@@ -2,98 +2,120 @@ Return-Path: <SRS0=YRFP=X2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D9FD2C388F3
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 10:42:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BF79C352AA
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 10:43:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B20D721924
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 10:42:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=shutemov-name.20150623.gappssmtp.com header.i=@shutemov-name.20150623.gappssmtp.com header.b="yyrFnMA4"
+	by mail.kernel.org (Postfix) with ESMTP id E3B502190F
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 10:43:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1569926581;
+	bh=fLlcwekdrGSCzJboirhCdZb2pRq7XYqkATwD0/s6rn8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=E/QVq3ExIdWHDUHha2ioB7BNl1BFMrjlsVkr0rfTP/14lNqRD+H8WcTfEPyvAko+T
+	 77EcVme7bza/3aIYSkIC7woIrhYFG0ldbYY0LU2T4QcAj6bkijPt56BWuACUOnSDLb
+	 h+Oz9+Sxv7k7OjXC1Y7cvXSxRODQHG/TxZUyM5RQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731095AbfJAKmX (ORCPT
+        id S1731113AbfJAKnA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Oct 2019 06:42:23 -0400
-Received: from mail-ed1-f67.google.com ([209.85.208.67]:45810 "EHLO
-        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729317AbfJAKmW (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Oct 2019 06:42:22 -0400
-Received: by mail-ed1-f67.google.com with SMTP id h33so11411735edh.12
-        for <linux-kernel@vger.kernel.org>; Tue, 01 Oct 2019 03:42:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=shutemov-name.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=K1jPj14nxpAoVvF1PZlHFLbTjJlXvJfGDzQ5Wzyv9Ek=;
-        b=yyrFnMA4aY10KseW9DWUcxSYaja2Uswf8aTlSgS6v/hJw/GxX84hrTGd79zrlgjilm
-         FzPrD4EROIlhtcwsK6Q8zt1epjMS5KM2UPNklRGjQYM+JrVTZ4XaJj/446qgdyz7uU6i
-         fcEZXAPKo38jdbVUX0LXncAADgzJySy7YJuRnaR3rcxi/OQUmJhpq7yU+xwwB80VIVwz
-         1Z1yc3qfe2Fiq+RpKLM2UsVVvTJcmsQMsxnoqXc0HPUvoECnZgJX9GnrayrsHJPTQZNr
-         Wkn95IGQz6w0b8QIdGnQ1FMQms1Q6NxW1g4x20fOlki8qx3i/yeshnbt0zEg0NWKziui
-         Ttzw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=K1jPj14nxpAoVvF1PZlHFLbTjJlXvJfGDzQ5Wzyv9Ek=;
-        b=rksZwoCsanrwRq9+ZWmOAqCG7r3Sgtd3qV0g+3CsHxAjV3NEmgR7vyKBsX2MbEECxi
-         F/06uiPLnYmRAR8uRWyKA0XZsaMav/YquqpRJh8LyKx21cPp7MqNge6G0PVLHT6LA6b1
-         dpYVuXs7/XY214IbBQMzKJWFp0/tYyiRbEe5ecdbEYCT9ZLM9bNY29Tx9ilUTd8f/hx8
-         RHo/EydJXeXXMkNT+Mh4hyIh+jKa+djGaBGoyE5GfScAcA+BS9CtItMy0lSK5sLNSCgn
-         pPS0iJoa8EMsMYrdiMnuktcIqx31uHNTUjzWAwkKqd6jDJlY53itGESmJiaoa/7ykEeT
-         r8Ng==
-X-Gm-Message-State: APjAAAXKe+9CrsbyrG9geHaTvQa03JGoNXMC2bOVJ6wwZ84bzpNAMdG+
-        hnDi2MIGM7hKsJt4kRatxitMLQ==
-X-Google-Smtp-Source: APXvYqyAm6+9hgtwYZ6sZEL5nFAwqNn1WDZ9BjiinNKVy+eFRejDSKRUOOx14gRU9eSGhSRtDXGILg==
-X-Received: by 2002:a17:906:7fda:: with SMTP id r26mr23780727ejs.170.1569926540535;
-        Tue, 01 Oct 2019 03:42:20 -0700 (PDT)
-Received: from box.localdomain ([86.57.175.117])
-        by smtp.gmail.com with ESMTPSA id a3sm3041116edk.51.2019.10.01.03.42.19
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 01 Oct 2019 03:42:19 -0700 (PDT)
-Received: by box.localdomain (Postfix, from userid 1000)
-        id 73B25102FB8; Tue,  1 Oct 2019 13:42:20 +0300 (+03)
-Date:   Tue, 1 Oct 2019 13:42:20 +0300
-From:   "Kirill A. Shutemov" <kirill@shutemov.name>
-To:     Matthew Wilcox <willy@infradead.org>
-Cc:     linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org,
-        William Kucharski <william.kucharski@oracle.com>
-Subject: Re: [PATCH 13/15] mm: Add a huge page fault handler for files
-Message-ID: <20191001104220.zhjcpdi6oaxl5un5@box>
-References: <20190925005214.27240-1-willy@infradead.org>
- <20190925005214.27240-14-willy@infradead.org>
+        Tue, 1 Oct 2019 06:43:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51994 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726494AbfJAKm7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Oct 2019 06:42:59 -0400
+Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id EAC6221906;
+        Tue,  1 Oct 2019 10:42:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1569926578;
+        bh=fLlcwekdrGSCzJboirhCdZb2pRq7XYqkATwD0/s6rn8=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=PRf2kKjUQf04+gaCdNG46D5w6U0piINzln1PR2OvjWhQXDAlD/RkxgHyAojkua2nz
+         tq/4o9XqfWbnpabpQep2kx3FXyKQzNDFI7iTKDHAJn8QNaUG8OfOL1tlrbNEC1ejgW
+         RF5s1iWFOxLXHv36ZMje4zqPQUovVagB/ZgUvNJI=
+Date:   Tue, 1 Oct 2019 11:42:54 +0100
+From:   Will Deacon <will@kernel.org>
+To:     Masahiro Yamada <yamada.masahiro@socionext.com>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH] Partially revert "compiler: enable
+ CONFIG_OPTIMIZE_INLINING forcibly"
+Message-ID: <20191001104253.fci7s3sn5ov3h56d@willie-the-truck>
+References: <20190930114540.27498-1-will@kernel.org>
+ <CAK7LNARWkQ-z02RYv3XQ69KkWdmEVaZge07qiYC8_kyMrFzCTg@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190925005214.27240-14-willy@infradead.org>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <CAK7LNARWkQ-z02RYv3XQ69KkWdmEVaZge07qiYC8_kyMrFzCTg@mail.gmail.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Sep 24, 2019 at 05:52:12PM -0700, Matthew Wilcox wrote:
-> From: William Kucharski <william.kucharski@oracle.com>
+On Tue, Oct 01, 2019 at 06:40:26PM +0900, Masahiro Yamada wrote:
+> On Mon, Sep 30, 2019 at 8:45 PM Will Deacon <will@kernel.org> wrote:
+> > diff --git a/lib/Kconfig.debug b/lib/Kconfig.debug
+> > index 93d97f9b0157..c37c72adaeff 100644
+> > --- a/lib/Kconfig.debug
+> > +++ b/lib/Kconfig.debug
+> > @@ -312,6 +312,7 @@ config HEADERS_CHECK
+> >
+> >  config OPTIMIZE_INLINING
+> >         def_bool y
+> > +       depends on !(ARM || ARM64) # https://gcc.gnu.org/bugzilla/show_bug.cgi?id=91111
 > 
-> Add filemap_huge_fault() to attempt to satisfy page
-> faults on memory-mapped read-only text pages using THP when possible.
 > 
-> Signed-off-by: William Kucharski <william.kucharski@oracle.com>
-> [rebased on top of mm prep patches -- Matthew]
-> Signed-off-by: Matthew Wilcox (Oracle) <willy@infradead.org>
+> This is a too big hammer.
 
-As we discuss before, I think it's wrong direction to separate ->fault()
-from ->huge_fault(). If ->fault() would return a huge page alloc_set_pte()
-will do The Right Thing™.
+It matches the previous default behaviour!
 
--- 
- Kirill A. Shutemov
+> For ARM, it is not a compiler bug, so I am trying to fix the kernel code.
+> 
+> For ARM64, even if it is a compiler bug, you can add __always_inline
+> to the functions in question.
+> (arch_atomic64_dec_if_positive in this case).
+> 
+> You do not need to force __always_inline globally.
+
+So you'd prefer I do something like the diff below? I mean, it's a start,
+but I do worry that we're hanging arch/arm/ out to dry.
+
+Will
+
+--->8
+
+diff --git a/arch/arm64/include/asm/atomic_lse.h b/arch/arm64/include/asm/atomic_lse.h
+index c6bd87d2915b..574808b9df4c 100644
+--- a/arch/arm64/include/asm/atomic_lse.h
++++ b/arch/arm64/include/asm/atomic_lse.h
+@@ -321,7 +321,8 @@ static inline s64 __lse_atomic64_dec_if_positive(atomic64_t *v)
+ }
+ 
+ #define __CMPXCHG_CASE(w, sfx, name, sz, mb, cl...)                    \
+-static inline u##sz __lse__cmpxchg_case_##name##sz(volatile void *ptr, \
++static __always_inline u##sz                                           \
++__lse__cmpxchg_case_##name##sz(volatile void *ptr,                     \
+                                              u##sz old,                \
+                                              u##sz new)                \
+ {                                                                      \
+@@ -362,7 +363,8 @@ __CMPXCHG_CASE(x,  ,  mb_, 64, al, "memory")
+ #undef __CMPXCHG_CASE
+ 
+ #define __CMPXCHG_DBL(name, mb, cl...)                                 \
+-static inline long __lse__cmpxchg_double##name(unsigned long old1,     \
++static __always_inline long                                            \
++__lse__cmpxchg_double##name(unsigned long old1,                                \
+                                         unsigned long old2,            \
+                                         unsigned long new1,            \
+                                         unsigned long new2,            \
