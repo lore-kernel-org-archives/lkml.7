@@ -2,101 +2,60 @@ Return-Path: <SRS0=YRFP=X2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA1F3C352AA
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 17:02:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7127ECE587
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 17:02:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B53732054F
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 17:02:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569949353;
-	bh=tPnWAe0mpthBXwTVbVe4uSBGjgQbQdtxeBaul5khI9s=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ZhpeQPrwqHLqwu9n64XmMaL8sqD+mQ0ANPQXcMTk6HTjFa7VaZgc2C7NC2vrBJVZj
-	 aJnWWICQNojmIqA4iyv6aqMSnuIkHTdlZJOac4H5TyBhM3x/RMOK2WIv2f+hfcxdjX
-	 fOlC98ayy3aOnBY8FdbD/rEuwBITHMjQFBW0Wq7Y=
+	by mail.kernel.org (Postfix) with ESMTP id A3AAA2054F
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 17:02:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732528AbfJARCc (ORCPT
+        id S1732618AbfJARCh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Oct 2019 13:02:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51192 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729383AbfJAQkC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Oct 2019 12:40:02 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2D38F21855;
-        Tue,  1 Oct 2019 16:40:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569948001;
-        bh=tPnWAe0mpthBXwTVbVe4uSBGjgQbQdtxeBaul5khI9s=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=OeYkVOEHqcOwB1QgkMfP7FBspa0yj0+j8ReXQ8FldOtQqMvfdfop/GaS+an0GTcIw
-         EbPOycWpNhGWZkxWTqefY6E5RaW9Rd/5hFCFn2CwRpq9aw4ykWPPRD+fBsECN46MJ0
-         hX8T9OZMgbCipdNMnKvZtcmADf6IJpBxKWHIlTfw=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     =?UTF-8?q?Bj=C3=B8rn=20Mork?= <bjorn@mork.no>,
-        Jakub Kicinski <jakub.kicinski@netronome.com>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
-        linux-usb@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.3 27/71] usbnet: ignore endpoints with invalid wMaxPacketSize
-Date:   Tue,  1 Oct 2019 12:38:37 -0400
-Message-Id: <20191001163922.14735-27-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191001163922.14735-1-sashal@kernel.org>
-References: <20191001163922.14735-1-sashal@kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+        Tue, 1 Oct 2019 13:02:37 -0400
+Received: from shards.monkeyblade.net ([23.128.96.9]:50000 "EHLO
+        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729383AbfJARCf (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Oct 2019 13:02:35 -0400
+Received: from localhost (unknown [IPv6:2601:601:9f00:1e2::3d5])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id 0E4B1154ECD6A;
+        Tue,  1 Oct 2019 10:02:34 -0700 (PDT)
+Date:   Tue, 01 Oct 2019 10:02:33 -0700 (PDT)
+Message-Id: <20191001.100233.2002881947003652758.davem@davemloft.net>
+To:     wenyang@linux.alibaba.com
+Cc:     alexandre.belloni@bootlin.com, UNGLinuxDriver@microchip.com,
+        xlpang@linux.alibaba.com, zhiche.yy@alibaba-inc.com,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] net: mscc: ocelot: add missing of_node_put after
+ calling of_get_child_by_name
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <20190929065424.2437-1-wenyang@linux.alibaba.com>
+References: <20190929065424.2437-1-wenyang@linux.alibaba.com>
+X-Mailer: Mew version 6.8 on Emacs 26.1
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Tue, 01 Oct 2019 10:02:34 -0700 (PDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bjørn Mork <bjorn@mork.no>
+From: Wen Yang <wenyang@linux.alibaba.com>
+Date: Sun, 29 Sep 2019 14:54:24 +0800
 
-[ Upstream commit 8d3d7c2029c1b360f1a6b0a2fca470b57eb575c0 ]
+> of_node_put needs to be called when the device node which is got
+> from of_get_child_by_name finished using.
+> In both cases of success and failure, we need to release 'ports',
+> so clean up the code using goto.
+> 
+> fixes: a556c76adc05 ("net: mscc: Add initial Ocelot switch support")
+> Signed-off-by: Wen Yang <wenyang@linux.alibaba.com>
 
-Endpoints with zero wMaxPacketSize are not usable for transferring
-data. Ignore such endpoints when looking for valid in, out and
-status pipes, to make the drivers more robust against invalid and
-meaningless descriptors.
-
-The wMaxPacketSize of these endpoints are used for memory allocations
-and as divisors in many usbnet minidrivers. Avoiding zero is therefore
-critical.
-
-Signed-off-by: Bjørn Mork <bjorn@mork.no>
-Signed-off-by: Jakub Kicinski <jakub.kicinski@netronome.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/net/usb/usbnet.c | 5 +++++
- 1 file changed, 5 insertions(+)
-
-diff --git a/drivers/net/usb/usbnet.c b/drivers/net/usb/usbnet.c
-index 72514c46b4786..07c00e378a5cd 100644
---- a/drivers/net/usb/usbnet.c
-+++ b/drivers/net/usb/usbnet.c
-@@ -100,6 +100,11 @@ int usbnet_get_endpoints(struct usbnet *dev, struct usb_interface *intf)
- 			int				intr = 0;
- 
- 			e = alt->endpoint + ep;
-+
-+			/* ignore endpoints which cannot transfer data */
-+			if (!usb_endpoint_maxp(&e->desc))
-+				continue;
-+
- 			switch (e->desc.bmAttributes) {
- 			case USB_ENDPOINT_XFER_INT:
- 				if (!usb_endpoint_dir_in(&e->desc))
--- 
-2.20.1
-
+Applied.
