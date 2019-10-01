@@ -2,135 +2,100 @@ Return-Path: <SRS0=YRFP=X2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 27547ECE587
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 13:42:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 49DB2C352AA
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 13:43:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 012F42086A
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 13:42:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 17BC22086A
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 13:43:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1569937434;
+	bh=et76C1A4jVcTdZi9RyZSz+iesSAiPJaVZ41ol/6THyk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=V8EPTWrLqwyzzHWlccA9t1SYX8pa8Ag85kItXHpvfhIu8WEvE2X+x3djxiTCWIuXz
+	 bHFXtIUW/GO9HaO5qoYVpdz0CBl65HAkGGzbu9+ZJ5ekrWZI5ghgAbijV2SuDNkHBO
+	 KaVuPab+HgF2pkNsl8tC3ufiBqt4Q2RmdUcUgW44=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388615AbfJANmx (ORCPT
+        id S2388656AbfJANnx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Oct 2019 09:42:53 -0400
-Received: from mga06.intel.com ([134.134.136.31]:19704 "EHLO mga06.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726554AbfJANmx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Oct 2019 09:42:53 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 01 Oct 2019 06:42:51 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,571,1559545200"; 
-   d="scan'208";a="205064778"
-Received: from lahna.fi.intel.com (HELO lahna) ([10.237.72.157])
-  by fmsmga001.fm.intel.com with SMTP; 01 Oct 2019 06:42:47 -0700
-Received: by lahna (sSMTP sendmail emulation); Tue, 01 Oct 2019 16:42:47 +0300
-Date:   Tue, 1 Oct 2019 16:42:47 +0300
-From:   Mika Westerberg <mika.westerberg@linux.intel.com>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-usb@vger.kernel.org,
-        Andreas Noever <andreas.noever@gmail.com>,
-        Michael Jamet <michael.jamet@intel.com>,
-        Yehezkel Bernat <YehezkelShB@gmail.com>,
-        Rajmohan Mani <rajmohan.mani@intel.com>,
-        Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>,
-        Lukas Wunner <lukas@wunner.de>,
-        Alan Stern <stern@rowland.harvard.edu>,
-        Mario.Limonciello@dell.com,
-        Anthony Wong <anthony.wong@canonical.com>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [RFC PATCH 00/22] thunderbolt: Add support for USB4
-Message-ID: <20191001134247.GT2714@lahna.fi.intel.com>
-References: <20191001113830.13028-1-mika.westerberg@linux.intel.com>
- <20191001124954.GI2954373@kroah.com>
+        Tue, 1 Oct 2019 09:43:53 -0400
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:42450 "EHLO
+        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726710AbfJANnx (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Oct 2019 09:43:53 -0400
+Received: by mail-oi1-f195.google.com with SMTP id i185so14389423oif.9;
+        Tue, 01 Oct 2019 06:43:52 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=/yW/ATB8FIjR5Cn9PtmrhJch8B9sWOBgNXx/ALh7kW4=;
+        b=E18fH9sa/0gktENzebkANfCYZJZ5A3qaITl2rgtVnwwkwGFmt3/Y24ExDlVO+JOnas
+         /F89GL0RIaZTkvurgZPleIS5l317Jejxg7QcCuyMQ9T8B55VTjNR55itDgGnbf4njSBt
+         e8JsvR4SEHwXmSXd0b1MaomnjbqnZg/1kzk7vpUjwFV8Vnf2UcelcOjsZdWWVI11L9O2
+         VjuLVaIwbaqzu0aeiKFPMKNr6Jj4dRc8iG8pMtJBqUbmC+lNSVtotWG7VYdI5sYBdOgW
+         54uxCkJiwLW1iQSToUegw5pQWJ71tOZ2iP6SvWSrKw6CdXqwLLnphN1xT7I64Ar/TBnd
+         GZOg==
+X-Gm-Message-State: APjAAAUp7Z2AqAR+2XnRaaZfotsK9Y8NjMXfGQkUkDolIF6Q/ODkSW7t
+        i+LSPtRI1OO6vbko6ZrRZEwqqf7djw==
+X-Google-Smtp-Source: APXvYqxH2El57SgxyxkgxKtPK7pxEqgYVY65LB7/f68E0xMJaKaZcvMhKHFXAxY2wZestrQ0pvaG5g==
+X-Received: by 2002:aca:5186:: with SMTP id f128mr3881842oib.107.1569937432345;
+        Tue, 01 Oct 2019 06:43:52 -0700 (PDT)
+Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id f12sm4950926oij.1.2019.10.01.06.43.51
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 01 Oct 2019 06:43:51 -0700 (PDT)
+Date:   Tue, 1 Oct 2019 08:43:51 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Marek Szyprowski <m.szyprowski@samsung.com>
+Cc:     devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org,
+        Maciej Falkowski <m.falkowski@samsung.com>,
+        Marek Szyprowski <m.szyprowski@samsung.com>
+Subject: Re: [PATCH v3] dt-bindings: gpu: Convert Samsung Image Scaler to
+  dt-schema
+Message-ID: <20191001134351.GA21744@bogus>
+References: <CGME20190927143314eucas1p2d419866cd740207426cd37cb6fdff468@eucas1p2.samsung.com>
+ <20190927143306.12133-1-m.szyprowski@samsung.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191001124954.GI2954373@kroah.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <20190927143306.12133-1-m.szyprowski@samsung.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Oct 01, 2019 at 02:49:54PM +0200, Greg Kroah-Hartman wrote:
-> On Tue, Oct 01, 2019 at 02:38:08PM +0300, Mika Westerberg wrote:
-> > Hi all,
-> > 
-> > I'm sending this as RFC because the series is still missing important
-> > features such as power management so not ready for merging. However, I
-> > think it is good to get any early feedback from the community. We are
-> > working to add support for the missing features.
-> > 
-> > USB4 is the public specification of Thunderbolt 3 protocol and can be
-> > downloaded here:
-> > 
-> >   https://www.usb.org/sites/default/files/USB4%20Specification_1.zip
-> > 
-> > USB4 is about tunneling different protocols over a single cable (in the
-> > same way as Thunderbolt). The current USB4 spec supports PCIe, Display Port
-> > and USB 3.x, and also software based protocols such as networking between
-> > domains (hosts).
-> > 
-> > So far PCs have been using firmware based Connection Manager and Apple
-> > systems have been using software based one. A Connection Manager is the
-> > entity that handles creation of different tunnel types through the USB4
-> > (and Thunderbolt) fabric. With USB4 the plan is to have software based
-> > Connection Manager everywhere but some early systems will also support
-> > firmware to allow OS downgrade for example.
-> > 
-> > Current Linux Thunderbolt driver supports both "modes" and can detect which
-> > one to use dynamically.
-> > 
-> > This series first adds support for Thunderbolt 3 devices to the software
-> > connection manager and then extends that to support USB4 compliant hosts
-> > and devices (this applies to both firmware and software based connection
-> > managers). With this series the following features are supported also for
-> > USB4 compliant devices:
-> > 
-> >   - PCIe tunneling
-> >   - Display Port tunneling
-> >   - USB 3.x tunneling
-> >   - P2P networking (implemented in drivers/net/thunderbolt.c)
-> >   - Host and device NVM firmware upgrade
-> > 
-> > We also add two new sysfs attributes under each device that expose link
-> > speed and width to userspace. The rest of the userspace ABI stays the same.
-> > 
-> > I'm including Linux USB folks as well because USB4 is officially coming
-> > from USB-IF which puts us on same boat now.
-> > 
-> > While I changed the user visible Kconfig string to mention "USB4" (the
-> > Kconfig option is still CONFIG_THUNDERBOLT), I'm wondering whether we
-> > should move the whole Thunderbolt driver under drivers/usb/thunderbolt as
-> > well? 
+On Fri, 27 Sep 2019 16:33:06 +0200, Marek Szyprowski wrote:
+> From: Maciej Falkowski <m.falkowski@samsung.com>
 > 
-> Looks "interesting", nice work!
-
-Thanks!
-
-> I stopped at patch "Add initial support for USB4" as I don't think we
-> want to add USB4 code to a system that we know does not have it, right?
-
-You can connect a USB4 device to Thunderbolt 3 system. USB4 hubs
-specifically are required to support this by the spec. Of course then it
-is in Thunderbolt 3 alternate mode (not in USB4 native mode) but the
-USB4 register set is still there. So for example we still need to
-configure TMU (Time Management Unit) and access the DROM via router
-operations and so on.
-
-Do you mean we don't want that?
-
-> Everything up to then is just "normal" thunderbolt, and with the
-> exception of a few minor comments, all look fine to me.
+> Convert Samsung Image Scaler to newer dt-schema format.
 > 
-> I didn't actually read the USB4 patch just yet, as I figured we needed
-> to argue about that some more :)
+> Signed-off-by: Maciej Falkowski <m.falkowski@samsung.com>
+> Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
+> ---
+> v3:
+> - Fixed description of 'clocks' property:
+> rather than 'mscl clock', 'pclk clock'
+> - Added empty line within if-else statement
+> - Added 'additionalProperties: false'
+> - Listed all missing 'properties' in properties scope
+> 
+> Best regards,
+> Maciej Falkowski
+> ---
+>  .../bindings/gpu/samsung-scaler.txt           | 27 -------
+>  .../bindings/gpu/samsung-scaler.yaml          | 81 +++++++++++++++++++
+>  2 files changed, 81 insertions(+), 27 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/gpu/samsung-scaler.txt
+>  create mode 100644 Documentation/devicetree/bindings/gpu/samsung-scaler.yaml
+> 
 
-Heh, sure and thanks for the feedback so far :)
+Applied, thanks.
+
+Rob
