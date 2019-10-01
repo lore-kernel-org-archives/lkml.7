@@ -4,48 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A8CAC352AA
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 16:39:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50D2FC352AA
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 16:39:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 38E2921855
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 16:39:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 20A802168B
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 16:39:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569947985;
-	bh=RZ+WOcSOBvQdQXPYEN1ohKIQpxofeW8IA32kr+1bOQc=;
+	s=default; t=1569947989;
+	bh=pj9nPbu8OCxceS12YwPlHpb0aSqTImsM0akfpQMHB4I=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=BVGAVNDrmynyhIHgeg3crYqjK/Yv88BNXvnkfNR+yXcJZ03SKGFHKD0gZvnwwyEGR
-	 2nbtbjwNH7+HgL0yjNGfC2bOMlP0M0yxiDw76Y9tVqn4XQeu7yGf/Pamk8/udbGq56
-	 vKqqA+HSxSIRbWL21R8F8JAgSmH/WCF3Bag6P5y8=
+	b=MZpb2lN6O0j7lSfS8tXtxnwYWSop/vGdUPh+z15360ED8hokuZQkjpFrMV1A0bxTW
+	 RZ7I+GQ+70OU7AmrsfrJiwL6POPATaRRolqgqnq/TBXCVWMDGkPfD+2e3RTIQRaQrh
+	 mTJBPMXfcM/Rfya45eRSbHOrgy5GmWBxprWXcRXE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728330AbfJAQjo (ORCPT
+        id S1728448AbfJAQjr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Oct 2019 12:39:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50664 "EHLO mail.kernel.org"
+        Tue, 1 Oct 2019 12:39:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50766 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727929AbfJAQjj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Oct 2019 12:39:39 -0400
+        id S1728316AbfJAQjo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Oct 2019 12:39:44 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4235521855;
-        Tue,  1 Oct 2019 16:39:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A7D7C21924;
+        Tue,  1 Oct 2019 16:39:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569947978;
-        bh=RZ+WOcSOBvQdQXPYEN1ohKIQpxofeW8IA32kr+1bOQc=;
+        s=default; t=1569947983;
+        bh=pj9nPbu8OCxceS12YwPlHpb0aSqTImsM0akfpQMHB4I=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=V9Mu1ozBPB4Px8QjS+lSQFVGyKHWvCuEp1jIUlb/xrS97DCtMVt2GjxAJ3MuyvaEZ
-         A88cSNuR3Cp/Qc9COHfIp4MdWzICZZIU6rj5Vqbv3VMXPyNrZnQTaWvFuDg80xoUjv
-         QedyPrSzjwcOxkbfkUEfzN5XNlrttrw25WReAuUk=
+        b=CWDbhJ0u6IkW7v/133VA4CUF+J0uonSCLr58Ut5y0VwSSr37v7vWIGVlvffXfybad
+         H5xvHJexIwlMMbUenkVUbpw+DE/EMoW8Euj8HrG6P75fxZdW64OVJqrJjMQCUQHl/2
+         jyxJE/Y7mpdfTCDBz5MVQfL9AzfosXCwD/qCkXTc=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Miklos Szeredi <mszeredi@redhat.com>,
-        Sasha Levin <sashal@kernel.org>, linux-fsdevel@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.3 11/71] fuse: fix request limit
-Date:   Tue,  1 Oct 2019 12:38:21 -0400
-Message-Id: <20191001163922.14735-11-sashal@kernel.org>
+Cc:     Dongsheng Yang <dongsheng.yang@easystack.cn>,
+        Ilya Dryomov <idryomov@gmail.com>,
+        Sasha Levin <sashal@kernel.org>, ceph-devel@vger.kernel.org,
+        linux-block@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.3 15/71] rbd: fix response length parameter for encoded strings
+Date:   Tue,  1 Oct 2019 12:38:25 -0400
+Message-Id: <20191001163922.14735-15-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191001163922.14735-1-sashal@kernel.org>
 References: <20191001163922.14735-1-sashal@kernel.org>
@@ -58,46 +60,66 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Miklos Szeredi <mszeredi@redhat.com>
+From: Dongsheng Yang <dongsheng.yang@easystack.cn>
 
-[ Upstream commit f22f812d5ce75a18b56073a7a63862e6ea764070 ]
+[ Upstream commit 5435d2069503e2aa89c34a94154f4f2fa4a0c9c4 ]
 
-The size of struct fuse_req was reduced from 392B to 144B on a non-debug
-config, thus the sanitize_global_limit() helper was setting a larger
-default limit.  This doesn't really reflect reduction in the memory used by
-requests, since the fields removed from fuse_req were added to fuse_args
-derived structs; e.g. sizeof(struct fuse_writepages_args) is 248B, thus
-resulting in slightly more memory being used for writepage requests
-overalll (due to using 256B slabs).
+rbd_dev_image_id() allocates space for length but passes a smaller
+value to rbd_obj_method_sync().  rbd_dev_v2_object_prefix() doesn't
+allocate space for length.  Fix both to be consistent.
 
-Make the calculatation ignore the size of fuse_req and use the old 392B
-value.
-
-Signed-off-by: Miklos Szeredi <mszeredi@redhat.com>
+Signed-off-by: Dongsheng Yang <dongsheng.yang@easystack.cn>
+Reviewed-by: Ilya Dryomov <idryomov@gmail.com>
+Signed-off-by: Ilya Dryomov <idryomov@gmail.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/fuse/inode.c | 7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
+ drivers/block/rbd.c | 10 ++++++----
+ 1 file changed, 6 insertions(+), 4 deletions(-)
 
-diff --git a/fs/fuse/inode.c b/fs/fuse/inode.c
-index 4bb885b0f0322..04b10b3b8741b 100644
---- a/fs/fuse/inode.c
-+++ b/fs/fuse/inode.c
-@@ -822,9 +822,12 @@ static const struct super_operations fuse_super_operations = {
+diff --git a/drivers/block/rbd.c b/drivers/block/rbd.c
+index c8fb886aebd4e..69db7385c8df5 100644
+--- a/drivers/block/rbd.c
++++ b/drivers/block/rbd.c
+@@ -5669,17 +5669,20 @@ static int rbd_dev_v2_image_size(struct rbd_device *rbd_dev)
  
- static void sanitize_global_limit(unsigned *limit)
+ static int rbd_dev_v2_object_prefix(struct rbd_device *rbd_dev)
  {
-+	/*
-+	 * The default maximum number of async requests is calculated to consume
-+	 * 1/2^13 of the total memory, assuming 392 bytes per request.
-+	 */
- 	if (*limit == 0)
--		*limit = ((totalram_pages() << PAGE_SHIFT) >> 13) /
--			 sizeof(struct fuse_req);
-+		*limit = ((totalram_pages() << PAGE_SHIFT) >> 13) / 392;
++	size_t size;
+ 	void *reply_buf;
+ 	int ret;
+ 	void *p;
  
- 	if (*limit >= 1 << 16)
- 		*limit = (1 << 16) - 1;
+-	reply_buf = kzalloc(RBD_OBJ_PREFIX_LEN_MAX, GFP_KERNEL);
++	/* Response will be an encoded string, which includes a length */
++	size = sizeof(__le32) + RBD_OBJ_PREFIX_LEN_MAX;
++	reply_buf = kzalloc(size, GFP_KERNEL);
+ 	if (!reply_buf)
+ 		return -ENOMEM;
+ 
+ 	ret = rbd_obj_method_sync(rbd_dev, &rbd_dev->header_oid,
+ 				  &rbd_dev->header_oloc, "get_object_prefix",
+-				  NULL, 0, reply_buf, RBD_OBJ_PREFIX_LEN_MAX);
++				  NULL, 0, reply_buf, size);
+ 	dout("%s: rbd_obj_method_sync returned %d\n", __func__, ret);
+ 	if (ret < 0)
+ 		goto out;
+@@ -6696,7 +6699,6 @@ static int rbd_dev_image_id(struct rbd_device *rbd_dev)
+ 	dout("rbd id object name is %s\n", oid.name);
+ 
+ 	/* Response will be an encoded string, which includes a length */
+-
+ 	size = sizeof (__le32) + RBD_IMAGE_ID_LEN_MAX;
+ 	response = kzalloc(size, GFP_NOIO);
+ 	if (!response) {
+@@ -6708,7 +6710,7 @@ static int rbd_dev_image_id(struct rbd_device *rbd_dev)
+ 
+ 	ret = rbd_obj_method_sync(rbd_dev, &oid, &rbd_dev->header_oloc,
+ 				  "get_id", NULL, 0,
+-				  response, RBD_IMAGE_ID_LEN_MAX);
++				  response, size);
+ 	dout("%s: rbd_obj_method_sync returned %d\n", __func__, ret);
+ 	if (ret == -ENOENT) {
+ 		image_id = kstrdup("", GFP_KERNEL);
 -- 
 2.20.1
 
