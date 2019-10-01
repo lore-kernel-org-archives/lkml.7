@@ -2,166 +2,123 @@ Return-Path: <SRS0=YRFP=X2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02769C352AA
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 08:19:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D57EAC388F3
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 08:22:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D7D2521855
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 08:19:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A9EA821855
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 08:22:29 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="PGX16Tb1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729747AbfJAITY (ORCPT
+        id S1732785AbfJAIW2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Oct 2019 04:19:24 -0400
-Received: from mail-out.m-online.net ([212.18.0.10]:41756 "EHLO
-        mail-out.m-online.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726148AbfJAITX (ORCPT
+        Tue, 1 Oct 2019 04:22:28 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:44998 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726148AbfJAIW2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Oct 2019 04:19:23 -0400
-Received: from frontend01.mail.m-online.net (unknown [192.168.8.182])
-        by mail-out.m-online.net (Postfix) with ESMTP id 46jBxz1sRqz1rfPS;
-        Tue,  1 Oct 2019 10:19:19 +0200 (CEST)
-Received: from localhost (dynscan1.mnet-online.de [192.168.6.70])
-        by mail.m-online.net (Postfix) with ESMTP id 46jBxz0tzKz1qqkJ;
-        Tue,  1 Oct 2019 10:19:19 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at mnet-online.de
-Received: from mail.mnet-online.de ([192.168.8.182])
-        by localhost (dynscan1.mail.m-online.net [192.168.6.70]) (amavisd-new, port 10024)
-        with ESMTP id 5UqoMroY0bH0; Tue,  1 Oct 2019 10:19:16 +0200 (CEST)
-X-Auth-Info: 8uGd2zSasi4BZOt5q3xd6by93nPKyS29VRpdS81cGcs=
-Received: from jawa (85-222-111-42.dynamic.chello.pl [85.222.111.42])
+        Tue, 1 Oct 2019 04:22:28 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=8nRscgxPVr7Aw7OjiSCDHF3qOKmeVYA2WPuMroRvj+A=; b=PGX16Tb1iIBI20tXU25hwOqCR
+        FHZMvtRwbYSpFmZxGuePXEEstPH0A/x7Ilpr7f37QQCEwhtQ26m9s/CJGrRdM9TkPDvL69H/GDG4l
+        1m41KfDH+U38RM6A1p/cbkfpWPMxO1cARfEp5mmBGMV0bnlmKxia/ENuIZ0LnE+ScgugfVEK7xnfJ
+        z/meiaKQkEgIi98kEdHZqjXPSa3yB5M0aUuxJlx5NK8+yrueOdfqZhfGvzs+mtm/E7yEX5xheWTq2
+        eITSE9P2ir+qZYRHOES9LSyHXLodix1LyjPDBAnne1wfHrBR5BrtcI105EmUr6KFzKvuVyafyU0QG
+        i+sRIn1+g==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.2 #3 (Red Hat Linux))
+        id 1iFDQL-0004ge-Lz; Tue, 01 Oct 2019 08:22:21 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.mnet-online.de (Postfix) with ESMTPSA;
-        Tue,  1 Oct 2019 10:19:16 +0200 (CEST)
-Date:   Tue, 1 Oct 2019 10:19:09 +0200
-From:   Lukasz Majewski <lukma@denx.de>
-To:     Lee Jones <lee.jones@linaro.org>
-Cc:     linux-kernel@vger.kernel.org,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Enrico Weigelt <info@metux.net>,
-        Kate Stewart <kstewart@linuxfoundation.org>,
-        linux-input@vger.kernel.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: Re: [PATCH v5 0/3] mfd: mc13xxx: Fixes and enhancements for NXP's
- mc34708
-Message-ID: <20191001101909.79aacda0@jawa>
-In-Reply-To: <20191001064130.GA11769@dell>
-References: <20190909214440.30674-1-lukma@denx.de>
-        <20190930095159.64e1001a@jawa>
-        <20191001064130.GA11769@dell>
-Organization: denx.de
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 8D8A230477A;
+        Tue,  1 Oct 2019 10:21:30 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id CD72223E90CDA; Tue,  1 Oct 2019 10:22:18 +0200 (CEST)
+Date:   Tue, 1 Oct 2019 10:22:18 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Like Xu <like.xu@linux.intel.com>
+Cc:     Paolo Bonzini <pbonzini@redhat.com>, kvm@vger.kernel.org,
+        rkrcmar@redhat.com, sean.j.christopherson@intel.com,
+        vkuznets@redhat.com, Jim Mattson <jmattson@google.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        ak@linux.intel.com, wei.w.wang@intel.com, kan.liang@intel.com,
+        like.xu@intel.com, ehankland@google.com, arbel.moshe@oracle.com,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/3] KVM: x86/vPMU: Reuse perf_event to avoid unnecessary
+ pmc_reprogram_counter
+Message-ID: <20191001082218.GK4519@hirez.programming.kicks-ass.net>
+References: <20190930072257.43352-1-like.xu@linux.intel.com>
+ <20190930072257.43352-3-like.xu@linux.intel.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
- boundary="Sig_/OwH/Dd552kMbiK8hNyDRMNo"; protocol="application/pgp-signature"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190930072257.43352-3-like.xu@linux.intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/OwH/Dd552kMbiK8hNyDRMNo
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On Mon, Sep 30, 2019 at 03:22:56PM +0800, Like Xu wrote:
+> diff --git a/arch/x86/kvm/pmu.c b/arch/x86/kvm/pmu.c
+> index 46875bbd0419..74bc5c42b8b5 100644
+> --- a/arch/x86/kvm/pmu.c
+> +++ b/arch/x86/kvm/pmu.c
+> @@ -140,6 +140,35 @@ static void pmc_reprogram_counter(struct kvm_pmc *pmc, u32 type,
+>  	clear_bit(pmc->idx, (unsigned long*)&pmc_to_pmu(pmc)->reprogram_pmi);
+>  }
+>  
+> +static void pmc_pause_counter(struct kvm_pmc *pmc)
+> +{
+> +	if (!pmc->perf_event)
+> +		return;
+> +
+> +	pmc->counter = pmc_read_counter(pmc);
+> +
+> +	perf_event_disable(pmc->perf_event);
+> +
+> +	/* reset count to avoid redundant accumulation */
+> +	local64_set(&pmc->perf_event->count, 0);
 
-Hi Lee,
+Yuck, don't frob in data structures you don't own.
 
-> On Mon, 30 Sep 2019, Lukasz Majewski wrote:
->=20
-> > Dear Lee,
-> >  =20
-> > > This patch set provides several enhancements to mc13xxx MFD family
-> > > of devices by introducing mc34708 as a separate device.
-> > >=20
-> > > This IC has dedicated pen detection feature, which allows better
-> > > touchscreen experience.
-> > >=20
-> > > This is the fifth version of this code (v5).
-> > > Discussion regarding previous versions can be found here:
-> > > https://lkml.org/lkml/2018/4/12/351
-> > > https://www.mail-archive.com/linux-kernel@vger.kernel.org/msg1661934.=
-html
-> > > https://www.mail-archive.com/linux-kernel@vger.kernel.org/msg1664296.=
-html
-> > > https://lkml.org/lkml/2019/7/17/705 =20
-> >=20
-> > Gentle ping on this patch series. It is now 3 weeks without any
-> > reply... =20
->=20
-> Please take note and follow the kernel release cycle.
->=20
-> These patches were sent after the release of -rc7 i.e. very late
-> in the release cycle and a point where most kernel maintainers stop
-> reviewing/applying patches
+Just like you exported the IOC_PERIOD thing, so too is there a
+IOC_RESET.
 
-Maybe something has changed recently, but I thought that the review is
-an ongoing process (that the discussion about patches takes place all
-the time to refine the code).
+Furthermore; wth do you call pmc_read_counter() _before_ doing
+perf_event_disable() ? Doing it the other way around is much cheaper,
+even better, you can use perf_event_count() after disable.
 
-(and nobody expects maintainers pulling new patches after merge window).
+> +}
+> +
+> +static bool pmc_resume_counter(struct kvm_pmc *pmc)
+> +{
+> +	if (!pmc->perf_event)
+> +		return false;
+> +
+> +	/* recalibrate sample period and check if it's accepted by perf core */
+> +	if (perf_event_period(pmc->perf_event,
+> +			(-pmc->counter) & pmc_bitmask(pmc)))
+> +		return false;
 
-> and start to prepare for the impending
-> merge-window.
->=20
-> Also, there is no such thing as a gentle ping.
+I'd do the reset here, but then you have 3 function in a row that do
+perf_event_ctx_lock()+perf_event_ctx_unlock(), which is rather
+expensive.
 
-I'm a bit puzzled now.=20
-I do know that maintainers are overworked - and I do understand that.
-
-However, NO reply for such a long time is at best confusing for
-somebody who is willing to fix the kernel.
-
-(Maybe this has changed too - but I do remember that there was a "rule
-of thumb" to express any comment about the patch in 2 weeks time).
-
->  If you genuinely think
-> your patches have unlikely("slipped though the gaps"), then post a
-> [RESEND] complete with a note alluding your reasons doing such.
->=20
-
-Please forgive me, but are patches from this series eligible for pulling
-(to v5.4 or even next release)?
-
-> > > Sascha Hauer (3):
-> > >   mfd: mc13xxx: Add mc34708 adc support
-> > >   input: touchscreen mc13xxx: Make platform data optional
-> > >   input: touchscreen mc13xxx: Add mc34708 support
-> > >=20
-> > >  drivers/input/touchscreen/mc13783_ts.c | 63 ++++++++++++++---
-> > >  drivers/mfd/mc13xxx-core.c             | 98
-> > > +++++++++++++++++++++++++- include/linux/mfd/mc34708.h
-> > > | 37 ++++++++++ 3 files changed, 185 insertions(+), 13
-> > > deletions(-) create mode 100644 include/linux/mfd/mc34708.h =20
->=20
-
-
-Best regards,
-
-Lukasz Majewski
-
---
-
-DENX Software Engineering GmbH,      Managing Director: Wolfgang Denk
-HRB 165235 Munich, Office: Kirchenstr.5, D-82194 Groebenzell, Germany
-Phone: (+49)-8142-66989-59 Fax: (+49)-8142-66989-80 Email: lukma@denx.de
-
---Sig_/OwH/Dd552kMbiK8hNyDRMNo
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCgAdFiEEgAyFJ+N6uu6+XupJAR8vZIA0zr0FAl2TC/0ACgkQAR8vZIA0
-zr3T1AgAx+/w2FpkD+h4YUVVh0IhJqiHC2Ho3rX9Hc4qCOZ2TUt+giDv0QvwAzaZ
-hMcuTZr6JwcoBtvMa2acDQgCcQr8TkywMhfOitev2ZA8jSpC3NZaXnH4aK4G2wp7
-r1oA0Fnt22XVtVlpXmoktiaqVttkxImcOlI1H5UOKMr2wxZOc4/oBOG5qH2cRFvr
-B4gWWaU5AGl6AkoG1/r9p/80N1w3tOnHapVJzptmKowKCoEdtFYG0pOUleFXZgAI
-f55x2H62J62S8LlkWgTtSyAHmOps/Bd2SlurRWUSICR1gmVCzdz6EhMvf7KKxBOL
-XUx4yTg8iv4BrW+kZ+I1yPdr0X/tFg==
-=T0tY
------END PGP SIGNATURE-----
-
---Sig_/OwH/Dd552kMbiK8hNyDRMNo--
+> +
+> +	/* reuse perf_event to serve as pmc_reprogram_counter() does*/
+> +	perf_event_enable(pmc->perf_event);
+> +	clear_bit(pmc->idx, (unsigned long *)&pmc_to_pmu(pmc)->reprogram_pmi);
+> +	return true;
+> +}
