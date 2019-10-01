@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E6A1C352AA
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 16:43:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA410C352AA
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 16:43:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ED97521855
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 16:43:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C008720B7C
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 16:43:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569948208;
-	bh=aaNRKxMCl//SOoWE0xPCzikii769S93wd/C/5cBbHWM=;
+	s=default; t=1569948210;
+	bh=+uCVdUA5lVCZ9a/ht/Z8yKNn/Mvm0QLIKe/8pzuMvFA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=MHCEKvw6ABWUz54Unz20JxrJkYYsMech0bg1+wHytRPnXTy6pOgMTIsWmpHGPpWaQ
-	 CK37tmKHDP/SdmfYEtLWal24S+dCXcf0pW6DHBJnKVx8tYq+wRI1dUmaQTNMfSbhbX
-	 P4mxCHkiH0x7V4O88G3f1pOR7cjW5I8cllbvOoxQ=
+	b=VN8CTmlwu6EtcPcbNIYvfI1JXkef+gSZ6f3ce/K2t7Y/iKrIXVwSZLr9vvydSXzmO
+	 b5m+r/tamGQyFTDCvukVMt8Hjydh9eZK5k5U5mECns9ybTkyWmhqvUL2g7qaFROFHr
+	 VJH1IWEC4iCP95sLbQuhOZzIzs3fYixGz+aV735g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732703AbfJAQn0 (ORCPT
+        id S1726619AbfJAQn3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Oct 2019 12:43:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55430 "EHLO mail.kernel.org"
+        Tue, 1 Oct 2019 12:43:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55506 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732646AbfJAQnX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Oct 2019 12:43:23 -0400
+        id S1732698AbfJAQn1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Oct 2019 12:43:27 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7909721D80;
-        Tue,  1 Oct 2019 16:43:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 22FD821906;
+        Tue,  1 Oct 2019 16:43:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569948202;
-        bh=aaNRKxMCl//SOoWE0xPCzikii769S93wd/C/5cBbHWM=;
+        s=default; t=1569948206;
+        bh=+uCVdUA5lVCZ9a/ht/Z8yKNn/Mvm0QLIKe/8pzuMvFA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ulJexPFxZDdZaAVInYoBUWs0ZsixoQPGgnr6Gf8dXkeG9dg9rkrmfrYRiUkomJGbi
-         AHcSKIqLgenQ+6Xkz46fO4POzQcHZHRJBta3WvmU3Hk2hK4jLUUvwFRFVz8+51vYER
-         +8jZkJ7rl0GncHAWT5UI4iRef8rtaFB9Sb3I0Y3k=
+        b=XbIG82ThkL96qTzblGCFgDtKZF6Eq1DiiiDdtOmNfL8G9e2882xQYmwPJ/R9POsSc
+         7K28XtrA9ohbYdT8rm8LyC+fhxkyCfL36TmEqXf14a6HrjD9NoaX+bL11kjP+PrWSg
+         jgkX7QmlHS8iBiQCbl/OK4JF6Yf42sGxTSv+eLLw=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Erqi Chen <chenerqi@gmail.com>, "Yan, Zheng" <zyan@redhat.com>,
-        Jeff Layton <jlayton@kernel.org>,
-        Ilya Dryomov <idryomov@gmail.com>,
-        Sasha Levin <sashal@kernel.org>, ceph-devel@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 09/43] ceph: reconnect connection if session hang in opening state
-Date:   Tue,  1 Oct 2019 12:42:37 -0400
-Message-Id: <20191001164311.15993-9-sashal@kernel.org>
+Cc:     Florian Westphal <fw@strlen.de>,
+        Pablo Neira Ayuso <pablo@netfilter.org>,
+        Sasha Levin <sashal@kernel.org>,
+        netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
+        netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 12/43] netfilter: nf_tables: allow lookups in dynamic sets
+Date:   Tue,  1 Oct 2019 12:42:40 -0400
+Message-Id: <20191001164311.15993-12-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191001164311.15993-1-sashal@kernel.org>
 References: <20191001164311.15993-1-sashal@kernel.org>
@@ -60,44 +61,105 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Erqi Chen <chenerqi@gmail.com>
+From: Florian Westphal <fw@strlen.de>
 
-[ Upstream commit 71a228bc8d65900179e37ac309e678f8c523f133 ]
+[ Upstream commit acab713177377d9e0889c46bac7ff0cfb9a90c4d ]
 
-If client mds session is evicted in CEPH_MDS_SESSION_OPENING state,
-mds won't send session msg to client, and delayed_work skip
-CEPH_MDS_SESSION_OPENING state session, the session hang forever.
+This un-breaks lookups in sets that have the 'dynamic' flag set.
+Given this active example configuration:
 
-Allow ceph_con_keepalive to reconnect a session in OPENING to avoid
-session hang. Also, ensure that we skip sessions in RESTARTING and
-REJECTED states since those states can't be resurrected by issuing
-a keepalive.
+table filter {
+  set set1 {
+    type ipv4_addr
+    size 64
+    flags dynamic,timeout
+    timeout 1m
+  }
 
-Link: https://tracker.ceph.com/issues/41551
-Signed-off-by: Erqi Chen chenerqi@gmail.com
-Reviewed-by: "Yan, Zheng" <zyan@redhat.com>
-Signed-off-by: Jeff Layton <jlayton@kernel.org>
-Signed-off-by: Ilya Dryomov <idryomov@gmail.com>
+  chain input {
+     type filter hook input priority 0; policy accept;
+  }
+}
+
+... this works:
+nft add rule ip filter input add @set1 { ip saddr }
+
+-> whenever rule is triggered, the source ip address is inserted
+into the set (if it did not exist).
+
+This won't work:
+nft add rule ip filter input ip saddr @set1 counter
+Error: Could not process rule: Operation not supported
+
+In other words, we can add entries to the set, but then can't make
+matching decision based on that set.
+
+That is just wrong -- all set backends support lookups (else they would
+not be very useful).
+The failure comes from an explicit rejection in nft_lookup.c.
+
+Looking at the history, it seems like NFT_SET_EVAL used to mean
+'set contains expressions' (aka. "is a meter"), for instance something like
+
+ nft add rule ip filter input meter example { ip saddr limit rate 10/second }
+ or
+ nft add rule ip filter input meter example { ip saddr counter }
+
+The actual meaning of NFT_SET_EVAL however, is
+'set can be updated from the packet path'.
+
+'meters' and packet-path insertions into sets, such as
+'add @set { ip saddr }' use exactly the same kernel code (nft_dynset.c)
+and thus require a set backend that provides the ->update() function.
+
+The only set that provides this also is the only one that has the
+NFT_SET_EVAL feature flag.
+
+Removing the wrong check makes the above example work.
+While at it, also fix the flag check during set instantiation to
+allow supported combinations only.
+
+Fixes: 8aeff920dcc9b3f ("netfilter: nf_tables: add stateful object reference to set elements")
+Signed-off-by: Florian Westphal <fw@strlen.de>
+Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/ceph/mds_client.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ net/netfilter/nf_tables_api.c | 7 +++++--
+ net/netfilter/nft_lookup.c    | 3 ---
+ 2 files changed, 5 insertions(+), 5 deletions(-)
 
-diff --git a/fs/ceph/mds_client.c b/fs/ceph/mds_client.c
-index bfcf11c70bfad..09db6d08614d2 100644
---- a/fs/ceph/mds_client.c
-+++ b/fs/ceph/mds_client.c
-@@ -3640,7 +3640,9 @@ static void delayed_work(struct work_struct *work)
- 				pr_info("mds%d hung\n", s->s_mds);
- 			}
- 		}
--		if (s->s_state < CEPH_MDS_SESSION_OPEN) {
-+		if (s->s_state == CEPH_MDS_SESSION_NEW ||
-+		    s->s_state == CEPH_MDS_SESSION_RESTARTING ||
-+		    s->s_state == CEPH_MDS_SESSION_REJECTED) {
- 			/* this mds is failed or recovering, just wait */
- 			ceph_put_mds_session(s);
- 			continue;
+diff --git a/net/netfilter/nf_tables_api.c b/net/netfilter/nf_tables_api.c
+index 2145581d7b3dc..24fddf0322790 100644
+--- a/net/netfilter/nf_tables_api.c
++++ b/net/netfilter/nf_tables_api.c
+@@ -3429,8 +3429,11 @@ static int nf_tables_newset(struct net *net, struct sock *nlsk,
+ 			      NFT_SET_OBJECT))
+ 			return -EINVAL;
+ 		/* Only one of these operations is supported */
+-		if ((flags & (NFT_SET_MAP | NFT_SET_EVAL | NFT_SET_OBJECT)) ==
+-			     (NFT_SET_MAP | NFT_SET_EVAL | NFT_SET_OBJECT))
++		if ((flags & (NFT_SET_MAP | NFT_SET_OBJECT)) ==
++			     (NFT_SET_MAP | NFT_SET_OBJECT))
++			return -EOPNOTSUPP;
++		if ((flags & (NFT_SET_EVAL | NFT_SET_OBJECT)) ==
++			     (NFT_SET_EVAL | NFT_SET_OBJECT))
+ 			return -EOPNOTSUPP;
+ 	}
+ 
+diff --git a/net/netfilter/nft_lookup.c b/net/netfilter/nft_lookup.c
+index 161c3451a747a..55754d9939b50 100644
+--- a/net/netfilter/nft_lookup.c
++++ b/net/netfilter/nft_lookup.c
+@@ -76,9 +76,6 @@ static int nft_lookup_init(const struct nft_ctx *ctx,
+ 	if (IS_ERR(set))
+ 		return PTR_ERR(set);
+ 
+-	if (set->flags & NFT_SET_EVAL)
+-		return -EOPNOTSUPP;
+-
+ 	priv->sreg = nft_parse_register(tb[NFTA_LOOKUP_SREG]);
+ 	err = nft_validate_register_load(priv->sreg, set->klen);
+ 	if (err < 0)
 -- 
 2.20.1
 
