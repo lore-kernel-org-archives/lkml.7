@@ -2,96 +2,165 @@ Return-Path: <SRS0=YRFP=X2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA153ECE587
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 16:31:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65CC6C352AA
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 16:32:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A66B32070B
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 16:31:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2E0A62168B
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 16:32:39 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="KfJfkHUP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730479AbfJAQbr (ORCPT
+        id S1730655AbfJAQci (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Oct 2019 12:31:47 -0400
-Received: from mail-qt1-f195.google.com ([209.85.160.195]:43581 "EHLO
-        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390015AbfJAQ3r (ORCPT
+        Tue, 1 Oct 2019 12:32:38 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:34128 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726491AbfJAQci (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Oct 2019 12:29:47 -0400
-Received: by mail-qt1-f195.google.com with SMTP id c3so22346429qtv.10
-        for <linux-kernel@vger.kernel.org>; Tue, 01 Oct 2019 09:29:47 -0700 (PDT)
+        Tue, 1 Oct 2019 12:32:38 -0400
+Received: by mail-pg1-f196.google.com with SMTP id y35so10031038pgl.1
+        for <linux-kernel@vger.kernel.org>; Tue, 01 Oct 2019 09:32:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=mLm3V78Nb0tq/zcNx2mEABQ569cNGACMXUe9AHxZPCM=;
+        b=KfJfkHUPequyd3hiy6z2aKGGX/2G6xIjF3IGbgcrndrvKmDDvI76B+oMbXDdMdg517
+         7edd6KGmmYrM2HwZ/3YzIKefoAxO253iSyU+LYLxXm3AaLtv/VZCRLbZoH8NQxeXa6pv
+         J0isUOh100Oj3CFe+3gjGZgQzfQ+3KP9bcY2FZnKxR20621nZ3qfGIspGrq/3cvA6dip
+         s3Vy3cGduEnepXlDYeBqVwIitR4pPBFGO+ohkowH5zGuez/DXehdcPAopmI7/uq9EPZA
+         QebtST4zNTHcOYeuaFZTLQQuomMjnd+MgBL+uQoNJ7pCZ/taZ8X6TnOtsvs1qN7CIe7P
+         w/lw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=0zO73icoSPJ3pNVWiNNF9L9OEEbriWKwEbaN0EtJRPI=;
-        b=Tsg+Giwtb9vEFQq8cmb+LwT6HAsYySoWGoTlcKuMP9PgGqXnPN5k5asSFSd99SyOLj
-         42VONpB1QvKyv+KCCpqg0+jEWnzF9kcZZwNh7cmsu6p7JLArwqfBAglCC5uWgHryX07Y
-         Aak4wCsBFq46LITl1oHwIMU8jGeh5ttKcd1Y+sOsRRxzpTLNUUaZRK7H+l2iBqUX4MaK
-         dk2VfOjy5oJkcI30A0HbgljPIpUV4qjjQ+uvwZOoEJIY79HcHEf4Dncml///uBrGJbb8
-         VceSnBFHR8ZY1kcoMfM6b6ZrPa8KVwCQlfc7z0H0ccZzTBr5jBcCFwMkpQfXO9QHTYzm
-         DTBg==
-X-Gm-Message-State: APjAAAW85jpCTdMVqr0vmk+Fq6Ar1qRAPFC35gXnGESsM2btCouoiZ4l
-        cf5dPTqUssGlFNxPW8dt8klDQLgpDcBACcjx7rA=
-X-Google-Smtp-Source: APXvYqxkgIX2gcVaLjsRtcgaC+7CiGnoTPy8gmARgU5xbBtCjA5leLB24V7ISErrIwWtMs8YA3rGRE+qoQ6Sf7PgVcI=
-X-Received: by 2002:ac8:1a2e:: with SMTP id v43mr31469917qtj.204.1569947386677;
- Tue, 01 Oct 2019 09:29:46 -0700 (PDT)
+        bh=mLm3V78Nb0tq/zcNx2mEABQ569cNGACMXUe9AHxZPCM=;
+        b=rPHOZ5huG3JVwym8AcwE/AHfMqt0hMgJHg7usEribh7QnA/luQS4IkwnxTPNaVhOZv
+         uj9G8Q+TL6qFIwo5Ink8LD+cwFKRsAMubvRcRKfKYbJJ6oTEZGU65hbGQPOxOki1E09J
+         CU27oYZrzGHf3eq0EBDUaiR0tHzkU0uo2M4/YgYzqAh0zsE/mz71ifi+uqpaKJqVK1b5
+         +BIynnENBQec0rcq6dCmBDulRqT5DSW+kuEfVTCD/BFMwJsU6d/8YPdvb86nTzNgcY/8
+         7fUF6E/CMBWYn2DuMtms04w54v+JbryT1zL3oxVkXcYxdRvkRaI8Bt+lB3MHgtGHOBBT
+         IX2A==
+X-Gm-Message-State: APjAAAWrQC8nlmYILPvrMp5COPMVm6ZC1S/rUsD4Qlk17pD+KaenR1fY
+        ASfTiUHWC2sJEK3EOgi1fT5FlTKcGcpg87if5ctXVg==
+X-Google-Smtp-Source: APXvYqxM+Y+20EHpLWfowfTRI98iZfd4uSIoBLzJYFhy1Zn7Y/nYzmkfx/vq5P/+m6teNiozD6Sg0C1nlHzdmJV2m20=
+X-Received: by 2002:a17:90a:154f:: with SMTP id y15mr741498pja.73.1569947556644;
+ Tue, 01 Oct 2019 09:32:36 -0700 (PDT)
 MIME-Version: 1.0
-References: <20191001142026.1124917-1-arnd@arndb.de> <bb58c7cc-209d-7a2f-0e5b-95a9605ffe7b@linux.intel.com>
- <CAK8P3a3Js2dNhnRhP7PLadWZ69DZr1mz6DowN9HDJL4CFDAAFw@mail.gmail.com> <e4b90233-846c-bfc1-68a3-a7b7c28b60bd@linux.intel.com>
-In-Reply-To: <e4b90233-846c-bfc1-68a3-a7b7c28b60bd@linux.intel.com>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Tue, 1 Oct 2019 18:29:30 +0200
-Message-ID: <CAK8P3a1vHECVV86JHxEZmo7jQOosHO=H33v784keqLMNiiHSxA@mail.gmail.com>
-Subject: Re: [alsa-devel] [PATCH] ASoC: SOF: imx: fix reverse
- CONFIG_SND_SOC_SOF_OF dependency
-To:     Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Cc:     Mark Brown <broonie@kernel.org>, Hulk Robot <hulkci@huawei.com>,
-        YueHaibing <yuehaibing@huawei.com>,
-        Daniel Baluta <daniel.baluta@nxp.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>, Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        ALSA Development Mailing List <alsa-devel@alsa-project.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <20190830034304.24259-1-yamada.masahiro@socionext.com>
+ <f5c221f5749e5768c9f0d909175a14910d349456.camel@suse.de> <CAKwvOdk=tr5nqq1CdZnUvRskaVqsUCP0SEciSGonzY5ayXsMXw@mail.gmail.com>
+ <CAHk-=wiTy7hrA=LkmApBE9PQtri8qYsSOrf2zbms_crfjgR=Hw@mail.gmail.com>
+ <20190930112636.vx2qxo4hdysvxibl@willie-the-truck> <CAK7LNASQZ82KSOrQW7+Wq1vFDCg2__maBEAPMLqUDqZMLuj1rA@mail.gmail.com>
+ <20190930121803.n34i63scet2ec7ll@willie-the-truck> <CAKwvOdnqn=0LndrX+mUrtSAQqoT1JWRMOJCA5t3e=S=T7zkcCQ@mail.gmail.com>
+ <20191001092823.z4zhlbwvtwnlotwc@willie-the-truck>
+In-Reply-To: <20191001092823.z4zhlbwvtwnlotwc@willie-the-truck>
+From:   Nick Desaulniers <ndesaulniers@google.com>
+Date:   Tue, 1 Oct 2019 09:32:25 -0700
+Message-ID: <CAKwvOdk0h2A6=fb7Yepf+oKbZfq_tqwpGq8EBmHVu1j4mo-a-A@mail.gmail.com>
+Subject: Re: [PATCH] compiler: enable CONFIG_OPTIMIZE_INLINING forcibly
+To:     Will Deacon <will@kernel.org>
+Cc:     Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Russell King <rmk+kernel@arm.linux.org.uk>,
+        Stefan Wahren <wahrenst@gmx.net>,
+        Kees Cook <keescook@google.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Oct 1, 2019 at 6:03 PM Pierre-Louis Bossart
-<pierre-louis.bossart@linux.intel.com> wrote:
-> On 10/1/19 10:41 AM, Arnd Bergmann wrote:
-> > On Tue, Oct 1, 2019 at 5:32 PM Pierre-Louis Bossart
-> > <pierre-louis.bossart@linux.intel.com> wrote:
-
-> >
-> > The same could be done with a Kconfig-only solution avoiding
-> > 'select' such as:
-> >
-> > config SND_SOC_SOF_IMX8_SUPPORT
-> >           bool "SOF support for i.MX8"
-> >           depends on IMX_SCU
-> >           depends on IMX_DSP
-> >
-> >   config SND_SOC_SOF_IMX8
-> >           def_tristate SND_SOC_SOF_OF
-> >           depends on SND_SOC_SOF_IMX8_SUPPORT
+On Tue, Oct 1, 2019 at 2:28 AM Will Deacon <will@kernel.org> wrote:
 >
-> Ah, nice, thanks for the suggestion! That would be my preference, we
-> have a similar select for PCI and ACPI parts in sound/soc/sof/Kconfig
-> and I was looking for a means to do this more elegantly.
-> I can submit a new fix or let you sent a v2, whatever is more convenient.
+> Hi Nick,
+>
+> On Mon, Sep 30, 2019 at 02:50:10PM -0700, Nick Desaulniers wrote:
+> > So __attribute__((always_inline)) doesn't guarantee that code will be
+> > inlined.  For instance in LLVM's inliner, it asks/answers "should I
+> > inline" and "can I inline."  "Should" has to do with a cost model, and
+> > is very heuristic-y.  "Can" has more to do with the transforms, and
+> > whether they're all implemented and safe.  If you if you say
+> > __attribute__((always_inline)), the answer to "can I inline this" can
+> > still be *no*.  The only way to guarantee inlining is via the C
+> > preprocessor.  The only way to prevent inlining is via
+> > __attribute__((no_inline)).  inline and __attribute__((always_inline))
+> > are a heuristic laden mess and should not be relied upon.  I would
+> > also look closely at code that *requires* inlining or the lack there
+> > of to be correct.  That the kernel no longer compiles at -O0 is not a
+> > good thing IMO, and hurts developers that want a short
+> > compile/execute/debug cycle.
+> >
+> > In this case, if there's a known codegen bug in a particular compiler
+> > or certain versions of it, I recommend the use of either the C
+> > preprocessor or __attribute__((no_inline)) to get the desired behavior
+> > localized to the function in question, and for us to proceed with
+> > Masahiro's cleanup.
+>
+> Hmm, I don't see how that would help. The problem occurs when things
+> are moved out of line by the compiler (see below).
 
-Ok, please send a patch then, I can add it to my randconfig test tree to
-make sure it covers all corner cases.
+It's being moved out of line because __attribute__((always_inline)) or
+just inline provide no guarantees that outlining does not occur.  It
+would help to make functions that need to be inlined macros, because
+the C preprocessor doesn't have that issue.
 
-    Arnd
+>
+> > The comment above the use of CONFIG_OPTIMIZE_INLINING in
+> > include/linux/compiler_types.h says:
+> >   * Force always-inline if the user requests it so via the .config.
+> > Which makes me grimace (__attribute__((always_inline)) doesn't *force*
+> > anything as per above), and the idea that forcing things marked inline
+> > to also be __attribute__((always_inline)) is an "optimization" (re:
+> > the name of the config; CONFIG_OPTIMIZE_INLINING) is also highly
+> > suspect.  Aggressive inlining leads to image size bloat, instruction
+> > cache and register pressure; it is not exclusively an optimization.
+>
+> Agreed on all of this, but the fact remains that GCC has been shown to
+> *miscompile* the arm64 kernel with CONFIG_OPTIMIZE_INLINING=y. Please,
+> look at this thread:
+>
+>         https://www.spinics.net/lists/arm-kernel/msg730329.html
+>         https://www.spinics.net/lists/arm-kernel/msg730512.html
+>
+> GCC decides to pull an atomic operation out-of-line and, in doing so,
+
+If the function is incorrect unless inlined, use a macro.
+
+> gets the register allocations subtly wrong when passing a 'register'
+> variable into an inline asm. I would like to avoid this sort of thing
+> happening, since it can result in really nasty bugs that manifest at
+> runtime and are extremely difficult to debug, which is why I would much
+> prefer not to have this option on by default for arm64. I sent a patch
+> already:
+>
+>         https://lkml.kernel.org/r/20190930114540.27498-1-will@kernel.org
+>
+> and I'm happy to spin a v2 which depends on !CC_IS_CLANG as well.
+
+For small things like whether we mark a function always_inline or not,
+I think it's simpler to just keep the code consistent between
+compilers, even if it's to work around a bug in one compiler.  A
+comment in the code would be sufficient.
+
+>
+> Reducing the instruction cache footprint is great, but not if the
+> resulting code is broken!
+
+You don't have to convince compiler folks about correctness. ;)
+Correctness trumps all, especially performance.
+-- 
+Thanks,
+~Nick Desaulniers
