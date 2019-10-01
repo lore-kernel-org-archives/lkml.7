@@ -2,165 +2,92 @@ Return-Path: <SRS0=YRFP=X2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65CC6C352AA
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 16:32:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 030DBC352AA
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 16:32:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2E0A62168B
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 16:32:39 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="KfJfkHUP"
+	by mail.kernel.org (Postfix) with ESMTP id CDB1121906
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 16:32:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730655AbfJAQci (ORCPT
+        id S1731126AbfJAQcw convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Oct 2019 12:32:38 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:34128 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726491AbfJAQci (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Oct 2019 12:32:38 -0400
-Received: by mail-pg1-f196.google.com with SMTP id y35so10031038pgl.1
-        for <linux-kernel@vger.kernel.org>; Tue, 01 Oct 2019 09:32:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=mLm3V78Nb0tq/zcNx2mEABQ569cNGACMXUe9AHxZPCM=;
-        b=KfJfkHUPequyd3hiy6z2aKGGX/2G6xIjF3IGbgcrndrvKmDDvI76B+oMbXDdMdg517
-         7edd6KGmmYrM2HwZ/3YzIKefoAxO253iSyU+LYLxXm3AaLtv/VZCRLbZoH8NQxeXa6pv
-         J0isUOh100Oj3CFe+3gjGZgQzfQ+3KP9bcY2FZnKxR20621nZ3qfGIspGrq/3cvA6dip
-         s3Vy3cGduEnepXlDYeBqVwIitR4pPBFGO+ohkowH5zGuez/DXehdcPAopmI7/uq9EPZA
-         QebtST4zNTHcOYeuaFZTLQQuomMjnd+MgBL+uQoNJ7pCZ/taZ8X6TnOtsvs1qN7CIe7P
-         w/lw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=mLm3V78Nb0tq/zcNx2mEABQ569cNGACMXUe9AHxZPCM=;
-        b=rPHOZ5huG3JVwym8AcwE/AHfMqt0hMgJHg7usEribh7QnA/luQS4IkwnxTPNaVhOZv
-         uj9G8Q+TL6qFIwo5Ink8LD+cwFKRsAMubvRcRKfKYbJJ6oTEZGU65hbGQPOxOki1E09J
-         CU27oYZrzGHf3eq0EBDUaiR0tHzkU0uo2M4/YgYzqAh0zsE/mz71ifi+uqpaKJqVK1b5
-         +BIynnENBQec0rcq6dCmBDulRqT5DSW+kuEfVTCD/BFMwJsU6d/8YPdvb86nTzNgcY/8
-         7fUF6E/CMBWYn2DuMtms04w54v+JbryT1zL3oxVkXcYxdRvkRaI8Bt+lB3MHgtGHOBBT
-         IX2A==
-X-Gm-Message-State: APjAAAWrQC8nlmYILPvrMp5COPMVm6ZC1S/rUsD4Qlk17pD+KaenR1fY
-        ASfTiUHWC2sJEK3EOgi1fT5FlTKcGcpg87if5ctXVg==
-X-Google-Smtp-Source: APXvYqxM+Y+20EHpLWfowfTRI98iZfd4uSIoBLzJYFhy1Zn7Y/nYzmkfx/vq5P/+m6teNiozD6Sg0C1nlHzdmJV2m20=
-X-Received: by 2002:a17:90a:154f:: with SMTP id y15mr741498pja.73.1569947556644;
- Tue, 01 Oct 2019 09:32:36 -0700 (PDT)
+        Tue, 1 Oct 2019 12:32:52 -0400
+Received: from hermes.aosc.io ([199.195.250.187]:38933 "EHLO hermes.aosc.io"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725988AbfJAQcv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Oct 2019 12:32:51 -0400
+Received: from localhost (localhost [127.0.0.1]) (Authenticated sender: icenowy@aosc.io)
+        by hermes.aosc.io (Postfix) with ESMTPSA id B33DB82889;
+        Tue,  1 Oct 2019 16:32:49 +0000 (UTC)
+Date:   Wed, 02 Oct 2019 00:31:25 +0800
+In-Reply-To: <20191001.093000.372726574458067639.davem@davemloft.net>
+References: <20191001082912.12905-1-icenowy@aosc.io> <20191001.090651.796983023328992596.davem@davemloft.net> <2CCD0856-433E-4602-A079-9F7F5F2E00D6@aosc.io> <20191001.093000.372726574458067639.davem@davemloft.net>
 MIME-Version: 1.0
-References: <20190830034304.24259-1-yamada.masahiro@socionext.com>
- <f5c221f5749e5768c9f0d909175a14910d349456.camel@suse.de> <CAKwvOdk=tr5nqq1CdZnUvRskaVqsUCP0SEciSGonzY5ayXsMXw@mail.gmail.com>
- <CAHk-=wiTy7hrA=LkmApBE9PQtri8qYsSOrf2zbms_crfjgR=Hw@mail.gmail.com>
- <20190930112636.vx2qxo4hdysvxibl@willie-the-truck> <CAK7LNASQZ82KSOrQW7+Wq1vFDCg2__maBEAPMLqUDqZMLuj1rA@mail.gmail.com>
- <20190930121803.n34i63scet2ec7ll@willie-the-truck> <CAKwvOdnqn=0LndrX+mUrtSAQqoT1JWRMOJCA5t3e=S=T7zkcCQ@mail.gmail.com>
- <20191001092823.z4zhlbwvtwnlotwc@willie-the-truck>
-In-Reply-To: <20191001092823.z4zhlbwvtwnlotwc@willie-the-truck>
-From:   Nick Desaulniers <ndesaulniers@google.com>
-Date:   Tue, 1 Oct 2019 09:32:25 -0700
-Message-ID: <CAKwvOdk0h2A6=fb7Yepf+oKbZfq_tqwpGq8EBmHVu1j4mo-a-A@mail.gmail.com>
-Subject: Re: [PATCH] compiler: enable CONFIG_OPTIMIZE_INLINING forcibly
-To:     Will Deacon <will@kernel.org>
-Cc:     Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Russell King <rmk+kernel@arm.linux.org.uk>,
-        Stefan Wahren <wahrenst@gmx.net>,
-        Kees Cook <keescook@google.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: 8BIT
+Subject: Re: [PATCH 0/3] Pine64+ specific hacks for RTL8211E Ethernet PHY
+To:     linux-arm-kernel@lists.infradead.org,
+        David Miller <davem@davemloft.net>
+CC:     mark.rutland@arm.com, andrew@lunn.ch, f.fainelli@gmail.com,
+        devicetree@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, mripard@kernel.org,
+        linux-sunxi@googlegroups.com, robh+dt@kernel.org, wens@csie.org,
+        hkallweit1@gmail.com
+From:   Icenowy Zheng <icenowy@aosc.io>
+Message-ID: <D1124458-D5CB-4AFF-B106-C6EA1A98100F@aosc.io>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Oct 1, 2019 at 2:28 AM Will Deacon <will@kernel.org> wrote:
->
-> Hi Nick,
->
-> On Mon, Sep 30, 2019 at 02:50:10PM -0700, Nick Desaulniers wrote:
-> > So __attribute__((always_inline)) doesn't guarantee that code will be
-> > inlined.  For instance in LLVM's inliner, it asks/answers "should I
-> > inline" and "can I inline."  "Should" has to do with a cost model, and
-> > is very heuristic-y.  "Can" has more to do with the transforms, and
-> > whether they're all implemented and safe.  If you if you say
-> > __attribute__((always_inline)), the answer to "can I inline this" can
-> > still be *no*.  The only way to guarantee inlining is via the C
-> > preprocessor.  The only way to prevent inlining is via
-> > __attribute__((no_inline)).  inline and __attribute__((always_inline))
-> > are a heuristic laden mess and should not be relied upon.  I would
-> > also look closely at code that *requires* inlining or the lack there
-> > of to be correct.  That the kernel no longer compiles at -O0 is not a
-> > good thing IMO, and hurts developers that want a short
-> > compile/execute/debug cycle.
-> >
-> > In this case, if there's a known codegen bug in a particular compiler
-> > or certain versions of it, I recommend the use of either the C
-> > preprocessor or __attribute__((no_inline)) to get the desired behavior
-> > localized to the function in question, and for us to proceed with
-> > Masahiro's cleanup.
->
-> Hmm, I don't see how that would help. The problem occurs when things
-> are moved out of line by the compiler (see below).
 
-It's being moved out of line because __attribute__((always_inline)) or
-just inline provide no guarantees that outlining does not occur.  It
-would help to make functions that need to be inlined macros, because
-the C preprocessor doesn't have that issue.
 
+于 2019年10月2日 GMT+08:00 上午12:30:00, David Miller <davem@davemloft.net> 写到:
+>From: Icenowy Zheng <icenowy@aosc.io>
+>Date: Wed, 02 Oct 2019 00:08:39 +0800
 >
-> > The comment above the use of CONFIG_OPTIMIZE_INLINING in
-> > include/linux/compiler_types.h says:
-> >   * Force always-inline if the user requests it so via the .config.
-> > Which makes me grimace (__attribute__((always_inline)) doesn't *force*
-> > anything as per above), and the idea that forcing things marked inline
-> > to also be __attribute__((always_inline)) is an "optimization" (re:
-> > the name of the config; CONFIG_OPTIMIZE_INLINING) is also highly
-> > suspect.  Aggressive inlining leads to image size bloat, instruction
-> > cache and register pressure; it is not exclusively an optimization.
+>> 
+>> 
+>> 于 2019年10月2日 GMT+08:00 上午12:06:51, David Miller <davem@davemloft.net>
+>写到:
+>>>From: Icenowy Zheng <icenowy@aosc.io>
+>>>Date: Tue,  1 Oct 2019 16:29:09 +0800
+>>>
+>>>> There're some Pine64+ boards known to have broken RTL8211E chips,
+>and
+>>>> a hack is given by Pine64+, which is said to be from Realtek.
+>>>> 
+>>>> This patchset adds the hack.
+>>>> 
+>>>> The hack is taken from U-Boot, and it contains magic numbers
+>without
+>>>> any document.
+>>>
+>>>Please contact Realtek and try to get an explanation about this.
+>> 
+>> Sorry, but Realtek never shows any idea to add more infomation about
+>this.
+>> 
+>> These hacks had existed and worked for years.
 >
-> Agreed on all of this, but the fact remains that GCC has been shown to
-> *miscompile* the arm64 kernel with CONFIG_OPTIMIZE_INLINING=y. Please,
-> look at this thread:
+>Have you actually tried to communicate with an appropriate contact
+>yourself?
 >
->         https://www.spinics.net/lists/arm-kernel/msg730329.html
->         https://www.spinics.net/lists/arm-kernel/msg730512.html
->
-> GCC decides to pull an atomic operation out-of-line and, in doing so,
+>If not, I am asking you to do so.
 
-If the function is incorrect unless inlined, use a macro.
-
-> gets the register allocations subtly wrong when passing a 'register'
-> variable into an inline asm. I would like to avoid this sort of thing
-> happening, since it can result in really nasty bugs that manifest at
-> runtime and are extremely difficult to debug, which is why I would much
-> prefer not to have this option on by default for arm64. I sent a patch
-> already:
->
->         https://lkml.kernel.org/r/20190930114540.27498-1-will@kernel.org
->
-> and I'm happy to spin a v2 which depends on !CC_IS_CLANG as well.
-
-For small things like whether we mark a function always_inline or not,
-I think it's simpler to just keep the code consistent between
-compilers, even if it's to work around a bug in one compiler.  A
-comment in the code would be sufficient.
+I have tried to ask via TL Lim from Pine64, because I have no way
+to communicate directly to Realtek. However TL cannot get anything
+more from Realtek.
 
 >
-> Reducing the instruction cache footprint is great, but not if the
-> resulting code is broken!
+>_______________________________________________
+>linux-arm-kernel mailing list
+>linux-arm-kernel@lists.infradead.org
+>http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
 
-You don't have to convince compiler folks about correctness. ;)
-Correctness trumps all, especially performance.
 -- 
-Thanks,
-~Nick Desaulniers
+使用 K-9 Mail 发送自我的Android设备。
