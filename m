@@ -4,53 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1870DECE587
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 16:50:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F0A12C352AA
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 16:50:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C198120659
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 16:50:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BDA092168B
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 16:50:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569948633;
-	bh=wBX0BLKAxEJ4pgZQUvtIbB9dURc/CT3Dk0SqiZRMAMI=;
+	s=default; t=1569948638;
+	bh=Hocc63BL0I0Fgrn+QymLAblajZc0ZEE1HFWH9U3eyJs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=M6BBns/mLl3iNMLi4srX+FPsLZYCuhhv9GcEZ35zhrFzPtbwImCmUYLv7lj/sKFuY
-	 q2FFvwcnzzfK1MMns9D4U4yONvtyzDFyRBTXpn9RisYa+aSRj4q7Zc0yxV7FFogSRg
-	 gALdNl/+y4uJbRMwTAb7ilpGOyUooKqx/C+RZYC0=
+	b=OMJNdKKdICwMpciFyb5ouKIdK2QBo69Ywta/ixcLbGOfgL8XmZUgVUMJtMrwNnF2N
+	 s4/CfjB4OLvItGqJz/gF+MRbQ6ExyhF6NQP7LUH4IZEw5F+Oa7Qja7wS+fToQj5NEG
+	 e4Z+3WCS7al3qLsM19rAhUtLAcc4p4xD7MPOdylU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388202AbfJAQob (ORCPT
+        id S2389058AbfJAQuh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Oct 2019 12:44:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56598 "EHLO mail.kernel.org"
+        Tue, 1 Oct 2019 12:50:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56754 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387834AbfJAQoX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Oct 2019 12:44:23 -0400
+        id S2388153AbfJAQob (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Oct 2019 12:44:31 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A47DB21855;
-        Tue,  1 Oct 2019 16:44:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id ADEEC21924;
+        Tue,  1 Oct 2019 16:44:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569948262;
-        bh=wBX0BLKAxEJ4pgZQUvtIbB9dURc/CT3Dk0SqiZRMAMI=;
+        s=default; t=1569948270;
+        bh=Hocc63BL0I0Fgrn+QymLAblajZc0ZEE1HFWH9U3eyJs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0fzcS7jzpy9Z5p1a1FhP95m+8et6J8/wXwuJ4qZFX9uX4sol0twFuVOnSLX5U6uZt
-         2aUsXsZtBQHQ+qtGVDjseuJPewoDLCx2ci0Tmw0zhhJ4ETGgMayqnOocFTcVKYP+mN
-         WSbgVGKGGaN3wcQJ5k2olJvYOiVQkvq5d7lFJb7o=
+        b=SFvDvlHVTfHmvbx1xIU0DhAbk4qV5wYgS21YS1Va0msy/xIyQwfxFyFpKenEScE7r
+         B7CnWx4txZ/y1m69IdfRbcuHbjsrNPjl5q8uJe96WIsIh8KgHQGk0YmFAROLft04rO
+         YiXIyPF6G0GRnfamohG/cM22wGOI6VVi2vF3wk2A=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Eric Dumazet <edumazet@google.com>,
-        syzbot <syzkaller@googlegroups.com>,
-        Jakub Kicinski <jakub.kicinski@netronome.com>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 43/43] sch_netem: fix a divide by zero in tabledist()
-Date:   Tue,  1 Oct 2019 12:43:11 -0400
-Message-Id: <20191001164311.15993-43-sashal@kernel.org>
+Cc:     Erqi Chen <chenerqi@gmail.com>, "Yan, Zheng" <zyan@redhat.com>,
+        Jeff Layton <jlayton@kernel.org>,
+        Ilya Dryomov <idryomov@gmail.com>,
+        Sasha Levin <sashal@kernel.org>, ceph-devel@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 06/29] ceph: reconnect connection if session hang in opening state
+Date:   Tue,  1 Oct 2019 12:44:00 -0400
+Message-Id: <20191001164423.16406-6-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191001164311.15993-1-sashal@kernel.org>
-References: <20191001164311.15993-1-sashal@kernel.org>
+In-Reply-To: <20191001164423.16406-1-sashal@kernel.org>
+References: <20191001164423.16406-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -60,39 +60,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eric Dumazet <edumazet@google.com>
+From: Erqi Chen <chenerqi@gmail.com>
 
-[ Upstream commit b41d936b5ecfdb3a4abc525ce6402a6c49cffddc ]
+[ Upstream commit 71a228bc8d65900179e37ac309e678f8c523f133 ]
 
-syzbot managed to crash the kernel in tabledist() loading
-an empty distribution table.
+If client mds session is evicted in CEPH_MDS_SESSION_OPENING state,
+mds won't send session msg to client, and delayed_work skip
+CEPH_MDS_SESSION_OPENING state session, the session hang forever.
 
-	t = dist->table[rnd % dist->size];
+Allow ceph_con_keepalive to reconnect a session in OPENING to avoid
+session hang. Also, ensure that we skip sessions in RESTARTING and
+REJECTED states since those states can't be resurrected by issuing
+a keepalive.
 
-Simply return an error when such load is attempted.
-
-Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
-Signed-off-by: Eric Dumazet <edumazet@google.com>
-Reported-by: syzbot <syzkaller@googlegroups.com>
-Signed-off-by: Jakub Kicinski <jakub.kicinski@netronome.com>
+Link: https://tracker.ceph.com/issues/41551
+Signed-off-by: Erqi Chen chenerqi@gmail.com
+Reviewed-by: "Yan, Zheng" <zyan@redhat.com>
+Signed-off-by: Jeff Layton <jlayton@kernel.org>
+Signed-off-by: Ilya Dryomov <idryomov@gmail.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/sched/sch_netem.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ fs/ceph/mds_client.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/net/sched/sch_netem.c b/net/sched/sch_netem.c
-index 4dfe10b9f96c8..86350fe5cfc8f 100644
---- a/net/sched/sch_netem.c
-+++ b/net/sched/sch_netem.c
-@@ -749,7 +749,7 @@ static int get_dist_table(struct Qdisc *sch, struct disttable **tbl,
- 	struct disttable *d;
- 	int i;
- 
--	if (n > NETEM_DIST_MAX)
-+	if (!n || n > NETEM_DIST_MAX)
- 		return -EINVAL;
- 
- 	d = kvmalloc(sizeof(struct disttable) + n * sizeof(s16), GFP_KERNEL);
+diff --git a/fs/ceph/mds_client.c b/fs/ceph/mds_client.c
+index e1ded4bd61154..b968334f841e8 100644
+--- a/fs/ceph/mds_client.c
++++ b/fs/ceph/mds_client.c
+@@ -3543,7 +3543,9 @@ static void delayed_work(struct work_struct *work)
+ 				pr_info("mds%d hung\n", s->s_mds);
+ 			}
+ 		}
+-		if (s->s_state < CEPH_MDS_SESSION_OPEN) {
++		if (s->s_state == CEPH_MDS_SESSION_NEW ||
++		    s->s_state == CEPH_MDS_SESSION_RESTARTING ||
++		    s->s_state == CEPH_MDS_SESSION_REJECTED) {
+ 			/* this mds is failed or recovering, just wait */
+ 			ceph_put_mds_session(s);
+ 			continue;
 -- 
 2.20.1
 
