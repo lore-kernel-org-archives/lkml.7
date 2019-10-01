@@ -4,55 +4,55 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 600C0ECDFB6
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 06:59:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C1A47ECE588
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 06:59:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2D6E821835
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 06:59:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9991121783
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 06:59:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=axtens.net header.i=@axtens.net header.b="HGfYh1Vy"
+	dkim=pass (1024-bit key) header.d=axtens.net header.i=@axtens.net header.b="W6/vpaq8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732787AbfJAG7E (ORCPT
+        id S1732806AbfJAG7L (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Oct 2019 02:59:04 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:46876 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725777AbfJAG7D (ORCPT
+        Tue, 1 Oct 2019 02:59:11 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:45042 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725777AbfJAG7K (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Oct 2019 02:59:03 -0400
-Received: by mail-pf1-f195.google.com with SMTP id q5so7209338pfg.13
-        for <linux-kernel@vger.kernel.org>; Mon, 30 Sep 2019 23:59:03 -0700 (PDT)
+        Tue, 1 Oct 2019 02:59:10 -0400
+Received: by mail-pg1-f194.google.com with SMTP id i14so8911791pgt.11
+        for <linux-kernel@vger.kernel.org>; Mon, 30 Sep 2019 23:59:08 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=axtens.net; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=nT2YfVWqLVVoMBBfkawFdkyFGk3ghEY3fSb+SzvkIKM=;
-        b=HGfYh1VyCCRRrYjyyHksV5PtYqUEUQGZAzjuMeCow2Rb3lbgVQMLAwN7dOYK6q3x0d
-         3q5K8hsf4wYgSeFHQaeY5uV5uPTsa7dMcpYL+kEz8ZVjoV+m5Z2CYNTnACBP3nyl78WX
-         aH+/6C6ji3wYROGNBbGc2VgFuXcqUP1SkXcx4=
+        bh=gfoubv0+TCtoMzcBmtFDPgTVp+GIySDcb+ulhvcFdKw=;
+        b=W6/vpaq86Jg09US4J7Hbr4oX0LH/BW84ggDQVsJougxzeDeHFv7XYI1FY1SJyb9xb5
+         sS+thKdFLvd3A5pp8brMuGFbQtj0TI6jfpwdoO5Zuqr9u/1R9VK8nSnMOjYRUmFFXXT0
+         6e7DUGUQDfHha+XiJKJDMCrYieYr2eSmW5mSk=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=nT2YfVWqLVVoMBBfkawFdkyFGk3ghEY3fSb+SzvkIKM=;
-        b=Y9SvS09FEG68BOarOCwwILt4GT4GbcuLMCEFF312+M7Jnldigdy5+RhIXcCRT56J3M
-         I3LKdTtIbxE7LvlBYt0N2P6N4RaVndpPeYhjefVzyRGw1mxIunlITpCjFxpHRJ1oRmlR
-         oVGt/O79dgD0Cj+8gZ3oKhcvyDkILdqAj4zESWHYARQkYci0eRZ0BXGz6h1oi6E5aJCY
-         71rJg3kAaEwd6gnYxMNhOCI0ANF4sxrTQ25ypc1paCq+3CWrRL5lm4mvuRpnDVIgSdSR
-         G6SGEX2wKzkiS7Xc71F6RZ5kw7A/O8Z+ugAi+3ta36Gl8qn/Fx0Nk9U/nxOzbVQWk1yV
-         3YFA==
-X-Gm-Message-State: APjAAAUmYqOtvKA2RnnATUDcpJpxnUyL/KNHV/TFJIQG9fXHlbnRSugO
-        J+tTMWAxJEt6LbvXn2bLgkX7Ew==
-X-Google-Smtp-Source: APXvYqz8XN8M4FTvdMOasc3Ml6YeYUnTSf9Eg44o2IZlhuRJvc2uu7N4c7IKXOnVmqqQuB4RQFqXww==
-X-Received: by 2002:a62:8286:: with SMTP id w128mr1195213pfd.240.1569913142901;
-        Mon, 30 Sep 2019 23:59:02 -0700 (PDT)
+        bh=gfoubv0+TCtoMzcBmtFDPgTVp+GIySDcb+ulhvcFdKw=;
+        b=fpuZDN5O0PB/T8uGnjep3BpQR8zQ9mafUpoPbrp3yuer+iAAIYzNT/35qZJA7dS1WS
+         a60efMvq74ThXxhjlIPJuH5Yp9AZw+I9xWEFdp/iAvfIGRi7XxetM3XE/wsqHCXuCI5N
+         ZmwtsP/qIcB+7aq0UeZ49fVqI7fibQ2HVvvBNmJfHq7+c57fjnszrbObBHamNWVQxnjB
+         qEdwC5uqu8dWH0AmSx4INZjzpTOnFrP4u31QYVpSYW3CnbIXed2HxMmH0aVBagGOMgVy
+         +1IJ8bO76IRMOfKd+u2Ct/VL+mYLUuI/QsFbIHU6ysPQRbiT5HVwY9e6X2y7v2XFU6rk
+         vRhg==
+X-Gm-Message-State: APjAAAURrhULyhSAxOpN48KZolZXdVI98VnW+z9JR+nAuOT5LhYV61lK
+        UbkJNf3Zb826MyMONUvL/D1+gw==
+X-Google-Smtp-Source: APXvYqy49hcf8sp+Lm2kw8/q9qNcmXmUB4fb4N0RLFd27DlMJvvw1VcqLwM3AzF7aIl8URHPYLiPCw==
+X-Received: by 2002:a17:90a:3b01:: with SMTP id d1mr3700467pjc.81.1569913148491;
+        Mon, 30 Sep 2019 23:59:08 -0700 (PDT)
 Received: from localhost (ppp167-251-205.static.internode.on.net. [59.167.251.205])
-        by smtp.gmail.com with ESMTPSA id u11sm21284342pgb.75.2019.09.30.23.59.01
+        by smtp.gmail.com with ESMTPSA id o64sm4297758pjb.24.2019.09.30.23.59.06
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 30 Sep 2019 23:59:02 -0700 (PDT)
+        Mon, 30 Sep 2019 23:59:07 -0700 (PDT)
 From:   Daniel Axtens <dja@axtens.net>
 To:     kasan-dev@googlegroups.com, linux-mm@kvack.org, x86@kernel.org,
         aryabinin@virtuozzo.com, glider@google.com, luto@kernel.org,
@@ -60,9 +60,9 @@ To:     kasan-dev@googlegroups.com, linux-mm@kvack.org, x86@kernel.org,
         dvyukov@google.com, christophe.leroy@c-s.fr
 Cc:     linuxppc-dev@lists.ozlabs.org, gor@linux.ibm.com,
         Daniel Axtens <dja@axtens.net>
-Subject: [PATCH v8 4/5] x86/kasan: support KASAN_VMALLOC
-Date:   Tue,  1 Oct 2019 16:58:33 +1000
-Message-Id: <20191001065834.8880-5-dja@axtens.net>
+Subject: [PATCH v8 5/5] kasan debug: track pages allocated for vmalloc shadow
+Date:   Tue,  1 Oct 2019 16:58:34 +1000
+Message-Id: <20191001065834.8880-6-dja@axtens.net>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191001065834.8880-1-dja@axtens.net>
 References: <20191001065834.8880-1-dja@axtens.net>
@@ -73,122 +73,98 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In the case where KASAN directly allocates memory to back vmalloc
-space, don't map the early shadow page over it.
+Provide the current number of vmalloc shadow pages in
+/sys/kernel/debug/kasan/vmalloc_shadow_pages.
 
-We prepopulate pgds/p4ds for the range that would otherwise be empty.
-This is required to get it synced to hardware on boot, allowing the
-lower levels of the page tables to be filled dynamically.
-
-Acked-by: Dmitry Vyukov <dvyukov@google.com>
 Signed-off-by: Daniel Axtens <dja@axtens.net>
 
 ---
-v5: fix some checkpatch CHECK warnings. There are some that remain
-    around lines ending with '(': I have not changed these because
-    it's consistent with the rest of the file and it's not easy to
-    see how to fix it without creating an overlong line or lots of
-    temporary variables.
 
-v2: move from faulting in shadow pgds to prepopulating
+v8: rename kasan_vmalloc/shadow_pages -> kasan/vmalloc_shadow_pages
+
+On v4 (no dynamic freeing), I saw the following approximate figures
+on my test VM:
+
+ - fresh boot: 720
+ - after test_vmalloc: ~14000
+
+With v5 (lazy dynamic freeing):
+
+ - boot: ~490-500
+ - running modprobe test_vmalloc pushes the figures up to sometimes
+    as high as ~14000, but they drop down to ~560 after the test ends.
+    I'm not sure where the extra sixty pages are from, but running the
+    test repeately doesn't cause the number to keep growing, so I don't
+    think we're leaking.
+ - with vmap_stack, spawning tasks pushes the figure up to ~4200, then
+    some clearing kicks in and drops it down to previous levels again.
 ---
- arch/x86/Kconfig            |  1 +
- arch/x86/mm/kasan_init_64.c | 60 +++++++++++++++++++++++++++++++++++++
- 2 files changed, 61 insertions(+)
+ mm/kasan/common.c | 26 ++++++++++++++++++++++++++
+ 1 file changed, 26 insertions(+)
 
-diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
-index 96ea2c7449ef..3590651e95f5 100644
---- a/arch/x86/Kconfig
-+++ b/arch/x86/Kconfig
-@@ -135,6 +135,7 @@ config X86
- 	select HAVE_ARCH_JUMP_LABEL
- 	select HAVE_ARCH_JUMP_LABEL_RELATIVE
- 	select HAVE_ARCH_KASAN			if X86_64
-+	select HAVE_ARCH_KASAN_VMALLOC		if X86_64
- 	select HAVE_ARCH_KGDB
- 	select HAVE_ARCH_MMAP_RND_BITS		if MMU
- 	select HAVE_ARCH_MMAP_RND_COMPAT_BITS	if MMU && COMPAT
-diff --git a/arch/x86/mm/kasan_init_64.c b/arch/x86/mm/kasan_init_64.c
-index 296da58f3013..8f00f462709e 100644
---- a/arch/x86/mm/kasan_init_64.c
-+++ b/arch/x86/mm/kasan_init_64.c
-@@ -245,6 +245,51 @@ static void __init kasan_map_early_shadow(pgd_t *pgd)
- 	} while (pgd++, addr = next, addr != end);
+diff --git a/mm/kasan/common.c b/mm/kasan/common.c
+index e33cbab83309..5b924f860a32 100644
+--- a/mm/kasan/common.c
++++ b/mm/kasan/common.c
+@@ -35,6 +35,7 @@
+ #include <linux/vmalloc.h>
+ #include <linux/bug.h>
+ #include <linux/uaccess.h>
++#include <linux/debugfs.h>
+ 
+ #include <asm/tlbflush.h>
+ 
+@@ -750,6 +751,8 @@ core_initcall(kasan_memhotplug_init);
+ #endif
+ 
+ #ifdef CONFIG_KASAN_VMALLOC
++static u64 vmalloc_shadow_pages;
++
+ static int kasan_populate_vmalloc_pte(pte_t *ptep, unsigned long addr,
+ 				      void *unused)
+ {
+@@ -776,6 +779,7 @@ static int kasan_populate_vmalloc_pte(pte_t *ptep, unsigned long addr,
+ 	if (likely(pte_none(*ptep))) {
+ 		set_pte_at(&init_mm, addr, ptep, pte);
+ 		page = 0;
++		vmalloc_shadow_pages++;
+ 	}
+ 	spin_unlock(&init_mm.page_table_lock);
+ 	if (page)
+@@ -829,6 +833,7 @@ static int kasan_depopulate_vmalloc_pte(pte_t *ptep, unsigned long addr,
+ 	if (likely(!pte_none(*ptep))) {
+ 		pte_clear(&init_mm, addr, ptep);
+ 		free_page(page);
++		vmalloc_shadow_pages--;
+ 	}
+ 	spin_unlock(&init_mm.page_table_lock);
+ 
+@@ -947,4 +952,25 @@ void kasan_release_vmalloc(unsigned long start, unsigned long end,
+ 				       (unsigned long)shadow_end);
+ 	}
  }
- 
-+static void __init kasan_shallow_populate_p4ds(pgd_t *pgd,
-+					       unsigned long addr,
-+					       unsigned long end,
-+					       int nid)
++
++static __init int kasan_init_debugfs(void)
 +{
-+	p4d_t *p4d;
-+	unsigned long next;
-+	void *p;
++	struct dentry *root, *count;
 +
-+	p4d = p4d_offset(pgd, addr);
-+	do {
-+		next = p4d_addr_end(addr, end);
++	root = debugfs_create_dir("kasan", NULL);
++	if (IS_ERR(root)) {
++		if (PTR_ERR(root) == -ENODEV)
++			return 0;
++		return PTR_ERR(root);
++	}
 +
-+		if (p4d_none(*p4d)) {
-+			p = early_alloc(PAGE_SIZE, nid, true);
-+			p4d_populate(&init_mm, p4d, p);
-+		}
-+	} while (p4d++, addr = next, addr != end);
++	count = debugfs_create_u64("vmalloc_shadow_pages", 0444, root,
++				   &vmalloc_shadow_pages);
++
++	if (IS_ERR(count))
++		return PTR_ERR(root);
++
++	return 0;
 +}
-+
-+static void __init kasan_shallow_populate_pgds(void *start, void *end)
-+{
-+	unsigned long addr, next;
-+	pgd_t *pgd;
-+	void *p;
-+	int nid = early_pfn_to_nid((unsigned long)start);
-+
-+	addr = (unsigned long)start;
-+	pgd = pgd_offset_k(addr);
-+	do {
-+		next = pgd_addr_end(addr, (unsigned long)end);
-+
-+		if (pgd_none(*pgd)) {
-+			p = early_alloc(PAGE_SIZE, nid, true);
-+			pgd_populate(&init_mm, pgd, p);
-+		}
-+
-+		/*
-+		 * we need to populate p4ds to be synced when running in
-+		 * four level mode - see sync_global_pgds_l4()
-+		 */
-+		kasan_shallow_populate_p4ds(pgd, addr, next, nid);
-+	} while (pgd++, addr = next, addr != (unsigned long)end);
-+}
-+
- #ifdef CONFIG_KASAN_INLINE
- static int kasan_die_handler(struct notifier_block *self,
- 			     unsigned long val,
-@@ -352,9 +397,24 @@ void __init kasan_init(void)
- 	shadow_cpu_entry_end = (void *)round_up(
- 			(unsigned long)shadow_cpu_entry_end, PAGE_SIZE);
- 
-+	/*
-+	 * If we're in full vmalloc mode, don't back vmalloc space with early
-+	 * shadow pages. Instead, prepopulate pgds/p4ds so they are synced to
-+	 * the global table and we can populate the lower levels on demand.
-+	 */
-+#ifdef CONFIG_KASAN_VMALLOC
-+	kasan_shallow_populate_pgds(
-+		kasan_mem_to_shadow((void *)PAGE_OFFSET + MAXMEM),
-+		kasan_mem_to_shadow((void *)VMALLOC_END));
-+
-+	kasan_populate_early_shadow(
-+		kasan_mem_to_shadow((void *)VMALLOC_END + 1),
-+		shadow_cpu_entry_begin);
-+#else
- 	kasan_populate_early_shadow(
- 		kasan_mem_to_shadow((void *)PAGE_OFFSET + MAXMEM),
- 		shadow_cpu_entry_begin);
-+#endif
- 
- 	kasan_populate_shadow((unsigned long)shadow_cpu_entry_begin,
- 			      (unsigned long)shadow_cpu_entry_end, 0);
++late_initcall(kasan_init_debugfs);
+ #endif
 -- 
 2.20.1
 
