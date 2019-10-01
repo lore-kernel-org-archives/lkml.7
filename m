@@ -2,94 +2,130 @@ Return-Path: <SRS0=YRFP=X2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0845DECE587
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 14:57:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A963C352AA
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 14:57:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D212F21872
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 14:57:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5E30721D79
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 14:57:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="knq3ALAQ"
+	dkim=pass (2048-bit key) header.d=rere.qmqm.pl header.i=@rere.qmqm.pl header.b="JsQ1F1kX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389544AbfJAO5D (ORCPT
+        id S2389553AbfJAO5F (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Tue, 1 Oct 2019 10:57:05 -0400
+Received: from rere.qmqm.pl ([91.227.64.183]:27152 "EHLO rere.qmqm.pl"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2389535AbfJAO5D (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 1 Oct 2019 10:57:03 -0400
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:44958 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389343AbfJAO4J (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Oct 2019 10:56:09 -0400
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id x91Eu5ip123818;
-        Tue, 1 Oct 2019 09:56:05 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1569941765;
-        bh=zV3cVdmjhCBXzQdA/5xCOaiT1n6XKbwdMaP1jdy4goo=;
-        h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=knq3ALAQV5MGQ2+ah6RXGtsv/zve2CLhHAbyrLzX8fSDte7MAJf6F12sa0No0AgGi
-         hAUubm3PWPgoJE+4XMSnAI6rnJGDTZfNEObdL0t7C3c6rquZOBIi/FbmQmIIs7a15v
-         0GtopGeB04TRY5GhsV3fexHMC6ln3qSctUkzLuP8=
-Received: from DFLE115.ent.ti.com (dfle115.ent.ti.com [10.64.6.36])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x91Eu4Fo041268
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 1 Oct 2019 09:56:05 -0500
-Received: from DFLE103.ent.ti.com (10.64.6.24) by DFLE115.ent.ti.com
- (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Tue, 1 Oct
- 2019 09:55:54 -0500
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE103.ent.ti.com
- (10.64.6.24) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Tue, 1 Oct 2019 09:56:04 -0500
-Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id x91Eu4iX014674;
-        Tue, 1 Oct 2019 09:56:04 -0500
-From:   Dan Murphy <dmurphy@ti.com>
-To:     <jacek.anaszewski@gmail.com>, <pavel@ucw.cz>
-CC:     <linux-leds@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        Dan Murphy <dmurphy@ti.com>
-Subject: [PATCH v10 02/16] dt-bindings: leds: Add multicolor ID to the color ID list
-Date:   Tue, 1 Oct 2019 09:56:06 -0500
-Message-ID: <20191001145620.11123-3-dmurphy@ti.com>
-X-Mailer: git-send-email 2.22.0.214.g8dca754b1e
-In-Reply-To: <20191001145620.11123-1-dmurphy@ti.com>
-References: <20191001145620.11123-1-dmurphy@ti.com>
+Received: from remote.user (localhost [127.0.0.1])
+        by rere.qmqm.pl (Postfix) with ESMTPSA id 46jMkZ2SSrz4G;
+        Tue,  1 Oct 2019 16:55:02 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=rere.qmqm.pl; s=1;
+        t=1569941704; bh=/oFjgNLU/ZvSelC6tLjw91cHQa877YduGYa+snzVYRU=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=JsQ1F1kX3wGRrlY1a9hWTLA2LaalbBEahiTlqlZOGsDZXb+SyXUwzKD4rbke0EmXG
+         x7N82fQJUZm074OdjoaLeJbSdMG/B3bF3Y+uWGhTlrenGAtWt3MMrBkxoPn3XT0f1v
+         ZYxlbloRZzLwqC97uSfDNoEDk0Yhu006mYNLkwnJtid/YXtL8s7NeBwDWKf2yIH9tk
+         brd/t5cuqt8mnC01f850RppQzimpW7PEbWF1Z5ZrE8uY+2lVF17M9PdYc7BIglHjxm
+         ZiM2Lzi3u2RaucgE3dU7OMpp60GXXQsanht7Z/0Ho1o/zDnV8d5fPbjPMTazBU7wW0
+         JuWnKzqAZOu9g==
+X-Virus-Status: Clean
+X-Virus-Scanned: clamav-milter 0.101.4 at mail
+Date:   Tue, 1 Oct 2019 16:56:56 +0200
+From:   =?iso-8859-2?Q?Micha=B3_Miros=B3aw?= <mirq-linux@rere.qmqm.pl>
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Codrin Ciubotariu <codrin.ciubotariu@microchip.com>,
+        Mark Brown <broonie@kernel.org>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        Ludovic Desroches <ludovic.desroches@microchip.com>,
+        alsa-devel@alsa-project.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] ASoC: atmel: fix atmel_ssc_set_audio link failure
+Message-ID: <20191001145656.GB6905@qmqm.qmqm.pl>
+References: <20191001142116.1172290-1-arnd@arndb.de>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-2
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+In-Reply-To: <20191001142116.1172290-1-arnd@arndb.de>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add a new color ID that is declared as MULTICOLOR as with the
-multicolor framework declaring a definitive color is not accurate
-as the node can contain multiple colors.
+On Tue, Oct 01, 2019 at 04:20:55PM +0200, Arnd Bergmann wrote:
+> The ssc audio driver can call into both pdc and dma backends.  With the
+> latest rework, the logic to do this in a safe way avoiding link errors
+> was removed, bringing back link errors that were fixed long ago in commit
+> 061981ff8cc8 ("ASoC: atmel: properly select dma driver state") such as
+> 
+> sound/soc/atmel/atmel_ssc_dai.o: In function `atmel_ssc_set_audio':
+> atmel_ssc_dai.c:(.text+0xac): undefined reference to `atmel_pcm_pdc_platform_register'
+> 
+> Fix it this time using Makefile hacks and a comment to prevent this
+> from accidentally getting removed again rather than Kconfig hacks.
+> 
+> Fixes: 18291410557f ("ASoC: atmel: enable SOC_SSC_PDC and SOC_SSC_DMA in Kconfig")
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+> ---
+>  sound/soc/atmel/Kconfig  |  4 ++--
+>  sound/soc/atmel/Makefile | 10 ++++++++--
+>  2 files changed, 10 insertions(+), 4 deletions(-)
+> 
+> diff --git a/sound/soc/atmel/Kconfig b/sound/soc/atmel/Kconfig
+> index f118c229ed82..25c31bf64936 100644
+> --- a/sound/soc/atmel/Kconfig
+> +++ b/sound/soc/atmel/Kconfig
+> @@ -10,11 +10,11 @@ config SND_ATMEL_SOC
+>  if SND_ATMEL_SOC
+>  
+>  config SND_ATMEL_SOC_PDC
+> -	tristate
+> +	bool
+>  	depends on HAS_DMA
+>  
+>  config SND_ATMEL_SOC_DMA
+> -	tristate
+> +	bool
+>  	select SND_SOC_GENERIC_DMAENGINE_PCM
+>  
+>  config SND_ATMEL_SOC_SSC
+> diff --git a/sound/soc/atmel/Makefile b/sound/soc/atmel/Makefile
+> index 1f6890ed3738..c7d2989791be 100644
+> --- a/sound/soc/atmel/Makefile
+> +++ b/sound/soc/atmel/Makefile
+> @@ -6,8 +6,14 @@ snd-soc-atmel_ssc_dai-objs := atmel_ssc_dai.o
+>  snd-soc-atmel-i2s-objs := atmel-i2s.o
+>  snd-soc-mchp-i2s-mcc-objs := mchp-i2s-mcc.o
+>  
+> -obj-$(CONFIG_SND_ATMEL_SOC_PDC) += snd-soc-atmel-pcm-pdc.o
+> -obj-$(CONFIG_SND_ATMEL_SOC_DMA) += snd-soc-atmel-pcm-dma.o
+> +# pdc and dma need to both be built-in if any user of
+> +# ssc is built-in.
+> +ifdef CONFIG_SND_ATMEL_SOC_PDC
+> +obj-$(CONFIG_SND_ATMEL_SOC_SSC) += snd-soc-atmel-pcm-pdc.o
+> +endif
+> +ifdef CONFIG_SND_ATMEL_SOC_DMA
+> +obj-$(CONFIG_SND_ATMEL_SOC_SSC) += snd-soc-atmel-pcm-dma.o
+> +endif
+>  obj-$(CONFIG_SND_ATMEL_SOC_SSC) += snd-soc-atmel_ssc_dai.o
+>  obj-$(CONFIG_SND_ATMEL_SOC_I2S) += snd-soc-atmel-i2s.o
+>  obj-$(CONFIG_SND_MCHP_SOC_I2S_MCC) += snd-soc-mchp-i2s-mcc.o
 
-Signed-off-by: Dan Murphy <dmurphy@ti.com>
----
- include/dt-bindings/leds/common.h | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+I was just exploring similar solution, using $(if X,Y) instead, but your
+fix will work just as well.
 
-diff --git a/include/dt-bindings/leds/common.h b/include/dt-bindings/leds/common.h
-index 9e1256a7c1bf..7006d15f71e8 100644
---- a/include/dt-bindings/leds/common.h
-+++ b/include/dt-bindings/leds/common.h
-@@ -29,7 +29,8 @@
- #define LED_COLOR_ID_VIOLET	5
- #define LED_COLOR_ID_YELLOW	6
- #define LED_COLOR_ID_IR		7
--#define LED_COLOR_ID_MAX	8
-+#define LED_COLOR_ID_MULTI	8
-+#define LED_COLOR_ID_MAX	9
- 
- /* Standard LED functions */
- #define LED_FUNCTION_ACTIVITY "activity"
--- 
-2.22.0.214.g8dca754b1e
+Reviewed-by: Micha³ Miros³aw <mirq-linux@rere.qmqm.pl>
 
+Best Regards,
+Micha³ Miros³aw
