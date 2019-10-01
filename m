@@ -2,156 +2,165 @@ Return-Path: <SRS0=YRFP=X2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80DF2C352AA
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 16:56:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 166BFC352AA
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 16:56:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 53FE72168B
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 16:56:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D63A22168B
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 16:56:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569948981;
-	bh=5rOmi/hQpmZC8qAgYpId4kUI81s/ozuuSGWHgczZ5BM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=R/P4VlQaP1F9oh9FKtA3gpMjR/n8tNuH+af9kMyiuPx5mBtnXKwt5PUaH/GCsmJVq
-	 x+9KWfXbSuELRf72gFkdcLa8dRxdFNw///sMHoUfntEBXWBpQPBvg/EPex8iMufX9R
-	 YoN5yyh6ggVgamz/OV826c6ABDayliPFdPbkautM=
+	s=default; t=1569948990;
+	bh=ZZClAxTFEW3c/LpGC1W37IcwlbtijIfprIcMS513UcE=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=PKw+ykFaKsQ968W2UUKIaBJAzGbqWe55jyhIn91iuzT39VniJZZRzLfdM+DffOSa4
+	 XQ9RE1VBoxv+/kS+TOGOLKnsLP07OBdaJiW3KV3ppenAqAYs5VqXuZZ7qMlH+iLovJ
+	 onByI/tbhZ7q946EB6PGgJeULsrViiLc5rbgQaO8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732305AbfJAQ4U (ORCPT
+        id S1732300AbfJAQ4a (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Oct 2019 12:56:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39260 "EHLO mail.kernel.org"
+        Tue, 1 Oct 2019 12:56:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54054 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731801AbfJAQ4O (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Oct 2019 12:56:14 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1731754AbfJAQmO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Oct 2019 12:42:14 -0400
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0A147206BB;
-        Tue,  1 Oct 2019 16:56:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6C28C21924;
+        Tue,  1 Oct 2019 16:42:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569948973;
-        bh=5rOmi/hQpmZC8qAgYpId4kUI81s/ozuuSGWHgczZ5BM=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=0tOVHOQwoEb0OxWlsUfzG6QSwR/67paORUCTvwb3UaFOhbnfzkMSlLGkYTRiIJQQ1
-         Xim6ULBJisHYLja++NzlTwlRQQ4o5CY4EdqD91HQhPrWDknDarp5s2rM63i9F87/eE
-         93URjYeeEg6jxTWkYLTulKf2l+yql5WIBEXxaAj0=
-Date:   Tue, 1 Oct 2019 18:56:11 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Potnuri Bharat Teja <bharat@chelsio.com>,
-        Doug Ledford <dledford@redhat.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>
-Cc:     linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Nicolas Waisman <nico@semmle.com>
-Subject: [PATCH v2] cxgb4: do not dma memory off of the stack
-Message-ID: <20191001165611.GA3542072@kroah.com>
-References: <20191001153917.GA3498459@kroah.com>
+        s=default; t=1569948133;
+        bh=ZZClAxTFEW3c/LpGC1W37IcwlbtijIfprIcMS513UcE=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=EM+VlOTm8cSOa9sEHTpxTPTVuC5gysfgaKupFwokSdssA7bVJMxgDVWTojDff0Se7
+         UfWHyR3oF0h4ejVdFE7kUZrbic2Z5SBqY7rdtIg7R9QYng6iQc426pcRIpZwHEYrYh
+         MxxF934ZMAIS6SrqUF0MLy3956HO1MLfXidsD4bc=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Sasha Levin <sashal@kernel.org>, linux-nvdimm@lists.01.org
+Subject: [PATCH AUTOSEL 5.2 33/63] libnvdimm/region: Initialize bad block for volatile namespaces
+Date:   Tue,  1 Oct 2019 12:40:55 -0400
+Message-Id: <20191001164125.15398-33-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20191001164125.15398-1-sashal@kernel.org>
+References: <20191001164125.15398-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191001153917.GA3498459@kroah.com>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Nicolas pointed out that the cxgb4 driver is doing dma off of the stack,
-which is generally considered a very bad thing.  On some architectures
-it could be a security problem, but odds are none of them actually run
-this driver, so it's just a "normal" bug.
+From: "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>
 
-Resolve this by allocating the memory for a message off of the heap
-instead of the stack.  kmalloc() always will give us a proper memory
-location that DMA will work correctly from.
+[ Upstream commit c42adf87e4e7ed77f6ffe288dc90f980d07d68df ]
 
-Reported-by: Nicolas Waisman <nico@semmle.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+We do check for a bad block during namespace init and that use
+region bad block list. We need to initialize the bad block
+for volatile regions for this to work. We also observe a lockdep
+warning as below because the lock is not initialized correctly
+since we skip bad block init for volatile regions.
 
+ INFO: trying to register non-static key.
+ the code is fine but needs lockdep annotation.
+ turning off the locking correctness validator.
+ CPU: 2 PID: 1 Comm: swapper/0 Not tainted 5.3.0-rc1-15699-g3dee241c937e #149
+ Call Trace:
+ [c0000000f95cb250] [c00000000147dd84] dump_stack+0xe8/0x164 (unreliable)
+ [c0000000f95cb2a0] [c00000000022ccd8] register_lock_class+0x308/0xa60
+ [c0000000f95cb3a0] [c000000000229cc0] __lock_acquire+0x170/0x1ff0
+ [c0000000f95cb4c0] [c00000000022c740] lock_acquire+0x220/0x270
+ [c0000000f95cb580] [c000000000a93230] badblocks_check+0xc0/0x290
+ [c0000000f95cb5f0] [c000000000d97540] nd_pfn_validate+0x5c0/0x7f0
+ [c0000000f95cb6d0] [c000000000d98300] nd_dax_probe+0xd0/0x1f0
+ [c0000000f95cb760] [c000000000d9b66c] nd_pmem_probe+0x10c/0x160
+ [c0000000f95cb790] [c000000000d7f5ec] nvdimm_bus_probe+0x10c/0x240
+ [c0000000f95cb820] [c000000000d0f844] really_probe+0x254/0x4e0
+ [c0000000f95cb8b0] [c000000000d0fdfc] driver_probe_device+0x16c/0x1e0
+ [c0000000f95cb930] [c000000000d10238] device_driver_attach+0x68/0xa0
+ [c0000000f95cb970] [c000000000d1040c] __driver_attach+0x19c/0x1c0
+ [c0000000f95cb9f0] [c000000000d0c4c4] bus_for_each_dev+0x94/0x130
+ [c0000000f95cba50] [c000000000d0f014] driver_attach+0x34/0x50
+ [c0000000f95cba70] [c000000000d0e208] bus_add_driver+0x178/0x2f0
+ [c0000000f95cbb00] [c000000000d117c8] driver_register+0x108/0x170
+ [c0000000f95cbb70] [c000000000d7edb0] __nd_driver_register+0xe0/0x100
+ [c0000000f95cbbd0] [c000000001a6baa4] nd_pmem_driver_init+0x34/0x48
+ [c0000000f95cbbf0] [c0000000000106f4] do_one_initcall+0x1d4/0x4b0
+ [c0000000f95cbcd0] [c0000000019f499c] kernel_init_freeable+0x544/0x65c
+ [c0000000f95cbdb0] [c000000000010d6c] kernel_init+0x2c/0x180
+ [c0000000f95cbe20] [c00000000000b954] ret_from_kernel_thread+0x5c/0x68
+
+Signed-off-by: Aneesh Kumar K.V <aneesh.kumar@linux.ibm.com>
+Link: https://lore.kernel.org/r/20190919083355.26340-1-aneesh.kumar@linux.ibm.com
+Signed-off-by: Dan Williams <dan.j.williams@intel.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- v2: clean up memory on error case, pointed out by Nicolas
- v1: https://lore.kernel.org/r/20191001153917.GA3498459@kroah.com
-     Test-built only, I don't have this hardware to actually run this
-     code at all.
+ drivers/nvdimm/bus.c         | 2 +-
+ drivers/nvdimm/region.c      | 4 ++--
+ drivers/nvdimm/region_devs.c | 4 ++--
+ 3 files changed, 5 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/infiniband/hw/cxgb4/mem.c b/drivers/infiniband/hw/cxgb4/mem.c
-index aa772ee0706f..35c284af574d 100644
---- a/drivers/infiniband/hw/cxgb4/mem.c
-+++ b/drivers/infiniband/hw/cxgb4/mem.c
-@@ -275,13 +275,17 @@ static int write_tpt_entry(struct c4iw_rdev *rdev, u32 reset_tpt_entry,
- 			   struct sk_buff *skb, struct c4iw_wr_wait *wr_waitp)
- {
- 	int err;
--	struct fw_ri_tpte tpt;
-+	struct fw_ri_tpte *tpt;
- 	u32 stag_idx;
- 	static atomic_t key;
+diff --git a/drivers/nvdimm/bus.c b/drivers/nvdimm/bus.c
+index df41f3571dc97..0d97158e7ac3f 100644
+--- a/drivers/nvdimm/bus.c
++++ b/drivers/nvdimm/bus.c
+@@ -176,7 +176,7 @@ static int nvdimm_clear_badblocks_region(struct device *dev, void *data)
+ 	sector_t sector;
  
- 	if (c4iw_fatal_error(rdev))
- 		return -EIO;
+ 	/* make sure device is a region */
+-	if (!is_nd_pmem(dev))
++	if (!is_memory(dev))
+ 		return 0;
  
-+	tpt = kmalloc(sizeof(*tpt), GFP_KERNEL);
-+	if (!tpt)
-+		return -ENOMEM;
-+
- 	stag_state = stag_state > 0;
- 	stag_idx = (*stag) >> 8;
+ 	nd_region = to_nd_region(dev);
+diff --git a/drivers/nvdimm/region.c b/drivers/nvdimm/region.c
+index 488c47ac4c4ae..0c618e478e65e 100644
+--- a/drivers/nvdimm/region.c
++++ b/drivers/nvdimm/region.c
+@@ -34,7 +34,7 @@ static int nd_region_probe(struct device *dev)
+ 	if (rc)
+ 		return rc;
  
-@@ -291,6 +295,7 @@ static int write_tpt_entry(struct c4iw_rdev *rdev, u32 reset_tpt_entry,
- 			mutex_lock(&rdev->stats.lock);
- 			rdev->stats.stag.fail++;
- 			mutex_unlock(&rdev->stats.lock);
-+			kfree(tpt);
- 			return -ENOMEM;
- 		}
- 		mutex_lock(&rdev->stats.lock);
-@@ -305,28 +310,28 @@ static int write_tpt_entry(struct c4iw_rdev *rdev, u32 reset_tpt_entry,
+-	if (is_nd_pmem(&nd_region->dev)) {
++	if (is_memory(&nd_region->dev)) {
+ 		struct resource ndr_res;
  
- 	/* write TPT entry */
- 	if (reset_tpt_entry)
--		memset(&tpt, 0, sizeof(tpt));
-+		memset(tpt, 0, sizeof(*tpt));
- 	else {
--		tpt.valid_to_pdid = cpu_to_be32(FW_RI_TPTE_VALID_F |
-+		tpt->valid_to_pdid = cpu_to_be32(FW_RI_TPTE_VALID_F |
- 			FW_RI_TPTE_STAGKEY_V((*stag & FW_RI_TPTE_STAGKEY_M)) |
- 			FW_RI_TPTE_STAGSTATE_V(stag_state) |
- 			FW_RI_TPTE_STAGTYPE_V(type) | FW_RI_TPTE_PDID_V(pdid));
--		tpt.locread_to_qpid = cpu_to_be32(FW_RI_TPTE_PERM_V(perm) |
-+		tpt->locread_to_qpid = cpu_to_be32(FW_RI_TPTE_PERM_V(perm) |
- 			(bind_enabled ? FW_RI_TPTE_MWBINDEN_F : 0) |
- 			FW_RI_TPTE_ADDRTYPE_V((zbva ? FW_RI_ZERO_BASED_TO :
- 						      FW_RI_VA_BASED_TO))|
- 			FW_RI_TPTE_PS_V(page_size));
--		tpt.nosnoop_pbladdr = !pbl_size ? 0 : cpu_to_be32(
-+		tpt->nosnoop_pbladdr = !pbl_size ? 0 : cpu_to_be32(
- 			FW_RI_TPTE_PBLADDR_V(PBL_OFF(rdev, pbl_addr)>>3));
--		tpt.len_lo = cpu_to_be32((u32)(len & 0xffffffffUL));
--		tpt.va_hi = cpu_to_be32((u32)(to >> 32));
--		tpt.va_lo_fbo = cpu_to_be32((u32)(to & 0xffffffffUL));
--		tpt.dca_mwbcnt_pstag = cpu_to_be32(0);
--		tpt.len_hi = cpu_to_be32((u32)(len >> 32));
-+		tpt->len_lo = cpu_to_be32((u32)(len & 0xffffffffUL));
-+		tpt->va_hi = cpu_to_be32((u32)(to >> 32));
-+		tpt->va_lo_fbo = cpu_to_be32((u32)(to & 0xffffffffUL));
-+		tpt->dca_mwbcnt_pstag = cpu_to_be32(0);
-+		tpt->len_hi = cpu_to_be32((u32)(len >> 32));
- 	}
- 	err = write_adapter_mem(rdev, stag_idx +
- 				(rdev->lldi.vr->stag.start >> 5),
--				sizeof(tpt), &tpt, skb, wr_waitp);
-+				sizeof(*tpt), tpt, skb, wr_waitp);
+ 		if (devm_init_badblocks(dev, &nd_region->bb))
+@@ -123,7 +123,7 @@ static void nd_region_notify(struct device *dev, enum nvdimm_event event)
+ 		struct nd_region *nd_region = to_nd_region(dev);
+ 		struct resource res;
  
- 	if (reset_tpt_entry) {
- 		c4iw_put_resource(&rdev->resource.tpt_table, stag_idx);
-@@ -334,6 +339,7 @@ static int write_tpt_entry(struct c4iw_rdev *rdev, u32 reset_tpt_entry,
- 		rdev->stats.stag.cur -= 32;
- 		mutex_unlock(&rdev->stats.lock);
- 	}
-+	kfree(tpt);
- 	return err;
- }
+-		if (is_nd_pmem(&nd_region->dev)) {
++		if (is_memory(&nd_region->dev)) {
+ 			res.start = nd_region->ndr_start;
+ 			res.end = nd_region->ndr_start +
+ 				nd_region->ndr_size - 1;
+diff --git a/drivers/nvdimm/region_devs.c b/drivers/nvdimm/region_devs.c
+index a15276cdec7d4..0a02b2b308f6f 100644
+--- a/drivers/nvdimm/region_devs.c
++++ b/drivers/nvdimm/region_devs.c
+@@ -630,11 +630,11 @@ static umode_t region_visible(struct kobject *kobj, struct attribute *a, int n)
+ 	if (!is_memory(dev) && a == &dev_attr_dax_seed.attr)
+ 		return 0;
  
+-	if (!is_nd_pmem(dev) && a == &dev_attr_badblocks.attr)
++	if (!is_memory(dev) && a == &dev_attr_badblocks.attr)
+ 		return 0;
+ 
+ 	if (a == &dev_attr_resource.attr) {
+-		if (is_nd_pmem(dev))
++		if (is_memory(dev))
+ 			return 0400;
+ 		else
+ 			return 0;
+-- 
+2.20.1
+
