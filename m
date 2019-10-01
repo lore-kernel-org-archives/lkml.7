@@ -4,50 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 01022ECE58A
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 16:55:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B8B0ECE58A
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 16:55:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CB5E32168B
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 16:55:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CFD1F2168B
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 16:55:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569948932;
-	bh=tIbenjcvZqPaNdBtku31+1LasH3s1munDjqFxyHW7Yw=;
+	s=default; t=1569948941;
+	bh=mzEWVmCzDzk3Hf6JP35BoydyehFPyUmjHoYwXHYpf5I=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=HvYbfZYrOQu6K8d/U93WbLtMaGqU/hhGoq6nOQ5STGD8mrByU7cWVaEgccgnacMIa
-	 2Um+rREDN2mVL4Z38RiOGIoc9KO5OIck3iToOFwXkgT35XueS2L7w6iuGHLjZ5uA1w
-	 5CkTODFsTWE2xsexdq8tsNf09QyhPLJa4Z8RVZLU=
+	b=vsY2WHdJpZTjhiItnEpyPsBDsRRsY/76u0P5fYo3nvyTg98awKvtBPK0sNKi1U2Ef
+	 SD1YAec2GwlZRypt0ipQvAz1oUu+gfyXwkb2pZJkGfAfek9Q5CmuW3bJb3UsQrV51t
+	 XKY1qO9nD7na2Ld91Pjbz2U3/NPmBQX/gSnyKUBc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389529AbfJAQz0 (ORCPT
+        id S1732077AbfJAQmk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Oct 2019 12:55:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54686 "EHLO mail.kernel.org"
+        Tue, 1 Oct 2019 12:42:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54458 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732142AbfJAQmo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Oct 2019 12:42:44 -0400
+        id S1732017AbfJAQmb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Oct 2019 12:42:31 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E0275205C9;
-        Tue,  1 Oct 2019 16:42:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DF1AF21D79;
+        Tue,  1 Oct 2019 16:42:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569948163;
-        bh=tIbenjcvZqPaNdBtku31+1LasH3s1munDjqFxyHW7Yw=;
+        s=default; t=1569948150;
+        bh=mzEWVmCzDzk3Hf6JP35BoydyehFPyUmjHoYwXHYpf5I=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=U7CD5UUK5fR7qnt+lBFbU9gr4u0GXOa317/jZJgv/6xkOTwOsnqHw5sAsAKAS9a8r
-         jb6Yzci52tEMuzIXS2RvUQ/Tkz/3djSvnn3yuqH5s6X2SrSTG3AulqNy2GfJGAC4P8
-         bgvZ5HzqiPrCGsGzFLuY2D+mA/vnGMW8Thj94JZg=
+        b=t41KtSRHge6rv1+ZvJC5EiiMHX8lvqTwd4ZP+kQcbScnm+fI7I/tSuqjNaKbL0F/P
+         9wqWBLIAbFC1KlJf1Bfqp1Cu0LclBN/BOjSnFG2lP26Gsh0sIeAaFmZNP6Y8oGwj3d
+         2+1oTk7YfYX4ylyNrHdHlRqE79DuYeeNHjQ7BTLo=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Xin Long <lucien.xin@gmail.com>, Xiumei Mu <xmu@redhat.com>,
-        Fei Liu <feliu@redhat.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.2 50/63] macsec: drop skb sk before calling gro_cells_receive
-Date:   Tue,  1 Oct 2019 12:41:12 -0400
-Message-Id: <20191001164125.15398-50-sashal@kernel.org>
+Cc:     Thomas Richter <tmricht@linux.ibm.com>,
+        Andreas Krebbel <krebbel@linux.ibm.com>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Hendrik Brueckner <brueckner@linux.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.2 44/63] perf build: Add detection of java-11-openjdk-devel package
+Date:   Tue,  1 Oct 2019 12:41:06 -0400
+Message-Id: <20191001164125.15398-44-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191001164125.15398-1-sashal@kernel.org>
 References: <20191001164125.15398-1-sashal@kernel.org>
@@ -60,64 +63,60 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Xin Long <lucien.xin@gmail.com>
+From: Thomas Richter <tmricht@linux.ibm.com>
 
-[ Upstream commit ba56d8ce38c8252fff5b745db3899cf092578ede ]
+[ Upstream commit 815c1560bf8fd522b8d93a1d727868b910c1cc24 ]
 
-Fei Liu reported a crash when doing netperf on a topo of macsec
-dev over veth:
+With Java 11 there is no seperate JRE anymore.
 
-  [  448.919128] refcount_t: underflow; use-after-free.
-  [  449.090460] Call trace:
-  [  449.092895]  refcount_sub_and_test+0xb4/0xc0
-  [  449.097155]  tcp_wfree+0x2c/0x150
-  [  449.100460]  ip_rcv+0x1d4/0x3a8
-  [  449.103591]  __netif_receive_skb_core+0x554/0xae0
-  [  449.108282]  __netif_receive_skb+0x28/0x78
-  [  449.112366]  netif_receive_skb_internal+0x54/0x100
-  [  449.117144]  napi_gro_complete+0x70/0xc0
-  [  449.121054]  napi_gro_flush+0x6c/0x90
-  [  449.124703]  napi_complete_done+0x50/0x130
-  [  449.128788]  gro_cell_poll+0x8c/0xa8
-  [  449.132351]  net_rx_action+0x16c/0x3f8
-  [  449.136088]  __do_softirq+0x128/0x320
+Details:
 
-The issue was caused by skb's true_size changed without its sk's
-sk_wmem_alloc increased in tcp/skb_gro_receive(). Later when the
-skb is being freed and the skb's truesize is subtracted from its
-sk's sk_wmem_alloc in tcp_wfree(), underflow occurs.
+  https://coderanch.com/t/701603/java/JRE-JDK
 
-macsec is calling gro_cells_receive() to receive a packet, which
-actually requires skb->sk to be NULL. However when macsec dev is
-over veth, it's possible the skb->sk is still set if the skb was
-not unshared or expanded from the peer veth.
+Therefore the detection of the JRE needs to be adapted.
 
-ip_rcv() is calling skb_orphan() to drop the skb's sk for tproxy,
-but it is too late for macsec's calling gro_cells_receive(). So
-fix it by dropping the skb's sk earlier on rx path of macsec.
+This change works for s390 and x86.  I have not tested other platforms.
 
-Fixes: 5491e7c6b1a9 ("macsec: enable GRO and RPS on macsec devices")
-Reported-by: Xiumei Mu <xmu@redhat.com>
-Reported-by: Fei Liu <feliu@redhat.com>
-Signed-off-by: Xin Long <lucien.xin@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Committer testing:
+
+Continues to work with the OpenJDK 8:
+
+  $ rm -f ~acme/lib64/libperf-jvmti.so
+  $ rpm -qa | grep jdk-devel
+  java-1.8.0-openjdk-devel-1.8.0.222.b10-0.fc30.x86_64
+  $ git log --oneline -1
+  a51937170f33 (HEAD -> perf/core) perf build: Add detection of java-11-openjdk-devel package
+  $ rm -rf /tmp/build/perf ; mkdir -p /tmp/build/perf ; make -C tools/perf O=/tmp/build/perf install > /dev/null 2>1
+  $ ls -la ~acme/lib64/libperf-jvmti.so
+  -rwxr-xr-x. 1 acme acme 230744 Sep 24 16:46 /home/acme/lib64/libperf-jvmti.so
+  $
+
+Suggested-by: Andreas Krebbel <krebbel@linux.ibm.com>
+Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
+Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: Heiko Carstens <heiko.carstens@de.ibm.com>
+Cc: Hendrik Brueckner <brueckner@linux.ibm.com>
+Cc: Vasily Gorbik <gor@linux.ibm.com>
+Link: http://lore.kernel.org/lkml/20190909114116.50469-4-tmricht@linux.ibm.com
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/macsec.c | 1 +
- 1 file changed, 1 insertion(+)
+ tools/perf/Makefile.config | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/macsec.c b/drivers/net/macsec.c
-index 8f46aa1ddec01..cb7637364b40d 100644
---- a/drivers/net/macsec.c
-+++ b/drivers/net/macsec.c
-@@ -1235,6 +1235,7 @@ static rx_handler_result_t macsec_handle_frame(struct sk_buff **pskb)
- 		macsec_rxsa_put(rx_sa);
- 	macsec_rxsc_put(rx_sc);
- 
-+	skb_orphan(skb);
- 	ret = gro_cells_receive(&macsec->gro_cells, skb);
- 	if (ret == NET_RX_SUCCESS)
- 		count_rx(dev, skb->len);
+diff --git a/tools/perf/Makefile.config b/tools/perf/Makefile.config
+index 17b81bc403e46..f7115501435f5 100644
+--- a/tools/perf/Makefile.config
++++ b/tools/perf/Makefile.config
+@@ -902,7 +902,7 @@ ifndef NO_JVMTI
+     JDIR=$(shell /usr/sbin/update-java-alternatives -l | head -1 | awk '{print $$3}')
+   else
+     ifneq (,$(wildcard /usr/sbin/alternatives))
+-      JDIR=$(shell /usr/sbin/alternatives --display java | tail -1 | cut -d' ' -f 5 | sed 's%/jre/bin/java.%%g')
++      JDIR=$(shell /usr/sbin/alternatives --display java | tail -1 | cut -d' ' -f 5 | sed -e 's%/jre/bin/java.%%g' -e 's%/bin/java.%%g')
+     endif
+   endif
+   ifndef JDIR
 -- 
 2.20.1
 
