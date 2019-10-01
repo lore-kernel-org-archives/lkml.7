@@ -2,114 +2,126 @@ Return-Path: <SRS0=YRFP=X2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CD2BAC388F3
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 06:04:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AEA34ECE588
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 06:08:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A304421872
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 06:04:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BjC4sH+a"
+	by mail.kernel.org (Postfix) with ESMTP id 8F24C206BB
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 06:08:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732036AbfJAGE5 (ORCPT
+        id S1732560AbfJAGIS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Oct 2019 02:04:57 -0400
-Received: from mail-oi1-f193.google.com ([209.85.167.193]:38992 "EHLO
-        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725777AbfJAGE5 (ORCPT
+        Tue, 1 Oct 2019 02:08:18 -0400
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:55471 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732347AbfJAGIS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Oct 2019 02:04:57 -0400
-Received: by mail-oi1-f193.google.com with SMTP id w144so13364016oia.6;
-        Mon, 30 Sep 2019 23:04:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=oEIJNBUFx9U+QiZqRvXaEBKRw5Gehkx+h0Lui6mqiMk=;
-        b=BjC4sH+aVzzM5CI09HoOBZVGXyJKiHbuY+VyANdqhQi7Iut83Q5ZlYz4Izw/lS8mCs
-         Iu1Af+2xTs63Py+2AAvL4vLj7rHEPCGfv67X4xHpg7g54K3RH0pwD2XUDfa6znT22YqB
-         U1KR0LDf0CYqIArYS5JapKAuSlQz+3MEDvr+DZBiaXnnLU5hVZkysTYLuBATmsvGNplu
-         Hje4WJ8e2XT/j5+ZCvpAc8pO5+gu3o514VVpjUAybEodIxbZ8GnT40NMgnEqImbTF4i8
-         aV9Uxq9I5teqk32KhCEgcRW/Fhe5BnDA6yqcmjibKujWeJOwIiYxRnFhwA5D04SPrYaF
-         3/HA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=oEIJNBUFx9U+QiZqRvXaEBKRw5Gehkx+h0Lui6mqiMk=;
-        b=UzdzqnNkb0yM/Usr+HlDz3l0uurYc4O2+zoR0dWN2U568AOlhQdpgYz57mKU4mjOI4
-         tmG1dSLhCNGbn3Fmr2dflm2ZE1dLH3C7afzOGS5xEQRCQzdN6nrAhTAc+XvQByDh2uFp
-         qMOG5TVt5rbz7T4GOFe5/bb0neEFqsPW67kVLHXKtjWqUFYkNDDwdCL2zL772VVgIYJw
-         HDmJLQzwGbrfRymJuEAiYnWVxvOU25OCi5aWnW6zoL+I2d3hn9Atqz7GMJR3POWdFSUG
-         4tZxbgqa+dXPAOQcz0tAz+08VM1a2Z2RQZigfyW/sd+C+MSacOeJeTcNCgY/3zBKappU
-         Y5Yw==
-X-Gm-Message-State: APjAAAUqCQ2vifoD95YmlkqM4WKiGrjKKgK9tWSVD79S4wOcTIrQGUlm
-        T2Bo+oFYjZ1jNrtnrk+RSDij5s5/PP9vSabsb6pHIngQMEo=
-X-Google-Smtp-Source: APXvYqwCpZS0Ku9+O/t4MlJT0csmkVhw/Syu2/K4LLXJyXh2SPQNSLC6V9yrcUX9tdak9gia//rFrA02hsACfX6T6m0=
-X-Received: by 2002:aca:5ed4:: with SMTP id s203mr2323789oib.101.1569909896234;
- Mon, 30 Sep 2019 23:04:56 -0700 (PDT)
+        Tue, 1 Oct 2019 02:08:18 -0400
+Received: from dude.hi.pengutronix.de ([2001:67c:670:100:1d::7])
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ore@pengutronix.de>)
+        id 1iFBKY-0005n4-S4; Tue, 01 Oct 2019 08:08:14 +0200
+Received: from ore by dude.hi.pengutronix.de with local (Exim 4.92)
+        (envelope-from <ore@pengutronix.de>)
+        id 1iFBKW-0006Ne-R5; Tue, 01 Oct 2019 08:08:12 +0200
+From:   Oleksij Rempel <o.rempel@pengutronix.de>
+To:     Andrew Lunn <andrew@lunn.ch>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Heiner Kallweit <hkallweit1@gmail.com>
+Cc:     Oleksij Rempel <o.rempel@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v2 3/3] net: phy: at803x: remove probe and struct at803x_priv
+Date:   Tue,  1 Oct 2019 08:08:11 +0200
+Message-Id: <20191001060811.24291-4-o.rempel@pengutronix.de>
+X-Mailer: git-send-email 2.23.0
+In-Reply-To: <20191001060811.24291-1-o.rempel@pengutronix.de>
+References: <20191001060811.24291-1-o.rempel@pengutronix.de>
 MIME-Version: 1.0
-References: <20190930130644.8704-1-bparrot@ti.com> <20190930130644.8704-5-bparrot@ti.com>
-In-Reply-To: <20190930130644.8704-5-bparrot@ti.com>
-From:   "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
-Date:   Tue, 1 Oct 2019 07:04:30 +0100
-Message-ID: <CA+V-a8tw1ydsiK1n0ctDEeg6dAUAD+oyMSh1S3n+X4DfiAMkOA@mail.gmail.com>
-Subject: Re: [Patch v5 4/8] media: i2c: ov2659: fix s_stream return value
-To:     Benoit Parrot <bparrot@ti.com>
-Cc:     Hans Verkuil <hverkuil@xs4all.nl>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        linux-media <linux-media@vger.kernel.org>,
-        devicetree@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::7
+X-SA-Exim-Mail-From: ore@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Sep 30, 2019 at 2:07 PM Benoit Parrot <bparrot@ti.com> wrote:
->
-> In ov2659_s_stream() return value for invoked function should be checked
-> and propagated.
->
-> Signed-off-by: Benoit Parrot <bparrot@ti.com>
-> ---
->  drivers/media/i2c/ov2659.c | 14 +++++++++-----
->  1 file changed, 9 insertions(+), 5 deletions(-)
->
-Acked-by: Lad, Prabhakar <prabhakar.csengg@gmail.com>
+struct at803x_priv is never used in this driver. So remove it
+and the probe function allocating it.
 
-Cheers,
---Prabhakar Lad
+Suggested-by: Heiner Kallweit <hkallweit1@gmail.com>
+Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
+---
+ drivers/net/phy/at803x.c | 21 ---------------------
+ 1 file changed, 21 deletions(-)
 
-> diff --git a/drivers/media/i2c/ov2659.c b/drivers/media/i2c/ov2659.c
-> index f77320e8a60d..da181a13cf44 100644
-> --- a/drivers/media/i2c/ov2659.c
-> +++ b/drivers/media/i2c/ov2659.c
-> @@ -1187,11 +1187,15 @@ static int ov2659_s_stream(struct v4l2_subdev *sd, int on)
->                 goto unlock;
->         }
->
-> -       ov2659_set_pixel_clock(ov2659);
-> -       ov2659_set_frame_size(ov2659);
-> -       ov2659_set_format(ov2659);
-> -       ov2659_set_streaming(ov2659, 1);
-> -       ov2659->streaming = on;
-> +       ret = ov2659_set_pixel_clock(ov2659);
-> +       if (!ret)
-> +               ret = ov2659_set_frame_size(ov2659);
-> +       if (!ret)
-> +               ret = ov2659_set_format(ov2659);
-> +       if (!ret) {
-> +               ov2659_set_streaming(ov2659, 1);
-> +               ov2659->streaming = on;
-> +       }
->
->  unlock:
->         mutex_unlock(&ov2659->lock);
-> --
-> 2.17.1
->
+diff --git a/drivers/net/phy/at803x.c b/drivers/net/phy/at803x.c
+index 42492f83c8d7..e64f77e152f4 100644
+--- a/drivers/net/phy/at803x.c
++++ b/drivers/net/phy/at803x.c
+@@ -63,10 +63,6 @@ MODULE_DESCRIPTION("Atheros 803x PHY driver");
+ MODULE_AUTHOR("Matus Ujhelyi");
+ MODULE_LICENSE("GPL");
+ 
+-struct at803x_priv {
+-	bool phy_reset:1;
+-};
+-
+ struct at803x_context {
+ 	u16 bmcr;
+ 	u16 advertise;
+@@ -232,20 +228,6 @@ static int at803x_resume(struct phy_device *phydev)
+ 	return phy_modify(phydev, MII_BMCR, BMCR_PDOWN | BMCR_ISOLATE, 0);
+ }
+ 
+-static int at803x_probe(struct phy_device *phydev)
+-{
+-	struct device *dev = &phydev->mdio.dev;
+-	struct at803x_priv *priv;
+-
+-	priv = devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
+-	if (!priv)
+-		return -ENOMEM;
+-
+-	phydev->priv = priv;
+-
+-	return 0;
+-}
+-
+ static int at803x_config_init(struct phy_device *phydev)
+ {
+ 	int ret;
+@@ -367,7 +349,6 @@ static struct phy_driver at803x_driver[] = {
+ 	/* ATHEROS 8035 */
+ 	PHY_ID_MATCH_EXACT(ATH8035_PHY_ID),
+ 	.name			= "Atheros 8035 ethernet",
+-	.probe			= at803x_probe,
+ 	.config_init		= at803x_config_init,
+ 	.set_wol		= at803x_set_wol,
+ 	.get_wol		= at803x_get_wol,
+@@ -380,7 +361,6 @@ static struct phy_driver at803x_driver[] = {
+ 	/* ATHEROS 8030 */
+ 	PHY_ID_MATCH_EXACT(ATH8030_PHY_ID),
+ 	.name			= "Atheros 8030 ethernet",
+-	.probe			= at803x_probe,
+ 	.config_init		= at803x_config_init,
+ 	.link_change_notify	= at803x_link_change_notify,
+ 	.set_wol		= at803x_set_wol,
+@@ -394,7 +374,6 @@ static struct phy_driver at803x_driver[] = {
+ 	/* ATHEROS 8031 */
+ 	PHY_ID_MATCH_EXACT(ATH8031_PHY_ID),
+ 	.name			= "Atheros 8031 ethernet",
+-	.probe			= at803x_probe,
+ 	.config_init		= at803x_config_init,
+ 	.set_wol		= at803x_set_wol,
+ 	.get_wol		= at803x_get_wol,
+-- 
+2.23.0
+
