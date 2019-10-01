@@ -2,83 +2,104 @@ Return-Path: <SRS0=YRFP=X2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3747AECE587
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 16:53:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D9CAECE587
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 16:53:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F04CA21924
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 16:53:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="ZaDS95R+"
+	by mail.kernel.org (Postfix) with ESMTP id 60D6C21783
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 16:53:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1569948783;
+	bh=tJCaqfcO8B+AE8KOjoSqsm4KEI4rGIfQR2coy5zqq08=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=vLFZWvtJH14t781crQEqZ4EwbWeBdU+0sQDdGWmDC5eV+hLn0ktPJKLAEMpGL0ezo
+	 w2z8pAKVu0MmzxMUeZ7r2VvGUpIqGNWqXRQuzTdj9YUZtN09Qz9mqH0fHxm4A16hl9
+	 zbX8VCVVGv9jB66mExWjxRukZG3QcNNJ0Qk3Mrjk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389419AbfJAQxA (ORCPT
+        id S2389379AbfJAQw5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Oct 2019 12:53:00 -0400
-Received: from vps0.lunn.ch ([185.16.172.187]:56510 "EHLO vps0.lunn.ch"
+        Tue, 1 Oct 2019 12:52:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55710 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389331AbfJAQw4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Oct 2019 12:52:56 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-        List-Post:List-Owner:List-Archive;
-        bh=FX5jf20eacmB/0gFXEhbZpatqYKCnwg235wY4yTy5I8=; b=ZaDS95R+qKbRGCSKbOtuDkKVkt
-        /C/hkhascHZ5lWv9IFuRxtzt2/pOybQ0vbmd7SmvBukkhoPdpz691km29114XSaqO9j/geTyTDrqU
-        2RjCogdwSyQJEKXMJsarWOGVkqEDvUu6l3PoKFZzHIaFAzrFPMgAJmAgkQmCeG60SaJg=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.92.2)
-        (envelope-from <andrew@lunn.ch>)
-        id 1iFLOJ-0001ii-4j; Tue, 01 Oct 2019 18:52:47 +0200
-Date:   Tue, 1 Oct 2019 18:52:47 +0200
-From:   Andrew Lunn <andrew@lunn.ch>
-To:     Florian Fainelli <f.fainelli@gmail.com>
-Cc:     Icenowy Zheng <icenowy@aosc.io>,
-        "David S . Miller" <davem@davemloft.net>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Chen-Yu Tsai <wens@csie.org>,
-        Heiner Kallweit <hkallweit1@gmail.com>, netdev@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-sunxi@googlegroups.com
-Subject: Re: [PATCH 0/3] Pine64+ specific hacks for RTL8211E Ethernet PHY
-Message-ID: <20191001165247.GE2031@lunn.ch>
-References: <20191001082912.12905-1-icenowy@aosc.io>
- <3ef60a0c-5cfd-420b-6cad-2c16eb2a6c01@gmail.com>
+        id S1732530AbfJAQng (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Oct 2019 12:43:36 -0400
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7BA532168B;
+        Tue,  1 Oct 2019 16:43:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1569948216;
+        bh=tJCaqfcO8B+AE8KOjoSqsm4KEI4rGIfQR2coy5zqq08=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=uQRDw945y0zvca7aTQZ9styCiPq5t4D7mYzUDhXOCpO5hmCy57xNa6BjHqa9RkRAf
+         muZWdIzAAVBiKoAWrTq8FmUPUNZrLRBKiEDQzFJk0iJhTRMMsz1InZv092jUcxgQBn
+         GHmQRaXOh96/aXWg9K2JS8K12c6vNlNm3YD8LlNg=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     =?UTF-8?q?Bj=C3=B8rn=20Mork?= <bjorn@mork.no>,
+        syzbot+ce366e2b8296e25d84f5@syzkaller.appspotmail.com,
+        Jakub Kicinski <jakub.kicinski@netronome.com>,
+        Sasha Levin <sashal@kernel.org>, linux-usb@vger.kernel.org,
+        netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 18/43] cdc_ncm: fix divide-by-zero caused by invalid wMaxPacketSize
+Date:   Tue,  1 Oct 2019 12:42:46 -0400
+Message-Id: <20191001164311.15993-18-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20191001164311.15993-1-sashal@kernel.org>
+References: <20191001164311.15993-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <3ef60a0c-5cfd-420b-6cad-2c16eb2a6c01@gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=UTF-8
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Oct 01, 2019 at 09:47:08AM -0700, Florian Fainelli wrote:
-> On 10/1/19 1:29 AM, Icenowy Zheng wrote:
-> > There're some Pine64+ boards known to have broken RTL8211E chips, and
-> > a hack is given by Pine64+, which is said to be from Realtek.
-> > 
-> > This patchset adds the hack.
-> > 
-> > The hack is taken from U-Boot, and it contains magic numbers without
-> > any document.
-> 
-> Such hacks are the very reason why PHY fixups exists, please investigate
-> working with Realtek first to understand how to make this hack less of a
-> hack so it is understood what it does and you can either add proper
-> infrastructure to the realtek PHY driver to perform that hack, or if
-> that is not an option, register a board specific fixup.
+From: Bjørn Mork <bjorn@mork.no>
 
-Hi Icenowy
+[ Upstream commit 3fe4b3351301660653a2bc73f2226da0ebd2b95e ]
 
-It would also be nice to know if only Pine64 has these bad PHYs, or if
-they were in the general distribution chain and other boards might
-have them as well.
+Endpoints with zero wMaxPacketSize are not usable for transferring
+data. Ignore such endpoints when looking for valid in, out and
+status pipes, to make the driver more robust against invalid and
+meaningless descriptors.
 
-     Andrew
+The wMaxPacketSize of the out pipe is used as divisor. So this change
+fixes a divide-by-zero bug.
+
+Reported-by: syzbot+ce366e2b8296e25d84f5@syzkaller.appspotmail.com
+Signed-off-by: Bjørn Mork <bjorn@mork.no>
+Signed-off-by: Jakub Kicinski <jakub.kicinski@netronome.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/net/usb/cdc_ncm.c | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/net/usb/cdc_ncm.c b/drivers/net/usb/cdc_ncm.c
+index 1eaec648bd1f7..f53e3e4e25f37 100644
+--- a/drivers/net/usb/cdc_ncm.c
++++ b/drivers/net/usb/cdc_ncm.c
+@@ -681,8 +681,12 @@ cdc_ncm_find_endpoints(struct usbnet *dev, struct usb_interface *intf)
+ 	u8 ep;
+ 
+ 	for (ep = 0; ep < intf->cur_altsetting->desc.bNumEndpoints; ep++) {
+-
+ 		e = intf->cur_altsetting->endpoint + ep;
++
++		/* ignore endpoints which cannot transfer data */
++		if (!usb_endpoint_maxp(&e->desc))
++			continue;
++
+ 		switch (e->desc.bmAttributes & USB_ENDPOINT_XFERTYPE_MASK) {
+ 		case USB_ENDPOINT_XFER_INT:
+ 			if (usb_endpoint_dir_in(&e->desc)) {
+-- 
+2.20.1
+
