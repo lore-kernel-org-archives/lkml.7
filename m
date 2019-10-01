@@ -2,165 +2,128 @@ Return-Path: <SRS0=YRFP=X2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 82745C32792
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 03:02:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 74F81C388F3
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 03:04:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4E4762087F
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 03:02:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4DC882087F
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 03:04:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="j8TZ3XWt"
+	dkim=pass (2048-bit key) header.d=alliedtelesis.co.nz header.i=@alliedtelesis.co.nz header.b="g7Kb8urq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731814AbfJADCM (ORCPT
+        id S1732620AbfJADEm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Sep 2019 23:02:12 -0400
-Received: from mail-qk1-f195.google.com ([209.85.222.195]:37849 "EHLO
-        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727459AbfJADCM (ORCPT
+        Mon, 30 Sep 2019 23:04:42 -0400
+Received: from gate2.alliedtelesis.co.nz ([202.36.163.20]:52186 "EHLO
+        gate2.alliedtelesis.co.nz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728134AbfJADEm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Sep 2019 23:02:12 -0400
-Received: by mail-qk1-f195.google.com with SMTP id u184so9834826qkd.4
-        for <linux-kernel@vger.kernel.org>; Mon, 30 Sep 2019 20:02:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=NhU6yRd8rVi5W+b69famc3Wf+MRe5kZVRUYy3CZ04Qw=;
-        b=j8TZ3XWt0rI+swgMAWG81IXe5bl3Mhp5Chfya22s00LvC2Qmaf21KWfpEq8VJ/MA8u
-         iNhpL1/brVJ+WU5XJYYZLVgDbmD5roZeLEVCh3uhhAIB6Q7ldaHczGUfocR60s6gObys
-         m1er4eyRCMglLPOygxeOlI4qFX7IKY66zuJwxiELQ/W3LoyKgzhnVXdJGqoQVZMXVAUC
-         9KZuZ4rvVUmmQRBfr7LB1410few7nJXjYhZZqwfeEapnyqWRbKVK0cWhG6As5U6voF8R
-         WYq499oUGxyH2Wy8JFjNthb89vV4tpHC/CAcFD2ijFpq6FcNQRn521nsK+FRvOmPctmD
-         uTsA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=NhU6yRd8rVi5W+b69famc3Wf+MRe5kZVRUYy3CZ04Qw=;
-        b=TUzrI58uqSvB7vkwP13gmsQpjuoVE5G2v5TPzatl1U4LB1GljnnTL774KoaaS+242A
-         q2OlEj7aRC1wOKn1YjKwKdVD0yUBXxOFDPvmPk3MTj/gGojjmMHGpjiisiOL1ZVLjJin
-         bzEKMsgo5iFUqQKp0htF75U5m6vS/PkK/jsbxS4pVyfeFqlP7k8Bst/TmJigXLsstXZy
-         42mYu1NRUx67meiNKIDNJiftm+TxlQjPZIl+DQbgItoITbP3/ayiaj1q51EwVGGgwItE
-         p/FDaiwhTMMnZ6682LKsxwQOdoNPrPk8Jf6rX5Sxw7UaO1k3voCV8IxjFTpJLJ1K1Ws6
-         Yn7g==
-X-Gm-Message-State: APjAAAX19UNzNlt5Xl/C2+0Xe7gTNbWTtZ4kJUZ9gCdXIMHaxVp7X6YF
-        CI0JsWaMdvW7e44HefNuir5iojHlMysq2Rnce02DgQ==
-X-Google-Smtp-Source: APXvYqyuGC+X6DqxkXQJnINPoHMvpwc54U1WbIB3aUskUWBOJyL6MJ7/tA34rkq9cIbagHqaomA+H0vqIGNs+aOtpFY=
-X-Received: by 2002:a37:d84:: with SMTP id 126mr3460614qkn.407.1569898930461;
- Mon, 30 Sep 2019 20:02:10 -0700 (PDT)
+        Mon, 30 Sep 2019 23:04:42 -0400
+Received: from mmarshal3.atlnz.lc (mmarshal3.atlnz.lc [10.32.18.43])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by gate2.alliedtelesis.co.nz (Postfix) with ESMTPS id C7133891AB;
+        Tue,  1 Oct 2019 16:04:37 +1300 (NZDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alliedtelesis.co.nz;
+        s=mail181024; t=1569899077;
+        bh=6Ps8c2mwMYs63gM+juMo2bF9nGCmlv/Bhb3Rap1Be20=;
+        h=From:To:CC:Subject:Date:References:In-Reply-To;
+        b=g7Kb8urqcsSwRVSLn6snIAYWTH9UxmhXtG9vyE3PE6b2bHPqOJeXzBFnWlbuMLm2V
+         HFIPoxUGxDmJI47iL72GqBSaZ6ivw7sTgL24PRAAqpMiqsQ5XCnKQgDXN9GNHnz68v
+         ZcbMKhmDazzfis2jYT2EqPNNyCpQEZb1Itq5ksmwZ5LiTlL9Atnu1z07+BT9Dsahza
+         9SdXy3WAMVVYoOCBugXsjJ6GTX+thnBjRY637m0iHFBYGNi2BxQAcntO3RAoeOqnv+
+         lg1+xT+xjDEzjyEze7IxJtui+5Fx2KF7Nizz0LsKPll5SUzFGNrB531KpV2PcNPBmC
+         GhO6HgSRLsqUw==
+Received: from svr-chch-ex1.atlnz.lc (Not Verified[10.32.16.77]) by mmarshal3.atlnz.lc with Trustwave SEG (v7,5,8,10121)
+        id <B5d92c2460001>; Tue, 01 Oct 2019 16:04:38 +1300
+Received: from svr-chch-ex1.atlnz.lc (2001:df5:b000:bc8::77) by
+ svr-chch-ex1.atlnz.lc (2001:df5:b000:bc8::77) with Microsoft SMTP Server
+ (TLS) id 15.0.1156.6; Tue, 1 Oct 2019 16:04:37 +1300
+Received: from svr-chch-ex1.atlnz.lc ([fe80::409d:36f5:8899:92e8]) by
+ svr-chch-ex1.atlnz.lc ([fe80::409d:36f5:8899:92e8%12]) with mapi id
+ 15.00.1156.000; Tue, 1 Oct 2019 16:04:37 +1300
+From:   Chris Packham <Chris.Packham@alliedtelesis.co.nz>
+To:     "rayagonda.kokatanur@broadcom.com" <rayagonda.kokatanur@broadcom.com>,
+        "bcm-kernel-feedback-list@broadcom.com" 
+        <bcm-kernel-feedback-list@broadcom.com>,
+        "f.fainelli@gmail.com" <f.fainelli@gmail.com>,
+        "li.jin@broadcom.com" <li.jin@broadcom.com>,
+        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
+        "sbranden@broadcom.com" <sbranden@broadcom.com>,
+        "rjui@broadcom.com" <rjui@broadcom.com>
+CC:     "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>
+Subject: Re: Problem sharing interrupts between gpioa and uart0 on Broadcom
+ Hurricane 2 (iProc)
+Thread-Topic: Problem sharing interrupts between gpioa and uart0 on Broadcom
+ Hurricane 2 (iProc)
+Thread-Index: AQHVeAChr1G1lS1DPESIPAb5KujH5KdEPSUAgAAC1QA=
+Date:   Tue, 1 Oct 2019 03:04:36 +0000
+Message-ID: <f3a243b1f22cf29075467d236610dbd2e7a20e55.camel@alliedtelesis.co.nz>
+References: <32c3d1dfe61a656e3250438d887e5ba91bd880d0.camel@alliedtelesis.co.nz>
+         <d72a965a-e4e1-ba5d-cd62-b31939e75e44@gmail.com>
+In-Reply-To: <d72a965a-e4e1-ba5d-cd62-b31939e75e44@gmail.com>
+Accept-Language: en-NZ, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-mailer: Evolution 3.28.5-0ubuntu0.18.04.1 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [2001:df5:b000:22:11c:6830:fcb5:dc24]
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <9ED249CD8C3C5A4AA80456A8123D76C6@atlnz.lc>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-References: <20190927034338.15813-1-walter-zh.wu@mediatek.com>
- <CACT4Y+Zxz+R=qQxSMoipXoLjRqyApD3O0eYpK0nyrfGHE4NNPw@mail.gmail.com>
- <1569594142.9045.24.camel@mtksdccf07> <CACT4Y+YuAxhKtL7ho7jpVAPkjG-JcGyczMXmw8qae2iaZjTh_w@mail.gmail.com>
- <1569818173.17361.19.camel@mtksdccf07> <a3a5e118-e6da-8d6d-5073-931653fa2808@free.fr>
- <1569897400.17361.27.camel@mtksdccf07>
-In-Reply-To: <1569897400.17361.27.camel@mtksdccf07>
-From:   Dmitry Vyukov <dvyukov@google.com>
-Date:   Tue, 1 Oct 2019 05:01:58 +0200
-Message-ID: <CACT4Y+b3NPemYwJJsD_oC0vde5Ybz1qDNWb=cFu2HpOTMrGSnQ@mail.gmail.com>
-Subject: Re: [PATCH] kasan: fix the missing underflow in memmove and memcpy
- with CONFIG_KASAN_GENERIC=y
-To:     Walter Wu <walter-zh.wu@mediatek.com>
-Cc:     Marc Gonzalez <marc.w.gonzalez@free.fr>,
-        LKML <linux-kernel@vger.kernel.org>,
-        kasan-dev <kasan-dev@googlegroups.com>,
-        Alexander Potapenko <glider@google.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Andrey Ryabinin <aryabinin@virtuozzo.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Oct 1, 2019 at 4:36 AM Walter Wu <walter-zh.wu@mediatek.com> wrote:
->
-> On Mon, 2019-09-30 at 10:57 +0200, Marc Gonzalez wrote:
-> > On 30/09/2019 06:36, Walter Wu wrote:
-> >
-> > >  bool check_memory_region(unsigned long addr, size_t size, bool write,
-> > >                                 unsigned long ret_ip)
-> > >  {
-> > > +       if (long(size) < 0) {
-> > > +               kasan_report_invalid_size(src, dest, len, _RET_IP_);
-> > > +               return false;
-> > > +       }
-> > > +
-> > >         return check_memory_region_inline(addr, size, write, ret_ip);
-> > >  }
-> >
-> > Is it expected that memcpy/memmove may sometimes (incorrectly) be passed
-> > a negative value? (It would indeed turn up as a "large" size_t)
-> >
-> > IMO, casting to long is suspicious.
-> >
-> > There seem to be some two implicit assumptions.
-> >
-> > 1) size >= ULONG_MAX/2 is invalid input
-> > 2) casting a size >= ULONG_MAX/2 to long yields a negative value
-> >
-> > 1) seems reasonable because we can't copy more than half of memory to
-> > the other half of memory. I suppose the constraint could be even tighter,
-> > but it's not clear where to draw the line, especially when considering
-> > 32b vs 64b arches.
-> >
-> > 2) is implementation-defined, and gcc works "as expected" (clang too
-> > probably) https://gcc.gnu.org/onlinedocs/gcc/Integers-implementation.html
-> >
-> > A comment might be warranted to explain the rationale.
-> > Regards.
->
-> Thanks for your suggestion.
-> Yes, It is passed a negative value issue in memcpy/memmove/memset.
-> Our current idea should be assumption 1 and only consider 64b arch,
-> because KASAN only supports 64b. In fact, we really can't use so much
-> memory in 64b arch. so assumption 1 make sense.
-
-Note there are arm KASAN patches floating around, so we should not
-make assumptions about 64-bit arch.
-
-But there seems to be a number of such casts already:
-
-$ find -name "*.c" -exec egrep "\(long\).* < 0" {} \; -print
-    } else if ((long) delta < 0) {
-./kernel/time/timer.c
-    if ((long)state < 0)
-./drivers/thermal/thermal_sysfs.c
-    if ((long)delay < 0)
-./drivers/infiniband/core/addr.c
-    if ((long)tmo < 0)
-./drivers/net/wireless/st/cw1200/pm.c
-    if (pos < 0 || (long) pos != pos || (ssize_t) count < 0)
-./sound/core/info.c
-        if ((long)hwrpb->sys_type < 0) {
-./arch/alpha/kernel/setup.c
-    if ((long)m->driver_data < 0)
-./arch/x86/kernel/apic/apic.c
-            if ((long) size < 0L)
-    if ((long)addr < 0L) {
-./arch/sparc/mm/init_64.c
-    if ((long)lpid < 0)
-./arch/powerpc/kvm/book3s_hv.c
-            if ((long)regs->regs[insn.mm_i_format.rs] < 0)
-            if ((long)regs->regs[insn.i_format.rs] < 0) {
-            if ((long)regs->regs[insn.i_format.rs] < 0) {
-./arch/mips/kernel/branch.c
-            if ((long)arch->gprs[insn.i_format.rs] < 0)
-            if ((long)arch->gprs[insn.i_format.rs] < 0)
-./arch/mips/kvm/emulate.c
-            if ((long)regs->regs[insn.i_format.rs] < 0)
-./arch/mips/math-emu/cp1emu.c
-        if ((int32_t)(long)prom_vec < 0) {
-./arch/mips/sibyte/common/cfe.c
-    if (msgsz > ns->msg_ctlmax || (long) msgsz < 0 || msqid < 0)
-    if (msqid < 0 || (long) bufsz < 0)
-./ipc/msg.c
-    if ((long)x < 0)
-./mm/page-writeback.c
-    if ((long)(next - val) < 0) {
-./mm/memcontrol.c
+SGkgRmxvcmlhbiwNCg0KT24gTW9uLCAyMDE5LTA5LTMwIGF0IDE5OjU0IC0wNzAwLCBGbG9yaWFu
+IEZhaW5lbGxpIHdyb3RlOg0KPiANCj4gT24gOS8zMC8yMDE5IDc6MzMgUE0sIENocmlzIFBhY2to
+YW0gd3JvdGU6DQo+ID4gSGksDQo+ID4gDQo+ID4gV2UgaGF2ZSBhIHBsYXRmb3JtIHVzaW5nIHRo
+ZSBCQ001MzM0NCBpbnRlZ3JhdGVkIHN3aXRjaC9DUFUuIFRoaXMgaXMNCj4gPiBwYXJ0IG9mIHRo
+ZSBIdXJyaWNhbmUgMiAodGVjaG5pY2FsbHkgV29sZmhvdW5kKSBmYW1pbHkgb2YgZGV2aWNlcy4N
+Cj4gPiANCj4gPiBDdXJyZW50bHkgd2UncmUgdXNpbmcgcGllY2VzIG9mIEJyb2FkY29tJ3MgImlQ
+cm9jIiBTREsgYmFzZWQgb24gYW4gb3V0DQo+ID4gb2YgZGF0ZSBrZXJuZWwgYW5kIHdlJ2QgdmVy
+eSBtdWNoIGxpa2UgdG8gYmUgcnVubmluZyBhcyBjbG9zZSB0bw0KPiA+IHVwc3RyZWFtIGFzIHBv
+c3NpYmxlLiBUaGUgZmFjdCB0aGF0IHRoZSBVYmlxdWl0aSBVbmlGaSBTd2l0Y2ggOCBpcw0KPiA+
+IHVwc3RyZWFtIGdpdmVzIG1lIHNvbWUgaG9wZS4NCj4gDQo+IEZZSSwgSSBjb3VsZCBub3QgZ2V0
+IGVub3VnaCBpbmZvcm1hdGlvbiBmcm9tIHRoZSBpUHJvYyBTREsgdG8gcG9ydCAob3INCj4gbm90
+KSB0aGUgY2xvY2sgZHJpdmVyLCBzbyBpZiBub3RoaW5nIGVsc2UsIHRoYXQgaXMgYW4gYXJlYSB0
+aGF0IG1heQ0KPiByZXF1aXJlIGltbWVkaWF0ZSB3b3JrICh0aG91Z2ggc29tZXRpbWVzIGZpeGVk
+LWNsb2NrcyB3b3VsZCBkbyBqdXN0IGZpbmUpLg0KDQpTZXR0aW5nIGEgZml4ZWQgY2xvY2sgc2Vl
+bXMgdG8gd29yayBmb3IgbWUuIEF0IGxlYXN0IGZvciBub3cuDQoNCj4gDQo+ID4gDQo+ID4gTXkg
+Y3VycmVudCBwcm9ibGVtIGlzIHRoZSBmYWN0IHRoYXQgdGhlIHVhcnQwIGludGVycnVwdCBpcyBz
+aGFyZWQgd2l0aA0KPiA+IHRoZSBDaGlwIENvbW1vbiBBIGdwaW8gYmxvY2suIFdoZW4gSSBoYXZl
+IGFuZCBpbnRlcnJ1cHQgbm9kZSBvbiB0aGUNCj4gPiBncGlvIGluIHRoZSBkZXZpY2UgdHJlZSBJ
+IGdldCBhbiBpbml0IGV4aXQgYXQgc3RhcnR1cC4gSWYgSSByZW1vdmUgdGhlDQo+ID4gaW50ZXJy
+dXB0IG5vZGUgdGhlIHN5c3RlbSB3aWxsIGJvb3QgKGV4Y2VwdCBJIGRvbid0IGdldCBjYXNjYWRl
+ZA0KPiA+IGludGVycnVwdHMgZnJvbSB0aGUgR1BJT3MpLg0KPiA+IA0KPiA+IExvb2tpbmcgYXQg
+dGhlIHBpbmN0cmwtbnNwLWdwaW8uYyBpdCBsb29rcyBhcyB0aG91Z2ggSSBtaWdodCBiZSBhYmxl
+IHRvDQo+ID4gbWFrZSB0aGlzIHdvcmsgaWYgSSBjYW4gY29udmluY2UgdGhlIGdwaW8gY29kZSB0
+byByZXR1cm4gSVJRX0hBTkRMRUQgb3INCj4gPiBJUlFfTk9ORSBidXQgSSdtIHN0cnVnZ2xpbmcg
+YWdhaW5zdCB0aGUgZmFjdCB0aGF0IHRoZSBwaW5jdHJsLWlwcm9jLQ0KPiA+IGdwaW8uYyBkZWZl
+cnMgaXQncyBpbnRlcnJ1cHQgaGFuZGluZyB0byB0aGUgZ3BpbyBjb3JlLg0KPiANCj4gTm90IHN1
+cmUgSSBmb2xsb3cgeW91IGhlcmUsIHdoYXQgcGFydCBpcyBiZWluZyBoYW5kZWQgdG8gZ3Bpb2xp
+Yj8gVGhlDQo+IHRvcCBpbnRlcnJ1cHQgaGFuZGxlciB1bmRlciBuc3BfZ3Bpb19pcnFfaGFuZGxl
+cigpIHdpbGwgdHJ5IHRvIGRvDQo+IGV4YWN0bHkgYXMgeW91IGRlc2NyaWJlZC4gSW4gZmFjdCwg
+dGhlcmUgYXJlIG90aGVyIGlQcm9jIGRlc2lnbnMgd2hlcmUNCj4gImdwaW8tYSIgYW5kIGFub3Ro
+ZXIgaW50ZXJydXB0LCBhcmNoL2FybS9ib290L2R0cy9iY20tbnNwLmR0c2kgaXMgb25lDQo+IHN1
+Y2ggZXhhbXBsZSBhbmQgSSBuZXZlciBoYWQgcHJvYmxlbXMgd2l0aCB0aGF0IHBhcnQgb2YgTlNQ
+Lg0KPiANCg0KbnNwX2dwaW9fcHJvYmUoKSBjcmVhdGVzIHRoZSBpcnEgZG9tYWluIGRpcmVjdGx5
+IGFuZA0KbnNwX2dwaW9faXJxX2hhbmRsZXIoKSBkaXJlY3RseSBkZWFscyB3aXRoIHNoYXJpbmcg
+YnkgcmV0dXJuaW5nDQpJUlFfSEFORExFRCBvciBJUlFfTk9ORSBkZXBlbmRpbmcgb24gd2hldGhl
+ciBpdCBoYXMgYSBiaXQgc2V0Lg0KDQppcHJvY19ncGlvX3Byb2JlKCkgb24gdGhlIHNldHMgaXBy
+b2NfZ3Bpb19pcnFfaGFuZGxlcigpIGFzIHRoZQ0KcGFyZW50X2hhbmRsZXIgYW5kIGRlZmVycyB0
+byBncGlvbGliIHRvIGRlYWwgd2l0aCB0aGUgaXJxIGRvbWFpbiBldGMuDQoNCkknbSBjdXJyZW50
+bHkgYXNzdW1pbmcgdGhpcyBpcyB3aHkgSSBjYW4ndCBoYXZlIHVhcnQwIGFuZCBncGlvDQppbnRl
+cnJ1cHRzLiBCdXQgb2YgY291cnNlIEkgY291bGQgYmUgY29tcGxldGVseSB3cm9uZy4NCg0KPiA+
+IA0KPiA+IElzIHRoZXJlIGFueSB3YXkgSSBjYW4gZ2V0IHRoZSBncGlvIGNvcmUgdG8gZGVhbCB3
+aXRoIHRoZSBzaGFyZWQNCj4gPiBpbnRlcnJ1cHQ/DQo=
