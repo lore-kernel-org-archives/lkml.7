@@ -2,123 +2,132 @@ Return-Path: <SRS0=YRFP=X2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E1D50C352AA
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 11:37:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A324DC388F3
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 11:37:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BC6C02133F
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 11:37:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8326C21A4C
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 11:37:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731466AbfJALhA (ORCPT
+        id S1731856AbfJALhJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Oct 2019 07:37:00 -0400
-Received: from mga04.intel.com ([192.55.52.120]:46171 "EHLO mga04.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725951AbfJALhA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Oct 2019 07:37:00 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 01 Oct 2019 04:36:59 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,571,1559545200"; 
-   d="scan'208";a="191434426"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by fmsmga007.fm.intel.com with ESMTP; 01 Oct 2019 04:36:57 -0700
-Received: from andy by smile with local (Exim 4.92.2)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1iFGSd-0008Ar-Jv; Tue, 01 Oct 2019 14:36:55 +0300
-Date:   Tue, 1 Oct 2019 14:36:55 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Alexandre Belloni <alexandre.belloni@bootlin.com>
-Cc:     Petr Mladek <pmladek@suse.com>, linux-kernel@vger.kernel.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Hans Verkuil <hverkuil@xs4all.nl>,
-        Mathias Nyman <mathias.nyman@intel.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        John Stultz <john.stultz@linaro.org>,
-        Thomas Gleixner <tglx@linutronix.de>
-Subject: Re: [PATCH v1 1/4] lib/vsprintf: Print time64_t in human readable
- format
-Message-ID: <20191001113655.GI32742@smile.fi.intel.com>
-References: <20190104193009.30907-1-andriy.shevchenko@linux.intel.com>
- <20190108152528.utr3a5huran52gsf@pathway.suse.cz>
- <20190110215858.GG2362@piout.net>
- <20190726132037.GX9224@smile.fi.intel.com>
- <20190930200809.GK3913@piout.net>
+        Tue, 1 Oct 2019 07:37:09 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:20412 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725951AbfJALhJ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Oct 2019 07:37:09 -0400
+Received: from pps.filterd (m0098399.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x91BWRV5072775
+        for <linux-kernel@vger.kernel.org>; Tue, 1 Oct 2019 07:37:08 -0400
+Received: from e06smtp02.uk.ibm.com (e06smtp02.uk.ibm.com [195.75.94.98])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2vc5kxrx9f-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Tue, 01 Oct 2019 07:37:07 -0400
+Received: from localhost
+        by e06smtp02.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <srikar@linux.vnet.ibm.com>;
+        Tue, 1 Oct 2019 12:37:05 +0100
+Received: from b06cxnps3074.portsmouth.uk.ibm.com (9.149.109.194)
+        by e06smtp02.uk.ibm.com (192.168.101.132) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Tue, 1 Oct 2019 12:37:01 +0100
+Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
+        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x91Bb0Qe57082092
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 1 Oct 2019 11:37:00 GMT
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 0FFCA11C054;
+        Tue,  1 Oct 2019 11:37:00 +0000 (GMT)
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 6CFE711C04A;
+        Tue,  1 Oct 2019 11:36:57 +0000 (GMT)
+Received: from linux.vnet.ibm.com (unknown [9.122.211.122])
+        by d06av25.portsmouth.uk.ibm.com (Postfix) with SMTP;
+        Tue,  1 Oct 2019 11:36:57 +0000 (GMT)
+Date:   Tue, 1 Oct 2019 17:06:56 +0530
+From:   Srikar Dronamraju <srikar@linux.vnet.ibm.com>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Qian Cai <cai@lca.pw>, akpm@linux-foundation.org,
+        bigeasy@linutronix.de, tglx@linutronix.de, thgarnie@google.com,
+        tytso@mit.edu, cl@linux.com, penberg@kernel.org,
+        rientjes@google.com, mingo@redhat.com, will@kernel.org,
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        keescook@chromium.org
+Subject: Re: [PATCH] sched: Avoid spurious lock dependencies
+Reply-To: Srikar Dronamraju <srikar@linux.vnet.ibm.com>
+References: <1568392064-3052-1-git-send-email-cai@lca.pw>
+ <20190925093153.GC4553@hirez.programming.kicks-ass.net>
+ <1569424727.5576.221.camel@lca.pw>
+ <20190925164527.GG4553@hirez.programming.kicks-ass.net>
+ <1569500974.5576.234.camel@lca.pw>
+ <20191001091837.GK4536@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <20190930200809.GK3913@piout.net>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20191001091837.GK4536@hirez.programming.kicks-ass.net>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-TM-AS-GCONF: 00
+x-cbid: 19100111-0008-0000-0000-0000031CBD92
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19100111-0009-0000-0000-00004A3B677A
+Message-Id: <20191001113513.GB32306@linux.vnet.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-10-01_06:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=27 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1908290000 definitions=main-1910010106
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Sep 30, 2019 at 10:08:09PM +0200, Alexandre Belloni wrote:
-> On 26/07/2019 16:20:37+0300, Andy Shevchenko wrote:
-> > On Thu, Jan 10, 2019 at 10:58:58PM +0100, Alexandre Belloni wrote:
-> > > On 08/01/2019 16:25:28+0100, Petr Mladek wrote:
-> > > > On Fri 2019-01-04 21:30:06, Andy Shevchenko wrote:
-> > > > > There are users which print time and date represented by content of
-> > > > > time64_t type in human readable format.
-> > > > > 
-> > > > > Instead of open coding that each time introduce %ptT[dt][r] specifier.
-> > > > > 
-> > > > > Few test cases for %ptT specifier has been added as well.
-> > 
-> > > > > +void time64_to_rtc_time(time64_t time, struct rtc_time *rtc_time)
-> > > > > +{
-> > > > > +#ifdef CONFIG_RTC_LIB
-> > > > > +	rtc_time64_to_tm(time, rtc_time);
-> > 
-> > > > I wonder if the conversion between struct tm and rtc_time
-> > > > might be useful in general.
-> > > >
-> > > > It might make sense to de-duplicate time64_to_tm() and
-> > > > rtc_time64_to_tm() implementations.
-> > 
-> > > Looking at 57f1f0874f42, this seemed to be the plan at the time
-> > > time_to_tm was introduced but this was never done. Seeing that tm and
-> > > rtc_time are quite similar, we could probably always use time64_to_tm as
-> > > it is more accurate than rtc_time64_to_tm as the latter assumes a
-> > > specific year range.
-> > 
-> > So, do I understand correctly that dropping #ifdef along with
-> > rtc_time64_to_tm() call is sufficient for now?
-> > 
+> Subject: sched: Avoid spurious lock dependencies
 > 
-> I'd be fine with that.
-
-Good, thanks! I'll send v2 soon.
-
-> > > Maybe be rtc_str should take a struct tm instead of an rtc_time so
-> > > time64_to_rtc_time always uses time64_to_tm.
-> > 
-> > Because this one, while sounding plausible, maybe too invasive on current
-> > state of affairs.
+> While seemingly harmless, __sched_fork() does hrtimer_init(), which,
+> when DEBUG_OBJETS, can end up doing allocations.
 > 
-> Well, if the kernel struct tm had an int tm_year instead of long
-> tm_year, then you could simply cast a struct rtc_time to a struct tm.
 
-I don't think so. It will be error prone from endianess prospective on
-64-bit platforms.
+NIT: s/DEBUG_OBJETS/DEBUG_OBJECTS
 
-> I'm not sure was was the rationale to have a long, especially since
-> userspace has an int.
+> diff --git a/kernel/sched/core.c b/kernel/sched/core.c
+> index 7880f4f64d0e..1832fc0fbec5 100644
+> --- a/kernel/sched/core.c
+> +++ b/kernel/sched/core.c
+> @@ -6039,10 +6039,11 @@ void init_idle(struct task_struct *idle, int cpu)
+>  	struct rq *rq = cpu_rq(cpu);
+>  	unsigned long flags;
+>  
+> +	__sched_fork(0, idle);
+> +
+>  	raw_spin_lock_irqsave(&idle->pi_lock, flags);
+>  	raw_spin_lock(&rq->lock);
+>  
+> -	__sched_fork(0, idle);
+>  	idle->state = TASK_RUNNING;
+>  	idle->se.exec_start = sched_clock();
+>  	idle->flags |= PF_IDLE;
+> 
 
-Yeah, this is strange, I guess we simple may long -> int in kernel's struct tm.
+Given that there is a comment just after this which says
+"init_task() gets called multiple times on a task",
+should we add a check if rq->idle is present and bail out?
+
+if (rq->idle) {
+    raw_spin_unlock(&rq->lock);
+    raw_spin_unlock_irqrestore(&idle->pi_lock, flags);
+    return;
+}
+
+Also can we also move the above 3 statements before the lock?
+
 
 -- 
-With Best Regards,
-Andy Shevchenko
-
+Thanks and Regards
+Srikar Dronamraju
 
