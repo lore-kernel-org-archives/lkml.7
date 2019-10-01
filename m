@@ -4,51 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EC317ECE587
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 16:56:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA39BECE587
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 16:56:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BA5832168B
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 16:56:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B79C52168B
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 16:56:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569949012;
-	bh=MyDQQmHBYpxiok5wMLlt4ZWNdBVl66/vrF4hYu3W/oA=;
+	s=default; t=1569949019;
+	bh=X2SYTPGTDoHIb6gn2jO+JXqH1w3E4aXG6pzrtbaleio=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=BYYYDSIV1qY3F998PotA5f+Xq8h0HbDBFs+S2AE8Rlu1tfEtIVgmyhTa7JabmvVto
-	 xEKOQNomMRBjFQse54qS7uT4WgpOYNqLEsSkUmoDb4nyePJ310ITP5paV8Uyl8OzaK
-	 YkAmr0idz65SCvKInNC+xc4jGf1pa1c2D99iLrbE=
+	b=yfLD40vLYRC1iqukTqOzEAi6DbHeW8xqlavH+aMrdq6Ajjf07aWKhctPkI0BCVAQS
+	 iz8Zxxl95N+bdB/UWJlMwstw+7ER92XtWXJdYWiFd9M6x7jWHjXcU/ZEd5GvHyOa0G
+	 kTsTRa5rIhjwZOIsI+yqYCugqnLX2yedYO+exgi0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731584AbfJAQmC (ORCPT
+        id S1732754AbfJAQ47 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Oct 2019 12:42:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53654 "EHLO mail.kernel.org"
+        Tue, 1 Oct 2019 12:56:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53800 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731479AbfJAQlz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Oct 2019 12:41:55 -0400
+        id S1731550AbfJAQmB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Oct 2019 12:42:01 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6EE9A21855;
-        Tue,  1 Oct 2019 16:41:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4E67F21A4C;
+        Tue,  1 Oct 2019 16:42:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569948115;
-        bh=MyDQQmHBYpxiok5wMLlt4ZWNdBVl66/vrF4hYu3W/oA=;
+        s=default; t=1569948121;
+        bh=X2SYTPGTDoHIb6gn2jO+JXqH1w3E4aXG6pzrtbaleio=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ZpWBbWTqZu3Y49V/x2lluLsOUn89LaqC6tV7XcUIwS4594dNHExd0KV2ngdASCxJs
-         r8wfwGCWZEriS7Ijh/sHTIZJQmXwWq0dG9yOkgO1H2KOg2DkoChMbZLym4QPiNTi7+
-         ByDdYPmQqQ4D/dK4yID6e5XmNSS3mXSdCybxwEMI=
+        b=eURYBlFoJkQmTb4TwULmhHC46YCiDgQX/UV6G14anABeeYUfHuSjs58AQVs49WYPE
+         chV7aXwKiem2sxUi3cN1I84XNi9q+2rW88nB/IewFzK7DOcwLEChLedLefDvazMU1W
+         JsA0Ojzw+VzqnwLEflA6lsyEoJYuIEyuIHhnbgUw=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Trond Myklebust <trondmy@gmail.com>,
-        Trond Myklebust <trond.myklebust@hammerspace.com>,
-        Anna Schumaker <Anna.Schumaker@Netapp.com>,
-        Sasha Levin <sashal@kernel.org>, linux-nfs@vger.kernel.org,
-        netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.2 21/63] SUNRPC: Don't try to parse incomplete RPC messages
-Date:   Tue,  1 Oct 2019 12:40:43 -0400
-Message-Id: <20191001164125.15398-21-sashal@kernel.org>
+Cc:     Peter Mamonov <pmamonov@gmail.com>, Andrew Lunn <andrew@lunn.ch>,
+        Jakub Kicinski <jakub.kicinski@netronome.com>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.2 26/63] net/phy: fix DP83865 10 Mbps HDX loopback disable function
+Date:   Tue,  1 Oct 2019 12:40:48 -0400
+Message-Id: <20191001164125.15398-26-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191001164125.15398-1-sashal@kernel.org>
 References: <20191001164125.15398-1-sashal@kernel.org>
@@ -61,61 +59,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Trond Myklebust <trondmy@gmail.com>
+From: Peter Mamonov <pmamonov@gmail.com>
 
-[ Upstream commit 9ba828861c56a21d211d5d10f5643774b1ea330d ]
+[ Upstream commit e47488b2df7f9cb405789c7f5d4c27909fc597ae ]
 
-If the copy of the RPC reply into our buffers did not complete, and
-we could end up with a truncated message. In that case, just resend
-the call.
+According to the DP83865 datasheet "the 10 Mbps HDX loopback can be
+disabled in the expanded memory register 0x1C0.1". The driver erroneously
+used bit 0 instead of bit 1.
 
-Fixes: a0584ee9aed80 ("SUNRPC: Use struct xdr_stream when decoding...")
-Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
-Signed-off-by: Anna Schumaker <Anna.Schumaker@Netapp.com>
+Fixes: 4621bf129856 ("phy: Add file missed in previous commit.")
+Signed-off-by: Peter Mamonov <pmamonov@gmail.com>
+Reviewed-by: Andrew Lunn <andrew@lunn.ch>
+Signed-off-by: Jakub Kicinski <jakub.kicinski@netronome.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/sunrpc/clnt.c | 14 +++++++++++++-
- 1 file changed, 13 insertions(+), 1 deletion(-)
+ drivers/net/phy/national.c | 9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
 
-diff --git a/net/sunrpc/clnt.c b/net/sunrpc/clnt.c
-index 8f32f73614111..866b60313fb12 100644
---- a/net/sunrpc/clnt.c
-+++ b/net/sunrpc/clnt.c
-@@ -2398,6 +2398,7 @@ call_decode(struct rpc_task *task)
- 	struct rpc_clnt	*clnt = task->tk_client;
- 	struct rpc_rqst	*req = task->tk_rqstp;
- 	struct xdr_stream xdr;
-+	int err;
+diff --git a/drivers/net/phy/national.c b/drivers/net/phy/national.c
+index a221dd552c3c6..a5bf0874c7d81 100644
+--- a/drivers/net/phy/national.c
++++ b/drivers/net/phy/national.c
+@@ -105,14 +105,17 @@ static void ns_giga_speed_fallback(struct phy_device *phydev, int mode)
  
- 	dprint_status(task);
- 
-@@ -2420,6 +2421,15 @@ call_decode(struct rpc_task *task)
- 	 * before it changed req->rq_reply_bytes_recvd.
- 	 */
- 	smp_rmb();
+ static void ns_10_base_t_hdx_loopack(struct phy_device *phydev, int disable)
+ {
++	u16 lb_dis = BIT(1);
 +
-+	/*
-+	 * Did we ever call xprt_complete_rqst()? If not, we should assume
-+	 * the message is incomplete.
-+	 */
-+	err = -EAGAIN;
-+	if (!req->rq_reply_bytes_recvd)
-+		goto out;
-+
- 	req->rq_rcv_buf.len = req->rq_private_buf.len;
+ 	if (disable)
+-		ns_exp_write(phydev, 0x1c0, ns_exp_read(phydev, 0x1c0) | 1);
++		ns_exp_write(phydev, 0x1c0,
++			     ns_exp_read(phydev, 0x1c0) | lb_dis);
+ 	else
+ 		ns_exp_write(phydev, 0x1c0,
+-			     ns_exp_read(phydev, 0x1c0) & 0xfffe);
++			     ns_exp_read(phydev, 0x1c0) & ~lb_dis);
  
- 	/* Check that the softirq receive buffer is valid */
-@@ -2428,7 +2438,9 @@ call_decode(struct rpc_task *task)
+ 	pr_debug("10BASE-T HDX loopback %s\n",
+-		 (ns_exp_read(phydev, 0x1c0) & 0x0001) ? "off" : "on");
++		 (ns_exp_read(phydev, 0x1c0) & lb_dis) ? "off" : "on");
+ }
  
- 	xdr_init_decode(&xdr, &req->rq_rcv_buf,
- 			req->rq_rcv_buf.head[0].iov_base, req);
--	switch (rpc_decode_header(task, &xdr)) {
-+	err = rpc_decode_header(task, &xdr);
-+out:
-+	switch (err) {
- 	case 0:
- 		task->tk_action = rpc_exit_task;
- 		task->tk_status = rpcauth_unwrap_resp(task, &xdr);
+ static int ns_config_init(struct phy_device *phydev)
 -- 
 2.20.1
 
