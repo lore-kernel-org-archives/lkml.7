@@ -2,121 +2,128 @@ Return-Path: <SRS0=YRFP=X2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 62581C352AA
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 14:51:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A683C352AA
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 14:54:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 401A920815
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 14:51:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F05DA21872
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 14:53:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1569941640;
+	bh=ZZ63NgRB4la/JntiVLUk4sSc2uMP4usvtqmHwu3XxTs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=EJHmlkyn6DKuszOQ1HUIcQ1gu5giJi/mUXUgtTt+CSuyrdrRgIQplW0Oa4QM5iPmL
+	 9VOlJLVIGV3P07kivrhENHrxUFeZ3HWBHVZPTq6bxT1uExcB8dLmszevrqLnijEprh
+	 TCUKVoLkdWqOKeDjWk+6Jxbk8W+vcBcMWww0DG9o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389328AbfJAOvO (ORCPT
+        id S2389263AbfJAOx7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Oct 2019 10:51:14 -0400
-Received: from mail-oi1-f194.google.com ([209.85.167.194]:42766 "EHLO
-        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388925AbfJAOvO (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Oct 2019 10:51:14 -0400
-Received: by mail-oi1-f194.google.com with SMTP id i185so14615189oif.9;
-        Tue, 01 Oct 2019 07:51:13 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=wjkwwfTfjq2moCLwkeTZGb6uXp0wkFlLr8cpTn6l27M=;
-        b=pyX7yAyfQGDwy+LAL4AlxcNrPM5m11R3UE1Duj0cP/MA1Y+LoYkWNgOgEdiXK9LVve
-         yt3dlDoA9aZPma7fb7qyTHOrcEeTECv70cA2GAph0M2HqHX4AslXvH6GCR7V0Y+MoMqf
-         NEPU0TdYqf8i0KRvX+kNI0Q/rVMBKIe/z2wQgGrnvvIit80bsJ9I1GcWBw4jLjVZvMER
-         w3lgyeN+y6tA33lW2vB2cf0peCioIbhnBYPtzQUdIMK4Tq1Wx+v3UdRB7eCBzkw8hhkl
-         tl4ZaRFmCrQQI7pD5bb9uRCHKAQIJS03jZFDHDY2mgtsEaN22ckkqTsX9v5dIgeqddAF
-         uWvQ==
-X-Gm-Message-State: APjAAAX1fqzd+VUdgm1/ApH8k8rxSEvAMmDVlM6tTdSm1ZAd7I7VEjjx
-        JIrOf5BRY7Tu+NLspdPWHs/vRJQ/PbOYi/LXwvHmHVEE
-X-Google-Smtp-Source: APXvYqwqIHUrEtXdoPbVnpLxwh2KqCzpzklP7J9yGOYytQ/1LS8BXr/JDl/k0iY/xzLs23owgZnP3oGCrG/oa+Ym31s=
-X-Received: by 2002:aca:b654:: with SMTP id g81mr3826040oif.153.1569941473256;
- Tue, 01 Oct 2019 07:51:13 -0700 (PDT)
+        Tue, 1 Oct 2019 10:53:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35820 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727143AbfJAOx6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Oct 2019 10:53:58 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 81C1220815;
+        Tue,  1 Oct 2019 14:53:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1569941637;
+        bh=ZZ63NgRB4la/JntiVLUk4sSc2uMP4usvtqmHwu3XxTs=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=oiJasVlV/zy+HQBB3apaVUeS88GLzmWZf3sELqH6JOyNmq4K7MjVnegmzgtjg/VJA
+         S4oyDx7A4/DF7rZt9NET7tydhgIkY0UlbdfKqHHL8nkFrL8izKLBWf3MKvMtpgVqcX
+         yO2oZq61V2mJrj8OmQqiGAZE7tXg9fIaa8964USI=
+Date:   Tue, 1 Oct 2019 16:53:54 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Mika Westerberg <mika.westerberg@linux.intel.com>
+Cc:     linux-usb@vger.kernel.org,
+        Andreas Noever <andreas.noever@gmail.com>,
+        Michael Jamet <michael.jamet@intel.com>,
+        Yehezkel Bernat <YehezkelShB@gmail.com>,
+        Rajmohan Mani <rajmohan.mani@intel.com>,
+        Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>,
+        Lukas Wunner <lukas@wunner.de>,
+        Alan Stern <stern@rowland.harvard.edu>,
+        Mario.Limonciello@dell.com,
+        Anthony Wong <anthony.wong@canonical.com>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [RFC PATCH 17/22] thunderbolt: Add initial support for USB4
+Message-ID: <20191001145354.GA3366714@kroah.com>
+References: <20191001113830.13028-1-mika.westerberg@linux.intel.com>
+ <20191001113830.13028-18-mika.westerberg@linux.intel.com>
+ <20191001124748.GH2954373@kroah.com>
+ <20191001130905.GO2714@lahna.fi.intel.com>
 MIME-Version: 1.0
-References: <1568793876-9009-1-git-send-email-gareth.williams.jx@renesas.com>
- <1568793876-9009-3-git-send-email-gareth.williams.jx@renesas.com>
- <20191001120203.GA28106@bogus> <TY2PR01MB292460F29AE0664CFFD70EFDDF9D0@TY2PR01MB2924.jpnprd01.prod.outlook.com>
-In-Reply-To: <TY2PR01MB292460F29AE0664CFFD70EFDDF9D0@TY2PR01MB2924.jpnprd01.prod.outlook.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Tue, 1 Oct 2019 16:51:02 +0200
-Message-ID: <CAMuHMdXBfgC=x7H_mnLb_s0gMOBS7r9h8vqbiSU+168VKs9q1w@mail.gmail.com>
-Subject: Re: [PATCH v2 2/4] dt-bindings: snps,dw-apb-ssi: Add optional clock
- domain information
-To:     Gareth Williams <gareth.williams.jx@renesas.com>
-Cc:     Rob Herring <robh@kernel.org>, Mark Brown <broonie@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Phil Edworthy <phil.edworthy@renesas.com>,
-        "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191001130905.GO2714@lahna.fi.intel.com>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Gareth,
+On Tue, Oct 01, 2019 at 04:09:05PM +0300, Mika Westerberg wrote:
+> On Tue, Oct 01, 2019 at 02:47:48PM +0200, Greg Kroah-Hartman wrote:
+> > > -	  Thunderbolt Controller driver. This driver is required if you
+> > > -	  want to hotplug Thunderbolt devices on Apple hardware or on PCs
+> > > -	  with Intel Falcon Ridge or newer.
+> > > +	  USB4 (Thunderbolt) driver. USB4 is the public spec based on
+> > > +	  Thunderbolt 3 protocol. This driver is required if you want to
+> > > +	  hotplug Thunderbolt and USB4 compliant devices on Apple
+> > > +	  hardware or on PCs with Intel Falcon Ridge or newer.
+> > 
+> > Wait, did "old" thunderbolt just get re-branded as USB4?
+> 
+> Not but the driver started supporting USB4 as well :)
+> 
+> USB4 is pretty much public spec of Thunderbolt 3 but with some
+> differences in register layouts (this is because Thunderbolt uses some
+> vendor specific capabilities which are now moved to more "standard"
+> places). 
 
-On Tue, Oct 1, 2019 at 3:50 PM Gareth Williams
-<gareth.williams.jx@renesas.com> wrote:
-> On Tue, Oct 01, 2019 at 13:02:34AM +0100, Rob Herring wrote:
-> > On Wed, Sep 18, 2019 at 09:04:34AM +0100, Gareth Williams wrote:
-> > > Note in the bindings documentation that pclk should be renamed if a
-> > > clock domain is used to enable the optional bus clock.
-> > >
-> > > Signed-off-by: Gareth Williams <gareth.williams.jx@renesas.com>
-> > > ---
-> > > v2: Introduced this patch.
-> > > ---
-> > >  Documentation/devicetree/bindings/spi/snps,dw-apb-ssi.txt | 3 ++-
-> > >  1 file changed, 2 insertions(+), 1 deletion(-)
-> > >
-> > > diff --git a/Documentation/devicetree/bindings/spi/snps,dw-apb-ssi.txt
-> > > b/Documentation/devicetree/bindings/spi/snps,dw-apb-ssi.txt
-> > > index f54c8c3..3ed08ee 100644
-> > > --- a/Documentation/devicetree/bindings/spi/snps,dw-apb-ssi.txt
-> > > +++ b/Documentation/devicetree/bindings/spi/snps,dw-apb-ssi.txt
-> > > @@ -16,7 +16,8 @@ Required properties:
-> > >  Optional properties:
-> > >  - clock-names : Contains the names of the clocks:
-> > >      "ssi_clk", for the core clock used to generate the external SPI clock.
-> > > -    "pclk", the interface clock, required for register access.
-> > > +    "pclk", the interface clock, required for register access. If a clock domain
-> > > +     used to enable this clock then it should be named "pclk_clkdomain".
-> >
-> > What's a clock domain?
-> >
-> > Unless this is a h/w difference in the IP block, then this change doesn't make
-> > sense.
-> This is a reference to the use of clock domains that are implemented through
-> generic power domains. The domain is implemented in
-> drivers/clk/renesas/r9a06g032-clocks.c and general details of clock domains
-> can be found at
-> https://elinux.org/images/1/14/Last_One_Out%2C_Turn_Off_The_Lights.pdf
+Ok, then we need to rename the Kconfig option as well, otherwise no one
+will "know" that this changed, so they will not be prompted for it.
 
-Rob is right: the clock domain is an SoC integration detail, not specific to
-the snps,dw-apb-ssi block.
-Remember, DT describes hardware, not implementation details.
+> > Because if I have an "old" laptop that needs Thunderbolt support, how am
+> > I going to know it is now called USB4 instead?
+> 
+> Well the Kconfig option tries to have both names there:
+> 
+>   tristate "USB4 (Thunderbolt) support"
+> 
+> and then
+> 
+>   USB4 (Thunderbolt) driver. USB4 is the public spec based on
+>   Thunderbolt 3 protocol. This driver is required if you want to hotplug
+>   Thunderbolt and USB4 compliant devices on Apple hardware or on PCs
+>   with Intel Falcon Ridge or newer.
+> 
+> and the Kconfig option is still CONFIG_THUNDERBOLT. I know this is
+> confusing but I don't have better ideas how we can advertise both. I
+> borrowed this "format" from firewire.
 
-So the Linux snps,dw-apb-ssi driver should take care of it.
+CONFIG_USB4 instead?
 
-Which brings us back to an old discussion topic: power-domains properties
-describe integration, and thus should be documented at a higher level than
-in individual binding documents, just like e.g. interrupt-parent.
+> > Shouldn't there just be a new USB4 option that only enables/builds the
+> > USB4 stuff if selected?  Why would I want all of this additional code on
+> > my old system if it's not going to do anything at all?
+> 
+> USB4 devices are backward compatible with Thunderbolt 3 so you should be
+> able to plug in USB4 device to your old Thunderbolt 3 laptop for
+> example. It goes the other way as well. Some things are optional but for
+> example USB4 hubs must support also Thunderbolt 3.
+> 
+> Does that clarify?
 
-Gr{oetje,eeting}s,
+Yes, it does, looks like marketing just renamed an old functioning
+system into a "brand new one!" :)
 
-                        Geert
+thanks,
 
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+greg k-h
