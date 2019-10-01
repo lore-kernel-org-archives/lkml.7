@@ -2,149 +2,127 @@ Return-Path: <SRS0=YRFP=X2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31807C352AA
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 09:59:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 18365ECE589
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 10:00:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 01F8D2190F
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 09:59:39 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="xcHZ5SL4"
+	by mail.kernel.org (Postfix) with ESMTP id ECCBD2190F
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 10:00:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729887AbfJAJ7i (ORCPT
+        id S1729946AbfJAKAU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Oct 2019 05:59:38 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:40580 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725765AbfJAJ7i (ORCPT
+        Tue, 1 Oct 2019 06:00:20 -0400
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:44659 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729579AbfJAKAT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Oct 2019 05:59:38 -0400
-Received: by mail-wr1-f67.google.com with SMTP id l3so14684009wru.7
-        for <linux-kernel@vger.kernel.org>; Tue, 01 Oct 2019 02:59:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=H6cw40bjr93UCpoh3Do3Kf35YqQ3oo81uvRbEJ9472w=;
-        b=xcHZ5SL4713A3EyMTIixe6/yC73jL+WfHaRcDANdxXBx93UTv13ECs5I4RB6eZHTl4
-         77RhLlEy9uezstXuY4eX+cCPCJ2geYLI1zEzt69kJo9V1U7GLV5sJjhQ9LboTBHfSwTK
-         8O5A/zKh/t0ht1pT+GbiBUiRgGDgCWUd97WNsWoSnjTzy0s2dlLGxGQcHYFld72LSS1T
-         nQciw1D2/rMeTZAw3FaEt2hReed087DfGzXs8tKqBfn4dnMpqydbOvnI8o9eP5dbg36B
-         wZC2XVjmTH3uoBRPBiXZ3Iol1e0lu8WN9rivxnPbEpgb1xmZPZEDFb7TPwTkyjhPaYQW
-         wFGg==
+        Tue, 1 Oct 2019 06:00:19 -0400
+Received: by mail-ot1-f68.google.com with SMTP id 21so10974419otj.11;
+        Tue, 01 Oct 2019 03:00:19 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=H6cw40bjr93UCpoh3Do3Kf35YqQ3oo81uvRbEJ9472w=;
-        b=i5KqOJzCIHiz3Rc2rIYZJwB0fyGTe9nrQamKlHAHTdX4No/0nHvy0qsyNZM0BWqVm0
-         MFeh9NEe6pu0DzNJ2dpM1hPKdkkZnZfdoNZUxM0BODtfCsqxN8xyRjtQJMw/400D0/xk
-         Y0O5371reFCOSBhZ3fTs1f7H/B+amNSPL4+ozMEE3e6FhcABoDXodNFOjkoX4k+e62ft
-         8bwQ1oWTfccGvZg+cotyClOPhC5ypmmIVGtCb6K3j4Ph0L3kP6/Yoszhj7le4X4pXIJb
-         BThEn9g6vUImIJ0ABS0TsrKDM9gU07mwoln6u7fISQtLLPI969PgqPTBi1fM3Lqo4yjL
-         G8pQ==
-X-Gm-Message-State: APjAAAWhCvbZQa51OJq/tc9WXTnh4VyMwEGxDULLxrIihkprPmCFewEd
-        ktC1Syel1gs+KHBJzPM0gPoKNbChdSA=
-X-Google-Smtp-Source: APXvYqwizk9nhaStRvBRetXOtY0+/aZmboK5qRDfqhBuZ7sY9IqqIlTxx3spkJJv18yVHQT84McA1A==
-X-Received: by 2002:adf:f709:: with SMTP id r9mr16801917wrp.228.1569923975338;
-        Tue, 01 Oct 2019 02:59:35 -0700 (PDT)
-Received: from [192.168.86.34] (cpc89974-aztw32-2-0-cust43.18-1.cable.virginm.net. [86.30.250.44])
-        by smtp.googlemail.com with ESMTPSA id h17sm4734761wme.6.2019.10.01.02.59.34
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 01 Oct 2019 02:59:34 -0700 (PDT)
-Subject: Re: [PATCH] nvmem: sc27xx: Change to use
- devm_hwspin_lock_request_specific() to request one hwlock
-To:     Baolin Wang <baolin.wang@linaro.org>
-Cc:     orsonzhai@gmail.com, zhang.lyra@gmail.com, freeman.liu@unisoc.com,
-        linux-kernel@vger.kernel.org
-References: <b2ad55edbb1185c52dc73622ddccbdb7c1b52efd.1569552692.git.baolin.wang@linaro.org>
-From:   Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Message-ID: <57bbc15f-85dc-2557-4b0b-be6fa8fe1ed0@linaro.org>
-Date:   Tue, 1 Oct 2019 10:59:33 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=faGsizJ3ecBmRT0lC0LHIc1ED5+33ls7KqFDwpGQp1Y=;
+        b=fc22cYz14ZLuj+6gUEMxaAyItYCtL/+OMGHN/xCY8SE3ul0KmRozOtLm+G+xPiLNl2
+         ce/jxsFL8pL121piU+DSXkHOyIDMwP+60BV63HHsHbYXGCqKB8bFJxRnqNKs7mc40eka
+         lyeBQulzXFmc6V0deKK4buLGfV+EyJUlOaBNmLfmkp3vThhSdRaeXIj5+i70K6hJCWtx
+         ROxy5t6M4aaOt7CvUOuemVa37HNB0qChf1SW3ipGWxOPG6P0Lro9F/kqTSdcIZO+5jjT
+         /wTXuePKSZG0RhHE05UBTcZLrQJzFeU0HeXQq9WaidqU+e52DM/Cmm1MLbNXk5UVNTwd
+         sNPg==
+X-Gm-Message-State: APjAAAU2Rib0sYM4u9A+3CVBloQHOlh0OUa+l3rE8MeS/lskVEQU9puQ
+        65i9rDKnGFX8NIvOFloIIqm/SmLWVuzeclcJcOw=
+X-Google-Smtp-Source: APXvYqzcpXgl/rpgg6rFvbP9U9TQV+0VWzYn2phPcW2I8wUeCtVGTFa1h63o2/2Q2yhbCpSR/x0pKN2LSm1Y9LEum2s=
+X-Received: by 2002:a9d:404d:: with SMTP id o13mr17642078oti.39.1569924018857;
+ Tue, 01 Oct 2019 03:00:18 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <b2ad55edbb1185c52dc73622ddccbdb7c1b52efd.1569552692.git.baolin.wang@linaro.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20191001090657.25721-1-lukma@denx.de> <CAMuHMdWHTaPkzTdzz-j1rFeT=aAEG+J46fgKiPYrXoAR_DTvtQ@mail.gmail.com>
+ <20191001113420.032dbfef@jawa>
+In-Reply-To: <20191001113420.032dbfef@jawa>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Tue, 1 Oct 2019 12:00:07 +0200
+Message-ID: <CAMuHMdWh7xPZqp4J1qG22dXk_g=Q1WtQ9Xu-r3wiFOL3kW+WBg@mail.gmail.com>
+Subject: Re: [PATCH] spi: Avoid calling spi_slave_abort() with kfreed spidev
+To:     Lukasz Majewski <lukma@denx.de>
+Cc:     Mark Brown <broonie@kernel.org>,
+        Colin Ian King <colin.king@canonical.com>,
+        linux-spi <linux-spi@vger.kernel.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        kbuild test robot <lkp@intel.com>,
+        Julia Lawall <julia.lawall@lip6.fr>,
+        Dan Carpenter <dan.carpenter@oracle.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Lukasz,
 
+On Tue, Oct 1, 2019 at 11:34 AM Lukasz Majewski <lukma@denx.de> wrote:
+> > On Tue, Oct 1, 2019 at 11:07 AM Lukasz Majewski <lukma@denx.de> wrote:
+> > > Call spi_slave_abort() only when the spidev->spi is !NULL and the
+> > > structure hasn't already been kfreed.
+> > >
+> > > Reported-by: kbuild test robot <lkp@intel.com>
+> > > Reported-by: Julia Lawall <julia.lawall@lip6.fr>
+> > > Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
+> > > Signed-off-by: Lukasz Majewski <lukma@denx.de>
 
-On 27/09/2019 04:12, Baolin Wang wrote:
-> Change to use devm_hwspin_lock_request_specific() to help to simplify the
-> cleanup code for drivers requesting one hwlock. Thus we can remove the
-> redundant sc27xx_efuse_remove() and platform_set_drvdata().
-> 
-> Signed-off-by: Baolin Wang <baolin.wang@linaro.org>
-> ---
->   drivers/nvmem/sc27xx-efuse.c |   13 +------------
->   1 file changed, 1 insertion(+), 12 deletions(-)
+> > > --- a/drivers/spi/spidev.c
+> > > +++ b/drivers/spi/spidev.c
+> > > @@ -600,15 +600,16 @@ static int spidev_open(struct inode *inode,
+> > > struct file *filp) static int spidev_release(struct inode *inode,
+> > > struct file *filp) {
+> > >         struct spidev_data      *spidev;
+> > > +       int dofree;
+> > >
+> > >         mutex_lock(&device_list_lock);
+> > >         spidev = filp->private_data;
+> > >         filp->private_data = NULL;
+> > > +       dofree = 0;
+> > >
+> > >         /* last close? */
+> > >         spidev->users--;
+> > >         if (!spidev->users) {
+> > > -               int             dofree;
+> > >
+> > >                 kfree(spidev->tx_buffer);
+> > >                 spidev->tx_buffer = NULL;
+> > > @@ -628,7 +629,8 @@ static int spidev_release(struct inode *inode,
+> > > struct file *filp) kfree(spidev);
+> > >         }
+> > >  #ifdef CONFIG_SPI_SLAVE
+> > > -       spi_slave_abort(spidev->spi);
+> > > +       if (!dofree)
+> > > +               spi_slave_abort(spidev->spi);
+> >
+> > Can spidev->spi be NULL, if spidev->users != 0?
+>
+> No, it shouldn't be.
+>
+> The "dofree" is only set to true (the spidev->spi == NULL condition is
+> checked) if there are no references (spidev->users == 0).
+>
+> The if (!dofree) prevents from calling spi_slave_abort() when
+> spidev->spi == NULL and spidev is kfree'd.
 
+If spidev->users != 0, the block checking spidev->spi == NULL is never
+executed, and spi_slave_abort() will be called.
 
-Applied thanks,
+I'm wondering if spidev->spi can be NULL if spidev->users is still positive.
 
-srini
+Gr{oetje,eeting}s,
 
-> 
-> diff --git a/drivers/nvmem/sc27xx-efuse.c b/drivers/nvmem/sc27xx-efuse.c
-> index c6ee210..ab5e7e0 100644
-> --- a/drivers/nvmem/sc27xx-efuse.c
-> +++ b/drivers/nvmem/sc27xx-efuse.c
-> @@ -211,7 +211,7 @@ static int sc27xx_efuse_probe(struct platform_device *pdev)
->   		return ret;
->   	}
->   
-> -	efuse->hwlock = hwspin_lock_request_specific(ret);
-> +	efuse->hwlock = devm_hwspin_lock_request_specific(&pdev->dev, ret);
->   	if (!efuse->hwlock) {
->   		dev_err(&pdev->dev, "failed to request hwspinlock\n");
->   		return -ENXIO;
-> @@ -219,7 +219,6 @@ static int sc27xx_efuse_probe(struct platform_device *pdev)
->   
->   	mutex_init(&efuse->mutex);
->   	efuse->dev = &pdev->dev;
-> -	platform_set_drvdata(pdev, efuse);
->   
->   	econfig.stride = 1;
->   	econfig.word_size = 1;
-> @@ -232,21 +231,12 @@ static int sc27xx_efuse_probe(struct platform_device *pdev)
->   	nvmem = devm_nvmem_register(&pdev->dev, &econfig);
->   	if (IS_ERR(nvmem)) {
->   		dev_err(&pdev->dev, "failed to register nvmem config\n");
-> -		hwspin_lock_free(efuse->hwlock);
->   		return PTR_ERR(nvmem);
->   	}
->   
->   	return 0;
->   }
->   
-> -static int sc27xx_efuse_remove(struct platform_device *pdev)
-> -{
-> -	struct sc27xx_efuse *efuse = platform_get_drvdata(pdev);
-> -
-> -	hwspin_lock_free(efuse->hwlock);
-> -	return 0;
-> -}
-> -
->   static const struct of_device_id sc27xx_efuse_of_match[] = {
->   	{ .compatible = "sprd,sc2731-efuse" },
->   	{ }
-> @@ -254,7 +244,6 @@ static int sc27xx_efuse_remove(struct platform_device *pdev)
->   
->   static struct platform_driver sc27xx_efuse_driver = {
->   	.probe = sc27xx_efuse_probe,
-> -	.remove = sc27xx_efuse_remove,
->   	.driver = {
->   		.name = "sc27xx-efuse",
->   		.of_match_table = sc27xx_efuse_of_match,
-> 
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
