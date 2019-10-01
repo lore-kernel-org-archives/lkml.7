@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2E9DC352AA
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 16:55:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 01022ECE58A
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 16:55:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 850782168B
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 16:55:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CB5E32168B
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 16:55:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569948931;
-	bh=z6WyRdHEuXM4BX+2/G9Bv1TDJ64UqpMMW83Y8th40I4=;
+	s=default; t=1569948932;
+	bh=tIbenjcvZqPaNdBtku31+1LasH3s1munDjqFxyHW7Yw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=FIRnesHhjPY7uKdaJhD5cwn/Arz2CR8sZQlODHo+HRAB0JVMSm4v256Yf0gJKNZBn
-	 YfnohByY1sH6CTzQ6n2EEwmlB2klniLFGJnqqUNegrqpIj4me6El1eWCc12l+Os499
-	 Lgzk5gGhUDsWA+FC+5ZyPjVEaKQDHLd9jk1Dq3XI=
+	b=HvYbfZYrOQu6K8d/U93WbLtMaGqU/hhGoq6nOQ5STGD8mrByU7cWVaEgccgnacMIa
+	 2Um+rREDN2mVL4Z38RiOGIoc9KO5OIck3iToOFwXkgT35XueS2L7w6iuGHLjZ5uA1w
+	 5CkTODFsTWE2xsexdq8tsNf09QyhPLJa4Z8RVZLU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731484AbfJAQz3 (ORCPT
+        id S2389529AbfJAQz0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Oct 2019 12:55:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54740 "EHLO mail.kernel.org"
+        Tue, 1 Oct 2019 12:55:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54686 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732158AbfJAQmp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Oct 2019 12:42:45 -0400
+        id S1732142AbfJAQmo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Oct 2019 12:42:44 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2517A21920;
-        Tue,  1 Oct 2019 16:42:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E0275205C9;
+        Tue,  1 Oct 2019 16:42:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569948165;
-        bh=z6WyRdHEuXM4BX+2/G9Bv1TDJ64UqpMMW83Y8th40I4=;
+        s=default; t=1569948163;
+        bh=tIbenjcvZqPaNdBtku31+1LasH3s1munDjqFxyHW7Yw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mbBqqh8YNcTRXxoNDYx+qbsvXVi/noLyRvycl4EDUbKusrR3VxQdqNJMtoUIaaj9l
-         Mgunod3pGGM/O5wcUjp4Y2S5oONSbvmDFHQmxhpD6oZwGNluL4fJBiFKlef4hrXcl/
-         FGIiGMPT+lhjlkkDXvRu/bLaqwFTrK/EyPWNbS10=
+        b=U7CD5UUK5fR7qnt+lBFbU9gr4u0GXOa317/jZJgv/6xkOTwOsnqHw5sAsAKAS9a8r
+         jb6Yzci52tEMuzIXS2RvUQ/Tkz/3djSvnn3yuqH5s6X2SrSTG3AulqNy2GfJGAC4P8
+         bgvZ5HzqiPrCGsGzFLuY2D+mA/vnGMW8Thj94JZg=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Lee Jones <lee.jones@linaro.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Wolfram Sang <wsa@the-dreams.de>,
-        Sasha Levin <sashal@kernel.org>, linux-i2c@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.2 51/63] i2c: qcom-geni: Disable DMA processing on the Lenovo Yoga C630
-Date:   Tue,  1 Oct 2019 12:41:13 -0400
-Message-Id: <20191001164125.15398-51-sashal@kernel.org>
+Cc:     Xin Long <lucien.xin@gmail.com>, Xiumei Mu <xmu@redhat.com>,
+        Fei Liu <feliu@redhat.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.2 50/63] macsec: drop skb sk before calling gro_cells_receive
+Date:   Tue,  1 Oct 2019 12:41:12 -0400
+Message-Id: <20191001164125.15398-50-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191001164125.15398-1-sashal@kernel.org>
 References: <20191001164125.15398-1-sashal@kernel.org>
@@ -61,63 +60,64 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Lee Jones <lee.jones@linaro.org>
+From: Xin Long <lucien.xin@gmail.com>
 
-[ Upstream commit 127068abe85bf3dee50df51cb039a5a987a4a666 ]
+[ Upstream commit ba56d8ce38c8252fff5b745db3899cf092578ede ]
 
-We have a production-level laptop (Lenovo Yoga C630) which is exhibiting
-a rather horrific bug.  When I2C HID devices are being scanned for at
-boot-time the QCom Geni based I2C (Serial Engine) attempts to use DMA.
-When it does, the laptop reboots and the user never sees the OS.
+Fei Liu reported a crash when doing netperf on a topo of macsec
+dev over veth:
 
-Attempts are being made to debug the reason for the spontaneous reboot.
-No luck so far, hence the requirement for this hot-fix.  This workaround
-will be removed once we have a viable fix.
+  [  448.919128] refcount_t: underflow; use-after-free.
+  [  449.090460] Call trace:
+  [  449.092895]  refcount_sub_and_test+0xb4/0xc0
+  [  449.097155]  tcp_wfree+0x2c/0x150
+  [  449.100460]  ip_rcv+0x1d4/0x3a8
+  [  449.103591]  __netif_receive_skb_core+0x554/0xae0
+  [  449.108282]  __netif_receive_skb+0x28/0x78
+  [  449.112366]  netif_receive_skb_internal+0x54/0x100
+  [  449.117144]  napi_gro_complete+0x70/0xc0
+  [  449.121054]  napi_gro_flush+0x6c/0x90
+  [  449.124703]  napi_complete_done+0x50/0x130
+  [  449.128788]  gro_cell_poll+0x8c/0xa8
+  [  449.132351]  net_rx_action+0x16c/0x3f8
+  [  449.136088]  __do_softirq+0x128/0x320
 
-Signed-off-by: Lee Jones <lee.jones@linaro.org>
-Tested-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-Signed-off-by: Wolfram Sang <wsa@the-dreams.de>
+The issue was caused by skb's true_size changed without its sk's
+sk_wmem_alloc increased in tcp/skb_gro_receive(). Later when the
+skb is being freed and the skb's truesize is subtracted from its
+sk's sk_wmem_alloc in tcp_wfree(), underflow occurs.
+
+macsec is calling gro_cells_receive() to receive a packet, which
+actually requires skb->sk to be NULL. However when macsec dev is
+over veth, it's possible the skb->sk is still set if the skb was
+not unshared or expanded from the peer veth.
+
+ip_rcv() is calling skb_orphan() to drop the skb's sk for tproxy,
+but it is too late for macsec's calling gro_cells_receive(). So
+fix it by dropping the skb's sk earlier on rx path of macsec.
+
+Fixes: 5491e7c6b1a9 ("macsec: enable GRO and RPS on macsec devices")
+Reported-by: Xiumei Mu <xmu@redhat.com>
+Reported-by: Fei Liu <feliu@redhat.com>
+Signed-off-by: Xin Long <lucien.xin@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/i2c/busses/i2c-qcom-geni.c | 12 ++++++++----
- 1 file changed, 8 insertions(+), 4 deletions(-)
+ drivers/net/macsec.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/i2c/busses/i2c-qcom-geni.c b/drivers/i2c/busses/i2c-qcom-geni.c
-index db075bc0d9525..715ddc5d0eac9 100644
---- a/drivers/i2c/busses/i2c-qcom-geni.c
-+++ b/drivers/i2c/busses/i2c-qcom-geni.c
-@@ -354,11 +354,13 @@ static int geni_i2c_rx_one_msg(struct geni_i2c_dev *gi2c, struct i2c_msg *msg,
- {
- 	dma_addr_t rx_dma;
- 	unsigned long time_left;
--	void *dma_buf;
-+	void *dma_buf = NULL;
- 	struct geni_se *se = &gi2c->se;
- 	size_t len = msg->len;
+diff --git a/drivers/net/macsec.c b/drivers/net/macsec.c
+index 8f46aa1ddec01..cb7637364b40d 100644
+--- a/drivers/net/macsec.c
++++ b/drivers/net/macsec.c
+@@ -1235,6 +1235,7 @@ static rx_handler_result_t macsec_handle_frame(struct sk_buff **pskb)
+ 		macsec_rxsa_put(rx_sa);
+ 	macsec_rxsc_put(rx_sc);
  
--	dma_buf = i2c_get_dma_safe_msg_buf(msg, 32);
-+	if (!of_machine_is_compatible("lenovo,yoga-c630"))
-+		dma_buf = i2c_get_dma_safe_msg_buf(msg, 32);
-+
- 	if (dma_buf)
- 		geni_se_select_mode(se, GENI_SE_DMA);
- 	else
-@@ -393,11 +395,13 @@ static int geni_i2c_tx_one_msg(struct geni_i2c_dev *gi2c, struct i2c_msg *msg,
- {
- 	dma_addr_t tx_dma;
- 	unsigned long time_left;
--	void *dma_buf;
-+	void *dma_buf = NULL;
- 	struct geni_se *se = &gi2c->se;
- 	size_t len = msg->len;
- 
--	dma_buf = i2c_get_dma_safe_msg_buf(msg, 32);
-+	if (!of_machine_is_compatible("lenovo,yoga-c630"))
-+		dma_buf = i2c_get_dma_safe_msg_buf(msg, 32);
-+
- 	if (dma_buf)
- 		geni_se_select_mode(se, GENI_SE_DMA);
- 	else
++	skb_orphan(skb);
+ 	ret = gro_cells_receive(&macsec->gro_cells, skb);
+ 	if (ret == NET_RX_SUCCESS)
+ 		count_rx(dev, skb->len);
 -- 
 2.20.1
 
