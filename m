@@ -2,90 +2,175 @@ Return-Path: <SRS0=YRFP=X2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AB201ECE589
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 09:32:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F411C352AA
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 09:34:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 77F78215EA
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 09:32:29 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=endlessm-com.20150623.gappssmtp.com header.i=@endlessm-com.20150623.gappssmtp.com header.b="iDAM+R9A"
+	by mail.kernel.org (Postfix) with ESMTP id 68FA8215EA
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 09:34:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729399AbfJAJc2 (ORCPT
+        id S1727690AbfJAJeb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Oct 2019 05:32:28 -0400
-Received: from mail-qt1-f194.google.com ([209.85.160.194]:40909 "EHLO
-        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729292AbfJAJc0 (ORCPT
+        Tue, 1 Oct 2019 05:34:31 -0400
+Received: from mail-out.m-online.net ([212.18.0.10]:58599 "EHLO
+        mail-out.m-online.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726132AbfJAJeb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Oct 2019 05:32:26 -0400
-Received: by mail-qt1-f194.google.com with SMTP id f7so20724275qtq.7
-        for <linux-kernel@vger.kernel.org>; Tue, 01 Oct 2019 02:32:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=endlessm-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=OFYZf47XM4r0xE8wHoVEHk7v0YQ69pCu6pGafD2jwco=;
-        b=iDAM+R9ANcbzIjKCTN6ZYSi+Aksa0PboAWyf4s6tXCRILXfjN3srMVk9rzXdIqonNN
-         C9tv2GNLMLTLlcZF4RTX407fQQa7EBvmm2QK21l9IcRLfczMl3ma6kDFRqqyBPouORRx
-         JZ/RhDpKYXtEX30EgeQ56tCgIuBlcbFg9y2srZkbkZX+E7tUi8PYPAYd2r/N17AWhvVG
-         s4Et//tI2AlllqkmYdaS8QVYEKC15gqaZ4bH6rNd9y/yNi15b2pDCdtRFyPfJjHI46yl
-         sGHyzAzz7QTQhSZLZoWbeNkX5FWMhPnhPPCFNgYOPGekKsGpB5/ZkIhxmOuO4a8p+QWr
-         jTJQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=OFYZf47XM4r0xE8wHoVEHk7v0YQ69pCu6pGafD2jwco=;
-        b=JtnfFawXD600Da3dRvRlfynRBRhW3PV49lPheM+ZJ3sRBf7519e7eYaeaL9C/blfl6
-         3t99vwATBo1FrbMJyeDW3wkmj3DTlD5EgnGEg9e5fuCci5p8izZur1kaS4icQ2U3o2tH
-         ka1ERbZDxT7qlxpuu7VyW3v3cPrm3PtxcnA/H5TIvCB7b3rQI6YnUeDJHE6ZxRhYyKN/
-         Uv++yOEkwJbM5+u9Fn540PSI4Xuj/YIkd8p+ImVIzV/WRyM+fj0uwolNb9L96wDpoXnQ
-         PJsCUT+ApdFtBq6XDWk0Hc7HqXXJHcdIt/OcP2P8J5wfsI9WmOZXYEmfjsAOKNQk+xtx
-         /X1w==
-X-Gm-Message-State: APjAAAVYnziFAWkw3T6YBPYdTgkLtW6x15nTpp/OgBQOEavFW3+v9yiX
-        km1b8qfw7C2S/fQ9ge9iHP0I5GOu0q642ueVxsq57Q==
-X-Google-Smtp-Source: APXvYqx/69O5IdHsZutFRVhhkJCSDgmYpJbh7WyfugO2INdJv/xpqNfiengrZJKHyEPhWEsJ/6sllro9UJLiTLagBoI=
-X-Received: by 2002:a05:6214:30d:: with SMTP id i13mr24557854qvu.101.1569922344454;
- Tue, 01 Oct 2019 02:32:24 -0700 (PDT)
+        Tue, 1 Oct 2019 05:34:31 -0400
+Received: from frontend01.mail.m-online.net (unknown [192.168.8.182])
+        by mail-out.m-online.net (Postfix) with ESMTP id 46jDcg6Kl0z1rh1N;
+        Tue,  1 Oct 2019 11:34:27 +0200 (CEST)
+Received: from localhost (dynscan1.mnet-online.de [192.168.6.70])
+        by mail.m-online.net (Postfix) with ESMTP id 46jDcg5Tytz1qqkg;
+        Tue,  1 Oct 2019 11:34:27 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at mnet-online.de
+Received: from mail.mnet-online.de ([192.168.8.182])
+        by localhost (dynscan1.mail.m-online.net [192.168.6.70]) (amavisd-new, port 10024)
+        with ESMTP id tsy_TKrL4bHL; Tue,  1 Oct 2019 11:34:26 +0200 (CEST)
+X-Auth-Info: wHdtrZ7eEaIvMY+PQWDo/jAgayEP2yvkEtcM0nBf1Sc=
+Received: from jawa (85-222-111-42.dynamic.chello.pl [85.222.111.42])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.mnet-online.de (Postfix) with ESMTPSA;
+        Tue,  1 Oct 2019 11:34:26 +0200 (CEST)
+Date:   Tue, 1 Oct 2019 11:34:20 +0200
+From:   Lukasz Majewski <lukma@denx.de>
+To:     Geert Uytterhoeven <geert@linux-m68k.org>
+Cc:     Mark Brown <broonie@kernel.org>,
+        Colin Ian King <colin.king@canonical.com>,
+        linux-spi <linux-spi@vger.kernel.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        kbuild test robot <lkp@intel.com>,
+        Julia Lawall <julia.lawall@lip6.fr>,
+        Dan Carpenter <dan.carpenter@oracle.com>
+Subject: Re: [PATCH] spi: Avoid calling spi_slave_abort() with kfreed spidev
+Message-ID: <20191001113420.032dbfef@jawa>
+In-Reply-To: <CAMuHMdWHTaPkzTdzz-j1rFeT=aAEG+J46fgKiPYrXoAR_DTvtQ@mail.gmail.com>
+References: <20191001090657.25721-1-lukma@denx.de>
+        <CAMuHMdWHTaPkzTdzz-j1rFeT=aAEG+J46fgKiPYrXoAR_DTvtQ@mail.gmail.com>
+Organization: denx.de
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-References: <20190911025045.20918-1-chiu@endlessm.com> <CAB4CAwcs4zn4Sg0AkFnSUE-tbkdrHE=3yYeF8g+-ak5NyPBkuQ@mail.gmail.com>
-In-Reply-To: <CAB4CAwcs4zn4Sg0AkFnSUE-tbkdrHE=3yYeF8g+-ak5NyPBkuQ@mail.gmail.com>
-From:   Chris Chiu <chiu@endlessm.com>
-Date:   Tue, 1 Oct 2019 17:32:13 +0800
-Message-ID: <CAB4CAwdO5evU8K5qjGe0rXJPmQA8gSd0tLkN6nh-EzyATU9aOw@mail.gmail.com>
-Subject: Re: [PATCH v2] rtl8xxxu: add bluetooth co-existence support for
- single antenna
-To:     Jes Sorensen <Jes.Sorensen@gmail.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        David Miller <davem@davemloft.net>
-Cc:     linux-wireless <linux-wireless@vger.kernel.org>,
-        netdev <netdev@vger.kernel.org>,
-        Linux Kernel <linux-kernel@vger.kernel.org>,
-        Linux Upstreaming Team <linux@endlessm.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha512;
+ boundary="Sig_/_NuMKD1CeMwaipxVqIJqYmB"; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Sep 19, 2019 at 9:44 AM Chris Chiu <chiu@endlessm.com> wrote:
->
-> On Wed, Sep 11, 2019 at 10:50 AM Chris Chiu <chiu@endlessm.com> wrote:
-> >
-> >
-> > Notes:
-> >   v2:
-> >    - Add helper functions to replace bunch of tdma settings
-> >    - Reformat some lines to meet kernel coding style
-> >
-> >
->
-Hi Jes,
-    I've refactored the code per your suggestion. Any comment for further
-improvement? Thanks.
+--Sig_/_NuMKD1CeMwaipxVqIJqYmB
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Chris
+Hi Geert,
+
+Thank you for a very prompt response.
+
+> Hi Lukasz,
+>=20
+> On Tue, Oct 1, 2019 at 11:07 AM Lukasz Majewski <lukma@denx.de> wrote:
+> > Call spi_slave_abort() only when the spidev->spi is !NULL and the
+> > structure hasn't already been kfreed.
+> >
+> > Reported-by: kbuild test robot <lkp@intel.com>
+> > Reported-by: Julia Lawall <julia.lawall@lip6.fr>
+> > Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
+> > Signed-off-by: Lukasz Majewski <lukma@denx.de> =20
+>=20
+> Thanks for your patch!
+>=20
+> > --- a/drivers/spi/spidev.c
+> > +++ b/drivers/spi/spidev.c
+> > @@ -600,15 +600,16 @@ static int spidev_open(struct inode *inode,
+> > struct file *filp) static int spidev_release(struct inode *inode,
+> > struct file *filp) {
+> >         struct spidev_data      *spidev;
+> > +       int dofree; =20
+>=20
+> bool?
+
+It may be bool, yes - I took this "int" from the original code (further
+down in the patch), as I've moved it a bit up.
+
+>=20
+> >
+> >         mutex_lock(&device_list_lock);
+> >         spidev =3D filp->private_data;
+> >         filp->private_data =3D NULL;
+> > +       dofree =3D 0; =20
+>=20
+> Why not initialize it at declaration time?
+
+I wanted to have it protected by mutex_lock() above. However, this also
+shall work with the initialization at declaration time.
+
+>=20
+> >
+> >         /* last close? */
+> >         spidev->users--;
+> >         if (!spidev->users) {
+> > -               int             dofree;
+> >
+> >                 kfree(spidev->tx_buffer);
+> >                 spidev->tx_buffer =3D NULL;
+> > @@ -628,7 +629,8 @@ static int spidev_release(struct inode *inode,
+> > struct file *filp) kfree(spidev);
+> >         }
+> >  #ifdef CONFIG_SPI_SLAVE
+> > -       spi_slave_abort(spidev->spi);
+> > +       if (!dofree)
+> > +               spi_slave_abort(spidev->spi); =20
+>=20
+> Can spidev->spi be NULL, if spidev->users !=3D 0?
+
+No, it shouldn't be.
+
+The "dofree" is only set to true (the spidev->spi =3D=3D NULL condition is
+checked) if there are no references (spidev->users =3D=3D 0).
+
+The if (!dofree) prevents from calling spi_slave_abort() when
+spidev->spi =3D=3D NULL and spidev is kfree'd.
+
+>=20
+> >  #endif
+> >         mutex_unlock(&device_list_lock); =20
+>=20
+> Gr{oetje,eeting}s,
+>=20
+>                         Geert
+>=20
+
+
+
+
+Best regards,
+
+Lukasz Majewski
+
+--
+
+DENX Software Engineering GmbH,      Managing Director: Wolfgang Denk
+HRB 165235 Munich, Office: Kirchenstr.5, D-82194 Groebenzell, Germany
+Phone: (+49)-8142-66989-59 Fax: (+49)-8142-66989-80 Email: lukma@denx.de
+
+--Sig_/_NuMKD1CeMwaipxVqIJqYmB
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCgAdFiEEgAyFJ+N6uu6+XupJAR8vZIA0zr0FAl2THZwACgkQAR8vZIA0
+zr2dgAgA1S92SIco0K0aIQNe2B7Yy06PATAG039pcQIraWn4LPI1Ya7e7bwWJKHL
+cB7ovrdc/ej+hoi2qfL2Pp0jyGeGAuysIRq2XRrP7O+ApaIwJuMU3rjQdsMDA/tD
+z6grGAizrX+KnrpQRBIAVp+YDsvf34MEvQbPAefTaS8CQ9ynGrAV5SOBCcTEG5+o
+PpK6WHAC8jstOjlObA5vzlR6vZUl17s5WulIJTUIHC267fFcMhiO8XRRQuvrWt+0
+LiqdKUSWLexvX78BuJtcg9h+2FFDQMZU0ag2YSwpg5dY9wVDjiIq/ntgYVRBm3nA
+pIVLYoErJUNMh9NEdFr540X8x5aE8A==
+=BMNC
+-----END PGP SIGNATURE-----
+
+--Sig_/_NuMKD1CeMwaipxVqIJqYmB--
