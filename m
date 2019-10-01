@@ -2,91 +2,100 @@ Return-Path: <SRS0=YRFP=X2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ACE17C352AA
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 14:22:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8C8FECE58A
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 14:22:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8A9112190F
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 14:22:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B35E821855
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 14:22:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389113AbfJAOWo (ORCPT
+        id S2389121AbfJAOWw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Oct 2019 10:22:44 -0400
-Received: from cmccmta3.chinamobile.com ([221.176.66.81]:3110 "EHLO
-        cmccmta3.chinamobile.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389057AbfJAOWm (ORCPT
+        Tue, 1 Oct 2019 10:22:52 -0400
+Received: from mout.kundenserver.de ([217.72.192.74]:43387 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388915AbfJAOWv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Oct 2019 10:22:42 -0400
-Received: from spf.mail.chinamobile.com (unknown[172.16.121.17]) by rmmx-syy-dmz-app12-12012 (RichMail) with SMTP id 2eec5d9361056ba-944a6; Tue, 01 Oct 2019 22:21:57 +0800 (CST)
-X-RM-TRANSID: 2eec5d9361056ba-944a6
-X-RM-TagInfo: emlType=0                                       
-X-RM-SPAM-FLAG: 00000000
-Received: from localhost (unknown[223.105.0.241])
-        by rmsmtp-syy-appsvr09-12009 (RichMail) with SMTP id 2ee95d936104c3a-05422;
-        Tue, 01 Oct 2019 22:21:57 +0800 (CST)
-X-RM-TRANSID: 2ee95d936104c3a-05422
-From:   Haishuang Yan <yanhaishuang@cmss.chinamobile.com>
-To:     Shuah Khan <shuah@kernel.org>,
-        Pablo Neira Ayuso <pablo@netfilter.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Simon Horman <horms@verge.net.au>
-Cc:     Julian Anastasov <ja@ssi.bg>, linux-kernel@vger.kernel.org,
-        linux-kselftest@vger.kernel.org, lvs-devel@vger.kernel.org,
-        netfilter-devel@vger.kernel.org,
-        Haishuang Yan <yanhaishuang@cmss.chinamobile.com>
-Subject: [PATCH v3 0/3] selftests: netfilter: introduce test cases for ipvs
-Date:   Tue,  1 Oct 2019 22:19:56 +0800
-Message-Id: <1569939599-1872-1-git-send-email-yanhaishuang@cmss.chinamobile.com>
-X-Mailer: git-send-email 1.8.3.1
+        Tue, 1 Oct 2019 10:22:51 -0400
+Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
+ (mreue106 [212.227.15.145]) with ESMTPA (Nemesis) id
+ 1MtfeD-1i0GXA0Ilb-00v9b6; Tue, 01 Oct 2019 16:22:31 +0200
+From:   Arnd Bergmann <arnd@arndb.de>
+To:     Johannes Weiner <hannes@cmpxchg.org>,
+        Michal Hocko <mhocko@kernel.org>,
+        Vladimir Davydov <vdavydov.dev@gmail.com>
+Cc:     Arnd Bergmann <arnd@arndb.de>, Qian Cai <cai@lca.pw>,
+        Michal Hocko <mhocko@suse.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Roman Gushchin <guro@fb.com>,
+        Shakeel Butt <shakeelb@google.com>,
+        Chris Down <chris@chrisdown.name>, Tejun Heo <tj@kernel.org>,
+        cgroups@vger.kernel.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, clang-built-linux@googlegroups.com
+Subject: [PATCH] mm/memcontrol.c: fix another unused function warning
+Date:   Tue,  1 Oct 2019 16:22:12 +0200
+Message-Id: <20191001142227.1227176-1-arnd@arndb.de>
+X-Mailer: git-send-email 2.20.0
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-Provags-ID: V03:K1:figbJF5L6G0XEWx7vE37p+1HREP4pdaUF1hixuKWiSXi1WhSqjN
+ 1mFGZ1tTDFVzveitQ5dJm1AfeFw4+iQGprrZcQpcp3bgMfPAhxpWPB+9wFKeiUuUZZIh2io
+ fKyAJSH7VFXtGs7nVJ2mRRs08ZUxBzWzQqfb+pARALNWlmIGBdxJ3hgENkjgKXJrT63booJ
+ oF8KApMv5rp9nj27TuJow==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:cz+DaDPdK8A=:2nL8zO8obyUue8/B1m31Mw
+ w7MDPepr2NIk/8jEqB17L8KReB0/sC8EuopUyWdwqJqlVcvp3IQxT2oKvNAJVDKUnviue6PeR
+ wIcmeLA66NBBAU4oXNJhVez6AvFXLQ5pmYeEAr1ifiNfKKoNiU7quSbvLMSnWI4vHmEIn8EY8
+ YWevjG+lYEUkz/gxRFFwQLNgF8cTE4qrsNGE7ZhE4GzS8Bqttluzugmj690TKdGNVNOPTVNOW
+ wUOMhG58H6zDpFSVAXPrAjtUdf6LKC8aHbM2oZz0fCxNiD0UtxN15MbsAEX2/BnNGgzZDIZ5Z
+ nFzqD+I/8uHKBRL6BGc540dfvuRUHxZaihiL3sC7pEDhnfPLqRAQhdagKAGVPy+dQr59WsDKI
+ /U7PN60uf17KvbPNoh2oJxNUYZHDtYm9ClaXAmkLLtxS6H5Pq7+02FwhUQF8Bpcdc4unnK17I
+ yjxptXPhtiFjgWbf7y6KGYFe0VgGsOTABwaetxrbxERmrNiuZmMrs68HaJhJNpJerd7TFFapt
+ 4S3LG3iz/3iK/Lvpxg8eSOSe3tfEu8HiqHFe+DKOLglC9DLB6JcAUtXvsDHlrF17J+sgDkQhc
+ 2qXBl2X+ugs/PMXMBsT1CoXL3Va/faJ77hBN4msDlp+BTP5ND57SWAqR66UxTtUeF9YcZqiu1
+ 9nAgc0uz6fFA4PEe23LNPB4p3mFah+U+Zi0gz8FUDrxlnIhcDkHC+nnPIHWbH5B8F6sSHYXXZ
+ 9mbOaXyAtbDR/icX0VfPaEESg1YMZNQ+e1zqPdMxSwDClUDfAgVg0VF2MjwtjcdZbsnh4/k6m
+ jniImRYGrZzQZvT0JS/EtY/rVgs/bFaeuc73VNwLShU10MDLcsW/CUEUHfbHeQ+bbjPfsL8IQ
+ ILrUXkj5IUCXuCgsn66Q==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This series patch include test cases for ipvs.
+Removing the mem_cgroup_id_get() stub function introduced a new warning
+of the same kind when CONFIG_MMU is disabled:
 
-The test topology is who as below:
-+--------------------------------------------------------------+
-|                      |                                       |
-|         ns0          |         ns1                           |
-|      -----------     |     -----------    -----------        |
-|      | veth01  | --------- | veth10  |    | veth12  |        |
-|      -----------    peer   -----------    -----------        |
-|           |          |                        |              |
-|      -----------     |                        |              |
-|      |  br0    |     |-----------------  peer |--------------|
-|      -----------     |                        |              |
-|           |          |                        |              |
-|      ----------     peer   ----------      -----------       |
-|      |  veth02 | --------- |  veth20 |     | veth12  |       |
-|      ----------      |     ----------      -----------       |
-|                      |         ns2                           |
-|                      |                                       |
-+--------------------------------------------------------------+
+mm/memcontrol.c:4929:13: error: unused function 'mem_cgroup_id_get_many' [-Werror,-Wunused-function]
 
-Test results:
-# selftests: netfilter: ipvs.sh
-# Testing DR mode...
-# Testing NAT mode...
-# Testing Tunnel mode...
-# ipvs.sh: PASS
-ok 6 selftests: netfilter: ipvs.sh
+Address this using a __maybe_unused annotation.
 
-Haishuang Yan (3):
-  selftests: netfilter: add ipvs test script
-  selftests: netfilter: add ipvs nat test case
-  selftests: netfilter: add ipvs tunnel test case
+Note: alternatively, this could be moved into an #ifdef block.  Marking it
+'static inline' would not work here as that would still produce the
+warning on clang, which only ignores unused inline functions declared
+in header files instead of .c files.
 
- tools/testing/selftests/netfilter/Makefile |   2 +-
- tools/testing/selftests/netfilter/ipvs.sh  | 234 +++++++++++++++++++++++++++++
- 2 files changed, 235 insertions(+), 1 deletion(-)
- create mode 100755 tools/testing/selftests/netfilter/ipvs.sh
+Fixes: 4d0e3230a56a ("mm/memcontrol.c: fix a -Wunused-function warning")
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+---
+ mm/memcontrol.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
+diff --git a/mm/memcontrol.c b/mm/memcontrol.c
+index c313c49074ca..5f9f90e3cef8 100644
+--- a/mm/memcontrol.c
++++ b/mm/memcontrol.c
+@@ -4921,7 +4921,8 @@ static void mem_cgroup_id_remove(struct mem_cgroup *memcg)
+ 	}
+ }
+ 
+-static void mem_cgroup_id_get_many(struct mem_cgroup *memcg, unsigned int n)
++static void __maybe_unused
++mem_cgroup_id_get_many(struct mem_cgroup *memcg, unsigned int n)
+ {
+ 	refcount_add(n, &memcg->id.ref);
+ }
 -- 
-1.8.3.1
-
-
+2.20.0
 
