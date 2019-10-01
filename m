@@ -2,199 +2,147 @@ Return-Path: <SRS0=YRFP=X2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D396CECE587
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 17:04:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 497ECC352AA
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 17:04:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A79B72168B
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 17:04:12 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="tQeowPI5"
+	by mail.kernel.org (Postfix) with ESMTP id 215AB2054F
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 17:04:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1569949457;
+	bh=K4JtO4D3ApZQ4fgFUps0vrNW1aXpYkqjHX4RDmNYVX8=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=UqJg1jTnMkrUHR8dgDLeVvmDU5DoKRUUHU+OOUC/EOfOWnNSFUw3D2XzgcPNS9qkL
+	 DiQN4GhmCXYEcG1n32upHmUl7+bmg2Y20dMtFXu3hUyyUDmnJ0a6t4kv/c7F3IIh1/
+	 fbCQVS7bJq/3pmxP+snGGob7hWtGWNQMNct+sSOo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731315AbfJAREK (ORCPT
+        id S1731843AbfJAREQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Oct 2019 13:04:10 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:36725 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730011AbfJAREC (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Oct 2019 13:04:02 -0400
-Received: by mail-pf1-f194.google.com with SMTP id y22so8455563pfr.3
-        for <linux-kernel@vger.kernel.org>; Tue, 01 Oct 2019 10:04:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=EcBrAvMosjOG+UozMLy1mX7WITMjOIgSIxKt9S1MY78=;
-        b=tQeowPI5FGxOFELVxn4y0uIrJzC5WdQ10Icig06ZTrO0qKSy0zxsNCHYx7PmJoHS7p
-         dog98eiYC996iI878c1DE9kDWe1n3D3glN7bCP3v+0GjdRobfuD6Wz5/LnugQCizZyKk
-         3t+GPMpzdPfo1HbVPk7aMWwpYS3e2/yiAtXINj1ZEEPjJ/r4rXi1mw3kWiTZbGtX2HY7
-         3Y64wTqHn2rZkQswmnTCus2NmKzKuBV5mD8CYr2MtWGQn0+L9J4dAcrgVi5Nhlx1+AK/
-         SQdt2fRwKidwBzn6oVp/ixyPx3dK1TWxMMj4ReQ25zrY85m6rZ9BTXSs2fD6sD4snKLA
-         M4qw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=EcBrAvMosjOG+UozMLy1mX7WITMjOIgSIxKt9S1MY78=;
-        b=AYdz6a3OXXOU9KI976ROpOciQbzrHbO83E4c3iMM4CIgHFbYUjSAQEr052Cnkz1yBz
-         1SfekutJIkX4a9w9yrY3HM2uyox4yFLrSfeZztDD+/eNTqoYKbQpDJODMfWRsl1xqGtQ
-         bacE3PUgvNChglz2upeTSGRv69kjL26X0n1Dn/Reai1zqdHNlYuQKBucuvfmJV96sisV
-         3SMQvyA11Zjxl9zDGtUczNrfMxXB3/diJttJ8fzwYDDjMGPDO0XToz5F7WkldtHErdw9
-         V0Q+c+lNAWjcTpqfa7lwY+sfEDnzofMwAXV/Scgl0YXkmca0wRmlRKoqw4nbgGvfHoSi
-         PAsQ==
-X-Gm-Message-State: APjAAAW7k009MAU8uk6NrVlPmPYmyao1iiAGGnq800+IpaukQystxiR8
-        h8AKgXfNRd98AHGvkL8qqlDRnbhue8GwCZ7c4aZo3A==
-X-Google-Smtp-Source: APXvYqw3A/RUIhbvi9tHej5gK5Ducu/8QWOwZ72fe1dUcSs00OVimHuao8TGBKT2Q9Yr+5x6YGdZ13lsQb3fiV6nTWk=
-X-Received: by 2002:a62:798e:: with SMTP id u136mr29331106pfc.3.1569949441392;
- Tue, 01 Oct 2019 10:04:01 -0700 (PDT)
+        Tue, 1 Oct 2019 13:04:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50562 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727789AbfJAQjg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Oct 2019 12:39:36 -0400
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 05DDD21872;
+        Tue,  1 Oct 2019 16:39:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1569947974;
+        bh=K4JtO4D3ApZQ4fgFUps0vrNW1aXpYkqjHX4RDmNYVX8=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=P4D2NIICQJCSPVlaxxPMR34YACt4hvVpb7tpju57hvucIZotag/wf1P56WkSKcXuL
+         W/yCW9WaiGu7q9c4F/KOqxiQD9Ir4/B+oD+SC84z130T3ufCWlS5m8sdsmfE6ADkIW
+         U3N45bV8ZpdPiOUDpm6BvU/G7iDdVACmZjb4Vo6Q=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Lu Shuaibing <shuaibinglu@126.com>,
+        Dominique Martinet <dominique.martinet@cea.fr>,
+        Sasha Levin <sashal@kernel.org>,
+        v9fs-developer@lists.sourceforge.net, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.3 07/71] 9p: Transport error uninitialized
+Date:   Tue,  1 Oct 2019 12:38:17 -0400
+Message-Id: <20191001163922.14735-7-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20191001163922.14735-1-sashal@kernel.org>
+References: <20191001163922.14735-1-sashal@kernel.org>
 MIME-Version: 1.0
-References: <20191001083701.27207-1-yamada.masahiro@socionext.com>
-In-Reply-To: <20191001083701.27207-1-yamada.masahiro@socionext.com>
-From:   Nick Desaulniers <ndesaulniers@google.com>
-Date:   Tue, 1 Oct 2019 10:03:50 -0700
-Message-ID: <CAKwvOd=NObDXDL3jz9ZX9wo4tn747peBJPTj0DXyLerixgL+wQ@mail.gmail.com>
-Subject: Re: [PATCH v2] ARM: add __always_inline to functions called from __get_user_check()
-To:     Masahiro Yamada <yamada.masahiro@socionext.com>
-Cc:     Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Russell King <rmk+kernel@armlinux.org.uk>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Olof Johansson <olof@lixom.net>, Arnd Bergmann <arnd@arndb.de>,
-        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        Allison Randal <allison@lohutok.net>,
-        Enrico Weigelt <info@metux.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Julien Thierry <julien.thierry.kdev@gmail.com>,
-        Kate Stewart <kstewart@linuxfoundation.org>,
-        Russell King <linux@armlinux.org.uk>,
-        Stefan Agner <stefan@agner.ch>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Vincent Whitchurch <vincent.whitchurch@axis.com>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Oct 1, 2019 at 1:37 AM Masahiro Yamada
-<yamada.masahiro@socionext.com> wrote:
->
-> KernelCI reports that bcm2835_defconfig is no longer booting since
-> commit ac7c3e4ff401 ("compiler: enable CONFIG_OPTIMIZE_INLINING
-> forcibly") (https://lkml.org/lkml/2019/9/26/825).
->
-> I also received a regression report from Nicolas Saenz Julienne
-> (https://lkml.org/lkml/2019/9/27/263).
->
-> This problem has cropped up on bcm2835_defconfig because it enables
-> CONFIG_CC_OPTIMIZE_FOR_SIZE. The compiler tends to prefer not inlining
-> functions with -Os. I was able to reproduce it with other boards and
-> defconfig files by manually enabling CONFIG_CC_OPTIMIZE_FOR_SIZE.
->
-> The __get_user_check() specifically uses r0, r1, r2 registers.
-> So, uaccess_save_and_enable() and uaccess_restore() must be inlined.
-> Otherwise, those register assignments would be entirely dropped,
-> according to my analysis of the disassembly.
->
-> Prior to commit 9012d011660e ("compiler: allow all arches to enable
-> CONFIG_OPTIMIZE_INLINING"), the 'inline' marker was always enough for
-> inlining functions, except on x86.
->
-> Since that commit, all architectures can enable CONFIG_OPTIMIZE_INLINING.
-> So, __always_inline is now the only guaranteed way of forcible inlining.
+From: Lu Shuaibing <shuaibinglu@126.com>
 
-No, the C preprocessor is the only guaranteed way of inlining.  I
-preferred v1; if you're going to <strikethrough>play with
-fire</strikethrough>write assembly, don't get burned.
+[ Upstream commit 0ce772fe79b68f83df40f07f28207b292785c677 ]
 
->
-> I also added __always_inline to 4 functions in the call-graph from the
-> __get_user_check() macro.
->
-> Fixes: 9012d011660e ("compiler: allow all arches to enable CONFIG_OPTIMIZE_INLINING")
-> Reported-by: "kernelci.org bot" <bot@kernelci.org>
-> Reported-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-> Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
-> ---
->
-> Changes in v2:
->   - Use __always_inline instead of changing the function call places
->      (per Russell King)
->   - The previous submission is: https://lore.kernel.org/patchwork/patch/1132459/
->
->  arch/arm/include/asm/domain.h  | 8 ++++----
->  arch/arm/include/asm/uaccess.h | 4 ++--
->  2 files changed, 6 insertions(+), 6 deletions(-)
->
-> diff --git a/arch/arm/include/asm/domain.h b/arch/arm/include/asm/domain.h
-> index 567dbede4785..f1d0a7807cd0 100644
-> --- a/arch/arm/include/asm/domain.h
-> +++ b/arch/arm/include/asm/domain.h
-> @@ -82,7 +82,7 @@
->  #ifndef __ASSEMBLY__
->
->  #ifdef CONFIG_CPU_CP15_MMU
-> -static inline unsigned int get_domain(void)
-> +static __always_inline unsigned int get_domain(void)
->  {
->         unsigned int domain;
->
-> @@ -94,7 +94,7 @@ static inline unsigned int get_domain(void)
->         return domain;
->  }
->
-> -static inline void set_domain(unsigned val)
-> +static __always_inline void set_domain(unsigned int val)
->  {
->         asm volatile(
->         "mcr    p15, 0, %0, c3, c0      @ set domain"
-> @@ -102,12 +102,12 @@ static inline void set_domain(unsigned val)
->         isb();
->  }
->  #else
-> -static inline unsigned int get_domain(void)
-> +static __always_inline unsigned int get_domain(void)
->  {
->         return 0;
->  }
->
-> -static inline void set_domain(unsigned val)
-> +static __always_inline void set_domain(unsigned int val)
->  {
->  }
->  #endif
-> diff --git a/arch/arm/include/asm/uaccess.h b/arch/arm/include/asm/uaccess.h
-> index 303248e5b990..98c6b91be4a8 100644
-> --- a/arch/arm/include/asm/uaccess.h
-> +++ b/arch/arm/include/asm/uaccess.h
-> @@ -22,7 +22,7 @@
->   * perform such accesses (eg, via list poison values) which could then
->   * be exploited for priviledge escalation.
->   */
-> -static inline unsigned int uaccess_save_and_enable(void)
-> +static __always_inline unsigned int uaccess_save_and_enable(void)
->  {
->  #ifdef CONFIG_CPU_SW_DOMAIN_PAN
->         unsigned int old_domain = get_domain();
-> @@ -37,7 +37,7 @@ static inline unsigned int uaccess_save_and_enable(void)
->  #endif
->  }
->
-> -static inline void uaccess_restore(unsigned int flags)
-> +static __always_inline void uaccess_restore(unsigned int flags)
->  {
->  #ifdef CONFIG_CPU_SW_DOMAIN_PAN
->         /* Restore the user access mask */
-> --
-> 2.17.1
->
+The p9_tag_alloc() does not initialize the transport error t_err field.
+The struct p9_req_t *req is allocated and stored in a struct p9_client
+variable. The field t_err is never initialized before p9_conn_cancel()
+checks its value.
 
+KUMSAN(KernelUninitializedMemorySantizer, a new error detection tool)
+reports this bug.
 
+==================================================================
+BUG: KUMSAN: use of uninitialized memory in p9_conn_cancel+0x2d9/0x3b0
+Read of size 4 at addr ffff88805f9b600c by task kworker/1:2/1216
+
+CPU: 1 PID: 1216 Comm: kworker/1:2 Not tainted 5.2.0-rc4+ #28
+Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS Ubuntu-1.8.2-1ubuntu1 04/01/2014
+Workqueue: events p9_write_work
+Call Trace:
+ dump_stack+0x75/0xae
+ __kumsan_report+0x17c/0x3e6
+ kumsan_report+0xe/0x20
+ p9_conn_cancel+0x2d9/0x3b0
+ p9_write_work+0x183/0x4a0
+ process_one_work+0x4d1/0x8c0
+ worker_thread+0x6e/0x780
+ kthread+0x1ca/0x1f0
+ ret_from_fork+0x35/0x40
+
+Allocated by task 1979:
+ save_stack+0x19/0x80
+ __kumsan_kmalloc.constprop.3+0xbc/0x120
+ kmem_cache_alloc+0xa7/0x170
+ p9_client_prepare_req.part.9+0x3b/0x380
+ p9_client_rpc+0x15e/0x880
+ p9_client_create+0x3d0/0xac0
+ v9fs_session_init+0x192/0xc80
+ v9fs_mount+0x67/0x470
+ legacy_get_tree+0x70/0xd0
+ vfs_get_tree+0x4a/0x1c0
+ do_mount+0xba9/0xf90
+ ksys_mount+0xa8/0x120
+ __x64_sys_mount+0x62/0x70
+ do_syscall_64+0x6d/0x1e0
+ entry_SYSCALL_64_after_hwframe+0x44/0xa9
+
+Freed by task 0:
+(stack is not available)
+
+The buggy address belongs to the object at ffff88805f9b6008
+ which belongs to the cache p9_req_t of size 144
+The buggy address is located 4 bytes inside of
+ 144-byte region [ffff88805f9b6008, ffff88805f9b6098)
+The buggy address belongs to the page:
+page:ffffea00017e6d80 refcount:1 mapcount:0 mapping:ffff888068b63740 index:0xffff88805f9b7d90 compound_mapcount: 0
+flags: 0x100000000010200(slab|head)
+raw: 0100000000010200 ffff888068b66450 ffff888068b66450 ffff888068b63740
+raw: ffff88805f9b7d90 0000000000100001 00000001ffffffff 0000000000000000
+page dumped because: kumsan: bad access detected
+==================================================================
+
+Link: http://lkml.kernel.org/r/20190613070854.10434-1-shuaibinglu@126.com
+Signed-off-by: Lu Shuaibing <shuaibinglu@126.com>
+[dominique.martinet@cea.fr: grouped the added init with the others]
+Signed-off-by: Dominique Martinet <dominique.martinet@cea.fr>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ net/9p/client.c | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/net/9p/client.c b/net/9p/client.c
+index 9622f3e469f67..1d48afc7033ca 100644
+--- a/net/9p/client.c
++++ b/net/9p/client.c
+@@ -281,6 +281,7 @@ p9_tag_alloc(struct p9_client *c, int8_t type, unsigned int max_size)
+ 
+ 	p9pdu_reset(&req->tc);
+ 	p9pdu_reset(&req->rc);
++	req->t_err = 0;
+ 	req->status = REQ_STATUS_ALLOC;
+ 	init_waitqueue_head(&req->wq);
+ 	INIT_LIST_HEAD(&req->req_list);
 -- 
-Thanks,
-~Nick Desaulniers
+2.20.1
+
