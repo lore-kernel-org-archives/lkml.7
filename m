@@ -2,138 +2,112 @@ Return-Path: <SRS0=YRFP=X2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6EFE6ECDFB6
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 07:08:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CC42ECDFB6
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 07:10:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4ED28215EA
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 07:08:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 21D4F215EA
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 07:10:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="nCPPdoIA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732815AbfJAHIz (ORCPT
+        id S1732846AbfJAHKo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Oct 2019 03:08:55 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:49326 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726157AbfJAHIy (ORCPT
+        Tue, 1 Oct 2019 03:10:44 -0400
+Received: from mx08-00178001.pphosted.com ([91.207.212.93]:40334 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1732676AbfJAHKo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Oct 2019 03:08:54 -0400
-Received: from 61-220-137-37.hinet-ip.hinet.net ([61.220.137.37] helo=localhost)
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <kai.heng.feng@canonical.com>)
-        id 1iFCHD-0002PH-9I; Tue, 01 Oct 2019 07:08:51 +0000
-From:   Kai-Heng Feng <kai.heng.feng@canonical.com>
-To:     dmitry.torokhov@gmail.com
-Cc:     benjamin.tissoires@redhat.com, linux-input@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Kai-Heng Feng <kai.heng.feng@canonical.com>
-Subject: [PATCH] Revert "Input: elantech - enable SMBus on new (2018+) systems"
-Date:   Tue,  1 Oct 2019 15:08:45 +0800
-Message-Id: <20191001070845.9720-1-kai.heng.feng@canonical.com>
-X-Mailer: git-send-email 2.17.1
+        Tue, 1 Oct 2019 03:10:44 -0400
+Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
+        by mx08-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id x917AX0Y016964;
+        Tue, 1 Oct 2019 09:10:34 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=STMicroelectronics;
+ bh=pOPCPe7TD98TjMLQMWtDzzXnRWgJwMhoU21tYTK3+oE=;
+ b=nCPPdoIAWmY+E3PbFphqiQxVifYVDuBTXtC5iPxIU5allVbyAEFfITnniTgis2ajDjkc
+ LcD3ftoHW4m2CBJlLzotb3awNS3nZ/WHGSzkwFw868CNfwA9SoJ+dZQ4b/RZ7iGkC/zs
+ AsS2SPxHV2W5PqwRXi/xY0g9y4UHKP4AKNn5i2ScXSB9LKX3yDPrnwJCrMjQdB6WZ3nq
+ UYf6wy9yoSsMnZ1Jbro6OL0vgMZeLMkBmiEpf6GwtisJm1RJsl5GNa20w/nqI57K4rdV
+ 4jFReLcBKpWmfWE3JqZxoMsxQmHgq1ChJESJyrcMyMva1cEZAAdmBQfqIZhKfApNhG2P dg== 
+Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
+        by mx08-00178001.pphosted.com with ESMTP id 2v9xdgq2kw-1
+        (version=TLSv1 cipher=ECDHE-RSA-AES256-SHA bits=256 verify=NOT);
+        Tue, 01 Oct 2019 09:10:34 +0200
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id 4334F4C;
+        Tue,  1 Oct 2019 07:10:15 +0000 (GMT)
+Received: from Webmail-eu.st.com (sfhdag5node2.st.com [10.75.127.14])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 596492AB7C3;
+        Tue,  1 Oct 2019 09:10:15 +0200 (CEST)
+Received: from [10.48.1.171] (10.75.127.44) by SFHDAG5NODE2.st.com
+ (10.75.127.14) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 1 Oct
+ 2019 09:10:14 +0200
+Subject: Re: [PATCH] i2c: i2c-stm32f7: fix first byte to send in slave mode
+To:     Fabrice Gasnier <fabrice.gasnier@st.com>, <wsa@the-dreams.de>
+CC:     <alain.volmat@st.com>, <alexandre.torgue@st.com>,
+        <linux-i2c@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>
+References: <1569857281-19419-1-git-send-email-fabrice.gasnier@st.com>
+From:   Pierre Yves MORDRET <pierre-yves.mordret@st.com>
+Message-ID: <144ffb23-a56e-c60f-8c50-802921755835@st.com>
+Date:   Tue, 1 Oct 2019 09:10:14 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
+MIME-Version: 1.0
+In-Reply-To: <1569857281-19419-1-git-send-email-fabrice.gasnier@st.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.75.127.44]
+X-ClientProxiedBy: SFHDAG8NODE2.st.com (10.75.127.23) To SFHDAG5NODE2.st.com
+ (10.75.127.14)
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,1.0.8
+ definitions=2019-10-01_03:2019-09-30,2019-10-01 signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This reverts commit 883a2a80f79ca5c0c105605fafabd1f3df99b34c.
+Hi,
 
-Apparently use dmi_get_bios_year() as manufacturing date isn't accurate
-and this breaks older laptops with new BIOS update.
+Reviewed-by: Pierre-Yves MORDRET <pierre-yves.mordret@st.com>
 
-So let's revert this patch.
+Thx
 
-There are still new HP laptops still need to use SMBus to support all
-features, but it'll be enabled via a whitelist.
-
-Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
----
- drivers/input/mouse/elantech.c | 55 ++++++++++++++++++----------------
- 1 file changed, 29 insertions(+), 26 deletions(-)
-
-diff --git a/drivers/input/mouse/elantech.c b/drivers/input/mouse/elantech.c
-index 04fe43440a3c..2d8434b7b623 100644
---- a/drivers/input/mouse/elantech.c
-+++ b/drivers/input/mouse/elantech.c
-@@ -1827,31 +1827,6 @@ static int elantech_create_smbus(struct psmouse *psmouse,
- 				  leave_breadcrumbs);
- }
- 
--static bool elantech_use_host_notify(struct psmouse *psmouse,
--				     struct elantech_device_info *info)
--{
--	if (ETP_NEW_IC_SMBUS_HOST_NOTIFY(info->fw_version))
--		return true;
--
--	switch (info->bus) {
--	case ETP_BUS_PS2_ONLY:
--		/* expected case */
--		break;
--	case ETP_BUS_SMB_HST_NTFY_ONLY:
--	case ETP_BUS_PS2_SMB_HST_NTFY:
--		/* SMbus implementation is stable since 2018 */
--		if (dmi_get_bios_year() >= 2018)
--			return true;
--		/* fall through */
--	default:
--		psmouse_dbg(psmouse,
--			    "Ignoring SMBus bus provider %d\n", info->bus);
--		break;
--	}
--
--	return false;
--}
--
- /**
-  * elantech_setup_smbus - called once the PS/2 devices are enumerated
-  * and decides to instantiate a SMBus InterTouch device.
-@@ -1871,7 +1846,7 @@ static int elantech_setup_smbus(struct psmouse *psmouse,
- 		 * i2c_blacklist_pnp_ids.
- 		 * Old ICs are up to the user to decide.
- 		 */
--		if (!elantech_use_host_notify(psmouse, info) ||
-+		if (!ETP_NEW_IC_SMBUS_HOST_NOTIFY(info->fw_version) ||
- 		    psmouse_matches_pnp_id(psmouse, i2c_blacklist_pnp_ids))
- 			return -ENXIO;
- 	}
-@@ -1891,6 +1866,34 @@ static int elantech_setup_smbus(struct psmouse *psmouse,
- 	return 0;
- }
- 
-+static bool elantech_use_host_notify(struct psmouse *psmouse,
-+				     struct elantech_device_info *info)
-+{
-+	if (ETP_NEW_IC_SMBUS_HOST_NOTIFY(info->fw_version))
-+		return true;
-+
-+	switch (info->bus) {
-+	case ETP_BUS_PS2_ONLY:
-+		/* expected case */
-+		break;
-+	case ETP_BUS_SMB_ALERT_ONLY:
-+		/* fall-through  */
-+	case ETP_BUS_PS2_SMB_ALERT:
-+		psmouse_dbg(psmouse, "Ignoring SMBus provider through alert protocol.\n");
-+		break;
-+	case ETP_BUS_SMB_HST_NTFY_ONLY:
-+		/* fall-through  */
-+	case ETP_BUS_PS2_SMB_HST_NTFY:
-+		return true;
-+	default:
-+		psmouse_dbg(psmouse,
-+			    "Ignoring SMBus bus provider %d.\n",
-+			    info->bus);
-+	}
-+
-+	return false;
-+}
-+
- int elantech_init_smbus(struct psmouse *psmouse)
- {
- 	struct elantech_device_info info;
--- 
-2.17.1
-
+On 9/30/19 5:28 PM, Fabrice Gasnier wrote:
+> The slave-interface documentation [1] states "the bus driver should
+> transmit the first byte" upon I2C_SLAVE_READ_REQUESTED slave event:
+> - 'val': backend returns first byte to be sent
+> The driver currently ignores the 1st byte to send on this event.
+> 
+> Fixes: 60d609f30de2 ("i2c: i2c-stm32f7: Add slave support")
+> 
+> [1] https://www.kernel.org/doc/Documentation/i2c/slave-interface
+> 
+> Signed-off-by: Fabrice Gasnier <fabrice.gasnier@st.com>
+> ---
+>  drivers/i2c/busses/i2c-stm32f7.c | 2 ++
+>  1 file changed, 2 insertions(+)
+> 
+> diff --git a/drivers/i2c/busses/i2c-stm32f7.c b/drivers/i2c/busses/i2c-stm32f7.c
+> index 266d1c2..0af9219 100644
+> --- a/drivers/i2c/busses/i2c-stm32f7.c
+> +++ b/drivers/i2c/busses/i2c-stm32f7.c
+> @@ -1192,6 +1192,8 @@ static void stm32f7_i2c_slave_start(struct stm32f7_i2c_dev *i2c_dev)
+>  			STM32F7_I2C_CR1_TXIE;
+>  		stm32f7_i2c_set_bits(base + STM32F7_I2C_CR1, mask);
+>  
+> +		/* Write 1st data byte */
+> +		writel_relaxed(value, base + STM32F7_I2C_TXDR);
+>  	} else {
+>  		/* Notify i2c slave that new write transfer is starting */
+>  		i2c_slave_event(slave, I2C_SLAVE_WRITE_REQUESTED, &value);
+> 
