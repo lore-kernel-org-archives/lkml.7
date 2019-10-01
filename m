@@ -2,235 +2,93 @@ Return-Path: <SRS0=YRFP=X2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D056AC352AA
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 14:22:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7C72C352AA
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 14:22:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 828AB21855
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 14:22:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rxOxoRq3"
+	by mail.kernel.org (Postfix) with ESMTP id 9D99B21855
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 14:22:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389028AbfJAOWI (ORCPT
+        id S2389042AbfJAOWL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Oct 2019 10:22:08 -0400
-Received: from mail-io1-f68.google.com ([209.85.166.68]:45154 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388994AbfJAOWG (ORCPT
+        Tue, 1 Oct 2019 10:22:11 -0400
+Received: from mout.kundenserver.de ([217.72.192.75]:39489 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389016AbfJAOWH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Oct 2019 10:22:06 -0400
-Received: by mail-io1-f68.google.com with SMTP id c25so48295734iot.12;
-        Tue, 01 Oct 2019 07:22:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=lvgQDu9WXpCvWJp0oOMglHPGYf9ZHsEL9W0aSNo7TEo=;
-        b=rxOxoRq3U+cKt4FFrG3NOwdes/J/KJuRWeS4BdORHW6mtwrPawK8KLTLauQbZM4VA1
-         7IvT3qOuIk0KTwjD3YHkA1627hH68DWiJafqoEcdyK6s8RGWkjQj+d8a8zHCvo3RjN/I
-         JovOl9GOOMIQ4gbhJoqCNYV9ozPUrnxDbks32/xpZf95ydCWElw8/eIqFXG0+rb9YrQG
-         Ax4vlOF9Ljt5nS6qOY0DCFAvTOpYT5RXETaWgOJDHD1KfbxUEFwPVphoEUR5pH08Hj0F
-         f1depZObQeep5qvRPKRtaSwB9z/vi1+5e4STyz2OaK2F64zF7+Cm3vvD4O2noEeaZ8hY
-         WOVQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=lvgQDu9WXpCvWJp0oOMglHPGYf9ZHsEL9W0aSNo7TEo=;
-        b=ARNcCa3E9FFlfmRxW7FxRSLveIJkMBWoJ3R3+SSvb5JBepzq7+Mv+WUubZhuAFgQ8S
-         1gPn9ndGT5oFWm1+FmNAJXwvVKtaKCwKPAmir7JUwHIuT9FGt3OBU4G620owqmsP6/pu
-         /y/VX8NXX+pg9X+gg1qXa7oaCAJCwOA8l/x7n9ChPhk94cv/Z1rPdPegVzPCKstNhs/K
-         wmHzJ6kCplS48+i+BrGLPTT0j0P1MzzHbvD3Xxb/POl7Pt6JNBt4vaVkcmbxOLFhrFNU
-         h/YFUyLTi1gwLlJkYvepo4cFnSk1zeftzn1a7k6bZ2DpGXS3B6z+GvxxiuX/3xxuAr1C
-         d84A==
-X-Gm-Message-State: APjAAAVCM4eranipohU0O30/QVsTBlfC9hNMWB2cN86L0b6fcG1T90ai
-        mMsbd89z8EbxY3N1ZylyuOOcHRy3w39ppV/uBFY=
-X-Google-Smtp-Source: APXvYqzj3Dxc1vunf9zG16glLNgfbvBzc1tu6VphnQxFvrhVNxB+wbIjd5c7ptmWW4q03c4MTmTyqqAz/VzFpTwOuJY=
-X-Received: by 2002:a92:b752:: with SMTP id c18mr26696367ilm.42.1569939725259;
- Tue, 01 Oct 2019 07:22:05 -0700 (PDT)
+        Tue, 1 Oct 2019 10:22:07 -0400
+Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
+ (mreue107 [212.227.15.145]) with ESMTPA (Nemesis) id
+ 1N6c0W-1i4vN93b6E-0182Dk; Tue, 01 Oct 2019 16:21:54 +0200
+From:   Arnd Bergmann <arnd@arndb.de>
+To:     Shannon Nelson <snelson@pensando.io>,
+        Pensando Drivers <drivers@pensando.io>,
+        "David S. Miller" <davem@davemloft.net>
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Leon Romanovsky <leon@kernel.org>,
+        Kalle Valo <kvalo@codeaurora.org>, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] ionic: select CONFIG_NET_DEVLINK
+Date:   Tue,  1 Oct 2019 16:21:40 +0200
+Message-Id: <20191001142151.1206987-1-arnd@arndb.de>
+X-Mailer: git-send-email 2.20.0
 MIME-Version: 1.0
-References: <cover.1558430617.git.amit.kucheria@linaro.org>
- <49cf5d94beb9af9ef4e78d4c52f3b0ad20b7c63f.1558430617.git.amit.kucheria@linaro.org>
- <CAOCk7NptTHPOdyEkCAofjTPuDQ5dsnPMQgfC0R8=7cp05xKQiA@mail.gmail.com> <CAHLCerOS1Hi3XdDZzTKFKnrsATj5cMKtjPEuJknWu-aPtwzP9g@mail.gmail.com>
-In-Reply-To: <CAHLCerOS1Hi3XdDZzTKFKnrsATj5cMKtjPEuJknWu-aPtwzP9g@mail.gmail.com>
-From:   Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
-Date:   Tue, 1 Oct 2019 08:21:54 -0600
-Message-ID: <CAOCk7NpA5OmgmH0PZpcrj1KmhdrTKvOb+3eUL6=Mo8HRUnKjdA@mail.gmail.com>
-Subject: Re: [PATCH v2 7/9] arm64: dts: qcom: msm8998: Add PSCI cpuidle low
- power states
-To:     Amit Kucheria <amit.kucheria@linaro.org>
-Cc:     lkml <linux-kernel@vger.kernel.org>,
-        MSM <linux-arm-msm@vger.kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Andy Gross <agross@kernel.org>,
-        Niklas Cassel <niklas.cassel@linaro.org>,
-        Marc Gonzalez <marc.w.gonzalez@free.fr>,
-        Sibi Sankar <sibis@codeaurora.org>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Andy Gross <andy.gross@linaro.org>,
-        David Brown <david.brown@linaro.org>,
-        Li Yang <leoyang.li@nxp.com>, Shawn Guo <shawnguo@kernel.org>,
-        DTML <devicetree@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-Provags-ID: V03:K1:u7qraBxsgoB/VaqNMmE0UtXHW3uhM1WX/o1uIcS2nAeZfUDgChQ
+ BtCKPfi1Jo3WIfOuE4U3nFRcAC6Rgni/92SmJ7YBr6HCd+sfqaIXu/sCIPCpWAdmYjzOBfQ
+ VCwRY4xh9QCc3PaBFt/LgHxbpzHnd19BeuAHVj9EYLC7gC5b1rWzDVw/2dlQ7W06mGIPnYI
+ BfbaJfuBD1+qiV1HwIRsg==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:dkPAEz+sepA=:Pg+Dbyy+hzRh0CS1RVlh79
+ L1hXS14AIrY/G/OHNUCQLb0ZeGJ7dmdcv+KKsJgRiI09HzwXmm02jusaIK72wYZeH3eW8IuFQ
+ 7hEGZo1mxG+8KNO9yPvTD/GTZqrtWXkwTgdib8IHR5FkeHWqQggWAFVpu7qHIFKEnqAu5jw6S
+ +7I2ot9C0kEm4VWeIBPl+OrVSWTPiVelxLBGMbppcobCEBcsIIbP5G3165iIG6vck5+NQYKXC
+ m6Mz79afCW4pftyaCd6oOfjg+keZbqGJbAFRqxyuJ5pgRzIkG/atkxG4/mIX0Imo+USOGTWcO
+ bx5rNJeYfx2cp6gNlJ/eiAZXjD/NPPU3tGp1clC5LB+zd9e4VjTXHy5qm9iOoutEqhaN+ti9M
+ bt0wCku7ZT4S1s5VokQJfwFPnPdy/WfA9kLkgRILtq8ElZnRmLYDTiTFbNzqJ8/YhdxkEvzvt
+ aert8QgW8TOkVWrYgs0QKSS61YslZpGWziGLTEoMYJ2nlDUxsImkc17hZbvYwyBZicbhaKLSe
+ blDLTZCsJMzlwjh/To12vRSmBoeDdYbAI+GQ5HlZCAO3NfVvtwX043zvjKhmGsFFyFyJNsFGA
+ swZkGPZn+5GaVvhbKjgGR3BDXmT5+d4UEhZ5jf8qgnJoIbYd+60xjIGU05UrB5/jgJsPrYTcY
+ bKvSRJu/ohLVWs/DOs/joa67MCegMxy5LUR1tWh1B3RtTJUn9EsWfPI3jAkCs4krZQ8p3rWdk
+ DL0/9fr72XcgAbK75bVf3Fw4LaSta2tmmTHWuNknlq0eMLIsaE4MkyLXi8mIBMm/COZZ8f38v
+ mrNtqFYZYeryLGnHc0gxkhtwhu5EAG/HVUcYZjbYKY/u4b8wdrbHvDH9y8jn5/yqBQsI1uCml
+ 1gYQhpOD05qEjFY6s5LA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Sep 30, 2019 at 4:44 PM Amit Kucheria <amit.kucheria@linaro.org> wrote:
->
-> Can you try removing just the *SLEEP_1 states from the cpu-idle-states
-> property? I want to understand if this is triggered just by the deeper
-> C-state.
+When no other driver selects the devlink library code, ionic
+produces a link failure:
 
-Still seeing the issue with just the SLEEP_0 states.  For reference,
-Bjorn suggested adding kpti=no to the command line, which also
-appeared to have no effect on the issue.
+drivers/net/ethernet/pensando/ionic/ionic_devlink.o: In function `ionic_devlink_alloc':
+ionic_devlink.c:(.text+0xd): undefined reference to `devlink_alloc'
+drivers/net/ethernet/pensando/ionic/ionic_devlink.o: In function `ionic_devlink_register':
+ionic_devlink.c:(.text+0x71): undefined reference to `devlink_register'
 
->
-> On Tue, Oct 1, 2019 at 3:50 AM Jeffrey Hugo <jeffrey.l.hugo@gmail.com> wrote:
-> >
-> > Amit, the merged version of the below change causes a boot failure
-> > (nasty hang, sometimes with RCU stalls) on the msm8998 laptops.  Oddly
-> > enough, it seems to be resolved if I remove the cpu-idle-states
-> > property from one of the cpu nodes.
-> >
-> > I see no issues with the msm8998 MTP.
-> >
-> > Do you have any suggestions on how we might debug this?
-> >
-> > On Tue, May 21, 2019 at 3:38 AM Amit Kucheria <amit.kucheria@linaro.org> wrote:
-> > >
-> > > Add device bindings for cpuidle states for cpu devices.
-> > >
-> > > Cc: Marc Gonzalez <marc.w.gonzalez@free.fr>
-> > > Signed-off-by: Amit Kucheria <amit.kucheria@linaro.org>
-> > > Acked-by: Daniel Lezcano <daniel.lezcano@linaro.org>
-> > > ---
-> > >  arch/arm64/boot/dts/qcom/msm8998.dtsi | 50 +++++++++++++++++++++++++++
-> > >  1 file changed, 50 insertions(+)
-> > >
-> > > diff --git a/arch/arm64/boot/dts/qcom/msm8998.dtsi b/arch/arm64/boot/dts/qcom/msm8998.dtsi
-> > > index 3fd0769fe648..54810980fcf9 100644
-> > > --- a/arch/arm64/boot/dts/qcom/msm8998.dtsi
-> > > +++ b/arch/arm64/boot/dts/qcom/msm8998.dtsi
-> > > @@ -78,6 +78,7 @@
-> > >                         compatible = "arm,armv8";
-> > >                         reg = <0x0 0x0>;
-> > >                         enable-method = "psci";
-> > > +                       cpu-idle-states = <&LITTLE_CPU_SLEEP_0 &LITTLE_CPU_SLEEP_1>;
-> > >                         efficiency = <1024>;
-> > >                         next-level-cache = <&L2_0>;
-> > >                         L2_0: l2-cache {
-> > > @@ -97,6 +98,7 @@
-> > >                         compatible = "arm,armv8";
-> > >                         reg = <0x0 0x1>;
-> > >                         enable-method = "psci";
-> > > +                       cpu-idle-states = <&LITTLE_CPU_SLEEP_0 &LITTLE_CPU_SLEEP_1>;
-> > >                         efficiency = <1024>;
-> > >                         next-level-cache = <&L2_0>;
-> > >                         L1_I_1: l1-icache {
-> > > @@ -112,6 +114,7 @@
-> > >                         compatible = "arm,armv8";
-> > >                         reg = <0x0 0x2>;
-> > >                         enable-method = "psci";
-> > > +                       cpu-idle-states = <&LITTLE_CPU_SLEEP_0 &LITTLE_CPU_SLEEP_1>;
-> > >                         efficiency = <1024>;
-> > >                         next-level-cache = <&L2_0>;
-> > >                         L1_I_2: l1-icache {
-> > > @@ -127,6 +130,7 @@
-> > >                         compatible = "arm,armv8";
-> > >                         reg = <0x0 0x3>;
-> > >                         enable-method = "psci";
-> > > +                       cpu-idle-states = <&LITTLE_CPU_SLEEP_0 &LITTLE_CPU_SLEEP_1>;
-> > >                         efficiency = <1024>;
-> > >                         next-level-cache = <&L2_0>;
-> > >                         L1_I_3: l1-icache {
-> > > @@ -142,6 +146,7 @@
-> > >                         compatible = "arm,armv8";
-> > >                         reg = <0x0 0x100>;
-> > >                         enable-method = "psci";
-> > > +                       cpu-idle-states = <&BIG_CPU_SLEEP_0 &BIG_CPU_SLEEP_1>;
-> > >                         efficiency = <1536>;
-> > >                         next-level-cache = <&L2_1>;
-> > >                         L2_1: l2-cache {
-> > > @@ -161,6 +166,7 @@
-> > >                         compatible = "arm,armv8";
-> > >                         reg = <0x0 0x101>;
-> > >                         enable-method = "psci";
-> > > +                       cpu-idle-states = <&BIG_CPU_SLEEP_0 &BIG_CPU_SLEEP_1>;
-> > >                         efficiency = <1536>;
-> > >                         next-level-cache = <&L2_1>;
-> > >                         L1_I_101: l1-icache {
-> > > @@ -176,6 +182,7 @@
-> > >                         compatible = "arm,armv8";
-> > >                         reg = <0x0 0x102>;
-> > >                         enable-method = "psci";
-> > > +                       cpu-idle-states = <&BIG_CPU_SLEEP_0 &BIG_CPU_SLEEP_1>;
-> > >                         efficiency = <1536>;
-> > >                         next-level-cache = <&L2_1>;
-> > >                         L1_I_102: l1-icache {
-> > > @@ -191,6 +198,7 @@
-> > >                         compatible = "arm,armv8";
-> > >                         reg = <0x0 0x103>;
-> > >                         enable-method = "psci";
-> > > +                       cpu-idle-states = <&BIG_CPU_SLEEP_0 &BIG_CPU_SLEEP_1>;
-> > >                         efficiency = <1536>;
-> > >                         next-level-cache = <&L2_1>;
-> > >                         L1_I_103: l1-icache {
-> > > @@ -238,6 +246,48 @@
-> > >                                 };
-> > >                         };
-> > >                 };
-> > > +
-> > > +               idle-states {
-> > > +                       entry-method = "psci";
-> > > +
-> > > +                       LITTLE_CPU_SLEEP_0: cpu-sleep-0-0 {
-> > > +                               compatible = "arm,idle-state";
-> > > +                               idle-state-name = "little-retention";
-> > > +                               arm,psci-suspend-param = <0x00000002>;
-> > > +                               entry-latency-us = <43>;
-> > > +                               exit-latency-us = <86>;
-> > > +                               min-residency-us = <200>;
-> > > +                       };
-> > > +
-> > > +                       LITTLE_CPU_SLEEP_1: cpu-sleep-0-1 {
-> > > +                               compatible = "arm,idle-state";
-> > > +                               idle-state-name = "little-power-collapse";
-> > > +                               arm,psci-suspend-param = <0x00000003>;
-> > > +                               entry-latency-us = <100>;
-> > > +                               exit-latency-us = <612>;
-> > > +                               min-residency-us = <1000>;
-> > > +                               local-timer-stop;
-> > > +                       };
-> > > +
-> > > +                       BIG_CPU_SLEEP_0: cpu-sleep-1-0 {
-> > > +                               compatible = "arm,idle-state";
-> > > +                               idle-state-name = "big-retention";
-> > > +                               arm,psci-suspend-param = <0x00000002>;
-> > > +                               entry-latency-us = <41>;
-> > > +                               exit-latency-us = <82>;
-> > > +                               min-residency-us = <200>;
-> > > +                       };
-> > > +
-> > > +                       BIG_CPU_SLEEP_1: cpu-sleep-1-1 {
-> > > +                               compatible = "arm,idle-state";
-> > > +                               idle-state-name = "big-power-collapse";
-> > > +                               arm,psci-suspend-param = <0x00000003>;
-> > > +                               entry-latency-us = <100>;
-> > > +                               exit-latency-us = <525>;
-> > > +                               min-residency-us = <1000>;
-> > > +                               local-timer-stop;
-> > > +                       };
-> > > +               };
-> > >         };
-> > >
-> > >         firmware {
-> > > --
-> > > 2.17.1
-> > >
+Add the same 'select' statement that the other drivers use here.
+
+Fixes: fbfb8031533c ("ionic: Add hardware init and device commands")
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+---
+ drivers/net/ethernet/pensando/Kconfig | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/drivers/net/ethernet/pensando/Kconfig b/drivers/net/ethernet/pensando/Kconfig
+index bd0583e409df..d25b88f53de4 100644
+--- a/drivers/net/ethernet/pensando/Kconfig
++++ b/drivers/net/ethernet/pensando/Kconfig
+@@ -20,6 +20,7 @@ if NET_VENDOR_PENSANDO
+ config IONIC
+ 	tristate "Pensando Ethernet IONIC Support"
+ 	depends on 64BIT && PCI
++	select NET_DEVLINK
+ 	help
+ 	  This enables the support for the Pensando family of Ethernet
+ 	  adapters.  More specific information on this driver can be
+-- 
+2.20.0
+
