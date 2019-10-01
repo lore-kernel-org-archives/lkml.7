@@ -2,141 +2,93 @@ Return-Path: <SRS0=YRFP=X2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D2BAFC352AA
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 11:33:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EDE9FC388F3
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 11:33:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A32F12133F
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 11:33:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BA24F2133F
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 11:33:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="Jzpf8622"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="a/daXUUo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731616AbfJALdK (ORCPT
+        id S1731905AbfJALdT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Oct 2019 07:33:10 -0400
-Received: from aserp2120.oracle.com ([141.146.126.78]:57488 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725839AbfJALdJ (ORCPT
+        Tue, 1 Oct 2019 07:33:19 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:36585 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725839AbfJALdS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Oct 2019 07:33:09 -0400
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x91BSnQo100242;
-        Tue, 1 Oct 2019 11:32:59 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2019-08-05;
- bh=Am+iooempG+SlcgOvuoPtWtced8jZFlU80pTSU8fThs=;
- b=Jzpf8622Rh5ybgpzhKqDsuebyuZAP0s/xa6kIbX7+mXkI08hLS/WPDdH95y8V3kgfMSn
- uEdX7BQnvSGxYuVNf3FvMhkXTFDTxyf2x4r7a/hdJFK8vgGlsoujWSJrgk+y8eTkYxqO
- 69LOjFHNqVZ20UwFLFtX8rw9IG3y8nfzqC+/10htwQd+gIqInVw81oeoFr6i4u9i/mlL
- +tpcaCBds3IZkmQsr8soyGxIOUgHVirSYf9bIj9Y8LL5iBOIWDqLUjV+RKYbJAz9u8sL
- eamAFyHd3ctLi3148FO/D5kjuNHFSDunHKeoi1vKit4oTUIKjBAsD8gs0zd3GXoQ7lAa 1g== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by aserp2120.oracle.com with ESMTP id 2v9yfq5530-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 01 Oct 2019 11:32:59 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x91BSjTQ070295;
-        Tue, 1 Oct 2019 11:30:58 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by userp3020.oracle.com with ESMTP id 2vbnqcqkgk-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 01 Oct 2019 11:30:58 +0000
-Received: from abhmp0022.oracle.com (abhmp0022.oracle.com [141.146.116.28])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x91BUub1003308;
-        Tue, 1 Oct 2019 11:30:57 GMT
-Received: from kadam (/41.57.98.10)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 01 Oct 2019 04:30:56 -0700
-Date:   Tue, 1 Oct 2019 14:30:43 +0300
-From:   Dan Carpenter <dan.carpenter@oracle.com>
-To:     Yizhuo <yzhai003@ucr.edu>
-Cc:     csong@cs.ucr.edu, devel@driverdev.osuosl.org,
-        Hariprasad Kelam <hariprasad.kelam@gmail.com>,
-        Jeeeun Evans <jeeeunevans@gmail.com>,
-        Puranjay Mohan <puranjay12@gmail.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        zhiyunq@cs.ucr.edu, linux-kernel@vger.kernel.org,
-        Larry Finger <Larry.Finger@lwfinger.net>
-Subject: Re: [PATCH] staging: rtl8723bs: Variable rf_type in function
- rtw_cfg80211_init_wiphy() could be uninitialized
-Message-ID: <20191001095650.GL27389@kadam>
-References: <20190928000655.27507-1-yzhai003@ucr.edu>
+        Tue, 1 Oct 2019 07:33:18 -0400
+Received: by mail-pf1-f195.google.com with SMTP id y22so7754842pfr.3;
+        Tue, 01 Oct 2019 04:33:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=NedOdxduYE192+j0L9U6oJB7serWu3kUApAmq9EK7s0=;
+        b=a/daXUUo3gjQK5srp4pfd1YsXfM2FYJ/SeSXm/K2wqAzgLsI9A22Cx4QVUXEUJGgNU
+         RXYzxEaVdT8uZrAbGe+FmV7RbeAHd3PV1uWdmSa+O6uHZ1b49Vr9/MCPMJnR/GAJPLh0
+         e8R6rENDW2vC5GJcyL+x6f0R2jbS0Mer5ikTdY2rCseYeOII+I2qgTz5L+fbvtdhlGPZ
+         8uhbD7rFFHTTeAHpTOXP1Ourma6dHQ6oWXd9dm0FZo75AIy69VThTVgPA8s/xw5BVTud
+         fQkemzWD2kwDQ647v/sH8Er1BtLJ1QX3AiiY0PJ3o4D2t5huxSy4KlrbHG65sk5hDxnV
+         /SMw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=NedOdxduYE192+j0L9U6oJB7serWu3kUApAmq9EK7s0=;
+        b=HapWnr1Z7LD9XOMZSlA6BSSTOQaUe+E6r0nYZ00KRKI8P+Z8O1zk8GsKGmNq7ZRIGJ
+         iVXHuhIPt03PYsrJSB8bBeg6tyLJiid4dGOFRlBBI++n9U9TkV6ZqP/tqZJPTMZb7Rlz
+         FotO5SgOaxl9u95xyMPgbBttD7nROzFd9e4zCrGMPYTp4kAWbGK+Dk0GmXO7/uvqmStT
+         S/1mh6cAnZ+Lsf421di05O8wOCfdEYd/j8DozRowagW8jS0C2EVvM5Qo+z6pTFQ+tMHD
+         7p5rlQ7gnoLVDYNq2wfqP9SwgWUzYsVdA6Cuy6j/0whIY7XTqOEirs9YROkMVuZ4Un5A
+         kRTQ==
+X-Gm-Message-State: APjAAAVoEisYodzR8MZdoxu+eYsLsEb2ArCfA1LSXqzTZBVPYX2D3kHi
+        agkZvPpNw638wbpPId5PnW7RvoeIzdMBdg==
+X-Google-Smtp-Source: APXvYqxCn3u/39GjKHZ0Kpc/Yja0tSf1XnpAKP21udqK7c+x2TaaNcm8mxZ+RkgBKqZ8FtEJajuosQ==
+X-Received: by 2002:a65:6659:: with SMTP id z25mr30064683pgv.23.1569929597494;
+        Tue, 01 Oct 2019 04:33:17 -0700 (PDT)
+Received: from btopel-mobl.ger.intel.com ([192.55.55.41])
+        by smtp.gmail.com with ESMTPSA id a29sm16238634pfr.152.2019.10.01.04.33.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 01 Oct 2019 04:33:16 -0700 (PDT)
+From:   =?UTF-8?q?Bj=C3=B6rn=20T=C3=B6pel?= <bjorn.topel@gmail.com>
+To:     linux-kernel@vger.kernel.org, acme@kernel.org
+Cc:     =?UTF-8?q?Bj=C3=B6rn=20T=C3=B6pel?= <bjorn.topel@gmail.com>,
+        netdev@vger.kernel.org, bpf@vger.kernel.org, ast@kernel.org,
+        daniel@iogearbox.net, adrian.hunter@intel.com, jolsa@kernel.org,
+        namhyung@kernel.org
+Subject: [PATCH 0/2] perf tools: optional compile time test_attr__* depenency for perf-sys.h
+Date:   Tue,  1 Oct 2019 13:33:05 +0200
+Message-Id: <20191001113307.27796-1-bjorn.topel@gmail.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190928000655.27507-1-yzhai003@ucr.edu>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9396 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1908290000 definitions=main-1910010106
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9396 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1908290000
- definitions=main-1910010106
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Sep 27, 2019 at 05:06:51PM -0700, Yizhuo wrote:
-> In function rtw_cfg80211_init_wiphy(), local variable "rf_type" could
-> be uninitialized if function rtw_hal_get_hwreg() fails to initialize
-> it. However, this value is used in function rtw_cfg80211_init_ht_capab()
-> and used to decide the value writing to ht_cap, which is potentially
-> unsafe.
+This mini series makes it possible to disable the use of test_attr__*
+for perf-sys.h users outside perf. E.g., samples/bpf/ uses perf-sys.h
+as a syscall wrapper.
 
-I feel like this is from a Smatch warning.  Sure, it looks from reading
-the code that rtw_hal_get_hwreg() can fail, but actually it cannot.
+Now a user can define HAVE_ATTR_TEST to zero to avoid this, and as a
+nice side-effect it also fixes the samples/bpf/ build. ;-)
 
-The longer explanation is that in these rtl drivers if you see a
-function with "_hal_" in it that stands for "Hardware Abstraction Layer".
-The HAL layer is nonsense.
+Björn Töpel (2):
+  perf tools: Make usage of test_attr__* optional for perf-sys.h
+  samples/bpf: fix build by setting HAVE_ATTR_TEST to zero
 
-drivers/staging/rtl8723bs/hal/hal_intf.c
-   139  void rtw_hal_get_hwreg(struct adapter *padapter, u8 variable, u8 *val)
-   140  {
-   141          if (padapter->HalFunc.GetHwRegHandler)
-   142                  padapter->HalFunc.GetHwRegHandler(padapter, variable, val);
-   143  }
+ samples/bpf/Makefile  | 1 +
+ tools/perf/perf-sys.h | 6 ++++--
+ 2 files changed, 5 insertions(+), 2 deletions(-)
 
-It looks as if reading the hardware register is an optional feature but
-obviously that's not possibly true.
+-- 
+2.20.1
 
-We can use Smatch to find out which functions implement the function
-pointer:
-~/smatch/smatch_data/db/smdb.py functions GetHwRegHandler
-
-drivers/staging/rtl8723bs/hal/sdio_halinit.c | (struct hal_ops)->GetHwRegHandler | GetHwReg8723BS  | 1
-
-So in this driver the ->GetHwRegHandler pointer always points to the
-GetHwReg8723BS() function.  Then we can check what the return states
-for that function are:
-
-~/smatch/smatch_data/db/smdb.py return_states GetHwReg8723BS
-
-It prints a lot of information but the relevant line is:
-
-drivers/staging/rtl8723bs/hal/sdio_halinit.c | GetHwReg8723BS | 84 |               |     PARAM_SET |   2 |                   *$ |             0-u16max |
-
-Which means that the *val is always set and never uninitialized.  This
-is after I have rebuilt my Smatch DB several times.  I rebuild it every
-day and it has been a long time since I started from scratch.
-
-So removing the HAL layer would make this code parsable by Smatch and it
-would make it more readable for human beings as well.  Another option
-would be to just delete the "if (padapter->HalFunc.GetHwRegHandler)"
-check which would also silence the false positive.  A third option would
-be to add "rtw_hal_get_hwreg 2" to the
-~/smatch/smatch_data/kernel.ignore_uninitialized_param file.
-
-regards,
-dan carpenter
