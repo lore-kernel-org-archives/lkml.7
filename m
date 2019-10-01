@@ -4,54 +4,56 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 33109C352AA
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 16:51:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B69CC352AA
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 16:51:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 08EF42168B
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 16:51:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E1B0B2190F
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 16:51:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569948691;
-	bh=EXhLy80jshL2AnL/RgoEgzVy62LVEiun2Ah8RdegCxQ=;
+	s=default; t=1569948697;
+	bh=Yxl65tRtauaDS2ACA8wLQ/MJvNUzQFwwxmwfmyU6yTY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=VGrp2ILa4CLYJhJz8rZR+Na7amqkdkmJDVPVGLGN03ilyyDOTGQR3E05PMX4uCSdH
-	 g4sW51nY8SVHpcMd2esFFA0hVqXLYTPLGGHTAJ5f2A4Fpv383T1uANCRBnbLkanNMX
-	 xkoJQyCj7hK+w9FFmtOgZjD3+Hzgiw0ksDqf1jPs=
+	b=0t1HHaAJN2oxUvwfr5bj9N6JWrYTwWaoXlH+D2A1twuXsjbh35RqTBet88XsfvwRG
+	 cNrZ+3jIzuSUWEO+cb8MRkD8fg0/7xS3iue8PxN4DVWFtBt2cZAeiqQhTMnItDjSWa
+	 AsxlCw2EbrFDVGvDhkVNw0DK3eppBnznUsCiL+PQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389177AbfJAQva (ORCPT
+        id S2387521AbfJAQoI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Oct 2019 12:51:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56378 "EHLO mail.kernel.org"
+        Tue, 1 Oct 2019 12:44:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56066 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387568AbfJAQoK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Oct 2019 12:44:10 -0400
+        id S1733085AbfJAQnv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Oct 2019 12:43:51 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B8AC22168B;
-        Tue,  1 Oct 2019 16:44:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2E2A3222CB;
+        Tue,  1 Oct 2019 16:43:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569948249;
-        bh=EXhLy80jshL2AnL/RgoEgzVy62LVEiun2Ah8RdegCxQ=;
+        s=default; t=1569948230;
+        bh=Yxl65tRtauaDS2ACA8wLQ/MJvNUzQFwwxmwfmyU6yTY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=lkny7JW3D4blVwt8rbgMgFEwQC2kkDvq6AXRPBJTG/9UjsH53VXCfd2jgiNBsYgFu
-         O/VW3Wpq/48LE6Sf72RUaDGz6CiIM1dEJsibJb7Nj+pftYze0XM297AwiqyG9Ql3RS
-         41hIqG5aKaJwSx+h3m3lIcbZBjZnsKrc8y/MKuKI=
+        b=bcxrVW9ORtRmRFUdtGpqQmzKM9G+MyvW+B1g9daP2TiwD7LuA6y2XnUogv9Qk5U+d
+         TILq5YzZLgvPWP+f4IEkt/iB4VAj2RKuQMlMAdlOh1ONbC1oY1Q7aR9vG4U/baOoim
+         2DZ++n7WSpxHEiNkoF/B0cRnZIuZg5NhU3tnbPcM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Xin Long <lucien.xin@gmail.com>, Xiumei Mu <xmu@redhat.com>,
-        Fei Liu <feliu@redhat.com>,
+Cc:     =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Michael Grzeschik <m.grzeschik@pengutronix.de>,
         "David S . Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 37/43] macsec: drop skb sk before calling gro_cells_receive
-Date:   Tue,  1 Oct 2019 12:43:05 -0400
-Message-Id: <20191001164311.15993-37-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 28/43] arcnet: provide a buffer big enough to actually receive packets
+Date:   Tue,  1 Oct 2019 12:42:56 -0400
+Message-Id: <20191001164311.15993-28-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191001164311.15993-1-sashal@kernel.org>
 References: <20191001164311.15993-1-sashal@kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -60,64 +62,104 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Xin Long <lucien.xin@gmail.com>
+From: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
 
-[ Upstream commit ba56d8ce38c8252fff5b745db3899cf092578ede ]
+[ Upstream commit 02a07046834e64970f3bcd87a422ac2b0adb80de ]
 
-Fei Liu reported a crash when doing netperf on a topo of macsec
-dev over veth:
+struct archdr is only big enough to hold the header of various types of
+arcnet packets. So to provide enough space to hold the data read from
+hardware provide a buffer large enough to hold a packet with maximal
+size.
 
-  [  448.919128] refcount_t: underflow; use-after-free.
-  [  449.090460] Call trace:
-  [  449.092895]  refcount_sub_and_test+0xb4/0xc0
-  [  449.097155]  tcp_wfree+0x2c/0x150
-  [  449.100460]  ip_rcv+0x1d4/0x3a8
-  [  449.103591]  __netif_receive_skb_core+0x554/0xae0
-  [  449.108282]  __netif_receive_skb+0x28/0x78
-  [  449.112366]  netif_receive_skb_internal+0x54/0x100
-  [  449.117144]  napi_gro_complete+0x70/0xc0
-  [  449.121054]  napi_gro_flush+0x6c/0x90
-  [  449.124703]  napi_complete_done+0x50/0x130
-  [  449.128788]  gro_cell_poll+0x8c/0xa8
-  [  449.132351]  net_rx_action+0x16c/0x3f8
-  [  449.136088]  __do_softirq+0x128/0x320
+The problem was noticed by the stack protector which makes the kernel
+oops.
 
-The issue was caused by skb's true_size changed without its sk's
-sk_wmem_alloc increased in tcp/skb_gro_receive(). Later when the
-skb is being freed and the skb's truesize is subtracted from its
-sk's sk_wmem_alloc in tcp_wfree(), underflow occurs.
-
-macsec is calling gro_cells_receive() to receive a packet, which
-actually requires skb->sk to be NULL. However when macsec dev is
-over veth, it's possible the skb->sk is still set if the skb was
-not unshared or expanded from the peer veth.
-
-ip_rcv() is calling skb_orphan() to drop the skb's sk for tproxy,
-but it is too late for macsec's calling gro_cells_receive(). So
-fix it by dropping the skb's sk earlier on rx path of macsec.
-
-Fixes: 5491e7c6b1a9 ("macsec: enable GRO and RPS on macsec devices")
-Reported-by: Xiumei Mu <xmu@redhat.com>
-Reported-by: Fei Liu <feliu@redhat.com>
-Signed-off-by: Xin Long <lucien.xin@gmail.com>
+Signed-off-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
+Acked-by: Michael Grzeschik <m.grzeschik@pengutronix.de>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/macsec.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/net/arcnet/arcnet.c | 31 +++++++++++++++++--------------
+ 1 file changed, 17 insertions(+), 14 deletions(-)
 
-diff --git a/drivers/net/macsec.c b/drivers/net/macsec.c
-index 2c971357e66cf..0dc92d2faa64d 100644
---- a/drivers/net/macsec.c
-+++ b/drivers/net/macsec.c
-@@ -1238,6 +1238,7 @@ static rx_handler_result_t macsec_handle_frame(struct sk_buff **pskb)
- 		macsec_rxsa_put(rx_sa);
- 	macsec_rxsc_put(rx_sc);
+diff --git a/drivers/net/arcnet/arcnet.c b/drivers/net/arcnet/arcnet.c
+index 8459115d9d4e5..553776cc1d29d 100644
+--- a/drivers/net/arcnet/arcnet.c
++++ b/drivers/net/arcnet/arcnet.c
+@@ -1063,31 +1063,34 @@ EXPORT_SYMBOL(arcnet_interrupt);
+ static void arcnet_rx(struct net_device *dev, int bufnum)
+ {
+ 	struct arcnet_local *lp = netdev_priv(dev);
+-	struct archdr pkt;
++	union {
++		struct archdr pkt;
++		char buf[512];
++	} rxdata;
+ 	struct arc_rfc1201 *soft;
+ 	int length, ofs;
  
-+	skb_orphan(skb);
- 	ret = gro_cells_receive(&macsec->gro_cells, skb);
- 	if (ret == NET_RX_SUCCESS)
- 		count_rx(dev, skb->len);
+-	soft = &pkt.soft.rfc1201;
++	soft = &rxdata.pkt.soft.rfc1201;
+ 
+-	lp->hw.copy_from_card(dev, bufnum, 0, &pkt, ARC_HDR_SIZE);
+-	if (pkt.hard.offset[0]) {
+-		ofs = pkt.hard.offset[0];
++	lp->hw.copy_from_card(dev, bufnum, 0, &rxdata.pkt, ARC_HDR_SIZE);
++	if (rxdata.pkt.hard.offset[0]) {
++		ofs = rxdata.pkt.hard.offset[0];
+ 		length = 256 - ofs;
+ 	} else {
+-		ofs = pkt.hard.offset[1];
++		ofs = rxdata.pkt.hard.offset[1];
+ 		length = 512 - ofs;
+ 	}
+ 
+ 	/* get the full header, if possible */
+-	if (sizeof(pkt.soft) <= length) {
+-		lp->hw.copy_from_card(dev, bufnum, ofs, soft, sizeof(pkt.soft));
++	if (sizeof(rxdata.pkt.soft) <= length) {
++		lp->hw.copy_from_card(dev, bufnum, ofs, soft, sizeof(rxdata.pkt.soft));
+ 	} else {
+-		memset(&pkt.soft, 0, sizeof(pkt.soft));
++		memset(&rxdata.pkt.soft, 0, sizeof(rxdata.pkt.soft));
+ 		lp->hw.copy_from_card(dev, bufnum, ofs, soft, length);
+ 	}
+ 
+ 	arc_printk(D_DURING, dev, "Buffer #%d: received packet from %02Xh to %02Xh (%d+4 bytes)\n",
+-		   bufnum, pkt.hard.source, pkt.hard.dest, length);
++		   bufnum, rxdata.pkt.hard.source, rxdata.pkt.hard.dest, length);
+ 
+ 	dev->stats.rx_packets++;
+ 	dev->stats.rx_bytes += length + ARC_HDR_SIZE;
+@@ -1096,13 +1099,13 @@ static void arcnet_rx(struct net_device *dev, int bufnum)
+ 	if (arc_proto_map[soft->proto]->is_ip) {
+ 		if (BUGLVL(D_PROTO)) {
+ 			struct ArcProto
+-			*oldp = arc_proto_map[lp->default_proto[pkt.hard.source]],
++			*oldp = arc_proto_map[lp->default_proto[rxdata.pkt.hard.source]],
+ 			*newp = arc_proto_map[soft->proto];
+ 
+ 			if (oldp != newp) {
+ 				arc_printk(D_PROTO, dev,
+ 					   "got protocol %02Xh; encap for host %02Xh is now '%c' (was '%c')\n",
+-					   soft->proto, pkt.hard.source,
++					   soft->proto, rxdata.pkt.hard.source,
+ 					   newp->suffix, oldp->suffix);
+ 			}
+ 		}
+@@ -1111,10 +1114,10 @@ static void arcnet_rx(struct net_device *dev, int bufnum)
+ 		lp->default_proto[0] = soft->proto;
+ 
+ 		/* in striking contrast, the following isn't a hack. */
+-		lp->default_proto[pkt.hard.source] = soft->proto;
++		lp->default_proto[rxdata.pkt.hard.source] = soft->proto;
+ 	}
+ 	/* call the protocol-specific receiver. */
+-	arc_proto_map[soft->proto]->rx(dev, bufnum, &pkt, length);
++	arc_proto_map[soft->proto]->rx(dev, bufnum, &rxdata.pkt, length);
+ }
+ 
+ static void null_rx(struct net_device *dev, int bufnum,
 -- 
 2.20.1
 
