@@ -2,80 +2,130 @@ Return-Path: <SRS0=YRFP=X2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F511ECDFB6
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 06:37:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 07976ECDFB6
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 06:41:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D6D032133F
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 06:37:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D26D22133F
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 06:41:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="PBu8Coen"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="cbFiVcXS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732441AbfJAGhq (ORCPT
+        id S1732622AbfJAGlh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Oct 2019 02:37:46 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:39110 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726672AbfJAGhq (ORCPT
+        Tue, 1 Oct 2019 02:41:37 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:50184 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725777AbfJAGlg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Oct 2019 02:37:46 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=1J2bXPCX7WE0H0txEjX0ivUz5quBP90hFeMgyCZKxxo=; b=PBu8CoencaxSyAddpHhtk33O1
-        pscNJjIe2M6BHbx5hsP0da5LBziJK9lGdykY1AKQZ+I9oApgaowj8CS7DQHxN2F956cRGedrXzu3k
-        Lvv58vkz9vBT6yrNgCDdK+dPResg6761Wm4yLVdYa8I+PpqzTWZ8lVe+RN1as6JstbuhDMKycS6LL
-        0OhKiwCi8iCZNM+ifUqrk5ymys1Wo/BipAbs7jyIKFu+giaW9bXDJDZt2bO7a37D2aIHRyHUolSy2
-        yVCwZv/mDjrn6oRHhbvCTu1B4oY33aIUdmOBmY2XU/HkNLfUk9rJ9e1tAnd03WE8wCfraM4ssvOCX
-        0+rFJHt9w==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.92.2 #3 (Red Hat Linux))
-        id 1iFBn6-00035m-Fo; Tue, 01 Oct 2019 06:37:44 +0000
-Date:   Mon, 30 Sep 2019 23:37:44 -0700
-From:   Christoph Hellwig <hch@infradead.org>
-To:     Nicolas Boichat <drinkcat@chromium.org>
-Cc:     Shik Chen <shik@chromium.org>,
-        Linux Media Mailing List <linux-media@vger.kernel.org>,
-        Tomasz Figa <tfiga@chromium.org>, notify@kernel.org,
-        Keiichi Watanabe <keiichiw@chromium.org>,
-        Ricky Liang <jcliang@chromium.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        lkml <linux-kernel@vger.kernel.org>,
-        kieran.bingham@ideasonboard.com, Vlastimil Babka <vbabka@suse.cz>,
-        Christoph Lameter <cl@linux.com>,
-        Christoph Hellwig <hch@infradead.org>
-Subject: Re: [PATCH] media: uvcvideo: Use streaming DMA APIs to transfer
- buffers
-Message-ID: <20191001063744.GA10402@infradead.org>
-References: <20190802131226.123800-1-shik@chromium.org>
- <CANMq1KD3Pth7LNnVqxSesx3kSFte0eR5JqEBETv45s_9_YKWHw@mail.gmail.com>
- <20190930082310.GA1750@infradead.org>
+        Tue, 1 Oct 2019 02:41:36 -0400
+Received: by mail-wm1-f66.google.com with SMTP id 5so1913085wmg.0
+        for <linux-kernel@vger.kernel.org>; Mon, 30 Sep 2019 23:41:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=k6qAJrWkJugJ+YyUVWwhzQnnSRT/IhjCBIC0PqWjhZc=;
+        b=cbFiVcXSWYBflxC9W25SeEQySmTY13LMor81UTl+hDJNCN/MClkjr0C3HXHRqxtjnp
+         ka9jopuu0cfxVmNUoWGpq4hU5TimpokAoV+maf7vGS9m66qAQk7RFQBq5KInXUGC8z4L
+         goCM9g7369v856CrQdJVbytKbPxj+QBVClqw+SMs3AHyfKQWkxf0qw/okOmVrN1VRbBF
+         4P+6NuoqeTw5abV+mRFJnUtp9tixR4UdxeqQdtOOCuFHwJMGBv0IiYjqVGlvtQdluXTR
+         UtPAq2//ItvspYFR0LR9a634GT6tTrKHQz3a+idRXa0/lhbRV0Ik8INiUfGr23Sa/4Hs
+         VZCw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=k6qAJrWkJugJ+YyUVWwhzQnnSRT/IhjCBIC0PqWjhZc=;
+        b=iVcauWMAjEJgic+86K/+bfOQjae9iGVqImQLhDKD0pYuK4OFKOBNFVnO6CJAt0zJhJ
+         ugOvfRJXrHftz2yB8tJ2jxyJ+wbpO1r+/cWL9kQR3lgtBeObTKQ1UVFGCRIQRXLu6wr6
+         ygociRINliBQoCGNKMIFZtqoILcnPsbNyCcFX3BWa0q23OKuAb4eIqrxn2d+ZBTEkehh
+         dzRxM44gnErLMH+rNMf09rcoB9Bm1/UZS/Xtr56oQ05JGvZiwgwFMk2PYSOyTrJrMCZX
+         bbEPNyuHCF+XEbDM+K8HrrydPjafVRUB5UXJTNhfDiuElTd/choYF2qtJaX1AjR/r2uG
+         dygw==
+X-Gm-Message-State: APjAAAUdsdXSxfz++DlgigwZql+lUuIKUbqSr8qGaIjID03F9qOoqe+z
+        t6pLhGUZLSMcY47IWydiSVoQJg==
+X-Google-Smtp-Source: APXvYqyd5/xCoi4aJNPbWGQpM9k1bRxwu4LYRcxqpmwT/41TmMSserFaqUkyTLP0bdvSXYjCbSoXaw==
+X-Received: by 2002:a05:600c:224e:: with SMTP id a14mr2181172wmm.174.1569912092996;
+        Mon, 30 Sep 2019 23:41:32 -0700 (PDT)
+Received: from dell ([2.27.167.122])
+        by smtp.gmail.com with ESMTPSA id o22sm39910169wra.96.2019.09.30.23.41.32
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 30 Sep 2019 23:41:32 -0700 (PDT)
+Date:   Tue, 1 Oct 2019 07:41:30 +0100
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Lukasz Majewski <lukma@denx.de>
+Cc:     linux-kernel@vger.kernel.org,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Enrico Weigelt <info@metux.net>,
+        Kate Stewart <kstewart@linuxfoundation.org>,
+        linux-input@vger.kernel.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: Re: [PATCH v5 0/3] mfd: mc13xxx: Fixes and enhancements for NXP's
+ mc34708
+Message-ID: <20191001064130.GA11769@dell>
+References: <20190909214440.30674-1-lukma@denx.de>
+ <20190930095159.64e1001a@jawa>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20190930082310.GA1750@infradead.org>
-User-Agent: Mutt/1.12.1 (2019-06-15)
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190930095159.64e1001a@jawa>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Sep 30, 2019 at 01:23:10AM -0700, Christoph Hellwig wrote:
-> And drivers really have no business looking at the dma mask.  I have
-> a plan for dma_alloc_pages API that could replace that cruft, but
-> until then please use GFP_KERNEL and let the dma subsystem bounce
-> buffer if needed.
+On Mon, 30 Sep 2019, Lukasz Majewski wrote:
 
-Can you try this series:
+> Dear Lee,
+> 
+> > This patch set provides several enhancements to mc13xxx MFD family
+> > of devices by introducing mc34708 as a separate device.
+> > 
+> > This IC has dedicated pen detection feature, which allows better
+> > touchscreen experience.
+> > 
+> > This is the fifth version of this code (v5).
+> > Discussion regarding previous versions can be found here:
+> > https://lkml.org/lkml/2018/4/12/351
+> > https://www.mail-archive.com/linux-kernel@vger.kernel.org/msg1661934.html
+> > https://www.mail-archive.com/linux-kernel@vger.kernel.org/msg1664296.html
+> > https://lkml.org/lkml/2019/7/17/705
+> 
+> Gentle ping on this patch series. It is now 3 weeks without any reply...
 
-http://git.infradead.org/users/hch/misc.git/shortlog/refs/heads/dma_alloc_pages
+Please take note and follow the kernel release cycle.
 
-and see if it does whay you need for usb?
+These patches were sent after the release of -rc7 i.e. very late
+in the release cycle and a point where most kernel maintainers stop
+reviewing/applying patches and start to prepare for the impending
+merge-window.
+
+Also, there is no such thing as a gentle ping.  If you genuinely think
+your patches have unlikely("slipped though the gaps"), then post a
+[RESEND] complete with a note alluding your reasons doing such.
+
+> > Sascha Hauer (3):
+> >   mfd: mc13xxx: Add mc34708 adc support
+> >   input: touchscreen mc13xxx: Make platform data optional
+> >   input: touchscreen mc13xxx: Add mc34708 support
+> > 
+> >  drivers/input/touchscreen/mc13783_ts.c | 63 ++++++++++++++---
+> >  drivers/mfd/mc13xxx-core.c             | 98
+> > +++++++++++++++++++++++++- include/linux/mfd/mc34708.h            |
+> > 37 ++++++++++ 3 files changed, 185 insertions(+), 13 deletions(-)
+> >  create mode 100644 include/linux/mfd/mc34708.h
+
+-- 
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
