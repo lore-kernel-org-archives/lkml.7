@@ -7,49 +7,49 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B45BECE58A
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 16:42:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3816ECE587
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 16:42:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 17E3420B7C
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 16:42:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 79E6B20B7C
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 16:42:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569948164;
-	bh=nHijfLVslklzqsWbRieTWkGDtWxQiEWqVBXIGOHJoME=;
+	s=default; t=1569948170;
+	bh=ri0y+tcaOShXS+LvXq26MlFByM5jdC+qr44td80hKS4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=g/VQ12UYbOnTUz3FUVMgZ/wJpENQivljp+lg8SI2It+1CMqxNjrvnv/y7QD6SlOZe
-	 38FuOK1VGr9M53PgvDu1Kti1Hb17sdEax5PsEV7+DG69tjmSJ8/ehVEcItsp868/JF
-	 7NHvgrv87WyAUgNtnitifWbKRrrxlriLKsWCZLo4=
+	b=HCJ8uKndXtZEIwjZIQoYM0sjhu3cWXgp9WHesXNT1wB59ipTpX6o7G6sMzX321Qkx
+	 BePz4uqxhvif7wtuBRjHANWT5vbnhkhg4+BWdVuft/kU0Tvwyd3QVOBhxKqy7ebWg7
+	 Rj0ivd5M9QfQtYLlhO3nNieBrjI0h9tLEpXhNVhw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732129AbfJAQmn (ORCPT
+        id S1732194AbfJAQmt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Oct 2019 12:42:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54426 "EHLO mail.kernel.org"
+        Tue, 1 Oct 2019 12:42:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54616 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732016AbfJAQma (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Oct 2019 12:42:30 -0400
+        id S1732056AbfJAQmi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Oct 2019 12:42:38 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 95FCC2190F;
-        Tue,  1 Oct 2019 16:42:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 18F27222C2;
+        Tue,  1 Oct 2019 16:42:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569948149;
-        bh=nHijfLVslklzqsWbRieTWkGDtWxQiEWqVBXIGOHJoME=;
+        s=default; t=1569948158;
+        bh=ri0y+tcaOShXS+LvXq26MlFByM5jdC+qr44td80hKS4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=c5BqJqfJVbeoQSRkRitde3AnLJ6LG0P/Eakzywa0VM18fjETPCpSZn/KoTEzG5Vi6
-         b+FQbl1iEoTh5UbSk+QDo3t8N4HBpFkm6xNVKDsLeF2rfOBG5zuAoAOWtay9UQMFPl
-         M5lpIe5R7fRuvTn4+ApaZNK/EJPffyYOWuaM7Too=
+        b=KVbs8aD4A/S096lFMtGeJ9GSAqSKc5KFaWxldQ7IxjH6grMeuQZAhUVzW8t9FPezk
+         ETfQurHu736i236YdstWJsYQlptkXhuq7HVvoYoLR5nQwPiMANvl0z0Czir4QsTJRD
+         FRSRfONrkWAaMLP5AVt9oICARp7pf0gP4qvSdPg8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     KeMeng Shi <shikemeng@huawei.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Valentin Schneider <valentin.schneider@arm.com>,
+Cc:     Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>,
+        syzbot <syzbot+8ab2d0f39fb79fe6ca40@syzkaller.appspotmail.com>,
+        Eric Biederman <ebiederm@xmission.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
         Linus Torvalds <torvalds@linux-foundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.2 43/63] sched/core: Fix migration to invalid CPU in __set_cpus_allowed_ptr()
-Date:   Tue,  1 Oct 2019 12:41:05 -0400
-Message-Id: <20191001164125.15398-43-sashal@kernel.org>
+        Sasha Levin <sashal@kernel.org>, kexec@lists.infradead.org
+Subject: [PATCH AUTOSEL 5.2 47/63] kexec: bail out upon SIGKILL when allocating memory.
+Date:   Tue,  1 Oct 2019 12:41:09 -0400
+Message-Id: <20191001164125.15398-47-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191001164125.15398-1-sashal@kernel.org>
 References: <20191001164125.15398-1-sashal@kernel.org>
@@ -62,83 +62,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: KeMeng Shi <shikemeng@huawei.com>
+From: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
 
-[ Upstream commit 714e501e16cd473538b609b3e351b2cc9f7f09ed ]
+[ Upstream commit 7c3a6aedcd6aae0a32a527e68669f7dd667492d1 ]
 
-An oops can be triggered in the scheduler when running qemu on arm64:
+syzbot found that a thread can stall for minutes inside kexec_load() after
+that thread was killed by SIGKILL [1].  It turned out that the reproducer
+was trying to allocate 2408MB of memory using kimage_alloc_page() from
+kimage_load_normal_segment().  Let's check for SIGKILL before doing memory
+allocation.
 
- Unable to handle kernel paging request at virtual address ffff000008effe40
- Internal error: Oops: 96000007 [#1] SMP
- Process migration/0 (pid: 12, stack limit = 0x00000000084e3736)
- pstate: 20000085 (nzCv daIf -PAN -UAO)
- pc : __ll_sc___cmpxchg_case_acq_4+0x4/0x20
- lr : move_queued_task.isra.21+0x124/0x298
- ...
- Call trace:
-  __ll_sc___cmpxchg_case_acq_4+0x4/0x20
-  __migrate_task+0xc8/0xe0
-  migration_cpu_stop+0x170/0x180
-  cpu_stopper_thread+0xec/0x178
-  smpboot_thread_fn+0x1ac/0x1e8
-  kthread+0x134/0x138
-  ret_from_fork+0x10/0x18
+[1] https://syzkaller.appspot.com/bug?id=a0e3436829698d5824231251fad9d8e998f94f5e
 
-__set_cpus_allowed_ptr() will choose an active dest_cpu in affinity mask to
-migrage the process if process is not currently running on any one of the
-CPUs specified in affinity mask. __set_cpus_allowed_ptr() will choose an
-invalid dest_cpu (dest_cpu >= nr_cpu_ids, 1024 in my virtual machine) if
-CPUS in an affinity mask are deactived by cpu_down after cpumask_intersects
-check. cpumask_test_cpu() of dest_cpu afterwards is overflown and may pass if
-corresponding bit is coincidentally set. As a consequence, kernel will
-access an invalid rq address associate with the invalid CPU in
-migration_cpu_stop->__migrate_task->move_queued_task and the Oops occurs.
-
-The reproduce the crash:
-
-  1) A process repeatedly binds itself to cpu0 and cpu1 in turn by calling
-  sched_setaffinity.
-
-  2) A shell script repeatedly does "echo 0 > /sys/devices/system/cpu/cpu1/online"
-  and "echo 1 > /sys/devices/system/cpu/cpu1/online" in turn.
-
-  3) Oops appears if the invalid CPU is set in memory after tested cpumask.
-
-Signed-off-by: KeMeng Shi <shikemeng@huawei.com>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Reviewed-by: Valentin Schneider <valentin.schneider@arm.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Link: https://lkml.kernel.org/r/1568616808-16808-1-git-send-email-shikemeng@huawei.com
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Link: http://lkml.kernel.org/r/993c9185-d324-2640-d061-bed2dd18b1f7@I-love.SAKURA.ne.jp
+Signed-off-by: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
+Reported-by: syzbot <syzbot+8ab2d0f39fb79fe6ca40@syzkaller.appspotmail.com>
+Cc: Eric Biederman <ebiederm@xmission.com>
+Reviewed-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/sched/core.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ kernel/kexec_core.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/kernel/sched/core.c b/kernel/sched/core.c
-index 42bc2986520d7..a614ee20c68b1 100644
---- a/kernel/sched/core.c
-+++ b/kernel/sched/core.c
-@@ -1129,7 +1129,8 @@ static int __set_cpus_allowed_ptr(struct task_struct *p,
- 	if (cpumask_equal(&p->cpus_allowed, new_mask))
- 		goto out;
+diff --git a/kernel/kexec_core.c b/kernel/kexec_core.c
+index d5870723b8ada..15d70a90b50dc 100644
+--- a/kernel/kexec_core.c
++++ b/kernel/kexec_core.c
+@@ -300,6 +300,8 @@ static struct page *kimage_alloc_pages(gfp_t gfp_mask, unsigned int order)
+ {
+ 	struct page *pages;
  
--	if (!cpumask_intersects(new_mask, cpu_valid_mask)) {
-+	dest_cpu = cpumask_any_and(cpu_valid_mask, new_mask);
-+	if (dest_cpu >= nr_cpu_ids) {
- 		ret = -EINVAL;
- 		goto out;
- 	}
-@@ -1150,7 +1151,6 @@ static int __set_cpus_allowed_ptr(struct task_struct *p,
- 	if (cpumask_test_cpu(task_cpu(p), new_mask))
- 		goto out;
- 
--	dest_cpu = cpumask_any_and(cpu_valid_mask, new_mask);
- 	if (task_running(rq, p) || p->state == TASK_WAKING) {
- 		struct migration_arg arg = { p, dest_cpu };
- 		/* Need help from migration thread: drop lock and wait. */
++	if (fatal_signal_pending(current))
++		return NULL;
+ 	pages = alloc_pages(gfp_mask & ~__GFP_ZERO, order);
+ 	if (pages) {
+ 		unsigned int count, i;
 -- 
 2.20.1
 
