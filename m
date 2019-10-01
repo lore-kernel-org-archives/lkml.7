@@ -2,144 +2,153 @@ Return-Path: <SRS0=YRFP=X2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7097C352AA
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 11:41:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 49F7DC352AA
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 11:41:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C664021855
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 11:41:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 21FBF222C2
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 11:41:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1569930107;
+	bh=SHQpS4kDDSUatUulx+dfzd89f5TU113Jk44L8IFwGpA=;
+	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
+	b=Cgur0tMLwHsBCKJMP81z7g18AtD0ZVtVc7xmF7ynhXzbxoTh4Oq8a0S8Av/pV5iry
+	 TYP7ZVrROdUxv75r1Rezy85rS4FNrGxCF2OdfDBbfN1E2aM9hQylkfNW/kgWiyG0LO
+	 bEwLpZWy85N3PB4ZzqTD3OQhmdB1EBwVikDO7mRs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387745AbfJALli (ORCPT
+        id S2387753AbfJALlq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Oct 2019 07:41:38 -0400
-Received: from foss.arm.com ([217.140.110.172]:47532 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387715AbfJALld (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Oct 2019 07:41:33 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 5CAAC337;
-        Tue,  1 Oct 2019 04:41:32 -0700 (PDT)
-Received: from localhost (unknown [10.37.6.20])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C85B53F706;
-        Tue,  1 Oct 2019 04:41:31 -0700 (PDT)
-Date:   Tue, 1 Oct 2019 12:41:30 +0100
-From:   Andrew Murray <andrew.murray@arm.com>
-To:     Will Deacon <will@kernel.org>
-Cc:     Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Russell King <linux@armlinux.org.uk>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-Subject: Re: [PATCH] Partially revert "compiler: enable
- CONFIG_OPTIMIZE_INLINING forcibly"
-Message-ID: <20191001114129.GL42880@e119886-lin.cambridge.arm.com>
-References: <20190930114540.27498-1-will@kernel.org>
- <CAK7LNARWkQ-z02RYv3XQ69KkWdmEVaZge07qiYC8_kyMrFzCTg@mail.gmail.com>
- <20191001104253.fci7s3sn5ov3h56d@willie-the-truck>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191001104253.fci7s3sn5ov3h56d@willie-the-truck>
-User-Agent: Mutt/1.10.1+81 (426a6c1) (2018-08-26)
+        Tue, 1 Oct 2019 07:41:46 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:41278 "EHLO
+        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387649AbfJALlO (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Oct 2019 07:41:14 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=sirena.org.uk; s=20170815-heliosphere; h=Date:Message-Id:In-Reply-To:
+        Subject:Cc:To:From:Sender:Reply-To:MIME-Version:Content-Type:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
+        List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
+        List-Archive; bh=s76vvuJytASWP0aoMu6n1w53rQCXKWbC2l3bEXVXrQ0=; b=FHJI43356iX2
+        9a0FSPeuCCrjKpXgjSqLjYd6sCKOdZV9CKmILUhXGGb1MzoSbMEQJqK8HgjCRNG6mYgeyg33qmVYN
+        oJpcUAyFMRL62OZXKL+xJXO7egAzpNMZVOHYTNTzzCD4Rh697u2sGg8kGrD/24cjDqgzDpYcd/ZJm
+        kj68k=;
+Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=ypsilon.sirena.org.uk)
+        by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <broonie@sirena.co.uk>)
+        id 1iFGWh-0004Z0-He; Tue, 01 Oct 2019 11:41:07 +0000
+Received: by ypsilon.sirena.org.uk (Postfix, from userid 1000)
+        id 0FAEC2742A10; Tue,  1 Oct 2019 12:41:07 +0100 (BST)
+From:   Mark Brown <broonie@kernel.org>
+To:     Gregory CLEMENT <gregory.clement@bootlin.com>
+Cc:     Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-spi@vger.kernel.org,
+        Ludovic Desroches <ludovic.desroches@microchip.com>,
+        Mark Brown <broonie@kernel.org>,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+Subject: Applied "spi: atmel: Remove AVR32 leftover" to the spi tree
+In-Reply-To: <20190919154034.7489-1-gregory.clement@bootlin.com>
+X-Patchwork-Hint: ignore
+Message-Id: <20191001114107.0FAEC2742A10@ypsilon.sirena.org.uk>
+Date:   Tue,  1 Oct 2019 12:41:07 +0100 (BST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Oct 01, 2019 at 11:42:54AM +0100, Will Deacon wrote:
-> On Tue, Oct 01, 2019 at 06:40:26PM +0900, Masahiro Yamada wrote:
-> > On Mon, Sep 30, 2019 at 8:45 PM Will Deacon <will@kernel.org> wrote:
-> > > diff --git a/lib/Kconfig.debug b/lib/Kconfig.debug
-> > > index 93d97f9b0157..c37c72adaeff 100644
-> > > --- a/lib/Kconfig.debug
-> > > +++ b/lib/Kconfig.debug
-> > > @@ -312,6 +312,7 @@ config HEADERS_CHECK
-> > >
-> > >  config OPTIMIZE_INLINING
-> > >         def_bool y
-> > > +       depends on !(ARM || ARM64) # https://gcc.gnu.org/bugzilla/show_bug.cgi?id=91111
-> > 
-> > 
-> > This is a too big hammer.
-> 
-> It matches the previous default behaviour!
-> 
-> > For ARM, it is not a compiler bug, so I am trying to fix the kernel code.
-> > 
-> > For ARM64, even if it is a compiler bug, you can add __always_inline
-> > to the functions in question.
-> > (arch_atomic64_dec_if_positive in this case).
-> > 
-> > You do not need to force __always_inline globally.
-> 
-> So you'd prefer I do something like the diff below? I mean, it's a start,
-> but I do worry that we're hanging arch/arm/ out to dry.
+The patch
 
-If I've understood one part of this issue correctly - and using the
-c2p_unsupported build failure as an example [1], there are instances in
-the kernel where it is assumed that the compiler will optimise out a call
-to an undefined function, and also assumed that the compiler will know
-at compile time that the function will never get called. It's common to
-satisfy this assumption when the calling function is inlined.
+   spi: atmel: Remove AVR32 leftover
 
-But I suspect there may be other cases similar to c2p_unsupported which
-are still lurking.
+has been applied to the spi tree at
 
-For example the following functions are called but non-existent, and thus
-may be an area worth investigating:
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git for-5.5
 
-__buggy_use_of_MTHCA_PUT, __put_dbe_unknown, __cmpxchg_wrong_size,
-__bad_percpu_size, __put_user_bad, __get_user_unknown,
-__bad_unaligned_access_size, __bad_xchg
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.  
 
-But more generally, as this is a common pattern - isn't there a benefit
-here for changing all of these to BUILD_BUG? (So they can be found easily).
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
 
-Or to avoid this class of issues, change them to BUG or unreachable - but
-lose the benefit of compile time detection?
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
+
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
 
 Thanks,
+Mark
 
-Andrew Murray
+From e61bb114d41ddf6ae5bf05a0109fc13116550c7d Mon Sep 17 00:00:00 2001
+From: Gregory CLEMENT <gregory.clement@bootlin.com>
+Date: Thu, 19 Sep 2019 17:40:34 +0200
+Subject: [PATCH] spi: atmel: Remove AVR32 leftover
 
-[1] https://lore.kernel.org/patchwork/patch/1122097/
-> 
-> Will
-> 
-> --->8
-> 
-> diff --git a/arch/arm64/include/asm/atomic_lse.h b/arch/arm64/include/asm/atomic_lse.h
-> index c6bd87d2915b..574808b9df4c 100644
-> --- a/arch/arm64/include/asm/atomic_lse.h
-> +++ b/arch/arm64/include/asm/atomic_lse.h
-> @@ -321,7 +321,8 @@ static inline s64 __lse_atomic64_dec_if_positive(atomic64_t *v)
->  }
->  
->  #define __CMPXCHG_CASE(w, sfx, name, sz, mb, cl...)                    \
-> -static inline u##sz __lse__cmpxchg_case_##name##sz(volatile void *ptr, \
-> +static __always_inline u##sz                                           \
-> +__lse__cmpxchg_case_##name##sz(volatile void *ptr,                     \
->                                               u##sz old,                \
->                                               u##sz new)                \
->  {                                                                      \
-> @@ -362,7 +363,8 @@ __CMPXCHG_CASE(x,  ,  mb_, 64, al, "memory")
->  #undef __CMPXCHG_CASE
->  
->  #define __CMPXCHG_DBL(name, mb, cl...)                                 \
-> -static inline long __lse__cmpxchg_double##name(unsigned long old1,     \
-> +static __always_inline long                                            \
-> +__lse__cmpxchg_double##name(unsigned long old1,                                \
->                                          unsigned long old2,            \
->                                          unsigned long new1,            \
->                                          unsigned long new2,            \
-> 
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+AV32 support has been from the kernel a few release ago, but there was
+still some specific macro for this architecture in this driver. Lets
+remove it.
+
+Signed-off-by: Gregory CLEMENT <gregory.clement@bootlin.com>
+Link: https://lore.kernel.org/r/20190919154034.7489-1-gregory.clement@bootlin.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
+---
+ drivers/spi/spi-atmel.c | 24 ------------------------
+ 1 file changed, 24 deletions(-)
+
+diff --git a/drivers/spi/spi-atmel.c b/drivers/spi/spi-atmel.c
+index acf318e7330c..3ed5e663da6f 100644
+--- a/drivers/spi/spi-atmel.c
++++ b/drivers/spi/spi-atmel.c
+@@ -222,37 +222,13 @@
+ 	  | SPI_BF(name, value))
+ 
+ /* Register access macros */
+-#ifdef CONFIG_AVR32
+-#define spi_readl(port, reg) \
+-	__raw_readl((port)->regs + SPI_##reg)
+-#define spi_writel(port, reg, value) \
+-	__raw_writel((value), (port)->regs + SPI_##reg)
+-
+-#define spi_readw(port, reg) \
+-	__raw_readw((port)->regs + SPI_##reg)
+-#define spi_writew(port, reg, value) \
+-	__raw_writew((value), (port)->regs + SPI_##reg)
+-
+-#define spi_readb(port, reg) \
+-	__raw_readb((port)->regs + SPI_##reg)
+-#define spi_writeb(port, reg, value) \
+-	__raw_writeb((value), (port)->regs + SPI_##reg)
+-#else
+ #define spi_readl(port, reg) \
+ 	readl_relaxed((port)->regs + SPI_##reg)
+ #define spi_writel(port, reg, value) \
+ 	writel_relaxed((value), (port)->regs + SPI_##reg)
+-
+-#define spi_readw(port, reg) \
+-	readw_relaxed((port)->regs + SPI_##reg)
+ #define spi_writew(port, reg, value) \
+ 	writew_relaxed((value), (port)->regs + SPI_##reg)
+ 
+-#define spi_readb(port, reg) \
+-	readb_relaxed((port)->regs + SPI_##reg)
+-#define spi_writeb(port, reg, value) \
+-	writeb_relaxed((value), (port)->regs + SPI_##reg)
+-#endif
+ /* use PIO for small transfers, avoiding DMA setup/teardown overhead and
+  * cache operations; better heuristics consider wordsize and bitrate.
+  */
+-- 
+2.20.1
+
