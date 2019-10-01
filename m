@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88223C388F3
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 11:12:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B0C2C388F3
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 11:12:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 586DB21A4C
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 11:12:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DADC521924
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 11:12:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569928359;
-	bh=K8AyG+osSytuHwKL2hiV0HvUJXM4yKUd26TB8FEhRMU=;
+	s=default; t=1569928365;
+	bh=KSIwqi7udYS1ltCOdZhqaw685LG1hFFg0WYWzZyx40M=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=rbH0XRvuPEjWuaqlXNkxVENaY34aJi0sYBM7T4ysC/X3Lkvf65XV9CEjbtSDtgY3d
-	 n3IYuY1TzlUrwEr/kWMiawMj6Sbvt/bDxoq/OCQQZGmFmeOVKRCS7LXQXOYVibNzhC
-	 bc33seoOZcTZ6ICVyIbkt3xwbOUCPzuzzhZcgwWA=
+	b=nhJXKyKKHg+IP2vI584lsL3il717H+wdDFhPGkWX+qrgffWeNT93SCv1eVa1IUT13
+	 jcLSvgZhzAt19Ttxsr8JautRioUHrNaZg30o1nGVRrnNNUyCUF2PFwRJnkcPB1KYZD
+	 K8rZRnLAu7atrokpYyAAx5OhM7a80tJq81Z6kd2U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731357AbfJALMi (ORCPT
+        id S1731391AbfJALMn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Oct 2019 07:12:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34504 "EHLO mail.kernel.org"
+        Tue, 1 Oct 2019 07:12:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34594 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730379AbfJALMi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Oct 2019 07:12:38 -0400
+        id S1731358AbfJALMm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Oct 2019 07:12:42 -0400
 Received: from quaco.ghostprotocols.net (177.206.223.101.dynamic.adsl.gvt.net.br [177.206.223.101])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D3F2B21924;
-        Tue,  1 Oct 2019 11:12:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BEAE721920;
+        Tue,  1 Oct 2019 11:12:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569928357;
-        bh=K8AyG+osSytuHwKL2hiV0HvUJXM4yKUd26TB8FEhRMU=;
+        s=default; t=1569928361;
+        bh=KSIwqi7udYS1ltCOdZhqaw685LG1hFFg0WYWzZyx40M=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=B4Yt3gzwU1CmcnljEmz1WCbdQY31v5gYeN1dCdx+HwaPdb/rE7m1i98rtK6MVc6zg
-         tsZJkEK4hrlZEO2E7co8J9qQnxMN4uncra9pyYNAEmyr/1yR68JyvYlp1Jf+wZEkIm
-         1q+SBu2COniB4853dx4p638dTvnb9Q0SVTYi2fAQ=
+        b=NYqDTAoHNgNNn86IWeXgp8zj2JEPYNWdLJ7YMzeZyZ9lpitG4vhjOJVyhKUO1hsWQ
+         8fz2AWw3zWJrPWulMntJ0QEAbN5nF/vckcWBIhLipJWUwUv5cerBjpMEa1Obo6uUi1
+         B17KciCVNN3Q+PxlHVg/IQnFE4Mqx4N58YXfINOA=
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
 To:     Ingo Molnar <mingo@kernel.org>,
         Thomas Gleixner <tglx@linutronix.de>
@@ -46,15 +46,14 @@ Cc:     Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
         Clark Williams <williams@redhat.com>,
         linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
         Ian Rogers <irogers@google.com>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Andi Kleen <ak@linux.intel.com>, Jiri Olsa <jolsa@redhat.com>,
         Peter Zijlstra <peterz@infradead.org>,
         Stephane Eranian <eranian@google.com>,
-        Wang Nan <wangnan0@huawei.com>
-Subject: [PATCH 02/24] perf tests: Avoid raising SEGV using an obvious NULL dereference
-Date:   Tue,  1 Oct 2019 08:11:54 -0300
-Message-Id: <20191001111216.7208-3-acme@kernel.org>
+        Arnaldo Carvalho de Melo <acme@redhat.com>
+Subject: [PATCH 03/24] perf docs: Allow man page date to be specified
+Date:   Tue,  1 Oct 2019 08:11:55 -0300
+Message-Id: <20191001111216.7208-4-acme@kernel.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20191001111216.7208-1-acme@kernel.org>
 References: <20191001111216.7208-1-acme@kernel.org>
@@ -67,83 +66,45 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Ian Rogers <irogers@google.com>
 
-An optimized build such as:
+With this change if a perf_date parameter is provided to asciidoc then
+it will override the default date written to the man page metadata.
 
-  make -C tools/perf CLANG=1 CC=clang EXTRA_CFLAGS="-O3
+Without this change, or if the perf_date isn't specified, then the
+current date is written to the metadata.
 
-will turn the dereference operation into a ud2 instruction, raising a
-SIGILL rather than a SIGSEGV. Use raise(..) for correctness and clarity.
+Having this parameter allows the metadata to be constant if builds
+happen on different dates.
 
-Similar issues were addressed in Numfor Mbiziwo-Tiapo's patch:
+The name of the parameter is intended to be consistent with the existing
+perf_version parameter.
 
-  https://lkml.org/lkml/2019/7/8/1234
-
-Committer testing:
-
-Before:
-
-  [root@quaco ~]# perf test hooks
-  55: perf hooks                                            : Ok
-  [root@quaco ~]# perf test -v hooks
-  55: perf hooks                                            :
-  --- start ---
-  test child forked, pid 17092
-  SIGSEGV is observed as expected, try to recover.
-  Fatal error (SEGFAULT) in perf hook 'test'
-  test child finished with 0
-  ---- end ----
-  perf hooks: Ok
-  [root@quaco ~]#
-
-After:
-
-  [root@quaco ~]# perf test hooks
-  55: perf hooks                                            : Ok
-  [root@quaco ~]# perf test -v hooks
-  55: perf hooks                                            :
-  --- start ---
-  test child forked, pid 17909
-  SIGSEGV is observed as expected, try to recover.
-  Fatal error (SEGFAULT) in perf hook 'test'
-  test child finished with 0
-  ---- end ----
-  perf hooks: Ok
-  [root@quaco ~]#
-
-Fixes: a074865e60ed ("perf tools: Introduce perf hooks")
 Signed-off-by: Ian Rogers <irogers@google.com>
-Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
 Cc: Andi Kleen <ak@linux.intel.com>
 Cc: Jiri Olsa <jolsa@redhat.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
 Cc: Peter Zijlstra <peterz@infradead.org>
 Cc: Stephane Eranian <eranian@google.com>
-Cc: Wang Nan <wangnan0@huawei.com>
-Link: http://lore.kernel.org/lkml/20190925195924.152834-2-irogers@google.com
+Link: http://lore.kernel.org/lkml/20190921041327.155054-1-irogers@google.com
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/tests/perf-hooks.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ tools/perf/Documentation/asciidoc.conf | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/tools/perf/tests/perf-hooks.c b/tools/perf/tests/perf-hooks.c
-index dbc27199c65e..dd865e0bea12 100644
---- a/tools/perf/tests/perf-hooks.c
-+++ b/tools/perf/tests/perf-hooks.c
-@@ -19,12 +19,11 @@ static void sigsegv_handler(int sig __maybe_unused)
- static void the_hook(void *_hook_flags)
- {
- 	int *hook_flags = _hook_flags;
--	int *p = NULL;
- 
- 	*hook_flags = 1234;
- 
- 	/* Generate a segfault, test perf_hooks__recover */
--	*p = 0;
-+	raise(SIGSEGV);
- }
- 
- int test__perf_hooks(struct test *test __maybe_unused, int subtest __maybe_unused)
+diff --git a/tools/perf/Documentation/asciidoc.conf b/tools/perf/Documentation/asciidoc.conf
+index 356b23a40339..2b62ba1e72b7 100644
+--- a/tools/perf/Documentation/asciidoc.conf
++++ b/tools/perf/Documentation/asciidoc.conf
+@@ -71,6 +71,9 @@ ifdef::backend-docbook[]
+ [header]
+ template::[header-declarations]
+ <refentry>
++ifdef::perf_date[]
++<refentryinfo><date>{perf_date}</date></refentryinfo>
++endif::perf_date[]
+ <refmeta>
+ <refentrytitle>{mantitle}</refentrytitle>
+ <manvolnum>{manvolnum}</manvolnum>
 -- 
 2.21.0
 
