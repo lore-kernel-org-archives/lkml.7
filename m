@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DF93ECE587
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 16:59:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FA4BC352AA
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 16:59:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DD7BA2168B
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 16:59:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 755AC21783
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 16:59:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569949177;
-	bh=nXIOzN763RWaREdN4K1IvJJoC/Zr8O0a/qtWgH4HEl8=;
+	s=default; t=1569949189;
+	bh=aH6ctXhIndO4xFNADjyeEW+RHGG7RRX4yg9ZHsOaVNw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=HUOz3wwfVz6fzM39ori9ndkcyVouJQ6WsuJ7d8hJNJvBOEUXB/mMUS86lf22+zVLP
-	 LdKq9vkgYT3IOqlhQh8YjcdnIpOhhOpfd1c8gLheoXHSkqtXYzk55cdeoQh2tO5x+N
-	 B//M9PUloNLNVYDDqkghh/4pufx2zkT/pQ9H0rIY=
+	b=e0JSctDdZ4D+lS0tf1sOEn8pGvkJCM87NV2HPHTY6Sd8TVMbsDjYwaeODrwQX25QP
+	 +N7JxEvCijTYIYym/cOyaCpgfFUKDaIC/7r2/dkv9AXDy8ZNRfvIQbF8UtWEtvlg4y
+	 r0dJrKpZt1DUcGWZBXEOMfNGMYU/Xrqr7L1Pu/ak=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730060AbfJAQ7f (ORCPT
+        id S1730616AbfJAQlG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Oct 2019 12:59:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52628 "EHLO mail.kernel.org"
+        Tue, 1 Oct 2019 12:41:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52384 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730672AbfJAQlI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Oct 2019 12:41:08 -0400
+        id S1730481AbfJAQk5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Oct 2019 12:40:57 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E77382168B;
-        Tue,  1 Oct 2019 16:41:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 49DDD2070B;
+        Tue,  1 Oct 2019 16:40:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569948067;
-        bh=nXIOzN763RWaREdN4K1IvJJoC/Zr8O0a/qtWgH4HEl8=;
+        s=default; t=1569948057;
+        bh=aH6ctXhIndO4xFNADjyeEW+RHGG7RRX4yg9ZHsOaVNw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=hfzGWZoFO9QEgCQr8LDv6nBDm48auW6iA1FvAcCzs4xKH8WZ+byuVG393Pjn/E7GD
-         M4MVJmBbfll8BKQBHNPygSggzs6eQM3xkiIXmE5xz7a/WU/NH5V18Zz/v6ZneVkX0o
-         4SzFJjX89tQdZOqbXSXTndE27Drrsf3BkXViXeAo=
+        b=rHIKX/z1jd2pgw/lcnulGZQn65TrsM/IkOUxt9b4r3mgK/oEE0/Qb8+iOYngC65bh
+         Vnc0JtnOq8cP5lqwy77JyCLUFsHHhQ0aOc1SjUNqQU2pAlZi527yw2plN7A29MsiAY
+         r2+KMvAzGZ5eobSpzu4/dJreF8V8RK/T8QScqToA=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     David Ahern <dsahern@gmail.com>,
-        Patrick Ruddy <pruddy@vyatta.att-mail.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.3 64/71] vrf: Do not attempt to create IPv6 mcast rule if IPv6 is disabled
-Date:   Tue,  1 Oct 2019 12:39:14 -0400
-Message-Id: <20191001163922.14735-64-sashal@kernel.org>
+Cc:     Lee Jones <lee.jones@linaro.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Wolfram Sang <wsa@the-dreams.de>,
+        Sasha Levin <sashal@kernel.org>, linux-i2c@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.3 58/71] i2c: qcom-geni: Disable DMA processing on the Lenovo Yoga C630
+Date:   Tue,  1 Oct 2019 12:39:08 -0400
+Message-Id: <20191001163922.14735-58-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191001163922.14735-1-sashal@kernel.org>
 References: <20191001163922.14735-1-sashal@kernel.org>
@@ -60,40 +61,63 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: David Ahern <dsahern@gmail.com>
+From: Lee Jones <lee.jones@linaro.org>
 
-[ Upstream commit dac91170f8e9c73784af5fad6225e954b795601c ]
+[ Upstream commit 127068abe85bf3dee50df51cb039a5a987a4a666 ]
 
-A user reported that vrf create fails when IPv6 is disabled at boot using
-'ipv6.disable=1':
-   https://bugzilla.kernel.org/show_bug.cgi?id=204903
+We have a production-level laptop (Lenovo Yoga C630) which is exhibiting
+a rather horrific bug.  When I2C HID devices are being scanned for at
+boot-time the QCom Geni based I2C (Serial Engine) attempts to use DMA.
+When it does, the laptop reboots and the user never sees the OS.
 
-The failure is adding fib rules at create time. Add RTNL_FAMILY_IP6MR to
-the check in vrf_fib_rule if ipv6_mod_enabled is disabled.
+Attempts are being made to debug the reason for the spontaneous reboot.
+No luck so far, hence the requirement for this hot-fix.  This workaround
+will be removed once we have a viable fix.
 
-Fixes: e4a38c0c4b27 ("ipv6: add vrf table handling code for ipv6 mcast")
-Signed-off-by: David Ahern <dsahern@gmail.com>
-Cc: Patrick Ruddy <pruddy@vyatta.att-mail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Lee Jones <lee.jones@linaro.org>
+Tested-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+Signed-off-by: Wolfram Sang <wsa@the-dreams.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/vrf.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/i2c/busses/i2c-qcom-geni.c | 12 ++++++++----
+ 1 file changed, 8 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/net/vrf.c b/drivers/net/vrf.c
-index 6e84328bdd402..a4b38a980c3cb 100644
---- a/drivers/net/vrf.c
-+++ b/drivers/net/vrf.c
-@@ -1154,7 +1154,8 @@ static int vrf_fib_rule(const struct net_device *dev, __u8 family, bool add_it)
- 	struct sk_buff *skb;
- 	int err;
+diff --git a/drivers/i2c/busses/i2c-qcom-geni.c b/drivers/i2c/busses/i2c-qcom-geni.c
+index a89bfce5388ee..17abf60c94aeb 100644
+--- a/drivers/i2c/busses/i2c-qcom-geni.c
++++ b/drivers/i2c/busses/i2c-qcom-geni.c
+@@ -355,11 +355,13 @@ static int geni_i2c_rx_one_msg(struct geni_i2c_dev *gi2c, struct i2c_msg *msg,
+ {
+ 	dma_addr_t rx_dma;
+ 	unsigned long time_left;
+-	void *dma_buf;
++	void *dma_buf = NULL;
+ 	struct geni_se *se = &gi2c->se;
+ 	size_t len = msg->len;
  
--	if (family == AF_INET6 && !ipv6_mod_enabled())
-+	if ((family == AF_INET6 || family == RTNL_FAMILY_IP6MR) &&
-+	    !ipv6_mod_enabled())
- 		return 0;
+-	dma_buf = i2c_get_dma_safe_msg_buf(msg, 32);
++	if (!of_machine_is_compatible("lenovo,yoga-c630"))
++		dma_buf = i2c_get_dma_safe_msg_buf(msg, 32);
++
+ 	if (dma_buf)
+ 		geni_se_select_mode(se, GENI_SE_DMA);
+ 	else
+@@ -394,11 +396,13 @@ static int geni_i2c_tx_one_msg(struct geni_i2c_dev *gi2c, struct i2c_msg *msg,
+ {
+ 	dma_addr_t tx_dma;
+ 	unsigned long time_left;
+-	void *dma_buf;
++	void *dma_buf = NULL;
+ 	struct geni_se *se = &gi2c->se;
+ 	size_t len = msg->len;
  
- 	skb = nlmsg_new(vrf_fib_rule_nl_size(), GFP_KERNEL);
+-	dma_buf = i2c_get_dma_safe_msg_buf(msg, 32);
++	if (!of_machine_is_compatible("lenovo,yoga-c630"))
++		dma_buf = i2c_get_dma_safe_msg_buf(msg, 32);
++
+ 	if (dma_buf)
+ 		geni_se_select_mode(se, GENI_SE_DMA);
+ 	else
 -- 
 2.20.1
 
