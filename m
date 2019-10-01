@@ -7,53 +7,53 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B69CC352AA
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 16:51:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 570C5C352AA
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 16:51:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E1B0B2190F
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 16:51:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2997C21783
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 16:51:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569948697;
-	bh=Yxl65tRtauaDS2ACA8wLQ/MJvNUzQFwwxmwfmyU6yTY=;
+	s=default; t=1569948701;
+	bh=X3S8WQ7UT0+IkdAe8bBvvWbrx78vCKcUbqkRwP0+dPU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0t1HHaAJN2oxUvwfr5bj9N6JWrYTwWaoXlH+D2A1twuXsjbh35RqTBet88XsfvwRG
-	 cNrZ+3jIzuSUWEO+cb8MRkD8fg0/7xS3iue8PxN4DVWFtBt2cZAeiqQhTMnItDjSWa
-	 AsxlCw2EbrFDVGvDhkVNw0DK3eppBnznUsCiL+PQ=
+	b=hmG9z+e6OtjSugAJVRs4dVoLe3aFFoczJ+3VM5qUiESbMHjvlJ/zNeN7TO8hGO8cv
+	 1PmmjLPPAdbCULJMtEFr5fdSy1ykpBsclDSO+q7B+jEUhCIklfVg1MpeKeh1GoIJJH
+	 3e+VodsI8BrUijV9gup+m4uDnCQHiswX2TPJroxs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387521AbfJAQoI (ORCPT
+        id S2389203AbfJAQvk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Oct 2019 12:44:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56066 "EHLO mail.kernel.org"
+        Tue, 1 Oct 2019 12:51:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56354 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733085AbfJAQnv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Oct 2019 12:43:51 -0400
+        id S1733194AbfJAQoH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Oct 2019 12:44:07 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2E2A3222CB;
-        Tue,  1 Oct 2019 16:43:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7C46F2190F;
+        Tue,  1 Oct 2019 16:44:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569948230;
-        bh=Yxl65tRtauaDS2ACA8wLQ/MJvNUzQFwwxmwfmyU6yTY=;
+        s=default; t=1569948246;
+        bh=X3S8WQ7UT0+IkdAe8bBvvWbrx78vCKcUbqkRwP0+dPU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=bcxrVW9ORtRmRFUdtGpqQmzKM9G+MyvW+B1g9daP2TiwD7LuA6y2XnUogv9Qk5U+d
-         TILq5YzZLgvPWP+f4IEkt/iB4VAj2RKuQMlMAdlOh1ONbC1oY1Q7aR9vG4U/baOoim
-         2DZ++n7WSpxHEiNkoF/B0cRnZIuZg5NhU3tnbPcM=
+        b=CAhyeW6C2ERsXdRg96YOvDY0h9G6drhtS7Xb2yy557GcB8NZGyrzyGdRMJXkdmaxZ
+         1zdgyPIbeZvoX7TWLp1x9h/hzNq48ijO8oIl4kL5ncUwOi2rK+t2NxjKYu0aQEKzjN
+         tdTX6N4zIWB1H9JQ2dVv+JCOCxSu3yPJ6Nb1yGTg=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Michael Grzeschik <m.grzeschik@pengutronix.de>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 28/43] arcnet: provide a buffer big enough to actually receive packets
-Date:   Tue,  1 Oct 2019 12:42:56 -0400
-Message-Id: <20191001164311.15993-28-sashal@kernel.org>
+Cc:     Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>,
+        syzbot <syzbot+8ab2d0f39fb79fe6ca40@syzkaller.appspotmail.com>,
+        Eric Biederman <ebiederm@xmission.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Sasha Levin <sashal@kernel.org>, kexec@lists.infradead.org
+Subject: [PATCH AUTOSEL 4.19 36/43] kexec: bail out upon SIGKILL when allocating memory.
+Date:   Tue,  1 Oct 2019 12:43:04 -0400
+Message-Id: <20191001164311.15993-36-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191001164311.15993-1-sashal@kernel.org>
 References: <20191001164311.15993-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -62,104 +62,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
+From: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
 
-[ Upstream commit 02a07046834e64970f3bcd87a422ac2b0adb80de ]
+[ Upstream commit 7c3a6aedcd6aae0a32a527e68669f7dd667492d1 ]
 
-struct archdr is only big enough to hold the header of various types of
-arcnet packets. So to provide enough space to hold the data read from
-hardware provide a buffer large enough to hold a packet with maximal
-size.
+syzbot found that a thread can stall for minutes inside kexec_load() after
+that thread was killed by SIGKILL [1].  It turned out that the reproducer
+was trying to allocate 2408MB of memory using kimage_alloc_page() from
+kimage_load_normal_segment().  Let's check for SIGKILL before doing memory
+allocation.
 
-The problem was noticed by the stack protector which makes the kernel
-oops.
+[1] https://syzkaller.appspot.com/bug?id=a0e3436829698d5824231251fad9d8e998f94f5e
 
-Signed-off-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
-Acked-by: Michael Grzeschik <m.grzeschik@pengutronix.de>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Link: http://lkml.kernel.org/r/993c9185-d324-2640-d061-bed2dd18b1f7@I-love.SAKURA.ne.jp
+Signed-off-by: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
+Reported-by: syzbot <syzbot+8ab2d0f39fb79fe6ca40@syzkaller.appspotmail.com>
+Cc: Eric Biederman <ebiederm@xmission.com>
+Reviewed-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/arcnet/arcnet.c | 31 +++++++++++++++++--------------
- 1 file changed, 17 insertions(+), 14 deletions(-)
+ kernel/kexec_core.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/net/arcnet/arcnet.c b/drivers/net/arcnet/arcnet.c
-index 8459115d9d4e5..553776cc1d29d 100644
---- a/drivers/net/arcnet/arcnet.c
-+++ b/drivers/net/arcnet/arcnet.c
-@@ -1063,31 +1063,34 @@ EXPORT_SYMBOL(arcnet_interrupt);
- static void arcnet_rx(struct net_device *dev, int bufnum)
+diff --git a/kernel/kexec_core.c b/kernel/kexec_core.c
+index 23a83a4da38a1..f50b90d0d1c28 100644
+--- a/kernel/kexec_core.c
++++ b/kernel/kexec_core.c
+@@ -301,6 +301,8 @@ static struct page *kimage_alloc_pages(gfp_t gfp_mask, unsigned int order)
  {
- 	struct arcnet_local *lp = netdev_priv(dev);
--	struct archdr pkt;
-+	union {
-+		struct archdr pkt;
-+		char buf[512];
-+	} rxdata;
- 	struct arc_rfc1201 *soft;
- 	int length, ofs;
+ 	struct page *pages;
  
--	soft = &pkt.soft.rfc1201;
-+	soft = &rxdata.pkt.soft.rfc1201;
- 
--	lp->hw.copy_from_card(dev, bufnum, 0, &pkt, ARC_HDR_SIZE);
--	if (pkt.hard.offset[0]) {
--		ofs = pkt.hard.offset[0];
-+	lp->hw.copy_from_card(dev, bufnum, 0, &rxdata.pkt, ARC_HDR_SIZE);
-+	if (rxdata.pkt.hard.offset[0]) {
-+		ofs = rxdata.pkt.hard.offset[0];
- 		length = 256 - ofs;
- 	} else {
--		ofs = pkt.hard.offset[1];
-+		ofs = rxdata.pkt.hard.offset[1];
- 		length = 512 - ofs;
- 	}
- 
- 	/* get the full header, if possible */
--	if (sizeof(pkt.soft) <= length) {
--		lp->hw.copy_from_card(dev, bufnum, ofs, soft, sizeof(pkt.soft));
-+	if (sizeof(rxdata.pkt.soft) <= length) {
-+		lp->hw.copy_from_card(dev, bufnum, ofs, soft, sizeof(rxdata.pkt.soft));
- 	} else {
--		memset(&pkt.soft, 0, sizeof(pkt.soft));
-+		memset(&rxdata.pkt.soft, 0, sizeof(rxdata.pkt.soft));
- 		lp->hw.copy_from_card(dev, bufnum, ofs, soft, length);
- 	}
- 
- 	arc_printk(D_DURING, dev, "Buffer #%d: received packet from %02Xh to %02Xh (%d+4 bytes)\n",
--		   bufnum, pkt.hard.source, pkt.hard.dest, length);
-+		   bufnum, rxdata.pkt.hard.source, rxdata.pkt.hard.dest, length);
- 
- 	dev->stats.rx_packets++;
- 	dev->stats.rx_bytes += length + ARC_HDR_SIZE;
-@@ -1096,13 +1099,13 @@ static void arcnet_rx(struct net_device *dev, int bufnum)
- 	if (arc_proto_map[soft->proto]->is_ip) {
- 		if (BUGLVL(D_PROTO)) {
- 			struct ArcProto
--			*oldp = arc_proto_map[lp->default_proto[pkt.hard.source]],
-+			*oldp = arc_proto_map[lp->default_proto[rxdata.pkt.hard.source]],
- 			*newp = arc_proto_map[soft->proto];
- 
- 			if (oldp != newp) {
- 				arc_printk(D_PROTO, dev,
- 					   "got protocol %02Xh; encap for host %02Xh is now '%c' (was '%c')\n",
--					   soft->proto, pkt.hard.source,
-+					   soft->proto, rxdata.pkt.hard.source,
- 					   newp->suffix, oldp->suffix);
- 			}
- 		}
-@@ -1111,10 +1114,10 @@ static void arcnet_rx(struct net_device *dev, int bufnum)
- 		lp->default_proto[0] = soft->proto;
- 
- 		/* in striking contrast, the following isn't a hack. */
--		lp->default_proto[pkt.hard.source] = soft->proto;
-+		lp->default_proto[rxdata.pkt.hard.source] = soft->proto;
- 	}
- 	/* call the protocol-specific receiver. */
--	arc_proto_map[soft->proto]->rx(dev, bufnum, &pkt, length);
-+	arc_proto_map[soft->proto]->rx(dev, bufnum, &rxdata.pkt, length);
- }
- 
- static void null_rx(struct net_device *dev, int bufnum,
++	if (fatal_signal_pending(current))
++		return NULL;
+ 	pages = alloc_pages(gfp_mask & ~__GFP_ZERO, order);
+ 	if (pages) {
+ 		unsigned int count, i;
 -- 
 2.20.1
 
