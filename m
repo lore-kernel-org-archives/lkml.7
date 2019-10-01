@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FE1DC352AA
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 16:44:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CFD3C352AA
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 16:44:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 78256205C9
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 16:44:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 66A4821920
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 16:44:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569948282;
-	bh=TEK+zAQbvi1BTh6kB8nuK+T1uHONDTyXZsyakcosRwA=;
+	s=default; t=1569948290;
+	bh=bY2jc3nxBIDvZpaERL5o1qwHDvDvHBnQDEO6tckBch0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=cUGhQpNg0odZVB/ScAB3Sy1C5Egu+9OJZB1CyawNAoUXZySfzMJK74Y30LB6b8lYL
-	 kHM2UxSeVJ1ZNeeYBe5DeIOX1bSI7qcvgjkLYmSApZfbd71hU4XO9i/O9qSJRFwQcQ
-	 vPEq6Gj1oDrn3DBEr2brEFwQmK71bV+Wxm5e6Jag=
+	b=c+QGgo/fRSATqw9Byhxjta7ok7J0mblufOOqr4TirpyS5S1xiPqAyCzLc8jG02J9u
+	 KsUMm/GX5JQU7zOYqeJiVOQu+3//+3qF1fL5LThqeVDPEYNkT7PPFZ0on7azHUd6yc
+	 W4IY9mHYM++1n4pDB7k4uf4VIBGzx3geIe2MCOYY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387926AbfJAQom (ORCPT
+        id S2390082AbfJAQot (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Oct 2019 12:44:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56772 "EHLO mail.kernel.org"
+        Tue, 1 Oct 2019 12:44:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56922 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387834AbfJAQoc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Oct 2019 12:44:32 -0400
+        id S2390012AbfJAQoi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Oct 2019 12:44:38 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E0CD62190F;
-        Tue,  1 Oct 2019 16:44:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3C54C21906;
+        Tue,  1 Oct 2019 16:44:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569948271;
-        bh=TEK+zAQbvi1BTh6kB8nuK+T1uHONDTyXZsyakcosRwA=;
+        s=default; t=1569948278;
+        bh=bY2jc3nxBIDvZpaERL5o1qwHDvDvHBnQDEO6tckBch0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=iCIeanhCW3Ss3iE/qzaCpzx4Vqi64huWVSTH46w7H22ykd+Zc8mmo0O73wYlXd0m/
-         SKs0r52tQrDX2W/O0sevGAzQLTlEh6oOema5hLqD0Q2GOaR8t/MG7ePHaQoWHh7/iW
-         nrrA+wydy/F2XoP6Y1PBdLrYTa9qQ4zDU3U2jsa8=
+        b=EiE6TBqjpB/wr2mLbiR4dk7QWDZCI/Q6pzEkLl1Lu7HOY+VuQBjt4j9gwQ0IP+nB1
+         xxK3eB/hvz4A07XGSV4XtsHXb+vUlrhYrQJjmLSA21sg9yPciDmcFYfskH3sG4O+j5
+         BHvOhIi5ECk1dplOTy5vu7154JKWsNHMx4AqalEE=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Dongsheng Yang <dongsheng.yang@easystack.cn>,
-        Ilya Dryomov <idryomov@gmail.com>,
-        Sasha Levin <sashal@kernel.org>, ceph-devel@vger.kernel.org,
-        linux-block@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 07/29] rbd: fix response length parameter for encoded strings
-Date:   Tue,  1 Oct 2019 12:44:01 -0400
-Message-Id: <20191001164423.16406-7-sashal@kernel.org>
+Cc:     Trond Myklebust <trondmy@gmail.com>,
+        Trond Myklebust <trond.myklebust@hammerspace.com>,
+        Anna Schumaker <Anna.Schumaker@Netapp.com>,
+        Sasha Levin <sashal@kernel.org>, linux-nfs@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 11/29] pNFS: Ensure we do clear the return-on-close layout stateid on fatal errors
+Date:   Tue,  1 Oct 2019 12:44:05 -0400
+Message-Id: <20191001164423.16406-11-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191001164423.16406-1-sashal@kernel.org>
 References: <20191001164423.16406-1-sashal@kernel.org>
@@ -60,66 +60,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dongsheng Yang <dongsheng.yang@easystack.cn>
+From: Trond Myklebust <trondmy@gmail.com>
 
-[ Upstream commit 5435d2069503e2aa89c34a94154f4f2fa4a0c9c4 ]
+[ Upstream commit 9c47b18cf722184f32148784189fca945a7d0561 ]
 
-rbd_dev_image_id() allocates space for length but passes a smaller
-value to rbd_obj_method_sync().  rbd_dev_v2_object_prefix() doesn't
-allocate space for length.  Fix both to be consistent.
+IF the server rejected our layout return with a state error such as
+NFS4ERR_BAD_STATEID, or even a stale inode error, then we do want
+to clear out all the remaining layout segments and mark that stateid
+as invalid.
 
-Signed-off-by: Dongsheng Yang <dongsheng.yang@easystack.cn>
-Reviewed-by: Ilya Dryomov <idryomov@gmail.com>
-Signed-off-by: Ilya Dryomov <idryomov@gmail.com>
+Fixes: 1c5bd76d17cca ("pNFS: Enable layoutreturn operation for...")
+Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
+Signed-off-by: Anna Schumaker <Anna.Schumaker@Netapp.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/block/rbd.c | 10 ++++++----
- 1 file changed, 6 insertions(+), 4 deletions(-)
+ fs/nfs/pnfs.c | 9 +++++++--
+ 1 file changed, 7 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/block/rbd.c b/drivers/block/rbd.c
-index f2b1994d58a06..4a9bff6ec0756 100644
---- a/drivers/block/rbd.c
-+++ b/drivers/block/rbd.c
-@@ -4911,17 +4911,20 @@ static int rbd_dev_v2_image_size(struct rbd_device *rbd_dev)
+diff --git a/fs/nfs/pnfs.c b/fs/nfs/pnfs.c
+index 96867fb159bf7..ec04cce31814b 100644
+--- a/fs/nfs/pnfs.c
++++ b/fs/nfs/pnfs.c
+@@ -1319,10 +1319,15 @@ void pnfs_roc_release(struct nfs4_layoutreturn_args *args,
+ 	const nfs4_stateid *res_stateid = NULL;
+ 	struct nfs4_xdr_opaque_data *ld_private = args->ld_private;
  
- static int rbd_dev_v2_object_prefix(struct rbd_device *rbd_dev)
- {
-+	size_t size;
- 	void *reply_buf;
- 	int ret;
- 	void *p;
- 
--	reply_buf = kzalloc(RBD_OBJ_PREFIX_LEN_MAX, GFP_KERNEL);
-+	/* Response will be an encoded string, which includes a length */
-+	size = sizeof(__le32) + RBD_OBJ_PREFIX_LEN_MAX;
-+	reply_buf = kzalloc(size, GFP_KERNEL);
- 	if (!reply_buf)
- 		return -ENOMEM;
- 
- 	ret = rbd_obj_method_sync(rbd_dev, &rbd_dev->header_oid,
- 				  &rbd_dev->header_oloc, "get_object_prefix",
--				  NULL, 0, reply_buf, RBD_OBJ_PREFIX_LEN_MAX);
-+				  NULL, 0, reply_buf, size);
- 	dout("%s: rbd_obj_method_sync returned %d\n", __func__, ret);
- 	if (ret < 0)
- 		goto out;
-@@ -5815,7 +5818,6 @@ static int rbd_dev_image_id(struct rbd_device *rbd_dev)
- 	dout("rbd id object name is %s\n", oid.name);
- 
- 	/* Response will be an encoded string, which includes a length */
--
- 	size = sizeof (__le32) + RBD_IMAGE_ID_LEN_MAX;
- 	response = kzalloc(size, GFP_NOIO);
- 	if (!response) {
-@@ -5827,7 +5829,7 @@ static int rbd_dev_image_id(struct rbd_device *rbd_dev)
- 
- 	ret = rbd_obj_method_sync(rbd_dev, &oid, &rbd_dev->header_oloc,
- 				  "get_id", NULL, 0,
--				  response, RBD_IMAGE_ID_LEN_MAX);
-+				  response, size);
- 	dout("%s: rbd_obj_method_sync returned %d\n", __func__, ret);
- 	if (ret == -ENOENT) {
- 		image_id = kstrdup("", GFP_KERNEL);
+-	if (ret == 0) {
+-		arg_stateid = &args->stateid;
++	switch (ret) {
++	case -NFS4ERR_NOMATCHING_LAYOUT:
++		break;
++	case 0:
+ 		if (res->lrs_present)
+ 			res_stateid = &res->stateid;
++		/* Fallthrough */
++	default:
++		arg_stateid = &args->stateid;
+ 	}
+ 	pnfs_layoutreturn_free_lsegs(lo, arg_stateid, &args->range,
+ 			res_stateid);
 -- 
 2.20.1
 
