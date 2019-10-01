@@ -4,55 +4,56 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2721CC352AA
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 16:59:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D91FECE587
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 16:59:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E993321783
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 16:59:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 52ED121855
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 16:59:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569949141;
-	bh=uOi64M7D10KweumGcEk7pWtgTYT8TAKC8lUsJlYhmAQ=;
+	s=default; t=1569949152;
+	bh=o4RGWiH6oPbtLY4bWIZ3b6R3x0ifsch3zIJ7Q8PddEs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zCuBqoW3p7uQqR8be9AjsEHsQlPgHhwSqO6wqO6Z+WKtuhvpFXLTrmh1yyFoWNSc2
-	 HuWtvMNZpYYPFYPXnX0FpHQsmyqCCwCps2CsCuNcGXFWdJFT5BIIiXKRzq8YBEvxp4
-	 I2m9wt5XG5IkrvRPphy7ecsKJmlK4To7WT+U4xhM=
+	b=p40kW38+olKocCHINtXps6ku+yYt/L1PTYsAbWH4gOm7EyB2tmSAGuV+71aYVsdtx
+	 neCcdbS3rczRgA4DiqYt2FFl1aNnrZAkHeALGYUjxRTWU/a8xN7H2OLf9p7N1HWsKF
+	 eJ4qmZxWxChWho2j8rFRdnmVfwaXif5ByiWjm0dc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387693AbfJAQ6z (ORCPT
+        id S1730913AbfJAQlW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Oct 2019 12:58:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53076 "EHLO mail.kernel.org"
+        Tue, 1 Oct 2019 12:41:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52850 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731038AbfJAQla (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Oct 2019 12:41:30 -0400
+        id S1730814AbfJAQlU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Oct 2019 12:41:20 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 010CD20B7C;
-        Tue,  1 Oct 2019 16:41:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F37EF21924;
+        Tue,  1 Oct 2019 16:41:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569948089;
-        bh=uOi64M7D10KweumGcEk7pWtgTYT8TAKC8lUsJlYhmAQ=;
+        s=default; t=1569948078;
+        bh=o4RGWiH6oPbtLY4bWIZ3b6R3x0ifsch3zIJ7Q8PddEs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qj8aOhpYRr3/bmwrgDC26TN2gYAnXM1YVej2E2ycGd0dwgLdGC9hDaJ9IWGnSGCq5
-         RXVMDycHcGdTbb1p77ST7zubPsKfcg52uXE6086gHY3XGietrP00MrQlumqYrdidc1
-         HWxnVNXLKlr+MGX3p8p+FE9xoiPfLtjdp0IELn5k=
+        b=y1UW0umKNCLdIAYsqgDUQa1vl1/R9zovs6WELw51y4nH4z+xP81ePP+yQN3qlr+z2
+         avUFx9VUSxSjoEXVpxt0KzVIY+zt6ytxg+POx8U3hqahEP6utgcvVLCbF8TMSzq3+/
+         1ptXtmSoIw9NrdGBenAPtfFgt6M2hvzFLuESC0v8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Sascha Hauer <s.hauer@pengutronix.de>,
-        Mimi Zohar <zohar@linux.ibm.com>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-integrity@vger.kernel.org,
-        linux-security-module@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.2 03/63] ima: fix freeing ongoing ahash_request
-Date:   Tue,  1 Oct 2019 12:40:25 -0400
-Message-Id: <20191001164125.15398-3-sashal@kernel.org>
+Cc:     Hans de Goede <hdegoede@redhat.com>,
+        =?UTF-8?q?Michel=20D=C3=A4nzer?= <mdaenzer@redhat.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        Sasha Levin <sashal@kernel.org>, amd-gfx@lists.freedesktop.org,
+        dri-devel@lists.freedesktop.org
+Subject: [PATCH AUTOSEL 5.3 68/71] drm/radeon: Bail earlier when radeon.cik_/si_support=0 is passed
+Date:   Tue,  1 Oct 2019 12:39:18 -0400
+Message-Id: <20191001163922.14735-68-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191001164125.15398-1-sashal@kernel.org>
-References: <20191001164125.15398-1-sashal@kernel.org>
+In-Reply-To: <20191001163922.14735-1-sashal@kernel.org>
+References: <20191001163922.14735-1-sashal@kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -61,40 +62,114 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sascha Hauer <s.hauer@pengutronix.de>
+From: Hans de Goede <hdegoede@redhat.com>
 
-[ Upstream commit 4ece3125f21b1d42b84896c5646dbf0e878464e1 ]
+[ Upstream commit 9dbc88d013b79c62bd845cb9e7c0256e660967c5 ]
 
-integrity_kernel_read() can fail in which case we forward to call
-ahash_request_free() on a currently running request. We have to wait
-for its completion before we can free the request.
+Bail from the pci_driver probe function instead of from the drm_driver
+load function.
 
-This was observed by interrupting a "find / -type f -xdev -print0 | xargs -0
-cat 1>/dev/null" with ctrl-c on an IMA enabled filesystem.
+This avoid /dev/dri/card0 temporarily getting registered and then
+unregistered again, sending unwanted add / remove udev events to
+userspace.
 
-Signed-off-by: Sascha Hauer <s.hauer@pengutronix.de>
-Signed-off-by: Mimi Zohar <zohar@linux.ibm.com>
+Specifically this avoids triggering the (userspace) bug fixed by this
+plymouth merge-request:
+https://gitlab.freedesktop.org/plymouth/plymouth/merge_requests/59
+
+Note that despite that being an userspace bug, not sending unnecessary
+udev events is a good idea in general.
+
+BugLink: https://bugzilla.redhat.com/show_bug.cgi?id=1490490
+Reviewed-by: Michel Dänzer <mdaenzer@redhat.com>
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- security/integrity/ima/ima_crypto.c | 5 +++++
- 1 file changed, 5 insertions(+)
+ drivers/gpu/drm/radeon/radeon_drv.c | 31 +++++++++++++++++++++++++++++
+ drivers/gpu/drm/radeon/radeon_kms.c | 25 -----------------------
+ 2 files changed, 31 insertions(+), 25 deletions(-)
 
-diff --git a/security/integrity/ima/ima_crypto.c b/security/integrity/ima/ima_crypto.c
-index 7532b062be594..73044fc6a9521 100644
---- a/security/integrity/ima/ima_crypto.c
-+++ b/security/integrity/ima/ima_crypto.c
-@@ -271,6 +271,11 @@ static int ima_calc_file_hash_atfm(struct file *file,
- 		if (rc != rbuf_len) {
- 			if (rc >= 0)
- 				rc = -EINVAL;
-+			/*
-+			 * Forward current rc, do not overwrite with return value
-+			 * from ahash_wait()
-+			 */
-+			ahash_wait(ahash_rc, &wait);
- 			goto out3;
- 		}
+diff --git a/drivers/gpu/drm/radeon/radeon_drv.c b/drivers/gpu/drm/radeon/radeon_drv.c
+index a6cbe11f79c61..7033f3a38c878 100644
+--- a/drivers/gpu/drm/radeon/radeon_drv.c
++++ b/drivers/gpu/drm/radeon/radeon_drv.c
+@@ -325,8 +325,39 @@ bool radeon_device_is_virtual(void);
+ static int radeon_pci_probe(struct pci_dev *pdev,
+ 			    const struct pci_device_id *ent)
+ {
++	unsigned long flags = 0;
+ 	int ret;
  
++	if (!ent)
++		return -ENODEV; /* Avoid NULL-ptr deref in drm_get_pci_dev */
++
++	flags = ent->driver_data;
++
++	if (!radeon_si_support) {
++		switch (flags & RADEON_FAMILY_MASK) {
++		case CHIP_TAHITI:
++		case CHIP_PITCAIRN:
++		case CHIP_VERDE:
++		case CHIP_OLAND:
++		case CHIP_HAINAN:
++			dev_info(&pdev->dev,
++				 "SI support disabled by module param\n");
++			return -ENODEV;
++		}
++	}
++	if (!radeon_cik_support) {
++		switch (flags & RADEON_FAMILY_MASK) {
++		case CHIP_KAVERI:
++		case CHIP_BONAIRE:
++		case CHIP_HAWAII:
++		case CHIP_KABINI:
++		case CHIP_MULLINS:
++			dev_info(&pdev->dev,
++				 "CIK support disabled by module param\n");
++			return -ENODEV;
++		}
++	}
++
+ 	if (vga_switcheroo_client_probe_defer(pdev))
+ 		return -EPROBE_DEFER;
+ 
+diff --git a/drivers/gpu/drm/radeon/radeon_kms.c b/drivers/gpu/drm/radeon/radeon_kms.c
+index 07f7ace42c4ba..e85c554eeaa94 100644
+--- a/drivers/gpu/drm/radeon/radeon_kms.c
++++ b/drivers/gpu/drm/radeon/radeon_kms.c
+@@ -100,31 +100,6 @@ int radeon_driver_load_kms(struct drm_device *dev, unsigned long flags)
+ 	struct radeon_device *rdev;
+ 	int r, acpi_status;
+ 
+-	if (!radeon_si_support) {
+-		switch (flags & RADEON_FAMILY_MASK) {
+-		case CHIP_TAHITI:
+-		case CHIP_PITCAIRN:
+-		case CHIP_VERDE:
+-		case CHIP_OLAND:
+-		case CHIP_HAINAN:
+-			dev_info(dev->dev,
+-				 "SI support disabled by module param\n");
+-			return -ENODEV;
+-		}
+-	}
+-	if (!radeon_cik_support) {
+-		switch (flags & RADEON_FAMILY_MASK) {
+-		case CHIP_KAVERI:
+-		case CHIP_BONAIRE:
+-		case CHIP_HAWAII:
+-		case CHIP_KABINI:
+-		case CHIP_MULLINS:
+-			dev_info(dev->dev,
+-				 "CIK support disabled by module param\n");
+-			return -ENODEV;
+-		}
+-	}
+-
+ 	rdev = kzalloc(sizeof(struct radeon_device), GFP_KERNEL);
+ 	if (rdev == NULL) {
+ 		return -ENOMEM;
 -- 
 2.20.1
 
