@@ -2,92 +2,134 @@ Return-Path: <SRS0=YRFP=X2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DDECC352AA
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 15:14:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A28DECE587
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 15:17:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 774BB2168B
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 15:14:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3A0C62133F
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 15:17:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="D7dJqcMa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389532AbfJAPOm (ORCPT
+        id S2389493AbfJAPRH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Oct 2019 11:14:42 -0400
-Received: from mx2.suse.de ([195.135.220.15]:42270 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2389129AbfJAPOm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Oct 2019 11:14:42 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 71301AFC6;
-        Tue,  1 Oct 2019 15:14:40 +0000 (UTC)
-Received: by unicorn.suse.cz (Postfix, from userid 1000)
-        id E9E8FE0083; Tue,  1 Oct 2019 17:14:39 +0200 (CEST)
-Date:   Tue, 1 Oct 2019 17:14:39 +0200
-From:   Michal Kubecek <mkubecek@suse.cz>
-To:     netdev@vger.kernel.org
-Cc:     Borislav Petkov <bp@alien8.de>, Alex Vesker <valex@mellanox.com>,
-        Stephen Hemminger <stephen@networkplumber.org>,
-        linux-rdma@vger.kernel.org, Saeed Mahameed <saeedm@mellanox.com>,
-        Leon Romanovsky <leon@kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>
-Subject: Re: ERROR: "__umoddi3"
- [drivers/net/ethernet/mellanox/mlx5/core/mlx5_core.ko] undefined!
-Message-ID: <20191001151439.GA24815@unicorn.suse.cz>
-References: <20190930141316.GG29694@zn.tnic>
- <20190930154535.GC22120@unicorn.suse.cz>
- <20190930162910.GI29694@zn.tnic>
- <20190930095516.0f55513a@hermes.lan>
- <20190930184031.GJ29694@zn.tnic>
+        Tue, 1 Oct 2019 11:17:07 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:38908 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389175AbfJAPRH (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Oct 2019 11:17:07 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x91FDk5A161443;
+        Tue, 1 Oct 2019 15:16:58 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
+ subject : date : message-id : mime-version : content-transfer-encoding;
+ s=corp-2019-08-05; bh=Cl6NTVoaJaSBxqb2QcFNk13Sq3UWtVzalNOzurAnyF4=;
+ b=D7dJqcMa/TH7rlsI4YA3nfkLmOEGuG6OjIc4axgqDw1FHCIBmQKLWjEzTOjp/DFTx6Eo
+ ctOxQPyKguGydMvx2zKFl0zRbaMfIlpYe94hAsmOI5K38kdVUKxnqzNqLkUJ0+N4t2NS
+ w68m/FwI73QiBcv+Kb6Qr+AQUFmyl889nJrPfFUOVAS3KX4EjrAt6YCxeYYKtRD3V106
+ wi8geTLcDENErs6iwAZKvI8P+pSTCZyAko1Cmg4Y1osISuXFo5vHwVkDIYZ5q4RYGMmV
+ aPWMSXidqQyOYB459e0fzrcJhIl25hNhTbSaU88pQ1wmIKnnBeIM3KcHGpATsOnEXTUe Xw== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by userp2120.oracle.com with ESMTP id 2va05rpp81-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 01 Oct 2019 15:16:57 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x91FEL6J127106;
+        Tue, 1 Oct 2019 15:16:57 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by userp3030.oracle.com with ESMTP id 2vbmpysbdj-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 01 Oct 2019 15:16:56 +0000
+Received: from abhmp0011.oracle.com (abhmp0011.oracle.com [141.146.116.17])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x91FGs8p010956;
+        Tue, 1 Oct 2019 15:16:55 GMT
+Received: from bostrovs-us.us.oracle.com (/10.152.32.65)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Tue, 01 Oct 2019 08:16:54 -0700
+From:   Boris Ostrovsky <boris.ostrovsky@oracle.com>
+To:     xen-devel@lists.xenproject.org, linux-kernel@vger.kernel.org
+Cc:     jgross@suse.com, james@dingwall.me.uk,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>
+Subject: [PATCH] x86/xen: Return from panic notifier
+Date:   Tue,  1 Oct 2019 11:16:33 -0400
+Message-Id: <20191001151633.1659-1-boris.ostrovsky@oracle.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190930184031.GJ29694@zn.tnic>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9397 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1908290000 definitions=main-1910010137
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9397 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1908290000
+ definitions=main-1910010137
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Sep 30, 2019 at 08:40:31PM +0200, Borislav Petkov wrote:
-> On Mon, Sep 30, 2019 at 09:55:16AM -0700, Stephen Hemminger wrote:
-> > Could also us div_u64_rem here?
-> 
-> Yah, the below seems to work and the resulting asm looks sensible to me
-> but someone should definitely double-check me as I don't know this code
-> at all.
-> 
-> Thx.
-> 
-> diff --git a/drivers/net/ethernet/mellanox/mlx5/core/steering/dr_icm_pool.c b/drivers/net/ethernet/mellanox/mlx5/core/steering/dr_icm_pool.c
-> index 913f1e5aaaf2..b4302658e5f8 100644
-> --- a/drivers/net/ethernet/mellanox/mlx5/core/steering/dr_icm_pool.c
-> +++ b/drivers/net/ethernet/mellanox/mlx5/core/steering/dr_icm_pool.c
-> @@ -137,7 +137,7 @@ dr_icm_pool_mr_create(struct mlx5dr_icm_pool *pool,
->  
->  	icm_mr->icm_start_addr = icm_mr->dm.addr;
->  
-> -	align_diff = icm_mr->icm_start_addr % align_base;
-> +	div_u64_rem(icm_mr->icm_start_addr, align_base, &align_diff);
->  	if (align_diff)
->  		icm_mr->used_length = align_base - align_diff;
->  
-> 
+Currently execution of panic() continues until Xen's panic notifier
+(xen_panic_event()) is called at which point we make a hypercall that
+never returns.
 
-While this fixes 32-bit builds, it breaks 64-bit ones as align_diff is
-64-bit and div_u64_rem expects pointer to u32. :-(
+This means that any notifier that is supposed to be called later as
+well as significant part of panic() code (such as pstore writes from
+kmsg_dump()) is never executed.
 
-I checked that align_base is always a power of two so that we could get
-away with
+There is no reason for xen_panic_event() to be this last point in
+execution since panic()'s emergency_restart() will call into
+xen_emergency_restart() from where we can perform our hypercall.
 
-	align_diff = icm_mr->icm_start_addr & (align_base - 1)
+Reported-by: James Dingwall <james@dingwall.me.uk>
+Signed-off-by: Boris Ostrovsky <boris.ostrovsky@oracle.com>
+---
+ arch/x86/xen/enlighten.c | 17 ++++++++++++++---
+ 1 file changed, 14 insertions(+), 3 deletions(-)
 
-I'm not sure, however, if it's safe to assume align_base will always
-have to be a power of two or if we should add a check for safety.
+diff --git a/arch/x86/xen/enlighten.c b/arch/x86/xen/enlighten.c
+index 750f46ad018a..fd4f58cf51dc 100644
+--- a/arch/x86/xen/enlighten.c
++++ b/arch/x86/xen/enlighten.c
+@@ -269,16 +269,27 @@ void xen_reboot(int reason)
+ 		BUG();
+ }
+ 
++static int reboot_reason = SHUTDOWN_reboot;
+ void xen_emergency_restart(void)
+ {
+-	xen_reboot(SHUTDOWN_reboot);
++	xen_reboot(reboot_reason);
+ }
+ 
+ static int
+ xen_panic_event(struct notifier_block *this, unsigned long event, void *ptr)
+ {
+-	if (!kexec_crash_loaded())
+-		xen_reboot(SHUTDOWN_crash);
++	if (!kexec_crash_loaded()) {
++		reboot_reason = SHUTDOWN_crash;
++
++		/*
++		 * If panic_timeout==0 then we are supposed to wait forever.
++		 * However, to preserve original dom0 behavior we have to drop
++		 * into hypervisor. (domU behavior is controlled by its
++		 * config file)
++		 */
++		if (panic_timeout == 0)
++			panic_timeout = -1;
++	}
+ 	return NOTIFY_DONE;
+ }
+ 
+-- 
+2.17.1
 
-(Cc-ing also author of commit 29cf8febd185 ("net/mlx5: DR, ICM pool
-memory allocator").)
-
-Michal
