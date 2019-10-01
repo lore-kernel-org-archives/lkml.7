@@ -2,111 +2,104 @@ Return-Path: <SRS0=YRFP=X2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIM_ADSP_ALL,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 94025C352AA
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 15:50:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B4B2ECE587
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 15:52:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 75CF42070B
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 15:50:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DF08B2070B
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 15:52:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="k/Cn5wxT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389771AbfJAPuB (ORCPT
+        id S2389733AbfJAPwH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Oct 2019 11:50:01 -0400
-Received: from mail-qt1-f193.google.com ([209.85.160.193]:44746 "EHLO
-        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727268AbfJAPuA (ORCPT
+        Tue, 1 Oct 2019 11:52:07 -0400
+Received: from smtp-fw-2101.amazon.com ([72.21.196.25]:32852 "EHLO
+        smtp-fw-2101.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727147AbfJAPwH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Oct 2019 11:50:00 -0400
-Received: by mail-qt1-f193.google.com with SMTP id u40so22204792qth.11;
-        Tue, 01 Oct 2019 08:50:00 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=0o++jJaVMAjjHeJdMlrBP61n3JOH5eAFGBT8AaVnQtI=;
-        b=JImTDk9BFabrTYzGsZxRhQkAtC56salUjl1NvtNgWWrgVw+NT5o0PQw46fdG2g7zjW
-         AFRYG81Ifya4Di0EkhsSLn0plgPKO22kHtiNkxtkZUkRgMicjD39vqlfHfEmqX3EJ8Bo
-         rYglfnraCWr1aDD0dhYT5YSFemGtVAmWWQOkkON4rSQBsjdexZNJDGAJI10ptQoghATa
-         9ZUHS7hTdgUjyeN5un7dcLjAsDS0/6A7wcE/i6d6kfVLZIh+HgAjjjhg5bB3Gq5JNTDT
-         Vr/OScTMira8w/URINPg/xiqUhunWvP2o7zzuGcY4E8Vk5v240kCtQN+W9yT31iJyORV
-         hhNw==
-X-Gm-Message-State: APjAAAV/mVjOskGg4hddojn/b/7RObuaAovuX9wwhl0a4YbdkTy+X3sW
-        KdTRd/oqyzsF52rxx2RThARoqC8HIb28e6Kc5gc=
-X-Google-Smtp-Source: APXvYqypsS82qtB6iytpnzukSbXyBszcU5NeOymfFRAU5FNK8ULw8UBOaqSfO8Az8u+dnJ3bihbzP6GMsMCzBI/xQzY=
-X-Received: by 2002:aed:2842:: with SMTP id r60mr30909299qtd.142.1569944999630;
- Tue, 01 Oct 2019 08:49:59 -0700 (PDT)
+        Tue, 1 Oct 2019 11:52:07 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1569945126; x=1601481126;
+  h=from:to:cc:subject:date:message-id:mime-version;
+  bh=nLVYk2yIxDtYBWgS2GCvSmYfxdD9HmyEs1OoB1XIuSk=;
+  b=k/Cn5wxTcmfZYVxNfhQ1iXGTKcTkkESZAyiFKizGYHTGRQheJTNtih5K
+   oPyqHAPYq8nz60gufeIItGQfCl6geAhxfDhRiixplmKDRvuNgaCPS8oq4
+   yYYCIwQV+kR0jqlwgXuHiD/b/abSDGsEgYHLG/IGa33nLl9zdtMA+49Fv
+   o=;
+X-IronPort-AV: E=Sophos;i="5.64,571,1559520000"; 
+   d="scan'208";a="754678097"
+Received: from iad6-co-svc-p1-lb1-vlan2.amazon.com (HELO email-inbound-relay-2b-c7131dcf.us-west-2.amazon.com) ([10.124.125.2])
+  by smtp-border-fw-out-2101.iad2.amazon.com with ESMTP; 01 Oct 2019 15:52:01 +0000
+Received: from EX13MTAUWC001.ant.amazon.com (pdx4-ws-svc-p6-lb7-vlan2.pdx.amazon.com [10.170.41.162])
+        by email-inbound-relay-2b-c7131dcf.us-west-2.amazon.com (Postfix) with ESMTPS id 9BA53A22D5;
+        Tue,  1 Oct 2019 15:52:00 +0000 (UTC)
+Received: from EX13D02UWC001.ant.amazon.com (10.43.162.243) by
+ EX13MTAUWC001.ant.amazon.com (10.43.162.135) with Microsoft SMTP Server (TLS)
+ id 15.0.1367.3; Tue, 1 Oct 2019 15:52:00 +0000
+Received: from EX13MTAUWA001.ant.amazon.com (10.43.160.58) by
+ EX13D02UWC001.ant.amazon.com (10.43.162.243) with Microsoft SMTP Server (TLS)
+ id 15.0.1367.3; Tue, 1 Oct 2019 15:51:59 +0000
+Received: from 8c859006a84e.ant.amazon.com (172.26.203.30) by
+ mail-relay.amazon.com (10.43.160.118) with Microsoft SMTP Server id
+ 15.0.1367.3 via Frontend Transport; Tue, 1 Oct 2019 15:51:58 +0000
+From:   Patrick Williams <alpawi@amazon.com>
+CC:     Patrick Williams <alpawi@amazon.com>,
+        Patrick Williams <patrick@stwcx.xyz>, <stable@vger.kernel.org>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Gregory Clement <gregory.clement@bootlin.com>,
+        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-gpio@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: [PATCH] pinctrl: armada-37xx: swap polarity on LED group
+Date:   Tue, 1 Oct 2019 10:51:38 -0500
+Message-ID: <20191001155154.99710-1-alpawi@amazon.com>
+X-Mailer: git-send-email 2.17.2 (Apple Git-113)
 MIME-Version: 1.0
-References: <20190930202055.1748710-1-arnd@arndb.de> <8d5d34da-e1f0-1ab5-461e-f3145e52c48a@kernel.dk>
- <623e1d27-d3b1-3241-bfd4-eb94ce70da14@kernel.dk>
-In-Reply-To: <623e1d27-d3b1-3241-bfd4-eb94ce70da14@kernel.dk>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Tue, 1 Oct 2019 17:49:43 +0200
-Message-ID: <CAK8P3a3AAFXNmpQwuirzM+jgEQGj9tMC_5oaSs4CfiEVGmTkZg@mail.gmail.com>
-Subject: Re: [PATCH] io_uring: use __kernel_timespec in timeout ABI
-To:     Jens Axboe <axboe@kernel.dk>
-Cc:     y2038 Mailman List <y2038@lists.linaro.org>,
-        Linux API <linux-api@vger.kernel.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        =?UTF-8?Q?Stefan_B=C3=BChler?= <source@stbuehler.de>,
-        Hannes Reinecke <hare@suse.com>,
-        Jackie Liu <liuyun01@kylinos.cn>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Hristo Venev <hristo@venev.name>,
-        linux-block <linux-block@vger.kernel.org>,
-        Linux FS-devel Mailing List <linux-fsdevel@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Oct 1, 2019 at 5:38 PM Jens Axboe <axboe@kernel.dk> wrote:
->
-> On 10/1/19 8:09 AM, Jens Axboe wrote:
-> > On 9/30/19 2:20 PM, Arnd Bergmann wrote:
-> >> All system calls use struct __kernel_timespec instead of the old struct
-> >> timespec, but this one was just added with the old-style ABI. Change it
-> >> now to enforce the use of __kernel_timespec, avoiding ABI confusion and
-> >> the need for compat handlers on 32-bit architectures.
-> >>
-> >> Any user space caller will have to use __kernel_timespec now, but this
-> >> is unambiguous and works for any C library regardless of the time_t
-> >> definition. A nicer way to specify the timeout would have been a less
-> >> ambiguous 64-bit nanosecond value, but I suppose it's too late now to
-> >> change that as this would impact both 32-bit and 64-bit users.
-> >
-> > Thanks for catching that, Arnd. Applied.
->
-> On second thought - since there appears to be no good 64-bit timespec
-> available to userspace, the alternative here is including on in liburing.
+The configuration registers for the LED group have inverted
+polarity, which puts the GPIO into open-drain state when used in
+GPIO mode.  Switch to '0' for GPIO and '1' for LED modes.
 
-What's wrong with using __kernel_timespec? Just the name?
-I suppose liburing could add a macro to give it a different name
-for its users.
+Fixes: 87466ccd9401 ("pinctrl: armada-37xx: Add pin controller support for Armada 37xx")
+Signed-off-by: Patrick Williams <alpawi@amazon.com>
+Cc: <stable@vger.kernel.org>
+---
+ drivers/pinctrl/mvebu/pinctrl-armada-37xx.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-> That seems kinda crappy in terms of API, so why not just use a 64-bit nsec
-> value as you suggest? There's on released kernel with this feature yet, so
-> there's nothing stopping us from just changing the API to be based on
-> a single 64-bit nanosecond timeout.
+diff --git a/drivers/pinctrl/mvebu/pinctrl-armada-37xx.c b/drivers/pinctrl/mvebu/pinctrl-armada-37xx.c
+index 6462d3ca7ceb..6310963ce5f0 100644
+--- a/drivers/pinctrl/mvebu/pinctrl-armada-37xx.c
++++ b/drivers/pinctrl/mvebu/pinctrl-armada-37xx.c
+@@ -183,10 +183,10 @@ static struct armada_37xx_pin_group armada_37xx_nb_groups[] = {
+ 	PIN_GRP_EXTRA("uart2", 9, 2, BIT(1) | BIT(13) | BIT(14) | BIT(19),
+ 		      BIT(1) | BIT(13) | BIT(14), BIT(1) | BIT(19),
+ 		      18, 2, "gpio", "uart"),
+-	PIN_GRP_GPIO("led0_od", 11, 1, BIT(20), "led"),
+-	PIN_GRP_GPIO("led1_od", 12, 1, BIT(21), "led"),
+-	PIN_GRP_GPIO("led2_od", 13, 1, BIT(22), "led"),
+-	PIN_GRP_GPIO("led3_od", 14, 1, BIT(23), "led"),
++	PIN_GRP_GPIO_2("led0_od", 11, 1, BIT(20), BIT(20), 0, "led"),
++	PIN_GRP_GPIO_2("led1_od", 12, 1, BIT(21), BIT(21), 0, "led"),
++	PIN_GRP_GPIO_2("led2_od", 13, 1, BIT(22), BIT(22), 0, "led"),
++	PIN_GRP_GPIO_2("led3_od", 14, 1, BIT(23), BIT(23), 0, "led"),
+ 
+ };
+ 
+-- 
+2.17.2 (Apple Git-113)
 
-Certainly fine with me.
-
-> +       timeout = READ_ONCE(sqe->addr);
->         hrtimer_init(&req->timeout.timer, CLOCK_MONOTONIC, HRTIMER_MODE_REL);
->         req->timeout.timer.function = io_timeout_fn;
-> -       hrtimer_start(&req->timeout.timer, timespec_to_ktime(ts),
-> +       hrtimer_start(&req->timeout.timer, ns_to_ktime(timeout),
-
-It seems a little odd to use the 'addr' field as something that's not
-an address,
-and I'm not sure I understand the logic behind when you use a READ_ONCE()
-as opposed to simply accessing the sqe the way it is done a few lines
-earlier.
-
-The time handling definitely looks good to me.
-
-       Arnd
