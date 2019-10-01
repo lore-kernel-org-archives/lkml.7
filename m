@@ -2,104 +2,98 @@ Return-Path: <SRS0=YRFP=X2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56FB1ECE58A
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 10:29:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BEC38C388F3
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 10:29:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2530321D82
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 10:29:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569925785;
-	bh=q8IRWQ1G5Bh1/mdP9l3riudWvhpGZWC28wSYUMGfaJM=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vzmBYq26ASRNMRwQ5ackfVVe9P33g2z1DShRuKvEsqKwq9jcnmOOORFb59/7TYckp
-	 XTjwgTiGlZrcMSdQZKZYE14TMno2fMk2mGw602OV1fzRv8a3alDUt1Eg5WaIJ8T/U5
-	 y5kKAiENh8TuRkc/hF+iPgboKUKb2SywiiLU4+V8=
+	by mail.kernel.org (Postfix) with ESMTP id 9C00721924
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 10:29:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730807AbfJAK3n (ORCPT
+        id S1730849AbfJAK3r (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Oct 2019 06:29:43 -0400
-Received: from mail-lf1-f67.google.com ([209.85.167.67]:40220 "EHLO
-        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730006AbfJAK3l (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Oct 2019 06:29:41 -0400
-Received: by mail-lf1-f67.google.com with SMTP id d17so9452530lfa.7;
-        Tue, 01 Oct 2019 03:29:39 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=XEBOz+FE2mSzj8bTRRBXElsPNG8TwUlMu3OH4VYCIKE=;
-        b=naeKcQB6yQnQ+b9vyQKNOIoHnXnYPnL5nFnfd+2afwOHI8jPJhslaKcYNYm3eUOksW
-         qYqcm3wnmSJG73TcFrcfKzDalgyfVAYgS7XVDNVQCAhXJfSt6ku2C0xqocvyt83s3g4/
-         S5MGIbLHFhgyuHCAN3VDiY+CWmWmIbFKNCVHbNOhNODfZ6J0OkGTf/sW4nipFZ+whHfj
-         TRkaTevcseTGMtmHbrmREwc5DJRme7kmfIgnOBqSIhgPA6/4eCyKFBHppwhE8qWtTBbg
-         7TgqvqDE3KOoZthtIQUMyVPvqwgJYSHKZUwo4J6qM6YnMD2gWm+feWbHNaCPN9b/xJ4I
-         3FJw==
-X-Gm-Message-State: APjAAAVf+Xdari43MNKHE1WBsILbeA+ZydlnicUs7SAI4rBphLoYfI8F
-        AC6+NhIRVUy/R0gNkoEJ+lw=
-X-Google-Smtp-Source: APXvYqyTHGCN3wYKNli04woh59rO57J3qnF9hWbaIix7kDk0xpaeXe/u/OtF/L7xZBxd3GVR+r4haw==
-X-Received: by 2002:a19:2313:: with SMTP id j19mr12881735lfj.138.1569925779217;
-        Tue, 01 Oct 2019 03:29:39 -0700 (PDT)
-Received: from xi.terra (c-51f1e055.07-184-6d6c6d4.bbcust.telenor.se. [85.224.241.81])
-        by smtp.gmail.com with ESMTPSA id t16sm3920399ljj.29.2019.10.01.03.29.37
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 01 Oct 2019 03:29:37 -0700 (PDT)
-Received: from johan by xi.terra with local (Exim 4.92.2)
-        (envelope-from <johan@xi.terra>)
-        id 1iFFPe-00036A-2a; Tue, 01 Oct 2019 12:29:46 +0200
-From:   Johan Hovold <johan@kernel.org>
-To:     Wolfgang Grandegger <wg@grandegger.com>,
-        Marc Kleine-Budde <mkl@pengutronix.de>
-Cc:     "David S. Miller" <davem@davemloft.net>, linux-can@vger.kernel.org,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-usb@vger.kernel.org, Johan Hovold <johan@kernel.org>,
-        stable <stable@vger.kernel.org>,
-        Bernd Krumboeck <b.krumboeck@gmail.com>
-Subject: [PATCH 2/2] can: usb_8dev: fix use-after-free on disconnect
-Date:   Tue,  1 Oct 2019 12:29:14 +0200
-Message-Id: <20191001102914.4567-3-johan@kernel.org>
-X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20191001102914.4567-1-johan@kernel.org>
-References: <20191001102914.4567-1-johan@kernel.org>
+        Tue, 1 Oct 2019 06:29:47 -0400
+Received: from foss.arm.com ([217.140.110.172]:46192 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730006AbfJAK3p (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Oct 2019 06:29:45 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 649FA1000;
+        Tue,  1 Oct 2019 03:29:45 -0700 (PDT)
+Received: from [10.1.194.37] (e113632-lin.cambridge.arm.com [10.1.194.37])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 5D7F33F739;
+        Tue,  1 Oct 2019 03:29:44 -0700 (PDT)
+Subject: Re: [PATCH v2 0/4] sched/fair: Active balancer RT/DL preemption fix
+From:   Valentin Schneider <valentin.schneider@arm.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     mingo@kernel.org, peterz@infradead.org, vincent.guittot@linaro.org,
+        tglx@linutronix.de, qais.yousef@arm.com,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Steven Rostedt <rostedt@goodmis.org>
+References: <20190815145107.5318-1-valentin.schneider@arm.com>
+Message-ID: <b442e1b5-a800-5dde-2e42-e4981089edf4@arm.com>
+Date:   Tue, 1 Oct 2019 11:29:43 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190815145107.5318-1-valentin.schneider@arm.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The driver was accessing its driver data after having freed it.
+(expanded the Cc list)
+RT/DL folks, any thought on the thing?
 
-Fixes: 0024d8ad1639 ("can: usb_8dev: Add support for USB2CAN interface from 8 devices")
-Cc: stable <stable@vger.kernel.org>     # 3.9
-Cc: Bernd Krumboeck <b.krumboeck@gmail.com>
-Cc: Wolfgang Grandegger <wg@grandegger.com>
-Signed-off-by: Johan Hovold <johan@kernel.org>
----
- drivers/net/can/usb/usb_8dev.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
-
-diff --git a/drivers/net/can/usb/usb_8dev.c b/drivers/net/can/usb/usb_8dev.c
-index d596a2ad7f78..8fa224b28218 100644
---- a/drivers/net/can/usb/usb_8dev.c
-+++ b/drivers/net/can/usb/usb_8dev.c
-@@ -996,9 +996,8 @@ static void usb_8dev_disconnect(struct usb_interface *intf)
- 		netdev_info(priv->netdev, "device disconnected\n");
- 
- 		unregister_netdev(priv->netdev);
--		free_candev(priv->netdev);
--
- 		unlink_all_urbs(priv);
-+		free_candev(priv->netdev);
- 	}
- 
- }
--- 
-2.23.0
-
+On 15/08/2019 15:51, Valentin Schneider wrote:
+> Vincent's load balance rework [1] got me thinking about how and where we
+> use rq.nr_running vs rq.cfs.h_nr_running checks, and this lead me to
+> stare intently at the active load balancer.
+> 
+> I haven't seen it happen (yet), but from reading the code it really looks
+> like we can have some scenarios where the cpu_stopper ends up preempting
+> a > CFS class task, since we never actually look at what's the remote rq's
+> running task.
+> 
+> This series shuffles things around the CFS active load balancer to prevent
+> this from happening.
+> 
+> - Patch 1 is a freebie cleanup
+> - Patch 2 is a preparatory code move
+> - Patch 3 adds h_nr_running checks
+> - Patch 4 adds a sched class check + detach_one_task() to the active balance
+> 
+> This is based on top of today's tip/sched/core:
+>   a46d14eca7b7 ("sched/fair: Use rq_lock/unlock in online_fair_sched_group")
+> 
+> v1 -> v2:
+>   - (new patch) Added need_active_balance() cleanup
+> 
+>   - Tweaked active balance code move to respect existing
+>     sd->nr_balance_failed modifications
+>   - Added explicit checks of active_load_balance()'s return value
+>   
+>   - Added an h_nr_running < 1 check before kicking the cpu_stopper
+> 
+>   - Added a detach_one_task() call in active_load_balance() when the remote
+>     rq's running task is > CFS
+> 
+> [1]: https://lore.kernel.org/lkml/1564670424-26023-1-git-send-email-vincent.guittot@linaro.org/
+> 
+> Valentin Schneider (4):
+>   sched/fair: Make need_active_balance() return bools
+>   sched/fair: Move active balance logic to its own function
+>   sched/fair: Check for CFS tasks before detach_one_task()
+>   sched/fair: Prevent active LB from preempting higher sched classes
+> 
+>  kernel/sched/fair.c | 151 ++++++++++++++++++++++++++++----------------
+>  1 file changed, 95 insertions(+), 56 deletions(-)
+> 
+> --
+> 2.22.0
+> 
