@@ -2,77 +2,138 @@ Return-Path: <SRS0=YRFP=X2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3AC55ECDFB6
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 07:07:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6EFE6ECDFB6
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 07:08:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 10F4A218DE
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 07:07:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569913662;
-	bh=W7DnxrQJnaB/Vyz05qZnyM11wdUw87JS7sJFfJAQ/tQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=qVJ42FL7LZ7MTv2mVr20EgKBNkXqA/ulAxZBu1OfHg6/aZpn6qtHxfKI1thyP6kbz
-	 4q84qpqxxkpHKU6xd0xosqwiK4FbUlXBoNTudGbCZ0tSLRZLxwOed1a90YySWt7Ybg
-	 wCo6OOSqukKWhxA884tpUZDCqZCFAJyZShXAq9bc=
+	by mail.kernel.org (Postfix) with ESMTP id 4ED28215EA
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 07:08:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732790AbfJAHHl (ORCPT
+        id S1732815AbfJAHIz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Oct 2019 03:07:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34858 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726571AbfJAHHl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Oct 2019 03:07:41 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1CA32215EA;
-        Tue,  1 Oct 2019 07:07:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569913660;
-        bh=W7DnxrQJnaB/Vyz05qZnyM11wdUw87JS7sJFfJAQ/tQ=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=j5l9vYSp2Ru3Vtf5nstKyAitckbXEBnP9u3svYKeL12Uy8PFqvru9rYLE1SQxbaHv
-         hXltbDuMrL1pR1PqYyA0LpG5C9VE4V3H4BPzudam+SRAGKewmsR/ZBPYC/iNxKAzLD
-         pYFrxfFYfv/aaIF19sFqzvFgT/fH8LCMmh5Hu3g8=
-Date:   Tue, 1 Oct 2019 09:07:38 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        torvalds@linux-foundation.org, stable@vger.kernel.org
-Cc:     lwn@lwn.net, Jiri Slaby <jslaby@suse.cz>
-Subject: 5.3.3??? [was Re: Linux 5.3.2]
-Message-ID: <20191001070738.GC2893807@kroah.com>
-References: <20191001070457.GA2893807@kroah.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191001070457.GA2893807@kroah.com>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+        Tue, 1 Oct 2019 03:08:55 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:49326 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726157AbfJAHIy (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Oct 2019 03:08:54 -0400
+Received: from 61-220-137-37.hinet-ip.hinet.net ([61.220.137.37] helo=localhost)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <kai.heng.feng@canonical.com>)
+        id 1iFCHD-0002PH-9I; Tue, 01 Oct 2019 07:08:51 +0000
+From:   Kai-Heng Feng <kai.heng.feng@canonical.com>
+To:     dmitry.torokhov@gmail.com
+Cc:     benjamin.tissoires@redhat.com, linux-input@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Kai-Heng Feng <kai.heng.feng@canonical.com>
+Subject: [PATCH] Revert "Input: elantech - enable SMBus on new (2018+) systems"
+Date:   Tue,  1 Oct 2019 15:08:45 +0800
+Message-Id: <20191001070845.9720-1-kai.heng.feng@canonical.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Oct 01, 2019 at 09:04:57AM +0200, Greg KH wrote:
-> I'm announcing the release of the 5.3.2 kernel.
-> 
-> All users of the 5.3 kernel series must upgrade.
+This reverts commit 883a2a80f79ca5c0c105605fafabd1f3df99b34c.
 
-Ok, I messed up this morning and typed "5.3" instead of "5.2" in my
-scripts and an "empty" 5.3.3 kernel got released.  Well kind of, it got
-checked into git, but there wasn't anything to release so things got a
-bit confused.
+Apparently use dmi_get_bios_year() as manufacturing date isn't accurate
+and this breaks older laptops with new BIOS update.
 
-So just consider 5.3.3 a "nothing to see here, ignore the man who forgot
-to release kernels _after_ coffee and not before" type of release.
+So let's revert this patch.
 
-5.3.4 will be the _next_ release after this one, sorry for any
-confusion.
+There are still new HP laptops still need to use SMBus to support all
+features, but it'll be enabled via a whitelist.
 
-ugh,
+Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+---
+ drivers/input/mouse/elantech.c | 55 ++++++++++++++++++----------------
+ 1 file changed, 29 insertions(+), 26 deletions(-)
 
-greg k-h
+diff --git a/drivers/input/mouse/elantech.c b/drivers/input/mouse/elantech.c
+index 04fe43440a3c..2d8434b7b623 100644
+--- a/drivers/input/mouse/elantech.c
++++ b/drivers/input/mouse/elantech.c
+@@ -1827,31 +1827,6 @@ static int elantech_create_smbus(struct psmouse *psmouse,
+ 				  leave_breadcrumbs);
+ }
+ 
+-static bool elantech_use_host_notify(struct psmouse *psmouse,
+-				     struct elantech_device_info *info)
+-{
+-	if (ETP_NEW_IC_SMBUS_HOST_NOTIFY(info->fw_version))
+-		return true;
+-
+-	switch (info->bus) {
+-	case ETP_BUS_PS2_ONLY:
+-		/* expected case */
+-		break;
+-	case ETP_BUS_SMB_HST_NTFY_ONLY:
+-	case ETP_BUS_PS2_SMB_HST_NTFY:
+-		/* SMbus implementation is stable since 2018 */
+-		if (dmi_get_bios_year() >= 2018)
+-			return true;
+-		/* fall through */
+-	default:
+-		psmouse_dbg(psmouse,
+-			    "Ignoring SMBus bus provider %d\n", info->bus);
+-		break;
+-	}
+-
+-	return false;
+-}
+-
+ /**
+  * elantech_setup_smbus - called once the PS/2 devices are enumerated
+  * and decides to instantiate a SMBus InterTouch device.
+@@ -1871,7 +1846,7 @@ static int elantech_setup_smbus(struct psmouse *psmouse,
+ 		 * i2c_blacklist_pnp_ids.
+ 		 * Old ICs are up to the user to decide.
+ 		 */
+-		if (!elantech_use_host_notify(psmouse, info) ||
++		if (!ETP_NEW_IC_SMBUS_HOST_NOTIFY(info->fw_version) ||
+ 		    psmouse_matches_pnp_id(psmouse, i2c_blacklist_pnp_ids))
+ 			return -ENXIO;
+ 	}
+@@ -1891,6 +1866,34 @@ static int elantech_setup_smbus(struct psmouse *psmouse,
+ 	return 0;
+ }
+ 
++static bool elantech_use_host_notify(struct psmouse *psmouse,
++				     struct elantech_device_info *info)
++{
++	if (ETP_NEW_IC_SMBUS_HOST_NOTIFY(info->fw_version))
++		return true;
++
++	switch (info->bus) {
++	case ETP_BUS_PS2_ONLY:
++		/* expected case */
++		break;
++	case ETP_BUS_SMB_ALERT_ONLY:
++		/* fall-through  */
++	case ETP_BUS_PS2_SMB_ALERT:
++		psmouse_dbg(psmouse, "Ignoring SMBus provider through alert protocol.\n");
++		break;
++	case ETP_BUS_SMB_HST_NTFY_ONLY:
++		/* fall-through  */
++	case ETP_BUS_PS2_SMB_HST_NTFY:
++		return true;
++	default:
++		psmouse_dbg(psmouse,
++			    "Ignoring SMBus bus provider %d.\n",
++			    info->bus);
++	}
++
++	return false;
++}
++
+ int elantech_init_smbus(struct psmouse *psmouse)
+ {
+ 	struct elantech_device_info info;
+-- 
+2.17.1
+
