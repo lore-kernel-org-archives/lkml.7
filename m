@@ -2,134 +2,117 @@ Return-Path: <SRS0=YRFP=X2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A28DECE587
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 15:17:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FD6BECE58A
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 15:17:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3A0C62133F
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 15:17:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7653E2133F
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 15:17:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="D7dJqcMa"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="vgVjgSmM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389493AbfJAPRH (ORCPT
+        id S2389555AbfJAPRy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Oct 2019 11:17:07 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:38908 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389175AbfJAPRH (ORCPT
+        Tue, 1 Oct 2019 11:17:54 -0400
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:52544 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727185AbfJAPRy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Oct 2019 11:17:07 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x91FDk5A161443;
-        Tue, 1 Oct 2019 15:16:58 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
- subject : date : message-id : mime-version : content-transfer-encoding;
- s=corp-2019-08-05; bh=Cl6NTVoaJaSBxqb2QcFNk13Sq3UWtVzalNOzurAnyF4=;
- b=D7dJqcMa/TH7rlsI4YA3nfkLmOEGuG6OjIc4axgqDw1FHCIBmQKLWjEzTOjp/DFTx6Eo
- ctOxQPyKguGydMvx2zKFl0zRbaMfIlpYe94hAsmOI5K38kdVUKxnqzNqLkUJ0+N4t2NS
- w68m/FwI73QiBcv+Kb6Qr+AQUFmyl889nJrPfFUOVAS3KX4EjrAt6YCxeYYKtRD3V106
- wi8geTLcDENErs6iwAZKvI8P+pSTCZyAko1Cmg4Y1osISuXFo5vHwVkDIYZ5q4RYGMmV
- aPWMSXidqQyOYB459e0fzrcJhIl25hNhTbSaU88pQ1wmIKnnBeIM3KcHGpATsOnEXTUe Xw== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by userp2120.oracle.com with ESMTP id 2va05rpp81-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 01 Oct 2019 15:16:57 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x91FEL6J127106;
-        Tue, 1 Oct 2019 15:16:57 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by userp3030.oracle.com with ESMTP id 2vbmpysbdj-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 01 Oct 2019 15:16:56 +0000
-Received: from abhmp0011.oracle.com (abhmp0011.oracle.com [141.146.116.17])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x91FGs8p010956;
-        Tue, 1 Oct 2019 15:16:55 GMT
-Received: from bostrovs-us.us.oracle.com (/10.152.32.65)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 01 Oct 2019 08:16:54 -0700
-From:   Boris Ostrovsky <boris.ostrovsky@oracle.com>
-To:     xen-devel@lists.xenproject.org, linux-kernel@vger.kernel.org
-Cc:     jgross@suse.com, james@dingwall.me.uk,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>
-Subject: [PATCH] x86/xen: Return from panic notifier
-Date:   Tue,  1 Oct 2019 11:16:33 -0400
-Message-Id: <20191001151633.1659-1-boris.ostrovsky@oracle.com>
-X-Mailer: git-send-email 2.20.1
+        Tue, 1 Oct 2019 11:17:54 -0400
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id x91FHd6G012908;
+        Tue, 1 Oct 2019 10:17:39 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1569943059;
+        bh=mYUdVtpTVwCAKDqOu/gzrxlPJtwVfw4kTjUjOPGBBwI=;
+        h=Subject:To:References:From:Date:In-Reply-To;
+        b=vgVjgSmM4Fm9w2oqiQFOOZO20eOMLlmf2fpPWhTk4SB6lLT6cXWfq0Z6zuuYfKhb9
+         WJcvCpx5oSZRqK2kWQ7PTEZWd82IgRDhabn5MBGNjzDlHvmLVVdbTmmHjMnBeKbxqw
+         yXchTeVsv4hWw2aRN9OXYzqf2lbVnB42ync3zMWA=
+Received: from DLEE109.ent.ti.com (dlee109.ent.ti.com [157.170.170.41])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x91FHdhi031997
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Tue, 1 Oct 2019 10:17:39 -0500
+Received: from DLEE102.ent.ti.com (157.170.170.32) by DLEE109.ent.ti.com
+ (157.170.170.41) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Tue, 1 Oct
+ 2019 10:17:28 -0500
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE102.ent.ti.com
+ (157.170.170.32) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Tue, 1 Oct 2019 10:17:29 -0500
+Received: from [10.250.65.13] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id x91FHceg051485;
+        Tue, 1 Oct 2019 10:17:38 -0500
+Subject: Re: [PATCH V6 5/8] backlight: qcom-wled: Restructure the driver for
+ WLED3
+To:     Kiran Gunda <kgunda@codeaurora.org>, <bjorn.andersson@linaro.org>,
+        <jingoohan1@gmail.com>, <lee.jones@linaro.org>,
+        <b.zolnierkie@samsung.com>, <dri-devel@lists.freedesktop.org>,
+        <daniel.thompson@linaro.org>, <jacek.anaszewski@gmail.com>,
+        <pavel@ucw.cz>, <robh+dt@kernel.org>, <mark.rutland@arm.com>,
+        <linux-leds@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, Andy Gross <agross@kernel.org>,
+        <linux-arm-msm@vger.kernel.org>, <linux-fbdev@vger.kernel.org>
+References: <1569825553-26039-1-git-send-email-kgunda@codeaurora.org>
+ <1569825553-26039-6-git-send-email-kgunda@codeaurora.org>
+From:   Dan Murphy <dmurphy@ti.com>
+Message-ID: <6f50ea19-f320-b4e6-f269-4d1e2189fa77@ti.com>
+Date:   Tue, 1 Oct 2019 10:17:57 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9397 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1908290000 definitions=main-1910010137
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9397 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1908290000
- definitions=main-1910010137
+In-Reply-To: <1569825553-26039-6-git-send-email-kgunda@codeaurora.org>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Currently execution of panic() continues until Xen's panic notifier
-(xen_panic_event()) is called at which point we make a hypercall that
-never returns.
+Kiran
 
-This means that any notifier that is supposed to be called later as
-well as significant part of panic() code (such as pstore writes from
-kmsg_dump()) is never executed.
+On 9/30/19 1:39 AM, Kiran Gunda wrote:
+> Restructure the driver to add the support for new WLED
+> peripherals.
+>
+> Signed-off-by: Kiran Gunda <kgunda@codeaurora.org>
+> Acked-by: Daniel Thompson <daniel.thompson@linaro.org>
+> ---
+>   drivers/video/backlight/qcom-wled.c | 395 ++++++++++++++++++++++--------------
+>   1 file changed, 245 insertions(+), 150 deletions(-)
+>
+> diff --git a/drivers/video/backlight/qcom-wled.c b/drivers/video/backlight/qcom-wled.c
+> index f191242..740f1b6 100644
+> --- a/drivers/video/backlight/qcom-wled.c
+> +++ b/drivers/video/backlight/qcom-wled.c
+> @@ -7,59 +7,71 @@
+>   #include <linux/module.h>
+>   #include <linux/of.h>
+>   #include <linux/of_device.h>
+> +#include <linux/of_address.h>
+>   #include <linux/regmap.h>
+>   
+>   /* From DT binding */
+> +#define WLED_MAX_STRINGS				4
+> +
+>   #define WLED_DEFAULT_BRIGHTNESS				2048
+>   
+> -#define WLED3_SINK_REG_BRIGHT_MAX			0xFFF
+> -#define WLED3_CTRL_REG_VAL_BASE				0x40
+> +#define WLED_SINK_REG_BRIGHT_MAX			0xFFF
 
-There is no reason for xen_panic_event() to be this last point in
-execution since panic()'s emergency_restart() will call into
-xen_emergency_restart() from where we can perform our hypercall.
+Why did you change some of these again?
 
-Reported-by: James Dingwall <james@dingwall.me.uk>
-Signed-off-by: Boris Ostrovsky <boris.ostrovsky@oracle.com>
----
- arch/x86/xen/enlighten.c | 17 ++++++++++++++---
- 1 file changed, 14 insertions(+), 3 deletions(-)
+Can you just change it to the final #define in patch 4/8?
 
-diff --git a/arch/x86/xen/enlighten.c b/arch/x86/xen/enlighten.c
-index 750f46ad018a..fd4f58cf51dc 100644
---- a/arch/x86/xen/enlighten.c
-+++ b/arch/x86/xen/enlighten.c
-@@ -269,16 +269,27 @@ void xen_reboot(int reason)
- 		BUG();
- }
- 
-+static int reboot_reason = SHUTDOWN_reboot;
- void xen_emergency_restart(void)
- {
--	xen_reboot(SHUTDOWN_reboot);
-+	xen_reboot(reboot_reason);
- }
- 
- static int
- xen_panic_event(struct notifier_block *this, unsigned long event, void *ptr)
- {
--	if (!kexec_crash_loaded())
--		xen_reboot(SHUTDOWN_crash);
-+	if (!kexec_crash_loaded()) {
-+		reboot_reason = SHUTDOWN_crash;
-+
-+		/*
-+		 * If panic_timeout==0 then we are supposed to wait forever.
-+		 * However, to preserve original dom0 behavior we have to drop
-+		 * into hypervisor. (domU behavior is controlled by its
-+		 * config file)
-+		 */
-+		if (panic_timeout == 0)
-+			panic_timeout = -1;
-+	}
- 	return NOTIFY_DONE;
- }
- 
--- 
-2.17.1
+Dan
+
+<snip>
 
