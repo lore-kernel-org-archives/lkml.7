@@ -2,163 +2,143 @@ Return-Path: <SRS0=YRFP=X2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CAB7ECE587
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 18:14:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 053D4ECE587
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 18:14:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5F89D21906
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 18:14:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C549F21906
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 18:14:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=dell.com header.i=@dell.com header.b="D21jo5mC"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="xkPaWta5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731882AbfJASO3 (ORCPT
+        id S1732004AbfJASOw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Oct 2019 14:14:29 -0400
-Received: from mx0b-00154904.pphosted.com ([148.163.137.20]:31444 "EHLO
-        mx0b-00154904.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728408AbfJASO3 (ORCPT
+        Tue, 1 Oct 2019 14:14:52 -0400
+Received: from pandora.armlinux.org.uk ([78.32.30.218]:42066 "EHLO
+        pandora.armlinux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727012AbfJASOv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Oct 2019 14:14:29 -0400
-Received: from pps.filterd (m0170395.ppops.net [127.0.0.1])
-        by mx0b-00154904.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id x91I5J5X028164;
-        Tue, 1 Oct 2019 14:14:27 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=dell.com; h=from : to : cc :
- subject : date : message-id : references : in-reply-to : content-type :
- content-transfer-encoding : mime-version; s=smtpout1;
- bh=RaiO7KgO6Gkx38Eh2brE9qaYaKO5NtDoBJB5Djv5Ffs=;
- b=D21jo5mCVVQT2GxX9Tn0E2EPPBBvGJWlpSGI/2MfWlKeG238UBHuGhQ3bI91SbG5rj2q
- 3wCnCLw4q4Y28UXjUT5LcFz1WDxCwDhzOZRvudoug+4EqnfLYXjL02uBdPqBkz3QtKDv
- 9Aum42g8jL3/Df143aRkxiqrHAegamXuU9fy+JSD0c4CtvxIZKkVk4MVOuddkscBdrAM
- fUPXZQiyR5PuAJjuF3tslyLIygFrIW0NBojOy15Od9vE8PDj9V1Z/iUQfkPmzFX+EB9h
- 4wE7pLOPKsB7IBadDOwNDdcAyUgdROTjpFFvJpKQ2avw0qnQRnXOBQNYQk9/A3Y0xHVu GA== 
-Received: from mx0a-00154901.pphosted.com (mx0a-00154901.pphosted.com [67.231.149.39])
-        by mx0b-00154904.pphosted.com with ESMTP id 2va46neqxr-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 01 Oct 2019 14:14:27 -0400
-Received: from pps.filterd (m0134746.ppops.net [127.0.0.1])
-        by mx0a-00154901.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id x91I8DaF105726;
-        Tue, 1 Oct 2019 14:14:26 -0400
-Received: from ausxipps310.us.dell.com (AUSXIPPS310.us.dell.com [143.166.148.211])
-        by mx0a-00154901.pphosted.com with ESMTP id 2vc2rut7h4-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 01 Oct 2019 14:14:26 -0400
-X-LoopCount0: from 10.166.132.133
-X-PREM-Routing: D-Outbound
-X-IronPort-AV: E=Sophos;i="5.60,349,1549951200"; 
-   d="scan'208";a="429845825"
-From:   <Mario.Limonciello@dell.com>
-To:     <mika.westerberg@linux.intel.com>, <linux-usb@vger.kernel.org>
-CC:     <andreas.noever@gmail.com>, <michael.jamet@intel.com>,
-        <YehezkelShB@gmail.com>, <rajmohan.mani@intel.com>,
-        <nicholas.johnson-opensource@outlook.com.au>, <lukas@wunner.de>,
-        <gregkh@linuxfoundation.org>, <stern@rowland.harvard.edu>,
-        <anthony.wong@canonical.com>, <linux-kernel@vger.kernel.org>
-Subject: RE: [RFC PATCH 17/22] thunderbolt: Add initial support for USB4
-Thread-Topic: [RFC PATCH 17/22] thunderbolt: Add initial support for USB4
-Thread-Index: AQHVeEzShOhklesInk+gx9St4A7986dGAqiggAATYiA=
-Date:   Tue, 1 Oct 2019 18:14:23 +0000
-Message-ID: <5357cb96013445d79f5c2016df8a194e@AUSX13MPC105.AMER.DELL.COM>
-References: <20191001113830.13028-1-mika.westerberg@linux.intel.com>
- <20191001113830.13028-18-mika.westerberg@linux.intel.com>
- <184c95fc476146939b240557e54ee2c9@AUSX13MPC105.AMER.DELL.COM>
-In-Reply-To: <184c95fc476146939b240557e54ee2c9@AUSX13MPC105.AMER.DELL.COM>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-msip_labels: MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_Enabled=True;
- MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_SiteId=945c199a-83a2-4e80-9f8c-5a91be5752dd;
- MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_Owner=Mario_Limonciello@Dell.com;
- MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_SetDate=2019-10-01T17:05:07.4414478Z;
- MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_Name=External Public;
- MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_Application=Microsoft Azure
- Information Protection;
- MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_Extended_MSFT_Method=Manual;
- aiplabel=External Public
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.143.18.86]
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Tue, 1 Oct 2019 14:14:51 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=w+T1a8PNiMrEGlMgZvzDIbmdQ/0XfekRvvWFfZpowuQ=; b=xkPaWta5X24XMC5QwKitp/bpH
+        /NN+CAbcvl4+3mfj3dRutfLjv1WrsrPUKv89jKoibs6xbo8LuOIPc0ep0grD8FzYnWAm1Vjoup9Mo
+        BMdBWurQvLS1c9SF/OrVS8tZGaTtzPcruXTHc3cPJYd1bxkDUpCvOdKcHeHNeswKNWWMlyOzuP1U3
+        K7S6t1a9PDNQ7cwC1IYOlUBijcJ1wyoxWwNW5LD7E/3ubWnqpArBIP6huXj5NfoX2X0fPQ9cJ+U8L
+        62+qTsLAtRiWlgpCKbOUEYi4x142ss2cmwl/u60WWTjUaSWEIYyfTMq+dUl1MfAmxnpqcOQgsci/t
+        8WT9EV7lw==;
+Received: from shell.armlinux.org.uk ([2001:4d48:ad52:3201:5054:ff:fe00:4ec]:38854)
+        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.90_1)
+        (envelope-from <linux@armlinux.org.uk>)
+        id 1iFMfX-0003xe-Tn; Tue, 01 Oct 2019 19:14:40 +0100
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
+        (envelope-from <linux@shell.armlinux.org.uk>)
+        id 1iFMfW-0008Pf-5T; Tue, 01 Oct 2019 19:14:38 +0100
+Date:   Tue, 1 Oct 2019 19:14:38 +0100
+From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
+To:     Nick Desaulniers <ndesaulniers@google.com>
+Cc:     Will Deacon <will@kernel.org>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Stefan Wahren <wahrenst@gmx.net>,
+        Kees Cook <keescook@google.com>
+Subject: Re: [PATCH] compiler: enable CONFIG_OPTIMIZE_INLINING forcibly
+Message-ID: <20191001181438.GL25745@shell.armlinux.org.uk>
+References: <20190930112636.vx2qxo4hdysvxibl@willie-the-truck>
+ <CAK7LNASQZ82KSOrQW7+Wq1vFDCg2__maBEAPMLqUDqZMLuj1rA@mail.gmail.com>
+ <20190930121803.n34i63scet2ec7ll@willie-the-truck>
+ <CAKwvOdnqn=0LndrX+mUrtSAQqoT1JWRMOJCA5t3e=S=T7zkcCQ@mail.gmail.com>
+ <20191001092823.z4zhlbwvtwnlotwc@willie-the-truck>
+ <CAKwvOdk0h2A6=fb7Yepf+oKbZfq_tqwpGq8EBmHVu1j4mo-a-A@mail.gmail.com>
+ <20191001170142.x66orounxuln7zs3@willie-the-truck>
+ <CAKwvOdnFJqipp+G5xLDRBcOrQRcvMQmn+n8fufWyzyt2QL_QkA@mail.gmail.com>
+ <20191001175512.GK25745@shell.armlinux.org.uk>
+ <CAKwvOdmw_xmTGZLeK8-+Q4nUpjs-UypJjHWks-3jHA670Dxa1A@mail.gmail.com>
 MIME-Version: 1.0
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,1.0.8
- definitions=2019-10-01_08:2019-10-01,2019-10-01 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0
- mlxlogscore=931 mlxscore=0 impostorscore=0 spamscore=0 lowpriorityscore=0
- priorityscore=1501 bulkscore=0 phishscore=0 clxscore=1015 adultscore=0
- suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-1908290000 definitions=main-1910010147
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 mlxlogscore=999
- priorityscore=1501 bulkscore=0 mlxscore=0 spamscore=0 lowpriorityscore=0
- suspectscore=0 malwarescore=0 impostorscore=0 adultscore=0 clxscore=1015
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-1908290000
- definitions=main-1910010147
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAKwvOdmw_xmTGZLeK8-+Q4nUpjs-UypJjHWks-3jHA670Dxa1A@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> -----Original Message-----
-> From: Limonciello, Mario
-> Sent: Tuesday, October 1, 2019 12:05 PM
-> To: 'Mika Westerberg'; linux-usb@vger.kernel.org
-> Cc: Andreas Noever; Michael Jamet; Yehezkel Bernat; Rajmohan Mani; Nichol=
-as
-> Johnson; Lukas Wunner; Greg Kroah-Hartman; Alan Stern; Anthony Wong; linu=
-x-
-> kernel@vger.kernel.org
-> Subject: RE: [RFC PATCH 17/22] thunderbolt: Add initial support for USB4
->=20
-> > @@ -322,9 +398,21 @@ static int tb_switch_nvm_add(struct tb_switch *sw)
-> >  	u32 val;
-> >  	int ret;
+On Tue, Oct 01, 2019 at 11:00:11AM -0700, Nick Desaulniers wrote:
+> On Tue, Oct 1, 2019 at 10:55 AM Russell King - ARM Linux admin
+> <linux@armlinux.org.uk> wrote:
 > >
-> > -	if (!sw->dma_port)
-> > +	if (!nvm_readable(sw))
-> >  		return 0;
+> > On Tue, Oct 01, 2019 at 10:44:43AM -0700, Nick Desaulniers wrote:
+> > > I apologize; I don't mean to be difficult.  I would just like to avoid
+> > > surprises when code written with the assumption that it will be
+> > > inlined is not.  It sounds like we found one issue in arm32 and one in
+> > > arm64 related to outlining.  If we fix those two cases, I think we're
+> > > close to proceeding with Masahiro's cleanup, which I view as a good
+> > > thing for the health of the Linux kernel codebase.
 > >
-> > +	/*
-> > +	 * The NVM format of non-Intel hardware is not known so
-> > +	 * currently restrict NVM upgrade for Intel hardware. We may
-> > +	 * relax this in the future when we learn other NVM formats.
-> > +	 */
-> > +	if (sw->config.vendor_id !=3D PCI_VENDOR_ID_INTEL) {
-> > +		dev_info(&sw->dev,
-> > +			 "NVM format of vendor %#x is not known, disabling NVM
-> > upgrade\n",
-> > +			 sw->config.vendor_id);
-> > +		return 0;
-> > +	}
-> > +
->=20
-> Don't you actually have an attribute you can use here for this exact purp=
-ose that
-> you
-> could  be setting rather than returning immediately?
-> sw->no_nvm_upgrade
->=20
+> > Except, using the C preprocessor for this turns the arm32 code into
+> > yuck:
+> >
+> > 1. We'd need to turn get_domain() and set_domain() into multi-line
+> >    preprocessor macro definitions, using the GCC ({ }) extension
+> >    so that get_domain() can return a value.
+> >
+> > 2. uaccess_save_and_enable() and uaccess_restore() also need to
+> >    become preprocessor macro definitions too.
+> >
+> > So, we end up with multiple levels of nested preprocessor macros.
+> > When something goes wrong, the compiler warning/error message is
+> > going to be utterly _horrid_.
+> 
+> That's why I preferred V1 of Masahiro's patch, that fixed the inline
+> asm not to make use of caller saved registers before calling a
+> function that might not be inlined.
 
-One more thought; would you consider exporting to sysfs sw->config.vendor_i=
-d?
-Maybe an attribute that is switch_vendor?
+... which I objected to based on the fact that this uaccess stuff is
+supposed to add protection against the kernel being fooled into
+accessing userspace when it shouldn't.  The whole intention there is
+that [sg]et_domain(), and uaccess_*() are _always_ inlined as close
+as possible to the call site of the accessor touching userspace.
 
-Userland fwupd also does validation on the NVM and will need to follow this=
-.
-The same check will go into fwupd to match the vendor and lack of nvm_non_a=
-ctive0
-to mark the device as not updatable.  When the checks in the kernel get rel=
-axed,
-some NVM parsing will have to make it over to fwupd too to relax the check =
-at that point.
+Moving it before the assignments mean that the compiler is then free
+to issue memory loads/stores to load up those registers, which is
+exactly what we want to avoid.
 
-> Then potentially you can at least let users "dump out" the nvm on !Intel =
-but don't
-> let
-> it be written until ready to relax further.
->=20
-> >  	nvm =3D kzalloc(sizeof(*nvm), GFP_KERNEL);
-> >  	if (!nvm)
-> >  		return -ENOMEM;
 
+In any case, I violently disagree with the idea that stuff we have
+in header files should be permitted not to be inlined because we
+have soo much that is marked inline.  Having it moved out of line,
+and essentially the same function code appearing in multiple C files
+is really not an improvement over the current situation with excessive
+use of inlining.  Anyone who has looked at the code resulting from
+dma_map_single() will know exactly what I'm talking about, which is
+way in excess of the few instructions we have for the uaccess_* stuff
+here.
+
+The right approach is to move stuff out of line - and by that, I
+mean _actually_ move the damn code, so that different compilation
+units can use the same instructions, and thereby gain from the
+whole point of an instruction cache.
+
+The whole "let's make inline not really mean inline" is nothing more
+than a band-aid to the overuse (and abuse) of "inline".
+
+-- 
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTC broadband for 0.8mile line in suburbia: sync at 12.1Mbps down 622kbps up
+According to speedtest.net: 11.9Mbps down 500kbps up
