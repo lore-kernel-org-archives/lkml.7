@@ -2,108 +2,105 @@ Return-Path: <SRS0=YRFP=X2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B9BDDECE58A
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 17:31:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EDDE8C352AA
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 17:32:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9B0762053B
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 17:31:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C4F262133F
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 17:32:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="K4u9RUQT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730778AbfJARbs (ORCPT
+        id S1730816AbfJARcx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Oct 2019 13:31:48 -0400
-Received: from foss.arm.com ([217.140.110.172]:55214 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727228AbfJARbr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Oct 2019 13:31:47 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B2069337;
-        Tue,  1 Oct 2019 10:31:46 -0700 (PDT)
-Received: from [10.1.197.116] (unknown [10.1.197.116])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A01A13F706;
-        Tue,  1 Oct 2019 10:31:40 -0700 (PDT)
-Subject: Re: [PATCHv9 2/3] arm64: dts: qcom: msm8998: Add Coresight support
-To:     Jeffrey Hugo <jeffrey.l.hugo@gmail.com>,
-        Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
-Cc:     Mark Rutland <mark.rutland@arm.com>,
-        Rajendra Nayak <rnayak@codeaurora.org>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        MSM <linux-arm-msm@vger.kernel.org>,
-        Marc Gonzalez <marc.w.gonzalez@free.fr>,
-        lkml <linux-kernel@vger.kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        David Brown <david.brown@linaro.org>,
-        Andy Gross <agross@kernel.org>,
-        Sibi Sankar <sibis@codeaurora.org>,
-        Leo Yan <leo.yan@linaro.org>,
-        linux-arm-kernel@lists.infradead.org
-References: <cover.1564550873.git.saiprakash.ranjan@codeaurora.org>
- <90114e06825e537c3aafd3de5c78743a9de6fadc.1564550873.git.saiprakash.ranjan@codeaurora.org>
- <CAOCk7NrK+wY8jfHdS8781NOQtyLm2RRe1NW2Rm3_zeaot0Q99Q@mail.gmail.com>
- <16212a577339204e901cf4eefa5e82f1@codeaurora.org>
- <CAOCk7NohO67qeYCnrjy4P0KN9nLUiamphHRvj-bFP++K7khPOw@mail.gmail.com>
-From:   Suzuki K Poulose <suzuki.poulose@arm.com>
-Message-ID: <450756ff-f897-7825-3424-6d5645fa9db9@arm.com>
-Date:   Tue, 1 Oct 2019 18:31:38 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.0
+        Tue, 1 Oct 2019 13:32:53 -0400
+Received: from mail-io1-f66.google.com ([209.85.166.66]:37848 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726463AbfJARcw (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Oct 2019 13:32:52 -0400
+Received: by mail-io1-f66.google.com with SMTP id b19so22005345iob.4;
+        Tue, 01 Oct 2019 10:32:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=ME9JERHhVrbe9bZKOQu8b1hgHngZbw7UvQiOYqhf3AE=;
+        b=K4u9RUQTlRAzpP4lzQfqEmLquc9JpM8ygSmmaYvctHChiQieDW4heA1Z0Ur4HDWvIb
+         fbZWY/NIzFubV9g6dDf0LUC2ScRvY1ZyiGr7c1aZUTGlr7ZLDSVh/z6mWHHMCsXhdOv6
+         k+/evVW0UNKvTM9upXIQLF+Bb7eYUXOX0z9A800GhjXe7ihOgiiv8fl5pVVfydjKBLvl
+         nsEM8toqBhnEN2jhh2vLdYYP7P4EAjn7TV24Fc0q2qiWOSW7sphMV0uZBphI0gyuE1AY
+         7xUcJiVTrbNjThUXpR85oIekm59z42fPyrEEZKHMHJ1tx5SP6dRD75s/7toh5bgxkZoP
+         qC0A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=ME9JERHhVrbe9bZKOQu8b1hgHngZbw7UvQiOYqhf3AE=;
+        b=MCyn8hIFTE6qZYNHCnIJZuhoTuwKinq/DUzRrpmrPnF+yr1eQs5r0uAhttqbrj/Sae
+         4Fb+8cgG70bbxKiV7WbnNLdrjlg8dqdCD6ua5yJabWPUFOUIlOlKGd7NRDpDZe+TUboE
+         XZE8/EY5hFGHGtkyQ0QXbFPAhpUugtYyMhh5/0X1cE6CiFTsZF2D9qIs9r4O7ujFnIsz
+         XIyRyt9/DtvtEwXlUITKrJ5oqbuO5o48abdOMXQR+X+HNKnyRxedvDE5UbkOnYm0T0F+
+         XANk6z6YutI2n7a/L9XIZ4QH5P/4iZ6o+btHvMWRlgrq9xB+bhwm4Cgiy09IYEOuKmaA
+         D+6Q==
+X-Gm-Message-State: APjAAAUuV6Glqwur4cXuiYq8bxyx1i60Fyx7xYgR+ks6s/bjpQOrBCAL
+        QazVLoMr4E1tp3tsL+3xNEMX/AMrabgWUHCfCBM=
+X-Google-Smtp-Source: APXvYqyYxMAY5xQEu8G8vVHN+ATd4tNlLzhw/LbXbd0+G/Y0WbtHvI9gQ28fXhdaQVTfcMo0yQSeNiuKOf21ktWtsTA=
+X-Received: by 2002:a5d:8143:: with SMTP id f3mr22230939ioo.294.1569951171833;
+ Tue, 01 Oct 2019 10:32:51 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <CAOCk7NohO67qeYCnrjy4P0KN9nLUiamphHRvj-bFP++K7khPOw@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20190930205241.5483-1-navid.emamdoost@gmail.com> <6b55e753-5797-2bdc-fae6-f575a0ef8186@web.de>
+In-Reply-To: <6b55e753-5797-2bdc-fae6-f575a0ef8186@web.de>
+From:   Navid Emamdoost <navid.emamdoost@gmail.com>
+Date:   Tue, 1 Oct 2019 12:32:41 -0500
+Message-ID: <CAEkB2ES3-gotqS9184izf0fKOigFaFUetBiqekmYJPBgPWbSBQ@mail.gmail.com>
+Subject: Re: [PATCH v2] spi: gpio: prevent memory leak in spi_gpio_probe
+To:     Markus Elfring <Markus.Elfring@web.de>
+Cc:     linux-spi@vger.kernel.org, Navid Emamdoost <emamd001@umn.edu>,
+        Kangjie Lu <kjlu@umn.edu>, Stephen McCamant <smccaman@umn.edu>,
+        Mark Brown <broonie@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        kernel-janitors@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Markus, thanks for your suggestions for improving the quality of
+the patch. At the moment I prefer first get a confirmation from
+contributors about the leak and then work on any possible improvements
+for the patch.
+
+Thanks,
+Navid.
+
+On Tue, Oct 1, 2019 at 4:11 AM Markus Elfring <Markus.Elfring@web.de> wrote=
+:
+>
+> > =E2=80=A6 In order to avoid leak spi_contriller_put must
+> > be called in case of failure for devm_add_action_or_reset.
+>
+> How does this wording fit to the diff display that you would like
+> to add the function call =E2=80=9Cspi_master_put(master)=E2=80=9D in
+> one if branch?
+>
+>
+> > Fixes: 8b797490b4db ("spi: gpio: Make sure spi_master_put() is called i=
+n every error path")
+>
+> Is there a need to complete the corresponding exception handling
+> at any more source code places?
+>
+> Regards,
+> Markus
 
 
-On 01/10/2019 18:14, Jeffrey Hugo wrote:
-> On Tue, Oct 1, 2019 at 11:04 AM Sai Prakash Ranjan
-> <saiprakash.ranjan@codeaurora.org> wrote:
->>
->> On 2019-10-01 09:13, Jeffrey Hugo wrote:
->>> Sai,
->>>
->>> This patch breaks boot on the 835 laptops.  However, I haven't seen
->>> the same issue on the MTP.  I wonder, is coresight expected to work
->>> with production fused devices?  I wonder if thats the difference
->>> between the laptop and MTP that is causing the issue.
->>>
->>> Let me know what I can do to help debug.
->>>
->>
->> I did test on MSM8998 MTP and didn't face any issue. I am guessing this
->> is the same issue which you reported regarding cpuidle? Coresight ETM
-> 
-> Yes, its the same issue.  Right now, I need both patches reverted to boot.
-> 
->> and cpuidle do not work well together since ETMs share the same power
->> domain as CPU and they might get turned off when CPU enters idle states.
->> Can you try with cpuidle.off=1 cmdline or just remove idle states from
->> DT to confirm? If this is the issue, then we can try the below patch
->> from Andrew Murray for ETM save and restore:
->>
->> https://patchwork.kernel.org/patch/11097893/
-> 
-> Is there still value in testing this if the idle states are removed,
-> yet the coresight nodes still cause issues?
-> 
-> Funny enough, I'm using the arm64 defconfig which doesn't seem to
-> select CONFIG_CORESIGHT, so I'm not even sure what would be binding to
-> the DT devices...
 
-That looks like potentially missing Power domain support, either in the kernel
-or from the firmware.
-
-The Coresight components are also AMBA devices (with primecell compatible)
-and thus the AMBA bus layer does some probing to check the PIDRx registers
-to match the driver. The AMBA layer does try to get the power to the
-component, but someone is lying that it is powered.
-
-Suzuki
+--=20
+Navid.
