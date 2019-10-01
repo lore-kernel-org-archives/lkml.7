@@ -2,140 +2,143 @@ Return-Path: <SRS0=YRFP=X2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9707C352AA
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 17:15:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E240DECE587
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 17:15:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9B6432168B
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 17:15:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569950101;
-	bh=O1XhKT9SpICuFEX4cta8iDmCH+T0Gf/goqoQlQVedjw=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=ma0kfEC6DgBeofNdL/iK0UI183SHcw3r3C3HzWPUrGBoj7FHjUhTgKmHmkZnEiTzB
-	 a2zCg+0llKl6YIjecSRflxrCjvmpuIVM+btKmwQx8xa7tmu3aAk71STB3wnWpQu0Z7
-	 dpyQt0HvXZaoA25fsaMUfaJLG8bIU3D0NHTLTDI0=
+	by mail.kernel.org (Postfix) with ESMTP id B476B2133F
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 17:15:54 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FRMVxcBH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729797AbfJARPA (ORCPT
+        id S1729470AbfJARPy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Oct 2019 13:15:00 -0400
-Received: from mail-lf1-f67.google.com ([209.85.167.67]:42681 "EHLO
-        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726905AbfJARPA (ORCPT
+        Tue, 1 Oct 2019 13:15:54 -0400
+Received: from mail-io1-f65.google.com ([209.85.166.65]:46480 "EHLO
+        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726473AbfJARPx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Oct 2019 13:15:00 -0400
-Received: by mail-lf1-f67.google.com with SMTP id c195so10504542lfg.9
-        for <linux-kernel@vger.kernel.org>; Tue, 01 Oct 2019 10:14:59 -0700 (PDT)
+        Tue, 1 Oct 2019 13:15:53 -0400
+Received: by mail-io1-f65.google.com with SMTP id c6so49800009ioo.13;
+        Tue, 01 Oct 2019 10:15:51 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
+        d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=nEuCxhcjsGTl2dAs2lSougJ6NsHoyENBtaiEDpg0vW0=;
-        b=CAOrEjWfrgxQe1kRn7vPNyNDDhxcOBYHgGpKgiFUvC+8Xh0bryCl/hbhQcREBq7Lqy
-         Di8Nvc8kr3Fdq7b6vyveiKmeu5qc4iGpH0q5xoUQXQkYJhnbf5ha2ZaOQBPrhPXgLE8d
-         HNVn8AUmqP4MQqP5rQ+BB5vG46fYP7i6BWsnA=
+        bh=xu9mIUeG8Hcz0lOqfBLA1+CwCuPD3jFNmQ7iOIYU3x4=;
+        b=FRMVxcBHcd1+N35DHWMGKKjOHcKURbQ98/5g7YKFf07zDDazVS2zJVkHkjmS2CA0X7
+         kWbZrrl+jvEkxkrhNegf+buiEwcLYglZKmyEpxxebxrvIOO7l69dlNTzwB9yKeKr992C
+         ahFwsU/tbsPGZ5fiCOs+CTeKmlYZtuvCT7emqm5cTuKawgvvZLaKOzyjdk9smk+T+31J
+         n5+Gy3QnFvXSzvYq6jK4AwoUY6LWSm3C5TLt6d7dFFe0Gsoe7tBisdd52Dd9lp4Vb1HZ
+         U2tM/Y8mX8rsfCiIcoC51K65jx3b5tD4eJ1ztwY3mfO39V0vddOwSbOcWDMt8ZrXObYh
+         9yiw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=nEuCxhcjsGTl2dAs2lSougJ6NsHoyENBtaiEDpg0vW0=;
-        b=kAGsyu+oA6aZmIg0uyRWAaig4TItus2AY0/fp2eNbyWVWm+aRiaAV5GWBPEuzixUWE
-         VDSTM/xNJKC9ShqaccBXFOhblxDPaRBjZeYd/TwcvgzzR6oYzSMmT8TuBEQt1nAus27z
-         2z2tTWp5Zuqs9HwKiG7Ce9jttMnkBHaVacWUig4UwA7+TW8fA9+WlqdxZ4ES/NuwD6sD
-         ESXKYrZlFQXqB11S5gs0tqLY4uRJfgeVoXgWvVLesQhnGD9p7LYkZACUs23CprsC2DLS
-         L13yM25GwJ/wg6oDpHmXmFmQPk6fDtyV7sG4fv8uF67FFTOtWi6GwRc2UG4zt/F+Rzsh
-         DxZg==
-X-Gm-Message-State: APjAAAVub7DZA5aLWJeuCXJD0MkC5x+RlRoSBXaKKw+R/1Eb6pwr0Otf
-        w+RKq09zaLTaV0DehWXx7lPubN7NGEE=
-X-Google-Smtp-Source: APXvYqxbe2LHjvek5OhWsjvXcr64R5P+EFue5WOGZdayqZ9OtT1bW56pj6PMvWRbCXiNmpypSypkrg==
-X-Received: by 2002:a19:ca07:: with SMTP id a7mr16872622lfg.181.1569950097981;
-        Tue, 01 Oct 2019 10:14:57 -0700 (PDT)
-Received: from mail-lj1-f175.google.com (mail-lj1-f175.google.com. [209.85.208.175])
-        by smtp.gmail.com with ESMTPSA id d26sm4100842ljc.64.2019.10.01.10.14.56
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 01 Oct 2019 10:14:57 -0700 (PDT)
-Received: by mail-lj1-f175.google.com with SMTP id 7so14198426ljw.7
-        for <linux-kernel@vger.kernel.org>; Tue, 01 Oct 2019 10:14:56 -0700 (PDT)
-X-Received: by 2002:a2e:3e07:: with SMTP id l7mr16622987lja.180.1569950096519;
- Tue, 01 Oct 2019 10:14:56 -0700 (PDT)
+        bh=xu9mIUeG8Hcz0lOqfBLA1+CwCuPD3jFNmQ7iOIYU3x4=;
+        b=L8/RZtufBzi4Jq0MdXROHbK0VkfnntlA0uIbQa9lK8j9Fc/Fzewqv3MyRiwR7hNpIV
+         +l56buhP7h1cGHOcbJRdmG0LsyUxaXW+SxS7weN2p9Q09RM1kYfnghOU1TJPcKDhFrJR
+         e5otFR1GPWYCbI3331ovJ7RPhAR+8ofvG5tMwcHDMgTA3wZIBcXMNop5HC6aa5vY70Xg
+         5RX4lBgY2vdE8G/sxku9xn12QSX4axRBpnYFnD1lVlcCCTtZU6+u/6CH3R8WugN0E4ds
+         rvQJbu0RazudFEz0BM6OyaHSCsNEb6QPOvj8+HTE13InwwwdwKVxBoI6fQGFm9q7sIyL
+         0yjw==
+X-Gm-Message-State: APjAAAVXuQ4PVaSpXMlB5Oq3k2ZdOxHxFla9g+2xZimvYAR0DBFuU8N1
+        J6hD8mmcBP9rwinl1VFz4/Ln3PohzOAqOvcbZezEG8M4
+X-Google-Smtp-Source: APXvYqwhVLhDPHdY3pVTIpmWCKtEk5hURjUQDpU3+51kVAPkGw4SME8F7rmmPHJ1iDSkth3/EfR+W2roF1UyG07MNbg=
+X-Received: by 2002:a02:ba12:: with SMTP id z18mr24979721jan.16.1569950151370;
+ Tue, 01 Oct 2019 10:15:51 -0700 (PDT)
 MIME-Version: 1.0
-References: <alpine.DEB.2.21.1909290010500.2636@nanos.tec.linutronix.de>
- <CAHk-=wgjC01UaoV35PZvGPnrQ812SRGPoV7Xp63BBFxAsJjvrg@mail.gmail.com>
- <CAHk-=wi0vxLmwEBn2Xgu7hZ0U8z2kN4sgCax+57ZJMVo3huDaQ@mail.gmail.com>
- <CAHk-=whKhD-GniDqpRhhF=V2cSxThX56NAdkAUoBkbp0mW5=LA@mail.gmail.com>
- <20190930061014.GC29694@zn.tnic> <CAHk-=wjfLfnOyGkHM+ZRn6bc6JD6CU3Ewix3cJDqCqjbMO5PNA@mail.gmail.com>
- <20191001135108.GD5390@zn.tnic>
-In-Reply-To: <20191001135108.GD5390@zn.tnic>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Tue, 1 Oct 2019 10:14:40 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wh-rUBFjJ-p-65DhX+uOHuoUcf2=XtxwEUOPqojw7vEUw@mail.gmail.com>
-Message-ID: <CAHk-=wh-rUBFjJ-p-65DhX+uOHuoUcf2=XtxwEUOPqojw7vEUw@mail.gmail.com>
-Subject: Re: x86/random: Speculation to the rescue
-To:     Borislav Petkov <bp@alien8.de>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        "Ahmed S. Darwish" <darwish.07@gmail.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "Theodore Ts'o" <tytso@mit.edu>,
-        Nicholas Mc Guire <hofrat@opentech.at>,
-        "the arch/x86 maintainers" <x86@kernel.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Kees Cook <keescook@chromium.org>
+References: <20191001163922.14735-1-sashal@kernel.org> <20191001163922.14735-15-sashal@kernel.org>
+In-Reply-To: <20191001163922.14735-15-sashal@kernel.org>
+From:   Ilya Dryomov <idryomov@gmail.com>
+Date:   Tue, 1 Oct 2019 19:15:49 +0200
+Message-ID: <CAOi1vP-2iSHxJVOabN05+NCiSZ0DxBC9fGN=5cx98mk5RvaDZA@mail.gmail.com>
+Subject: Re: [PATCH AUTOSEL 5.3 15/71] rbd: fix response length parameter for
+ encoded strings
+To:     Sasha Levin <sashal@kernel.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>, stable@vger.kernel.org,
+        Dongsheng Yang <dongsheng.yang@easystack.cn>,
+        Ceph Development <ceph-devel@vger.kernel.org>,
+        linux-block <linux-block@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Oct 1, 2019 at 6:51 AM Borislav Petkov <bp@alien8.de> wrote:
+On Tue, Oct 1, 2019 at 6:39 PM Sasha Levin <sashal@kernel.org> wrote:
 >
-> So when I add this by hand and do git diff, it adds a second hunk:
-
-You and me both.
-
-We both have editors that always add line-endings, and right now that
-file doesn't have a newline at the end of the file thanks to commit
-428826f5358c ("fdt: add support for rng-seed").
-
-
-> and I kinda get what it is trying to tell me but this is new. And when I
-> do
+> From: Dongsheng Yang <dongsheng.yang@easystack.cn>
 >
-> $ xxd drivers/char/random.c
-> ..
+> [ Upstream commit 5435d2069503e2aa89c34a94154f4f2fa4a0c9c4 ]
 >
-> 000125e0: 646f 6d6e 6573 7329 3b0a                 domness);.
+> rbd_dev_image_id() allocates space for length but passes a smaller
+> value to rbd_obj_method_sync().  rbd_dev_v2_object_prefix() doesn't
+> allocate space for length.  Fix both to be consistent.
 >
-> there's a 0xa at the end so what's git really trying to tell me?
-
-The previous state of the file didn't have that 0xa at the end, so you get that
-
-
-  -EXPORT_SYMBOL_GPL(add_bootloader_randomness);
-  \ No newline at end of file
-  +EXPORT_SYMBOL_GPL(add_bootloader_randomness);
-
-which is "the '-' line doesn't have a newline, the '+' line does" marker.
-
-> > Doing something like the above to /dev/urandom is likely the right
-> > thing to do eventually, but I didn't want to mix up "we can perhaps
-> > improve the urandom situation too" with the basic "let's fix the boot
-> > problem". The urandom behavior change would be a separate thing.
+> Signed-off-by: Dongsheng Yang <dongsheng.yang@easystack.cn>
+> Reviewed-by: Ilya Dryomov <idryomov@gmail.com>
+> Signed-off-by: Ilya Dryomov <idryomov@gmail.com>
+> Signed-off-by: Sasha Levin <sashal@kernel.org>
+> ---
+>  drivers/block/rbd.c | 10 ++++++----
+>  1 file changed, 6 insertions(+), 4 deletions(-)
 >
-> So make it a separate patch and let's hammer on it during the next weeks
-> and see what happens?
-
-Yeah, probably.
-
-> > Also, talking about "future changes". Right now
-> > "try_to_generate_entropy()" is actually uninterruptible once it gets
-> > started. I think we should add a test for signal_pending() too, but it
+> diff --git a/drivers/block/rbd.c b/drivers/block/rbd.c
+> index c8fb886aebd4e..69db7385c8df5 100644
+> --- a/drivers/block/rbd.c
+> +++ b/drivers/block/rbd.c
+> @@ -5669,17 +5669,20 @@ static int rbd_dev_v2_image_size(struct rbd_device *rbd_dev)
 >
-> Wouldn't that even increase its entropy, which would be a good thing?
+>  static int rbd_dev_v2_object_prefix(struct rbd_device *rbd_dev)
+>  {
+> +       size_t size;
+>         void *reply_buf;
+>         int ret;
+>         void *p;
+>
+> -       reply_buf = kzalloc(RBD_OBJ_PREFIX_LEN_MAX, GFP_KERNEL);
+> +       /* Response will be an encoded string, which includes a length */
+> +       size = sizeof(__le32) + RBD_OBJ_PREFIX_LEN_MAX;
+> +       reply_buf = kzalloc(size, GFP_KERNEL);
+>         if (!reply_buf)
+>                 return -ENOMEM;
+>
+>         ret = rbd_obj_method_sync(rbd_dev, &rbd_dev->header_oid,
+>                                   &rbd_dev->header_oloc, "get_object_prefix",
+> -                                 NULL, 0, reply_buf, RBD_OBJ_PREFIX_LEN_MAX);
+> +                                 NULL, 0, reply_buf, size);
+>         dout("%s: rbd_obj_method_sync returned %d\n", __func__, ret);
+>         if (ret < 0)
+>                 goto out;
+> @@ -6696,7 +6699,6 @@ static int rbd_dev_image_id(struct rbd_device *rbd_dev)
+>         dout("rbd id object name is %s\n", oid.name);
+>
+>         /* Response will be an encoded string, which includes a length */
+> -
+>         size = sizeof (__le32) + RBD_IMAGE_ID_LEN_MAX;
+>         response = kzalloc(size, GFP_NOIO);
+>         if (!response) {
+> @@ -6708,7 +6710,7 @@ static int rbd_dev_image_id(struct rbd_device *rbd_dev)
+>
+>         ret = rbd_obj_method_sync(rbd_dev, &oid, &rbd_dev->header_oloc,
+>                                   "get_id", NULL, 0,
+> -                                 response, RBD_IMAGE_ID_LEN_MAX);
+> +                                 response, size);
+>         dout("%s: rbd_obj_method_sync returned %d\n", __func__, ret);
+>         if (ret == -ENOENT) {
+>                 image_id = kstrdup("", GFP_KERNEL);
 
-I'm not sure it increases it, but it certainly shouldn't make it any worse.
+Hi Sasha,
 
-                  Linus
+This patch just made things consistent, there was no bug here.  I don't
+think it should be backported.
+
+Thanks,
+
+                Ilya
