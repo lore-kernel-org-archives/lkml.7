@@ -2,119 +2,125 @@ Return-Path: <SRS0=YRFP=X2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC503ECE587
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 13:17:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 431ACECE587
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 13:18:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8CFF920842
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 13:17:30 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="A5xDwPGJ"
+	by mail.kernel.org (Postfix) with ESMTP id 1A36320842
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 13:18:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1569935895;
+	bh=6m1eUKQJystw0arz/fHU4P2e1y2Llptslw795XGsgR0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=JdeqyaulBe1Y102o0wJkqei4p7vNv1N9cZG7q6I5uAWMMQucaIcEz+YXBLPYXsKhh
+	 oE73rnXYYV712zV95C4kxpdH/f6eWs1S9oo0khN8yN0umqsB3PpWFipQ38/Zn/AGRS
+	 A4Qgz9ri7WvO6zODZn4byWAMqW9kQ5yOhQvg1TpE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388157AbfJANR3 (ORCPT
+        id S2388278AbfJANSO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Oct 2019 09:17:29 -0400
-Received: from aserp2120.oracle.com ([141.146.126.78]:56344 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726917AbfJANR3 (ORCPT
+        Tue, 1 Oct 2019 09:18:14 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:50600 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726917AbfJANSO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Oct 2019 09:17:29 -0400
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x91DDbdU191350;
-        Tue, 1 Oct 2019 13:17:26 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2019-08-05;
- bh=2CaoF5N6B1PLkCP4DaoWaEz16b+2iGGcswNGpgHzJMk=;
- b=A5xDwPGJAvWyON+A6egUaUghA6inUvt5JB/nWDXJXDZv4isjXeiXY0qCat2pbEZQCGZZ
- C6pjaKfUxYsGRHQlqynJ3EeZ/NV1+FP/C0rzOfRrHiUKIVha+zFoDfLjgXJ5JYmf6ayh
- CD+Qi0uWBgHeOlr5nimp+lbdf9YuvXR2GDvitsGwtztCIQhJBXI8mVal7IfMMF+BYeN2
- N46OP+O8SR4O2YWHHBqYs1581Z1JlptkkO9mdOBLcf0TqB4QVOXsXc40QFhe+4TrXdVV
- t+ADZhHbyNv3l+SfnGsnAs2KQJcEbM20p2SsNFQ7lFgsSuS97Mbu2PFJzzjS/zNyjQ1x lA== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by aserp2120.oracle.com with ESMTP id 2v9yfq5r6n-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 01 Oct 2019 13:17:25 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x91DDrq3130787;
-        Tue, 1 Oct 2019 13:17:25 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by userp3030.oracle.com with ESMTP id 2vbmpyj7fw-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 01 Oct 2019 13:17:24 +0000
-Received: from abhmp0009.oracle.com (abhmp0009.oracle.com [141.146.116.15])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x91DHNC2031371;
-        Tue, 1 Oct 2019 13:17:23 GMT
-Received: from kadam (/41.57.98.10)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 01 Oct 2019 06:17:23 -0700
-Date:   Tue, 1 Oct 2019 16:17:17 +0300
-From:   Dan Carpenter <dan.carpenter@oracle.com>
-To:     Jesse Barton <jessebarton95@gmail.com>
-Cc:     valdis.kletnieks@vt.edu, devel@driverdev.osuosl.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 3/3] Staging: exfat: exfat_super.c Fixed coding style
- issues.
-Message-ID: <20191001131717.GD22609@kadam>
-References: <20190929002119.20689-1-jessebarton95@gmail.com>
+        Tue, 1 Oct 2019 09:18:14 -0400
+Received: by mail-wm1-f65.google.com with SMTP id 5so3381470wmg.0;
+        Tue, 01 Oct 2019 06:18:12 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=hpSRk5pH5ZfX94ui4Po6gctzu/8HdpWpMgPRUTWIgiY=;
+        b=MrhHfgTtB4RjVbFnJ6YgniZNBkuh9hi0OKISlgGry6z+29FbKkQbABS745yrCQE2TF
+         8/HXLyZ7NNSg2Ah4CK06PM73IRwhEc79dLdIU6C0x5aWfTakf6aD1E9Dfqmai5Zcqoy2
+         J4vwgDsCUIgIpjoexu7fwkuNZcgvJZTOJfm4DzqQoYIin06NhFHeae9Qa+ncGop5R9kC
+         INY9OfJGCVVBluywOLZv0GmYPBPiiHDtZX8/egqWgE6OYRVo2mnHWg8AEpQyU3V52eUA
+         xtTg9lGa6J9e+Ic/qOGulWUjs5IQA/vjStB2efPVTKeJzaUk8/DuPYpknHlGOSvSJl8g
+         OvKg==
+X-Gm-Message-State: APjAAAX9CMUhtt07RmNccHWZQqjHiVeaY5TThHFOWP41Eiuvq4/0QpT1
+        S7hX3iAqrQCQIQcyIxpGI4BcGbji
+X-Google-Smtp-Source: APXvYqxgdnyCxx5oD9tLArvgGVNt21WJpjLWH5T4JaMALPm61yEm4BR5Qt7YiPJMubGHsBapZrlLqA==
+X-Received: by 2002:a1c:7519:: with SMTP id o25mr3603916wmc.16.1569935891213;
+        Tue, 01 Oct 2019 06:18:11 -0700 (PDT)
+Received: from pi3 ([194.230.155.145])
+        by smtp.googlemail.com with ESMTPSA id y5sm3780299wma.14.2019.10.01.06.18.08
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 01 Oct 2019 06:18:09 -0700 (PDT)
+Date:   Tue, 1 Oct 2019 15:18:07 +0200
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     Lukasz Luba <l.luba@partner.samsung.com>
+Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-pm@vger.kernel.org, linux-samsung-soc@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, b.zolnierkie@samsung.com,
+        kgene@kernel.org, mark.rutland@arm.com, cw00.choi@samsung.com,
+        kyungmin.park@samsung.com, m.szyprowski@samsung.com,
+        s.nawrocki@samsung.com, myungjoo.ham@samsung.com,
+        robh+dt@kernel.org, willy.mh.wolff.ml@gmail.com
+Subject: Re: [PATCH v2 1/4] dt-bindings: memory-controllers: Add Exynos5422
+ DMC interrupts description
+Message-ID: <20191001131807.GB30129@pi3>
+References: <20191001125436.24086-1-l.luba@partner.samsung.com>
+ <CGME20191001125444eucas1p2e4254acf8434e1fadf0e208dbe62b2d7@eucas1p2.samsung.com>
+ <20191001125436.24086-2-l.luba@partner.samsung.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20190929002119.20689-1-jessebarton95@gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9396 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1908290000 definitions=main-1910010120
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9396 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1908290000
- definitions=main-1910010120
+In-Reply-To: <20191001125436.24086-2-l.luba@partner.samsung.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Sep 28, 2019 at 07:21:19PM -0500, Jesse Barton wrote:
-> Fixed Coding Style issues
-
-Which ones?
-
+On Tue, Oct 01, 2019 at 02:54:33PM +0200, Lukasz Luba wrote:
+> Add description for optional interrupt lines. It provides a new operation
+> mode, which uses internal performance counters interrupt when overflow.
+> This is more reliable than using default polling mode implemented in
+> devfreq.
 > 
-> Signed-off-by: Jesse Barton <jessebarton95@gmail.com>
+> Signed-off-by: Lukasz Luba <l.luba@partner.samsung.com>
 > ---
->  drivers/staging/exfat/exfat_super.c | 29 +++++++++--------------------
->  1 file changed, 9 insertions(+), 20 deletions(-)
+>  .../bindings/memory-controllers/exynos5422-dmc.txt     | 10 ++++++++++
+>  1 file changed, 10 insertions(+)
 > 
-> diff --git a/drivers/staging/exfat/exfat_super.c b/drivers/staging/exfat/exfat_super.c
-> index 3c7e2b7c2195..b9656ec06144 100644
-> --- a/drivers/staging/exfat/exfat_super.c
-> +++ b/drivers/staging/exfat/exfat_super.c
-> @@ -640,8 +640,7 @@ static int ffs_lookup_file(struct inode *inode, char *path, struct file_id_t *fi
->  	return ret;
->  }
+> diff --git a/Documentation/devicetree/bindings/memory-controllers/exynos5422-dmc.txt b/Documentation/devicetree/bindings/memory-controllers/exynos5422-dmc.txt
+> index 02aeb3b5a820..afc38aea6b1c 100644
+> --- a/Documentation/devicetree/bindings/memory-controllers/exynos5422-dmc.txt
+> +++ b/Documentation/devicetree/bindings/memory-controllers/exynos5422-dmc.txt
+> @@ -31,6 +31,13 @@ Required properties for DMC device for Exynos5422:
+>  	The register offsets are in the driver code and specyfic for this SoC
+>  	type.
 >  
-> -static int ffs_create_file(struct inode *inode, char *path, u8 mode,
-> -			 struct file_id_t *fid)
-> +static int ffs_create_file(struct inode *inode, char *path, u8 mode, struct file_id_t *fid)
+> +Optional properties for DMC device for Exynos5422:
+> +- interrupt-parent : The parent interrupt controller.
+> +- interrupts : Contains the IRQ line numbers for the DMC internal performance
+> +  event counters. Align with specification of the interrupt line(s) in the
+> +  interrupt-parent controller.
+> +- interrupt-names : List of IRQ names.
 
-I think now checkpatch will complain that the line is too long?  What we
-want here is:
+Since the names are important (not the order) they are part of the
+bindings and they must be listed here.
 
-static int ffs_create_file(struct inode *inode, char *path, u8 mode,
-			   struct file_id_t *fid)
+Best regards,
+Krzysztof
 
-[tab][tab][tab][space][space][space]struct file_id_t *fid)
 
-So they line up.
-
-regards,
-dan carpenter
-
+> +
+>  Example:
+>  
+>  	ppmu_dmc0_0: ppmu@10d00000 {
+> @@ -70,4 +77,7 @@ Example:
+>  		device-handle = <&samsung_K3QF2F20DB>;
+>  		vdd-supply = <&buck1_reg>;
+>  		samsung,syscon-clk = <&clock>;
+> +		interrupt-parent = <&combiner>;
+> +		interrupts = <16 0>, <16 1>;
+> +		interrupt-names = "drex_0", "drex_1";
+>  	};
+> -- 
+> 2.17.1
+> 
