@@ -2,216 +2,112 @@ Return-Path: <SRS0=YRFP=X2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4464DC352AA
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 15:12:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DB92FECE58A
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 15:13:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1195C206BB
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 15:12:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="Tjgzc5la"
+	by mail.kernel.org (Postfix) with ESMTP id BB7A1206BB
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 15:13:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389442AbfJAPMf (ORCPT
+        id S2389470AbfJAPN0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Oct 2019 11:12:35 -0400
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:46944 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727234AbfJAPMe (ORCPT
+        Tue, 1 Oct 2019 11:13:26 -0400
+Received: from mail-ed1-f65.google.com ([209.85.208.65]:36252 "EHLO
+        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727179AbfJAPNZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Oct 2019 11:12:34 -0400
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id x91FCKRC127767;
-        Tue, 1 Oct 2019 10:12:20 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1569942740;
-        bh=Zwnt9jNQrIm2hKZQ4ZZ5PvIDofDquK4WHFGwMvMgDGQ=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=Tjgzc5la5vZRdPCkdaDwlNcFRxGgIHkdsfsqMcrNRrlstk4OcgMCaRhcbh1PCNGpB
-         BIePqWsikNzAlrZW6s7OP1K/F0nI9qDApJpm9prvmX5REcK0wFJq0Oe9IFhRdoiyBu
-         HlhU8vipkWgqSTWom2UUQHMog1XVTVc6RNW2B7GQ=
-Received: from DLEE107.ent.ti.com (dlee107.ent.ti.com [157.170.170.37])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x91FCJa5063001
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 1 Oct 2019 10:12:19 -0500
-Received: from DLEE107.ent.ti.com (157.170.170.37) by DLEE107.ent.ti.com
- (157.170.170.37) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Tue, 1 Oct
- 2019 10:12:19 -0500
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE107.ent.ti.com
- (157.170.170.37) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Tue, 1 Oct 2019 10:12:19 -0500
-Received: from [10.250.65.13] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id x91FCJtb074683;
-        Tue, 1 Oct 2019 10:12:19 -0500
-Subject: Re: [PATCH V6 3/8] backlight: qcom-wled: Add new properties for
- PMI8998
-To:     Kiran Gunda <kgunda@codeaurora.org>, <bjorn.andersson@linaro.org>,
-        <jingoohan1@gmail.com>, <lee.jones@linaro.org>,
-        <b.zolnierkie@samsung.com>, <dri-devel@lists.freedesktop.org>,
-        <daniel.thompson@linaro.org>, <jacek.anaszewski@gmail.com>,
-        <pavel@ucw.cz>, <robh+dt@kernel.org>, <mark.rutland@arm.com>,
-        <linux-leds@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-CC:     <linux-arm-msm@vger.kernel.org>
-References: <1569825553-26039-1-git-send-email-kgunda@codeaurora.org>
- <1569825553-26039-4-git-send-email-kgunda@codeaurora.org>
-From:   Dan Murphy <dmurphy@ti.com>
-Message-ID: <3836b382-a4e6-d6db-9667-1851a9cf0112@ti.com>
-Date:   Tue, 1 Oct 2019 10:12:37 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Tue, 1 Oct 2019 11:13:25 -0400
+Received: by mail-ed1-f65.google.com with SMTP id h2so12277732edn.3;
+        Tue, 01 Oct 2019 08:13:24 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:reply-to:subject:to:cc:references:from
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=N2FlzG+PxQCjT3jm2D3Aa1IldYkDzjEnGNfZ4YLjVII=;
+        b=GTLlE36emsyfwlCmg5/qd+JCYVMMKgASzsy4gmL+XPeskYqSSSuJISrQ3A6dDD7t+9
+         F+V7XPh7bQttfJku/JHEpVwBQdsQQK174lSegpomZrTGIBleXS809G6+RrucB2/3PzNO
+         cCYYCOnMZsOQT9+5ORElE7x4qrE9o8Bn37g1s63AU426pysTPJUrGDbwBlITeZVQer3j
+         FYTPzJ90dbeNq4eySZ/SgEs+CBE5/r0k9F77oFU1jHeGvMYp5Vw+93okzSpvVVdLJPPU
+         7VcncYpfqwPxiELEb/1orqM2ZE866YdWQhnd4MEt4FXsly+RE1c4W6iJvHb7xo7D7/JR
+         1ToA==
+X-Gm-Message-State: APjAAAUN0a3/RbdDZc9uQhr0wn9Sq3kAP9A7+8fUdt5/EMCoCjUzo1gd
+        87ZBNk48IMxh1PLYBoO+8TA=
+X-Google-Smtp-Source: APXvYqxyVJmic1F+7fZfFZQAxNcXMB5Z/ocNdDnPHOVjj8h1tH2nOU0MyL/PgaJMMnw3AF2+JFzzgw==
+X-Received: by 2002:a17:906:7802:: with SMTP id u2mr15475439ejm.3.1569942803627;
+        Tue, 01 Oct 2019 08:13:23 -0700 (PDT)
+Received: from [10.10.2.174] (bran.ispras.ru. [83.149.199.196])
+        by smtp.gmail.com with ESMTPSA id gl4sm1878601ejb.6.2019.10.01.08.13.22
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 01 Oct 2019 08:13:23 -0700 (PDT)
+Reply-To: efremov@linux.com
+Subject: Re: [PATCH] staging: rtl8723bs: hal: Fix memcpy calls
+To:     David Laight <David.Laight@ACULAB.COM>,
+        'Dan Carpenter' <dan.carpenter@oracle.com>
+Cc:     "devel@driverdev.osuosl.org" <devel@driverdev.osuosl.org>,
+        Jes Sorensen <jes.sorensen@gmail.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "stable@vger.kernel.org" <stable@vger.kernel.org>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Bastien Nocera <hadess@hadess.net>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Larry Finger <Larry.Finger@lwfinger.net>
+References: <20190930110141.29271-1-efremov@linux.com>
+ <37b195b700394e95aa8329afc9f60431@AcuMS.aculab.com>
+ <e4051dcb-10dc-ff17-ec0b-6f51dccdb5bf@linux.com>
+ <20191001135649.GH22609@kadam>
+ <8d2e8196cae74ec4ae20e9c23e898207@AcuMS.aculab.com>
+From:   Denis Efremov <efremov@linux.com>
+Message-ID: <a7c002f7-c6f2-a9ed-0100-acfbafea65c5@linux.com>
+Date:   Tue, 1 Oct 2019 18:13:21 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.0
 MIME-Version: 1.0
-In-Reply-To: <1569825553-26039-4-git-send-email-kgunda@codeaurora.org>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <8d2e8196cae74ec4ae20e9c23e898207@AcuMS.aculab.com>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Kiran
+On 10/1/19 5:36 PM, David Laight wrote:
+>> From: Dan Carpenter
+>> Sent: 01 October 2019 14:57
+>> Subject: Re: [PATCH] staging: rtl8723bs: hal: Fix memcpy calls
+> ...
+>> That's true for glibc memcpy() but not for the kernel memcpy().  In the
+>> kernel there are lots of places which do a zero size memcpy().
+> 
+> And probably from NULL (or even garbage) pointers.
+> 
+> After all a pointer to the end of an array (a + ARRAY_SIZE(a)) is valid
+> but must not be dereferenced - so memcpy() can't dereference it's
+> source address when the length is zero.
+> 
+>> The glibc attitude is "the standard allows us to put knives here" so
+>> let's put knives everywhere in the path.  And the GCC attitude is let's
+>> silently remove NULL checks instead of just printing a warning that the
+>> NULL check isn't required...  It could really make someone despondent.
+> 
+> gcc is the one that add knives...
+> 
 
-On 9/30/19 1:39 AM, Kiran Gunda wrote:
-> Update the bindings with the new properties used for
-> PMI8998.
->
-> Signed-off-by: Kiran Gunda <kgunda@codeaurora.org>
-> Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-> Reviewed-by: Rob Herring <robh@kernel.org>
-> Acked-by: Daniel Thompson <daniel.thompson@linaro.org>
-> ---
->   .../bindings/leds/backlight/qcom-wled.txt          | 76 ++++++++++++++++++----
->   1 file changed, 62 insertions(+), 14 deletions(-)
->
-> diff --git a/Documentation/devicetree/bindings/leds/backlight/qcom-wled.txt b/Documentation/devicetree/bindings/leds/backlight/qcom-wled.txt
-> index 14f28f2..9d840d5 100644
-> --- a/Documentation/devicetree/bindings/leds/backlight/qcom-wled.txt
-> +++ b/Documentation/devicetree/bindings/leds/backlight/qcom-wled.txt
-> @@ -20,8 +20,7 @@ platforms. The PMIC is connected to the host processor via SPMI bus.
->   - default-brightness
->   	Usage:        optional
->   	Value type:   <u32>
-> -	Definition:   brightness value on boot, value from: 0-4095
-> -		      Default: 2048
-> +	Definition:   brightness value on boot, value from: 0-4095.
->   
->   - label
->   	Usage:        required
-> @@ -48,20 +47,24 @@ platforms. The PMIC is connected to the host processor via SPMI bus.
->   - qcom,current-limit
->   	Usage:        optional
->   	Value type:   <u32>
-> -	Definition:   mA; per-string current limit
-> -		      value: For pm8941: from 0 to 25 with 5 mA step
-> -			     Default 20 mA.
-> -			     For pmi8998: from 0 to 30 with 5 mA step
-> -			     Default 25 mA.
-> +	Definition:   mA; per-string current limit; value from 0 to 25 with
-> +		      1 mA step.
-> +		      This property is supported only for pm8941.
-> +
-> +- qcom,current-limit-microamp
-> +	Usage:        optional
-> +	Value type:   <u32>
-> +	Definition:   uA; per-string current limit; value from 0 to 30000 with
-> +		      2500 uA step.
->   
->   - qcom,current-boost-limit
->   	Usage:        optional
->   	Value type:   <u32>
->   	Definition:   mA; boost current limit.
->   		      For pm8941: one of: 105, 385, 525, 805, 980, 1260, 1400,
-> -		      1680. Default: 805 mA
-> +		      1680.
->   		      For pmi8998: one of: 105, 280, 450, 620, 970, 1150, 1300,
-> -		      1500. Default: 970 mA
-> +		      1500.
->   
->   - qcom,switching-freq
->   	Usage:        optional
-> @@ -69,22 +72,66 @@ platforms. The PMIC is connected to the host processor via SPMI bus.
->   	 Definition:   kHz; switching frequency; one of: 600, 640, 685, 738,
->   		       800, 872, 960, 1066, 1200, 1371, 1600, 1920, 2400, 3200,
->   		       4800, 9600.
-> -		       Default: for pm8941: 1600 kHz
-> -				for pmi8998: 800 kHz
->   
->   - qcom,ovp
->   	Usage:        optional
->   	Value type:   <u32>
->   	Definition:   V; Over-voltage protection limit; one of:
-> -		      27, 29, 32, 35. default: 29V
-> +		      27, 29, 32, 35.
->   		      This property is supported only for PM8941.
->   
-> +- qcom,ovp-millivolt
-> +	Usage:        optional
-> +	Value type:   <u32>
-> +	Definition:   mV; Over-voltage protection limit;
-> +		      For pmi8998: one of 18100, 19600, 29600, 31100
-> +		      If this property is not specified for PM8941, it
-> +		      falls back to "qcom,ovp" property.
-> +
->   - qcom,num-strings
->   	Usage:        optional
->   	Value type:   <u32>
->   	Definition:   #; number of led strings attached;
-> -		      value from 1 to 3. default: 2
-> -		      This property is supported only for PM8941.
-> +		      value: For PM8941 from 1 to 3.
-> +			     For PMI8998 from 1 to 4.
+Just found an official documentation to this issue:
+https://gcc.gnu.org/gcc-4.9/porting_to.html
+"Null pointer checks may be optimized away more aggressively
+...
+The pointers passed to memmove (and similar functions in <string.h>) must be non-null
+even when nbytes==0, so GCC can use that information to remove the check after the
+memmove call. Calling copy(p, NULL, 0) can therefore deference a null pointer and crash."
 
-We probably don't need this since we define 1 led node per output.  And 
-if you need to define
+But again, I would say that the bug in this code is because the if condition was copy-pasted
+and it should be inverted.
 
-multiple strings per node then you use led-sources.
-
-Then you will use fwnode_property_count_u32(child, "led-sources"); to 
-get the number of outputs
-
-
-> +
-> +- interrupts
-> +	Usage:        optional
-> +	Value type:   <prop encoded array>
-> +	Definition:   Interrupts associated with WLED. This should be
-> +		      "short" and "ovp" interrupts. Interrupts can be
-> +		      specified as per the encoding listed under
-> +		      Documentation/devicetree/bindings/spmi/
-> +		      qcom,spmi-pmic-arb.txt.
-> +
-> +- interrupt-names
-> +	Usage:        optional
-> +	Value type:   <string>
-> +	Definition:   Interrupt names associated with the interrupts.
-> +		      Must be "short" and "ovp". The short circuit detection
-> +		      is not supported for PM8941.
-> +
-> +- qcom,enabled-strings
-> +	Usage:        optional
-> +	Value tyoe:   <u32 array>
-> +	Definition:   Array of the WLED strings numbered from 0 to 3. Each
-> +		      string of leds are operated individually. Specify the
-> +		      list of strings used by the device. Any combination of
-> +		      led strings can be used.
-
-We usually use the reg property per led node to denote what output is 
-associated with which
-
-property node.  And if you want to define multiple outputs per node then 
-you need to use
-
-led-sources
-
-See leds-lm3697.txt for an example
-
-Dan
-
-
+Thanks,
+Denis
