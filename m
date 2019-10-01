@@ -7,50 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88C9BECE587
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 16:45:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4441C352AA
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 16:45:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 540A920B7C
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 16:45:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8D297205C9
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 16:45:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569948302;
-	bh=nuXD4wbneSMpDhykuG26b2NJCMcSOTmYL3uTk8bs/B4=;
+	s=default; t=1569948313;
+	bh=d1cwlKNt2mnCdzZ5RHbHyTPGEAf/7X1xqYU1nu09wHU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=HvMbA2oIR5FOpTXkV6ssUDGiSHGrdCUB7hB8n5xV2JlEDY2NltDuyUx/dTEuRNEcj
-	 rLPz0cev5g/C9ElZBiBe94AL9RHY+c8Whvaln8nzpnnqiuS0hTL03fFUmSK0GLyEvO
-	 vT/qKfmbe5OnHptf+Gv4syROXuh0hAZdQ03wVrL0=
+	b=cM38BFSf5oEwDF0IC6cYLikjILWTBg7r/cX93Br18tSpqkXlMTS9XshqCfVmwFMMa
+	 rAsQzzN8j5phTY7Uj3Q8bjetGZ1+4rl2c0jVayjUM858jTXGqy2GwnfPc8PAv9TD+M
+	 i2P790oSdZS3gygAg4+4c1sqFugiLST/DC8tf8mA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390149AbfJAQpB (ORCPT
+        id S2390209AbfJAQpM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Oct 2019 12:45:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57070 "EHLO mail.kernel.org"
+        Tue, 1 Oct 2019 12:45:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57244 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390061AbfJAQop (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Oct 2019 12:44:45 -0400
+        id S2390115AbfJAQoz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Oct 2019 12:44:55 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1BC9121924;
-        Tue,  1 Oct 2019 16:44:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 20605205C9;
+        Tue,  1 Oct 2019 16:44:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569948285;
-        bh=nuXD4wbneSMpDhykuG26b2NJCMcSOTmYL3uTk8bs/B4=;
+        s=default; t=1569948294;
+        bh=d1cwlKNt2mnCdzZ5RHbHyTPGEAf/7X1xqYU1nu09wHU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mR7ADidclbVp4XmykTuSIEhv2Je7U2BKuu4E+cJGQp/q7Tc3f2SVil+oIz7T+c1n+
-         gviQf7yMzU5kxZw0Mt7Mng8ZWFQxXDqV6OlTBQauJMK3I/dyJicwEIXo+poDVr6QaG
-         YPdwOhuF/yXwDa/PerBVGpscnM4rJ6+JOs4zArGI=
+        b=mdgTY4rP2ezKE+vGVg2GyvuKlbrIzOoyO3YnBT3uKI3o4FZxMTUYSPzuaXXnJJ012
+         b/So622WNfDowW255WveaCIcXAvbNZqNofNRreDkUVnPys+hwJGYrp4P8F7+x5ItxW
+         LhT3fE4S3ZfQqOSxRORE9EFWjVCR6QLdxdsz9dIQ=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Cong Wang <xiyou.wangcong@gmail.com>,
-        syzbot+618aacd49e8c8b8486bd@syzkaller.appspotmail.com,
-        Jamal Hadi Salim <jhs@mojatatu.com>,
-        David Ahern <dsahern@gmail.com>,
-        Jiri Pirko <jiri@mellanox.com>,
-        Jakub Kicinski <jakub.kicinski@netronome.com>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 17/29] net_sched: add max len check for TCA_KIND
-Date:   Tue,  1 Oct 2019 12:44:11 -0400
-Message-Id: <20191001164423.16406-17-sashal@kernel.org>
+Cc:     Valdis Kletnieks <valdis.kletnieks@vt.edu>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.14 24/29] kernel/elfcore.c: include proper prototypes
+Date:   Tue,  1 Oct 2019 12:44:18 -0400
+Message-Id: <20191001164423.16406-24-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191001164423.16406-1-sashal@kernel.org>
 References: <20191001164423.16406-1-sashal@kernel.org>
@@ -63,42 +60,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Cong Wang <xiyou.wangcong@gmail.com>
+From: Valdis Kletnieks <valdis.kletnieks@vt.edu>
 
-[ Upstream commit 62794fc4fbf52f2209dc094ea255eaef760e7d01 ]
+[ Upstream commit 0f74914071ab7e7b78731ed62bf350e3a344e0a5 ]
 
-The TCA_KIND attribute is of NLA_STRING which does not check
-the NUL char. KMSAN reported an uninit-value of TCA_KIND which
-is likely caused by the lack of NUL.
+When building with W=1, gcc properly complains that there's no prototypes:
 
-Change it to NLA_NUL_STRING and add a max len too.
+  CC      kernel/elfcore.o
+kernel/elfcore.c:7:17: warning: no previous prototype for 'elf_core_extra_phdrs' [-Wmissing-prototypes]
+    7 | Elf_Half __weak elf_core_extra_phdrs(void)
+      |                 ^~~~~~~~~~~~~~~~~~~~
+kernel/elfcore.c:12:12: warning: no previous prototype for 'elf_core_write_extra_phdrs' [-Wmissing-prototypes]
+   12 | int __weak elf_core_write_extra_phdrs(struct coredump_params *cprm, loff_t offset)
+      |            ^~~~~~~~~~~~~~~~~~~~~~~~~~
+kernel/elfcore.c:17:12: warning: no previous prototype for 'elf_core_write_extra_data' [-Wmissing-prototypes]
+   17 | int __weak elf_core_write_extra_data(struct coredump_params *cprm)
+      |            ^~~~~~~~~~~~~~~~~~~~~~~~~
+kernel/elfcore.c:22:15: warning: no previous prototype for 'elf_core_extra_data_size' [-Wmissing-prototypes]
+   22 | size_t __weak elf_core_extra_data_size(void)
+      |               ^~~~~~~~~~~~~~~~~~~~~~~~
 
-Fixes: 8b4c3cdd9dd8 ("net: sched: Add policy validation for tc attributes")
-Reported-and-tested-by: syzbot+618aacd49e8c8b8486bd@syzkaller.appspotmail.com
-Cc: Jamal Hadi Salim <jhs@mojatatu.com>
-Signed-off-by: Cong Wang <xiyou.wangcong@gmail.com>
-Reviewed-by: David Ahern <dsahern@gmail.com>
-Acked-by: Jiri Pirko <jiri@mellanox.com>
-Signed-off-by: Jakub Kicinski <jakub.kicinski@netronome.com>
+Provide the include file so gcc is happy, and we don't have potential code drift
+
+Link: http://lkml.kernel.org/r/29875.1565224705@turing-police
+Signed-off-by: Valdis Kletnieks <valdis.kletnieks@vt.edu>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/sched/sch_api.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ kernel/elfcore.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/net/sched/sch_api.c b/net/sched/sch_api.c
-index 7b4270987ac16..637949b576c63 100644
---- a/net/sched/sch_api.c
-+++ b/net/sched/sch_api.c
-@@ -1217,7 +1217,8 @@ check_loop_fn(struct Qdisc *q, unsigned long cl, struct qdisc_walker *w)
-  */
+diff --git a/kernel/elfcore.c b/kernel/elfcore.c
+index fc482c8e0bd88..57fb4dcff4349 100644
+--- a/kernel/elfcore.c
++++ b/kernel/elfcore.c
+@@ -3,6 +3,7 @@
+ #include <linux/fs.h>
+ #include <linux/mm.h>
+ #include <linux/binfmts.h>
++#include <linux/elfcore.h>
  
- const struct nla_policy rtm_tca_policy[TCA_MAX + 1] = {
--	[TCA_KIND]		= { .type = NLA_STRING },
-+	[TCA_KIND]		= { .type = NLA_NUL_STRING,
-+				    .len = IFNAMSIZ - 1 },
- 	[TCA_RATE]		= { .type = NLA_BINARY,
- 				    .len = sizeof(struct tc_estimator) },
- 	[TCA_STAB]		= { .type = NLA_NESTED },
+ Elf_Half __weak elf_core_extra_phdrs(void)
+ {
 -- 
 2.20.1
 
