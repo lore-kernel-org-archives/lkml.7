@@ -7,53 +7,52 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9631ECE587
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 16:57:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 958D5ECE58A
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 16:58:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B51372168B
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 16:57:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5B2642168B
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 16:58:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569949071;
-	bh=l62JA0cwp5myrRm3ZVR1pkjHrtwy9H/0KLao1eRcjkw=;
+	s=default; t=1569949080;
+	bh=OLACyd3bdMh9lkeSGbPlVm1QG0QsbhnG2nzLNyj/aNY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=lahP/m1hoGhudGm8jr5/a869HuAoh4LGl51lLL6BxsC4XY0c7qEi6wzzGprLbsCg4
-	 aaUZYUfZ/ACjKb30514rGfvWfRNGKepwlS5ekxUh2Cjnbusw9LCQjjQleZafZlKKyO
-	 K/vxk+GOSVtRxNFGIDgoslr/w2YNFYn88VPIf6dc=
+	b=vIOtCQrvyDZxZtJOXb4UmLS27eZk7JPYYePiqMaaS4aJ5lV2KGiRnf1JzGwk15zUg
+	 7QVCMqjq22RBPeeaK0aD6ueKCRl8Eadf8leGSYi/H0KB1eqThdwWVoRxjuEE0ipdE9
+	 FjaKAsIl7F4C9dgxBj+/Z6kFR13N/LEeHJV+PthQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387588AbfJAQ5u (ORCPT
+        id S2387710AbfJAQ57 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Oct 2019 12:57:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53518 "EHLO mail.kernel.org"
+        Tue, 1 Oct 2019 12:57:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53424 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731382AbfJAQlu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Oct 2019 12:41:50 -0400
+        id S1731313AbfJAQlq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Oct 2019 12:41:46 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3A502205C9;
-        Tue,  1 Oct 2019 16:41:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CD5192190F;
+        Tue,  1 Oct 2019 16:41:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569948110;
-        bh=l62JA0cwp5myrRm3ZVR1pkjHrtwy9H/0KLao1eRcjkw=;
+        s=default; t=1569948105;
+        bh=OLACyd3bdMh9lkeSGbPlVm1QG0QsbhnG2nzLNyj/aNY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2WdY5b7ceQu2zXVhrOYEGRtcU2r0tHwkfQ1Gn39ZwzmiSxCgxAXrZBrtY+uDv8pJQ
-         TcsIiPDU8SzQyyB3jRLp77MSRH9X6AcDaKYOO8QSl0PbsIJdtlJqrnNXDTKrIWiuGy
-         CEgonstOSZFgxhj6hje/LSYcAMkL6fvB4tFkmaiQ=
+        b=g1aK25bjSMTjkKvDETe+krx8tGz9lVaZreDTi8mZmf4rPPtKi9CaCpr7lfhJdOKAJ
+         QT0mImNHU423f7njKIs2iFp9Lc4H0B3hvGOkghGfjO7SRjRBCE6JDhZNV83P4zLGMm
+         zBqlBqz2AQtyKR0ozDp3aRpP6+y5FI8OqzB12SZs=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Felix Kuehling <Felix.Kuehling@amd.com>,
-        =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        Sasha Levin <sashal@kernel.org>, amd-gfx@lists.freedesktop.org,
-        dri-devel@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 5.2 18/63] drm/amdgpu: Fix KFD-related kernel oops on Hawaii
-Date:   Tue,  1 Oct 2019 12:40:40 -0400
-Message-Id: <20191001164125.15398-18-sashal@kernel.org>
+Cc:     Ryan Chen <ryan_chen@aspeedtech.com>,
+        Joel Stanley <joel@jms.id.au>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Sasha Levin <sashal@kernel.org>, linux-watchdog@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.2 16/63] watchdog: aspeed: Add support for AST2600
+Date:   Tue,  1 Oct 2019 12:40:38 -0400
+Message-Id: <20191001164125.15398-16-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191001164125.15398-1-sashal@kernel.org>
 References: <20191001164125.15398-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -62,36 +61,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Felix Kuehling <Felix.Kuehling@amd.com>
+From: Ryan Chen <ryan_chen@aspeedtech.com>
 
-[ Upstream commit dcafbd50f2e4d5cc964aae409fb5691b743fba23 ]
+[ Upstream commit b3528b4874480818e38e4da019d655413c233e6a ]
 
-Hawaii needs to flush caches explicitly, submitting an IB in a user
-VMID from kernel mode. There is no s_fence in this case.
+The ast2600 can be supported by the same code as the ast2500.
 
-Fixes: eb3961a57424 ("drm/amdgpu: remove fence context from the job")
-Signed-off-by: Felix Kuehling <Felix.Kuehling@amd.com>
-Reviewed-by: Christian König <christian.koenig@amd.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+Signed-off-by: Ryan Chen <ryan_chen@aspeedtech.com>
+Signed-off-by: Joel Stanley <joel@jms.id.au>
+Reviewed-by: Guenter Roeck <linux@roeck-us.net>
+Link: https://lore.kernel.org/r/20190819051738.17370-3-joel@jms.id.au
+Signed-off-by: Guenter Roeck <linux@roeck-us.net>
+Signed-off-by: Wim Van Sebroeck <wim@linux-watchdog.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/amd/amdgpu/amdgpu_ib.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/watchdog/aspeed_wdt.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_ib.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_ib.c
-index fe393a46f8811..5eed2423dbb5e 100644
---- a/drivers/gpu/drm/amd/amdgpu/amdgpu_ib.c
-+++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_ib.c
-@@ -141,7 +141,8 @@ int amdgpu_ib_schedule(struct amdgpu_ring *ring, unsigned num_ibs,
- 	/* ring tests don't use a job */
- 	if (job) {
- 		vm = job->vm;
--		fence_ctx = job->base.s_fence->scheduled.context;
-+		fence_ctx = job->base.s_fence ?
-+			job->base.s_fence->scheduled.context : 0;
- 	} else {
- 		vm = NULL;
- 		fence_ctx = 0;
+diff --git a/drivers/watchdog/aspeed_wdt.c b/drivers/watchdog/aspeed_wdt.c
+index f0148637e5dd1..a6c78e123ef54 100644
+--- a/drivers/watchdog/aspeed_wdt.c
++++ b/drivers/watchdog/aspeed_wdt.c
+@@ -34,6 +34,7 @@ static const struct aspeed_wdt_config ast2500_config = {
+ static const struct of_device_id aspeed_wdt_of_table[] = {
+ 	{ .compatible = "aspeed,ast2400-wdt", .data = &ast2400_config },
+ 	{ .compatible = "aspeed,ast2500-wdt", .data = &ast2500_config },
++	{ .compatible = "aspeed,ast2600-wdt", .data = &ast2500_config },
+ 	{ },
+ };
+ MODULE_DEVICE_TABLE(of, aspeed_wdt_of_table);
+@@ -259,7 +260,8 @@ static int aspeed_wdt_probe(struct platform_device *pdev)
+ 		set_bit(WDOG_HW_RUNNING, &wdt->wdd.status);
+ 	}
+ 
+-	if (of_device_is_compatible(np, "aspeed,ast2500-wdt")) {
++	if ((of_device_is_compatible(np, "aspeed,ast2500-wdt")) ||
++		(of_device_is_compatible(np, "aspeed,ast2600-wdt"))) {
+ 		u32 reg = readl(wdt->base + WDT_RESET_WIDTH);
+ 
+ 		reg &= config->ext_pulse_width_mask;
 -- 
 2.20.1
 
