@@ -2,138 +2,176 @@ Return-Path: <SRS0=YRFP=X2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 66DD0C352AA
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 13:20:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F0ECFECE58A
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 13:21:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 43F4E20842
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 13:20:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BDFD020815
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 13:21:01 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=dell.com header.i=@dell.com header.b="q9s1mU+c"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388319AbfJANUk (ORCPT
+        id S2388332AbfJANVB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Oct 2019 09:20:40 -0400
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:46180 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388146AbfJANUk (ORCPT
+        Tue, 1 Oct 2019 09:21:01 -0400
+Received: from mx0a-00154904.pphosted.com ([148.163.133.20]:20634 "EHLO
+        mx0a-00154904.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2388212AbfJANVA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Oct 2019 09:20:40 -0400
-Received: by mail-ot1-f66.google.com with SMTP id 89so5951336oth.13
-        for <linux-kernel@vger.kernel.org>; Tue, 01 Oct 2019 06:20:39 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=fZmRbEsruWyw6QjQdADmS+Xo1vkXkRcFYI1pBoUt5gs=;
-        b=rTZBWrqmUV/5UAc9jTUKMQljp88Hb8Rp9W+C9iS3ye3tej9IoznaoVGOqWaRxOEt9o
-         HpA4bbMkY3OIANtOX/+5zwD6kk9ySdcVkggSSDW37IGqGowgpqrMqiCZP29DnXHy28st
-         gJQaNRyb2eGAok+KRorJ9qXCmWTnx4+Mhyp1XZa4F9Pm++KeNKFffvqMdYrMF0lpkC4C
-         DdJpeFzsdc1uHQZdQpeS+/FuFLauxaLOwFC+jRd+MTkbFQKYc1ter14j8UQUPjOa+x69
-         IPFnRrNme5x72GRecm71pR06X6eL6vQPhlA554JprNhfzZ+n/rdNrYnVBuDWjTg5oZ9s
-         nBxg==
-X-Gm-Message-State: APjAAAXxixnJGnhpMhFb1DaIt0C4SdVeZH5H9x3e4PFxegqYtPZDPDQf
-        2edie08CKYKE8vhwhmxx407aODHO2er+8e8aGUo=
-X-Google-Smtp-Source: APXvYqx7Tma9gFELdx5dgWCcbj/8O8IS5mK2hSemheEmozquet1YALg33qx4hyX5hlnLo1QxMET9Xge8UlykS2h7HrE=
-X-Received: by 2002:a9d:404d:: with SMTP id o13mr18265756oti.39.1569936039027;
- Tue, 01 Oct 2019 06:20:39 -0700 (PDT)
+        Tue, 1 Oct 2019 09:21:00 -0400
+Received: from pps.filterd (m0170393.ppops.net [127.0.0.1])
+        by mx0a-00154904.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id x91DJwUa014094;
+        Tue, 1 Oct 2019 09:20:59 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=dell.com; h=from : to : cc :
+ subject : date : message-id : references : in-reply-to : content-type :
+ content-transfer-encoding : mime-version; s=smtpout1;
+ bh=k61vTQ4ke+NdcKGdexR0iZ/4exS0UGCMH6YpAyTwZi8=;
+ b=q9s1mU+c55g/FlMWDz/7WE8Qv24GhTE6yXatf3DlCqm5wcyciDAKZDdjH8uJfBi66NgY
+ texsVvPvv6sLeLAcjvdILJ3iHejRtBSVqEsMkE5QQ7uZ69yJl7mVL+v1KwsSDHbOSO2p
+ sEgm3miBOWDru0EE2B4OY3UJzjOo52qLIl9fugGEFAn7Ded5NauELca9qJZcLgtHkSIc
+ fft/IqmSyytXhNsWfYlYJ2lCPnPLkGyNdpnXVoi4LjcPBIzw5Az6YzlrEHCcT6gHlO4l
+ B/tp0aWoqRvbndgzVQEH+/bjyael79JYJy0oXqN3/LXEa3Q92IGJoEPBKApW8h9W2J8w 3g== 
+Received: from mx0a-00154901.pphosted.com (mx0b-00154901.pphosted.com [67.231.157.37])
+        by mx0a-00154904.pphosted.com with ESMTP id 2va2ujwc82-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 01 Oct 2019 09:20:59 -0400
+Received: from pps.filterd (m0089484.ppops.net [127.0.0.1])
+        by mx0b-00154901.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id x91DDYq0034165;
+        Tue, 1 Oct 2019 09:20:58 -0400
+Received: from ausxippc110.us.dell.com (AUSXIPPC110.us.dell.com [143.166.85.200])
+        by mx0b-00154901.pphosted.com with ESMTP id 2vc0wmpyyf-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 01 Oct 2019 09:20:58 -0400
+X-LoopCount0: from 10.166.136.217
+X-PREM-Routing: D-Outbound
+X-IronPort-AV: E=Sophos;i="5.60,349,1549951200"; 
+   d="scan'208";a="863062711"
+From:   <Mario.Limonciello@dell.com>
+To:     <ard.biesheuvel@linaro.org>, <geert@linux-m68k.org>
+CC:     <Narendra.K@dell.com>, <linux-efi@vger.kernel.org>,
+        <mingo@kernel.org>, <tglx@linutronix.de>,
+        <linux-kernel@vger.kernel.org>, <james.morse@arm.com>,
+        <tanxiaofei@huawei.com>
+Subject: RE: [PATCH 4/5] efi: Export Runtime Configuration Interface table to
+ sysfs
+Thread-Topic: [PATCH 4/5] efi: Export Runtime Configuration Interface table to
+ sysfs
+Thread-Index: AQHVeDV6YfpW1TUI6U2T+6WFDn4TTadFzx8AgAACgICAAAqbgP//6Fvw
+Date:   Tue, 1 Oct 2019 13:20:46 +0000
+Message-ID: <8446d19dd197447a88eed580601f3c4c@AUSX13MPC105.AMER.DELL.COM>
+References: <20190812150452.27983-1-ard.biesheuvel@linaro.org>
+ <20190812150452.27983-5-ard.biesheuvel@linaro.org>
+ <CAMuHMdXY5UH4KhcaNVuxa8-+GN-4bjyvCd0wzPYuFBY5Ch=fNA@mail.gmail.com>
+ <CAKv+Gu-KPypju6roQaVKP0DHE3aZijVVqLGwNyhiRSNqn1r6-w@mail.gmail.com>
+ <CAMuHMdV9m+Dbch46cVNqtn4cyB74qgHa18Qcm=HQv7Wx1rk==w@mail.gmail.com>
+ <CAKv+Gu9iLxkJgmxZR+1yvCTj6GiCDuyfN_QiGXEWBHS7uYUbfQ@mail.gmail.com>
+In-Reply-To: <CAKv+Gu9iLxkJgmxZR+1yvCTj6GiCDuyfN_QiGXEWBHS7uYUbfQ@mail.gmail.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+msip_labels: MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_Enabled=True;
+ MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_SiteId=945c199a-83a2-4e80-9f8c-5a91be5752dd;
+ MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_Owner=Mario_Limonciello@Dell.com;
+ MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_SetDate=2019-10-01T13:20:45.4531752Z;
+ MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_Name=External Public;
+ MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_Application=Microsoft Azure
+ Information Protection;
+ MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_Extended_MSFT_Method=Manual;
+ aiplabel=External Public
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.143.18.86]
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-References: <20191001121724.23886-1-yamada.masahiro@socionext.com>
-In-Reply-To: <20191001121724.23886-1-yamada.masahiro@socionext.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Tue, 1 Oct 2019 15:20:27 +0200
-Message-ID: <CAMuHMdUFMC0hbv68Ggsu4q2A+OyHwS1kMsgjjRvxZ7qnqqov7A@mail.gmail.com>
-Subject: Re: [PATCH] scripts/setlocalversion: clear local varaible to make it
- work for sh
-To:     Masahiro Yamada <yamada.masahiro@socionext.com>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,1.0.8
+ definitions=2019-10-01_07:2019-10-01,2019-10-01 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0
+ lowpriorityscore=0 impostorscore=0 suspectscore=0 spamscore=0
+ mlxlogscore=999 bulkscore=0 mlxscore=0 priorityscore=1501 adultscore=0
+ clxscore=1011 phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-1908290000 definitions=main-1910010120
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 impostorscore=0 bulkscore=0
+ clxscore=1011 mlxlogscore=999 priorityscore=1501 lowpriorityscore=0
+ spamscore=0 malwarescore=0 phishscore=0 adultscore=0 suspectscore=0
+ mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-1908290000 definitions=main-1910010121
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Yamada-san,
-
-s/varaible/variable/ in subject.
-
-On Tue, Oct 1, 2019 at 2:17 PM Masahiro Yamada
-<yamada.masahiro@socionext.com> wrote:
-> Geert Uytterhoeven reports a strange side-effect of commit 858805b336be
-> ("kbuild: add $(BASH) to run scripts with bash-extension"), which
-> inserts the contents of a localversion file in the build directory twice.
->
-> [Steps to Reproduce]
->   $ echo bar > localversion
->   $ mkdir build
->   $ cd build/
->   $ echo foo > localversion
->   $ make -s -f ../Makefile defconfig include/config/kernel.release
->   $ cat include/config/kernel.release
->   5.4.0-rc1foofoobar
->
-> This comes down to the behavior change of 'local' variables.
->
-> The 'man sh' on my Ubuntu machine, where sh is an alias to dash,
-> explains as follows:
->   When a variable is made local, it inherits the initial value and
->   exported and readonly flags from the variable with the same name
->   in the surrounding scope, if there is one. Otherwise, the variable
->   is initially unset.
->
-> [Test Code]
->
->   foo ()
->   {
->           local res
->           echo "res: $res"
->   }
->
->   res=1
->   foo
->
-> [Result]
->
->   $ sh test.sh
->   res: 1
->   $ bash test.sh
->   res:
->
-> So, scripts/setlocalversion correctly works only for bash in spite of
-> its hashbang being #!/bin/sh. Nobody had noticed it before because
-> CONFIG_SHELL was previously set to sh only when bash is missing, which
-> is very unlikely to happen.
->
-> The benefit of commit 858805b336be is to make people write portable and
-> correct code. I gave it the Fixes tag since it uncovered the issue for
-> most of people.
->
-> Clear the variable 'res' in collect_files() to make it work for sh
-> (and it also works on distributions where sh is an alias to bash).
->
-> Fixes: commit 858805b336be ("kbuild: add $(BASH) to run scripts with bash-extension")
-> Reported-by: Geert Uytterhoeven <geert@linux-m68k.org>
-
-Can you please use
-
-    Reported-by: Geert Uytterhoeven <geert+renesas@glider.be>
-
-instead?
-
-> Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
-
-Thanks, that fixes the issue for me!
-
-Tested-by: Geert Uytterhoeven <geert+renesas@glider.be>
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBBcmQgQmllc2hldXZlbCA8YXJk
+LmJpZXNoZXV2ZWxAbGluYXJvLm9yZz4NCj4gU2VudDogVHVlc2RheSwgT2N0b2JlciAxLCAyMDE5
+IDQ6NDIgQU0NCj4gVG86IEdlZXJ0IFV5dHRlcmhvZXZlbg0KPiBDYzogSywgTmFyZW5kcmE7IGxp
+bnV4LWVmaTsgSW5nbyBNb2xuYXI7IFRob21hcyBHbGVpeG5lcjsgTGludXggS2VybmVsIE1haWxp
+bmcgTGlzdDsNCj4gSmFtZXMgTW9yc2U7IExpbW9uY2llbGxvLCBNYXJpbzsgWGlhb2ZlaSBUYW4N
+Cj4gU3ViamVjdDogUmU6IFtQQVRDSCA0LzVdIGVmaTogRXhwb3J0IFJ1bnRpbWUgQ29uZmlndXJh
+dGlvbiBJbnRlcmZhY2UgdGFibGUgdG8gc3lzZnMNCj4gDQo+IA0KPiBbRVhURVJOQUwgRU1BSUxd
+DQo+IA0KPiBPbiBUdWUsIDEgT2N0IDIwMTkgYXQgMTE6MDMsIEdlZXJ0IFV5dHRlcmhvZXZlbiA8
+Z2VlcnRAbGludXgtbTY4ay5vcmc+IHdyb3RlOg0KPiA+DQo+ID4gSGkgQXJkLA0KPiA+DQo+ID4g
+T24gVHVlLCBPY3QgMSwgMjAxOSBhdCAxMDo1NCBBTSBBcmQgQmllc2hldXZlbA0KPiA+IDxhcmQu
+Ymllc2hldXZlbEBsaW5hcm8ub3JnPiB3cm90ZToNCj4gPiA+IE9uIFR1ZSwgMSBPY3QgMjAxOSBh
+dCAxMDo1MSwgR2VlcnQgVXl0dGVyaG9ldmVuIDxnZWVydEBsaW51eC1tNjhrLm9yZz4NCj4gd3Jv
+dGU6DQo+ID4gPiA+IE9uIE1vbiwgQXVnIDEyLCAyMDE5IGF0IDU6MDcgUE0gQXJkIEJpZXNoZXV2
+ZWwNCj4gPiA+ID4gPGFyZC5iaWVzaGV1dmVsQGxpbmFyby5vcmc+IHdyb3RlOg0KPiA+ID4gPiA+
+IEZyb206IE5hcmVuZHJhIEsgPE5hcmVuZHJhLktAZGVsbC5jb20+DQo+ID4gPiA+ID4NCj4gPiA+
+ID4gPiBTeXN0ZW0gZmlybXdhcmUgYWR2ZXJ0aXNlcyB0aGUgYWRkcmVzcyBvZiB0aGUgJ1J1bnRp
+bWUNCj4gPiA+ID4gPiBDb25maWd1cmF0aW9uIEludGVyZmFjZSB0YWJsZSB2ZXJzaW9uIDIgKFJD
+STIpJyB2aWENCj4gPiA+ID4gPiBhbiBFRkkgQ29uZmlndXJhdGlvbiBUYWJsZSBlbnRyeS4gVGhp
+cyBjb2RlIHJldHJpZXZlcyB0aGUgUkNJMg0KPiA+ID4gPiA+IHRhYmxlIGZyb20gdGhlIGFkZHJl
+c3MgYW5kIGV4cG9ydHMgaXQgdG8gc3lzZnMgYXMgYSBiaW5hcnkNCj4gPiA+ID4gPiBhdHRyaWJ1
+dGUgJ3JjaTInIHVuZGVyIC9zeXMvZmlybXdhcmUvZWZpL3RhYmxlcyBkaXJlY3RvcnkuDQo+ID4g
+PiA+ID4gVGhlIGFwcHJvYWNoIGFkb3B0ZWQgaXMgc2ltaWxhciB0byB0aGUgYXR0cmlidXRlICdE
+TUknIHVuZGVyDQo+ID4gPiA+ID4gL3N5cy9maXJtd2FyZS9kbWkvdGFibGVzLg0KPiA+ID4gPiA+
+DQo+ID4gPiA+ID4gUkNJMiB0YWJsZSBjb250YWlucyBCSU9TIEhJSSBpbiBYTUwgZm9ybWF0IGFu
+ZCBpcyB1c2VkIHRvIHBvcHVsYXRlDQo+ID4gPiA+ID4gQklPUyBzZXR1cCBwYWdlIGluIERlbGwg
+RU1DIE9wZW5NYW5hZ2UgU2VydmVyIEFkbWluaXN0cmF0b3IgdG9vbC4NCj4gPiA+ID4gPiBUaGUg
+QklPUyBzZXR1cCBwYWdlIGNvbnRhaW5zIEJJT1MgdG9rZW5zIHdoaWNoIGNhbiBiZSBjb25maWd1
+cmVkLg0KPiA+ID4gPiA+DQo+ID4gPiA+ID4gU2lnbmVkLW9mZi1ieTogTmFyZW5kcmEgSyA8TmFy
+ZW5kcmEuS0BkZWxsLmNvbT4NCj4gPiA+ID4gPiBSZXZpZXdlZC1ieTogTWFyaW8gTGltb25jaWVs
+bG8gPG1hcmlvLmxpbW9uY2llbGxvQGRlbGwuY29tPg0KPiA+ID4gPiA+IFNpZ25lZC1vZmYtYnk6
+IEFyZCBCaWVzaGV1dmVsIDxhcmQuYmllc2hldXZlbEBsaW5hcm8ub3JnPg0KPiA+ID4gPg0KPiA+
+ID4gPiBUaGFua3MsIHRoaXMgaXMgbm93IGNvbW1pdCAxYzVmZWNiNjEyNTVhYTEyICgiZWZpOiBF
+eHBvcnQgUnVudGltZQ0KPiA+ID4gPiBDb25maWd1cmF0aW9uIEludGVyZmFjZSB0YWJsZSB0byBz
+eXNmcyIpLg0KPiA+ID4gPg0KPiA+ID4gPiA+IC0tLSBhL2RyaXZlcnMvZmlybXdhcmUvZWZpL0tj
+b25maWcNCj4gPiA+ID4gPiArKysgYi9kcml2ZXJzL2Zpcm13YXJlL2VmaS9LY29uZmlnDQo+ID4g
+PiA+ID4gQEAgLTE4MCw2ICsxODAsMTkgQEAgY29uZmlnIFJFU0VUX0FUVEFDS19NSVRJR0FUSU9O
+DQo+ID4gPiA+ID4gICAgICAgICAgIGhhdmUgYmVlbiBldmljdGVkLCBzaW5jZSBvdGhlcndpc2Ug
+aXQgd2lsbCB0cmlnZ2VyIGV2ZW4gb24gY2xlYW4NCj4gPiA+ID4gPiAgICAgICAgICAgcmVib290
+cy4NCj4gPiA+ID4gPg0KPiA+ID4gPiA+ICtjb25maWcgRUZJX1JDSTJfVEFCTEUNCj4gPiA+ID4g
+PiArICAgICAgIGJvb2wgIkVGSSBSdW50aW1lIENvbmZpZ3VyYXRpb24gSW50ZXJmYWNlIFRhYmxl
+IFZlcnNpb24gMiBTdXBwb3J0Ig0KPiA+ID4gPiA+ICsgICAgICAgaGVscA0KPiA+ID4gPiA+ICsg
+ICAgICAgICBEaXNwbGF5cyB0aGUgY29udGVudCBvZiB0aGUgUnVudGltZSBDb25maWd1cmF0aW9u
+IEludGVyZmFjZQ0KPiA+ID4gPiA+ICsgICAgICAgICBUYWJsZSB2ZXJzaW9uIDIgb24gRGVsbCBF
+TUMgUG93ZXJFZGdlIHN5c3RlbXMgYXMgYSBiaW5hcnkNCj4gPiA+ID4gPiArICAgICAgICAgYXR0
+cmlidXRlICdyY2kyJyB1bmRlciAvc3lzL2Zpcm13YXJlL2VmaS90YWJsZXMgZGlyZWN0b3J5Lg0K
+PiA+ID4gPiA+ICsNCj4gPiA+ID4gPiArICAgICAgICAgUkNJMiB0YWJsZSBjb250YWlucyBCSU9T
+IEhJSSBpbiBYTUwgZm9ybWF0IGFuZCBpcyB1c2VkIHRvIHBvcHVsYXRlDQo+ID4gPiA+ID4gKyAg
+ICAgICAgIEJJT1Mgc2V0dXAgcGFnZSBpbiBEZWxsIEVNQyBPcGVuTWFuYWdlIFNlcnZlciBBZG1p
+bmlzdHJhdG9yIHRvb2wuDQo+ID4gPiA+ID4gKyAgICAgICAgIFRoZSBCSU9TIHNldHVwIHBhZ2Ug
+Y29udGFpbnMgQklPUyB0b2tlbnMgd2hpY2ggY2FuIGJlIGNvbmZpZ3VyZWQuDQo+ID4gPiA+ID4g
+Kw0KPiA+ID4gPiA+ICsgICAgICAgICBTYXkgWSBoZXJlIGZvciBEZWxsIEVNQyBQb3dlckVkZ2Ug
+c3lzdGVtcy4NCj4gPiA+ID4NCj4gPiA+ID4gQSBxdWljayBHb29nbGUgc2VhcmNoIHRlbGxzIG1l
+IHRoZXNlIGFyZSBJbnRlbCBYZW9uLg0KPiA+ID4gPiBBcmUgYXJtL2FybTY0L2lhNjQgdmFyaWFu
+dHMgYXZhaWxhYmxlLCB0b28/DQo+ID4gPiA+IElmIG5vdCwgdGhpcyBzaG91bGQgYmUgcHJvdGVj
+dGVkIGJ5ICJkZXBlbmRzIG9uIHg4NiIgKCJ8fCBDT01QSUxFX1RFU1QiPykuDQo+ID4gPg0KPiA+
+ID4gVGhlIGNvZGUgaW4gcXVlc3Rpb24gaXMgZW50aXJlbHkgYXJjaGl0ZWN0dXJlIGFnbm9zdGlj
+LCBhbmQgZGVmYXVsdHMNCj4gPiA+IHRvICduJywgc28gSSBhbSBub3QgY29udmluY2VkIHRoaXMg
+aXMgbmVlZGVkLiAoSXQgY2FtZSB1cCBpbiB0aGUNCj4gPiA+IHJldmlldyBhcyB3ZWxsKQ0KPiA+
+DQo+ID4gIm1ha2Ugb2xkY29uZmlnIiBzdGlsbCBhc2tzIG1lIHRoZSBxdWVzdGlvbiBvbiBlLmcu
+IGFybTY0LCB3aGVyZSBpdCBpcw0KPiA+IGlycmVsZXZhbnQsIHVudGlsIGFybTY0IHZhcmlhbnRz
+IG9mIHRoZSBoYXJkd2FyZSBzaG93IHVwLg0KPiA+DQo+ID4gU28gSU1ITyBpdCBzaG91bGQgaGF2
+ZSAiZGVwZW5kcyBvbiBYODYgfHwgQ09NUElMRV9URVNUIi4NCj4gPg0KPiANCj4gRmFpciBlbm91
+Z2guIEkgYW0gZ29pbmcgdG8gc2VuZCBvdXQgYSBidW5jaCBvZiBFRkkgZml4ZXMgdGhpcyB3ZWVr
+LCBzbw0KPiBJJ2xsIGFjY2VwdCBhIHBhdGNoIHRoYXQgbWFrZXMgdGhlIGNoYW5nZSBhYm92ZS4N
+Cg0KSXMgaXQgcmVhbGx5IGEgcHJvYmxlbSB0byBqdXN0IHNheSBuPw0KDQpJIHRoaW5rIHRoaXMg
+c2VlbXMgbGlrZSBhIG5lZWRsZXNzIGNoYW5nZSB0aGF0IHdvdWxkIHNsb3cgZG93biBhZG9wdGlv
+biBvZg0KIXg4NiBpZiBEZWxsIEVNQyBQb3dlckVkZ2Ugc3lzdGVtcyBkaWQgc3RhcnQgZ29pbmcg
+dGhhdCByb3V0ZSwgZXNwZWNpYWxseQ0Kd2hlbiBpdCBjb21lcyB0byBkaXN0cmlidXRpb25zIHRo
+YXQgbW92ZSBnbGFjaWFsbHkgc2xvdyB3aXRoIHBpY2tpbmcgdXAgbmV3DQprZXJuZWwgY29kZS4N
+Cg0K
