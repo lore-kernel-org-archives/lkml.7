@@ -7,49 +7,49 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A4F5ECE58A
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 17:00:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DD511C352AA
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 17:00:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 26EBC2168B
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 17:00:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B4FF221783
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 17:00:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569949231;
-	bh=ri0y+tcaOShXS+LvXq26MlFByM5jdC+qr44td80hKS4=;
+	s=default; t=1569949232;
+	bh=9ja428gZ4RmI6EOL72mQVEMXFQ6pN4UX4cmhs7izldg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=F/+E56q+0NoOAL2N+5gBFitQWr9qgBx7dDPcZhbDMxkFJMVSxypNydD11nNpCe1Qx
-	 bwk9kVU6CV0YI/IKQD17YAFqW+4/4HoldVOYldCSI0lL4k3z8ggR1CAoQnd1JPcJZd
-	 zohHw2y5PPfnj8eoe0fvnjhgX8sp8k8DGzQdrPhU=
+	b=byMyxNulYjwywYao635cMSZYImXYYx/Q8Kit5mmmpR/Bm2nRgnu8Em4ymQJpRjDAf
+	 4UBO4xUA4UdcuQw1wf7j3tpMSJSqfddZQEYT+KhON56y4JNODH9Yl1S9h/H89xUlyt
+	 q3BBogPVJKZ/iw/18JCbIuLgtOM9Obc5QXjGmZjc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730430AbfJAQkz (ORCPT
+        id S1726469AbfJAQkx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Oct 2019 12:40:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52194 "EHLO mail.kernel.org"
+        Tue, 1 Oct 2019 12:40:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52212 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730326AbfJAQkt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Oct 2019 12:40:49 -0400
+        id S1726053AbfJAQku (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Oct 2019 12:40:50 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 81BE021906;
-        Tue,  1 Oct 2019 16:40:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D293621A4C;
+        Tue,  1 Oct 2019 16:40:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569948048;
-        bh=ri0y+tcaOShXS+LvXq26MlFByM5jdC+qr44td80hKS4=;
+        s=default; t=1569948049;
+        bh=9ja428gZ4RmI6EOL72mQVEMXFQ6pN4UX4cmhs7izldg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=P1q4M/6eJ8WSU6kRlti/gsiXyyGMEt8VZ4V2zG9DZ/6d4xMACmdCPU1t4OcQLUT61
-         SjoJS8v73B3MeISf+NiTufUI8dVAQNRtnRjGaBunlDPwYxAsMNjNNCS8PEtR9UzGB0
-         e2B8PKzXwZwCnxcJJ7WKRf0DSAkjo6a/1UmF7CXo=
+        b=WhrQhPlxyp6wbGCCnrQTe4AjV9mbdbt8QMh5Nf80R+sn36jhdXOjVC4lwb6SRHmHw
+         nuf1CV78yNkdNQdhKkyOSgRsTyq2eDVnLSzxYGvl1J9JIdelTK/NHOIwev8I/j3xdU
+         6/fruZ6jcseZMmExmgXvLmfk+Vbff/wOV3VHYpWw=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>,
-        syzbot <syzbot+8ab2d0f39fb79fe6ca40@syzkaller.appspotmail.com>,
-        Eric Biederman <ebiederm@xmission.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Sasha Levin <sashal@kernel.org>, kexec@lists.infradead.org
-Subject: [PATCH AUTOSEL 5.3 53/71] kexec: bail out upon SIGKILL when allocating memory.
-Date:   Tue,  1 Oct 2019 12:39:03 -0400
-Message-Id: <20191001163922.14735-53-sashal@kernel.org>
+Cc:     Ming Lei <ming.lei@redhat.com>,
+        syzbot+da3b7677bb913dc1b737@syzkaller.appspotmail.com,
+        Bart Van Assche <bvanassche@acm.org>,
+        Damien Le Moal <damien.lemoal@wdc.com>,
+        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>,
+        linux-block@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.3 54/71] blk-mq: move lockdep_assert_held() into elevator_exit
+Date:   Tue,  1 Oct 2019 12:39:04 -0400
+Message-Id: <20191001163922.14735-54-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191001163922.14735-1-sashal@kernel.org>
 References: <20191001163922.14735-1-sashal@kernel.org>
@@ -62,43 +62,65 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
+From: Ming Lei <ming.lei@redhat.com>
 
-[ Upstream commit 7c3a6aedcd6aae0a32a527e68669f7dd667492d1 ]
+[ Upstream commit 284b94be1925dbe035ce5218d8b5c197321262c7 ]
 
-syzbot found that a thread can stall for minutes inside kexec_load() after
-that thread was killed by SIGKILL [1].  It turned out that the reproducer
-was trying to allocate 2408MB of memory using kimage_alloc_page() from
-kimage_load_normal_segment().  Let's check for SIGKILL before doing memory
-allocation.
+Commit c48dac137a62 ("block: don't hold q->sysfs_lock in elevator_init_mq")
+removes q->sysfs_lock from elevator_init_mq(), but forgot to deal with
+lockdep_assert_held() called in blk_mq_sched_free_requests() which is
+run in failure path of elevator_init_mq().
 
-[1] https://syzkaller.appspot.com/bug?id=a0e3436829698d5824231251fad9d8e998f94f5e
+blk_mq_sched_free_requests() is called in the following 3 functions:
 
-Link: http://lkml.kernel.org/r/993c9185-d324-2640-d061-bed2dd18b1f7@I-love.SAKURA.ne.jp
-Signed-off-by: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
-Reported-by: syzbot <syzbot+8ab2d0f39fb79fe6ca40@syzkaller.appspotmail.com>
-Cc: Eric Biederman <ebiederm@xmission.com>
-Reviewed-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+	elevator_init_mq()
+	elevator_exit()
+	blk_cleanup_queue()
+
+In blk_cleanup_queue(), blk_mq_sched_free_requests() is followed exactly
+by 'mutex_lock(&q->sysfs_lock)'.
+
+So moving the lockdep_assert_held() from blk_mq_sched_free_requests()
+into elevator_exit() for fixing the report by syzbot.
+
+Reported-by: syzbot+da3b7677bb913dc1b737@syzkaller.appspotmail.com
+Fixed: c48dac137a62 ("block: don't hold q->sysfs_lock in elevator_init_mq")
+Reviewed-by: Bart Van Assche <bvanassche@acm.org>
+Reviewed-by: Damien Le Moal <damien.lemoal@wdc.com>
+Signed-off-by: Ming Lei <ming.lei@redhat.com>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/kexec_core.c | 2 ++
- 1 file changed, 2 insertions(+)
+ block/blk-mq-sched.c | 2 --
+ block/blk.h          | 2 ++
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/kernel/kexec_core.c b/kernel/kexec_core.c
-index d5870723b8ada..15d70a90b50dc 100644
---- a/kernel/kexec_core.c
-+++ b/kernel/kexec_core.c
-@@ -300,6 +300,8 @@ static struct page *kimage_alloc_pages(gfp_t gfp_mask, unsigned int order)
- {
- 	struct page *pages;
+diff --git a/block/blk-mq-sched.c b/block/blk-mq-sched.c
+index c9d183d6c4999..ca22afd47b3dc 100644
+--- a/block/blk-mq-sched.c
++++ b/block/blk-mq-sched.c
+@@ -555,8 +555,6 @@ void blk_mq_sched_free_requests(struct request_queue *q)
+ 	struct blk_mq_hw_ctx *hctx;
+ 	int i;
  
-+	if (fatal_signal_pending(current))
-+		return NULL;
- 	pages = alloc_pages(gfp_mask & ~__GFP_ZERO, order);
- 	if (pages) {
- 		unsigned int count, i;
+-	lockdep_assert_held(&q->sysfs_lock);
+-
+ 	queue_for_each_hw_ctx(q, hctx, i) {
+ 		if (hctx->sched_tags)
+ 			blk_mq_free_rqs(q->tag_set, hctx->sched_tags, i);
+diff --git a/block/blk.h b/block/blk.h
+index de6b2e146d6eb..3ce8b73bb2264 100644
+--- a/block/blk.h
++++ b/block/blk.h
+@@ -194,6 +194,8 @@ void elv_unregister_queue(struct request_queue *q);
+ static inline void elevator_exit(struct request_queue *q,
+ 		struct elevator_queue *e)
+ {
++	lockdep_assert_held(&q->sysfs_lock);
++
+ 	blk_mq_sched_free_requests(q);
+ 	__elevator_exit(q, e);
+ }
 -- 
 2.20.1
 
