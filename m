@@ -2,141 +2,230 @@ Return-Path: <SRS0=YRFP=X2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B925C388F3
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 06:15:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 11A67ECE588
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 06:16:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6C80C206BB
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 06:15:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D4076215EA
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 06:16:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ZqWivwEF"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="qCoro9KI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732432AbfJAGPc (ORCPT
+        id S1731717AbfJAGQl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Oct 2019 02:15:32 -0400
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:51557 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1731822AbfJAGPc (ORCPT
+        Tue, 1 Oct 2019 02:16:41 -0400
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:57492 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726822AbfJAGQk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Oct 2019 02:15:32 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1569910529;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=RaDvnMbLxrkazX0FheBlc5k/BJaQuhfFQB7rxFi7w4I=;
-        b=ZqWivwEFgytJTnDLm3QrdKUgTy1+7k0daqJQZewuKd4yNGK5volaB94zNTmWC5WOkPNceT
-        hRcsr4teUOOrRAR3/CgDQ5flZZF4FM+d/9q0c6WoZXw27amUxGhD3Gyry3Iqe/PclM4GfG
-        BXhyRRSThIIeDCdX2nuuVPcOz0s8Nhw=
-Received: from mail-ed1-f69.google.com (mail-ed1-f69.google.com
- [209.85.208.69]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-96-C5Wr7pi_MYiQr1nE2jxiuQ-1; Tue, 01 Oct 2019 02:15:26 -0400
-Received: by mail-ed1-f69.google.com with SMTP id h12so7888677eda.19
-        for <linux-kernel@vger.kernel.org>; Mon, 30 Sep 2019 23:15:26 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=GWWMZLIGumGHax9H0h3X9Y0A4H9SN5QPKJSfyEBYC5I=;
-        b=Iqf7oz5U0CkX93W+Kd8EmhoLeHsWAZxmeI4ZEx5FmKe+mMpx3cIULeAUA6lmwhBzB7
-         rDKQKagd8VFjO0N/G+t+bK8CO3O6xZ7jkFLtOhdSHMVmEG478xfbDuxg97/hxObxSR9v
-         xsU04xNAJZ5s7se8X0X9r3zP0RdNBNRNculrQdK24Sx2hyLbQUYzGuqEWEXE2WCuJkUv
-         9KsGsp7omgspDpUZUGi4JOjhlChJkqzw5EExJ5PXqN1kQA2mV3rQl55KTOjJlC4Va9YH
-         vzpbxkJLtlPYJ2bUSgWIcyEL7M18jTJUU7j4fAQLObcAseQhT2CkaF3oKK+WusVVSLOI
-         2glA==
-X-Gm-Message-State: APjAAAWC1CgZSrcb2lTH6ZPJb8CkMmPHIvp1xQKe51p1R6YJHEiG1OPP
-        4vz3EHxZO1/RSYXK6jqKohYeaz0BWTOx/gWr84/Yb4PAwFSzjs8kVVLLMjslfU+6ISEIUwSp9vd
-        VqZ6ztzQuMIpbe+hfZtXaQ4BB
-X-Received: by 2002:a17:907:441d:: with SMTP id om21mr23215420ejb.188.1569910525080;
-        Mon, 30 Sep 2019 23:15:25 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqx0BznTJyAsTVjo5pCJTdBKgZR1znwvk5eXNetuzl3vkDGg/8PK5IbG/C1rmjBEH5WUMvACKw==
-X-Received: by 2002:a17:907:441d:: with SMTP id om21mr23215406ejb.188.1569910524881;
-        Mon, 30 Sep 2019 23:15:24 -0700 (PDT)
-Received: from shalem.localdomain (2001-1c00-0c14-2800-ec23-a060-24d5-2453.cable.dynamic.v6.ziggo.nl. [2001:1c00:c14:2800:ec23:a060:24d5:2453])
-        by smtp.gmail.com with ESMTPSA id 36sm2921211edz.92.2019.09.30.23.15.23
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 30 Sep 2019 23:15:24 -0700 (PDT)
-Subject: Re: [PATCH v2] virt: vbox: fix memory leak in
- hgcm_call_preprocess_linaddr
-To:     Navid Emamdoost <navid.emamdoost@gmail.com>
-Cc:     emamd001@umn.edu, smccaman@umn.edu, kjlu@umn.edu,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org
-References: <664aab6a-37c9-7239-a817-25dfbab00c7f@redhat.com>
- <20190930204223.3660-1-navid.emamdoost@gmail.com>
-From:   Hans de Goede <hdegoede@redhat.com>
-Message-ID: <48a2ad9b-bcdb-6146-0911-37961e07b1d9@redhat.com>
-Date:   Tue, 1 Oct 2019 08:15:23 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.0
+        Tue, 1 Oct 2019 02:16:40 -0400
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id x916GVox055685;
+        Tue, 1 Oct 2019 01:16:31 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1569910591;
+        bh=FmEP4mSp+GB3++ivD8Sfw2OMCbXIs8M52yHh6m5wEd4=;
+        h=From:To:CC:Subject:Date:In-Reply-To:References;
+        b=qCoro9KINSS9w4Mgvp/8q1KL5gJW5qJEyooqu2shBxOlhje1JzO18UcqqTkxoJ8Yb
+         5k6KtcaxzwI2qg/KfMN4lkbwxlp1E4Zd0UP+hZWPxo0ObyY+QIkhz0g2kAmfMwUTOs
+         wXO8HhQXfAbfumSyvIQJeNav0+aB5ZDE5AvM8eDE=
+Received: from DFLE107.ent.ti.com (dfle107.ent.ti.com [10.64.6.28])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x916GVU1018023
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Tue, 1 Oct 2019 01:16:31 -0500
+Received: from DFLE105.ent.ti.com (10.64.6.26) by DFLE107.ent.ti.com
+ (10.64.6.28) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Tue, 1 Oct
+ 2019 01:16:21 -0500
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE105.ent.ti.com
+ (10.64.6.26) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Tue, 1 Oct 2019 01:16:31 -0500
+Received: from feketebors.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id x916GGX8090310;
+        Tue, 1 Oct 2019 01:16:27 -0500
+From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
+To:     <vkoul@kernel.org>, <robh+dt@kernel.org>, <nm@ti.com>,
+        <ssantosh@kernel.org>
+CC:     <dan.j.williams@intel.com>, <dmaengine@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <grygorii.strashko@ti.com>, <lokeshvutla@ti.com>,
+        <t-kristo@ti.com>, <tony@atomide.com>, <j-keerthy@ti.com>
+Subject: [PATCH v3 03/14] dmaengine: doc: Add sections for per descriptor metadata support
+Date:   Tue, 1 Oct 2019 09:16:53 +0300
+Message-ID: <20191001061704.2399-4-peter.ujfalusi@ti.com>
+X-Mailer: git-send-email 2.23.0
+In-Reply-To: <20191001061704.2399-1-peter.ujfalusi@ti.com>
+References: <20191001061704.2399-1-peter.ujfalusi@ti.com>
 MIME-Version: 1.0
-In-Reply-To: <20190930204223.3660-1-navid.emamdoost@gmail.com>
-Content-Language: en-US
-X-MC-Unique: C5Wr7pi_MYiQr1nE2jxiuQ-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+Update the provider and client documentation with details about the
+metadata support.
 
-On 30-09-2019 22:42, Navid Emamdoost wrote:
-> In hgcm_call_preprocess_linaddr memory is allocated for bounce_buf but
-> is not released if copy_form_user fails. In order to prevent memory leak
-> in case of failure, the assignment to bounce_buf_ret is moved before the
-> error check. This way the allocated bounce_buf will be released by the
-> caller.
->=20
-> Fixes: 579db9d45cb4 ("virt: Add vboxguest VMMDEV communication code")
-> Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
+Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
+---
+ Documentation/driver-api/dmaengine/client.rst | 75 +++++++++++++++++++
+ .../driver-api/dmaengine/provider.rst         | 46 ++++++++++++
+ 2 files changed, 121 insertions(+)
 
-Thank you.
+diff --git a/Documentation/driver-api/dmaengine/client.rst b/Documentation/driver-api/dmaengine/client.rst
+index 45953f171500..d708e46b88a2 100644
+--- a/Documentation/driver-api/dmaengine/client.rst
++++ b/Documentation/driver-api/dmaengine/client.rst
+@@ -151,6 +151,81 @@ The details of these operations are:
+      Note that callbacks will always be invoked from the DMA
+      engines tasklet, never from interrupt context.
+ 
++  Optional: per descriptor metadata
++  ---------------------------------
++  DMAengine provides two ways for metadata support.
++
++  DESC_METADATA_CLIENT
++
++    The metadata buffer is allocated/provided by the client driver and it is
++    attached to the descriptor.
++
++  .. code-block:: c
++
++     int dmaengine_desc_attach_metadata(struct dma_async_tx_descriptor *desc,
++				   void *data, size_t len);
++
++  DESC_METADATA_ENGINE
++
++    The metadata buffer is allocated/managed by the DMA driver. The client
++    driver can ask for the pointer, maximum size and the currently used size of
++    the metadata and can directly update or read it.
++
++  .. code-block:: c
++
++     void *dmaengine_desc_get_metadata_ptr(struct dma_async_tx_descriptor *desc,
++		size_t *payload_len, size_t *max_len);
++
++     int dmaengine_desc_set_metadata_len(struct dma_async_tx_descriptor *desc,
++		size_t payload_len);
++
++  Client drivers can query if a given mode is supported with:
++
++  .. code-block:: c
++
++     bool dmaengine_is_metadata_mode_supported(struct dma_chan *chan,
++		enum dma_desc_metadata_mode mode);
++
++  Depending on the used mode client drivers must follow different flow.
++
++  DESC_METADATA_CLIENT
++
++    - DMA_MEM_TO_DEV / DEV_MEM_TO_MEM:
++      1. prepare the descriptor (dmaengine_prep_*)
++         construct the metadata in the client's buffer
++      2. use dmaengine_desc_attach_metadata() to attach the buffer to the
++         descriptor
++      3. submit the transfer
++    - DMA_DEV_TO_MEM:
++      1. prepare the descriptor (dmaengine_prep_*)
++      2. use dmaengine_desc_attach_metadata() to attach the buffer to the
++         descriptor
++      3. submit the transfer
++      4. when the transfer is completed, the metadata should be available in the
++         attached buffer
++
++  DESC_METADATA_ENGINE
++
++    - DMA_MEM_TO_DEV / DEV_MEM_TO_MEM:
++      1. prepare the descriptor (dmaengine_prep_*)
++      2. use dmaengine_desc_get_metadata_ptr() to get the pointer to the
++         engine's metadata area
++      3. update the metadata at the pointer
++      4. use dmaengine_desc_set_metadata_len()  to tell the DMA engine the
++         amount of data the client has placed into the metadata buffer
++      5. submit the transfer
++    - DMA_DEV_TO_MEM:
++      1. prepare the descriptor (dmaengine_prep_*)
++      2. submit the transfer
++      3. on transfer completion, use dmaengine_desc_get_metadata_ptr() to get the
++         pointer to the engine's metadata are
++      4. Read out the metadate from the pointer
++
++  .. note::
++
++     Mixed use of DESC_METADATA_CLIENT / DESC_METADATA_ENGINE is not allowed,
++     client drivers must use either of the modes per descriptor.
++
+ 4. Submit the transaction
+ 
+    Once the descriptor has been prepared and the callback information
+diff --git a/Documentation/driver-api/dmaengine/provider.rst b/Documentation/driver-api/dmaengine/provider.rst
+index dfc4486b5743..9e6d87b3c477 100644
+--- a/Documentation/driver-api/dmaengine/provider.rst
++++ b/Documentation/driver-api/dmaengine/provider.rst
+@@ -247,6 +247,52 @@ after each transfer. In case of a ring buffer, they may loop
+ (DMA_CYCLIC). Addresses pointing to a device's register (e.g. a FIFO)
+ are typically fixed.
+ 
++Per descriptor metadata support
++-------------------------------
++Some data movement architecure (DMA controller and peripherals) uses metadata
++associated with a transaction. The DMA controller role is to transfer the
++payload and the metadata alongside.
++The metadata itself is not used by the DMA engine itself, but it contains
++parameters, keys, vectors, etc for peripheral or from the peripheral.
++
++The DMAengine framework provides a generic ways to facilitate the metadata for
++descriptors. Depending on the architecture the DMA driver can implement either
++or both of the methods and it is up to the client driver to choose which one
++to use.
++
++- DESC_METADATA_CLIENT
++
++  The metadata buffer is allocated/provided by the client driver and it is
++  attached (via the dmaengine_desc_attach_metadata() helper to the descriptor.
++
++  From the DMA driver the following is expected for this mode:
++  - DMA_MEM_TO_DEV / DEV_MEM_TO_MEM
++    The data from the provided metadata buffer should be prepared for the DMA
++    controller to be sent alongside of the payload data. Either by copying to a
++    hardware descriptor, or highly coupled packet.
++  - DMA_DEV_TO_MEM
++    On transfer completion the DMA driver must copy the metadata to the client
++    provided metadata buffer.
++
++- DESC_METADATA_ENGINE
++
++  The metadata buffer is allocated/managed by the DMA driver. The client driver
++  can ask for the pointer, maximum size and the currently used size of the
++  metadata and can directly update or read it. dmaengine_desc_get_metadata_ptr()
++  and dmaengine_desc_set_metadata_len() is provided as helper functions.
++
++  From the DMA driver the following is expected for this mode:
++  - get_metadata_ptr
++    Should return a pointer for the metadata buffer, the maximum size of the
++    metadata buffer and the currently used / valid (if any) bytes in the buffer.
++  - set_metadata_len
++    It is called by the clients after it have placed the metadata to the buffer
++    to let the DMA driver know the number of valid bytes provided.
++
++  Note: since the client will ask for the metadata pointer in the completion
++  callback (in DMA_DEV_TO_MEM case) the DMA driver must ensure that the
++  descriptor is not freed up prior the callback is called.
++
+ Device operations
+ -----------------
+ 
+-- 
+Peter
 
-Patch looks good to me:
-
-Reviewed-by: Hans de Goede <hdegoede@redhat.com>
-
-Regards,
-
-Hans
-
-
-
-> ---
->   drivers/virt/vboxguest/vboxguest_utils.c | 3 ++-
->   1 file changed, 2 insertions(+), 1 deletion(-)
->=20
-> diff --git a/drivers/virt/vboxguest/vboxguest_utils.c b/drivers/virt/vbox=
-guest/vboxguest_utils.c
-> index 75fd140b02ff..43c391626a00 100644
-> --- a/drivers/virt/vboxguest/vboxguest_utils.c
-> +++ b/drivers/virt/vboxguest/vboxguest_utils.c
-> @@ -220,6 +220,8 @@ static int hgcm_call_preprocess_linaddr(
->   =09if (!bounce_buf)
->   =09=09return -ENOMEM;
->  =20
-> +=09*bounce_buf_ret =3D bounce_buf;
-> +
->   =09if (copy_in) {
->   =09=09ret =3D copy_from_user(bounce_buf, (void __user *)buf, len);
->   =09=09if (ret)
-> @@ -228,7 +230,6 @@ static int hgcm_call_preprocess_linaddr(
->   =09=09memset(bounce_buf, 0, len);
->   =09}
->  =20
-> -=09*bounce_buf_ret =3D bounce_buf;
->   =09hgcm_call_add_pagelist_size(bounce_buf, len, extra);
->   =09return 0;
->   }
->=20
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
 
