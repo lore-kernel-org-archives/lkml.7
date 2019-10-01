@@ -2,261 +2,88 @@ Return-Path: <SRS0=YRFP=X2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D39F6C352AA
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 09:51:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B391C352AA
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 09:52:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AB55621855
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 09:51:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6DBC621855
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 09:52:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729690AbfJAJv1 (ORCPT
+        id S1729722AbfJAJw3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Oct 2019 05:51:27 -0400
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:52397 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725765AbfJAJv0 (ORCPT
+        Tue, 1 Oct 2019 05:52:29 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:54712 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725765AbfJAJw3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Oct 2019 05:51:26 -0400
-Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1iFEoT-0003zO-DF; Tue, 01 Oct 2019 11:51:21 +0200
-Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1iFEoR-0003uQ-P8; Tue, 01 Oct 2019 11:51:19 +0200
-Date:   Tue, 1 Oct 2019 11:51:19 +0200
-From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-To:     Fabrice Gasnier <fabrice.gasnier@st.com>
-Cc:     thierry.reding@gmail.com, robh+dt@kernel.org,
-        alexandre.torgue@st.com, mark.rutland@arm.com,
-        mcoquelin.stm32@gmail.com, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-pwm@vger.kernel.org, benjamin.gaignard@st.com,
-        linux-stm32@st-md-mailman.stormreply.com
-Subject: Re: [PATCH 2/2] pwm: stm32: add power management support
-Message-ID: <20191001095119.ws36f7liwgvbokem@pengutronix.de>
-References: <1569857951-20007-1-git-send-email-fabrice.gasnier@st.com>
- <1569857951-20007-3-git-send-email-fabrice.gasnier@st.com>
- <20191001070450.4zogfryzo7a5ssbd@pengutronix.de>
- <3c6e551b-98a2-a418-c4ee-002077e46f31@st.com>
+        Tue, 1 Oct 2019 05:52:29 -0400
+Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tip-bot2@linutronix.de>)
+        id 1iFEpV-0007B9-NL; Tue, 01 Oct 2019 11:52:25 +0200
+Received: from [127.0.1.1] (localhost [IPv6:::1])
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 4B6D81C03AB;
+        Tue,  1 Oct 2019 11:52:25 +0200 (CEST)
+Date:   Tue, 01 Oct 2019 09:52:25 -0000
+From:   "tip-bot2 for Borislav Petkov" <tip-bot2@linutronix.de>
+Reply-to: linux-kernel@vger.kernel.org
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip: ras/core] x86/mce/amd: Make disable_err_thresholding() static
+Cc:     Borislav Petkov <bp@suse.de>, x86@kernel.org,
+        Ingo Molnar <mingo@kernel.org>, Borislav Petkov <bp@alien8.de>,
+        linux-kernel@vger.kernel.org
+In-Reply-To: <20190928170539.2729-1-bp@alien8.de>
+References: <20190928170539.2729-1-bp@alien8.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <3c6e551b-98a2-a418-c4ee-002077e46f31@st.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+Message-ID: <156992354518.9978.16819187666387348387.tip-bot2@tip-bot2>
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot2.linutronix.de>
+Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello Fabrice,
+The following commit has been merged into the ras/core branch of tip:
 
-On Tue, Oct 01, 2019 at 10:18:31AM +0200, Fabrice Gasnier wrote:
-> On 10/1/19 9:04 AM, Uwe Kleine-König wrote:
-> > On Mon, Sep 30, 2019 at 05:39:11PM +0200, Fabrice Gasnier wrote:
-> >> Add suspend/resume PM sleep ops. When going to low power, enforce the PWM
-> >> channel isn't active. Let the PWM consumers disable it during their own
-> >> suspend sequence, see [1]. So, perform a check here, and handle the
-> >> pinctrl states. Also restore the break inputs upon resume, as registers
-> >> content may be lost when going to low power mode.
-> >>
-> >> [1] https://lkml.org/lkml/2019/2/5/770
-> >>
-> >> Signed-off-by: Fabrice Gasnier <fabrice.gasnier@st.com>
-> >> ---
-> >>  drivers/pwm/pwm-stm32.c | 82 +++++++++++++++++++++++++++++++++++++------------
-> >>  1 file changed, 62 insertions(+), 20 deletions(-)
-> >>
-> >> diff --git a/drivers/pwm/pwm-stm32.c b/drivers/pwm/pwm-stm32.c
-> >> index 740e2de..9bcd73a 100644
-> >> --- a/drivers/pwm/pwm-stm32.c
-> >> +++ b/drivers/pwm/pwm-stm32.c
-> >> @@ -12,6 +12,7 @@
-> >>  #include <linux/mfd/stm32-timers.h>
-> >>  #include <linux/module.h>
-> >>  #include <linux/of.h>
-> >> +#include <linux/pinctrl/consumer.h>
-> >>  #include <linux/platform_device.h>
-> >>  #include <linux/pwm.h>
-> >>  
-> >> @@ -19,6 +20,12 @@
-> >>  #define CCMR_CHANNEL_MASK  0xFF
-> >>  #define MAX_BREAKINPUT 2
-> >>  
-> >> +struct stm32_breakinput {
-> >> +	u32 index;
-> >> +	u32 level;
-> >> +	u32 filter;
-> >> +};
-> >> +
-> >>  struct stm32_pwm {
-> >>  	struct pwm_chip chip;
-> >>  	struct mutex lock; /* protect pwm config/enable */
-> >> @@ -26,15 +33,11 @@ struct stm32_pwm {
-> >>  	struct regmap *regmap;
-> >>  	u32 max_arr;
-> >>  	bool have_complementary_output;
-> >> +	struct stm32_breakinput breakinput[MAX_BREAKINPUT];
-> >> +	unsigned int nbreakinput;
-> >>  	u32 capture[4] ____cacheline_aligned; /* DMA'able buffer */
-> >>  };
-> >>  
-> >> -struct stm32_breakinput {
-> >> -	u32 index;
-> >> -	u32 level;
-> >> -	u32 filter;
-> >> -};
-> >> -
-> >>  static inline struct stm32_pwm *to_stm32_pwm_dev(struct pwm_chip *chip)
-> >>  {
-> >>  	return container_of(chip, struct stm32_pwm, chip);
-> >> @@ -512,15 +515,27 @@ static int stm32_pwm_set_breakinput(struct stm32_pwm *priv,
-> >>  	return (bdtr & bke) ? 0 : -EINVAL;
-> >>  }
-> >>  
-> >> -static int stm32_pwm_apply_breakinputs(struct stm32_pwm *priv,
-> >> +static int stm32_pwm_apply_breakinputs(struct stm32_pwm *priv)
-> >> +{
-> >> +	int i, ret = 0;
-> >> +
-> >> +	for (i = 0; i < priv->nbreakinput && !ret; i++) {
-> >> +		ret = stm32_pwm_set_breakinput(priv,
-> >> +					       priv->breakinput[i].index,
-> >> +					       priv->breakinput[i].level,
-> >> +					       priv->breakinput[i].filter);
-> >> +	}
-> >> +
-> >> +	return ret;
-> >> +}
-> > 
-> > Can you explain what the effect of this function is? This is something
-> > that is lost during suspend?
-> 
-> Yes, that's what I explain in the commit message: ...registers content
-> may be lost when going to low power mode.
-> Do you think I need to rephrase ?
+Commit-ID:     47cd84e98f512eac5aad988f08baff432aea35ba
+Gitweb:        https://git.kernel.org/tip/47cd84e98f512eac5aad988f08baff432aea35ba
+Author:        Borislav Petkov <bp@suse.de>
+AuthorDate:    Sat, 28 Sep 2019 19:02:29 +02:00
+Committer:     Borislav Petkov <bp@suse.de>
+CommitterDate: Tue, 01 Oct 2019 11:42:59 +02:00
 
-Ah, right I missed it in the commit log. It might be worth adding that
-to a code comment. Also having the purpose of this function described
-would be great. Does it configure some electrical characteristics? Or
-has it to do with pinmuxing? Why is an input relevant for a PWM?
+x86/mce/amd: Make disable_err_thresholding() static
 
-> > I wonder why the patch is so big. There are some rearrangements that
-> > should have no effect and I think it would be beneficial for
-> > reviewability to split this patch in a patch that only does the
-> > restructuring and than on top of that add the PM stuff.
-> 
-> I can split this to ease the review.
-> > 
-> >> +
-> >> +static int stm32_pwm_probe_breakinputs(struct stm32_pwm *priv,
-> >>  				       struct device_node *np)
-> >>  {
-> >> -	struct stm32_breakinput breakinput[MAX_BREAKINPUT];
-> >> -	int nb, ret, i, array_size;
-> >> +	int nb, ret, array_size;
-> >>  
-> >>  	nb = of_property_count_elems_of_size(np, "st,breakinput",
-> >>  					     sizeof(struct stm32_breakinput));
-> >> -
-> >>  	/*
-> >>  	 * Because "st,breakinput" parameter is optional do not make probe
-> >>  	 * failed if it doesn't exist.
-> >> @@ -531,20 +546,14 @@ static int stm32_pwm_apply_breakinputs(struct stm32_pwm *priv,
-> >>  	if (nb > MAX_BREAKINPUT)
-> >>  		return -EINVAL;
-> >>  
-> >> +	priv->nbreakinput = nb;
-> >>  	array_size = nb * sizeof(struct stm32_breakinput) / sizeof(u32);
-> >>  	ret = of_property_read_u32_array(np, "st,breakinput",
-> >> -					 (u32 *)breakinput, array_size);
-> >> +					 (u32 *)priv->breakinput, array_size);
-> >>  	if (ret)
-> >>  		return ret;
-> >>  
-> >> -	for (i = 0; i < nb && !ret; i++) {
-> >> -		ret = stm32_pwm_set_breakinput(priv,
-> >> -					       breakinput[i].index,
-> >> -					       breakinput[i].level,
-> >> -					       breakinput[i].filter);
-> >> -	}
-> >> -
-> >> -	return ret;
-> >> +	return stm32_pwm_apply_breakinputs(priv);
-> >>  }
-> >>  
-> >>  static void stm32_pwm_detect_complementary(struct stm32_pwm *priv)
-> >> @@ -614,7 +623,7 @@ static int stm32_pwm_probe(struct platform_device *pdev)
-> >>  	if (!priv->regmap || !priv->clk)
-> >>  		return -EINVAL;
-> >>  
-> >> -	ret = stm32_pwm_apply_breakinputs(priv, np);
-> >> +	ret = stm32_pwm_probe_breakinputs(priv, np);
-> >>  	if (ret)
-> >>  		return ret;
-> >>  
-> >> @@ -647,6 +656,38 @@ static int stm32_pwm_remove(struct platform_device *pdev)
-> >>  	return 0;
-> >>  }
-> >>  
-> >> +static int __maybe_unused stm32_pwm_suspend(struct device *dev)
-> >> +{
-> >> +	struct stm32_pwm *priv = dev_get_drvdata(dev);
-> >> +	struct pwm_state state;
-> >> +	unsigned int i;
-> >> +
-> >> +	for (i = 0; i < priv->chip.npwm; i++) {
-> >> +		pwm_get_state(&priv->chip.pwms[i], &state);
-> > 
-> > pwm_get_state is a function designed to be used by PWM consumers. I
-> > would prefer to check the hardware registers here instead.
-> 
-> It's also useful for PWM provider: This PWM driver is part of a MFD that
+No functional changes.
 
-I don't doubt "useful". But still you should only call it if you called
-pwm_get (or a similar function) to get a PWM handle.
+Signed-off-by: Borislav Petkov <bp@suse.de>
+Cc: x86@kernel.org
+Link: https://lkml.kernel.org/r/20190928170539.2729-1-bp@alien8.de
+---
+ arch/x86/kernel/cpu/mce/amd.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-> also take care of IIO trigger (can be used simultaneously). Simply
-> reading a register doesn't tell us that the timer is used/configured as
-> a PWM here. That's the reason to use this helper to read pwm->state.
-
-How can the pwm driver be bound and the hardware not be used a PWM?
-
-> Do you wish I add a comment to clarify this here ?
-
-No, I wish you inspect the hardware to determine what you need to know :-)
-
-> > What if there is no consumer and the PWM just happens to be enabled by
-> > the bootloader? Or is this too minor an issue to be worth consideration?
-> 
-> That's the purpose of returning -EBUSY: "PWM should not stop if the PWM
-> user didn't call pwm_disable()" ... "to avoid situation where the PWM is
-> actually suspended before the user". This has been enforced in later
-> series with the device_link_add(). See our previous discussions here:
-> https://lkml.org/lkml/2019/2/5/770
-> So, I guess this would point exactly a lack for a PWM user to manage it
-> after the boot stage, in the kernel.
-> 
-> Could you please clarify, provide an example here ?
-
-This is something different than I asked for. Not having a consumer
-isn't an error. Still the pwm might be running (for a good reason or
-not). (This is more a question that affects how a driver should behave
-in general, it is not specific to the stm32 driver here.)
-
-Best regards
-Uwe
-
--- 
-Pengutronix e.K.                           | Uwe Kleine-König            |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+diff --git a/arch/x86/kernel/cpu/mce/amd.c b/arch/x86/kernel/cpu/mce/amd.c
+index 6ea7fdc..5167bd2 100644
+--- a/arch/x86/kernel/cpu/mce/amd.c
++++ b/arch/x86/kernel/cpu/mce/amd.c
+@@ -583,7 +583,7 @@ bool amd_filter_mce(struct mce *m)
+  * - Prevent possible spurious interrupts from the IF bank on Family 0x17
+  *   Models 0x10-0x2F due to Erratum #1114.
+  */
+-void disable_err_thresholding(struct cpuinfo_x86 *c, unsigned int bank)
++static void disable_err_thresholding(struct cpuinfo_x86 *c, unsigned int bank)
+ {
+ 	int i, num_msrs;
+ 	u64 hwcr;
