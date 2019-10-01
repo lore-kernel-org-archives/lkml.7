@@ -7,50 +7,49 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2548ECE587
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 16:45:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8058BECE587
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 16:45:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7790D222C2
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 16:45:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4BF02205C9
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 16:45:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569948336;
-	bh=Geih3nmsUSTN8whOgZ/Z6JoWNRMfyxn43+CgsYft+M0=;
+	s=default; t=1569948340;
+	bh=OBdtrm8pJtajj5WunNduBtqbGjzE7rTRWzKQSZySMEs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=IN5e/6C4zkVL7dfa4IdfwvKEHy93eUJnCz1tf4B4XrRxlTxKo8zxIhnYVhJ4jZ4B4
-	 yCfS96irsEnpTWIJP2wYOWRVcQqW3ECdrQ2nArmojfset7wpeMKq1ldSmqeMHRx4e4
-	 VmGdlvepElRG/EwtvYqRmu5vHuGMHgcwKRWzbkr0=
+	b=fDkFvFAqUkhLMmTytMofG/22dmtGUFG+kqDMFAw1P4nzZryH/cBN6WJTbSz1QeKrm
+	 CYq9rQ8Iccjg4ldgF2E8siYr0ueH2knF+NgO26CwP4o30ZSID49eriq5gkVbCHPhYK
+	 kswgj5R2D3Yjxw1mhbLsn2ihklFSXgL3BZFZdWBs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390338AbfJAQpf (ORCPT
+        id S2390361AbfJAQpj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Oct 2019 12:45:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58004 "EHLO mail.kernel.org"
+        Tue, 1 Oct 2019 12:45:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58148 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390297AbfJAQpb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Oct 2019 12:45:31 -0400
+        id S2390339AbfJAQpg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Oct 2019 12:45:36 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 57C7C20B7C;
-        Tue,  1 Oct 2019 16:45:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 61FB721A4A;
+        Tue,  1 Oct 2019 16:45:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569948330;
-        bh=Geih3nmsUSTN8whOgZ/Z6JoWNRMfyxn43+CgsYft+M0=;
+        s=default; t=1569948336;
+        bh=OBdtrm8pJtajj5WunNduBtqbGjzE7rTRWzKQSZySMEs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=yrAAlPuR51GeQ38jHKBXiBtEA4JF1IFCE+QeO1MWtlQDOGad5wOMNmnMBHdiTpJlW
-         f6Vp0YZ9fn0ROTmErn4oT3oxJKF9j2Ladl4WIFMG77lAMlizvTQEKg17fj+AZfmZwT
-         Bqi6f0hQnGdmap9QqPO3EmK6HXZ33cpNJb7UnkY8=
+        b=pkBGI4nQ2DTsGNnA1jt/FdLHP73glOUfBGR0K+WHKhggBQrjpmLPBa/NhivxgdeQU
+         hwEnRijwfTptRH7JMk2BUchSMcWaeTiql5x0RfMZaGvEOVaUEYXp5czNjvvAYS8q+m
+         GsUJ5kYvhtVTZLAeMzClDbu56Cuj3Acp7q2/eBEo=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Xin Long <lucien.xin@gmail.com>, Xiumei Mu <xmu@redhat.com>,
-        Fei Liu <feliu@redhat.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 17/19] macsec: drop skb sk before calling gro_cells_receive
-Date:   Tue,  1 Oct 2019 12:45:03 -0400
-Message-Id: <20191001164505.16708-17-sashal@kernel.org>
+Cc:     Jia-Ju Bai <baijiaju1990@gmail.com>,
+        Anna Schumaker <Anna.Schumaker@Netapp.com>,
+        Sasha Levin <sashal@kernel.org>, linux-nfs@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.4 02/15] fs: nfs: Fix possible null-pointer dereferences in encode_attrs()
+Date:   Tue,  1 Oct 2019 12:45:20 -0400
+Message-Id: <20191001164533.16915-2-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191001164505.16708-1-sashal@kernel.org>
-References: <20191001164505.16708-1-sashal@kernel.org>
+In-Reply-To: <20191001164533.16915-1-sashal@kernel.org>
+References: <20191001164533.16915-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -60,64 +59,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Xin Long <lucien.xin@gmail.com>
+From: Jia-Ju Bai <baijiaju1990@gmail.com>
 
-[ Upstream commit ba56d8ce38c8252fff5b745db3899cf092578ede ]
+[ Upstream commit e2751463eaa6f9fec8fea80abbdc62dbc487b3c5 ]
 
-Fei Liu reported a crash when doing netperf on a topo of macsec
-dev over veth:
+In encode_attrs(), there is an if statement on line 1145 to check
+whether label is NULL:
+    if (label && (attrmask[2] & FATTR4_WORD2_SECURITY_LABEL))
 
-  [  448.919128] refcount_t: underflow; use-after-free.
-  [  449.090460] Call trace:
-  [  449.092895]  refcount_sub_and_test+0xb4/0xc0
-  [  449.097155]  tcp_wfree+0x2c/0x150
-  [  449.100460]  ip_rcv+0x1d4/0x3a8
-  [  449.103591]  __netif_receive_skb_core+0x554/0xae0
-  [  449.108282]  __netif_receive_skb+0x28/0x78
-  [  449.112366]  netif_receive_skb_internal+0x54/0x100
-  [  449.117144]  napi_gro_complete+0x70/0xc0
-  [  449.121054]  napi_gro_flush+0x6c/0x90
-  [  449.124703]  napi_complete_done+0x50/0x130
-  [  449.128788]  gro_cell_poll+0x8c/0xa8
-  [  449.132351]  net_rx_action+0x16c/0x3f8
-  [  449.136088]  __do_softirq+0x128/0x320
+When label is NULL, it is used on lines 1178-1181:
+    *p++ = cpu_to_be32(label->lfs);
+    *p++ = cpu_to_be32(label->pi);
+    *p++ = cpu_to_be32(label->len);
+    p = xdr_encode_opaque_fixed(p, label->label, label->len);
 
-The issue was caused by skb's true_size changed without its sk's
-sk_wmem_alloc increased in tcp/skb_gro_receive(). Later when the
-skb is being freed and the skb's truesize is subtracted from its
-sk's sk_wmem_alloc in tcp_wfree(), underflow occurs.
+To fix these bugs, label is checked before being used.
 
-macsec is calling gro_cells_receive() to receive a packet, which
-actually requires skb->sk to be NULL. However when macsec dev is
-over veth, it's possible the skb->sk is still set if the skb was
-not unshared or expanded from the peer veth.
+These bugs are found by a static analysis tool STCheck written by us.
 
-ip_rcv() is calling skb_orphan() to drop the skb's sk for tproxy,
-but it is too late for macsec's calling gro_cells_receive(). So
-fix it by dropping the skb's sk earlier on rx path of macsec.
-
-Fixes: 5491e7c6b1a9 ("macsec: enable GRO and RPS on macsec devices")
-Reported-by: Xiumei Mu <xmu@redhat.com>
-Reported-by: Fei Liu <feliu@redhat.com>
-Signed-off-by: Xin Long <lucien.xin@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Jia-Ju Bai <baijiaju1990@gmail.com>
+Signed-off-by: Anna Schumaker <Anna.Schumaker@Netapp.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/macsec.c | 1 +
- 1 file changed, 1 insertion(+)
+ fs/nfs/nfs4xdr.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/macsec.c b/drivers/net/macsec.c
-index d91f020a8491d..da10104be16cf 100644
---- a/drivers/net/macsec.c
-+++ b/drivers/net/macsec.c
-@@ -1240,6 +1240,7 @@ static rx_handler_result_t macsec_handle_frame(struct sk_buff **pskb)
- 		macsec_rxsa_put(rx_sa);
- 	macsec_rxsc_put(rx_sc);
- 
-+	skb_orphan(skb);
- 	ret = gro_cells_receive(&macsec->gro_cells, skb);
- 	if (ret == NET_RX_SUCCESS)
- 		count_rx(dev, skb->len);
+diff --git a/fs/nfs/nfs4xdr.c b/fs/nfs/nfs4xdr.c
+index 1cb50bb898b01..15cd9db6d616d 100644
+--- a/fs/nfs/nfs4xdr.c
++++ b/fs/nfs/nfs4xdr.c
+@@ -1123,7 +1123,7 @@ static void encode_attrs(struct xdr_stream *xdr, const struct iattr *iap,
+ 		} else
+ 			*p++ = cpu_to_be32(NFS4_SET_TO_SERVER_TIME);
+ 	}
+-	if (bmval[2] & FATTR4_WORD2_SECURITY_LABEL) {
++	if (label && (bmval[2] & FATTR4_WORD2_SECURITY_LABEL)) {
+ 		*p++ = cpu_to_be32(label->lfs);
+ 		*p++ = cpu_to_be32(label->pi);
+ 		*p++ = cpu_to_be32(label->len);
 -- 
 2.20.1
 
