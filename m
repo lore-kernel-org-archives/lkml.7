@@ -2,113 +2,204 @@ Return-Path: <SRS0=YRFP=X2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 28569ECE589
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 08:52:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66448C352AA
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 08:52:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 07739218DE
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 08:52:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3DF6A215EA
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 08:52:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1569919972;
+	bh=TYXtlG+fiA+pF3jSsz1tPLK5DQwytXD+ciUdbJAWuhk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=sKipNO9U2X6PQPjUu9ufVhV/UIsoRsmBeIelNIiTpROboS3zS52dfLz6xp1A7kuf0
+	 DB3GsiuuAmzOM3rZHJDDL6zyzQhqCnKK9mSjbylutHrAVR0IfUvG5Os8PoJnZg6z4/
+	 r2TcxKSqOwjFhNayQos67iYvnEYHeZ9KD5+PkUQ0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733226AbfJAIwP (ORCPT
+        id S1733227AbfJAIwv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Oct 2019 04:52:15 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:59378 "EHLO mx1.redhat.com"
+        Tue, 1 Oct 2019 04:52:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35036 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726672AbfJAIwP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Oct 2019 04:52:15 -0400
-Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com [209.85.128.72])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S1726672AbfJAIwv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Oct 2019 04:52:51 -0400
+Received: from localhost (lfbn-1-10718-76.w90-89.abo.wanadoo.fr [90.89.68.76])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id D1AB411A1F
-        for <linux-kernel@vger.kernel.org>; Tue,  1 Oct 2019 08:52:14 +0000 (UTC)
-Received: by mail-wm1-f72.google.com with SMTP id o8so1100626wmc.2
-        for <linux-kernel@vger.kernel.org>; Tue, 01 Oct 2019 01:52:14 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=r3xlO7TaHFHwT8jXasdq8AJJ7zol/7iECMT7Y59gYD4=;
-        b=IstFMBQ0bDN3myWToUKErPQB/JW/V0Vhq91Imifn639PdgUN7WKfQ877vmwer75w42
-         OsLUu5PqO8WHkfmAesZ22vZBoM59KoWEthdkk/tC5j69ouWZQXZHet2JxZOicxdXbwmS
-         X88wfy+pkWOScjKhFTh2M3OesZf3xus7y9jZoctKt+Vw/DithKyclG3ZVX0QjCtCQg5N
-         crB1myir7q5LUYGhrvJsNelHCUofYckNNn/s9wZgfct9xMCBa9Y3x2ylXsqBjHSEgc7k
-         2nvjho+Ah1S7kN92qPbgu6Ww8r4Lua5uTcWbZSM5S3z46P7Ay1K+qKnzfbtOnMcEOxFQ
-         Q6NQ==
-X-Gm-Message-State: APjAAAVUBlKGONUQyUcA7mXqZ5Ey+WW89lrV2GEqv71gzjgHGkbPMoEi
-        yimri/+pSW2YDRYrsSfyC739Qzikf6DtHi2Nf0am70qqno9FvcckPS59TGsdRqTwaTgN19u5VIJ
-        gTLE6BrorSFWO3pm1P1oPwXgq
-X-Received: by 2002:a5d:618a:: with SMTP id j10mr15928540wru.168.1569919933395;
-        Tue, 01 Oct 2019 01:52:13 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqw8/49hwt2vzb8oiIwuAd5CNWC+ld9UCGKlur/R2FDoiRZ1Smkn0sdEc93OBCQpH+pqgjCyOQ==
-X-Received: by 2002:a5d:618a:: with SMTP id j10mr15928494wru.168.1569919932875;
-        Tue, 01 Oct 2019 01:52:12 -0700 (PDT)
-Received: from localhost.localdomain ([151.29.237.241])
-        by smtp.gmail.com with ESMTPSA id y186sm4810444wmb.41.2019.10.01.01.52.11
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 01 Oct 2019 01:52:11 -0700 (PDT)
-Date:   Tue, 1 Oct 2019 10:52:09 +0200
-From:   Juri Lelli <juri.lelli@redhat.com>
-To:     Scott Wood <swood@redhat.com>
-Cc:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Daniel Bristot de Oliveira <bristot@redhat.com>,
-        Clark Williams <williams@redhat.com>,
-        linux-kernel@vger.kernel.org, linux-rt-users@vger.kernel.org
-Subject: Re: [PATCH RT 5/8] sched/deadline: Reclaim cpuset bandwidth in
- .migrate_task_rq()
-Message-ID: <20191001085209.GA6481@localhost.localdomain>
-References: <20190727055638.20443-1-swood@redhat.com>
- <20190727055638.20443-6-swood@redhat.com>
- <20190927081141.GB31660@localhost.localdomain>
- <9a4cc499e6de4690c682c03c0c880363fe3c9307.camel@redhat.com>
- <20190930071233.GE31660@localhost.localdomain>
- <9acc5f1bd0fe06acb2b7b518c5ef1f082e89ad63.camel@redhat.com>
+        by mail.kernel.org (Postfix) with ESMTPSA id 872D82133F;
+        Tue,  1 Oct 2019 08:52:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1569919970;
+        bh=TYXtlG+fiA+pF3jSsz1tPLK5DQwytXD+ciUdbJAWuhk=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=Pcq6+VW4s9nKnunOdT0D2PQSwt06qFkxoutKMOh6lfzCjv0B+CUXME6uoPjRpjMRG
+         1KExkyTabs+UJgSqaLRPYZyj4KicHav4PbAdLBmqDsnfYA2BQWDSdDQP66AhfCHpH9
+         fl8DS+0XLZDHcBytry97Ks7aXl8rbOpD6/Wa2SQM=
+Date:   Tue, 1 Oct 2019 10:52:46 +0200
+From:   Maxime Ripard <mripard@kernel.org>
+To:     Chen-Yu Tsai <wens@csie.org>
+Cc:     Hans Verkuil <hans.verkuil@cisco.com>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Linux Media Mailing List <linux-media@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Rob Herring <robh+dt@kernel.org>
+Subject: Re: [PATCH v6 1/5] dt-bindings: media: Add Allwinner A10 CSI binding
+Message-ID: <20191001085246.55srb62bpfc6jhtu@gilmour>
+References: <cover.34bcd988943a26671681eaf849aacab51fab1cfe.1562847292.git-series.maxime.ripard@bootlin.com>
+ <110dd9ff1784c29fa16304825a41d1603a33f166.1562847292.git-series.maxime.ripard@bootlin.com>
+ <CAGb2v64nx2AuWZN+RxCneE0pqvXr_d7u6mQ+=nCHv2VJ1MNtrQ@mail.gmail.com>
+ <CAGb2v66Sin9HZ+QENegLQ3d7iiy278niwdr9rEZ0HwUfeQNFRQ@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="xnpqoekd4qgpls3t"
 Content-Disposition: inline
-In-Reply-To: <9acc5f1bd0fe06acb2b7b518c5ef1f082e89ad63.camel@redhat.com>
-User-Agent: Mutt/1.11.3 (2019-02-01)
+In-Reply-To: <CAGb2v66Sin9HZ+QENegLQ3d7iiy278niwdr9rEZ0HwUfeQNFRQ@mail.gmail.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 30/09/19 11:24, Scott Wood wrote:
-> On Mon, 2019-09-30 at 09:12 +0200, Juri Lelli wrote:
 
-[...]
+--xnpqoekd4qgpls3t
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-> > Hummm, I was actually more worried about the fact that we call free_old_
-> > cpuset_bw_dl() only if p->state != TASK_WAKING.
-> 
-> Oh, right. :-P  Not sure what I had in mind there; we want to call it
-> regardless.
-> 
-> I assume we need rq->lock in free_old_cpuset_bw_dl()?  So something like
+Hi,
 
-I think we can do with rcu_read_lock_sched() (see dl_task_can_attach()).
+Thanks for looking into this.
 
-> this:
-> 
-> 	if (p->state == TASK_WAITING)
-> 		raw_spin_lock(&rq->lock);
-> 	free_old_cpuset_bw_dl(rq, p);
-> 	if (p->state != TASK_WAITING)
-> 		return;
-> 
-> 	if (p->dl.dl_non_contending) {
-> 	....	
-> 
-> BTW, is the full cpumask_intersects() necessary or would it suffice to see
-> that the new cpu is not in the old span?
+On Sun, Sep 15, 2019 at 04:54:16PM +0800, Chen-Yu Tsai wrote:
+> On Thu, Aug 15, 2019 at 4:34 PM Chen-Yu Tsai <wens@csie.org> wrote:
+> >
+> > Hi,
+> >
+> > Sorry for chiming in so late.
+> >
+> > On Thu, Jul 11, 2019 at 8:15 PM Maxime Ripard <maxime.ripard@bootlin.com> wrote:
+> > >
+> > > The Allwinner A10 CMOS Sensor Interface is a camera capture interface also
+> > > used in later (A10s, A13, A20, R8 and GR8) SoCs.
+> > >
+> > > On some SoCs, like the A10, there's multiple instances of that controller,
+> > > with one instance supporting more channels and having an ISP.
+> > >
+> > > Reviewed-by: Rob Herring <robh@kernel.org>
+> > > Signed-off-by: Maxime Ripard <maxime.ripard@bootlin.com>
+> > > ---
+> > >  Documentation/devicetree/bindings/media/allwinner,sun4i-a10-csi.yaml | 94 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++-
+> > >  1 file changed, 94 insertions(+)
+> > >  create mode 100644 Documentation/devicetree/bindings/media/allwinner,sun4i-a10-csi.yaml
+> > >
+> > > diff --git a/Documentation/devicetree/bindings/media/allwinner,sun4i-a10-csi.yaml b/Documentation/devicetree/bindings/media/allwinner,sun4i-a10-csi.yaml
+> > > new file mode 100644
+> > > index 000000000000..97c9fc3b5050
+> > > --- /dev/null
+> > > +++ b/Documentation/devicetree/bindings/media/allwinner,sun4i-a10-csi.yaml
+> > > @@ -0,0 +1,94 @@
+> > > +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+> > > +%YAML 1.2
+> > > +---
+> > > +$id: http://devicetree.org/schemas/arm/allwinner,sun4i-a10-csi.yaml#
+> > > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > > +
+> > > +title: Allwinner A10 CMOS Sensor Interface (CSI) Device Tree Bindings
+> > > +
+> > > +maintainers:
+> > > +  - Chen-Yu Tsai <wens@csie.org>
+> > > +  - Maxime Ripard <maxime.ripard@bootlin.com>
+> > > +
+> > > +description: |-
+> > > +  The Allwinner A10 and later has a CMOS Sensor Interface to retrieve
+> > > +  frames from a parallel or BT656 sensor.
+> > > +
+> > > +
+> > > +properties:
+> > > +  compatible:
+> > > +    oneOf:
+> > > +      - items:
+> > > +          - enum:
+> > > +              - allwinner,sun7i-a20-csi0
+> > > +          - const: allwinner,sun4i-a10-csi0
+> >
+> > CSI0 on the A10 has an ISP. Do we know if the one in the A20 does
+> > as well? It certainly doesn't say so in the user manual. If not,
+> > then we can't claim that A20 CSI0 is compatible with A10 CSI0.
+> >
+> > > +
+> > > +      - items:
+> > > +          - const: allwinner,sun4i-a10-csi0
+> > > +
+> > > +  reg:
+> > > +    maxItems: 1
+> > > +
+> > > +  interrupts:
+> > > +    maxItems: 1
+> > > +
+> > > +  clocks:
+> > > +    items:
+> > > +      - description: The CSI interface clock
+> > > +      - description: The CSI module clock
+> > > +      - description: The CSI ISP clock
+> > > +      - description: The CSI DRAM clock
+> > > +
+> > > +  clock-names:
+> > > +    items:
+> > > +      - const: bus
+> > > +      - const: mod
+> >
+> > I doubt this actually is a module clock. Based on the usage in your
+> > device tree patch, and the csi driver in the old linux-sunxi kernel,
+> > the clock rate is set to 24 MHz, or whatever the sensor requires for
+> > MCLK.
+>
+> I'm working on adding support for this on the R40, and it seems with
+> this SoC the picture is much clearer. It has the same CSI interface
+> block, but the CCU has the clocks correctly named. We have:
+>
+>   - CSI_MCLK0
+>   - CSI_MCLK1
+>   - CSI_SCLK
+>
+> in addition to the bus clocks.
+>
+> The CSI section also explains the clock signals:
+>
+>     6.1.3.2. Clock Sources
+>     Two Clocks need to be configured for CSI controller. CSI0/1_MCLK
+>     provides the master clock for sensor and other devices. CSI_SCLK
+>     is the top clock for the whole CSI module.
+>
+> So it would seem the ISP clock we currently have in the DT is simply
+> the module clock shared by all CSI-related hardware blocks, and the
+> module clock is bogus.
 
-Checking new cpu only should be OK.
+I don't think it is. It looks like there's no ISP in the R40 CSI
+controllers, so that would mean that we don't have an ISP clock, and
+the SCLK is the module clock.
 
-Thanks,
+Does that make sense?
 
-Juri
+Maxime
+
+--xnpqoekd4qgpls3t
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXZMT3gAKCRDj7w1vZxhR
+xS3GAQChjJb/Uh7KohG6iZVuImDjv2jvfjSVwaddzLEzegEoVwD/RqeeW3t/PRw3
+H9mwot1F7alalXIAAbHRVcaRaKwlXQE=
+=vdGi
+-----END PGP SIGNATURE-----
+
+--xnpqoekd4qgpls3t--
