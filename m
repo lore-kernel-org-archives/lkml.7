@@ -2,286 +2,284 @@ Return-Path: <SRS0=YRFP=X2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 82AC3ECE58B
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 10:32:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71868ECE58A
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 10:32:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5A9F121924
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 10:32:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3CF4521924
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 10:32:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=shutemov-name.20150623.gappssmtp.com header.i=@shutemov-name.20150623.gappssmtp.com header.b="NbJgxJgb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731037AbfJAKcn (ORCPT
+        id S1731080AbfJAKcu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Oct 2019 06:32:43 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:38798 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730547AbfJAKcm (ORCPT
+        Tue, 1 Oct 2019 06:32:50 -0400
+Received: from mail-ed1-f67.google.com ([209.85.208.67]:46633 "EHLO
+        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730547AbfJAKct (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Oct 2019 06:32:42 -0400
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: eballetbo)
-        with ESMTPSA id B4C3B28BA02
-Subject: Re: [PATCH 06/13] platform: chrome: cros_ec: handle MKBP more events
- flag
-To:     Gwendal Grignou <gwendal@chromium.org>, jic23@kernel.org,
-        knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net,
-        lee.jones@linaro.org, bleung@chromium.org, dianders@chromium.org,
-        groeck@chromium.org, fabien.lahoudere@collabora.com
-Cc:     linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org,
-        Enrico Granata <egranata@chromium.org>
-References: <20190922175021.53449-1-gwendal@chromium.org>
- <20190922175021.53449-7-gwendal@chromium.org>
-From:   Enric Balletbo i Serra <enric.balletbo@collabora.com>
-Message-ID: <7bfb5e95-b5a0-f656-30ab-65285c66dd49@collabora.com>
-Date:   Tue, 1 Oct 2019 12:32:37 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Tue, 1 Oct 2019 06:32:49 -0400
+Received: by mail-ed1-f67.google.com with SMTP id t3so11388139edw.13
+        for <linux-kernel@vger.kernel.org>; Tue, 01 Oct 2019 03:32:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=shutemov-name.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=Hkj8XVJ/JUK9saNg13tQ3faYHAWqr5mxxbpKyWY+/lk=;
+        b=NbJgxJgb2fDhq/gnPWMIPrPM/oV+fS4TBXJvQAXcqmX50zg8TaU+J9jp6/owm8xdTO
+         77d7jWEAwC9B88ER83cuQjSkF0gKE34LfPv2slmWytVuVJNOI2fqpyoQ8W3mkMywStFB
+         zYqPlSb4r1fqYURb1Oq3HfaDWTiSfxUoJ/tK2DeO4krnh1Yso3P1WQ2XG5tRuC1HDl06
+         b2CcPsJ3vq912hJH77+m5oxVY0W2Zby2DH/cwYspL6cQxatIpDNPiGtpKWtpLx3QA5sT
+         uM9fF5EAZ2poz03M6z6QHx4WLxWskE/JrelAPO1DQbyldqxFEbq3j2Rr99D6IC1/IP7h
+         /N9g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=Hkj8XVJ/JUK9saNg13tQ3faYHAWqr5mxxbpKyWY+/lk=;
+        b=Pt/PafpVwxRan1LQRx6yDsJomuNpqZOkSJS3/f6ZMknFPGmK/JwAbqNcPvHCCM9L9s
+         NmnIlmwlREKSEr5ugzVei55HVLsnIJyJ8e2ktvNTekp2elM8HWoNkF5b6wMbDQAw9NyA
+         DooIG31SFL0lFaG0vkToohrHCnc7H8l/V+qocttm05vuNmET87gU58eQhk5nEz6gKp0l
+         jd00wIXdOwcVZ5BNvO48Nw1L5q5h1iyBW6udetr0Lq66mJ6E9MVq0lpGE6CIk1XxNU6W
+         40U2WdjnjoVuWeaZs0yEp6javW9Tn7DkFX0OHyCHgFPdmKuMZFwBATyOXgtvWYKHN+Im
+         CL3A==
+X-Gm-Message-State: APjAAAVRtGPbItHmAp5vwCxH4asMeqdY1YpmMDG3P0/LSbwqG6B6ahjw
+        O9lG76jzPi6zYJZpTmMtWiV7XQ==
+X-Google-Smtp-Source: APXvYqwJKL8NZI0rPzJBtmIdStjGyQsB05mczE+qkf3OKCLP9xcEDXlOu63DS9N0WrWNB+DqyKJtYw==
+X-Received: by 2002:a05:6402:1adc:: with SMTP id ba28mr25451063edb.103.1569925966479;
+        Tue, 01 Oct 2019 03:32:46 -0700 (PDT)
+Received: from box.localdomain ([86.57.175.117])
+        by smtp.gmail.com with ESMTPSA id r18sm3052121edx.94.2019.10.01.03.32.45
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 01 Oct 2019 03:32:45 -0700 (PDT)
+Received: by box.localdomain (Postfix, from userid 1000)
+        id E6139102FB8; Tue,  1 Oct 2019 13:32:45 +0300 (+03)
+Date:   Tue, 1 Oct 2019 13:32:45 +0300
+From:   "Kirill A. Shutemov" <kirill@shutemov.name>
+To:     Matthew Wilcox <willy@infradead.org>
+Cc:     linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 10/15] mm: Allow find_get_page to be used for large pages
+Message-ID: <20191001103245.zmgbtoer4f7ytxg2@box>
+References: <20190925005214.27240-1-willy@infradead.org>
+ <20190925005214.27240-11-willy@infradead.org>
 MIME-Version: 1.0
-In-Reply-To: <20190922175021.53449-7-gwendal@chromium.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190925005214.27240-11-willy@infradead.org>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Gwendal and Enrico,
-
-Some comments below.
-
-On 22/9/19 19:50, Gwendal Grignou wrote:
-> From: Enrico Granata <egranata@chromium.org>
+On Tue, Sep 24, 2019 at 05:52:09PM -0700, Matthew Wilcox wrote:
+> From: "Matthew Wilcox (Oracle)" <willy@infradead.org>
 > 
-> The ChromeOS EC has support for signaling to the host that
-> a single IRQ can serve multiple MKBP events.
+> Add FGP_PMD to indicate that we're trying to find-or-create a page that
+> is at least PMD_ORDER in size.  The internal 'conflict' entry usage
+> is modelled after that in DAX, but the implementations are different
+> due to DAX using multi-order entries and the page cache using multiple
+> order-0 entries.
 > 
-> Doing this serves an optimization purpose, as it minimizes the
-> number of round-trips into the interrupt handling machinery, and
-> it proves beneficial to sensor timestamping as it keeps the desired
-> synchronization of event times between the two processors.
-> 
-> This patch adds kernel support for this EC feature, allowing the
-> ec_irq to loop until all events have been served.
-> 
-> Signed-off-by: Enrico Granata <egranata@chromium.org>
-> Signed-off-by: Gwendal Grignou <gwendal@chromium.org>
+> Signed-off-by: Matthew Wilcox (Oracle) <willy@infradead.org>
 > ---
->  drivers/platform/chrome/cros_ec.c           | 33 +++++++++----
->  drivers/platform/chrome/cros_ec_proto.c     | 51 ++++++++++++---------
->  include/linux/platform_data/cros_ec_proto.h |  7 ++-
->  3 files changed, 57 insertions(+), 34 deletions(-)
+>  include/linux/pagemap.h | 13 ++++++
+>  mm/filemap.c            | 99 +++++++++++++++++++++++++++++++++++------
+>  2 files changed, 99 insertions(+), 13 deletions(-)
 > 
-> diff --git a/drivers/platform/chrome/cros_ec.c b/drivers/platform/chrome/cros_ec.c
-> index 9c8dc7cdb2b7..4adc007c357c 100644
-> --- a/drivers/platform/chrome/cros_ec.c
-> +++ b/drivers/platform/chrome/cros_ec.c
-> @@ -46,25 +46,38 @@ static irqreturn_t ec_irq_handler(int irq, void *data)
->  	return IRQ_WAKE_THREAD;
+> diff --git a/include/linux/pagemap.h b/include/linux/pagemap.h
+> index d610a49be571..d6d97f9fb762 100644
+> --- a/include/linux/pagemap.h
+> +++ b/include/linux/pagemap.h
+> @@ -248,6 +248,19 @@ pgoff_t page_cache_prev_miss(struct address_space *mapping,
+>  #define FGP_NOFS		0x00000010
+>  #define FGP_NOWAIT		0x00000020
+>  #define FGP_FOR_MMAP		0x00000040
+> +/*
+> + * If you add more flags, increment FGP_ORDER_SHIFT (no further than 25).
+> + * Do not insert flags above the FGP order bits.
+> + */
+> +#define FGP_ORDER_SHIFT		7
+> +#define FGP_PMD			((PMD_SHIFT - PAGE_SHIFT) << FGP_ORDER_SHIFT)
+> +#define FGP_PUD			((PUD_SHIFT - PAGE_SHIFT) << FGP_ORDER_SHIFT)
+> +
+> +#ifdef CONFIG_TRANSPARENT_HUGEPAGE
+> +#define fgp_order(fgp)		((fgp) >> FGP_ORDER_SHIFT)
+> +#else
+> +#define fgp_order(fgp)		0
+> +#endif
+>  
+>  struct page *pagecache_get_page(struct address_space *mapping, pgoff_t offset,
+>  		int fgp_flags, gfp_t cache_gfp_mask);
+> diff --git a/mm/filemap.c b/mm/filemap.c
+> index afe8f5d95810..8eca91547e40 100644
+> --- a/mm/filemap.c
+> +++ b/mm/filemap.c
+> @@ -1576,7 +1576,71 @@ struct page *find_get_entry(struct address_space *mapping, pgoff_t offset)
+>  
+>  	return page;
 >  }
->  
-> -static irqreturn_t ec_irq_thread(int irq, void *data)
-> +static bool ec_handle_event(struct cros_ec_device *ec_dev)
->  {
-> -	struct cros_ec_device *ec_dev = data;
->  	bool wake_event = true;
-> -	int ret;
-> +	bool ec_has_more_events = false;
-> +	int ret = cros_ec_get_next_event(ec_dev, &wake_event);
->  
-> -	ret = cros_ec_get_next_event(ec_dev, &wake_event);
-> +	if (ec_dev->mkbp_event_supported) {
-> +		ec_has_more_events = (ret > 0) &&
-> +			(ec_dev->event_data.event_type &
-> +				EC_MKBP_HAS_MORE_EVENTS);
-> +	}
->  
-> -	/*
-> -	 * Signal only if wake host events or any interrupt if
-> -	 * cros_ec_get_next_event() returned an error (default value for
-> -	 * wake_event is true)
-> -	 */
-> -	if (wake_event && device_may_wakeup(ec_dev->dev))
-> +	if (device_may_wakeup(ec_dev->dev) && wake_event)
->  		pm_wakeup_event(ec_dev->dev, 0);
->  
->  	if (ret > 0)
->  		blocking_notifier_call_chain(&ec_dev->event_notifier,
->  					     0, ec_dev);
+> -EXPORT_SYMBOL(find_get_entry);
 > +
-> +	return ec_has_more_events;
-> +
+> +static bool pagecache_is_conflict(struct page *page)
+> +{
+> +	return page == XA_RETRY_ENTRY;
 > +}
 > +
-> +static irqreturn_t ec_irq_thread(int irq, void *data)
+> +/**
+> + * __find_get_page - Find and get a page cache entry.
+> + * @mapping: The address_space to search.
+> + * @offset: The page cache index.
+> + * @order: The minimum order of the entry to return.
+> + *
+> + * Looks up the page cache entries at @mapping between @offset and
+> + * @offset + 2^@order.  If there is a page cache page, it is returned with
+> + * an increased refcount unless it is smaller than @order.
+> + *
+> + * If the slot holds a shadow entry of a previously evicted page, or a
+> + * swap entry from shmem/tmpfs, it is returned.
+> + *
+> + * Return: the found page, a value indicating a conflicting page or %NULL if
+> + * there are no pages in this range.
+> + */
+> +static struct page *__find_get_page(struct address_space *mapping,
+> +		unsigned long offset, unsigned int order)
 > +{
-> +	struct cros_ec_device *ec_dev = data;
-> +	bool ec_has_more_events;
+> +	XA_STATE(xas, &mapping->i_pages, offset);
+> +	struct page *page;
 > +
-> +	do {
-> +		ec_has_more_events = ec_handle_event(ec_dev);
-
-ec_handle_event is only called once, right? I'd prefer add the code directly
-here instead of calling that function. I don't think it helps readability like
-it is now.
-
-
-> +	} while (ec_has_more_events);
+> +	rcu_read_lock();
+> +repeat:
+> +	xas_reset(&xas);
+> +	page = xas_find(&xas, offset | ((1UL << order) - 1));
+> +	if (xas_retry(&xas, page))
+> +		goto repeat;
+> +	/*
+> +	 * A shadow entry of a recently evicted page, or a swap entry from
+> +	 * shmem/tmpfs.  Skip it; keep looking for pages.
+> +	 */
+> +	if (xa_is_value(page))
+> +		goto repeat;
+> +	if (!page)
+> +		goto out;
+> +	if (compound_order(page) < order) {
+> +		page = XA_RETRY_ENTRY;
+> +		goto out;
+> +	}
 > +
->  	return IRQ_HANDLED;
->  }
->  
-> diff --git a/drivers/platform/chrome/cros_ec_proto.c b/drivers/platform/chrome/cros_ec_proto.c
-> index f659f96bda12..70e6d6c93b8d 100644
-> --- a/drivers/platform/chrome/cros_ec_proto.c
-> +++ b/drivers/platform/chrome/cros_ec_proto.c
-> @@ -425,10 +425,14 @@ int cros_ec_query_all(struct cros_ec_device *ec_dev)
->  	ret = cros_ec_get_host_command_version_mask(ec_dev,
->  						    EC_CMD_GET_NEXT_EVENT,
->  						    &ver_mask);
-> -	if (ret < 0 || ver_mask == 0)
-> +	if (ret < 0 || ver_mask == 0) {
->  		ec_dev->mkbp_event_supported = 0;
-> -	else
-> -		ec_dev->mkbp_event_supported = 1;
-> +		dev_info(ec_dev->dev, "MKBP not supported\n");
-> +	} else {
-> +		ec_dev->mkbp_event_supported = fls(ver_mask);
-> +		dev_info(ec_dev->dev, "MKBP support version %u\n",
-> +			ec_dev->mkbp_event_supported - 1);
+> +	if (!page_cache_get_speculative(page))
+> +		goto repeat;
+> +
+> +	/*
+> +	 * Has the page moved or been split?
+> +	 * This is part of the lockless pagecache protocol. See
+> +	 * include/linux/pagemap.h for details.
+> +	 */
+> +	if (unlikely(page != xas_reload(&xas))) {
+> +		put_page(page);
+> +		goto repeat;
 > +	}
 
-I'm not a big fan of having dev_info prints, unless the information is really a
-good reason for it. In this case looks to me that fits more as debug message.
+You need to re-check compound_order() after obtaining reference to the
+page. Otherwise the page could be split under you.
 
-Remove the messages or low down the level to dbg, in that casepreferably just
-use one message. I.e.
-
-dev_info(ec_dev->dev, "MKBP support version %u\n", ec_dev->mkbp_event_supported
-- 1);
-
--1, means no support.
-
-
+> +	page = find_subpage(page, offset);
+> +out:
+> +	rcu_read_unlock();
+> +
+> +	return page;
+> +}
 >  
->  	/* Probe if host sleep v1 is supported for S0ix failure detection. */
->  	ret = cros_ec_get_host_command_version_mask(ec_dev,
-> @@ -519,6 +523,7 @@ EXPORT_SYMBOL(cros_ec_cmd_xfer_status);
->  
->  static int get_next_event_xfer(struct cros_ec_device *ec_dev,
->  			       struct cros_ec_command *msg,
-> +			       struct ec_response_get_next_event_v1 *event,
->  			       int version, uint32_t size)
+>  /**
+>   * find_lock_entry - locate, pin and lock a page cache entry
+> @@ -1618,12 +1682,12 @@ EXPORT_SYMBOL(find_lock_entry);
+>   * pagecache_get_page - find and get a page reference
+>   * @mapping: the address_space to search
+>   * @offset: the page index
+> - * @fgp_flags: PCG flags
+> + * @fgp_flags: FGP flags
+>   * @gfp_mask: gfp mask to use for the page cache data page allocation
+>   *
+>   * Looks up the page cache slot at @mapping & @offset.
+>   *
+> - * PCG flags modify how the page is returned.
+> + * FGP flags modify how the page is returned.
+>   *
+>   * @fgp_flags can be:
+>   *
+> @@ -1636,6 +1700,10 @@ EXPORT_SYMBOL(find_lock_entry);
+>   * - FGP_FOR_MMAP: Similar to FGP_CREAT, only we want to allow the caller to do
+>   *   its own locking dance if the page is already in cache, or unlock the page
+>   *   before returning if we had to add the page to pagecache.
+> + * - FGP_PMD: We're only interested in pages at PMD granularity.  If there
+> + *   is no page here (and FGP_CREATE is set), we'll create one large enough.
+> + *   If there is a smaller page in the cache that overlaps the PMD page, we
+> + *   return %NULL and do not attempt to create a page.
+
+I still think it's suboptimal interface. It's okay to ask for PMD page,
+but there's small page already caller should deal with it. Otherwise the
+caller will do one additional lookup in xarray for fallback path for no
+real reason.
+
+>   *
+>   * If FGP_LOCK or FGP_CREAT are specified then the function may sleep even
+>   * if the GFP flags specified for FGP_CREAT are atomic.
+> @@ -1649,10 +1717,11 @@ struct page *pagecache_get_page(struct address_space *mapping, pgoff_t offset,
 >  {
->  	int ret;
-> @@ -531,7 +536,7 @@ static int get_next_event_xfer(struct cros_ec_device *ec_dev,
->  	ret = cros_ec_cmd_xfer(ec_dev, msg);
->  	if (ret > 0) {
->  		ec_dev->event_size = ret - 1;
-> -		memcpy(&ec_dev->event_data, msg->data, ret);
-> +		ec_dev->event_data = *event;
+>  	struct page *page;
+>  
+> +	BUILD_BUG_ON(((63 << FGP_ORDER_SHIFT) >> FGP_ORDER_SHIFT) != 63);
+>  repeat:
+> -	page = find_get_entry(mapping, offset);
+> -	if (xa_is_value(page))
+> -		page = NULL;
+> +	page = __find_get_page(mapping, offset, fgp_order(fgp_flags));
+> +	if (pagecache_is_conflict(page))
+> +		return NULL;
+>  	if (!page)
+>  		goto no_page;
+>  
+> @@ -1686,7 +1755,7 @@ struct page *pagecache_get_page(struct address_space *mapping, pgoff_t offset,
+>  		if (fgp_flags & FGP_NOFS)
+>  			gfp_mask &= ~__GFP_FS;
+>  
+> -		page = __page_cache_alloc(gfp_mask);
+> +		page = __page_cache_alloc_order(gfp_mask, fgp_order(fgp_flags));
+>  		if (!page)
+>  			return NULL;
+>  
+> @@ -1704,13 +1773,17 @@ struct page *pagecache_get_page(struct address_space *mapping, pgoff_t offset,
+>  			if (err == -EEXIST)
+>  				goto repeat;
+>  		}
+> +		if (page) {
+> +			if (fgp_order(fgp_flags))
+> +				count_vm_event(THP_FILE_ALLOC);
+>  
+> -		/*
+> -		 * add_to_page_cache_lru locks the page, and for mmap we expect
+> -		 * an unlocked page.
+> -		 */
+> -		if (page && (fgp_flags & FGP_FOR_MMAP))
+> -			unlock_page(page);
+> +			/*
+> +			 * add_to_page_cache_lru locks the page, and
+> +			 * for mmap we expect an unlocked page.
+> +			 */
+> +			if (fgp_flags & FGP_FOR_MMAP)
+> +				unlock_page(page);
+> +		}
 >  	}
 >  
->  	return ret;
-> @@ -539,30 +544,29 @@ static int get_next_event_xfer(struct cros_ec_device *ec_dev,
->  
->  static int get_next_event(struct cros_ec_device *ec_dev)
->  {
-> -	u8 buffer[sizeof(struct cros_ec_command) + sizeof(ec_dev->event_data)];
-> -	struct cros_ec_command *msg = (struct cros_ec_command *)&buffer;
-> -	static int cmd_version = 1;
-> -	int ret;
-> +	struct {
-> +		struct cros_ec_command msg;
-> +		struct ec_response_get_next_event_v1 event;
-> +	} __packed buf;
-> +	struct cros_ec_command *msg = &buf.msg;
-> +	struct ec_response_get_next_event_v1 *event = &buf.event;
-> +	const int cmd_version = ec_dev->mkbp_event_supported - 1;
-> +
-> +	BUILD_BUG_ON(sizeof(union ec_response_get_next_data_v1) != 16);
-> +
-> +	memset(&buf, 0, sizeof(buf));
->  
->  	if (ec_dev->suspended) {
->  		dev_dbg(ec_dev->dev, "Device suspended.\n");
->  		return -EHOSTDOWN;
->  	}
->  
-> -	if (cmd_version == 1) {
-> -		ret = get_next_event_xfer(ec_dev, msg, cmd_version,
-> -				sizeof(struct ec_response_get_next_event_v1));
-> -		if (ret < 0 || msg->result != EC_RES_INVALID_VERSION)
-> -			return ret;
-> -
-> -		/* Fallback to version 0 for future send attempts */
-> -		cmd_version = 0;
-> -	}
-> -
-> -	ret = get_next_event_xfer(ec_dev, msg, cmd_version,
-> +	if (cmd_version == 0)
-> +		return get_next_event_xfer(ec_dev, msg, event, 0,
->  				  sizeof(struct ec_response_get_next_event));
->  
-> -	return ret;
-> +	return get_next_event_xfer(ec_dev, msg, event, cmd_version,
-> +				sizeof(struct ec_response_get_next_event_v1));
->  }
->  
->  static int get_keyboard_state_event(struct cros_ec_device *ec_dev)
-> @@ -606,7 +610,8 @@ int cros_ec_get_next_event(struct cros_ec_device *ec_dev, bool *wake_event)
->  		return ret;
->  
->  	if (wake_event) {
-> -		event_type = ec_dev->event_data.event_type;
-> +		event_type =
-> +			ec_dev->event_data.event_type & EC_MKBP_EVENT_TYPE_MASK;
->  		host_event = cros_ec_get_host_event(ec_dev);
->  
->  		/*
-> @@ -631,10 +636,12 @@ EXPORT_SYMBOL(cros_ec_get_next_event);
->  u32 cros_ec_get_host_event(struct cros_ec_device *ec_dev)
->  {
->  	u32 host_event;
-> +	const u8 event_type =
-> +		ec_dev->event_data.event_type & EC_MKBP_EVENT_TYPE_MASK;
->  
->  	BUG_ON(!ec_dev->mkbp_event_supported);
->  
-> -	if (ec_dev->event_data.event_type != EC_MKBP_EVENT_HOST_EVENT)
-> +	if (event_type != EC_MKBP_EVENT_HOST_EVENT)
->  		return 0;
->  
->  	if (ec_dev->event_size != sizeof(host_event)) {
-> diff --git a/include/linux/platform_data/cros_ec_proto.h b/include/linux/platform_data/cros_ec_proto.h
-> index ab12e28f2107..63b5597294e7 100644
-> --- a/include/linux/platform_data/cros_ec_proto.h
-> +++ b/include/linux/platform_data/cros_ec_proto.h
-> @@ -115,7 +115,9 @@ struct cros_ec_command {
->   *            code.
->   * @pkt_xfer: Send packet to EC and get response.
->   * @lock: One transaction at a time.
-> - * @mkbp_event_supported: True if this EC supports the MKBP event protocol.
-> + * @mkbp_event_supported: 0 if MKBP not supported. Otherwise its value is
-> + *                        the maximum supported version of the MKBP host event
-> + *                        command + 1.
->   * @host_sleep_v1: True if this EC supports the sleep v1 command.
->   * @event_notifier: Interrupt event notifier for transport devices.
->   * @event_data: Raw payload transferred with the MKBP event.
-> @@ -155,7 +157,8 @@ struct cros_ec_device {
->  	int (*pkt_xfer)(struct cros_ec_device *ec,
->  			struct cros_ec_command *msg);
->  	struct mutex lock;
-> -	bool mkbp_event_supported;
-> +	/* 0 == not supported, otherwise it supports version x - 1 */
-
-You can remove this comment, is already in the doc.
-
-> +	u8 mkbp_event_supported;
->  	bool host_sleep_v1;
->  	struct blocking_notifier_head event_notifier;
->  
+>  	return page;
+> -- 
+> 2.23.0
 > 
+
+-- 
+ Kirill A. Shutemov
