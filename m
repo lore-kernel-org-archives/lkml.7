@@ -7,51 +7,52 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 933EFECE587
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 16:45:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B04EC352AA
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 16:45:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5F8382190F
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 16:45:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 51FDF205C9
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 16:45:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569948331;
-	bh=DdXffDv43Dzcs2A5WSrvHVsPPlFVTzzPNg20It8U2EU=;
+	s=default; t=1569948333;
+	bh=jgOVQH1oabmmA2tXS0QqxJF8/sUZvCaHERUsbEeTv08=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=EcOl64ZXCQYMQa+KmaHQOhcdyjCdv4vB/8Fa89vRtp9yxtXybK+hxw0tb971rZt+t
-	 2NQm3+3ByiMOkaGC0J7rJlOxXJ6yNx6IbinLlpuz0JEbnx0fE/XTaxj26NVtw8+1Xz
-	 9ajWu+5GYSKhWDj2jJGWmIDiTrtb3CyUAttL+QP0=
+	b=EF+qBwZU8xEDXBRsP3eR2cIYrTCXui3wYTcuTi1VJlykSAvn3/wqziqk6g8qYE3F2
+	 YrgCPKC2ZxyV+hFLNXuvFoJ9phVwgS23xBzM5W3F7TqRmSbEMqiVPhzxFQJaXtwlX8
+	 jzfEA0c36dDVYHhlnzHbgCqjiVfLs2cFcsgGohDc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390296AbfJAQpa (ORCPT
+        id S2390313AbfJAQpc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Oct 2019 12:45:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57626 "EHLO mail.kernel.org"
+        Tue, 1 Oct 2019 12:45:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57740 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388464AbfJAQpN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Oct 2019 12:45:13 -0400
+        id S2388008AbfJAQpS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Oct 2019 12:45:18 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 936122168B;
-        Tue,  1 Oct 2019 16:45:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C786721A4A;
+        Tue,  1 Oct 2019 16:45:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569948312;
-        bh=DdXffDv43Dzcs2A5WSrvHVsPPlFVTzzPNg20It8U2EU=;
+        s=default; t=1569948317;
+        bh=jgOVQH1oabmmA2tXS0QqxJF8/sUZvCaHERUsbEeTv08=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ce1qvMFXs4tC52ZdzhdroMp+PcxOf0RjnzRMksBJV84fE2eh2xL4vxchXr2FbM7MR
-         CQ67hIeho9FZkHtlNnSToXeiqzxS4Sqx9LrajDcYt9goJD9jRLqquBxK1V9AWljb9f
-         2/E+Bf1/tGJdkpyaJxeku2oHgN5HPqV+G7fRKLps=
+        b=qIEJZ5a9VXDNBpx+DIkJmx6A7M6ptuHMVrRVpFm5dvW59n7Ff4Mzcyw0R393TW4qN
+         /5Cx819/iKBlz5T9hQXUwgGXngL3eTdPPLnkwJUE6OXhs77w2X/e9bHkFknVDVN9ce
+         GMZKy6CghOO5/kyTX8J/HSE2NkWBkCd3LhCtl0hc=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Erqi Chen <chenerqi@gmail.com>, "Yan, Zheng" <zyan@redhat.com>,
-        Jeff Layton <jlayton@kernel.org>,
-        Ilya Dryomov <idryomov@gmail.com>,
-        Sasha Levin <sashal@kernel.org>, ceph-devel@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 06/19] ceph: reconnect connection if session hang in opening state
-Date:   Tue,  1 Oct 2019 12:44:52 -0400
-Message-Id: <20191001164505.16708-6-sashal@kernel.org>
+Cc:     =?UTF-8?q?Bj=C3=B8rn=20Mork?= <bjorn@mork.no>,
+        Jakub Kicinski <jakub.kicinski@netronome.com>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
+        linux-usb@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 09/19] usbnet: ignore endpoints with invalid wMaxPacketSize
+Date:   Tue,  1 Oct 2019 12:44:55 -0400
+Message-Id: <20191001164505.16708-9-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191001164505.16708-1-sashal@kernel.org>
 References: <20191001164505.16708-1-sashal@kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -60,44 +61,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Erqi Chen <chenerqi@gmail.com>
+From: Bjørn Mork <bjorn@mork.no>
 
-[ Upstream commit 71a228bc8d65900179e37ac309e678f8c523f133 ]
+[ Upstream commit 8d3d7c2029c1b360f1a6b0a2fca470b57eb575c0 ]
 
-If client mds session is evicted in CEPH_MDS_SESSION_OPENING state,
-mds won't send session msg to client, and delayed_work skip
-CEPH_MDS_SESSION_OPENING state session, the session hang forever.
+Endpoints with zero wMaxPacketSize are not usable for transferring
+data. Ignore such endpoints when looking for valid in, out and
+status pipes, to make the drivers more robust against invalid and
+meaningless descriptors.
 
-Allow ceph_con_keepalive to reconnect a session in OPENING to avoid
-session hang. Also, ensure that we skip sessions in RESTARTING and
-REJECTED states since those states can't be resurrected by issuing
-a keepalive.
+The wMaxPacketSize of these endpoints are used for memory allocations
+and as divisors in many usbnet minidrivers. Avoiding zero is therefore
+critical.
 
-Link: https://tracker.ceph.com/issues/41551
-Signed-off-by: Erqi Chen chenerqi@gmail.com
-Reviewed-by: "Yan, Zheng" <zyan@redhat.com>
-Signed-off-by: Jeff Layton <jlayton@kernel.org>
-Signed-off-by: Ilya Dryomov <idryomov@gmail.com>
+Signed-off-by: Bjørn Mork <bjorn@mork.no>
+Signed-off-by: Jakub Kicinski <jakub.kicinski@netronome.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/ceph/mds_client.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/net/usb/usbnet.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/fs/ceph/mds_client.c b/fs/ceph/mds_client.c
-index 67cb9d078bfa7..3139fbd4c34e3 100644
---- a/fs/ceph/mds_client.c
-+++ b/fs/ceph/mds_client.c
-@@ -3410,7 +3410,9 @@ static void delayed_work(struct work_struct *work)
- 				pr_info("mds%d hung\n", s->s_mds);
- 			}
- 		}
--		if (s->s_state < CEPH_MDS_SESSION_OPEN) {
-+		if (s->s_state == CEPH_MDS_SESSION_NEW ||
-+		    s->s_state == CEPH_MDS_SESSION_RESTARTING ||
-+		    s->s_state == CEPH_MDS_SESSION_REJECTED) {
- 			/* this mds is failed or recovering, just wait */
- 			ceph_put_mds_session(s);
- 			continue;
+diff --git a/drivers/net/usb/usbnet.c b/drivers/net/usb/usbnet.c
+index a5acbcb3c0445..6d0efeb28f5cb 100644
+--- a/drivers/net/usb/usbnet.c
++++ b/drivers/net/usb/usbnet.c
+@@ -114,6 +114,11 @@ int usbnet_get_endpoints(struct usbnet *dev, struct usb_interface *intf)
+ 			int				intr = 0;
+ 
+ 			e = alt->endpoint + ep;
++
++			/* ignore endpoints which cannot transfer data */
++			if (!usb_endpoint_maxp(&e->desc))
++				continue;
++
+ 			switch (e->desc.bmAttributes) {
+ 			case USB_ENDPOINT_XFER_INT:
+ 				if (!usb_endpoint_dir_in(&e->desc))
 -- 
 2.20.1
 
