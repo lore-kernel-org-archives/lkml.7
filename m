@@ -2,208 +2,112 @@ Return-Path: <SRS0=YRFP=X2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FAKE_REPLY_C,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09798C352AA
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 19:45:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 593C2C352AA
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 19:46:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D56B321855
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 19:45:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569959123;
-	bh=iuEl0oG1KnkC1p6/E5Wz2uBIvJyfmGalS5kJrSPDlLw=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
-	b=Qb25oYbPznGyj4ry158ftqtJA5FVQJGGVqqI4TzdoYAfxHPLUg67mDoQBXJCaNtcA
-	 4GmN+SDNMqTvxEsxrRvHDiyahftb1NQwnqyM3a6EX0D3U037VilCv2FKqrlQPV/uwg
-	 hb7KuOuv6AyzV+cYSh5d06M53rE8c3ORWUauNrn0=
+	by mail.kernel.org (Postfix) with ESMTP id 311DE21855
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 19:46:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="BlBJdPd6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726778AbfJATpX (ORCPT
+        id S1726867AbfJATqZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Oct 2019 15:45:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56544 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725844AbfJATpX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Oct 2019 15:45:23 -0400
-Received: from localhost (unknown [69.71.4.100])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 26F8A205C9;
-        Tue,  1 Oct 2019 19:45:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569959121;
-        bh=iuEl0oG1KnkC1p6/E5Wz2uBIvJyfmGalS5kJrSPDlLw=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=2hV/mPBtGU8oBcPBQvxE26QUIPzRLboN1a7KAwOaOZE1lpPoyVJG5/4rv3CiYrDzN
-         uL1kVj4B0TKChZ7oBo9O48OKM+XZkxEg8M7raFz6GnIiuzvq+gO1KpkNu9loHUiJwF
-         6tlzF/Y34Z2JKakjjPqBmUkb5VodKqlwihN5ekVs=
-Date:   Tue, 1 Oct 2019 14:45:19 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Krzysztof Wilczynski <kw@linux.com>
-Cc:     Joerg Roedel <joro@8bytes.org>, Jingoo Han <jingoohan1@gmail.com>,
-        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        iommu@lists.linux-foundation.org, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        devicetree@vger.kernel.org
-Subject: Re: [PATCH v2] PCI: Remove unused includes and superfluous struct
- declaration
-Message-ID: <20191001194519.GA63059@google.com>
+        Tue, 1 Oct 2019 15:46:25 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:44094 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725844AbfJATqZ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Oct 2019 15:46:25 -0400
+Received: by mail-pf1-f193.google.com with SMTP id q21so8808771pfn.11
+        for <linux-kernel@vger.kernel.org>; Tue, 01 Oct 2019 12:46:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=XlhrzqUm99LPeCzy1CLEgqtATY57KMRZvj7FJwTHt3Y=;
+        b=BlBJdPd6a2yhJnwOoQBdMYStVorzzB/7/Pgx9fDxjOWfHKarl/Zo2QgvysyxIqo1+0
+         i97TAjJYwGkgXByGwikNWZ1UfK9uTK2SuMuLQKGFFpyo3fMz7Ccu2w11k5CBFYGs5wLx
+         IaCpSD4yOVbqxCjwMRd8jnWIgbdNeUg0r2kPk=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=XlhrzqUm99LPeCzy1CLEgqtATY57KMRZvj7FJwTHt3Y=;
+        b=lEFNZTRJFRaft+/4lU7RHuB5jXOUbE+z2GXHsky2hd1QukhJGQjOm2kE03dmvzGAL/
+         Tpp3VRkKiXBdMWUJmQCR/9iwGzNJC6A20lKEmKQQyuMnkaUAx7hnBUjgZxrjDe79eztf
+         Bw2C+RcQP49NkRu+q9WwKip71JHoHcgLCTQ42/v2h073xe0+Dy+8DAiGM/GxXlQNV9Yq
+         xr036XOdnRw0HXEgC0zj86uqwb9NcJD5FlH50HHXoZhaG/0Ub7L/18BQzGA6dpRFTj9k
+         Wj5esBz/0ZkioEcCy7nvkpdY80TNGEWEmdso0o8DNrM++MXmR5k2ynL1ttQlcQ3jW93m
+         hQHg==
+X-Gm-Message-State: APjAAAVjHWvdVKlNNa7cxyU8iGrUG+pYRA6KsCbt5UsyW+5/oEtNYZYh
+        gvPgndbaKnmz/HTU3u8afG9dng==
+X-Google-Smtp-Source: APXvYqz+yD3csXdcsd3rQlyvJ8ra69IQckYVL2z4i1SenQUZV2eCKmQUdHAuU32HEA1rPGoK8gCTaw==
+X-Received: by 2002:a63:6783:: with SMTP id b125mr23576873pgc.125.1569959184577;
+        Tue, 01 Oct 2019 12:46:24 -0700 (PDT)
+Received: from tictac2.mtv.corp.google.com ([2620:15c:202:1:24fa:e766:52c9:e3b2])
+        by smtp.gmail.com with ESMTPSA id y4sm17013919pga.60.2019.10.01.12.46.23
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 01 Oct 2019 12:46:24 -0700 (PDT)
+From:   Douglas Anderson <dianders@chromium.org>
+To:     Mark Brown <broonie@kernel.org>, Rob Herring <robh+dt@kernel.org>
+Cc:     Marco Felsch <m.felsch@pengutronix.de>,
+        ckeepax@opensource.cirrus.com, zhang.chunyan@linaro.org,
+        Douglas Anderson <dianders@chromium.org>,
+        devicetree@vger.kernel.org, Liam Girdwood <lgirdwood@gmail.com>,
+        linux-kernel@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>
+Subject: [PATCH v2] regulator: Document "regulator-boot-on" binding more thoroughly
+Date:   Tue,  1 Oct 2019 12:45:54 -0700
+Message-Id: <20191001124531.v2.1.Ice34ad5970a375c3c03cb15c3859b3ee501561bf@changeid>
+X-Mailer: git-send-email 2.23.0.444.g18eeb5a265-goog
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190903113059.2901-1-kw@linux.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Sep 03, 2019 at 01:30:59PM +0200, Krzysztof Wilczynski wrote:
-> Remove <linux/pci.h> and <linux/msi.h> from being included
-> directly as part of the include/linux/of_pci.h, and remove
-> superfluous declaration of struct of_phandle_args.
-> 
-> Move users of include <linux/of_pci.h> to include <linux/pci.h>
-> and <linux/msi.h> directly rather than rely on both being
-> included transitively through <linux/of_pci.h>.
-> 
-> Signed-off-by: Krzysztof Wilczynski <kw@linux.com>
+The description of "regulator-boot-on" was a little unclear, at least
+to me.  Did this property mean that we should turn the regulator on at
+boot?  Or perhaps it was intended only to be used for regulators where
+we couldn't read the state at bootup to indicate what state we should
+assume?  The answer, it turns out, is both [1].
 
-Applied with Rob's reviewed-by to pci/misc for v5.5, thanks!
+Let's document this.
 
-> ---
->  drivers/iommu/of_iommu.c                          | 2 ++
->  drivers/irqchip/irq-gic-v2m.c                     | 1 +
->  drivers/irqchip/irq-gic-v3-its-pci-msi.c          | 1 +
->  drivers/pci/controller/dwc/pcie-designware-host.c | 1 +
->  drivers/pci/controller/pci-aardvark.c             | 1 +
->  drivers/pci/controller/pci-thunder-pem.c          | 1 +
->  drivers/pci/pci.c                                 | 1 +
->  drivers/pci/probe.c                               | 1 +
->  include/linux/of_pci.h                            | 5 ++---
->  9 files changed, 11 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/iommu/of_iommu.c b/drivers/iommu/of_iommu.c
-> index 614a93aa5305..026ad2b29dcd 100644
-> --- a/drivers/iommu/of_iommu.c
-> +++ b/drivers/iommu/of_iommu.c
-> @@ -8,6 +8,8 @@
->  #include <linux/export.h>
->  #include <linux/iommu.h>
->  #include <linux/limits.h>
-> +#include <linux/pci.h>
-> +#include <linux/msi.h>
->  #include <linux/of.h>
->  #include <linux/of_iommu.h>
->  #include <linux/of_pci.h>
-> diff --git a/drivers/irqchip/irq-gic-v2m.c b/drivers/irqchip/irq-gic-v2m.c
-> index e88e75c22b6a..fbec07d634ad 100644
-> --- a/drivers/irqchip/irq-gic-v2m.c
-> +++ b/drivers/irqchip/irq-gic-v2m.c
-> @@ -17,6 +17,7 @@
->  #include <linux/irq.h>
->  #include <linux/irqdomain.h>
->  #include <linux/kernel.h>
-> +#include <linux/pci.h>
->  #include <linux/msi.h>
->  #include <linux/of_address.h>
->  #include <linux/of_pci.h>
-> diff --git a/drivers/irqchip/irq-gic-v3-its-pci-msi.c b/drivers/irqchip/irq-gic-v3-its-pci-msi.c
-> index 229d586c3d7a..87711e0f8014 100644
-> --- a/drivers/irqchip/irq-gic-v3-its-pci-msi.c
-> +++ b/drivers/irqchip/irq-gic-v3-its-pci-msi.c
-> @@ -5,6 +5,7 @@
->   */
->  
->  #include <linux/acpi_iort.h>
-> +#include <linux/pci.h>
->  #include <linux/msi.h>
->  #include <linux/of.h>
->  #include <linux/of_irq.h>
-> diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c b/drivers/pci/controller/dwc/pcie-designware-host.c
-> index d3156446ff27..7a9bef993e57 100644
-> --- a/drivers/pci/controller/dwc/pcie-designware-host.c
-> +++ b/drivers/pci/controller/dwc/pcie-designware-host.c
-> @@ -10,6 +10,7 @@
->  
->  #include <linux/irqchip/chained_irq.h>
->  #include <linux/irqdomain.h>
-> +#include <linux/msi.h>
->  #include <linux/of_address.h>
->  #include <linux/of_pci.h>
->  #include <linux/pci_regs.h>
-> diff --git a/drivers/pci/controller/pci-aardvark.c b/drivers/pci/controller/pci-aardvark.c
-> index fc0fe4d4de49..3a05f6ca95b0 100644
-> --- a/drivers/pci/controller/pci-aardvark.c
-> +++ b/drivers/pci/controller/pci-aardvark.c
-> @@ -16,6 +16,7 @@
->  #include <linux/pci.h>
->  #include <linux/init.h>
->  #include <linux/platform_device.h>
-> +#include <linux/msi.h>
->  #include <linux/of_address.h>
->  #include <linux/of_pci.h>
->  
-> diff --git a/drivers/pci/controller/pci-thunder-pem.c b/drivers/pci/controller/pci-thunder-pem.c
-> index f127ce8bd4ef..9491e266b1ea 100644
-> --- a/drivers/pci/controller/pci-thunder-pem.c
-> +++ b/drivers/pci/controller/pci-thunder-pem.c
-> @@ -6,6 +6,7 @@
->  #include <linux/bitfield.h>
->  #include <linux/kernel.h>
->  #include <linux/init.h>
-> +#include <linux/pci.h>
->  #include <linux/of_address.h>
->  #include <linux/of_pci.h>
->  #include <linux/pci-acpi.h>
-> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-> index 484e35349565..571e7e00984b 100644
-> --- a/drivers/pci/pci.c
-> +++ b/drivers/pci/pci.c
-> @@ -13,6 +13,7 @@
->  #include <linux/delay.h>
->  #include <linux/dmi.h>
->  #include <linux/init.h>
-> +#include <linux/msi.h>
->  #include <linux/of.h>
->  #include <linux/of_pci.h>
->  #include <linux/pci.h>
-> diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
-> index 169943f17a4c..11b11a652d18 100644
-> --- a/drivers/pci/probe.c
-> +++ b/drivers/pci/probe.c
-> @@ -7,6 +7,7 @@
->  #include <linux/delay.h>
->  #include <linux/init.h>
->  #include <linux/pci.h>
-> +#include <linux/msi.h>
->  #include <linux/of_device.h>
->  #include <linux/of_pci.h>
->  #include <linux/pci_hotplug.h>
-> diff --git a/include/linux/of_pci.h b/include/linux/of_pci.h
-> index 21a89c4880fa..29658c0ee71f 100644
-> --- a/include/linux/of_pci.h
-> +++ b/include/linux/of_pci.h
-> @@ -2,11 +2,10 @@
->  #ifndef __OF_PCI_H
->  #define __OF_PCI_H
->  
-> -#include <linux/pci.h>
-> -#include <linux/msi.h>
-> +#include <linux/types.h>
-> +#include <linux/errno.h>
->  
->  struct pci_dev;
-> -struct of_phandle_args;
->  struct device_node;
->  
->  #if IS_ENABLED(CONFIG_OF) && IS_ENABLED(CONFIG_PCI)
-> -- 
-> 2.23.0
-> 
+[1] https://lore.kernel.org/r/20190923181431.GU2036@sirena.org.uk
+
+Signed-off-by: Douglas Anderson <dianders@chromium.org>
+---
+
+Changes in v2:
+- Don't mention Linux.  Duh.
+
+ Documentation/devicetree/bindings/regulator/regulator.yaml | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
+
+diff --git a/Documentation/devicetree/bindings/regulator/regulator.yaml b/Documentation/devicetree/bindings/regulator/regulator.yaml
+index 02c3043ce419..92ff2e8ad572 100644
+--- a/Documentation/devicetree/bindings/regulator/regulator.yaml
++++ b/Documentation/devicetree/bindings/regulator/regulator.yaml
+@@ -38,7 +38,12 @@ properties:
+     type: boolean
+ 
+   regulator-boot-on:
+-    description: bootloader/firmware enabled regulator
++    description: bootloader/firmware enabled regulator.
++      It's expected that this regulator was left on by the bootloader.
++      If the bootloader didn't leave it on then OS should turn it on
++      at boot but shouldn't prevent it from being turned off later.
++      This property is intended to only be used for regulators where
++      software cannot read the state of the regulator.
+     type: boolean
+ 
+   regulator-allow-bypass:
+-- 
+2.23.0.444.g18eeb5a265-goog
+
