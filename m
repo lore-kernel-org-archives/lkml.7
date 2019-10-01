@@ -4,59 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BB74C352AA
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 16:51:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37901C352AA
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 16:52:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D2D5621783
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 16:51:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 01AD521855
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 16:52:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569948716;
-	bh=frKQUWaTNqxWUOAgl8M0QJm71Dy1KEBTrzhSMfb7V2A=;
+	s=default; t=1569948722;
+	bh=lLf2g9KCQK5PoHP2qYZDVggikNw887AYHXv+3PO2oMY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=dwcHNWsdzDpZ/tXMgncJgIYVnwL2llgZY0ljD/P1IWx8hhca4CoRgph2FMHjuehwl
-	 GYYYVwyar9n/nv675bX0ygCeXHKHKbBxqrJsvcMI5uKMc/kYcLQ2+WSicB+jUAszjX
-	 7zTtqYFrAK0gPyl7wT9oli9bF/l0ulPp7bAKwTFI=
+	b=urx95Fpem6Voi7FlTbqInWOt16Gh1nylo9vcNIcsCP0+djaxXhuJY6FVQHM/gAkhE
+	 WrcCrOXjz8uUs7LGQKJ5phTxMgQjLE2EDYVh0KWIpnL4dPLbfW8I2T5tz0DkAXH+OR
+	 HCrikLPvGvdnRUMDkNd8LFoW0un74JrNYmxVRK04=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733094AbfJAQvz (ORCPT
+        id S1733252AbfJAQn7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Oct 2019 12:51:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56200 "EHLO mail.kernel.org"
+        Tue, 1 Oct 2019 12:43:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55968 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733281AbfJAQoB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Oct 2019 12:44:01 -0400
+        id S1733011AbfJAQns (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Oct 2019 12:43:48 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A05C820B7C;
-        Tue,  1 Oct 2019 16:43:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DB9D121A4A;
+        Tue,  1 Oct 2019 16:43:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569948240;
-        bh=frKQUWaTNqxWUOAgl8M0QJm71Dy1KEBTrzhSMfb7V2A=;
+        s=default; t=1569948227;
+        bh=lLf2g9KCQK5PoHP2qYZDVggikNw887AYHXv+3PO2oMY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=PFGQhCfxe4qF90Rrg1cYK/xWyed2G4idG6IASWGyGLhwS9MOaKzEFWJJS83f9gbOa
-         ptaAIPiiiDLzDtzmq6Q49hK3M6PwJ4LAPJbl9rqVhabd8ii39WqLs5hUPIg3MkdGbu
-         teqvjxGz5nEqGTs+jx/Lyc0rSOYpAiA4bxb/Irik=
+        b=M6CN8BUq7BafHLop4DpVE05CTlNG/0scDLLiTmcM4tUQPtRTXT/SuXTdRmdLR+qWa
+         lyMhTGyHSyWTNbMOUFCr0wmzIss8dAc0SbFNg0wqdYn9jYOrrPGYGXw39TRl3IPz90
+         FtbC7MRtIRFpBduvwo9Tmxk+CdMGiWHzxfM/oMJc=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Chris Metcalf <cmetcalf@ezchip.com>,
-        Christoph Lameter <cl@linux.com>,
-        "Eric W . Biederman" <ebiederm@xmission.com>,
-        Kirill Tkhai <tkhai@yandex.ru>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Mike Galbraith <efault@gmx.de>,
-        Oleg Nesterov <oleg@redhat.com>,
-        "Paul E . McKenney" <paulmck@linux.ibm.com>,
-        Russell King - ARM Linux admin <linux@armlinux.org.uk>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.19 32/43] sched/membarrier: Fix private expedited registration check
-Date:   Tue,  1 Oct 2019 12:43:00 -0400
-Message-Id: <20191001164311.15993-32-sashal@kernel.org>
+Cc:     Stefan Mavrodiev <stefan@olimex.com>,
+        Zhang Rui <rui.zhang@intel.com>,
+        Sasha Levin <sashal@kernel.org>, linux-pm@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 25/43] thermal_hwmon: Sanitize thermal_zone type
+Date:   Tue,  1 Oct 2019 12:42:53 -0400
+Message-Id: <20191001164311.15993-25-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191001164311.15993-1-sashal@kernel.org>
 References: <20191001164311.15993-1-sashal@kernel.org>
@@ -69,51 +59,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+From: Stefan Mavrodiev <stefan@olimex.com>
 
-[ Upstream commit fc0d77387cb5ae883fd774fc559e056a8dde024c ]
+[ Upstream commit 8c7aa184281c01fc26f319059efb94725012921d ]
 
-Fix a logic flaw in the way membarrier_register_private_expedited()
-handles ready state checks for private expedited sync core and private
-expedited registrations.
+When calling thermal_add_hwmon_sysfs(), the device type is sanitized by
+replacing '-' with '_'. However tz->type remains unsanitized. Thus
+calling thermal_hwmon_lookup_by_type() returns no device. And if there is
+no device, thermal_remove_hwmon_sysfs() fails with "hwmon device lookup
+failed!".
 
-If a private expedited membarrier registration is first performed, and
-then a private expedited sync_core registration is performed, the ready
-state check will skip the second registration when it really should not.
+The result is unregisted hwmon devices in the sysfs.
 
-Signed-off-by: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Cc: Chris Metcalf <cmetcalf@ezchip.com>
-Cc: Christoph Lameter <cl@linux.com>
-Cc: Eric W. Biederman <ebiederm@xmission.com>
-Cc: Kirill Tkhai <tkhai@yandex.ru>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Mike Galbraith <efault@gmx.de>
-Cc: Oleg Nesterov <oleg@redhat.com>
-Cc: Paul E. McKenney <paulmck@linux.ibm.com>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Russell King - ARM Linux admin <linux@armlinux.org.uk>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Link: https://lkml.kernel.org/r/20190919173705.2181-2-mathieu.desnoyers@efficios.com
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Fixes: 409ef0bacacf ("thermal_hwmon: Sanitize attribute name passed to hwmon")
+
+Signed-off-by: Stefan Mavrodiev <stefan@olimex.com>
+Signed-off-by: Zhang Rui <rui.zhang@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/sched/membarrier.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/thermal/thermal_hwmon.c | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
 
-diff --git a/kernel/sched/membarrier.c b/kernel/sched/membarrier.c
-index 76e0eaf4654e0..dd27e632b1bab 100644
---- a/kernel/sched/membarrier.c
-+++ b/kernel/sched/membarrier.c
-@@ -235,7 +235,7 @@ static int membarrier_register_private_expedited(int flags)
- 	 * groups, which use the same mm. (CLONE_VM but not
- 	 * CLONE_THREAD).
- 	 */
--	if (atomic_read(&mm->membarrier_state) & state)
-+	if ((atomic_read(&mm->membarrier_state) & state) == state)
- 		return 0;
- 	atomic_or(MEMBARRIER_STATE_PRIVATE_EXPEDITED, &mm->membarrier_state);
- 	if (flags & MEMBARRIER_FLAG_SYNC_CORE)
+diff --git a/drivers/thermal/thermal_hwmon.c b/drivers/thermal/thermal_hwmon.c
+index 40c69a533b240..dd5d8ee379287 100644
+--- a/drivers/thermal/thermal_hwmon.c
++++ b/drivers/thermal/thermal_hwmon.c
+@@ -87,13 +87,17 @@ static struct thermal_hwmon_device *
+ thermal_hwmon_lookup_by_type(const struct thermal_zone_device *tz)
+ {
+ 	struct thermal_hwmon_device *hwmon;
++	char type[THERMAL_NAME_LENGTH];
+ 
+ 	mutex_lock(&thermal_hwmon_list_lock);
+-	list_for_each_entry(hwmon, &thermal_hwmon_list, node)
+-		if (!strcmp(hwmon->type, tz->type)) {
++	list_for_each_entry(hwmon, &thermal_hwmon_list, node) {
++		strcpy(type, tz->type);
++		strreplace(type, '-', '_');
++		if (!strcmp(hwmon->type, type)) {
+ 			mutex_unlock(&thermal_hwmon_list_lock);
+ 			return hwmon;
+ 		}
++	}
+ 	mutex_unlock(&thermal_hwmon_list_lock);
+ 
+ 	return NULL;
 -- 
 2.20.1
 
