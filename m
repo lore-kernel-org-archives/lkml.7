@@ -2,111 +2,102 @@ Return-Path: <SRS0=YRFP=X2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5A54ECE58A
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 18:25:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D70AEECE58A
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 18:25:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6BE7820815
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 18:25:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AE2EF20815
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 18:25:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="eGWf2T8s"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Eel1qi18"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732348AbfJASZm (ORCPT
+        id S1732435AbfJASZw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Oct 2019 14:25:42 -0400
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:41093 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732279AbfJASZj (ORCPT
+        Tue, 1 Oct 2019 14:25:52 -0400
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:44641 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732394AbfJASZv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Oct 2019 14:25:39 -0400
-Received: by mail-pg1-f194.google.com with SMTP id s1so10248522pgv.8
-        for <linux-kernel@vger.kernel.org>; Tue, 01 Oct 2019 11:25:39 -0700 (PDT)
+        Tue, 1 Oct 2019 14:25:51 -0400
+Received: by mail-pl1-f195.google.com with SMTP id q15so5888392pll.11
+        for <linux-kernel@vger.kernel.org>; Tue, 01 Oct 2019 11:25:51 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=z78DOvz8kzmGfG9Z2xiQ3oJZKxQKLVG8/acy4oN8Dcw=;
-        b=eGWf2T8sSynGC2rohuPpxezKnt/2MdAbe2kmU38KOEEr1AOEToOk+D0v0KZgZpCnQH
-         OaMpO5xtn/aw6XxNXr5X64tnTR2Qmbg+2qEbDNDp6cG8k3Qkw9S8ogPg/E/woKdUQKZR
-         WDi2F+Z93nlXJm1SKJW+RCLLKdqR8+/DCZAVI=
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=LzScokAJUZmfEzLyRgkBYA98Mp75br3n/i2JbQ8ioSU=;
+        b=Eel1qi18Au+svdpZ7+XVj5a8bXyXORVjJPkq8MNCvHpEEiT0X2QJpv0kweG5dD01GT
+         8jF1xfb3pML4lkci+3Mcza2vkDMURS9/pP2cU58heb6uUg/4zu/y8GXSNmzMXfFdp8f4
+         oxBUb9ko7sRM7Sla0Mom37zphpvPzi7WrsMN68t3kNuqSBtu6BhkR1Kyzib3fILZYHAm
+         I6BZSGvfJ6gJj8MER91eVYp2ty+rsdUeqYv1LEoiuoQl71QzvREzakFiQr1mwgVc2fyL
+         9oYQ8mc6zZ6+SvhjeVy/wzaC7MRqeT4RvsidhvkAMDET1tVK6Y0ExYfznNAMET8JrzSD
+         wbIw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=z78DOvz8kzmGfG9Z2xiQ3oJZKxQKLVG8/acy4oN8Dcw=;
-        b=ZSgyrWia+Z/NPx1GVFmXSAiylfH4JX2xBdTyDVvFwzsWCZoWTrpf7Qe8cNInwchzT+
-         j4qXwHWGQo5K2nVAmf/1b28at8/zbmRQW8+QXzb0qHpQ2R/6mHTXQ5l4AHnAhXBFZkYX
-         OCDIviqejqiaDCNdye+e6K7TWkbnZpkav5cZE85Y4z1UakdhRUOE0pVPdgi3Qotxktfc
-         IbpUYKuxz2zhqwWzBo2yedgx/oq1E9k++X9cnLxY/EyLwso9bmQhTBAJy6QskK4lQUOm
-         yznYtPuItcJYyJSJf5j2L85+10zlauIFxVdASkwXCOuCdEvuhjSlqXI48stuk7KK/LbW
-         3rSg==
-X-Gm-Message-State: APjAAAU3LnkiX9/1r6YtK6JRwCKyYnNYMOTwTSPsVZTVpQuxf8bgtRPI
-        5ivi4ygr0X88e6GovDAIBzLNzw==
-X-Google-Smtp-Source: APXvYqxmcbMyJTaRzE/DNM8yFk2B+0LtMbDGHuNUFGXfcfl6cq9uMy+/Tm1S4m5uWiep+jpOqZsiQg==
-X-Received: by 2002:a63:d901:: with SMTP id r1mr31912514pgg.159.1569954338929;
-        Tue, 01 Oct 2019 11:25:38 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id b11sm17860627pgr.20.2019.10.01.11.25.35
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=LzScokAJUZmfEzLyRgkBYA98Mp75br3n/i2JbQ8ioSU=;
+        b=KHqkFxEnoU5449qOvt1OxYVMF7Surs+XYO8n5FomZj4VLpUB2+JT/yHJ6GhA41lzdI
+         LzTQBTcyEme11FDJpUnWdcd7YvvCKmn35cR8bz18GcdYG3zJBrIbeSUVpARQc3LzAV5N
+         tInyjoEgmwjDobRShkIC1UcvQ2NqdUiK8NZziqmKFFUn6oAspKKoxu2iHkVDJlgMNCpu
+         oLXZ+HMZQdowusFLG7G6x6xegz7dPfeRUBVPH2/9UF/d+3nZKfQbw0Gf4BCjoqjdX/wa
+         BchsRUcf8NtJNIg5F8pGKVIaadqfY42PEWP+AvQf8lzBiJx++b6M/qLupejxDZjniaBv
+         woag==
+X-Gm-Message-State: APjAAAVUvGLU4zlGlFA+Vw5vlUvs1Fbt5mhjTBOtxjDEKgpLYaxMtf9J
+        iuQenj42+rYj0XHtQHPihwBMmok/BIo=
+X-Google-Smtp-Source: APXvYqy/JN5Tukl6e1s+uskah3wczLS0qKNm1HHwfv24GZ0gm9S3ONW3SZg0fKBQSIEgdXHSBoByrA==
+X-Received: by 2002:a17:902:fe86:: with SMTP id x6mr27652483plm.28.1569954350285;
+        Tue, 01 Oct 2019 11:25:50 -0700 (PDT)
+Received: from localhost.localdomain ([2601:1c2:680:1319:692:26ff:feda:3a81])
+        by smtp.gmail.com with ESMTPSA id e14sm3095996pjt.8.2019.10.01.11.25.48
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 01 Oct 2019 11:25:36 -0700 (PDT)
-From:   Kees Cook <keescook@chromium.org>
-To:     Jonathan Corbet <corbet@lwn.net>
-Cc:     Kees Cook <keescook@chromium.org>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Jani Nikula <jani.nikula@linux.intel.com>,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v2 1/2] doc-rst: Reduce CSS padding around Field
-Date:   Tue,  1 Oct 2019 11:25:31 -0700
-Message-Id: <20191001182532.21538-2-keescook@chromium.org>
+        Tue, 01 Oct 2019 11:25:49 -0700 (PDT)
+From:   John Stultz <john.stultz@linaro.org>
+To:     lkml <linux-kernel@vger.kernel.org>
+Cc:     Peter Griffin <peter.griffin@linaro.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Allison Randal <allison@lohutok.net>,
+        linux-clk@vger.kernel.org, John Stultz <john.stultz@linaro.org>
+Subject: [PATCH] clk: hi6220: use CLK_OF_DECLARE_DRIVER
+Date:   Tue,  1 Oct 2019 18:25:46 +0000
+Message-Id: <20191001182546.70090-1-john.stultz@linaro.org>
 X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20191001182532.21538-1-keescook@chromium.org>
-References: <20191001182532.21538-1-keescook@chromium.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Right now any ":Field Name: Field Contents" lines end up with significant
-padding due to CSS from the "table" CSS which rightly needs padding to
-make tables readable. However, field lists don't need this as they tend
-to be stacked together. The future heavy use of fields in the parsed
-MAINTAINERS file needs this cleaned up, and existing users look better
-too. Note the needless white space (and misalignment of name/contents)
-between "Date" and "Author":
+From: Peter Griffin <peter.griffin@linaro.org>
 
-https://www.kernel.org/doc/html/latest/accounting/psi.html
+As now we also need to probe in the reset driver as well.
 
-This patch fixes this by lowering the padding with a more specific CSS.
-
-Signed-off-by: Kees Cook <keescook@chromium.org>
+Cc: Michael Turquette <mturquette@baylibre.com>
+Cc: Stephen Boyd <sboyd@kernel.org>
+Cc: Allison Randal <allison@lohutok.net>
+Cc: Peter Griffin <peter.griffin@linaro.org>
+Cc: linux-clk@vger.kernel.org
+Signed-off-by: Peter Griffin <peter.griffin@linaro.org>
+Signed-off-by: John Stultz <john.stultz@linaro.org>
 ---
- Documentation/sphinx-static/theme_overrides.css | 10 ++++++++++
- 1 file changed, 10 insertions(+)
+ drivers/clk/hisilicon/clk-hi6220.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/Documentation/sphinx-static/theme_overrides.css b/Documentation/sphinx-static/theme_overrides.css
-index e21e36cd6761..459ec5b29d68 100644
---- a/Documentation/sphinx-static/theme_overrides.css
-+++ b/Documentation/sphinx-static/theme_overrides.css
-@@ -53,6 +53,16 @@ div[class^="highlight"] pre {
-     line-height: normal;
+diff --git a/drivers/clk/hisilicon/clk-hi6220.c b/drivers/clk/hisilicon/clk-hi6220.c
+index b2c5b6bbb1c1..63a94e1b6785 100644
+--- a/drivers/clk/hisilicon/clk-hi6220.c
++++ b/drivers/clk/hisilicon/clk-hi6220.c
+@@ -86,7 +86,7 @@ static void __init hi6220_clk_ao_init(struct device_node *np)
+ 	hisi_clk_register_gate_sep(hi6220_separated_gate_clks_ao,
+ 				ARRAY_SIZE(hi6220_separated_gate_clks_ao), clk_data_ao);
  }
+-CLK_OF_DECLARE(hi6220_clk_ao, "hisilicon,hi6220-aoctrl", hi6220_clk_ao_init);
++CLK_OF_DECLARE_DRIVER(hi6220_clk_ao, "hisilicon,hi6220-aoctrl", hi6220_clk_ao_init);
  
-+/* Keep fields from being strangely far apart due to inheirited table CSS. */
-+.rst-content table.field-list th.field-name {
-+    padding-top: 1px;
-+    padding-bottom: 1px;
-+}
-+.rst-content table.field-list td.field-body {
-+    padding-top: 1px;
-+    padding-bottom: 1px;
-+}
-+
- @media screen {
  
-     /* content column
+ /* clocks in sysctrl */
 -- 
 2.17.1
 
