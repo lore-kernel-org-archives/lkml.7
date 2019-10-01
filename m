@@ -2,169 +2,180 @@ Return-Path: <SRS0=YRFP=X2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 411F2ECDFB6
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A690C388F3
 	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 05:28:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 21CF721783
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 05:28:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EAD3020640
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 05:28:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731558AbfJAF2M convert rfc822-to-8bit (ORCPT
+        id S1731266AbfJAF1G (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Oct 2019 01:28:12 -0400
-Received: from mga02.intel.com ([134.134.136.20]:7652 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727720AbfJAF2L (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Oct 2019 01:28:11 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 30 Sep 2019 22:28:11 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,570,1559545200"; 
-   d="scan'208";a="190478749"
-Received: from fmsmsx105.amr.corp.intel.com ([10.18.124.203])
-  by fmsmga008.fm.intel.com with ESMTP; 30 Sep 2019 22:28:10 -0700
-Received: from fmsmsx119.amr.corp.intel.com (10.18.124.207) by
- FMSMSX105.amr.corp.intel.com (10.18.124.203) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Mon, 30 Sep 2019 22:28:10 -0700
-Received: from shsmsx106.ccr.corp.intel.com (10.239.4.159) by
- FMSMSX119.amr.corp.intel.com (10.18.124.207) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Mon, 30 Sep 2019 22:28:09 -0700
-Received: from shsmsx104.ccr.corp.intel.com ([169.254.5.166]) by
- SHSMSX106.ccr.corp.intel.com ([169.254.10.119]) with mapi id 14.03.0439.000;
- Tue, 1 Oct 2019 13:28:08 +0800
-From:   "Zhang, Jun" <jun.zhang@intel.com>
-To:     Greg KH <gregkh@linuxfoundation.org>
-CC:     "labbott@redhat.com" <labbott@redhat.com>,
-        "sumit.semwal@linaro.org" <sumit.semwal@linaro.org>,
-        "arve@android.com" <arve@android.com>,
-        "tkjos@android.com" <tkjos@android.com>,
-        "maco@android.com" <maco@android.com>,
-        "joel@joelfernandes.org" <joel@joelfernandes.org>,
-        "christian@brauner.io" <christian@brauner.io>,
-        "devel@driverdev.osuosl.org" <devel@driverdev.osuosl.org>,
-        "Bai, Jie A" <jie.a.bai@intel.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        "linaro-mm-sig@lists.linaro.org" <linaro-mm-sig@lists.linaro.org>,
-        "he@osuosl.org" <he@osuosl.org>, "Bai@osuosl.org" <Bai@osuosl.org>,
-        "He, Bo" <bo.he@intel.com>
-Subject: RE: [PATCH] ion_system_heap: support X86 archtecture
-Thread-Topic: [PATCH] ion_system_heap: support X86 archtecture
-Thread-Index: AQHVdppyYu/UDgwp3kCa1tCveaZ4I6dB6ZkAgANY4IA=
-Date:   Tue, 1 Oct 2019 05:28:07 +0000
-Message-ID: <88DC34334CA3444C85D647DBFA962C2735B662D8@SHSMSX104.ccr.corp.intel.com>
-References: <20190929072841.14848-1-jun.zhang@intel.com>
- <20190929101254.GA1907778@kroah.com>
-In-Reply-To: <20190929101254.GA1907778@kroah.com>
-Accept-Language: zh-CN, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-titus-metadata-40: eyJDYXRlZ29yeUxhYmVscyI6IiIsIk1ldGFkYXRhIjp7Im5zIjoiaHR0cDpcL1wvd3d3LnRpdHVzLmNvbVwvbnNcL0ludGVsMyIsImlkIjoiNjViOGZjNzEtZDcxOS00YTFjLTk4NGUtYTUzYzBjOGNmMjUwIiwicHJvcHMiOlt7Im4iOiJDVFBDbGFzc2lmaWNhdGlvbiIsInZhbHMiOlt7InZhbHVlIjoiQ1RQX05UIn1dfV19LCJTdWJqZWN0TGFiZWxzIjpbXSwiVE1DVmVyc2lvbiI6IjE3LjEwLjE4MDQuNDkiLCJUcnVzdGVkTGFiZWxIYXNoIjoic25ZeGlQekh3WlRQa1RtNTVxa0VvSEpzV2RmaU5SdG41eWxkbm4reU1Ta3c0aTJpQVEwTUdPODZqUCtsdTNiRiJ9
-x-ctpclassification: CTP_NT
-dlp-product: dlpe-windows
-dlp-version: 11.2.0.6
-dlp-reaction: no-action
-x-originating-ip: [10.239.127.40]
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
+        Tue, 1 Oct 2019 01:27:06 -0400
+Received: from mail2-relais-roc.national.inria.fr ([192.134.164.83]:45803 "EHLO
+        mail2-relais-roc.national.inria.fr" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729406AbfJAF1F (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Oct 2019 01:27:05 -0400
+X-IronPort-AV: E=Sophos;i="5.64,570,1559512800"; 
+   d="scan'208";a="404095827"
+Received: from 81-65-53-202.rev.numericable.fr (HELO hadrien) ([81.65.53.202])
+  by mail2-relais-roc.national.inria.fr with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 01 Oct 2019 07:27:01 +0200
+Date:   Tue, 1 Oct 2019 07:27:01 +0200 (CEST)
+From:   Julia Lawall <julia.lawall@lip6.fr>
+X-X-Sender: jll@hadrien
+To:     Sam Ravnborg <sam@ravnborg.org>
+cc:     Inki Dae <inki.dae@samsung.com>, linux-kernel@vger.kernel.org,
+        kbuild-all@01.org
+Subject: drivers/gpu/drm/exynos/exynos_drm_dsi.c:1796:2-9: line 1796 is
+ redundant because platform_get_irq() already prints an error (fwd)
+Message-ID: <alpine.DEB.2.21.1910010726101.4150@hadrien>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello, Greg
 
-Sorry, I am newcomer, and I don't know why couldn't use #ifdefs?  I only refer some kernel code(V4.19) in drivers/hwtracing/intel_th/msu.c.
-Could you tell me why? And I tell my workmate to avoid the same case.
 
-If I define a config in Kconfig, and static inline function in .h file, then call it? Could you accept it?
+---------- Forwarded message ----------
+Date: Tue, 1 Oct 2019 10:47:40 +0800
+From: kbuild test robot <lkp@intel.com>
+To: kbuild@01.org
+Cc: Julia Lawall <julia.lawall@lip6.fr>
+Subject: drivers/gpu/drm/exynos/exynos_drm_dsi.c:1796:2-9: line 1796 is
+    redundant because platform_get_irq() already prints an error
 
-If not, Could you give me a sample?
+CC: kbuild-all@01.org
+CC: linux-kernel@vger.kernel.org
+TO: Sam Ravnborg <sam@ravnborg.org>
+CC: Inki Dae <inki.dae@samsung.com>
 
-Thanks,
-Jun
+tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
+head:   54ecb8f7028c5eb3d740bb82b0f1d90f2df63c5c
+commit: 156bdac99061b4013c8e47799c6e574f7f84e9f4 drm/exynos: trigger build of all modules
+date:   3 months ago
+:::::: branch date: 9 hours ago
+:::::: commit date: 3 months ago
 
------Original Message-----
-From: Greg KH <gregkh@linuxfoundation.org> 
-Sent: Sunday, September 29, 2019 6:13 PM
-To: Zhang, Jun <jun.zhang@intel.com>
-Cc: labbott@redhat.com; sumit.semwal@linaro.org; arve@android.com; tkjos@android.com; maco@android.com; joel@joelfernandes.org; christian@brauner.io; devel@driverdev.osuosl.org; Bai, Jie A <jie.a.bai@intel.com>; linux-kernel@vger.kernel.org; dri-devel@lists.freedesktop.org; linaro-mm-sig@lists.linaro.org; he@osuosl.org; Bai@osuosl.org; He, Bo <bo.he@intel.com>
-Subject: Re: [PATCH] ion_system_heap: support X86 archtecture
+If you fix the issue, kindly add following tag
+Reported-by: kbuild test robot <lkp@intel.com>
+Reported-by: Julia Lawall <julia.lawall@lip6.fr>
 
-On Sun, Sep 29, 2019 at 03:28:41PM +0800, jun.zhang@intel.com wrote:
-> From: zhang jun <jun.zhang@intel.com>
-> 
-> we see tons of warning like:
-> [   45.846872] x86/PAT: NDK MediaCodec_:3753 map pfn RAM range req
-> write-combining for [mem 0x1e7a80000-0x1e7a87fff], got write-back
-> [   45.848827] x86/PAT: .vorbis.decoder:4088 map pfn RAM range req
-> write-combining for [mem 0x1e7a58000-0x1e7a58fff], got write-back
-> [   45.848875] x86/PAT: NDK MediaCodec_:3753 map pfn RAM range req
-> write-combining for [mem 0x1e7a48000-0x1e7a4ffff], got write-back
-> [   45.849403] x86/PAT: .vorbis.decoder:4088 map pfn RAM range
-> req write-combining for [mem 0x1e7a70000-0x1e7a70fff], got write-back
-> 
-> check the kernel Documentation/x86/pat.txt, it says:
-> A. Exporting pages to users with remap_pfn_range, io_remap_pfn_range, 
-> vm_insert_pfn Drivers wanting to export some pages to userspace do it 
-> by using mmap interface and a combination of
-> 1) pgprot_noncached()
-> 2) io_remap_pfn_range() or remap_pfn_range() or vm_insert_pfn() With 
-> PAT support, a new API pgprot_writecombine is being added.
-> So, drivers can continue to use the above sequence, with either
-> pgprot_noncached() or pgprot_writecombine() in step 1, followed by step 2.
-> 
-> In addition, step 2 internally tracks the region as UC or WC in 
-> memtype list in order to ensure no conflicting mapping.
-> 
-> Note that this set of APIs only works with IO (non RAM) regions.
-> If driver ants to export a RAM region, it has to do set_memory_uc() or
-> set_memory_wc() as step 0 above and also track the usage of those 
-> pages and use set_memory_wb() before the page is freed to free pool.
-> 
-> the fix follow the pat document, do set_memory_wc() as step 0 and use 
-> the set_memory_wb() before the page is freed.
-> 
-> Signed-off-by: he, bo <bo.he@intel.com>
-> Signed-off-by: zhang jun <jun.zhang@intel.com>
-> Signed-off-by: Bai, Jie A <jie.a.bai@intel.com>
-> ---
->  drivers/staging/android/ion/ion_system_heap.c | 28 
-> ++++++++++++++++++-
->  1 file changed, 27 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/staging/android/ion/ion_system_heap.c 
-> b/drivers/staging/android/ion/ion_system_heap.c
-> index b83a1d16bd89..d298b8194820 100644
-> --- a/drivers/staging/android/ion/ion_system_heap.c
-> +++ b/drivers/staging/android/ion/ion_system_heap.c
-> @@ -13,6 +13,7 @@
->  #include <linux/scatterlist.h>
->  #include <linux/slab.h>
->  #include <linux/vmalloc.h>
-> +#include <asm/set_memory.h>
->  
->  #include "ion.h"
->  
-> @@ -134,6 +135,13 @@ static int ion_system_heap_allocate(struct ion_heap *heap,
->  	sg = table->sgl;
->  	list_for_each_entry_safe(page, tmp_page, &pages, lru) {
->  		sg_set_page(sg, page, page_size(page), 0);
-> +
-> +#ifdef CONFIG_X86
-> +	if (!(buffer->flags & ION_FLAG_CACHED))
-> +		set_memory_wc((unsigned long)page_address(sg_page(sg)),
-> +			      PAGE_ALIGN(sg->length) >> PAGE_SHIFT); #endif
+>> drivers/gpu/drm/exynos/exynos_drm_dsi.c:1796:2-9: line 1796 is redundant because platform_get_irq() already prints an error
 
-There is no way to do this without these #ifdefs?  That feels odd, why can't you just always test for this?
+# https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=156bdac99061b4013c8e47799c6e574f7f84e9f4
+git remote add linus https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git
+git remote update linus
+git checkout 156bdac99061b4013c8e47799c6e574f7f84e9f4
+vim +1796 drivers/gpu/drm/exynos/exynos_drm_dsi.c
 
-thanks,
+f37cd5e8098441 Inki Dae         2014-05-09  1722
+7eb8f069be8a03 Andrzej Hajda    2014-04-04  1723  static int exynos_dsi_probe(struct platform_device *pdev)
+7eb8f069be8a03 Andrzej Hajda    2014-04-04  1724  {
+2900c69c52079a Andrzej Hajda    2014-10-07  1725  	struct device *dev = &pdev->dev;
+7eb8f069be8a03 Andrzej Hajda    2014-04-04  1726  	struct resource *res;
+7eb8f069be8a03 Andrzej Hajda    2014-04-04  1727  	struct exynos_dsi *dsi;
+0ff03fd164a4f2 Hyungwon Hwang   2015-06-12  1728  	int ret, i;
+7eb8f069be8a03 Andrzej Hajda    2014-04-04  1729
+2900c69c52079a Andrzej Hajda    2014-10-07  1730  	dsi = devm_kzalloc(dev, sizeof(*dsi), GFP_KERNEL);
+2900c69c52079a Andrzej Hajda    2014-10-07  1731  	if (!dsi)
+2900c69c52079a Andrzej Hajda    2014-10-07  1732  		return -ENOMEM;
+2900c69c52079a Andrzej Hajda    2014-10-07  1733
+e17ddecc3aa519 YoungJun Cho     2014-07-22  1734  	/* To be checked as invalid one */
+e17ddecc3aa519 YoungJun Cho     2014-07-22  1735  	dsi->te_gpio = -ENOENT;
+e17ddecc3aa519 YoungJun Cho     2014-07-22  1736
+7eb8f069be8a03 Andrzej Hajda    2014-04-04  1737  	init_completion(&dsi->completed);
+7eb8f069be8a03 Andrzej Hajda    2014-04-04  1738  	spin_lock_init(&dsi->transfer_lock);
+7eb8f069be8a03 Andrzej Hajda    2014-04-04  1739  	INIT_LIST_HEAD(&dsi->transfer_list);
+7eb8f069be8a03 Andrzej Hajda    2014-04-04  1740
+7eb8f069be8a03 Andrzej Hajda    2014-04-04  1741  	dsi->dsi_host.ops = &exynos_dsi_ops;
+e2d2a1e0a26472 Andrzej Hajda    2014-10-07  1742  	dsi->dsi_host.dev = dev;
+7eb8f069be8a03 Andrzej Hajda    2014-04-04  1743
+e2d2a1e0a26472 Andrzej Hajda    2014-10-07  1744  	dsi->dev = dev;
+2154ac9229c10f Marek Szyprowski 2016-04-19  1745  	dsi->driver_data = of_device_get_match_data(dev);
+7eb8f069be8a03 Andrzej Hajda    2014-04-04  1746
+7eb8f069be8a03 Andrzej Hajda    2014-04-04  1747  	ret = exynos_dsi_parse_dt(dsi);
+7eb8f069be8a03 Andrzej Hajda    2014-04-04  1748  	if (ret)
+8665040850e3cb Andrzej Hajda    2015-06-11  1749  		return ret;
+7eb8f069be8a03 Andrzej Hajda    2014-04-04  1750
+7eb8f069be8a03 Andrzej Hajda    2014-04-04  1751  	dsi->supplies[0].supply = "vddcore";
+7eb8f069be8a03 Andrzej Hajda    2014-04-04  1752  	dsi->supplies[1].supply = "vddio";
+e2d2a1e0a26472 Andrzej Hajda    2014-10-07  1753  	ret = devm_regulator_bulk_get(dev, ARRAY_SIZE(dsi->supplies),
+7eb8f069be8a03 Andrzej Hajda    2014-04-04  1754  				      dsi->supplies);
+7eb8f069be8a03 Andrzej Hajda    2014-04-04  1755  	if (ret) {
+e2d2a1e0a26472 Andrzej Hajda    2014-10-07  1756  		dev_info(dev, "failed to get regulators: %d\n", ret);
+7eb8f069be8a03 Andrzej Hajda    2014-04-04  1757  		return -EPROBE_DEFER;
+7eb8f069be8a03 Andrzej Hajda    2014-04-04  1758  	}
+7eb8f069be8a03 Andrzej Hajda    2014-04-04  1759
+a86854d0c599b3 Kees Cook        2018-06-12  1760  	dsi->clks = devm_kcalloc(dev,
+a86854d0c599b3 Kees Cook        2018-06-12  1761  			dsi->driver_data->num_clks, sizeof(*dsi->clks),
+0ff03fd164a4f2 Hyungwon Hwang   2015-06-12  1762  			GFP_KERNEL);
+e6f988a4585762 Hyungwon Hwang   2015-06-12  1763  	if (!dsi->clks)
+e6f988a4585762 Hyungwon Hwang   2015-06-12  1764  		return -ENOMEM;
+e6f988a4585762 Hyungwon Hwang   2015-06-12  1765
+0ff03fd164a4f2 Hyungwon Hwang   2015-06-12  1766  	for (i = 0; i < dsi->driver_data->num_clks; i++) {
+0ff03fd164a4f2 Hyungwon Hwang   2015-06-12  1767  		dsi->clks[i] = devm_clk_get(dev, clk_names[i]);
+0ff03fd164a4f2 Hyungwon Hwang   2015-06-12  1768  		if (IS_ERR(dsi->clks[i])) {
+0ff03fd164a4f2 Hyungwon Hwang   2015-06-12  1769  			if (strcmp(clk_names[i], "sclk_mipi") == 0) {
+0ff03fd164a4f2 Hyungwon Hwang   2015-06-12  1770  				strcpy(clk_names[i], OLD_SCLK_MIPI_CLK_NAME);
+0ff03fd164a4f2 Hyungwon Hwang   2015-06-12  1771  				i--;
+0ff03fd164a4f2 Hyungwon Hwang   2015-06-12  1772  				continue;
+7eb8f069be8a03 Andrzej Hajda    2014-04-04  1773  			}
+7eb8f069be8a03 Andrzej Hajda    2014-04-04  1774
+0ff03fd164a4f2 Hyungwon Hwang   2015-06-12  1775  			dev_info(dev, "failed to get the clock: %s\n",
+0ff03fd164a4f2 Hyungwon Hwang   2015-06-12  1776  					clk_names[i]);
+0ff03fd164a4f2 Hyungwon Hwang   2015-06-12  1777  			return PTR_ERR(dsi->clks[i]);
+0ff03fd164a4f2 Hyungwon Hwang   2015-06-12  1778  		}
+7eb8f069be8a03 Andrzej Hajda    2014-04-04  1779  	}
+7eb8f069be8a03 Andrzej Hajda    2014-04-04  1780
+7eb8f069be8a03 Andrzej Hajda    2014-04-04  1781  	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+e2d2a1e0a26472 Andrzej Hajda    2014-10-07  1782  	dsi->reg_base = devm_ioremap_resource(dev, res);
+293d3f6a707046 Jingoo Han       2014-04-17  1783  	if (IS_ERR(dsi->reg_base)) {
+e2d2a1e0a26472 Andrzej Hajda    2014-10-07  1784  		dev_err(dev, "failed to remap io region\n");
+8665040850e3cb Andrzej Hajda    2015-06-11  1785  		return PTR_ERR(dsi->reg_base);
+7eb8f069be8a03 Andrzej Hajda    2014-04-04  1786  	}
+7eb8f069be8a03 Andrzej Hajda    2014-04-04  1787
+e2d2a1e0a26472 Andrzej Hajda    2014-10-07  1788  	dsi->phy = devm_phy_get(dev, "dsim");
+7eb8f069be8a03 Andrzej Hajda    2014-04-04  1789  	if (IS_ERR(dsi->phy)) {
+e2d2a1e0a26472 Andrzej Hajda    2014-10-07  1790  		dev_info(dev, "failed to get dsim phy\n");
+8665040850e3cb Andrzej Hajda    2015-06-11  1791  		return PTR_ERR(dsi->phy);
+7eb8f069be8a03 Andrzej Hajda    2014-04-04  1792  	}
+7eb8f069be8a03 Andrzej Hajda    2014-04-04  1793
+7eb8f069be8a03 Andrzej Hajda    2014-04-04  1794  	dsi->irq = platform_get_irq(pdev, 0);
+7eb8f069be8a03 Andrzej Hajda    2014-04-04  1795  	if (dsi->irq < 0) {
+e2d2a1e0a26472 Andrzej Hajda    2014-10-07 @1796  		dev_err(dev, "failed to request dsi irq resource\n");
+8665040850e3cb Andrzej Hajda    2015-06-11  1797  		return dsi->irq;
+7eb8f069be8a03 Andrzej Hajda    2014-04-04  1798  	}
+7eb8f069be8a03 Andrzej Hajda    2014-04-04  1799
+7eb8f069be8a03 Andrzej Hajda    2014-04-04  1800  	irq_set_status_flags(dsi->irq, IRQ_NOAUTOEN);
+e2d2a1e0a26472 Andrzej Hajda    2014-10-07  1801  	ret = devm_request_threaded_irq(dev, dsi->irq, NULL,
+7eb8f069be8a03 Andrzej Hajda    2014-04-04  1802  					exynos_dsi_irq, IRQF_ONESHOT,
+e2d2a1e0a26472 Andrzej Hajda    2014-10-07  1803  					dev_name(dev), dsi);
+7eb8f069be8a03 Andrzej Hajda    2014-04-04  1804  	if (ret) {
+e2d2a1e0a26472 Andrzej Hajda    2014-10-07  1805  		dev_err(dev, "failed to request dsi irq\n");
+8665040850e3cb Andrzej Hajda    2015-06-11  1806  		return ret;
+7eb8f069be8a03 Andrzej Hajda    2014-04-04  1807  	}
+7eb8f069be8a03 Andrzej Hajda    2014-04-04  1808
+cf67cc9a29ac19 Gustavo Padovan  2015-08-11  1809  	platform_set_drvdata(pdev, &dsi->encoder);
+7eb8f069be8a03 Andrzej Hajda    2014-04-04  1810
+ba6e47795d836e Inki Dae         2015-11-16  1811  	pm_runtime_enable(dev);
+ba6e47795d836e Inki Dae         2015-11-16  1812
+8665040850e3cb Andrzej Hajda    2015-06-11  1813  	return component_add(dev, &exynos_dsi_component_ops);
+7eb8f069be8a03 Andrzej Hajda    2014-04-04  1814  }
+7eb8f069be8a03 Andrzej Hajda    2014-04-04  1815
 
-greg k-h
+:::::: The code at line 1796 was first introduced by commit
+:::::: e2d2a1e0a264725fd0a62b91422d33ba2263a341 drm/exynos: dsi: simplify device pointer evaluation
+
+:::::: TO: Andrzej Hajda <a.hajda@samsung.com>
+:::::: CC: Inki Dae <inki.dae@samsung.com>
+
+---
+0-DAY kernel test infrastructure                Open Source Technology Center
+https://lists.01.org/pipermail/kbuild-all                   Intel Corporation
