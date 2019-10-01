@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84AA8C352AA
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 17:02:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 780F9C352AA
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 17:02:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 560CE2054F
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 17:02:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4028D2054F
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 17:02:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569949370;
-	bh=sYY95Hr5Vx7uYLpkaAUKFT7rsKYr+ZKBrBYfbzCeno0=;
+	s=default; t=1569949376;
+	bh=5RYbrWbEgh2pUYCTiY8DsiU2kwg66mfF2oaID6U5yrM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Tf2jzQlgvX86zqOnST4zwu7cysuXlwWuptYJz13AWv5jQHMjHxCKzmwtipeUlICMg
-	 I4WFKidDPSL7dqMnuxnGLNrEosR7UWeDe8v70E0AOncGWHwZnZGgoBOPhlbyIwKS3A
-	 RfjydPP21BDVoMNfGLTm5/j6MA9QDPqgoIoHKv2Y=
+	b=tk5wCfHRsnr17wMg90o9aQDki3aA15qG8bE2S92S1oh+ZGVMODQrvvdWEp0WILuCS
+	 coY2sUU6YNBoJCJu5ppGoQHlNj/PeJu/Jp3Y85XD93TGPDjy9ZhjlquZJgsc3wekAq
+	 +ITpJSXwt7bj/m9331kvnVTVEaJED23ZceoAGFAc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729229AbfJAQj7 (ORCPT
+        id S1732534AbfJARCy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Oct 2019 12:39:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51058 "EHLO mail.kernel.org"
+        Tue, 1 Oct 2019 13:02:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51142 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728521AbfJAQj4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Oct 2019 12:39:56 -0400
+        id S1729094AbfJAQj7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Oct 2019 12:39:59 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5E6C62190F;
-        Tue,  1 Oct 2019 16:39:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AE3402168B;
+        Tue,  1 Oct 2019 16:39:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569947996;
-        bh=sYY95Hr5Vx7uYLpkaAUKFT7rsKYr+ZKBrBYfbzCeno0=;
+        s=default; t=1569947998;
+        bh=5RYbrWbEgh2pUYCTiY8DsiU2kwg66mfF2oaID6U5yrM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=nNajo/9/AtRBIt5z2NxJmrX/Ot9ufPNXCJMndxQO8Y7YE0CSXEUOaGmqlaIlU0CP4
-         AWNFw0gd+iOyN/fmGe2DI/gjY4Dkj8kVGqqrdCjrySbr2q7UkbORa0FVGP9qXl9Aui
-         /B32Haas3/LSBF1wGnHyMIb7gmkXoMJ1xGKYl6aM=
+        b=Hw3D3SBqqPDI8nmkBQIuX5pbjvC0Thg/U0CcEM4Ay2oTJjR3HwmUnyZfiFHoRV8fL
+         DNMFTbpDP+b827hPUQg5skrbG1I32bSOupqDYfFu3icLsEeo9t5beAt65MYWEOCI/b
+         rcHmcl9mN8sk5JvXpZd3a3jq/aOjyd9LGNVwwD0c=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Trond Myklebust <trondmy@gmail.com>,
-        Trond Myklebust <trond.myklebust@hammerspace.com>,
-        Anna Schumaker <Anna.Schumaker@Netapp.com>,
-        Sasha Levin <sashal@kernel.org>, linux-nfs@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.3 22/71] pNFS: Ensure we do clear the return-on-close layout stateid on fatal errors
-Date:   Tue,  1 Oct 2019 12:38:32 -0400
-Message-Id: <20191001163922.14735-22-sashal@kernel.org>
+Cc:     Davide Caratti <dcaratti@redhat.com>,
+        Yotam Gigi <yotam.gi@gmail.com>,
+        Jakub Kicinski <jakub.kicinski@netronome.com>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.3 24/71] net/sched: act_sample: don't push mac header on ip6gre ingress
+Date:   Tue,  1 Oct 2019 12:38:34 -0400
+Message-Id: <20191001163922.14735-24-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191001163922.14735-1-sashal@kernel.org>
 References: <20191001163922.14735-1-sashal@kernel.org>
@@ -60,45 +60,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Trond Myklebust <trondmy@gmail.com>
+From: Davide Caratti <dcaratti@redhat.com>
 
-[ Upstream commit 9c47b18cf722184f32148784189fca945a7d0561 ]
+[ Upstream commit 92974a1d006ad8b30d53047c70974c9e065eb7df ]
 
-IF the server rejected our layout return with a state error such as
-NFS4ERR_BAD_STATEID, or even a stale inode error, then we do want
-to clear out all the remaining layout segments and mark that stateid
-as invalid.
+current 'sample' action doesn't push the mac header of ingress packets if
+they are received by a layer 3 tunnel (like gre or sit); but it forgot to
+check for gre over ipv6, so the following script:
 
-Fixes: 1c5bd76d17cca ("pNFS: Enable layoutreturn operation for...")
-Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
-Signed-off-by: Anna Schumaker <Anna.Schumaker@Netapp.com>
+ # tc q a dev $d clsact
+ # tc f a dev $d ingress protocol ip flower ip_proto icmp action sample \
+ > group 100 rate 1
+ # psample -v -g 100
+
+dumps everything, including outer header and mac, when $d is a gre tunnel
+over ipv6. Fix this adding a missing label for ARPHRD_IP6GRE devices.
+
+Fixes: 5c5670fae430 ("net/sched: Introduce sample tc action")
+Signed-off-by: Davide Caratti <dcaratti@redhat.com>
+Reviewed-by: Yotam Gigi <yotam.gi@gmail.com>
+Signed-off-by: Jakub Kicinski <jakub.kicinski@netronome.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/nfs/pnfs.c | 9 +++++++--
- 1 file changed, 7 insertions(+), 2 deletions(-)
+ net/sched/act_sample.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/fs/nfs/pnfs.c b/fs/nfs/pnfs.c
-index 4525d5acae386..0418b198edd3e 100644
---- a/fs/nfs/pnfs.c
-+++ b/fs/nfs/pnfs.c
-@@ -1449,10 +1449,15 @@ void pnfs_roc_release(struct nfs4_layoutreturn_args *args,
- 	const nfs4_stateid *res_stateid = NULL;
- 	struct nfs4_xdr_opaque_data *ld_private = args->ld_private;
- 
--	if (ret == 0) {
--		arg_stateid = &args->stateid;
-+	switch (ret) {
-+	case -NFS4ERR_NOMATCHING_LAYOUT:
-+		break;
-+	case 0:
- 		if (res->lrs_present)
- 			res_stateid = &res->stateid;
-+		/* Fallthrough */
-+	default:
-+		arg_stateid = &args->stateid;
- 	}
- 	pnfs_layoutreturn_free_lsegs(lo, arg_stateid, &args->range,
- 			res_stateid);
+diff --git a/net/sched/act_sample.c b/net/sched/act_sample.c
+index 10229124a9924..86344fd2ff1fa 100644
+--- a/net/sched/act_sample.c
++++ b/net/sched/act_sample.c
+@@ -146,6 +146,7 @@ static bool tcf_sample_dev_ok_push(struct net_device *dev)
+ 	case ARPHRD_TUNNEL6:
+ 	case ARPHRD_SIT:
+ 	case ARPHRD_IPGRE:
++	case ARPHRD_IP6GRE:
+ 	case ARPHRD_VOID:
+ 	case ARPHRD_NONE:
+ 		return false;
 -- 
 2.20.1
 
