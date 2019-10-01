@@ -2,118 +2,125 @@ Return-Path: <SRS0=YRFP=X2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0B6AECE58A
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 13:57:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B8DDECE587
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 13:59:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 87FE921855
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 13:57:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="Z4YvyUsy"
+	by mail.kernel.org (Postfix) with ESMTP id 683EA21D80
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 13:59:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388911AbfJAN5f (ORCPT
+        id S1731220AbfJAN74 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Oct 2019 09:57:35 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:50288 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388505AbfJAN5e (ORCPT
+        Tue, 1 Oct 2019 09:59:56 -0400
+Received: from iolanthe.rowland.org ([192.131.102.54]:48220 "HELO
+        iolanthe.rowland.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with SMTP id S1726710AbfJAN74 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Oct 2019 09:57:34 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x91DiIdE070140;
-        Tue, 1 Oct 2019 13:57:15 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2019-08-05;
- bh=7NxNlqn0YOBGFrAVM08bANlLn524Zi8Hql56hdiSIX4=;
- b=Z4YvyUsyFByaV+0qmxNLgUFcvrqzA4adjPogsAs1PbyKsVJS5VYRULwebBlKH0IfmUS9
- FX0IpbHje//0+KqjVu6AyO/nkV3V7u67Lzl0t5LrY8z/9DNu12WqSWjAL7fFOVku+B6S
- 2NEP6FSe1RG0LnuAV9FTCTv5qA7X3bShvDHiYFyHSZZsYF3uUxLlnZZMRvZfGoTBovtf
- bZ8jJSdiZ8rK6WZujmJkODZTvt4GUMRfIipQMTUJ3FyZxG/iKoe5D1GHrDRTV4o+EPiK
- JNUwbZ+QnKptZKZLpFpbA6NGpSncV9Xy52ktgRJxkykpJyiBwSNdFLBryFzfNxhu71tH yg== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by userp2130.oracle.com with ESMTP id 2v9xxup42p-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 01 Oct 2019 13:57:14 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x91DhcO7147373;
-        Tue, 1 Oct 2019 13:57:14 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by aserp3030.oracle.com with ESMTP id 2vbsm21aj5-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 01 Oct 2019 13:57:14 +0000
-Received: from abhmp0013.oracle.com (abhmp0013.oracle.com [141.146.116.19])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x91Dv8sT028275;
-        Tue, 1 Oct 2019 13:57:08 GMT
-Received: from kadam (/41.57.98.10)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 01 Oct 2019 06:57:07 -0700
-Date:   Tue, 1 Oct 2019 16:56:49 +0300
-From:   Dan Carpenter <dan.carpenter@oracle.com>
-To:     Denis Efremov <efremov@linux.com>
-Cc:     David Laight <David.Laight@ACULAB.COM>,
-        "devel@driverdev.osuosl.org" <devel@driverdev.osuosl.org>,
-        Jes Sorensen <jes.sorensen@gmail.com>,
+        Tue, 1 Oct 2019 09:59:56 -0400
+Received: (qmail 2179 invoked by uid 2102); 1 Oct 2019 09:59:55 -0400
+Received: from localhost (sendmail-bs@127.0.0.1)
+  by localhost with SMTP; 1 Oct 2019 09:59:55 -0400
+Date:   Tue, 1 Oct 2019 09:59:55 -0400 (EDT)
+From:   Alan Stern <stern@rowland.harvard.edu>
+X-X-Sender: stern@iolanthe.rowland.org
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>
+cc:     Ingo Molnar <mingo@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Clark Williams <williams@redhat.com>,
+        <linux-kernel@vger.kernel.org>, <linux-perf-users@vger.kernel.org>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Brendan Gregg <brendan.d.gregg@gmail.com>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "stable@vger.kernel.org" <stable@vger.kernel.org>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Bastien Nocera <hadess@hadess.net>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Larry Finger <Larry.Finger@lwfinger.net>
-Subject: Re: [PATCH] staging: rtl8723bs: hal: Fix memcpy calls
-Message-ID: <20191001135649.GH22609@kadam>
-References: <20190930110141.29271-1-efremov@linux.com>
- <37b195b700394e95aa8329afc9f60431@AcuMS.aculab.com>
- <e4051dcb-10dc-ff17-ec0b-6f51dccdb5bf@linux.com>
+        =?UTF-8?q?Luis=20Cl=C3=A1udio=20Gon=C3=A7alves?= 
+        <lclaudio@redhat.com>
+Subject: Re: [PATCH 06/24] tools headers uapi: Sync linux/usbdevice_fs.h with
+ the kernel sources
+In-Reply-To: <20191001111216.7208-7-acme@kernel.org>
+Message-ID: <Pine.LNX.4.44L0.1910010957340.1991-100000@iolanthe.rowland.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <e4051dcb-10dc-ff17-ec0b-6f51dccdb5bf@linux.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9396 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=952
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1908290000 definitions=main-1910010125
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9396 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1908290000
- definitions=main-1910010125
+Content-Type: TEXT/PLAIN; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Sep 30, 2019 at 05:25:43PM +0300, Denis Efremov wrote:
-> On 9/30/19 4:18 PM, David Laight wrote:
-> > From: Denis Efremov
-> >> Sent: 30 September 2019 12:02
-> >> memcpy() in phy_ConfigBBWithParaFile() and PHY_ConfigRFWithParaFile() is
-> >> called with "src == NULL && len == 0". This is an undefined behavior.
-> > 
-> > I'm pretty certain it is well defined (to do nothing).
+On Tue, 1 Oct 2019, Arnaldo Carvalho de Melo wrote:
+
+> From: Arnaldo Carvalho de Melo <acme@redhat.com>
 > 
-> Well, technically you are right. However, UBSAN warns about passing NULL
-> to memcpy and from the formal point of view this is an undefined behavior [1].
-> There were a discussion [2] about interesting implication of assuming that
-> memcpy with 0 size and NULL pointer is fine. This could result in that compiler
-> assume that pointer is not NULL.
+> To pick up the changes from:
+> 
+>   4ed3350539aa ("USB: usbfs: Add a capability flag for runtime suspend")
+>   7794f486ed0b ("usbfs: Add ioctls for runtime power management")
+> 
+> This triggers these changes in the kernel sources, automagically
+> supporting these new ioctls in the 'perf trace' beautifiers.
+> 
+> Soon this will be used in things like filter expressions for tracepoints
+> in 'perf record', 'perf trace', 'perf top', i.e. filter expressions will
+> do a lookup to turn things like USBDEVFS_WAIT_FOR_RESUME into _IO('U',
+> 35) before associating the tracepoint expression to tracepoint perf
+> event.
+> 
+>   $ tools/perf/trace/beauty/usbdevfs_ioctl.sh  > before
+>   $ cp include/uapi/linux/usbdevice_fs.h tools/include/uapi/linux/usbdevice_fs.h
+>   $ git diff
+>   diff --git a/tools/include/uapi/linux/usbdevice_fs.h b/tools/include/uapi/linux/usbdevice_fs.h
+>   index 78efe870c2b7..cf525cddeb94 100644
+>   --- a/tools/include/uapi/linux/usbdevice_fs.h
+>   +++ b/tools/include/uapi/linux/usbdevice_fs.h
+>   @@ -158,6 +158,7 @@ struct usbdevfs_hub_portinfo {
+>    #define USBDEVFS_CAP_MMAP                      0x20
+>    #define USBDEVFS_CAP_DROP_PRIVILEGES           0x40
+>    #define USBDEVFS_CAP_CONNINFO_EX               0x80
+>   +#define USBDEVFS_CAP_SUSPEND                   0x100
+> 
+>    /* USBDEVFS_DISCONNECT_CLAIM flags & struct */
+> 
+>   @@ -223,5 +224,8 @@ struct usbdevfs_streams {
+>     * extending size of the data returned.
+>     */
+>    #define USBDEVFS_CONNINFO_EX(len)  _IOC(_IOC_READ, 'U', 32, len)
+>   +#define USBDEVFS_FORBID_SUSPEND    _IO('U', 33)
+>   +#define USBDEVFS_ALLOW_SUSPEND     _IO('U', 34)
+>   +#define USBDEVFS_WAIT_FOR_RESUME   _IO('U', 35)
+> 
+>    #endif /* _UAPI_LINUX_USBDEVICE_FS_H */
+>   $ tools/perf/trace/beauty/usbdevfs_ioctl.sh  > after
+>   $ diff -u before after
+>   --- before	2019-09-27 11:41:50.634867620 -0300
+>   +++ after	2019-09-27 11:42:07.453102978 -0300
+>   @@ -24,6 +24,9 @@
+>    	[30] = "DROP_PRIVILEGES",
+>    	[31] = "GET_SPEED",
+>    	[32] = "CONNINFO_EX",
+>   +	[33] = "FORBID_SUSPEND",
+>   +	[34] = "ALLOW_SUSPEND",
+>   +	[35] = "WAIT_FOR_RESUME",
+>    	[3] = "RESETEP",
+>    	[4] = "SETINTERFACE",
+>    	[5] = "SETCONFIGURATION",
+>   $
+> 
+> This addresses the following perf build warning:
+> 
+>   Warning: Kernel ABI header at 'tools/include/uapi/linux/usbdevice_fs.h' differs from latest version at 'include/uapi/linux/usbdevice_fs.h'
+>   diff -u tools/include/uapi/linux/usbdevice_fs.h include/uapi/linux/usbdevice_fs.h
 
-That's true for glibc memcpy() but not for the kernel memcpy().  In the
-kernel there are lots of places which do a zero size memcpy().
+This may sound silly, and undoubtedly the question has been asked 
+before.  Nevertheless...
 
-The glibc attitude is "the standard allows us to put knives here" so
-let's put knives everywhere in the path.  And the GCC attitude is let's
-silently remove NULL checks instead of just printing a warning that the
-NULL check isn't required...  It could really make someone despondent.
+Why go to the time and trouble to detect differences between 
+tools/include/uapi/linux/usbdevice_fs.h and 
+include/uapi/linux/usbdevice_fs.h?  Why not just make the first a 
+symbolic link to the second?  Or get rid of the first entirely, and 
+change the source code so that it #include's the second?
 
-regards,
-dan carpenter
+Alan Stern
 
