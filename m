@@ -2,80 +2,82 @@ Return-Path: <SRS0=YRFP=X2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2942ECE587
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 14:15:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 85975C352AA
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 14:16:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D185E20842
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 14:15:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 53B1621906
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 14:16:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1569939401;
+	bh=J9ed0KJmRZLdI0okBxc82Ypt6X45ISUClcmfQyIa8eQ=;
+	h=Date:From:To:cc:Subject:In-Reply-To:References:List-ID:From;
+	b=kKl2d9DNAgh1EzwUvNaQeWlH7s+zISVtwj6dP6/G4GZTvBzjltdl9X6wDLL8JDThO
+	 eFRXVFlooemnIAQXfk4f1x6mtqTqDKP5o8YHUi1UPKpaR/zYLyGqwWK5aSc00kUgsd
+	 XdIaRr6kbwjw4CNnkAm8sfRVCFUCePnKHpI0O1yE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388693AbfJAOPb (ORCPT
+        id S2388888AbfJAOQl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Oct 2019 10:15:31 -0400
-Received: from foss.arm.com ([217.140.110.172]:50592 "EHLO foss.arm.com"
+        Tue, 1 Oct 2019 10:16:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60716 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726554AbfJAOPa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Oct 2019 10:15:30 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 305A11000;
-        Tue,  1 Oct 2019 07:15:30 -0700 (PDT)
-Received: from [10.1.194.37] (e113632-lin.cambridge.arm.com [10.1.194.37])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 292883F71A;
-        Tue,  1 Oct 2019 07:15:29 -0700 (PDT)
-Subject: Re: [PATCH v2 0/4] sched/fair: Active balancer RT/DL preemption fix
-To:     Juri Lelli <juri.lelli@redhat.com>
-Cc:     linux-kernel@vger.kernel.org, mingo@kernel.org,
-        peterz@infradead.org, vincent.guittot@linaro.org,
-        tglx@linutronix.de, qais.yousef@arm.com,
-        Steven Rostedt <rostedt@goodmis.org>
-References: <20190815145107.5318-1-valentin.schneider@arm.com>
- <b442e1b5-a800-5dde-2e42-e4981089edf4@arm.com>
- <20191001133115.GC6481@localhost.localdomain>
-From:   Valentin Schneider <valentin.schneider@arm.com>
-Message-ID: <c4f7940e-8a8a-378e-ca02-034e3b7348ef@arm.com>
-Date:   Tue, 1 Oct 2019 15:15:28 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        id S2388825AbfJAOQk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Oct 2019 10:16:40 -0400
+Received: from pobox.suse.cz (prg-ext-pat.suse.com [213.151.95.130])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id AF5CF2086A;
+        Tue,  1 Oct 2019 14:16:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1569939400;
+        bh=J9ed0KJmRZLdI0okBxc82Ypt6X45ISUClcmfQyIa8eQ=;
+        h=Date:From:To:cc:Subject:In-Reply-To:References:From;
+        b=td/yed3D8cE+/wFon8OrIygIUcF1RdDoL0ZCxVhvd3nTK7sAHcfZ+nmGAeH7n6W5+
+         Y4Pj26R3fXm7CXOBP9W5QSSDCAtaR3SJMLl/JhqN48E+T4eD1f7lSpcIMU8znWa+1u
+         FYEAI3nzLnzccVQzf5fhvYSambBaaKPrcV3RrUug=
+Date:   Tue, 1 Oct 2019 16:16:13 +0200 (CEST)
+From:   Jiri Kosina <jikos@kernel.org>
+To:     Dmitry Torokhov <dtor@chromium.org>
+cc:     Nicolas Boichat <drinkcat@chromium.org>,
+        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
+        Benson Leung <bleung@chromium.org>,
+        "open list:HID CORE LAYER" <linux-input@vger.kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 1/3] HID: google: whiskers: more robust tablet mode
+ detection
+In-Reply-To: <nycvar.YFH.7.76.1909231108330.1459@cbobk.fhfr.pm>
+Message-ID: <nycvar.YFH.7.76.1910011616020.13160@cbobk.fhfr.pm>
+References: <20190913220317.58289-1-dtor@chromium.org> <CANMq1KALGLdZmOgcrrOROU5BXjwnXWSfq6fr85jfRn079JympQ@mail.gmail.com> <CAE_wzQ9U-Lu=Uce0jFjec9JMYMhsQZoTuB+xqDpkOdC+Ufq6Ng@mail.gmail.com> <nycvar.YFH.7.76.1909231108330.1459@cbobk.fhfr.pm>
+User-Agent: Alpine 2.21 (LSU 202 2017-01-01)
 MIME-Version: 1.0
-In-Reply-To: <20191001133115.GC6481@localhost.localdomain>
-Content-Type: text/plain; charset=windows-1252
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Juri,
+On Mon, 23 Sep 2019, Jiri Kosina wrote:
 
-On 01/10/2019 14:31, Juri Lelli wrote:
-> Hi Valentin,
+> > > > The USB interface may get detected before the platform/EC one, so let's
+> > > > note the state of the base (if we receive event) and use it to correctly
+> > > > initialize the tablet mode switch state.
+> > > >
+> > > > Also let's start the HID interface immediately when probing, this will
+> > > > ensure that we correctly process "base folded" events that may be sent
+> > > > as we initialize the base. Note that this requires us to add a release()
+> > >
+> > > s/release/remove/ ?
+> > 
+> > You are right.
 > 
-> On 01/10/19 11:29, Valentin Schneider wrote:
->> (expanded the Cc list)
->> RT/DL folks, any thought on the thing?
-> 
-> Even if I like your idea and it looks theoretically the right thing to
-> do, I'm not sure we want it in practice if it adds complexity to CFS.
-> 
-> I personally never noticed this kind of interference from CFS, but, at
-> the same time, for RT we usually like more to be safe than sorry.
-> However, since this doesn't seem to be bullet-proof (as you also say), I
-> guess it all boils down again to complexity vs. practical benefits.
-> 
+> I'll fix that up when I am applying it (once 5.4 merge window is over).
 
-Thanks for having a look.
+Now applied (with the fixup made). Thanks,
 
-IMO worst part is the local detach_one_task() thing, I added that after v1
-following Qais' comments but perhaps it doesn't gain us much.
+-- 
+Jiri Kosina
+SUSE Labs
 
-I'll try to cook something up with rt-app and see if I can get sensible
-numbers.
-
-> Best,
-> 
-> Juri
-> 
