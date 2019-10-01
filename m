@@ -2,163 +2,159 @@ Return-Path: <SRS0=YRFP=X2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B971CECDFB6
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 06:57:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0045ECE588
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 06:58:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8E90021783
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 06:57:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A5EE521835
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 06:58:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b="y+MmzCmF";
-	dkim=pass (1024-bit key) header.d=marvell.onmicrosoft.com header.i=@marvell.onmicrosoft.com header.b="ZPNkgjjv"
+	dkim=pass (1024-bit key) header.d=axtens.net header.i=@axtens.net header.b="oq7mxXzD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732635AbfJAG5R (ORCPT
+        id S1732700AbfJAG6m (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Oct 2019 02:57:17 -0400
-Received: from mx0a-0016f401.pphosted.com ([67.231.148.174]:13524 "EHLO
-        mx0b-0016f401.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725777AbfJAG5Q (ORCPT
+        Tue, 1 Oct 2019 02:58:42 -0400
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:39200 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725777AbfJAG6m (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Oct 2019 02:57:16 -0400
-Received: from pps.filterd (m0045849.ppops.net [127.0.0.1])
-        by mx0a-0016f401.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id x916t10U027120;
-        Mon, 30 Sep 2019 23:57:03 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com; h=from : to : cc :
- subject : date : message-id : references : in-reply-to : content-type :
- content-id : content-transfer-encoding : mime-version; s=pfpt0818;
- bh=rZNopNoLcgasFI6lL0PAoEtgFQtWa50/GZ4LA99iRNs=;
- b=y+MmzCmF1glk8P5zSGJOe7FHpDPkmc8ckCy4JNRBD/UM1bx359Uy9s4SYc59RGyLwCRc
- QDoqDAqGdC8XwxPKLJnUORUXGzCkGjDwsWbKp1OL8fdwcgDhlkY9tFze1K072W05zrh4
- p9CjTsRBgEsnS3xyhIOTZ/cp3rQxVBc9RPfYDVSrheQxVX+USJMlgrlESrwznGNuvJAJ
- BSVIGp8RwJdupYdPh0qsi1+F6IyFNUwPUP23NyQe/RfAW44VGdbrAx6LWvfWANZ7hsRG
- gWWTXyqZxD7dgcPEebdGmZmuI6WK+aDfgnv80kv1broOoEbQzvdchgaG+P9BuWt9fUSJ wQ== 
-Received: from sc-exch01.marvell.com ([199.233.58.181])
-        by mx0a-0016f401.pphosted.com with ESMTP id 2vbur192df-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
-        Mon, 30 Sep 2019 23:57:03 -0700
-Received: from SC-EXCH02.marvell.com (10.93.176.82) by SC-EXCH01.marvell.com
- (10.93.176.81) with Microsoft SMTP Server (TLS) id 15.0.1367.3; Mon, 30 Sep
- 2019 23:57:01 -0700
-Received: from NAM02-BL2-obe.outbound.protection.outlook.com (104.47.38.55) by
- SC-EXCH02.marvell.com (10.93.176.82) with Microsoft SMTP Server (TLS) id
- 15.0.1367.3 via Frontend Transport; Mon, 30 Sep 2019 23:57:01 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Xd76CDoWOny27Mn68RNtFoVDzrgAa3DDofoxoaLFluS+9rJb6fifceRkxbO220NG+QmiOJBaeyy+Q9aad1ueepi/dmmfJaaIouRhIFfa6XZpR6jRn36tDVtKbbya6XrRytdmZ1LizFaPnFqO/FKZcm2jfIfmna6hfev+y5hPqNNAcjigh3wKbo4x62HT182r4QHg+uOBYoMsbGN6xZasr6Na0iHnfMBvK47mKaIQyZe6yiquSQBsGxOhtQnqXknOMtsQvp+zhehKcnUI4jwMv3LXIBxmYozGTVUUBh7fX//4O7LVtRmn9HsQsliaI5YnIvAOMmJJexfh0Mg2+0l8LA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=rZNopNoLcgasFI6lL0PAoEtgFQtWa50/GZ4LA99iRNs=;
- b=bSv9EOLbwbFc1GAJa8F/27N+03eS6OLYrYeOosKklRbCZy93cyZl2JvLvdT6B6ZFFAtxCDmqCyBbnoN07Ai9ke2UCMLdN9Q6NxoDvHsbsz0mbexHcdNpq+Jz872WwUAe5+brg06gAALaJzSjeLBRlzNE2FWk9w0DcnArxa5iEjamavkRnoSGPZTR6vz8J5up93VzgMtNTT6GHQQasJdSC2BRcPFW2GfOwDaIfKtyTSOzT+g5szP5HJK0q9Lb/YSAPNY+wLdXtR9ukupqlRve9qJRC+T1AWkO5XIz+iQBKaDBo89Yz/0Gifho3qC4zvzZs0haWCPsXnKown0B27+2Vw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=marvell.com; dmarc=pass action=none header.from=marvell.com;
- dkim=pass header.d=marvell.com; arc=none
+        Tue, 1 Oct 2019 02:58:42 -0400
+Received: by mail-pl1-f195.google.com with SMTP id s17so4982779plp.6
+        for <linux-kernel@vger.kernel.org>; Mon, 30 Sep 2019 23:58:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=marvell.onmicrosoft.com; s=selector2-marvell-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=rZNopNoLcgasFI6lL0PAoEtgFQtWa50/GZ4LA99iRNs=;
- b=ZPNkgjjv5OlmFZJhbNwD0lc/BncUoi2brxNCIsIXlFJM8kZJH/pALcCvIPNg2HUrVEk8s+YEin0l4LrCozQFiZsAhKYgNfGjNU1Ms/AVPGeM1vRa9n82HbCDTZrPsH2qkeei/mxEfJEkTbbNTjlL1iIovcze60AgrML6kZDaspw=
-Received: from MN2PR18MB3408.namprd18.prod.outlook.com (10.255.238.217) by
- MN2PR18MB2414.namprd18.prod.outlook.com (20.179.81.20) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2305.20; Tue, 1 Oct 2019 06:56:59 +0000
-Received: from MN2PR18MB3408.namprd18.prod.outlook.com
- ([fe80::88e4:c340:f520:6b36]) by MN2PR18MB3408.namprd18.prod.outlook.com
- ([fe80::88e4:c340:f520:6b36%3]) with mapi id 15.20.2305.017; Tue, 1 Oct 2019
- 06:56:59 +0000
-From:   Robert Richter <rrichter@marvell.com>
-To:     Borislav Petkov <bp@alien8.de>
-CC:     Hanna Hawa <hhhawa@amazon.com>,
-        "mchehab@kernel.org" <mchehab@kernel.org>,
-        "james.morse@arm.com" <james.morse@arm.com>,
-        "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "dwmw@amazon.co.uk" <dwmw@amazon.co.uk>,
-        "benh@amazon.com" <benh@amazon.com>,
-        "ronenk@amazon.com" <ronenk@amazon.com>,
-        "talel@amazon.com" <talel@amazon.com>,
-        "jonnyc@amazon.com" <jonnyc@amazon.com>,
-        "hanochu@amazon.com" <hanochu@amazon.com>
-Subject: Re: [PATCH v4 1/2] edac: Add an API for edac device to report for
- multiple errors
-Thread-Topic: [PATCH v4 1/2] edac: Add an API for edac device to report for
- multiple errors
-Thread-Index: AQHVeCVrgaUXL1IS7EiUioDc+15NJQ==
-Date:   Tue, 1 Oct 2019 06:56:58 +0000
-Message-ID: <20191001065649.a6454bh4ncgdpigf@rric.localdomain>
-References: <20190923191741.29322-1-hhhawa@amazon.com>
- <20190923191741.29322-2-hhhawa@amazon.com> <20190930145046.GH29694@zn.tnic>
-In-Reply-To: <20190930145046.GH29694@zn.tnic>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: HE1PR0502CA0018.eurprd05.prod.outlook.com
- (2603:10a6:3:e3::28) To MN2PR18MB3408.namprd18.prod.outlook.com
- (2603:10b6:208:16c::25)
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [31.208.96.227]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: c0cf36b6-83a9-4466-de7a-08d7463c8dca
-x-ms-traffictypediagnostic: MN2PR18MB2414:
-x-microsoft-antispam-prvs: <MN2PR18MB241457A9A4BEC4AF95A87168D99D0@MN2PR18MB2414.namprd18.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:7691;
-x-forefront-prvs: 0177904E6B
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(136003)(366004)(376002)(39860400002)(346002)(396003)(199004)(189003)(4326008)(64756008)(66946007)(66476007)(66556008)(66446008)(66066001)(305945005)(71200400001)(71190400001)(256004)(6916009)(7736002)(7416002)(6246003)(3846002)(9686003)(1076003)(102836004)(6116002)(99286004)(8676002)(8936002)(2906002)(6512007)(6436002)(53546011)(76176011)(81156014)(386003)(81166006)(52116002)(25786009)(11346002)(316002)(26005)(54906003)(478600001)(14454004)(6506007)(476003)(86362001)(5660300002)(186003)(229853002)(6486002)(446003)(486006);DIR:OUT;SFP:1101;SCL:1;SRVR:MN2PR18MB2414;H:MN2PR18MB3408.namprd18.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: marvell.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: 8KFVQ8AV9AGyccUioWfX2NgeFLMI0VUeHnGJ3NrgjxlCW4nhzOEie9Eskb8qM+7wz+UY4BpJjmj/HmvFeHdAk84PKNw+Zda2PDSNk7QRRzKSPX2lFTknVY9N5WuVKeCBaLNcZUT0/6mtCDaFGPUKREwy+4a8gAJGs6c8e4BssfWmcMzQFmKlJgiQngwlRe/njwGg2Ucbv8sZXyCFVqy2xaAnwnHVue5ERY2xS0Jbcl2L7gN2NWZLX07ocy/HBCWi8TyQmL+Ay4d1z9qOjJgFe/Q3hDupVE9HwwoowR//h5tUorihEnHa/yWrlOmr2svSxdUGCX+34QOyYls2ZXdzLRWiKONIzxPM+vi5Xw35eeHPLQtwzl2bNiUJXYVgD/mhfxr8bO7bQtsWY98GnN11sObCww5pHoUk7wUCRh8/yF4=
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <B011E369A5477F4098887569C9292363@namprd18.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
+        d=axtens.net; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=b5QJN2+41L3WFDMkHvmVhhmne8r1m1bjlvikNn9ZaWo=;
+        b=oq7mxXzD7mktOBQuf3nC3diwM26fudtogiDGDX6nHiqprad5Ms9PG/WgNAgkOdpYfh
+         iYHI/Gmx/fOLELQIWtxsxzpK/ocpF4oay8L/DJwhzBOPrrTF0zp7nmcLM3kV3dSgVNtb
+         rsQsI77ldEJ3T7W4ISMvM6oiCEcGIMrBrYrPE=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=b5QJN2+41L3WFDMkHvmVhhmne8r1m1bjlvikNn9ZaWo=;
+        b=hDACi7FqEYuoIhk6SioiVzAMKv9qvybJJ0E1NR/IjpC/prfa/iDxIYXXJrV8ByOpcg
+         WrftqyPrB1mK2w2uqNYaR3dpSVsZFSFA43udrazqzXmAUB2qs/gUEBpmhWLi1UQNsZ9M
+         9J1f2KkcgkukOrhx8K6YjQy5HXr3g6VA9tV/k2slzkqpkN8fPzXdH21GOBjHm4vUw7uH
+         G2PcEdlXL6QhApfhayvF0fAj3BmuRqqlV0Cpu1doFdfC8crULx6iGHdvnv/+lpGxAdUV
+         eM500F0ivFdwtmyYXiEMNqhPj/ehEY2v2SnYH1L6dXrpb0oI0zgzHRYkmGW96GkQgTaY
+         a7AQ==
+X-Gm-Message-State: APjAAAXEwsmQNBAzV0atqRB7IaLtfl1ncZZWJxM9Y44ETN19Q1GLkYlz
+        ZEUv0NmlJAJ+DNwS62fTE67fZg==
+X-Google-Smtp-Source: APXvYqzqQ2SP4fixuRIKQXyzC5KWE0huLiu20WrA3ePCSN/PC1TpOjbiWo4StEzpxBZdknnQ2lZC0A==
+X-Received: by 2002:a17:902:ab82:: with SMTP id f2mr24901353plr.220.1569913121508;
+        Mon, 30 Sep 2019 23:58:41 -0700 (PDT)
+Received: from localhost (ppp167-251-205.static.internode.on.net. [59.167.251.205])
+        by smtp.gmail.com with ESMTPSA id l62sm21800452pfl.167.2019.09.30.23.58.39
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 30 Sep 2019 23:58:40 -0700 (PDT)
+From:   Daniel Axtens <dja@axtens.net>
+To:     kasan-dev@googlegroups.com, linux-mm@kvack.org, x86@kernel.org,
+        aryabinin@virtuozzo.com, glider@google.com, luto@kernel.org,
+        linux-kernel@vger.kernel.org, mark.rutland@arm.com,
+        dvyukov@google.com, christophe.leroy@c-s.fr
+Cc:     linuxppc-dev@lists.ozlabs.org, gor@linux.ibm.com,
+        Daniel Axtens <dja@axtens.net>
+Subject: [PATCH v8 0/5] kasan: support backing vmalloc space with real shadow memory
+Date:   Tue,  1 Oct 2019 16:58:29 +1000
+Message-Id: <20191001065834.8880-1-dja@axtens.net>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: c0cf36b6-83a9-4466-de7a-08d7463c8dca
-X-MS-Exchange-CrossTenant-originalarrivaltime: 01 Oct 2019 06:56:59.2446
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 70e1fb47-1155-421d-87fc-2e58f638b6e0
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: EnHasRR1L1wnmXDUHIhCaxHaJ0IwZgJjp94xpTlyTtyGE8Tm+HkQumUnt7liPh0EKh9xSpuWaQOD0M+gEDCEtQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR18MB2414
-X-OriginatorOrg: marvell.com
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,1.0.8
- definitions=2019-10-01_03:2019-09-30,2019-10-01 signatures=0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 30.09.19 16:50:46, Borislav Petkov wrote:
-> ----------------------------------------------------------------------
-> On Mon, Sep 23, 2019 at 08:17:40PM +0100, Hanna Hawa wrote:
-> > +void edac_device_handle_ce(struct edac_device_ctl_info *edac_dev,
-> > +			int inst_nr, int block_nr, const char *msg)
-> > +{
-> > +	__edac_device_handle_ce(edac_dev, 1, inst_nr, block_nr, msg);
-> > +}
-> > +EXPORT_SYMBOL_GPL(edac_device_handle_ce);
->=20
-> Eww, I don't like that: exporting the function *and* the __ counterpart.
-> The user will get confused and that is unnecessary.
+Currently, vmalloc space is backed by the early shadow page. This
+means that kasan is incompatible with VMAP_STACK.
 
-It is *not* the counterpart. The __* version already has the
-additional count argument in. There are 2 patches:
+This series provides a mechanism to back vmalloc space with real,
+dynamically allocated memory. I have only wired up x86, because that's
+the only currently supported arch I can work with easily, but it's
+very easy to wire up other architectures, and it appears that there is
+some work-in-progress code to do this on arm64 and s390.
 
-1) introduce new function __edac_device_handle_ce/ue() including the
-   *_count() inline functions, but keep the old symbols (note the
-   count=3D1 parameter).
+This has been discussed before in the context of VMAP_STACK:
+ - https://bugzilla.kernel.org/show_bug.cgi?id=202009
+ - https://lkml.org/lkml/2018/7/22/198
+ - https://lkml.org/lkml/2019/7/19/822
 
-2) remove old symbol edac_device_handle_ce/ue() and replace it with an
-   inline function to use the counterpart symbol too.
+In terms of implementation details:
 
-The first patch only adds functionality but keeps the abi. Thus it
-makes a backport easier. The 2nd switches completely to the new
-function.
+Most mappings in vmalloc space are small, requiring less than a full
+page of shadow space. Allocating a full shadow page per mapping would
+therefore be wasteful. Furthermore, to ensure that different mappings
+use different shadow pages, mappings would have to be aligned to
+KASAN_SHADOW_SCALE_SIZE * PAGE_SIZE.
 
--Robert
+Instead, share backing space across multiple mappings. Allocate a
+backing page when a mapping in vmalloc space uses a particular page of
+the shadow region. This page can be shared by other vmalloc mappings
+later on.
+
+We hook in to the vmap infrastructure to lazily clean up unused shadow
+memory.
+
+v1: https://lore.kernel.org/linux-mm/20190725055503.19507-1-dja@axtens.net/
+v2: https://lore.kernel.org/linux-mm/20190729142108.23343-1-dja@axtens.net/
+ Address review comments:
+ - Patch 1: use kasan_unpoison_shadow's built-in handling of
+            ranges that do not align to a full shadow byte
+ - Patch 3: prepopulate pgds rather than faulting things in
+v3: https://lore.kernel.org/linux-mm/20190731071550.31814-1-dja@axtens.net/
+ Address comments from Mark Rutland:
+ - kasan_populate_vmalloc is a better name
+ - handle concurrency correctly
+ - various nits and cleanups
+ - relax module alignment in KASAN_VMALLOC case
+v4: https://lore.kernel.org/linux-mm/20190815001636.12235-1-dja@axtens.net/
+ Changes to patch 1 only:
+ - Integrate Mark's rework, thanks Mark!
+ - handle the case where kasan_populate_shadow might fail
+ - poision shadow on free, allowing the alloc path to just
+     unpoision memory that it uses
+v5: https://lore.kernel.org/linux-mm/20190830003821.10737-1-dja@axtens.net/
+ Address comments from Christophe Leroy:
+ - Fix some issues with my descriptions in commit messages and docs
+ - Dynamically free unused shadow pages by hooking into the vmap book-keeping
+ - Split out the test into a separate patch
+ - Optional patch to track the number of pages allocated
+ - minor checkpatch cleanups
+v6: https://lore.kernel.org/linux-mm/20190902112028.23773-1-dja@axtens.net/
+ Properly guard freeing pages in patch 1, drop debugging code.
+v7: https://lore.kernel.org/linux-mm/20190903145536.3390-1-dja@axtens.net/
+    Add a TLB flush on freeing, thanks Mark Rutland.
+    Explain more clearly how I think freeing is concurrency-safe.
+v8: rename kasan_vmalloc/shadow_pages to kasan/vmalloc_shadow_pages
+
+Daniel Axtens (5):
+  kasan: support backing vmalloc space with real shadow memory
+  kasan: add test for vmalloc
+  fork: support VMAP_STACK with KASAN_VMALLOC
+  x86/kasan: support KASAN_VMALLOC
+  kasan debug: track pages allocated for vmalloc shadow
+
+ Documentation/dev-tools/kasan.rst |  63 ++++++++
+ arch/Kconfig                      |   9 +-
+ arch/x86/Kconfig                  |   1 +
+ arch/x86/mm/kasan_init_64.c       |  60 ++++++++
+ include/linux/kasan.h             |  31 ++++
+ include/linux/moduleloader.h      |   2 +-
+ include/linux/vmalloc.h           |  12 ++
+ kernel/fork.c                     |   4 +
+ lib/Kconfig.kasan                 |  16 +++
+ lib/test_kasan.c                  |  26 ++++
+ mm/kasan/common.c                 | 230 ++++++++++++++++++++++++++++++
+ mm/kasan/generic_report.c         |   3 +
+ mm/kasan/kasan.h                  |   1 +
+ mm/vmalloc.c                      |  45 +++++-
+ 14 files changed, 497 insertions(+), 6 deletions(-)
+
+-- 
+2.20.1
 
