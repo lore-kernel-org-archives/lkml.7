@@ -2,226 +2,140 @@ Return-Path: <SRS0=YRFP=X2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E76F1C352AA
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 21:54:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 929F8ECE58A
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 21:54:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AECDC2133F
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 21:54:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5F9E92133F
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 21:54:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="GR21Dtnb"
+	dkim=pass (1024-bit key) header.d=wavecomp.com header.i=@wavecomp.com header.b="FHC/iLND"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728533AbfJAVyg (ORCPT
+        id S1728464AbfJAVy1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Oct 2019 17:54:36 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:43590 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728425AbfJAVya (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Oct 2019 17:54:30 -0400
-Received: by mail-pg1-f196.google.com with SMTP id v27so10628813pgk.10
-        for <linux-kernel@vger.kernel.org>; Tue, 01 Oct 2019 14:54:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=ENE8lCt1crf8LnnzzVk3RdzghYu9Y7qjMvfHyutZqEM=;
-        b=GR21DtnbEA+kE+k0vTIHmfnhDfZIY2DCbYDDM9cr2SMWYDc646u3WaARyfEPa6KztD
-         cvlh3UXseCaxYmoqq8aHPohxyGr1cYzO8eSy+rpjsk18BLmbU7BJy9npjiDEzWdaZIku
-         IadqA5LQZ0CBF3kZm8h2e2JgPPz89cPl67PE4=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=ENE8lCt1crf8LnnzzVk3RdzghYu9Y7qjMvfHyutZqEM=;
-        b=cJw1JPQkEORmKz4hZu6GPcYPWtkbRxkldTrktQVFlL4jAvuAhsYFeyxa2geKsjWLIx
-         wFCsJ1zl6zjjd3075xRFqXnWqghDBPGGF6e3S4pWsg5deYtvIM9zII/6URglCSENreTv
-         GMVioJok30Trm4K2CtGqLQxZ5GywSXe+LtBWGM6m0teCWFvVcExJqDvwVP4o11zvTsJq
-         UrA2FIVSHiB7N5Iky/VYqmxXnDpvtbh1Br68frAAIA5nfqJpt3aZ2LFW78ViPqrd+wF8
-         DaklFplpG6ufweGpScB8Q2ouPrugVMLcZcKrCLb87DzMJi2hSiMGY8/e+szG6bGRAiwa
-         3lmw==
-X-Gm-Message-State: APjAAAWJrkjg6V9lA6UKUmuugzyvCl5cXXlb10fOhf2OUChYD9KVtVTn
-        tXmTYLI5nQv9EqA9Gl6sLfI1eQ==
-X-Google-Smtp-Source: APXvYqynDNpZsGHGKSmI8DACWshnS2LNeZcLSDFiHhvjfnDhCaVpMBz/yjaQFBaT1mFxvnQmvG24OQ==
-X-Received: by 2002:a62:b40a:: with SMTP id h10mr601438pfn.88.1569966869584;
-        Tue, 01 Oct 2019 14:54:29 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id b73sm8535469pga.36.2019.10.01.14.54.28
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 01 Oct 2019 14:54:28 -0700 (PDT)
-Date:   Tue, 1 Oct 2019 14:54:27 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     Bill Metzenthen <billm@melbpc.org.au>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/2] x86: math-emu: limit MATH_EMULATION to 486SX
- compatibles
-Message-ID: <201910011454.3B8E504091@keescook>
-References: <20191001142344.1274185-1-arnd@arndb.de>
- <20191001142344.1274185-2-arnd@arndb.de>
+        Tue, 1 Oct 2019 17:54:27 -0400
+Received: from mail-eopbgr750115.outbound.protection.outlook.com ([40.107.75.115]:30851
+        "EHLO NAM02-BL2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728447AbfJAVyZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Oct 2019 17:54:25 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=DCcrQDCNyI39OPoBimBqB7XUQS2Ga2MXGZbBue0u4s9NgufINqiQseC1/GvA52VozhYukiaItxrmuA/rGFCRD9aionJKOlpyL4f4Tw34zZtwpcsIkJEHHmUNZzdGXGzrvMqhrkkHtqbmEl/fy0edvoaEkbCiRGOAu4KtM98jnKbWDg3d9222R6U67VuO6MOtg+HiUIQ3Q7M2C5rfKLperA2g5PjlgyIUcgU2cB7erRaaTiqDJ4ujg/+0jxZFMuF/PiCOUym10PVP/fUMR+U2OpGi3RfylWUEbM+9g1Sk4qr/FYJZGzXO32Iwx8AaFlvnp1B+Gqr1lvvzD4NdCz0IHw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=UEuJ/46XhwVU2eIrIfOwmeNx92pxUuflO1ZQt5HbWCo=;
+ b=N0ecvU2KKDBxd/Uw1Cqjm8elo7cONLBlZYt5jWuebFZrf0r6VXpCJGJRoaRokpHFgQRVz/KYFdcFf6nZz6Bcs02FEoSoeY/J6OL6us4wX75zcpFEvl/8l3HKbOp+Zhicksu4Xb/g1Dqt/hg2DZFWleOzb72u319CHcbfESZ8WckoV9wDWzidbGE1btXKymXj6YI7LjSFSa37uFYZERup98mVKIJ5h7QzboU47TrPT2jjTrQvXLvLgYQ3PcpE7YxvGi6QGO9BFLQ61q19+sk0Uf0jaAxiiwFhPpS7+Obk/dsnTq4qr237pN64fciROmCAoCsDUpSvbmo/t+jG3fEXqA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=wavecomp.com; dmarc=pass action=none header.from=mips.com;
+ dkim=pass header.d=mips.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wavecomp.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=UEuJ/46XhwVU2eIrIfOwmeNx92pxUuflO1ZQt5HbWCo=;
+ b=FHC/iLNDqEgtRmQiQCdbLqBjCa/gUsqTymtp0wRtMVRbY3Ih8K8yOcFD2zyX2ohvwV3rqvQTW2iD2evozu9Xt1WHcOZsUDI8u54AJrUswUM6g1A5AGgZDqYk+dwfeKGnoxeXSwNl8bHoUKwXqOMYVgvKxCrvppIFRcDUlSuzEi4=
+Received: from MWHPR2201MB1277.namprd22.prod.outlook.com (10.172.60.12) by
+ MWHPR2201MB1581.namprd22.prod.outlook.com (10.174.167.30) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2305.15; Tue, 1 Oct 2019 21:54:16 +0000
+Received: from MWHPR2201MB1277.namprd22.prod.outlook.com
+ ([fe80::498b:c2cd:e816:1481]) by MWHPR2201MB1277.namprd22.prod.outlook.com
+ ([fe80::498b:c2cd:e816:1481%2]) with mapi id 15.20.2305.022; Tue, 1 Oct 2019
+ 21:54:16 +0000
+From:   Paul Burton <paul.burton@mips.com>
+To:     "linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>
+CC:     Huacai Chen <chenhc@lemote.com>,
+        Jiaxun Yang <jiaxun.yang@flygoat.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Paul Burton <pburton@wavecomp.com>
+Subject: [PATCH v2 35/36] MIPS: genex: Don't reload address unnecessarily
+Thread-Topic: [PATCH v2 35/36] MIPS: genex: Don't reload address unnecessarily
+Thread-Index: AQHVeKKxGksHXgvWN0Cq1FTc0sIMpQ==
+Date:   Tue, 1 Oct 2019 21:53:43 +0000
+Message-ID: <20191001215249.4157062-36-paul.burton@mips.com>
+References: <20191001215249.4157062-1-paul.burton@mips.com>
+In-Reply-To: <20191001215249.4157062-1-paul.burton@mips.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: BYAPR07CA0093.namprd07.prod.outlook.com
+ (2603:10b6:a03:12b::34) To MWHPR2201MB1277.namprd22.prod.outlook.com
+ (2603:10b6:301:18::12)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=pburton@wavecomp.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-mailer: git-send-email 2.23.0
+x-originating-ip: [12.94.197.246]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 4e443a24-2d61-4a1f-d2b9-08d746b9d3c8
+x-ms-traffictypediagnostic: MWHPR2201MB1581:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <MWHPR2201MB15811DCBB2345314D8C6F232C19D0@MWHPR2201MB1581.namprd22.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:8882;
+x-forefront-prvs: 0177904E6B
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(136003)(39850400004)(366004)(346002)(396003)(376002)(189003)(199004)(8936002)(26005)(478600001)(6512007)(8676002)(81166006)(81156014)(6916009)(386003)(76176011)(186003)(6506007)(25786009)(52116002)(6436002)(99286004)(6486002)(316002)(102836004)(54906003)(14454004)(5640700003)(2501003)(486006)(66476007)(7736002)(256004)(14444005)(66556008)(66946007)(1076003)(64756008)(36756003)(107886003)(66066001)(66446008)(4326008)(42882007)(2906002)(6666004)(3846002)(6116002)(476003)(446003)(2616005)(11346002)(2351001)(71190400001)(44832011)(5660300002)(50226002)(305945005)(71200400001);DIR:OUT;SFP:1102;SCL:1;SRVR:MWHPR2201MB1581;H:MWHPR2201MB1277.namprd22.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: wavecomp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: iVsi1yyHGIykh5K0ZPf/KofbYdCDYPPAMmpIm2u0Auy8AVha9V6a2JemHewtZ/tqRnCKl56PHcruuW92fZa9H6k8tc1a6scDR2YmMubylULzzAVSIsC6G4ryJ2fq8d8tXK8CiSF6+Hvr2g6O91MIE2oQrNTbjljPtQEUfneUFF4qgRTLF4El+mJSzNjicljLPFoXxLyvHSTDVkfdILouMD2yUiwGEs0axGlHGNR9cfFhoF5fwozFHXvOhfFoCDIAKNPPoLYRaFre4Mkdz+5mwODY7pPjozvGkkFpTMFMhOWqZBf1njOOQT/G9RRQp6S2/wyi0yhQxcIZclbK0hjeKFhnMTuNAxQFMwKFlZYkbySlYJqNltPZadQrDzYeeHNl7xVi93dFXYru4ArjZOp+vBRLul3XmXcvpvsS5CNLVIE=
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20191001142344.1274185-2-arnd@arndb.de>
+X-OriginatorOrg: mips.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 4e443a24-2d61-4a1f-d2b9-08d746b9d3c8
+X-MS-Exchange-CrossTenant-originalarrivaltime: 01 Oct 2019 21:53:43.4191
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 463607d3-1db3-40a0-8a29-970c56230104
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: XbXSJizRjekxJcODd79Rvz4k1Zj1vDSB2datmgPnhsVv/bv8nU4fvZHaCSC2k4Tw09UyPk6nk2ZUAD5Ng3n0iA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR2201MB1581
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Oct 01, 2019 at 04:23:35PM +0200, Arnd Bergmann wrote:
-> The fpu emulation code is old and fragile in places, try to limit its
-> use to builds for CPUs that actually use it. As far as I can tell,
-> this is only true for i486sx compatibles, including the Cyrix 486SLC,
-> AMD Am486SX and ÉLAN SC410, UMC U5S amd DM&P VortexSX86, all of which
-> were relatively short-lived and got replaced with i486DX compatible
-> processors soon after introduction, though the some of the embedded
-> versions remained available much longer.
-> 
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+In ejtag_debug_handler() we must reload the address of
+ejtag_debug_buffer_spinlock if an sc fails, since the address in k0 will
+have been clobbered by the result of the sc instruction. In the case
+where we simply load a non-zero value (ie. there's contention for the
+lock) the address will not be clobbered & we can simply branch back to
+repeat the load from memory without reloading the address into k0.
 
-Nice, I like carving out CONFIG space for 486SX; this makes sense to me.
+The primary motivation for this change is that it moves the target of
+the bnez instruction to an instruction within the LL/SC loop (the LL
+itself), which we know contains no other memory accesses & therefore
+isn't affected by Loongson3 LL/SC errata.
 
-Reviewed-by: Kees Cook <keescook@chromium.org>
+Signed-off-by: Paul Burton <paul.burton@mips.com>
+---
 
--Kees
+Changes in v2: None
 
-> ---
->  arch/x86/Kconfig              |  2 +-
->  arch/x86/Kconfig.cpu          | 25 ++++++++++++++++---------
->  arch/x86/Makefile_32.cpu      |  1 +
->  arch/x86/include/asm/module.h |  2 ++
->  4 files changed, 20 insertions(+), 10 deletions(-)
-> 
-> diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
-> index f4d9d1e55e5c..77b02387bd0c 100644
-> --- a/arch/x86/Kconfig
-> +++ b/arch/x86/Kconfig
-> @@ -1751,7 +1751,7 @@ config X86_RESERVE_LOW
->  config MATH_EMULATION
->  	bool
->  	depends on MODIFY_LDT_SYSCALL
-> -	prompt "Math emulation" if X86_32
-> +	prompt "Math emulation" if X86_32 && (M486SX || MELAN)
->  	---help---
->  	  Linux can emulate a math coprocessor (used for floating point
->  	  operations) if you don't have one. 486DX and Pentium processors have
-> diff --git a/arch/x86/Kconfig.cpu b/arch/x86/Kconfig.cpu
-> index 228705a1232a..5f7bff9885a1 100644
-> --- a/arch/x86/Kconfig.cpu
-> +++ b/arch/x86/Kconfig.cpu
-> @@ -50,12 +50,19 @@ choice
->  	  See each option's help text for additional details. If you don't know
->  	  what to do, choose "486".
->  
-> +config M486SX
-> +	bool "486SX"
-> +	depends on X86_32
-> +	---help---
-> +	  Select this for an 486-class CPU without an FPU such as
-> +	  AMD/Cyrix/IBM/Intel SL/SLC/SLC2/SLC3/SX/SX2 and UMC U5S.
-> +
->  config M486
-> -	bool "486"
-> +	bool "486DX"
->  	depends on X86_32
->  	---help---
->  	  Select this for an 486-class CPU such as AMD/Cyrix/IBM/Intel
-> -	  486DX/DX2/DX4 or SL/SLC/SLC2/SLC3/SX/SX2 and UMC U5D or U5S.
-> +	  486DX/DX2/DX4 and UMC U5D.
->  
->  config M586
->  	bool "586/K5/5x86/6x86/6x86MX"
-> @@ -313,20 +320,20 @@ config X86_L1_CACHE_SHIFT
->  	int
->  	default "7" if MPENTIUM4 || MPSC
->  	default "6" if MK7 || MK8 || MPENTIUMM || MCORE2 || MATOM || MVIAC7 || X86_GENERIC || GENERIC_CPU
-> -	default "4" if MELAN || M486 || MGEODEGX1
-> +	default "4" if MELAN || M486SX || M486 || MGEODEGX1
->  	default "5" if MWINCHIP3D || MWINCHIPC6 || MCRUSOE || MEFFICEON || MCYRIXIII || MK6 || MPENTIUMIII || MPENTIUMII || M686 || M586MMX || M586TSC || M586 || MVIAC3_2 || MGEODE_LX
->  
->  config X86_F00F_BUG
->  	def_bool y
-> -	depends on M586MMX || M586TSC || M586 || M486
-> +	depends on M586MMX || M586TSC || M586 || M486SX || M486
->  
->  config X86_INVD_BUG
->  	def_bool y
-> -	depends on M486
-> +	depends on M486SX || M486
->  
->  config X86_ALIGNMENT_16
->  	def_bool y
-> -	depends on MWINCHIP3D || MWINCHIPC6 || MCYRIXIII || MELAN || MK6 || M586MMX || M586TSC || M586 || M486 || MVIAC3_2 || MGEODEGX1
-> +	depends on MWINCHIP3D || MWINCHIPC6 || MCYRIXIII || MELAN || MK6 || M586MMX || M586TSC || M586 || M486SX || M486 || MVIAC3_2 || MGEODEGX1
->  
->  config X86_INTEL_USERCOPY
->  	def_bool y
-> @@ -379,7 +386,7 @@ config X86_MINIMUM_CPU_FAMILY
->  
->  config X86_DEBUGCTLMSR
->  	def_bool y
-> -	depends on !(MK6 || MWINCHIPC6 || MWINCHIP3D || MCYRIXIII || M586MMX || M586TSC || M586 || M486) && !UML
-> +	depends on !(MK6 || MWINCHIPC6 || MWINCHIP3D || MCYRIXIII || M586MMX || M586TSC || M586 || M486SX || M486) && !UML
->  
->  menuconfig PROCESSOR_SELECT
->  	bool "Supported processor vendors" if EXPERT
-> @@ -403,7 +410,7 @@ config CPU_SUP_INTEL
->  config CPU_SUP_CYRIX_32
->  	default y
->  	bool "Support Cyrix processors" if PROCESSOR_SELECT
-> -	depends on M486 || M586 || M586TSC || M586MMX || (EXPERT && !64BIT)
-> +	depends on M486SX || M486 || M586 || M586TSC || M586MMX || (EXPERT && !64BIT)
->  	---help---
->  	  This enables detection, tunings and quirks for Cyrix processors
->  
-> @@ -471,7 +478,7 @@ config CPU_SUP_TRANSMETA_32
->  config CPU_SUP_UMC_32
->  	default y
->  	bool "Support UMC processors" if PROCESSOR_SELECT
-> -	depends on M486 || (EXPERT && !64BIT)
-> +	depends on M486SX || M486 || (EXPERT && !64BIT)
->  	---help---
->  	  This enables detection, tunings and quirks for UMC processors
->  
-> diff --git a/arch/x86/Makefile_32.cpu b/arch/x86/Makefile_32.cpu
-> index 1f5faf8606b4..cd3056759880 100644
-> --- a/arch/x86/Makefile_32.cpu
-> +++ b/arch/x86/Makefile_32.cpu
-> @@ -10,6 +10,7 @@ else
->  tune		= $(call cc-option,-mcpu=$(1),$(2))
->  endif
->  
-> +cflags-$(CONFIG_M486SX)		+= -march=i486
->  cflags-$(CONFIG_M486)		+= -march=i486
->  cflags-$(CONFIG_M586)		+= -march=i586
->  cflags-$(CONFIG_M586TSC)	+= -march=i586
-> diff --git a/arch/x86/include/asm/module.h b/arch/x86/include/asm/module.h
-> index 7948a17febb4..c215d2762488 100644
-> --- a/arch/x86/include/asm/module.h
-> +++ b/arch/x86/include/asm/module.h
-> @@ -15,6 +15,8 @@ struct mod_arch_specific {
->  
->  #ifdef CONFIG_X86_64
->  /* X86_64 does not define MODULE_PROC_FAMILY */
-> +#elif defined CONFIG_M486SX
-> +#define MODULE_PROC_FAMILY "486SX "
->  #elif defined CONFIG_M486
->  #define MODULE_PROC_FAMILY "486 "
->  #elif defined CONFIG_M586
-> -- 
-> 2.20.0
-> 
+ arch/mips/kernel/genex.S | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
--- 
-Kees Cook
+diff --git a/arch/mips/kernel/genex.S b/arch/mips/kernel/genex.S
+index ac4f2b835165..60ede6b75a3b 100644
+--- a/arch/mips/kernel/genex.S
++++ b/arch/mips/kernel/genex.S
+@@ -355,8 +355,8 @@ NESTED(ejtag_debug_handler, PT_SIZE, sp)
+ #ifdef CONFIG_SMP
+ 1:	PTR_LA	k0, ejtag_debug_buffer_spinlock
+ 	__SYNC(full, loongson3_war)
+-	ll	k0, 0(k0)
+-	bnez	k0, 1b
++2:	ll	k0, 0(k0)
++	bnez	k0, 2b
+ 	PTR_LA	k0, ejtag_debug_buffer_spinlock
+ 	sc	k0, 0(k0)
+ 	beqz	k0, 1b
+--=20
+2.23.0
+
