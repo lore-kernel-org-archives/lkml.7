@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C5CD9ECE587
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 16:44:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FE1DC352AA
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 16:44:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 98A342190F
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 16:44:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 78256205C9
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 16:44:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569948274;
-	bh=6EyxsEqBJ2oOZtJcJw9OqpnSifZ1fmKpzk8Q4zKakk4=;
+	s=default; t=1569948282;
+	bh=TEK+zAQbvi1BTh6kB8nuK+T1uHONDTyXZsyakcosRwA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=l8xoXuCAiVjS48PhWtOl7w2sYCdm9bm25WrF+D58am5uQHkm6AurzdXzEGVF98tRP
-	 kwn377Ij+VIJEsfX41PiNbE9YOtuB0YA/xyo8A/vAYEjg5iN3qF/0+To+glQoEAQg+
-	 KLxpFcYKrt0NN6YUOxGhbI1KPXqO6gpWt2qCK1tI=
+	b=cUGhQpNg0odZVB/ScAB3Sy1C5Egu+9OJZB1CyawNAoUXZySfzMJK74Y30LB6b8lYL
+	 kHM2UxSeVJ1ZNeeYBe5DeIOX1bSI7qcvgjkLYmSApZfbd71hU4XO9i/O9qSJRFwQcQ
+	 vPEq6Gj1oDrn3DBEr2brEFwQmK71bV+Wxm5e6Jag=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390007AbfJAQoe (ORCPT
+        id S2387926AbfJAQom (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Oct 2019 12:44:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56726 "EHLO mail.kernel.org"
+        Tue, 1 Oct 2019 12:44:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56772 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387998AbfJAQo3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Oct 2019 12:44:29 -0400
+        id S2387834AbfJAQoc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Oct 2019 12:44:32 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 967762190F;
-        Tue,  1 Oct 2019 16:44:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E0CD62190F;
+        Tue,  1 Oct 2019 16:44:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569948268;
-        bh=6EyxsEqBJ2oOZtJcJw9OqpnSifZ1fmKpzk8Q4zKakk4=;
+        s=default; t=1569948271;
+        bh=TEK+zAQbvi1BTh6kB8nuK+T1uHONDTyXZsyakcosRwA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Vd1fmAR1sG7X1QIxe6/T2XqFJTXDJYUvR1OKBTYvXx2fzOoBDcThAabZR9Vy4beMM
-         O8goJIrUr4WmXG2m/jAm+sEE+IrqgHAC9rm3KQXR18lAo9i4vPZi8VtG9ng4UdAUoA
-         O+TFgXykqN+F3kcE0fb1w2Dvf16g9/huVOxaRsJg=
+        b=iCIeanhCW3Ss3iE/qzaCpzx4Vqi64huWVSTH46w7H22ykd+Zc8mmo0O73wYlXd0m/
+         SKs0r52tQrDX2W/O0sevGAzQLTlEh6oOema5hLqD0Q2GOaR8t/MG7ePHaQoWHh7/iW
+         nrrA+wydy/F2XoP6Y1PBdLrYTa9qQ4zDU3U2jsa8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Igor Druzhinin <igor.druzhinin@citrix.com>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.14 04/29] xen/pci: reserve MCFG areas earlier
-Date:   Tue,  1 Oct 2019 12:43:58 -0400
-Message-Id: <20191001164423.16406-4-sashal@kernel.org>
+Cc:     Dongsheng Yang <dongsheng.yang@easystack.cn>,
+        Ilya Dryomov <idryomov@gmail.com>,
+        Sasha Levin <sashal@kernel.org>, ceph-devel@vger.kernel.org,
+        linux-block@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 07/29] rbd: fix response length parameter for encoded strings
+Date:   Tue,  1 Oct 2019 12:44:01 -0400
+Message-Id: <20191001164423.16406-7-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191001164423.16406-1-sashal@kernel.org>
 References: <20191001164423.16406-1-sashal@kernel.org>
@@ -59,88 +60,66 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Igor Druzhinin <igor.druzhinin@citrix.com>
+From: Dongsheng Yang <dongsheng.yang@easystack.cn>
 
-[ Upstream commit a4098bc6eed5e31e0391bcc068e61804c98138df ]
+[ Upstream commit 5435d2069503e2aa89c34a94154f4f2fa4a0c9c4 ]
 
-If MCFG area is not reserved in E820, Xen by default will defer its usage
-until Dom0 registers it explicitly after ACPI parser recognizes it as
-a reserved resource in DSDT. Having it reserved in E820 is not
-mandatory according to "PCI Firmware Specification, rev 3.2" (par. 4.1.2)
-and firmware is free to keep a hole in E820 in that place. Xen doesn't know
-what exactly is inside this hole since it lacks full ACPI view of the
-platform therefore it's potentially harmful to access MCFG region
-without additional checks as some machines are known to provide
-inconsistent information on the size of the region.
+rbd_dev_image_id() allocates space for length but passes a smaller
+value to rbd_obj_method_sync().  rbd_dev_v2_object_prefix() doesn't
+allocate space for length.  Fix both to be consistent.
 
-Now xen_mcfg_late() runs after acpi_init() which is too late as some basic
-PCI enumeration starts exactly there as well. Trying to register a device
-prior to MCFG reservation causes multiple problems with PCIe extended
-capability initializations in Xen (e.g. SR-IOV VF BAR sizing). There are
-no convenient hooks for us to subscribe to so register MCFG areas earlier
-upon the first invocation of xen_add_device(). It should be safe to do once
-since all the boot time buses must have their MCFG areas in MCFG table
-already and we don't support PCI bus hot-plug.
-
-Signed-off-by: Igor Druzhinin <igor.druzhinin@citrix.com>
-Reviewed-by: Boris Ostrovsky <boris.ostrovsky@oracle.com>
-Signed-off-by: Boris Ostrovsky <boris.ostrovsky@oracle.com>
+Signed-off-by: Dongsheng Yang <dongsheng.yang@easystack.cn>
+Reviewed-by: Ilya Dryomov <idryomov@gmail.com>
+Signed-off-by: Ilya Dryomov <idryomov@gmail.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/xen/pci.c | 21 +++++++++++++++------
- 1 file changed, 15 insertions(+), 6 deletions(-)
+ drivers/block/rbd.c | 10 ++++++----
+ 1 file changed, 6 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/xen/pci.c b/drivers/xen/pci.c
-index 7494dbeb4409c..db58aaa4dc598 100644
---- a/drivers/xen/pci.c
-+++ b/drivers/xen/pci.c
-@@ -29,6 +29,8 @@
- #include "../pci/pci.h"
- #ifdef CONFIG_PCI_MMCONFIG
- #include <asm/pci_x86.h>
-+
-+static int xen_mcfg_late(void);
- #endif
+diff --git a/drivers/block/rbd.c b/drivers/block/rbd.c
+index f2b1994d58a06..4a9bff6ec0756 100644
+--- a/drivers/block/rbd.c
++++ b/drivers/block/rbd.c
+@@ -4911,17 +4911,20 @@ static int rbd_dev_v2_image_size(struct rbd_device *rbd_dev)
  
- static bool __read_mostly pci_seg_supported = true;
-@@ -40,7 +42,18 @@ static int xen_add_device(struct device *dev)
- #ifdef CONFIG_PCI_IOV
- 	struct pci_dev *physfn = pci_dev->physfn;
- #endif
--
-+#ifdef CONFIG_PCI_MMCONFIG
-+	static bool pci_mcfg_reserved = false;
-+	/*
-+	 * Reserve MCFG areas in Xen on first invocation due to this being
-+	 * potentially called from inside of acpi_init immediately after
-+	 * MCFG table has been finally parsed.
-+	 */
-+	if (!pci_mcfg_reserved) {
-+		xen_mcfg_late();
-+		pci_mcfg_reserved = true;
-+	}
-+#endif
- 	if (pci_seg_supported) {
- 		struct {
- 			struct physdev_pci_device_add add;
-@@ -213,7 +226,7 @@ static int __init register_xen_pci_notifier(void)
- arch_initcall(register_xen_pci_notifier);
- 
- #ifdef CONFIG_PCI_MMCONFIG
--static int __init xen_mcfg_late(void)
-+static int xen_mcfg_late(void)
+ static int rbd_dev_v2_object_prefix(struct rbd_device *rbd_dev)
  {
- 	struct pci_mmcfg_region *cfg;
- 	int rc;
-@@ -252,8 +265,4 @@ static int __init xen_mcfg_late(void)
- 	}
- 	return 0;
- }
--/*
-- * Needs to be done after acpi_init which are subsys_initcall.
-- */
--subsys_initcall_sync(xen_mcfg_late);
- #endif
++	size_t size;
+ 	void *reply_buf;
+ 	int ret;
+ 	void *p;
+ 
+-	reply_buf = kzalloc(RBD_OBJ_PREFIX_LEN_MAX, GFP_KERNEL);
++	/* Response will be an encoded string, which includes a length */
++	size = sizeof(__le32) + RBD_OBJ_PREFIX_LEN_MAX;
++	reply_buf = kzalloc(size, GFP_KERNEL);
+ 	if (!reply_buf)
+ 		return -ENOMEM;
+ 
+ 	ret = rbd_obj_method_sync(rbd_dev, &rbd_dev->header_oid,
+ 				  &rbd_dev->header_oloc, "get_object_prefix",
+-				  NULL, 0, reply_buf, RBD_OBJ_PREFIX_LEN_MAX);
++				  NULL, 0, reply_buf, size);
+ 	dout("%s: rbd_obj_method_sync returned %d\n", __func__, ret);
+ 	if (ret < 0)
+ 		goto out;
+@@ -5815,7 +5818,6 @@ static int rbd_dev_image_id(struct rbd_device *rbd_dev)
+ 	dout("rbd id object name is %s\n", oid.name);
+ 
+ 	/* Response will be an encoded string, which includes a length */
+-
+ 	size = sizeof (__le32) + RBD_IMAGE_ID_LEN_MAX;
+ 	response = kzalloc(size, GFP_NOIO);
+ 	if (!response) {
+@@ -5827,7 +5829,7 @@ static int rbd_dev_image_id(struct rbd_device *rbd_dev)
+ 
+ 	ret = rbd_obj_method_sync(rbd_dev, &oid, &rbd_dev->header_oloc,
+ 				  "get_id", NULL, 0,
+-				  response, RBD_IMAGE_ID_LEN_MAX);
++				  response, size);
+ 	dout("%s: rbd_obj_method_sync returned %d\n", __func__, ret);
+ 	if (ret == -ENOENT) {
+ 		image_id = kstrdup("", GFP_KERNEL);
 -- 
 2.20.1
 
