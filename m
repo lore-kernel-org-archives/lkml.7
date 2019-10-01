@@ -7,95 +7,170 @@ X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C81F9C352AA
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 14:56:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 29D5DC352AA
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 14:56:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 991C420842
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 14:56:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F188E20842
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 14:56:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="jnMn4H/b"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="qK9rcvNG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389390AbfJAO4M (ORCPT
+        id S2389422AbfJAO4P (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Oct 2019 10:56:12 -0400
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:50122 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726987AbfJAO4J (ORCPT
+        Tue, 1 Oct 2019 10:56:15 -0400
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:42454 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389379AbfJAO4M (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Oct 2019 10:56:09 -0400
+        Tue, 1 Oct 2019 10:56:12 -0400
 Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id x91Eu6SG007763;
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id x91Eu6Ir016105;
         Tue, 1 Oct 2019 09:56:06 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
         s=ti-com-17Q1; t=1569941766;
-        bh=2mClMRVmQem6A4eXR7dKG+E8+5lp9Pdw27NqZQki0y8=;
+        bh=0CPOm8eM1uD8XbD6J4VdzkHXSOBHZ4mtmjsY/tl59e8=;
         h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=jnMn4H/bZMWbGeWbCj4Lgp4odJZNPQPjoSC2EhkaPBmo5lBzt0DPcEbmlkRS5JrIH
-         iGHuLZ3ufGLF62K9g0hR6qAYLKK/5x8mwRGaJAjcgBFKYCZ9cl+FvguSPIMPYmY0Gg
-         c+Hdc1RG+clcb4Vu0lqUklquIiZFCFRUrtEYEg74=
-Received: from DLEE111.ent.ti.com (dlee111.ent.ti.com [157.170.170.22])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x91Eu6he003589
+        b=qK9rcvNGrIKYqiPA7RDYo+oWJvmd2ndNKk/Tkcv3W1H4Ce7NEhSTcO8hbv6syUVyh
+         nLsyPW6irnPzIjkLQtcJJAoe+b8K+tX8zNOn8UMY9YoDvd/8wia51msPPAC5xdKueJ
+         F5UTh7HBlUF/ukXmxSlDYTMJLAWFdzKwncWLar9A=
+Received: from DLEE114.ent.ti.com (dlee114.ent.ti.com [157.170.170.25])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x91Eu6T4003601
         (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
         Tue, 1 Oct 2019 09:56:06 -0500
-Received: from DLEE113.ent.ti.com (157.170.170.24) by DLEE111.ent.ti.com
- (157.170.170.22) with Microsoft SMTP Server (version=TLS1_2,
+Received: from DLEE107.ent.ti.com (157.170.170.37) by DLEE114.ent.ti.com
+ (157.170.170.25) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Tue, 1 Oct
- 2019 09:55:55 -0500
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE113.ent.ti.com
- (157.170.170.24) with Microsoft SMTP Server (version=TLS1_2,
+ 2019 09:55:56 -0500
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE107.ent.ti.com
+ (157.170.170.37) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Tue, 1 Oct 2019 09:55:55 -0500
+ Frontend Transport; Tue, 1 Oct 2019 09:56:06 -0500
 Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id x91Eu55r014718;
-        Tue, 1 Oct 2019 09:56:05 -0500
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id x91Eu6uq044711;
+        Tue, 1 Oct 2019 09:56:06 -0500
 From:   Dan Murphy <dmurphy@ti.com>
 To:     <jacek.anaszewski@gmail.com>, <pavel@ucw.cz>
 CC:     <linux-leds@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        Dan Murphy <dmurphy@ti.com>
-Subject: [PATCH v10 07/16] dt: bindings: lp55xx: Be consistent in the document with LED acronym
-Date:   Tue, 1 Oct 2019 09:56:11 -0500
-Message-ID: <20191001145620.11123-8-dmurphy@ti.com>
+        Dan Murphy <dmurphy@ti.com>, Tony Lindgren <tony@atomide.com>,
+        =?UTF-8?q?Beno=C3=AEt=20Cousson?= <bcousson@baylibre.com>
+Subject: [PATCH v10 09/16] ARM: dts: n900: Add reg property to the LP5523 channel node
+Date:   Tue, 1 Oct 2019 09:56:13 -0500
+Message-ID: <20191001145620.11123-10-dmurphy@ti.com>
 X-Mailer: git-send-email 2.22.0.214.g8dca754b1e
 In-Reply-To: <20191001145620.11123-1-dmurphy@ti.com>
 References: <20191001145620.11123-1-dmurphy@ti.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
 X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Update the document to be consistent in case when using "LED".
-This acronym should be capital throughout the document.
+Add the reg property to each channel node.  This update is
+to accomodate the multicolor framework.  In addition to the
+accomodation this allows the LEDs to be placed on any channel
+and allow designs to skip channels as opposed to requiring
+sequential order.
 
 Signed-off-by: Dan Murphy <dmurphy@ti.com>
----
- Documentation/devicetree/bindings/leds/leds-lp55xx.txt | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+CC: Tony Lindgren <tony@atomide.com>
+CC: "Benoît Cousson" <bcousson@baylibre.com>
 
-diff --git a/Documentation/devicetree/bindings/leds/leds-lp55xx.txt b/Documentation/devicetree/bindings/leds/leds-lp55xx.txt
-index 1b66a413fb9d..bfe2805c5534 100644
---- a/Documentation/devicetree/bindings/leds/leds-lp55xx.txt
-+++ b/Documentation/devicetree/bindings/leds/leds-lp55xx.txt
-@@ -1,4 +1,4 @@
--Binding for TI/National Semiconductor LP55xx Led Drivers
-+Binding for TI/National Semiconductor LP55xx LED Drivers
+k# interactive rebase in progress; onto ae89cc6d4a8c
+---
+ arch/arm/boot/dts/omap3-n900.dts | 29 ++++++++++++++++++++---------
+ 1 file changed, 20 insertions(+), 9 deletions(-)
+
+diff --git a/arch/arm/boot/dts/omap3-n900.dts b/arch/arm/boot/dts/omap3-n900.dts
+index 84a5ade1e865..643f35619246 100644
+--- a/arch/arm/boot/dts/omap3-n900.dts
++++ b/arch/arm/boot/dts/omap3-n900.dts
+@@ -607,63 +607,74 @@
+ 	};
  
- Required properties:
- - compatible: one of
-@@ -12,8 +12,8 @@ Required properties:
- - clock-mode: Input clock mode, (0: automode, 1: internal, 2: external)
+ 	lp5523: lp5523@32 {
++		#address-cells = <1>;
++		#size-cells = <0>;
+ 		compatible = "national,lp5523";
+ 		reg = <0x32>;
+ 		clock-mode = /bits/ 8 <0>; /* LP55XX_CLOCK_AUTO */
+ 		enable-gpio = <&gpio2 9 GPIO_ACTIVE_HIGH>; /* 41 */
  
- Each child has own specific current settings
--- led-cur: Current setting at each led channel (mA x10, 0 if led is not connected)
--- max-cur: Maximun current at each led channel.
-+- led-cur: Current setting at each LED channel (mA x10, 0 if LED is not connected)
-+- max-cur: Maximun current at each LED channel.
+-		chan0 {
++		chan@0 {
+ 			chan-name = "lp5523:kb1";
+ 			led-cur = /bits/ 8 <50>;
+ 			max-cur = /bits/ 8 <100>;
++			reg = <0>;
+ 		};
  
- Optional properties:
- - enable-gpio: GPIO attached to the chip's enable pin
+-		chan1 {
++		chan@1 {
+ 			chan-name = "lp5523:kb2";
+ 			led-cur = /bits/ 8 <50>;
+ 			max-cur = /bits/ 8 <100>;
++			reg = <1>;
+ 		};
+ 
+-		chan2 {
++		chan@2 {
+ 			chan-name = "lp5523:kb3";
+ 			led-cur = /bits/ 8 <50>;
+ 			max-cur = /bits/ 8 <100>;
++			reg = <2>;
+ 		};
+ 
+-		chan3 {
++		chan@3 {
+ 			chan-name = "lp5523:kb4";
+ 			led-cur = /bits/ 8 <50>;
+ 			max-cur = /bits/ 8 <100>;
++			reg = <3>;
+ 		};
+ 
+-		chan4 {
++		chan@4 {
+ 			chan-name = "lp5523:b";
+ 			led-cur = /bits/ 8 <50>;
+ 			max-cur = /bits/ 8 <100>;
++			reg = <4>;
+ 		};
+ 
+-		chan5 {
++		chan@5 {
+ 			chan-name = "lp5523:g";
+ 			led-cur = /bits/ 8 <50>;
+ 			max-cur = /bits/ 8 <100>;
++			reg = <5>;
+ 		};
+ 
+-		chan6 {
++		chan@6 {
+ 			chan-name = "lp5523:r";
+ 			led-cur = /bits/ 8 <50>;
+ 			max-cur = /bits/ 8 <100>;
++			reg = <6>;
+ 		};
+ 
+-		chan7 {
++		chan@7 {
+ 			chan-name = "lp5523:kb5";
+ 			led-cur = /bits/ 8 <50>;
+ 			max-cur = /bits/ 8 <100>;
++			reg = <7>;
+ 		};
+ 
+-		chan8 {
++		chan@8 {
+ 			chan-name = "lp5523:kb6";
+ 			led-cur = /bits/ 8 <50>;
+ 			max-cur = /bits/ 8 <100>;
++			reg = <8>;
+ 		};
+ 	};
+ 
 -- 
 2.22.0.214.g8dca754b1e
 
