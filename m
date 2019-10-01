@@ -7,48 +7,49 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20758C352AA
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 16:54:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9B6BECE587
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 16:55:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E1B6F2168B
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 16:54:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 983892168B
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 16:55:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569948896;
-	bh=/9/aMWttHsVjoz7AtQoEnuhw9IY82C4nqkSpLrTWbSo=;
+	s=default; t=1569948902;
+	bh=+n3gJ1VrqbqNkcBk7vhlCR91tUTb6AximTmpMzZNXhQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=i3rIzzD2Yrtva7Ar9UNoFOmKmPUztoebZW+VFO3l6AFicmgX3be/+5uBuB76NAH0N
-	 DIbccHE7rlQacwEs4axV8amkmof4aRII7nxs/DebXmK0Rq1FLZQMBcHv39XnZLptqk
-	 /G4KqeVLJbI0I9kBiOWww30CcCPJ0LORQ7GOrpTk=
+	b=tSlPWaQEjNqx8LdslR9U52qdgHJZXwKZKD0R1D4zAam9usAcG45fioKGDaMjH9fus
+	 Lr8GoelkJlm6eYIkHgkMm7bvMpjH0BP8s3WInU7OoN1oxHnq+PJ5we6dWw0H0iCnGW
+	 xivoZijlnIBqyHaIpEk46Blpu7Z1Ay3oSTCEvpwg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730406AbfJAQyz (ORCPT
+        id S1732233AbfJAQmx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Oct 2019 12:54:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54894 "EHLO mail.kernel.org"
+        Tue, 1 Oct 2019 12:42:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54630 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732239AbfJAQmy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Oct 2019 12:42:54 -0400
+        id S1732073AbfJAQmj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Oct 2019 12:42:39 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 79E9E2168B;
-        Tue,  1 Oct 2019 16:42:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6E49321D82;
+        Tue,  1 Oct 2019 16:42:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569948173;
-        bh=/9/aMWttHsVjoz7AtQoEnuhw9IY82C4nqkSpLrTWbSo=;
+        s=default; t=1569948159;
+        bh=+n3gJ1VrqbqNkcBk7vhlCR91tUTb6AximTmpMzZNXhQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ir/I0k69WobuEjqX4ukG5B9A3HV/BYz91VHmGBoWXpV0tgmZm2Nw/ftqFdx0iTxz5
-         2FkPzx15FY4UxjJppG1LTr7TJfudS0POwkB/dtRd5RRr8fgqDPJm+wXHj09Xga37lm
-         NjdXQGeOwQc9nk4BEY/Hn4tri7Tz2fKRFwD6S5zQ=
+        b=DO1DrFphJfrg20WyNzAHO84ZNCoAouP7RhpahnK0fICjv1c3ZqqC8r2suMbVH4OLj
+         R6+XsZJMGfFu6BnTobks3wyWS0hReWIDPULDX2D5fOZh4QlJNYb/lHJqQTolGD60cp
+         /tm8FKVb2k8ZsnCGz0VNICVf94EHRTQ58BqR76ws=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Danielle Ratson <danieller@mellanox.com>,
-        Jiri Pirko <jiri@mellanox.com>,
-        Ido Schimmel <idosch@mellanox.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.2 55/63] mlxsw: spectrum_flower: Fail in case user specifies multiple mirror actions
-Date:   Tue,  1 Oct 2019 12:41:17 -0400
-Message-Id: <20191001164125.15398-55-sashal@kernel.org>
+Cc:     Ming Lei <ming.lei@redhat.com>,
+        syzbot+da3b7677bb913dc1b737@syzkaller.appspotmail.com,
+        Bart Van Assche <bvanassche@acm.org>,
+        Damien Le Moal <damien.lemoal@wdc.com>,
+        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>,
+        linux-block@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.2 48/63] blk-mq: move lockdep_assert_held() into elevator_exit
+Date:   Tue,  1 Oct 2019 12:41:10 -0400
+Message-Id: <20191001164125.15398-48-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191001164125.15398-1-sashal@kernel.org>
 References: <20191001164125.15398-1-sashal@kernel.org>
@@ -61,50 +62,65 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Danielle Ratson <danieller@mellanox.com>
+From: Ming Lei <ming.lei@redhat.com>
 
-[ Upstream commit 52feb8b588f6d23673dd7cc2b44b203493b627f6 ]
+[ Upstream commit 284b94be1925dbe035ce5218d8b5c197321262c7 ]
 
-The ASIC can only mirror a packet to one port, but when user is trying
-to set more than one mirror action, it doesn't fail.
+Commit c48dac137a62 ("block: don't hold q->sysfs_lock in elevator_init_mq")
+removes q->sysfs_lock from elevator_init_mq(), but forgot to deal with
+lockdep_assert_held() called in blk_mq_sched_free_requests() which is
+run in failure path of elevator_init_mq().
 
-Add a check if more than one mirror action was specified per rule and if so,
-fail for not being supported.
+blk_mq_sched_free_requests() is called in the following 3 functions:
 
-Fixes: d0d13c1858a11 ("mlxsw: spectrum_acl: Add support for mirror action")
-Signed-off-by: Danielle Ratson <danieller@mellanox.com>
-Acked-by: Jiri Pirko <jiri@mellanox.com>
-Signed-off-by: Ido Schimmel <idosch@mellanox.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+	elevator_init_mq()
+	elevator_exit()
+	blk_cleanup_queue()
+
+In blk_cleanup_queue(), blk_mq_sched_free_requests() is followed exactly
+by 'mutex_lock(&q->sysfs_lock)'.
+
+So moving the lockdep_assert_held() from blk_mq_sched_free_requests()
+into elevator_exit() for fixing the report by syzbot.
+
+Reported-by: syzbot+da3b7677bb913dc1b737@syzkaller.appspotmail.com
+Fixed: c48dac137a62 ("block: don't hold q->sysfs_lock in elevator_init_mq")
+Reviewed-by: Bart Van Assche <bvanassche@acm.org>
+Reviewed-by: Damien Le Moal <damien.lemoal@wdc.com>
+Signed-off-by: Ming Lei <ming.lei@redhat.com>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/mellanox/mlxsw/spectrum_flower.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+ block/blk-mq-sched.c | 2 --
+ block/blk.h          | 2 ++
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/net/ethernet/mellanox/mlxsw/spectrum_flower.c b/drivers/net/ethernet/mellanox/mlxsw/spectrum_flower.c
-index 96b23c856f4de..ca31c26e98c1e 100644
---- a/drivers/net/ethernet/mellanox/mlxsw/spectrum_flower.c
-+++ b/drivers/net/ethernet/mellanox/mlxsw/spectrum_flower.c
-@@ -21,6 +21,7 @@ static int mlxsw_sp_flower_parse_actions(struct mlxsw_sp *mlxsw_sp,
- 					 struct netlink_ext_ack *extack)
+diff --git a/block/blk-mq-sched.c b/block/blk-mq-sched.c
+index 2766066a15dbf..3cf555f127006 100644
+--- a/block/blk-mq-sched.c
++++ b/block/blk-mq-sched.c
+@@ -554,8 +554,6 @@ void blk_mq_sched_free_requests(struct request_queue *q)
+ 	struct blk_mq_hw_ctx *hctx;
+ 	int i;
+ 
+-	lockdep_assert_held(&q->sysfs_lock);
+-
+ 	queue_for_each_hw_ctx(q, hctx, i) {
+ 		if (hctx->sched_tags)
+ 			blk_mq_free_rqs(q->tag_set, hctx->sched_tags, i);
+diff --git a/block/blk.h b/block/blk.h
+index 7814aa207153c..38938125ab729 100644
+--- a/block/blk.h
++++ b/block/blk.h
+@@ -184,6 +184,8 @@ void elv_unregister_queue(struct request_queue *q);
+ static inline void elevator_exit(struct request_queue *q,
+ 		struct elevator_queue *e)
  {
- 	const struct flow_action_entry *act;
-+	int mirror_act_count = 0;
- 	int err, i;
- 
- 	if (!flow_action_has_entries(flow_action))
-@@ -95,6 +96,11 @@ static int mlxsw_sp_flower_parse_actions(struct mlxsw_sp *mlxsw_sp,
- 		case FLOW_ACTION_MIRRED: {
- 			struct net_device *out_dev = act->dev;
- 
-+			if (mirror_act_count++) {
-+				NL_SET_ERR_MSG_MOD(extack, "Multiple mirror actions per rule are not supported");
-+				return -EOPNOTSUPP;
-+			}
++	lockdep_assert_held(&q->sysfs_lock);
 +
- 			err = mlxsw_sp_acl_rulei_act_mirror(mlxsw_sp, rulei,
- 							    block, out_dev,
- 							    extack);
+ 	blk_mq_sched_free_requests(q);
+ 	__elevator_exit(q, e);
+ }
 -- 
 2.20.1
 
