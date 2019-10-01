@@ -2,143 +2,94 @@ Return-Path: <SRS0=YRFP=X2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5B1CC388F3
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 10:24:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55259C352AA
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 10:25:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C1DBB21920
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 10:24:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 21B8721920
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 10:25:43 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="krFKLzr/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730627AbfJAKYj (ORCPT
+        id S1730653AbfJAKZm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Oct 2019 06:24:39 -0400
-Received: from mga14.intel.com ([192.55.52.115]:17390 "EHLO mga14.intel.com"
+        Tue, 1 Oct 2019 06:25:42 -0400
+Received: from mail.skyhub.de ([5.9.137.197]:37600 "EHLO mail.skyhub.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726721AbfJAKYi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Oct 2019 06:24:38 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 01 Oct 2019 03:24:38 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,570,1559545200"; 
-   d="asc'?scan'208";a="220954053"
-Received: from pipin.fi.intel.com (HELO pipin) ([10.237.72.175])
-  by fmsmga002.fm.intel.com with ESMTP; 01 Oct 2019 03:24:35 -0700
-From:   Felipe Balbi <felipe.balbi@linux.intel.com>
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     Richard Cochran <richardcochran@gmail.com>, netdev@vger.kernel.org,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H . Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
-        linux-kernel@vger.kernel.org,
-        "Christopher S . Hall" <christopher.s.hall@intel.com>
-Subject: Re: [RFC PATCH 1/5] x86: tsc: add tsc to art helpers
-In-Reply-To: <alpine.DEB.2.21.1908151458560.1923@nanos.tec.linutronix.de>
-References: <20190716072038.8408-1-felipe.balbi@linux.intel.com> <20190716072038.8408-2-felipe.balbi@linux.intel.com> <alpine.DEB.2.21.1907160952040.1767@nanos.tec.linutronix.de> <87y2zvt1hk.fsf@gmail.com> <alpine.DEB.2.21.1908151458560.1923@nanos.tec.linutronix.de>
-Date:   Tue, 01 Oct 2019 13:24:31 +0300
-Message-ID: <87y2y4vk4g.fsf@gmail.com>
+        id S1726655AbfJAKZl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Oct 2019 06:25:41 -0400
+Received: from zn.tnic (p200300EC2F0A2D00017390E5B71D5792.dip0.t-ipconnect.de [IPv6:2003:ec:2f0a:2d00:173:90e5:b71d:5792])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id E954B1EC067D;
+        Tue,  1 Oct 2019 12:25:39 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1569925540;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=RaP7lzEeNpwJFyEgd0ifXAeNVcOjPtxtxmyMVCw/82k=;
+        b=krFKLzr/64jERMiS8rbqHaz/KmRtAxWpKemMjchmeKgQGnVBhiGs2i8Yf/dNdG637oDNs8
+        RN15arnzmzP/He6Cf1AFm5FT4U3n7K1x+sobMkle1/ZIS2dwluBFqwdapXwlQJRCbCLTct
+        ciZ3fMLF5QkcPbi+xSYzZmhllpktyQ4=
+Date:   Tue, 1 Oct 2019 12:25:39 +0200
+From:   Borislav Petkov <bp@alien8.de>
+To:     Robert Richter <rrichter@marvell.com>
+Cc:     Hanna Hawa <hhhawa@amazon.com>,
+        "mchehab@kernel.org" <mchehab@kernel.org>,
+        "james.morse@arm.com" <james.morse@arm.com>,
+        "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "dwmw@amazon.co.uk" <dwmw@amazon.co.uk>,
+        "benh@amazon.com" <benh@amazon.com>,
+        "ronenk@amazon.com" <ronenk@amazon.com>,
+        "talel@amazon.com" <talel@amazon.com>,
+        "jonnyc@amazon.com" <jonnyc@amazon.com>,
+        "hanochu@amazon.com" <hanochu@amazon.com>
+Subject: Re: [PATCH v4 1/2] edac: Add an API for edac device to report for
+ multiple errors
+Message-ID: <20191001102539.GB5390@zn.tnic>
+References: <20190923191741.29322-1-hhhawa@amazon.com>
+ <20190923191741.29322-2-hhhawa@amazon.com>
+ <20190930145046.GH29694@zn.tnic>
+ <20191001065649.a6454bh4ncgdpigf@rric.localdomain>
+ <20191001083242.GA5390@zn.tnic>
+ <20191001094659.5of5ul2tof6s75px@rric.localdomain>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="=-=-=";
-        micalg=pgp-sha256; protocol="application/pgp-signature"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20191001094659.5of5ul2tof6s75px@rric.localdomain>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---=-=-=
-Content-Type: text/plain
-Content-Transfer-Encoding: quoted-printable
+On Tue, Oct 01, 2019 at 09:47:07AM +0000, Robert Richter wrote:
+> If you move to static inline for edac_device_handle_{ce,ue} the
+> symbols vanish and this breaks the abi. That's why the split in two
+> patches.
 
+ABI issues do not concern upstream. And that coming from me working at a
+company who dance a lot to make ABI happy.
 
-Hi,
+Also, I'm missing the reasoning why you use the ABI as an argument at
+all: do you know of a particular case where people are thinking of
+backporting this or this is all hypothetical.
 
-(sorry for the long delay, got caught up in other tasks)
+> Your comment to not have a __ version as a third variant of the
+> interface makes sense to me. But to keep ABI your patch still needs to
+> be split.
 
-Thomas Gleixner <tglx@linutronix.de> writes:
-> On Thu, 15 Aug 2019, Felipe Balbi wrote:
->> Thomas Gleixner <tglx@linutronix.de> writes:
->> > On Tue, 16 Jul 2019, Felipe Balbi wrote:
->> >
->> > So some information what those interfaces are used for and why they are
->> > needed would be really helpful.
->>=20
->> Okay, I have some more details about this. The TGPIO device itself uses
->> ART since TSC is not directly available to anything other than the
->> CPU. The 'problem' here is that reading ART incurs extra latency which
->> we would like to avoid. Therefore, we use TSC and scale it to
->> nanoseconds which, would be the same as ART to ns.
->
-> Fine. But that's not really correct:
->
->       TSC =3D art_to_tsc_offset + ART * scale;
+Not really - normally, when you fix ABI issues with symbols
+disappearing, all of a sudden, you add dummy ones so that the ABI
+checker is happy.
 
-From=20silicon folks I got the equation:
+-- 
+Regards/Gruss,
+    Boris.
 
-ART =3D ECX * EBX / EAX;
-
-If I'm reading this correctly, that's basically what
-native_calibrate_tsc() does (together with some error checking the safe
-defaults). Couldn't we, instead, just have a single function like below?
-
-u64 convert_tsc_to_art_ns()
-{
-	return x86_platform.calibrate_tsc();
-}
-
-Another way would be extract the important parts from
-native_calibrate_tsc() into a separate helper. This would safe another
-call to cpuid(0x15,...);
-
->> >> +void get_tsc_ns(struct system_counterval_t *tsc_counterval, u64 *tsc=
-_ns)
->
-> Why is this not returning the result instead of having that pointer
-> indirection?
-
-That can be changed easily, no worries.
-
->> >> +{
->> >> +	u64 tmp, res, rem;
->> >> +	u64 cycles;
->> >> +
->> >> +	tsc_counterval->cycles =3D clocksource_tsc.read(NULL);
->> >> +	cycles =3D tsc_counterval->cycles;
->> >> +	tsc_counterval->cs =3D art_related_clocksource;
->
-> So this does more than returning the TSC time converted to nanoseconds. T=
-he
-> function name should reflect this. Plus both functions want kernel-doc
-> explaining what they do.
-
-convert_tsc_to_art_ns()? That would be analogous to convert_art_to_tsc()
-and convert_art_ns_to_tsc().
-
-cheers
-
-=2D-=20
-balbi
-
---=-=-=
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCAAdFiEElLzh7wn96CXwjh2IzL64meEamQYFAl2TKV8ACgkQzL64meEa
-mQavbw/8DuVOATQnOMj+Ng0sKlu26pZeFznN46wERGArebhbba4GAz4DY55ONSR/
-1tX4bovky6KOmLh7p+rzHlR0IQ66osWP/pl0F1hVAG/zXabH5jya8TiSnmbZEMMG
-s3mAPu8WyEeoPXBT964w/wmnu7fvS/hHnRYhkfLJ16E59/7SiFYz6H6RphKmq6iH
-a+ykrTKt97UNw8HDFyNrfl+cTIfHELOxvzxu2ppBI5soaOjFmYC2Wtiw1SpORWBS
-p4WPOk8kmwVQzCQPf1EqF0nC0nBCcniPKcxzFKz6OjBXbASbarftabp1M1i+COW3
-vwQTKavAbKaCxJs6HfXxSS9f59nkKlZN7Owp1xRCglT/3b9XGwZLmecu8t8Cw9z2
-QNBhBorXsrJwf26Xot+GgxpUYPDhetkSfHAOGoXRe/+ZXSJnceH51cif6PXrCEk1
-x5/BrsK5ATMKeioVpiriHkdRFAg9EdsPaXoVkaEWBvQWMKNLQppdItz8NyNWYM1D
-E/qfICZzZGpAeHkukVIw8rbFFeFgSF8Vr8ARjqW7MNBtDM9P7xg/fyJvbQ+E9KTT
-GoZXc4EsjlgcMzpgFgDWlWkCMvQxf3dtx8PEshEe44LeEJRlw2MaCTlsjoNRHAld
-/NLsiCENtVMLWmaPLIy4wHtNNiP29orf9xVoOyUqFTobx5RVsuk=
-=keGU
------END PGP SIGNATURE-----
---=-=-=--
+https://people.kernel.org/tglx/notes-about-netiquette
