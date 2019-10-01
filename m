@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D0ACECE587
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 16:43:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 355DEECE587
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 16:43:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5818020B7C
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 16:43:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 082BA21855
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 16:43:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569948183;
-	bh=s9bI3RQyQ7ZpumkjuFDT8yh/T4vi+2jONkZP6sqpKjg=;
+	s=default; t=1569948189;
+	bh=o88kax3SJ0wmxyj4Tn0gF8U4IPTWnmvDxBUUGine5bk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Qu1HZbTVJGGT13Zt3HX3tCuuipsG3ht9imqh+IZyjOm/4eEDhWHW1wdcSJ+DX2Z2z
-	 mRXol5W1lsOKS/jQqXSQLZ4zchmCNbRk+fDenFelJqA0FB/I0K96xhH2OoAnfKocTb
-	 JzxHHE0rgZ1y2H8AzlD6Dx5qsXD77JPPmEkdBKl4=
+	b=CaiFEGWy6HnN/7tbPTeL37o6S2thMUREzML5zqMFvEH4rg8dYNUV9Y7/ggc/5uIdH
+	 tEDGY+YbxV4DMUQWeABuWSRKCim8eCHU9lFHYkt0nmpvFvFfgCMfWpoD/QM1ktmMoi
+	 J3B5CDm8hsB8w/tMmSY0cIoxsDIbNuU3iYRph2K0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732367AbfJAQnC (ORCPT
+        id S1732466AbfJAQnI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Oct 2019 12:43:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54906 "EHLO mail.kernel.org"
+        Tue, 1 Oct 2019 12:43:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54992 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732274AbfJAQmz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Oct 2019 12:42:55 -0400
+        id S1732274AbfJAQnD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Oct 2019 12:43:03 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B682720B7C;
-        Tue,  1 Oct 2019 16:42:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E7C52205C9;
+        Tue,  1 Oct 2019 16:43:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569948174;
-        bh=s9bI3RQyQ7ZpumkjuFDT8yh/T4vi+2jONkZP6sqpKjg=;
+        s=default; t=1569948182;
+        bh=o88kax3SJ0wmxyj4Tn0gF8U4IPTWnmvDxBUUGine5bk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=PGfRhhNAEPYd1A+jqMkhOxKSdIkbrc9RDP8ofbpi2IOSdQo7DonY6gsvKBTkGd9Gd
-         7egm0mbvgkJW8JfwhNOXTQ6iU24Ig6uOfPNKtBkNUKwSb4GsvMOAOAtz1fQBf2u7dx
-         WvmQLuXilA3jjOWHqISZb8quIhPEwTNuj9F0lv4Q=
+        b=SIXVQwpjfxMUPpgfPx+aIqEfbgTNxC958TeRtb/qQZdXv+0L+SwDv4SORDoXsSnuM
+         UCKApeswlj6hv5GUjny4TGZdQfS057c2w+k/zYEUImNLCaxc0d+uLzEUjCIqAajvLL
+         /ajJLZj9bwC1bpj07HlWwjlc7OarSCkQwrGwxNDE=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     David Ahern <dsahern@gmail.com>,
-        Patrick Ruddy <pruddy@vyatta.att-mail.com>,
+Cc:     Navid Emamdoost <navid.emamdoost@gmail.com>,
         "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.2 56/63] vrf: Do not attempt to create IPv6 mcast rule if IPv6 is disabled
-Date:   Tue,  1 Oct 2019 12:41:18 -0400
-Message-Id: <20191001164125.15398-56-sashal@kernel.org>
+        Sasha Levin <sashal@kernel.org>, oss-drivers@netronome.com,
+        netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.2 58/63] nfp: abm: fix memory leak in nfp_abm_u32_knode_replace
+Date:   Tue,  1 Oct 2019 12:41:20 -0400
+Message-Id: <20191001164125.15398-58-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191001164125.15398-1-sashal@kernel.org>
 References: <20191001164125.15398-1-sashal@kernel.org>
@@ -60,40 +60,67 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: David Ahern <dsahern@gmail.com>
+From: Navid Emamdoost <navid.emamdoost@gmail.com>
 
-[ Upstream commit dac91170f8e9c73784af5fad6225e954b795601c ]
+[ Upstream commit 78beef629fd95be4ed853b2d37b832f766bd96ca ]
 
-A user reported that vrf create fails when IPv6 is disabled at boot using
-'ipv6.disable=1':
-   https://bugzilla.kernel.org/show_bug.cgi?id=204903
+In nfp_abm_u32_knode_replace if the allocation for match fails it should
+go to the error handling instead of returning. Updated other gotos to
+have correct errno returned, too.
 
-The failure is adding fib rules at create time. Add RTNL_FAMILY_IP6MR to
-the check in vrf_fib_rule if ipv6_mod_enabled is disabled.
-
-Fixes: e4a38c0c4b27 ("ipv6: add vrf table handling code for ipv6 mcast")
-Signed-off-by: David Ahern <dsahern@gmail.com>
-Cc: Patrick Ruddy <pruddy@vyatta.att-mail.com>
+Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/vrf.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/net/ethernet/netronome/nfp/abm/cls.c | 14 ++++++++++----
+ 1 file changed, 10 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/net/vrf.c b/drivers/net/vrf.c
-index 97fb0cb1b97ab..1a22165afb393 100644
---- a/drivers/net/vrf.c
-+++ b/drivers/net/vrf.c
-@@ -1153,7 +1153,8 @@ static int vrf_fib_rule(const struct net_device *dev, __u8 family, bool add_it)
- 	struct sk_buff *skb;
+diff --git a/drivers/net/ethernet/netronome/nfp/abm/cls.c b/drivers/net/ethernet/netronome/nfp/abm/cls.c
+index ff39130856652..39be107fbccc8 100644
+--- a/drivers/net/ethernet/netronome/nfp/abm/cls.c
++++ b/drivers/net/ethernet/netronome/nfp/abm/cls.c
+@@ -176,8 +176,10 @@ nfp_abm_u32_knode_replace(struct nfp_abm_link *alink,
+ 	u8 mask, val;
  	int err;
  
--	if (family == AF_INET6 && !ipv6_mod_enabled())
-+	if ((family == AF_INET6 || family == RTNL_FAMILY_IP6MR) &&
-+	    !ipv6_mod_enabled())
- 		return 0;
+-	if (!nfp_abm_u32_check_knode(alink->abm, knode, proto, extack))
++	if (!nfp_abm_u32_check_knode(alink->abm, knode, proto, extack)) {
++		err = -EOPNOTSUPP;
+ 		goto err_delete;
++	}
  
- 	skb = nlmsg_new(vrf_fib_rule_nl_size(), GFP_KERNEL);
+ 	tos_off = proto == htons(ETH_P_IP) ? 16 : 20;
+ 
+@@ -198,14 +200,18 @@ nfp_abm_u32_knode_replace(struct nfp_abm_link *alink,
+ 		if ((iter->val & cmask) == (val & cmask) &&
+ 		    iter->band != knode->res->classid) {
+ 			NL_SET_ERR_MSG_MOD(extack, "conflict with already offloaded filter");
++			err = -EOPNOTSUPP;
+ 			goto err_delete;
+ 		}
+ 	}
+ 
+ 	if (!match) {
+ 		match = kzalloc(sizeof(*match), GFP_KERNEL);
+-		if (!match)
+-			return -ENOMEM;
++		if (!match) {
++			err = -ENOMEM;
++			goto err_delete;
++		}
++
+ 		list_add(&match->list, &alink->dscp_map);
+ 	}
+ 	match->handle = knode->handle;
+@@ -221,7 +227,7 @@ nfp_abm_u32_knode_replace(struct nfp_abm_link *alink,
+ 
+ err_delete:
+ 	nfp_abm_u32_knode_delete(alink, knode);
+-	return -EOPNOTSUPP;
++	return err;
+ }
+ 
+ static int nfp_abm_setup_tc_block_cb(enum tc_setup_type type,
 -- 
 2.20.1
 
