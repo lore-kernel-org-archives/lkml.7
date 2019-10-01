@@ -2,150 +2,133 @@ Return-Path: <SRS0=YRFP=X2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8B33ECE587
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 12:53:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B66DDECE587
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 12:54:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 99FF821A4A
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 12:53:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 88F0D21D71
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 12:54:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1569934461;
+	bh=qdFT2iQGfLY4YITal90NGC2PaaAOxSUOpd1IJ8jDa4A=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=vo5d6QVRCeA01PaalRoAk6+aY48VvN3iqI6s+2bTYjMMleEB+eh/sKr4CNKCooTAv
+	 +6mEoIOrpdtVndIpMyqzujWAg8dKdKhSQ0eC54wAUcXUxrBRVtPuFl3Ec88qheabp4
+	 VUOImKd8T8qi141D71FvoOqjxH1/2PhFYCeOEBOQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388107AbfJAMx0 (ORCPT
+        id S2388116AbfJAMyU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Oct 2019 08:53:26 -0400
-Received: from mga03.intel.com ([134.134.136.65]:1093 "EHLO mga03.intel.com"
+        Tue, 1 Oct 2019 08:54:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43910 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726464AbfJAMx0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Oct 2019 08:53:26 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 01 Oct 2019 05:53:25 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,571,1559545200"; 
-   d="scan'208";a="205058671"
-Received: from lahna.fi.intel.com (HELO lahna) ([10.237.72.157])
-  by fmsmga001.fm.intel.com with SMTP; 01 Oct 2019 05:53:21 -0700
-Received: by lahna (sSMTP sendmail emulation); Tue, 01 Oct 2019 15:53:21 +0300
-Date:   Tue, 1 Oct 2019 15:53:20 +0300
-From:   Mika Westerberg <mika.westerberg@linux.intel.com>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-usb@vger.kernel.org,
-        Andreas Noever <andreas.noever@gmail.com>,
-        Michael Jamet <michael.jamet@intel.com>,
-        Yehezkel Bernat <YehezkelShB@gmail.com>,
-        Rajmohan Mani <rajmohan.mani@intel.com>,
-        Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>,
-        Lukas Wunner <lukas@wunner.de>,
-        Alan Stern <stern@rowland.harvard.edu>,
-        Mario.Limonciello@dell.com,
-        Anthony Wong <anthony.wong@canonical.com>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [RFC PATCH 06/22] thunderbolt: Add support for lane bonding
-Message-ID: <20191001125320.GN2714@lahna.fi.intel.com>
-References: <20191001113830.13028-1-mika.westerberg@linux.intel.com>
- <20191001113830.13028-7-mika.westerberg@linux.intel.com>
- <20191001123808.GA2954373@kroah.com>
+        id S1726464AbfJAMyU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Oct 2019 08:54:20 -0400
+Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9F2E321872;
+        Tue,  1 Oct 2019 12:54:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1569934459;
+        bh=qdFT2iQGfLY4YITal90NGC2PaaAOxSUOpd1IJ8jDa4A=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=KD7GKKfxZ54dCseOBe5DG+Yohm1Gco/g7LjKC3gCbHAP9ww1Hb9AcIC5WGiQnooAO
+         +x0gIphzaT3nFyIhopIKkTQYByBH1dMoWYdlUT9AwlNE1MQujO3FhOhYP2Owa+U82x
+         DR9GDDoMON4RQpr++Mr7UPWmm3BFFpcOkOmqmfNY=
+Date:   Tue, 1 Oct 2019 13:54:13 +0100
+From:   Will Deacon <will@kernel.org>
+To:     Jia He <justin.he@arm.com>
+Cc:     Catalin Marinas <catalin.marinas@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        James Morse <james.morse@arm.com>,
+        Marc Zyngier <maz@kernel.org>,
+        Matthew Wilcox <willy@infradead.org>,
+        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org, Punit Agrawal <punitagrawal@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Andrew Morton <akpm@linux-foundation.org>, hejianet@gmail.com,
+        Kaly Xin <Kaly.Xin@arm.com>
+Subject: Re: [PATCH v10 3/3] mm: fix double page fault on arm64 if PTE_AF is
+ cleared
+Message-ID: <20191001125413.mhxa6qszwnuhglky@willie-the-truck>
+References: <20190930015740.84362-1-justin.he@arm.com>
+ <20190930015740.84362-4-justin.he@arm.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191001123808.GA2954373@kroah.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <20190930015740.84362-4-justin.he@arm.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Oct 01, 2019 at 02:38:08PM +0200, Greg Kroah-Hartman wrote:
-> On Tue, Oct 01, 2019 at 02:38:14PM +0300, Mika Westerberg wrote:
-> > Lane bonding allows aggregating the two 10/20 Gb/s (depending on the
-> > generation) lanes into a single 20/40 Gb/s bonded link. This allows
-> > sharing the full bandwidth more efficiently. In order to establish lane
-> > bonding we need to check that the lane bonding is possible through LC
-> > and that both end of the link actually supports 2x widths. This also
-> > means that all the paths should be established through the primary port
-> > so update tb_path_alloc() to handle this as well.
-> > 
-> > Lane bonding is supported starting from Falcon Ridge (2nd generation)
-> > controllers.
+On Mon, Sep 30, 2019 at 09:57:40AM +0800, Jia He wrote:
+> When we tested pmdk unit test [1] vmmalloc_fork TEST1 in arm64 guest, there
+> will be a double page fault in __copy_from_user_inatomic of cow_user_page.
 > 
-> Are we only going to be allowed to "bond" two links together?  Or will
-> we be doing more than 2 in the future?  If more, then we might want to
-> think of a different way to specify these...
-
-AFAICT only two lanes are available in USB4. This goes over USB type-C
-using the two lanes there.
-
-Of course I don't know if in future there will be USB4 1.1 or something
-that adds more lanes so if you think there is a better way to specify
-these, I'm happy to implement that instead :) 
-
-> Anyway, one tiny nit below:
+> Below call trace is from arm64 do_page_fault for debugging purpose
+> [  110.016195] Call trace:
+> [  110.016826]  do_page_fault+0x5a4/0x690
+> [  110.017812]  do_mem_abort+0x50/0xb0
+> [  110.018726]  el1_da+0x20/0xc4
+> [  110.019492]  __arch_copy_from_user+0x180/0x280
+> [  110.020646]  do_wp_page+0xb0/0x860
+> [  110.021517]  __handle_mm_fault+0x994/0x1338
+> [  110.022606]  handle_mm_fault+0xe8/0x180
+> [  110.023584]  do_page_fault+0x240/0x690
+> [  110.024535]  do_mem_abort+0x50/0xb0
+> [  110.025423]  el0_da+0x20/0x24
 > 
-> > 
-> > Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
-> > ---
-> >  .../ABI/testing/sysfs-bus-thunderbolt         |  17 ++
-> >  drivers/thunderbolt/icm.c                     |  18 +-
-> >  drivers/thunderbolt/lc.c                      |  28 ++
-> >  drivers/thunderbolt/path.c                    |  30 +-
-> >  drivers/thunderbolt/switch.c                  | 274 ++++++++++++++++++
-> >  drivers/thunderbolt/tb.c                      |  21 ++
-> >  drivers/thunderbolt/tb.h                      |  10 +
-> >  drivers/thunderbolt/tb_msgs.h                 |   2 +
-> >  drivers/thunderbolt/tb_regs.h                 |  20 ++
-> >  drivers/thunderbolt/tunnel.c                  |  19 +-
-> >  10 files changed, 429 insertions(+), 10 deletions(-)
-> > 
-> > diff --git a/Documentation/ABI/testing/sysfs-bus-thunderbolt b/Documentation/ABI/testing/sysfs-bus-thunderbolt
-> > index b21fba14689b..2c9166f6fa97 100644
-> > --- a/Documentation/ABI/testing/sysfs-bus-thunderbolt
-> > +++ b/Documentation/ABI/testing/sysfs-bus-thunderbolt
-> > @@ -104,6 +104,23 @@ Contact:	thunderbolt-software@lists.01.org
-> >  Description:	This attribute contains name of this device extracted from
-> >  		the device DROM.
-> >  
-> > +What:		/sys/bus/thunderbolt/devices/.../link_speed
-> > +Date:		Apr 2020
-> > +KernelVersion:	5.6
-> > +Contact:	Mika Westerberg <mika.westerberg@linux.intel.com>
-> > +Description:	This attribute reports the current upstream link speed
-> > +		in Gb/s per lane. If there are two lanes they both are
-> > +		running at the same speed. Use link_width to determine
-> > +		whether the two lanes are bonded or not.
-> > +
-> > +What:		/sys/bus/thunderbolt/devices/.../link_width
-> > +Date:		Apr 2020
-> > +KernelVersion:	5.6
-> > +Contact:	Mika Westerberg <mika.westerberg@linux.intel.com>
-> > +Description:	This attribute reports the current upstream link width.
-> > +		It is 1 for single lane link (or two single lane links)
-> > +		and 2 for bonded dual lane link.
-> > +
-> >  What:		/sys/bus/thunderbolt/devices/.../vendor
-> >  Date:		Sep 2017
-> >  KernelVersion:	4.13
-> > diff --git a/drivers/thunderbolt/icm.c b/drivers/thunderbolt/icm.c
-> > index 6550f68f92ce..9c9c6ea2b790 100644
-> > --- a/drivers/thunderbolt/icm.c
-> > +++ b/drivers/thunderbolt/icm.c
-> > @@ -567,7 +567,8 @@ static struct tb_switch *add_switch(struct tb_switch *parent_sw, u64 route,
-> >  				    size_t ep_name_size, u8 connection_id,
-> >  				    u8 connection_key, u8 link, u8 depth,
-> >  				    enum tb_security_level security_level,
-> > -				    bool authorized, bool boot)
-> > +				    bool authorized, bool boot, bool dual_lane,
-> > +				    bool speed_gen3)
+> The pte info before __copy_from_user_inatomic is (PTE_AF is cleared):
+> [ffff9b007000] pgd=000000023d4f8003, pud=000000023da9b003, pmd=000000023d4b3003, pte=360000298607bd3
 > 
-> That's just a crazy amount of function parameters, with no way of
-> remembering what is what, especially when you add 2 more booleans at the
-> end.
+> As told by Catalin: "On arm64 without hardware Access Flag, copying from
+> user will fail because the pte is old and cannot be marked young. So we
+> always end up with zeroed page after fork() + CoW for pfn mappings. we
+> don't always have a hardware-managed access flag on arm64."
 > 
-> It's your code, but ugh, that's going to be hard to maintain over time
-> :(
+> This patch fix it by calling pte_mkyoung. Also, the parameter is
+> changed because vmf should be passed to cow_user_page()
+> 
+> Add a WARN_ON_ONCE when __copy_from_user_inatomic() returns error
+> in case there can be some obscure use-case.(by Kirill)
+> 
+> [1] https://github.com/pmem/pmdk/tree/master/src/test/vmmalloc_fork
+> 
+> Signed-off-by: Jia He <justin.he@arm.com>
+> Reported-by: Yibo Cai <Yibo.Cai@arm.com>
+> Reviewed-by: Catalin Marinas <catalin.marinas@arm.com>
+> Acked-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
+> ---
+>  mm/memory.c | 99 +++++++++++++++++++++++++++++++++++++++++++++--------
+>  1 file changed, 84 insertions(+), 15 deletions(-)
+> 
+> diff --git a/mm/memory.c b/mm/memory.c
+> index b1ca51a079f2..1f56b0118ef5 100644
+> --- a/mm/memory.c
+> +++ b/mm/memory.c
+> @@ -118,6 +118,13 @@ int randomize_va_space __read_mostly =
+>  					2;
+>  #endif
+>  
+> +#ifndef arch_faults_on_old_pte
+> +static inline bool arch_faults_on_old_pte(void)
+> +{
+> +	return false;
+> +}
+> +#endif
 
-Good point. I'll see if I can simplify it in the next version.
+Kirill has acked this, so I'm happy to take the patch as-is, however isn't
+it the case that /most/ architectures will want to return true for
+arch_faults_on_old_pte()? In which case, wouldn't it make more sense for
+that to be the default, and have x86 and arm64 provide an override? For
+example, aren't most architectures still going to hit the double fault
+scenario even with your patch applied?
+
+Will
