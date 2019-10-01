@@ -2,138 +2,77 @@ Return-Path: <SRS0=YRFP=X2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 67F00ECE587
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 16:29:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C4C6C352AA
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 16:30:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4A1C021783
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 16:29:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 25F6D20679
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 16:30:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390001AbfJAQ3n (ORCPT
+        id S2390020AbfJAQaC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Oct 2019 12:29:43 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:58656 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729782AbfJAQ3n (ORCPT
+        Tue, 1 Oct 2019 12:30:02 -0400
+Received: from shards.monkeyblade.net ([23.128.96.9]:49352 "EHLO
+        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729744AbfJAQaC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Oct 2019 12:29:43 -0400
-Received: from pps.filterd (m0098404.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x91GDcPI084473;
-        Tue, 1 Oct 2019 12:29:13 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2vc9bgahr1-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 01 Oct 2019 12:29:13 -0400
-Received: from m0098404.ppops.net (m0098404.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.27/8.16.0.27) with SMTP id x91GFibZ104327;
-        Tue, 1 Oct 2019 12:29:12 -0400
-Received: from ppma02dal.us.ibm.com (a.bd.3ea9.ip4.static.sl-reverse.com [169.62.189.10])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2vc9bgahqc-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 01 Oct 2019 12:29:12 -0400
-Received: from pps.filterd (ppma02dal.us.ibm.com [127.0.0.1])
-        by ppma02dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id x91GQQLN009749;
-        Tue, 1 Oct 2019 16:29:11 GMT
-Received: from b03cxnp07029.gho.boulder.ibm.com (b03cxnp07029.gho.boulder.ibm.com [9.17.130.16])
-        by ppma02dal.us.ibm.com with ESMTP id 2v9y57m06g-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 01 Oct 2019 16:29:11 +0000
-Received: from b03ledav005.gho.boulder.ibm.com (b03ledav005.gho.boulder.ibm.com [9.17.130.236])
-        by b03cxnp07029.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x91GT9Vl45351412
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 1 Oct 2019 16:29:09 GMT
-Received: from b03ledav005.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id C01F2BE053;
-        Tue,  1 Oct 2019 16:29:09 +0000 (GMT)
-Received: from b03ledav005.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id C6EE9BE056;
-        Tue,  1 Oct 2019 16:29:06 +0000 (GMT)
-Received: from swastik.ibm.com (unknown [9.80.224.222])
-        by b03ledav005.gho.boulder.ibm.com (Postfix) with ESMTP;
-        Tue,  1 Oct 2019 16:29:06 +0000 (GMT)
-Subject: Re: [PATCH v6 1/9] dt-bindings: ibm,secureboot: secure boot specific
- properties for PowerNV
-To:     Rob Herring <robh@kernel.org>, Nayna Jain <nayna@linux.ibm.com>,
-        Michael Ellerman <mpe@ellerman.id.au>
-Cc:     linuxppc-dev@ozlabs.org, linux-efi@vger.kernel.org,
-        linux-integrity@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Jeremy Kerr <jk@ozlabs.org>,
-        Matthew Garret <matthew.garret@nebula.com>,
-        Mimi Zohar <zohar@linux.ibm.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Claudio Carvalho <cclaudio@linux.ibm.com>,
-        George Wilson <gcwilson@linux.ibm.com>,
-        Elaine Palmer <erpalmer@us.ibm.com>,
-        Eric Ricther <erichte@linux.ibm.com>,
-        "Oliver O'Halloran" <oohall@gmail.com>,
-        Mark Rutland <mark.rutland@arm.com>
-References: <1569594360-7141-1-git-send-email-nayna@linux.ibm.com>
- <1569594360-7141-2-git-send-email-nayna@linux.ibm.com>
- <20191001133330.GA29810@bogus>
-From:   Nayna <nayna@linux.vnet.ibm.com>
-Message-ID: <e0575a28-5bd9-1f5b-c09d-ed86cb715165@linux.vnet.ibm.com>
-Date:   Tue, 1 Oct 2019 12:29:06 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.9.1
-MIME-Version: 1.0
-In-Reply-To: <20191001133330.GA29810@bogus>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-10-01_08:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1011 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1908290000 definitions=main-1910010140
+        Tue, 1 Oct 2019 12:30:02 -0400
+Received: from localhost (unknown [IPv6:2601:601:9f00:1e2::3d5])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id F1319154B74EF;
+        Tue,  1 Oct 2019 09:30:00 -0700 (PDT)
+Date:   Tue, 01 Oct 2019 09:30:00 -0700 (PDT)
+Message-Id: <20191001.093000.372726574458067639.davem@davemloft.net>
+To:     icenowy@aosc.io
+Cc:     linux-arm-kernel@lists.infradead.org, mark.rutland@arm.com,
+        andrew@lunn.ch, f.fainelli@gmail.com, devicetree@vger.kernel.org,
+        netdev@vger.kernel.org, linux-sunxi@googlegroups.com,
+        linux-kernel@vger.kernel.org, mripard@kernel.org, wens@csie.org,
+        robh+dt@kernel.org, hkallweit1@gmail.com
+Subject: Re: [PATCH 0/3] Pine64+ specific hacks for RTL8211E Ethernet PHY
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <2CCD0856-433E-4602-A079-9F7F5F2E00D6@aosc.io>
+References: <20191001082912.12905-1-icenowy@aosc.io>
+        <20191001.090651.796983023328992596.davem@davemloft.net>
+        <2CCD0856-433E-4602-A079-9F7F5F2E00D6@aosc.io>
+X-Mailer: Mew version 6.8 on Emacs 26.1
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=iso-2022-jp
+Content-Transfer-Encoding: 7bit
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Tue, 01 Oct 2019 09:30:01 -0700 (PDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: Icenowy Zheng <icenowy@aosc.io>
+Date: Wed, 02 Oct 2019 00:08:39 +0800
 
-
-On 10/01/2019 09:33 AM, Rob Herring wrote:
-> On Fri, Sep 27, 2019 at 10:25:52AM -0400, Nayna Jain wrote:
->> PowerNV represents both the firmware and Host OS secureboot state of the
->> system via device tree. This patch adds the documentation to give
->> the definition of the nodes and the properties.
+> 
+> 
+> $BP2(B 2019$BG/(B10$B7n(B2$BF|(B GMT+08:00 $B>e8a(B12:06:51, David Miller <davem@davemloft.net> $B<LE~(B:
+>>From: Icenowy Zheng <icenowy@aosc.io>
+>>Date: Tue,  1 Oct 2019 16:29:09 +0800
 >>
->> Signed-off-by: Nayna Jain <nayna@linux.ibm.com>
->> ---
->>   .../bindings/powerpc/ibm,secureboot.rst       | 76 ++++++++++++++++
->>   .../devicetree/bindings/powerpc/secvar.rst    | 89 +++++++++++++++++++
->>   2 files changed, 165 insertions(+)
->>   create mode 100644 Documentation/devicetree/bindings/powerpc/ibm,secureboot.rst
->>   create mode 100644 Documentation/devicetree/bindings/powerpc/secvar.rst
+>>> There're some Pine64+ boards known to have broken RTL8211E chips, and
+>>> a hack is given by Pine64+, which is said to be from Realtek.
+>>> 
+>>> This patchset adds the hack.
+>>> 
+>>> The hack is taken from U-Boot, and it contains magic numbers without
+>>> any document.
 >>
->> diff --git a/Documentation/devicetree/bindings/powerpc/ibm,secureboot.rst b/Documentation/devicetree/bindings/powerpc/ibm,secureboot.rst
->> new file mode 100644
->> index 000000000000..03d32099d2eb
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/powerpc/ibm,secureboot.rst
->> @@ -0,0 +1,76 @@
->> +# SPDX-License-Identifier: GPL-2.0
-> Not the right form for reST files.
->
->> +*** NOTE ***
->> +This document is copied from OPAL firmware
->> +(skiboot/doc/device-tree/ibm,secureboot.rst)
-> Why copy into the kernel?
+>>Please contact Realtek and try to get an explanation about this.
+> 
+> Sorry, but Realtek never shows any idea to add more infomation about this.
+> 
+> These hacks had existed and worked for years.
 
-Do you mean we do not need the device-tree documentation in the kernel 
-when it already exists in the skiboot tree ?
+Have you actually tried to communicate with an appropriate contact yourself?
 
-I think I am ok with that. Michael, what do you think ?
-
-Thanks & Regards,
-      - Nayna
+If not, I am asking you to do so.
