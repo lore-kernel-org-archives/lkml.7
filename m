@@ -2,119 +2,149 @@ Return-Path: <SRS0=YRFP=X2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C71CC388F3
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 09:59:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 31807C352AA
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 09:59:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2D3E621920
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 09:59:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569923958;
-	bh=6BQj7mEtfMmysioXhhYw2T2ycMJfZtHk5KXS+5M9J/I=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=ELkWxKsxetYvfb65mJPMCC82UvdsjbPOlDhEvtR4djcEXEleWMoaL9IzK0vyMmKnv
-	 FzjRJUebmpPQO4sAz4rovXyEStTSzLwbdWFouDH8ZtwlWbOn/kgQNVb0Z/EX1wZcQN
-	 dX4CGxt4uErIcFh8ZI1rGtTEhc1l+dSsukK7TN64=
+	by mail.kernel.org (Postfix) with ESMTP id 01F8D2190F
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 09:59:39 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="xcHZ5SL4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729803AbfJAJ7R (ORCPT
+        id S1729887AbfJAJ7i (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Oct 2019 05:59:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37010 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725765AbfJAJ7R (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Oct 2019 05:59:17 -0400
-Received: from localhost (unknown [89.205.130.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1BAED2190F;
-        Tue,  1 Oct 2019 09:59:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569923954;
-        bh=6BQj7mEtfMmysioXhhYw2T2ycMJfZtHk5KXS+5M9J/I=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=gsqEsnnhnu/YvGG69TnK4g5a2xTa+FgrBXr/RiK7xIdHcSVquGY5kk5UCPw0iPfki
-         6IRV7Bm90LEpF2HwXQ4tSoA/ymTVqyAIm66I8530Ysgg8KutObDwHg80mjPMs70gDR
-         DwW9tjRLUXtLNXrmKQhvnYg1xEvyDLnKrCMVglag=
-Date:   Tue, 1 Oct 2019 11:59:11 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Jani Nikula <jani.nikula@intel.com>
-Cc:     Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        linux-kernel@vger.kernel.org,
-        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-        Rodrigo Vivi <rodrigo.vivi@intel.com>,
-        intel-gfx@lists.freedesktop.org,
-        Vishal Kulkarni <vishal@chelsio.com>, netdev@vger.kernel.org,
-        linux-usb@vger.kernel.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Julia Lawall <julia.lawall@lip6.fr>
-Subject: Re: [PATCH v3] string-choice: add yesno(), onoff(),
- enableddisabled(), plural() helpers
-Message-ID: <20191001095911.GA2945944@kroah.com>
-References: <8e697984-03b5-44f3-304e-42d303724eaa@rasmusvillemoes.dk>
- <20191001080739.18513-1-jani.nikula@intel.com>
- <20191001093849.GA2945163@kroah.com>
- <87blv0dcol.fsf@intel.com>
+        Tue, 1 Oct 2019 05:59:38 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:40580 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725765AbfJAJ7i (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Oct 2019 05:59:38 -0400
+Received: by mail-wr1-f67.google.com with SMTP id l3so14684009wru.7
+        for <linux-kernel@vger.kernel.org>; Tue, 01 Oct 2019 02:59:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=H6cw40bjr93UCpoh3Do3Kf35YqQ3oo81uvRbEJ9472w=;
+        b=xcHZ5SL4713A3EyMTIixe6/yC73jL+WfHaRcDANdxXBx93UTv13ECs5I4RB6eZHTl4
+         77RhLlEy9uezstXuY4eX+cCPCJ2geYLI1zEzt69kJo9V1U7GLV5sJjhQ9LboTBHfSwTK
+         8O5A/zKh/t0ht1pT+GbiBUiRgGDgCWUd97WNsWoSnjTzy0s2dlLGxGQcHYFld72LSS1T
+         nQciw1D2/rMeTZAw3FaEt2hReed087DfGzXs8tKqBfn4dnMpqydbOvnI8o9eP5dbg36B
+         wZC2XVjmTH3uoBRPBiXZ3Iol1e0lu8WN9rivxnPbEpgb1xmZPZEDFb7TPwTkyjhPaYQW
+         wFGg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=H6cw40bjr93UCpoh3Do3Kf35YqQ3oo81uvRbEJ9472w=;
+        b=i5KqOJzCIHiz3Rc2rIYZJwB0fyGTe9nrQamKlHAHTdX4No/0nHvy0qsyNZM0BWqVm0
+         MFeh9NEe6pu0DzNJ2dpM1hPKdkkZnZfdoNZUxM0BODtfCsqxN8xyRjtQJMw/400D0/xk
+         Y0O5371reFCOSBhZ3fTs1f7H/B+amNSPL4+ozMEE3e6FhcABoDXodNFOjkoX4k+e62ft
+         8bwQ1oWTfccGvZg+cotyClOPhC5ypmmIVGtCb6K3j4Ph0L3kP6/Yoszhj7le4X4pXIJb
+         BThEn9g6vUImIJ0ABS0TsrKDM9gU07mwoln6u7fISQtLLPI969PgqPTBi1fM3Lqo4yjL
+         G8pQ==
+X-Gm-Message-State: APjAAAWhCvbZQa51OJq/tc9WXTnh4VyMwEGxDULLxrIihkprPmCFewEd
+        ktC1Syel1gs+KHBJzPM0gPoKNbChdSA=
+X-Google-Smtp-Source: APXvYqwizk9nhaStRvBRetXOtY0+/aZmboK5qRDfqhBuZ7sY9IqqIlTxx3spkJJv18yVHQT84McA1A==
+X-Received: by 2002:adf:f709:: with SMTP id r9mr16801917wrp.228.1569923975338;
+        Tue, 01 Oct 2019 02:59:35 -0700 (PDT)
+Received: from [192.168.86.34] (cpc89974-aztw32-2-0-cust43.18-1.cable.virginm.net. [86.30.250.44])
+        by smtp.googlemail.com with ESMTPSA id h17sm4734761wme.6.2019.10.01.02.59.34
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 01 Oct 2019 02:59:34 -0700 (PDT)
+Subject: Re: [PATCH] nvmem: sc27xx: Change to use
+ devm_hwspin_lock_request_specific() to request one hwlock
+To:     Baolin Wang <baolin.wang@linaro.org>
+Cc:     orsonzhai@gmail.com, zhang.lyra@gmail.com, freeman.liu@unisoc.com,
+        linux-kernel@vger.kernel.org
+References: <b2ad55edbb1185c52dc73622ddccbdb7c1b52efd.1569552692.git.baolin.wang@linaro.org>
+From:   Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Message-ID: <57bbc15f-85dc-2557-4b0b-be6fa8fe1ed0@linaro.org>
+Date:   Tue, 1 Oct 2019 10:59:33 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <87blv0dcol.fsf@intel.com>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+In-Reply-To: <b2ad55edbb1185c52dc73622ddccbdb7c1b52efd.1569552692.git.baolin.wang@linaro.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Oct 01, 2019 at 12:42:34PM +0300, Jani Nikula wrote:
-> On Tue, 01 Oct 2019, Greg Kroah-Hartman <gregkh@linuxfoundation.org> wrote:
-> > On Tue, Oct 01, 2019 at 11:07:39AM +0300, Jani Nikula wrote:
-> >> The kernel has plenty of ternary operators to choose between constant
-> >> strings, such as condition ? "yes" : "no", as well as value == 1 ? "" :
-> >> "s":
-> >> 
-> >> $ git grep '? "yes" : "no"' | wc -l
-> >> 258
-> >> $ git grep '? "on" : "off"' | wc -l
-> >> 204
-> >> $ git grep '? "enabled" : "disabled"' | wc -l
-> >> 196
-> >> $ git grep '? "" : "s"' | wc -l
-> >> 25
-> >> 
-> >> Additionally, there are some occurences of the same in reverse order,
-> >> split to multiple lines, or otherwise not caught by the simple grep.
-> >> 
-> >> Add helpers to return the constant strings. Remove existing equivalent
-> >> and conflicting functions in i915, cxgb4, and USB core. Further
-> >> conversion can be done incrementally.
-> >> 
-> >> While the main goal here is to abstract recurring patterns, and slightly
-> >> clean up the code base by not open coding the ternary operators, there
-> >> are also some space savings to be had via better string constant
-> >> pooling.
-> >> 
-> >> Cc: Joonas Lahtinen <joonas.lahtinen@linux.intel.com>
-> >> Cc: Rodrigo Vivi <rodrigo.vivi@intel.com>
-> >> Cc: intel-gfx@lists.freedesktop.org
-> >> Cc: Vishal Kulkarni <vishal@chelsio.com>
-> >> Cc: netdev@vger.kernel.org
-> >> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> >> Cc: linux-usb@vger.kernel.org
-> >> Cc: Andrew Morton <akpm@linux-foundation.org>
-> >> Cc: linux-kernel@vger.kernel.org
-> >> Cc: Julia Lawall <julia.lawall@lip6.fr>
-> >> Cc: Rasmus Villemoes <linux@rasmusvillemoes.dk>
-> >> Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org> # v1
-> >
-> > As this is a totally different version, please drop my reviewed-by as
-> > that's really not true here :(
+
+
+On 27/09/2019 04:12, Baolin Wang wrote:
+> Change to use devm_hwspin_lock_request_specific() to help to simplify the
+> cleanup code for drivers requesting one hwlock. Thus we can remove the
+> redundant sc27xx_efuse_remove() and platform_set_drvdata().
 > 
-> I did indicate it was for v1. Indeed v2 was different, but care to
-> elaborate what's wrong with v3?
+> Signed-off-by: Baolin Wang <baolin.wang@linaro.org>
+> ---
+>   drivers/nvmem/sc27xx-efuse.c |   13 +------------
+>   1 file changed, 1 insertion(+), 12 deletions(-)
 
-No idea, but I haven't reviewed it yet, so to put my tag on there isn't
-the nicest...
 
-greg k-h
+Applied thanks,
+
+srini
+
+> 
+> diff --git a/drivers/nvmem/sc27xx-efuse.c b/drivers/nvmem/sc27xx-efuse.c
+> index c6ee210..ab5e7e0 100644
+> --- a/drivers/nvmem/sc27xx-efuse.c
+> +++ b/drivers/nvmem/sc27xx-efuse.c
+> @@ -211,7 +211,7 @@ static int sc27xx_efuse_probe(struct platform_device *pdev)
+>   		return ret;
+>   	}
+>   
+> -	efuse->hwlock = hwspin_lock_request_specific(ret);
+> +	efuse->hwlock = devm_hwspin_lock_request_specific(&pdev->dev, ret);
+>   	if (!efuse->hwlock) {
+>   		dev_err(&pdev->dev, "failed to request hwspinlock\n");
+>   		return -ENXIO;
+> @@ -219,7 +219,6 @@ static int sc27xx_efuse_probe(struct platform_device *pdev)
+>   
+>   	mutex_init(&efuse->mutex);
+>   	efuse->dev = &pdev->dev;
+> -	platform_set_drvdata(pdev, efuse);
+>   
+>   	econfig.stride = 1;
+>   	econfig.word_size = 1;
+> @@ -232,21 +231,12 @@ static int sc27xx_efuse_probe(struct platform_device *pdev)
+>   	nvmem = devm_nvmem_register(&pdev->dev, &econfig);
+>   	if (IS_ERR(nvmem)) {
+>   		dev_err(&pdev->dev, "failed to register nvmem config\n");
+> -		hwspin_lock_free(efuse->hwlock);
+>   		return PTR_ERR(nvmem);
+>   	}
+>   
+>   	return 0;
+>   }
+>   
+> -static int sc27xx_efuse_remove(struct platform_device *pdev)
+> -{
+> -	struct sc27xx_efuse *efuse = platform_get_drvdata(pdev);
+> -
+> -	hwspin_lock_free(efuse->hwlock);
+> -	return 0;
+> -}
+> -
+>   static const struct of_device_id sc27xx_efuse_of_match[] = {
+>   	{ .compatible = "sprd,sc2731-efuse" },
+>   	{ }
+> @@ -254,7 +244,6 @@ static int sc27xx_efuse_remove(struct platform_device *pdev)
+>   
+>   static struct platform_driver sc27xx_efuse_driver = {
+>   	.probe = sc27xx_efuse_probe,
+> -	.remove = sc27xx_efuse_remove,
+>   	.driver = {
+>   		.name = "sc27xx-efuse",
+>   		.of_match_table = sc27xx_efuse_of_match,
+> 
