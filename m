@@ -2,111 +2,101 @@ Return-Path: <SRS0=YRFP=X2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 46D2DC352AA
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 20:54:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3AF8CECE587
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 20:54:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 285CA21924
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 20:54:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0D4902168B
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 20:54:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727487AbfJAUx7 (ORCPT
+        id S1727505AbfJAUyw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Oct 2019 16:53:59 -0400
-Received: from mail-qk1-f194.google.com ([209.85.222.194]:46989 "EHLO
-        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726166AbfJAUx7 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Oct 2019 16:53:59 -0400
-Received: by mail-qk1-f194.google.com with SMTP id 201so12679589qkd.13;
-        Tue, 01 Oct 2019 13:53:58 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=v7MUChZMPK1zb+gMXHU9XAGkO5pYjaFnqTcVSPFdTOk=;
-        b=c7F0xiJipaPPKQhVLUiiwGsk7nbi53P01pVjsfR5Oh0x37OhzjUv3MVVQbleiEgRto
-         MxT9q0mBQpA2HByGtCTZajKYhNG5fNHZIuam6bN4LDqDrBNshfnhlXLAWd6Wh6SaADYG
-         W+2RkhYQ0Ngyn0vl2yGxCv3S5BTSvo4G/oYw07TttSWVY9BKRJ0ZflKLtPxzDmMoatF1
-         NKN/TlXN+zo+cPckiQBng+jRTxMTZPqQwEcr522ZaCnPEnFMVzjYisflxf1xrBpJbE27
-         fAdbWgpnuQ7xn0/dCuqvMR+MkDYoPRc59AlNoI62Pc+iZRqtlt3t2OrRxrpVeK0/SVwa
-         9+4A==
-X-Gm-Message-State: APjAAAV6L+b6yKh0IJIMmfsszF3NJJPoTdsemhW6DF6cOS0JIay/dZDY
-        D+A+gESzpYBOGUapKnEqeD6EZPHE1WAb69FI8HA=
-X-Google-Smtp-Source: APXvYqwAAPH4OmvY2XCe1/doK1g9oWOdcEyrG1wCz0XnGY6yC21KGfyPKMEejKGP/IUydW6XAfSyzIaF1jEoGuvJHxY=
-X-Received: by 2002:a37:a858:: with SMTP id r85mr72574qke.394.1569963237942;
- Tue, 01 Oct 2019 13:53:57 -0700 (PDT)
+        Tue, 1 Oct 2019 16:54:52 -0400
+Received: from mga17.intel.com ([192.55.52.151]:14871 "EHLO mga17.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726195AbfJAUyv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Oct 2019 16:54:51 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 01 Oct 2019 13:54:50 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,571,1559545200"; 
+   d="scan'208";a="275119848"
+Received: from nbaca1-mobl1.ger.corp.intel.com (HELO localhost) ([10.252.37.57])
+  by orsmga001.jf.intel.com with ESMTP; 01 Oct 2019 13:54:46 -0700
+Date:   Tue, 1 Oct 2019 23:54:45 +0300
+From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+To:     linux-integrity@vger.kernel.org, stable@vger.kernel.org,
+        David Howells <dhowells@redhat.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        "David S. Miller" <davem@davemloft.net>,
+        "open list:ASYMMETRIC KEYS" <keyrings@vger.kernel.org>,
+        "open list:CRYPTO API" <linux-crypto@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] KEYS: asym_tpm: Switch to get_random_bytes()
+Message-ID: <20191001205445.GC26709@linux.intel.com>
+References: <20190926171601.30404-1-jarkko.sakkinen@linux.intel.com>
+ <20190928180559.jivt5zlisr43fnva@cantor>
 MIME-Version: 1.0
-References: <20190930112636.vx2qxo4hdysvxibl@willie-the-truck>
- <CAK7LNASQZ82KSOrQW7+Wq1vFDCg2__maBEAPMLqUDqZMLuj1rA@mail.gmail.com>
- <20190930121803.n34i63scet2ec7ll@willie-the-truck> <CAKwvOdnqn=0LndrX+mUrtSAQqoT1JWRMOJCA5t3e=S=T7zkcCQ@mail.gmail.com>
- <20191001092823.z4zhlbwvtwnlotwc@willie-the-truck> <CAKwvOdk0h2A6=fb7Yepf+oKbZfq_tqwpGq8EBmHVu1j4mo-a-A@mail.gmail.com>
- <20191001170142.x66orounxuln7zs3@willie-the-truck> <CAKwvOdnFJqipp+G5xLDRBcOrQRcvMQmn+n8fufWyzyt2QL_QkA@mail.gmail.com>
- <20191001175512.GK25745@shell.armlinux.org.uk> <CAKwvOdmw_xmTGZLeK8-+Q4nUpjs-UypJjHWks-3jHA670Dxa1A@mail.gmail.com>
- <20191001181438.GL25745@shell.armlinux.org.uk> <CAKwvOdmBnBVU7F-a6DqPU6QM-BRc8LNn6YRmhTsuGLauCWKUOg@mail.gmail.com>
-In-Reply-To: <CAKwvOdmBnBVU7F-a6DqPU6QM-BRc8LNn6YRmhTsuGLauCWKUOg@mail.gmail.com>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Tue, 1 Oct 2019 22:53:41 +0200
-Message-ID: <CAK8P3a0eKOyJRjp1P8HWfSLWO=d6Y3befy3kQBgTPVX+g_2q4A@mail.gmail.com>
-Subject: Re: [PATCH] compiler: enable CONFIG_OPTIMIZE_INLINING forcibly
-To:     Nick Desaulniers <ndesaulniers@google.com>
-Cc:     Russell King - ARM Linux admin <linux@armlinux.org.uk>,
-        Will Deacon <will@kernel.org>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Stefan Wahren <wahrenst@gmx.net>,
-        Kees Cook <keescook@google.com>,
-        clang-built-linux <clang-built-linux@googlegroups.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190928180559.jivt5zlisr43fnva@cantor>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Oct 1, 2019 at 10:21 PM 'Nick Desaulniers' via Clang Built
-Linux <clang-built-linux@googlegroups.com> wrote:
-> On Tue, Oct 1, 2019 at 11:14 AM Russell King - ARM Linux admin
-> <linux@armlinux.org.uk> wrote:
-> >
-> > On Tue, Oct 01, 2019 at 11:00:11AM -0700, Nick Desaulniers wrote:
-> > > On Tue, Oct 1, 2019 at 10:55 AM Russell King - ARM Linux admin
-> > > <linux@armlinux.org.uk> wrote:
-> > In any case, I violently disagree with the idea that stuff we have
-> > in header files should be permitted not to be inlined because we
-> > have soo much that is marked inline.
->
-> So there's a very important subtly here.  There's:
-> 1. code that adds `inline` cause "oh maybe it would be nice to inline
-> this, but if it isn't no big deal"
-> 2. code that if not inlined is somehow not correct.
-> 3. avoid ODR violations via `static inline`
->
-> I'll posit that "we have soo much that is marked inline [is
-> predominantly case 1 or 3, not case 2]."  Case 2 is a code smell, and
-> requires extra scrutiny.
+On Sat, Sep 28, 2019 at 11:05:59AM -0700, Jerry Snitselaar wrote:
+> On Thu Sep 26 19, Jarkko Sakkinen wrote:
+> > Only the kernel random pool should be used for generating random numbers.
+> > TPM contributes to that pool among the other sources of entropy. In here it
+> > is not, agreed, absolutely critical because TPM is what is trusted anyway
+> > but in order to remove tpm_get_random() we need to first remove all the > > call sites.  > > 
+> > Cc: stable@vger.kernel.org
+> > Fixes: 0c36264aa1d5 ("KEYS: asym_tpm: Add loadkey2 and flushspecific [ver #2]")
+> > Signed-off-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+> > ---
+> > crypto/asymmetric_keys/asym_tpm.c | 7 ++-----
+> > 1 file changed, 2 insertions(+), 5 deletions(-)
+> > 
+> > diff --git a/crypto/asymmetric_keys/asym_tpm.c b/crypto/asymmetric_keys/asym_tpm.c
+> > index 76d2ce3a1b5b..c14b8d186e93 100644
+> > --- a/crypto/asymmetric_keys/asym_tpm.c
+> > +++ b/crypto/asymmetric_keys/asym_tpm.c
+> > @@ -6,6 +6,7 @@
+> > #include <linux/kernel.h>
+> > #include <linux/seq_file.h>
+> > #include <linux/scatterlist.h>
+> > +#include <linux/random.h>
+> > #include <linux/tpm.h>
+> > #include <linux/tpm_command.h>
+> > #include <crypto/akcipher.h>
+> > @@ -54,11 +55,7 @@ static int tpm_loadkey2(struct tpm_buf *tb,
+> > 	}
+> > 
+> > 	/* generate odd nonce */
+> > -	ret = tpm_get_random(NULL, nonceodd, TPM_NONCE_SIZE);
+> > -	if (ret < 0) {
+> > -		pr_info("tpm_get_random failed (%d)\n", ret);
+> > -		return ret;
+> > -	}
+> > +	get_random_bytes(nonceodd, TPM_NONCE_SIZE);
+> > 
+> > 	/* calculate authorization HMAC value */
+> > 	ret = TSS_authhmac(authdata, keyauth, SHA1_DIGEST_SIZE, enonce,
+> > -- 
+> > 2.20.1
+> > 
+> 
+> Should tpm_unbind and tpm_sign in asym_tpm.c be switched as well then?
 
-1. is clearly the most common case, but there is also
+Without doubt. Thanks. I'll send an update soon.
 
-4. Some compiler version (possibly long gone, possibly still current)
-makes bad inlining decisions that result in horrible but functionally
-correct object code for a particular function, and forcing a function to
-be inlined results in what we had expected the compiler to do already.
-
-The problem with 2. is that they are largely not documented, and often
-unintentional. This also affects functions that are simply 'static'
-rather than 'static inline' but are broken when not being inlined.
-E.g. we've had a number of kernel bugs with 'static __init' functions
-that gcc always inlined into a non-__init caller, but that produced an
-invalid call into a discarded function when clang decided to leave
-them out of line.
-
-      Arnd
+/Jarkko
