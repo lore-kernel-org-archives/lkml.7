@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 128D9ECE587
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 16:45:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 933EFECE587
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 16:45:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D23E72190F
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 16:45:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5F8382190F
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 16:45:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569948328;
-	bh=f6t4c88a69fuHzhV8io9AVBJIcK7SkSDMOV9GaanKkY=;
+	s=default; t=1569948331;
+	bh=DdXffDv43Dzcs2A5WSrvHVsPPlFVTzzPNg20It8U2EU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=aZsjdG0ougmif1cF8IniLNsXZxmMpc1EmeC9ON6BOnb41+Ouoocx/0QyJgDhmkAiL
-	 +fhfBdR0rjcEIU19htaRJMGOqdzASGgvGANkXqMDnjn4xguzTeJKV+Lsx0FWhi0gp2
-	 mQI1i/3rnXW0bHUVodWHziNEyFPELU7MOubfWlaw=
+	b=EcOl64ZXCQYMQa+KmaHQOhcdyjCdv4vB/8Fa89vRtp9yxtXybK+hxw0tb971rZt+t
+	 2NQm3+3ByiMOkaGC0J7rJlOxXJ6yNx6IbinLlpuz0JEbnx0fE/XTaxj26NVtw8+1Xz
+	 9ajWu+5GYSKhWDj2jJGWmIDiTrtb3CyUAttL+QP0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390287AbfJAQp2 (ORCPT
+        id S2390296AbfJAQpa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Oct 2019 12:45:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57680 "EHLO mail.kernel.org"
+        Tue, 1 Oct 2019 12:45:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57626 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390216AbfJAQpP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Oct 2019 12:45:15 -0400
+        id S2388464AbfJAQpN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Oct 2019 12:45:13 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7604D205C9;
-        Tue,  1 Oct 2019 16:45:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 936122168B;
+        Tue,  1 Oct 2019 16:45:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569948315;
-        bh=f6t4c88a69fuHzhV8io9AVBJIcK7SkSDMOV9GaanKkY=;
+        s=default; t=1569948312;
+        bh=DdXffDv43Dzcs2A5WSrvHVsPPlFVTzzPNg20It8U2EU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=hCr5BI4/PyRq2UnhfkFRY0el25iumOSZ0PnG5Vq0Wu/znwic8lbD0fssxzAiM0nW/
-         iDurK91CJwhIa2BzWY8bIo4237l0Z8BwNLBBKh6MlHFuIRXYIgsiMnhjd/+qvGrRo8
-         OnLBAuWMRoUmLzQtR+ePouRhRT8wi3ZUnf22LWBE=
+        b=ce1qvMFXs4tC52ZdzhdroMp+PcxOf0RjnzRMksBJV84fE2eh2xL4vxchXr2FbM7MR
+         CQ67hIeho9FZkHtlNnSToXeiqzxS4Sqx9LrajDcYt9goJD9jRLqquBxK1V9AWljb9f
+         2/E+Bf1/tGJdkpyaJxeku2oHgN5HPqV+G7fRKLps=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Trek <trek00@inbox.ru>, Alex Deucher <alexander.deucher@amd.com>,
-        Sasha Levin <sashal@kernel.org>, amd-gfx@lists.freedesktop.org,
-        dri-devel@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 4.9 07/19] drm/amdgpu: Check for valid number of registers to read
-Date:   Tue,  1 Oct 2019 12:44:53 -0400
-Message-Id: <20191001164505.16708-7-sashal@kernel.org>
+Cc:     Erqi Chen <chenerqi@gmail.com>, "Yan, Zheng" <zyan@redhat.com>,
+        Jeff Layton <jlayton@kernel.org>,
+        Ilya Dryomov <idryomov@gmail.com>,
+        Sasha Levin <sashal@kernel.org>, ceph-devel@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 06/19] ceph: reconnect connection if session hang in opening state
+Date:   Tue,  1 Oct 2019 12:44:52 -0400
+Message-Id: <20191001164505.16708-6-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191001164505.16708-1-sashal@kernel.org>
 References: <20191001164505.16708-1-sashal@kernel.org>
@@ -59,37 +60,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Trek <trek00@inbox.ru>
+From: Erqi Chen <chenerqi@gmail.com>
 
-[ Upstream commit 73d8e6c7b841d9bf298c8928f228fb433676635c ]
+[ Upstream commit 71a228bc8d65900179e37ac309e678f8c523f133 ]
 
-Do not try to allocate any amount of memory requested by the user.
-Instead limit it to 128 registers. Actually the longest series of
-consecutive allowed registers are 48, mmGB_TILE_MODE0-31 and
-mmGB_MACROTILE_MODE0-15 (0x2644-0x2673).
+If client mds session is evicted in CEPH_MDS_SESSION_OPENING state,
+mds won't send session msg to client, and delayed_work skip
+CEPH_MDS_SESSION_OPENING state session, the session hang forever.
 
-Bug: https://bugs.freedesktop.org/show_bug.cgi?id=111273
-Signed-off-by: Trek <trek00@inbox.ru>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+Allow ceph_con_keepalive to reconnect a session in OPENING to avoid
+session hang. Also, ensure that we skip sessions in RESTARTING and
+REJECTED states since those states can't be resurrected by issuing
+a keepalive.
+
+Link: https://tracker.ceph.com/issues/41551
+Signed-off-by: Erqi Chen chenerqi@gmail.com
+Reviewed-by: "Yan, Zheng" <zyan@redhat.com>
+Signed-off-by: Jeff Layton <jlayton@kernel.org>
+Signed-off-by: Ilya Dryomov <idryomov@gmail.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/amd/amdgpu/amdgpu_kms.c | 3 +++
- 1 file changed, 3 insertions(+)
+ fs/ceph/mds_client.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_kms.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_kms.c
-index 3938fca1ea8e5..24941a7b659f4 100644
---- a/drivers/gpu/drm/amd/amdgpu/amdgpu_kms.c
-+++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_kms.c
-@@ -430,6 +430,9 @@ static int amdgpu_info_ioctl(struct drm_device *dev, void *data, struct drm_file
- 		if (sh_num == AMDGPU_INFO_MMR_SH_INDEX_MASK)
- 			sh_num = 0xffffffff;
- 
-+		if (info->read_mmr_reg.count > 128)
-+			return -EINVAL;
-+
- 		regs = kmalloc_array(info->read_mmr_reg.count, sizeof(*regs), GFP_KERNEL);
- 		if (!regs)
- 			return -ENOMEM;
+diff --git a/fs/ceph/mds_client.c b/fs/ceph/mds_client.c
+index 67cb9d078bfa7..3139fbd4c34e3 100644
+--- a/fs/ceph/mds_client.c
++++ b/fs/ceph/mds_client.c
+@@ -3410,7 +3410,9 @@ static void delayed_work(struct work_struct *work)
+ 				pr_info("mds%d hung\n", s->s_mds);
+ 			}
+ 		}
+-		if (s->s_state < CEPH_MDS_SESSION_OPEN) {
++		if (s->s_state == CEPH_MDS_SESSION_NEW ||
++		    s->s_state == CEPH_MDS_SESSION_RESTARTING ||
++		    s->s_state == CEPH_MDS_SESSION_REJECTED) {
+ 			/* this mds is failed or recovering, just wait */
+ 			ceph_put_mds_session(s);
+ 			continue;
 -- 
 2.20.1
 
