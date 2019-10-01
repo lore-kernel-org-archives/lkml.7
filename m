@@ -2,147 +2,150 @@ Return-Path: <SRS0=YRFP=X2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D369C388F3
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 08:56:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B24AEC388F3
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 08:59:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4AA50215EA
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 08:56:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8C25C215EA
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 08:59:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733201AbfJAI4w (ORCPT
+        id S1733069AbfJAI7d (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Oct 2019 04:56:52 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:60536 "EHLO mx1.redhat.com"
+        Tue, 1 Oct 2019 04:59:33 -0400
+Received: from inva020.nxp.com ([92.121.34.13]:49236 "EHLO inva020.nxp.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729787AbfJAI4w (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Oct 2019 04:56:52 -0400
-Received: from mail-io1-f69.google.com (mail-io1-f69.google.com [209.85.166.69])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id E4F2469061
-        for <linux-kernel@vger.kernel.org>; Tue,  1 Oct 2019 08:56:51 +0000 (UTC)
-Received: by mail-io1-f69.google.com with SMTP id w16so37164216ioc.15
-        for <linux-kernel@vger.kernel.org>; Tue, 01 Oct 2019 01:56:51 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Y4MCB39tSojzPSG5F8motQYTFmJxxDn1nUNabNxkafU=;
-        b=GHHVkI354HoNxpViDFcfBM7dDntKf/oi7iwP54NuPsY8Xps/vAUELzSOf/0vMf3A01
-         6CsyMX2IxWz7vdKFgkG46H59e6ggQlxfeR1Zu8Yz/V3Jj41onTKG4smCcVIANFLAW45R
-         9SSJS+yGmoMiFmcEEKrTZok52Xg9827v2oLixodxix+KZcLXTpm+KaMo7wxjEcJMrYL9
-         qG+oWrSX4hE0BZGsXHEmNf9TxQIrcSrkDBj8hh9IkkJfUisVlkP4E1h3xe9WcfcAI1Sb
-         hjCEphokrg96BhVIm8WZ/ZQDdkctAnjtRvUwtZ1FJ7WdRK5vmFIYuy/7nbTB1PF3syVS
-         2dFQ==
-X-Gm-Message-State: APjAAAXp0nZsdFpJ8OLQS/XrAeRQQxxXwlHapoFohM2zyqI2/rBHajNe
-        ff0jnHUkGOPWt7hNtTJfBFbAlk24c9utiQSf4ag9ptt13217maDhRd1DXbMBLoIrAPRhHNWGJhP
-        u40Wb+jSeTa48mecFpDHQU0VsgM3Z6Zawf/1X5zCn
-X-Received: by 2002:a02:3785:: with SMTP id r127mr23230729jar.40.1569920211280;
-        Tue, 01 Oct 2019 01:56:51 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqwoNzktoaUof8b0H3sFnkM9bXtOd3VgXH5Bw47BtxohVXwwNwKIPvNn8hjvUfNCqV1BTAm2hn7ua8hYHfXP2xc=
-X-Received: by 2002:a02:3785:: with SMTP id r127mr23230713jar.40.1569920210929;
- Tue, 01 Oct 2019 01:56:50 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190927144421.22608-1-kherbst@redhat.com> <20190927214252.GA65801@google.com>
- <CACO55tuaY1jFXpJPeC9M4PoWEDyy547_tE8MpLaTDb+C+ffsbg@mail.gmail.com>
- <20190930080534.GS2714@lahna.fi.intel.com> <CACO55tuMo1aAA7meGtEey6J6sOS-ZA0ebZeL52i2zfkWtPqe_g@mail.gmail.com>
- <20190930092934.GT2714@lahna.fi.intel.com> <CACO55tu9M8_TWu2MxNe_NROit+d+rHJP5_Tb+t73q5vr19sd1w@mail.gmail.com>
- <20190930163001.GX2714@lahna.fi.intel.com> <CACO55tuk4SA6-xUtJ-oRePy8MPXYAp2cfmSPxwW3J5nQuX3y2g@mail.gmail.com>
- <20191001084651.GC2714@lahna.fi.intel.com>
-In-Reply-To: <20191001084651.GC2714@lahna.fi.intel.com>
-From:   Karol Herbst <kherbst@redhat.com>
-Date:   Tue, 1 Oct 2019 10:56:39 +0200
-Message-ID: <CACO55ts9ommYbA5g4=G+f0G=v90qGM7EsurU7AL7bU=PFzQMnw@mail.gmail.com>
-Subject: Re: [RFC PATCH] pci: prevent putting pcie devices into lower device
- states on certain intel bridges
-To:     Mika Westerberg <mika.westerberg@linux.intel.com>
-Cc:     Bjorn Helgaas <helgaas@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Lyude Paul <lyude@redhat.com>,
-        Linux PCI <linux-pci@vger.kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        nouveau <nouveau@lists.freedesktop.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Linux PM <linux-pm@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        id S1729031AbfJAI7c (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Oct 2019 04:59:32 -0400
+Received: from inva020.nxp.com (localhost [127.0.0.1])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 1D0501A001A;
+        Tue,  1 Oct 2019 10:59:30 +0200 (CEST)
+Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id E328B1A091F;
+        Tue,  1 Oct 2019 10:59:26 +0200 (CEST)
+Received: from lsv03124.swis.in-blr01.nxp.com (lsv03124.swis.in-blr01.nxp.com [92.120.146.121])
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id E31954029A;
+        Tue,  1 Oct 2019 16:59:22 +0800 (SGT)
+From:   Kuldeep Singh <kuldeep.singh@nxp.com>
+To:     han.xu@nxp.com, broonie@kernel.org, linux-spi@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     Kuldeep Singh <kuldeep.singh@nxp.com>,
+        Suresh Gupta <suresh.gupta@nxp.com>
+Subject: [PATCH] spi: spi-fsl-qspi: Introduce variable to fix different invalid master Id
+Date:   Tue,  1 Oct 2019 14:29:16 +0530
+Message-Id: <1569920356-8953-1-git-send-email-kuldeep.singh@nxp.com>
+X-Mailer: git-send-email 2.7.4
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Oct 1, 2019 at 10:47 AM Mika Westerberg
-<mika.westerberg@linux.intel.com> wrote:
->
-> On Mon, Sep 30, 2019 at 06:36:12PM +0200, Karol Herbst wrote:
-> > On Mon, Sep 30, 2019 at 6:30 PM Mika Westerberg
-> > <mika.westerberg@linux.intel.com> wrote:
-> > >
-> > > On Mon, Sep 30, 2019 at 06:05:14PM +0200, Karol Herbst wrote:
-> > > > still happens with your patch applied. The machine simply gets shut down.
-> > > >
-> > > > dmesg can be found here:
-> > > > https://gist.githubusercontent.com/karolherbst/40eb091c7b7b33ef993525de660f1a3b/raw/2380e31f566e93e5ba7c87ef545420965d4c492c/gistfile1.txt
-> > >
-> > > Looking your dmesg:
-> > >
-> > > Sep 30 17:24:27 kernel: nouveau 0000:01:00.0: DRM: DCB version 4.1
-> > > Sep 30 17:24:27 kernel: nouveau 0000:01:00.0: DRM: MM: using COPY for buffer copies
-> > > Sep 30 17:24:27 kernel: [drm] Initialized nouveau 1.3.1 20120801 for 0000:01:00.0 on minor 1
-> > >
-> > > I would assume it runtime suspends here. Then it wakes up because of PCI
-> > > access from userspace:
-> > >
-> > > Sep 30 17:24:42 kernel: pci_raw_set_power_state: 56 callbacks suppressed
-> > >
-> > > and for some reason it does not get resumed properly. There are also few
-> > > warnings from ACPI that might be relevant:
-> > >
-> > > Sep 30 17:24:27 kernel: ACPI Warning: \_SB.PCI0.GFX0._DSM: Argument #4 type mismatch - Found [Buffer], ACPI requires [Package] (20190509/nsarguments-59)
-> > > Sep 30 17:24:27 kernel: ACPI Warning: \_SB.PCI0.PEG0.PEGP._DSM: Argument #4 type mismatch - Found [Buffer], ACPI requires [Package] (20190509/nsarguments-59)
-> > >
-> >
-> > afaik this is the case for essentially every laptop out there.
->
-> OK, so they are harmless?
->
+Different platforms have different Master with different SourceID on
+AHB bus. The 0X0E Master ID is used by cluster 3 in case of LS2088A.
+So, patch introduce an invalid master id variable to fix invalid
+mastered on different platforms.
 
-yes
+Signed-off-by: Suresh Gupta <suresh.gupta@nxp.com>
+Signed-off-by: Kuldeep Singh <kuldeep.singh@nxp.com>
+---
+ drivers/spi/spi-fsl-qspi.c | 17 +++++++++++++++++
+ 1 file changed, 17 insertions(+)
 
-> > > This seems to be Dell XPS 9560 which I think has been around some time
-> > > already so I wonder why we only see issues now. Has it ever worked for
-> > > you or maybe there is a regression that causes it to happen now?
-> >
-> > oh, it's broken since forever, we just tried to get more information
-> > from Nvidia if they know what this is all about, but we got nothing
-> > useful.
-> >
-> > We were also hoping to find a reliable fix or workaround we could have
-> > inside nouveau to fix that as I think nouveau is the only driver
-> > actually hit by this issue, but nothing turned out to be reliable
-> > enough.
->
-> Can't you just block runtime PM from the nouveau driver until this is
-> understood better? That can be done by calling pm_runtime_forbid() (or
-> not calling pm_runtime_allow() in the driver). Or in case of PCI driver
-> you just don't decrease the reference count when probe() ends.
->
+diff --git a/drivers/spi/spi-fsl-qspi.c b/drivers/spi/spi-fsl-qspi.c
+index c02e24c..51385b0 100644
+--- a/drivers/spi/spi-fsl-qspi.c
++++ b/drivers/spi/spi-fsl-qspi.c
+@@ -63,6 +63,11 @@
+ #define QUADSPI_IPCR			0x08
+ #define QUADSPI_IPCR_SEQID(x)		((x) << 24)
+ 
++#define QUADSPI_BUF0CR                  0x10
++#define QUADSPI_BUF1CR                  0x14
++#define QUADSPI_BUF2CR                  0x18
++#define QUADSPI_BUFXCR_INVALID_MSTRID   0xe
++
+ #define QUADSPI_BUF3CR			0x1c
+ #define QUADSPI_BUF3CR_ALLMST_MASK	BIT(31)
+ #define QUADSPI_BUF3CR_ADATSZ(x)	((x) << 8)
+@@ -184,6 +189,7 @@
+ struct fsl_qspi_devtype_data {
+ 	unsigned int rxfifo;
+ 	unsigned int txfifo;
++	int invalid_mstrid;
+ 	unsigned int ahb_buf_size;
+ 	unsigned int quirks;
+ 	bool little_endian;
+@@ -192,6 +198,7 @@ struct fsl_qspi_devtype_data {
+ static const struct fsl_qspi_devtype_data vybrid_data = {
+ 	.rxfifo = SZ_128,
+ 	.txfifo = SZ_64,
++	.invalid_mstrid = QUADSPI_BUFXCR_INVALID_MSTRID,
+ 	.ahb_buf_size = SZ_1K,
+ 	.quirks = QUADSPI_QUIRK_SWAP_ENDIAN,
+ 	.little_endian = true,
+@@ -200,6 +207,7 @@ static const struct fsl_qspi_devtype_data vybrid_data = {
+ static const struct fsl_qspi_devtype_data imx6sx_data = {
+ 	.rxfifo = SZ_128,
+ 	.txfifo = SZ_512,
++	.invalid_mstrid = QUADSPI_BUFXCR_INVALID_MSTRID,
+ 	.ahb_buf_size = SZ_1K,
+ 	.quirks = QUADSPI_QUIRK_4X_INT_CLK | QUADSPI_QUIRK_TKT245618,
+ 	.little_endian = true,
+@@ -208,6 +216,7 @@ static const struct fsl_qspi_devtype_data imx6sx_data = {
+ static const struct fsl_qspi_devtype_data imx7d_data = {
+ 	.rxfifo = SZ_128,
+ 	.txfifo = SZ_512,
++	.invalid_mstrid = QUADSPI_BUFXCR_INVALID_MSTRID,
+ 	.ahb_buf_size = SZ_1K,
+ 	.quirks = QUADSPI_QUIRK_TKT253890 | QUADSPI_QUIRK_4X_INT_CLK,
+ 	.little_endian = true,
+@@ -216,6 +225,7 @@ static const struct fsl_qspi_devtype_data imx7d_data = {
+ static const struct fsl_qspi_devtype_data imx6ul_data = {
+ 	.rxfifo = SZ_128,
+ 	.txfifo = SZ_512,
++	.invalid_mstrid = QUADSPI_BUFXCR_INVALID_MSTRID,
+ 	.ahb_buf_size = SZ_1K,
+ 	.quirks = QUADSPI_QUIRK_TKT253890 | QUADSPI_QUIRK_4X_INT_CLK,
+ 	.little_endian = true,
+@@ -224,6 +234,7 @@ static const struct fsl_qspi_devtype_data imx6ul_data = {
+ static const struct fsl_qspi_devtype_data ls1021a_data = {
+ 	.rxfifo = SZ_128,
+ 	.txfifo = SZ_64,
++	.invalid_mstrid = QUADSPI_BUFXCR_INVALID_MSTRID,
+ 	.ahb_buf_size = SZ_1K,
+ 	.quirks = 0,
+ 	.little_endian = false,
+@@ -233,6 +244,7 @@ static const struct fsl_qspi_devtype_data ls2080a_data = {
+ 	.rxfifo = SZ_128,
+ 	.txfifo = SZ_64,
+ 	.ahb_buf_size = SZ_1K,
++	.invalid_mstrid = 0x0,
+ 	.quirks = QUADSPI_QUIRK_TKT253890 | QUADSPI_QUIRK_BASE_INTERNAL,
+ 	.little_endian = true,
+ };
+@@ -615,6 +627,7 @@ static int fsl_qspi_exec_op(struct spi_mem *mem, const struct spi_mem_op *op)
+ 	void __iomem *base = q->iobase;
+ 	u32 addr_offset = 0;
+ 	int err = 0;
++	int invalid_mstrid = q->devtype_data->invalid_mstrid;
+ 
+ 	mutex_lock(&q->lock);
+ 
+@@ -638,6 +651,10 @@ static int fsl_qspi_exec_op(struct spi_mem *mem, const struct spi_mem_op *op)
+ 	qspi_writel(q, QUADSPI_SPTRCLR_BFPTRC | QUADSPI_SPTRCLR_IPPTRC,
+ 		    base + QUADSPI_SPTRCLR);
+ 
++	qspi_writel(q, invalid_mstrid, base + QUADSPI_BUF0CR);
++	qspi_writel(q, invalid_mstrid, base + QUADSPI_BUF1CR);
++	qspi_writel(q, invalid_mstrid, base + QUADSPI_BUF2CR);
++
+ 	fsl_qspi_prepare_lut(q, op);
+ 
+ 	/*
+-- 
+2.7.4
 
-the thing is, it does work for a lot of laptops. We could only observe
-this on kaby lake and skylake ones. Even on Cannon Lakes it seems to
-work just fine.
-
-> I think that would be much better than blocking any devices behind
-> Kabylake PCIe root ports from entering D3 (I don't really think the
-> problem is in the root ports itself but there is something we are
-> missing when the NVIDIA GPU is put into D3cold or back from there).
-
-I highly doubt there is anything wrong with the GPU alone as we have
-too many indications which tell us otherwise.
-
-Anyway, at this point I don't know where to look further for what's
-actually wrong. And apparently it works on Windows, but I don't know
-why and I have no idea what Windows does on such systems to make it
-work reliably.
