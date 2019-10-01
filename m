@@ -7,52 +7,51 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B04EC352AA
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 16:45:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2548ECE587
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 16:45:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 51FDF205C9
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 16:45:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7790D222C2
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 16:45:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569948333;
-	bh=jgOVQH1oabmmA2tXS0QqxJF8/sUZvCaHERUsbEeTv08=;
+	s=default; t=1569948336;
+	bh=Geih3nmsUSTN8whOgZ/Z6JoWNRMfyxn43+CgsYft+M0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=EF+qBwZU8xEDXBRsP3eR2cIYrTCXui3wYTcuTi1VJlykSAvn3/wqziqk6g8qYE3F2
-	 YrgCPKC2ZxyV+hFLNXuvFoJ9phVwgS23xBzM5W3F7TqRmSbEMqiVPhzxFQJaXtwlX8
-	 jzfEA0c36dDVYHhlnzHbgCqjiVfLs2cFcsgGohDc=
+	b=IN5e/6C4zkVL7dfa4IdfwvKEHy93eUJnCz1tf4B4XrRxlTxKo8zxIhnYVhJ4jZ4B4
+	 yCfS96irsEnpTWIJP2wYOWRVcQqW3ECdrQ2nArmojfset7wpeMKq1ldSmqeMHRx4e4
+	 VmGdlvepElRG/EwtvYqRmu5vHuGMHgcwKRWzbkr0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390313AbfJAQpc (ORCPT
+        id S2390338AbfJAQpf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Oct 2019 12:45:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57740 "EHLO mail.kernel.org"
+        Tue, 1 Oct 2019 12:45:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58004 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388008AbfJAQpS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Oct 2019 12:45:18 -0400
+        id S2390297AbfJAQpb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Oct 2019 12:45:31 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C786721A4A;
-        Tue,  1 Oct 2019 16:45:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 57C7C20B7C;
+        Tue,  1 Oct 2019 16:45:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569948317;
-        bh=jgOVQH1oabmmA2tXS0QqxJF8/sUZvCaHERUsbEeTv08=;
+        s=default; t=1569948330;
+        bh=Geih3nmsUSTN8whOgZ/Z6JoWNRMfyxn43+CgsYft+M0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qIEJZ5a9VXDNBpx+DIkJmx6A7M6ptuHMVrRVpFm5dvW59n7Ff4Mzcyw0R393TW4qN
-         /5Cx819/iKBlz5T9hQXUwgGXngL3eTdPPLnkwJUE6OXhs77w2X/e9bHkFknVDVN9ce
-         GMZKy6CghOO5/kyTX8J/HSE2NkWBkCd3LhCtl0hc=
+        b=yrAAlPuR51GeQ38jHKBXiBtEA4JF1IFCE+QeO1MWtlQDOGad5wOMNmnMBHdiTpJlW
+         f6Vp0YZ9fn0ROTmErn4oT3oxJKF9j2Ladl4WIFMG77lAMlizvTQEKg17fj+AZfmZwT
+         Bqi6f0hQnGdmap9QqPO3EmK6HXZ33cpNJb7UnkY8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     =?UTF-8?q?Bj=C3=B8rn=20Mork?= <bjorn@mork.no>,
-        Jakub Kicinski <jakub.kicinski@netronome.com>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
-        linux-usb@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 09/19] usbnet: ignore endpoints with invalid wMaxPacketSize
-Date:   Tue,  1 Oct 2019 12:44:55 -0400
-Message-Id: <20191001164505.16708-9-sashal@kernel.org>
+Cc:     Xin Long <lucien.xin@gmail.com>, Xiumei Mu <xmu@redhat.com>,
+        Fei Liu <feliu@redhat.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 17/19] macsec: drop skb sk before calling gro_cells_receive
+Date:   Tue,  1 Oct 2019 12:45:03 -0400
+Message-Id: <20191001164505.16708-17-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191001164505.16708-1-sashal@kernel.org>
 References: <20191001164505.16708-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -61,42 +60,64 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bjørn Mork <bjorn@mork.no>
+From: Xin Long <lucien.xin@gmail.com>
 
-[ Upstream commit 8d3d7c2029c1b360f1a6b0a2fca470b57eb575c0 ]
+[ Upstream commit ba56d8ce38c8252fff5b745db3899cf092578ede ]
 
-Endpoints with zero wMaxPacketSize are not usable for transferring
-data. Ignore such endpoints when looking for valid in, out and
-status pipes, to make the drivers more robust against invalid and
-meaningless descriptors.
+Fei Liu reported a crash when doing netperf on a topo of macsec
+dev over veth:
 
-The wMaxPacketSize of these endpoints are used for memory allocations
-and as divisors in many usbnet minidrivers. Avoiding zero is therefore
-critical.
+  [  448.919128] refcount_t: underflow; use-after-free.
+  [  449.090460] Call trace:
+  [  449.092895]  refcount_sub_and_test+0xb4/0xc0
+  [  449.097155]  tcp_wfree+0x2c/0x150
+  [  449.100460]  ip_rcv+0x1d4/0x3a8
+  [  449.103591]  __netif_receive_skb_core+0x554/0xae0
+  [  449.108282]  __netif_receive_skb+0x28/0x78
+  [  449.112366]  netif_receive_skb_internal+0x54/0x100
+  [  449.117144]  napi_gro_complete+0x70/0xc0
+  [  449.121054]  napi_gro_flush+0x6c/0x90
+  [  449.124703]  napi_complete_done+0x50/0x130
+  [  449.128788]  gro_cell_poll+0x8c/0xa8
+  [  449.132351]  net_rx_action+0x16c/0x3f8
+  [  449.136088]  __do_softirq+0x128/0x320
 
-Signed-off-by: Bjørn Mork <bjorn@mork.no>
-Signed-off-by: Jakub Kicinski <jakub.kicinski@netronome.com>
+The issue was caused by skb's true_size changed without its sk's
+sk_wmem_alloc increased in tcp/skb_gro_receive(). Later when the
+skb is being freed and the skb's truesize is subtracted from its
+sk's sk_wmem_alloc in tcp_wfree(), underflow occurs.
+
+macsec is calling gro_cells_receive() to receive a packet, which
+actually requires skb->sk to be NULL. However when macsec dev is
+over veth, it's possible the skb->sk is still set if the skb was
+not unshared or expanded from the peer veth.
+
+ip_rcv() is calling skb_orphan() to drop the skb's sk for tproxy,
+but it is too late for macsec's calling gro_cells_receive(). So
+fix it by dropping the skb's sk earlier on rx path of macsec.
+
+Fixes: 5491e7c6b1a9 ("macsec: enable GRO and RPS on macsec devices")
+Reported-by: Xiumei Mu <xmu@redhat.com>
+Reported-by: Fei Liu <feliu@redhat.com>
+Signed-off-by: Xin Long <lucien.xin@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/usb/usbnet.c | 5 +++++
- 1 file changed, 5 insertions(+)
+ drivers/net/macsec.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/net/usb/usbnet.c b/drivers/net/usb/usbnet.c
-index a5acbcb3c0445..6d0efeb28f5cb 100644
---- a/drivers/net/usb/usbnet.c
-+++ b/drivers/net/usb/usbnet.c
-@@ -114,6 +114,11 @@ int usbnet_get_endpoints(struct usbnet *dev, struct usb_interface *intf)
- 			int				intr = 0;
+diff --git a/drivers/net/macsec.c b/drivers/net/macsec.c
+index d91f020a8491d..da10104be16cf 100644
+--- a/drivers/net/macsec.c
++++ b/drivers/net/macsec.c
+@@ -1240,6 +1240,7 @@ static rx_handler_result_t macsec_handle_frame(struct sk_buff **pskb)
+ 		macsec_rxsa_put(rx_sa);
+ 	macsec_rxsc_put(rx_sc);
  
- 			e = alt->endpoint + ep;
-+
-+			/* ignore endpoints which cannot transfer data */
-+			if (!usb_endpoint_maxp(&e->desc))
-+				continue;
-+
- 			switch (e->desc.bmAttributes) {
- 			case USB_ENDPOINT_XFER_INT:
- 				if (!usb_endpoint_dir_in(&e->desc))
++	skb_orphan(skb);
+ 	ret = gro_cells_receive(&macsec->gro_cells, skb);
+ 	if (ret == NET_RX_SUCCESS)
+ 		count_rx(dev, skb->len);
 -- 
 2.20.1
 
