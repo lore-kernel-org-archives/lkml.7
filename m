@@ -2,125 +2,151 @@ Return-Path: <SRS0=YRFP=X2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1832C388F3
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 09:10:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BC3E5ECE589
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 09:11:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A613021920
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 09:10:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=aol.com header.i=@aol.com header.b="U61gxEK+"
+	by mail.kernel.org (Postfix) with ESMTP id 902A4222CE
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 09:11:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733051AbfJAJKA (ORCPT
+        id S1733260AbfJAJLk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Oct 2019 05:10:00 -0400
-Received: from sonic306-19.consmr.mail.ir2.yahoo.com ([77.238.176.205]:43579
-        "EHLO sonic306-19.consmr.mail.ir2.yahoo.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728892AbfJAJJ7 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Oct 2019 05:09:59 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aol.com; s=a2048; t=1569920997; bh=/Hwz0MxqOic/tYrg0VLHTdYvhqlYjwGMfuUdJ4Fp1gw=; h=Date:From:To:Cc:Subject:From:Subject; b=U61gxEK+IDw4uA0RGTv14T/OvCrEnaFObS7Rk+qMd+ExdBGY4iLyWIlC9ZSN83BhK0QMpSTuMmI6/dEs6GsGKID32blYobZm1QfcsosYvlnXoqKzrOZZLr0DMZX+FZMU+Mj5AJvKPvxj6yVHjUNvxawJy5w39kF8Z0X+kG1s4GBstkyPsLq14SVJsStFw5T8fG1T2IjaH4GzM1nGQYcBntqDYlm2m9URDwKk3oBaO+dFyNvC3fpXHdOPgLsXrBoIQsVInYKwDVvddI3ZZYdQuhgEFaKgdyy0cAZRHf/ag2Gwa8105xX6EkMJh4DABGfpm4Um7CaJIADF4cpcAMHAwQ==
-X-YMail-OSG: 5mUTXrMVM1k6R82NABifyxjoDszBtHVPR2e.tbio8GPgSirabd608Yq.SXoqhNt
- yNMRlGhgfg4LzQcXcl8W7ViIGWt0b4zzFl1I0e5sSciWQ0q3s5hid81LFyWRU0sSfirwtDUxovFC
- 9eeOJ3ca5VS3CumyG6deR0Nzgf1qI.b8ga_1A9zymtOByx4DVjenHexP26aF26rAs7ye6FYFHAJS
- BVAVCeI63RZIE7Pl_Mk7_9iy55J0zfVZ1WD6GPzaT43cM3gg66VFJWXOG8afjFz9iV53pQ7vZTnW
- c5IxHP9xyU23x8Y4JV99QvpR1mzXv9mmM7Cj7OEKmImSDNUkH8YGI0cpCHVefT4MfjPWrPB1LVXe
- sMyRED5yXJGtLdeUCx9P.tSeddXvoNihEhWj20JDaeA0g79Hg2MpxJDH4lM4TyAz.6KCpEm_.4nN
- rvnhnC36KUorRfKGAtqOhnjx6Rq.I48tzo2UPOZkeiWcPq77EGIn_aQz3tRgt5QeDXqfGIiCi9HJ
- vaz22IZIZNCafrJEUkwgUsApkIZtzuuXARWrGfX587vNste_cfLhRuCjuGffvyuvjchDHiskDxhY
- 14GTRaB1aht5citBSO9fpOSHndeB2SHGJYiJBpi47mGO._8cxiliKH9K73MIdgC0CqKPhNDjHOJd
- mtXgkXqJoM5lUMtXri1P7SXwTACgYvroesASs4TYcXJWYsLXJpeYvpaPgGPkDCUiZIa6sUwYopQr
- t2gXMc.EReqivzkzQPzuDgqT1YzmjR9ThIlaQoCmz.mMd_36G.uoKanct7Qnp_Ckgoxg9bCTasxO
- 3_TmeDGFqmlvqeU8.0bAAvU5_9dYjt.d_BKX4zKS4Ezc9NqkIP_Xgj4UVpHaernyxqu5Nh2Hwkk_
- oCih6J_ocH_coPSAx23.1kFLaCILEJMZnwfB0qKUxnfv4aNK4DI4ZFIhMs.zZTQSazFuKGYBRtUO
- o0y0SLk7U652r8jGnpPtkwhXd1YO84Z3cxuPjq93_Gbs_XP04.jaad2dTPxPqoSshu3ZpMBN1RIm
- VKk0iBTH_kE9nwG6gJKJ66JwCYbwe1Z8m0oqfnxEIoQd1shsdE0dUO3ppFdTg8vNfrZch0eSQxLF
- Hy2fYdGwMSP9eyoTNWFrfK_yNrJXFVaNxBdgHraOd17yma8CHAX8ck7bO9IjPhFQG34DNnKzyQ0z
- o63v6mYlXQ1gGaeBL3Cs.BlNK98PcolUiyP1raRxfAi4C1NKV7qvqhk8PlJyUnvh0rA5A58s8Tky
- RTPnbrfgdISglKo89GLbP3Pvz_puVB64q8IKOS_DKavZ4NRz1J2Ac6NOoJXoiC1WFltjz70KJcGP
- K
-Received: from sonic.gate.mail.ne1.yahoo.com by sonic306.consmr.mail.ir2.yahoo.com with HTTP; Tue, 1 Oct 2019 09:09:57 +0000
-Received: by smtp405.mail.ir2.yahoo.com (Oath Hermes SMTP Server) with ESMTPA ID c999365307370019789162bfab3ecb7c;
-          Tue, 01 Oct 2019 09:09:53 +0000 (UTC)
-Date:   Tue, 1 Oct 2019 17:09:43 +0800
-From:   Gao Xiang <hsiangkao@aol.com>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Chao Yu <yuchao0@huawei.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-erofs@lists.ozlabs.org, LKML <linux-kernel@vger.kernel.org>,
-        Miao Xie <miaoxie@huawei.com>,
-        Gao Xiang <gaoxiang25@huawei.com>
-Subject: [GIT PULL] erofs fixes for 5.4-rc2
-Message-ID: <20191001090938.GA30542@hsiangkao-HP-ZHAN-66-Pro-G1>
+        Tue, 1 Oct 2019 05:11:40 -0400
+Received: from mga04.intel.com ([192.55.52.120]:34845 "EHLO mga04.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728892AbfJAJLj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Oct 2019 05:11:39 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 01 Oct 2019 02:11:38 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,570,1559545200"; 
+   d="scan'208";a="205029276"
+Received: from lahna.fi.intel.com (HELO lahna) ([10.237.72.157])
+  by fmsmga001.fm.intel.com with SMTP; 01 Oct 2019 02:11:35 -0700
+Received: by lahna (sSMTP sendmail emulation); Tue, 01 Oct 2019 12:11:34 +0300
+Date:   Tue, 1 Oct 2019 12:11:34 +0300
+From:   Mika Westerberg <mika.westerberg@linux.intel.com>
+To:     Karol Herbst <kherbst@redhat.com>
+Cc:     Bjorn Helgaas <helgaas@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Lyude Paul <lyude@redhat.com>,
+        Linux PCI <linux-pci@vger.kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        nouveau <nouveau@lists.freedesktop.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Linux PM <linux-pm@vger.kernel.org>
+Subject: Re: [RFC PATCH] pci: prevent putting pcie devices into lower device
+ states on certain intel bridges
+Message-ID: <20191001091134.GD2714@lahna.fi.intel.com>
+References: <20190927214252.GA65801@google.com>
+ <CACO55tuaY1jFXpJPeC9M4PoWEDyy547_tE8MpLaTDb+C+ffsbg@mail.gmail.com>
+ <20190930080534.GS2714@lahna.fi.intel.com>
+ <CACO55tuMo1aAA7meGtEey6J6sOS-ZA0ebZeL52i2zfkWtPqe_g@mail.gmail.com>
+ <20190930092934.GT2714@lahna.fi.intel.com>
+ <CACO55tu9M8_TWu2MxNe_NROit+d+rHJP5_Tb+t73q5vr19sd1w@mail.gmail.com>
+ <20190930163001.GX2714@lahna.fi.intel.com>
+ <CACO55tuk4SA6-xUtJ-oRePy8MPXYAp2cfmSPxwW3J5nQuX3y2g@mail.gmail.com>
+ <20191001084651.GC2714@lahna.fi.intel.com>
+ <CACO55ts9ommYbA5g4=G+f0G=v90qGM7EsurU7AL7bU=PFzQMnw@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <CACO55ts9ommYbA5g4=G+f0G=v90qGM7EsurU7AL7bU=PFzQMnw@mail.gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Linus,
+On Tue, Oct 01, 2019 at 10:56:39AM +0200, Karol Herbst wrote:
+> On Tue, Oct 1, 2019 at 10:47 AM Mika Westerberg
+> <mika.westerberg@linux.intel.com> wrote:
+> >
+> > On Mon, Sep 30, 2019 at 06:36:12PM +0200, Karol Herbst wrote:
+> > > On Mon, Sep 30, 2019 at 6:30 PM Mika Westerberg
+> > > <mika.westerberg@linux.intel.com> wrote:
+> > > >
+> > > > On Mon, Sep 30, 2019 at 06:05:14PM +0200, Karol Herbst wrote:
+> > > > > still happens with your patch applied. The machine simply gets shut down.
+> > > > >
+> > > > > dmesg can be found here:
+> > > > > https://gist.githubusercontent.com/karolherbst/40eb091c7b7b33ef993525de660f1a3b/raw/2380e31f566e93e5ba7c87ef545420965d4c492c/gistfile1.txt
+> > > >
+> > > > Looking your dmesg:
+> > > >
+> > > > Sep 30 17:24:27 kernel: nouveau 0000:01:00.0: DRM: DCB version 4.1
+> > > > Sep 30 17:24:27 kernel: nouveau 0000:01:00.0: DRM: MM: using COPY for buffer copies
+> > > > Sep 30 17:24:27 kernel: [drm] Initialized nouveau 1.3.1 20120801 for 0000:01:00.0 on minor 1
+> > > >
+> > > > I would assume it runtime suspends here. Then it wakes up because of PCI
+> > > > access from userspace:
+> > > >
+> > > > Sep 30 17:24:42 kernel: pci_raw_set_power_state: 56 callbacks suppressed
+> > > >
+> > > > and for some reason it does not get resumed properly. There are also few
+> > > > warnings from ACPI that might be relevant:
+> > > >
+> > > > Sep 30 17:24:27 kernel: ACPI Warning: \_SB.PCI0.GFX0._DSM: Argument #4 type mismatch - Found [Buffer], ACPI requires [Package] (20190509/nsarguments-59)
+> > > > Sep 30 17:24:27 kernel: ACPI Warning: \_SB.PCI0.PEG0.PEGP._DSM: Argument #4 type mismatch - Found [Buffer], ACPI requires [Package] (20190509/nsarguments-59)
+> > > >
+> > >
+> > > afaik this is the case for essentially every laptop out there.
+> >
+> > OK, so they are harmless?
+> >
+> 
+> yes
+> 
+> > > > This seems to be Dell XPS 9560 which I think has been around some time
+> > > > already so I wonder why we only see issues now. Has it ever worked for
+> > > > you or maybe there is a regression that causes it to happen now?
+> > >
+> > > oh, it's broken since forever, we just tried to get more information
+> > > from Nvidia if they know what this is all about, but we got nothing
+> > > useful.
+> > >
+> > > We were also hoping to find a reliable fix or workaround we could have
+> > > inside nouveau to fix that as I think nouveau is the only driver
+> > > actually hit by this issue, but nothing turned out to be reliable
+> > > enough.
+> >
+> > Can't you just block runtime PM from the nouveau driver until this is
+> > understood better? That can be done by calling pm_runtime_forbid() (or
+> > not calling pm_runtime_allow() in the driver). Or in case of PCI driver
+> > you just don't decrease the reference count when probe() ends.
+> >
+> 
+> the thing is, it does work for a lot of laptops. We could only observe
+> this on kaby lake and skylake ones. Even on Cannon Lakes it seems to
+> work just fine.
 
-Could you consider this pull request for 5.4-rc2?
+Can't you then limit it to those?
 
-3 patches of those address regressions due to recent cleanups, mainly
-founded by stress test on latest mainline kernel (no more regression
-out compared with older kernels for more than a week). The other patch
-updates sub-entries in MAINTAINERS.
+I've experienced that Kabylake root ports can enter and exit in D3cold
+just fine because we do that for Thunderbolt for example. But that
+always requires help from ACPI. If the system is using non-standard ACPI
+methods for example that may require some tricks in the driver side.
 
-All commits have been in -next for a week (since 20190924). In order to
-avoiding using a random base of a random day, I just rebased those fixes
-on -rc1 stable point without any change, which are now in next-20191001
-as well. This merges cleanly with master.
+> > I think that would be much better than blocking any devices behind
+> > Kabylake PCIe root ports from entering D3 (I don't really think the
+> > problem is in the root ports itself but there is something we are
+> > missing when the NVIDIA GPU is put into D3cold or back from there).
+> 
+> I highly doubt there is anything wrong with the GPU alone as we have
+> too many indications which tell us otherwise.
+> 
+> Anyway, at this point I don't know where to look further for what's
+> actually wrong. And apparently it works on Windows, but I don't know
+> why and I have no idea what Windows does on such systems to make it
+> work reliably.
 
-This is my first pull request, due to National Day holiday I'd use my
-personal email. I refered many other past pull requests these days,
-kindly let me know if something wrong...
-
-Thanks,
-Gao Xiang
-
-The following changes since commit 54ecb8f7028c5eb3d740bb82b0f1d90f2df63c5c:
-
-  Linux 5.4-rc1 (2019-09-30 10:35:40 -0700)
-
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/xiang/erofs.git tags/erofs-for-5.4-rc2-fixes
-
-for you to fetch changes up to dc76ea8c1087b5c44235566ed4be2202d21a8504:
-
-  erofs: fix mis-inplace determination related with noio chain (2019-10-01 04:54:45 +0800)
-
-----------------------------------------------------------------
-Changes since last update:
-- Resolve 3 regressions due to recent cleanups:
-  Fix error handling due to avoiding sb_bread in erofs_read_superblock;
-  Fix locking in erofs_get_meta_page;
-  Fix mis-inplace behavior due to decompression frontend cleanup.
-- Update sub-entries in MAINTAINERS in order to better blame.
-
-----------------------------------------------------------------
-Gao Xiang (3):
-      MAINTAINERS: erofs: complete sub-entries for erofs
-      erofs: fix erofs_get_meta_page locking due to a cleanup
-      erofs: fix mis-inplace determination related with noio chain
-
-Wei Yongjun (1):
-      erofs: fix return value check in erofs_read_superblock()
-
- MAINTAINERS      |  3 +++
- fs/erofs/data.c  | 10 +++++++---
- fs/erofs/super.c |  4 ++--
- fs/erofs/zdata.c | 12 ++++++++++--
- 4 files changed, 22 insertions(+), 7 deletions(-)
-
+By works you mean that Windows is able to put it into D3cold and back?
+If that's the case it may be that there is some ACPI magic that the
+Windows driver does and we of course are missing in Linux.
