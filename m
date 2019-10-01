@@ -2,110 +2,98 @@ Return-Path: <SRS0=YRFP=X2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C36BCECE587
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 13:19:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 038FCC352AA
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 13:20:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 98BA621906
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 13:19:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569935948;
-	bh=HKniFrzlEIzDLbVQIXPlj+qxkY260aNAZwM8YakNKBQ=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=UnXs2IaK68+8gySFlAN+yhEFf8/N75f28UDJMpsAk/7Iv/aGNSazys/umym6vV/ht
-	 cULJaoFPicwq/6B58ZAnzGSzXlhPfwoEg+RtYv+ABCeDpJDKG4vlpEuiIn0lpYG0yQ
-	 r77Agf4VDpsz7+e+w5sCKlnDozj6UFETxc2xxqDs=
+	by mail.kernel.org (Postfix) with ESMTP id CBC7520842
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 13:20:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b="XFEH746m"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388303AbfJANTI (ORCPT
+        id S2388308AbfJANUX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Oct 2019 09:19:08 -0400
-Received: from inca-roads.misterjones.org ([213.251.177.50]:38169 "EHLO
-        inca-roads.misterjones.org" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2388005AbfJANTH (ORCPT
+        Tue, 1 Oct 2019 09:20:23 -0400
+Received: from mx0a-001ae601.pphosted.com ([67.231.149.25]:22996 "EHLO
+        mx0b-001ae601.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725821AbfJANUW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Oct 2019 09:19:07 -0400
-Received: from 78.163-31-62.static.virginmediabusiness.co.uk ([62.31.163.78] helo=why)
-        by cheepnis.misterjones.org with esmtpsa (TLSv1.2:AES256-GCM-SHA384:256)
-        (Exim 4.80)
-        (envelope-from <maz@kernel.org>)
-        id 1iFI3N-0005kv-Pu; Tue, 01 Oct 2019 15:18:57 +0200
-Date:   Tue, 1 Oct 2019 14:18:48 +0100
-From:   Marc Zyngier <maz@kernel.org>
-To:     Will Deacon <will@kernel.org>
-Cc:     Jia He <justin.he@arm.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        James Morse <james.morse@arm.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org, Punit Agrawal <punitagrawal@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Andrew Morton <akpm@linux-foundation.org>, hejianet@gmail.com,
-        Kaly Xin <Kaly.Xin@arm.com>
-Subject: Re: [PATCH v10 1/3] arm64: cpufeature: introduce helper
- cpu_has_hw_af()
-Message-ID: <20191001141848.762296bd@why>
-In-Reply-To: <20191001125446.gknoofnm7az4wqf5@willie-the-truck>
-References: <20190930015740.84362-1-justin.he@arm.com>
-        <20190930015740.84362-2-justin.he@arm.com>
-        <20191001125446.gknoofnm7az4wqf5@willie-the-truck>
-Organization: Approximate
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Tue, 1 Oct 2019 09:20:22 -0400
+Received: from pps.filterd (m0077473.ppops.net [127.0.0.1])
+        by mx0a-001ae601.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id x91DECxi031379;
+        Tue, 1 Oct 2019 08:20:20 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cirrus.com; h=from : to : cc :
+ subject : date : message-id : mime-version : content-type;
+ s=PODMain02222019; bh=3EoE7FWYxNK59f42gp98Tt85HWsrCEBJg/yVd+I5GCQ=;
+ b=XFEH746mClPj03139K4kgmrvEkwACx7DSn5FPmsy22V0yc/53BfsgvIbp7IWa53A9I7h
+ U2ywRLRB8wSGImKpdKN92zh1FbeU2Y0eAP/g3hvBN74gzS3F1naOTYNng4oeXTkKc2NR
+ JY+C0g/JzJI2VTLHIQI2EOD39LZXtSYAjun4VFo4hzY5oNWUV4SMu2Mat/hEzvyPvQky
+ orZY9yS1+QQdprp7KShq/A2yqIvBaFSNEnkW+LYCQ6lh0mH3CNa4e2nlilMwbWieH81K
+ U1Qevk97rdsBRHUO2Dnm6tkZ6Qsp0KWw+zolunCD8IGLA6TUrBDFmm80Jl0unA3iKdtx Uw== 
+Authentication-Results: ppops.net;
+        spf=fail smtp.mailfrom=ckeepax@opensource.cirrus.com
+Received: from ediex02.ad.cirrus.com ([87.246.76.36])
+        by mx0a-001ae601.pphosted.com with ESMTP id 2va4x4nbmm-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
+        Tue, 01 Oct 2019 08:20:20 -0500
+Received: from EDIEX01.ad.cirrus.com (198.61.84.80) by EDIEX02.ad.cirrus.com
+ (198.61.84.81) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1591.10; Tue, 1 Oct
+ 2019 14:20:18 +0100
+Received: from ediswmail.ad.cirrus.com (198.61.86.93) by EDIEX01.ad.cirrus.com
+ (198.61.84.80) with Microsoft SMTP Server id 15.1.1591.10 via Frontend
+ Transport; Tue, 1 Oct 2019 14:20:18 +0100
+Received: from algalon.ad.cirrus.com (algalon.ad.cirrus.com [198.90.251.122])
+        by ediswmail.ad.cirrus.com (Postfix) with ESMTP id 001492A1;
+        Tue,  1 Oct 2019 13:20:17 +0000 (UTC)
+From:   Charles Keepax <ckeepax@opensource.cirrus.com>
+To:     <broonie@kernel.org>
+CC:     <lgirdwood@gmail.com>, <patches@opensource.cirrus.com>,
+        <linux-kernel@vger.kernel.org>
+Subject: [PATCH] regulator: lochnagar: Add on_off_delay for VDDCORE
+Date:   Tue, 1 Oct 2019 14:20:17 +0100
+Message-ID: <20191001132017.1785-1-ckeepax@opensource.cirrus.com>
+X-Mailer: git-send-email 2.11.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-SA-Exim-Connect-IP: 62.31.163.78
-X-SA-Exim-Rcpt-To: will@kernel.org, justin.he@arm.com, catalin.marinas@arm.com, mark.rutland@arm.com, james.morse@arm.com, willy@infradead.org, kirill.shutemov@linux.intel.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-mm@kvack.org, punitagrawal@gmail.com, tglx@linutronix.de, akpm@linux-foundation.org, hejianet@gmail.com, Kaly.Xin@arm.com
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on cheepnis.misterjones.org); SAEximRunCond expanded to false
+Content-Type: text/plain
+X-Proofpoint-SPF-Result: fail
+X-Proofpoint-SPF-Record: v=spf1 include:spf-001ae601.pphosted.com include:spf.protection.outlook.com
+ -all
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 mlxlogscore=887
+ malwarescore=0 adultscore=0 phishscore=0 impostorscore=0
+ priorityscore=1501 suspectscore=1 bulkscore=0 mlxscore=0 clxscore=1015
+ lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-1908290000 definitions=main-1910010120
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 1 Oct 2019 13:54:47 +0100
-Will Deacon <will@kernel.org> wrote:
+The VDDCORE regulator takes a good length of time to discharge down, so
+add an on_off_delay to ensure DCVDD is removed before it is powered on
+again.
 
-> On Mon, Sep 30, 2019 at 09:57:38AM +0800, Jia He wrote:
-> > We unconditionally set the HW_AFDBM capability and only enable it on
-> > CPUs which really have the feature. But sometimes we need to know
-> > whether this cpu has the capability of HW AF. So decouple AF from
-> > DBM by new helper cpu_has_hw_af().
-> > 
-> > Signed-off-by: Jia He <justin.he@arm.com>
-> > Suggested-by: Suzuki Poulose <Suzuki.Poulose@arm.com>
-> > Reviewed-by: Catalin Marinas <catalin.marinas@arm.com>
-> > ---
-> >  arch/arm64/include/asm/cpufeature.h | 10 ++++++++++
-> >  1 file changed, 10 insertions(+)
-> > 
-> > diff --git a/arch/arm64/include/asm/cpufeature.h b/arch/arm64/include/asm/cpufeature.h
-> > index 9cde5d2e768f..949bc7c85030 100644
-> > --- a/arch/arm64/include/asm/cpufeature.h
-> > +++ b/arch/arm64/include/asm/cpufeature.h
-> > @@ -659,6 +659,16 @@ static inline u32 id_aa64mmfr0_parange_to_phys_shift(int parange)
-> >  	default: return CONFIG_ARM64_PA_BITS;
-> >  	}
-> >  }
-> > +
-> > +/* Check whether hardware update of the Access flag is supported */
-> > +static inline bool cpu_has_hw_af(void)
-> > +{
-> > +	if (IS_ENABLED(CONFIG_ARM64_HW_AFDBM))
-> > +		return read_cpuid(ID_AA64MMFR1_EL1) & 0xf;  
-> 
-> 0xf? I think we should have a mask in sysreg.h for this constant.
+Signed-off-by: Charles Keepax <ckeepax@opensource.cirrus.com>
+---
+ drivers/regulator/lochnagar-regulator.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-We don't have the mask, but we certainly have the shift.
-
-GENMASK(ID_AA64MMFR1_HADBS_SHIFT + 3, ID_AA64MMFR1_HADBS_SHIFT) is a bit
-of a mouthful though. Ideally, we'd have a helper for that.
-
-	M.
+diff --git a/drivers/regulator/lochnagar-regulator.c b/drivers/regulator/lochnagar-regulator.c
+index ff97cc50f2eb9..9b05e03ba8305 100644
+--- a/drivers/regulator/lochnagar-regulator.c
++++ b/drivers/regulator/lochnagar-regulator.c
+@@ -210,6 +210,7 @@ static const struct regulator_desc lochnagar_regulators[] = {
+ 
+ 		.enable_time = 3000,
+ 		.ramp_delay = 1000,
++		.off_on_delay = 15000,
+ 
+ 		.owner = THIS_MODULE,
+ 	},
 -- 
-Without deviation from the norm, progress is not possible.
+2.11.0
+
