@@ -2,145 +2,122 @@ Return-Path: <SRS0=YRFP=X2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D707C352AA
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 15:39:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C0E3AECE587
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 15:41:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 755F42133F
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 15:39:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569944363;
-	bh=c3rVfzYtsTWo4wLjYthp4mUIgCkjj9GL3anMJAQORLA=;
-	h=Date:From:To:Cc:Subject:List-ID:From;
-	b=fDJIqziiHoskvLspXHPqjSPtGnesUbDevPGJ8KJyTunVP1sEYoeyFer+lPvxgFlTA
-	 Zj+Hym8KCZua5KL3KaXN0BZyibx/e+Ulzh2x1HWZiZoQPLUpCrLfFIdvAdDVlZII6G
-	 qAfccnrv319SpJEapM+dnxOgBLEbFyLgvU8cTGYI=
+	by mail.kernel.org (Postfix) with ESMTP id 9DE982086A
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 15:41:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389698AbfJAPjW (ORCPT
+        id S2389706AbfJAPlh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Oct 2019 11:39:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58234 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389528AbfJAPjW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Oct 2019 11:39:22 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 149FC2133F;
-        Tue,  1 Oct 2019 15:39:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569944359;
-        bh=c3rVfzYtsTWo4wLjYthp4mUIgCkjj9GL3anMJAQORLA=;
-        h=Date:From:To:Cc:Subject:From;
-        b=TfAsmXYJ+0g0gOQO2JSeJlwU6hWMx1ZrHscboe+EMZ3vqRrHaYv6oTCd30qkw353r
-         McoBGqPJ6pbxbbIoE1/UXHv/EvxMcHUfkwcqGaNq+bieHS+EGBsodcn13t3I1J2beW
-         4/0Mob8YGX65JYDYC3TlRvGaAboL9rGGXX9/kMQ0=
-Date:   Tue, 1 Oct 2019 17:39:17 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Potnuri Bharat Teja <bharat@chelsio.com>,
-        Doug Ledford <dledford@redhat.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>
-Cc:     linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Nicolas Waisman <nico@semmle.com>
-Subject: [PATCH] cxgb4: do not dma memory off of the stack
-Message-ID: <20191001153917.GA3498459@kroah.com>
+        Tue, 1 Oct 2019 11:41:37 -0400
+Received: from mail-qk1-f193.google.com ([209.85.222.193]:45168 "EHLO
+        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727362AbfJAPlg (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Oct 2019 11:41:36 -0400
+Received: by mail-qk1-f193.google.com with SMTP id z67so11633378qkb.12
+        for <linux-kernel@vger.kernel.org>; Tue, 01 Oct 2019 08:41:35 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=PYNED/gHAQZWO+3A/3UN+zfY12A/7ApPwVWXSrVnRe4=;
+        b=a3TMZmfnbJjCLYH1LB9WvSN/CCMSEoVs0M+szws6OvlSCT5HBQObqMnFTKhGPP1dHJ
+         OFYMZaBdIgnnBZuy4leXBK2LbwiLMMxG7oRmlQ3ECe12jBWtDVqG9CptKgLNTn35oR/J
+         8zqBlw1NIjHugDpzt7bVq10smPnqhHC3d1wfYteN5+/FkviDyBS+nDxeyE39IW/sOyHu
+         vaVzM2zBHqh8cn2XD1LJo5ZGboKKr02RrA2xaodu5IGBb95yTFi2BhxVukf9J6r6h6rr
+         H0qaXMOuldQo3JwcC8mdnXc4/+kSZFvCxrFWlF5GpdpzGug6DGVuo9f1qbvK8Ljd1Gwi
+         zE0Q==
+X-Gm-Message-State: APjAAAV9OmnsUtuX0+DV20FgGgm/1ChEsvShWQTTORJJRBQBg0hAXs7t
+        jIgGCIFw/f/paE9aLWMDPBtlg4/hkOd5LiCXibA=
+X-Google-Smtp-Source: APXvYqzYVsIwghV1g7M189GjA1p2gl/d+MucD1KvbEioKPUwygJiOOw9tiSuacOJf+g/Fbf9+E9jGyNtKXcZR+sjTxc=
+X-Received: by 2002:a37:a858:: with SMTP id r85mr6681072qke.394.1569944495423;
+ Tue, 01 Oct 2019 08:41:35 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.12.2 (2019-09-21)
+References: <20191001142026.1124917-1-arnd@arndb.de> <bb58c7cc-209d-7a2f-0e5b-95a9605ffe7b@linux.intel.com>
+In-Reply-To: <bb58c7cc-209d-7a2f-0e5b-95a9605ffe7b@linux.intel.com>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Tue, 1 Oct 2019 17:41:19 +0200
+Message-ID: <CAK8P3a3Js2dNhnRhP7PLadWZ69DZr1mz6DowN9HDJL4CFDAAFw@mail.gmail.com>
+Subject: Re: [alsa-devel] [PATCH] ASoC: SOF: imx: fix reverse
+ CONFIG_SND_SOC_SOF_OF dependency
+To:     Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Cc:     Mark Brown <broonie@kernel.org>, Hulk Robot <hulkci@huawei.com>,
+        YueHaibing <yuehaibing@huawei.com>,
+        Daniel Baluta <daniel.baluta@nxp.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>, Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        ALSA Development Mailing List <alsa-devel@alsa-project.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Nicolas pointed out that the cxgb4 driver is doing dma off of the stack,
-which is generally considered a very bad thing.  On some architectures
-it could be a security problem, but odds are none of them actually run
-this driver, so it's just a "normal" bug.
+On Tue, Oct 1, 2019 at 5:32 PM Pierre-Louis Bossart
+<pierre-louis.bossart@linux.intel.com> wrote:
+> On 10/1/19 9:20 AM, Arnd Bergmann wrote:
+> > CONFIG_SND_SOC_SOF_IMX depends on CONFIG_SND_SOC_SOF, but is in
+> > turn referenced by the sof-of-dev driver. This creates a reverse
+> > dependency that manifests in a link error when CONFIG_SND_SOC_SOF_OF
+> > is built-in but CONFIG_SND_SOC_SOF_IMX=m:
+> >
+> > sound/soc/sof/sof-of-dev.o:(.data+0x118): undefined reference to `sof_imx8_ops'
+> >
+> > Make the latter a 'bool' symbol and change the Makefile so the imx8
+> > driver is compiled the same way as the driver using it.
+> >
+> > A nicer way would be to reverse the layering and move all
+> > the imx specific bits of sof-of-dev.c into the imx driver
+> > itself, which can then call into the common code. Doing this
+> > would need more testing and can be done if we add another
+> > driver like the first one.
+>
+> Or use something like
+>
+> config SND_SOC_SOF_IMX8_SUPPORT
+>         bool "SOF support for i.MX8"
+>         depends on IMX_SCU
+>         depends on IMX_DSP
+>
+> config SND_SOC_SOF_IMX8
+>         tristate
+>         <i.mx selects>
+>
+> config SND_SOC_SOF_OF
+>         depends on OF
+>         select SND_SOC_SOF_IMX8 if SND_SOC_SOF_IMX8_SUPPORT
+>
+> That way you propagate the module/built-in information. That's how we
+> fixed those issues for the Intel parts.
 
-Resolve this by allocating the memory for a message off of the heap
-instead of the stack.  kmalloc() always will give us a proper memory
-location that DMA will work correctly from.
+Yes, I think that would work here as well, but it keeps even more
+information about the specific drivers in the generic code. It also
+requires adding more 'select' statements that tend to cause more
+problems.
 
-Reported-by: Nicolas Waisman <nico@semmle.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+The same could be done with a Kconfig-only solution avoiding
+'select' such as:
 
----
+config SND_SOC_SOF_IMX8_SUPPORT
+         bool "SOF support for i.MX8"
+         depends on IMX_SCU
+         depends on IMX_DSP
 
-Note, test-built only, I don't have this hardware to actually run this
-code at all.
+ config SND_SOC_SOF_IMX8
+         def_tristate SND_SOC_SOF_OF
+         depends on SND_SOC_SOF_IMX8_SUPPORT
 
-diff --git a/drivers/infiniband/hw/cxgb4/mem.c b/drivers/infiniband/hw/cxgb4/mem.c
-index aa772ee0706f..b2bd3de81dcd 100644
---- a/drivers/infiniband/hw/cxgb4/mem.c
-+++ b/drivers/infiniband/hw/cxgb4/mem.c
-@@ -275,13 +275,17 @@ static int write_tpt_entry(struct c4iw_rdev *rdev, u32 reset_tpt_entry,
- 			   struct sk_buff *skb, struct c4iw_wr_wait *wr_waitp)
- {
- 	int err;
--	struct fw_ri_tpte tpt;
-+	struct fw_ri_tpte *tpt;
- 	u32 stag_idx;
- 	static atomic_t key;
- 
- 	if (c4iw_fatal_error(rdev))
- 		return -EIO;
- 
-+	tpt = kmalloc(sizeof(*tpt), GFP_KERNEL);
-+	if (!tpt)
-+		return -ENOMEM;
-+
- 	stag_state = stag_state > 0;
- 	stag_idx = (*stag) >> 8;
- 
-@@ -305,28 +309,28 @@ static int write_tpt_entry(struct c4iw_rdev *rdev, u32 reset_tpt_entry,
- 
- 	/* write TPT entry */
- 	if (reset_tpt_entry)
--		memset(&tpt, 0, sizeof(tpt));
-+		memset(tpt, 0, sizeof(*tpt));
- 	else {
--		tpt.valid_to_pdid = cpu_to_be32(FW_RI_TPTE_VALID_F |
-+		tpt->valid_to_pdid = cpu_to_be32(FW_RI_TPTE_VALID_F |
- 			FW_RI_TPTE_STAGKEY_V((*stag & FW_RI_TPTE_STAGKEY_M)) |
- 			FW_RI_TPTE_STAGSTATE_V(stag_state) |
- 			FW_RI_TPTE_STAGTYPE_V(type) | FW_RI_TPTE_PDID_V(pdid));
--		tpt.locread_to_qpid = cpu_to_be32(FW_RI_TPTE_PERM_V(perm) |
-+		tpt->locread_to_qpid = cpu_to_be32(FW_RI_TPTE_PERM_V(perm) |
- 			(bind_enabled ? FW_RI_TPTE_MWBINDEN_F : 0) |
- 			FW_RI_TPTE_ADDRTYPE_V((zbva ? FW_RI_ZERO_BASED_TO :
- 						      FW_RI_VA_BASED_TO))|
- 			FW_RI_TPTE_PS_V(page_size));
--		tpt.nosnoop_pbladdr = !pbl_size ? 0 : cpu_to_be32(
-+		tpt->nosnoop_pbladdr = !pbl_size ? 0 : cpu_to_be32(
- 			FW_RI_TPTE_PBLADDR_V(PBL_OFF(rdev, pbl_addr)>>3));
--		tpt.len_lo = cpu_to_be32((u32)(len & 0xffffffffUL));
--		tpt.va_hi = cpu_to_be32((u32)(to >> 32));
--		tpt.va_lo_fbo = cpu_to_be32((u32)(to & 0xffffffffUL));
--		tpt.dca_mwbcnt_pstag = cpu_to_be32(0);
--		tpt.len_hi = cpu_to_be32((u32)(len >> 32));
-+		tpt->len_lo = cpu_to_be32((u32)(len & 0xffffffffUL));
-+		tpt->va_hi = cpu_to_be32((u32)(to >> 32));
-+		tpt->va_lo_fbo = cpu_to_be32((u32)(to & 0xffffffffUL));
-+		tpt->dca_mwbcnt_pstag = cpu_to_be32(0);
-+		tpt->len_hi = cpu_to_be32((u32)(len >> 32));
- 	}
- 	err = write_adapter_mem(rdev, stag_idx +
- 				(rdev->lldi.vr->stag.start >> 5),
--				sizeof(tpt), &tpt, skb, wr_waitp);
-+				sizeof(*tpt), tpt, skb, wr_waitp);
- 
- 	if (reset_tpt_entry) {
- 		c4iw_put_resource(&rdev->resource.tpt_table, stag_idx);
-@@ -334,6 +338,7 @@ static int write_tpt_entry(struct c4iw_rdev *rdev, u32 reset_tpt_entry,
- 		rdev->stats.stag.cur -= 32;
- 		mutex_unlock(&rdev->stats.lock);
- 	}
-+	kfree(tpt);
- 	return err;
- }
- 
+      Arnd
