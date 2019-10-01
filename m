@@ -2,153 +2,148 @@ Return-Path: <SRS0=YRFP=X2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2AFF2C352AA
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 21:29:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A7CCECE587
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 21:29:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 015A221920
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 21:29:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B78D121906
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 21:29:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="B7G370sx"
+	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="3HkkubYV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727859AbfJAV3C (ORCPT
+        id S1727872AbfJAV3h (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Oct 2019 17:29:02 -0400
-Received: from mailout2.samsung.com ([203.254.224.25]:17627 "EHLO
-        mailout2.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726894AbfJAV3C (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Oct 2019 17:29:02 -0400
-Received: from epcas1p1.samsung.com (unknown [182.195.41.45])
-        by mailout2.samsung.com (KnoxPortal) with ESMTP id 20191001212859epoutp028c84d8fbed5ddab915c8e2e97d3fa2e2~JoyiVVW3t2194621946epoutp02W
-        for <linux-kernel@vger.kernel.org>; Tue,  1 Oct 2019 21:28:59 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.samsung.com 20191001212859epoutp028c84d8fbed5ddab915c8e2e97d3fa2e2~JoyiVVW3t2194621946epoutp02W
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1569965339;
-        bh=Yw3R56mDxhyX+u4BbNdpgiLhPEMauvLJ8lCJK6ld5rI=;
-        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
-        b=B7G370sxl+pK92P/zn2FfPr/DyZWbVTyus2c5paURjEeGrcd5iEhvMk9iyHRDu0ti
-         ZLfNXJtlPiFOIF17nzNkLRiJ3ue/3w1nOtZSYv3Hn7pnwPeT/iydEUjeYSPaE1Qhn1
-         z5i3jhol3E7+w/H/rD3fLxFPjoufAMODqNdOZKdk=
-Received: from epsnrtp2.localdomain (unknown [182.195.42.163]) by
-        epcas1p3.samsung.com (KnoxPortal) with ESMTP id
-        20191001212859epcas1p3994901743dac42e89b4e5b8246638f0e~Joyh9zKKr2696226962epcas1p3W;
-        Tue,  1 Oct 2019 21:28:59 +0000 (GMT)
-Received: from epsmges1p5.samsung.com (unknown [182.195.40.156]) by
-        epsnrtp2.localdomain (Postfix) with ESMTP id 46jXT50YFmzMqYkV; Tue,  1 Oct
-        2019 21:28:57 +0000 (GMT)
-Received: from epcas1p1.samsung.com ( [182.195.41.45]) by
-        epsmges1p5.samsung.com (Symantec Messaging Gateway) with SMTP id
-        4C.9D.04068.815C39D5; Wed,  2 Oct 2019 06:28:57 +0900 (KST)
-Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
-        epcas1p3.samsung.com (KnoxPortal) with ESMTPA id
-        20191001212856epcas1p3e718d6ad3965a6956cc49007e3a95fd4~JoyfOofDg2696226962epcas1p3V;
-        Tue,  1 Oct 2019 21:28:56 +0000 (GMT)
-Received: from epsmgms1p2new.samsung.com (unknown [182.195.42.42]) by
-        epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
-        20191001212856epsmtrp17d413fd26795ac38443de3f1128b6b65~JoyfLOYjM2299222992epsmtrp1f;
-        Tue,  1 Oct 2019 21:28:56 +0000 (GMT)
-X-AuditID: b6c32a39-f5fff70000000fe4-6c-5d93c518e45c
-Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
-        epsmgms1p2new.samsung.com (Symantec Messaging Gateway) with SMTP id
-        6E.9F.03889.815C39D5; Wed,  2 Oct 2019 06:28:56 +0900 (KST)
-Received: from [10.113.221.102] (unknown [10.113.221.102]) by
-        epsmtip1.samsung.com (KnoxPortal) with ESMTPA id
-        20191001212856epsmtip12fe8c2e438560997049fb2d8134b9bd1~Joye-1klJ2152221522epsmtip1S;
-        Tue,  1 Oct 2019 21:28:56 +0000 (GMT)
-Subject: Re: [PATCH] PM / devfreq: exynos-ppmu: remove useless assignment
-To:     Marek Szyprowski <m.szyprowski@samsung.com>,
-        linux-pm@vger.kernel.org, linux-samsung-soc@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     MyungJoo Ham <myungjoo.ham@samsung.com>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-From:   Chanwoo Choi <cw00.choi@samsung.com>
-Organization: Samsung Electronics
-Message-ID: <b70439ce-0300-1a95-7ed2-41d70db559a8@samsung.com>
-Date:   Wed, 2 Oct 2019 06:33:44 +0900
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
-        Thunderbird/60.8.0
-MIME-Version: 1.0
-In-Reply-To: <20191001124641.22896-1-m.szyprowski@samsung.com>
+        Tue, 1 Oct 2019 17:29:37 -0400
+Received: from mail-eopbgr800051.outbound.protection.outlook.com ([40.107.80.51]:17440
+        "EHLO NAM03-DM3-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727818AbfJAV3g (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Oct 2019 17:29:36 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=IGwa3GDTwbvfSOjS0CqsQPhiKXYfj/xuGcZzwNMlKLjJiQtVD67bARx714RT6UYBHPDyu5kcp1aMoiegVpZE2xgWmRioFwgeWRxc0+oobJzxjlkdJ2AFByvAzsFf6RxrE/nTvGEV9qOF520RPreTKeEdxGtuxIMObd9yVGTom7twVSdoYoIicFvthM5VEvwHBTf/wOyURDnIV63TilrnCeA59V7M32Vz3cI6ROdiNWYu3ZkEW9rN9L84bc/QbCpcJvIXTrUqJmUffiyVrq6AE2QP4VRNL1K8EhUJSekxVXgxZk87V2i4U+bhFUMA4JKPy4ykk+M70BeFfqvjTvGKcA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=p4AMzhDMWlIsMMyNikXEDNxRx9gyyR+NE3rUR7F8XmE=;
+ b=nLg6Eul3JLaQMwAZqPx8j0Jjmli8CqPoEhkQEtDpSEUxqAY6W0j32jz6PNt3XL/6jOCnrdL7VeadyxfgHD7Q667U7fajwJhH04P4eNVcGdSu20NPMBxk+aqT9Bsjyc6wACaYzADhStYuc7+7gj1mgzw+qRQPw1QLDlHPWmmH4kcDOpjNsT+tMo04EQPzJetDmmTEEPBIRRsi4rkmTl3DGGymIU0KiLp7hTUYLfFmPu4XV+fZOTKv5/bulPfVwnrskERDgABSDDXozPM5qK5+VBbbZ+WcCUUT1ukwF9eAwYstPTIsrUD73hicbXxlm5Hfv4KQV+meveS5FnegRMrnBw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=p4AMzhDMWlIsMMyNikXEDNxRx9gyyR+NE3rUR7F8XmE=;
+ b=3HkkubYV7FHzZVEyAEL9+Ozk1qgwsIg9iHqyYwqLanHJFKVQPBHGVCGaZ2bCnCqz7MRS4zt3rUhky3ZJgZwyvMXzS0CZQLciSveSt/OwawlP1joYPjn0oGi7ERAf8uAmuMVmVcPQI2+2Dqcut4ynGljpBzLP4bpXXmuykUSW6Gc=
+Received: from DM5PR12MB2456.namprd12.prod.outlook.com (52.132.141.37) by
+ DM5PR12MB1258.namprd12.prod.outlook.com (10.168.239.142) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2305.20; Tue, 1 Oct 2019 21:29:30 +0000
+Received: from DM5PR12MB2456.namprd12.prod.outlook.com
+ ([fe80::3449:def:4457:5b72]) by DM5PR12MB2456.namprd12.prod.outlook.com
+ ([fe80::3449:def:4457:5b72%3]) with mapi id 15.20.2305.022; Tue, 1 Oct 2019
+ 21:29:30 +0000
+From:   "Liu, Leo" <Leo.Liu@amd.com>
+To:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        "Deucher, Alexander" <Alexander.Deucher@amd.com>,
+        "Koenig, Christian" <Christian.Koenig@amd.com>,
+        "Zhou, David(ChunMing)" <David1.Zhou@amd.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>
+CC:     "amd-gfx@lists.freedesktop.org" <amd-gfx@lists.freedesktop.org>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] drm/amdgpu: fix structurally dead code vcn_v2_5_hw_init
+Thread-Topic: [PATCH] drm/amdgpu: fix structurally dead code vcn_v2_5_hw_init
+Thread-Index: AQHVeHwU+1a8umxE5EyQDrqeTbYcDKdGTaMA
+Date:   Tue, 1 Oct 2019 21:29:30 +0000
+Message-ID: <192815d9-5ecb-09a7-4624-5fd36126890d@amd.com>
+References: <20191001171635.GA17306@embeddedor>
+In-Reply-To: <20191001171635.GA17306@embeddedor>
+Accept-Language: en-CA, en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA01Sa0gUURjt7uzOjuHWtGp9SpROEiioO+rqKBpBERv2Qygoim2ddNiVfbaz
-        hlbQ9lDTsiyjdEt70UMjTTEpTRfUNAXflaFogi5lREFZmEq0zij573zfd84937n3EpiyAg8i
-        Mi0Ozm5hTRS+WtrQFhYREfi6RKu6VSFhaktrZExf3zM5M9R4C2d+FrUjprSvRcI8bR+TM6On
-        H+Pb5Zq6qgJcc6m+Cml+1m1KxQ4akwwcm8HZgzlLujUj06JPplL26nbo1HEqOoJOYOKpYAtr
-        5pKpnXtSI3ZlmrzmVPAx1pTlbaWyPE9FbUuyW7McXLDByjuSKc6WYbIl2CJ51sxnWfSR6VZz
-        Iq1SRau9xDSjofrvuMRWTGSfuzErc6JBvBD5EEDGwmTeGXkhWk0oyRcI3g4UYWLxA8F7z1eZ
-        WPxG0HOzQbosKfRU4OKgGcHD6j9LxXcEHQ0FkkWWH7kbPo3XCwN/8iKC6dF+4SyMLERQPNwi
-        W2ThZDi4P38QVllLhsC72Um0iBXkNvhaPiNwpGQozLbUCt4B5AH4MdEmEznroKtsSuj7ePnz
-        j12CFiM3wMjUbYmIN8PZ5zeFREB+xKEzNxcTQ+yEucE3S9gPvnTWy0UcBNOX85bwCajsasdF
-        8XkE9e5+mTiIAfeDEq8D4XUIg5rGKLEdAi/ny5eWWAPffl2ULVKAVMD5PKVI2QJDE2MSEQfC
-        /fwCvBhRrhVxXCsiuFZEcP03u4OkVWg9Z+PNeo6nbeqVD16HhL8ZnvACdfTuaUUkgShfxYd9
-        JVqljD3G55hbERAY5a9IWriqVSoy2JzjnN2qs2eZOL4Vqb23fQULCki3en+6xaGj1dExMTFM
-        LB2npmlqg0Kjd2qVpJ51cEaOs3H2ZZ2E8Alyothn3MbW41uPenqaQsnaJ579AWu6a21NzemX
-        VO6XJ+Ou6VbFb8k3DBlPlRq0vr1HJuuaIpt3DQ8/0oQ2vvI/OLKQeKi7sqhgIFuZ5ryRW3P4
-        +t2U+Ed7D+TMXwB//J6xp7I/bGTq2/sZz9Gq0bnOabc6obojJMdZmZ3W1ZQ3HtJSRkl5A0uH
-        Y3ae/QdqMkX4sQMAAA==
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFmpnkeLIzCtJLcpLzFFi42LZdlhJTlfi6ORYg3sTRCw2zljPanH+/AZ2
-        i8u75rBZfO49wmgx4/w+Jou1R+6yW9xuXMHmwO6xaVUnm0ffllWMHp83yQUwR3HZpKTmZJal
-        FunbJXBlrPt3j6lgAkdFy/QfrA2Ml9i6GDk5JARMJLqezgOzhQR2M0q0X1CAiEtKTLt4lLmL
-        kQPIFpY4fLi4i5ELqOQto8SB02fB6oUFPCWe39vCBpIQEehhlHj3ah8jiMMM4mxrWsUK0TKR
-        UWLXm9lMIC1sAloS+1/cAGvnF1CUuPrjMSOIzStgJ/Fm7hdWEJtFQEXix76NLCC2qECExOEd
-        s6BqBCVOznwCFucEqv+9AiLOLKAu8WfeJWYIW1zi1pP5TBC2vETz1tnMExiFZyFpn4WkZRaS
-        lllIWhYwsqxilEwtKM5Nzy02LDDKSy3XK07MLS7NS9dLzs/dxAiOHi2tHYwnTsQfYhTgYFTi
-        4b0RMjlWiDWxrLgy9xCjBAezkgivzZ9JsUK8KYmVValF+fFFpTmpxYcYpTlYlMR55fOPRQoJ
-        pCeWpGanphakFsFkmTg4pRoYiwoFmJeafOY90+jfFTOz7JH8yfnFmY5hO+34hdwlbnRkBbJ9
-        sVHMsqz9JpH0Xcvqi+cG8RdX6xPfy/WrqN9oOnXcO5X/k1Orcuu+WyvXNDHfiOq7onaeK7Sq
-        3mbZpVzhNaaV96dOcd2wn2dWRNyU+aavGENL9pyrXvb7h0RIzsN3k3b+SJqgxFKckWioxVxU
-        nAgAeqdNmpoCAAA=
-X-CMS-MailID: 20191001212856epcas1p3e718d6ad3965a6956cc49007e3a95fd4
-X-Msg-Generator: CA
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+user-agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
+x-originating-ip: [165.204.55.251]
+x-clientproxiedby: YT1PR01CA0027.CANPRD01.PROD.OUTLOOK.COM (2603:10b6:b01::40)
+ To DM5PR12MB2456.namprd12.prod.outlook.com (2603:10b6:4:b4::37)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=Leo.Liu@amd.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 01a85e82-c2a3-4ff9-8742-08d746b67198
+x-ms-office365-filtering-ht: Tenant
+x-ms-traffictypediagnostic: DM5PR12MB1258:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <DM5PR12MB12589C24E218E36CA52D7593E59D0@DM5PR12MB1258.namprd12.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:8273;
+x-forefront-prvs: 0177904E6B
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(366004)(396003)(136003)(39860400002)(376002)(346002)(189003)(199004)(7736002)(6116002)(3846002)(64756008)(86362001)(66066001)(66556008)(305945005)(71190400001)(71200400001)(4326008)(99286004)(31696002)(52116002)(54906003)(110136005)(316002)(58126008)(76176011)(65956001)(36756003)(65806001)(66476007)(81156014)(8936002)(8676002)(81166006)(66446008)(31686004)(6506007)(2906002)(386003)(66946007)(5660300002)(486006)(6512007)(478600001)(256004)(14444005)(2616005)(446003)(476003)(11346002)(26005)(102836004)(186003)(6246003)(25786009)(229853002)(6436002)(6486002)(14454004)(53546011);DIR:OUT;SFP:1101;SCL:1;SRVR:DM5PR12MB1258;H:DM5PR12MB2456.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: amd.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: ZJm9qOeDMFcJKOvmd4a3cTbhwHtfkxXMfWZgR4p9lzjEJ7oMcxl6uFooMaPnG+3jNK6CgCeiw90qXdxfG/Q13v9Worey/ow2wvyobIeQk/V0zxLvomnx3zsKfus+0nJtERHk0TikViVoBnzay7kU+aoLRS9gYoAs+b9CT6gW1Ckz8eEdeG9u2QAElIOJI0u8im7SnQFzJWrzcv1/IJqqXn6OZZxFETVpTT0OzrTfEmkNkpYLR+1jsR/H9el3x8TfX9hEpD7O+JtLcBD4xC0Fg63yc2ZxhU1ah25SEfO3fawmy3gXGGktNrW7XhiqoX4KkVtD6DeUR41OZcyzysI6F6DurE4q8oBpaiyEQfVGVnjOZvKW0uRJi/KJ3BS7dRNPnJjWPDvniew3HPoeZLsVhfZ2JU6C9QctGg43Ozr63o8=
 Content-Type: text/plain; charset="utf-8"
-X-Sendblock-Type: SVC_REQ_APPROVE
-CMS-TYPE: 101P
-DLP-Filter: Pass
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20191001124646eucas1p2768afab3fc8fbaaf7c2bcf1966b06781
-References: <CGME20191001124646eucas1p2768afab3fc8fbaaf7c2bcf1966b06781@eucas1p2.samsung.com>
-        <20191001124641.22896-1-m.szyprowski@samsung.com>
+Content-ID: <ECA8B4F795D59A4F98CD32414F5655B4@namprd12.prod.outlook.com>
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 01a85e82-c2a3-4ff9-8742-08d746b67198
+X-MS-Exchange-CrossTenant-originalarrivaltime: 01 Oct 2019 21:29:30.1997
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: rxyDzWZCn1kd4na7lOjAszKBTvpFE2t8Vq2+jpCLS3Mbc/VzPkRHc7ggtsazFIMS
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR12MB1258
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
-
-On 19. 10. 1. 오후 9:46, Marek Szyprowski wrote:
-> The error code is propagated to the caller, so there is no need to keep
-> it additionally in the unused variable.
-> 
-> Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
-> ---
->  drivers/devfreq/event/exynos-ppmu.c | 1 -
->  1 file changed, 1 deletion(-)
-> 
-> diff --git a/drivers/devfreq/event/exynos-ppmu.c b/drivers/devfreq/event/exynos-ppmu.c
-> index 87b42055e6bc..85c7a77bf3f0 100644
-> --- a/drivers/devfreq/event/exynos-ppmu.c
-> +++ b/drivers/devfreq/event/exynos-ppmu.c
-> @@ -673,7 +673,6 @@ static int exynos_ppmu_probe(struct platform_device *pdev)
->  	for (i = 0; i < info->num_events; i++) {
->  		edev[i] = devm_devfreq_event_add_edev(&pdev->dev, &desc[i]);
->  		if (IS_ERR(edev[i])) {
-> -			ret = PTR_ERR(edev[i]);
->  			dev_err(&pdev->dev,
->  				"failed to add devfreq-event device\n");
->  			return PTR_ERR(edev[i]);
-> 
-
-Thanks.
-Acked-by: Chanwoo Choi <cw00.choi@samsung.com>
-
--- 
-Best Regards,
-Chanwoo Choi
-Samsung Electronics
+DQpPbiAyMDE5LTEwLTAxIDE6MTYgcC5tLiwgR3VzdGF2byBBLiBSLiBTaWx2YSB3cm90ZToNCj4g
+Tm90aWNlIHRoYXQgdGhlcmUgaXMgYSAqY29udGludWUqIHN0YXRlbWVudCBpbiB0aGUgbWlkZGxl
+IG9mIHRoZQ0KPiBmb3IgbG9vcCBhbmQgdGhhdCBwcmV2ZW50cyB0aGUgY29kZSBiZWxvdyBmcm9t
+IGV2ZXIgYmVpbmcgcmVhY2hlZDoNCj4NCj4gCXIgPSBhbWRncHVfcmluZ190ZXN0X3Jpbmcocmlu
+Zyk7DQo+IAlpZiAocikgew0KPiAJCXJpbmctPnNjaGVkLnJlYWR5ID0gZmFsc2U7DQo+IAkJZ290
+byBkb25lOw0KPiAJfQ0KPg0KPiBGaXggdGhpcyBieSByZW1vdmluZyB0aGUgY29udGludWUgc3Rh
+dGVtZW50IGFuZCB1cGRhdGluZyByaW5nLT5zY2hlZC5yZWFkeQ0KPiB0byB0cnVlIGJlZm9yZSBj
+YWxsaW5nIGFtZGdwdV9yaW5nX3Rlc3RfcmluZyhyaW5nKS4NCj4NCj4gTm90aWNlIHRoYXQgdGhp
+cyBmaXggaXMgYmFzZWQgb24NCj4gY29tbWl0IDFiNjFkZTQ1ZGZhZiAoImRybS9hbWRncHU6IGFk
+ZCBpbml0aWFsIFZDTjIuMCBzdXBwb3J0ICh2MikiKQ0KPg0KPiBBZGRyZXNzZXMtQ292ZXJpdHkt
+SUQgMTQ4NTYwOCAoIlN0cnVjdHVyYWxseSBkZWFkIGNvZGUiKQ0KPiBGaXhlczogMjhjMTdkNzIw
+NzJiICgiZHJtL2FtZGdwdTogYWRkIFZDTjIuNSBiYXNpYyBzdXBwb3J0cyIpDQo+IFNpZ25lZC1v
+ZmYtYnk6IEd1c3Rhdm8gQS4gUi4gU2lsdmEgPGd1c3Rhdm9AZW1iZWRkZWRvci5jb20+DQo+IC0t
+LQ0KPg0KPiBBbnkgZmVlZGJhY2sgaXMgZ3JlYXRseSBhcHByZWNpYXRlZC4NCj4NCj4gICBkcml2
+ZXJzL2dwdS9kcm0vYW1kL2FtZGdwdS92Y25fdjJfNS5jIHwgNSArKystLQ0KPiAgIDEgZmlsZSBj
+aGFuZ2VkLCAzIGluc2VydGlvbnMoKyksIDIgZGVsZXRpb25zKC0pDQo+DQo+IGRpZmYgLS1naXQg
+YS9kcml2ZXJzL2dwdS9kcm0vYW1kL2FtZGdwdS92Y25fdjJfNS5jIGIvZHJpdmVycy9ncHUvZHJt
+L2FtZC9hbWRncHUvdmNuX3YyXzUuYw0KPiBpbmRleCAzOTVjMjI1OWY5NzkuLjQ3YjBkY2Q1OWUx
+MyAxMDA2NDQNCj4gLS0tIGEvZHJpdmVycy9ncHUvZHJtL2FtZC9hbWRncHUvdmNuX3YyXzUuYw0K
+PiArKysgYi9kcml2ZXJzL2dwdS9kcm0vYW1kL2FtZGdwdS92Y25fdjJfNS5jDQo+IEBAIC0yNTgs
+NiArMjU4LDcgQEAgc3RhdGljIGludCB2Y25fdjJfNV9od19pbml0KHZvaWQgKmhhbmRsZSkNCj4g
+ICAJCWFkZXYtPm5iaW9fZnVuY3MtPnZjbl9kb29yYmVsbF9yYW5nZShhZGV2LCByaW5nLT51c2Vf
+ZG9vcmJlbGwsDQo+ICAgCQkJCQkJICAgICByaW5nLT5kb29yYmVsbF9pbmRleCwgaik7DQo+ICAg
+DQo+ICsJCXJpbmctPnNjaGVkLnJlYWR5ID0gdHJ1ZTsNCg0KVGhpcyBpcyByZWR1bmRhbnQuIGFs
+bCB0aGUgc2NoZWQtPnJlYWR5IGlzIGluaXRpYWxpemVkIGFzIHRydWUsIHBsZWFzZSANCnJlZmVy
+IHRvIGRybV9zY2hlZF9pbml0KCkNCg0KDQo+ICAgCQlyID0gYW1kZ3B1X3JpbmdfdGVzdF9yaW5n
+KHJpbmcpOw0KPiAgIAkJaWYgKHIpIHsNCj4gICAJCQlyaW5nLT5zY2hlZC5yZWFkeSA9IGZhbHNl
+Ow0KPiBAQCAtMjY2LDggKzI2Nyw3IEBAIHN0YXRpYyBpbnQgdmNuX3YyXzVfaHdfaW5pdCh2b2lk
+ICpoYW5kbGUpDQo+ICAgDQo+ICAgCQlmb3IgKGkgPSAwOyBpIDwgYWRldi0+dmNuLm51bV9lbmNf
+cmluZ3M7ICsraSkgew0KPiAgIAkJCXJpbmcgPSAmYWRldi0+dmNuLmluc3Rbal0ucmluZ19lbmNb
+aV07DQo+IC0JCQlyaW5nLT5zY2hlZC5yZWFkeSA9IGZhbHNlOw0KPiAtCQkJY29udGludWU7DQo+
+ICsJCQlyaW5nLT5zY2hlZC5yZWFkeSA9IHRydWU7DQoNCkJlY2F1c2UgdGhlIFZDTiAyLjUgRlcg
+c3RpbGwgaGFzIGlzc3VlIGZvciBlbmNvZGUsIHNvIHdlIGhhdmUgaXQgDQpkaXNhYmxlZCBoZXJl
+Lg0KDQoNClJlZ2FyZHMsDQoNCkxlbw0KDQoNCg0KDQo+ICAgCQkJciA9IGFtZGdwdV9yaW5nX3Rl
+c3RfcmluZyhyaW5nKTsNCj4gICAJCQlpZiAocikgew0KPiAgIAkJCQlyaW5nLT5zY2hlZC5yZWFk
+eSA9IGZhbHNlOw0KPiBAQCAtMjc2LDYgKzI3Niw3IEBAIHN0YXRpYyBpbnQgdmNuX3YyXzVfaHdf
+aW5pdCh2b2lkICpoYW5kbGUpDQo+ICAgCQl9DQo+ICAgDQo+ICAgCQlyaW5nID0gJmFkZXYtPnZj
+bi5pbnN0W2pdLnJpbmdfanBlZzsNCj4gKwkJcmluZy0+c2NoZWQucmVhZHkgPSB0cnVlOw0KPiAg
+IAkJciA9IGFtZGdwdV9yaW5nX3Rlc3RfcmluZyhyaW5nKTsNCj4gICAJCWlmIChyKSB7DQo+ICAg
+CQkJcmluZy0+c2NoZWQucmVhZHkgPSBmYWxzZTsNCg==
