@@ -2,169 +2,121 @@ Return-Path: <SRS0=YRFP=X2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 749B8C352AA
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 08:51:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 351ABC388F3
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 08:51:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 488C620815
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 08:51:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="zmVGODov"
+	by mail.kernel.org (Postfix) with ESMTP id 0E31C2133F
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 08:51:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728159AbfJAIvB (ORCPT
+        id S1733186AbfJAIvw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Oct 2019 04:51:01 -0400
-Received: from merlin.infradead.org ([205.233.59.134]:59112 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727361AbfJAIvB (ORCPT
+        Tue, 1 Oct 2019 04:51:52 -0400
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:41190 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727659AbfJAIvv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Oct 2019 04:51:01 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=3oH0vnApdKGvy1w7jlfeLiiAGy7wlNVNQLM6PmEPn3g=; b=zmVGODovfQUHsQeZRZEzeV65A
-        Smxrv6hDX43SJXZJaC/l5fdrMBDkWQ/eqk4O7f9gMrrPFQgq52ZckL+UTKYxosDsgwr2ybCZvmdW+
-        x3BWTxE6W3sjTrfY23z31va3jMnZ02CndPTwjIQ5DR65TaEObUCuRpAPSDte3BUMIQtzSeVBslKd9
-        0MopjGj2yrdnKE+p+02qt+AzuaQEoUAQJH0PV+nKbwSViBqTblbWHCoEGZOsUtLbC0M2C3DMJtM8b
-        djVMfLz5F8qdAXACcTPv5b474TY8JM/QsNKN5MIf0zuM9Y/iXS0wWViwyyzJ/c0GuqRLa3N0aYfkD
-        VSYym0YRg==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92.2 #3 (Red Hat Linux))
-        id 1iFDrg-0002Hv-KY; Tue, 01 Oct 2019 08:50:37 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id AE82B304B4C;
-        Tue,  1 Oct 2019 10:49:45 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 083E4265299B1; Tue,  1 Oct 2019 10:50:34 +0200 (CEST)
-Date:   Tue, 1 Oct 2019 10:50:33 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Ingo Molnar <mingo@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, linux-tip-commits@vger.kernel.org,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Chris Metcalf <cmetcalf@ezchip.com>,
-        Christoph Lameter <cl@linux.com>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        Kirill Tkhai <tkhai@yandex.ru>, Mike Galbraith <efault@gmx.de>,
-        Oleg Nesterov <oleg@redhat.com>,
-        "Paul E. McKenney" <paulmck@linux.ibm.com>,
-        Russell King - ARM Linux admin <linux@armlinux.org.uk>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Borislav Petkov <bp@alien8.de>
-Subject: Re: [tip: sched/urgent] sched/membarrier: Fix
- p->mm->membarrier_state racy load
-Message-ID: <20191001085033.GP4519@hirez.programming.kicks-ass.net>
-References: <20190919173705.2181-5-mathieu.desnoyers@efficios.com>
- <156957184332.9866.1795367595934026999.tip-bot2@tip-bot2>
- <20191001084405.GA115089@gmail.com>
+        Tue, 1 Oct 2019 04:51:51 -0400
+Received: by mail-ot1-f66.google.com with SMTP id g13so10840115otp.8;
+        Tue, 01 Oct 2019 01:51:51 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=vvjWsAyb1mW3ZHQ5l3Ug/TQISxE7kDZyp64OCPfb4tg=;
+        b=MR7kXXsOQsyfNFFivm8o5A9Y8S48RCuH4oORoJzoxHVr8l60fJRH5izMvlwuMF4zoF
+         3BZZHK9YDlyWdgzXaE29r9GimSwke0EaAS4qgonJMd2FhFkvxSG/yYsELp02L7ZWpOnW
+         3pt6iHB5GGJ/GG3XP2xTCxat3Lz1ZSpT3/TXc1eLI40SzO1LFk4j5xmnBtGcsvqBMb4O
+         4GVUz/6xAGCXgDCFk3UmhH3bi78RRwl1nvTZ+AtzGfIYCNEB8A1mbGKCl3FhblqsPY4K
+         YtkASZNCONoofdFritXo0TMYHciKlqF8hI0oR5RhAfvZGEEI4ii7143mf3ZhFowGv3sD
+         slXw==
+X-Gm-Message-State: APjAAAVBasRuWHNNTT2oWEAyQtVntcKeoqdIId0KOWU6X+k69e9D3uG7
+        VS3GkUu+NX7n0Q5zrps5xjJjrY18oc1SiCSuYWE=
+X-Google-Smtp-Source: APXvYqyZmrPht+MK46Tt7NiDZ5XKr/6fRfxeYSCXNQV3EpuN8UbJSvFfXh9be0ebAHjlfOkKMLi33g3EQStN9woWnJU=
+X-Received: by 2002:a9d:7311:: with SMTP id e17mr1321582otk.107.1569919910603;
+ Tue, 01 Oct 2019 01:51:50 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191001084405.GA115089@gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20190812150452.27983-1-ard.biesheuvel@linaro.org> <20190812150452.27983-5-ard.biesheuvel@linaro.org>
+In-Reply-To: <20190812150452.27983-5-ard.biesheuvel@linaro.org>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Tue, 1 Oct 2019 10:51:39 +0200
+Message-ID: <CAMuHMdXY5UH4KhcaNVuxa8-+GN-4bjyvCd0wzPYuFBY5Ch=fNA@mail.gmail.com>
+Subject: Re: [PATCH 4/5] efi: Export Runtime Configuration Interface table to sysfs
+To:     Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Narendra K <Narendra.K@dell.com>
+Cc:     linux-efi <linux-efi@vger.kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        James Morse <james.morse@arm.com>,
+        Mario Limonciello <mario.limonciello@dell.com>,
+        Xiaofei Tan <tanxiaofei@huawei.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Oct 01, 2019 at 10:44:05AM +0200, Ingo Molnar wrote:
-> 
-> * tip-bot2 for Mathieu Desnoyers <tip-bot2@linutronix.de> wrote:
-> 
-> > The following commit has been merged into the sched/urgent branch of tip:
-> > 
-> > Commit-ID:     227a4aadc75ba22fcb6c4e1c078817b8cbaae4ce
-> > Gitweb:        https://git.kernel.org/tip/227a4aadc75ba22fcb6c4e1c078817b8cbaae4ce
-> > Author:        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-> > AuthorDate:    Thu, 19 Sep 2019 13:37:02 -04:00
-> > Committer:     Ingo Molnar <mingo@kernel.org>
-> > CommitterDate: Wed, 25 Sep 2019 17:42:30 +02:00
-> > 
-> > sched/membarrier: Fix p->mm->membarrier_state racy load
-> 
-> > +	rcu_read_unlock();
-> >  	if (!fallback) {
-> >  		preempt_disable();
-> >  		smp_call_function_many(tmpmask, ipi_mb, NULL, 1);
-> > @@ -136,6 +178,7 @@ static int membarrier_private_expedited(int flags)
-> >  	}
-> >  
-> >  	cpus_read_lock();
-> > +	rcu_read_lock();
-> >  	for_each_online_cpu(cpu) {
-> >  		struct task_struct *p;
-> >  
-> > @@ -157,8 +200,8 @@ static int membarrier_private_expedited(int flags)
-> >  			else
-> >  				smp_call_function_single(cpu, ipi_mb, NULL, 1);
-> >  		}
-> > -		rcu_read_unlock();
-> >  	}
-> > +	rcu_read_unlock();
-> 
-> I noticed this too late, but the locking in this part is now bogus:
-> 
-> 	rcu_read_lock();
-> 	for_each_online_cpu(cpu) {
-> 		struct task_struct *p;
-> 
-> 		/*
-> 		 * Skipping the current CPU is OK even through we can be
-> 		 * migrated at any point. The current CPU, at the point
-> 		 * where we read raw_smp_processor_id(), is ensured to
-> 		 * be in program order with respect to the caller
-> 		 * thread. Therefore, we can skip this CPU from the
-> 		 * iteration.
-> 		 */
-> 		if (cpu == raw_smp_processor_id())
-> 			continue;
-> 		rcu_read_lock();
+Hi Ard, Narendra,
 
-Yeah, that one needs to go.
+On Mon, Aug 12, 2019 at 5:07 PM Ard Biesheuvel
+<ard.biesheuvel@linaro.org> wrote:
+> From: Narendra K <Narendra.K@dell.com>
+>
+> System firmware advertises the address of the 'Runtime
+> Configuration Interface table version 2 (RCI2)' via
+> an EFI Configuration Table entry. This code retrieves the RCI2
+> table from the address and exports it to sysfs as a binary
+> attribute 'rci2' under /sys/firmware/efi/tables directory.
+> The approach adopted is similar to the attribute 'DMI' under
+> /sys/firmware/dmi/tables.
+>
+> RCI2 table contains BIOS HII in XML format and is used to populate
+> BIOS setup page in Dell EMC OpenManage Server Administrator tool.
+> The BIOS setup page contains BIOS tokens which can be configured.
+>
+> Signed-off-by: Narendra K <Narendra.K@dell.com>
+> Reviewed-by: Mario Limonciello <mario.limonciello@dell.com>
+> Signed-off-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
 
-> 		p = rcu_dereference(cpu_rq(cpu)->curr);
-> 		if (p && p->mm == mm)
-> 			__cpumask_set_cpu(cpu, tmpmask);
-> 	}
-> 	rcu_read_unlock();
-> 
-> Note the double rcu_read_lock() ....
-> 
-> This bug is now upstream, so requires an urgent fix, as it should be 
-> trivial to trigger with pretty much any membarrier user.
+Thanks, this is now commit 1c5fecb61255aa12 ("efi: Export Runtime
+Configuration Interface table to sysfs").
 
----
-Subject: membarrier: Fix faulty merge
+> --- a/drivers/firmware/efi/Kconfig
+> +++ b/drivers/firmware/efi/Kconfig
+> @@ -180,6 +180,19 @@ config RESET_ATTACK_MITIGATION
+>           have been evicted, since otherwise it will trigger even on clean
+>           reboots.
+>
+> +config EFI_RCI2_TABLE
+> +       bool "EFI Runtime Configuration Interface Table Version 2 Support"
+> +       help
+> +         Displays the content of the Runtime Configuration Interface
+> +         Table version 2 on Dell EMC PowerEdge systems as a binary
+> +         attribute 'rci2' under /sys/firmware/efi/tables directory.
+> +
+> +         RCI2 table contains BIOS HII in XML format and is used to populate
+> +         BIOS setup page in Dell EMC OpenManage Server Administrator tool.
+> +         The BIOS setup page contains BIOS tokens which can be configured.
+> +
+> +         Say Y here for Dell EMC PowerEdge systems.
 
-Commit 227a4aadc75b ("sched/membarrier: Fix p->mm->membarrier_state racy
-load") got fat fingered by me when merging it with other patches. It
-meant to move the rcu section out of the for loop but ended up doing it
-partially, leaving a superfluous rcu_read_lock() inside, causing havok.
+A quick Google search tells me these are Intel Xeon.
+Are arm/arm64/ia64 variants available, too?
+If not, this should be protected by "depends on x86" ("|| COMPILE_TEST"?).
 
-Fixes: 227a4aadc75b ("sched/membarrier: Fix p->mm->membarrier_state racy load")
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
----
- kernel/sched/membarrier.c | 1 -
- 1 file changed, 1 deletion(-)
+Thanks!
 
-diff --git a/kernel/sched/membarrier.c b/kernel/sched/membarrier.c
-index a39bed2c784f..168479a7d61b 100644
---- a/kernel/sched/membarrier.c
-+++ b/kernel/sched/membarrier.c
-@@ -174,7 +174,6 @@ static int membarrier_private_expedited(int flags)
- 		 */
- 		if (cpu == raw_smp_processor_id())
- 			continue;
--		rcu_read_lock();
- 		p = rcu_dereference(cpu_rq(cpu)->curr);
- 		if (p && p->mm == mm)
- 			__cpumask_set_cpu(cpu, tmpmask);
+Gr{oetje,eeting}s,
+
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
