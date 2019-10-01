@@ -7,50 +7,56 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E83FECE587
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 16:51:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BB74C352AA
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 16:51:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 23B1D21783
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 16:51:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D2D5621783
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 16:51:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569948710;
-	bh=EsGY4Ro3QJMVIc6Pr48axtXJLhwkNlHF1eAwIn0tiHA=;
+	s=default; t=1569948716;
+	bh=frKQUWaTNqxWUOAgl8M0QJm71Dy1KEBTrzhSMfb7V2A=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=BMM9hIfn4ACxT+B+LRrKfArlWZjvB53M3kKJPFaKUF3W6AI13DN0MCrGryfgH2XW4
-	 aEBsr8Pw6zLfnWurcZOCmjXasKByRqFa1f54z2aRdh8PMYOaVYUgyFK1dhtRfTUXwo
-	 mok4McmpBntdm/kD1i5wGccDkUQw7dJ3mteWeY7g=
+	b=dwcHNWsdzDpZ/tXMgncJgIYVnwL2llgZY0ljD/P1IWx8hhca4CoRgph2FMHjuehwl
+	 GYYYVwyar9n/nv675bX0ygCeXHKHKbBxqrJsvcMI5uKMc/kYcLQ2+WSicB+jUAszjX
+	 7zTtqYFrAK0gPyl7wT9oli9bF/l0ulPp7bAKwTFI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389216AbfJAQvq (ORCPT
+        id S1733094AbfJAQvz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Oct 2019 12:51:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56280 "EHLO mail.kernel.org"
+        Tue, 1 Oct 2019 12:51:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56200 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387412AbfJAQoD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Oct 2019 12:44:03 -0400
+        id S1733281AbfJAQoB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Oct 2019 12:44:01 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D746321A4C;
-        Tue,  1 Oct 2019 16:44:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A05C820B7C;
+        Tue,  1 Oct 2019 16:43:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569948242;
-        bh=EsGY4Ro3QJMVIc6Pr48axtXJLhwkNlHF1eAwIn0tiHA=;
+        s=default; t=1569948240;
+        bh=frKQUWaTNqxWUOAgl8M0QJm71Dy1KEBTrzhSMfb7V2A=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=v+iobtXwOCcmw4dL2jtU8q5yHvyiFlMaIS0Uq3x90e5v2PTw1TQFRAXyoJMGFdYUz
-         vSLjocm43xgn5Ntfra+lKnUiF6NCVbWl8dKAYIB6OUJ4nfLNc8mF4IzuEmbO+0HCql
-         eQmGAEOBPCYcSHQ+B1N73Uk9GSt/rs9VsqjiskK4=
+        b=PFGQhCfxe4qF90Rrg1cYK/xWyed2G4idG6IASWGyGLhwS9MOaKzEFWJJS83f9gbOa
+         ptaAIPiiiDLzDtzmq6Q49hK3M6PwJ4LAPJbl9rqVhabd8ii39WqLs5hUPIg3MkdGbu
+         teqvjxGz5nEqGTs+jx/Lyc0rSOYpAiA4bxb/Irik=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Thomas Richter <tmricht@linux.ibm.com>,
-        Andreas Krebbel <krebbel@linux.ibm.com>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Hendrik Brueckner <brueckner@linux.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.19 34/43] perf build: Add detection of java-11-openjdk-devel package
-Date:   Tue,  1 Oct 2019 12:43:02 -0400
-Message-Id: <20191001164311.15993-34-sashal@kernel.org>
+Cc:     Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Chris Metcalf <cmetcalf@ezchip.com>,
+        Christoph Lameter <cl@linux.com>,
+        "Eric W . Biederman" <ebiederm@xmission.com>,
+        Kirill Tkhai <tkhai@yandex.ru>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Mike Galbraith <efault@gmx.de>,
+        Oleg Nesterov <oleg@redhat.com>,
+        "Paul E . McKenney" <paulmck@linux.ibm.com>,
+        Russell King - ARM Linux admin <linux@armlinux.org.uk>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 32/43] sched/membarrier: Fix private expedited registration check
+Date:   Tue,  1 Oct 2019 12:43:00 -0400
+Message-Id: <20191001164311.15993-32-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191001164311.15993-1-sashal@kernel.org>
 References: <20191001164311.15993-1-sashal@kernel.org>
@@ -63,60 +69,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Thomas Richter <tmricht@linux.ibm.com>
+From: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
 
-[ Upstream commit 815c1560bf8fd522b8d93a1d727868b910c1cc24 ]
+[ Upstream commit fc0d77387cb5ae883fd774fc559e056a8dde024c ]
 
-With Java 11 there is no seperate JRE anymore.
+Fix a logic flaw in the way membarrier_register_private_expedited()
+handles ready state checks for private expedited sync core and private
+expedited registrations.
 
-Details:
+If a private expedited membarrier registration is first performed, and
+then a private expedited sync_core registration is performed, the ready
+state check will skip the second registration when it really should not.
 
-  https://coderanch.com/t/701603/java/JRE-JDK
-
-Therefore the detection of the JRE needs to be adapted.
-
-This change works for s390 and x86.  I have not tested other platforms.
-
-Committer testing:
-
-Continues to work with the OpenJDK 8:
-
-  $ rm -f ~acme/lib64/libperf-jvmti.so
-  $ rpm -qa | grep jdk-devel
-  java-1.8.0-openjdk-devel-1.8.0.222.b10-0.fc30.x86_64
-  $ git log --oneline -1
-  a51937170f33 (HEAD -> perf/core) perf build: Add detection of java-11-openjdk-devel package
-  $ rm -rf /tmp/build/perf ; mkdir -p /tmp/build/perf ; make -C tools/perf O=/tmp/build/perf install > /dev/null 2>1
-  $ ls -la ~acme/lib64/libperf-jvmti.so
-  -rwxr-xr-x. 1 acme acme 230744 Sep 24 16:46 /home/acme/lib64/libperf-jvmti.so
-  $
-
-Suggested-by: Andreas Krebbel <krebbel@linux.ibm.com>
-Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
-Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-Cc: Heiko Carstens <heiko.carstens@de.ibm.com>
-Cc: Hendrik Brueckner <brueckner@linux.ibm.com>
-Cc: Vasily Gorbik <gor@linux.ibm.com>
-Link: http://lore.kernel.org/lkml/20190909114116.50469-4-tmricht@linux.ibm.com
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Signed-off-by: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Cc: Chris Metcalf <cmetcalf@ezchip.com>
+Cc: Christoph Lameter <cl@linux.com>
+Cc: Eric W. Biederman <ebiederm@xmission.com>
+Cc: Kirill Tkhai <tkhai@yandex.ru>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Mike Galbraith <efault@gmx.de>
+Cc: Oleg Nesterov <oleg@redhat.com>
+Cc: Paul E. McKenney <paulmck@linux.ibm.com>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Russell King - ARM Linux admin <linux@armlinux.org.uk>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Link: https://lkml.kernel.org/r/20190919173705.2181-2-mathieu.desnoyers@efficios.com
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/perf/Makefile.config | 2 +-
+ kernel/sched/membarrier.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/tools/perf/Makefile.config b/tools/perf/Makefile.config
-index 849b3be15bd89..510caedd73194 100644
---- a/tools/perf/Makefile.config
-+++ b/tools/perf/Makefile.config
-@@ -837,7 +837,7 @@ ifndef NO_JVMTI
-     JDIR=$(shell /usr/sbin/update-java-alternatives -l | head -1 | awk '{print $$3}')
-   else
-     ifneq (,$(wildcard /usr/sbin/alternatives))
--      JDIR=$(shell /usr/sbin/alternatives --display java | tail -1 | cut -d' ' -f 5 | sed 's%/jre/bin/java.%%g')
-+      JDIR=$(shell /usr/sbin/alternatives --display java | tail -1 | cut -d' ' -f 5 | sed -e 's%/jre/bin/java.%%g' -e 's%/bin/java.%%g')
-     endif
-   endif
-   ifndef JDIR
+diff --git a/kernel/sched/membarrier.c b/kernel/sched/membarrier.c
+index 76e0eaf4654e0..dd27e632b1bab 100644
+--- a/kernel/sched/membarrier.c
++++ b/kernel/sched/membarrier.c
+@@ -235,7 +235,7 @@ static int membarrier_register_private_expedited(int flags)
+ 	 * groups, which use the same mm. (CLONE_VM but not
+ 	 * CLONE_THREAD).
+ 	 */
+-	if (atomic_read(&mm->membarrier_state) & state)
++	if ((atomic_read(&mm->membarrier_state) & state) == state)
+ 		return 0;
+ 	atomic_or(MEMBARRIER_STATE_PRIVATE_EXPEDITED, &mm->membarrier_state);
+ 	if (flags & MEMBARRIER_FLAG_SYNC_CORE)
 -- 
 2.20.1
 
