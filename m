@@ -2,159 +2,112 @@ Return-Path: <SRS0=YRFP=X2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B3AEBC388F3
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 08:31:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2ADEEC352AA
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 08:32:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7D708215EA
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 08:31:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="NfQaBzr2"
+	by mail.kernel.org (Postfix) with ESMTP id F245C21872
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 08:32:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733061AbfJAIbd (ORCPT
+        id S1733074AbfJAIcR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Oct 2019 04:31:33 -0400
-Received: from mout.web.de ([212.227.15.14]:34595 "EHLO mout.web.de"
+        Tue, 1 Oct 2019 04:32:17 -0400
+Received: from hermes.aosc.io ([199.195.250.187]:51778 "EHLO hermes.aosc.io"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732738AbfJAIbd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Oct 2019 04:31:33 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
-        s=dbaedf251592; t=1569918655;
-        bh=uEaNgF8/W7jxLx+nK9u6Zze2gr1PDsS2bf27/yBG1Sc=;
-        h=X-UI-Sender-Class:Subject:To:Cc:References:From:Date:In-Reply-To;
-        b=NfQaBzr27iw1hVAN6LWU3e6seLXMxrYMdxx06XrpDMycIIhUWNCiJ5jEzJrUhpvhm
-         gNTpbSgFnO4VxW7DZ+w5LVEqjsGUP0KcSJigjfzASy5W28g+EA3z917lkx46GD37lg
-         11x29/moBUKCKp+mruHl6JDjIFy3kAit4+rwIM74=
-X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
-Received: from [192.168.1.2] ([93.133.188.160]) by smtp.web.de (mrweb002
- [213.165.67.108]) with ESMTPSA (Nemesis) id 0MWinD-1ichZk0Ckd-00XsqN; Tue, 01
- Oct 2019 10:30:55 +0200
-Subject: Re: [PATCH v2] fs: affs: fix a memory leak in affs_remount
-To:     Navid Emamdoost <navid.emamdoost@gmail.com>,
-        linux-fsdevel@vger.kernel.org
-Cc:     Navid Emamdoost <emamd001@umn.edu>,
-        Stephen McCamant <smccaman@umn.edu>, Kangjie Lu <kjlu@umn.edu>,
-        David Sterba <dsterba@suse.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Jeff Layton <jlayton@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Deepa Dinamani <deepa.kernel@gmail.com>,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
-References: <ec7d3fdb-445b-7f4e-d6e6-77c6ae9a5732@web.de>
- <20190930210114.6557-1-navid.emamdoost@gmail.com>
-From:   Markus Elfring <Markus.Elfring@web.de>
-Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
- 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 FEE=
-Message-ID: <44ad775e-3b6f-4cbc-ba6f-455ff7191c58@web.de>
-Date:   Tue, 1 Oct 2019 10:30:44 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.1
+        id S1727361AbfJAIcR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Oct 2019 04:32:17 -0400
+Received: from localhost (localhost [127.0.0.1]) (Authenticated sender: icenowy@aosc.io)
+        by hermes.aosc.io (Postfix) with ESMTPSA id 5342182B0F;
+        Tue,  1 Oct 2019 08:32:12 +0000 (UTC)
+From:   Icenowy Zheng <icenowy@aosc.io>
+To:     "David S . Miller" <davem@davemloft.net>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Chen-Yu Tsai <wens@csie.org>, Andrew Lunn <andrew@lunn.ch>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Heiner Kallweit <hkallweit1@gmail.com>
+Cc:     netdev@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-sunxi@googlegroups.com, Icenowy Zheng <icenowy@aosc.io>
+Subject: [PATCH 2/3] net: phy: realtek: add config hack for broken RTL8211E on Pine64+ boards
+Date:   Tue,  1 Oct 2019 16:29:11 +0800
+Message-Id: <20191001082912.12905-3-icenowy@aosc.io>
+In-Reply-To: <20191001082912.12905-1-icenowy@aosc.io>
+References: <20191001082912.12905-1-icenowy@aosc.io>
 MIME-Version: 1.0
-In-Reply-To: <20190930210114.6557-1-navid.emamdoost@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:Wgp6OF25pMnaIJ2HzGdp+iMn7T62koCOIPUQQ4mgspfLpattIdf
- dvBhg34g/CCTYonReyj/vUPr5QsTGHAr28Qhv7YJpWfKiSGsUjK5/xO/kUdWD0nhPdelg4u
- qfSLVdKUKtRKqvzrnC+w9oYuq/tp3l9/+5idWhiATI6GVjPvHONY/3dyM761BZ+tmY2OHRT
- 25lEorDZWe5JgAWHdjNag==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:i5REQtY1IqM=:+y3FNtSz9fF2Qbte4Q5YF/
- sp9mEllSZbzqjDCht7CkpWkWA8cGTeb6IHxHIXMzV9LocEMcgjEzhoAdwT14CfIfhsP8wb5Nd
- 4p/7bB4DvATP2yBQYE5xEX7Po4m5S24dKZKcHHfTBEAGdLJ0MeA8+vqeQtOk1HVH1V+sSehNY
- o5yIBbRzu2PnzxlQV/4Zyvyh1AVwSXhoYx71yCCjrap10yNtGtcpspVdsxmTEjZk8wk4Hsany
- xqRzJO8jJL/lw+j1ry6fWxHobfaehEuu/yVu8vJmphypV0ZR5HtmltqUg2vslRDjNshoOLQY+
- 1rl7lfyR+CsYlCiQE+rDiA4jKw/JEg5EiuxKdv8BWxIKOjFrRQT7XzIfkRWNnUeLHqiyAovmL
- i4BCPRQTC2EB0sJNCTMp2w7vNMwFsiI9IdjixWPZ0y21Ay1hcxJ8juR580QsSYuDOZfRLUSXi
- D9n2ozQTDPGwK09vFbfUI8EQG76IOVJnFrTa86FriMcpQ+a3W+H0I5fFbXD6HDpDhWc/BAhU3
- cDuuTXS0C9Fsn2fEjISal/Oy+7aXf+MOcp+ipkzdL9+s2RAVOIh6q5OyjHXQur5Ys2R6py/aj
- gq0hbLv1HFhIM6gWkjlHKcvkuvhK76DXD6xJ1QVVZ/HwA8JfMLGVP7l5ArtC6LNzDKb/qH/M8
- iWKESgv9a2CQnwKlUd1zXLlNYtq/ZOuQExqFngxXYfcUVgrT411nUZKUpIwQXp01qkK7D5l+E
- fgVvLC0viUQ2Mn/aZ0LzPlp/QiVAqv52/zFGFmGWhIHyi75w3V1Jw1vX5aHwTrxUawkzP098w
- t1YdgVvKpScTciG4wPyPmCnRelISjj46XZrbvBsVazCfuLDTzbLZnSkiQALCf2UhkD6zqnH0x
- 3W6p1jQC4S4fw52FGBkW35maGYYWSqnOWMLrRcrgZQbLzwfDtjo5kI34jACsSdIQYfjdXrXvi
- fLwrpLOeO1yGsNEz+pBKpHJfZAnANKKcHfun6gDJC/quZ0YY8iUZvhOM33lZH0DX8p9afZMu1
- 7wcaAt8wPGrxafsYMucL8k5PG7pihlP9PmJHLCBU5oqbrll+ujU7SgHP42EbyVAPhRrDAOiz7
- tcYgJNR4sb/ChR5yBlq6GFUfuINxLE6B4ejhCf4EbhD9vAIaz0LKJS80BkwI/+XEm382HKSEU
- QH4CLHkS69uNp/R5LIhgQ8Y4JHks72Olk0zrk4zB9OqibOAUOXOzWAiEEH1apfkrKhZ9DC856
- LU6vNinBik0leBYN/pn+mve4nl2TeGu8iO8O3DsY8Bbm+MBgjvEJ30dbCsS0=
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> The allocated memory for new_opts is only released if pare_options fail.
+Some RTL8211E chips have broken GbE function, which needs a hack to
+fix.
 
-Can the following wording be nicer?
+Currently only some Pine64+ boards are known to used this broken batch
+of RTL8211E chips.
 
-  The allocated memory for the buffer =E2=80=9Cnew_opts=E2=80=9D will be r=
-eleased
-  only if a call of the function =E2=80=9Cparse_options=E2=80=9D failed.
+Enable this hack when a certain device tree property is set.
 
+As this hack is not documented on the datasheet at all, it contains
+magic numbers, and could not be revealed. These magic numbers are
+received from Realtek via Pine64.
 
-> The release for new_opts is added.
+Signed-off-by: Icenowy Zheng <icenowy@aosc.io>
+---
+ drivers/net/phy/realtek.c | 14 ++++++++++++++
+ 1 file changed, 14 insertions(+)
 
-* How do you think about the change possibility to delete questionable
-  source code here?
+diff --git a/drivers/net/phy/realtek.c b/drivers/net/phy/realtek.c
+index 677c45985338..f696f2085368 100644
+--- a/drivers/net/phy/realtek.c
++++ b/drivers/net/phy/realtek.c
+@@ -9,6 +9,7 @@
+  * Copyright (c) 2004 Freescale Semiconductor, Inc.
+  */
+ #include <linux/bitops.h>
++#include <linux/of.h>
+ #include <linux/phy.h>
+ #include <linux/module.h>
+ 
+@@ -32,6 +33,12 @@
+ #define RTL8211E_TX_DELAY			BIT(1)
+ #define RTL8211E_RX_DELAY			BIT(2)
+ #define RTL8211E_MODE_MII_GMII			BIT(3)
++/* The following number resides in the same register with
++ * the delay bits and mode bit above. However, no known
++ * document can explain this, and this value is directly
++ * received from Realtek via Pine64.
++ */
++#define RTL8211E_CONF_MAGIC_PINE64		0xb400
+ 
+ #define RTL8201F_ISR				0x1e
+ #define RTL8201F_IER				0x13
+@@ -196,6 +203,7 @@ static int rtl8211e_config_init(struct phy_device *phydev)
+ {
+ 	int ret = 0, oldpage;
+ 	u16 val;
++	struct device_node *of_node = phydev->mdio.dev.of_node;
+ 
+ 	/* enable TX/RX delay for rgmii-* modes, and disable them for rgmii. */
+ 	switch (phydev->interface) {
+@@ -234,6 +242,12 @@ static int rtl8211e_config_init(struct phy_device *phydev)
+ 	ret = __phy_modify(phydev, 0x1c, RTL8211E_TX_DELAY | RTL8211E_RX_DELAY,
+ 			   val);
+ 
++	if (of_node &&
++	    of_property_read_bool(of_node, "realtek,config-magic-for-pine64")) {
++		ret = __phy_modify(phydev, 0x1c, GENMASK(15, 8),
++				   RTL8211E_CONF_MAGIC_PINE64);
++	}
++
+ err_restore_page:
+ 	return phy_restore_page(phydev, oldpage, ret);
+ }
+-- 
+2.21.0
 
-* Would you like to complete the data processing for corresponding options
-  any more?
-
-
-> 	-- fix a type in title, =E2=80=A6
-
-Please avoid typos also in your version comments.
-
-
-> ---
-
-I suggest to replace this second delimiter by a blank line.
-
-Regards,
-Markus
