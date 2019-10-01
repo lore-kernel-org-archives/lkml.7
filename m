@@ -4,32 +4,32 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B4FEC352AA
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 11:39:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00272C352AA
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 11:39:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3D1E92133F
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 11:39:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D6A2A2133F
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 11:39:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733021AbfJALjN (ORCPT
+        id S1732656AbfJALil (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Oct 2019 07:39:13 -0400
+        Tue, 1 Oct 2019 07:38:41 -0400
 Received: from mga02.intel.com ([134.134.136.20]:39070 "EHLO mga02.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732559AbfJALim (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Oct 2019 07:38:42 -0400
+        id S1732559AbfJALij (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Oct 2019 07:38:39 -0400
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 01 Oct 2019 04:38:41 -0700
+  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 01 Oct 2019 04:38:38 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.64,571,1559545200"; 
-   d="scan'208";a="191434986"
+   d="scan'208";a="191434929"
 Received: from black.fi.intel.com ([10.237.72.28])
-  by fmsmga007.fm.intel.com with ESMTP; 01 Oct 2019 04:38:39 -0700
+  by fmsmga007.fm.intel.com with ESMTP; 01 Oct 2019 04:38:35 -0700
 Received: by black.fi.intel.com (Postfix, from userid 1001)
-        id A2D1C1AD; Tue,  1 Oct 2019 14:38:31 +0300 (EEST)
+        id 4D65C4E5; Tue,  1 Oct 2019 14:38:31 +0300 (EEST)
 From:   Mika Westerberg <mika.westerberg@linux.intel.com>
 To:     linux-usb@vger.kernel.org
 Cc:     Andreas Noever <andreas.noever@gmail.com>,
@@ -44,9 +44,9 @@ Cc:     Andreas Noever <andreas.noever@gmail.com>,
         Mario.Limonciello@dell.com,
         Anthony Wong <anthony.wong@canonical.com>,
         linux-kernel@vger.kernel.org
-Subject: [RFC PATCH 18/22] thunderbolt: Make tb_switch_find_cap() available to other files
-Date:   Tue,  1 Oct 2019 14:38:26 +0300
-Message-Id: <20191001113830.13028-19-mika.westerberg@linux.intel.com>
+Subject: [RFC PATCH 10/22] thunderbolt: Convert PCIe adapter register names to use USB4 names
+Date:   Tue,  1 Oct 2019 14:38:18 +0300
+Message-Id: <20191001113830.13028-11-mika.westerberg@linux.intel.com>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191001113830.13028-1-mika.westerberg@linux.intel.com>
 References: <20191001113830.13028-1-mika.westerberg@linux.intel.com>
@@ -57,52 +57,64 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Rajmohan Mani <rajmohan.mani@intel.com>
+Now that USB4 spec has names for these PCIe adapter registers we can use
+them instead. This makes it easier to match certain register to the spec.
 
-We need to find switch capabilities in order to implement TMU support so
-make it available to other files as well.
+No functional changes.
 
-Signed-off-by: Rajmohan Mani <rajmohan.mani@intel.com>
 Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
 ---
- drivers/thunderbolt/cap.c | 11 ++++++++++-
- drivers/thunderbolt/tb.h  |  1 +
- 2 files changed, 11 insertions(+), 1 deletion(-)
+ drivers/thunderbolt/switch.c  | 10 ++++++----
+ drivers/thunderbolt/tb_regs.h |  4 ++--
+ 2 files changed, 8 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/thunderbolt/cap.c b/drivers/thunderbolt/cap.c
-index 8bf8e031f0bc..568d878f19f7 100644
---- a/drivers/thunderbolt/cap.c
-+++ b/drivers/thunderbolt/cap.c
-@@ -113,7 +113,16 @@ int tb_port_find_cap(struct tb_port *port, enum tb_port_cap cap)
- 	return ret;
+diff --git a/drivers/thunderbolt/switch.c b/drivers/thunderbolt/switch.c
+index 8d17398e3349..2079e6065038 100644
+--- a/drivers/thunderbolt/switch.c
++++ b/drivers/thunderbolt/switch.c
+@@ -929,10 +929,11 @@ bool tb_pci_port_is_enabled(struct tb_port *port)
+ {
+ 	u32 data;
+ 
+-	if (tb_port_read(port, &data, TB_CFG_PORT, port->cap_adap, 1))
++	if (tb_port_read(port, &data, TB_CFG_PORT,
++			 port->cap_adap + ADP_PCIE_CS_0, 1))
+ 		return false;
+ 
+-	return !!(data & TB_PCI_EN);
++	return !!(data & ADP_PCIE_CS_0_PE);
  }
  
--static int tb_switch_find_cap(struct tb_switch *sw, enum tb_switch_cap cap)
-+/**
-+ * tb_switch_find_cap() - Find switch capability
-+ * @sw Switch to find the capability for
-+ * @cap: Capability to look
-+ *
-+ * Returns offset to start of capability or %-ENOENT if no such
-+ * capability was found. Negative errno is returned if there was an
-+ * error.
-+ */
-+int tb_switch_find_cap(struct tb_switch *sw, enum tb_switch_cap cap)
+ /**
+@@ -942,10 +943,11 @@ bool tb_pci_port_is_enabled(struct tb_port *port)
+  */
+ int tb_pci_port_enable(struct tb_port *port, bool enable)
  {
- 	int offset = sw->config.first_cap_offset;
+-	u32 word = enable ? TB_PCI_EN : 0x0;
++	u32 word = enable ? ADP_PCIE_CS_0_PE : 0x0;
+ 	if (!port->cap_adap)
+ 		return -ENXIO;
+-	return tb_port_write(port, &word, TB_CFG_PORT, port->cap_adap, 1);
++	return tb_port_write(port, &word, TB_CFG_PORT,
++			     port->cap_adap + ADP_PCIE_CS_0, 1);
+ }
  
-diff --git a/drivers/thunderbolt/tb.h b/drivers/thunderbolt/tb.h
-index 60f237020d1b..1488382066fd 100644
---- a/drivers/thunderbolt/tb.h
-+++ b/drivers/thunderbolt/tb.h
-@@ -709,6 +709,7 @@ struct tb_port *tb_next_port_on_path(struct tb_port *start, struct tb_port *end,
- 				     struct tb_port *prev);
+ /**
+diff --git a/drivers/thunderbolt/tb_regs.h b/drivers/thunderbolt/tb_regs.h
+index 0ac22fc26a5f..cd03d160634c 100644
+--- a/drivers/thunderbolt/tb_regs.h
++++ b/drivers/thunderbolt/tb_regs.h
+@@ -258,8 +258,8 @@ struct tb_regs_port_header {
+ #define TB_DP_REMOTE_CAP		0x5
  
- int tb_switch_find_vse_cap(struct tb_switch *sw, enum tb_switch_vse_cap vsec);
-+int tb_switch_find_cap(struct tb_switch *sw, enum tb_switch_cap cap);
- int tb_port_find_cap(struct tb_port *port, enum tb_port_cap cap);
- bool tb_port_is_enabled(struct tb_port *port);
+ /* PCIe adapter registers */
+-
+-#define TB_PCI_EN			BIT(31)
++#define ADP_PCIE_CS_0				0x00
++#define ADP_PCIE_CS_0_PE			BIT(31)
  
+ /* Hop register from TB_CFG_HOPS. 8 byte per entry. */
+ struct tb_regs_hop {
 -- 
 2.23.0
 
