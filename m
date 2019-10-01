@@ -2,563 +2,109 @@ Return-Path: <SRS0=YRFP=X2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UPPERCASE_50_75,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0818C352AA
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 07:35:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D1496C388F3
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 07:39:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7B12F21855
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 07:35:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A8E8F21783
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 07:39:12 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kZCCL6Wv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733039AbfJAHfv (ORCPT
+        id S1729817AbfJAHjM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Oct 2019 03:35:51 -0400
-Received: from albert.telenet-ops.be ([195.130.137.90]:49716 "EHLO
-        albert.telenet-ops.be" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730309AbfJAHfv (ORCPT
+        Tue, 1 Oct 2019 03:39:12 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:45704 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725777AbfJAHjL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Oct 2019 03:35:51 -0400
-Received: from ramsan ([84.194.98.4])
-        by albert.telenet-ops.be with bizsmtp
-        id 87bk2101g05gfCL067bkwa; Tue, 01 Oct 2019 09:35:45 +0200
-Received: from rox.of.borg ([192.168.97.57])
-        by ramsan with esmtp (Exim 4.90_1)
-        (envelope-from <geert@linux-m68k.org>)
-        id 1iFChE-0002DO-Nm; Tue, 01 Oct 2019 09:35:44 +0200
-Received: from geert by rox.of.borg with local (Exim 4.90_1)
-        (envelope-from <geert@linux-m68k.org>)
-        id 1iFChE-0001BC-Lt; Tue, 01 Oct 2019 09:35:44 +0200
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-To:     linux-m68k@lists.linux-m68k.org
-Cc:     Max Staudt <max@enpas.org>, linux-kernel@vger.kernel.org,
-        Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: [PATCH] m68k: defconfig: Update defconfigs for v5.4-rc1
-Date:   Tue,  1 Oct 2019 09:35:39 +0200
-Message-Id: <20191001073539.4488-1-geert@linux-m68k.org>
-X-Mailer: git-send-email 2.17.1
+        Tue, 1 Oct 2019 03:39:11 -0400
+Received: by mail-pf1-f196.google.com with SMTP id y72so7282671pfb.12;
+        Tue, 01 Oct 2019 00:39:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=d+XFVlqmdczgfds1Dy3o5Q1n0UPcPm7FLBJVkbS1FRI=;
+        b=kZCCL6Wv6ckxpsHQfP+jMu5n4JpfOYT7ga47pCoO6uutcU6zZrOm55rBGFlhH9x5zO
+         x8Iwi3y9n+iUUObpezPF57bsLFwJcXhgmKd0JCEjTZ3Mgta7i4vx3+eh+ac9CIWMFdGU
+         P+k8VHxMK7iG0ka/iHqUkv1dug5WK2tQEtbN+rJcMEZ2q4w8OcJl5239zu3Amrxm8ZRP
+         EwKcuShpZ85tg2suVwzZ8lDLUjsmZetUDc+LWuiIcM4B7mowdLHNONz1qMc0+pFxi8Kk
+         YesWe/Y3LQxpfw2FeJrVpb9eUF9Wb/2a5EkQody0trLjgKnQFkQuiH5HiPbbRpRybzfW
+         pYtQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=d+XFVlqmdczgfds1Dy3o5Q1n0UPcPm7FLBJVkbS1FRI=;
+        b=I5GEPNrSjrODd6OxkUgLda2gHnfcx0swIt2HbpY94JimgTnFtYay9peZcNeGFkew7Q
+         wBA99ja5Oi035C3F2vIgPZ4cG1UGbo83xPR43sr6AXoW8PZjEbyJVMBg2hVJPRjg/que
+         Ebt5XmH3KNsXnRRlo9BHeviXjjkxhzuUXGAaYuOQv8f99qY0ZmpupCnc11wGBbZWw+o4
+         5IObQqJvn9idMKmSWCPJNxUsQI+KxL8Lon1yGcQlc1xlB7cT7N0mHT7fwwkhE5WCmNcm
+         lDof7ScRc6GAfZ0y6xDFuiCMWpoDf/mL50dRevK3M0UmVkpT9h5Ev+fzupOj3Cb/2eDv
+         Vk1g==
+X-Gm-Message-State: APjAAAV1UHW+OUIfPou7W2x+rqyjU8Ua5aEwrA1SdHsfBiO6P4ExEAUN
+        73Vuxasf7oztbEo2YQ9z/eA=
+X-Google-Smtp-Source: APXvYqyS/slV7GS5YvJ7kRHM3s6Z948KYm85VVT9ES4WvZ/YOhx/a+DDOUToG0ox75TZC06wlRzJew==
+X-Received: by 2002:a17:90a:7bce:: with SMTP id d14mr3979423pjl.96.1569915551132;
+        Tue, 01 Oct 2019 00:39:11 -0700 (PDT)
+Received: from localhost.localdomain ([103.51.74.191])
+        by smtp.gmail.com with ESMTPSA id g19sm23133024pgm.63.2019.10.01.00.39.07
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 01 Oct 2019 00:39:10 -0700 (PDT)
+From:   Anand Moon <linux.amoon@gmail.com>
+To:     Rob Herring <robh+dt@kernel.org>,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        Jerome Brunet <jbrunet@baylibre.com>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Kevin Hilman <khilman@baylibre.com>
+Cc:     devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [PATCHv3 RESEND-next 0/3] Odroid c2 missing regulator linking
+Date:   Tue,  1 Oct 2019 07:38:58 +0000
+Message-Id: <20191001073901.372-1-linux.amoon@gmail.com>
+X-Mailer: git-send-email 2.23.0
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Actual changes:
-    -# CONFIG_BACKLIGHT_CLASS_DEVICE is not set
-    -CONFIG_CRYPTO_AEGIS128L=m
-    -CONFIG_CRYPTO_AEGIS256=m
-    -CONFIG_CRYPTO_MORUS1280=m
-    -CONFIG_CRYPTO_MORUS640=m
-    +CONFIG_DM_CLONE=m
-    +CONFIG_EROFS_FS=m
-    -# CONFIG_LCD_CLASS_DEVICE is not set
+Looks like this changes got lost so resend these changes again.
 
-Signed-off-by: Geert Uytterhoeven <geert@linux-m68k.org>
----
-Should support for ICY and LTC2990 be enabled in amiga_defconfig and/or
-multi_defconfig?
+Below small changes help re-configure or fix missing inter linking
+of regulator node.
 
-    +CONFIG_I2C=m
-    +CONFIG_I2C_CHARDEV=m
-    +CONFIG_I2C_ICY=m
+Re-based on *next-20191001*
+Changes from previous patch's series.
+Build using Cross Compiler.
 
-    +CONFIG_HWMON=m
-    +CONFIG_SENSORS_LTC2990=m
----
- arch/m68k/configs/amiga_defconfig    | 8 ++------
- arch/m68k/configs/apollo_defconfig   | 8 ++------
- arch/m68k/configs/atari_defconfig    | 8 ++------
- arch/m68k/configs/bvme6000_defconfig | 8 ++------
- arch/m68k/configs/hp300_defconfig    | 8 ++------
- arch/m68k/configs/mac_defconfig      | 8 ++------
- arch/m68k/configs/multi_defconfig    | 8 ++------
- arch/m68k/configs/mvme147_defconfig  | 8 ++------
- arch/m68k/configs/mvme16x_defconfig  | 8 ++------
- arch/m68k/configs/q40_defconfig      | 8 ++------
- arch/m68k/configs/sun3_defconfig     | 8 ++------
- arch/m68k/configs/sun3x_defconfig    | 8 ++------
- 12 files changed, 24 insertions(+), 72 deletions(-)
+Added missing Reviewed-by Neil's and Martin.
+Added few suggestion from martin for rename of node.
 
-diff --git a/arch/m68k/configs/amiga_defconfig b/arch/m68k/configs/amiga_defconfig
-index 9a33c1c006a1f9b8..6c9d4e47cf1745dd 100644
---- a/arch/m68k/configs/amiga_defconfig
-+++ b/arch/m68k/configs/amiga_defconfig
-@@ -355,6 +355,7 @@ CONFIG_DM_SNAPSHOT=m
- CONFIG_DM_THIN_PROVISIONING=m
- CONFIG_DM_WRITECACHE=m
- CONFIG_DM_ERA=m
-+CONFIG_DM_CLONE=m
- CONFIG_DM_MIRROR=m
- CONFIG_DM_RAID=m
- CONFIG_DM_ZERO=m
-@@ -432,8 +433,6 @@ CONFIG_FB_AMIGA_OCS=y
- CONFIG_FB_AMIGA_ECS=y
- CONFIG_FB_AMIGA_AGA=y
- CONFIG_FB_FM2=y
--# CONFIG_LCD_CLASS_DEVICE is not set
--# CONFIG_BACKLIGHT_CLASS_DEVICE is not set
- CONFIG_FRAMEBUFFER_CONSOLE=y
- CONFIG_LOGO=y
- CONFIG_SOUND=m
-@@ -490,6 +489,7 @@ CONFIG_QNX4FS_FS=m
- CONFIG_QNX6FS_FS=m
- CONFIG_SYSV_FS=m
- CONFIG_UFS_FS=m
-+CONFIG_EROFS_FS=m
- CONFIG_NFS_FS=y
- CONFIG_NFS_V4=m
- CONFIG_NFS_SWAP=y
-@@ -560,10 +560,6 @@ CONFIG_CRYPTO_ECDH=m
- CONFIG_CRYPTO_ECRDSA=m
- CONFIG_CRYPTO_CHACHA20POLY1305=m
- CONFIG_CRYPTO_AEGIS128=m
--CONFIG_CRYPTO_AEGIS128L=m
--CONFIG_CRYPTO_AEGIS256=m
--CONFIG_CRYPTO_MORUS640=m
--CONFIG_CRYPTO_MORUS1280=m
- CONFIG_CRYPTO_CFB=m
- CONFIG_CRYPTO_CTS=m
- CONFIG_CRYPTO_LRW=m
-diff --git a/arch/m68k/configs/apollo_defconfig b/arch/m68k/configs/apollo_defconfig
-index 7fdbc797a05d4d65..caa0558abcdbdeb3 100644
---- a/arch/m68k/configs/apollo_defconfig
-+++ b/arch/m68k/configs/apollo_defconfig
-@@ -334,6 +334,7 @@ CONFIG_DM_SNAPSHOT=m
- CONFIG_DM_THIN_PROVISIONING=m
- CONFIG_DM_WRITECACHE=m
- CONFIG_DM_ERA=m
-+CONFIG_DM_CLONE=m
- CONFIG_DM_MIRROR=m
- CONFIG_DM_RAID=m
- CONFIG_DM_ZERO=m
-@@ -393,8 +394,6 @@ CONFIG_PPS_CLIENT_LDISC=m
- CONFIG_PTP_1588_CLOCK=m
- # CONFIG_HWMON is not set
- CONFIG_FB=y
--# CONFIG_LCD_CLASS_DEVICE is not set
--# CONFIG_BACKLIGHT_CLASS_DEVICE is not set
- CONFIG_FRAMEBUFFER_CONSOLE=y
- CONFIG_LOGO=y
- # CONFIG_LOGO_LINUX_VGA16 is not set
-@@ -450,6 +449,7 @@ CONFIG_QNX4FS_FS=m
- CONFIG_QNX6FS_FS=m
- CONFIG_SYSV_FS=m
- CONFIG_UFS_FS=m
-+CONFIG_EROFS_FS=m
- CONFIG_NFS_FS=y
- CONFIG_NFS_V4=m
- CONFIG_NFS_SWAP=y
-@@ -520,10 +520,6 @@ CONFIG_CRYPTO_ECDH=m
- CONFIG_CRYPTO_ECRDSA=m
- CONFIG_CRYPTO_CHACHA20POLY1305=m
- CONFIG_CRYPTO_AEGIS128=m
--CONFIG_CRYPTO_AEGIS128L=m
--CONFIG_CRYPTO_AEGIS256=m
--CONFIG_CRYPTO_MORUS640=m
--CONFIG_CRYPTO_MORUS1280=m
- CONFIG_CRYPTO_CFB=m
- CONFIG_CRYPTO_CTS=m
- CONFIG_CRYPTO_LRW=m
-diff --git a/arch/m68k/configs/atari_defconfig b/arch/m68k/configs/atari_defconfig
-index 087dd8482c1131c8..83d8486524bda8cb 100644
---- a/arch/m68k/configs/atari_defconfig
-+++ b/arch/m68k/configs/atari_defconfig
-@@ -350,6 +350,7 @@ CONFIG_DM_SNAPSHOT=m
- CONFIG_DM_THIN_PROVISIONING=m
- CONFIG_DM_WRITECACHE=m
- CONFIG_DM_ERA=m
-+CONFIG_DM_CLONE=m
- CONFIG_DM_MIRROR=m
- CONFIG_DM_RAID=m
- CONFIG_DM_ZERO=m
-@@ -417,8 +418,6 @@ CONFIG_PTP_1588_CLOCK=m
- # CONFIG_HWMON is not set
- CONFIG_FB=y
- CONFIG_FB_ATARI=y
--# CONFIG_LCD_CLASS_DEVICE is not set
--# CONFIG_BACKLIGHT_CLASS_DEVICE is not set
- CONFIG_FRAMEBUFFER_CONSOLE=y
- CONFIG_LOGO=y
- CONFIG_SOUND=m
-@@ -479,6 +478,7 @@ CONFIG_QNX4FS_FS=m
- CONFIG_QNX6FS_FS=m
- CONFIG_SYSV_FS=m
- CONFIG_UFS_FS=m
-+CONFIG_EROFS_FS=m
- CONFIG_NFS_FS=y
- CONFIG_NFS_V4=m
- CONFIG_NFS_SWAP=y
-@@ -549,10 +549,6 @@ CONFIG_CRYPTO_ECDH=m
- CONFIG_CRYPTO_ECRDSA=m
- CONFIG_CRYPTO_CHACHA20POLY1305=m
- CONFIG_CRYPTO_AEGIS128=m
--CONFIG_CRYPTO_AEGIS128L=m
--CONFIG_CRYPTO_AEGIS256=m
--CONFIG_CRYPTO_MORUS640=m
--CONFIG_CRYPTO_MORUS1280=m
- CONFIG_CRYPTO_CFB=m
- CONFIG_CRYPTO_CTS=m
- CONFIG_CRYPTO_LRW=m
-diff --git a/arch/m68k/configs/bvme6000_defconfig b/arch/m68k/configs/bvme6000_defconfig
-index 91154d6acb313c72..4ffc1e5646d5139d 100644
---- a/arch/m68k/configs/bvme6000_defconfig
-+++ b/arch/m68k/configs/bvme6000_defconfig
-@@ -332,6 +332,7 @@ CONFIG_DM_SNAPSHOT=m
- CONFIG_DM_THIN_PROVISIONING=m
- CONFIG_DM_WRITECACHE=m
- CONFIG_DM_ERA=m
-+CONFIG_DM_CLONE=m
- CONFIG_DM_MIRROR=m
- CONFIG_DM_RAID=m
- CONFIG_DM_ZERO=m
-@@ -390,8 +391,6 @@ CONFIG_NTP_PPS=y
- CONFIG_PPS_CLIENT_LDISC=m
- CONFIG_PTP_1588_CLOCK=m
- # CONFIG_HWMON is not set
--# CONFIG_LCD_CLASS_DEVICE is not set
--# CONFIG_BACKLIGHT_CLASS_DEVICE is not set
- CONFIG_HID=m
- CONFIG_HIDRAW=y
- CONFIG_UHID=m
-@@ -443,6 +442,7 @@ CONFIG_QNX4FS_FS=m
- CONFIG_QNX6FS_FS=m
- CONFIG_SYSV_FS=m
- CONFIG_UFS_FS=m
-+CONFIG_EROFS_FS=m
- CONFIG_NFS_FS=y
- CONFIG_NFS_V4=m
- CONFIG_NFS_SWAP=y
-@@ -513,10 +513,6 @@ CONFIG_CRYPTO_ECDH=m
- CONFIG_CRYPTO_ECRDSA=m
- CONFIG_CRYPTO_CHACHA20POLY1305=m
- CONFIG_CRYPTO_AEGIS128=m
--CONFIG_CRYPTO_AEGIS128L=m
--CONFIG_CRYPTO_AEGIS256=m
--CONFIG_CRYPTO_MORUS640=m
--CONFIG_CRYPTO_MORUS1280=m
- CONFIG_CRYPTO_CFB=m
- CONFIG_CRYPTO_CTS=m
- CONFIG_CRYPTO_LRW=m
-diff --git a/arch/m68k/configs/hp300_defconfig b/arch/m68k/configs/hp300_defconfig
-index c398c4a94d95c666..806da3d97ca4e939 100644
---- a/arch/m68k/configs/hp300_defconfig
-+++ b/arch/m68k/configs/hp300_defconfig
-@@ -333,6 +333,7 @@ CONFIG_DM_SNAPSHOT=m
- CONFIG_DM_THIN_PROVISIONING=m
- CONFIG_DM_WRITECACHE=m
- CONFIG_DM_ERA=m
-+CONFIG_DM_CLONE=m
- CONFIG_DM_MIRROR=m
- CONFIG_DM_RAID=m
- CONFIG_DM_ZERO=m
-@@ -395,8 +396,6 @@ CONFIG_PPS_CLIENT_LDISC=m
- CONFIG_PTP_1588_CLOCK=m
- # CONFIG_HWMON is not set
- CONFIG_FB=y
--# CONFIG_LCD_CLASS_DEVICE is not set
--# CONFIG_BACKLIGHT_CLASS_DEVICE is not set
- CONFIG_FRAMEBUFFER_CONSOLE=y
- CONFIG_LOGO=y
- # CONFIG_LOGO_LINUX_MONO is not set
-@@ -452,6 +451,7 @@ CONFIG_QNX4FS_FS=m
- CONFIG_QNX6FS_FS=m
- CONFIG_SYSV_FS=m
- CONFIG_UFS_FS=m
-+CONFIG_EROFS_FS=m
- CONFIG_NFS_FS=y
- CONFIG_NFS_V4=m
- CONFIG_NFS_SWAP=y
-@@ -522,10 +522,6 @@ CONFIG_CRYPTO_ECDH=m
- CONFIG_CRYPTO_ECRDSA=m
- CONFIG_CRYPTO_CHACHA20POLY1305=m
- CONFIG_CRYPTO_AEGIS128=m
--CONFIG_CRYPTO_AEGIS128L=m
--CONFIG_CRYPTO_AEGIS256=m
--CONFIG_CRYPTO_MORUS640=m
--CONFIG_CRYPTO_MORUS1280=m
- CONFIG_CRYPTO_CFB=m
- CONFIG_CRYPTO_CTS=m
- CONFIG_CRYPTO_LRW=m
-diff --git a/arch/m68k/configs/mac_defconfig b/arch/m68k/configs/mac_defconfig
-index 350d004559be8431..250da20e291c83e0 100644
---- a/arch/m68k/configs/mac_defconfig
-+++ b/arch/m68k/configs/mac_defconfig
-@@ -342,6 +342,7 @@ CONFIG_DM_SNAPSHOT=m
- CONFIG_DM_THIN_PROVISIONING=m
- CONFIG_DM_WRITECACHE=m
- CONFIG_DM_ERA=m
-+CONFIG_DM_CLONE=m
- CONFIG_DM_MIRROR=m
- CONFIG_DM_RAID=m
- CONFIG_DM_ZERO=m
-@@ -419,8 +420,6 @@ CONFIG_PTP_1588_CLOCK=m
- CONFIG_FB=y
- CONFIG_FB_VALKYRIE=y
- CONFIG_FB_MAC=y
--# CONFIG_LCD_CLASS_DEVICE is not set
--# CONFIG_BACKLIGHT_CLASS_DEVICE is not set
- CONFIG_FRAMEBUFFER_CONSOLE=y
- CONFIG_LOGO=y
- CONFIG_HID=m
-@@ -474,6 +473,7 @@ CONFIG_QNX4FS_FS=m
- CONFIG_QNX6FS_FS=m
- CONFIG_SYSV_FS=m
- CONFIG_UFS_FS=m
-+CONFIG_EROFS_FS=m
- CONFIG_NFS_FS=y
- CONFIG_NFS_V4=m
- CONFIG_NFS_SWAP=y
-@@ -544,10 +544,6 @@ CONFIG_CRYPTO_ECDH=m
- CONFIG_CRYPTO_ECRDSA=m
- CONFIG_CRYPTO_CHACHA20POLY1305=m
- CONFIG_CRYPTO_AEGIS128=m
--CONFIG_CRYPTO_AEGIS128L=m
--CONFIG_CRYPTO_AEGIS256=m
--CONFIG_CRYPTO_MORUS640=m
--CONFIG_CRYPTO_MORUS1280=m
- CONFIG_CRYPTO_CFB=m
- CONFIG_CRYPTO_CTS=m
- CONFIG_CRYPTO_LRW=m
-diff --git a/arch/m68k/configs/multi_defconfig b/arch/m68k/configs/multi_defconfig
-index b838dd820348ede0..45654650f50a32fa 100644
---- a/arch/m68k/configs/multi_defconfig
-+++ b/arch/m68k/configs/multi_defconfig
-@@ -386,6 +386,7 @@ CONFIG_DM_SNAPSHOT=m
- CONFIG_DM_THIN_PROVISIONING=m
- CONFIG_DM_WRITECACHE=m
- CONFIG_DM_ERA=m
-+CONFIG_DM_CLONE=m
- CONFIG_DM_MIRROR=m
- CONFIG_DM_RAID=m
- CONFIG_DM_ZERO=m
-@@ -495,8 +496,6 @@ CONFIG_FB_FM2=y
- CONFIG_FB_ATARI=y
- CONFIG_FB_VALKYRIE=y
- CONFIG_FB_MAC=y
--# CONFIG_LCD_CLASS_DEVICE is not set
--# CONFIG_BACKLIGHT_CLASS_DEVICE is not set
- CONFIG_FRAMEBUFFER_CONSOLE=y
- CONFIG_LOGO=y
- CONFIG_SOUND=m
-@@ -556,6 +555,7 @@ CONFIG_QNX4FS_FS=m
- CONFIG_QNX6FS_FS=m
- CONFIG_SYSV_FS=m
- CONFIG_UFS_FS=m
-+CONFIG_EROFS_FS=m
- CONFIG_NFS_FS=y
- CONFIG_NFS_V4=m
- CONFIG_NFS_SWAP=y
-@@ -626,10 +626,6 @@ CONFIG_CRYPTO_ECDH=m
- CONFIG_CRYPTO_ECRDSA=m
- CONFIG_CRYPTO_CHACHA20POLY1305=m
- CONFIG_CRYPTO_AEGIS128=m
--CONFIG_CRYPTO_AEGIS128L=m
--CONFIG_CRYPTO_AEGIS256=m
--CONFIG_CRYPTO_MORUS640=m
--CONFIG_CRYPTO_MORUS1280=m
- CONFIG_CRYPTO_CFB=m
- CONFIG_CRYPTO_CTS=m
- CONFIG_CRYPTO_LRW=m
-diff --git a/arch/m68k/configs/mvme147_defconfig b/arch/m68k/configs/mvme147_defconfig
-index 3f8dd61559cf06b4..7800d3a8d46e3e59 100644
---- a/arch/m68k/configs/mvme147_defconfig
-+++ b/arch/m68k/configs/mvme147_defconfig
-@@ -331,6 +331,7 @@ CONFIG_DM_SNAPSHOT=m
- CONFIG_DM_THIN_PROVISIONING=m
- CONFIG_DM_WRITECACHE=m
- CONFIG_DM_ERA=m
-+CONFIG_DM_CLONE=m
- CONFIG_DM_MIRROR=m
- CONFIG_DM_RAID=m
- CONFIG_DM_ZERO=m
-@@ -389,8 +390,6 @@ CONFIG_NTP_PPS=y
- CONFIG_PPS_CLIENT_LDISC=m
- CONFIG_PTP_1588_CLOCK=m
- # CONFIG_HWMON is not set
--# CONFIG_LCD_CLASS_DEVICE is not set
--# CONFIG_BACKLIGHT_CLASS_DEVICE is not set
- CONFIG_HID=m
- CONFIG_HIDRAW=y
- CONFIG_UHID=m
-@@ -442,6 +441,7 @@ CONFIG_QNX4FS_FS=m
- CONFIG_QNX6FS_FS=m
- CONFIG_SYSV_FS=m
- CONFIG_UFS_FS=m
-+CONFIG_EROFS_FS=m
- CONFIG_NFS_FS=y
- CONFIG_NFS_V4=m
- CONFIG_NFS_SWAP=y
-@@ -512,10 +512,6 @@ CONFIG_CRYPTO_ECDH=m
- CONFIG_CRYPTO_ECRDSA=m
- CONFIG_CRYPTO_CHACHA20POLY1305=m
- CONFIG_CRYPTO_AEGIS128=m
--CONFIG_CRYPTO_AEGIS128L=m
--CONFIG_CRYPTO_AEGIS256=m
--CONFIG_CRYPTO_MORUS640=m
--CONFIG_CRYPTO_MORUS1280=m
- CONFIG_CRYPTO_CFB=m
- CONFIG_CRYPTO_CTS=m
- CONFIG_CRYPTO_LRW=m
-diff --git a/arch/m68k/configs/mvme16x_defconfig b/arch/m68k/configs/mvme16x_defconfig
-index ae3b2d4f636c7562..c32dc2d2058d32bf 100644
---- a/arch/m68k/configs/mvme16x_defconfig
-+++ b/arch/m68k/configs/mvme16x_defconfig
-@@ -332,6 +332,7 @@ CONFIG_DM_SNAPSHOT=m
- CONFIG_DM_THIN_PROVISIONING=m
- CONFIG_DM_WRITECACHE=m
- CONFIG_DM_ERA=m
-+CONFIG_DM_CLONE=m
- CONFIG_DM_MIRROR=m
- CONFIG_DM_RAID=m
- CONFIG_DM_ZERO=m
-@@ -390,8 +391,6 @@ CONFIG_NTP_PPS=y
- CONFIG_PPS_CLIENT_LDISC=m
- CONFIG_PTP_1588_CLOCK=m
- # CONFIG_HWMON is not set
--# CONFIG_LCD_CLASS_DEVICE is not set
--# CONFIG_BACKLIGHT_CLASS_DEVICE is not set
- CONFIG_HID=m
- CONFIG_HIDRAW=y
- CONFIG_UHID=m
-@@ -443,6 +442,7 @@ CONFIG_QNX4FS_FS=m
- CONFIG_QNX6FS_FS=m
- CONFIG_SYSV_FS=m
- CONFIG_UFS_FS=m
-+CONFIG_EROFS_FS=m
- CONFIG_NFS_FS=y
- CONFIG_NFS_V4=m
- CONFIG_NFS_SWAP=y
-@@ -513,10 +513,6 @@ CONFIG_CRYPTO_ECDH=m
- CONFIG_CRYPTO_ECRDSA=m
- CONFIG_CRYPTO_CHACHA20POLY1305=m
- CONFIG_CRYPTO_AEGIS128=m
--CONFIG_CRYPTO_AEGIS128L=m
--CONFIG_CRYPTO_AEGIS256=m
--CONFIG_CRYPTO_MORUS640=m
--CONFIG_CRYPTO_MORUS1280=m
- CONFIG_CRYPTO_CFB=m
- CONFIG_CRYPTO_CTS=m
- CONFIG_CRYPTO_LRW=m
-diff --git a/arch/m68k/configs/q40_defconfig b/arch/m68k/configs/q40_defconfig
-index cd61ef14b582812f..bf0a65ce57e0606d 100644
---- a/arch/m68k/configs/q40_defconfig
-+++ b/arch/m68k/configs/q40_defconfig
-@@ -339,6 +339,7 @@ CONFIG_DM_SNAPSHOT=m
- CONFIG_DM_THIN_PROVISIONING=m
- CONFIG_DM_WRITECACHE=m
- CONFIG_DM_ERA=m
-+CONFIG_DM_CLONE=m
- CONFIG_DM_MIRROR=m
- CONFIG_DM_RAID=m
- CONFIG_DM_ZERO=m
-@@ -404,8 +405,6 @@ CONFIG_PPS_CLIENT_PARPORT=m
- CONFIG_PTP_1588_CLOCK=m
- # CONFIG_HWMON is not set
- CONFIG_FB=y
--# CONFIG_LCD_CLASS_DEVICE is not set
--# CONFIG_BACKLIGHT_CLASS_DEVICE is not set
- CONFIG_FRAMEBUFFER_CONSOLE=y
- CONFIG_LOGO=y
- CONFIG_SOUND=m
-@@ -461,6 +460,7 @@ CONFIG_QNX4FS_FS=m
- CONFIG_QNX6FS_FS=m
- CONFIG_SYSV_FS=m
- CONFIG_UFS_FS=m
-+CONFIG_EROFS_FS=m
- CONFIG_NFS_FS=y
- CONFIG_NFS_V4=m
- CONFIG_NFS_SWAP=y
-@@ -531,10 +531,6 @@ CONFIG_CRYPTO_ECDH=m
- CONFIG_CRYPTO_ECRDSA=m
- CONFIG_CRYPTO_CHACHA20POLY1305=m
- CONFIG_CRYPTO_AEGIS128=m
--CONFIG_CRYPTO_AEGIS128L=m
--CONFIG_CRYPTO_AEGIS256=m
--CONFIG_CRYPTO_MORUS640=m
--CONFIG_CRYPTO_MORUS1280=m
- CONFIG_CRYPTO_CFB=m
- CONFIG_CRYPTO_CTS=m
- CONFIG_CRYPTO_LRW=m
-diff --git a/arch/m68k/configs/sun3_defconfig b/arch/m68k/configs/sun3_defconfig
-index 151f5371cd3d42e1..5f3cfa2926d22960 100644
---- a/arch/m68k/configs/sun3_defconfig
-+++ b/arch/m68k/configs/sun3_defconfig
-@@ -329,6 +329,7 @@ CONFIG_DM_SNAPSHOT=m
- CONFIG_DM_THIN_PROVISIONING=m
- CONFIG_DM_WRITECACHE=m
- CONFIG_DM_ERA=m
-+CONFIG_DM_CLONE=m
- CONFIG_DM_MIRROR=m
- CONFIG_DM_RAID=m
- CONFIG_DM_ZERO=m
-@@ -390,8 +391,6 @@ CONFIG_PPS_CLIENT_LDISC=m
- CONFIG_PTP_1588_CLOCK=m
- # CONFIG_HWMON is not set
- CONFIG_FB=y
--# CONFIG_LCD_CLASS_DEVICE is not set
--# CONFIG_BACKLIGHT_CLASS_DEVICE is not set
- CONFIG_FRAMEBUFFER_CONSOLE=y
- CONFIG_LOGO=y
- CONFIG_HID=m
-@@ -445,6 +444,7 @@ CONFIG_QNX4FS_FS=m
- CONFIG_QNX6FS_FS=m
- CONFIG_SYSV_FS=m
- CONFIG_UFS_FS=m
-+CONFIG_EROFS_FS=m
- CONFIG_NFS_FS=y
- CONFIG_NFS_V4=m
- CONFIG_NFS_SWAP=y
-@@ -515,10 +515,6 @@ CONFIG_CRYPTO_ECDH=m
- CONFIG_CRYPTO_ECRDSA=m
- CONFIG_CRYPTO_CHACHA20POLY1305=m
- CONFIG_CRYPTO_AEGIS128=m
--CONFIG_CRYPTO_AEGIS128L=m
--CONFIG_CRYPTO_AEGIS256=m
--CONFIG_CRYPTO_MORUS640=m
--CONFIG_CRYPTO_MORUS1280=m
- CONFIG_CRYPTO_CFB=m
- CONFIG_CRYPTO_CTS=m
- CONFIG_CRYPTO_LRW=m
-diff --git a/arch/m68k/configs/sun3x_defconfig b/arch/m68k/configs/sun3x_defconfig
-index 1dcb0ee1fe989522..58354d2018d5151e 100644
---- a/arch/m68k/configs/sun3x_defconfig
-+++ b/arch/m68k/configs/sun3x_defconfig
-@@ -329,6 +329,7 @@ CONFIG_DM_SNAPSHOT=m
- CONFIG_DM_THIN_PROVISIONING=m
- CONFIG_DM_WRITECACHE=m
- CONFIG_DM_ERA=m
-+CONFIG_DM_CLONE=m
- CONFIG_DM_MIRROR=m
- CONFIG_DM_RAID=m
- CONFIG_DM_ZERO=m
-@@ -389,8 +390,6 @@ CONFIG_PPS_CLIENT_LDISC=m
- CONFIG_PTP_1588_CLOCK=m
- # CONFIG_HWMON is not set
- CONFIG_FB=y
--# CONFIG_LCD_CLASS_DEVICE is not set
--# CONFIG_BACKLIGHT_CLASS_DEVICE is not set
- CONFIG_FRAMEBUFFER_CONSOLE=y
- CONFIG_LOGO=y
- CONFIG_HID=m
-@@ -444,6 +443,7 @@ CONFIG_QNX4FS_FS=m
- CONFIG_QNX6FS_FS=m
- CONFIG_SYSV_FS=m
- CONFIG_UFS_FS=m
-+CONFIG_EROFS_FS=m
- CONFIG_NFS_FS=y
- CONFIG_NFS_V4=m
- CONFIG_NFS_SWAP=y
-@@ -514,10 +514,6 @@ CONFIG_CRYPTO_ECDH=m
- CONFIG_CRYPTO_ECRDSA=m
- CONFIG_CRYPTO_CHACHA20POLY1305=m
- CONFIG_CRYPTO_AEGIS128=m
--CONFIG_CRYPTO_AEGIS128L=m
--CONFIG_CRYPTO_AEGIS256=m
--CONFIG_CRYPTO_MORUS640=m
--CONFIG_CRYPTO_MORUS1280=m
- CONFIG_CRYPTO_CFB=m
- CONFIG_CRYPTO_CTS=m
- CONFIG_CRYPTO_LRW=m
+Changes for previous changes.
+Fix some typo.
+Updated few patches as per Martin's suggestion.
+
+Best Regards
+-Anand
+
+Anand Moon (3):
+  arm64: dts: meson: odroid-c2: Add missing regulator linked to P5V0
+    regulator
+  arm64: dts: meson: odroid-c2: Add missing regulator linked to
+    VDDIO_AO3V3 regulator
+  arm64: dts: meson: odroid-c2: Add missing regulator linked to HDMI
+    supply
+
+ .../boot/dts/amlogic/meson-gxbb-odroidc2.dts  | 53 +++++++++++++++++--
+ 1 file changed, 50 insertions(+), 3 deletions(-)
+
 -- 
-2.17.1
+2.23.0
 
