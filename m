@@ -2,169 +2,125 @@ Return-Path: <SRS0=YRFP=X2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B3E1ECE587
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 19:35:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 662E2C352AA
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 19:37:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6C2A521783
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 19:35:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3D24C21783
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 19:37:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CFs6hF/H"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Z18GCOhV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727117AbfJATfH (ORCPT
+        id S1726804AbfJAThE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Oct 2019 15:35:07 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:34272 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726043AbfJATfH (ORCPT
+        Tue, 1 Oct 2019 15:37:04 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:44315 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726229AbfJAThE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Oct 2019 15:35:07 -0400
-Received: by mail-wm1-f66.google.com with SMTP id y135so3269859wmc.1;
-        Tue, 01 Oct 2019 12:35:04 -0700 (PDT)
+        Tue, 1 Oct 2019 15:37:04 -0400
+Received: by mail-pf1-f194.google.com with SMTP id q21so8795802pfn.11
+        for <linux-kernel@vger.kernel.org>; Tue, 01 Oct 2019 12:37:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:openpgp:autocrypt:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=3cgxDW8us0+5JVWW7DTO4bnkHpCqO+NE67H0yqTE6g8=;
-        b=CFs6hF/HesZmShWWokCP0TaSRQA7w0rT+nJvA1Y0mc5M6Bza1PYF3t/ta2r7Xnx22t
-         dWUgDIT8mdrPwX67AM2h/lgpwggNwc9rVQJCn+2bTbCHKS9sIXCdfMWWebOiC+8BT1nv
-         zcex448PKU0tNvfRvdtbt6zDuw00nfOieI94WF8TsICyh11anHZQAhyzgrDMuhH130XU
-         6XkdlG8XeD/f+7qOuYx9v7ekldrs9xYtDOkF8x/rJa837mgJGOLrqAQMSjEVYe8zP9FG
-         cj0DAgfMNPG0P/gbLmfYM1PJDECkGJZ51acXbXIdzIkjLwpZ2vbeFkJ4ILqZJ4Lsi9yI
-         CXdA==
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=C7sOqQNedkcx0oCS8qMJJDlwDpOYg3wAh4V6d+6Y9us=;
+        b=Z18GCOhVkcmnAppiVtHPtC432SZzbQ0CPVKlFMwn4NlnV8o8ElXiCmyMbopSXkwISq
+         buEszM7lUB7HW+11kOfbMcZpfHkAf+93d+cY7hOguSnaWBexkIAAyoQtU7V9crqvZO/K
+         Js8OCGwxgJ7wYZHApTtbC+H/sCtsZfMViUWUc=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=3cgxDW8us0+5JVWW7DTO4bnkHpCqO+NE67H0yqTE6g8=;
-        b=jvKRvKLJXhmF7EfgBe87VLInjPnnVxWOg0xkhqhzlB9XtWc33s3uSE9tbwmwVEfsuf
-         l1QGwcnBR+ecfJTBGVuFfXu1kr0L0I0OgvDOrpffGUnMlSE5G/Sib2AHiZDySipTDuc4
-         bYOZ/QJv8QtYlCh+o8FPGS2zIG4GDTdngPPVoimKyS9Lw0KiJX72RXIFsAbHoUkSN5mz
-         G68o7SZ/DqpUaFuabxUtsS421jWGfV/ubTntuEt8M7/hlx7o1LoQKFq5GiH1fe28daHB
-         lq+5NRI4Mr1HKWwATxSoVfNnYQtGBh8olZe6A58cJt3GlXeMqg4vffUDSjutkxqpSA1z
-         lChQ==
-X-Gm-Message-State: APjAAAXfVKJhFmJB0kDb+Y3uPKsKwY6BfJAGoGKRA/HBI2RHVGMurdu8
-        gxuH6FLjQT3i4w3ECpecKpg=
-X-Google-Smtp-Source: APXvYqzIwmHFDZYFkUdxkEPstZSswkmzmdwNVyG9KzQULvqVS3WotitBpDdKR7eGTZmQwbSm3Zw5lA==
-X-Received: by 2002:a1c:d183:: with SMTP id i125mr5321706wmg.1.1569958504190;
-        Tue, 01 Oct 2019 12:35:04 -0700 (PDT)
-Received: from [192.168.1.19] (bgt101.neoplus.adsl.tpnet.pl. [83.28.83.101])
-        by smtp.gmail.com with ESMTPSA id x2sm23807617wrn.81.2019.10.01.12.35.02
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 01 Oct 2019 12:35:03 -0700 (PDT)
-Subject: Re: [PATCH v3 1/1] leds: remove PAGE_SIZE limit of
- /sys/class/leds/<led>/trigger
-To:     Akinobu Mita <akinobu.mita@gmail.com>, linux-leds@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>
-References: <1569766729-8433-1-git-send-email-akinobu.mita@gmail.com>
- <1569766729-8433-2-git-send-email-akinobu.mita@gmail.com>
-From:   Jacek Anaszewski <jacek.anaszewski@gmail.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=jacek.anaszewski@gmail.com; prefer-encrypt=mutual; keydata=
- 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
-Message-ID: <85dad71e-bd8d-99a4-c955-7b51e8a47141@gmail.com>
-Date:   Tue, 1 Oct 2019 21:35:01 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=C7sOqQNedkcx0oCS8qMJJDlwDpOYg3wAh4V6d+6Y9us=;
+        b=VXIHbt8y4R3r44I0UUG78fDvEtsxI61iPdcETrW49hCy/RINQ0UR69qN6wTl0FwmLp
+         u7MC7NSheuwHNPgPx0rBFMjvJUnrJWC6NPDVHi3MfAmjY5Artbzw/32oSRVFZ/bDSAe1
+         8OXIE0K5NJfFgzkoneosWyCpCQu4yN9Y4BV8Fu9y2Gxgl/QpIhIjDthOPO33wcj3OF34
+         FkDbQ8pI+B55goy5VEagNuALviwaE/HenQXpfrZWD43fS9tLkRigC98XaBo9aUVYTiWs
+         Xf13nu0kYMSL9itZYyTkTuqfuo0aCWu5s/Cp0rdGH40+38kLt8XHALr/w3p6m3Esq6Sm
+         /FFQ==
+X-Gm-Message-State: APjAAAUijDFQgTwXb7TgHoCft+zPN0jATpLAcTpoI69ON5B2ZLtmSUAq
+        zXkdivSwMPqXyBcCC6iw/ylUjg==
+X-Google-Smtp-Source: APXvYqzgc+nnPoSiGwwK5dMvZe3vh+x52mbB8Hmzp3uWe6KiEKdzdVkFq5+0RZu54v9/oU/j3jycgg==
+X-Received: by 2002:a17:90a:c8a:: with SMTP id v10mr7357813pja.4.1569958623489;
+        Tue, 01 Oct 2019 12:37:03 -0700 (PDT)
+Received: from localhost ([2620:15c:202:1:4fff:7a6b:a335:8fde])
+        by smtp.gmail.com with ESMTPSA id w134sm16471589pfd.4.2019.10.01.12.37.02
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 01 Oct 2019 12:37:02 -0700 (PDT)
+Date:   Tue, 1 Oct 2019 12:37:01 -0700
+From:   Matthias Kaehlcke <mka@chromium.org>
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     "Rafael J . Wysocki" <rjw@rjwysocki.net>,
+        Kevin Hilman <khilman@kernel.org>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Len Brown <len.brown@intel.com>, Pavel Machek <pavel@ucw.cz>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Douglas Anderson <dianders@chromium.org>,
+        linux-pm@vger.kernel.org, Amit Kucheria <amit.kucheria@linaro.org>,
+        linux-kernel@vger.kernel.org,
+        Ravi Chandra Sadineni <ravisadineni@chromium.org>
+Subject: Re: [PATCH v1] PM / Domains: Add tracepoints
+Message-ID: <20191001193701.GD87296@google.com>
+References: <20190926150406.v1.1.I07a769ad7b00376777c9815fb169322cde7b9171@changeid>
+ <20190927044239.589e7c4c@oasis.local.home>
+ <20191001163542.GB87296@google.com>
+ <20191001130343.4480afe3@gandalf.local.home>
+ <20191001174235.GC87296@google.com>
+ <20191001140846.65d7866c@gandalf.local.home>
 MIME-Version: 1.0
-In-Reply-To: <1569766729-8433-2-git-send-email-akinobu.mita@gmail.com>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+In-Reply-To: <20191001140846.65d7866c@gandalf.local.home>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Akinobu,
-
-Thank you for your work on this patch.
-
-On 9/29/19 4:18 PM, Akinobu Mita wrote:
-> Reading /sys/class/leds/<led>/trigger returns all available LED triggers.
-> However, the size of this file is limited to PAGE_SIZE because of the
-> limitation for sysfs attribute.
+On Tue, Oct 01, 2019 at 02:08:46PM -0400, Steven Rostedt wrote:
+> On Tue, 1 Oct 2019 10:42:35 -0700
+> Matthias Kaehlcke <mka@chromium.org> wrote:
 > 
-> Enabling LED CPU trigger on systems with thousands of CPUs easily hits
-> PAGE_SIZE limit, and makes it impossible to see all available LED triggers
-> and which trigger is currently activated.
+> > On Tue, Oct 01, 2019 at 01:03:43PM -0400, Steven Rostedt wrote:
+> > > On Tue, 1 Oct 2019 09:35:42 -0700
+> > > Matthias Kaehlcke <mka@chromium.org> wrote:
+> > >   
+> > > > How about this instead:
+> > > > 
+> > > >   Add tracepoints for genpd_power_on, genpd_power_off and
+> > > >   genpd_set_performance_state. The tracepoints can help with
+> > > >   understanding power domain behavior of a given device, which
+> > > >   may be particularly interesting for battery powered devices
+> > > >   and suspend/resume.  
+> > > 
+> > > Do you have a use case example to present?  
+> > 
+> > TBH I'm not looking into a specific use case right now. While
+> > peeking around in /sys/kernel/debug/tracing/events to learn more
+> > about existing tracepoints that might be relevant for my work
+> > I noticed the absence of genpd ones and it seemed a good idea to
+> > add them preemptively. Conceptually they seem similar to the
+> > existing regulator_enable/disable and cpu_idle tracepoints.
+> > 
+> > As an abstract use case I could see power analysis on battery
+> > powered devices during suspend. genpd_power_on/off allow to see
+> > which power domains remain on during suspend, and might give
+> > insights for possible power saving options. Examples could be that
+> > a power domain stays unexpectedly on due to a misconfiguration, or
+> > two power domains remain on when it could be only one if you just
+> > moved that one pin/port over to the other domain in the next
+> > hardware revision.
 > 
-> We work around it here by converting /sys/class/leds/<led>/trigger to
-> binary attribute, which is not limited by length. This is _not_ good
-> design, do not copy it.
-> 
-> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> Cc: "Rafael J. Wysocki" <rafael@kernel.org>
-> Cc: Jacek Anaszewski <jacek.anaszewski@gmail.com>
-> Cc: Pavel Machek <pavel@ucw.cz>
-> Cc: Dan Murphy <dmurphy@ti.com>
-> Signed-off-by: Akinobu Mita <akinobu.mita@gmail.com>
+> If the power management maintainers have no issues with adding these,
+> then neither do I ;-)  It would be them who would pull them in anyway.
 
-Applied to the for-next branch of linux-leds.git
-
--- 
-Best regards,
-Jacek Anaszewski
+Ok, I'll send a new version with the changes you suggested and some more
+info in the commit message, unless PM maintainers raise concerns before
+that.
