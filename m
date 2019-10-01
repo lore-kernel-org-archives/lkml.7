@@ -2,162 +2,196 @@ Return-Path: <SRS0=YRFP=X2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CF9B0FA373F
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 08:04:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 35615FA373F
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 08:05:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AC79D21855
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 08:04:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1616121872
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 08:05:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729189AbfJAIEa (ORCPT
+        id S1730869AbfJAIFu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Oct 2019 04:04:30 -0400
-Received: from relay.sw.ru ([185.231.240.75]:37952 "EHLO relay.sw.ru"
+        Tue, 1 Oct 2019 04:05:50 -0400
+Received: from foss.arm.com ([217.140.110.172]:43288 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726148AbfJAIE3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Oct 2019 04:04:29 -0400
-Received: from [172.16.24.163] (helo=snorch.sw.ru)
-        by relay.sw.ru with esmtp (Exim 4.92.2)
-        (envelope-from <ptikhomirov@virtuozzo.com>)
-        id 1iFD8l-0001vD-Nl; Tue, 01 Oct 2019 11:04:11 +0300
-From:   Pavel Tikhomirov <ptikhomirov@virtuozzo.com>
-To:     "J . Bruce Fields" <bfields@fieldses.org>,
-        Trond Myklebust <trond.myklebust@hammerspace.com>,
-        Anna Schumaker <anna.schumaker@netapp.com>
-Cc:     Chuck Lever <chuck.lever@oracle.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        linux-nfs@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Konstantin Khorenko <khorenko@virtuozzo.com>,
-        Pavel Tikhomirov <ptikhomirov@virtuozzo.com>,
-        Vasily Averin <vvs@virtuozzo.com>
-Subject: [PATCH] sunrpc: fix crash when cache_head become valid before update
-Date:   Tue,  1 Oct 2019 11:03:59 +0300
-Message-Id: <20191001080359.6034-1-ptikhomirov@virtuozzo.com>
-X-Mailer: git-send-email 2.21.0
+        id S1726703AbfJAIFu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Oct 2019 04:05:50 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0D768337;
+        Tue,  1 Oct 2019 01:05:49 -0700 (PDT)
+Received: from localhost (unknown [10.37.6.20])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 78E413F739;
+        Tue,  1 Oct 2019 01:05:48 -0700 (PDT)
+Date:   Tue, 1 Oct 2019 09:05:46 +0100
+From:   Andrew Murray <andrew.murray@arm.com>
+To:     Remi Pommarel <repk@triplefau.lt>
+Cc:     Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Bjorn Helgaas <helgaas@kernel.org>,
+        Ellie Reeves <ellierevves@gmail.com>,
+        linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3] PCI: aardvark: Use LTSSM state to build link training
+ flag
+Message-ID: <20191001080546.GI42880@e119886-lin.cambridge.arm.com>
+References: <20190522213351.21366-3-repk@triplefau.lt>
+ <20190930154017.GF42880@e119886-lin.cambridge.arm.com>
+ <20190930165230.GA12568@voidbox>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190930165230.GA12568@voidbox>
+User-Agent: Mutt/1.10.1+81 (426a6c1) (2018-08-26)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-I was investigating a crash in our Virtuozzo7 kernel which happened in
-in svcauth_unix_set_client. I found out that we access m_client field
-in ip_map structure, which was received from sunrpc_cache_lookup (we
-have a bit older kernel, now the code is in sunrpc_cache_add_entry), and
-these field looks uninitialized (m_client == 0x74 don't look like a
-pointer) but in the cache_head in flags we see 0x1 which is CACHE_VALID.
+On Mon, Sep 30, 2019 at 06:52:30PM +0200, Remi Pommarel wrote:
+> On Mon, Sep 30, 2019 at 04:40:18PM +0100, Andrew Murray wrote:
+> > On Wed, May 22, 2019 at 11:33:51PM +0200, Remi Pommarel wrote:
+> > > Aardvark's PCI_EXP_LNKSTA_LT flag in its link status register is not
+> > > implemented and does not reflect the actual link training state (the
+> > > flag is always set to 0). In order to support link re-training feature
+> > > this flag has to be emulated. The Link Training and Status State
+> > > Machine (LTSSM) flag in Aardvark LMI config register could be used as
+> > > a link training indicator. Indeed if the LTSSM is in L0 or upper state
+> > > then link training has completed (see [1]).
+> > > 
+> > > Unfortunately because after asking a link retraining it takes a while
+> > > for the LTSSM state to become less than 0x10 (due to L0s to recovery
+> > > state transition delays), LTSSM can still be in L0 while link training
+> > > has not finished yet. So this waits for link to be in recovery or lesser
+> > > state before returning after asking for a link retrain.
+> > > 
+> > > [1] "PCI Express Base Specification", REV. 4.0
+> > >     PCI Express, February 19 2014, Table 4-14
+> > > 
+> > > Signed-off-by: Remi Pommarel <repk@triplefau.lt>
+> > > ---
+> > > Changes since v1:
+> > >   - Rename retraining flag field
+> > >   - Fix DEVCTL register writing
+> > > 
+> > > Changes since v2:
+> > >   - Rewrite patch logic so it is more legible
+> > > 
+> > > Please note that I will unlikely be able to answer any comments from May
+> > > 24th to June 10th.
+> > > ---
+> > >  drivers/pci/controller/pci-aardvark.c | 29 ++++++++++++++++++++++++++-
+> > >  1 file changed, 28 insertions(+), 1 deletion(-)
+> > > 
+> > > diff --git a/drivers/pci/controller/pci-aardvark.c b/drivers/pci/controller/pci-aardvark.c
+> > > index 134e0306ff00..8803083b2174 100644
+> > > --- a/drivers/pci/controller/pci-aardvark.c
+> > > +++ b/drivers/pci/controller/pci-aardvark.c
+> > > @@ -180,6 +180,8 @@
+> > >  #define LINK_WAIT_MAX_RETRIES		10
+> > >  #define LINK_WAIT_USLEEP_MIN		90000
+> > >  #define LINK_WAIT_USLEEP_MAX		100000
+> > > +#define RETRAIN_WAIT_MAX_RETRIES	10
+> > > +#define RETRAIN_WAIT_USLEEP_US		2000
+> > >  
+> > >  #define MSI_IRQ_NUM			32
+> > >  
+> > > @@ -239,6 +241,17 @@ static int advk_pcie_wait_for_link(struct advk_pcie *pcie)
+> > >  	return -ETIMEDOUT;
+> > >  }
+> > >  
+> > > +static void advk_pcie_wait_for_retrain(struct advk_pcie *pcie)
+> > > +{
+> > > +	size_t retries;
+> > > +
+> > > +	for (retries = 0; retries < RETRAIN_WAIT_MAX_RETRIES; ++retries) {
+> > > +		if (!advk_pcie_link_up(pcie))
+> > > +			break;
+> > > +		udelay(RETRAIN_WAIT_USLEEP_US);
+> > > +	}
+> > > +}
+> > > +
+> > >  static void advk_pcie_setup_hw(struct advk_pcie *pcie)
+> > >  {
+> > >  	u32 reg;
+> > > @@ -426,11 +439,20 @@ advk_pci_bridge_emul_pcie_conf_read(struct pci_bridge_emul *bridge,
+> > >  		return PCI_BRIDGE_EMUL_HANDLED;
+> > >  	}
+> > >  
+> > > +	case PCI_EXP_LNKCTL: {
+> > > +		/* u32 contains both PCI_EXP_LNKCTL and PCI_EXP_LNKSTA */
+> > > +		u32 val = advk_readl(pcie, PCIE_CORE_PCIEXP_CAP + reg) &
+> > > +			~(PCI_EXP_LNKSTA_LT << 16);
+> > 
+> > The commit message says "the flag is always set to 0" - therefore I guess
+> > you don't *need* to mask out the LT bit here? I assume this is just
+> > belt-and-braces but thought I'd check incase I've misunderstood or if your
+> > commit message is inaccurate.
+> > 
+> > In any case masking out the bit (or adding a comment) makes this code more
+> > readable as the reader doesn't need to know what the hardware does with this
+> > bit.
+> 
+> Actually vendor eventually responded that the bit was reserved, but
+> during my tests it remains to 0.
+> 
+> So yes I am masking this out mainly for belt-and-braces and legibility.
 
-It looks like the problem appeared from our previous fix to sunrpc (1):
-commit 4ecd55ea0742 ("sunrpc: fix cache_head leak due to queued
-request")
+Thanks for the clarification.
 
-And we've also found a patch already fixing our patch (2):
-commit d58431eacb22 ("sunrpc: don't mark uninitialised items as VALID.")
+> 
+> > > +		if (!advk_pcie_link_up(pcie))
+> > > +			val |= (PCI_EXP_LNKSTA_LT << 16);
+> > > +		*value = val;
+> > > +		return PCI_BRIDGE_EMUL_HANDLED;
+> > > +	}
+> > > +
+> > >  	case PCI_CAP_LIST_ID:
+> > >  	case PCI_EXP_DEVCAP:
+> > >  	case PCI_EXP_DEVCTL:
+> > >  	case PCI_EXP_LNKCAP:
+> > > -	case PCI_EXP_LNKCTL:
+> > >  		*value = advk_readl(pcie, PCIE_CORE_PCIEXP_CAP + reg);
+> > >  		return PCI_BRIDGE_EMUL_HANDLED;
+> > >  	default:
+> > > @@ -447,8 +469,13 @@ advk_pci_bridge_emul_pcie_conf_write(struct pci_bridge_emul *bridge,
+> > >  
+> > >  	switch (reg) {
+> > >  	case PCI_EXP_DEVCTL:
+> > > +		advk_writel(pcie, new, PCIE_CORE_PCIEXP_CAP + reg);
+> > > +		break;
+> > 
+> > Why is this here?
+> > 
+> 
+> Before PCI_EXP_DEVCTL and PCI_EXP_LNKCTL were doing the same thing, but
+> as now PCI_EXP_LNKCTL does extra things (i.e. wait for link to
+> successfully retrain), they do have different behaviours.
+> 
+> So this is here so PCI_EXP_DEVCTL keeps its old behaviour and do not
+> wait for link retrain in case an unrelated (PCI_EXP_LNKCTL_RL) bit is
+> set.
 
-Though the crash is eliminated, I think the core of the problem is not
-completely fixed:
+Oh yes, of course!
 
-Neil in the patch (2) makes cache_head CACHE_NEGATIVE, before
-cache_fresh_locked which was added in (1) to fix crash. These way
-cache_is_valid won't say the cache is valid anymore and in
-svcauth_unix_set_client the function cache_check will return error
-instead of 0, and we don't count entry as initialized.
+Thanks and:
 
-But it looks like we need to remove cache_fresh_locked completely in
-sunrpc_cache_lookup:
+Reviewed-by: Andrew Murray <andrew.murray@arm.com>
 
-In (1) we've only wanted to make cache_fresh_unlocked->cache_dequeue so
-that cache_requests with no readers also release corresponding
-cache_head, to fix their leak.  We with Vasily were not sure if
-cache_fresh_locked and cache_fresh_unlocked should be used in pair or
-not, so we've guessed to use them in pair.
-
-Now we see that we don't want the CACHE_VALID bit set here by
-cache_fresh_locked, as "valid" means "initialized" and there is no
-initialization in sunrpc_cache_add_entry. Both expiry_time and
-last_refresh are not used in cache_fresh_unlocked code-path and also not
-required for the initial fix.
-
-So to conclude cache_fresh_locked was called by mistake, and we can just
-safely remove it instead of crutching it with CACHE_NEGATIVE. It looks
-ideologically better for me. Hope I don't miss something here.
-
-Here is our crash backtrace:
-[13108726.326291] BUG: unable to handle kernel NULL pointer dereference at 0000000000000074
-[13108726.326365] IP: [<ffffffffc01f79eb>] svcauth_unix_set_client+0x2ab/0x520 [sunrpc]
-[13108726.326448] PGD 0
-[13108726.326468] Oops: 0002 [#1] SMP
-[13108726.326497] Modules linked in: nbd isofs xfs loop kpatch_cumulative_81_0_r1(O) xt_physdev nfnetlink_queue bluetooth rfkill ip6table_nat nf_nat_ipv6 ip_vs_wrr ip_vs_wlc ip_vs_sh nf_conntrack_netlink ip_vs_sed ip_vs_pe_sip nf_conntrack_sip ip_vs_nq ip_vs_lc ip_vs_lblcr ip_vs_lblc ip_vs_ftp ip_vs_dh nf_nat_ftp nf_conntrack_ftp iptable_raw xt_recent nf_log_ipv6 xt_hl ip6t_rt nf_log_ipv4 nf_log_common xt_LOG xt_limit xt_TCPMSS xt_tcpmss vxlan ip6_udp_tunnel udp_tunnel xt_statistic xt_NFLOG nfnetlink_log dummy xt_mark xt_REDIRECT nf_nat_redirect raw_diag udp_diag tcp_diag inet_diag netlink_diag af_packet_diag unix_diag rpcsec_gss_krb5 xt_addrtype ip6t_rpfilter ipt_REJECT nf_reject_ipv4 ip6t_REJECT nf_reject_ipv6 ebtable_nat ebtable_broute nf_conntrack_ipv6 nf_defrag_ipv6 ip6table_mangle ip6table_raw nfsv4
-[13108726.327173]  dns_resolver cls_u32 binfmt_misc arptable_filter arp_tables ip6table_filter ip6_tables devlink fuse_kio_pcs ipt_MASQUERADE nf_nat_masquerade_ipv4 xt_nat iptable_nat nf_nat_ipv4 xt_comment nf_conntrack_ipv4 nf_defrag_ipv4 xt_wdog_tmo xt_multiport bonding xt_set xt_conntrack iptable_filter iptable_mangle kpatch(O) ebtable_filter ebt_among ebtables ip_set_hash_ip ip_set nfnetlink vfat fat skx_edac intel_powerclamp coretemp intel_rapl iosf_mbi kvm_intel kvm irqbypass fuse pcspkr ses enclosure joydev sg mei_me hpwdt hpilo lpc_ich mei ipmi_si shpchp ipmi_devintf ipmi_msghandler xt_ipvs acpi_power_meter ip_vs_rr nfsv3 nfsd auth_rpcgss nfs_acl nfs lockd grace fscache nf_nat cls_fw sch_htb sch_cbq sch_sfq ip_vs em_u32 nf_conntrack tun br_netfilter veth overlay ip6_vzprivnet ip6_vznetstat ip_vznetstat
-[13108726.327817]  ip_vzprivnet vziolimit vzevent vzlist vzstat vznetstat vznetdev vzmon vzdev bridge pio_kaio pio_nfs pio_direct pfmt_raw pfmt_ploop1 ploop ip_tables ext4 mbcache jbd2 sd_mod crc_t10dif crct10dif_generic mgag200 i2c_algo_bit drm_kms_helper scsi_transport_iscsi 8021q syscopyarea sysfillrect garp sysimgblt fb_sys_fops mrp stp ttm llc bnx2x crct10dif_pclmul crct10dif_common crc32_pclmul crc32c_intel drm dm_multipath ghash_clmulni_intel uas aesni_intel lrw gf128mul glue_helper ablk_helper cryptd tg3 smartpqi scsi_transport_sas mdio libcrc32c i2c_core usb_storage ptp pps_core wmi sunrpc dm_mirror dm_region_hash dm_log dm_mod [last unloaded: kpatch_cumulative_82_0_r1]
-[13108726.328403] CPU: 35 PID: 63742 Comm: nfsd ve: 51332 Kdump: loaded Tainted: G        W  O   ------------   3.10.0-862.20.2.vz7.73.29 #1 73.29
-[13108726.328491] Hardware name: HPE ProLiant DL360 Gen10/ProLiant DL360 Gen10, BIOS U32 10/02/2018
-[13108726.328554] task: ffffa0a6a41b1160 ti: ffffa0c2a74bc000 task.ti: ffffa0c2a74bc000
-[13108726.328610] RIP: 0010:[<ffffffffc01f79eb>]  [<ffffffffc01f79eb>] svcauth_unix_set_client+0x2ab/0x520 [sunrpc]
-[13108726.328706] RSP: 0018:ffffa0c2a74bfd80  EFLAGS: 00010246
-[13108726.328750] RAX: 0000000000000001 RBX: ffffa0a6183ae000 RCX: 0000000000000000
-[13108726.328811] RDX: 0000000000000074 RSI: 0000000000000286 RDI: ffffa0c2a74bfcf0
-[13108726.328864] RBP: ffffa0c2a74bfe00 R08: ffffa0bab8c22960 R09: 0000000000000001
-[13108726.328916] R10: 0000000000000001 R11: 0000000000000001 R12: ffffa0a32aa7f000
-[13108726.328969] R13: ffffa0a6183afac0 R14: ffffa0c233d88d00 R15: ffffa0c2a74bfdb4
-[13108726.329022] FS:  0000000000000000(0000) GS:ffffa0e17f9c0000(0000) knlGS:0000000000000000
-[13108726.329081] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-[13108726.332311] CR2: 0000000000000074 CR3: 00000026a1b28000 CR4: 00000000007607e0
-[13108726.334606] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-[13108726.336754] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-[13108726.338908] PKRU: 00000000
-[13108726.341047] Call Trace:
-[13108726.343074]  [<ffffffff8a2c78b4>] ? groups_alloc+0x34/0x110
-[13108726.344837]  [<ffffffffc01f5eb4>] svc_set_client+0x24/0x30 [sunrpc]
-[13108726.346631]  [<ffffffffc01f2ac1>] svc_process_common+0x241/0x710 [sunrpc]
-[13108726.348332]  [<ffffffffc01f3093>] svc_process+0x103/0x190 [sunrpc]
-[13108726.350016]  [<ffffffffc07d605f>] nfsd+0xdf/0x150 [nfsd]
-[13108726.351735]  [<ffffffffc07d5f80>] ? nfsd_destroy+0x80/0x80 [nfsd]
-[13108726.353459]  [<ffffffff8a2bf741>] kthread+0xd1/0xe0
-[13108726.355195]  [<ffffffff8a2bf670>] ? create_kthread+0x60/0x60
-[13108726.356896]  [<ffffffff8a9556dd>] ret_from_fork_nospec_begin+0x7/0x21
-[13108726.358577]  [<ffffffff8a2bf670>] ? create_kthread+0x60/0x60
-[13108726.360240] Code: 4c 8b 45 98 0f 8e 2e 01 00 00 83 f8 fe 0f 84 76 fe ff ff 85 c0 0f 85 2b 01 00 00 49 8b 50 40 b8 01 00 00 00 48 89 93 d0 1a 00 00 <f0> 0f c1 02 83 c0 01 83 f8 01 0f 8e 53 02 00 00 49 8b 44 24 38
-[13108726.363769] RIP  [<ffffffffc01f79eb>] svcauth_unix_set_client+0x2ab/0x520 [sunrpc]
-[13108726.365530]  RSP <ffffa0c2a74bfd80>
-[13108726.367179] CR2: 0000000000000074
-
-Fixes: d58431eacb22 ("sunrpc: don't mark uninitialised items as VALID.")
-Signed-off-by: Pavel Tikhomirov <ptikhomirov@virtuozzo.com>
-
----
- net/sunrpc/cache.c | 6 ------
- 1 file changed, 6 deletions(-)
-
-diff --git a/net/sunrpc/cache.c b/net/sunrpc/cache.c
-index a349094f6fb7..f740cb51802a 100644
---- a/net/sunrpc/cache.c
-+++ b/net/sunrpc/cache.c
-@@ -53,9 +53,6 @@ static void cache_init(struct cache_head *h, struct cache_detail *detail)
- 	h->last_refresh = now;
- }
- 
--static inline int cache_is_valid(struct cache_head *h);
--static void cache_fresh_locked(struct cache_head *head, time_t expiry,
--				struct cache_detail *detail);
- static void cache_fresh_unlocked(struct cache_head *head,
- 				struct cache_detail *detail);
- 
-@@ -105,9 +102,6 @@ static struct cache_head *sunrpc_cache_add_entry(struct cache_detail *detail,
- 			if (cache_is_expired(detail, tmp)) {
- 				hlist_del_init_rcu(&tmp->cache_list);
- 				detail->entries --;
--				if (cache_is_valid(tmp) == -EAGAIN)
--					set_bit(CACHE_NEGATIVE, &tmp->flags);
--				cache_fresh_locked(tmp, 0, detail);
- 				freeme = tmp;
- 				break;
- 			}
--- 
-2.21.0
-
+> 
+> -- 
+> Remi
+> 
+> > > +
+> > >  	case PCI_EXP_LNKCTL:
+> > >  		advk_writel(pcie, new, PCIE_CORE_PCIEXP_CAP + reg);
+> > > +		if (new & PCI_EXP_LNKCTL_RL)
+> > > +			advk_pcie_wait_for_retrain(pcie);
+> > >  		break;
+> > >  
+> > >  	case PCI_EXP_RTCTL:
+> > > -- 
+> > > 2.20.1
+> > > 
