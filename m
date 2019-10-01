@@ -2,91 +2,204 @@ Return-Path: <SRS0=YRFP=X2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,UNWANTED_LANGUAGE_BODY autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BA51C352AA
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 22:18:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F39FECE587
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 22:19:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EA9EC21A4A
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 22:18:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569968333;
-	bh=GY7thRGOZ1r2xDbR89w74dCj0DAS+2dYgM86S+SMG8I=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=USy4oe+LVq/sF0oylur/LYpDmmCCRPrezM7oXCDjclyKTWsumBx27paPPFphaDlZ1
-	 299r6U5OccCBgacGBMTLWx+TaswIHC7ACpzvyBXp3UIvuArvkwlIVBSbpx9O6ptzUp
-	 N2JaQBH82TkIMMj2wwiRQFy8hTLk+AWXkH8ToaUw=
+	by mail.kernel.org (Postfix) with ESMTP id 3B3842054F
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 22:19:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lXMslVfz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728775AbfJAWSw (ORCPT
+        id S1728795AbfJAWTU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Oct 2019 18:18:52 -0400
-Received: from mail-io1-f68.google.com ([209.85.166.68]:40067 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728254AbfJAWSw (ORCPT
+        Tue, 1 Oct 2019 18:19:20 -0400
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:41139 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725988AbfJAWTU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Oct 2019 18:18:52 -0400
-Received: by mail-io1-f68.google.com with SMTP id h144so52144939iof.7;
-        Tue, 01 Oct 2019 15:18:51 -0700 (PDT)
+        Tue, 1 Oct 2019 18:19:20 -0400
+Received: by mail-lj1-f194.google.com with SMTP id f5so15054136ljg.8;
+        Tue, 01 Oct 2019 15:19:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=oMnTWIkEFx7hV55d8HRQu4uB51SHbkOs+8qRO4hsJAg=;
+        b=lXMslVfz7D8gI9mo1A6A7CFLlOvvNOzKTULQyZx+3MprJpFQSceMODLbDPEWFctAPt
+         jdav5cHZwKLJ0zq03R9SPpX4DlK3b0AboPx7ScTZ6GQXs1w1gOrzCYpfLIQdJi/POq5e
+         RPpJf0hJGI6Teq8zpjwpLdsgH2Cvw92RksrnhhZl8dF98s29ee0gDiAxdgU6v0kEKgmn
+         E797CFH0clXE/pantveJ8+GX9vEvNdIjgfeDuSGv4H6Y825dnFZN2diZDQw12CnslPWB
+         xRdB8ya9rZ9YIjVvIbPUezcXiUA3JKxm+uguAJvArtPXxqFXyDy20o7YTgZREjAucMVv
+         HRbQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=DfJAIFweW93qpKH43bI88X5hOnNXXwnGiqTtHYDlS8Y=;
-        b=VXvXMIzbhPVowRddSoxOikvIb+NR19AC1rqSxlXgzODltMGyDxfLp6law3vLKtxw5I
-         trgB1ehtviZqnvZOLhZ6AMJQu/lG2iCkEK2r84SWRRh11x6Wf9EHyLNTlUxFIut3gNqc
-         fNgbx106PHDuqqI+0H7Vr31pCyoMACVKzRmCJG55+251BAd8cDxDjOqptkfYeZdmXXeI
-         D1Rfr9ikcqwQinAkc//tsGfGzcAIyKWqejC/8LcxZ3F+dc/N2qospfMEN6N2OU9/y2Ws
-         W8VGxOuIQeA5on1uoHsEGvW1m8mbceR2mfLy27jQPmRz3B//PWK5FSXPMIx0i4BVD9fj
-         f8Tg==
-X-Gm-Message-State: APjAAAUxL1JpwZA+nKTf5VpZALRwxoE/vV3e1fm3R0PRr1gpbRrp4+ns
-        mmQLK5JLQnXOuXCuKtLroQ==
-X-Google-Smtp-Source: APXvYqw+cA3p1NFGee+H9razWOXS0gfBSqg2+hdSyzNszuTUWBpTFckUxRqvMV0GBeoX54prTGAuxg==
-X-Received: by 2002:a6b:6e02:: with SMTP id d2mr516455ioh.8.1569968331333;
-        Tue, 01 Oct 2019 15:18:51 -0700 (PDT)
-Received: from localhost ([2607:fb90:1780:6fbf:9c38:e932:436b:4079])
-        by smtp.gmail.com with ESMTPSA id e15sm7398438ioe.33.2019.10.01.15.18.50
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 01 Oct 2019 15:18:50 -0700 (PDT)
-Date:   Tue, 1 Oct 2019 17:18:48 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Stefan Riedmueller <s.riedmueller@phytec.de>
-Cc:     linux-arm-kernel@lists.infradead.org,
-        Mark Rutland <mark.rutland@arm.com>,
-        devicetree@vger.kernel.org,
-        Stefan Riedmueller <s.riedmueller@phytec.de>,
-        Andrew Smirnov <andrew.smirnov@gmail.com>,
-        Fabio Estevam <festevam@gmail.com>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 2/2] dt-bindings: arm: fsl: Add PHYTEC i.MX6
- devicetree  bindings
-Message-ID: <20191001221848.GA25201@bogus>
-References: <1568980346-385840-1-git-send-email-s.riedmueller@phytec.de>
- <1568980346-385840-2-git-send-email-s.riedmueller@phytec.de>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=oMnTWIkEFx7hV55d8HRQu4uB51SHbkOs+8qRO4hsJAg=;
+        b=c596HXm44236KyNs5GZE4CpOUJDhUW58z7GrqNowRNgjY8/c0tCyPwkg/1PkX08GWE
+         JRYx4fdzp+YEpd3xHdm0spgRxZ0d5OXqSFBlMT9AntoXaoqxoOxMEg2O4ns6k/bc7D7B
+         UsII77PguvodJPmMvnULxo/z4gADOP7SmCpkWUFgQsbclBk55HbGMExwHEYYf5AfthE9
+         RyYsuX+XA2i0NZ69vxT00Ytl8E5LX1PreCKPnWjoum8WgR7Qcyjix59b5Oxe8HmObVnL
+         rM6bMOm2aEFAhX+OlNg4KloDkMsi+4pRLULTpU5kxCnmO2SYPCeRPic2gf5pGesVZuQe
+         MriQ==
+X-Gm-Message-State: APjAAAVPqkhPo4LBKJq55DB6tpaex+AVxQH2NdH2HO9zo/P5jY6sVxbp
+        IqxvXx7/N1oMpL5clH9+xrdSawIy/ZFKdWL6vik=
+X-Google-Smtp-Source: APXvYqweBJ5toKrdcq0StVEbNJ9J/cYfYJDUQ8PAkdbREU0S7AVdKsQxGACvp49bFkNQF6eUP3KyjngCeUD0nmidRkw=
+X-Received: by 2002:a2e:b0d1:: with SMTP id g17mr108184ljl.238.1569968357000;
+ Tue, 01 Oct 2019 15:19:17 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1568980346-385840-2-git-send-email-s.riedmueller@phytec.de>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <CANL0fFSGG_+R2zbf-9MxVLJMTMgc+-fwSoLCqS1qc+jWo-zNLA@mail.gmail.com>
+ <20190219213003.l7hzy2emdsxe4izy@gofer.mess.org>
+In-Reply-To: <20190219213003.l7hzy2emdsxe4izy@gofer.mess.org>
+From:   Gonsolo <gonsolo@gmail.com>
+Date:   Wed, 2 Oct 2019 00:19:05 +0200
+Message-ID: <CANL0fFRnEaapgm3oiDQmZb6qeAr4pwyhofZXA0mbmq=o4PPUDg@mail.gmail.com>
+Subject: Re: DVB-T2 Stick
+To:     Sean Young <sean@mess.org>
+Cc:     crope@iki.fi, linux-media@vger.kernel.org,
+        Linux Kernel <linux-kernel@vger.kernel.org>
+Content-Type: multipart/mixed; boundary="0000000000003ac0f70593e0be20"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 20 Sep 2019 13:52:26 +0200, Stefan Riedmueller wrote:
-> Add devicetree bindings for i.MX6 based phyCORE-i.MX6, phyBOARD-Mira and
-> phyFLEX-i.MX6.
-> 
-> Signed-off-by: Stefan Riedmueller <s.riedmueller@phytec.de>
-> ---
-> Changes in v2:
->  - Use seperate description for each board instead of squashing them into
->    the standard board.
-> ---
->  Documentation/devicetree/bindings/arm/fsl.yaml | 37 ++++++++++++++++++++++++++
->  1 file changed, 37 insertions(+)
-> 
+--0000000000003ac0f70593e0be20
+Content-Type: text/plain; charset="UTF-8"
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+Hi!
+
+> Secondly there are lots of coding style issues, see:
+> https://www.kernel.org/doc/html/v4.10/process/coding-style.html
+
+I addressed most of these except one "#if 0" warning from checkpatch.
+
+> I'm afraid there are many problems with this patch. First of all it looks
+> like support was added for a si2168 tuner but it looks like it will break
+> for any other si2157-type device.
+
+
+Can you give me a hint how to proceed here? I don't know much about
+DVB tuners or kernel development.
+
+I attached the cleaned-up patch for 5.4.0-rc1
+
+Thanks,
+g
+
+--0000000000003ac0f70593e0be20
+Content-Type: text/x-patch; charset="US-ASCII"; 
+	name="0001-DVB-T2-with-coding-style-updates.patch"
+Content-Disposition: attachment; 
+	filename="0001-DVB-T2-with-coding-style-updates.patch"
+Content-Transfer-Encoding: base64
+Content-ID: <f_k18elxx70>
+X-Attachment-Id: f_k18elxx70
+
+RnJvbSA2Y2FkYTY0NDIyMDdhNjcyMDJlNzM3MjE2OTJhY2VkNjY1YjhmZGYwIE1vbiBTZXAgMTcg
+MDA6MDA6MDAgMjAwMQpGcm9tOiBHb24gU29sbyA8Z29uc29sb0BnbWFpbC5jb20+CkRhdGU6IFR1
+ZSwgMSBPY3QgMjAxOSAyMTo1OTo0NCArMDIwMApTdWJqZWN0OiBbUEFUQ0hdIERWQi1UMiB3aXRo
+IGNvZGluZyBzdHlsZSB1cGRhdGVzLgoKLS0tCiBkcml2ZXJzL21lZGlhL3R1bmVycy9zaTIxNTcu
+YyAgICAgICAgIHwgNDQgKysrKysrKysrKysrKysrKysrKysrKy0tLQogZHJpdmVycy9tZWRpYS90
+dW5lcnMvc2kyMTU3X3ByaXYuaCAgICB8ICA4ICsrKysrCiBkcml2ZXJzL21lZGlhL3VzYi9kdmIt
+dXNiLXYyL2FmOTAzNS5jIHwgNDcgKysrKysrKysrKysrKysrKysrKysrKysrKystCiAzIGZpbGVz
+IGNoYW5nZWQsIDkzIGluc2VydGlvbnMoKyksIDYgZGVsZXRpb25zKC0pCgpkaWZmIC0tZ2l0IGEv
+ZHJpdmVycy9tZWRpYS90dW5lcnMvc2kyMTU3LmMgYi9kcml2ZXJzL21lZGlhL3R1bmVycy9zaTIx
+NTcuYwppbmRleCBlODcwNDBkNmVjYTcuLmFmNTBlNzIxMjgxYiAxMDA2NDQKLS0tIGEvZHJpdmVy
+cy9tZWRpYS90dW5lcnMvc2kyMTU3LmMKKysrIGIvZHJpdmVycy9tZWRpYS90dW5lcnMvc2kyMTU3
+LmMKQEAgLTc1LDcgKzc1LDcgQEAgc3RhdGljIGludCBzaTIxNTdfaW5pdChzdHJ1Y3QgZHZiX2Zy
+b250ZW5kICpmZSkKIAlzdHJ1Y3Qgc2kyMTU3X2NtZCBjbWQ7CiAJY29uc3Qgc3RydWN0IGZpcm13
+YXJlICpmdzsKIAljb25zdCBjaGFyICpmd19uYW1lOwotCXVuc2lnbmVkIGludCB1aXRtcCwgY2hp
+cF9pZDsKKwl1bnNpZ25lZCBpbnQgdWl0bXA7CiAKIAlkZXZfZGJnKCZjbGllbnQtPmRldiwgIlxu
+Iik7CiAKQEAgLTExNyw3ICsxMTcsNyBAQCBzdGF0aWMgaW50IHNpMjE1N19pbml0KHN0cnVjdCBk
+dmJfZnJvbnRlbmQgKmZlKQogCQlpZiAocmV0KQogCQkJZ290byBlcnI7CiAJfQotCisjaWYgMAog
+CS8qIHF1ZXJ5IGNoaXAgcmV2aXNpb24gKi8KIAltZW1jcHkoY21kLmFyZ3MsICJceDAyIiwgMSk7
+CiAJY21kLndsZW4gPSAxOwpAQCAtMTM4LDYgKzEzOCw4IEBAIHN0YXRpYyBpbnQgc2kyMTU3X2lu
+aXQoc3RydWN0IGR2Yl9mcm9udGVuZCAqZmUpCiAJI2RlZmluZSBTSTIxNDFfQTEwICgnQScgPDwg
+MjQgfCA0MSA8PCAxNiB8ICcxJyA8PCA4IHwgJzAnIDw8IDApCiAKIAlzd2l0Y2ggKGNoaXBfaWQp
+IHsKKyNlbmRpZgorCXN3aXRjaCAoZGV2LT5jaGlwX2lkKSB7CiAJY2FzZSBTSTIxNThfQTIwOgog
+CWNhc2UgU0kyMTQ4X0EyMDoKIAkJZndfbmFtZSA9IFNJMjE1OF9BMjBfRklSTVdBUkU7CkBAIC0x
+NjEsOSArMTYzLDkgQEAgc3RhdGljIGludCBzaTIxNTdfaW5pdChzdHJ1Y3QgZHZiX2Zyb250ZW5k
+ICpmZSkKIAkJZ290byBlcnI7CiAJfQogCi0JZGV2X2luZm8oJmNsaWVudC0+ZGV2LCAiZm91bmQg
+YSAnU2lsaWNvbiBMYWJzIFNpMjElZC0lYyVjJWMnXG4iLAotCQkJY21kLmFyZ3NbMl0sIGNtZC5h
+cmdzWzFdLCBjbWQuYXJnc1szXSwgY21kLmFyZ3NbNF0pOwotCisvLwlkZXZfaW5mbygmY2xpZW50
+LT5kZXYsICJmb3VuZCBhICdTaWxpY29uIExhYnMgU2kyMSVkLSVjJWMlYydcbiIsCisvLwkJCWNt
+ZC5hcmdzWzJdLCBjbWQuYXJnc1sxXSwgY21kLmFyZ3NbM10sIGNtZC5hcmdzWzRdKTsKKy8vCiAJ
+aWYgKGZ3X25hbWUgPT0gTlVMTCkKIAkJZ290byBza2lwX2Z3X2Rvd25sb2FkOwogCkBAIC00NTYs
+NiArNDU4LDM4IEBAIHN0YXRpYyBpbnQgc2kyMTU3X3Byb2JlKHN0cnVjdCBpMmNfY2xpZW50ICpj
+bGllbnQsCiAJbWVtY3B5KCZmZS0+b3BzLnR1bmVyX29wcywgJnNpMjE1N19vcHMsIHNpemVvZihz
+dHJ1Y3QgZHZiX3R1bmVyX29wcykpOwogCWZlLT50dW5lcl9wcml2ID0gY2xpZW50OwogCisJLyog
+cG93ZXIgdXAgKi8KKwlpZiAoZGV2LT5jaGlwdHlwZSA9PSBTSTIxNTdfQ0hJUFRZUEVfU0kyMTQ2
+KSB7CisJCW1lbWNweShjbWQuYXJncywgIlx4YzBceDA1XHgwMVx4MDBceDAwXHgwYlx4MDBceDAw
+XHgwMSIsIDkpOworCQljbWQud2xlbiA9IDk7CisJfSBlbHNlIHsKKwkJbWVtY3B5KGNtZC5hcmdz
+LAorCQkiXHhjMFx4MDBceDBjXHgwMFx4MDBceDAxXHgwMVx4MDFceDAxXHgwMVx4MDFceDAyXHgw
+MFx4MDBceDAxIiwKKwkJMTUpOworCQljbWQud2xlbiA9IDE1OworCX0KKwljbWQucmxlbiA9IDE7
+CisJcmV0ID0gc2kyMTU3X2NtZF9leGVjdXRlKGNsaWVudCwgJmNtZCk7CisJaWYgKHJldCkKKwkJ
+Z290byBlcnI7CisJLyogcXVlcnkgY2hpcCByZXZpc2lvbiAqLworCS8qIGhhY2s6IGRvIGl0IGhl
+cmUgYmVjYXVzZSBhZnRlciB0aGUgc2kyMTY4IGdldHMgMDEwMSwgY29tbWFuZHMgd2lsbAorCSAq
+IHN0aWxsIGJlIGV4ZWN1dGVkIGhlcmUgYnV0IG5vIHJlc3VsdAorCSAqLworCW1lbWNweShjbWQu
+YXJncywgIlx4MDIiLCAxKTsKKwljbWQud2xlbiA9IDE7CisJY21kLnJsZW4gPSAxMzsKKwlyZXQg
+PSBzaTIxNTdfY21kX2V4ZWN1dGUoY2xpZW50LCAmY21kKTsKKwlpZiAocmV0KQorCQlnb3RvIGVy
+cl9rZnJlZTsKKwlkZXYtPmNoaXBfaWQgPSBjbWQuYXJnc1sxXSA8PCAyNCB8CisJCWNtZC5hcmdz
+WzJdIDw8IDE2IHwKKwkJY21kLmFyZ3NbM10gPDwgOCB8CisJCWNtZC5hcmdzWzRdIDw8IDA7CisJ
+ZGV2X2luZm8oJmNsaWVudC0+ZGV2LCAiZm91bmQgYSAnU2lsaWNvbiBMYWJzIFNpMjElZC0lYyVj
+JWMnXG4iLAorCQljbWQuYXJnc1syXSwgY21kLmFyZ3NbMV0sIGNtZC5hcmdzWzNdLCBjbWQuYXJn
+c1s0XSk7CisKKwogI2lmZGVmIENPTkZJR19NRURJQV9DT05UUk9MTEVSCiAJaWYgKGNmZy0+bWRl
+dikgewogCQlkZXYtPm1kZXYgPSBjZmctPm1kZXY7CmRpZmYgLS1naXQgYS9kcml2ZXJzL21lZGlh
+L3R1bmVycy9zaTIxNTdfcHJpdi5oIGIvZHJpdmVycy9tZWRpYS90dW5lcnMvc2kyMTU3X3ByaXYu
+aAppbmRleCAyYmRhOTAzMzU4ZGEuLjBmNDA5MGUxODRlOSAxMDA2NDQKLS0tIGEvZHJpdmVycy9t
+ZWRpYS90dW5lcnMvc2kyMTU3X3ByaXYuaAorKysgYi9kcml2ZXJzL21lZGlhL3R1bmVycy9zaTIx
+NTdfcHJpdi5oCkBAIC0yOCw2ICsyOCw3IEBAIHN0cnVjdCBzaTIxNTdfZGV2IHsKIAl1OCBjaGlw
+dHlwZTsKIAl1OCBpZl9wb3J0OwogCXUzMiBpZl9mcmVxdWVuY3k7CisJdTMyIGNoaXBfaWQ7CiAJ
+c3RydWN0IGRlbGF5ZWRfd29yayBzdGF0X3dvcms7CiAKICNpZiBkZWZpbmVkKENPTkZJR19NRURJ
+QV9DT05UUk9MTEVSKQpAQCAtNDMsNiArNDQsMTMgQEAgc3RydWN0IHNpMjE1N19kZXYgewogI2Rl
+ZmluZSBTSTIxNTdfQ0hJUFRZUEVfU0kyMTQxIDIKICNkZWZpbmUgU0kyMTU3X0NISVBUWVBFX1NJ
+MjE3NyAzCiAKKyNkZWZpbmUgU0kyMTU4X0EyMCAoJ0EnIDw8IDI0IHwgNTggPDwgMTYgfCAnMicg
+PDwgOCB8ICcwJyA8PCAwKQorI2RlZmluZSBTSTIxNDhfQTIwICgnQScgPDwgMjQgfCA0OCA8PCAx
+NiB8ICcyJyA8PCA4IHwgJzAnIDw8IDApCisjZGVmaW5lIFNJMjE1N19BMzAgKCdBJyA8PCAyNCB8
+IDU3IDw8IDE2IHwgJzMnIDw8IDggfCAnMCcgPDwgMCkKKyNkZWZpbmUgU0kyMTQ3X0EzMCAoJ0En
+IDw8IDI0IHwgNDcgPDwgMTYgfCAnMycgPDwgOCB8ICcwJyA8PCAwKQorI2RlZmluZSBTSTIxNDZf
+QTEwICgnQScgPDwgMjQgfCA0NiA8PCAxNiB8ICcxJyA8PCA4IHwgJzAnIDw8IDApCisjZGVmaW5l
+IFNJMjE0MV9BMTAgKCdBJyA8PCAyNCB8IDQxIDw8IDE2IHwgJzEnIDw8IDggfCAnMCcgPDwgMCkK
+KwogLyogZmlybXdhcmUgY29tbWFuZCBzdHJ1Y3QgKi8KICNkZWZpbmUgU0kyMTU3X0FSR0xFTiAg
+ICAgIDMwCiBzdHJ1Y3Qgc2kyMTU3X2NtZCB7CmRpZmYgLS1naXQgYS9kcml2ZXJzL21lZGlhL3Vz
+Yi9kdmItdXNiLXYyL2FmOTAzNS5jIGIvZHJpdmVycy9tZWRpYS91c2IvZHZiLXVzYi12Mi9hZjkw
+MzUuYwppbmRleCAzYWZkMTg3MzM2MTQuLjViN2EwMGNkY2JkOCAxMDA2NDQKLS0tIGEvZHJpdmVy
+cy9tZWRpYS91c2IvZHZiLXVzYi12Mi9hZjkwMzUuYworKysgYi9kcml2ZXJzL21lZGlhL3VzYi9k
+dmItdXNiLXYyL2FmOTAzNS5jCkBAIC0xMjA2LDcgKzEyMDYsNTAgQEAgc3RhdGljIGludCBpdDkz
+MHhfZnJvbnRlbmRfYXR0YWNoKHN0cnVjdCBkdmJfdXNiX2FkYXB0ZXIgKmFkYXApCiAJc3RydWN0
+IHNpMjE2OF9jb25maWcgc2kyMTY4X2NvbmZpZzsKIAlzdHJ1Y3QgaTJjX2FkYXB0ZXIgKmFkYXB0
+ZXI7CiAKLQlkZXZfZGJnKCZpbnRmLT5kZXYsICJhZGFwLT5pZD0lZFxuIiwgYWRhcC0+aWQpOwor
+CS8vZGV2X2RiZygmaW50Zi0+ZGV2LCAiYWRhcC0+aWQ9JWRcbiIsIGFkYXAtPmlkKTsKKwlkZXZf
+ZGJnKCZpbnRmLT5kZXYsICIlcyAgYWRhcC0+aWQ9JWRcbiIsIF9fZnVuY19fLCBhZGFwLT5pZCk7
+CisKKwkvKiBJMkMgbWFzdGVyIGJ1cyAyIGNsb2NrIHNwZWVkIDMwMGsgKi8KKwlyZXQgPSBhZjkw
+MzVfd3JfcmVnKGQsIDB4MDBmNmE3LCAweDA3KTsKKwlpZiAocmV0IDwgMCkKKwkJZ290byBlcnI7
+CisKKwkvKiBJMkMgbWFzdGVyIGJ1cyAxLDMgY2xvY2sgc3BlZWQgMzAwayAqLworCXJldCA9IGFm
+OTAzNV93cl9yZWcoZCwgMHgwMGYxMDMsIDB4MDcpOworCWlmIChyZXQgPCAwKQorCQlnb3RvIGVy
+cjsKKworCS8qIHNldCBncGlvMTEgbG93ICovCisJcmV0ID0gYWY5MDM1X3dyX3JlZ19tYXNrKGQs
+IDB4ZDhkNCwgMHgwMSwgMHgwMSk7CisJaWYgKHJldCA8IDApCisJCWdvdG8gZXJyOworCisJcmV0
+ID0gYWY5MDM1X3dyX3JlZ19tYXNrKGQsIDB4ZDhkNSwgMHgwMSwgMHgwMSk7CisJaWYgKHJldCA8
+IDApCisJCWdvdG8gZXJyOworCisJcmV0ID0gYWY5MDM1X3dyX3JlZ19tYXNrKGQsIDB4ZDhkMywg
+MHgwMSwgMHgwMSk7CisJaWYgKHJldCA8IDApCisJCWdvdG8gZXJyOworCisJLyogVHVuZXIgZW5h
+YmxlIHVzaW5nIGdwaW90Ml9lbiwgZ3Bpb3QyX29uIGFuZCBncGlvdDJfbyAocmVzZXQpICovCisJ
+cmV0ID0gYWY5MDM1X3dyX3JlZ19tYXNrKGQsIDB4ZDhiOCwgMHgwMSwgMHgwMSk7CisJaWYgKHJl
+dCA8IDApCisJCWdvdG8gZXJyOworCisJcmV0ID0gYWY5MDM1X3dyX3JlZ19tYXNrKGQsIDB4ZDhi
+OSwgMHgwMSwgMHgwMSk7CisJaWYgKHJldCA8IDApCisJCWdvdG8gZXJyOworCisJcmV0ID0gYWY5
+MDM1X3dyX3JlZ19tYXNrKGQsIDB4ZDhiNywgMHgwMCwgMHgwMSk7CisJaWYgKHJldCA8IDApCisJ
+CWdvdG8gZXJyOworCisJbXNsZWVwKDIwMCk7CisKKwlyZXQgPSBhZjkwMzVfd3JfcmVnX21hc2so
+ZCwgMHhkOGI3LCAweDAxLCAweDAxKTsKKwlpZiAocmV0IDwgMCkKKwkJZ290byBlcnI7CiAKIAkv
+KiBJMkMgbWFzdGVyIGJ1cyAyIGNsb2NrIHNwZWVkIDMwMGsgKi8KIAlyZXQgPSBhZjkwMzVfd3Jf
+cmVnKGQsIDB4MDBmNmE3LCAweDA3KTsKQEAgLTIxMTgsNiArMjE2MSw4IEBAIHN0YXRpYyBjb25z
+dCBzdHJ1Y3QgdXNiX2RldmljZV9pZCBhZjkwMzVfaWRfdGFibGVbXSA9IHsKIAogCS8qIElUOTMw
+eCBkZXZpY2VzICovCiAJeyBEVkJfVVNCX0RFVklDRShVU0JfVklEX0lURVRFQ0gsIFVTQl9QSURf
+SVRFVEVDSF9JVDkzMDMsCisJeyBEVkJfVVNCX0RFVklDRShVU0JfVklEX0RFWEFURUssIDB4MDEw
+MCwKKwkJJml0OTMweF9wcm9wcywgIkxvZ2lsaW5rIFZHMDAyMkEiLCBOVUxMKSB9LAogCQkmaXQ5
+MzB4X3Byb3BzLCAiSVRFIDkzMDMgR2VuZXJpYyIsIE5VTEwpIH0sCiAJeyBEVkJfVVNCX0RFVklD
+RShVU0JfVklEX0FWRVJNRURJQSwgVVNCX1BJRF9BVkVSTUVESUFfVEQzMTAsCiAJCSZpdDkzMHhf
+cHJvcHMsICJBVmVyTWVkaWEgVEQzMTAgRFZCLVQyIiwgTlVMTCkgfSwKLS0gCjIuMjAuMQoK
+--0000000000003ac0f70593e0be20--
