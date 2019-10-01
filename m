@@ -2,106 +2,90 @@ Return-Path: <SRS0=YRFP=X2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B46A1C352AA
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 13:35:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 634FFC352AA
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 13:36:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8137B20700
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 13:35:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 290C220700
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 13:36:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="MkmSdRxc"
+	dkim=pass (2048-bit key) header.d=paul-moore-com.20150623.gappssmtp.com header.i=@paul-moore-com.20150623.gappssmtp.com header.b="AdazWGWU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388564AbfJANfX (ORCPT
+        id S2388530AbfJANgu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Oct 2019 09:35:23 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:40298 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388126AbfJANfW (ORCPT
+        Tue, 1 Oct 2019 09:36:50 -0400
+Received: from mail-lf1-f65.google.com ([209.85.167.65]:40121 "EHLO
+        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726086AbfJANgu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Oct 2019 09:35:22 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x91DXiR3058353;
-        Tue, 1 Oct 2019 13:35:00 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2019-08-05;
- bh=2S6v0Da0UQZgNufjPiiwLYA37zV4TkfepApDSqjUYWM=;
- b=MkmSdRxckjXVch/Lb4V5fl6dWFO1n6k24LEg/MHve2pTIE8NKgqipnzP+PK51UQLisPT
- nb1dJ+eBDCTaUNmlO03g7I7A3maiFvx0rDDmXF4zoohocPSZ1XRpBTGzEmmEGsMKLIa1
- ycaCAlB5+jLCHjLJvYFGVT6dme359igny3P7+xCCMRPeAjUBNCReE2Ktx3Jrg176f1Ro
- aRfAXAmXWysgJdKK9ZYH7ug+djbZRAI+SY0GOD7OWk+Dk4l0J9loTm9Y9tQ+srMpn0L5
- LzrFhOe6ycli7WaNrXqHcpk1fg8Q6UbeKE29LCyX2rngRDuJvdMybm23h+hLFVBGwHp4 Uw== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by userp2120.oracle.com with ESMTP id 2va05rntuv-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 01 Oct 2019 13:35:00 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x91DXZLj116417;
-        Tue, 1 Oct 2019 13:34:59 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by aserp3030.oracle.com with ESMTP id 2vbsm2048s-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 01 Oct 2019 13:34:59 +0000
-Received: from abhmp0004.oracle.com (abhmp0004.oracle.com [141.146.116.10])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x91DYq9J004937;
-        Tue, 1 Oct 2019 13:34:53 GMT
-Received: from kadam (/41.57.98.10)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 01 Oct 2019 06:34:52 -0700
-Date:   Tue, 1 Oct 2019 16:34:43 +0300
-From:   Dan Carpenter <dan.carpenter@oracle.com>
-To:     Navid Emamdoost <navid.emamdoost@gmail.com>
-Cc:     Jan Sebastian =?iso-8859-1?Q?G=F6tte?= <linux@jaseg.net>,
-        devel@driverdev.osuosl.org, linux-fbdev@vger.kernel.org,
-        Nishad Kamdar <nishadkamdar@gmail.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>, kjlu@umn.edu,
-        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        Daniel Vetter <daniel.vetter@ffwll.ch>, emamd001@umn.edu,
-        Bhanusree Pola <bhanusreemahesh@gmail.com>, smccaman@umn.edu,
-        Phil Reid <preid@electromag.com.au>,
-        Sam Ravnborg <sam@ravnborg.org>
-Subject: Re: [PATCH] Staging: fbtft: fix memory leak in
- fbtft_framebuffer_alloc
-Message-ID: <20191001133408.GG22609@kadam>
-References: <20190930030949.28615-1-navid.emamdoost@gmail.com>
+        Tue, 1 Oct 2019 09:36:50 -0400
+Received: by mail-lf1-f65.google.com with SMTP id d17so9915733lfa.7
+        for <linux-kernel@vger.kernel.org>; Tue, 01 Oct 2019 06:36:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=paul-moore-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=LBHO7zBu/6JjDHFy+rHD3rg8Vl+Sb1j1Pek5jxU6ZD4=;
+        b=AdazWGWUFIyD1sBv4VN3jWkjxF8KZsfmGLNEB+AOCQrwf9H5TKah7C32mjVx0HggPM
+         UvS0IiPmZ0QSqRAAyzyefIJpdePRtf6t67jd015f2xyeXDM2oj2GQKG5V+7xMRyipYTO
+         +KdP5LS9A0EopIg7+32qBeCvhE+/PjTMOJjrzFVUr22kvW21ZWxKlxkpFY0UgXQErZRm
+         BIPPvzdZu7sTFlv/71tFIVriM7zAme+57LSP9fDv9fuxzUX3SSg5MrP+6W+uHK5XIY0E
+         X1Qzw78D1nBUfSBhkynn9nbbKL7EP4LPf5H6TxJHevmxBKxnDsO58CtUWljPNrg3g0PU
+         uABQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=LBHO7zBu/6JjDHFy+rHD3rg8Vl+Sb1j1Pek5jxU6ZD4=;
+        b=XQrQs1mkc0l+HP162dog2EQyDk8pezv10fTX51nIJlSZQPncl1x/DllFm03KnRuGI2
+         XE58Ag2BYkRvxz0+8ZOESZ/coEgTNcG7Cwx/ew1iT9D2xJQvvC7PLa9T9XbGhPcvx2dX
+         K/nwRKMxqiN/R16GJjCe1qkex8GG7gYC89WG7BPrGfBZSZfBit1J4dnxS/JpIKRmM8ws
+         FzZLkxKnyD8XwtlcHtUdEMOgBBkFBPu3+4RK8+sHxAzzfEK7C8Iaq7xKzZWSDiV7KtBN
+         o+H1WR47/l6qwDfD/MPH38rvZCT4DWvEBQWssSc2E4cUgIsG+oeCe9lud8hlA7qorqec
+         w+sQ==
+X-Gm-Message-State: APjAAAVdBnlhOR3YGe2ZgjPzAH78kKKgHj2XReTq9CWxx79ez7rIIgr1
+        6mZzHt/0rFTSMSZBe8m0a7Yh2Ko8uiu2yODYwTwv
+X-Google-Smtp-Source: APXvYqyn3WvKwkQ8R2SsJsa1lUJ37RrWTw8cnwUVmRKmiAS+K1joAjAV0/Phh08yXh4Y90F0uYGWDelT/md22wBnlMQ=
+X-Received: by 2002:a19:6517:: with SMTP id z23mr8803595lfb.31.1569937007561;
+ Tue, 01 Oct 2019 06:36:47 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190930030949.28615-1-navid.emamdoost@gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9396 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1908290000 definitions=main-1910010123
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9396 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1908290000
- definitions=main-1910010123
+References: <1569031035-12354-1-git-send-email-zhang.lin16@zte.com.cn>
+In-Reply-To: <1569031035-12354-1-git-send-email-zhang.lin16@zte.com.cn>
+From:   Paul Moore <paul@paul-moore.com>
+Date:   Tue, 1 Oct 2019 09:36:36 -0400
+Message-ID: <CAHC9VhQsupyDDYSNm3VvyqnfZ8-cQGcjqNfBTK=_dJzo-8qBRA@mail.gmail.com>
+Subject: Re: [PATCH] selinux: Remove load size limit
+To:     zhanglin <zhang.lin16@zte.com.cn>
+Cc:     Stephen Smalley <sds@tycho.nsa.gov>,
+        Eric Paris <eparis@parisplace.org>, selinux@vger.kernel.org,
+        linux-kernel@vger.kernel.org, xue.zhihong@zte.com.cn,
+        wang.yi59@zte.com.cn, jiang.xuexin@zte.com.cn
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Sep 29, 2019 at 10:09:45PM -0500, Navid Emamdoost wrote:
-> In fbtft_framebuffer_alloc the error handling path should take care of
-> releasing frame buffer after it is allocated via framebuffer_alloc, too.
-> Therefore, in two failure cases the goto destination is changed to
-> address this issue.
-> 
-> Fixes: c296d5f9957c ("staging: fbtft: core support")
-> Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
+On Fri, Sep 20, 2019 at 9:55 PM zhanglin <zhang.lin16@zte.com.cn> wrote:
+> Load size was limited to 64MB, this was legacy limitation due to vmalloc()
+> which was removed a while ago.
+>
+> Limiting load size to 64MB is both pointless and affects real world use
+> cases.
+>
+> Signed-off-by: zhanglin <zhang.lin16@zte.com.cn>
+> ---
+>  security/selinux/selinuxfs.c | 4 ----
+>  1 file changed, 4 deletions(-)
 
-Looks good.
+I just merged this into selinux/next (thank you!), but I removed the
+last sentence in the description that mentioned "real world use cases"
+since that appears to be a cut-n-paste artifact and not a reflection
+of what we are currently seeing from users.
 
-Reviewed-by: Dan Carpenter <dan.carpenter@gmail.com>
-
-regards,
-dan carpenter
-
+-- 
+paul moore
+www.paul-moore.com
