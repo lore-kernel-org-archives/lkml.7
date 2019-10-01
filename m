@@ -2,176 +2,64 @@ Return-Path: <SRS0=YRFP=X2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6AA04ECE58A
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 16:07:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B132ECE587
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 16:07:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4A6FA2053B
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 16:07:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7745421872
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 16:07:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733273AbfJAQHo (ORCPT
+        id S1733309AbfJAQHt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Oct 2019 12:07:44 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:44534 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725765AbfJAQHn (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Oct 2019 12:07:43 -0400
-Received: from pps.filterd (m0098396.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x91G2Q2X017754;
-        Tue, 1 Oct 2019 12:07:18 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2vc8e7m7mw-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 01 Oct 2019 12:07:18 -0400
-Received: from m0098396.ppops.net (m0098396.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.27/8.16.0.27) with SMTP id x91G2cZx018895;
-        Tue, 1 Oct 2019 12:07:17 -0400
-Received: from ppma04wdc.us.ibm.com (1a.90.2fa9.ip4.static.sl-reverse.com [169.47.144.26])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2vc8e7m7m7-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 01 Oct 2019 12:07:17 -0400
-Received: from pps.filterd (ppma04wdc.us.ibm.com [127.0.0.1])
-        by ppma04wdc.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id x91G5EFo009042;
-        Tue, 1 Oct 2019 16:07:15 GMT
-Received: from b03cxnp08026.gho.boulder.ibm.com (b03cxnp08026.gho.boulder.ibm.com [9.17.130.18])
-        by ppma04wdc.us.ibm.com with ESMTP id 2v9y57vkwd-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 01 Oct 2019 16:07:15 +0000
-Received: from b03ledav005.gho.boulder.ibm.com (b03ledav005.gho.boulder.ibm.com [9.17.130.236])
-        by b03cxnp08026.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x91G7EKW59703610
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 1 Oct 2019 16:07:14 GMT
-Received: from b03ledav005.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id B3C18BE05B;
-        Tue,  1 Oct 2019 16:07:13 +0000 (GMT)
-Received: from b03ledav005.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 28767BE051;
-        Tue,  1 Oct 2019 16:07:11 +0000 (GMT)
-Received: from swastik.ibm.com (unknown [9.80.224.222])
-        by b03ledav005.gho.boulder.ibm.com (Postfix) with ESMTP;
-        Tue,  1 Oct 2019 16:07:10 +0000 (GMT)
-Subject: Re: [PATCH v6 3/9] powerpc: add support to initialize ima policy
- rules
-To:     Thiago Jung Bauermann <bauerman@linux.ibm.com>,
-        Nayna Jain <nayna@linux.ibm.com>
-Cc:     Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org,
-        linux-efi@vger.kernel.org,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Eric Ricther <erichte@linux.ibm.com>,
-        linux-kernel@vger.kernel.org, Mimi Zohar <zohar@linux.ibm.com>,
-        Claudio Carvalho <cclaudio@linux.ibm.com>,
-        Matthew Garret <matthew.garret@nebula.com>,
-        linuxppc-dev@ozlabs.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Paul Mackerras <paulus@samba.org>, Jeremy Kerr <jk@ozlabs.org>,
-        Elaine Palmer <erpalmer@us.ibm.com>,
-        "Oliver O'Halloran" <oohall@gmail.com>,
-        linux-integrity@vger.kernel.org,
-        George Wilson <gcwilson@linux.ibm.com>
-References: <1569594360-7141-1-git-send-email-nayna@linux.ibm.com>
- <1569594360-7141-4-git-send-email-nayna@linux.ibm.com>
- <877e5pwa1b.fsf@morokweng.localdomain>
-From:   Nayna <nayna@linux.vnet.ibm.com>
-Message-ID: <84f057d0-6a0b-d486-0eb6-f1590f32e377@linux.vnet.ibm.com>
-Date:   Tue, 1 Oct 2019 12:07:10 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.9.1
+        Tue, 1 Oct 2019 12:07:49 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:44522 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725765AbfJAQHs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Oct 2019 12:07:48 -0400
+Received: from DGGEMS414-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 63D0EA5A589137093EB3;
+        Wed,  2 Oct 2019 00:07:45 +0800 (CST)
+Received: from localhost.localdomain (10.67.212.75) by
+ DGGEMS414-HUB.china.huawei.com (10.3.19.214) with Microsoft SMTP Server id
+ 14.3.439.0; Wed, 2 Oct 2019 00:07:14 +0800
+From:   John Garry <john.garry@huawei.com>
+To:     <xuwei5@hisilicon.com>
+CC:     <linuxarm@huawei.com>, <linux-kernel@vger.kernel.org>,
+        <arnd@arndb.de>, <bhelgaas@google.com>, <olof@lixom.net>,
+        John Garry <john.garry@huawei.com>
+Subject: [PATCH 0/3] hisi_lpc: Improve build test coverage
+Date:   Wed, 2 Oct 2019 00:04:24 +0800
+Message-ID: <1569945867-82243-1-git-send-email-john.garry@huawei.com>
+X-Mailer: git-send-email 2.8.1
 MIME-Version: 1.0
-In-Reply-To: <877e5pwa1b.fsf@morokweng.localdomain>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-10-01_08:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1011 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1908290000 definitions=main-1910010139
+Content-Type: text/plain
+X-Originating-IP: [10.67.212.75]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+This series aims to improve the build test cover of the driver by
+supporting building under COMPILE_TEST.
 
+I also included "lib: logic_pio: Enforce LOGIC_PIO_INDIRECT region ops
+are set at registration" as it was never picked up for 5.4.
 
-On 09/30/2019 09:04 PM, Thiago Jung Bauermann wrote:
-> Hello,
+John Garry (3):
+  lib: logic_pio: Enforce LOGIC_PIO_INDIRECT region ops are set at
+    registration
+  logic_pio: Define PIO_INDIRECT_SIZE for !CONFIG_INDIRECT_PIO
+  bus: hisi_lpc: Expand build test coverage
 
-Hi,
+ drivers/bus/Kconfig       |  4 ++--
+ include/linux/logic_pio.h |  4 ++--
+ lib/logic_pio.c           | 14 ++++++++------
+ 3 files changed, 12 insertions(+), 10 deletions(-)
 
->
->> diff --git a/arch/powerpc/kernel/ima_arch.c b/arch/powerpc/kernel/ima_arch.c
->> new file mode 100644
->> index 000000000000..39401b67f19e
->> --- /dev/null
->> +++ b/arch/powerpc/kernel/ima_arch.c
->> @@ -0,0 +1,33 @@
->> +// SPDX-License-Identifier: GPL-2.0
->> +/*
->> + * Copyright (C) 2019 IBM Corporation
->> + * Author: Nayna Jain
->> + */
->> +
->> +#include <linux/ima.h>
->> +#include <asm/secure_boot.h>
->> +
->> +bool arch_ima_get_secureboot(void)
->> +{
->> +	return is_powerpc_os_secureboot_enabled();
->> +}
->> +
->> +/* Defines IMA appraise rules for secureboot */
->> +static const char *const arch_rules[] = {
->> +	"appraise func=KEXEC_KERNEL_CHECK appraise_type=imasig|modsig",
->> +#if !IS_ENABLED(CONFIG_MODULE_SIG)
->> +	"appraise func=MODULE_CHECK appraise_type=imasig|modsig",
->> +#endif
->> +	NULL
->> +};
->> +
->> +/*
->> + * Returns the relevant IMA arch policies based on the system secureboot state.
->> + */
->> +const char *const *arch_get_ima_policy(void)
->> +{
->> +	if (is_powerpc_os_secureboot_enabled())
->> +		return arch_rules;
->> +
->> +	return NULL;
->> +}
-> If CONFIG_MODULE_SIG is enabled but module signatures aren't enforced,
-> then IMA won't enforce module signature either. x86's
-> arch_get_ima_policy() calls set_module_sig_enforced(). Doesn't the
-> powerpc version need to do that as well?
->
-> On the flip side, if module signatures are enforced by the module
-> subsystem then IMA will verify the signature a second time since there's
-> no sharing of signature verification results between the module
-> subsystem and IMA (this was observed by Mimi).
->
-> IMHO this is a minor issue, since module loading isn't a hot path and
-> the duplicate work shouldn't impact anything. But it could be avoided by
-> having a NULL entry in arch_rules, which arch_get_ima_policy() would
-> dynamically update with the "appraise func=MODULE_CHECK" rule if
-> is_module_sig_enforced() is true.
+-- 
+2.17.1
 
-Thanks Thiago for reviewing.  I am wondering that this will give two 
-meanings for NULL. Can we do something like below, there are possibly 
-two options ?
-
-1. Set IMA_APPRAISED in the iint->flags if is_module_sig_enforced().
-
-OR
-
-2. Let ima_get_action() check for is_module_sig_enforced() when policy 
-is appraise and func is MODULE_CHECK.
-
-Thanks & Regards,
-    - Nayna
