@@ -2,120 +2,182 @@ Return-Path: <SRS0=YRFP=X2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79B01ECE587
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 14:56:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E0707ECE587
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 14:56:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5A78820842
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 14:56:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B204B20842
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 14:56:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="iKvV49uG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389340AbfJAO4C (ORCPT
+        id S2389380AbfJAO4L (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Oct 2019 10:56:02 -0400
-Received: from mga17.intel.com ([192.55.52.151]:45896 "EHLO mga17.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726987AbfJAO4C (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Oct 2019 10:56:02 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 01 Oct 2019 07:56:01 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,571,1559545200"; 
-   d="scan'208";a="203254365"
-Received: from stinkbox.fi.intel.com (HELO stinkbox) ([10.237.72.174])
-  by orsmga002.jf.intel.com with SMTP; 01 Oct 2019 07:55:57 -0700
-Received: by stinkbox (sSMTP sendmail emulation); Tue, 01 Oct 2019 17:55:56 +0300
-Date:   Tue, 1 Oct 2019 17:55:56 +0300
-From:   Ville =?iso-8859-1?Q?Syrj=E4l=E4?= <ville.syrjala@linux.intel.com>
-To:     Ezequiel Garcia <ezequiel@collabora.com>
-Cc:     dri-devel@lists.freedesktop.org,
-        Mark Rutland <mark.rutland@arm.com>,
-        devicetree@vger.kernel.org, Jacopo Mondi <jacopo@jmondi.org>,
-        linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
-        Douglas Anderson <dianders@chromium.org>,
-        linux-rockchip@lists.infradead.org,
-        Boris Brezillon <boris.brezillon@collabora.com>,
-        Sean Paul <seanpaul@chromium.org>, kernel@collabora.com
-Subject: Re: [PATCH v3 5/5] RFC: drm/atomic-helper: Reapply color
- transformation after resume
-Message-ID: <20191001145556.GP1208@intel.com>
-References: <20190930222802.32088-1-ezequiel@collabora.com>
- <20190930222802.32088-6-ezequiel@collabora.com>
+        Tue, 1 Oct 2019 10:56:11 -0400
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:33284 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389344AbfJAO4J (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Oct 2019 10:56:09 -0400
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id x91Eu4I1056672;
+        Tue, 1 Oct 2019 09:56:04 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1569941764;
+        bh=U/CdL3ky1UgHUUHC2UlJw+Bp+HRLVkYO6pdXvDYGyfg=;
+        h=From:To:CC:Subject:Date:In-Reply-To:References;
+        b=iKvV49uG4KXH+Mi/nqqvUDzBc2MZ1h2OPAtyvCYTr3PX0aWi5sH1fRuVnry7KuNWq
+         3a8I3lZSeRD/K+rtpsKbXo7CpWoVoE9JPzlYQJcYod5qyqCsBy04Q7zJSHnhqj/a+A
+         6UbWzINRLSK9DPGeXE49QKA0rKSpa2MrYmQNbfwg=
+Received: from DLEE112.ent.ti.com (dlee112.ent.ti.com [157.170.170.23])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id x91Eu4o9063947;
+        Tue, 1 Oct 2019 09:56:04 -0500
+Received: from DLEE104.ent.ti.com (157.170.170.34) by DLEE112.ent.ti.com
+ (157.170.170.23) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Tue, 1 Oct
+ 2019 09:55:54 -0500
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE104.ent.ti.com
+ (157.170.170.34) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Tue, 1 Oct 2019 09:55:54 -0500
+Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id x91Eu4bg095598;
+        Tue, 1 Oct 2019 09:56:04 -0500
+From:   Dan Murphy <dmurphy@ti.com>
+To:     <jacek.anaszewski@gmail.com>, <pavel@ucw.cz>
+CC:     <linux-leds@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        Dan Murphy <dmurphy@ti.com>
+Subject: [PATCH v10 01/16] dt: bindings: Add multicolor class dt bindings documention
+Date:   Tue, 1 Oct 2019 09:56:05 -0500
+Message-ID: <20191001145620.11123-2-dmurphy@ti.com>
+X-Mailer: git-send-email 2.22.0.214.g8dca754b1e
+In-Reply-To: <20191001145620.11123-1-dmurphy@ti.com>
+References: <20191001145620.11123-1-dmurphy@ti.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190930222802.32088-6-ezequiel@collabora.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Sep 30, 2019 at 07:28:02PM -0300, Ezequiel Garcia wrote:
-> Some platforms are not able to maintain the color transformation
-> state after a system suspend/resume cycle.
-> 
-> Set the colog_mgmt_changed flag so that CMM on the CRTCs in
-> the suspend state are reapplied after system resume.
-> 
-> Signed-off-by: Ezequiel Garcia <ezequiel@collabora.com>
-> ---
-> This is an RFC, and it's mostly based on Jacopo Mondi's work https://lkml.org/lkml/2019/9/6/498.
-> 
-> Changes from v2:
-> * New patch.
-> ---
->  drivers/gpu/drm/drm_atomic_helper.c | 12 ++++++++++++
->  1 file changed, 12 insertions(+)
-> 
-> diff --git a/drivers/gpu/drm/drm_atomic_helper.c b/drivers/gpu/drm/drm_atomic_helper.c
-> index e41db0f202ca..518488125575 100644
-> --- a/drivers/gpu/drm/drm_atomic_helper.c
-> +++ b/drivers/gpu/drm/drm_atomic_helper.c
-> @@ -3234,8 +3234,20 @@ int drm_atomic_helper_resume(struct drm_device *dev,
->  			     struct drm_atomic_state *state)
->  {
->  	struct drm_modeset_acquire_ctx ctx;
-> +	struct drm_crtc_state *crtc_state;
-> +	struct drm_crtc *crtc;
-> +	unsigned int i;
->  	int err;
->  
-> +	for_each_new_crtc_in_state(state, crtc, crtc_state, i) {
-> +		/*
-> +		 * Force re-enablement of CMM after system resume if any
-> +		 * of the DRM color transformation properties was set in
-> +		 * the state saved at system suspend time.
-> +		 */
-> +		if (crtc_state->gamma_lut)
+Add DT bindings for the LEDs multicolor class framework.
 
-You say "any" but you check the one?
+Signed-off-by: Dan Murphy <dmurphy@ti.com>
+---
+ .../bindings/leds/leds-class-multicolor.txt   | 98 +++++++++++++++++++
+ 1 file changed, 98 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/leds/leds-class-multicolor.txt
 
-> +			crtc_state->color_mgmt_changed = true;
-
-But I'm not convinced this is the best way to go about it. 
-I would generally expect that you repgrogram everything
-when doing a full modeset since the state was possibly
-lost while the crtc was disabled.
-
-> +	}
->  	drm_mode_config_reset(dev);
->  
->  	DRM_MODESET_LOCK_ALL_BEGIN(dev, ctx, 0, err);
-> -- 
-> 2.22.0
-> 
-> _______________________________________________
-> dri-devel mailing list
-> dri-devel@lists.freedesktop.org
-> https://lists.freedesktop.org/mailman/listinfo/dri-devel
-
+diff --git a/Documentation/devicetree/bindings/leds/leds-class-multicolor.txt b/Documentation/devicetree/bindings/leds/leds-class-multicolor.txt
+new file mode 100644
+index 000000000000..8619c9bf1811
+--- /dev/null
++++ b/Documentation/devicetree/bindings/leds/leds-class-multicolor.txt
+@@ -0,0 +1,98 @@
++* Multicolor LED properties
++
++Bindings for multi color LEDs show how to describe current outputs of
++either integrated multi-color LED elements (like RGB, RGBW, RGBWA-UV
++etc.) or standalone LEDs, to achieve logically grouped multi-color LED
++modules. This is achieved by adding multi-led nodes layer to the
++monochrome LED bindings.
++
++The nodes and properties defined in this document are unique to the multicolor
++LED class.  Common LED nodes and properties are inherited from the common.txt
++within this documentation directory.
++
++Required LED Child properties:
++	- color : For multicolor LED support this property should be defined as
++		  LED_COLOR_ID_MULTI and further definition can be found in
++		  include/linux/leds/common.h.
++
++led-controller@30 {
++	#address-cells = <1>;
++	#size-cells = <0>;
++	compatible = "ti,lp5024";
++	reg = <0x29>;
++
++	multi-led@1 {
++		#address-cells = <1>;
++		#size-cells = <0>;
++		reg = <1>;
++		color = <LED_COLOR_ID_MULTI>;
++		function = LED_FUNCTION_STATUS;
++
++
++		led@3 {
++			reg = <3>;
++			color = <LED_COLOR_ID_RED>;
++		};
++
++		led@4 {
++			reg = <4>;
++			color = <LED_COLOR_ID_GREEN>;
++		};
++
++		led@5 {
++			reg = <5>;
++			color = <LED_COLOR_ID_BLUE>;
++		};
++	};
++
++	multi-led@2 {
++		#address-cells = <1>;
++		#size-cells = <0>;
++		color = <LED_COLOR_ID_MULTI>;
++		function = LED_FUNCTION_ACTIVITY;
++		reg = <2>;
++		ti,led-bank = <2 3 5>;
++
++		led@6 {
++			reg = <0x6>;
++			color = <LED_COLOR_ID_RED>;
++			led-sources = <6 9 15>;
++		};
++
++		led@7 {
++			reg = <0x7>;
++			color = <LED_COLOR_ID_GREEN>;
++			led-sources = <7 10 16>;
++		};
++
++		led@8 {
++			reg = <0x8>;
++			color = <LED_COLOR_ID_BLUE>;
++			led-sources = <8 11 17>;
++		};
++	};
++
++	multi-led@4 {
++		#address-cells = <1>;
++		#size-cells = <0>;
++		reg = <4>;
++		color = <LED_COLOR_ID_MULTI>;
++		function = LED_FUNCTION_ACTIVITY;
++
++		led@12 {
++			reg = <12>;
++			color = <LED_COLOR_ID_RED>;
++		};
++
++		led@13 {
++			reg = <13>;
++			color = <LED_COLOR_ID_GREEN>;
++		};
++
++		led@14 {
++			reg = <14>;
++			color = <LED_COLOR_ID_BLUE>;
++		};
++	};
++
++};
 -- 
-Ville Syrjälä
-Intel
+2.22.0.214.g8dca754b1e
+
