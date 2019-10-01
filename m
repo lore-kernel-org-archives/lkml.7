@@ -2,184 +2,257 @@ Return-Path: <SRS0=YRFP=X2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD0FCECE58A
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 21:21:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43ABDECE587
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 21:26:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A7F752168B
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 21:21:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F09E521906
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 21:26:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="gDE5dj7Z"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="FWKCS+Bw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727798AbfJAVVF (ORCPT
+        id S1727839AbfJAV0X (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Oct 2019 17:21:05 -0400
-Received: from mail-io1-f68.google.com ([209.85.166.68]:40346 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726852AbfJAVVE (ORCPT
+        Tue, 1 Oct 2019 17:26:23 -0400
+Received: from pandora.armlinux.org.uk ([78.32.30.218]:44316 "EHLO
+        pandora.armlinux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727822AbfJAV0X (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Oct 2019 17:21:04 -0400
-Received: by mail-io1-f68.google.com with SMTP id h144so51783881iof.7
-        for <linux-kernel@vger.kernel.org>; Tue, 01 Oct 2019 14:21:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Ffy7ik8tMNlg+8qyltSb6cmvYYkvXVlCoaWdUSbEBAw=;
-        b=gDE5dj7Z9tEK+pSj9YNBDU7alXjvcXJUaaBbdNsIae3poVVFRTM2wikSDKDzXarSvE
-         WshslJcaWFjR37xUwc4zRQrS0p+nRU3xndQP2vxVovtYL3egfaWVZaW5bUujIKgfU+1f
-         EjQVk2otICupo79nD7bXf8mpnUu9T20dgDgzE=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Ffy7ik8tMNlg+8qyltSb6cmvYYkvXVlCoaWdUSbEBAw=;
-        b=SymqyeCcIeUPf4AYhjlcmlpVWSQVQcMDbALAXdfW7wdJGOhLjjg854OAztljOiyg4u
-         5Ar5d6WKKxddS4JQy2YNJCRNE+HhvC2SuY+9aTl6kWzuN/eRK+dNc19qv6M+ds4cMo+u
-         boF3ZxGHz2fNNiL2QJY+5Q/8652PUIQG22cZyVwVGCp4hn6J5MGqq4bwlNaTQ6eOaARq
-         krdJo0eorJp5ScXzcSe2UOBH//adSSVGr8d7GmSAEuiTmDcLIEF5SaS8k2W5U99x29Sc
-         lEUTlBy5xgw1rVRcpG1pEb0qFpkYCirPZlczOUsEuGOnKl5aKzhzUBHX3mxxmkTyJGc4
-         J0+g==
-X-Gm-Message-State: APjAAAVIvnzV8KKoL8shebAAPoM3BkpbmuwzH0af4y0nSrZdjW8W5K7E
-        eSzr1piycbPhS3j97ONx1k+XnDv+b+c=
-X-Google-Smtp-Source: APXvYqwcxP/pV6TwreP3ku1lazRyIYYeMohlcr4kBszJMc5MGTo/O6wbPujD8O5ktFHZnrQexXKhng==
-X-Received: by 2002:a92:4c7:: with SMTP id 190mr71494ile.165.1569964863040;
-        Tue, 01 Oct 2019 14:21:03 -0700 (PDT)
-Received: from mail-io1-f45.google.com (mail-io1-f45.google.com. [209.85.166.45])
-        by smtp.gmail.com with ESMTPSA id s78sm7934523ila.40.2019.10.01.14.21.02
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 01 Oct 2019 14:21:02 -0700 (PDT)
-Received: by mail-io1-f45.google.com with SMTP id b19so23767792iob.4
-        for <linux-kernel@vger.kernel.org>; Tue, 01 Oct 2019 14:21:02 -0700 (PDT)
-X-Received: by 2002:a5d:88c9:: with SMTP id i9mr221760iol.269.1569964861763;
- Tue, 01 Oct 2019 14:21:01 -0700 (PDT)
-MIME-Version: 1.0
-References: <20191001174439.182435-1-sboyd@kernel.org>
-In-Reply-To: <20191001174439.182435-1-sboyd@kernel.org>
-From:   Doug Anderson <dianders@chromium.org>
-Date:   Tue, 1 Oct 2019 14:20:50 -0700
-X-Gmail-Original-Message-ID: <CAD=FV=VBWuMwLOCvUK0JRsFPSvkCu2RNAa4=2g5CpsGRS--1UA@mail.gmail.com>
-Message-ID: <CAD=FV=VBWuMwLOCvUK0JRsFPSvkCu2RNAa4=2g5CpsGRS--1UA@mail.gmail.com>
-Subject: Re: [PATCH] clk: Don't cache errors from clk_ops::get_phase()
-To:     Stephen Boyd <sboyd@kernel.org>
-Cc:     Michael Turquette <mturquette@baylibre.com>,
+        Tue, 1 Oct 2019 17:26:23 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:
+        Content-Transfer-Encoding:Content-Type:MIME-Version:References:Message-ID:
+        Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=ZcyJFaU199HQGTOCbuTWwERJGL8QNllHqpGJn20ojIM=; b=FWKCS+Bwiqq5ZsX1/9d8F12vD
+        tuooA0OvfZXCfpJZF3S24mg2oLjsVBsTB5Pwy0c4l2/wk3PwEODS45XUhOxL4C+JbDrzo8dY5adxZ
+        WQdb5jXXXZpzmvB9nuq0uZKkrq8HFHmyIyomYvrELiPKm61MomZCB5e5DvWoKlV+7h0vGmAE4y1yI
+        h+oPQ6Mgqbf7pmVJ4xPKKS7+nrX/DmLLrNxeTFvSnsz6iYII67NAAgF0iqVA8Jz3eU4EZ8uDhqa+V
+        hmodnzNt7/Ycz47gm9XbqaqmkH7hTZJTyvz6D+Z1niBGtzHab0YwqD3BT9O8A04C7PBEsPQNKxE14
+        0o/pEzK2A==;
+Received: from shell.armlinux.org.uk ([2002:4e20:1eda:1:5054:ff:fe00:4ec]:46420)
+        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.90_1)
+        (envelope-from <linux@armlinux.org.uk>)
+        id 1iFPet-0004pL-7S; Tue, 01 Oct 2019 22:26:11 +0100
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
+        (envelope-from <linux@shell.armlinux.org.uk>)
+        id 1iFPeq-0008WV-Vu; Tue, 01 Oct 2019 22:26:09 +0100
+Date:   Tue, 1 Oct 2019 22:26:08 +0100
+From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
+To:     Nick Desaulniers <ndesaulniers@google.com>
+Cc:     Will Deacon <will@kernel.org>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
+        linux-arch <linux-arch@vger.kernel.org>,
         LKML <linux-kernel@vger.kernel.org>,
-        linux-clk <linux-clk@vger.kernel.org>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Jerome Brunet <jbrunet@baylibre.com>
-Content-Type: text/plain; charset="UTF-8"
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Stefan Wahren <wahrenst@gmx.net>,
+        Kees Cook <keescook@google.com>, Arnd Bergmann <arnd@arndb.de>,
+        clang-built-linux <clang-built-linux@googlegroups.com>
+Subject: Re: [PATCH] compiler: enable CONFIG_OPTIMIZE_INLINING forcibly
+Message-ID: <20191001212608.GN25745@shell.armlinux.org.uk>
+References: <CAKwvOdnqn=0LndrX+mUrtSAQqoT1JWRMOJCA5t3e=S=T7zkcCQ@mail.gmail.com>
+ <20191001092823.z4zhlbwvtwnlotwc@willie-the-truck>
+ <CAKwvOdk0h2A6=fb7Yepf+oKbZfq_tqwpGq8EBmHVu1j4mo-a-A@mail.gmail.com>
+ <20191001170142.x66orounxuln7zs3@willie-the-truck>
+ <CAKwvOdnFJqipp+G5xLDRBcOrQRcvMQmn+n8fufWyzyt2QL_QkA@mail.gmail.com>
+ <20191001175512.GK25745@shell.armlinux.org.uk>
+ <CAKwvOdmw_xmTGZLeK8-+Q4nUpjs-UypJjHWks-3jHA670Dxa1A@mail.gmail.com>
+ <20191001181438.GL25745@shell.armlinux.org.uk>
+ <CAKwvOdmBnBVU7F-a6DqPU6QM-BRc8LNn6YRmhTsuGLauCWKUOg@mail.gmail.com>
+ <20191001205938.GM25745@shell.armlinux.org.uk>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20191001205938.GM25745@shell.armlinux.org.uk>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On Tue, Oct 01, 2019 at 09:59:38PM +0100, Russell King - ARM Linux admin wrote:
+> On Tue, Oct 01, 2019 at 01:21:44PM -0700, Nick Desaulniers wrote:
+> > On Tue, Oct 1, 2019 at 11:14 AM Russell King - ARM Linux admin
+> > <linux@armlinux.org.uk> wrote:
+> > >
+> > > On Tue, Oct 01, 2019 at 11:00:11AM -0700, Nick Desaulniers wrote:
+> > > > On Tue, Oct 1, 2019 at 10:55 AM Russell King - ARM Linux admin
+> > > > <linux@armlinux.org.uk> wrote:
+> > > > >
+> > > > > On Tue, Oct 01, 2019 at 10:44:43AM -0700, Nick Desaulniers wrote:
+> > > > > > I apologize; I don't mean to be difficult.  I would just like to avoid
+> > > > > > surprises when code written with the assumption that it will be
+> > > > > > inlined is not.  It sounds like we found one issue in arm32 and one in
+> > > > > > arm64 related to outlining.  If we fix those two cases, I think we're
+> > > > > > close to proceeding with Masahiro's cleanup, which I view as a good
+> > > > > > thing for the health of the Linux kernel codebase.
+> > > > >
+> > > > > Except, using the C preprocessor for this turns the arm32 code into
+> > > > > yuck:
+> > > > >
+> > > > > 1. We'd need to turn get_domain() and set_domain() into multi-line
+> > > > >    preprocessor macro definitions, using the GCC ({ }) extension
+> > > > >    so that get_domain() can return a value.
+> > > > >
+> > > > > 2. uaccess_save_and_enable() and uaccess_restore() also need to
+> > > > >    become preprocessor macro definitions too.
+> > > > >
+> > > > > So, we end up with multiple levels of nested preprocessor macros.
+> > > > > When something goes wrong, the compiler warning/error message is
+> > > > > going to be utterly _horrid_.
+> > > >
+> > > > That's why I preferred V1 of Masahiro's patch, that fixed the inline
+> > > > asm not to make use of caller saved registers before calling a
+> > > > function that might not be inlined.
+> > >
+> > > ... which I objected to based on the fact that this uaccess stuff is
+> > > supposed to add protection against the kernel being fooled into
+> > > accessing userspace when it shouldn't.  The whole intention there is
+> > > that [sg]et_domain(), and uaccess_*() are _always_ inlined as close
+> > > as possible to the call site of the accessor touching userspace.
+> > 
+> > Then use the C preprocessor to force the inlining.  I'm sorry it's not
+> > as pretty as static inline functions.
+> > 
+> > >
+> > > Moving it before the assignments mean that the compiler is then free
+> > > to issue memory loads/stores to load up those registers, which is
+> > > exactly what we want to avoid.
+> > >
+> > >
+> > > In any case, I violently disagree with the idea that stuff we have
+> > > in header files should be permitted not to be inlined because we
+> > > have soo much that is marked inline.
+> > 
+> > So there's a very important subtly here.  There's:
+> > 1. code that adds `inline` cause "oh maybe it would be nice to inline
+> > this, but if it isn't no big deal"
+> > 2. code that if not inlined is somehow not correct.
+> > 3. avoid ODR violations via `static inline`
+> > 
+> > I'll posit that "we have soo much that is marked inline [is
+> > predominantly case 1 or 3, not case 2]."  Case 2 is a code smell, and
+> > requires extra scrutiny.
+> > 
+> > > Having it moved out of line,
+> > > and essentially the same function code appearing in multiple C files
+> > > is really not an improvement over the current situation with excessive
+> > > use of inlining.  Anyone who has looked at the code resulting from
+> > > dma_map_single() will know exactly what I'm talking about, which is
+> > > way in excess of the few instructions we have for the uaccess_* stuff
+> > > here.
+> > >
+> > > The right approach is to move stuff out of line - and by that, I
+> > > mean _actually_ move the damn code, so that different compilation
+> > > units can use the same instructions, and thereby gain from the
+> > > whole point of an instruction cache.
+> > 
+> > And be marked __attribute__((noinline)), otherwise might be inlined via LTO.
+> > 
+> > >
+> > > The whole "let's make inline not really mean inline" is nothing more
+> > > than a band-aid to the overuse (and abuse) of "inline".
+> > 
+> > Let's triple check the ISO C11 draft spec just to be sure:
+> > § 6.7.4.6: A function declared with an inline function specifier is an
+> > inline function. Making a
+> > function an inline function suggests that calls to the function be as
+> > fast as possible.
+> > The extent to which such suggestions are effective is
+> > implementation-defined. 139)
+> > 139) For example, an implementation might never perform inline
+> > substitution, or might only perform inline
+> > substitutions to calls in the scope of an inline declaration.
+> > § J.3.8 [Undefined Behavior] Hints: The extent to which suggestions
+> > made by using the inline function specifier are effective (6.7.4).
+> > 
+> > My translation:
+> > "Please don't assume inline means anything."
+> > 
+> > For the unspecified GNU C extension __attribute__((always_inline)), it
+> > seems to me like it's meant more for performing inlining (an
+> > optimization) at -O0.  Whether the compiler warns or not seems like a
+> > nice side effect, but provides no strong guarantee otherwise.
+> > 
+> > I'm sorry that so much code may have been written with that
+> > assumption, and I'm sorry to be the bearer of bad news, but this isn't
+> > a recent change.  If code was written under false assumptions, it
+> > should be rewritten. Sorry.
+> 
+> You may quote C11, but that is not relevent.  The kernel is coded to
+> gnu89 standard - see the -std=gnu89 flag.
 
-On Tue, Oct 1, 2019 at 10:44 AM Stephen Boyd <sboyd@kernel.org> wrote:
->
-> We don't check for errors from clk_ops::get_phase() before storing away
-> the result into the clk_core::phase member. This can lead to some fairly
-> confusing debugfs information if these ops do return an error. Let's
-> skip the store when this op fails to fix this. While we're here, move
-> the locking outside of clk_core_get_phase() to simplify callers from
-> the debugfs side.
->
-> Cc: Douglas Anderson <dianders@chromium.org>
-> Cc: Heiko Stuebner <heiko@sntech.de>
-> Cc: Jerome Brunet <jbrunet@baylibre.com>
-> Signed-off-by: Stephen Boyd <sboyd@kernel.org>
-> ---
->
-> Resending because I couldn't find this anywhere.
+There's more to this and why C11 is entirely irrelevant.  The "inline"
+you see in our headers is not the compiler keyword that you find in
+various C standards, it is a macro that gets expanded to either:
 
-It was at:
+#define inline inline __attribute__((__always_inline__)) __gnu_inline \
+        __maybe_unused notrace
 
-https://lore.kernel.org/r/155692148370.12939.291938595926908281@swboyd.mtv.corp.google.com
+or
 
+#define inline inline                                    __gnu_inline \
+        __maybe_unused notrace
 
-> @@ -2640,14 +2640,14 @@ EXPORT_SYMBOL_GPL(clk_set_phase);
->
->  static int clk_core_get_phase(struct clk_core *core)
->  {
-> -       int ret;
-> +       int ret = 0;
->
-> -       clk_prepare_lock();
-> +       lockdep_assert_held(&prepare_lock);
->         /* Always try to update cached phase if possible */
->         if (core->ops->get_phase)
-> -               core->phase = core->ops->get_phase(core->hw);
-> -       ret = core->phase;
-> -       clk_prepare_unlock();
-> +               ret = core->ops->get_phase(core->hw);
-> +       if (ret >= 0)
-> +               core->phase = ret;
+__gnu_inline is defined as:
 
-It doesn't matter much, but if it were me I'd add this under the "if
-(core->ops->get_phase)" statement.  Then we don't keep doing a memory
-write of 0 to "core->phase" all the time when "core->ops->get_phase"
-isn't there.  ...plus (to me) it makes more logical sense.
+#define __gnu_inline                    __attribute__((__gnu_inline__))
 
-I'd guess you were trying to make sure that core->phase got set to 0
-like the old code did in __clk_core_init().  ...but that really
-shouldn't be needed since the clk_core is initted with kzalloc().
+So this attaches the gnu_inline attribute to the function:
 
+`gnu_inline'
+     This attribute should be used with a function that is also declared
+     with the `inline' keyword.  It directs GCC to treat the function
+     as if it were defined in gnu90 mode even when compiling in C99 or
+     gnu99 mode.
+...
+     Since ISO C99 specifies a different semantics for `inline', this
+     function attribute is provided as a transition measure and as a
+     useful feature in its own right.  This attribute is available in
+     GCC 4.1.3 and later.  It is available if either of the
+     preprocessor macros `__GNUC_GNU_INLINE__' or
+     `__GNUC_STDC_INLINE__' are defined.  *Note An Inline Function is
+     As Fast As a Macro: Inline.
 
-> @@ -2661,10 +2661,16 @@ static int clk_core_get_phase(struct clk_core *core)
->   */
->  int clk_get_phase(struct clk *clk)
->  {
-> +       int ret;
-> +
->         if (!clk)
->                 return 0;
->
-> -       return clk_core_get_phase(clk->core);
-> +       clk_prepare_unlock();
-> +       ret = clk_core_get_phase(clk->core);
-> +       clk_prepare_unlock();
+which is quite clear that C99 semantics do not apply to _this_ inline.
+The manual goes on to explain:
 
-Probably the first of these two should be clk_prepare_lock() unless
-you really really wanted the clock to be unlocked.
+ GCC implements three different semantics of declaring a function
+inline.  One is available with `-std=gnu89' or `-fgnu89-inline' or when
+`gnu_inline' attribute is present on all inline declarations, another
+when `-std=c99', `-std=c11', `-std=gnu99' or `-std=gnu11' (without
+`-fgnu89-inline'), and the third is used when compiling C++.
 
+I'd suggest gnu90 mode is pretty similar to gnu89 mode, and as we build
+the kernel in gnu89 mode, that is the inlining definition that is
+appropriate.
 
-> @@ -2878,13 +2884,21 @@ static struct hlist_head *orphan_list[] = {
->  static void clk_summary_show_one(struct seq_file *s, struct clk_core *c,
->                                  int level)
->  {
-> -       seq_printf(s, "%*s%-*s %7d %8d %8d %11lu %10lu %5d %6d\n",
-> +       int phase;
-> +
-> +       seq_printf(s, "%*s%-*s %7d %8d %8d %11lu %10lu ",
->                    level * 3 + 1, "",
->                    30 - level * 3, c->name,
->                    c->enable_count, c->prepare_count, c->protect_count,
-> -                  clk_core_get_rate(c), clk_core_get_accuracy(c),
-> -                  clk_core_get_phase(c),
-> -                  clk_core_get_scaled_duty_cycle(c, 100000));
-> +                  clk_core_get_rate(c), clk_core_get_accuracy(c));
-> +
-> +       phase = clk_core_get_phase(c);
+When it comes to __always_inline, the GCC manual is the definitive
+reference, since we use the GCC attribute for that:
 
-Don't you need a clk_prepare_lock() / clk_prepare_unlock() around this now?
+#define __always_inline                 inline __attribute__((__always_inline__))
 
+and I've already quoted what the GCC manual says for always_inline.
 
-> @@ -3349,10 +3366,7 @@ static int __clk_core_init(struct clk_core *core)
->          * Since a phase is by definition relative to its parent, just
->          * query the current clock phase, or just assume it's in phase.
+Arguing about what the C11 spec says about inlining when we aren't
+using C11 dialect in the kernel, but are using GCC features, does
+not move the discussion on.
 
-Maybe update the comment to something like "clk_core_get_phase() will
-cache the phase for us".
+Thanks anyway, maybe it will become relevent in the future if we
+decide to move to C11.
 
-
->          */
-> -       if (core->ops->get_phase)
-> -               core->phase = core->ops->get_phase(core->hw);
-> -       else
-> -               core->phase = 0;
-> +       clk_core_get_phase(core);
+-- 
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTC broadband for 0.8mile line in suburbia: sync at 12.1Mbps down 622kbps up
+According to speedtest.net: 11.9Mbps down 500kbps up
