@@ -2,88 +2,94 @@ Return-Path: <SRS0=YRFP=X2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B391C352AA
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 09:52:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD8CAC388F3
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 09:53:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6DBC621855
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 09:52:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 926F42190F
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 09:53:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729722AbfJAJw3 (ORCPT
+        id S1729776AbfJAJxP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Oct 2019 05:52:29 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:54712 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725765AbfJAJw3 (ORCPT
+        Tue, 1 Oct 2019 05:53:15 -0400
+Received: from s3.sipsolutions.net ([144.76.43.62]:58438 "EHLO
+        sipsolutions.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725765AbfJAJxO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Oct 2019 05:52:29 -0400
-Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tip-bot2@linutronix.de>)
-        id 1iFEpV-0007B9-NL; Tue, 01 Oct 2019 11:52:25 +0200
-Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 4B6D81C03AB;
-        Tue,  1 Oct 2019 11:52:25 +0200 (CEST)
-Date:   Tue, 01 Oct 2019 09:52:25 -0000
-From:   "tip-bot2 for Borislav Petkov" <tip-bot2@linutronix.de>
-Reply-to: linux-kernel@vger.kernel.org
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: ras/core] x86/mce/amd: Make disable_err_thresholding() static
-Cc:     Borislav Petkov <bp@suse.de>, x86@kernel.org,
-        Ingo Molnar <mingo@kernel.org>, Borislav Petkov <bp@alien8.de>,
-        linux-kernel@vger.kernel.org
-In-Reply-To: <20190928170539.2729-1-bp@alien8.de>
-References: <20190928170539.2729-1-bp@alien8.de>
+        Tue, 1 Oct 2019 05:53:14 -0400
+Received: by sipsolutions.net with esmtpsa (TLS1.3:ECDHE_SECP256R1__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
+        (Exim 4.92.2)
+        (envelope-from <johannes@sipsolutions.net>)
+        id 1iFEq2-0004UP-IC; Tue, 01 Oct 2019 11:52:58 +0200
+Message-ID: <9b6f5c279e8aea8e6241d03b0b21de88ac49e8b2.camel@sipsolutions.net>
+Subject: Re: [PATCH v5.1-rc] iwlwifi: make locking in iwl_mvm_tx_mpdu()
+ BH-safe
+From:   Johannes Berg <johannes@sipsolutions.net>
+To:     Jiri Kosina <jikos@kernel.org>
+Cc:     Emmanuel Grumbach <emmanuel.grumbach@intel.com>,
+        Luca Coelho <luciano.coelho@intel.com>,
+        Intel Linux Wireless <linuxwifi@intel.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Toke =?ISO-8859-1?Q?H=F8iland-J=F8rgensen?= <toke@redhat.com>
+Date:   Tue, 01 Oct 2019 11:52:57 +0200
+In-Reply-To: <46cce48de455acf073ad0582565d1fe34253f823.camel@sipsolutions.net>
+References: <nycvar.YFH.7.76.1904151300160.9803@cbobk.fhfr.pm>
+         <24e05607b902e811d1142e3bd345af021fd3d077.camel@sipsolutions.net>
+         <nycvar.YFH.7.76.1904151328270.9803@cbobk.fhfr.pm>
+         <01d55c5cf513554d9cbdee0b14f9360a8df859c8.camel@sipsolutions.net>
+         <nycvar.YFH.7.76.1909111238470.473@cbobk.fhfr.pm>
+         <46cce48de455acf073ad0582565d1fe34253f823.camel@sipsolutions.net>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.30.5 (3.30.5-1.fc29) 
 MIME-Version: 1.0
-Message-ID: <156992354518.9978.16819187666387348387.tip-bot2@tip-bot2>
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot2.linutronix.de>
-Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following commit has been merged into the ras/core branch of tip:
+On Tue, 2019-10-01 at 11:46 +0200, Johannes Berg wrote:
+> 
+> ieee80211_wake_queues_by_reason() does
+> spin_lock_irqsave()/spin_unlock_irqrestore() - why is that "{SOFTIRQ-ON-
+> W} usage"?
 
-Commit-ID:     47cd84e98f512eac5aad988f08baff432aea35ba
-Gitweb:        https://git.kernel.org/tip/47cd84e98f512eac5aad988f08baff432aea35ba
-Author:        Borislav Petkov <bp@suse.de>
-AuthorDate:    Sat, 28 Sep 2019 19:02:29 +02:00
-Committer:     Borislav Petkov <bp@suse.de>
-CommitterDate: Tue, 01 Oct 2019 11:42:59 +02:00
+scratch that - _ieee80211_wake_txqs() unlocks that again...
 
-x86/mce/amd: Make disable_err_thresholding() static
+It does hold RCU critical section, but that's not the same as disabling
+BHs.
 
-No functional changes.
+I think we should do this perhaps - I think it'd be better to ensure
+that the drivers' wake_tx_queue op is always called with softirqs
+disabled, since that happens in almost all cases already ...
 
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Cc: x86@kernel.org
-Link: https://lkml.kernel.org/r/20190928170539.2729-1-bp@alien8.de
----
- arch/x86/kernel/cpu/mce/amd.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/x86/kernel/cpu/mce/amd.c b/arch/x86/kernel/cpu/mce/amd.c
-index 6ea7fdc..5167bd2 100644
---- a/arch/x86/kernel/cpu/mce/amd.c
-+++ b/arch/x86/kernel/cpu/mce/amd.c
-@@ -583,7 +583,7 @@ bool amd_filter_mce(struct mce *m)
-  * - Prevent possible spurious interrupts from the IF bank on Family 0x17
-  *   Models 0x10-0x2F due to Erratum #1114.
-  */
--void disable_err_thresholding(struct cpuinfo_x86 *c, unsigned int bank)
-+static void disable_err_thresholding(struct cpuinfo_x86 *c, unsigned int bank)
- {
- 	int i, num_msrs;
- 	u64 hwcr;
+diff --git a/net/mac80211/util.c b/net/mac80211/util.c
+index 051a02ddcb85..ad1e88958da2 100644
+--- a/net/mac80211/util.c
++++ b/net/mac80211/util.c
+@@ -273,9 +273,9 @@ static void __ieee80211_wake_txqs(struct ieee80211_sub_if_data *sdata, int ac)
+ 						&txqi->flags))
+ 				continue;
+ 
+-			spin_unlock_bh(&fq->lock);
++			spin_unlock(&fq->lock);
+ 			drv_wake_tx_queue(local, txqi);
+-			spin_lock_bh(&fq->lock);
++			spin_lock(&fq->lock);
+ 		}
+ 	}
+ 
+Perhaps we could add some validation into drv_wake_tx_queue(), but I
+didn't find the right thing to call right now ...
+
+
+Toke, what do you think?
+
+johannes
+
