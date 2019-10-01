@@ -2,67 +2,57 @@ Return-Path: <SRS0=YRFP=X2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_SBL,URIBL_SBL_A,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 883AAECE587
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 16:55:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A187AECE587
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 16:55:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 569AA21783
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 16:55:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 72D58206BB
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 16:55:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569948945;
-	bh=iUtZ+ozD5ageHYgBSvJsnHAVqbiyiKVeoNsJQ9ir0oE=;
+	s=default; t=1569948954;
+	bh=Efk7544LTQxXE1lxJo1fUKGpeEZvCEgZA8NP4JthTw0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=kVE/ZYZfPFNhCQSNGm6kcHuRCnPaCDVjJs88ZFUudXVIi3CAYMUzu1HyqDBs7CHmn
-	 9+fqwpVpoqsWLMBs7BWIKl0UehhPILeglfk+u2W2FuX8kF+gUX+DgQB5PhLUj2zxJE
-	 IYqfeFXwDeHPM9p75XLSDA5fEM9WI3xexi9fkj1Q=
+	b=GuL4Vjfw1oxYLtF3dPkNGJWGkG2Lp958+z6OC15mffgjTCixPhwz0RQFZNKcF951Q
+	 S+CE6sqvtQ8gNfZLHEhgOc5LeVuOiXo5tglGBTF2FTRCj4HEbO7y431Cqx2Tluf+2p
+	 XviDiv7oZw09O/gk5VSS+6aCcaL9+Ndw+aGKxGDY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731630AbfJAQzo (ORCPT
+        id S1731867AbfJAQmT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Oct 2019 12:55:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54542 "EHLO mail.kernel.org"
+        Tue, 1 Oct 2019 12:42:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54146 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726102AbfJAQmf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Oct 2019 12:42:35 -0400
+        id S1731734AbfJAQmR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Oct 2019 12:42:17 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7A7152168B;
-        Tue,  1 Oct 2019 16:42:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DE34A21924;
+        Tue,  1 Oct 2019 16:42:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569948154;
-        bh=iUtZ+ozD5ageHYgBSvJsnHAVqbiyiKVeoNsJQ9ir0oE=;
+        s=default; t=1569948136;
+        bh=Efk7544LTQxXE1lxJo1fUKGpeEZvCEgZA8NP4JthTw0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=JqMfTtjrFaNL5SpXDJmqHWs2iaoE+BAs7GY00ycKgYgmvdTo1Ct1SQGAGnJ8mlHTF
-         Hz4o1+W18+My7rCmykoTEQeOH//L8bAEvqv1XoybKLZGONTJtBYv1IunWGHWIcGLNK
-         blnAGVF2Z2vlBiNdhSL0DsNhxNIq1EMrTRuky/+E=
+        b=pZrCKHiOuOZ5iNomBYy1uzX5TDh8oA5SGZ5jNr/of2xJTim/lYCVleJ7FsvACwVY3
+         QoFitvDiXU2uMuiiz3YaKI9W20C8LJMxkNA6przsk4gTKwBj5bTXEOAh/M8IopldRx
+         ZyTldQVGOb8RQiB5NVvg03fptNDMlnBk+B9Ag5d0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Qian Cai <cai@lca.pw>, Jan Kara <jack@suse.cz>,
-        "Tobin C . Harding" <tobin@kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ingo Molnar <mingo@redhat.com>, Tejun Heo <tj@kernel.org>,
-        Dave Chinner <dchinner@redhat.com>,
-        Fengguang Wu <fengguang.wu@intel.com>,
-        Jens Axboe <axboe@kernel.dk>, Joe Perches <joe@perches.com>,
-        Kees Cook <keescook@chromium.org>,
-        Jann Horn <jannh@google.com>, Jonathan Corbet <corbet@lwn.net>,
-        Nitin Gote <nitin.r.gote@intel.com>,
-        Rasmus Villemoes <rasmus.villemoes@prevas.dk>,
-        Stephen Kitt <steve@sk2.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.2 45/63] include/trace/events/writeback.h: fix -Wstringop-truncation warnings
-Date:   Tue,  1 Oct 2019 12:41:07 -0400
-Message-Id: <20191001164125.15398-45-sashal@kernel.org>
+Cc:     "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Sasha Levin <sashal@kernel.org>, linux-nvdimm@lists.01.org
+Subject: [PATCH AUTOSEL 5.2 36/63] =?UTF-8?q?libnvdimm:=20Fix=20endian=20c?= =?UTF-8?q?onversion=20issues=C2=A0?=
+Date:   Tue,  1 Oct 2019 12:40:58 -0400
+Message-Id: <20191001164125.15398-36-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191001164125.15398-1-sashal@kernel.org>
 References: <20191001164125.15398-1-sashal@kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -71,189 +61,78 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Qian Cai <cai@lca.pw>
+From: "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>
 
-[ Upstream commit d1a445d3b86c9341ce7a0954c23be0edb5c9bec5 ]
+[ Upstream commit 86aa66687442ef45909ff9814b82b4d2bb892294 ]
 
-There are many of those warnings.
+nd_label->dpa issue was observed when trying to enable the namespace created
+with little-endian kernel on a big-endian kernel. That made me run
+`sparse` on the rest of the code and other changes are the result of that.
 
-In file included from ./arch/powerpc/include/asm/paca.h:15,
-                 from ./arch/powerpc/include/asm/current.h:13,
-                 from ./include/linux/thread_info.h:21,
-                 from ./include/asm-generic/preempt.h:5,
-                 from ./arch/powerpc/include/generated/asm/preempt.h:1,
-                 from ./include/linux/preempt.h:78,
-                 from ./include/linux/spinlock.h:51,
-                 from fs/fs-writeback.c:19:
-In function 'strncpy',
-    inlined from 'perf_trace_writeback_page_template' at
-./include/trace/events/writeback.h:56:1:
-./include/linux/string.h:260:9: warning: '__builtin_strncpy' specified
-bound 32 equals destination size [-Wstringop-truncation]
-  return __builtin_strncpy(p, q, size);
-         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-Fix it by using the new strscpy_pad() which was introduced in "lib/string:
-Add strscpy_pad() function" and will always be NUL-terminated instead of
-strncpy().  Also, change strlcpy() to use strscpy_pad() in this file for
-consistency.
-
-Link: http://lkml.kernel.org/r/1564075099-27750-1-git-send-email-cai@lca.pw
-Fixes: 455b2864686d ("writeback: Initial tracing support")
-Fixes: 028c2dd184c0 ("writeback: Add tracing to balance_dirty_pages")
-Fixes: e84d0a4f8e39 ("writeback: trace event writeback_queue_io")
-Fixes: b48c104d2211 ("writeback: trace event bdi_dirty_ratelimit")
-Fixes: cc1676d917f3 ("writeback: Move requeueing when I_SYNC set to writeback_sb_inodes()")
-Fixes: 9fb0a7da0c52 ("writeback: add more tracepoints")
-Signed-off-by: Qian Cai <cai@lca.pw>
-Reviewed-by: Jan Kara <jack@suse.cz>
-Cc: Tobin C. Harding <tobin@kernel.org>
-Cc: Steven Rostedt (VMware) <rostedt@goodmis.org>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: Tejun Heo <tj@kernel.org>
-Cc: Dave Chinner <dchinner@redhat.com>
-Cc: Fengguang Wu <fengguang.wu@intel.com>
-Cc: Jens Axboe <axboe@kernel.dk>
-Cc: Joe Perches <joe@perches.com>
-Cc: Kees Cook <keescook@chromium.org>
-Cc: Jann Horn <jannh@google.com>
-Cc: Jonathan Corbet <corbet@lwn.net>
-Cc: Nitin Gote <nitin.r.gote@intel.com>
-Cc: Rasmus Villemoes <rasmus.villemoes@prevas.dk>
-Cc: Stephen Kitt <steve@sk2.org>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Fixes: d9b83c756953 ("libnvdimm, btt: rework error clearing")
+Fixes: 9dedc73a4658 ("libnvdimm/btt: Fix LBA masking during 'free list' population")
+Reviewed-by: Vishal Verma <vishal.l.verma@intel.com>
+Signed-off-by: Aneesh Kumar K.V <aneesh.kumar@linux.ibm.com>
+Link: https://lore.kernel.org/r/20190809074726.27815-1-aneesh.kumar@linux.ibm.com
+Signed-off-by: Dan Williams <dan.j.williams@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/trace/events/writeback.h | 38 +++++++++++++++++---------------
- 1 file changed, 20 insertions(+), 18 deletions(-)
+ drivers/nvdimm/btt.c            | 8 ++++----
+ drivers/nvdimm/namespace_devs.c | 7 ++++---
+ 2 files changed, 8 insertions(+), 7 deletions(-)
 
-diff --git a/include/trace/events/writeback.h b/include/trace/events/writeback.h
-index aa7f3aeac7408..79095434c1be3 100644
---- a/include/trace/events/writeback.h
-+++ b/include/trace/events/writeback.h
-@@ -66,8 +66,9 @@ DECLARE_EVENT_CLASS(writeback_page_template,
- 	),
+diff --git a/drivers/nvdimm/btt.c b/drivers/nvdimm/btt.c
+index a8d56887ec881..3e9f45aec8d18 100644
+--- a/drivers/nvdimm/btt.c
++++ b/drivers/nvdimm/btt.c
+@@ -392,9 +392,9 @@ static int btt_flog_write(struct arena_info *arena, u32 lane, u32 sub,
+ 	arena->freelist[lane].sub = 1 - arena->freelist[lane].sub;
+ 	if (++(arena->freelist[lane].seq) == 4)
+ 		arena->freelist[lane].seq = 1;
+-	if (ent_e_flag(ent->old_map))
++	if (ent_e_flag(le32_to_cpu(ent->old_map)))
+ 		arena->freelist[lane].has_err = 1;
+-	arena->freelist[lane].block = le32_to_cpu(ent_lba(ent->old_map));
++	arena->freelist[lane].block = ent_lba(le32_to_cpu(ent->old_map));
  
- 	TP_fast_assign(
--		strncpy(__entry->name,
--			mapping ? dev_name(inode_to_bdi(mapping->host)->dev) : "(unknown)", 32);
-+		strscpy_pad(__entry->name,
-+			    mapping ? dev_name(inode_to_bdi(mapping->host)->dev) : "(unknown)",
-+			    32);
- 		__entry->ino = mapping ? mapping->host->i_ino : 0;
- 		__entry->index = page->index;
- 	),
-@@ -110,8 +111,8 @@ DECLARE_EVENT_CLASS(writeback_dirty_inode_template,
- 		struct backing_dev_info *bdi = inode_to_bdi(inode);
+ 	return ret;
+ }
+@@ -560,8 +560,8 @@ static int btt_freelist_init(struct arena_info *arena)
+ 		 * FIXME: if error clearing fails during init, we want to make
+ 		 * the BTT read-only
+ 		 */
+-		if (ent_e_flag(log_new.old_map) &&
+-				!ent_normal(log_new.old_map)) {
++		if (ent_e_flag(le32_to_cpu(log_new.old_map)) &&
++		    !ent_normal(le32_to_cpu(log_new.old_map))) {
+ 			arena->freelist[i].has_err = 1;
+ 			ret = arena_clear_freelist_error(arena, i);
+ 			if (ret)
+diff --git a/drivers/nvdimm/namespace_devs.c b/drivers/nvdimm/namespace_devs.c
+index a434a5964cb93..d1a062d6ff705 100644
+--- a/drivers/nvdimm/namespace_devs.c
++++ b/drivers/nvdimm/namespace_devs.c
+@@ -1987,7 +1987,7 @@ static struct device *create_namespace_pmem(struct nd_region *nd_region,
+ 		nd_mapping = &nd_region->mapping[i];
+ 		label_ent = list_first_entry_or_null(&nd_mapping->labels,
+ 				typeof(*label_ent), list);
+-		label0 = label_ent ? label_ent->label : 0;
++		label0 = label_ent ? label_ent->label : NULL;
  
- 		/* may be called for files on pseudo FSes w/ unregistered bdi */
--		strncpy(__entry->name,
--			bdi->dev ? dev_name(bdi->dev) : "(unknown)", 32);
-+		strscpy_pad(__entry->name,
-+			    bdi->dev ? dev_name(bdi->dev) : "(unknown)", 32);
- 		__entry->ino		= inode->i_ino;
- 		__entry->state		= inode->i_state;
- 		__entry->flags		= flags;
-@@ -190,8 +191,8 @@ DECLARE_EVENT_CLASS(writeback_write_inode_template,
- 	),
+ 		if (!label0) {
+ 			WARN_ON(1);
+@@ -2322,8 +2322,9 @@ static struct device **scan_labels(struct nd_region *nd_region)
+ 			continue;
  
- 	TP_fast_assign(
--		strncpy(__entry->name,
--			dev_name(inode_to_bdi(inode)->dev), 32);
-+		strscpy_pad(__entry->name,
-+			    dev_name(inode_to_bdi(inode)->dev), 32);
- 		__entry->ino		= inode->i_ino;
- 		__entry->sync_mode	= wbc->sync_mode;
- 		__entry->cgroup_ino	= __trace_wbc_assign_cgroup(wbc);
-@@ -234,8 +235,9 @@ DECLARE_EVENT_CLASS(writeback_work_class,
- 		__field(unsigned int, cgroup_ino)
- 	),
- 	TP_fast_assign(
--		strncpy(__entry->name,
--			wb->bdi->dev ? dev_name(wb->bdi->dev) : "(unknown)", 32);
-+		strscpy_pad(__entry->name,
-+			    wb->bdi->dev ? dev_name(wb->bdi->dev) :
-+			    "(unknown)", 32);
- 		__entry->nr_pages = work->nr_pages;
- 		__entry->sb_dev = work->sb ? work->sb->s_dev : 0;
- 		__entry->sync_mode = work->sync_mode;
-@@ -288,7 +290,7 @@ DECLARE_EVENT_CLASS(writeback_class,
- 		__field(unsigned int, cgroup_ino)
- 	),
- 	TP_fast_assign(
--		strncpy(__entry->name, dev_name(wb->bdi->dev), 32);
-+		strscpy_pad(__entry->name, dev_name(wb->bdi->dev), 32);
- 		__entry->cgroup_ino = __trace_wb_assign_cgroup(wb);
- 	),
- 	TP_printk("bdi %s: cgroup_ino=%u",
-@@ -310,7 +312,7 @@ TRACE_EVENT(writeback_bdi_register,
- 		__array(char, name, 32)
- 	),
- 	TP_fast_assign(
--		strncpy(__entry->name, dev_name(bdi->dev), 32);
-+		strscpy_pad(__entry->name, dev_name(bdi->dev), 32);
- 	),
- 	TP_printk("bdi %s",
- 		__entry->name
-@@ -335,7 +337,7 @@ DECLARE_EVENT_CLASS(wbc_class,
- 	),
+ 		/* skip labels that describe extents outside of the region */
+-		if (nd_label->dpa < nd_mapping->start || nd_label->dpa > map_end)
+-			continue;
++		if (__le64_to_cpu(nd_label->dpa) < nd_mapping->start ||
++		    __le64_to_cpu(nd_label->dpa) > map_end)
++				continue;
  
- 	TP_fast_assign(
--		strncpy(__entry->name, dev_name(bdi->dev), 32);
-+		strscpy_pad(__entry->name, dev_name(bdi->dev), 32);
- 		__entry->nr_to_write	= wbc->nr_to_write;
- 		__entry->pages_skipped	= wbc->pages_skipped;
- 		__entry->sync_mode	= wbc->sync_mode;
-@@ -386,7 +388,7 @@ TRACE_EVENT(writeback_queue_io,
- 	),
- 	TP_fast_assign(
- 		unsigned long *older_than_this = work->older_than_this;
--		strncpy(__entry->name, dev_name(wb->bdi->dev), 32);
-+		strscpy_pad(__entry->name, dev_name(wb->bdi->dev), 32);
- 		__entry->older	= older_than_this ?  *older_than_this : 0;
- 		__entry->age	= older_than_this ?
- 				  (jiffies - *older_than_this) * 1000 / HZ : -1;
-@@ -472,7 +474,7 @@ TRACE_EVENT(bdi_dirty_ratelimit,
- 	),
- 
- 	TP_fast_assign(
--		strlcpy(__entry->bdi, dev_name(wb->bdi->dev), 32);
-+		strscpy_pad(__entry->bdi, dev_name(wb->bdi->dev), 32);
- 		__entry->write_bw	= KBps(wb->write_bandwidth);
- 		__entry->avg_write_bw	= KBps(wb->avg_write_bandwidth);
- 		__entry->dirty_rate	= KBps(dirty_rate);
-@@ -537,7 +539,7 @@ TRACE_EVENT(balance_dirty_pages,
- 
- 	TP_fast_assign(
- 		unsigned long freerun = (thresh + bg_thresh) / 2;
--		strlcpy(__entry->bdi, dev_name(wb->bdi->dev), 32);
-+		strscpy_pad(__entry->bdi, dev_name(wb->bdi->dev), 32);
- 
- 		__entry->limit		= global_wb_domain.dirty_limit;
- 		__entry->setpoint	= (global_wb_domain.dirty_limit +
-@@ -597,8 +599,8 @@ TRACE_EVENT(writeback_sb_inodes_requeue,
- 	),
- 
- 	TP_fast_assign(
--		strncpy(__entry->name,
--		        dev_name(inode_to_bdi(inode)->dev), 32);
-+		strscpy_pad(__entry->name,
-+			    dev_name(inode_to_bdi(inode)->dev), 32);
- 		__entry->ino		= inode->i_ino;
- 		__entry->state		= inode->i_state;
- 		__entry->dirtied_when	= inode->dirtied_when;
-@@ -671,8 +673,8 @@ DECLARE_EVENT_CLASS(writeback_single_inode_template,
- 	),
- 
- 	TP_fast_assign(
--		strncpy(__entry->name,
--			dev_name(inode_to_bdi(inode)->dev), 32);
-+		strscpy_pad(__entry->name,
-+			    dev_name(inode_to_bdi(inode)->dev), 32);
- 		__entry->ino		= inode->i_ino;
- 		__entry->state		= inode->i_state;
- 		__entry->dirtied_when	= inode->dirtied_when;
+ 		i = add_namespace_resource(nd_region, nd_label, devs, count);
+ 		if (i < 0)
 -- 
 2.20.1
 
