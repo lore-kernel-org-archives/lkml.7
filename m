@@ -2,149 +2,116 @@ Return-Path: <SRS0=YRFP=X2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B679C388F3
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 09:02:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96A97C352AA
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 09:03:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 32A0621872
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 09:02:54 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="AmIJP46e"
+	by mail.kernel.org (Postfix) with ESMTP id 730E021872
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 09:03:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733269AbfJAJCx (ORCPT
+        id S1733272AbfJAJDq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Oct 2019 05:02:53 -0400
-Received: from aserp2120.oracle.com ([141.146.126.78]:35614 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732876AbfJAJCx (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Oct 2019 05:02:53 -0400
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x918Xvd8145892;
-        Tue, 1 Oct 2019 09:02:40 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2019-08-05;
- bh=Ss5NpWoU0ZtQE+xaK30GI2odKGwGDndDFGiADsg5f+o=;
- b=AmIJP46eDWMeMGVOKdEbvWtj6RAv6kkkd8oyqL0pDdJvgRP42W+k5v+/WoT8r1OdETyE
- ZXtnX3GCpdVEuLtaNeUyuGJNn3mzp+kQQop1WfGBZYDYkXzBDZCyJC01XD5v/zrnjZiI
- vfiBhC/+tWx2OyMkQPMk8ZAOZsRJ9Uu598LsbnyR51jd+b2jAuas9M6yS8IoBt4CvmGX
- 7RLuXT9ez+lnNIWUxW93nK5GZRQukgoc3H6Ne9DwJmydrVq95wqgqnseraWt8l+2atQJ
- sPaPhTBTsDqGrM9Xj5RX8clZj5ZShWNDK10V5y3FdwTJY+jAtDl1rOemfp3vrFJ0EpDt 2A== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by aserp2120.oracle.com with ESMTP id 2v9yfq4ebw-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 01 Oct 2019 09:02:40 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x918WrbG006916;
-        Tue, 1 Oct 2019 09:02:39 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by userp3030.oracle.com with ESMTP id 2vbmpy4m96-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 01 Oct 2019 09:02:39 +0000
-Received: from abhmp0015.oracle.com (abhmp0015.oracle.com [141.146.116.21])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x9192bnF026280;
-        Tue, 1 Oct 2019 09:02:37 GMT
-Received: from kadam (/41.57.98.10)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 01 Oct 2019 02:02:36 -0700
-Date:   Tue, 1 Oct 2019 12:02:30 +0300
-From:   Dan Carpenter <dan.carpenter@oracle.com>
-To:     Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Cc:     bharat@chelsio.com, dledford@redhat.com, jgg@ziepe.ca,
-        linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel-janitors@vger.kernel.org
-Subject: Re: [PATCH] RDMA/iw_cgxb4: Fix an error handling path in
- 'c4iw_connect()'
-Message-ID: <20191001090229.GK27389@kadam>
-References: <20190923190746.10964-1-christophe.jaillet@wanadoo.fr>
+        Tue, 1 Oct 2019 05:03:46 -0400
+Received: from mx2.suse.de ([195.135.220.15]:49114 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726568AbfJAJDq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Oct 2019 05:03:46 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 53471AFF4;
+        Tue,  1 Oct 2019 09:03:44 +0000 (UTC)
+Message-ID: <196a63271591fbe0bc1fdd5a1a01a25caf5178d0.camel@suse.de>
+Subject: Re: [PATCH v2] ARM: add __always_inline to functions called from
+ __get_user_check()
+From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+To:     Masahiro Yamada <yamada.masahiro@socionext.com>,
+        linux-arm-kernel@lists.infradead.org,
+        Russell King <rmk+kernel@armlinux.org.uk>
+Cc:     Kate Stewart <kstewart@linuxfoundation.org>,
+        Arnd Bergmann <arnd@arndb.de>, Enrico Weigelt <info@metux.net>,
+        Vincent Whitchurch <vincent.whitchurch@axis.com>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Stefan Agner <stefan@agner.ch>, linux-kernel@vger.kernel.org,
+        Allison Randal <allison@lohutok.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Olof Johansson <olof@lixom.net>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Julien Thierry <julien.thierry.kdev@gmail.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Tue, 01 Oct 2019 11:03:40 +0200
+In-Reply-To: <20191001083701.27207-1-yamada.masahiro@socionext.com>
+References: <20191001083701.27207-1-yamada.masahiro@socionext.com>
+Content-Type: multipart/signed; micalg="pgp-sha256";
+        protocol="application/pgp-signature"; boundary="=-1pzhYzFOaS2Q7mcGcHoY"
+User-Agent: Evolution 3.32.4 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190923190746.10964-1-christophe.jaillet@wanadoo.fr>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9396 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=2 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1908290000 definitions=main-1910010083
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9396 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=2 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1908290000
- definitions=main-1910010083
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Sep 23, 2019 at 09:07:46PM +0200, Christophe JAILLET wrote:
-> We should jump to fail3 in order to undo the 'xa_insert_irq()' call.
-> 
-> Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-> ---
-> Not sure which Fixes tag to use because of the many refactorings in this
-> area. So I've choosen to use none :).
-> The issue was already there in 4a740838bf44c. This commit has renamed
-> all labels because a new fail1 was introduced. I've not searched further.
-> 
-> Naming of error labels should be improved. Having nowadays a fail5
-> between fail2 and fail3 (because fail5 was the last
-> error handling path added) is not that readable.
-> However, it goes beyong the purpose of this patch.
-> 
-> Maybe, just using a fail2a, just as already done in 9f5a9632e412 (which
-> introduced fail5) would be enough.
 
-I think/hope that you're joking.  Anyway, these are GW-BASIC style
-labels.  The other anti-pattern that we sometimes see is come-from
-labels where the code does:
+--=-1pzhYzFOaS2Q7mcGcHoY
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-	foo = kmalloc();
-	if (!foo)
-		goto kmalloc_failed;
+On Tue, 2019-10-01 at 17:37 +0900, Masahiro Yamada wrote:
+> KernelCI reports that bcm2835_defconfig is no longer booting since
+> commit ac7c3e4ff401 ("compiler: enable CONFIG_OPTIMIZE_INLINING
+> forcibly") (https://lkml.org/lkml/2019/9/26/825).
+>=20
+> I also received a regression report from Nicolas Saenz Julienne
+> (https://lkml.org/lkml/2019/9/27/263).
+>=20
+> This problem has cropped up on bcm2835_defconfig because it enables
+> CONFIG_CC_OPTIMIZE_FOR_SIZE. The compiler tends to prefer not inlining
+> functions with -Os. I was able to reproduce it with other boards and
+> defconfig files by manually enabling CONFIG_CC_OPTIMIZE_FOR_SIZE.
+>=20
+> The __get_user_check() specifically uses r0, r1, r2 registers.
+> So, uaccess_save_and_enable() and uaccess_restore() must be inlined.
+> Otherwise, those register assignments would be entirely dropped,
+> according to my analysis of the disassembly.
+>=20
+> Prior to commit 9012d011660e ("compiler: allow all arches to enable
+> CONFIG_OPTIMIZE_INLINING"), the 'inline' marker was always enough for
+> inlining functions, except on x86.
+>=20
+> Since that commit, all architectures can enable CONFIG_OPTIMIZE_INLINING.
+> So, __always_inline is now the only guaranteed way of forcible inlining.
+>=20
+> I also added __always_inline to 4 functions in the call-graph from the
+> __get_user_check() macro.
+>=20
+> Fixes: 9012d011660e ("compiler: allow all arches to enable
+> CONFIG_OPTIMIZE_INLINING")
+> Reported-by: "kernelci.org bot" <bot@kernelci.org>
+> Reported-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+> Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
 
-We've no clue what the goto does.  And another anti-pattern is generic
-names where we have "goto out;" instead of a better label name which
-says what the goto does "goto unlock;".  Otherwise we have to scroll
-down every time we encounter a goto.
+Tested-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
 
-Imagine if we used the same anti patterns for naming functions:
 
-	called_from_frob_1();
-	called_from_frob_2();
+--=-1pzhYzFOaS2Q7mcGcHoY
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+Content-Transfer-Encoding: 7bit
 
-And with a string of error lables like this if we name the error labels
-after what the label frees then it makes auditing the function very
-easy.
+-----BEGIN PGP SIGNATURE-----
 
-	one = alloc();
-	if (!one)
-		return -ENOMEM;
+iQEzBAABCAAdFiEErOkkGDHCg2EbPcGjlfZmHno8x/4FAl2TFmwACgkQlfZmHno8
+x/6gYwf/bt9SGaahlMy9jzh92vkL0lR++WMTDA9czeLR9wbO/ccn+pzclxkdt2oV
+zHhrTCh5umkugXPLNKJAwZHfyBCnZ/r4Qe4RUrf4VLaQxHWNtNAhfSroI0213SXW
+xcpmbYWmgFuEkiCBC0WOUESteF78q5e6OXe8jExrj1BQIe4aOqaKHNSMJdkdrbyl
+Im1V51p0JSvVgJPDTZJax4gHko+Tq4/PTPXwCsxeRCu7ftC2eLk+TFFfxufsVAOw
+gTr0yr8wR+ekaeDayR1fp87Uz51u83A3/K0bhfTtcHHMykQwTUFijaYRHeAGd//G
+wV5Zsn+SQl3vKzQsrCieTubb54urkw==
+=6Yel
+-----END PGP SIGNATURE-----
 
-	two = alloc();
-	if (!two) {
-		ret = -ENOMEM;
-		goto free_one;
-	}
+--=-1pzhYzFOaS2Q7mcGcHoY--
 
-	three = alloc();
-	if (!three) {
-		ret = -ENOMEM;
-		goto free_two;
-	}
-
-We only need to remember the most recently allocated resource.  And if
-we need to update the function later then the patch is minimal because
-we only need to change the one goto and the error label.  No need to
-re-number everything.  You can audit a patch with properly named labels
-from directly within your email client instead of needing to re-review
-the whole function in the source.
-
-regards,
-dan carpenter
