@@ -7,464 +7,153 @@ X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7659ECE587
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 12:38:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CBABECE58A
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 12:38:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8F98D21924
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 12:38:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569933493;
-	bh=RP+vRkvxXXi+nz/MV7q6juabjTRuWT6mrhD2UR8v/8k=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=iZZ2XCV3HtDSTh6ntkaAB8WAwmyE1sxrJOIbToUqOfi6X2HDm/EOtqptJolAgUUdb
-	 sorhs5/YaWdGrNBF3GFMW+uYu81NqEgr0xBq7t0tVbA74fzYYZCBsSGCxzxPYEF80P
-	 UCWveoLRTAjYCyQ7A1H3kH4DtRFDXw5mzEY4Lpd8=
+	by mail.kernel.org (Postfix) with ESMTP id DD5DC21920
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 12:38:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="Kc5elUoe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387877AbfJAMiM (ORCPT
+        id S2387893AbfJAMir (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Oct 2019 08:38:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37938 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726393AbfJAMiM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Oct 2019 08:38:12 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A2C6121920;
-        Tue,  1 Oct 2019 12:38:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569933491;
-        bh=RP+vRkvxXXi+nz/MV7q6juabjTRuWT6mrhD2UR8v/8k=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=JEO7CUi5tr2iA3WvDbwoongsf0mgcRS+4ufxh3PtcwYNdz8XQVjP4dVCQP3/gd2DY
-         3VpownEzZ6GT06OALB/2nbrUuGbX+tgPKTkt8R4kOB5eFXez8e642tZOTjWL/pOPQX
-         tiiZPWhqNyi8qlDEvGqe7o1b7yrif2MvalTNT+eM=
-Date:   Tue, 1 Oct 2019 14:38:08 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Mika Westerberg <mika.westerberg@linux.intel.com>
-Cc:     linux-usb@vger.kernel.org,
-        Andreas Noever <andreas.noever@gmail.com>,
-        Michael Jamet <michael.jamet@intel.com>,
-        Yehezkel Bernat <YehezkelShB@gmail.com>,
-        Rajmohan Mani <rajmohan.mani@intel.com>,
-        Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>,
-        Lukas Wunner <lukas@wunner.de>,
-        Alan Stern <stern@rowland.harvard.edu>,
-        Mario.Limonciello@dell.com,
-        Anthony Wong <anthony.wong@canonical.com>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [RFC PATCH 06/22] thunderbolt: Add support for lane bonding
-Message-ID: <20191001123808.GA2954373@kroah.com>
-References: <20191001113830.13028-1-mika.westerberg@linux.intel.com>
- <20191001113830.13028-7-mika.westerberg@linux.intel.com>
+        Tue, 1 Oct 2019 08:38:47 -0400
+Received: from mailout2.w1.samsung.com ([210.118.77.12]:58911 "EHLO
+        mailout2.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732007AbfJAMiq (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Oct 2019 08:38:46 -0400
+Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
+        by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20191001123845euoutp025789fb73d82e853900103a0eee9fbccb~JhjkkEUrj1376613766euoutp02e
+        for <linux-kernel@vger.kernel.org>; Tue,  1 Oct 2019 12:38:45 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20191001123845euoutp025789fb73d82e853900103a0eee9fbccb~JhjkkEUrj1376613766euoutp02e
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1569933525;
+        bh=P3LQEMEr2ElljIQFeYWukVZZz3LkJ8Ybhmdpwqsf1A0=;
+        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
+        b=Kc5elUoefFeEupRb9TuW6SBOmhq0W00Sgqtnjrb8pKXWT+NKi+hoJeb/qvF0gGVVG
+         NoZI8p5nmKYN8hY5xHbJw4rqe5k9m1AVPqtoiECyhShwguXFa9/qdB9UXt6R3BTe+N
+         OdQUq9BQutxwBb67S4dwN3H9dOtXYhYtoVKv6K8s=
+Received: from eusmges3new.samsung.com (unknown [203.254.199.245]) by
+        eucas1p2.samsung.com (KnoxPortal) with ESMTP id
+        20191001123844eucas1p24a109be47dc918a3c988aeeb63b7f6f0~JhjkOeLGg2967929679eucas1p2a;
+        Tue,  1 Oct 2019 12:38:44 +0000 (GMT)
+Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
+        eusmges3new.samsung.com (EUCPMTA) with SMTP id EB.73.04374.4D8439D5; Tue,  1
+        Oct 2019 13:38:44 +0100 (BST)
+Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
+        eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
+        20191001123844eucas1p1ab3cf26fa7a5ec8748b67f49df5aaa47~JhjjyhIH60392003920eucas1p1_;
+        Tue,  1 Oct 2019 12:38:44 +0000 (GMT)
+Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
+        eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
+        20191001123844eusmtrp10339363d1656fab2f497e0178b59ca6e~JhjjxsAZZ0473004730eusmtrp1X;
+        Tue,  1 Oct 2019 12:38:44 +0000 (GMT)
+X-AuditID: cbfec7f5-4f7ff70000001116-24-5d9348d4aacc
+Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
+        eusmgms1.samsung.com (EUCPMTA) with SMTP id CA.0B.04166.4D8439D5; Tue,  1
+        Oct 2019 13:38:44 +0100 (BST)
+Received: from [106.120.51.20] (unknown [106.120.51.20]) by
+        eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
+        20191001123843eusmtip237921a023022d439d4283e2bae0b2dd9~JhjjG90Ma1599415994eusmtip2u;
+        Tue,  1 Oct 2019 12:38:43 +0000 (GMT)
+Subject: Re: [PATCH 1/3] ARM: dts: exynos: Add interrupt to DMC controller
+ in Exynos5422
+To:     Krzysztof Kozlowski <krzk@kernel.org>
+Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-pm@vger.kernel.org, linux-samsung-soc@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, b.zolnierkie@samsung.com,
+        kgene@kernel.org, mark.rutland@arm.com, cw00.choi@samsung.com,
+        kyungmin.park@samsung.com, m.szyprowski@samsung.com,
+        s.nawrocki@samsung.com, myungjoo.ham@samsung.com,
+        robh+dt@kernel.org, willy.mh.wolff.ml@gmail.com
+From:   Lukasz Luba <l.luba@partner.samsung.com>
+Message-ID: <16c56e81-d0a7-a405-fa12-83442364c260@partner.samsung.com>
+Date:   Tue, 1 Oct 2019 14:38:43 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+        Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191001113830.13028-7-mika.westerberg@linux.intel.com>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+In-Reply-To: <20190927085359.GA19131@pi3>
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA01Sa0hTYRju29m5OJodp+WbhcEKUkMzKvgg8QIq+5XRrzBWrXZQyU3bmZYm
+        5KWLzmtalqs0pZoMY2ViOkpBl1O6mOYtozCVpFKLZg3BLI/HyH/P+7zP+z7P+/ExhGKI9GOS
+        9EbOoNckKymZtLlr/lXwgKpCHZo/sh0/vG4j8fDcFIlrHK9IXDrxlcC9vQ9o/DJ3msaNE0Mk
+        fmO/SWFXsQPh671tEnzf8Z7Gd4f7JPhdTj2FLzx10Lhz+hKJf3WPo0hW1VDdgFSt5ve0qtFa
+        QKke3TmnKmmyIpWr0f8AFS8L03LJSemcYWf4MVliSf2O1HbZmdqKQjIbdTImxDDA7oEnV3Um
+        5MEo2HoETlOgCcmW8ByC9hdtlFi4EPTbZ0hBJQzk5UyQYsOCILfsrUQsZhCU5nykBZU3Gw8N
+        rkGpgH3YQBj+7V6eJlgzAYM1QYI1xYZAi/WUQMvZWCirvCcRaCm7DS4WUAK9nj0EP8Y6SVHi
+        BT1Vk8sbPZY2jtxYpMWNvjA6WSMR8RZ4PHOTEOIAm8OA6ZsTiaGjYd49KxGxN3xxNtEi3gzP
+        K4qkIuYhu7h2RZ8FE6W3VjT7oNPZRwrZiCVjm32nSEdBV79FKj6iJ4zMeIkRPKG8+Roh0nLI
+        v6gQ1QHQVPR6JcAGsDRU0mVIaV51mHnVMeZVx5j/+95GUivy5dJ4XQLH79Zzp0N4jY5P0yeE
+        nEjRNaKl3/Z80fmzBbUtHO9ALIOUa+V46rJaQWrS+QxdBwKGUPrIwxbK1Qq5VpORyRlSjhrS
+        kjm+A21ipEpf+dk1Y4cVbILGyJ3kuFTO8K8rYTz8slHcEKxxr1PRza37Y5SLan0wepeSanRE
+        dEcfKd0b62+LURf98aprabI0X+juW7BndXwecGurAii/iO/h97e7t1SFvul5Vh1l4lsTvGxH
+        XMYPYenedYu2SGvhp6nM+BPjwXULvv3G9vNbr+QRksKNEQfDb0BitU+c1t81SrGWWaWUT9Ts
+        CiIMvOYvnYKBEGkDAAA=
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrDIsWRmVeSWpSXmKPExsVy+t/xe7pXPCbHGlz7x2WxccZ6VovrX56z
+        Wsw/co7Vov/xa2aL8+c3sFucbXrDbrHp8TVWi8u75rBZfO49wmgx4/w+Jou1R+6yWyy9fpHJ
+        4nbjCjaL1r1H2C0Ov2lntfh24hGjg4DHmnlrGD12zrrL7rFpVSebx+Yl9R59W1YxenzeJBfA
+        FqVnU5RfWpKqkJFfXGKrFG1oYaRnaGmhZ2RiqWdobB5rZWSqpG9nk5Kak1mWWqRvl6CX0bdC
+        u2A/V8XCyd2sDYyHOboYOTkkBEwkmhsfs4LYQgJLGSWez3aBiItJTNq3nR3CFpb4c62LrYuR
+        C6jmNaNEz7wvjCAJYYEoib3r54MViQhoSlz/+50VpIhZYBazxPorzSwQHS8YJa6caGfuYuTg
+        YBPQk9ixqhCkgVfATWLCtGVMIGEWARWJtk42kLCoQITE4R2zGCFKBCVOznzCAmJzAs2/Mfsf
+        2C5mATOJeZsfMkPY4hK3nsxngrDlJba/ncM8gVFoFpL2WUhaZiFpmYWkZQEjyypGkdTS4tz0
+        3GJDveLE3OLSvHS95PzcTYzAmN527OfmHYyXNgYfYhTgYFTi4Z3wcmKsEGtiWXFl7iFGCQ5m
+        JRFemz+TYoV4UxIrq1KL8uOLSnNSiw8xmgL9NpFZSjQ5H5hu8kriDU0NzS0sDc2NzY3NLJTE
+        eTsEDsYICaQnlqRmp6YWpBbB9DFxcEo1MHpxKDecfPNweoayqUnCvMmsm5R5mzvaJ28V+Ga8
+        5+mzAwuvTFzWlsFswOb8audV/6uc4do3n7olV5Y/67GdWjWR+7uzyxpG89CdLw/tWhYcvvYr
+        Z/h52xtRSTpfV83ICZ9aMEV/2VdR48Pad4SPxPvX+LO8VZjBOWmvbqtguYLziic/prJy6Cqx
+        FGckGmoxFxUnAgDoPfRt/wIAAA==
+X-CMS-MailID: 20191001123844eucas1p1ab3cf26fa7a5ec8748b67f49df5aaa47
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20190925161842eucas1p271a9cf4f62b3d7af02c0a5d0d1eb9c4f
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20190925161842eucas1p271a9cf4f62b3d7af02c0a5d0d1eb9c4f
+References: <20190925161813.21117-1-l.luba@partner.samsung.com>
+        <CGME20190925161842eucas1p271a9cf4f62b3d7af02c0a5d0d1eb9c4f@eucas1p2.samsung.com>
+        <20190925161813.21117-2-l.luba@partner.samsung.com>
+        <20190927085359.GA19131@pi3>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Oct 01, 2019 at 02:38:14PM +0300, Mika Westerberg wrote:
-> Lane bonding allows aggregating the two 10/20 Gb/s (depending on the
-> generation) lanes into a single 20/40 Gb/s bonded link. This allows
-> sharing the full bandwidth more efficiently. In order to establish lane
-> bonding we need to check that the lane bonding is possible through LC
-> and that both end of the link actually supports 2x widths. This also
-> means that all the paths should be established through the primary port
-> so update tb_path_alloc() to handle this as well.
+Hi Krzysztof,
+
+On 9/27/19 10:53 AM, Krzysztof Kozlowski wrote:
+> On Wed, Sep 25, 2019 at 06:18:11PM +0200, Lukasz Luba wrote:
+>> Add interrupt to Dynamic Memory Controller in Exynos5422 and Odroid
+>> XU3-family boards. It will be used instead of devfreq polling mode
+>> governor. The interrupt is connected to performance counters private
+>> for DMC, which might track utilisation of the memory channels.
+>>
+>> Signed-off-by: Lukasz Luba <l.luba@partner.samsung.com>
+>> ---
+>>   arch/arm/boot/dts/exynos5420.dtsi | 2 ++
+>>   1 file changed, 2 insertions(+)
+>>
+>> diff --git a/arch/arm/boot/dts/exynos5420.dtsi b/arch/arm/boot/dts/exynos5420.dtsi
+>> index ac49373baae7..72738e620d11 100644
+>> --- a/arch/arm/boot/dts/exynos5420.dtsi
+>> +++ b/arch/arm/boot/dts/exynos5420.dtsi
+>> @@ -240,6 +240,8 @@
+>>   		dmc: memory-controller@10c20000 {
+>>   			compatible = "samsung,exynos5422-dmc";
+>>   			reg = <0x10c20000 0x100>, <0x10c30000 0x100>;
+>> +			interrupt-parent = <&combiner>;
+>> +			interrupts = <16 0>;
 > 
-> Lane bonding is supported starting from Falcon Ridge (2nd generation)
-> controllers.
-
-Are we only going to be allowed to "bond" two links together?  Or will
-we be doing more than 2 in the future?  If more, then we might want to
-think of a different way to specify these...
-
-Anyway, one tiny nit below:
-
+> You register DMC for DREX0 and DREX1 but take only DREX0 interrupt. Why
+> skipping second?
 > 
-> Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
-> ---
->  .../ABI/testing/sysfs-bus-thunderbolt         |  17 ++
->  drivers/thunderbolt/icm.c                     |  18 +-
->  drivers/thunderbolt/lc.c                      |  28 ++
->  drivers/thunderbolt/path.c                    |  30 +-
->  drivers/thunderbolt/switch.c                  | 274 ++++++++++++++++++
->  drivers/thunderbolt/tb.c                      |  21 ++
->  drivers/thunderbolt/tb.h                      |  10 +
->  drivers/thunderbolt/tb_msgs.h                 |   2 +
->  drivers/thunderbolt/tb_regs.h                 |  20 ++
->  drivers/thunderbolt/tunnel.c                  |  19 +-
->  10 files changed, 429 insertions(+), 10 deletions(-)
-> 
-> diff --git a/Documentation/ABI/testing/sysfs-bus-thunderbolt b/Documentation/ABI/testing/sysfs-bus-thunderbolt
-> index b21fba14689b..2c9166f6fa97 100644
-> --- a/Documentation/ABI/testing/sysfs-bus-thunderbolt
-> +++ b/Documentation/ABI/testing/sysfs-bus-thunderbolt
-> @@ -104,6 +104,23 @@ Contact:	thunderbolt-software@lists.01.org
->  Description:	This attribute contains name of this device extracted from
->  		the device DROM.
->  
-> +What:		/sys/bus/thunderbolt/devices/.../link_speed
-> +Date:		Apr 2020
-> +KernelVersion:	5.6
-> +Contact:	Mika Westerberg <mika.westerberg@linux.intel.com>
-> +Description:	This attribute reports the current upstream link speed
-> +		in Gb/s per lane. If there are two lanes they both are
-> +		running at the same speed. Use link_width to determine
-> +		whether the two lanes are bonded or not.
-> +
-> +What:		/sys/bus/thunderbolt/devices/.../link_width
-> +Date:		Apr 2020
-> +KernelVersion:	5.6
-> +Contact:	Mika Westerberg <mika.westerberg@linux.intel.com>
-> +Description:	This attribute reports the current upstream link width.
-> +		It is 1 for single lane link (or two single lane links)
-> +		and 2 for bonded dual lane link.
-> +
->  What:		/sys/bus/thunderbolt/devices/.../vendor
->  Date:		Sep 2017
->  KernelVersion:	4.13
-> diff --git a/drivers/thunderbolt/icm.c b/drivers/thunderbolt/icm.c
-> index 6550f68f92ce..9c9c6ea2b790 100644
-> --- a/drivers/thunderbolt/icm.c
-> +++ b/drivers/thunderbolt/icm.c
-> @@ -567,7 +567,8 @@ static struct tb_switch *add_switch(struct tb_switch *parent_sw, u64 route,
->  				    size_t ep_name_size, u8 connection_id,
->  				    u8 connection_key, u8 link, u8 depth,
->  				    enum tb_security_level security_level,
-> -				    bool authorized, bool boot)
-> +				    bool authorized, bool boot, bool dual_lane,
-> +				    bool speed_gen3)
 
-That's just a crazy amount of function parameters, with no way of
-remembering what is what, especially when you add 2 more booleans at the
-end.
+Right, the second should also be there: <16 1>. The channel 1 has not
+been triggered in CPU test cases but might be used by some other
+NoC clients.
+I will add it in the next version.
 
-It's your code, but ugh, that's going to be hard to maintain over time
-:(
-
->  {
->  	const struct intel_vss *vss;
->  	struct tb_switch *sw;
-> @@ -592,6 +593,8 @@ static struct tb_switch *add_switch(struct tb_switch *parent_sw, u64 route,
->  	sw->authorized = authorized;
->  	sw->security_level = security_level;
->  	sw->boot = boot;
-> +	sw->link_speed = speed_gen3 ? 20 : 10;
-> +	sw->link_width = dual_lane ? 2 : 1;
->  	init_completion(&sw->rpm_complete);
->  
->  	vss = parse_intel_vss(ep_name, ep_name_size);
-> @@ -697,11 +700,11 @@ icm_fr_device_connected(struct tb *tb, const struct icm_pkg_header *hdr)
->  		(const struct icm_fr_event_device_connected *)hdr;
->  	enum tb_security_level security_level;
->  	struct tb_switch *sw, *parent_sw;
-> +	bool boot, dual_lane, speed_gen3;
->  	struct icm *icm = tb_priv(tb);
->  	bool authorized = false;
->  	struct tb_xdomain *xd;
->  	u8 link, depth;
-> -	bool boot;
->  	u64 route;
->  	int ret;
->  
-> @@ -714,6 +717,8 @@ icm_fr_device_connected(struct tb *tb, const struct icm_pkg_header *hdr)
->  	security_level = (pkg->hdr.flags & ICM_FLAGS_SLEVEL_MASK) >>
->  			 ICM_FLAGS_SLEVEL_SHIFT;
->  	boot = pkg->link_info & ICM_LINK_INFO_BOOT;
-> +	dual_lane = pkg->hdr.flags & ICM_FLAGS_DUAL_LANE;
-> +	speed_gen3 = pkg->hdr.flags & ICM_FLAGS_SPEED_GEN3;
->  
->  	if (pkg->link_info & ICM_LINK_INFO_REJECTED) {
->  		tb_info(tb, "switch at %u.%u was rejected by ICM firmware because topology limit exceeded\n",
-> @@ -814,7 +819,7 @@ icm_fr_device_connected(struct tb *tb, const struct icm_pkg_header *hdr)
->  	add_switch(parent_sw, route, &pkg->ep_uuid, (const u8 *)pkg->ep_name,
->  		   sizeof(pkg->ep_name), pkg->connection_id,
->  		   pkg->connection_key, link, depth, security_level,
-> -		   authorized, boot);
-> +		   authorized, boot, dual_lane, speed_gen3);
->  
->  	tb_switch_put(parent_sw);
->  }
-> @@ -1142,10 +1147,10 @@ __icm_tr_device_connected(struct tb *tb, const struct icm_pkg_header *hdr,
->  {
->  	const struct icm_tr_event_device_connected *pkg =
->  		(const struct icm_tr_event_device_connected *)hdr;
-> +	bool authorized, boot, dual_lane, speed_gen3;
->  	enum tb_security_level security_level;
->  	struct tb_switch *sw, *parent_sw;
->  	struct tb_xdomain *xd;
-> -	bool authorized, boot;
->  	u64 route;
->  
->  	icm_postpone_rescan(tb);
-> @@ -1163,6 +1168,8 @@ __icm_tr_device_connected(struct tb *tb, const struct icm_pkg_header *hdr,
->  	security_level = (pkg->hdr.flags & ICM_FLAGS_SLEVEL_MASK) >>
->  			 ICM_FLAGS_SLEVEL_SHIFT;
->  	boot = pkg->link_info & ICM_LINK_INFO_BOOT;
-> +	dual_lane = pkg->hdr.flags & ICM_FLAGS_DUAL_LANE;
-> +	speed_gen3 = pkg->hdr.flags & ICM_FLAGS_SPEED_GEN3;
->  
->  	if (pkg->link_info & ICM_LINK_INFO_REJECTED) {
->  		tb_info(tb, "switch at %llx was rejected by ICM firmware because topology limit exceeded\n",
-> @@ -1207,7 +1214,8 @@ __icm_tr_device_connected(struct tb *tb, const struct icm_pkg_header *hdr,
->  
->  	sw = add_switch(parent_sw, route, &pkg->ep_uuid, (const u8 *)pkg->ep_name,
->  			sizeof(pkg->ep_name), pkg->connection_id, 0, 0, 0,
-> -			security_level, authorized, boot);
-> +			security_level, authorized, boot, dual_lane,
-> +			speed_gen3);
->  	if (!IS_ERR(sw) && force_rtd3)
->  		sw->rpm = true;
->  
-> diff --git a/drivers/thunderbolt/lc.c b/drivers/thunderbolt/lc.c
-> index af38076088f6..df56523eb822 100644
-> --- a/drivers/thunderbolt/lc.c
-> +++ b/drivers/thunderbolt/lc.c
-> @@ -177,3 +177,31 @@ int tb_lc_set_sleep(struct tb_switch *sw)
->  
->  	return 0;
->  }
-> +
-> +/**
-> + * tb_lc_lane_bonding_possible() - Is lane bonding possible towards switch
-> + * @sw: Switch to check
-> + *
-> + * Checks whether conditions for lane bonding from parent to @sw are
-> + * possible.
-> + */
-> +bool tb_lc_lane_bonding_possible(struct tb_switch *sw)
-> +{
-> +	struct tb_port *up;
-> +	int cap, ret;
-> +	u32 val;
-> +
-> +	if (sw->generation < 2)
-> +		return false;
-> +
-> +	up = tb_upstream_port(sw);
-> +	cap = find_port_lc_cap(up);
-> +	if (cap < 0)
-> +		return false;
-> +
-> +	ret = tb_sw_read(sw, &val, TB_CFG_SWITCH, cap + TB_LC_PORT_ATTR, 1);
-> +	if (ret)
-> +		return false;
-> +
-> +	return !!(val & TB_LC_PORT_ATTR_BE);
-> +}
-> diff --git a/drivers/thunderbolt/path.c b/drivers/thunderbolt/path.c
-> index afe5f8391ebf..6cf66597d5d8 100644
-> --- a/drivers/thunderbolt/path.c
-> +++ b/drivers/thunderbolt/path.c
-> @@ -220,7 +220,8 @@ struct tb_path *tb_path_discover(struct tb_port *src, int src_hopid,
->   * Creates path between two ports starting with given @src_hopid. Reserves
->   * HopIDs for each port (they can be different from @src_hopid depending on
->   * how many HopIDs each port already have reserved). If there are dual
-> - * links on the path, prioritizes using @link_nr.
-> + * links on the path, prioritizes using @link_nr but takes into account
-> + * that the lanes may be bonded.
->   *
->   * Return: Returns a tb_path on success or NULL on failure.
->   */
-> @@ -259,7 +260,9 @@ struct tb_path *tb_path_alloc(struct tb *tb, struct tb_port *src, int src_hopid,
->  		if (!in_port)
->  			goto err;
->  
-> -		if (in_port->dual_link_port && in_port->link_nr != link_nr)
-> +		/* When lanes are bonded primary link must be used */
-> +		if (!in_port->bonded && in_port->dual_link_port &&
-> +		    in_port->link_nr != link_nr)
->  			in_port = in_port->dual_link_port;
->  
->  		ret = tb_port_alloc_in_hopid(in_port, in_hopid, in_hopid);
-> @@ -271,8 +274,27 @@ struct tb_path *tb_path_alloc(struct tb *tb, struct tb_port *src, int src_hopid,
->  		if (!out_port)
->  			goto err;
->  
-> -		if (out_port->dual_link_port && out_port->link_nr != link_nr)
-> -			out_port = out_port->dual_link_port;
-> +		/*
-> +		 * Pick up right port when going from non-bonded to
-> +		 * bonded or from bonded to non-bonded.
-> +		 */
-> +		if (out_port->dual_link_port) {
-> +			if (!in_port->bonded && out_port->bonded &&
-> +			    out_port->link_nr) {
-> +				/*
-> +				 * Use primary link when going from
-> +				 * non-bonded to bonded.
-> +				 */
-> +				out_port = out_port->dual_link_port;
-> +			} else if (!out_port->bonded &&
-> +				   out_port->link_nr != link_nr) {
-> +				/*
-> +				 * If out port is not bonded follow
-> +				 * link_nr.
-> +				 */
-> +				out_port = out_port->dual_link_port;
-> +			}
-> +		}
->  
->  		if (i == num_hops - 1)
->  			ret = tb_port_alloc_out_hopid(out_port, dst_hopid,
-> diff --git a/drivers/thunderbolt/switch.c b/drivers/thunderbolt/switch.c
-> index cc2670dd2698..2b00ea7a979a 100644
-> --- a/drivers/thunderbolt/switch.c
-> +++ b/drivers/thunderbolt/switch.c
-> @@ -775,6 +775,132 @@ struct tb_port *tb_next_port_on_path(struct tb_port *start, struct tb_port *end,
->  	return next;
->  }
->  
-> +static int tb_port_get_link_speed(struct tb_port *port)
-> +{
-> +	u32 val, speed;
-> +	int ret;
-> +
-> +	if (!port->cap_phy)
-> +		return -EINVAL;
-> +
-> +	ret = tb_port_read(port, &val, TB_CFG_PORT,
-> +			   port->cap_phy + LANE_ADP_CS_1, 1);
-> +	if (ret)
-> +		return ret;
-> +
-> +	speed = (val & LANE_ADP_CS_1_CURRENT_SPEED_MASK) >>
-> +		LANE_ADP_CS_1_CURRENT_SPEED_SHIFT;
-> +	return speed == LANE_ADP_CS_1_CURRENT_SPEED_GEN3 ? 20 : 10;
-> +}
-> +
-> +static int tb_port_get_link_width(struct tb_port *port)
-> +{
-> +	u32 val;
-> +	int ret;
-> +
-> +	if (!port->cap_phy)
-> +		return -EINVAL;
-> +
-> +	ret = tb_port_read(port, &val, TB_CFG_PORT,
-> +			   port->cap_phy + LANE_ADP_CS_1, 1);
-> +	if (ret)
-> +		return ret;
-> +
-> +	return (val & LANE_ADP_CS_1_CURRENT_WIDTH_MASK) >>
-> +		LANE_ADP_CS_1_CURRENT_WIDTH_SHIFT;
-> +}
-> +
-> +static bool tb_port_is_width_supported(struct tb_port *port, int width)
-> +{
-> +	u32 phy, widths;
-> +	int ret;
-> +
-> +	if (!port->cap_phy)
-> +		return false;
-> +
-> +	ret = tb_port_read(port, &phy, TB_CFG_PORT,
-> +			   port->cap_phy + LANE_ADP_CS_0, 1);
-> +	if (ret)
-> +		return ret;
-> +
-> +	widths = (phy & LANE_ADP_CS_0_SUPPORTED_WIDTH_MASK) >>
-> +		LANE_ADP_CS_0_SUPPORTED_WIDTH_SHIFT;
-> +
-> +	return !!(widths & width);
-> +}
-> +
-> +static int tb_port_set_link_width(struct tb_port *port, unsigned int width)
-> +{
-> +	u32 val;
-> +	int ret;
-> +
-> +	if (!port->cap_phy)
-> +		return -EINVAL;
-> +
-> +	ret = tb_port_read(port, &val, TB_CFG_PORT,
-> +			   port->cap_phy + LANE_ADP_CS_1, 1);
-> +	if (ret)
-> +		return ret;
-> +
-> +	val &= ~LANE_ADP_CS_1_TARGET_WIDTH_MASK;
-> +	switch (width) {
-> +	case 1:
-> +		val |= LANE_ADP_CS_1_TARGET_WIDTH_SINGLE <<
-> +			LANE_ADP_CS_1_TARGET_WIDTH_SHIFT;
-> +		break;
-> +	case 2:
-> +		val |= LANE_ADP_CS_1_TARGET_WIDTH_DUAL <<
-> +			LANE_ADP_CS_1_TARGET_WIDTH_SHIFT;
-> +		break;
-> +	default:
-> +		return -EINVAL;
-> +	}
-> +
-> +	val |= LANE_ADP_CS_1_LB;
-> +
-> +	return tb_port_write(port, &val, TB_CFG_PORT,
-> +			     port->cap_phy + LANE_ADP_CS_1, 1);
-> +}
-> +
-> +static int tb_port_lane_bonding_enable(struct tb_port *port)
-> +{
-> +	int ret;
-> +
-> +	/*
-> +	 * Enable lane bonding for both links if not already enabled by
-> +	 * for example the boot firmware.
-> +	 */
-> +	ret = tb_port_get_link_width(port);
-> +	if (ret == 1) {
-> +		ret = tb_port_set_link_width(port, 2);
-> +		if (ret)
-> +			return ret;
-> +	}
-> +
-> +	ret = tb_port_get_link_width(port->dual_link_port);
-> +	if (ret == 1) {
-> +		ret = tb_port_set_link_width(port->dual_link_port, 2);
-> +		if (ret) {
-> +			tb_port_set_link_width(port, 1);
-> +			return ret;
-> +		}
-> +	}
-> +
-> +	port->bonded = true;
-> +	port->dual_link_port->bonded = true;
-> +
-> +	return 0;
-> +}
-> +
-> +static void tb_port_lane_bonding_disable(struct tb_port *port)
-> +{
-> +	port->dual_link_port->bonded = false;
-> +	port->bonded = false;
-> +
-> +	tb_port_set_link_width(port->dual_link_port, 1);
-> +	tb_port_set_link_width(port, 1);
-> +}
-> +
->  /**
->   * tb_port_is_enabled() - Is the adapter port enabled
->   * @port: Port to check
-> @@ -1166,6 +1292,26 @@ static ssize_t key_store(struct device *dev, struct device_attribute *attr,
->  }
->  static DEVICE_ATTR(key, 0600, key_show, key_store);
->  
-> +static ssize_t link_speed_show(struct device *dev,
-> +			       struct device_attribute *attr, char *buf)
-> +{
-> +	struct tb_switch *sw = tb_to_switch(dev);
-> +
-> +	return sprintf(buf, "%u.0 Gb/s\n", sw->link_speed);
-
-Why units?  ".0" is implied as it always will be the case, so why not
-just have the units be Gb in the sysfs documentation file and then just
-report link_speed here with nothing else?  Makes it much easier for
-userspace to parse as well.
-
-Otherwise, looks sane to me, nice job.
-
-greg k-h
+Regards,
+Lukasz
