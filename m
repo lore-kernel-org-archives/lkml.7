@@ -2,76 +2,143 @@ Return-Path: <SRS0=YRFP=X2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9E14C352AA
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 20:51:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5E51ECE587
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 20:52:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AB2FE2168B
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 20:51:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A8CB1215EA
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 20:52:32 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CZBkuUYH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727435AbfJAUv6 (ORCPT
+        id S1727443AbfJAUwc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Oct 2019 16:51:58 -0400
-Received: from mga14.intel.com ([192.55.52.115]:8396 "EHLO mga14.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726097AbfJAUv5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Oct 2019 16:51:57 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 01 Oct 2019 13:51:56 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,571,1559545200"; 
-   d="scan'208";a="343106358"
-Received: from nbaca1-mobl1.ger.corp.intel.com (HELO localhost) ([10.252.37.57])
-  by orsmga004.jf.intel.com with ESMTP; 01 Oct 2019 13:51:51 -0700
-Date:   Tue, 1 Oct 2019 23:51:50 +0300
-From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-To:     linux-integrity@vger.kernel.org, Mimi Zohar <zohar@linux.ibm.com>,
-        James Bottomley <James.Bottomley@HansenPartnership.com>,
-        Sumit Garg <sumit.garg@linaro.org>,
-        Stefan Berger <stefanb@linux.vnet.ibm.com>,
-        Peter Huewe <peterhuewe@gmx.de>,
-        Jason Gunthorpe <jgg@ziepe.ca>, Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] tpm: Detach page allocation from tpm_buf
-Message-ID: <20191001205150.GA26709@linux.intel.com>
-References: <20190926172324.3405-1-jarkko.sakkinen@linux.intel.com>
- <20190928075813.nsmu3g7derj2fjmj@cantor>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190928075813.nsmu3g7derj2fjmj@cantor>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Tue, 1 Oct 2019 16:52:32 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:40633 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725942AbfJAUwc (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Oct 2019 16:52:32 -0400
+Received: by mail-wr1-f67.google.com with SMTP id l3so17108143wru.7;
+        Tue, 01 Oct 2019 13:52:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=YdRHcVFToHIZbvkxUNJPK19pypp2Z2yOIgvmAjENZz0=;
+        b=CZBkuUYHqE3ivHd6F1I66DMYJ2YMY706bvqkad/lOPVvMwKUwiUoZ/zRolnJbuFgsd
+         vsdgeiGloPIWskOjaWPQL/Lw0HcGMwMcDXGhRlMkw3txfz6ZXdtdIG3MTM2GXlzEnbC4
+         fM8+iq9dYFXk96hlc+oW8gN6C/mUv3ocKDFjeq0jxuvEtg3wfKIjGWPYbiTj09p0uwuo
+         8GmsMwEskqskeuMFqVtIeqW0PoAF6X4Df1trUbLTin6GfCsfS9zTjDNPaupyK2pin9Ey
+         5Cn/WMXDFYE0Wg5jUSSFbfd1OfosGjodmpSN9LNxozr1Q/L2NlDTUfnUtsUm67AgRzRV
+         GgUg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=YdRHcVFToHIZbvkxUNJPK19pypp2Z2yOIgvmAjENZz0=;
+        b=k2B86yBpSCXKOtNlwH0CaiKI0y5mDnV70J6wxEYfpKmjRW3oXfcZFk3jzBRof+y9do
+         jnfLxHqmM7WYBL7DVBbdWxuW2Uf2rjxSodKALDzOO2G3VZrX7Mrn0k4gHy4SV3pxz+Vv
+         +OISrnEA4ebHKG3fcz7YTFmynPrFGPN6jGSHn8E+PT8wTMjZbN+A7JaOaTlDhm7yyD1i
+         PN2P1UwyR2XBoxl+7gHL/ZeczsmJBEJK6x/kZ2Iz5Vlt4fIAmFZtpTIqGrA8lYwlMAdY
+         UxN1Weku7ftZ5AFmDwL3uLzO29ulSTUiIOllr6n1zdKrznkS++Ya6WbcYiIWtiyuAFbh
+         4vtQ==
+X-Gm-Message-State: APjAAAUxBtIaZ590ABtud0URGxGN17Kt1O1XMaDt5WPfXgd5Nxjs6Ofw
+        qnRpoTnfai/YVxYYoV+Yg5o=
+X-Google-Smtp-Source: APXvYqxkB68UDBZMJnWyKXg3gFOPUhWrTyeISJjqxdeI58U/o4a7897AxfLSCcjzW1MLdXsAVJ7VYA==
+X-Received: by 2002:a5d:62c8:: with SMTP id o8mr18999590wrv.350.1569963147806;
+        Tue, 01 Oct 2019 13:52:27 -0700 (PDT)
+Received: from localhost.localdomain ([86.124.196.40])
+        by smtp.gmail.com with ESMTPSA id y13sm26680057wrg.8.2019.10.01.13.52.26
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 01 Oct 2019 13:52:27 -0700 (PDT)
+From:   Vladimir Oltean <olteanv@gmail.com>
+To:     broonie@kernel.org
+Cc:     linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Vladimir Oltean <olteanv@gmail.com>
+Subject: [PATCH] spi: spi-fsl-dspi: Always use the TCFQ devices in poll mode
+Date:   Tue,  1 Oct 2019 23:52:16 +0300
+Message-Id: <20191001205216.32115-1-olteanv@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Sep 28, 2019 at 12:58:13AM -0700, Jerry Snitselaar wrote:
-> TPM2_CC_GET_RANDOM
+With this patch, the "interrupts" property from the device tree bindings
+is ignored, even if present, if the driver runs in TCFQ mode.
 
-Ugh, I somehow sent v1 2nd time also in terms of contents (was fixed in
-v2).
+Switching to using the DSPI in poll mode has several distinct
+benefits:
 
-I think it would be a great idea to add call to tpm_get_random() to the
-chip startup as an additional test.
+- With interrupts, the DSPI driver in TCFQ mode raises an IRQ after each
+  transmitted word. There is more time wasted for the "waitq" event than
+  for actual I/O. And the DSPI IRQ count can easily get the largest in
+  /proc/interrupts on Freescale boards with attached SPI devices.
 
-> Would this work here?
-> 
->      	err = total ? total : -EIO;
-> out:
-> 	kunmap(data_page);
-> 	__free_page(data_page);
-> 	return err;
+- The SPI I/O time is both lower, and more consistently so. Attached to
+  some Freescale devices are either PTP switches, or SPI RTCs. For
+  reading time off of a SPI slave device, it is important that all SPI
+  transfers take a deterministic time to complete.
 
-I'd guess but I want to keep this commit as dumbed down and mechanical
-as possible given the amount of changes.
+- In poll mode there is much less time spent by the CPU in hardirq
+  context, which helps with the response latency of the system, and at
+  the same time there is more control over when interrupts must be
+  disabled (to get a precise timestamp measurement, which will come in a
+  future patch): win-win.
 
-/Jarkko
+On the LS1021A-TSN board, where the SPI device is a SJA1105 PTP switch
+(with a bits_per_word=8 driver), I created a "benchmark" where I
+periodically transferred a 12-byte message once per second, for 120
+seconds. I then recorded the time before putting the first byte in the
+TX FIFO, and the time after reading the last byte from the RX FIFO. That
+is the transfer delay in nanoseconds.
+
+Interrupt mode:
+
+  delay: min 125120 max 168320 mean 150286 std dev 17675.3
+
+Poll mode:
+
+  delay: min 69440 max 119040 mean 70312.9 std dev 8065.34
+
+Both the mean latency and the standard deviation are more than 50% lower
+in poll mode than in interrupt mode, and the 'max' in poll mode is lower
+than the 'min' in interrupt mode. This is with an 'ondemand' governor on
+an otherwise idle system - therefore running mostly at 600 MHz out of a
+max of 1200 MHz.
+
+Signed-off-by: Vladimir Oltean <olteanv@gmail.com>
+---
+ drivers/spi/spi-fsl-dspi.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/spi/spi-fsl-dspi.c b/drivers/spi/spi-fsl-dspi.c
+index bec758e978fb..7bb018eb67d0 100644
+--- a/drivers/spi/spi-fsl-dspi.c
++++ b/drivers/spi/spi-fsl-dspi.c
+@@ -707,7 +707,7 @@ static irqreturn_t dspi_interrupt(int irq, void *dev_id)
+ 	regmap_read(dspi->regmap, SPI_SR, &spi_sr);
+ 	regmap_write(dspi->regmap, SPI_SR, spi_sr);
+ 
+-	if (!(spi_sr & (SPI_SR_EOQF | SPI_SR_TCFQF)))
++	if (!(spi_sr & SPI_SR_EOQF))
+ 		return IRQ_NONE;
+ 
+ 	if (dspi_rxtx(dspi) == 0) {
+@@ -1114,6 +1114,9 @@ static int dspi_probe(struct platform_device *pdev)
+ 
+ 	dspi_init(dspi);
+ 
++	if (dspi->devtype_data->trans_mode == DSPI_TCFQ_MODE)
++		goto poll_mode;
++
+ 	dspi->irq = platform_get_irq(pdev, 0);
+ 	if (dspi->irq <= 0) {
+ 		dev_info(&pdev->dev,
+-- 
+2.17.1
+
