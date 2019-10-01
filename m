@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE6DFECE587
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 16:41:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C5C4ECE587
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 16:41:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 95D3C20B7C
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 16:41:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5332D20B7C
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 16:41:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569948076;
-	bh=QNM6iEfyjMR2dBWC83OX9hT7NSrwY7XUPzrBgi4u/Gk=;
+	s=default; t=1569948085;
+	bh=Q+BxTpxl1yyf6CTkUQrsfcgTDYJOqPZL8IcLXQm2SYI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=UBVZYRqIpRf2NhRAXb4mMStPPEr0WDVBVkmmsOZis1TeLNDwrUhIk2yiNxlRY9MsT
-	 3AOgQBaHKWzlPVGrynXNrwLfkex0LyEIfyShccipLBzsr4m493vXWmC3EzpiZ7Zb5h
-	 yYPw28S8NkTdNxQBX8nztvqOYDa4zZf8Mwfx3KMc=
+	b=AwO4CUflWwdJ9Sr4zn+sCnEexV/GBpBIcqmn4N7z+rJDUKECcmHCI8j60oLTX0gBD
+	 b+ZE64HRH4QarOmgQG4KJLeR6I/BCHBaWdi3SJJXxP1gCFhIhcMIlJbeAkTX79A+7L
+	 85yAwvO4RxMpi2YH+h5u1TusBLmwUws0bgG0K+9Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730805AbfJAQlP (ORCPT
+        id S1730960AbfJAQlY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Oct 2019 12:41:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52696 "EHLO mail.kernel.org"
+        Tue, 1 Oct 2019 12:41:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52866 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730733AbfJAQlL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Oct 2019 12:41:11 -0400
+        id S1730844AbfJAQlU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Oct 2019 12:41:20 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BD44821872;
-        Tue,  1 Oct 2019 16:41:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2F7FB20B7C;
+        Tue,  1 Oct 2019 16:41:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569948070;
-        bh=QNM6iEfyjMR2dBWC83OX9hT7NSrwY7XUPzrBgi4u/Gk=;
+        s=default; t=1569948079;
+        bh=Q+BxTpxl1yyf6CTkUQrsfcgTDYJOqPZL8IcLXQm2SYI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=kVGNnXfWxbpjFYCaxfWbJ1M7HRxS6VthgBkac++zi7LeoYYkBh8EjeGmXRrCsas33
-         IR2EXTsS4o2o+XgV4wtHshOf6dA8de1bwtiRH8BfdKHEitE7jBGlCqvyDCMNbX2iFK
-         vQF2Gc+3LqVf6gqfEsFDORibIR9+WiDei6bSSyII=
+        b=WuG8RNxusGFoWOk78fjkI1Upva8VoBTkVCFIQ4CFmDlYtckaeHdjfG6D9fwvvZS3O
+         xrnVl7YTslmQDmVPNTmgWr8Y5l0MDVOIZNXF4roQ+6W3JI5En49C4it0j2CtZ67oGo
+         jZX/HBMVABPm0qlpgv3FsbFYqKRxauaq+U1eHYs8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Navid Emamdoost <navid.emamdoost@gmail.com>,
-        Jakub Kicinski <jakub.kicinski@netronome.com>,
+Cc:     Oliver Neukum <oneukum@suse.com>,
         "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, oss-drivers@netronome.com,
-        netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.3 65/71] nfp: flower: prevent memory leak in nfp_flower_spawn_phy_reprs
-Date:   Tue,  1 Oct 2019 12:39:15 -0400
-Message-Id: <20191001163922.14735-65-sashal@kernel.org>
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
+        linux-usb@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.3 69/71] usbnet: sanity checking of packet sizes and device mtu
+Date:   Tue,  1 Oct 2019 12:39:19 -0400
+Message-Id: <20191001163922.14735-69-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191001163922.14735-1-sashal@kernel.org>
 References: <20191001163922.14735-1-sashal@kernel.org>
@@ -61,57 +60,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Navid Emamdoost <navid.emamdoost@gmail.com>
+From: Oliver Neukum <oneukum@suse.com>
 
-[ Upstream commit 8572cea1461a006bce1d06c0c4b0575869125fa4 ]
+[ Upstream commit 280ceaed79f18db930c0cc8bb21f6493490bf29c ]
 
-In nfp_flower_spawn_phy_reprs, in the for loop over eth_tbl if any of
-intermediate allocations or initializations fail memory is leaked.
-requiered releases are added.
+After a reset packet sizes and device mtu can change and need
+to be reevaluated to calculate queue sizes.
+Malicious devices can set this to zero and we divide by it.
+Introduce sanity checking.
 
-Fixes: b94524529741 ("nfp: flower: add per repr private data for LAG offload")
-Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
-Acked-by: Jakub Kicinski <jakub.kicinski@netronome.com>
+Reported-and-tested-by:  syzbot+6102c120be558c885f04@syzkaller.appspotmail.com
+Signed-off-by: Oliver Neukum <oneukum@suse.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/netronome/nfp/flower/main.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ drivers/net/usb/usbnet.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/drivers/net/ethernet/netronome/nfp/flower/main.c b/drivers/net/ethernet/netronome/nfp/flower/main.c
-index 5331e01f373e0..acb02e1513f2e 100644
---- a/drivers/net/ethernet/netronome/nfp/flower/main.c
-+++ b/drivers/net/ethernet/netronome/nfp/flower/main.c
-@@ -518,6 +518,7 @@ nfp_flower_spawn_phy_reprs(struct nfp_app *app, struct nfp_flower_priv *priv)
- 		repr_priv = kzalloc(sizeof(*repr_priv), GFP_KERNEL);
- 		if (!repr_priv) {
- 			err = -ENOMEM;
-+			nfp_repr_free(repr);
- 			goto err_reprs_clean;
- 		}
+diff --git a/drivers/net/usb/usbnet.c b/drivers/net/usb/usbnet.c
+index 07c00e378a5cd..ef1d667b0108b 100644
+--- a/drivers/net/usb/usbnet.c
++++ b/drivers/net/usb/usbnet.c
+@@ -344,6 +344,8 @@ void usbnet_update_max_qlen(struct usbnet *dev)
+ {
+ 	enum usb_device_speed speed = dev->udev->speed;
  
-@@ -528,11 +529,13 @@ nfp_flower_spawn_phy_reprs(struct nfp_app *app, struct nfp_flower_priv *priv)
- 		port = nfp_port_alloc(app, NFP_PORT_PHYS_PORT, repr);
- 		if (IS_ERR(port)) {
- 			err = PTR_ERR(port);
-+			kfree(repr_priv);
- 			nfp_repr_free(repr);
- 			goto err_reprs_clean;
- 		}
- 		err = nfp_port_init_phy_port(app->pf, app, port, i);
- 		if (err) {
-+			kfree(repr_priv);
- 			nfp_port_free(port);
- 			nfp_repr_free(repr);
- 			goto err_reprs_clean;
-@@ -545,6 +548,7 @@ nfp_flower_spawn_phy_reprs(struct nfp_app *app, struct nfp_flower_priv *priv)
- 		err = nfp_repr_init(app, repr,
- 				    cmsg_port_id, port, priv->nn->dp.netdev);
- 		if (err) {
-+			kfree(repr_priv);
- 			nfp_port_free(port);
- 			nfp_repr_free(repr);
- 			goto err_reprs_clean;
++	if (!dev->rx_urb_size || !dev->hard_mtu)
++		goto insanity;
+ 	switch (speed) {
+ 	case USB_SPEED_HIGH:
+ 		dev->rx_qlen = MAX_QUEUE_MEMORY / dev->rx_urb_size;
+@@ -360,6 +362,7 @@ void usbnet_update_max_qlen(struct usbnet *dev)
+ 		dev->tx_qlen = 5 * MAX_QUEUE_MEMORY / dev->hard_mtu;
+ 		break;
+ 	default:
++insanity:
+ 		dev->rx_qlen = dev->tx_qlen = 4;
+ 	}
+ }
 -- 
 2.20.1
 
