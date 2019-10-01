@@ -2,121 +2,123 @@ Return-Path: <SRS0=YRFP=X2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF7D5C388F3
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 10:39:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EBD8C352AA
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 10:40:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C70F22190F
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 10:39:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=shutemov-name.20150623.gappssmtp.com header.i=@shutemov-name.20150623.gappssmtp.com header.b="v/xy58nd"
+	by mail.kernel.org (Postfix) with ESMTP id E616A21D56
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 10:40:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1569926452;
+	bh=RjGesY7GpigpFIYyIbZJxfLAID7Ik88bqq8JTjW3xZo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=b7UXaivSaYnRFH2w60WVcfBaTe4T5uuoHny6ncaig086K/ovANmMV/uJ5ShwuEvDu
+	 qcyAYplfwjtUiENIIqwqjZVg8JGdYLeMJtYgmgXOQ2GN4JD2Mv/TfhZZKgOSDZUgsz
+	 tO76cMJ/QGjQZhI8AizdpwrK0nfSw4KtSQ3gAFqo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730861AbfJAKjl (ORCPT
+        id S1730919AbfJAKkv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Oct 2019 06:39:41 -0400
-Received: from mail-ed1-f66.google.com ([209.85.208.66]:37492 "EHLO
-        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730158AbfJAKjk (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Oct 2019 06:39:40 -0400
-Received: by mail-ed1-f66.google.com with SMTP id r4so11443734edy.4
-        for <linux-kernel@vger.kernel.org>; Tue, 01 Oct 2019 03:39:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=shutemov-name.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=zf2gaKJ/eDzPQzImElJSNiNa4nWg1/5YZ90uH/NU1NQ=;
-        b=v/xy58ndNDY5VCkPAXKs2/P4zolClIIif+c8A3NnFM74/7ovBrnAMaUtpO7Wln9Wcq
-         ny6QHj81q70g43LJBlyxGHqpnQ+V0BNbijiFXPrMEJqHJQVXNyvOaqcw925Bf0Fc//Hc
-         QpsnPQgZhtLqztAvrLQTotgoVrX3r8QHXm3j9PYOprZpEDq1iLNLCvJf5CGj6WSkCXSS
-         WVEB3UdrCMQTkfM8/OTyEg8G6KqzlSxOVMa2G7X4yLPRQfAiV5NounZGcMJcjgbClgde
-         zeem/9i2rgBW2PjrqmK7/N70sOZH4LGFdvSkJwoueMn8CkIPberk8jw7O7S4ez2Mctac
-         tGyg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=zf2gaKJ/eDzPQzImElJSNiNa4nWg1/5YZ90uH/NU1NQ=;
-        b=CwMJBi8k8XcATOoWvCccbaY9/6c2UH7iipHxJBnSRgwlBCXopGKTI1PAw5+xq2XCIw
-         i4+nVkXiVDXq1GYGdfDGkm7c+VIZIkXhHnm6L2kh5C7VVFEny/YB9r8z2BWQs+wHfLgR
-         fHh4EaYa9NTEa9kN+N03wYCFYTe4zT5EDR9Y5x3f55X3V65+g2j2U10YfD1zHNWlv/yg
-         McodMbyij5CtVn0nRiYqT5Iv6k0zwfVf77Pqdjtt1AsW5EJ82bvJGe9yrUuTh5pqSFP4
-         yJ0Y/qQt/V7HXzSBZL3l3NFFBwznKfTnqEUkj7Y0HgZ+6eRtO1t4a1oKJ/569pEfDCr6
-         F/3Q==
-X-Gm-Message-State: APjAAAVKNQI31JMWHaCfZHCt2gCBs7sttXf8hUxmVPz/1JfA4qK8jrAI
-        rLNxj7em+HjiWuZgfrMRBF61Ug==
-X-Google-Smtp-Source: APXvYqy2QolsgNzGnwwkDTLzzKTYfeuu0xP8JusSUnA1oUajUjhhsEMDK7MHjuhIdfj3+Q8Sbo1KeQ==
-X-Received: by 2002:aa7:c34b:: with SMTP id j11mr24782763edr.245.1569926379081;
-        Tue, 01 Oct 2019 03:39:39 -0700 (PDT)
-Received: from box.localdomain ([86.57.175.117])
-        by smtp.gmail.com with ESMTPSA id v8sm3058924edi.49.2019.10.01.03.39.38
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 01 Oct 2019 03:39:38 -0700 (PDT)
-Received: by box.localdomain (Postfix, from userid 1000)
-        id 0E58E102FB8; Tue,  1 Oct 2019 13:39:39 +0300 (+03)
-Date:   Tue, 1 Oct 2019 13:39:39 +0300
-From:   "Kirill A. Shutemov" <kirill@shutemov.name>
-To:     Matthew Wilcox <willy@infradead.org>
-Cc:     linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org,
-        William Kucharski <william.kucharski@oracle.com>
-Subject: Re: [PATCH 12/15] mm: Support removing arbitrary sized pages from
- mapping
-Message-ID: <20191001103939.gglcqk2gzezkrpnc@box>
-References: <20190925005214.27240-1-willy@infradead.org>
- <20190925005214.27240-13-willy@infradead.org>
+        Tue, 1 Oct 2019 06:40:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51268 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726130AbfJAKkv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Oct 2019 06:40:51 -0400
+Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 533B321906;
+        Tue,  1 Oct 2019 10:40:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1569926449;
+        bh=RjGesY7GpigpFIYyIbZJxfLAID7Ik88bqq8JTjW3xZo=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=Cwf1F1dehd7IynLxOYfvypyn3apYhqkQ82qyRJHxWTt5sxUqGuUJ/Czc/O9NW2Kns
+         mG4D8ekmgwgbPTUEPNgonxupyl8tSywqpwNvHGgLsk0rE+VqtNKseqJICPsHohzyWu
+         S4i2b2HZnyO4FK+G6rPck1giLDngCrkOvhvEC8Xc=
+Date:   Tue, 1 Oct 2019 11:40:44 +0100
+From:   Will Deacon <will@kernel.org>
+To:     Masahiro Yamada <yamada.masahiro@socionext.com>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Russell King <rmk+kernel@arm.linux.org.uk>,
+        Stefan Wahren <wahrenst@gmx.net>,
+        Kees Cook <keescook@google.com>
+Subject: Re: [PATCH] compiler: enable CONFIG_OPTIMIZE_INLINING forcibly
+Message-ID: <20191001104043.cmgpa2lztwdwi35m@willie-the-truck>
+References: <20190830034304.24259-1-yamada.masahiro@socionext.com>
+ <f5c221f5749e5768c9f0d909175a14910d349456.camel@suse.de>
+ <CAKwvOdk=tr5nqq1CdZnUvRskaVqsUCP0SEciSGonzY5ayXsMXw@mail.gmail.com>
+ <CAHk-=wiTy7hrA=LkmApBE9PQtri8qYsSOrf2zbms_crfjgR=Hw@mail.gmail.com>
+ <20190930112636.vx2qxo4hdysvxibl@willie-the-truck>
+ <CAK7LNASQZ82KSOrQW7+Wq1vFDCg2__maBEAPMLqUDqZMLuj1rA@mail.gmail.com>
+ <20190930121803.n34i63scet2ec7ll@willie-the-truck>
+ <CAK7LNAT8vx=vEwaj2=JYHzCYa_J68-TSmjN+sHZeaQYyWV95yw@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190925005214.27240-13-willy@infradead.org>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <CAK7LNAT8vx=vEwaj2=JYHzCYa_J68-TSmjN+sHZeaQYyWV95yw@mail.gmail.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Sep 24, 2019 at 05:52:11PM -0700, Matthew Wilcox wrote:
-> From: William Kucharski <william.kucharski@oracle.com>
+On Tue, Oct 01, 2019 at 06:39:34PM +0900, Masahiro Yamada wrote:
+> On Mon, Sep 30, 2019 at 9:18 PM Will Deacon <will@kernel.org> wrote:
+> > I agree that the ARM code looks dodgy with
+> > that call to uaccess_save_and_enable(), but there are __asmeq macros
+> > in there to try to catch that, so it's still very fishy.
 > 
-> __remove_mapping() assumes that pages can only be either base pages
-> or HPAGE_PMD_SIZE.  Ask the page what size it is.
+> I am totally fine with double-checking
+> the output from the compiler.
 
-You also fixes the issue CONFIG_READ_ONLY_THP_FOR_FS=y with this patch.
-The new feature makes the refcount calculation relevant not only for
-PageSwapCache(). It should go to v5.4.
+Sure, but don't you find it odd that those checks didn't fire, and instead
+the failure occurred at runtime?
 
+> > > I fixed it already. See
+> > > https://lore.kernel.org/patchwork/patch/1132459/
+> >
+> > You fixed the specific case above for 32-bit ARM, but the arm64 case
+> > is due to a compiler bug. As it happens, we've reworked our atomics
+> > in 5.4 so that particular issue no longer triggers, but the fact remains
+> > that GCC has been shown to screw up explicit register allocation for
+> > perfectly legitimate code when giving the flexibility to move code out
+> > of line.
+> >
+> > > The problems are fixable by writing correct code.
+> >
+> > Right, in the compiler ;)
 > 
-> Signed-off-by: William Kucharski <william.kucharski@oracle.com>
-> Signed-off-by: Matthew Wilcox (Oracle) <willy@infradead.org>
+> Not always.
+> 
+> You showed a compiler bug case for arm64.
+> The 32bit ARM is not the case.
 
-> ---
->  mm/vmscan.c | 5 +----
->  1 file changed, 1 insertion(+), 4 deletions(-)
-> 
-> diff --git a/mm/vmscan.c b/mm/vmscan.c
-> index a7f9f379e523..9f44868e640b 100644
-> --- a/mm/vmscan.c
-> +++ b/mm/vmscan.c
-> @@ -932,10 +932,7 @@ static int __remove_mapping(struct address_space *mapping, struct page *page,
->  	 * Note that if SetPageDirty is always performed via set_page_dirty,
->  	 * and thus under the i_pages lock, then this ordering is not required.
->  	 */
-> -	if (unlikely(PageTransHuge(page)) && PageSwapCache(page))
-> -		refcount = 1 + HPAGE_PMD_NR;
-> -	else
-> -		refcount = 2;
-> +	refcount = 1 + compound_nr(page);
->  	if (!page_ref_freeze(page, refcount))
->  		goto cannot_free;
->  	/* note: atomic_cmpxchg in page_ref_freeze provides the smp_rmb */
-> -- 
-> 2.23.0
-> 
-> 
+I would be /very/ surprised if the same compiler bug didn't also apply
+to ARM, which is why I'm championing the conservative approach of restoring
+the old default behaviour rather than run the risk of runtime failures.
 
--- 
- Kirill A. Shutemov
+> > If it helps, here is more information about the arm64 failure which
+> > triggered the GCC bugzilla:
+> >
+> > https://www.spinics.net/lists/arm-kernel/msg730329.html
+> >
+> You put multiple references here and there,
+> but they are all about arch_atomic64_dec_if_positive().
+
+Right, but that's because it was the atomic64 selftest code which triggered
+the compiler bug in practice. Without a better understanding of why GCC
+got this wrong, we can't assume that no other register variables are
+affected.
+
+Will
