@@ -2,276 +2,85 @@ Return-Path: <SRS0=YRFP=X2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43AC1C352AA
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 14:00:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 066EFECE587
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 14:00:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 10D6B21855
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 14:00:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569938408;
-	bh=gTf72zjW4aJJth44ueFQ6LVk67ouN20Al3yXqpe4rfs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=mGeHJ78AVS5zT13jIhtgYfoRCq5vF9eJdjvbznmgMt11c6/UKb8JDxU4vLOVMw1da
-	 jXnmN1rOGA/MLDumTKmjvL69FzhAXhpTl2YC7ZGEahOPxMGEFVcKeZQ0MK30x4PFCk
-	 BBt2Tp44cWQVYKiQHXFqdUJY3KdMfVU+42XXBhkc=
+	by mail.kernel.org (Postfix) with ESMTP id CB73B20842
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 14:00:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388869AbfJAOAH (ORCPT
+        id S2388890AbfJAOAp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Oct 2019 10:00:07 -0400
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:40773 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726710AbfJAOAH (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Oct 2019 10:00:07 -0400
-Received: by mail-ot1-f68.google.com with SMTP id y39so11610424ota.7;
-        Tue, 01 Oct 2019 07:00:05 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=JZBM1FPFDAl5uESgEP9tPsFTn7qdNx8IBtQzRJpA2CU=;
-        b=JJ6Ba9U260hPNMjV33RcZ4y4AOaBtHnjOByo9zSyjfHN3eAatyKNOkOgmyd1ru0Sm9
-         Sh0ucXuvXH5gHibOXGHWFPbLnOMTyrqAVMT+4gthL0YteSJyxpstoaO4V9iyLtOIV4mk
-         vqs8y3GDEj61emJcbuf5VrBAYuRm+ZTKiyod7zaSjSik06RgNP9A3j8T17P47IoGyOd6
-         hg7mtUlOXdAodyFCsBiBvJ1HgXnwIQ45nshjfu+Bodd+rOJRidpOPndCoCGsjgyVobpd
-         bwR8ycm8zR0dF61jo6a2FP57u6Jg3T6gS22+G+vOhySqKsyDZ1gbdxnZ8PwUalSEfshh
-         KkmA==
-X-Gm-Message-State: APjAAAVr+PRHwQCvMAYY+PNPx5D0/RCQsKzdEgbERn2PSzCOE2hbsup5
-        HznEYzRjx+2O9BlmLHiUOw==
-X-Google-Smtp-Source: APXvYqyny3jSQCJcTq07B8NFgeh+CqrPZ/jllExOJcitfcVJnCPPhlC7KQB0zTngJlFTUtwdcVIBqg==
-X-Received: by 2002:a9d:4041:: with SMTP id o1mr4924805oti.61.1569938405253;
-        Tue, 01 Oct 2019 07:00:05 -0700 (PDT)
-Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id m25sm5045457oie.39.2019.10.01.07.00.04
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 01 Oct 2019 07:00:04 -0700 (PDT)
-Date:   Tue, 1 Oct 2019 09:00:03 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Krzysztof Kozlowski <krzk@kernel.org>
-Cc:     Mark Rutland <mark.rutland@arm.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Matt Mackall <mpm@selenic.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Guenter Roeck <linux@roeck-us.net>, linux-clk@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, linux-leds@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org, linux-pwm@vger.kernel.org,
-        linux-tegra@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com,
-        linux-rpi-kernel@lists.infradead.org,
-        linux-amlogic@lists.infradead.org,
-        linux-mediatek@lists.infradead.org,
-        linux-rockchip@lists.infradead.org,
-        linux-riscv@lists.infradead.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-crypto@vger.kernel.org, linux-watchdog@vger.kernel.org
-Subject: Re: [PATCH v2 2/8] dt-bindings: sram: Convert SRAM bindings to
- json-schema
-Message-ID: <20191001140003.GA31344@bogus>
-References: <20190918173141.4314-1-krzk@kernel.org>
- <20190918173141.4314-2-krzk@kernel.org>
+        Tue, 1 Oct 2019 10:00:45 -0400
+Received: from mga18.intel.com ([134.134.136.126]:31666 "EHLO mga18.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726554AbfJAOAo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Oct 2019 10:00:44 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 01 Oct 2019 07:00:44 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,571,1559545200"; 
+   d="scan'208";a="191468774"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by fmsmga007.fm.intel.com with ESMTP; 01 Oct 2019 07:00:42 -0700
+Received: from andy by smile with local (Exim 4.92.2)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1iFIhl-00016Z-Gs; Tue, 01 Oct 2019 17:00:41 +0300
+Date:   Tue, 1 Oct 2019 17:00:41 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     kbuild test robot <lkp@intel.com>
+Cc:     kbuild-all@01.org, linux-kernel@vger.kernel.org,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Subject: Re: ERROR: "__aeabi_uldivmod"
+ [drivers/iio/common/hid-sensors/hid-sensor-iio-common.ko] undefined!
+Message-ID: <20191001140041.GQ32742@smile.fi.intel.com>
+References: <201910012128.Ouz6DJXL%lkp@intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190918173141.4314-2-krzk@kernel.org>
+In-Reply-To: <201910012128.Ouz6DJXL%lkp@intel.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Sep 18, 2019 at 07:31:35PM +0200, Krzysztof Kozlowski wrote:
-> Convert generic mmio-sram bindings to DT schema format using
-> json-schema.
-
-I've been slow getting to this because I started on the same thing...
-
+On Tue, Oct 01, 2019 at 09:26:33PM +0800, kbuild test robot wrote:
+> Hi Andy,
 > 
-> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+> FYI, the error/warning still remains.
 > 
-> ---
+> tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
+> head:   54ecb8f7028c5eb3d740bb82b0f1d90f2df63c5c
+> commit: 473d12f7638c93acbd9296a8cd455b203d5eb528 iio: hid-sensor-attributes: Convert to use int_pow()
+> date:   6 weeks ago
+> config: arm-allmodconfig (attached as .config)
+> compiler: arm-linux-gnueabi-gcc (GCC) 7.4.0
+> reproduce:
+>         wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
+>         chmod +x ~/bin/make.cross
+>         git checkout 473d12f7638c93acbd9296a8cd455b203d5eb528
+>         # save the attached .config to linux build tree
+>         GCC_VERSION=7.4.0 make.cross ARCH=arm 
 > 
-> Changes since v1:
-> 1. Indent example with four spaces (more readable).
-> ---
->  .../devicetree/bindings/sram/sram.txt         |  80 ----------
->  .../devicetree/bindings/sram/sram.yaml        | 138 ++++++++++++++++++
->  2 files changed, 138 insertions(+), 80 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/sram/sram.txt
->  create mode 100644 Documentation/devicetree/bindings/sram/sram.yaml
-
-> diff --git a/Documentation/devicetree/bindings/sram/sram.yaml b/Documentation/devicetree/bindings/sram/sram.yaml
-> new file mode 100644
-> index 000000000000..8d9d6ce494b2
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/sram/sram.yaml
-> @@ -0,0 +1,138 @@
-> +# SPDX-License-Identifier: GPL-2.0
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/sram/sram.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Generic on-chip SRAM
-> +
-> +maintainers:
-> +  - FIXME <who@should.it.be>
-
-You can put me.
-
-> +
-> +description: |+
-> +  Simple IO memory regions to be managed by the genalloc API.
-> +
-> +  Each child of the sram node specifies a region of reserved memory. Each
-> +  child node should use a 'reg' property to specify a specific range of
-> +  reserved memory.
-> +
-> +  Following the generic-names recommended practice, node names should
-> +  reflect the purpose of the node. Unit address (@<address>) should be
-> +  appended to the name.
-> +
-> +properties:
-> +  $nodename:
-> +    pattern: "^sram(@.*)?"
-> +
-> +  compatible:
-> +    items:
-> +      - enum:
-> +          - mmio-sram
-> +          - atmel,sama5d2-securam
-
-I was trying to go down the path of putting all the compatibles for 
-various SRAM bindings here, but I ran into some issues. I need to 
-revisit as I've forgotten the exact issue.
-
-This would need to be a 'contains' if this is going to work for others.
-
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  "#address-cells":
-> +    description: Should use the same values as the root node.
-> +
-> +  "#size-cells":
-> +    description: Should use the same values as the root node.
-
-I defined both of these to be 1 as 4GB of SRAM should be enough for a 
-while. We can debate 1 or 2 cells vs. 1, but there's no reason it has to 
-be the same as the root (unless we're failing to do address 
-translation).
-
-> +
-> +  ranges:
-> +    description:
-> +      Should translate from local addresses within the sram to bus addresses.
-> +
-> +  no-memory-wc:
-> +    description:
-> +      The flag indicating, that SRAM memory region has not to be remapped
-> +      as write combining. WC is used by default.
-> +    type: boolean
-> +
-> +  # TODO: additionalProperties: false
-> +
-> +patternProperties:
-> +  "^([a-z]*-)?sram@[a-f0-9]$":
-> +    type: object
-> +    description:
-> +      Each child of the sram node specifies a region of reserved memory.
-> +    properties:
-> +      reg:
-> +        description:
-> +          IO mem address range, relative to the SRAM range.
-
-maxItems: 1
-
-> +
-> +      compatible:
-> +        $ref: /schemas/types.yaml#/definitions/string
-> +        description:
-> +          Should contain a vendor specific string in the form
-> +          <vendor>,[<device>-]<usage>
-> +
-> +      pool:
-> +        description:
-> +          Indicates that the particular reserved SRAM area is addressable
-> +          and in use by another device or devices.
-> +        type: boolean
-> +
-> +      export:
-> +        description:
-> +          Indicates that the reserved SRAM area may be accessed outside
-> +          of the kernel, e.g. by bootloader or userspace.
-> +        type: boolean
-> +
-> +      protect-exec:
-> +        description: |
-> +          Same as 'pool' above but with the additional constraint that code
-> +          will be run from the region and that the memory is maintained as
-> +          read-only, executable during code execution. NOTE: This region must
-> +          be page aligned on start and end in order to properly allow
-> +          manipulation of the page attributes.
-> +        type: boolean
-> +
-> +      label:
-> +        $ref: /schemas/types.yaml#/definitions/string
-
-Already has a type definition.
-
-> +        description:
-> +          The name for the reserved partition, if omitted, the label is taken
-> +          from the node name excluding the unit address.
-> +
-> +      clocks:
-> +        description:
-> +          A list of phandle and clock specifier pair that controls the
-> +          single SRAM clock.
-> +
-> +      # TODO: additionalProperties: false
-> +
-> +    required:
-> +      - reg
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - "#address-cells"
-> +  - "#size-cells"
-> +  - ranges
-> +
-> +examples:
-> +  - |
-> +    sram: sram@5c000000 {
-> +        compatible = "mmio-sram";
-> +        reg = <0x5c000000 0x40000>; /* 256 KiB SRAM at address 0x5c000000 */
-> +
-> +        #address-cells = <1>;
-> +        #size-cells = <1>;
-> +        ranges = <0 0x5c000000 0x40000>;
-> +
-> +        smp-sram@100 {
-> +            compatible = "socvendor,smp-sram";
-> +            reg = <0x100 0x50>;
-> +        };
-> +
-> +        device-sram@1000 {
-> +            reg = <0x1000 0x1000>;
-> +            pool;
-> +        };
-> +
-> +        exported@20000 {
-> +            reg = <0x20000 0x20000>;
-> +            export;
-> +        };
-> +    };
-> -- 
-> 2.17.1
+> If you fix the issue, kindly add following tag
+> Reported-by: kbuild test robot <lkp@intel.com>
 > 
+> All errors (new ones prefixed by >>):
+> 
+> >> ERROR: "__aeabi_uldivmod" [drivers/iio/common/hid-sensors/hid-sensor-iio-common.ko] undefined!
+
+It has f6897deef4fc.
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
