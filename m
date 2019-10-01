@@ -4,52 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 034CAECE58A
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 16:39:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E52C0ECE587
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 16:39:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C82712190F
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 16:39:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B7D172168B
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 16:39:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569947966;
-	bh=sdWjKc7950Ix1oAlzn3Bdm8pbL63ww+3W/0cLP/FqRI=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=SH8kWM5W+NXeYOt+HY/toHP8B0C61h10PgFwB/ZvgTxJ/1CZI9ZSJG6gObMHbuaMb
-	 ki/i6gVs9r4UWJFFbBbZ3UY7gCsFZa30t8A2akcVJizGqGUx9J7SX27iKLmDHLzzc9
-	 5ranTJSCGz+nSR5N5rOH1MXLvi0YwUzg+B09Q+jo=
+	s=default; t=1569947968;
+	bh=6vs+mxOj8LdnxQhig/ZrlnZJRypReXhz9Lk/p8RpLM8=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=e+k+a053yicAQxtiX0XW9uipJcLe/U2WANG856UBElDvXzUOTbj8e8P7HiLDuY3WN
+	 935k+InoTQ4Dr41HT4DnF2+IMgEHKtUbOvTOMkAql6twN+zmCDEWtDF1WNDR8J+xXz
+	 DkPWjSXqKqk3m8RCoC+o7vrXvcxvoHaJQ5X3+siw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727637AbfJAQjZ (ORCPT
+        id S1727693AbfJAQj1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Oct 2019 12:39:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50294 "EHLO mail.kernel.org"
+        Tue, 1 Oct 2019 12:39:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50314 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725747AbfJAQjZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Oct 2019 12:39:25 -0400
+        id S1727612AbfJAQj0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Oct 2019 12:39:26 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 58B532168B;
-        Tue,  1 Oct 2019 16:39:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8D00321906;
+        Tue,  1 Oct 2019 16:39:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569947964;
-        bh=sdWjKc7950Ix1oAlzn3Bdm8pbL63ww+3W/0cLP/FqRI=;
-        h=From:To:Cc:Subject:Date:From;
-        b=lcMSEn1iwSYiXpzEX/NXKetKJPHm1YTvbJ/HdTCfJnJ5kJbveV4SsHzjVEZQppWg7
-         yvMf48oSC1BomSPh+Ksi4NTScQRl8Fz/99VlSMP94QeWtiQ8LqfnIKWnpPLj6YPvfb
-         R254JFg47OUEZzBEYC5fS/9UwYb4HPSvQ1Ihu1rQ=
+        s=default; t=1569947965;
+        bh=6vs+mxOj8LdnxQhig/ZrlnZJRypReXhz9Lk/p8RpLM8=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=jGLI5M3/MgspypwgK7RuuBhxQKM/wm9p8BMl+Zk/7P7Vljj7pADYysfJLKxTc8aOg
+         ErXVPTvc1dheoTBmNyv4BMZvXVr794GbRy+ZvxRHOYWk2/gh5RtkU81awjO0E6inuD
+         fqfR5XtFYyeg9s7615+pN/gpMF/cV4kcHkCp3W5g=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        Amit Kucheria <amit.kucheria@linaro.org>,
-        Zhang Rui <rui.zhang@intel.com>,
-        Sasha Levin <sashal@kernel.org>, linux-arm-msm@vger.kernel.org,
-        linux-pm@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.3 01/71] drivers: thermal: qcom: tsens: Fix memory leak from qfprom read
-Date:   Tue,  1 Oct 2019 12:38:11 -0400
-Message-Id: <20191001163922.14735-1-sashal@kernel.org>
+Cc:     Sascha Hauer <s.hauer@pengutronix.de>,
+        Mimi Zohar <zohar@linux.ibm.com>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-integrity@vger.kernel.org,
+        linux-security-module@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.3 02/71] ima: always return negative code for error
+Date:   Tue,  1 Oct 2019 12:38:12 -0400
+Message-Id: <20191001163922.14735-2-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20191001163922.14735-1-sashal@kernel.org>
+References: <20191001163922.14735-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -59,126 +61,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+From: Sascha Hauer <s.hauer@pengutronix.de>
 
-[ Upstream commit 6b8249abb093551ef173d13a25ed0044d5dd33e0 ]
+[ Upstream commit f5e1040196dbfe14c77ce3dfe3b7b08d2d961e88 ]
 
-memory returned as part of nvmem_read via qfprom_read should be
-freed by the consumer once done.
-Existing code is not doing it so fix it.
+integrity_kernel_read() returns the number of bytes read. If this is
+a short read then this positive value is returned from
+ima_calc_file_hash_atfm(). Currently this is only indirectly called from
+ima_calc_file_hash() and this function only tests for the return value
+being zero or nonzero and also doesn't forward the return value.
+Nevertheless there's no point in returning a positive value as an error,
+so translate a short read into -EINVAL.
 
-Below memory leak detected by kmemleak
-   [<ffffff80088b7658>] kmemleak_alloc+0x50/0x84
-    [<ffffff80081df120>] __kmalloc+0xe8/0x168
-    [<ffffff80086db350>] nvmem_cell_read+0x30/0x80
-    [<ffffff8008632790>] qfprom_read+0x4c/0x7c
-    [<ffffff80086335a4>] calibrate_v1+0x34/0x204
-    [<ffffff8008632518>] tsens_probe+0x164/0x258
-    [<ffffff80084e0a1c>] platform_drv_probe+0x80/0xa0
-    [<ffffff80084de4f4>] really_probe+0x208/0x248
-    [<ffffff80084de2c4>] driver_probe_device+0x98/0xc0
-    [<ffffff80084dec54>] __device_attach_driver+0x9c/0xac
-    [<ffffff80084dca74>] bus_for_each_drv+0x60/0x8c
-    [<ffffff80084de634>] __device_attach+0x8c/0x100
-    [<ffffff80084de6c8>] device_initial_probe+0x20/0x28
-    [<ffffff80084dcbb8>] bus_probe_device+0x34/0x7c
-    [<ffffff80084deb08>] deferred_probe_work_func+0x6c/0x98
-    [<ffffff80080c3da8>] process_one_work+0x160/0x2f8
-
-Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Acked-by: Amit Kucheria <amit.kucheria@linaro.org>
-Signed-off-by: Zhang Rui <rui.zhang@intel.com>
+Signed-off-by: Sascha Hauer <s.hauer@pengutronix.de>
+Signed-off-by: Mimi Zohar <zohar@linux.ibm.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/thermal/qcom/tsens-8960.c |  2 ++
- drivers/thermal/qcom/tsens-v0_1.c | 12 ++++++++++--
- drivers/thermal/qcom/tsens-v1.c   |  1 +
- drivers/thermal/qcom/tsens.h      |  1 +
- 4 files changed, 14 insertions(+), 2 deletions(-)
+ security/integrity/ima/ima_crypto.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/thermal/qcom/tsens-8960.c b/drivers/thermal/qcom/tsens-8960.c
-index 8d9b721dadb65..e46a4e3f25c42 100644
---- a/drivers/thermal/qcom/tsens-8960.c
-+++ b/drivers/thermal/qcom/tsens-8960.c
-@@ -229,6 +229,8 @@ static int calibrate_8960(struct tsens_priv *priv)
- 	for (i = 0; i < num_read; i++, s++)
- 		s->offset = data[i];
+diff --git a/security/integrity/ima/ima_crypto.c b/security/integrity/ima/ima_crypto.c
+index d4c7b8e1b083d..7532b062be594 100644
+--- a/security/integrity/ima/ima_crypto.c
++++ b/security/integrity/ima/ima_crypto.c
+@@ -268,8 +268,11 @@ static int ima_calc_file_hash_atfm(struct file *file,
+ 		rbuf_len = min_t(loff_t, i_size - offset, rbuf_size[active]);
+ 		rc = integrity_kernel_read(file, offset, rbuf[active],
+ 					   rbuf_len);
+-		if (rc != rbuf_len)
++		if (rc != rbuf_len) {
++			if (rc >= 0)
++				rc = -EINVAL;
+ 			goto out3;
++		}
  
-+	kfree(data);
-+
- 	return 0;
- }
- 
-diff --git a/drivers/thermal/qcom/tsens-v0_1.c b/drivers/thermal/qcom/tsens-v0_1.c
-index 6f26fadf4c279..055647bcee67d 100644
---- a/drivers/thermal/qcom/tsens-v0_1.c
-+++ b/drivers/thermal/qcom/tsens-v0_1.c
-@@ -145,8 +145,10 @@ static int calibrate_8916(struct tsens_priv *priv)
- 		return PTR_ERR(qfprom_cdata);
- 
- 	qfprom_csel = (u32 *)qfprom_read(priv->dev, "calib_sel");
--	if (IS_ERR(qfprom_csel))
-+	if (IS_ERR(qfprom_csel)) {
-+		kfree(qfprom_cdata);
- 		return PTR_ERR(qfprom_csel);
-+	}
- 
- 	mode = (qfprom_csel[0] & MSM8916_CAL_SEL_MASK) >> MSM8916_CAL_SEL_SHIFT;
- 	dev_dbg(priv->dev, "calibration mode is %d\n", mode);
-@@ -181,6 +183,8 @@ static int calibrate_8916(struct tsens_priv *priv)
- 	}
- 
- 	compute_intercept_slope(priv, p1, p2, mode);
-+	kfree(qfprom_cdata);
-+	kfree(qfprom_csel);
- 
- 	return 0;
- }
-@@ -198,8 +202,10 @@ static int calibrate_8974(struct tsens_priv *priv)
- 		return PTR_ERR(calib);
- 
- 	bkp = (u32 *)qfprom_read(priv->dev, "calib_backup");
--	if (IS_ERR(bkp))
-+	if (IS_ERR(bkp)) {
-+		kfree(calib);
- 		return PTR_ERR(bkp);
-+	}
- 
- 	calib_redun_sel =  bkp[1] & BKP_REDUN_SEL;
- 	calib_redun_sel >>= BKP_REDUN_SHIFT;
-@@ -313,6 +319,8 @@ static int calibrate_8974(struct tsens_priv *priv)
- 	}
- 
- 	compute_intercept_slope(priv, p1, p2, mode);
-+	kfree(calib);
-+	kfree(bkp);
- 
- 	return 0;
- }
-diff --git a/drivers/thermal/qcom/tsens-v1.c b/drivers/thermal/qcom/tsens-v1.c
-index 10b595d4f6199..870f502f2cb6c 100644
---- a/drivers/thermal/qcom/tsens-v1.c
-+++ b/drivers/thermal/qcom/tsens-v1.c
-@@ -138,6 +138,7 @@ static int calibrate_v1(struct tsens_priv *priv)
- 	}
- 
- 	compute_intercept_slope(priv, p1, p2, mode);
-+	kfree(qfprom_cdata);
- 
- 	return 0;
- }
-diff --git a/drivers/thermal/qcom/tsens.h b/drivers/thermal/qcom/tsens.h
-index 2fd94997245bf..b89083b61c383 100644
---- a/drivers/thermal/qcom/tsens.h
-+++ b/drivers/thermal/qcom/tsens.h
-@@ -17,6 +17,7 @@
- 
- #include <linux/thermal.h>
- #include <linux/regmap.h>
-+#include <linux/slab.h>
- 
- struct tsens_priv;
- 
+ 		if (rbuf[1] && offset) {
+ 			/* Using two buffers, and it is not the first
 -- 
 2.20.1
 
