@@ -4,52 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 91983C352AA
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 16:48:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E535BECE58B
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 16:48:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5E0DF20659
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 16:48:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BB95C21783
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 16:48:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569948495;
-	bh=JlMX2lzPSZonYYQe8neGfCYmIhxJDq7CPBzUWvY4DJk=;
+	s=default; t=1569948498;
+	bh=aMYMszbyV6LpeIhYhtf7nTC8zBEf+25fE5is7feSnPk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=t7f+OJiRc5Za9EzxIMATr/7DPOGgdQxuuitp8CS6ISspeEmb9wrETzGT1pximfHpg
-	 C3++VShLbVmIqZus2VhBfAFl0T14kuWRYLbYDKWB+nqqNpOX26e1CD6JwWjj58ShYO
-	 a3d6BxHHLylr18x9CJb3EYtOCAq9poJs0HnQqkuk=
+	b=jtsDu36iK3WDCx3S+RqNewdRMWvoBf3Myv0jtQN3v3aOae8tZlEKKLz0X+MqFE1+1
+	 yIm10IKuECHjlvW5PrWV4y4/eZIJVTqnwJWALC3kHEowza0SW8ocGzPUpWFOB83ytI
+	 qc+QUnhkyNNZzroo292czX/HPiTpCHpBYnsOCcLU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388751AbfJAQsO (ORCPT
+        id S2390235AbfJAQpT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Oct 2019 12:48:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57796 "EHLO mail.kernel.org"
+        Tue, 1 Oct 2019 12:45:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57344 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390239AbfJAQpV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Oct 2019 12:45:21 -0400
+        id S2390133AbfJAQpA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Oct 2019 12:45:00 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0EFBE20B7C;
-        Tue,  1 Oct 2019 16:45:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 61B4A21920;
+        Tue,  1 Oct 2019 16:44:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569948319;
-        bh=JlMX2lzPSZonYYQe8neGfCYmIhxJDq7CPBzUWvY4DJk=;
+        s=default; t=1569948299;
+        bh=aMYMszbyV6LpeIhYhtf7nTC8zBEf+25fE5is7feSnPk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=aN6+ODPmIYFxTMjm1M0MtcQSD9VxzLQ0/JHi99DbgkZ5lj84FtknYyEQxFK4c+GOu
-         qwW7o6whXffvHDvBe5qyYRkILWJjNQvnHWbeZkrpXaBkvV2M/UtS+0WxHmUvLM55/V
-         RAKH1i3vr2bjO8jwfVQMUHE0i9GyKnCFf2gob9oA=
+        b=oxQyiIiUO5MNcW2mzlOdK9kQWdy4CBKu2tpK98xYMHrDQHrJtQGoA8Rgs3r5Yfw1O
+         s0lBgwmnK5WevVN7qeI9gSDGz581XsxW4+E20aPR60hxxuARE1czEAV290dFJVuZUH
+         I7CgxGJZJhGFDzFR71wfQE2ElszL5p0hvyCrBYow=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Ido Schimmel <idosch@mellanox.com>, Jiri Pirko <jiri@mellanox.com>,
-        Zhang Rui <rui.zhang@intel.com>,
-        Sasha Levin <sashal@kernel.org>, linux-pm@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 11/19] thermal: Fix use-after-free when unregistering thermal zone device
-Date:   Tue,  1 Oct 2019 12:44:57 -0400
-Message-Id: <20191001164505.16708-11-sashal@kernel.org>
+Cc:     Xin Long <lucien.xin@gmail.com>, Xiumei Mu <xmu@redhat.com>,
+        Fei Liu <feliu@redhat.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 26/29] macsec: drop skb sk before calling gro_cells_receive
+Date:   Tue,  1 Oct 2019 12:44:20 -0400
+Message-Id: <20191001164423.16406-26-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191001164505.16708-1-sashal@kernel.org>
-References: <20191001164505.16708-1-sashal@kernel.org>
+In-Reply-To: <20191001164423.16406-1-sashal@kernel.org>
+References: <20191001164423.16406-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -59,132 +60,64 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ido Schimmel <idosch@mellanox.com>
+From: Xin Long <lucien.xin@gmail.com>
 
-[ Upstream commit 1851799e1d2978f68eea5d9dff322e121dcf59c1 ]
+[ Upstream commit ba56d8ce38c8252fff5b745db3899cf092578ede ]
 
-thermal_zone_device_unregister() cancels the delayed work that polls the
-thermal zone, but it does not wait for it to finish. This is racy with
-respect to the freeing of the thermal zone device, which can result in a
-use-after-free [1].
+Fei Liu reported a crash when doing netperf on a topo of macsec
+dev over veth:
 
-Fix this by waiting for the delayed work to finish before freeing the
-thermal zone device. Note that thermal_zone_device_set_polling() is
-never invoked from an atomic context, so it is safe to call
-cancel_delayed_work_sync() that can block.
+  [  448.919128] refcount_t: underflow; use-after-free.
+  [  449.090460] Call trace:
+  [  449.092895]  refcount_sub_and_test+0xb4/0xc0
+  [  449.097155]  tcp_wfree+0x2c/0x150
+  [  449.100460]  ip_rcv+0x1d4/0x3a8
+  [  449.103591]  __netif_receive_skb_core+0x554/0xae0
+  [  449.108282]  __netif_receive_skb+0x28/0x78
+  [  449.112366]  netif_receive_skb_internal+0x54/0x100
+  [  449.117144]  napi_gro_complete+0x70/0xc0
+  [  449.121054]  napi_gro_flush+0x6c/0x90
+  [  449.124703]  napi_complete_done+0x50/0x130
+  [  449.128788]  gro_cell_poll+0x8c/0xa8
+  [  449.132351]  net_rx_action+0x16c/0x3f8
+  [  449.136088]  __do_softirq+0x128/0x320
 
-[1]
-[  +0.002221] ==================================================================
-[  +0.000064] BUG: KASAN: use-after-free in __mutex_lock+0x1076/0x11c0
-[  +0.000016] Read of size 8 at addr ffff8881e48e0450 by task kworker/1:0/17
+The issue was caused by skb's true_size changed without its sk's
+sk_wmem_alloc increased in tcp/skb_gro_receive(). Later when the
+skb is being freed and the skb's truesize is subtracted from its
+sk's sk_wmem_alloc in tcp_wfree(), underflow occurs.
 
-[  +0.000023] CPU: 1 PID: 17 Comm: kworker/1:0 Not tainted 5.2.0-rc6-custom-02495-g8e73ca3be4af #1701
-[  +0.000010] Hardware name: Mellanox Technologies Ltd. MSN2100-CB2FO/SA001017, BIOS 5.6.5 06/07/2016
-[  +0.000016] Workqueue: events_freezable_power_ thermal_zone_device_check
-[  +0.000012] Call Trace:
-[  +0.000021]  dump_stack+0xa9/0x10e
-[  +0.000020]  print_address_description.cold.2+0x9/0x25e
-[  +0.000018]  __kasan_report.cold.3+0x78/0x9d
-[  +0.000016]  kasan_report+0xe/0x20
-[  +0.000016]  __mutex_lock+0x1076/0x11c0
-[  +0.000014]  step_wise_throttle+0x72/0x150
-[  +0.000018]  handle_thermal_trip+0x167/0x760
-[  +0.000019]  thermal_zone_device_update+0x19e/0x5f0
-[  +0.000019]  process_one_work+0x969/0x16f0
-[  +0.000017]  worker_thread+0x91/0xc40
-[  +0.000014]  kthread+0x33d/0x400
-[  +0.000015]  ret_from_fork+0x3a/0x50
+macsec is calling gro_cells_receive() to receive a packet, which
+actually requires skb->sk to be NULL. However when macsec dev is
+over veth, it's possible the skb->sk is still set if the skb was
+not unshared or expanded from the peer veth.
 
-[  +0.000020] Allocated by task 1:
-[  +0.000015]  save_stack+0x19/0x80
-[  +0.000015]  __kasan_kmalloc.constprop.4+0xc1/0xd0
-[  +0.000014]  kmem_cache_alloc_trace+0x152/0x320
-[  +0.000015]  thermal_zone_device_register+0x1b4/0x13a0
-[  +0.000015]  mlxsw_thermal_init+0xc92/0x23d0
-[  +0.000014]  __mlxsw_core_bus_device_register+0x659/0x11b0
-[  +0.000013]  mlxsw_core_bus_device_register+0x3d/0x90
-[  +0.000013]  mlxsw_pci_probe+0x355/0x4b0
-[  +0.000014]  local_pci_probe+0xc3/0x150
-[  +0.000013]  pci_device_probe+0x280/0x410
-[  +0.000013]  really_probe+0x26a/0xbb0
-[  +0.000013]  driver_probe_device+0x208/0x2e0
-[  +0.000013]  device_driver_attach+0xfe/0x140
-[  +0.000013]  __driver_attach+0x110/0x310
-[  +0.000013]  bus_for_each_dev+0x14b/0x1d0
-[  +0.000013]  driver_register+0x1c0/0x400
-[  +0.000015]  mlxsw_sp_module_init+0x5d/0xd3
-[  +0.000014]  do_one_initcall+0x239/0x4dd
-[  +0.000013]  kernel_init_freeable+0x42b/0x4e8
-[  +0.000012]  kernel_init+0x11/0x18b
-[  +0.000013]  ret_from_fork+0x3a/0x50
+ip_rcv() is calling skb_orphan() to drop the skb's sk for tproxy,
+but it is too late for macsec's calling gro_cells_receive(). So
+fix it by dropping the skb's sk earlier on rx path of macsec.
 
-[  +0.000015] Freed by task 581:
-[  +0.000013]  save_stack+0x19/0x80
-[  +0.000014]  __kasan_slab_free+0x125/0x170
-[  +0.000013]  kfree+0xf3/0x310
-[  +0.000013]  thermal_release+0xc7/0xf0
-[  +0.000014]  device_release+0x77/0x200
-[  +0.000014]  kobject_put+0x1a8/0x4c0
-[  +0.000014]  device_unregister+0x38/0xc0
-[  +0.000014]  thermal_zone_device_unregister+0x54e/0x6a0
-[  +0.000014]  mlxsw_thermal_fini+0x184/0x35a
-[  +0.000014]  mlxsw_core_bus_device_unregister+0x10a/0x640
-[  +0.000013]  mlxsw_devlink_core_bus_device_reload+0x92/0x210
-[  +0.000015]  devlink_nl_cmd_reload+0x113/0x1f0
-[  +0.000014]  genl_family_rcv_msg+0x700/0xee0
-[  +0.000013]  genl_rcv_msg+0xca/0x170
-[  +0.000013]  netlink_rcv_skb+0x137/0x3a0
-[  +0.000012]  genl_rcv+0x29/0x40
-[  +0.000013]  netlink_unicast+0x49b/0x660
-[  +0.000013]  netlink_sendmsg+0x755/0xc90
-[  +0.000013]  __sys_sendto+0x3de/0x430
-[  +0.000013]  __x64_sys_sendto+0xe2/0x1b0
-[  +0.000013]  do_syscall_64+0xa4/0x4d0
-[  +0.000013]  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-
-[  +0.000017] The buggy address belongs to the object at ffff8881e48e0008
-               which belongs to the cache kmalloc-2k of size 2048
-[  +0.000012] The buggy address is located 1096 bytes inside of
-               2048-byte region [ffff8881e48e0008, ffff8881e48e0808)
-[  +0.000007] The buggy address belongs to the page:
-[  +0.000012] page:ffffea0007923800 refcount:1 mapcount:0 mapping:ffff88823680d0c0 index:0x0 compound_mapcount: 0
-[  +0.000020] flags: 0x200000000010200(slab|head)
-[  +0.000019] raw: 0200000000010200 ffffea0007682008 ffffea00076ab808 ffff88823680d0c0
-[  +0.000016] raw: 0000000000000000 00000000000d000d 00000001ffffffff 0000000000000000
-[  +0.000007] page dumped because: kasan: bad access detected
-
-[  +0.000012] Memory state around the buggy address:
-[  +0.000012]  ffff8881e48e0300: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-[  +0.000012]  ffff8881e48e0380: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-[  +0.000012] >ffff8881e48e0400: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-[  +0.000008]                                                  ^
-[  +0.000012]  ffff8881e48e0480: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-[  +0.000012]  ffff8881e48e0500: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-[  +0.000007] ==================================================================
-
-Fixes: b1569e99c795 ("ACPI: move thermal trip handling to generic thermal layer")
-Reported-by: Jiri Pirko <jiri@mellanox.com>
-Signed-off-by: Ido Schimmel <idosch@mellanox.com>
-Acked-by: Jiri Pirko <jiri@mellanox.com>
-Signed-off-by: Zhang Rui <rui.zhang@intel.com>
+Fixes: 5491e7c6b1a9 ("macsec: enable GRO and RPS on macsec devices")
+Reported-by: Xiumei Mu <xmu@redhat.com>
+Reported-by: Fei Liu <feliu@redhat.com>
+Signed-off-by: Xin Long <lucien.xin@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/thermal/thermal_core.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/macsec.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/thermal/thermal_core.c b/drivers/thermal/thermal_core.c
-index cd82ae34ddfa3..57603be42c507 100644
---- a/drivers/thermal/thermal_core.c
-+++ b/drivers/thermal/thermal_core.c
-@@ -402,7 +402,7 @@ static void thermal_zone_device_set_polling(struct thermal_zone_device *tz,
- 		mod_delayed_work(system_freezable_wq, &tz->poll_queue,
- 				 msecs_to_jiffies(delay));
- 	else
--		cancel_delayed_work(&tz->poll_queue);
-+		cancel_delayed_work_sync(&tz->poll_queue);
- }
+diff --git a/drivers/net/macsec.c b/drivers/net/macsec.c
+index 0c69dfbd28efa..aa204c98af79c 100644
+--- a/drivers/net/macsec.c
++++ b/drivers/net/macsec.c
+@@ -1234,6 +1234,7 @@ static rx_handler_result_t macsec_handle_frame(struct sk_buff **pskb)
+ 		macsec_rxsa_put(rx_sa);
+ 	macsec_rxsc_put(rx_sc);
  
- static void monitor_thermal_zone(struct thermal_zone_device *tz)
++	skb_orphan(skb);
+ 	ret = gro_cells_receive(&macsec->gro_cells, skb);
+ 	if (ret == NET_RX_SUCCESS)
+ 		count_rx(dev, skb->len);
 -- 
 2.20.1
 
