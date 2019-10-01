@@ -2,103 +2,99 @@ Return-Path: <SRS0=YRFP=X2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A923C352AA
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 17:04:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9105ECE587
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 17:04:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2C81421783
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 17:04:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="MWo5h9KQ";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="Amc4WfDq"
+	by mail.kernel.org (Postfix) with ESMTP id 94EFD2168B
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 17:04:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1569949478;
+	bh=uOi64M7D10KweumGcEk7pWtgTYT8TAKC8lUsJlYhmAQ=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=2dJzPgdC182Ka0Bz7q9qUFaMpEQ5CUZRab2xSy4Ll0c9KK7fpDr4HwnOfnFvqQq+U
+	 Xr5aT9mn4GuK09uKF8idvQ/ww+ISTpbpwjsFg+lyKR8dvI5v/eBg40R0ny4VzuNRaP
+	 Jx5FcSiMRZq8afEkhOoYGX4U2hZZUG8PGJ33XuJ8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732237AbfJAREY (ORCPT
+        id S1730487AbfJAREi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Oct 2019 13:04:24 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:45798 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726983AbfJAREV (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Oct 2019 13:04:21 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id 1AAB26177C; Tue,  1 Oct 2019 17:04:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1569949461;
-        bh=UEkX/cHMbQ0sDePOFVv3FYadMtUY51cOeHadyFKhHvY=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=MWo5h9KQE6iRhSXNDSxstK3op6HdP7U/hDZ2AALli5OwqN2QqeYIm6Xyr0gxdpXuM
-         IvyM5hN1KtE2Mgr9LGJEAzLmgdtSCVDn5Bt91RQr3t0IHGJccCZRGiUdwgfVECLX2i
-         AK4GeB3Ocl18d5kbrxP0RVryYf+sbk+uMWK7D9rU=
-Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
-        by smtp.codeaurora.org (Postfix) with ESMTP id 62D5561728;
-        Tue,  1 Oct 2019 17:04:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1569949454;
-        bh=UEkX/cHMbQ0sDePOFVv3FYadMtUY51cOeHadyFKhHvY=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=Amc4WfDqR/Ia2oe2RA7vGkjDeZHnbdBIgta2AynRkAwnAg0DKlyrue7DBbGM2Zhb5
-         vGwuYZkfCUQAHLfmEkZ4PpW4V1SYojQvaVT//h5rwM4kfQ3lgT6iOMSdCCmBo8q1bl
-         uGQDcZFuvPCNecg3TlEHS0/XCvOgiPl9Mv/+wDig=
+        Tue, 1 Oct 2019 13:04:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50352 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727670AbfJAQj0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Oct 2019 12:39:26 -0400
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id AAB5421872;
+        Tue,  1 Oct 2019 16:39:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1569947966;
+        bh=uOi64M7D10KweumGcEk7pWtgTYT8TAKC8lUsJlYhmAQ=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=vWboagiD+P2IhT7gOaPDHpZfsjH4akDoCvpn8AIVxTe1UuSD8ct6qFNY35Twp38Pp
+         1kT2zIniwtPqIol7veeJQ2hOMpeQZVy21wmLTMgxQWOlWTvLSDPUYxeSqj8qPZfWo1
+         SOItGf4NlbwOR8qDJ4AVy/WMDVQC7AslFurN+UGY=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Sascha Hauer <s.hauer@pengutronix.de>,
+        Mimi Zohar <zohar@linux.ibm.com>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-integrity@vger.kernel.org,
+        linux-security-module@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.3 03/71] ima: fix freeing ongoing ahash_request
+Date:   Tue,  1 Oct 2019 12:38:13 -0400
+Message-Id: <20191001163922.14735-3-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20191001163922.14735-1-sashal@kernel.org>
+References: <20191001163922.14735-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Tue, 01 Oct 2019 10:04:14 -0700
-From:   Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
-To:     Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
-Cc:     Mark Rutland <mark.rutland@arm.com>,
-        Rajendra Nayak <rnayak@codeaurora.org>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        MSM <linux-arm-msm@vger.kernel.org>,
-        Marc Gonzalez <marc.w.gonzalez@free.fr>,
-        lkml <linux-kernel@vger.kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        David Brown <david.brown@linaro.org>,
-        Andy Gross <agross@kernel.org>,
-        Sibi Sankar <sibis@codeaurora.org>,
-        Vivek Gautam <vivek.gautam@codeaurora.org>,
-        Leo Yan <leo.yan@linaro.org>,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCHv9 2/3] arm64: dts: qcom: msm8998: Add Coresight support
-In-Reply-To: <CAOCk7NrK+wY8jfHdS8781NOQtyLm2RRe1NW2Rm3_zeaot0Q99Q@mail.gmail.com>
-References: <cover.1564550873.git.saiprakash.ranjan@codeaurora.org>
- <90114e06825e537c3aafd3de5c78743a9de6fadc.1564550873.git.saiprakash.ranjan@codeaurora.org>
- <CAOCk7NrK+wY8jfHdS8781NOQtyLm2RRe1NW2Rm3_zeaot0Q99Q@mail.gmail.com>
-Message-ID: <16212a577339204e901cf4eefa5e82f1@codeaurora.org>
-X-Sender: saiprakash.ranjan@codeaurora.org
-User-Agent: Roundcube Webmail/1.2.5
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019-10-01 09:13, Jeffrey Hugo wrote:
-> Sai,
-> 
-> This patch breaks boot on the 835 laptops.  However, I haven't seen
-> the same issue on the MTP.  I wonder, is coresight expected to work
-> with production fused devices?  I wonder if thats the difference
-> between the laptop and MTP that is causing the issue.
-> 
-> Let me know what I can do to help debug.
-> 
+From: Sascha Hauer <s.hauer@pengutronix.de>
 
-I did test on MSM8998 MTP and didn't face any issue. I am guessing this 
-is the same issue which you reported regarding cpuidle? Coresight ETM 
-and cpuidle do not work well together since ETMs share the same power 
-domain as CPU and they might get turned off when CPU enters idle states. 
-Can you try with cpuidle.off=1 cmdline or just remove idle states from 
-DT to confirm? If this is the issue, then we can try the below patch 
-from Andrew Murray for ETM save and restore:
+[ Upstream commit 4ece3125f21b1d42b84896c5646dbf0e878464e1 ]
 
-https://patchwork.kernel.org/patch/11097893/
+integrity_kernel_read() can fail in which case we forward to call
+ahash_request_free() on a currently running request. We have to wait
+for its completion before we can free the request.
 
-It is not merged yet. They would appreciate your tested by ;)
+This was observed by interrupting a "find / -type f -xdev -print0 | xargs -0
+cat 1>/dev/null" with ctrl-c on an IMA enabled filesystem.
 
-Thanks,
-Sai
+Signed-off-by: Sascha Hauer <s.hauer@pengutronix.de>
+Signed-off-by: Mimi Zohar <zohar@linux.ibm.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ security/integrity/ima/ima_crypto.c | 5 +++++
+ 1 file changed, 5 insertions(+)
+
+diff --git a/security/integrity/ima/ima_crypto.c b/security/integrity/ima/ima_crypto.c
+index 7532b062be594..73044fc6a9521 100644
+--- a/security/integrity/ima/ima_crypto.c
++++ b/security/integrity/ima/ima_crypto.c
+@@ -271,6 +271,11 @@ static int ima_calc_file_hash_atfm(struct file *file,
+ 		if (rc != rbuf_len) {
+ 			if (rc >= 0)
+ 				rc = -EINVAL;
++			/*
++			 * Forward current rc, do not overwrite with return value
++			 * from ahash_wait()
++			 */
++			ahash_wait(ahash_rc, &wait);
+ 			goto out3;
+ 		}
+ 
+-- 
+2.20.1
+
