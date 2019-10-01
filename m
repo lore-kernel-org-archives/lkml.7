@@ -2,123 +2,92 @@ Return-Path: <SRS0=YRFP=X2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F682C352AA
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 09:18:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13527C352AA
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 09:19:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EA25120700
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 09:18:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DACE020700
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 09:19:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="CmbcU21L"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="IQM5yFLV";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="U5cz+xpq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733297AbfJAJSw (ORCPT
+        id S2387457AbfJAJTJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Oct 2019 05:18:52 -0400
-Received: from merlin.infradead.org ([205.233.59.134]:59324 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732991AbfJAJSw (ORCPT
+        Tue, 1 Oct 2019 05:19:09 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:39574 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728748AbfJAJTI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Oct 2019 05:18:52 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=qJgQIp1PbWd7MDwKGdEgTjEvRijTu/H2sV4eU4dxT3E=; b=CmbcU21Ln2WAiNG4BNCs8y5uf
-        lnrh/jm7R8+P+5vep3wk6Xg6GNVfwmJn2afgLlo7l1BZJ7G68HAFXvQdvyXWI0MRMu140eKGxYKrL
-        i+WvbHkw1H4NMQr9HleZ6DEAPN+zJWwgIQqqpSSGFAsNOhDhtX2hcWWc6XtzTDvh9WBrqPdWkppPb
-        bsuMgn0a1kSzm/0lu3C4+3kBNQXwjoJHdo4NIHxoAagF4AMVQt9LjfP0YiSP0Pl5dkZSamF1HB4Xh
-        AJeGyU6MrHsWgadJ4OA3dEQWaPVDrrt8KPeKg5WM/uDQynOgOVVaisKTuVg0Ur2HTe8OgG4/mvWRP
-        ErUx5iYHw==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92.2 #3 (Red Hat Linux))
-        id 1iFEIq-0002nx-U7; Tue, 01 Oct 2019 09:18:41 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        Tue, 1 Oct 2019 05:19:08 -0400
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id 6D01C6076C; Tue,  1 Oct 2019 09:19:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1569921547;
+        bh=aAWvCZYegerllMvZ/ZPMWpSmc22b+zyrwrm+VBt9azk=;
+        h=Subject:From:In-Reply-To:References:To:Cc:Date:From;
+        b=IQM5yFLVVg6bnVhG3YLAMpKk3d+vgPg7Wj8vWj/ep7AtPo9FV7CLztUozmM8UHpxj
+         7Ef/p+tNBOyK04AkxZg5rtpOYAH82cJq1vc39V3belywebN393RynRVsVG9jrtSThE
+         BJbs2e1IigaO9mol6UlmtkoKaAyfuPwjK4AtptDI=
+Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 7300F30600C;
-        Tue,  1 Oct 2019 11:17:49 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id C2C28265261AC; Tue,  1 Oct 2019 11:18:37 +0200 (CEST)
-Date:   Tue, 1 Oct 2019 11:18:37 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Qian Cai <cai@lca.pw>
-Cc:     akpm@linux-foundation.org, bigeasy@linutronix.de,
-        tglx@linutronix.de, thgarnie@google.com, tytso@mit.edu,
-        cl@linux.com, penberg@kernel.org, rientjes@google.com,
-        mingo@redhat.com, will@kernel.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, keescook@chromium.org
-Subject: [PATCH] sched: Avoid spurious lock dependencies
-Message-ID: <20191001091837.GK4536@hirez.programming.kicks-ass.net>
-References: <1568392064-3052-1-git-send-email-cai@lca.pw>
- <20190925093153.GC4553@hirez.programming.kicks-ass.net>
- <1569424727.5576.221.camel@lca.pw>
- <20190925164527.GG4553@hirez.programming.kicks-ass.net>
- <1569500974.5576.234.camel@lca.pw>
+        (No client certificate requested)
+        (Authenticated sender: kvalo@smtp.codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 4157B6076C;
+        Tue,  1 Oct 2019 09:19:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1569921546;
+        bh=aAWvCZYegerllMvZ/ZPMWpSmc22b+zyrwrm+VBt9azk=;
+        h=Subject:From:In-Reply-To:References:To:Cc:From;
+        b=U5cz+xpqROcI8f5DTuGJByz3aIj61Uka+9PZdzKkLPBmkze5DajJYTCYJvG9RIuho
+         ml6Dh7HaFo+io5nwNbu0VgKqHO8R3jy8uYRSh44brVJS6s5F5QfUOpdDNm25nO2ODx
+         5Ubtx6hxAio3qz9uaVMJ/Y1U4TDBcKCl93jG9idI=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 4157B6076C
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1569500974.5576.234.camel@lca.pw>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 7bit
+Subject: Re: [PATCH] rsi: release skb if rsi_prepare_beacon fails
+From:   Kalle Valo <kvalo@codeaurora.org>
+In-Reply-To: <20190914000812.10188-1-navid.emamdoost@gmail.com>
+References: <20190914000812.10188-1-navid.emamdoost@gmail.com>
+To:     Navid Emamdoost <navid.emamdoost@gmail.com>
+Cc:     unlisted-recipients:; (no To-header on input) emamd001@umn.edu,
+        smccaman@umn.edu, kjlu@umn.edu,
+        Navid Emamdoost <navid.emamdoost@gmail.com>,
+        Amitkumar Karwar <amitkarwar@gmail.com>,
+        Siva Rebbagondla <siva8118@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Illegal-Object: Syntax error in Cc: address found on vger.kernel.org:
+        Cc:     unlisted-recipients:; (no To-header on input)emamd001@umn.edu
+                                                                     ^-missing end of address
+User-Agent: pwcli/0.0.0-git (https://github.com/kvalo/pwcli/) Python/2.7.12
+Message-Id: <20191001091907.6D01C6076C@smtp.codeaurora.org>
+Date:   Tue,  1 Oct 2019 09:19:07 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Sep 26, 2019 at 08:29:34AM -0400, Qian Cai wrote:
+Navid Emamdoost <navid.emamdoost@gmail.com> wrote:
 
-> Oh, you were talking about took #3 while holding #2. Anyway, your patch is
-> working fine so far. Care to post/merge it officially or do you want me to post
-> it?
+> In rsi_send_beacon, if rsi_prepare_beacon fails the allocated skb should
+> be released.
+> 
+> Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
 
-Does the below adequately describe the situation?
+Patch applied to wireless-drivers-next.git, thanks.
 
----
-Subject: sched: Avoid spurious lock dependencies
+d563131ef23c rsi: release skb if rsi_prepare_beacon fails
 
-While seemingly harmless, __sched_fork() does hrtimer_init(), which,
-when DEBUG_OBJETS, can end up doing allocations.
+-- 
+https://patchwork.kernel.org/patch/11145515/
 
-This then results in the following lock order:
-
-  rq->lock
-    zone->lock.rlock
-      batched_entropy_u64.lock
-
-Which in turn causes deadlocks when we do wakeups while holding that
-batched_entropy lock -- as the random code does.
-
-Solve this by moving __sched_fork() out from under rq->lock. This is
-safe because nothing there relies on rq->lock, as also evident from the
-other __sched_fork() callsite.
-
-Fixes: b7d5dc21072c ("random: add a spinlock_t to struct batched_entropy")
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
----
- kernel/sched/core.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
-
-diff --git a/kernel/sched/core.c b/kernel/sched/core.c
-index 7880f4f64d0e..1832fc0fbec5 100644
---- a/kernel/sched/core.c
-+++ b/kernel/sched/core.c
-@@ -6039,10 +6039,11 @@ void init_idle(struct task_struct *idle, int cpu)
- 	struct rq *rq = cpu_rq(cpu);
- 	unsigned long flags;
- 
-+	__sched_fork(0, idle);
-+
- 	raw_spin_lock_irqsave(&idle->pi_lock, flags);
- 	raw_spin_lock(&rq->lock);
- 
--	__sched_fork(0, idle);
- 	idle->state = TASK_RUNNING;
- 	idle->se.exec_start = sched_clock();
- 	idle->flags |= PF_IDLE;
-
+https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
 
