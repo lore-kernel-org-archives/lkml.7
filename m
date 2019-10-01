@@ -4,55 +4,55 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 12185C352AA
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 08:49:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3AEF3C388F3
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 08:49:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D8BFE2133F
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 08:49:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0CC932133F
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 08:49:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569919766;
-	bh=Y6bBCAhnoN+oQaM/xasUAOl9f9CxTcwf2xIOYgxYlZ4=;
+	s=default; t=1569919768;
+	bh=dsarGCswgx7ic5yApssoOVQt7STf0OL5uaDHkr1jQws=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=N77mE4/sfRUEhs3Jxb5lDkYsOgK5cGbhmYYXxfgfoctwNGVsHQb3M8CcQhhQMUPYT
-	 foYwr52p/WVfuUiLZI4SB4v+O8lqa8qmSm8+nih1+HdKnBCYdJvNznMZW877lFlwbU
-	 kWSWqZlaWDc9Sxq7NOOVuz57pkqJp0EAuOPU0sGs=
+	b=rfyQ1Svrl9f2KNtns1S87yCX5L4vnkILufcb7Zv/gbh24NRD8gGh/rDBuzhdKfhms
+	 lJHmhEn2D3epIWM9tLUggJ2Wzq4LVxKulVpuU2YTnR9DK2j3ppEre+cS0CaWiyYBnj
+	 IGDpLqSpii4sg1+pgWO5qHqyqVJW/XO6hlaxRk10=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733208AbfJAIt0 (ORCPT
+        id S1733218AbfJAIt1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Oct 2019 04:49:26 -0400
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:33175 "EHLO
+        Tue, 1 Oct 2019 04:49:27 -0400
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:44381 "EHLO
         mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727615AbfJAItV (ORCPT
+        with ESMTP id S1733162AbfJAItW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Oct 2019 04:49:21 -0400
-Received: by mail-lj1-f196.google.com with SMTP id a22so12467126ljd.0;
-        Tue, 01 Oct 2019 01:49:19 -0700 (PDT)
+        Tue, 1 Oct 2019 04:49:22 -0400
+Received: by mail-lj1-f196.google.com with SMTP id m13so12409800ljj.11;
+        Tue, 01 Oct 2019 01:49:20 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=JUd78FTTvuyVB+HT3mJkVtnKhl3dv/ZLiCCH/pdhHmA=;
-        b=OKICGYx3cZG1VILkvNJkl0RPCd40LJtWcrwuEI09BmKfyqaghPLqP6RG097l6ATm/h
-         bT4KbAMg3QFdbklRp4NC5xGe1YNYnHqiMo96qfeMkmJHGMc3IHBrgq43aQffpgapUo2J
-         +RrzKFowTkOR90+vjF8dCg7LPz3GhdY2Af96tBDv5cxve8qtXV+9v/Q5/rPpLBRk8hbN
-         t/WhNly0hMDOwX131SQ84tlLWxO73lZIFiRx7V/NK4cSZLgjtPK+EVvPmb7GR9o1Jd3i
-         glUSBjdFieHcdAB/XEneNsCRfX/TefWatMBXU37FfB54tycdvy59E1mZYl/vMCdE4MZJ
-         iJgg==
-X-Gm-Message-State: APjAAAV2FKo738iLMp8CFC0JPV+P84f21ieYl2BKpmgVWHIQtImFgX1F
-        L6UWV01dJ4H5LY/XQJw+suc=
-X-Google-Smtp-Source: APXvYqzyk9KKiUwbpuHhcejhs2Rq0Ta8oGoO3n74kd2chyGPqAjezkB5yhUJ0pgt0iWxKZLBwVwj6w==
-X-Received: by 2002:a2e:7a16:: with SMTP id v22mr4690114ljc.61.1569919758982;
-        Tue, 01 Oct 2019 01:49:18 -0700 (PDT)
+        bh=Ca/INmDFVsC6VnPl4lbuo+UeGmswEkRdIM5NeHHd3ug=;
+        b=Ww2Ryi3ltsDgPMrNrUxlUd1YCrtKo4JXAq66jwhEe5NhT3hH6bvP3PCNYNTXWWH/km
+         rnASuR5wZ/e7lFdrzlwDbZwYGPdCB1pLom4PU5IGqCn0HUOzyhRoNuFZ3zS1Qv1Q0BlI
+         OubmPXEvOAjpE2tmNxkggcT8p1DJPrSJ1bMKcXjdACiBJJFLIThbGNKqPbrIOjgdiSS8
+         LLDdlphbJv0NC6KwYkn9T4+FhtqkWLBm8pMy78ACj4K7jpypqmXY02NCz7ip5kgwuByZ
+         5odw/nPiZojdsFm7CCzljDuNapnvdx7u9/whkX0NFc8gNnqDp5VBYs2YZfzyCKKpQvKR
+         /Wlw==
+X-Gm-Message-State: APjAAAVQRnLGLiV7f6pH4I/zY1gt915BUquHgIQDjPfyMusTTv2k0uYo
+        aUCRfvfq32JcZqMNBFnp6Jk=
+X-Google-Smtp-Source: APXvYqx6zk0AODtqV62ey8fF5pZauaelQT9dehzN+xR3TYKKj5ckKfHYTVe4n8+ixmC52JRbSN1mxQ==
+X-Received: by 2002:a2e:4296:: with SMTP id h22mr15418860ljf.208.1569919760229;
+        Tue, 01 Oct 2019 01:49:20 -0700 (PDT)
 Received: from xi.terra (c-51f1e055.07-184-6d6c6d4.bbcust.telenor.se. [85.224.241.81])
-        by smtp.gmail.com with ESMTPSA id n2sm3860473ljj.30.2019.10.01.01.49.16
+        by smtp.gmail.com with ESMTPSA id h12sm3880087ljg.24.2019.10.01.01.49.16
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 01 Oct 2019 01:49:16 -0700 (PDT)
+        Tue, 01 Oct 2019 01:49:18 -0700 (PDT)
 Received: from johan by xi.terra with local (Exim 4.92.2)
         (envelope-from <johan@xi.terra>)
-        id 1iFDqX-0000XE-68; Tue, 01 Oct 2019 10:49:25 +0200
+        id 1iFDqX-0000XP-BP; Tue, 01 Oct 2019 10:49:25 +0200
 From:   Johan Hovold <johan@kernel.org>
 To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Mauro Carvalho Chehab <mchehab@kernel.org>
@@ -60,10 +60,11 @@ Cc:     Pete Zaitcev <zaitcev@redhat.com>,
         Alan Stern <stern@rowland.harvard.edu>,
         linux-media@vger.kernel.org, linux-usb@vger.kernel.org,
         linux-kernel@vger.kernel.org, Johan Hovold <johan@kernel.org>,
-        stable <stable@vger.kernel.org>
-Subject: [PATCH v2 2/4] USB: usblp: fix runtime PM after driver unbind
-Date:   Tue,  1 Oct 2019 10:49:06 +0200
-Message-Id: <20191001084908.2003-3-johan@kernel.org>
+        stable <stable@vger.kernel.org>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Subject: [PATCH v2 4/4] media: stkwebcam: fix runtime PM after driver unbind
+Date:   Tue,  1 Oct 2019 10:49:08 +0200
+Message-Id: <20191001084908.2003-5-johan@kernel.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191001084908.2003-1-johan@kernel.org>
 References: <20191001084908.2003-1-johan@kernel.org>
@@ -82,33 +83,31 @@ unbound from the interface.
 Leaving the interface with a positive PM usage counter would prevent a
 later bound driver from suspending the device.
 
+Note that runtime PM has never actually been enabled for this driver
+since the support_autosuspend flag in its usb_driver struct is not set.
+
 Fixes: c2b71462d294 ("USB: core: Fix bug caused by duplicate interface PM usage counter")
 Cc: stable <stable@vger.kernel.org>
+Acked-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 Signed-off-by: Johan Hovold <johan@kernel.org>
 ---
- drivers/usb/class/usblp.c | 8 +++++---
- 1 file changed, 5 insertions(+), 3 deletions(-)
+ drivers/media/usb/stkwebcam/stk-webcam.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/drivers/usb/class/usblp.c b/drivers/usb/class/usblp.c
-index 7fea4999d352..fb8bd60c83f4 100644
---- a/drivers/usb/class/usblp.c
-+++ b/drivers/usb/class/usblp.c
-@@ -461,10 +461,12 @@ static int usblp_release(struct inode *inode, struct file *file)
+diff --git a/drivers/media/usb/stkwebcam/stk-webcam.c b/drivers/media/usb/stkwebcam/stk-webcam.c
+index be8041e3e6b8..b0cfa4c1f8cc 100644
+--- a/drivers/media/usb/stkwebcam/stk-webcam.c
++++ b/drivers/media/usb/stkwebcam/stk-webcam.c
+@@ -643,8 +643,7 @@ static int v4l_stk_release(struct file *fp)
+ 		dev->owner = NULL;
+ 	}
  
- 	mutex_lock(&usblp_mutex);
- 	usblp->used = 0;
--	if (usblp->present) {
-+	if (usblp->present)
- 		usblp_unlink_urbs(usblp);
--		usb_autopm_put_interface(usblp->intf);
--	} else		/* finish cleanup from disconnect */
-+
-+	usb_autopm_put_interface(usblp->intf);
-+
-+	if (!usblp->present)		/* finish cleanup from disconnect */
- 		usblp_cleanup(usblp);
- 	mutex_unlock(&usblp_mutex);
- 	return 0;
+-	if (is_present(dev))
+-		usb_autopm_put_interface(dev->interface);
++	usb_autopm_put_interface(dev->interface);
+ 	mutex_unlock(&dev->lock);
+ 	return v4l2_fh_release(fp);
+ }
 -- 
 2.23.0
 
