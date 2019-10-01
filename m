@@ -7,50 +7,49 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 01855C352AA
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 16:48:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5493C352AA
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 16:48:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C96492168B
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 16:48:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8C66E20659
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 16:48:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569948486;
-	bh=DdStZYFpYZrqCK5j5UIujWCDEOKqjXsCIKOn23cHrNI=;
+	s=default; t=1569948491;
+	bh=x5Dh/lsFvWpy8PJRDAS+pIIwjaN0mNYgFOUG/aDqDhc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ed4LyK4HvQW+7y4UFPAURoBnYo0issDsj7h1neknpWEiyQACA6MLXeMNSHIVpQZlY
-	 ocNQXPrXv75gQN09pLbT03WdcIM+dUDqJv0drfl6Sl1Bq6vrhY/YNPZkdzcXjX0XTV
-	 5WQApHgml00VMg47e6gC6EfTTGW6hNkm5VgnMFNE=
+	b=Pfc3Tc/8K6qPKen24RYkjdvFh4GhE75YL+YMNt/YY7P5JQSBh5Vl4+LNn1BoMgR/Z
+	 9rBAvDP3kaMePZuMCm9wou1/AwR1KAbevqjd8MBzzs7SF0ywlIfYk8Jg72/C5gqbpF
+	 pKXVDqNHqjlsJnyo+6WzNTQnkBAqX6zjTYLaJNc8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390245AbfJAQpV (ORCPT
+        id S2388331AbfJAQsK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Oct 2019 12:45:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57490 "EHLO mail.kernel.org"
+        Tue, 1 Oct 2019 12:48:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57810 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390154AbfJAQpE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Oct 2019 12:45:04 -0400
+        id S2390238AbfJAQpV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Oct 2019 12:45:21 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A18C520B7C;
-        Tue,  1 Oct 2019 16:45:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3231C2168B;
+        Tue,  1 Oct 2019 16:45:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569948303;
-        bh=DdStZYFpYZrqCK5j5UIujWCDEOKqjXsCIKOn23cHrNI=;
+        s=default; t=1569948321;
+        bh=x5Dh/lsFvWpy8PJRDAS+pIIwjaN0mNYgFOUG/aDqDhc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=bcP3hhzaVAM4UOFTdEIy1LojEvaog28ogA5U2UHjWmYzNV1Va+U4PoKGdTRH4W/ad
-         Zy699cdYVZMKL2Nhmq0VSQY8Z0iNoEf0qvO1GJgysTam0EC3WE3hun0Yh5D4ONxFC9
-         K8EpJZ/cMjeyOfQKJrTjRSd80Fs7oZ13HDEfwFgk=
+        b=u6YhdkmifIJQFimhBM8y+aPlbPdKTpTsNjIcc/27hhIsslt01YPqHtDW01RgtXOo4
+         yLXda0jGeMKoaaC4qQu/hYKGnEkbR1stlavDnSghwrdm+X7b+HI4hMUvbmRkePpPsW
+         T6HnOd7quDpmhNH6z1Ng9P47TKbX47rahm9M/cbY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Oliver Neukum <oneukum@suse.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
-        linux-usb@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 28/29] usbnet: sanity checking of packet sizes and device mtu
-Date:   Tue,  1 Oct 2019 12:44:22 -0400
-Message-Id: <20191001164423.16406-28-sashal@kernel.org>
+Cc:     zhengbin <zhengbin13@huawei.com>, Hulk Robot <hulkci@huawei.com>,
+        Miklos Szeredi <mszeredi@redhat.com>,
+        Sasha Levin <sashal@kernel.org>, linux-fsdevel@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 12/19] fuse: fix memleak in cuse_channel_open
+Date:   Tue,  1 Oct 2019 12:44:58 -0400
+Message-Id: <20191001164505.16708-12-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191001164423.16406-1-sashal@kernel.org>
-References: <20191001164423.16406-1-sashal@kernel.org>
+In-Reply-To: <20191001164505.16708-1-sashal@kernel.org>
+References: <20191001164505.16708-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -60,44 +59,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Oliver Neukum <oneukum@suse.com>
+From: zhengbin <zhengbin13@huawei.com>
 
-[ Upstream commit 280ceaed79f18db930c0cc8bb21f6493490bf29c ]
+[ Upstream commit 9ad09b1976c562061636ff1e01bfc3a57aebe56b ]
 
-After a reset packet sizes and device mtu can change and need
-to be reevaluated to calculate queue sizes.
-Malicious devices can set this to zero and we divide by it.
-Introduce sanity checking.
+If cuse_send_init fails, need to fuse_conn_put cc->fc.
 
-Reported-and-tested-by:  syzbot+6102c120be558c885f04@syzkaller.appspotmail.com
-Signed-off-by: Oliver Neukum <oneukum@suse.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+cuse_channel_open->fuse_conn_init->refcount_set(&fc->count, 1)
+                 ->fuse_dev_alloc->fuse_conn_get
+                 ->fuse_dev_free->fuse_conn_put
+
+Fixes: cc080e9e9be1 ("fuse: introduce per-instance fuse_dev structure")
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: zhengbin <zhengbin13@huawei.com>
+Signed-off-by: Miklos Szeredi <mszeredi@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/usb/usbnet.c | 3 +++
- 1 file changed, 3 insertions(+)
+ fs/fuse/cuse.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/net/usb/usbnet.c b/drivers/net/usb/usbnet.c
-index 42e3244d3a705..cb9a18eda798f 100644
---- a/drivers/net/usb/usbnet.c
-+++ b/drivers/net/usb/usbnet.c
-@@ -356,6 +356,8 @@ void usbnet_update_max_qlen(struct usbnet *dev)
- {
- 	enum usb_device_speed speed = dev->udev->speed;
- 
-+	if (!dev->rx_urb_size || !dev->hard_mtu)
-+		goto insanity;
- 	switch (speed) {
- 	case USB_SPEED_HIGH:
- 		dev->rx_qlen = MAX_QUEUE_MEMORY / dev->rx_urb_size;
-@@ -372,6 +374,7 @@ void usbnet_update_max_qlen(struct usbnet *dev)
- 		dev->tx_qlen = 5 * MAX_QUEUE_MEMORY / dev->hard_mtu;
- 		break;
- 	default:
-+insanity:
- 		dev->rx_qlen = dev->tx_qlen = 4;
+diff --git a/fs/fuse/cuse.c b/fs/fuse/cuse.c
+index c5b6b71654893..d9aba97007267 100644
+--- a/fs/fuse/cuse.c
++++ b/fs/fuse/cuse.c
+@@ -513,6 +513,7 @@ static int cuse_channel_open(struct inode *inode, struct file *file)
+ 	rc = cuse_send_init(cc);
+ 	if (rc) {
+ 		fuse_dev_free(fud);
++		fuse_conn_put(&cc->fc);
+ 		return rc;
  	}
- }
+ 	file->private_data = fud;
 -- 
 2.20.1
 
