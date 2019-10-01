@@ -2,105 +2,107 @@ Return-Path: <SRS0=YRFP=X2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58C85ECE587
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 18:48:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 253CEECE58A
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 18:49:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 32A42215EA
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 18:48:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569955711;
-	bh=GNgNrUswTuvHulo9vmyBNdCcYSawvC+U+jdWFB0IKyA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=MKhROn2Sc6oK75N0nmcvqf0JxhcxJT7sNIeOTcfupswr/fjybj/DEcudijboKbRRY
-	 QRUAagQ+M+UJvrkZDzTPYfxat7jX7e6o0l0zNQWIZhGccu6dIG2EJSahl/y0U6oDXX
-	 gCBLMxA1P8jdCv10ZmPNrjHIDqP5V70/pt3IeIcw=
+	by mail.kernel.org (Postfix) with ESMTP id 09B7120B7C
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 18:49:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726208AbfJASsa (ORCPT
+        id S1726252AbfJAStY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Oct 2019 14:48:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36952 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725844AbfJASsa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Oct 2019 14:48:30 -0400
-Received: from localhost (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 52F3120B7C;
-        Tue,  1 Oct 2019 18:48:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569955709;
-        bh=GNgNrUswTuvHulo9vmyBNdCcYSawvC+U+jdWFB0IKyA=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=erK6Grjo4aC6WkHaCceBQ+bGig2oyXgyMli+uxdawFNMuoPz3ptlHI20zYnrieCdU
-         DH7OOYU9vc/9njBGuy7uy4PfYeLd9Uh8a+RY1FFmytt9TO1CwQHXQsyOdJ04V8Ogsu
-         DpqPyFfJN64LOCdPZCl/4MKpJVDaxghK2+7Ki9Hw=
-Date:   Tue, 1 Oct 2019 14:48:28 -0400
-From:   Sasha Levin <sashal@kernel.org>
-To:     Michael Kelley <mikelley@microsoft.com>
-Cc:     Wei Hu <weh@microsoft.com>,
-        "rdunlap@infradead.org" <rdunlap@infradead.org>,
-        "shc_work@mail.ru" <shc_work@mail.ru>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "lee.jones@linaro.org" <lee.jones@linaro.org>,
-        "alexandre.belloni@bootlin.com" <alexandre.belloni@bootlin.com>,
-        "baijiaju1990@gmail.com" <baijiaju1990@gmail.com>,
-        "info@metux.net" <info@metux.net>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        "linux-fbdev@vger.kernel.org" <linux-fbdev@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        KY Srinivasan <kys@microsoft.com>,
-        Dexuan Cui <decui@microsoft.com>
-Subject: Re: [PATHC v6] video: hyperv: hyperv_fb: Support deferred IO for
- Hyper-V frame buffer driver
-Message-ID: <20191001184828.GF8171@sasha-vm>
-References: <20190918060227.6834-1-weh@microsoft.com>
- <DM5PR21MB0137DA408FE59E8C1171CFFCD78E0@DM5PR21MB0137.namprd21.prod.outlook.com>
- <DM5PR21MB01375E8543451D4550D622CDD7880@DM5PR21MB0137.namprd21.prod.outlook.com>
+        Tue, 1 Oct 2019 14:49:24 -0400
+Received: from mail-qt1-f193.google.com ([209.85.160.193]:44491 "EHLO
+        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725844AbfJAStY (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Oct 2019 14:49:24 -0400
+Received: by mail-qt1-f193.google.com with SMTP id u40so22962929qth.11;
+        Tue, 01 Oct 2019 11:49:23 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=yQ/aeUAODcfHsnJVhrCVPGFZvCnxoF2P68MP76wAWmI=;
+        b=AlZxib+mGrsNLwaQc5WEpQUiZKR30Peq7nNgLoexWN80JZqJjMunu6vMxgokE3Fwjo
+         u7SjYl3tT8ieXMO2jKHaaSeUp8RUOHTF+QpNJ/yEMX1GU52TUtGzwGHR2oE0KtnT0buG
+         zAMABkGQ6lYRlYsZEiKmrfZTyypNyR7nMCMiYYzJIcOyl5WjbdDRatF05ytu1e82miSy
+         T/I56w8/DUa2V/oPI4kMiyXSQt1PQV2E7QrrflERnhS01saWCR6kD1XpYdL/kgUbuEhZ
+         hpUrR4sF/9A/eH0i/bk3dJnGYZ0alB9jXR/zXuvFQoj4vlj+aGnGX4aKaB2CUjAmakoq
+         0voA==
+X-Gm-Message-State: APjAAAX1l/FN+KeajfXT7I2RwJMAs8d8Z7FW6OZCIl0eDBunKMcXh5Ge
+        zxIkdXl7jYtiL0yQoaYO5On4an7AtpNX5yhksOM=
+X-Google-Smtp-Source: APXvYqyKolI0m0eL4KVQA6JY8f/fHGLIsg+k3X/A7B4lxu4r3JPwQIOYgeTZWrWRk1KDX7C5SA8y2/wMSQYTZe1zEKo=
+X-Received: by 2002:a0c:e0c4:: with SMTP id x4mr26961100qvk.176.1569955762750;
+ Tue, 01 Oct 2019 11:49:22 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <DM5PR21MB01375E8543451D4550D622CDD7880@DM5PR21MB0137.namprd21.prod.outlook.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20190930121520.1388317-1-arnd@arndb.de> <20190930121520.1388317-2-arnd@arndb.de>
+ <CH2PR20MB2968B7855D241C747BEB68B9CA820@CH2PR20MB2968.namprd20.prod.outlook.com>
+ <CAK8P3a0PeocENP6c=ENVrq2X8x-vinM6qhPRDDi_WEf6y73AOQ@mail.gmail.com> <CH2PR20MB29682E2C514733F290CFA3CECA820@CH2PR20MB2968.namprd20.prod.outlook.com>
+In-Reply-To: <CH2PR20MB29682E2C514733F290CFA3CECA820@CH2PR20MB2968.namprd20.prod.outlook.com>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Tue, 1 Oct 2019 20:49:06 +0200
+Message-ID: <CAK8P3a0_ZAdoYkZsb_C2y5gi9u3_Pt-qa3c1FiCMq7_Lax0AYw@mail.gmail.com>
+Subject: Re: [PATCH 2/3] crypto: inside-secure - Reduce stack usage
+To:     Pascal Van Leeuwen <pvanleeuwen@verimatrix.com>
+Cc:     Antoine Tenart <antoine.tenart@bootlin.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        "David S. Miller" <davem@davemloft.net>,
+        Pascal van Leeuwen <pascalvanl@gmail.com>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Eric Biggers <ebiggers@google.com>,
+        "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Sep 20, 2019 at 05:26:34PM +0000, Michael Kelley wrote:
->From: Michael Kelley <mikelley@microsoft.com>  Sent: Wednesday, September 18, 2019 2:48 PM
->> >
->> > Without deferred IO support, hyperv_fb driver informs the host to refresh
->> > the entire guest frame buffer at fixed rate, e.g. at 20Hz, no matter there
->> > is screen update or not. This patch supports deferred IO for screens in
->> > graphics mode and also enables the frame buffer on-demand refresh. The
->> > highest refresh rate is still set at 20Hz.
->> >
->> > Currently Hyper-V only takes a physical address from guest as the starting
->> > address of frame buffer. This implies the guest must allocate contiguous
->> > physical memory for frame buffer. In addition, Hyper-V Gen 2 VMs only
->> > accept address from MMIO region as frame buffer address. Due to these
->> > limitations on Hyper-V host, we keep a shadow copy of frame buffer
->> > in the guest. This means one more copy of the dirty rectangle inside
->> > guest when doing the on-demand refresh. This can be optimized in the
->> > future with help from host. For now the host performance gain from deferred
->> > IO outweighs the shadow copy impact in the guest.
->> >
->> > Signed-off-by: Wei Hu <weh@microsoft.com>
->
->Sasha -- this patch and one other from Wei Hu for the Hyper-V frame buffer
->driver should be ready.  Both patches affect only the Hyper-V frame buffer
->driver so can go through the Hyper-V tree.  Can you pick these up?  Thx.
+On Mon, Sep 30, 2019 at 11:09 PM Pascal Van Leeuwen
+<pvanleeuwen@verimatrix.com> wrote:
+> > Subject: Re: [PATCH 2/3] crypto: inside-secure - Reduce stack usage
+> >
+> > On Mon, Sep 30, 2019 at 9:04 PM Pascal Van Leeuwen
+> > <pvanleeuwen@verimatrix.com> wrote:
+> >
+> > > > Alternatively, it should be possible to shrink these allocations
+> > > > as the extra buffers appear to be largely unnecessary, but doing
+> > > > this would be a much more invasive change.
+> > > >
+> > > Actually, for HMAC-SHA512 you DO need all that buffer space.
+> > > You could shrink it to 2 * ctx->state_sz but then your simple indexing
+> > > is no longer going to fly. Not sure if that would be worth the effort.
+> >
+> > Stack allocations can no longer be dynamically sized in the kernel,
+> > so that would not work.
+> >
+> I was actually referring to your kzalloc, not to the original stack
+> based implementation ...
 
-I can't get this to apply anywhere, what tree is it based on?
+Ok, got it. For the kzalloc version, the size matters much less, as
+this is not coming from a scarce resource and only takes a few more
+cycles to do the initial clearing of the larger struct.
 
---
-Thanks,
-Sasha
+> > > And it conflicts with another change I have waiting that gets rid of
+> > > aes_expandkey and that struct alltogether (since it was really just
+> > > abused to do a key size check, which was very wasteful since the
+> > > function actually generates all roundkeys we don't need at all ...)
+> >
+> > Right, this is what I noticed there. With 480 of the 484 bytes gone,
+> > you are well below the warning limit even without the other change.
+> >
+> And by "other change" you mean the safexcel_ahash_export_state?
+
+Yes.
+
+> Ok, good to known, although I do like to improve that one as well,
+> but preferably by not exporting the cache so I don't need the full
+> struct.
+
+Sounds good to me.
+
+      Arnd
