@@ -2,143 +2,171 @@ Return-Path: <SRS0=YRFP=X2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D5E51ECE587
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 20:52:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CE61EECE587
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 20:52:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A8CB1215EA
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 20:52:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A72C421783
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 20:52:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CZBkuUYH"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="BKq6QhZE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727443AbfJAUwc (ORCPT
+        id S1727455AbfJAUwp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Oct 2019 16:52:32 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:40633 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725942AbfJAUwc (ORCPT
+        Tue, 1 Oct 2019 16:52:45 -0400
+Received: from aserp2120.oracle.com ([141.146.126.78]:45358 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725942AbfJAUwo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Oct 2019 16:52:32 -0400
-Received: by mail-wr1-f67.google.com with SMTP id l3so17108143wru.7;
-        Tue, 01 Oct 2019 13:52:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=YdRHcVFToHIZbvkxUNJPK19pypp2Z2yOIgvmAjENZz0=;
-        b=CZBkuUYHqE3ivHd6F1I66DMYJ2YMY706bvqkad/lOPVvMwKUwiUoZ/zRolnJbuFgsd
-         vsdgeiGloPIWskOjaWPQL/Lw0HcGMwMcDXGhRlMkw3txfz6ZXdtdIG3MTM2GXlzEnbC4
-         fM8+iq9dYFXk96hlc+oW8gN6C/mUv3ocKDFjeq0jxuvEtg3wfKIjGWPYbiTj09p0uwuo
-         8GmsMwEskqskeuMFqVtIeqW0PoAF6X4Df1trUbLTin6GfCsfS9zTjDNPaupyK2pin9Ey
-         5Cn/WMXDFYE0Wg5jUSSFbfd1OfosGjodmpSN9LNxozr1Q/L2NlDTUfnUtsUm67AgRzRV
-         GgUg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=YdRHcVFToHIZbvkxUNJPK19pypp2Z2yOIgvmAjENZz0=;
-        b=k2B86yBpSCXKOtNlwH0CaiKI0y5mDnV70J6wxEYfpKmjRW3oXfcZFk3jzBRof+y9do
-         jnfLxHqmM7WYBL7DVBbdWxuW2Uf2rjxSodKALDzOO2G3VZrX7Mrn0k4gHy4SV3pxz+Vv
-         +OISrnEA4ebHKG3fcz7YTFmynPrFGPN6jGSHn8E+PT8wTMjZbN+A7JaOaTlDhm7yyD1i
-         PN2P1UwyR2XBoxl+7gHL/ZeczsmJBEJK6x/kZ2Iz5Vlt4fIAmFZtpTIqGrA8lYwlMAdY
-         UxN1Weku7ftZ5AFmDwL3uLzO29ulSTUiIOllr6n1zdKrznkS++Ya6WbcYiIWtiyuAFbh
-         4vtQ==
-X-Gm-Message-State: APjAAAUxBtIaZ590ABtud0URGxGN17Kt1O1XMaDt5WPfXgd5Nxjs6Ofw
-        qnRpoTnfai/YVxYYoV+Yg5o=
-X-Google-Smtp-Source: APXvYqxkB68UDBZMJnWyKXg3gFOPUhWrTyeISJjqxdeI58U/o4a7897AxfLSCcjzW1MLdXsAVJ7VYA==
-X-Received: by 2002:a5d:62c8:: with SMTP id o8mr18999590wrv.350.1569963147806;
-        Tue, 01 Oct 2019 13:52:27 -0700 (PDT)
-Received: from localhost.localdomain ([86.124.196.40])
-        by smtp.gmail.com with ESMTPSA id y13sm26680057wrg.8.2019.10.01.13.52.26
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 01 Oct 2019 13:52:27 -0700 (PDT)
-From:   Vladimir Oltean <olteanv@gmail.com>
-To:     broonie@kernel.org
-Cc:     linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Vladimir Oltean <olteanv@gmail.com>
-Subject: [PATCH] spi: spi-fsl-dspi: Always use the TCFQ devices in poll mode
-Date:   Tue,  1 Oct 2019 23:52:16 +0300
-Message-Id: <20191001205216.32115-1-olteanv@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        Tue, 1 Oct 2019 16:52:44 -0400
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x91KmdUj026721;
+        Tue, 1 Oct 2019 20:52:30 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2019-08-05;
+ bh=LSuVeD78YGQTVaM+QiDXfwCHERay2Z2fUzD7YJHLx24=;
+ b=BKq6QhZEx+qWDpDJxOdPnDvNAQpsdJuV16ntvPqhTOzZH3URn9hS5KvTEwENjNydbtDF
+ nvta0ioJhJ+206FjROnZFZzS36j8Ne8OLxHNhCuhP1mYohZd2Tn+XmS1HXeEdOk4/fCB
+ mmG26frLdp9pfnXd39VJz2RzZ7AYwt0ibwixUMgSyzmJAV1BXpY3Qke+g44SNso3oKtv
+ Oi8KNjPNxInSaIPQaedQJL93kSWgrvX1IVp1VT5Iz9Y6ALIvYndLToUNROuzZl+vnYkA
+ CMqFMP0MgLSoujh0sT3o1WLqTrJOo4TNyu80fkWSaRhOEA/p7aSseeXIow/CeDETR4oi ZA== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by aserp2120.oracle.com with ESMTP id 2v9yfq8xkj-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 01 Oct 2019 20:52:29 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x91KnIiv084672;
+        Tue, 1 Oct 2019 20:52:29 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by aserp3020.oracle.com with ESMTP id 2vbqd1gwtj-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 01 Oct 2019 20:52:29 +0000
+Received: from abhmp0001.oracle.com (abhmp0001.oracle.com [141.146.116.7])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x91KqPPP031464;
+        Tue, 1 Oct 2019 20:52:25 GMT
+Received: from localhost (/67.169.218.210)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Tue, 01 Oct 2019 13:52:25 -0700
+Date:   Tue, 1 Oct 2019 13:52:24 -0700
+From:   "Darrick J. Wong" <darrick.wong@oracle.com>
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     Damien Le Moal <Damien.LeMoal@wdc.com>,
+        Andreas Gruenbacher <agruenba@redhat.com>,
+        linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 01/11] iomap: add tracing for the readpage / readpages
+Message-ID: <20191001205224.GG13108@magnolia>
+References: <20191001071152.24403-1-hch@lst.de>
+ <20191001071152.24403-2-hch@lst.de>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191001071152.24403-2-hch@lst.de>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9397 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1908290000 definitions=main-1910010172
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9397 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1908290000
+ definitions=main-1910010172
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-With this patch, the "interrupts" property from the device tree bindings
-is ignored, even if present, if the driver runs in TCFQ mode.
+On Tue, Oct 01, 2019 at 09:11:42AM +0200, Christoph Hellwig wrote:
+> Lift the xfs code for tracing address space operations to the iomap
+> layer.
+> 
+> Signed-off-by: Christoph Hellwig <hch@lst.de>
+> ---
+>  fs/iomap/buffered-io.c       |  7 +++++++
+>  include/trace/events/iomap.h | 27 +++++++++++++++++++++++++++
+>  2 files changed, 34 insertions(+)
+>  create mode 100644 include/trace/events/iomap.h
+> 
+> diff --git a/fs/iomap/buffered-io.c b/fs/iomap/buffered-io.c
+> index e25901ae3ff4..099daf0c09b8 100644
+> --- a/fs/iomap/buffered-io.c
+> +++ b/fs/iomap/buffered-io.c
+> @@ -19,6 +19,9 @@
+>  
+>  #include "../internal.h"
+>  
+> +#define CREATE_TRACE_POINTS
+> +#include <trace/events/iomap.h>
+> +
 
-Switching to using the DSPI in poll mode has several distinct
-benefits:
+/me wonders if we really ought to be creating the tracepoints in
+buffered-io.c, though I guess it does seem a little silly to have a
+fs/iomap/trace.c just for these two lines...
 
-- With interrupts, the DSPI driver in TCFQ mode raises an IRQ after each
-  transmitted word. There is more time wasted for the "waitq" event than
-  for actual I/O. And the DSPI IRQ count can easily get the largest in
-  /proc/interrupts on Freescale boards with attached SPI devices.
+--D
 
-- The SPI I/O time is both lower, and more consistently so. Attached to
-  some Freescale devices are either PTP switches, or SPI RTCs. For
-  reading time off of a SPI slave device, it is important that all SPI
-  transfers take a deterministic time to complete.
-
-- In poll mode there is much less time spent by the CPU in hardirq
-  context, which helps with the response latency of the system, and at
-  the same time there is more control over when interrupts must be
-  disabled (to get a precise timestamp measurement, which will come in a
-  future patch): win-win.
-
-On the LS1021A-TSN board, where the SPI device is a SJA1105 PTP switch
-(with a bits_per_word=8 driver), I created a "benchmark" where I
-periodically transferred a 12-byte message once per second, for 120
-seconds. I then recorded the time before putting the first byte in the
-TX FIFO, and the time after reading the last byte from the RX FIFO. That
-is the transfer delay in nanoseconds.
-
-Interrupt mode:
-
-  delay: min 125120 max 168320 mean 150286 std dev 17675.3
-
-Poll mode:
-
-  delay: min 69440 max 119040 mean 70312.9 std dev 8065.34
-
-Both the mean latency and the standard deviation are more than 50% lower
-in poll mode than in interrupt mode, and the 'max' in poll mode is lower
-than the 'min' in interrupt mode. This is with an 'ondemand' governor on
-an otherwise idle system - therefore running mostly at 600 MHz out of a
-max of 1200 MHz.
-
-Signed-off-by: Vladimir Oltean <olteanv@gmail.com>
----
- drivers/spi/spi-fsl-dspi.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/spi/spi-fsl-dspi.c b/drivers/spi/spi-fsl-dspi.c
-index bec758e978fb..7bb018eb67d0 100644
---- a/drivers/spi/spi-fsl-dspi.c
-+++ b/drivers/spi/spi-fsl-dspi.c
-@@ -707,7 +707,7 @@ static irqreturn_t dspi_interrupt(int irq, void *dev_id)
- 	regmap_read(dspi->regmap, SPI_SR, &spi_sr);
- 	regmap_write(dspi->regmap, SPI_SR, spi_sr);
- 
--	if (!(spi_sr & (SPI_SR_EOQF | SPI_SR_TCFQF)))
-+	if (!(spi_sr & SPI_SR_EOQF))
- 		return IRQ_NONE;
- 
- 	if (dspi_rxtx(dspi) == 0) {
-@@ -1114,6 +1114,9 @@ static int dspi_probe(struct platform_device *pdev)
- 
- 	dspi_init(dspi);
- 
-+	if (dspi->devtype_data->trans_mode == DSPI_TCFQ_MODE)
-+		goto poll_mode;
-+
- 	dspi->irq = platform_get_irq(pdev, 0);
- 	if (dspi->irq <= 0) {
- 		dev_info(&pdev->dev,
--- 
-2.17.1
-
+>  static struct iomap_page *
+>  iomap_page_create(struct inode *inode, struct page *page)
+>  {
+> @@ -293,6 +296,8 @@ iomap_readpage(struct page *page, const struct iomap_ops *ops)
+>  	unsigned poff;
+>  	loff_t ret;
+>  
+> +	trace_iomap_readpage(page->mapping->host, 1);
+> +
+>  	for (poff = 0; poff < PAGE_SIZE; poff += ret) {
+>  		ret = iomap_apply(inode, page_offset(page) + poff,
+>  				PAGE_SIZE - poff, 0, ops, &ctx,
+> @@ -389,6 +394,8 @@ iomap_readpages(struct address_space *mapping, struct list_head *pages,
+>  	loff_t last = page_offset(list_entry(pages->next, struct page, lru));
+>  	loff_t length = last - pos + PAGE_SIZE, ret = 0;
+>  
+> +	trace_iomap_readpages(mapping->host, nr_pages);
+> +
+>  	while (length > 0) {
+>  		ret = iomap_apply(mapping->host, pos, length, 0, ops,
+>  				&ctx, iomap_readpages_actor);
+> diff --git a/include/trace/events/iomap.h b/include/trace/events/iomap.h
+> new file mode 100644
+> index 000000000000..7d2fe2c773f3
+> --- /dev/null
+> +++ b/include/trace/events/iomap.h
+> @@ -0,0 +1,27 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Copyright (c) 2009-2019, Christoph Hellwig
+> + * All Rights Reserved.
+> + *
+> + * NOTE: none of these tracepoints shall be consider a stable kernel ABI
+> + * as they can change at any time.
+> + */
+> +#undef TRACE_SYSTEM
+> +#define TRACE_SYSTEM iomap
+> +
+> +#if !defined(_TRACE_IOMAP_H) || defined(TRACE_HEADER_MULTI_READ)
+> +#define _TRACE_IOMAP_H
+> +
+> +#include <linux/tracepoint.h>
+> +
+> +#define DEFINE_READPAGE_EVENT(name)		\
+> +DEFINE_EVENT(iomap_readpage_class, name,	\
+> +	TP_PROTO(struct inode *inode, int nr_pages), \
+> +	TP_ARGS(inode, nr_pages))
+> +DEFINE_READPAGE_EVENT(iomap_readpage);
+> +DEFINE_READPAGE_EVENT(iomap_readpages);
+> +
+> +#endif /* _TRACE_IOMAP_H */
+> +
+> +/* This part must be outside protection */
+> +#include <trace/define_trace.h>
+> -- 
+> 2.20.1
+> 
