@@ -4,57 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 21B57ECE587
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 16:56:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55457C352AA
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 16:56:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ED1D4206BB
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 16:56:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1EFE221783
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 16:56:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569948969;
-	bh=TCP7dajGRAJRe3aycXPdbSr6pAIYTBVA4U0rkCcawpM=;
+	s=default; t=1569948973;
+	bh=exn8/8HVHvf9LiSHvgAZu2X9qfOa7LTrMXz2TMoMPxA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=CTsqgGgCpzQNxGpSXL9TF1CYalnYmDx4KlTztj4GN4yGQ1MEwi+pFnl6Er1AmG5Iy
-	 JI3kWVYeQIHgiSA7/3m7Mtd+dL+cDTBtt5Mojw3E93IfxlwH5l0wYrg+139EGsOXoP
-	 zBb1QhE8G/0Jg87xUpJEZ8CcKldCt+DwOtyvqUBc=
+	b=MxHysQ7iQsnh9diPEAQRihQeITU1goJBwuOZDv78cNTw9iAnvn4EGtIC0zlvKCG68
+	 qdTMBlszt4JfcVDN205kNkwygClg2nwn5J2K7UBcAr22VygpvPVTCEbaK19HgUzZXn
+	 Jzk4dTfbYITCtQHf1cyl9Qrjr/wapcxc5jFgSVn4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731959AbfJAQ4I (ORCPT
+        id S1731795AbfJAQmP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Oct 2019 12:56:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54118 "EHLO mail.kernel.org"
+        Tue, 1 Oct 2019 12:42:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53964 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731801AbfJAQmQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Oct 2019 12:42:16 -0400
+        id S1731678AbfJAQmL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Oct 2019 12:42:11 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8A0E021855;
-        Tue,  1 Oct 2019 16:42:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 45C552190F;
+        Tue,  1 Oct 2019 16:42:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569948135;
-        bh=TCP7dajGRAJRe3aycXPdbSr6pAIYTBVA4U0rkCcawpM=;
+        s=default; t=1569948130;
+        bh=exn8/8HVHvf9LiSHvgAZu2X9qfOa7LTrMXz2TMoMPxA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=NRFELVzAQP5FS+U3vfTmV8g3VhDIgyid6SU+n5db/3MGrNJMQmn18Ht17pu/z8DgY
-         +Pe6TZze2t93i6DU3xsEqc4PJjcrCTxHLwbINy4t4n1ed6KieVaauMtmUNloiOmmC3
-         JwZpsgCqXXXrfW4KVKkTJhNYZJmcPkjMTAAO0px4=
+        b=bFz5BVBunS4ZYS5ZP7DE5tG95Um5Klngu6GcoxS52vQ5qggRK1Sq1PFzLMB7zpu+H
+         ZMrHQ+VIK96pC97K57YWohsC7WrZOlonSI6RY+C28A7/MTV5im/W4s3GrhGCFLiCJW
+         ATxJ4gwbg9Y3hIt0lCvQLig4T9H7boRzgPup5q0k=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Wanpeng Li <wanpengli@tencent.com>,
-        syzbot+dff25ee91f0c7d5c1695@syzkaller.appspotmail.com,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        =?UTF-8?q?Radim=20Kr=C4=8Dm=C3=A1=C5=99?= <rkrcmar@redhat.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Sasha Levin <sashal@kernel.org>, kvm@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.2 35/63] KVM: hyperv: Fix Direct Synthetic timers assert an interrupt w/o lapic_in_kernel
-Date:   Tue,  1 Oct 2019 12:40:57 -0400
-Message-Id: <20191001164125.15398-35-sashal@kernel.org>
+Cc:     Ido Schimmel <idosch@mellanox.com>, Jiri Pirko <jiri@mellanox.com>,
+        Zhang Rui <rui.zhang@intel.com>,
+        Sasha Levin <sashal@kernel.org>, linux-pm@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.2 30/63] thermal: Fix use-after-free when unregistering thermal zone device
+Date:   Tue,  1 Oct 2019 12:40:52 -0400
+Message-Id: <20191001164125.15398-30-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191001164125.15398-1-sashal@kernel.org>
 References: <20191001164125.15398-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -63,75 +59,132 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wanpeng Li <wanpengli@tencent.com>
+From: Ido Schimmel <idosch@mellanox.com>
 
-[ Upstream commit a073d7e3ad687a7ef32b65affe80faa7ce89bf92 ]
+[ Upstream commit 1851799e1d2978f68eea5d9dff322e121dcf59c1 ]
 
-Reported by syzkaller:
+thermal_zone_device_unregister() cancels the delayed work that polls the
+thermal zone, but it does not wait for it to finish. This is racy with
+respect to the freeing of the thermal zone device, which can result in a
+use-after-free [1].
 
-	kasan: GPF could be caused by NULL-ptr deref or user memory access
-	general protection fault: 0000 [#1] PREEMPT SMP KASAN
-	RIP: 0010:__apic_accept_irq+0x46/0x740 arch/x86/kvm/lapic.c:1029
-	Call Trace:
-	kvm_apic_set_irq+0xb4/0x140 arch/x86/kvm/lapic.c:558
-	stimer_notify_direct arch/x86/kvm/hyperv.c:648 [inline]
-	stimer_expiration arch/x86/kvm/hyperv.c:659 [inline]
-	kvm_hv_process_stimers+0x594/0x1650 arch/x86/kvm/hyperv.c:686
-	vcpu_enter_guest+0x2b2a/0x54b0 arch/x86/kvm/x86.c:7896
-	vcpu_run+0x393/0xd40 arch/x86/kvm/x86.c:8152
-	kvm_arch_vcpu_ioctl_run+0x636/0x900 arch/x86/kvm/x86.c:8360
-	kvm_vcpu_ioctl+0x6cf/0xaf0 arch/x86/kvm/../../../virt/kvm/kvm_main.c:2765
+Fix this by waiting for the delayed work to finish before freeing the
+thermal zone device. Note that thermal_zone_device_set_polling() is
+never invoked from an atomic context, so it is safe to call
+cancel_delayed_work_sync() that can block.
 
-The testcase programs HV_X64_MSR_STIMERn_CONFIG/HV_X64_MSR_STIMERn_COUNT,
-in addition, there is no lapic in the kernel, the counters value are small
-enough in order that kvm_hv_process_stimers() inject this already-expired
-timer interrupt into the guest through lapic in the kernel which triggers
-the NULL deferencing. This patch fixes it by don't advertise direct mode
-synthetic timers and discarding the inject when lapic is not in kernel.
+[1]
+[  +0.002221] ==================================================================
+[  +0.000064] BUG: KASAN: use-after-free in __mutex_lock+0x1076/0x11c0
+[  +0.000016] Read of size 8 at addr ffff8881e48e0450 by task kworker/1:0/17
 
-syzkaller source: https://syzkaller.appspot.com/x/repro.c?x=1752fe0a600000
+[  +0.000023] CPU: 1 PID: 17 Comm: kworker/1:0 Not tainted 5.2.0-rc6-custom-02495-g8e73ca3be4af #1701
+[  +0.000010] Hardware name: Mellanox Technologies Ltd. MSN2100-CB2FO/SA001017, BIOS 5.6.5 06/07/2016
+[  +0.000016] Workqueue: events_freezable_power_ thermal_zone_device_check
+[  +0.000012] Call Trace:
+[  +0.000021]  dump_stack+0xa9/0x10e
+[  +0.000020]  print_address_description.cold.2+0x9/0x25e
+[  +0.000018]  __kasan_report.cold.3+0x78/0x9d
+[  +0.000016]  kasan_report+0xe/0x20
+[  +0.000016]  __mutex_lock+0x1076/0x11c0
+[  +0.000014]  step_wise_throttle+0x72/0x150
+[  +0.000018]  handle_thermal_trip+0x167/0x760
+[  +0.000019]  thermal_zone_device_update+0x19e/0x5f0
+[  +0.000019]  process_one_work+0x969/0x16f0
+[  +0.000017]  worker_thread+0x91/0xc40
+[  +0.000014]  kthread+0x33d/0x400
+[  +0.000015]  ret_from_fork+0x3a/0x50
 
-Reported-by: syzbot+dff25ee91f0c7d5c1695@syzkaller.appspotmail.com
-Cc: Paolo Bonzini <pbonzini@redhat.com>
-Cc: Radim Krčmář <rkrcmar@redhat.com>
-Signed-off-by: Wanpeng Li <wanpengli@tencent.com>
-Reviewed-by: Vitaly Kuznetsov <vkuznets@redhat.com>
-Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+[  +0.000020] Allocated by task 1:
+[  +0.000015]  save_stack+0x19/0x80
+[  +0.000015]  __kasan_kmalloc.constprop.4+0xc1/0xd0
+[  +0.000014]  kmem_cache_alloc_trace+0x152/0x320
+[  +0.000015]  thermal_zone_device_register+0x1b4/0x13a0
+[  +0.000015]  mlxsw_thermal_init+0xc92/0x23d0
+[  +0.000014]  __mlxsw_core_bus_device_register+0x659/0x11b0
+[  +0.000013]  mlxsw_core_bus_device_register+0x3d/0x90
+[  +0.000013]  mlxsw_pci_probe+0x355/0x4b0
+[  +0.000014]  local_pci_probe+0xc3/0x150
+[  +0.000013]  pci_device_probe+0x280/0x410
+[  +0.000013]  really_probe+0x26a/0xbb0
+[  +0.000013]  driver_probe_device+0x208/0x2e0
+[  +0.000013]  device_driver_attach+0xfe/0x140
+[  +0.000013]  __driver_attach+0x110/0x310
+[  +0.000013]  bus_for_each_dev+0x14b/0x1d0
+[  +0.000013]  driver_register+0x1c0/0x400
+[  +0.000015]  mlxsw_sp_module_init+0x5d/0xd3
+[  +0.000014]  do_one_initcall+0x239/0x4dd
+[  +0.000013]  kernel_init_freeable+0x42b/0x4e8
+[  +0.000012]  kernel_init+0x11/0x18b
+[  +0.000013]  ret_from_fork+0x3a/0x50
+
+[  +0.000015] Freed by task 581:
+[  +0.000013]  save_stack+0x19/0x80
+[  +0.000014]  __kasan_slab_free+0x125/0x170
+[  +0.000013]  kfree+0xf3/0x310
+[  +0.000013]  thermal_release+0xc7/0xf0
+[  +0.000014]  device_release+0x77/0x200
+[  +0.000014]  kobject_put+0x1a8/0x4c0
+[  +0.000014]  device_unregister+0x38/0xc0
+[  +0.000014]  thermal_zone_device_unregister+0x54e/0x6a0
+[  +0.000014]  mlxsw_thermal_fini+0x184/0x35a
+[  +0.000014]  mlxsw_core_bus_device_unregister+0x10a/0x640
+[  +0.000013]  mlxsw_devlink_core_bus_device_reload+0x92/0x210
+[  +0.000015]  devlink_nl_cmd_reload+0x113/0x1f0
+[  +0.000014]  genl_family_rcv_msg+0x700/0xee0
+[  +0.000013]  genl_rcv_msg+0xca/0x170
+[  +0.000013]  netlink_rcv_skb+0x137/0x3a0
+[  +0.000012]  genl_rcv+0x29/0x40
+[  +0.000013]  netlink_unicast+0x49b/0x660
+[  +0.000013]  netlink_sendmsg+0x755/0xc90
+[  +0.000013]  __sys_sendto+0x3de/0x430
+[  +0.000013]  __x64_sys_sendto+0xe2/0x1b0
+[  +0.000013]  do_syscall_64+0xa4/0x4d0
+[  +0.000013]  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+
+[  +0.000017] The buggy address belongs to the object at ffff8881e48e0008
+               which belongs to the cache kmalloc-2k of size 2048
+[  +0.000012] The buggy address is located 1096 bytes inside of
+               2048-byte region [ffff8881e48e0008, ffff8881e48e0808)
+[  +0.000007] The buggy address belongs to the page:
+[  +0.000012] page:ffffea0007923800 refcount:1 mapcount:0 mapping:ffff88823680d0c0 index:0x0 compound_mapcount: 0
+[  +0.000020] flags: 0x200000000010200(slab|head)
+[  +0.000019] raw: 0200000000010200 ffffea0007682008 ffffea00076ab808 ffff88823680d0c0
+[  +0.000016] raw: 0000000000000000 00000000000d000d 00000001ffffffff 0000000000000000
+[  +0.000007] page dumped because: kasan: bad access detected
+
+[  +0.000012] Memory state around the buggy address:
+[  +0.000012]  ffff8881e48e0300: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+[  +0.000012]  ffff8881e48e0380: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+[  +0.000012] >ffff8881e48e0400: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+[  +0.000008]                                                  ^
+[  +0.000012]  ffff8881e48e0480: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+[  +0.000012]  ffff8881e48e0500: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+[  +0.000007] ==================================================================
+
+Fixes: b1569e99c795 ("ACPI: move thermal trip handling to generic thermal layer")
+Reported-by: Jiri Pirko <jiri@mellanox.com>
+Signed-off-by: Ido Schimmel <idosch@mellanox.com>
+Acked-by: Jiri Pirko <jiri@mellanox.com>
+Signed-off-by: Zhang Rui <rui.zhang@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/kvm/hyperv.c | 12 ++++++++++--
- 1 file changed, 10 insertions(+), 2 deletions(-)
+ drivers/thermal/thermal_core.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/x86/kvm/hyperv.c b/arch/x86/kvm/hyperv.c
-index 742ecf5b6c009..72200998687cd 100644
---- a/arch/x86/kvm/hyperv.c
-+++ b/arch/x86/kvm/hyperv.c
-@@ -645,7 +645,9 @@ static int stimer_notify_direct(struct kvm_vcpu_hv_stimer *stimer)
- 		.vector = stimer->config.apic_vector
- 	};
- 
--	return !kvm_apic_set_irq(vcpu, &irq, NULL);
-+	if (lapic_in_kernel(vcpu))
-+		return !kvm_apic_set_irq(vcpu, &irq, NULL);
-+	return 0;
+diff --git a/drivers/thermal/thermal_core.c b/drivers/thermal/thermal_core.c
+index 46cfb7de4eb28..f87f462c60c19 100644
+--- a/drivers/thermal/thermal_core.c
++++ b/drivers/thermal/thermal_core.c
+@@ -298,7 +298,7 @@ static void thermal_zone_device_set_polling(struct thermal_zone_device *tz,
+ 				 &tz->poll_queue,
+ 				 msecs_to_jiffies(delay));
+ 	else
+-		cancel_delayed_work(&tz->poll_queue);
++		cancel_delayed_work_sync(&tz->poll_queue);
  }
  
- static void stimer_expiration(struct kvm_vcpu_hv_stimer *stimer)
-@@ -1854,7 +1856,13 @@ int kvm_vcpu_ioctl_get_hv_cpuid(struct kvm_vcpu *vcpu, struct kvm_cpuid2 *cpuid,
- 
- 			ent->edx |= HV_FEATURE_FREQUENCY_MSRS_AVAILABLE;
- 			ent->edx |= HV_FEATURE_GUEST_CRASH_MSR_AVAILABLE;
--			ent->edx |= HV_STIMER_DIRECT_MODE_AVAILABLE;
-+
-+			/*
-+			 * Direct Synthetic timers only make sense with in-kernel
-+			 * LAPIC
-+			 */
-+			if (lapic_in_kernel(vcpu))
-+				ent->edx |= HV_STIMER_DIRECT_MODE_AVAILABLE;
- 
- 			break;
- 
+ static void monitor_thermal_zone(struct thermal_zone_device *tz)
 -- 
 2.20.1
 
