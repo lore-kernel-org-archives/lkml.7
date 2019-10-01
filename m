@@ -2,100 +2,142 @@ Return-Path: <SRS0=YRFP=X2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8EE2CECE587
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 12:54:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF7A3ECE587
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 12:55:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 66CDC21A4C
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 12:54:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569934498;
-	bh=4ZwqNMkLAQ6qVgwcsq/kPtYCFF46wZLCtAuZ+J9bA0E=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=RhsjBw5KqsjCQOsvxn6Rx/sTJxSpmknR58zJqeqzvCXZe9sL/A7JwoWZkjAYZSSpL
-	 qmz/a9cN5319L54J6Ox4E2t6yoGLDUkAqzkucClJ2R6La9n+JgA3xjyAI2GmaBTNFb
-	 JS/nVp3Ts2dw9tZTbClxw/WkoVxmimXZvfgJpKeI=
+	by mail.kernel.org (Postfix) with ESMTP id 817DF21924
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 12:55:01 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="nfsJooGM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388197AbfJAMy5 (ORCPT
+        id S2388174AbfJAMyw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Oct 2019 08:54:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44472 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388181AbfJAMyx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Oct 2019 08:54:53 -0400
-Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C1ADF21872;
-        Tue,  1 Oct 2019 12:54:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569934493;
-        bh=4ZwqNMkLAQ6qVgwcsq/kPtYCFF46wZLCtAuZ+J9bA0E=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=BOXfnlLNBAeHH+AHjQ/kdaxE6JUJFThHEvZ5AnHpcIJhKyHJiF59b0Nb3ywQH8RE5
-         78jm9cqaDGZLNS11Hdl09X2vIhhg0UGjXDBMZZPluuea7beLK4hgB694ALgyVuezxZ
-         JS/+Y+lD4qfJINQObM0tYmWz7zzM3Gy1feo1XRN0=
-Date:   Tue, 1 Oct 2019 13:54:47 +0100
-From:   Will Deacon <will@kernel.org>
-To:     Jia He <justin.he@arm.com>
-Cc:     Catalin Marinas <catalin.marinas@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        James Morse <james.morse@arm.com>,
-        Marc Zyngier <maz@kernel.org>,
-        Matthew Wilcox <willy@infradead.org>,
-        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org, Punit Agrawal <punitagrawal@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Andrew Morton <akpm@linux-foundation.org>, hejianet@gmail.com,
-        Kaly Xin <Kaly.Xin@arm.com>
-Subject: Re: [PATCH v10 1/3] arm64: cpufeature: introduce helper
- cpu_has_hw_af()
-Message-ID: <20191001125446.gknoofnm7az4wqf5@willie-the-truck>
-References: <20190930015740.84362-1-justin.he@arm.com>
- <20190930015740.84362-2-justin.he@arm.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190930015740.84362-2-justin.he@arm.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
+        Tue, 1 Oct 2019 08:54:52 -0400
+Received: from mailout2.w1.samsung.com ([210.118.77.12]:36799 "EHLO
+        mailout2.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388142AbfJAMys (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Oct 2019 08:54:48 -0400
+Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
+        by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20191001125447euoutp0292b7a6dddfcd1105893e76c686ed7a62~JhxkjI0i52342323423euoutp024
+        for <linux-kernel@vger.kernel.org>; Tue,  1 Oct 2019 12:54:47 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20191001125447euoutp0292b7a6dddfcd1105893e76c686ed7a62~JhxkjI0i52342323423euoutp024
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1569934487;
+        bh=FRZw07xYV/3wwgOKgcBaHkQAtitosvAVLouSIu+mMzQ=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=nfsJooGMhVFI1KEs0bQRPh7mZEpo7XSCG+O3lTHR1DSJwFtwK0L+KXhljY6OAs/Xu
+         Z9h+uhrg9wp7OgQeb3pAprIG6sC9f/lJzwuRBhJgErNVbuWpsPXHzEv6UrdIUcgo0C
+         GoYQIukxnaE/ubiiHQDKPbbn3/c4W0Terxk4ts6U=
+Received: from eusmges2new.samsung.com (unknown [203.254.199.244]) by
+        eucas1p1.samsung.com (KnoxPortal) with ESMTP id
+        20191001125446eucas1p1328389253e6441a21e3128788eed3da2~JhxkO-yxo2273722737eucas1p1J;
+        Tue,  1 Oct 2019 12:54:46 +0000 (GMT)
+Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
+        eusmges2new.samsung.com (EUCPMTA) with SMTP id B2.FB.04309.69C439D5; Tue,  1
+        Oct 2019 13:54:46 +0100 (BST)
+Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
+        eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
+        20191001125446eucas1p1fb2ad4c13feac8dfec8d5eeeeec0a64a~Jhxj569wP0786807868eucas1p1M;
+        Tue,  1 Oct 2019 12:54:46 +0000 (GMT)
+Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
+        eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
+        20191001125446eusmtrp159943e5ef6acf48f09bd25ada70b427f~Jhxj5PbHB1469914699eusmtrp1y;
+        Tue,  1 Oct 2019 12:54:46 +0000 (GMT)
+X-AuditID: cbfec7f4-ae1ff700000010d5-6e-5d934c966cc2
+Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
+        eusmgms1.samsung.com (EUCPMTA) with SMTP id 47.6D.04166.69C439D5; Tue,  1
+        Oct 2019 13:54:46 +0100 (BST)
+Received: from AMDC3778.digital.local (unknown [106.120.51.20]) by
+        eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
+        20191001125445eusmtip13bcde73093ffe8d4bfc91c2e04f40688~JhxjLfqXw2414524145eusmtip1S;
+        Tue,  1 Oct 2019 12:54:45 +0000 (GMT)
+From:   Lukasz Luba <l.luba@partner.samsung.com>
+To:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-pm@vger.kernel.org, linux-samsung-soc@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Cc:     b.zolnierkie@samsung.com, krzk@kernel.org, kgene@kernel.org,
+        mark.rutland@arm.com, cw00.choi@samsung.com,
+        kyungmin.park@samsung.com, m.szyprowski@samsung.com,
+        s.nawrocki@samsung.com, myungjoo.ham@samsung.com,
+        robh+dt@kernel.org, willy.mh.wolff.ml@gmail.com,
+        Lukasz Luba <l.luba@partner.samsung.com>
+Subject: [PATCH v2 3/4] ARM: dts: exynos: map 0x10000 SFR instead of 0x100
+ in DMC Exynos5422
+Date:   Tue,  1 Oct 2019 14:54:35 +0200
+Message-Id: <20191001125436.24086-4-l.luba@partner.samsung.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20191001125436.24086-1-l.luba@partner.samsung.com>
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrCKsWRmVeSWpSXmKPExsWy7djPc7rTfCbHGtw/p2+xccZ6VovrX56z
+        Wsw/co7Vov/xa2aL8+c3sFucbXrDbnGrQcZi0+NrrBaXd81hs/jce4TRYsb5fUwWa4/cZbdY
+        ev0ik8XtxhVsFq17j7BbHH7Tzmrx7cQjRgdBjzXz1jB67Jx1l91j06pONo/NS+o9Dr7bw+TR
+        t2UVo8fnTXIB7FFcNimpOZllqUX6dglcGcfa/7AXPGKv+NS7mbGBcTdbFyMnh4SAiUTXv+vs
+        XYxcHEICKxglfn9/wQThfAFybj1khHA+M0ocnvuECablQNdfFojEckaJJSsOMMO1/Jm5GqiK
+        g4NNQE9ix6pCkAYRgcWMEt8OR4HUMAtsY5J4sOobK0hCWCBO4s3DXWA2i4CqxJZV28GO4hWw
+        lzj+9SAjxDZ5idUbQBZwcnAKOEgsu7SVFWSQhMApdomjcw4yQxS5SCw+sgaqQVji1fEt7BC2
+        jMTpyT0sEHaxREPvQqiaGonH/XOhaqwlDh+/yApyNLOApsT6XfoQYUeJL4tWg4UlBPgkbrwV
+        BAkzA5mTtk1nhgjzSnS0CUFUa0hs6bkADR8xieVrprFDlHhItH5yg4TOZEaJn3fmskxglJ+F
+        sGsBI+MqRvHU0uLc9NRio7zUcr3ixNzi0rx0veT83E2MwLR0+t/xLzsYd/1JOsQowMGoxMM7
+        4eXEWCHWxLLiytxDjBIczEoivDZ/JsUK8aYkVlalFuXHF5XmpBYfYpTmYFES561meBAtJJCe
+        WJKanZpakFoEk2Xi4JRqYFyucmTKIv07Ks0xq5Uendd71bbrdXxoevxHpa7ggJrtAmutPHhV
+        thukL9L4acj6ZMcBuZmsX/prpdymnrz7fw/D5AXd+mbhGq4ZoX3NchbPK455hx4vfZZgyJBd
+        e8a3s4DXgMHE6eecwobJTgVH+b2cc1W2vtm8tT2j737yoxcdi25V5YfKK7EUZyQaajEXFScC
+        AKc7d31HAwAA
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprOIsWRmVeSWpSXmKPExsVy+t/xu7rTfCbHGty/IGmxccZ6VovrX56z
+        Wsw/co7Vov/xa2aL8+c3sFucbXrDbnGrQcZi0+NrrBaXd81hs/jce4TRYsb5fUwWa4/cZbdY
+        ev0ik8XtxhVsFq17j7BbHH7Tzmrx7cQjRgdBjzXz1jB67Jx1l91j06pONo/NS+o9Dr7bw+TR
+        t2UVo8fnTXIB7FF6NkX5pSWpChn5xSW2StGGFkZ6hpYWekYmlnqGxuaxVkamSvp2NimpOZll
+        qUX6dgl6Gcfa/7AXPGKv+NS7mbGBcTdbFyMnh4SAicSBrr8sXYxcHEICSxklpra9ZYRIiElM
+        2redHcIWlvhzrYsNougTo8Tl+0+AEhwcbAJ6EjtWFYLERQSWM0ocW/WWGcRhFjjCJHF09TVG
+        kCJhgRiJ7a0+IINYBFQltqzaDraZV8Be4vjXg1DL5CVWbzjADGJzCjhILLu0lRXEFgKqmbLv
+        NeMERr4FjAyrGEVSS4tz03OLDfWKE3OLS/PS9ZLzczcxAiNl27Gfm3cwXtoYfIhRgINRiYd3
+        wsuJsUKsiWXFlbmHGCU4mJVEeG3+TIoV4k1JrKxKLcqPLyrNSS0+xGgKdNREZinR5HxgFOeV
+        xBuaGppbWBqaG5sbm1koifN2CByMERJITyxJzU5NLUgtgulj4uCUamAMCZl05NWkG6u56w9d
+        5U6xOVoXfH+BKs9PuwaP2bM/5bY/vhKcMPPSNrnmRYUTm4OOPZupZxndWzb5dvHVpOXcKTf2
+        pHU/7LWd9rPI5ia72eWwOz+iRHWFWhZf3rTAuSUksm5Ckn7Fwqe9UvvXrZNRmmN2Neb2lBP1
+        bv++xXfv3Pq7WvdTImePEktxRqKhFnNRcSIA06hgvqoCAAA=
+X-CMS-MailID: 20191001125446eucas1p1fb2ad4c13feac8dfec8d5eeeeec0a64a
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20191001125446eucas1p1fb2ad4c13feac8dfec8d5eeeeec0a64a
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20191001125446eucas1p1fb2ad4c13feac8dfec8d5eeeeec0a64a
+References: <20191001125436.24086-1-l.luba@partner.samsung.com>
+        <CGME20191001125446eucas1p1fb2ad4c13feac8dfec8d5eeeeec0a64a@eucas1p1.samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Sep 30, 2019 at 09:57:38AM +0800, Jia He wrote:
-> We unconditionally set the HW_AFDBM capability and only enable it on
-> CPUs which really have the feature. But sometimes we need to know
-> whether this cpu has the capability of HW AF. So decouple AF from
-> DBM by new helper cpu_has_hw_af().
-> 
-> Signed-off-by: Jia He <justin.he@arm.com>
-> Suggested-by: Suzuki Poulose <Suzuki.Poulose@arm.com>
-> Reviewed-by: Catalin Marinas <catalin.marinas@arm.com>
-> ---
->  arch/arm64/include/asm/cpufeature.h | 10 ++++++++++
->  1 file changed, 10 insertions(+)
-> 
-> diff --git a/arch/arm64/include/asm/cpufeature.h b/arch/arm64/include/asm/cpufeature.h
-> index 9cde5d2e768f..949bc7c85030 100644
-> --- a/arch/arm64/include/asm/cpufeature.h
-> +++ b/arch/arm64/include/asm/cpufeature.h
-> @@ -659,6 +659,16 @@ static inline u32 id_aa64mmfr0_parange_to_phys_shift(int parange)
->  	default: return CONFIG_ARM64_PA_BITS;
->  	}
->  }
-> +
-> +/* Check whether hardware update of the Access flag is supported */
-> +static inline bool cpu_has_hw_af(void)
-> +{
-> +	if (IS_ENABLED(CONFIG_ARM64_HW_AFDBM))
-> +		return read_cpuid(ID_AA64MMFR1_EL1) & 0xf;
+There is a need to access registers at address offset near 0x10000.
+These registers are private DMC performance counters, which might be used
+as interrupt trigger when overflow. Potential usage is to skip polling
+in devfreq framework and switch to interrupt managed bandwidth control.
 
-0xf? I think we should have a mask in sysreg.h for this constant.
+Signed-off-by: Lukasz Luba <l.luba@partner.samsung.com>
+---
+ arch/arm/boot/dts/exynos5420.dtsi | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Will
+diff --git a/arch/arm/boot/dts/exynos5420.dtsi b/arch/arm/boot/dts/exynos5420.dtsi
+index 45f63cd82e56..ac6dc44dbe4d 100644
+--- a/arch/arm/boot/dts/exynos5420.dtsi
++++ b/arch/arm/boot/dts/exynos5420.dtsi
+@@ -239,7 +239,7 @@
+ 
+ 		dmc: memory-controller@10c20000 {
+ 			compatible = "samsung,exynos5422-dmc";
+-			reg = <0x10c20000 0x100>, <0x10c30000 0x100>;
++			reg = <0x10c20000 0x10000>, <0x10c30000 0x10000>;
+ 			interrupt-parent = <&combiner>;
+ 			interrupts = <16 0>, <16 1>;
+ 			interrupt-names = "drex_0", "drex_1";
+-- 
+2.17.1
+
