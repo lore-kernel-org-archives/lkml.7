@@ -2,116 +2,149 @@ Return-Path: <SRS0=YRFP=X2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E3EFECE58B
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 23:37:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C0D58C352AA
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 23:39:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7DD3621A4A
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 23:37:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8DE6821A4C
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 23:39:43 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SvSuvufv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729140AbfJAXhi (ORCPT
+        id S1729162AbfJAXjn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Oct 2019 19:37:38 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:40366 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729050AbfJAXhh (ORCPT
+        Tue, 1 Oct 2019 19:39:43 -0400
+Received: from mail-io1-f68.google.com ([209.85.166.68]:42841 "EHLO
+        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729121AbfJAXjm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Oct 2019 19:37:37 -0400
-Received: from pps.filterd (m0098421.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x91NaiiK104729
-        for <linux-kernel@vger.kernel.org>; Tue, 1 Oct 2019 19:37:36 -0400
-Received: from e06smtp05.uk.ibm.com (e06smtp05.uk.ibm.com [195.75.94.101])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2vcgk402qx-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Tue, 01 Oct 2019 19:37:35 -0400
-Received: from localhost
-        by e06smtp05.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <nayna@linux.ibm.com>;
-        Wed, 2 Oct 2019 00:37:33 +0100
-Received: from b06cxnps4074.portsmouth.uk.ibm.com (9.149.109.196)
-        by e06smtp05.uk.ibm.com (192.168.101.135) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Wed, 2 Oct 2019 00:37:29 +0100
-Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
-        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x91NbRx136372604
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 1 Oct 2019 23:37:28 GMT
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id BE242AE04D;
-        Tue,  1 Oct 2019 23:37:27 +0000 (GMT)
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 35D86AE051;
-        Tue,  1 Oct 2019 23:37:25 +0000 (GMT)
-Received: from swastik.ibm.com (unknown [9.80.224.222])
-        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Tue,  1 Oct 2019 23:37:25 +0000 (GMT)
-From:   Nayna Jain <nayna@linux.ibm.com>
-To:     linuxppc-dev@ozlabs.org, linux-efi@vger.kernel.org,
-        linux-integrity@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Jeremy Kerr <jk@ozlabs.org>,
-        Matthew Garret <matthew.garret@nebula.com>,
-        Mimi Zohar <zohar@linux.ibm.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Claudio Carvalho <cclaudio@linux.ibm.com>,
-        George Wilson <gcwilson@linux.ibm.com>,
-        Elaine Palmer <erpalmer@us.ibm.com>,
-        Eric Ricther <erichte@linux.ibm.com>,
-        "Oliver O'Halloran" <oohall@gmail.com>,
-        Nayna Jain <nayna@linux.ibm.com>
-Subject: [PATCH] sysfs: Fixes __BIN_ATTR_WO() macro
-Date:   Tue,  1 Oct 2019 19:37:18 -0400
-X-Mailer: git-send-email 1.8.3.1
-X-TM-AS-GCONF: 00
-x-cbid: 19100123-0020-0000-0000-000003742318
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19100123-0021-0000-0000-000021CA2488
-Message-Id: <1569973038-2710-1-git-send-email-nayna@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-10-01_10:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=740 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1908290000 definitions=main-1910010201
+        Tue, 1 Oct 2019 19:39:42 -0400
+Received: by mail-io1-f68.google.com with SMTP id n197so52561592iod.9;
+        Tue, 01 Oct 2019 16:39:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=58jpN6kWHAdO3tEL+y4lY6rt76msdHq/bsZsGT7F90Q=;
+        b=SvSuvufv+gb1Em1YZE/meNqsikAT0bmsrAYxIog97pFs618p0gqm7/afZrcd9pUc33
+         5fxADY0uoB818dziQyLsbJ0PoaWJdBqXD007LX4kpdBh+rlYQpKTSkecUrFbmOuchmab
+         YJfxmzd2FdhuDAzkRHimZ9xvpg9y/bY74MIQgq5d3uXDPtXfaIbb1QL9wQCz6n6hf6IT
+         J9Ng1E8Cf8UWM2bxh8OQUP6yHpZXT9lIy1vdOts7yc52qHM8XB60aSg2jDoFvT+GfSdJ
+         X2yJZWJoGLotuCHq0W8w0fAR4ORaz67fnzyRyEKKAfCVhnD4cyJ8TzuceQXvAqNbrj66
+         xC6w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=58jpN6kWHAdO3tEL+y4lY6rt76msdHq/bsZsGT7F90Q=;
+        b=MukdRL6FpIYoYypmNQtsC/n7Z7KddeLkMSnhqrBEaVbiI1gxvkH7lc1VprU+TCIMnz
+         4bSDV5OMEAHmSC2TQV1C7xjU+rNgdH6OsB9ZpOF+hd56L8T4AUWM2SzbSCht4xy011rj
+         Ho36Us2ilLptepGTlxXuE2ZG5gJLR8ax2TCefUTxyc6SKOWIBpyVqdrB6pRSsmDu27Ru
+         TQF/nUssdYQVcyDUGdk16wNd+lhaLFrIvZuGUE14S9ipVfI1rzVggDs8WoxBtY075mMl
+         OmEWpOE0Kqm8UhX0/Hcmg7vG9al6pTs7VPoQ0KU5PlBXMLn1k89awjLdN5r8FxQV0Lqi
+         2fFg==
+X-Gm-Message-State: APjAAAUnhLM4xS0UXptoGt//mwnJlQSXLQ94Odes2Ipi+T1w4ppNNtlz
+        zclVRXkeGPRUtUlGHRJUCWw=
+X-Google-Smtp-Source: APXvYqx/Io8WkCb0T45Vregl4/lp6Yar6RAnWh52hAyGEGPoMLqPDMbZySdWTSgeeIhBx7SWJOXZug==
+X-Received: by 2002:a6b:b4c7:: with SMTP id d190mr774996iof.209.1569973181556;
+        Tue, 01 Oct 2019 16:39:41 -0700 (PDT)
+Received: from localhost.localdomain (c-73-37-219-234.hsd1.mn.comcast.net. [73.37.219.234])
+        by smtp.gmail.com with ESMTPSA id r22sm8659935ilb.85.2019.10.01.16.39.39
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 01 Oct 2019 16:39:40 -0700 (PDT)
+From:   Adam Ford <aford173@gmail.com>
+To:     dri-devel@lists.freedesktop.org
+Cc:     linux-omap@vger.kernel.org, adam.ford@logicpd.com,
+        Adam Ford <aford173@gmail.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH V4 1/3] drm/panel: simple: Add Logic PD Type 28 display support
+Date:   Tue,  1 Oct 2019 18:39:18 -0500
+Message-Id: <20191001233923.16514-1-aford173@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch fixes the size and write parameter for the macro
-__BIN_ATTR_WO().
+Previously, there was an omap panel-dpi driver that would
+read generic timings from the device tree and set the display
+timing accordingly.  This driver was removed so the screen
+no longer functions.  This patch modifies the panel-simple
+file to setup the timings to the same values previously used.
 
-Fixes: 7f905761e15a8 ("sysfs: add BIN_ATTR_WO() macro")
-Signed-off-by: Nayna Jain <nayna@linux.ibm.com>
+Fixes: 8bf4b1621178 ("drm/omap: Remove panel-dpi driver")
+
+Signed-off-by: Adam Ford <aford173@gmail.com>
+Reviewed-by: Sam Ravnborg <sam@ravnborg.org>
 ---
- include/linux/sysfs.h | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+V4:  No Change
+V3:  No Change
+V2:  No Change
 
-diff --git a/include/linux/sysfs.h b/include/linux/sysfs.h
-index 5420817ed317..fa7ee503fb76 100644
---- a/include/linux/sysfs.h
-+++ b/include/linux/sysfs.h
-@@ -196,9 +196,9 @@ struct bin_attribute {
- 	.size	= _size,						\
- }
+diff --git a/drivers/gpu/drm/panel/panel-simple.c b/drivers/gpu/drm/panel/panel-simple.c
+index 28fa6ba7b767..8abb31f83ffc 100644
+--- a/drivers/gpu/drm/panel/panel-simple.c
++++ b/drivers/gpu/drm/panel/panel-simple.c
+@@ -2048,6 +2048,40 @@ static const struct drm_display_mode mitsubishi_aa070mc01_mode = {
+ 	.flags = DRM_MODE_FLAG_NHSYNC | DRM_MODE_FLAG_NVSYNC,
+ };
  
--#define __BIN_ATTR_WO(_name) {						\
-+#define __BIN_ATTR_WO(_name, _size) {					\
- 	.attr	= { .name = __stringify(_name), .mode = 0200 },		\
--	.store	= _name##_store,					\
-+	.write	= _name##_write,					\
- 	.size	= _size,						\
- }
- 
++static const struct drm_display_mode logicpd_type_28_mode = {
++	.clock = 9000,
++	.hdisplay = 480,
++	.hsync_start = 480 + 3,
++	.hsync_end = 480 + 3 + 42,
++	.htotal = 480 + 3 + 42 + 2,
++
++	.vdisplay = 272,
++	.vsync_start = 272 + 2,
++	.vsync_end = 272 + 2 + 11,
++	.vtotal = 272 + 2 + 11 + 3,
++	.vrefresh = 60,
++	.flags = DRM_MODE_FLAG_PHSYNC | DRM_MODE_FLAG_PVSYNC,
++};
++
++static const struct panel_desc logicpd_type_28 = {
++	.modes = &logicpd_type_28_mode,
++	.num_modes = 1,
++	.bpc = 8,
++	.size = {
++		.width = 105,
++		.height = 67,
++	},
++	.delay = {
++		.prepare = 200,
++		.enable = 200,
++		.unprepare = 200,
++		.disable = 200,
++	},
++	.bus_format = MEDIA_BUS_FMT_RGB888_1X24,
++	.bus_flags = DRM_BUS_FLAG_DE_HIGH | DRM_BUS_FLAG_PIXDATA_DRIVE_POSEDGE |
++		     DRM_BUS_FLAG_SYNC_DRIVE_NEGEDGE,
++};
++
+ static const struct panel_desc mitsubishi_aa070mc01 = {
+ 	.modes = &mitsubishi_aa070mc01_mode,
+ 	.num_modes = 1,
+@@ -3264,6 +3298,9 @@ static const struct of_device_id platform_of_match[] = {
+ 	}, {
+ 		.compatible = "lg,lp129qe",
+ 		.data = &lg_lp129qe,
++	}, {
++		.compatible = "logicpd,type28",
++		.data = &logicpd_type_28,
+ 	}, {
+ 		.compatible = "mitsubishi,aa070mc01-ca1",
+ 		.data = &mitsubishi_aa070mc01,
 -- 
-2.20.1
+2.17.1
 
