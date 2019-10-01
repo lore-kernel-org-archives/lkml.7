@@ -6,96 +6,79 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8C8FECE58A
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 14:22:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0277ECE587
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 14:23:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B35E821855
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 14:22:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ACA0621855
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 14:23:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389121AbfJAOWw (ORCPT
+        id S2389132AbfJAOXA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Oct 2019 10:22:52 -0400
-Received: from mout.kundenserver.de ([217.72.192.74]:43387 "EHLO
+        Tue, 1 Oct 2019 10:23:00 -0400
+Received: from mout.kundenserver.de ([212.227.17.10]:53553 "EHLO
         mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388915AbfJAOWv (ORCPT
+        with ESMTP id S2389006AbfJAOW7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Oct 2019 10:22:51 -0400
+        Tue, 1 Oct 2019 10:22:59 -0400
 Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
  (mreue106 [212.227.15.145]) with ESMTPA (Nemesis) id
- 1MtfeD-1i0GXA0Ilb-00v9b6; Tue, 01 Oct 2019 16:22:31 +0200
+ 1MF418-1iLthw2cqO-00FRsG; Tue, 01 Oct 2019 16:22:56 +0200
 From:   Arnd Bergmann <arnd@arndb.de>
-To:     Johannes Weiner <hannes@cmpxchg.org>,
-        Michal Hocko <mhocko@kernel.org>,
-        Vladimir Davydov <vdavydov.dev@gmail.com>
-Cc:     Arnd Bergmann <arnd@arndb.de>, Qian Cai <cai@lca.pw>,
-        Michal Hocko <mhocko@suse.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Roman Gushchin <guro@fb.com>,
-        Shakeel Butt <shakeelb@google.com>,
-        Chris Down <chris@chrisdown.name>, Tejun Heo <tj@kernel.org>,
-        cgroups@vger.kernel.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, clang-built-linux@googlegroups.com
-Subject: [PATCH] mm/memcontrol.c: fix another unused function warning
-Date:   Tue,  1 Oct 2019 16:22:12 +0200
-Message-Id: <20191001142227.1227176-1-arnd@arndb.de>
+To:     Evgeniy Polyakov <zbr@ioremap.net>
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        Thomas Bogendoerfer <tbogendoerfer@suse.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] w1: ds2505: select CRC16
+Date:   Tue,  1 Oct 2019 16:22:44 +0200
+Message-Id: <20191001142255.1245989-1-arnd@arndb.de>
 X-Mailer: git-send-email 2.20.0
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:figbJF5L6G0XEWx7vE37p+1HREP4pdaUF1hixuKWiSXi1WhSqjN
- 1mFGZ1tTDFVzveitQ5dJm1AfeFw4+iQGprrZcQpcp3bgMfPAhxpWPB+9wFKeiUuUZZIh2io
- fKyAJSH7VFXtGs7nVJ2mRRs08ZUxBzWzQqfb+pARALNWlmIGBdxJ3hgENkjgKXJrT63booJ
- oF8KApMv5rp9nj27TuJow==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:cz+DaDPdK8A=:2nL8zO8obyUue8/B1m31Mw
- w7MDPepr2NIk/8jEqB17L8KReB0/sC8EuopUyWdwqJqlVcvp3IQxT2oKvNAJVDKUnviue6PeR
- wIcmeLA66NBBAU4oXNJhVez6AvFXLQ5pmYeEAr1ifiNfKKoNiU7quSbvLMSnWI4vHmEIn8EY8
- YWevjG+lYEUkz/gxRFFwQLNgF8cTE4qrsNGE7ZhE4GzS8Bqttluzugmj690TKdGNVNOPTVNOW
- wUOMhG58H6zDpFSVAXPrAjtUdf6LKC8aHbM2oZz0fCxNiD0UtxN15MbsAEX2/BnNGgzZDIZ5Z
- nFzqD+I/8uHKBRL6BGc540dfvuRUHxZaihiL3sC7pEDhnfPLqRAQhdagKAGVPy+dQr59WsDKI
- /U7PN60uf17KvbPNoh2oJxNUYZHDtYm9ClaXAmkLLtxS6H5Pq7+02FwhUQF8Bpcdc4unnK17I
- yjxptXPhtiFjgWbf7y6KGYFe0VgGsOTABwaetxrbxERmrNiuZmMrs68HaJhJNpJerd7TFFapt
- 4S3LG3iz/3iK/Lvpxg8eSOSe3tfEu8HiqHFe+DKOLglC9DLB6JcAUtXvsDHlrF17J+sgDkQhc
- 2qXBl2X+ugs/PMXMBsT1CoXL3Va/faJ77hBN4msDlp+BTP5ND57SWAqR66UxTtUeF9YcZqiu1
- 9nAgc0uz6fFA4PEe23LNPB4p3mFah+U+Zi0gz8FUDrxlnIhcDkHC+nnPIHWbH5B8F6sSHYXXZ
- 9mbOaXyAtbDR/icX0VfPaEESg1YMZNQ+e1zqPdMxSwDClUDfAgVg0VF2MjwtjcdZbsnh4/k6m
- jniImRYGrZzQZvT0JS/EtY/rVgs/bFaeuc73VNwLShU10MDLcsW/CUEUHfbHeQ+bbjPfsL8IQ
- ILrUXkj5IUCXuCgsn66Q==
+X-Provags-ID: V03:K1:2wTcfLAihyLHj4j+fM8o3d07tIhT4eM5C4mQ+VyTh56oe4qPJvi
+ k/RgP6fvxJHWyHsKPXoePy03smAmfB+7ptZYlV7S1t0nFAgY/WrSTCmlzut3E1+Q5UL0Qx5
+ TFPRCAE/imQlncFtdmnNQ9MtFMEh5pxUAuAsyoJ5g/v+yf49cQENfpMWxOo2bRQMR+lDj+B
+ YYoh/jgXkzjO36ZzfS6WQ==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:B5dB2AhTFQ8=:bjVe/aYWvOzQB5DIHq4p/G
+ 4xwi9VJ2sF0SZ3NoEFk0/hpqdPgc52+OfY618vpzPEhkwove5dCZIdA3d2/VAa5pltnbzsK3N
+ 0Ru4VNET8u/0AZxoOLgDziT+KP0d7v1Xx4KgvZlIvpQHCWjtOKPthPOIro4icabOl/PrqwFYZ
+ bjpi1Jjl5ZVDaXReTKqs3ohy5fDcUu0gr50WmH/YRxdCyeezz228MhCGpUf1mmtu8eYaYriMD
+ hyhDYPbayA9JeVP1tMDmyRjrrcTYwzuZ3/ylXix12LppuNTGaNPAsO37W1gHHMmevFHm7F8iq
+ 9Ew0KZa2m7FwffjM1rOCk3RYztdNxaWXszabktbZAAE/aPSOZwE9aVahF62gurDKOBZDzEN7e
+ BMTTwE0PdK0EAplRsKHpVhpH3685vozyqScH6kqpeV5S+pAQB1iVTQHQW67dFsYteyJPPYAOr
+ 5Gk8D9sI2X8Csp+0Ss8ajvQsFCesfBDyuYzjZF9MioAWEF8q8IpfFoMkgQ6PwVZvxLjJj3Dmj
+ L+Evqr4mbjMWurSdtVoefcHWYISBYFcKgQ1pcgm1B0xjA8MaCFXM2vaSY4OXuwYLQcujHmWbQ
+ QrcdIX506qTfGzHzys+uIqS7aEmz3qkw4krPdclNRSgPmIsloWB5o7vW8jWcZ5sYGrSjN1Yk4
+ fqyHveOQOf+zeUr68WteAhTFxAGt4JXvN+b37R0oZKla/ItNv96yXjUjC/bfQaLtziPDkFhlE
+ wshDLzXSzbkfOUDYXKNnDnG1WxSGFsH17zQrzBy0+bjPftcj/4d54N/cYu/ilFtjEZyaclKVe
+ 74yaxOPfO9EA7VJRD4vjzLvzyBi0mp4AwP1gvNxuaI+ZwHUqKciDNXodJk+X4El9hwgoW9WfQ
+ SneKpJEqqY+mKFeef+lQ==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Removing the mem_cgroup_id_get() stub function introduced a new warning
-of the same kind when CONFIG_MMU is disabled:
+drivers/w1/slaves/w1_ds250x.o: In function `w1_ds2505_read_page':
+w1_ds250x.c:(.text+0xed4): undefined reference to `crc16'
 
-mm/memcontrol.c:4929:13: error: unused function 'mem_cgroup_id_get_many' [-Werror,-Wunused-function]
-
-Address this using a __maybe_unused annotation.
-
-Note: alternatively, this could be moved into an #ifdef block.  Marking it
-'static inline' would not work here as that would still produce the
-warning on clang, which only ignores unused inline functions declared
-in header files instead of .c files.
-
-Fixes: 4d0e3230a56a ("mm/memcontrol.c: fix a -Wunused-function warning")
+Fixes: 25ec8710d9c2 ("w1: add DS2501, DS2502, DS2505 EPROM device driver")
 Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 ---
- mm/memcontrol.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/w1/slaves/Kconfig | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/mm/memcontrol.c b/mm/memcontrol.c
-index c313c49074ca..5f9f90e3cef8 100644
---- a/mm/memcontrol.c
-+++ b/mm/memcontrol.c
-@@ -4921,7 +4921,8 @@ static void mem_cgroup_id_remove(struct mem_cgroup *memcg)
- 	}
- }
+diff --git a/drivers/w1/slaves/Kconfig b/drivers/w1/slaves/Kconfig
+index ebed495b9e69..b7847636501d 100644
+--- a/drivers/w1/slaves/Kconfig
++++ b/drivers/w1/slaves/Kconfig
+@@ -103,6 +103,7 @@ config W1_SLAVE_DS2438
  
--static void mem_cgroup_id_get_many(struct mem_cgroup *memcg, unsigned int n)
-+static void __maybe_unused
-+mem_cgroup_id_get_many(struct mem_cgroup *memcg, unsigned int n)
- {
- 	refcount_add(n, &memcg->id.ref);
- }
+ config W1_SLAVE_DS250X
+ 	tristate "512b/1kb/16kb EPROM family support"
++	select CRC16
+ 	help
+ 	  Say Y here if you want to use a 1-wire
+ 	  512b/1kb/16kb EPROM family device (DS250x).
 -- 
 2.20.0
 
