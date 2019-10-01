@@ -2,202 +2,133 @@ Return-Path: <SRS0=YRFP=X2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CB07C352AA
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 15:31:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B171C352AA
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 15:32:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1635720842
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 15:31:21 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fFf/s9L/"
+	by mail.kernel.org (Postfix) with ESMTP id 6B5662133F
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 15:32:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389772AbfJAPbU (ORCPT
+        id S2389777AbfJAPcE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Oct 2019 11:31:20 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:37639 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389757AbfJAPbU (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Oct 2019 11:31:20 -0400
-Received: by mail-pg1-f195.google.com with SMTP id c17so9907520pgg.4;
-        Tue, 01 Oct 2019 08:31:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:from:to:cc:date:message-id:in-reply-to:references
-         :user-agent:mime-version:content-transfer-encoding;
-        bh=IYnIZF3ya8GRMyw0Z8v44wRFjachYcZ/Qaw0Oz7Yqys=;
-        b=fFf/s9L/WVB7bjmw9fJPe2WCP680R1hAwuz1EqtrpqaGDESC6QFN2j2SXFOiAJg48C
-         QnQhC/HuBLM4hw4d4aGJ9GMH+NahcRJzzAfWlDiQem/OQ6HTAv0fMd1BeY9U1lQ/GSge
-         Me1yyZXkd7tOvHMyE79qhoufjm0W3V9RiZ4BajjbmZ2I7jx0AgLfZwuHR98ZhjI1xS6x
-         6wKWChettN4aTn+SOWX6b2RqdJSknjPHojz6q/AqeS0Emtu4rXj02fEx4X7/r9KZk0nq
-         V6As+NbPDdINtRfRk95OxlyONVc8iPdBVtjmmXBl4YE4jeGWo7lhRl42+2ZHCEmSq6KA
-         HTuQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:from:to:cc:date:message-id:in-reply-to
-         :references:user-agent:mime-version:content-transfer-encoding;
-        bh=IYnIZF3ya8GRMyw0Z8v44wRFjachYcZ/Qaw0Oz7Yqys=;
-        b=SkC7AUxdxsQD+cbFSx+lt9Gnosm3Y++WaJTeX67LnL3xnVgk4NU6+NZCkOsdszXa7k
-         29Q3B2+9gW4+ssakpxbw77ltzWST2qa7ud9fY+cykjtVwVrcabq2U1Op1YW+WitN0wny
-         2rv+P+OcLAiW/aVlrY2u/bNQMub1tk0PTvODhwHg2vBFB0zj6/3ba2P/quSNF6RXyl0H
-         Ss10BcSyerV2tcTBDYQHJPufU7R/da7YeitAKBc3ZOuj1+2/F0L6rVEOT1gGo8RxthSz
-         3pFZfbS4QYl/tCv28iNDOrA7ugqFHyDT+3GBF2T6gWi8G/3DQa6IPnVRV1KiTHOpw8jz
-         XUTQ==
-X-Gm-Message-State: APjAAAXmBbBk85aDXDfxC2EE1K9PLKVTLhzhVCOmyuHcF31BKkJBfVzD
-        1qQPP3It48Ga6hxdhw60dIs=
-X-Google-Smtp-Source: APXvYqyJ7G21Slmmp/tSoYHHg2Wj1SXXe+iZkfjyVs/U7WtIKdIWA4ZHjBpG89+YrZqmxqOcv//CQQ==
-X-Received: by 2002:a62:d152:: with SMTP id t18mr4342674pfl.259.1569943879123;
-        Tue, 01 Oct 2019 08:31:19 -0700 (PDT)
-Received: from localhost.localdomain ([2001:470:b:9c3:9e5c:8eff:fe4f:f2d0])
-        by smtp.gmail.com with ESMTPSA id 2sm16384053pfo.91.2019.10.01.08.31.18
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 01 Oct 2019 08:31:18 -0700 (PDT)
-Subject: [PATCH v11 QEMU 3/3] virtio-balloon: Provide a interface for unused
- page reporting
-From:   Alexander Duyck <alexander.duyck@gmail.com>
-To:     virtio-dev@lists.oasis-open.org, kvm@vger.kernel.org,
-        mst@redhat.com, david@redhat.com, dave.hansen@intel.com,
-        linux-kernel@vger.kernel.org, willy@infradead.org,
-        mhocko@kernel.org, linux-mm@kvack.org, akpm@linux-foundation.org,
-        mgorman@techsingularity.net, vbabka@suse.cz, osalvador@suse.de
-Cc:     yang.zhang.wz@gmail.com, pagupta@redhat.com,
-        konrad.wilk@oracle.com, nitesh@redhat.com, riel@surriel.com,
-        lcapitulino@redhat.com, wei.w.wang@intel.com, aarcange@redhat.com,
-        pbonzini@redhat.com, dan.j.williams@intel.com,
-        alexander.h.duyck@linux.intel.com
-Date:   Tue, 01 Oct 2019 08:31:17 -0700
-Message-ID: <20191001153117.4422.30512.stgit@localhost.localdomain>
-In-Reply-To: <20191001152441.27008.99285.stgit@localhost.localdomain>
-References: <20191001152441.27008.99285.stgit@localhost.localdomain>
-User-Agent: StGit/0.17.1-dirty
+        Tue, 1 Oct 2019 11:32:04 -0400
+Received: from mga18.intel.com ([134.134.136.126]:41575 "EHLO mga18.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2388277AbfJAPcE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Oct 2019 11:32:04 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 01 Oct 2019 08:32:00 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,571,1559545200"; 
+   d="scan'208";a="275026881"
+Received: from linux.intel.com ([10.54.29.200])
+  by orsmga001.jf.intel.com with ESMTP; 01 Oct 2019 08:32:00 -0700
+Received: from abapat-mobl1.amr.corp.intel.com (unknown [10.251.1.101])
+        by linux.intel.com (Postfix) with ESMTP id D8A92580696;
+        Tue,  1 Oct 2019 08:31:58 -0700 (PDT)
+Subject: Re: [alsa-devel] [PATCH] ASoC: SOF: imx: fix reverse
+ CONFIG_SND_SOC_SOF_OF dependency
+To:     Arnd Bergmann <arnd@arndb.de>, Mark Brown <broonie@kernel.org>
+Cc:     Hulk Robot <hulkci@huawei.com>, YueHaibing <yuehaibing@huawei.com>,
+        Daniel Baluta <daniel.baluta@nxp.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>, Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        alsa-devel@alsa-project.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+References: <20191001142026.1124917-1-arnd@arndb.de>
+From:   Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Message-ID: <bb58c7cc-209d-7a2f-0e5b-95a9605ffe7b@linux.intel.com>
+Date:   Tue, 1 Oct 2019 10:31:58 -0500
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.13; rv:60.0)
+ Gecko/20100101 Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+In-Reply-To: <20191001142026.1124917-1-arnd@arndb.de>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alexander Duyck <alexander.h.duyck@linux.intel.com>
+On 10/1/19 9:20 AM, Arnd Bergmann wrote:
+> CONFIG_SND_SOC_SOF_IMX depends on CONFIG_SND_SOC_SOF, but is in
+> turn referenced by the sof-of-dev driver. This creates a reverse
+> dependency that manifests in a link error when CONFIG_SND_SOC_SOF_OF
+> is built-in but CONFIG_SND_SOC_SOF_IMX=m:
+> 
+> sound/soc/sof/sof-of-dev.o:(.data+0x118): undefined reference to `sof_imx8_ops'
+> 
+> Make the latter a 'bool' symbol and change the Makefile so the imx8
+> driver is compiled the same way as the driver using it.
+> 
+> A nicer way would be to reverse the layering and move all
+> the imx specific bits of sof-of-dev.c into the imx driver
+> itself, which can then call into the common code. Doing this
+> would need more testing and can be done if we add another
+> driver like the first one.
 
-Add support for what I am referring to as "unused page reporting".
-Basically the idea is to function very similar to how the balloon works
-in that we basically end up madvising the page as not being used. However
-we don't really need to bother with any deflate type logic since the page
-will be faulted back into the guest when it is read or written to.
+Or use something like
 
-This is meant to be a simplification of the existing balloon interface
-to use for providing hints to what memory needs to be freed. I am assuming
-this is safe to do as the deflate logic does not actually appear to do very
-much other than tracking what subpages have been released and which ones
-haven't.
+config SND_SOC_SOF_IMX8_SUPPORT
+	bool "SOF support for i.MX8"
+    	depends on IMX_SCU
+    	depends on IMX_DSP
 
-Signed-off-by: Alexander Duyck <alexander.h.duyck@linux.intel.com>
----
- hw/virtio/virtio-balloon.c         |   46 ++++++++++++++++++++++++++++++++++--
- include/hw/virtio/virtio-balloon.h |    2 +-
- 2 files changed, 45 insertions(+), 3 deletions(-)
+config SND_SOC_SOF_IMX8
+	tristate
+	<i.mx selects>
 
-diff --git a/hw/virtio/virtio-balloon.c b/hw/virtio/virtio-balloon.c
-index 6ecfec422309..47f253d016db 100644
---- a/hw/virtio/virtio-balloon.c
-+++ b/hw/virtio/virtio-balloon.c
-@@ -321,6 +321,40 @@ static void balloon_stats_set_poll_interval(Object *obj, Visitor *v,
-     balloon_stats_change_timer(s, 0);
- }
- 
-+static void virtio_balloon_handle_report(VirtIODevice *vdev, VirtQueue *vq)
-+{
-+    VirtIOBalloon *dev = VIRTIO_BALLOON(vdev);
-+    VirtQueueElement *elem;
-+
-+    while ((elem = virtqueue_pop(vq, sizeof(VirtQueueElement)))) {
-+    	unsigned int i;
-+
-+        for (i = 0; i < elem->in_num; i++) {
-+            void *addr = elem->in_sg[i].iov_base;
-+            size_t size = elem->in_sg[i].iov_len;
-+            ram_addr_t ram_offset;
-+            size_t rb_page_size;
-+            RAMBlock *rb;
-+
-+            if (qemu_balloon_is_inhibited() || dev->poison_val)
-+                continue;
-+
-+            rb = qemu_ram_block_from_host(addr, false, &ram_offset);
-+            rb_page_size = qemu_ram_pagesize(rb);
-+
-+            /* For now we will simply ignore unaligned memory regions */
-+            if ((ram_offset | size) & (rb_page_size - 1))
-+                continue;
-+
-+            ram_block_discard_range(rb, ram_offset, size);
-+        }
-+
-+        virtqueue_push(vq, elem, 0);
-+        virtio_notify(vdev, vq);
-+        g_free(elem);
-+    }
-+}
-+
- static void virtio_balloon_handle_output(VirtIODevice *vdev, VirtQueue *vq)
- {
-     VirtIOBalloon *s = VIRTIO_BALLOON(vdev);
-@@ -628,7 +662,8 @@ static size_t virtio_balloon_config_size(VirtIOBalloon *s)
-         return sizeof(struct virtio_balloon_config);
-     }
-     if (virtio_has_feature(features, VIRTIO_BALLOON_F_PAGE_POISON) ||
--        virtio_has_feature(features, VIRTIO_BALLOON_F_FREE_PAGE_HINT)) {
-+        virtio_has_feature(features, VIRTIO_BALLOON_F_FREE_PAGE_HINT) ||
-+        virtio_has_feature(features, VIRTIO_BALLOON_F_REPORTING)) {
-         return sizeof(struct virtio_balloon_config);
-     }
-     return offsetof(struct virtio_balloon_config, free_page_report_cmd_id);
-@@ -716,7 +751,8 @@ static uint64_t virtio_balloon_get_features(VirtIODevice *vdev, uint64_t f,
-     VirtIOBalloon *dev = VIRTIO_BALLOON(vdev);
-     f |= dev->host_features;
-     virtio_add_feature(&f, VIRTIO_BALLOON_F_STATS_VQ);
--    if (virtio_has_feature(f, VIRTIO_BALLOON_F_FREE_PAGE_HINT)) {
-+    if (virtio_has_feature(f, VIRTIO_BALLOON_F_FREE_PAGE_HINT) ||
-+        virtio_has_feature(f, VIRTIO_BALLOON_F_REPORTING)) {
-         virtio_add_feature(&f, VIRTIO_BALLOON_F_PAGE_POISON);
-     }
- 
-@@ -806,6 +842,10 @@ static void virtio_balloon_device_realize(DeviceState *dev, Error **errp)
-     s->dvq = virtio_add_queue(vdev, 128, virtio_balloon_handle_output);
-     s->svq = virtio_add_queue(vdev, 128, virtio_balloon_receive_stats);
- 
-+    if (virtio_has_feature(s->host_features, VIRTIO_BALLOON_F_REPORTING)) {
-+        s->rvq = virtio_add_queue(vdev, 32, virtio_balloon_handle_report);
-+    }
-+
-     if (virtio_has_feature(s->host_features,
-                            VIRTIO_BALLOON_F_FREE_PAGE_HINT)) {
-         s->free_page_vq = virtio_add_queue(vdev, VIRTQUEUE_MAX_SIZE,
-@@ -932,6 +972,8 @@ static Property virtio_balloon_properties[] = {
-      */
-     DEFINE_PROP_BOOL("qemu-4-0-config-size", VirtIOBalloon,
-                      qemu_4_0_config_size, false),
-+    DEFINE_PROP_BIT("unused-page-reporting", VirtIOBalloon, host_features,
-+                    VIRTIO_BALLOON_F_REPORTING, true),
-     DEFINE_PROP_LINK("iothread", VirtIOBalloon, iothread, TYPE_IOTHREAD,
-                      IOThread *),
-     DEFINE_PROP_END_OF_LIST(),
-diff --git a/include/hw/virtio/virtio-balloon.h b/include/hw/virtio/virtio-balloon.h
-index 7fe78e5c14d7..db5bf7127112 100644
---- a/include/hw/virtio/virtio-balloon.h
-+++ b/include/hw/virtio/virtio-balloon.h
-@@ -42,7 +42,7 @@ enum virtio_balloon_free_page_report_status {
- 
- typedef struct VirtIOBalloon {
-     VirtIODevice parent_obj;
--    VirtQueue *ivq, *dvq, *svq, *free_page_vq;
-+    VirtQueue *ivq, *dvq, *svq, *free_page_vq, *rvq;
-     uint32_t free_page_report_status;
-     uint32_t num_pages;
-     uint32_t actual;
+config SND_SOC_SOF_OF
+	depends on OF
+	select SND_SOC_SOF_IMX8 if SND_SOC_SOF_IMX8_SUPPORT
+
+That way you propagate the module/built-in information. That's how we 
+fixed those issues for the Intel parts.
+
+> 
+> Fixes: f4df4e4042b0 ("ASoC: SOF: imx8: Fix COMPILE_TEST error")
+> Fixes: 202acc565a1f ("ASoC: SOF: imx: Add i.MX8 HW support")
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+> ---
+>   sound/soc/sof/imx/Kconfig  | 2 +-
+>   sound/soc/sof/imx/Makefile | 4 +++-
+>   2 files changed, 4 insertions(+), 2 deletions(-)
+> 
+> diff --git a/sound/soc/sof/imx/Kconfig b/sound/soc/sof/imx/Kconfig
+> index 5acae75f5750..a3891654a1fc 100644
+> --- a/sound/soc/sof/imx/Kconfig
+> +++ b/sound/soc/sof/imx/Kconfig
+> @@ -12,7 +12,7 @@ config SND_SOC_SOF_IMX_TOPLEVEL
+>   if SND_SOC_SOF_IMX_TOPLEVEL
+>   
+>   config SND_SOC_SOF_IMX8
+> -	tristate "SOF support for i.MX8"
+> +	bool "SOF support for i.MX8"
+>   	depends on IMX_SCU
+>   	depends on IMX_DSP
+>   	help
+> diff --git a/sound/soc/sof/imx/Makefile b/sound/soc/sof/imx/Makefile
+> index 6ef908e8c807..9e8f35df0ff2 100644
+> --- a/sound/soc/sof/imx/Makefile
+> +++ b/sound/soc/sof/imx/Makefile
+> @@ -1,4 +1,6 @@
+>   # SPDX-License-Identifier: (GPL-2.0 OR BSD-3-Clause)
+>   snd-sof-imx8-objs := imx8.o
+>   
+> -obj-$(CONFIG_SND_SOC_SOF_IMX8) += snd-sof-imx8.o
+> +ifdef CONFIG_SND_SOC_SOF_IMX8
+> +obj-$(CONFIG_SND_SOC_SOF_OF) += snd-sof-imx8.o
+> +endif
+> 
 
