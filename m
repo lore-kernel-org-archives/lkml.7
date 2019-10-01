@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 780F9C352AA
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 17:02:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9755CECE587
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 17:03:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4028D2054F
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 17:02:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6E8A32054F
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 17:03:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569949376;
-	bh=5RYbrWbEgh2pUYCTiY8DsiU2kwg66mfF2oaID6U5yrM=;
+	s=default; t=1569949382;
+	bh=NuHhHXw4QZBdglT0kxOOBHpNOn1XLOOMc9cyecLOYBc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=tk5wCfHRsnr17wMg90o9aQDki3aA15qG8bE2S92S1oh+ZGVMODQrvvdWEp0WILuCS
-	 coY2sUU6YNBoJCJu5ppGoQHlNj/PeJu/Jp3Y85XD93TGPDjy9ZhjlquZJgsc3wekAq
-	 +ITpJSXwt7bj/m9331kvnVTVEaJED23ZceoAGFAc=
+	b=ERHLV8j7gPgVUUbcc00Ls4EwSY2OQlNwodcZL1nR/ADJAbDYA7UhC+TfyBVuxtWZ4
+	 rn0S1uUPdLnnOqEJ3f7Vcq0K0WIkDB8456Z19onCQ4Wcmna4BRIok4Eq5U2SbO+rNw
+	 M4zlwzshfgAjVM4yif4umhL06mWwtBU473CqcCVQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732534AbfJARCy (ORCPT
+        id S1729086AbfJAQj6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Oct 2019 13:02:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51142 "EHLO mail.kernel.org"
+        Tue, 1 Oct 2019 12:39:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51040 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729094AbfJAQj7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Oct 2019 12:39:59 -0400
+        id S1728595AbfJAQjz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Oct 2019 12:39:55 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AE3402168B;
-        Tue,  1 Oct 2019 16:39:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2E17921920;
+        Tue,  1 Oct 2019 16:39:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569947998;
-        bh=5RYbrWbEgh2pUYCTiY8DsiU2kwg66mfF2oaID6U5yrM=;
+        s=default; t=1569947995;
+        bh=NuHhHXw4QZBdglT0kxOOBHpNOn1XLOOMc9cyecLOYBc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Hw3D3SBqqPDI8nmkBQIuX5pbjvC0Thg/U0CcEM4Ay2oTJjR3HwmUnyZfiFHoRV8fL
-         DNMFTbpDP+b827hPUQg5skrbG1I32bSOupqDYfFu3icLsEeo9t5beAt65MYWEOCI/b
-         rcHmcl9mN8sk5JvXpZd3a3jq/aOjyd9LGNVwwD0c=
+        b=KFlQ0fe81+Fa8eDae6cTPtZ3TXN5IjIKlTipmtZAqLD+ceBYENQDxSciZyd5oGIOX
+         5/Pb1J/P/aUugBkn7YY4bW9BFN82ZHf1le/1UJnt5sgoqGcV/Y9SreEB2CZdklgqfY
+         7wFGsz9wZ/WdY3iDf1E6R07C7V5xht0A8GMeueIc=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Davide Caratti <dcaratti@redhat.com>,
-        Yotam Gigi <yotam.gi@gmail.com>,
-        Jakub Kicinski <jakub.kicinski@netronome.com>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.3 24/71] net/sched: act_sample: don't push mac header on ip6gre ingress
-Date:   Tue,  1 Oct 2019 12:38:34 -0400
-Message-Id: <20191001163922.14735-24-sashal@kernel.org>
+Cc:     Masami Hiramatsu <mhiramat@kernel.org>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Wang Nan <wangnan0@huawei.com>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.3 21/71] perf probe: Fix to clear tev->nargs in clear_probe_trace_event()
+Date:   Tue,  1 Oct 2019 12:38:31 -0400
+Message-Id: <20191001163922.14735-21-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191001163922.14735-1-sashal@kernel.org>
 References: <20191001163922.14735-1-sashal@kernel.org>
@@ -60,43 +61,64 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Davide Caratti <dcaratti@redhat.com>
+From: Masami Hiramatsu <mhiramat@kernel.org>
 
-[ Upstream commit 92974a1d006ad8b30d53047c70974c9e065eb7df ]
+[ Upstream commit 9e6124d9d635957b56717f85219a88701617253f ]
 
-current 'sample' action doesn't push the mac header of ingress packets if
-they are received by a layer 3 tunnel (like gre or sit); but it forgot to
-check for gre over ipv6, so the following script:
+Since add_probe_trace_event() can reuse tf->tevs[i] after calling
+clear_probe_trace_event(), this can make perf-probe crash if the 1st
+attempt of probe event finding fails to find an event argument, and the
+2nd attempt fails to find probe point.
 
- # tc q a dev $d clsact
- # tc f a dev $d ingress protocol ip flower ip_proto icmp action sample \
- > group 100 rate 1
- # psample -v -g 100
+E.g.
+  $ perf probe -D "task_pid_nr tsk"
+  Failed to find 'tsk' in this function.
+  Failed to get entry address of warn_bad_vsyscall
+  Segmentation fault (core dumped)
 
-dumps everything, including outer header and mac, when $d is a gre tunnel
-over ipv6. Fix this adding a missing label for ARPHRD_IP6GRE devices.
+Committer testing:
 
-Fixes: 5c5670fae430 ("net/sched: Introduce sample tc action")
-Signed-off-by: Davide Caratti <dcaratti@redhat.com>
-Reviewed-by: Yotam Gigi <yotam.gi@gmail.com>
-Signed-off-by: Jakub Kicinski <jakub.kicinski@netronome.com>
+After the patch:
+
+  $ perf probe -D "task_pid_nr tsk"
+  Failed to find 'tsk' in this function.
+  Failed to get entry address of warn_bad_vsyscall
+  Failed to get entry address of signal_fault
+  Failed to get entry address of show_signal
+  Failed to get entry address of umip_printk
+  Failed to get entry address of __bad_area_nosemaphore
+  <SNIP>
+  Failed to get entry address of sock_set_timeout
+  Failed to get entry address of tcp_recvmsg
+  Probe point 'task_pid_nr' not found.
+    Error: Failed to add events.
+  $
+
+Fixes: 092b1f0b5f9f ("perf probe: Clear probe_trace_event when add_probe_trace_event() fails")
+Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
+Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: Jiri Olsa <jolsa@redhat.com>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Wang Nan <wangnan0@huawei.com>
+Link: http://lore.kernel.org/lkml/156856587999.25775.5145779959474477595.stgit@devnote2
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/sched/act_sample.c | 1 +
+ tools/perf/util/probe-event.c | 1 +
  1 file changed, 1 insertion(+)
 
-diff --git a/net/sched/act_sample.c b/net/sched/act_sample.c
-index 10229124a9924..86344fd2ff1fa 100644
---- a/net/sched/act_sample.c
-+++ b/net/sched/act_sample.c
-@@ -146,6 +146,7 @@ static bool tcf_sample_dev_ok_push(struct net_device *dev)
- 	case ARPHRD_TUNNEL6:
- 	case ARPHRD_SIT:
- 	case ARPHRD_IPGRE:
-+	case ARPHRD_IP6GRE:
- 	case ARPHRD_VOID:
- 	case ARPHRD_NONE:
- 		return false;
+diff --git a/tools/perf/util/probe-event.c b/tools/perf/util/probe-event.c
+index 8394d48f8b32e..3355c445abedf 100644
+--- a/tools/perf/util/probe-event.c
++++ b/tools/perf/util/probe-event.c
+@@ -2329,6 +2329,7 @@ void clear_probe_trace_event(struct probe_trace_event *tev)
+ 		}
+ 	}
+ 	zfree(&tev->args);
++	tev->nargs = 0;
+ }
+ 
+ struct kprobe_blacklist_node {
 -- 
 2.20.1
 
