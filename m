@@ -2,93 +2,123 @@ Return-Path: <SRS0=YRFP=X2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CFB1C352AA
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 09:23:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FE9AECE589
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 09:28:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 63DA22133F
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 09:23:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 630A22133F
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 09:28:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728760AbfJAJXx (ORCPT
+        id S1729289AbfJAJ2Q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Oct 2019 05:23:53 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:54630 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726303AbfJAJXx (ORCPT
+        Tue, 1 Oct 2019 05:28:16 -0400
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:44991 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727326AbfJAJ2Q (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Oct 2019 05:23:53 -0400
-Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tip-bot2@linutronix.de>)
-        id 1iFENn-0006fc-IQ; Tue, 01 Oct 2019 11:23:47 +0200
-Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 28EAD1C03AB;
-        Tue,  1 Oct 2019 11:23:47 +0200 (CEST)
-Date:   Tue, 01 Oct 2019 09:23:46 -0000
-From:   "tip-bot2 for Borislav Petkov" <tip-bot2@linutronix.de>
-Reply-to: linux-kernel@vger.kernel.org
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: x86/cleanups] x86/nmi: Remove stale EDAC include leftover
-Cc:     Borislav Petkov <bp@suse.de>, Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@kernel.org>, Borislav Petkov <bp@alien8.de>,
-        linux-kernel@vger.kernel.org
-In-Reply-To: <20190923193807.30896-1-bp@alien8.de>
-References: <20190923193807.30896-1-bp@alien8.de>
+        Tue, 1 Oct 2019 05:28:16 -0400
+Received: by mail-ot1-f66.google.com with SMTP id 21so10904671otj.11;
+        Tue, 01 Oct 2019 02:28:15 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=7GWGh2D7aZcVTalvii3cK7UDmHvdrp+om18ofNeVba8=;
+        b=qpj1jnLn8JowzM99dz8TaGdKjJ3LzU8RufP7gu+sSUSUF/5jb1MHmUsPl/giAwhZpu
+         0qS4zi3t5y6AC4S7k0dhzslvbG+R7aBw5pDO2NljXQP9FJYvLlgSH6m40DjMA3SpQgmE
+         4OjoNYtLnSOxMPMHxjDrA1d4WXXqikFAkQWp2sNE8Jozo47N+LQuJ9bVPMf2pNb0aPHZ
+         KwXuOg7f4VVwdUG+uqQ7/tahq4V2/7eYVxZUB2glVp7Y1pMtJiGGSONSAScbRD2bOLGx
+         k5RivpKgNovWj74c5c7C1+YHmzvyzKDCmHQL2Iee3UogpaZmMd7WRIxkRHgpukIlRHaC
+         tzmg==
+X-Gm-Message-State: APjAAAWUlJVdvkqNib1LKqgV4rafimudoYEnAIC74oVl21VczjjgZipo
+        r/GIOFjfjjd3i7j+mJQ67oKhzn+E/QaY7LqWass=
+X-Google-Smtp-Source: APXvYqxUufz8LGb/JAoIgX1fGGEw9iT8aiUJjPt7oB7FJ2AuPPMS33WxhIxXcjmTRYGD42MwfUAanBkCEJnpdi94Fqg=
+X-Received: by 2002:a9d:404d:: with SMTP id o13mr17559692oti.39.1569922094967;
+ Tue, 01 Oct 2019 02:28:14 -0700 (PDT)
 MIME-Version: 1.0
-Message-ID: <156992182699.9978.3620777237467343344.tip-bot2@tip-bot2>
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot2.linutronix.de>
-Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+References: <20190930055925.25842-1-yamada.masahiro@socionext.com>
+In-Reply-To: <20190930055925.25842-1-yamada.masahiro@socionext.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Tue, 1 Oct 2019 11:28:03 +0200
+Message-ID: <CAMuHMdW3e5bYfinAjqUWcONK_s4iFhwG2CXUvNR0wz3+Cf_YWA@mail.gmail.com>
+Subject: Re: [PATCH] ARM: fix __get_user_check() in case uaccess_* calls are
+ not inlined
+To:     Masahiro Yamada <yamada.masahiro@socionext.com>
+Cc:     Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Russell King <rmk+kernel@armlinux.org.uk>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Vincent Whitchurch <vincent.whitchurch@axis.com>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Stefan Agner <stefan@agner.ch>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Julien Thierry <julien.thierry.kdev@gmail.com>,
+        Olof Johansson <olof@lixom.net>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following commit has been merged into the x86/cleanups branch of tip:
+On Mon, Sep 30, 2019 at 8:01 AM Masahiro Yamada
+<yamada.masahiro@socionext.com> wrote:
+> KernelCI reports that bcm2835_defconfig is no longer booting since
+> commit ac7c3e4ff401 ("compiler: enable CONFIG_OPTIMIZE_INLINING
+> forcibly"):
+>
+>   https://lkml.org/lkml/2019/9/26/825
+>
+> I also received a regression report from Nicolas Saenz Julienne:
+>
+>   https://lkml.org/lkml/2019/9/27/263
+>
+> This problem has cropped up on arch/arm/config/bcm2835_defconfig
+> because it enables CONFIG_CC_OPTIMIZE_FOR_SIZE. The compiler tends
+> to prefer not inlining functions with -Os. I was able to reproduce
+> it with other boards and defconfig files by manually enabling
+> CONFIG_CC_OPTIMIZE_FOR_SIZE.
+>
+> The __get_user_check() specifically uses r0, r1, r2 registers.
+> So, uaccess_save_and_enable() and uaccess_restore() must be inlined
+> in order to avoid those registers being overwritten in the callees.
+>
+> Prior to commit 9012d011660e ("compiler: allow all arches to enable
+> CONFIG_OPTIMIZE_INLINING"), the 'inline' marker was always enough for
+> inlining functions, except on x86.
+>
+> Since that commit, all architectures can enable CONFIG_OPTIMIZE_INLINING.
+> So, __always_inline is now the only guaranteed way of forcible inlining.
+>
+> I want to keep as much compiler's freedom as possible about the inlining
+> decision. So, I changed the function call order instead of adding
+> __always_inline around.
+>
+> Call uaccess_save_and_enable() before assigning the __p ("r0"), and
+> uaccess_restore() after evacuating the __e ("r0").
+>
+> Fixes: 9012d011660e ("compiler: allow all arches to enable CONFIG_OPTIMIZE_INLINING")
+> Reported-by: "kernelci.org bot" <bot@kernelci.org>
+> Reported-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+> Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
 
-Commit-ID:     abaebe11dd07adf51b53bb7c56ba35eab267654d
-Gitweb:        https://git.kernel.org/tip/abaebe11dd07adf51b53bb7c56ba35eab267654d
-Author:        Borislav Petkov <bp@suse.de>
-AuthorDate:    Thu, 16 Aug 2018 09:14:04 +02:00
-Committer:     Borislav Petkov <bp@suse.de>
-CommitterDate: Tue, 01 Oct 2019 11:11:11 +02:00
+Thanks, this fixes the issues I was seeing on r8a7791/koelsch.
 
-x86/nmi: Remove stale EDAC include leftover
+Tested-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
-db47d5f85646 ("x86/nmi, EDAC: Get rid of DRAM error reporting thru PCI SERR NMI")
+Gr{oetje,eeting}s,
 
-forgot to remove it. Drop it.
+                        Geert
 
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Reviewed-by: Thomas Gleixner <tglx@linutronix.de>
-Link: https://lkml.kernel.org/r/20190923193807.30896-1-bp@alien8.de
----
- arch/x86/kernel/traps.c | 5 -----
- 1 file changed, 5 deletions(-)
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
-diff --git a/arch/x86/kernel/traps.c b/arch/x86/kernel/traps.c
-index 4bb0f84..c903121 100644
---- a/arch/x86/kernel/traps.c
-+++ b/arch/x86/kernel/traps.c
-@@ -37,11 +37,6 @@
- #include <linux/mm.h>
- #include <linux/smp.h>
- #include <linux/io.h>
--
--#if defined(CONFIG_EDAC)
--#include <linux/edac.h>
--#endif
--
- #include <asm/stacktrace.h>
- #include <asm/processor.h>
- #include <asm/debugreg.h>
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
