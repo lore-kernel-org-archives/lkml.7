@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 22C29ECE587
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 16:51:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 95CC0C352AA
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 16:51:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EC73F20842
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 16:51:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 626D621855
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 16:51:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569948671;
-	bh=1onUORIcRSXdoz5rdRYiqpEvoDT48f1X2RjM7NQ/+rk=;
+	s=default; t=1569948683;
+	bh=d1cwlKNt2mnCdzZ5RHbHyTPGEAf/7X1xqYU1nu09wHU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wJDSN+XbAdLvFjYELompfE6hjByiUNJk725SYS+Y6rFlhbOqiJQ1DNZCJrrGtKeu6
-	 FzmszyTUO6UxlOzd2WARX42UPK9jzkYJtEC4SR1RXxYnd0MzeMCMv4X3bMEknL8DvZ
-	 eqc54Acsa2AFpoJCuJemG44fuyKY5LqXu3EBYtLk=
+	b=bHRKS72IzvziHgg7X9ZW/lqiz2gIekAMUSAhGUapurMSNRqwVrhn0Zj3xbApydrFu
+	 Qasw07ZZ/p2Bmhgy1ar7wGBPSUrWeafxo+rju1Dm0jmhtRPf1PZAAHkOlAZmkhL5BA
+	 +ynOXUZSEjGuLRI3p+6TegDq1upqZJrBF0S6WM58=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726712AbfJAQoY (ORCPT
+        id S2387659AbfJAQoO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Oct 2019 12:44:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56518 "EHLO mail.kernel.org"
+        Tue, 1 Oct 2019 12:44:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56342 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387740AbfJAQoT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Oct 2019 12:44:19 -0400
+        id S2387447AbfJAQoF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Oct 2019 12:44:05 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0F97521855;
-        Tue,  1 Oct 2019 16:44:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7220621D7B;
+        Tue,  1 Oct 2019 16:44:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569948258;
-        bh=1onUORIcRSXdoz5rdRYiqpEvoDT48f1X2RjM7NQ/+rk=;
+        s=default; t=1569948245;
+        bh=d1cwlKNt2mnCdzZ5RHbHyTPGEAf/7X1xqYU1nu09wHU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=g5lW3MQFO3eXTB2c0fDUBLSUyPqZUsnF5QooywsnGmNOTL8USRSOy5feRVYDH3Fcn
-         y2uayxXTtokky8Q3j5Vv9OaHbeLeY5udNdLo6B+hZP8+57kWKOrBA5jFbH29oBcDP3
-         Iw/tYrkkS3W2cBxeJ+Teod0sMtLvbl+dPH+cCph0=
+        b=ai8TeNvtKrSOtQunZJ+2EpvX29uDUywUSzp6KUzpNOxUqXLbLxB0aP2aJ+WOetCN3
+         TA/30XMavj19SVFMcRNNbREBJOFuWt2V+FPc0yKFf/w/SWHIpROc48Q5a0Dgp4ESBp
+         TAdS0LzX2Z7y8dH7eU5PbAUSxC+9LrwbbGDDe8g4=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Navid Emamdoost <navid.emamdoost@gmail.com>,
-        Jakub Kicinski <jakub.kicinski@netronome.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, oss-drivers@netronome.com,
-        netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 40/43] nfp: flower: prevent memory leak in nfp_flower_spawn_phy_reprs
-Date:   Tue,  1 Oct 2019 12:43:08 -0400
-Message-Id: <20191001164311.15993-40-sashal@kernel.org>
+Cc:     Valdis Kletnieks <valdis.kletnieks@vt.edu>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 35/43] kernel/elfcore.c: include proper prototypes
+Date:   Tue,  1 Oct 2019 12:43:03 -0400
+Message-Id: <20191001164311.15993-35-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191001164311.15993-1-sashal@kernel.org>
 References: <20191001164311.15993-1-sashal@kernel.org>
@@ -61,57 +60,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Navid Emamdoost <navid.emamdoost@gmail.com>
+From: Valdis Kletnieks <valdis.kletnieks@vt.edu>
 
-[ Upstream commit 8572cea1461a006bce1d06c0c4b0575869125fa4 ]
+[ Upstream commit 0f74914071ab7e7b78731ed62bf350e3a344e0a5 ]
 
-In nfp_flower_spawn_phy_reprs, in the for loop over eth_tbl if any of
-intermediate allocations or initializations fail memory is leaked.
-requiered releases are added.
+When building with W=1, gcc properly complains that there's no prototypes:
 
-Fixes: b94524529741 ("nfp: flower: add per repr private data for LAG offload")
-Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
-Acked-by: Jakub Kicinski <jakub.kicinski@netronome.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+  CC      kernel/elfcore.o
+kernel/elfcore.c:7:17: warning: no previous prototype for 'elf_core_extra_phdrs' [-Wmissing-prototypes]
+    7 | Elf_Half __weak elf_core_extra_phdrs(void)
+      |                 ^~~~~~~~~~~~~~~~~~~~
+kernel/elfcore.c:12:12: warning: no previous prototype for 'elf_core_write_extra_phdrs' [-Wmissing-prototypes]
+   12 | int __weak elf_core_write_extra_phdrs(struct coredump_params *cprm, loff_t offset)
+      |            ^~~~~~~~~~~~~~~~~~~~~~~~~~
+kernel/elfcore.c:17:12: warning: no previous prototype for 'elf_core_write_extra_data' [-Wmissing-prototypes]
+   17 | int __weak elf_core_write_extra_data(struct coredump_params *cprm)
+      |            ^~~~~~~~~~~~~~~~~~~~~~~~~
+kernel/elfcore.c:22:15: warning: no previous prototype for 'elf_core_extra_data_size' [-Wmissing-prototypes]
+   22 | size_t __weak elf_core_extra_data_size(void)
+      |               ^~~~~~~~~~~~~~~~~~~~~~~~
+
+Provide the include file so gcc is happy, and we don't have potential code drift
+
+Link: http://lkml.kernel.org/r/29875.1565224705@turing-police
+Signed-off-by: Valdis Kletnieks <valdis.kletnieks@vt.edu>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/netronome/nfp/flower/main.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ kernel/elfcore.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/net/ethernet/netronome/nfp/flower/main.c b/drivers/net/ethernet/netronome/nfp/flower/main.c
-index c197f3e058817..c19e88efe958d 100644
---- a/drivers/net/ethernet/netronome/nfp/flower/main.c
-+++ b/drivers/net/ethernet/netronome/nfp/flower/main.c
-@@ -376,6 +376,7 @@ nfp_flower_spawn_phy_reprs(struct nfp_app *app, struct nfp_flower_priv *priv)
- 		repr_priv = kzalloc(sizeof(*repr_priv), GFP_KERNEL);
- 		if (!repr_priv) {
- 			err = -ENOMEM;
-+			nfp_repr_free(repr);
- 			goto err_reprs_clean;
- 		}
+diff --git a/kernel/elfcore.c b/kernel/elfcore.c
+index fc482c8e0bd88..57fb4dcff4349 100644
+--- a/kernel/elfcore.c
++++ b/kernel/elfcore.c
+@@ -3,6 +3,7 @@
+ #include <linux/fs.h>
+ #include <linux/mm.h>
+ #include <linux/binfmts.h>
++#include <linux/elfcore.h>
  
-@@ -385,11 +386,13 @@ nfp_flower_spawn_phy_reprs(struct nfp_app *app, struct nfp_flower_priv *priv)
- 		port = nfp_port_alloc(app, NFP_PORT_PHYS_PORT, repr);
- 		if (IS_ERR(port)) {
- 			err = PTR_ERR(port);
-+			kfree(repr_priv);
- 			nfp_repr_free(repr);
- 			goto err_reprs_clean;
- 		}
- 		err = nfp_port_init_phy_port(app->pf, app, port, i);
- 		if (err) {
-+			kfree(repr_priv);
- 			nfp_port_free(port);
- 			nfp_repr_free(repr);
- 			goto err_reprs_clean;
-@@ -402,6 +405,7 @@ nfp_flower_spawn_phy_reprs(struct nfp_app *app, struct nfp_flower_priv *priv)
- 		err = nfp_repr_init(app, repr,
- 				    cmsg_port_id, port, priv->nn->dp.netdev);
- 		if (err) {
-+			kfree(repr_priv);
- 			nfp_port_free(port);
- 			nfp_repr_free(repr);
- 			goto err_reprs_clean;
+ Elf_Half __weak elf_core_extra_phdrs(void)
+ {
 -- 
 2.20.1
 
