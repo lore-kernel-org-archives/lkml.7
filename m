@@ -2,91 +2,261 @@ Return-Path: <SRS0=YRFP=X2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIM_ADSP_ALL,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1A62ECE587
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 16:00:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EDAA5C352AA
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 16:00:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AEA882053B
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 16:00:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B77662168B
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 16:00:57 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="PllNqCS3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389812AbfJAQAZ (ORCPT
+        id S2389817AbfJAQA4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Oct 2019 12:00:25 -0400
-Received: from eu-smtp-delivery-151.mimecast.com ([207.82.80.151]:57693 "EHLO
-        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727398AbfJAQAZ (ORCPT
+        Tue, 1 Oct 2019 12:00:56 -0400
+Received: from smtp-fw-6001.amazon.com ([52.95.48.154]:9752 "EHLO
+        smtp-fw-6001.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726050AbfJAQA4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Oct 2019 12:00:25 -0400
-Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
- TLS) by relay.mimecast.com with ESMTP id
- uk-mta-164--oUOnduMO7u6T_CwoD2SuA-1; Tue, 01 Oct 2019 17:00:21 +0100
-Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
- AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
- Server (TLS) id 15.0.1347.2; Tue, 1 Oct 2019 17:00:21 +0100
-Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
- AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
- Tue, 1 Oct 2019 17:00:21 +0100
-From:   David Laight <David.Laight@ACULAB.COM>
-To:     "'efremov@linux.com'" <efremov@linux.com>,
-        'Dan Carpenter' <dan.carpenter@oracle.com>
-CC:     "devel@driverdev.osuosl.org" <devel@driverdev.osuosl.org>,
-        Jes Sorensen <jes.sorensen@gmail.com>,
+        Tue, 1 Oct 2019 12:00:56 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1569945654; x=1601481654;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version;
+  bh=xWH4lG20IIUw6dauOTepn7gZe73IqabzrfB2TTDNa6g=;
+  b=PllNqCS3P+Lt+fA991x05MSX3RVeJ4DS+9SsduBoOIRGR8wP9z9Fjd6X
+   lq6FZwAj+Fc3H3DNMHihpuz/Lb6vr4hvrRB8yM9E9M+8YYxbzTU9VO4vr
+   fqvhNFQBq6FSPrjR625j70FmUTyVPYLH3rHW/m/Qc6sdGiMOnMBLOVTIw
+   4=;
+X-IronPort-AV: E=Sophos;i="5.64,571,1559520000"; 
+   d="scan'208";a="419068224"
+Received: from iad6-co-svc-p1-lb1-vlan3.amazon.com (HELO email-inbound-relay-1d-f273de60.us-east-1.amazon.com) ([10.124.125.6])
+  by smtp-border-fw-out-6001.iad6.amazon.com with ESMTP; 01 Oct 2019 16:00:53 +0000
+Received: from EX13MTAUWB001.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan2.iad.amazon.com [10.40.159.162])
+        by email-inbound-relay-1d-f273de60.us-east-1.amazon.com (Postfix) with ESMTPS id 51AF7A295F;
+        Tue,  1 Oct 2019 16:00:47 +0000 (UTC)
+Received: from EX13D02UWB004.ant.amazon.com (10.43.161.11) by
+ EX13MTAUWB001.ant.amazon.com (10.43.161.249) with Microsoft SMTP Server (TLS)
+ id 15.0.1367.3; Tue, 1 Oct 2019 16:00:18 +0000
+Received: from EX13MTAUWA001.ant.amazon.com (10.43.160.58) by
+ EX13D02UWB004.ant.amazon.com (10.43.161.11) with Microsoft SMTP Server (TLS)
+ id 15.0.1367.3; Tue, 1 Oct 2019 16:00:17 +0000
+Received: from 8c859006a84e.ant.amazon.com (172.26.203.30) by
+ mail-relay.amazon.com (10.43.160.118) with Microsoft SMTP Server id
+ 15.0.1367.3 via Frontend Transport; Tue, 1 Oct 2019 16:00:15 +0000
+From:   Patrick Williams <alpawi@amazon.com>
+CC:     Patrick Williams <alpawi@amazon.com>,
+        Patrick Williams <patrick@stwcx.xyz>,
+        Wolfram Sang <wsa@the-dreams.de>,
+        Jean Delvare <jdelvare@suse.de>,
+        Jarkko Nikula <jarkko.nikula@linux.intel.com>,
+        Max Staudt <max@enpas.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        "Juergen Fitschen" <jfi@ssv-embedded.de>,
+        Elie Morisse <syniurge@gmail.com>,
+        Ajay Gupta <ajayg@nvidia.com>, Stefan Roese <sr@denx.de>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        Baolin Wang <baolin.wang@linaro.org>,
+        "Paul Cercueil" <paul@crapouillou.net>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "Enrico Weigelt" <info@metux.net>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "stable@vger.kernel.org" <stable@vger.kernel.org>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Bastien Nocera <hadess@hadess.net>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Larry Finger <Larry.Finger@lwfinger.net>
-Subject: RE: [PATCH] staging: rtl8723bs: hal: Fix memcpy calls
-Thread-Topic: [PATCH] staging: rtl8723bs: hal: Fix memcpy calls
-Thread-Index: AQHVd36LU5ikVLKK6EuvH5wLNYQtMKdEMyLwgAGeKE+AAAh2kP///AWAgAAc6lA=
-Date:   Tue, 1 Oct 2019 16:00:20 +0000
-Message-ID: <35c2d89987854fb8a42f04dc28ad4bc9@AcuMS.aculab.com>
-References: <20190930110141.29271-1-efremov@linux.com>
- <37b195b700394e95aa8329afc9f60431@AcuMS.aculab.com>
- <e4051dcb-10dc-ff17-ec0b-6f51dccdb5bf@linux.com>
- <20191001135649.GH22609@kadam>
- <8d2e8196cae74ec4ae20e9c23e898207@AcuMS.aculab.com>
- <a7c002f7-c6f2-a9ed-0100-acfbafea65c5@linux.com>
-In-Reply-To: <a7c002f7-c6f2-a9ed-0100-acfbafea65c5@linux.com>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.202.205.107]
+        Allison Randal <allison@lohutok.net>,
+        <linux-i2c@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: [PATCH 1/2] i2c: pxa: migrate to new i2c_slave APIs
+Date:   Tue, 1 Oct 2019 10:59:59 -0500
+Message-ID: <20191001160001.2388-2-alpawi@amazon.com>
+X-Mailer: git-send-email 2.17.2 (Apple Git-113)
+In-Reply-To: <20191001160001.2388-1-alpawi@amazon.com>
+References: <20191001160001.2388-1-alpawi@amazon.com>
 MIME-Version: 1.0
-X-MC-Unique: -oUOnduMO7u6T_CwoD2SuA-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: base64
+Content-Type: text/plain
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-RnJvbTogRGVuaXMgRWZyZW1vdg0KPiBTZW50OiAwMSBPY3RvYmVyIDIwMTkgMTY6MTMNCi4uLg0K
-PiBKdXN0IGZvdW5kIGFuIG9mZmljaWFsIGRvY3VtZW50YXRpb24gdG8gdGhpcyBpc3N1ZToNCj4g
-aHR0cHM6Ly9nY2MuZ251Lm9yZy9nY2MtNC45L3BvcnRpbmdfdG8uaHRtbA0KPiAiTnVsbCBwb2lu
-dGVyIGNoZWNrcyBtYXkgYmUgb3B0aW1pemVkIGF3YXkgbW9yZSBhZ2dyZXNzaXZlbHkNCj4gLi4u
-DQo+IFRoZSBwb2ludGVycyBwYXNzZWQgdG8gbWVtbW92ZSAoYW5kIHNpbWlsYXIgZnVuY3Rpb25z
-IGluIDxzdHJpbmcuaD4pIG11c3QgYmUgbm9uLW51bGwNCj4gZXZlbiB3aGVuIG5ieXRlcz09MCwg
-c28gR0NDIGNhbiB1c2UgdGhhdCBpbmZvcm1hdGlvbiB0byByZW1vdmUgdGhlIGNoZWNrIGFmdGVy
-IHRoZQ0KPiBtZW1tb3ZlIGNhbGwuIENhbGxpbmcgY29weShwLCBOVUxMLCAwKSBjYW4gdGhlcmVm
-b3JlIGRlZmVyZW5jZSBhIG51bGwgcG9pbnRlciBhbmQgY3Jhc2guIg0KDQpSaWdodCwgc28ganVz
-dCBkb24ndCBjb2RlIGEgTlVMTCBwb2ludGVyIHRlc3QgYWZ0ZXIgYSBtZW1jcHkoKSBjYWxsLg0K
-VGhlcmUgaXMgbm8gbmVlZCB0byBhdm9pZCB0aGUgY2FsbCBpdHNlbGYuDQoNCj4gQnV0IGFnYWlu
-LCBJIHdvdWxkIHNheSB0aGF0IHRoZSBidWcgaW4gdGhpcyBjb2RlIGlzIGJlY2F1c2UgdGhlIGlm
-IGNvbmRpdGlvbiB3YXMgY29weS1wYXN0ZWQNCj4gYW5kIGl0IHNob3VsZCBiZSBpbnZlcnRlZC4N
-Cg0KT2gsIHRoZSBjb2RlIGlzIHF1ZXN0aW9uIGlzIGp1c3Qgc3R1cGlkbHkgYmFkLg0KSXQgc2Vl
-bWVkIHRvIGRvOg0KCWlmIChhKQ0KCQl4Ow0KCWVsc2UgaWYgKCFhKQ0KCQl5Ow0KCWVsc2UNCgkJ
-ZXJyb3IgKCJhbGwgYm9ya2VkIikNCg0KSWYgdGhlIHdob2xlIGRyaXZlciBpcyB3cml0dGVuIGxp
-a2UgdGhhdCBpdCBuZWVkcyBmaXhpbmcgYmVmb3JlIGFueW9uZSB0YWtlcyBhIHNlcmlvdXMgbG9v
-ayBhdCBpdC4NCg0KCURhdmlkDQoNCi0NClJlZ2lzdGVyZWQgQWRkcmVzcyBMYWtlc2lkZSwgQnJh
-bWxleSBSb2FkLCBNb3VudCBGYXJtLCBNaWx0b24gS2V5bmVzLCBNSzEgMVBULCBVSw0KUmVnaXN0
-cmF0aW9uIE5vOiAxMzk3Mzg2IChXYWxlcykNCg==
+The i2c subsystem was enhanced circa 2015 to support operating as
+an i2c-slave device.  Prior to that, the i2c-pxa driver supported
+an i2c-slave but had its own APIs.  There are no existing in-kernel
+drivers or platforms that utilize the i2c-pxa APIs.
+
+Migrate the i2c-pxa driver to the general i2c-slave APIs so that
+existing drivers, such as the i2c-slave-eeprom, can be used.
+
+This has been tested with a Marvell EspressoBin, using i2c-pxa and
+i2c-slave-eeprom, acting as a slave, and a RaspeberryPi 3, using the
+at24 driver, acting as a master.
+
+Signed-off-by: Patrick Williams <alpawi@amazon.com>
+---
+ drivers/i2c/busses/Kconfig   |  1 +
+ drivers/i2c/busses/i2c-pxa.c | 74 +++++++++++++++++++++++++++++-------
+ 2 files changed, 61 insertions(+), 14 deletions(-)
+
+diff --git a/drivers/i2c/busses/Kconfig b/drivers/i2c/busses/Kconfig
+index 146ce40d8e0a..d0c79ac9ffdb 100644
+--- a/drivers/i2c/busses/Kconfig
++++ b/drivers/i2c/busses/Kconfig
+@@ -874,6 +874,7 @@ config I2C_PXA_PCI
+ config I2C_PXA_SLAVE
+ 	bool "Intel PXA2XX I2C Slave comms support"
+ 	depends on I2C_PXA && !X86_32
++	select I2C_SLAVE
+ 	help
+ 	  Support I2C slave mode communications on the PXA I2C bus.  This
+ 	  is necessary for systems where the PXA may be a target on the
+diff --git a/drivers/i2c/busses/i2c-pxa.c b/drivers/i2c/busses/i2c-pxa.c
+index 2c3c3d6935c0..c811646e809f 100644
+--- a/drivers/i2c/busses/i2c-pxa.c
++++ b/drivers/i2c/busses/i2c-pxa.c
+@@ -180,7 +180,7 @@ struct pxa_i2c {
+ 	struct i2c_adapter	adap;
+ 	struct clk		*clk;
+ #ifdef CONFIG_I2C_PXA_SLAVE
+-	struct i2c_slave_client *slave;
++	struct i2c_client	*slave;
+ #endif
+ 
+ 	unsigned int		irqlogidx;
+@@ -544,22 +544,23 @@ static void i2c_pxa_slave_txempty(struct pxa_i2c *i2c, u32 isr)
+ 	if (isr & ISR_BED) {
+ 		/* what should we do here? */
+ 	} else {
+-		int ret = 0;
++		u8 byte = 0;
+ 
+ 		if (i2c->slave != NULL)
+-			ret = i2c->slave->read(i2c->slave->data);
++			i2c_slave_event(i2c->slave, I2C_SLAVE_READ_PROCESSED,
++					&byte);
+ 
+-		writel(ret, _IDBR(i2c));
++		writel(byte, _IDBR(i2c));
+ 		writel(readl(_ICR(i2c)) | ICR_TB, _ICR(i2c));   /* allow next byte */
+ 	}
+ }
+ 
+ static void i2c_pxa_slave_rxfull(struct pxa_i2c *i2c, u32 isr)
+ {
+-	unsigned int byte = readl(_IDBR(i2c));
++	u8 byte = readl(_IDBR(i2c));
+ 
+ 	if (i2c->slave != NULL)
+-		i2c->slave->write(i2c->slave->data, byte);
++		i2c_slave_event(i2c->slave, I2C_SLAVE_WRITE_RECEIVED, &byte);
+ 
+ 	writel(readl(_ICR(i2c)) | ICR_TB, _ICR(i2c));
+ }
+@@ -572,9 +573,18 @@ static void i2c_pxa_slave_start(struct pxa_i2c *i2c, u32 isr)
+ 		dev_dbg(&i2c->adap.dev, "SAD, mode is slave-%cx\n",
+ 		       (isr & ISR_RWM) ? 'r' : 't');
+ 
+-	if (i2c->slave != NULL)
+-		i2c->slave->event(i2c->slave->data,
+-				 (isr & ISR_RWM) ? I2C_SLAVE_EVENT_START_READ : I2C_SLAVE_EVENT_START_WRITE);
++	if (i2c->slave != NULL) {
++		if (isr & ISR_RWM) {
++			u8 byte = 0;
++
++			i2c_slave_event(i2c->slave, I2C_SLAVE_READ_REQUESTED,
++					&byte);
++			writel(byte, _IDBR(i2c));
++		} else {
++			i2c_slave_event(i2c->slave, I2C_SLAVE_WRITE_REQUESTED,
++					NULL);
++		}
++	}
+ 
+ 	/*
+ 	 * slave could interrupt in the middle of us generating a
+@@ -607,7 +617,7 @@ static void i2c_pxa_slave_stop(struct pxa_i2c *i2c)
+ 		dev_dbg(&i2c->adap.dev, "ISR: SSD (Slave Stop)\n");
+ 
+ 	if (i2c->slave != NULL)
+-		i2c->slave->event(i2c->slave->data, I2C_SLAVE_EVENT_STOP);
++		i2c_slave_event(i2c->slave, I2C_SLAVE_STOP, NULL);
+ 
+ 	if (i2c_debug > 2)
+ 		dev_dbg(&i2c->adap.dev, "ISR: SSD (Slave Stop) acked\n");
+@@ -619,6 +629,38 @@ static void i2c_pxa_slave_stop(struct pxa_i2c *i2c)
+ 	if (i2c->msg)
+ 		i2c_pxa_master_complete(i2c, I2C_RETRY);
+ }
++
++static int i2c_pxa_slave_reg(struct i2c_client *slave)
++{
++	struct pxa_i2c *i2c = slave->adapter->algo_data;
++
++	if (i2c->slave)
++		return -EBUSY;
++
++	if (!i2c->reg_isar)
++		return -EAFNOSUPPORT;
++
++	i2c->slave = slave;
++	i2c->slave_addr = slave->addr;
++
++	writel(i2c->slave_addr, _ISAR(i2c));
++
++	return 0;
++}
++
++static int i2c_pxa_slave_unreg(struct i2c_client *slave)
++{
++	struct pxa_i2c *i2c = slave->adapter->algo_data;
++
++	WARN_ON(!i2c->slave);
++
++	i2c->slave_addr = I2C_PXA_SLAVE_ADDR;
++	writel(i2c->slave_addr, _ISAR(i2c));
++
++	i2c->slave = NULL;
++
++	return 0;
++}
+ #else
+ static void i2c_pxa_slave_txempty(struct pxa_i2c *i2c, u32 isr)
+ {
+@@ -1141,11 +1183,19 @@ static u32 i2c_pxa_functionality(struct i2c_adapter *adap)
+ static const struct i2c_algorithm i2c_pxa_algorithm = {
+ 	.master_xfer	= i2c_pxa_xfer,
+ 	.functionality	= i2c_pxa_functionality,
++#ifdef CONFIG_I2C_PXA_SLAVE
++	.reg_slave	= i2c_pxa_slave_reg,
++	.unreg_slave	= i2c_pxa_slave_unreg,
++#endif
+ };
+ 
+ static const struct i2c_algorithm i2c_pxa_pio_algorithm = {
+ 	.master_xfer	= i2c_pxa_pio_xfer,
+ 	.functionality	= i2c_pxa_functionality,
++#ifdef CONFIG_I2C_PXA_SLAVE
++	.reg_slave	= i2c_pxa_slave_reg,
++	.unreg_slave	= i2c_pxa_slave_unreg,
++#endif
+ };
+ 
+ static const struct of_device_id i2c_pxa_dt_ids[] = {
+@@ -1270,10 +1320,6 @@ static int i2c_pxa_probe(struct platform_device *dev)
+ 	i2c->highmode_enter = false;
+ 
+ 	if (plat) {
+-#ifdef CONFIG_I2C_PXA_SLAVE
+-		i2c->slave_addr = plat->slave_addr;
+-		i2c->slave = plat->slave;
+-#endif
+ 		i2c->adap.class = plat->class;
+ 	}
+ 
+-- 
+2.17.2 (Apple Git-113)
 
