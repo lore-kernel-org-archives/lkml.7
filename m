@@ -2,218 +2,255 @@ Return-Path: <SRS0=YRFP=X2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3265C352AA
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 21:58:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 342BAC352AA
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 22:04:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AA54F2133F
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 21:58:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0919821906
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 22:04:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="0CbGVzaw"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="THRFx164"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728571AbfJAV6u (ORCPT
+        id S1728683AbfJAWE0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Oct 2019 17:58:50 -0400
-Received: from pandora.armlinux.org.uk ([78.32.30.218]:44712 "EHLO
-        pandora.armlinux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726392AbfJAV6t (ORCPT
+        Tue, 1 Oct 2019 18:04:26 -0400
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:44160 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726521AbfJAWE0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Oct 2019 17:58:49 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:
-        Content-Transfer-Encoding:Content-Type:MIME-Version:References:Message-ID:
-        Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=Exk+Gmz2dV80jT3PJWsusPiReJ0a0LJ3sfaKxNGSGAs=; b=0CbGVzawzd0J8yJnlJAJtNZtx
-        aHYjA6M45hN2RNGGl6svc1qGVXFNlZmRe+XkXZYzxYCmhh9g+cnCp+exLrZPY10b5RCPaqgOdAuIg
-        21JQU8TESfk1Z25L+EG96K5ahGc9Q2jLq/ksCq2Fr85GVTv1ArkPEsUrdBag29MDosivH2Fug/yhM
-        FyNSzfaMhSbdot9hxskC7Jmc9gHBbdg01N1kS44HihDJOZhCMEgnaskCtirX90eSRWHxiJkGrWsOy
-        jFpCIQJTyaA1nQbCiu7DT87fPQXmxV5zItonExGOWk9A4mmf0FrHveXLFNu4uaSoLzDFgOCUkKqa/
-        6/DPmG4ug==;
-Received: from shell.armlinux.org.uk ([2002:4e20:1eda:1:5054:ff:fe00:4ec]:46432)
-        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.90_1)
-        (envelope-from <linux@armlinux.org.uk>)
-        id 1iFQAB-0004y6-9i; Tue, 01 Oct 2019 22:58:34 +0100
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
-        (envelope-from <linux@shell.armlinux.org.uk>)
-        id 1iFQA7-000068-VG; Tue, 01 Oct 2019 22:58:27 +0100
-Date:   Tue, 1 Oct 2019 22:58:27 +0100
-From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
-To:     Nick Desaulniers <ndesaulniers@google.com>
-Cc:     Will Deacon <will@kernel.org>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Stefan Wahren <wahrenst@gmx.net>,
-        Kees Cook <keescook@google.com>, Arnd Bergmann <arnd@arndb.de>,
-        clang-built-linux <clang-built-linux@googlegroups.com>
-Subject: Re: [PATCH] compiler: enable CONFIG_OPTIMIZE_INLINING forcibly
-Message-ID: <20191001215827.GP25745@shell.armlinux.org.uk>
-References: <CAKwvOdk0h2A6=fb7Yepf+oKbZfq_tqwpGq8EBmHVu1j4mo-a-A@mail.gmail.com>
- <20191001170142.x66orounxuln7zs3@willie-the-truck>
- <CAKwvOdnFJqipp+G5xLDRBcOrQRcvMQmn+n8fufWyzyt2QL_QkA@mail.gmail.com>
- <20191001175512.GK25745@shell.armlinux.org.uk>
- <CAKwvOdmw_xmTGZLeK8-+Q4nUpjs-UypJjHWks-3jHA670Dxa1A@mail.gmail.com>
- <20191001181438.GL25745@shell.armlinux.org.uk>
- <CAKwvOdmBnBVU7F-a6DqPU6QM-BRc8LNn6YRmhTsuGLauCWKUOg@mail.gmail.com>
- <20191001205938.GM25745@shell.armlinux.org.uk>
- <20191001212608.GN25745@shell.armlinux.org.uk>
- <CAKwvOdmkmdM14BNurK3WwyG3Qc5wOFeajMtQ1D+na9mLfkim+w@mail.gmail.com>
+        Tue, 1 Oct 2019 18:04:26 -0400
+Received: by mail-pl1-f194.google.com with SMTP id q15so6196397pll.11;
+        Tue, 01 Oct 2019 15:04:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
+         :user-agent;
+        bh=l7orQYKnUvvQj6dfwOeG/rFQGC9QhyED0camIWdwGOg=;
+        b=THRFx164QQ/IDFGWDoWdArwl1AyL8fiOmEi2ZPdMf8iVLb031ViFV5eJYlg8zShtWq
+         qL7PS6B2nvH8YMMmazOLfPlWqRmkFHkWNx6gtnB0ATu/TMeu6WyRXf1nfFUClebB09gp
+         jfMPzG9NW7dkeSyEYiBW/MzjD/9CsV9MRqU+XL8XJIXJ639/Oejye2Wr58KN6u3q1SU7
+         H+IHWYKy1E8qcsiJ7up47yDJ3y9hG8BtyFAjAValxPEEb7a/MO8zppx4OflqxEbYVHzM
+         0OtNzXNm71T59pItyRPjm5z9fqdwjFf8yDHWR9WcmM5VDxUtxOwwCs/B3gfR9tOlxa0X
+         5kkA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=l7orQYKnUvvQj6dfwOeG/rFQGC9QhyED0camIWdwGOg=;
+        b=dE3j7lXXoww/e9lY9S16r2Gz91/OpPKA7eGip9sQe6lOT1P8vlxJUosD6SqEI5GuO/
+         yj5mXaPpkKrWuwv6WJ7/0+FGiLmGUrVCBUQWb8P0XFBD0imkq0q1c7lT+uKzytUHX9gN
+         oVKpW2vfIGphtFeCtue2Q8dg/8RIvbmC2I3k2vNulrcwt62pRCcjmKbbWqT8Yw3MNetZ
+         FPSey1LrsXin7OePzPGtp9C4zeXzQceVTDRT+nIV/scKiq+5WjklokrFVoL8ZvxIhmnf
+         2TOpTAsa2wnVpARqWgyozkvYB94AYBHCKkSGwpYyu2S/82eKcyBcrRtA2gyDYekmOsIi
+         D/UQ==
+X-Gm-Message-State: APjAAAVPmIaF8D+eFL6SNiJooWNjru7JsmcJ7ZGHaVBF80rF+Xr82M/S
+        j5/VPi80OgRS8UMZwJu6O1O7nlaw
+X-Google-Smtp-Source: APXvYqxFVu5KmSe3vfMZGmDNd4jzR+p1QRKbkPXLk5315QxR5LJKUB/j8JFY8jmv8jys/q7pWWYk2Q==
+X-Received: by 2002:a17:902:9884:: with SMTP id s4mr52642plp.50.1569967464596;
+        Tue, 01 Oct 2019 15:04:24 -0700 (PDT)
+Received: from dtor-ws ([2620:15c:202:201:3adc:b08c:7acc:b325])
+        by smtp.gmail.com with ESMTPSA id q132sm16935414pfq.16.2019.10.01.15.04.23
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 01 Oct 2019 15:04:24 -0700 (PDT)
+Date:   Tue, 1 Oct 2019 15:04:21 -0700
+From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
+To:     linux-input@vger.kernel.org
+Cc:     Tomohiro Yoshidomi <sylph23k@gmail.com>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] Input: psxpad-spi - switch to using polled mode of input
+ devices
+Message-ID: <20191001220421.GA66693@dtor-ws>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAKwvOdmkmdM14BNurK3WwyG3Qc5wOFeajMtQ1D+na9mLfkim+w@mail.gmail.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Oct 01, 2019 at 02:32:54PM -0700, Nick Desaulniers wrote:
-> On Tue, Oct 1, 2019 at 2:26 PM Russell King - ARM Linux admin
-> <linux@armlinux.org.uk> wrote:
-> >
-> > On Tue, Oct 01, 2019 at 09:59:38PM +0100, Russell King - ARM Linux admin wrote:
-> > > On Tue, Oct 01, 2019 at 01:21:44PM -0700, Nick Desaulniers wrote:
-> > > > On Tue, Oct 1, 2019 at 11:14 AM Russell King - ARM Linux admin
-> > > > <linux@armlinux.org.uk> wrote:
-> > > > >
-> > > > > The whole "let's make inline not really mean inline" is nothing more
-> > > > > than a band-aid to the overuse (and abuse) of "inline".
-> > > >
-> > > > Let's triple check the ISO C11 draft spec just to be sure:
-> > > > § 6.7.4.6: A function declared with an inline function specifier is an
-> > > > inline function. Making a
-> > > > function an inline function suggests that calls to the function be as
-> > > > fast as possible.
-> > > > The extent to which such suggestions are effective is
-> > > > implementation-defined. 139)
-> > > > 139) For example, an implementation might never perform inline
-> > > > substitution, or might only perform inline
-> > > > substitutions to calls in the scope of an inline declaration.
-> > > > § J.3.8 [Undefined Behavior] Hints: The extent to which suggestions
-> > > > made by using the inline function specifier are effective (6.7.4).
-> > > >
-> > > > My translation:
-> > > > "Please don't assume inline means anything."
-> > > >
-> > > > For the unspecified GNU C extension __attribute__((always_inline)), it
-> > > > seems to me like it's meant more for performing inlining (an
-> > > > optimization) at -O0.  Whether the compiler warns or not seems like a
-> > > > nice side effect, but provides no strong guarantee otherwise.
-> > > >
-> > > > I'm sorry that so much code may have been written with that
-> > > > assumption, and I'm sorry to be the bearer of bad news, but this isn't
-> > > > a recent change.  If code was written under false assumptions, it
-> > > > should be rewritten. Sorry.
-> > >
-> > > You may quote C11, but that is not relevent.  The kernel is coded to
-> > > gnu89 standard - see the -std=gnu89 flag.
-> >
-> > There's more to this and why C11 is entirely irrelevant.  The "inline"
-> > you see in our headers is not the compiler keyword that you find in
-> > various C standards, it is a macro that gets expanded to either:
-> >
-> > #define inline inline __attribute__((__always_inline__)) __gnu_inline \
-> >         __maybe_unused notrace
-> >
-> > or
-> >
-> > #define inline inline                                    __gnu_inline \
-> >         __maybe_unused notrace
-> >
-> > __gnu_inline is defined as:
-> >
-> > #define __gnu_inline                    __attribute__((__gnu_inline__))
-> >
-> > So this attaches the gnu_inline attribute to the function:
-> >
-> > `gnu_inline'
-> >      This attribute should be used with a function that is also declared
-> >      with the `inline' keyword.  It directs GCC to treat the function
-> >      as if it were defined in gnu90 mode even when compiling in C99 or
-> >      gnu99 mode.
-> > ...
-> >      Since ISO C99 specifies a different semantics for `inline', this
-> >      function attribute is provided as a transition measure and as a
-> >      useful feature in its own right.  This attribute is available in
-> >      GCC 4.1.3 and later.  It is available if either of the
-> >      preprocessor macros `__GNUC_GNU_INLINE__' or
-> >      `__GNUC_STDC_INLINE__' are defined.  *Note An Inline Function is
-> >      As Fast As a Macro: Inline.
-> >
-> > which is quite clear that C99 semantics do not apply to _this_ inline.
-> > The manual goes on to explain:
-> >
-> >  GCC implements three different semantics of declaring a function
-> > inline.  One is available with `-std=gnu89' or `-fgnu89-inline' or when
-> > `gnu_inline' attribute is present on all inline declarations, another
-> > when `-std=c99', `-std=c11', `-std=gnu99' or `-std=gnu11' (without
-> > `-fgnu89-inline'), and the third is used when compiling C++.
-> 
-> (I wrote the kernel patch for gnu_inline; it only comes into play when
-> `inline` appears on a function *also defined as `extern`*).
+We have added polled mode to the normal input devices with the intent of
+retiring input_polled_dev. This converts psxpad-spi driver to use the
+polling mode of standard input devices and removes dependency on
+INPUT_POLLDEV.
 
-From what I can tell reading the GCC manual, the patch adding
-gnu_inline should have no effect.  Maybe it was written before
--std=gnu89 was in use by the kernel makefiles?
+Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+---
+ drivers/input/joystick/Kconfig      |  1 -
+ drivers/input/joystick/psxpad-spi.c | 64 +++++++++++++++--------------
+ 2 files changed, 34 insertions(+), 31 deletions(-)
 
-> > I'd suggest gnu90 mode is pretty similar to gnu89 mode, and as we build
-> > the kernel in gnu89 mode, that is the inlining definition that is
-> > appropriate.
-> >
-> > When it comes to __always_inline, the GCC manual is the definitive
-> > reference, since we use the GCC attribute for that:
-> >
-> > #define __always_inline                 inline __attribute__((__always_inline__))
-> >
-> > and I've already quoted what the GCC manual says for always_inline.
-> >
-> > Arguing about what the C11 spec says about inlining when we aren't
-> > using C11 dialect in the kernel, but are using GCC features, does
-> > not move the discussion on.
-> >
-> > Thanks anyway, maybe it will become relevent in the future if we
-> > decide to move to C11.
-> 
-> It's not like the semantics of inline are better specified by an older
-> standard, or changed (The only real semantic change involving `inline`
-> between ISO C90 and ISO C99 has to do with whether `extern inline`
-> emits the function with external linkage as you noted).  But that's
-> irrelevant to the discussion.).  I quoted C11 because ctrl+f doesn't
-> work for the C90 ISO spec pdf.  C90 spec doesn't even have a section
-> on Function Specifiers.  From what I can tell, `inline` wasn't
-> specified until ISO C99.
-> 
-> GNU modes are often modifiers off of ISO C bases; gnu89 corresponds to
-> ISO C90.  They may permit the use of features from newer ISO C specs
-> and GNU C extensions without warning under -Wpedantic.  There aren't a
-> whole lot of semantic differences, at least that I'm aware of.
+diff --git a/drivers/input/joystick/Kconfig b/drivers/input/joystick/Kconfig
+index 312b854b5506..940b744639c7 100644
+--- a/drivers/input/joystick/Kconfig
++++ b/drivers/input/joystick/Kconfig
+@@ -334,7 +334,6 @@ config JOYSTICK_MAPLE
+ config JOYSTICK_PSXPAD_SPI
+ 	tristate "PlayStation 1/2 joypads via SPI interface"
+ 	depends on SPI
+-	select INPUT_POLLDEV
+ 	help
+ 	  Say Y here if you wish to connect PlayStation 1/2 joypads
+ 	  via SPI interface.
+diff --git a/drivers/input/joystick/psxpad-spi.c b/drivers/input/joystick/psxpad-spi.c
+index 7eee1b0e360f..a32656064f39 100644
+--- a/drivers/input/joystick/psxpad-spi.c
++++ b/drivers/input/joystick/psxpad-spi.c
+@@ -22,7 +22,6 @@
+ #include <linux/kernel.h>
+ #include <linux/device.h>
+ #include <linux/input.h>
+-#include <linux/input-polldev.h>
+ #include <linux/module.h>
+ #include <linux/spi/spi.h>
+ #include <linux/types.h>
+@@ -60,7 +59,7 @@ static const u8 PSX_CMD_ENABLE_MOTOR[]	= {
+ 
+ struct psxpad {
+ 	struct spi_device *spi;
+-	struct input_polled_dev *pdev;
++	struct input_dev *idev;
+ 	char phys[0x20];
+ 	bool motor1enable;
+ 	bool motor2enable;
+@@ -140,8 +139,7 @@ static void psxpad_set_motor_level(struct psxpad *pad,
+ static int psxpad_spi_play_effect(struct input_dev *idev,
+ 				  void *data, struct ff_effect *effect)
+ {
+-	struct input_polled_dev *pdev = input_get_drvdata(idev);
+-	struct psxpad *pad = pdev->private;
++	struct psxpad *pad = input_get_drvdata(idev);
+ 
+ 	switch (effect->type) {
+ 	case FF_RUMBLE:
+@@ -158,10 +156,9 @@ static int psxpad_spi_init_ff(struct psxpad *pad)
+ {
+ 	int err;
+ 
+-	input_set_capability(pad->pdev->input, EV_FF, FF_RUMBLE);
++	input_set_capability(pad->idev, EV_FF, FF_RUMBLE);
+ 
+-	err = input_ff_create_memless(pad->pdev->input, NULL,
+-				      psxpad_spi_play_effect);
++	err = input_ff_create_memless(pad->idev, NULL, psxpad_spi_play_effect);
+ 	if (err) {
+ 		dev_err(&pad->spi->dev,
+ 			"input_ff_create_memless() failed: %d\n", err);
+@@ -189,24 +186,25 @@ static inline int psxpad_spi_init_ff(struct psxpad *pad)
+ }
+ #endif	/* CONFIG_JOYSTICK_PSXPAD_SPI_FF */
+ 
+-static void psxpad_spi_poll_open(struct input_polled_dev *pdev)
++static int psxpad_spi_poll_open(struct input_dev *input)
+ {
+-	struct psxpad *pad = pdev->private;
++	struct psxpad *pad = input_get_drvdata(input);
+ 
+ 	pm_runtime_get_sync(&pad->spi->dev);
++
++	return 0;
+ }
+ 
+-static void psxpad_spi_poll_close(struct input_polled_dev *pdev)
++static void psxpad_spi_poll_close(struct input_dev *input)
+ {
+-	struct psxpad *pad = pdev->private;
++	struct psxpad *pad = input_get_drvdata(input);
+ 
+ 	pm_runtime_put_sync(&pad->spi->dev);
+ }
+ 
+-static void psxpad_spi_poll(struct input_polled_dev *pdev)
++static void psxpad_spi_poll(struct input_dev *input)
+ {
+-	struct psxpad *pad = pdev->private;
+-	struct input_dev *input = pdev->input;
++	struct psxpad *pad = input_get_drvdata(input);
+ 	u8 b_rsp3, b_rsp4;
+ 	int err;
+ 
+@@ -284,7 +282,6 @@ static void psxpad_spi_poll(struct input_polled_dev *pdev)
+ static int psxpad_spi_probe(struct spi_device *spi)
+ {
+ 	struct psxpad *pad;
+-	struct input_polled_dev *pdev;
+ 	struct input_dev *idev;
+ 	int err;
+ 
+@@ -292,31 +289,26 @@ static int psxpad_spi_probe(struct spi_device *spi)
+ 	if (!pad)
+ 		return -ENOMEM;
+ 
+-	pdev = input_allocate_polled_device();
+-	if (!pdev) {
++	idev = devm_input_allocate_device(&spi->dev);
++	if (!idev) {
+ 		dev_err(&spi->dev, "failed to allocate input device\n");
+ 		return -ENOMEM;
+ 	}
+ 
+ 	/* input poll device settings */
+-	pad->pdev = pdev;
++	pad->idev = idev;
+ 	pad->spi = spi;
+ 
+-	pdev->private = pad;
+-	pdev->open = psxpad_spi_poll_open;
+-	pdev->close = psxpad_spi_poll_close;
+-	pdev->poll = psxpad_spi_poll;
+-	/* poll interval is about 60fps */
+-	pdev->poll_interval = 16;
+-	pdev->poll_interval_min = 8;
+-	pdev->poll_interval_max = 32;
+-
+ 	/* input device settings */
+-	idev = pdev->input;
++	input_set_drvdata(idev, pad);
++
+ 	idev->name = "PlayStation 1/2 joypad";
+ 	snprintf(pad->phys, sizeof(pad->phys), "%s/input", dev_name(&spi->dev));
+ 	idev->id.bustype = BUS_SPI;
+ 
++	idev->open = psxpad_spi_poll_open;
++	idev->close = psxpad_spi_poll_close;
++
+ 	/* key/value map settings */
+ 	input_set_abs_params(idev, ABS_X, 0, 255, 0, 0);
+ 	input_set_abs_params(idev, ABS_Y, 0, 255, 0, 0);
+@@ -354,11 +346,23 @@ static int psxpad_spi_probe(struct spi_device *spi)
+ 	/* pad settings */
+ 	psxpad_set_motor_level(pad, 0, 0);
+ 
++
++	err = input_setup_polling(idev, psxpad_spi_poll);
++	if (err) {
++		dev_err(&spi->dev, "failed to set up polling: %d\n", err);
++		return err;
++	}
++
++	/* poll interval is about 60fps */
++	input_set_poll_interval(idev, 16);
++	input_set_min_poll_interval(idev, 8);
++	input_set_max_poll_interval(idev, 32);
++
+ 	/* register input poll device */
+-	err = input_register_polled_device(pdev);
++	err = input_register_device(idev);
+ 	if (err) {
+ 		dev_err(&spi->dev,
+-			"failed to register input poll device: %d\n", err);
++			"failed to register input device: %d\n", err);
+ 		return err;
+ 	}
+ 
+-- 
+2.23.0.444.g18eeb5a265-goog
 
-Right, so GCC had inlining support before ISO C added it (which I
-distinctly remember, I've been involved in Linux since 1994.)
-
-Unless ISO C based their definition in some way off GCC's
-implementation, I still don't see how quoting ISO C documents
-helps this discussion when it's the GCC feature that we're using.
-
-And none of this is relevent anyway if we use the GCC
-always_inline extension *which is obviously the right way to
-resolve this instance*.
 
 -- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTC broadband for 0.8mile line in suburbia: sync at 12.1Mbps down 622kbps up
-According to speedtest.net: 11.9Mbps down 500kbps up
+Dmitry
