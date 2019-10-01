@@ -2,72 +2,87 @@ Return-Path: <SRS0=YRFP=X2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7148C352AA
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 13:56:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0B6AECE58A
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 13:57:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8869121855
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 13:56:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 87FE921855
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 13:57:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="YQ9au5zr"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="Z4YvyUsy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388897AbfJAN4l (ORCPT
+        id S2388911AbfJAN5f (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Oct 2019 09:56:41 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:41034 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388872AbfJAN4k (ORCPT
+        Tue, 1 Oct 2019 09:57:35 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:50288 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388505AbfJAN5e (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Oct 2019 09:56:40 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x91DiVIs069498;
-        Tue, 1 Oct 2019 13:56:27 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
- subject : date : message-id; s=corp-2019-08-05;
- bh=9GWeqhJnT5PGkazNzMmgVhKC+DkKpsNOs2T2q3VSXac=;
- b=YQ9au5zrbo5ogpT38yZosjjBdTHx3lvFjGT7Jr6XFzkxCpLXFQOoyF9og7t6J7v18n2u
- 8mkyXJpxHWgj3DF8LmyF14FN5B2/PE5RiFiyZbZeY+v64dyTRNvMxvAQ54Eg8yO1DmO0
- j+d83AnWQFcM5XyK0c3GrLTdSmo3KXL0cMGM3Ahr9nCm6tDoYHXPP545TXCTURQH0Qas
- 5csgLO3K/EDUD15D0ctQklBzF7R32Og/2PBggtrmMIzcvM4Rjirt47o6yVJWtuMxWI+4
- LsH1cpmqvvZpCmGKtUmfq2Fa7fRj4+0b/1rXU2oOwiA4zji6sF6363ueSoD7gLZOuP65 FQ== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by userp2120.oracle.com with ESMTP id 2va05rp0hx-1
+        Tue, 1 Oct 2019 09:57:34 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x91DiIdE070140;
+        Tue, 1 Oct 2019 13:57:15 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2019-08-05;
+ bh=7NxNlqn0YOBGFrAVM08bANlLn524Zi8Hql56hdiSIX4=;
+ b=Z4YvyUsyFByaV+0qmxNLgUFcvrqzA4adjPogsAs1PbyKsVJS5VYRULwebBlKH0IfmUS9
+ FX0IpbHje//0+KqjVu6AyO/nkV3V7u67Lzl0t5LrY8z/9DNu12WqSWjAL7fFOVku+B6S
+ 2NEP6FSe1RG0LnuAV9FTCTv5qA7X3bShvDHiYFyHSZZsYF3uUxLlnZZMRvZfGoTBovtf
+ bZ8jJSdiZ8rK6WZujmJkODZTvt4GUMRfIipQMTUJ3FyZxG/iKoe5D1GHrDRTV4o+EPiK
+ JNUwbZ+QnKptZKZLpFpbA6NGpSncV9Xy52ktgRJxkykpJyiBwSNdFLBryFzfNxhu71tH yg== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by userp2130.oracle.com with ESMTP id 2v9xxup42p-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 01 Oct 2019 13:56:26 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x91DheEB025460;
-        Tue, 1 Oct 2019 13:56:26 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by userp3030.oracle.com with ESMTP id 2vbmpymbq6-1
+        Tue, 01 Oct 2019 13:57:14 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x91DhcO7147373;
+        Tue, 1 Oct 2019 13:57:14 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by aserp3030.oracle.com with ESMTP id 2vbsm21aj5-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 01 Oct 2019 13:56:26 +0000
-Received: from abhmp0018.oracle.com (abhmp0018.oracle.com [141.146.116.24])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x91DuOvF026286;
-        Tue, 1 Oct 2019 13:56:24 GMT
-Received: from linux.cn.oracle.com (/10.182.69.106)
+        Tue, 01 Oct 2019 13:57:14 +0000
+Received: from abhmp0013.oracle.com (abhmp0013.oracle.com [141.146.116.19])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x91Dv8sT028275;
+        Tue, 1 Oct 2019 13:57:08 GMT
+Received: from kadam (/41.57.98.10)
         by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 01 Oct 2019 06:56:23 -0700
-From:   Dongli Zhang <dongli.zhang@oracle.com>
-To:     xen-devel@lists.xenproject.org, netdev@vger.kernel.org
-Cc:     jgross@suse.com, boris.ostrovsky@oracle.com,
-        sstabellini@kernel.org, davem@davemloft.net,
-        linux-kernel@vger.kernel.org, joe.jin@oracle.com
-Subject: [PATCH v2 1/1] xen-netfront: do not use ~0U as error return value for xennet_fill_frags()
-Date:   Tue,  1 Oct 2019 21:56:41 +0800
-Message-Id: <1569938201-23620-1-git-send-email-dongli.zhang@oracle.com>
-X-Mailer: git-send-email 2.7.4
+        with ESMTP ; Tue, 01 Oct 2019 06:57:07 -0700
+Date:   Tue, 1 Oct 2019 16:56:49 +0300
+From:   Dan Carpenter <dan.carpenter@oracle.com>
+To:     Denis Efremov <efremov@linux.com>
+Cc:     David Laight <David.Laight@ACULAB.COM>,
+        "devel@driverdev.osuosl.org" <devel@driverdev.osuosl.org>,
+        Jes Sorensen <jes.sorensen@gmail.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "stable@vger.kernel.org" <stable@vger.kernel.org>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Bastien Nocera <hadess@hadess.net>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Larry Finger <Larry.Finger@lwfinger.net>
+Subject: Re: [PATCH] staging: rtl8723bs: hal: Fix memcpy calls
+Message-ID: <20191001135649.GH22609@kadam>
+References: <20190930110141.29271-1-efremov@linux.com>
+ <37b195b700394e95aa8329afc9f60431@AcuMS.aculab.com>
+ <e4051dcb-10dc-ff17-ec0b-6f51dccdb5bf@linux.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <e4051dcb-10dc-ff17-ec0b-6f51dccdb5bf@linux.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9396 signatures=668685
 X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=963
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=952
  adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
  engine=8.0.1-1908290000 definitions=main-1910010125
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9396 signatures=668685
 X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
  lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
  classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1908290000
  definitions=main-1910010125
@@ -76,95 +91,29 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-xennet_fill_frags() uses ~0U as return value when the sk_buff is not able
-to cache extra fragments. This is incorrect because the return type of
-xennet_fill_frags() is RING_IDX and 0xffffffff is an expected value for
-ring buffer index.
+On Mon, Sep 30, 2019 at 05:25:43PM +0300, Denis Efremov wrote:
+> On 9/30/19 4:18 PM, David Laight wrote:
+> > From: Denis Efremov
+> >> Sent: 30 September 2019 12:02
+> >> memcpy() in phy_ConfigBBWithParaFile() and PHY_ConfigRFWithParaFile() is
+> >> called with "src == NULL && len == 0". This is an undefined behavior.
+> > 
+> > I'm pretty certain it is well defined (to do nothing).
+> 
+> Well, technically you are right. However, UBSAN warns about passing NULL
+> to memcpy and from the formal point of view this is an undefined behavior [1].
+> There were a discussion [2] about interesting implication of assuming that
+> memcpy with 0 size and NULL pointer is fine. This could result in that compiler
+> assume that pointer is not NULL.
 
-In the situation when the rsp_cons is approaching 0xffffffff, the return
-value of xennet_fill_frags() may become 0xffffffff which xennet_poll() (the
-caller) would regard as error. As a result, queue->rx.rsp_cons is set
-incorrectly because it is updated only when there is error. If there is no
-error, xennet_poll() would be responsible to update queue->rx.rsp_cons.
-Finally, queue->rx.rsp_cons would point to the rx ring buffer entries whose
-queue->rx_skbs[i] and queue->grant_rx_ref[i] are already cleared to NULL.
-This leads to NULL pointer access in the next iteration to process rx ring
-buffer entries.
+That's true for glibc memcpy() but not for the kernel memcpy().  In the
+kernel there are lots of places which do a zero size memcpy().
 
-The symptom is similar to the one fixed in
-commit 00b368502d18 ("xen-netfront: do not assume sk_buff_head list is
-empty in error handling").
+The glibc attitude is "the standard allows us to put knives here" so
+let's put knives everywhere in the path.  And the GCC attitude is let's
+silently remove NULL checks instead of just printing a warning that the
+NULL check isn't required...  It could really make someone despondent.
 
-This patch changes the return type of xennet_fill_frags() to indicate
-whether it is successful or failed. The queue->rx.rsp_cons will be
-always updated inside this function.
-
-Fixes: ad4f15dc2c70 ("xen/netfront: don't bug in case of too many frags")
-Signed-off-by: Dongli Zhang <dongli.zhang@oracle.com>
----
-Changed since v1:
-  - Always update queue->rx.rsp_cons inside xennet_fill_frags() so we do
-    not need to add extra argument to xennet_fill_frags().
-
- drivers/net/xen-netfront.c | 17 +++++++++--------
- 1 file changed, 9 insertions(+), 8 deletions(-)
-
-diff --git a/drivers/net/xen-netfront.c b/drivers/net/xen-netfront.c
-index e14ec75..482c6c8 100644
---- a/drivers/net/xen-netfront.c
-+++ b/drivers/net/xen-netfront.c
-@@ -887,9 +887,9 @@ static int xennet_set_skb_gso(struct sk_buff *skb,
- 	return 0;
- }
- 
--static RING_IDX xennet_fill_frags(struct netfront_queue *queue,
--				  struct sk_buff *skb,
--				  struct sk_buff_head *list)
-+static int xennet_fill_frags(struct netfront_queue *queue,
-+			     struct sk_buff *skb,
-+			     struct sk_buff_head *list)
- {
- 	RING_IDX cons = queue->rx.rsp_cons;
- 	struct sk_buff *nskb;
-@@ -908,7 +908,7 @@ static RING_IDX xennet_fill_frags(struct netfront_queue *queue,
- 		if (unlikely(skb_shinfo(skb)->nr_frags >= MAX_SKB_FRAGS)) {
- 			queue->rx.rsp_cons = ++cons + skb_queue_len(list);
- 			kfree_skb(nskb);
--			return ~0U;
-+			return -ENOENT;
- 		}
- 
- 		skb_add_rx_frag(skb, skb_shinfo(skb)->nr_frags,
-@@ -919,7 +919,9 @@ static RING_IDX xennet_fill_frags(struct netfront_queue *queue,
- 		kfree_skb(nskb);
- 	}
- 
--	return cons;
-+	queue->rx.rsp_cons = cons;
-+
-+	return 0;
- }
- 
- static int checksum_setup(struct net_device *dev, struct sk_buff *skb)
-@@ -1045,8 +1047,7 @@ static int xennet_poll(struct napi_struct *napi, int budget)
- 		skb->data_len = rx->status;
- 		skb->len += rx->status;
- 
--		i = xennet_fill_frags(queue, skb, &tmpq);
--		if (unlikely(i == ~0U))
-+		if (unlikely(xennet_fill_frags(queue, skb, &tmpq)))
- 			goto err;
- 
- 		if (rx->flags & XEN_NETRXF_csum_blank)
-@@ -1056,7 +1057,7 @@ static int xennet_poll(struct napi_struct *napi, int budget)
- 
- 		__skb_queue_tail(&rxq, skb);
- 
--		queue->rx.rsp_cons = ++i;
-+		i = ++queue->rx.rsp_cons;
- 		work_done++;
- 	}
- 
--- 
-2.7.4
+regards,
+dan carpenter
 
