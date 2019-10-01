@@ -2,181 +2,145 @@ Return-Path: <SRS0=YRFP=X2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ABC11C352AA
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 15:35:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55451ECE587
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 15:38:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7DA2921855
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 15:35:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2B93520842
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 15:38:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="WiIT9lAW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389689AbfJAPfS (ORCPT
+        id S2389582AbfJAPio (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Oct 2019 11:35:18 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:38180 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389583AbfJAPfS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Oct 2019 11:35:18 -0400
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 9541330917AC;
-        Tue,  1 Oct 2019 15:35:17 +0000 (UTC)
-Received: from [10.36.116.54] (ovpn-116-54.ams2.redhat.com [10.36.116.54])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 1564610027A1;
-        Tue,  1 Oct 2019 15:35:00 +0000 (UTC)
-Subject: Re: [PATCH v11 0/6] mm / virtio: Provide support for unused page
- reporting
-To:     Alexander Duyck <alexander.duyck@gmail.com>,
-        virtio-dev@lists.oasis-open.org, kvm@vger.kernel.org,
-        mst@redhat.com, dave.hansen@intel.com,
-        linux-kernel@vger.kernel.org, willy@infradead.org,
-        mhocko@kernel.org, linux-mm@kvack.org, akpm@linux-foundation.org,
-        mgorman@techsingularity.net, vbabka@suse.cz, osalvador@suse.de
-Cc:     yang.zhang.wz@gmail.com, pagupta@redhat.com,
-        konrad.wilk@oracle.com, nitesh@redhat.com, riel@surriel.com,
-        lcapitulino@redhat.com, wei.w.wang@intel.com, aarcange@redhat.com,
-        pbonzini@redhat.com, dan.j.williams@intel.com,
-        alexander.h.duyck@linux.intel.com
-References: <20191001152441.27008.99285.stgit@localhost.localdomain>
-From:   David Hildenbrand <david@redhat.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
- 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
- SE+xAvmumFBY
-Organization: Red Hat GmbH
-Message-ID: <7233498c-2f64-d661-4981-707b59c78fd5@redhat.com>
-Date:   Tue, 1 Oct 2019 17:35:00 +0200
+        Tue, 1 Oct 2019 11:38:44 -0400
+Received: from mail-io1-f65.google.com ([209.85.166.65]:36176 "EHLO
+        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388916AbfJAPio (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Oct 2019 11:38:44 -0400
+Received: by mail-io1-f65.google.com with SMTP id b136so49082335iof.3
+        for <linux-kernel@vger.kernel.org>; Tue, 01 Oct 2019 08:38:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:from:to:cc:references:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=x4oki5zqaQqD9Lw/LHfcoqYFe2cd/ERA90a/rseIBMo=;
+        b=WiIT9lAWvLNqkJPLDmK3wtxUBnf7YlD0Y/kELsZ+76TlnDPSyvunE5wo0RbyKXRFQa
+         q5XkTSz7HmMAj2RYgO68VYiCeT4dPWF9dFle0DmUC+RRFWbiqODHQKrf6ih1DOQmL6VS
+         9As5ceqbUSx+qr7H1jLjg1uiMSRImQoyzxisdZcAuM6EPQsnNGcvPq442sxIo4wtMvR4
+         hEJCIm2A/RAc8xGf197TveBDYPhwudyteTXmi6+ZT4JdJPLzmQvKfMh+wCMgOB/F4ozv
+         dib8PFFKWS0wJQNjaZVYrDfvDvdpjICYt5QmdIxLfh0PELHRPwnfMu2bXy85jgG/ND9Y
+         /2Mw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:from:to:cc:references:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=x4oki5zqaQqD9Lw/LHfcoqYFe2cd/ERA90a/rseIBMo=;
+        b=aeQX0T4B6Gq1yaZp1dDrvZbTt/GhyjPli78B7uf7a27elOrGk5PDiegtF1/Aa1enHG
+         bhxxK/9czNsXA7A34tJoXk4CfyZLfAzXp39GG0hFWxUEfngSU0TiFZfmbNBb6Lrwob2b
+         0x9J/R+zUgqz3NaEDVcoZhjCHnqOuEN8Fo9Gcm7An3fkZiKXzkLJpJfVsLsErCjenJFi
+         aHh5eItw1ticIqSncAVoiqnlUjk22vzP/ruIxpQUuLm6APiMp0S1QrGVJK1yxgSHdDu1
+         qGeSvzFFXgLAvee2UpURHMTVICXARuxEUns8T1lIWHAb0hsp6dHWwSPOGBLO4s00U3yf
+         XbMA==
+X-Gm-Message-State: APjAAAX8JGN3358kAI/dmMFV6BZg/FlWP/mardCC0xIk9CTfV4ja2uVf
+        sSdSQ1a54fZhtSx5jm/2cqdeqF/K/mAWpA==
+X-Google-Smtp-Source: APXvYqwx+6EDi1cZu8EVpD4waPECZ30FL4SJH4ERBjWjw+ax3CYgRlOg/ieHHI4DCViinpHplbgtRg==
+X-Received: by 2002:a6b:9107:: with SMTP id t7mr11078862iod.150.1569944322839;
+        Tue, 01 Oct 2019 08:38:42 -0700 (PDT)
+Received: from [192.168.1.50] ([65.144.74.34])
+        by smtp.gmail.com with ESMTPSA id t24sm7118469ioi.44.2019.10.01.08.38.40
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 01 Oct 2019 08:38:41 -0700 (PDT)
+Subject: Re: [PATCH] io_uring: use __kernel_timespec in timeout ABI
+From:   Jens Axboe <axboe@kernel.dk>
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     y2038@lists.linaro.org, linux-api@vger.kernel.org,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        =?UTF-8?Q?Stefan_B=c3=bchler?= <source@stbuehler.de>,
+        Hannes Reinecke <hare@suse.com>,
+        Jackie Liu <liuyun01@kylinos.cn>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Hristo Venev <hristo@venev.name>, linux-block@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20190930202055.1748710-1-arnd@arndb.de>
+ <8d5d34da-e1f0-1ab5-461e-f3145e52c48a@kernel.dk>
+Message-ID: <623e1d27-d3b1-3241-bfd4-eb94ce70da14@kernel.dk>
+Date:   Tue, 1 Oct 2019 09:38:40 -0600
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.8.0
 MIME-Version: 1.0
-In-Reply-To: <20191001152441.27008.99285.stgit@localhost.localdomain>
+In-Reply-To: <8d5d34da-e1f0-1ab5-461e-f3145e52c48a@kernel.dk>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.41]); Tue, 01 Oct 2019 15:35:17 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 01.10.19 17:29, Alexander Duyck wrote:
-> This series provides an asynchronous means of reporting to a hypervisor
-> that a guest page is no longer in use and can have the data associated
-> with it dropped. To do this I have implemented functionality that allows
-> for what I am referring to as unused page reporting. The advantage of
-> unused page reporting is that we can support a significant amount of
-> memory over-commit with improved performance as we can avoid having to
-> write/read memory from swap as the VM will instead actively participate
-> in freeing unused memory so it doesn't have to be written.
+On 10/1/19 8:09 AM, Jens Axboe wrote:
+> On 9/30/19 2:20 PM, Arnd Bergmann wrote:
+>> All system calls use struct __kernel_timespec instead of the old struct
+>> timespec, but this one was just added with the old-style ABI. Change it
+>> now to enforce the use of __kernel_timespec, avoiding ABI confusion and
+>> the need for compat handlers on 32-bit architectures.
+>>
+>> Any user space caller will have to use __kernel_timespec now, but this
+>> is unambiguous and works for any C library regardless of the time_t
+>> definition. A nicer way to specify the timeout would have been a less
+>> ambiguous 64-bit nanosecond value, but I suppose it's too late now to
+>> change that as this would impact both 32-bit and 64-bit users.
 > 
-> The functionality for this is fairly simple. When enabled it will allocate
-> statistics to track the number of reported pages in a given free area.
-> When the number of free pages exceeds this value plus a high water value,
-> currently 32, it will begin performing page reporting which consists of
-> pulling non-reported pages off of the free lists of a given zone and
-> placing them into a scatterlist. The scatterlist is then given to the page
-> reporting device and it will perform the required action to make the pages
-> "reported", in the case of virtio-balloon this results in the pages being
-> madvised as MADV_DONTNEED. After this they are placed back on their
-> original free list. If they are not merged in freeing an additional bit is
-> set indicating that they are a "reported" buddy page instead of a standard
-> buddy page. The cycle then repeats with additional non-reported pages
-> being pulled until the free areas all consist of reported pages.
-> 
-> In order to try and keep the time needed to find a non-reported page to
-> a minimum we maintain a "reported_boundary" pointer. This pointer is used
-> by the get_unreported_pages iterator to determine at what point it should
-> resume searching for non-reported pages. In order to guarantee pages do
-> not get past the scan I have modified add_to_free_list_tail so that it
-> will not insert pages behind the reported_boundary. Doing this allows us
-> to keep the overhead to a minimum as re-walking the list without the
-> boundary will result in as much as 18% additional overhead on a 32G VM.
-> 
-> If another process needs to perform a massive manipulation of the free
-> list, such as compaction, it can either reset a given individual boundary
-> which will push the boundary back to the list_head, or it can clear the
-> bit indicating the zone is actively processing which will result in the
-> reporting process resetting all of the boundaries for a given zone.
-> 
-> I am leaving a number of things hard-coded such as limiting the lowest
-> order processed to pageblock_order, and have left it up to the guest to
-> determine what the limit is on how many pages it wants to allocate to
-> process the hints. The upper limit for this is based on the size of the
-> queue used to store the scatterlist.
-> 
-> I wanted to avoid gaming the performance testing for this. As far as
-> possible gain a significant performance improvement should be visible in
-> cases where guests are forced to write/read from swap. As such, testing
-> it would be more of a benchmark of copying a page from swap versus just
-> allocating a zero page. I have been verifying that the memory is being
-> freed using memhog to allocate all the memory on the guest, and then
-> watching /proc/meminfo to verify the host sees the memory returned after
-> the test completes.
-> 
-> As far as possible regressions I have focused on cases where performing
-> the hinting would be non-optimal, such as cases where the code isn't
-> needed as memory is not over-committed, or the functionality is not in
-> use. I have been using the will-it-scale/page_fault1 test running with 16
-> vcpus and have modified it to use Transparent Huge Pages. With this I see
-> almost no difference with the patches applied and the feature disabled.
-> Likewise I see almost no difference with the feature enabled, but the
-> madvise disabled in the hypervisor due to a device being assigned. With
-> the feature fully enabled in both guest and hypervisor I see a regression
-> between -1.86% and -8.84% versus the baseline. I found that most of the
-> overhead was due to the page faulting/zeroing that comes as a result of
-> the pages having been evicted from the guest.
+> Thanks for catching that, Arnd. Applied.
 
-I think Michal asked for a performance comparison against Nitesh's
-approach, to evaluate if keeping the reported state + tracking inside
-the buddy is really worth it. Do you have any such numbers already? (or
-did my tired eyes miss them in this cover letter? :/)
+On second thought - since there appears to be no good 64-bit timespec
+available to userspace, the alternative here is including on in liburing.
+That seems kinda crappy in terms of API, so why not just use a 64-bit nsec
+value as you suggest? There's on released kernel with this feature yet, so
+there's nothing stopping us from just changing the API to be based on
+a single 64-bit nanosecond timeout.
+
+diff --git a/fs/io_uring.c b/fs/io_uring.c
+index dd094b387cab..de3d14fe3025 100644
+--- a/fs/io_uring.c
++++ b/fs/io_uring.c
+@@ -1892,16 +1892,13 @@ static int io_timeout(struct io_kiocb *req, const struct io_uring_sqe *sqe)
+ 	unsigned count, req_dist, tail_index;
+ 	struct io_ring_ctx *ctx = req->ctx;
+ 	struct list_head *entry;
+-	struct timespec ts;
++	u64 timeout;
+ 
+ 	if (unlikely(ctx->flags & IORING_SETUP_IOPOLL))
+ 		return -EINVAL;
+ 	if (sqe->flags || sqe->ioprio || sqe->buf_index || sqe->timeout_flags ||
+ 	    sqe->len != 1)
+ 		return -EINVAL;
+-	if (copy_from_user(&ts, (void __user *) (unsigned long) sqe->addr,
+-	    sizeof(ts)))
+-		return -EFAULT;
+ 
+ 	/*
+ 	 * sqe->off holds how many events that need to occur for this
+@@ -1932,9 +1929,10 @@ static int io_timeout(struct io_kiocb *req, const struct io_uring_sqe *sqe)
+ 	list_add(&req->list, entry);
+ 	spin_unlock_irq(&ctx->completion_lock);
+ 
++	timeout = READ_ONCE(sqe->addr);
+ 	hrtimer_init(&req->timeout.timer, CLOCK_MONOTONIC, HRTIMER_MODE_REL);
+ 	req->timeout.timer.function = io_timeout_fn;
+-	hrtimer_start(&req->timeout.timer, timespec_to_ktime(ts),
++	hrtimer_start(&req->timeout.timer, ns_to_ktime(timeout),
+ 			HRTIMER_MODE_REL);
+ 	return 0;
+ }
 
 -- 
+Jens Axboe
 
-Thanks,
-
-David / dhildenb
