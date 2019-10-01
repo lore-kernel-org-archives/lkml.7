@@ -7,52 +7,53 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA410C352AA
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 16:43:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F63DECE58A
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 16:43:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C008720B7C
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 16:43:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2D46320B7C
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 16:43:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569948210;
-	bh=+uCVdUA5lVCZ9a/ht/Z8yKNn/Mvm0QLIKe/8pzuMvFA=;
+	s=default; t=1569948217;
+	bh=9KK+zWA/y/bDSujiZFJZWo7AuGxM4XHwDzPBWNMWyak=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=VN8CTmlwu6EtcPcbNIYvfI1JXkef+gSZ6f3ce/K2t7Y/iKrIXVwSZLr9vvydSXzmO
-	 b5m+r/tamGQyFTDCvukVMt8Hjydh9eZK5k5U5mECns9ybTkyWmhqvUL2g7qaFROFHr
-	 VJH1IWEC4iCP95sLbQuhOZzIzs3fYixGz+aV735g=
+	b=OOY7iZPzlMc8i13/rKQ3Ih6Qg/cyEXpH46Swt2fLmSgTP2pkce28zxAS0riT01Oo+
+	 4mDzixIN1SiYoZ6bJnDtRzlxHI5zv3N2QIQciWHyoYKyJaIlSdItAJKB5bX6r+SIbx
+	 xDNcmT4Oppc4oIM6Xj+52gHVRJMtMAFkoBHX9B7c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726619AbfJAQn3 (ORCPT
+        id S1732852AbfJAQng (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Oct 2019 12:43:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55506 "EHLO mail.kernel.org"
+        Tue, 1 Oct 2019 12:43:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55562 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732698AbfJAQn1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Oct 2019 12:43:27 -0400
+        id S1732757AbfJAQn3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Oct 2019 12:43:29 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 22FD821906;
-        Tue,  1 Oct 2019 16:43:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1BA0F21924;
+        Tue,  1 Oct 2019 16:43:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569948206;
-        bh=+uCVdUA5lVCZ9a/ht/Z8yKNn/Mvm0QLIKe/8pzuMvFA=;
+        s=default; t=1569948208;
+        bh=9KK+zWA/y/bDSujiZFJZWo7AuGxM4XHwDzPBWNMWyak=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=XbIG82ThkL96qTzblGCFgDtKZF6Eq1DiiiDdtOmNfL8G9e2882xQYmwPJ/R9POsSc
-         7K28XtrA9ohbYdT8rm8LyC+fhxkyCfL36TmEqXf14a6HrjD9NoaX+bL11kjP+PrWSg
-         jgkX7QmlHS8iBiQCbl/OK4JF6Yf42sGxTSv+eLLw=
+        b=uDv/Y3mZ6kiybuF65Y9SCXMnVtGvRisxiB+0l6Ci36tBFoDXhX+8GK+rpny4ig9k6
+         95FfXHbdKhK3ErxoBF8BlIl1j1TIvGnnfwGnxLUbAy/ZS2v0oJ0Vp/Ll9QVfaooOND
+         cnNORkoxUJ6kAICc40KPvNuWwgYxDYzvmdXHYdPg=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Florian Westphal <fw@strlen.de>,
-        Pablo Neira Ayuso <pablo@netfilter.org>,
-        Sasha Levin <sashal@kernel.org>,
-        netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
-        netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 12/43] netfilter: nf_tables: allow lookups in dynamic sets
-Date:   Tue,  1 Oct 2019 12:42:40 -0400
-Message-Id: <20191001164311.15993-12-sashal@kernel.org>
+Cc:     Felix Kuehling <Felix.Kuehling@amd.com>,
+        =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        Sasha Levin <sashal@kernel.org>, amd-gfx@lists.freedesktop.org,
+        dri-devel@lists.freedesktop.org
+Subject: [PATCH AUTOSEL 4.19 13/43] drm/amdgpu: Fix KFD-related kernel oops on Hawaii
+Date:   Tue,  1 Oct 2019 12:42:41 -0400
+Message-Id: <20191001164311.15993-13-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191001164311.15993-1-sashal@kernel.org>
 References: <20191001164311.15993-1-sashal@kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -61,105 +62,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Florian Westphal <fw@strlen.de>
+From: Felix Kuehling <Felix.Kuehling@amd.com>
 
-[ Upstream commit acab713177377d9e0889c46bac7ff0cfb9a90c4d ]
+[ Upstream commit dcafbd50f2e4d5cc964aae409fb5691b743fba23 ]
 
-This un-breaks lookups in sets that have the 'dynamic' flag set.
-Given this active example configuration:
+Hawaii needs to flush caches explicitly, submitting an IB in a user
+VMID from kernel mode. There is no s_fence in this case.
 
-table filter {
-  set set1 {
-    type ipv4_addr
-    size 64
-    flags dynamic,timeout
-    timeout 1m
-  }
-
-  chain input {
-     type filter hook input priority 0; policy accept;
-  }
-}
-
-... this works:
-nft add rule ip filter input add @set1 { ip saddr }
-
--> whenever rule is triggered, the source ip address is inserted
-into the set (if it did not exist).
-
-This won't work:
-nft add rule ip filter input ip saddr @set1 counter
-Error: Could not process rule: Operation not supported
-
-In other words, we can add entries to the set, but then can't make
-matching decision based on that set.
-
-That is just wrong -- all set backends support lookups (else they would
-not be very useful).
-The failure comes from an explicit rejection in nft_lookup.c.
-
-Looking at the history, it seems like NFT_SET_EVAL used to mean
-'set contains expressions' (aka. "is a meter"), for instance something like
-
- nft add rule ip filter input meter example { ip saddr limit rate 10/second }
- or
- nft add rule ip filter input meter example { ip saddr counter }
-
-The actual meaning of NFT_SET_EVAL however, is
-'set can be updated from the packet path'.
-
-'meters' and packet-path insertions into sets, such as
-'add @set { ip saddr }' use exactly the same kernel code (nft_dynset.c)
-and thus require a set backend that provides the ->update() function.
-
-The only set that provides this also is the only one that has the
-NFT_SET_EVAL feature flag.
-
-Removing the wrong check makes the above example work.
-While at it, also fix the flag check during set instantiation to
-allow supported combinations only.
-
-Fixes: 8aeff920dcc9b3f ("netfilter: nf_tables: add stateful object reference to set elements")
-Signed-off-by: Florian Westphal <fw@strlen.de>
-Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
+Fixes: eb3961a57424 ("drm/amdgpu: remove fence context from the job")
+Signed-off-by: Felix Kuehling <Felix.Kuehling@amd.com>
+Reviewed-by: Christian König <christian.koenig@amd.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/netfilter/nf_tables_api.c | 7 +++++--
- net/netfilter/nft_lookup.c    | 3 ---
- 2 files changed, 5 insertions(+), 5 deletions(-)
+ drivers/gpu/drm/amd/amdgpu/amdgpu_ib.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/net/netfilter/nf_tables_api.c b/net/netfilter/nf_tables_api.c
-index 2145581d7b3dc..24fddf0322790 100644
---- a/net/netfilter/nf_tables_api.c
-+++ b/net/netfilter/nf_tables_api.c
-@@ -3429,8 +3429,11 @@ static int nf_tables_newset(struct net *net, struct sock *nlsk,
- 			      NFT_SET_OBJECT))
- 			return -EINVAL;
- 		/* Only one of these operations is supported */
--		if ((flags & (NFT_SET_MAP | NFT_SET_EVAL | NFT_SET_OBJECT)) ==
--			     (NFT_SET_MAP | NFT_SET_EVAL | NFT_SET_OBJECT))
-+		if ((flags & (NFT_SET_MAP | NFT_SET_OBJECT)) ==
-+			     (NFT_SET_MAP | NFT_SET_OBJECT))
-+			return -EOPNOTSUPP;
-+		if ((flags & (NFT_SET_EVAL | NFT_SET_OBJECT)) ==
-+			     (NFT_SET_EVAL | NFT_SET_OBJECT))
- 			return -EOPNOTSUPP;
- 	}
- 
-diff --git a/net/netfilter/nft_lookup.c b/net/netfilter/nft_lookup.c
-index 161c3451a747a..55754d9939b50 100644
---- a/net/netfilter/nft_lookup.c
-+++ b/net/netfilter/nft_lookup.c
-@@ -76,9 +76,6 @@ static int nft_lookup_init(const struct nft_ctx *ctx,
- 	if (IS_ERR(set))
- 		return PTR_ERR(set);
- 
--	if (set->flags & NFT_SET_EVAL)
--		return -EOPNOTSUPP;
--
- 	priv->sreg = nft_parse_register(tb[NFTA_LOOKUP_SREG]);
- 	err = nft_validate_register_load(priv->sreg, set->klen);
- 	if (err < 0)
+diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_ib.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_ib.c
+index 51b5e977ca885..f4e9d1b10e3ed 100644
+--- a/drivers/gpu/drm/amd/amdgpu/amdgpu_ib.c
++++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_ib.c
+@@ -139,7 +139,8 @@ int amdgpu_ib_schedule(struct amdgpu_ring *ring, unsigned num_ibs,
+ 	/* ring tests don't use a job */
+ 	if (job) {
+ 		vm = job->vm;
+-		fence_ctx = job->base.s_fence->scheduled.context;
++		fence_ctx = job->base.s_fence ?
++			job->base.s_fence->scheduled.context : 0;
+ 	} else {
+ 		vm = NULL;
+ 		fence_ctx = 0;
 -- 
 2.20.1
 
