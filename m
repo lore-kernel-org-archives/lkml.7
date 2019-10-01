@@ -2,180 +2,170 @@ Return-Path: <SRS0=YRFP=X2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 03C6AC352AA
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 19:37:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 349FFECE58A
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 19:39:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C8A0A20B7C
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 19:37:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 04B5420700
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 19:39:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=sruffell-net.20150623.gappssmtp.com header.i=@sruffell-net.20150623.gappssmtp.com header.b="f6BL1mz0"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="B/V7puL/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726918AbfJAThO (ORCPT
+        id S1726830AbfJATj0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Oct 2019 15:37:14 -0400
-Received: from mail-yw1-f65.google.com ([209.85.161.65]:40466 "EHLO
-        mail-yw1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726830AbfJAThN (ORCPT
+        Tue, 1 Oct 2019 15:39:26 -0400
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:54440 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726397AbfJATjZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Oct 2019 15:37:13 -0400
-Received: by mail-yw1-f65.google.com with SMTP id e205so5251320ywc.7
-        for <linux-kernel@vger.kernel.org>; Tue, 01 Oct 2019 12:37:12 -0700 (PDT)
+        Tue, 1 Oct 2019 15:39:25 -0400
+Received: by mail-wm1-f67.google.com with SMTP id p7so4654387wmp.4;
+        Tue, 01 Oct 2019 12:39:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sruffell-net.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=foVLqaSKdSg7KmJBN5U8BgO8IzOWWXDLHAODqmx68uA=;
-        b=f6BL1mz0QqZj0+WznWUS9I25oBoxdz9Cf3bRimTBX4VM32Ye4yoO64y2aAy2cUvIpw
-         80ooiSnOAFSVDmVKYcvk/WAla/naO3RqjHpdxg7HXoQnS4yq2eA9AA0uSVPlw22VLaWU
-         9hCOGeGlm/mAZYZ+zFQ1e8R4q2M8Xq2qDopwUIskeiK4sydFl6kYhEUyIQDVdopg52Hi
-         iEmj2262XPoAIDDCTjzhhfFFuaE63a8h1HLVVFT+pyFDxTt3REuz+lM5ZdkndZGYD6bl
-         TnlnvRiTnEK/gmzzx37r1whlD6AzCkvUW3bJfjvBjfktpKwNzh1OOgwOXZY/XzBidAgO
-         bdwA==
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:openpgp:autocrypt:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=ywb+nsfPF+Z3DCZgk+yF3jv1PIj9PSL8oPWXw4QNmes=;
+        b=B/V7puL/nT3UONj3n3yunqqTShXwbzE/dZLJYxI+qcTTAuHYwnSyuPneVvUnf2pcPm
+         jUJLV678kdpU6myJYnKqjKVwy0rAZqAIszBWcIJt8nXkudRU4VqGd/jzPjOaKFbZvev+
+         73iY32BL7hiOYUUVXcohfmmUJulIAdlFLZk03HOTdBNDM4neBmRg4mSODSVsPgGkeazb
+         bpCuX4oZ125uxg1cyanneLj0nHT5etHcaY09l+UHliqpWaVetLAZmAy5HDRbRmqzt56W
+         /hpLRke/XvDKNPfOtDxjedp29FbuL8TEMYQMMFQeibXSQ/o/RnB8zxiIoZtm/cFMevd9
+         LiwQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=foVLqaSKdSg7KmJBN5U8BgO8IzOWWXDLHAODqmx68uA=;
-        b=P2TMHV5MVNZzyuQWrEjEFHDPSb+16swNt/K8IOMfBeBRnevv/Rw4Kc7HQXxEncSmSx
-         O7TctlskmgID6ELwdneh+D0WdXaifYjNrxklcuazTZNGqOU+37AOUohfq3+x/5bq7lkf
-         pga+BWsP0mMrZwoGEofeYf+vb68LyRhaVG0pRKoMAv1ag85NFy0fVb55o9k9CndhyRfv
-         YJ1j++22TQdWmqYzqskzUruW+oyQRl9GVfcXTF/CGbK8dOKkJURhDI4Hg3edpU6pW6Ql
-         H43NYzMO8D1F+tsZrU/UbPP2TvY7wMp5g2HGYIMU+rU4DiVsksSMqLTzjDbfEVBW9qUi
-         IaAA==
-X-Gm-Message-State: APjAAAXCr3LngIUR/1tZ6rybuLxB/1I4geHCWTsYqSfq4QhWFmJKl4Tc
-        FcRlMGmWMLHynP875XGKc5sr
-X-Google-Smtp-Source: APXvYqxVDSWTsEqdYFLLjwLmGzfkNYXsoRCzlp7MyqHhmyzZeS1l5DvbS4oh7nHfLLFPJnA+lp4Mcg==
-X-Received: by 2002:a81:a24f:: with SMTP id z15mr22776ywg.55.1569958632192;
-        Tue, 01 Oct 2019 12:37:12 -0700 (PDT)
-Received: from sruffell.net ([136.53.91.217])
-        by smtp.gmail.com with ESMTPSA id g128sm3696526ywb.13.2019.10.01.12.37.10
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 01 Oct 2019 12:37:11 -0700 (PDT)
-Date:   Tue, 1 Oct 2019 14:37:04 -0500
-From:   Shaun Ruffell <sruffell@sruffell.net>
-To:     Matthias Maennich <maennich@google.com>
-Cc:     linux-kernel@vger.kernel.org, Martijn Coenen <maco@android.com>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jessica Yu <jeyu@kernel.org>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>
-Subject: Re: [PATCH] modpost: Copy namespace string into 'struct symbol'
-Message-ID: <20191001193704.txidwxf3h4te4rtr@sruffell.net>
-References: <20190906103235.197072-5-maennich@google.com>
- <20190926222446.30510-1-sruffell@sruffell.net>
- <20190927080346.GC90796@google.com>
- <20190930212046.rhtqmnueoffe7dnr@sruffell.net>
- <20191001161923.GH90796@google.com>
+        h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=ywb+nsfPF+Z3DCZgk+yF3jv1PIj9PSL8oPWXw4QNmes=;
+        b=o4m56y3e0DeottmlHRSv4cFEHkyPESBCbGT01IOl4yhJi3yoBLmS40LtdJcj5CogXh
+         fb+6/xDXrLILeDHLuOTEH4U99rrF1SMWuHzJykLOQ05YwYcNDoUeJyX4ixX7/ukt38SP
+         8a7gD1VOG0OMWVrgfQgOld22HG75rDZBocfB092lmgyglLCjSpNMvM1YEpppaTuDqmqd
+         nSO2AXRCi1NR1CEyf36DWvMyABG20l+2brCwfoCMMZCUea1k+OcPa/m2a9RLAqluIukS
+         PHPydcD3mYrDo8VOwiz337gv30xf3eFjq0EujrbTWmJyfPRSz9Dr5AS3dUtHwvDqAgna
+         D3hQ==
+X-Gm-Message-State: APjAAAU8l3BPg2bbcNmeSjxeXLxuggPtZrZ04sunQ9RDs2poBhAZlreG
+        AU1iCtTaLDTRAvTv3eSSR7TEhbdo
+X-Google-Smtp-Source: APXvYqy68EoO3ZdSzeTIT6RB8xqNljDnNUwtktKG58eAkc6CdTmLe0JGCqzAkFh90ZcumORl9nfRAA==
+X-Received: by 2002:a1c:a853:: with SMTP id r80mr4951562wme.140.1569958762580;
+        Tue, 01 Oct 2019 12:39:22 -0700 (PDT)
+Received: from [192.168.1.19] (bgt101.neoplus.adsl.tpnet.pl. [83.28.83.101])
+        by smtp.gmail.com with ESMTPSA id r9sm20653329wra.19.2019.10.01.12.39.21
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 01 Oct 2019 12:39:22 -0700 (PDT)
+Subject: Re: [PATCH 5/5] leds: lm3601x: Convert class registration to device
+ managed
+To:     Dan Murphy <dmurphy@ti.com>, pavel@ucw.cz
+Cc:     linux-leds@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20191001180439.8312-1-dmurphy@ti.com>
+ <20191001180439.8312-5-dmurphy@ti.com>
+From:   Jacek Anaszewski <jacek.anaszewski@gmail.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=jacek.anaszewski@gmail.com; prefer-encrypt=mutual; keydata=
+ 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
+Message-ID: <66354452-f6f9-416d-0955-63914cb32746@gmail.com>
+Date:   Tue, 1 Oct 2019 21:39:20 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191001161923.GH90796@google.com>
+In-Reply-To: <20191001180439.8312-5-dmurphy@ti.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Oct 01, 2019 at 05:19:23PM +0100, Matthias Maennich wrote:
-> On Mon, Sep 30, 2019 at 04:20:46PM -0500, Shaun Ruffell wrote:
-> > On Fri, Sep 27, 2019 at 09:03:46AM +0100, Matthias Maennich wrote:
-> > > On Thu, Sep 26, 2019 at 05:24:46PM -0500, Shaun Ruffell wrote:
-> > > > When building an out-of-tree module I was receiving many warnings from
-> > > > modpost like:
-> > > >
-> > > >  WARNING: module dahdi_vpmadt032_loader uses symbol __kmalloc from namespace ts/dahdi-linux/drivers/dahdi/dahdi-version.o: ..., but does not import it.
-> > > >  WARNING: module dahdi_vpmadt032_loader uses symbol vpmadtreg_register from namespace linux/drivers/dahdi/dahdi-version.o: ..., but does not import it.
-> > > >  WARNING: module dahdi_vpmadt032_loader uses symbol param_ops_int from namespace ahdi-linux/drivers/dahdi/dahdi-version.o: ..., but does not import it.
-> > > >  WARNING: module dahdi_vpmadt032_loader uses symbol __init_waitqueue_head from namespace ux/drivers/dahdi/dahdi-version.o: ..., but does not import it.
-> > > >  ...
-> > > >
-> > > > The fundamental issue appears to be that read_dump() is passing a
-> > > > pointer to a statically allocated buffer for the namespace which is
-> > > > reused as the file is parsed.
-> > > 
-> > > Hi Shaun,
-> > > 
-> > > Thanks for working on this. I think you are right about the root cause
-> > > of this. I will have a closer look at your fix later today.
-> > 
-> > Thanks Matthias.
+Hi Dan,
+
+Thank you for the patch.
+
+On 10/1/19 8:04 PM, Dan Murphy wrote:
+> Convert LED flash class registration to device managed class
+> registration API.
 > 
-> In the meantime, Masahiro came up with an alternative approach to
-> address this problem:
-> https://lore.kernel.org/lkml/20190927093603.9140-2-yamada.masahiro@socionext.com/
-> How do you think about it? It ignores the memory allocation problem that
-> you addressed as modpost is a host tool after all. As part of the patch
-> series, an alternative format for the namespace ksymtab entry is
-> suggested that also changes the way modpost has to deal with it.
-
-Masahiro's patch set looks good to me.
-
-My only comment would be that I felt it preferable for
-sym_add_exported() to treat the two string arguments passed to it the
-same way. I feel the way it is currently violates the princple of least
-surprise. However I accept this is just my personal opinion.
-
-> > > > @@ -672,7 +696,6 @@ static void handle_modversions(struct module *mod, struct elf_info *info,
-> > > > 	unsigned int crc;
-> > > > 	enum export export;
-> > > > 	bool is_crc = false;
-> > > > -	const char *name, *namespace;
-> > > >
-> > > > 	if ((!is_vmlinux(mod->name) || mod->is_dot_o) &&
-> > > > 	    strstarts(symname, "__ksymtab"))
-> > > > @@ -744,9 +767,13 @@ static void handle_modversions(struct module *mod, struct elf_info *info,
-> > > > 	default:
-> > > > 		/* All exported symbols */
-> > > > 		if (strstarts(symname, "__ksymtab_")) {
-> > > > +			const char *name, *namespace;
-> > > > +
-> > > > 			name = symname + strlen("__ksymtab_");
-> > > > 			namespace = sym_extract_namespace(&name);
-> > > > 			sym_add_exported(name, namespace, mod, export);
-> > > > +			if (namespace)
-> > > > +				free((char *)name);
-> > > 
-> > > This probably should free namespace instead.
-> > 
-> > Given the implementation of sym_extract_namespace below, I believe
-> > free((char *)name) is correct.
+> Signed-off-by: Dan Murphy <dmurphy@ti.com>
+> ---
+>  drivers/leds/leds-lm3601x.c | 3 +--
+>  1 file changed, 1 insertion(+), 2 deletions(-)
 > 
-> Yeah, you are right. I was just noticing the inconsistency and thought
-> it was obviously wrong. So, I was wrong. Sorry and thanks for the
-> explanation.
-> 
-> > 
-> >  static const char *sym_extract_namespace(const char **symname)
-> >  {
-> >  	size_t n;
-> >  	char *dupsymname;
-> > 
-> >  	n = strcspn(*symname, ".");
-> >  	if (n < strlen(*symname) - 1) {
-> >  		dupsymname = NOFAIL(strdup(*symname));
-> >  		dupsymname[n] = '\0';
-> >  		*symname = dupsymname;
-> >  		return dupsymname + n + 1;
-> >  	}
-> > 
-> >  	return NULL;
-> >  }
-> > 
-> > I agree that freeing name instead of namespace is a little surprising
-> > unless you know the implementation of sym_extract_namespace.
-> > 
-> > I thought about changing the the signature of sym_extract_namespace() to
-> > make it clear when the symname is used to return a new allocation or
-> > not, and given your comment, perhaps I should have.
-> 
-> I would rather follow-up with Masahiro's approach for now. What do you
-> think?
+> diff --git a/drivers/leds/leds-lm3601x.c b/drivers/leds/leds-lm3601x.c
+> index b02972f1a341..a68e4f97739c 100644
+> --- a/drivers/leds/leds-lm3601x.c
+> +++ b/drivers/leds/leds-lm3601x.c
+> @@ -350,8 +350,7 @@ static int lm3601x_register_leds(struct lm3601x_led *led,
+>  	init_data.devicename = led->client->name;
+>  	init_data.default_label = (led->led_mode == LM3601X_LED_TORCH) ?
+>  					"torch" : "infrared";
+> -
+> -	return led_classdev_flash_register_ext(&led->client->dev,
+> +	return devm_led_classdev_flash_register_ext(&led->client->dev,
+>  						&led->fled_cdev, &init_data);
 
-I agree that following-up with Masahiro's patch set is the better
-option.
+You need to remove led_classdev_flash_unregister(&led->fled_cdev) from
+lm3601x_remove() to complete this improvement.
 
-Cheers,
-Shaun
+-- 
+Best regards,
+Jacek Anaszewski
