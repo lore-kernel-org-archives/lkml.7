@@ -2,86 +2,85 @@ Return-Path: <SRS0=YRFP=X2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BF18C352AA
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 10:56:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53408C388F3
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 10:58:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 77B5620673
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 10:56:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1BBBC2133F
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 10:58:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=tronnes.org header.i=@tronnes.org header.b="MDcF3cWa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731179AbfJAK4K (ORCPT
+        id S1731198AbfJAK6M (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Oct 2019 06:56:10 -0400
-Received: from atrey.karlin.mff.cuni.cz ([195.113.26.193]:51920 "EHLO
-        atrey.karlin.mff.cuni.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725865AbfJAK4K (ORCPT
+        Tue, 1 Oct 2019 06:58:12 -0400
+Received: from smtp.domeneshop.no ([194.63.252.55]:60619 "EHLO
+        smtp.domeneshop.no" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725865AbfJAK6L (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Oct 2019 06:56:10 -0400
-Received: by atrey.karlin.mff.cuni.cz (Postfix, from userid 512)
-        id DE85280498; Tue,  1 Oct 2019 12:55:53 +0200 (CEST)
-Date:   Tue, 1 Oct 2019 12:56:07 +0200
-From:   Pavel Machek <pavel@ucw.cz>
-To:     Jani Nikula <jani.nikula@linux.intel.com>
-Cc:     kernel list <linux-kernel@vger.kernel.org>,
-        intel-gfx@lists.freedesktop.org, rodrigo.vivi@intel.com,
-        joonas.lahtinen@linux.intel.com
-Subject: Re: 5.4-rc1 on Thinkpad x220: graphics regression, it "snows" on
- digital output
-Message-ID: <20191001105607.GA4339@amd>
-References: <20191001105102.GA4442@amd>
+        Tue, 1 Oct 2019 06:58:11 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=tronnes.org
+        ; s=ds201810; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:
+        MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender:Reply-To:
+        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+        Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
+        List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=OD/B4iuITOBha9TeXpgkoPm9qIuj9lBSYQ/sNuiU7O0=; b=MDcF3cWagQZbEN1B+InsUhKij2
+        N3zZg9zAjHkUCBrBGuytCTVkqLRpcnlsLgTtFsfGW4diDrF6qGUVciAPZouJihn2Frw1rVa244yuj
+        xLoFESzg27iwtsoQ603yQh14aBwNWfaIczS8rhXtQF6WSPmzrr/uSJkhValCX3zvta9FKxiK3CKwG
+        DOcKogl9BpNp/epm3jeSPcILJVWcUIf+bdiG3n6W3S9PK4DVnERJO5N3cRwwcJGiSrBHZPX0vQpbB
+        LyNif+S6DxCPBAXZG2F6TcrSe57hdkNO0HxJQ9y20TWQY0JgBJppO/ar7/eKewposog47VHy+GzNV
+        D3bbIM7g==;
+Received: from 211.81-166-168.customer.lyse.net ([81.166.168.211]:52781 helo=[192.168.10.177])
+        by smtp.domeneshop.no with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.89)
+        (envelope-from <noralf@tronnes.org>)
+        id 1iFFr4-00014j-ST; Tue, 01 Oct 2019 12:58:06 +0200
+Subject: Re: [PATCH] drm/tiny: Kconfig: Remove always-y THERMAL dep. from
+ TINYDRM_REPAPER
+To:     Ulf Magnusson <ulfalizer@gmail.com>, linux-kbuild@vger.kernel.org,
+        yamada.masahiro@socionext.com
+Cc:     airlied@linux.ie, daniel@ffwll.ch, sam@ravnborg.org,
+        david@lechnology.com, hdegoede@redhat.com, eric@anholt.net,
+        tglx@linutronix.de, dri-devel@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org
+References: <20190927174218.GA32085@huvuddator>
+From:   =?UTF-8?Q?Noralf_Tr=c3=b8nnes?= <noralf@tronnes.org>
+Message-ID: <c3b41a7b-ef3b-7960-13a1-d4b8dd6f15b6@tronnes.org>
+Date:   Tue, 1 Oct 2019 12:58:00 +0200
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="wRRV7LY7NUeQGEoC"
-Content-Disposition: inline
-In-Reply-To: <20191001105102.GA4442@amd>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+In-Reply-To: <20190927174218.GA32085@huvuddator>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
---wRRV7LY7NUeQGEoC
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
 
-Hi!
+Den 27.09.2019 19.42, skrev Ulf Magnusson:
+> Commit 554b3529fe01 ("thermal/drivers/core: Remove the module Kconfig's
+> option") changed the type of THERMAL from tristate to bool, so
+> THERMAL || !THERMAL is now always y. Remove the redundant dependency.
+> 
+> Discovered through Kconfiglib detecting a dependency loop. The C tools
+> simplify the expression to y before running dependency loop detection,
+> and so don't see it. Changing the type of THERMAL back to tristate makes
+> the C tools detect the same loop.
+> 
+> Not sure if running dep. loop detection after simplification can be
+> called a bug. Fixing this nit unbreaks Kconfiglib on the kernel at
+> least.
+> 
+> Signed-off-by: Ulf Magnusson <ulfalizer@gmail.com>
+> ---
 
-> When 5.4-rc1 is booted on thinkpad X220 I get "snow" and other
-> artefacts on digital output.
->=20
-> 00:02.0 VGA compatible controller: Intel Corporation 2nd Generation
-> Core Processor Family Integrated Graphics Controller (rev 09)
->=20
-> It already snows when kernel is booting, snow continues in X.
+Thanks, applied to drm-misc-next.
 
-Sorry, false alarm. I seem to have a hardware problem, it persisted
-reboot to older kernel, and went away after I wiggled cables.
-
-Best regards,
-									Pavel
-
-
-
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
-
---wRRV7LY7NUeQGEoC
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iEYEARECAAYFAl2TMMcACgkQMOfwapXb+vIHYACdEwgjSZrQx2RQQ5tJu1JrD4Ny
-/noAoIfW65BKZQ42HcUBKDDdNQM+C4UY
-=ZGYS
------END PGP SIGNATURE-----
-
---wRRV7LY7NUeQGEoC--
+Noralf.
