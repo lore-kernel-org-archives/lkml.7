@@ -2,103 +2,92 @@ Return-Path: <SRS0=YRFP=X2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EDBBDC352AA
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 11:33:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53771C352AA
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 11:33:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C4DCF21906
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 11:33:30 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HRaTJrbn"
+	by mail.kernel.org (Postfix) with ESMTP id 2E70A2133F
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 11:33:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732281AbfJALd3 (ORCPT
+        id S1732372AbfJALdj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Oct 2019 07:33:29 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:44970 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732086AbfJALd1 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Oct 2019 07:33:27 -0400
-Received: by mail-pg1-f196.google.com with SMTP id i14so9403410pgt.11;
-        Tue, 01 Oct 2019 04:33:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=09lI8sA7GBmAEMY2ZHF2GfLfirrTO8tbiRtZGHSh2eo=;
-        b=HRaTJrbn7HI6PaiCQm9rKuYy1mccgKsXAOfaPFlYC1bvJUIysqgQ1PO51Yw7JlMNCU
-         j4Ba/kpmHtiaHL/K1eLBDrIjETgKRAZgfXIaUtshwZKKPDTdw/rhFx4D/HzNpX4+2ab5
-         rI2TGfxxsOXPUwYB47r0K82qmnY2DVgoh0z4HlJghPktYRuWObIbqdLWalZH5zn0SmPI
-         uj4Nre6CcOL+LoSaUkP2v9EK6sk6YBsbr2ujPHz7TNNP9us3o8XQMrYhXMTH3kfjIzJn
-         BfduXWpI+DXhu36AXo7IX67AGF1fd8OcOT0s5OvXwRWNMkyTnsYsgRzPK1TbLmKvtvXa
-         OZ8w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=09lI8sA7GBmAEMY2ZHF2GfLfirrTO8tbiRtZGHSh2eo=;
-        b=MPaHDYhV28RJtgomv5ej6QKZ8JHtzqWdWErYwI0UL49rSnMXPTtQdl4KeOZPLeYD0d
-         WG/6sTH9MIzolBIFFq0m0Asn18tzBn078AaszG5JJ2s7dTYJ2V85dEtURbgitTAmCkuz
-         T9TnfX1OvH8RI9E/Zc2VFdBHrjtb+5ADX5JzPPDB8ltWs6ScmrI75cU/JgD0e6Dg1CLn
-         aMtof9woU02oQe4+frCYDrJENfacZOUcdUDe4UAJGylGMezCRWy6lrpQL4Nj4Hi8fKEM
-         YcldIq/gm+DTz62Qh4MTJmlFIt12mqGxovam85dSoCA7uTnmecaqaw/LE2/0cunzjeXK
-         Azxg==
-X-Gm-Message-State: APjAAAWu1Cxpc7ZIEQPMm8OMrp7RsOokrwKqas5TOP4qKwsybVNAbn4v
-        lwWt/8mGzdOJ2p4u4f7pp+vLd+H/+PoHpg==
-X-Google-Smtp-Source: APXvYqxI2XEKH6x0Vt6kBCMsXWh4Ts8VEMTFQ+fqehWx1Mwoq+Wby4LwhnS6ZWII8JzeEf4TjMwYcA==
-X-Received: by 2002:a17:90a:d98a:: with SMTP id d10mr4929715pjv.65.1569929606610;
-        Tue, 01 Oct 2019 04:33:26 -0700 (PDT)
-Received: from btopel-mobl.ger.intel.com ([192.55.55.41])
-        by smtp.gmail.com with ESMTPSA id a29sm16238634pfr.152.2019.10.01.04.33.22
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 01 Oct 2019 04:33:26 -0700 (PDT)
-From:   =?UTF-8?q?Bj=C3=B6rn=20T=C3=B6pel?= <bjorn.topel@gmail.com>
-To:     linux-kernel@vger.kernel.org, acme@kernel.org
-Cc:     =?UTF-8?q?Bj=C3=B6rn=20T=C3=B6pel?= <bjorn.topel@intel.com>,
-        netdev@vger.kernel.org, bpf@vger.kernel.org, ast@kernel.org,
-        daniel@iogearbox.net, adrian.hunter@intel.com, jolsa@kernel.org,
-        namhyung@kernel.org
-Subject: [PATCH 2/2] samples/bpf: fix build by setting HAVE_ATTR_TEST to zero
-Date:   Tue,  1 Oct 2019 13:33:07 +0200
-Message-Id: <20191001113307.27796-3-bjorn.topel@gmail.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191001113307.27796-1-bjorn.topel@gmail.com>
-References: <20191001113307.27796-1-bjorn.topel@gmail.com>
+        Tue, 1 Oct 2019 07:33:39 -0400
+Received: from mx2.suse.de ([195.135.220.15]:46282 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1732298AbfJALdj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Oct 2019 07:33:39 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 6ED04AF47;
+        Tue,  1 Oct 2019 11:33:37 +0000 (UTC)
+Subject: Re: xenbus hang after userspace ctrl-c of xenstore-rm
+To:     James Dingwall <james@dingwall.me.uk>, linux-kernel@vger.kernel.org
+Cc:     Stefano Stabellini <sstabellini@kernel.org>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>
+References: <20191001095716.GA16951@dingwall.me.uk>
+From:   =?UTF-8?B?SsO8cmdlbiBHcm/Dnw==?= <jgross@suse.com>
+Message-ID: <b95d9a22-727e-f919-ae3b-6567f7ba5543@suse.com>
+Date:   Tue, 1 Oct 2019 13:33:36 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20191001095716.GA16951@dingwall.me.uk>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Björn Töpel <bjorn.topel@intel.com>
+On 01.10.19 11:57, James Dingwall wrote:
+> Hi,
+> 
+> I have been investigating a problem where xenstore becomes unresponsive
+> during domain shutdowns.  My test script seems to trigger the problem
+> but without definitively being the same.  It is possible to replicate
+> the issue in dom0 or a domU.  If the test script is run in dom0 it seems
+> that it is possible to affect xenstore access in domUs but I have not
+> observed any negative impact in dom0 or other guests when running in a
+> domU.
+> 
+> The environment is a default Ubuntu 5.0.0-29-generic kernel, xen
+> 4.11.3-pre (built from current head of staging-4.11), xenstore is
+> running in a stubdom.  I did try a kernel with
+> d10e0cc113c9e1b64b5c6e3db37b5c839794f3df "xenbus: Avoid deadlock during
+> suspend due to open transactions" but that didn't help, this stack trace
+> is with that patch applied.
+> 
+> [ 2551.474706] INFO: task xenbus:37 blocked for more than 120 seconds.
+> [ 2551.492215]       Tainted: P           OE     5.0.0-29-generic #5
+> [ 2551.510263] "echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
+> [ 2551.528585] xenbus          D    0    37      2 0x80000080
+> [ 2551.528590] Call Trace:
+> [ 2551.528603]  __schedule+0x2c0/0x870
+> [ 2551.528606]  ? _cond_resched+0x19/0x40
+> [ 2551.528632]  schedule+0x2c/0x70
+> [ 2551.528637]  xs_talkv+0x1ec/0x2b0
+> [ 2551.528642]  ? wait_woken+0x80/0x80
+> [ 2551.528645]  xs_single+0x53/0x80
+> [ 2551.528648]  xenbus_transaction_end+0x3b/0x70
+> [ 2551.528651]  xenbus_file_free+0x5a/0x160
+> [ 2551.528654]  xenbus_dev_queue_reply+0xc4/0x220
+> [ 2551.528657]  xenbus_thread+0x7de/0x880
+> [ 2551.528660]  ? wait_woken+0x80/0x80
+> [ 2551.528665]  kthread+0x121/0x140
+> [ 2551.528667]  ? xb_read+0x1d0/0x1d0
+> [ 2551.528670]  ? kthread_park+0x90/0x90
+> [ 2551.528673]  ret_from_fork+0x35/0x40
 
-To remove that test_attr__{enabled/open} are used by perf-sys.h, we
-set HAVE_ATTR_TEST to zero.
+Yes, this is a self-deadlock when cleaning up a user's file context.
+Thanks for the nice debug data. :-)
 
-Signed-off-by: Björn Töpel <bjorn.topel@intel.com>
----
- samples/bpf/Makefile | 1 +
- 1 file changed, 1 insertion(+)
+I need to do the cleanup via a workqueue instead of calling it directly.
 
-diff --git a/samples/bpf/Makefile b/samples/bpf/Makefile
-index 1d9be26b4edd..42b571cde177 100644
---- a/samples/bpf/Makefile
-+++ b/samples/bpf/Makefile
-@@ -176,6 +176,7 @@ KBUILD_HOSTCFLAGS += -I$(srctree)/tools/lib/bpf/
- KBUILD_HOSTCFLAGS += -I$(srctree)/tools/testing/selftests/bpf/
- KBUILD_HOSTCFLAGS += -I$(srctree)/tools/lib/ -I$(srctree)/tools/include
- KBUILD_HOSTCFLAGS += -I$(srctree)/tools/perf
-+KBUILD_HOSTCFLAGS += -DHAVE_ATTR_TEST=0
- 
- HOSTCFLAGS_bpf_load.o += -I$(objtree)/usr/include -Wno-unused-variable
- 
--- 
-2.20.1
+Cooking up a patch now...
 
+
+Juergen
