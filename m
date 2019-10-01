@@ -2,120 +2,119 @@ Return-Path: <SRS0=YRFP=X2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BF79C352AA
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 10:43:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE98AC388F3
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 10:44:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E3B502190F
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 10:43:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569926581;
-	bh=fLlcwekdrGSCzJboirhCdZb2pRq7XYqkATwD0/s6rn8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=E/QVq3ExIdWHDUHha2ioB7BNl1BFMrjlsVkr0rfTP/14lNqRD+H8WcTfEPyvAko+T
-	 77EcVme7bza/3aIYSkIC7woIrhYFG0ldbYY0LU2T4QcAj6bkijPt56BWuACUOnSDLb
-	 h+Oz9+Sxv7k7OjXC1Y7cvXSxRODQHG/TxZUyM5RQ=
+	by mail.kernel.org (Postfix) with ESMTP id BC46021906
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 10:44:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731113AbfJAKnA (ORCPT
+        id S1731164AbfJAKok convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Oct 2019 06:43:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51994 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726494AbfJAKm7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Oct 2019 06:42:59 -0400
-Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EAC6221906;
-        Tue,  1 Oct 2019 10:42:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569926578;
-        bh=fLlcwekdrGSCzJboirhCdZb2pRq7XYqkATwD0/s6rn8=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=PRf2kKjUQf04+gaCdNG46D5w6U0piINzln1PR2OvjWhQXDAlD/RkxgHyAojkua2nz
-         tq/4o9XqfWbnpabpQep2kx3FXyKQzNDFI7iTKDHAJn8QNaUG8OfOL1tlrbNEC1ejgW
-         RF5s1iWFOxLXHv36ZMje4zqPQUovVagB/ZgUvNJI=
-Date:   Tue, 1 Oct 2019 11:42:54 +0100
-From:   Will Deacon <will@kernel.org>
-To:     Masahiro Yamada <yamada.masahiro@socionext.com>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Russell King <linux@armlinux.org.uk>,
-        Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH] Partially revert "compiler: enable
- CONFIG_OPTIMIZE_INLINING forcibly"
-Message-ID: <20191001104253.fci7s3sn5ov3h56d@willie-the-truck>
-References: <20190930114540.27498-1-will@kernel.org>
- <CAK7LNARWkQ-z02RYv3XQ69KkWdmEVaZge07qiYC8_kyMrFzCTg@mail.gmail.com>
+        Tue, 1 Oct 2019 06:44:40 -0400
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:32961 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726885AbfJAKoi (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Oct 2019 06:44:38 -0400
+Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ore@pengutronix.de>)
+        id 1iFFdu-0000tI-3F; Tue, 01 Oct 2019 12:44:30 +0200
+Received: from ore by pty.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <ore@pengutronix.de>)
+        id 1iFFds-0008HI-2B; Tue, 01 Oct 2019 12:44:28 +0200
+Date:   Tue, 1 Oct 2019 12:44:28 +0200
+From:   Oleksij Rempel <o.rempel@pengutronix.de>
+To:     Colin King <colin.king@canonical.com>
+Cc:     Robin van der Gracht <robin@protonic.nl>,
+        Oleksij Rempel <linux@rempel-privat.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Oliver Hartkopp <socketcan@hartkopp.net>,
+        Marc Kleine-Budde <mkl@pengutronix.de>,
+        "David S . Miller" <davem@davemloft.net>,
+        linux-can@vger.kernel.org, netdev@vger.kernel.org,
+        kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH][next] can: fix resource leak of skb on error return paths
+Message-ID: <20191001104428.welkedinv7322tq4@pengutronix.de>
+References: <20190918101156.24370-1-colin.king@canonical.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <CAK7LNARWkQ-z02RYv3XQ69KkWdmEVaZge07qiYC8_kyMrFzCTg@mail.gmail.com>
+Content-Transfer-Encoding: 8BIT
+In-Reply-To: <20190918101156.24370-1-colin.king@canonical.com>
+X-Sent-From: Pengutronix Hildesheim
+X-URL:  http://www.pengutronix.de/
+X-IRC:  #ptxdist @freenode
+X-Accept-Language: de,en
+X-Accept-Content-Type: text/plain
+X-Uptime: 12:40:48 up 136 days, 16:58, 90 users,  load average: 0.09, 0.06,
+ 0.07
 User-Agent: NeoMutt/20170113 (1.7.2)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
+X-SA-Exim-Mail-From: ore@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Oct 01, 2019 at 06:40:26PM +0900, Masahiro Yamada wrote:
-> On Mon, Sep 30, 2019 at 8:45 PM Will Deacon <will@kernel.org> wrote:
-> > diff --git a/lib/Kconfig.debug b/lib/Kconfig.debug
-> > index 93d97f9b0157..c37c72adaeff 100644
-> > --- a/lib/Kconfig.debug
-> > +++ b/lib/Kconfig.debug
-> > @@ -312,6 +312,7 @@ config HEADERS_CHECK
-> >
-> >  config OPTIMIZE_INLINING
-> >         def_bool y
-> > +       depends on !(ARM || ARM64) # https://gcc.gnu.org/bugzilla/show_bug.cgi?id=91111
+On Wed, Sep 18, 2019 at 11:11:56AM +0100, Colin King wrote:
+> From: Colin Ian King <colin.king@canonical.com>
+> 
+> Currently the error return paths do not free skb and this results
+> in a memory leak. Fix this by freeing them before the return.
+> 
+> Addresses-Coverity: ("Resource leak")
+> Fixes: 9d71dd0c7009 ("can: add support of SAE J1939 protocol")
+> Signed-off-by: Colin Ian King <colin.king@canonical.com>
+
+Acked-by: Oleksij Rempel <o.rempel@pengutronix.de>
+
+> ---
+>  net/can/j1939/socket.c | 8 ++++++--
+>  1 file changed, 6 insertions(+), 2 deletions(-)
+> 
+> diff --git a/net/can/j1939/socket.c b/net/can/j1939/socket.c
+> index 37c1040bcb9c..5c6eabcb5df1 100644
+> --- a/net/can/j1939/socket.c
+> +++ b/net/can/j1939/socket.c
+> @@ -909,8 +909,10 @@ void j1939_sk_errqueue(struct j1939_session *session,
+>  	memset(serr, 0, sizeof(*serr));
+>  	switch (type) {
+>  	case J1939_ERRQUEUE_ACK:
+> -		if (!(sk->sk_tsflags & SOF_TIMESTAMPING_TX_ACK))
+> +		if (!(sk->sk_tsflags & SOF_TIMESTAMPING_TX_ACK)) {
+> +			kfree_skb(skb);
+>  			return;
+> +		}
+>  
+>  		serr->ee.ee_errno = ENOMSG;
+>  		serr->ee.ee_origin = SO_EE_ORIGIN_TIMESTAMPING;
+> @@ -918,8 +920,10 @@ void j1939_sk_errqueue(struct j1939_session *session,
+>  		state = "ACK";
+>  		break;
+>  	case J1939_ERRQUEUE_SCHED:
+> -		if (!(sk->sk_tsflags & SOF_TIMESTAMPING_TX_SCHED))
+> +		if (!(sk->sk_tsflags & SOF_TIMESTAMPING_TX_SCHED)) {
+> +			kfree_skb(skb);
+>  			return;
+> +		}
+>  
+>  		serr->ee.ee_errno = ENOMSG;
+>  		serr->ee.ee_origin = SO_EE_ORIGIN_TIMESTAMPING;
+> -- 
+> 2.20.1
 > 
 > 
-> This is a too big hammer.
 
-It matches the previous default behaviour!
-
-> For ARM, it is not a compiler bug, so I am trying to fix the kernel code.
-> 
-> For ARM64, even if it is a compiler bug, you can add __always_inline
-> to the functions in question.
-> (arch_atomic64_dec_if_positive in this case).
-> 
-> You do not need to force __always_inline globally.
-
-So you'd prefer I do something like the diff below? I mean, it's a start,
-but I do worry that we're hanging arch/arm/ out to dry.
-
-Will
-
---->8
-
-diff --git a/arch/arm64/include/asm/atomic_lse.h b/arch/arm64/include/asm/atomic_lse.h
-index c6bd87d2915b..574808b9df4c 100644
---- a/arch/arm64/include/asm/atomic_lse.h
-+++ b/arch/arm64/include/asm/atomic_lse.h
-@@ -321,7 +321,8 @@ static inline s64 __lse_atomic64_dec_if_positive(atomic64_t *v)
- }
- 
- #define __CMPXCHG_CASE(w, sfx, name, sz, mb, cl...)                    \
--static inline u##sz __lse__cmpxchg_case_##name##sz(volatile void *ptr, \
-+static __always_inline u##sz                                           \
-+__lse__cmpxchg_case_##name##sz(volatile void *ptr,                     \
-                                              u##sz old,                \
-                                              u##sz new)                \
- {                                                                      \
-@@ -362,7 +363,8 @@ __CMPXCHG_CASE(x,  ,  mb_, 64, al, "memory")
- #undef __CMPXCHG_CASE
- 
- #define __CMPXCHG_DBL(name, mb, cl...)                                 \
--static inline long __lse__cmpxchg_double##name(unsigned long old1,     \
-+static __always_inline long                                            \
-+__lse__cmpxchg_double##name(unsigned long old1,                                \
-                                         unsigned long old2,            \
-                                         unsigned long new1,            \
-                                         unsigned long new2,            \
+-- 
+Pengutronix e.K.                           |                             |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
