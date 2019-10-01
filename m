@@ -2,158 +2,88 @@ Return-Path: <SRS0=YRFP=X2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 61F96ECE589
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 08:44:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 032FBC388F3
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 08:45:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 38F9321855
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 08:44:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569919452;
-	bh=kG8VWB5S4eyjcS1JBhJuQtUp+VkgX2w/qBlFQEPWX4g=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=xGAhHsbP6S3qzSF2XQ0RG7KNPBtd0qkEgLV6UdY3ejKZAB8JCkQRtvIiuOaMljpBD
-	 f5ITaDXeEvFubGbe7Vpvv4zyohIlxxCxiUjB7osnSldqJzXICjpzCGpJF6CYoQzrGQ
-	 EWnqmhD1G+E5t9XZmqoc4OlOyehoj1pLmkMdlCeM=
+	by mail.kernel.org (Postfix) with ESMTP id CAD34215EA
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 08:45:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="pyD+v/H3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733122AbfJAIoL (ORCPT
+        id S1733133AbfJAIp1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Oct 2019 04:44:11 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:46229 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1733089AbfJAIoK (ORCPT
+        Tue, 1 Oct 2019 04:45:27 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:34124 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726148AbfJAIp0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Oct 2019 04:44:10 -0400
-Received: by mail-wr1-f67.google.com with SMTP id o18so14351660wrv.13;
-        Tue, 01 Oct 2019 01:44:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=SdwQsb3+JNLacsbpDuz5D32yWpg1tCJ/fPIbG+myM0k=;
-        b=HdLePNBPoqDcKEnbiodeM2y0/VHWwbTm0K4gcAPzQG5RyacfWV8WdQ7aANdu6YFRld
-         4gvhFaEjdKU/VKuqkXc8uDdEDLc718tTTK4psrEo7DArxtyyC7EmhUGc12rCtxIu76U+
-         F+h6qIAos0aLbpED271AqnIXBF2AzkfGl90a/0noS3z3/3BZmuHmGcfFEXoHeV3CINSS
-         M4iq2zgCvOisAC4VLxU2FtoTyvVTIMJcrwGbbERl4h+5A1XWMD9liYf6GxbcH24Em7pg
-         qlKC4xx1ylqwLmTdHmJeCP/Ys8XMdMh1id+lz9nz0OGRcJoGSbtgMFQH+DUURXYTVto8
-         6E3Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=SdwQsb3+JNLacsbpDuz5D32yWpg1tCJ/fPIbG+myM0k=;
-        b=KhLOFEuBFULxBIBzIfn7eHXwW5ocF9xC/IhjoAoR3jvEVY+vIqM4vyqW/CcKBgEcPZ
-         a74OWYuGavUyaL2tl3rs2HmYXPN/DndzeUl2wXX0JibYoyAf6D8qTEGeWVU3aGjJpMbV
-         LkPLLvKLbo7IRcBN15DUoGyEIlLCob3fS5/8lkPcLE1exii8CRR4z396C9jt1UHEMtkO
-         JEGY2qgorluX+Wg4srBu6l/ECGD3NrZ0xU4NwCNnFgKG3QxhK+1DcPKLMYQYWy0LAiZr
-         cOu09JChvAV+oaCj6XP7jhES4n12o4E8NS8vBnL0N8JGAgzcRpTvP57WOr85Su7ayTjv
-         DQdQ==
-X-Gm-Message-State: APjAAAUz8j4gK5iBfHIeqRy2gfTvawTWplEAMsvIs8wF5jt++L7FwooA
-        eKbpZGGCy0uKa+NHnJePypRNvOYE
-X-Google-Smtp-Source: APXvYqxEOTjQwvwYhtdzjfmAg55crVPh5QvTjltvq9e7dUT8IARmTGB+GkEbovvl0gxcy+nDXVx6Zg==
-X-Received: by 2002:adf:f341:: with SMTP id e1mr16367215wrp.1.1569919448565;
-        Tue, 01 Oct 2019 01:44:08 -0700 (PDT)
-Received: from gmail.com (2E8B0CD5.catv.pool.telekom.hu. [46.139.12.213])
-        by smtp.gmail.com with ESMTPSA id d10sm2307155wma.42.2019.10.01.01.44.07
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 01 Oct 2019 01:44:07 -0700 (PDT)
-Date:   Tue, 1 Oct 2019 10:44:05 +0200
-From:   Ingo Molnar <mingo@kernel.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     linux-tip-commits@vger.kernel.org,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Chris Metcalf <cmetcalf@ezchip.com>,
-        Christoph Lameter <cl@linux.com>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        Kirill Tkhai <tkhai@yandex.ru>, Mike Galbraith <efault@gmx.de>,
-        Oleg Nesterov <oleg@redhat.com>,
-        "Paul E. McKenney" <paulmck@linux.ibm.com>,
-        Russell King - ARM Linux admin <linux@armlinux.org.uk>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Borislav Petkov <bp@alien8.de>
-Subject: Re: [tip: sched/urgent] sched/membarrier: Fix
- p->mm->membarrier_state racy load
-Message-ID: <20191001084405.GA115089@gmail.com>
-References: <20190919173705.2181-5-mathieu.desnoyers@efficios.com>
- <156957184332.9866.1795367595934026999.tip-bot2@tip-bot2>
+        Tue, 1 Oct 2019 04:45:26 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=mF3/fd7P0Rq3M0sPBe2764euN8GKHuf61uE85D6TBMI=; b=pyD+v/H3OMJvvbdz4cwbTDBnK
+        O5Mo4Bk0nUWzFLLGP6W5S1S76jg+Ywr1Cd4Lu7Pr11a1bYWcp+pScCWqIARrA0b5GX5S9B9jtnkQY
+        Uyf1RdzyT2A7EGksLFhrpu9ybJqfcjwLzjKr8T/crLXnorVd8+mrmW3mLsQtqcPrGDMyQWHZ/irh9
+        DR/BO+uElkmE7VFbUc0uQFiCa0SaM2c9YJReLnG8NbCvvoU9FRE+NBy8oy5vo/LvMUkftas+HwG3c
+        F5WLsDlpf1lu/hGv5y8GQSbvbyyTtOkm3gnGg/e7FDrdf7ndhTnM2HkVY2Xoc8+r9rGLTnDX40ltp
+        zliq5qYDA==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.2 #3 (Red Hat Linux))
+        id 1iFDmc-0006jw-08; Tue, 01 Oct 2019 08:45:22 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 08CFC304B4C;
+        Tue,  1 Oct 2019 10:44:32 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 52182265261AD; Tue,  1 Oct 2019 10:45:20 +0200 (CEST)
+Date:   Tue, 1 Oct 2019 10:45:20 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     syzbot <syzbot+0e1a9dce275f13907b4e@syzkaller.appspotmail.com>
+Cc:     dvhart@infradead.org, linux-kernel@vger.kernel.org,
+        mingo@redhat.com, syzkaller-bugs@googlegroups.com,
+        tglx@linutronix.de
+Subject: Re: WARNING in rcu_note_context_switch
+Message-ID: <20191001084520.GN4519@hirez.programming.kicks-ass.net>
+References: <000000000000d2661c0593d4dd89@google.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <156957184332.9866.1795367595934026999.tip-bot2@tip-bot2>
+In-Reply-To: <000000000000d2661c0593d4dd89@google.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-* tip-bot2 for Mathieu Desnoyers <tip-bot2@linutronix.de> wrote:
-
-> The following commit has been merged into the sched/urgent branch of tip:
+On Tue, Oct 01, 2019 at 01:09:07AM -0700, syzbot wrote:
+> Hello,
 > 
-> Commit-ID:     227a4aadc75ba22fcb6c4e1c078817b8cbaae4ce
-> Gitweb:        https://git.kernel.org/tip/227a4aadc75ba22fcb6c4e1c078817b8cbaae4ce
-> Author:        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-> AuthorDate:    Thu, 19 Sep 2019 13:37:02 -04:00
-> Committer:     Ingo Molnar <mingo@kernel.org>
-> CommitterDate: Wed, 25 Sep 2019 17:42:30 +02:00
+> syzbot found the following crash on:
 > 
-> sched/membarrier: Fix p->mm->membarrier_state racy load
+> HEAD commit:    54ecb8f7 Linux 5.4-rc1
+> git tree:       upstream
+> console output: https://syzkaller.appspot.com/x/log.txt?x=14972bf3600000
+> kernel config:  https://syzkaller.appspot.com/x/.config?x=fb0b431ccdf08c1c
+> dashboard link: https://syzkaller.appspot.com/bug?extid=0e1a9dce275f13907b4e
+> compiler:       clang version 9.0.0 (/home/glider/llvm/clang
+> 80fee25776c2fb61e74c1ecb1a523375c2500b69)
+> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=16875a35600000
+> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=104bd519600000
+> 
+> IMPORTANT: if you fix the bug, please add the following tag to the commit:
+> Reported-by: syzbot+0e1a9dce275f13907b4e@syzkaller.appspotmail.com
+> 
+> ------------[ cut here ]------------
+> WARNING: CPU: 1 PID: 7994 at kernel/rcu/tree_plugin.h:293
+> rcu_note_context_switch+0xdde/0xee0 kernel/rcu/tree_plugin.h:293
+> Kernel panic - not syncing: panic_on_warn set ...
 
-> +	rcu_read_unlock();
->  	if (!fallback) {
->  		preempt_disable();
->  		smp_call_function_many(tmpmask, ipi_mb, NULL, 1);
-> @@ -136,6 +178,7 @@ static int membarrier_private_expedited(int flags)
->  	}
->  
->  	cpus_read_lock();
-> +	rcu_read_lock();
->  	for_each_online_cpu(cpu) {
->  		struct task_struct *p;
->  
-> @@ -157,8 +200,8 @@ static int membarrier_private_expedited(int flags)
->  			else
->  				smp_call_function_single(cpu, ipi_mb, NULL, 1);
->  		}
-> -		rcu_read_unlock();
->  	}
-> +	rcu_read_unlock();
-
-I noticed this too late, but the locking in this part is now bogus:
-
-	rcu_read_lock();
-	for_each_online_cpu(cpu) {
-		struct task_struct *p;
-
-		/*
-		 * Skipping the current CPU is OK even through we can be
-		 * migrated at any point. The current CPU, at the point
-		 * where we read raw_smp_processor_id(), is ensured to
-		 * be in program order with respect to the caller
-		 * thread. Therefore, we can skip this CPU from the
-		 * iteration.
-		 */
-		if (cpu == raw_smp_processor_id())
-			continue;
-		rcu_read_lock();
-		p = rcu_dereference(cpu_rq(cpu)->curr);
-		if (p && p->mm == mm)
-			__cpumask_set_cpu(cpu, tmpmask);
-	}
-	rcu_read_unlock();
-
-Note the double rcu_read_lock() ....
-
-This bug is now upstream, so requires an urgent fix, as it should be 
-trivial to trigger with pretty much any membarrier user.
-
-Thanks,
-
-	Ingo
+https://lkml.kernel.org/r/20191001071921.GJ4519@hirez.programming.kicks-ass.net
