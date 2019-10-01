@@ -7,51 +7,52 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE7D8ECE587
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 16:45:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 133DDC352AA
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 16:45:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7C2B221A4C
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 16:45:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D53EB20B7C
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 16:45:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569948344;
-	bh=VBpfkg9+vEMeWQ1VwqaiwwHBY3ZYF105rVStb5Nnl4M=;
+	s=default; t=1569948349;
+	bh=4/1WMFpvEtJisXoIx8yqSm8+ou6YBcEv5rXgYGQ49L8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=guLUP1XAsVqud8EP3uTXqwAPsj9+YYCKj/a08dFbtvi7qLGeg1ZOaSEHnvuWGoSb5
-	 FBPaLujsXgjdy17ltS3cwhE+Vwzn/EruqIb4/d4Y5PSnOgEeW2H6GusLAC4a8LgW0K
-	 ocDkG2W6LAJLXiR36MldgAw3T0nk/9onSYTFSH9A=
+	b=TI4XmM/OOetiPn1YLz0/vKVE3Td6xpMGvQMlK+m6zviML18g32KgZaOKvxhCYvbjz
+	 1bBiW/kvnjxYYUVEX4HVpZMuZ5IduCMRzX0tAZA9k0UCgzogptn4Z1gMDtaJSpbPBc
+	 D9CkHl5DaAxB6ImIGsRfJoGk6kZV86TVpFGELfUc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390380AbfJAQpn (ORCPT
+        id S2388229AbfJAQps (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Oct 2019 12:45:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58228 "EHLO mail.kernel.org"
+        Tue, 1 Oct 2019 12:45:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58308 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390356AbfJAQpj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Oct 2019 12:45:39 -0400
+        id S2390388AbfJAQpp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Oct 2019 12:45:45 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6151521A4A;
-        Tue,  1 Oct 2019 16:45:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9FD3D2190F;
+        Tue,  1 Oct 2019 16:45:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569948339;
-        bh=VBpfkg9+vEMeWQ1VwqaiwwHBY3ZYF105rVStb5Nnl4M=;
+        s=default; t=1569948344;
+        bh=4/1WMFpvEtJisXoIx8yqSm8+ou6YBcEv5rXgYGQ49L8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Ki+J01fiPJxVXyRLH3pZv6vLyWCnFkKv0YGV+KDIstIjir35gwhEQzh5Jvhfq32BK
-         mYTwNCtiMwws0w0pZNqbt4kxTd+wA0x3TBUfJsSj0I2/iYoDX/ODK+HHhjXgKzlds+
-         N9f69IK0bqZdV3VZuJcZ0VQ27g8Qyjt9qgZUuP5U=
+        b=ZkODZ435u1WkE8AfEgflBNyntlWUyXeEtXpvehnCxywGtJPIAPLWPTFdX+FxHU0Pk
+         prc0eZydirH78mY68AOFtBsN+Hav6RPPzglgzycMuV9FZxyQwWirw1t1vyiVBFt+/4
+         Mu/ZeCkt4IWOGlBVAjragUg/R1fz6g+wMPsEWXbA=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Luis Henriques <lhenriques@suse.com>,
-        Jeff Layton <jlayton@kernel.org>,
-        Ilya Dryomov <idryomov@gmail.com>,
-        Sasha Levin <sashal@kernel.org>, ceph-devel@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.4 05/15] ceph: fix directories inode i_blkbits initialization
-Date:   Tue,  1 Oct 2019 12:45:23 -0400
-Message-Id: <20191001164533.16915-5-sashal@kernel.org>
+Cc:     =?UTF-8?q?Bj=C3=B8rn=20Mork?= <bjorn@mork.no>,
+        Jakub Kicinski <jakub.kicinski@netronome.com>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
+        linux-usb@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.4 08/15] usbnet: ignore endpoints with invalid wMaxPacketSize
+Date:   Tue,  1 Oct 2019 12:45:26 -0400
+Message-Id: <20191001164533.16915-8-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191001164533.16915-1-sashal@kernel.org>
 References: <20191001164533.16915-1-sashal@kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -60,48 +61,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Luis Henriques <lhenriques@suse.com>
+From: Bjørn Mork <bjorn@mork.no>
 
-[ Upstream commit 750670341a24cb714e624e0fd7da30900ad93752 ]
+[ Upstream commit 8d3d7c2029c1b360f1a6b0a2fca470b57eb575c0 ]
 
-When filling an inode with info from the MDS, i_blkbits is being
-initialized using fl_stripe_unit, which contains the stripe unit in
-bytes.  Unfortunately, this doesn't make sense for directories as they
-have fl_stripe_unit set to '0'.  This means that i_blkbits will be set
-to 0xff, causing an UBSAN undefined behaviour in i_blocksize():
+Endpoints with zero wMaxPacketSize are not usable for transferring
+data. Ignore such endpoints when looking for valid in, out and
+status pipes, to make the drivers more robust against invalid and
+meaningless descriptors.
 
-  UBSAN: Undefined behaviour in ./include/linux/fs.h:731:12
-  shift exponent 255 is too large for 32-bit type 'int'
+The wMaxPacketSize of these endpoints are used for memory allocations
+and as divisors in many usbnet minidrivers. Avoiding zero is therefore
+critical.
 
-Fix this by initializing i_blkbits to CEPH_BLOCK_SHIFT if fl_stripe_unit
-is zero.
-
-Signed-off-by: Luis Henriques <lhenriques@suse.com>
-Reviewed-by: Jeff Layton <jlayton@kernel.org>
-Signed-off-by: Ilya Dryomov <idryomov@gmail.com>
+Signed-off-by: Bjørn Mork <bjorn@mork.no>
+Signed-off-by: Jakub Kicinski <jakub.kicinski@netronome.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/ceph/inode.c | 7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
+ drivers/net/usb/usbnet.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/fs/ceph/inode.c b/fs/ceph/inode.c
-index a663b676d5661..2ad3f4ab4dcfa 100644
---- a/fs/ceph/inode.c
-+++ b/fs/ceph/inode.c
-@@ -725,7 +725,12 @@ static int fill_inode(struct inode *inode, struct page *locked_page,
- 	ci->i_version = le64_to_cpu(info->version);
- 	inode->i_version++;
- 	inode->i_rdev = le32_to_cpu(info->rdev);
--	inode->i_blkbits = fls(le32_to_cpu(info->layout.fl_stripe_unit)) - 1;
-+	/* directories have fl_stripe_unit set to zero */
-+	if (le32_to_cpu(info->layout.fl_stripe_unit))
-+		inode->i_blkbits =
-+			fls(le32_to_cpu(info->layout.fl_stripe_unit)) - 1;
-+	else
-+		inode->i_blkbits = CEPH_BLOCK_SHIFT;
+diff --git a/drivers/net/usb/usbnet.c b/drivers/net/usb/usbnet.c
+index 2502681369cd1..6c531abe198bb 100644
+--- a/drivers/net/usb/usbnet.c
++++ b/drivers/net/usb/usbnet.c
+@@ -115,6 +115,11 @@ int usbnet_get_endpoints(struct usbnet *dev, struct usb_interface *intf)
+ 			int				intr = 0;
  
- 	if ((new_version || (new_issued & CEPH_CAP_AUTH_SHARED)) &&
- 	    (issued & CEPH_CAP_AUTH_EXCL) == 0) {
+ 			e = alt->endpoint + ep;
++
++			/* ignore endpoints which cannot transfer data */
++			if (!usb_endpoint_maxp(&e->desc))
++				continue;
++
+ 			switch (e->desc.bmAttributes) {
+ 			case USB_ENDPOINT_XFER_INT:
+ 				if (!usb_endpoint_dir_in(&e->desc))
 -- 
 2.20.1
 
