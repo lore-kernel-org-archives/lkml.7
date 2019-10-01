@@ -2,190 +2,126 @@ Return-Path: <SRS0=YRFP=X2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DATE_IN_PAST_12_24,
-	DKIMWL_WL_HIGH,DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BA1BECE587
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 12:43:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1301CC352AA
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 12:44:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5164A20842
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 12:43:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="HyCQuURl"
+	by mail.kernel.org (Postfix) with ESMTP id D520921920
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 12:44:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1569933853;
+	bh=HUG7D2L1xMpD+wT6zwC93RGUDy/6NzX8Tq3e8RB2A9U=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=p+ROJ6YhJESz6/5tg1vseMKc5ijOZmhzUrYgDd44R6na9uvWnKBke8fKlSc2Wpkk1
+	 +ghrKONlze+Fc5m9o8dkea7127sk52eIrgqaswJZFXjKGOMHpaqJ9Plhc0dob7SSgf
+	 PqJ80sRrj37s3AyU66CWNjzNz/02GPoBq7ysr5+g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387938AbfJAMnw (ORCPT
+        id S2388032AbfJAMoN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Oct 2019 08:43:52 -0400
-Received: from aserp2120.oracle.com ([141.146.126.78]:36558 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732701AbfJAMnw (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Oct 2019 08:43:52 -0400
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x91CNrDw145664;
-        Tue, 1 Oct 2019 12:42:02 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
- subject : date : message-id : in-reply-to : references; s=corp-2019-08-05;
- bh=ZJU7loQMKeSoP/RlUzFVBDI3b7KBQRKdPz3cE8BrKSw=;
- b=HyCQuURlBEJp1HNn+K0A6naF6KTrnqsDw2P3Gl/qrFMjZ1/sY6+ApajqNZF7NusOL5oK
- J/X1wrOozJNLLagKbKtvPVAc9LVXcyfVIzzpnjRmJf0aTyKpFjT4Fd9VNU4NWGueus32
- YaHEqGCHQIaoGfi7aHwttWUNiCWx8yJAXI/qqSrxfOOD/MVTfvhBmhcTvsNAfQWKdydQ
- MZkiqrHfqGjh5VAFbWteHlw98rr2HTmW7t3zr3SQHzB66yGmkdgX+vleWSbsh24XdsAh
- c1CHfFlYIRZJ0MN0uC8zndPsBUdhEWgmqBXu7N9FBdzJiTLO4IzVDOuj0cLFP/gJn1vG cw== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by aserp2120.oracle.com with ESMTP id 2v9yfq5gpq-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 01 Oct 2019 12:42:02 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x91COQJQ039749;
-        Tue, 1 Oct 2019 12:40:01 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by aserp3020.oracle.com with ESMTP id 2vbqd0suuq-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 01 Oct 2019 12:40:01 +0000
-Received: from abhmp0010.oracle.com (abhmp0010.oracle.com [141.146.116.16])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x91Cdxo9005795;
-        Tue, 1 Oct 2019 12:39:59 GMT
-Received: from z2.cn.oracle.com (/10.182.71.205)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 01 Oct 2019 05:39:58 -0700
-From:   Zhenzhong Duan <zhenzhong.duan@oracle.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     vkuznets@redhat.com, linux-hyperv@vger.kernel.org,
-        kvm@vger.kernel.org, Zhenzhong Duan <zhenzhong.duan@oracle.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Radim Krcmar <rkrcmar@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Will Deacon <will@kernel.org>
-Subject: [PATCH v3 1/4] x86/kvm: Add "nopvspin" parameter to disable PV spinlocks
-Date:   Mon, 30 Sep 2019 20:44:36 +0800
-Message-Id: <1569847479-13201-2-git-send-email-zhenzhong.duan@oracle.com>
-X-Mailer: git-send-email 1.8.3.1
-In-Reply-To: <1569847479-13201-1-git-send-email-zhenzhong.duan@oracle.com>
-References: <1569847479-13201-1-git-send-email-zhenzhong.duan@oracle.com>
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9396 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=1 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1908290000 definitions=main-1910010114
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9396 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=1 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1908290000
- definitions=main-1910010114
+        Tue, 1 Oct 2019 08:44:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39892 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2387921AbfJAMoM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Oct 2019 08:44:12 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8DEEB20842;
+        Tue,  1 Oct 2019 12:44:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1569933852;
+        bh=HUG7D2L1xMpD+wT6zwC93RGUDy/6NzX8Tq3e8RB2A9U=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=kVPf4/IdPv+EoVEk/aOd4bL+2UIL477WEqSv9yEk5h3ggjFAiR458XXEECVf/Gz73
+         C+fVY/EW178yKkmm2kJFJtKW4qo//2v2fByBJPQVcjpa5cG6D2Or7TaLhFQgHA23Ra
+         /u/V+f88X7OV5wcv/m3B0kjJZZoKqRvBUNXbFZPQ=
+Date:   Tue, 1 Oct 2019 14:44:09 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Mika Westerberg <mika.westerberg@linux.intel.com>
+Cc:     linux-usb@vger.kernel.org,
+        Andreas Noever <andreas.noever@gmail.com>,
+        Michael Jamet <michael.jamet@intel.com>,
+        Yehezkel Bernat <YehezkelShB@gmail.com>,
+        Rajmohan Mani <rajmohan.mani@intel.com>,
+        Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>,
+        Lukas Wunner <lukas@wunner.de>,
+        Alan Stern <stern@rowland.harvard.edu>,
+        Mario.Limonciello@dell.com,
+        Anthony Wong <anthony.wong@canonical.com>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [RFC PATCH 12/22] thunderbolt: Add Display Port CM handshake for
+ Titan Ridge devices
+Message-ID: <20191001124409.GG2954373@kroah.com>
+References: <20191001113830.13028-1-mika.westerberg@linux.intel.com>
+ <20191001113830.13028-13-mika.westerberg@linux.intel.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191001113830.13028-13-mika.westerberg@linux.intel.com>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There are cases where a guest tries to switch spinlocks to bare metal
-behavior (e.g. by setting "xen_nopvspin" on XEN platform and
-"hv_nopvspin" on HYPER_V).
+On Tue, Oct 01, 2019 at 02:38:20PM +0300, Mika Westerberg wrote:
+> Titan Ridge devices and newer need an additional connection manager
+> handshake in order to do proper Display Port tunneling so implement it
+> here.
+> 
+> Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+> ---
+>  drivers/thunderbolt/tb_regs.h |  3 +++
+>  drivers/thunderbolt/tunnel.c  | 44 +++++++++++++++++++++++++++++++++++
+>  2 files changed, 47 insertions(+)
+> 
+> diff --git a/drivers/thunderbolt/tb_regs.h b/drivers/thunderbolt/tb_regs.h
+> index 3a39490a954b..8d11b4a2d552 100644
+> --- a/drivers/thunderbolt/tb_regs.h
+> +++ b/drivers/thunderbolt/tb_regs.h
+> @@ -252,6 +252,9 @@ struct tb_regs_port_header {
+>  #define ADP_DP_CS_3_HDPC			BIT(9)
+>  #define DP_LOCAL_CAP				0x04
+>  #define DP_REMOTE_CAP				0x05
+> +#define DP_STATUS_CTRL				0x06
+> +#define DP_STATUS_CTRL_CMHS			BIT(25)
+> +#define DP_STATUS_CTRL_UF			BIT(26)
+>  
+>  /* PCIe adapter registers */
+>  #define ADP_PCIE_CS_0				0x00
+> diff --git a/drivers/thunderbolt/tunnel.c b/drivers/thunderbolt/tunnel.c
+> index 3353396e0806..369800110e5e 100644
+> --- a/drivers/thunderbolt/tunnel.c
+> +++ b/drivers/thunderbolt/tunnel.c
+> @@ -6,6 +6,7 @@
+>   * Copyright (C) 2019, Intel Corporation
+>   */
+>  
+> +#include <linux/delay.h>
+>  #include <linux/slab.h>
+>  #include <linux/list.h>
+>  
+> @@ -242,6 +243,41 @@ struct tb_tunnel *tb_tunnel_alloc_pci(struct tb *tb, struct tb_port *up,
+>  	return tunnel;
+>  }
+>  
+> +static int tb_dp_cm_handshake(struct tb_port *in, struct tb_port *out)
+> +{
+> +	int timeout = 10;
+> +	u32 val;
+> +	int ret;
+> +
+> +	/* Both ends need to support this */
+> +	if (!tb_switch_is_tr(in->sw) || !tb_switch_is_tr(out->sw))
+> +		return 0;
 
-That feature is missed on KVM, add a new parameter "nopvspin" to disable
-PV spinlocks for KVM guest.
+So if the ends are both "Titan Ridge", matches your changelog text, but
+where is the "and newer" comment being checked here?
 
-This new parameter is also used to replace "xen_nopvspin" and
-"hv_nopvspin".
+thanks,
 
-The global variable pvspin isn't defined as __initdata as it's used at
-runtime by XEN guest.
-
-Signed-off-by: Zhenzhong Duan <zhenzhong.duan@oracle.com>
-Cc: Jonathan Corbet <corbet@lwn.net>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: Borislav Petkov <bp@alien8.de>
-Cc: "H. Peter Anvin" <hpa@zytor.com>
-Cc: Paolo Bonzini <pbonzini@redhat.com>
-Cc: Radim Krcmar <rkrcmar@redhat.com>
-Cc: Sean Christopherson <sean.j.christopherson@intel.com>
-Cc: Vitaly Kuznetsov <vkuznets@redhat.com>
-Cc: Wanpeng Li <wanpengli@tencent.com>
-Cc: Jim Mattson <jmattson@google.com>
-Cc: Joerg Roedel <joro@8bytes.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Will Deacon <will@kernel.org>
----
- Documentation/admin-guide/kernel-parameters.txt | 4 ++++
- arch/x86/include/asm/qspinlock.h                | 1 +
- arch/x86/kernel/kvm.c                           | 7 +++++++
- kernel/locking/qspinlock.c                      | 7 +++++++
- 4 files changed, 19 insertions(+)
-
-diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
-index c7ac2f3..4b956d8 100644
---- a/Documentation/admin-guide/kernel-parameters.txt
-+++ b/Documentation/admin-guide/kernel-parameters.txt
-@@ -5330,6 +5330,10 @@
- 			as generic guest with no PV drivers. Currently support
- 			XEN HVM, KVM, HYPER_V and VMWARE guest.
- 
-+	nopvspin	[X86,KVM] Disables the qspinlock slow path
-+			using PV optimizations which allow the hypervisor to
-+			'idle' the guest on lock contention.
-+
- 	xirc2ps_cs=	[NET,PCMCIA]
- 			Format:
- 			<irq>,<irq_mask>,<io>,<full_duplex>,<do_sound>,<lockup_hack>[,<irq2>[,<irq3>[,<irq4>]]]
-diff --git a/arch/x86/include/asm/qspinlock.h b/arch/x86/include/asm/qspinlock.h
-index 444d6fd..34a4484 100644
---- a/arch/x86/include/asm/qspinlock.h
-+++ b/arch/x86/include/asm/qspinlock.h
-@@ -32,6 +32,7 @@ static __always_inline u32 queued_fetch_set_pending_acquire(struct qspinlock *lo
- extern void __pv_init_lock_hash(void);
- extern void __pv_queued_spin_lock_slowpath(struct qspinlock *lock, u32 val);
- extern void __raw_callee_save___pv_queued_spin_unlock(struct qspinlock *lock);
-+extern bool pvspin;
- 
- #define	queued_spin_unlock queued_spin_unlock
- /**
-diff --git a/arch/x86/kernel/kvm.c b/arch/x86/kernel/kvm.c
-index e820568..a4f108d 100644
---- a/arch/x86/kernel/kvm.c
-+++ b/arch/x86/kernel/kvm.c
-@@ -842,6 +842,13 @@ void __init kvm_spinlock_init(void)
- 	if (num_possible_cpus() == 1)
- 		return;
- 
-+	if (!pvspin) {
-+		pr_info("PV spinlocks disabled\n");
-+		static_branch_disable(&virt_spin_lock_key);
-+		return;
-+	}
-+	pr_info("PV spinlocks enabled\n");
-+
- 	__pv_init_lock_hash();
- 	pv_ops.lock.queued_spin_lock_slowpath = __pv_queued_spin_lock_slowpath;
- 	pv_ops.lock.queued_spin_unlock =
-diff --git a/kernel/locking/qspinlock.c b/kernel/locking/qspinlock.c
-index 2473f10..945b510 100644
---- a/kernel/locking/qspinlock.c
-+++ b/kernel/locking/qspinlock.c
-@@ -580,4 +580,11 @@ void queued_spin_lock_slowpath(struct qspinlock *lock, u32 val)
- #include "qspinlock_paravirt.h"
- #include "qspinlock.c"
- 
-+bool pvspin = true;
-+static __init int parse_nopvspin(char *arg)
-+{
-+	pvspin = false;
-+	return 0;
-+}
-+early_param("nopvspin", parse_nopvspin);
- #endif
--- 
-1.8.3.1
-
+greg k-h
