@@ -6,149 +6,149 @@ X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C8497C352AA
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 07:41:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 61C3FFA373A
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 07:57:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9A75D20815
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 07:41:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4297F2190F
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 07:57:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733114AbfJAHlL (ORCPT
+        id S1731325AbfJAH5J (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Oct 2019 03:41:11 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:54480 "EHLO mx1.redhat.com"
+        Tue, 1 Oct 2019 03:57:09 -0400
+Received: from mga17.intel.com ([192.55.52.151]:10537 "EHLO mga17.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728249AbfJAHlL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Oct 2019 03:41:11 -0400
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 7969B308FBAC;
-        Tue,  1 Oct 2019 07:41:10 +0000 (UTC)
-Received: from [10.36.117.182] (ovpn-117-182.ams2.redhat.com [10.36.117.182])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 6D75D60623;
-        Tue,  1 Oct 2019 07:41:08 +0000 (UTC)
-Subject: Re: [PATCH v6 1/1] memory_hotplug: Add a bounds check to __add_pages
-To:     Alastair D'Silva <alastair@au1.ibm.com>, alastair@d-silva.org
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Oscar Salvador <osalvador@suse.de>,
-        Michal Hocko <mhocko@suse.com>,
-        Pavel Tatashin <pasha.tatashin@soleen.com>,
-        Dan Williams <dan.j.williams@intel.com>, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org
-References: <20190930062347.23620-1-alastair@au1.ibm.com>
- <20190930062347.23620-2-alastair@au1.ibm.com>
-From:   David Hildenbrand <david@redhat.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
- 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
- SE+xAvmumFBY
-Organization: Red Hat GmbH
-Message-ID: <7c42959d-53fd-3e60-dba8-43c6a4fdd763@redhat.com>
-Date:   Tue, 1 Oct 2019 09:41:07 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        id S1726672AbfJAH5J (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Oct 2019 03:57:09 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 01 Oct 2019 00:57:08 -0700
+X-IronPort-AV: E=Sophos;i="5.64,570,1559545200"; 
+   d="scan'208";a="185104735"
+Received: from paasikivi.fi.intel.com ([10.237.72.42])
+  by orsmga008-auth.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 01 Oct 2019 00:57:06 -0700
+Received: by paasikivi.fi.intel.com (Postfix, from userid 1000)
+        id 62B0521ACC; Tue,  1 Oct 2019 10:57:04 +0300 (EEST)
+Date:   Tue, 1 Oct 2019 10:57:04 +0300
+From:   Sakari Ailus <sakari.ailus@linux.intel.com>
+To:     Benoit Parrot <bparrot@ti.com>
+Cc:     Hans Verkuil <hverkuil@xs4all.nl>, linux-media@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [Patch 1/3] media: ov5640: add PIXEL_RATE control
+Message-ID: <20191001075704.GA5449@paasikivi.fi.intel.com>
+References: <20190925152301.21645-1-bparrot@ti.com>
+ <20190925152301.21645-2-bparrot@ti.com>
 MIME-Version: 1.0
-In-Reply-To: <20190930062347.23620-2-alastair@au1.ibm.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.43]); Tue, 01 Oct 2019 07:41:10 +0000 (UTC)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190925152301.21645-2-bparrot@ti.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 30.09.19 08:23, Alastair D'Silva wrote:
-> From: Alastair D'Silva <alastair@d-silva.org>
+Hi Benoit,
+
+On Wed, Sep 25, 2019 at 10:22:59AM -0500, Benoit Parrot wrote:
+> Add v4l2 controls to report the pixel rates of each mode. This is
+> needed by some CSI2 receiver in order to perform proper DPHY
+> configuration.
 > 
-> On PowerPC, the address ranges allocated to OpenCAPI LPC memory
-> are allocated from firmware. These address ranges may be higher
-> than what older kernels permit, as we increased the maximum
-> permissable address in commit 4ffe713b7587
-> ("powerpc/mm: Increase the max addressable memory to 2PB"). It is
-> possible that the addressable range may change again in the
-> future.
-> 
-> In this scenario, we end up with a bogus section returned from
-> __section_nr (see the discussion on the thread "mm: Trigger bug on
-> if a section is not found in __section_nr").
-> 
-> Adding a check here means that we fail early and have an
-> opportunity to handle the error gracefully, rather than rumbling
-> on and potentially accessing an incorrect section.
-> 
-> Further discussion is also on the thread ("powerpc: Perform a bounds
-> check in arch_add_memory")
-> http://lkml.kernel.org/r/20190827052047.31547-1-alastair@au1.ibm.com
-> 
-> Signed-off-by: Alastair D'Silva <alastair@d-silva.org>
+> Signed-off-by: Benoit Parrot <bparrot@ti.com>
 > ---
->  mm/memory_hotplug.c | 20 ++++++++++++++++++++
->  1 file changed, 20 insertions(+)
+>  drivers/media/i2c/ov5640.c | 25 +++++++++++++++++++++++++
+>  1 file changed, 25 insertions(+)
 > 
-> diff --git a/mm/memory_hotplug.c b/mm/memory_hotplug.c
-> index c73f09913165..a5eddf3c3c1f 100644
-> --- a/mm/memory_hotplug.c
-> +++ b/mm/memory_hotplug.c
-> @@ -278,6 +278,22 @@ static int check_pfn_span(unsigned long pfn, unsigned long nr_pages,
->  	return 0;
->  }
+> diff --git a/drivers/media/i2c/ov5640.c b/drivers/media/i2c/ov5640.c
+> index 500d9bbff10b..c2a44f30d56e 100644
+> --- a/drivers/media/i2c/ov5640.c
+> +++ b/drivers/media/i2c/ov5640.c
+> @@ -193,6 +193,9 @@ struct ov5640_mode_info {
 >  
-> +static int check_hotplug_memory_addressable(unsigned long pfn,
-> +					    unsigned long nr_pages)
-> +{
-> +	const u64 max_addr = PFN_PHYS(pfn + nr_pages) - 1;
+>  struct ov5640_ctrls {
+>  	struct v4l2_ctrl_handler handler;
+> +	struct {
+> +		struct v4l2_ctrl *pixel_rate;
+> +	};
+>  	struct {
+>  		struct v4l2_ctrl *auto_exp;
+>  		struct v4l2_ctrl *exposure;
+> @@ -241,6 +244,7 @@ struct ov5640_dev {
+>  	const struct ov5640_mode_info *last_mode;
+>  	enum ov5640_frame_rate current_fr;
+>  	struct v4l2_fract frame_interval;
+> +	u64 pixel_rate;
+>  
+>  	struct ov5640_ctrls ctrls;
+>  
+> @@ -2202,6 +2206,7 @@ static int ov5640_set_fmt(struct v4l2_subdev *sd,
+>  	const struct ov5640_mode_info *new_mode;
+>  	struct v4l2_mbus_framefmt *mbus_fmt = &format->format;
+>  	struct v4l2_mbus_framefmt *fmt;
+> +	u64 rate;
+>  	int ret;
+>  
+>  	if (format->pad != 0)
+> @@ -2233,6 +2238,12 @@ static int ov5640_set_fmt(struct v4l2_subdev *sd,
+>  	if (mbus_fmt->code != sensor->fmt.code)
+>  		sensor->pending_fmt_change = true;
+>  
+> +	rate = sensor->current_mode->vtot * sensor->current_mode->htot;
+> +	rate *= ov5640_framerates[sensor->current_fr];
+> +	sensor->pixel_rate = rate;
 > +
-> +	if (max_addr >> MAX_PHYSMEM_BITS) {
-> +		const u64 max_allowed = (1ull << (MAX_PHYSMEM_BITS + 1)) - 1;
+> +	__v4l2_ctrl_s_ctrl_int64(sensor->ctrls.pixel_rate,
+> +				 sensor->pixel_rate);
+>  out:
+>  	mutex_unlock(&sensor->lock);
+>  	return ret;
+> @@ -2657,6 +2668,13 @@ static int ov5640_init_controls(struct ov5640_dev *sensor)
+>  	/* we can use our own mutex for the ctrl lock */
+>  	hdl->lock = &sensor->lock;
+>  
+> +	/* Clock related controls */
+> +	ctrls->pixel_rate =
+> +		v4l2_ctrl_new_std(hdl, ops,
+> +				  V4L2_CID_PIXEL_RATE, 0, INT_MAX, 1,
+> +				  55969920);
 
-I'd move that up, next to max_addr.
+Could you calculate this value instead of using a seemingly random number?
 
-Reviewed-by: David Hildenbrand <david@redhat.com>
+> +	ctrls->pixel_rate->flags |= V4L2_CTRL_FLAG_READ_ONLY;
+> +
+>  	/* Auto/manual white balance */
+>  	ctrls->auto_wb = v4l2_ctrl_new_std(hdl, ops,
+>  					   V4L2_CID_AUTO_WHITE_BALANCE,
+> @@ -2782,6 +2800,7 @@ static int ov5640_s_frame_interval(struct v4l2_subdev *sd,
+>  	struct ov5640_dev *sensor = to_ov5640_dev(sd);
+>  	const struct ov5640_mode_info *mode;
+>  	int frame_rate, ret = 0;
+> +	u64 rate;
+>  
+>  	if (fi->pad != 0)
+>  		return -EINVAL;
+> @@ -2816,6 +2835,12 @@ static int ov5640_s_frame_interval(struct v4l2_subdev *sd,
+>  		sensor->frame_interval = fi->interval;
+>  		sensor->current_mode = mode;
+>  		sensor->pending_mode_change = true;
+> +
+> +		rate = sensor->current_mode->vtot * sensor->current_mode->htot;
+> +		rate *= ov5640_framerates[sensor->current_fr];
+> +		sensor->pixel_rate = rate;
+
+I think it'd be better to have a function to calculate the value instead of
+duplicating the code here.
+
+> +		__v4l2_ctrl_s_ctrl_int64(sensor->ctrls.pixel_rate,
+> +					 sensor->pixel_rate);
+>  	}
+>  out:
+>  	mutex_unlock(&sensor->lock);
 
 -- 
+Kind regards,
 
-Thanks,
-
-David / dhildenb
+Sakari Ailus
+sakari.ailus@linux.intel.com
