@@ -2,97 +2,87 @@ Return-Path: <SRS0=YRFP=X2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIM_ADSP_ALL,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2937C352AA
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 15:58:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7121ECE587
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 16:00:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CCE732053B
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 15:58:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7888D2053B
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 16:00:12 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="fXaF52mG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389797AbfJAP6C (ORCPT
+        id S2389805AbfJAQAL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Oct 2019 11:58:02 -0400
-Received: from mail-qt1-f193.google.com ([209.85.160.193]:37738 "EHLO
-        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727236AbfJAP6B (ORCPT
+        Tue, 1 Oct 2019 12:00:11 -0400
+Received: from smtp-fw-6001.amazon.com ([52.95.48.154]:9565 "EHLO
+        smtp-fw-6001.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727398AbfJAQAL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Oct 2019 11:58:01 -0400
-Received: by mail-qt1-f193.google.com with SMTP id l3so22249698qtr.4;
-        Tue, 01 Oct 2019 08:57:59 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=SOSJCMXkn6+n8RHqpUdKI466CjMeIh5mDOaAgCCmVlg=;
-        b=loI2JWR5h5tZIOWBn0DgIw42qDFg7O+mKC6pn7BgO+rP/1pJc57bJEKQf7p7UTi5sU
-         qMOSeXvnRi0NEl1BXjtYRsWkPUxDampw0o0/F2dlpDkudngz4pgVsRw6V3JHGnfLPOeX
-         dVHDlE3aNgQXDjop8kCd44C2hD2kzfy0/G7gbfshX01K2gugBcB5cVwWUQAtzyVd+9qc
-         CKPwy0WnkDd6jyC0IpyK1N/CZttDfs6gG4fTyusRDKtTS7IuSlF61Q0x0uTGQfOkpTVC
-         jtjnFgeCwT0aEYSDvGyZfRfYxl8p+htQSX1pD6+LTgpoTwA8qrh16sB/b8DbSJuZlxlu
-         zr2w==
-X-Gm-Message-State: APjAAAWAMafiW0ZHmntpM+0OTcKT5htfiUltnCJRTBb9bIjtgICkl0cR
-        5nfMOTz4LfEo0vmPgI8UJCJztkX/5A1S7RruBms=
-X-Google-Smtp-Source: APXvYqxDQhvqeIreS0WTIiG2aM/W3oAbsLqBVTy4w3yhOpMo0LHRRJJRgTxpU/lGmDQuUe1Zu70sAjxTPS5wJsH3rvk=
-X-Received: by 2002:a0c:d084:: with SMTP id z4mr25699088qvg.63.1569945479216;
- Tue, 01 Oct 2019 08:57:59 -0700 (PDT)
+        Tue, 1 Oct 2019 12:00:11 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1569945610; x=1601481610;
+  h=from:to:cc:subject:date:message-id:mime-version;
+  bh=qDD5LT8DtwKPIaKWHMsLpUgPzfzI2haoHG8xYLA7T7o=;
+  b=fXaF52mGGeCZLSuVbHEHCld6mDh3UEUdBPxtyRaYYg+vUWtwkk5AQqHn
+   ts3lbm8FdJuQvOLJ+Lz6bctvjS/tB+dyYzFH0My1U48jSdlP1ExRnMkV9
+   n7tAMc1VBu9BADEgPjY0Au7ebcRYY2Ajj00fkM5bFMh8SUbcCLv7d8MrQ
+   8=;
+X-IronPort-AV: E=Sophos;i="5.64,571,1559520000"; 
+   d="scan'208";a="419068076"
+Received: from iad6-co-svc-p1-lb1-vlan3.amazon.com (HELO email-inbound-relay-1d-9ec21598.us-east-1.amazon.com) ([10.124.125.6])
+  by smtp-border-fw-out-6001.iad6.amazon.com with ESMTP; 01 Oct 2019 16:00:08 +0000
+Received: from EX13MTAUWB001.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan3.iad.amazon.com [10.40.159.166])
+        by email-inbound-relay-1d-9ec21598.us-east-1.amazon.com (Postfix) with ESMTPS id C54C4A1CA2;
+        Tue,  1 Oct 2019 16:00:07 +0000 (UTC)
+Received: from EX13D02UWB003.ant.amazon.com (10.43.161.48) by
+ EX13MTAUWB001.ant.amazon.com (10.43.161.249) with Microsoft SMTP Server (TLS)
+ id 15.0.1367.3; Tue, 1 Oct 2019 16:00:07 +0000
+Received: from EX13MTAUWA001.ant.amazon.com (10.43.160.58) by
+ EX13D02UWB003.ant.amazon.com (10.43.161.48) with Microsoft SMTP Server (TLS)
+ id 15.0.1367.3; Tue, 1 Oct 2019 16:00:06 +0000
+Received: from 8c859006a84e.ant.amazon.com (172.26.203.30) by
+ mail-relay.amazon.com (10.43.160.118) with Microsoft SMTP Server id
+ 15.0.1367.3 via Frontend Transport; Tue, 1 Oct 2019 16:00:06 +0000
+From:   Patrick Williams <alpawi@amazon.com>
+CC:     Patrick Williams <alpawi@amazon.com>,
+        Patrick Williams <patrick@stwcx.xyz>,
+        <linux-kernel@vger.kernel.org>, <linux-i2c@vger.kernel.org>,
+        Wolfram Sang <wsa@the-dreams.de>
+Subject: [PATCH 0/2] i2c: pxa: migrate to i2c-core-slave APIs
+Date:   Tue, 1 Oct 2019 10:59:58 -0500
+Message-ID: <20191001160001.2388-1-alpawi@amazon.com>
+X-Mailer: git-send-email 2.17.2 (Apple Git-113)
 MIME-Version: 1.0
-References: <20190930202055.1748710-1-arnd@arndb.de> <8d5d34da-e1f0-1ab5-461e-f3145e52c48a@kernel.dk>
- <623e1d27-d3b1-3241-bfd4-eb94ce70da14@kernel.dk> <CAK8P3a3AAFXNmpQwuirzM+jgEQGj9tMC_5oaSs4CfiEVGmTkZg@mail.gmail.com>
- <ca0a5bbe-c20e-d5be-110e-942c604ad2d7@kernel.dk>
-In-Reply-To: <ca0a5bbe-c20e-d5be-110e-942c604ad2d7@kernel.dk>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Tue, 1 Oct 2019 17:57:42 +0200
-Message-ID: <CAK8P3a19TDk0uo1eu4CcaKHvQCPUJGMjBV8Txtpgvg1ifAgW_A@mail.gmail.com>
-Subject: Re: [PATCH] io_uring: use __kernel_timespec in timeout ABI
-To:     Jens Axboe <axboe@kernel.dk>
-Cc:     y2038 Mailman List <y2038@lists.linaro.org>,
-        Linux API <linux-api@vger.kernel.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        =?UTF-8?Q?Stefan_B=C3=BChler?= <source@stbuehler.de>,
-        Hannes Reinecke <hare@suse.com>,
-        Jackie Liu <liuyun01@kylinos.cn>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Hristo Venev <hristo@venev.name>,
-        linux-block <linux-block@vger.kernel.org>,
-        Linux FS-devel Mailing List <linux-fsdevel@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Oct 1, 2019 at 5:52 PM Jens Axboe <axboe@kernel.dk> wrote:
-> On 10/1/19 9:49 AM, Arnd Bergmann wrote:
-> > On Tue, Oct 1, 2019 at 5:38 PM Jens Axboe <axboe@kernel.dk> wrote:
+i2c-pxa has its own i2c slave APIs rather than using the i2c-core
+APIs.  There are no in-tree drivers currently using this custom
+slave API set.
 
-> > What's wrong with using __kernel_timespec? Just the name?
-> > I suppose liburing could add a macro to give it a different name
-> > for its users.
->
-> Just that it seems I need to make it available through liburing on
-> systems that don't have it yet. Not a big deal, though.
+Migrate the i2c-pxa driver from its own i2c slave APIs to the
+i2c-core slave APIs so that in-tree slave devices can be used with
+the i2c-pxa hardware (ex. i2c-slave-eeprom).
 
-Ah, right. I t would not cover the case of building against kernel
-headers earlier than linux-5.1 but running on a 5.4+ kernel.
+Patrick Williams (2):
+  i2c: pxa: migrate to new i2c_slave APIs
+  i2c: pxa: remove unused i2c-slave APIs
 
-I assumed that that you would require new kernel headers anyway,
-but if you have a copy of the io_uring header, that is not necessary.
+ drivers/i2c/busses/Kconfig            |  1 +
+ drivers/i2c/busses/i2c-pxa.c          | 75 +++++++++++++++++++++------
+ include/linux/i2c-pxa.h               | 18 -------
+ include/linux/platform_data/i2c-pxa.h |  4 --
+ 4 files changed, 61 insertions(+), 37 deletions(-)
+ delete mode 100644 include/linux/i2c-pxa.h
 
-> One thing that struck me about this approach - we then lose the ability to
-> differentiate between "don't want a timed timeout" with ts == NULL, vs
-> tv_sec and tv_nsec both being 0.
+-- 
+2.17.2 (Apple Git-113)
 
-You could always define a special constant such as
-'#define IO_URING_TIMEOUT_NEVER -1ull' if you want to
-support for 'never wait if it's not already done' and 'wait indefinitely'.
-
-> I think I'll stuck with that you had and just use __kernel_timespec in
-> liburing.
-
-Ok.
-
-       Arnd
