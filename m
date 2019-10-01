@@ -2,175 +2,145 @@ Return-Path: <SRS0=YRFP=X2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F411C352AA
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 09:34:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA350C352AA
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 09:35:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 68FA8215EA
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 09:34:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 95972215EA
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 09:35:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727690AbfJAJeb (ORCPT
+        id S1729282AbfJAJf2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Oct 2019 05:34:31 -0400
-Received: from mail-out.m-online.net ([212.18.0.10]:58599 "EHLO
-        mail-out.m-online.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726132AbfJAJeb (ORCPT
+        Tue, 1 Oct 2019 05:35:28 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:54658 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727957AbfJAJf2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Oct 2019 05:34:31 -0400
-Received: from frontend01.mail.m-online.net (unknown [192.168.8.182])
-        by mail-out.m-online.net (Postfix) with ESMTP id 46jDcg6Kl0z1rh1N;
-        Tue,  1 Oct 2019 11:34:27 +0200 (CEST)
-Received: from localhost (dynscan1.mnet-online.de [192.168.6.70])
-        by mail.m-online.net (Postfix) with ESMTP id 46jDcg5Tytz1qqkg;
-        Tue,  1 Oct 2019 11:34:27 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at mnet-online.de
-Received: from mail.mnet-online.de ([192.168.8.182])
-        by localhost (dynscan1.mail.m-online.net [192.168.6.70]) (amavisd-new, port 10024)
-        with ESMTP id tsy_TKrL4bHL; Tue,  1 Oct 2019 11:34:26 +0200 (CEST)
-X-Auth-Info: wHdtrZ7eEaIvMY+PQWDo/jAgayEP2yvkEtcM0nBf1Sc=
-Received: from jawa (85-222-111-42.dynamic.chello.pl [85.222.111.42])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.mnet-online.de (Postfix) with ESMTPSA;
-        Tue,  1 Oct 2019 11:34:26 +0200 (CEST)
-Date:   Tue, 1 Oct 2019 11:34:20 +0200
-From:   Lukasz Majewski <lukma@denx.de>
-To:     Geert Uytterhoeven <geert@linux-m68k.org>
-Cc:     Mark Brown <broonie@kernel.org>,
-        Colin Ian King <colin.king@canonical.com>,
-        linux-spi <linux-spi@vger.kernel.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        kbuild test robot <lkp@intel.com>,
-        Julia Lawall <julia.lawall@lip6.fr>,
-        Dan Carpenter <dan.carpenter@oracle.com>
-Subject: Re: [PATCH] spi: Avoid calling spi_slave_abort() with kfreed spidev
-Message-ID: <20191001113420.032dbfef@jawa>
-In-Reply-To: <CAMuHMdWHTaPkzTdzz-j1rFeT=aAEG+J46fgKiPYrXoAR_DTvtQ@mail.gmail.com>
-References: <20191001090657.25721-1-lukma@denx.de>
-        <CAMuHMdWHTaPkzTdzz-j1rFeT=aAEG+J46fgKiPYrXoAR_DTvtQ@mail.gmail.com>
-Organization: denx.de
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Tue, 1 Oct 2019 05:35:28 -0400
+Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tip-bot2@linutronix.de>)
+        id 1iFEYl-0006ps-V0; Tue, 01 Oct 2019 11:35:08 +0200
+Received: from [127.0.1.1] (localhost [IPv6:::1])
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 4930A1C03AB;
+        Tue,  1 Oct 2019 11:35:07 +0200 (CEST)
+Date:   Tue, 01 Oct 2019 09:35:07 -0000
+From:   "tip-bot2 for Bruce Ashfield" <tip-bot2@linutronix.de>
+Reply-to: linux-kernel@vger.kernel.org
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip: x86/build] arch/x86/boot: Use prefix map to avoid embedded paths
+Cc:     Bruce Ashfield <bruce.ashfield@gmail.com>,
+        Ross Burton <ross.burton@intel.com>,
+        Borislav Petkov <bp@suse.de>, "H. Peter Anvin" <hpa@zytor.com>,
+        George Rimar <grimar@accesssoftek.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "x86-ml" <x86@kernel.org>, Ingo Molnar <mingo@kernel.org>,
+        Borislav Petkov <bp@alien8.de>, linux-kernel@vger.kernel.org
+In-Reply-To: <20190926093226.8568-1-ross.burton@intel.com>
+References: <20190926093226.8568-1-ross.burton@intel.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
- boundary="Sig_/_NuMKD1CeMwaipxVqIJqYmB"; protocol="application/pgp-signature"
+Message-ID: <156992250722.9978.12089821293615435249.tip-bot2@tip-bot2>
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot2.linutronix.de>
+Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/_NuMKD1CeMwaipxVqIJqYmB
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+The following commit has been merged into the x86/build branch of tip:
 
-Hi Geert,
+Commit-ID:     9e2276fa6eb39817dcc4cda415f0199fb7016b37
+Gitweb:        https://git.kernel.org/tip/9e2276fa6eb39817dcc4cda415f0199fb7016b37
+Author:        Bruce Ashfield <bruce.ashfield@gmail.com>
+AuthorDate:    Thu, 26 Sep 2019 10:32:26 +01:00
+Committer:     Borislav Petkov <bp@suse.de>
+CommitterDate: Tue, 01 Oct 2019 11:19:40 +02:00
 
-Thank you for a very prompt response.
+arch/x86/boot: Use prefix map to avoid embedded paths
 
-> Hi Lukasz,
->=20
-> On Tue, Oct 1, 2019 at 11:07 AM Lukasz Majewski <lukma@denx.de> wrote:
-> > Call spi_slave_abort() only when the spidev->spi is !NULL and the
-> > structure hasn't already been kfreed.
-> >
-> > Reported-by: kbuild test robot <lkp@intel.com>
-> > Reported-by: Julia Lawall <julia.lawall@lip6.fr>
-> > Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
-> > Signed-off-by: Lukasz Majewski <lukma@denx.de> =20
->=20
-> Thanks for your patch!
->=20
-> > --- a/drivers/spi/spidev.c
-> > +++ b/drivers/spi/spidev.c
-> > @@ -600,15 +600,16 @@ static int spidev_open(struct inode *inode,
-> > struct file *filp) static int spidev_release(struct inode *inode,
-> > struct file *filp) {
-> >         struct spidev_data      *spidev;
-> > +       int dofree; =20
->=20
-> bool?
+It was observed that the kernel embeds the absolute build path in the
+x86 boot image when the __FILE__ macro is expanded.
 
-It may be bool, yes - I took this "int" from the original code (further
-down in the patch), as I've moved it a bit up.
+> From https://bugzilla.yoctoproject.org/show_bug.cgi?id=13458:
 
->=20
-> >
-> >         mutex_lock(&device_list_lock);
-> >         spidev =3D filp->private_data;
-> >         filp->private_data =3D NULL;
-> > +       dofree =3D 0; =20
->=20
-> Why not initialize it at declaration time?
+  If you turn on the buildpaths QA test, or try a reproducible build, you
+  discover that the kernel image contains build paths.
 
-I wanted to have it protected by mutex_lock() above. However, this also
-shall work with the initialization at declaration time.
+  $ strings bzImage-5.0.19-yocto-standard |grep tmp/
+  out of pgt_buf in
+  /data/poky-tmp/reproducible/tmp/work-shared/qemux86-64/kernel-source/arch/x86/boot/compressed/kaslr_64.c!?
 
->=20
-> >
-> >         /* last close? */
-> >         spidev->users--;
-> >         if (!spidev->users) {
-> > -               int             dofree;
-> >
-> >                 kfree(spidev->tx_buffer);
-> >                 spidev->tx_buffer =3D NULL;
-> > @@ -628,7 +629,8 @@ static int spidev_release(struct inode *inode,
-> > struct file *filp) kfree(spidev);
-> >         }
-> >  #ifdef CONFIG_SPI_SLAVE
-> > -       spi_slave_abort(spidev->spi);
-> > +       if (!dofree)
-> > +               spi_slave_abort(spidev->spi); =20
->=20
-> Can spidev->spi be NULL, if spidev->users !=3D 0?
+  But what's this in the top-level Makefile:
 
-No, it shouldn't be.
+  $ git grep prefix-map
+  Makefile:KBUILD_CFLAGS  += $(call
+  cc-option,-fmacro-prefix-map=$(srctree)/=)
 
-The "dofree" is only set to true (the spidev->spi =3D=3D NULL condition is
-checked) if there are no references (spidev->users =3D=3D 0).
+  So the __FILE__ shouldn't be using the full path.  However
+  arch/x86/boot/compressed/Makefile has this:
 
-The if (!dofree) prevents from calling spi_slave_abort() when
-spidev->spi =3D=3D NULL and spidev is kfree'd.
+  KBUILD_CFLAGS := -m$(BITS) -O2
 
->=20
-> >  #endif
-> >         mutex_unlock(&device_list_lock); =20
->=20
-> Gr{oetje,eeting}s,
->=20
->                         Geert
->=20
+  So that clears KBUILD_FLAGS, removing the -fmacro-prefix-map option.
 
+Use -fmacro-prefix-map to have relative paths in the boot image too.
 
+ [ bp: Massage commit message and put the KBUILD_CFLAGS addition in
+   ..boot/Makefile after the KBUILD_AFLAGS assignment because gas
+   doesn't support -fmacro-prefix-map. ]
 
+Signed-off-by: Bruce Ashfield <bruce.ashfield@gmail.com>
+Signed-off-by: Ross Burton <ross.burton@intel.com>
+Signed-off-by: Borislav Petkov <bp@suse.de>
+Cc: "H. Peter Anvin" <hpa@zytor.com>
+Cc: George Rimar <grimar@accesssoftek.com>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Masahiro Yamada <yamada.masahiro@socionext.com>
+Cc: Nathan Chancellor <natechancellor@gmail.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: x86-ml <x86@kernel.org>
+Link: https://lkml.kernel.org/r/20190926093226.8568-1-ross.burton@intel.com
+Link: https://bugzilla.kernel.org/show_bug.cgi?id=204333
+---
+ arch/x86/boot/Makefile            | 1 +
+ arch/x86/boot/compressed/Makefile | 1 +
+ 2 files changed, 2 insertions(+)
 
-Best regards,
-
-Lukasz Majewski
-
---
-
-DENX Software Engineering GmbH,      Managing Director: Wolfgang Denk
-HRB 165235 Munich, Office: Kirchenstr.5, D-82194 Groebenzell, Germany
-Phone: (+49)-8142-66989-59 Fax: (+49)-8142-66989-80 Email: lukma@denx.de
-
---Sig_/_NuMKD1CeMwaipxVqIJqYmB
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCgAdFiEEgAyFJ+N6uu6+XupJAR8vZIA0zr0FAl2THZwACgkQAR8vZIA0
-zr2dgAgA1S92SIco0K0aIQNe2B7Yy06PATAG039pcQIraWn4LPI1Ya7e7bwWJKHL
-cB7ovrdc/ej+hoi2qfL2Pp0jyGeGAuysIRq2XRrP7O+ApaIwJuMU3rjQdsMDA/tD
-z6grGAizrX+KnrpQRBIAVp+YDsvf34MEvQbPAefTaS8CQ9ynGrAV5SOBCcTEG5+o
-PpK6WHAC8jstOjlObA5vzlR6vZUl17s5WulIJTUIHC267fFcMhiO8XRRQuvrWt+0
-LiqdKUSWLexvX78BuJtcg9h+2FFDQMZU0ag2YSwpg5dY9wVDjiIq/ntgYVRBm3nA
-pIVLYoErJUNMh9NEdFr540X8x5aE8A==
-=BMNC
------END PGP SIGNATURE-----
-
---Sig_/_NuMKD1CeMwaipxVqIJqYmB--
+diff --git a/arch/x86/boot/Makefile b/arch/x86/boot/Makefile
+index e2839b5..3e9f554 100644
+--- a/arch/x86/boot/Makefile
++++ b/arch/x86/boot/Makefile
+@@ -67,6 +67,7 @@ clean-files += cpustr.h
+ 
+ KBUILD_CFLAGS	:= $(REALMODE_CFLAGS) -D_SETUP
+ KBUILD_AFLAGS	:= $(KBUILD_CFLAGS) -D__ASSEMBLY__
++KBUILD_CFLAGS	+= $(call cc-option,-fmacro-prefix-map=$(srctree)/=)
+ GCOV_PROFILE := n
+ UBSAN_SANITIZE := n
+ 
+diff --git a/arch/x86/boot/compressed/Makefile b/arch/x86/boot/compressed/Makefile
+index 6b84afd..b246f18 100644
+--- a/arch/x86/boot/compressed/Makefile
++++ b/arch/x86/boot/compressed/Makefile
+@@ -38,6 +38,7 @@ KBUILD_CFLAGS += $(call cc-option,-fno-stack-protector)
+ KBUILD_CFLAGS += $(call cc-disable-warning, address-of-packed-member)
+ KBUILD_CFLAGS += $(call cc-disable-warning, gnu)
+ KBUILD_CFLAGS += -Wno-pointer-sign
++KBUILD_CFLAGS += $(call cc-option,-fmacro-prefix-map=$(srctree)/=)
+ 
+ KBUILD_AFLAGS  := $(KBUILD_CFLAGS) -D__ASSEMBLY__
+ GCOV_PROFILE := n
