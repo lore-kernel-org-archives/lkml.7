@@ -2,133 +2,117 @@ Return-Path: <SRS0=YRFP=X2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A76B8C352AA
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 09:03:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C0FD8ECE589
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 09:04:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8A2A521872
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 09:03:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 98D20218DE
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 09:04:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1569920644;
+	bh=ATnyEFPDPF0YF2jKwwMipduqmTRVvuPs9YSLpUGcY1M=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Ac/oOc6rEN34xd54ggiQlWqKLpvdaTMqGkpfK3tLZ7vdoQM++gXBOvGThj2SFyBxR
+	 UY6rWG0RhxaIR6tXxtD2AVIPCbHmUAqXxLM0jZXidEnXNVDzuAR6OoSJaZoe5V4urX
+	 W8wQuEyWM48A1jTDMCxAtVn88+mkElKlF81UdnyQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733285AbfJAJDu (ORCPT
+        id S1733303AbfJAJEE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Oct 2019 05:03:50 -0400
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:34598 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726568AbfJAJDt (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Oct 2019 05:03:49 -0400
-Received: by mail-ot1-f66.google.com with SMTP id m19so10913880otp.1;
-        Tue, 01 Oct 2019 02:03:48 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=tHb/q0D5mq2W+1z309ghRX/uOTtJacVT4nymLRBbTcY=;
-        b=htkYd76D3kiDKEcy1bWVrY8+LBE/JTkBI+mpbmAmo2K653WzDQPZopJzPaUzyvcsD8
-         PUcIsjBHr4bk3NFJ5aX9ecsYZIv44d0o1Kl3tC6e6kB+LWm2ydN6iL7CNkI3TsOpGpB5
-         QY1OHSFgiZmHAnudnKRjUyL4CU27rK2x+dLLeeG1Eu19JwE06buCpYwGOrXicxUNlZZv
-         ttrROxujt0T89cVt+1FEVtNTp2GqwqN01vxkFoFknhLC+bA7Qb297JsqydOuxaKuJsM5
-         v93nTjBmphU/RKczONQdAaFyp8Fucjeq3t7XyEDX2qk3aNsaGSYw36250H48rEzIDLid
-         4G2Q==
-X-Gm-Message-State: APjAAAWlkXeMrrIqMKKayfl1MDbu8F7jjCsSTihgEGNfhmXYf6NwYbgE
-        uT7g7pqxhSt5IdIZRwCnyl3+jZUMhf8pa4tqo7s=
-X-Google-Smtp-Source: APXvYqyt8Fr5MNj8xgi9zNhfzNfGel2OzKPctcEPWiUOWLO4+kzE7HEg5SIyhaqF7N+eaUzd0/bjIui+DRWnMOK6Apw=
-X-Received: by 2002:a9d:404d:: with SMTP id o13mr17494480oti.39.1569920628345;
- Tue, 01 Oct 2019 02:03:48 -0700 (PDT)
+        Tue, 1 Oct 2019 05:04:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41952 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1733273AbfJAJED (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Oct 2019 05:04:03 -0400
+Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2370821872;
+        Tue,  1 Oct 2019 09:03:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1569920642;
+        bh=ATnyEFPDPF0YF2jKwwMipduqmTRVvuPs9YSLpUGcY1M=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=o2Bouksca4/Ysk5lJ7WWmFPnxcT3xv7UFw5yLaQ6XaZLpDW4shGpVV1cbBrIufFvS
+         6G73iE8E37vEYzs8FKpN4ItDwwuuQMYS8tsa0Q5eVhMYrH/69oeEWI17IWCFoIt1EW
+         Qo7/75w2RFkOYv3E5+EZepM3CPEZu4zv2gF9FNu4=
+Date:   Tue, 1 Oct 2019 10:03:56 +0100
+From:   Will Deacon <will@kernel.org>
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Rick Edgecombe <rick.p.edgecombe@intel.com>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>, linux-arch@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, linux-alpha@vger.kernel.org,
+        linux-ia64@vger.kernel.org, linux-s390@vger.kernel.org,
+        linux-c6x-dev@linux-c6x.org,
+        Yoshinori Sato <ysato@users.sourceforge.jp>,
+        Michal Simek <monstr@monstr.eu>, linux-parisc@vger.kernel.org,
+        linux-xtensa@linux-xtensa.org, x86@kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 18/29] arm64: Move EXCEPTION_TABLE to RO_DATA segment
+Message-ID: <20191001090355.blnaqlf4rfzucpb2@willie-the-truck>
+References: <20190926175602.33098-1-keescook@chromium.org>
+ <20190926175602.33098-19-keescook@chromium.org>
 MIME-Version: 1.0
-References: <20190812150452.27983-1-ard.biesheuvel@linaro.org>
- <20190812150452.27983-5-ard.biesheuvel@linaro.org> <CAMuHMdXY5UH4KhcaNVuxa8-+GN-4bjyvCd0wzPYuFBY5Ch=fNA@mail.gmail.com>
- <CAKv+Gu-KPypju6roQaVKP0DHE3aZijVVqLGwNyhiRSNqn1r6-w@mail.gmail.com>
-In-Reply-To: <CAKv+Gu-KPypju6roQaVKP0DHE3aZijVVqLGwNyhiRSNqn1r6-w@mail.gmail.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Tue, 1 Oct 2019 11:03:37 +0200
-Message-ID: <CAMuHMdV9m+Dbch46cVNqtn4cyB74qgHa18Qcm=HQv7Wx1rk==w@mail.gmail.com>
-Subject: Re: [PATCH 4/5] efi: Export Runtime Configuration Interface table to sysfs
-To:     Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Cc:     Narendra K <Narendra.K@dell.com>,
-        linux-efi <linux-efi@vger.kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        James Morse <james.morse@arm.com>,
-        Mario Limonciello <mario.limonciello@dell.com>,
-        Xiaofei Tan <tanxiaofei@huawei.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190926175602.33098-19-keescook@chromium.org>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Ard,
+Hi Kees,
 
-On Tue, Oct 1, 2019 at 10:54 AM Ard Biesheuvel
-<ard.biesheuvel@linaro.org> wrote:
-> On Tue, 1 Oct 2019 at 10:51, Geert Uytterhoeven <geert@linux-m68k.org> wrote:
-> > On Mon, Aug 12, 2019 at 5:07 PM Ard Biesheuvel
-> > <ard.biesheuvel@linaro.org> wrote:
-> > > From: Narendra K <Narendra.K@dell.com>
-> > >
-> > > System firmware advertises the address of the 'Runtime
-> > > Configuration Interface table version 2 (RCI2)' via
-> > > an EFI Configuration Table entry. This code retrieves the RCI2
-> > > table from the address and exports it to sysfs as a binary
-> > > attribute 'rci2' under /sys/firmware/efi/tables directory.
-> > > The approach adopted is similar to the attribute 'DMI' under
-> > > /sys/firmware/dmi/tables.
-> > >
-> > > RCI2 table contains BIOS HII in XML format and is used to populate
-> > > BIOS setup page in Dell EMC OpenManage Server Administrator tool.
-> > > The BIOS setup page contains BIOS tokens which can be configured.
-> > >
-> > > Signed-off-by: Narendra K <Narendra.K@dell.com>
-> > > Reviewed-by: Mario Limonciello <mario.limonciello@dell.com>
-> > > Signed-off-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
-> >
-> > Thanks, this is now commit 1c5fecb61255aa12 ("efi: Export Runtime
-> > Configuration Interface table to sysfs").
-> >
-> > > --- a/drivers/firmware/efi/Kconfig
-> > > +++ b/drivers/firmware/efi/Kconfig
-> > > @@ -180,6 +180,19 @@ config RESET_ATTACK_MITIGATION
-> > >           have been evicted, since otherwise it will trigger even on clean
-> > >           reboots.
-> > >
-> > > +config EFI_RCI2_TABLE
-> > > +       bool "EFI Runtime Configuration Interface Table Version 2 Support"
-> > > +       help
-> > > +         Displays the content of the Runtime Configuration Interface
-> > > +         Table version 2 on Dell EMC PowerEdge systems as a binary
-> > > +         attribute 'rci2' under /sys/firmware/efi/tables directory.
-> > > +
-> > > +         RCI2 table contains BIOS HII in XML format and is used to populate
-> > > +         BIOS setup page in Dell EMC OpenManage Server Administrator tool.
-> > > +         The BIOS setup page contains BIOS tokens which can be configured.
-> > > +
-> > > +         Say Y here for Dell EMC PowerEdge systems.
-> >
-> > A quick Google search tells me these are Intel Xeon.
-> > Are arm/arm64/ia64 variants available, too?
-> > If not, this should be protected by "depends on x86" ("|| COMPILE_TEST"?).
->
-> The code in question is entirely architecture agnostic, and defaults
-> to 'n', so I am not convinced this is needed. (It came up in the
-> review as well)
+On Thu, Sep 26, 2019 at 10:55:51AM -0700, Kees Cook wrote:
+> The EXCEPTION_TABLE is read-only, so collapse it into RO_DATA.
+> 
+> Signed-off-by: Kees Cook <keescook@chromium.org>
+> ---
+>  arch/arm64/kernel/vmlinux.lds.S | 6 ++++--
+>  1 file changed, 4 insertions(+), 2 deletions(-)
+> 
+> diff --git a/arch/arm64/kernel/vmlinux.lds.S b/arch/arm64/kernel/vmlinux.lds.S
+> index 81d94e371c95..c6ba2eee0ee8 100644
+> --- a/arch/arm64/kernel/vmlinux.lds.S
+> +++ b/arch/arm64/kernel/vmlinux.lds.S
+> @@ -5,6 +5,8 @@
+>   * Written by Martin Mares <mj@atrey.karlin.mff.cuni.cz>
+>   */
+>  
+> +#define RO_DATA_EXCEPTION_TABLE_ALIGN	8
+> +
+>  #include <asm-generic/vmlinux.lds.h>
+>  #include <asm/cache.h>
+>  #include <asm/kernel-pgtable.h>
+> @@ -135,8 +137,8 @@ SECTIONS
+>  	. = ALIGN(SEGMENT_ALIGN);
+>  	_etext = .;			/* End of text section */
+>  
+> -	RO_DATA(PAGE_SIZE)		/* everything from this point to     */
+> -	EXCEPTION_TABLE(8)		/* __init_begin will be marked RO NX */
+> +	/* everything from this point to __init_begin will be marked RO NX */
+> +	RO_DATA(PAGE_SIZE)
+>  
+>  	. = ALIGN(PAGE_SIZE);
 
-"make oldconfig" still asks me the question on e.g. arm64, where it is
-irrelevant, until arm64 variants of the hardware show up.
+Do you reckon it would be worth merging this last ALIGN directive into the
+RO_DATA definition too? Given that we want to map the thing read-only, it
+really has to be aligned either side.
 
-So IMHO it should have "depends on X86 || COMPILE_TEST".
+Anyway, that's only a nit, so:
 
-Gr{oetje,eeting}s,
+Acked-by: Will Deacon <will@kernel.org>
 
-                        Geert
+Will
 
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+P.S. Please CC the arm64 maintainers on arm64 patches -- I nearly missed
+this one!
