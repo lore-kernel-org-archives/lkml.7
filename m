@@ -2,134 +2,269 @@ Return-Path: <SRS0=YRFP=X2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B541C352AA
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 21:17:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1AF0C352AA
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 21:19:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1E26321783
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 21:17:47 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=victronenergy.com header.i=@victronenergy.com header.b="OBGRDUKO"
+	by mail.kernel.org (Postfix) with ESMTP id 80FFE21783
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 21:19:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727730AbfJAVRq (ORCPT
+        id S1727740AbfJAVT2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Oct 2019 17:17:46 -0400
-Received: from mail-eopbgr60124.outbound.protection.outlook.com ([40.107.6.124]:42755
-        "EHLO EUR04-DB3-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726681AbfJAVRp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Oct 2019 17:17:45 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=NiBpETAOBqpSTBWjLVYdj2+OHEjZk69x5g15iPq5ADKixIr1Xt5PeuKdDTdA4BvVGXSAe8ABGUBLBpEYMBqonCGt98lOQ6PzgIsCu9XjsrhU6TF9RYxEVy3ykIw8XSTVoVh3zDnGxqbR2iTLgf3iMLWJYQrmR4Dxu8DIFsjmQnbRHqYUXyUo1d4t2K2YBeACdqNOAQ2GTtDRzZ/X2T005KeqHKE3ab1VdgB7AwYmTkgDD3NvYkKVvr02tzGh5lhr9NskyMsA1AmHQq54VG2zX55jQuW/q1d8SVPiim0sKkg4ZQWJhhPcAQjP19kXj91XcqkOglNhWLJyXOR29GiSdA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=iZQMoEdwZW9fbH8RS0CdA4ktON/JljHylgfHUJi0U/A=;
- b=fRROq4FheC0eBt7eEhyoJ3X5S9cw8zVy+ajpWBrbC+SopjDFbAcfZDyu5KeJpnhf0fZ7RrABvGggoLHG3qrXi/LADE7PFj3PTSLxWnpwv0djCEWa2eTnxGjj/5Dh7yjr1mIU2Z70lpifPIdzztu89dSNaNy8du76qaik5tT+bKhDfASnENjfpwQblI8pWN1OA5FNq5RSTI/0Wq4O2/xQIvIXXx6KQF2PPNGskgozxoHbiNrZf7r4ALiecEvlISmWbzRdl3cZ2iryIV04zRIpH2fXqRnV57DlWUYUcO39iM3Og9f4FlVw6517g3JWCIdWRKVw7hK4c80/fnLvHzZung==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=victronenergy.com; dmarc=pass action=none
- header.from=victronenergy.com; dkim=pass header.d=victronenergy.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=victronenergy.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=iZQMoEdwZW9fbH8RS0CdA4ktON/JljHylgfHUJi0U/A=;
- b=OBGRDUKOLl7rAMXm5o9IU3KUBAiobamK25F/k34HufZjCSn6QvXOPUW+pZXLJX3APZuxblFRWf9NsINdHkzM4js3io9/VXtMiw1N03prgYT8FswFNTQTG6GGKwZ8xJmXUiYaMIR9PxDedhyMT54JlUSYxwa3w4oHLdBm7jsVHm4=
-Received: from VI1PR0701MB2623.eurprd07.prod.outlook.com (10.173.82.19) by
- VI1PR0701MB2173.eurprd07.prod.outlook.com (10.169.135.6) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2327.9; Tue, 1 Oct 2019 21:17:01 +0000
-Received: from VI1PR0701MB2623.eurprd07.prod.outlook.com
- ([fe80::dc92:2e0d:561a:fbb1]) by VI1PR0701MB2623.eurprd07.prod.outlook.com
- ([fe80::dc92:2e0d:561a:fbb1%8]) with mapi id 15.20.2305.017; Tue, 1 Oct 2019
- 21:17:01 +0000
-From:   Jeroen Hofstee <jhofstee@victronenergy.com>
-To:     Marc Kleine-Budde <mkl@pengutronix.de>,
-        "linux-can@vger.kernel.org" <linux-can@vger.kernel.org>
-CC:     Wolfgang Grandegger <wg@grandegger.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        "open list:NETWORKING DRIVERS" <netdev@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 1/2] can: D_CAN: perform a sofware reset on open
-Thread-Topic: [PATCH 1/2] can: D_CAN: perform a sofware reset on open
-Thread-Index: AQHVdEd7etT22gKeN0iCyvC9ZUyGFadF4WyAgABxJIA=
-Date:   Tue, 1 Oct 2019 21:17:01 +0000
-Message-ID: <04f38523-07fb-4ea9-3031-932176f68660@victronenergy.com>
-References: <20190926085005.24805-1-jhofstee@victronenergy.com>
- <20190926085005.24805-2-jhofstee@victronenergy.com>
- <b30e9834-a324-ad97-2050-df9600a95347@pengutronix.de>
-In-Reply-To: <b30e9834-a324-ad97-2050-df9600a95347@pengutronix.de>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-user-agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
-x-originating-ip: [2001:1c01:3bc5:4e00:5c2:1c3a:9351:514c]
-x-clientproxiedby: AM3PR07CA0066.eurprd07.prod.outlook.com
- (2603:10a6:207:4::24) To VI1PR0701MB2623.eurprd07.prod.outlook.com
- (2603:10a6:801:b::19)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=jhofstee@victronenergy.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 1b3cc6b0-6ec7-420c-2b04-08d746b4b32f
-x-ms-traffictypediagnostic: VI1PR0701MB2173:
-x-ms-exchange-purlcount: 1
-x-microsoft-antispam-prvs: <VI1PR0701MB2173085A7D0C7702493FCA7BC09D0@VI1PR0701MB2173.eurprd07.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:5516;
-x-forefront-prvs: 0177904E6B
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(979002)(4636009)(346002)(396003)(39850400004)(376002)(366004)(136003)(199004)(189003)(186003)(446003)(305945005)(486006)(2501003)(36756003)(6486002)(6436002)(2616005)(7736002)(102836004)(11346002)(476003)(6506007)(53546011)(386003)(86362001)(52116002)(6306002)(81156014)(6512007)(76176011)(8676002)(46003)(229853002)(81166006)(31686004)(6246003)(110136005)(256004)(31696002)(316002)(65806001)(99286004)(71200400001)(71190400001)(14454004)(54906003)(66556008)(25786009)(8936002)(4326008)(65956001)(2906002)(5660300002)(478600001)(58126008)(966005)(66446008)(66476007)(64756008)(6116002)(66946007)(969003)(989001)(999001)(1009001)(1019001);DIR:OUT;SFP:1102;SCL:1;SRVR:VI1PR0701MB2173;H:VI1PR0701MB2623.eurprd07.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: victronenergy.com does not
- designate permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: j4CShGhBO0bHbTXSi5VnyOog+8t/L2ecCnNLiURcXN21wDVXhsyzBlvy59IYrojjOHpj/54pfzvQoK9XtPtpbyHlPzuVPRnc6gWa81Dac+RueX61OAixEOGVLiEm61xX5kPLcvf9MIT9qWLxW5jaq5WKCdiboETZuFYysJpfMyckwBHMnMoCIDzs7t0GZ6cfw2HarFI2upbVhMiDcDKSkjtlHF10VQuTXOJy/RmONp/gsBHPVOarzThfY3Pccuj7BXlQzzO/56TX2EMYnCuT/V5Xe7wobat014iGBHx2Q/VxUdzhLQKoRSSvmWMjKzg+zZo4IbR3kyZZGKIt41acYh27NEVAevHPRX/Tv/6ft+isA8XR52mjJk043thskItbgRT+8gjPGz29PDIlGCV0QI/3PYnSZaslRBuJdeHdszrYacLSxKqpgxaftLLZn7F7qIyULTbYc5Pxn24UR1lx6g==
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <A7F7F6AD8CEF9145A094951C873E3341@eurprd07.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        Tue, 1 Oct 2019 17:19:28 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:44620 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726681AbfJAVT2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Oct 2019 17:19:28 -0400
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 537B45945E;
+        Tue,  1 Oct 2019 21:19:27 +0000 (UTC)
+Received: from [10.10.122.80] (ovpn-122-80.rdu2.redhat.com [10.10.122.80])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 642875C1D4;
+        Tue,  1 Oct 2019 21:19:26 +0000 (UTC)
+Subject: Re: INFO: task hung in nbd_ioctl
+To:     syzbot <syzbot+24c12fa8d218ed26011a@syzkaller.appspotmail.com>,
+        axboe@kernel.dk, josef@toxicpanda.com, linux-block@vger.kernel.org,
+        linux-kernel@vger.kernel.org, nbd@other.debian.org,
+        syzkaller-bugs@googlegroups.com
+References: <000000000000b1b1ee0593cce78f@google.com>
+From:   Mike Christie <mchristi@redhat.com>
+Message-ID: <5D93C2DD.10103@redhat.com>
+Date:   Tue, 1 Oct 2019 16:19:25 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:38.0) Gecko/20100101
+ Thunderbird/38.6.0
 MIME-Version: 1.0
-X-OriginatorOrg: victronenergy.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 1b3cc6b0-6ec7-420c-2b04-08d746b4b32f
-X-MS-Exchange-CrossTenant-originalarrivaltime: 01 Oct 2019 21:17:01.2773
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 60b95f08-3558-4e94-b0f8-d690c498e225
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: vN2YWlS255ZHWCUYNNTrvi0b4ZJDhlMZ+bueY1PUKOiEzPFQj+US24UJnBsGtYZyiAhzWHTfvm74hwq2ySTcx8ZjB4CkCNwoIT/yng62hy0=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR0701MB2173
+In-Reply-To: <000000000000b1b1ee0593cce78f@google.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.39]); Tue, 01 Oct 2019 21:19:27 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGVsbG8gTWFyYywNCg0KT24gMTAvMS8xOSA0OjMyIFBNLCBNYXJjIEtsZWluZS1CdWRkZSB3cm90
-ZToNCj4gT24gOS8yNi8xOSAxMDo1MCBBTSwgSmVyb2VuIEhvZnN0ZWUgd3JvdGU6DQo+PiBXaGVu
-IHRoZSBDX0NBTiBpbnRlcmZhY2UgaXMgY2xvc2VkIGl0IGlzIHB1dCBpbiBwb3dlciBkb3duIG1v
-ZGUsIGJ1dA0KPj4gZG9lcyBub3QgcmVzZXQgdGhlIGVycm9yIGNvdW50ZXJzIC8gc3RhdGUuIFNv
-IHJlc2V0IHRoZSBEX0NBTiBvbiBvcGVuLA0KPj4gc28gdGhlIHJlcG9ydGVkIHN0YXRlIGFuZCB0
-aGUgYWN0dWFsIHN0YXRlIG1hdGNoLg0KPj4NCj4+IEFjY29yZGluZyB0byBbMV0sIHRoZSBDX0NB
-TiBtb2R1bGUgZG9lc24ndCBoYXZlIHRoZSBzb2Z0d2FyZSByZXNldC4NCj4+DQo+PiBbMV0gaHR0
-cDovL3d3dy5ib3NjaC1zZW1pY29uZHVjdG9ycy5jb20vbWVkaWEvaXBfbW9kdWxlcy9wZGZfMi9j
-X2Nhbl9mZDgvdXNlcnNfbWFudWFsX2NfY2FuX2ZkOF9yMjEwXzEucGRmDQo+Pg0KPj4gU2lnbmVk
-LW9mZi1ieTogSmVyb2VuIEhvZnN0ZWUgPGpob2ZzdGVlQHZpY3Ryb25lbmVyZ3kuY29tPg0KPj4g
-LS0tDQo+PiAgIGRyaXZlcnMvbmV0L2Nhbi9jX2Nhbi9jX2Nhbi5jIHwgMjYgKysrKysrKysrKysr
-KysrKysrKysrKysrKysNCj4+ICAgMSBmaWxlIGNoYW5nZWQsIDI2IGluc2VydGlvbnMoKykNCj4+
-DQo+PiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9uZXQvY2FuL2NfY2FuL2NfY2FuLmMgYi9kcml2ZXJz
-L25ldC9jYW4vY19jYW4vY19jYW4uYw0KPj4gaW5kZXggNjA2YjdkOGZmZTEzLi41MDJhMTgxZDAy
-ZTcgMTAwNjQ0DQo+PiAtLS0gYS9kcml2ZXJzL25ldC9jYW4vY19jYW4vY19jYW4uYw0KPj4gKysr
-IGIvZHJpdmVycy9uZXQvY2FuL2NfY2FuL2NfY2FuLmMNCj4+IEBAIC01Miw2ICs1Miw3IEBADQo+
-PiAgICNkZWZpbmUgQ09OVFJPTF9FWF9QRFIJCUJJVCg4KQ0KPj4gICANCj4+ICAgLyogY29udHJv
-bCByZWdpc3RlciAqLw0KPj4gKyNkZWZpbmUgQ09OVFJPTF9TV1IJCUJJVCgxNSkNCj4+ICAgI2Rl
-ZmluZSBDT05UUk9MX1RFU1QJCUJJVCg3KQ0KPj4gICAjZGVmaW5lIENPTlRST0xfQ0NFCQlCSVQo
-NikNCj4+ICAgI2RlZmluZSBDT05UUk9MX0RJU0FCTEVfQVIJQklUKDUpDQo+PiBAQCAtNTY5LDYg
-KzU3MCwyNiBAQCBzdGF0aWMgdm9pZCBjX2Nhbl9jb25maWd1cmVfbXNnX29iamVjdHMoc3RydWN0
-IG5ldF9kZXZpY2UgKmRldikNCj4+ICAgCQkJCSAgIElGX01DT05UX1JDVl9FT0IpOw0KPj4gICB9
-DQo+PiAgIA0KPj4gK3N0YXRpYyBpbnQgc29mdHdhcmVfcmVzZXQoc3RydWN0IG5ldF9kZXZpY2Ug
-KmRldikNCj4gUGxlYXNlIGFkZCB0aGUgY29tbW9uIHByZWZpeCAiY19jYW5fIiB0byB0aGUgZnVu
-Y3Rpb24NCg0KRmluZSB3aXRoIG1lLCBJIGRpZCBzZW50IGEgdjIuDQoNClJlZ2FyZHMsDQpKZXJv
-ZW4NCg0K
+Hey Josef and nbd list,
+
+I had a question about if there are any socket family restrictions for nbd?
+
+The bug here is that some socket familys do not support the
+sock->ops->shutdown callout, and when nbd calls kernel_sock_shutdown
+their callout returns -EOPNOTSUPP. That then leaves recv_work stuck in
+nbd_read_stat -> sock_xmit -> sock_recvmsg. My patch added a
+flush_workqueue call, so for socket familys like AF_NETLINK in this bug
+we hang like we see below.
+
+I can just remove the flush_workqueue call in that code path since it's
+not needed there, but it leaves the original bug my patch was hitting
+where we leave the recv_work running which can then result in leaked
+resources, or possible use after free crashes and you still get the hang
+if you remove the module.
+
+It looks like we have used kernel_sock_shutdown for a while so I thought
+we might never have supported sockets that did not support the callout.
+Is that correct? If so then I can just add a check for this in
+nbd_add_socket and fix that bug too.
+
+
+On 09/30/2019 05:39 PM, syzbot wrote:
+> Hello,
+> 
+> syzbot found the following crash on:
+> 
+> HEAD commit:    bb2aee77 Add linux-next specific files for 20190926
+> git tree:       linux-next
+> console output: https://syzkaller.appspot.com/x/log.txt?x=13385ca3600000
+> kernel config:  https://syzkaller.appspot.com/x/.config?x=e60af4ac5a01e964
+> dashboard link:
+> https://syzkaller.appspot.com/bug?extid=24c12fa8d218ed26011a
+> compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=12abc2a3600000
+> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=11712c05600000
+> 
+> The bug was bisected to:
+> 
+> commit e9e006f5fcf2bab59149cb38a48a4817c1b538b4
+> Author: Mike Christie <mchristi@redhat.com>
+> Date:   Sun Aug 4 19:10:06 2019 +0000
+> 
+>     nbd: fix max number of supported devs
+> 
+> bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=1226f3c5600000
+> final crash:    https://syzkaller.appspot.com/x/report.txt?x=1126f3c5600000
+> console output: https://syzkaller.appspot.com/x/log.txt?x=1626f3c5600000
+> 
+> IMPORTANT: if you fix the bug, please add the following tag to the commit:
+> Reported-by: syzbot+24c12fa8d218ed26011a@syzkaller.appspotmail.com
+> Fixes: e9e006f5fcf2 ("nbd: fix max number of supported devs")
+> 
+> INFO: task syz-executor390:8778 can't die for more than 143 seconds.
+> syz-executor390 D27432  8778   8777 0x00004004
+> Call Trace:
+>  context_switch kernel/sched/core.c:3384 [inline]
+>  __schedule+0x828/0x1c20 kernel/sched/core.c:4065
+>  schedule+0xd9/0x260 kernel/sched/core.c:4132
+>  schedule_timeout+0x717/0xc50 kernel/time/timer.c:1871
+>  do_wait_for_common kernel/sched/completion.c:83 [inline]
+>  __wait_for_common kernel/sched/completion.c:104 [inline]
+>  wait_for_common kernel/sched/completion.c:115 [inline]
+>  wait_for_completion+0x29c/0x440 kernel/sched/completion.c:136
+>  flush_workqueue+0x40f/0x14c0 kernel/workqueue.c:2826
+>  nbd_start_device_ioctl drivers/block/nbd.c:1272 [inline]
+>  __nbd_ioctl drivers/block/nbd.c:1347 [inline]
+>  nbd_ioctl+0xb2e/0xc44 drivers/block/nbd.c:1387
+>  __blkdev_driver_ioctl block/ioctl.c:304 [inline]
+>  blkdev_ioctl+0xedb/0x1c20 block/ioctl.c:606
+>  block_ioctl+0xee/0x130 fs/block_dev.c:1954
+>  vfs_ioctl fs/ioctl.c:47 [inline]
+>  file_ioctl fs/ioctl.c:539 [inline]
+>  do_vfs_ioctl+0xdb6/0x13e0 fs/ioctl.c:726
+>  ksys_ioctl+0xab/0xd0 fs/ioctl.c:743
+>  __do_sys_ioctl fs/ioctl.c:750 [inline]
+>  __se_sys_ioctl fs/ioctl.c:748 [inline]
+>  __x64_sys_ioctl+0x73/0xb0 fs/ioctl.c:748
+>  do_syscall_64+0xfa/0x760 arch/x86/entry/common.c:290
+>  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+> RIP: 0033:0x4452d9
+> Code: Bad RIP value.
+> RSP: 002b:00007ffde928d288 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
+> RAX: ffffffffffffffda RBX: 0000000000000000 RCX: 00000000004452d9
+> RDX: 0000000000000000 RSI: 000000000000ab03 RDI: 0000000000000004
+> RBP: 0000000000000000 R08: 00000000004025b0 R09: 00000000004025b0
+> R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000402520
+> R13: 00000000004025b0 R14: 0000000000000000 R15: 0000000000000000
+> INFO: task syz-executor390:8778 blocked for more than 143 seconds.
+>       Not tainted 5.3.0-next-20190926 #0
+> "echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
+> syz-executor390 D27432  8778   8777 0x00004004
+> Call Trace:
+>  context_switch kernel/sched/core.c:3384 [inline]
+>  __schedule+0x828/0x1c20 kernel/sched/core.c:4065
+>  schedule+0xd9/0x260 kernel/sched/core.c:4132
+>  schedule_timeout+0x717/0xc50 kernel/time/timer.c:1871
+>  do_wait_for_common kernel/sched/completion.c:83 [inline]
+>  __wait_for_common kernel/sched/completion.c:104 [inline]
+>  wait_for_common kernel/sched/completion.c:115 [inline]
+>  wait_for_completion+0x29c/0x440 kernel/sched/completion.c:136
+>  flush_workqueue+0x40f/0x14c0 kernel/workqueue.c:2826
+>  nbd_start_device_ioctl drivers/block/nbd.c:1272 [inline]
+>  __nbd_ioctl drivers/block/nbd.c:1347 [inline]
+>  nbd_ioctl+0xb2e/0xc44 drivers/block/nbd.c:1387
+>  __blkdev_driver_ioctl block/ioctl.c:304 [inline]
+>  blkdev_ioctl+0xedb/0x1c20 block/ioctl.c:606
+>  block_ioctl+0xee/0x130 fs/block_dev.c:1954
+>  vfs_ioctl fs/ioctl.c:47 [inline]
+>  file_ioctl fs/ioctl.c:539 [inline]
+>  do_vfs_ioctl+0xdb6/0x13e0 fs/ioctl.c:726
+>  ksys_ioctl+0xab/0xd0 fs/ioctl.c:743
+>  __do_sys_ioctl fs/ioctl.c:750 [inline]
+>  __se_sys_ioctl fs/ioctl.c:748 [inline]
+>  __x64_sys_ioctl+0x73/0xb0 fs/ioctl.c:748
+>  do_syscall_64+0xfa/0x760 arch/x86/entry/common.c:290
+>  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+> RIP: 0033:0x4452d9
+> Code: Bad RIP value.
+> RSP: 002b:00007ffde928d288 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
+> RAX: ffffffffffffffda RBX: 0000000000000000 RCX: 00000000004452d9
+> RDX: 0000000000000000 RSI: 000000000000ab03 RDI: 0000000000000004
+> RBP: 0000000000000000 R08: 00000000004025b0 R09: 00000000004025b0
+> R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000402520
+> R13: 00000000004025b0 R14: 0000000000000000 R15: 0000000000000000
+> 
+> Showing all locks held in the system:
+> 1 lock held by khungtaskd/1066:
+>  #0: ffffffff88faad80 (rcu_read_lock){....}, at:
+> debug_show_all_locks+0x5f/0x27e kernel/locking/lockdep.c:5337
+> 2 locks held by kworker/u5:0/1525:
+>  #0: ffff8880923d0d28 ((wq_completion)knbd0-recv){+.+.}, at:
+> __write_once_size include/linux/compiler.h:226 [inline]
+>  #0: ffff8880923d0d28 ((wq_completion)knbd0-recv){+.+.}, at:
+> arch_atomic64_set arch/x86/include/asm/atomic64_64.h:34 [inline]
+>  #0: ffff8880923d0d28 ((wq_completion)knbd0-recv){+.+.}, at:
+> atomic64_set include/asm-generic/atomic-instrumented.h:855 [inline]
+>  #0: ffff8880923d0d28 ((wq_completion)knbd0-recv){+.+.}, at:
+> atomic_long_set include/asm-generic/atomic-long.h:40 [inline]
+>  #0: ffff8880923d0d28 ((wq_completion)knbd0-recv){+.+.}, at:
+> set_work_data kernel/workqueue.c:620 [inline]
+>  #0: ffff8880923d0d28 ((wq_completion)knbd0-recv){+.+.}, at:
+> set_work_pool_and_clear_pending kernel/workqueue.c:647 [inline]
+>  #0: ffff8880923d0d28 ((wq_completion)knbd0-recv){+.+.}, at:
+> process_one_work+0x88b/0x1740 kernel/workqueue.c:2240
+>  #1: ffff8880a63b7dc0 ((work_completion)(&args->work)){+.+.}, at:
+> process_one_work+0x8c1/0x1740 kernel/workqueue.c:2244
+> 1 lock held by rsyslogd/8659:
+> 2 locks held by getty/8749:
+>  #0: ffff888098c08090 (&tty->ldisc_sem){++++}, at:
+> ldsem_down_read+0x33/0x40 drivers/tty/tty_ldsem.c:340
+>  #1: ffffc90005f112e0 (&ldata->atomic_read_lock){+.+.}, at:
+> n_tty_read+0x232/0x1c10 drivers/tty/n_tty.c:2156
+> 2 locks held by getty/8750:
+>  #0: ffff88808f10b090 (&tty->ldisc_sem){++++}, at:
+> ldsem_down_read+0x33/0x40 drivers/tty/tty_ldsem.c:340
+>  #1: ffffc90005f2d2e0 (&ldata->atomic_read_lock){+.+.}, at:
+> n_tty_read+0x232/0x1c10 drivers/tty/n_tty.c:2156
+> 2 locks held by getty/8751:
+>  #0: ffff88809a6be090 (&tty->ldisc_sem){++++}, at:
+> ldsem_down_read+0x33/0x40 drivers/tty/tty_ldsem.c:340
+>  #1: ffffc90005f192e0 (&ldata->atomic_read_lock){+.+.}, at:
+> n_tty_read+0x232/0x1c10 drivers/tty/n_tty.c:2156
+> 2 locks held by getty/8752:
+>  #0: ffff8880a48af090 (&tty->ldisc_sem){++++}, at:
+> ldsem_down_read+0x33/0x40 drivers/tty/tty_ldsem.c:340
+>  #1: ffffc90005f352e0 (&ldata->atomic_read_lock){+.+.}, at:
+> n_tty_read+0x232/0x1c10 drivers/tty/n_tty.c:2156
+> 2 locks held by getty/8753:
+>  #0: ffff88808c599090 (&tty->ldisc_sem){++++}, at:
+> ldsem_down_read+0x33/0x40 drivers/tty/tty_ldsem.c:340
+>  #1: ffffc90005f212e0 (&ldata->atomic_read_lock){+.+.}, at:
+> n_tty_read+0x232/0x1c10 drivers/tty/n_tty.c:2156
+> 2 locks held by getty/8754:
+>  #0: ffff88808f1a8090 (&tty->ldisc_sem){++++}, at:
+> ldsem_down_read+0x33/0x40 drivers/tty/tty_ldsem.c:340
+>  #1: ffffc90005f392e0 (&ldata->atomic_read_lock){+.+.}, at:
+> n_tty_read+0x232/0x1c10 drivers/tty/n_tty.c:2156
+> 2 locks held by getty/8755:
+>  #0: ffff88809ab33090 (&tty->ldisc_sem){++++}, at:
+> ldsem_down_read+0x33/0x40 drivers/tty/tty_ldsem.c:340
+>  #1: ffffc90005f012e0 (&ldata->atomic_read_lock){+.+.}, at:
+> n_tty_read+0x232/0x1c10 drivers/tty/n_tty.c:2156
+> 
+> =============================================
+> 
+> NMI backtrace for cpu 1
+> CPU: 1 PID: 1066 Comm: khungtaskd Not tainted 5.3.0-next-20190926 #0
+> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS
+> Google 01/01/2011
+> Call Trace:
+>  __dump_stack lib/dump_stack.c:77 [inline]
+>  dump_stack+0x172/0x1f0 lib/dump_stack.c:113
+>  nmi_cpu_backtrace.cold+0x70/0xb2 lib/nmi_backtrace.c:101
+>  nmi_trigger_cpumask_backtrace+0x23b/0x28b lib/nmi_backtrace.c:62
+>  arch_trigger_cpumask_backtrace+0x14/0x20 arch/x86/kernel/apic/hw_nmi.c:38
+>  trigger_all_cpu_backtrace include/linux/nmi.h:146 [inline]
+>  check_hung_uninterruptible_tasks kernel/hung_task.c:269 [inline]
+>  watchdog+0xc99/0x1360 kernel/hung_task.c:353
+>  kthread+0x361/0x430 kernel/kthread.c:255
+>  ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
+> Sending NMI from CPU 1 to CPUs 0:
+> NMI backtrace for cpu 0 skipped: idling at native_safe_halt+0xe/0x10
+> arch/x86/include/asm/irqflags.h:60
+> 
+> 
+> ---
+> This bug is generated by a bot. It may contain errors.
+> See https://goo.gl/tpsmEJ for more information about syzbot.
+> syzbot engineers can be reached at syzkaller@googlegroups.com.
+> 
+> syzbot will keep track of this bug report. See:
+> https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+> For information about bisection process see:
+> https://goo.gl/tpsmEJ#bisection
+> syzbot can test patches for this bug, for details see:
+> https://goo.gl/tpsmEJ#testing-patches
+
