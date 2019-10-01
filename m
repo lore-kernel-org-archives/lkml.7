@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EC566ECE587
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 16:46:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 156F9ECE587
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 16:46:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C05322168B
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 16:46:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D4A7720659
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 16:46:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569948401;
-	bh=6EyxsEqBJ2oOZtJcJw9OqpnSifZ1fmKpzk8Q4zKakk4=;
+	s=default; t=1569948405;
+	bh=gOxfJOCLf60/pIqvNXNUkBT5bw2/Po247341M7g2E6k=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=nmqHMjTQFnqGpCIE9DWPwbF/yIUXI/Z3PMR5AbW+NKk4rOONpv0XAmtWHIWZ9beoo
-	 W+mGKvei/6dArPRMiEWWPeSm2gzaEQ5BLmeOTo6Rhu5Bxbo0IXdlnq/Hbmo2xLzwkk
-	 ShWhdZ23p0khDvDU4QG9kRa4CJx5nkEeukC7I0vo=
+	b=VN0+kSLmQexQ+uvPPWJMXHSZ3A/1VB3LsBygiNPDzga0uEy84v5S0rbNn+CyQ2z0i
+	 +PpmklJ1tmwGy11/bLi/9+IMOZp8HzEaIbz29B7kB7bxDIRJ6UneM6rjV9bYgf1V6O
+	 U3stxsmese6HJ05G4zzVYNWSOdeMJTRe7ZjSjKk8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390371AbfJAQpm (ORCPT
+        id S1733176AbfJAQqo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Oct 2019 12:45:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58216 "EHLO mail.kernel.org"
+        Tue, 1 Oct 2019 12:46:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58280 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390314AbfJAQpj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Oct 2019 12:45:39 -0400
+        id S2390370AbfJAQpm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Oct 2019 12:45:42 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6F3B52190F;
-        Tue,  1 Oct 2019 16:45:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1D10220B7C;
+        Tue,  1 Oct 2019 16:45:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569948338;
-        bh=6EyxsEqBJ2oOZtJcJw9OqpnSifZ1fmKpzk8Q4zKakk4=;
+        s=default; t=1569948341;
+        bh=gOxfJOCLf60/pIqvNXNUkBT5bw2/Po247341M7g2E6k=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=itiD6SMaKXiPA1abaI/s2k+mthGULdGl4IXQpaEkMneQje/YkjWzEgjlQi7rvJv+w
-         XKrC0geL5Ye2zc0o+8Eb/nBfc9/Gpl+LNDwrgo70xaeJ7HwSbM57hrVQvMy9ajle7a
-         owADzBKYmxFsS6UiQkE7Yzx7FIazthLxOy+byK4I=
+        b=ZgMm5IH5eLW4pnGxmdgJTNAL6UqmHEnyJLbWs8Pp307w6Wk4B6K1Cqu5Ko4EXxOqe
+         1IsNraRHE/4acnkJ9yGs0WCGBNb/N6xzQ3CyA8Lu/AaU4H589KEh/G5/h5vnNk33Ky
+         Y284QML/ZNImaHFqLapEJcGJItVm+ZfhW8fy2oTM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Igor Druzhinin <igor.druzhinin@citrix.com>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.4 04/15] xen/pci: reserve MCFG areas earlier
-Date:   Tue,  1 Oct 2019 12:45:22 -0400
-Message-Id: <20191001164533.16915-4-sashal@kernel.org>
+Cc:     Trek <trek00@inbox.ru>, Alex Deucher <alexander.deucher@amd.com>,
+        Sasha Levin <sashal@kernel.org>, amd-gfx@lists.freedesktop.org,
+        dri-devel@lists.freedesktop.org
+Subject: [PATCH AUTOSEL 4.4 06/15] drm/amdgpu: Check for valid number of registers to read
+Date:   Tue,  1 Oct 2019 12:45:24 -0400
+Message-Id: <20191001164533.16915-6-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191001164533.16915-1-sashal@kernel.org>
 References: <20191001164533.16915-1-sashal@kernel.org>
@@ -59,88 +59,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Igor Druzhinin <igor.druzhinin@citrix.com>
+From: Trek <trek00@inbox.ru>
 
-[ Upstream commit a4098bc6eed5e31e0391bcc068e61804c98138df ]
+[ Upstream commit 73d8e6c7b841d9bf298c8928f228fb433676635c ]
 
-If MCFG area is not reserved in E820, Xen by default will defer its usage
-until Dom0 registers it explicitly after ACPI parser recognizes it as
-a reserved resource in DSDT. Having it reserved in E820 is not
-mandatory according to "PCI Firmware Specification, rev 3.2" (par. 4.1.2)
-and firmware is free to keep a hole in E820 in that place. Xen doesn't know
-what exactly is inside this hole since it lacks full ACPI view of the
-platform therefore it's potentially harmful to access MCFG region
-without additional checks as some machines are known to provide
-inconsistent information on the size of the region.
+Do not try to allocate any amount of memory requested by the user.
+Instead limit it to 128 registers. Actually the longest series of
+consecutive allowed registers are 48, mmGB_TILE_MODE0-31 and
+mmGB_MACROTILE_MODE0-15 (0x2644-0x2673).
 
-Now xen_mcfg_late() runs after acpi_init() which is too late as some basic
-PCI enumeration starts exactly there as well. Trying to register a device
-prior to MCFG reservation causes multiple problems with PCIe extended
-capability initializations in Xen (e.g. SR-IOV VF BAR sizing). There are
-no convenient hooks for us to subscribe to so register MCFG areas earlier
-upon the first invocation of xen_add_device(). It should be safe to do once
-since all the boot time buses must have their MCFG areas in MCFG table
-already and we don't support PCI bus hot-plug.
-
-Signed-off-by: Igor Druzhinin <igor.druzhinin@citrix.com>
-Reviewed-by: Boris Ostrovsky <boris.ostrovsky@oracle.com>
-Signed-off-by: Boris Ostrovsky <boris.ostrovsky@oracle.com>
+Bug: https://bugs.freedesktop.org/show_bug.cgi?id=111273
+Signed-off-by: Trek <trek00@inbox.ru>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/xen/pci.c | 21 +++++++++++++++------
- 1 file changed, 15 insertions(+), 6 deletions(-)
+ drivers/gpu/drm/amd/amdgpu/amdgpu_kms.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/drivers/xen/pci.c b/drivers/xen/pci.c
-index 7494dbeb4409c..db58aaa4dc598 100644
---- a/drivers/xen/pci.c
-+++ b/drivers/xen/pci.c
-@@ -29,6 +29,8 @@
- #include "../pci/pci.h"
- #ifdef CONFIG_PCI_MMCONFIG
- #include <asm/pci_x86.h>
+diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_kms.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_kms.c
+index a5c8240784726..e35e603710b4d 100644
+--- a/drivers/gpu/drm/amd/amdgpu/amdgpu_kms.c
++++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_kms.c
+@@ -406,6 +406,9 @@ static int amdgpu_info_ioctl(struct drm_device *dev, void *data, struct drm_file
+ 		if (sh_num == AMDGPU_INFO_MMR_SH_INDEX_MASK)
+ 			sh_num = 0xffffffff;
+ 
++		if (info->read_mmr_reg.count > 128)
++			return -EINVAL;
 +
-+static int xen_mcfg_late(void);
- #endif
- 
- static bool __read_mostly pci_seg_supported = true;
-@@ -40,7 +42,18 @@ static int xen_add_device(struct device *dev)
- #ifdef CONFIG_PCI_IOV
- 	struct pci_dev *physfn = pci_dev->physfn;
- #endif
--
-+#ifdef CONFIG_PCI_MMCONFIG
-+	static bool pci_mcfg_reserved = false;
-+	/*
-+	 * Reserve MCFG areas in Xen on first invocation due to this being
-+	 * potentially called from inside of acpi_init immediately after
-+	 * MCFG table has been finally parsed.
-+	 */
-+	if (!pci_mcfg_reserved) {
-+		xen_mcfg_late();
-+		pci_mcfg_reserved = true;
-+	}
-+#endif
- 	if (pci_seg_supported) {
- 		struct {
- 			struct physdev_pci_device_add add;
-@@ -213,7 +226,7 @@ static int __init register_xen_pci_notifier(void)
- arch_initcall(register_xen_pci_notifier);
- 
- #ifdef CONFIG_PCI_MMCONFIG
--static int __init xen_mcfg_late(void)
-+static int xen_mcfg_late(void)
- {
- 	struct pci_mmcfg_region *cfg;
- 	int rc;
-@@ -252,8 +265,4 @@ static int __init xen_mcfg_late(void)
- 	}
- 	return 0;
- }
--/*
-- * Needs to be done after acpi_init which are subsys_initcall.
-- */
--subsys_initcall_sync(xen_mcfg_late);
- #endif
+ 		regs = kmalloc_array(info->read_mmr_reg.count, sizeof(*regs), GFP_KERNEL);
+ 		if (!regs)
+ 			return -ENOMEM;
 -- 
 2.20.1
 
