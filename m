@@ -2,87 +2,91 @@ Return-Path: <SRS0=YRFP=X2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIM_ADSP_ALL,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7121ECE587
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 16:00:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D1A62ECE587
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 16:00:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7888D2053B
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 16:00:12 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="fXaF52mG"
+	by mail.kernel.org (Postfix) with ESMTP id AEA882053B
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 16:00:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389805AbfJAQAL (ORCPT
+        id S2389812AbfJAQAZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Oct 2019 12:00:11 -0400
-Received: from smtp-fw-6001.amazon.com ([52.95.48.154]:9565 "EHLO
-        smtp-fw-6001.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727398AbfJAQAL (ORCPT
+        Tue, 1 Oct 2019 12:00:25 -0400
+Received: from eu-smtp-delivery-151.mimecast.com ([207.82.80.151]:57693 "EHLO
+        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727398AbfJAQAZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Oct 2019 12:00:11 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1569945610; x=1601481610;
-  h=from:to:cc:subject:date:message-id:mime-version;
-  bh=qDD5LT8DtwKPIaKWHMsLpUgPzfzI2haoHG8xYLA7T7o=;
-  b=fXaF52mGGeCZLSuVbHEHCld6mDh3UEUdBPxtyRaYYg+vUWtwkk5AQqHn
-   ts3lbm8FdJuQvOLJ+Lz6bctvjS/tB+dyYzFH0My1U48jSdlP1ExRnMkV9
-   n7tAMc1VBu9BADEgPjY0Au7ebcRYY2Ajj00fkM5bFMh8SUbcCLv7d8MrQ
-   8=;
-X-IronPort-AV: E=Sophos;i="5.64,571,1559520000"; 
-   d="scan'208";a="419068076"
-Received: from iad6-co-svc-p1-lb1-vlan3.amazon.com (HELO email-inbound-relay-1d-9ec21598.us-east-1.amazon.com) ([10.124.125.6])
-  by smtp-border-fw-out-6001.iad6.amazon.com with ESMTP; 01 Oct 2019 16:00:08 +0000
-Received: from EX13MTAUWB001.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan3.iad.amazon.com [10.40.159.166])
-        by email-inbound-relay-1d-9ec21598.us-east-1.amazon.com (Postfix) with ESMTPS id C54C4A1CA2;
-        Tue,  1 Oct 2019 16:00:07 +0000 (UTC)
-Received: from EX13D02UWB003.ant.amazon.com (10.43.161.48) by
- EX13MTAUWB001.ant.amazon.com (10.43.161.249) with Microsoft SMTP Server (TLS)
- id 15.0.1367.3; Tue, 1 Oct 2019 16:00:07 +0000
-Received: from EX13MTAUWA001.ant.amazon.com (10.43.160.58) by
- EX13D02UWB003.ant.amazon.com (10.43.161.48) with Microsoft SMTP Server (TLS)
- id 15.0.1367.3; Tue, 1 Oct 2019 16:00:06 +0000
-Received: from 8c859006a84e.ant.amazon.com (172.26.203.30) by
- mail-relay.amazon.com (10.43.160.118) with Microsoft SMTP Server id
- 15.0.1367.3 via Frontend Transport; Tue, 1 Oct 2019 16:00:06 +0000
-From:   Patrick Williams <alpawi@amazon.com>
-CC:     Patrick Williams <alpawi@amazon.com>,
-        Patrick Williams <patrick@stwcx.xyz>,
-        <linux-kernel@vger.kernel.org>, <linux-i2c@vger.kernel.org>,
-        Wolfram Sang <wsa@the-dreams.de>
-Subject: [PATCH 0/2] i2c: pxa: migrate to i2c-core-slave APIs
-Date:   Tue, 1 Oct 2019 10:59:58 -0500
-Message-ID: <20191001160001.2388-1-alpawi@amazon.com>
-X-Mailer: git-send-email 2.17.2 (Apple Git-113)
+        Tue, 1 Oct 2019 12:00:25 -0400
+Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
+ TLS) by relay.mimecast.com with ESMTP id
+ uk-mta-164--oUOnduMO7u6T_CwoD2SuA-1; Tue, 01 Oct 2019 17:00:21 +0100
+Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
+ AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
+ Server (TLS) id 15.0.1347.2; Tue, 1 Oct 2019 17:00:21 +0100
+Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
+ AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
+ Tue, 1 Oct 2019 17:00:21 +0100
+From:   David Laight <David.Laight@ACULAB.COM>
+To:     "'efremov@linux.com'" <efremov@linux.com>,
+        'Dan Carpenter' <dan.carpenter@oracle.com>
+CC:     "devel@driverdev.osuosl.org" <devel@driverdev.osuosl.org>,
+        Jes Sorensen <jes.sorensen@gmail.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "stable@vger.kernel.org" <stable@vger.kernel.org>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Bastien Nocera <hadess@hadess.net>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Larry Finger <Larry.Finger@lwfinger.net>
+Subject: RE: [PATCH] staging: rtl8723bs: hal: Fix memcpy calls
+Thread-Topic: [PATCH] staging: rtl8723bs: hal: Fix memcpy calls
+Thread-Index: AQHVd36LU5ikVLKK6EuvH5wLNYQtMKdEMyLwgAGeKE+AAAh2kP///AWAgAAc6lA=
+Date:   Tue, 1 Oct 2019 16:00:20 +0000
+Message-ID: <35c2d89987854fb8a42f04dc28ad4bc9@AcuMS.aculab.com>
+References: <20190930110141.29271-1-efremov@linux.com>
+ <37b195b700394e95aa8329afc9f60431@AcuMS.aculab.com>
+ <e4051dcb-10dc-ff17-ec0b-6f51dccdb5bf@linux.com>
+ <20191001135649.GH22609@kadam>
+ <8d2e8196cae74ec4ae20e9c23e898207@AcuMS.aculab.com>
+ <a7c002f7-c6f2-a9ed-0100-acfbafea65c5@linux.com>
+In-Reply-To: <a7c002f7-c6f2-a9ed-0100-acfbafea65c5@linux.com>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.202.205.107]
 MIME-Version: 1.0
-Content-Type: text/plain
-To:     unlisted-recipients:; (no To-header on input)
+X-MC-Unique: -oUOnduMO7u6T_CwoD2SuA-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-i2c-pxa has its own i2c slave APIs rather than using the i2c-core
-APIs.  There are no in-tree drivers currently using this custom
-slave API set.
-
-Migrate the i2c-pxa driver from its own i2c slave APIs to the
-i2c-core slave APIs so that in-tree slave devices can be used with
-the i2c-pxa hardware (ex. i2c-slave-eeprom).
-
-Patrick Williams (2):
-  i2c: pxa: migrate to new i2c_slave APIs
-  i2c: pxa: remove unused i2c-slave APIs
-
- drivers/i2c/busses/Kconfig            |  1 +
- drivers/i2c/busses/i2c-pxa.c          | 75 +++++++++++++++++++++------
- include/linux/i2c-pxa.h               | 18 -------
- include/linux/platform_data/i2c-pxa.h |  4 --
- 4 files changed, 61 insertions(+), 37 deletions(-)
- delete mode 100644 include/linux/i2c-pxa.h
-
--- 
-2.17.2 (Apple Git-113)
+RnJvbTogRGVuaXMgRWZyZW1vdg0KPiBTZW50OiAwMSBPY3RvYmVyIDIwMTkgMTY6MTMNCi4uLg0K
+PiBKdXN0IGZvdW5kIGFuIG9mZmljaWFsIGRvY3VtZW50YXRpb24gdG8gdGhpcyBpc3N1ZToNCj4g
+aHR0cHM6Ly9nY2MuZ251Lm9yZy9nY2MtNC45L3BvcnRpbmdfdG8uaHRtbA0KPiAiTnVsbCBwb2lu
+dGVyIGNoZWNrcyBtYXkgYmUgb3B0aW1pemVkIGF3YXkgbW9yZSBhZ2dyZXNzaXZlbHkNCj4gLi4u
+DQo+IFRoZSBwb2ludGVycyBwYXNzZWQgdG8gbWVtbW92ZSAoYW5kIHNpbWlsYXIgZnVuY3Rpb25z
+IGluIDxzdHJpbmcuaD4pIG11c3QgYmUgbm9uLW51bGwNCj4gZXZlbiB3aGVuIG5ieXRlcz09MCwg
+c28gR0NDIGNhbiB1c2UgdGhhdCBpbmZvcm1hdGlvbiB0byByZW1vdmUgdGhlIGNoZWNrIGFmdGVy
+IHRoZQ0KPiBtZW1tb3ZlIGNhbGwuIENhbGxpbmcgY29weShwLCBOVUxMLCAwKSBjYW4gdGhlcmVm
+b3JlIGRlZmVyZW5jZSBhIG51bGwgcG9pbnRlciBhbmQgY3Jhc2guIg0KDQpSaWdodCwgc28ganVz
+dCBkb24ndCBjb2RlIGEgTlVMTCBwb2ludGVyIHRlc3QgYWZ0ZXIgYSBtZW1jcHkoKSBjYWxsLg0K
+VGhlcmUgaXMgbm8gbmVlZCB0byBhdm9pZCB0aGUgY2FsbCBpdHNlbGYuDQoNCj4gQnV0IGFnYWlu
+LCBJIHdvdWxkIHNheSB0aGF0IHRoZSBidWcgaW4gdGhpcyBjb2RlIGlzIGJlY2F1c2UgdGhlIGlm
+IGNvbmRpdGlvbiB3YXMgY29weS1wYXN0ZWQNCj4gYW5kIGl0IHNob3VsZCBiZSBpbnZlcnRlZC4N
+Cg0KT2gsIHRoZSBjb2RlIGlzIHF1ZXN0aW9uIGlzIGp1c3Qgc3R1cGlkbHkgYmFkLg0KSXQgc2Vl
+bWVkIHRvIGRvOg0KCWlmIChhKQ0KCQl4Ow0KCWVsc2UgaWYgKCFhKQ0KCQl5Ow0KCWVsc2UNCgkJ
+ZXJyb3IgKCJhbGwgYm9ya2VkIikNCg0KSWYgdGhlIHdob2xlIGRyaXZlciBpcyB3cml0dGVuIGxp
+a2UgdGhhdCBpdCBuZWVkcyBmaXhpbmcgYmVmb3JlIGFueW9uZSB0YWtlcyBhIHNlcmlvdXMgbG9v
+ayBhdCBpdC4NCg0KCURhdmlkDQoNCi0NClJlZ2lzdGVyZWQgQWRkcmVzcyBMYWtlc2lkZSwgQnJh
+bWxleSBSb2FkLCBNb3VudCBGYXJtLCBNaWx0b24gS2V5bmVzLCBNSzEgMVBULCBVSw0KUmVnaXN0
+cmF0aW9uIE5vOiAxMzk3Mzg2IChXYWxlcykNCg==
 
