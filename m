@@ -2,232 +2,185 @@ Return-Path: <SRS0=YRFP=X2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FAKE_REPLY_C,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 60184ECE587
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 23:42:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8230ECE587
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 23:45:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3327521924
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 23:42:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BC18C21906
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 23:45:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1569973524;
+	bh=4dc7GBLC2gRvgsUFzPpuqN1X7GpaKXj4y6O/n3piYdA=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
+	b=giBMYJn5f5pbaOWxXQPMSXrSwMtbK3C3hatLfr4XFEx8Yr45omWJBqSYFJFPjffLc
+	 0McAXsP7lm0fytJ6ivIbwCIFu5X7NbIo2jn5++nhN3bW/d3D9zd8pqsuYVp0IKQN/6
+	 dtFYyX1vlg4EyHQkA6CGOTw9BE0g0begNq6rlm9o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729358AbfJAXm0 (ORCPT
+        id S1729375AbfJAXpY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Oct 2019 19:42:26 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:12510 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729334AbfJAXmY (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Oct 2019 19:42:24 -0400
-Received: from pps.filterd (m0098394.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x91NgBsZ093551
-        for <linux-kernel@vger.kernel.org>; Tue, 1 Oct 2019 19:42:23 -0400
-Received: from e06smtp04.uk.ibm.com (e06smtp04.uk.ibm.com [195.75.94.100])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2vcdfxwb7d-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Tue, 01 Oct 2019 19:42:23 -0400
-Received: from localhost
-        by e06smtp04.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <nayna@linux.ibm.com>;
-        Wed, 2 Oct 2019 00:42:20 +0100
-Received: from b06avi18878370.portsmouth.uk.ibm.com (9.149.26.194)
-        by e06smtp04.uk.ibm.com (192.168.101.134) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Wed, 2 Oct 2019 00:42:17 +0100
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
-        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x91NgGKP37683644
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 1 Oct 2019 23:42:16 GMT
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 1014BA4054;
-        Tue,  1 Oct 2019 23:42:16 +0000 (GMT)
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 75EDCA405B;
-        Tue,  1 Oct 2019 23:42:13 +0000 (GMT)
-Received: from swastik.ibm.com (unknown [9.80.224.222])
-        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Tue,  1 Oct 2019 23:42:13 +0000 (GMT)
-From:   Nayna Jain <nayna@linux.ibm.com>
-To:     linuxppc-dev@ozlabs.org, linux-efi@vger.kernel.org,
-        linux-integrity@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Jeremy Kerr <jk@ozlabs.org>,
-        Matthew Garret <matthew.garret@nebula.com>,
-        Mimi Zohar <zohar@linux.ibm.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Claudio Carvalho <cclaudio@linux.ibm.com>,
-        George Wilson <gcwilson@linux.ibm.com>,
-        Elaine Palmer <erpalmer@us.ibm.com>,
-        Eric Ricther <erichte@linux.ibm.com>,
-        "Oliver O'Halloran" <oohall@gmail.com>,
-        Nayna Jain <nayna@linux.ibm.com>
-Subject: [PATCH v4 4/4] powerpc: load firmware trusted keys/hashes into kernel keyring
-Date:   Tue,  1 Oct 2019 19:41:51 -0400
-X-Mailer: git-send-email 1.8.3.1
-In-Reply-To: <1569973311-3047-1-git-send-email-nayna@linux.ibm.com>
-References: <1569973311-3047-1-git-send-email-nayna@linux.ibm.com>
-X-TM-AS-GCONF: 00
-x-cbid: 19100123-0016-0000-0000-000002B324B2
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19100123-0017-0000-0000-00003314262D
-Message-Id: <1569973311-3047-5-git-send-email-nayna@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-10-01_10:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1908290000 definitions=main-1910010202
+        Tue, 1 Oct 2019 19:45:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:32994 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729075AbfJAXpX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Oct 2019 19:45:23 -0400
+Received: from localhost (unknown [69.71.4.100])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0AED521906;
+        Tue,  1 Oct 2019 23:45:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1569973522;
+        bh=4dc7GBLC2gRvgsUFzPpuqN1X7GpaKXj4y6O/n3piYdA=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=dOIDrOB2XUCXsTSaL5soREn99fZwrt2NfJs3YmPUPJ/aH4BC4/MNw6G0WajnG9NZr
+         XIbql5XlhX0ryuiXiy/c3qaGeEbwu7UZLr5E4BqEnt2KXnl2p1apQydaPF/V2zA26b
+         hCJ58GC4G2qZh18CBdiVTQ7DSQ/FKcNqJlRfoo8M=
+Date:   Tue, 1 Oct 2019 18:45:20 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     CREGUT Pierre IMT/OLN <pierre.cregut@orange.com>
+Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] PCI/IOV: update num_VFs earlier
+Message-ID: <20191001234520.GA96866@google.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <744273fd-8045-7527-ad29-fa19adf6d015@orange.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The keys used to verify the Host OS kernel are managed by firmware as
-secure variables. This patch loads the verification keys into the .platform
-keyring and revocation hashes into .blacklist keyring. This enables
-verification and loading of the kernels signed by the boot time keys which
-are trusted by firmware.
+On Fri, Apr 26, 2019 at 10:11:54AM +0200, CREGUT Pierre IMT/OLN wrote:
+> I also initially thought that kobject_uevent generated the netlink event
+> but this is not the case. This is generated by the specific driver in use.
+> For the Intel i40e driver, this is the call to i40e_do_reset_safe in
+> i40e_pci_sriov_configure that sends the event.
+> It is followed by i40e_pci_sriov_enable that calls i40e_alloc_vfs that
+> finally calls the generic pci_enable_sriov function.
 
-Signed-off-by: Nayna Jain <nayna@linux.ibm.com>
-Reviewed-by: Mimi Zohar <zohar@linux.ibm.com>
----
- security/integrity/Kconfig                    |  8 ++
- security/integrity/Makefile                   |  3 +
- .../integrity/platform_certs/load_powerpc.c   | 86 +++++++++++++++++++
- 3 files changed, 97 insertions(+)
- create mode 100644 security/integrity/platform_certs/load_powerpc.c
+I don't know anything about netlink.  The script from the bugzilla
+(https://bugzilla.kernel.org/show_bug.cgi?id=202991) looks like it
+runs
 
-diff --git a/security/integrity/Kconfig b/security/integrity/Kconfig
-index 0bae6adb63a9..26abee23e4e3 100644
---- a/security/integrity/Kconfig
-+++ b/security/integrity/Kconfig
-@@ -72,6 +72,14 @@ config LOAD_IPL_KEYS
-        depends on S390
-        def_bool y
- 
-+config LOAD_PPC_KEYS
-+	bool "Enable loading of platform and blacklisted keys for POWER"
-+	depends on INTEGRITY_PLATFORM_KEYRING
-+	depends on PPC_SECURE_BOOT
-+	help
-+	  Enable loading of keys to the .platform keyring and blacklisted
-+	  hashes to the .blacklist keyring for powerpc based platforms.
-+
- config INTEGRITY_AUDIT
- 	bool "Enables integrity auditing support "
- 	depends on AUDIT
-diff --git a/security/integrity/Makefile b/security/integrity/Makefile
-index 525bf1d6e0db..9eeb6b053de3 100644
---- a/security/integrity/Makefile
-+++ b/security/integrity/Makefile
-@@ -14,6 +14,9 @@ integrity-$(CONFIG_LOAD_UEFI_KEYS) += platform_certs/efi_parser.o \
- 				      platform_certs/load_uefi.o \
- 				      platform_certs/keyring_handler.o
- integrity-$(CONFIG_LOAD_IPL_KEYS) += platform_certs/load_ipl_s390.o
-+integrity-$(CONFIG_LOAD_PPC_KEYS) += platform_certs/efi_parser.o \
-+					 platform_certs/load_powerpc.o \
-+					 platform_certs/keyring_handler.o
- $(obj)/load_uefi.o: KBUILD_CFLAGS += -fshort-wchar
- 
- subdir-$(CONFIG_IMA)			+= ima
-diff --git a/security/integrity/platform_certs/load_powerpc.c b/security/integrity/platform_certs/load_powerpc.c
-new file mode 100644
-index 000000000000..83d99cde5376
---- /dev/null
-+++ b/security/integrity/platform_certs/load_powerpc.c
-@@ -0,0 +1,86 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Copyright (C) 2019 IBM Corporation
-+ * Author: Nayna Jain
-+ *
-+ *      - loads keys and hashes stored and controlled by the firmware.
-+ */
-+#include <linux/kernel.h>
-+#include <linux/sched.h>
-+#include <linux/cred.h>
-+#include <linux/err.h>
-+#include <linux/slab.h>
-+#include <asm/secure_boot.h>
-+#include <asm/secvar.h>
-+#include "keyring_handler.h"
-+
-+/*
-+ * Get a certificate list blob from the named secure variable.
-+ */
-+static __init void *get_cert_list(u8 *key, unsigned long keylen, uint64_t *size)
-+{
-+	int rc;
-+	void *db;
-+
-+	rc = secvar_ops->get(key, keylen, NULL, size);
-+	if (rc) {
-+		pr_err("Couldn't get size: %d\n", rc);
-+		return NULL;
-+	}
-+
-+	db = kmalloc(*size, GFP_KERNEL);
-+	if (!db)
-+		return NULL;
-+
-+	rc = secvar_ops->get(key, keylen, db, size);
-+	if (rc) {
-+		kfree(db);
-+		pr_err("Error reading db var: %d\n", rc);
-+		return NULL;
-+	}
-+
-+	return db;
-+}
-+
-+/*
-+ * Load the certs contained in the keys databases into the platform trusted
-+ * keyring and the blacklisted X.509 cert SHA256 hashes into the blacklist
-+ * keyring.
-+ */
-+static int __init load_powerpc_certs(void)
-+{
-+	void *db = NULL, *dbx = NULL;
-+	uint64_t dbsize = 0, dbxsize = 0;
-+	int rc = 0;
-+
-+	if (!secvar_ops)
-+		return -ENODEV;
-+
-+	/* Get db, and dbx.  They might not exist, so it isn't
-+	 * an error if we can't get them.
-+	 */
-+	db = get_cert_list("db", 3, &dbsize);
-+	if (!db) {
-+		pr_err("Couldn't get db list from firmware\n");
-+	} else {
-+		rc = parse_efi_signature_list("powerpc:db", db, dbsize,
-+					      get_handler_for_db);
-+		if (rc)
-+			pr_err("Couldn't parse db signatures: %d\n", rc);
-+		kfree(db);
-+	}
-+
-+	dbx = get_cert_list("dbx", 3,  &dbxsize);
-+	if (!dbx) {
-+		pr_info("Couldn't get dbx list from firmware\n");
-+	} else {
-+		rc = parse_efi_signature_list("powerpc:dbx", dbx, dbxsize,
-+					      get_handler_for_dbx);
-+		if (rc)
-+			pr_err("Couldn't parse dbx signatures: %d\n", rc);
-+		kfree(dbx);
-+	}
-+
-+	return rc;
-+}
-+late_initcall(load_powerpc_certs);
--- 
-2.20.1
+  ip monitor dev enp9s0f2
 
+What are the actual netlink events you see?  Are they related to a
+device being removed?
+
+When we change num_VFs, I think we have to disable any existing VFs
+before enabling the new num_VFs, so if you trigger on a netlink
+"remove" event, I wouldn't be surprised that reading sriov_numvfs
+would give a zero until the new VFs are enabled.
+
+> So the proposed patch works well for the i40e driver (x710 cards) because
+> the update to num_VFs is fast enough to be committed before the event is
+> received. It may not work with other cards. The same is true for the zero
+> value and there is no guarantee for other cards.
+> 
+> The clean solution would be to lock the device in sriov_numvfs_show.
+> I guess that there are good reasons why locks have been avoided
+> in sysfs getter functions so let us explore other approaches.
+> 
+> We can either return a "not settled" value (-1) or (probably better)
+> do not return a value but an error (-EAGAIN returned by the show
+> function).
+> 
+> To distinguish this "not settled" situation we can either:
+> * overload the meaning of num_VFs (eg make it negative)
+>   but it is an unsigned short.
+> * add a bool to pci_sriov struct (rather simple but modifies a well
+>   established structure).
+> * use the fact that not_settled => device is locked and use
+>   mutex_is_locked as an over approximation.
+> 
+> The later is not perfect but requires minimal changes to
+> sriov_numvfs_show:
+> 
+>      if (mutex_is_locked(&dev->mutex))
+>          return -EAGAIN;
+
+I thought this was a good idea, but
+
+  - It does break the device_lock() encapsulation a little bit:
+    sriov_numvfs_store() uses device_lock(), which happens to be
+    implemented as "mutex_lock(&dev->mutex)", but we really shouldn't
+    rely on that implementation, and
+
+  - The netlink events are being generated via the NIC driver, and I'm
+    a little hesitant about changing the PCI core to deal with timing
+    issues "over there".
+
+> In all cases, the device could be locked or the boolean set just
+> after the test. But I don't think there is a case where causality
+> would be violated.Thank you in advance for your recommendations.  I will
+> update the patch according to your instructions.
+> 
+> Le 06/04/2019 à 00:33, Bjorn Helgaas a écrit :
+> > On Fri, Mar 29, 2019 at 09:00:58AM +0100, Pierre Crégut wrote:
+> > > Ensure that iov->num_VFs is set before a netlink message is sent
+> > > when the number of VFs is changed. Only the path for num_VFs > 0
+> > > is affected. The path for num_VFs = 0 is already correct.
+> > > 
+> > > Monitoring programs can relie on netlink messages to track interface
+> > > change and query their state in /sys. But when sriov_numvfs is set to a
+> > > positive value, the netlink message is sent before the value is available
+> > > in sysfs. The value read after the message is received is always zero.
+> > Thanks, Pierre!  Can you clue me in on where exactly the connection
+> > from sriov_enable() to netlink is?
+> > 
+> > I see one side of the race is with sriov_numvfs_show(), but I don't
+> > know where the netlink message is sent.  Is that connected with the
+> > kobject_uevent(KOBJ_CHANGE)?
+> > 
+> > One thing this would help with is figuring out exactly how *much*
+> > earlier we need to set iov->num_VFs.  It looks like the current patch
+> > sets it before we actually enable the VFs, so a user could read
+> > /sys/.../sriov_numvfs and get the wrong value.  Of course, that's
+> > unavoidable; the question is whether it's OK to get the new value
+> > *before* it actually takes effect, or whether we want to return a
+> > stale value until after it takes effect.
+> > 
+> > > Link: https://bugzilla.kernel.org/show_bug.cgi?id=202991
+> > > Signed-off-by: Pierre Crégut <pierre.cregut@orange.com>
+> > > ---
+> > > note: the behaviour can be tested with the following shell script also
+> > > available on the bugzilla (d being the phy device name):
+> > > 
+> > > ip monitor dev $d | grep --line-buffered "^[0-9]*:" | \
+> > > while read line; do cat /sys/class/net/$d/device/sriov_numvfs; done
+> > > 
+> > >   drivers/pci/iov.c | 3 ++-
+> > >   1 file changed, 2 insertions(+), 1 deletion(-)
+> > > 
+> > > diff --git a/drivers/pci/iov.c b/drivers/pci/iov.c
+> > > index 3aa115ed3a65..a9655c10e87f 100644
+> > > --- a/drivers/pci/iov.c
+> > > +++ b/drivers/pci/iov.c
+> > > @@ -351,6 +351,7 @@ static int sriov_enable(struct pci_dev *dev, int nr_virtfn)
+> > >   		goto err_pcibios;
+> > >   	}
+> > > +	iov->num_VFs = nr_virtfn;
+> > >   	pci_iov_set_numvfs(dev, nr_virtfn);
+> > >   	iov->ctrl |= PCI_SRIOV_CTRL_VFE | PCI_SRIOV_CTRL_MSE;
+> > >   	pci_cfg_access_lock(dev);
+> > > @@ -363,7 +364,6 @@ static int sriov_enable(struct pci_dev *dev, int nr_virtfn)
+> > >   		goto err_pcibios;
+> > >   	kobject_uevent(&dev->dev.kobj, KOBJ_CHANGE);
+> > > -	iov->num_VFs = nr_virtfn;
+> > >   	return 0;
+> > > @@ -379,6 +379,7 @@ static int sriov_enable(struct pci_dev *dev, int nr_virtfn)
+> > >   	if (iov->link != dev->devfn)
+> > >   		sysfs_remove_link(&dev->dev.kobj, "dep_link");
+> > > +	iov->num_VFs = 0;
+> > >   	pci_iov_set_numvfs(dev, 0);
+> > >   	return rc;
+> > >   }
+> > > -- 
+> > > 2.17.1
+> > > 
