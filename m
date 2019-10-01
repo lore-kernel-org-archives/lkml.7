@@ -2,144 +2,108 @@ Return-Path: <SRS0=YRFP=X2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 75F55C352AA
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 12:08:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 52C81C388F3
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 12:08:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4438820700
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 12:08:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569931710;
-	bh=XCHUW0sFiehsHWOdWkwoD3qJu53YikewXF18yEas9ow=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=sD7YmagL13Zk5rqQlQYC45s5pKHlDIpg3aOlKr68NLSPtFPGeOEI9kjxdXHV+wFN0
-	 PNEdsN56LrbRQWNLVWW2q1GJg2f49j2DqfvDUtT6msP+pZRnBaVNaUT22rNvfRQVAI
-	 4i3w1A3Np4Akm/rti5Z5iNXXlgJIpV2Umh/WY+R0=
+	by mail.kernel.org (Postfix) with ESMTP id 32A8C20700
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 12:08:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732902AbfJAMI3 (ORCPT
+        id S2387664AbfJAMIl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Oct 2019 08:08:29 -0400
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:44997 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725821AbfJAMI3 (ORCPT
+        Tue, 1 Oct 2019 08:08:41 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:33088 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725821AbfJAMIl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Oct 2019 08:08:29 -0400
-Received: by mail-ot1-f65.google.com with SMTP id 21so11262884otj.11;
-        Tue, 01 Oct 2019 05:08:28 -0700 (PDT)
+        Tue, 1 Oct 2019 08:08:41 -0400
+Received: by mail-wr1-f65.google.com with SMTP id b9so15220403wrs.0;
+        Tue, 01 Oct 2019 05:08:39 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=bsKuMui1/xIoRg9sgW3QW1zBNcxnt/Bx1wXQKc1PEYw=;
-        b=K+DuMYxe5AFY6jMyR9GF4N/ICs9VhMRnq90JOIv0ry1NQuDP5Ayj4xOjHkoVivOlyY
-         Oxj0TJH6/durEsLzVzRDEqgvrlZb8YddkZXJXJnzWmHf2RUWUkqsA9o4PEp9yKvp6tsS
-         tEMWPwVcVACb0CS4L6k/eqiCep7ru4vL/yizEyYvqdcYe+B1077pQJK8KdcQdl4UwaBF
-         mC67LbPi4VeWKjI/5XW4pqaErKDkmQs0K4dILmLACEpigDyYYR55uaF26dUJV0wLkJyu
-         qC52oP2fstIIn9RXK6kqxaXJ8dWisNCZ8p4zawx+DASRS6FHuHf9U9UzHDF4Su7wNty/
-         RShQ==
-X-Gm-Message-State: APjAAAUuIhQMEEVrv0F8q1940zeVBau+oBy30eD8ThrmPYsokqQVYYZl
-        nOVfk1BIbx34+YUeJARbWw==
-X-Google-Smtp-Source: APXvYqzmhKuiodn2k2rjYHtIY+sxnIt9AOC3JK/zLBpGlQPeOA32z0qruE+A+HepzhYskR0Jx1n7iw==
-X-Received: by 2002:a9d:19a8:: with SMTP id k37mr17930702otk.172.1569931708065;
-        Tue, 01 Oct 2019 05:08:28 -0700 (PDT)
-Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id z3sm2524158otk.45.2019.10.01.05.08.27
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=vDFY4l7ObdzMDLTWvSUTkZyMTjDs2NyWYY8Kts57jhs=;
+        b=LQWkubhsu5JfOHnNRgZxHIVVqCwzlzmLuZ9RHk9QImzDX+0MV/CkXvsOatJ8tZrmXe
+         piAW/kJ612Zz75+s/zPNZ3jGgdtNmrHKAM1JfokLdSUAtFQAhU32AoKvMfarbTjWdPzT
+         SQEMxn+a2+nL4iNSRZbq09+EhJfByQ6UrXxaZnqSMks+OEgjXFSfc6OBquesTes2NQ07
+         XXtnlwoC9mcSE7WTBZ0Wc4mCa8Tl7iMcFslMY65KqGDhNWT055fwAULryP9LZae5dd3I
+         mat6PHk4RoNhs1du92YxKWZnnunloWSOpEJ2+V26Jqr0NWc1ao+HMTW1Z+Evw7XFEXCd
+         kCuQ==
+X-Gm-Message-State: APjAAAXRGfOqKC1GUjsfAFk1rBo27bvu7FrqiRlgpNcgHKyCXKXKHzSU
+        HbztSGXtCP1h6vE50Pxg9cdagF++
+X-Google-Smtp-Source: APXvYqyujIGI2hIGh/lUB8MFy3vCutJPJw+lMg4NWy6Jo7f9gI9ynwIJ+NcNgdPUNqFXXaJHDo5zCQ==
+X-Received: by 2002:a5d:540c:: with SMTP id g12mr17579546wrv.207.1569931718832;
+        Tue, 01 Oct 2019 05:08:38 -0700 (PDT)
+Received: from green.intra.ispras.ru (bran.ispras.ru. [83.149.199.196])
+        by smtp.googlemail.com with ESMTPSA id f18sm2600683wmh.43.2019.10.01.05.08.37
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 01 Oct 2019 05:08:27 -0700 (PDT)
-Date:   Tue, 1 Oct 2019 07:08:26 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Vignesh Raghavendra <vigneshr@ti.com>
-Cc:     Mark Rutland <mark.rutland@arm.com>, jejb@linux.ibm.com,
-        Martin K Petersen <martin.petersen@oracle.com>,
-        Alim Akhtar <alim.akhtar@samsung.com>,
-        Avri Altman <avri.altman@wdc.com>,
-        Pedro Sousa <pedrom.sousa@synopsys.com>,
-        Janek Kotas <jank@cadence.com>, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-scsi@vger.kernel.org,
-        nsekhar@ti.com
-Subject: Re: [PATCH 1/2] dt-bindings: ufs: ti,j721e-ufs.yaml: Add binding for
- TI UFS wrapper
-Message-ID: <20191001120826.GA4214@bogus>
-References: <20190918133921.25844-1-vigneshr@ti.com>
- <20190918133921.25844-2-vigneshr@ti.com>
+        Tue, 01 Oct 2019 05:08:38 -0700 (PDT)
+From:   Denis Efremov <efremov@linux.com>
+To:     linux-wireless@vger.kernel.org
+Cc:     Denis Efremov <efremov@linux.com>, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, wil6210@qti.qualcomm.com,
+        Maya Erez <merez@codeaurora.org>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        "David S. Miller" <davem@davemloft.net>, stable@vger.kernel.org
+Subject: [PATCH] wil6210: check len before memcpy() calls
+Date:   Tue,  1 Oct 2019 15:08:23 +0300
+Message-Id: <20191001120823.29853-1-efremov@linux.com>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190918133921.25844-2-vigneshr@ti.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Sep 18, 2019 at 07:09:20PM +0530, Vignesh Raghavendra wrote:
-> Add binding documentation of TI wrapper for Cadence UFS Controller.
-> 
-> Signed-off-by: Vignesh Raghavendra <vigneshr@ti.com>
-> ---
->  .../devicetree/bindings/ufs/ti,j721e-ufs.yaml | 45 +++++++++++++++++++
->  1 file changed, 45 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/ufs/ti,j721e-ufs.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/ufs/ti,j721e-ufs.yaml b/Documentation/devicetree/bindings/ufs/ti,j721e-ufs.yaml
-> new file mode 100644
-> index 000000000000..dabd7c795fbe
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/ufs/ti,j721e-ufs.yaml
-> @@ -0,0 +1,45 @@
-> +# SPDX-License-Identifier: GPL-2.0
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/ufs/ti,j721e-ufs.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: TI J721e UFS Host Controller Glue Driver
-> +
-> +maintainers:
-> +  - Vignesh Raghavendra <vigneshr@ti.com>
-> +
-> +properties:
-> +  compatible:
-> +    items:
-> +      - const: ti,j721e-ufs
-> +
-> +  reg:
-> +    maxItems: 1
-> +    description: address of TI UFS glue registers
-> +
-> +  clocks:
-> +    maxItems: 1
-> +    description: phandle to the M-PHY clock
-> +
-> +  power-domains:
-> +    maxItems: 1
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - clocks
-> +  - power-domains
-> +
-> +examples:
-> +  - |
-> +    ufs_wrapper: ufs-wrapper@4e80000 {
-> +       compatible = "ti,j721e-ufs";
-> +       reg = <0x0 0x4e80000 0x0 0x100>;
-> +       power-domains = <&k3_pds 277>;
-> +       clocks = <&k3_clks 277 1>;
-> +       assigned-clocks = <&k3_clks 277 1>;
-> +       assigned-clock-parents = <&k3_clks 277 4>;
-> +       #address-cells = <2>;
-> +       #size-cells = <2>;
+memcpy() in wmi_set_ie() and wmi_update_ft_ies() is called with
+src == NULL and len == 0. This is an undefined behavior. Fix it
+by checking "ie_len > 0" before the memcpy() calls.
 
-Based on the driver you expect to have a child node here with the UFS 
-controller? You need to show that and have a schema for it.
+As suggested by GCC documentation:
+"The pointers passed to memmove (and similar functions in <string.h>)
+must be non-null even when nbytes==0, so GCC can use that information
+to remove the check after the memmove call." [1]
 
-> +    };
-> -- 
-> 2.23.0
-> 
+[1] https://gcc.gnu.org/gcc-4.9/porting_to.html
+
+Cc: Maya Erez <merez@codeaurora.org>
+Cc: Kalle Valo <kvalo@codeaurora.org>
+Cc: "David S. Miller" <davem@davemloft.net>
+Cc: stable@vger.kernel.org
+Signed-off-by: Denis Efremov <efremov@linux.com>
+---
+ drivers/net/wireless/ath/wil6210/wmi.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/net/wireless/ath/wil6210/wmi.c b/drivers/net/wireless/ath/wil6210/wmi.c
+index 153b84447e40..41389c1eb252 100644
+--- a/drivers/net/wireless/ath/wil6210/wmi.c
++++ b/drivers/net/wireless/ath/wil6210/wmi.c
+@@ -2505,7 +2505,8 @@ int wmi_set_ie(struct wil6210_vif *vif, u8 type, u16 ie_len, const void *ie)
+ 	cmd->mgmt_frm_type = type;
+ 	/* BUG: FW API define ieLen as u8. Will fix FW */
+ 	cmd->ie_len = cpu_to_le16(ie_len);
+-	memcpy(cmd->ie_info, ie, ie_len);
++	if (ie_len)
++		memcpy(cmd->ie_info, ie, ie_len);
+ 	rc = wmi_send(wil, WMI_SET_APPIE_CMDID, vif->mid, cmd, len);
+ 	kfree(cmd);
+ out:
+@@ -2541,7 +2542,8 @@ int wmi_update_ft_ies(struct wil6210_vif *vif, u16 ie_len, const void *ie)
+ 	}
+ 
+ 	cmd->ie_len = cpu_to_le16(ie_len);
+-	memcpy(cmd->ie_info, ie, ie_len);
++	if (ie_len)
++		memcpy(cmd->ie_info, ie, ie_len);
+ 	rc = wmi_send(wil, WMI_UPDATE_FT_IES_CMDID, vif->mid, cmd, len);
+ 	kfree(cmd);
+ 
+-- 
+2.21.0
+
