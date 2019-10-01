@@ -2,270 +2,166 @@ Return-Path: <SRS0=YRFP=X2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A8E2C388F3
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 08:18:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 02769C352AA
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 08:19:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5145821920
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 08:18:54 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="nIWFlUzx"
+	by mail.kernel.org (Postfix) with ESMTP id D7D2521855
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 08:19:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728916AbfJAISx (ORCPT
+        id S1729747AbfJAITY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Oct 2019 04:18:53 -0400
-Received: from mx08-00178001.pphosted.com ([91.207.212.93]:6070 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726148AbfJAISx (ORCPT
+        Tue, 1 Oct 2019 04:19:24 -0400
+Received: from mail-out.m-online.net ([212.18.0.10]:41756 "EHLO
+        mail-out.m-online.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726148AbfJAITX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Oct 2019 04:18:53 -0400
-Received: from pps.filterd (m0046660.ppops.net [127.0.0.1])
-        by mx08-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id x918GGSn032726;
-        Tue, 1 Oct 2019 10:18:37 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=STMicroelectronics;
- bh=mN3zwHVMlS9XIg54J7DpTZd7PPmBpXVwI1xLJWxnpGg=;
- b=nIWFlUzxCMWmLyvlbhF7uyhvZ7ZKrnLlLYtk3LMAHWtFOi8TgmcqVRAESrRCbV1H966c
- BGE5fOTKuhZ+n5Px7v3Wfa/tYnVhBV7dsS86FSl6mVJrvje9aLbILZINc6Mn93DoYzPk
- 51FZSHiHQv5j1qjL2L8JB4+JuGs51jC4Dr2H2QbcTvN+f8KF4tFMTYFu643PEhJ2De9h
- RjQhDKokkWTzqEfghnVqnH/5/qnMP3UC6oKxEeKbNBZoYmQLmAjM2Q8gErIO5gCSfEyg
- TlUzVseNWQVCIIgInh5DBAiPVfLY7r4vckN6qEYro+AO+9FlGElnZ9d4jmfmbICbLGjc hw== 
-Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
-        by mx08-00178001.pphosted.com with ESMTP id 2v9vna7ua8-1
-        (version=TLSv1 cipher=ECDHE-RSA-AES256-SHA bits=256 verify=NOT);
-        Tue, 01 Oct 2019 10:18:37 +0200
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id A6F0B4C;
-        Tue,  1 Oct 2019 08:18:33 +0000 (GMT)
-Received: from Webmail-eu.st.com (Safex1hubcas21.st.com [10.75.90.44])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 1CA1D2AF4CC;
-        Tue,  1 Oct 2019 10:18:33 +0200 (CEST)
-Received: from SAFEX1HUBCAS22.st.com (10.75.90.92) by SAFEX1HUBCAS21.st.com
- (10.75.90.44) with Microsoft SMTP Server (TLS) id 14.3.439.0; Tue, 1 Oct 2019
- 10:18:32 +0200
-Received: from [10.48.0.192] (10.48.0.192) by Webmail-ga.st.com (10.75.90.48)
- with Microsoft SMTP Server (TLS) id 14.3.439.0; Tue, 1 Oct 2019 10:18:32
- +0200
-Subject: Re: [PATCH 2/2] pwm: stm32: add power management support
-To:     =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>
-CC:     <thierry.reding@gmail.com>, <robh+dt@kernel.org>,
-        <alexandre.torgue@st.com>, <mark.rutland@arm.com>,
-        <mcoquelin.stm32@gmail.com>, <devicetree@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <linux-pwm@vger.kernel.org>,
-        <benjamin.gaignard@st.com>,
-        <linux-stm32@st-md-mailman.stormreply.com>
-References: <1569857951-20007-1-git-send-email-fabrice.gasnier@st.com>
- <1569857951-20007-3-git-send-email-fabrice.gasnier@st.com>
- <20191001070450.4zogfryzo7a5ssbd@pengutronix.de>
-From:   Fabrice Gasnier <fabrice.gasnier@st.com>
-Message-ID: <3c6e551b-98a2-a418-c4ee-002077e46f31@st.com>
-Date:   Tue, 1 Oct 2019 10:18:31 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Tue, 1 Oct 2019 04:19:23 -0400
+Received: from frontend01.mail.m-online.net (unknown [192.168.8.182])
+        by mail-out.m-online.net (Postfix) with ESMTP id 46jBxz1sRqz1rfPS;
+        Tue,  1 Oct 2019 10:19:19 +0200 (CEST)
+Received: from localhost (dynscan1.mnet-online.de [192.168.6.70])
+        by mail.m-online.net (Postfix) with ESMTP id 46jBxz0tzKz1qqkJ;
+        Tue,  1 Oct 2019 10:19:19 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at mnet-online.de
+Received: from mail.mnet-online.de ([192.168.8.182])
+        by localhost (dynscan1.mail.m-online.net [192.168.6.70]) (amavisd-new, port 10024)
+        with ESMTP id 5UqoMroY0bH0; Tue,  1 Oct 2019 10:19:16 +0200 (CEST)
+X-Auth-Info: 8uGd2zSasi4BZOt5q3xd6by93nPKyS29VRpdS81cGcs=
+Received: from jawa (85-222-111-42.dynamic.chello.pl [85.222.111.42])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.mnet-online.de (Postfix) with ESMTPSA;
+        Tue,  1 Oct 2019 10:19:16 +0200 (CEST)
+Date:   Tue, 1 Oct 2019 10:19:09 +0200
+From:   Lukasz Majewski <lukma@denx.de>
+To:     Lee Jones <lee.jones@linaro.org>
+Cc:     linux-kernel@vger.kernel.org,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Enrico Weigelt <info@metux.net>,
+        Kate Stewart <kstewart@linuxfoundation.org>,
+        linux-input@vger.kernel.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: Re: [PATCH v5 0/3] mfd: mc13xxx: Fixes and enhancements for NXP's
+ mc34708
+Message-ID: <20191001101909.79aacda0@jawa>
+In-Reply-To: <20191001064130.GA11769@dell>
+References: <20190909214440.30674-1-lukma@denx.de>
+        <20190930095159.64e1001a@jawa>
+        <20191001064130.GA11769@dell>
+Organization: denx.de
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-In-Reply-To: <20191001070450.4zogfryzo7a5ssbd@pengutronix.de>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.48.0.192]
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,1.0.8
- definitions=2019-10-01_04:2019-09-30,2019-10-01 signatures=0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+ boundary="Sig_/OwH/Dd552kMbiK8hNyDRMNo"; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 10/1/19 9:04 AM, Uwe Kleine-König wrote:
-> Hello Fabrice,
-> 
-> On Mon, Sep 30, 2019 at 05:39:11PM +0200, Fabrice Gasnier wrote:
->> Add suspend/resume PM sleep ops. When going to low power, enforce the PWM
->> channel isn't active. Let the PWM consumers disable it during their own
->> suspend sequence, see [1]. So, perform a check here, and handle the
->> pinctrl states. Also restore the break inputs upon resume, as registers
->> content may be lost when going to low power mode.
->>
->> [1] https://lkml.org/lkml/2019/2/5/770
->>
->> Signed-off-by: Fabrice Gasnier <fabrice.gasnier@st.com>
->> ---
->>  drivers/pwm/pwm-stm32.c | 82 +++++++++++++++++++++++++++++++++++++------------
->>  1 file changed, 62 insertions(+), 20 deletions(-)
->>
->> diff --git a/drivers/pwm/pwm-stm32.c b/drivers/pwm/pwm-stm32.c
->> index 740e2de..9bcd73a 100644
->> --- a/drivers/pwm/pwm-stm32.c
->> +++ b/drivers/pwm/pwm-stm32.c
->> @@ -12,6 +12,7 @@
->>  #include <linux/mfd/stm32-timers.h>
->>  #include <linux/module.h>
->>  #include <linux/of.h>
->> +#include <linux/pinctrl/consumer.h>
->>  #include <linux/platform_device.h>
->>  #include <linux/pwm.h>
->>  
->> @@ -19,6 +20,12 @@
->>  #define CCMR_CHANNEL_MASK  0xFF
->>  #define MAX_BREAKINPUT 2
->>  
->> +struct stm32_breakinput {
->> +	u32 index;
->> +	u32 level;
->> +	u32 filter;
->> +};
->> +
->>  struct stm32_pwm {
->>  	struct pwm_chip chip;
->>  	struct mutex lock; /* protect pwm config/enable */
->> @@ -26,15 +33,11 @@ struct stm32_pwm {
->>  	struct regmap *regmap;
->>  	u32 max_arr;
->>  	bool have_complementary_output;
->> +	struct stm32_breakinput breakinput[MAX_BREAKINPUT];
->> +	unsigned int nbreakinput;
->>  	u32 capture[4] ____cacheline_aligned; /* DMA'able buffer */
->>  };
->>  
->> -struct stm32_breakinput {
->> -	u32 index;
->> -	u32 level;
->> -	u32 filter;
->> -};
->> -
->>  static inline struct stm32_pwm *to_stm32_pwm_dev(struct pwm_chip *chip)
->>  {
->>  	return container_of(chip, struct stm32_pwm, chip);
->> @@ -512,15 +515,27 @@ static int stm32_pwm_set_breakinput(struct stm32_pwm *priv,
->>  	return (bdtr & bke) ? 0 : -EINVAL;
->>  }
->>  
->> -static int stm32_pwm_apply_breakinputs(struct stm32_pwm *priv,
->> +static int stm32_pwm_apply_breakinputs(struct stm32_pwm *priv)
->> +{
->> +	int i, ret = 0;
->> +
->> +	for (i = 0; i < priv->nbreakinput && !ret; i++) {
->> +		ret = stm32_pwm_set_breakinput(priv,
->> +					       priv->breakinput[i].index,
->> +					       priv->breakinput[i].level,
->> +					       priv->breakinput[i].filter);
->> +	}
->> +
->> +	return ret;
->> +}
-> 
-> Can you explain what the effect of this function is? This is something
-> that is lost during suspend?
+--Sig_/OwH/Dd552kMbiK8hNyDRMNo
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Hi Uwe,
+Hi Lee,
 
-Yes, that's what I explain in the commit message: ...registers content
-may be lost when going to low power mode.
-Do you think I need to rephrase ?
+> On Mon, 30 Sep 2019, Lukasz Majewski wrote:
+>=20
+> > Dear Lee,
+> >  =20
+> > > This patch set provides several enhancements to mc13xxx MFD family
+> > > of devices by introducing mc34708 as a separate device.
+> > >=20
+> > > This IC has dedicated pen detection feature, which allows better
+> > > touchscreen experience.
+> > >=20
+> > > This is the fifth version of this code (v5).
+> > > Discussion regarding previous versions can be found here:
+> > > https://lkml.org/lkml/2018/4/12/351
+> > > https://www.mail-archive.com/linux-kernel@vger.kernel.org/msg1661934.=
+html
+> > > https://www.mail-archive.com/linux-kernel@vger.kernel.org/msg1664296.=
+html
+> > > https://lkml.org/lkml/2019/7/17/705 =20
+> >=20
+> > Gentle ping on this patch series. It is now 3 weeks without any
+> > reply... =20
+>=20
+> Please take note and follow the kernel release cycle.
+>=20
+> These patches were sent after the release of -rc7 i.e. very late
+> in the release cycle and a point where most kernel maintainers stop
+> reviewing/applying patches
 
-> 
-> I wonder why the patch is so big. There are some rearrangements that
-> should have no effect and I think it would be beneficial for
-> reviewability to split this patch in a patch that only does the
-> restructuring and than on top of that add the PM stuff.
+Maybe something has changed recently, but I thought that the review is
+an ongoing process (that the discussion about patches takes place all
+the time to refine the code).
 
-I can split this to ease the review.
-> 
->> +
->> +static int stm32_pwm_probe_breakinputs(struct stm32_pwm *priv,
->>  				       struct device_node *np)
->>  {
->> -	struct stm32_breakinput breakinput[MAX_BREAKINPUT];
->> -	int nb, ret, i, array_size;
->> +	int nb, ret, array_size;
->>  
->>  	nb = of_property_count_elems_of_size(np, "st,breakinput",
->>  					     sizeof(struct stm32_breakinput));
->> -
->>  	/*
->>  	 * Because "st,breakinput" parameter is optional do not make probe
->>  	 * failed if it doesn't exist.
->> @@ -531,20 +546,14 @@ static int stm32_pwm_apply_breakinputs(struct stm32_pwm *priv,
->>  	if (nb > MAX_BREAKINPUT)
->>  		return -EINVAL;
->>  
->> +	priv->nbreakinput = nb;
->>  	array_size = nb * sizeof(struct stm32_breakinput) / sizeof(u32);
->>  	ret = of_property_read_u32_array(np, "st,breakinput",
->> -					 (u32 *)breakinput, array_size);
->> +					 (u32 *)priv->breakinput, array_size);
->>  	if (ret)
->>  		return ret;
->>  
->> -	for (i = 0; i < nb && !ret; i++) {
->> -		ret = stm32_pwm_set_breakinput(priv,
->> -					       breakinput[i].index,
->> -					       breakinput[i].level,
->> -					       breakinput[i].filter);
->> -	}
->> -
->> -	return ret;
->> +	return stm32_pwm_apply_breakinputs(priv);
->>  }
->>  
->>  static void stm32_pwm_detect_complementary(struct stm32_pwm *priv)
->> @@ -614,7 +623,7 @@ static int stm32_pwm_probe(struct platform_device *pdev)
->>  	if (!priv->regmap || !priv->clk)
->>  		return -EINVAL;
->>  
->> -	ret = stm32_pwm_apply_breakinputs(priv, np);
->> +	ret = stm32_pwm_probe_breakinputs(priv, np);
->>  	if (ret)
->>  		return ret;
->>  
->> @@ -647,6 +656,38 @@ static int stm32_pwm_remove(struct platform_device *pdev)
->>  	return 0;
->>  }
->>  
->> +static int __maybe_unused stm32_pwm_suspend(struct device *dev)
->> +{
->> +	struct stm32_pwm *priv = dev_get_drvdata(dev);
->> +	struct pwm_state state;
->> +	unsigned int i;
->> +
->> +	for (i = 0; i < priv->chip.npwm; i++) {
->> +		pwm_get_state(&priv->chip.pwms[i], &state);
-> 
-> pwm_get_state is a function designed to be used by PWM consumers. I
-> would prefer to check the hardware registers here instead.
+(and nobody expects maintainers pulling new patches after merge window).
 
-It's also useful for PWM provider: This PWM driver is part of a MFD that
-also take care of IIO trigger (can be used simultaneously). Simply
-reading a register doesn't tell us that the timer is used/configured as
-a PWM here. That's the reason to use this helper to read pwm->state.
+> and start to prepare for the impending
+> merge-window.
+>=20
+> Also, there is no such thing as a gentle ping.
 
-Do you wish I add a comment to clarify this here ?
+I'm a bit puzzled now.=20
+I do know that maintainers are overworked - and I do understand that.
 
-> 
-> What if there is no consumer and the PWM just happens to be enabled by
-> the bootloader? Or is this too minor an issue to be worth consideration?
+However, NO reply for such a long time is at best confusing for
+somebody who is willing to fix the kernel.
 
-That's the purpose of returning -EBUSY: "PWM should not stop if the PWM
-user didn't call pwm_disable()" ... "to avoid situation where the PWM is
-actually suspended before the user". This has been enforced in later
-series with the device_link_add(). See our previous discussions here:
-https://lkml.org/lkml/2019/2/5/770
-So, I guess this would point exactly a lack for a PWM user to manage it
-after the boot stage, in the kernel.
+(Maybe this has changed too - but I do remember that there was a "rule
+of thumb" to express any comment about the patch in 2 weeks time).
 
-Could you please clarify, provide an example here ?
+>  If you genuinely think
+> your patches have unlikely("slipped though the gaps"), then post a
+> [RESEND] complete with a note alluding your reasons doing such.
+>=20
 
-Thanks for reviewing,
-BR,
-Fabrice
+Please forgive me, but are patches from this series eligible for pulling
+(to v5.4 or even next release)?
 
-> 
-> Best regards
-> Uwe
-> 
+> > > Sascha Hauer (3):
+> > >   mfd: mc13xxx: Add mc34708 adc support
+> > >   input: touchscreen mc13xxx: Make platform data optional
+> > >   input: touchscreen mc13xxx: Add mc34708 support
+> > >=20
+> > >  drivers/input/touchscreen/mc13783_ts.c | 63 ++++++++++++++---
+> > >  drivers/mfd/mc13xxx-core.c             | 98
+> > > +++++++++++++++++++++++++- include/linux/mfd/mc34708.h
+> > > | 37 ++++++++++ 3 files changed, 185 insertions(+), 13
+> > > deletions(-) create mode 100644 include/linux/mfd/mc34708.h =20
+>=20
+
+
+Best regards,
+
+Lukasz Majewski
+
+--
+
+DENX Software Engineering GmbH,      Managing Director: Wolfgang Denk
+HRB 165235 Munich, Office: Kirchenstr.5, D-82194 Groebenzell, Germany
+Phone: (+49)-8142-66989-59 Fax: (+49)-8142-66989-80 Email: lukma@denx.de
+
+--Sig_/OwH/Dd552kMbiK8hNyDRMNo
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCgAdFiEEgAyFJ+N6uu6+XupJAR8vZIA0zr0FAl2TC/0ACgkQAR8vZIA0
+zr3T1AgAx+/w2FpkD+h4YUVVh0IhJqiHC2Ho3rX9Hc4qCOZ2TUt+giDv0QvwAzaZ
+hMcuTZr6JwcoBtvMa2acDQgCcQr8TkywMhfOitev2ZA8jSpC3NZaXnH4aK4G2wp7
+r1oA0Fnt22XVtVlpXmoktiaqVttkxImcOlI1H5UOKMr2wxZOc4/oBOG5qH2cRFvr
+B4gWWaU5AGl6AkoG1/r9p/80N1w3tOnHapVJzptmKowKCoEdtFYG0pOUleFXZgAI
+f55x2H62J62S8LlkWgTtSyAHmOps/Bd2SlurRWUSICR1gmVCzdz6EhMvf7KKxBOL
+XUx4yTg8iv4BrW+kZ+I1yPdr0X/tFg==
+=T0tY
+-----END PGP SIGNATURE-----
+
+--Sig_/OwH/Dd552kMbiK8hNyDRMNo--
