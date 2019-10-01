@@ -2,118 +2,96 @@ Return-Path: <SRS0=YRFP=X2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3618AECE587
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 13:44:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 398C1ECE587
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 13:44:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0A45520815
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 13:44:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="YLeNdJ2/"
+	by mail.kernel.org (Postfix) with ESMTP id 0504F2086A
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 13:44:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1569937493;
+	bh=cDLGZOEKPcejJ8BC4dY+lAl+SSVuZo2OcqMrFTLR3VI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=P0negnPakhhGMBH3skSPM0s7xIHi9jyh6xSWUZbuwkBB6oHeaSEAHMKRPD/Ry9PxM
+	 AUwa89xINtyZPj1ij1UnQIRyfcEDICfnPCU+19u8tpAh6q6WfduTTalDdLHoPxcyh7
+	 K9d/ot1Jc9IXJbbet492//vaqjorHuPnMQXx1vxA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388595AbfJANog (ORCPT
+        id S2388690AbfJANow (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Oct 2019 09:44:36 -0400
-Received: from merlin.infradead.org ([205.233.59.134]:33070 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726710AbfJANof (ORCPT
+        Tue, 1 Oct 2019 09:44:52 -0400
+Received: from mail-oi1-f194.google.com ([209.85.167.194]:34585 "EHLO
+        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726710AbfJANow (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Oct 2019 09:44:35 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=2m24KAnnZ5y5sVgG4gm6joH2usJLTNvqw2r0eLXmqA8=; b=YLeNdJ2/KlYqexp/AFMUaoUJM
-        etxHpft9okaRwQ7rJwh7yH58Cdfw3mL0t1siWVBFIJVwnAcNclRu7YMtDW7GOkgZ9Yiwc2Tdu7ITa
-        1aKlf1Kj4LET0p2ZW0bcgwCNL3ekAN4wKpvrYXos7JzSJniWF26OmDK+HOfNdoDHliejHSNu+O5m8
-        3yROoJrKjjADnCXqko3ifqDQVnV6jUeYkIQoJafTJV4j3E+8U5Uw6Vp039pKJC2MLBdqHzbyFr2oq
-        wO1yNVxkLRvxv4CdbMzIcsB9GSBy/qQtpogr9pTDDbwFfCcOX7ocLO5whK2fnUI5b20ttNNEbBYJd
-        IP3cxdgWg==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92.2 #3 (Red Hat Linux))
-        id 1iFIRp-0008Cn-6O; Tue, 01 Oct 2019 13:44:13 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id F29FB305E4E;
-        Tue,  1 Oct 2019 15:43:21 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 643C629CCFDD4; Tue,  1 Oct 2019 15:44:10 +0200 (CEST)
-Date:   Tue, 1 Oct 2019 15:44:10 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Srikar Dronamraju <srikar@linux.vnet.ibm.com>
-Cc:     Qian Cai <cai@lca.pw>, akpm@linux-foundation.org,
-        bigeasy@linutronix.de, tglx@linutronix.de, thgarnie@google.com,
-        tytso@mit.edu, cl@linux.com, penberg@kernel.org,
-        rientjes@google.com, mingo@redhat.com, will@kernel.org,
-        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        keescook@chromium.org
-Subject: Re: [PATCH] sched: Avoid spurious lock dependencies
-Message-ID: <20191001134410.GL4536@hirez.programming.kicks-ass.net>
-References: <1568392064-3052-1-git-send-email-cai@lca.pw>
- <20190925093153.GC4553@hirez.programming.kicks-ass.net>
- <1569424727.5576.221.camel@lca.pw>
- <20190925164527.GG4553@hirez.programming.kicks-ass.net>
- <1569500974.5576.234.camel@lca.pw>
- <20191001091837.GK4536@hirez.programming.kicks-ass.net>
- <20191001113513.GB32306@linux.vnet.ibm.com>
+        Tue, 1 Oct 2019 09:44:52 -0400
+Received: by mail-oi1-f194.google.com with SMTP id 83so14460687oii.1;
+        Tue, 01 Oct 2019 06:44:51 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=tEk9hnIUXWE3u1Rb3n2bhHYcH2Wd7u6ueEiS5QFdFr0=;
+        b=mE+5HtLXTWbP6dRQRQmAotRIbCU+lk3lH6pOBTZQrEFzLdc5UoldO+iRlWpruobPr0
+         L+BpqZIlNDP+q3iXCPDB7AsTniJREmCQVntIv8LnSOCa+9YGnnv1BKKIuTSTWPH0j4T6
+         xdV7/ex80UAbAd1mFd27qjJ6eoNA1BqelgPLH5EGYrsS2DGznbAnmuR31rR+RkffUorh
+         KeC7pzTQBBeQyKsNT5D7jJk8g8f05e8NJCI2X2JtltY8oGs0iKymTnJ1RfMMoQymujzC
+         iubrjJgirisP5GiTVFhYb5KQmTlsIMVR6gjXZa9kLre9+b+1Klr9m7Z1kc4Y5gqOXLcv
+         tmOg==
+X-Gm-Message-State: APjAAAVLOvcrbyGybFgglY3QxPy6U8m8DK2IxI2HPCOWFtfdsrnC8rve
+        mYcf6/0jJPXkLeIAF5pDmw==
+X-Google-Smtp-Source: APXvYqwOufGQSK3HWFRGN91rsiUi3BhlQyYODzFgebhOif+j+ruhjh6YpWFbeO3JiM9jfqQ60ojUuw==
+X-Received: by 2002:aca:f0d4:: with SMTP id o203mr3677322oih.15.1569937491029;
+        Tue, 01 Oct 2019 06:44:51 -0700 (PDT)
+Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id v75sm5301353oia.6.2019.10.01.06.44.50
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 01 Oct 2019 06:44:50 -0700 (PDT)
+Date:   Tue, 1 Oct 2019 08:44:49 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Marek Szyprowski <m.szyprowski@samsung.com>
+Cc:     devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org,
+        Maciej Falkowski <m.falkowski@samsung.com>
+Subject: Re: [PATCH v3] dt-bindings: gpu: Convert Samsung 2D Graphics
+  Accelerator to dt-schema
+Message-ID: <20191001134449.GA23645@bogus>
+References: <CGME20190927143325eucas1p289cb46e8dcbb1ace0b1f80ade738c29b@eucas1p2.samsung.com>
+ <20190927143319.12232-1-m.szyprowski@samsung.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191001113513.GB32306@linux.vnet.ibm.com>
+In-Reply-To: <20190927143319.12232-1-m.szyprowski@samsung.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Oct 01, 2019 at 05:06:56PM +0530, Srikar Dronamraju wrote:
-> > Subject: sched: Avoid spurious lock dependencies
-> > 
-> > While seemingly harmless, __sched_fork() does hrtimer_init(), which,
-> > when DEBUG_OBJETS, can end up doing allocations.
-> > 
+On Fri, 27 Sep 2019 16:33:19 +0200, Marek Szyprowski wrote:
+> From: Maciej Falkowski <m.falkowski@samsung.com>
 > 
-> NIT: s/DEBUG_OBJETS/DEBUG_OBJECTS
+> Convert Samsung 2D Graphics Accelerator to newer dt-schema format
 > 
-> > diff --git a/kernel/sched/core.c b/kernel/sched/core.c
-> > index 7880f4f64d0e..1832fc0fbec5 100644
-> > --- a/kernel/sched/core.c
-> > +++ b/kernel/sched/core.c
-> > @@ -6039,10 +6039,11 @@ void init_idle(struct task_struct *idle, int cpu)
-> >  	struct rq *rq = cpu_rq(cpu);
-> >  	unsigned long flags;
-> >  
-> > +	__sched_fork(0, idle);
-> > +
-> >  	raw_spin_lock_irqsave(&idle->pi_lock, flags);
-> >  	raw_spin_lock(&rq->lock);
-> >  
-> > -	__sched_fork(0, idle);
-> >  	idle->state = TASK_RUNNING;
-> >  	idle->se.exec_start = sched_clock();
-> >  	idle->flags |= PF_IDLE;
-> > 
+> Signed-off-by: Maciej Falkowski <m.falkowski@samsung.com>
+> ---
+> v3:
+> - Merged two if-statements with single if-else statement
+> - Added 'additionalProperties: false'
+> - Listed all missing 'properties' in properties scope
 > 
-> Given that there is a comment just after this which says
-> "init_task() gets called multiple times on a task",
-> should we add a check if rq->idle is present and bail out?
+> Best regards,
+> Maciej Falkowski
+> ---
+>  .../devicetree/bindings/gpu/samsung-g2d.txt   | 27 -------
+>  .../devicetree/bindings/gpu/samsung-g2d.yaml  | 75 +++++++++++++++++++
+>  2 files changed, 75 insertions(+), 27 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/gpu/samsung-g2d.txt
+>  create mode 100644 Documentation/devicetree/bindings/gpu/samsung-g2d.yaml
 > 
-> if (rq->idle) {
->     raw_spin_unlock(&rq->lock);
->     raw_spin_unlock_irqrestore(&idle->pi_lock, flags);
->     return;
-> }
 
-Not really worth it; the best solution is to fix the callchains leading
-up to it. It's all hotplug related IIRC and so it's slow anyway.
+Applied, thanks.
 
-> Also can we also move the above 3 statements before the lock?
-
-Probably, but to what effect?
+Rob
