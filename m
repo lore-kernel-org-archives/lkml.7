@@ -2,104 +2,68 @@ Return-Path: <SRS0=YRFP=X2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 958D5ECE58A
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 16:58:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0495ECE587
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 16:58:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5B2642168B
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 16:58:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569949080;
-	bh=OLACyd3bdMh9lkeSGbPlVm1QG0QsbhnG2nzLNyj/aNY=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vIOtCQrvyDZxZtJOXb4UmLS27eZk7JPYYePiqMaaS4aJ5lV2KGiRnf1JzGwk15zUg
-	 7QVCMqjq22RBPeeaK0aD6ueKCRl8Eadf8leGSYi/H0KB1eqThdwWVoRxjuEE0ipdE9
-	 FjaKAsIl7F4C9dgxBj+/Z6kFR13N/LEeHJV+PthQ=
+	by mail.kernel.org (Postfix) with ESMTP id 8CA722168B
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 16:58:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387710AbfJAQ57 (ORCPT
+        id S2387912AbfJAQ6F (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Oct 2019 12:57:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53424 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731313AbfJAQlq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Oct 2019 12:58:05 -0400
+Received: from shards.monkeyblade.net ([23.128.96.9]:49568 "EHLO
+        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731314AbfJAQlq (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 1 Oct 2019 12:41:46 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CD5192190F;
-        Tue,  1 Oct 2019 16:41:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569948105;
-        bh=OLACyd3bdMh9lkeSGbPlVm1QG0QsbhnG2nzLNyj/aNY=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=g1aK25bjSMTjkKvDETe+krx8tGz9lVaZreDTi8mZmf4rPPtKi9CaCpr7lfhJdOKAJ
-         QT0mImNHU423f7njKIs2iFp9Lc4H0B3hvGOkghGfjO7SRjRBCE6JDhZNV83P4zLGMm
-         zBqlBqz2AQtyKR0ozDp3aRpP6+y5FI8OqzB12SZs=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Ryan Chen <ryan_chen@aspeedtech.com>,
-        Joel Stanley <joel@jms.id.au>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Sasha Levin <sashal@kernel.org>, linux-watchdog@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.2 16/63] watchdog: aspeed: Add support for AST2600
-Date:   Tue,  1 Oct 2019 12:40:38 -0400
-Message-Id: <20191001164125.15398-16-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191001164125.15398-1-sashal@kernel.org>
-References: <20191001164125.15398-1-sashal@kernel.org>
-MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+Received: from localhost (unknown [IPv6:2601:601:9f00:1e2::3d5])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id 2241015458711;
+        Tue,  1 Oct 2019 09:41:45 -0700 (PDT)
+Date:   Tue, 01 Oct 2019 09:41:44 -0700 (PDT)
+Message-Id: <20191001.094144.1520493336302505890.davem@davemloft.net>
+To:     icenowy@aosc.io
+Cc:     linux-arm-kernel@lists.infradead.org, mark.rutland@arm.com,
+        andrew@lunn.ch, f.fainelli@gmail.com, devicetree@vger.kernel.org,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        mripard@kernel.org, linux-sunxi@googlegroups.com,
+        robh+dt@kernel.org, wens@csie.org, hkallweit1@gmail.com
+Subject: Re: [PATCH 0/3] Pine64+ specific hacks for RTL8211E Ethernet PHY
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <D1124458-D5CB-4AFF-B106-C6EA1A98100F@aosc.io>
+References: <2CCD0856-433E-4602-A079-9F7F5F2E00D6@aosc.io>
+        <20191001.093000.372726574458067639.davem@davemloft.net>
+        <D1124458-D5CB-4AFF-B106-C6EA1A98100F@aosc.io>
+X-Mailer: Mew version 6.8 on Emacs 26.1
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Tue, 01 Oct 2019 09:41:45 -0700 (PDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ryan Chen <ryan_chen@aspeedtech.com>
+From: Icenowy Zheng <icenowy@aosc.io>
+Date: Wed, 02 Oct 2019 00:31:25 +0800
 
-[ Upstream commit b3528b4874480818e38e4da019d655413c233e6a ]
+> I have tried to ask via TL Lim from Pine64, because I have no way
+> to communicate directly to Realtek. However TL cannot get anything
+> more from Realtek.
 
-The ast2600 can be supported by the same code as the ast2500.
+We have several Realtek developers who post here as part of maintaining
+the upstream copy of their drivers, and upstream developers of other
+Realtek parts who sometimes interact with Realtek.
 
-Signed-off-by: Ryan Chen <ryan_chen@aspeedtech.com>
-Signed-off-by: Joel Stanley <joel@jms.id.au>
-Reviewed-by: Guenter Roeck <linux@roeck-us.net>
-Link: https://lore.kernel.org/r/20190819051738.17370-3-joel@jms.id.au
-Signed-off-by: Guenter Roeck <linux@roeck-us.net>
-Signed-off-by: Wim Van Sebroeck <wim@linux-watchdog.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/watchdog/aspeed_wdt.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+Be creative and work with these people to try to get to the right
+people.
 
-diff --git a/drivers/watchdog/aspeed_wdt.c b/drivers/watchdog/aspeed_wdt.c
-index f0148637e5dd1..a6c78e123ef54 100644
---- a/drivers/watchdog/aspeed_wdt.c
-+++ b/drivers/watchdog/aspeed_wdt.c
-@@ -34,6 +34,7 @@ static const struct aspeed_wdt_config ast2500_config = {
- static const struct of_device_id aspeed_wdt_of_table[] = {
- 	{ .compatible = "aspeed,ast2400-wdt", .data = &ast2400_config },
- 	{ .compatible = "aspeed,ast2500-wdt", .data = &ast2500_config },
-+	{ .compatible = "aspeed,ast2600-wdt", .data = &ast2500_config },
- 	{ },
- };
- MODULE_DEVICE_TABLE(of, aspeed_wdt_of_table);
-@@ -259,7 +260,8 @@ static int aspeed_wdt_probe(struct platform_device *pdev)
- 		set_bit(WDOG_HW_RUNNING, &wdt->wdd.status);
- 	}
- 
--	if (of_device_is_compatible(np, "aspeed,ast2500-wdt")) {
-+	if ((of_device_is_compatible(np, "aspeed,ast2500-wdt")) ||
-+		(of_device_is_compatible(np, "aspeed,ast2600-wdt"))) {
- 		u32 reg = readl(wdt->base + WDT_RESET_WIDTH);
- 
- 		reg &= config->ext_pulse_width_mask;
--- 
-2.20.1
+Please stop making excuses and do the right thing.
 
+Thank you.
