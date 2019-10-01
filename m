@@ -4,52 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D459C352AA
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 16:41:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64CC7C352AA
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 16:41:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 63FF221A4C
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 16:41:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 31B1420B7C
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 16:41:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569948089;
-	bh=NAi1+Bo0JVBgckqyAVTISXOYMwHPgSPKdbHxAFeiRps=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=rLHJ6k9DKlToo9U9DLmZKYrGjn4VMSY/g+RVXy8q5WJcVMaHNVRXxagYnyDhJtMf5
-	 2sNBDLSFIeqYoeXZBY1Pd3X3SO18VQ9Mwoz/zDQJxgilhF+q4GII7ea8wNGtTMgKcC
-	 KenEbpoUIeGL+iYOYXNPUu4xk2G0IEfSbONBqrZQ=
+	s=default; t=1569948093;
+	bh=sdWjKc7950Ix1oAlzn3Bdm8pbL63ww+3W/0cLP/FqRI=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=LWHpVIX9O0Urd0pWPl3rw2pt/k6JhmAqpTIWxj1P/WXxlpFYq+D4WD8AGP8g8gXyI
+	 fzeEW+IEEqBL/8N7ecsgW/EZMSdeurN4Bd1cRQwmy6JRSZa1nkG7Y3lReOvpKCTBsT
+	 LU3LwuUYDuyeNPDCXiGJHgBr9k6Arz8ZNZ/sNqSU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731024AbfJAQl2 (ORCPT
+        id S1731059AbfJAQlb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Oct 2019 12:41:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52902 "EHLO mail.kernel.org"
+        Tue, 1 Oct 2019 12:41:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53000 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730941AbfJAQlY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Oct 2019 12:41:24 -0400
+        id S1731014AbfJAQl2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Oct 2019 12:41:28 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C54CB205C9;
-        Tue,  1 Oct 2019 16:41:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A282720B7C;
+        Tue,  1 Oct 2019 16:41:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569948083;
-        bh=NAi1+Bo0JVBgckqyAVTISXOYMwHPgSPKdbHxAFeiRps=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=s3LYVKxNJhpfXorbc7ajjvVgh5N0LVN9NhRsCp+YOPyp44LsFkDTq11Bn3FZm8tav
-         CUptZYGQcrmp8F50jDXe7SKJxKXyF3aTuE1VVwxciT50Szdq06VJFeLYzlVQfUMM/U
-         L3OO5/u8gO4qWigyeOCZYIrOdfNR7YEgpxR24Wwc=
+        s=default; t=1569948087;
+        bh=sdWjKc7950Ix1oAlzn3Bdm8pbL63ww+3W/0cLP/FqRI=;
+        h=From:To:Cc:Subject:Date:From;
+        b=ATRRfRFxVtziXtD6FNH4nWcbWtME6VhrIVgTzhod/Mh3kLXuJxnNxeOvJk8bDjxq6
+         EGOlHObdAFZ63Ke+lgQfsGZ17JP+CQWN4zF5DAvvk3SR0aQXK6MISZKpxN70xrqm8d
+         B+SbyXoeF/UKjrt4IFsi2IV8ddc7HS2/IVRxqhuU=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Filipe Manana <fdmanana@suse.com>, Qu Wenruo <wqu@suse.com>,
-        David Sterba <dsterba@suse.com>,
-        Sasha Levin <sashal@kernel.org>, linux-btrfs@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.3 71/71] Btrfs: fix selftests failure due to uninitialized i_mode in test inodes
-Date:   Tue,  1 Oct 2019 12:39:21 -0400
-Message-Id: <20191001163922.14735-71-sashal@kernel.org>
+Cc:     Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        Amit Kucheria <amit.kucheria@linaro.org>,
+        Zhang Rui <rui.zhang@intel.com>,
+        Sasha Levin <sashal@kernel.org>, linux-arm-msm@vger.kernel.org,
+        linux-pm@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.2 01/63] drivers: thermal: qcom: tsens: Fix memory leak from qfprom read
+Date:   Tue,  1 Oct 2019 12:40:23 -0400
+Message-Id: <20191001164125.15398-1-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191001163922.14735-1-sashal@kernel.org>
-References: <20191001163922.14735-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -59,85 +59,126 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Filipe Manana <fdmanana@suse.com>
+From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
 
-[ Upstream commit 9f7fec0ba89108b9385f1b9fb167861224912a4a ]
+[ Upstream commit 6b8249abb093551ef173d13a25ed0044d5dd33e0 ]
 
-Some of the self tests create a test inode, setup some extents and then do
-calls to btrfs_get_extent() to test that the corresponding extent maps
-exist and are correct. However btrfs_get_extent(), since the 5.2 merge
-window, now errors out when it finds a regular or prealloc extent for an
-inode that does not correspond to a regular file (its ->i_mode is not
-S_IFREG). This causes the self tests to fail sometimes, specially when
-KASAN, slub_debug and page poisoning are enabled:
+memory returned as part of nvmem_read via qfprom_read should be
+freed by the consumer once done.
+Existing code is not doing it so fix it.
 
-  $ modprobe btrfs
-  modprobe: ERROR: could not insert 'btrfs': Invalid argument
+Below memory leak detected by kmemleak
+   [<ffffff80088b7658>] kmemleak_alloc+0x50/0x84
+    [<ffffff80081df120>] __kmalloc+0xe8/0x168
+    [<ffffff80086db350>] nvmem_cell_read+0x30/0x80
+    [<ffffff8008632790>] qfprom_read+0x4c/0x7c
+    [<ffffff80086335a4>] calibrate_v1+0x34/0x204
+    [<ffffff8008632518>] tsens_probe+0x164/0x258
+    [<ffffff80084e0a1c>] platform_drv_probe+0x80/0xa0
+    [<ffffff80084de4f4>] really_probe+0x208/0x248
+    [<ffffff80084de2c4>] driver_probe_device+0x98/0xc0
+    [<ffffff80084dec54>] __device_attach_driver+0x9c/0xac
+    [<ffffff80084dca74>] bus_for_each_drv+0x60/0x8c
+    [<ffffff80084de634>] __device_attach+0x8c/0x100
+    [<ffffff80084de6c8>] device_initial_probe+0x20/0x28
+    [<ffffff80084dcbb8>] bus_probe_device+0x34/0x7c
+    [<ffffff80084deb08>] deferred_probe_work_func+0x6c/0x98
+    [<ffffff80080c3da8>] process_one_work+0x160/0x2f8
 
-  $ dmesg
-  [ 9414.691648] Btrfs loaded, crc32c=crc32c-intel, debug=on, assert=on, integrity-checker=on, ref-verify=on
-  [ 9414.692655] BTRFS: selftest: sectorsize: 4096  nodesize: 4096
-  [ 9414.692658] BTRFS: selftest: running btrfs free space cache tests
-  [ 9414.692918] BTRFS: selftest: running extent only tests
-  [ 9414.693061] BTRFS: selftest: running bitmap only tests
-  [ 9414.693366] BTRFS: selftest: running bitmap and extent tests
-  [ 9414.696455] BTRFS: selftest: running space stealing from bitmap to extent tests
-  [ 9414.697131] BTRFS: selftest: running extent buffer operation tests
-  [ 9414.697133] BTRFS: selftest: running btrfs_split_item tests
-  [ 9414.697564] BTRFS: selftest: running extent I/O tests
-  [ 9414.697583] BTRFS: selftest: running find delalloc tests
-  [ 9415.081125] BTRFS: selftest: running find_first_clear_extent_bit test
-  [ 9415.081278] BTRFS: selftest: running extent buffer bitmap tests
-  [ 9415.124192] BTRFS: selftest: running inode tests
-  [ 9415.124195] BTRFS: selftest: running btrfs_get_extent tests
-  [ 9415.127909] BTRFS: selftest: running hole first btrfs_get_extent test
-  [ 9415.128343] BTRFS critical (device (efault)): regular/prealloc extent found for non-regular inode 256
-  [ 9415.131428] BTRFS: selftest: fs/btrfs/tests/inode-tests.c:904 expected a real extent, got 0
-
-This happens because the test inodes are created without ever initializing
-the i_mode field of the inode, and neither VFS's new_inode() nor the btrfs
-callback btrfs_alloc_inode() initialize the i_mode. Initialization of the
-i_mode is done through the various callbacks used by the VFS to create
-new inodes (regular files, directories, symlinks, tmpfiles, etc), which
-all call btrfs_new_inode() which in turn calls inode_init_owner(), which
-sets the inode's i_mode. Since the tests only uses new_inode() to create
-the test inodes, the i_mode was never initialized.
-
-This always happens on a VM I used with kasan, slub_debug and many other
-debug facilities enabled. It also happened to someone who reported this
-on bugzilla (on a 5.3-rc).
-
-Fix this by setting i_mode to S_IFREG at btrfs_new_test_inode().
-
-Fixes: 6bf9e4bd6a2778 ("btrfs: inode: Verify inode mode to avoid NULL pointer dereference")
-Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=204397
-Signed-off-by: Filipe Manana <fdmanana@suse.com>
-Reviewed-by: Qu Wenruo <wqu@suse.com>
-Signed-off-by: David Sterba <dsterba@suse.com>
+Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Acked-by: Amit Kucheria <amit.kucheria@linaro.org>
+Signed-off-by: Zhang Rui <rui.zhang@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/btrfs/tests/btrfs-tests.c | 8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
+ drivers/thermal/qcom/tsens-8960.c |  2 ++
+ drivers/thermal/qcom/tsens-v0_1.c | 12 ++++++++++--
+ drivers/thermal/qcom/tsens-v1.c   |  1 +
+ drivers/thermal/qcom/tsens.h      |  1 +
+ 4 files changed, 14 insertions(+), 2 deletions(-)
 
-diff --git a/fs/btrfs/tests/btrfs-tests.c b/fs/btrfs/tests/btrfs-tests.c
-index 1e3ba49493995..814a918998ece 100644
---- a/fs/btrfs/tests/btrfs-tests.c
-+++ b/fs/btrfs/tests/btrfs-tests.c
-@@ -51,7 +51,13 @@ static struct file_system_type test_type = {
+diff --git a/drivers/thermal/qcom/tsens-8960.c b/drivers/thermal/qcom/tsens-8960.c
+index 8d9b721dadb65..e46a4e3f25c42 100644
+--- a/drivers/thermal/qcom/tsens-8960.c
++++ b/drivers/thermal/qcom/tsens-8960.c
+@@ -229,6 +229,8 @@ static int calibrate_8960(struct tsens_priv *priv)
+ 	for (i = 0; i < num_read; i++, s++)
+ 		s->offset = data[i];
  
- struct inode *btrfs_new_test_inode(void)
- {
--	return new_inode(test_mnt->mnt_sb);
-+	struct inode *inode;
++	kfree(data);
 +
-+	inode = new_inode(test_mnt->mnt_sb);
-+	if (inode)
-+		inode_init_owner(inode, NULL, S_IFREG);
-+
-+	return inode;
+ 	return 0;
  }
  
- static int btrfs_init_test_fs(void)
+diff --git a/drivers/thermal/qcom/tsens-v0_1.c b/drivers/thermal/qcom/tsens-v0_1.c
+index 6f26fadf4c279..055647bcee67d 100644
+--- a/drivers/thermal/qcom/tsens-v0_1.c
++++ b/drivers/thermal/qcom/tsens-v0_1.c
+@@ -145,8 +145,10 @@ static int calibrate_8916(struct tsens_priv *priv)
+ 		return PTR_ERR(qfprom_cdata);
+ 
+ 	qfprom_csel = (u32 *)qfprom_read(priv->dev, "calib_sel");
+-	if (IS_ERR(qfprom_csel))
++	if (IS_ERR(qfprom_csel)) {
++		kfree(qfprom_cdata);
+ 		return PTR_ERR(qfprom_csel);
++	}
+ 
+ 	mode = (qfprom_csel[0] & MSM8916_CAL_SEL_MASK) >> MSM8916_CAL_SEL_SHIFT;
+ 	dev_dbg(priv->dev, "calibration mode is %d\n", mode);
+@@ -181,6 +183,8 @@ static int calibrate_8916(struct tsens_priv *priv)
+ 	}
+ 
+ 	compute_intercept_slope(priv, p1, p2, mode);
++	kfree(qfprom_cdata);
++	kfree(qfprom_csel);
+ 
+ 	return 0;
+ }
+@@ -198,8 +202,10 @@ static int calibrate_8974(struct tsens_priv *priv)
+ 		return PTR_ERR(calib);
+ 
+ 	bkp = (u32 *)qfprom_read(priv->dev, "calib_backup");
+-	if (IS_ERR(bkp))
++	if (IS_ERR(bkp)) {
++		kfree(calib);
+ 		return PTR_ERR(bkp);
++	}
+ 
+ 	calib_redun_sel =  bkp[1] & BKP_REDUN_SEL;
+ 	calib_redun_sel >>= BKP_REDUN_SHIFT;
+@@ -313,6 +319,8 @@ static int calibrate_8974(struct tsens_priv *priv)
+ 	}
+ 
+ 	compute_intercept_slope(priv, p1, p2, mode);
++	kfree(calib);
++	kfree(bkp);
+ 
+ 	return 0;
+ }
+diff --git a/drivers/thermal/qcom/tsens-v1.c b/drivers/thermal/qcom/tsens-v1.c
+index 10b595d4f6199..870f502f2cb6c 100644
+--- a/drivers/thermal/qcom/tsens-v1.c
++++ b/drivers/thermal/qcom/tsens-v1.c
+@@ -138,6 +138,7 @@ static int calibrate_v1(struct tsens_priv *priv)
+ 	}
+ 
+ 	compute_intercept_slope(priv, p1, p2, mode);
++	kfree(qfprom_cdata);
+ 
+ 	return 0;
+ }
+diff --git a/drivers/thermal/qcom/tsens.h b/drivers/thermal/qcom/tsens.h
+index 2fd94997245bf..b89083b61c383 100644
+--- a/drivers/thermal/qcom/tsens.h
++++ b/drivers/thermal/qcom/tsens.h
+@@ -17,6 +17,7 @@
+ 
+ #include <linux/thermal.h>
+ #include <linux/regmap.h>
++#include <linux/slab.h>
+ 
+ struct tsens_priv;
+ 
 -- 
 2.20.1
 
