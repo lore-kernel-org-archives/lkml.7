@@ -2,103 +2,103 @@ Return-Path: <SRS0=YRFP=X2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EABA5ECE587
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 17:04:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A923C352AA
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 17:04:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B478C2054F
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 17:04:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569949459;
-	bh=kjBBx1owjHoHOHK+PfnP7vwaB5MJ/Cp+vuwoeSfQum4=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=SOSbvtep5kmKgMtAd/VY82CPmYOvjKbmF2gvZkIAQ3vvUaAUvxJrOgaKDENySA391
-	 vHEQwnx6twMI049tCCaspjdEUCfI/dP8zRomDC4BtWu0L7fx/n++Zgfob2ZbrJgCtK
-	 +ExeUk8srW/sa7hlAtKp2BZNribNT9Mi/cGZIREE=
+	by mail.kernel.org (Postfix) with ESMTP id 2C81421783
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 17:04:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="MWo5h9KQ";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="Amc4WfDq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732141AbfJARET (ORCPT
+        id S1732237AbfJAREY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Oct 2019 13:04:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50586 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727990AbfJAQjg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Oct 2019 12:39:36 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 296502190F;
-        Tue,  1 Oct 2019 16:39:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569947975;
-        bh=kjBBx1owjHoHOHK+PfnP7vwaB5MJ/Cp+vuwoeSfQum4=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=AdJQU+T9JxKuvpvuLWcYpr+hRCeQiBPtrolxiaDdCkE1YQ3DDGZvLMJ3H6tW6W1I8
-         4Dq8e15lD0C2GElZtqEpXrFkisdNMpciJFUcb2MrEaUObeoY8kNzRIm2qMTSnNY9NZ
-         FPvpMu3fQVzV8V7Pbd8NjtScZYiq+6XhTvB2D7kw=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Chengguang Xu <cgxu519@zoho.com.cn>,
-        Dominique Martinet <dominique.martinet@cea.fr>,
-        Sasha Levin <sashal@kernel.org>,
-        v9fs-developer@lists.sourceforge.net
-Subject: [PATCH AUTOSEL 5.3 08/71] 9p: avoid attaching writeback_fid on mmap with type PRIVATE
-Date:   Tue,  1 Oct 2019 12:38:18 -0400
-Message-Id: <20191001163922.14735-8-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191001163922.14735-1-sashal@kernel.org>
-References: <20191001163922.14735-1-sashal@kernel.org>
+        Tue, 1 Oct 2019 13:04:24 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:45798 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726983AbfJAREV (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Oct 2019 13:04:21 -0400
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id 1AAB26177C; Tue,  1 Oct 2019 17:04:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1569949461;
+        bh=UEkX/cHMbQ0sDePOFVv3FYadMtUY51cOeHadyFKhHvY=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=MWo5h9KQE6iRhSXNDSxstK3op6HdP7U/hDZ2AALli5OwqN2QqeYIm6Xyr0gxdpXuM
+         IvyM5hN1KtE2Mgr9LGJEAzLmgdtSCVDn5Bt91RQr3t0IHGJccCZRGiUdwgfVECLX2i
+         AK4GeB3Ocl18d5kbrxP0RVryYf+sbk+uMWK7D9rU=
+Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
+        by smtp.codeaurora.org (Postfix) with ESMTP id 62D5561728;
+        Tue,  1 Oct 2019 17:04:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1569949454;
+        bh=UEkX/cHMbQ0sDePOFVv3FYadMtUY51cOeHadyFKhHvY=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=Amc4WfDqR/Ia2oe2RA7vGkjDeZHnbdBIgta2AynRkAwnAg0DKlyrue7DBbGM2Zhb5
+         vGwuYZkfCUQAHLfmEkZ4PpW4V1SYojQvaVT//h5rwM4kfQ3lgT6iOMSdCCmBo8q1bl
+         uGQDcZFuvPCNecg3TlEHS0/XCvOgiPl9Mv/+wDig=
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Tue, 01 Oct 2019 10:04:14 -0700
+From:   Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+To:     Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+Cc:     Mark Rutland <mark.rutland@arm.com>,
+        Rajendra Nayak <rnayak@codeaurora.org>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        MSM <linux-arm-msm@vger.kernel.org>,
+        Marc Gonzalez <marc.w.gonzalez@free.fr>,
+        lkml <linux-kernel@vger.kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        David Brown <david.brown@linaro.org>,
+        Andy Gross <agross@kernel.org>,
+        Sibi Sankar <sibis@codeaurora.org>,
+        Vivek Gautam <vivek.gautam@codeaurora.org>,
+        Leo Yan <leo.yan@linaro.org>,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCHv9 2/3] arm64: dts: qcom: msm8998: Add Coresight support
+In-Reply-To: <CAOCk7NrK+wY8jfHdS8781NOQtyLm2RRe1NW2Rm3_zeaot0Q99Q@mail.gmail.com>
+References: <cover.1564550873.git.saiprakash.ranjan@codeaurora.org>
+ <90114e06825e537c3aafd3de5c78743a9de6fadc.1564550873.git.saiprakash.ranjan@codeaurora.org>
+ <CAOCk7NrK+wY8jfHdS8781NOQtyLm2RRe1NW2Rm3_zeaot0Q99Q@mail.gmail.com>
+Message-ID: <16212a577339204e901cf4eefa5e82f1@codeaurora.org>
+X-Sender: saiprakash.ranjan@codeaurora.org
+User-Agent: Roundcube Webmail/1.2.5
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chengguang Xu <cgxu519@zoho.com.cn>
+On 2019-10-01 09:13, Jeffrey Hugo wrote:
+> Sai,
+> 
+> This patch breaks boot on the 835 laptops.  However, I haven't seen
+> the same issue on the MTP.  I wonder, is coresight expected to work
+> with production fused devices?  I wonder if thats the difference
+> between the laptop and MTP that is causing the issue.
+> 
+> Let me know what I can do to help debug.
+> 
 
-[ Upstream commit c87a37ebd40b889178664c2c09cc187334146292 ]
+I did test on MSM8998 MTP and didn't face any issue. I am guessing this 
+is the same issue which you reported regarding cpuidle? Coresight ETM 
+and cpuidle do not work well together since ETMs share the same power 
+domain as CPU and they might get turned off when CPU enters idle states. 
+Can you try with cpuidle.off=1 cmdline or just remove idle states from 
+DT to confirm? If this is the issue, then we can try the below patch 
+from Andrew Murray for ETM save and restore:
 
-Currently on mmap cache policy, we always attach writeback_fid
-whether mmap type is SHARED or PRIVATE. However, in the use case
-of kata-container which combines 9p(Guest OS) with overlayfs(Host OS),
-this behavior will trigger overlayfs' copy-up when excute command
-inside container.
+https://patchwork.kernel.org/patch/11097893/
 
-Link: http://lkml.kernel.org/r/20190820100325.10313-1-cgxu519@zoho.com.cn
-Signed-off-by: Chengguang Xu <cgxu519@zoho.com.cn>
-Signed-off-by: Dominique Martinet <dominique.martinet@cea.fr>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- fs/9p/vfs_file.c | 3 +++
- 1 file changed, 3 insertions(+)
+It is not merged yet. They would appreciate your tested by ;)
 
-diff --git a/fs/9p/vfs_file.c b/fs/9p/vfs_file.c
-index 4cc966a31cb37..fe7f0bd2048e4 100644
---- a/fs/9p/vfs_file.c
-+++ b/fs/9p/vfs_file.c
-@@ -513,6 +513,7 @@ v9fs_mmap_file_mmap(struct file *filp, struct vm_area_struct *vma)
- 	v9inode = V9FS_I(inode);
- 	mutex_lock(&v9inode->v_mutex);
- 	if (!v9inode->writeback_fid &&
-+	    (vma->vm_flags & VM_SHARED) &&
- 	    (vma->vm_flags & VM_WRITE)) {
- 		/*
- 		 * clone a fid and add it to writeback_fid
-@@ -614,6 +615,8 @@ static void v9fs_mmap_vm_close(struct vm_area_struct *vma)
- 			(vma->vm_end - vma->vm_start - 1),
- 	};
- 
-+	if (!(vma->vm_flags & VM_SHARED))
-+		return;
- 
- 	p9_debug(P9_DEBUG_VFS, "9p VMA close, %p, flushing", vma);
- 
--- 
-2.20.1
-
+Thanks,
+Sai
