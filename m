@@ -4,53 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F881ECE587
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 16:46:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 76F49C352AA
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 16:46:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 15B5520659
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 16:46:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3913D2168B
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 16:46:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569948412;
-	bh=uiHsB3meyPILAAZDTjLvMiCCFNR9pJuupii+/uI5/FA=;
+	s=default; t=1569948417;
+	bh=AAKQlzbvTxzLTVQbz11o7zrn12sb1NA0ge1J0S9RcAM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=RiOA4HrVyhaD35ZTYXHpcxXpbpaR0LUl/4XvKFUiptSotdc4A8PYPhLgCit+46kf2
-	 tLLQeVvRBG9O8hHFJOpJ/5T7Xxg73ntL4kcXPtMZKVqSSMpttkxsaea+Jxxa2bryDe
-	 QNU5iMYSscpNtGvIYTXnMCQ5JJdnE9ivUUK4bD08=
+	b=NgH1KDHNC3s2YnFq046lJcecavWqzfVmYu/vG757CFptx9L8DH9Om3Q4isZ3PRY0j
+	 gOHztvBBz99r4G7DRK/AWaD37GdRHUHmGgrVbFA9kViXRcY9uhxAOsE9bOTpqCg41b
+	 sNfqB/tCnJLsdDqxk/cmFbxYqrjlYGzKDEsubuGA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390348AbfJAQpi (ORCPT
+        id S2388388AbfJAQq4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Oct 2019 12:45:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58066 "EHLO mail.kernel.org"
+        Tue, 1 Oct 2019 12:46:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58204 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390314AbfJAQpc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Oct 2019 12:45:32 -0400
+        id S2388126AbfJAQph (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Oct 2019 12:45:37 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B1EA72190F;
-        Tue,  1 Oct 2019 16:45:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 658BF222BE;
+        Tue,  1 Oct 2019 16:45:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569948332;
-        bh=uiHsB3meyPILAAZDTjLvMiCCFNR9pJuupii+/uI5/FA=;
+        s=default; t=1569948337;
+        bh=AAKQlzbvTxzLTVQbz11o7zrn12sb1NA0ge1J0S9RcAM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=CDzP/xyOYUJMPuoOUmg9ZRaO2Dw7K3TVjzTWi/NnV0Y0Se5PmHEHyTiV4WK7W9xF1
-         ybqkGjK8Oz5p/l+u7dzMTm5PAErKb7Xu0HK5wh08arbJ1GHC4FTtmUvVnbNkBQGKyW
-         SDFNV6AUjfINaUqYaliZ5pZOsu/Kgupx6bA/csb4=
+        b=THuaXncchIX79RIwL8ucVpClO9tdgMhCiesdAKBnB63w+qMKDbAd8nsxM6XCFSoV3
+         Vnp147QZxHV8wOSABdzcXQLwAlxDYVSSfuGMa0Ak5SvuLpFPRhGgScSCh3jv74DDCl
+         5DbzVNXKDA/9Vqm0jqY2MWEmjDhmE6FqDaRX7E5U=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Eric Dumazet <edumazet@google.com>,
-        syzbot <syzkaller@googlegroups.com>,
-        Jakub Kicinski <jakub.kicinski@netronome.com>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 19/19] sch_netem: fix a divide by zero in tabledist()
-Date:   Tue,  1 Oct 2019 12:45:05 -0400
-Message-Id: <20191001164505.16708-19-sashal@kernel.org>
+Cc:     Chengguang Xu <cgxu519@zoho.com.cn>,
+        Dominique Martinet <dominique.martinet@cea.fr>,
+        Sasha Levin <sashal@kernel.org>,
+        v9fs-developer@lists.sourceforge.net
+Subject: [PATCH AUTOSEL 4.4 03/15] 9p: avoid attaching writeback_fid on mmap with type PRIVATE
+Date:   Tue,  1 Oct 2019 12:45:21 -0400
+Message-Id: <20191001164533.16915-3-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191001164505.16708-1-sashal@kernel.org>
-References: <20191001164505.16708-1-sashal@kernel.org>
+In-Reply-To: <20191001164533.16915-1-sashal@kernel.org>
+References: <20191001164533.16915-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -60,39 +60,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eric Dumazet <edumazet@google.com>
+From: Chengguang Xu <cgxu519@zoho.com.cn>
 
-[ Upstream commit b41d936b5ecfdb3a4abc525ce6402a6c49cffddc ]
+[ Upstream commit c87a37ebd40b889178664c2c09cc187334146292 ]
 
-syzbot managed to crash the kernel in tabledist() loading
-an empty distribution table.
+Currently on mmap cache policy, we always attach writeback_fid
+whether mmap type is SHARED or PRIVATE. However, in the use case
+of kata-container which combines 9p(Guest OS) with overlayfs(Host OS),
+this behavior will trigger overlayfs' copy-up when excute command
+inside container.
 
-	t = dist->table[rnd % dist->size];
-
-Simply return an error when such load is attempted.
-
-Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
-Signed-off-by: Eric Dumazet <edumazet@google.com>
-Reported-by: syzbot <syzkaller@googlegroups.com>
-Signed-off-by: Jakub Kicinski <jakub.kicinski@netronome.com>
+Link: http://lkml.kernel.org/r/20190820100325.10313-1-cgxu519@zoho.com.cn
+Signed-off-by: Chengguang Xu <cgxu519@zoho.com.cn>
+Signed-off-by: Dominique Martinet <dominique.martinet@cea.fr>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/sched/sch_netem.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ fs/9p/vfs_file.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/net/sched/sch_netem.c b/net/sched/sch_netem.c
-index e9812e21dbc9b..12e3ae09c4ba1 100644
---- a/net/sched/sch_netem.c
-+++ b/net/sched/sch_netem.c
-@@ -711,7 +711,7 @@ static int get_dist_table(struct Qdisc *sch, const struct nlattr *attr)
- 	int i;
- 	size_t s;
+diff --git a/fs/9p/vfs_file.c b/fs/9p/vfs_file.c
+index 373cc50544e91..9dbf371471261 100644
+--- a/fs/9p/vfs_file.c
++++ b/fs/9p/vfs_file.c
+@@ -528,6 +528,7 @@ v9fs_mmap_file_mmap(struct file *filp, struct vm_area_struct *vma)
+ 	v9inode = V9FS_I(inode);
+ 	mutex_lock(&v9inode->v_mutex);
+ 	if (!v9inode->writeback_fid &&
++	    (vma->vm_flags & VM_SHARED) &&
+ 	    (vma->vm_flags & VM_WRITE)) {
+ 		/*
+ 		 * clone a fid and add it to writeback_fid
+@@ -629,6 +630,8 @@ static void v9fs_mmap_vm_close(struct vm_area_struct *vma)
+ 			(vma->vm_end - vma->vm_start - 1),
+ 	};
  
--	if (n > NETEM_DIST_MAX)
-+	if (!n || n > NETEM_DIST_MAX)
- 		return -EINVAL;
++	if (!(vma->vm_flags & VM_SHARED))
++		return;
  
- 	s = sizeof(struct disttable) + n * sizeof(s16);
+ 	p9_debug(P9_DEBUG_VFS, "9p VMA close, %p, flushing", vma);
+ 
 -- 
 2.20.1
 
