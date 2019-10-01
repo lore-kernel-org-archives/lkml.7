@@ -2,108 +2,92 @@ Return-Path: <SRS0=YRFP=X2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37901C352AA
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 16:52:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D9FFC352AA
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 16:52:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 01AD521855
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 16:52:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569948722;
-	bh=lLf2g9KCQK5PoHP2qYZDVggikNw887AYHXv+3PO2oMY=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=urx95Fpem6Voi7FlTbqInWOt16Gh1nylo9vcNIcsCP0+djaxXhuJY6FVQHM/gAkhE
-	 WrcCrOXjz8uUs7LGQKJ5phTxMgQjLE2EDYVh0KWIpnL4dPLbfW8I2T5tz0DkAXH+OR
-	 HCrikLPvGvdnRUMDkNd8LFoW0un74JrNYmxVRK04=
+	by mail.kernel.org (Postfix) with ESMTP id CF64721855
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 16:52:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="jRiBOJ+r"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733252AbfJAQn7 (ORCPT
+        id S1733222AbfJAQn5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Oct 2019 12:43:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55968 "EHLO mail.kernel.org"
+        Tue, 1 Oct 2019 12:43:57 -0400
+Received: from vps0.lunn.ch ([185.16.172.187]:56406 "EHLO vps0.lunn.ch"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733011AbfJAQns (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Oct 2019 12:43:48 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DB9D121A4A;
-        Tue,  1 Oct 2019 16:43:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569948227;
-        bh=lLf2g9KCQK5PoHP2qYZDVggikNw887AYHXv+3PO2oMY=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=M6CN8BUq7BafHLop4DpVE05CTlNG/0scDLLiTmcM4tUQPtRTXT/SuXTdRmdLR+qWa
-         lyMhTGyHSyWTNbMOUFCr0wmzIss8dAc0SbFNg0wqdYn9jYOrrPGYGXw39TRl3IPz90
-         FtbC7MRtIRFpBduvwo9Tmxk+CdMGiWHzxfM/oMJc=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Stefan Mavrodiev <stefan@olimex.com>,
-        Zhang Rui <rui.zhang@intel.com>,
-        Sasha Levin <sashal@kernel.org>, linux-pm@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 25/43] thermal_hwmon: Sanitize thermal_zone type
-Date:   Tue,  1 Oct 2019 12:42:53 -0400
-Message-Id: <20191001164311.15993-25-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191001164311.15993-1-sashal@kernel.org>
-References: <20191001164311.15993-1-sashal@kernel.org>
+        id S1732946AbfJAQno (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Oct 2019 12:43:44 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=QuwwxLI9kehPovTMnhH9tA/I5Dk8xgDmaCwWA+JgdKs=; b=jRiBOJ+rTkEwl7VFrxVg659ca8
+        wE80UkiiCyYsOLCNrwJ8A5H//VMB9zBAb5HNTBZlx7/caNEggddhy4ECPA79qLoIGa/5ANSlgzWbo
+        Dn2PDpgELnhdQv1XA2Q33QkzPnsLRMMaa/QjEPiG5pb2NNYCCwJPJ3WRndmIOvHreI7Y=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.92.2)
+        (envelope-from <andrew@lunn.ch>)
+        id 1iFLFU-0001Zn-3t; Tue, 01 Oct 2019 18:43:40 +0200
+Date:   Tue, 1 Oct 2019 18:43:40 +0200
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     David Miller <davem@davemloft.net>
+Cc:     o.rempel@pengutronix.de, jcliburn@gmail.com, chris.snook@gmail.com,
+        kernel@pengutronix.de, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH net v2] net: ag71xx: fix mdio subnode support
+Message-ID: <20191001164340.GC2031@lunn.ch>
+References: <20191001064147.23633-1-o.rempel@pengutronix.de>
+ <20191001.090320.1192378852987776883.davem@davemloft.net>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191001.090320.1192378852987776883.davem@davemloft.net>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Stefan Mavrodiev <stefan@olimex.com>
+On Tue, Oct 01, 2019 at 09:03:20AM -0700, David Miller wrote:
+> From: Oleksij Rempel <o.rempel@pengutronix.de>
+> Date: Tue,  1 Oct 2019 08:41:47 +0200
+> 
+> > @@ -571,7 +571,9 @@ static int ag71xx_mdio_probe(struct ag71xx *ag)
+> >  		msleep(200);
+> >  	}
+> >  
+> > -	err = of_mdiobus_register(mii_bus, np);
+> > +	mnp = of_get_child_by_name(np, "mdio");
+> > +	err = of_mdiobus_register(mii_bus, mnp);
+> 
+> of_get_child_by_name() can fail, so error checking is necessary
+> before you pass mnp into of_mdiobus_register().
 
-[ Upstream commit 8c7aa184281c01fc26f319059efb94725012921d ]
+Hi David
 
-When calling thermal_add_hwmon_sysfs(), the device type is sanitized by
-replacing '-' with '_'. However tz->type remains unsanitized. Thus
-calling thermal_hwmon_lookup_by_type() returns no device. And if there is
-no device, thermal_remove_hwmon_sysfs() fails with "hwmon device lookup
-failed!".
+/**
+ *	of_get_child_by_name - Find the child node by name for a given parent
+ *	@node:	parent node
+ *	@name:	child name to look for.
+ *
+ *      This function looks for child node for given matching name
+ *
+ *	Returns a node pointer if found, with refcount incremented, use
+ *	of_node_put() on it when done.
+ *	Returns NULL if node is not found.
+ */
 
-The result is unregisted hwmon devices in the sysfs.
+So on error, it returns NULL. And passing NULL to
+of_mdiobus_register() is the correct thing to do if there is no DT
+node. of_node_put() is also O.K. with NULL.
 
-Fixes: 409ef0bacacf ("thermal_hwmon: Sanitize attribute name passed to hwmon")
+So this is all O.K. as is.
 
-Signed-off-by: Stefan Mavrodiev <stefan@olimex.com>
-Signed-off-by: Zhang Rui <rui.zhang@intel.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/thermal/thermal_hwmon.c | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+Reviewed-by: Andrew Lunn <andrew@lunn.ch>
 
-diff --git a/drivers/thermal/thermal_hwmon.c b/drivers/thermal/thermal_hwmon.c
-index 40c69a533b240..dd5d8ee379287 100644
---- a/drivers/thermal/thermal_hwmon.c
-+++ b/drivers/thermal/thermal_hwmon.c
-@@ -87,13 +87,17 @@ static struct thermal_hwmon_device *
- thermal_hwmon_lookup_by_type(const struct thermal_zone_device *tz)
- {
- 	struct thermal_hwmon_device *hwmon;
-+	char type[THERMAL_NAME_LENGTH];
- 
- 	mutex_lock(&thermal_hwmon_list_lock);
--	list_for_each_entry(hwmon, &thermal_hwmon_list, node)
--		if (!strcmp(hwmon->type, tz->type)) {
-+	list_for_each_entry(hwmon, &thermal_hwmon_list, node) {
-+		strcpy(type, tz->type);
-+		strreplace(type, '-', '_');
-+		if (!strcmp(hwmon->type, type)) {
- 			mutex_unlock(&thermal_hwmon_list_lock);
- 			return hwmon;
- 		}
-+	}
- 	mutex_unlock(&thermal_hwmon_list_lock);
- 
- 	return NULL;
--- 
-2.20.1
-
+    Andrew
