@@ -2,76 +2,116 @@ Return-Path: <SRS0=YRFP=X2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 056BCECE587
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 16:01:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1B94ECE587
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 16:01:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D6E832190F
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 16:01:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 760002053B
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 16:01:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=pensando.io header.i=@pensando.io header.b="ApBg4e0y"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389829AbfJAQBK (ORCPT
+        id S2389845AbfJAQBq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Oct 2019 12:01:10 -0400
-Received: from mail-qt1-f195.google.com ([209.85.160.195]:38323 "EHLO
-        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726050AbfJAQBJ (ORCPT
+        Tue, 1 Oct 2019 12:01:46 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:39894 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732809AbfJAQBq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Oct 2019 12:01:09 -0400
-Received: by mail-qt1-f195.google.com with SMTP id j31so22268498qta.5;
-        Tue, 01 Oct 2019 09:01:07 -0700 (PDT)
+        Tue, 1 Oct 2019 12:01:46 -0400
+Received: by mail-pf1-f193.google.com with SMTP id v4so8309413pff.6
+        for <linux-kernel@vger.kernel.org>; Tue, 01 Oct 2019 09:01:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=pensando.io; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-transfer-encoding:content-language;
+        bh=idbzkM4Uy3IgWjz+crMW94nlfJxR/IgtZnRXVc7jjQk=;
+        b=ApBg4e0yJjPYuGCRnLEys1GKToPLkmDDLlkuiZK8QZQy0EDHWuth01D6nqOvq4KAng
+         Z0xcmh0o0od7yoNPG8gHR80kaxpgRzAAktzpBL8shUTR1GFsfJe4mSG1hMAwKDOT1yWg
+         J8ljpl4j3PadYPdWA7eAqvUwMwNQAiR3H8bZ5IZlzKO3SjwsFmclT20PH9vcvMoqiuDA
+         G+xYsPanBp0ne/KalGKxAYfevIt56y1/L7mABnxch+Hf7TVW/9H/b2IYS92klbfZ49/x
+         ptovyq44ZiQdLsVxb7ilymFMi49nWOXlRWTSakofVVx4o4PqxI1ItGnIC/E2AthqF6uW
+         XvLw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=x01awrD5TSlsk6NlvH+kQSXg+iJmGObI88cW5UgsE3c=;
-        b=QWvTtiz/VZYw1m0emYZEvdX3jIvdDqxwcdnllghimSJMK3C5Ai00cL9TOAPOHwpnne
-         YE15m+iiuMUNVC+K9dzxXBFNg9iGTX+VK09xl+5cwlMlABm5otzMli3Y6EdlIVZqSvav
-         84cqfGop0SmbgwugT+NhoZuvW1JJCo3kW4e3RuBDjlx06YoUBhdEX0cNs0+2QotM5Wnm
-         x0spmgprZ1miAdsdHHmHtAs84Un7joJuFc+fdWgb5GPLEZEgJ5WdtQ6w0iqUtrxSlBpn
-         dvz/ln4tCoK+o3Dor2376kxekznS1rs+ob7tirDpEUZKjFIKlBcnxQa4w28N7qp1VEC2
-         8oCQ==
-X-Gm-Message-State: APjAAAWIRZfTW65nmSxNeVi8tjBPv1kSJWlXhkze0tTY4LvtO14Wr0lA
-        TvhxrP3CvxQB1fFA0RfKBEtHatXtNZO5UUjPCRk=
-X-Google-Smtp-Source: APXvYqwXNQ85AMQ82y5yVifrvbRIc55eAUjhwij0+sTOJVCU6PWFQrAXLde5ogB+7LJPke763XickWNjc6/9cst2GW4=
-X-Received: by 2002:a05:6214:2b0:: with SMTP id m16mr25953761qvv.45.1569945667079;
- Tue, 01 Oct 2019 09:01:07 -0700 (PDT)
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-transfer-encoding
+         :content-language;
+        bh=idbzkM4Uy3IgWjz+crMW94nlfJxR/IgtZnRXVc7jjQk=;
+        b=JdzCUn9qYOd64+f/AMloIbIab1jUYyemx/RoS5ZFoePG9z91mCcWHhJfQ500cAQ/RL
+         6yGiooB1AlF0W/zea8KvIobcHhNU19Q0jjLvhrLZmUL1x0cOEF780iUyVx25wHnnvurg
+         RTj1QkuKrfRUS37lRXmdGx9eVUgYrSs7iMZw9lv1GErU9JejB5XMDGQSP8vnnavUc5kp
+         eKiKPiCuB6SNl3Rv7jxeE/qNDAJvNeHcrNkQ+HcVX8NusdRwZ7MbqLEGf6jxNeNnmtsS
+         aXyIi70fAbKudy7x6UIDMLW37UCiFcDn8+OmPcbHCc5Fprsivgdi0e6uLbHUc2arNHX5
+         fLOw==
+X-Gm-Message-State: APjAAAU25yfxczmmTUnEk3YAoQaOdE9YM77oPaRii94ELG9DoKM+zrs7
+        MZHRq3z4UauMMk6eiQ0ykwxhdtT9aUbm9w==
+X-Google-Smtp-Source: APXvYqymArKhOXlsUJI+sJmVq0/SoBQOToYBm5aE+7kMNeRDvzhEE0tq8mcjkbbNZIgAEHyF3ePxZA==
+X-Received: by 2002:a63:ec52:: with SMTP id r18mr31698670pgj.128.1569945704953;
+        Tue, 01 Oct 2019 09:01:44 -0700 (PDT)
+Received: from Shannons-MacBook-Pro.local (static-50-53-47-17.bvtn.or.frontiernet.net. [50.53.47.17])
+        by smtp.gmail.com with ESMTPSA id v4sm15064179pff.181.2019.10.01.09.01.43
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 01 Oct 2019 09:01:44 -0700 (PDT)
+Subject: Re: [PATCH] ionic: select CONFIG_NET_DEVLINK
+To:     Arnd Bergmann <arnd@arndb.de>,
+        Pensando Drivers <drivers@pensando.io>,
+        "David S. Miller" <davem@davemloft.net>
+Cc:     Krzysztof Kozlowski <krzk@kernel.org>,
+        Leon Romanovsky <leon@kernel.org>,
+        Kalle Valo <kvalo@codeaurora.org>, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20191001142151.1206987-1-arnd@arndb.de>
+From:   Shannon Nelson <snelson@pensando.io>
+Message-ID: <57c673d8-a1f2-e759-7a7d-3cbf9b370d55@pensando.io>
+Date:   Tue, 1 Oct 2019 09:01:43 -0700
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:60.0)
+ Gecko/20100101 Thunderbird/60.9.0
 MIME-Version: 1.0
-References: <20191001142227.1227176-1-arnd@arndb.de> <1569940805.5576.257.camel@lca.pw>
-In-Reply-To: <1569940805.5576.257.camel@lca.pw>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Tue, 1 Oct 2019 18:00:50 +0200
-Message-ID: <CAK8P3a04nMwy3VpdtD6x_tdPC14LPPbt3JKrGN48qRo_sDVk-Q@mail.gmail.com>
-Subject: Re: [PATCH] mm/memcontrol.c: fix another unused function warning
-To:     Qian Cai <cai@lca.pw>
-Cc:     Johannes Weiner <hannes@cmpxchg.org>,
-        Michal Hocko <mhocko@kernel.org>,
-        Vladimir Davydov <vdavydov.dev@gmail.com>,
-        Michal Hocko <mhocko@suse.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Roman Gushchin <guro@fb.com>,
-        Shakeel Butt <shakeelb@google.com>,
-        Chris Down <chris@chrisdown.name>, Tejun Heo <tj@kernel.org>,
-        cgroups@vger.kernel.org, Linux-MM <linux-mm@kvack.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20191001142151.1206987-1-arnd@arndb.de>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Oct 1, 2019 at 4:40 PM Qian Cai <cai@lca.pw> wrote:
+On 10/1/19 7:21 AM, Arnd Bergmann wrote:
+> When no other driver selects the devlink library code, ionic
+> produces a link failure:
 >
-> On Tue, 2019-10-01 at 16:22 +0200, Arnd Bergmann wrote:
-> > Removing the mem_cgroup_id_get() stub function introduced a new warning
-> > of the same kind when CONFIG_MMU is disabled:
+> drivers/net/ethernet/pensando/ionic/ionic_devlink.o: In function `ionic_devlink_alloc':
+> ionic_devlink.c:(.text+0xd): undefined reference to `devlink_alloc'
+> drivers/net/ethernet/pensando/ionic/ionic_devlink.o: In function `ionic_devlink_register':
+> ionic_devlink.c:(.text+0x71): undefined reference to `devlink_register'
 >
-> Shouldn't CONFIG_MEMCG depends on CONFIG_MMU instead?
+> Add the same 'select' statement that the other drivers use here.
+>
+> Fixes: fbfb8031533c ("ionic: Add hardware init and device commands")
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+> ---
+>   drivers/net/ethernet/pensando/Kconfig | 1 +
+>   1 file changed, 1 insertion(+)
+>
+> diff --git a/drivers/net/ethernet/pensando/Kconfig b/drivers/net/ethernet/pensando/Kconfig
+> index bd0583e409df..d25b88f53de4 100644
+> --- a/drivers/net/ethernet/pensando/Kconfig
+> +++ b/drivers/net/ethernet/pensando/Kconfig
+> @@ -20,6 +20,7 @@ if NET_VENDOR_PENSANDO
+>   config IONIC
+>   	tristate "Pensando Ethernet IONIC Support"
+>   	depends on 64BIT && PCI
+> +	select NET_DEVLINK
+>   	help
+>   	  This enables the support for the Pensando family of Ethernet
+>   	  adapters.  More specific information on this driver can be
 
-Maybe. Generally we allow building a lot of stuff without CONFIG_MMU that
-may not make sense, so I just followed the same idea here.
+Thanks!
 
-      Arnd
+Acked-by: Shannon Nelson <snelson@pensando.io>
+
