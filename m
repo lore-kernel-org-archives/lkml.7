@@ -4,55 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 53ED1ECE58A
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 16:49:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A535BECE587
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 16:49:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2A8C521783
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 16:49:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 728D220659
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 16:49:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569948545;
-	bh=vQmU4uYLyl0AcxBunUP+8zR/zf9+YA3LP7QWONoMOO0=;
+	s=default; t=1569948549;
+	bh=2i8+d2TT3yX8/1+HhuIWKqY7fbcAmg4UD+/uh4pIKuY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=A5DxpcAXUqmYzWT9JpWO4TeYqU0IV2AjSpCOe2GKuJvZ0Q+P11zzgHp3Cmltc4214
-	 ORyzIhPlmZQOB5WgQp+tNmiAoYVrV2nvTcpBVQs3ct0F/M+aQm9zOO8eopOF2Ai1iC
-	 kmWj0iDu9gHODhTnDrYXxMr1bA0AasK7H6XQaw64=
+	b=MMYf7jF443W7KSSLeNesjrr3tP/C4JBs8kmHauPeTLcBJhumD7zAL4vpzZiAeoB+n
+	 XdAU4NE77fhsq5HYXQUHitcUulG0yRvmMIA5Z+C8TXJffaPgQSmYiUEJwuKDIwwzJm
+	 iYCMLSVGBcl7gbH2Tu+yv5ArKd104Z2F4SDbIM4c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388066AbfJAQpK (ORCPT
+        id S2388891AbfJAQtI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Oct 2019 12:45:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57144 "EHLO mail.kernel.org"
+        Tue, 1 Oct 2019 12:49:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57594 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390086AbfJAQou (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Oct 2019 12:44:50 -0400
+        id S2390184AbfJAQpK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Oct 2019 12:45:10 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0B9D5205C9;
-        Tue,  1 Oct 2019 16:44:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7F4C72190F;
+        Tue,  1 Oct 2019 16:45:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569948290;
-        bh=vQmU4uYLyl0AcxBunUP+8zR/zf9+YA3LP7QWONoMOO0=;
+        s=default; t=1569948309;
+        bh=2i8+d2TT3yX8/1+HhuIWKqY7fbcAmg4UD+/uh4pIKuY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=bfvovPC8F9j9IxSlWP/UL/6XdUeY/pM0eOMvAPq+JwZNfVa+C4iX0do5Nh+/R9hNQ
-         SwJJnO3E4QyXeHQD3l7dIexib2HgP9jq9pQDPsYto0Y+U2Aed9jJp9ZpIIGlh48RiR
-         CIO9IpHKCyjGmUwsBs2diMhWj+SHHu0A29j1NF3w=
+        b=q2cst86dE3KW9QpoKzrlIpGI68YGySdgr/IMAIK2T6y/Bgwxb4uSMDibRMvfjtPag
+         4TbQszZIRW+1JfLTV9BHQbxTAtj2IE5vNrLBXR1qYZlojX/Lk+93l5yaovl9ibuHVW
+         AhBUBC7qcH5P8nFmwqA51qqxlKp9ZRJNEA17GsZw=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Takeshi Misawa <jeliantsurux@gmail.com>,
-        syzbot+d9c8bf24e56416d7ce2c@syzkaller.appspotmail.com,
-        Guillaume Nault <gnault@redhat.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, linux-ppp@vger.kernel.org,
-        netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 21/29] ppp: Fix memory leak in ppp_write
-Date:   Tue,  1 Oct 2019 12:44:15 -0400
-Message-Id: <20191001164423.16406-21-sashal@kernel.org>
+Cc:     Chengguang Xu <cgxu519@zoho.com.cn>,
+        Dominique Martinet <dominique.martinet@cea.fr>,
+        Sasha Levin <sashal@kernel.org>,
+        v9fs-developer@lists.sourceforge.net
+Subject: [PATCH AUTOSEL 4.9 03/19] 9p: avoid attaching writeback_fid on mmap with type PRIVATE
+Date:   Tue,  1 Oct 2019 12:44:49 -0400
+Message-Id: <20191001164505.16708-3-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191001164423.16406-1-sashal@kernel.org>
-References: <20191001164423.16406-1-sashal@kernel.org>
+In-Reply-To: <20191001164505.16708-1-sashal@kernel.org>
+References: <20191001164505.16708-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -62,64 +60,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Takeshi Misawa <jeliantsurux@gmail.com>
+From: Chengguang Xu <cgxu519@zoho.com.cn>
 
-[ Upstream commit 4c247de564f1ff614d11b3bb5313fb70d7b9598b ]
+[ Upstream commit c87a37ebd40b889178664c2c09cc187334146292 ]
 
-When ppp is closing, __ppp_xmit_process() failed to enqueue skb
-and skb allocated in ppp_write() is leaked.
+Currently on mmap cache policy, we always attach writeback_fid
+whether mmap type is SHARED or PRIVATE. However, in the use case
+of kata-container which combines 9p(Guest OS) with overlayfs(Host OS),
+this behavior will trigger overlayfs' copy-up when excute command
+inside container.
 
-syzbot reported :
-BUG: memory leak
-unreferenced object 0xffff88812a17bc00 (size 224):
-  comm "syz-executor673", pid 6952, jiffies 4294942888 (age 13.040s)
-  hex dump (first 32 bytes):
-    00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
-    00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
-  backtrace:
-    [<00000000d110fff9>] kmemleak_alloc_recursive include/linux/kmemleak.h:43 [inline]
-    [<00000000d110fff9>] slab_post_alloc_hook mm/slab.h:522 [inline]
-    [<00000000d110fff9>] slab_alloc_node mm/slab.c:3262 [inline]
-    [<00000000d110fff9>] kmem_cache_alloc_node+0x163/0x2f0 mm/slab.c:3574
-    [<000000002d616113>] __alloc_skb+0x6e/0x210 net/core/skbuff.c:197
-    [<000000000167fc45>] alloc_skb include/linux/skbuff.h:1055 [inline]
-    [<000000000167fc45>] ppp_write+0x48/0x120 drivers/net/ppp/ppp_generic.c:502
-    [<000000009ab42c0b>] __vfs_write+0x43/0xa0 fs/read_write.c:494
-    [<00000000086b2e22>] vfs_write fs/read_write.c:558 [inline]
-    [<00000000086b2e22>] vfs_write+0xee/0x210 fs/read_write.c:542
-    [<00000000a2b70ef9>] ksys_write+0x7c/0x130 fs/read_write.c:611
-    [<00000000ce5e0fdd>] __do_sys_write fs/read_write.c:623 [inline]
-    [<00000000ce5e0fdd>] __se_sys_write fs/read_write.c:620 [inline]
-    [<00000000ce5e0fdd>] __x64_sys_write+0x1e/0x30 fs/read_write.c:620
-    [<00000000d9d7b370>] do_syscall_64+0x76/0x1a0 arch/x86/entry/common.c:296
-    [<0000000006e6d506>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
-
-Fix this by freeing skb, if ppp is closing.
-
-Fixes: 6d066734e9f0 ("ppp: avoid loop in xmit recursion detection code")
-Reported-and-tested-by: syzbot+d9c8bf24e56416d7ce2c@syzkaller.appspotmail.com
-Signed-off-by: Takeshi Misawa <jeliantsurux@gmail.com>
-Reviewed-by: Guillaume Nault <gnault@redhat.com>
-Tested-by: Guillaume Nault <gnault@redhat.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Link: http://lkml.kernel.org/r/20190820100325.10313-1-cgxu519@zoho.com.cn
+Signed-off-by: Chengguang Xu <cgxu519@zoho.com.cn>
+Signed-off-by: Dominique Martinet <dominique.martinet@cea.fr>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ppp/ppp_generic.c | 2 ++
- 1 file changed, 2 insertions(+)
+ fs/9p/vfs_file.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/drivers/net/ppp/ppp_generic.c b/drivers/net/ppp/ppp_generic.c
-index 34b24d7e1e2f3..8faf4488340dd 100644
---- a/drivers/net/ppp/ppp_generic.c
-+++ b/drivers/net/ppp/ppp_generic.c
-@@ -1433,6 +1433,8 @@ static void __ppp_xmit_process(struct ppp *ppp, struct sk_buff *skb)
- 			netif_wake_queue(ppp->dev);
- 		else
- 			netif_stop_queue(ppp->dev);
-+	} else {
-+		kfree_skb(skb);
- 	}
- 	ppp_xmit_unlock(ppp);
- }
+diff --git a/fs/9p/vfs_file.c b/fs/9p/vfs_file.c
+index 79ff727254bb6..e963b83afc717 100644
+--- a/fs/9p/vfs_file.c
++++ b/fs/9p/vfs_file.c
+@@ -528,6 +528,7 @@ v9fs_mmap_file_mmap(struct file *filp, struct vm_area_struct *vma)
+ 	v9inode = V9FS_I(inode);
+ 	mutex_lock(&v9inode->v_mutex);
+ 	if (!v9inode->writeback_fid &&
++	    (vma->vm_flags & VM_SHARED) &&
+ 	    (vma->vm_flags & VM_WRITE)) {
+ 		/*
+ 		 * clone a fid and add it to writeback_fid
+@@ -629,6 +630,8 @@ static void v9fs_mmap_vm_close(struct vm_area_struct *vma)
+ 			(vma->vm_end - vma->vm_start - 1),
+ 	};
+ 
++	if (!(vma->vm_flags & VM_SHARED))
++		return;
+ 
+ 	p9_debug(P9_DEBUG_VFS, "9p VMA close, %p, flushing", vma);
+ 
 -- 
 2.20.1
 
