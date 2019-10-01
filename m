@@ -4,59 +4,61 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85DD5C352AA
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 21:53:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B74E2ECE587
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 21:53:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 58D4C2133F
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 21:53:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 81A092133F
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 21:53:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=wavecomp.com header.i=@wavecomp.com header.b="K9jTvt4k"
+	dkim=pass (1024-bit key) header.d=wavecomp.com header.i=@wavecomp.com header.b="o42ZpeGP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728208AbfJAVxj (ORCPT
+        id S1728227AbfJAVxm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Oct 2019 17:53:39 -0400
+        Tue, 1 Oct 2019 17:53:42 -0400
 Received: from mail-eopbgr730113.outbound.protection.outlook.com ([40.107.73.113]:17171
         "EHLO NAM05-DM3-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728158AbfJAVxe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Oct 2019 17:53:34 -0400
+        id S1728177AbfJAVxg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Oct 2019 17:53:36 -0400
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=H4oAd3TwORqGAaoeZKwF7uVar4dD3eJ9sbjHwRDI5dY+3EaDC52TydqZ+wLxQNvqTFRtiijv5bkT03XW4g7txlknu5Ft+TO0ZQMOSvu3u0rOhNPqTZf/wvs3AGWV2Yfk+RLUVQHQx2afZ1orb3OI2qhBa27rWt3j5QIvTvwOJHQcIwc4ElVXNbJLcPE1xQWWicVyi/2UxTPkqSIRemYLx0RlnmtpnfNUMzK10FTsLXVIDvG0pEdi0bMjH+GLR+3zK5RhuvFmj7xqxL9Xh8YghKI/xeK0TjMR/d4odbVLz2P2TTzOakGiXpWs51zoWtOjyCaN8Ur+pa7TDsRYUhMECQ==
+ b=RJCab2LgaLrvJyYrUnFOSa9RcFME5qBcRP6NKxM5c/jx+DVUIOaNfX8oaLTah2KWiom/1f9duZhf4Wu4tMu2zxEc1FsWGgIJOVqOFOgp0ZSZj5T1dZPKkpOMkaMMUOM57NFrvwpXA3SVTJm+ngMtv7QO6AW6kXrt7UCr0etDwzIPddjkqBVjy1/CJoKLEYV9c/o0TZe934oOGxiHj1fJX8SId7EwtiOoz4kwf+hxiAlbQG5hSs4iIyNupIyFUZrMXKA60kKNX6mSiikNB4kXV5r33gbTmIIzVJn1b8Hl6sFrGv8he+Mt8EiaHfzculKabdDcZKWhfU3mj5ILeCduAA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=IfiRsDiQqxRk1eif9MMujcDB1YCLPcoEvYoKJruLovM=;
- b=iClaUV3jqnD/kRlwe1A33KUsRTvFqYtewfYKfNXHsaC5ITeZ1DYiDCHdQjMT4MEGSaVsey6EbaIttYN+BNxFevBrtpKwsels8PK/133fMxWoHm4HygXonkoJtqw4EIBlPeYF2kMUGWCYZ1mJVtvoOmkcp+WRxkoEYxZ6V9ITrHnvCYQZkb7DjWAXfvqiwMwWGlnFs08EsV8fHOPpnA7MHCbNggmuAfDjaGNIy+ybYDRhWBFrtVxx2u9yEMb1nH4zBD2Np2QNlIQIho25NAUBOjfGmu7hwJ2eXW/8Ejj364iv41OJD9dhpTWAbjOh94UZHUSr629okmguJf5Ys6GpFg==
+ bh=wfQFj92XwiM5Yll6ITwBRnUHmK79aZPRXQ36V53lwPs=;
+ b=afQ8TXxmy/FqSd5so196E4HVcUeiyt9jiacGyT5Py7251Uu9Rk/IAIBSANQz4l2joyiEbZbf5wpMKJ++yRzZ2a0V5oEYGuia2jxPxEIPn15A6WwXkQtZw4Kjp/WHdRU7tUhKkt4qZhhYoWIO+EPrgSw4NTM38zEaF5ml1LyPY/hxLjNIFw1cn98CDxt2A/tYUvmPdK425uKJetDBOveVM4Ugjuw0JtK2RK7QSquHdyGVMqVHpfU9gxFwiTMOsEgCYucuz8phkDuK2yovNhyOLDsAHk/VwoLLPDNFhZKiHXDw0Cm/NzHs7MW6YY0klIhstQC9L3zp3PJQf4jRWW0MtQ==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=wavecomp.com; dmarc=pass action=none header.from=mips.com;
  dkim=pass header.d=mips.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wavecomp.com;
  s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=IfiRsDiQqxRk1eif9MMujcDB1YCLPcoEvYoKJruLovM=;
- b=K9jTvt4k4vAmGTz3AvIBw9hmCJ9vznLZb0W5Aubdn5ebjSD91A0vxlNwkL7yZvIxSM4Cl5VDUGfkhwkey4NfXQRyNgR5PXWSDce+M1wLt6eBlMxqOV3nbLZ2Z1wxZiWExmmpopi+fpMN/buq0KPEI1yJ5ESAVts1NI4JrtIB+Ew=
+ bh=wfQFj92XwiM5Yll6ITwBRnUHmK79aZPRXQ36V53lwPs=;
+ b=o42ZpeGPUWIHtUH6cCDu9WTgYZjE/OdtdRPUqDUQoAQ9rh54kTstPBNf+xt4qtoqBVpKRUp1TIFfCpr29yFpOrYucYepOWpRBLkhdWvze5yy14FUl+2Qa0SWdycOYiyBhpIJFzSN+z9ZXBCkpkPhApkz/Cge6KMGkMr/wif5D/E=
 Received: from MWHPR2201MB1277.namprd22.prod.outlook.com (10.172.60.12) by
  MWHPR2201MB1439.namprd22.prod.outlook.com (10.174.169.166) with Microsoft
  SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2305.20; Tue, 1 Oct 2019 21:53:26 +0000
+ 15.20.2305.20; Tue, 1 Oct 2019 21:53:29 +0000
 Received: from MWHPR2201MB1277.namprd22.prod.outlook.com
  ([fe80::498b:c2cd:e816:1481]) by MWHPR2201MB1277.namprd22.prod.outlook.com
  ([fe80::498b:c2cd:e816:1481%2]) with mapi id 15.20.2305.022; Tue, 1 Oct 2019
- 21:53:26 +0000
+ 21:53:29 +0000
 From:   Paul Burton <paul.burton@mips.com>
 To:     "linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>
 CC:     Huacai Chen <chenhc@lemote.com>,
         Jiaxun Yang <jiaxun.yang@flygoat.com>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
         Paul Burton <pburton@wavecomp.com>
-Subject: [PATCH v2 17/36] MIPS: bitops: Only use ins for bit 16 or higher
-Thread-Topic: [PATCH v2 17/36] MIPS: bitops: Only use ins for bit 16 or higher
-Thread-Index: AQHVeKKn4vPBf6q7eEKYatE8kpS2FQ==
-Date:   Tue, 1 Oct 2019 21:53:26 +0000
-Message-ID: <20191001215249.4157062-18-paul.burton@mips.com>
+Subject: [PATCH v2 19/36] MIPS: bitops: ins start position is always an
+ immediate
+Thread-Topic: [PATCH v2 19/36] MIPS: bitops: ins start position is always an
+ immediate
+Thread-Index: AQHVeKKpGFkNJ1wM/EuB/qgdkW07aw==
+Date:   Tue, 1 Oct 2019 21:53:29 +0000
+Message-ID: <20191001215249.4157062-20-paul.burton@mips.com>
 References: <20191001215249.4157062-1-paul.burton@mips.com>
 In-Reply-To: <20191001215249.4157062-1-paul.burton@mips.com>
 Accept-Language: en-US
@@ -72,78 +74,83 @@ x-ms-exchange-messagesentrepresentingtype: 1
 x-mailer: git-send-email 2.23.0
 x-originating-ip: [12.94.197.246]
 x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 75f2181c-5fb9-4009-2844-08d746b9c9bc
+x-ms-office365-filtering-correlation-id: 468e0ca3-ee65-49c3-4969-08d746b9cb81
 x-ms-traffictypediagnostic: MWHPR2201MB1439:
 x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <MWHPR2201MB1439632C07AB0288D213AF79C19D0@MWHPR2201MB1439.namprd22.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:7219;
+x-microsoft-antispam-prvs: <MWHPR2201MB14399608912C26D85978EA69C19D0@MWHPR2201MB1439.namprd22.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:2887;
 x-forefront-prvs: 0177904E6B
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(396003)(39840400004)(366004)(346002)(136003)(376002)(199004)(189003)(186003)(11346002)(6512007)(1076003)(486006)(66066001)(26005)(6486002)(316002)(2906002)(5640700003)(6436002)(44832011)(42882007)(25786009)(446003)(6916009)(386003)(6506007)(76176011)(478600001)(52116002)(2616005)(102836004)(476003)(5660300002)(305945005)(64756008)(66446008)(14444005)(2351001)(7736002)(99286004)(54906003)(14454004)(71190400001)(71200400001)(66946007)(66556008)(66476007)(36756003)(3846002)(6116002)(107886003)(4326008)(50226002)(81166006)(81156014)(8676002)(2501003)(8936002)(256004);DIR:OUT;SFP:1102;SCL:1;SRVR:MWHPR2201MB1439;H:MWHPR2201MB1277.namprd22.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(396003)(39840400004)(366004)(346002)(136003)(376002)(199004)(189003)(186003)(11346002)(6512007)(1076003)(486006)(66066001)(26005)(6486002)(316002)(2906002)(5640700003)(6436002)(44832011)(42882007)(25786009)(446003)(6916009)(386003)(6506007)(76176011)(478600001)(52116002)(2616005)(102836004)(476003)(5660300002)(305945005)(64756008)(66446008)(2351001)(7736002)(99286004)(54906003)(14454004)(71190400001)(71200400001)(66946007)(66556008)(66476007)(36756003)(3846002)(6116002)(107886003)(4326008)(50226002)(81166006)(81156014)(8676002)(2501003)(8936002)(256004)(14773001);DIR:OUT;SFP:1102;SCL:1;SRVR:MWHPR2201MB1439;H:MWHPR2201MB1277.namprd22.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
 received-spf: None (protection.outlook.com: wavecomp.com does not designate
  permitted sender hosts)
 x-ms-exchange-senderadcheck: 1
 x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: xwFmUgZRnN/fc2FQIqrdzqBOEWrULQgJflhTSoP83DIvAJaxlAVQRfTQyP5PuvNSSE7oyoZBeGyOHMgAGXNVBC70ECptFRr9UNV8iF0zq8Z1ny1eudSxSBE4jSTq3Hhz6c6MJgsaj0ANGNoenwja7tesH+LF6kj1gHN8RQ6/VDeDqcVa/sM7OgbzYUmm+JHAN9FPOCh38newSfua7lnc9krH6C5F4t8xhqyNFPdkHnV/ER4NjtSQWZmZTMxJ2yD5+S+7gGyig/3C+8RTL1otoX60LzgXFdk7CBYWd+uQBv4i8y+Am8jEu7PxToxvWqvnUdULPyqJIyUIoodx808lac5po5Tut/0ReWjgqozgKxRfWi/zDm+XNldXwM2WPuWkbNq78Z45TilDqIOdQ0DEHva/DFqVAgHjO6U4HbjKo2o=
+x-microsoft-antispam-message-info: c6ks9cX5dYcPxi7uPV1n4z1Wm5ToFFHkt2GHB7u935/bVkaYx9XI7oecMEACZCaKUO04Hcg+MXKnoJQ2UA4TP/NPQ3eyZamjRD7bMY+OvVTenrSSgRMcMPrJgg6lSGelRI61VdJ8GM7yKGhduFHccV7NsODXxiq+R4Ic8mhZkgN4zw88BZ/WiW29T305Vtmrmlg/sObDsKFrGJBwfl79mOQSudIjDt6YWzM+07BVYRmkBdZEeYg8j6o/wz3T19PgEi66yem3pR0b/7GjIrr4Rz55CB1Hur+9XB44yS7s0Bhk4zvoNSEpt70Eklv3tZMt3u667YuRBUeBhR4ajhSShH+G2BwLqmDPzP7pwzWoTwGVsh8/7YpO8niSBpQfpUUYF92DcTaf+2vxZDbSkfM1XyU3Id/E2pKxjdBvTpG5RyQ=
 Content-Type: text/plain; charset="iso-8859-1"
 Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
 X-OriginatorOrg: mips.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 75f2181c-5fb9-4009-2844-08d746b9c9bc
-X-MS-Exchange-CrossTenant-originalarrivaltime: 01 Oct 2019 21:53:26.5429
+X-MS-Exchange-CrossTenant-Network-Message-Id: 468e0ca3-ee65-49c3-4969-08d746b9cb81
+X-MS-Exchange-CrossTenant-originalarrivaltime: 01 Oct 2019 21:53:29.4475
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
 X-MS-Exchange-CrossTenant-id: 463607d3-1db3-40a0-8a29-970c56230104
 X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: j+0eaYBHxe5dgOc8tlNJe8CqCwyDQZvTo6lEmR+gAg19D5GChaYlUL10igXucTWi+giYgWuyxem9mL8OARnaxA==
+X-MS-Exchange-CrossTenant-userprincipalname: OX7LwPCZnvbTKg2EQrBMW4QMfNLCw3lQ3TirWoN4tqszFt5imivMI69r9VDmmkaop6kqyT26RnfEJqi0DV08cQ==
 X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR2201MB1439
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-set_bit() can set bits 0-15 using an ori instruction, rather than
-loading the value -1 into a register & then using an ins instruction.
-
-That is, rather than the following:
-
-  li   t0, -1
-  ll   t1, 0(t2)
-  ins  t1, t0, 4, 1
-  sc   t1, 0(t2)
-
-We can have the simpler:
-
-  ll   t1, 0(t2)
-  ori  t1, t1, 0x10
-  sc   t1, 0(t2)
-
-The or path already allows immediates to be used, so simply restricting
-the ins path to bits that don't fit in immediates is sufficient to take
-advantage of this.
+The start position for an ins instruction is always encoded as an
+immediate, so allowing registers to be used by the inline asm makes no
+sense. It should never happen anyway since a bit index should always be
+small enough to be treated as an immediate, but remove the nonsensical
+"r" for sanity.
 
 Signed-off-by: Paul Burton <paul.burton@mips.com>
 ---
 
 Changes in v2: None
 
- arch/mips/include/asm/bitops.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/mips/include/asm/bitops.h | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
 diff --git a/arch/mips/include/asm/bitops.h b/arch/mips/include/asm/bitops.=
 h
-index e300960717e0..1e5739191ddf 100644
+index 0f5329e32e87..03532ae9f528 100644
 --- a/arch/mips/include/asm/bitops.h
 +++ b/arch/mips/include/asm/bitops.h
-@@ -77,7 +77,7 @@ static inline void set_bit(unsigned long nr, volatile uns=
+@@ -85,7 +85,7 @@ static inline void set_bit(unsigned long nr, volatile uns=
 igned long *addr)
- 	}
-=20
- #if defined(CONFIG_CPU_MIPSR2) || defined(CONFIG_CPU_MIPSR6)
--	if (__builtin_constant_p(bit)) {
-+	if (__builtin_constant_p(bit) && (bit >=3D 16)) {
- 		loongson_llsc_mb();
- 		do {
- 			__asm__ __volatile__(
+ 			"	" __INS "%0, %3, %2, 1			\n"
+ 			"	" __SC "%0, %1				\n"
+ 			: "=3D&r" (temp), "+" GCC_OFF_SMALL_ASM() (*m)
+-			: "ir" (bit), "r" (~0)
++			: "i" (bit), "r" (~0)
+ 			: __LLSC_CLOBBER);
+ 		} while (unlikely(!temp));
+ 		return;
+@@ -150,7 +150,7 @@ static inline void clear_bit(unsigned long nr, volatile=
+ unsigned long *addr)
+ 			"	" __INS "%0, $0, %2, 1			\n"
+ 			"	" __SC "%0, %1				\n"
+ 			: "=3D&r" (temp), "+" GCC_OFF_SMALL_ASM() (*m)
+-			: "ir" (bit)
++			: "i" (bit)
+ 			: __LLSC_CLOBBER);
+ 		} while (unlikely(!temp));
+ 		return;
+@@ -383,7 +383,7 @@ static inline int test_and_clear_bit(unsigned long nr,
+ 			"	" __INS "%0, $0, %3, 1			\n"
+ 			"	" __SC	"%0, %1				\n"
+ 			: "=3D&r" (temp), "+" GCC_OFF_SMALL_ASM() (*m), "=3D&r" (res)
+-			: "ir" (bit)
++			: "i" (bit)
+ 			: __LLSC_CLOBBER);
+ 		} while (unlikely(!temp));
+ 	} else {
 --=20
 2.23.0
 
