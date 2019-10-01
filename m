@@ -2,123 +2,107 @@ Return-Path: <SRS0=YRFP=X2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14F8EC352AA
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 10:26:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 529B8C352AA
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 10:28:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D8FD121920
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 10:26:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b="MW/6KBSt"
+	by mail.kernel.org (Postfix) with ESMTP id 268DD21A4C
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 10:28:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730682AbfJAK01 (ORCPT
+        id S1730189AbfJAK2M (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Oct 2019 06:26:27 -0400
-Received: from mail-io1-f68.google.com ([209.85.166.68]:43165 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730596AbfJAK00 (ORCPT
+        Tue, 1 Oct 2019 06:28:12 -0400
+Received: from eu-smtp-delivery-151.mimecast.com ([207.82.80.151]:44995 "EHLO
+        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726190AbfJAK2M (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Oct 2019 06:26:26 -0400
-Received: by mail-io1-f68.google.com with SMTP id v2so46407372iob.10
-        for <linux-kernel@vger.kernel.org>; Tue, 01 Oct 2019 03:26:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=amarulasolutions.com; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=7dJvQt2XADSP58gshAp3mouDAHa/fpvN+3lt4rGrgN0=;
-        b=MW/6KBStB07v5dXk4ZigslPFPugYyqpQ/ScdkbBrgCiKH3o4AbFDQ1qwAd32i3L1Ut
-         qcFaTGc/lhLrM65+N2L6mT4GH2quV73dZ3OW0f6J3hfFwX4x/zkGKr+2BK03MWo28DBy
-         KNoWV2aGvRV8NEKSqzFK7sgsmnnNqr38yDafY=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=7dJvQt2XADSP58gshAp3mouDAHa/fpvN+3lt4rGrgN0=;
-        b=Cn578em20bHTtSxqdlteLe9DEB80qBnoAj9w+GVCAFwhpSBhHLawoihg9t+xo2Oxvk
-         L0leSoIfX/7n5N7tEt38u905v7wZ//mUr2vv+9QWlUSyDFJF+KS2VipaqpaKws0LcGYU
-         410wtrE465/qSa7AlLq12f6XkAoVQLWHKOx4/Nz1fq/FpbEPG5BxpDcJqzRypaMUY+Ri
-         5KqsoEUaFN+j3oIvSlSzJzoCwu7rwcjBtXSWHfEwsVxIHi6Ouaqfw69/bqiakG4PRXak
-         TRI1sVfn4GNAn4vG8/68sULy6oiM2o4ocdDZZ5JhsJALAUVIXkFDAlZKj4eOUXLYlAT7
-         eWuw==
-X-Gm-Message-State: APjAAAVX3kxliCG7plR9Dn+OuwBXt0zW5QjvxV0PTBcpQtr60eybQwGg
-        CiBBG1AMf8/vtfBBTHkakoYdlCfsEOw0d0lPJwGAWg==
-X-Google-Smtp-Source: APXvYqyE36IiztYNTVOMhjmeAHCFxs73KTI2V5Ei5/NiBQ6XuIFOw+4jhZSV1acSSHmC1qFffPrmWbSyxu+uPa3yx0A=
-X-Received: by 2002:a5d:89da:: with SMTP id a26mr23534629iot.61.1569925585423;
- Tue, 01 Oct 2019 03:26:25 -0700 (PDT)
+        Tue, 1 Oct 2019 06:28:12 -0400
+Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
+ TLS) by relay.mimecast.com with ESMTP id
+ uk-mta-104-QriuFpqrN4OOGp2kPcqmDw-1; Tue, 01 Oct 2019 11:28:08 +0100
+Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
+ AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
+ Server (TLS) id 15.0.1347.2; Tue, 1 Oct 2019 11:28:07 +0100
+Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
+ AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
+ Tue, 1 Oct 2019 11:28:07 +0100
+From:   David Laight <David.Laight@ACULAB.COM>
+To:     'Linus Torvalds' <torvalds@linux-foundation.org>,
+        "Theodore Y. Ts'o" <tytso@mit.edu>
+CC:     Thomas Gleixner <tglx@linutronix.de>,
+        "Ahmed S. Darwish" <darwish.07@gmail.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        "Nicholas Mc Guire" <hofrat@opentech.at>,
+        the arch/x86 maintainers <x86@kernel.org>,
+        "Andy Lutomirski" <luto@kernel.org>,
+        Kees Cook <keescook@chromium.org>
+Subject: RE: x86/random: Speculation to the rescue
+Thread-Topic: x86/random: Speculation to the rescue
+Thread-Index: AQHVd6pl492SQGjALUePXRzXPfNmoqdFkRMg
+Date:   Tue, 1 Oct 2019 10:28:07 +0000
+Message-ID: <41646d76683844e7baf068bed35891ad@AcuMS.aculab.com>
+References: <alpine.DEB.2.21.1909290010500.2636@nanos.tec.linutronix.de>
+ <CAHk-=wgjC01UaoV35PZvGPnrQ812SRGPoV7Xp63BBFxAsJjvrg@mail.gmail.com>
+ <CAHk-=wi0vxLmwEBn2Xgu7hZ0U8z2kN4sgCax+57ZJMVo3huDaQ@mail.gmail.com>
+ <20190930033706.GD4994@mit.edu> <20190930131639.GF4994@mit.edu>
+ <CAHk-=wg7YAx_+CDe6fUqApPD_ghP18H9sPnJWWUg32pQ4pU82g@mail.gmail.com>
+In-Reply-To: <CAHk-=wg7YAx_+CDe6fUqApPD_ghP18H9sPnJWWUg32pQ4pU82g@mail.gmail.com>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.202.205.107]
 MIME-Version: 1.0
-References: <20190919052822.10403-1-jagan@amarulasolutions.com>
- <20190919052822.10403-2-jagan@amarulasolutions.com> <6797961.eJj5WIFbM9@phil>
-In-Reply-To: <6797961.eJj5WIFbM9@phil>
-From:   Jagan Teki <jagan@amarulasolutions.com>
-Date:   Tue, 1 Oct 2019 15:56:14 +0530
-Message-ID: <CAMty3ZDKaywoPxCSD-5N2pLjtGmZ-dZ7ZgUOJqiB1V_9rfR26A@mail.gmail.com>
-Subject: Re: [PATCH 1/6] arm64: dts: rockchip: Fix rk3399-roc-pc pwm2 pin
-To:     Heiko Stuebner <heiko@sntech.de>
-Cc:     Levin Du <djw@t-chip.com.cn>, Akash Gajjar <akash@openedev.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Da Xue <da@lessconfused.com>,
-        devicetree <devicetree@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-amarula <linux-amarula@amarulasolutions.com>
-Content-Type: text/plain; charset="UTF-8"
+X-MC-Unique: QriuFpqrN4OOGp2kPcqmDw-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Heiko,
+RnJvbTogTGludXMgVG9ydmFsZHMNCj4gU2VudDogMzAgU2VwdGVtYmVyIDIwMTkgMTc6MTYNCj4g
+DQo+IE9uIE1vbiwgU2VwIDMwLCAyMDE5IGF0IDY6MTYgQU0gVGhlb2RvcmUgWS4gVHMnbyA8dHl0
+c29AbWl0LmVkdT4gd3JvdGU6DQo+ID4NCj4gPiBXaGljaCBpcyB0byBzYXksIEknbSBzdGlsbCB3
+b3JyaWVkIHRoYXQgcGVvcGxlIHdpdGggZGVlcCBhY2Nlc3MgdG8gdGhlDQo+ID4gaW1wbGVtZW50
+YXRpb24gZGV0YWlscyBvZiBhIENQVSBtaWdodCBiZSBhYmxlIHRvIHJldmVyc2UgZW5naW5lZXIg
+d2hhdA0KPiA+IGEgaml0dGVyIGVudHJvcHkgc2NoZW1lIHByb2R1Y2VzLiAgVGhpcyBpcyB3aHkg
+SSdkIGJlIGN1cmlvdXMgdG8gc2VlDQo+ID4gdGhlIHJlc3VsdHMgd2hlbiBzb21lb25lIHRyaWVz
+IHRvIGF0dGFjayBhIGppdHRlciBzY2hlbWUgb24gYSBmdWxseQ0KPiA+IG9wZW4sIHNpbXBsZSBh
+cmNoaXRlY3R1cmUgc3VjaCBhcyBSSVNDLVYuDQo+IA0KPiBPaCwgSSBhZ3JlZS4NCj4gDQo+IE9u
+ZSBvZiB0aGUgcmVhc29ucyBJIGRpZG4ndCBsaWtlIHNvbWUgb2YgdGhlIG90aGVyIGppdHRlciBl
+bnRyb3B5DQo+IHRoaW5ncyB3YXMgdGhhdCB0aGV5IHNlZW1lZCB0byByZWx5IF9lbnRpcmVseV8g
+b24ganVzdCBwdXJlbHkNCj4gbG93LWxldmVsIENQVSB1bnByZWRpY3RhYmlsaXR5LiBJIHRoaW5r
+IHRoYXQgZXhpc3RzLCBidXQgSSB0aGluayBpdA0KPiBtYWtlcyBmb3IgcHJvYmxlbXMgZm9yIHJl
+YWxseSBzaW1wbGUgY29yZXMuDQo+IA0KPiBUaW1pbmcgb3ZlciBhIGJpZ2dlciB0aGluZyBhbmQg
+YW4gYWN0dWFsIGludGVycnVwdCAoZXZlbiBpZiBpdCdzDQo+ICJqdXN0IiBhIHRpbWVyIGludGVy
+cnVwdCwgd2hpY2ggaXMgYXJndWFibHkgbXVjaCBjbG9zZXIgdG8gdGhlIENQVSBhbmQNCj4gaGFz
+IGEgbXVjaCBoaWdoZXIgbGlrZWxpaG9vZCBvZiBoYXZpbmcgY29tbW9uIGZyZXF1ZW5jeSBkb21h
+aW5zIHdpdGgNCj4gdGhlIGN5Y2xlIGNvdW50ZXIgZXRjKSBtZWFucyB0aGF0IEknbSBwcmV0dHkg
+ZGFtbiBjb252aW5jZWQgdGhhdCBhIGJpZw0KPiBjb21wbGV4IENQVSB3aWxsIGFic29sdXRlbHkg
+c2VlIGlzc3VlcywgZXZlbiBpZiBpdCBoYXMgYmlnIGNhY2hlcy4NCg0KQWdyZWVkLCB5b3UgbmVl
+ZCBzb21ldGhpbmcgdGhhdCBpcyBhY3R1YWxseSBub24tZGV0ZXJtaW5pc3RpYy4NCldoaWxlICdz
+cGVjdWxhdGlvbicgaXMgZGlmZmljdWx0IHRvIHByZWRpY3QsIGl0IGlzIGFjdHVhbGx5IGZ1bGx5
+IGRldGVybWluaXN0aWMuDQpVbnRpbCB5b3UgZ2V0IHNvbWUgcGVydHVyYmF0aW9uIGZyb20gYW4g
+b3V0c2lkZSBzb3VyY2UgdGhlIGNwdSBzdGF0ZQ0KKGluY2x1ZGluZyBjYWNoZXMgYW5kIERSQU0p
+IGlzIGxpa2VseSB0byBiZSB0aGUgc2FtZSBvbiBldmVyeSBib290Lg0KRm9yIGEgZGVza3RvcCAo
+ZXRjKSBQQyBib290aW5nIGZyb20gYSBkaXNrIChldmVuIFNTRCkgeW91J2xsIGdldCBzb21lIHZh
+cmlhdGlvbi4NCkJvb3QgYW4gZW1iZWRkZWQgc3lzdGVtIGZyb20gb25ib2FyZCBmbGFzaCBhbmQg
+ZXZlcnkgYm9vdCBjb3VsZA0Kd2VsbCBiZSB0aGUgc2FtZSAob3Igb25lIG9mIGEgc21hbGwgbnVt
+YmVyIG9mIHJlc3VsdHMpLg0KDQpTeW5jaHJvbmlzaW5nIGEgc2lnbmFsIGJldHdlZW4gZnJlcXVl
+bmN5IGRvbWFpbnMgbWlnaHQgZ2VuZXJhdGUNCnNvbWUgJ3JhbmRvbW5lc3MnLCBidXQgbWF5YmUg
+bm90IGlmIGJvdGggY29tZSBmcm9tIHRoZSBzYW1lIFBMTC4NCg0KRXZlbiBpZiB0aGVyZSBhcmUg
+dmFyaWF0aW9ucywgdGhleSBtYXkgbm90IGJlIGxhcmdlIGVub3VnaCB0byBnaXZlDQphIGxvdCBv
+ZiB2YXJpYXRpb25zIGluIHRoZSBzdGF0ZS4NClRoZSB2YXJpYXRpb25zIGJldHdlZW4gc3lzdGVt
+cyBjb3VsZCBhbHNvIGJlIGEgbG90IGxhcmdlciB0aGFuIHRoZQ0KdmFyaWF0aW9ucyB3aXRoaW4g
+YSBzeXN0ZW0uDQoNCklmIHRoZXJlIGFyZSAnb25seScgMl4zMiB2YXJpYXRpb25zIGFuIGV4aGF1
+c3RpdmUgc2VhcmNoIG1pZ2h0IGJlDQpwb3NzaWJsZSB0byBmaW5kIGFuIHNzaCBrZXkuDQoNCglE
+YXZpZA0KDQotDQpSZWdpc3RlcmVkIEFkZHJlc3MgTGFrZXNpZGUsIEJyYW1sZXkgUm9hZCwgTW91
+bnQgRmFybSwgTWlsdG9uIEtleW5lcywgTUsxIDFQVCwgVUsNClJlZ2lzdHJhdGlvbiBObzogMTM5
+NzM4NiAoV2FsZXMpDQo=
 
-On Mon, Sep 30, 2019 at 2:51 AM Heiko Stuebner <heiko@sntech.de> wrote:
->
-> Hi Jagan,
->
-> Am Donnerstag, 19. September 2019, 07:28:17 CEST schrieb Jagan Teki:
-> > ROC-PC is not able to boot linux console if PWM2_d is
-> > unattached to any pinctrl logic.
-> >
-> > To be precise the linux boot hang with last logs as,
-> > ...
-> > .....
-> > [    0.003367] Console: colour dummy device 80x25
-> > [    0.003788] printk: console [tty0] enabled
-> > [    0.004178] printk: bootconsole [uart8250] disabled
-> >
-> > In ROC-PC the PWM2_d pin is connected to LOG_DVS_PWM of
-> > VDD_LOG. So, for normal working operations this needs to
-> > active and pull-down.
-> >
-> > This patch fix, by attaching pinctrl active and pull-down
-> > the pwm2.
->
-> This looks highly dubious on first glance. The pwm subsystem nor
-> the Rockchip pwm driver do not do any pinctrl handling.
->
-> So I don't really see where that "active" pinctrl state is supposed
-> to come from.
->
-> Comparing with the pwm driver in the vendor tree I see that there
-> is such a state defined there. But that code there also looks strange
-> as that driver never again leaves this active state after entering it.
->
-> Also for example all the Gru devices run with quite a number of pwm-
-> regulators without needing additional fiddling with the pwm itself, so
-> I don't really see why that should be different here.
-
-I deed, I was supposed to think the same. but the vendor kernel dts
-from firefly do follow the pwm2 pinctrl [1]. I wouldn't find any
-information other than this vensor information, ie one of the reason I
-have marked "Levin Du" who initially supported this board.
-
-One, think I have seen was this pinctrl active fixed the boot hang.
-any inputs from would be very helpful.
-
-Levin Du, any inputs?
-
-[1] https://github.com/FireflyTeam/kernel/blob/stable-4.4-rk3399-linux/arch/arm64/boot/dts/rockchip/rk3399-roc-pc.dtsi#L1184
