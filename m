@@ -6,107 +6,115 @@ X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 74103C352AA
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 22:09:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A90DECE587
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 22:09:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4960621906
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 22:09:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2EA2121906
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 22:09:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569967749;
-	bh=KP7tbJJSrQ+krIzZL4qKovSSv9oz1A9YS1/VWcNUJe4=;
+	s=default; t=1569967752;
+	bh=DrHEafNtjjEFY/tPgA+AdDLWxQskCAnmGqq4lx0RUJc=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=pxClRz37Za0b1mrA6VH0nv7hkwYcVPej1vQNY3pR0UISyJsMpXwOnKOgGDfbeNrpF
-	 jHdDgROi3DiooVmDUyl8bjW1bC/qJfccXhxIVcRpPL32i3tMgdLRRzVC4BkYwgjosr
-	 ebE7e1XLDCmQogltQdS51rABc6ZvpZ2tFAXgU3s0=
+	b=lFLDO0fTcCj9pVnJlC1+zbGgtNcbWdfX6rMYCIVX+718L0KfrWTUI2F8kwIfe1Y5d
+	 vBZBFwpBzt6g6lE5HtW8kBIlwz/DmUW9SPp6/A8LArQ/PAawlryCp2/LP66Q1UxCo7
+	 Gd/m3D1iQajZOzD7OJffthBc9HJXkpxpryvy2S5U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728690AbfJAWJI (ORCPT
+        id S1728713AbfJAWJL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Oct 2019 18:09:08 -0400
-Received: from mail-io1-f67.google.com ([209.85.166.67]:35083 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727939AbfJAWJI (ORCPT
+        Tue, 1 Oct 2019 18:09:11 -0400
+Received: from mail-io1-f66.google.com ([209.85.166.66]:33038 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727939AbfJAWJK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Oct 2019 18:09:08 -0400
-Received: by mail-io1-f67.google.com with SMTP id q10so52255860iop.2;
-        Tue, 01 Oct 2019 15:09:07 -0700 (PDT)
+        Tue, 1 Oct 2019 18:09:10 -0400
+Received: by mail-io1-f66.google.com with SMTP id z19so52286113ior.0;
+        Tue, 01 Oct 2019 15:09:09 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:message-id:date:from:to:cc:subject:references
          :mime-version:content-disposition:in-reply-to;
-        bh=j0S7cSZMIiJCew19Ox3ICfK8eVP4NNvzwGL3SrqsdBg=;
-        b=EKrsajyf2p6WguzyNQSmpMNsgf8vAfAXWhhtdXowsZXyfTH6/EWhwMwxNZcAlcGp1i
-         aMiU/ftIcBoxFXEHRO0yqbZG09D2qCqZsIvtEA6iplYzGlmzOZV5nJYH8Kn3BJNFBOC9
-         a1aZacpaDldRwPpQQIbdbKFdridv80URELZUES87rxVShbeNSZHZDGP+PfpgQWTcXHT+
-         IWDU+metvO8yDDePkpaYjM2WQOA0TWivy31V8JUPX18Rj7v4U6Z7lEcMGHp0CBDoAc/M
-         qKKx1aku2w4OalHIwHwz/vt2rxlOPDOrYHnfx075WKZcYlgc/A4DOGjaMmuZl57nB1HT
-         mc0A==
-X-Gm-Message-State: APjAAAVbCwCzlMSL+r303AiX6HMxswDaQM46RArdwj0JWUJz/rDEWIXx
-        S8xuRR3zJDVIjfZ4XWV//tF9ESU=
-X-Google-Smtp-Source: APXvYqwZ3rRMPzQT8p0E97fI2TeXqht1cQv+PU9FDpVWfNh8AjFLQdA9FYpdAhTH6dUuqxj2Cm23gQ==
-X-Received: by 2002:a02:93e5:: with SMTP id z92mr684479jah.8.1569967747118;
-        Tue, 01 Oct 2019 15:09:07 -0700 (PDT)
+        bh=5//jtefmaJ97Y9W3Pk3QhG7cK96EetPPEWG2vT77tjg=;
+        b=FWUJNUjvredINOph0LKSO3N8V1uR0zqm6Mb7r4DGGfNgRHcbHOrgnynAWRhCyO+c2r
+         HxRw8JBoxJM4Xj8ad0r7j+nvk+7VpoI5HDISGNhQ5LGSIu3lf/m1b50PcZCkDBrgygEb
+         rFeDurZlcXjFEW1/o6wfz+zIE4lMth6s8zi9ay8hVbZUnpqI84cAtbKg+TEI2LTIesHE
+         clxZT/hLlLx1xjCoIX0L/JbdRhLy+RwwDrHhiPZC5jrWuhn9Z+v8pMoWrZGnMHT621JL
+         99yXSXmQSyKw7Xc4qvyXfcWDLlHrkE15a/Uur/KM/yCYHRsqQYmHDPPvU0lPUG/cdpF6
+         Ruig==
+X-Gm-Message-State: APjAAAVIKNXxwD+rl4n49KpkfG5pCZ905R+v6HDSOToZyYJpw28zj0B8
+        dpqmyNyN7Lsik7G/3NfeZA==
+X-Google-Smtp-Source: APXvYqwOEoRGKu2K7r6IWzeo9k0HQ6duIkNv4Ictjw6+GHKk96Azxq9Q+dg98oVjdyrtmqkwyg4jMA==
+X-Received: by 2002:a6b:4f0c:: with SMTP id d12mr427307iob.214.1569967749050;
+        Tue, 01 Oct 2019 15:09:09 -0700 (PDT)
 Received: from localhost ([2607:fb90:1780:6fbf:9c38:e932:436b:4079])
-        by smtp.gmail.com with ESMTPSA id 197sm8609364ioc.78.2019.10.01.15.09.06
+        by smtp.gmail.com with ESMTPSA id t4sm6596166iln.82.2019.10.01.15.09.08
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 01 Oct 2019 15:09:06 -0700 (PDT)
-Message-ID: <5d93ce82.1c69fb81.fe9a0.e3e6@mx.google.com>
-Date:   Tue, 01 Oct 2019 17:09:04 -0500
+        Tue, 01 Oct 2019 15:09:08 -0700 (PDT)
+Message-ID: <5d93ce84.1c69fb81.8e964.4dc1@mx.google.com>
+Date:   Tue, 01 Oct 2019 17:09:06 -0500
 From:   Rob Herring <robh@kernel.org>
-To:     Martin Kaiser <martin@kaiser.cx>
-Cc:     Shawn Guo <shawnguo@kernel.org>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] dt-bindings: display: imx: fix native-mode setting
-References: <20190918193853.25689-1-martin@kaiser.cx>
+To:     vincent.cheng.xh@renesas.com
+Cc:     mark.rutland@arm.com, richardcochran@gmail.com,
+        devicetree@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/2] dt-bindings: ptp: Add binding doc for IDT
+ ClockMatrix based PTP clock
+References: <1568837198-27211-1-git-send-email-vincent.cheng.xh@renesas.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190918193853.25689-1-martin@kaiser.cx>
-X-Mutt-References: <20190918193853.25689-1-martin@kaiser.cx>
+In-Reply-To: <1568837198-27211-1-git-send-email-vincent.cheng.xh@renesas.com>
+X-Mutt-References: <1568837198-27211-1-git-send-email-vincent.cheng.xh@renesas.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Sep 18, 2019 at 09:38:53PM +0200, Martin Kaiser wrote:
-> According to
-> Documentation/devicetree/bindings/display/panel/display-timing.txt,
-> native-mode is a property of the display-timings node.
+On Wed, Sep 18, 2019 at 04:06:37PM -0400, vincent.cheng.xh@renesas.com wrote:
+> From: Vincent Cheng <vincent.cheng.xh@renesas.com>
 > 
-> If it's located outside of display-timings, the native-mode setting is
-> ignored and the first display timing is used.
+> Add device tree binding doc for the IDT ClockMatrix PTP clock driver.
+
+Bindings are for h/w, not drivers...
+
 > 
-> We've already fixed the board definitions which got this wrong. Fix the
-> example in the imx framebuffer bindings as well.
-> 
-> Signed-off-by: Martin Kaiser <martin@kaiser.cx>
+> Signed-off-by: Vincent Cheng <vincent.cheng.xh@renesas.com>
 > ---
->  Documentation/devicetree/bindings/display/imx/fsl,imx-fb.txt | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+>  Documentation/devicetree/bindings/ptp/ptp-idtcm.txt | 15 +++++++++++++++
+>  1 file changed, 15 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/ptp/ptp-idtcm.txt
 
-Please also fix 
-Documentation/devicetree/bindings/display/cirrus,clps711x-fb.txt
+Please make this a DT schema.
 
 > 
-> diff --git a/Documentation/devicetree/bindings/display/imx/fsl,imx-fb.txt b/Documentation/devicetree/bindings/display/imx/fsl,imx-fb.txt
-> index e5a8b363d829..f4df9e83bcd2 100644
-> --- a/Documentation/devicetree/bindings/display/imx/fsl,imx-fb.txt
-> +++ b/Documentation/devicetree/bindings/display/imx/fsl,imx-fb.txt
-> @@ -38,10 +38,10 @@ Example:
->  
->  	display0: display0 {
->  		model = "Primeview-PD050VL1";
-> -		native-mode = <&timing_disp0>;
->  		bits-per-pixel = <16>;
->  		fsl,pcr = <0xf0c88080>;	/* non-standard but required */
->  		display-timings {
-> +			native-mode = <&timing_disp0>;
->  			timing_disp0: 640x480 {
->  				hactive = <640>;
->  				vactive = <480>;
+> diff --git a/Documentation/devicetree/bindings/ptp/ptp-idtcm.txt b/Documentation/devicetree/bindings/ptp/ptp-idtcm.txt
+> new file mode 100644
+> index 0000000..4eaa34d
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/ptp/ptp-idtcm.txt
+> @@ -0,0 +1,15 @@
+> +* IDT ClockMatrix (TM) PTP clock
+> +
+> +Required properties:
+> +
+> +  - compatible  Should be "idt,8a3400x-ptp" for System Synchronizer
+> +                Should be "idt,8a3401x-ptp" for Port Synchronizer
+> +                Should be "idt,8a3404x-ptp" for Universal Frequency Translator (UFT)
+
+If PTP is the only function of the chip, you don't need to append 
+'-ptp'.
+
+What's the 'x' for? We generally don't use wildcards in compatible 
+strings.
+
+> +  - reg         I2C slave address of the device
+> +
+> +Example:
+> +
+> +	phc@5b {
+> +		compatible = "idt,8a3400x-ptp";
+> +		reg = <0x5b>;
+> +	};
 > -- 
-> 2.11.0
+> 2.7.4
 > 
 
