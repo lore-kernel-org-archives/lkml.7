@@ -6,118 +6,195 @@ X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C0E3AECE587
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 15:41:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 31B3FECE58A
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 15:43:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9DE982086A
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 15:41:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 13E2321D7B
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 15:43:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389706AbfJAPlh (ORCPT
+        id S2389624AbfJAPnP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Oct 2019 11:41:37 -0400
-Received: from mail-qk1-f193.google.com ([209.85.222.193]:45168 "EHLO
-        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727362AbfJAPlg (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Oct 2019 11:41:36 -0400
-Received: by mail-qk1-f193.google.com with SMTP id z67so11633378qkb.12
-        for <linux-kernel@vger.kernel.org>; Tue, 01 Oct 2019 08:41:35 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=PYNED/gHAQZWO+3A/3UN+zfY12A/7ApPwVWXSrVnRe4=;
-        b=a3TMZmfnbJjCLYH1LB9WvSN/CCMSEoVs0M+szws6OvlSCT5HBQObqMnFTKhGPP1dHJ
-         OFYMZaBdIgnnBZuy4leXBK2LbwiLMMxG7oRmlQ3ECe12jBWtDVqG9CptKgLNTn35oR/J
-         8zqBlw1NIjHugDpzt7bVq10smPnqhHC3d1wfYteN5+/FkviDyBS+nDxeyE39IW/sOyHu
-         vaVzM2zBHqh8cn2XD1LJo5ZGboKKr02RrA2xaodu5IGBb95yTFi2BhxVukf9J6r6h6rr
-         H0qaXMOuldQo3JwcC8mdnXc4/+kSZFvCxrFWlF5GpdpzGug6DGVuo9f1qbvK8Ljd1Gwi
-         zE0Q==
-X-Gm-Message-State: APjAAAV9OmnsUtuX0+DV20FgGgm/1ChEsvShWQTTORJJRBQBg0hAXs7t
-        jIgGCIFw/f/paE9aLWMDPBtlg4/hkOd5LiCXibA=
-X-Google-Smtp-Source: APXvYqzYVsIwghV1g7M189GjA1p2gl/d+MucD1KvbEioKPUwygJiOOw9tiSuacOJf+g/Fbf9+E9jGyNtKXcZR+sjTxc=
-X-Received: by 2002:a37:a858:: with SMTP id r85mr6681072qke.394.1569944495423;
- Tue, 01 Oct 2019 08:41:35 -0700 (PDT)
+        Tue, 1 Oct 2019 11:43:15 -0400
+Received: from mx2.suse.de ([195.135.220.15]:55430 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727302AbfJAPnP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Oct 2019 11:43:15 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 972FDAD2A;
+        Tue,  1 Oct 2019 15:43:12 +0000 (UTC)
+Message-ID: <0557c83bcb781724a284811fef7fdb122039f336.camel@suse.de>
+Subject: Re: [PATCH 05/11] of: Ratify of_dma_configure() interface
+From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+To:     Rob Herring <robh@kernel.org>
+Cc:     devicetree@vger.kernel.org,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Arnd Bergmann <arnd@arndb.de>, PCI <linux-pci@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Christoph Hellwig <hch@infradead.org>,
+        Marek Vasut <marek.vasut@gmail.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Oza Pawandeep <oza.oza@broadcom.com>,
+        Stefan Wahren <wahrenst@gmx.net>,
+        Simon Horman <horms+renesas@verge.net.au>,
+        Frank Rowand <frowand.list@gmail.com>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        Robin Murphy <robin.murphy@arm.com>
+Date:   Tue, 01 Oct 2019 17:43:09 +0200
+In-Reply-To: <CAL_JsqLnKxuQRR3sGGtXF3nwwDx7DOONPPYz37ROk7u_+cxRug@mail.gmail.com>
+References: <20190927002455.13169-1-robh@kernel.org>
+         <20190927002455.13169-6-robh@kernel.org>
+         <20190930125752.GD12051@infradead.org>
+         <95f8dabea99f104336491281b88c04b58d462258.camel@suse.de>
+         <CAL_JsqLnKxuQRR3sGGtXF3nwwDx7DOONPPYz37ROk7u_+cxRug@mail.gmail.com>
+Content-Type: multipart/signed; micalg="pgp-sha256";
+        protocol="application/pgp-signature"; boundary="=-Cs3oOlvxVqdSsNFddCdM"
+User-Agent: Evolution 3.32.4 
 MIME-Version: 1.0
-References: <20191001142026.1124917-1-arnd@arndb.de> <bb58c7cc-209d-7a2f-0e5b-95a9605ffe7b@linux.intel.com>
-In-Reply-To: <bb58c7cc-209d-7a2f-0e5b-95a9605ffe7b@linux.intel.com>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Tue, 1 Oct 2019 17:41:19 +0200
-Message-ID: <CAK8P3a3Js2dNhnRhP7PLadWZ69DZr1mz6DowN9HDJL4CFDAAFw@mail.gmail.com>
-Subject: Re: [alsa-devel] [PATCH] ASoC: SOF: imx: fix reverse
- CONFIG_SND_SOC_SOF_OF dependency
-To:     Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Cc:     Mark Brown <broonie@kernel.org>, Hulk Robot <hulkci@huawei.com>,
-        YueHaibing <yuehaibing@huawei.com>,
-        Daniel Baluta <daniel.baluta@nxp.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>, Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        ALSA Development Mailing List <alsa-devel@alsa-project.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Oct 1, 2019 at 5:32 PM Pierre-Louis Bossart
-<pierre-louis.bossart@linux.intel.com> wrote:
-> On 10/1/19 9:20 AM, Arnd Bergmann wrote:
-> > CONFIG_SND_SOC_SOF_IMX depends on CONFIG_SND_SOC_SOF, but is in
-> > turn referenced by the sof-of-dev driver. This creates a reverse
-> > dependency that manifests in a link error when CONFIG_SND_SOC_SOF_OF
-> > is built-in but CONFIG_SND_SOC_SOF_IMX=m:
-> >
-> > sound/soc/sof/sof-of-dev.o:(.data+0x118): undefined reference to `sof_imx8_ops'
-> >
-> > Make the latter a 'bool' symbol and change the Makefile so the imx8
-> > driver is compiled the same way as the driver using it.
-> >
-> > A nicer way would be to reverse the layering and move all
-> > the imx specific bits of sof-of-dev.c into the imx driver
-> > itself, which can then call into the common code. Doing this
-> > would need more testing and can be done if we add another
-> > driver like the first one.
->
-> Or use something like
->
-> config SND_SOC_SOF_IMX8_SUPPORT
->         bool "SOF support for i.MX8"
->         depends on IMX_SCU
->         depends on IMX_DSP
->
-> config SND_SOC_SOF_IMX8
->         tristate
->         <i.mx selects>
->
-> config SND_SOC_SOF_OF
->         depends on OF
->         select SND_SOC_SOF_IMX8 if SND_SOC_SOF_IMX8_SUPPORT
->
-> That way you propagate the module/built-in information. That's how we
-> fixed those issues for the Intel parts.
 
-Yes, I think that would work here as well, but it keeps even more
-information about the specific drivers in the generic code. It also
-requires adding more 'select' statements that tend to cause more
-problems.
+--=-Cs3oOlvxVqdSsNFddCdM
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-The same could be done with a Kconfig-only solution avoiding
-'select' such as:
+On Mon, 2019-09-30 at 16:24 -0500, Rob Herring wrote:
+> On Mon, Sep 30, 2019 at 8:32 AM Nicolas Saenz Julienne
+> <nsaenzjulienne@suse.de> wrote:
+> > On Mon, 2019-09-30 at 05:57 -0700, Christoph Hellwig wrote:
+> > > On Thu, Sep 26, 2019 at 07:24:49PM -0500, Rob Herring wrote:
+> > > > -int of_dma_configure(struct device *dev, struct device_node *np, b=
+ool
+> > > > force_dma)
+> > > > +int of_dma_configure(struct device *dev, struct device_node *paren=
+t,
+> > > > bool
+> > > > force_dma)
+> > >=20
+> > > This creates a > 80 char line.
+> > >=20
+> > > >  {
+> > > >     u64 dma_addr, paddr, size =3D 0;
+> > > >     int ret;
+> > > >     bool coherent;
+> > > >     unsigned long offset;
+> > > >     const struct iommu_ops *iommu;
+> > > > +   struct device_node *np;
+> > > >     u64 mask;
+> > > >=20
+> > > > +   np =3D dev->of_node;
+> > > > +   if (!np)
+> > > > +           np =3D parent;
+> > > > +   if (!np)
+> > > > +           return -ENODEV;
+> > >=20
+> > > I have to say I find the older calling convention simpler to understa=
+nd.
+> > > If we want to enforce the invariant I'd rather do that explicitly:
+> > >=20
+> > >       if (dev->of_node && np !=3D dev->of_node)
+> > >               return -EINVAL;
+> >=20
+> > As is, this would break Freescale Layerscape fsl-mc bus' dma_configure(=
+):
+>=20
+> This may break PCI too for devices that have a DT node.
+>=20
+> > static int fsl_mc_dma_configure(struct device *dev)
+> > {
+> >         struct device *dma_dev =3D dev;
+> >=20
+> >         while (dev_is_fsl_mc(dma_dev))
+> >                 dma_dev =3D dma_dev->parent;
+> >=20
+> >         return of_dma_configure(dev, dma_dev->of_node, 0);
+> > }
+> >=20
+> > But I think that with this series, given the fact that we now treat the=
+ lack
+> > of
+> > dma-ranges as a 1:1 mapping instead of an error, we could rewrite the
+> > function
+> > like this:
+>=20
+> Now, I'm reconsidering allowing this abuse... It's better if the code
+> which understands the bus structure in DT for a specific bus passes in
+> the right thing. Maybe I should go back to Robin's version (below).
+> OTOH, the existing assumption that 'dma-ranges' was in the immediate
+> parent was an assumption on the bus structure which maybe doesn't
+> always apply.
+>=20
+> diff --git a/drivers/of/device.c b/drivers/of/device.c
+> index a45261e21144..6951450bb8f3 100644
+> --- a/drivers/of/device.c
+> +++ b/drivers/of/device.c
+> @@ -98,12 +98,15 @@ int of_dma_configure(struct device *dev, struct
+> device_node *parent, bool force_
+>         u64 mask;
+>=20
+>         np =3D dev->of_node;
+> -       if (!np)
+> -               np =3D parent;
+> +       if (np)
+> +               parent =3D of_get_dma_parent(np);
+> +       else
+> +               np =3D of_node_get(parent);
+>         if (!np)
+>                 return -ENODEV;
+>=20
+> -       ret =3D of_dma_get_range(np, &dma_addr, &paddr, &size);
+> +       ret =3D of_dma_get_range(parent, &dma_addr, &paddr, &size);
+> +       of_node_put(parent);
+>         if (ret < 0) {
+>                 /*
+>                  * For legacy reasons, we have to assume some devices nee=
+d
 
-config SND_SOC_SOF_IMX8_SUPPORT
-         bool "SOF support for i.MX8"
-         depends on IMX_SCU
-         depends on IMX_DSP
+I spent some time thinking about your comments and researching. I came to t=
+he
+realization that both these solutions break the usage in
+drivers/gpu/drm/sun4i/sun4i_backend.c:805. In that specific case both
+'dev->of_node' and 'parent' exist yet the device receiving the configuratio=
+n
+and 'parent' aren't related in any way.
 
- config SND_SOC_SOF_IMX8
-         def_tristate SND_SOC_SOF_OF
-         depends on SND_SOC_SOF_IMX8_SUPPORT
+IOW we can't just use 'dev->of_node' as a starting point to walk upwards th=
+e
+tree. We always have to respect whatever DT node the bus provided, and star=
+t
+there. This clashes with the current solutions, as they are based on the fa=
+ct
+that we can use dev->of_node when present.
 
-      Arnd
+My guess at this point, if we're forced to honor that behaviour, is that we
+have to create a new API for the PCI use case. Something the likes of
+of_dma_configure_parent().
+
+Regards,
+Nicolas
+
+
+--=-Cs3oOlvxVqdSsNFddCdM
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+Content-Transfer-Encoding: 7bit
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCAAdFiEErOkkGDHCg2EbPcGjlfZmHno8x/4FAl2TdA0ACgkQlfZmHno8
+x/6K4AgAjioHwGF/mb4/iuCV18ZNbc5+28Uj8QSuVjilegKoNykY14Tj+cUOZScx
+3EF7lURVACHKIEG1K4mOtTqx/gzU+CkDYq3h6j7WkGGOIVY9Uadlnj/Koe7b3WuN
+CtyjG0ZpwC0Houf+sUzULF/oh70hKCQnGJqaw4zM11eaV3GWVFusupxh6VuZ61Ez
+PFo9kjYEn9DJFCUYzlZBYmqo7KIXm17W2fiY6AqjPvYE7s4HoA3Y1IE3uofxIY0B
+0jyx5feECFqXNM6OXhaOVDV5jiDrM2aFc1/w0IYU3dcaQxjkPFlb4yI7KtzE/HBT
+DJ49VyTT04oQy0DYBsw8BXur1BGXCw==
+=Iift
+-----END PGP SIGNATURE-----
+
+--=-Cs3oOlvxVqdSsNFddCdM--
+
