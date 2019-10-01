@@ -2,116 +2,127 @@ Return-Path: <SRS0=YRFP=X2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E28BC352AA
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 22:54:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CE759ECE58A
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 22:58:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 48FD6215EA
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 22:54:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9D47021D7B
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 22:58:36 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="KmOintRg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727399AbfJAWyV (ORCPT
+        id S1728370AbfJAW6g (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Oct 2019 18:54:21 -0400
-Received: from out01.mta.xmission.com ([166.70.13.231]:35958 "EHLO
-        out01.mta.xmission.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726050AbfJAWyV (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Oct 2019 18:54:21 -0400
-Received: from in02.mta.xmission.com ([166.70.13.52])
-        by out01.mta.xmission.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.87)
-        (envelope-from <ebiederm@xmission.com>)
-        id 1iFR24-00043h-FL; Tue, 01 Oct 2019 16:54:12 -0600
-Received: from ip68-227-160-95.om.om.cox.net ([68.227.160.95] helo=x220.xmission.com)
-        by in02.mta.xmission.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.87)
-        (envelope-from <ebiederm@xmission.com>)
-        id 1iFR1y-00061d-Ku; Tue, 01 Oct 2019 16:54:12 -0600
-From:   ebiederm@xmission.com (Eric W. Biederman)
-To:     Kees Cook <keescook@chromium.org>
-Cc:     linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
-        linux-api@vger.kernel.org,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Andi Kleen <andi@firstfloor.org>,
-        Andi Kleen <ak@linux.intel.com>,
-        Cong Wang <xiyou.wangcong@gmail.com>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Apelete Seketeli <apelete@seketeli.net>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Chee Nouk Phoon <cnphoon@altera.com>,
-        Chris Zankel <chris@zankel.net>,
-        Christian Ruppert <christian.ruppert@abilis.com>,
-        Greg Ungerer <gerg@uclinux.org>, Helge Deller <deller@gmx.de>,
-        Hongliang Tao <taohl@lemote.com>,
-        Huacai Chen <chenhc@lemote.com>,
-        Jonas Jensen <jonas.jensen@gmail.com>,
-        Josh Boyer <jwboyer@gmail.com>, Jun Nie <jun.nie@linaro.org>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Ley Foon Tan <lftan@altera.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Max Filippov <jcmvbkbc@gmail.com>,
-        Olof Johansson <olof@lixom.net>,
-        Paul Burton <paul.burton@mips.com>,
-        Phil Edworthy <phil.edworthy@renesas.com>,
-        Pierrick Hascoet <pierrick.hascoet@abilis.com>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Roland Stigge <stigge@antcom.de>,
-        Vineet Gupta <vgupta@synopsys.com>
-References: <8736gcjosv.fsf@x220.int.ebiederm.org>
-        <201910011140.EA0181F13@keescook>
-Date:   Tue, 01 Oct 2019 17:53:27 -0500
-In-Reply-To: <201910011140.EA0181F13@keescook> (Kees Cook's message of "Tue, 1
-        Oct 2019 11:46:45 -0700")
-Message-ID: <87imp8hyc8.fsf@x220.int.ebiederm.org>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
+        Tue, 1 Oct 2019 18:58:36 -0400
+Received: from mail-eopbgr730139.outbound.protection.outlook.com ([40.107.73.139]:6118
+        "EHLO NAM05-DM3-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727362AbfJAW6f (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Oct 2019 18:58:35 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=e0PP7w47Xh6jhCND1jRH4DYck4aNSDSVtNtardrUsYS636p1uw62tt5+eDeM3ihVZZRfMplPIn5AlZT1iIb8Oyfo4ZOBgO/CQ2R+tF3MU6bF0Ekhhc3FYk6p6Li6IiTYifHxL/SnwRkSCjbpMV11MXbC8FfIPPAwxQrpgG3c0lkImO9bnNHnJrNWE223XmwJ1KgiThLdAZJpXhyeyR/QvtpyO73G7sCaTh1oxpzxSfCHjKbuOt71e1a+rbmnMD0BEdiM4Pyq5TTVjs+GSrGYfsLXDwLM3NIk7FM2FacTnNetGNoLyeZOYrJUVjSUkH/wqjpX/7TNHX1K6xU3N409jw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=4PG+JG67IvM+tCUi7GMob6JClhFJdru1ErWlwVGQiLk=;
+ b=llQNRKSDezgxvf9EX/J2q+ZGKnBUPlC9XzAXEyAi5O8wZoH8F5JqLZ/txNguerXlrYGbtf8hmj2rlNPzEiB4FL7xO8tDi/EPzSSiUOnMRZeHwaPojrZ+cgf0VQvc5br/ShgDGPsEUP4x/533BSSzm8NbDPv+FEM5Jdg4JJ7Tf0Duj/GTQpX/Xe0CHijsrMhuBKtoimtlmttCuNGdEGiiSy7fDh07BRfk/EcIJv32JhmmVfp3etugT+DwARNsXcrOfbRA59Qb9c3hUCwplzIAKD5EaK7IJJ7pU2OyUT4mj5q0Ndbu+ye1uOG2BgRHkoVvSJz+kNlwfXAtcRtlKcllcA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=microsoft.com; dmarc=pass action=none
+ header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=4PG+JG67IvM+tCUi7GMob6JClhFJdru1ErWlwVGQiLk=;
+ b=KmOintRgxSJHR5xu65+mEGFPFVsbHCGjdTiuPRpeg8vn8A0KmMh1PORZl336XrCvaZohqJqbYWOTFMyJw0L8hfE5FiII+4ivSH84QOPmOol3YPerpAov6akV0TaBwVhtk96/mlSP3iHCcluSD8XWw65PHYE8wBmTcPna8MhP1Rk=
+Received: from BY5PR21MB1395.namprd21.prod.outlook.com (20.180.34.12) by
+ BY5PR21MB1508.namprd21.prod.outlook.com (20.180.34.140) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2327.6; Tue, 1 Oct 2019 22:58:32 +0000
+Received: from BY5PR21MB1395.namprd21.prod.outlook.com
+ ([fe80::81aa:19e8:4e5e:b2dc]) by BY5PR21MB1395.namprd21.prod.outlook.com
+ ([fe80::81aa:19e8:4e5e:b2dc%2]) with mapi id 15.20.2347.003; Tue, 1 Oct 2019
+ 22:58:32 +0000
+From:   Pavel Shilovskiy <pshilov@microsoft.com>
+To:     Sasha Levin <sashal@kernel.org>
+CC:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "stable@vger.kernel.org" <stable@vger.kernel.org>,
+        kbuild test robot <lkp@intel.com>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        Steven French <Steven.French@microsoft.com>,
+        Aurelien Aptel <aaptel@suse.com>
+Subject: RE: [PATCH 5.2 02/45] smb3: fix unmount hang in open_shroot
+Thread-Topic: [PATCH 5.2 02/45] smb3: fix unmount hang in open_shroot
+Thread-Index: AQHVds5cF4tEGrkArkiZ6kF9upgKeadGQl8ggAAk6ICAAAJZIA==
+Date:   Tue, 1 Oct 2019 22:58:32 +0000
+Message-ID: <BY5PR21MB1395063CA8DA58DD499C824FB69D0@BY5PR21MB1395.namprd21.prod.outlook.com>
+References: <20190929135024.387033930@linuxfoundation.org>
+ <20190929135025.151404151@linuxfoundation.org>
+ <BY5PR21MB13958939EBDEB4122A29675EB69D0@BY5PR21MB1395.namprd21.prod.outlook.com>
+ <20191001224913.GE17454@sasha-vm>
+In-Reply-To: <20191001224913.GE17454@sasha-vm>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=True;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Owner=pshilov@microsoft.com;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2019-10-01T22:58:31.2359094Z;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=General;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Application=Microsoft Azure
+ Information Protection;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=7f61303c-2db9-4607-916d-9d910e961a42;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Extended_MSFT_Method=Automatic
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=pshilov@microsoft.com; 
+x-originating-ip: [2001:4898:80e8:3:994b:430e:3aec:b167]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: e16899d2-ea63-439a-36c1-08d746c2e207
+x-ms-office365-filtering-ht: Tenant
+x-ms-traffictypediagnostic: BY5PR21MB1508:|BY5PR21MB1508:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <BY5PR21MB15081ED09C918F91A2E0BD5FB69D0@BY5PR21MB1508.namprd21.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:6108;
+x-forefront-prvs: 0177904E6B
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(346002)(39860400002)(396003)(376002)(136003)(366004)(199004)(189003)(13464003)(10090500001)(81166006)(6506007)(99286004)(6436002)(316002)(22452003)(229853002)(186003)(305945005)(46003)(14454004)(7696005)(7736002)(76176011)(102836004)(54906003)(86362001)(4326008)(74316002)(6916009)(8936002)(81156014)(478600001)(6246003)(55016002)(10290500003)(25786009)(9686003)(8990500004)(64756008)(66556008)(76116006)(8676002)(66446008)(486006)(2906002)(4744005)(11346002)(52536014)(6116002)(33656002)(71190400001)(5660300002)(71200400001)(66946007)(476003)(66476007)(256004)(446003);DIR:OUT;SFP:1102;SCL:1;SRVR:BY5PR21MB1508;H:BY5PR21MB1395.namprd21.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: microsoft.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: rROj/HvoDdbfQE4yQSc7sKEhYrj7A2TWC6h5pYQCLquZqAooPIZkHC1rifFcjuCrK9N7/w5BjAwb28F3P9xCxI6lfeijBDCBsryC6HgrcEi2N17bSpc6CLjO99uYaapGmXRozeb+/kOfDWQgjvys2rLOSMfqaS4OGo+va2QIZeSq9gp+alpTgcIsjFGO4yC9FddZVeKe1IJ+SAXEQAI8jfPgk9Jw2fS1nVfANcnljIUcxgrZeY4bIWcdqxgY+VjWmSapwFCtkRnYGrtQ+7Z7pyooxAnlfdrpLU8z2jxxr1u2XVasUvesdb5MXxAKf1aUD+h9mOVfVwVNgI5rwGjDUmhgBcCUMpLEjFdP6EqFagZSK+80oIouKRCsr3Xpe1MeR3GhaqrWKyYpqToqyi8QW58IgmpzlUupV63pF5Jssww=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain
-X-XM-SPF: eid=1iFR1y-00061d-Ku;;;mid=<87imp8hyc8.fsf@x220.int.ebiederm.org>;;;hst=in02.mta.xmission.com;;;ip=68.227.160.95;;;frm=ebiederm@xmission.com;;;spf=neutral
-X-XM-AID: U2FsdGVkX1890sJnTfB2radGtM5zpN9fbLEpYr3LK/s=
-X-SA-Exim-Connect-IP: 68.227.160.95
-X-SA-Exim-Mail-From: ebiederm@xmission.com
-Subject: Re: [RFC][PATCH] sysctl: Remove the sysctl system call
-X-SA-Exim-Version: 4.2.1 (built Thu, 05 May 2016 13:38:54 -0600)
-X-SA-Exim-Scanned: Yes (on in02.mta.xmission.com)
+X-OriginatorOrg: microsoft.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: e16899d2-ea63-439a-36c1-08d746c2e207
+X-MS-Exchange-CrossTenant-originalarrivaltime: 01 Oct 2019 22:58:32.4636
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: 6e6XKxKnp2HYGvYQnhss/OBfk2R3xqnLQXIKHSoIB+qb4onKvkRVG+x1TZFMT1u7NVNFmlo+2FFpNaFchSI5VA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BY5PR21MB1508
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Kees Cook <keescook@chromium.org> writes:
+-----Original Message-----
+From: Sasha Levin <sashal@kernel.org>=20
+Sent: Tuesday, October 1, 2019 3:49 PM
+> On Tue, Oct 01, 2019 at 08:41:43PM +0000, Pavel Shilovskiy wrote:
+> >Hi Greg,
+> >
+> >Are you going to apply this patch to the 5.3.y stable kernel? The patch =
+is applicable there too.
+>=20
+> I will, yes.
 
-> On Tue, Oct 01, 2019 at 01:36:32PM -0500, Eric W. Biederman wrote:
->> 
->> This system call has been deprecated almost since it was introduced, and
->> in a survey of the linux distributions I can no longer find any of them
->> that enable CONFIG_SYSCTL_SYSCALL.  The only indication that I can find
->> that anyone might care is that a few of the defconfigs in the kernel
->> enable CONFIG_SYSCTL_SYSCALL.  However this appears in only 31 of 414
->> defconfigs in the kernel, so I suspect this symbols presence is simply
->> because it is harmless to include rather than because it is necessary.
->> 
->> As there appear to be no users of the sysctl system call, remove the
->> code.  As this removes one of the few uses of the internal kernel mount
->> of proc I hope this allows for even more simplifications of the proc
->> filesystem.
->
-> I'm for it. :) I tripped over this being deprecated over a decade ago. :P
->
-> I think you can actually take this further and remove (or at least
-> empty) the uapi/linux/sysctl.h file too.
+Thanks!
 
-I copied everyone who had put this into a defconfig and I will wait a
-little more to see if anyone screams.  I think it is a safe guess that
-several of the affected configurations are dead (or at least
-unmaintained) as I received 17 bounces when copying everyone.
-
-I would make it a followup that removes uapi/linux/sysctl.h.  I don't
-see anything in it that isn't about the sysctl system call.  I will keep
-it a separate patch as I can imagine something silly that needs the
-header file to compile.  A separate patch would make a revert easier
-if we find something like that.
-
-Eric
+Best regards,
+Pavel Shilovsky
