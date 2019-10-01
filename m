@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D6D5C352AA
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 16:53:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9106ECE587
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 16:53:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4A8DF2168B
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 16:53:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8014321783
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 16:53:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569948811;
-	bh=G5VaTwfS5O/XxUYXqnwGpmGX3h20JN+8pFptTAtSvIo=;
+	s=default; t=1569948815;
+	bh=Psok01rb9VQ9VEznPEyjc5+rXwjlQFDg2BvagxWZhyU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1aSldl8/6OAjqYY/jAfD8ZtRyh1BefkpxO4M7PnTmn8StgdQk4GN328gbeNf9KnVG
-	 WtNE+UCwiStyCNOZAPibOhDvc+i6pBxbsTMknuKnsqxyBhu71uep9YMmpAW6fPdH1b
-	 s2Rb/pRfipyzEOWlWVpE9WQCY/SbWnGkspS7j9wc=
+	b=iYPA+K9SLaMsJMfAqv/mUsjMBABZThUUlexnKxaMvoy0mfMgH7THPrvrQiXtSFIG2
+	 9zyVjtk8LU26YZoPWQpEm1xjRQih4pQaLWWBqo+ebEnp1mIDR4VU44eir6nxL1vtW4
+	 puVEndK2NaMoNTAQS0yAAX+GxIiZ6774MooBe8lk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389461AbfJAQx3 (ORCPT
+        id S1732628AbfJAQnV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Oct 2019 12:53:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55436 "EHLO mail.kernel.org"
+        Tue, 1 Oct 2019 12:43:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55268 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732268AbfJAQnY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Oct 2019 12:43:24 -0400
+        id S1732527AbfJAQnQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Oct 2019 12:43:16 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B078D21924;
-        Tue,  1 Oct 2019 16:43:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F104421906;
+        Tue,  1 Oct 2019 16:43:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569948203;
-        bh=G5VaTwfS5O/XxUYXqnwGpmGX3h20JN+8pFptTAtSvIo=;
+        s=default; t=1569948195;
+        bh=Psok01rb9VQ9VEznPEyjc5+rXwjlQFDg2BvagxWZhyU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=sP97qoQrvjWoSi4/a1W/bOfOgoiJVCvkRKX7zX8GPBztzJ67NDTSbNn7hePDx2keJ
-         Lz097muGjUw1NcIgdfhyPujP8G0Hon6mu3okOg2/YsJmkx6ZJmAxTG3ZNz0+UxwT8+
-         kIb08SoomY+ohlEKsDrK4RDNoYGp9bbqFk+uFM9o=
+        b=z6mvd+zK0sqrFMmvytAZSqGVaZbYdMsq0G63JusNNldTLSwNJevIbKEyynO84LWep
+         6i5g0cnyRO2GW1x95aEf1LtZBFAUwt8TowRnMDs7XvHeM47UDd8kfuHiEOn859FJyo
+         cNN5w3b6n2X1wMio2I+CxWMlWzm1p9T9Hn9llmro=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Dongsheng Yang <dongsheng.yang@easystack.cn>,
-        Ilya Dryomov <idryomov@gmail.com>,
-        Sasha Levin <sashal@kernel.org>, ceph-devel@vger.kernel.org,
-        linux-block@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 10/43] rbd: fix response length parameter for encoded strings
-Date:   Tue,  1 Oct 2019 12:42:38 -0400
-Message-Id: <20191001164311.15993-10-sashal@kernel.org>
+Cc:     Jia-Ju Bai <baijiaju1990@gmail.com>,
+        Anna Schumaker <Anna.Schumaker@Netapp.com>,
+        Sasha Levin <sashal@kernel.org>, linux-nfs@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 03/43] fs: nfs: Fix possible null-pointer dereferences in encode_attrs()
+Date:   Tue,  1 Oct 2019 12:42:31 -0400
+Message-Id: <20191001164311.15993-3-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191001164311.15993-1-sashal@kernel.org>
 References: <20191001164311.15993-1-sashal@kernel.org>
@@ -60,66 +59,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dongsheng Yang <dongsheng.yang@easystack.cn>
+From: Jia-Ju Bai <baijiaju1990@gmail.com>
 
-[ Upstream commit 5435d2069503e2aa89c34a94154f4f2fa4a0c9c4 ]
+[ Upstream commit e2751463eaa6f9fec8fea80abbdc62dbc487b3c5 ]
 
-rbd_dev_image_id() allocates space for length but passes a smaller
-value to rbd_obj_method_sync().  rbd_dev_v2_object_prefix() doesn't
-allocate space for length.  Fix both to be consistent.
+In encode_attrs(), there is an if statement on line 1145 to check
+whether label is NULL:
+    if (label && (attrmask[2] & FATTR4_WORD2_SECURITY_LABEL))
 
-Signed-off-by: Dongsheng Yang <dongsheng.yang@easystack.cn>
-Reviewed-by: Ilya Dryomov <idryomov@gmail.com>
-Signed-off-by: Ilya Dryomov <idryomov@gmail.com>
+When label is NULL, it is used on lines 1178-1181:
+    *p++ = cpu_to_be32(label->lfs);
+    *p++ = cpu_to_be32(label->pi);
+    *p++ = cpu_to_be32(label->len);
+    p = xdr_encode_opaque_fixed(p, label->label, label->len);
+
+To fix these bugs, label is checked before being used.
+
+These bugs are found by a static analysis tool STCheck written by us.
+
+Signed-off-by: Jia-Ju Bai <baijiaju1990@gmail.com>
+Signed-off-by: Anna Schumaker <Anna.Schumaker@Netapp.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/block/rbd.c | 10 ++++++----
- 1 file changed, 6 insertions(+), 4 deletions(-)
+ fs/nfs/nfs4xdr.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/block/rbd.c b/drivers/block/rbd.c
-index 585378bc988cd..3d01ad6a3bcfc 100644
---- a/drivers/block/rbd.c
-+++ b/drivers/block/rbd.c
-@@ -4510,17 +4510,20 @@ static int rbd_dev_v2_image_size(struct rbd_device *rbd_dev)
- 
- static int rbd_dev_v2_object_prefix(struct rbd_device *rbd_dev)
- {
-+	size_t size;
- 	void *reply_buf;
- 	int ret;
- 	void *p;
- 
--	reply_buf = kzalloc(RBD_OBJ_PREFIX_LEN_MAX, GFP_KERNEL);
-+	/* Response will be an encoded string, which includes a length */
-+	size = sizeof(__le32) + RBD_OBJ_PREFIX_LEN_MAX;
-+	reply_buf = kzalloc(size, GFP_KERNEL);
- 	if (!reply_buf)
- 		return -ENOMEM;
- 
- 	ret = rbd_obj_method_sync(rbd_dev, &rbd_dev->header_oid,
- 				  &rbd_dev->header_oloc, "get_object_prefix",
--				  NULL, 0, reply_buf, RBD_OBJ_PREFIX_LEN_MAX);
-+				  NULL, 0, reply_buf, size);
- 	dout("%s: rbd_obj_method_sync returned %d\n", __func__, ret);
- 	if (ret < 0)
- 		goto out;
-@@ -5489,7 +5492,6 @@ static int rbd_dev_image_id(struct rbd_device *rbd_dev)
- 	dout("rbd id object name is %s\n", oid.name);
- 
- 	/* Response will be an encoded string, which includes a length */
--
- 	size = sizeof (__le32) + RBD_IMAGE_ID_LEN_MAX;
- 	response = kzalloc(size, GFP_NOIO);
- 	if (!response) {
-@@ -5501,7 +5503,7 @@ static int rbd_dev_image_id(struct rbd_device *rbd_dev)
- 
- 	ret = rbd_obj_method_sync(rbd_dev, &oid, &rbd_dev->header_oloc,
- 				  "get_id", NULL, 0,
--				  response, RBD_IMAGE_ID_LEN_MAX);
-+				  response, size);
- 	dout("%s: rbd_obj_method_sync returned %d\n", __func__, ret);
- 	if (ret == -ENOENT) {
- 		image_id = kstrdup("", GFP_KERNEL);
+diff --git a/fs/nfs/nfs4xdr.c b/fs/nfs/nfs4xdr.c
+index b7bde12d8cd51..1c0227c78a7bc 100644
+--- a/fs/nfs/nfs4xdr.c
++++ b/fs/nfs/nfs4xdr.c
+@@ -1171,7 +1171,7 @@ static void encode_attrs(struct xdr_stream *xdr, const struct iattr *iap,
+ 		} else
+ 			*p++ = cpu_to_be32(NFS4_SET_TO_SERVER_TIME);
+ 	}
+-	if (bmval[2] & FATTR4_WORD2_SECURITY_LABEL) {
++	if (label && (bmval[2] & FATTR4_WORD2_SECURITY_LABEL)) {
+ 		*p++ = cpu_to_be32(label->lfs);
+ 		*p++ = cpu_to_be32(label->pi);
+ 		*p++ = cpu_to_be32(label->len);
 -- 
 2.20.1
 
