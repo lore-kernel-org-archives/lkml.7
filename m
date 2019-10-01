@@ -2,247 +2,155 @@ Return-Path: <SRS0=YRFP=X2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B89FFECE587
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 13:50:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 517F1ECE587
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 13:51:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 853342190F
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 13:50:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 60E0E21855
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 13:51:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="Pq9uNLT4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388845AbfJANub (ORCPT
+        id S2388849AbfJANvM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Oct 2019 09:50:31 -0400
-Received: from mx2.suse.de ([195.135.220.15]:43366 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726554AbfJANub (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Oct 2019 09:50:31 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id E7CA8AE0C;
-        Tue,  1 Oct 2019 13:50:27 +0000 (UTC)
-Subject: Re: [patch for-5.3 0/4] revert immediate fallback to remote hugepages
-To:     Michal Hocko <mhocko@kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     David Rientjes <rientjes@google.com>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Mel Gorman <mgorman@suse.de>,
-        "Kirill A. Shutemov" <kirill@shutemov.name>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux-MM <linux-mm@kvack.org>
-References: <alpine.DEB.2.21.1909041252230.94813@chino.kir.corp.google.com>
- <20190904205522.GA9871@redhat.com>
- <alpine.DEB.2.21.1909051400380.217933@chino.kir.corp.google.com>
- <20190909193020.GD2063@dhcp22.suse.cz>
- <20190925070817.GH23050@dhcp22.suse.cz>
- <alpine.DEB.2.21.1909261149380.39830@chino.kir.corp.google.com>
- <20190927074803.GB26848@dhcp22.suse.cz>
- <CAHk-=wgba5zOJtGBFCBP3Oc1m4ma+AR+80s=hy=BbvNr3GqEmA@mail.gmail.com>
- <20190930112817.GC15942@dhcp22.suse.cz>
- <20191001054343.GA15624@dhcp22.suse.cz>
-From:   Vlastimil Babka <vbabka@suse.cz>
-Autocrypt: addr=vbabka@suse.cz; prefer-encrypt=mutual; keydata=
- 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
-Message-ID: <fac13297-424f-33b0-e01d-d72b949a73fe@suse.cz>
-Date:   Tue, 1 Oct 2019 15:50:27 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.0
+        Tue, 1 Oct 2019 09:51:12 -0400
+Received: from mail.skyhub.de ([5.9.137.197]:44560 "EHLO mail.skyhub.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2388706AbfJANvM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Oct 2019 09:51:12 -0400
+Received: from zn.tnic (p200300EC2F0A2D0011A0C0FEFCED0EBA.dip0.t-ipconnect.de [IPv6:2003:ec:2f0a:2d00:11a0:c0fe:fced:eba])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id F3C1B1EC03AD;
+        Tue,  1 Oct 2019 15:51:10 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1569937871;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=jWF7NUD3UG4zEl0CddlLEO+oeHhhgitXQGaScYypXro=;
+        b=Pq9uNLT41EO/NKOX2eDfLDuzdhcEz39M+YEQgdg1fmeI29l0IubgvVStdbhcu/mNNKlLBq
+        dOpiCIO5r8s+33d+fdYvbSar5pQQEtGzrUlX6Ztf2A91PyB1tSmfbYgSAooSVnNmvuGQ3I
+        CQhu6feHC9g9szUkRyi0bT4LmnJXKyU=
+Date:   Tue, 1 Oct 2019 15:51:08 +0200
+From:   Borislav Petkov <bp@alien8.de>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        "Ahmed S. Darwish" <darwish.07@gmail.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Theodore Ts'o <tytso@mit.edu>,
+        Nicholas Mc Guire <hofrat@opentech.at>,
+        the arch/x86 maintainers <x86@kernel.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Kees Cook <keescook@chromium.org>
+Subject: Re: x86/random: Speculation to the rescue
+Message-ID: <20191001135108.GD5390@zn.tnic>
+References: <alpine.DEB.2.21.1909290010500.2636@nanos.tec.linutronix.de>
+ <CAHk-=wgjC01UaoV35PZvGPnrQ812SRGPoV7Xp63BBFxAsJjvrg@mail.gmail.com>
+ <CAHk-=wi0vxLmwEBn2Xgu7hZ0U8z2kN4sgCax+57ZJMVo3huDaQ@mail.gmail.com>
+ <CAHk-=whKhD-GniDqpRhhF=V2cSxThX56NAdkAUoBkbp0mW5=LA@mail.gmail.com>
+ <20190930061014.GC29694@zn.tnic>
+ <CAHk-=wjfLfnOyGkHM+ZRn6bc6JD6CU3Ewix3cJDqCqjbMO5PNA@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20191001054343.GA15624@dhcp22.suse.cz>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+In-Reply-To: <CAHk-=wjfLfnOyGkHM+ZRn6bc6JD6CU3Ewix3cJDqCqjbMO5PNA@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 10/1/19 7:43 AM, Michal Hocko wrote:
-> so we do not get more that 12 huge pages which is really poor. Although
-> hugetlb pages tend to be allocated early after the boot they are still
-> an explicit admin request and having less than 5% success rate is really
-> bad. If anything the __GFP_RETRY_MAYFAIL needs to be reflected in the
-> code.
+On Mon, Sep 30, 2019 at 09:06:36AM -0700, Linus Torvalds wrote:
+> Obviously, that can be a problem if you then need sshd in order to get
+> into a headless box, so my patch fixes things for you too, but at
+> least your box doesn't show the problem that Ahmed had, and the boot
+> completing presumably means that you got more entropy from other disk
+> IO being done by the rest of the boot.
 
-Yeah it's roughly what I expected, thanks for the testing. How about this
-patch on top?
+Right, another observation I did was that when it would wait for
+entropy, if I press random keys, it would get done faster because
+apparently it would collect entropy from the key presses too.
 
----8<---
-From 3ae67ab2274626c276ff2dd58794215a8461f045 Mon Sep 17 00:00:00 2001
-From: Vlastimil Babka <vbabka@suse.cz>
-Date: Tue, 1 Oct 2019 14:20:58 +0200
-Subject: [RFC] mm, thp: tweak reclaim/compaction effort of local-only and
- all-node allocations
+> If you want to test my hacky "do /dev/urandom too", it was this one-liner:
+> 
+>   --- a/drivers/char/random.c
+>   +++ b/drivers/char/random.c
+>   @@ -2027,6 +2027,7 @@ urandom_read(struct file *file, char __user
+> *buf, size_t nbytes, loff_t *ppos)
+>         static int maxwarn = 10;
+>         int ret;
+> 
+>   +     if (!crng_ready()) try_to_generate_entropy();
+>         if (!crng_ready() && maxwarn > 0) {
+>                 maxwarn--;
+>                 if (__ratelimit(&urandom_warning))
+> 
+> and that should get rid of the warnings.
 
-THP page faults now attempt a __GFP_THISNODE allocation first, which should
-only compact existing free memory, followed by another attempt that can
-allocate from any node using reclaim/compaction effort specified by global
-defrag setting and madvise.
+So when I add this by hand and do git diff, it adds a second hunk:
 
-This patch makes the following changes to the scheme:
-
-- before the patch, the first allocation relies on a check for pageblock order
-  and __GFP_IO. This however affects also the second attempt, and also hugetlb
-  allocations and other allocations of whole pageblock. Instead of that, reuse
-  the existing check for costly order __GFP_NORETRY allocations, and make sure
-  the first THP attempt uses __GFP_NORETRY. As a side-effect, all costly order
-  __GFP_NORETRY allocations will bail out if compaction needs reclaim, while
-  previously they only bailed out when compaction was deferred due to previous
-  failures. This should be still acceptable within the __GFP_NORETRY semantics.
-
-- before the patch, the second allocation attempt (on all nodes) was passing
-  __GFP_NORETRY. This is redundant as the check for pageblock order (discussed
-  above) was stronger. It's also contrary to madvise(MADV_HUGEPAGE) which means
-  some effort to allocate THP is requested. After this patch, the second
-  attempt doesn't pass __GFP_THISNODE nor __GFP_NORETRY.
-
-To sum up, THP page faults now try the following attempt:
-
-1. local node only THP allocation with no reclaim, just compaction.
-2. THP allocation from any node with effort determined by global defrag setting
-   and VMA madvise
-3. fallback to base pages on any node
-
-Signed-off-by: Vlastimil Babka <vbabka@suse.cz>
 ---
- mm/mempolicy.c  | 16 +++++++++-------
- mm/page_alloc.c | 23 +++++------------------
- 2 files changed, 14 insertions(+), 25 deletions(-)
+diff --git a/drivers/char/random.c b/drivers/char/random.c
+index c2f7de9dc543..93bad17bef98 100644
+--- a/drivers/char/random.c
++++ b/drivers/char/random.c
+@@ -2027,6 +2027,7 @@ urandom_read(struct file *file, char __user *buf, size_t nbytes, loff_t *ppos)
+ 	static int maxwarn = 10;
+ 	int ret;
+ 
++	if (!crng_ready()) try_to_generate_entropy();
+ 	if (!crng_ready() && maxwarn > 0) {
+ 		maxwarn--;
+ 		if (__ratelimit(&urandom_warning))
+@@ -2520,4 +2521,4 @@ void add_bootloader_randomness(const void *buf, unsigned int size)
+ 	else
+ 		add_device_randomness(buf, size);
+ }
+-EXPORT_SYMBOL_GPL(add_bootloader_randomness);
+\ No newline at end of file
++EXPORT_SYMBOL_GPL(add_bootloader_randomness);
+---
 
-diff --git a/mm/mempolicy.c b/mm/mempolicy.c
-index 4ae967bcf954..2c48146f3ee2 100644
---- a/mm/mempolicy.c
-+++ b/mm/mempolicy.c
-@@ -2129,18 +2129,20 @@ alloc_pages_vma(gfp_t gfp, int order, struct vm_area_struct *vma,
- 		nmask = policy_nodemask(gfp, pol);
- 		if (!nmask || node_isset(hpage_node, *nmask)) {
- 			mpol_cond_put(pol);
-+			/*
-+			 * First, try to allocate THP only on local node, but
-+			 * don't reclaim unnecessarily, just compact.
-+			 */
- 			page = __alloc_pages_node(hpage_node,
--						gfp | __GFP_THISNODE, order);
-+				gfp | __GFP_THISNODE | __GFP_NORETRY, order);
- 
- 			/*
--			 * If hugepage allocations are configured to always
--			 * synchronous compact or the vma has been madvised
--			 * to prefer hugepage backing, retry allowing remote
--			 * memory as well.
-+			 * If that fails, allow both compaction and reclaim,
-+			 * but on all nodes.
- 			 */
--			if (!page && (gfp & __GFP_DIRECT_RECLAIM))
-+			if (!page)
- 				page = __alloc_pages_node(hpage_node,
--						gfp | __GFP_NORETRY, order);
-+								gfp, order);
- 
- 			goto out;
- 		}
-diff --git a/mm/page_alloc.c b/mm/page_alloc.c
-index 15c2050c629b..da9075d4cdf6 100644
---- a/mm/page_alloc.c
-+++ b/mm/page_alloc.c
-@@ -4467,7 +4467,11 @@ __alloc_pages_slowpath(gfp_t gfp_mask, unsigned int order,
- 		if (page)
- 			goto got_pg;
- 
--		 if (order >= pageblock_order && (gfp_mask & __GFP_IO)) {
-+		/*
-+		 * Checks for costly allocations with __GFP_NORETRY, which
-+		 * includes some THP page fault allocations
-+		 */
-+		if (costly_order && (gfp_mask & __GFP_NORETRY)) {
- 			/*
- 			 * If allocating entire pageblock(s) and compaction
- 			 * failed because all zones are below low watermarks
-@@ -4487,23 +4491,6 @@ __alloc_pages_slowpath(gfp_t gfp_mask, unsigned int order,
- 			if (compact_result == COMPACT_SKIPPED ||
- 			    compact_result == COMPACT_DEFERRED)
- 				goto nopage;
--		}
--
--		/*
--		 * Checks for costly allocations with __GFP_NORETRY, which
--		 * includes THP page fault allocations
--		 */
--		if (costly_order && (gfp_mask & __GFP_NORETRY)) {
--			/*
--			 * If compaction is deferred for high-order allocations,
--			 * it is because sync compaction recently failed. If
--			 * this is the case and the caller requested a THP
--			 * allocation, we do not want to heavily disrupt the
--			 * system, so we fail the allocation instead of entering
--			 * direct reclaim.
--			 */
--			if (compact_result == COMPACT_DEFERRED)
--				goto nopage;
- 
- 			/*
- 			 * Looks like reclaim/compaction is worth trying, but
+and I kinda get what it is trying to tell me but this is new. And when I
+do
+
+$ xxd drivers/char/random.c
+..
+
+000125e0: 646f 6d6e 6573 7329 3b0a                 domness);.
+
+there's a 0xa at the end so what's git really trying to tell me?
+
+Anyway, that does get rid of the warns too.
+
+> Doing something like the above to /dev/urandom is likely the right
+> thing to do eventually, but I didn't want to mix up "we can perhaps
+> improve the urandom situation too" with the basic "let's fix the boot
+> problem". The urandom behavior change would be a separate thing.
+
+So make it a separate patch and let's hammer on it during the next weeks
+and see what happens?
+
+> Also, talking about "future changes". Right now
+> "try_to_generate_entropy()" is actually uninterruptible once it gets
+> started. I think we should add a test for signal_pending() too, but it
+
+Wouldn't that even increase its entropy, which would be a good thing?
+
+> should generally complete really fairly quickly so I left it without
+> one just to see if anybody even notices.
+
+Right.
+
+Thx.
+
 -- 
-2.23.0
+Regards/Gruss,
+    Boris.
 
+https://people.kernel.org/tglx/notes-about-netiquette
