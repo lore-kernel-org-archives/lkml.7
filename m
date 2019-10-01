@@ -2,98 +2,100 @@ Return-Path: <SRS0=YRFP=X2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ECC88C352AA
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 23:09:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E9F8C352AA
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 23:10:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B8FAC21924
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 23:09:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CEA2B2086A
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 23:10:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="srIIQM6l"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ArdtP1c3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728852AbfJAXJH (ORCPT
+        id S1728948AbfJAXKX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Oct 2019 19:09:07 -0400
-Received: from mail-qk1-f193.google.com ([209.85.222.193]:43776 "EHLO
-        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726430AbfJAXJG (ORCPT
+        Tue, 1 Oct 2019 19:10:23 -0400
+Received: from mail-ed1-f66.google.com ([209.85.208.66]:35718 "EHLO
+        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726050AbfJAXKW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Oct 2019 19:09:06 -0400
-Received: by mail-qk1-f193.google.com with SMTP id h126so13001651qke.10;
-        Tue, 01 Oct 2019 16:09:05 -0700 (PDT)
+        Tue, 1 Oct 2019 19:10:22 -0400
+Received: by mail-ed1-f66.google.com with SMTP id v8so13541604eds.2;
+        Tue, 01 Oct 2019 16:10:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=LOpFVMgw/qyGlxcI8Ot6QminlgTrtT6okvp/hgnhkDE=;
-        b=srIIQM6lmikHi1kLgqPsjGOnQLDuuTZllABnnsS00Nk4bz2NSCo/WFqnCqNJsyt2EU
-         VfUFyTWHyqwlf7PBgs2rbjmFORP7rBEsvmYBIuF/NRU5tdWWmqUGw5ViBpRVKe0e3w93
-         6yd+oXjNp4Y4sD81hWgCzkAItXNa/nABtGbxUmhrjdQK241NAGnn3D1kU0INq017Y42d
-         A5uWz024Pzzwfa9ikhMsxyssgrV4+tsWguJgQHlc7fdY9eI5D8flzJ+YfUniJHkqhUVl
-         ZxBqG+gH+6DkGx9mHNLKRTeL/XviIRQO2RyvF77X8tZI2UT5KB6PUhdr9h1knucWj4lT
-         /JaA==
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=rllEIXSEaJY+0zEEMqfyvHADIZRp1u2OsWJwhWHfzJw=;
+        b=ArdtP1c3q8CKnJz8AiZ8hgGXcZmYBVvJZ3S0smD/DiUBn7H/KRI2q9TXLCyZ9Zu889
+         5zVdKYAW6jn8Pqft0KmuoBugb4FxcLj+QUeYxPcqOWsDuq6T0erzPFWmz7koAt/fYmPw
+         wf6FaZRScZ+IcqZoPxQbPlzy0zBvHpQTGRURHmg1Z5nOTiIqzJZhxo0S6eqkSPjLgWJk
+         4nGEkE5/ch89ON3SGlCUw33/Z8j+Iretag3f99oQ6NuUl7xqXDzut4RmFqTcOX+Ljk0B
+         ixqlo8pDNQ90eJ+aNm4Yl8cbYZyJmq/IDQmXeqN/j3CqYdFC3jiLUwhvxxCgmZEJ3tG7
+         YN4w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=LOpFVMgw/qyGlxcI8Ot6QminlgTrtT6okvp/hgnhkDE=;
-        b=fwzyErtwWU1lDxwJicVNjKzBRPAFnIS4IIUz1F1CIm0n+l99IzXneAzyZhJQSCz/kH
-         5Zc7t4Mj6+D1q6twuNkeLqOnfLZiBYZa2XylPrRCrzrAwyt13kt/rxBNpdf0ZJhvXTbp
-         ouKNfdcZUuGYJc4E8vZeok/y91My/crUGUVaUEAE9ad96uY+t2h/I9jeA012ZiwAMqQC
-         4u6llrg3aq1HpLd7/ddAHgFfCerR9sOgTgkKLhrl7JAFZskammErBMDqYZYllzoy1olk
-         cRnAiT8P4URohGKM6mGUe3eIwrRJo/U8E0KSNesY9TNJWD3SfF+Pvf1XJmO60NNreIwG
-         K9ng==
-X-Gm-Message-State: APjAAAWfDoVk+yEljKMhKZCJ2wj+DcDx0fH5cJn0xzAr3Xv8gbU/MGvV
-        KmP+fpblg7PoRthWTlvG9NnHM2mQvJlQmn8uznhdNw==
-X-Google-Smtp-Source: APXvYqz9ihuKKqAYfL1D9QzH13QTSw/XJVfGELkzG5iXUUJswEgcgv+2HeEv3vVOnqK+8P+H80QaW3x38cZ1a/OP448=
-X-Received: by 2002:ae9:dec2:: with SMTP id s185mr703551qkf.203.1569971345545;
- Tue, 01 Oct 2019 16:09:05 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=rllEIXSEaJY+0zEEMqfyvHADIZRp1u2OsWJwhWHfzJw=;
+        b=V5oPr9ntI8Mn7/j3PpwfKNvlCjrNbZlSlnElq5RY6hOXJuYCFHTpq7v7BD1LiaEVzC
+         1quvelCgJFKfFZbxML6wb2/fxn/VJ/J7Ju0aiZJDxqC0V7T7C3fBZRUoAIspa3+h2vG9
+         EVgqDEN6OwfyqhltOZDuiJzOYHOrJ//7MIXiKFLGbdWQYcE6CgZ4qOZ5G//pWm/E4B9m
+         jylk14LWuvkvfU55qcZZkeyJbQ9dXmytXZ3VaGLHRPx8onRpjwd4sZfsAN5/F8HwF2zZ
+         6qJaMO6sl8sko8/Fj0Y/ftShyKjgxXE9V0wgoMGH3AiY/OWmt2kQN0LKZKSd0obVmqDn
+         DzwA==
+X-Gm-Message-State: APjAAAWz5bl+rpk9DsIYUOKEgQJqBefJbyRVghQcvQuzkV/JTGVK6qUr
+        TXdw8zRgUwplsd2iBrEdqfQ=
+X-Google-Smtp-Source: APXvYqxCwnsxrsZ0hgw5ZP4b4Wj0yx4DKc0RYyXjQaniqT/qEmoXZMwtUiZu8tdA5iigF8D9bEQC4g==
+X-Received: by 2002:a17:906:48e:: with SMTP id f14mr524812eja.15.1569971420589;
+        Tue, 01 Oct 2019 16:10:20 -0700 (PDT)
+Received: from desk.local ([2a02:a03f:4080:1900:c8a8:489c:8544:d3e4])
+        by smtp.gmail.com with ESMTPSA id q16sm1991662ejb.41.2019.10.01.16.10.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 01 Oct 2019 16:10:19 -0700 (PDT)
+Date:   Wed, 2 Oct 2019 01:10:18 +0200
+From:   Luc Van Oostenryck <luc.vanoostenryck@gmail.com>
+To:     Steve French <smfrench@gmail.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>, sparse@vger.kernel.org,
+        linux-sparse@vger.kernel.org
+Subject: Re: Many unexpected warnings with current sparse
+Message-ID: <20191001231017.67txq4dhrvhyzbu5@desk.local>
+References: <CAH2r5mspD=iMnO-CuyHMf3jmS0zm7fbqNOXe0cqMcKsXfLAu-Q@mail.gmail.com>
 MIME-Version: 1.0
-References: <20190921060031.GB18726@mwanda>
-In-Reply-To: <20190921060031.GB18726@mwanda>
-From:   Song Liu <liu.song.a23@gmail.com>
-Date:   Tue, 1 Oct 2019 16:08:54 -0700
-Message-ID: <CAPhsuW7zfwX2GPEhXV_X5F7zKi-NvT0vmP-bCc9qYjmFwSJwFg@mail.gmail.com>
-Subject: Re: [PATCH] md/raid0: Fix an error message in raid0_make_request()
-To:     Dan Carpenter <dan.carpenter@oracle.com>
-Cc:     NeilBrown <neilb@suse.de>, linux-raid <linux-raid@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        kernel-janitors@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAH2r5mspD=iMnO-CuyHMf3jmS0zm7fbqNOXe0cqMcKsXfLAu-Q@mail.gmail.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Sep 20, 2019 at 11:00 PM Dan Carpenter <dan.carpenter@oracle.com> wrote:
->
-> The first argument to WARN() is supposed to be a condition.  The
-> original code will just print the mdname() instead of the full warning
-> message.
->
-> Fixes: c84a1372df92 ("md/raid0: avoid RAID0 data corruption due to layout confusion.")
-> Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
-> ---
->  drivers/md/raid0.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/drivers/md/raid0.c b/drivers/md/raid0.c
-> index f61693e59684..3956ea502f97 100644
-> --- a/drivers/md/raid0.c
-> +++ b/drivers/md/raid0.c
-> @@ -615,7 +615,7 @@ static bool raid0_make_request(struct mddev *mddev, struct bio *bio)
->                 tmp_dev = map_sector(mddev, zone, sector, &sector);
->                 break;
+On Tue, Oct 01, 2019 at 11:28:16AM -0500, Steve French wrote:
+> Updated sparse to get rid of some unneeded kernel sparse check
+> warnings but now get many more
+> 
+> I get 100s of warnings similar to
+> 
+> ./include/linux/quota.h:114:17: error: Expected ( after asm
+> ./include/linux/quota.h:114:17: error: got __inline
+> 
+> but that is simply
 >         default:
-> -               WARN("md/raid0:%s: Invalid layout\n", mdname(mddev));
-> +               WARN(1, "md/raid0:%s: Invalid layout\n", mdname(mddev));
->                 bio_io_error(bio);
->                 return true;
+>                 BUG();
 
-Applied. Thanks for the fix!
+Hi,
 
-Song
+I don't see this on v5.4-rc1 with defconfig or allyesconfig and
+sparse's current version. Any sparse's version since roughly
+mid-December should give the same result.
+
+If you're using an older version of sparse, please upgrade.
+Otherwise, please send me your config so that I can take a look at it.
+
+
+Best regards,
+-- Luc Van Oostenryck
