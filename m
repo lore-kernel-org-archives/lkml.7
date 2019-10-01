@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D98BEECE587
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 17:02:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C0A77C352AA
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 17:02:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B02B92054F
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 17:02:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 84FB92054F
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 17:02:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569949336;
-	bh=KeGk7ekKKZHY2R8nLwGcjBusx9sdG8nRc9xvnHtfSGM=;
+	s=default; t=1569949344;
+	bh=QW0ekt2NVtSUYBkmf2MI5jiIISU16b48NI9jA7OHoJY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=eDSSDsKq1CNK4ycs+5peIRva+YhFOuQKw5sAI3w3czX8zFCFLuSDCT+hQRZ03tb5e
-	 ghTlTDGUuE1qbzDxxxz8Lo7w1ErqNefaq4Er6bNCmvjExShWCCvHojv+sAKbl06PSw
-	 S6RaNH03YloigOXvMscLZXVBem7fugDVUDNHA3d0=
+	b=APhowBUl7k+fbycvnzo64advqmDl32IDBmq2peE86pu4wVyWuN5IQLkaWSX0vBGtw
+	 y7B+OaP8/hby4OkQuuSViGX1zbCdCNgZTSNEq4b07POWhOIdB23Z7Xe6ql3/8ECy1/
+	 hsey13Qm8crSDR4nQEXaBtQFZVoU2A/k6BlO56ac=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732461AbfJARCP (ORCPT
+        id S1729537AbfJAQkF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Oct 2019 13:02:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51242 "EHLO mail.kernel.org"
+        Tue, 1 Oct 2019 12:40:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51154 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729570AbfJAQkG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Oct 2019 12:40:06 -0400
+        id S1729254AbfJAQkA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Oct 2019 12:40:00 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C4A8F21906;
-        Tue,  1 Oct 2019 16:40:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CC1C02190F;
+        Tue,  1 Oct 2019 16:39:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569948005;
-        bh=KeGk7ekKKZHY2R8nLwGcjBusx9sdG8nRc9xvnHtfSGM=;
+        s=default; t=1569947999;
+        bh=QW0ekt2NVtSUYBkmf2MI5jiIISU16b48NI9jA7OHoJY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=U5mo18adlS3mD7VBqclMZ84gx4heR8sBcuMoUb+3Lx7x8ZLT3mkdjaehkK71CbFh/
-         B9a2m1gh2cNrgFq7ra2dyFVrPTA37T+FTzTzwXLup93AXJojEiWMWw8OspFxXXbXs+
-         IiVUAWSkLvsWUNhBIA/moK2dByXWWDWI5C8Td7yo=
+        b=U2sxihZ/5ESRDgKQL7TyJM01KgJ0AE2WlLCEe8i6pahu//PjPfNuSJqGG8BnGkvwZ
+         3XPb47IN6FxqkDXU9bQK3EJ00E4Jh/WwKepzn8WictLE8a1nRosLCU5Rt/1KFDfqRF
+         3IJ2ve+U8na9xX/AQr4DyXzVx+Ftwk6F1yoTUgIk=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Tycho Andersen <tycho@tycho.ws>, Kees Cook <keescook@chromium.org>,
-        Shuah Khan <skhan@linuxfoundation.org>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-kselftest@vger.kernel.org, netdev@vger.kernel.org,
-        bpf@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.3 30/71] selftests/seccomp: fix build on older kernels
-Date:   Tue,  1 Oct 2019 12:38:40 -0400
-Message-Id: <20191001163922.14735-30-sashal@kernel.org>
+Cc:     Fabrice Gasnier <fabrice.gasnier@st.com>,
+        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Sasha Levin <sashal@kernel.org>, linux-pwm@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.3 25/71] pwm: stm32-lp: Add check in case requested period cannot be achieved
+Date:   Tue,  1 Oct 2019 12:38:35 -0400
+Message-Id: <20191001163922.14735-25-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191001163922.14735-1-sashal@kernel.org>
 References: <20191001163922.14735-1-sashal@kernel.org>
@@ -62,75 +62,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tycho Andersen <tycho@tycho.ws>
+From: Fabrice Gasnier <fabrice.gasnier@st.com>
 
-[ Upstream commit 88282297fff00796e81f5e67734a6afdfb31fbc4 ]
+[ Upstream commit c91e3234c6035baf5a79763cb4fcd5d23ce75c2b ]
 
-The seccomp selftest goes to some length to build against older kernel
-headers, viz. all the #ifdefs at the beginning of the file.
+LPTimer can use a 32KHz clock for counting. It depends on clock tree
+configuration. In such a case, PWM output frequency range is limited.
+Although unlikely, nothing prevents user from requesting a PWM frequency
+above counting clock (32KHz for instance):
+- This causes (prd - 1) = 0xffff to be written in ARR register later in
+the apply() routine.
+This results in badly configured PWM period (and also duty_cycle).
+Add a check to report an error is such a case.
 
-Commit 201766a20e30 ("ptrace: add PTRACE_GET_SYSCALL_INFO request")
-introduces some additional macros, but doesn't do the #ifdef dance.
-Let's add that dance here to avoid:
-
-gcc -Wl,-no-as-needed -Wall  seccomp_bpf.c -lpthread -o seccomp_bpf
-In file included from seccomp_bpf.c:51:
-seccomp_bpf.c: In function ‘tracer_ptrace’:
-seccomp_bpf.c:1787:20: error: ‘PTRACE_EVENTMSG_SYSCALL_ENTRY’ undeclared (first use in this function); did you mean ‘PTRACE_EVENT_CLONE’?
-  EXPECT_EQ(entry ? PTRACE_EVENTMSG_SYSCALL_ENTRY
-                    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-../kselftest_harness.h:608:13: note: in definition of macro ‘__EXPECT’
-  __typeof__(_expected) __exp = (_expected); \
-             ^~~~~~~~~
-seccomp_bpf.c:1787:2: note: in expansion of macro ‘EXPECT_EQ’
-  EXPECT_EQ(entry ? PTRACE_EVENTMSG_SYSCALL_ENTRY
-  ^~~~~~~~~
-seccomp_bpf.c:1787:20: note: each undeclared identifier is reported only once for each function it appears in
-  EXPECT_EQ(entry ? PTRACE_EVENTMSG_SYSCALL_ENTRY
-                    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-../kselftest_harness.h:608:13: note: in definition of macro ‘__EXPECT’
-  __typeof__(_expected) __exp = (_expected); \
-             ^~~~~~~~~
-seccomp_bpf.c:1787:2: note: in expansion of macro ‘EXPECT_EQ’
-  EXPECT_EQ(entry ? PTRACE_EVENTMSG_SYSCALL_ENTRY
-  ^~~~~~~~~
-seccomp_bpf.c:1788:6: error: ‘PTRACE_EVENTMSG_SYSCALL_EXIT’ undeclared (first use in this function); did you mean ‘PTRACE_EVENT_EXIT’?
-    : PTRACE_EVENTMSG_SYSCALL_EXIT, msg);
-      ^~~~~~~~~~~~~~~~~~~~~~~~~~~~
-../kselftest_harness.h:608:13: note: in definition of macro ‘__EXPECT’
-  __typeof__(_expected) __exp = (_expected); \
-             ^~~~~~~~~
-seccomp_bpf.c:1787:2: note: in expansion of macro ‘EXPECT_EQ’
-  EXPECT_EQ(entry ? PTRACE_EVENTMSG_SYSCALL_ENTRY
-  ^~~~~~~~~
-make: *** [Makefile:12: seccomp_bpf] Error 1
-
-[skhan@linuxfoundation.org: Fix checkpatch error in commit log]
-Signed-off-by: Tycho Andersen <tycho@tycho.ws>
-Fixes: 201766a20e30 ("ptrace: add PTRACE_GET_SYSCALL_INFO request")
-Acked-by: Kees Cook <keescook@chromium.org>
-Signed-off-by: Shuah Khan <skhan@linuxfoundation.org>
+Signed-off-by: Fabrice Gasnier <fabrice.gasnier@st.com>
+Reviewed-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
+Signed-off-by: Thierry Reding <thierry.reding@gmail.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/testing/selftests/seccomp/seccomp_bpf.c | 5 +++++
- 1 file changed, 5 insertions(+)
+ drivers/pwm/pwm-stm32-lp.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/tools/testing/selftests/seccomp/seccomp_bpf.c b/tools/testing/selftests/seccomp/seccomp_bpf.c
-index 6ef7f16c4cf52..7f8b5c8982e3b 100644
---- a/tools/testing/selftests/seccomp/seccomp_bpf.c
-+++ b/tools/testing/selftests/seccomp/seccomp_bpf.c
-@@ -199,6 +199,11 @@ struct seccomp_notif_sizes {
- };
- #endif
- 
-+#ifndef PTRACE_EVENTMSG_SYSCALL_ENTRY
-+#define PTRACE_EVENTMSG_SYSCALL_ENTRY	1
-+#define PTRACE_EVENTMSG_SYSCALL_EXIT	2
-+#endif
+diff --git a/drivers/pwm/pwm-stm32-lp.c b/drivers/pwm/pwm-stm32-lp.c
+index 2211a642066db..97a9afa191ee0 100644
+--- a/drivers/pwm/pwm-stm32-lp.c
++++ b/drivers/pwm/pwm-stm32-lp.c
+@@ -59,6 +59,12 @@ static int stm32_pwm_lp_apply(struct pwm_chip *chip, struct pwm_device *pwm,
+ 	/* Calculate the period and prescaler value */
+ 	div = (unsigned long long)clk_get_rate(priv->clk) * state->period;
+ 	do_div(div, NSEC_PER_SEC);
++	if (!div) {
++		/* Clock is too slow to achieve requested period. */
++		dev_dbg(priv->chip.dev, "Can't reach %u ns\n",	state->period);
++		return -EINVAL;
++	}
 +
- #ifndef seccomp
- int seccomp(unsigned int op, unsigned int flags, void *args)
- {
+ 	prd = div;
+ 	while (div > STM32_LPTIM_MAX_ARR) {
+ 		presc++;
 -- 
 2.20.1
 
