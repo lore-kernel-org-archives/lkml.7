@@ -2,107 +2,85 @@ Return-Path: <SRS0=YRFP=X2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIM_ADSP_ALL,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A35FECE58A
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 16:04:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C888AECE587
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 16:04:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 41A9A2133F
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 16:04:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="VHkK0EHm"
+	by mail.kernel.org (Postfix) with ESMTP id A6D572053B
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 16:04:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729548AbfJAQEQ (ORCPT
+        id S1733107AbfJAQEv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Oct 2019 12:04:16 -0400
-Received: from smtp-fw-6001.amazon.com ([52.95.48.154]:64710 "EHLO
-        smtp-fw-6001.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726327AbfJAQEQ (ORCPT
+        Tue, 1 Oct 2019 12:04:51 -0400
+Received: from mail-qk1-f196.google.com ([209.85.222.196]:45072 "EHLO
+        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726327AbfJAQEv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Oct 2019 12:04:16 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1569945855; x=1601481855;
-  h=from:to:cc:subject:date:message-id:mime-version;
-  bh=V31EWNMvdqyWe/Qg+FgJTs3uamoYxLmoNCf8l4/4axk=;
-  b=VHkK0EHmY7Iti2xqC8lDjuvy2I+kugptvS428xpSiiohNwCYOSHdrb30
-   wdRrdG6C3XbyqxxEnQMcPwXCSmZGiZTS/6OXtUtRiIMhW9/foYiyePg2t
-   ShbhOer6mJqseoyB7swaYks3j3UQkSBEMrxwFQrcjJj/6JVMBgE/7MHpS
-   8=;
-X-IronPort-AV: E=Sophos;i="5.64,571,1559520000"; 
-   d="scan'208";a="419069137"
-Received: from iad6-co-svc-p1-lb1-vlan3.amazon.com (HELO email-inbound-relay-2a-22cc717f.us-west-2.amazon.com) ([10.124.125.6])
-  by smtp-border-fw-out-6001.iad6.amazon.com with ESMTP; 01 Oct 2019 16:04:13 +0000
-Received: from EX13MTAUWC001.ant.amazon.com (pdx4-ws-svc-p6-lb7-vlan3.pdx.amazon.com [10.170.41.166])
-        by email-inbound-relay-2a-22cc717f.us-west-2.amazon.com (Postfix) with ESMTPS id 8BB09A1E7E;
-        Tue,  1 Oct 2019 16:04:13 +0000 (UTC)
-Received: from EX13D02UWC002.ant.amazon.com (10.43.162.6) by
- EX13MTAUWC001.ant.amazon.com (10.43.162.135) with Microsoft SMTP Server (TLS)
- id 15.0.1367.3; Tue, 1 Oct 2019 16:04:13 +0000
-Received: from EX13MTAUWA001.ant.amazon.com (10.43.160.58) by
- EX13D02UWC002.ant.amazon.com (10.43.162.6) with Microsoft SMTP Server (TLS)
- id 15.0.1367.3; Tue, 1 Oct 2019 16:04:12 +0000
-Received: from 8c859006a84e.ant.amazon.com (172.26.203.30) by
- mail-relay.amazon.com (10.43.160.118) with Microsoft SMTP Server id
- 15.0.1367.3 via Frontend Transport; Tue, 1 Oct 2019 16:04:12 +0000
-From:   Patrick Williams <alpawi@amazon.com>
-CC:     Patrick Williams <alpawi@amazon.com>,
-        Patrick Williams <patrick@stwcx.xyz>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Jean Delvare <jdelvare@suse.com>,
-        <linux-hwmon@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: [PATCH] hwmon: (pmbus) add VR12/VR13 mode support write paths
-Date:   Tue, 1 Oct 2019 11:03:41 -0500
-Message-ID: <20191001160407.6265-1-alpawi@amazon.com>
-X-Mailer: git-send-email 2.17.2 (Apple Git-113)
+        Tue, 1 Oct 2019 12:04:51 -0400
+Received: by mail-qk1-f196.google.com with SMTP id z67so11712292qkb.12
+        for <linux-kernel@vger.kernel.org>; Tue, 01 Oct 2019 09:04:51 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=PVA9zycwwTmxrHgzivoqyA4S7B6/Ae12ZgJJqfTA6ZE=;
+        b=kWH65QgR1OnL1d/VL5esb0Smyk1Yxa+TKxJc4tpUoNbw5E3yiPBDeFGYZiKctajWlf
+         EHb0HubwEQNxAVO4KLB8KNg2+uywkP8/3Zf/FSJuHvRXGcnUbAtQehWPogic3TH4nXx5
+         SB4/Yc+2dnC2ibYAXZP0SWECWTAUgs+vuMnO9jhBck7lLlGq1Jk0vJtluiVPzw0LHNok
+         gZ+M599nwfmiHZuIsNRqrQrONeYkztA2q7I/ciXO/O+gRZAKlABHGCvju37xpBotvvPy
+         jGT870SfegHi9lxVvV2mJ0uTSHI7ZmTxbkhDjcjlStaOlZppRawgM/AZcw7/2SIXTghv
+         cXVQ==
+X-Gm-Message-State: APjAAAUzDKV68GYRIuV/ADPFQJ5y/wulJjcSxOfh3lOHd6RnGT+YWK2p
+        T7j8wOe41EEr04JZmHl7GGUDTL3eWM/LlZvuLFA=
+X-Google-Smtp-Source: APXvYqw8OSzTRQKAtzD5yJNb3X/TKsuG58PVn13xDbhiPbbzHk02DUCmHWqaGsNg1xN9FhUJmk9LIa3wCb6Y08Qz7k8=
+X-Received: by 2002:ae9:ef8c:: with SMTP id d134mr1425740qkg.286.1569945569712;
+ Tue, 01 Oct 2019 08:59:29 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
-To:     unlisted-recipients:; (no To-header on input)
+References: <20191001142116.1172290-1-arnd@arndb.de> <20191001142734.GD4106@piout.net>
+In-Reply-To: <20191001142734.GD4106@piout.net>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Tue, 1 Oct 2019 17:59:13 +0200
+Message-ID: <CAK8P3a3ovgR4THuXb17Fh7DDts188jWRqP3OAZ7cknNUsWQ-dg@mail.gmail.com>
+Subject: Re: [PATCH] ASoC: atmel: fix atmel_ssc_set_audio link failure
+To:     Alexandre Belloni <alexandre.belloni@bootlin.com>
+Cc:     Codrin Ciubotariu <codrin.ciubotariu@microchip.com>,
+        Mark Brown <broonie@kernel.org>,
+        =?UTF-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        Ludovic Desroches <ludovic.desroches@microchip.com>,
+        ALSA Development Mailing List <alsa-devel@alsa-project.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-pmbus_core supported VR11/VR12/VR13 modes when reading
-VID-formatted registers, but the write path only supported
-VR11 translations.  Add support for VR12 and VR13 to
-'data2reg_vid' for translating these formats.  This is the
-inverse of 'reg2data_vid'.
+On Tue, Oct 1, 2019 at 4:27 PM Alexandre Belloni
+<alexandre.belloni@bootlin.com> wrote:
 
-Signed-off-by: Patrick Williams <alpawi@amazon.com>
----
- drivers/hwmon/pmbus/pmbus_core.c | 14 ++++++++++++--
- 1 file changed, 12 insertions(+), 2 deletions(-)
+> > -obj-$(CONFIG_SND_ATMEL_SOC_PDC) += snd-soc-atmel-pcm-pdc.o
+> > -obj-$(CONFIG_SND_ATMEL_SOC_DMA) += snd-soc-atmel-pcm-dma.o
+> > +# pdc and dma need to both be built-in if any user of
+> > +# ssc is built-in.
+> > +ifdef CONFIG_SND_ATMEL_SOC_PDC
+> > +obj-$(CONFIG_SND_ATMEL_SOC_SSC) += snd-soc-atmel-pcm-pdc.o
+> > +endif
+> > +ifdef CONFIG_SND_ATMEL_SOC_DMA
+> > +obj-$(CONFIG_SND_ATMEL_SOC_SSC) += snd-soc-atmel-pcm-dma.o
+> > +endif
+>
+> Doesn't that prevent them to be built as a module at all?
+> I'm not sure there is a use case though.
 
-diff --git a/drivers/hwmon/pmbus/pmbus_core.c b/drivers/hwmon/pmbus/pmbus_core.c
-index 8470097907bc..f0d696552142 100644
---- a/drivers/hwmon/pmbus/pmbus_core.c
-+++ b/drivers/hwmon/pmbus/pmbus_core.c
-@@ -845,9 +845,19 @@ static u16 pmbus_data2reg_direct(struct pmbus_data *data,
- static u16 pmbus_data2reg_vid(struct pmbus_data *data,
- 			      struct pmbus_sensor *sensor, long val)
- {
--	val = clamp_val(val, 500, 1600);
-+	switch (data->info->vrm_version) {
-+	case vr11:
-+		val = clamp_val(val, 500, 1600);
-+		return 2 + DIV_ROUND_CLOSEST((1600 - val) * 100, 625);
-+	case vr12:
-+		val = clamp_val(val, 0, 1520);
-+		return ((val - 250) / 5) + 1;
-+	case vr13:
-+		val = clamp_val(val, 0, 2500);
-+		return ((val - 500) / 10) + 1;
-+	}
- 
--	return 2 + DIV_ROUND_CLOSEST((1600 - val) * 100, 625);
-+	return 0;
- }
- 
- static u16 pmbus_data2reg(struct pmbus_data *data,
--- 
-2.17.2 (Apple Git-113)
+It should not: the idea was that snd-soc-atmel-pcm-{pdc,dma}.o
+get built as modules if CONFIG_SND_ATMEL_SOC_SSC=m.
 
+      arnd
