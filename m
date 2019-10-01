@@ -7,45 +7,51 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 133FEECE587
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 17:02:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3231BECE587
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 17:02:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DC45C2086A
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 17:02:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 022572054F
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 17:02:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569949325;
-	bh=Ew1a+as8Mr/trFi0bQpDJF/OruLxmHhgczpHLE3bCZs=;
+	s=default; t=1569949332;
+	bh=WIl6W8ebQcojUGSsK88TdAJ9kurCE2C5egXd6emtgqY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=QYkFwvEhFv0oVU6pnEpxbpn/LmNzXjTHGsCDjfBYBR7BpgS8+/SowyFzsOylbjyE0
-	 ba2TTSVTuRXDYgK/xWewEiNsRBKQIrspm+tZZyjQVJhSfNzQPof8YjjG2J0rFKiv/M
-	 o0q4k/li6Z4VyDJRiGkzvwQwR7lmLW4E9+RVj7ek=
+	b=U2UCXjCro60wgpBujG5XxX5kxWpGaXWmPeu2jrQ4Vl5rygVx2PhgqOzf4iqrMm/4E
+	 RSu3kU7qlv8Vrc4NvdZpjJ3HV+eUweDMhOUDWLFhTDQNALtktYm7j61YDgDtgnUwFK
+	 t4YbJS09A8h1zbqXV2HMcRsOK0NNX3o6pKYA27Ns=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732142AbfJARCE (ORCPT
+        id S1732215AbfJARCK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Oct 2019 13:02:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51342 "EHLO mail.kernel.org"
+        Tue, 1 Oct 2019 13:02:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51276 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729650AbfJAQkL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Oct 2019 12:40:11 -0400
+        id S1729622AbfJAQkJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Oct 2019 12:40:09 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3D21921855;
-        Tue,  1 Oct 2019 16:40:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 48B552168B;
+        Tue,  1 Oct 2019 16:40:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569948010;
-        bh=Ew1a+as8Mr/trFi0bQpDJF/OruLxmHhgczpHLE3bCZs=;
+        s=default; t=1569948008;
+        bh=WIl6W8ebQcojUGSsK88TdAJ9kurCE2C5egXd6emtgqY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=WQMk4ZZ/yyWrIT4FdiPEL6nWOhp/o7ksmIPQIvrhHzC5n0Mn9Eo028G219WlKX/zE
-         Wx+2+zL7YKTUoBGGjOHRrXK/Owyd3dAM0xDVNfeA0LvlF4meYm79mlMDybhC0yDCC8
-         8eXkPHCSOffqCfMVkF8jFT0Azr2BOVM/7VFM8Ij0=
+        b=U3Y4hzicVkYGO6ecBrsGnlAv+j/3NmJEmSZZdln8LHd6XbSPljzSP9LEOfmKfBYa3
+         NUEqCh4pedGVhMi0zah9NUOK0lyg7vW45kQe98BqAQG7o61+HmN4hvWm111j0zG/n6
+         Ico4ZgAq9bLfCrZ9QNG8p+2IkuqIbJCu6vOquUmc=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Sanjay R Mehta <sanju.mehta@amd.com>, Jon Mason <jdmason@kudzu.us>,
-        Sasha Levin <sashal@kernel.org>, linux-ntb@googlegroups.com
-Subject: [PATCH AUTOSEL 5.3 32/71] ntb: point to right memory window index
-Date:   Tue,  1 Oct 2019 12:38:42 -0400
-Message-Id: <20191001163922.14735-32-sashal@kernel.org>
+Cc:     Arvind Sankar <nivedita@alum.mit.edu>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Borislav Petkov <bp@alien8.de>,
+        "H . Peter Anvin" <hpa@zytor.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.3 31/71] x86/purgatory: Disable the stackleak GCC plugin for the purgatory
+Date:   Tue,  1 Oct 2019 12:38:41 -0400
+Message-Id: <20191001163922.14735-31-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191001163922.14735-1-sashal@kernel.org>
 References: <20191001163922.14735-1-sashal@kernel.org>
@@ -58,51 +64,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sanjay R Mehta <sanju.mehta@amd.com>
+From: Arvind Sankar <nivedita@alum.mit.edu>
 
-[ Upstream commit ae89339b08f3fe02457ec9edd512ddc3d246d0f8 ]
+[ Upstream commit ca14c996afe7228ff9b480cf225211cc17212688 ]
 
-second parameter of ntb_peer_mw_get_addr is pointing to wrong memory
-window index by passing "peer gidx" instead of "local gidx".
+Since commit:
 
-For ex, "local gidx" value is '0' and "peer gidx" value is '1', then
+  b059f801a937 ("x86/purgatory: Use CFLAGS_REMOVE rather than reset KBUILD_CFLAGS")
 
-on peer side ntb_mw_set_trans() api is used as below with gidx pointing to
-local side gidx which is '0', so memroy window '0' is chosen and XLAT '0'
-will be programmed by peer side.
+kexec breaks if GCC_PLUGIN_STACKLEAK=y is enabled, as the purgatory
+contains undefined references to stackleak_track_stack.
 
-    ntb_mw_set_trans(perf->ntb, peer->pidx, peer->gidx, peer->inbuf_xlat,
-                    peer->inbuf_size);
+Attempting to load a kexec kernel results in this failure:
 
-Now, on local side ntb_peer_mw_get_addr() is been used as below with gidx
-pointing to "peer gidx" which is '1', so pointing to memory window '1'
-instead of memory window '0'.
+  kexec: Undefined symbol: stackleak_track_stack
+  kexec-bzImage64: Loading purgatory failed
 
-    ntb_peer_mw_get_addr(perf->ntb,  peer->gidx, &phys_addr,
-                        &peer->outbuf_size);
+Fix this by disabling the stackleak plugin for the purgatory.
 
-So this patch pass "local gidx" as parameter to ntb_peer_mw_get_addr().
-
-Signed-off-by: Sanjay R Mehta <sanju.mehta@amd.com>
-Signed-off-by: Jon Mason <jdmason@kudzu.us>
+Signed-off-by: Arvind Sankar <nivedita@alum.mit.edu>
+Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
+Cc: Borislav Petkov <bp@alien8.de>
+Cc: H. Peter Anvin <hpa@zytor.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Fixes: b059f801a937 ("x86/purgatory: Use CFLAGS_REMOVE rather than reset KBUILD_CFLAGS")
+Link: https://lkml.kernel.org/r/20190923171753.GA2252517@rani.riverdale.lan
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/ntb/test/ntb_perf.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/x86/purgatory/Makefile | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/ntb/test/ntb_perf.c b/drivers/ntb/test/ntb_perf.c
-index d028331558ea7..e9b7c2dfc7301 100644
---- a/drivers/ntb/test/ntb_perf.c
-+++ b/drivers/ntb/test/ntb_perf.c
-@@ -1378,7 +1378,7 @@ static int perf_setup_peer_mw(struct perf_peer *peer)
- 	int ret;
+diff --git a/arch/x86/purgatory/Makefile b/arch/x86/purgatory/Makefile
+index 10fb42da0007e..b81b5172cf994 100644
+--- a/arch/x86/purgatory/Makefile
++++ b/arch/x86/purgatory/Makefile
+@@ -23,6 +23,7 @@ KCOV_INSTRUMENT := n
  
- 	/* Get outbound MW parameters and map it */
--	ret = ntb_peer_mw_get_addr(perf->ntb, peer->gidx, &phys_addr,
-+	ret = ntb_peer_mw_get_addr(perf->ntb, perf->gidx, &phys_addr,
- 				   &peer->outbuf_size);
- 	if (ret)
- 		return ret;
+ PURGATORY_CFLAGS_REMOVE := -mcmodel=kernel
+ PURGATORY_CFLAGS := -mcmodel=large -ffreestanding -fno-zero-initialized-in-bss
++PURGATORY_CFLAGS += $(DISABLE_STACKLEAK_PLUGIN)
+ 
+ # Default KBUILD_CFLAGS can have -pg option set when FTRACE is enabled. That
+ # in turn leaves some undefined symbols like __fentry__ in purgatory and not
 -- 
 2.20.1
 
