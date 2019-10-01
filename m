@@ -2,166 +2,111 @@ Return-Path: <SRS0=YRFP=X2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIM_ADSP_ALL,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EE85ECE587
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 15:49:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 94025C352AA
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 15:50:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E9AFE2070B
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 15:49:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="Vl5WOhqB"
+	by mail.kernel.org (Postfix) with ESMTP id 75CF42070B
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 15:50:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389754AbfJAPts (ORCPT
+        id S2389771AbfJAPuB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Oct 2019 11:49:48 -0400
-Received: from smtp-fw-33001.amazon.com ([207.171.190.10]:8025 "EHLO
-        smtp-fw-33001.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727268AbfJAPts (ORCPT
+        Tue, 1 Oct 2019 11:50:01 -0400
+Received: from mail-qt1-f193.google.com ([209.85.160.193]:44746 "EHLO
+        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727268AbfJAPuA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Oct 2019 11:49:48 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1569944988; x=1601480988;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version;
-  bh=PgZ9aytk0j+S8TWOd0mGQ2grSS4ZIPx/rutqBSNX9jI=;
-  b=Vl5WOhqBnUarXg7QtiEDzMy7b+wfCE3iVKhM353m6fzubxfbvObwITFd
-   tF7gkSzIXEfzGCtsYalShBQ+tRs7X6YXP+siFgZjn7oe8sqjL8hypdRjz
-   XrQscHSWQMkjvE43AglTAezjFHcDmAuFfetlxEW40YcmdEXS/yljWf9ML
-   A=;
-X-IronPort-AV: E=Sophos;i="5.64,571,1559520000"; 
-   d="scan'208";a="838434598"
-Received: from sea3-co-svc-lb6-vlan2.sea.amazon.com (HELO email-inbound-relay-2c-2225282c.us-west-2.amazon.com) ([10.47.22.34])
-  by smtp-border-fw-out-33001.sea14.amazon.com with ESMTP; 01 Oct 2019 15:47:16 +0000
-Received: from EX13MTAUWC001.ant.amazon.com (pdx4-ws-svc-p6-lb7-vlan3.pdx.amazon.com [10.170.41.166])
-        by email-inbound-relay-2c-2225282c.us-west-2.amazon.com (Postfix) with ESMTPS id 4D0D9A1EF5;
-        Tue,  1 Oct 2019 15:46:56 +0000 (UTC)
-Received: from EX13D02UWC004.ant.amazon.com (10.43.162.236) by
- EX13MTAUWC001.ant.amazon.com (10.43.162.135) with Microsoft SMTP Server (TLS)
- id 15.0.1367.3; Tue, 1 Oct 2019 15:46:56 +0000
-Received: from EX13MTAUWA001.ant.amazon.com (10.43.160.58) by
- EX13D02UWC004.ant.amazon.com (10.43.162.236) with Microsoft SMTP Server (TLS)
- id 15.0.1367.3; Tue, 1 Oct 2019 15:46:56 +0000
-Received: from 8c859006a84e.ant.amazon.com (172.26.203.30) by
- mail-relay.amazon.com (10.43.160.118) with Microsoft SMTP Server id
- 15.0.1367.3 via Frontend Transport; Tue, 1 Oct 2019 15:46:55 +0000
-From:   Patrick Williams <alpawi@amazon.com>
-CC:     Patrick Williams <alpawi@amazon.com>,
-        Patrick Williams <patrick@stwcx.xyz>, <stable@vger.kernel.org>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Gregory Clement <gregory.clement@bootlin.com>,
-        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-gpio@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: [PATCH v2] pinctrl: armada-37xx: fix control of pins 32 and up
-Date:   Tue, 1 Oct 2019 10:46:31 -0500
-Message-ID: <20191001154634.96165-1-alpawi@amazon.com>
-X-Mailer: git-send-email 2.17.2 (Apple Git-113)
-In-Reply-To: <20190618160105.26343-3-alpawi@amazon.com>
-References: <20190618160105.26343-3-alpawi@amazon.com>
+        Tue, 1 Oct 2019 11:50:00 -0400
+Received: by mail-qt1-f193.google.com with SMTP id u40so22204792qth.11;
+        Tue, 01 Oct 2019 08:50:00 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=0o++jJaVMAjjHeJdMlrBP61n3JOH5eAFGBT8AaVnQtI=;
+        b=JImTDk9BFabrTYzGsZxRhQkAtC56salUjl1NvtNgWWrgVw+NT5o0PQw46fdG2g7zjW
+         AFRYG81Ifya4Di0EkhsSLn0plgPKO22kHtiNkxtkZUkRgMicjD39vqlfHfEmqX3EJ8Bo
+         rYglfnraCWr1aDD0dhYT5YSFemGtVAmWWQOkkON4rSQBsjdexZNJDGAJI10ptQoghATa
+         9ZUHS7hTdgUjyeN5un7dcLjAsDS0/6A7wcE/i6d6kfVLZIh+HgAjjjhg5bB3Gq5JNTDT
+         Vr/OScTMira8w/URINPg/xiqUhunWvP2o7zzuGcY4E8Vk5v240kCtQN+W9yT31iJyORV
+         hhNw==
+X-Gm-Message-State: APjAAAV/mVjOskGg4hddojn/b/7RObuaAovuX9wwhl0a4YbdkTy+X3sW
+        KdTRd/oqyzsF52rxx2RThARoqC8HIb28e6Kc5gc=
+X-Google-Smtp-Source: APXvYqypsS82qtB6iytpnzukSbXyBszcU5NeOymfFRAU5FNK8ULw8UBOaqSfO8Az8u+dnJ3bihbzP6GMsMCzBI/xQzY=
+X-Received: by 2002:aed:2842:: with SMTP id r60mr30909299qtd.142.1569944999630;
+ Tue, 01 Oct 2019 08:49:59 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
-To:     unlisted-recipients:; (no To-header on input)
+References: <20190930202055.1748710-1-arnd@arndb.de> <8d5d34da-e1f0-1ab5-461e-f3145e52c48a@kernel.dk>
+ <623e1d27-d3b1-3241-bfd4-eb94ce70da14@kernel.dk>
+In-Reply-To: <623e1d27-d3b1-3241-bfd4-eb94ce70da14@kernel.dk>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Tue, 1 Oct 2019 17:49:43 +0200
+Message-ID: <CAK8P3a3AAFXNmpQwuirzM+jgEQGj9tMC_5oaSs4CfiEVGmTkZg@mail.gmail.com>
+Subject: Re: [PATCH] io_uring: use __kernel_timespec in timeout ABI
+To:     Jens Axboe <axboe@kernel.dk>
+Cc:     y2038 Mailman List <y2038@lists.linaro.org>,
+        Linux API <linux-api@vger.kernel.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        =?UTF-8?Q?Stefan_B=C3=BChler?= <source@stbuehler.de>,
+        Hannes Reinecke <hare@suse.com>,
+        Jackie Liu <liuyun01@kylinos.cn>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Hristo Venev <hristo@venev.name>,
+        linux-block <linux-block@vger.kernel.org>,
+        Linux FS-devel Mailing List <linux-fsdevel@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The 37xx configuration registers are only 32 bits long, so
-pins 32-35 spill over into the next register.  The calculation
-for the register address was done, but the bitmask was not, so
-any configuration to pin 32 or above resulted in a bitmask that
-overflowed and performed no action.
+On Tue, Oct 1, 2019 at 5:38 PM Jens Axboe <axboe@kernel.dk> wrote:
+>
+> On 10/1/19 8:09 AM, Jens Axboe wrote:
+> > On 9/30/19 2:20 PM, Arnd Bergmann wrote:
+> >> All system calls use struct __kernel_timespec instead of the old struct
+> >> timespec, but this one was just added with the old-style ABI. Change it
+> >> now to enforce the use of __kernel_timespec, avoiding ABI confusion and
+> >> the need for compat handlers on 32-bit architectures.
+> >>
+> >> Any user space caller will have to use __kernel_timespec now, but this
+> >> is unambiguous and works for any C library regardless of the time_t
+> >> definition. A nicer way to specify the timeout would have been a less
+> >> ambiguous 64-bit nanosecond value, but I suppose it's too late now to
+> >> change that as this would impact both 32-bit and 64-bit users.
+> >
+> > Thanks for catching that, Arnd. Applied.
+>
+> On second thought - since there appears to be no good 64-bit timespec
+> available to userspace, the alternative here is including on in liburing.
 
-Fix the register / offset calculation to also adjust the offset.
+What's wrong with using __kernel_timespec? Just the name?
+I suppose liburing could add a macro to give it a different name
+for its users.
 
-Fixes: 5715092a458c ("pinctrl: armada-37xx: Add gpio support")
-Signed-off-by: Patrick Williams <alpawi@amazon.com>
-Acked-by: Gregory CLEMENT <gregory.clement@bootlin.com>
-Cc: <stable@vger.kernel.org>
----
- drivers/pinctrl/mvebu/pinctrl-armada-37xx.c | 18 +++++++++---------
- 1 file changed, 9 insertions(+), 9 deletions(-)
+> That seems kinda crappy in terms of API, so why not just use a 64-bit nsec
+> value as you suggest? There's on released kernel with this feature yet, so
+> there's nothing stopping us from just changing the API to be based on
+> a single 64-bit nanosecond timeout.
 
-diff --git a/drivers/pinctrl/mvebu/pinctrl-armada-37xx.c b/drivers/pinctrl/mvebu/pinctrl-armada-37xx.c
-index 6462d3ca7ceb..34c1fee52cbe 100644
---- a/drivers/pinctrl/mvebu/pinctrl-armada-37xx.c
-+++ b/drivers/pinctrl/mvebu/pinctrl-armada-37xx.c
-@@ -221,11 +221,11 @@ static const struct armada_37xx_pin_data armada_37xx_pin_sb = {
- };
- 
- static inline void armada_37xx_update_reg(unsigned int *reg,
--					  unsigned int offset)
-+					  unsigned int *offset)
- {
- 	/* We never have more than 2 registers */
--	if (offset >= GPIO_PER_REG) {
--		offset -= GPIO_PER_REG;
-+	if (*offset >= GPIO_PER_REG) {
-+		*offset -= GPIO_PER_REG;
- 		*reg += sizeof(u32);
- 	}
- }
-@@ -376,7 +376,7 @@ static inline void armada_37xx_irq_update_reg(unsigned int *reg,
- {
- 	int offset = irqd_to_hwirq(d);
- 
--	armada_37xx_update_reg(reg, offset);
-+	armada_37xx_update_reg(reg, &offset);
- }
- 
- static int armada_37xx_gpio_direction_input(struct gpio_chip *chip,
-@@ -386,7 +386,7 @@ static int armada_37xx_gpio_direction_input(struct gpio_chip *chip,
- 	unsigned int reg = OUTPUT_EN;
- 	unsigned int mask;
- 
--	armada_37xx_update_reg(&reg, offset);
-+	armada_37xx_update_reg(&reg, &offset);
- 	mask = BIT(offset);
- 
- 	return regmap_update_bits(info->regmap, reg, mask, 0);
-@@ -399,7 +399,7 @@ static int armada_37xx_gpio_get_direction(struct gpio_chip *chip,
- 	unsigned int reg = OUTPUT_EN;
- 	unsigned int val, mask;
- 
--	armada_37xx_update_reg(&reg, offset);
-+	armada_37xx_update_reg(&reg, &offset);
- 	mask = BIT(offset);
- 	regmap_read(info->regmap, reg, &val);
- 
-@@ -413,7 +413,7 @@ static int armada_37xx_gpio_direction_output(struct gpio_chip *chip,
- 	unsigned int reg = OUTPUT_EN;
- 	unsigned int mask, val, ret;
- 
--	armada_37xx_update_reg(&reg, offset);
-+	armada_37xx_update_reg(&reg, &offset);
- 	mask = BIT(offset);
- 
- 	ret = regmap_update_bits(info->regmap, reg, mask, mask);
-@@ -434,7 +434,7 @@ static int armada_37xx_gpio_get(struct gpio_chip *chip, unsigned int offset)
- 	unsigned int reg = INPUT_VAL;
- 	unsigned int val, mask;
- 
--	armada_37xx_update_reg(&reg, offset);
-+	armada_37xx_update_reg(&reg, &offset);
- 	mask = BIT(offset);
- 
- 	regmap_read(info->regmap, reg, &val);
-@@ -449,7 +449,7 @@ static void armada_37xx_gpio_set(struct gpio_chip *chip, unsigned int offset,
- 	unsigned int reg = OUTPUT_VAL;
- 	unsigned int mask, val;
- 
--	armada_37xx_update_reg(&reg, offset);
-+	armada_37xx_update_reg(&reg, &offset);
- 	mask = BIT(offset);
- 	val = value ? mask : 0;
- 
--- 
-2.17.2 (Apple Git-113)
+Certainly fine with me.
 
+> +       timeout = READ_ONCE(sqe->addr);
+>         hrtimer_init(&req->timeout.timer, CLOCK_MONOTONIC, HRTIMER_MODE_REL);
+>         req->timeout.timer.function = io_timeout_fn;
+> -       hrtimer_start(&req->timeout.timer, timespec_to_ktime(ts),
+> +       hrtimer_start(&req->timeout.timer, ns_to_ktime(timeout),
+
+It seems a little odd to use the 'addr' field as something that's not
+an address,
+and I'm not sure I understand the logic behind when you use a READ_ONCE()
+as opposed to simply accessing the sqe the way it is done a few lines
+earlier.
+
+The time handling definitely looks good to me.
+
+       Arnd
