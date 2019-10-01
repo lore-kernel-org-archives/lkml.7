@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D15AECE587
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 16:53:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D6D5C352AA
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 16:53:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 18D6C2168B
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 16:53:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4A8DF2168B
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 16:53:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569948797;
-	bh=gSx/kE23fzHUe4o9lTlqP2NnAB1nJWy1UhDsuCg7TD8=;
+	s=default; t=1569948811;
+	bh=G5VaTwfS5O/XxUYXqnwGpmGX3h20JN+8pFptTAtSvIo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=HpP1sGTn/VsE2IGSOtZuf9yBKwFmNlvS8HZtFoOlEYpFr7WyohqM65NadnYV5KBi4
-	 2x237Gs70IbokqYvmsGLHu6vJ9MFnbQ5cS2xoYk+szFYk9iJR6iHBIk5iz39KDw/yZ
-	 XlBeJv/exUNqBRFRn236mmX46BGkAB4D11KoeqYY=
+	b=1aSldl8/6OAjqYY/jAfD8ZtRyh1BefkpxO4M7PnTmn8StgdQk4GN328gbeNf9KnVG
+	 WtNE+UCwiStyCNOZAPibOhDvc+i6pBxbsTMknuKnsqxyBhu71uep9YMmpAW6fPdH1b
+	 s2Rb/pRfipyzEOWlWVpE9WQCY/SbWnGkspS7j9wc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732796AbfJAQnd (ORCPT
+        id S2389461AbfJAQx3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Oct 2019 12:43:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55494 "EHLO mail.kernel.org"
+        Tue, 1 Oct 2019 12:53:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55436 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732678AbfJAQnZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Oct 2019 12:43:25 -0400
+        id S1732268AbfJAQnY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Oct 2019 12:43:24 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D4734222CC;
-        Tue,  1 Oct 2019 16:43:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B078D21924;
+        Tue,  1 Oct 2019 16:43:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569948204;
-        bh=gSx/kE23fzHUe4o9lTlqP2NnAB1nJWy1UhDsuCg7TD8=;
+        s=default; t=1569948203;
+        bh=G5VaTwfS5O/XxUYXqnwGpmGX3h20JN+8pFptTAtSvIo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=AYCsRSSCYwGaMQx1tXI95eY9fCHdSl8zQA66vcMJnv9A8zg7IFojIL2T99r58mB/y
-         1+wJXnfko6FM03D2aE8ewrF8CJSopXi8xM28vCIuxFxSP42Rg5wRxhsfRl56X3TnHY
-         yHI+95qpdo7nZR9cUEKTyEGnKLaVLT/SoDes+fIk=
+        b=sP97qoQrvjWoSi4/a1W/bOfOgoiJVCvkRKX7zX8GPBztzJ67NDTSbNn7hePDx2keJ
+         Lz097muGjUw1NcIgdfhyPujP8G0Hon6mu3okOg2/YsJmkx6ZJmAxTG3ZNz0+UxwT8+
+         kIb08SoomY+ohlEKsDrK4RDNoYGp9bbqFk+uFM9o=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Ryan Chen <ryan_chen@aspeedtech.com>,
-        Joel Stanley <joel@jms.id.au>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Sasha Levin <sashal@kernel.org>, linux-watchdog@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 11/43] watchdog: aspeed: Add support for AST2600
-Date:   Tue,  1 Oct 2019 12:42:39 -0400
-Message-Id: <20191001164311.15993-11-sashal@kernel.org>
+Cc:     Dongsheng Yang <dongsheng.yang@easystack.cn>,
+        Ilya Dryomov <idryomov@gmail.com>,
+        Sasha Levin <sashal@kernel.org>, ceph-devel@vger.kernel.org,
+        linux-block@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 10/43] rbd: fix response length parameter for encoded strings
+Date:   Tue,  1 Oct 2019 12:42:38 -0400
+Message-Id: <20191001164311.15993-10-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191001164311.15993-1-sashal@kernel.org>
 References: <20191001164311.15993-1-sashal@kernel.org>
@@ -61,45 +60,66 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ryan Chen <ryan_chen@aspeedtech.com>
+From: Dongsheng Yang <dongsheng.yang@easystack.cn>
 
-[ Upstream commit b3528b4874480818e38e4da019d655413c233e6a ]
+[ Upstream commit 5435d2069503e2aa89c34a94154f4f2fa4a0c9c4 ]
 
-The ast2600 can be supported by the same code as the ast2500.
+rbd_dev_image_id() allocates space for length but passes a smaller
+value to rbd_obj_method_sync().  rbd_dev_v2_object_prefix() doesn't
+allocate space for length.  Fix both to be consistent.
 
-Signed-off-by: Ryan Chen <ryan_chen@aspeedtech.com>
-Signed-off-by: Joel Stanley <joel@jms.id.au>
-Reviewed-by: Guenter Roeck <linux@roeck-us.net>
-Link: https://lore.kernel.org/r/20190819051738.17370-3-joel@jms.id.au
-Signed-off-by: Guenter Roeck <linux@roeck-us.net>
-Signed-off-by: Wim Van Sebroeck <wim@linux-watchdog.org>
+Signed-off-by: Dongsheng Yang <dongsheng.yang@easystack.cn>
+Reviewed-by: Ilya Dryomov <idryomov@gmail.com>
+Signed-off-by: Ilya Dryomov <idryomov@gmail.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/watchdog/aspeed_wdt.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/block/rbd.c | 10 ++++++----
+ 1 file changed, 6 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/watchdog/aspeed_wdt.c b/drivers/watchdog/aspeed_wdt.c
-index 1abe4d021fd27..ffde179a9bb2c 100644
---- a/drivers/watchdog/aspeed_wdt.c
-+++ b/drivers/watchdog/aspeed_wdt.c
-@@ -38,6 +38,7 @@ static const struct aspeed_wdt_config ast2500_config = {
- static const struct of_device_id aspeed_wdt_of_table[] = {
- 	{ .compatible = "aspeed,ast2400-wdt", .data = &ast2400_config },
- 	{ .compatible = "aspeed,ast2500-wdt", .data = &ast2500_config },
-+	{ .compatible = "aspeed,ast2600-wdt", .data = &ast2500_config },
- 	{ },
- };
- MODULE_DEVICE_TABLE(of, aspeed_wdt_of_table);
-@@ -264,7 +265,8 @@ static int aspeed_wdt_probe(struct platform_device *pdev)
- 		set_bit(WDOG_HW_RUNNING, &wdt->wdd.status);
- 	}
+diff --git a/drivers/block/rbd.c b/drivers/block/rbd.c
+index 585378bc988cd..3d01ad6a3bcfc 100644
+--- a/drivers/block/rbd.c
++++ b/drivers/block/rbd.c
+@@ -4510,17 +4510,20 @@ static int rbd_dev_v2_image_size(struct rbd_device *rbd_dev)
  
--	if (of_device_is_compatible(np, "aspeed,ast2500-wdt")) {
-+	if ((of_device_is_compatible(np, "aspeed,ast2500-wdt")) ||
-+		(of_device_is_compatible(np, "aspeed,ast2600-wdt"))) {
- 		u32 reg = readl(wdt->base + WDT_RESET_WIDTH);
+ static int rbd_dev_v2_object_prefix(struct rbd_device *rbd_dev)
+ {
++	size_t size;
+ 	void *reply_buf;
+ 	int ret;
+ 	void *p;
  
- 		reg &= config->ext_pulse_width_mask;
+-	reply_buf = kzalloc(RBD_OBJ_PREFIX_LEN_MAX, GFP_KERNEL);
++	/* Response will be an encoded string, which includes a length */
++	size = sizeof(__le32) + RBD_OBJ_PREFIX_LEN_MAX;
++	reply_buf = kzalloc(size, GFP_KERNEL);
+ 	if (!reply_buf)
+ 		return -ENOMEM;
+ 
+ 	ret = rbd_obj_method_sync(rbd_dev, &rbd_dev->header_oid,
+ 				  &rbd_dev->header_oloc, "get_object_prefix",
+-				  NULL, 0, reply_buf, RBD_OBJ_PREFIX_LEN_MAX);
++				  NULL, 0, reply_buf, size);
+ 	dout("%s: rbd_obj_method_sync returned %d\n", __func__, ret);
+ 	if (ret < 0)
+ 		goto out;
+@@ -5489,7 +5492,6 @@ static int rbd_dev_image_id(struct rbd_device *rbd_dev)
+ 	dout("rbd id object name is %s\n", oid.name);
+ 
+ 	/* Response will be an encoded string, which includes a length */
+-
+ 	size = sizeof (__le32) + RBD_IMAGE_ID_LEN_MAX;
+ 	response = kzalloc(size, GFP_NOIO);
+ 	if (!response) {
+@@ -5501,7 +5503,7 @@ static int rbd_dev_image_id(struct rbd_device *rbd_dev)
+ 
+ 	ret = rbd_obj_method_sync(rbd_dev, &oid, &rbd_dev->header_oloc,
+ 				  "get_id", NULL, 0,
+-				  response, RBD_IMAGE_ID_LEN_MAX);
++				  response, size);
+ 	dout("%s: rbd_obj_method_sync returned %d\n", __func__, ret);
+ 	if (ret == -ENOENT) {
+ 		image_id = kstrdup("", GFP_KERNEL);
 -- 
 2.20.1
 
