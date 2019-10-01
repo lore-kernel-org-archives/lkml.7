@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8058BECE587
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 16:45:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE7D8ECE587
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 16:45:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4BF02205C9
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 16:45:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7C2B221A4C
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 16:45:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569948340;
-	bh=OBdtrm8pJtajj5WunNduBtqbGjzE7rTRWzKQSZySMEs=;
+	s=default; t=1569948344;
+	bh=VBpfkg9+vEMeWQ1VwqaiwwHBY3ZYF105rVStb5Nnl4M=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=fDkFvFAqUkhLMmTytMofG/22dmtGUFG+kqDMFAw1P4nzZryH/cBN6WJTbSz1QeKrm
-	 CYq9rQ8Iccjg4ldgF2E8siYr0ueH2knF+NgO26CwP4o30ZSID49eriq5gkVbCHPhYK
-	 kswgj5R2D3Yjxw1mhbLsn2ihklFSXgL3BZFZdWBs=
+	b=guLUP1XAsVqud8EP3uTXqwAPsj9+YYCKj/a08dFbtvi7qLGeg1ZOaSEHnvuWGoSb5
+	 FBPaLujsXgjdy17ltS3cwhE+Vwzn/EruqIb4/d4Y5PSnOgEeW2H6GusLAC4a8LgW0K
+	 ocDkG2W6LAJLXiR36MldgAw3T0nk/9onSYTFSH9A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390361AbfJAQpj (ORCPT
+        id S2390380AbfJAQpn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Oct 2019 12:45:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58148 "EHLO mail.kernel.org"
+        Tue, 1 Oct 2019 12:45:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58228 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390339AbfJAQpg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Oct 2019 12:45:36 -0400
+        id S2390356AbfJAQpj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Oct 2019 12:45:39 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 61FB721A4A;
-        Tue,  1 Oct 2019 16:45:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6151521A4A;
+        Tue,  1 Oct 2019 16:45:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569948336;
-        bh=OBdtrm8pJtajj5WunNduBtqbGjzE7rTRWzKQSZySMEs=;
+        s=default; t=1569948339;
+        bh=VBpfkg9+vEMeWQ1VwqaiwwHBY3ZYF105rVStb5Nnl4M=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=pkBGI4nQ2DTsGNnA1jt/FdLHP73glOUfBGR0K+WHKhggBQrjpmLPBa/NhivxgdeQU
-         hwEnRijwfTptRH7JMk2BUchSMcWaeTiql5x0RfMZaGvEOVaUEYXp5czNjvvAYS8q+m
-         GsUJ5kYvhtVTZLAeMzClDbu56Cuj3Acp7q2/eBEo=
+        b=Ki+J01fiPJxVXyRLH3pZv6vLyWCnFkKv0YGV+KDIstIjir35gwhEQzh5Jvhfq32BK
+         mYTwNCtiMwws0w0pZNqbt4kxTd+wA0x3TBUfJsSj0I2/iYoDX/ODK+HHhjXgKzlds+
+         N9f69IK0bqZdV3VZuJcZ0VQ27g8Qyjt9qgZUuP5U=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jia-Ju Bai <baijiaju1990@gmail.com>,
-        Anna Schumaker <Anna.Schumaker@Netapp.com>,
-        Sasha Levin <sashal@kernel.org>, linux-nfs@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.4 02/15] fs: nfs: Fix possible null-pointer dereferences in encode_attrs()
-Date:   Tue,  1 Oct 2019 12:45:20 -0400
-Message-Id: <20191001164533.16915-2-sashal@kernel.org>
+Cc:     Luis Henriques <lhenriques@suse.com>,
+        Jeff Layton <jlayton@kernel.org>,
+        Ilya Dryomov <idryomov@gmail.com>,
+        Sasha Levin <sashal@kernel.org>, ceph-devel@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.4 05/15] ceph: fix directories inode i_blkbits initialization
+Date:   Tue,  1 Oct 2019 12:45:23 -0400
+Message-Id: <20191001164533.16915-5-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191001164533.16915-1-sashal@kernel.org>
 References: <20191001164533.16915-1-sashal@kernel.org>
@@ -59,44 +60,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jia-Ju Bai <baijiaju1990@gmail.com>
+From: Luis Henriques <lhenriques@suse.com>
 
-[ Upstream commit e2751463eaa6f9fec8fea80abbdc62dbc487b3c5 ]
+[ Upstream commit 750670341a24cb714e624e0fd7da30900ad93752 ]
 
-In encode_attrs(), there is an if statement on line 1145 to check
-whether label is NULL:
-    if (label && (attrmask[2] & FATTR4_WORD2_SECURITY_LABEL))
+When filling an inode with info from the MDS, i_blkbits is being
+initialized using fl_stripe_unit, which contains the stripe unit in
+bytes.  Unfortunately, this doesn't make sense for directories as they
+have fl_stripe_unit set to '0'.  This means that i_blkbits will be set
+to 0xff, causing an UBSAN undefined behaviour in i_blocksize():
 
-When label is NULL, it is used on lines 1178-1181:
-    *p++ = cpu_to_be32(label->lfs);
-    *p++ = cpu_to_be32(label->pi);
-    *p++ = cpu_to_be32(label->len);
-    p = xdr_encode_opaque_fixed(p, label->label, label->len);
+  UBSAN: Undefined behaviour in ./include/linux/fs.h:731:12
+  shift exponent 255 is too large for 32-bit type 'int'
 
-To fix these bugs, label is checked before being used.
+Fix this by initializing i_blkbits to CEPH_BLOCK_SHIFT if fl_stripe_unit
+is zero.
 
-These bugs are found by a static analysis tool STCheck written by us.
-
-Signed-off-by: Jia-Ju Bai <baijiaju1990@gmail.com>
-Signed-off-by: Anna Schumaker <Anna.Schumaker@Netapp.com>
+Signed-off-by: Luis Henriques <lhenriques@suse.com>
+Reviewed-by: Jeff Layton <jlayton@kernel.org>
+Signed-off-by: Ilya Dryomov <idryomov@gmail.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/nfs/nfs4xdr.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ fs/ceph/inode.c | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
 
-diff --git a/fs/nfs/nfs4xdr.c b/fs/nfs/nfs4xdr.c
-index 1cb50bb898b01..15cd9db6d616d 100644
---- a/fs/nfs/nfs4xdr.c
-+++ b/fs/nfs/nfs4xdr.c
-@@ -1123,7 +1123,7 @@ static void encode_attrs(struct xdr_stream *xdr, const struct iattr *iap,
- 		} else
- 			*p++ = cpu_to_be32(NFS4_SET_TO_SERVER_TIME);
- 	}
--	if (bmval[2] & FATTR4_WORD2_SECURITY_LABEL) {
-+	if (label && (bmval[2] & FATTR4_WORD2_SECURITY_LABEL)) {
- 		*p++ = cpu_to_be32(label->lfs);
- 		*p++ = cpu_to_be32(label->pi);
- 		*p++ = cpu_to_be32(label->len);
+diff --git a/fs/ceph/inode.c b/fs/ceph/inode.c
+index a663b676d5661..2ad3f4ab4dcfa 100644
+--- a/fs/ceph/inode.c
++++ b/fs/ceph/inode.c
+@@ -725,7 +725,12 @@ static int fill_inode(struct inode *inode, struct page *locked_page,
+ 	ci->i_version = le64_to_cpu(info->version);
+ 	inode->i_version++;
+ 	inode->i_rdev = le32_to_cpu(info->rdev);
+-	inode->i_blkbits = fls(le32_to_cpu(info->layout.fl_stripe_unit)) - 1;
++	/* directories have fl_stripe_unit set to zero */
++	if (le32_to_cpu(info->layout.fl_stripe_unit))
++		inode->i_blkbits =
++			fls(le32_to_cpu(info->layout.fl_stripe_unit)) - 1;
++	else
++		inode->i_blkbits = CEPH_BLOCK_SHIFT;
+ 
+ 	if ((new_version || (new_issued & CEPH_CAP_AUTH_SHARED)) &&
+ 	    (issued & CEPH_CAP_AUTH_EXCL) == 0) {
 -- 
 2.20.1
 
