@@ -2,204 +2,155 @@ Return-Path: <SRS0=YRFP=X2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,UNWANTED_LANGUAGE_BODY autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F39FECE587
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 22:19:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D84EECE587
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 22:20:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3B3842054F
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 22:19:21 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lXMslVfz"
+	by mail.kernel.org (Postfix) with ESMTP id EC9A121A4A
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 22:20:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1569968442;
+	bh=7S9CIqcXAVZUyUkLtWX/MV97N5Y/jebJaa8Ssd2OQZ0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Jvzjivh8LjWAPFe3KGqyEocCrthco1Bhf2zCzhDABULuRqQ1xeefFfs31EyeGA8pH
+	 0y8fPU01CsQQWjOhHYMqTmHcNKDIT4fRqAcAKJh8X+rCuOO//gC6ItfdYDK2Y3IcJL
+	 +tviezQvi5BHcfxTakW1ol4e6RF1qgBzkB6JZDl0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728795AbfJAWTU (ORCPT
+        id S1728836AbfJAWUl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Oct 2019 18:19:20 -0400
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:41139 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725988AbfJAWTU (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Oct 2019 18:19:20 -0400
-Received: by mail-lj1-f194.google.com with SMTP id f5so15054136ljg.8;
-        Tue, 01 Oct 2019 15:19:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=oMnTWIkEFx7hV55d8HRQu4uB51SHbkOs+8qRO4hsJAg=;
-        b=lXMslVfz7D8gI9mo1A6A7CFLlOvvNOzKTULQyZx+3MprJpFQSceMODLbDPEWFctAPt
-         jdav5cHZwKLJ0zq03R9SPpX4DlK3b0AboPx7ScTZ6GQXs1w1gOrzCYpfLIQdJi/POq5e
-         RPpJf0hJGI6Teq8zpjwpLdsgH2Cvw92RksrnhhZl8dF98s29ee0gDiAxdgU6v0kEKgmn
-         E797CFH0clXE/pantveJ8+GX9vEvNdIjgfeDuSGv4H6Y825dnFZN2diZDQw12CnslPWB
-         xRdB8ya9rZ9YIjVvIbPUezcXiUA3JKxm+uguAJvArtPXxqFXyDy20o7YTgZREjAucMVv
-         HRbQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=oMnTWIkEFx7hV55d8HRQu4uB51SHbkOs+8qRO4hsJAg=;
-        b=c596HXm44236KyNs5GZE4CpOUJDhUW58z7GrqNowRNgjY8/c0tCyPwkg/1PkX08GWE
-         JRYx4fdzp+YEpd3xHdm0spgRxZ0d5OXqSFBlMT9AntoXaoqxoOxMEg2O4ns6k/bc7D7B
-         UsII77PguvodJPmMvnULxo/z4gADOP7SmCpkWUFgQsbclBk55HbGMExwHEYYf5AfthE9
-         RyYsuX+XA2i0NZ69vxT00Ytl8E5LX1PreCKPnWjoum8WgR7Qcyjix59b5Oxe8HmObVnL
-         rM6bMOm2aEFAhX+OlNg4KloDkMsi+4pRLULTpU5kxCnmO2SYPCeRPic2gf5pGesVZuQe
-         MriQ==
-X-Gm-Message-State: APjAAAVPqkhPo4LBKJq55DB6tpaex+AVxQH2NdH2HO9zo/P5jY6sVxbp
-        IqxvXx7/N1oMpL5clH9+xrdSawIy/ZFKdWL6vik=
-X-Google-Smtp-Source: APXvYqweBJ5toKrdcq0StVEbNJ9J/cYfYJDUQ8PAkdbREU0S7AVdKsQxGACvp49bFkNQF6eUP3KyjngCeUD0nmidRkw=
-X-Received: by 2002:a2e:b0d1:: with SMTP id g17mr108184ljl.238.1569968357000;
- Tue, 01 Oct 2019 15:19:17 -0700 (PDT)
+        Tue, 1 Oct 2019 18:20:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44664 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728254AbfJAWUk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Oct 2019 18:20:40 -0400
+Received: from localhost (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 09A742054F;
+        Tue,  1 Oct 2019 22:20:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1569968439;
+        bh=7S9CIqcXAVZUyUkLtWX/MV97N5Y/jebJaa8Ssd2OQZ0=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=OocQHakiseAu6M+OxfVgBu6wM9Mp4h/tS8jyWcYeyZ57AdwXYrjwAr4z0O6pIbfx4
+         8ommnGhgrvfPsLGygky5KgVrHvjAaSGyAB+JT9xCQ2js+Xvlpey6egbkrIHDQ9+G8Y
+         65kDPPijaTKEJAfIrwUSuBG8XiLYKpCR+02MCqXw=
+Date:   Tue, 1 Oct 2019 18:20:38 -0400
+From:   Sasha Levin <sashal@kernel.org>
+To:     Waiman Long <longman@redhat.com>
+Cc:     Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        syzbot+53383ae265fb161ef488@syzkaller.appspotmail.com,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        "Paul E. McKenney" <paulmck@linux.vnet.ibm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Will Deacon <will.deacon@arm.com>,
+        Ingo Molnar <mingo@kernel.org>
+Subject: Re: [PATCH 4.19 36/63] locking/lockdep: Add debug_locks check in
+ __lock_downgrade()
+Message-ID: <20191001222038.GD17454@sasha-vm>
+References: <20190929135031.382429403@linuxfoundation.org>
+ <20190929135038.482721804@linuxfoundation.org>
+ <801c81d2-ce72-8eb3-a18b-1b0943270fc4@i-love.sakura.ne.jp>
+ <20190930002828.GQ8171@sasha-vm>
+ <b0203141-297f-1138-5988-607e076cbcf0@i-love.sakura.ne.jp>
+ <b4e4de80-cabc-3de5-9fa7-8366a8582ba9@redhat.com>
 MIME-Version: 1.0
-References: <CANL0fFSGG_+R2zbf-9MxVLJMTMgc+-fwSoLCqS1qc+jWo-zNLA@mail.gmail.com>
- <20190219213003.l7hzy2emdsxe4izy@gofer.mess.org>
-In-Reply-To: <20190219213003.l7hzy2emdsxe4izy@gofer.mess.org>
-From:   Gonsolo <gonsolo@gmail.com>
-Date:   Wed, 2 Oct 2019 00:19:05 +0200
-Message-ID: <CANL0fFRnEaapgm3oiDQmZb6qeAr4pwyhofZXA0mbmq=o4PPUDg@mail.gmail.com>
-Subject: Re: DVB-T2 Stick
-To:     Sean Young <sean@mess.org>
-Cc:     crope@iki.fi, linux-media@vger.kernel.org,
-        Linux Kernel <linux-kernel@vger.kernel.org>
-Content-Type: multipart/mixed; boundary="0000000000003ac0f70593e0be20"
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <b4e4de80-cabc-3de5-9fa7-8366a8582ba9@redhat.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---0000000000003ac0f70593e0be20
-Content-Type: text/plain; charset="UTF-8"
+On Mon, Sep 30, 2019 at 10:00:35AM -0400, Waiman Long wrote:
+>On 9/29/19 9:46 PM, Tetsuo Handa wrote:
+>> On 2019/09/30 9:28, Sasha Levin wrote:
+>>> On Sun, Sep 29, 2019 at 11:43:38PM +0900, Tetsuo Handa wrote:
+>>>> On 2019/09/29 22:54, Greg Kroah-Hartman wrote:
+>>>>> From: Waiman Long <longman@redhat.com>
+>>>>>
+>>>>> [ Upstream commit 513e1073d52e55b8024b4f238a48de7587c64ccf ]
+>>>>>
+>>>>> Tetsuo Handa had reported he saw an incorrect "downgrading a read lock"
+>>>>> warning right after a previous lockdep warning. It is likely that the
+>>>>> previous warning turned off lock debugging causing the lockdep to have
+>>>>> inconsistency states leading to the lock downgrade warning.
+>>>>>
+>>>>> Fix that by add a check for debug_locks at the beginning of
+>>>>> __lock_downgrade().
+>>>> Please drop "[PATCH 4.19 36/63] locking/lockdep: Add debug_locks check in __lock_downgrade()".
+>>>> We had a revert patch shown below in the past.
+>>> We had a revert in the stable trees, but that revert was incorrect.
+>>>
+>>> Take a look at commit 513e1073d52e55 upstream, it patches
+>>> __lock_set_class() (even though the subject line says
+>>> __lock_downgrade()). So this is not a backporting error as the revert
+>>> said it is, but is rather the intended location to be patched.
+>>>
+>>> If this is actually wrong, then it should be addressed upstream first.
+>>>
+>> Hmm, upstream has two commits with same author, same date, same subject, different hash, different content.
+>> I couldn't find from https://lkml.kernel.org/r/1547093005-26085-1-git-send-email-longman@redhat.com that
+>> we want to patch both __lock_set_class() and __lock_downgrade(), but I found that the tip-bot has patched
+>> __lock_downgrade() on "2019-01-21 11:29" and __lock_set_class() on "2019-02-04  8:56".
+>> Seems that we by error patched both functions, though patching both functions should be harmless...
+>>
+>> 64aa348ed kernel/lockdep.c         (Peter Zijlstra            2008-08-11 09:30:21 +0200 4115) static int
+>> 00ef9f734 kernel/lockdep.c         (Peter Zijlstra            2008-12-04 09:00:17 +0100 4116) __lock_set_class(struct lockdep_map *lock, const char *name,
+>> 00ef9f734 kernel/lockdep.c         (Peter Zijlstra            2008-12-04 09:00:17 +0100 4117)            struct lock_class_key *key, unsigned int subclass,
+>> 00ef9f734 kernel/lockdep.c         (Peter Zijlstra            2008-12-04 09:00:17 +0100 4118)            unsigned long ip)
+>> 64aa348ed kernel/lockdep.c         (Peter Zijlstra            2008-08-11 09:30:21 +0200 4119) {
+>> 64aa348ed kernel/lockdep.c         (Peter Zijlstra            2008-08-11 09:30:21 +0200 4120)   struct task_struct *curr = current;
+>> 8c8889d8e kernel/locking/lockdep.c (Imre Deak                 2019-05-24 23:15:08 +0300 4121)   unsigned int depth, merged = 0;
+>> 41c2c5b86 kernel/locking/lockdep.c (J. R. Okajima             2017-02-03 01:38:15 +0900 4122)   struct held_lock *hlock;
+>> 64aa348ed kernel/lockdep.c         (Peter Zijlstra            2008-08-11 09:30:21 +0200 4123)   struct lock_class *class;
+>> 64aa348ed kernel/lockdep.c         (Peter Zijlstra            2008-08-11 09:30:21 +0200 4124)   int i;
+>> 64aa348ed kernel/lockdep.c         (Peter Zijlstra            2008-08-11 09:30:21 +0200 4125)
+>> 513e1073d kernel/locking/lockdep.c (Waiman Long               2019-01-09 23:03:25 -0500 4126)   if (unlikely(!debug_locks))
+>> 513e1073d kernel/locking/lockdep.c (Waiman Long               2019-01-09 23:03:25 -0500 4127)           return 0;
+>> 513e1073d kernel/locking/lockdep.c (Waiman Long               2019-01-09 23:03:25 -0500 4128)
+>>
+>> 6419c4af7 kernel/locking/lockdep.c (J. R. Okajima             2017-02-03 01:38:17 +0900 4162) static int __lock_downgrade(struct lockdep_map *lock, unsigned long ip)
+>> 6419c4af7 kernel/locking/lockdep.c (J. R. Okajima             2017-02-03 01:38:17 +0900 4163) {
+>> 6419c4af7 kernel/locking/lockdep.c (J. R. Okajima             2017-02-03 01:38:17 +0900 4164)   struct task_struct *curr = current;
+>> 8c8889d8e kernel/locking/lockdep.c (Imre Deak                 2019-05-24 23:15:08 +0300 4165)   unsigned int depth, merged = 0;
+>> 6419c4af7 kernel/locking/lockdep.c (J. R. Okajima             2017-02-03 01:38:17 +0900 4166)   struct held_lock *hlock;
+>> 6419c4af7 kernel/locking/lockdep.c (J. R. Okajima             2017-02-03 01:38:17 +0900 4167)   int i;
+>> 6419c4af7 kernel/locking/lockdep.c (J. R. Okajima             2017-02-03 01:38:17 +0900 4168)
+>> 714925805 kernel/locking/lockdep.c (Waiman Long               2019-01-09 23:03:25 -0500 4169)   if (unlikely(!debug_locks))
+>> 714925805 kernel/locking/lockdep.c (Waiman Long               2019-01-09 23:03:25 -0500 4170)           return 0;
+>> 714925805 kernel/locking/lockdep.c (Waiman Long               2019-01-09 23:03:25 -0500 4171)
+>>
+>> commit 513e1073d52e55b8024b4f238a48de7587c64ccf
+>> Author: Waiman Long <longman@redhat.com>
+>> Date:   Wed Jan 9 23:03:25 2019 -0500
+>>
+>>     locking/lockdep: Add debug_locks check in __lock_downgrade()
+>>
+>> commit 71492580571467fb7177aade19c18ce7486267f5
+>> Author: Waiman Long <longman@redhat.com>
+>> Date:   Wed Jan 9 23:03:25 2019 -0500
+>>
+>>     locking/lockdep: Add debug_locks check in __lock_downgrade()
+>>
+>As I had said before, it looks like the git-apply mixed up the location
+>due to the fact that the hunks are exactly the same for both locations.
+>So if the patch to be applied does not have the right line number, it
+>will get applied to the wrong location first.
 
-Hi!
+I very much agree, my point is that *both* patches are upstream right
+now, and if one of those patches is wrong then it should be reverted
+upstream, and we'd be happy to take the revert.
 
-> Secondly there are lots of coding style issues, see:
-> https://www.kernel.org/doc/html/v4.10/process/coding-style.html
-
-I addressed most of these except one "#if 0" warning from checkpatch.
-
-> I'm afraid there are many problems with this patch. First of all it looks
-> like support was added for a si2168 tuner but it looks like it will break
-> for any other si2157-type device.
-
-
-Can you give me a hint how to proceed here? I don't know much about
-DVB tuners or kernel development.
-
-I attached the cleaned-up patch for 5.4.0-rc1
-
+--
 Thanks,
-g
-
---0000000000003ac0f70593e0be20
-Content-Type: text/x-patch; charset="US-ASCII"; 
-	name="0001-DVB-T2-with-coding-style-updates.patch"
-Content-Disposition: attachment; 
-	filename="0001-DVB-T2-with-coding-style-updates.patch"
-Content-Transfer-Encoding: base64
-Content-ID: <f_k18elxx70>
-X-Attachment-Id: f_k18elxx70
-
-RnJvbSA2Y2FkYTY0NDIyMDdhNjcyMDJlNzM3MjE2OTJhY2VkNjY1YjhmZGYwIE1vbiBTZXAgMTcg
-MDA6MDA6MDAgMjAwMQpGcm9tOiBHb24gU29sbyA8Z29uc29sb0BnbWFpbC5jb20+CkRhdGU6IFR1
-ZSwgMSBPY3QgMjAxOSAyMTo1OTo0NCArMDIwMApTdWJqZWN0OiBbUEFUQ0hdIERWQi1UMiB3aXRo
-IGNvZGluZyBzdHlsZSB1cGRhdGVzLgoKLS0tCiBkcml2ZXJzL21lZGlhL3R1bmVycy9zaTIxNTcu
-YyAgICAgICAgIHwgNDQgKysrKysrKysrKysrKysrKysrKysrKy0tLQogZHJpdmVycy9tZWRpYS90
-dW5lcnMvc2kyMTU3X3ByaXYuaCAgICB8ICA4ICsrKysrCiBkcml2ZXJzL21lZGlhL3VzYi9kdmIt
-dXNiLXYyL2FmOTAzNS5jIHwgNDcgKysrKysrKysrKysrKysrKysrKysrKysrKystCiAzIGZpbGVz
-IGNoYW5nZWQsIDkzIGluc2VydGlvbnMoKyksIDYgZGVsZXRpb25zKC0pCgpkaWZmIC0tZ2l0IGEv
-ZHJpdmVycy9tZWRpYS90dW5lcnMvc2kyMTU3LmMgYi9kcml2ZXJzL21lZGlhL3R1bmVycy9zaTIx
-NTcuYwppbmRleCBlODcwNDBkNmVjYTcuLmFmNTBlNzIxMjgxYiAxMDA2NDQKLS0tIGEvZHJpdmVy
-cy9tZWRpYS90dW5lcnMvc2kyMTU3LmMKKysrIGIvZHJpdmVycy9tZWRpYS90dW5lcnMvc2kyMTU3
-LmMKQEAgLTc1LDcgKzc1LDcgQEAgc3RhdGljIGludCBzaTIxNTdfaW5pdChzdHJ1Y3QgZHZiX2Zy
-b250ZW5kICpmZSkKIAlzdHJ1Y3Qgc2kyMTU3X2NtZCBjbWQ7CiAJY29uc3Qgc3RydWN0IGZpcm13
-YXJlICpmdzsKIAljb25zdCBjaGFyICpmd19uYW1lOwotCXVuc2lnbmVkIGludCB1aXRtcCwgY2hp
-cF9pZDsKKwl1bnNpZ25lZCBpbnQgdWl0bXA7CiAKIAlkZXZfZGJnKCZjbGllbnQtPmRldiwgIlxu
-Iik7CiAKQEAgLTExNyw3ICsxMTcsNyBAQCBzdGF0aWMgaW50IHNpMjE1N19pbml0KHN0cnVjdCBk
-dmJfZnJvbnRlbmQgKmZlKQogCQlpZiAocmV0KQogCQkJZ290byBlcnI7CiAJfQotCisjaWYgMAog
-CS8qIHF1ZXJ5IGNoaXAgcmV2aXNpb24gKi8KIAltZW1jcHkoY21kLmFyZ3MsICJceDAyIiwgMSk7
-CiAJY21kLndsZW4gPSAxOwpAQCAtMTM4LDYgKzEzOCw4IEBAIHN0YXRpYyBpbnQgc2kyMTU3X2lu
-aXQoc3RydWN0IGR2Yl9mcm9udGVuZCAqZmUpCiAJI2RlZmluZSBTSTIxNDFfQTEwICgnQScgPDwg
-MjQgfCA0MSA8PCAxNiB8ICcxJyA8PCA4IHwgJzAnIDw8IDApCiAKIAlzd2l0Y2ggKGNoaXBfaWQp
-IHsKKyNlbmRpZgorCXN3aXRjaCAoZGV2LT5jaGlwX2lkKSB7CiAJY2FzZSBTSTIxNThfQTIwOgog
-CWNhc2UgU0kyMTQ4X0EyMDoKIAkJZndfbmFtZSA9IFNJMjE1OF9BMjBfRklSTVdBUkU7CkBAIC0x
-NjEsOSArMTYzLDkgQEAgc3RhdGljIGludCBzaTIxNTdfaW5pdChzdHJ1Y3QgZHZiX2Zyb250ZW5k
-ICpmZSkKIAkJZ290byBlcnI7CiAJfQogCi0JZGV2X2luZm8oJmNsaWVudC0+ZGV2LCAiZm91bmQg
-YSAnU2lsaWNvbiBMYWJzIFNpMjElZC0lYyVjJWMnXG4iLAotCQkJY21kLmFyZ3NbMl0sIGNtZC5h
-cmdzWzFdLCBjbWQuYXJnc1szXSwgY21kLmFyZ3NbNF0pOwotCisvLwlkZXZfaW5mbygmY2xpZW50
-LT5kZXYsICJmb3VuZCBhICdTaWxpY29uIExhYnMgU2kyMSVkLSVjJWMlYydcbiIsCisvLwkJCWNt
-ZC5hcmdzWzJdLCBjbWQuYXJnc1sxXSwgY21kLmFyZ3NbM10sIGNtZC5hcmdzWzRdKTsKKy8vCiAJ
-aWYgKGZ3X25hbWUgPT0gTlVMTCkKIAkJZ290byBza2lwX2Z3X2Rvd25sb2FkOwogCkBAIC00NTYs
-NiArNDU4LDM4IEBAIHN0YXRpYyBpbnQgc2kyMTU3X3Byb2JlKHN0cnVjdCBpMmNfY2xpZW50ICpj
-bGllbnQsCiAJbWVtY3B5KCZmZS0+b3BzLnR1bmVyX29wcywgJnNpMjE1N19vcHMsIHNpemVvZihz
-dHJ1Y3QgZHZiX3R1bmVyX29wcykpOwogCWZlLT50dW5lcl9wcml2ID0gY2xpZW50OwogCisJLyog
-cG93ZXIgdXAgKi8KKwlpZiAoZGV2LT5jaGlwdHlwZSA9PSBTSTIxNTdfQ0hJUFRZUEVfU0kyMTQ2
-KSB7CisJCW1lbWNweShjbWQuYXJncywgIlx4YzBceDA1XHgwMVx4MDBceDAwXHgwYlx4MDBceDAw
-XHgwMSIsIDkpOworCQljbWQud2xlbiA9IDk7CisJfSBlbHNlIHsKKwkJbWVtY3B5KGNtZC5hcmdz
-LAorCQkiXHhjMFx4MDBceDBjXHgwMFx4MDBceDAxXHgwMVx4MDFceDAxXHgwMVx4MDFceDAyXHgw
-MFx4MDBceDAxIiwKKwkJMTUpOworCQljbWQud2xlbiA9IDE1OworCX0KKwljbWQucmxlbiA9IDE7
-CisJcmV0ID0gc2kyMTU3X2NtZF9leGVjdXRlKGNsaWVudCwgJmNtZCk7CisJaWYgKHJldCkKKwkJ
-Z290byBlcnI7CisJLyogcXVlcnkgY2hpcCByZXZpc2lvbiAqLworCS8qIGhhY2s6IGRvIGl0IGhl
-cmUgYmVjYXVzZSBhZnRlciB0aGUgc2kyMTY4IGdldHMgMDEwMSwgY29tbWFuZHMgd2lsbAorCSAq
-IHN0aWxsIGJlIGV4ZWN1dGVkIGhlcmUgYnV0IG5vIHJlc3VsdAorCSAqLworCW1lbWNweShjbWQu
-YXJncywgIlx4MDIiLCAxKTsKKwljbWQud2xlbiA9IDE7CisJY21kLnJsZW4gPSAxMzsKKwlyZXQg
-PSBzaTIxNTdfY21kX2V4ZWN1dGUoY2xpZW50LCAmY21kKTsKKwlpZiAocmV0KQorCQlnb3RvIGVy
-cl9rZnJlZTsKKwlkZXYtPmNoaXBfaWQgPSBjbWQuYXJnc1sxXSA8PCAyNCB8CisJCWNtZC5hcmdz
-WzJdIDw8IDE2IHwKKwkJY21kLmFyZ3NbM10gPDwgOCB8CisJCWNtZC5hcmdzWzRdIDw8IDA7CisJ
-ZGV2X2luZm8oJmNsaWVudC0+ZGV2LCAiZm91bmQgYSAnU2lsaWNvbiBMYWJzIFNpMjElZC0lYyVj
-JWMnXG4iLAorCQljbWQuYXJnc1syXSwgY21kLmFyZ3NbMV0sIGNtZC5hcmdzWzNdLCBjbWQuYXJn
-c1s0XSk7CisKKwogI2lmZGVmIENPTkZJR19NRURJQV9DT05UUk9MTEVSCiAJaWYgKGNmZy0+bWRl
-dikgewogCQlkZXYtPm1kZXYgPSBjZmctPm1kZXY7CmRpZmYgLS1naXQgYS9kcml2ZXJzL21lZGlh
-L3R1bmVycy9zaTIxNTdfcHJpdi5oIGIvZHJpdmVycy9tZWRpYS90dW5lcnMvc2kyMTU3X3ByaXYu
-aAppbmRleCAyYmRhOTAzMzU4ZGEuLjBmNDA5MGUxODRlOSAxMDA2NDQKLS0tIGEvZHJpdmVycy9t
-ZWRpYS90dW5lcnMvc2kyMTU3X3ByaXYuaAorKysgYi9kcml2ZXJzL21lZGlhL3R1bmVycy9zaTIx
-NTdfcHJpdi5oCkBAIC0yOCw2ICsyOCw3IEBAIHN0cnVjdCBzaTIxNTdfZGV2IHsKIAl1OCBjaGlw
-dHlwZTsKIAl1OCBpZl9wb3J0OwogCXUzMiBpZl9mcmVxdWVuY3k7CisJdTMyIGNoaXBfaWQ7CiAJ
-c3RydWN0IGRlbGF5ZWRfd29yayBzdGF0X3dvcms7CiAKICNpZiBkZWZpbmVkKENPTkZJR19NRURJ
-QV9DT05UUk9MTEVSKQpAQCAtNDMsNiArNDQsMTMgQEAgc3RydWN0IHNpMjE1N19kZXYgewogI2Rl
-ZmluZSBTSTIxNTdfQ0hJUFRZUEVfU0kyMTQxIDIKICNkZWZpbmUgU0kyMTU3X0NISVBUWVBFX1NJ
-MjE3NyAzCiAKKyNkZWZpbmUgU0kyMTU4X0EyMCAoJ0EnIDw8IDI0IHwgNTggPDwgMTYgfCAnMicg
-PDwgOCB8ICcwJyA8PCAwKQorI2RlZmluZSBTSTIxNDhfQTIwICgnQScgPDwgMjQgfCA0OCA8PCAx
-NiB8ICcyJyA8PCA4IHwgJzAnIDw8IDApCisjZGVmaW5lIFNJMjE1N19BMzAgKCdBJyA8PCAyNCB8
-IDU3IDw8IDE2IHwgJzMnIDw8IDggfCAnMCcgPDwgMCkKKyNkZWZpbmUgU0kyMTQ3X0EzMCAoJ0En
-IDw8IDI0IHwgNDcgPDwgMTYgfCAnMycgPDwgOCB8ICcwJyA8PCAwKQorI2RlZmluZSBTSTIxNDZf
-QTEwICgnQScgPDwgMjQgfCA0NiA8PCAxNiB8ICcxJyA8PCA4IHwgJzAnIDw8IDApCisjZGVmaW5l
-IFNJMjE0MV9BMTAgKCdBJyA8PCAyNCB8IDQxIDw8IDE2IHwgJzEnIDw8IDggfCAnMCcgPDwgMCkK
-KwogLyogZmlybXdhcmUgY29tbWFuZCBzdHJ1Y3QgKi8KICNkZWZpbmUgU0kyMTU3X0FSR0xFTiAg
-ICAgIDMwCiBzdHJ1Y3Qgc2kyMTU3X2NtZCB7CmRpZmYgLS1naXQgYS9kcml2ZXJzL21lZGlhL3Vz
-Yi9kdmItdXNiLXYyL2FmOTAzNS5jIGIvZHJpdmVycy9tZWRpYS91c2IvZHZiLXVzYi12Mi9hZjkw
-MzUuYwppbmRleCAzYWZkMTg3MzM2MTQuLjViN2EwMGNkY2JkOCAxMDA2NDQKLS0tIGEvZHJpdmVy
-cy9tZWRpYS91c2IvZHZiLXVzYi12Mi9hZjkwMzUuYworKysgYi9kcml2ZXJzL21lZGlhL3VzYi9k
-dmItdXNiLXYyL2FmOTAzNS5jCkBAIC0xMjA2LDcgKzEyMDYsNTAgQEAgc3RhdGljIGludCBpdDkz
-MHhfZnJvbnRlbmRfYXR0YWNoKHN0cnVjdCBkdmJfdXNiX2FkYXB0ZXIgKmFkYXApCiAJc3RydWN0
-IHNpMjE2OF9jb25maWcgc2kyMTY4X2NvbmZpZzsKIAlzdHJ1Y3QgaTJjX2FkYXB0ZXIgKmFkYXB0
-ZXI7CiAKLQlkZXZfZGJnKCZpbnRmLT5kZXYsICJhZGFwLT5pZD0lZFxuIiwgYWRhcC0+aWQpOwor
-CS8vZGV2X2RiZygmaW50Zi0+ZGV2LCAiYWRhcC0+aWQ9JWRcbiIsIGFkYXAtPmlkKTsKKwlkZXZf
-ZGJnKCZpbnRmLT5kZXYsICIlcyAgYWRhcC0+aWQ9JWRcbiIsIF9fZnVuY19fLCBhZGFwLT5pZCk7
-CisKKwkvKiBJMkMgbWFzdGVyIGJ1cyAyIGNsb2NrIHNwZWVkIDMwMGsgKi8KKwlyZXQgPSBhZjkw
-MzVfd3JfcmVnKGQsIDB4MDBmNmE3LCAweDA3KTsKKwlpZiAocmV0IDwgMCkKKwkJZ290byBlcnI7
-CisKKwkvKiBJMkMgbWFzdGVyIGJ1cyAxLDMgY2xvY2sgc3BlZWQgMzAwayAqLworCXJldCA9IGFm
-OTAzNV93cl9yZWcoZCwgMHgwMGYxMDMsIDB4MDcpOworCWlmIChyZXQgPCAwKQorCQlnb3RvIGVy
-cjsKKworCS8qIHNldCBncGlvMTEgbG93ICovCisJcmV0ID0gYWY5MDM1X3dyX3JlZ19tYXNrKGQs
-IDB4ZDhkNCwgMHgwMSwgMHgwMSk7CisJaWYgKHJldCA8IDApCisJCWdvdG8gZXJyOworCisJcmV0
-ID0gYWY5MDM1X3dyX3JlZ19tYXNrKGQsIDB4ZDhkNSwgMHgwMSwgMHgwMSk7CisJaWYgKHJldCA8
-IDApCisJCWdvdG8gZXJyOworCisJcmV0ID0gYWY5MDM1X3dyX3JlZ19tYXNrKGQsIDB4ZDhkMywg
-MHgwMSwgMHgwMSk7CisJaWYgKHJldCA8IDApCisJCWdvdG8gZXJyOworCisJLyogVHVuZXIgZW5h
-YmxlIHVzaW5nIGdwaW90Ml9lbiwgZ3Bpb3QyX29uIGFuZCBncGlvdDJfbyAocmVzZXQpICovCisJ
-cmV0ID0gYWY5MDM1X3dyX3JlZ19tYXNrKGQsIDB4ZDhiOCwgMHgwMSwgMHgwMSk7CisJaWYgKHJl
-dCA8IDApCisJCWdvdG8gZXJyOworCisJcmV0ID0gYWY5MDM1X3dyX3JlZ19tYXNrKGQsIDB4ZDhi
-OSwgMHgwMSwgMHgwMSk7CisJaWYgKHJldCA8IDApCisJCWdvdG8gZXJyOworCisJcmV0ID0gYWY5
-MDM1X3dyX3JlZ19tYXNrKGQsIDB4ZDhiNywgMHgwMCwgMHgwMSk7CisJaWYgKHJldCA8IDApCisJ
-CWdvdG8gZXJyOworCisJbXNsZWVwKDIwMCk7CisKKwlyZXQgPSBhZjkwMzVfd3JfcmVnX21hc2so
-ZCwgMHhkOGI3LCAweDAxLCAweDAxKTsKKwlpZiAocmV0IDwgMCkKKwkJZ290byBlcnI7CiAKIAkv
-KiBJMkMgbWFzdGVyIGJ1cyAyIGNsb2NrIHNwZWVkIDMwMGsgKi8KIAlyZXQgPSBhZjkwMzVfd3Jf
-cmVnKGQsIDB4MDBmNmE3LCAweDA3KTsKQEAgLTIxMTgsNiArMjE2MSw4IEBAIHN0YXRpYyBjb25z
-dCBzdHJ1Y3QgdXNiX2RldmljZV9pZCBhZjkwMzVfaWRfdGFibGVbXSA9IHsKIAogCS8qIElUOTMw
-eCBkZXZpY2VzICovCiAJeyBEVkJfVVNCX0RFVklDRShVU0JfVklEX0lURVRFQ0gsIFVTQl9QSURf
-SVRFVEVDSF9JVDkzMDMsCisJeyBEVkJfVVNCX0RFVklDRShVU0JfVklEX0RFWEFURUssIDB4MDEw
-MCwKKwkJJml0OTMweF9wcm9wcywgIkxvZ2lsaW5rIFZHMDAyMkEiLCBOVUxMKSB9LAogCQkmaXQ5
-MzB4X3Byb3BzLCAiSVRFIDkzMDMgR2VuZXJpYyIsIE5VTEwpIH0sCiAJeyBEVkJfVVNCX0RFVklD
-RShVU0JfVklEX0FWRVJNRURJQSwgVVNCX1BJRF9BVkVSTUVESUFfVEQzMTAsCiAJCSZpdDkzMHhf
-cHJvcHMsICJBVmVyTWVkaWEgVEQzMTAgRFZCLVQyIiwgTlVMTCkgfSwKLS0gCjIuMjAuMQoK
---0000000000003ac0f70593e0be20--
+Sasha
