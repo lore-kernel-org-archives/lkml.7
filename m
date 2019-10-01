@@ -2,132 +2,102 @@ Return-Path: <SRS0=YRFP=X2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A036C352AA
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 11:42:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC5CCC388F3
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 11:43:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D6D8A21D7B
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 11:42:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B2B8821D71
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 11:43:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569930170;
-	bh=vKnirlEY8QuvMbSTakpR2y6j4KigYy1nldiqKGh+gcg=;
-	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
-	b=BC/mzHEv5nPZI6jxXr6yMUZPhx+/6X0W80XrwkoYQ7zYxSQEbwL+ykjWZq99ung1w
-	 rGFd7SUkBARstx6RCw5qtr6OWb+m4j/tGoO1wOA6GzH6KAeKtcZsOYVoQUI2wsKRl9
-	 C9le63/F1rmvyA+NoWuTj3/bdxZJs+U3Z1/sM4vI=
+	s=default; t=1569930188;
+	bh=tJR5J/Rh2DvJ4Fsv74waKrrmgsTKjIPuw/3Vb14e/Vk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=TrpmS1jzy+Q3y/sK7aDAkzEHxlmfjsQvQDEUMAsZnFz/VyAf4sKbv3HmPoEIGdWi/
+	 MXE4wbzFxppzU/NiV8/8mMvD4IFKjkeogZBfSfaLpjTwP5OH7cLg2cOhm98qCk9Los
+	 dHZZxu75ZERixBtOxmU6AqgyHF7WObdmWwxCCUZQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387860AbfJALmt (ORCPT
+        id S2387869AbfJALnI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Oct 2019 07:42:49 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:40542 "EHLO
-        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387465AbfJALk6 (ORCPT
+        Tue, 1 Oct 2019 07:43:08 -0400
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:43857 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732551AbfJALnH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Oct 2019 07:40:58 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=sirena.org.uk; s=20170815-heliosphere; h=Date:Message-Id:In-Reply-To:
-        Subject:Cc:To:From:Sender:Reply-To:MIME-Version:Content-Type:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
-        List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
-        List-Archive; bh=ZGl+hCx9u/66B7tvLuoBxNOYAm3sNLNizym3DyA34fs=; b=hGjRKc5zycsW
-        CPYR6e2IPZO68ULxAdUEptle9zMo6ktB6gTeZN86uQWLQ4iVEKZEigYGKtttEjR7sSsQKLZ/KP22R
-        7ZyAUeZCqjf7oMOM/yuNvXGODmDMdVJqWWQ36VEJcL+V/JqscXWamMcrPTdbZOi3CfdTUZQ9iUSVy
-        W19ro=;
-Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=ypsilon.sirena.org.uk)
-        by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <broonie@sirena.co.uk>)
-        id 1iFGWO-0004T4-8k; Tue, 01 Oct 2019 11:40:48 +0000
-Received: by ypsilon.sirena.org.uk (Postfix, from userid 1000)
-        id AA2AA2742A10; Tue,  1 Oct 2019 12:40:47 +0100 (BST)
-From:   Mark Brown <broonie@kernel.org>
-To:     Colin Ian King <colin.king@canonical.com>
-Cc:     alsa-devel@alsa-project.org, Bard Liao <bardliao@realtek.com>,
-        Jaroslav Kysela <perex@perex.cz>,
-        kernel-janitors@vger.kernel.org,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>,
-        Oder Chiou <oder_chiou@realtek.com>,
-        Takashi Iwai <tiwai@suse.com>
-Subject: Applied "ASoC: rt5663: clean up indentation issues" to the asoc tree
-In-Reply-To: <20190925100330.20695-1-colin.king@canonical.com>
-X-Patchwork-Hint: ignore
-Message-Id: <20191001114047.AA2AA2742A10@ypsilon.sirena.org.uk>
-Date:   Tue,  1 Oct 2019 12:40:47 +0100 (BST)
+        Tue, 1 Oct 2019 07:43:07 -0400
+Received: by mail-ot1-f66.google.com with SMTP id o44so11219832ota.10;
+        Tue, 01 Oct 2019 04:43:07 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=qBJxEX/eYnXyleU23su6cmwpDx2vW/AsucVLt4T1oY4=;
+        b=SrsvjXJAyeqsNBsGElZzT0KGkSpYuK7sgq24G1As8ftzrIo5rti/JbqiykhlyXFgf5
+         JiFMXxcYB46QQFKQLv51qlcLKR76vvmZMb850QW7WDRNCv1NaxCNfhN2NIpuCsEwtQRA
+         JYZ11SzpZo2SicOb9h7OS9vCAlbNGmdFze4CGAGhwV0j4O0j/rpfoiv/+o2MnCtivnfR
+         wOPs4SM40cggEScQYnNGPwtxAehpP1Tv1FczsjQINj/xGtGPVshdS9ySoOiEKKNcWYuu
+         itY6TkXQOduNJ0j/lIG1r7bOP4MKbPQ72ef0+U50YJ1YHj7gVznkrbm1d37kUAjurMrI
+         8TXQ==
+X-Gm-Message-State: APjAAAXQ56GkXLcwBCBnG/O/fGmPNIHRqrJcbGnjZ9X5LtmjBGifsg+b
+        6oHsot2LswliCmgOb6DWkFS3Xu+4Wg==
+X-Google-Smtp-Source: APXvYqzG8a5/BqVOShp3MMjA8cBOESjkC8SFtqntj1uGWf40TDhUIGK4H9QgRbGE2/PDdzHrHHNLYw==
+X-Received: by 2002:a9d:3b26:: with SMTP id z35mr17205216otb.182.1569930186825;
+        Tue, 01 Oct 2019 04:43:06 -0700 (PDT)
+Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id q199sm5116011oic.16.2019.10.01.04.43.06
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 01 Oct 2019 04:43:06 -0700 (PDT)
+Date:   Tue, 1 Oct 2019 06:43:05 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Gareth Williams <gareth.williams.jx@renesas.com>
+Cc:     Mark Brown <broonie@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Phil Edworthy <phil.edworthy@renesas.com>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        linux-spi@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Gareth Williams <gareth.williams.jx@renesas.com>
+Subject: Re: [PATCH v2 1/4] dt: spi: Add Renesas RZ/N1 binding documentation
+Message-ID: <20191001114305.GA27944@bogus>
+References: <1568793876-9009-1-git-send-email-gareth.williams.jx@renesas.com>
+ <1568793876-9009-2-git-send-email-gareth.williams.jx@renesas.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1568793876-9009-2-git-send-email-gareth.williams.jx@renesas.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The patch
+On Wed, 18 Sep 2019 09:04:33 +0100, Gareth Williams wrote:
+> From: Phil Edworthy <phil.edworthy@renesas.com>
+> 
+> The Renesas RZ/N1 SPI Controller is based on the Synopsys DW SSI, but has
+> additional registers for software CS control and DMA. This patch does not
+> address the changes required for DMA support, it simply adds the compatible
+> string. The CS functionality is not very useful and also not needed as
+> Linux can use gpios for the CS signals.
+> 
+> Add a compatible string to handle any unforeseen issues that may arise, and
+> pave the way for DMA support.
+> 
+> Signed-off-by: Gareth Williams <gareth.williams.jx@renesas.com>
+> Signed-off-by: Phil Edworthy <phil.edworthy@renesas.com>
+> ---
+> Note: All the other manufacturers detail their compatible strings in
+> snps,dw-apb-ssi.txt. I think it makes sense for rzn1 to be in it's own file
+> due to the changes made to the peripheral for DMA support.
+> 
+> v2:
+>  - No changes.
+> ---
+>  Documentation/devicetree/bindings/spi/renesas,rzn1-spi.txt | 11 +++++++++++
+>  1 file changed, 11 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/spi/renesas,rzn1-spi.txt
+> 
 
-   ASoC: rt5663: clean up indentation issues
-
-has been applied to the asoc tree at
-
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-5.5
-
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.  
-
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
-
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
-
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
-
-Thanks,
-Mark
-
-From bd1468f252e85280b71a069a2255842d78133cc4 Mon Sep 17 00:00:00 2001
-From: Colin Ian King <colin.king@canonical.com>
-Date: Wed, 25 Sep 2019 11:03:30 +0100
-Subject: [PATCH] ASoC: rt5663: clean up indentation issues
-
-There are two break statements that are indented one level too deeply,
-remove the extraneous tabs.
-
-Signed-off-by: Colin Ian King <colin.king@canonical.com>
-Link: https://lore.kernel.org/r/20190925100330.20695-1-colin.king@canonical.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
----
- sound/soc/codecs/rt5663.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/sound/soc/codecs/rt5663.c b/sound/soc/codecs/rt5663.c
-index 2943692f66ed..e6c1ec6c426e 100644
---- a/sound/soc/codecs/rt5663.c
-+++ b/sound/soc/codecs/rt5663.c
-@@ -3644,7 +3644,7 @@ static int rt5663_i2c_probe(struct i2c_client *i2c,
- 		regmap_update_bits(rt5663->regmap, RT5663_PWR_ANLG_1,
- 			RT5663_LDO1_DVO_MASK | RT5663_AMP_HP_MASK,
- 			RT5663_LDO1_DVO_0_9V | RT5663_AMP_HP_3X);
--			break;
-+		break;
- 	case CODEC_VER_0:
- 		regmap_update_bits(rt5663->regmap, RT5663_DIG_MISC,
- 			RT5663_DIG_GATE_CTRL_MASK, RT5663_DIG_GATE_CTRL_EN);
-@@ -3663,7 +3663,7 @@ static int rt5663_i2c_probe(struct i2c_client *i2c,
- 		regmap_update_bits(rt5663->regmap, RT5663_TDM_2,
- 			RT5663_DATA_SWAP_ADCDAT1_MASK,
- 			RT5663_DATA_SWAP_ADCDAT1_LL);
--			break;
-+		break;
- 	default:
- 		dev_err(&i2c->dev, "%s:Unknown codec type\n", __func__);
- 	}
--- 
-2.20.1
-
+Reviewed-by: Rob Herring <robh@kernel.org>
