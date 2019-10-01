@@ -2,471 +2,242 @@ Return-Path: <SRS0=YRFP=X2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65FD8ECE587
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 21:58:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60D05ECE587
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 21:58:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1CF8321924
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 21:58:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ip5pECzN"
+	by mail.kernel.org (Postfix) with ESMTP id 2B3352133F
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 21:58:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726656AbfJAV6I (ORCPT
+        id S1727720AbfJAV6Q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Oct 2019 17:58:08 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:33214 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725865AbfJAV6I (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Oct 2019 17:58:08 -0400
-Received: by mail-wm1-f68.google.com with SMTP id r17so3500055wme.0
-        for <linux-kernel@vger.kernel.org>; Tue, 01 Oct 2019 14:58:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=ro11dA7TxHLX24FDU6vZ1buOPYRppuSXQj+xZJhqYuA=;
-        b=Ip5pECzNMMqbQdMIW+4xfff8Kzd1tyUz8vrh/JUaAtSfIiNkWBU8QGlgzS8SemB5fy
-         2pm8CIAvTXYmaemkJfRXNr6z/8UjHdwuFM4PpSYWNSqMcKDZk1VwRFGbKNNwMRn4Q22P
-         PIyoL49vW2OgYFUTNkHBlBE5d8RNGmrjEZU8uNneLDHzXSp88OUwzC8FHsWpUf1VqFjo
-         w996SuwPk+gKjUlqwt3Chy6U0+7+anN5TF0og2rCEzdyYDQXd9lp5DgP2US5Fgji145q
-         Vn0/biRftsbrvq9WEHid5wJerquAYqN+FFsA5nIO1nVVqfS3MN+2UbxwVaJQ3wJwahku
-         yZSQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=ro11dA7TxHLX24FDU6vZ1buOPYRppuSXQj+xZJhqYuA=;
-        b=J7AG4+vsazOhpgdc4zo+hFv891DJDxHT3Cu7RYI+pFWBk7MCwg2IwJvX7pbKF/zL1g
-         l/WBfRgKFpjMXiLB1PXFA3B/T4/nYT3sC3To7ce07VgOLe0LxXbjmoMiCrwhRJBdpoOL
-         YgqInSURzwB+8MpDc1tmFXTSY4jVaafF4edqYihEOdiCNMjxNWkSdNNvsj4QWW+Jzway
-         56IYcgvC97ZuHJXmi2DzaINm2ThpaysjughnFV+T8GTrkyHTP4UVWq6lkdyt2Bkfpo87
-         qL+Uyj7xZQ1v9qVAhqkIiKT46wKXEc4cHdNmOBg5ll9M0UDhQsaAieUGoY1l0VpH24C2
-         fXmg==
-X-Gm-Message-State: APjAAAV6NI59wOduhsbgMBg63DpeYrELWNfqpbM8HoSG7EJP8wCQZby2
-        rg1HXJ46iiyB4hi4VSEVrz0=
-X-Google-Smtp-Source: APXvYqxIbBXqUpTcpjJnq/96iof0haWGqxN2jtWZFOd7XqoaNJtN1dgMQwGGkUjVdf2eNr5sfzsSmg==
-X-Received: by 2002:a1c:cb83:: with SMTP id b125mr185150wmg.43.1569967084567;
-        Tue, 01 Oct 2019 14:58:04 -0700 (PDT)
-Received: from narunkot.lan (97e42f4c.skybroadband.com. [151.228.47.76])
-        by smtp.gmail.com with ESMTPSA id b5sm3309483wmj.18.2019.10.01.14.58.03
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 01 Oct 2019 14:58:03 -0700 (PDT)
-From:   Okash Khawaja <okash.khawaja@gmail.com>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Samuel Thibault <samuel.thibault@ens-lyon.org>,
-        Gregory Nowak <greg@gregn.net>, linux-kernel@vger.kernel.org
-Cc:     Jiri Slaby <jslaby@suse.com>, William Hubbs <w.d.hubbs@gmail.com>,
-        Chris Brannon <chris@the-brannons.com>,
-        Kirk Reiser <kirk@reisers.ca>,
-        John Covici <covici@ccs.covici.com>,
-        devel@driverdev.osuosl.org, speakup@linux-speakup.org,
-        Okash Khawaja <okash.khawaja@gmail.com>
-Subject: [PATCH v2] staging: speakup: document sysfs attributes
-Date:   Tue,  1 Oct 2019 22:47:29 +0100
-Message-Id: <20191001214729.1770-1-okash.khawaja@gmail.com>
-X-Mailer: git-send-email 2.21.0
+        Tue, 1 Oct 2019 17:58:16 -0400
+Received: from mx2.suse.de ([195.135.220.15]:38854 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725865AbfJAV6P (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Oct 2019 17:58:15 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id BE58FAD3E;
+        Tue,  1 Oct 2019 21:58:12 +0000 (UTC)
+Subject: Re: [patch for-5.3 0/4] revert immediate fallback to remote hugepages
+To:     David Rientjes <rientjes@google.com>
+Cc:     Michal Hocko <mhocko@kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Mel Gorman <mgorman@suse.de>,
+        "Kirill A. Shutemov" <kirill@shutemov.name>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux-MM <linux-mm@kvack.org>
+References: <alpine.DEB.2.21.1909041252230.94813@chino.kir.corp.google.com>
+ <20190904205522.GA9871@redhat.com>
+ <alpine.DEB.2.21.1909051400380.217933@chino.kir.corp.google.com>
+ <20190909193020.GD2063@dhcp22.suse.cz>
+ <20190925070817.GH23050@dhcp22.suse.cz>
+ <alpine.DEB.2.21.1909261149380.39830@chino.kir.corp.google.com>
+ <20190927074803.GB26848@dhcp22.suse.cz>
+ <CAHk-=wgba5zOJtGBFCBP3Oc1m4ma+AR+80s=hy=BbvNr3GqEmA@mail.gmail.com>
+ <20190930112817.GC15942@dhcp22.suse.cz>
+ <20191001054343.GA15624@dhcp22.suse.cz>
+ <fac13297-424f-33b0-e01d-d72b949a73fe@suse.cz>
+ <alpine.DEB.2.21.1910011318050.38265@chino.kir.corp.google.com>
+From:   Vlastimil Babka <vbabka@suse.cz>
+Autocrypt: addr=vbabka@suse.cz; prefer-encrypt=mutual; keydata=
+ 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
+Message-ID: <a5abc877-26de-ed3c-eb33-71474301c852@suse.cz>
+Date:   Tue, 1 Oct 2019 23:54:14 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.0
 MIME-Version: 1.0
+In-Reply-To: <alpine.DEB.2.21.1910011318050.38265@chino.kir.corp.google.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Speakup exposes a set of sysfs attributes under
-/sys/accessibility/speakup/ for user-space to interact with and
-configure speakup's kernel modules. This patch describes those
-attributes. Some attributes either lack a description or contain
-incomplete description. They are marked wit TODO.
+On 10/1/19 10:31 PM, David Rientjes wrote:
+> On Tue, 1 Oct 2019, Vlastimil Babka wrote:
+> 
+>> diff --git a/mm/mempolicy.c b/mm/mempolicy.c
+>> index 4ae967bcf954..2c48146f3ee2 100644
+>> --- a/mm/mempolicy.c
+>> +++ b/mm/mempolicy.c
+>> @@ -2129,18 +2129,20 @@ alloc_pages_vma(gfp_t gfp, int order, struct vm_area_struct *vma,
+>>  		nmask = policy_nodemask(gfp, pol);
+>>  		if (!nmask || node_isset(hpage_node, *nmask)) {
+>>  			mpol_cond_put(pol);
+>> +			/*
+>> +			 * First, try to allocate THP only on local node, but
+>> +			 * don't reclaim unnecessarily, just compact.
+>> +			 */
+>>  			page = __alloc_pages_node(hpage_node,
+>> -						gfp | __GFP_THISNODE, order);
+>> +				gfp | __GFP_THISNODE | __GFP_NORETRY, order);
+> 
+> The page allocator has heuristics to determine when compaction should be 
+> retried, reclaim should be retried, and the allocation itself should retry 
+> for high-order allocations (see PAGE_ALLOC_COSTLY_ORDER).
 
-Authored-by: Gregory Nowak <greg@gregn.net>
-Submitted-by: Okash Khawaja <okash.khawaja@gmail.com>
-Signed-off-by: Okash Khawaja <okash.khawaja@gmail.com>
----
- drivers/staging/speakup/sysfs-driver-speakup | 369 +++++++++++++++++++
- 1 file changed, 369 insertions(+)
- create mode 100644 drivers/staging/speakup/sysfs-driver-speakup
+Yes, and flags like __GFP_NORETRY and __GFP_RETRY_MAYFAIL affect these
+heuristics according to the caller's willingness to wait vs availability
+of some kind of fallback.
+  
+> PAGE_ALLOC_COSTLY_ORDER exists solely to avoid poor allocator behavior 
+> when reclaim itself is unlikely -- or disruptive enough -- in making that 
+> amount of contiguous memory available.
 
-diff --git a/drivers/staging/speakup/sysfs-driver-speakup b/drivers/staging/speakup/sysfs-driver-speakup
-new file mode 100644
-index 000000000000..be3f5d6962e9
---- /dev/null
-+++ b/drivers/staging/speakup/sysfs-driver-speakup
-@@ -0,0 +1,369 @@
-+What:		/sys/accessibility/speakup/attrib_bleep
-+KernelVersion:	2.6
-+Contact:	speakup@linux-speakup.org
-+Description:	Beeps the PC speaker when there is an attribute change such as
-+		foreground or background color when using speakup review
-+		commands. One = on, zero = off.
-+
-+What:		/sys/accessibility/speakup/bell_pos
-+KernelVersion:	2.6
-+Contact:	speakup@linux-speakup.org
-+Description:	This works much like a typewriter bell. If for example 72 is
-+		echoed to bell_pos, it will beep the PC speaker when typing on
-+		a line past character 72.
-+
-+What:		/sys/accessibility/speakup/bleeps
-+KernelVersion:	2.6
-+Contact:	speakup@linux-speakup.org
-+Description:	This controls whether one hears beeps through the PC speaker
-+		when using speakup's review commands.
-+		TODO: what values does it accept?
-+
-+What:		/sys/accessibility/speakup/bleep_time
-+KernelVersion:	2.6
-+Contact:	speakup@linux-speakup.org
-+Description:	This controls the duration of the PC speaker beeps speakup
-+		produces.
-+		TODO: What are the units? Jiffies?
-+
-+What:		/sys/accessibility/speakup/cursor_time
-+KernelVersion:	2.6
-+Contact:	speakup@linux-speakup.org
-+Description:	This controls cursor delay when using arrow keys. When a
-+		connection is very slow, with the default setting, when moving
-+		with  the arrows, or backspacing etc. speakup says the incorrect
-+		characters. Set this to a higher value to adjust for the delay
-+		and better synchronisation between cursor position and speech.
-+
-+What:		/sys/accessibility/speakup/delimiters
-+KernelVersion:	2.6
-+Contact:	speakup@linux-speakup.org
-+Description:	Delimit a word from speakup.
-+		TODO: add more info
-+
-+What:		/sys/accessibility/speakup/ex_num
-+KernelVersion:	2.6
-+Contact:	speakup@linux-speakup.org
-+Description:	TODO:
-+
-+What:		/sys/accessibility/speakup/key_echo
-+KernelVersion:	2.6
-+Contact:	speakup@linux-speakup.org
-+Description:	Controls if speakup speaks keys when they are typed. One = on,
-+		zero = off or don't echo keys.
-+
-+What:		/sys/accessibility/speakup/keymap
-+KernelVersion:	2.6
-+Contact:	speakup@linux-speakup.org
-+Description:	Speakup keymap remaps keys to Speakup functions.
-+		It uses a binary
-+		format. A special program called genmap is needed to compile a
-+		textual  keymap into the binary format which is then loaded into
-+		/sys/accessibility/speakup/keymap.
-+
-+What:		/sys/accessibility/speakup/no_interrupt
-+KernelVersion:	2.6
-+Contact:	speakup@linux-speakup.org
-+Description:	Controls if typing interrupts output from speakup. With
-+		no_interrupt set to zero, typing on the keyboard will interrupt
-+		speakup if for example
-+		the say screen command is used before the
-+		entire screen  is read.
-+		With no_interrupt set to one, if the say
-+		screen command is used, and one then types on the keyboard,
-+		speakup will continue to say the whole screen regardless until
-+		it finishes.
-+
-+What:		/sys/accessibility/speakup/punc_all
-+KernelVersion:	2.6
-+Contact:	speakup@linux-speakup.org
-+Description:	This is a list of all the punctuation speakup should speak when
-+		punc_level is set to four.
-+
-+What:		/sys/accessibility/speakup/punc_level
-+KernelVersion:	2.6
-+Contact:	speakup@linux-speakup.org
-+Description:	Controls the level of punctuation spoken as the screen is
-+		displayed, not reviewed. Levels range from zero no punctuation,
-+		to four, all punctuation. One corresponds to punc_some, two
-+		corresponds to punc_most, and three as well as four both
-+		correspond to punc_all. Some hardware synthesizers may have
-+		different levels each corresponding to  three and four for
-+		punc_level. Also note that if punc_level is set to zero, and
-+		key_echo is set to one, typed punctuation is still spoken as it
-+		is typed.
-+
-+What:		/sys/accessibility/speakup/punc_most
-+KernelVersion:	2.6
-+Contact:	speakup@linux-speakup.org
-+Description:	This is a list of all the punctuation speakup should speak when
-+		punc_level is set to two.
-+
-+What:		/sys/accessibility/speakup/punc_some
-+KernelVersion:	2.6
-+Contact:	speakup@linux-speakup.org
-+Description:	This is a list of all the punctuation speakup should speak when
-+		punc_level is set to one.
-+
-+What:		/sys/accessibility/speakup/reading_punc
-+KernelVersion:	2.6
-+Contact:	speakup@linux-speakup.org
-+Description:	Almost the same as punc_level, the differences being that
-+		reading_punc controls the level of punctuation when reviewing
-+		the screen with speakup's screen review commands. The other
-+		difference is that reading_punc set to three speaks punc_all,
-+		and reading_punc set to four speaks all punctuation, including
-+		spaces.
-+
-+What:		/sys/accessibility/speakup/repeats
-+KernelVersion:	2.6
-+Contact:	speakup@linux-speakup.org
-+Description:	A list of characters speakup repeats. Normally, when there are
-+		more than three characters in a row, speakup
-+		just reads three of
-+		those characters. For example, "......" would be read as dot,
-+		dot, dot. If a . is added to the list of characters in repeats,
-+		"......" would be read as dot, dot, dot, times six.
-+
-+What:		/sys/accessibility/speakup/say_control
-+KernelVersion:	2.6
-+Contact:	speakup@linux-speakup.org
-+Description:	If set to one, speakup speaks shift, alt and control when those
-+		keys are pressed. If say_control is set to zero, shift, ctrl,
-+		and alt are not spoken when they are pressed.
-+
-+What:		/sys/accessibility/speakup/say_word_ctl
-+KernelVersion:	2.6
-+Contact:	speakup@linux-speakup.org
-+Description:	TODO:
-+
-+What:		/sys/accessibility/speakup/silent
-+KernelVersion:	2.6
-+Contact:	speakup@linux-speakup.org
-+Description:	TODO:
-+
-+What:		/sys/accessibility/speakup/spell_delay
-+KernelVersion:	2.6
-+Contact:	speakup@linux-speakup.org
-+Description:	This controls how fast a word is spelled
-+		when speakup's say word
-+		review command is pressed twice quickly to speak the current
-+		word being reviewed. Zero just speaks the letters one after
-+		another, while values one through four
-+		seem to introduce more of
-+		a pause between the spelling of each letter by speakup.
-+
-+What:		/sys/accessibility/speakup/synth
-+KernelVersion:	2.6
-+Contact:	speakup@linux-speakup.org
-+Description:	Gets or sets the synthesizer driver currently in use. Reading
-+		synth returns the synthesizer driver currently in use. Writing
-+		synth switches to the given synthesizer driver, provided it is
-+		either built into the kernel, or already loaded as a module.
-+
-+What:		/sys/accessibility/speakup/synth_direct
-+KernelVersion:	2.6
-+Contact:	speakup@linux-speakup.org
-+Description:	Sends whatever is written to synth_direct
-+		directly to the speech synthesizer in use, bypassing speakup.
-+		This could be used to make the synthesizer speak
-+		a string, or to
-+		send control sequences to the synthesizer to change how the
-+		synthesizer behaves.
-+
-+What:		/sys/accessibility/speakup/version
-+KernelVersion:	2.6
-+Contact:	speakup@linux-speakup.org
-+Description:	Reading version returns the version of speakup, and the version
-+		of the synthesizer driver currently in use.
-+
-+What:		/sys/accessibility/speakup/i18n/announcements
-+KernelVersion:	2.6
-+Contact:	speakup@linux-speakup.org
-+Description:	This file contains various general announcements, most of which
-+		cannot be categorized.  You will find messages such as "You
-+		killed Speakup", "I'm alive", "leaving help", "parked",
-+		"unparked", and others. You will also find the names of the
-+		screen edges and cursor tracking modes here.
-+
-+What:		/sys/accessibility/speakup/i18n/chartab
-+KernelVersion:	2.6
-+Contact:	speakup@linux-speakup.org
-+Description:	TODO
-+
-+What:		/sys/accessibility/speakup/i18n/ctl_keys
-+KernelVersion:	2.6
-+Contact:	speakup@linux-speakup.org
-+Description:	Here, you will find names of control keys.  These are used with
-+		Speakup's say_control feature.
-+
-+What:		/sys/accessibility/speakup/i18n/function_names
-+KernelVersion:	2.6
-+Contact:	speakup@linux-speakup.org
-+Description:	Here, you will find a list of names for Speakup functions.
-+		These are used by the help system.  For example, suppose that
-+		you have activated help mode, and you pressed
-+		keypad 3.  Speakup
-+		says: "keypad 3 is character, say next."
-+		The message "character, say next" names a Speakup function, and
-+		it comes from this function_names file.
-+
-+What:		/sys/accessibility/speakup/i18n/states
-+KernelVersion:	2.6
-+Contact:	speakup@linux-speakup.org
-+Description:	This file contains names for key states.
-+		Again, these are part of the help system.  For instance, if you
-+		had pressed speakup + keypad 3, you would hear:
-+		"speakup keypad 3 is go to bottom edge."
-+		The speakup key is depressed, so the name of the key state is
-+		speakup.
-+		This part of the message comes from the states collection.
-+
-+What:		/sys/accessibility/speakup/i18n/characters
-+KernelVersion:	2.6
-+Contact:	speakup@linux-speakup.org
-+Description:	Through this sys entry, Speakup gives you the ability to change
-+		how Speakup pronounces a given character. You could, for
-+		example, change how some punctuation characters are spoken. You
-+		can even change how Speakup will pronounce certain letters. For
-+		further details see '12.  Changing the Pronunciation of
-+		Characters' in Speakup User's Guide (file spkguide.txt in
-+		source).
-+
-+What:		/sys/accessibility/speakup/i18n/colors
-+KernelVersion:	2.6
-+Contact:	speakup@linux-speakup.org
-+Description:	When you use the "say attributes" function, Speakup says the
-+		name of the foreground and background colors.  These names come
-+		from the i18n/colors file.
-+
-+What:		/sys/accessibility/speakup/i18n/formatted
-+KernelVersion:	2.6
-+Contact:	speakup@linux-speakup.org
-+Description:	This group of messages contains embedded formatting codes, to
-+		specify the type and width of displayed data.  If you change
-+		these, you must preserve all of the formatting codes, and they
-+		must appear in the order used by the default messages.
-+
-+What:		/sys/accessibility/speakup/i18n/key_names
-+KernelVersion:	2.6
-+Contact:	speakup@linux-speakup.org
-+Description:	Again, key_names is used by Speakup's help system.  In the
-+		previous example, Speakup said that you pressed "keypad 3."
-+		This name came from the key_names file.
-+
-+What:		/sys/accessibility/speakup/<synth-name>/
-+KernelVersion:	2.6
-+Contact:	speakup@linux-speakup.org
-+Description:	In `/sys/accessibility/speakup` is a directory corresponding to
-+		the synthesizer driver currently in use (E.G) `soft` for the
-+		soft driver. This directory contains files which control the
-+		speech synthesizer itself,
-+		as opposed to controlling the speakup
-+		screen reader. The parameters in this directory have the same
-+		names and functions across all
-+		supported synthesizers. The range
-+		of values for freq, pitch, rate, and vol is the same for all
-+		supported synthesizers, with the given range being internally
-+		mapped by the driver to  more or less fit the range of values
-+		supported for a given parameter by the individual synthesizer.
-+		Below is a description of values and  parameters for soft
-+		synthesizer, which is currently the most commonly used.
-+
-+What:		/sys/accessibility/speakup/soft/caps_start
-+KernelVersion:	2.6
-+Contact:	speakup@linux-speakup.org
-+Description:	This is the string that is sent to the synthesizer to cause it
-+		to start speaking uppercase letters. For the soft synthesizer
-+		and most others, this causes the pitch of the voice to rise
-+		above the currently set pitch.
-+
-+What:		/sys/accessibility/speakup/soft/caps_stop
-+KernelVersion:	2.6
-+Contact:	speakup@linux-speakup.org
-+Description:	This is the string sent to the synthesizer to cause it to stop
-+		speaking uppercase letters. In the case of the soft synthesizer
-+		and most others, this returns the pitch of the voice
-+		down to the
-+		currently set pitch.
-+
-+What:		/sys/accessibility/speakup/soft/delay_time
-+KernelVersion:	2.6
-+Contact:	speakup@linux-speakup.org
-+Description:	TODO:
-+
-+What:		/sys/accessibility/speakup/soft/direct
-+KernelVersion:	2.6
-+Contact:	speakup@linux-speakup.org
-+Description:	Controls if punctuation is spoken by speakup, or by the
-+		synthesizer.
-+		For example, speakup speaks ">" as "greater", while
-+		the espeak synthesizer used by the soft driver speaks "greater
-+		than". Zero lets speakup speak the punctuation. One lets the
-+		synthesizer itself speak punctuation.
-+
-+What:		/sys/accessibility/speakup/soft/freq
-+KernelVersion:	2.6
-+Contact:	speakup@linux-speakup.org
-+Description:	Gets or sets the frequency of the speech synthesizer. Range is
-+		0-9.
-+
-+What:		/sys/accessibility/speakup/soft/full_time
-+KernelVersion:	2.6
-+Contact:	speakup@linux-speakup.org
-+Description:	TODO:
-+
-+What:		/sys/accessibility/speakup/soft/jiffy_delta
-+KernelVersion:	2.6
-+Contact:	speakup@linux-speakup.org
-+Description:	This controls how many jiffys the kernel gives to the
-+		synthesizer. Setting this too high can make a system unstable,
-+		or even crash it.
-+
-+What:		/sys/accessibility/speakup/soft/pitch
-+KernelVersion:	2.6
-+Contact:	speakup@linux-speakup.org
-+Description:	Gets or sets the pitch of the synthesizer. The range is 0-9.
-+
-+What:		/sys/accessibility/speakup/soft/punct
-+KernelVersion:	2.6
-+Contact:	speakup@linux-speakup.org
-+Description:	Gets or sets the amount of punctuation spoken by the
-+		synthesizer. The range for the soft driver seems to be 0-2.
-+		TODO: How is this related to speakup's punc_level, or
-+		reading_punc.
-+
-+What:		/sys/accessibility/speakup/soft/rate
-+KernelVersion:	2.6
-+Contact:	speakup@linux-speakup.org
-+Description:	Gets or sets the rate of the synthesizer. Range is from zero
-+		slowest, to nine fastest.
-+
-+What:		/sys/accessibility/speakup/soft/tone
-+KernelVersion:	2.6
-+Contact:	speakup@linux-speakup.org
-+Description:	Gets or sets the tone of the speech synthesizer. The range for
-+		the soft driver seems to be 0-2. This seems to make no
-+		difference if using espeak and the espeakup connector.
-+		TODO: does espeakup support different tonalities?
-+
-+What:		/sys/accessibility/speakup/soft/trigger_time
-+KernelVersion:	2.6
-+Contact:	speakup@linux-speakup.org
-+Description:	TODO:
-+
-+What:		/sys/accessibility/speakup/soft/voice
-+KernelVersion:	2.6
-+Contact:	speakup@linux-speakup.org
-+Description:	Gets or sets the voice used by the synthesizer if the
-+		synthesizer can speak in more than one voice. The range for the
-+		soft driver is 0-7. Note that while espeak supports multiple
-+		voices, this parameter will not set the voice when the espeakup
-+		connector is used  between speakup and espeak.
-+
-+What:		/sys/accessibility/speakup/soft/vol
-+KernelVersion:	2.6
-+Contact:	speakup@linux-speakup.org
-+Description:	Gets or sets the volume of the speech synthesizer. Range is 0-9,
-+		with zero being the softest, and nine being the loudest.
-+
--- 
-2.21.0
+The __GFP_NORETRY check for costly orders is one of the implementation
+details of that poor allocator behavior avoidance.
 
+> Rather than papering over the poor feedback loop between compaction and 
+> reclaim that exists in the page allocator, it's probably better to improve 
+> that and determine when an allocation should fail or it's worthwhile to 
+> retry.  That's a separate topic from NUMA locality of thp.
+
+I don't disagree. But we are doing that 'papering over' already and I simply
+believe it can be done better, until we can drop it. Right now at least the
+hugetlb allocations are regressing, as Michal showed.
+
+> In other words, we should likely address how compaction and reclaim is 
+> done for all high order-allocations in the page allocator itself rather 
+> than only here for hugepage allocations and relying on specific gfp bits 
+> to be set.
+
+Well, with your patches, decisions are made based on pageblock order
+(affecting also hugetlbfs) and a specific __GFP_IO bit. I don't see how
+using a __GFP_NORETRY and costly order is worse - both are concepts
+already used to guide reclaim/compaction decisions. And it won't affect
+hugetlbfs. Also with some THP defrag modes, __GFP_NORETRY is also already
+being used.
+
+> Ask: if the allocation here should not retry regardless of why 
+> compaction failed, why should any high-order allocation (user or kernel) 
+> retry if compaction failed and at what order we should just fail?
+
+If that's refering to the quoted code above, the allocation here should not
+retry because it would lead to reclaiming just the local node, effectively
+a node reclaim mode, leading to the problems Andrea and Mel reported.
+That's because __GFP_THISNODE makes it rather specific, so we shouldn't
+conclude anything for the other kinds of allocations, as you're asking.
+
+> If 
+> hugetlb wants to stress this to the fullest extent possible, it already 
+> appropriately uses __GFP_RETRY_MAYFAIL.
+
+Which doesn't work anymore right now, and should again after this patch.
+
+> The code here is saying we care more about NUMA locality than hugepages
+
+That's why there's __GFP_THISNODE, yes.
+ 
+> simply because that's where the access latency is better and is specific 
+> to hugepages; allocation behavior for high-order pages needs to live in 
+> the page allocator.
+
+I'd rather add the __GFP_NORETRY to __GFP_THISNODE here to influence the
+allocation behavior, than reintroduce any __GFP_THISNODE checks in the
+page allocator. There are not that many __GFP_THISNODE users, but there
+are plenty of __GFP_NORETRY users, so it seems better to adjust behavior
+based on the latter flag. IIRC in the recent past you argued for putting
+back __GFP_NORETRY to all THP allocations including madvise, so why is there
+a problem now?
+
+>>  
+>>  			/*
+>> -			 * If hugepage allocations are configured to always
+>> -			 * synchronous compact or the vma has been madvised
+>> -			 * to prefer hugepage backing, retry allowing remote
+>> -			 * memory as well.
+>> +			 * If that fails, allow both compaction and reclaim,
+>> +			 * but on all nodes.
+>>  			 */
+>> -			if (!page && (gfp & __GFP_DIRECT_RECLAIM))
+>> +			if (!page)
+>>  				page = __alloc_pages_node(hpage_node,
+>> -						gfp | __GFP_NORETRY, order);
+
+Also this __GFP_NORETRY was added by your patch, so I really don't see
+why do you think it's wrong in the first allocation attempt.
+
+>> +								gfp, order);
+>>  
+>>  			goto out;
+>>  		}
+> 
+> We certainly don't want this for non-MADV_HUGEPAGE regions when thp 
+> enabled bit is not set to "always".  We'd much rather fallback to local 
+> native pages because of its improved access latency.  This is allowing all 
+> hugepage allocations to be remote even without MADV_HUGEPAGE which is not 
+> even what Andrea needs: qemu uses MADV_HUGEPAGE.
+ 
+OTOH it's better to use a remote THP than a remote base page, in case the
+local node is below watermark. But that would probably require a larger surgery
+of the allocator.
+
+But what you're saying is keep the gfp & __GFP_DIRECT_RECLAIM condition.
+I still suggest to drop the __GFP_NORETRY as that goes against MADV_HUGEPAGE.
