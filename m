@@ -6,112 +6,129 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96A97C352AA
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 09:03:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A76B8C352AA
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 09:03:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 730E021872
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 09:03:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8A2A521872
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 09:03:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733272AbfJAJDq (ORCPT
+        id S1733285AbfJAJDu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Oct 2019 05:03:46 -0400
-Received: from mx2.suse.de ([195.135.220.15]:49114 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726568AbfJAJDq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Oct 2019 05:03:46 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 53471AFF4;
-        Tue,  1 Oct 2019 09:03:44 +0000 (UTC)
-Message-ID: <196a63271591fbe0bc1fdd5a1a01a25caf5178d0.camel@suse.de>
-Subject: Re: [PATCH v2] ARM: add __always_inline to functions called from
- __get_user_check()
-From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-To:     Masahiro Yamada <yamada.masahiro@socionext.com>,
-        linux-arm-kernel@lists.infradead.org,
-        Russell King <rmk+kernel@armlinux.org.uk>
-Cc:     Kate Stewart <kstewart@linuxfoundation.org>,
-        Arnd Bergmann <arnd@arndb.de>, Enrico Weigelt <info@metux.net>,
-        Vincent Whitchurch <vincent.whitchurch@axis.com>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Russell King <linux@armlinux.org.uk>,
-        Stefan Agner <stefan@agner.ch>, linux-kernel@vger.kernel.org,
-        Allison Randal <allison@lohutok.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Olof Johansson <olof@lixom.net>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Julien Thierry <julien.thierry.kdev@gmail.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Tue, 01 Oct 2019 11:03:40 +0200
-In-Reply-To: <20191001083701.27207-1-yamada.masahiro@socionext.com>
-References: <20191001083701.27207-1-yamada.masahiro@socionext.com>
-Content-Type: multipart/signed; micalg="pgp-sha256";
-        protocol="application/pgp-signature"; boundary="=-1pzhYzFOaS2Q7mcGcHoY"
-User-Agent: Evolution 3.32.4 
+        Tue, 1 Oct 2019 05:03:50 -0400
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:34598 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726568AbfJAJDt (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Oct 2019 05:03:49 -0400
+Received: by mail-ot1-f66.google.com with SMTP id m19so10913880otp.1;
+        Tue, 01 Oct 2019 02:03:48 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=tHb/q0D5mq2W+1z309ghRX/uOTtJacVT4nymLRBbTcY=;
+        b=htkYd76D3kiDKEcy1bWVrY8+LBE/JTkBI+mpbmAmo2K653WzDQPZopJzPaUzyvcsD8
+         PUcIsjBHr4bk3NFJ5aX9ecsYZIv44d0o1Kl3tC6e6kB+LWm2ydN6iL7CNkI3TsOpGpB5
+         QY1OHSFgiZmHAnudnKRjUyL4CU27rK2x+dLLeeG1Eu19JwE06buCpYwGOrXicxUNlZZv
+         ttrROxujt0T89cVt+1FEVtNTp2GqwqN01vxkFoFknhLC+bA7Qb297JsqydOuxaKuJsM5
+         v93nTjBmphU/RKczONQdAaFyp8Fucjeq3t7XyEDX2qk3aNsaGSYw36250H48rEzIDLid
+         4G2Q==
+X-Gm-Message-State: APjAAAWlkXeMrrIqMKKayfl1MDbu8F7jjCsSTihgEGNfhmXYf6NwYbgE
+        uT7g7pqxhSt5IdIZRwCnyl3+jZUMhf8pa4tqo7s=
+X-Google-Smtp-Source: APXvYqyt8Fr5MNj8xgi9zNhfzNfGel2OzKPctcEPWiUOWLO4+kzE7HEg5SIyhaqF7N+eaUzd0/bjIui+DRWnMOK6Apw=
+X-Received: by 2002:a9d:404d:: with SMTP id o13mr17494480oti.39.1569920628345;
+ Tue, 01 Oct 2019 02:03:48 -0700 (PDT)
 MIME-Version: 1.0
+References: <20190812150452.27983-1-ard.biesheuvel@linaro.org>
+ <20190812150452.27983-5-ard.biesheuvel@linaro.org> <CAMuHMdXY5UH4KhcaNVuxa8-+GN-4bjyvCd0wzPYuFBY5Ch=fNA@mail.gmail.com>
+ <CAKv+Gu-KPypju6roQaVKP0DHE3aZijVVqLGwNyhiRSNqn1r6-w@mail.gmail.com>
+In-Reply-To: <CAKv+Gu-KPypju6roQaVKP0DHE3aZijVVqLGwNyhiRSNqn1r6-w@mail.gmail.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Tue, 1 Oct 2019 11:03:37 +0200
+Message-ID: <CAMuHMdV9m+Dbch46cVNqtn4cyB74qgHa18Qcm=HQv7Wx1rk==w@mail.gmail.com>
+Subject: Re: [PATCH 4/5] efi: Export Runtime Configuration Interface table to sysfs
+To:     Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Cc:     Narendra K <Narendra.K@dell.com>,
+        linux-efi <linux-efi@vger.kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        James Morse <james.morse@arm.com>,
+        Mario Limonciello <mario.limonciello@dell.com>,
+        Xiaofei Tan <tanxiaofei@huawei.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Ard,
 
---=-1pzhYzFOaS2Q7mcGcHoY
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+On Tue, Oct 1, 2019 at 10:54 AM Ard Biesheuvel
+<ard.biesheuvel@linaro.org> wrote:
+> On Tue, 1 Oct 2019 at 10:51, Geert Uytterhoeven <geert@linux-m68k.org> wrote:
+> > On Mon, Aug 12, 2019 at 5:07 PM Ard Biesheuvel
+> > <ard.biesheuvel@linaro.org> wrote:
+> > > From: Narendra K <Narendra.K@dell.com>
+> > >
+> > > System firmware advertises the address of the 'Runtime
+> > > Configuration Interface table version 2 (RCI2)' via
+> > > an EFI Configuration Table entry. This code retrieves the RCI2
+> > > table from the address and exports it to sysfs as a binary
+> > > attribute 'rci2' under /sys/firmware/efi/tables directory.
+> > > The approach adopted is similar to the attribute 'DMI' under
+> > > /sys/firmware/dmi/tables.
+> > >
+> > > RCI2 table contains BIOS HII in XML format and is used to populate
+> > > BIOS setup page in Dell EMC OpenManage Server Administrator tool.
+> > > The BIOS setup page contains BIOS tokens which can be configured.
+> > >
+> > > Signed-off-by: Narendra K <Narendra.K@dell.com>
+> > > Reviewed-by: Mario Limonciello <mario.limonciello@dell.com>
+> > > Signed-off-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+> >
+> > Thanks, this is now commit 1c5fecb61255aa12 ("efi: Export Runtime
+> > Configuration Interface table to sysfs").
+> >
+> > > --- a/drivers/firmware/efi/Kconfig
+> > > +++ b/drivers/firmware/efi/Kconfig
+> > > @@ -180,6 +180,19 @@ config RESET_ATTACK_MITIGATION
+> > >           have been evicted, since otherwise it will trigger even on clean
+> > >           reboots.
+> > >
+> > > +config EFI_RCI2_TABLE
+> > > +       bool "EFI Runtime Configuration Interface Table Version 2 Support"
+> > > +       help
+> > > +         Displays the content of the Runtime Configuration Interface
+> > > +         Table version 2 on Dell EMC PowerEdge systems as a binary
+> > > +         attribute 'rci2' under /sys/firmware/efi/tables directory.
+> > > +
+> > > +         RCI2 table contains BIOS HII in XML format and is used to populate
+> > > +         BIOS setup page in Dell EMC OpenManage Server Administrator tool.
+> > > +         The BIOS setup page contains BIOS tokens which can be configured.
+> > > +
+> > > +         Say Y here for Dell EMC PowerEdge systems.
+> >
+> > A quick Google search tells me these are Intel Xeon.
+> > Are arm/arm64/ia64 variants available, too?
+> > If not, this should be protected by "depends on x86" ("|| COMPILE_TEST"?).
+>
+> The code in question is entirely architecture agnostic, and defaults
+> to 'n', so I am not convinced this is needed. (It came up in the
+> review as well)
 
-On Tue, 2019-10-01 at 17:37 +0900, Masahiro Yamada wrote:
-> KernelCI reports that bcm2835_defconfig is no longer booting since
-> commit ac7c3e4ff401 ("compiler: enable CONFIG_OPTIMIZE_INLINING
-> forcibly") (https://lkml.org/lkml/2019/9/26/825).
->=20
-> I also received a regression report from Nicolas Saenz Julienne
-> (https://lkml.org/lkml/2019/9/27/263).
->=20
-> This problem has cropped up on bcm2835_defconfig because it enables
-> CONFIG_CC_OPTIMIZE_FOR_SIZE. The compiler tends to prefer not inlining
-> functions with -Os. I was able to reproduce it with other boards and
-> defconfig files by manually enabling CONFIG_CC_OPTIMIZE_FOR_SIZE.
->=20
-> The __get_user_check() specifically uses r0, r1, r2 registers.
-> So, uaccess_save_and_enable() and uaccess_restore() must be inlined.
-> Otherwise, those register assignments would be entirely dropped,
-> according to my analysis of the disassembly.
->=20
-> Prior to commit 9012d011660e ("compiler: allow all arches to enable
-> CONFIG_OPTIMIZE_INLINING"), the 'inline' marker was always enough for
-> inlining functions, except on x86.
->=20
-> Since that commit, all architectures can enable CONFIG_OPTIMIZE_INLINING.
-> So, __always_inline is now the only guaranteed way of forcible inlining.
->=20
-> I also added __always_inline to 4 functions in the call-graph from the
-> __get_user_check() macro.
->=20
-> Fixes: 9012d011660e ("compiler: allow all arches to enable
-> CONFIG_OPTIMIZE_INLINING")
-> Reported-by: "kernelci.org bot" <bot@kernelci.org>
-> Reported-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-> Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+"make oldconfig" still asks me the question on e.g. arm64, where it is
+irrelevant, until arm64 variants of the hardware show up.
 
-Tested-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+So IMHO it should have "depends on X86 || COMPILE_TEST".
 
+Gr{oetje,eeting}s,
 
---=-1pzhYzFOaS2Q7mcGcHoY
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-Content-Transfer-Encoding: 7bit
+                        Geert
 
------BEGIN PGP SIGNATURE-----
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
-iQEzBAABCAAdFiEErOkkGDHCg2EbPcGjlfZmHno8x/4FAl2TFmwACgkQlfZmHno8
-x/6gYwf/bt9SGaahlMy9jzh92vkL0lR++WMTDA9czeLR9wbO/ccn+pzclxkdt2oV
-zHhrTCh5umkugXPLNKJAwZHfyBCnZ/r4Qe4RUrf4VLaQxHWNtNAhfSroI0213SXW
-xcpmbYWmgFuEkiCBC0WOUESteF78q5e6OXe8jExrj1BQIe4aOqaKHNSMJdkdrbyl
-Im1V51p0JSvVgJPDTZJax4gHko+Tq4/PTPXwCsxeRCu7ftC2eLk+TFFfxufsVAOw
-gTr0yr8wR+ekaeDayR1fp87Uz51u83A3/K0bhfTtcHHMykQwTUFijaYRHeAGd//G
-wV5Zsn+SQl3vKzQsrCieTubb54urkw==
-=6Yel
------END PGP SIGNATURE-----
-
---=-1pzhYzFOaS2Q7mcGcHoY--
-
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
