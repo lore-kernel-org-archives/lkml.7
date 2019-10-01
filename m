@@ -4,67 +4,67 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 095F3ECE589
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 11:55:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DF200ECE589
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 11:55:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D000820640
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 11:55:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B393C20640
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 11:55:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="1TOMxkxe"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="oWJ+OKnv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387482AbfJALzi (ORCPT
+        id S2387511AbfJALzm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Oct 2019 07:55:38 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:38763 "EHLO
+        Tue, 1 Oct 2019 07:55:42 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:33941 "EHLO
         mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732634AbfJALzU (ORCPT
+        with ESMTP id S1732680AbfJALzU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 1 Oct 2019 07:55:20 -0400
-Received: by mail-wr1-f67.google.com with SMTP id w12so15143347wro.5
-        for <linux-kernel@vger.kernel.org>; Tue, 01 Oct 2019 04:55:17 -0700 (PDT)
+Received: by mail-wr1-f67.google.com with SMTP id a11so15165225wrx.1
+        for <linux-kernel@vger.kernel.org>; Tue, 01 Oct 2019 04:55:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=baylibre-com.20150623.gappssmtp.com; s=20150623;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=FPzLmAFxVlvoWlrn/cPfzD8ybuBQrABYqNe+NltmaKc=;
-        b=1TOMxkxerDcDdYyn/c1uIZ/uj0DzxKShl5K/0P2F20uXlMC/bcb2a9kp/Ml83JiaM/
-         nStHdsK13vmQlXn9VMOR42LNGxNuIbd8C3RKY01DILSPwTnSJZGR/oJIbJif6Wsh5K5B
-         azww9ja9DlPp8yQY9HjnEPBlvy4DWPiYKLg4WD4eZmfBdUH7IKfDnl9/afRBKvTL9JoS
-         I0qZQcB7YwdBvXDPz9CxLqkjhUpsGmE5Dm2/jfNx7d7WqswIM7mGP7KGU7BJswOv3zbm
-         mC8y5kAP2rEd71fMe+wi1MWU02bTa8H/oiQ8VPSsSJ4pQVJfnNM9KrTe0bImFosGuLx7
-         vnDw==
+        bh=nE4XL8qms/9Kpgy3n+0LiYMlRLilMKnu0uTWVFko214=;
+        b=oWJ+OKnvV1nEG85+oJzgPToAX9vlxIWdG33ZmNo089bYl4219SMu9P+4ZiKS5alPnv
+         5UHCIPKTg/6CjUPmjjl7COJyHASgZ7djN6vERzU3JRqTG5L8bPIElMntHt+sA8PpJI1V
+         IvJlWa3b5iRZTemB7JePoQxA3AXeJx/CCyRXUiWTRLx2vb3eXCNIM5RKPGSL/X4pnFF2
+         D4F2zIBTK+yyY8Eju1H5Iyw/NAbBZBOyZL4Gb/UDwyYhEwLtKHiaHV8ePa5S72ivUO5X
+         opbH8Sxi5bqTWYhRKCyjxnb9bQPWuHeY8sZVnOQd3+cPmzSeWbxKdgHs8yRkyeD1CM2x
+         DyoQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=FPzLmAFxVlvoWlrn/cPfzD8ybuBQrABYqNe+NltmaKc=;
-        b=jF+XitLg04lru4jEt6EeVO2G72RLErGLEnQOG2vUsas9tWDng+rjcs/wSDw5Ld0Fk/
-         Na/+5Kd8HR04xx1KHsz6llWhwaOGWjGthB6oOY67xuOxrby1in/+EjBaasMG0kBYvrCf
-         Z8FTF+HWEUem5YTFE4GsJGDpM3YKzPc0CTwfFHnwocmV6OOeIbmZWoDOzB0uNxYf2qpz
-         FlXWIR58MmM/6D99aX8LenOHxJ2LDbq2vjdW/J6cZLL3bNgwxSDCDxvKYMH61KSxpqMY
-         bJyYmo6Py5myEAwiHhIAN4GhoB12SFpuGKxV0F4+DHzly1ZLxVC4DP7gALmSEv7yh493
-         aLqw==
-X-Gm-Message-State: APjAAAXPsHsBH5U7ZYxcdlh1KuIZOK77bKOaK5eiwEAgHTsA9guHwjFu
-        GxnEHBDFfg88ak1Cs+qNvIqCQw==
-X-Google-Smtp-Source: APXvYqwRX3j5tvwuz4L808TXtlgd4FkFR2XCdK6+VapPQ5njw/IymdIRWI98q3TvnLuFXi6YyC6Whg==
-X-Received: by 2002:adf:cd81:: with SMTP id q1mr18294507wrj.185.1569930916922;
-        Tue, 01 Oct 2019 04:55:16 -0700 (PDT)
+        bh=nE4XL8qms/9Kpgy3n+0LiYMlRLilMKnu0uTWVFko214=;
+        b=pAyaKgdE+CnJ1514y8twR80WoROGyU98P+m9qG71/swF0VoK4CSVtcpOgONQEcZzv2
+         yxiUbJ8jLdBqn/5OzdgeGsPV0BxlDs7/NKultBTphUu2N4bo2236kTfqhYVI3lspnemz
+         YOYFnejZZN1SqIdttl7/tkQT5ZJKArjo/ttaWQy9KuOcssORq1huyjQFXuk+PBtPERDB
+         W96WCy0U3vsZ574Nl5oYRR0h5FuT74wzrsG0NGwtubBhD25YQgdgmHHO2jH6x62TbsJu
+         YT5ERssOU1OdjRaFxwjHe+cOsjaJjpKaQPO+/EdMtERkhRwZkN0eQ+jNemjzk8Fv2Jq8
+         AUIw==
+X-Gm-Message-State: APjAAAViGXV/zvnSs29/YiOULKRB+wn85EEcFaGrsjIKKQAVbCvLnW2O
+        JI6Wjv34m3ZPd2mPgFTgpWx37w==
+X-Google-Smtp-Source: APXvYqxw28X8pR77Rx9+mC0iRniK+Od8uatu5Uhz9j9oHbBWi+WdTmjujMGlSGZOE+lCuwODEk45pA==
+X-Received: by 2002:adf:cf0c:: with SMTP id o12mr17227829wrj.30.1569930918809;
+        Tue, 01 Oct 2019 04:55:18 -0700 (PDT)
 Received: from starbuck.baylibre.local (lmontsouris-657-1-212-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
-        by smtp.googlemail.com with ESMTPSA id p85sm4052171wme.23.2019.10.01.04.55.15
+        by smtp.googlemail.com with ESMTPSA id p85sm4052171wme.23.2019.10.01.04.55.17
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 01 Oct 2019 04:55:16 -0700 (PDT)
+        Tue, 01 Oct 2019 04:55:18 -0700 (PDT)
 From:   Jerome Brunet <jbrunet@baylibre.com>
 To:     Neil Armstrong <narmstrong@baylibre.com>
 Cc:     Jerome Brunet <jbrunet@baylibre.com>,
         Kevin Hilman <khilman@baylibre.com>,
         linux-amlogic@lists.infradead.org, linux-clk@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH v2 2/7] dt-bindings: clock: meson: add sm1 resets to the axg-audio controller
-Date:   Tue,  1 Oct 2019 13:55:05 +0200
-Message-Id: <20191001115511.17357-3-jbrunet@baylibre.com>
+Subject: [PATCH v2 4/7] clk: meson: axg-audio: fix regmap last register
+Date:   Tue,  1 Oct 2019 13:55:07 +0200
+Message-Id: <20191001115511.17357-5-jbrunet@baylibre.com>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20191001115511.17357-1-jbrunet@baylibre.com>
 References: <20191001115511.17357-1-jbrunet@baylibre.com>
@@ -75,38 +75,29 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add the reset id of the sm1 audio clock controller
+Since the addition of the g12a, the last register is
+AUDIO_CLK_SPDIFOUT_B_CTRL.
 
-Reviewed-by: Neil Armstrong <narmstrong@baylibre.com>
+Fixes: 075001385c66 ("clk: meson: axg-audio: add g12a support")
+Acked-by: Neil Armstrong <narmstrong@baylibre.com>
 Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
 ---
- .../reset/amlogic,meson-g12a-audio-reset.h        | 15 +++++++++++++++
- 1 file changed, 15 insertions(+)
+ drivers/clk/meson/axg-audio.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/include/dt-bindings/reset/amlogic,meson-g12a-audio-reset.h b/include/dt-bindings/reset/amlogic,meson-g12a-audio-reset.h
-index 14b78dabed0e..f805129ca7af 100644
---- a/include/dt-bindings/reset/amlogic,meson-g12a-audio-reset.h
-+++ b/include/dt-bindings/reset/amlogic,meson-g12a-audio-reset.h
-@@ -35,4 +35,19 @@
- #define AUD_RESET_TOHDMITX	24
- #define AUD_RESET_CLKTREE	25
+diff --git a/drivers/clk/meson/axg-audio.c b/drivers/clk/meson/axg-audio.c
+index 60ac71856e5e..4b34601342bb 100644
+--- a/drivers/clk/meson/axg-audio.c
++++ b/drivers/clk/meson/axg-audio.c
+@@ -997,7 +997,7 @@ static const struct regmap_config axg_audio_regmap_cfg = {
+ 	.reg_bits	= 32,
+ 	.val_bits	= 32,
+ 	.reg_stride	= 4,
+-	.max_register	= AUDIO_CLK_PDMIN_CTRL1,
++	.max_register	= AUDIO_CLK_SPDIFOUT_B_CTRL,
+ };
  
-+/* SM1 added resets */
-+#define AUD_RESET_RESAMPLE_B	26
-+#define AUD_RESET_TOVAD		27
-+#define AUD_RESET_LOCKER	28
-+#define AUD_RESET_SPDIFIN_LB	29
-+#define AUD_RESET_FRATV		30
-+#define AUD_RESET_FRHDMIRX	31
-+#define AUD_RESET_FRDDR_D	32
-+#define AUD_RESET_TODDR_D	33
-+#define AUD_RESET_LOOPBACK_B	34
-+#define AUD_RESET_EARCTX	35
-+#define AUD_RESET_EARCRX	36
-+#define AUD_RESET_FRDDR_E	37
-+#define AUD_RESET_TODDR_E	38
-+
- #endif
+ struct audioclk_data {
 -- 
 2.21.0
 
