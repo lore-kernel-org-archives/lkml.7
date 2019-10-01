@@ -8,29 +8,29 @@ X-Spam-Status: No, score=-7.2 required=3.0 tests=DATE_IN_FUTURE_06_12,
 	UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AB505C32792
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 14:07:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D092C32792
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 14:07:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5EDE420842
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 14:07:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 31AF120842
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 14:07:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="SbYmxjoZ"
+	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="nD3bD/6q"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731565AbfI3OHG (ORCPT
+        id S1731580AbfI3OHj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Sep 2019 10:07:06 -0400
-Received: from mail-eopbgr770073.outbound.protection.outlook.com ([40.107.77.73]:19333
-        "EHLO NAM02-SN1-obe.outbound.protection.outlook.com"
+        Mon, 30 Sep 2019 10:07:39 -0400
+Received: from mail-eopbgr790048.outbound.protection.outlook.com ([40.107.79.48]:41768
+        "EHLO NAM03-CO1-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1730809AbfI3OHG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Sep 2019 10:07:06 -0400
+        id S1726314AbfI3OHj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 30 Sep 2019 10:07:39 -0400
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=RR5Aa93aEK8UCKII/IWC3TCdzepdgF3fhR8+ZZpnLQyWn1ijME3RpOQDi2Q8k4q7mg/loOYC3UAyh7Xvvrc/UOjuzubQJI/bSJ5qKNhOOfN9ULI/CZL201kszMf9MJQzh0WdhwLy4fNeN6+mzGNbbU1yPvS5KruXlYmXSLOY1AD8SPOS14ftgqgSFFt9hrkBg4HvvuLY+V6NjVE93Tetj+UlLHjngOK3BW9J5d9OuBOdwHiyYOp0pxVmuiMUHSzU3M47CoXno6m7dZGyUVic9bBw7IvtohAA/zD3Js38oissiYW7y085PHIDa0xxfm8OsFOW2f3J32ZQfufthwB3vQ==
+ b=iUkTtppUSMqGLiJlk4rgXhApqTPZ0QUpW6GN4UUuGPBU33l7IBAsZUEFOnL5RFWyfyueGsFmqw1tj/djVaF9XlUrqKziwqNdgIIEy2OzxKwoKPd+jEuChJBoK+JEvQupaxCNc76nnt/mwudA3X3ImiE1S0Nlqk/pWGNeHFacSbnd9GmB45ngovsUULw0hnZCAxHBXG5M9Nws7ID1sFAd/Ngp8dKIM0vQvw2CjBAp2fLxjuxoNJgdIC4PL8H4NROYATOFkDVGBCbzlfZj4P2Y4xgcuducEXmWu2N5T7/BoTkfZ9O0kjfnQFS3a7B8SrnDmENtUZujqbRXlT5fFlG+aA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=41mimW94ELZCqFOtKsh89Si6C0x+vxR5n8irJqfWfKE=;
- b=Q6iqkiivG7wbPcJ2fnOgd/zr06a/lshtzXivt5NWGkbutz3GgUra9I3r3YITQKQzhUSJwNQA3jn8NDJxq4O1Ych/z20ZsXzEXngLaHDHQA0MPj4IpLcHhV0qH7kikoW0p4SOd5Jlu+BY/8hDRH8o7hg48DDdbb+k9G8UnELYENNpREaFLIFc7kYEDDIiPF5vnsgrddLFcEIIRVH+ONa8WMEXnbvnVxOWbn5QJgs8GUjnWPDC+SnHp4A8jIStIqypLRGx8d/Cap94W80n5yZyshN8x6RA57h+TFFD9Alhg7ZsnheBeCGwpf4V8nOJzaRQB9+NE1OPznpLcmr6nnO+cg==
+ bh=2zj4J1monzztHvLn/9/E6Oprs41hNIAObi+6+n23KcE=;
+ b=HGgaH+gI7Ac0gxPWMseEWw95PiS5E/fAkEK78Ua8lH0cRItbEZeQyjbstgExEz0Eoo6Fsa2zzfQJkmsm6xcrFQmbpTYaV3ivR/5BZ6XNcn8XF1VQAzEH4f7PZcoVV+cG6AdCajBC9Hpei1ynVqjc/S936D+I/1BR5U1iKh2Gm9uT2vPeULqFel+I/eDKydCCIBUIv7cX+J/q5xvHraawlXAtU7peYV/Ed2ueGFpczUPU3D0/Tw03Q4QwvIkF1lB0AF1h4ybYkvedo3bgfWNUVEOQhF0yzi6sj0/UbD3siIyqTQIBcS/q3K3fQt00PueDPL/sMuBXxyI7iX3v/5c9Vg==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none (sender ip is
  165.204.84.17) smtp.rcpttodomain=oracle.com smtp.mailfrom=amd.com;
  dmarc=permerror action=none header.from=amd.com; dkim=none (message not
@@ -38,30 +38,30 @@ ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none (sender ip is
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
  d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=41mimW94ELZCqFOtKsh89Si6C0x+vxR5n8irJqfWfKE=;
- b=SbYmxjoZzFFXJcum1mqIfJ3Bx2Iff7CIAnOX63PJRJsCadU4jwCikLsEkN+ucmEr976Wd8eeM5ARWAyj38xB0rWUNntBv9sV8oe21gFuTUyCmRF81ertgzXK4YX/RmmiN5iYPs6ZxGcM48Tu3pmzftEByD+J+uNXGzgKtztoVF8=
-Received: from SN1PR12CA0106.namprd12.prod.outlook.com (2603:10b6:802:21::41)
- by MN2PR12MB4000.namprd12.prod.outlook.com (2603:10b6:208:16b::17) with
+ bh=2zj4J1monzztHvLn/9/E6Oprs41hNIAObi+6+n23KcE=;
+ b=nD3bD/6qE1lz/DMhzWlZM45dTm8viCmsSkzszV8dlS8AlP0tTrugFIenbyPi4GfyEes7Ub62rUteOb4ctg8RnsBOVabV/U+Noz7gYQM6zfU/gKXX71+7WVVqXlFNt6yzDRX8mAedJQ5jiIwTaJAQjy3tf4+rQV9kb4QoKuT/sWI=
+Received: from DM6PR12CA0007.namprd12.prod.outlook.com (2603:10b6:5:1c0::20)
+ by BYAPR12MB2821.namprd12.prod.outlook.com (2603:10b6:a03:96::31) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2305.17; Mon, 30 Sep
- 2019 14:06:56 +0000
-Received: from CO1NAM03FT046.eop-NAM03.prod.protection.outlook.com
- (2a01:111:f400:7e48::206) by SN1PR12CA0106.outlook.office365.com
- (2603:10b6:802:21::41) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2178.18 via Frontend
- Transport; Mon, 30 Sep 2019 14:06:55 +0000
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2305.18; Mon, 30 Sep
+ 2019 14:05:56 +0000
+Received: from CO1NAM03FT016.eop-NAM03.prod.protection.outlook.com
+ (2a01:111:f400:7e48::207) by DM6PR12CA0007.outlook.office365.com
+ (2603:10b6:5:1c0::20) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2284.19 via Frontend
+ Transport; Mon, 30 Sep 2019 14:05:56 +0000
 Authentication-Results: spf=none (sender IP is 165.204.84.17)
  smtp.mailfrom=amd.com; oracle.com; dkim=none (message not signed)
  header.d=none;oracle.com; dmarc=permerror action=none header.from=amd.com;
 Received-SPF: None (protection.outlook.com: amd.com does not designate
  permitted sender hosts)
 Received: from SATLEXCHOV01.amd.com (165.204.84.17) by
- CO1NAM03FT046.mail.protection.outlook.com (10.152.81.15) with Microsoft SMTP
+ CO1NAM03FT016.mail.protection.outlook.com (10.152.80.170) with Microsoft SMTP
  Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
- 15.20.2305.15 via Frontend Transport; Mon, 30 Sep 2019 14:06:55 +0000
+ 15.20.2305.15 via Frontend Transport; Mon, 30 Sep 2019 14:05:56 +0000
 Received: from vishnu-All-Series.amd.com (10.180.168.240) by
  SATLEXCHOV01.amd.com (10.181.40.71) with Microsoft SMTP Server id 14.3.389.1;
- Mon, 30 Sep 2019 09:06:53 -0500
+ Mon, 30 Sep 2019 09:05:54 -0500
 From:   Ravulapati Vishnu vardhan rao 
         <Vishnuvardhanrao.Ravulapati@amd.com>
 CC:     <Alexander.Deucher@amd.com>,
@@ -72,17 +72,17 @@ CC:     <Alexander.Deucher@amd.com>,
         Jaroslav Kysela <perex@perex.cz>,
         "Takashi Iwai" <tiwai@suse.com>,
         Vijendar Mukunda <Vijendar.Mukunda@amd.com>,
-        "Maruthi Bayyavarapu" <maruthi.bayyavarapu@amd.com>,
-        YueHaibing <yuehaibing@huawei.com>,
+        "Maruthi Srinivas Bayyavarapu" <Maruthi.Bayyavarapu@amd.com>,
         Alex Deucher <alexander.deucher@amd.com>,
-        "Dan Carpenter" <dan.carpenter@oracle.com>,
-        Colin Ian King <colin.king@canonical.com>,
+        Sanju R Mehta <sanju.mehta@amd.com>,
+        "Colin Ian King" <colin.king@canonical.com>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
         "moderated list:SOUND - SOC LAYER / DYNAMIC AUDIO POWER MANAGEM..." 
         <alsa-devel@alsa-project.org>,
         open list <linux-kernel@vger.kernel.org>
-Subject: [PATCH 7/7] ASoc: amd: Added ACP3x system resume and runtime pm ops
-Date:   Tue, 1 Oct 2019 06:28:15 +0530
-Message-ID: <1569891524-18875-7-git-send-email-Vishnuvardhanrao.Ravulapati@amd.com>
+Subject: [PATCH 2/7] ASoC: amd: Registering device endpoints using MFD framework
+Date:   Tue, 1 Oct 2019 06:28:10 +0530
+Message-ID: <1569891524-18875-2-git-send-email-Vishnuvardhanrao.Ravulapati@amd.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1569891524-18875-1-git-send-email-Vishnuvardhanrao.Ravulapati@amd.com>
 References: <1569891524-18875-1-git-send-email-Vishnuvardhanrao.Ravulapati@amd.com>
@@ -90,582 +90,250 @@ MIME-Version: 1.0
 Content-Type: text/plain
 X-EOPAttributedMessage: 0
 X-MS-Office365-Filtering-HT: Tenant
-X-Forefront-Antispam-Report: CIP:165.204.84.17;IPV:NLI;CTRY:US;EFV:NLI;SFV:NSPM;SFS:(10009020)(4636009)(376002)(396003)(39860400002)(346002)(136003)(428003)(199004)(189003)(14444005)(16586007)(1671002)(36756003)(316002)(11346002)(446003)(126002)(476003)(486006)(356004)(6666004)(48376002)(305945005)(426003)(70206006)(336012)(70586007)(47776003)(50226002)(30864003)(2906002)(7696005)(109986005)(86362001)(53416004)(8676002)(8936002)(81166006)(81156014)(5660300002)(2616005)(51416003)(76176011)(4326008)(186003)(50466002)(54906003)(26005)(478600001)(266003)(32563001);DIR:OUT;SFP:1101;SCL:1;SRVR:MN2PR12MB4000;H:SATLEXCHOV01.amd.com;FPR:;SPF:None;LANG:en;PTR:InfoDomainNonexistent;A:1;MX:1;
+X-Forefront-Antispam-Report: CIP:165.204.84.17;IPV:NLI;CTRY:US;EFV:NLI;SFV:NSPM;SFS:(10009020)(4636009)(396003)(346002)(136003)(376002)(39860400002)(428003)(199004)(189003)(86362001)(47776003)(486006)(426003)(76176011)(356004)(50466002)(4326008)(50226002)(51416003)(7696005)(305945005)(6666004)(48376002)(1671002)(109986005)(5660300002)(16586007)(316002)(26005)(336012)(186003)(54906003)(53416004)(36756003)(2906002)(81156014)(81166006)(446003)(70206006)(478600001)(70586007)(2616005)(8676002)(11346002)(476003)(8936002)(126002)(266003);DIR:OUT;SFP:1101;SCL:1;SRVR:BYAPR12MB2821;H:SATLEXCHOV01.amd.com;FPR:;SPF:None;LANG:en;PTR:InfoDomainNonexistent;A:1;MX:1;
 X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 8f0fe140-bfa3-412f-6e41-08d745af73a0
-X-MS-TrafficTypeDiagnostic: MN2PR12MB4000:|MN2PR12MB4000:
-X-Microsoft-Antispam-PRVS: <MN2PR12MB400016906899093257B318D4E7820@MN2PR12MB4000.namprd12.prod.outlook.com>
-X-MS-Exchange-Transport-Forked: True
-X-MS-Oob-TLC-OOBClassifiers: OLM:42;
+X-MS-Office365-Filtering-Correlation-Id: 9a143658-4d27-4978-c545-08d745af5031
+X-MS-TrafficTypeDiagnostic: BYAPR12MB2821:
+X-Microsoft-Antispam-PRVS: <BYAPR12MB28214DC5DB891FA8E4A480E9E7820@BYAPR12MB2821.namprd12.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:108;
 X-Forefront-PRVS: 01762B0D64
 X-MS-Exchange-SenderADCheck: 1
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: KZdgIUfjz7zs1v7M28DcWIGTmx31DOZutwa9TGi4oxOLNTQOTRzIuu5lAdfBV/X1dH4p47b5UIbABMkIvi7iDiLzB7+d5TDE22H8lQvPvdN86UMPhHvMRqDmjP3Cwc4Perl3ZlPT4JEavvlCkul6uKLR0U46dxBIyNTpFbUNSEnGoso5Bd2rwJm+xFHfJxeel10s61iYJjrTGuiCNKzeYR+Th0DJ1NWFvQozyE/P0+rCclfn6gSYajiK37YTfyL4rB8WMTN1tLcHf1BxC82sgu5nCnhOQhMCDFrP/ebR8lFCMIWeWgGSowI4mZBMKis2QjTYwH6MzI/OnmnUpNCNKhoNGIIom2q6nD+sf0EKx/QDwraDsnvA1XeAK/rhglWlX96FMx0A811ZAB1YG+i9fz9V1fqMoPfonBq7Kd6YG6Q=
+X-Microsoft-Antispam-Message-Info: oV239+70idZI47zaBxmD/5R3NenEXPmC0CKkWtczdE6aJr9MvjQRrqbQvlfKOi6nnXZq+anWXjji4DW/fEwXutxMw/K7HSFy3YxZluHvUdq2g/4PVWSkT6KTjhHWvou/FX0BwsB2EOyNzDeTWEHMk8RmSEIcZnRJ2MmNlFDhE86Do6EQKGjivZy+ymz0/QE1cc+e9gi2ACi13x37vTVXsNUNyVLNHwWfKUn9nzKue6TmKUOJOWFkMa5g3emTt5RtafOWUGQgMQ76u63W/cNUna3qiVRCwONs0wU6dQ9UadSbYJvQ9LCWTzckMcBMBwhypCGJ5URPCyAYVATywZUZd1nz7KPCqvm8GT2m9bDWNkj9v8udeBC7w0d42+KPTfy9IxHFvTsZ98oWZu9b+v0nfR6yB1s4pffR1tSUqQYNUfM=
 X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 Sep 2019 14:06:55.5779
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 Sep 2019 14:05:56.1375
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 8f0fe140-bfa3-412f-6e41-08d745af73a0
+X-MS-Exchange-CrossTenant-Network-Message-Id: 9a143658-4d27-4978-c545-08d745af5031
 X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
 X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXCHOV01.amd.com]
 X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR12MB4000
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR12MB2821
 To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When audio usecase in progress and system wide suspend happens, ACP will
-be powered off and when system resumes, for audio usecase to continue,
-all the runtime configuration data needs to be programmed again. Added
-'resume'pm call back to ACP pm ops and also Added runtime PM operations
-for ACP3x PCM platform device. Device will be powered on/off based on
-device is in use or not.
+Removed platform based endpoint registering in ACP-PCI driver.
+Now Registering PCM DMA and multiple I2S instances: SP and  BT endpoint
+devices automatically by using MFD framework.
 
 Signed-off-by: Ravulapati Vishnu vardhan rao <Vishnuvardhanrao.Ravulapati@amd.com>
 ---
- sound/soc/amd/raven/acp3x-pcm-dma.c | 160 +++-------------------------
- sound/soc/amd/raven/acp3x.h         |   7 ++
- sound/soc/amd/raven/pci-acp3x.c     | 204 +++++++++++++++++++++++++++++++++++-
- 3 files changed, 223 insertions(+), 148 deletions(-)
+ sound/soc/amd/raven/acp3x.h     |   8 +++
+ sound/soc/amd/raven/pci-acp3x.c | 123 ++++++++++++++++++++++++++--------------
+ 2 files changed, 90 insertions(+), 41 deletions(-)
 
-diff --git a/sound/soc/amd/raven/acp3x-pcm-dma.c b/sound/soc/amd/raven/acp3x-pcm-dma.c
-index 49f640f..4011c78 100644
---- a/sound/soc/amd/raven/acp3x-pcm-dma.c
-+++ b/sound/soc/amd/raven/acp3x-pcm-dma.c
-@@ -58,106 +58,6 @@ static const struct snd_pcm_hardware acp3x_pcm_hardware_capture = {
- 	.periods_max = CAPTURE_MAX_NUM_PERIODS,
- };
- 
--static int acp3x_power_on(void __iomem *acp3x_base, bool on)
--{
--	u16 val, mask;
--	u32 timeout;
--
--	if (on == true) {
--		val = 1;
--		mask = ACP3x_POWER_ON;
--	} else {
--		val = 0;
--		mask = ACP3x_POWER_OFF;
--	}
--
--	rv_writel(val, acp3x_base + mmACP_PGFSM_CONTROL);
--	timeout = 0;
--	while (true) {
--		val = rv_readl(acp3x_base + mmACP_PGFSM_STATUS);
--		if ((val & ACP3x_POWER_OFF_IN_PROGRESS) == mask)
--			break;
--		if (timeout > 100) {
--			pr_err("ACP3x power state change failure\n");
--			return -ENODEV;
--		}
--		timeout++;
--		cpu_relax();
--	}
--	return 0;
--}
--
--static int acp3x_reset(void __iomem *acp3x_base)
--{
--	u32 val, timeout;
--
--	rv_writel(1, acp3x_base + mmACP_SOFT_RESET);
--	timeout = 0;
--	while (true) {
--		val = rv_readl(acp3x_base + mmACP_SOFT_RESET);
--		if ((val & ACP3x_SOFT_RESET__SoftResetAudDone_MASK) ||
--		     timeout > 100) {
--			if (val & ACP3x_SOFT_RESET__SoftResetAudDone_MASK)
--				break;
--			return -ENODEV;
--		}
--		timeout++;
--		cpu_relax();
--	}
--
--	rv_writel(0, acp3x_base + mmACP_SOFT_RESET);
--	timeout = 0;
--	while (true) {
--		val = rv_readl(acp3x_base + mmACP_SOFT_RESET);
--		if (!val || timeout > 100) {
--			if (!val)
--				break;
--			return -ENODEV;
--		}
--		timeout++;
--		cpu_relax();
--	}
--	return 0;
--}
--
--static int acp3x_init(void __iomem *acp3x_base)
--{
--	int ret;
--
--	/* power on */
--	ret = acp3x_power_on(acp3x_base, true);
--	if (ret) {
--		pr_err("ACP3x power on failed\n");
--		return ret;
--	}
--	/* Reset */
--	ret = acp3x_reset(acp3x_base);
--	if (ret) {
--		pr_err("ACP3x reset failed\n");
--		return ret;
--	}
--	return 0;
--}
--
--static int acp3x_deinit(void __iomem *acp3x_base)
--{
--	int ret;
--
--	/* Reset */
--	ret = acp3x_reset(acp3x_base);
--	if (ret) {
--		pr_err("ACP3x reset failed\n");
--		return ret;
--	}
--	/* power off */
--	ret = acp3x_power_on(acp3x_base, false);
--	if (ret) {
--		pr_err("ACP3x power off failed\n");
--		return ret;
--	}
--	return 0;
--}
--
- static irqreturn_t i2s_irq_handler(int irq, void *dev_id)
- {
- 	u16 play_flag, cap_flag;
-@@ -554,75 +454,52 @@ static int acp3x_audio_probe(struct platform_device *pdev)
- 	adata->i2ssp_capture_stream = NULL;
- 
- 	dev_set_drvdata(&pdev->dev, adata);
--	/* Initialize ACP */
--	status = acp3x_init(adata->acp3x_base);
--	if (status)
--		return -ENODEV;
- 	status = devm_snd_soc_register_component(&pdev->dev,
- 						 &acp3x_i2s_component,
- 						 NULL, 0);
- 	if (status) {
- 		dev_err(&pdev->dev, "Fail to register acp i2s component\n");
--		goto dev_err;
-+		return -ENODEV;
- 	}
- 	status = devm_request_irq(&pdev->dev, adata->i2s_irq, i2s_irq_handler,
- 				  irqflags, "ACP3x_I2S_IRQ", adata);
- 	if (status) {
- 		dev_err(&pdev->dev, "ACP3x I2S IRQ request failed\n");
--		goto dev_err;
-+		return -ENODEV;
- 	}
- 
- 	pm_runtime_set_autosuspend_delay(&pdev->dev, 10000);
- 	pm_runtime_use_autosuspend(&pdev->dev);
- 	pm_runtime_enable(&pdev->dev);
- 	return 0;
--dev_err:
--	status = acp3x_deinit(adata->acp3x_base);
--	if (status)
--		dev_err(&pdev->dev, "ACP de-init failed\n");
--	else
--		dev_info(&pdev->dev, "ACP de-initialized\n");
--	/*ignore device status and return driver probe error*/
--	return -ENODEV;
- }
- 
- static int acp3x_audio_remove(struct platform_device *pdev)
- {
--	int ret;
--	struct i2s_dev_data *adata = dev_get_drvdata(&pdev->dev);
--
--	ret = acp3x_deinit(adata->acp3x_base);
--	if (ret)
--		dev_err(&pdev->dev, "ACP de-init failed\n");
--	else
--		dev_info(&pdev->dev, "ACP de-initialized\n");
--
- 	pm_runtime_disable(&pdev->dev);
- 	return 0;
- }
- 
- static int acp3x_resume(struct device *dev)
- {
--	int status;
- 	u32 val;
- 	struct i2s_dev_data *adata = dev_get_drvdata(dev);
- 
--	status = acp3x_init(adata->acp3x_base);
--	if (status)
--		return -ENODEV;
--
- 	if (adata->play_stream && adata->play_stream->runtime) {
- 		struct i2s_stream_instance *rtd =
- 			adata->play_stream->runtime->private_data;
- 		config_acp3x_dma(rtd, SNDRV_PCM_STREAM_PLAYBACK);
- 		rv_writel((rtd->xfer_resolution  << 3),
--			  rtd->acp3x_base + mmACP_BTTDM_ITER);
-+				rtd->acp3x_base + mmACP_BTTDM_ITER);
-+		val = rv_readl(rtd->acp3x_base + mmACP_I2STDM_ITER);
-+		val = val | (rtd->xfer_resolution  << 3);
-+		rv_writel(val, rtd->acp3x_base + mmACP_I2STDM_ITER);
- 		if (adata->tdm_mode == true) {
- 			rv_writel(adata->tdm_fmt, adata->acp3x_base +
--				  mmACP_BTTDM_TXFRMT);
-+					mmACP_BTTDM_TXFRMT);
- 			val = rv_readl(adata->acp3x_base + mmACP_BTTDM_ITER);
- 			rv_writel((val | 0x2), adata->acp3x_base +
--				  mmACP_BTTDM_ITER);
-+					mmACP_BTTDM_ITER);
- 		}
- 	}
- 
-@@ -631,13 +508,17 @@ static int acp3x_resume(struct device *dev)
- 			adata->capture_stream->runtime->private_data;
- 		config_acp3x_dma(rtd, SNDRV_PCM_STREAM_CAPTURE);
- 		rv_writel((rtd->xfer_resolution  << 3),
--			  rtd->acp3x_base + mmACP_BTTDM_IRER);
-+				rtd->acp3x_base + mmACP_BTTDM_IRER);
-+		val = rv_readl(rtd->acp3x_base + mmACP_I2STDM_ITER);
-+		val = val | (rtd->xfer_resolution  << 3);
-+		rv_writel(val, rtd->acp3x_base + mmACP_I2STDM_ITER);
-+
- 		if (adata->tdm_mode == true) {
- 			rv_writel(adata->tdm_fmt, adata->acp3x_base +
--				  mmACP_BTTDM_RXFRMT);
-+					mmACP_BTTDM_RXFRMT);
- 			val = rv_readl(adata->acp3x_base + mmACP_BTTDM_IRER);
- 			rv_writel((val | 0x2), adata->acp3x_base +
--				  mmACP_BTTDM_IRER);
-+					mmACP_BTTDM_IRER);
- 		}
- 	}
- 
-@@ -648,15 +529,8 @@ static int acp3x_resume(struct device *dev)
- 
- static int acp3x_pcm_runtime_suspend(struct device *dev)
- {
--	int status;
- 	struct i2s_dev_data *adata = dev_get_drvdata(dev);
- 
--	status = acp3x_deinit(adata->acp3x_base);
--	if (status)
--		dev_err(dev, "ACP de-init failed\n");
--	else
--		dev_info(dev, "ACP de-initialized\n");
--
- 	rv_writel(0, adata->acp3x_base + mmACP_EXTERNAL_INTR_ENB);
- 
- 	return 0;
-@@ -664,12 +538,8 @@ static int acp3x_pcm_runtime_suspend(struct device *dev)
- 
- static int acp3x_pcm_runtime_resume(struct device *dev)
- {
--	int status;
- 	struct i2s_dev_data *adata = dev_get_drvdata(dev);
- 
--	status = acp3x_init(adata->acp3x_base);
--	if (status)
--		return -ENODEV;
- 	rv_writel(1, adata->acp3x_base + mmACP_EXTERNAL_INTR_ENB);
- 	return 0;
- }
 diff --git a/sound/soc/amd/raven/acp3x.h b/sound/soc/amd/raven/acp3x.h
-index d97d7d5..21c3109 100644
+index 4f2cadd..c122dc6 100644
 --- a/sound/soc/amd/raven/acp3x.h
 +++ b/sound/soc/amd/raven/acp3x.h
-@@ -65,6 +65,13 @@
- #define SLOT_WIDTH_16 0x10
- #define SLOT_WIDTH_24 0x18
- #define SLOT_WIDTH_32 0x20
-+#define ACP_PGFSM_CNTL_POWER_ON_MASK	0x01
-+#define ACP_PGFSM_CNTL_POWER_OFF_MASK	0x00
-+#define ACP_PGFSM_STATUS_MASK		0x03
-+#define ACP_POWERED_ON			0x00
-+#define ACP_POWER_ON_IN_PROGRESS	0x01
-+#define ACP_POWERED_OFF			0x02
-+#define ACP_POWER_OFF_IN_PROGRESS	0x03
+@@ -7,13 +7,21 @@
  
- struct acp3x_platform_info {
- 	u16 play_i2s_instance;
+ #include "chip_offset_byte.h"
+ 
++#define ACP3x_DEVS		3
+ #define ACP3x_PHY_BASE_ADDRESS 0x1240000
+ #define	ACP3x_I2S_MODE	0
+ #define	ACP3x_REG_START	0x1240000
+ #define	ACP3x_REG_END	0x1250200
++#define ACP3x_I2STDM_REG_START	0x1242400
++#define ACP3x_I2STDM_REG_END	0x1242410
++#define ACP3x_BT_TDM_REG_START	0x1242800
++#define ACP3x_BT_TDM_REG_END	0x1242810
+ #define I2S_MODE	0x04
++#define	I2S_RX_THRESHOLD	27
++#define	I2S_TX_THRESHOLD	28
+ #define	BT_TX_THRESHOLD 26
+ #define	BT_RX_THRESHOLD 25
++#define ACP_ERR_INTR_MASK	29
+ #define ACP3x_POWER_ON 0x00
+ #define ACP3x_POWER_ON_IN_PROGRESS 0x01
+ #define ACP3x_POWER_OFF 0x02
 diff --git a/sound/soc/amd/raven/pci-acp3x.c b/sound/soc/amd/raven/pci-acp3x.c
-index d9f5bc0..8386c4a 100644
+index 8f6bf00..d9f5bc0 100644
 --- a/sound/soc/amd/raven/pci-acp3x.c
 +++ b/sound/soc/amd/raven/pci-acp3x.c
-@@ -10,6 +10,9 @@
+@@ -9,13 +9,21 @@
+ #include <linux/io.h>
  #include <linux/platform_device.h>
  #include <linux/interrupt.h>
- #include <linux/mfd/core.h>
-+#include <linux/pm_runtime.h>
-+#include <linux/delay.h>
-+#include <sound/pcm.h>
++#include <linux/mfd/core.h>
  
  #include "acp3x.h"
  
-@@ -27,12 +30,141 @@ struct acp3x_dev_data {
++struct i2s_platform_data {
++	unsigned int cap;
++	int channel;
++	u32 snd_rates;
++};
+ struct acp3x_dev_data {
++	struct device *parent;
++	struct mfd_cell *cell;
++	struct resource *res;
+ 	void __iomem *acp3x_base;
+ 	bool acp3x_audio_mode;
+-	struct resource *res;
  	struct platform_device *pdev;
  };
  
-+static int acp3x_power_on(void __iomem *acp3x_base)
-+{
-+	u32 val;
-+	u32 timeout = 0;
-+	int ret = 0;
-+
-+	val = rv_readl(acp3x_base + mmACP_PGFSM_STATUS);
-+	if (val) {
-+		if (!((val & ACP_PGFSM_STATUS_MASK) ==
-+				ACP_POWER_ON_IN_PROGRESS))
-+			rv_writel(ACP_PGFSM_CNTL_POWER_ON_MASK,
-+				acp3x_base + mmACP_PGFSM_CONTROL);
-+		while (true) {
-+			val  = rv_readl(acp3x_base + mmACP_PGFSM_STATUS);
-+			if (!val)
-+				break;
-+			udelay(1);
-+			if (timeout > 500) {
-+				pr_err("ACP is Not Powered ON\n");
-+				ret = -ETIMEDOUT;
-+				break;
-+			}
-+			timeout++;
-+		}
-+		if (ret) {
-+			pr_err("ACP is not powered on status:%d\n", ret);
-+			return ret;
-+		}
-+	}
-+	return ret;
-+}
-+
-+static int acp3x_power_off(void __iomem *acp3x_base)
-+{
-+	u32 val;
-+	u32 timeout = 0;
-+	int ret = 0;
-+
-+	val = rv_readl(acp3x_base + mmACP_PGFSM_CONTROL);
-+	rv_writel(ACP_PGFSM_CNTL_POWER_OFF_MASK,
-+			acp3x_base + mmACP_PGFSM_CONTROL);
-+	while (true) {
-+		val  = rv_readl(acp3x_base + mmACP_PGFSM_STATUS);
-+		if ((val & ACP_PGFSM_STATUS_MASK) == ACP_POWERED_OFF)
-+			break;
-+		udelay(1);
-+		if (timeout > 500) {
-+			pr_err("ACP is Not Powered OFF\n");
-+			ret = -ETIMEDOUT;
-+			break;
-+		}
-+		timeout++;
-+	}
-+	if (ret)
-+		pr_err("ACP is not powered off status:%d\n", ret);
-+	return ret;
-+}
-+
-+
-+static int acp3x_reset(void __iomem *acp3x_base)
-+{
-+	u32 val, timeout;
-+
-+	rv_writel(1, acp3x_base + mmACP_SOFT_RESET);
-+	timeout = 0;
-+	while (true) {
-+		val = rv_readl(acp3x_base + mmACP_SOFT_RESET);
-+		if ((val & ACP3x_SOFT_RESET__SoftResetAudDone_MASK) ||
-+							timeout > 100) {
-+			if (val & ACP3x_SOFT_RESET__SoftResetAudDone_MASK)
-+				break;
-+			return -ENODEV;
-+		}
-+		timeout++;
-+		cpu_relax();
-+	}
-+	rv_writel(0, acp3x_base + mmACP_SOFT_RESET);
-+	timeout = 0;
-+	while (true) {
-+		val = rv_readl(acp3x_base + mmACP_SOFT_RESET);
-+		if (!val || timeout > 100) {
-+			if (!val)
-+				break;
-+			return -ENODEV;
-+		}
-+		timeout++;
-+		cpu_relax();
-+	}
-+	return 0;
-+}
-+
-+static int acp3x_init(void __iomem *acp3x_base)
-+{
-+	int ret;
-+
-+	/* power on */
-+	ret = acp3x_power_on(acp3x_base);
-+	if (ret) {
-+		pr_err("ACP3x power on failed\n");
-+		return ret;
-+	}
-+	/* Reset */
-+	ret = acp3x_reset(acp3x_base);
-+	if (ret) {
-+		pr_err("ACP3x reset failed\n");
-+		return ret;
-+	}
-+	return 0;
-+}
-+
-+static int acp3x_deinit(void __iomem *acp3x_base)
-+{
-+	int ret;
-+
-+	/* Reset */
-+	ret = acp3x_reset(acp3x_base);
-+	if (ret) {
-+		pr_err("ACP3x reset failed\n");
-+		return ret;
-+	}
-+	/* power off */
-+	ret = acp3x_power_off(acp3x_base);
-+	if (ret) {
-+		pr_err("ACP3x power off failed\n");
-+		return ret;
-+	}
-+	return 0;
-+}
-+
- static int snd_acp3x_probe(struct pci_dev *pci,
+@@ -23,9 +31,11 @@ static int snd_acp3x_probe(struct pci_dev *pci,
  			   const struct pci_device_id *pci_id)
  {
  	int ret;
- 	resource_size_t addr;
--	int val, i, r;
-+	int val, i, r, status;
+-	u32 addr, val;
++	resource_size_t addr;
++	int val, i, r;
  	struct acp3x_dev_data *adata;
- 	struct device *dev;
- 	struct i2s_platform_data *i2s_pdata;
-@@ -46,7 +178,7 @@ static int snd_acp3x_probe(struct pci_dev *pci,
- 	ret = pci_request_regions(pci, "AMD ACP3x audio");
- 	if (ret < 0) {
- 		dev_err(&pci->dev, "pci_request_regions failed\n");
--		goto disable_pci;
-+		goto release_regions;
- 	}
+-	struct platform_device_info pdevinfo;
++	struct device *dev;
++	struct i2s_platform_data *i2s_pdata;
+ 	unsigned int irqflags;
  
- 	adata = devm_kzalloc(&pci->dev, sizeof(struct acp3x_dev_data),
-@@ -67,6 +199,10 @@ static int snd_acp3x_probe(struct pci_dev *pci,
+ 	if (pci_enable_device(pci)) {
+@@ -56,55 +66,87 @@ static int snd_acp3x_probe(struct pci_dev *pci,
+ 	}
  	pci_set_master(pci);
  	pci_set_drvdata(pci, adata);
- 	adata->parent = &pci->dev;
-+	status = acp3x_init(adata->acp3x_base);
-+	if (status)
-+		return -ENODEV;
-+
+-
++	adata->parent = &pci->dev;
  	val = rv_readl(adata->acp3x_base + mmACP_I2S_PIN_CONFIG);
  	switch (val) {
  	case I2S_MODE:
-@@ -141,26 +277,85 @@ static int snd_acp3x_probe(struct pci_dev *pci,
- 					adata->cell, ACP3x_DEVS);
+ 		adata->res = devm_kzalloc(&pci->dev,
+-					  sizeof(struct resource) * 2,
+-					  GFP_KERNEL);
+-		if (!adata->res) {
++				sizeof(struct resource) * 4,
++						GFP_KERNEL);
++		adata->cell = devm_kzalloc(&pci->dev,
++				sizeof(struct mfd_cell) * ACP3x_DEVS,
++						GFP_KERNEL);
++		if (!adata->cell) {
+ 			ret = -ENOMEM;
+ 			goto unmap_mmio;
+ 		}
+ 
+-		adata->res[0].name = "acp3x_i2s_iomem";
+-		adata->res[0].flags = IORESOURCE_MEM;
+-		adata->res[0].start = addr;
+-		adata->res[0].end = addr + (ACP3x_REG_END - ACP3x_REG_START);
+-
+-		adata->res[1].name = "acp3x_i2s_irq";
+-		adata->res[1].flags = IORESOURCE_IRQ;
+-		adata->res[1].start = pci->irq;
+-		adata->res[1].end = pci->irq;
+-
+-		adata->acp3x_audio_mode = ACP3x_I2S_MODE;
+-
+-		memset(&pdevinfo, 0, sizeof(pdevinfo));
+-		pdevinfo.name = "acp3x_rv_i2s";
+-		pdevinfo.id = 0;
+-		pdevinfo.parent = &pci->dev;
+-		pdevinfo.num_res = 2;
+-		pdevinfo.res = adata->res;
+-		pdevinfo.data = &irqflags;
+-		pdevinfo.size_data = sizeof(irqflags);
+-
+-		adata->pdev = platform_device_register_full(&pdevinfo);
+-		if (IS_ERR(adata->pdev)) {
+-			dev_err(&pci->dev, "cannot register %s device\n",
+-				pdevinfo.name);
+-			ret = PTR_ERR(adata->pdev);
+-			goto unmap_mmio;
++		i2s_pdata = devm_kzalloc(&pci->dev,
++				sizeof(struct i2s_platform_data) * ACP3x_DEVS,
++						GFP_KERNEL);
++		if (i2s_pdata == NULL) {
++			kfree(adata->res);
++			kfree(adata->cell);
++			return -ENOMEM;
+ 		}
++		adata->res[0].name	= "acp3x_i2s_iomem";
++		adata->res[0].flags	= IORESOURCE_MEM;
++		adata->res[0].start	= addr;
++		adata->res[0].end	= addr +
++			(ACP3x_REG_END - ACP3x_REG_START);
++		i2s_pdata[0].cap	= 0;
++		i2s_pdata[0].snd_rates	= SNDRV_PCM_RATE_8000_96000;
++
++		adata->res[1].name	= "acp3x_i2s_sp_play_cap";
++		adata->res[1].flags	= IORESOURCE_MEM;
++		adata->res[1].start	= addr + ACP3x_I2STDM_REG_START;
++		adata->res[1].end	= addr + ACP3x_I2STDM_REG_END;
++		i2s_pdata[1].cap	= 0;
++		i2s_pdata[1].snd_rates	= SNDRV_PCM_RATE_8000_96000;
++
++		adata->res[2].name	= "acp3x_i2s_bt_play_cap";
++		adata->res[2].flags	= IORESOURCE_MEM;
++		adata->res[2].start	= addr + ACP3x_BT_TDM_REG_START;
++		adata->res[2].end	= addr + ACP3x_BT_TDM_REG_END;
++		i2s_pdata[2].cap	= 0;
++		i2s_pdata[2].snd_rates	= SNDRV_PCM_RATE_8000_96000;
++
++		adata->res[3].name	= "acp3x_i2s_irq";
++		adata->res[3].flags	= IORESOURCE_IRQ;
++		adata->res[3].start	= pci->irq;
++		adata->res[3].end	= adata->res[3].start;
++
++		adata->acp3x_audio_mode	= ACP3x_I2S_MODE;
++
++		adata->cell[0].name	=	"acp3x_rv_i2s_dma";
++		adata->cell[0].num_resources	= 4;
++		adata->cell[0].resources	= &adata->res[0];
++		adata->cell[0].platform_data	= &irqflags;
++		adata->cell[0].pdata_size	= sizeof(irqflags);
++
++		adata->cell[1].name		= "acp3x_i2s_playcap";
++		adata->cell[1].num_resources	= 1;
++		adata->cell[1].resources	= &adata->res[1];
++		adata->cell[1].platform_data	= &i2s_pdata[0];
++		adata->cell[1].pdata_size	=
++				sizeof(struct i2s_platform_data);
++
++		adata->cell[2].name		= "acp3x_i2s_playcap";
++		adata->cell[2].num_resources	= 1;
++		adata->cell[2].resources	= &adata->res[2];
++		adata->cell[2].platform_data	= &i2s_pdata[1];
++		adata->cell[2].pdata_size	=
++				sizeof(struct i2s_platform_data);
++		r = mfd_add_hotplug_devices(adata->parent,
++					adata->cell, ACP3x_DEVS);
  		break;
+-	default:
+-		dev_err(&pci->dev, "Invalid ACP audio mode : %d\n", val);
+-		ret = -ENODEV;
+-		goto unmap_mmio;
  	}
-+	pm_runtime_set_autosuspend_delay(&pci->dev, 10000);
-+	pm_runtime_use_autosuspend(&pci->dev);
-+	pm_runtime_set_active(&pci->dev);
-+	pm_runtime_put_noidle(&pci->dev);
-+	pm_runtime_enable(&pci->dev);
  	return 0;
  
  unmap_mmio:
-+	status = acp3x_deinit(adata->acp3x_base);
-+	if (status)
-+		dev_err(&pci->dev, "ACP de-init failed\n");
-+	else
-+		dev_info(&pci->dev, "ACP de-initialized\n");
- 	mfd_remove_devices(adata->parent);
- 	kfree(adata->res);
- 	kfree(adata->cell);
++	mfd_remove_devices(adata->parent);
++	kfree(adata->res);
++	kfree(adata->cell);
  	iounmap(adata->acp3x_base);
  release_regions:
  	pci_release_regions(pci);
--disable_pci:
- 	pci_disable_device(pci);
-+	status = acp3x_deinit(adata->acp3x_base);
-+	if (status)
-+		dev_err(&pci->dev, "ACP de-init failed\n");
-+	else
-+		dev_info(&pci->dev, "ACP de-initialized\n");
- 
- 	return ret;
- }
- 
-+
-+
-+static int  snd_acp3x_suspend(struct device *dev)
-+{
-+
-+	int status;
-+	struct acp3x_dev_data *adata = dev_get_drvdata(dev);
-+
-+	status = acp3x_deinit(adata->acp3x_base);
-+	if (status)
-+		dev_err(dev, "ACP de-init failed\n");
-+	else
-+		dev_info(dev, "ACP de-initialized\n");
-+
-+	return 0;
-+}
-+static int  snd_acp3x_resume(struct device *dev)
-+{
-+
-+	int status;
-+	struct acp3x_dev_data *adata = dev_get_drvdata(dev);
-+
-+	status = acp3x_init(adata->acp3x_base);
-+	if (status)
-+		return -ENODEV;
-+
-+	return 0;
-+}
-+
-+static const struct dev_pm_ops acp3x_pm = {
-+	.runtime_suspend = snd_acp3x_suspend,
-+	.runtime_resume =  snd_acp3x_resume,
-+	.resume	=	snd_acp3x_resume,
-+
-+};
-+
+@@ -117,10 +159,8 @@ static int snd_acp3x_probe(struct pci_dev *pci,
  static void snd_acp3x_remove(struct pci_dev *pci)
  {
-+	int i;
  	struct acp3x_dev_data *adata = pci_get_drvdata(pci);
- 	mfd_remove_devices(adata->parent);
-+	i = acp3x_deinit(adata->acp3x_base);
-+	if (i)
-+		dev_err(&pci->dev, "ACP de-init failed\n");
-+	else
-+		dev_info(&pci->dev, "ACP de-initialized\n");
+-
+-	platform_device_unregister(adata->pdev);
++	mfd_remove_devices(adata->parent);
  	iounmap(adata->acp3x_base);
-+	pm_runtime_disable(&pci->dev);
-+	pm_runtime_get_noresume(&pci->dev);
-+	pci_disable_msi(pci);
+-
  	pci_release_regions(pci);
  	pci_disable_device(pci);
  }
-@@ -178,6 +373,9 @@ static struct pci_driver acp3x_driver  = {
- 	.id_table = snd_acp3x_ids,
- 	.probe = snd_acp3x_probe,
- 	.remove = snd_acp3x_remove,
-+	.driver = {
-+		.pm = &acp3x_pm,
-+	}
- };
+@@ -142,6 +182,7 @@ static struct pci_driver acp3x_driver  = {
  
  module_pci_driver(acp3x_driver);
+ 
++MODULE_AUTHOR("Vishnuvardhanrao.Ravulapati@amd.com");
+ MODULE_AUTHOR("Maruthi.Bayyavarapu@amd.com");
+ MODULE_DESCRIPTION("AMD ACP3x PCI driver");
+ MODULE_LICENSE("GPL v2");
 -- 
 2.7.4
 
