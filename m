@@ -4,32 +4,32 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 69692C388F3
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 11:39:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D769C388F3
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 11:39:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4B7F921906
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 11:39:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E08BE21906
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 11:39:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732949AbfJALjG (ORCPT
+        id S1732983AbfJALjJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Oct 2019 07:39:06 -0400
-Received: from mga12.intel.com ([192.55.52.136]:17385 "EHLO mga12.intel.com"
+        Tue, 1 Oct 2019 07:39:09 -0400
+Received: from mga02.intel.com ([134.134.136.20]:39078 "EHLO mga02.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732685AbfJALin (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Oct 2019 07:38:43 -0400
+        id S1732674AbfJALim (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Oct 2019 07:38:42 -0400
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 01 Oct 2019 04:38:42 -0700
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 01 Oct 2019 04:38:42 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.64,571,1559545200"; 
-   d="scan'208";a="220968935"
+   d="scan'208";a="191434989"
 Received: from black.fi.intel.com ([10.237.72.28])
-  by fmsmga002.fm.intel.com with ESMTP; 01 Oct 2019 04:38:39 -0700
+  by fmsmga007.fm.intel.com with ESMTP; 01 Oct 2019 04:38:39 -0700
 Received: by black.fi.intel.com (Postfix, from userid 1001)
-        id D4A8577A; Tue,  1 Oct 2019 14:38:31 +0300 (EEST)
+        id CA452720; Tue,  1 Oct 2019 14:38:31 +0300 (EEST)
 From:   Mika Westerberg <mika.westerberg@linux.intel.com>
 To:     linux-usb@vger.kernel.org
 Cc:     Andreas Noever <andreas.noever@gmail.com>,
@@ -44,9 +44,9 @@ Cc:     Andreas Noever <andreas.noever@gmail.com>,
         Mario.Limonciello@dell.com,
         Anthony Wong <anthony.wong@canonical.com>,
         linux-kernel@vger.kernel.org
-Subject: [RFC PATCH 22/22] thunderbolt: Do not start firmware unless asked by the user
-Date:   Tue,  1 Oct 2019 14:38:30 +0300
-Message-Id: <20191001113830.13028-23-mika.westerberg@linux.intel.com>
+Subject: [RFC PATCH 21/22] thunderbolt: Update documentation with the USB4 information
+Date:   Tue,  1 Oct 2019 14:38:29 +0300
+Message-Id: <20191001113830.13028-22-mika.westerberg@linux.intel.com>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191001113830.13028-1-mika.westerberg@linux.intel.com>
 References: <20191001113830.13028-1-mika.westerberg@linux.intel.com>
@@ -57,95 +57,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Since now we can do pretty much the same thing in the software
-connection manager than the firmware would do, there is no point
-starting it by default. Instead we can just continue using the software
-connection manager.
-
-Make it possible for user to switch between the two by adding a module
-pararameter (start_icm) which is by default false. Having this ability
-to enable the firmware may be useful at least when debugging possible
-issues with the software connection manager implementation.
+Update user's and administrator's guide to mention USB4, how it relates
+to Thunderbolt (it is public spec of Thunderbolt 3) and and how it is
+supported in Linux.
 
 Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
 ---
- drivers/thunderbolt/icm.c | 14 +++++++++++---
- drivers/thunderbolt/tb.c  |  4 ----
- 2 files changed, 11 insertions(+), 7 deletions(-)
+ Documentation/admin-guide/thunderbolt.rst | 27 ++++++++++++++++++-----
+ 1 file changed, 22 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/thunderbolt/icm.c b/drivers/thunderbolt/icm.c
-index 9c9c6ea2b790..c4a2de0f2a44 100644
---- a/drivers/thunderbolt/icm.c
-+++ b/drivers/thunderbolt/icm.c
-@@ -11,6 +11,7 @@
- 
- #include <linux/delay.h>
- #include <linux/mutex.h>
-+#include <linux/moduleparam.h>
- #include <linux/pci.h>
- #include <linux/pm_runtime.h>
- #include <linux/platform_data/x86/apple.h>
-@@ -43,6 +44,10 @@
- #define ICM_APPROVE_TIMEOUT		10000	/* ms */
- #define ICM_MAX_LINK			4
- 
-+static bool start_icm;
-+module_param(start_icm, bool, 0444);
-+MODULE_PARM_DESC(start_icm, "start ICM firmware if it is not running (default: false)");
+diff --git a/Documentation/admin-guide/thunderbolt.rst b/Documentation/admin-guide/thunderbolt.rst
+index 898ad78f3cc7..4cbed319133d 100644
+--- a/Documentation/admin-guide/thunderbolt.rst
++++ b/Documentation/admin-guide/thunderbolt.rst
+@@ -1,6 +1,25 @@
+-=============
+- Thunderbolt
+-=============
++======================
++ Thunderbolt and USB4
++======================
++USB4 is the public spec of Thunderbolt 3 with some differences at the
++register level among other things. There are two different
++implementations available: firmware connection manager and software
++connection manager. Typically PCs come with a firmware connection
++manager for Thunderbolt 3 and early USB4 capable systems. Apple systems
++on the other hand use software connection manager and the future USB4
++compliant PCs follow the suit.
 +
- /**
-  * struct icm - Internal connection manager private data
-  * @request_lock: Makes sure only one message is send to ICM at time
-@@ -1353,13 +1358,16 @@ static bool icm_ar_is_supported(struct tb *tb)
- {
- 	struct pci_dev *upstream_port;
- 	struct icm *icm = tb_priv(tb);
-+	u32 val;
++The Linux Thunderbolt driver supports both and can detect at runtime
++which connection manager implementation is to be used. To be on the safe
++side the software connection manager in Linux also advertises security
++level ``user`` which means PCIe tunneling is disabled by default. The
++documentation below applies to both implementations with the exception
++that the software connection manager only supports ``user`` security
++level and is expected to be accompanied with an IOMMU based DMA
++protection.
++
++Security levels and how to use them
++-----------------------------------
+ The interface presented here is not meant for end users. Instead there
+ should be a userspace tool that handles all the low-level details, keeps
+ a database of the authorized devices and prompts users for new connections.
+@@ -18,8 +37,6 @@ This will authorize all devices automatically when they appear. However,
+ keep in mind that this bypasses the security levels and makes the system
+ vulnerable to DMA attacks.
  
- 	/*
- 	 * Starting from Alpine Ridge we can use ICM on Apple machines
- 	 * as well. We just need to reset and re-enable it first.
-+	 * However, only start it if explicitly asked by the user.
- 	 */
--	if (!x86_apple_machine)
--		return true;
-+	val = ioread32(tb->nhi->iobase + REG_FW_STS);
-+	if (!(val & REG_FW_STS_ICM_EN) && !start_icm)
-+		return false;
- 
- 	/*
- 	 * Find the upstream PCIe port in case we need to do reset
-@@ -2224,7 +2232,7 @@ struct tb *icm_probe(struct tb_nhi *nhi)
- 
- 	case PCI_DEVICE_ID_INTEL_ICL_NHI0:
- 	case PCI_DEVICE_ID_INTEL_ICL_NHI1:
--		icm->is_supported = icm_ar_is_supported;
-+		icm->is_supported = icm_fr_is_supported;
- 		icm->driver_ready = icm_icl_driver_ready;
- 		icm->set_uuid = icm_icl_set_uuid;
- 		icm->device_connected = icm_icl_device_connected;
-diff --git a/drivers/thunderbolt/tb.c b/drivers/thunderbolt/tb.c
-index 6c468ba96e9a..aebf2c10aa85 100644
---- a/drivers/thunderbolt/tb.c
-+++ b/drivers/thunderbolt/tb.c
-@@ -9,7 +9,6 @@
- #include <linux/slab.h>
- #include <linux/errno.h>
- #include <linux/delay.h>
--#include <linux/platform_data/x86/apple.h>
- 
- #include "tb.h"
- #include "tb_regs.h"
-@@ -1117,9 +1116,6 @@ struct tb *tb_probe(struct tb_nhi *nhi)
- 	struct tb_cm *tcm;
- 	struct tb *tb;
- 
--	if (!x86_apple_machine)
--		return NULL;
--
- 	tb = tb_domain_alloc(nhi, sizeof(*tcm));
- 	if (!tb)
- 		return NULL;
+-Security levels and how to use them
+------------------------------------
+ Starting with Intel Falcon Ridge Thunderbolt controller there are 4
+ security levels available. Intel Titan Ridge added one more security level
+ (usbonly). The reason for these is the fact that the connected devices can
 -- 
 2.23.0
 
