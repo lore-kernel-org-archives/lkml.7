@@ -4,49 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C335BECE587
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 16:40:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E60E4ECE587
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 16:40:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8C85A2168B
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 16:40:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B2B872168B
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 16:40:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569948017;
-	bh=lLf2g9KCQK5PoHP2qYZDVggikNw887AYHXv+3PO2oMY=;
+	s=default; t=1569948020;
+	bh=2py4yvsg+8cjdkDAYD5Lyx1lM4YYJQqh+WS9ZrdrzDQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Ptw9jNMfsLAjRt7Fa1Oqb7mH/6iNNFmMD9sNyV0dTYobPYOlRKQ+C0dHor3ASiG/g
-	 X+5WcPBUmN1CTPck7IYklI22sR//7TGVav+bf0RyyRXi7iVJ9TzkoHjAdTSFsWQUdz
-	 tW66OoTn+stT6Xqd/jMdRcsLs6K3ZiC0Gnf0UkU0=
+	b=WuZAr9G1vkNF+0afj/+1QzrN2m7DoRb2yGvTZvOyWomvZEIO83WIRxKE6GH0kdp6x
+	 cuppZzxyu8F3cVd3SK3LIMo62xHGgkwc5XXFwR6E4n7LpsPsPdgc0YYp9hhF+z9miF
+	 09U5CRFyFLSc3AiEO6TzCai+AVivJHhqilad/JyI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729753AbfJAQkQ (ORCPT
+        id S1729850AbfJAQkT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Oct 2019 12:40:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51396 "EHLO mail.kernel.org"
+        Tue, 1 Oct 2019 12:40:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51476 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729689AbfJAQkN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Oct 2019 12:40:13 -0400
+        id S1729738AbfJAQkS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Oct 2019 12:40:18 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 66ED221906;
-        Tue,  1 Oct 2019 16:40:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7963B21906;
+        Tue,  1 Oct 2019 16:40:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569948013;
-        bh=lLf2g9KCQK5PoHP2qYZDVggikNw887AYHXv+3PO2oMY=;
+        s=default; t=1569948016;
+        bh=2py4yvsg+8cjdkDAYD5Lyx1lM4YYJQqh+WS9ZrdrzDQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ddKuCXI/HFhP4RQMxzJ8d6U8QvvxwncGAHXFD5nZJPPZrcUiVWKNAR9q1kszqpZ/M
-         WtpGW51gj5/ih3iMr1tWst531ZUn/uiWUjqAMXMlE7JteP2OdM8G0P0l0W8c+qaMX2
-         sStJgZN+zo2UGhkkf1TXptQ0TZedFZAT+XN69aeg=
+        b=kf7X3A7d+1R0/ic7D3dZEXm74gT0VmprhZOoXrN4ln3MiEsKmL/mIA0Wridp5soxz
+         a/0FFFYlouZlBhPUYsCedepffjJ4YNCpyCoa2LSdf5Rt5/Ko1t0utZBciWE962LmIr
+         Qv7SU/PQBAL0iONAiTClDdq2BPMKhPI5W3xoqEwc=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Stefan Mavrodiev <stefan@olimex.com>,
-        Zhang Rui <rui.zhang@intel.com>,
-        Sasha Levin <sashal@kernel.org>, linux-pm@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.3 34/71] thermal_hwmon: Sanitize thermal_zone type
-Date:   Tue,  1 Oct 2019 12:38:44 -0400
-Message-Id: <20191001163922.14735-34-sashal@kernel.org>
+Cc:     Dmytro Linkin <dmitrolin@mellanox.com>,
+        Vlad Buslov <vladbu@mellanox.com>,
+        Eli Britstein <elibr@mellanox.com>,
+        Roi Dayan <roid@mellanox.com>,
+        Saeed Mahameed <saeedm@mellanox.com>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
+        linux-rdma@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.3 37/71] net/mlx5e: Fix matching on tunnel addresses type
+Date:   Tue,  1 Oct 2019 12:38:47 -0400
+Message-Id: <20191001163922.14735-37-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191001163922.14735-1-sashal@kernel.org>
 References: <20191001163922.14735-1-sashal@kernel.org>
@@ -59,51 +63,134 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Stefan Mavrodiev <stefan@olimex.com>
+From: Dmytro Linkin <dmitrolin@mellanox.com>
 
-[ Upstream commit 8c7aa184281c01fc26f319059efb94725012921d ]
+[ Upstream commit fe1587a7de94912ed75ba5ddbfabf0741f9f8239 ]
 
-When calling thermal_add_hwmon_sysfs(), the device type is sanitized by
-replacing '-' with '_'. However tz->type remains unsanitized. Thus
-calling thermal_hwmon_lookup_by_type() returns no device. And if there is
-no device, thermal_remove_hwmon_sysfs() fails with "hwmon device lookup
-failed!".
+In mlx5 parse_tunnel_attr() function dispatch on encap IP address type
+is performed by directly checking flow_rule_match_key() on
+FLOW_DISSECTOR_KEY_ENC_IPV4_ADDRS, and then on
+FLOW_DISSECTOR_KEY_ENC_IPV6_ADDRS. However, since those are stored in
+union, first check is always true if any type of encap address is set,
+which leads to IPv6 tunnel encap address being parsed as IPv4 by mlx5.
+Determine correct IP address type by checking control key first and if
+it set, take address type from match.key->addr_type.
 
-The result is unregisted hwmon devices in the sysfs.
-
-Fixes: 409ef0bacacf ("thermal_hwmon: Sanitize attribute name passed to hwmon")
-
-Signed-off-by: Stefan Mavrodiev <stefan@olimex.com>
-Signed-off-by: Zhang Rui <rui.zhang@intel.com>
+Fixes: d1bda7eecd88 ("net/mlx5e: Allow matching only enc_key_id/enc_dst_port for decapsulation action")
+Signed-off-by: Dmytro Linkin <dmitrolin@mellanox.com>
+Reviewed-by: Vlad Buslov <vladbu@mellanox.com>
+Reviewed-by: Eli Britstein <elibr@mellanox.com>
+Reviewed-by: Roi Dayan <roid@mellanox.com>
+Signed-off-by: Saeed Mahameed <saeedm@mellanox.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/thermal/thermal_hwmon.c | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+ .../net/ethernet/mellanox/mlx5/core/en_tc.c   | 89 +++++++++++--------
+ 1 file changed, 53 insertions(+), 36 deletions(-)
 
-diff --git a/drivers/thermal/thermal_hwmon.c b/drivers/thermal/thermal_hwmon.c
-index 40c69a533b240..dd5d8ee379287 100644
---- a/drivers/thermal/thermal_hwmon.c
-+++ b/drivers/thermal/thermal_hwmon.c
-@@ -87,13 +87,17 @@ static struct thermal_hwmon_device *
- thermal_hwmon_lookup_by_type(const struct thermal_zone_device *tz)
- {
- 	struct thermal_hwmon_device *hwmon;
-+	char type[THERMAL_NAME_LENGTH];
+diff --git a/drivers/net/ethernet/mellanox/mlx5/core/en_tc.c b/drivers/net/ethernet/mellanox/mlx5/core/en_tc.c
+index 00b2d4a86159f..98be5fe336743 100644
+--- a/drivers/net/ethernet/mellanox/mlx5/core/en_tc.c
++++ b/drivers/net/ethernet/mellanox/mlx5/core/en_tc.c
+@@ -1369,46 +1369,63 @@ static int parse_tunnel_attr(struct mlx5e_priv *priv,
+ 		return err;
+ 	}
  
- 	mutex_lock(&thermal_hwmon_list_lock);
--	list_for_each_entry(hwmon, &thermal_hwmon_list, node)
--		if (!strcmp(hwmon->type, tz->type)) {
-+	list_for_each_entry(hwmon, &thermal_hwmon_list, node) {
-+		strcpy(type, tz->type);
-+		strreplace(type, '-', '_');
-+		if (!strcmp(hwmon->type, type)) {
- 			mutex_unlock(&thermal_hwmon_list_lock);
- 			return hwmon;
- 		}
-+	}
- 	mutex_unlock(&thermal_hwmon_list_lock);
+-	if (flow_rule_match_key(rule, FLOW_DISSECTOR_KEY_ENC_IPV4_ADDRS)) {
+-		struct flow_match_ipv4_addrs match;
++	if (flow_rule_match_key(rule, FLOW_DISSECTOR_KEY_ENC_CONTROL)) {
++		struct flow_match_control match;
++		u16 addr_type;
  
- 	return NULL;
+-		flow_rule_match_enc_ipv4_addrs(rule, &match);
+-		MLX5_SET(fte_match_set_lyr_2_4, headers_c,
+-			 src_ipv4_src_ipv6.ipv4_layout.ipv4,
+-			 ntohl(match.mask->src));
+-		MLX5_SET(fte_match_set_lyr_2_4, headers_v,
+-			 src_ipv4_src_ipv6.ipv4_layout.ipv4,
+-			 ntohl(match.key->src));
+-
+-		MLX5_SET(fte_match_set_lyr_2_4, headers_c,
+-			 dst_ipv4_dst_ipv6.ipv4_layout.ipv4,
+-			 ntohl(match.mask->dst));
+-		MLX5_SET(fte_match_set_lyr_2_4, headers_v,
+-			 dst_ipv4_dst_ipv6.ipv4_layout.ipv4,
+-			 ntohl(match.key->dst));
+-
+-		MLX5_SET_TO_ONES(fte_match_set_lyr_2_4, headers_c, ethertype);
+-		MLX5_SET(fte_match_set_lyr_2_4, headers_v, ethertype, ETH_P_IP);
+-	} else if (flow_rule_match_key(rule, FLOW_DISSECTOR_KEY_ENC_IPV6_ADDRS)) {
+-		struct flow_match_ipv6_addrs match;
++		flow_rule_match_enc_control(rule, &match);
++		addr_type = match.key->addr_type;
+ 
+-		flow_rule_match_enc_ipv6_addrs(rule, &match);
+-		memcpy(MLX5_ADDR_OF(fte_match_set_lyr_2_4, headers_c,
+-				    src_ipv4_src_ipv6.ipv6_layout.ipv6),
+-		       &match.mask->src, MLX5_FLD_SZ_BYTES(ipv6_layout, ipv6));
+-		memcpy(MLX5_ADDR_OF(fte_match_set_lyr_2_4, headers_v,
+-				    src_ipv4_src_ipv6.ipv6_layout.ipv6),
+-		       &match.key->src, MLX5_FLD_SZ_BYTES(ipv6_layout, ipv6));
++		/* For tunnel addr_type used same key id`s as for non-tunnel */
++		if (addr_type == FLOW_DISSECTOR_KEY_IPV4_ADDRS) {
++			struct flow_match_ipv4_addrs match;
+ 
+-		memcpy(MLX5_ADDR_OF(fte_match_set_lyr_2_4, headers_c,
+-				    dst_ipv4_dst_ipv6.ipv6_layout.ipv6),
+-		       &match.mask->dst, MLX5_FLD_SZ_BYTES(ipv6_layout, ipv6));
+-		memcpy(MLX5_ADDR_OF(fte_match_set_lyr_2_4, headers_v,
+-				    dst_ipv4_dst_ipv6.ipv6_layout.ipv6),
+-		       &match.key->dst, MLX5_FLD_SZ_BYTES(ipv6_layout, ipv6));
++			flow_rule_match_enc_ipv4_addrs(rule, &match);
++			MLX5_SET(fte_match_set_lyr_2_4, headers_c,
++				 src_ipv4_src_ipv6.ipv4_layout.ipv4,
++				 ntohl(match.mask->src));
++			MLX5_SET(fte_match_set_lyr_2_4, headers_v,
++				 src_ipv4_src_ipv6.ipv4_layout.ipv4,
++				 ntohl(match.key->src));
+ 
+-		MLX5_SET_TO_ONES(fte_match_set_lyr_2_4, headers_c, ethertype);
+-		MLX5_SET(fte_match_set_lyr_2_4, headers_v, ethertype, ETH_P_IPV6);
++			MLX5_SET(fte_match_set_lyr_2_4, headers_c,
++				 dst_ipv4_dst_ipv6.ipv4_layout.ipv4,
++				 ntohl(match.mask->dst));
++			MLX5_SET(fte_match_set_lyr_2_4, headers_v,
++				 dst_ipv4_dst_ipv6.ipv4_layout.ipv4,
++				 ntohl(match.key->dst));
++
++			MLX5_SET_TO_ONES(fte_match_set_lyr_2_4, headers_c,
++					 ethertype);
++			MLX5_SET(fte_match_set_lyr_2_4, headers_v, ethertype,
++				 ETH_P_IP);
++		} else if (addr_type == FLOW_DISSECTOR_KEY_IPV6_ADDRS) {
++			struct flow_match_ipv6_addrs match;
++
++			flow_rule_match_enc_ipv6_addrs(rule, &match);
++			memcpy(MLX5_ADDR_OF(fte_match_set_lyr_2_4, headers_c,
++					    src_ipv4_src_ipv6.ipv6_layout.ipv6),
++			       &match.mask->src, MLX5_FLD_SZ_BYTES(ipv6_layout,
++								   ipv6));
++			memcpy(MLX5_ADDR_OF(fte_match_set_lyr_2_4, headers_v,
++					    src_ipv4_src_ipv6.ipv6_layout.ipv6),
++			       &match.key->src, MLX5_FLD_SZ_BYTES(ipv6_layout,
++								  ipv6));
++
++			memcpy(MLX5_ADDR_OF(fte_match_set_lyr_2_4, headers_c,
++					    dst_ipv4_dst_ipv6.ipv6_layout.ipv6),
++			       &match.mask->dst, MLX5_FLD_SZ_BYTES(ipv6_layout,
++								   ipv6));
++			memcpy(MLX5_ADDR_OF(fte_match_set_lyr_2_4, headers_v,
++					    dst_ipv4_dst_ipv6.ipv6_layout.ipv6),
++			       &match.key->dst, MLX5_FLD_SZ_BYTES(ipv6_layout,
++								  ipv6));
++
++			MLX5_SET_TO_ONES(fte_match_set_lyr_2_4, headers_c,
++					 ethertype);
++			MLX5_SET(fte_match_set_lyr_2_4, headers_v, ethertype,
++				 ETH_P_IPV6);
++		}
+ 	}
+ 
+ 	if (flow_rule_match_key(rule, FLOW_DISSECTOR_KEY_ENC_IP)) {
 -- 
 2.20.1
 
