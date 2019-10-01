@@ -2,199 +2,168 @@ Return-Path: <SRS0=YRFP=X2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31B3FECE58A
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 15:43:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00615C352AA
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 15:44:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 13E2321D7B
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 15:43:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C55A22086A
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 15:44:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=networkplumber-org.20150623.gappssmtp.com header.i=@networkplumber-org.20150623.gappssmtp.com header.b="aaXHJnyI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389624AbfJAPnP (ORCPT
+        id S1726086AbfJAPoh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Oct 2019 11:43:15 -0400
-Received: from mx2.suse.de ([195.135.220.15]:55430 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727302AbfJAPnP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Oct 2019 11:43:15 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 972FDAD2A;
-        Tue,  1 Oct 2019 15:43:12 +0000 (UTC)
-Message-ID: <0557c83bcb781724a284811fef7fdb122039f336.camel@suse.de>
-Subject: Re: [PATCH 05/11] of: Ratify of_dma_configure() interface
-From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-To:     Rob Herring <robh@kernel.org>
-Cc:     devicetree@vger.kernel.org,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Arnd Bergmann <arnd@arndb.de>, PCI <linux-pci@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Christoph Hellwig <hch@infradead.org>,
-        Marek Vasut <marek.vasut@gmail.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Oza Pawandeep <oza.oza@broadcom.com>,
-        Stefan Wahren <wahrenst@gmx.net>,
-        Simon Horman <horms+renesas@verge.net.au>,
-        Frank Rowand <frowand.list@gmail.com>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        Robin Murphy <robin.murphy@arm.com>
-Date:   Tue, 01 Oct 2019 17:43:09 +0200
-In-Reply-To: <CAL_JsqLnKxuQRR3sGGtXF3nwwDx7DOONPPYz37ROk7u_+cxRug@mail.gmail.com>
-References: <20190927002455.13169-1-robh@kernel.org>
-         <20190927002455.13169-6-robh@kernel.org>
-         <20190930125752.GD12051@infradead.org>
-         <95f8dabea99f104336491281b88c04b58d462258.camel@suse.de>
-         <CAL_JsqLnKxuQRR3sGGtXF3nwwDx7DOONPPYz37ROk7u_+cxRug@mail.gmail.com>
-Content-Type: multipart/signed; micalg="pgp-sha256";
-        protocol="application/pgp-signature"; boundary="=-Cs3oOlvxVqdSsNFddCdM"
-User-Agent: Evolution 3.32.4 
+        Tue, 1 Oct 2019 11:44:37 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:42871 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726309AbfJAPoh (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Oct 2019 11:44:37 -0400
+Received: by mail-pf1-f194.google.com with SMTP id q12so8268847pff.9
+        for <linux-kernel@vger.kernel.org>; Tue, 01 Oct 2019 08:44:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=networkplumber-org.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=3RxnDGRr7B1XTJFunDM7ZNbXmbQskGnoRCYVHzPDhjY=;
+        b=aaXHJnyItKtapP/eT7bgV/RWcyFHwp4VhYihtj48vumdyUhczhQsttZcV7NVVOnK/G
+         bA0s4p9tepc1VmsRkQQ5CQML0vT+xCOsgbuaWoLtVVaFijXVrlx1DMR1wGOCjdFdgdrc
+         ZgvEtbd23AuEK8wDpfL/qIoLrUUGbeMRcwenVT+WV8JqrWPao1UWc8J6T1QjmQof0Ue7
+         pC2pPoOxrWe6FNsXNsRVMzR3O1osZ6JF9B98kOxXht0KlPseHc2BedqgSnEqmIK+Wfg0
+         v6qkpF5ICEM8hJgvHXeS85jUZ1gtI97Ll1NkBXbp9Vjxs0FtyJ+wtWhnMuDTboj/IaSY
+         KwXw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=3RxnDGRr7B1XTJFunDM7ZNbXmbQskGnoRCYVHzPDhjY=;
+        b=VD9/yMbUTCr+5PdIHfr8/I7uNqM9Iz2dTe+ovFQNDpLUraqhpVN+h/lYOtPG+4sxOM
+         okv+Gxhjplwk7xCh9iFhQ5hllDcP4DSbQ5B40f0ty8ySBkjXOgTW8ZB0cukfatfHmdBR
+         EOIlfDD+Nrt7FpWmFJPGFwXiHzqZTSlSwpRimSp1/gPuF1sVnqjcmww6W4BAzC78jNl2
+         QIGo1qR3OpWqCk8ThFm3TfB4lTxz3n1uPhEJbkCzhPllYuCv/tVA3CB586GQq2/r3qpU
+         XDTL/+mvzH51y/tvDC7R46rCLNeep2BBbHoTcOZJy3tnVFmnEoHjTFjCIQdYn+jzwk5N
+         +Ntw==
+X-Gm-Message-State: APjAAAWvyOAwelixNKz0V9ggZ6vizhFDS3tdaOuF48JvzzAjtVKAoGBL
+        KK1Pk1Gmki7bC0Pd62jjq23oEuk8Lut4eA==
+X-Google-Smtp-Source: APXvYqwVhM/EntPxs94ONszYZE1mKQBE9G5wS7fcs2w8cMG3BAuOlnjqb0PYFYz8fL7WJ+yQjl16nA==
+X-Received: by 2002:a63:350f:: with SMTP id c15mr27311143pga.225.1569944674989;
+        Tue, 01 Oct 2019 08:44:34 -0700 (PDT)
+Received: from hermes.lan (204-195-22-127.wavecable.com. [204.195.22.127])
+        by smtp.gmail.com with ESMTPSA id p88sm5938164pjp.22.2019.10.01.08.44.34
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 01 Oct 2019 08:44:34 -0700 (PDT)
+Date:   Tue, 1 Oct 2019 08:44:27 -0700
+From:   Stephen Hemminger <stephen@networkplumber.org>
+To:     Willem de Bruijn <willemdebruijn.kernel@gmail.com>
+Cc:     Sriram Krishnan <srirakr2@cisco.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        xe-linux-external@cisco.com,
+        "David S. Miller" <davem@davemloft.net>,
+        Network Development <netdev@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] AF_PACKET doesnt strip VLAN information
+Message-ID: <20191001084427.73f130c0@hermes.lan>
+In-Reply-To: <CA+FuTSfN5=xkYUKiafM3uKF37kV6mg0Cn5WGv2QF887Pyw5A5g@mail.gmail.com>
+References: <1569646705-10585-1-git-send-email-srirakr2@cisco.com>
+        <CA+FuTSfN5=xkYUKiafM3uKF37kV6mg0Cn5WGv2QF887Pyw5A5g@mail.gmail.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Mon, 30 Sep 2019 11:16:14 -0400
+Willem de Bruijn <willemdebruijn.kernel@gmail.com> wrote:
 
---=-Cs3oOlvxVqdSsNFddCdM
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+> On Mon, Sep 30, 2019 at 1:24 AM Sriram Krishnan <srirakr2@cisco.com> wrote:
+> >
+> > When an application sends with AF_PACKET and places a vlan header on
+> > the raw packet; then the AF_PACKET needs to move the tag into the skb
+> > so that it gets processed normally through the rest of the transmit
+> > path.
+> >
+> > This is particularly a problem on Hyper-V where the host only allows
+> > vlan in the offload info.  
+> 
+> This sounds like behavior that needs to be addressed in the driver, instead?
 
-On Mon, 2019-09-30 at 16:24 -0500, Rob Herring wrote:
-> On Mon, Sep 30, 2019 at 8:32 AM Nicolas Saenz Julienne
-> <nsaenzjulienne@suse.de> wrote:
-> > On Mon, 2019-09-30 at 05:57 -0700, Christoph Hellwig wrote:
-> > > On Thu, Sep 26, 2019 at 07:24:49PM -0500, Rob Herring wrote:
-> > > > -int of_dma_configure(struct device *dev, struct device_node *np, b=
-ool
-> > > > force_dma)
-> > > > +int of_dma_configure(struct device *dev, struct device_node *paren=
-t,
-> > > > bool
-> > > > force_dma)
-> > >=20
-> > > This creates a > 80 char line.
-> > >=20
-> > > >  {
-> > > >     u64 dma_addr, paddr, size =3D 0;
-> > > >     int ret;
-> > > >     bool coherent;
-> > > >     unsigned long offset;
-> > > >     const struct iommu_ops *iommu;
-> > > > +   struct device_node *np;
-> > > >     u64 mask;
-> > > >=20
-> > > > +   np =3D dev->of_node;
-> > > > +   if (!np)
-> > > > +           np =3D parent;
-> > > > +   if (!np)
-> > > > +           return -ENODEV;
-> > >=20
-> > > I have to say I find the older calling convention simpler to understa=
-nd.
-> > > If we want to enforce the invariant I'd rather do that explicitly:
-> > >=20
-> > >       if (dev->of_node && np !=3D dev->of_node)
-> > >               return -EINVAL;
-> >=20
-> > As is, this would break Freescale Layerscape fsl-mc bus' dma_configure(=
-):
->=20
-> This may break PCI too for devices that have a DT node.
->=20
-> > static int fsl_mc_dma_configure(struct device *dev)
-> > {
-> >         struct device *dma_dev =3D dev;
-> >=20
-> >         while (dev_is_fsl_mc(dma_dev))
-> >                 dma_dev =3D dma_dev->parent;
-> >=20
-> >         return of_dma_configure(dev, dma_dev->of_node, 0);
-> > }
-> >=20
-> > But I think that with this series, given the fact that we now treat the=
- lack
-> > of
-> > dma-ranges as a 1:1 mapping instead of an error, we could rewrite the
-> > function
-> > like this:
->=20
-> Now, I'm reconsidering allowing this abuse... It's better if the code
-> which understands the bus structure in DT for a specific bus passes in
-> the right thing. Maybe I should go back to Robin's version (below).
-> OTOH, the existing assumption that 'dma-ranges' was in the immediate
-> parent was an assumption on the bus structure which maybe doesn't
-> always apply.
->=20
-> diff --git a/drivers/of/device.c b/drivers/of/device.c
-> index a45261e21144..6951450bb8f3 100644
-> --- a/drivers/of/device.c
-> +++ b/drivers/of/device.c
-> @@ -98,12 +98,15 @@ int of_dma_configure(struct device *dev, struct
-> device_node *parent, bool force_
->         u64 mask;
->=20
->         np =3D dev->of_node;
-> -       if (!np)
-> -               np =3D parent;
-> +       if (np)
-> +               parent =3D of_get_dma_parent(np);
-> +       else
-> +               np =3D of_node_get(parent);
->         if (!np)
->                 return -ENODEV;
->=20
-> -       ret =3D of_dma_get_range(np, &dma_addr, &paddr, &size);
-> +       ret =3D of_dma_get_range(parent, &dma_addr, &paddr, &size);
-> +       of_node_put(parent);
->         if (ret < 0) {
->                 /*
->                  * For legacy reasons, we have to assume some devices nee=
-d
+This was what we did first, but the problem was more general.
+For example, many filtering functions assume that vlan tag is in
+skb meta data, not the packet data itself. Therefore AF_PACKET would
+get around any filter rules.
 
-I spent some time thinking about your comments and researching. I came to t=
-he
-realization that both these solutions break the usage in
-drivers/gpu/drm/sun4i/sun4i_backend.c:805. In that specific case both
-'dev->of_node' and 'parent' exist yet the device receiving the configuratio=
-n
-and 'parent' aren't related in any way.
+> 
+> > Cc: xe-linux-external@cisco.com
+> > ---
+> >  net/packet/af_packet.c | 26 ++++++++++++++++++++++++--
+> >  1 file changed, 24 insertions(+), 2 deletions(-)
+> >
+> > diff --git a/net/packet/af_packet.c b/net/packet/af_packet.c
+> > index e2742b0..cfe0904 100644
+> > --- a/net/packet/af_packet.c
+> > +++ b/net/packet/af_packet.c
+> > @@ -1849,15 +1849,35 @@ static int packet_rcv_spkt(struct sk_buff *skb, struct net_device *dev,
+> >         return 0;
+> >  }
+> >
+> > -static void packet_parse_headers(struct sk_buff *skb, struct socket *sock)
+> > +static int packet_parse_headers(struct sk_buff *skb, struct socket *sock)
+> >  {
+> >         if ((!skb->protocol || skb->protocol == htons(ETH_P_ALL)) &&
+> >             sock->type == SOCK_RAW) {  
+> 
+> If inside this branch, may miss packets with skb->protocol set to one
+> of the VLAN Ethertypes.
+> 
+> > +               __be16 ethertype;
+> > +
+> >                 skb_reset_mac_header(skb);
+> > +
+> > +               ethertype = eth_hdr(skb)->h_proto;
+> > +               /*
+> > +                * If Vlan tag is present in the packet
+> > +                *  move it to skb
+> > +               */
+> > +               if (eth_type_vlan(ethertype)) {
+> > +                       int err;
+> > +                       __be16 vlan_tci;
+> > +
+> > +                       err = __skb_vlan_pop(skb, &vlan_tci);
+> > +                       if (unlikely(err))
+> > +                               return err;
+> > +
+> > +                       __vlan_hwaccel_put_tag(skb, ethertype, vlan_tci);  
+> 
+> What happens with multiple tags (QinQ)?
 
-IOW we can't just use 'dev->of_node' as a starting point to walk upwards th=
-e
-tree. We always have to respect whatever DT node the bus provided, and star=
-t
-there. This clashes with the current solutions, as they are based on the fa=
-ct
-that we can use dev->of_node when present.
+Same as multiple tags in a normal sent packet. The second tag is in
+the packet itself.
 
-My guess at this point, if we're forced to honor that behaviour, is that we
-have to create a new API for the PCI use case. Something the likes of
-of_dma_configure_parent().
-
-Regards,
-Nicolas
-
-
---=-Cs3oOlvxVqdSsNFddCdM
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-Content-Transfer-Encoding: 7bit
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCAAdFiEErOkkGDHCg2EbPcGjlfZmHno8x/4FAl2TdA0ACgkQlfZmHno8
-x/6K4AgAjioHwGF/mb4/iuCV18ZNbc5+28Uj8QSuVjilegKoNykY14Tj+cUOZScx
-3EF7lURVACHKIEG1K4mOtTqx/gzU+CkDYq3h6j7WkGGOIVY9Uadlnj/Koe7b3WuN
-CtyjG0ZpwC0Houf+sUzULF/oh70hKCQnGJqaw4zM11eaV3GWVFusupxh6VuZ61Ez
-PFo9kjYEn9DJFCUYzlZBYmqo7KIXm17W2fiY6AqjPvYE7s4HoA3Y1IE3uofxIY0B
-0jyx5feECFqXNM6OXhaOVDV5jiDrM2aFc1/w0IYU3dcaQxjkPFlb4yI7KtzE/HBT
-DJ49VyTT04oQy0DYBsw8BXur1BGXCw==
-=Iift
------END PGP SIGNATURE-----
-
---=-Cs3oOlvxVqdSsNFddCdM--
+> 
+> > +               }
+> > +
+> >                 skb->protocol = dev_parse_header_protocol(skb);
+> >         }
+> >
+> >         skb_probe_transport_header(skb);
+> > +       return 0;
+> >  }
+> >
+> >  /*
+> > @@ -1979,7 +1999,9 @@ static int packet_sendmsg_spkt(struct socket *sock, struct msghdr *msg,
+> >         if (unlikely(extra_len == 4))
+> >                 skb->no_fcs = 1;
+> >
+> > -       packet_parse_headers(skb, sock);
+> > +       err = packet_parse_headers(skb, sock);
+> > +       if (err)
+> > +               goto out_unlock;  
+> 
+> This only tests the new return value in one of three callers of
+> packet_sendmsg_spkt.
 
