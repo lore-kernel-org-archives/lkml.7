@@ -2,153 +2,173 @@ Return-Path: <SRS0=YRFP=X2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3EEC4C352AA
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 21:01:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DDDBAC352AA
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 21:01:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 160CF2168B
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 21:01:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A552A2133F
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 21:01:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="F4dDv2k6"
+	dkim=pass (1024-bit key) header.d=victronenergy.com header.i=@victronenergy.com header.b="NAVDgB4D"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727104AbfJAVB1 (ORCPT
+        id S1727401AbfJAVBa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Oct 2019 17:01:27 -0400
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:42908 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726402AbfJAVB0 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Oct 2019 17:01:26 -0400
-Received: by mail-pg1-f193.google.com with SMTP id z12so10537084pgp.9
-        for <linux-kernel@vger.kernel.org>; Tue, 01 Oct 2019 14:01:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=joelfernandes.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=uYKxifQyI8LZAL0b+I59pyXeuVXwNstd2CD5JAIyVRg=;
-        b=F4dDv2k6Cs43F0QIi/a/1eyYuvus2CAork56dBSxvs1UNAyVW/7wTsOjQlu3U8jhbK
-         X2J2ce53E5QLL2j+inv1Ao2Vd+2fZWtDf5gF52lrddIvneL02g6WxA+0Xl5qHeo3mbir
-         rD2lxbGuthFypdlVW10UuLLFJ6cytxxr34Z9I=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=uYKxifQyI8LZAL0b+I59pyXeuVXwNstd2CD5JAIyVRg=;
-        b=hZw2TtiUVHjJb6LTv2Pp/SrjlGQtRhmVyYnctuzV9AlOvMUBp0ekcAo3LtpwsOA3Ru
-         XF2UVUXTwYtmkPQImM0h66cEQ9nkhNSU6N+x92GeJ8Tlv0yib+4NhuQbAjgJvU5jYAHI
-         rCrsBw9cjG98tfEIU2rIg6nGPAj3IMvWaWCjThkXSiWYyIMTXYBuzZAJwZs8YR6wcIc3
-         0asfdETVtlyfIHftpIVjXC0Y2E05ctQgTahyXECUbZMi2gK5oNiCRsuCb9VY/gCzb8mC
-         CWfYCFHrpwDg5/gsBwT1+Tc+8bdo4QvowsMcrJdjTD6YMw7KQBOO5em+Ter6lteGKLGf
-         4V0Q==
-X-Gm-Message-State: APjAAAVznkJSDJolL7DTe+R4xtgqjggrPlvoe9T88Ay24wfvErsENmV8
-        KMlDDNPSTl/LZFLg1P9ZnL3kVg==
-X-Google-Smtp-Source: APXvYqzQF+OqM1NVJyzA7Dp7ll6y6jrAz7paipzr4igoOLdB+fUpwl+DgVsyghwH2mbKfoe7C8/KnQ==
-X-Received: by 2002:a65:5883:: with SMTP id d3mr12672916pgu.332.1569963685064;
-        Tue, 01 Oct 2019 14:01:25 -0700 (PDT)
-Received: from localhost ([2620:15c:6:12:9c46:e0da:efbf:69cc])
-        by smtp.gmail.com with ESMTPSA id m12sm20075859pff.66.2019.10.01.14.01.24
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 01 Oct 2019 14:01:24 -0700 (PDT)
-Date:   Tue, 1 Oct 2019 17:01:23 -0400
-From:   Joel Fernandes <joel@joelfernandes.org>
-To:     Alan Stern <stern@rowland.harvard.edu>
-Cc:     LKMM Maintainers -- Akira Yokosawa <akiyks@gmail.com>,
-        Andrea Parri <parri.andrea@gmail.com>,
-        Boqun Feng <boqun.feng@gmail.com>,
-        Daniel Lustig <dlustig@nvidia.com>,
-        David Howells <dhowells@redhat.com>,
-        Jade Alglave <j.alglave@ucl.ac.uk>,
-        Luc Maranget <luc.maranget@inria.fr>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Will Deacon <will@kernel.org>,
-        Kernel development list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 1/3] tools/memory-model/Documentation: Fix typos in
- explanation.txt
-Message-ID: <20191001210123.GA41667@google.com>
-References: <Pine.LNX.4.44L0.1910011331320.1991-100000@iolanthe.rowland.org>
+        Tue, 1 Oct 2019 17:01:30 -0400
+Received: from mail-eopbgr140139.outbound.protection.outlook.com ([40.107.14.139]:8538
+        "EHLO EUR01-VE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726973AbfJAVB2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Oct 2019 17:01:28 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=hVlmhPhi6RIODzhAy40mZ7FgPNFQHFk/YSOFxwiHFfFN6/O7Ur5ioiY8xYlnVjPnTVypm/VS5THINd5twm/gJZOlJUBfZQzDWlBm+zBAD+IT3b5EwUcoF54Md5ozQ8A/AQ1NYelO8qPqQUTCqhptEGK54Ttpph8KzwiZfyS02VFHCjpgCf/tzQCnGVVA4ik9O/XqKXy7V8uJANi1nE59YeTLRfR4mRW1t6DGcuEfVYYzmKP7Lf9IjI+iTm1JZHpUz/qrqWBjGE+Q+TCdVL0UM61bqV95UZd9J8WSbKZpTLhghzlE3XyUJ85lkQ0ps0k+OY9lPUeNvhx6MpXXAXua5w==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=NDinrLYU/wk20kHj6EjeGYsAhRnYvw98zkoHY3Qy3So=;
+ b=NBXgiMc/sDXoPUjAwuo7auM9VlYgs2ipifyCwcUCj/38LUKjBSc5/WSd4NPp2f4LiHh84NhoB5XdFN2QjzlY4jEszigPxQyJKH2MZ+LGZGRHCGrbAJuCCOVa45lW3JzBY6RVK4LZTBeYEvRoqjzk3TN/sU6MxqbdqYlnBRKZxvOnu+G7wUMAXO3Q6trrqV8SZG+zU8D60tNEbRXElMv+vVD8grJyIllrvu56sV/cf+deToAhneq+rZL7LBnmxuoMFNTZEqA0PER0Z+39X6Un/YYeDZXeYlKMDWzpxyN4427UaUz9XwVuJdU0BR0S5V3c1y/IqJEkNMeWpVmQ5pszrg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=victronenergy.com; dmarc=pass action=none
+ header.from=victronenergy.com; dkim=pass header.d=victronenergy.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=victronenergy.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=NDinrLYU/wk20kHj6EjeGYsAhRnYvw98zkoHY3Qy3So=;
+ b=NAVDgB4DEntFfI8XC6IyHXjd9o5AB1EYpIgT/6cgkNngoPGZtsDtbfFw+lawMr354W1KjTvAaQOkJZh6HwsOdEeLXXeV9obzw6t8eiRIm0Y3upXc+NZXmAlOoVqL2W87ZPVUTCJDadcZaKKkTmYok7rRpk2HbOjv40xQC+KfLjs=
+Received: from VI1PR0701MB2623.eurprd07.prod.outlook.com (10.173.82.19) by
+ VI1PR0701MB2813.eurprd07.prod.outlook.com (10.173.71.21) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2305.15; Tue, 1 Oct 2019 21:01:25 +0000
+Received: from VI1PR0701MB2623.eurprd07.prod.outlook.com
+ ([fe80::dc92:2e0d:561a:fbb1]) by VI1PR0701MB2623.eurprd07.prod.outlook.com
+ ([fe80::dc92:2e0d:561a:fbb1%8]) with mapi id 15.20.2305.017; Tue, 1 Oct 2019
+ 21:01:25 +0000
+From:   Jeroen Hofstee <jhofstee@victronenergy.com>
+To:     "linux-can@vger.kernel.org" <linux-can@vger.kernel.org>
+CC:     Jeroen Hofstee <jhofstee@victronenergy.com>,
+        Wolfgang Grandegger <wg@grandegger.com>,
+        Marc Kleine-Budde <mkl@pengutronix.de>,
+        "David S. Miller" <davem@davemloft.net>,
+        Kurt Van Dijck <dev.kurt@vandijck-laurijssen.be>,
+        "open list:NETWORKING DRIVERS" <netdev@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: [PATCH v2 2/2] can: C_CAN: add bus recovery events
+Thread-Topic: [PATCH v2 2/2] can: C_CAN: add bus recovery events
+Thread-Index: AQHVeJtihUjcrRUQAUmkCgXOis19pg==
+Date:   Tue, 1 Oct 2019 21:01:24 +0000
+Message-ID: <20191001210054.14588-3-jhofstee@victronenergy.com>
+References: <20191001210054.14588-1-jhofstee@victronenergy.com>
+In-Reply-To: <20191001210054.14588-1-jhofstee@victronenergy.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [2001:1c01:3bc5:4e00:5c2:1c3a:9351:514c]
+x-clientproxiedby: AM4PR0202CA0019.eurprd02.prod.outlook.com
+ (2603:10a6:200:89::29) To VI1PR0701MB2623.eurprd07.prod.outlook.com
+ (2603:10a6:801:b::19)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=jhofstee@victronenergy.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-mailer: git-send-email 2.17.1
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 0e422f6e-c731-41b1-f8a8-08d746b2851f
+x-ms-traffictypediagnostic: VI1PR0701MB2813:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <VI1PR0701MB2813247C3C2101DC96F9463AC09D0@VI1PR0701MB2813.eurprd07.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:138;
+x-forefront-prvs: 0177904E6B
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(346002)(396003)(366004)(39850400004)(136003)(376002)(199004)(189003)(99286004)(316002)(46003)(6436002)(6486002)(386003)(6506007)(6916009)(76176011)(5640700003)(186003)(102836004)(7736002)(54906003)(305945005)(52116002)(86362001)(14454004)(478600001)(4326008)(25786009)(8936002)(6512007)(81166006)(81156014)(8676002)(66446008)(66556008)(14444005)(66946007)(36756003)(2351001)(50226002)(64756008)(1076003)(66476007)(256004)(446003)(11346002)(2906002)(486006)(5660300002)(476003)(2616005)(71200400001)(2501003)(6116002)(71190400001);DIR:OUT;SFP:1102;SCL:1;SRVR:VI1PR0701MB2813;H:VI1PR0701MB2623.eurprd07.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: victronenergy.com does not
+ designate permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: EryyMXjjGneXcEp3hxCJZzrHMV75kRQklkUHK8XjSwTdRoqYeQlIE7K4SOEs9vADjAGb7lt+PI2PSJJjCdlHEiLih4tg0VYz+dIF+QiY+aGfaMI151UkTqozVtlZPOWK8194kmxZI2neB2WzJMXHm/z8pDW3kjURCoxyncQ2vWtVgGiJ0VwU7lNZPSSGaM7uHTgcRx540m5QDu0npdyLASGAPzqLny09jmtLQu5rCCrqtsAUasgYwh8FR0xNPQmILMkyLn+z4L+9IQETS9xdSaaYVuiMQOQS70sIy06ku2jzxr0cIFgFYy7Y/iJbZWvqeFhxNUB80cjs6AsAW3CtutR82S/kFfkXf59JRtFOvywc3g/npgll5y3Oiax3nrwaksyTDbPLJtrcDi9/718+cFkKIPxsZzR3ZeWGngxOXUE=
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Pine.LNX.4.44L0.1910011331320.1991-100000@iolanthe.rowland.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-OriginatorOrg: victronenergy.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 0e422f6e-c731-41b1-f8a8-08d746b2851f
+X-MS-Exchange-CrossTenant-originalarrivaltime: 01 Oct 2019 21:01:24.9991
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 60b95f08-3558-4e94-b0f8-d690c498e225
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: eu9hKfv/OhZefdmQXCMUwmaxBdHlK+/+UA8WnA63bJ91RzN76f5/8Mkz+FbprsiYxRyEm3uYBjYhwRnGf0UvDUYSExdi8Sujhkh2FWR3bcg=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR0701MB2813
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Oct 01, 2019 at 01:39:47PM -0400, Alan Stern wrote:
-> This patch fixes a few minor typos and improves word usage in a few
-> places in the Linux Kernel Memory Model's explanation.txt file.
-> 
-> Signed-off-by: Alan Stern <stern@rowland.harvard.edu>
-> 
+While the state is updated when the error counters increase and decrease,
+there is no event when the bus recovers and the error counters decrease
+again. So add that event as well.
 
-Reviewed-by: Joel Fernandes (Google) <joel@joelfernandes.org>
+Change the state going downward to be ERROR_PASSIVE -> ERROR_WARNING ->
+ERROR_ACTIVE instead of directly to ERROR_ACTIVE again.
 
-thanks,
+Signed-off-by: Jeroen Hofstee <jhofstee@victronenergy.com>
+Acked-by: Kurt Van Dijck <dev.kurt@vandijck-laurijssen.be>
+Tested-by: Kurt Van Dijck <dev.kurt@vandijck-laurijssen.be>
+---
+ drivers/net/can/c_can/c_can.c | 20 ++++++++++++++++++--
+ 1 file changed, 18 insertions(+), 2 deletions(-)
 
- - Joel
+diff --git a/drivers/net/can/c_can/c_can.c b/drivers/net/can/c_can/c_can.c
+index 2332687fa6dc..e1e9b87dd4d2 100644
+--- a/drivers/net/can/c_can/c_can.c
++++ b/drivers/net/can/c_can/c_can.c
+@@ -912,6 +912,9 @@ static int c_can_handle_state_change(struct net_device =
+*dev,
+ 	struct can_berr_counter bec;
+=20
+ 	switch (error_type) {
++	case C_CAN_NO_ERROR:
++		priv->can.state =3D CAN_STATE_ERROR_ACTIVE;
++		break;
+ 	case C_CAN_ERROR_WARNING:
+ 		/* error warning state */
+ 		priv->can.can_stats.error_warning++;
+@@ -942,6 +945,13 @@ static int c_can_handle_state_change(struct net_device=
+ *dev,
+ 				ERR_CNT_RP_SHIFT;
+=20
+ 	switch (error_type) {
++	case C_CAN_NO_ERROR:
++		/* error warning state */
++		cf->can_id |=3D CAN_ERR_CRTL;
++		cf->data[1] =3D CAN_ERR_CRTL_ACTIVE;
++		cf->data[6] =3D bec.txerr;
++		cf->data[7] =3D bec.rxerr;
++		break;
+ 	case C_CAN_ERROR_WARNING:
+ 		/* error warning state */
+ 		cf->can_id |=3D CAN_ERR_CRTL;
+@@ -1080,11 +1090,17 @@ static int c_can_poll(struct napi_struct *napi, int=
+ quota)
+ 	/* handle bus recovery events */
+ 	if ((!(curr & STATUS_BOFF)) && (last & STATUS_BOFF)) {
+ 		netdev_dbg(dev, "left bus off state\n");
+-		priv->can.state =3D CAN_STATE_ERROR_ACTIVE;
++		work_done +=3D c_can_handle_state_change(dev, C_CAN_ERROR_PASSIVE);
+ 	}
++
+ 	if ((!(curr & STATUS_EPASS)) && (last & STATUS_EPASS)) {
+ 		netdev_dbg(dev, "left error passive state\n");
+-		priv->can.state =3D CAN_STATE_ERROR_ACTIVE;
++		work_done +=3D c_can_handle_state_change(dev, C_CAN_ERROR_WARNING);
++	}
++
++	if ((!(curr & STATUS_EWARN)) && (last & STATUS_EWARN)) {
++		netdev_dbg(dev, "left error warning state\n");
++		work_done +=3D c_can_handle_state_change(dev, C_CAN_NO_ERROR);
+ 	}
+=20
+ 	/* handle lec errors on the bus */
+--=20
+2.17.1
 
-
-> ---
-> 
->  tools/memory-model/Documentation/explanation.txt |   10 +++++-----
->  1 file changed, 5 insertions(+), 5 deletions(-)
-> 
-> Index: usb-devel/tools/memory-model/Documentation/explanation.txt
-> ===================================================================
-> --- usb-devel.orig/tools/memory-model/Documentation/explanation.txt
-> +++ usb-devel/tools/memory-model/Documentation/explanation.txt
-> @@ -206,7 +206,7 @@ goes like this:
->  	P0 stores 1 to buf before storing 1 to flag, since it executes
->  	its instructions in order.
->  
-> -	Since an instruction (in this case, P1's store to flag) cannot
-> +	Since an instruction (in this case, P0's store to flag) cannot
->  	execute before itself, the specified outcome is impossible.
->  
->  However, real computer hardware almost never follows the Sequential
-> @@ -419,7 +419,7 @@ example:
->  
->  The object code might call f(5) either before or after g(6); the
->  memory model cannot assume there is a fixed program order relation
-> -between them.  (In fact, if the functions are inlined then the
-> +between them.  (In fact, if the function calls are inlined then the
->  compiler might even interleave their object code.)
->  
->  
-> @@ -499,7 +499,7 @@ different CPUs (external reads-from, or
->  
->  For our purposes, a memory location's initial value is treated as
->  though it had been written there by an imaginary initial store that
-> -executes on a separate CPU before the program runs.
-> +executes on a separate CPU before the main program runs.
->  
->  Usage of the rf relation implicitly assumes that loads will always
->  read from a single store.  It doesn't apply properly in the presence
-> @@ -955,7 +955,7 @@ atomic update.  This is what the LKMM's
->  THE PRESERVED PROGRAM ORDER RELATION: ppo
->  -----------------------------------------
->  
-> -There are many situations where a CPU is obligated to execute two
-> +There are many situations where a CPU is obliged to execute two
->  instructions in program order.  We amalgamate them into the ppo (for
->  "preserved program order") relation, which links the po-earlier
->  instruction to the po-later instruction and is thus a sub-relation of
-> @@ -1572,7 +1572,7 @@ and there are events X, Y and a read-sid
->  
->  	2. X comes "before" Y in some sense (including rfe, co and fr);
->  
-> -	2. Y is po-before Z;
-> +	3. Y is po-before Z;
->  
->  	4. Z is the rcu_read_unlock() event marking the end of C;
->  
-> 
-> 
