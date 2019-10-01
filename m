@@ -2,150 +2,64 @@ Return-Path: <SRS0=YRFP=X2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B24AEC388F3
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 08:59:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EDDEC352AA
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 09:01:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8C25C215EA
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 08:59:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7B75121872
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 09:01:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733069AbfJAI7d (ORCPT
+        id S1733160AbfJAJB5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Oct 2019 04:59:33 -0400
-Received: from inva020.nxp.com ([92.121.34.13]:49236 "EHLO inva020.nxp.com"
+        Tue, 1 Oct 2019 05:01:57 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:48750 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729031AbfJAI7c (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Oct 2019 04:59:32 -0400
-Received: from inva020.nxp.com (localhost [127.0.0.1])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 1D0501A001A;
-        Tue,  1 Oct 2019 10:59:30 +0200 (CEST)
-Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id E328B1A091F;
-        Tue,  1 Oct 2019 10:59:26 +0200 (CEST)
-Received: from lsv03124.swis.in-blr01.nxp.com (lsv03124.swis.in-blr01.nxp.com [92.120.146.121])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id E31954029A;
-        Tue,  1 Oct 2019 16:59:22 +0800 (SGT)
-From:   Kuldeep Singh <kuldeep.singh@nxp.com>
-To:     han.xu@nxp.com, broonie@kernel.org, linux-spi@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     Kuldeep Singh <kuldeep.singh@nxp.com>,
-        Suresh Gupta <suresh.gupta@nxp.com>
-Subject: [PATCH] spi: spi-fsl-qspi: Introduce variable to fix different invalid master Id
-Date:   Tue,  1 Oct 2019 14:29:16 +0530
-Message-Id: <1569920356-8953-1-git-send-email-kuldeep.singh@nxp.com>
-X-Mailer: git-send-email 2.7.4
-X-Virus-Scanned: ClamAV using ClamSMTP
+        id S1729787AbfJAJB5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Oct 2019 05:01:57 -0400
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 82117C04DBCD;
+        Tue,  1 Oct 2019 09:01:57 +0000 (UTC)
+Received: from t460s.redhat.com (ovpn-117-182.ams2.redhat.com [10.36.117.182])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id CCCAD611DE;
+        Tue,  1 Oct 2019 09:01:52 +0000 (UTC)
+From:   David Hildenbrand <david@redhat.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     linux-mm@kvack.org, xen-devel@lists.xenproject.org,
+        David Hildenbrand <david@redhat.com>
+Subject: [PATCH v1 0/3] xen/balloon: PG_offline cleanups
+Date:   Tue,  1 Oct 2019 11:01:49 +0200
+Message-Id: <20191001090152.1770-1-david@redhat.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.32]); Tue, 01 Oct 2019 09:01:57 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Different platforms have different Master with different SourceID on
-AHB bus. The 0X0E Master ID is used by cluster 3 in case of LS2088A.
-So, patch introduce an invalid master id variable to fix invalid
-mastered on different platforms.
+Some cleanups based on top of:
+    [PATCH v1] xen/balloon: Set pages PageOffline() in balloon_add_region()
 
-Signed-off-by: Suresh Gupta <suresh.gupta@nxp.com>
-Signed-off-by: Kuldeep Singh <kuldeep.singh@nxp.com>
----
- drivers/spi/spi-fsl-qspi.c | 17 +++++++++++++++++
- 1 file changed, 17 insertions(+)
+Make the PG_offline less error prone, by simply setting PG_offline when
+they enter the page list and clearing PG_offline when they leave the
+page list.
 
-diff --git a/drivers/spi/spi-fsl-qspi.c b/drivers/spi/spi-fsl-qspi.c
-index c02e24c..51385b0 100644
---- a/drivers/spi/spi-fsl-qspi.c
-+++ b/drivers/spi/spi-fsl-qspi.c
-@@ -63,6 +63,11 @@
- #define QUADSPI_IPCR			0x08
- #define QUADSPI_IPCR_SEQID(x)		((x) << 24)
- 
-+#define QUADSPI_BUF0CR                  0x10
-+#define QUADSPI_BUF1CR                  0x14
-+#define QUADSPI_BUF2CR                  0x18
-+#define QUADSPI_BUFXCR_INVALID_MSTRID   0xe
-+
- #define QUADSPI_BUF3CR			0x1c
- #define QUADSPI_BUF3CR_ALLMST_MASK	BIT(31)
- #define QUADSPI_BUF3CR_ADATSZ(x)	((x) << 8)
-@@ -184,6 +189,7 @@
- struct fsl_qspi_devtype_data {
- 	unsigned int rxfifo;
- 	unsigned int txfifo;
-+	int invalid_mstrid;
- 	unsigned int ahb_buf_size;
- 	unsigned int quirks;
- 	bool little_endian;
-@@ -192,6 +198,7 @@ struct fsl_qspi_devtype_data {
- static const struct fsl_qspi_devtype_data vybrid_data = {
- 	.rxfifo = SZ_128,
- 	.txfifo = SZ_64,
-+	.invalid_mstrid = QUADSPI_BUFXCR_INVALID_MSTRID,
- 	.ahb_buf_size = SZ_1K,
- 	.quirks = QUADSPI_QUIRK_SWAP_ENDIAN,
- 	.little_endian = true,
-@@ -200,6 +207,7 @@ static const struct fsl_qspi_devtype_data vybrid_data = {
- static const struct fsl_qspi_devtype_data imx6sx_data = {
- 	.rxfifo = SZ_128,
- 	.txfifo = SZ_512,
-+	.invalid_mstrid = QUADSPI_BUFXCR_INVALID_MSTRID,
- 	.ahb_buf_size = SZ_1K,
- 	.quirks = QUADSPI_QUIRK_4X_INT_CLK | QUADSPI_QUIRK_TKT245618,
- 	.little_endian = true,
-@@ -208,6 +216,7 @@ static const struct fsl_qspi_devtype_data imx6sx_data = {
- static const struct fsl_qspi_devtype_data imx7d_data = {
- 	.rxfifo = SZ_128,
- 	.txfifo = SZ_512,
-+	.invalid_mstrid = QUADSPI_BUFXCR_INVALID_MSTRID,
- 	.ahb_buf_size = SZ_1K,
- 	.quirks = QUADSPI_QUIRK_TKT253890 | QUADSPI_QUIRK_4X_INT_CLK,
- 	.little_endian = true,
-@@ -216,6 +225,7 @@ static const struct fsl_qspi_devtype_data imx7d_data = {
- static const struct fsl_qspi_devtype_data imx6ul_data = {
- 	.rxfifo = SZ_128,
- 	.txfifo = SZ_512,
-+	.invalid_mstrid = QUADSPI_BUFXCR_INVALID_MSTRID,
- 	.ahb_buf_size = SZ_1K,
- 	.quirks = QUADSPI_QUIRK_TKT253890 | QUADSPI_QUIRK_4X_INT_CLK,
- 	.little_endian = true,
-@@ -224,6 +234,7 @@ static const struct fsl_qspi_devtype_data imx6ul_data = {
- static const struct fsl_qspi_devtype_data ls1021a_data = {
- 	.rxfifo = SZ_128,
- 	.txfifo = SZ_64,
-+	.invalid_mstrid = QUADSPI_BUFXCR_INVALID_MSTRID,
- 	.ahb_buf_size = SZ_1K,
- 	.quirks = 0,
- 	.little_endian = false,
-@@ -233,6 +244,7 @@ static const struct fsl_qspi_devtype_data ls2080a_data = {
- 	.rxfifo = SZ_128,
- 	.txfifo = SZ_64,
- 	.ahb_buf_size = SZ_1K,
-+	.invalid_mstrid = 0x0,
- 	.quirks = QUADSPI_QUIRK_TKT253890 | QUADSPI_QUIRK_BASE_INTERNAL,
- 	.little_endian = true,
- };
-@@ -615,6 +627,7 @@ static int fsl_qspi_exec_op(struct spi_mem *mem, const struct spi_mem_op *op)
- 	void __iomem *base = q->iobase;
- 	u32 addr_offset = 0;
- 	int err = 0;
-+	int invalid_mstrid = q->devtype_data->invalid_mstrid;
- 
- 	mutex_lock(&q->lock);
- 
-@@ -638,6 +651,10 @@ static int fsl_qspi_exec_op(struct spi_mem *mem, const struct spi_mem_op *op)
- 	qspi_writel(q, QUADSPI_SPTRCLR_BFPTRC | QUADSPI_SPTRCLR_IPPTRC,
- 		    base + QUADSPI_SPTRCLR);
- 
-+	qspi_writel(q, invalid_mstrid, base + QUADSPI_BUF0CR);
-+	qspi_writel(q, invalid_mstrid, base + QUADSPI_BUF1CR);
-+	qspi_writel(q, invalid_mstrid, base + QUADSPI_BUF2CR);
-+
- 	fsl_qspi_prepare_lut(q, op);
- 
- 	/*
+Only compile-tested.
+
+David Hildenbrand (3):
+  xen/balloon: Drop __balloon_append()
+  xen/balloon: Mark pages PG_offline in balloon_append()
+  xen/balloon: Clear PG_offline in balloon_retrieve()
+
+ drivers/xen/balloon.c | 25 +++++++------------------
+ 1 file changed, 7 insertions(+), 18 deletions(-)
+
 -- 
-2.7.4
+2.21.0
 
