@@ -6,101 +6,79 @@ X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02966C388F3
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 07:40:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E1929C388F3
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 07:41:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D38C121783
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 07:40:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BA1C420815
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 07:41:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733092AbfJAHkU (ORCPT
+        id S1733103AbfJAHlE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Oct 2019 03:40:20 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:57076 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731358AbfJAHkT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Oct 2019 03:40:19 -0400
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 7FEF3A44AF6;
-        Tue,  1 Oct 2019 07:40:19 +0000 (UTC)
-Received: from localhost (ovpn-12-43.pek2.redhat.com [10.72.12.43])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id B2703600C8;
-        Tue,  1 Oct 2019 07:40:15 +0000 (UTC)
-Date:   Tue, 1 Oct 2019 15:40:12 +0800
-From:   Baoquan He <bhe@redhat.com>
-To:     "Eric W. Biederman" <ebiederm@xmission.com>
-Cc:     Dave Young <dyoung@redhat.com>, Lianbo Jiang <lijiang@redhat.com>,
-        linux-kernel@vger.kernel.org, tglx@linutronix.de, mingo@redhat.com,
-        bp@alien8.de, hpa@zytor.com, x86@kernel.org, jgross@suse.com,
-        dhowells@redhat.com, Thomas.Lendacky@amd.com,
-        kexec@lists.infradead.org, Vivek Goyal <vgoyal@redhat.com>
-Subject: Re: [PATCH] x86/kdump: Fix 'kmem -s' reported an invalid freepointer
- when SME was active
-Message-ID: <20191001074012.GK31919@MiWiFi-R3L-srv>
-References: <20190920035326.27212-1-lijiang@redhat.com>
- <20190927051518.GA13023@dhcp-128-65.nay.redhat.com>
- <87r241piqg.fsf@x220.int.ebiederm.org>
- <20190928000505.GJ31919@MiWiFi-R3L-srv>
- <875zldp2vj.fsf@x220.int.ebiederm.org>
- <20190928030910.GA5774@MiWiFi-R3L-srv>
- <87zhimks5j.fsf@x220.int.ebiederm.org>
+        Tue, 1 Oct 2019 03:41:04 -0400
+Received: from relay-b02.edpnet.be ([212.71.1.222]:60097 "EHLO
+        relay-b02.edpnet.be" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1733094AbfJAHlD (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Oct 2019 03:41:03 -0400
+X-ASG-Debug-ID: 1569915660-0a7b8d53c1e3e2f0001-xx1T2L
+Received: from zotac.vandijck-laurijssen.be (77.109.119.18.adsl.dyn.edpnet.net [77.109.119.18]) by relay-b02.edpnet.be with ESMTP id C6MQQ4QsadEFXAAr; Tue, 01 Oct 2019 09:41:00 +0200 (CEST)
+X-Barracuda-Envelope-From: dev.kurt@vandijck-laurijssen.be
+X-Barracuda-Effective-Source-IP: 77.109.119.18.adsl.dyn.edpnet.net[77.109.119.18]
+X-Barracuda-Apparent-Source-IP: 77.109.119.18
+Received: from x1.vandijck-laurijssen.be (74.250-240-81.adsl-static.isp.belgacom.be [81.240.250.74])
+        by zotac.vandijck-laurijssen.be (Postfix) with ESMTPSA id 10B88A1D9DB;
+        Tue,  1 Oct 2019 09:41:00 +0200 (CEST)
+Date:   Tue, 1 Oct 2019 09:40:57 +0200
+From:   Kurt Van Dijck <dev.kurt@vandijck-laurijssen.be>
+To:     Jeroen Hofstee <jhofstee@victronenergy.com>
+Cc:     "linux-can@vger.kernel.org" <linux-can@vger.kernel.org>,
+        Wolfgang Grandegger <wg@grandegger.com>,
+        Marc Kleine-Budde <mkl@pengutronix.de>,
+        "David S. Miller" <davem@davemloft.net>,
+        "open list:NETWORKING DRIVERS" <netdev@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 2/2] can: C_CAN: add bus recovery events
+Message-ID: <20191001074057.GA28813@x1.vandijck-laurijssen.be>
+X-ASG-Orig-Subj: Re: [PATCH 2/2] can: C_CAN: add bus recovery events
+Mail-Followup-To: Jeroen Hofstee <jhofstee@victronenergy.com>,
+        "linux-can@vger.kernel.org" <linux-can@vger.kernel.org>,
+        Wolfgang Grandegger <wg@grandegger.com>,
+        Marc Kleine-Budde <mkl@pengutronix.de>,
+        "David S. Miller" <davem@davemloft.net>,
+        "open list:NETWORKING DRIVERS" <netdev@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+References: <20190926085005.24805-1-jhofstee@victronenergy.com>
+ <20190926085005.24805-3-jhofstee@victronenergy.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <87zhimks5j.fsf@x220.int.ebiederm.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.68]); Tue, 01 Oct 2019 07:40:19 +0000 (UTC)
+In-Reply-To: <20190926085005.24805-3-jhofstee@victronenergy.com>
+User-Agent: Mutt/1.5.22 (2013-10-16)
+X-Barracuda-Connect: 77.109.119.18.adsl.dyn.edpnet.net[77.109.119.18]
+X-Barracuda-Start-Time: 1569915660
+X-Barracuda-URL: https://212.71.1.222:443/cgi-mod/mark.cgi
+X-Virus-Scanned: by bsmtpd at edpnet.be
+X-Barracuda-Scan-Msg-Size: 484
+X-Barracuda-BRTS-Status: 1
+X-Barracuda-Bayes: SPAM GLOBAL 0.9983 1.0000 4.3232
+X-Barracuda-Spam-Score: 4.32
+X-Barracuda-Spam-Status: No, SCORE=4.32 using global scores of TAG_LEVEL=1000.0 QUARANTINE_LEVEL=1000.0 KILL_LEVEL=7.0 tests=
+X-Barracuda-Spam-Report: Code version 3.2, rules version 3.2.3.76991
+        Rule breakdown below
+         pts rule name              description
+        ---- ---------------------- --------------------------------------------------
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 09/30/19 at 05:14am, Eric W. Biederman wrote:
-> Baoquan He <bhe@redhat.com> writes:
-> >> needs a little better description.  I know it is not a lot on modern
-> >> systems but reserving an extra 1M of memory to avoid having to special
-> >> case it later seems in need of calling out.
-> >> 
-> >> I have an old system around that I think that 640K is about 25% of
-> >> memory.
-> >
-> > Understood. Basically 640K is wasted in this case. But we only do like
-> > this in SME case, a condition checking is added. And system with SME is
-> > pretty new model, it may not impact the old system.
+On do, 26 sep 2019 08:50:51 +0000, Jeroen Hofstee wrote:
+> While the state is update when the error counters increase and decrease,
+> there is no event when the bus recovers and the error counters decrease
+> again. So add that event as well.
 > 
-> The conditional really should be based on if we are reserving memory
-> for a kdump kernel.  AKA if crash_kernel=XXX is specified on the kernel
-> command line.
-> 
-> At which point I think it would be very reasonable to unconditionally
-> reserve the low 640k, and make the whole thing a non-issue.  This would
-> allow the kdump code to just not do anything special for any of the
-> weird special case.
-> 
-> It isn't perfect because we need a page or so used in the first kernel
-> for bootstrapping the secondary cpus, but that seems like the least of
-> evils.  Especially as no one will DMA to that memory.
-> 
-> So please let's just change what memory we reserve when crash_kernel is
-> specified.
+> Change the state going downward to be ERROR_PASSIVE -> ERROR_WARNING ->
+> ERROR_ACTIVE instead of directly to ERROR_ACTIVE again.
 
-Yes, makes sense, thanks for pointing it out.
-
-> 
-> >> How we interact with BIOS tables in the first 640k needs some
-> >> explanation.  Both in the first kernel and in the crash kernel.
-> >
-> > Yes, totally agree.
-> >
-> > Those BIOS tables have been reserved as e820 reserved regions and will
-> > be passed to kdump kernel for reusing. Memblock reserved 640K doesn't
-> > mean it will cover the whole [0, 640K) region, it only searches for
-> > available system RAM from memblock allocator.
-> 
-> Careful with that assumption.  My memory is that the e820 memory map
-> frequently fails to cover areas like the real mode interrupt descriptor
-> table at address 0.
-
-OK, will think more about this. Thanks.
+This looks like a proper thing to do
+Acked-by: Kurt Van Dijck <dev.kurt@vandijck-laurijssen.be>
