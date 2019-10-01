@@ -2,91 +2,90 @@ Return-Path: <SRS0=YRFP=X2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 30A72C352AA
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 13:47:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 749FCECE587
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 13:48:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F338E218DE
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 13:47:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569937669;
-	bh=4SYxozpggALUFoq+hix6bOttvPdIt89FA3o2AdzISek=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=QANOrX1TyUasipdPzvDMz9N2Rwl0+kaWF3DDO9yf/q4AqYU5CYE+Tbi5Cr2Q4+yIA
-	 eC4c7GJRkykxHI3n7FbW2hLuKjwmyzI3B0XtpkArSjhfGwQyw5Mc24fabRv6HnLwSf
-	 B0KKpc9nHQiIgh8SZRK/+D5alWWGhli7wku092Gs=
+	by mail.kernel.org (Postfix) with ESMTP id 52CE6218DE
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 13:48:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388802AbfJANrs (ORCPT
+        id S2388738AbfJANse (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Oct 2019 09:47:48 -0400
-Received: from mail-oi1-f193.google.com ([209.85.167.193]:33463 "EHLO
-        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388557AbfJANrr (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Oct 2019 09:47:47 -0400
-Received: by mail-oi1-f193.google.com with SMTP id e18so14464524oii.0;
-        Tue, 01 Oct 2019 06:47:45 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=rEDnc9Jd/28M1ohLSPCRWsF0EEAGDKVCbMJuC0W7puU=;
-        b=StHkJTYSOwHh5hm5Hu6ec6yqjkLusXPUTVDkMd8UMHq2m0r6w6E7awEcRXO9kHceCi
-         7v5tSGlFikKJPiMqJfGhbkCIT6rrnEOPma0fRJI3+N7enJCvHjs0dB4ZTbRgE+elEyNU
-         hlcCb+O/FuX5/WMVUpHbERv/nQsql/N8bwd4R6q+OqQ6R3iBn7k4mQVdscPU1txbwWfz
-         rP/qf6h0ZWT35niWRp8I7memvyFp3/ENzrwVhtdd7AKdPSyf6BR7O31vbcPpTJFGuhmN
-         Ezqp/BGS7bHlbLYwIfIRzSjDD2VvcaIeSeC9j5Eu0q8CMkeMHRntvw5+O2xO41sIqFNc
-         W/3A==
-X-Gm-Message-State: APjAAAXFnIyVyeG0CGmzNwmMJnhG5FbAmfi/JI11iYW/sisvbDrgDbyY
-        q40r4JZ65bbBX0o/e2LxYXDa2ozsrw==
-X-Google-Smtp-Source: APXvYqw+KmPmFzmwX23fwaUZyE2kdDvGO96W7ayIpwSq39QK5BvLEHskSHj/M4RX2RX1E5kPaWkipA==
-X-Received: by 2002:aca:5ad7:: with SMTP id o206mr3927590oib.59.1569937665296;
-        Tue, 01 Oct 2019 06:47:45 -0700 (PDT)
-Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id o184sm5305824oia.28.2019.10.01.06.47.44
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 01 Oct 2019 06:47:44 -0700 (PDT)
-Date:   Tue, 1 Oct 2019 08:47:44 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Xingyu Chen <xingyu.chen@amlogic.com>
-Cc:     Philipp Zabel <p.zabel@pengutronix.de>,
-        Kevin Hilman <khilman@baylibre.com>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Xingyu Chen <xingyu.chen@amlogic.com>,
-        Jerome Brunet <jbrunet@baylibre.com>,
-        Hanjie Lin <hanjie.lin@amlogic.com>,
-        Jianxin Pan <jianxin.pan@amlogic.com>,
-        linux-amlogic@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org
-Subject: Re: [PATCH v3 2/3] dt-bindings: reset: add bindings for the Meson-A1
- SoC Reset Controller
-Message-ID: <20191001134744.GA28989@bogus>
-References: <1569738255-3941-1-git-send-email-xingyu.chen@amlogic.com>
- <1569738255-3941-3-git-send-email-xingyu.chen@amlogic.com>
+        Tue, 1 Oct 2019 09:48:34 -0400
+Received: from mga07.intel.com ([134.134.136.100]:60933 "EHLO mga07.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726554AbfJANse (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Oct 2019 09:48:34 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 01 Oct 2019 06:48:33 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,571,1559545200"; 
+   d="scan'208";a="205065386"
+Received: from lahna.fi.intel.com (HELO lahna) ([10.237.72.157])
+  by fmsmga001.fm.intel.com with SMTP; 01 Oct 2019 06:48:29 -0700
+Received: by lahna (sSMTP sendmail emulation); Tue, 01 Oct 2019 16:48:28 +0300
+Date:   Tue, 1 Oct 2019 16:48:28 +0300
+From:   Mika Westerberg <mika.westerberg@linux.intel.com>
+To:     Mario.Limonciello@dell.com
+Cc:     gregkh@linuxfoundation.org, linux-usb@vger.kernel.org,
+        andreas.noever@gmail.com, michael.jamet@intel.com,
+        YehezkelShB@gmail.com, rajmohan.mani@intel.com,
+        nicholas.johnson-opensource@outlook.com.au, lukas@wunner.de,
+        stern@rowland.harvard.edu, anthony.wong@canonical.com,
+        linux-kernel@vger.kernel.org
+Subject: Re: [RFC PATCH 01/22] thunderbolt: Introduce tb_switch_is_icm()
+Message-ID: <20191001134828.GU2714@lahna.fi.intel.com>
+References: <20191001113830.13028-1-mika.westerberg@linux.intel.com>
+ <20191001113830.13028-2-mika.westerberg@linux.intel.com>
+ <20191001121005.GA2951658@kroah.com>
+ <20191001124638.GL2714@lahna.fi.intel.com>
+ <bc3be927d5fd41efa6e0828f78a41d7a@AUSX13MPC105.AMER.DELL.COM>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1569738255-3941-3-git-send-email-xingyu.chen@amlogic.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <bc3be927d5fd41efa6e0828f78a41d7a@AUSX13MPC105.AMER.DELL.COM>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, 29 Sep 2019 14:24:14 +0800, Xingyu Chen wrote:
-> Add DT bindings for the Meson-A1 SoC Reset Controller include file,
-> and also slightly update documentation.
+On Tue, Oct 01, 2019 at 01:36:49PM +0000, Mario.Limonciello@dell.com wrote:
+> > -----Original Message-----
+> > From: Mika Westerberg <mika.westerberg@linux.intel.com>
+> > Sent: Tuesday, October 1, 2019 7:47 AM
+> > To: Greg Kroah-Hartman
+> > Cc: linux-usb@vger.kernel.org; Andreas Noever; Michael Jamet; Yehezkel Bernat;
+> > Rajmohan Mani; Nicholas Johnson; Lukas Wunner; Alan Stern; Limonciello, Mario;
+> > Anthony Wong; linux-kernel@vger.kernel.org
+> > Subject: Re: [RFC PATCH 01/22] thunderbolt: Introduce tb_switch_is_icm()
+> > 
+> > 
+> > [EXTERNAL EMAIL]
+> > 
+> > On Tue, Oct 01, 2019 at 02:10:05PM +0200, Greg Kroah-Hartman wrote:
+> > > On Tue, Oct 01, 2019 at 02:38:09PM +0300, Mika Westerberg wrote:
+> > > > We currently differentiate between SW CM and ICM by looking directly at
+> > >
+> > > You should spell out what "SW CM" and "ICM" means please :)
+> > 
+> > Indeed, sorry about that. I will spell them out in next version.
+> > 
+> > SW CM is Software Connection manager, essentially
+> > drivers/thunderbolt/tb.c.
 > 
-> Signed-off-by: Xingyu Chen <xingyu.chen@amlogic.com>
-> ---
->  .../bindings/reset/amlogic,meson-reset.yaml        |  1 +
->  include/dt-bindings/reset/amlogic,meson-a1-reset.h | 74 ++++++++++++++++++++++
->  2 files changed, 75 insertions(+)
->  create mode 100644 include/dt-bindings/reset/amlogic,meson-a1-reset.h
-> 
+> In some of the documentation I've seen non-internal connection manager referred to
+> as ECM, which I guess is an external connection manager?  To be consistent with various
+> documentations maybe that would be better than "SW CM".
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+That's the first time I hear about ECM ;-)
+
+Here at Intel we use term "SW CM" and "FW CM" and IMHO they are better
+than ECM/ICM. But if people insist I can change them.
