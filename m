@@ -4,56 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F63DECE58A
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 16:43:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 968CFC352AA
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 16:43:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2D46320B7C
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 16:43:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 64DA921906
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 16:43:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569948217;
-	bh=9KK+zWA/y/bDSujiZFJZWo7AuGxM4XHwDzPBWNMWyak=;
+	s=default; t=1569948224;
+	bh=kl6y0PIDllbuDfQrNxUtupro8sXWdcpAf3l3oGOT+VQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=OOY7iZPzlMc8i13/rKQ3Ih6Qg/cyEXpH46Swt2fLmSgTP2pkce28zxAS0riT01Oo+
-	 4mDzixIN1SiYoZ6bJnDtRzlxHI5zv3N2QIQciWHyoYKyJaIlSdItAJKB5bX6r+SIbx
-	 xDNcmT4Oppc4oIM6Xj+52gHVRJMtMAFkoBHX9B7c=
+	b=JsfnmOLIMnvpCdD8P5mU/GNoMyckE1LcWrR1p539XX7hqeL0rGwofiK8KU8o9vQeQ
+	 BAy6gQmealrmFhx1wqMEllUT6Q7mKcY8du1yBp+KPkSWGYdLQgPezueXL84BvqDyTr
+	 MQ96eeelyRGiHc5/AtLogLkSvBwvfyHlQooDffTg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732852AbfJAQng (ORCPT
+        id S1732718AbfJAQnm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Oct 2019 12:43:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55562 "EHLO mail.kernel.org"
+        Tue, 1 Oct 2019 12:43:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55676 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732757AbfJAQn3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Oct 2019 12:43:29 -0400
+        id S1732798AbfJAQne (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Oct 2019 12:43:34 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1BA0F21924;
-        Tue,  1 Oct 2019 16:43:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3AE2820B7C;
+        Tue,  1 Oct 2019 16:43:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569948208;
-        bh=9KK+zWA/y/bDSujiZFJZWo7AuGxM4XHwDzPBWNMWyak=;
+        s=default; t=1569948214;
+        bh=kl6y0PIDllbuDfQrNxUtupro8sXWdcpAf3l3oGOT+VQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=uDv/Y3mZ6kiybuF65Y9SCXMnVtGvRisxiB+0l6Ci36tBFoDXhX+8GK+rpny4ig9k6
-         95FfXHbdKhK3ErxoBF8BlIl1j1TIvGnnfwGnxLUbAy/ZS2v0oJ0Vp/Ll9QVfaooOND
-         cnNORkoxUJ6kAICc40KPvNuWwgYxDYzvmdXHYdPg=
+        b=yToVYshRSWwdDugHqI1dEpVxEY7WGsZA3DDg1D7PgGpMAznHnRvr/DAgZbmll4I0z
+         AsiBbXGRRoZDQgFdG8yVk2r6ZTKMBrLSKk7eIK9L/TSmLvy4qXMhmpyThMhyh4XpdG
+         JZBm8EOvsKtW6rdIQ99MRufw++76V7EQRUlEJT7M=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Felix Kuehling <Felix.Kuehling@amd.com>,
-        =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        Sasha Levin <sashal@kernel.org>, amd-gfx@lists.freedesktop.org,
-        dri-devel@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 4.19 13/43] drm/amdgpu: Fix KFD-related kernel oops on Hawaii
-Date:   Tue,  1 Oct 2019 12:42:41 -0400
-Message-Id: <20191001164311.15993-13-sashal@kernel.org>
+Cc:     Davide Caratti <dcaratti@redhat.com>,
+        Yotam Gigi <yotam.gi@gmail.com>,
+        Jakub Kicinski <jakub.kicinski@netronome.com>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 16/43] net/sched: act_sample: don't push mac header on ip6gre ingress
+Date:   Tue,  1 Oct 2019 12:42:44 -0400
+Message-Id: <20191001164311.15993-16-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191001164311.15993-1-sashal@kernel.org>
 References: <20191001164311.15993-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -62,36 +60,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Felix Kuehling <Felix.Kuehling@amd.com>
+From: Davide Caratti <dcaratti@redhat.com>
 
-[ Upstream commit dcafbd50f2e4d5cc964aae409fb5691b743fba23 ]
+[ Upstream commit 92974a1d006ad8b30d53047c70974c9e065eb7df ]
 
-Hawaii needs to flush caches explicitly, submitting an IB in a user
-VMID from kernel mode. There is no s_fence in this case.
+current 'sample' action doesn't push the mac header of ingress packets if
+they are received by a layer 3 tunnel (like gre or sit); but it forgot to
+check for gre over ipv6, so the following script:
 
-Fixes: eb3961a57424 ("drm/amdgpu: remove fence context from the job")
-Signed-off-by: Felix Kuehling <Felix.Kuehling@amd.com>
-Reviewed-by: Christian König <christian.koenig@amd.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+ # tc q a dev $d clsact
+ # tc f a dev $d ingress protocol ip flower ip_proto icmp action sample \
+ > group 100 rate 1
+ # psample -v -g 100
+
+dumps everything, including outer header and mac, when $d is a gre tunnel
+over ipv6. Fix this adding a missing label for ARPHRD_IP6GRE devices.
+
+Fixes: 5c5670fae430 ("net/sched: Introduce sample tc action")
+Signed-off-by: Davide Caratti <dcaratti@redhat.com>
+Reviewed-by: Yotam Gigi <yotam.gi@gmail.com>
+Signed-off-by: Jakub Kicinski <jakub.kicinski@netronome.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/amd/amdgpu/amdgpu_ib.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ net/sched/act_sample.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_ib.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_ib.c
-index 51b5e977ca885..f4e9d1b10e3ed 100644
---- a/drivers/gpu/drm/amd/amdgpu/amdgpu_ib.c
-+++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_ib.c
-@@ -139,7 +139,8 @@ int amdgpu_ib_schedule(struct amdgpu_ring *ring, unsigned num_ibs,
- 	/* ring tests don't use a job */
- 	if (job) {
- 		vm = job->vm;
--		fence_ctx = job->base.s_fence->scheduled.context;
-+		fence_ctx = job->base.s_fence ?
-+			job->base.s_fence->scheduled.context : 0;
- 	} else {
- 		vm = NULL;
- 		fence_ctx = 0;
+diff --git a/net/sched/act_sample.c b/net/sched/act_sample.c
+index 98635311a5a0b..ea0738ceb5bb8 100644
+--- a/net/sched/act_sample.c
++++ b/net/sched/act_sample.c
+@@ -134,6 +134,7 @@ static bool tcf_sample_dev_ok_push(struct net_device *dev)
+ 	case ARPHRD_TUNNEL6:
+ 	case ARPHRD_SIT:
+ 	case ARPHRD_IPGRE:
++	case ARPHRD_IP6GRE:
+ 	case ARPHRD_VOID:
+ 	case ARPHRD_NONE:
+ 		return false;
 -- 
 2.20.1
 
