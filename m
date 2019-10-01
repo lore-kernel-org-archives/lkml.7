@@ -2,180 +2,141 @@ Return-Path: <SRS0=YRFP=X2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F4C4C352AA
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 17:23:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E2D0DECE587
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 17:25:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5A22020842
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 17:23:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="KO0gvkzu"
+	by mail.kernel.org (Postfix) with ESMTP id AEF5220842
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 17:25:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1569950730;
+	bh=+fEUdXS7U/s4Wm/A1vLCoUf1gP7CN4w1ZiPvsUEEhj8=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=QDtDUXrKfrYk+GHm6rDzv+8hCJTQ5+guPI9KAiHhxNkh6fkYiQ7eVr6+lU3OpBnpG
+	 +igfx0I4m4U93DZiB3G43ucBZ1biy3zCpf4jEO2D54zzmC4MXX1RC0fPEMgB7QY+V7
+	 Zm+UW3NeS/nwd0SUWDHPAY1UwV+UgDc+Rm0PUkxs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729836AbfJARXs (ORCPT
+        id S1730001AbfJARZa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Oct 2019 13:23:48 -0400
-Received: from mail-eopbgr760079.outbound.protection.outlook.com ([40.107.76.79]:2371
-        "EHLO NAM02-CY1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729692AbfJARXs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Oct 2019 13:23:48 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=EpHLWxo3pAvbjzhdkTtWVIz+FV3u7bjE/QEG7KWvre1+1qCPEPj2FtQeUum6nifAy12QEyJeFRtE3scrpD9a74NKN4AI9sJRH/lL921Ltuj/gKmF/LK3+MnnuarWhXNLPkMItx2gxaUftMfyz4OAb+YOjFe7D/LAI0KGYTK1TR88fTgJuG9RLxYekFN/j+8YKnTCjD5jD1sHwMc1O7+SHA2WH7upeNXbtspxQ48XX/VuMyobU4NK9/CmfEuD2XRopspkDuQhZwMuO9o29DVfCoCUlTtU5BWCxaZvlgMrjK6lZYU+kk4t8D+UWwLsKPKNmpBYEycGPGHyjMLI4mnRfw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=DvpI6JiW8S029O9uMVE64R+dxC4VkgtzpqCTecQvjyY=;
- b=EEysCr+14T/KeITki4hzAbz74gVCQdbhWcejOWHlVryhW7ssAPWoWLY3RA0qyFhSrmY750A/nnEhnUKktHCjYFTFJKsDON7BFED20pVEC0rBJSG0nXeNXIBmoxRGtffQ4kUMP0bhIDSKg66YgNWtFqu10ftPTmT6hOg3bYjfSHmE3pqtI4wrI6E5NM1K+zVuRG06BrF5ZLSYim8ei55M+5HEMMU3CUm86fT8vVxJTl6UzdDakppfiOC6SC2EmjMPSlIw74XaCCmLOAht2bhU187UMjRFsdP/jGyMVx25eK1SCs+9+4x0DHTrIRESbXmCmg2wo7MEXBJ7OD/WDaveXA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
+        Tue, 1 Oct 2019 13:25:30 -0400
+Received: from mail-lf1-f65.google.com ([209.85.167.65]:42640 "EHLO
+        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726653AbfJARZ3 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Oct 2019 13:25:29 -0400
+Received: by mail-lf1-f65.google.com with SMTP id c195so10531419lfg.9
+        for <linux-kernel@vger.kernel.org>; Tue, 01 Oct 2019 10:25:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=DvpI6JiW8S029O9uMVE64R+dxC4VkgtzpqCTecQvjyY=;
- b=KO0gvkzuo+JT/ONaHRp1M88knvT5RH08rBTUe742JKh9epGyFzxcdAgETwEuessqRM3FkWxP1nQv1FrdJexYICtHnI9eiMSpj0JDiDNAD+yNXFD2QJnh0zVfBkK8Wn05sMOq4+xytlDAbBYi3OtEmxd67nfDdm5iRmF4qfvjTwY=
-Received: from BN6PR12MB1809.namprd12.prod.outlook.com (10.175.101.17) by
- BN6PR12MB1539.namprd12.prod.outlook.com (10.172.19.9) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2305.20; Tue, 1 Oct 2019 17:23:43 +0000
-Received: from BN6PR12MB1809.namprd12.prod.outlook.com
- ([fe80::418d:e764:3c12:f961]) by BN6PR12MB1809.namprd12.prod.outlook.com
- ([fe80::418d:e764:3c12:f961%10]) with mapi id 15.20.2305.017; Tue, 1 Oct 2019
- 17:23:43 +0000
-From:   "Deucher, Alexander" <Alexander.Deucher@amd.com>
-To:     "RAVULAPATI, VISHNU VARDHAN RAO" 
-        <Vishnuvardhanrao.Ravulapati@amd.com>
-CC:     "RAVULAPATI, VISHNU VARDHAN RAO" 
-        <Vishnuvardhanrao.Ravulapati@amd.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>,
-        "Mukunda, Vijendar" <Vijendar.Mukunda@amd.com>,
-        Maruthi Srinivas Bayyavarapu <Maruthi.Bayyavarapu@amd.com>,
-        Colin Ian King <colin.king@canonical.com>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        "moderated list:SOUND - SOC LAYER / DYNAMIC AUDIO POWER MANAGEM..." 
-        <alsa-devel@alsa-project.org>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH 1/7] ASoC: amd: No need PCI-MSI interrupts
-Thread-Topic: [PATCH 1/7] ASoC: amd: No need PCI-MSI interrupts
-Thread-Index: AQHVd5goxXKghNLRDkOKQUyI++DOdKdGClsQ
-Date:   Tue, 1 Oct 2019 17:23:43 +0000
-Message-ID: <BN6PR12MB18093C8EDE60811B3D917DEAF79D0@BN6PR12MB1809.namprd12.prod.outlook.com>
-References: <1569891524-18875-1-git-send-email-Vishnuvardhanrao.Ravulapati@amd.com>
-In-Reply-To: <1569891524-18875-1-git-send-email-Vishnuvardhanrao.Ravulapati@amd.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=Alexander.Deucher@amd.com; 
-x-originating-ip: [71.219.73.178]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 172c7345-53ef-4076-6b91-08d746941c01
-x-ms-office365-filtering-ht: Tenant
-x-ms-traffictypediagnostic: BN6PR12MB1539:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <BN6PR12MB1539BA27E633847BA309B94CF79D0@BN6PR12MB1539.namprd12.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:5516;
-x-forefront-prvs: 0177904E6B
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(39860400002)(366004)(376002)(136003)(346002)(396003)(13464003)(189003)(199004)(102836004)(256004)(486006)(54906003)(11346002)(446003)(476003)(7736002)(305945005)(33656002)(4326008)(2906002)(74316002)(14454004)(8936002)(64756008)(66446008)(66476007)(66946007)(186003)(6246003)(76116006)(66556008)(81156014)(6116002)(229853002)(25786009)(81166006)(3846002)(8676002)(6506007)(26005)(478600001)(99286004)(7696005)(71190400001)(316002)(6862004)(6636002)(71200400001)(66066001)(76176011)(6436002)(55016002)(5660300002)(9686003)(52536014)(86362001);DIR:OUT;SFP:1101;SCL:1;SRVR:BN6PR12MB1539;H:BN6PR12MB1809.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: amd.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: 3fmu5b9NDCQdTyhAbiGlsTzaidlwKDX98TceKJAVSVMOFPyBDc95lgxYkBZ6z5Ra5ozuAtt3gUDyZOoeIidl3iOt9ztSTwAG/bx31xdjejrq0uv/81gt+CRrwnxxlrkTOVs8sOvXJR2TdouowEnaZI1Fu0OX/u3duRAh9X5kMNoEKv+TwKD/ZAEwwN0p3abEqSXMhL3SIsAa25joZPA1C+8Ub3/Tn7pl/yEBY/wt2N++eZzjH6r1Kdqnmos+IXPX1xJiWlceTNjHKOafEEAHeXVajt9g8zl7BeEQkBTJDx26K7ZP5Kl33k/a908E63hYaoxAtVpTVtGGpiFXpMXEPKj7UVQ++s9WfJlpVyZHbm8hVKsaNI44QmJMnX5EoFvdWyW6pwNNORHi1aGfzFP9cfPgyEX2UFCQhPrFJbAPMvs=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=qYzOtNd+OvSp1jcA2j3Zo16xP06tK4ORpxwmrrXPsz4=;
+        b=DJdHG6NxS24yvxVndj3S+46jprRiQmR+UGWyqm1a61hVGlhD7ncbRUiP1+D18kVfMH
+         jHtCfaeHloL/uhiOyx3iTHAfVJdfjVRwN0xeyn4s7RJrpF4rLuCRTzhh2Kyt9RF6bcWh
+         TmM2RuW//Rt6vxIfbyXBRKOom6iSbAqS/bOlY=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=qYzOtNd+OvSp1jcA2j3Zo16xP06tK4ORpxwmrrXPsz4=;
+        b=fs4ZILzlVDbwnjmIuy/gB79hwqW3AZp860YBv1V7iAuOY6gDkKqgQimg2yLMF0JLzp
+         2PJvbCqMGQ3sg4ZrxNnDNj3z5SFD0D9K+L6w7zbAY7p23RRZxCK3SBLjsAuju2jNB7Q6
+         VUjFPCTbagNv1wJ1SlQ1c0UD1lu62EVycwdyaj6uS7Gj/c4BpXNsoLzmdzr32vroaVeM
+         2wqTLEv12SiEeS6BS11ouKRxVH2RcOTToP/NEbXHcD5eoJXSAOS/I1TFVXJ/Yad0i+sc
+         gfFIFP00QnMbFxJ/047++ApL3gLNxnUjQx3mTAIj7mZOxwMMnLld7XOicZzHN7GjI+p0
+         8VQw==
+X-Gm-Message-State: APjAAAV+m8HjKJd8X06BpW5Bim691AXlumx1S4cZ1hjhg5oVu0Y6zKFK
+        +oGVr+hjrfRJI+h968qUJE9UbEJwLVE=
+X-Google-Smtp-Source: APXvYqxhzJ10d44uKW1WoJ9yG97PX1zrt0evmx1HJ2Fne7gbzlxjPEAv/e+IbBWEe9mmburlboo8Gg==
+X-Received: by 2002:ac2:5c11:: with SMTP id r17mr15791447lfp.61.1569950727274;
+        Tue, 01 Oct 2019 10:25:27 -0700 (PDT)
+Received: from mail-lj1-f180.google.com (mail-lj1-f180.google.com. [209.85.208.180])
+        by smtp.gmail.com with ESMTPSA id c3sm3987432lfi.32.2019.10.01.10.25.24
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 01 Oct 2019 10:25:25 -0700 (PDT)
+Received: by mail-lj1-f180.google.com with SMTP id y3so14248076ljj.6
+        for <linux-kernel@vger.kernel.org>; Tue, 01 Oct 2019 10:25:24 -0700 (PDT)
+X-Received: by 2002:a2e:2c02:: with SMTP id s2mr17142967ljs.156.1569950724432;
+ Tue, 01 Oct 2019 10:25:24 -0700 (PDT)
 MIME-Version: 1.0
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 172c7345-53ef-4076-6b91-08d746941c01
-X-MS-Exchange-CrossTenant-originalarrivaltime: 01 Oct 2019 17:23:43.4124
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: iAAy3VBWHbOfW6LPcbfC9ROFpELqwhp8vdPB3Yre7BFaiM5MA5qholxTSWxVzbmRBf0nEJOn0m7mYh5zX9Qrhg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN6PR12MB1539
+References: <alpine.DEB.2.21.1909290010500.2636@nanos.tec.linutronix.de>
+ <CAHk-=wgjC01UaoV35PZvGPnrQ812SRGPoV7Xp63BBFxAsJjvrg@mail.gmail.com> <20191001161448.GA1918@darwi-home-pc>
+In-Reply-To: <20191001161448.GA1918@darwi-home-pc>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Tue, 1 Oct 2019 10:25:08 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wjPTVJNtynBMUbcnChUu=11f=VK=ASkw+4TUU7MEpiugA@mail.gmail.com>
+Message-ID: <CAHk-=wjPTVJNtynBMUbcnChUu=11f=VK=ASkw+4TUU7MEpiugA@mail.gmail.com>
+Subject: Re: x86/random: Speculation to the rescue
+To:     "Ahmed S. Darwish" <darwish.07@gmail.com>
+Cc:     Thomas Gleixner <tglx@linutronix.de>, a.darwish@linutronix.de,
+        LKML <linux-kernel@vger.kernel.org>,
+        "Theodore Ts'o" <tytso@mit.edu>,
+        Nicholas Mc Guire <hofrat@opentech.at>,
+        "the arch/x86 maintainers" <x86@kernel.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Kees Cook <keescook@chromium.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> -----Original Message-----
-> From: Ravulapati Vishnu vardhan rao
-> <Vishnuvardhanrao.Ravulapati@amd.com>
-> Sent: Monday, September 30, 2019 8:58 PM
-> Cc: Deucher, Alexander <Alexander.Deucher@amd.com>; RAVULAPATI,
-> VISHNU VARDHAN RAO <Vishnuvardhanrao.Ravulapati@amd.com>; Liam
-> Girdwood <lgirdwood@gmail.com>; Mark Brown <broonie@kernel.org>;
-> Jaroslav Kysela <perex@perex.cz>; Takashi Iwai <tiwai@suse.com>;
-> Mukunda, Vijendar <Vijendar.Mukunda@amd.com>; Maruthi Srinivas
-> Bayyavarapu <Maruthi.Bayyavarapu@amd.com>; Deucher, Alexander
-> <Alexander.Deucher@amd.com>; Colin Ian King
-> <colin.king@canonical.com>; Dan Carpenter <dan.carpenter@oracle.com>;
-> moderated list:SOUND - SOC LAYER / DYNAMIC AUDIO POWER MANAGEM...
-> <alsa-devel@alsa-project.org>; open list <linux-kernel@vger.kernel.org>
-> Subject: [PATCH 1/7] ASoC: amd: No need PCI-MSI interrupts
->=20
-> ACP-PCI controller driver does not depends msi interrupts.
-> So removed msi related pci functions which have no use and does not impac=
-t
-> on existing functionality.
+On Tue, Oct 1, 2019 at 9:15 AM Ahmed S. Darwish <darwish.07@gmail.com> wrot=
+e:
+>
+> To test the quality of the new jitter code, I added a small patch on
+> top to disable all other sources of randomness except the new jitter
+> entropy code, [1] and made quick tests on the quality of getrandom(0).
 
-In general, however, aren't MSIs preferred to legacy interrupts?  Doesn't t=
-he driver have to opt into MSI support?  As such, won't removing this code =
-effectively disable MSI support?
+You also need to make sure to disable rdrand. Even if we don't trust
+it, we always mix it in.
 
-Alex
+> Using the "ent" tool, [2] also used to test randomness in the Stephen
+> M=C3=BCller LRNG paper, on a 500000-byte file, produced the following
+> results:
 
->=20
-> Signed-off-by: Ravulapati Vishnu vardhan rao
-> <Vishnuvardhanrao.Ravulapati@amd.com>
-> ---
->  sound/soc/amd/raven/pci-acp3x.c | 11 +----------
->  1 file changed, 1 insertion(+), 10 deletions(-)
->=20
-> diff --git a/sound/soc/amd/raven/pci-acp3x.c b/sound/soc/amd/raven/pci-
-> acp3x.c index facec24..8f6bf00 100644
-> --- a/sound/soc/amd/raven/pci-acp3x.c
-> +++ b/sound/soc/amd/raven/pci-acp3x.c
-> @@ -46,14 +46,7 @@ static int snd_acp3x_probe(struct pci_dev *pci,
->  		goto release_regions;
->  	}
->=20
-> -	/* check for msi interrupt support */
-> -	ret =3D pci_enable_msi(pci);
-> -	if (ret)
-> -		/* msi is not enabled */
-> -		irqflags =3D IRQF_SHARED;
-> -	else
-> -		/* msi is enabled */
-> -		irqflags =3D 0;
-> +	irqflags =3D 0;
->=20
->  	addr =3D pci_resource_start(pci, 0);
->  	adata->acp3x_base =3D ioremap(addr, pci_resource_len(pci, 0)); @@ -
-> 112,7 +105,6 @@ static int snd_acp3x_probe(struct pci_dev *pci,
->  	return 0;
->=20
->  unmap_mmio:
-> -	pci_disable_msi(pci);
->  	iounmap(adata->acp3x_base);
->  release_regions:
->  	pci_release_regions(pci);
-> @@ -129,7 +121,6 @@ static void snd_acp3x_remove(struct pci_dev *pci)
->  	platform_device_unregister(adata->pdev);
->  	iounmap(adata->acp3x_base);
->=20
-> -	pci_disable_msi(pci);
->  	pci_release_regions(pci);
->  	pci_disable_device(pci);
->  }
-> --
-> 2.7.4
+Entropy is hard to estimate, for roughly the same reasons it's hard to gene=
+rate.
 
+The entropy estimation is entirely bvroken by the whitening we do:
+first we do the LFSR to mix things into the pools, then we whiten it
+when we mix it between the input pool and the final pool, and then we
+whiten it once more when we extract it when reading.
+
+So the end result of urandom will look random to all the entropy tools
+regardless of what the starting point is. Because we use good hashes
+for whitening, and do all the updating of the pools while extracing,
+the end result had better look perfect.
+
+The only way to even make an educated estimate of actual entropy would
+be to print out the raw state of the input pool when we do that "crng
+init done".
+
+And then you would have to automate some "reboot machine thousands of
+times" and start looking for patterns.
+
+And even then you'd only have a few thousand starting points that we
+_claim_ have at least 128 bits of entropy in, and you'd have a really
+hard time to prove that is the case.
+
+You might prove that we are doing something very very wrong and don't
+have even remotely close to 128 bits of randomness, but just 5 bits of
+actual entropy or whatever - _that_ kind of pattern is easy to see.
+
+But even then /dev/urandom as a _stream_ should look fine. Only the
+(multiple, repeated) initial states in the input pool would show the
+lack of entropy.
+
+And you'd really have to reboot things for real. And not in a VM
+either. Just repeating the entropy initialization wouldn't show the
+pattern (unless it's even more broken) because the base TSC values
+would be changing.
+
+Entropy really is hard. It's hard to generate, and it's hard to measure.
+
+              Linus
