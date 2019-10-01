@@ -2,198 +2,123 @@ Return-Path: <SRS0=YRFP=X2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_SANE_2 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 607F2C352AA
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 09:18:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F682C352AA
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 09:18:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3612921855
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 09:18:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569921509;
-	bh=NzrmT6/uM8DiLs5qH8+ADYtEzINy849nBpR8ZrecVm8=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=Gr4aer4qUugL4Y9kyophexTvTXMhr3qoxjbi6QTMw1AozEF9hzQExjmQpvngYvdl3
-	 QicktYTvV/Jm1Z93i+hLeDrJgC8dNyMGRJRrvrc80H31oxHdFoA+wukD7Df6c7y/GS
-	 /4lW/zXZXGogPbFKtwpOcpbvPGOtqaU58sI98j2s=
+	by mail.kernel.org (Postfix) with ESMTP id EA25120700
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 09:18:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="CmbcU21L"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733256AbfJAJS2 (ORCPT
+        id S1733297AbfJAJSw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Oct 2019 05:18:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45926 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729418AbfJAJS2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Oct 2019 05:18:28 -0400
-Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
+        Tue, 1 Oct 2019 05:18:52 -0400
+Received: from merlin.infradead.org ([205.233.59.134]:59324 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732991AbfJAJSw (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Oct 2019 05:18:52 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=qJgQIp1PbWd7MDwKGdEgTjEvRijTu/H2sV4eU4dxT3E=; b=CmbcU21Ln2WAiNG4BNCs8y5uf
+        lnrh/jm7R8+P+5vep3wk6Xg6GNVfwmJn2afgLlo7l1BZJ7G68HAFXvQdvyXWI0MRMu140eKGxYKrL
+        i+WvbHkw1H4NMQr9HleZ6DEAPN+zJWwgIQqqpSSGFAsNOhDhtX2hcWWc6XtzTDvh9WBrqPdWkppPb
+        bsuMgn0a1kSzm/0lu3C4+3kBNQXwjoJHdo4NIHxoAagF4AMVQt9LjfP0YiSP0Pl5dkZSamF1HB4Xh
+        AJeGyU6MrHsWgadJ4OA3dEQWaPVDrrt8KPeKg5WM/uDQynOgOVVaisKTuVg0Ur2HTe8OgG4/mvWRP
+        ErUx5iYHw==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.2 #3 (Red Hat Linux))
+        id 1iFEIq-0002nx-U7; Tue, 01 Oct 2019 09:18:41 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7D0DE20700;
-        Tue,  1 Oct 2019 09:18:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569921507;
-        bh=NzrmT6/uM8DiLs5qH8+ADYtEzINy849nBpR8ZrecVm8=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=L588/tMWNTk7MXtRD9IvA1JHu70dCQjc453S6/+xuKlyC/78qg1NVjRL8BKf28rgT
-         jrF9BjFR/+1s9yLeXhnl8KVNKP8F1cHqWJz6HhBmx1gGwWKkbXDvtpT8DkDtiPlkXj
-         B3DSkNGXwOX5vBMN8W+yXusvHJ7ZoK+evcspEJr4=
-Date:   Tue, 1 Oct 2019 10:18:21 +0100
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     Yizhuo <yzhai003@ucr.edu>
-Cc:     csong@cs.ucr.edu, zhiyunq@cs.ucr.edu,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Ray Jui <rjui@broadcom.com>,
-        Scott Branden <sbranden@broadcom.com>,
-        bcm-kernel-feedback-list@broadcom.com,
-        Stephen Boyd <swboyd@chromium.org>,
-        Allison Randal <allison@lohutok.net>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-iio@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] iio: adc: Variables could be uninitalized if
- regmap_read() fails
-Message-ID: <20191001101821.438259c2@archlinux>
-In-Reply-To: <20190930052540.19168-1-yzhai003@ucr.edu>
-References: <20190930052540.19168-1-yzhai003@ucr.edu>
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 7300F30600C;
+        Tue,  1 Oct 2019 11:17:49 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id C2C28265261AC; Tue,  1 Oct 2019 11:18:37 +0200 (CEST)
+Date:   Tue, 1 Oct 2019 11:18:37 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Qian Cai <cai@lca.pw>
+Cc:     akpm@linux-foundation.org, bigeasy@linutronix.de,
+        tglx@linutronix.de, thgarnie@google.com, tytso@mit.edu,
+        cl@linux.com, penberg@kernel.org, rientjes@google.com,
+        mingo@redhat.com, will@kernel.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, keescook@chromium.org
+Subject: [PATCH] sched: Avoid spurious lock dependencies
+Message-ID: <20191001091837.GK4536@hirez.programming.kicks-ass.net>
+References: <1568392064-3052-1-git-send-email-cai@lca.pw>
+ <20190925093153.GC4553@hirez.programming.kicks-ass.net>
+ <1569424727.5576.221.camel@lca.pw>
+ <20190925164527.GG4553@hirez.programming.kicks-ass.net>
+ <1569500974.5576.234.camel@lca.pw>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1569500974.5576.234.camel@lca.pw>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, 29 Sep 2019 22:25:39 -0700
-Yizhuo <yzhai003@ucr.edu> wrote:
+On Thu, Sep 26, 2019 at 08:29:34AM -0400, Qian Cai wrote:
 
-> Several functions in this file are trying to use regmap_read() to
-> initialize the specific variable, however, if regmap_read() fails,
-> the variable could be uninitialized but used directly, which is
-> potentially unsafe. The return value of regmap_read() should be
-> checked and handled.
-> 
-> Signed-off-by: Yizhuo <yzhai003@ucr.edu>
-I haven't checked if this one has a clock, but there is a bigger issue.
-See inline.
+> Oh, you were talking about took #3 while holding #2. Anyway, your patch is
+> working fine so far. Care to post/merge it officially or do you want me to post
+> it?
 
-Jonathan
+Does the below adequately describe the situation?
 
-> ---
->  drivers/iio/adc/bcm_iproc_adc.c | 45 ++++++++++++++++++++++++++++-----
->  1 file changed, 39 insertions(+), 6 deletions(-)
-> 
-> diff --git a/drivers/iio/adc/bcm_iproc_adc.c b/drivers/iio/adc/bcm_iproc_adc.c
-> index 646ebdc0a8b4..6df19ceb5ff2 100644
-> --- a/drivers/iio/adc/bcm_iproc_adc.c
-> +++ b/drivers/iio/adc/bcm_iproc_adc.c
-> @@ -137,6 +137,7 @@ static irqreturn_t iproc_adc_interrupt_thread(int irq, void *data)
->  	u32 channel_intr_status;
->  	u32 intr_status;
->  	u32 intr_mask;
-> +	int ret;
->  	struct iio_dev *indio_dev = data;
->  	struct iproc_adc_priv *adc_priv = iio_priv(indio_dev);
->  
-> @@ -145,8 +146,19 @@ static irqreturn_t iproc_adc_interrupt_thread(int irq, void *data)
->  	 * Make sure this interrupt is intended for us.
->  	 * Handle only ADC channel specific interrupts.
->  	 */
-> -	regmap_read(adc_priv->regmap, IPROC_INTERRUPT_STATUS, &intr_status);
-> -	regmap_read(adc_priv->regmap, IPROC_INTERRUPT_MASK, &intr_mask);
-> +	ret = regmap_read(adc_priv->regmap,
-> +					IPROC_INTERRUPT_STATUS, &intr_status);
-> +	if (ret) {
-> +		dev_err(&indio_dev->dev, "Fail to read IPROC_INTERRUPT_STATUS.\n");
-> +		return ret;
-> +	}
-> +
-> +	ret = regmap_read(adc_priv->regmap, IPROC_INTERRUPT_MASK, &intr_mask);
-> +	if (ret) {
-> +		dev_err(&indio_dev->dev, "Fail to read IPROC_INTERRUPT_MASK.\n");
-> +		return ret;
-> +	}
-You need to be extremely careful returning error codes from interrupt routines..
+---
+Subject: sched: Avoid spurious lock dependencies
 
-Basically you can't ;)
+While seemingly harmless, __sched_fork() does hrtimer_init(), which,
+when DEBUG_OBJETS, can end up doing allocations.
 
-> +
->  	intr_status = intr_status & intr_mask;
->  	channel_intr_status = (intr_status & IPROC_ADC_INTR_MASK) >>
->  				IPROC_ADC_INTR;
-> @@ -162,6 +174,7 @@ static irqreturn_t iproc_adc_interrupt_handler(int irq, void *data)
->  	struct iproc_adc_priv *adc_priv;
->  	struct iio_dev *indio_dev = data;
->  	unsigned int valid_entries;
-> +	int ret;
->  	u32 intr_status;
->  	u32 intr_channels;
->  	u32 channel_status;
-> @@ -169,23 +182,37 @@ static irqreturn_t iproc_adc_interrupt_handler(int irq, void *data)
->  
->  	adc_priv = iio_priv(indio_dev);
->  
-> -	regmap_read(adc_priv->regmap, IPROC_INTERRUPT_STATUS, &intr_status);
-> +	ret = regmap_read(adc_priv->regmap,
-> +					IPROC_INTERRUPT_STATUS, &intr_status);
-> +	if (ret) {
-> +		dev_err(&indio_dev->dev, "Fail to read IPROC_INTERRUPT_STATUS.\n");
-> +		return ret;
-> +	}
-> +
->  	dev_dbg(&indio_dev->dev, "iproc_adc_interrupt_handler(),INTRPT_STS:%x\n",
->  			intr_status);
->  
->  	intr_channels = (intr_status & IPROC_ADC_INTR_MASK) >> IPROC_ADC_INTR;
->  	if (intr_channels) {
-> -		regmap_read(adc_priv->regmap,
-> +		ret = regmap_read(adc_priv->regmap,
->  			    IPROC_ADC_CHANNEL_INTERRUPT_STATUS +
->  			    IPROC_ADC_CHANNEL_OFFSET * adc_priv->chan_id,
->  			    &ch_intr_status);
-> +		if (ret) {
-> +			dev_err(&indio_dev->dev, "Fail to read the register.\n");
-> +			return ret;
-> +		}
->  
->  		if (ch_intr_status & IPROC_ADC_CHANNEL_WTRMRK_INTR_MASK) {
-> -			regmap_read(adc_priv->regmap,
-> +			ret = regmap_read(adc_priv->regmap,
->  					IPROC_ADC_CHANNEL_STATUS +
->  					IPROC_ADC_CHANNEL_OFFSET *
->  					adc_priv->chan_id,
->  					&channel_status);
-> +			if (ret) {
-> +				dev_err(&indio_dev->dev, "Fail to read the register.\n");
-> +				return ret;
-> +			}
->  
->  			valid_entries = ((channel_status &
->  				IPROC_ADC_CHANNEL_VALID_ENTERIES_MASK) >>
-> @@ -230,6 +257,7 @@ static int iproc_adc_do_read(struct iio_dev *indio_dev,
->  	u32 mask;
->  	u32 val_check;
->  	int failed_cnt = 0;
-> +	int ret;
->  	struct iproc_adc_priv *adc_priv = iio_priv(indio_dev);
->  
->  	mutex_lock(&adc_priv->mutex);
-> @@ -284,7 +312,12 @@ static int iproc_adc_do_read(struct iio_dev *indio_dev,
->  	 * Testing has shown that this may loop a few time, but we have never
->  	 * hit the full count.
->  	 */
-> -	regmap_read(adc_priv->regmap, IPROC_INTERRUPT_MASK, &val_check);
-> +	ret = regmap_read(adc_priv->regmap, IPROC_INTERRUPT_MASK, &val_check);
-> +	if (ret) {
-> +		dev_err(&indio_dev->dev, "Fail to read IPROC_INTERRUPT_MASK.\n");
-> +		return ret;
-> +	}
-> +
->  	while (val_check != val) {
->  		failed_cnt++;
->  
+This then results in the following lock order:
+
+  rq->lock
+    zone->lock.rlock
+      batched_entropy_u64.lock
+
+Which in turn causes deadlocks when we do wakeups while holding that
+batched_entropy lock -- as the random code does.
+
+Solve this by moving __sched_fork() out from under rq->lock. This is
+safe because nothing there relies on rq->lock, as also evident from the
+other __sched_fork() callsite.
+
+Fixes: b7d5dc21072c ("random: add a spinlock_t to struct batched_entropy")
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+---
+ kernel/sched/core.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/kernel/sched/core.c b/kernel/sched/core.c
+index 7880f4f64d0e..1832fc0fbec5 100644
+--- a/kernel/sched/core.c
++++ b/kernel/sched/core.c
+@@ -6039,10 +6039,11 @@ void init_idle(struct task_struct *idle, int cpu)
+ 	struct rq *rq = cpu_rq(cpu);
+ 	unsigned long flags;
+ 
++	__sched_fork(0, idle);
++
+ 	raw_spin_lock_irqsave(&idle->pi_lock, flags);
+ 	raw_spin_lock(&rq->lock);
+ 
+-	__sched_fork(0, idle);
+ 	idle->state = TASK_RUNNING;
+ 	idle->se.exec_start = sched_clock();
+ 	idle->flags |= PF_IDLE;
+
 
