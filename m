@@ -2,106 +2,105 @@ Return-Path: <SRS0=YRFP=X2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F699ECE587
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 16:59:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C280C352AA
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 17:00:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 109C021783
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 16:59:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="UuQs43Oh"
+	by mail.kernel.org (Postfix) with ESMTP id F2AEF21783
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 17:00:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1569949202;
+	bh=lg4NZhD6aEiaPEorh6MHcLCVlbXhvN9IA9cMZA+xJcI=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=AYigti3DMTzFETXjk42Z6jPAyRG6QH3v2OmxpAcCCFzF3jcXgf7AL1Q9lNErzh99k
+	 aPl5SnW4F07vd/F/e6I+kr8KTQOaYn7MvEKSlKm3nvLBabEWaaRiIp9vZTr1idDSOk
+	 5i10RKj1gckUqq4HKtcjxpfDp25le+36VU/rc8V0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387562AbfJAQ7w (ORCPT
+        id S1732709AbfJARAB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Oct 2019 12:59:52 -0400
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:45463 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730610AbfJAQlG (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Oct 2019 12:41:06 -0400
-Received: by mail-pl1-f193.google.com with SMTP id u12so5727847pls.12
-        for <linux-kernel@vger.kernel.org>; Tue, 01 Oct 2019 09:41:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=wWx6wd3DIiucF+Ocv7n1SU0Th5H7npNVE0zzmnuydhU=;
-        b=UuQs43OhGgF0e0PCeN/p+BGim5fp57VfMnBxVRhLHeHO42C0dF3FiLIvy2P/KOoTop
-         D8wFLFNqlGrIkdQTGbzrWDABccy9iD5K8LOaTOUgKaAeBnr2SjKd5LTOVEqG3ggy+Atd
-         IpLG8/E2MXUJuuuCnoCpZpVBNKRXgxBHFYQzlWLH0dvMeyUh+lYw+gVrV1OH3F+sHD3R
-         DEJAwubCF+2wV2Ux8GqaRKsQ3Vw46ZO5m2D1jQoWzGYX7TEeFiUE1sbWZo0jWQ0EWQz3
-         YGLioif80xqj0BD66Og47ERRZL+RfZ/IrTZZQH1y6Jlvs2I7SmvOr88a99ydT3XDmT21
-         BUGA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=wWx6wd3DIiucF+Ocv7n1SU0Th5H7npNVE0zzmnuydhU=;
-        b=C5bQsziBjb9t7G4OMOHcVl9MMZ2P8EMBc3H6Xkf0K5yR3m2fOuVg8XPmP1pj2xLx6i
-         BoRgIP66bKWOJ6lug8je6d9PJVEzM6284Z3A1Iti33QJzzAwEoxr7suDEDv4EApTyWjr
-         uofuVY1TN5sQiB7OdjakvcTIH+5U/j9MvfZ74GSZB6NiC76AGmSk1xiysW4uZaVEWVmL
-         0rAmhJq1CfB4Gy4hpUJpZkUBB6oQ6tQc5GA8auiWJ1Twv7z6ByIWdEZPBL3z122yIwcp
-         rzTXlatrdj7Bx7dLpXTCF5Accb2nGQO7p8LE97D93yr5lex2XOUvyoSMcGf7vlrcjJel
-         BasA==
-X-Gm-Message-State: APjAAAXj4BNrtGnSjycSa+rPtOznpmZ0P0pzY3nTz3tsUpZDT42hCHbt
-        RCLwvUZVYj8BjFIaQIcki1shYflxHAWDufDxAfaSdw==
-X-Google-Smtp-Source: APXvYqwEzOWxmDU2hzC1zPRylpvjjoZt28pQ2PYdPEiCuZ7rfM0W+z1jPp1YoebhIrWOl9wxHRIIw7LZrVnkRnisqn8=
-X-Received: by 2002:a17:902:9a95:: with SMTP id w21mr26531027plp.336.1569948065411;
- Tue, 01 Oct 2019 09:41:05 -0700 (PDT)
+        Tue, 1 Oct 2019 13:00:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52536 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730545AbfJAQlF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Oct 2019 12:41:05 -0400
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8FECF2168B;
+        Tue,  1 Oct 2019 16:41:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1569948064;
+        bh=lg4NZhD6aEiaPEorh6MHcLCVlbXhvN9IA9cMZA+xJcI=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=W5W2Jz99PPkHkl2IGDR0cf/R/2mwrc+Q9IIbfQ6SI0KDuLJBoz2VjYLWO0fUkSvzb
+         a5p5F7ODZAZ4MVAqFzhBov+MPiOsceOdvncLcYDOHmkGZVZ7rUEJxPvNq46dMfvzEz
+         6mbezP+KGxtSyBlbxxX/Bwk02fE3K25YCBV3i5EA=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Thierry Reding <treding@nvidia.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.3 61/71] net: stmmac: Fix page pool size
+Date:   Tue,  1 Oct 2019 12:39:11 -0400
+Message-Id: <20191001163922.14735-61-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20191001163922.14735-1-sashal@kernel.org>
+References: <20191001163922.14735-1-sashal@kernel.org>
 MIME-Version: 1.0
-References: <000000000000927a7b0586561537@google.com> <MN2PR18MB263783F52CAD4A335FD8BB34A01A0@MN2PR18MB2637.namprd18.prod.outlook.com>
- <CACT4Y+aQzBkAq86Hx4jNFnAUzjXnq8cS2NZKfeCaFrZa__g-cg@mail.gmail.com>
- <MN2PR18MB26372D98386D79736A7947EEA0140@MN2PR18MB2637.namprd18.prod.outlook.com>
- <MN2PR18MB263710E8F1F8FFA06B2EDB3CA0EC0@MN2PR18MB2637.namprd18.prod.outlook.com>
- <CAAeHK+z8MBNikw_x50Crf8ZhOhcF=uvPHakvBx44K77xHRUNfg@mail.gmail.com>
- <87k1bhb20j.fsf@kamboji.qca.qualcomm.com> <MN2PR18MB263724E4791927DF1AE009B1A0AD0@MN2PR18MB2637.namprd18.prod.outlook.com>
-In-Reply-To: <MN2PR18MB263724E4791927DF1AE009B1A0AD0@MN2PR18MB2637.namprd18.prod.outlook.com>
-From:   Andrey Konovalov <andreyknvl@google.com>
-Date:   Tue, 1 Oct 2019 18:40:53 +0200
-Message-ID: <CAAeHK+w6Po=8cYRDXZBHY6ZpFLc_ysmxsuGmxGzpvfdZw6ySrw@mail.gmail.com>
-Subject: Re: [EXT] INFO: trying to register non-static key in del_timer_sync (2)
-To:     Ganapathi Bhat <gbhat@marvell.com>
-Cc:     Kalle Valo <kvalo@codeaurora.org>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        syzbot <syzbot+dc4127f950da51639216@syzkaller.appspotmail.com>,
-        "amitkarwar@gmail.com" <amitkarwar@gmail.com>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        "huxinming820@gmail.com" <huxinming820@gmail.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
-        "linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "nishants@marvell.com" <nishants@marvell.com>,
-        "syzkaller-bugs@googlegroups.com" <syzkaller-bugs@googlegroups.com>
-Content-Type: text/plain; charset="UTF-8"
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 14, 2019 at 4:08 PM Ganapathi Bhat <gbhat@marvell.com> wrote:
->
-> Hi Dmitry/Kalle,
->
-> > >>
-> > >> Hi Dmitry,
-> > >>
-> > >> We have a patch to fix this:
-> > >> https://patchwork.kernel.org/patch/10990275/
-> > >
-> > > Hi Ganapathi,
-> > >
-> > > Has this patch been accepted anywhere? This bug is still open on syzbot.
-> >
-> > The patch is in "Changes Requested" state which means that the author is
-> > supposed to send a new version based on the review comments.
-> We will address the review comments and try to push the updated version soon;
+From: Thierry Reding <treding@nvidia.com>
 
-Hi Ganapathi,
+[ Upstream commit 4f28bd956e081fc018fe9b41ffa31573f17bfb61 ]
 
-I was wondering if you've posted the updated version of the fix?
+The size of individual pages in the page pool in given by an order. The
+order is the binary logarithm of the number of pages that make up one of
+the pages in the pool. However, the driver currently passes the number
+of pages rather than the order, so it ends up wasting quite a bit of
+memory.
 
-Thanks!
+Fix this by taking the binary logarithm and passing that in the order
+field.
+
+Fixes: 2af6106ae949 ("net: stmmac: Introducing support for Page Pool")
+Signed-off-by: Thierry Reding <treding@nvidia.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/net/ethernet/stmicro/stmmac/stmmac_main.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
+index b19ab09cb18f7..5c4408bdc843a 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
++++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
+@@ -1532,13 +1532,15 @@ static int alloc_dma_rx_desc_resources(struct stmmac_priv *priv)
+ 	for (queue = 0; queue < rx_count; queue++) {
+ 		struct stmmac_rx_queue *rx_q = &priv->rx_queue[queue];
+ 		struct page_pool_params pp_params = { 0 };
++		unsigned int num_pages;
+ 
+ 		rx_q->queue_index = queue;
+ 		rx_q->priv_data = priv;
+ 
+ 		pp_params.flags = PP_FLAG_DMA_MAP;
+ 		pp_params.pool_size = DMA_RX_SIZE;
+-		pp_params.order = DIV_ROUND_UP(priv->dma_buf_sz, PAGE_SIZE);
++		num_pages = DIV_ROUND_UP(priv->dma_buf_sz, PAGE_SIZE);
++		pp_params.order = ilog2(num_pages);
+ 		pp_params.nid = dev_to_node(priv->device);
+ 		pp_params.dev = priv->device;
+ 		pp_params.dma_dir = DMA_FROM_DEVICE;
+-- 
+2.20.1
+
