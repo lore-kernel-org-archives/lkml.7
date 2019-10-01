@@ -2,93 +2,145 @@ Return-Path: <SRS0=YRFP=X2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB81AECE587
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 15:38:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D707C352AA
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 15:39:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B285C20842
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 15:38:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 755F42133F
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 15:39:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1569944363;
+	bh=c3rVfzYtsTWo4wLjYthp4mUIgCkjj9GL3anMJAQORLA=;
+	h=Date:From:To:Cc:Subject:List-ID:From;
+	b=fDJIqziiHoskvLspXHPqjSPtGnesUbDevPGJ8KJyTunVP1sEYoeyFer+lPvxgFlTA
+	 Zj+Hym8KCZua5KL3KaXN0BZyibx/e+Ulzh2x1HWZiZoQPLUpCrLfFIdvAdDVlZII6G
+	 qAfccnrv319SpJEapM+dnxOgBLEbFyLgvU8cTGYI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389651AbfJAPiy (ORCPT
+        id S2389698AbfJAPjW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Oct 2019 11:38:54 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:39342 "EHLO mx1.redhat.com"
+        Tue, 1 Oct 2019 11:39:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58234 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727236AbfJAPix (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Oct 2019 11:38:53 -0400
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        id S2389528AbfJAPjW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Oct 2019 11:39:22 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 6AB7C10C0944;
-        Tue,  1 Oct 2019 15:38:53 +0000 (UTC)
-Received: from x1.home (ovpn-118-102.phx2.redhat.com [10.3.118.102])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 0ACC95C226;
-        Tue,  1 Oct 2019 15:38:52 +0000 (UTC)
-Date:   Tue, 1 Oct 2019 09:38:52 -0600
-From:   Alex Williamson <alex.williamson@redhat.com>
-To:     Shawn Anastasio <shawn@anastas.io>
-Cc:     kvm@vger.kernel.org, cohuck@redhat.com,
-        linux-kernel@vger.kernel.org, Donald Dutile <ddutile@redhat.com>
-Subject: Re: [PATCH RFC 0/1] VFIO: Region-specific file descriptors
-Message-ID: <20191001093852.5c1d9c7c@x1.home>
-In-Reply-To: <20190930235533.2759-1-shawn@anastas.io>
-References: <20190930235533.2759-1-shawn@anastas.io>
-Organization: Red Hat
+        by mail.kernel.org (Postfix) with ESMTPSA id 149FC2133F;
+        Tue,  1 Oct 2019 15:39:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1569944359;
+        bh=c3rVfzYtsTWo4wLjYthp4mUIgCkjj9GL3anMJAQORLA=;
+        h=Date:From:To:Cc:Subject:From;
+        b=TfAsmXYJ+0g0gOQO2JSeJlwU6hWMx1ZrHscboe+EMZ3vqRrHaYv6oTCd30qkw353r
+         McoBGqPJ6pbxbbIoE1/UXHv/EvxMcHUfkwcqGaNq+bieHS+EGBsodcn13t3I1J2beW
+         4/0Mob8YGX65JYDYC3TlRvGaAboL9rGGXX9/kMQ0=
+Date:   Tue, 1 Oct 2019 17:39:17 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Potnuri Bharat Teja <bharat@chelsio.com>,
+        Doug Ledford <dledford@redhat.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>
+Cc:     linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Nicolas Waisman <nico@semmle.com>
+Subject: [PATCH] cxgb4: do not dma memory off of the stack
+Message-ID: <20191001153917.GA3498459@kroah.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.66]); Tue, 01 Oct 2019 15:38:53 +0000 (UTC)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 30 Sep 2019 18:55:32 -0500
-Shawn Anastasio <shawn@anastas.io> wrote:
+Nicolas pointed out that the cxgb4 driver is doing dma off of the stack,
+which is generally considered a very bad thing.  On some architectures
+it could be a security problem, but odds are none of them actually run
+this driver, so it's just a "normal" bug.
 
-> This patch adds region file descriptors to VFIO, a simple file descriptor type
-> that allows read/write/mmap operations on a single region of a VFIO device.
-> 
-> This feature is particularly useful for privileged applications that use VFIO
-> and wish to share file descriptors with unprivileged applications without
-> handing over full control of the device.
+Resolve this by allocating the memory for a message off of the heap
+instead of the stack.  kmalloc() always will give us a proper memory
+location that DMA will work correctly from.
 
-Such as?  How do we defined "privileged"?  VFIO already allows
-"unprivileged applications" to own a device, only file permissions are
-necessary for the VFIO group.  Does region level granularity really
-allow us to claim that the consumer of this fd doesn't have full
-control of the device?  Clearly device ioctls, including interrupts,
-and DMA mappings are not granted with only access to a region, but said
-unprivileged application may have absolute full control of the device
-itself via that region.
+Reported-by: Nicolas Waisman <nico@semmle.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-> It also allows applications to use
-> regular offsets in read/write/mmap instead of the region index + offset that
-> must be used with device file descriptors.
+---
 
-How is this actually an issue that needs a solution?
+Note, test-built only, I don't have this hardware to actually run this
+code at all.
 
-> The current implementation is very raw (PCI only, no reference counting which
-> is probably wrong), but I wanted to get a sense to see if this feature is
-> desired. If it is, tips on how to implement this more correctly are
-> appreciated.
-
-Handling the ownership and life cycle of the region fds is the more
-complicated problem.  If an unprivileged user has an mmap to a device
-owned by a privileged user, how does it get revoked by the privileged
-part of this equation?  How do we decide which regions merit this
-support, for instance a device specific region could have just as
-viable a use case as a BAR.  Why does this code limit support to
-regions supporting mmap but then support read/write as well?
-
-Technically, isn't the extent of functionality provided in this RFC
-already available via the PCI resource files in sysfs?
-
-Without a concrete use case, this looks like a solution in search of a
-problem.  Thanks,
-
-Alex
+diff --git a/drivers/infiniband/hw/cxgb4/mem.c b/drivers/infiniband/hw/cxgb4/mem.c
+index aa772ee0706f..b2bd3de81dcd 100644
+--- a/drivers/infiniband/hw/cxgb4/mem.c
++++ b/drivers/infiniband/hw/cxgb4/mem.c
+@@ -275,13 +275,17 @@ static int write_tpt_entry(struct c4iw_rdev *rdev, u32 reset_tpt_entry,
+ 			   struct sk_buff *skb, struct c4iw_wr_wait *wr_waitp)
+ {
+ 	int err;
+-	struct fw_ri_tpte tpt;
++	struct fw_ri_tpte *tpt;
+ 	u32 stag_idx;
+ 	static atomic_t key;
+ 
+ 	if (c4iw_fatal_error(rdev))
+ 		return -EIO;
+ 
++	tpt = kmalloc(sizeof(*tpt), GFP_KERNEL);
++	if (!tpt)
++		return -ENOMEM;
++
+ 	stag_state = stag_state > 0;
+ 	stag_idx = (*stag) >> 8;
+ 
+@@ -305,28 +309,28 @@ static int write_tpt_entry(struct c4iw_rdev *rdev, u32 reset_tpt_entry,
+ 
+ 	/* write TPT entry */
+ 	if (reset_tpt_entry)
+-		memset(&tpt, 0, sizeof(tpt));
++		memset(tpt, 0, sizeof(*tpt));
+ 	else {
+-		tpt.valid_to_pdid = cpu_to_be32(FW_RI_TPTE_VALID_F |
++		tpt->valid_to_pdid = cpu_to_be32(FW_RI_TPTE_VALID_F |
+ 			FW_RI_TPTE_STAGKEY_V((*stag & FW_RI_TPTE_STAGKEY_M)) |
+ 			FW_RI_TPTE_STAGSTATE_V(stag_state) |
+ 			FW_RI_TPTE_STAGTYPE_V(type) | FW_RI_TPTE_PDID_V(pdid));
+-		tpt.locread_to_qpid = cpu_to_be32(FW_RI_TPTE_PERM_V(perm) |
++		tpt->locread_to_qpid = cpu_to_be32(FW_RI_TPTE_PERM_V(perm) |
+ 			(bind_enabled ? FW_RI_TPTE_MWBINDEN_F : 0) |
+ 			FW_RI_TPTE_ADDRTYPE_V((zbva ? FW_RI_ZERO_BASED_TO :
+ 						      FW_RI_VA_BASED_TO))|
+ 			FW_RI_TPTE_PS_V(page_size));
+-		tpt.nosnoop_pbladdr = !pbl_size ? 0 : cpu_to_be32(
++		tpt->nosnoop_pbladdr = !pbl_size ? 0 : cpu_to_be32(
+ 			FW_RI_TPTE_PBLADDR_V(PBL_OFF(rdev, pbl_addr)>>3));
+-		tpt.len_lo = cpu_to_be32((u32)(len & 0xffffffffUL));
+-		tpt.va_hi = cpu_to_be32((u32)(to >> 32));
+-		tpt.va_lo_fbo = cpu_to_be32((u32)(to & 0xffffffffUL));
+-		tpt.dca_mwbcnt_pstag = cpu_to_be32(0);
+-		tpt.len_hi = cpu_to_be32((u32)(len >> 32));
++		tpt->len_lo = cpu_to_be32((u32)(len & 0xffffffffUL));
++		tpt->va_hi = cpu_to_be32((u32)(to >> 32));
++		tpt->va_lo_fbo = cpu_to_be32((u32)(to & 0xffffffffUL));
++		tpt->dca_mwbcnt_pstag = cpu_to_be32(0);
++		tpt->len_hi = cpu_to_be32((u32)(len >> 32));
+ 	}
+ 	err = write_adapter_mem(rdev, stag_idx +
+ 				(rdev->lldi.vr->stag.start >> 5),
+-				sizeof(tpt), &tpt, skb, wr_waitp);
++				sizeof(*tpt), tpt, skb, wr_waitp);
+ 
+ 	if (reset_tpt_entry) {
+ 		c4iw_put_resource(&rdev->resource.tpt_table, stag_idx);
+@@ -334,6 +338,7 @@ static int write_tpt_entry(struct c4iw_rdev *rdev, u32 reset_tpt_entry,
+ 		rdev->stats.stag.cur -= 32;
+ 		mutex_unlock(&rdev->stats.lock);
+ 	}
++	kfree(tpt);
+ 	return err;
+ }
+ 
