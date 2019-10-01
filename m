@@ -2,116 +2,117 @@ Return-Path: <SRS0=YRFP=X2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1B94ECE587
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 16:01:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E9056ECE587
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 16:02:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 760002053B
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 16:01:47 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=pensando.io header.i=@pensando.io header.b="ApBg4e0y"
+	by mail.kernel.org (Postfix) with ESMTP id C1D7C21872
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 16:02:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389845AbfJAQBq (ORCPT
+        id S1732908AbfJAQCF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Oct 2019 12:01:46 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:39894 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732809AbfJAQBq (ORCPT
+        Tue, 1 Oct 2019 12:02:05 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:43234 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728249AbfJAQCE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Oct 2019 12:01:46 -0400
-Received: by mail-pf1-f193.google.com with SMTP id v4so8309413pff.6
-        for <linux-kernel@vger.kernel.org>; Tue, 01 Oct 2019 09:01:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=pensando.io; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-transfer-encoding:content-language;
-        bh=idbzkM4Uy3IgWjz+crMW94nlfJxR/IgtZnRXVc7jjQk=;
-        b=ApBg4e0yJjPYuGCRnLEys1GKToPLkmDDLlkuiZK8QZQy0EDHWuth01D6nqOvq4KAng
-         Z0xcmh0o0od7yoNPG8gHR80kaxpgRzAAktzpBL8shUTR1GFsfJe4mSG1hMAwKDOT1yWg
-         J8ljpl4j3PadYPdWA7eAqvUwMwNQAiR3H8bZ5IZlzKO3SjwsFmclT20PH9vcvMoqiuDA
-         G+xYsPanBp0ne/KalGKxAYfevIt56y1/L7mABnxch+Hf7TVW/9H/b2IYS92klbfZ49/x
-         ptovyq44ZiQdLsVxb7ilymFMi49nWOXlRWTSakofVVx4o4PqxI1ItGnIC/E2AthqF6uW
-         XvLw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-transfer-encoding
-         :content-language;
-        bh=idbzkM4Uy3IgWjz+crMW94nlfJxR/IgtZnRXVc7jjQk=;
-        b=JdzCUn9qYOd64+f/AMloIbIab1jUYyemx/RoS5ZFoePG9z91mCcWHhJfQ500cAQ/RL
-         6yGiooB1AlF0W/zea8KvIobcHhNU19Q0jjLvhrLZmUL1x0cOEF780iUyVx25wHnnvurg
-         RTj1QkuKrfRUS37lRXmdGx9eVUgYrSs7iMZw9lv1GErU9JejB5XMDGQSP8vnnavUc5kp
-         eKiKPiCuB6SNl3Rv7jxeE/qNDAJvNeHcrNkQ+HcVX8NusdRwZ7MbqLEGf6jxNeNnmtsS
-         aXyIi70fAbKudy7x6UIDMLW37UCiFcDn8+OmPcbHCc5Fprsivgdi0e6uLbHUc2arNHX5
-         fLOw==
-X-Gm-Message-State: APjAAAU25yfxczmmTUnEk3YAoQaOdE9YM77oPaRii94ELG9DoKM+zrs7
-        MZHRq3z4UauMMk6eiQ0ykwxhdtT9aUbm9w==
-X-Google-Smtp-Source: APXvYqymArKhOXlsUJI+sJmVq0/SoBQOToYBm5aE+7kMNeRDvzhEE0tq8mcjkbbNZIgAEHyF3ePxZA==
-X-Received: by 2002:a63:ec52:: with SMTP id r18mr31698670pgj.128.1569945704953;
-        Tue, 01 Oct 2019 09:01:44 -0700 (PDT)
-Received: from Shannons-MacBook-Pro.local (static-50-53-47-17.bvtn.or.frontiernet.net. [50.53.47.17])
-        by smtp.gmail.com with ESMTPSA id v4sm15064179pff.181.2019.10.01.09.01.43
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 01 Oct 2019 09:01:44 -0700 (PDT)
-Subject: Re: [PATCH] ionic: select CONFIG_NET_DEVLINK
-To:     Arnd Bergmann <arnd@arndb.de>,
-        Pensando Drivers <drivers@pensando.io>,
-        "David S. Miller" <davem@davemloft.net>
-Cc:     Krzysztof Kozlowski <krzk@kernel.org>,
-        Leon Romanovsky <leon@kernel.org>,
-        Kalle Valo <kvalo@codeaurora.org>, netdev@vger.kernel.org,
+        Tue, 1 Oct 2019 12:02:04 -0400
+Received: from [213.220.153.21] (helo=wittgenstein)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <christian.brauner@ubuntu.com>)
+        id 1iFKaw-0000Ns-A7; Tue, 01 Oct 2019 16:01:46 +0000
+Date:   Tue, 1 Oct 2019 18:01:45 +0200
+From:   Christian Brauner <christian.brauner@ubuntu.com>
+To:     Aleksa Sarai <cyphar@cyphar.com>, Kees Cook <keescook@chromium.org>
+Cc:     Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        libc-alpha@sourceware.org, linux-api@vger.kernel.org,
         linux-kernel@vger.kernel.org
-References: <20191001142151.1206987-1-arnd@arndb.de>
-From:   Shannon Nelson <snelson@pensando.io>
-Message-ID: <57c673d8-a1f2-e759-7a7d-3cbf9b370d55@pensando.io>
-Date:   Tue, 1 Oct 2019 09:01:43 -0700
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:60.0)
- Gecko/20100101 Thunderbird/60.9.0
+Subject: Re: [PATCH v4 0/4] lib: introduce copy_struct_from_user() helper
+Message-ID: <20191001160144.z4y7gz4yla76apq4@wittgenstein>
+References: <20191001011055.19283-1-cyphar@cyphar.com>
 MIME-Version: 1.0
-In-Reply-To: <20191001142151.1206987-1-arnd@arndb.de>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20191001011055.19283-1-cyphar@cyphar.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 10/1/19 7:21 AM, Arnd Bergmann wrote:
-> When no other driver selects the devlink library code, ionic
-> produces a link failure:
->
-> drivers/net/ethernet/pensando/ionic/ionic_devlink.o: In function `ionic_devlink_alloc':
-> ionic_devlink.c:(.text+0xd): undefined reference to `devlink_alloc'
-> drivers/net/ethernet/pensando/ionic/ionic_devlink.o: In function `ionic_devlink_register':
-> ionic_devlink.c:(.text+0x71): undefined reference to `devlink_register'
->
-> Add the same 'select' statement that the other drivers use here.
->
-> Fixes: fbfb8031533c ("ionic: Add hardware init and device commands")
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-> ---
->   drivers/net/ethernet/pensando/Kconfig | 1 +
->   1 file changed, 1 insertion(+)
->
-> diff --git a/drivers/net/ethernet/pensando/Kconfig b/drivers/net/ethernet/pensando/Kconfig
-> index bd0583e409df..d25b88f53de4 100644
-> --- a/drivers/net/ethernet/pensando/Kconfig
-> +++ b/drivers/net/ethernet/pensando/Kconfig
-> @@ -20,6 +20,7 @@ if NET_VENDOR_PENSANDO
->   config IONIC
->   	tristate "Pensando Ethernet IONIC Support"
->   	depends on 64BIT && PCI
-> +	select NET_DEVLINK
->   	help
->   	  This enables the support for the Pensando family of Ethernet
->   	  adapters.  More specific information on this driver can be
+On Tue, Oct 01, 2019 at 11:10:51AM +1000, Aleksa Sarai wrote:
+> Patch changelog:
+>  v4:
+>   * __always_inline copy_struct_from_user(). [Kees Cook]
+>   * Rework test_user_copy.ko changes. [Kees Cook]
+>  v3: <https://lore.kernel.org/lkml/20190930182810.6090-1-cyphar@cyphar.com/>
+>      <https://lore.kernel.org/lkml/20190930191526.19544-1-asarai@suse.de/>
+>  v2: <https://lore.kernel.org/lkml/20190925230332.18690-1-cyphar@cyphar.com/>
+>  v1: <https://lore.kernel.org/lkml/20190925165915.8135-1-cyphar@cyphar.com/>
+> 
+> This series was split off from the openat2(2) syscall discussion[1].
+> However, the copy_struct_to_user() helper has been dropped, because
+> after some discussion it appears that there is no really obvious
+> semantics for how copy_struct_to_user() should work on mixed-vintages
+> (for instance, whether [2] is the correct semantics for all syscalls).
+> 
+> A common pattern for syscall extensions is increasing the size of a
+> struct passed from userspace, such that the zero-value of the new fields
+> result in the old kernel behaviour (allowing for a mix of userspace and
+> kernel vintages to operate on one another in most cases).
+> 
+> Previously there was no common lib/ function that implemented
+> the necessary extension-checking semantics (and different syscalls
+> implemented them slightly differently or incompletely[3]). This series
+> implements the helper and ports several syscalls to use it.
+> 
+> Some in-kernel selftests are included in this patch. More complete
+> self-tests for copy_struct_from_user() are included in the openat2()
+> patchset.
+> 
+> [1]: https://lore.kernel.org/lkml/20190904201933.10736-1-cyphar@cyphar.com/
+> 
+> [2]: commit 1251201c0d34 ("sched/core: Fix uclamp ABI bug, clean up and
+>      robustify sched_read_attr() ABI logic and code")
+> 
+> [3]: For instance {sched_setattr,perf_event_open,clone3}(2) all do do
+>      similar checks to copy_struct_from_user() while rt_sigprocmask(2)
+>      always rejects differently-sized struct arguments.
+> 
+> Aleksa Sarai (4):
+>   lib: introduce copy_struct_from_user() helper
+>   clone3: switch to copy_struct_from_user()
+>   sched_setattr: switch to copy_struct_from_user()
+>   perf_event_open: switch to copy_struct_from_user()
+> 
+>  include/linux/bitops.h     |   7 ++
+>  include/linux/uaccess.h    |  70 +++++++++++++++++++
+>  include/uapi/linux/sched.h |   2 +
+>  kernel/events/core.c       |  47 +++----------
+>  kernel/fork.c              |  34 ++--------
+>  kernel/sched/core.c        |  43 ++----------
+>  lib/strnlen_user.c         |   8 +--
+>  lib/test_user_copy.c       | 136 +++++++++++++++++++++++++++++++++++--
+>  lib/usercopy.c             |  55 +++++++++++++++
+>  9 files changed, 288 insertions(+), 114 deletions(-)
 
-Thanks!
+I've picked this up now and it's sitting in
+https://git.kernel.org/pub/scm/linux/kernel/git/brauner/linux.git/log/?h=copy_struct_from_user
 
-Acked-by: Shannon Nelson <snelson@pensando.io>
+It should show up in linux-next tomorrow. I will let this sit there for
+a few days but overall this seems good to have in rc2.
+If someone objects and prefers to take it through their tree I can drop
+it.
 
+Christian
