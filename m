@@ -2,117 +2,133 @@ Return-Path: <SRS0=YRFP=X2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FD6BECE58A
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 15:17:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EFB42ECE587
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 15:19:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7653E2133F
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 15:17:55 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="vgVjgSmM"
+	by mail.kernel.org (Postfix) with ESMTP id C1CA821872
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 15:19:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1569943179;
+	bh=oPP01wWGd043s57vaWHPnGdkRRNGRk9rhQTfDKdV+wA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=uRC7zsyvZelqPni+DXa7hm+D1pmZrQ+iRlIDoAeROdiOkf70+gtZ66KzDL8VNNqsD
+	 pYfccKULs3eDfbH9LgqAD9WX1BidmGkrhVC8vIerk4rvJaUIqZy6aAmeJPy5smLgFl
+	 326ep8KeGb0UpQQNCNID0hqBtPVK/p4XcF1iP2Q4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389555AbfJAPRy (ORCPT
+        id S2389559AbfJAPTj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Oct 2019 11:17:54 -0400
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:52544 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727185AbfJAPRy (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Oct 2019 11:17:54 -0400
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id x91FHd6G012908;
-        Tue, 1 Oct 2019 10:17:39 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1569943059;
-        bh=mYUdVtpTVwCAKDqOu/gzrxlPJtwVfw4kTjUjOPGBBwI=;
-        h=Subject:To:References:From:Date:In-Reply-To;
-        b=vgVjgSmM4Fm9w2oqiQFOOZO20eOMLlmf2fpPWhTk4SB6lLT6cXWfq0Z6zuuYfKhb9
-         WJcvCpx5oSZRqK2kWQ7PTEZWd82IgRDhabn5MBGNjzDlHvmLVVdbTmmHjMnBeKbxqw
-         yXchTeVsv4hWw2aRN9OXYzqf2lbVnB42ync3zMWA=
-Received: from DLEE109.ent.ti.com (dlee109.ent.ti.com [157.170.170.41])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x91FHdhi031997
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 1 Oct 2019 10:17:39 -0500
-Received: from DLEE102.ent.ti.com (157.170.170.32) by DLEE109.ent.ti.com
- (157.170.170.41) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Tue, 1 Oct
- 2019 10:17:28 -0500
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE102.ent.ti.com
- (157.170.170.32) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Tue, 1 Oct 2019 10:17:29 -0500
-Received: from [10.250.65.13] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id x91FHceg051485;
-        Tue, 1 Oct 2019 10:17:38 -0500
-Subject: Re: [PATCH V6 5/8] backlight: qcom-wled: Restructure the driver for
- WLED3
-To:     Kiran Gunda <kgunda@codeaurora.org>, <bjorn.andersson@linaro.org>,
-        <jingoohan1@gmail.com>, <lee.jones@linaro.org>,
-        <b.zolnierkie@samsung.com>, <dri-devel@lists.freedesktop.org>,
-        <daniel.thompson@linaro.org>, <jacek.anaszewski@gmail.com>,
-        <pavel@ucw.cz>, <robh+dt@kernel.org>, <mark.rutland@arm.com>,
-        <linux-leds@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, Andy Gross <agross@kernel.org>,
-        <linux-arm-msm@vger.kernel.org>, <linux-fbdev@vger.kernel.org>
-References: <1569825553-26039-1-git-send-email-kgunda@codeaurora.org>
- <1569825553-26039-6-git-send-email-kgunda@codeaurora.org>
-From:   Dan Murphy <dmurphy@ti.com>
-Message-ID: <6f50ea19-f320-b4e6-f269-4d1e2189fa77@ti.com>
-Date:   Tue, 1 Oct 2019 10:17:57 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Tue, 1 Oct 2019 11:19:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51776 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731893AbfJAPTi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Oct 2019 11:19:38 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1B5202133F;
+        Tue,  1 Oct 2019 15:19:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1569943177;
+        bh=oPP01wWGd043s57vaWHPnGdkRRNGRk9rhQTfDKdV+wA=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=VH+T0EKVMsL0HZuofffSGj9XBTKML9DobPL3lwz6J+rst9DASxXpKIblruJyzUSNw
+         cXq9McQ9z1QACt7YSYggYLcrrlhFpgwAnQadnpxIoLr7wEVGPXcji2r/CDGr04mXwR
+         1s+4P3i+AEJOPaxI00MGoLMrHR+jWhFzfECp3y/s=
+Date:   Tue, 1 Oct 2019 17:19:35 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Mika Westerberg <mika.westerberg@linux.intel.com>
+Cc:     linux-usb@vger.kernel.org,
+        Andreas Noever <andreas.noever@gmail.com>,
+        Michael Jamet <michael.jamet@intel.com>,
+        Yehezkel Bernat <YehezkelShB@gmail.com>,
+        Rajmohan Mani <rajmohan.mani@intel.com>,
+        Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>,
+        Lukas Wunner <lukas@wunner.de>,
+        Alan Stern <stern@rowland.harvard.edu>,
+        Mario.Limonciello@dell.com,
+        Anthony Wong <anthony.wong@canonical.com>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [RFC PATCH 17/22] thunderbolt: Add initial support for USB4
+Message-ID: <20191001151935.GA3450435@kroah.com>
+References: <20191001113830.13028-1-mika.westerberg@linux.intel.com>
+ <20191001113830.13028-18-mika.westerberg@linux.intel.com>
+ <20191001124748.GH2954373@kroah.com>
+ <20191001130905.GO2714@lahna.fi.intel.com>
+ <20191001145354.GA3366714@kroah.com>
+ <20191001150734.GA2714@lahna.fi.intel.com>
 MIME-Version: 1.0
-In-Reply-To: <1569825553-26039-6-git-send-email-kgunda@codeaurora.org>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191001150734.GA2714@lahna.fi.intel.com>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Kiran
+On Tue, Oct 01, 2019 at 06:07:34PM +0300, Mika Westerberg wrote:
+> On Tue, Oct 01, 2019 at 04:53:54PM +0200, Greg Kroah-Hartman wrote:
+> > On Tue, Oct 01, 2019 at 04:09:05PM +0300, Mika Westerberg wrote:
+> > > On Tue, Oct 01, 2019 at 02:47:48PM +0200, Greg Kroah-Hartman wrote:
+> > > > > -	  Thunderbolt Controller driver. This driver is required if you
+> > > > > -	  want to hotplug Thunderbolt devices on Apple hardware or on PCs
+> > > > > -	  with Intel Falcon Ridge or newer.
+> > > > > +	  USB4 (Thunderbolt) driver. USB4 is the public spec based on
+> > > > > +	  Thunderbolt 3 protocol. This driver is required if you want to
+> > > > > +	  hotplug Thunderbolt and USB4 compliant devices on Apple
+> > > > > +	  hardware or on PCs with Intel Falcon Ridge or newer.
+> > > > 
+> > > > Wait, did "old" thunderbolt just get re-branded as USB4?
+> > > 
+> > > Not but the driver started supporting USB4 as well :)
+> > > 
+> > > USB4 is pretty much public spec of Thunderbolt 3 but with some
+> > > differences in register layouts (this is because Thunderbolt uses some
+> > > vendor specific capabilities which are now moved to more "standard"
+> > > places). 
+> > 
+> > Ok, then we need to rename the Kconfig option as well, otherwise no one
+> > will "know" that this changed, so they will not be prompted for it.
+> > 
+> > > > Because if I have an "old" laptop that needs Thunderbolt support, how am
+> > > > I going to know it is now called USB4 instead?
+> > > 
+> > > Well the Kconfig option tries to have both names there:
+> > > 
+> > >   tristate "USB4 (Thunderbolt) support"
+> > > 
+> > > and then
+> > > 
+> > >   USB4 (Thunderbolt) driver. USB4 is the public spec based on
+> > >   Thunderbolt 3 protocol. This driver is required if you want to hotplug
+> > >   Thunderbolt and USB4 compliant devices on Apple hardware or on PCs
+> > >   with Intel Falcon Ridge or newer.
+> > > 
+> > > and the Kconfig option is still CONFIG_THUNDERBOLT. I know this is
+> > > confusing but I don't have better ideas how we can advertise both. I
+> > > borrowed this "format" from firewire.
+> > 
+> > CONFIG_USB4 instead?
+> 
+> OK, but does that break existing .configs? I mean if you have already
+> CONFIG_THUNDERBOLT in your .config/defconfig does it now just get
+> dropped silently?
 
-On 9/30/19 1:39 AM, Kiran Gunda wrote:
-> Restructure the driver to add the support for new WLED
-> peripherals.
->
-> Signed-off-by: Kiran Gunda <kgunda@codeaurora.org>
-> Acked-by: Daniel Thompson <daniel.thompson@linaro.org>
-> ---
->   drivers/video/backlight/qcom-wled.c | 395 ++++++++++++++++++++++--------------
->   1 file changed, 245 insertions(+), 150 deletions(-)
->
-> diff --git a/drivers/video/backlight/qcom-wled.c b/drivers/video/backlight/qcom-wled.c
-> index f191242..740f1b6 100644
-> --- a/drivers/video/backlight/qcom-wled.c
-> +++ b/drivers/video/backlight/qcom-wled.c
-> @@ -7,59 +7,71 @@
->   #include <linux/module.h>
->   #include <linux/of.h>
->   #include <linux/of_device.h>
-> +#include <linux/of_address.h>
->   #include <linux/regmap.h>
->   
->   /* From DT binding */
-> +#define WLED_MAX_STRINGS				4
-> +
->   #define WLED_DEFAULT_BRIGHTNESS				2048
->   
-> -#define WLED3_SINK_REG_BRIGHT_MAX			0xFFF
-> -#define WLED3_CTRL_REG_VAL_BASE				0x40
-> +#define WLED_SINK_REG_BRIGHT_MAX			0xFFF
+Yup.  And then you get asked about CONFIG_USB4
 
-Why did you change some of these again?
+> For example firewire has CONFIG_FIREWIRE even though the "standard" name
+> is IEEE 1394. I was thinking maybe we can do the same for
+> USB4/Thunderbolt?
 
-Can you just change it to the final #define in patch 4/8?
+It comes down to the what do you want to do for the next 20+ years,
+explain to people that "to get USB4 support, enable CONFIG_THUNDERBOLT"?
 
-Dan
+:)
 
-<snip>
+thanks,
 
+greg k-h
