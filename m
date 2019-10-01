@@ -2,117 +2,135 @@ Return-Path: <SRS0=YRFP=X2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8560ECE587
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 13:40:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27547ECE587
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 13:42:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8C74A20815
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 13:40:47 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Xnt/LuGD"
+	by mail.kernel.org (Postfix) with ESMTP id 012F42086A
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 13:42:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388681AbfJANkq (ORCPT
+        id S2388615AbfJANmx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Oct 2019 09:40:46 -0400
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:34657 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726898AbfJANkq (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Oct 2019 09:40:46 -0400
-Received: by mail-pg1-f194.google.com with SMTP id y35so9705367pgl.1;
-        Tue, 01 Oct 2019 06:40:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=4vOYNi5T48xwb1n2hFAYpF7E0QLiPcqC0FCJyUAyNBQ=;
-        b=Xnt/LuGDQaAK+dLqW2ga47WZvlv2h7nLyYoxPC6nSSmFeMTOq9RG8hCFNc7GL5tl9e
-         HgzNat/g5WB6fyJKzllB+la34cFqzBeJ9bAEcCIeunGcLZ80RCNuTMh+5Ukt08Lk1waG
-         LPE37m/Zevzw6WVvXMZG00j8ICsosFSJuaie/psFekhW3u8oFUay0Wgq6IjgagvzUo6f
-         Oma6PdOoFvtHWdpdKHvhhMNrTBBqzaY1rcDAQgAkgYqtm7gl70TTWGVIDwcvGR/SuXAP
-         N/pzw+aw+FUEdQPUdRJMju6GajbSITrg+D+npSkgM2NRxRTUYqKH0Za/ZhWSsFvijutF
-         ntrw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:subject:to:cc:references:from:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=4vOYNi5T48xwb1n2hFAYpF7E0QLiPcqC0FCJyUAyNBQ=;
-        b=DfzI9uxTA8u7ADk+BusUwsO0zdE6JwZRO79vD4CQDuBnpTjUUuI+KGxluHT7FGFWqF
-         e2PJfnGKQeogvMF641CL4Zv0x4yLSJa2qCjddtKKLAeWh1izLDerhYEwFt/6fPQsh1ci
-         H9Mf+e1/GIEUIoPbwMf+HA7bwGCu9zBxBTBAHnCrvqj+6Xh/dvSW7Sg/eWVwzp9VZgY+
-         pd0VHY7SBq6q5wGcNwNCqoa26zoErRMQsy/u2IE4DaS/TzmTtBwiWg29bpYu5L8eR5VV
-         BwlTzyCIB+/8dR2h6uq1Ec5/rIEZTIuBh6vqjYonCi0KHIOxc11pduq+RZD3Ac4mTOtR
-         0fdA==
-X-Gm-Message-State: APjAAAVKhG3T3lVa/bYayO4TftcOzT/60VoVz0HQH9SEI7YZBpYURPVN
-        jbeWJBJ3e9Xq0bNU76B33Tb4zQap
-X-Google-Smtp-Source: APXvYqwRvvLnhzb7LlS95wwloBZe3MSNY48zgJ00VCMN74VaASkeqSApwY50oEKW2WSGzYgAYhSTRA==
-X-Received: by 2002:a65:6709:: with SMTP id u9mr238225pgf.59.1569937245302;
-        Tue, 01 Oct 2019 06:40:45 -0700 (PDT)
-Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id ev20sm2598898pjb.19.2019.10.01.06.40.44
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 01 Oct 2019 06:40:44 -0700 (PDT)
-Subject: Re: [PATCH] usb: typec: tcpm: Fix a signedness bug in
- tcpm_fw_get_caps()
-To:     Dan Carpenter <dan.carpenter@oracle.com>
-Cc:     Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel-janitors@vger.kernel.org
-References: <20190925110219.GN3264@mwanda>
- <20190926125310.GA9967@roeck-us.net> <20191001115442.GB22609@kadam>
-From:   Guenter Roeck <linux@roeck-us.net>
-Message-ID: <0d9ebb0e-d8b1-f963-9310-e4099dcf677a@roeck-us.net>
-Date:   Tue, 1 Oct 2019 06:40:43 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Tue, 1 Oct 2019 09:42:53 -0400
+Received: from mga06.intel.com ([134.134.136.31]:19704 "EHLO mga06.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726554AbfJANmx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Oct 2019 09:42:53 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 01 Oct 2019 06:42:51 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,571,1559545200"; 
+   d="scan'208";a="205064778"
+Received: from lahna.fi.intel.com (HELO lahna) ([10.237.72.157])
+  by fmsmga001.fm.intel.com with SMTP; 01 Oct 2019 06:42:47 -0700
+Received: by lahna (sSMTP sendmail emulation); Tue, 01 Oct 2019 16:42:47 +0300
+Date:   Tue, 1 Oct 2019 16:42:47 +0300
+From:   Mika Westerberg <mika.westerberg@linux.intel.com>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     linux-usb@vger.kernel.org,
+        Andreas Noever <andreas.noever@gmail.com>,
+        Michael Jamet <michael.jamet@intel.com>,
+        Yehezkel Bernat <YehezkelShB@gmail.com>,
+        Rajmohan Mani <rajmohan.mani@intel.com>,
+        Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>,
+        Lukas Wunner <lukas@wunner.de>,
+        Alan Stern <stern@rowland.harvard.edu>,
+        Mario.Limonciello@dell.com,
+        Anthony Wong <anthony.wong@canonical.com>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [RFC PATCH 00/22] thunderbolt: Add support for USB4
+Message-ID: <20191001134247.GT2714@lahna.fi.intel.com>
+References: <20191001113830.13028-1-mika.westerberg@linux.intel.com>
+ <20191001124954.GI2954373@kroah.com>
 MIME-Version: 1.0
-In-Reply-To: <20191001115442.GB22609@kadam>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191001124954.GI2954373@kroah.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 10/1/19 4:54 AM, Dan Carpenter wrote:
-> On Thu, Sep 26, 2019 at 05:53:10AM -0700, Guenter Roeck wrote:
->> On Wed, Sep 25, 2019 at 02:02:19PM +0300, Dan Carpenter wrote:
->>> The "port->typec_caps.data" and "port->typec_caps.type" variables are
->>> enums and in this context GCC will treat them as an unsigned int so they
->>> can never be less than zero.
->>>
->>> Fixes: ae8a2ca8a221 ("usb: typec: Group all TCPCI/TCPM code together")
->>> Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
->>> ---
->>>   drivers/usb/typec/tcpm/tcpm.c | 4 ++--
->>>   1 file changed, 2 insertions(+), 2 deletions(-)
->>>
->>> diff --git a/drivers/usb/typec/tcpm/tcpm.c b/drivers/usb/typec/tcpm/tcpm.c
->>> index 96562744101c..d3b63e000ae2 100644
->>> --- a/drivers/usb/typec/tcpm/tcpm.c
->>> +++ b/drivers/usb/typec/tcpm/tcpm.c
->>> @@ -4410,7 +4410,7 @@ static int tcpm_fw_get_caps(struct tcpm_port *port,
->>>   	ret = fwnode_property_read_string(fwnode, "data-role", &cap_str);
->>>   	if (ret == 0) {
->>>   		port->typec_caps.data = typec_find_port_data_role(cap_str);
->>> -		if (port->typec_caps.data < 0)
->>> +		if ((int)port->typec_caps.data < 0)
->>>   			return -EINVAL;
->>
->> Doesn't that also cause a warning about overwriting error return codes ?
+On Tue, Oct 01, 2019 at 02:49:54PM +0200, Greg Kroah-Hartman wrote:
+> On Tue, Oct 01, 2019 at 02:38:08PM +0300, Mika Westerberg wrote:
+> > Hi all,
+> > 
+> > I'm sending this as RFC because the series is still missing important
+> > features such as power management so not ready for merging. However, I
+> > think it is good to get any early feedback from the community. We are
+> > working to add support for the missing features.
+> > 
+> > USB4 is the public specification of Thunderbolt 3 protocol and can be
+> > downloaded here:
+> > 
+> >   https://www.usb.org/sites/default/files/USB4%20Specification_1.zip
+> > 
+> > USB4 is about tunneling different protocols over a single cable (in the
+> > same way as Thunderbolt). The current USB4 spec supports PCIe, Display Port
+> > and USB 3.x, and also software based protocols such as networking between
+> > domains (hosts).
+> > 
+> > So far PCs have been using firmware based Connection Manager and Apple
+> > systems have been using software based one. A Connection Manager is the
+> > entity that handles creation of different tunnel types through the USB4
+> > (and Thunderbolt) fabric. With USB4 the plan is to have software based
+> > Connection Manager everywhere but some early systems will also support
+> > firmware to allow OS downgrade for example.
+> > 
+> > Current Linux Thunderbolt driver supports both "modes" and can detect which
+> > one to use dynamically.
+> > 
+> > This series first adds support for Thunderbolt 3 devices to the software
+> > connection manager and then extends that to support USB4 compliant hosts
+> > and devices (this applies to both firmware and software based connection
+> > managers). With this series the following features are supported also for
+> > USB4 compliant devices:
+> > 
+> >   - PCIe tunneling
+> >   - Display Port tunneling
+> >   - USB 3.x tunneling
+> >   - P2P networking (implemented in drivers/net/thunderbolt.c)
+> >   - Host and device NVM firmware upgrade
+> > 
+> > We also add two new sysfs attributes under each device that expose link
+> > speed and width to userspace. The rest of the userspace ABI stays the same.
+> > 
+> > I'm including Linux USB folks as well because USB4 is officially coming
+> > from USB-IF which puts us on same boat now.
+> > 
+> > While I changed the user visible Kconfig string to mention "USB4" (the
+> > Kconfig option is still CONFIG_THUNDERBOLT), I'm wondering whether we
+> > should move the whole Thunderbolt driver under drivers/usb/thunderbolt as
+> > well? 
 > 
-> I'm happy that you think there is a tool which generates warnings like
-> that but it's just people manually complaining.  :P
+> Looks "interesting", nice work!
+
+Thanks!
+
+> I stopped at patch "Add initial support for USB4" as I don't think we
+> want to add USB4 code to a system that we know does not have it, right?
+
+You can connect a USB4 device to Thunderbolt 3 system. USB4 hubs
+specifically are required to support this by the spec. Of course then it
+is in Thunderbolt 3 alternate mode (not in USB4 native mode) but the
+USB4 register set is still there. So for example we still need to
+configure TMU (Time Management Unit) and access the DROM via router
+operations and so on.
+
+Do you mean we don't want that?
+
+> Everything up to then is just "normal" thunderbolt, and with the
+> exception of a few minor comments, all look fine to me.
 > 
+> I didn't actually read the USB4 patch just yet, as I figured we needed
+> to argue about that some more :)
 
-I am quite sure there is, or at least used to be - I have seen such warnings.
-Maybe it was removed.
-
-Guenter
+Heh, sure and thanks for the feedback so far :)
