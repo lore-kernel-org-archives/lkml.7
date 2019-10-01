@@ -2,99 +2,111 @@ Return-Path: <SRS0=YRFP=X2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 34A7EECE587
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 16:47:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1BA6ECE587
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 16:47:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EF4C921855
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 16:47:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8844C2168B
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 16:47:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569948423;
-	bh=nc5ULy0TFrTcGfOM1GDNpdTbbJKQWQYLHky46hqyIBk=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=LLtzJbjyypYiAA8+n18792FINXLFrnzbeuDNcCWrxrF2EhtfhTEELw+DlGDaouO7N
-	 JcIoDyFtKMrTDcImaG60/VrygahuUtiBzHdHkhKYv9Unz7woZSFc6E4Zh3nAiNuwbY
-	 zJxKKlBHdT1Z+TikV6hT8q1a/NqOkcJO3SRQXjuc=
+	s=default; t=1569948427;
+	bh=JJ7gDG/KutG+i9qf0bFYfM+IUFqtjNVsTgvgalBoxf4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=LrySwXPmbJudWXcWoRQmxKjf5RBNYJin25l2g+jb1LRzbfYXLP5QtAgbPXbfg+B1F
+	 50CqftEYWOesQRl6/66D/LhiqUWetEv6ZJ58hymzAUgMZU/736AMw28dQHnT+Ynf6u
+	 Y2k8Kyecl/Pn0K8mw/zn2NHyPYmqAxJlKL5H04Kg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388493AbfJAQrB (ORCPT
+        id S2388585AbfJAQrG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Oct 2019 12:47:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58132 "EHLO mail.kernel.org"
+        Tue, 1 Oct 2019 12:47:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59384 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390334AbfJAQpf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Oct 2019 12:45:35 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S1726956AbfJAQrD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Oct 2019 12:47:03 -0400
+Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 42AA4205C9;
-        Tue,  1 Oct 2019 16:45:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A536F20659;
+        Tue,  1 Oct 2019 16:47:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569948335;
-        bh=nc5ULy0TFrTcGfOM1GDNpdTbbJKQWQYLHky46hqyIBk=;
-        h=From:To:Cc:Subject:Date:From;
-        b=RrKFp3HGKwMAeOeTcQVCvCaWUqb0qA+w6uZs/RFucHh1gMy5TnUcaSyOqL5cS2sfC
-         Tg1LlQgKczfmQAEXviAksVo8OxuE0sZRkQ9R4n+F+5yCY5sGIgx70QykL/uXtS/tuS
-         00Uy77CwgPyH/bscHxSF1/En3ySD61CDTBgnrEbc=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Sascha Hauer <s.hauer@pengutronix.de>,
-        Mimi Zohar <zohar@linux.ibm.com>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-integrity@vger.kernel.org,
-        linux-security-module@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.4 01/15] ima: always return negative code for error
-Date:   Tue,  1 Oct 2019 12:45:19 -0400
-Message-Id: <20191001164533.16915-1-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
+        s=default; t=1569948423;
+        bh=JJ7gDG/KutG+i9qf0bFYfM+IUFqtjNVsTgvgalBoxf4=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=n+MevooD/Y954ryuPnnAl+0+Zq2uKrhxzZTbolBu/i9o/zKOEX4H36Tuu0z4eyDn/
+         Y5ggKuu+7ovuOJw2z3rF9yTMrRzgSbmPal9VvuzLj/i95/F+lUfVA1Prs+gaE+EAWk
+         Ei+64VscEu5RoGOeA3OeGSVNOgveAV1TdLXEBsQg=
+Date:   Tue, 1 Oct 2019 17:46:58 +0100
+From:   Will Deacon <will@kernel.org>
+To:     Catalin Marinas <catalin.marinas@arm.com>
+Cc:     Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        ard.biesheuvel@linaro.org, ndesaulniers@google.com,
+        tglx@linutronix.de
+Subject: Re: [PATCH v3 1/5] arm64: vdso32: Introduce COMPAT_CC_IS_GCC
+Message-ID: <20191001164657.l2wz3ghq6icm3lim@willie-the-truck>
+References: <20190920142738.qlsjwguc6bpnez63@willie-the-truck>
+ <20190926214342.34608-1-vincenzo.frascino@arm.com>
+ <20190926214342.34608-2-vincenzo.frascino@arm.com>
+ <20191001131420.y3fsydlo7pg6ykfs@willie-the-truck>
+ <20191001132731.GG41399@arrakis.emea.arm.com>
+ <ed7d1465-2d7b-d57c-c1b1-215af1ba7a6f@arm.com>
+ <20191001142038.ptwyfbesfrz3kkoz@willie-the-truck>
+ <7558914c-fc2d-d05a-ccbe-76ef451670ae@arm.com>
+ <20191001144353.5rn3bkcc6eyfclh7@willie-the-truck>
+ <20191001153056.GO41399@arrakis.emea.arm.com>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191001153056.GO41399@arrakis.emea.arm.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sascha Hauer <s.hauer@pengutronix.de>
+On Tue, Oct 01, 2019 at 04:30:56PM +0100, Catalin Marinas wrote:
+> On Tue, Oct 01, 2019 at 03:43:54PM +0100, Will Deacon wrote:
+> > > >>>> On Thu, Sep 26, 2019 at 10:43:38PM +0100, Vincenzo Frascino wrote:
+> > > >>>>> +config COMPATCC_IS_ARM_GCC
+> > > >>>>> +	def_bool $(success,$(COMPATCC) --version | head -n 1 | grep -q "arm-.*-gcc")
+> [...]
+> > My point was that we don't attempt to sanitise the compiler passed via
+> > CROSS_COMPILE, so I don't think we should do anything special for COMPATCC
+> > either.
+> 
+> What I really want from kbuild with this patch is:
+> 
+> 1. Not to warn me that I don't have a CROSS_COMPILE_COMPAT set
+> 
+> 2. Not to give me a compilation error if the makefile made up a COMPATCC
+>    that doesn't work
+> 
+> Since we dropped the Kconfig option for the compat gcc prefix (which I
+> didn't like anyway), COMPATCC is now initialised to
+> (CROSS_COMPILE_COMPAT)gcc. This means that it is valid compiler (and
+> it's an aarch64 compiler on my machine). The COMPATCC_IS_ARM_GCC
+> silently disables the compat vDSO for this case rather than giving me a
+> build error if we don't have such checks.
+> 
+> In the long run, I wouldn't mandate CROSS_COMPILE_COMPAT to always be
+> set for the compat vDSO since with clang we could use the same compiler
+> binary for both native and compat (with different flags). That's once we
+> cleaned up the headers.
 
-[ Upstream commit f5e1040196dbfe14c77ce3dfe3b7b08d2d961e88 ]
+But we'll still need it even with clang so that the relevant triple can be
+passed to the --target option. The top-level Makefile already does this:
 
-integrity_kernel_read() returns the number of bytes read. If this is
-a short read then this positive value is returned from
-ima_calc_file_hash_atfm(). Currently this is only indirectly called from
-ima_calc_file_hash() and this function only tests for the return value
-being zero or nonzero and also doesn't forward the return value.
-Nevertheless there's no point in returning a positive value as an error,
-so translate a short read into -EINVAL.
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Makefile#n544
 
-Signed-off-by: Sascha Hauer <s.hauer@pengutronix.de>
-Signed-off-by: Mimi Zohar <zohar@linux.ibm.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- security/integrity/ima/ima_crypto.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+so I think we should do the same thing for the compat vdso as well, which
+would allow us to remove this complexity by requiring that
+CROSS_COMPILE_COMPAT identifies the cross-compiler to use in exactly the
+same way as CROSS_COMPILE does.
 
-diff --git a/security/integrity/ima/ima_crypto.c b/security/integrity/ima/ima_crypto.c
-index a29209fa56746..5c87baaefafb6 100644
---- a/security/integrity/ima/ima_crypto.c
-+++ b/security/integrity/ima/ima_crypto.c
-@@ -298,8 +298,11 @@ static int ima_calc_file_hash_atfm(struct file *file,
- 		rbuf_len = min_t(loff_t, i_size - offset, rbuf_size[active]);
- 		rc = integrity_kernel_read(file, offset, rbuf[active],
- 					   rbuf_len);
--		if (rc != rbuf_len)
-+		if (rc != rbuf_len) {
-+			if (rc >= 0)
-+				rc = -EINVAL;
- 			goto out3;
-+		}
- 
- 		if (rbuf[1] && offset) {
- 			/* Using two buffers, and it is not the first
--- 
-2.20.1
+Am I missing something here?
 
+Will
