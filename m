@@ -2,94 +2,101 @@ Return-Path: <SRS0=YRFP=X2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BD8CAC388F3
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 09:53:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B7F4C388F3
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 09:54:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 926F42190F
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 09:53:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 29FA121D82
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 09:54:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729776AbfJAJxP (ORCPT
+        id S1729879AbfJAJyU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Oct 2019 05:53:15 -0400
-Received: from s3.sipsolutions.net ([144.76.43.62]:58438 "EHLO
-        sipsolutions.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725765AbfJAJxO (ORCPT
+        Tue, 1 Oct 2019 05:54:20 -0400
+Received: from kirsty.vergenet.net ([202.4.237.240]:34398 "EHLO
+        kirsty.vergenet.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729792AbfJAJyU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Oct 2019 05:53:14 -0400
-Received: by sipsolutions.net with esmtpsa (TLS1.3:ECDHE_SECP256R1__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
-        (Exim 4.92.2)
-        (envelope-from <johannes@sipsolutions.net>)
-        id 1iFEq2-0004UP-IC; Tue, 01 Oct 2019 11:52:58 +0200
-Message-ID: <9b6f5c279e8aea8e6241d03b0b21de88ac49e8b2.camel@sipsolutions.net>
-Subject: Re: [PATCH v5.1-rc] iwlwifi: make locking in iwl_mvm_tx_mpdu()
- BH-safe
-From:   Johannes Berg <johannes@sipsolutions.net>
-To:     Jiri Kosina <jikos@kernel.org>
-Cc:     Emmanuel Grumbach <emmanuel.grumbach@intel.com>,
-        Luca Coelho <luciano.coelho@intel.com>,
-        Intel Linux Wireless <linuxwifi@intel.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Toke =?ISO-8859-1?Q?H=F8iland-J=F8rgensen?= <toke@redhat.com>
-Date:   Tue, 01 Oct 2019 11:52:57 +0200
-In-Reply-To: <46cce48de455acf073ad0582565d1fe34253f823.camel@sipsolutions.net>
-References: <nycvar.YFH.7.76.1904151300160.9803@cbobk.fhfr.pm>
-         <24e05607b902e811d1142e3bd345af021fd3d077.camel@sipsolutions.net>
-         <nycvar.YFH.7.76.1904151328270.9803@cbobk.fhfr.pm>
-         <01d55c5cf513554d9cbdee0b14f9360a8df859c8.camel@sipsolutions.net>
-         <nycvar.YFH.7.76.1909111238470.473@cbobk.fhfr.pm>
-         <46cce48de455acf073ad0582565d1fe34253f823.camel@sipsolutions.net>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.30.5 (3.30.5-1.fc29) 
+        Tue, 1 Oct 2019 05:54:20 -0400
+Received: from reginn.horms.nl (watermunt.horms.nl [80.127.179.77])
+        by kirsty.vergenet.net (Postfix) with ESMTPA id 665AB25BDFF;
+        Tue,  1 Oct 2019 19:54:17 +1000 (AEST)
+Received: by reginn.horms.nl (Postfix, from userid 7100)
+        id 5EC7094046A; Tue,  1 Oct 2019 11:54:15 +0200 (CEST)
+Date:   Tue, 1 Oct 2019 11:54:15 +0200
+From:   Simon Horman <horms@verge.net.au>
+To:     Julian Anastasov <ja@ssi.bg>
+Cc:     Haishuang Yan <yanhaishuang@cmss.chinamobile.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Pablo Neira Ayuso <pablo@netfilter.org>,
+        netdev@vger.kernel.org, lvs-devel@vger.kernel.org,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        netfilter-devel@vger.kernel.org
+Subject: Re: [PATCH v2 0/2] ipvs: speedup ipvs netns dismantle
+Message-ID: <20191001095415.fari4ntiszkbkgxr@verge.net.au>
+References: <1569560091-20553-1-git-send-email-yanhaishuang@cmss.chinamobile.com>
+ <alpine.LFD.2.21.1909302205360.2706@ja.home.ssi.bg>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <alpine.LFD.2.21.1909302205360.2706@ja.home.ssi.bg>
+Organisation: Horms Solutions BV
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 2019-10-01 at 11:46 +0200, Johannes Berg wrote:
+On Mon, Sep 30, 2019 at 10:08:23PM +0300, Julian Anastasov wrote:
 > 
-> ieee80211_wake_queues_by_reason() does
-> spin_lock_irqsave()/spin_unlock_irqrestore() - why is that "{SOFTIRQ-ON-
-> W} usage"?
+> 	Hello,
+> 
+> On Fri, 27 Sep 2019, Haishuang Yan wrote:
+> 
+> > Implement exit_batch() method to dismantle more ipvs netns
+> > per round.
+> > 
+> > Tested:
+> > $  cat add_del_unshare.sh
+> > #!/bin/bash
+> > 
+> > for i in `seq 1 100`
+> >     do
+> >      (for j in `seq 1 40` ; do  unshare -n ipvsadm -A -t 172.16.$i.$j:80 >/dev/null ; done) &
+> >     done
+> > wait; grep net_namespace /proc/slabinfo
+> > 
+> > Befor patch:
+> > $  time sh add_del_unshare.sh
+> > net_namespace       4020   4020   4736    6    8 : tunables    0    0    0 : slabdata    670    670      0
+> > 
+> > real    0m8.086s
+> > user    0m2.025s
+> > sys     0m36.956s
+> > 
+> > After patch:
+> > $  time sh add_del_unshare.sh
+> > net_namespace       4020   4020   4736    6    8 : tunables    0    0    0 : slabdata    670    670      0
+> > 
+> > real    0m7.623s
+> > user    0m2.003s
+> > sys     0m32.935s
+> > 
+> > Haishuang Yan (2):
+> >   ipvs: batch __ip_vs_cleanup
+> >   ipvs: batch __ip_vs_dev_cleanup
+> > 
+> >  include/net/ip_vs.h             |  2 +-
+> >  net/netfilter/ipvs/ip_vs_core.c | 47 ++++++++++++++++++++++++-----------------
+> >  net/netfilter/ipvs/ip_vs_ctl.c  | 12 ++++++++---
+> >  3 files changed, 38 insertions(+), 23 deletions(-)
+> 
+> 	Both patches in v2 look good to me, thanks!
+> 
+> Acked-by: Julian Anastasov <ja@ssi.bg>
+> 
+> 	This is for the -next kernels...
 
-scratch that - _ieee80211_wake_txqs() unlocks that again...
-
-It does hold RCU critical section, but that's not the same as disabling
-BHs.
-
-I think we should do this perhaps - I think it'd be better to ensure
-that the drivers' wake_tx_queue op is always called with softirqs
-disabled, since that happens in almost all cases already ...
-
-
-diff --git a/net/mac80211/util.c b/net/mac80211/util.c
-index 051a02ddcb85..ad1e88958da2 100644
---- a/net/mac80211/util.c
-+++ b/net/mac80211/util.c
-@@ -273,9 +273,9 @@ static void __ieee80211_wake_txqs(struct ieee80211_sub_if_data *sdata, int ac)
- 						&txqi->flags))
- 				continue;
- 
--			spin_unlock_bh(&fq->lock);
-+			spin_unlock(&fq->lock);
- 			drv_wake_tx_queue(local, txqi);
--			spin_lock_bh(&fq->lock);
-+			spin_lock(&fq->lock);
- 		}
- 	}
- 
-Perhaps we could add some validation into drv_wake_tx_queue(), but I
-didn't find the right thing to call right now ...
-
-
-Toke, what do you think?
-
-johannes
-
+Thanks, applied to ipvs-next.
