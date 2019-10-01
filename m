@@ -2,76 +2,87 @@ Return-Path: <SRS0=YRFP=X2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6D7CC352AA
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 12:18:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D64C8C352AA
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 12:18:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7C4DE20700
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 12:18:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A8AA721A4C
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 12:18:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="bEe3phAd"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="MDu/IhfX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726675AbfJAMSR (ORCPT
+        id S1726437AbfJAMSk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Oct 2019 08:18:17 -0400
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:52492 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726086AbfJAMSQ (ORCPT
+        Tue, 1 Oct 2019 08:18:40 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:54642 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725821AbfJAMSj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Oct 2019 08:18:16 -0400
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id x91CI1aZ106156;
-        Tue, 1 Oct 2019 07:18:01 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1569932281;
-        bh=xse21JTAzQ8GU1Wu6CB2o+llOAUhXp4hV5WxhhhEmJk=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=bEe3phAdv8S8+ucek6mTI+4AS67Ezt72kzbjzMc1tTGTwbStGkMK4iNvdmcgALj+L
-         bX5dSWIDOwY2YDdJC46Ec6VkRxxon8xdMa53fHxywPfnYi6vgkDPLbqWdm+7ygxKtm
-         qKq7AgWx1MIxMORiDX6dUjgMgHmHxPtSUN0K/w7Y=
-Received: from DFLE111.ent.ti.com (dfle111.ent.ti.com [10.64.6.32])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x91CI1Dw055642
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 1 Oct 2019 07:18:01 -0500
-Received: from DFLE112.ent.ti.com (10.64.6.33) by DFLE111.ent.ti.com
- (10.64.6.32) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Tue, 1 Oct
- 2019 07:18:00 -0500
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE112.ent.ti.com
- (10.64.6.33) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Tue, 1 Oct 2019 07:17:50 -0500
-Received: from [172.24.145.136] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id x91CHuxU053240;
-        Tue, 1 Oct 2019 07:17:57 -0500
-Subject: Re: [PATCH 1/2] dt-bindings: ufs: ti,j721e-ufs.yaml: Add binding for
- TI UFS wrapper
-To:     Rob Herring <robh@kernel.org>
-CC:     Mark Rutland <mark.rutland@arm.com>, <jejb@linux.ibm.com>,
-        Martin K Petersen <martin.petersen@oracle.com>,
-        Alim Akhtar <alim.akhtar@samsung.com>,
-        Avri Altman <avri.altman@wdc.com>,
-        Pedro Sousa <pedrom.sousa@synopsys.com>,
-        Janek Kotas <jank@cadence.com>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-scsi@vger.kernel.org>,
-        <nsekhar@ti.com>
-References: <20190918133921.25844-1-vigneshr@ti.com>
- <20190918133921.25844-2-vigneshr@ti.com> <20191001120826.GA4214@bogus>
-From:   Vignesh Raghavendra <vigneshr@ti.com>
-Message-ID: <c3490572-8230-3e41-0916-097091386b21@ti.com>
-Date:   Tue, 1 Oct 2019 17:48:30 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Tue, 1 Oct 2019 08:18:39 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x91C8wjG175385;
+        Tue, 1 Oct 2019 12:18:32 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2019-08-05;
+ bh=dcLYJvPK24WEL/GkiHEqYn8VO4YkXFlAa6MpcIoc3SY=;
+ b=MDu/IhfXGIhNz//977B0rKXUpa1lZY1yJNdFTIPRlSe+ifg4CdYd6X0NMGjp2rs9i9qf
+ cYVQZrY/6v9513GKS4GIUF4bwZKOS5lCfJai6w8F/VYycKUmBseZXR2FWOJmKzgippoH
+ nwGvm6ymmn8L4A4E7EAe5LEbV2zVNFen0NwyVTQtjNORf35kYbbDjaHkK9tXnUBbdxph
+ V62cqwMJUF52lzhGqAkHEqXZ1QBxPOL8QZQgaq5xBA8/s9qiu+Kp+EQxPdMuJkbyAkj2
+ zddo+lAVqOO6SnfvUK0UDQkTQfcl6zA+aHbRoEU3WSKGlVypn3gDxxTCnvurMRw21cJq Gw== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by userp2120.oracle.com with ESMTP id 2va05rnaks-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 01 Oct 2019 12:18:32 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x91C8hrB090887;
+        Tue, 1 Oct 2019 12:18:31 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by aserp3030.oracle.com with ESMTP id 2vbsm1vfmd-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 01 Oct 2019 12:18:31 +0000
+Received: from abhmp0013.oracle.com (abhmp0013.oracle.com [141.146.116.19])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x91CIT4o017825;
+        Tue, 1 Oct 2019 12:18:29 GMT
+Received: from localhost.localdomain (/73.243.10.6)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Tue, 01 Oct 2019 05:18:29 -0700
+Subject: Re: [PATCH 14/15] mm: Align THP mappings for non-DAX
+To:     "Kirill A. Shutemov" <kirill@shutemov.name>
+Cc:     Matthew Wilcox <willy@infradead.org>,
+        linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org
+References: <20190925005214.27240-1-willy@infradead.org>
+ <20190925005214.27240-15-willy@infradead.org>
+ <20191001104558.rdcqhjdz7frfuhca@box>
+ <A935F599-BB18-40C3-90DD-47B7700743D6@oracle.com>
+ <20191001113216.3qbrkqmb2b2xtwkd@box>
+From:   William Kucharski <william.kucharski@oracle.com>
+Message-ID: <5dc7b5c1-6d7d-90ee-9423-6eda9ecb005c@oracle.com>
+Date:   Tue, 1 Oct 2019 06:18:28 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.0
 MIME-Version: 1.0
-In-Reply-To: <20191001120826.GA4214@bogus>
-Content-Type: text/plain; charset="utf-8"
+In-Reply-To: <20191001113216.3qbrkqmb2b2xtwkd@box>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9396 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1908290000 definitions=main-1910010113
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9396 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1908290000
+ definitions=main-1910010113
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -79,85 +90,84 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 
 
-On 01/10/19 5:38 PM, Rob Herring wrote:
-> On Wed, Sep 18, 2019 at 07:09:20PM +0530, Vignesh Raghavendra wrote:
->> Add binding documentation of TI wrapper for Cadence UFS Controller.
+On 10/1/19 5:32 AM, Kirill A. Shutemov wrote:
+> On Tue, Oct 01, 2019 at 05:21:26AM -0600, William Kucharski wrote:
 >>
->> Signed-off-by: Vignesh Raghavendra <vigneshr@ti.com>
->> ---
->>  .../devicetree/bindings/ufs/ti,j721e-ufs.yaml | 45 +++++++++++++++++++
->>  1 file changed, 45 insertions(+)
->>  create mode 100644 Documentation/devicetree/bindings/ufs/ti,j721e-ufs.yaml
 >>
->> diff --git a/Documentation/devicetree/bindings/ufs/ti,j721e-ufs.yaml b/Documentation/devicetree/bindings/ufs/ti,j721e-ufs.yaml
->> new file mode 100644
->> index 000000000000..dabd7c795fbe
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/ufs/ti,j721e-ufs.yaml
->> @@ -0,0 +1,45 @@
->> +# SPDX-License-Identifier: GPL-2.0
->> +%YAML 1.2
->> +---
->> +$id: http://devicetree.org/schemas/ufs/ti,j721e-ufs.yaml#
->> +$schema: http://devicetree.org/meta-schemas/core.yaml#
->> +
->> +title: TI J721e UFS Host Controller Glue Driver
->> +
->> +maintainers:
->> +  - Vignesh Raghavendra <vigneshr@ti.com>
->> +
->> +properties:
->> +  compatible:
->> +    items:
->> +      - const: ti,j721e-ufs
->> +
->> +  reg:
->> +    maxItems: 1
->> +    description: address of TI UFS glue registers
->> +
->> +  clocks:
->> +    maxItems: 1
->> +    description: phandle to the M-PHY clock
->> +
->> +  power-domains:
->> +    maxItems: 1
->> +
->> +required:
->> +  - compatible
->> +  - reg
->> +  - clocks
->> +  - power-domains
->> +
->> +examples:
->> +  - |
->> +    ufs_wrapper: ufs-wrapper@4e80000 {
->> +       compatible = "ti,j721e-ufs";
->> +       reg = <0x0 0x4e80000 0x0 0x100>;
->> +       power-domains = <&k3_pds 277>;
->> +       clocks = <&k3_clks 277 1>;
->> +       assigned-clocks = <&k3_clks 277 1>;
->> +       assigned-clock-parents = <&k3_clks 277 4>;
->> +       #address-cells = <2>;
->> +       #size-cells = <2>;
+>>> On Oct 1, 2019, at 4:45 AM, Kirill A. Shutemov <kirill@shutemov.name> wrote:
+>>>
+>>> On Tue, Sep 24, 2019 at 05:52:13PM -0700, Matthew Wilcox wrote:
+>>>>
+>>>> diff --git a/mm/huge_memory.c b/mm/huge_memory.c
+>>>> index cbe7d0619439..670a1780bd2f 100644
+>>>> --- a/mm/huge_memory.c
+>>>> +++ b/mm/huge_memory.c
+>>>> @@ -563,8 +563,6 @@ unsigned long thp_get_unmapped_area(struct file *filp, unsigned long addr,
+>>>>
+>>>> 	if (addr)
+>>>> 		goto out;
+>>>> -	if (!IS_DAX(filp->f_mapping->host) || !IS_ENABLED(CONFIG_FS_DAX_PMD))
+>>>> -		goto out;
+>>>>
+>>>> 	addr = __thp_get_unmapped_area(filp, len, off, flags, PMD_SIZE);
+>>>> 	if (addr)
+>>>
+>>> I think you reducing ASLR without any real indication that THP is relevant
+>>> for the VMA. We need to know if any huge page allocation will be
+>>> *attempted* for the VMA or the file.
+>>
+>> Without a properly aligned address the code will never even attempt allocating
+>> a THP.
+>>
+>> I don't think rounding an address to one that would be properly aligned to map
+>> to a THP if possible is all that detrimental to ASLR and without the ability to
+>> pick an aligned address it's rather unlikely anyone would ever map anything to
+>> a THP unless they explicitly designate an address with MAP_FIXED.
+>>
+>> If you do object to the slight reduction of the ASLR address space, what
+>> alternative would you prefer to see?
 > 
-> Based on the driver you expect to have a child node here with the UFS 
-> controller? You need to show that and have a schema for it.
+> We need to know by the time if THP is allowed for this
+> file/VMA/process/whatever. Meaning that we do not give up ASLR entropy for
+> nothing.
 > 
+> For instance, if THP is disabled globally, there is no reason to align the
+> VMA to the THP requirements.
 
-Yes, Cadence UFS controller node will be the child node. Its bindings
-are documented at: Documentation/devicetree/bindings/ufs/cdns,ufshc.txt
-(which in turn refers to
-Documentation/devicetree/bindings/ufs/ufshcd-pltfrm.txt)
+I understand, but this code is in thp_get_unmapped_area(), which is only called
+if THP is configured and the VMA can support it.
 
-But they are not in .yaml yet. How would you suggest to reference that?
-Or should I just write plain text DT binding doc given that subsystem is
-not converted to yaml?
+I don't see it in Matthew's patchset, so I'm not sure if it was inadvertently
+missed in his merge or if he has other ideas for how it would eventually be 
+called, but in my last patch revision the code calling it in do_mmap() looked 
+like this:
 
->> +    };
->> -- 
->> 2.23.0
->>
+#ifdef CONFIG_RO_EXEC_FILEMAP_HUGE_FAULT_THP
+         /*
+          * If THP is enabled, it's a read-only executable that is
+          * MAP_PRIVATE mapped, the length is larger than a PMD page
+          * and either it's not a MAP_FIXED mapping or the passed address is
+          * properly aligned for a PMD page, attempt to get an appropriate
+          * address at which to map a PMD-sized THP page, otherwise call the
+          * normal routine.
+          */
+         if ((prot & PROT_READ) && (prot & PROT_EXEC) &&
+                 (!(prot & PROT_WRITE)) && (flags & MAP_PRIVATE) &&
+                 (!(flags & MAP_FIXED)) && len >= HPAGE_PMD_SIZE) {
+                 addr = thp_get_unmapped_area(file, addr, len, pgoff, flags);
 
--- 
-Regards
-Vignesh
+                 if (addr && (!(addr & ~HPAGE_PMD_MASK))) {
+                         /*
+                          * If we got a suitable THP mapping address, shut off
+                          * VM_MAYWRITE for the region, since it's never what
+                          * we would want.
+                          */
+                         vm_maywrite = 0;
+                 } else
+                         addr = get_unmapped_area(file, addr, len, pgoff, flags);
+         } else {
+#endif
+
+So I think that meets your expectations regarding ASLR.
+
+    -- Bill
