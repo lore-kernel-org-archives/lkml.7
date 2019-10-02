@@ -2,143 +2,169 @@ Return-Path: <SRS0=zem1=X3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 422D2C352AA
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 13:53:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69ACAC35280
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 13:54:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 16CC021783
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 13:53:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 333F821920
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 13:54:00 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=habanalabs.onmicrosoft.com header.i=@habanalabs.onmicrosoft.com header.b="fDnTX3JG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728000AbfJBNxU (ORCPT
+        id S1728009AbfJBNx7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Oct 2019 09:53:20 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:46488 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726775AbfJBNxT (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Oct 2019 09:53:19 -0400
-Received: from 1.general.cking.uk.vpn ([10.172.193.212])
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <colin.king@canonical.com>)
-        id 1iFf49-0006Qf-GX; Wed, 02 Oct 2019 13:53:17 +0000
-Subject: Re: [PATCH] net: stmmac: xgmac: add missing parentheses to fix
- precendence error
-To:     Dan Carpenter <dan.carpenter@oracle.com>
-Cc:     Giuseppe Cavallaro <peppe.cavallaro@st.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        Jose Abreu <joabreu@synopsys.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        netdev@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com,
-        linux-arm-kernel@lists.infradead.org,
-        kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20191002110849.13405-1-colin.king@canonical.com>
- <20191002133356.GP22609@kadam> <20191002134238.GP29696@kadam>
-From:   Colin Ian King <colin.king@canonical.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=colin.king@canonical.com; prefer-encrypt=mutual; keydata=
- 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
-Message-ID: <a995eee6-5b26-f9a9-4d6a-5533da050a3b@canonical.com>
-Date:   Wed, 2 Oct 2019 14:53:17 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
-MIME-Version: 1.0
-In-Reply-To: <20191002134238.GP29696@kadam>
-Content-Type: text/plain; charset=utf-8
+        Wed, 2 Oct 2019 09:53:59 -0400
+Received: from mail-eopbgr80113.outbound.protection.outlook.com ([40.107.8.113]:30438
+        "EHLO EUR04-VI1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725747AbfJBNx6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 2 Oct 2019 09:53:58 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=VOi9JffLncAj0QAh8OerJcUSbH7Hd++EJI5Jy39hldGpmISAuxTcUVO95ghapd5UmOcfTIlks0bVFMy9Pkk+UX6c+GGd54+xma3/Fdi7fRe0ldB634qc5wwcI0jccjq5xMsOT4Ze4SooX3OXJdjRAZpzcDLp534d2gcGzduK5lrnDQMatvrIJOgCg2U9xK78VDbl/uIWIIh6M4S5/AjJ/wHRCqF/9R4m6W2Ke7bBOgDdU4bW9BMo6ZS1EUer8VBXpyfAXsyE3Nic8/BwJOK+JoiWKGkKVVPGxFdy4hKckORaHzexaW+OMROXNmXjL6zHUkbUg39LOjtmjCH1GjJD1Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=hVDu19wCH2EsMUykgqOKSsKPtIgKYfyxhwrpV6L2lAY=;
+ b=D2Tk5T7SSaCtNn2ADNzvXhc1PlDd6xXfeI+4ju4cKbG8RBPspanYKIOJcGD1i8KjkpNBP8JGiM3ZGnlDpFX+9vhAuRFz0uNaPof/NFiqQujmBwjNaH/zlHfY3IYT7ZU2uJxxEJjqwp2ChLsZ54StR5Uau0N69UdMNj4KPeU5MdFG8duMZidMUZS6FhzJ96uKx+qtzBmE/K63QTjL+BNwhsBOEqWS3Ue5hhKWRjLPD/U3iISww9CHa8Ix9sLY1UyJkXcJIDwXX+/4sD6my9Pl07XGV25iezLoBtEo747DcPuKAxtiQLgwrClpJUsNcnfM8lXdY462/SvwFzbRadOn0w==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=habana.ai; dmarc=pass action=none header.from=habana.ai;
+ dkim=pass header.d=habana.ai; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=habanalabs.onmicrosoft.com; s=selector2-habanalabs-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=hVDu19wCH2EsMUykgqOKSsKPtIgKYfyxhwrpV6L2lAY=;
+ b=fDnTX3JGp/zXoEkgNGmjyA9m/10ElBj/G/ouKMxi1rxSrt7hQ9phBGzrakoewxkdUtcnERUQmkBPXZTj7a3gx6L+6+ZiySNfqI+jFYbWwBgh9syDr/KvdVpg2F+1hLE07GgAzavALxKxxbADYdPgMkgADyj0/RqmtEDn/wYe7Yk=
+Received: from VI1PR02MB3054.eurprd02.prod.outlook.com (10.170.235.155) by
+ VI1PR02MB4846.eurprd02.prod.outlook.com (20.177.202.138) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2305.20; Wed, 2 Oct 2019 13:53:52 +0000
+Received: from VI1PR02MB3054.eurprd02.prod.outlook.com
+ ([fe80::78a3:56d0:8d09:1604]) by VI1PR02MB3054.eurprd02.prod.outlook.com
+ ([fe80::78a3:56d0:8d09:1604%6]) with mapi id 15.20.2305.017; Wed, 2 Oct 2019
+ 13:53:52 +0000
+From:   Tomer Tayar <ttayar@habana.ai>
+To:     "oded.gabbay@gmail.com" <oded.gabbay@gmail.com>
+CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: [PATCH] habanalabs: Fix typos
+Thread-Topic: [PATCH] habanalabs: Fix typos
+Thread-Index: AQHVeSjTLxrJEM17vEOpR6QZn/4CJw==
+Date:   Wed, 2 Oct 2019 13:53:52 +0000
+Message-ID: <20191002135345.22677-1-ttayar@habana.ai>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: AM0PR0102CA0066.eurprd01.prod.exchangelabs.com
+ (2603:10a6:208::43) To VI1PR02MB3054.eurprd02.prod.outlook.com
+ (2603:10a6:802:17::27)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=ttayar@habana.ai; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-mailer: git-send-email 2.17.1
+x-originating-ip: [31.154.190.6]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: cde71a42-768a-4ba4-00e9-08d7473ff57d
+x-ms-traffictypediagnostic: VI1PR02MB4846:
+x-microsoft-antispam-prvs: <VI1PR02MB48465A459D58853AE04EEBA9D29C0@VI1PR02MB4846.eurprd02.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:913;
+x-forefront-prvs: 0178184651
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(396003)(346002)(366004)(136003)(39840400004)(376002)(189003)(199004)(305945005)(66066001)(4326008)(7736002)(316002)(36756003)(81166006)(14444005)(1361003)(2616005)(476003)(2351001)(2906002)(486006)(5640700003)(256004)(6486002)(2501003)(6436002)(6916009)(1076003)(99286004)(52116002)(6512007)(66556008)(66446008)(66476007)(64756008)(386003)(71200400001)(71190400001)(66946007)(5660300002)(8936002)(3846002)(6116002)(50226002)(26005)(86362001)(102836004)(478600001)(8676002)(14454004)(6506007)(81156014)(186003)(25786009);DIR:OUT;SFP:1102;SCL:1;SRVR:VI1PR02MB4846;H:VI1PR02MB3054.eurprd02.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: habana.ai does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: JJhG81VJ2siow0BagZe31Fdf0MvnG8L/SL7xd7N8nmMWYscJvlqBjqj+HOYS9/1fuI2gM8uoUaxQEV4gzmDp1ZP3X55mapcLMjKGY0zalHFry8RSEkb9InR/jhKLhHSJSZ7bqWx5wRsNBNY0RE5PYKrDFUH3NHRfS5kL/MBjUU6MEwnofZJxTj1sUgQbs71uVBJt6wrGRZm9+Xnn4czb1ghn6g72hr+rs729yHnuq81wTAs3nl1zTuFvfB0qI6SC/SX3vOsub/YiFUTMg8mBtzAb1fw7Qdr94tXaJb7mLJEJOgox8Qb+wUXOYkUi2VnqYVAYHNqP15WuhUZWJiiiSvcobJAlfhBMEXDosEyjE9dguypOfMM//NbZBk686g5zPcy/1dZSfnIsne4BPU8D6eXHiZa9CuOsNlFh/Cjby4o=
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: habana.ai
+X-MS-Exchange-CrossTenant-Network-Message-Id: cde71a42-768a-4ba4-00e9-08d7473ff57d
+X-MS-Exchange-CrossTenant-originalarrivaltime: 02 Oct 2019 13:53:52.5765
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 0d4d4539-213c-4ed8-a251-dc9766ba127a
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: gQbois0a7Aa74rQhr8Jmk8RX5laBNFiXk7DG+/xfaJXJ5enf5YQY/DKQKLMs8FU6gHlqjcQuqpxDV5L5ype3Zw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR02MB4846
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 02/10/2019 14:42, Dan Carpenter wrote:
-> On Wed, Oct 02, 2019 at 04:33:57PM +0300, Dan Carpenter wrote:
->> On Wed, Oct 02, 2019 at 12:08:49PM +0100, Colin King wrote:
->>> From: Colin Ian King <colin.king@canonical.com>
->>>
->>> The expression !(hw_cap & XGMAC_HWFEAT_RAVSEL) >> 10 is always zero, so
->>> the masking operation is incorrect. Fix this by adding the missing
->>> parentheses to correctly bind the negate operator on the entire expression.
->>>
->>> Addresses-Coverity: ("Operands don't affect result")
->>> Fixes: c2b69474d63b ("net: stmmac: xgmac: Correct RAVSEL field interpretation")
->>> Signed-off-by: Colin Ian King <colin.king@canonical.com>
->>> ---
->>>  drivers/net/ethernet/stmicro/stmmac/dwxgmac2_dma.c | 2 +-
->>>  1 file changed, 1 insertion(+), 1 deletion(-)
->>>
->>> diff --git a/drivers/net/ethernet/stmicro/stmmac/dwxgmac2_dma.c b/drivers/net/ethernet/stmicro/stmmac/dwxgmac2_dma.c
->>> index 965cbe3e6f51..2e814aa64a5c 100644
->>> --- a/drivers/net/ethernet/stmicro/stmmac/dwxgmac2_dma.c
->>> +++ b/drivers/net/ethernet/stmicro/stmmac/dwxgmac2_dma.c
->>> @@ -369,7 +369,7 @@ static void dwxgmac2_get_hw_feature(void __iomem *ioaddr,
->>>  	dma_cap->eee = (hw_cap & XGMAC_HWFEAT_EEESEL) >> 13;
->>>  	dma_cap->atime_stamp = (hw_cap & XGMAC_HWFEAT_TSSEL) >> 12;
->>>  	dma_cap->av = (hw_cap & XGMAC_HWFEAT_AVSEL) >> 11;
->>> -	dma_cap->av &= !(hw_cap & XGMAC_HWFEAT_RAVSEL) >> 10;
->>> +	dma_cap->av &= !((hw_cap & XGMAC_HWFEAT_RAVSEL) >> 10);
->>
->> There is no point to the shift at all.
-> 
-> Sorry I meant to say it should be a bitwise NOT, right?  I was just
-> looking at some other dma_cap stuff that did this same thing...  I can't
-> find it now...
+s/paerser/parser/
+s/requeusted/requested/
+s/an JOB/a JOB/
 
-In drivers/net/ethernet/stmicro/stmmac/stmmac_tc.c it is being used like
-a boolean and not a bitmask'd value:
+Signed-off-by: Tomer Tayar <ttayar@habana.ai>
+---
+ drivers/misc/habanalabs/habanalabs.h | 2 +-
+ drivers/misc/habanalabs/hw_queue.c   | 4 ++--
+ include/uapi/misc/habanalabs.h       | 2 +-
+ 3 files changed, 4 insertions(+), 4 deletions(-)
 
-        if (!priv->dma_cap.av)
-
-so the original logic is to do boolean flag merging rather than bit-wise
-logic.
-
-> 
-> regards,
-> dan carpenter
-> 
+diff --git a/drivers/misc/habanalabs/habanalabs.h b/drivers/misc/habanalabs=
+/habanalabs.h
+index 75862be53c60..c3d24ffad9fa 100644
+--- a/drivers/misc/habanalabs/habanalabs.h
++++ b/drivers/misc/habanalabs/habanalabs.h
+@@ -774,7 +774,7 @@ struct hl_cs_job {
+ };
+=20
+ /**
+- * struct hl_cs_parser - command submission paerser properties.
++ * struct hl_cs_parser - command submission parser properties.
+  * @user_cb: the CB we got from the user.
+  * @patched_cb: in case of patching, this is internal CB which is submitte=
+d on
+  *		the queue instead of the CB we got from the IOCTL.
+diff --git a/drivers/misc/habanalabs/hw_queue.c b/drivers/misc/habanalabs/h=
+w_queue.c
+index 55b383b2a116..f733b534f738 100644
+--- a/drivers/misc/habanalabs/hw_queue.c
++++ b/drivers/misc/habanalabs/hw_queue.c
+@@ -220,7 +220,7 @@ int hl_hw_queue_send_cb_no_cmpl(struct hl_device *hdev,=
+ u32 hw_queue_id,
+ }
+=20
+ /*
+- * ext_hw_queue_schedule_job - submit an JOB to an external queue
++ * ext_hw_queue_schedule_job - submit a JOB to an external queue
+  *
+  * @job: pointer to the job that needs to be submitted to the queue
+  *
+@@ -278,7 +278,7 @@ static void ext_hw_queue_schedule_job(struct hl_cs_job =
+*job)
+ }
+=20
+ /*
+- * int_hw_queue_schedule_job - submit an JOB to an internal queue
++ * int_hw_queue_schedule_job - submit a JOB to an internal queue
+  *
+  * @job: pointer to the job that needs to be submitted to the queue
+  *
+diff --git a/include/uapi/misc/habanalabs.h b/include/uapi/misc/habanalabs.=
+h
+index 39c4ea51a719..53e4ff73578e 100644
+--- a/include/uapi/misc/habanalabs.h
++++ b/include/uapi/misc/habanalabs.h
+@@ -589,7 +589,7 @@ struct hl_debug_args {
+  *
+  * The user can call this IOCTL with a handle it received from the CS IOCT=
+L
+  * to wait until the handle's CS has finished executing. The user will wai=
+t
+- * inside the kernel until the CS has finished or until the user-requeuste=
+d
++ * inside the kernel until the CS has finished or until the user-requested
+  * timeout has expired.
+  *
+  * The return value of the IOCTL is a standard Linux error code. The possi=
+ble
+--=20
+2.17.1
 
