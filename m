@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D7C0C4360C
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 19:09:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2616AC4360C
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 19:09:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 103EB21D82
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 19:09:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0296A2133F
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 19:09:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729689AbfJBTJn (ORCPT
+        id S1729674AbfJBTJm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Oct 2019 15:09:43 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:35954 "EHLO
+        Wed, 2 Oct 2019 15:09:42 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:35968 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729337AbfJBTIS (ORCPT
+        by vger.kernel.org with ESMTP id S1729341AbfJBTIS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 2 Oct 2019 15:08:18 -0400
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1iFjyx-00036B-Rk; Wed, 02 Oct 2019 20:08:16 +0100
+        id 1iFjyx-00035y-Rd; Wed, 02 Oct 2019 20:08:16 +0100
 Received: from ben by deadeye with local (Exim 4.92.1)
         (envelope-from <ben@decadent.org.uk>)
-        id 1iFjyp-0003ee-4V; Wed, 02 Oct 2019 20:08:07 +0100
+        id 1iFjyp-0003f5-D6; Wed, 02 Oct 2019 20:08:07 +0100
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,23 +35,14 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Hugh Dickins" <hughd@google.com>,
-        "Andrea Arcangeli" <aarcange@redhat.com>,
-        "Peter Xu" <peterx@redhat.com>,
-        "Linus Torvalds" <torvalds@linux-foundation.org>,
-        "Mike Kravetz" <mike.kravetz@oracle.com>,
-        "Michal Hocko" <mhocko@suse.com>,
-        "Jason Gunthorpe" <jgg@mellanox.com>,
-        "Mike Rapoport" <rppt@linux.vnet.ibm.com>,
-        "Oleg Nesterov" <oleg@redhat.com>,
-        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-        "Jann Horn" <jannh@google.com>
+        "Eric Dumazet" <edumazet@google.com>,
+        "syzbot" <syzkaller@googlegroups.com>,
+        "David S. Miller" <davem@davemloft.net>
 Date:   Wed, 02 Oct 2019 20:06:51 +0100
-Message-ID: <lsq.1570043211.584670199@decadent.org.uk>
+Message-ID: <lsq.1570043211.992323758@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 60/87] coredump: fix race condition between
- collapse_huge_page() and core dumping
+Subject: [PATCH 3.16 65/87] neigh: fix use-after-free read in pneigh_get_next
 In-Reply-To: <lsq.1570043210.379046399@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -65,92 +56,184 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Andrea Arcangeli <aarcange@redhat.com>
+From: Eric Dumazet <edumazet@google.com>
 
-commit 59ea6d06cfa9247b586a695c21f94afa7183af74 upstream.
+commit f3e92cb8e2eb8c27d109e6fd73d3a69a8c09e288 upstream.
 
-When fixing the race conditions between the coredump and the mmap_sem
-holders outside the context of the process, we focused on
-mmget_not_zero()/get_task_mm() callers in 04f5866e41fb70 ("coredump: fix
-race condition between mmget_not_zero()/get_task_mm() and core
-dumping"), but those aren't the only cases where the mmap_sem can be
-taken outside of the context of the process as Michal Hocko noticed
-while backporting that commit to older -stable kernels.
+Nine years ago, I added RCU handling to neighbours, not pneighbours.
+(pneigh are not commonly used)
 
-If mmgrab() is called in the context of the process, but then the
-mm_count reference is transferred outside the context of the process,
-that can also be a problem if the mmap_sem has to be taken for writing
-through that mm_count reference.
+Unfortunately I missed that /proc dump operations would use a
+common entry and exit point : neigh_seq_start() and neigh_seq_stop()
 
-khugepaged registration calls mmgrab() in the context of the process,
-but the mmap_sem for writing is taken later in the context of the
-khugepaged kernel thread.
+We need to read_lock(tbl->lock) or risk use-after-free while
+iterating the pneigh structures.
 
-collapse_huge_page() after taking the mmap_sem for writing doesn't
-modify any vma, so it's not obvious that it could cause a problem to the
-coredump, but it happens to modify the pmd in a way that breaks an
-invariant that pmd_trans_huge_lock() relies upon.  collapse_huge_page()
-needs the mmap_sem for writing just to block concurrent page faults that
-call pmd_trans_huge_lock().
+We might later convert pneigh to RCU and revert this patch.
 
-Specifically the invariant that "!pmd_trans_huge()" cannot become a
-"pmd_trans_huge()" doesn't hold while collapse_huge_page() runs.
+sysbot reported :
 
-The coredump will call __get_user_pages() without mmap_sem for reading,
-which eventually can invoke a lockless page fault which will need a
-functional pmd_trans_huge_lock().
+BUG: KASAN: use-after-free in pneigh_get_next.isra.0+0x24b/0x280 net/core/neighbour.c:3158
+Read of size 8 at addr ffff888097f2a700 by task syz-executor.0/9825
 
-So collapse_huge_page() needs to use mmget_still_valid() to check it's
-not running concurrently with the coredump...  as long as the coredump
-can invoke page faults without holding the mmap_sem for reading.
+CPU: 1 PID: 9825 Comm: syz-executor.0 Not tainted 5.2.0-rc4+ #32
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+Call Trace:
+ __dump_stack lib/dump_stack.c:77 [inline]
+ dump_stack+0x172/0x1f0 lib/dump_stack.c:113
+ print_address_description.cold+0x7c/0x20d mm/kasan/report.c:188
+ __kasan_report.cold+0x1b/0x40 mm/kasan/report.c:317
+ kasan_report+0x12/0x20 mm/kasan/common.c:614
+ __asan_report_load8_noabort+0x14/0x20 mm/kasan/generic_report.c:132
+ pneigh_get_next.isra.0+0x24b/0x280 net/core/neighbour.c:3158
+ neigh_seq_next+0xdb/0x210 net/core/neighbour.c:3240
+ seq_read+0x9cf/0x1110 fs/seq_file.c:258
+ proc_reg_read+0x1fc/0x2c0 fs/proc/inode.c:221
+ do_loop_readv_writev fs/read_write.c:714 [inline]
+ do_loop_readv_writev fs/read_write.c:701 [inline]
+ do_iter_read+0x4a4/0x660 fs/read_write.c:935
+ vfs_readv+0xf0/0x160 fs/read_write.c:997
+ kernel_readv fs/splice.c:359 [inline]
+ default_file_splice_read+0x475/0x890 fs/splice.c:414
+ do_splice_to+0x127/0x180 fs/splice.c:877
+ splice_direct_to_actor+0x2d2/0x970 fs/splice.c:954
+ do_splice_direct+0x1da/0x2a0 fs/splice.c:1063
+ do_sendfile+0x597/0xd00 fs/read_write.c:1464
+ __do_sys_sendfile64 fs/read_write.c:1525 [inline]
+ __se_sys_sendfile64 fs/read_write.c:1511 [inline]
+ __x64_sys_sendfile64+0x1dd/0x220 fs/read_write.c:1511
+ do_syscall_64+0xfd/0x680 arch/x86/entry/common.c:301
+ entry_SYSCALL_64_after_hwframe+0x49/0xbe
+RIP: 0033:0x4592c9
+Code: fd b7 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 cb b7 fb ff c3 66 2e 0f 1f 84 00 00 00 00
+RSP: 002b:00007f4aab51dc78 EFLAGS: 00000246 ORIG_RAX: 0000000000000028
+RAX: ffffffffffffffda RBX: 0000000000000004 RCX: 00000000004592c9
+RDX: 0000000000000000 RSI: 0000000000000004 RDI: 0000000000000005
+RBP: 000000000075bf20 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000080000000 R11: 0000000000000246 R12: 00007f4aab51e6d4
+R13: 00000000004c689d R14: 00000000004db828 R15: 00000000ffffffff
 
-This has "Fixes: khugepaged" to facilitate backporting, but in my view
-it's more a bug in the coredump code that will eventually have to be
-rewritten to stop invoking page faults without the mmap_sem for reading.
-So the long term plan is still to drop all mmget_still_valid().
+Allocated by task 9827:
+ save_stack+0x23/0x90 mm/kasan/common.c:71
+ set_track mm/kasan/common.c:79 [inline]
+ __kasan_kmalloc mm/kasan/common.c:489 [inline]
+ __kasan_kmalloc.constprop.0+0xcf/0xe0 mm/kasan/common.c:462
+ kasan_kmalloc+0x9/0x10 mm/kasan/common.c:503
+ __do_kmalloc mm/slab.c:3660 [inline]
+ __kmalloc+0x15c/0x740 mm/slab.c:3669
+ kmalloc include/linux/slab.h:552 [inline]
+ pneigh_lookup+0x19c/0x4a0 net/core/neighbour.c:731
+ arp_req_set_public net/ipv4/arp.c:1010 [inline]
+ arp_req_set+0x613/0x720 net/ipv4/arp.c:1026
+ arp_ioctl+0x652/0x7f0 net/ipv4/arp.c:1226
+ inet_ioctl+0x2a0/0x340 net/ipv4/af_inet.c:926
+ sock_do_ioctl+0xd8/0x2f0 net/socket.c:1043
+ sock_ioctl+0x3ed/0x780 net/socket.c:1194
+ vfs_ioctl fs/ioctl.c:46 [inline]
+ file_ioctl fs/ioctl.c:509 [inline]
+ do_vfs_ioctl+0xd5f/0x1380 fs/ioctl.c:696
+ ksys_ioctl+0xab/0xd0 fs/ioctl.c:713
+ __do_sys_ioctl fs/ioctl.c:720 [inline]
+ __se_sys_ioctl fs/ioctl.c:718 [inline]
+ __x64_sys_ioctl+0x73/0xb0 fs/ioctl.c:718
+ do_syscall_64+0xfd/0x680 arch/x86/entry/common.c:301
+ entry_SYSCALL_64_after_hwframe+0x49/0xbe
 
-Link: http://lkml.kernel.org/r/20190607161558.32104-1-aarcange@redhat.com
-Fixes: ba76149f47d8 ("thp: khugepaged")
-Signed-off-by: Andrea Arcangeli <aarcange@redhat.com>
-Reported-by: Michal Hocko <mhocko@suse.com>
-Acked-by: Michal Hocko <mhocko@suse.com>
-Acked-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
-Cc: Oleg Nesterov <oleg@redhat.com>
-Cc: Jann Horn <jannh@google.com>
-Cc: Hugh Dickins <hughd@google.com>
-Cc: Mike Rapoport <rppt@linux.vnet.ibm.com>
-Cc: Mike Kravetz <mike.kravetz@oracle.com>
-Cc: Peter Xu <peterx@redhat.com>
-Cc: Jason Gunthorpe <jgg@mellanox.com>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
-[bwh: Backported to 3.16:
- - Don't set result variable; collapse_huge_range() returns void
- - Adjust filenames]
+Freed by task 9824:
+ save_stack+0x23/0x90 mm/kasan/common.c:71
+ set_track mm/kasan/common.c:79 [inline]
+ __kasan_slab_free+0x102/0x150 mm/kasan/common.c:451
+ kasan_slab_free+0xe/0x10 mm/kasan/common.c:459
+ __cache_free mm/slab.c:3432 [inline]
+ kfree+0xcf/0x220 mm/slab.c:3755
+ pneigh_ifdown_and_unlock net/core/neighbour.c:812 [inline]
+ __neigh_ifdown+0x236/0x2f0 net/core/neighbour.c:356
+ neigh_ifdown+0x20/0x30 net/core/neighbour.c:372
+ arp_ifdown+0x1d/0x21 net/ipv4/arp.c:1274
+ inetdev_destroy net/ipv4/devinet.c:319 [inline]
+ inetdev_event+0xa14/0x11f0 net/ipv4/devinet.c:1544
+ notifier_call_chain+0xc2/0x230 kernel/notifier.c:95
+ __raw_notifier_call_chain kernel/notifier.c:396 [inline]
+ raw_notifier_call_chain+0x2e/0x40 kernel/notifier.c:403
+ call_netdevice_notifiers_info+0x3f/0x90 net/core/dev.c:1749
+ call_netdevice_notifiers_extack net/core/dev.c:1761 [inline]
+ call_netdevice_notifiers net/core/dev.c:1775 [inline]
+ rollback_registered_many+0x9b9/0xfc0 net/core/dev.c:8178
+ rollback_registered+0x109/0x1d0 net/core/dev.c:8220
+ unregister_netdevice_queue net/core/dev.c:9267 [inline]
+ unregister_netdevice_queue+0x1ee/0x2c0 net/core/dev.c:9260
+ unregister_netdevice include/linux/netdevice.h:2631 [inline]
+ __tun_detach+0xd8a/0x1040 drivers/net/tun.c:724
+ tun_detach drivers/net/tun.c:741 [inline]
+ tun_chr_close+0xe0/0x180 drivers/net/tun.c:3451
+ __fput+0x2ff/0x890 fs/file_table.c:280
+ ____fput+0x16/0x20 fs/file_table.c:313
+ task_work_run+0x145/0x1c0 kernel/task_work.c:113
+ tracehook_notify_resume include/linux/tracehook.h:185 [inline]
+ exit_to_usermode_loop+0x273/0x2c0 arch/x86/entry/common.c:168
+ prepare_exit_to_usermode arch/x86/entry/common.c:199 [inline]
+ syscall_return_slowpath arch/x86/entry/common.c:279 [inline]
+ do_syscall_64+0x58e/0x680 arch/x86/entry/common.c:304
+ entry_SYSCALL_64_after_hwframe+0x49/0xbe
+
+The buggy address belongs to the object at ffff888097f2a700
+ which belongs to the cache kmalloc-64 of size 64
+The buggy address is located 0 bytes inside of
+ 64-byte region [ffff888097f2a700, ffff888097f2a740)
+The buggy address belongs to the page:
+page:ffffea00025fca80 refcount:1 mapcount:0 mapping:ffff8880aa400340 index:0x0
+flags: 0x1fffc0000000200(slab)
+raw: 01fffc0000000200 ffffea000250d548 ffffea00025726c8 ffff8880aa400340
+raw: 0000000000000000 ffff888097f2a000 0000000100000020 0000000000000000
+page dumped because: kasan: bad access detected
+
+Memory state around the buggy address:
+ ffff888097f2a600: 00 00 00 00 00 00 00 00 fc fc fc fc fc fc fc fc
+ ffff888097f2a680: fb fb fb fb fb fb fb fb fc fc fc fc fc fc fc fc
+>ffff888097f2a700: fb fb fb fb fb fb fb fb fc fc fc fc fc fc fc fc
+                   ^
+ ffff888097f2a780: fb fb fb fb fb fb fb fb fc fc fc fc fc fc fc fc
+ ffff888097f2a800: fb fb fb fb fb fb fb fb fc fc fc fc fc fc fc fc
+
+Fixes: 767e97e1e0db ("neigh: RCU conversion of struct neighbour")
+Signed-off-by: Eric Dumazet <edumazet@google.com>
+Reported-by: syzbot <syzkaller@googlegroups.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
---- a/include/linux/sched.h
-+++ b/include/linux/sched.h
-@@ -2439,6 +2439,10 @@ static inline void mmdrop(struct mm_stru
-  * followed by taking the mmap_sem for writing before modifying the
-  * vmas or anything the coredump pretends not to change from under it.
-  *
-+ * It also has to be called when mmgrab() is used in the context of
-+ * the process, but then the mm_count refcount is transferred outside
-+ * the context of the process to run down_write() on that pinned mm.
-+ *
-  * NOTE: find_extend_vma() called from GUP context is the only place
-  * that can modify the "mm" (notably the vm_start/end) under mmap_sem
-  * for reading and outside the context of the process, so it is also
---- a/mm/huge_memory.c
-+++ b/mm/huge_memory.c
-@@ -2428,6 +2428,8 @@ static void collapse_huge_page(struct mm
- 	 * handled by the anon_vma lock + PG_lock.
- 	 */
- 	down_write(&mm->mmap_sem);
-+	if (!mmget_still_valid(mm))
-+		goto out;
- 	if (unlikely(khugepaged_test_exit(mm)))
- 		goto out;
+ net/core/neighbour.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
+
+--- a/net/core/neighbour.c
++++ b/net/core/neighbour.c
+@@ -2649,6 +2649,7 @@ static void *neigh_get_idx_any(struct se
+ }
  
+ void *neigh_seq_start(struct seq_file *seq, loff_t *pos, struct neigh_table *tbl, unsigned int neigh_seq_flags)
++	__acquires(tbl->lock)
+ 	__acquires(rcu_bh)
+ {
+ 	struct neigh_seq_state *state = seq->private;
+@@ -2659,6 +2660,7 @@ void *neigh_seq_start(struct seq_file *s
+ 
+ 	rcu_read_lock_bh();
+ 	state->nht = rcu_dereference_bh(tbl->nht);
++	read_lock(&tbl->lock);
+ 
+ 	return *pos ? neigh_get_idx_any(seq, pos) : SEQ_START_TOKEN;
+ }
+@@ -2692,8 +2694,13 @@ out:
+ EXPORT_SYMBOL(neigh_seq_next);
+ 
+ void neigh_seq_stop(struct seq_file *seq, void *v)
++	__releases(tbl->lock)
+ 	__releases(rcu_bh)
+ {
++	struct neigh_seq_state *state = seq->private;
++	struct neigh_table *tbl = state->tbl;
++
++	read_unlock(&tbl->lock);
+ 	rcu_read_unlock_bh();
+ }
+ EXPORT_SYMBOL(neigh_seq_stop);
 
