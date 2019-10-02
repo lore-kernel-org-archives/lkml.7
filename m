@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E22D3C4360C
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 19:13:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A131CC4360C
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 19:13:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BD13E2133F
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 19:13:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8836D2133F
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 19:13:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730161AbfJBTNA (ORCPT
+        id S1730155AbfJBTM7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Oct 2019 15:13:00 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:35372 "EHLO
+        Wed, 2 Oct 2019 15:12:59 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:35384 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729094AbfJBTIK (ORCPT
+        by vger.kernel.org with ESMTP id S1729098AbfJBTIK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 2 Oct 2019 15:08:10 -0400
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1iFjyo-00036E-Sf; Wed, 02 Oct 2019 20:08:06 +0100
+        id 1iFjyo-00036H-Vy; Wed, 02 Oct 2019 20:08:07 +0100
 Received: from ben by deadeye with local (Exim 4.92.1)
         (envelope-from <ben@decadent.org.uk>)
-        id 1iFjyo-0003cu-2Z; Wed, 02 Oct 2019 20:08:06 +0100
+        id 1iFjyo-0003d5-5L; Wed, 02 Oct 2019 20:08:06 +0100
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,15 +35,15 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        "Benjamin Block" <bblock@linux.ibm.com>,
-        "Steffen Maier" <maier@linux.ibm.com>
+        "David S. Miller" <davem@davemloft.net>,
+        "syzbot" <syzkaller@googlegroups.com>,
+        "Eric Dumazet" <edumazet@google.com>
 Date:   Wed, 02 Oct 2019 20:06:51 +0100
-Message-ID: <lsq.1570043211.472496112@decadent.org.uk>
+Message-ID: <lsq.1570043211.104471262@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 38/87] scsi: zfcp: fix to prevent port_remove with
- pure auto scan LUNs (only sdevs)
+Subject: [PATCH 3.16 40/87] net-gro: fix use-after-free read in
+ napi_gro_frags()
 In-Reply-To: <lsq.1570043210.379046399@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -57,183 +57,68 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Steffen Maier <maier@linux.ibm.com>
+From: Eric Dumazet <edumazet@google.com>
 
-commit ef4021fe5fd77ced0323cede27979d80a56211ca upstream.
+commit a4270d6795b0580287453ea55974d948393e66ef upstream.
 
-When the user tries to remove a zfcp port via sysfs, we only rejected it if
-there are zfcp unit children under the port. With purely automatically
-scanned LUNs there are no zfcp units but only SCSI devices. In such cases,
-the port_remove erroneously continued. We close the port and this
-implicitly closes all LUNs under the port. The SCSI devices survive with
-their private zfcp_scsi_dev still holding a reference to the "removed"
-zfcp_port (still allocated but invisible in sysfs) [zfcp_get_port_by_wwpn
-in zfcp_scsi_slave_alloc]. This is not a problem as long as the fc_rport
-stays blocked. Once (auto) port scan brings back the removed port, we
-unblock its fc_rport again by design.  However, there is no mechanism that
-would recover (open) the LUNs under the port (no "ersfs_3" without
-zfcp_unit [zfcp_erp_strategy_followup_success]).  Any pending or new I/O to
-such LUN leads to repeated:
+If a network driver provides to napi_gro_frags() an
+skb with a page fragment of exactly 14 bytes, the call
+to gro_pull_from_frag0() will 'consume' the fragment
+by calling skb_frag_unref(skb, 0), and the page might
+be freed and reused.
 
-  Done: NEEDS_RETRY Result: hostbyte=DID_IMM_RETRY driverbyte=DRIVER_OK
+Reading eth->h_proto at the end of napi_frags_skb() might
+read mangled data, or crash under specific debugging features.
 
-See also v4.10 commit 6f2ce1c6af37 ("scsi: zfcp: fix rport unblock race
-with LUN recovery"). Even a manual LUN recovery
-(echo 0 > /sys/bus/scsi/devices/H:C:T:L/zfcp_failed)
-does not help, as the LUN links to the old "removed" port which remains
-to lack ZFCP_STATUS_COMMON_RUNNING [zfcp_erp_required_act].
-The only workaround is to first ensure that the fc_rport is blocked
-(e.g. port_remove again in case it was re-discovered by (auto) port scan),
-then delete the SCSI devices, and finally re-discover by (auto) port scan.
-The port scan includes an fc_rport unblock, which in turn triggers
-a new scan on the scsi target to freshly get new pure auto scan LUNs.
+BUG: KASAN: use-after-free in napi_frags_skb net/core/dev.c:5833 [inline]
+BUG: KASAN: use-after-free in napi_gro_frags+0xc6f/0xd10 net/core/dev.c:5841
+Read of size 2 at addr ffff88809366840c by task syz-executor599/8957
 
-Fix this by rejecting port_remove also if there are SCSI devices
-(even without any zfcp_unit) under this port. Re-use mechanics from v3.7
-commit d99b601b6338 ("[SCSI] zfcp: restore refcount check on port_remove").
-However, we have to give up zfcp_sysfs_port_units_mutex earlier in unit_add
-to prevent a deadlock with scsi_host scan taking shost->scan_mutex first
-and then zfcp_sysfs_port_units_mutex now in our zfcp_scsi_slave_alloc().
+CPU: 1 PID: 8957 Comm: syz-executor599 Not tainted 5.2.0-rc1+ #32
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+Call Trace:
+ __dump_stack lib/dump_stack.c:77 [inline]
+ dump_stack+0x172/0x1f0 lib/dump_stack.c:113
+ print_address_description.cold+0x7c/0x20d mm/kasan/report.c:188
+ __kasan_report.cold+0x1b/0x40 mm/kasan/report.c:317
+ kasan_report+0x12/0x20 mm/kasan/common.c:614
+ __asan_report_load_n_noabort+0xf/0x20 mm/kasan/generic_report.c:142
+ napi_frags_skb net/core/dev.c:5833 [inline]
+ napi_gro_frags+0xc6f/0xd10 net/core/dev.c:5841
+ tun_get_user+0x2f3c/0x3ff0 drivers/net/tun.c:1991
+ tun_chr_write_iter+0xbd/0x156 drivers/net/tun.c:2037
+ call_write_iter include/linux/fs.h:1872 [inline]
+ do_iter_readv_writev+0x5f8/0x8f0 fs/read_write.c:693
+ do_iter_write fs/read_write.c:970 [inline]
+ do_iter_write+0x184/0x610 fs/read_write.c:951
+ vfs_writev+0x1b3/0x2f0 fs/read_write.c:1015
+ do_writev+0x15b/0x330 fs/read_write.c:1058
 
-Signed-off-by: Steffen Maier <maier@linux.ibm.com>
-Fixes: b62a8d9b45b9 ("[SCSI] zfcp: Use SCSI device data zfcp scsi dev instead of zfcp unit")
-Fixes: f8210e34887e ("[SCSI] zfcp: Allow midlayer to scan for LUNs when running in NPIV mode")
-Reviewed-by: Benjamin Block <bblock@linux.ibm.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Fixes: a50e233c50db ("net-gro: restore frag0 optimization")
+Signed-off-by: Eric Dumazet <edumazet@google.com>
+Reported-by: syzbot <syzkaller@googlegroups.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- drivers/s390/scsi/zfcp_ext.h   |  1 +
- drivers/s390/scsi/zfcp_scsi.c  |  9 ++++++
- drivers/s390/scsi/zfcp_sysfs.c | 54 ++++++++++++++++++++++++++++++----
- drivers/s390/scsi/zfcp_unit.c  |  8 ++++-
- 4 files changed, 65 insertions(+), 7 deletions(-)
+ net/core/dev.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/s390/scsi/zfcp_ext.h
-+++ b/drivers/s390/scsi/zfcp_ext.h
-@@ -160,6 +160,7 @@ extern const struct attribute_group *zfc
- extern struct mutex zfcp_sysfs_port_units_mutex;
- extern struct device_attribute *zfcp_sysfs_sdev_attrs[];
- extern struct device_attribute *zfcp_sysfs_shost_attrs[];
-+bool zfcp_sysfs_port_is_removing(const struct zfcp_port *const port);
+--- a/net/core/dev.c
++++ b/net/core/dev.c
+@@ -4239,7 +4239,6 @@ static struct sk_buff *napi_frags_skb(st
+ 	skb_reset_mac_header(skb);
+ 	skb_gro_reset_offset(skb);
  
- /* zfcp_unit.c */
- extern int zfcp_unit_add(struct zfcp_port *, u64);
---- a/drivers/s390/scsi/zfcp_scsi.c
-+++ b/drivers/s390/scsi/zfcp_scsi.c
-@@ -145,6 +145,15 @@ static int zfcp_scsi_slave_alloc(struct
- 
- 	zfcp_sdev->erp_action.port = port;
- 
-+	mutex_lock(&zfcp_sysfs_port_units_mutex);
-+	if (zfcp_sysfs_port_is_removing(port)) {
-+		/* port is already gone */
-+		mutex_unlock(&zfcp_sysfs_port_units_mutex);
-+		put_device(&port->dev); /* undo zfcp_get_port_by_wwpn() */
-+		return -ENXIO;
-+	}
-+	mutex_unlock(&zfcp_sysfs_port_units_mutex);
-+
- 	unit = zfcp_unit_find(port, zfcp_scsi_dev_lun(sdev));
- 	if (unit)
- 		put_device(&unit->dev);
---- a/drivers/s390/scsi/zfcp_sysfs.c
-+++ b/drivers/s390/scsi/zfcp_sysfs.c
-@@ -235,6 +235,53 @@ static ZFCP_DEV_ATTR(adapter, port_resca
- 
- DEFINE_MUTEX(zfcp_sysfs_port_units_mutex);
- 
-+static void zfcp_sysfs_port_set_removing(struct zfcp_port *const port)
-+{
-+	lockdep_assert_held(&zfcp_sysfs_port_units_mutex);
-+	atomic_set(&port->units, -1);
-+}
-+
-+bool zfcp_sysfs_port_is_removing(const struct zfcp_port *const port)
-+{
-+	lockdep_assert_held(&zfcp_sysfs_port_units_mutex);
-+	return atomic_read(&port->units) == -1;
-+}
-+
-+static bool zfcp_sysfs_port_in_use(struct zfcp_port *const port)
-+{
-+	struct zfcp_adapter *const adapter = port->adapter;
-+	unsigned long flags;
-+	struct scsi_device *sdev;
-+	bool in_use = true;
-+
-+	mutex_lock(&zfcp_sysfs_port_units_mutex);
-+	if (atomic_read(&port->units) > 0)
-+		goto unlock_port_units_mutex; /* zfcp_unit(s) under port */
-+
-+	spin_lock_irqsave(adapter->scsi_host->host_lock, flags);
-+	__shost_for_each_device(sdev, adapter->scsi_host) {
-+		const struct zfcp_scsi_dev *zsdev = sdev_to_zfcp(sdev);
-+
-+		if (sdev->sdev_state == SDEV_DEL ||
-+		    sdev->sdev_state == SDEV_CANCEL)
-+			continue;
-+		if (zsdev->port != port)
-+			continue;
-+		/* alive scsi_device under port of interest */
-+		goto unlock_host_lock;
-+	}
-+
-+	/* port is about to be removed, so no more unit_add or slave_alloc */
-+	zfcp_sysfs_port_set_removing(port);
-+	in_use = false;
-+
-+unlock_host_lock:
-+	spin_unlock_irqrestore(adapter->scsi_host->host_lock, flags);
-+unlock_port_units_mutex:
-+	mutex_unlock(&zfcp_sysfs_port_units_mutex);
-+	return in_use;
-+}
-+
- static ssize_t zfcp_sysfs_port_remove_store(struct device *dev,
- 					    struct device_attribute *attr,
- 					    const char *buf, size_t count)
-@@ -257,16 +304,11 @@ static ssize_t zfcp_sysfs_port_remove_st
- 	else
- 		retval = 0;
- 
--	mutex_lock(&zfcp_sysfs_port_units_mutex);
--	if (atomic_read(&port->units) > 0) {
-+	if (zfcp_sysfs_port_in_use(port)) {
- 		retval = -EBUSY;
--		mutex_unlock(&zfcp_sysfs_port_units_mutex);
- 		put_device(&port->dev); /* undo zfcp_get_port_by_wwpn() */
- 		goto out;
- 	}
--	/* port is about to be removed, so no more unit_add */
--	atomic_set(&port->units, -1);
--	mutex_unlock(&zfcp_sysfs_port_units_mutex);
- 
- 	write_lock_irq(&adapter->port_list_lock);
- 	list_del(&port->list);
---- a/drivers/s390/scsi/zfcp_unit.c
-+++ b/drivers/s390/scsi/zfcp_unit.c
-@@ -122,7 +122,7 @@ int zfcp_unit_add(struct zfcp_port *port
- 	int retval = 0;
- 
- 	mutex_lock(&zfcp_sysfs_port_units_mutex);
--	if (atomic_read(&port->units) == -1) {
-+	if (zfcp_sysfs_port_is_removing(port)) {
- 		/* port is already gone */
- 		retval = -ENODEV;
- 		goto out;
-@@ -166,8 +166,14 @@ int zfcp_unit_add(struct zfcp_port *port
- 	write_lock_irq(&port->unit_list_lock);
- 	list_add_tail(&unit->list, &port->unit_list);
- 	write_unlock_irq(&port->unit_list_lock);
-+	/*
-+	 * lock order: shost->scan_mutex before zfcp_sysfs_port_units_mutex
-+	 * due to      zfcp_unit_scsi_scan() => zfcp_scsi_slave_alloc()
-+	 */
-+	mutex_unlock(&zfcp_sysfs_port_units_mutex);
- 
- 	zfcp_unit_scsi_scan(unit);
-+	return retval;
- 
- out:
- 	mutex_unlock(&zfcp_sysfs_port_units_mutex);
+-	eth = skb_gro_header_fast(skb, 0);
+ 	if (unlikely(skb_gro_header_hard(skb, hlen))) {
+ 		eth = skb_gro_header_slow(skb, hlen, 0);
+ 		if (unlikely(!eth)) {
+@@ -4247,6 +4246,7 @@ static struct sk_buff *napi_frags_skb(st
+ 			return NULL;
+ 		}
+ 	} else {
++		eth = (const struct ethhdr *)skb->data;
+ 		gro_pull_from_frag0(skb, hlen);
+ 		NAPI_GRO_CB(skb)->frag0 += hlen;
+ 		NAPI_GRO_CB(skb)->frag0_len -= hlen;
 
