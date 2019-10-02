@@ -2,109 +2,99 @@ Return-Path: <SRS0=zem1=X3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BCB58C35280
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 08:56:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80BE1C35280
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 08:58:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9A94C215EA
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 08:56:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 58DD8222C2
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 08:58:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727333AbfJBI4w (ORCPT
+        id S1727443AbfJBI6J (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Oct 2019 04:56:52 -0400
-Received: from retiisi.org.uk ([95.216.213.190]:59028 "EHLO
-        hillosipuli.retiisi.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726250AbfJBI4w (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Oct 2019 04:56:52 -0400
-Received: from valkosipuli.localdomain (valkosipuli.retiisi.org.uk [IPv6:2a01:4f9:c010:4572::80:2])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by hillosipuli.retiisi.org.uk (Postfix) with ESMTPS id 3BA00634C87;
-        Wed,  2 Oct 2019 11:56:24 +0300 (EEST)
-Received: from sailus by valkosipuli.localdomain with local (Exim 4.92)
-        (envelope-from <sakari.ailus@retiisi.org.uk>)
-        id 1iFaQo-00028Q-LB; Wed, 02 Oct 2019 11:56:22 +0300
-Date:   Wed, 2 Oct 2019 11:56:22 +0300
-From:   Sakari Ailus <sakari.ailus@iki.fi>
-To:     Jacopo Mondi <jacopo@jmondi.org>
-Cc:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        jacopo+renesas@jmondi.org, kieran.bingham+renesas@ideasonboard.com,
-        laurent.pinchart+renesas@ideasonboard.com,
-        niklas.soderlund+renesas@ragnatech.se, mchehab@kernel.org,
-        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] media: i2c: max9286: Pass default bus type when parsing
- fwnode endpoint
-Message-ID: <20191002085622.GN896@valkosipuli.retiisi.org.uk>
-References: <20191001145503.5170-1-manivannan.sadhasivam@linaro.org>
- <20191002075432.bkee4fl6cfcr25iv@uno.localdomain>
+        Wed, 2 Oct 2019 04:58:09 -0400
+Received: from sauhun.de ([88.99.104.3]:57040 "EHLO pokefinder.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725988AbfJBI6I (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 2 Oct 2019 04:58:08 -0400
+Received: from localhost (p54B33447.dip0.t-ipconnect.de [84.179.52.71])
+        by pokefinder.org (Postfix) with ESMTPSA id 3312A2C3720;
+        Wed,  2 Oct 2019 10:58:06 +0200 (CEST)
+Date:   Wed, 2 Oct 2019 10:58:05 +0200
+From:   Wolfram Sang <wsa@the-dreams.de>
+To:     Geert Uytterhoeven <geert@linux-m68k.org>
+Cc:     Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Wolfram Sang <wsa+renesas@sang-engineering.com>,
+        Jiri Slaby <jslaby@suse.com>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "linux-renesas-soc@vger.kernel.org" 
+        <linux-renesas-soc@vger.kernel.org>,
+        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] mmc: sh_mmcif: Use platform_get_irq_optional() for
+ optional interrupt
+Message-ID: <20191002085805.GA10270@ninjato>
+References: <20191001180834.1158-1-geert+renesas@glider.be>
+ <20191002081553.GB1388@ninjato>
+ <TYAPR01MB454472C76E03930717A2898BD89C0@TYAPR01MB4544.jpnprd01.prod.outlook.com>
+ <CAMuHMdWBghL8Em0OoCKjJdU7OiY_pV3Lmc=SXhV2yY=sKJJ-aw@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="Nq2Wo0NMKNjxTN9z"
 Content-Disposition: inline
-In-Reply-To: <20191002075432.bkee4fl6cfcr25iv@uno.localdomain>
+In-Reply-To: <CAMuHMdWBghL8Em0OoCKjJdU7OiY_pV3Lmc=SXhV2yY=sKJJ-aw@mail.gmail.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Jacopo, Manivannan,
 
-On Wed, Oct 02, 2019 at 09:54:32AM +0200, Jacopo Mondi wrote:
-> Hello Manivannan,
-> 
-> On Tue, Oct 01, 2019 at 08:25:03PM +0530, Manivannan Sadhasivam wrote:
-> > The caller of v4l2_fwnode_endpoint_alloc_parse() is expected to pass a
-> > valid bus_type parameter for proper working of this API. Hence, pass
-> > V4L2_MBUS_CSI2_DPHY as the bus_type parameter as this driver only supports
-> > MIPI CSI2 for now. Without this commit, the API fails on 96Boards
-> > Dragonboard410c connected to MAX9286 deserializer.
-> >
-> > Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> > ---
-> >
-> > This patch depends on the latest "MAX9286 GMSL Support" series posted
-> > by Kieran Bingham.
-> >
-> >  drivers/media/i2c/max9286.c | 4 +++-
-> >  1 file changed, 3 insertions(+), 1 deletion(-)
-> >
-> > diff --git a/drivers/media/i2c/max9286.c b/drivers/media/i2c/max9286.c
-> > index 9390edf5ad9c..6e1299f15493 100644
-> > --- a/drivers/media/i2c/max9286.c
-> > +++ b/drivers/media/i2c/max9286.c
-> > @@ -976,7 +976,9 @@ static int max9286_parse_dt(struct max9286_device *max9286)
-> >
-> >  		/* For the source endpoint just parse the bus configuration. */
-> >  		if (ep.port == MAX9286_SRC_PAD) {
-> > -			struct v4l2_fwnode_endpoint vep;
-> > +			struct v4l2_fwnode_endpoint vep = {
-> > +				.bus_type = V4L2_MBUS_CSI2_DPHY
-> > +			};
-> 
-> Isn't the bus_type just an hint ? __v4l2_fwnode_endpoint_parse()
-> should try to parse CSI2 first, and should be able to to deduct the bus
-> type from the properties specified in DT...
+--Nq2Wo0NMKNjxTN9z
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-It's basically telling the V4L2 fwnode parser to parse that bus only, and
-not guess what the caller wanted.
 
-This is what drivers should actually be doing. It also allows setting the
-defaults that many drivers declare in their DT bindings but very few
-actually implement.
+> Please cherry-pick the top commit from renesas-devel:
+> 6e47c841329eb9b0 ("ARM: fix __get_user_check() in case uaccess_* calls
+> are not inlined")
 
-> 
-> Anyway, I'm not against this change, the contrary actually, I'm just
-> afraid it might hide some more subtile bug, as we don't need this on
-> our platforms...
+Thanks a lot, Geert. I can confirm this patch fixes the issue I was
+seeing:
 
-I'd expect it to be safer this way, as there's no guessing involved.
+Tested-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
 
--- 
-Regards,
+Could you kindly forward this tag to Yamada-san or bounce me the patch
+so I can do it?
 
-Sakari Ailus
+Thanks again,
+
+   Wolfram
+
+
+--Nq2Wo0NMKNjxTN9z
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl2UZpkACgkQFA3kzBSg
+Kbbzrw/9Fy0DuET9/QhPpkciG0if9TcmOmULaCWrBLLTLmKs4VG8YrtkFAhLNXg9
+aobUjyTteybY6rXp3b/jlPmr6qgtQNlyYNmHx5h1Z967jnn6hpOMXlrpzMcaFfTS
+TvoaK7a0bFUc90O4PgSL75Lgn3zU5gGZl8ZJAf5h7Oc7cnfyKDr1UVtAvJrNki5Q
+zTjE7+FakyExml+DaPEQGYx5iLYYakIBsWOyVAGmIMHmKpp4nzYTutF+aFR0ezzW
+eKvscgdTBxPWVInFRV/vH4vy0KgMEHr0SG8K2HCAwoXvMni8mYP1gATzBjkJQODc
+szwuNgLfQ6rlrjFh2SDsqUozpk+Bgrz0u77K7ocZtLmBtGTvQ6/7wcKiecxNLSrp
+rAUBfF0VdJvK23BsuwYt3AAnjCYCu16bl/Fg/Sijh0va2MufQEQqISzIu1CNeEmy
+ETOrJV3VDl9u1GgUt4xBzrO1Nc1JrSxx68apKuQ2KmUpSAJ/Oi5FSftCb+Fra9lY
+43uFrAQ6njrGrVb0PbSg7d0PBIngV6KNyDZfwhy3qL8eid/bqn8R8/Pvbpk/5Evg
+oyJjx3fhe5iwdr4cEMaLn3shcbYNO/AaRllhijlaWST6RR3YA3yf5RnHjTs59RHo
+882RvFdxDr7gfBhbhZpDkm1imPA0VdFzxHGnhESstCwtlYNvcX8=
+=Csu1
+-----END PGP SIGNATURE-----
+
+--Nq2Wo0NMKNjxTN9z--
