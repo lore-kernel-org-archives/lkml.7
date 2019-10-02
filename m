@@ -2,113 +2,144 @@ Return-Path: <SRS0=zem1=X3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 071C7C35280
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 14:48:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D8CAC35280
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 14:49:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C92E421A4C
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 14:48:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3F0F521783
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 14:49:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="A38PTkh4"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="en2MMk6i"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727832AbfJBOso (ORCPT
+        id S1728475AbfJBOtv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Oct 2019 10:48:44 -0400
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:39640 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726435AbfJBOsn (ORCPT
+        Wed, 2 Oct 2019 10:49:51 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:39344 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726411AbfJBOtv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Oct 2019 10:48:43 -0400
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id x92EmdiY050438;
-        Wed, 2 Oct 2019 09:48:39 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1570027719;
-        bh=JiffS4ZfsZeTjYUTRmO0KXVyJua2BpQysZ+4TqjyF1A=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=A38PTkh4pMW6ZPa2U6TdfqvlF4nOs2kq4dMsYePi3CUyyME1MJUqaqNZ+oE9xRkjE
-         EDvlZupc135Ftsm2fLufRhmrJntlb/832RzTsLzmull8q7Zu9syc0YYG6VGaf+ABpL
-         xMznG/2UnLUJT3PGXSO/pp9IP33tljFHQ1fuC5OA=
-Received: from DLEE115.ent.ti.com (dlee115.ent.ti.com [157.170.170.26])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id x92Emduf032530;
-        Wed, 2 Oct 2019 09:48:39 -0500
-Received: from DLEE100.ent.ti.com (157.170.170.30) by DLEE115.ent.ti.com
- (157.170.170.26) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Wed, 2 Oct
- 2019 09:48:38 -0500
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE100.ent.ti.com
- (157.170.170.30) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Wed, 2 Oct 2019 09:48:38 -0500
-Received: from [10.250.98.116] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id x92Emb8Z077626;
-        Wed, 2 Oct 2019 09:48:37 -0500
-Subject: Re: [PATCH] ARM: dts: am335x-sancloud-bbe: Fix PHY mode for ethernet
-To:     Jeroen Hofstee <jhofstee@victronenergy.com>,
-        "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>
-CC:     Koen Kooi <koen@dominion.thruhere.net>,
-        =?UTF-8?Q?Beno=c3=aet_Cousson?= <bcousson@baylibre.com>,
-        Tony Lindgren <tony@atomide.com>,
-        open list <linux-kernel@vger.kernel.org>
-References: <20191002095416.19603-1-jhofstee@victronenergy.com>
-From:   Grygorii Strashko <grygorii.strashko@ti.com>
-Message-ID: <d027ef07-807d-6a7b-2939-b67be4542469@ti.com>
-Date:   Wed, 2 Oct 2019 17:48:35 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Wed, 2 Oct 2019 10:49:51 -0400
+Received: by mail-wm1-f65.google.com with SMTP id v17so7297245wml.4;
+        Wed, 02 Oct 2019 07:49:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=MRX7MVzKV2NasOdGGBHZN5dKTeuEyw7WMiE2n0MgQj4=;
+        b=en2MMk6iqR1ZVTx19B7QV5SSFiGdBrMrfCdmWNvgQZsf35VRZTwiIslnhd+/vgIybT
+         l/dhyN7HvsyfFuvjnCFl3KTC92yK7jbh8u+BYLyOOJR8d5Jyl1g4/gyY6lsn/3AQECOJ
+         rS24HXnqRGmQI6jJyWi9TfrLx25ELJfZeykeeGY3jl2e0QXGaL9X63goT51Kq0R7dTWC
+         kmaCXoCAfBkL4i1SkrcNO9XHPM3aA786CjIv+hB9zqmsi9gPIz5VZwrzLUCKFyz6+MEO
+         iiIqsObBjmCDeMU6WEendmJBrQwu1C8Aqd89QEVuEaeR4bW6K5FJJkCfQRk0jjdcd44w
+         /mOQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=MRX7MVzKV2NasOdGGBHZN5dKTeuEyw7WMiE2n0MgQj4=;
+        b=fSZ+qNbpG9L442jUZALQPAur4p4FgaY4bm0lmClgdJHGzTbREkewqQa4m87OZiNhQU
+         ifE91zfgQtLD83Ku7vmEKsZPjVY+WYcbf/6wesC6LvqUjpUwlATJIOhs4Besr7M3TRKV
+         yyj/b6cBZud4ZrEnQRv6kMAbscgvRUWVwfxjzELdWCzPgL7CaYzS7nCrlVamJFD0txEv
+         xrfTmQlbhJdrSYdAJrUJh11diNSBG2847SiImF3eFb7h8FzM0QKj9MFPs8X3BhEMEwh1
+         bD3w0DpwnROq7B+oh+fRhFPfbaxSy2XZ1Hj6xKLJk0Sac5yT8wWiFfIppLUwnFROtWW0
+         FO6g==
+X-Gm-Message-State: APjAAAXfWD/9nJCZEo8ShxAU7pUxGAQ5nikMjhIwShpODuruYbsuIhuq
+        YYZwiKnKYkfGERqoJKXzggk=
+X-Google-Smtp-Source: APXvYqxcrs2DsroGKSrdpkWYOirroFKSyCTTGszuiL4Cvd7AIj6WKmnnHD6tEhs6eZ4x1BFazvUPaA==
+X-Received: by 2002:a7b:ce0a:: with SMTP id m10mr3397067wmc.167.1570027789092;
+        Wed, 02 Oct 2019 07:49:49 -0700 (PDT)
+Received: from localhost (p2E5BE2CE.dip0.t-ipconnect.de. [46.91.226.206])
+        by smtp.gmail.com with ESMTPSA id l10sm27877457wrh.20.2019.10.02.07.49.47
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 02 Oct 2019 07:49:47 -0700 (PDT)
+From:   Thierry Reding <thierry.reding@gmail.com>
+To:     "David S . Miller" <davem@davemloft.net>
+Cc:     Jose Abreu <joabreu@synopsys.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Bitan Biswas <bbiswas@nvidia.com>, netdev@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [PATCH net] net: stmmac: Avoid deadlock on suspend/resume
+Date:   Wed,  2 Oct 2019 16:49:46 +0200
+Message-Id: <20191002144946.176976-1-thierry.reding@gmail.com>
+X-Mailer: git-send-email 2.23.0
 MIME-Version: 1.0
-In-Reply-To: <20191002095416.19603-1-jhofstee@victronenergy.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: Thierry Reding <treding@nvidia.com>
 
+The stmmac driver will try to acquire its private mutex during suspend
+via phylink_resolve() -> stmmac_mac_link_down() -> stmmac_eee_init().
+However, the phylink configuration is updated with the private mutex
+held already, which causes a deadlock during suspend.
 
-On 02/10/2019 12:54, Jeroen Hofstee wrote:
-> cd28d1d6e52e: ("net: phy: at803x: Disable phy delay for RGMII mode") broke
-> the ethernet networking on the beaglebone enhanced.
+Fix this by moving the phylink configuration updates out of the region
+of code protected by the private mutex.
 
-Above commit is incorrect (by itself) and there are few more commits on top of
-it, so pls. update reference to commit(s)
+Fixes: 19e13cb27b99 ("net: stmmac: Hold rtnl lock in suspend/resume callbacks")
+Suggested-by: Bitan Biswas <bbiswas@nvidia.com>
+Signed-off-by: Thierry Reding <treding@nvidia.com>
+---
+ drivers/net/ethernet/stmicro/stmmac/stmmac_main.c | 10 ++++++----
+ 1 file changed, 6 insertions(+), 4 deletions(-)
 
-bb0ce4c1517d net: phy: at803x: stop switching phy delay config needlessly
-6d4cd041f0af net: phy: at803x: disable delay only for RGMII mode
-
-
-> 
-> The board relied on the bug in the at803x driver to always enable the rx
-> delay. So change the phy-mode to rgmii-id so it is enabled again.
-> 
-> Signed-off-by: Jeroen Hofstee <jhofstee@victronenergy.com>
-> cc: Koen Kooi <koen@dominion.thruhere.net>
-> ---
->   arch/arm/boot/dts/am335x-sancloud-bbe.dts | 2 +-
->   1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/arch/arm/boot/dts/am335x-sancloud-bbe.dts b/arch/arm/boot/dts/am335x-sancloud-bbe.dts
-> index 8678e6e35493..e5fdb7abb0d5 100644
-> --- a/arch/arm/boot/dts/am335x-sancloud-bbe.dts
-> +++ b/arch/arm/boot/dts/am335x-sancloud-bbe.dts
-> @@ -108,7 +108,7 @@
->   
->   &cpsw_emac0 {
->   	phy-handle = <&ethphy0>;
-> -	phy-mode = "rgmii-txid";
-> +	phy-mode = "rgmii-id";
->   };
->   
->   &i2c0 {
-> 
-
+diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
+index 843d53e084b7..c76a1336a451 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
++++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
+@@ -4716,10 +4716,10 @@ int stmmac_suspend(struct device *dev)
+ 	if (!ndev || !netif_running(ndev))
+ 		return 0;
+ 
+-	mutex_lock(&priv->lock);
+-
+ 	phylink_mac_change(priv->phylink, false);
+ 
++	mutex_lock(&priv->lock);
++
+ 	netif_device_detach(ndev);
+ 	stmmac_stop_all_queues(priv);
+ 
+@@ -4733,9 +4733,11 @@ int stmmac_suspend(struct device *dev)
+ 		stmmac_pmt(priv, priv->hw, priv->wolopts);
+ 		priv->irq_wake = 1;
+ 	} else {
++		mutex_unlock(&priv->lock);
+ 		rtnl_lock();
+ 		phylink_stop(priv->phylink);
+ 		rtnl_unlock();
++		mutex_lock(&priv->lock);
+ 
+ 		stmmac_mac_set(priv, priv->ioaddr, false);
+ 		pinctrl_pm_select_sleep_state(priv->device);
+@@ -4827,6 +4829,8 @@ int stmmac_resume(struct device *dev)
+ 
+ 	stmmac_start_all_queues(priv);
+ 
++	mutex_unlock(&priv->lock);
++
+ 	if (!device_may_wakeup(priv->device)) {
+ 		rtnl_lock();
+ 		phylink_start(priv->phylink);
+@@ -4835,8 +4839,6 @@ int stmmac_resume(struct device *dev)
+ 
+ 	phylink_mac_change(priv->phylink, true);
+ 
+-	mutex_unlock(&priv->lock);
+-
+ 	return 0;
+ }
+ EXPORT_SYMBOL_GPL(stmmac_resume);
 -- 
-Best regards,
-grygorii
+2.23.0
+
