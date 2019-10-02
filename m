@@ -2,117 +2,127 @@ Return-Path: <SRS0=zem1=X3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3405BC35280
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 16:47:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 58DB5C35280
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 16:51:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F083721D81
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 16:47:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2D5AE21920
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 16:51:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=silabs.onmicrosoft.com header.i=@silabs.onmicrosoft.com header.b="c3GWiyIS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727895AbfJBQrd (ORCPT
+        id S1727737AbfJBQvG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Oct 2019 12:47:33 -0400
-Received: from mga06.intel.com ([134.134.136.31]:60016 "EHLO mga06.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726267AbfJBQrc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Oct 2019 12:47:32 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 02 Oct 2019 09:47:32 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.67,249,1566889200"; 
-   d="scan'208";a="203652629"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.41])
-  by orsmga002.jf.intel.com with ESMTP; 02 Oct 2019 09:47:30 -0700
-Date:   Wed, 2 Oct 2019 09:47:30 -0700
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Zhenzhong Duan <zhenzhong.duan@oracle.com>
-Cc:     Vitaly Kuznetsov <vkuznets@redhat.com>,
-        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Radim Krcmar <rkrcmar@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Will Deacon <will@kernel.org>
-Subject: Re: [PATCH 1/3] KVM: X86: Add "nopvspin" parameter to disable PV
- spinlocks
-Message-ID: <20191002164730.GA9615@linux.intel.com>
-References: <1569759666-26904-1-git-send-email-zhenzhong.duan@oracle.com>
- <1569759666-26904-2-git-send-email-zhenzhong.duan@oracle.com>
- <87pnjh3i6i.fsf@vitty.brq.redhat.com>
- <aae59646-be5f-6455-a033-ed29861107ce@oracle.com>
- <87eezw3lna.fsf@vitty.brq.redhat.com>
- <fdd14f28-74e9-5cf9-2f5a-09c884c55110@oracle.com>
+        Wed, 2 Oct 2019 12:51:06 -0400
+Received: from mail-eopbgr810040.outbound.protection.outlook.com ([40.107.81.40]:56928
+        "EHLO NAM01-BY2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726101AbfJBQvG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 2 Oct 2019 12:51:06 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=DDf8cNiVaIs1USTdZfYtFWuiOlkBnLW2mdxHFTjzIMXPbkGkBwe0DJDzFDgpW3MH4PCibAAYAPMMFKx36Qwrh3ijC2ksS5KAPT9mxZvxHJUAjyarrr0jGMg2mGFLXckbu3Q6s6do6hr1i47bCYjUqahN4lrvesBox5UH6f1a5zdb/qWr7ACXwAh/r3AMrASdE6ZbeRLr/I+TeBMR+qIvyYnlGbp7zN6O1Jihxp9sJHGUwPTePMun0/lyA7Vhr+x4q7G70Wlhr+vxfQRRHjTB2jDOm/UsLFp5k8sOEOZE7DI7LiQPXMmJNPUA69yIFJ4UdrUPzgVXOR2M9+WgDwB3jg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=ziovh6Z/smGLGAiixIv5ZVkNm5JWlgc5DA97F/bWCqo=;
+ b=PQs5KrSoz+oDLwsLtQoDcPRyeO3mmTPyF3zMmlbWcHQwJHLMP1oMtT4ico+4Wigvn0RQ8WcAQrH/z5nMTK9bqMyh9e3Mm5V4jluIv8bAnJwkHCZwQJBjhFLM8V7U0wOSPLed8iwwXpQ7BU4rqM5LHw18cwB7zUtxd8kCrQBwuQmNBms/VuHRapmFkPMKa47S6ihw7umkKmXpl6YUD086OA67dTWXdPZIjXG0o+5qeCrDPD0riLnYwD7plqz19rEc0UrTDBvAncZDkzwjTdWjNneiqjdK+9BKGq7X66gaaxqjE8PO3dekRag1OSZNwscjS4Xz9dfiklWQrZJsDP48dg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=silabs.com; dmarc=pass action=none header.from=silabs.com;
+ dkim=pass header.d=silabs.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=silabs.onmicrosoft.com; s=selector2-silabs-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=ziovh6Z/smGLGAiixIv5ZVkNm5JWlgc5DA97F/bWCqo=;
+ b=c3GWiyISylf2hC+CCh3e5s2XwzBxkHkB7ybZz/bHJAHDrgiM69pCBJiGp3lfJAoZqPu6l6U3AHlq+MYIdKSVmRlktNZgtq4dLPwwbMeXwrTyfpBdjeYt48mbnfQNo4wNGMqzTkw08SMuKkR0CwibP8cN/KzMPVbgqM7uF0QfOIE=
+Received: from MN2PR11MB4063.namprd11.prod.outlook.com (10.255.180.22) by
+ MN2PR11MB3918.namprd11.prod.outlook.com (10.255.180.141) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2305.15; Wed, 2 Oct 2019 16:51:02 +0000
+Received: from MN2PR11MB4063.namprd11.prod.outlook.com
+ ([fe80::ac8c:fc55:d1e2:465f]) by MN2PR11MB4063.namprd11.prod.outlook.com
+ ([fe80::ac8c:fc55:d1e2:465f%5]) with mapi id 15.20.2305.017; Wed, 2 Oct 2019
+ 16:51:01 +0000
+From:   Jerome Pouiller <Jerome.Pouiller@silabs.com>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+CC:     Andrew Lunn <andrew@lunn.ch>,
+        "devel@driverdev.osuosl.org" <devel@driverdev.osuosl.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        David Le Goff <David.Legoff@silabs.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Kalle Valo <kvalo@codeaurora.org>
+Subject: Re: [PATCH 02/20] staging: wfx: add support for I/O access
+Thread-Topic: [PATCH 02/20] staging: wfx: add support for I/O access
+Thread-Index: AQHVbthYAz5BV9jhoUCLDh42xNi6RaczMoaAgBRsfQCAAAP0gIAAAimA
+Date:   Wed, 2 Oct 2019 16:51:01 +0000
+Message-ID: <2259110.QEIxtLcPIB@pc-42>
+References: <20190919105153.15285-1-Jerome.Pouiller@silabs.com>
+ <4024590.nSQgSsaaFe@pc-42> <20191002164207.GA1758310@kroah.com>
+In-Reply-To: <20191002164207.GA1758310@kroah.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=Jerome.Pouiller@silabs.com; 
+x-originating-ip: [37.71.187.125]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 30a366c0-d004-4c82-3f44-08d74758b51f
+x-ms-traffictypediagnostic: MN2PR11MB3918:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <MN2PR11MB391807CFBB0291A9D625746E939C0@MN2PR11MB3918.namprd11.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:6790;
+x-forefront-prvs: 0178184651
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(979002)(7916004)(136003)(376002)(366004)(39850400004)(346002)(396003)(189003)(199004)(51444003)(478600001)(26005)(102836004)(76176011)(6486002)(486006)(8936002)(305945005)(7736002)(8676002)(6506007)(229853002)(81156014)(6246003)(14454004)(81166006)(76116006)(6436002)(64756008)(66446008)(66556008)(11346002)(91956017)(66946007)(476003)(66066001)(66476007)(71190400001)(71200400001)(25786009)(186003)(14444005)(256004)(446003)(6512007)(9686003)(6116002)(3846002)(2906002)(4326008)(66574012)(6916009)(86362001)(33716001)(54906003)(99286004)(316002)(5660300002)(4744005)(969003)(989001)(999001)(1009001)(1019001);DIR:OUT;SFP:1101;SCL:1;SRVR:MN2PR11MB3918;H:MN2PR11MB4063.namprd11.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: silabs.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: miXPqlD7uojS2keYbaU6A7E7eEkLFREmk9tkMsjExyA/S0RJnGDLM+9HeX11DmaxeVEAcHJWAUr0nNMaxgHHW/o99hw48s5qrLv4VXDFAu8Cxb2Ryo4ialbzQresvCLif9JcjeHbi7gA9hqGevXCEZNbSfy8ytWAA/y6eb+BHwB4ywpy3EoNtUcpezW1EPCgPBMejx5BpgjvmEjSp6cTC4F920Eq7W+SqUWetC+f15ucS+K+TRYFfJQlKcde1m6EVmTewTzcV4WL2vao9jupxZvVlSPTCYxS8122EfHD9SnhuywEV+Ryeh9+v4mAo9kF4Y/T+SDm6mtPs0dL2yD4i+zsZFm8c8FuE76Hq252dG27ImX8L00/fk5z5IEJu3lT+DtuvH92YT3DlmwQn91Q5vpRQHTPlEqbokvfhTxvevA=
+Content-Type: text/plain; charset="iso-8859-1"
+Content-ID: <97457DD34C246E4F95A1E589E5D28F25@namprd11.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <fdd14f28-74e9-5cf9-2f5a-09c884c55110@oracle.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+X-OriginatorOrg: silabs.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 30a366c0-d004-4c82-3f44-08d74758b51f
+X-MS-Exchange-CrossTenant-originalarrivaltime: 02 Oct 2019 16:51:01.6073
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 54dbd822-5231-4b20-944d-6f4abcd541fb
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: Dtl8cSgUJXafLV+ALxSAcTxGMVFMKn17lomLQBCbLXsjBfyrdVp8IIdbn5c+Asf2QywzcYV7RXEeN+LuJNVDqw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR11MB3918
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Oct 01, 2019 at 05:47:00PM +0800, Zhenzhong Duan wrote:
-> 
-> On 2019/10/1 16:39, Vitaly Kuznetsov wrote:
-> >Zhenzhong Duan<zhenzhong.duan@oracle.com>  writes:
+On Wednesday 2 October 2019 18:42:14 CEST Greg Kroah-Hartman wrote:
+> On Wed, Oct 02, 2019 at 04:29:09PM +0000, Jerome Pouiller wrote:
+[...]
 > >
-> >>On 2019/9/30 23:41, Vitaly Kuznetsov wrote:
-> >>>Zhenzhong Duan<zhenzhong.duan@oracle.com>   writes:
-> >>>
-> >>>>There are cases where a guest tries to switch spinlocks to bare metal
-> >>>>behavior (e.g. by setting "xen_nopvspin" on XEN platform and
-> >>>>"hv_nopvspin" on HYPER_V).
-> >>>>
-> >>>>That feature is missed on KVM, add a new parameter "nopvspin" to disable
-> >>>>PV spinlocks for KVM guest.
-> >>>>
-> >>>>This new parameter is also intended to replace "xen_nopvspin" and
-> >>>>"hv_nopvspin" in the future.
-> >>>Any reason to not do it right now? We will probably need to have compat
-> >>>code to support xen_nopvspin/hv_nopvspin too but emit a 'is deprecated'
-> >>>warning.
-> >>Sorry the description isn't clear, I'll fix it.
-> >>
-> >>I did the compat work in the other two patches.
-> >>[PATCH 2/3] xen: Mark "xen_nopvspin" parameter obsolete and map it to "nopvspin"
-> >>[PATCH 3/3] x86/hyperv: Mark "hv_nopvspin" parameter obsolete and map it to "nopvspin"
-> >>
-> >For some reason I got CCed only on the first one and moreover,
-> 
-> The three patches have different maintainers/reviewers by get_maintainer.pl, I added
-> "Cc: maintainers/reviewers" to each patch then git-sendemail picked them automaticly.
-> I meaned to not disturb maintainers with the field they aren't in charge of. It looks
-> I'm wrong.
-> 
-> So what's the correct way dealing with this? Should I send the whole patchset to all
-> the maintainers/reviewers related to all the patches?
+> > Hi Andrew,
+> >
+> > I did not forget your suggestion. However, if everyone is agree with th=
+at, I'd
+> > prefer to address it in a next pull request. Indeed, I'd prefer to keep=
+ this
+> > version in sync with version 2.3.1 published on github.
+>=20
+> Ugh, you aren't doing development outside of the kernel tree and
+> expecting things to stay in sync somehow are you?  That way lies madness
+> and a sure way to get me to just delete the staging driver.  Just work
+> on it in-tree please.
 
-There's no one right answer to that question, folks have different
-preferences.  My general rule of thumb is to cc everyone on all patches
-unless the series is obnoxiously large *and* isolated to a specific part
-of the kernel.  The idea being that people are more likely to be annoyed
-if they can't find all patches in a relatively small series (this case)
-than they are about receiving a mail or two that they don't care about.
+Sure, I will just work in-tree. But, I think that if someone want to
+follow history, it is easier if it exists a version exactly identical
+in kernel and on github.
 
-At a minimum I would cc everyone involved on the cover letter, and cc the
-relevant mailing lists on all patches.  Sending everyone the cover letter
-provides people a quick overview of the patches they didn't receive, as
-well as a starting point if they want to find those patches.  Cc'ing the
-mailing list(s) can make it even easier to find the patches.  The cover
-letter is also a good place to explain why you didn't cc everyone on all
-patches (or vice versa).
 
-Also, the cover letter should have the shortlog and overall diffstats.
-'git format-patch --cover-letter' will do the work for you.
+--=20
+J=E9r=F4me Pouiller
+
