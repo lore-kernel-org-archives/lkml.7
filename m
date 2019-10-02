@@ -2,51 +2,51 @@ Return-Path: <SRS0=zem1=X3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4AEDAC4360C
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 21:50:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 30362C4360C
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 21:50:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1C567218DE
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 21:50:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0F417218DE
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 21:50:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729137AbfJBVuN (ORCPT
+        id S1729450AbfJBVuQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Oct 2019 17:50:13 -0400
-Received: from mail-io1-f72.google.com ([209.85.166.72]:42062 "EHLO
-        mail-io1-f72.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726300AbfJBVuN (ORCPT
+        Wed, 2 Oct 2019 17:50:16 -0400
+Received: from mail-io1-f69.google.com ([209.85.166.69]:48363 "EHLO
+        mail-io1-f69.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726300AbfJBVuO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Oct 2019 17:50:13 -0400
-Received: by mail-io1-f72.google.com with SMTP id w1so1365335ioj.9
+        Wed, 2 Oct 2019 17:50:14 -0400
+Received: by mail-io1-f69.google.com with SMTP id w16so1315684ioc.15
         for <linux-kernel@vger.kernel.org>; Wed, 02 Oct 2019 14:50:12 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=FVFfSQ1N4e8sms9/3nhKCOCc7RVTElQVbWRSDR4Lz+w=;
-        b=kgoyHCCnyFn+17UErT3VpxcI24o+Yu8YFvqtEW0E5yZBz4LpMfh/NygRJFqCYkSEAR
-         R0oPJJnuKOd3gnpTAL6GDK1VQ2QXbv9dDjCZFMtGR5RfMebR1eO/b23Y+OKWXkHk4pYR
-         sPDq8P+9wVVRMkTs02j1mHgCaJ+xYrtEBBAuLcnr0fP0yEq3qer5bjJluS5B0ILZN8yG
-         UUkx+EZFhX0ak1M6jf6yYMh8b1jHF4lzrwpRz41TjGQB4CECSvrf51YbV5L9ErbJ3VJg
-         a5/Zk9MhmDYJqGmEe14F4bvmDBeGtLuUN9RBdqKUkBTYFikPaDwd8KD7e3EsrMRzQM2v
-         nxFA==
-X-Gm-Message-State: APjAAAXJSpaHJnQFbNawCZatbx8n0teJWSXXj1C/aiCbR59MinPYU/8X
-        YvzZt/pnou0++Co45BIWtSaNYoLYCz5to66N/Y+subU06qBe
-X-Google-Smtp-Source: APXvYqy5U8vEk6m4PI9O3uAMPgUs+AjruWPqkT+uB7XC8rwgLIBqxdvCaMjkxb0GRLWGttlC7FJchJHWsKQgGspmxvME0KMoeaXE
+        bh=EaD4hPrd8RVzckGPGHICifgUp2cDYNo0SWfmeyPd01c=;
+        b=ieGV//Nn86WqJfmicDgUtBf7SSEClJUwFrtR2M2BF3sJ4lo2L9SLfr4r/aE/Eb+TXc
+         GhPYwwZw32OMkfER4xfOvwe7hW/U+exXy1J1ddtWeU1OOzRi+bv2cwmtRJUw0Qv5ZfTF
+         Qg7PfEuyCsWiLW0wPqWc/a2r9g+fsh44kjtPViVRnFwIHpZiNxe8/Xzly8nM7I20IH/O
+         34HTOZy9i0xOOmKYKOX/xs3UiZexONIDqLhwlss4zR+R1hFNSMw/X46GQX2UYzJTL3Ib
+         8bg6L2/Hkwo2sC7YetCmtekwMET2+PMPn65OZrFqtmOtrZ6FK3cQ7DgUGXYh6HyrioYJ
+         i3aw==
+X-Gm-Message-State: APjAAAVPKP/3Iz+z8kkCrd2XBWVpcjj8L2UaaxGSOHo/MURyTH0FMJ94
+        9kAkEVBSLUW0XmX7b2/u7JjCmJ6ctwMgBy6ebCgNkwhVZ0m5
+X-Google-Smtp-Source: APXvYqx4oOzu5t//LshFFaGh6KBOFeEHIHJYyBx9jm6FsErNxXc3DvJ35+y9V2zd917afxvZ1ZlLSOUTyPj9SXJupZ68Z5PZW5Lx
 MIME-Version: 1.0
-X-Received: by 2002:a92:c530:: with SMTP id m16mr6570416ili.44.1570053011937;
- Wed, 02 Oct 2019 14:50:11 -0700 (PDT)
-Date:   Wed, 02 Oct 2019 14:50:11 -0700
+X-Received: by 2002:a5d:8143:: with SMTP id f3mr5612914ioo.294.1570053012399;
+ Wed, 02 Oct 2019 14:50:12 -0700 (PDT)
+Date:   Wed, 02 Oct 2019 14:50:12 -0700
 X-Google-Appengine-App-Id: s~syzkaller
 X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <0000000000000e235d0593f474ba@google.com>
-Subject: KMSAN: uninit-value in mts_usb_probe
-From:   syzbot <syzbot+5630ca7c3b2be5c9da5e@syzkaller.appspotmail.com>
-To:     glider@google.com, gregkh@linuxfoundation.org,
-        linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
-        oliver@neukum.org, syzkaller-bugs@googlegroups.com
+Message-ID: <0000000000001530e00593f47496@google.com>
+Subject: general protection fault in sit_exit_batch_net
+From:   syzbot <syzbot+1695af5ca559927e2db8@syzkaller.appspotmail.com>
+To:     davem@davemloft.net, kuznet@ms2.inr.ac.ru,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        syzkaller-bugs@googlegroups.com, yoshfuji@linux-ipv6.org
 Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -57,113 +57,68 @@ Hello,
 
 syzbot found the following crash on:
 
-HEAD commit:    fe36eb20 kmsan: rework SLUB hooks
-git tree:       https://github.com/google/kmsan.git master
-console output: https://syzkaller.appspot.com/x/log.txt?x=17605b6fa00000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=40511ad0c5945201
-dashboard link: https://syzkaller.appspot.com/bug?extid=5630ca7c3b2be5c9da5e
-compiler:       clang version 9.0.0 (/home/glider/llvm/clang  
-80fee25776c2fb61e74c1ecb1a523375c2500b69)
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=11305710600000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=1506787fa00000
+HEAD commit:    c01ebd6c r8152: Use guard clause and fix comment typos
+git tree:       net-next
+console output: https://syzkaller.appspot.com/x/log.txt?x=10329447600000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=6ffbfa7e4a36190f
+dashboard link: https://syzkaller.appspot.com/bug?extid=1695af5ca559927e2db8
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1156242b600000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=17253b19600000
 
 IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+5630ca7c3b2be5c9da5e@syzkaller.appspotmail.com
+Reported-by: syzbot+1695af5ca559927e2db8@syzkaller.appspotmail.com
 
-usb 1-1: config 0 interface 235 altsetting 0 bulk endpoint 0x5 has invalid  
-maxpacket 0
-usb 1-1: New USB device found, idVendor=05da, idProduct=009a,  
-bcdDevice=46.6b
-usb 1-1: New USB device strings: Mfr=0, Product=0, SerialNumber=0
-usb 1-1: config 0 descriptor??
-microtek usb (rev 0.4.3): can only deal with bulk endpoints; endpoint 15 is  
-not bulk.
-microtek usb (rev 0.4.3): can only deal with bulk endpoints; endpoint 10 is  
-not bulk.
-microtek usb (rev 0.4.3): will this work? Command EP is not usually 5
-==================================================================
-BUG: KMSAN: uninit-value in mts_usb_probe+0xd1d/0xfb0  
-drivers/usb/image/microtek.c:754
-CPU: 1 PID: 33 Comm: kworker/1:1 Not tainted 5.2.0-rc4+ #11
+kasan: CONFIG_KASAN_INLINE enabled
+kasan: GPF could be caused by NULL-ptr deref or user memory access
+general protection fault: 0000 [#1] PREEMPT SMP KASAN
+CPU: 0 PID: 21 Comm: kworker/u4:1 Not tainted 5.3.0+ #0
 Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
 Google 01/01/2011
-Workqueue: usb_hub_wq hub_event
+Workqueue: netns cleanup_net
+RIP: 0010:dev_net include/linux/netdevice.h:2186 [inline]
+RIP: 0010:sit_destroy_tunnels net/ipv6/sit.c:1831 [inline]
+RIP: 0010:sit_exit_batch_net+0x3b1/0x750 net/ipv6/sit.c:1894
+Code: fb 49 8d 7c 24 18 48 89 f8 48 c1 e8 03 80 3c 18 00 0f 85 27 02 00 00  
+4d 8b 44 24 18 49 8d b8 80 05 00 00 48 89 f8 48 c1 e8 03 <80> 3c 18 00 0f  
+85 f2 01 00 00 4d 3b a8 80 05 00 00 4c 89 85 58 ff
+RSP: 0018:ffff8880a9a07b50 EFLAGS: 00010202
+RAX: 00000000000000b0 RBX: dffffc0000000000 RCX: ffffffff865ad59f
+RDX: 0000000000000000 RSI: ffffffff865ad488 RDI: 0000000000000580
+RBP: ffff8880a9a07c08 R08: 0000000000000000 R09: fffffbfff1332f89
+R10: fffffbfff1332f88 R11: ffffffff89997c47 R12: ffff88808b711140
+R13: ffff88808f206300 R14: 0000000000000006 R15: ffff88808a9e8e50
+FS:  0000000000000000(0000) GS:ffff8880ae800000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 0000000000f8e000 CR3: 00000000980db000 CR4: 00000000001406f0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
 Call Trace:
-  __dump_stack lib/dump_stack.c:77 [inline]
-  dump_stack+0x191/0x1f0 lib/dump_stack.c:113
-  kmsan_report+0x162/0x2d0 mm/kmsan/kmsan_report.c:109
-  __msan_warning+0x75/0xe0 mm/kmsan/kmsan_instr.c:294
-  mts_usb_probe+0xd1d/0xfb0 drivers/usb/image/microtek.c:754
-  usb_probe_interface+0xd19/0x1310 drivers/usb/core/driver.c:361
-  really_probe+0x1344/0x1d90 drivers/base/dd.c:513
-  driver_probe_device+0x1ba/0x510 drivers/base/dd.c:670
-  __device_attach_driver+0x5b8/0x790 drivers/base/dd.c:777
-  bus_for_each_drv+0x28e/0x3b0 drivers/base/bus.c:454
-  __device_attach+0x489/0x750 drivers/base/dd.c:843
-  device_initial_probe+0x4a/0x60 drivers/base/dd.c:890
-  bus_probe_device+0x131/0x390 drivers/base/bus.c:514
-  device_add+0x25b5/0x2df0 drivers/base/core.c:2111
-  usb_set_configuration+0x309f/0x3710 drivers/usb/core/message.c:2027
-  generic_probe+0xe7/0x280 drivers/usb/core/generic.c:210
-  usb_probe_device+0x146/0x200 drivers/usb/core/driver.c:266
-  really_probe+0x1344/0x1d90 drivers/base/dd.c:513
-  driver_probe_device+0x1ba/0x510 drivers/base/dd.c:670
-  __device_attach_driver+0x5b8/0x790 drivers/base/dd.c:777
-  bus_for_each_drv+0x28e/0x3b0 drivers/base/bus.c:454
-  __device_attach+0x489/0x750 drivers/base/dd.c:843
-  device_initial_probe+0x4a/0x60 drivers/base/dd.c:890
-  bus_probe_device+0x131/0x390 drivers/base/bus.c:514
-  device_add+0x25b5/0x2df0 drivers/base/core.c:2111
-  usb_new_device+0x23e5/0x2fb0 drivers/usb/core/hub.c:2534
-  hub_port_connect drivers/usb/core/hub.c:5089 [inline]
-  hub_port_connect_change drivers/usb/core/hub.c:5204 [inline]
-  port_event drivers/usb/core/hub.c:5350 [inline]
-  hub_event+0x5853/0x7320 drivers/usb/core/hub.c:5432
-  process_one_work+0x1572/0x1f00 kernel/workqueue.c:2269
-  worker_thread+0x111b/0x2460 kernel/workqueue.c:2415
-  kthread+0x4b5/0x4f0 kernel/kthread.c:256
-  ret_from_fork+0x35/0x40 arch/x86/entry/entry_64.S:355
-
-Uninit was stored to memory at:
-  kmsan_save_stack_with_flags mm/kmsan/kmsan.c:187 [inline]
-  kmsan_internal_chain_origin+0xcc/0x150 mm/kmsan/kmsan.c:349
-  __msan_chain_origin+0x6b/0xe0 mm/kmsan/kmsan_instr.c:190
-  mts_usb_probe+0xcf7/0xfb0 drivers/usb/image/microtek.c:748
-  usb_probe_interface+0xd19/0x1310 drivers/usb/core/driver.c:361
-  really_probe+0x1344/0x1d90 drivers/base/dd.c:513
-  driver_probe_device+0x1ba/0x510 drivers/base/dd.c:670
-  __device_attach_driver+0x5b8/0x790 drivers/base/dd.c:777
-  bus_for_each_drv+0x28e/0x3b0 drivers/base/bus.c:454
-  __device_attach+0x489/0x750 drivers/base/dd.c:843
-  device_initial_probe+0x4a/0x60 drivers/base/dd.c:890
-  bus_probe_device+0x131/0x390 drivers/base/bus.c:514
-  device_add+0x25b5/0x2df0 drivers/base/core.c:2111
-  usb_set_configuration+0x309f/0x3710 drivers/usb/core/message.c:2027
-  generic_probe+0xe7/0x280 drivers/usb/core/generic.c:210
-  usb_probe_device+0x146/0x200 drivers/usb/core/driver.c:266
-  really_probe+0x1344/0x1d90 drivers/base/dd.c:513
-  driver_probe_device+0x1ba/0x510 drivers/base/dd.c:670
-  __device_attach_driver+0x5b8/0x790 drivers/base/dd.c:777
-  bus_for_each_drv+0x28e/0x3b0 drivers/base/bus.c:454
-  __device_attach+0x489/0x750 drivers/base/dd.c:843
-  device_initial_probe+0x4a/0x60 drivers/base/dd.c:890
-  bus_probe_device+0x131/0x390 drivers/base/bus.c:514
-  device_add+0x25b5/0x2df0 drivers/base/core.c:2111
-  usb_new_device+0x23e5/0x2fb0 drivers/usb/core/hub.c:2534
-  hub_port_connect drivers/usb/core/hub.c:5089 [inline]
-  hub_port_connect_change drivers/usb/core/hub.c:5204 [inline]
-  port_event drivers/usb/core/hub.c:5350 [inline]
-  hub_event+0x5853/0x7320 drivers/usb/core/hub.c:5432
-  process_one_work+0x1572/0x1f00 kernel/workqueue.c:2269
-  worker_thread+0x111b/0x2460 kernel/workqueue.c:2415
-  kthread+0x4b5/0x4f0 kernel/kthread.c:256
-  ret_from_fork+0x35/0x40 arch/x86/entry/entry_64.S:355
-
-Local variable description: ----ep_in_set@mts_usb_probe
-Variable was created at:
-  mts_usb_probe+0x53/0xfb0 drivers/usb/image/microtek.c:666
-  usb_probe_interface+0xd19/0x1310 drivers/usb/core/driver.c:361
-==================================================================
+  ops_exit_list.isra.0+0xfc/0x150 net/core/net_namespace.c:175
+  cleanup_net+0x4e2/0xa60 net/core/net_namespace.c:594
+  process_one_work+0x9af/0x1740 kernel/workqueue.c:2269
+  worker_thread+0x98/0xe40 kernel/workqueue.c:2415
+  kthread+0x361/0x430 kernel/kthread.c:255
+  ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
+Modules linked in:
+---[ end trace 279fb1eb05d15843 ]---
+RIP: 0010:dev_net include/linux/netdevice.h:2186 [inline]
+RIP: 0010:sit_destroy_tunnels net/ipv6/sit.c:1831 [inline]
+RIP: 0010:sit_exit_batch_net+0x3b1/0x750 net/ipv6/sit.c:1894
+Code: fb 49 8d 7c 24 18 48 89 f8 48 c1 e8 03 80 3c 18 00 0f 85 27 02 00 00  
+4d 8b 44 24 18 49 8d b8 80 05 00 00 48 89 f8 48 c1 e8 03 <80> 3c 18 00 0f  
+85 f2 01 00 00 4d 3b a8 80 05 00 00 4c 89 85 58 ff
+RSP: 0018:ffff8880a9a07b50 EFLAGS: 00010202
+RAX: 00000000000000b0 RBX: dffffc0000000000 RCX: ffffffff865ad59f
+RDX: 0000000000000000 RSI: ffffffff865ad488 RDI: 0000000000000580
+RBP: ffff8880a9a07c08 R08: 0000000000000000 R09: fffffbfff1332f89
+R10: fffffbfff1332f88 R11: ffffffff89997c47 R12: ffff88808b711140
+R13: ffff88808f206300 R14: 0000000000000006 R15: ffff88808a9e8e50
+FS:  0000000000000000(0000) GS:ffff8880ae800000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 0000000000f8e000 CR3: 00000000980db000 CR4: 00000000001406f0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
 
 
 ---
