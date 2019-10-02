@@ -2,294 +2,385 @@ Return-Path: <SRS0=zem1=X3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE11AC352AA
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 09:28:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 85384C35280
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 09:29:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7A56A2133F
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 09:28:08 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="izX4SKGD"
+	by mail.kernel.org (Postfix) with ESMTP id 5B9E321783
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 09:29:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1570008548;
+	bh=nmNlEwlLA5nm/w1skISCClarW336SGPfJzyPXXF5BKU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Nt881ni4mmeFrJBX/5Ize82lXlU6VHjTI9NlLCicFjkRaBV5vnZK05IiokvuxA0H+
+	 2Q/GjdNexNhjhtlNTr98JJH1UyeJi5ChKWj315VWMv0k39qDbiN7sl/jC3qL+iwmv5
+	 0v+D16kgfe7MsTVJJwGRJ7EYVSAc44VfSsuETwOg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727221AbfJBJ2H (ORCPT
+        id S1727287AbfJBJ3H (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Oct 2019 05:28:07 -0400
-Received: from smtp-fw-33001.amazon.com ([207.171.190.10]:29812 "EHLO
-        smtp-fw-33001.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725852AbfJBJ2H (ORCPT
+        Wed, 2 Oct 2019 05:29:07 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:46014 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726227AbfJBJ3H (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Oct 2019 05:28:07 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1570008484; x=1601544484;
-  h=subject:to:cc:references:from:message-id:date:
-   mime-version:in-reply-to:content-transfer-encoding;
-  bh=pakAPBrVlVMGqVOKoh2qW8SL/VWSbaRCbk8sgD+X+W8=;
-  b=izX4SKGDZeJ1oVK0aupvfwt+09CiUwu95BHy7WxFv5JVi1mBU8BVq5XB
-   DdHVZq8qM5Qond9n7Oid8BrZZkxx65EgoKj5nDZWp7rQ+2/dZTvR+o1Ga
-   vf3Q5OyKt9E5+ae2XaGTkI6YcQKdBc/Gu7pOokjvLFgyEco8JsnVsWhz6
-   g=;
-X-IronPort-AV: E=Sophos;i="5.64,573,1559520000"; 
-   d="scan'208";a="838652386"
-Received: from sea3-co-svc-lb6-vlan2.sea.amazon.com (HELO email-inbound-relay-1d-74cf8b49.us-east-1.amazon.com) ([10.47.22.34])
-  by smtp-border-fw-out-33001.sea14.amazon.com with ESMTP; 02 Oct 2019 09:26:18 +0000
-Received: from EX13MTAUEB001.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan2.iad.amazon.com [10.40.159.162])
-        by email-inbound-relay-1d-74cf8b49.us-east-1.amazon.com (Postfix) with ESMTPS id 68A25C05B3;
-        Wed,  2 Oct 2019 09:26:00 +0000 (UTC)
-Received: from EX13D08UEB004.ant.amazon.com (10.43.60.142) by
- EX13MTAUEB001.ant.amazon.com (10.43.60.129) with Microsoft SMTP Server (TLS)
- id 15.0.1367.3; Wed, 2 Oct 2019 09:25:59 +0000
-Received: from EX13MTAUEB001.ant.amazon.com (10.43.60.96) by
- EX13D08UEB004.ant.amazon.com (10.43.60.142) with Microsoft SMTP Server (TLS)
- id 15.0.1367.3; Wed, 2 Oct 2019 09:25:59 +0000
-Received: from [10.95.86.195] (10.95.86.195) by mail-relay.amazon.com
- (10.43.60.129) with Microsoft SMTP Server (TLS) id 15.0.1367.3 via Frontend
- Transport; Wed, 2 Oct 2019 09:25:56 +0000
-Subject: Re: [PATCH v4 1/2] edac: Add an API for edac device to report for
- multiple errors
-To:     Borislav Petkov <bp@alien8.de>
-CC:     <mchehab@kernel.org>, <james.morse@arm.com>,
-        <rrichter@marvell.com>, <linux-edac@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <dwmw@amazon.co.uk>,
-        <benh@amazon.com>, <ronenk@amazon.com>, <talel@amazon.com>,
-        <jonnyc@amazon.com>, <hanochu@amazon.com>
-References: <20190923191741.29322-1-hhhawa@amazon.com>
- <20190923191741.29322-2-hhhawa@amazon.com> <20190930145046.GH29694@zn.tnic>
-From:   "Hawa, Hanna" <hhhawa@amazon.com>
-Message-ID: <5263edad-e0c9-a05a-72d7-e69c59d78d8f@amazon.com>
-Date:   Wed, 2 Oct 2019 12:25:55 +0300
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Wed, 2 Oct 2019 05:29:07 -0400
+Received: by mail-wr1-f65.google.com with SMTP id r5so18743224wrm.12;
+        Wed, 02 Oct 2019 02:29:04 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=b0Ociy6JljwjUTs4PnmwFPDtjgbH8C6eykIqQ/ZVJtw=;
+        b=FwZPlh12b0g6k9XKvemJOc5na8TNkUz11aT2yvheVugVe2SNiGG9yh0BNFXvPZTOse
+         962pI/TC5gS2chCbffXn+MGFqcFrRlseNb/5xP7T11xesZN+tSc4LyF0J6gGNCxAFnLP
+         BwEix4a4+0mo116ib8EyABHVjd3jwlWZyDIgqBZAki0uyVYRYnZwaOJVzsE5hTcGcyWg
+         7lGHQKg9WX24/45SvP5PiH/sYcKgUNifdVzLcbJPxmaCoOn/0KLZjpdjueDWkwekmfgK
+         8g7RXJ4M2eaFJpo0y87CjjgUDAeqjTgVPs+sjFGzziZF88Ez7WcM105/pzuGTWuzF5Tn
+         DzvQ==
+X-Gm-Message-State: APjAAAXLoWS5yzL8Apy1ZbHOEcsK3S0DFcFQtoV8pU7x+3afhFloFc7N
+        5mkoLaGrztsoyC2P4gaJ9UI=
+X-Google-Smtp-Source: APXvYqwkdZl/UXbeVLBd1w+E4+dYfi9w40fpdf0Yy8hnVGRbqwE8NoYAkNbedRwEkq643DtA1Lco6g==
+X-Received: by 2002:adf:b648:: with SMTP id i8mr1790052wre.372.1570008543674;
+        Wed, 02 Oct 2019 02:29:03 -0700 (PDT)
+Received: from pi3 ([194.230.155.145])
+        by smtp.googlemail.com with ESMTPSA id c4sm19695954wru.31.2019.10.02.02.29.02
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 02 Oct 2019 02:29:03 -0700 (PDT)
+Date:   Wed, 2 Oct 2019 11:29:01 +0200
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     Rob Herring <robh@kernel.org>
+Cc:     Mark Rutland <mark.rutland@arm.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Kevin Hilman <khilman@kernel.org>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-pm@vger.kernel.org
+Subject: Re: [RFC 1/2] dt-bindings: power: Convert Generic Power Domain
+ bindings to json-schema
+Message-ID: <20191002092901.GB9952@pi3>
+References: <20190908152813.20646-1-krzk@kernel.org>
+ <20190930140006.GA9671@bogus>
 MIME-Version: 1.0
-In-Reply-To: <20190930145046.GH29694@zn.tnic>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20190930140006.GA9671@bogus>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Mon, Sep 30, 2019 at 09:00:06AM -0500, Rob Herring wrote:
+> On Sun, Sep 08, 2019 at 05:28:12PM +0200, Krzysztof Kozlowski wrote:
+> > Convert Generic Power Domain bindings to DT schema format using
+> > json-schema.  The consumer bindings are split to separate file.
+> > 
+> > Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+> > 
+> > ---
+> > 
+> > TODO:
+> > 1. How the consumer bindings should match nodes?
+> 
+> How it already done. The consumer binding is always applied so we 
+> always apply the type schema to the consumer properties. Device specific 
+> bindings have to list the consumer properties because they need to 
+> define how many power domains and the names.
 
-
-On 9/30/2019 5:50 PM, Borislav Petkov wrote:
-> On Mon, Sep 23, 2019 at 08:17:40PM +0100, Hanna Hawa wrote:
->> +void edac_device_handle_ce(struct edac_device_ctl_info *edac_dev,
->> +			int inst_nr, int block_nr, const char *msg)
->> +{
->> +	__edac_device_handle_ce(edac_dev, 1, inst_nr, block_nr, msg);
->> +}
->> +EXPORT_SYMBOL_GPL(edac_device_handle_ce);
-> 
-> Eww, I don't like that: exporting the function *and* the __ counterpart.
-> The user will get confused and that is unnecessary.
-> 
-> See below for a better version. This way you solve the whole deal with a
-> single patch.
-I'm okay with this version, minor comment below.
+I'll apply then select:true so the "required-opps" will be matched.
 
 > 
-> ---
-> From: Hanna Hawa <hhhawa@amazon.com>
-> Date: Mon, 23 Sep 2019 20:17:40 +0100
-> Subject: [PATCH] EDAC/device: Rework error logging API
+> > 2. Somehow the example complains:
+> > Documentation/devicetree/bindings/power/power-domain.example.dt.yaml: power-controller@12341000: power-domains:0: [1, 0] is too long
+> > Documentation/devicetree/bindings/power/power-domain.example.dt.yaml: power-controller@12341000: power-domains:0:1: missing phandle tag in 0
 > 
-> Make the main workhorse the "count" functions which can log a @count
-> of errors. Have the current APIs edac_device_handle_{ce,ue}() call
-> the _count() variants and this way keep the exported symbols number
-> unchanged.
-> 
->   [ bp: Rewrite. ]
-> 
-> Signed-off-by: Hanna Hawa <hhhawa@amazon.com>
-> Signed-off-by: Borislav Petkov <bp@suse.de>
-> Cc: benh@amazon.com
-> Cc: dwmw@amazon.co.uk
-> Cc: hanochu@amazon.com
-> Cc: James Morse <james.morse@arm.com>
-> Cc: jonnyc@amazon.com
-> Cc: linux-edac <linux-edac@vger.kernel.org>
-> Cc: Mauro Carvalho Chehab <mchehab@kernel.org>
-> Cc: ronenk@amazon.com
-> Cc: talel@amazon.com
-> Cc: Tony Luck <tony.luck@intel.com>
-> Link: https://lkml.kernel.org/r/20190923191741.29322-2-hhhawa@amazon.com
-> ---
->   drivers/edac/edac_device.c | 44 ++++++++++++++++---------------
->   drivers/edac/edac_device.h | 54 ++++++++++++++++++++++++++++++--------
->   2 files changed, 66 insertions(+), 32 deletions(-)
-> 
-> diff --git a/drivers/edac/edac_device.c b/drivers/edac/edac_device.c
-> index 65cf2b9355c4..d4d8bed5b55d 100644
-> --- a/drivers/edac/edac_device.c
-> +++ b/drivers/edac/edac_device.c
-> @@ -555,8 +555,9 @@ static inline int edac_device_get_panic_on_ue(struct edac_device_ctl_info
->   	return edac_dev->panic_on_ue;
->   }
->   
-> -void edac_device_handle_ce(struct edac_device_ctl_info *edac_dev,
-> -			int inst_nr, int block_nr, const char *msg)
-> +void edac_device_handle_ce_count(struct edac_device_ctl_info *edac_dev,
-> +				 unsigned int count, int inst_nr, int block_nr,
-> +				 const char *msg)
->   {
->   	struct edac_device_instance *instance;
->   	struct edac_device_block *block = NULL;
+> You used 'phandle' instead of 'phandle-array'. If you have cells, the 
+> latter is used. Perhaps we should distinguish between having cells or no 
+> cells.
 
-Missing count check, same in *_ue_count():
-if (count)
-	return;
+Thanks, I'll drop it anyway as it is duplicating dt-schema.
 
-> @@ -582,23 +583,24 @@ void edac_device_handle_ce(struct edac_device_ctl_info *edac_dev,
->   
->   	if (instance->nr_blocks > 0) {
->   		block = instance->blocks + block_nr;
-> -		block->counters.ce_count++;
-> +		block->counters.ce_count += count;
->   	}
->   
->   	/* Propagate the count up the 'totals' tree */
-> -	instance->counters.ce_count++;
-> -	edac_dev->counters.ce_count++;
-> +	instance->counters.ce_count += count;
-> +	edac_dev->counters.ce_count += count;
->   
->   	if (edac_device_get_log_ce(edac_dev))
->   		edac_device_printk(edac_dev, KERN_WARNING,
-> -				"CE: %s instance: %s block: %s '%s'\n",
-> -				edac_dev->ctl_name, instance->name,
-> -				block ? block->name : "N/A", msg);
-> +				   "CE: %s instance: %s block: %s count: %d '%s'\n",
-> +				   edac_dev->ctl_name, instance->name,
-> +				   block ? block->name : "N/A", count, msg);
->   }
-> -EXPORT_SYMBOL_GPL(edac_device_handle_ce);
-> +EXPORT_SYMBOL_GPL(edac_device_handle_ce_count);
->   
-> -void edac_device_handle_ue(struct edac_device_ctl_info *edac_dev,
-> -			int inst_nr, int block_nr, const char *msg)
-> +void edac_device_handle_ue_count(struct edac_device_ctl_info *edac_dev,
-> +				 unsigned int count, int inst_nr, int block_nr,
-> +				 const char *msg)
->   {
->   	struct edac_device_instance *instance;
->   	struct edac_device_block *block = NULL;
-> @@ -624,22 +626,22 @@ void edac_device_handle_ue(struct edac_device_ctl_info *edac_dev,
->   
->   	if (instance->nr_blocks > 0) {
->   		block = instance->blocks + block_nr;
-> -		block->counters.ue_count++;
-> +		block->counters.ue_count += count;
->   	}
->   
->   	/* Propagate the count up the 'totals' tree */
-> -	instance->counters.ue_count++;
-> -	edac_dev->counters.ue_count++;
-> +	instance->counters.ue_count += count;
-> +	edac_dev->counters.ue_count += count;
->   
->   	if (edac_device_get_log_ue(edac_dev))
->   		edac_device_printk(edac_dev, KERN_EMERG,
-> -				"UE: %s instance: %s block: %s '%s'\n",
-> -				edac_dev->ctl_name, instance->name,
-> -				block ? block->name : "N/A", msg);
-> +				   "UE: %s instance: %s block: %s count: %d '%s'\n",
-> +				   edac_dev->ctl_name, instance->name,
-> +				   block ? block->name : "N/A", count, msg);
->   
->   	if (edac_device_get_panic_on_ue(edac_dev))
-> -		panic("EDAC %s: UE instance: %s block %s '%s'\n",
-> -			edac_dev->ctl_name, instance->name,
-> -			block ? block->name : "N/A", msg);
-> +		panic("EDAC %s: UE instance: %s block %s count: %d '%s'\n",
-> +		      edac_dev->ctl_name, instance->name,
-> +		      block ? block->name : "N/A", count, msg);
->   }
-> -EXPORT_SYMBOL_GPL(edac_device_handle_ue);
-> +EXPORT_SYMBOL_GPL(edac_device_handle_ue_count);
-> diff --git a/drivers/edac/edac_device.h b/drivers/edac/edac_device.h
-> index 1aaba74ae411..c4c0e0bdce14 100644
-> --- a/drivers/edac/edac_device.h
-> +++ b/drivers/edac/edac_device.h
-> @@ -286,27 +286,60 @@ extern int edac_device_add_device(struct edac_device_ctl_info *edac_dev);
->   extern struct edac_device_ctl_info *edac_device_del_device(struct device *dev);
->   
->   /**
-> - * edac_device_handle_ue():
-> - *	perform a common output and handling of an 'edac_dev' UE event
-> + * Log correctable errors.
->    *
->    * @edac_dev: pointer to struct &edac_device_ctl_info
-> - * @inst_nr: number of the instance where the UE error happened
-> - * @block_nr: number of the block where the UE error happened
-> + * @inst_nr: number of the instance where the CE error happened
-> + * @count: Number of errors to log.
-> + * @block_nr: number of the block where the CE error happened
-> + * @msg: message to be printed
-> + */
-> +void edac_device_handle_ce_count(struct edac_device_ctl_info *edac_dev,
-> +				 unsigned int count, int inst_nr, int block_nr,
-> +				 const char *msg);
-> +
-> +/**
-> + * Log uncorrectable errors.
-> + *
-> + * @edac_dev: pointer to struct &edac_device_ctl_info
-> + * @inst_nr: number of the instance where the CE error happened
-> + * @count: Number of errors to log.
-> + * @block_nr: number of the block where the CE error happened
->    * @msg: message to be printed
->    */
-> -extern void edac_device_handle_ue(struct edac_device_ctl_info *edac_dev,
-> -				int inst_nr, int block_nr, const char *msg);
-> +void edac_device_handle_ue_count(struct edac_device_ctl_info *edac_dev,
-> +				 unsigned int count, int inst_nr, int block_nr,
-> +				 const char *msg);
-> +
->   /**
-> - * edac_device_handle_ce():
-> - *	perform a common output and handling of an 'edac_dev' CE event
-> + * edac_device_handle_ce(): Log a single correctable error
->    *
->    * @edac_dev: pointer to struct &edac_device_ctl_info
->    * @inst_nr: number of the instance where the CE error happened
->    * @block_nr: number of the block where the CE error happened
->    * @msg: message to be printed
->    */
-> -extern void edac_device_handle_ce(struct edac_device_ctl_info *edac_dev,
-> -				int inst_nr, int block_nr, const char *msg);
-> +static inline void
-> +edac_device_handle_ce(struct edac_device_ctl_info *edac_dev, int inst_nr,
-> +		      int block_nr, const char *msg)
-> +{
-> +	edac_device_handle_ce_count(edac_dev, 1, inst_nr, block_nr, msg);
-> +}
-> +
-> +/**
-> + * edac_device_handle_ue(): Log a single uncorrectable error
-> + *
-> + * @edac_dev: pointer to struct &edac_device_ctl_info
-> + * @inst_nr: number of the instance where the UE error happened
-> + * @block_nr: number of the block where the UE error happened
-> + * @msg: message to be printed
-> + */
-> +static inline void
-> +edac_device_handle_ue(struct edac_device_ctl_info *edac_dev, int inst_nr,
-> +		      int block_nr, const char *msg)
-> +{
-> +	edac_device_handle_ue_count(edac_dev, 1, inst_nr, block_nr, msg);
-> +}
->   
->   /**
->    * edac_device_alloc_index: Allocate a unique device index number
-> @@ -316,5 +349,4 @@ extern void edac_device_handle_ce(struct edac_device_ctl_info *edac_dev,
->    */
->   extern int edac_device_alloc_index(void);
->   extern const char *edac_layer_name[];
-> -
->   #endif
 > 
+> > 3. Current matching by node name causes false positives:
+> > arch/arm/boot/dts/am335x-icev2.dt.yaml: power-controller@2d: '#power-domain-cells' is a required property
+> > arch/arm/boot/dts/qcom-apq8064-cm-qs600.dt.yaml: power-controller@2099000: '#power-domain-cells' is a required property
+> 
+> They should have different node names if they are not power-domain 
+> providers.
+> 
+> > ---
+> >  .../devicetree/bindings/arm/arm,scmi.txt      |   2 +-
+> >  .../devicetree/bindings/arm/arm,scpi.txt      |   2 +-
+> >  .../bindings/arm/freescale/fsl,scu.txt        |   2 +-
+> >  .../bindings/clock/clk-exynos-audss.txt       |   2 +-
+> >  .../bindings/clock/exynos5433-clock.txt       |   4 +-
+> >  .../bindings/clock/renesas,cpg-mssr.txt       |   2 +-
+> >  .../clock/renesas,r8a7778-cpg-clocks.txt      |   2 +-
+> >  .../clock/renesas,r8a7779-cpg-clocks.txt      |   2 +-
+> >  .../clock/renesas,rcar-gen2-cpg-clocks.txt    |   2 +-
+> >  .../bindings/clock/renesas,rz-cpg-clocks.txt  |   2 +-
+> >  .../bindings/clock/ti/davinci/psc.txt         |   2 +-
+> >  .../bindings/display/etnaviv/etnaviv-drm.txt  |   2 +-
+> >  .../devicetree/bindings/display/msm/dpu.txt   |   2 +-
+> >  .../devicetree/bindings/display/msm/mdp5.txt  |   2 +-
+> >  .../devicetree/bindings/dsp/fsl,dsp.yaml      |   2 +-
+> >  .../firmware/nvidia,tegra186-bpmp.txt         |   2 +-
+> >  .../bindings/media/imx7-mipi-csi2.txt         |   3 +-
+> >  .../bindings/media/mediatek-jpeg-decoder.txt  |   3 +-
+> >  .../bindings/media/mediatek-mdp.txt           |   3 +-
+> >  .../bindings/opp/qcom-nvmem-cpufreq.txt       |   2 +-
+> >  .../devicetree/bindings/pci/pci-keystone.txt  |   2 +-
+> >  .../bindings/phy/ti,phy-am654-serdes.txt      |   2 +-
+> >  .../bindings/power/amlogic,meson-gx-pwrc.txt  |   2 +-
+> >  .../devicetree/bindings/power/fsl,imx-gpc.txt |   2 +-
+> >  .../bindings/power/fsl,imx-gpcv2.txt          |   2 +-
+> >  .../power/power-domain-consumers.yaml         | 124 +++++++++++
+> >  .../bindings/power/power-domain.yaml          | 136 ++++++++++++
+> >  .../bindings/power/power_domain.txt           | 205 ------------------
+> >  .../devicetree/bindings/power/qcom,rpmpd.txt  |   2 +-
+> >  .../bindings/power/renesas,rcar-sysc.txt      |   2 +-
+> >  .../bindings/power/renesas,sysc-rmobile.txt   |   2 +-
+> >  .../bindings/power/xlnx,zynqmp-genpd.txt      |   2 +-
+> >  .../bindings/soc/bcm/brcm,bcm2835-pm.txt      |   2 +-
+> >  .../bindings/soc/mediatek/scpsys.txt          |   2 +-
+> >  .../bindings/soc/ti/sci-pm-domain.txt         |   2 +-
+> >  .../bindings/usb/nvidia,tegra124-xusb.txt     |   4 +-
+> >  MAINTAINERS                                   |   2 +-
+> >  37 files changed, 299 insertions(+), 241 deletions(-)
+> >  create mode 100644 Documentation/devicetree/bindings/power/power-domain-consumers.yaml
+> >  create mode 100644 Documentation/devicetree/bindings/power/power-domain.yaml
+> >  delete mode 100644 Documentation/devicetree/bindings/power/power_domain.txt
+> 
+> 
+> > diff --git a/Documentation/devicetree/bindings/power/power-domain-consumers.yaml b/Documentation/devicetree/bindings/power/power-domain-consumers.yaml
+> > new file mode 100644
+> > index 000000000000..95cc6da1e8a8
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/power/power-domain-consumers.yaml
+> > @@ -0,0 +1,124 @@
+> > +# SPDX-License-Identifier: GPL-2.0
+> > +%YAML 1.2
+> > +---
+> > +$id: http://devicetree.org/schemas/power/power-domain-consumers.yaml#
+> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > +
+> > +title: PM domain consumers
+> > +
+> > +maintainers:
+> > +  - Rafael J. Wysocki <rjw@rjwysocki.net>
+> > +  - Kevin Hilman <khilman@kernel.org>
+> > +  - Ulf Hansson <ulf.hansson@linaro.org>
+> > +
+> > +description: |+
+> > +  See power-domain.yaml
+> > +
+> > +allOf:
+> > +  - $ref: /schemas/power-domain/power-domain-consumer.yaml
+> > +
+> > +# TODO: missing select (compatible?)
+> > +
+> > +properties:
+> > +  power-domains:
+> > +    $ref: /schemas/types.yaml#/definitions/phandle-array
+> > +    description:
+> > +      A list of PM domain specifiers, as defined by bindings of the power
+> > +      controller that is the PM domain provider.
+> > +
+> > +  power-domain-names:
+> > +    $ref: /schemas/types.yaml#/definitions/string-array
+> > +    description:
+> > +      A list of power domain name strings sorted in the same order
+> > +      as the power-domains property. Consumers drivers will use
+> > +      power-domain-names to match power domains with power-domains specifiers.
+> 
+> Why are we duplicating this?
+
+My bad.
+
+> 
+> > +
+> > +  required-opps:
+> > +    $ref: /schemas/types.yaml#/definitions/phandle
+> > +    description:
+> > +      This contains phandle to an OPP node in another device's OPP table.
+> > +      It may contain an array of phandles, where each phandle points to an OPP
+> > +      of a different device. It should not contain multiple phandles to the OPP
+> > +      nodes in the same OPP table. This specifies the minimum required OPP
+> > +      of the device(s), whose OPP's phandle is present in this property,
+> > +      for the functioning of the current device at the current OPP (where this
+> > +      property is present).
+> > +
+> > +required:
+> > +  - power-domains
+> > +
+> > +dependencies:
+> > +  power-domain-names: [ power-domains ]
+> > +
+> > +examples:
+> > +  - |
+> > +    leaky-device@12350000 {
+> > +      compatible = "foo,i-leak-current";
+> > +      reg = <0x12350000 0x1000>;
+> > +      power-domains = <&power 0>;
+> > +      power-domain-names = "io";
+> > +    };
+> > +
+> > +    leaky-device@12351000 {
+> > +      compatible = "foo,i-leak-current";
+> > +      reg = <0x12351000 0x1000>;
+> > +      power-domains = <&power 0>, <&power 1> ;
+> > +      power-domain-names = "io", "clk";
+> > +    };
+> > +
+> > +    // The first example above defines a typical PM domain consumer device, which is
+> > +    // located inside a PM domain with index 0 of a power controller represented by a
+> > +    // node with the label "power".
+> > +    // In the second example the consumer device are partitioned across two PM domains,
+> > +    // the first with index 0 and the second with index 1, of a power controller that
+> > +    // is represented by a node with the label "power".
+> > +
+> > +  - |
+> > +    // Example with  OPP table for domain provider that provides two domains:
+> > +
+> > +    domain0_opp_table: opp-table0 {
+> > +      compatible = "operating-points-v2";
+> > +
+> > +      domain0_opp_0: opp-1000000000 {
+> > +        opp-hz = /bits/ 64 <1000000000>;
+> > +        opp-microvolt = <975000 970000 985000>;
+> > +      };
+> > +      domain0_opp_1: opp-1100000000 {
+> > +        opp-hz = /bits/ 64 <1100000000>;
+> > +        opp-microvolt = <1000000 980000 1010000>;
+> > +      };
+> > +    };
+> > +
+> > +    domain1_opp_table: opp-table1 {
+> > +      compatible = "operating-points-v2";
+> > +
+> > +      domain1_opp_0: opp-1200000000 {
+> > +        opp-hz = /bits/ 64 <1200000000>;
+> > +        opp-microvolt = <975000 970000 985000>;
+> > +      };
+> > +      domain1_opp_1: opp-1300000000 {
+> > +        opp-hz = /bits/ 64 <1300000000>;
+> > +        opp-microvolt = <1000000 980000 1010000>;
+> > +      };
+> > +    };
+> > +
+> > +    power: power-controller@12340000 {
+> > +      compatible = "foo,power-controller";
+> > +      reg = <0x12340000 0x1000>;
+> > +      #power-domain-cells = <1>;
+> > +      operating-points-v2 = <&domain0_opp_table>, <&domain1_opp_table>;
+> > +    };
+> > +
+> > +    leaky-device0@12350000 {
+> > +      compatible = "foo,i-leak-current";
+> > +      reg = <0x12350000 0x1000>;
+> > +      power-domains = <&power 0>;
+> > +      required-opps = <&domain0_opp_0>;
+> > +    };
+> > +
+> > +    leaky-device1@12350000 {
+> > +      compatible = "foo,i-leak-current";
+> > +      reg = <0x12350000 0x1000>;
+> > +      power-domains = <&power 1>;
+> > +      required-opps = <&domain1_opp_1>;
+> > +    };
+> > diff --git a/Documentation/devicetree/bindings/power/power-domain.yaml b/Documentation/devicetree/bindings/power/power-domain.yaml
+> > new file mode 100644
+> > index 000000000000..9454fdb904ae
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/power/power-domain.yaml
+> > @@ -0,0 +1,136 @@
+> > +# SPDX-License-Identifier: GPL-2.0
+> > +%YAML 1.2
+> > +---
+> > +$id: http://devicetree.org/schemas/power/power-domain.yaml#
+> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > +
+> > +title: Generic PM domains
+> > +
+> > +maintainers:
+> > +  - Rafael J. Wysocki <rjw@rjwysocki.net>
+> > +  - Kevin Hilman <khilman@kernel.org>
+> > +  - Ulf Hansson <ulf.hansson@linaro.org>
+> > +
+> > +description: |+
+> > +  System on chip designs are often divided into multiple PM domains that can be
+> > +  used for power gating of selected IP blocks for power saving by reduced leakage
+> > +  current.
+> > +
+> > +  This device tree binding can be used to bind PM domain consumer devices with
+> > +  their PM domains provided by PM domain providers. A PM domain provider can be
+> > +  represented by any node in the device tree and can provide one or more PM
+> > +  domains. A consumer node can refer to the provider by a phandle and a set of
+> > +  phandle arguments (so called PM domain specifiers) of length specified by the
+> > +  \#power-domain-cells property in the PM domain provider node.
+> > +
+> > +properties:
+> > +  $nodename:
+> > +    pattern: "^(power-controller|power-domain)(@.*)?"
+> > +
+> > +  domain-idle-states:
+> > +    $ref: /schemas/types.yaml#/definitions/phandle-array
+> > +    description:
+> > +      A phandle of an idle-state that shall be soaked into a generic domain
+> > +      power state. The idle state definitions are compatible with
+> > +      domain-idle-state specified in
+> > +      Documentation/devicetree/bindings/power/domain-idle-state.txt
+> > +      phandles that are not compatible with domain-idle-state will be ignored.
+> > +      The domain-idle-state property reflects the idle state of this PM domain
+> > +      and not the idle states of the devices or sub-domains in the PM domain.
+> > +      Devices and sub-domains have their own idle-states independent
+> > +      of the parent domain's idle states. In the absence of this property,
+> > +      the domain would be considered as capable of being powered-on
+> > +      or powered-off.
+> > +
+> > +  operating-points-v2:
+> > +    $ref: /schemas/types.yaml#/definitions/phandle-array
+> 
+> This needs to be defined as part of an OPP schema. I guess there's some 
+> value listing it here, but a device specific binding will still have to 
+> list it to define how many entries.
+
+So for now I'll leave it here. Consecutive patches can split it.
+
+> 
+> > +    description:
+> > +      Phandles to the OPP tables of power domains provided by a power domain
+> > +      provider. If the provider provides a single power domain only or all
+> > +      the power domains provided by the provider have identical OPP tables,
+> > +      then this shall contain a single phandle. Refer to ../opp/opp.txt
+> > +      for more information.
+> > +
+> > +  "#power-domain-cells":
+> > +    $ref: /schemas/types.yaml#/definitions/uint32
+> 
+> Strictly speaking, we don't need to define the type as '#.*-cells' has a 
+> type.
+
+OK
+
+> 
+> > +    description:
+> > +      Number of cells in a PM domain specifier. Typically 0 for nodes
+> > +      representing a single PM domain and 1 for nodes providing multiple PM
+> > +      domains (e.g. power controllers), but can be any value as specified
+> > +      by device tree binding documentation of particular provider.
+> > +
+> > +  power-domains:
+> > +    $ref: /schemas/types.yaml#/definitions/phandle
+> 
+> Don't need type here either.
+
+OK
+
+Best regards,
+Krzysztof
+
