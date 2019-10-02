@@ -8,56 +8,56 @@ X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D583BC35280
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 10:10:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D332C352AA
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 10:11:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AD0D121783
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 10:10:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 136D321920
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 10:11:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EsIyLHWI"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZitNU5uT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727727AbfJBKKI (ORCPT
+        id S1727763AbfJBKLI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Oct 2019 06:10:08 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:33413 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727409AbfJBKKH (ORCPT
+        Wed, 2 Oct 2019 06:11:08 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:37684 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727409AbfJBKLI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Oct 2019 06:10:07 -0400
-Received: by mail-wm1-f66.google.com with SMTP id r17so4562872wme.0;
-        Wed, 02 Oct 2019 03:10:04 -0700 (PDT)
+        Wed, 2 Oct 2019 06:11:08 -0400
+Received: by mail-wm1-f68.google.com with SMTP id f22so6332734wmc.2;
+        Wed, 02 Oct 2019 03:11:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to:user-agent;
-        bh=7f4FFC207JROsiL0BefsQuifFD7iKPSKyUdbTlcKVhk=;
-        b=EsIyLHWIlUvo5OPxpqtGqWZTIcmJXB7TzEFLgP5EiYtuwbmx9VtRE8qlbl4kF/pedb
-         JAxiAHgEtG5QBuLK1xbbmZF5x/VOM488n3VSxQSKxUwNXIPeAt1TiruvjYAsfMk61kSF
-         xqVKYnOVANiDHgYL46l1wpsaCfuWi89UkrVNybh961KLNoCLsxHjc+LtoSW8ZEKCfvin
-         jriwcLLRc3BGcnIu7XhNfAelrnCUr7DwCJYQ8SuiwCLHxI4uXrQTIh2rYcm8PnYztyMq
-         w5Bs9/Fh6OPlPflhX/o7iLXuRlgk8khBKAauYSRyjFtX82Zklj6l6YYBxOXgNFSHf0z3
-         A3vg==
+        bh=M4UUQ+aEuggjcZX2H/YTgUQiAaMcYcQjkAJllVSG030=;
+        b=ZitNU5uTOmbFx7v1UniRtun/Yc0QcBGI4ZlhH3ocFzm2Om4WZMqgez9edaLqGUy/wZ
+         rXiJ1jD3b7gHCDTCXk3TXmkrKJhU4j3sa2jPEedqRsn1o5bY/zHIWUqGZHr9nSc0/sQI
+         c1W47Ymmq81Ry9D+Ea2cYb39cuOAloJhWV6xHC5X004coWH6LBa5st2w0s89USKtV4IB
+         +YgQqVuehCMt0t/GUIZvYZdBDCHFG/Ld/Z/9BGfdQ/U+PwdclygOEBe1+8J7x+flBgfv
+         BDDjyolCPBP4sAbj21AMZkcRYLOR0UTkSfplMiljla9I4Tu9+eSfGjpBJVCm6AJjIUEx
+         iMoQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=7f4FFC207JROsiL0BefsQuifFD7iKPSKyUdbTlcKVhk=;
-        b=d/kDOKhZIFYcFpyjztZiluJznFQ3S1iT1vuryF/R4eJfx1aWl2hDf/ZdHHvNoiX+mF
-         J/vQwElo3DTUUPSYU2k383qQCEGT3gUs9PSpzonloxf28teqBvgKBMOMPLaLsYFAt1/P
-         Rg16u4oi6YGww5apJKUXcelaSh9UvswE5CLq0FUK/5ihEoUhce0GoG8O+CIvkzwzKVfT
-         J88TeWS4gZVx5/SzOLnXqcELY9on/lONtbhbx2c8aZmAhQa05fCyUkUE4nnP5s1FnMdC
-         HiEJUQsPULLYT7JrHcutOSdU+2iEYhYB7syDkYXUWI/iSYNXvRu7L7vF5F25aJmq7dIz
-         G8Ng==
-X-Gm-Message-State: APjAAAXPuF2JsXZ5aLAT+4Sw5ux44BtnDQS24fW1JlBa3ir+d+ju94lR
-        qZ8UB0tSoqhSrf/FMi+X4eo=
-X-Google-Smtp-Source: APXvYqz4klkUD/cZvX4DLNIb/KY21ThRQndFnyoJX7sjX3A4XS5j+3NVIVzGcrUS6Yz3bBWBZ0uzwQ==
-X-Received: by 2002:a1c:7d8e:: with SMTP id y136mr2143472wmc.83.1570011004123;
-        Wed, 02 Oct 2019 03:10:04 -0700 (PDT)
+        bh=M4UUQ+aEuggjcZX2H/YTgUQiAaMcYcQjkAJllVSG030=;
+        b=Yl1NuhtJlPxIk5PpqSD2xuxHz1f1VDUa1GnMVEQteWsBZFDqHIN0KOtoT3DyGsxjiE
+         HU/yS7+Hhn5B46rzRFvFvgxUMlCpQTu61WioRofCA82Nhb1/4blcvEU2ZbMTwc5Mc42T
+         qkkVy0B5VaLKgdlQ/InNBYOWKgNpKFAVXhI176PC1f20BuYXJZ1l4QFTidsSdvz+cy9t
+         FqsO9aiGWN3o8lJZCO9bybRetIZ0CWKWAx28wHFesHrGtsu8Dl2HwT92YKtQLnGjwH/m
+         /f7uTAMLs+oD95TVuHL5zhxa/L0cfAkJk7T2vg8bKw5RdiUDGGK2XOsIZnNFWRPTxEG1
+         4XIQ==
+X-Gm-Message-State: APjAAAUPMEi0ZnosgP7KUctOLsq5b8xfIjlr52zORjFxOn078mDqjz6p
+        U+cIopKlo8QJqmMRDeVcWW4=
+X-Google-Smtp-Source: APXvYqzqtvIJ5BH8JA2ViQyMstGCjhKX2rgAAsWWNSo4aGPTtquUMKlxj2BQl2aPvnloImVstqW7lw==
+X-Received: by 2002:a7b:cd11:: with SMTP id f17mr2181454wmj.12.1570011064811;
+        Wed, 02 Oct 2019 03:11:04 -0700 (PDT)
 Received: from localhost (p2E5BE2CE.dip0.t-ipconnect.de. [46.91.226.206])
-        by smtp.gmail.com with ESMTPSA id f8sm3954015wmb.37.2019.10.02.03.10.02
+        by smtp.gmail.com with ESMTPSA id b22sm4964600wmj.36.2019.10.02.03.11.03
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 02 Oct 2019 03:10:02 -0700 (PDT)
-Date:   Wed, 2 Oct 2019 12:10:01 +0200
+        Wed, 02 Oct 2019 03:11:03 -0700 (PDT)
+Date:   Wed, 2 Oct 2019 12:11:02 +0200
 From:   Thierry Reding <thierry.reding@gmail.com>
 To:     JC Kuo <jckuo@nvidia.com>
 Cc:     gregkh@linuxfoundation.org, jonathanh@nvidia.com,
@@ -65,12 +65,12 @@ Cc:     gregkh@linuxfoundation.org, jonathanh@nvidia.com,
         linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
         nkristam@nvidia.com, skomatineni@nvidia.com
 Subject: Re: [PATCH 5/6] arm64: tegra: Add XUSB and pad controller on Tegra194
-Message-ID: <20191002101001.GF3716706@ulmo>
+Message-ID: <20191002101102.GG3716706@ulmo>
 References: <20191002080051.11142-1-jckuo@nvidia.com>
  <20191002080051.11142-6-jckuo@nvidia.com>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="kR3zbvD4cgoYnS/6"
+        protocol="application/pgp-signature"; boundary="kadn00tgSopKmJ1H"
 Content-Disposition: inline
 In-Reply-To: <20191002080051.11142-6-jckuo@nvidia.com>
 User-Agent: Mutt/1.12.2 (2019-09-21)
@@ -80,7 +80,7 @@ List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
---kR3zbvD4cgoYnS/6
+--kadn00tgSopKmJ1H
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
@@ -104,14 +104,15 @@ ts/nvidia/tegra194.dtsi
 >  	};
 > +
 > +	xusb_padctl: padctl@3520000 {
+
+I also noticed that this is outside of the /cbb bus node. It really
+belongs inside /cbb. Same for the XHCI controller node.
+
+Thierry
+
 > +		compatible =3D "nvidia,tegra194-xusb-padctl";
 > +		reg =3D <0x0 0x03520000 0x0 0x1000>,
 > +			<0x0 0x03540000 0x0 0x1000>;
-
-These should generally be aligned. Use tabs first and then spaces to
-make the opening < on subsequent lines align with the opening < on the
-first line. There are a couple more like this below.
-
 > +		reg-names =3D "padctl", "ao";
 > +
 > +		resets =3D <&bpmp TEGRA194_RESET_XUSB_PADCTL>;
@@ -131,9 +132,6 @@ first line. There are a couple more like this below.
 > +						#phy-cells =3D <0>;
 > +					};
 > +					usb2-1 {
-
-I prefer blank lines to visually separate blocks here and below.
-
 > +						nvidia,function =3D "xusb";
 > +						status =3D "disabled";
 > +						#phy-cells =3D <0>;
@@ -205,12 +203,6 @@ I prefer blank lines to visually separate blocks here and below.
 > +	};
 > +
 > +	tegra_xhci: xhci@3610000 {
-
-The tegra_xhci is unused, so I don't think we need to add it. Also, the
-name of this node should be usb@3610000 since it's the compatible string
-that defines (together with the bindings) that this is XHCI capable. But
-it is fundamentally a USB controller, so the name should reflect that.
-
 > +		compatible =3D "nvidia,tegra194-xusb";
 > +		reg =3D <0x0 0x03610000 0x0 0x40000>,
 > +			<0x0 0x03600000 0x0 0x10000>;
@@ -238,16 +230,6 @@ it is fundamentally a USB controller, so the name should reflect that.
 > +			"xusb_falcon_host_clk", "xusb_falcon_superspeed_clk",
 > +			"xusb_fs_src", "xusb_fs_host_clk", "xusb_ss_src",
 > +			"xusb_ss", "pll_u_480m", "clk_m", "pll_e";
-
-Some of these clocks are not defined in the bindings. Many of them are
-also not used by the driver. Are all of these really needed? If they
-are, please add the required ones to the bindings.
-
-Also, for new ones, drop the _clk suffix. The fact that these are clocks
-is already conveyed by the property name.
-
-Thierry
-
 > +
 > +		power-domains =3D <&bpmp TEGRA194_POWER_DOMAIN_XUSBC>,
 > +				<&bpmp TEGRA194_POWER_DOMAIN_XUSBA>;
@@ -261,24 +243,24 @@ Thierry
 > 2.17.1
 >=20
 
---kR3zbvD4cgoYnS/6
+--kadn00tgSopKmJ1H
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl2Ud3kACgkQ3SOs138+
-s6HHxA//f2bNm7UQ7wJ81PQ6k1PUe7yCIbYVt0DW5uP1acBlo6n4rVB4qTER2wxc
-BMWH4a029oQoMabQj6zUsYnTfEKTJUs1D06BakN7x1uP3+daQOg2SqyM1VshqsyF
-lryvzMF3d0uHUTF2TTbsAWj2xV/0KGgRd1WfSgfcLW6beKL8WHa95R3fgRnscmZZ
-gTnS4Bl6Uo3yrTc9u02RCiSKH8cDzaqtFYqlgrRRTj3mK301NipEvGKumz2OM4cg
-zlWk9tAO2hqsAkz1rxAjGdpZ9IyWWwx95k5PnO2aCSdP4TyZ3fzAWlxH/smzd6/f
-K/c0hT/+Slo4JW4klly41fKu/Fi6N0Gk2OKpnsCmc65bD3US2pHD/6ytjMY2LN0i
-5upasZ6IyG3/9jBuH62i3sT+9anw9rGkIRGI0FZSWZynYEt+BLimW8pisf6iUAMm
-1i7sUit/6nvouFR03k4Vvya8URbv2uyp8+rtHNJseeYBsuRvxdwNrK20TPHeeX+Y
-xAE5pXavpFOqhlx+NuqU+wwjH3HoYuOuKZYDnMUtY2PjhBaOUs0tOBkDLsBzp8Nw
-8QQy6oQ0RGKDCvjRYdJDEk7qgDa4oDE3/qtmjsamf1m37LmQnYS0YDzQbNtWZp0B
-UNtr5wJ5Vo5cSNnOCgDNlh3kI+gdTxhI9ooWqPlgnXWdZw9/4lQ=
-=a/8b
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl2Ud7YACgkQ3SOs138+
+s6Fc4g//doxqb6jUWGiWBzZ1ER+mEG+TxHEsnsZJ/r1205w9wyN+WLLEKkrDVwKN
+yaB/7/4TlwCg8HEs6pDMwn4puU8kiRoMLQM6jekI4NtExurKLV9JhkAnA0l7J+nJ
+bKDeewgv04CqzYIeGg+NeveI8nheTlbg2qFXrQxbjZHqUYouRBUJhaUB9yH+8+qo
+Mg6phXNr6e63bqy8lE0cNDi3QFNKn1tRdYJ/1/Cmd+UiZzFy2JJr6Df0ca9xIU/8
+zHpvUO5Gft4lof1wbTgRuJT93O/Tpul431noSIA2FJbUWfWdMeHoq9iO0RsQ2jrW
+9BKWV966H2mFyt4RZtRehlcE9T4R8z7VkV63hrCK39ggLywmARIgUdYXtl9bjn1K
+/OCbCPsthITfuXBCOhrfeNCysrCHwOA5VeAtISI0xnCPAogAdTplmpWPJY9XZDz1
+XkzE0UZG59YF5x1+JRwbamJ0WP28NUXemhD3MX5fbWwBRcK3B5roTnQHxyYcyCOS
+/DVknEU893JRCqi70kB67zZu2nGICC6peiTdJZMHovaXQHOi/2YK7F/qRli3DCkd
+aakqavcDQt1AGgEry9wg0NEyBG9ltPIZThnUCTveu+9oBtMGutRBsNNu8kT6bIww
+4+7VyitnJWyw0lFGu7C4n8+Y0pWqeTxI++yOnuosM+q0wz2g7LM=
+=l7N3
 -----END PGP SIGNATURE-----
 
---kR3zbvD4cgoYnS/6--
+--kadn00tgSopKmJ1H--
