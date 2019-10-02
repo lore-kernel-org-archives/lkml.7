@@ -2,108 +2,151 @@ Return-Path: <SRS0=zem1=X3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 561F3C35280
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 15:39:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ADDEAC35280
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 15:42:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3472721A4C
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 15:39:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7FCAD21A4C
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 15:42:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="azTJwomv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728049AbfJBPjn (ORCPT
+        id S1728240AbfJBPmM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Oct 2019 11:39:43 -0400
-Received: from mail-qk1-f196.google.com ([209.85.222.196]:43859 "EHLO
-        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726233AbfJBPjn (ORCPT
+        Wed, 2 Oct 2019 11:42:12 -0400
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:44058 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727333AbfJBPmM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Oct 2019 11:39:43 -0400
-Received: by mail-qk1-f196.google.com with SMTP id h126so15425941qke.10
-        for <linux-kernel@vger.kernel.org>; Wed, 02 Oct 2019 08:39:41 -0700 (PDT)
+        Wed, 2 Oct 2019 11:42:12 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1570030930;
+        h=from:from:reply-to:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:mime-version:mime-version:
+         content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=Xrk/iom6SacGfDF1/MM+LslI1lE/sTa+RHmkn0pm1oc=;
+        b=azTJwomv9/VoNcjy9Ik5K5aNeL7f45TW9cTOZ33dkbTg0mwDozxFS9Cvnyx0zdpu2v21eZ
+        KrtVlPgG9snCFLQwzJnlhys1Giwsbh2omvcmt0QkZji9qJE09KWrRsz6kH64gRR69CnfVc
+        xCE8DGcypsFoGmh/n22DJR4EV/jrNcQ=
+Received: from mail-io1-f71.google.com (mail-io1-f71.google.com
+ [209.85.166.71]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-250-WDuhs8NSPsyU-pJqW2ATlA-1; Wed, 02 Oct 2019 11:42:08 -0400
+Received: by mail-io1-f71.google.com with SMTP id o11so45204932iop.12
+        for <linux-kernel@vger.kernel.org>; Wed, 02 Oct 2019 08:42:08 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=N9xgxObyHlo32PssmGV4PbxM2Gv46DJwY2CihzT//HU=;
-        b=hp3/XGu2+owEKBNxFkdkvNZ6pHXmtFmq8YlPiwmaNWCMttgEdGz0efXtezl1iNae9R
-         eTE7pYGu/g+h2mXu9KY/pjKR2uahjtreNC2RAcMFlvsI/seZQBZbswZmXCeC70jRWVol
-         4M2Xf2uixThQqfCQO9tl/XE4/BPUKPMGMbSVRsExhCcaSwdDb4eUHtFfuvcv3RISMCce
-         xgEtIFAmgF9Neupp9n+R543SMnToXyB/57867AAiLGXydmZmuLLlH+6EMcT0btZR0HTW
-         yKbw8jI1qFROEHFEBX0m7NXQr6vCqhSgCbqowHXPX9jZKpHXmO+md8XT6C/9zpPBQGI0
-         RZ1Q==
-X-Gm-Message-State: APjAAAWRTcC0hK/izrqWfAz+SYvFTpwxpbuNPaJycZT5hWHPu3Fpe2+V
-        kVqQkXVTOrAcVglSrI6Sf1nrXk5lUI9ne0i74sY=
-X-Google-Smtp-Source: APXvYqxIIie+ioLh/sY/tvwAt7uW3G9LAGSG/pVeE7kRPGqPrqsGloWfg5qjshHoZxBwIbW08vbocy/QOIw3DfO4kPY=
-X-Received: by 2002:ae9:f503:: with SMTP id o3mr4266633qkg.3.1570030780522;
- Wed, 02 Oct 2019 08:39:40 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:subject:message-id:reply-to
+         :mail-followup-to:references:mime-version:content-disposition
+         :in-reply-to:user-agent;
+        bh=GNjCC8zynseCVOGAnnSac3El4WfDC7ObgvHi4C+tII0=;
+        b=SVb8GQKlFLvN+iVc8gBMfU/ytGxn0FSq2wC8uIvZB7BeYUWMXR+TC6HuPIVjOTf4bN
+         msgIE2GmIy12/Gx0E0TumwkYD4VaO0cyZmymlDBVhheLgtSekC0NPRkcdf3bGoT7BCVI
+         xBUJYItTt5CAhAV4EIttg7Y+KYkgGFYgn+97orKUuuVjhA3rukAY5R5x5tbr0JKOnAus
+         z/FX+X37qj6WwO5yLTClO/+8Be5TSQrXE0ISPiWxIeRQYmcU1LIsCkvCVq342HGACaN8
+         13znexOMhw2+mKxw3zrBW2KQGE3r5V+ICm8Taod5cSWGRvDt2YIc9RGPMMCjrVUXQHnV
+         3wfw==
+X-Gm-Message-State: APjAAAWd4ahrttQ7kkfwvNy1T90QvPvgcMAIF6beM2pPFWkjJ8YAL3pR
+        Bmm7HOAgxVwwPzZPq2AnfDxAb7n3f1dS6qSC8UeXHYnF1e5VNMo7fl200muJpBxbYkx/W+YhzU4
+        h1atGSpom8cpDKRmGqOQ3xcmz
+X-Received: by 2002:a92:8f19:: with SMTP id j25mr4502262ild.302.1570030928109;
+        Wed, 02 Oct 2019 08:42:08 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqyoz3ZFieRh9HyOfrL85tv/y22VKUjqn3g4HP+t/mcTWx0Pl3pyfxzaeghuDo6XoQJjRpPgDQ==
+X-Received: by 2002:a92:8f19:: with SMTP id j25mr4502246ild.302.1570030927921;
+        Wed, 02 Oct 2019 08:42:07 -0700 (PDT)
+Received: from localhost (ip70-163-223-149.ph.ph.cox.net. [70.163.223.149])
+        by smtp.gmail.com with ESMTPSA id q3sm8208287ioi.68.2019.10.02.08.42.06
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 02 Oct 2019 08:42:07 -0700 (PDT)
+Date:   Wed, 2 Oct 2019 08:42:04 -0700
+From:   Jerry Snitselaar <jsnitsel@redhat.com>
+To:     Sasha Levin <sashal@kernel.org>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        linux-stabley@vger.kernel.org,
+        Vadim Sukhomlinov <sukhomlinov@google.com>,
+        stable@vger.kernel.org, Douglas Anderson <dianders@chromium.org>,
+        Peter Huewe <peterhuewe@gmx.de>,
+        Jason Gunthorpe <jgunthorpe@obsidianresearch.com>,
+        "open list:TPM DEVICE DRIVER" <linux-integrity@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 3/3] tpm: Fix TPM 1.2 Shutdown sequence to prevent future
+ TPM operations
+Message-ID: <20191002154204.me4lzgx2l4r6zkpy@cantor>
+Reply-To: Jerry Snitselaar <jsnitsel@redhat.com>
+Mail-Followup-To: Sasha Levin <sashal@kernel.org>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        linux-stabley@vger.kernel.org,
+        Vadim Sukhomlinov <sukhomlinov@google.com>, stable@vger.kernel.org,
+        Douglas Anderson <dianders@chromium.org>,
+        Peter Huewe <peterhuewe@gmx.de>,
+        Jason Gunthorpe <jgunthorpe@obsidianresearch.com>,
+        "open list:TPM DEVICE DRIVER" <linux-integrity@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+References: <20191002131445.7793-1-jarkko.sakkinen@linux.intel.com>
+ <20191002131445.7793-4-jarkko.sakkinen@linux.intel.com>
+ <20191002135758.GA1738718@kroah.com>
+ <20191002151751.GP17454@sasha-vm>
+ <20191002153123.wcguist4okoxckis@cantor>
 MIME-Version: 1.0
-References: <20191002120136.1777161-1-arnd@arndb.de> <20191002120136.1777161-5-arnd@arndb.de>
- <CADnq5_PkTwTBbQY9JatZD2_sWjdU5_hK7V2GLfviEvMh_QB12Q@mail.gmail.com>
- <CAK8P3a0KMT437okhobg=Vzi5LRDgUO7L-x35LczBGXE2jYLg2A@mail.gmail.com> <CADnq5_PWWndBomBOXTYgmFqo+U8f8d8+OdJ5Ym3+a2mgO5=E0A@mail.gmail.com>
-In-Reply-To: <CADnq5_PWWndBomBOXTYgmFqo+U8f8d8+OdJ5Ym3+a2mgO5=E0A@mail.gmail.com>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Wed, 2 Oct 2019 17:39:24 +0200
-Message-ID: <CAK8P3a05ZSWcw=XUZrLyjMLY7wCHLKhpe+MF9p5P3URWpAcj+A@mail.gmail.com>
-Subject: Re: [PATCH 4/6] drm/amd/display: fix dcn21 Makefile for clang
-To:     Alex Deucher <alexdeucher@gmail.com>
-Cc:     Alex Deucher <alexander.deucher@amd.com>,
-        Harry Wentland <harry.wentland@amd.com>,
-        Leo Li <sunpeng.li@amd.com>,
-        =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
-        "David (ChunMing) Zhou" <David1.Zhou@amd.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Maling list - DRI developers 
-        <dri-devel@lists.freedesktop.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        amd-gfx list <amd-gfx@lists.freedesktop.org>,
-        Bhawanpreet Lakha <Bhawanpreet.Lakha@amd.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20191002153123.wcguist4okoxckis@cantor>
+User-Agent: NeoMutt/20180716
+X-MC-Unique: WDuhs8NSPsyU-pJqW2ATlA-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=WINDOWS-1252; format=flowed
+Content-Transfer-Encoding: quoted-printable
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Oct 2, 2019 at 5:12 PM Alex Deucher <alexdeucher@gmail.com> wrote:
-> On Wed, Oct 2, 2019 at 10:51 AM Arnd Bergmann <arnd@arndb.de> wrote:
-
-> >
-> > Nothing should really change with regards to the -msse flag here, only
-> > the stack alignment flag changed. Maybe there was some other change
-> > in your Makefile that conflicts with my my patch?
+On Wed Oct 02 19, Jerry Snitselaar wrote:
+>On Wed Oct 02 19, Sasha Levin wrote:
+>>On Wed, Oct 02, 2019 at 03:57:58PM +0200, Greg KH wrote:
+>>>On Wed, Oct 02, 2019 at 04:14:44PM +0300, Jarkko Sakkinen wrote:
+>>>>From: Vadim Sukhomlinov <sukhomlinov@google.com>
+>>>>
+>>>>commit db4d8cb9c9f2af71c4d087817160d866ed572cc9 upstream
+>>>>
+>>>>TPM 2.0 Shutdown involve sending TPM2_Shutdown to TPM chip and disablin=
+g
+>>>>future TPM operations. TPM 1.2 behavior was different, future TPM
+>>>>operations weren't disabled, causing rare issues. This patch ensures
+>>>>that future TPM operations are disabled.
+>>>>
+>>>>Fixes: d1bd4a792d39 ("tpm: Issue a TPM2_Shutdown for TPM2 devices.")
+>>>>Cc: stable@vger.kernel.org
+>>>>Signed-off-by: Vadim Sukhomlinov <sukhomlinov@google.com>
+>>>>[dianders: resolved merge conflicts with mainline]
+>>>>Signed-off-by: Douglas Anderson <dianders@chromium.org>
+>>>>Reviewed-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+>>>>Signed-off-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+>>>>---
+>>>>drivers/char/tpm/tpm-chip.c | 5 +++--
+>>>>1 file changed, 3 insertions(+), 2 deletions(-)
+>>>
+>>>What kernel version(s) is this for?
+>>
+>>It would go to 4.19, we've recently reverted an incorrect backport of
+>>this patch.
+>>
+>>Jarkko, why is this patch 3/3? We haven't seen the first two on the
+>>mailing list, do we need anything besides this patch?
+>>
+>>--
+>>Thanks,
+>>Sasha
 >
-> This patch on top of yours seems to fix it and aligns better with the
-> other Makefiles:
->
-> diff --git a/drivers/gpu/drm/amd/display/dc/dcn21/Makefile
-> b/drivers/gpu/drm/amd/display/dc/dcn21/Makefile
-> index ef673bffc241..e71f3ee76cd1 100644
-> --- a/drivers/gpu/drm/amd/display/dc/dcn21/Makefile
-> +++ b/drivers/gpu/drm/amd/display/dc/dcn21/Makefile
-> @@ -9,10 +9,10 @@ else ifneq ($(call cc-option, -mstack-alignment=16),)
->         cc_stack_align := -mstack-alignment=16
->  endif
->
-> -CFLAGS_$(AMDDALPATH)/dc/dcn21/dcn21_resource.o := -mhard-float -msse
-> $(cc_stack_align)
-> +CFLAGS_dcn21_resource.o := -mhard-float -msse $(cc_stack_align)
->
->  ifdef CONFIG_CC_IS_CLANG
-> -CFLAGS_$(AMDDALPATH)/dc/dcn21/dcn21_resource.o += -msse2
-> +CFLAGS_dcn21_resource.o += -msse2
->  endif
+>It looks like there was a problem mailing the earlier patchset, and patche=
+s 1 and 2
+>weren't cc'd to stable, but patch 3 was.
 
-Ok, so there is clearly a global change that went into your tree, or
-is missing from it:
+Is linux-stabley@vger.kernel.org a valid address?
 
-I see that as of linux-5.4-rc1, I have commit 54b8ae66ae1a ("kbuild: change
- *FLAGS_<basetarget>.o to take the path relative to $(obj)"), which changed
-all these path names to include the AMDDALPATH.
-
-It seems you are either on an older kernel that does not yet have this,
-or you have applied another patch that reverts it.
-
-       Arnd
