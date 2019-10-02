@@ -2,67 +2,126 @@ Return-Path: <SRS0=zem1=X3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 12155C4360C
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 22:50:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59C92C10F14
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 22:54:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DC0B820659
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 22:50:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2ED0921848
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 22:54:02 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=wavecomp.com header.i=@wavecomp.com header.b="YBMAYh3N"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728003AbfJBWuq (ORCPT
+        id S1728079AbfJBWyB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Oct 2019 18:50:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35940 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727103AbfJBWup (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Oct 2019 18:50:45 -0400
-Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E394120659;
-        Wed,  2 Oct 2019 22:50:44 +0000 (UTC)
-Date:   Wed, 2 Oct 2019 18:50:43 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Viktor Rosendahl <viktor.rosendahl@gmail.com>
-Cc:     Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org,
-        Joel Fernandes <joel@joelfernandes.org>
-Subject: Re: [PATCH v7 1/4] ftrace: Implement fs notification for
- tracing_max_latency
-Message-ID: <20191002185043.298fa820@gandalf.local.home>
-In-Reply-To: <fc1de769-a00e-b7cc-50cb-796560d79d89@gmail.com>
-References: <20190920152219.12920-1-viktor.rosendahl@gmail.com>
-        <20190920152219.12920-2-viktor.rosendahl@gmail.com>
-        <20191002111324.7590bf6d@gandalf.local.home>
-        <fc1de769-a00e-b7cc-50cb-796560d79d89@gmail.com>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Wed, 2 Oct 2019 18:54:01 -0400
+Received: from mail-eopbgr820092.outbound.protection.outlook.com ([40.107.82.92]:52531
+        "EHLO NAM01-SN1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727103AbfJBWyB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 2 Oct 2019 18:54:01 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=AHciOKE7l4NM1zthu8+JR3hd4aLjv40itGo4qyUZjoIzfTqoVVwpoZknnnnM807zpaCdnsSUN9k9pI418QtkEsZT3JXu7KnPP1BaDuslegN5r1WJDT3pTFSRXIRwWDM12xaJXLtvl7Eupq8JetBH3WPGplq6kzzli1bLuv1lBNDA2OQZKMX4uxeL7Bk7AZgU6NCd2RoOSs1CZhFZ+V7MK+x6teyRnGQ9G65EiS05TgnY6iQaEMbSgWLXidU7r/T4p7SQCkgWH9vrPxjf7bJElQp+RLoru4mYcR2hwRafAt6ptwYfwru+yF4LnrkAEORgRNF4GEFjjFRadSag17f7IQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=ian0Zfs0J6GyFVDLDOjY6iDdvlqPagATymXn4JZ7VAE=;
+ b=ODyvwCm5YoEjLvHAwooRl2eKTdLGW6mh3zdmg+8fkplRCsnS5jBAI69/+ks3PKsshxHEjN83UJjTGdjAcHKfbJyqh7eboHaZrUtDSssZQsHgFA8br7ZfGmwyf6MYS0rAW9kIHwDlHS+MUqpkVx72WV2LaGPixxoeGijYjSJkuQMhkMVdmrry94wnn1eIrtxa/M4hCZDuKNdZhry5a+5v3loBklPvxQf+EPErpoOV70yJSGzBNBWBxjFktmDbmxuSHvuIrTS/zD6b4Ewjf1ZAkTOKUaBH+Wt8M7yugQ/fq3xD6FNaFXa9vSaMfkNu8pcf240oVEO7DDRA3iD54t/BJQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=wavecomp.com; dmarc=pass action=none header.from=mips.com;
+ dkim=pass header.d=mips.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wavecomp.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=ian0Zfs0J6GyFVDLDOjY6iDdvlqPagATymXn4JZ7VAE=;
+ b=YBMAYh3NA+P/59wysbMAw+tSHPTWVlE4aE2sn8NR1dFlfAFpf7qsifN2pEst9Fur8XFS0s4ivG7cRffj7fyFtowFMzw0l1mACl39KxO72gJs+R5vmOdFhFjmi+Fhe9Qdn5XpCJ261H1Z4Cq7y2NZ9SzqMBwkeWsEwFy3KkAr3mE=
+Received: from MWHPR2201MB1277.namprd22.prod.outlook.com (10.172.60.12) by
+ MWHPR2201MB1294.namprd22.prod.outlook.com (10.172.60.9) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2305.20; Wed, 2 Oct 2019 22:53:59 +0000
+Received: from MWHPR2201MB1277.namprd22.prod.outlook.com
+ ([fe80::498b:c2cd:e816:1481]) by MWHPR2201MB1277.namprd22.prod.outlook.com
+ ([fe80::498b:c2cd:e816:1481%2]) with mapi id 15.20.2305.023; Wed, 2 Oct 2019
+ 22:53:59 +0000
+From:   Paul Burton <paul.burton@mips.com>
+To:     Thomas Bogendoerfer <tbogendoerfer@suse.de>
+CC:     Ralf Baechle <ralf@linux-mips.org>,
+        Paul Burton <pburton@wavecomp.com>,
+        James Hogan <jhogan@kernel.org>,
+        "linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>
+Subject: Re: [PATCH] MIPS: init: Fix reservation of memory between PHYS_OFFSET
+ and  mem start
+Thread-Topic: [PATCH] MIPS: init: Fix reservation of memory between
+ PHYS_OFFSET and  mem start
+Thread-Index: AQHVeXRGEnUUPWwIDUuaPQg5R7jkYg==
+Date:   Wed, 2 Oct 2019 22:53:58 +0000
+Message-ID: <MWHPR2201MB127731DF0BC99BCCA4D02680C19C0@MWHPR2201MB1277.namprd22.prod.outlook.com>
+References: <20190924151956.9528-1-tbogendoerfer@suse.de>
+In-Reply-To: <20190924151956.9528-1-tbogendoerfer@suse.de>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: BYAPR02CA0049.namprd02.prod.outlook.com
+ (2603:10b6:a03:54::26) To MWHPR2201MB1277.namprd22.prod.outlook.com
+ (2603:10b6:301:18::12)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=pburton@wavecomp.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [12.94.197.246]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 12fd4274-aaad-4a04-f84a-08d7478b6937
+x-ms-traffictypediagnostic: MWHPR2201MB1294:
+x-ms-exchange-purlcount: 1
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <MWHPR2201MB12940F87389994864E28F63AC19C0@MWHPR2201MB1294.namprd22.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:7219;
+x-forefront-prvs: 0178184651
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(39840400004)(136003)(346002)(366004)(376002)(396003)(189003)(199004)(256004)(55016002)(478600001)(26005)(6916009)(6436002)(186003)(316002)(74316002)(14454004)(4744005)(305945005)(54906003)(25786009)(7736002)(99286004)(4326008)(6306002)(52116002)(76176011)(6506007)(386003)(102836004)(486006)(476003)(42882007)(8936002)(446003)(966005)(33656002)(8676002)(11346002)(81156014)(81166006)(66946007)(66476007)(66556008)(64756008)(66446008)(5660300002)(66066001)(2906002)(6246003)(6116002)(3846002)(44832011)(71200400001)(71190400001)(52536014)(229853002)(9686003)(7696005);DIR:OUT;SFP:1102;SCL:1;SRVR:MWHPR2201MB1294;H:MWHPR2201MB1277.namprd22.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: wavecomp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: +DPimu/T4BdPmK0ntYdWS4pZTaMIJMmGiuR3zcXW6oBtRTyWCf0a8EZjNyB2aKBeXjz7KZ9yyUa/Hv8wIgPvGdlFaaaM3D8X6VtUWV/iJ4TLBTnu1ar9WqeU3nb3eX4k4AQPll3JTl/r0l+F8p/Ap7SH2ZZ/Y3My5hbN0GZ9JyyS+WAnhR8U+ZpVlZherJIr1KcnrZ/rPYBAUMXBTggHGXioy3XMq5ej0alV+ldt3dYklxwm6rCq4OTa4RGA8SbDrghb9CvW6agZHdvZab/KXXcMhc4klF9l/W4FF4o2K9AR2iBsMnLCkvkKtpZdnHMST3tJIpUUwKg5saWqenyj3kVQ2exU8ajKudNH0hqzHjQPJ059hOvKbHNEwFBRNpjrTrSkToH9s67xQEFhVrAsPd2UXdLicWJXuRiED7JgL3SCc4iw364jE3xLUXVEmY2FNu55ZyIrVjj0dwIQtxligA==
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+X-OriginatorOrg: mips.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 12fd4274-aaad-4a04-f84a-08d7478b6937
+X-MS-Exchange-CrossTenant-originalarrivaltime: 02 Oct 2019 22:53:58.9475
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 463607d3-1db3-40a0-8a29-970c56230104
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: 07eUL9HJq6STMcWHWVDFMNiu/iERXEkLYxs9QVkMXrf72SY0J/K2rgMdISXqeYSbkOJJTN4qIa5FQ1cCy5/Ngg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR2201MB1294
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 3 Oct 2019 00:04:56 +0200
-Viktor Rosendahl <viktor.rosendahl@gmail.com> wrote:
+Hello,
 
-> > Can fsnotify() be called from irq context? If so, why have the work
-> > queue at all? Just do the work from the irq_work handler.
-> >   
-> 
-> fsnotify() might sleep. It calls send_to_group(), which calls 
-> inotify_handle_event() through a function pointer.
-> 
-> inotify_handle_event() calls kmalloc() without the GFP_ATOMIC flag.
-> 
-> There might be other reasons as well but the above is one that I have 
-> seen a warning for, when enabling CONFIG_DEBUG_ATOMIC_SLEEP and trying 
-> to call fsnotify() from an atomic context.
+Thomas Bogendoerfer wrote:
+> Fix calculation of the size for reserving memory between PHYS_OFFSET
+> and real memory start.
 
-Thanks for the context. I wonder if we should add a "might_sleep()" to
-fsnotify() then.
+Applied to mips-fixes.
 
--- Steve
+> commit 66b416ee41ed
+> https://git.kernel.org/mips/c/66b416ee41ed
+>=20
+> Fixes: a94e4f24ec83 ("MIPS: init: Drop boot_mem_map")
+> Signed-off-by: Thomas Bogendoerfer <tbogendoerfer@suse.de>
+> Signed-off-by: Paul Burton <paul.burton@mips.com>
+
+Thanks,
+    Paul
+
+[ This message was auto-generated; if you believe anything is incorrect
+  then please email paul.burton@mips.com to report it. ]
