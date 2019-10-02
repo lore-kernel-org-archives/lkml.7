@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C485AC4360C
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 19:08:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A1EFC4360C
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 19:08:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ACBCC21D82
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 19:08:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4AE902133F
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 19:08:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729557AbfJBTIo (ORCPT
+        id S1729504AbfJBTIe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Oct 2019 15:08:44 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:36234 "EHLO
+        Wed, 2 Oct 2019 15:08:34 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:35780 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729440AbfJBTI2 (ORCPT
+        by vger.kernel.org with ESMTP id S1729301AbfJBTIQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Oct 2019 15:08:28 -0400
+        Wed, 2 Oct 2019 15:08:16 -0400
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1iFjyo-00035s-EC; Wed, 02 Oct 2019 20:08:06 +0100
+        id 1iFjyu-00035y-8H; Wed, 02 Oct 2019 20:08:12 +0100
 Received: from ben by deadeye with local (Exim 4.92.1)
         (envelope-from <ben@decadent.org.uk>)
-        id 1iFjyn-0003bw-Np; Wed, 02 Oct 2019 20:08:05 +0100
+        id 1iFjyq-0003gt-OJ; Wed, 02 Oct 2019 20:08:08 +0100
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,16 +35,15 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Michael Hennerich" <michael.hennerich@analog.com>,
-        "Linus Walleij" <linus.walleij@linaro.org>,
-        "Randy Dunlap" <rdunlap@infradead.org>, linux-gpio@vger.kernel.org,
-        "kbuild test robot" <lkp@intel.com>,
-        "Bartosz Golaszewski" <bgolaszewski@baylibre.com>
+        "Roman Bolshakov" <r.bolshakov@yadro.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        "Bart Van Assche" <bvanassche@acm.org>
 Date:   Wed, 02 Oct 2019 20:06:51 +0100
-Message-ID: <lsq.1570043211.865311511@decadent.org.uk>
+Message-ID: <lsq.1570043211.378304899@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 26/87] gpio: fix gpio-adp5588 build errors
+Subject: [PATCH 3.16 85/87] scsi: target/iblock: Fix overrun in WRITE SAME
+ emulation
 In-Reply-To: <lsq.1570043210.379046399@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -58,47 +57,40 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Randy Dunlap <rdunlap@infradead.org>
+From: Roman Bolshakov <r.bolshakov@yadro.com>
 
-commit e9646f0f5bb62b7d43f0968f39d536cfe7123b53 upstream.
+commit 5676234f20fef02f6ca9bd66c63a8860fce62645 upstream.
 
-The gpio-adp5588 driver uses interfaces that are provided by
-GPIOLIB_IRQCHIP, so select that symbol in its Kconfig entry.
+WRITE SAME corrupts data on the block device behind iblock if the command
+is emulated. The emulation code issues (M - 1) * N times more bios than
+requested, where M is the number of 512 blocks per real block size and N is
+the NUMBER OF LOGICAL BLOCKS specified in WRITE SAME command. So, for a
+device with 4k blocks, 7 * N more LBAs gets written after the requested
+range.
 
-Fixes these build errors:
+The issue happens because the number of 512 byte sectors to be written is
+decreased one by one while the real bios are typically from 1 to 8 512 byte
+sectors per bio.
 
-../drivers/gpio/gpio-adp5588.c: In function ‘adp5588_irq_handler’:
-../drivers/gpio/gpio-adp5588.c:266:26: error: ‘struct gpio_chip’ has no member named ‘irq’
-            dev->gpio_chip.irq.domain, gpio));
-                          ^
-../drivers/gpio/gpio-adp5588.c: In function ‘adp5588_irq_setup’:
-../drivers/gpio/gpio-adp5588.c:298:2: error: implicit declaration of function ‘gpiochip_irqchip_add_nested’ [-Werror=implicit-function-declaration]
-  ret = gpiochip_irqchip_add_nested(&dev->gpio_chip,
-  ^
-../drivers/gpio/gpio-adp5588.c:307:2: error: implicit declaration of function ‘gpiochip_set_nested_irqchip’ [-Werror=implicit-function-declaration]
-  gpiochip_set_nested_irqchip(&dev->gpio_chip,
-  ^
-
-Fixes: 459773ae8dbb ("gpio: adp5588-gpio: support interrupt controller")
-Reported-by: kbuild test robot <lkp@intel.com>
-Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
-Cc: linux-gpio@vger.kernel.org
-Reviewed-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Acked-by: Michael Hennerich <michael.hennerich@analog.com>
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+Fixes: c66ac9db8d4a ("[SCSI] target: Add LIO target core v4.0.0-rc6")
+Signed-off-by: Roman Bolshakov <r.bolshakov@yadro.com>
+Reviewed-by: Bart Van Assche <bvanassche@acm.org>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+[bwh: Backported to 3.16: use IBLOCK_LBA_SHIFT instead of SECTOR_SHIFT]
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- drivers/gpio/Kconfig | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/target/target_core_iblock.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/gpio/Kconfig
-+++ b/drivers/gpio/Kconfig
-@@ -654,6 +654,7 @@ config GPIO_ADP5588
- config GPIO_ADP5588_IRQ
- 	bool "Interrupt controller support for ADP5588"
- 	depends on GPIO_ADP5588=y
-+	select GPIOLIB_IRQCHIP
- 	help
- 	  Say yes here to enable the adp5588 to be used as an interrupt
- 	  controller. It requires the driver to be built in the kernel.
+--- a/drivers/target/target_core_iblock.c
++++ b/drivers/target/target_core_iblock.c
+@@ -490,7 +490,7 @@ iblock_execute_write_same(struct se_cmd
+ 
+ 		/* Always in 512 byte units for Linux/Block */
+ 		block_lba += sg->length >> IBLOCK_LBA_SHIFT;
+-		sectors -= 1;
++		sectors -= sg->length >> IBLOCK_LBA_SHIFT;
+ 	}
+ 
+ 	iblock_submit_bios(&list, WRITE);
 
