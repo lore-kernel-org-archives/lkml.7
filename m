@@ -2,87 +2,99 @@ Return-Path: <SRS0=zem1=X3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B270EC352AA
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 14:51:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C71E8C352AA
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 14:53:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8C16C21848
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 14:51:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9A58721D7B
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 14:53:49 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="eGO/GTXU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728766AbfJBOv2 convert rfc822-to-8bit (ORCPT
+        id S1727892AbfJBOxt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Oct 2019 10:51:28 -0400
-Received: from mail-qt1-f193.google.com ([209.85.160.193]:33790 "EHLO
-        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727718AbfJBOv0 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Oct 2019 10:51:26 -0400
-Received: by mail-qt1-f193.google.com with SMTP id r5so26742149qtd.0
-        for <linux-kernel@vger.kernel.org>; Wed, 02 Oct 2019 07:51:26 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=BFBQJKcoWFEsoedh3fU5Yan3pHcHh9XjwUhZKy85y8A=;
-        b=AvB0iNDL7w2KazAF5hr0rP1gedm6EW+1XAt5sLzt+KXz8gM2SoZX2pGxuSigd6DEud
-         2gFJTtyMmhGQagIuv+xCV7NSPBmb9bTe75R81096DjJrSEG6XWhdYMeAMgIQgPk2bTw2
-         KHUUhAd3n34QTDjg70pi6IkDiwETKl/JxrdRXaCoEPx2fEx8Cset+1O4/4HBC0Ii0VfU
-         vxow06u661vcn18B5bFsCvIlkmxdwVUQxDSh9XYmx6MrSsXOXZggmo+ZqU7ZC4ci5+fq
-         6qieaBFf6iGsJX5L45DOnuT0pm6yDYbIxLHQwXwRl9scBvzRxscPaBf+Zb9xRbgie4YM
-         JmGw==
-X-Gm-Message-State: APjAAAWOnIhhK5JIbsSi6Ou1KkQ9Xnylrcgh73RSItjkIAqdw75uyCD5
-        ZrL1HGXvdpFB/INOlL1Q0YrmAKEkVsojaaAsYdE=
-X-Google-Smtp-Source: APXvYqxytpKY7md+ImYxw2tgO2LdMMwX5MTobPRAkiWizRa+eDP+sDnPS94ixm658TSE7sUrUSJHRI/Q/drWU7Qw1LM=
-X-Received: by 2002:ac8:4a01:: with SMTP id x1mr4410955qtq.304.1570027885656;
- Wed, 02 Oct 2019 07:51:25 -0700 (PDT)
+        Wed, 2 Oct 2019 10:53:49 -0400
+Received: from mout.gmx.net ([212.227.17.21]:59119 "EHLO mout.gmx.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725747AbfJBOxs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 2 Oct 2019 10:53:48 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
+        s=badeba3b8450; t=1570027987;
+        bh=51Sd29DCKYAXaUWlFEJfRj+l41UwrIs1JX74yeC2ifg=;
+        h=X-UI-Sender-Class:From:To:Cc:Subject:Date;
+        b=eGO/GTXU76rDgAICREMwEX/TkRpVYd9ymRixLzDswWuw4gRFI8ZOD8rPM4E2Nigsn
+         fxG3euEh8tYs4TW1BffO6iCYWm9Nqbavtww0Pgxm1c4wx4Vef0kLWePKTXmyr/cuA2
+         PFQfEqFfEGwXm8yd8n/PaLbw0JR5CLAPRxRGeWqI=
+X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
+Received: from longitude ([109.90.233.87]) by mail.gmx.com (mrgmx104
+ [212.227.17.168]) with ESMTPSA (Nemesis) id 1N3bX1-1i7bDE2xKl-010c1P; Wed, 02
+ Oct 2019 16:53:07 +0200
+From:   =?UTF-8?q?Jonathan=20Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>
+To:     linux-omap@vger.kernel.org
+Cc:     =?UTF-8?q?Jonathan=20Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>,
+        Aaro Koskinen <aaro.koskinen@iki.fi>,
+        Tony Lindgren <tony@atomide.com>,
+        Russell King <linux@armlinux.org.uk>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] ARM: OMAP1: ams-delta FIQ: Fix a typo ("Initiaize")
+Date:   Wed,  2 Oct 2019 16:53:00 +0200
+Message-Id: <20191002145301.11332-1-j.neuschaefer@gmx.net>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-References: <20191002120136.1777161-1-arnd@arndb.de> <20191002120136.1777161-5-arnd@arndb.de>
- <CADnq5_PkTwTBbQY9JatZD2_sWjdU5_hK7V2GLfviEvMh_QB12Q@mail.gmail.com>
-In-Reply-To: <CADnq5_PkTwTBbQY9JatZD2_sWjdU5_hK7V2GLfviEvMh_QB12Q@mail.gmail.com>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Wed, 2 Oct 2019 16:51:09 +0200
-Message-ID: <CAK8P3a0KMT437okhobg=Vzi5LRDgUO7L-x35LczBGXE2jYLg2A@mail.gmail.com>
-Subject: Re: [PATCH 4/6] drm/amd/display: fix dcn21 Makefile for clang
-To:     Alex Deucher <alexdeucher@gmail.com>
-Cc:     Alex Deucher <alexander.deucher@amd.com>,
-        Harry Wentland <harry.wentland@amd.com>,
-        Leo Li <sunpeng.li@amd.com>,
-        =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
-        "David (ChunMing) Zhou" <David1.Zhou@amd.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Maling list - DRI developers 
-        <dri-devel@lists.freedesktop.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        amd-gfx list <amd-gfx@lists.freedesktop.org>,
-        Bhawanpreet Lakha <Bhawanpreet.Lakha@amd.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:JYPZWN/GxGfD2Zob7XwPzNdaW8wOJ3rz+ji1lyCuLCH7QKVtti/
+ MGFmD0gLOjy0Ua1xo7IKccQWtn7TCgXY2iEK1pX5S6lXIbBDag25F8PDyk7Wn06DJj93Xtx
+ wNy4qxraBwTRLKgOsrbiRPtJ4u4DDaRRHzMFHMra1Bmsx586a60tttRt4RvoW06ohx6+Mza
+ N/VLYdNh74j4vhtbcFLCQ==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:tdTVvgG66qQ=:u6AgU0YGduHL8Z3UaiQ622
+ wv/wVVVHkW3Anw1I+FJjIz7gor+YRx+7cGkhBnoZtE+5Wu8rbOvyk6/+9kWfwxRHGb+jizTnB
+ dZ3RDmXWUMyZkXkyHDvLb8466ouLnWTQi67bW+j1PaGWVD00m7ymgUp0037qED+YdOOtBY11a
+ p2E8CD2iyt6UI4GFoXIUYVvRO51AUr9K1XmO7E4p+uBm+PJ9uTereJMqB8IE+px2q0QRPLC7K
+ HAckLZEz5pEGGJv+FsMrfYoURQmbxt1kzn07e2UFeDWOdVSRddhppZDwOPbR78Aga/7nT9RCy
+ NVx5hIjWYDfkWW14tPGsL42wqQ4XX/Rvw8nHzJoHgJP3ADqk5r7Su5TKvnRQuMjcg/UlS8RnY
+ +YvheJ8xVc8+/L+vj1aMeoYzkrs2YlDdssT9IICB2mvKHzTB3dd9gXNXRwTlbB8Mi6F9SP53t
+ xLviBkVD+SIt79wRcfAyXbyOWjULeTA/j4KRzmiSNQS9n9144SZmCy+tEU/NPXT9ejGhTGLwG
+ hJRvIw9NnLp68Sorj5GjieVrch0JNddPMRK9eGQkBxvj9oxykrrvXzC/5RvzsuQIWAHHUWJK3
+ 9anS6CPh7L9dRST8QtrLRnbZv5gbQUqTp0ziqe8s0LFZICgDFmRiU033AFEaFBv+pi/al5gbZ
+ THAAdN7lgScO+ec2WW++1DiQbveJydqUwNXVhZ+3QG8rxt9o/aa0NyucY9ydXexvYY58KJ+wH
+ QnJxlWDMvSV9QJebDe742JKoTZnMdVYCHR3/9lbh8NWu8N9vaGTjXbkXRS01Fjfq+qxhG0Xm+
+ 9QeFhmo5gFf4kSrzxsuss9RdgIj9afhlfiQjmfTa4bsbiAoOXIxKntnnIJQhL7Aiz/DWqP5EF
+ Q9/W2oQe7c19RDJerBg8dPwgPflDjdRKsiWR1lcN/rt6kGY4VYtez3auBFRhn92YEWlCvcrY7
+ xl62xYp6WugxI/eUW/Mn22Ltiy9MbIpYkrV4AaM2M8v+3k8r6X5A/M0/U89JOD4zhxBC1TfTJ
+ 1ztxk6kz6olpE/mbS4R2RSSOLF9RukbyNIVQRpFX4sw6nb+Q39S26Z03o0pWneTWJ7L9vzo+8
+ PhQbNDnDaXW/9wxmTBrCjIM1SMnDdWrIvNjgkYaOlE7Ny1w9uH03F9RKPDG9b2e4eyg12s8O7
+ wmAOm8oIE1GkBzDUWa5XwOuuq8mz60SNLNtwYbMgANe1ko31mjkZ7IFy5Z4pOf+zTeQg+gFhy
+ j+/B9HvA3KQnMdPIXSQ7HmBF45JQ31LbktB61lGvtyvM73X/YO93zQcpf4jI=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Oct 2, 2019 at 4:17 PM Alex Deucher <alexdeucher@gmail.com> wrote:
->
-> I'm getting an error with gcc with this patch:
->   CC [M]  drivers/gpu/drm/amd/amdgpu/../display/dc/dcn21/dcn21_resource.o
-> drivers/gpu/drm/amd/amdgpu/../display/dc/dcn21/dcn21_resource.c: In
-> function ‘calculate_wm_set_for_vlevel’:
-> drivers/gpu/drm/amd/amdgpu/../display/dc/dcn21/dcn21_resource.c:964:22:
-> error: SSE register return with SSE disabled
+Signed-off-by: Jonathan Neusch=C3=A4fer <j.neuschaefer@gmx.net>
+=2D--
+ arch/arm/mach-omap1/ams-delta-fiq.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-I checked again with gcc-8, but do not see that error message.
+diff --git a/arch/arm/mach-omap1/ams-delta-fiq.c b/arch/arm/mach-omap1/ams=
+-delta-fiq.c
+index 0254eb9cf8c6..4eea3e39e633 100644
+=2D-- a/arch/arm/mach-omap1/ams-delta-fiq.c
++++ b/arch/arm/mach-omap1/ams-delta-fiq.c
+@@ -110,7 +110,7 @@ void __init ams_delta_init_fiq(struct gpio_chip *chip,
 
-> > -CFLAGS_$(AMDDALPATH)/dc/dcn21/dcn21_resource.o := -mhard-float -msse -mpreferred-stack-boundary=4
-> > +CFLAGS_$(AMDDALPATH)/dc/dcn21/dcn21_resource.o := -mhard-float -msse $(cc_stack_align)
+ 		/*
+ 		 * FIQ handler takes full control over serio data and clk GPIO
+-		 * pins.  Initiaize them and keep requested so nobody can
++		 * pins.  Initialize them and keep requested so nobody can
+ 		 * interfere.  Fail if any of those two couldn't be requested.
+ 		 */
+ 		switch (i) {
+=2D-
+2.20.1
 
-Nothing should really change with regards to the -msse flag here, only
-the stack alignment flag changed. Maybe there was some other change
-in your Makefile that conflicts with my my patch?
-
-       Arnd
