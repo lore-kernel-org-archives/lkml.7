@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 12F52C4360C
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 19:11:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD25AC4360C
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 19:11:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EBAED21D82
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 19:11:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 940F52133F
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 19:11:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729975AbfJBTLI (ORCPT
+        id S1729964AbfJBTLG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Oct 2019 15:11:08 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:35764 "EHLO
+        Wed, 2 Oct 2019 15:11:06 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:35768 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729294AbfJBTIP (ORCPT
+        by vger.kernel.org with ESMTP id S1729295AbfJBTIP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 2 Oct 2019 15:08:15 -0400
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1iFjyu-00035v-Ea; Wed, 02 Oct 2019 20:08:12 +0100
+        id 1iFjyu-00035x-EP; Wed, 02 Oct 2019 20:08:12 +0100
 Received: from ben by deadeye with local (Exim 4.92.1)
         (envelope-from <ben@decadent.org.uk>)
-        id 1iFjyq-0003gN-BF; Wed, 02 Oct 2019 20:08:08 +0100
+        id 1iFjyq-0003gR-Dh; Wed, 02 Oct 2019 20:08:08 +0100
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,14 +35,17 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
+        "Neil Horman" <nhorman@redhat.com>,
+        "Xin Long" <lucien.xin@gmail.com>,
+        syzbot+afabda3890cc2f765041@syzkaller.appspotmail.com,
         "David S. Miller" <davem@davemloft.net>,
-        "YueHaibing" <yuehaibing@huawei.com>,
-        "Jay Vosburgh" <jay.vosburgh@canonical.com>
+        syzbot+276ca1c77a19977c0130@syzkaller.appspotmail.com
 Date:   Wed, 02 Oct 2019 20:06:51 +0100
-Message-ID: <lsq.1570043211.282268254@decadent.org.uk>
+Message-ID: <lsq.1570043211.95333315@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 81/87] bonding: Add vlan tx offload to hw_enc_features
+Subject: [PATCH 3.16 82/87] sctp: change to hold sk after auth shkey is
+ created successfully
 In-Reply-To: <lsq.1570043210.379046399@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -56,59 +59,51 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: YueHaibing <yuehaibing@huawei.com>
+From: Xin Long <lucien.xin@gmail.com>
 
-commit d595b03de2cb0bdf9bcdf35ff27840cc3a37158f upstream.
+commit 25bff6d5478b2a02368097015b7d8eb727c87e16 upstream.
 
-As commit 30d8177e8ac7 ("bonding: Always enable vlan tx offload")
-said, we should always enable bonding's vlan tx offload, pass the
-vlan packets to the slave devices with vlan tci, let them to handle
-vlan implementation.
+Now in sctp_endpoint_init(), it holds the sk then creates auth
+shkey. But when the creation fails, it doesn't release the sk,
+which causes a sk defcnf leak,
 
-Now if encapsulation protocols like VXLAN is used, skb->encapsulation
-may be set, then the packet is passed to vlan device which based on
-bonding device. However in netif_skb_features(), the check of
-hw_enc_features:
+Here to fix it by only holding the sk when auth shkey is created
+successfully.
 
-	 if (skb->encapsulation)
-                 features &= dev->hw_enc_features;
-
-clears NETIF_F_HW_VLAN_CTAG_TX/NETIF_F_HW_VLAN_STAG_TX. This results
-in same issue in commit 30d8177e8ac7 like this:
-
-vlan_dev_hard_start_xmit
-  -->dev_queue_xmit
-    -->validate_xmit_skb
-      -->netif_skb_features //NETIF_F_HW_VLAN_CTAG_TX is cleared
-      -->validate_xmit_vlan
-        -->__vlan_hwaccel_push_inside //skb->tci is cleared
-...
- --> bond_start_xmit
-   --> bond_xmit_hash //BOND_XMIT_POLICY_ENCAP34
-     --> __skb_flow_dissect // nhoff point to IP header
-        -->  case htons(ETH_P_8021Q)
-             // skb_vlan_tag_present is false, so
-             vlan = __skb_header_pointer(skb, nhoff, sizeof(_vlan),
-             //vlan point to ip header wrongly
-
-Fixes: b2a103e6d0af ("bonding: convert to ndo_fix_features")
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
-Acked-by: Jay Vosburgh <jay.vosburgh@canonical.com>
+Fixes: a29a5bd4f5c3 ("[SCTP]: Implement SCTP-AUTH initializations.")
+Reported-by: syzbot+afabda3890cc2f765041@syzkaller.appspotmail.com
+Reported-by: syzbot+276ca1c77a19977c0130@syzkaller.appspotmail.com
+Signed-off-by: Xin Long <lucien.xin@gmail.com>
+Acked-by: Neil Horman <nhorman@redhat.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 [bwh: Backported to 3.16: adjust context]
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
---- a/drivers/net/bonding/bond_main.c
-+++ b/drivers/net/bonding/bond_main.c
-@@ -1083,7 +1083,9 @@ static void bond_compute_features(struct
+ net/sctp/endpointola.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
+
+--- a/net/sctp/endpointola.c
++++ b/net/sctp/endpointola.c
+@@ -126,10 +126,6 @@ static struct sctp_endpoint *sctp_endpoi
+ 	/* Initialize the bind addr area */
+ 	sctp_bind_addr_init(&ep->base.bind_addr, 0);
  
- done:
- 	bond_dev->vlan_features = vlan_features;
--	bond_dev->hw_enc_features = enc_features;
-+	bond_dev->hw_enc_features = enc_features |
-+				    NETIF_F_HW_VLAN_CTAG_TX |
-+				    NETIF_F_HW_VLAN_STAG_TX;
- 	bond_dev->hard_header_len = max_hard_header_len;
- 	bond_dev->gso_max_segs = gso_max_segs;
- 	netif_set_gso_max_size(bond_dev, gso_max_size);
+-	/* Remember who we are attached to.  */
+-	ep->base.sk = sk;
+-	sock_hold(ep->base.sk);
+-
+ 	/* Create the lists of associations.  */
+ 	INIT_LIST_HEAD(&ep->asocs);
+ 
+@@ -165,6 +161,10 @@ static struct sctp_endpoint *sctp_endpoi
+ 	ep->auth_hmacs_list = auth_hmacs;
+ 	ep->auth_chunk_list = auth_chunks;
+ 
++	/* Remember who we are attached to.  */
++	ep->base.sk = sk;
++	sock_hold(ep->base.sk);
++
+ 	return ep;
+ 
+ nomem_hmacs:
 
