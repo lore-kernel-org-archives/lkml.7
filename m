@@ -8,32 +8,32 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 620DEC35280
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 15:39:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3992CC352AA
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 15:39:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3728C21920
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 15:39:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 08A4221920
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 15:39:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="WMUwOlX1"
+	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="kWLlsgWp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727451AbfJBPjF (ORCPT
+        id S1727783AbfJBPjQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Oct 2019 11:39:05 -0400
-Received: from mout.gmx.net ([212.227.17.20]:48975 "EHLO mout.gmx.net"
+        Wed, 2 Oct 2019 11:39:16 -0400
+Received: from mout.gmx.net ([212.227.17.22]:49815 "EHLO mout.gmx.net"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726233AbfJBPjF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Oct 2019 11:39:05 -0400
+        id S1726233AbfJBPjP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 2 Oct 2019 11:39:15 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-        s=badeba3b8450; t=1570030728;
-        bh=uJ94hoeDYVlEUYDK9HmHZapgsgfzPQRJy+izURTskdE=;
-        h=X-UI-Sender-Class:From:To:Cc:Subject:Date;
-        b=WMUwOlX1Lb+j1C/oVgGjmbT2uNZ8Szam2fkpKo78AKGmKzBXzAHYANDh2eDKXx3L4
-         wDojROI8kNSvHNtmUonTmzCkOCa3ndhwdVJPJdjX/j1l436Id1m9J11tdGoHeGnkJ/
-         V65KyvV+61xIAbki28wFcMSBrP35Y5Gw6qVlXdYQ=
+        s=badeba3b8450; t=1570030737;
+        bh=7UNQa6APdXCQXKmz4/u06gNevWXgMiwFA0a8UcA0ctY=;
+        h=X-UI-Sender-Class:From:To:Cc:Subject:Date:In-Reply-To:References;
+        b=kWLlsgWpRAk+ojVf5qCKKag7laV6AiQCVwaZH6gmYMO8klQbYPOY9jS13xFSFrHfB
+         WzYjDxMO6ErVjF9yrhZFIL3cS58U4ODEKKeSybs/NddlxMjp/PqrqQFAz+USzNs0BB
+         T1z42Qxz37Vm2EY0yzupKEMph4ZcczZrFcqV4dPQ=
 X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
-Received: from longitude ([109.90.233.87]) by mail.gmx.com (mrgmx105
- [212.227.17.168]) with ESMTPSA (Nemesis) id 1N4hvb-1i6RN120Od-011loW; Wed, 02
- Oct 2019 17:38:48 +0200
+Received: from longitude ([109.90.233.87]) by mail.gmx.com (mrgmx104
+ [212.227.17.168]) with ESMTPSA (Nemesis) id 1M26vB-1iIAky2d21-002ZYR; Wed, 02
+ Oct 2019 17:38:57 +0200
 From:   =?UTF-8?q?Jonathan=20Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>
 To:     dri-devel@lists.freedesktop.org
 Cc:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
@@ -43,61 +43,81 @@ Cc:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
         Linus Walleij <linus.walleij@linaro.org>,
         linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
         =?UTF-8?q?Jonathan=20Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>
-Subject: [PATCH 1/2] drm/mcde: Fix reference to DOC comment
-Date:   Wed,  2 Oct 2019 17:38:26 +0200
-Message-Id: <20191002153827.23026-1-j.neuschaefer@gmx.net>
+Subject: [PATCH 2/2] drm/mcde: Fix Sphinx formatting
+Date:   Wed,  2 Oct 2019 17:38:27 +0200
+Message-Id: <20191002153827.23026-2-j.neuschaefer@gmx.net>
 X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20191002153827.23026-1-j.neuschaefer@gmx.net>
+References: <20191002153827.23026-1-j.neuschaefer@gmx.net>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:SVSunW34OIe4oEVA5808fwuyxjOn+4LwN+7F3SKvA2tXwrxZ4Hf
- sXxKuyLBXu20zT684c5xM3xYP6buM+1XcJdQARxKi0O+Qytp/nI6EAd4ZgYmj81/3TLPC0R
- k3NZYHtLRqlmKP13YfBJ8I4gGX0IlC4elWUNLjUMAOHIxuv+0B0aAbri/+0lGfTK0OQ51fu
- B0AjU17XJkcVMotb4r2Pg==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:3el9ghxLDL4=:UcbCjmWj4WraLgSfYL5TUF
- Pk7ndKlh01nUM8aE3vYwVsz+uszqjobrKK8qe4UcF3J9v9T6yHxc9nhwDf5XPWGHO6NDyUZPH
- aa+53iLudgA5eee8pZ5MaVFO9ss/70BRV5dHHmUCHyCLhb0d6xfavSfkb/Ctut6GaEmYvEtSz
- VwDRL0leZlci/p0Z1F2S8xio1QERlnWedllMLvNMY1lE7S2lsey/Lb6jmAHKvDFhkXp2Gdfqp
- toEIgZMxmxVD4IUXVYV5H2kViDQcRCrUxwnkhPRBF2LCI2PSiq9dI2Fd/YerBIy0Bm0Vmd4dY
- 75brhPkyITGoqUTjwxPftnitlWWyeYuS7nH3QPWchDIgQI88lEzG+2h4Xno/fIel8cb4IYvi3
- pWNa47tePmuYPXT5uFL7xyMVEDriAC7CvukZnYS3q6MmY7gWS6PTf2zUcN3A9SnF71gqwcPVB
- kz6qTgZgV2ZT2bGsu4hvgfCSFUYZU1hoEjAgziseu5iInIqCUs/CBvMyyLnShVftcG846gD7l
- Y2hjzcojN/VHj9isHHhXfZoPibDqMukghJqzv9H0Fx1HesEpk9uu3gIyVwyFE0Nt/h/zouKNi
- npRIr2cZ03MLSBphfNyFp3R9OiboRovfpc3gHJHGjtcFpgtag2o5A2lo2qpF1d2SAqasEichf
- KL/lD8vwqJybY7spv/VsYCnGdRjGkVZTgmxeF/X0RAAuZKMA1TpkphI0veE1sE87AitiicqN9
- 237UZ/7Qt6/LGqdJPspaoH7hs8/4XF42yk0FoxuD5d5mpS10//UsFv43Zk2OAR0FmUp58pqFf
- kQBpjeE6QlBVS3RaN5/Oy4XojOvwcg2mPIeR04CiwfAZEOSYk7kL8iQ0skit6N7yhgwpOvSJa
- rWXCTvxDdcLd4JBcYWOKR/5pU+Wlzh5QUaRTOqGC8CTh2tlV7Pr7gua9b9oa4K94d3fzzdvGL
- MgrzhUVneX/BOnP486dsKC7S5Joa46apHh8+d5G4bTLvxNB941WeDFLuz75CfZbAZ7s/jnFGX
- q1Zb6kzbTnChvXKA4s9UNojCfw1W+rhSn5aeYVqdXLv+eelP2Rh/l4W41dauVf0nu/HoJdtbh
- +PymWVbJsR0Hdn63k7Aeoan+v0MTc57r5X35uIg/KhtmcaE6DcpxImMd9xETtjVuHiBTvPLLm
- vhfk9g22PDZne8ISXgEG+hs9RO/bJfO5iC/uhf/f3DDzNwggxEnJijM/SLCc/i8iIlLbqPs1Z
- vVH2v9j6cT1m3xfUDBlEYVvOPbvxEtlBwOWubr6r8nBLGYCOvU82DkNw7sJQ=
+X-Provags-ID: V03:K1:+HGwyEkEJ1bTWVKUnQD498SQcfuBEXN7W3Cj2BGlplSjTF4nz8f
+ cBUw6lk5d0t6dvZbTJEE0d3SOQTGqREpxLdnWvFCAT0RVu51e1dc03+JVBM+f6FILbK5lqA
+ 8DIH19MLF2K5FCSv83/YTi+Y5kG5g9G+P/NYzqFHgNz8SSVUzP4Yh9CPwzyyIpWRJQRi8kz
+ pkHWoe2H4jisRK4hILzvQ==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:P8/WDH8GVeE=:6b+d5EuIc/tVdwLd5A16CG
+ BuM36A4vHcQb1ol4jEVAMCpAfjgb3WWIzJ8gC4d71cVGbSjg1rAsK6Jgnb/iiD28VZUjzU45e
+ 5O96n3cpNR0lHAjzrjJfUMujf39LfDPF5dLXPodCCigFNMnre2kJPJ1raa20o51coUNP5ReH6
+ KX4I0jc1+VVrB5Ug9liLNNbGqxisUBiBkc/EbdisjI5ekxfCSMVdGV9x/OBpQmFBJziprBLy0
+ C1lf5Vli46BMrembrkjYsjP0WLw7TBMqgyzgDspVroE+cfkc9CLc6vkOndW6JaMgy1VsfqzmT
+ +Bb1yZm4FUIpkXk9TCM6orKGpKHszWV7v4U4UbtIAmazoFPtXyMFsyv96OlKcbph4oZl+zEmH
+ ht/kud1GLODIr4eCRdJWVHR+yz0/arq1VkllN76f7/8gj2FnQ4jZjhYDQVk1BBKEJVJTFXVGy
+ +iDEm1nA/qO1zaV3W+M1yoA6n2N2niVGMUYTagS3Fya0S4Rd3BQ5QrvIDEHdjo3f4QkOG4B62
+ ao2FMZ6rRveeQ9cj1xgSMOAyDN8NKBaREVV2nM8Ywn0RUQAwA4p6S7iL88dAR3937iJpXbcx3
+ s8zf7vAACbuwo+8alJCoIu0/p1440kqKXkIOOxN8btKtzQRNeAwxqDuyMD6+uo45XCDwueH3N
+ eI+7+rUGcVKzT+rW4VjF9n8z25T1dLw+9+DkGsSsJajvFJacRH4qi0u2CDgCcukJkC5fbUHKA
+ T8zuo/ujkV8Vn1QRxE3ZjLok2NsAIdAa+bk3HcXWUM5CazJcQHin5fwcFDHEeR4CYb77cf31t
+ 45xmVgB2MH5wVhGgQ4LuQWv4LTGtzddVfIuMeF+MyBkXfo7BizEnMq02HuKzfNs4LMYfrclZj
+ G43I1rkIH9bNLV5dq5VFopiuOdNDbYGzPEjcVE/VutyGlVJPmlgwwhyKdi3R5FUKrz+PuVeiG
+ xOJpWlV4dWUNbgDJz+eRv+9kdRerhI6ZDQhDcDf/JhCH26+fU3VuHbY6ebmHBWbJT82SqDZle
+ t8Tze4K8fuNmgg4TWi/Kxps347pHZ3Nh1A5MDjiGYCrxQbEfZXQyyVw7lo/Uf6gyb0EdvR+Kw
+ OB4LVkRJpeEtPnXf6wxyd1t/1WmM4fQsufeZb27IPu2jdajVOmlNw19ecaJpB7QVMv0jSCRL0
+ C9fDO15mANqZFvDAca5EvqMUj2BiDDljV9RlfHzW1xVGns6XEXQsv5jMp8Kg8refqKCKM/bl8
+ umAQ+YaRtF5q/lRjv1sH3P7MvvaXrcgS/xNI5kz0IJKsdbsBZGY41DgThUt8=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The :doc: reference did not match the DOC comment's name.
+- Format the pipe diagram as a monospace block.
+- Fix formatting of the list. Without the empty line, the first dash is
+  not parsed as a bullet point.
 
-Fixes: 5fc537bfd000 ("drm/mcde: Add new driver for ST-Ericsson MCDE")
 Signed-off-by: Jonathan Neusch=C3=A4fer <j.neuschaefer@gmx.net>
 =2D--
- Documentation/gpu/mcde.rst | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/gpu/drm/mcde/mcde_drv.c | 9 +++++----
+ 1 file changed, 5 insertions(+), 4 deletions(-)
 
-diff --git a/Documentation/gpu/mcde.rst b/Documentation/gpu/mcde.rst
-index c69e977defda..dd43dde379e0 100644
-=2D-- a/Documentation/gpu/mcde.rst
-+++ b/Documentation/gpu/mcde.rst
-@@ -5,4 +5,4 @@
- =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D
-
- .. kernel-doc:: drivers/gpu/drm/mcde/mcde_drv.c
--   :doc: ST-Ericsson MCDE DRM Driver
-+   :doc: ST-Ericsson MCDE Driver
+diff --git a/drivers/gpu/drm/mcde/mcde_drv.c b/drivers/gpu/drm/mcde/mcde_d=
+rv.c
+index 9a09eba53182..c535abed4765 100644
+=2D-- a/drivers/gpu/drm/mcde/mcde_drv.c
++++ b/drivers/gpu/drm/mcde/mcde_drv.c
+@@ -20,11 +20,11 @@
+  * input formats including most variants of RGB and YUV.
+  *
+  * The hardware has four display pipes, and the layout is a little
+- * bit like this:
++ * bit like this::
+  *
+- * Memory     -> Overlay -> Channel -> FIFO -> 5 formatters -> DSI/DPI
+- * External      0..5       0..3       A,B,    3 x DSI         bridge
+- * source 0..9                         C0,C1   2 x DPI
++ *   Memory     -> Overlay -> Channel -> FIFO -> 5 formatters -> DSI/DPI
++ *   External      0..5       0..3       A,B,    3 x DSI         bridge
++ *   source 0..9                         C0,C1   2 x DPI
+  *
+  * FIFOs A and B are for LCD and HDMI while FIFO CO/C1 are for
+  * panels with embedded buffer.
+@@ -43,6 +43,7 @@
+  * to change as we exploit more of the hardware capabilities.
+  *
+  * TODO:
++ *
+  * - Enabled damaged rectangles using drm_plane_enable_fb_damage_clips()
+  *   so we can selectively just transmit the damaged area to a
+  *   command-only display.
 =2D-
 2.20.1
 
