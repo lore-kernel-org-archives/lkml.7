@@ -2,112 +2,138 @@ Return-Path: <SRS0=zem1=X3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A26A3C352AA
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 08:33:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E1DB4C352AA
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 08:34:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 743EA218DE
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 08:33:54 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="ig5Wa0bH"
+	by mail.kernel.org (Postfix) with ESMTP id BF2CB2190F
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 08:34:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727810AbfJBIdx (ORCPT
+        id S1727824AbfJBIeN convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Oct 2019 04:33:53 -0400
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:44090 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725919AbfJBIdx (ORCPT
+        Wed, 2 Oct 2019 04:34:13 -0400
+Received: from eu-smtp-delivery-151.mimecast.com ([207.82.80.151]:59409 "EHLO
+        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726559AbfJBIeM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Oct 2019 04:33:53 -0400
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id x928XoTr028711;
-        Wed, 2 Oct 2019 03:33:50 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1570005231;
-        bh=Lx0PqOkFZnRlGG1vEvlWMVTGc+q6HEDxj3c2tzG4bLs=;
-        h=From:To:CC:Subject:Date;
-        b=ig5Wa0bHgog0DDzmgvazjkSpYC2YGavFl4c7/gUGUm+KvhGYzcBkRcLAjsdv7QT3s
-         XarlGThelfpXo8AAGr5LNBimXDeqrh4mAysaOSmyybopAY2dOSZqnvLoOlsZ/tALI1
-         VJIi7fZSXLFVFT2NRXblKigV84Z6QvOiKpGQxdlk=
-Received: from DLEE107.ent.ti.com (dlee107.ent.ti.com [157.170.170.37])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x928Xohi093820
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 2 Oct 2019 03:33:50 -0500
-Received: from DLEE100.ent.ti.com (157.170.170.30) by DLEE107.ent.ti.com
- (157.170.170.37) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Wed, 2 Oct
- 2019 03:33:50 -0500
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE100.ent.ti.com
- (157.170.170.30) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Wed, 2 Oct 2019 03:33:50 -0500
-Received: from feketebors.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id x928Xlts014195;
-        Wed, 2 Oct 2019 03:33:48 -0500
-From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
-To:     <t-kristo@ti.com>, <mturquette@baylibre.com>
-CC:     <sboyd@kernel.org>, <linux-omap@vger.kernel.org>,
-        <linux-clk@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: [PATCH v2] clk: ti: dra7-atl-clock: Remove ti_clk_add_alias call
-Date:   Wed, 2 Oct 2019 11:34:36 +0300
-Message-ID: <20191002083436.10194-1-peter.ujfalusi@ti.com>
-X-Mailer: git-send-email 2.23.0
+        Wed, 2 Oct 2019 04:34:12 -0400
+Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
+ TLS) by relay.mimecast.com with ESMTP id
+ uk-mta-106-A4o3tKQ9OZitIOq_xjIfUQ-1; Wed, 02 Oct 2019 09:34:09 +0100
+Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
+ AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
+ Server (TLS) id 15.0.1347.2; Wed, 2 Oct 2019 09:34:08 +0100
+Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
+ AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
+ Wed, 2 Oct 2019 09:34:08 +0100
+From:   David Laight <David.Laight@ACULAB.COM>
+To:     'Sasha Levin' <sashal@kernel.org>,
+        Greg KH <gregkh@linuxfoundation.org>
+CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "stable@vger.kernel.org" <stable@vger.kernel.org>,
+        Austin Kim <austindh.kim@gmail.com>,
+        Dimitri Sivanich <dimitri.sivanich@hpe.com>,
+        "Hedi Berriche" <hedi.berriche@hpe.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Mike Travis <mike.travis@hpe.com>,
+        "Peter Zijlstra" <peterz@infradead.org>,
+        Russ Anderson <russ.anderson@hpe.com>,
+        "Steve Wahl" <steve.wahl@hpe.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "allison@lohutok.net" <allison@lohutok.net>,
+        "andy@infradead.org" <andy@infradead.org>,
+        "armijn@tjaldur.nl" <armijn@tjaldur.nl>,
+        "bp@alien8.de" <bp@alien8.de>,
+        "dvhart@infradead.org" <dvhart@infradead.org>,
+        "hpa@zytor.com" <hpa@zytor.com>, "kjlu@umn.edu" <kjlu@umn.edu>,
+        "platform-driver-x86@vger.kernel.org" 
+        <platform-driver-x86@vger.kernel.org>,
+        Ingo Molnar <mingo@kernel.org>
+Subject: RE: [PATCH AUTOSEL 5.3 169/203] x86/platform/uv: Fix kmalloc() NULL
+ check routine
+Thread-Topic: [PATCH AUTOSEL 5.3 169/203] x86/platform/uv: Fix kmalloc() NULL
+ check routine
+Thread-Index: AQHVeHIkSedJbnEQTUevg+MgQTj4iqdHBdUw
+Date:   Wed, 2 Oct 2019 08:34:08 +0000
+Message-ID: <ea163ee8ba4446978732c2c6607bd6da@AcuMS.aculab.com>
+References: <20190922184350.30563-1-sashal@kernel.org>
+ <20190922184350.30563-169-sashal@kernel.org>
+ <20190922202544.GA2719513@kroah.com> <20191001160601.GX8171@sasha-vm>
+In-Reply-To: <20191001160601.GX8171@sasha-vm>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.202.205.107]
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+X-MC-Unique: A4o3tKQ9OZitIOq_xjIfUQ-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-ti_clk_register() calls it already so the driver should not create
-duplicated alias.
+From: Sasha Levin
+> Sent: 01 October 2019 17:06
+> Subject: Re: [PATCH AUTOSEL 5.3 169/203] x86/platform/uv: Fix kmalloc() NULL check routine
+> 
+> On Sun, Sep 22, 2019 at 10:25:44PM +0200, Greg KH wrote:
+> >On Sun, Sep 22, 2019 at 02:43:15PM -0400, Sasha Levin wrote:
+> >> From: Austin Kim <austindh.kim@gmail.com>
+> >>
+> >> [ Upstream commit 864b23f0169d5bff677e8443a7a90dfd6b090afc ]
+> >>
+> >> The result of kmalloc() should have been checked ahead of below statement:
+> >>
+> >> 	pqp = (struct bau_pq_entry *)vp;
+> >>
+> >> Move BUG_ON(!vp) before above statement.
+> >>
+> >> Signed-off-by: Austin Kim <austindh.kim@gmail.com>
+...
+> >> ---
+> >>  arch/x86/platform/uv/tlb_uv.c | 4 ++--
+> >>  1 file changed, 2 insertions(+), 2 deletions(-)
+> >>
+> >> diff --git a/arch/x86/platform/uv/tlb_uv.c b/arch/x86/platform/uv/tlb_uv.c
+> >> index 20c389a91b803..5f0a96bf27a1f 100644
+> >> --- a/arch/x86/platform/uv/tlb_uv.c
+> >> +++ b/arch/x86/platform/uv/tlb_uv.c
+> >> @@ -1804,9 +1804,9 @@ static void pq_init(int node, int pnode)
+> >>
+> >>  	plsize = (DEST_Q_SIZE + 1) * sizeof(struct bau_pq_entry);
+> >>  	vp = kmalloc_node(plsize, GFP_KERNEL, node);
+> >> -	pqp = (struct bau_pq_entry *)vp;
+> >> -	BUG_ON(!pqp);
+> >> +	BUG_ON(!vp);
+> >>
+> >> +	pqp = (struct bau_pq_entry *)vp;
+> >>  	cp = (char *)pqp + 31;
+> >>  	pqp = (struct bau_pq_entry *)(((unsigned long)cp >> 5) << 5);
+> >>
+> >
+> >How did this even get merged in the first place?  I thought a number of
+> >us complained about it.
+> >
+> >This isn't any change in code, and the original is just fine, the author
+> >didn't realize how C works :(
 
-Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
----
-Hi,
+Mind you, the code itself if pretty horrid.
+Looks like it is aligning to 32 bytes, easier done by:
+	pqp = (void *)((unsigned long)vp + 31 & ~31);
+(and there's a roundup macro to obfuscate it somewhere.)
+But I'd also expect to see a matching '+ 31' in the size passed to kmalloc().
+Not to mention a comment!
 
-changes since v1:
-- removed unused ret variable
+	David
 
-Regards,
-Peter
-
- drivers/clk/ti/clk-dra7-atl.c | 6 ------
- 1 file changed, 6 deletions(-)
-
-diff --git a/drivers/clk/ti/clk-dra7-atl.c b/drivers/clk/ti/clk-dra7-atl.c
-index a01ca9395179..f65e16c4f3c4 100644
---- a/drivers/clk/ti/clk-dra7-atl.c
-+++ b/drivers/clk/ti/clk-dra7-atl.c
-@@ -174,7 +174,6 @@ static void __init of_dra7_atl_clock_setup(struct device_node *node)
- 	struct clk_init_data init = { NULL };
- 	const char **parent_names = NULL;
- 	struct clk *clk;
--	int ret;
- 
- 	clk_hw = kzalloc(sizeof(*clk_hw), GFP_KERNEL);
- 	if (!clk_hw) {
-@@ -207,11 +206,6 @@ static void __init of_dra7_atl_clock_setup(struct device_node *node)
- 	clk = ti_clk_register(NULL, &clk_hw->hw, node->name);
- 
- 	if (!IS_ERR(clk)) {
--		ret = ti_clk_add_alias(NULL, clk, node->name);
--		if (ret) {
--			clk_unregister(clk);
--			goto cleanup;
--		}
- 		of_clk_add_provider(node, of_clk_src_simple_get, clk);
- 		kfree(parent_names);
- 		return;
--- 
-Peter
-
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+-
+Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
+Registration No: 1397386 (Wales)
 
