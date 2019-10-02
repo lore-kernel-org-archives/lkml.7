@@ -2,97 +2,122 @@ Return-Path: <SRS0=zem1=X3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 294B8ECE58A
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 14:05:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7B95C352AA
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 14:05:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ED655205F4
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 14:05:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8273021D82
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 14:05:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728083AbfJBOFx (ORCPT
+        id S1727774AbfJBOFn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Oct 2019 10:05:53 -0400
-Received: from inva021.nxp.com ([92.121.34.21]:52516 "EHLO inva021.nxp.com"
+        Wed, 2 Oct 2019 10:05:43 -0400
+Received: from inva021.nxp.com ([92.121.34.21]:52362 "EHLO inva021.nxp.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726435AbfJBOFu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Oct 2019 10:05:50 -0400
+        id S1726087AbfJBOFn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 2 Oct 2019 10:05:43 -0400
 Received: from inva021.nxp.com (localhost [127.0.0.1])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 83119200141;
-        Wed,  2 Oct 2019 16:05:48 +0200 (CEST)
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 5C7E920067F;
+        Wed,  2 Oct 2019 16:05:40 +0200 (CEST)
 Received: from inva024.eu-rdc02.nxp.com (inva024.eu-rdc02.nxp.com [134.27.226.22])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 750192000AF;
-        Wed,  2 Oct 2019 16:05:48 +0200 (CEST)
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 4B46E200141;
+        Wed,  2 Oct 2019 16:05:40 +0200 (CEST)
 Received: from fsr-ub1664-121.ea.freescale.net (fsr-ub1664-121.ea.freescale.net [10.171.82.171])
-        by inva024.eu-rdc02.nxp.com (Postfix) with ESMTP id F2A0B2060C;
-        Wed,  2 Oct 2019 16:05:47 +0200 (CEST)
+        by inva024.eu-rdc02.nxp.com (Postfix) with ESMTP id C8B962060C;
+        Wed,  2 Oct 2019 16:05:39 +0200 (CEST)
 From:   Laurentiu Palcu <laurentiu.palcu@nxp.com>
-To:     Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
+To:     Pengutronix Kernel Team <kernel@pengutronix.de>,
         Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>
+        NXP Linux Team <linux-imx@nxp.com>,
+        dri-devel@lists.freedesktop.org,
+        linux-arm-kernel@lists.infradead.org
 Cc:     agx@sigxcpu.org, l.stach@pengutronix.de,
         Laurentiu Palcu <laurentiu.palcu@nxp.com>,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v2 5/5] arm64: dts: imx8mq: add DCSS node
-Date:   Wed,  2 Oct 2019 17:04:57 +0300
-Message-Id: <1570025100-5634-6-git-send-email-laurentiu.palcu@nxp.com>
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-clk@vger.kernel.org
+Subject: [PATCH v2 0/5] Add support for iMX8MQ Display Controller Subsystem
+Date:   Wed,  2 Oct 2019 17:04:52 +0300
+Message-Id: <1570025100-5634-1-git-send-email-laurentiu.palcu@nxp.com>
 X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1570025100-5634-1-git-send-email-laurentiu.palcu@nxp.com>
-References: <1570025100-5634-1-git-send-email-laurentiu.palcu@nxp.com>
 X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch adds the node for iMX8MQ Display Controller Subsystem.
+Hi,
 
-Signed-off-by: Laurentiu Palcu <laurentiu.palcu@nxp.com>
----
- arch/arm64/boot/dts/freescale/imx8mq.dtsi | 25 +++++++++++++++++++++++++
- 1 file changed, 25 insertions(+)
+This patchset adds initial DCSS support for iMX8MQ chip. Initial support
+includes only graphics plane support (no video planes), no HDR10 capabilities,
+no graphics decompression (only linear, tiled and super-tiled buffers allowed).
 
-diff --git a/arch/arm64/boot/dts/freescale/imx8mq.dtsi b/arch/arm64/boot/dts/freescale/imx8mq.dtsi
-index 04115ca..7f4bfb4 100644
---- a/arch/arm64/boot/dts/freescale/imx8mq.dtsi
-+++ b/arch/arm64/boot/dts/freescale/imx8mq.dtsi
-@@ -938,6 +938,31 @@
- 				interrupt-controller;
- 				#interrupt-cells = <1>;
- 			};
-+
-+			dcss: display-controller@32e00000 {
-+				#address-cells = <1>;
-+				#size-cells = <0>;
-+				compatible = "nxp,imx8mq-dcss";
-+				reg = <0x32e00000 0x2d000>, <0x32e2f000 0x1000>;
-+				interrupts = <6>, <8>, <9>;
-+				interrupt-names = "ctx_ld", "ctxld_kick", "vblank";
-+				interrupt-parent = <&irqsteer>;
-+				clocks = <&clk IMX8MQ_CLK_DISP_APB_ROOT>,
-+					 <&clk IMX8MQ_CLK_DISP_AXI_ROOT>,
-+					 <&clk IMX8MQ_CLK_DISP_RTRM_ROOT>,
-+					 <&clk IMX8MQ_VIDEO2_PLL_OUT>,
-+					 <&clk IMX8MQ_CLK_DISP_DTRC>;
-+				clock-names = "apb", "axi", "rtrm", "pix", "dtrc";
-+				assigned-clocks = <&clk IMX8MQ_CLK_DISP_AXI>,
-+						  <&clk IMX8MQ_CLK_DISP_RTRM>,
-+						  <&clk IMX8MQ_VIDEO2_PLL1_REF_SEL>;
-+				assigned-clock-parents = <&clk IMX8MQ_SYS1_PLL_800M>,
-+							 <&clk IMX8MQ_SYS1_PLL_800M>,
-+							 <&clk IMX8MQ_CLK_27M>;
-+				assigned-clock-rates = <800000000>,
-+							   <400000000>;
-+				status = "disabled";
-+			};
- 		};
- 
- 		gpu: gpu@38000000 {
+Support for the rest of the features will be added incrementally, in subsequent
+patches.
+
+The patchset was tested with both HDP driver (not yet upstreamed) and MIPI-DSI
+(drivers already on the dri-devel ML).
+
+Thanks,
+Laurentiu
+
+Changes in v2:
+ * Removed '0x' in node's unit-address both in DT and yaml;
+ * Made the address region size lowercase, to be consistent;
+ * Removed some left-over references to P010;
+ * Added a Kconfig dependency of DRM && ARCH_MXC. This will also silence compilation
+   issues reported by kbuild for other architectures;
+
+
+Laurentiu Palcu (5):
+  clk: imx8mq: Add VIDEO2_PLL clock
+  drm/imx: compile imx directory by default
+  drm/imx: Add initial support for DCSS on iMX8MQ
+  dt-bindings: display: imx: add bindings for DCSS
+  arm64: dts: imx8mq: add DCSS node
+
+ .../bindings/display/imx/nxp,imx8mq-dcss.yaml      |  86 +++
+ arch/arm64/boot/dts/freescale/imx8mq.dtsi          |  25 +
+ drivers/clk/imx/clk-imx8mq.c                       |   4 +
+ drivers/gpu/drm/Makefile                           |   2 +-
+ drivers/gpu/drm/imx/Kconfig                        |   2 +
+ drivers/gpu/drm/imx/Makefile                       |   1 +
+ drivers/gpu/drm/imx/dcss/Kconfig                   |   8 +
+ drivers/gpu/drm/imx/dcss/Makefile                  |   6 +
+ drivers/gpu/drm/imx/dcss/dcss-blkctl.c             |  75 ++
+ drivers/gpu/drm/imx/dcss/dcss-crtc.c               | 223 ++++++
+ drivers/gpu/drm/imx/dcss/dcss-ctxld.c              | 447 +++++++++++
+ drivers/gpu/drm/imx/dcss/dcss-dev.c                | 286 +++++++
+ drivers/gpu/drm/imx/dcss/dcss-dev.h                | 195 +++++
+ drivers/gpu/drm/imx/dcss/dcss-dpr.c                | 548 ++++++++++++++
+ drivers/gpu/drm/imx/dcss/dcss-drv.c                | 182 +++++
+ drivers/gpu/drm/imx/dcss/dcss-dtg.c                | 438 +++++++++++
+ drivers/gpu/drm/imx/dcss/dcss-kms.c                | 321 ++++++++
+ drivers/gpu/drm/imx/dcss/dcss-kms.h                |  52 ++
+ drivers/gpu/drm/imx/dcss/dcss-plane.c              | 418 +++++++++++
+ drivers/gpu/drm/imx/dcss/dcss-scaler.c             | 826 +++++++++++++++++++++
+ drivers/gpu/drm/imx/dcss/dcss-ss.c                 | 179 +++++
+ include/dt-bindings/clock/imx8mq-clock.h           |   4 +-
+ 22 files changed, 4326 insertions(+), 2 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/display/imx/nxp,imx8mq-dcss.yaml
+ create mode 100644 drivers/gpu/drm/imx/dcss/Kconfig
+ create mode 100644 drivers/gpu/drm/imx/dcss/Makefile
+ create mode 100644 drivers/gpu/drm/imx/dcss/dcss-blkctl.c
+ create mode 100644 drivers/gpu/drm/imx/dcss/dcss-crtc.c
+ create mode 100644 drivers/gpu/drm/imx/dcss/dcss-ctxld.c
+ create mode 100644 drivers/gpu/drm/imx/dcss/dcss-dev.c
+ create mode 100644 drivers/gpu/drm/imx/dcss/dcss-dev.h
+ create mode 100644 drivers/gpu/drm/imx/dcss/dcss-dpr.c
+ create mode 100644 drivers/gpu/drm/imx/dcss/dcss-drv.c
+ create mode 100644 drivers/gpu/drm/imx/dcss/dcss-dtg.c
+ create mode 100644 drivers/gpu/drm/imx/dcss/dcss-kms.c
+ create mode 100644 drivers/gpu/drm/imx/dcss/dcss-kms.h
+ create mode 100644 drivers/gpu/drm/imx/dcss/dcss-plane.c
+ create mode 100644 drivers/gpu/drm/imx/dcss/dcss-scaler.c
+ create mode 100644 drivers/gpu/drm/imx/dcss/dcss-ss.c
+
 -- 
 2.7.4
 
