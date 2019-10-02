@@ -2,117 +2,182 @@ Return-Path: <SRS0=zem1=X3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EEB5C4360C
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 21:49:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A698C4360C
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 21:49:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 33F2521D82
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 21:49:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="WE/IKrkT"
+	by mail.kernel.org (Postfix) with ESMTP id 5D49A21D82
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 21:49:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728544AbfJBVtW (ORCPT
+        id S1728674AbfJBVtY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Oct 2019 17:49:22 -0400
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:34188 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726863AbfJBVtV (ORCPT
+        Wed, 2 Oct 2019 17:49:24 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:39478 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728455AbfJBVtX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Oct 2019 17:49:21 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1570052960;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=6hrbSzRsq3ds3VXbb+ea03n+mD5K/aT75kBKzIeL8jA=;
-        b=WE/IKrkTyQBhZsBmGz1Aan8xw9jaSNC2ap8NmwsFAXrUfiLTTqS0DwaaEGHX56O1bQmus8
-        HsDxvs3pgSrSLFN9zHfJtJeIG/uE+LySkxW/Vdsi4U08ML1UHdOKwTRnWSIYVUCgXrPSQX
-        giO5RxIOEfgLLfzhbCcHKtd7Z0vebt8=
-Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
- [209.85.221.70]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-201-iY6xSkVvNPOK9qwR4X0Dfw-1; Wed, 02 Oct 2019 17:49:17 -0400
-Received: by mail-wr1-f70.google.com with SMTP id i15so140049wrx.12
-        for <linux-kernel@vger.kernel.org>; Wed, 02 Oct 2019 14:49:17 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=l3Nxu/xtXSQjos9JiDu4uBaxvkGFvYrw3zPm6tflCvQ=;
-        b=q3LYISbx62wPFzX9ndevKLy/Hl7N6wmV+P90I19bB1udxcNrEJ888C38jNOsGnA1Vt
-         2i3+OMRJP6X4uxwBFmco6gcb9Y59+uKYJ1cv9//8/ga4a414BYeDj8NGZvb7ygpPiwJH
-         CRX4dAPMzizWiiSe0ihY+O5w7KzozF3E6Ojswg4v11IWuX6nhnI8Q91ES25LGpAokzZy
-         +eMabmLoBVoka8613ypIDhlRmKcadE2TTi1+snzZAENTQ4XS+VzNczeTfgQtI90o4dc+
-         1XxkI/zbp2gmQrXjmG+N66hxPS0GYnuoRo4l5QyjzOqeTF6YHJc/Zh+SqbCN9X4Zw8D7
-         4lww==
-X-Gm-Message-State: APjAAAVVt4Wd7pHvdQFufifib3XFByu/MQpEREHT3Goq745gTyRgdWsn
-        2o8hbnpdALuxroosxY2UFIvzyZPOFFT9WS+FvT5J798hdumMWQ+NizngEu62auLAx90W3l5vHdB
-        vYH38BNyo95S7C85PNXrwme8s
-X-Received: by 2002:a5d:5381:: with SMTP id d1mr4344231wrv.315.1570052956907;
-        Wed, 02 Oct 2019 14:49:16 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqwcda7tsHRm1GWdgqm+B0tMOadsyXb2f93B2ypRL7Ehj9AtMyoWBctUTBe8ehgAUne8St50sw==
-X-Received: by 2002:a5d:5381:: with SMTP id d1mr4344222wrv.315.1570052956685;
-        Wed, 02 Oct 2019 14:49:16 -0700 (PDT)
-Received: from raver.teknoraver.net (net-93-70-69-208.cust.vodafonedsl.it. [93.70.69.208])
-        by smtp.gmail.com with ESMTPSA id q66sm965836wme.39.2019.10.02.14.49.15
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 02 Oct 2019 14:49:16 -0700 (PDT)
-From:   Matteo Croce <mcroce@redhat.com>
-To:     netdev@vger.kernel.org
-Cc:     "David S. Miller" <davem@davemloft.net>,
-        Antoine Tenart <antoine.tenart@bootlin.com>,
-        Maxime Chevallier <maxime.chevallier@bootlin.com>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH net-next] mvpp2: remove misleading comment
-Date:   Wed,  2 Oct 2019 23:49:04 +0200
-Message-Id: <20191002214904.10887-1-mcroce@redhat.com>
-X-Mailer: git-send-email 2.21.0
-MIME-Version: 1.0
-X-MC-Unique: iY6xSkVvNPOK9qwR4X0Dfw-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=WINDOWS-1252
-Content-Transfer-Encoding: quoted-printable
+        Wed, 2 Oct 2019 17:49:23 -0400
+Received: from pps.filterd (m0098396.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x92LkfJu032298
+        for <linux-kernel@vger.kernel.org>; Wed, 2 Oct 2019 17:49:22 -0400
+Received: from e06smtp04.uk.ibm.com (e06smtp04.uk.ibm.com [195.75.94.100])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2vd2vka2tb-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Wed, 02 Oct 2019 17:49:21 -0400
+Received: from localhost
+        by e06smtp04.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <zohar@linux.ibm.com>;
+        Wed, 2 Oct 2019 22:49:19 +0100
+Received: from b06cxnps4075.portsmouth.uk.ibm.com (9.149.109.197)
+        by e06smtp04.uk.ibm.com (192.168.101.134) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Wed, 2 Oct 2019 22:49:14 +0100
+Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
+        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x92LnDE019792014
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 2 Oct 2019 21:49:13 GMT
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 2BA8A4C044;
+        Wed,  2 Oct 2019 21:49:13 +0000 (GMT)
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 339C64C040;
+        Wed,  2 Oct 2019 21:49:11 +0000 (GMT)
+Received: from dhcp-9-31-103-196.watson.ibm.com (unknown [9.31.103.196])
+        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Wed,  2 Oct 2019 21:49:11 +0000 (GMT)
+Subject: Re: [PATCH v6 3/9] powerpc: add support to initialize ima policy
+ rules
+From:   Mimi Zohar <zohar@linux.ibm.com>
+To:     Nayna <nayna@linux.vnet.ibm.com>,
+        Thiago Jung Bauermann <bauerman@linux.ibm.com>,
+        Nayna Jain <nayna@linux.ibm.com>
+Cc:     Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org,
+        linux-efi@vger.kernel.org,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Eric Ricther <erichte@linux.ibm.com>,
+        linux-kernel@vger.kernel.org,
+        Claudio Carvalho <cclaudio@linux.ibm.com>,
+        Matthew Garret <matthew.garret@nebula.com>,
+        linuxppc-dev@ozlabs.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Paul Mackerras <paulus@samba.org>, Jeremy Kerr <jk@ozlabs.org>,
+        Elaine Palmer <erpalmer@us.ibm.com>,
+        "Oliver O'Halloran" <oohall@gmail.com>,
+        linux-integrity@vger.kernel.org,
+        George Wilson <gcwilson@linux.ibm.com>
+Date:   Wed, 02 Oct 2019 17:49:10 -0400
+In-Reply-To: <84f057d0-6a0b-d486-0eb6-f1590f32e377@linux.vnet.ibm.com>
+References: <1569594360-7141-1-git-send-email-nayna@linux.ibm.com>
+         <1569594360-7141-4-git-send-email-nayna@linux.ibm.com>
+         <877e5pwa1b.fsf@morokweng.localdomain>
+         <84f057d0-6a0b-d486-0eb6-f1590f32e377@linux.vnet.ibm.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+x-cbid: 19100221-0016-0000-0000-000002B37556
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19100221-0017-0000-0000-000033147C3D
+Message-Id: <1570052950.4421.70.camel@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-10-02_09:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=3 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1908290000 definitions=main-1910020172
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Recycling in mvpp2 has gone long time ago, but two comment still refers
-to it. Remove those two misleading comments as they generate confusion.
+On Tue, 2019-10-01 at 12:07 -0400, Nayna wrote:
+> 
+> On 09/30/2019 09:04 PM, Thiago Jung Bauermann wrote:
+> > Hello,
+> 
+> Hi,
+> 
+> >
+> >> diff --git a/arch/powerpc/kernel/ima_arch.c b/arch/powerpc/kernel/ima_arch.c
+> >> new file mode 100644
+> >> index 000000000000..39401b67f19e
+> >> --- /dev/null
+> >> +++ b/arch/powerpc/kernel/ima_arch.c
+> >> @@ -0,0 +1,33 @@
+> >> +// SPDX-License-Identifier: GPL-2.0
+> >> +/*
+> >> + * Copyright (C) 2019 IBM Corporation
+> >> + * Author: Nayna Jain
+> >> + */
+> >> +
+> >> +#include <linux/ima.h>
+> >> +#include <asm/secure_boot.h>
+> >> +
+> >> +bool arch_ima_get_secureboot(void)
+> >> +{
+> >> +	return is_powerpc_os_secureboot_enabled();
+> >> +}
+> >> +
+> >> +/* Defines IMA appraise rules for secureboot */
+> >> +static const char *const arch_rules[] = {
+> >> +	"appraise func=KEXEC_KERNEL_CHECK appraise_type=imasig|modsig",
+> >> +#if !IS_ENABLED(CONFIG_MODULE_SIG)
+> >> +	"appraise func=MODULE_CHECK appraise_type=imasig|modsig",
+> >> +#endif
+> >> +	NULL
+> >> +};
+> >> +
+> >> +/*
+> >> + * Returns the relevant IMA arch policies based on the system secureboot state.
+> >> + */
+> >> +const char *const *arch_get_ima_policy(void)
+> >> +{
+> >> +	if (is_powerpc_os_secureboot_enabled())
+> >> +		return arch_rules;
+> >> +
+> >> +	return NULL;
+> >> +}
+> > If CONFIG_MODULE_SIG is enabled but module signatures aren't enforced,
+> > then IMA won't enforce module signature either. x86's
+> > arch_get_ima_policy() calls set_module_sig_enforced(). Doesn't the
+> > powerpc version need to do that as well?
+> >
+> > On the flip side, if module signatures are enforced by the module
+> > subsystem then IMA will verify the signature a second time since there's
+> > no sharing of signature verification results between the module
+> > subsystem and IMA (this was observed by Mimi).
+> >
+> > IMHO this is a minor issue, since module loading isn't a hot path and
+> > the duplicate work shouldn't impact anything. But it could be avoided by
+> > having a NULL entry in arch_rules, which arch_get_ima_policy() would
+> > dynamically update with the "appraise func=MODULE_CHECK" rule if
+> > is_module_sig_enforced() is true.
+> 
+> Thanks Thiago for reviewing.  I am wondering that this will give two 
+> meanings for NULL. Can we do something like below, there are possibly 
+> two options ?
+> 
+> 1. Set IMA_APPRAISED in the iint->flags if is_module_sig_enforced().
+> 
+> OR
+> 
+> 2. Let ima_get_action() check for is_module_sig_enforced() when policy 
+> is appraise and func is MODULE_CHECK.
 
-Fixes: 7ef7e1d949cd ("net: mvpp2: drop useless fields in mvpp2_bm_pool and =
-related code")
-Signed-off-by: Matteo Croce <mcroce@redhat.com>
----
- drivers/net/ethernet/marvell/mvpp2/mvpp2_main.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+I'm a bit hesitant about mixing the module subsystem signature
+verification method with the IMA measure "template=ima-modsig" rules.
+ Does it actually work?
 
-diff --git a/drivers/net/ethernet/marvell/mvpp2/mvpp2_main.c b/drivers/net/=
-ethernet/marvell/mvpp2/mvpp2_main.c
-index 111b3b8239e1..5fea65256b9d 100644
---- a/drivers/net/ethernet/marvell/mvpp2/mvpp2_main.c
-+++ b/drivers/net/ethernet/marvell/mvpp2/mvpp2_main.c
-@@ -2863,7 +2863,7 @@ static void mvpp2_rx_csum(struct mvpp2_port *port, u3=
-2 status,
- =09skb->ip_summed =3D CHECKSUM_NONE;
- }
-=20
--/* Reuse skb if possible, or allocate a new skb and add it to BM pool */
-+/* Allocate a new skb and add it to BM pool */
- static int mvpp2_rx_refill(struct mvpp2_port *port,
- =09=09=09   struct mvpp2_bm_pool *bm_pool, int pool)
- {
-@@ -2871,7 +2871,6 @@ static int mvpp2_rx_refill(struct mvpp2_port *port,
- =09phys_addr_t phys_addr;
- =09void *buf;
-=20
--=09/* No recycle or too many buffers are in use, so allocate a new skb */
- =09buf =3D mvpp2_buf_alloc(port, bm_pool, &dma_addr, &phys_addr,
- =09=09=09      GFP_ATOMIC);
- =09if (!buf)
---=20
-2.21.0
+We can at least limit verifying the same appended signature twice to
+when "module.sig_enforce" is specified on the boot command line, by
+changing "!IS_ENABLED(CONFIG_MODULE_SIG)" to test
+"CONFIG_MODULE_SIG_FORCE".
+
+Mimi
 
