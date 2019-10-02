@@ -2,122 +2,104 @@ Return-Path: <SRS0=zem1=X3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90EEBC352AA
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 18:18:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FE87C10F14
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 18:19:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6EFE9218DE
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 18:18:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 55F89218DE
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 18:19:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eRzFCqQe"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="KS8XHwld"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728740AbfJBSSu (ORCPT
+        id S1728815AbfJBSTT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Oct 2019 14:18:50 -0400
-Received: from mail-io1-f65.google.com ([209.85.166.65]:40951 "EHLO
-        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726669AbfJBSSt (ORCPT
+        Wed, 2 Oct 2019 14:19:19 -0400
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:44651 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728638AbfJBSTT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Oct 2019 14:18:49 -0400
-Received: by mail-io1-f65.google.com with SMTP id h144so59079735iof.7;
-        Wed, 02 Oct 2019 11:18:49 -0700 (PDT)
+        Wed, 2 Oct 2019 14:19:19 -0400
+Received: by mail-pl1-f193.google.com with SMTP id q15so95513pll.11
+        for <linux-kernel@vger.kernel.org>; Wed, 02 Oct 2019 11:19:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=eG6ofvrckUFcFRYXwx/ccEp5zbwUgI4UE493A1wR4no=;
-        b=eRzFCqQe4nvNRGO5zbc7vgTWV5c8zYTtTrbRd770nTtsJNwmMCYJLSiO4h2k1DrsuZ
-         62XWZvx0kPFUhkur2RFvwrd4gsi4/cO2A4Bt15ywfZNYne9TWPqG2X+5/ALs7eOV1mm+
-         KppNrSUsi4PuPhIRxsgKFsGSLguuq+HffYC5ksmIuHNOsuc7dY93DYi5RMHmjgGYW8fS
-         m/x8E9QBLa9U9RlWS2GQM6MyORB5fIW2Za7HIBKRc8y7xU7xyghufZZq9ZXWbZYOZ71a
-         xOFdQpRiKVSWyhl0LmbvEy7I/xmkD9ksVFS/38CVNTxDJf0Ek908Nxo/7LBMD5kZyk/4
-         zBAg==
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=1pSxC96cp63O/uKBhjxXAYKtXILwpdL5DptqGzoFDRc=;
+        b=KS8XHwldUbXMCwU/wt18G2OK3lA/p6SmJW4QaclaJxjcf0kt6fXXEoTLQ+OgfR6T2A
+         6K9i/mQZGEZzIvyz6aVNi0kWIKEllGe8QZtNbxxUitZVjztRbtWJYb2D/h4Es4jvSrcA
+         ZIhiPvb34WPJKOp/OrihvBZtGcfdrRQ933q94=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=eG6ofvrckUFcFRYXwx/ccEp5zbwUgI4UE493A1wR4no=;
-        b=HF4EUxxL9YndIHIpIq2T3+mYsJ1oX3RsruS1Vs6N33ayoUIXU9bnfRP60jkTDs+mGN
-         GQl6tM7lXQu7belpxbcRULEDhpDIWA1uyDN3Uk1zGT19rK/HhWizb4RuoZFTf66nvBLY
-         gzsZqvvYTBYwpOuPIMYpndXHyccoD528KKeNTeWl5wNnL1NqYA139jtXFEaP5ecbu2Vn
-         V1fPWLobFkqUNJ9fGfv8XY33XyG9TLdHLrAng/R/MOJ9t4ED5nzPe1O9u6J4Hl3R7wLf
-         27ENMdWNz3O60xtmWdEjrKTBlz7oDS/QP8gUMuLUWxIuIZWKHwfMyKzawv6oXJv3TfJL
-         Ukhg==
-X-Gm-Message-State: APjAAAUQJKaVm63Dfj7VsPKLytR1hWofA3TyZmy0zWN/JwQ0efdzovcq
-        +U43gxJCrjfA9kZ9QNtU8c/j+pzrJfxlqVXJBAU=
-X-Google-Smtp-Source: APXvYqzeGOG+vjdbOlerjELbGdZs+cwv0jd4E+qA7STc6TTnUbh87zuNhWs38yf4kxrOP6qiE/fmRvTpGxP8XFDpqFg=
-X-Received: by 2002:a02:cd2d:: with SMTP id h13mr5165251jaq.19.1570040328827;
- Wed, 02 Oct 2019 11:18:48 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=1pSxC96cp63O/uKBhjxXAYKtXILwpdL5DptqGzoFDRc=;
+        b=FquE1sQGK3tOvQt+7VgfPkeP36zBFzxZ9c7/fsEEPPreJT1WAtUvZNMHl+l25pnn5t
+         c7igrX8Be9QUV7lmpqBjdtXM/AKi3sOsSBmLvkF9GWGBvjw8to9FKU7E79Wk0jR5swJp
+         zMGwmwyn4X4nkxl3bVkXFqUCIYybMcsjFIeNNx30cnFWmIwj+TKaEGiXOrdHPnsgvj2I
+         0CwiysWQVk62PANczV1wbRC/NHAQ8EDe3kVnnZajrjvsL7Kn+nA9ICc1fUmjawq3mF8g
+         JKx2KjY5diYUrIz/UO9VjiCsjl9Fknmrcx37VBAlQcjssNrL3FNkECAhUXis/hM5b7ML
+         s+PQ==
+X-Gm-Message-State: APjAAAWkGtJlLjWmqlbv0FHJNFi72eraHYx2UwNsSsLWDVV7kpButARJ
+        jbX8xpCgk/tK5zyGdwNrlhbkKQ==
+X-Google-Smtp-Source: APXvYqyoCE1WFuTiE+G81nuaYtNBUeF3ahHA12Odrg2xFman2LZ5fF0xrMGJRhkd5R2IcaOjmlK/wQ==
+X-Received: by 2002:a17:902:aa95:: with SMTP id d21mr5113730plr.48.1570040358638;
+        Wed, 02 Oct 2019 11:19:18 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id c8sm132622pfi.117.2019.10.02.11.19.17
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 02 Oct 2019 11:19:17 -0700 (PDT)
+Date:   Wed, 2 Oct 2019 11:19:16 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     David Miller <davem@davemloft.net>
+Cc:     linux-kernel@vger.kernel.org,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Pankaj Bharadiya <pankaj.laxminarayan.bharadiya@intel.com>,
+        Joe Perches <joe@perches.com>,
+        Alexey Dobriyan <adobriyan@gmail.com>, netdev@vger.kernel.org
+Subject: renaming FIELD_SIZEOF to sizeof_member (was Re: [GIT PULL] treewide
+ conversion to sizeof_member() for v5.4-rc1)
+Message-ID: <201910021115.9888E9B@keescook>
+References: <201909261026.6E3381876C@keescook>
+ <CAHk-=wg8+eNK+SK1Ekqm0qNQHVM6e6YOdZx3yhsX6Ajo3gEupg@mail.gmail.com>
+ <201909261347.3F04AFA0@keescook>
 MIME-Version: 1.0
-References: <cover.1558430617.git.amit.kucheria@linaro.org>
- <49cf5d94beb9af9ef4e78d4c52f3b0ad20b7c63f.1558430617.git.amit.kucheria@linaro.org>
- <CAOCk7NptTHPOdyEkCAofjTPuDQ5dsnPMQgfC0R8=7cp05xKQiA@mail.gmail.com>
- <20191002091950.GA9393@centauri> <20191002092734.GA15523@centauri>
-In-Reply-To: <20191002092734.GA15523@centauri>
-From:   Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
-Date:   Wed, 2 Oct 2019 12:18:37 -0600
-Message-ID: <CAOCk7Nqqm6d3bR9hFJH6rp1jMPmx2e2qmJtnOuw5viaGWohEZA@mail.gmail.com>
-Subject: Re: [PATCH v2 7/9] arm64: dts: qcom: msm8998: Add PSCI cpuidle low
- power states
-To:     Niklas Cassel <niklas.cassel@linaro.org>
-Cc:     Amit Kucheria <amit.kucheria@linaro.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        MSM <linux-arm-msm@vger.kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Andy Gross <agross@kernel.org>,
-        Marc Gonzalez <marc.w.gonzalez@free.fr>,
-        Sibi Sankar <sibis@codeaurora.org>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        David Brown <david.brown@linaro.org>,
-        Li Yang <leoyang.li@nxp.com>, Shawn Guo <shawnguo@kernel.org>,
-        DTML <devicetree@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <201909261347.3F04AFA0@keescook>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Oct 2, 2019 at 3:27 AM Niklas Cassel <niklas.cassel@linaro.org> wrote:
->
-> On Wed, Oct 02, 2019 at 11:19:50AM +0200, Niklas Cassel wrote:
-> > On Mon, Sep 30, 2019 at 04:20:15PM -0600, Jeffrey Hugo wrote:
-> > > Amit, the merged version of the below change causes a boot failure
-> > > (nasty hang, sometimes with RCU stalls) on the msm8998 laptops.  Oddly
-> > > enough, it seems to be resolved if I remove the cpu-idle-states
-> > > property from one of the cpu nodes.
-> > >
-> > > I see no issues with the msm8998 MTP.
-> >
-> > Hello Jeffrey, Amit,
-> >
-> > If the PSCI idle states work properly on the msm8998 devboard (MTP),
-> > but causes crashes on msm8998 laptops, the only logical change is
-> > that the PSCI firmware is different between the two devices.
->
-> Since the msm8998 laptops boot using ACPI, perhaps these laptops
-> doesn't support PSCI/have any PSCI firmware at all.
+On Thu, Sep 26, 2019 at 01:56:55PM -0700, Kees Cook wrote:
+> On Thu, Sep 26, 2019 at 01:06:01PM -0700, Linus Torvalds wrote:
+> >  (a) why didn't this use the already existing and well-named macro
+> > that nobody really had issues with?
+> 
+> That was suggested, but other folks wanted the more accurate "member"
+> instead of "field" since a treewide change was happening anyway:
+> https://www.openwall.com/lists/kernel-hardening/2019/07/02/2
+> 
+> At the end of the day, I really don't care -- I just want to have _one_
+> macro. :)
+> 
+> >  (b) I see no sign of the networking people having been asked about
+> > their preferences.
+> 
+> Yeah, that's entirely true. Totally my mistake; it seemed like a trivial
+> enough change that I didn't want to bother too many people. But let's
+> fix that now... Dave, do you have any concerns about this change of
+> FIELD_SIZEOF() to sizeof_member() (or if it prevails, sizeof_field())?
 
-They have PSCI.  If there was no PSCI, I would expect the PSCI
-get_version request from Linux to fail, and all PSCI functionality to
-be disabled.
+David, can you weight in on this? Are you okay with a mass renaming of
+FIELD_SIZEOF() to sizeof_member(), as the largest user of the old macro
+is in networking?
 
-However, your mention about ACPI sparked a thought.  ACPI describes
-the idle states, along with the PSCI info, in the ACPI0007 devices.
-Those exist on the laptops, and the info mostly correlates with Amit's
-patch (ACPI seems to be a bit more conservative about the latencies,
-and describes one additional deeper state).  However, upon a detailed
-analysis of the ACPI description, I did find something relevant - the
-retention state is not enabled.
+Thanks!
 
-So, I hacked out the retention state from Amit's patch, and I did not
-observe a hang.  I used sysfs, and appeared able to validate that the
-power collapse state was being used successfully.
-
-I'm guessing that something is weird with the laptops, where the CPUs
-can go into retention, but not come out, thus causing issues.
-
-I'll post a patch to fix up the laptops.  Thanks for all the help.
+-- 
+Kees Cook
