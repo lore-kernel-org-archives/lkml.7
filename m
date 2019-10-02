@@ -7,71 +7,71 @@ X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
 	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 093A1C35280
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 09:39:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 30EA5C352AA
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 09:40:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BF51C218DE
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 09:39:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F3E41218DE
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 09:40:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Br7f7aRj"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HM1l5Qkd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727015AbfJBJj6 (ORCPT
+        id S1727244AbfJBJk6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Oct 2019 05:39:58 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:38055 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725852AbfJBJj5 (ORCPT
+        Wed, 2 Oct 2019 05:40:58 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:43797 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727104AbfJBJk5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Oct 2019 05:39:57 -0400
-Received: by mail-wr1-f68.google.com with SMTP id w12so18831555wro.5;
-        Wed, 02 Oct 2019 02:39:55 -0700 (PDT)
+        Wed, 2 Oct 2019 05:40:57 -0400
+Received: by mail-wr1-f66.google.com with SMTP id q17so18825919wrx.10;
+        Wed, 02 Oct 2019 02:40:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to:user-agent;
-        bh=hraA8b1qBqpZHnOd5yn8HO/MRf75psj1fsbKICu/qto=;
-        b=Br7f7aRjotBomYBHxyfEyC2YFTKCobpkcIoFcpCi2SAFZlV5qBcj9P3ISaou6q74xE
-         k8Vjo14JoUVn68Eryk1x/q0q/A9BJ7hjjBVcSDA96AMhRStBccIiQ+of6LzzD2FVEWqC
-         Pi1P5yJvLqIL2C7/cCCG3OQgbmSJ+2FBLaBP07Vlj57wyXF3dA/0hlefdh8n2kI6wubP
-         Zyqs8zvShH/9iAnu3ybvRZX/PrzAdxfBEH26Yz/jPPyNXKqNro++kRlrnirdEnR66F8n
-         GFDVAaVu2hvqOBfAPq5dfmISEh3vDW/yMyE88ulpQ/7w6/kaWbyn+X1Pb3Bp8JlWhYCP
-         adFg==
+        bh=7+HG4NilW59A5ESK7jbhVXvazT7i3A75xS1VC6Mz7T8=;
+        b=HM1l5QkdhFrxLb8sFjl64pHUh8T1h9thIzlQPE/9mm0cJ+a11htZm1twN6GU88p7eB
+         uVXshZBHMrVV+NkkaU43KwBVuFt+bPa3OA78tHQD5GOMPt1DcpjvApWmIRUt7fvsFOiE
+         NWyCEUdYeh4O5Rofq80BdeBdoDQhFYmWWYXsI2GNVMLN18ZqIOmhKPubiEzHxPGgGsJ3
+         cuFHgn6oRvSxX8lrsGkdJDqTcn+KN0xsWaZadRMd+k77wBo/wsHsw6M6vDZ0Xoxyu4V9
+         s5LOWtKqGXHpGCzZmdpGO984WB9b4UlPVLEAr8OFcKTiNiPpl7sU7LwM/uP7+3a6y0w7
+         4mcg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=hraA8b1qBqpZHnOd5yn8HO/MRf75psj1fsbKICu/qto=;
-        b=N1etcA2NBmXqaMUzJOTlze1cEY1ZJyYAPhv9cxR1yr7ND6BKSzF7rMM9otYhTf3SMI
-         gg9sErfRytz0S5jhNIrMkJ5fhhFqxfqv8cr6lWMbpFZjkKMFCNA2lO6KRuj4JV4VyKWD
-         xnbGtiC8zj/OhAhMLatgwcMpb3HIuGk1sr8u3kNfF7Hjsuf/n40r71ur19s8eu6D9uC2
-         ffNozGeb2DR9KNMQMscQjmuUZf+mtmiHCDlL7HZbbOCq31FMb+WbPWlKSlb6ZJK3cG/H
-         hzOunb/mlIDUa+7pErtGIc/9vzs60x2LLIuObLNnYJgoS8uQm/GaVpDwX4WRRNufiQ3y
-         U2Cw==
-X-Gm-Message-State: APjAAAUv/Z615yp0kN9eUkG8Y7TXd/7vNbLjazLsE44TziYFHjArJuY3
-        Jo9yqOaK98a5Vg+mRsoGgP4=
-X-Google-Smtp-Source: APXvYqwd7WSUQ5zWRLHLMWJXNP195SFhVpd8PQfrm58rOVm4+4e22s1GVrVvmifGAQz02d2VbJhz7w==
-X-Received: by 2002:a5d:4f0b:: with SMTP id c11mr1915132wru.63.1570009194755;
-        Wed, 02 Oct 2019 02:39:54 -0700 (PDT)
+        bh=7+HG4NilW59A5ESK7jbhVXvazT7i3A75xS1VC6Mz7T8=;
+        b=Wns9jl5+kbFjFBF7vzHiFgKBirLEoNbkdVx0okLW4xIlIKlofkz/z1k86M4UDICztr
+         RItB2D1mjmP9A5OTGmvUJP4+/0HG4o3EKQEH5es6R5OiMc1+Yhpyc82wO9LEobm1iq7a
+         SG6eamDsc21AxX5NLON/C33+axsY54z963ikLwHXnx/ZMzQjcuQg+3ceHZUKQSKTLNOK
+         zyAjL3PaHQAEK61vRpQh7m/4b1Bne/U850eT6nN21HitFVx8we8AcfC1W6cRL/ZbMGm0
+         kXtg9OrGdR8SxX67Pe8ncI5AunLqGuG96Oj3Qg1pbH19ZVSgCJjCgxNGxmK5ehWU8d83
+         J+LQ==
+X-Gm-Message-State: APjAAAU+EUhD+12WFDDmtZUbYQnIVRLvCfI3fZK/lw2Zep63t0g4PBi8
+        D7rHoH3RD+dcnVc8oBZXcjs=
+X-Google-Smtp-Source: APXvYqzoi9GkS+0cUBszcVqSntVKo/zCHwONJWP+67EhNGhTaBCv6Mgr4HopNu3W7Qsz3GCYIxwaWw==
+X-Received: by 2002:adf:9b81:: with SMTP id d1mr1146871wrc.157.1570009254965;
+        Wed, 02 Oct 2019 02:40:54 -0700 (PDT)
 Received: from localhost (p2E5BE2CE.dip0.t-ipconnect.de. [46.91.226.206])
-        by smtp.gmail.com with ESMTPSA id o19sm9574626wmh.27.2019.10.02.02.39.52
+        by smtp.gmail.com with ESMTPSA id c9sm5459036wrt.7.2019.10.02.02.40.53
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 02 Oct 2019 02:39:52 -0700 (PDT)
-Date:   Wed, 2 Oct 2019 11:39:51 +0200
+        Wed, 02 Oct 2019 02:40:53 -0700 (PDT)
+Date:   Wed, 2 Oct 2019 11:40:52 +0200
 From:   Thierry Reding <thierry.reding@gmail.com>
 To:     JC Kuo <jckuo@nvidia.com>
 Cc:     gregkh@linuxfoundation.org, jonathanh@nvidia.com,
         linux-tegra@vger.kernel.org, linux-usb@vger.kernel.org,
         linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
         nkristam@nvidia.com, skomatineni@nvidia.com
-Subject: Re: [PATCH 1/6] xhci: tegra: Parameterize mailbox register addresses
-Message-ID: <20191002093951.GB3716706@ulmo>
+Subject: Re: [PATCH 2/6] usb: host: xhci-tegra: Add Tegra194 XHCI support
+Message-ID: <20191002094052.GC3716706@ulmo>
 References: <20191002080051.11142-1-jckuo@nvidia.com>
- <20191002080051.11142-2-jckuo@nvidia.com>
+ <20191002080051.11142-3-jckuo@nvidia.com>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="aM3YZ0Iwxop3KEKx"
+        protocol="application/pgp-signature"; boundary="Sr1nOIr3CvdE5hEN"
 Content-Disposition: inline
-In-Reply-To: <20191002080051.11142-2-jckuo@nvidia.com>
+In-Reply-To: <20191002080051.11142-3-jckuo@nvidia.com>
 User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -79,41 +79,43 @@ List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
---aM3YZ0Iwxop3KEKx
+--Sr1nOIr3CvdE5hEN
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, Oct 02, 2019 at 04:00:46PM +0800, JC Kuo wrote:
-> Tegra194 XUSB host controller has rearranged mailbox registers. This
-> commit makes mailbox registers address a part of "soc" data so that
-> xhci-tegra driver can be used for Tegra194.
+On Wed, Oct 02, 2019 at 04:00:47PM +0800, JC Kuo wrote:
+> This commit adds Tegra194 XUSB host mode controller support. This is
+> very similar to the existing Tegra124/Tegra210/Tegra186 XHCI, except
+>   1. the number of ports and PHYs differs
+>   2. the IPFS wrapper being removed
+>   3. mailbox registers address changes
 >=20
 > Signed-off-by: JC Kuo <jckuo@nvidia.com>
 > ---
->  drivers/usb/host/xhci-tegra.c | 58 +++++++++++++++++++++++++----------
->  1 file changed, 42 insertions(+), 16 deletions(-)
+>  drivers/usb/host/xhci-tegra.c | 30 ++++++++++++++++++++++++++++++
+>  1 file changed, 30 insertions(+)
 
 Acked-by: Thierry Reding <treding@nvidia.com>
 
---aM3YZ0Iwxop3KEKx
+--Sr1nOIr3CvdE5hEN
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl2UcGcACgkQ3SOs138+
-s6HZXxAAj/2ccE7HkLhaxNMza6KLkAIu71w1a/63g7IUbRc7yLn7g4PwViahNPI0
-cyT0wfdMIZlquxbf+g7w7kqHXcMdylo34cNFKApdVTmMy6axKnom/jVJ7SUY4RXe
-N5YGVUXEGIhtlsuherZNx0MCgVh59KZSegokKL0sUbn5FaN7n+al0hYB0jJBEg2Y
-MuUJHhKbF+JKDL1G+TKGjhC7HQZP4GZubc0NWZAII+KwLmQAcPUK5UuPbFXyCK3S
-exxBrULnhWidd9g8A+FJNCcJgQAlPDfdo5XHIgEi1ZHJLoOqBVgUiwX6aZw4TIRM
-8J10QdlK0EYGM6e5Rj396FJgjREYY78n+oUNqx+L5GTVgDNYLjZ7xTmLTUxq8Gng
-vPeSxlruwzzbcnfI5YvWS5Spj7ydMEG5jfBaW9el1MCCuuIVuIXA2nbfZmVaPpvG
-6FYxav5UUVzrNiIwK0F5+0+RaB0U5/IlNSjlBFi1n0d5E4vLLrpwMGtu2cFsFzkq
-ZiGkchUm2V41JOuXmU+CFNGfOWKhzDBYNEnCJ+We5qNwYx+OG6/iP/nEEPCkIr5p
-jFMStpz0JBi6MDG5Vas7WexdPsk9N/1lOszGzkLAMYAJSTF014uylLyyK0+Y6NQe
-6FOuL//KfM5QGrdCFU5RnwM/Zz8YlS39wUahPYgkmd6w5j3wR9Y=
-=+5KZ
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl2UcKQACgkQ3SOs138+
+s6HHLA//YBnOoAm2X3mFPUPSTtCfo7+h1y4hsbXuPMvKd1Fkl26dAr+L5f00ZUNW
+zZQg5WJqV1c+ZzUebxtcfPbBSjDpoqvBqAW8heJSBX700v/nJmIyETStDaApUbmd
+wkCNGpwik68b2s1+B99y5vDr2btCspIDBkVq0U5rrNC3dbb7TZW4oGKWis3Iuo6K
+Qh0qSpwy8lLult05RkzLENTjwtpzG4bN+K9MksdmI2gVFpSOxyGE5imHXIpSHSwJ
+P4IAd/pGZOvsTwT/LGIq7bNt/mAMigD46AGjtaE3w+owvzMSH8GRYtJuQeFjjCyg
+6Hf4WITjYVFJA5K2DaklvwSSNCsjWiwTB+Rfeds9CG5hYTbGIv+b4lTj8HYPzY+t
+67EpqDT0OsFrg7VjzHNvIzoDkTnG2Kh+DBFVUjkJoqcFQY714+ek1VT0M4UWTpJe
+JbmCjUC3GrosVC/wPl2hjS3jsoDFSwZwK5TMYzkTw3r8GX7oTJ4HBxZgFdbqqC9D
+NPVREICBVqDq/AdTqxf3YEyB19blCIBUGvuq8CNTRwSrPFkAaqAQD8G/zAx8ETr4
+nKEq3jmqPRIc0Yn4H3PYavEGOlNpDvMEtJixwBibkC0ujivV5tnsTuYT1BXlOSgZ
+2fIMYaYL3isOYsscCSiJIz2S52NLMAfRSdtC3oxUehiVlXIKZhg=
+=NBTc
 -----END PGP SIGNATURE-----
 
---aM3YZ0Iwxop3KEKx--
+--Sr1nOIr3CvdE5hEN--
