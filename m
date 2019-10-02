@@ -2,112 +2,108 @@ Return-Path: <SRS0=zem1=X3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EDD1C35280
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 12:24:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80A9DC352AA
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 12:24:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0B48721920
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 12:24:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 577B7222C6
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 12:24:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726726AbfJBMYJ (ORCPT
+        id S1727223AbfJBMYT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Oct 2019 08:24:09 -0400
-Received: from foss.arm.com ([217.140.110.172]:42732 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725747AbfJBMYJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Oct 2019 08:24:09 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 2C16D28;
-        Wed,  2 Oct 2019 05:24:08 -0700 (PDT)
-Received: from lakrids.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 5F5713F71A;
-        Wed,  2 Oct 2019 05:24:06 -0700 (PDT)
-Date:   Wed, 2 Oct 2019 13:23:57 +0100
-From:   Mark Rutland <mark.rutland@arm.com>
-To:     Colin King <colin.king@canonical.com>
-Cc:     Kan Liang <kan.liang@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
+        Wed, 2 Oct 2019 08:24:19 -0400
+Received: from mx2.suse.de ([195.135.220.15]:57182 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725747AbfJBMYT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 2 Oct 2019 08:24:19 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 45594B11B;
+        Wed,  2 Oct 2019 12:24:17 +0000 (UTC)
+From:   Giovanni Gherdovich <ggherdovich@suse.cz>
+To:     Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
         Thomas Gleixner <tglx@linutronix.de>,
-        Borislav Petkov <bp@alien8.de>,
-        "H . Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
-        kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] perf/x86/intel/uncore: fix integer overflow on shift of
- a u32 integer
-Message-ID: <20191002122357.GA29018@lakrids.cambridge.arm.com>
-References: <20191002115545.15570-1-colin.king@canonical.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191002115545.15570-1-colin.king@canonical.com>
-User-Agent: Mutt/1.11.1+11 (2f07cb52) (2018-12-01)
+        Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Borislav Petkov <bp@suse.de>, Len Brown <lenb@kernel.org>,
+        "Rafael J . Wysocki" <rjw@rjwysocki.net>
+Cc:     x86@kernel.org, linux-pm@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Mel Gorman <mgorman@techsingularity.net>,
+        Matt Fleming <matt@codeblueprint.co.uk>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Paul Turner <pjt@google.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Quentin Perret <qperret@qperret.net>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Doug Smythies <dsmythies@telus.net>,
+        Giovanni Gherdovich <ggherdovich@suse.cz>
+Subject: [PATCH v2 0/2] Add support for frequency invariance for (some) x86
+Date:   Wed,  2 Oct 2019 14:29:24 +0200
+Message-Id: <20191002122926.385-1-ggherdovich@suse.cz>
+X-Mailer: git-send-email 2.16.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Oct 02, 2019 at 12:55:45PM +0100, Colin King wrote:
-> From: Colin Ian King <colin.king@canonical.com>
-> 
-> Shifting the u32 integer result of (pci_dword & SNR_IMC_MMIO_BASE_MASK)
-> will end up with an overflow when pci_dword greater than 0x1ff. Fix this
-> by casting pci_dword to a resource_size_t before masking and shifting it.
-> 
-> Addresses-Coverity: ("Unintentional integer overflow")
+v1 at https://lore.kernel.org/lkml/20190909024216.5942-1-ggherdovich@suse.cz/
 
-I don't see that tag in Documentation/process/submitting-patches.rst ;)
+Changes wrt v1:
 
-IIUC this is unintented truncation of the upper bits due to missing type
-promotion before the shift, rather than overflow (i.e. the value
-wrapping across addition/subtraction), so I think the wording is
-slightly misleading.
+- add x86-specific implementation of arch_scale_freq_invariant() using a
+  static key that checks for the availability of APERF and MPERF
+- refer to GOLDMONT_D instead of GOLDMONT_X, according to recent rename
+- set arch_cpu_freq to 1024 from x86_arch_scale_freq_tick_disable() to prevent
+  PELT from being fed stale data
 
-Does coverity call that integer overflow?
+- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+Cover Letter from v1:
 
-It might be better to say:
+This is a resend with of Peter Zijlstra's patch to support frequency
+scale-invariance on x86 from May 2018 [see 1]. I've added some modifications
+and included performance test results. If Peter doesn't mind, I'm slapping my
+name on it :)
 
-| [PATCH] perf/x86/intel/uncore: don't truncate upper bits of address
-|
-| Shifting the u32 integer result of (pci_dword & SNR_IMC_MMIO_BASE_MASK)
-| by 23 will throw away the upper 23 bits of the potentially 64-bit
-| address. Fix this by casting pci_dword to a resource_size_t before
-| masking and shifting it.
-|
-| Found by coverity ("Unintentional integer overflow").
+The changes from Peter's original implementation are:
 
-Otherwise, the patch looks fine to me:
+1) normalizing against the 4-cores turbo level instead or 1-core turbo
+2) removing the run-time search for when the above value isn't found in the
+   various Intel MSRs -- the base frequency value is taken in that case.
 
-Acked-by: Mark Rutland <mark.rutland@arm.com>
+The section "4. KNOWN LIMITATIONS" in the first patch commit message addresses
+the reason why this approach was dropped back in 2018, and explains that the
+performance gains outweight that issue.
 
-Thanks,
-Mark.
+The second patch from Srinivas is taken verbatim from the May 2018 submission
+as it still applies.
 
-> Fixes: ee49532b38dd ("perf/x86/intel/uncore: Add IMC uncore support for Snow Ridge")
-> Signed-off-by: Colin Ian King <colin.king@canonical.com>
-> ---
->  arch/x86/events/intel/uncore_snbep.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/arch/x86/events/intel/uncore_snbep.c b/arch/x86/events/intel/uncore_snbep.c
-> index b10a5ec79e48..ed69df1340d9 100644
-> --- a/arch/x86/events/intel/uncore_snbep.c
-> +++ b/arch/x86/events/intel/uncore_snbep.c
-> @@ -4415,7 +4415,7 @@ static void snr_uncore_mmio_init_box(struct intel_uncore_box *box)
->  		return;
->  
->  	pci_read_config_dword(pdev, SNR_IMC_MMIO_BASE_OFFSET, &pci_dword);
-> -	addr = (pci_dword & SNR_IMC_MMIO_BASE_MASK) << 23;
-> +	addr = ((resource_size_t)pci_dword & SNR_IMC_MMIO_BASE_MASK) << 23;
->  
->  	pci_read_config_dword(pdev, SNR_IMC_MMIO_MEM0_OFFSET, &pci_dword);
->  	addr |= (pci_dword & SNR_IMC_MMIO_MEM0_MASK) << 12;
-> -- 
-> 2.20.1
-> 
+I apologies for the length of patch #1 commit message; I've made a table of
+contents with summaries of each section that should make easier to skim
+through the content.
+
+This submission incorporates the feedback and requests for additional tests
+received during the presentation made at OSPM 2019 in Pisa three months ago.
+
+[1] https://lore.kernel.org/lkml/20180516044911.28797-2-srinivas.pandruvada@linux.intel.com/
+
+Giovanni Gherdovich (1):
+  x86,sched: Add support for frequency invariance
+
+Srinivas Pandruvada (1):
+  cpufreq: intel_pstate: Conditional frequency invariant accounting
+
+ arch/x86/include/asm/topology.h |  33 +++++++
+ arch/x86/kernel/smpboot.c       | 195 +++++++++++++++++++++++++++++++++++++++-
+ drivers/cpufreq/intel_pstate.c  |   5 ++
+ kernel/sched/core.c             |   1 +
+ kernel/sched/sched.h            |   7 ++
+ 5 files changed, 240 insertions(+), 1 deletion(-)
+
+-- 
+2.16.4
+
