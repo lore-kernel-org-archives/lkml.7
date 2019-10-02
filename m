@@ -2,93 +2,116 @@ Return-Path: <SRS0=zem1=X3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B393ECE587
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 03:00:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 11D1DECE587
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 03:18:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 60E9C20842
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 03:00:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DD3B520818
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 03:18:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=stwcx.xyz header.i=patrick@stwcx.xyz header.b="ovYg3uWA"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IhspJJTC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727688AbfJBDAp (ORCPT
+        id S1729077AbfJBDSC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Oct 2019 23:00:45 -0400
-Received: from sender4-of-o59.zoho.com ([136.143.188.59]:21995 "EHLO
-        sender4-of-o59.zoho.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726014AbfJBDAp (ORCPT
+        Tue, 1 Oct 2019 23:18:02 -0400
+Received: from mail-qt1-f194.google.com ([209.85.160.194]:36570 "EHLO
+        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726869AbfJBDSC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Oct 2019 23:00:45 -0400
-X-Greylist: delayed 904 seconds by postgrey-1.27 at vger.kernel.org; Tue, 01 Oct 2019 23:00:44 EDT
-ARC-Seal: i=1; a=rsa-sha256; t=1569984317; cv=none; 
-        d=zoho.com; s=zohoarc; 
-        b=X+x1fBqLgbkQ/HGOvQ90VVYlVocTC4Qrkes4dnMtaoUTUnFUOIX0PTKGAHCYQz4Ew9Z6eF+VRzg0U9sSJB+8EExz9wmEa5PGhti+54XuVxhzD2dSMSBN6qkSkvVZ4OJkxX76tG+FpL3tTYbQM2uOCGju39n7wgmBhgb8FN8iexw=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zoho.com; s=zohoarc; 
-        t=1569984317; h=Content-Type:Content-Transfer-Encoding:Cc:Date:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:To:ARC-Authentication-Results; 
-        bh=Y65TYuhuLI2LCKd2i7wZHzGe+IIxg6hi6mtRxdTLakM=; 
-        b=Plsfb1j5YyX1QIHQ3OvdQtkRyPWTtXiD03lqAyQFJS9YWK+QU+Z8xyGtlGuM26Iqvb7wQEmH3/gioYz0lObrDjmy0AXDhY8VJDnXN6rM5l2eZ7+A3sfJfY9ih4shpOAjNjvb/hrOqlsIHRF9rK7q9BRf68fQ6EnlHY7NB3wloXY=
-ARC-Authentication-Results: i=1; mx.zoho.com;
-        dkim=pass  header.i=stwcx.xyz;
-        spf=pass  smtp.mailfrom=patrick@stwcx.xyz;
-        dmarc=pass header.from=<patrick@stwcx.xyz> header.from=<patrick@stwcx.xyz>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1569984317;
-        s=zoho; d=stwcx.xyz; i=patrick@stwcx.xyz;
-        h=Date:From:To:Cc:Message-ID:In-Reply-To:References:Subject:MIME-Version:Content-Type:Content-Transfer-Encoding;
-        l=1010; bh=Y65TYuhuLI2LCKd2i7wZHzGe+IIxg6hi6mtRxdTLakM=;
-        b=ovYg3uWA5rMVaSuCeYchem58/Xrkynnsaxu9bhooWA++/jiu92W0pC9tRx8+Y2x+
-        vtWL6HrG5PEqCrXx/Vp++M02OiCoaisWMiGMBnbmCjxdlzDnaZvJa4pDlD0pgUWaz2E
-        wxu/zMPd+eYXKb3KV+9EhMk/zgvB7NtQ2XxX01GA=
-Received: from mail.zoho.com by mx.zohomail.com
-        with SMTP id 1569984310604701.88758278745; Tue, 1 Oct 2019 19:45:10 -0700 (PDT)
-Date:   Tue, 01 Oct 2019 19:45:10 -0700
-From:   Patrick Williams <patrick@stwcx.xyz>
-To:     "Guenter Roeck" <linux@roeck-us.net>
-Cc:     "Patrick Williams" <alpawi@amazon.com>,
-        "Jean Delvare" <jdelvare@suse.com>,
-        "linux-hwmon" <linux-hwmon@vger.kernel.org>,
-        "linux-kernel" <linux-kernel@vger.kernel.org>
-Message-ID: <16d8a5b6d4b.118d8b6f685481.1504538702961589684@stwcx.xyz>
-In-Reply-To: <20191001230210.GA15354@roeck-us.net>
-References: <20191001160407.6265-1-alpawi@amazon.com> <20191001230210.GA15354@roeck-us.net>
-Subject: Re: [PATCH] hwmon: (pmbus) add VR12/VR13 mode support write paths
+        Tue, 1 Oct 2019 23:18:02 -0400
+Received: by mail-qt1-f194.google.com with SMTP id o12so24558994qtf.3;
+        Tue, 01 Oct 2019 20:18:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=DkfOxbgDr7IYTTOG7aOBpzhIL2nlLLSARJt6E+jjVXU=;
+        b=IhspJJTCUMExojADiKr2W/9JHFM0sVu94fB83wkgQSgbKLnWmSlRyg7OBZ2wEQ6zFV
+         yQRvkabi8UL5SqFLiyi6m1SPuhofDVvoaLHj2L0C5sx0uSySug1ibL7hNfGwvie86GJZ
+         NPDitckoC0vaohlnMQmYOv3L4Gzsz5OKIx1/tNUWeRcIkDPLdjAYtuaq5ZnE6QFg6YmW
+         b/ZHkclTCiwtvPp0BZ9CKTdn7ZAX02ne0DRLfidO2AcVv8LtvDpS+06BS7nGcH+8xBzy
+         hX8Um03GcW04FPtVizP/47K82r2th84FqA7j86y5kLcTI9+J/FmtI6oDhKZ47QCYRd6j
+         1uUA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=DkfOxbgDr7IYTTOG7aOBpzhIL2nlLLSARJt6E+jjVXU=;
+        b=k8/+Nuij7PdJh+FT1554aeGnvu1e0FUYGRpJejN6MVLrH8wAhMM+VilQcA94S7Ydj0
+         ++eCCbw0aItGuCT8cuoqLLIwbLcithTsKBz46XF1soHZ5K4VD102ktbHyp1/vUt33UXK
+         D7VOX6XvBvSseVVPbVqmCVAp4wRtYpRxVGQfF0L4HJV52yejlOTVUXiaVw86FmBBqca6
+         CdWYMwe2Ac8voOHHcuqT0IfSC4jBUJzbWTQAPzDhrQYAX1PxOF6tJHOFtKCxAWNrtbx/
+         5UckLgHmwAEOXyCzRX2bDAc/QEkDeRFyaVauscvdVQyOFFgyy5prtRXUbbiI3Mkde6fl
+         WgJg==
+X-Gm-Message-State: APjAAAUY42veVtfPMZQsiJ/6OdarslG9yOBcJ9wTSkbl0jG8Fe+cnI8G
+        p+UYUeTeMS+Uc5XwPGT5yCN/75xdG8bAx3MY/Nw=
+X-Google-Smtp-Source: APXvYqw3Go3PwnQpyK3Qdr1NGe4I3IFRGZ1+38xzNKIt7ca1IGQDBDYkiZWNeqhmy2nhKIfw6qymUYBbF/yKvCcGtUk=
+X-Received: by 2002:a0c:88f0:: with SMTP id 45mr1215730qvo.78.1569986280629;
+ Tue, 01 Oct 2019 20:18:00 -0700 (PDT)
 MIME-Version: 1.0
+References: <20191001173728.149786-1-brianvv@google.com> <20191001173728.149786-2-brianvv@google.com>
+In-Reply-To: <20191001173728.149786-2-brianvv@google.com>
+From:   Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Date:   Tue, 1 Oct 2019 20:17:49 -0700
+Message-ID: <CAEf4Bzb7ag=bdhuAuDHuxk_+jQj7ZudU3Bd2zk3OPz8GSYVFtA@mail.gmail.com>
+Subject: Re: [PATCH bpf 1/2] selftests/bpf: test_progs: don't leak server_fd
+ in tcp_rtt
+To:     Brian Vazquez <brianvv@google.com>
+Cc:     Brian Vazquez <brianvv.kernel@gmail.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        "David S . Miller" <davem@davemloft.net>,
+        Stanislav Fomichev <sdf@google.com>,
+        open list <linux-kernel@vger.kernel.org>,
+        Networking <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Priority: Medium
-User-Agent: Zoho Mail
-X-Mailer: Zoho Mail
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
----- On Tue, 01 Oct 2019 16:02:10 -0700 Guenter Roeck <linux@roeck-us.net> =
-wrote ----
-=20
- > > -    val =3D clamp_val(val, 500, 1600);=20
- > > +    switch (data->info->vrm_version) {=20
- > > +    case vr11:=20
- > > +        val =3D clamp_val(val, 500, 1600);=20
- > > +        return 2 + DIV_ROUND_CLOSEST((1600 - val) * 100, 625);=20
- > > +    case vr12:=20
- > > +        val =3D clamp_val(val, 0, 1520);=20
- > > +        return ((val - 250) / 5) + 1;=20
- > > +    case vr13:=20
- > > +        val =3D clamp_val(val, 0, 2500);=20
- > > +        return ((val - 500) / 10) + 1;=20
- > =20
- > Both vr12 and vr13 converts low values into negative values,=20
- > which are then converted into more or less random register=20
- > values. That can not be correct. The resulting register values=20
- > must always be valid.=20
- > =20
- > Guenter=20
+On Tue, Oct 1, 2019 at 10:39 AM Brian Vazquez <brianvv@google.com> wrote:
+>
+> server_fd needs to be closed if pthread can't be created.
+>
+> Fixes: 8a03222f508b ("selftests/bpf: test_progs: fix client/server race
+> in tcp_rtt")
 
-Thanks for catching this.  It may be as simple as me adjusting the lower
-bound on the clamp_val.  I=E2=80=99ll check with one of the device specs an=
-d
-confirm the appropriate behavior on the lower bounds.
+Fixes tag hast to be on single line, no wrapping. Besides that:
 
+Acked-by: Andrii Nakryiko <andriin@fb.com>
+
+> Cc: Stanislav Fomichev <sdf@google.com>
+>
+> Signed-off-by: Brian Vazquez <brianvv@google.com>
+> ---
+>  tools/testing/selftests/bpf/prog_tests/tcp_rtt.c | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
+>
+> diff --git a/tools/testing/selftests/bpf/prog_tests/tcp_rtt.c b/tools/testing/selftests/bpf/prog_tests/tcp_rtt.c
+> index a82da555b1b02..f4cd60d6fba2e 100644
+> --- a/tools/testing/selftests/bpf/prog_tests/tcp_rtt.c
+> +++ b/tools/testing/selftests/bpf/prog_tests/tcp_rtt.c
+> @@ -260,13 +260,14 @@ void test_tcp_rtt(void)
+>
+>         if (CHECK_FAIL(pthread_create(&tid, NULL, server_thread,
+>                                       (void *)&server_fd)))
+> -               goto close_cgroup_fd;
+> +               goto close_server_fd;
+>
+>         pthread_mutex_lock(&server_started_mtx);
+>         pthread_cond_wait(&server_started, &server_started_mtx);
+>         pthread_mutex_unlock(&server_started_mtx);
+>
+>         CHECK_FAIL(run_test(cgroup_fd, server_fd));
+> +close_server_fd:
+>         close(server_fd);
+>  close_cgroup_fd:
+>         close(cgroup_fd);
+> --
+> 2.23.0.444.g18eeb5a265-goog
+>
