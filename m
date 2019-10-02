@@ -6,82 +6,88 @@ X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
 	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 67C24C352AA
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 15:48:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 586D2C35280
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 15:49:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3F23621848
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 15:48:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2613C21848
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 15:49:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570031330;
-	bh=qgj+Htm8Ty5XDGtj2mvSIl2LJNQo9b0XVs1LQEEIQ24=;
+	s=default; t=1570031361;
+	bh=b01o6kUsRXwCCJnyaECwmtD2gL1kpsiv3Q1KNxxKdtU=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=iGj7uNiYNLdPs6DrRHw0xdZ35tgwKN8ZhpPBvqD2zGTIsR8MBabByhtD99mdrrWo6
-	 /Eb/kNb0a6OrYrOPR1iIjgi3sQvSYzd98l7HZP2kNka6wUOInY1ownlrw2XUSHbjFm
-	 cfTh/dLC5nFegjiTRFsM8dmWwcB7gbgTen9F/ASc=
+	b=BDdLkNv8uOLPllK90vWOYIfuelwVSG4C3ncQkmRnkWSPKsxFWBl3flCQmKtVdh4VW
+	 jPkLfbvSgzKkbsOIejDotMueDkKJc3fTaRJgXRPokyuzyfzYDng0xBawq3kSd+auYM
+	 YhMCsVOrDQUoj4qRVM9I4eJ/CmPZxSH2OzYgZ9yc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729027AbfJBPst (ORCPT
+        id S1729036AbfJBPtU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Oct 2019 11:48:49 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:51661 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726208AbfJBPss (ORCPT
+        Wed, 2 Oct 2019 11:49:20 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:38673 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726208AbfJBPtU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Oct 2019 11:48:48 -0400
-Received: by mail-wm1-f68.google.com with SMTP id 7so7770115wme.1;
-        Wed, 02 Oct 2019 08:48:47 -0700 (PDT)
+        Wed, 2 Oct 2019 11:49:20 -0400
+Received: by mail-wm1-f66.google.com with SMTP id 3so7531836wmi.3;
+        Wed, 02 Oct 2019 08:49:18 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=L+hxNaDSGun9WXAKThcVXAhiXWk+/gt73mQz7EUTjWo=;
-        b=BqaLRTTncpF84Gsoz/HZErrAv5pXFEmj9k5QwkKYcLmnV3EsaaP05XRx5yD1rGh12e
-         fcKKrdwpwqjGRKI7yr9/ef7BRmo6dIdh8gEJpYLSLDqV4cCyK7S84M9QuK++8/2hlkfr
-         JWpze7jLEOdilE7ZO1KCzbUdjOfDE7cOewqzj0/2U/S2eV6Pw2w5ycbm2AMG+1VWNSeu
-         IUGgcdocJR7U2xvhrkCqYk/+9CvUZJQR+OGm+tsrI6L6Cxp7WG1OVLriA8zNYRqqDD89
-         zwuK/t1qNe8FOqZuXCA77xd/4/qQvOm5i8lFE7hN83rJdrkXhkcI5SI5geYNdGRT2vad
-         O2fA==
-X-Gm-Message-State: APjAAAVDaKmNlbEXct84nZYNSjPODn/6FddVpspfx1qd2YcauSdM2vla
-        3EO7yeMrwDCXd7xFxzV8LcXkkuav
-X-Google-Smtp-Source: APXvYqzw/rAoksd2h8xVjx1/aL0+itOfDm4AXqGRq+B96m/2GvsWHUhTmg85JDurWQYKSx+2fLR1AQ==
-X-Received: by 2002:a7b:cf1a:: with SMTP id l26mr3644534wmg.38.1570031326159;
-        Wed, 02 Oct 2019 08:48:46 -0700 (PDT)
+        bh=hgUS28cg0Ci8+dU8EWiIp1hr9/xKokLLrdm7CPLWAvo=;
+        b=SDFQhw/vM5hrNciY/12it34hmjV1m9i1MrP+q/PCJnDF1zYrF11sRzTlMD8nWu4Vsj
+         R3lmAJvXYONzboLBlO13j/HNSRs/dZBFBvL5gmYBVtgeWlnC0wVX12qA3H4tyKaDq8j6
+         G/G2bog5BrLVGzgXXMQR/b+49cpfblQB4z0DgRISkWFTkL1cyytbbyWA3nfwU9pDlyxz
+         26tYeluQyweDQlC0QVhURCaELslucG/9sQ+2gXefWIfkfiFdBLQtwDGu+CBVuzCKwRJA
+         yPDTveLH+N20YzDehO7OL1GjqVxEEa4spm5wwnkqTB1ZOXIbDYA1fTMpLiaqeasqQ+cm
+         KpWw==
+X-Gm-Message-State: APjAAAXFkbi7ixmykYr7TQgb66/152Jl1U3nBSz5IzkeMw+9K3hecVqQ
+        Vmgj9NB9ArVnjABRHMXj0fo=
+X-Google-Smtp-Source: APXvYqyTeEy+1KjEAYvX0VNyGdGx9sODUOSxgNLAZ2aoIxasQFGDO/mzpLVaIyqmpgn0Y5MQ2y7OYQ==
+X-Received: by 2002:a7b:c35a:: with SMTP id l26mr3554413wmj.81.1570031357494;
+        Wed, 02 Oct 2019 08:49:17 -0700 (PDT)
 Received: from kozik-lap ([194.230.155.145])
-        by smtp.googlemail.com with ESMTPSA id q15sm42255773wrg.65.2019.10.02.08.48.44
+        by smtp.googlemail.com with ESMTPSA id p7sm7527991wma.34.2019.10.02.08.49.15
         (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 02 Oct 2019 08:48:45 -0700 (PDT)
-Date:   Wed, 2 Oct 2019 17:48:43 +0200
+        Wed, 02 Oct 2019 08:49:16 -0700 (PDT)
+Date:   Wed, 2 Oct 2019 17:49:14 +0200
 From:   Krzysztof Kozlowski <krzk@kernel.org>
 To:     Marek Szyprowski <m.szyprowski@samsung.com>
 Cc:     linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
+        linux-kernel@vger.kernel.org, alsa-devel@alsa-project.org,
         Maciej Falkowski <m.falkowski@samsung.com>,
-        mark.rutland@arm.com, robh@kernel.org, a.hajda@samsung.com
-Subject: Re: [PATCH v2 resend] ARM: dts: exynos: remove obsolete IRQ lines
-Message-ID: <20191002154843.GB4072@kozik-lap>
-References: <CAJKOXPcs5K46U9mF8evCpbEap_j0Sd5kUk-xiWjwyihAL7te=Q@mail.gmail.com>
- <CGME20190919134622eucas1p1947abc201f86d414bd0b0635f2d91cfe@eucas1p1.samsung.com>
- <20190919134547.11671-1-m.szyprowski@samsung.com>
+        Mark Rutland <mark.rutland@arm.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Sylwester Nawrocki <s.nawrocki@samsung.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Andrzej Hajda <a.hajda@samsung.com>
+Subject: Re: [PATCH 1/2] ARM: dts: exynos: split phandle in dmas property
+Message-ID: <20191002154914.GC4072@kozik-lap>
+References: <CAL_JsqJ=QWk07y=h7dHFiRrKuE7NGoUr50bu3kiOC+YU8qS9jg@mail.gmail.com>
+ <CGME20190920121525eucas1p27562c205c41200221540b720c9084fb4@eucas1p2.samsung.com>
+ <20190920121431.31678-1-m.szyprowski@samsung.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20190919134547.11671-1-m.szyprowski@samsung.com>
+In-Reply-To: <20190920121431.31678-1-m.szyprowski@samsung.com>
 User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Sep 19, 2019 at 03:45:47PM +0200, Marek Szyprowski wrote:
+On Fri, Sep 20, 2019 at 02:14:30PM +0200, Marek Szyprowski wrote:
 > From: Maciej Falkowski <m.falkowski@samsung.com>
 > 
-> In commit 7222e8db2d50 ("iommu/exynos: Fix build errors") Exynos3250
-> iommu driver stopped supporting two IRQ lines. The second IRQ line in DTS
-> is ignored and is not needed.
+> Change representation of phandle array as then
+> dt-schema counts number of its items properly.
 > 
 > Signed-off-by: Maciej Falkowski <m.falkowski@samsung.com>
 > Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
 > ---
->  arch/arm/boot/dts/exynos3250.dtsi | 9 +++------
+>  arch/arm/boot/dts/exynos5250.dtsi | 14 +++++++-------
+>  arch/arm/boot/dts/exynos5410.dtsi |  6 +++---
+>  arch/arm/boot/dts/exynos5420.dtsi | 14 +++++++-------
 
 Thanks, applied.
 
