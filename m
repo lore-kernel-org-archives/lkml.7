@@ -2,181 +2,310 @@ Return-Path: <SRS0=zem1=X3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70932C35280
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 15:55:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B370AC35280
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 15:57:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3A1C121848
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 15:55:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6D83321848
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 15:57:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=ucr.edu header.i=@ucr.edu header.b="HZK27wtX"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="aPNUDLfD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729120AbfJBPzG (ORCPT
+        id S1729142AbfJBP5m (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Oct 2019 11:55:06 -0400
-Received: from mx3.ucr.edu ([138.23.248.64]:18668 "EHLO mx3.ucr.edu"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725747AbfJBPzG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Oct 2019 11:55:06 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=ucr.edu; i=@ucr.edu; q=dns/txt; s=selector3;
-  t=1570031706; x=1601567706;
-  h=from:to:cc:subject:date:message-id;
-  bh=bj0cxGKPfe8MhxQf55HPC2pGXsBBiMQq3I7Z648xezQ=;
-  b=HZK27wtX1WTcMPpk0LC51VzUsI+vnilSGs9G9fIRLx/ZooTEdD4LcGFO
-   0Cb6PgHFlZcvaeA6VD6YOuMNyWw2tDANdniVW8+P386cu7N1IMWGgaN5o
-   m7Z+IIsx/ndBB/qbcmTLT0ee4iVqU6HM+BQG5QCC6KlxfdfYalgnLEv3V
-   m49d4JV2+ga/9NNaumPDEd0eaG5nD74nKs+ch2fz3uTrK0A5ypfUvkHdE
-   2nBtTPUwHUitCQuU+F6ItXEUdPkrbSxTepmrUpvbU+wg+DkYSu4mFz8ru
-   hTnPhihaEHQAyT0OIlycXVZab1aIjRWHwpM4pGaDJ4Hw+99jZoZB+zVXa
-   A==;
-IronPort-SDR: r2q/yjjxPelVpMAzC4qRy5Q8UJZHrHFD4NLrIzSXMdwMHZo7tcR323m91l5zzI+aabDkgBHOE1
- aJA8h3sNgTZWQdSNDOIYRL+C3D1I+pVBTLveyiy+ax4gFrRPE2222hqxthpJyv0lBviyWdZ/sW
- o0unA2NYldvZuSGM8GgIn6HLrzZ3ojs9yfub76ClV5pih8Q6s38lGIKlteTvWq54OfdFbv7Uw1
- poo2ZdSXDXWXBb6tLCV2t/ifPg9ozGIV5PIKpOpNMIa+78N5jeYjYus0n0FQ/jPhK5J+6fffz9
- bcA=
-IronPort-PHdr: =?us-ascii?q?9a23=3A589tChPY9w6xrCgy47sl6mtUPXoX/o7sNwtQ0K?=
- =?us-ascii?q?IMzox0LfX6rarrMEGX3/hxlliBBdydt6sfzbaI+PG7EUU7or+5+EgYd5JNUx?=
- =?us-ascii?q?JXwe43pCcHRPC/NEvgMfTxZDY7FskRHHVs/nW8LFQHUJ2mPw6arXK99yMdFQ?=
- =?us-ascii?q?viPgRpOOv1BpTSj8Oq3Oyu5pHfeQpFiCezbL9oIxi7rArdu80YjIB/Nqs/1x?=
- =?us-ascii?q?zFr2dSde9L321oP1WTnxj95se04pFu9jlbtuwi+cBdT6j0Zrw0QrNEAjsoNW?=
- =?us-ascii?q?A1/9DrugLYTQST/HscU34ZnQRODgPY8Rz1RJbxsi/9tupgxCmXOND9QL4oVT?=
- =?us-ascii?q?i+6apgVQTlgzkbOTEn7G7Xi9RwjKNFrxKnuxx/2JPfbIWMOPZjYq/RYdYWSG?=
- =?us-ascii?q?xEXsZQTCxBGYK8b40AD+EcI+hWtpT2p1UPrRSgAQmjGf7kxjtGi3Pq2KE31f?=
- =?us-ascii?q?kqHwPb0ww6B98AsGraosj7OqkRVu6417XEwSnZYv9Kwzrx9JTEfxY8qv+MR7?=
- =?us-ascii?q?Jwds/RxFEtGAPEj1SQqZHlPzSI3ekKs2ma7upgWviui2I7tw18rCOixtowhY?=
- =?us-ascii?q?nTnI4a1E3L9ThgzYszONa2S1Z7bMa6HJdMsyyWLYh7T8M4T212pSo21qcKtY?=
- =?us-ascii?q?O/cSUO0Jgr2h/SZvidf4SW7B/uVPydLSl5iX5/er+yiBC/+lW6xOLmTMm7yl?=
- =?us-ascii?q?NKozJAktnLq38CyQTe6tOCSvth5keh3iuP1xzL5uFEP080ka3bJoYkwrEql5?=
- =?us-ascii?q?oTtV3PHjf4mEnrlaOWeFgo9+ys5uj9bbXmoZicN4Bwig7gKKghhsu/AeEgPg?=
- =?us-ascii?q?gPWWiU5/i82aX98UHlRLhGlP47n6nDvJzEOMgXurS1DxJR34sn8xq/Ci2p0N?=
- =?us-ascii?q?UcnXkJNlJFfxeHgpDpOlDPIPD3F/a/j0iwnDpl3P3GI6HuAo/XInfdjbjhYK?=
- =?us-ascii?q?5x61RAxwor0dBf+5VUB6kFIPLyXE/xqdPZAgY6MwOq2ebnDsty1ocFVGKRDa?=
- =?us-ascii?q?+WLrnSvUWL5u0xOemMYpEauDLnJ/gi/f7ugixxt0UaePyY3IkXdXfwSuV0I0?=
- =?us-ascii?q?yYOSK3qsoKCyEHshdoH7+is0GLTTMGPyX6ZKk7/DxuTd3+AA=3D=3D?=
-X-IronPort-Anti-Spam-Filtered: true
-X-IronPort-Anti-Spam-Result: =?us-ascii?q?A2F4BAAdyJRdgMfSVdFmHgEGEoVFTBC?=
- =?us-ascii?q?NIIYpBos+cYV6gwuHIgEIAQEBDAEBLQIBAYRAgkAjOBMCAwkBAQUBAQEBAQU?=
- =?us-ascii?q?EAQECEAEBCQ0JCCeFQoI6KYM1CxYVUoEVAQUBNSI5gkcBgXYUpASBAzyMJTO?=
- =?us-ascii?q?IYwEJDYFICQEIgSKHNYRZgRCBB4RhhCiDPYJEBIE3AQEBizsHiWFwlV0BBgK?=
- =?us-ascii?q?CEBSBeJMSJ4Q6iT2LQQEtjA2bGAIKBwYPI4FGgXtNJYFsCoFEUBAUgVsXFY4?=
- =?us-ascii?q?uITOBCJA8AQ?=
-X-IPAS-Result: =?us-ascii?q?A2F4BAAdyJRdgMfSVdFmHgEGEoVFTBCNIIYpBos+cYV6g?=
- =?us-ascii?q?wuHIgEIAQEBDAEBLQIBAYRAgkAjOBMCAwkBAQUBAQEBAQUEAQECEAEBCQ0JC?=
- =?us-ascii?q?CeFQoI6KYM1CxYVUoEVAQUBNSI5gkcBgXYUpASBAzyMJTOIYwEJDYFICQEIg?=
- =?us-ascii?q?SKHNYRZgRCBB4RhhCiDPYJEBIE3AQEBizsHiWFwlV0BBgKCEBSBeJMSJ4Q6i?=
- =?us-ascii?q?T2LQQEtjA2bGAIKBwYPI4FGgXtNJYFsCoFEUBAUgVsXFY4uITOBCJA8AQ?=
-X-IronPort-AV: E=Sophos;i="5.67,249,1566889200"; 
-   d="scan'208";a="84526235"
-Received: from mail-pf1-f199.google.com ([209.85.210.199])
-  by smtp3.ucr.edu with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 02 Oct 2019 08:55:01 -0700
-Received: by mail-pf1-f199.google.com with SMTP id z13so12908380pfr.15
-        for <linux-kernel@vger.kernel.org>; Wed, 02 Oct 2019 08:55:01 -0700 (PDT)
+        Wed, 2 Oct 2019 11:57:42 -0400
+Received: from mail-io1-f66.google.com ([209.85.166.66]:33453 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726152AbfJBP5m (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 2 Oct 2019 11:57:42 -0400
+Received: by mail-io1-f66.google.com with SMTP id z19so58225848ior.0
+        for <linux-kernel@vger.kernel.org>; Wed, 02 Oct 2019 08:57:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=7HDf73q4RlIWgNL715WMeMDfk4kVLdtCUlcpTLXCE7w=;
+        b=aPNUDLfDLiilzK6w0AGNqCi3jmHPUzXzeHF9Iw5YifRz79FoltwYvbtkGtEvKG/Oaq
+         EYbwv3O3nQqGDCEX4rUq/JP9hfvpabZ3WEvvMMsnB75yfEMw4xgXC41IEJIhWJ0yYIyT
+         QgirIH7hEuQkAhcaQ73aS57htdaaMpcjPVkOS0Df8Lx7/GumdLvzZaRAh4N9gJ5nM4Pl
+         VxEiAT3ETxLrN1nY9XU3bOGRVkAtRm2TGQXj1tqMyhVN4k7NYqqU6NCDkzTNFXlwYNDH
+         iYYdpWsUFvek8N5O/MZCVCG0+bJLnHKeJys262GMu1NHj0qGBmwo3GQUJQy0CSOLb8JN
+         YgiQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=j3XM934BgcvR4S3GWK972GfeJ1Pu9gnBBD2xLxEu5nI=;
-        b=ZnLZS54cWn+PdRyPnl1bW/UPnhNj7eQ+pwgbS0udbhpbko/oad6rjgTIB0rmEKbQMp
-         uJRvKJknKXknGuVCLG50jFimtScMkLtXXUqPd0T7S8pqnHE9JPzpPfZV3PMH+OLG9pWF
-         47LQnAMlneVxTk9r3hACqcylg6a5khV+G6AQNS4B/wJiarDvpEnarDY7LIjd3thJu7/r
-         VuhqOn7unWscb3h5IXQYAMy2yWou1LfCkbmKXt3RGYiIu2iRkwlR+PHGucYkEeOf7fSB
-         FoPkES3Qlmf0Sf14mLjscEqmoex3UzOH//eWMkvgZ+U1BzKTutrX6z7r1pc4bPbhOrOn
-         Zctg==
-X-Gm-Message-State: APjAAAV3O3jJ/sANqDyB64rjiNqIykVteE9UaYBGjt+bhs+CY9jhubkC
-        +pNMSrzviXY1OoWeaALrqHV8ySzO9S+dhbffMvaspWED0JTvH81j26Y9VU23bQPk5lOw9NtuqWB
-        p+UaZaUyjLvL0jkBx7ZCX3E/WZw==
-X-Received: by 2002:a17:90a:ba91:: with SMTP id t17mr5190852pjr.116.1570031700665;
-        Wed, 02 Oct 2019 08:55:00 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqzaceMrlI3m0IF4H1HJAHPFI0DTM8kNCQIWt1N9YAjTQ/sgOnhDPuMQdGUPQsL0yw7vmAbfzA==
-X-Received: by 2002:a17:90a:ba91:: with SMTP id t17mr5190829pjr.116.1570031700402;
-        Wed, 02 Oct 2019 08:55:00 -0700 (PDT)
-Received: from Yizhuo.cs.ucr.edu (yizhuo.cs.ucr.edu. [169.235.26.74])
-        by smtp.googlemail.com with ESMTPSA id p17sm18198326pfn.50.2019.10.02.08.54.59
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 02 Oct 2019 08:54:59 -0700 (PDT)
-From:   Yizhuo <yzhai003@ucr.edu>
-Cc:     csong@cs.ucr.edu, zhiyunq@cs.ucr.edu, Yizhuo <yzhai003@ucr.edu>,
-        Sebastian Reichel <sre@kernel.org>, linux-pm@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] power: supply: max17042_battery: fix some usage of uninitialized variables
-Date:   Wed,  2 Oct 2019 08:55:47 -0700
-Message-Id: <20191002155547.9137-1-yzhai003@ucr.edu>
-X-Mailer: git-send-email 2.17.1
-To:     unlisted-recipients:; (no To-header on input)
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=7HDf73q4RlIWgNL715WMeMDfk4kVLdtCUlcpTLXCE7w=;
+        b=DGLalewe9I2EeqUbnZUtGl1xM8F6kNlbLpahYW4hrSQJB3ff6Rz0TYKAyvU5nl8aYt
+         6ZdBIpPlDNsvQFa8wjRVMVFN68actJwc7Q2bSap/yRBrEcbf4lnrzRd8pZkUUzKd+6vu
+         o3Z+qXOooDxO93/2tRjErwXDcM2XrCkY6kSCloMaGAIGwPAmZas1T+ChuvRSAEjD4uI3
+         ut3Izx0G5eyLVXuC1LTds94LaWEVK0FDWGhob+f0OYTCguw6wStVLjk9XN9ID4BuOp2E
+         OxfioIvsXr4X/dKu/8bqrC3Q8TWgL5/fcKqT0Y0v5oOm6ydj/v7ihsEeQ43QI1mjLFh9
+         NAwA==
+X-Gm-Message-State: APjAAAWpFqv37YcxnooYLmlBMY4e619W9MFay38j88XSDgBxrGm9vYEd
+        UNUE/AwKAnN4enKIWQGGvy1WGYnYO8pYz75axAD6QBZOLTg=
+X-Google-Smtp-Source: APXvYqyhHKTPsS+3uRHQwZO3JyQGOM8dv0YUEp/vjPP1ABlFVGnrq9TEzU9hkWJ3nckFDvQH7f8PGEzZeTII0oy434Y=
+X-Received: by 2002:a92:d184:: with SMTP id z4mr4408206ilz.189.1570031861226;
+ Wed, 02 Oct 2019 08:57:41 -0700 (PDT)
+MIME-Version: 1.0
+References: <20191002085759.13337-2-brgl@bgdev.pl> <201910022132.qRNFfzjP%lkp@intel.com>
+In-Reply-To: <201910022132.qRNFfzjP%lkp@intel.com>
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+Date:   Wed, 2 Oct 2019 17:57:30 +0200
+Message-ID: <CAMRc=McpiPT2n2adpUiNGF+iF-gO_B3r7rAGFEA_1YzY0c+6Ww@mail.gmail.com>
+Subject: Re: [PATCH 1/4] iio: pressure: bmp280: use bulk regulator ops
+To:     kbuild test robot <lkp@intel.com>
+Cc:     kbuild-all@01.org, Jonathan Cameron <jic23@kernel.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        linux-iio@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Several functions in this file are trying to use regmap_read() to
-initialize the specific variable, however, if regmap_read() fails,
-the variable could be uninitialized but used directly, which is
-potentially unsafe. The return value of regmap_read() should be
-checked and handled. The same case also happens in function
-max17042_thread_handler() but it needs more effort to patch.
+=C5=9Br., 2 pa=C5=BA 2019 o 15:06 kbuild test robot <lkp@intel.com> napisa=
+=C5=82(a):
+>
+> Hi Bartosz,
+>
+> I love your patch! Yet something to improve:
+>
+> [auto build test ERROR on iio/togreg]
+> [cannot apply to v5.4-rc1 next-20191002]
+> [if your patch is applied to the wrong git tree, please drop us a note to=
+ help
+> improve the system. BTW, we also suggest to use '--base' option to specif=
+y the
+> base tree in git format-patch, please see https://stackoverflow.com/a/374=
+06982]
+>
+> url:    https://github.com/0day-ci/linux/commits/Bartosz-Golaszewski/iio-=
+pressure-bmp280-code-shrink/20191002-194508
+> base:   https://git.kernel.org/pub/scm/linux/kernel/git/jic23/iio.git tog=
+reg
+> config: sh-allmodconfig (attached as .config)
+> compiler: sh4-linux-gcc (GCC) 7.4.0
+> reproduce:
+>         wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbi=
+n/make.cross -O ~/bin/make.cross
+>         chmod +x ~/bin/make.cross
+>         # save the attached .config to linux build tree
+>         GCC_VERSION=3D7.4.0 make.cross ARCH=3Dsh
+>
+> If you fix the issue, kindly add following tag
+> Reported-by: kbuild test robot <lkp@intel.com>
+>
+> All errors (new ones prefixed by >>):
+>
+>    drivers/iio/pressure/bmp280-core.c: In function 'bmp280_common_probe':
+> >> drivers/iio/pressure/bmp280-core.c:1041:2: error: implicit declaration=
+ of function 'regulator_bulk_set_supply_names'; did you mean 'regulator_bul=
+k_register_supply_alias'? [-Werror=3Dimplicit-function-declaration]
+>      regulator_bulk_set_supply_names(data->supplies,
+>      ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+>      regulator_bulk_register_supply_alias
+>    cc1: some warnings being treated as errors
+>
 
-Signed-off-by: Yizhuo <yzhai003@ucr.edu>
----
- drivers/power/supply/max17042_battery.c | 23 +++++++++++++++++++----
- 1 file changed, 19 insertions(+), 4 deletions(-)
+This function has been introduced in commit d0087e72710c ("regulator:
+provide regulator_bulk_set_supply_names()") and released in v5.4-rc1
+but it's not present in this tree. In other words: a false positive.
 
-diff --git a/drivers/power/supply/max17042_battery.c b/drivers/power/supply/max17042_battery.c
-index e6a2dacaa730..8e5727010ed2 100644
---- a/drivers/power/supply/max17042_battery.c
-+++ b/drivers/power/supply/max17042_battery.c
-@@ -675,8 +675,12 @@ static void max17042_reset_vfsoc0_reg(struct max17042_chip *chip)
- {
- 	unsigned int vfSoc;
- 	struct regmap *map = chip->regmap;
-+	int ret;
-+
-+	ret = regmap_read(map, MAX17042_VFSOC, &vfSoc);
-+	if (ret)
-+		return;
- 
--	regmap_read(map, MAX17042_VFSOC, &vfSoc);
- 	regmap_write(map, MAX17042_VFSOC0Enable, VFSOC0_UNLOCK);
- 	max17042_write_verify_reg(map, MAX17042_VFSOC0, vfSoc);
- 	regmap_write(map, MAX17042_VFSOC0Enable, VFSOC0_LOCK);
-@@ -686,12 +690,18 @@ static void max17042_load_new_capacity_params(struct max17042_chip *chip)
- {
- 	u32 full_cap0, rep_cap, dq_acc, vfSoc;
- 	u32 rem_cap;
-+	int ret;
- 
- 	struct max17042_config_data *config = chip->pdata->config_data;
- 	struct regmap *map = chip->regmap;
- 
--	regmap_read(map, MAX17042_FullCAP0, &full_cap0);
--	regmap_read(map, MAX17042_VFSOC, &vfSoc);
-+	ret = regmap_read(map, MAX17042_FullCAP0, &full_cap0);
-+	if (ret)
-+		return ret;
-+
-+	ret = regmap_read(map, MAX17042_VFSOC, &vfSoc);
-+	if (ret)
-+		return ret;
- 
- 	/* fg_vfSoc needs to shifted by 8 bits to get the
- 	 * perc in 1% accuracy, to get the right rem_cap multiply
-@@ -1108,7 +1118,12 @@ static int max17042_probe(struct i2c_client *client,
- 	if (!client->irq)
- 		regmap_write(chip->regmap, MAX17042_SALRT_Th, 0xff00);
- 
--	regmap_read(chip->regmap, MAX17042_STATUS, &val);
-+	ret = regmap_read(chip->regmap, MAX17042_STATUS, &val);
-+	if (ret) {
-+		dev_err(&client->dev, "Failed to get MAX17042_STATUS.\n");
-+		return ret;
-+	}
-+
- 	if (val & STATUS_POR_BIT) {
- 		INIT_WORK(&chip->work, max17042_init_worker);
- 		ret = devm_add_action(&client->dev, max17042_stop_work, chip);
--- 
-2.17.1
+Bart
 
+> vim +1041 drivers/iio/pressure/bmp280-core.c
+>
+>    986
+>    987  int bmp280_common_probe(struct device *dev,
+>    988                          struct regmap *regmap,
+>    989                          unsigned int chip,
+>    990                          const char *name,
+>    991                          int irq)
+>    992  {
+>    993          int ret;
+>    994          struct iio_dev *indio_dev;
+>    995          struct bmp280_data *data;
+>    996          unsigned int chip_id;
+>    997          struct gpio_desc *gpiod;
+>    998
+>    999          indio_dev =3D devm_iio_device_alloc(dev, sizeof(*data));
+>   1000          if (!indio_dev)
+>   1001                  return -ENOMEM;
+>   1002
+>   1003          data =3D iio_priv(indio_dev);
+>   1004          mutex_init(&data->lock);
+>   1005          data->dev =3D dev;
+>   1006
+>   1007          indio_dev->dev.parent =3D dev;
+>   1008          indio_dev->name =3D name;
+>   1009          indio_dev->channels =3D bmp280_channels;
+>   1010          indio_dev->info =3D &bmp280_info;
+>   1011          indio_dev->modes =3D INDIO_DIRECT_MODE;
+>   1012
+>   1013          switch (chip) {
+>   1014          case BMP180_CHIP_ID:
+>   1015                  indio_dev->num_channels =3D 2;
+>   1016                  data->chip_info =3D &bmp180_chip_info;
+>   1017                  data->oversampling_press =3D ilog2(8);
+>   1018                  data->oversampling_temp =3D ilog2(1);
+>   1019                  data->start_up_time =3D 10000;
+>   1020                  break;
+>   1021          case BMP280_CHIP_ID:
+>   1022                  indio_dev->num_channels =3D 2;
+>   1023                  data->chip_info =3D &bmp280_chip_info;
+>   1024                  data->oversampling_press =3D ilog2(16);
+>   1025                  data->oversampling_temp =3D ilog2(2);
+>   1026                  data->start_up_time =3D 2000;
+>   1027                  break;
+>   1028          case BME280_CHIP_ID:
+>   1029                  indio_dev->num_channels =3D 3;
+>   1030                  data->chip_info =3D &bme280_chip_info;
+>   1031                  data->oversampling_press =3D ilog2(16);
+>   1032                  data->oversampling_humid =3D ilog2(16);
+>   1033                  data->oversampling_temp =3D ilog2(2);
+>   1034                  data->start_up_time =3D 2000;
+>   1035                  break;
+>   1036          default:
+>   1037                  return -EINVAL;
+>   1038          }
+>   1039
+>   1040          /* Bring up regulators */
+> > 1041          regulator_bulk_set_supply_names(data->supplies,
+>   1042                                          bmp280_supply_names,
+>   1043                                          BMP280_NUM_SUPPLIES);
+>   1044
+>   1045          ret =3D devm_regulator_bulk_get(dev,
+>   1046                                        BMP280_NUM_SUPPLIES, data->=
+supplies);
+>   1047          if (ret) {
+>   1048                  dev_err(dev, "failed to get regulators\n");
+>   1049                  return ret;
+>   1050          }
+>   1051
+>   1052          ret =3D regulator_bulk_enable(BMP280_NUM_SUPPLIES, data->=
+supplies);
+>   1053          if (ret) {
+>   1054                  dev_err(dev, "failed to enable regulators\n");
+>   1055                  return ret;
+>   1056          }
+>   1057
+>   1058          /* Wait to make sure we started up properly */
+>   1059          usleep_range(data->start_up_time, data->start_up_time + 1=
+00);
+>   1060
+>   1061          /* Bring chip out of reset if there is an assigned GPIO l=
+ine */
+>   1062          gpiod =3D devm_gpiod_get(dev, "reset", GPIOD_OUT_HIGH);
+>   1063          /* Deassert the signal */
+>   1064          if (!IS_ERR(gpiod)) {
+>   1065                  dev_info(dev, "release reset\n");
+>   1066                  gpiod_set_value(gpiod, 0);
+>   1067          }
+>   1068
+>   1069          data->regmap =3D regmap;
+>   1070          ret =3D regmap_read(regmap, BMP280_REG_ID, &chip_id);
+>   1071          if (ret < 0)
+>   1072                  goto out_disable_regulators;
+>   1073          if (chip_id !=3D chip) {
+>   1074                  dev_err(dev, "bad chip id: expected %x got %x\n",
+>   1075                          chip, chip_id);
+>   1076                  ret =3D -EINVAL;
+>   1077                  goto out_disable_regulators;
+>   1078          }
+>   1079
+>   1080          ret =3D data->chip_info->chip_config(data);
+>   1081          if (ret < 0)
+>   1082                  goto out_disable_regulators;
+>   1083
+>   1084          dev_set_drvdata(dev, indio_dev);
+>   1085
+>   1086          /*
+>   1087           * Some chips have calibration parameters "programmed int=
+o the devices'
+>   1088           * non-volatile memory during production". Let's read the=
+m out at probe
+>   1089           * time once. They will not change.
+>   1090           */
+>   1091          if (chip_id  =3D=3D BMP180_CHIP_ID) {
+>   1092                  ret =3D bmp180_read_calib(data, &data->calib.bmp1=
+80);
+>   1093                  if (ret < 0) {
+>   1094                          dev_err(data->dev,
+>   1095                                  "failed to read calibration coeff=
+icients\n");
+>   1096                          goto out_disable_regulators;
+>   1097                  }
+>   1098          } else if (chip_id =3D=3D BMP280_CHIP_ID || chip_id =3D=
+=3D BME280_CHIP_ID) {
+>   1099                  ret =3D bmp280_read_calib(data, &data->calib.bmp2=
+80, chip_id);
+>   1100                  if (ret < 0) {
+>   1101                          dev_err(data->dev,
+>   1102                                  "failed to read calibration coeff=
+icients\n");
+>   1103                          goto out_disable_regulators;
+>   1104                  }
+>   1105          }
+>   1106
+>   1107          /*
+>   1108           * Attempt to grab an optional EOC IRQ - only the BMP085 =
+has this
+>   1109           * however as it happens, the BMP085 shares the chip ID o=
+f BMP180
+>   1110           * so we look for an IRQ if we have that.
+>   1111           */
+>   1112          if (irq > 0 || (chip_id  =3D=3D BMP180_CHIP_ID)) {
+>   1113                  ret =3D bmp085_fetch_eoc_irq(dev, name, irq, data=
+);
+>   1114                  if (ret)
+>   1115                          goto out_disable_regulators;
+>   1116          }
+>   1117
+>   1118          /* Enable runtime PM */
+>   1119          pm_runtime_get_noresume(dev);
+>   1120          pm_runtime_set_active(dev);
+>   1121          pm_runtime_enable(dev);
+>   1122          /*
+>   1123           * Set autosuspend to two orders of magnitude larger than=
+ the
+>   1124           * start-up time.
+>   1125           */
+>   1126          pm_runtime_set_autosuspend_delay(dev, data->start_up_time=
+ / 10);
+>   1127          pm_runtime_use_autosuspend(dev);
+>   1128          pm_runtime_put(dev);
+>   1129
+>   1130          ret =3D iio_device_register(indio_dev);
+>   1131          if (ret)
+>   1132                  goto out_runtime_pm_disable;
+>   1133
+>   1134
+>   1135          return 0;
+>   1136
+>   1137  out_runtime_pm_disable:
+>   1138          pm_runtime_get_sync(data->dev);
+>   1139          pm_runtime_put_noidle(data->dev);
+>   1140          pm_runtime_disable(data->dev);
+>   1141  out_disable_regulators:
+>   1142          regulator_bulk_disable(BMP280_NUM_SUPPLIES, data->supplie=
+s);
+>   1143          return ret;
+>   1144  }
+>   1145  EXPORT_SYMBOL(bmp280_common_probe);
+>   1146
+>
+> ---
+> 0-DAY kernel test infrastructure                Open Source Technology Ce=
+nter
+> https://lists.01.org/pipermail/kbuild-all                   Intel Corpora=
+tion
