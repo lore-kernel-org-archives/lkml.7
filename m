@@ -2,262 +2,219 @@ Return-Path: <SRS0=zem1=X3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1041C10F14
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 21:59:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 281CBC4360C
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 21:59:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 85E9C222C6
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 21:59:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DE90020842
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 21:59:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="I0e08Ri3"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ra54M5jq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728117AbfJBV7l (ORCPT
+        id S1728190AbfJBV7v (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Oct 2019 17:59:41 -0400
-Received: from pandora.armlinux.org.uk ([78.32.30.218]:32962 "EHLO
-        pandora.armlinux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725789AbfJBV7l (ORCPT
+        Wed, 2 Oct 2019 17:59:51 -0400
+Received: from mail-lf1-f67.google.com ([209.85.167.67]:38976 "EHLO
+        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727818AbfJBV7v (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Oct 2019 17:59:41 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=qwaMCw5+GH89GY4D31Ks8Y7B/aUlyWSrhEUdNOLlI+o=; b=I0e08Ri3YtCzhJKOHSGe8WnDm
-        6p6A5AP8uCicID35A9JaihTSz34ChubKqEJ7tugY1yQ5sUBTHO0JRJDj6gLZjfTE14RR9nUPqXZvs
-        90/4/yVAlQjHkUhQX+JjPF+8+fKl/jjJe7clxYByP1+Nnr6TCPcjvK/rKTMm99TFrk7XiLlv1nUqF
-        n0O9D7BI0XSz2AyUACe4iSCANRuO1iAOOnacB22Go6UAOmqTLk+tuJ3tPSoeMWRCHu5rPzYCPqK8O
-        BUxz0Kx7R4ksZQyHq1y6evGKqCRnqRASLPtElVrbCCtauh9qmBWgmfSRFupq/T6i3gcDcZJIN9fpJ
-        FWsBpRFrQ==;
-Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:50976)
-        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.90_1)
-        (envelope-from <linux@armlinux.org.uk>)
-        id 1iFmee-0002bh-6m; Wed, 02 Oct 2019 22:59:29 +0100
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
-        (envelope-from <linux@shell.armlinux.org.uk>)
-        id 1iFmeW-00014i-96; Wed, 02 Oct 2019 22:59:20 +0100
-Date:   Wed, 2 Oct 2019 22:59:20 +0100
-From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Xiaowei Bao <xiaowei.bao@nxp.com>, mark.rutland@arm.com,
-        devicetree@vger.kernel.org, lorenzo.pieralisi@arm.com,
-        linux-pci@vger.kernel.org, Zhiqiang.Hou@nxp.com,
-        linux-kernel@vger.kernel.org, leoyang.li@nxp.com,
-        Minghuan.Lian@nxp.com, robh+dt@kernel.org,
-        linux-arm-kernel@lists.infradead.org, andrew.murray@arm.com,
-        kishon@ti.com, shawnguo@kernel.org, mingkai.hu@nxp.com
-Subject: Re: [PATCH 0/6] Add the Mobiveil EP and Layerscape Gen4 EP driver
- support
-Message-ID: <20191002215920.GU25745@shell.armlinux.org.uk>
-References: <20190924155223.GX25745@shell.armlinux.org.uk>
- <20191002211421.GA64972@google.com>
+        Wed, 2 Oct 2019 17:59:51 -0400
+Received: by mail-lf1-f67.google.com with SMTP id 72so223051lfh.6
+        for <linux-kernel@vger.kernel.org>; Wed, 02 Oct 2019 14:59:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=5vzSux9eQKxJFF9GRNL8OortCb//QnofpEzbbxkuctE=;
+        b=Ra54M5jqFtuH94od5Ka7bDqh25FpHc3nVnYPZRs8I3Y0C8fFqpUchmN8+rNEtvqB92
+         PXgW2L3tMOunKrQAoBtmp5Yy/EvcmMDKbdEe6fV8hBcs+iKg3g9YWc/vby6KgBonpJyM
+         hTcAwuciZnbcFvRs6h0b228r6IDKsLYvegnQKkm7hFn9Uak7tlCSL40EiBkNN4G1FmIa
+         BF+rYyjdNXoK4uRXx/gthtzOOuSbaqyVeTPQ+5kAbzWuEkTjDmXo1CDsL+MG89F58BfL
+         0Trqp805S+AAN8GHOBYfSr1pnXQFJrCJMRhy6b4mytoYyA4Y23f5QfsnH5DDupFG5Icm
+         Yu8w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=5vzSux9eQKxJFF9GRNL8OortCb//QnofpEzbbxkuctE=;
+        b=UfNqrN0lylHBhOnaW954WiSwTo0hQvmsPJSKfHn2HImvtN4ZiNnyIsKoMPc7itzWuu
+         IKrHIray1Ry/pMFgA7s7nmIK9TruhJZ95ju9d2UIWOKF/PEasOqoQwXAkvlT9XZrGv0z
+         twPVxy0MYIVD/TFDoPYk773i5LJT4QFP4oItil2ktspxOr3axOios9c7ya9nnt2QMtQb
+         NSSKGiD1nA9nDw3Fq8//4W2YxOBQTAXMIXYax3Ja8L+oPMu741HxwbDE3vpEwlIWJpqk
+         N/Mzsb0D3guaaBC/C3k5DYrMVsXYyIhq67wo3VCQdkDkI3d3nB1t5dpTNxx0cwcpShjm
+         bNVA==
+X-Gm-Message-State: APjAAAVuJQJIGYuSEPv7KVhuL9BbCCVDxuVFCb/yxGIgJsb79U1EJEX/
+        W2iQPsBddslhLCSjBFhum2fomN3Z7xGD150v3sPsDUSoCSOarg==
+X-Google-Smtp-Source: APXvYqzpHTdtzstQ7/aG1r2T4ZNucopug1JAYDvlX47NOST/EJWbQndDIvxJiGN2+f29gwor8k+1jyY4XED5po0KGBY=
+X-Received: by 2002:a19:c80b:: with SMTP id y11mr3820786lff.184.1570053588707;
+ Wed, 02 Oct 2019 14:59:48 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191002211421.GA64972@google.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <CADkTA4PBT374CY+UNb85WjQEaNCDodMZu=MgpG8aMYbAu2eOGA@mail.gmail.com>
+ <20191002020100.GA6436@castle.dhcp.thefacebook.com> <CADkTA4Mbai=Q5xgKH9-md_g73UsHiKnEauVgMWev+-sG8FVNSA@mail.gmail.com>
+ <20191002181914.GA7617@castle.DHCP.thefacebook.com>
+In-Reply-To: <20191002181914.GA7617@castle.DHCP.thefacebook.com>
+From:   Bruce Ashfield <bruce.ashfield@gmail.com>
+Date:   Wed, 2 Oct 2019 17:59:36 -0400
+Message-ID: <CADkTA4PmGBR7YdOXvi6sEDJ+uztuB7x2G95TCcW2u_iqjwhUNQ@mail.gmail.com>
+Subject: Re: ptrace/strace and freezer oddities and v5.2+ kernels
+To:     Roman Gushchin <guro@fb.com>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "tj@kernel.org" <tj@kernel.org>,
+        Richard Purdie <richard.purdie@linuxfoundation.org>,
+        "oleg@redhat.com" <oleg@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Oct 02, 2019 at 04:14:21PM -0500, Bjorn Helgaas wrote:
-> On Tue, Sep 24, 2019 at 04:52:23PM +0100, Russell King - ARM Linux admin wrote:
-> > On Tue, Sep 24, 2019 at 03:18:47PM +0100, Russell King - ARM Linux admin wrote:
-> > > On Mon, Sep 16, 2019 at 10:17:36AM +0800, Xiaowei Bao wrote:
-> > > > This patch set are for adding Mobiveil EP driver and adding PCIe Gen4
-> > > > EP driver of NXP Layerscape platform.
-> > > > 
-> > > > This patch set depends on:
-> > > > https://patchwork.kernel.org/project/linux-pci/list/?series=159139
-> > > > 
-> > > > Xiaowei Bao (6):
-> > > >   PCI: mobiveil: Add the EP driver support
-> > > >   dt-bindings: Add DT binding for PCIE GEN4 EP of the layerscape
-> > > >   PCI: mobiveil: Add PCIe Gen4 EP driver for NXP Layerscape SoCs
-> > > >   PCI: mobiveil: Add workaround for unsupported request error
-> > > >   arm64: dts: lx2160a: Add PCIe EP node
-> > > >   misc: pci_endpoint_test: Add the layerscape PCIe GEN4 EP device
-> > > >     support
-> > > > 
-> > > >  .../bindings/pci/layerscape-pcie-gen4.txt          |  28 +-
-> > > >  MAINTAINERS                                        |   3 +
-> > > >  arch/arm64/boot/dts/freescale/fsl-lx2160a.dtsi     |  56 ++
-> > > >  drivers/misc/pci_endpoint_test.c                   |   2 +
-> > > >  drivers/pci/controller/mobiveil/Kconfig            |  22 +-
-> > > >  drivers/pci/controller/mobiveil/Makefile           |   2 +
-> > > >  .../controller/mobiveil/pcie-layerscape-gen4-ep.c  | 169 ++++++
-> > > >  drivers/pci/controller/mobiveil/pcie-mobiveil-ep.c | 568 +++++++++++++++++++++
-> > > >  drivers/pci/controller/mobiveil/pcie-mobiveil.c    |  99 +++-
-> > > >  drivers/pci/controller/mobiveil/pcie-mobiveil.h    |  72 +++
-> > > >  10 files changed, 1009 insertions(+), 12 deletions(-)
-> > > >  create mode 100644 drivers/pci/controller/mobiveil/pcie-layerscape-gen4-ep.c
-> > > >  create mode 100644 drivers/pci/controller/mobiveil/pcie-mobiveil-ep.c
-> > > 
-> > > Hi,
-> > > 
-> > > I've applied "PCI: mobiveil: Fix the CPU base address setup in inbound
-> > > window" and your patch set to 5.3, which seems to be able to detect the
-> > > PCIe card I have plugged in:
-> > > 
-> > > layerscape-pcie-gen4 3800000.pcie: host bridge /soc/pcie@3800000 ranges:
-> > > layerscape-pcie-gen4 3800000.pcie:   MEM 0xa040000000..0xa07fffffff -> 0x40000000
-> > > layerscape-pcie-gen4 3800000.pcie: PCI host bridge to bus 0000:00
-> > > pci_bus 0000:00: root bus resource [bus 00-ff]
-> > > pci_bus 0000:00: root bus resource [mem 0xa040000000-0xa07fffffff] (bus address
-> > > [0x40000000-0x7fffffff])
-> > > pci 0000:00:00.0: [1957:8d90] type 01 class 0x060400
-> > > pci 0000:00:00.0: enabling Extended Tags
-> > > pci 0000:00:00.0: supports D1 D2
-> > > pci 0000:00:00.0: PME# supported from D0 D1 D2 D3hot D3cold
-> > > pci 0000:01:00.0: [15b3:6750] type 00 class 0x020000
-> > > pci 0000:01:00.0: reg 0x10: [mem 0xa040000000-0xa0400fffff 64bit]
-> > > pci 0000:01:00.0: reg 0x18: [mem 0xa040800000-0xa040ffffff 64bit pref]
-> > > pci 0000:01:00.0: reg 0x30: [mem 0xa041000000-0xa0410fffff pref]
-> > > pci 0000:00:00.0: up support 3 enabled 0
-> > > pci 0000:00:00.0: dn support 1 enabled 0
-> > > pci 0000:00:00.0: BAR 9: assigned [mem 0xa040000000-0xa0407fffff 64bit pref]
-> > > pci 0000:00:00.0: BAR 8: assigned [mem 0xa040800000-0xa0409fffff]
-> > > pci 0000:01:00.0: BAR 2: assigned [mem 0xa040000000-0xa0407fffff 64bit pref]
-> > > pci 0000:01:00.0: BAR 0: assigned [mem 0xa040800000-0xa0408fffff 64bit]
-> > > pci 0000:01:00.0: BAR 6: assigned [mem 0xa040900000-0xa0409fffff pref]
-> > > pci 0000:00:00.0: PCI bridge to [bus 01-ff]
-> > > pci 0000:00:00.0:   bridge window [mem 0xa040800000-0xa0409fffff]
-> > > pci 0000:00:00.0:   bridge window [mem 0xa040000000-0xa0407fffff 64bit pref]
-> > > pci 0000:00:00.0: Max Payload Size set to  256/ 256 (was  128), Max Read Rq  256pci 0000:01:00.0: Max Payload Size set to  256/ 256 (was  128), Max Read Rq  256pcieport 0000:00:00.0: PCIe capabilities: 0x13
-> > > pcieport 0000:00:00.0: init_service_irqs: -19
-> > > 
-> > > However, a bit later in the kernel boot, I get:
-> > > 
-> > > SError Interrupt on CPU1, code 0xbf000002 -- SError
-> > > CPU: 1 PID: 1 Comm: swapper/0 Not tainted 5.3.0+ #392
-> > > Hardware name: SolidRun LX2160A COM express type 7 module (DT)
-> > > pstate: 60400085 (nZCv daIf +PAN -UAO)
-> > > pc : pci_generic_config_read+0xb0/0xc0
-> > > lr : pci_generic_config_read+0x1c/0xc0
-> > > sp : ffffff8010f9baf0
-> > > x29: ffffff8010f9baf0 x28: ffffff8010d620a0
-> > > x27: ffffff8010d79000 x26: ffffff8010d62000
-> > > x25: ffffff8010cb06d4 x24: 0000000000000000
-> > > x23: ffffff8010e499b8 x22: ffffff8010f9bbaf
-> > > x21: 0000000000000000 x20: ffffffe2eda11800
-> > > x19: ffffff8010f62158 x18: ffffff8010bdede0
-> > > x17: ffffff8010bdede8 x16: ffffff8010b96970
-> > > x15: ffffffffffffffff x14: ffffffffff000000
-> > > x13: ffffffffffffffff x12: 0000000000000030
-> > > x11: 0101010101010101 x10: 7f7f7f7f7f7f7f7f
-> > > x9 : 2dff716475687163 x8 : ffffffffffffffff
-> > > x7 : fefefefefefefefe x6 : 0000000000000000
-> > > x5 : 0000000000000000 x4 : ffffff8010f9bb6c
-> > > x3 : 0000000000000001 x2 : 0000000000000003
-> > > x1 : 0000000000000000 x0 : 0000000000000000
-> > > Kernel panic - not syncing: Asynchronous SError Interrupt
-> > > CPU: 1 PID: 1 Comm: swapper/0 Not tainted 5.3.0+ #392
-> > > Hardware name: SolidRun LX2160A COM express type 7 module (DT)
-> > > Call trace:
-> > >  dump_backtrace+0x0/0x120
-> > >  show_stack+0x14/0x1c
-> > >  dump_stack+0x9c/0xc0
-> > >  panic+0x148/0x34c
-> > >  print_tainted+0x0/0xa8
-> > >  arm64_serror_panic+0x74/0x80
-> > >  do_serror+0x8c/0x13c
-> > >  el1_error+0xbc/0x160
-> > >  pci_generic_config_read+0xb0/0xc0
-> > >  pci_bus_read_config_byte+0x64/0x90
-> > >  pci_read_config_byte+0x40/0x48
-> > >  pci_assign_irq+0x34/0xc8
-> > >  pci_device_probe+0x28/0x148
-> > >  really_probe+0x1c4/0x2d0
-> > >  driver_probe_device+0x58/0xfc
-> > >  device_driver_attach+0x68/0x70
-> > >  __driver_attach+0x94/0xdc
-> > >  bus_for_each_dev+0x50/0xa0
-> > >  driver_attach+0x20/0x28
-> > >  bus_add_driver+0x14c/0x200
-> > >  driver_register+0x6c/0x124
-> > >  __pci_register_driver+0x48/0x50
-> > >  mlx4_init+0x154/0x180
-> > >  do_one_initcall+0x30/0x250
-> > >  kernel_init_freeable+0x23c/0x32c
-> > >  kernel_init+0x10/0xfc
-> > >  ret_from_fork+0x10/0x18
-> > > SMP: stopping secondary CPUs
-> > > Kernel Offset: disabled
-> > > CPU features: 0x0002,21006008
-> > > Memory Limit: none
-> > > 
-> > > and there it dies.  Any ideas?
-> > 
-> > The failing access seems to be:
-> > 
-> >         pci_read_config_byte(dev, PCI_INTERRUPT_PIN, &pin);
-> > 
-> > for the Mellanox Ethernet card.  Presumably, being a PCIe ethernet
-> > card, it doesn't implement this register (just a guess), and aborts
-> > the PCI transaction, which is presumably triggering the above SError.
-> 
-> PCIe r5.0, sec 7.5.1.1.13, says Interrupt Pin is a read-only register,
-> so there shouldn't be an issue with reading it.
-> 
-> mobiveil_pcie_ops uses the generic pci_generic_config_read(), which
-> will perform a readb() in this case.  Could mobiveil be a bridge that
-> only supports 32-bit config accesses?
+On Wed, Oct 2, 2019 at 2:19 PM Roman Gushchin <guro@fb.com> wrote:
+>
+> On Wed, Oct 02, 2019 at 12:18:54AM -0400, Bruce Ashfield wrote:
+> > On Tue, Oct 1, 2019 at 10:01 PM Roman Gushchin <guro@fb.com> wrote:
+> > >
+> > > On Tue, Oct 01, 2019 at 12:14:18PM -0400, Bruce Ashfield wrote:
+> > > > Hi all,
+> > > >
+> > >
+> > > Hi Bruce!
+> > >
+> > > > The Yocto project has an upcoming release this fall, and I've been trying to
+> > > > sort through some issues that are happening with kernel 5.2+ .. although
+> > > > there is a specific yocto kernel, I'm testing and seeing this with
+> > > > normal / vanilla
+> > > > mainline kernels as well.
+> > > >
+> > > > I'm running into an issue that is *very* similar to the one discussed in the
+> > > > [REGRESSION] ptrace broken from "cgroup: cgroup v2 freezer" (76f969e)
+> > > > thread from this past may: https://lkml.org/lkml/2019/5/12/272
+> > > >
+> > > > I can confirm that I have the proposed fix for the initial regression report in
+> > > > my build (05b2892637 [signal: unconditionally leave the frozen state
+> > > > in ptrace_stop()]),
+> > > > but yet I'm still seeing 3 or 4 minute runtimes on a test that used to take 3 or
+> > > > 4 seconds.
+> > >
+> > > So, the problem is that you're experiencing a severe performance regression
+> > > in some test, right?
+> >
+> > Hi Roman,
+> >
+> > Correct. In particular, running some of the tests that ship with strace itself.
+> > The performance change is so drastic, that it definitely makes you wonder
+> > "What have I done wrong? Since everyone must be seeing this" .. and I
+> > always blame myself first.
+> >
+> > >
+> > > >
+> > > > This isn't my normal area of kernel hacking, so I've so far come up empty
+> > > > at either fixing it myself, or figuring out a viable workaround. (well, I can
+> > > > "fix" it by remove the cgroup_enter_frozen() call in ptrace_stop ...
+> > > > but obviously,
+> > > > that is just me trying to figure out what could be causing the issue).
+> > > >
+> > > > As part of the release, we run tests that come with various applications. The
+> > > > ptrace test that is causing us issues can be boiled down to this:
+> > > >
+> > > > $ cd /usr/lib/strace/ptest/tests
+> > > > $ time ../strace -o log -qq -esignal=none -e/clock ./printpath-umovestr>ttt
+> > > >
+> > > > (I can provide as many details as needed, but I wanted to keep this initial
+> > > > email relatively short).
+> > > >
+> > > > I'll continue to debug and attempt to fix this myself, but I grabbed the
+> > > > email list from the regression report in May to see if anyone has any ideas
+> > > > or angles that I haven't covered in my search for a fix.
+> > >
+> > > I'm definitely happy to help, but it's a bit hard to say anything from what
+> > > you've provided. I'm not aware of any open issues with the freezer except
+> > > some spurious cgroup frozen<->not frozen transitions which can happen in some
+> > > cases. If you'll describe how can I reproduce the issue, and I'll try to take
+> > > a look asap.
+> >
+> > That would be great.
+> >
+> > I'll attempt to remove all of the build system specifics out of this
+> > (and Richard Purdie
+> > on the cc' of this can probably help provide more details / setup info as well).
+> >
+> > We are running the built-in tests of strace. So here's a cut and paste of what I
+> > did to get the tests available (ignore/skip what is common sense or isn't needed
+> > in your test rig).
+> >
+> > % git clone https://github.com/strace/strace.git
+> > % cd strace
+> > % ./bootstrap
+> > # the --enable flag isn't strictly required, but may break on some
+> > build machines
+> > % ./configure --enable-mpers=no
+> > % make
+> > % make check-TESTS
+> >
+> > That last step will not only build the tests, but run them all .. so
+> > ^c the run once
+> > it starts, since it is a lot of noise (we carry a patch to strace that
+> > allows us to build
+> > the tests without running them).
+> >
+> > % cd tests
+> > % time strace -o log -qq -esignal=none -e/clock ./printpath-umovestr > fff
+> > real    0m2.566s
+> > user    0m0.284s
+> > sys     0m2.519
+> >
+> > On pre-cgroup2 freezer kernels, you see a run time similar to what I have above.
+> > On the newer kernels we are testing, it is taking 3 or 4 minutes to
+> > run the test.
+> >
+> > I hope that is simple enough to setup and try. Since I've been seeing
+> > this on both
+> > mainline kernels and the yocto reference kernels, I don't think it is
+> > something that
+> > I'm carrying in the distro/reference kernel that is causing this (but
+> > again, I always
+> > blame myself first). If you don't see that same run time, then that
+> > does point the finger
+> > back at what we are doing and I'll have to apologize for chewing up some of your
+> > time.
+>
+> Thank you for the detailed description!
+> I'll try to reproduce the issue and will be back
+> by the end of the week.
 
-I have it solved through private discussion.
+Thanks again!
 
-Essentially, however, the patch set which has been sent for mainline
-seems to fail for (some? all?) PCIe cards in this way.  I'm lead to
-believe that the work-arounds for this for the LX2160A can't be
-mainlined.
+While discussing the issue with a few yocto folks today, it came up that
+someone wasn't seeing the same behaviour on the opensuse v5.2 kernel
+(but I've yet to figure out exactly where to find that tree) .. but when I do,
+I'll try and confirm that and will look for patches or config differences that
+could explain the results.
 
-There's two patches published in the publically available QiorQ tree
-that seem to be necessary:
+I did confirm that 5.3 shows the same thing today, and I'll do a 5.4-rc1 test
+tomorrow.
 
-PCI: mobiveil: ls_pcie_g4: add Workaround for A-011577
+We are also primarily reproducing the issue on qemux86-64, so I'm also
+going to try and rule out qemu (but the same version of qemu with just
+the kernel changing shows the issue).
 
-    PCIe configuration access to non-existent function triggered
-    SERROR interrupt exception.
+I just wanted to add those data points in case that strace test doesn't
+reproduce the problem for you. I'll follow up if I learn anything more during
+my debug on Thursday.
 
-    Workaround:
-    Disable error reporting on AXI bus during the Vendor ID read
-    transactions in enumeration.
+Bruce
 
-    This ERRATA is only for LX2160A Rev1.0, and it will be fixed
-    in Rev2.0.
+>
+> Thank you!
+>
+> Roman
 
-PCI: mobiveil: ls_pcie_g4: add Workaround for A-011451
 
-    When LX2 PCIe controller is sending multiple split completions and
-    ACK latency expires indicating that ACK should be send at priority.
-    But because of large number of split completions and FC update DLLP,
-    the controller does not give priority to ACK transmission. This
-    results into ACK latency timer timeout error at the link partner and
-    the pending TLPs are replayed by the link partner again.
-
-    Workaround:
-    1. Reduce the ACK latency timeout value to a very small value.
-    2. Restrict the number of completions from the LX2 PCIe controller
-       to 1, by changing the Max Read Request Size (MRRS) of link partner
-       to the same value as Max Packet size (MPS).
-
-    This patch implemented part 1, the part 2 can be set by kernel parameter
-    'pci=pcie_bus_perf'
-
-    This ERRATA is only for LX2160A Rev1.0, and it will be fixed
-    in Rev2.0.
-
-and a third to fix the problem I'm seeing (which modifies the first
-of the above two patches), which afaik has not been published in
-the QiorQ tree.
 
 -- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTC broadband for 0.8mile line in suburbia: sync at 12.1Mbps down 622kbps up
-According to speedtest.net: 11.9Mbps down 500kbps up
+- Thou shalt not follow the NULL pointer, for chaos and madness await
+thee at its end
+- "Use the force Harry" - Gandalf, Star Trek II
