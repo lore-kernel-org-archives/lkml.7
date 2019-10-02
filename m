@@ -2,144 +2,129 @@ Return-Path: <SRS0=zem1=X3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B55CCC352AA
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 12:02:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D07C7C35280
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 12:03:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 90FF421929
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 12:02:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A803E21929
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 12:03:02 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="gsoanE9y"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728287AbfJBMC6 (ORCPT
+        id S1728305AbfJBMDB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Oct 2019 08:02:58 -0400
-Received: from mout.kundenserver.de ([212.227.126.131]:53363 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725875AbfJBMC6 (ORCPT
+        Wed, 2 Oct 2019 08:03:01 -0400
+Received: from aserp2120.oracle.com ([141.146.126.78]:50644 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725875AbfJBMDB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Oct 2019 08:02:58 -0400
-Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
- (mreue009 [212.227.15.129]) with ESMTPA (Nemesis) id
- 1N6srH-1i4Jx02kQB-018Nqd; Wed, 02 Oct 2019 14:02:49 +0200
-From:   Arnd Bergmann <arnd@arndb.de>
-To:     Alex Deucher <alexander.deucher@amd.com>,
-        Harry Wentland <harry.wentland@amd.com>,
-        Leo Li <sunpeng.li@amd.com>,
-        =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
-        "David (ChunMing) Zhou" <David1.Zhou@amd.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>
-Cc:     clang-built-linux@googlegroups.com, amd-gfx@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        Arnd Bergmann <arnd@arndb.de>,
-        Bhawanpreet Lakha <Bhawanpreet.Lakha@amd.com>
-Subject: [PATCH 3/6] drm/amdgpu: display_mode_vba_21: remove uint typedef
-Date:   Wed,  2 Oct 2019 14:01:24 +0200
-Message-Id: <20191002120136.1777161-4-arnd@arndb.de>
-X-Mailer: git-send-email 2.20.0
-In-Reply-To: <20191002120136.1777161-1-arnd@arndb.de>
-References: <20191002120136.1777161-1-arnd@arndb.de>
+        Wed, 2 Oct 2019 08:03:01 -0400
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x92BwidV115138;
+        Wed, 2 Oct 2019 12:02:30 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2019-08-05;
+ bh=5f9WP1t5ZUCUnAU3TFbU22auufKBsGd2ReO5WAV1EVQ=;
+ b=gsoanE9ypOdaIJvz2Lmkws6zLs50sjloWhfxTGFIniRY5XGdYQxqfshsvI7qZ7QVVoaH
+ YtY0w9g6HoZWV8rDGohb4keAR73zQY2nhrKRUYtwJ8FXZhoC3nUU7wi5fXKVvhf2IdxC
+ bEufY9WBp3AkTmNLA2/vkFkUqoDzL8KGVYgE1hY/dd7JTL3+AwK+Hgwbt2TsjkI4G73O
+ CNlx9HpqUTjesEmSJUTAyolzL8wPV9u4GRDqgQoym0z1ro3D/0py18majTtuN2oneM8O
+ qiZL+FisqUOl4WUi+mwM+qs3h+3VAU/ZhKhK+DTtBzTT1xifbJzmzI7Yr2GtH8vvEdp3 wQ== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by aserp2120.oracle.com with ESMTP id 2v9yfqcen5-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 02 Oct 2019 12:02:30 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x92Bw3kx076918;
+        Wed, 2 Oct 2019 12:00:29 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by aserp3020.oracle.com with ESMTP id 2vckyntqya-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 02 Oct 2019 12:00:29 +0000
+Received: from abhmp0009.oracle.com (abhmp0009.oracle.com [141.146.116.15])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x92C0OHP020718;
+        Wed, 2 Oct 2019 12:00:24 GMT
+Received: from tomti.i.net-space.pl (/10.175.221.225)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Wed, 02 Oct 2019 05:00:23 -0700
+Date:   Wed, 2 Oct 2019 14:00:18 +0200
+From:   Daniel Kiper <daniel.kiper@oracle.com>
+To:     "H. Peter Anvin" <hpa@zytor.com>
+Cc:     linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        x86@kernel.org, bp@alien8.de, corbet@lwn.net,
+        dpsmith@apertussolutions.com, eric.snowberg@oracle.com,
+        kanth.ghatraju@oracle.com, konrad.wilk@oracle.com,
+        mingo@redhat.com, ross.philipson@oracle.com, tglx@linutronix.de
+Subject: Re: [PATCH v2 1/3] x86/boot: Introduce the kernel_info
+Message-ID: <20191002120018.d7wbpf3zusl4dcsc@tomti.i.net-space.pl>
+References: <20190704163612.14311-1-daniel.kiper@oracle.com>
+ <20190704163612.14311-2-daniel.kiper@oracle.com>
+ <5633066F-01BE-437D-A564-150FD48B6D92@zytor.com>
+ <20190930150110.ekir52wu3w67v2fk@tomti.i.net-space.pl>
+ <c9eb5a39-ced5-b35d-616d-6ffbe15c1396@zytor.com>
+ <20191001114133.xy5nuhepzzixhuh4@tomti.i.net-space.pl>
+ <dda802de-2efe-3d22-7816-6da36bf9ebf8@zytor.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:oBjKGQ3jYf0A2J2ocemwNHrJLF3mvVMEn6zOLTNAGubueuLRYyk
- BpOHFj8UwLoAn+bAxDpM0Us8z6MwyTwhFaeTAJtXgpd1gN2qJVEkpNfIB76daOLbh6I9g1g
- ahi1mLhjBji4qSGK5wctAS/ZXegSzGKfel5KNAxFR+4Ew0SuQO7JYnxKngDUC1t/3w0hgkw
- 0QdnYpJY4kkYs3R/f4iCg==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:eSQ5Yr5a9oE=:9FRtoMlN7bwSrOG9f5YY1I
- bpZ3Qlyhsku0LcpbDJu5j1GigQk6vUWd/VoWhAWdlLLxtXK+BCdOiQtpfBiQFZdP8FLJ26cuR
- kV5qGa3w8U+kaC94DSFBi0lHTB2sNsHBjsd2p8WvqTLIZwirBsTcidrQkvC2sa1DPz0RHHLd8
- U9Vnvws8HuDgF+P7zwa3qcikMwSX3nStW4yO3wtkWdKwr6Uglr1x0i8/QF3LCtLtK4FEzrZVg
- bM4cQCIHQZpPin18GxcI5pwvpk2Qgoml/0vjZaUvLxFLn2V4iCWTtG43DqQmNKwH+Uu5EPbFE
- XKXWZUhX8b8lTqAqeEI30b2ahQc932Gp2k9HLD4BRhgWp8Ig9EQRTUgQKWSsTHSTnQtU1cNv+
- 4wMcWJOh0Doxtl6hUiJzmGCWOFc2YYIcQ9ELhsb9uoUBPdrVP4Cjrk1ffgCIZs6HhA7bvk7NE
- EZVguXf2MjBwrvsRdR3dXp5q2dELksAz89Tywytd8DQjNspuSufMllFGCsbJxVOgVSEnevN5g
- fKYidaTAnk8c1QQo9w9YM1DRwbCfHfDbJUTn+5ROSNw8cDuvGt7AjNVZUyBKhRUS3S6hrk7I5
- 34ybrIVzQiMV1ahqKIPXzQ0zPNdkHLSJNEc5Zt0ixZByldmxHwcytbpqPiVd3k++zjnk1lmAh
- Cmv0SEdjvSfss1GwwRbvWZi8aTQH32JG2l9zkRPg7Dnv9F3dDWn4s9meRO7HnvAqZHffcxad3
- vMQ1fsnJ20Ma1FOm07EGM6aLkWoypGrNlbx+lKhhjGOg0kBUxqdy1pVidgfcwS403HhTEwiuL
- BlKxnY8Yx/kkAUL/1tXVJvhmg2XNXfg78iWD6M/9MmC8aZWKvP915zIr6FNADpRBtcjNi4JOp
- 8nnSZfI7XGVLOMcy5tjQ==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <dda802de-2efe-3d22-7816-6da36bf9ebf8@zytor.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9397 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1908290000 definitions=main-1910020115
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9397 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1908290000
+ definitions=main-1910020115
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The type definition for 'uint' clashes with the generic kernel
-headers:
+On Tue, Oct 01, 2019 at 03:28:01PM -0700, H. Peter Anvin wrote:
+> On 2019-10-01 04:41, Daniel Kiper wrote:
+> >
+> > OK, so, this is more or less what I had in my v3 patch before sending
+> > this email. So, it looks that I am on good track. Great! Though I am not
+> > sure that we should have magic for chunked objects. If yes could you
+> > explain why? I would just leave len for chunked objects.
+> >
+>
+> It makes it easier to validate the contents (bugs happen...), and would allow
+> for multiple chunks that could come from different object files if it ever
+> becomes necessary for some reason.
 
-drivers/gpu/drm/amd/amdgpu/../display/dc/dml/dcn21/display_mode_vba_21.c:43:22: error: redefinition of typedef 'uint' is a C11 feature [-Werror,-Wtypedef-redefinition]
-include/linux/types.h:92:23: note: previous definition is here
+OK.
 
-Just remove this type and use plain 'unsigned int' consistently,
-as it is already use almost everywhere in this file.
+> We could also just say that dynamic chunks don't even have pointers, and let
+> the boot loader just walk the list.
 
-Fixes: b04641a3f4c5 ("drm/amd/display: Add Renoir DML")
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
----
- .../amd/display/dc/dml/dcn21/display_mode_vba_21.c  | 13 +++++--------
- 1 file changed, 5 insertions(+), 8 deletions(-)
+Yeah... That seams simpler. I will do that.
 
-diff --git a/drivers/gpu/drm/amd/display/dc/dml/dcn21/display_mode_vba_21.c b/drivers/gpu/drm/amd/display/dc/dml/dcn21/display_mode_vba_21.c
-index 46cda85d3d63..998970e2f84c 100644
---- a/drivers/gpu/drm/amd/display/dc/dml/dcn21/display_mode_vba_21.c
-+++ b/drivers/gpu/drm/amd/display/dc/dml/dcn21/display_mode_vba_21.c
-@@ -39,9 +39,6 @@
-  * ways. Unless there is something clearly wrong with it the code should
-  * remain as-is as it provides us with a guarantee from HW that it is correct.
-  */
--
--typedef unsigned int uint;
--
- typedef struct {
- 	amdgpu_dc_double DPPCLK;
- 	amdgpu_dc_double DISPCLK;
-@@ -4774,7 +4771,7 @@ void dml21_ModeSupportAndSystemConfigurationFull(struct display_mode_lib *mode_l
- 				mode_lib->vba.MaximumReadBandwidthWithoutPrefetch = 0.0;
- 				mode_lib->vba.MaximumReadBandwidthWithPrefetch = 0.0;
- 				for (k = 0; k <= mode_lib->vba.NumberOfActivePlanes - 1; k++) {
--					uint m;
-+					unsigned int m;
- 
- 					locals->cursor_bw[k] = 0;
- 					locals->cursor_bw_pre[k] = 0;
-@@ -5285,7 +5282,7 @@ static void CalculateWatermarksAndDRAMSpeedChangeSupport(
- 	amdgpu_dc_double SecondMinActiveDRAMClockChangeMarginOneDisplayInVBLank;
- 	amdgpu_dc_double FullDETBufferingTimeYStutterCriticalPlane = 0;
- 	amdgpu_dc_double TimeToFinishSwathTransferStutterCriticalPlane = 0;
--	uint k, j;
-+	unsigned int k, j;
- 
- 	mode_lib->vba.TotalActiveDPP = 0;
- 	mode_lib->vba.TotalDCCActiveDPP = 0;
-@@ -5507,7 +5504,7 @@ static void CalculateDCFCLKDeepSleep(
- 		amdgpu_dc_double DPPCLK[],
- 		amdgpu_dc_double *DCFCLKDeepSleep)
- {
--	uint k;
-+	unsigned int k;
- 	amdgpu_dc_double DisplayPipeLineDeliveryTimeLuma;
- 	amdgpu_dc_double DisplayPipeLineDeliveryTimeChroma;
- 	//amdgpu_dc_double   DCFCLKDeepSleepPerPlane[DC__NUM_DPP__MAX];
-@@ -5727,7 +5724,7 @@ static void CalculatePixelDeliveryTimes(
- 		amdgpu_dc_double DisplayPipeRequestDeliveryTimeChromaPrefetch[])
- {
- 	amdgpu_dc_double req_per_swath_ub;
--	uint k;
-+	unsigned int k;
- 
- 	for (k = 0; k < NumberOfActivePlanes; ++k) {
- 		if (VRatio[k] <= 1) {
-@@ -5869,7 +5866,7 @@ static void CalculateMetaAndPTETimes(
- 	unsigned int dpte_groups_per_row_chroma_ub;
- 	unsigned int num_group_per_lower_vm_stage;
- 	unsigned int num_req_per_lower_vm_stage;
--	uint k;
-+	unsigned int k;
- 
- 	for (k = 0; k < NumberOfActivePlanes; ++k) {
- 		if (GPUVMEnable == true) {
--- 
-2.20.0
+> >> Also "InfO" is a pretty hideous magic. In general, all-ASCII magics have much
+> >> higher risk of collision than *RANDOM* binary numbers. However, for a chunked
+> >> architecture they do have the advantage that they can be used also as a human
+> >> name or file name for the chunk, e.,g. in sysfs, so maybe something like
+> >> "LnuX" or even "LToP" for the top-level chunk might make sense.
+> >>
+> >> How does that sound?
+> >
+> > Well, your proposals are more cryptic, especially the second one, than
+> > mine but I tend to agree that more *RANDOM* magics are better. So,
+> > I would choose "LToP" if you decipher it for me. Linux Top?
+> >
+>
+> Yes, Linux top [structure].
 
+Thx!
+
+Daniel
