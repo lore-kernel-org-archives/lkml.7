@@ -2,127 +2,82 @@ Return-Path: <SRS0=zem1=X3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58DB5C35280
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 16:51:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B816EC35280
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 16:51:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2D5AE21920
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 16:51:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7D2C121920
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 16:51:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=silabs.onmicrosoft.com header.i=@silabs.onmicrosoft.com header.b="c3GWiyIS"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="rmQ/UWjp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727737AbfJBQvG (ORCPT
+        id S1727822AbfJBQvk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Oct 2019 12:51:06 -0400
-Received: from mail-eopbgr810040.outbound.protection.outlook.com ([40.107.81.40]:56928
-        "EHLO NAM01-BY2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726101AbfJBQvG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Oct 2019 12:51:06 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=DDf8cNiVaIs1USTdZfYtFWuiOlkBnLW2mdxHFTjzIMXPbkGkBwe0DJDzFDgpW3MH4PCibAAYAPMMFKx36Qwrh3ijC2ksS5KAPT9mxZvxHJUAjyarrr0jGMg2mGFLXckbu3Q6s6do6hr1i47bCYjUqahN4lrvesBox5UH6f1a5zdb/qWr7ACXwAh/r3AMrASdE6ZbeRLr/I+TeBMR+qIvyYnlGbp7zN6O1Jihxp9sJHGUwPTePMun0/lyA7Vhr+x4q7G70Wlhr+vxfQRRHjTB2jDOm/UsLFp5k8sOEOZE7DI7LiQPXMmJNPUA69yIFJ4UdrUPzgVXOR2M9+WgDwB3jg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ziovh6Z/smGLGAiixIv5ZVkNm5JWlgc5DA97F/bWCqo=;
- b=PQs5KrSoz+oDLwsLtQoDcPRyeO3mmTPyF3zMmlbWcHQwJHLMP1oMtT4ico+4Wigvn0RQ8WcAQrH/z5nMTK9bqMyh9e3Mm5V4jluIv8bAnJwkHCZwQJBjhFLM8V7U0wOSPLed8iwwXpQ7BU4rqM5LHw18cwB7zUtxd8kCrQBwuQmNBms/VuHRapmFkPMKa47S6ihw7umkKmXpl6YUD086OA67dTWXdPZIjXG0o+5qeCrDPD0riLnYwD7plqz19rEc0UrTDBvAncZDkzwjTdWjNneiqjdK+9BKGq7X66gaaxqjE8PO3dekRag1OSZNwscjS4Xz9dfiklWQrZJsDP48dg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=silabs.com; dmarc=pass action=none header.from=silabs.com;
- dkim=pass header.d=silabs.com; arc=none
+        Wed, 2 Oct 2019 12:51:40 -0400
+Received: from mail-pl1-f202.google.com ([209.85.214.202]:52024 "EHLO
+        mail-pl1-f202.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726101AbfJBQvk (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 2 Oct 2019 12:51:40 -0400
+Received: by mail-pl1-f202.google.com with SMTP id 99so9563678plc.18
+        for <linux-kernel@vger.kernel.org>; Wed, 02 Oct 2019 09:51:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=silabs.onmicrosoft.com; s=selector2-silabs-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ziovh6Z/smGLGAiixIv5ZVkNm5JWlgc5DA97F/bWCqo=;
- b=c3GWiyISylf2hC+CCh3e5s2XwzBxkHkB7ybZz/bHJAHDrgiM69pCBJiGp3lfJAoZqPu6l6U3AHlq+MYIdKSVmRlktNZgtq4dLPwwbMeXwrTyfpBdjeYt48mbnfQNo4wNGMqzTkw08SMuKkR0CwibP8cN/KzMPVbgqM7uF0QfOIE=
-Received: from MN2PR11MB4063.namprd11.prod.outlook.com (10.255.180.22) by
- MN2PR11MB3918.namprd11.prod.outlook.com (10.255.180.141) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2305.15; Wed, 2 Oct 2019 16:51:02 +0000
-Received: from MN2PR11MB4063.namprd11.prod.outlook.com
- ([fe80::ac8c:fc55:d1e2:465f]) by MN2PR11MB4063.namprd11.prod.outlook.com
- ([fe80::ac8c:fc55:d1e2:465f%5]) with mapi id 15.20.2305.017; Wed, 2 Oct 2019
- 16:51:01 +0000
-From:   Jerome Pouiller <Jerome.Pouiller@silabs.com>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-CC:     Andrew Lunn <andrew@lunn.ch>,
-        "devel@driverdev.osuosl.org" <devel@driverdev.osuosl.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        David Le Goff <David.Legoff@silabs.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Kalle Valo <kvalo@codeaurora.org>
-Subject: Re: [PATCH 02/20] staging: wfx: add support for I/O access
-Thread-Topic: [PATCH 02/20] staging: wfx: add support for I/O access
-Thread-Index: AQHVbthYAz5BV9jhoUCLDh42xNi6RaczMoaAgBRsfQCAAAP0gIAAAimA
-Date:   Wed, 2 Oct 2019 16:51:01 +0000
-Message-ID: <2259110.QEIxtLcPIB@pc-42>
-References: <20190919105153.15285-1-Jerome.Pouiller@silabs.com>
- <4024590.nSQgSsaaFe@pc-42> <20191002164207.GA1758310@kroah.com>
-In-Reply-To: <20191002164207.GA1758310@kroah.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=Jerome.Pouiller@silabs.com; 
-x-originating-ip: [37.71.187.125]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 30a366c0-d004-4c82-3f44-08d74758b51f
-x-ms-traffictypediagnostic: MN2PR11MB3918:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <MN2PR11MB391807CFBB0291A9D625746E939C0@MN2PR11MB3918.namprd11.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:6790;
-x-forefront-prvs: 0178184651
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(979002)(7916004)(136003)(376002)(366004)(39850400004)(346002)(396003)(189003)(199004)(51444003)(478600001)(26005)(102836004)(76176011)(6486002)(486006)(8936002)(305945005)(7736002)(8676002)(6506007)(229853002)(81156014)(6246003)(14454004)(81166006)(76116006)(6436002)(64756008)(66446008)(66556008)(11346002)(91956017)(66946007)(476003)(66066001)(66476007)(71190400001)(71200400001)(25786009)(186003)(14444005)(256004)(446003)(6512007)(9686003)(6116002)(3846002)(2906002)(4326008)(66574012)(6916009)(86362001)(33716001)(54906003)(99286004)(316002)(5660300002)(4744005)(969003)(989001)(999001)(1009001)(1019001);DIR:OUT;SFP:1101;SCL:1;SRVR:MN2PR11MB3918;H:MN2PR11MB4063.namprd11.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: silabs.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: miXPqlD7uojS2keYbaU6A7E7eEkLFREmk9tkMsjExyA/S0RJnGDLM+9HeX11DmaxeVEAcHJWAUr0nNMaxgHHW/o99hw48s5qrLv4VXDFAu8Cxb2Ryo4ialbzQresvCLif9JcjeHbi7gA9hqGevXCEZNbSfy8ytWAA/y6eb+BHwB4ywpy3EoNtUcpezW1EPCgPBMejx5BpgjvmEjSp6cTC4F920Eq7W+SqUWetC+f15ucS+K+TRYFfJQlKcde1m6EVmTewTzcV4WL2vao9jupxZvVlSPTCYxS8122EfHD9SnhuywEV+Ryeh9+v4mAo9kF4Y/T+SDm6mtPs0dL2yD4i+zsZFm8c8FuE76Hq252dG27ImX8L00/fk5z5IEJu3lT+DtuvH92YT3DlmwQn91Q5vpRQHTPlEqbokvfhTxvevA=
-Content-Type: text/plain; charset="iso-8859-1"
-Content-ID: <97457DD34C246E4F95A1E589E5D28F25@namprd11.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
-MIME-Version: 1.0
-X-OriginatorOrg: silabs.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 30a366c0-d004-4c82-3f44-08d74758b51f
-X-MS-Exchange-CrossTenant-originalarrivaltime: 02 Oct 2019 16:51:01.6073
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 54dbd822-5231-4b20-944d-6f4abcd541fb
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: Dtl8cSgUJXafLV+ALxSAcTxGMVFMKn17lomLQBCbLXsjBfyrdVp8IIdbn5c+Asf2QywzcYV7RXEeN+LuJNVDqw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR11MB3918
+        d=google.com; s=20161025;
+        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
+         :cc;
+        bh=4INGfYLGyLALjI2XEapvgZEklVw6KiRSbjc8hD/raH0=;
+        b=rmQ/UWjpQ9gSzRQMAE9Z2Xm1qYUhMcoVPefDNgkutcuhAi3dYBTO5gO3X0gTikcFBt
+         A8aFY6lBh4YRc3ZV78aFfn9mcnZk7KNABwAsbR4rBLPsjkz7FkAd4W8JABWZtgwBuDRS
+         qLf+e3Do4U0t5RzrMax6zl4/qxX2a2ca9jKJoTV9YMXCqsefR/zm+i6MoA40bIgWs0ef
+         idGAQnt76kWKxc+sp4VlCpn/uEpphTcefYNTFu78VhpGeQerpQMrMGWrw4FOiaEEgZL+
+         V6lhDzqU96Aa4+a1Wl2AY5D/AwQK7X6SwZaeXfsW6M/84YBqf1QCSC9wCDOjcD5nWs4w
+         VBVw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
+         :references:subject:from:to:cc;
+        bh=4INGfYLGyLALjI2XEapvgZEklVw6KiRSbjc8hD/raH0=;
+        b=lLv+3uvx+FFvwAdDJ5Vppu3iz6KtGlZ8XN6ljE0hDUOf9aidnNxJ5dQyqLYkXFMQ8v
+         K+cw0zWFYeMghiPawF/+cZGYS9DwGbeQlMu8fvovbvgQR4W2GlA/I54j8szeZ4YHLaYc
+         EAXcxGi+q4CJcgVJmQ4kKp6itcj6JL993NeWV+Sv1VMpg3RFqCwN0zLUIywgf6asztrC
+         Exf86iOT3OsMWd0//tEOBJiGa7+8RJ7ew2zqKYJp9d+xAsPBpVDDWSCSah73/13qehQ7
+         hdi5Elj26Z0VqyuTyW6nsCduHqkmU/+Sgi/U1QQNRIJT4wOWdkPihplv16c/I84leiSn
+         A2gA==
+X-Gm-Message-State: APjAAAU+Yv05ilQC1nMcOZZHS8xlTz3Pv2wus41Gg65pWXxRFNBuLspL
+        aqoxHbrVN7H8ezPHnJx+B5zEECpu1CDlgDr9v6o=
+X-Google-Smtp-Source: APXvYqzqokz2U9Wh/jeAoe5hFd5+Jm6Iq6mS+TfQ3qt8KuD3T5573f6jW+N2W7bdqA+tpZGrZLlRlVZZvHAt9/vymno=
+X-Received: by 2002:a63:dd0c:: with SMTP id t12mr4611244pgg.82.1570035099268;
+ Wed, 02 Oct 2019 09:51:39 -0700 (PDT)
+Date:   Wed,  2 Oct 2019 09:51:37 -0700
+In-Reply-To: <20191002120136.1777161-7-arnd@arndb.de>
+Message-Id: <20191002165137.15726-1-ndesaulniers@google.com>
+Mime-Version: 1.0
+References: <20191002120136.1777161-7-arnd@arndb.de>
+X-Mailer: git-send-email 2.23.0.444.g18eeb5a265-goog
+Subject: Re: [PATCH 6/6] [RESEND] drm/amdgpu: work around llvm bug #42576
+From:   Nick Desaulniers <ndesaulniers@google.com>
+To:     arnd@arndb.de
+Cc:     David1.Zhou@amd.com, Hawking.Zhang@amd.com, airlied@linux.ie,
+        alexander.deucher@amd.com, amd-gfx@lists.freedesktop.org,
+        christian.koenig@amd.com, clang-built-linux@googlegroups.com,
+        daniel@ffwll.ch, dri-devel@lists.freedesktop.org, le.ma@amd.com,
+        linux-kernel@vger.kernel.org, ray.huang@amd.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wednesday 2 October 2019 18:42:14 CEST Greg Kroah-Hartman wrote:
-> On Wed, Oct 02, 2019 at 04:29:09PM +0000, Jerome Pouiller wrote:
-[...]
-> >
-> > Hi Andrew,
-> >
-> > I did not forget your suggestion. However, if everyone is agree with th=
-at, I'd
-> > prefer to address it in a next pull request. Indeed, I'd prefer to keep=
- this
-> > version in sync with version 2.3.1 published on github.
->=20
-> Ugh, you aren't doing development outside of the kernel tree and
-> expecting things to stay in sync somehow are you?  That way lies madness
-> and a sure way to get me to just delete the staging driver.  Just work
-> on it in-tree please.
+> Apparently this bug is still present in both the released clang-9
+> and the current development version of clang-10.
+> I was hoping we would not need a workaround in clang-9+, but
+> it seems that we do.
 
-Sure, I will just work in-tree. But, I think that if someone want to
-follow history, it is easier if it exists a version exactly identical
-in kernel and on github.
-
-
---=20
-J=E9r=F4me Pouiller
-
+I think I'd rather:
+1. mark AMDGPU BROKEN if CC_IS_CLANG. There are numerous other issues building
+   a working driver here.
+2. Fix the compiler bug.
