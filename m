@@ -2,105 +2,140 @@ Return-Path: <SRS0=zem1=X3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 11DA7C352AA
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 16:59:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 95411C10F14
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 17:03:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DE97221920
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 16:59:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6DCDC2086A
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 17:03:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="V4N2hGEp"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="KNuxG3aE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728000AbfJBQ7w (ORCPT
+        id S1727751AbfJBRC7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Oct 2019 12:59:52 -0400
-Received: from mail-io1-f68.google.com ([209.85.166.68]:37752 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726101AbfJBQ7v (ORCPT
+        Wed, 2 Oct 2019 13:02:59 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:36487 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726076AbfJBRC7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Oct 2019 12:59:51 -0400
-Received: by mail-io1-f68.google.com with SMTP id b19so30505093iob.4;
-        Wed, 02 Oct 2019 09:59:51 -0700 (PDT)
+        Wed, 2 Oct 2019 13:02:59 -0400
+Received: by mail-wr1-f68.google.com with SMTP id y19so20536195wrd.3
+        for <linux-kernel@vger.kernel.org>; Wed, 02 Oct 2019 10:02:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=edH88JJdhvk/m92MPK7nfCg4Dk9GmYl/C4LQHI6oVcg=;
-        b=V4N2hGEp0d2Y39s7wVpn/Bk4EUviruUwYOflGFl1F9b8QascqJIKG49jxSvZaziNes
-         cTF0rcV/QtekP7KHzbfAqN6glQunPtXZbBrtH6fK7fnxdq++jQk5E+NTlTBO4/LBqUjE
-         NnqNcXZISZQPFkfdWGRzY5xOEtlgEtyKAm37qr8Yn0N+WzmwGTpnwORjMFznPZc682hG
-         oMan9P6a/rKvuFONLlyBxzKC3qTigKG0YC7Rh0NJnla50L3Uzv+dzHQ7Z9Idr6TbvKd0
-         VrVWtske+SzTOIiOtdYUcKFS3aOEZr2yjZ4NPOXlRGSVc5evScbtaEXW8f85mQpAt/TN
-         XtMg==
+        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=WtSPNig1ms9qonkm00W4u3LTk/rJpQxZEt50bultrPA=;
+        b=KNuxG3aE6nOukio7lmJ5sljTpGvgk7ZA8T+/oECKpldoWO/D3KZgzS8hr50+9lG2mX
+         iTCGqZmuZyAF1IKgZJPo9KQtErAx9E0KIZcgMB85UXMtGJmx8Oo1Qd+Xa4lBbJ/uYWup
+         3r0rGUOwrjcDHQKeoYKfWGhFraLkSapL0x/t9zl/tuCIRha19r3mJeJoa0Suusk2JpcF
+         YUs4tGDbJFGrLjTX1zVNnIM0qkeAqxy2gQjP9wZwXtqVb6LS2RLfK2JVhbx1mgyb2wIM
+         Bq8GTd4fBBUpHd/NwKI9w3M23zZLOno6wE2oqzuaYAwbY6RnKt2qoVeemo9nNZX9QZbP
+         w/zQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=edH88JJdhvk/m92MPK7nfCg4Dk9GmYl/C4LQHI6oVcg=;
-        b=Delca1bDpyx8EOeqRvVoVIxJ2Kp+y7d4HRTO7sHbHiJyfI2oQSCdFJxG0CPuh2xoEV
-         gBke6+5N7WJUH+epD99PSAxOIaGNND2Q6o2IudUNf7++H17QybqFeh3QRlGLxTrMMDrw
-         OmGYtikVkfnfu+hP+f0yizvQHe1TY35g31HsTOtVYfBluCbAwqv8CQsy5jf20yDX/jzZ
-         EruxthZ2ThaXuMTH5gDaJcU31zK35uxtVMD0yqhvYgMfDv/OcSSzTCtVeuRN6x46y8bQ
-         NYp7rJeoOWuF/rKwxTf/3hJd/bX5ZP8D/k7GX/hTwHPvFadlKrPS220RVr4nfgFRrPAD
-         0+nw==
-X-Gm-Message-State: APjAAAWuW6fCZnUIHl6EgHgCup+q2Zk9RsolW1MMGKE2Rdh7+/DmVHpq
-        meuOtkdknPp9c+r4chjMLcdgCNphuXmZTPndZsE=
-X-Google-Smtp-Source: APXvYqyTHRFovhUojBsEb0XHEq2pPC73Ho0l0/Gbp4i+D9nBP1s8h7A2c86r1V5mGH1264/hx7ZE9D4VBS1dqX8IETA=
-X-Received: by 2002:a5e:8216:: with SMTP id l22mr1172841iom.252.1570035590957;
- Wed, 02 Oct 2019 09:59:50 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=WtSPNig1ms9qonkm00W4u3LTk/rJpQxZEt50bultrPA=;
+        b=iQug0M8xUcvdu8DkgrzTynn3qCmOnwqMzSrWtu5m4pW5s3vxEIFt9AyzFea1VPGvj9
+         z2g94eEMknHOXhg6rGLF7ZUdNAYNUaFhc9DHRNosS92V9VGdXYNn8ANmq+lNfURCUdY9
+         /FH6mzbKn3PumOKm8wtSTZMt1YMV/Thj3sbQCZol7/kh9Z5xL7JJpMBNJ9EU8xLUvAbc
+         Gou5luXyTnlWTgX2RXSkb/3XkBakzrFjlbAthOEkLNxf8qAJOnpH56FhaJ4X8wol+NWY
+         16Ps6cX2vivyX+y5oNM2J1r5v12bikmTfMqxYx+H06guwAlFvhvXEk/7KGtSU7+uow1d
+         KZ2g==
+X-Gm-Message-State: APjAAAUba+3e5j+hBJ40H9sHOt5fbNI30d+AxNRH6l6ErIFu0rH5NNKM
+        EOjb+Ttsjo/IQfSfXYulxlGDlw==
+X-Google-Smtp-Source: APXvYqzNbi2tQhUutrh0PDR6+GL71tBbUlCTKYzIweDtOM53Qle0E8W8yAJXMLrVkQItccbrZNGUMQ==
+X-Received: by 2002:a5d:4b46:: with SMTP id w6mr3784184wrs.223.1570035777609;
+        Wed, 02 Oct 2019 10:02:57 -0700 (PDT)
+Received: from debian-brgl.home ([2a01:cb1d:af:5b00:6d6c:8493:1ab5:dad7])
+        by smtp.gmail.com with ESMTPSA id b62sm11188575wmc.13.2019.10.02.10.02.56
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 02 Oct 2019 10:02:57 -0700 (PDT)
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+To:     Linus Walleij <linus.walleij@linaro.org>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Alban Bedel <albeu@free.fr>
+Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Subject: [PATCH 1/6] gpio: xgene: remove redundant error message
+Date:   Wed,  2 Oct 2019 19:02:44 +0200
+Message-Id: <20191002170249.17366-2-brgl@bgdev.pl>
+X-Mailer: git-send-email 2.23.0
+In-Reply-To: <20191002170249.17366-1-brgl@bgdev.pl>
+References: <20191002170249.17366-1-brgl@bgdev.pl>
 MIME-Version: 1.0
-References: <ec7d3fdb-445b-7f4e-d6e6-77c6ae9a5732@web.de> <20190930210114.6557-1-navid.emamdoost@gmail.com>
- <20191002092221.GJ2751@suse.cz>
-In-Reply-To: <20191002092221.GJ2751@suse.cz>
-From:   Navid Emamdoost <navid.emamdoost@gmail.com>
-Date:   Wed, 2 Oct 2019 11:59:40 -0500
-Message-ID: <CAEkB2ERBSfAad=EChgH+X9vrPGjH8_sBvb2W9ur8n1Fnh_NuUg@mail.gmail.com>
-Subject: Re: [PATCH v2] fs: affs: fix a memory leak in affs_remount
-To:     David Sterba <dsterba@suse.cz>
-Cc:     Markus Elfring <Markus.Elfring@web.de>,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        Deepa Dinamani <deepa.kernel@gmail.com>,
-        Jeff Layton <jlayton@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        David Sterba <dsterba@suse.com>,
-        Navid Emamdoost <emamd001@umn.edu>, Kangjie Lu <kjlu@umn.edu>,
-        Stephen McCamant <smccaman@umn.edu>,
-        linux-fsdevel@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
-        Al Viro <viro@zeniv.linux.org.uk>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Thanks David,
+From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 
-On Wed, Oct 2, 2019 at 4:22 AM David Sterba <dsterba@suse.cz> wrote:
->
-> On Mon, Sep 30, 2019 at 04:01:10PM -0500, Navid Emamdoost wrote:
-> > In affs_remount if data is provided it is duplicated into new_opts.
-> > The allocated memory for new_opts is only released if pare_options fail.
-> > The release for new_opts is added.
->
-> A variable that is allocated and freed without use should ring a bell to
-> look closer at the code. There's a bit of history behind new_options,
-> originally there was save/replace options on the VFS layer so the 'data'
-> passed must not change (thus strdup), this got cleaned up in later
-> patches. But not completely.
->
-> There's no reason to do the strdup in cases where the filesystem does
-> not need to reuse the 'data' again, because strsep would modify it
-> directly.
->
-> So new_opts should be removed.
+There's no need to emit an error message on probe failure unless we're
+printing some meaningful info. Otherwise the core driver code will
+inform us about a probe error.
 
-I will send a new patch with the unused variable removed.
+Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+---
+ drivers/gpio/gpio-xgene.c | 23 +++++++----------------
+ 1 file changed, 7 insertions(+), 16 deletions(-)
 
-
+diff --git a/drivers/gpio/gpio-xgene.c b/drivers/gpio/gpio-xgene.c
+index 2918363884de..900b38a7dba8 100644
+--- a/drivers/gpio/gpio-xgene.c
++++ b/drivers/gpio/gpio-xgene.c
+@@ -160,23 +160,17 @@ static int xgene_gpio_probe(struct platform_device *pdev)
+ 	int err = 0;
+ 
+ 	gpio = devm_kzalloc(&pdev->dev, sizeof(*gpio), GFP_KERNEL);
+-	if (!gpio) {
+-		err = -ENOMEM;
+-		goto err;
+-	}
++	if (!gpio)
++		return -ENOMEM;
+ 
+ 	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+-	if (!res) {
+-		err = -EINVAL;
+-		goto err;
+-	}
++	if (!res)
++		return -EINVAL;
+ 
+ 	gpio->base = devm_ioremap_nocache(&pdev->dev, res->start,
+ 							resource_size(res));
+-	if (!gpio->base) {
+-		err = -ENOMEM;
+-		goto err;
+-	}
++	if (!gpio->base)
++		return -ENOMEM;
+ 
+ 	gpio->chip.ngpio = XGENE_MAX_GPIOS;
+ 
+@@ -196,14 +190,11 @@ static int xgene_gpio_probe(struct platform_device *pdev)
+ 	if (err) {
+ 		dev_err(&pdev->dev,
+ 			"failed to register gpiochip.\n");
+-		goto err;
++		return err;
+ 	}
+ 
+ 	dev_info(&pdev->dev, "X-Gene GPIO driver registered.\n");
+ 	return 0;
+-err:
+-	dev_err(&pdev->dev, "X-Gene GPIO driver registration failed.\n");
+-	return err;
+ }
+ 
+ static const struct of_device_id xgene_gpio_of_match[] = {
 -- 
-Navid.
+2.23.0
+
