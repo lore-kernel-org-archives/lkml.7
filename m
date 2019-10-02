@@ -2,111 +2,132 @@ Return-Path: <SRS0=zem1=X3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 86ABFECE58B
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 09:16:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CCDB8C352AA
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 09:17:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5585B2190F
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 09:16:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="TjVT0D6D"
+	by mail.kernel.org (Postfix) with ESMTP id AEE5D206C0
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 09:17:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727258AbfJBJP7 (ORCPT
+        id S1727072AbfJBJRj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Oct 2019 05:15:59 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:35619 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725852AbfJBJPh (ORCPT
+        Wed, 2 Oct 2019 05:17:39 -0400
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:41772 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725848AbfJBJRi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Oct 2019 05:15:37 -0400
-Received: by mail-wm1-f68.google.com with SMTP id y21so6138244wmi.0
-        for <linux-kernel@vger.kernel.org>; Wed, 02 Oct 2019 02:15:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=FPzLmAFxVlvoWlrn/cPfzD8ybuBQrABYqNe+NltmaKc=;
-        b=TjVT0D6D0IDve5evcKRh6oxGsg70BRR503/nwR27ckewQi1eA7EoYNYe69MKOT/mrw
-         IwsSwedW0AarjTBKsAb5oEBFz6Wuj7bBy4CaR+nE1y5oYJEF1aFYT3TCv3aURhSHLVev
-         VbcjX+F0OBK8G78rKEhs59ebi0KtuuuszxbZcFfphI7Im+mEOzBs3nJbkzBbrlxsQLts
-         fBoaZluHMUnbkFpavdfrqISEOvILhKJDwiEW8A9536Afgrhj7uQoUmOolVhaqh0yo17z
-         LlXhY43TWJNBti5XJbAIX3Z0FYOWaRJh6zEPPYftj10rasuNDz7noeB1U6dzImMEq/vx
-         MjnA==
+        Wed, 2 Oct 2019 05:17:38 -0400
+Received: by mail-ot1-f65.google.com with SMTP id g13so14063050otp.8;
+        Wed, 02 Oct 2019 02:17:38 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=FPzLmAFxVlvoWlrn/cPfzD8ybuBQrABYqNe+NltmaKc=;
-        b=OC4LyvgokKsMOEbIwoIMnFwiqRsKGnj1izNZACP3CJdXDwE4ElNOdC/1q5625BR0pY
-         v14oLvPk8JSRJtoGYQKN99HEj+tRbRH0Yney4Yfqpeqyy4dBRmwZGKW44oov2J1GuPq2
-         4LrLzA/ChhyyPDaiO43/8nTDmhTThUKsGMChdfn5rBpgG0TtutlASyPkBcZE6jAWaVOZ
-         376yMyQhw7qBOsgKCH8QLeObayIGOa2c3HcqGgfZSQ19g0Ad1c8RWoB18co/7W7lTop7
-         VgpvR7a522p+jsW5W3eaDpttuCYPlqjoB9FheNQW86TsmqHvydunlVGKHEeBDLSPGYKI
-         w9Xg==
-X-Gm-Message-State: APjAAAVb3SLUW2fLjghWz+qf9pY/wWP5K/mS4I78PEswB/ynF7hxjLCY
-        No6wWA/bv7/ISae8z0avePyY0Q==
-X-Google-Smtp-Source: APXvYqyAeNIzYfZDnXVDS34M/KFIdc9BCM3rsZxBblu5PD/ay+OI5yEHpjToOgd8l9an0xWnyWUp6Q==
-X-Received: by 2002:a7b:c92d:: with SMTP id h13mr2060315wml.169.1570007734515;
-        Wed, 02 Oct 2019 02:15:34 -0700 (PDT)
-Received: from starbuck.baylibre.local (lmontsouris-657-1-212-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
-        by smtp.googlemail.com with ESMTPSA id r13sm32913737wrn.0.2019.10.02.02.15.33
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 02 Oct 2019 02:15:33 -0700 (PDT)
-From:   Jerome Brunet <jbrunet@baylibre.com>
-To:     Neil Armstrong <narmstrong@baylibre.com>
-Cc:     Jerome Brunet <jbrunet@baylibre.com>,
-        Kevin Hilman <khilman@baylibre.com>,
-        linux-amlogic@lists.infradead.org, linux-clk@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v3 2/7] dt-bindings: clock: meson: add sm1 resets to the axg-audio controller
-Date:   Wed,  2 Oct 2019 11:15:24 +0200
-Message-Id: <20191002091529.17112-3-jbrunet@baylibre.com>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20191002091529.17112-1-jbrunet@baylibre.com>
-References: <20191002091529.17112-1-jbrunet@baylibre.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Ls6EK3vubSTuihO8bhZK7PjFeD0RgzqQTr2Z4JO8PkE=;
+        b=HVgwShvbvsIuGc03VzYv+tXBhEd7uvXoV3wX/9+ylPvUhOALYYQY7fmbUzcrXAuF4f
+         fsjwUmUpVTCRd/kTZMsvwmnAo0PPIRVpH+1nYVVEjdKSA4ilnEd0uPN8+mNWQv86P5Ao
+         Rt6v6pDpTCgc1sYs5RrEVpPhDSUsYTvqFPln6XlQA5CV09T9/ECJdl1ekqlyM1CBdoe8
+         F8IyNnVbJjQSnYdA9xfN8VRpRp69/YstqD27MBvvUILTiCzDUglfliPzDnZWMZwaldQG
+         qGhUY8bhmNgayN2fhMhI7nB3Rm3ywscDe95TTgsijg1V/DY7X5q0no1mv68SAeDJwLwF
+         VxoQ==
+X-Gm-Message-State: APjAAAUk9GAlsPIOVCwk9atEcm3Z2KM/PQSItM4QxNOgrRa0JVWcwErb
+        VK8cv6BrdOO1iglKRgXNdK0awjVJC0GqjuXOVRn2QLMo
+X-Google-Smtp-Source: APXvYqy+Nj/99JkY+AGWCoI9iuwNtvxD/sJXf6Ney2dGy6HlRLq+mQUTdRIlpehSzHEHq3WZ2Fmrs1jkwV4XzPvS5oY=
+X-Received: by 2002:a9d:730d:: with SMTP id e13mr1857379otk.145.1570007857612;
+ Wed, 02 Oct 2019 02:17:37 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20191002085809.16381-1-geert@linux-m68k.org>
+In-Reply-To: <20191002085809.16381-1-geert@linux-m68k.org>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Wed, 2 Oct 2019 11:17:26 +0200
+Message-ID: <CAMuHMdUHG-4=HEOspGH=-6P_nTdbR_wYnyKdyUR9+-2=r1fNkQ@mail.gmail.com>
+Subject: Re: Build regressions/improvements in v5.4-rc1
+To:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Cc:     linux-mips@vger.kernel.org, Matthew Wilcox <willy@infradead.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        David Daney <ddaney.cavm@gmail.com>,
+        Alex Vesker <valex@mellanox.com>,
+        Matt Fleming <matt@codeblueprint.co.uk>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add the reset id of the sm1 audio clock controller
+On Wed, Oct 2, 2019 at 11:05 AM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
+> Below is the list of build error/warning regressions/improvements in
+> v5.4-rc1[1] compared to v5.3[2].
+>
+> Summarized:
+>   - build errors: +15/-3
+>   - build warnings: +215/-117
+>
+> Note that there may be false regressions, as some logs are incomplete.
+> Still, they're build errors/warnings.
+>
+> Happy fixing! ;-)
+>
+> Thanks to the linux-next team for providing the build service.
+>
+> [1] http://kisskb.ellerman.id.au/kisskb/branch/linus/head/54ecb8f7028c5eb3d740bb82b0f1d90f2df63c5c/ (233 out of 242 configs)
+> [2] http://kisskb.ellerman.id.au/kisskb/branch/linus/head/4d856f72c10ecb060868ed10ff1b1453943fc6c8/ (all 242 configs)
+>
+>
+> *** ERRORS ***
+>
+> 15 error regressions:
+>   + /kisskb/build/tmp/cc1Or5dj.s: Error: can't resolve `_start' {*UND* section} - `L0 ' {.text section}:  => 663, 1200, 222, 873, 1420
+>   + /kisskb/build/tmp/cc2uWmof.s: Error: can't resolve `_start' {*UND* section} - `L0 ' {.text section}:  => 1213, 919, 688, 1434, 226
+>   + /kisskb/build/tmp/ccc6hBqd.s: Error: can't resolve `_start' {*UND* section} - `L0 ' {.text section}:  => 513, 1279, 1058, 727
+>   + /kisskb/build/tmp/cclSQ19p.s: Error: can't resolve `_start' {*UND* section} - `L0 ' {.text section}:  => 1396, 881, 1175, 671, 226
+>   + /kisskb/build/tmp/ccu3SlxY.s: Error: can't resolve `_start' {*UND* section} - `L0 ' {.text section}:  => 1238, 911, 222, 680, 1457
 
-Reviewed-by: Neil Armstrong <narmstrong@baylibre.com>
-Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
----
- .../reset/amlogic,meson-g12a-audio-reset.h        | 15 +++++++++++++++
- 1 file changed, 15 insertions(+)
+Various mips (allmodconfig, allnoconfig, malta_defconfig, ip22_defconfig)
 
-diff --git a/include/dt-bindings/reset/amlogic,meson-g12a-audio-reset.h b/include/dt-bindings/reset/amlogic,meson-g12a-audio-reset.h
-index 14b78dabed0e..f805129ca7af 100644
---- a/include/dt-bindings/reset/amlogic,meson-g12a-audio-reset.h
-+++ b/include/dt-bindings/reset/amlogic,meson-g12a-audio-reset.h
-@@ -35,4 +35,19 @@
- #define AUD_RESET_TOHDMITX	24
- #define AUD_RESET_CLKTREE	25
- 
-+/* SM1 added resets */
-+#define AUD_RESET_RESAMPLE_B	26
-+#define AUD_RESET_TOVAD		27
-+#define AUD_RESET_LOCKER	28
-+#define AUD_RESET_SPDIFIN_LB	29
-+#define AUD_RESET_FRATV		30
-+#define AUD_RESET_FRHDMIRX	31
-+#define AUD_RESET_FRDDR_D	32
-+#define AUD_RESET_TODDR_D	33
-+#define AUD_RESET_LOOPBACK_B	34
-+#define AUD_RESET_EARCTX	35
-+#define AUD_RESET_EARCRX	36
-+#define AUD_RESET_FRDDR_E	37
-+#define AUD_RESET_TODDR_E	38
-+
- #endif
+Related to
+
+    /kisskb/src/arch/mips/vdso/Makefile:61: MIPS VDSO requires binutils >= 2.25
+
+?
+
+>   + /kisskb/src/arch/mips/include/asm/octeon/cvmx-ipd.h: error: 'CVMX_PIP_SFT_RST' undeclared (first use in this function):  => 331:36
+>   + /kisskb/src/arch/mips/include/asm/octeon/cvmx-ipd.h: error: 'CVMX_PIP_SFT_RST' undeclared (first use in this function); did you mean 'CVMX_CIU_SOFT_RST'?:  => 331:36
+>   + /kisskb/src/arch/mips/include/asm/octeon/cvmx-ipd.h: error: storage size of 'pip_sft_rst' isn't known:  => 330:27
+
+mips-allmodconfig (CC Matthew Wilcox)
+
+>   + /kisskb/src/drivers/watchdog/cpwd.c: error: 'compat_ptr_ioctl' undeclared here (not in a function):  => 500:19
+
+sparc64-allmodconfig (CC Arnd Bergmann)
+
+>   + error: "__delay" [drivers/net/phy/mdio-cavium.ko] undefined!:  => N/A
+
+sh-allmodconfig (CC David Daney)
+
+>   + error: "__moddi3" [drivers/net/ethernet/mellanox/mlx5/core/mlx5_core.ko] undefined!:  => N/A
+>   + error: "__umoddi3" [drivers/net/ethernet/mellanox/mlx5/core/mlx5_core.ko] undefined!:  => N/A
+
+parisc-allmodconfig (CC Alex Vesker)
+
+>   + error: c2p_iplan2.c: undefined reference to `c2p_unsupported':  => .text+0xc4), .text+0x150)
+>   + error: c2p_planar.c: undefined reference to `c2p_unsupported':  => .text+0xd6), .text+0x1dc)
+
+m68k-defconfig (https://lore.kernel.org/lkml/20190927094708.11563-1-geert@linux-m68k.org/)
+
+>   + error: page_alloc.c: undefined reference to `node_reclaim_distance':  => .text+0x3180), .text+0x3148)
+
+Various sh4 (migor_defconfig, se7722_defconfig, ul2_defconfig) (CC Matt Fleming)
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
 -- 
-2.21.0
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
