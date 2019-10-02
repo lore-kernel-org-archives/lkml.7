@@ -2,132 +2,113 @@ Return-Path: <SRS0=zem1=X3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98BF0C352AA
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 14:41:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22F6AC35280
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 14:41:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 73D5A21783
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 14:41:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EC21321A4C
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 14:41:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="ZzXRNOW+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728336AbfJBOlu (ORCPT
+        id S1728356AbfJBOlv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Wed, 2 Oct 2019 10:41:51 -0400
+Received: from mout.gmx.net ([212.227.15.18]:58165 "EHLO mout.gmx.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728322AbfJBOlu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 2 Oct 2019 10:41:50 -0400
-Received: from out01.mta.xmission.com ([166.70.13.231]:53200 "EHLO
-        out01.mta.xmission.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728316AbfJBOlt (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Oct 2019 10:41:49 -0400
-Received: from in01.mta.xmission.com ([166.70.13.51])
-        by out01.mta.xmission.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.87)
-        (envelope-from <ebiederm@xmission.com>)
-        id 1iFfoy-0000co-LJ; Wed, 02 Oct 2019 08:41:40 -0600
-Received: from ip68-227-160-95.om.om.cox.net ([68.227.160.95] helo=x220.xmission.com)
-        by in01.mta.xmission.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.87)
-        (envelope-from <ebiederm@xmission.com>)
-        id 1iFfox-0000M4-PV; Wed, 02 Oct 2019 08:41:40 -0600
-From:   ebiederm@xmission.com (Eric W. Biederman)
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     Kees Cook <keescook@chromium.org>,
-        "linux-kernel\@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        Linux API <linux-api@vger.kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Andi Kleen <andi@firstfloor.org>,
-        Andi Kleen <ak@linux.intel.com>,
-        Cong Wang <xiyou.wangcong@gmail.com>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Apelete Seketeli <apelete@seketeli.net>,
-        Chee Nouk Phoon <cnphoon@altera.com>,
-        Chris Zankel <chris@zankel.net>,
-        Christian Ruppert <christian.ruppert@abilis.com>,
-        Greg Ungerer <gerg@uclinux.org>, Helge Deller <deller@gmx.de>,
-        Hongliang Tao <taohl@lemote.com>,
-        Huacai Chen <chenhc@lemote.com>,
-        Jonas Jensen <jonas.jensen@gmail.com>,
-        Josh Boyer <jwboyer@gmail.com>, Jun Nie <jun.nie@linaro.org>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Ley Foon Tan <lftan@altera.com>,
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
+        s=badeba3b8450; t=1570027304;
+        bh=LEhTMKW5en/jej5WrXelG7JFpmCLnLL3D9Fno0SqqiE=;
+        h=X-UI-Sender-Class:From:To:Cc:Subject:Date;
+        b=ZzXRNOW+ZhSDxD/PHTD7oPaHkJX6SKVzNwPSQDWltGhgozJ8789ySKvST1l8vzEzC
+         6yadNZn9jATrP7drL9DQtMW3k+JkhVLKaHa+7+AqhVfaHUpN9K8X6fTOXKxmSDIS+9
+         EaSdEh1Aa1M/Yh+wLu1vGf8mFtW6nGUf8bR1mJSo=
+X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
+Received: from longitude ([109.90.233.87]) by mail.gmx.com (mrgmx005
+ [212.227.17.190]) with ESMTPSA (Nemesis) id 1MvbFs-1hxRz437yw-00siDI; Wed, 02
+ Oct 2019 16:41:44 +0200
+From:   =?UTF-8?q?Jonathan=20Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>
+To:     linux-gpio@vger.kernel.org
+Cc:     =?UTF-8?q?Jonathan=20Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>,
         Linus Walleij <linus.walleij@linaro.org>,
-        Max Filippov <jcmvbkbc@gmail.com>,
-        Olof Johansson <olof@lixom.net>,
-        Paul Burton <paul.burton@mips.com>,
-        Phil Edworthy <phil.edworthy@renesas.com>,
-        Pierrick Hascoet <pierrick.hascoet@abilis.com>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Roland Stigge <stigge@antcom.de>,
-        Vineet Gupta <vgupta@synopsys.com>
-References: <8736gcjosv.fsf@x220.int.ebiederm.org>
-        <201910011140.EA0181F13@keescook>
-        <87imp8hyc8.fsf@x220.int.ebiederm.org>
-        <CAK8P3a1zLATC7rzYxSpAK-z=NJ1rw7-3ZgHqCOJUUf6b9HwK1A@mail.gmail.com>
-Date:   Wed, 02 Oct 2019 09:41:00 -0500
-In-Reply-To: <CAK8P3a1zLATC7rzYxSpAK-z=NJ1rw7-3ZgHqCOJUUf6b9HwK1A@mail.gmail.com>
-        (Arnd Bergmann's message of "Wed, 2 Oct 2019 09:31:01 +0200")
-Message-ID: <87a7aji51f.fsf@x220.int.ebiederm.org>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] Documentation: gpio: driver: Format code blocks properly
+Date:   Wed,  2 Oct 2019 16:41:41 +0200
+Message-Id: <20191002144141.9732-1-j.neuschaefer@gmx.net>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain
-X-XM-SPF: eid=1iFfox-0000M4-PV;;;mid=<87a7aji51f.fsf@x220.int.ebiederm.org>;;;hst=in01.mta.xmission.com;;;ip=68.227.160.95;;;frm=ebiederm@xmission.com;;;spf=neutral
-X-XM-AID: U2FsdGVkX19IHDVGlAbdPU8dF8uFaTBUUrSZFrNIEnY=
-X-SA-Exim-Connect-IP: 68.227.160.95
-X-SA-Exim-Mail-From: ebiederm@xmission.com
-Subject: Re: [RFC][PATCH] sysctl: Remove the sysctl system call
-X-SA-Exim-Version: 4.2.1 (built Thu, 05 May 2016 13:38:54 -0600)
-X-SA-Exim-Scanned: Yes (on in01.mta.xmission.com)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:YFez/7mfyanK8mMCrXHvqTnhrX6cN+9wLIY25EBKnAxkL3cgsh9
+ 7qafulLSxZIx20FSFlPX6o9yd9y9ZoDrSx3BncrhWl2V9n0HG5ES0x6XSCCSKsliCAR7Yp7
+ Vh6yNmCbZN5bVqpqwY8ja5uQcpm4B/CJWLUDkKQ3nWT3k7goBNCaGp5SsLFf7/HKAn9yAMl
+ xx8AZXJRK6PlcAP1YkBsg==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:34aLev9KuC8=:KnTFspfp4RsaTlnHrzoorr
+ yd/9iE+D3j6WGB6LbHcN8pT+jqwTJcGPQGKt4uSqhU24NUeZ8f4XHYP6Y3S3m3U2OZdesqnbZ
+ HvXA3NqSHhM5J/qGMg7lw9h+fCt1VRRHwO5SFTPikob5qwQ07/wbtMKNRRzIe77+A9mLKAxpe
+ DudyktU9ArLNzCL9dysvfml+6vFU0US72sIlSg6b2FwJrBgsqND16gEIab60Dc2ZwdPL1ryzw
+ Cbh+ZSyNyhJcHdSor0C7NJSgr/OfhfqQvKdKgKW966PIbyiAWLKBHHXDNZqUwaz7COktjT1Fh
+ EzBvG2CgTqp+Wqe+uoVl/GhePnNjQlLyO6xE2zM6VU8srxwol3L2wDH2y+yYLy6qxyoI9J6zl
+ G/unlI20blLaArgVb6yh72pKtsQHXe0Sho5WvZb7PRDs6QEWtdQ70y7zxxRCCWtjY3aW4BCtk
+ fVx5CsBSl2ER/Ra9k047ux77i2Kjp5ycQ7Ti/JjcU+3BUdHGnFwGGnhrjcCTdBIekohBHi3qo
+ kSsVYvri5gZ3f26GldDadEXQRASuOIuukOGVRzW2cmGEpiQMjcmkytBw8dQWq6ErnyHPNSumA
+ 5+qcU5sy4EeLnvjFGMnNa2aQhaP9q420XbB3hfpuL5Ym6PRhAv5CtSKGKYvLr9H81askQH2WE
+ +aYJL3UF7/3MYMIGKPpahH0pzSl5I16D8Kc8uzXddoxw8Dd/NujBH9IIBOTZX+nVeXBDVoLop
+ 5XuAXTRjKVspATyoZrxqlhrgGzB9+xFFQ6UZw8HbKhi6dxBb2nOsqfWR3BgVIdwTdjXJplatb
+ QvdpEL3fnbMpHN/XaJAuwG0RqcrdIGJSFHq/5SPW3JBQyifnV4ezcJTfeMcUqOD0AGFmvl2xC
+ SDV4lEtCAtHU7FeNK4ztaBvliwOzZATK8zcF5EO3kg1NtZ8CT9ZCFq3qTfrgGwGZSE6bl8q4o
+ nIL2J+lIbv3T8rLuEY+/35HeSTx9icIVxK3uvsALWA7h54MojeCBcBC7M9volxWb5LIR2eeEB
+ a58OFPc7HZ+Vj3ODokdDBKMfrHe4QS/ckPZ3hUKf6lGNs1HPstS+kMS78MXB5A8eVvjLBIUBa
+ gWhjd8aXkAT4KkVK3LCXSrgyzGOj3T78bHRMl4uVs+iRvPyqF4c1pFrsU+07qG0Cm9T3Zr5aa
+ Xo9aBZ8fV9Rpg/xH3K/enlcv0LCP2xhJfiockuVd1QH8DtyPCwKJrViI+MMe1dA8Ti3ruYBMK
+ tpti6OwcW2Oh3EDDQ90jCJUvchiCEP/uY26m9V1s5GngUvNjzUOqTcy30XBg=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Arnd Bergmann <arnd@arndb.de> writes:
+This fixes a lot of Sphinx warnings, and makes the code blocks look nice
+in HTML.
 
-> On Wed, Oct 2, 2019 at 12:54 AM Eric W. Biederman <ebiederm@xmission.com> wrote:
->> Kees Cook <keescook@chromium.org> writes:
->> > On Tue, Oct 01, 2019 at 01:36:32PM -0500, Eric W. Biederman wrote:
->> >
->> > I think you can actually take this further and remove (or at least
->> > empty) the uapi/linux/sysctl.h file too.
->>
->> I copied everyone who had put this into a defconfig and I will wait a
->> little more to see if anyone screams.  I think it is a safe guess that
->> several of the affected configurations are dead (or at least
->> unmaintained) as I received 17 bounces when copying everyone.
->
-> Looking at the arm defconfigs:
->
->> arch/arm/configs/axm55xx_defconfig:CONFIG_SYSCTL_SYSCALL=y
->
-> No notable work on this platform since it got sold to Intel in 2014.
-> I think they still use it but not with mainline kernels that lack support
-> for most drivers and the later chips.
->
->> arch/arm/configs/keystone_defconfig:CONFIG_SYSCTL_SYSCALL=y
->
-> Not that old either, but this hardware is mostly obsoleted by newer variants
-> that we support with the arm64 defconfig.
->
->> arch/arm/configs/lpc32xx_defconfig:CONFIG_SYSCTL_SYSCALL=y
->> arch/arm/configs/moxart_defconfig:CONFIG_SYSCTL_SYSCALL=y
->
-> Ancient hardware, but still in active use. These tend to have very little
-> RAM, but they both enable CONFIG_PROC_FS.
->
->> arch/arm/configs/qcom_defconfig:CONFIG_SYSCTL_SYSCALL=y
->> arch/arm/configs/zx_defconfig:CONFIG_SYSCTL_SYSCALL=y
->
-> These are for older Qualcomm and LG chips that tend to be used
-> with Android rather than the defconfig here. Maybe double-check
-> if the official android-common tree enables SYSCTL_SYSCALL.
+Signed-off-by: Jonathan Neusch=C3=A4fer <j.neuschaefer@gmx.net>
+=2D--
+ Documentation/driver-api/gpio/driver.rst | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-I just looked quickly at:
-https://android.googlesource.com/kernel/configs/
+diff --git a/Documentation/driver-api/gpio/driver.rst b/Documentation/driv=
+er-api/gpio/driver.rst
+index 3fdb32422f8a..18dca55eddfd 100644
+=2D-- a/Documentation/driver-api/gpio/driver.rst
++++ b/Documentation/driver-api/gpio/driver.rst
+@@ -415,6 +415,8 @@ If you do this, the additional irq_chip will be set up=
+ by gpiolib at the
+ same time as setting up the rest of the GPIO functionality. The following
+ is a typical example of a cascaded interrupt handler using gpio_irq_chip:
 
-I don't see the string SYSCTL mentioned anywhere.  Much less
-SYSCTL_SYSCALL.
++.. code-block:: c
++
+   /* Typical state container with dynamic irqchip */
+   struct my_gpio {
+       struct gpio_chip gc;
+@@ -450,6 +452,8 @@ is a typical example of a cascaded interrupt handler u=
+sing gpio_irq_chip:
+ The helper support using hierarchical interrupt controllers as well.
+ In this case the typical set-up will look like this:
 
-Eric
++.. code-block:: c
++
+   /* Typical state container with dynamic irqchip */
+   struct my_gpio {
+       struct gpio_chip gc;
+=2D-
+2.20.1
+
