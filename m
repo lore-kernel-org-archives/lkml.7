@@ -2,114 +2,240 @@ Return-Path: <SRS0=zem1=X3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96FCAC4360C
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 21:06:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BFD8C10F14
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 21:07:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 642EE217D7
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 21:06:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C61ED21848
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 21:07:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="T4cObNtQ"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="a48bnacK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729285AbfJBVGs (ORCPT
+        id S1729315AbfJBVHj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Oct 2019 17:06:48 -0400
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:45232 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729081AbfJBVGr (ORCPT
+        Wed, 2 Oct 2019 17:07:39 -0400
+Received: from mail-yw1-f66.google.com ([209.85.161.66]:43069 "EHLO
+        mail-yw1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728918AbfJBVHi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Oct 2019 17:06:47 -0400
-Received: by mail-pl1-f196.google.com with SMTP id u12so391483pls.12
-        for <linux-kernel@vger.kernel.org>; Wed, 02 Oct 2019 14:06:45 -0700 (PDT)
+        Wed, 2 Oct 2019 17:07:38 -0400
+Received: by mail-yw1-f66.google.com with SMTP id q7so211178ywe.10
+        for <linux-kernel@vger.kernel.org>; Wed, 02 Oct 2019 14:07:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
+        d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=nnuWp9o1RpgvITnmL7LTsPFljnPiknKKHQUHm98mrZ4=;
-        b=T4cObNtQ9BzuXk1AzgmY3Sc75aW7mav2CcAKcsDLC6tJGSGN1Im2tyak5dQuBl6ooh
-         rmucnO+yufqGKap3U20y1tKRMZk55Z4Fw+0X7NcpiKq7r8oElQt41NMSlgm5hQaoUOcn
-         TI20pIZB5NLrwuZZ8s/oQQtaxMUSX1mbmXzZyoQITNYCDeyWL1T1RVrU5/01TcSOjB0k
-         H87wCZj3EvU/uec0eHPlVmc+Y2Bv/0rzHKLpqB2/GgJUCZkyNx1xoOR4GVomTqOIMqis
-         +Bd9tSeFBAsy36uaeeclC1Vd4eI3i7I4YHt44jyjQDrfw6rPA4VI0rPWsb02ik9U9ISP
-         0hyw==
+        bh=T2JVXi2n7aIjQPfd/y2Qza7rCOQAGt2XVrhneTlTFqk=;
+        b=a48bnacKL3bHQCAPTzjpwOWeh35mQfcT2+1l7mws8a+hPVifJauAclcUDowffjOciD
+         7uzBDNymTolORf/fs9l5zGGzRzz1hSg5yfarrk9unbU0agAgkyHjNdV3ca808h83hVDC
+         ZA1LnWCehKYL3I+DIx90V/bnighUg2HmkiHF3mnXA6EWwd/FZPqiJolqmmcQqE/499oN
+         JR4bJoR0fgCl2zzIeZ9BkOiXp5m1FinDcASY+l3yvJgazfbBMi1M1GskUfbZPFh0l8Yh
+         7FdZxNMS7krkjz8dI7du0pR8FAcyCuE7SyvDXqOi1NeqBG+KoqNaZ0sB8BP/lu+hpQQI
+         IcNw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=nnuWp9o1RpgvITnmL7LTsPFljnPiknKKHQUHm98mrZ4=;
-        b=HxdSCs/phBv8S/qJ7CYBuq+PqKg/pT3TwwoT3IP6Ap5zMdfUH6Jnj1oTvP4UcOAQvW
-         YOcSStiMQYHN7+LenB8aNjtQtzy7Ea8SydG904OytuNW9ygtXqcw+SBxQApx9X3OADMF
-         0O3b90ja+Sv9pLxgBTxWwlRG49RxdLTogqtslN22Ni9YsSMZ2D9L1zs8cCErKjeCSVHt
-         BoU6E4DakEs9Zi5nADtRAzULYokeJRPntx50norKEbVgVJyG9QJaiIKSt98oXBQcD9CL
-         OQjzQWcm1bVkpxXhle55JWZCGH4Bbiw0g0EyzehR/u8v8ff1uYC5o7c2sSl/QfU/ge19
-         EGRg==
-X-Gm-Message-State: APjAAAXFvoXn61VEkT0neMkkS3MVRQf3who3TcA7jvVbycggAUFiGOlX
-        sEcEJwFC/GHntmI/oyJ01GLuWkoeqOA7vBLRmWO1KA==
-X-Google-Smtp-Source: APXvYqyU8Fl0l+rqi6339fDMhqJwPCU1m7omZfuV2qQaEQI4L5k50rkX+z9V7oon9o4K/aE/KPg7wYE2ofuxHA943P4=
-X-Received: by 2002:a17:902:820e:: with SMTP id x14mr5819917pln.223.1570050404239;
- Wed, 02 Oct 2019 14:06:44 -0700 (PDT)
+        bh=T2JVXi2n7aIjQPfd/y2Qza7rCOQAGt2XVrhneTlTFqk=;
+        b=Ldql7yepOR2HExH5sgDIQtjiOqSGB0k+VEB64gjJxEtcWcl9BfC0yLADox9tOZYHS8
+         bYzXLPoccVbyfVpnKQVx+lQRkCxSM23KDeib+yRRmaJ8pMCnann1ndMukVkE+jp7Bl82
+         yp6cTJPt2bNdKtIaB+vZ/9+wC+BiZYZy6+jNs+zO5hcDdGFqTSVPXdbNpFQCyyXn1e1S
+         Bdy1zj2eV7DSCr5ruauDoW+SMGJ+Wu6zsS7lOICflCC7Oi74xqI3Xq7JjA1rT5HF2afQ
+         cMXfD5KYGxyaMt4eBp3tM3T/Q1uGoih99G9dON+WcEvBZe5Bq3Qsi9Q6yiuFD/QUmNZe
+         iR6w==
+X-Gm-Message-State: APjAAAX9n0th+imLW/YvOes5/y5HP0t25Tyo+PL9lJxQf1c1XN3OR1ot
+        9+aDxdGc0llFEvPpUDsnuTcv/Xl6
+X-Google-Smtp-Source: APXvYqxQG7JoTZe++unblzzw8DbGcJPVmKkoeWAmTU6aYGL0Bsopdb5SJ5BUGIJMnPAvqXIcPAZY4A==
+X-Received: by 2002:a81:2b0a:: with SMTP id r10mr4266896ywr.301.1570050457102;
+        Wed, 02 Oct 2019 14:07:37 -0700 (PDT)
+Received: from mail-yw1-f53.google.com (mail-yw1-f53.google.com. [209.85.161.53])
+        by smtp.gmail.com with ESMTPSA id p199sm100939ywe.1.2019.10.02.14.07.36
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 02 Oct 2019 14:07:36 -0700 (PDT)
+Received: by mail-yw1-f53.google.com with SMTP id d192so231960ywa.1
+        for <linux-kernel@vger.kernel.org>; Wed, 02 Oct 2019 14:07:36 -0700 (PDT)
+X-Received: by 2002:a81:6f8a:: with SMTP id k132mr4013325ywc.275.1570050020507;
+ Wed, 02 Oct 2019 14:00:20 -0700 (PDT)
 MIME-Version: 1.0
-References: <20191002120136.1777161-7-arnd@arndb.de> <20191002165137.15726-1-ndesaulniers@google.com>
- <20191002170733.GB1076951@archlinux-threadripper>
-In-Reply-To: <20191002170733.GB1076951@archlinux-threadripper>
-From:   Nick Desaulniers <ndesaulniers@google.com>
-Date:   Wed, 2 Oct 2019 14:06:33 -0700
-Message-ID: <CAKwvOdmfD-vYNw=YZKBhZhaK04BSMD9xjPJ4seqDe+keHb42_w@mail.gmail.com>
-Subject: Re: [PATCH 6/6] [RESEND] drm/amdgpu: work around llvm bug #42576
-To:     Nathan Chancellor <natechancellor@gmail.com>
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        "Zhou, David(ChunMing)" <David1.Zhou@amd.com>,
-        Hawking.Zhang@amd.com, David Airlie <airlied@linux.ie>,
-        "Deucher, Alexander" <alexander.deucher@amd.com>,
-        amd-gfx@lists.freedesktop.org,
-        "Koenig, Christian" <christian.koenig@amd.com>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        dri-devel <dri-devel@lists.freedesktop.org>, le.ma@amd.com,
-        LKML <linux-kernel@vger.kernel.org>, ray.huang@amd.com
+References: <00000000000051e9280593f2dc9f@google.com>
+In-Reply-To: <00000000000051e9280593f2dc9f@google.com>
+From:   Willem de Bruijn <willemdebruijn.kernel@gmail.com>
+Date:   Wed, 2 Oct 2019 16:59:44 -0400
+X-Gmail-Original-Message-ID: <CA+FuTSedj9+UJKLfuER+FuEmQvWNqsDfO5i+Z6vit0OoLv=NLA@mail.gmail.com>
+Message-ID: <CA+FuTSedj9+UJKLfuER+FuEmQvWNqsDfO5i+Z6vit0OoLv=NLA@mail.gmail.com>
+Subject: Re: general protection fault in veth_get_stats64
+To:     syzbot <syzbot+3f3e5e77d793c7a6fe6c@syzkaller.appspotmail.com>
+Cc:     airlied@linux.ie, andriy.shevchenko@linux.intel.com,
+        Alexei Starovoitov <ast@kernel.org>, bpf <bpf@vger.kernel.org>,
+        bskeggs@redhat.com, daniel@ffwll.ch,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        David Miller <davem@davemloft.net>,
+        dri-devel@lists.freedesktop.org, David Ahern <dsahern@gmail.com>,
+        f.fainelli@gmail.com, guoren@kernel.org, hawk@kernel.org,
+        idosch@mellanox.com, Jakub Kicinski <jakub.kicinski@netronome.com>,
+        John Fastabend <john.fastabend@gmail.com>, jwi@linux.ibm.com,
+        Martin Lau <kafai@fb.com>, kimbrownkd@gmail.com,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Network Development <netdev@vger.kernel.org>,
+        nouveau@lists.freedesktop.org, petrm@mellanox.com,
+        songliubraving@fb.com, syzkaller-bugs@googlegroups.com,
+        tglx@linutronix.de, torvalds@linux-foundation.org,
+        toshiaki.makita1@gmail.com, wanghai26@huawei.com,
+        Yonghong Song <yhs@fb.com>, yuehaibing@huawei.com,
+        jiri@mellanox.com
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Oct 2, 2019 at 10:07 AM Nathan Chancellor
-<natechancellor@gmail.com> wrote:
+On Wed, Oct 2, 2019 at 3:56 PM syzbot
+<syzbot+3f3e5e77d793c7a6fe6c@syzkaller.appspotmail.com> wrote:
 >
-> On Wed, Oct 02, 2019 at 09:51:37AM -0700, 'Nick Desaulniers' via Clang Built Linux wrote:
-> > > Apparently this bug is still present in both the released clang-9
-> > > and the current development version of clang-10.
-> > > I was hoping we would not need a workaround in clang-9+, but
-> > > it seems that we do.
+> Hello,
+>
+> syzbot found the following crash on:
+>
+> HEAD commit:    a32db7e1 Add linux-next specific files for 20191002
+> git tree:       linux-next
+> console output: https://syzkaller.appspot.com/x/log.txt?x=175ab7cd600000
+> kernel config:  https://syzkaller.appspot.com/x/.config?x=599cf05035799eef
+> dashboard link: https://syzkaller.appspot.com/bug?extid=3f3e5e77d793c7a6fe6c
+> compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=12f8b943600000
+> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=16981a25600000
+>
+> The bug was bisected to:
+>
+> commit 84da111de0b4be15bd500deff773f5116f39f7be
+> Author: Linus Torvalds <torvalds@linux-foundation.org>
+> Date:   Sat Sep 21 17:07:42 2019 +0000
+>
+>      Merge tag 'for-linus-hmm' of
+> git://git.kernel.org/pub/scm/linux/kernel/git/rdma/rdma
+>
+> bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=17c55847600000
+> final crash:    https://syzkaller.appspot.com/x/report.txt?x=14255847600000
+> console output: https://syzkaller.appspot.com/x/log.txt?x=10255847600000
+>
+> IMPORTANT: if you fix the bug, please add the following tag to the commit:
+> Reported-by: syzbot+3f3e5e77d793c7a6fe6c@syzkaller.appspotmail.com
+> Fixes: 84da111de0b4 ("Merge tag 'for-linus-hmm' of
+> git://git.kernel.org/pub/scm/linux/kernel/git/rdma/rdma")
+>
+> RSP: 002b:00007fff0ba6c998 EFLAGS: 00000246 ORIG_RAX: 000000000000002e
+> RAX: ffffffffffffffda RBX: 0000000000000003 RCX: 00000000004424a9
+> RDX: 0000000000000000 RSI: 0000000020000140 RDI: 0000000000000003
+> RBP: 0000000000000000 R08: 0000000000000002 R09: 0000000000000000
+> R10: 0000000000000000 R11: 0000000000000246 R12: ffffffffffffffff
+> R13: 0000000000000004 R14: 0000000000000000 R15: 0000000000000000
+> kasan: CONFIG_KASAN_INLINE enabled
+> kasan: GPF could be caused by NULL-ptr deref or user memory access
+> general protection fault: 0000 [#1] PREEMPT SMP KASAN
+> CPU: 1 PID: 8605 Comm: syz-executor330 Not tainted 5.4.0-rc1-next-20191002
+> #0
+> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS
+> Google 01/01/2011
+> RIP: 0010:veth_stats_rx drivers/net/veth.c:322 [inline]
+> RIP: 0010:veth_get_stats64+0x523/0x900 drivers/net/veth.c:356
+> Code: 89 85 60 ff ff ff e8 6c 74 31 fd 49 63 c7 48 69 c0 c0 02 00 00 48 03
+> 85 60 ff ff ff 48 8d b8 a0 01 00 00 48 89 fa 48 c1 ea 03 <42> 80 3c 32 00
+> 0f 85 c9 02 00 00 48 8d b8 a8 01 00 00 48 8b 90 a0
+> RSP: 0018:ffff88809996ed00 EFLAGS: 00010202
+> RAX: 0000000000000000 RBX: 0000000000000001 RCX: ffffffff84418daf
+> RDX: 0000000000000034 RSI: ffffffff84418e04 RDI: 00000000000001a0
+> RBP: ffff88809996ede0 R08: ffff888093182180 R09: ffffed1013202d6a
+> R10: ffffed1013202d69 R11: ffff888099016b4f R12: 0000000000000000
+> R13: 0000000000000000 R14: dffffc0000000000 R15: 0000000000000000
+> FS:  0000000001f4a880(0000) GS:ffff8880ae900000(0000) knlGS:0000000000000000
+> CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> CR2: 0000000020000140 CR3: 000000009a80b000 CR4: 00000000001406e0
+> DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+> DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+> Call Trace:
+>   dev_get_stats+0x8e/0x280 net/core/dev.c:9220
+>   rtnl_fill_stats+0x4d/0xac0 net/core/rtnetlink.c:1191
+>   rtnl_fill_ifinfo+0x10ad/0x3af0 net/core/rtnetlink.c:1717
+>   rtmsg_ifinfo_build_skb+0xc9/0x1a0 net/core/rtnetlink.c:3635
+>   rtmsg_ifinfo_event.part.0+0x43/0xe0 net/core/rtnetlink.c:3667
+>   rtmsg_ifinfo_event net/core/rtnetlink.c:3678 [inline]
+>   rtmsg_ifinfo+0x8d/0xa0 net/core/rtnetlink.c:3676
+>   __dev_notify_flags+0x235/0x2c0 net/core/dev.c:7757
+>   rtnl_configure_link+0x175/0x250 net/core/rtnetlink.c:2968
+>   __rtnl_newlink+0x10c4/0x16d0 net/core/rtnetlink.c:3285
+>   rtnl_newlink+0x69/0xa0 net/core/rtnetlink.c:3325
+>   rtnetlink_rcv_msg+0x463/0xb00 net/core/rtnetlink.c:5386
+>   netlink_rcv_skb+0x177/0x450 net/netlink/af_netlink.c:2477
+>   rtnetlink_rcv+0x1d/0x30 net/core/rtnetlink.c:5404
+>   netlink_unicast_kernel net/netlink/af_netlink.c:1302 [inline]
+>   netlink_unicast+0x531/0x710 net/netlink/af_netlink.c:1328
+>   netlink_sendmsg+0x8a5/0xd60 net/netlink/af_netlink.c:1917
+>   sock_sendmsg_nosec net/socket.c:638 [inline]
+>   sock_sendmsg+0xd7/0x130 net/socket.c:658
+>   ___sys_sendmsg+0x803/0x920 net/socket.c:2312
+>   __sys_sendmsg+0x105/0x1d0 net/socket.c:2357
+>   __do_sys_sendmsg net/socket.c:2366 [inline]
+>   __se_sys_sendmsg net/socket.c:2364 [inline]
+>   __x64_sys_sendmsg+0x78/0xb0 net/socket.c:2364
+>   do_syscall_64+0xfa/0x760 arch/x86/entry/common.c:290
+>   entry_SYSCALL_64_after_hwframe+0x49/0xbe
+> RIP: 0033:0x4424a9
+> Code: e8 9c 07 03 00 48 83 c4 18 c3 0f 1f 80 00 00 00 00 48 89 f8 48 89 f7
+> 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff
+> ff 0f 83 3b 0a fc ff c3 66 2e 0f 1f 84 00 00 00 00
+> RSP: 002b:00007fff0ba6c998 EFLAGS: 00000246 ORIG_RAX: 000000000000002e
+> RAX: ffffffffffffffda RBX: 0000000000000003 RCX: 00000000004424a9
+> RDX: 0000000000000000 RSI: 0000000020000140 RDI: 0000000000000003
+> RBP: 0000000000000000 R08: 0000000000000002 R09: 0000000000000000
+> R10: 0000000000000000 R11: 0000000000000246 R12: ffffffffffffffff
+> R13: 0000000000000004 R14: 0000000000000000 R15: 0000000000000000
+> Modules linked in:
+> ---[ end trace cc6dec8a4962bfff ]---
+> RIP: 0010:veth_stats_rx drivers/net/veth.c:322 [inline]
+> RIP: 0010:veth_get_stats64+0x523/0x900 drivers/net/veth.c:356
+> Code: 89 85 60 ff ff ff e8 6c 74 31 fd 49 63 c7 48 69 c0 c0 02 00 00 48 03
+> 85 60 ff ff ff 48 8d b8 a0 01 00 00 48 89 fa 48 c1 ea 03 <42> 80 3c 32 00
+> 0f 85 c9 02 00 00 48 8d b8 a8 01 00 00 48 8b 90 a0
+> RSP: 0018:ffff88809996ed00 EFLAGS: 00010202
+> RAX: 0000000000000000 RBX: 0000000000000001 RCX: ffffffff84418daf
+> RDX: 0000000000000034 RSI: ffffffff84418e04 RDI: 00000000000001a0
+> RBP: ffff88809996ede0 R08: ffff888093182180 R09: ffffed1013202d6a
+> R10: ffffed1013202d69 R11: ffff888099016b4f R12: 0000000000000000
+> R13: 0000000000000000 R14: dffffc0000000000 R15: 0000000000000000
+> FS:  0000000001f4a880(0000) GS:ffff8880ae900000(0000) knlGS:0000000000000000
+> CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> CR2: 0000000020000140 CR3: 000000009a80b000 CR4: 00000000001406e0
+> DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+> DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
 
-Here's a fix: https://reviews.llvm.org/D68356
-Can't possibly land until clang-10 though.
+Syzbot CC:ed a lot of people directly on this report. Perhaps because
+of the bisection?
 
-> >
-> > I think I'd rather:
-> > 1. mark AMDGPU BROKEN if CC_IS_CLANG. There are numerous other issues building
-> >    a working driver here.
->
-> The only reason I am not thrilled about this is we will lose out on
-> warning coverage while the compiler bug gets fixed. I think the AMDGPU
-> drivers have been the single biggest source of clang warnings.
->
-> I think something like:
->
-> depends on CC_IS_GCC || (CC_IS_CLANG && COMPILE_TEST)
->
-> would end up avoiding the runtime issues and give us warning coverage.
-> The only issue is that we would still need this patch...
->
-> Cheers,
-> Nathan
+Specific to the report: I think this may be introduced with the
+alternative names for network interfaces patchset.
 
+The reproducer
 
+fails on      76c9ac0ee878 net: rtnetlink: add possibility to use
+alternative names as message handle
+passes on be2644aac3e1 tcp: add ipv6_addr_v4mapped_loopback() helper
 
--- 
-Thanks,
-~Nick Desaulniers
+Leaving
+
+76c9ac0ee878 net: rtnetlink: add possibility to use alternative names
+as message handle
+cc6090e985d7 net: rtnetlink: introduce helper to get net_device
+instance by ifname
+7af12cba4ef0 net: rtnetlink: unify the code in __rtnl_newlink get dev
+with the rest
+88f4fb0c7496 net: rtnetlink: put alternative names to getlink message
+36fbf1e52bd3 net: rtnetlink: add linkprop commands to add and delete
+alternative ifnames
+ff92741270bf net: introduce name_node struct to be used in hashlist
+6958c97a488c net: procfs: use index hashlist instead of name hashlist
+be2
