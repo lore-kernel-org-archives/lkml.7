@@ -2,754 +2,207 @@ Return-Path: <SRS0=zem1=X3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D72F1C352AA
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 16:52:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4AE10C352AA
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 16:53:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 95CA621D81
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 16:52:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0F69B21920
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 16:53:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="r8fugI+P"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727966AbfJBQwJ convert rfc822-to-8bit (ORCPT
+        id S1728045AbfJBQxT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Oct 2019 12:52:09 -0400
-Received: from mga03.intel.com ([134.134.136.65]:50286 "EHLO mga03.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726101AbfJBQwJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Oct 2019 12:52:09 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 02 Oct 2019 09:52:07 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.67,249,1566889200"; 
-   d="scan'208";a="198263627"
-Received: from fmsmsx103.amr.corp.intel.com ([10.18.124.201])
-  by FMSMGA003.fm.intel.com with ESMTP; 02 Oct 2019 09:52:07 -0700
-Received: from fmsmsx154.amr.corp.intel.com (10.18.116.70) by
- FMSMSX103.amr.corp.intel.com (10.18.124.201) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Wed, 2 Oct 2019 09:52:07 -0700
-Received: from fmsmsx122.amr.corp.intel.com ([169.254.5.106]) by
- FMSMSX154.amr.corp.intel.com ([169.254.6.48]) with mapi id 14.03.0439.000;
- Wed, 2 Oct 2019 09:52:06 -0700
-From:   "Mani, Rajmohan" <rajmohan.mani@intel.com>
-To:     Mika Westerberg <mika.westerberg@linux.intel.com>,
-        "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>
-CC:     Andreas Noever <andreas.noever@gmail.com>,
-        "Jamet, Michael" <michael.jamet@intel.com>,
-        Yehezkel Bernat <YehezkelShB@gmail.com>,
-        Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>,
-        Lukas Wunner <lukas@wunner.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Alan Stern" <stern@rowland.harvard.edu>,
-        "Mario.Limonciello@dell.com" <Mario.Limonciello@dell.com>,
-        Anthony Wong <anthony.wong@canonical.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [RFC PATCH 19/22] thunderbolt: Add support for Time Management
- Unit
-Thread-Topic: [RFC PATCH 19/22] thunderbolt: Add support for Time Management
- Unit
-Thread-Index: AQHVeEzHQSd27IEudkGzUafQQRhe8adHj91Q
-Date:   Wed, 2 Oct 2019 16:52:06 +0000
-Message-ID: <6F87890CF0F5204F892DEA1EF0D77A599B3F3DEC@fmsmsx122.amr.corp.intel.com>
-References: <20191001113830.13028-1-mika.westerberg@linux.intel.com>
- <20191001113830.13028-20-mika.westerberg@linux.intel.com>
-In-Reply-To: <20191001113830.13028-20-mika.westerberg@linux.intel.com>
-Accept-Language: en-US
+        Wed, 2 Oct 2019 12:53:19 -0400
+Received: from mail-eopbgr720051.outbound.protection.outlook.com ([40.107.72.51]:30240
+        "EHLO NAM05-CO1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726453AbfJBQxT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 2 Oct 2019 12:53:19 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=MqEPeLbgs5PsLWveq2G5Lc3ltYlF/IjZRd7zyTJbNBfCglqZha+H0PdQ0OdlysDn4cTJP2npsNUjYiXjGrSFgjhaSR+kseOBSCXebH2G1sHBe6iRWN4ssq2FIkOFM/IOEWFI81QqyIvaFI3fQVBRekwlh+lQsAZdvHfrVxG7lr7BDh2Je+vu70I3SQJozPTxk/+iQIQoE1hUg7/gOn5FT4ChjcT7QW6z+ClbcZGEK33T3XiQTq7wreTYHieJLrcAlAFcdBtZ++WtIy2R5Nbk7sSaFSYcwfP7HxM9eSzjkZ0tlmjuoD6U1KFC8cJTxW205KTG4wyPVby29iPIwMqE9Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=LkWZFIUKli+yxaFCWJ5tEkeDEe1zSbC/JY1oNDETO1E=;
+ b=og/KCvp5vLpEwlC1YYozv3NmP+sWuXdWQT2FDNY92qI2ZNp/pE9nwWAtBNr2jT4pMnwIs4mznVJ3gBOrieR1CR1XjRkO5fBWU5Bafh7J5GGg7RT/kINLKqTpNAHSI1x5/r0FfWLwdubHXXPoyCFfnkbT0KPU3K2s3nVWTnJRxkZ4F/MTKjgvgQw0u0NrdzOJZ/Ni7djvf5Yg7FqqmaBEZEiysKXAdBFpZmHF8lMQWnTMd+TjaUIWInzhSJ9z1wPWKVdylIVNZ69PHugR4t5NyxAy/Y0h3RTLz+q36yDkue6gbPqFo2Q2oQtVvYV4DKCXQeMtNayaZbztR+l0f71ZhA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=LkWZFIUKli+yxaFCWJ5tEkeDEe1zSbC/JY1oNDETO1E=;
+ b=r8fugI+PFLPu3zn9YNaFVCIMZODmNIbduQoFus/Gt002KcmUUHSEZRBS95TmB/NIuV0ZFekqQWeiVInjouC7ixjbky/yxJhWuv/ZAE9Ggk0KFbOpnlgB1TQdECFfEsoGeVyOKuc4bA3E1sLpujNrmU+wf/BiNK8jbNX1xwqzGpc=
+Received: from MWHPR12MB1453.namprd12.prod.outlook.com (10.172.55.22) by
+ MWHPR12MB1583.namprd12.prod.outlook.com (10.172.56.145) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2305.17; Wed, 2 Oct 2019 16:53:10 +0000
+Received: from MWHPR12MB1453.namprd12.prod.outlook.com
+ ([fe80::4803:438a:eb1d:d6a6]) by MWHPR12MB1453.namprd12.prod.outlook.com
+ ([fe80::4803:438a:eb1d:d6a6%10]) with mapi id 15.20.2305.022; Wed, 2 Oct 2019
+ 16:53:10 +0000
+From:   "Grodzovsky, Andrey" <Andrey.Grodzovsky@amd.com>
+To:     Neil Armstrong <narmstrong@baylibre.com>,
+        "daniel@ffwll.ch" <daniel@ffwll.ch>,
+        "airlied@linux.ie" <airlied@linux.ie>,
+        "Koenig, Christian" <Christian.Koenig@amd.com>
+CC:     Erico Nunes <nunes.erico@gmail.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "steven.price@arm.com" <steven.price@arm.com>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        Rob Herring <robh@kernel.org>,
+        Tomeu Vizoso <tomeu.vizoso@collabora.com>,
+        "open list:ARM/Amlogic Meson..." <linux-amlogic@lists.infradead.org>
+Subject: Re: drm_sched with panfrost crash on T820
+Thread-Topic: drm_sched with panfrost crash on T820
+Thread-Index: AQHVdQtdjrcnE/APhki/CyOIa6xfH6c/vsAAgAQ2/4CAA6PTAA==
+Date:   Wed, 2 Oct 2019 16:53:10 +0000
+Message-ID: <d5ceef14-b876-c102-d793-25289635cab1@amd.com>
+References: <e450fbe6-dec7-2704-59c2-db7e869d67f5@baylibre.com>
+ <f0ab487e-8d49-987b-12b8-7a115a6543e1@amd.com>
+ <5f7d10ab-1ce5-25aa-90bd-4f87ed2a9bfb@baylibre.com>
+In-Reply-To: <5f7d10ab-1ce5-25aa-90bd-4f87ed2a9bfb@baylibre.com>
+Accept-Language: en-GB, en-US
 Content-Language: en-US
 X-MS-Has-Attach: 
 X-MS-TNEF-Correlator: 
-dlp-product: dlpe-windows
-dlp-version: 11.2.0.6
-dlp-reaction: no-action
-x-ctpclassification: CTP_NT
-x-titus-metadata-40: eyJDYXRlZ29yeUxhYmVscyI6IiIsIk1ldGFkYXRhIjp7Im5zIjoiaHR0cDpcL1wvd3d3LnRpdHVzLmNvbVwvbnNcL0ludGVsMyIsImlkIjoiY2JhZjNjYzQtZjdlZi00YmU4LTk0NWMtMWI5MDljMTNlNTM2IiwicHJvcHMiOlt7Im4iOiJDVFBDbGFzc2lmaWNhdGlvbiIsInZhbHMiOlt7InZhbHVlIjoiQ1RQX05UIn1dfV19LCJTdWJqZWN0TGFiZWxzIjpbXSwiVE1DVmVyc2lvbiI6IjE3LjEwLjE4MDQuNDkiLCJUcnVzdGVkTGFiZWxIYXNoIjoiSlljZ1EwTHFNUitVYThMT252cHFcL2dNelN5SDFXOUhrNERLNENtSWpPcUF0MHEzc2RJZ0lyYTB3MlVBUVFxWXQifQ==
-x-originating-ip: [10.1.200.106]
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
+x-clientproxiedby: PN1PR01CA0099.INDPRD01.PROD.OUTLOOK.COM (2603:1096:c00::15)
+ To MWHPR12MB1453.namprd12.prod.outlook.com (2603:10b6:301:e::22)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=Andrey.Grodzovsky@amd.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [2607:fea8:3edf:fe95::4]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 28ade9d2-d561-4873-afa9-08d747590195
+x-ms-office365-filtering-ht: Tenant
+x-ms-traffictypediagnostic: MWHPR12MB1583:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <MWHPR12MB1583CBBA8CC4758F51002DC0EA9C0@MWHPR12MB1583.namprd12.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:4502;
+x-forefront-prvs: 0178184651
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(396003)(136003)(376002)(346002)(366004)(39860400002)(52314003)(51234002)(189003)(199004)(5660300002)(46003)(86362001)(99286004)(31686004)(186003)(31696002)(53546011)(6506007)(102836004)(52116002)(14454004)(76176011)(386003)(36756003)(7736002)(110136005)(4326008)(256004)(6636002)(6246003)(2906002)(71200400001)(14444005)(71190400001)(45080400002)(25786009)(316002)(6116002)(2201001)(486006)(478600001)(64756008)(2616005)(446003)(54906003)(7416002)(476003)(66476007)(11346002)(66556008)(305945005)(66446008)(66946007)(81166006)(81156014)(8676002)(8936002)(6486002)(229853002)(2501003)(6512007)(6436002);DIR:OUT;SFP:1101;SCL:1;SRVR:MWHPR12MB1583;H:MWHPR12MB1453.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:3;A:1;
+received-spf: None (protection.outlook.com: amd.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: 1//5BZAL3iMRo/2qc6gNwIg9IqBW62i7BtMBMsNL55K83Fg5O2fCBWi11QKmRB222AUfVJyUsB7V6krpq/XTeI89QDXjz26lnqRUmhSL93vK5jJRA7BH9u8gdn5jrjc+O/kRS+/G6HYyuVAwLF/hy7In7RwsRR+IgDoqyuOia1G20mnd+ZFpUcRbsamjYXQvf9BHHUqqBzIXky7pc7OXhLglPjGADoSlNfWP7SbHlxRaB/NNSUkqZwDG987TsNApNpUH5NFrgodggx5koghuX7OSSS4R2eqG2ILXeFl5Tsnjcx+VR06+LWdV+F7O6vcL1LaojM6Z3/FSsEUaLAUgNjnFF4h5lx2c5lRolCpa4PYnn40++zNAEiI+pqf8wGp3KHTifLGUzkNK3FF4aKSdscpF4+drigbmwSUw4i61/h0=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <AAF20E40FC56A446A552B6C34B982D53@namprd12.prod.outlook.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 28ade9d2-d561-4873-afa9-08d747590195
+X-MS-Exchange-CrossTenant-originalarrivaltime: 02 Oct 2019 16:53:10.3461
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: Y7yWjZB4OQTtC94BIGFWAZTHfZ1l2B8uS6C9+B8Z5ffr2Msh9tYV9DxwjDb2Gsef82FeUXdTW5zg1YdVq/KscQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR12MB1583
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Mika,
-
-> -----Original Message-----
-> From: Mika Westerberg [mailto:mika.westerberg@linux.intel.com]
-> Sent: Tuesday, October 01, 2019 4:38 AM
-> To: linux-usb@vger.kernel.org
-> Cc: Andreas Noever <andreas.noever@gmail.com>; Jamet, Michael
-> <michael.jamet@intel.com>; Mika Westerberg
-> <mika.westerberg@linux.intel.com>; Yehezkel Bernat
-> <YehezkelShB@gmail.com>; Mani, Rajmohan <rajmohan.mani@intel.com>;
-> Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>; Lukas
-> Wunner <lukas@wunner.de>; Greg Kroah-Hartman
-> <gregkh@linuxfoundation.org>; Alan Stern <stern@rowland.harvard.edu>;
-> Mario.Limonciello@dell.com; Anthony Wong
-> <anthony.wong@canonical.com>; linux-kernel@vger.kernel.org
-> Subject: [RFC PATCH 19/22] thunderbolt: Add support for Time Management
-> Unit
-> 
-> From: Rajmohan Mani <rajmohan.mani@intel.com>
-> 
-> Time Management Unit (TMU) is included in each USB4 router. It is used to
-> synchronize time across the USB4 fabric. By default when USB4 router is
-> plugged to the domain, its TMU is turned off. This differs from Thunderbolt (1,
-> 2 and 3) devices whose TMU is by default configured to bi-directional HiFi
-> mode. Since time synchronization is needed for proper Display Port tunneling
-> this means we need to configure the TMU on
-> USB4 compliant devices.
-> 
-> The USB4 spec allows some flexibility on how the TMU can be configured.
-> This makes it possible to enable link power management states (CLx) in certain
-> topologies, where for example DP tunneling is not used. TMU can also be re-
-> configured dynamicaly depending on types of tunnels created over the USB4
-> fabric.
-> 
-> In this patch we simply configure the TMU to be in bi-directional HiFi mode.
-> This way we can tunnel any kind of traffic without need to perform complex
-> steps to re-configure the domain dynamically. We can add more fine-grained
-> TMU configuration later on when we start enabling CLx states.
-> 
-> Signed-off-by: Rajmohan Mani <rajmohan.mani@intel.com>
-> Co-developed-by: Mika Westerberg <mika.westerberg@linux.intel.com>
-> Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
-> ---
->  drivers/thunderbolt/Makefile  |   2 +-
->  drivers/thunderbolt/switch.c  |   4 +
->  drivers/thunderbolt/tb.c      |  29 +++
->  drivers/thunderbolt/tb.h      |  47 +++++
->  drivers/thunderbolt/tb_regs.h |  20 ++
->  drivers/thunderbolt/tmu.c     | 380 ++++++++++++++++++++++++++++++++++
->  6 files changed, 481 insertions(+), 1 deletion(-)  create mode 100644
-> drivers/thunderbolt/tmu.c
-> 
-> diff --git a/drivers/thunderbolt/Makefile b/drivers/thunderbolt/Makefile index
-> c0b2fd73dfbd..2014bc840b06 100644
-> --- a/drivers/thunderbolt/Makefile
-> +++ b/drivers/thunderbolt/Makefile
-> @@ -1,4 +1,4 @@
->  # SPDX-License-Identifier: GPL-2.0-only  obj-${CONFIG_THUNDERBOLT} :=
-> thunderbolt.o  thunderbolt-objs := nhi.o nhi_ops.o ctl.o tb.o switch.o cap.o
-> path.o tunnel.o eeprom.o -thunderbolt-objs += domain.o dma_port.o icm.o
-> property.o xdomain.o lc.o usb4.o
-> +thunderbolt-objs += domain.o dma_port.o icm.o property.o xdomain.o lc.o
-> +tmu.o usb4.o
-> diff --git a/drivers/thunderbolt/switch.c b/drivers/thunderbolt/switch.c index
-> 2ccd1004920e..58e3f54ddbb9 100644
-> --- a/drivers/thunderbolt/switch.c
-> +++ b/drivers/thunderbolt/switch.c
-> @@ -2278,6 +2278,10 @@ int tb_switch_add(struct tb_switch *sw)
->  		ret = tb_switch_update_link_attributes(sw);
->  		if (ret)
->  			return ret;
-> +
-> +		ret = tb_switch_tmu_init(sw);
-> +		if (ret)
-> +			return ret;
->  	}
-> 
->  	ret = device_add(&sw->dev);
-> diff --git a/drivers/thunderbolt/tb.c b/drivers/thunderbolt/tb.c index
-> 24e37e47dc48..f2868c125637 100644
-> --- a/drivers/thunderbolt/tb.c
-> +++ b/drivers/thunderbolt/tb.c
-> @@ -161,6 +161,25 @@ static void tb_scan_xdomain(struct tb_port *port)
->  	}
->  }
-> 
-> +static int tb_enable_tmu(struct tb_switch *sw) {
-> +	int ret;
-> +
-> +	/* If it is already enabled in correct mode, don't touch it */
-> +	if (tb_switch_tmu_is_enabled(sw))
-> +		return 0;
-> +
-> +	ret = tb_switch_tmu_disable(sw);
-> +	if (ret)
-> +		return ret;
-> +
-> +	ret = tb_switch_tmu_post_time(sw);
-> +	if (ret)
-> +		return ret;
-> +
-> +	return tb_switch_tmu_enable(sw);
-> +}
-> +
->  static void tb_scan_port(struct tb_port *port);
-> 
->  /**
-> @@ -263,6 +282,9 @@ static void tb_scan_port(struct tb_port *port)
->  	if (tb_switch_lane_bonding_enable(sw))
->  		tb_sw_warn(sw, "failed to enable lane bonding\n");
-> 
-> +	if (tb_enable_tmu(sw))
-> +		tb_sw_warn(sw, "failed to enable TMU\n");
-> +
->  	tb_scan_switch(sw);
->  }
-> 
-> @@ -713,6 +735,7 @@ static void tb_handle_hotplug(struct work_struct
-> *work)
->  			tb_sw_set_unplugged(port->remote->sw);
->  			tb_free_invalid_tunnels(tb);
->  			tb_remove_dp_resources(port->remote->sw);
-> +			tb_switch_tmu_disable(port->remote->sw);
->  			tb_switch_lane_bonding_disable(port->remote->sw);
->  			tb_switch_remove(port->remote->sw);
->  			port->remote = NULL;
-> @@ -860,6 +883,9 @@ static int tb_start(struct tb *tb)
->  		return ret;
->  	}
-> 
-> +	/* Enable TMU if it is off */
-> +	if (!tb_switch_tmu_is_enabled(tb->root_switch))
-
-To be consistent with the implementation of tb_switch_tmu_disable(), should we
-move the above check inside tb_switch_tmu_enable()?
-
-> +		tb_switch_tmu_enable(tb->root_switch);
->  	/* Full scan to discover devices added before the driver was loaded. */
->  	tb_scan_switch(tb->root_switch);
->  	/* Find out tunnels created by the boot firmware */ @@ -891,6 +917,9
-> @@ static void tb_restore_children(struct tb_switch *sw)  {
->  	int i;
-> 
-> +	if (tb_enable_tmu(sw))
-> +		tb_sw_warn(sw, "failed to restore TMU configuration\n");
-> +
->  	tb_switch_for_each_remote_port(sw, i) {
->  		struct tb_port *port = &sw->ports[i];
-> 
-> diff --git a/drivers/thunderbolt/tb.h b/drivers/thunderbolt/tb.h index
-> 1488382066fd..087fd6d6ef9a 100644
-> --- a/drivers/thunderbolt/tb.h
-> +++ b/drivers/thunderbolt/tb.h
-> @@ -46,6 +46,38 @@ struct tb_switch_nvm {
->  #define TB_SWITCH_MAX_DEPTH		6
->  #define USB4_SWITCH_MAX_DEPTH		5
-> 
-> +/**
-> + * enum tb_switch_tmu_rate - TMU refresh rate
-> + * @TB_SWITCH_TMU_RATE_OFF: %0 (Disable Time Sync handshake)
-> + * @TB_SWITCH_TMU_RATE_HIFI: %16 us time interval between successive
-> + *			     transmission of the Delay Request TSNOS
-> + *			     (Time Sync Notification Ordered Set) on a Link
-> + * @TB_SWITCH_TMU_RATE_NORMAL: %1 ms time interval between
-> successive
-> + *			       transmission of the Delay Request TSNOS on
-> + *			       a Link
-> + */
-> +enum tb_switch_tmu_rate {
-> +	TB_SWITCH_TMU_RATE_OFF = 0,
-> +	TB_SWITCH_TMU_RATE_HIFI = 16,
-> +	TB_SWITCH_TMU_RATE_NORMAL = 1000,
-> +};
-> +
-> +/**
-> + * struct tb_switch_tmu - Structure holding switch TMU configuration
-> + * @cap: Offset to the TMU capability (%0 if not found)
-> + * @has_ucap: Does the switch support uni-directional mode
-> + * @rate: TMU refresh rate related to upstream switch. In case of root
-> + *	  switch this holds the domain rate.
-> + * @unidirectional: Is the TMU in uni-directional or bi-directional mode
-> + *		    related to upstream switch. Don't case for root switch.
-> + */
-> +struct tb_switch_tmu {
-> +	int cap;
-> +	bool has_ucap;
-> +	enum tb_switch_tmu_rate rate;
-> +	bool unidirectional;
-> +};
-> +
->  /**
->   * struct tb_switch - a thunderbolt switch
->   * @dev: Device for the switch
-> @@ -55,6 +87,7 @@ struct tb_switch_nvm {
->   *	      mailbox this will hold the pointer to that (%NULL
->   *	      otherwise). If set it also means the switch has
->   *	      upgradeable NVM.
-> + * @tmu: The switch TMU configuration
->   * @tb: Pointer to the domain the switch belongs to
->   * @uid: Unique ID of the switch
->   * @uuid: UUID of the switch (or %NULL if not supported) @@ -93,6 +126,7
-> @@ struct tb_switch {
->  	struct tb_regs_switch_header config;
->  	struct tb_port *ports;
->  	struct tb_dma_port *dma_port;
-> +	struct tb_switch_tmu tmu;
->  	struct tb *tb;
->  	u64 uid;
->  	uuid_t *uuid;
-> @@ -129,6 +163,7 @@ struct tb_switch {
->   * @remote: Remote port (%NULL if not connected)
->   * @xdomain: Remote host (%NULL if not connected)
->   * @cap_phy: Offset, zero if not found
-> + * @cap_tmu: Offset of the adapter specific TMU capability (%0 if not
-> + present)
->   * @cap_adap: Offset of the adapter specific capability (%0 if not present)
->   * @cap_usb4: Offset to the USB4 port capability (%0 if not present)
->   * @port: Port number on switch
-> @@ -147,6 +182,7 @@ struct tb_port {
->  	struct tb_port *remote;
->  	struct tb_xdomain *xdomain;
->  	int cap_phy;
-> +	int cap_tmu;
->  	int cap_adap;
->  	int cap_usb4;
->  	u8 port;
-> @@ -696,6 +732,17 @@ bool tb_switch_query_dp_resource(struct tb_switch
-> *sw, struct tb_port *in);  int tb_switch_alloc_dp_resource(struct tb_switch
-> *sw, struct tb_port *in);  void tb_switch_dealloc_dp_resource(struct tb_switch
-> *sw, struct tb_port *in);
-> 
-> +int tb_switch_tmu_init(struct tb_switch *sw); int
-> +tb_switch_tmu_post_time(struct tb_switch *sw); int
-> +tb_switch_tmu_disable(struct tb_switch *sw); int
-> +tb_switch_tmu_enable(struct tb_switch *sw);
-> +
-> +static inline bool tb_switch_tmu_is_enabled(const struct tb_switch *sw)
-> +{
-> +	return sw->tmu.rate == TB_SWITCH_TMU_RATE_HIFI &&
-> +	       !sw->tmu.unidirectional;
-> +}
-> +
->  int tb_wait_for_port(struct tb_port *port, bool wait_if_unplugged);  int
-> tb_port_add_nfc_credits(struct tb_port *port, int credits);  int
-> tb_port_set_initial_credits(struct tb_port *port, u32 credits); diff --git
-> a/drivers/thunderbolt/tb_regs.h b/drivers/thunderbolt/tb_regs.h index
-> 47f73f992412..ec1a5d1f7c94 100644
-> --- a/drivers/thunderbolt/tb_regs.h
-> +++ b/drivers/thunderbolt/tb_regs.h
-> @@ -26,6 +26,7 @@
->  #define TB_MAX_CONFIG_RW_LENGTH 60
-> 
->  enum tb_switch_cap {
-> +	TB_SWITCH_CAP_TMU		= 0x03,
->  	TB_SWITCH_CAP_VSE		= 0x05,
->  };
-> 
-> @@ -195,6 +196,21 @@ struct tb_regs_switch_header {
->  #define ROUTER_CS_26_ONS			BIT(30)
->  #define ROUTER_CS_26_OV				BIT(31)
-> 
-> +/* Router TMU configuration */
-> +#define TMU_RTR_CS_0				0x00
-> +#define TMU_RTR_CS_0_TD				BIT(27)
-> +#define TMU_RTR_CS_0_UCAP			BIT(30)
-> +#define TMU_RTR_CS_1				0x01
-> +#define TMU_RTR_CS_1_LOCAL_TIME_NS_MASK		GENMASK(31,
-> 16)
-> +#define TMU_RTR_CS_1_LOCAL_TIME_NS_SHIFT	16
-> +#define TMU_RTR_CS_2				0x02
-> +#define TMU_RTR_CS_3				0x03
-> +#define TMU_RTR_CS_3_LOCAL_TIME_NS_MASK		GENMASK(15,
-> 0)
-> +#define TMU_RTR_CS_3_TS_PACKET_INTERVAL_MASK	GENMASK(31,
-> 16)
-> +#define TMU_RTR_CS_3_TS_PACKET_INTERVAL_SHIFT	16
-> +#define TMU_RTR_CS_22				0x16
-> +#define TMU_RTR_CS_24				0x18
-> +
->  enum tb_port_type {
->  	TB_TYPE_INACTIVE	= 0x000000,
->  	TB_TYPE_PORT		= 0x000001,
-> @@ -248,6 +264,10 @@ struct tb_regs_port_header {
->  #define ADP_CS_5_LCA_MASK			GENMASK(28, 22)
->  #define ADP_CS_5_LCA_SHIFT			22
-> 
-> +/* TMU adapter registers */
-> +#define TMU_ADP_CS_3				0x03
-> +#define TMU_ADP_CS_3_UDM			BIT(29)
-> +
->  /* Lane adapter registers */
->  #define LANE_ADP_CS_0				0x00
->  #define LANE_ADP_CS_0_SUPPORTED_WIDTH_MASK	GENMASK(25, 20)
-> diff --git a/drivers/thunderbolt/tmu.c b/drivers/thunderbolt/tmu.c new file
-> mode 100644 index 000000000000..d6314f6b20c7
-> --- /dev/null
-> +++ b/drivers/thunderbolt/tmu.c
-> @@ -0,0 +1,380 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * Thunderbolt Time Management Unit (TMU) support
-> + *
-> + * Copyright (C) 2019, Intel Corporation
-> + * Authors: Mika Westerberg <mika.westerberg@linux.intel.com>
-> + *	    Rajmohan Mani <rajmohan.mani@intel.com>
-> + */
-> +
-> +#include <linux/delay.h>
-> +
-> +#include "tb.h"
-> +
-> +static const char *tb_switch_tmu_mode_name(const struct tb_switch *sw)
-> +{
-> +	bool root_switch = !tb_route(sw);
-> +
-> +	switch (sw->tmu.rate) {
-> +	case TB_SWITCH_TMU_RATE_OFF:
-> +		return "off";
-> +
-> +	case TB_SWITCH_TMU_RATE_HIFI:
-> +		/* Root switch does not have upstream directionality */
-> +		if (root_switch)
-> +			return "HiFi";
-> +		if (sw->tmu.unidirectional)
-> +			return "uni-directional, HiFi";
-> +		return "bi-directional, HiFi";
-> +
-> +	case TB_SWITCH_TMU_RATE_NORMAL:
-> +		if (root_switch)
-> +			return "normal";
-> +		return "uni-directional, normal";
-> +
-> +	default:
-> +		return "unknown";
-> +	}
-> +}
-> +
-> +static bool tb_switch_tmu_ucap_supported(struct tb_switch *sw) {
-> +	int ret;
-> +	u32 val;
-> +
-> +	ret = tb_sw_read(sw, &val, TB_CFG_SWITCH,
-> +			 sw->tmu.cap + TMU_RTR_CS_0, 1);
-> +	if (ret)
-> +		return false;
-> +
-> +	return !!(val & TMU_RTR_CS_0_UCAP);
-> +}
-> +
-> +static int tb_switch_tmu_rate_read(struct tb_switch *sw) {
-> +	int ret;
-> +	u32 val;
-> +
-> +	ret = tb_sw_read(sw, &val, TB_CFG_SWITCH,
-> +			 sw->tmu.cap + TMU_RTR_CS_3, 1);
-> +	if (ret)
-> +		return ret;
-> +
-> +	val >>= TMU_RTR_CS_3_TS_PACKET_INTERVAL_SHIFT;
-> +	return val;
-> +}
-> +
-> +static int tb_switch_tmu_rate_write(struct tb_switch *sw, int rate) {
-> +	int ret;
-> +	u32 val;
-> +
-> +	ret = tb_sw_read(sw, &val, TB_CFG_SWITCH,
-> +			 sw->tmu.cap + TMU_RTR_CS_3, 1);
-> +	if (ret)
-> +		return ret;
-> +
-> +	val &= ~TMU_RTR_CS_3_TS_PACKET_INTERVAL_MASK;
-> +	val |= rate << TMU_RTR_CS_3_TS_PACKET_INTERVAL_SHIFT;
-> +
-> +	return tb_sw_write(sw, &val, TB_CFG_SWITCH,
-> +			   sw->tmu.cap + TMU_RTR_CS_3, 1);
-> +}
-> +
-> +static int tb_port_tmu_write(struct tb_port *port, u8 offset, u32 mask,
-> +			     u32 value)
-> +{
-> +	u32 data;
-> +	int ret;
-> +
-> +	ret = tb_port_read(port, &data, TB_CFG_PORT, port->cap_tmu +
-> offset, 1);
-> +	if (ret)
-> +		return ret;
-> +
-> +	data &= ~mask;
-> +	data |= value;
-> +
-> +	return tb_port_write(port, &data, TB_CFG_PORT,
-> +			     port->cap_tmu + offset, 1);
-> +}
-> +
-> +static int tb_port_tmu_set_unidirectional(struct tb_port *port,
-> +					  bool unidirectional)
-> +{
-> +	u32 val;
-> +
-> +	if (!port->sw->tmu.has_ucap)
-> +		return 0;
-> +
-> +	val = unidirectional ? TMU_ADP_CS_3_UDM : 0;
-> +	return tb_port_tmu_write(port, TMU_ADP_CS_3,
-> TMU_ADP_CS_3_UDM, val); }
-> +
-> +static inline int tb_port_tmu_unidirectional_disable(struct tb_port
-> +*port) {
-> +	return tb_port_tmu_set_unidirectional(port, false); }
-> +
-> +static bool tb_port_tmu_is_unidirectional(struct tb_port *port) {
-> +	int ret;
-> +	u32 val;
-> +
-> +	ret = tb_port_read(port, &val, TB_CFG_PORT,
-> +			   port->cap_tmu + TMU_ADP_CS_3, 1);
-> +	if (ret)
-> +		return false;
-> +
-> +	return val & TMU_ADP_CS_3_UDM;
-> +}
-> +
-> +static int tb_switch_tmu_set_time_disruption(struct tb_switch *sw, bool
-> +set) {
-> +	int ret;
-> +	u32 val;
-> +
-> +	ret = tb_sw_read(sw, &val, TB_CFG_SWITCH,
-> +			 sw->tmu.cap + TMU_RTR_CS_0, 1);
-> +	if (ret)
-> +		return ret;
-> +
-> +	if (set)
-> +		val |= TMU_RTR_CS_0_TD;
-> +	else
-> +		val &= ~TMU_RTR_CS_0_TD;
-> +
-> +	return tb_sw_write(sw, &val, TB_CFG_SWITCH,
-> +			   sw->tmu.cap + TMU_RTR_CS_0, 1);
-> +}
-> +
-> +/**
-> + * tb_switch_tmu_init() - Initialize switch TMU structures
-> + * @sw: Switch to initialized
-> + *
-> + * This function must be called before other TMU related functions to
-> + * makes the internal structures are filled in correctly. Does not
-> + * change any hardware configuration.
-> + */
-> +int tb_switch_tmu_init(struct tb_switch *sw) {
-> +	int ret, i;
-> +
-> +	if (tb_switch_is_icm(sw))
-> +		return 0;
-> +
-> +	ret = tb_switch_find_cap(sw, TB_SWITCH_CAP_TMU);
-> +	if (ret > 0)
-> +		sw->tmu.cap = ret;
-> +
-> +	tb_switch_for_each_port(sw, i) {
-> +		struct tb_port *port = &sw->ports[i];
-> +		int cap;
-> +
-> +		cap = tb_port_find_cap(port, TB_PORT_CAP_TIME1);
-> +		if (cap > 0)
-> +			port->cap_tmu = cap;
-> +	}
-> +
-> +	ret = tb_switch_tmu_rate_read(sw);
-> +	if (ret < 0)
-> +		return ret;
-> +
-> +	sw->tmu.rate = ret;
-> +
-> +	sw->tmu.has_ucap = tb_switch_tmu_ucap_supported(sw);
-> +	if (sw->tmu.has_ucap) {
-> +		tb_sw_dbg(sw, "TMU: supports uni-directional mode\n");
-> +
-> +		if (tb_route(sw)) {
-> +			struct tb_port *up = tb_upstream_port(sw);
-> +
-> +			sw->tmu.unidirectional =
-> +				tb_port_tmu_is_unidirectional(up);
-> +		}
-> +	} else {
-> +		sw->tmu.unidirectional = false;
-> +	}
-> +
-> +	tb_sw_dbg(sw, "TMU: current mode: %s\n",
-> tb_switch_tmu_mode_name(sw));
-> +	return 0;
-> +}
-> +
-> +/**
-> + * tb_switch_tmu_post_time() - Update switch local time
-> + * @sw: Switch whose time to update
-> + *
-> + * Updates switch local time using time posting procedure.
-> + */
-> +int tb_switch_tmu_post_time(struct tb_switch *sw) {
-> +	unsigned int  post_local_time_offset, post_time_offset;
-> +	struct tb_switch *root_switch = sw->tb->root_switch;
-> +	u64 hi, mid, lo, local_time, post_time;
-> +	int i, ret, retries = 100;
-> +	u32 gm_local_time[3];
-> +
-> +	if (!tb_route(sw))
-> +		return 0;
-> +
-> +	if (!tb_switch_is_usb4(sw))
-> +		return 0;
-> +
-> +	/* Need to be able to read the grand master time */
-> +	if (!root_switch->tmu.cap)
-> +		return 0;
-> +
-> +	ret = tb_sw_read(root_switch, gm_local_time, TB_CFG_SWITCH,
-> +			 root_switch->tmu.cap + TMU_RTR_CS_1,
-> +			 ARRAY_SIZE(gm_local_time));
-> +	if (ret)
-> +		return ret;
-> +
-> +	for (i = 0; i < ARRAY_SIZE(gm_local_time); i++)
-> +		tb_sw_dbg(root_switch, "local_time[%d]=0x%08x\n", i,
-> +			  gm_local_time[i]);
-> +
-> +	/* Convert to nanoseconds (drop fractional part) */
-> +	hi = gm_local_time[2] & TMU_RTR_CS_3_LOCAL_TIME_NS_MASK;
-> +	mid = gm_local_time[1];
-> +	lo = (gm_local_time[0] & TMU_RTR_CS_1_LOCAL_TIME_NS_MASK) >>
-> +		TMU_RTR_CS_1_LOCAL_TIME_NS_SHIFT;
-> +	local_time = hi << 48 | mid << 16 | lo;
-> +
-> +	/* Tell the switch that time sync is disrupted for a while */
-> +	ret = tb_switch_tmu_set_time_disruption(sw, true);
-> +	if (ret)
-> +		return ret;
-> +
-> +	post_local_time_offset = sw->tmu.cap + TMU_RTR_CS_22;
-> +	post_time_offset = sw->tmu.cap + TMU_RTR_CS_24;
-> +
-> +	/*
-> +	 * Write the Grandmaster time to the Post Local Time registers
-> +	 * of the new switch.
-> +	 */
-> +	ret = tb_sw_write(sw, &local_time, TB_CFG_SWITCH,
-> +			  post_local_time_offset, 2);
-> +	if (ret)
-> +		goto out;
-> +
-> +	/*
-> +	 * Have the new switch update its local time (by writing 1 to
-> +	 * the post_time registers) and wait for the completion of the
-> +	 * same (post_time register becomes 0). This means the time has
-> +	 * been converged properly.
-> +	 */
-> +	post_time = 1;
-> +
-> +	ret = tb_sw_write(sw, &post_time, TB_CFG_SWITCH, post_time_offset,
-> 2);
-> +	if (ret)
-> +		goto out;
-> +
-> +	do {
-> +		usleep_range(5, 10);
-> +		ret = tb_sw_read(sw, &post_time, TB_CFG_SWITCH,
-> +				 post_time_offset, 2);
-> +		if (ret)
-> +			goto out;
-> +	} while (--retries && post_time);
-> +
-> +	if (!retries) {
-> +		ret = -ETIMEDOUT;
-> +		goto out;
-> +	}
-> +
-> +	tb_sw_dbg(sw, "TMU: updated local time to %#llx\n", local_time);
-> +
-> +out:
-> +	tb_switch_tmu_set_time_disruption(sw, false);
-> +	return ret;
-> +}
-> +
-> +/**
-> + * tb_switch_tmu_disable() - Disable TMU of a switch
-> + * @sw: Switch whose TMU to disable
-> + *
-> + * Turns off TMU of @sw if it is enabled. If not enabled does nothing.
-> + */
-> +int tb_switch_tmu_disable(struct tb_switch *sw) {
-> +	int ret;
-> +
-> +	if (!tb_switch_is_usb4(sw))
-> +		return 0;
-> +
-> +	/* Already disabled? */
-> +	if (sw->tmu.rate == TB_SWITCH_TMU_RATE_OFF)
-> +		return 0;
-> +
-> +	if (sw->tmu.unidirectional) {
-> +		struct tb_switch *parent = tb_switch_parent(sw);
-> +		struct tb_port *up, *down;
-> +
-> +		up = tb_upstream_port(sw);
-> +		down = tb_port_at(tb_route(sw), parent);
-> +
-> +		/* The switch may be unplugged so ignore any errors */
-> +		tb_port_tmu_unidirectional_disable(up);
-> +		ret = tb_port_tmu_unidirectional_disable(down);
-> +		if (ret)
-> +			return ret;
-> +	}
-> +
-> +	tb_switch_tmu_rate_write(sw, TB_SWITCH_TMU_RATE_OFF);
-> +
-> +	sw->tmu.unidirectional = false;
-> +	sw->tmu.rate = TB_SWITCH_TMU_RATE_OFF;
-> +
-> +	tb_sw_dbg(sw, "TMU: disabled\n");
-> +	return 0;
-> +}
-> +
-> +/**
-> + * tb_switch_tmu_enable() - Enable TMU on a switch
-> + * @sw: Switch whose TMU to enable
-> + *
-> + * Enables TMU of a switch to be in bi-directional, HiFi mode. In this
-> +mode
-> + * all tunneling should work.
-> + */
-> +int tb_switch_tmu_enable(struct tb_switch *sw) {
-> +	int ret;
-> +
-> +	if (!tb_switch_is_usb4(sw))
-> +		return 0;
-> +
-> +	ret = tb_switch_tmu_set_time_disruption(sw, true);
-> +	if (ret)
-> +		return ret;
-> +
-> +	/* Change mode to bi-directional */
-> +	if (tb_route(sw) && sw->tmu.unidirectional) {
-> +		struct tb_switch *parent = tb_switch_parent(sw);
-> +		struct tb_port *up, *down;
-> +
-> +		up = tb_upstream_port(sw);
-> +		down = tb_port_at(tb_route(sw), parent);
-> +
-> +		ret = tb_port_tmu_unidirectional_disable(down);
-> +		if (ret)
-> +			return ret;
-> +
-> +		ret = tb_switch_tmu_rate_write(sw,
-> TB_SWITCH_TMU_RATE_HIFI);
-> +		if (ret)
-> +			return ret;
-> +
-> +		ret = tb_port_tmu_unidirectional_disable(up);
-> +		if (ret)
-> +			return ret;
-> +	} else {
-> +		ret = tb_switch_tmu_rate_write(sw,
-> TB_SWITCH_TMU_RATE_HIFI);
-> +		if (ret)
-> +			return ret;
-> +	}
-> +
-> +	sw->tmu.unidirectional = false;
-> +	sw->tmu.rate = TB_SWITCH_TMU_RATE_HIFI;
-> +	tb_sw_dbg(sw, "TMU: mode set to: %s\n",
-> tb_switch_tmu_mode_name(sw));
-> +
-> +	return tb_switch_tmu_set_time_disruption(sw, false); }
-> --
-> 2.23.0
-
+DQpPbiA5LzMwLzE5IDU6MTcgQU0sIE5laWwgQXJtc3Ryb25nIHdyb3RlOg0KPiBIaSBBbmRyZXks
+DQo+DQo+IE9uIDI3LzA5LzIwMTkgMjI6NTUsIEdyb2R6b3Zza3ksIEFuZHJleSB3cm90ZToNCj4+
+IENhbiB5b3UgcGxlYXNlIHVzZSBhZGRyMmxpbmUgb3IgZ2RiIHRvIHBpbnBvaW50IHdoZXJlIGlu
+DQo+PiBkcm1fc2NoZWRfaW5jcmVhc2Vfa2FybWEgeW91IGhpdCB0aGUgTlVMTCBwdHIgPyBJdCBs
+b29rcyBsaWtlIHRoZSBndWlsdHkNCj4+IGpvYiwgYnV0IHRvIGJlIHN1cmUuDQo+IERpZCBhIG5l
+dyBydW4gZnJvbSA1LjM6DQo+DQo+IFsgICAzNS45NzE5NzJdIENhbGwgdHJhY2U6DQo+IFsgICAz
+NS45NzQzOTFdICBkcm1fc2NoZWRfaW5jcmVhc2Vfa2FybWErMHg1Yy8weGYwCWZmZmYwMDAwMTA2
+NjdmMzgJRkZGRjAwMDAxMDY2N0Y5NAlkcml2ZXJzL2dwdS9kcm0vc2NoZWR1bGVyL3NjaGVkX21h
+aW4uYzozMzUNCj4NCj4NCj4gVGhlIGNyYXNoaW5nIGxpbmUgaXMgOg0KPiAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICBpZiAoYmFkLT5zX2ZlbmNlLT5zY2hlZHVsZWQuY29udGV4dCA9
+PQ0KPiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgZW50aXR5LT5mZW5jZV9j
+b250ZXh0KSB7DQo+DQo+IERvZXNuJ3Qgc2VlbSByZWxhdGVkIHRvIGd1aWx0eSBqb2IuDQo+DQo+
+IE5laWwNCg0KDQpUaGFua3MgTmVpbCwgYnkgZ3VpbHR5IGkgbWVhbnQgdGhlICdiYWQnIGpvYi4g
+SSByZXZpZXdlZCB0aGUgY29kZSBhbmQgDQpjYW4ndCBzZWUgYW55dGhpbmcgc3VzcGljaW91cyBm
+b3Igbm93LiBUbyBoZWxwIGNsYXJpZnkgY291bGQgeW91IHBsZWFzZSANCnByb3ZpZGUgZnRyYWNl
+IGxvZyBmb3IgdGhpcyA/IEFsbCB0aGUgZG1hX2ZlbmNlIGFuZCBncHVfc2NoZWR1bGVyIHRyYWNl
+cyANCmNhbiBoZWxwLiBJIHVzdWFsbHkganVzdCBzZXQgdGhlbSBhbGwgdXAgaW4gb25lIGxpbmUg
+dXNpbmcgdHJhY2UtY21kIA0KdXRpbGl0eSBsaWtlIHRoaXMgYmVmb3JlIHN0YXJ0aW5nIHRoZSBy
+dW4uIElmIHlvdSBoYXZlIGFueSByZWxldmFudCANCnRyYWNlcyBpbiBwYW5mcm9zdCBpdCBhc2xv
+IGNhbiBiZSB1c2VmdWwuDQoNCnN1ZG8gdHJhY2UtY21kIHN0YXJ0IC1lIGRtYV9mZW5jZSAtZSBn
+cHVfc2NoZWR1bGVyDQoNCkFuZHJleQ0KDQoNCj4NCj4+IEFuZHJleQ0KPj4NCj4+IE9uIDkvMjcv
+MTkgNDoxMiBBTSwgTmVpbCBBcm1zdHJvbmcgd3JvdGU6DQo+Pj4gSGkgQ2hyaXN0aWFuLA0KPj4+
+DQo+Pj4gSW4gdjUuMywgcnVubmluZyBkRVFQIHRyaWdnZXJzIHRoZSBmb2xsb3dpbmcga2VybmVs
+IGNyYXNoIDoNCj4+Pg0KPj4+IFsgICAyMC4yMjQ5ODJdIFVuYWJsZSB0byBoYW5kbGUga2VybmVs
+IE5VTEwgcG9pbnRlciBkZXJlZmVyZW5jZSBhdCB2aXJ0dWFsIGFkZHJlc3MgMDAwMDAwMDAwMDAw
+MDAzOA0KPj4+IFsuLi5dDQo+Pj4gWyAgIDIwLjI5MTA2NF0gSGFyZHdhcmUgbmFtZTogS2hhZGFz
+IFZJTTIgKERUKQ0KPj4+IFsgICAyMC4yOTUyMTddIFdvcmtxdWV1ZTogZXZlbnRzIGRybV9zY2hl
+ZF9qb2JfdGltZWRvdXQNCj4+PiBbLi4uXQ0KPj4+IFsgICAyMC4zMDQ4NjddIHBjIDogZHJtX3Nj
+aGVkX2luY3JlYXNlX2thcm1hKzB4NWMvMHhmMA0KPj4+IFsgICAyMC4zMDk2OTZdIGxyIDogZHJt
+X3NjaGVkX2luY3JlYXNlX2thcm1hKzB4NDQvMHhmMA0KPj4+IFsuLi5dDQo+Pj4gWyAgIDIwLjM5
+NjcyMF0gQ2FsbCB0cmFjZToNCj4+PiBbICAgMjAuMzk5MTM4XSAgZHJtX3NjaGVkX2luY3JlYXNl
+X2thcm1hKzB4NWMvMHhmMA0KPj4+IFsgICAyMC40MDM2MjNdICBwYW5mcm9zdF9qb2JfdGltZWRv
+dXQrMHgxMmMvMHgxZTANCj4+PiBbICAgMjAuNDA4MDIxXSAgZHJtX3NjaGVkX2pvYl90aW1lZG91
+dCsweDQ4LzB4YTANCj4+PiBbICAgMjAuNDEyMzM2XSAgcHJvY2Vzc19vbmVfd29yaysweDFlMC8w
+eDMyMA0KPj4+IFsgICAyMC40MTYzMDBdICB3b3JrZXJfdGhyZWFkKzB4NDAvMHg0NTANCj4+PiBb
+ICAgMjAuNDE5OTI0XSAga3RocmVhZCsweDEyNC8weDEyOA0KPj4+IFsgICAyMC40MjMxMTZdICBy
+ZXRfZnJvbV9mb3JrKzB4MTAvMHgxOA0KPj4+IFsgICAyMC40MjY2NTNdIENvZGU6IGY5NDAwMDAx
+IDU0MDAwMWMwIGY5NDAwYTgzIGY5NDAyNDAyIChmOTQwMWM2NCkNCj4+PiBbICAgMjAuNDMyNjkw
+XSAtLS1bIGVuZCB0cmFjZSBiZDAyZjg5MDEzOTA5NmE3IF0tLS0NCj4+Pg0KPj4+IFdoaWNoIG5l
+dmVyIGhhcHBlbnMsIGF0IGFsbCwgb24gdjUuMi4NCj4+Pg0KPj4+IEkgZGlkIGEgKHZlcnkpIGxv
+bmcgKDcgZGF5cywgfjEwMHJ1bnMpIGJpc2VjdCBydW4gdXNpbmcgb3VyIExBVkEgbGFiICh0aGFu
+a3MgdG9tZXUgISksIGJ1dA0KPj4+IGJpc2VjdGluZyB3YXMgbm90IGVhc3kgc2luY2UgdGhlIGJh
+ZCBjb21taXQgbGFuZGVkIG9uIGRybS1taXNjLW5leHQgYWZ0ZXIgdjUuMS1yYzYsIGFuZA0KPj4+
+IHRoZW4gdjUuMi1yYzEgd2FzIGJhY2ttZXJnZWQgaW50byBkcm0tbWlzYy1uZXh0IGF0Og0KPj4+
+IFsxXSAzNzRlZDU0MjkzNDYgTWVyZ2UgZHJtL2RybS1uZXh0IGludG8gZHJtLW1pc2MtbmV4dA0K
+Pj4+DQo+Pj4gVGh1cyBiaXNlY3RpbmcgYmV0d2VlbiBbMV0gYW5nIHY1LjItcmMxIGxlYWRzIHRv
+IGNvbW1pdCBiYXNlZCBvbiB2NS4yLXJjMS4uLiB3aGVyZSBwYW5mcm9zdCB3YXMNCj4+PiBub3Qg
+ZW5hYmxlZCBpbiB0aGUgS2hhZGFzIFZJTTIgRFQuDQo+Pj4NCj4+PiBBbnl3YXksIEkgbWFuYWdl
+ZCB0byBpZGVudGlmeSAzIHBvc3NpYmx5IGJyZWFraW5nIGNvbW1pdHMgOg0KPj4+IFsyXSAyOTA3
+NjRhZjdlMzYgZHJtL3NjaGVkOiBLZWVwIHNfZmVuY2UtPnBhcmVudCBwb2ludGVyDQo+Pj4gWzNd
+IDU5MTgwNDVjNGVkNCBkcm0vc2NoZWR1bGVyOiByZXdvcmsgam9iIGRlc3RydWN0aW9uDQo+Pj4g
+WzRdIGE1MzQzYjhhMmNhNSBkcm0vc2NoZWR1bGVyOiBBZGQgZmxhZyB0byBoaW50IHRoZSByZWxl
+YXNlIG9mIGd1aWx0eSBqb2IuDQo+Pj4NCj4+PiBCdXQgWzFdIGFuZCBbMl0gZG9lc24ndCBjcmFz
+aCB0aGUgc2FtZSB3YXkgOg0KPj4+IFsgICAxNi4yNTc5MTJdIFVuYWJsZSB0byBoYW5kbGUga2Vy
+bmVsIE5VTEwgcG9pbnRlciBkZXJlZmVyZW5jZSBhdCB2aXJ0dWFsIGFkZHJlc3MgMDAwMDAwMDAw
+MDAwMDA2MA0KPj4+IFsuLi5dDQo+Pj4gWyAgIDE2LjMwODMwN10gQ1BVOiA0IFBJRDogODAgQ29t
+bToga3dvcmtlci80OjEgTm90IHRhaW50ZWQgNS4xLjAtcmMyLTAxMTg1LWcyOTA3NjRhZjdlMzYt
+ZGlydHkgIzM3OA0KPj4+IFsgICAxNi4zMTcwOTldIEhhcmR3YXJlIG5hbWU6IEtoYWRhcyBWSU0y
+IChEVCkNCj4+PiBbLi4uXSkNCj4+PiBbICAgMTYuMzMwOTA3XSBwYyA6IHJlZmNvdW50X3N1Yl9h
+bmRfdGVzdF9jaGVja2VkKzB4NC8weGIwDQo+Pj4gWyAgIDE2LjMzNjA3OF0gbHIgOiByZWZjb3Vu
+dF9kZWNfYW5kX3Rlc3RfY2hlY2tlZCsweDE0LzB4MjANCj4+PiBbLi4uXQ0KPj4+IFsgICAxNi40
+MjM1MzNdIFByb2Nlc3Mga3dvcmtlci80OjEgKHBpZDogODAsIHN0YWNrIGxpbWl0ID0gMHgoX19f
+X3B0cnZhbF9fX18pKQ0KPj4+IFsgICAxNi40MzA0MzFdIENhbGwgdHJhY2U6DQo+Pj4gWyAgIDE2
+LjQzMjg1MV0gIHJlZmNvdW50X3N1Yl9hbmRfdGVzdF9jaGVja2VkKzB4NC8weGIwDQo+Pj4gWyAg
+IDE2LjQzNzY4MV0gIGRybV9zY2hlZF9qb2JfY2xlYW51cCsweDI0LzB4NTgNCj4+PiBbICAgMTYu
+NDQxOTA4XSAgcGFuZnJvc3Rfam9iX2ZyZWUrMHgxNC8weDI4DQo+Pj4gWyAgIDE2LjQ0NTc4N10g
+IGRybV9zY2hlZF9qb2JfdGltZWRvdXQrMHg2Yy8weGEwDQo+Pj4gWyAgIDE2LjQ1MDEwMl0gIHBy
+b2Nlc3Nfb25lX3dvcmsrMHgxZTAvMHgzMjANCj4+PiBbICAgMTYuNDU0MDY3XSAgd29ya2VyX3Ro
+cmVhZCsweDQwLzB4NDUwDQo+Pj4gWyAgIDE2LjQ1NzY5MF0gIGt0aHJlYWQrMHgxMjQvMHgxMjgN
+Cj4+PiBbICAgMTYuNDYwODgyXSAgcmV0X2Zyb21fZm9yaysweDEwLzB4MTgNCj4+PiBbICAgMTYu
+NDY0NDIxXSBDb2RlOiA1MjgwMDAwMCBkNjVmMDNjMCBkNTAzMjAxZiBhYTAxMDNlMyAoYjk0MDAw
+MjEpDQo+Pj4gWyAgIDE2LjQ3MDQ1Nl0gLS0tWyBlbmQgdHJhY2UgMzlhNjc0MTJlZTFiNjRiNSBd
+LS0tDQo+Pj4NCj4+PiBhbmQgWzNdIGZhaWxzIGxpa2Ugb24gdjUuMyAoaW4gZHJtX3NjaGVkX2lu
+Y3JlYXNlX2thcm1hKToNCj4+PiBbICAgMzMuODMwMDgwXSBVbmFibGUgdG8gaGFuZGxlIGtlcm5l
+bCBOVUxMIHBvaW50ZXIgZGVyZWZlcmVuY2UgYXQgdmlydHVhbCBhZGRyZXNzIDAwMDAwMDAwMDAw
+MDAwMzgNCj4+PiBbLi4uXQ0KPj4+IFsgICAzMy44NzE5NDZdIEludGVybmFsIGVycm9yOiBPb3Bz
+OiA5NjAwMDAwNCBbIzFdIFBSRUVNUFQgU01QDQo+Pj4gWyAgIDMzLjg3NzQ1MF0gTW9kdWxlcyBs
+aW5rZWQgaW46DQo+Pj4gWyAgIDMzLjg4MDQ3NF0gQ1BVOiA2IFBJRDogODEgQ29tbToga3dvcmtl
+ci82OjEgTm90IHRhaW50ZWQgNS4xLjAtcmMyLTAxMTg2LWdhNTM0M2I4YTJjYTUtZGlydHkgIzM4
+MA0KPj4+IFsgICAzMy44ODkyNjVdIEhhcmR3YXJlIG5hbWU6IEtoYWRhcyBWSU0yIChEVCkNCj4+
+PiBbICAgMzMuODkzNDE5XSBXb3JrcXVldWU6IGV2ZW50cyBkcm1fc2NoZWRfam9iX3RpbWVkb3V0
+DQo+Pj4gWy4uLl0NCj4+PiBbICAgMzMuOTAzMDY5XSBwYyA6IGRybV9zY2hlZF9pbmNyZWFzZV9r
+YXJtYSsweDVjLzB4ZjANCj4+PiBbICAgMzMuOTA3ODk4XSBsciA6IGRybV9zY2hlZF9pbmNyZWFz
+ZV9rYXJtYSsweDQ0LzB4ZjANCj4+PiBbLi4uXQ0KPj4+IFsgICAzMy45OTQ5MjRdIFByb2Nlc3Mg
+a3dvcmtlci82OjEgKHBpZDogODEsIHN0YWNrIGxpbWl0ID0gMHgoX19fX3B0cnZhbF9fX18pKQ0K
+Pj4+IFsgICAzNC4wMDE4MjJdIENhbGwgdHJhY2U6DQo+Pj4gWyAgIDM0LjAwNDI0Ml0gIGRybV9z
+Y2hlZF9pbmNyZWFzZV9rYXJtYSsweDVjLzB4ZjANCj4+PiBbICAgMzQuMDA4NzI2XSAgcGFuZnJv
+c3Rfam9iX3RpbWVkb3V0KzB4MTJjLzB4MWUwDQo+Pj4gWyAgIDM0LjAxMzEyMl0gIGRybV9zY2hl
+ZF9qb2JfdGltZWRvdXQrMHg0OC8weGEwDQo+Pj4gWyAgIDM0LjAxNzQzOF0gIHByb2Nlc3Nfb25l
+X3dvcmsrMHgxZTAvMHgzMjANCj4+PiBbICAgMzQuMDIxNDAyXSAgd29ya2VyX3RocmVhZCsweDQw
+LzB4NDUwDQo+Pj4gWyAgIDM0LjAyNTAyNl0gIGt0aHJlYWQrMHgxMjQvMHgxMjgNCj4+PiBbICAg
+MzQuMDI4MjE4XSAgcmV0X2Zyb21fZm9yaysweDEwLzB4MTgNCj4+PiBbICAgMzQuMDMxNzU1XSBD
+b2RlOiBmOTQwMDAwMSA1NDAwMDFjMCBmOTQwMGE4MyBmOTQwMjQwMiAoZjk0MDFjNjQpDQo+Pj4g
+WyAgIDM0LjAzNzc5Ml0gLS0tWyBlbmQgdHJhY2UgYmUzZmQ2Zjc3ZjRkZjI2NyBdLS0tDQo+Pj4N
+Cj4+Pg0KPj4+IFdoZW4gSSByZXZlcnQgWzNdIG9uIFsxXSwgaSBnZXQgdGhlIHNhbWUgY3Jhc2gg
+YXMgWzJdLCBtZWFuaW5nDQo+Pj4gdGhlIGNvbW1pdCBbM10gbWFza3MgdGhlIGZhaWx1cmUgWzJd
+IGludHJvZHVjZWQuDQo+Pj4NCj4+PiBEbyB5b3Uga25vdyBob3cgdG8gc29sdmUgdGhpcyA/DQo+
+Pj4NCj4+PiBUaGFua3MsDQo+Pj4gTmVpbA0K
