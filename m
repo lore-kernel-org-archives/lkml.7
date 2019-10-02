@@ -2,32 +2,32 @@ Return-Path: <SRS0=zem1=X3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC306C4360C
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 19:08:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 24C65C4360C
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 19:08:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C3A672133F
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 19:08:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0DB8A2133F
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 19:08:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729491AbfJBTId (ORCPT
+        id S1729482AbfJBTIc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Oct 2019 15:08:33 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:35836 "EHLO
+        Wed, 2 Oct 2019 15:08:32 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:35840 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729307AbfJBTIQ (ORCPT
+        by vger.kernel.org with ESMTP id S1729309AbfJBTIQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 2 Oct 2019 15:08:16 -0400
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1iFjyt-00035n-SX; Wed, 02 Oct 2019 20:08:12 +0100
+        id 1iFjyt-00035t-SP; Wed, 02 Oct 2019 20:08:12 +0100
 Received: from ben by deadeye with local (Exim 4.92.1)
         (envelope-from <ben@decadent.org.uk>)
-        id 1iFjyq-0003hB-SF; Wed, 02 Oct 2019 20:08:08 +0100
+        id 1iFjyq-0003hN-UQ; Wed, 02 Oct 2019 20:08:08 +0100
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,14 +35,16 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
+        "Michal Suchanek" <msuchanek@suse.de>,
         "Herbert Xu" <herbert@gondor.apana.org.au>,
-        "Eric Biggers" <ebiggers@kernel.org>,
-        syzbot+f7baccc38dcc1e094e77@syzkaller.appspotmail.com
+        "Eric Biggers" <ebiggers@google.com>,
+        "Steffen Klassert" <steffen.klassert@secunet.com>
 Date:   Wed, 02 Oct 2019 20:06:51 +0100
-Message-ID: <lsq.1570043211.119489746@decadent.org.uk>
+Message-ID: <lsq.1570043211.444788492@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 86/87] lib/mpi: Fix karactx leak in mpi_powm
+Subject: [PATCH 3.16 87/87] crypto: user - prevent operating on larval
+ algorithms
 In-Reply-To: <lsq.1570043210.379046399@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -56,64 +58,53 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Herbert Xu <herbert@gondor.apana.org.au>
+From: Eric Biggers <ebiggers@google.com>
 
-commit c8ea9fce2baf7b643384f36f29e4194fa40d33a6 upstream.
+commit 21d4120ec6f5b5992b01b96ac484701163917b63 upstream.
 
-Sometimes mpi_powm will leak karactx because a memory allocation
-failure causes a bail-out that skips the freeing of karactx.  This
-patch moves the freeing of karactx to the end of the function like
-everything else so that it can't be skipped.
+Michal Suchanek reported [1] that running the pcrypt_aead01 test from
+LTP [2] in a loop and holding Ctrl-C causes a NULL dereference of
+alg->cra_users.next in crypto_remove_spawns(), via crypto_del_alg().
+The test repeatedly uses CRYPTO_MSG_NEWALG and CRYPTO_MSG_DELALG.
 
-Reported-by: syzbot+f7baccc38dcc1e094e77@syzkaller.appspotmail.com
-Fixes: cdec9cb5167a ("crypto: GnuPG based MPI lib - source files...")
+The crash occurs when the instance that CRYPTO_MSG_DELALG is trying to
+unregister isn't a real registered algorithm, but rather is a "test
+larval", which is a special "algorithm" added to the algorithms list
+while the real algorithm is still being tested.  Larvals don't have
+initialized cra_users, so that causes the crash.  Normally pcrypt_aead01
+doesn't trigger this because CRYPTO_MSG_NEWALG waits for the algorithm
+to be tested; however, CRYPTO_MSG_NEWALG returns early when interrupted.
+
+Everything else in the "crypto user configuration" API has this same bug
+too, i.e. it inappropriately allows operating on larval algorithms
+(though it doesn't look like the other cases can cause a crash).
+
+Fix this by making crypto_alg_match() exclude larval algorithms.
+
+[1] https://lkml.kernel.org/r/20190625071624.27039-1-msuchanek@suse.de
+[2] https://github.com/linux-test-project/ltp/blob/20190517/testcases/kernel/crypto/pcrypt_aead01.c
+
+Reported-by: Michal Suchanek <msuchanek@suse.de>
+Fixes: a38f7907b926 ("crypto: Add userspace configuration API")
+Cc: Steffen Klassert <steffen.klassert@secunet.com>
+Signed-off-by: Eric Biggers <ebiggers@google.com>
 Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
-Reviewed-by: Eric Biggers <ebiggers@kernel.org>
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+[bwh: Backported to 3.16: adjust filename]
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- lib/mpi/mpi-pow.c | 6 ++----
- 1 file changed, 2 insertions(+), 4 deletions(-)
+ crypto/crypto_user.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
---- a/lib/mpi/mpi-pow.c
-+++ b/lib/mpi/mpi-pow.c
-@@ -36,6 +36,7 @@
- int mpi_powm(MPI res, MPI base, MPI exp, MPI mod)
- {
- 	mpi_ptr_t mp_marker = NULL, bp_marker = NULL, ep_marker = NULL;
-+	struct karatsuba_ctx karactx = {};
- 	mpi_ptr_t xp_marker = NULL;
- 	mpi_ptr_t tspace = NULL;
- 	mpi_ptr_t rp, ep, mp, bp;
-@@ -163,13 +164,11 @@ int mpi_powm(MPI res, MPI base, MPI exp,
- 		int c;
- 		mpi_limb_t e;
- 		mpi_limb_t carry_limb;
--		struct karatsuba_ctx karactx;
+--- a/crypto/crypto_user.c
++++ b/crypto/crypto_user.c
+@@ -53,6 +53,9 @@ static struct crypto_alg *crypto_alg_mat
+ 	list_for_each_entry(q, &crypto_alg_list, cra_list) {
+ 		int match = 0;
  
- 		xp = xp_marker = mpi_alloc_limb_space(2 * (msize + 1));
- 		if (!xp)
- 			goto enomem;
++		if (crypto_is_larval(q))
++			continue;
++
+ 		if ((q->cra_flags ^ p->cru_type) & p->cru_mask)
+ 			continue;
  
--		memset(&karactx, 0, sizeof karactx);
- 		negative_result = (ep[0] & 1) && base->sign;
- 
- 		i = esize - 1;
-@@ -293,8 +292,6 @@ int mpi_powm(MPI res, MPI base, MPI exp,
- 		if (mod_shift_cnt)
- 			mpihelp_rshift(rp, rp, rsize, mod_shift_cnt);
- 		MPN_NORMALIZE(rp, rsize);
--
--		mpihelp_release_karatsuba_ctx(&karactx);
- 	}
- 
- 	if (negative_result && rsize) {
-@@ -311,6 +308,7 @@ int mpi_powm(MPI res, MPI base, MPI exp,
- leave:
- 	rc = 0;
- enomem:
-+	mpihelp_release_karatsuba_ctx(&karactx);
- 	if (assign_rp)
- 		mpi_assign_limb_space(res, rp, size);
- 	if (mp_marker)
 
