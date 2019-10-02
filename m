@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23DFEC4360C
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 19:13:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 28C4FC4360C
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 19:13:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0BB3321D82
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 19:13:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 02DC7207FF
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 19:13:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730176AbfJBTNP (ORCPT
+        id S1729298AbfJBTNf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Oct 2019 15:13:15 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:35364 "EHLO
+        Wed, 2 Oct 2019 15:13:35 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:35304 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729093AbfJBTIJ (ORCPT
+        by vger.kernel.org with ESMTP id S1728918AbfJBTIJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 2 Oct 2019 15:08:09 -0400
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1iFjyn-00035S-M1; Wed, 02 Oct 2019 20:08:05 +0100
+        id 1iFjyn-00035Y-Qa; Wed, 02 Oct 2019 20:08:05 +0100
 Received: from ben by deadeye with local (Exim 4.92.1)
         (envelope-from <ben@decadent.org.uk>)
-        id 1iFjyn-0003au-9T; Wed, 02 Oct 2019 20:08:05 +0100
+        id 1iFjyn-0003b3-Af; Wed, 02 Oct 2019 20:08:05 +0100
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,14 +35,15 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Jan Stancek" <jstancek@redhat.com>,
-        "Michael Ellerman" <mpe@ellerman.id.au>
+        "Carsten Schmid" <carsten_schmid@mentor.com>,
+        "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
+        "Mathias Nyman" <mathias.nyman@linux.intel.com>
 Date:   Wed, 02 Oct 2019 20:06:51 +0100
-Message-ID: <lsq.1570043211.926004973@decadent.org.uk>
+Message-ID: <lsq.1570043211.260163381@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 14/87] powerpc/perf: add missing put_cpu_var in
- power_pmu_event_init
+Subject: [PATCH 3.16 16/87] usb: xhci: avoid null pointer deref when bos
+ field is NULL
 In-Reply-To: <lsq.1570043210.379046399@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -56,89 +57,105 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Jan Stancek <jstancek@redhat.com>
+From: Carsten Schmid <carsten_schmid@mentor.com>
 
-commit 68de8867ea5d99127e836c23f6bccf4d44859623 upstream.
+commit 7aa1bb2ffd84d6b9b5f546b079bb15cd0ab6e76e upstream.
 
-One path in power_pmu_event_init() calls get_cpu_var(), but is
-missing matching call to put_cpu_var(), which causes preemption
-imbalance and crash in user-space:
+With defective USB sticks we see the following error happen:
+usb 1-3: new high-speed USB device number 6 using xhci_hcd
+usb 1-3: device descriptor read/64, error -71
+usb 1-3: device descriptor read/64, error -71
+usb 1-3: new high-speed USB device number 7 using xhci_hcd
+usb 1-3: device descriptor read/64, error -71
+usb 1-3: unable to get BOS descriptor set
+usb 1-3: New USB device found, idVendor=0781, idProduct=5581
+usb 1-3: New USB device strings: Mfr=1, Product=2, SerialNumber=3
+...
+BUG: unable to handle kernel NULL pointer dereference at 0000000000000008
 
-  Page fault in user mode with in_atomic() = 1 mm = c000001fefa5a280
-  NIP = 3fff9bf2cae0  MSR = 900000014280f032
-  Oops: Weird page fault, sig: 11 [#23]
-  SMP NR_CPUS=2048 NUMA PowerNV
-  Modules linked in: <snip>
-  CPU: 43 PID: 10285 Comm: a.out Tainted: G      D         4.0.0-rc5+ #1
-  task: c000001fe82c9200 ti: c000001fe835c000 task.ti: c000001fe835c000
-  NIP: 00003fff9bf2cae0 LR: 00003fff9bee4898 CTR: 00003fff9bf2cae0
-  REGS: c000001fe835fea0 TRAP: 0401   Tainted: G      D          (4.0.0-rc5+)
-  MSR: 900000014280f032 <SF,HV,VEC,VSX,EE,PR,FP,ME,IR,DR,RI>  CR: 22000028  XER: 00000000
-  CFAR: 00003fff9bee4894 SOFTE: 1
-   GPR00: 00003fff9bee494c 00003fffe01c2ee0 00003fff9c084410 0000000010020068
-   GPR04: 0000000000000000 0000000000000002 0000000000000008 0000000000000001
-   GPR08: 0000000000000001 00003fff9c074a30 00003fff9bf2cae0 00003fff9bf2cd70
-   GPR12: 0000000052000022 00003fff9c10b700
-  NIP [00003fff9bf2cae0] 0x3fff9bf2cae0
-  LR [00003fff9bee4898] 0x3fff9bee4898
-  Call Trace:
-  ---[ end trace 5d3d952b5d4185d4 ]---
+This comes from the following place:
+[ 1660.215380] IP: xhci_set_usb2_hardware_lpm+0xdf/0x3d0 [xhci_hcd]
+[ 1660.222092] PGD 0 P4D 0
+[ 1660.224918] Oops: 0000 [#1] PREEMPT SMP NOPTI
+[ 1660.425520] CPU: 1 PID: 38 Comm: kworker/1:1 Tainted: P     U  W  O    4.14.67-apl #1
+[ 1660.434277] Workqueue: usb_hub_wq hub_event [usbcore]
+[ 1660.439918] task: ffffa295b6ae4c80 task.stack: ffffad4580150000
+[ 1660.446532] RIP: 0010:xhci_set_usb2_hardware_lpm+0xdf/0x3d0 [xhci_hcd]
+[ 1660.453821] RSP: 0018:ffffad4580153c70 EFLAGS: 00010046
+[ 1660.459655] RAX: 0000000000000000 RBX: ffffa295b4d7c000 RCX: 0000000000000002
+[ 1660.467625] RDX: 0000000000000002 RSI: ffffffff984a55b2 RDI: ffffffff984a55b2
+[ 1660.475586] RBP: ffffad4580153cc8 R08: 0000000000d6520a R09: 0000000000000001
+[ 1660.483556] R10: ffffad4580a004a0 R11: 0000000000000286 R12: ffffa295b4d7c000
+[ 1660.491525] R13: 0000000000010648 R14: ffffa295a84e1800 R15: 0000000000000000
+[ 1660.499494] FS:  0000000000000000(0000) GS:ffffa295bfc80000(0000) knlGS:0000000000000000
+[ 1660.508530] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[ 1660.514947] CR2: 0000000000000008 CR3: 000000025a114000 CR4: 00000000003406a0
+[ 1660.522917] Call Trace:
+[ 1660.525657]  usb_set_usb2_hardware_lpm+0x3d/0x70 [usbcore]
+[ 1660.531792]  usb_disable_device+0x242/0x260 [usbcore]
+[ 1660.537439]  usb_disconnect+0xc1/0x2b0 [usbcore]
+[ 1660.542600]  hub_event+0x596/0x18f0 [usbcore]
+[ 1660.547467]  ? trace_preempt_on+0xdf/0x100
+[ 1660.552040]  ? process_one_work+0x1c1/0x410
+[ 1660.556708]  process_one_work+0x1d2/0x410
+[ 1660.561184]  ? preempt_count_add.part.3+0x21/0x60
+[ 1660.566436]  worker_thread+0x2d/0x3f0
+[ 1660.570522]  kthread+0x122/0x140
+[ 1660.574123]  ? process_one_work+0x410/0x410
+[ 1660.578792]  ? kthread_create_on_node+0x60/0x60
+[ 1660.583849]  ret_from_fork+0x3a/0x50
+[ 1660.587839] Code: 00 49 89 c3 49 8b 84 24 50 16 00 00 8d 4a ff 48 8d 04 c8 48 89 ca 4c 8b 10 45 8b 6a 04 48 8b 00 48 89 45 c0 49 8b 86 80 03 00 00 <48> 8b 40 08 8b 40 03 0f 1f 44 00 00 45 85 ff 0f 84 81 01 00 00
+[ 1660.608980] RIP: xhci_set_usb2_hardware_lpm+0xdf/0x3d0 [xhci_hcd] RSP: ffffad4580153c70
+[ 1660.617921] CR2: 0000000000000008
 
-  BUG: sleeping function called from invalid context at kernel/locking/rwsem.c:41
-  in_atomic(): 1, irqs_disabled(): 0, pid: 10285, name: a.out
-  INFO: lockdep is turned off.
-  CPU: 43 PID: 10285 Comm: a.out Tainted: G      D         4.0.0-rc5+ #1
-  Call Trace:
-  [c000001fe835f990] [c00000000089c014] .dump_stack+0x98/0xd4 (unreliable)
-  [c000001fe835fa10] [c0000000000e4138] .___might_sleep+0x1d8/0x2e0
-  [c000001fe835faa0] [c000000000888da8] .down_read+0x38/0x110
-  [c000001fe835fb30] [c0000000000bf2f4] .exit_signals+0x24/0x160
-  [c000001fe835fbc0] [c0000000000abde0] .do_exit+0xd0/0xe70
-  [c000001fe835fcb0] [c00000000001f4c4] .die+0x304/0x450
-  [c000001fe835fd60] [c00000000088e1f4] .do_page_fault+0x2d4/0x900
-  [c000001fe835fe30] [c000000000008664] handle_page_fault+0x10/0x30
-  note: a.out[10285] exited with preempt_count 1
+Tracking this down shows that udev->bos is NULL in the following code:
+(xhci.c, in xhci_set_usb2_hardware_lpm)
+	field = le32_to_cpu(udev->bos->ext_cap->bmAttributes);  <<<<<<< here
 
-Reproducer:
-  #include <stdio.h>
-  #include <unistd.h>
-  #include <syscall.h>
-  #include <sys/types.h>
-  #include <sys/stat.h>
-  #include <linux/perf_event.h>
-  #include <linux/hw_breakpoint.h>
+	xhci_dbg(xhci, "%s port %d USB2 hardware LPM\n",
+			enable ? "enable" : "disable", port_num + 1);
 
-  static struct perf_event_attr event = {
-          .type = PERF_TYPE_RAW,
-          .size = sizeof(struct perf_event_attr),
-          .sample_type = PERF_SAMPLE_BRANCH_STACK,
-          .branch_sample_type = PERF_SAMPLE_BRANCH_ANY_RETURN,
-  };
+	if (enable) {
+		/* Host supports BESL timeout instead of HIRD */
+		if (udev->usb2_hw_lpm_besl_capable) {
+			/* if device doesn't have a preferred BESL value use a
+			 * default one which works with mixed HIRD and BESL
+			 * systems. See XHCI_DEFAULT_BESL definition in xhci.h
+			 */
+			if ((field & USB_BESL_SUPPORT) &&
+			    (field & USB_BESL_BASELINE_VALID))
+				hird = USB_GET_BESL_BASELINE(field);
+			else
+				hird = udev->l1_params.besl;
 
-  int main()
-  {
-          syscall(__NR_perf_event_open, &event, 0, -1, -1, 0);
-  }
+The failing case is when disabling LPM. So it is sufficient to avoid
+access to udev->bos by moving the instruction into the "enable" clause.
 
-Signed-off-by: Jan Stancek <jstancek@redhat.com>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Signed-off-by: Carsten Schmid <carsten_schmid@mentor.com>
+Signed-off-by: Mathias Nyman <mathias.nyman@linux.intel.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+[bwh: Backported to 3.16: adjust context]
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- arch/powerpc/perf/core-book3s.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/usb/host/xhci.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/arch/powerpc/perf/core-book3s.c
-+++ b/arch/powerpc/perf/core-book3s.c
-@@ -1825,8 +1825,10 @@ static int power_pmu_event_init(struct p
- 		cpuhw->bhrb_filter = ppmu->bhrb_filter_map(
- 					event->attr.branch_sample_type);
+--- a/drivers/usb/host/xhci.c
++++ b/drivers/usb/host/xhci.c
+@@ -4178,7 +4178,6 @@ int xhci_set_usb2_hardware_lpm(struct us
+ 	pm_addr = port_array[port_num] + PORTPMSC;
+ 	pm_val = readl(pm_addr);
+ 	hlpm_addr = port_array[port_num] + PORTHLPMC;
+-	field = le32_to_cpu(udev->bos->ext_cap->bmAttributes);
  
--		if(cpuhw->bhrb_filter == -1)
-+		if (cpuhw->bhrb_filter == -1) {
-+			put_cpu_var(cpu_hw_events);
- 			return -EOPNOTSUPP;
-+		}
- 	}
- 
- 	put_cpu_var(cpu_hw_events);
+ 	xhci_dbg(xhci, "%s port %d USB2 hardware LPM\n",
+ 			enable ? "enable" : "disable", port_num + 1);
+@@ -4190,6 +4189,7 @@ int xhci_set_usb2_hardware_lpm(struct us
+ 			 * default one which works with mixed HIRD and BESL
+ 			 * systems. See XHCI_DEFAULT_BESL definition in xhci.h
+ 			 */
++			field = le32_to_cpu(udev->bos->ext_cap->bmAttributes);
+ 			if ((field & USB_BESL_SUPPORT) &&
+ 			    (field & USB_BESL_BASELINE_VALID))
+ 				hird = USB_GET_BESL_BASELINE(field);
 
