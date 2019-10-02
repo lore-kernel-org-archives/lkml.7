@@ -7,44 +7,44 @@ X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E624C352AA
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 13:05:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D6F4C35280
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 13:05:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 66F4B21920
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 13:05:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3A8C821D7B
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 13:05:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="XPMlX+9R"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="Bju7Yd0n"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727378AbfJBNFB (ORCPT
+        id S1727381AbfJBNFG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Oct 2019 09:05:01 -0400
+        Wed, 2 Oct 2019 09:05:06 -0400
 Received: from mail-eopbgr80051.outbound.protection.outlook.com ([40.107.8.51]:20989
         "EHLO EUR04-VI1-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727084AbfJBNFA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Oct 2019 09:05:00 -0400
+        id S1727223AbfJBNFF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 2 Oct 2019 09:05:05 -0400
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=k5NN9Qu7Ky6ZIPtycoaUdLxTM6yoxVZ+5Y7xnS4iv/bCjHUMxmO6ZZ/gD+weoM6qpGHNGR1r1b3JyYBMqoHZLMO7J97cx9h2Hb+Y6Yh8rszGqVuto/0ZymSMjcEx851jtggiRhT6BrSm3TZcFY5lqwaQa5bvnXrWWhqsvRGM7Pv1cIb5lELhmHCA2UpdAGWwOrI1doCfS7a6VSJrcY5iK6fXDjyd9Dim1FmgFVVv3hB2F+g21QLX7rEVkzyv9a8YCkFFbR1ejSWYtdd8JXsugyM7Xp/Q2HliNihQeVgVa/8JnbKQSycurhkonYcpS/dK2d9apyXRa45QtqKJ+cerYg==
+ b=GGtWBNqo3gmWKnYJJvTBEUsR7ZGt90B+S1WX8bK5RPsJJFVAyEZdqkDRPdcjJaHH84SPXn0jdCf5BZuwkMbbf34yd5sf8Fb4L1SepribW3e/vHzBAhqfL+MFxGqyKWymWB7M88VTbU6JWZf6Tkj62sAXZIChcuCKmoAsGD58vCP/dJJPIhpOsfUpS/LFyA3JnJNXnnEvxsbII6cVKIqHb4SvWFcYe9mKemp5n1UoLCAPrIX/N4rQtxgQe16oDbS3jKgl0UfL0ycNIwgproA3DbppASnzgPFw704AdpbyIy2LBGMlluKh424xPR6dhxr31yntizspMkBwj7fgmQoBog==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=jDRbKsOFigBmVYBko0W+r9T3uEFtB6nFeU5C/rB+UAY=;
- b=n+KQodOz8sA2YAALGvWjoMVW6KBLhAyqqnxjuqhCV94SmXInutdNuMmIqoOTwhLMEQ7AjhuW3m/v0hrml5S+Oly4/iZjhEhsQWmym7byDvgO2KG3P0pF4oKMMTRKu9fMysu4zvVQbJPSmmcctlWjiSyVD+B2eUSYENEIle0mwipcSE6pFhIi9JNHrKfg8t/Dlwey5BarBKPVCjN+TS5e7wYZtPXECO0/vF8DRyREJ726Smdh81mX8as8eeifuoDlm731R0AoMdxYVY6AZ0VnPZkSgpU0ycXiTMEp+9k1Yo/flAAWJ3nJXwjNbyCKByRGgunF23gtNDJU8sxiZFbpug==
+ bh=VqQUcoI7siuClgI0M6QIJ4XwGRz82ZJqe2/hZfHIipE=;
+ b=NjwB8j8HIHxjV2aHQig12B0Y+60cmK7pUBs4UONCh2hRxRczE8ciP6qY+4bVkrTKg+otQSDCbr3heWEdQ5wL39tAiquJW71btSD/3QgMCwvrM2BdQlo3WZtF6uSLAh7+3XtC0DbMbwkNgE3GVRakDu9GXV3pdyK0SpIWamzg1OadPdqDuwNsVBF1CYFRtYBLr8cx5wqCQD7/ODOF2MUpUdwv41sd+FxiIEKNqJ2NXRS8P4hB+UF4LUlG8u/PiRYZ/A4NihCZODwT7ZMV1Uros2MARh+kM56Zkl92U/A9fAEeDQ30fsXrmYoMbbXaQ+KxDqn/AWjVLwS4lEWulGzXeA==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
  header.d=nxp.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=jDRbKsOFigBmVYBko0W+r9T3uEFtB6nFeU5C/rB+UAY=;
- b=XPMlX+9RgFGwUvNoiHWqPyQrOy6Imy6FfZ1NMMirslJ4d8BR27nelC6k+b3fRP5zzr4JFW0KF9uUnmt6RE+TdgJaS2+XxA+ABDopM2J4hx5nq4gUSiHi5CPWjgmDF1IDfEADTdo9T6HgKmDUfzOTmyw9lvmtpZbq0vkql35eRCI=
+ bh=VqQUcoI7siuClgI0M6QIJ4XwGRz82ZJqe2/hZfHIipE=;
+ b=Bju7Yd0nOkj7DKHCTYz6anSiB1lm59miWBY9DCt2EUC4kQKvQ7WvCK1JKiXoOqfxD7iOJscm4XJWWdBv9jaQmCks58tbdFSFB/fxtN8vD/i0b4IXTKkZvvGntul2vU5UahGtlSy0yEFYDGylMLHwPJofsD5Zq5QZ3qTGfXckBgw=
 Received: from VI1PR0402MB2863.eurprd04.prod.outlook.com (10.175.20.18) by
  VI1PR0402MB3918.eurprd04.prod.outlook.com (52.134.17.31) with Microsoft SMTP
  Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2305.15; Wed, 2 Oct 2019 13:04:41 +0000
+ 15.20.2305.15; Wed, 2 Oct 2019 13:04:42 +0000
 Received: from VI1PR0402MB2863.eurprd04.prod.outlook.com
  ([fe80::fd33:c447:3cab:c36]) by VI1PR0402MB2863.eurprd04.prod.outlook.com
  ([fe80::fd33:c447:3cab:c36%7]) with mapi id 15.20.2305.023; Wed, 2 Oct 2019
- 13:04:41 +0000
+ 13:04:42 +0000
 From:   Stefan-gabriel Mirea <stefan-gabriel.mirea@nxp.com>
 To:     "corbet@lwn.net" <corbet@lwn.net>,
         "robh+dt@kernel.org" <robh+dt@kernel.org>,
@@ -58,13 +58,13 @@ CC:     "jslaby@suse.com" <jslaby@suse.com>,
         "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
         "linux-serial@vger.kernel.org" <linux-serial@vger.kernel.org>,
         "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        Cosmin Stefan Stoica <cosmin.stoica@nxp.com>
-Subject: [PATCH v5 2/5] arm64: Introduce config for S32
-Thread-Topic: [PATCH v5 2/5] arm64: Introduce config for S32
-Thread-Index: AQHVeSH0gYgaSbiD5UaSomdVgm1X0w==
-Date:   Wed, 2 Oct 2019 13:04:41 +0000
-Message-ID: <20191002130425.28905-3-stefan-gabriel.mirea@nxp.com>
+        <linux-arm-kernel@lists.infradead.org>
+Subject: [PATCH v5 3/5] serial: fsl_linflexuart: Be consistent with the name
+Thread-Topic: [PATCH v5 3/5] serial: fsl_linflexuart: Be consistent with the
+ name
+Thread-Index: AQHVeSH0+mfP9oRy8ku2MCfc+O1hUQ==
+Date:   Wed, 2 Oct 2019 13:04:42 +0000
+Message-ID: <20191002130425.28905-4-stefan-gabriel.mirea@nxp.com>
 References: <20191002130425.28905-1-stefan-gabriel.mirea@nxp.com>
 In-Reply-To: <20191002130425.28905-1-stefan-gabriel.mirea@nxp.com>
 Accept-Language: en-US
@@ -80,66 +80,124 @@ authentication-results: spf=none (sender IP is )
 x-ms-exchange-messagesentrepresentingtype: 1
 x-originating-ip: [86.120.240.156]
 x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 6c21a046-5b28-41aa-2275-08d747391678
+x-ms-office365-filtering-correlation-id: 43b86077-b31b-469c-7e91-08d747391746
 x-ms-office365-filtering-ht: Tenant
-x-ms-traffictypediagnostic: VI1PR0402MB3918:|VI1PR0402MB3918:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <VI1PR0402MB3918A4525A7FFEC4E841470ADF9C0@VI1PR0402MB3918.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:3968;
+x-ms-traffictypediagnostic: VI1PR0402MB3918:
+x-microsoft-antispam-prvs: <VI1PR0402MB3918DF9161580DE1DA820DD6DF9C0@VI1PR0402MB3918.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:6790;
 x-forefront-prvs: 0178184651
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(366004)(39860400002)(136003)(396003)(376002)(346002)(189003)(199004)(102836004)(2201001)(5660300002)(26005)(478600001)(76176011)(486006)(386003)(14454004)(50226002)(8676002)(8936002)(81156014)(305945005)(81166006)(6506007)(7736002)(7416002)(64756008)(6436002)(66556008)(66446008)(476003)(66066001)(2906002)(11346002)(2616005)(66476007)(6486002)(66946007)(25786009)(52116002)(2501003)(186003)(256004)(446003)(6512007)(6116002)(3846002)(36756003)(71190400001)(71200400001)(4744005)(4326008)(1076003)(86362001)(54906003)(99286004)(110136005)(316002);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR0402MB3918;H:VI1PR0402MB2863.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(366004)(39860400002)(136003)(396003)(376002)(346002)(189003)(199004)(102836004)(2201001)(5660300002)(26005)(478600001)(76176011)(486006)(386003)(14454004)(50226002)(8676002)(8936002)(81156014)(305945005)(81166006)(6506007)(7736002)(7416002)(64756008)(6436002)(66556008)(66446008)(476003)(66066001)(2906002)(11346002)(2616005)(66476007)(6486002)(66946007)(25786009)(52116002)(2501003)(186003)(256004)(446003)(6512007)(6116002)(3846002)(36756003)(71190400001)(71200400001)(4326008)(1076003)(86362001)(54906003)(99286004)(110136005)(316002);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR0402MB3918;H:VI1PR0402MB2863.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
 received-spf: None (protection.outlook.com: nxp.com does not designate
  permitted sender hosts)
 x-ms-exchange-senderadcheck: 1
 x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: KQeSlaIxYa5KHIyyZ4Nm0oT8JotShh3g43P9bjIWQTKD2TgOSOupnvB+JKkaJoPyKwxDNbGibC6mHsoAUJA00qg+Z/DBrkhn1abc4kkJXYX/OLiZHHRPvAF0Hj6pemc+kEstGszZeQzj3F8DvwKtoHwiN35D0B+lr9W3qeuShcNwBVd1xOsE/yYNuXEuyx+NsXc05tNBoEtKajuTfx7Bj/JuDVVNQWmEOLdIBoy27OUfQ3C1l/ZvlkJhZsYMCTVLrfv5tELZb8qYDEYTfr/hz/p0McpajkpUC3rLilSw+cD+Eig1M1hywVwX3czN5cJ7tsSaoQKUQ5KxQace+LAct5M+fqKj+1pjexIZfgmnq0taEHDdpaKdc0+eqwqeaCuf7sIV/21ILcjTZPXSjg1uaNLvbdPn+LbGVJYKYupeRGc=
+x-microsoft-antispam-message-info: jUxzy4Xu/YERbC9196grQB+gqcNhJNtZSpfz3FYc0EVBV7j+CdsreF1W+Hm5A7cZOuaL9wgF9JxDHk5p5K8Dv7OalRiYpj91fGRD52IslCftWmHOt8S6IMX/GUoX2dKrSODMLnq4q4KWunVbbxB8YM0/1IRtBDjxiqfw4MLOlVm0uv8YlmXN1DvMedeWxmaNRwgGaD/RMPgp4wTElt0yNTNw9PfNbT3dB6M4HbHQZxCniSBOuIgfQy0a+85qLS9qwVEy9ZO4kf6UMr/qCp6/TCqHYjP37mntd3ohyEh4LB6GERwcpj3d8h4q5n7d5t4a2fG00PMyvyRfj8cdCNn7KmQbxOi2ZUv5wEx8bo/sn4BXL+hvPZSh1MQPBRkf1FoTRSIzgeX93HzteL+A7ANL8UKOXqtKpq2+r8GWrffwRUc=
+x-ms-exchange-transport-forked: True
 Content-Type: text/plain; charset="iso-8859-1"
 Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
 X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 6c21a046-5b28-41aa-2275-08d747391678
-X-MS-Exchange-CrossTenant-originalarrivaltime: 02 Oct 2019 13:04:41.4043
+X-MS-Exchange-CrossTenant-Network-Message-Id: 43b86077-b31b-469c-7e91-08d747391746
+X-MS-Exchange-CrossTenant-originalarrivaltime: 02 Oct 2019 13:04:42.8666
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
 X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
 X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: UUKCLDeCiPmP6bSQB4G9flHLA2kdIhTEk4GJEt6XOD+VFG2Lfgn31aqm7upSrufkBPTjVKzU69HQ97Ic4pwQ6W6GT2evk/tgfeZTaH24bLk=
+X-MS-Exchange-CrossTenant-userprincipalname: SG70gBIXmhO42yRLgsh90GW9uieiuAQ9oDvHydIMgm6foY+0c1JDLx8ERIPesR2ajn5jH+N07hfqztytMftVPcrERdrcPlyrklvpJz84zO8=
 X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR0402MB3918
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mihaela Martinas <Mihaela.Martinas@freescale.com>
+For consistency reasons, spell the controller name as "LINFlexD" in
+comments and documentation.
 
-Add configuration option for the NXP S32 platform family in
-Kconfig.platforms. For starters, the only SoC supported will be Treerunner
-(S32V234), with a single execution target: the S32V234-EVB (rev 29288)
-board.
-
-Signed-off-by: Mihaela Martinas <Mihaela.Martinas@freescale.com>
-Signed-off-by: Stoica Cosmin-Stefan <cosmin.stoica@nxp.com>
 Signed-off-by: Stefan-Gabriel Mirea <stefan-gabriel.mirea@nxp.com>
 ---
- arch/arm64/Kconfig.platforms | 5 +++++
- 1 file changed, 5 insertions(+)
+ Documentation/admin-guide/kernel-parameters.txt | 2 +-
+ drivers/tty/serial/Kconfig                      | 8 ++++----
+ drivers/tty/serial/fsl_linflexuart.c            | 4 ++--
+ include/uapi/linux/serial_core.h                | 4 ++--
+ 4 files changed, 9 insertions(+), 9 deletions(-)
 
-diff --git a/arch/arm64/Kconfig.platforms b/arch/arm64/Kconfig.platforms
-index 16d761475a86..17f1c34ec750 100644
---- a/arch/arm64/Kconfig.platforms
-+++ b/arch/arm64/Kconfig.platforms
-@@ -212,6 +212,11 @@ config ARCH_ROCKCHIP
- 	  This enables support for the ARMv8 based Rockchip chipsets,
- 	  like the RK3368.
+diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentatio=
+n/admin-guide/kernel-parameters.txt
+index c7ac2f3ac99f..666326d74415 100644
+--- a/Documentation/admin-guide/kernel-parameters.txt
++++ b/Documentation/admin-guide/kernel-parameters.txt
+@@ -1101,7 +1101,7 @@
+ 			mapped with the correct attributes.
 =20
-+config ARCH_S32
-+	bool "NXP S32 SoC Family"
-+	help
-+	  This enables support for the NXP S32 family of processors.
-+
- config ARCH_SEATTLE
- 	bool "AMD Seattle SoC Family"
+ 		linflex,<addr>
+-			Use early console provided by Freescale LinFlex UART
++			Use early console provided by Freescale LINFlexD UART
+ 			serial driver for NXP S32V234 SoCs. A valid base
+ 			address must be provided, and the serial port must
+ 			already be setup and configured.
+diff --git a/drivers/tty/serial/Kconfig b/drivers/tty/serial/Kconfig
+index 4789b5d62f63..c8e11f62ea19 100644
+--- a/drivers/tty/serial/Kconfig
++++ b/drivers/tty/serial/Kconfig
+@@ -1391,19 +1391,19 @@ config SERIAL_FSL_LPUART_CONSOLE
+ 	  you can make it the console by answering Y to this option.
+=20
+ config SERIAL_FSL_LINFLEXUART
+-	tristate "Freescale linflexuart serial port support"
++	tristate "Freescale LINFlexD UART serial port support"
+ 	depends on PRINTK
+ 	select SERIAL_CORE
  	help
+-	  Support for the on-chip linflexuart on some Freescale SOCs.
++	  Support for the on-chip LINFlexD UART on some Freescale SOCs.
+=20
+ config SERIAL_FSL_LINFLEXUART_CONSOLE
+-	bool "Console on Freescale linflexuart serial port"
++	bool "Console on Freescale LINFlexD UART serial port"
+ 	depends on SERIAL_FSL_LINFLEXUART=3Dy
+ 	select SERIAL_CORE_CONSOLE
+ 	select SERIAL_EARLYCON
+ 	help
+-	  If you have enabled the linflexuart serial port on the Freescale
++	  If you have enabled the LINFlexD UART serial port on the Freescale
+ 	  SoCs, you can make it the console by answering Y to this option.
+=20
+ config SERIAL_CONEXANT_DIGICOLOR
+diff --git a/drivers/tty/serial/fsl_linflexuart.c b/drivers/tty/serial/fsl_=
+linflexuart.c
+index 68d74f2b5106..2d39e13176e1 100644
+--- a/drivers/tty/serial/fsl_linflexuart.c
++++ b/drivers/tty/serial/fsl_linflexuart.c
+@@ -1,6 +1,6 @@
+ // SPDX-License-Identifier: GPL-2.0-or-later
+ /*
+- * Freescale linflexuart serial port driver
++ * Freescale LINFlexD UART serial port driver
+  *
+  * Copyright 2012-2016 Freescale Semiconductor, Inc.
+  * Copyright 2017-2018 NXP
+@@ -933,5 +933,5 @@ static void __exit linflex_serial_exit(void)
+ module_init(linflex_serial_init);
+ module_exit(linflex_serial_exit);
+=20
+-MODULE_DESCRIPTION("Freescale linflex serial port driver");
++MODULE_DESCRIPTION("Freescale LINFlexD serial port driver");
+ MODULE_LICENSE("GPL v2");
+diff --git a/include/uapi/linux/serial_core.h b/include/uapi/linux/serial_c=
+ore.h
+index 0f4f87a6fd54..8ec3dd742ea4 100644
+--- a/include/uapi/linux/serial_core.h
++++ b/include/uapi/linux/serial_core.h
+@@ -290,7 +290,7 @@
+ /* Sunix UART */
+ #define PORT_SUNIX	121
+=20
+-/* Freescale Linflex UART */
+-#define PORT_LINFLEXUART	121
++/* Freescale LINFlexD UART */
++#define PORT_LINFLEXUART	122
+=20
+ #endif /* _UAPILINUX_SERIAL_CORE_H */
 --=20
 2.22.0
 
