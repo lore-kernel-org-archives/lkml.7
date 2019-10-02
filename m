@@ -2,130 +2,140 @@ Return-Path: <SRS0=zem1=X3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A7E7C47404
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 20:27:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C984C47404
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 20:28:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1D5CD218DE
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 20:27:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D875D222BE
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 20:28:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1570048082;
+	bh=KMdwI4c6wky7rlUs/8eG1P4CxPw71KUYJg0fIqdJSLw=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=blKLO+4TNJA+CquirIE27KuOfnTIJC6UwB3cgz1u7JCix+MPOw/8nSF04wI7nBkJT
+	 puLdlAEqA5mBeRRYuYKVFgZlBJLwOQ0L96MfaQAWehur4aO4hfKRsVpjDoDwfideLc
+	 rXD4FPmQLOY4vOuCHb9lIgZTyescxM2pcBzNZxiE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727807AbfJBU1V (ORCPT
+        id S1727925AbfJBU2C (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Oct 2019 16:27:21 -0400
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:47025 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725875AbfJBU1U (ORCPT
+        Wed, 2 Oct 2019 16:28:02 -0400
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:42564 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725875AbfJBU2B (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Oct 2019 16:27:20 -0400
-Received: by mail-pg1-f193.google.com with SMTP id a3so202486pgm.13;
-        Wed, 02 Oct 2019 13:27:19 -0700 (PDT)
+        Wed, 2 Oct 2019 16:28:01 -0400
+Received: by mail-lj1-f194.google.com with SMTP id y23so220819lje.9
+        for <linux-kernel@vger.kernel.org>; Wed, 02 Oct 2019 13:28:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=XdihLjEHzl6Bdj0J0VKybnqHBrV7BKaKSpUBn6TrYd8=;
+        b=KYUs3SsAkfuNreQPOWd8l020BqbDHgpj9kTZh1yMHxS9XVgi7DHbvGyVzHZ+0SNoXF
+         ZcvynCNbqW9sTmshD9EY97xPxWMOO+506YH04ZNWdgpzm5t/SR15nnl6ka9+ZDTIp/AU
+         emU5WeC6YsTuq2VNWkuBYXMY7brJ+Ydm3TMCE=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=thPrT7yVrWLzrR73UMdFtFROCIaln63nE+Eo5yiQpnk=;
-        b=XQ0qA9axYqr+cZUB07M7WSNATJN1SmrpFTyGzSN8jzB4GD+w2R3XTi3ew8RDCABb+0
-         FXL2G7faqHi2MX2SAdi345qGoyUX8kIqcUKXxq9BBa2urZJuuGJ9Mwl7BraQZLFqgaHE
-         dXnD4LTodzyH/39+foGZhDkAUiF6oIMS8ply+TumrpQwSHk0nf27fUX+KvX1deDjd+zJ
-         J+nw6RdciZ7fO/s7n1siLTCC/D1dI5mtfNn5EL0bKw2denz44j+EIlm3pBr1Re3KPsaa
-         agJ0ndGWuymMRTR1CiQXz5VwfLewK6rS8+oEofqeyjdepuJQy0Lz7RRF/gaXo+nFQeXE
-         rjTA==
-X-Gm-Message-State: APjAAAVt9VfKI9BSifou+qw4N27Vnto1MULaETEurgi6qLLk5MeZOsQP
-        zuWotlCGUnPAMZ/S7+lHUExhZqA5
-X-Google-Smtp-Source: APXvYqzo5rzZtC8vCCUsIHde3nji9og5JSYKZOamBYgBRL1NIjharGVaxXNnIix5U7bGlW7CLZ04AQ==
-X-Received: by 2002:a63:e853:: with SMTP id a19mr5488996pgk.296.1570048038505;
-        Wed, 02 Oct 2019 13:27:18 -0700 (PDT)
-Received: from desktop-bart.svl.corp.google.com ([2620:15c:2cd:202:4308:52a3:24b6:2c60])
-        by smtp.gmail.com with ESMTPSA id l62sm311480pfl.167.2019.10.02.13.27.17
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=XdihLjEHzl6Bdj0J0VKybnqHBrV7BKaKSpUBn6TrYd8=;
+        b=SqfPIPIMjzGvWxDApc0plTTjRHVrXRv4RsM4X465EQvXU0tRNZfg+Bw+JH5hRsCJOa
+         AMAnQL3eyqjrNJSNrXASsV2J28ExpAFka5wvJQfjcYRKaorrxp7Blv9FMrZ/j3NNuwuB
+         FkQtVNwjKy8oryOcsdjEn0wNUuLZp2WtHtd5M3Hz+q/xsvFTdJJGREwb6V1irVCwUzzE
+         xMXwgEfnJG8/NpkRs5ZtcFvuXF+gaQYlslkPyJTojoyCj+Qp6JLn4YaJ/drbvnuJUY8D
+         AmLEAHAEyijQMFt2uDOvqFPMt2nsAaUadYJ0v+y+uGmOFCvCREs9S+bqXnfFhMMQYs23
+         UGVw==
+X-Gm-Message-State: APjAAAV2SknzXJiSjU1M02pnfqFqDv9RvOda/OXC1bYNBy6Tj/MZl+sP
+        q8czZnM4vkoSoWm6uRU5ZNTZ3HeIZ6g=
+X-Google-Smtp-Source: APXvYqzv8Y8ZR3P6grxOmL6IVhlO+vh/QKzHU6PD1l+GE8E8aILa0fZGDOoCPIppYNUvUdF8SDPByg==
+X-Received: by 2002:a2e:9d44:: with SMTP id y4mr3580766ljj.115.1570048078851;
+        Wed, 02 Oct 2019 13:27:58 -0700 (PDT)
+Received: from mail-lf1-f44.google.com (mail-lf1-f44.google.com. [209.85.167.44])
+        by smtp.gmail.com with ESMTPSA id o15sm28099lff.22.2019.10.02.13.27.57
+        for <linux-kernel@vger.kernel.org>
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 02 Oct 2019 13:27:17 -0700 (PDT)
-Subject: Re: [PATCH 1/1] blk-mq: fill header with kernel-doc
-To:     Jens Axboe <axboe@kernel.dk>,
-        =?UTF-8?Q?Andr=c3=a9_Almeida?= <andrealmeid@collabora.com>,
-        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     kernel@collabora.com, krisman@collabora.com
-References: <20190930194846.23141-1-andrealmeid@collabora.com>
- <f1ca9de7-383b-4a84-31d0-92cfbb3759b2@kernel.dk>
-From:   Bart Van Assche <bvanassche@acm.org>
-Message-ID: <f46014fd-b29d-aee5-d49d-d2c5f2ddfb9f@acm.org>
-Date:   Wed, 2 Oct 2019 13:27:16 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Wed, 02 Oct 2019 13:27:57 -0700 (PDT)
+Received: by mail-lf1-f44.google.com with SMTP id w6so83437lfl.2
+        for <linux-kernel@vger.kernel.org>; Wed, 02 Oct 2019 13:27:57 -0700 (PDT)
+X-Received: by 2002:a19:741a:: with SMTP id v26mr3467833lfe.79.1570048077142;
+ Wed, 02 Oct 2019 13:27:57 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <f1ca9de7-383b-4a84-31d0-92cfbb3759b2@kernel.dk>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+References: <20191002134730.40985-1-thomas_os@shipmail.org>
+ <20191002134730.40985-4-thomas_os@shipmail.org> <CAHk-=wic5vXCxpH-+UTtmH_t-EDBKrKnDhxQk=t_N20aiWnqUg@mail.gmail.com>
+ <516814a5-a616-b15e-ac87-26ede681da85@shipmail.org>
+In-Reply-To: <516814a5-a616-b15e-ac87-26ede681da85@shipmail.org>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Wed, 2 Oct 2019 13:27:41 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wgH=T5mcDxTaC6QbBN=iJD3d_amzcb2+GxbcV7XuEYL2A@mail.gmail.com>
+Message-ID: <CAHk-=wgH=T5mcDxTaC6QbBN=iJD3d_amzcb2+GxbcV7XuEYL2A@mail.gmail.com>
+Subject: Re: [PATCH v3 3/7] mm: Add write-protect and clean utilities for
+ address space ranges
+To:     =?UTF-8?Q?Thomas_Hellstr=C3=B6m_=28VMware=29?= 
+        <thomas_os@shipmail.org>
+Cc:     Linux-MM <linux-mm@kvack.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Thomas Hellstrom <thellstrom@vmware.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Matthew Wilcox <willy@infradead.org>,
+        Will Deacon <will.deacon@arm.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Rik van Riel <riel@surriel.com>,
+        Minchan Kim <minchan@kernel.org>,
+        Michal Hocko <mhocko@suse.com>,
+        Huang Ying <ying.huang@intel.com>,
+        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
+        "Kirill A . Shutemov" <kirill@shutemov.name>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 10/1/19 8:33 PM, Jens Axboe wrote:
-> On 9/30/19 1:48 PM, André Almeida wrote:
->> -
->> +/**
->> + * struct blk_mq_ops - list of callback functions for blk-mq drivers
->> + */
->>    struct blk_mq_ops {
->> -	/*
->> -	 * Queue request
->> +	/**
->> +	 * @queue_rq: Queue a new request from block IO.
->>    	 */
->>    	queue_rq_fn		*queue_rq;
->>    
->> -	/*
->> -	 * If a driver uses bd->last to judge when to submit requests to
->> -	 * hardware, it must define this function. In case of errors that
->> -	 * make us stop issuing further requests, this hook serves the
->> +	/**
->> +	 * @commit_rqs: If a driver uses bd->last to judge when to submit
->> +	 * requests to hardware, it must define this function. In case of errors
->> +	 * that make us stop issuing further requests, this hook serves the
->>    	 * purpose of kicking the hardware (which the last request otherwise
->>    	 * would have done).
->>    	 */
->>    	commit_rqs_fn		*commit_rqs;
-> 
-> Stuff like this is MUCH better. Why isn't all of it done like this?
+On Wed, Oct 2, 2019 at 12:09 PM Thomas Hellstr=C3=B6m (VMware)
+<thomas_os@shipmail.org> wrote:
+>
+> Yes I typically tend towards using a "namespace_object_operation" naming
+> scheme, with "as_dirty" being the namespace here,
 
-Hi Jens,
+We discourage that kind of mindless namespacing for core stuff.
 
-If you prefer this style you may want to update
-Documentation/doc-guide/kernel-doc.rst. I think that document recommends 
-another style for documenting struct members, maybe because that style 
-requires less vertical space:
+It makes sense in a driver or a filesystem: when there are 20+
+different filesystems all implementing the same operation, you can't
+have descriptive and natural names that are unique. So having a
+namespace prefix for the filesystem or driver makes sense. But even
+then it tends ot be just a simple name, not the op it does.
 
-------------------------------------------------------------------------
-Structure, union, and enumeration documentation
------------------------------------------------
+> Looking at Matthew's suggestion but lining up with
+> "unmap_mapping_range()", perhaps we could use "clean_mapping_range" and
+> "wp_mapping_range"?
 
-The general format of a struct, union, and enum kernel-doc comment is::
+Yes, I agree with Willy that "dirty" is kind of implicit when the
+operation is to clean something, so the above sounds sane to me.
 
-   /**
-    * struct struct_name - Brief description.
-    * @member1: Description of member1.
-    * @member2: Description of member2.
-    *           One can provide multiple line descriptions
-    *           for members.
-    *
-    * Description of the structure.
-    */
+The wp part I'm not entirely sure about: you're not actually
+write-protecting the range. You're doing something different. You're
+only doing it for shared writable mappings. And I'd rather see
+separate 'struct mm_walk_ops' than shared ones that then have a flag
+in a differfent structure to change behavior.
 
-You can replace the ``struct`` in the above example with ``union`` or
-``enum``  to describe unions or enums. ``member`` is used to mean struct
-and union member names as well as enumerations in an enum.
+Yes, yes, some of the levels share the same logic, but that just means
+that you can use the same function pointer for that level in the
+different "clean" vs "wp" mm_walk_op.
 
-The brief description following the structure name may span multiple
-lines, and ends with a member description, a blank comment line, or the
-end of the comment block.
-------------------------------------------------------------------------
+Also, looking closer at this patch, this makes me go "Whaa?":
 
-Thanks,
++       pte =3D (mm =3D=3D &init_mm) ?
++               pte_offset_kernel(pmd, addr) :
++               pte_offset_map_lock(mm, pmd, addr, &ptl);
 
-Bart.
+because I don't think that's sensible. When do you have a vma in kernel spa=
+ce?
+
+Also, why do you loop inside the pmd_entry function, instead of just
+having a pte_entry function?
+
+           Linus
