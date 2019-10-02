@@ -2,211 +2,145 @@ Return-Path: <SRS0=zem1=X3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB677C10F14
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 17:19:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 75312C10F14
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 17:19:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CD24421D81
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 17:19:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 595ED21848
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 17:19:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728777AbfJBRTm (ORCPT
+        id S1728835AbfJBRTy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Oct 2019 13:19:42 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:57380 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726076AbfJBRTl (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Oct 2019 13:19:41 -0400
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: tonyk)
-        with ESMTPSA id 0EF0628F713
-Subject: Re: [PATCH 1/1] blk-mq: fill header with kernel-doc
-To:     Jens Axboe <axboe@kernel.dk>, linux-block@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     kernel@collabora.com, krisman@collabora.com
-References: <20190930194846.23141-1-andrealmeid@collabora.com>
- <f1ca9de7-383b-4a84-31d0-92cfbb3759b2@kernel.dk>
-From:   =?UTF-8?Q?Andr=c3=a9_Almeida?= <andrealmeid@collabora.com>
-Message-ID: <93dd3c86-f1d9-22ea-70fa-fa22837d31fd@collabora.com>
-Date:   Wed, 2 Oct 2019 14:18:23 -0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.1
+        Wed, 2 Oct 2019 13:19:54 -0400
+Received: from mga02.intel.com ([134.134.136.20]:27107 "EHLO mga02.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728199AbfJBRTx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 2 Oct 2019 13:19:53 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 02 Oct 2019 10:19:52 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.67,249,1566889200"; 
+   d="scan'208";a="196066711"
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.41])
+  by orsmga006.jf.intel.com with ESMTP; 02 Oct 2019 10:19:52 -0700
+Date:   Wed, 2 Oct 2019 10:19:52 -0700
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Zhenzhong Duan <zhenzhong.duan@oracle.com>
+Cc:     linux-kernel@vger.kernel.org, vkuznets@redhat.com,
+        linux-hyperv@vger.kernel.org, kvm@vger.kernel.org,
+        Jonathan Corbet <corbet@lwn.net>,
+        "K. Y. Srinivasan" <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Sasha Levin <sashal@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>
+Subject: Re: [PATCH v3 4/4] x86/hyperv: Mark "hv_nopvspin" parameter obsolete
+ and map it to "nopvspin"
+Message-ID: <20191002171952.GE9615@linux.intel.com>
+References: <1569847479-13201-1-git-send-email-zhenzhong.duan@oracle.com>
+ <1569847479-13201-5-git-send-email-zhenzhong.duan@oracle.com>
 MIME-Version: 1.0
-In-Reply-To: <f1ca9de7-383b-4a84-31d0-92cfbb3759b2@kernel.dk>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1569847479-13201-5-git-send-email-zhenzhong.duan@oracle.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 10/2/19 12:33 AM, Jens Axboe wrote:
-> On 9/30/19 1:48 PM, André Almeida wrote:
->> diff --git a/include/linux/blk-mq.h b/include/linux/blk-mq.h
->> index 0bf056de5cc3..d0aab34972b7 100644
->> --- a/include/linux/blk-mq.h
->> +++ b/include/linux/blk-mq.h
->> @@ -11,12 +11,85 @@ struct blk_flush_queue;
->>   
->>   /**
->>    * struct blk_mq_hw_ctx - State for a hardware queue facing the hardware block device
->> + *
->> + * @lock:	Lock for accessing dispatch queue
->> + * @dispatch:	Queue of dispatched requests, waiting for workers to send them
->> + *		to the hardware.
->> + * @state:	BLK_MQ_S_* flags. Define the state of the hw queue (active,
->> + *		scheduled to restart, stopped).
->> + *
->> + * @run_work:		Worker for dispatch scheduled requests to hardware.
->> + *			BLK_MQ_CPU_WORK_BATCH workers will be assigned to a CPU,
->> + *			then the following ones will be assigned to
->> + *			the next_cpu.
->> + * @cpumask:		Map of available CPUs.
->> + * @next_cpu:		Index of CPU/workqueue to be used in the next batch
->> + *			of workers.
->> + * @next_cpu_batch:	Counter of how many works letf in the batch before
->> + *			changing to the next CPU. A batch has the size of
->> + *			BLK_MQ_CPU_WORK_BATCH.
->> + *
->> + * @flags:	BLK_MQ_F_* flags. Define the behaviour of the queue.
->> + *
->> + * @sched_data: Data to support schedulers.
->> + * @queue:	Queue of request to be dispatched.
->> + * @fq:		Queue of requests to be flushed from memory to storage.
->> + *
->> + * @driver_data: Device driver specific queue.
->> + *
->> + * @ctx_map:	Bitmap for each software queue. If bit is on, there is a
->> + *		pending request.
->> + *
->> + * @dispatch_from: Queue to be used when there is no scheduler was selected.
->> + * @dispatch_busy: Number used by blk_mq_update_dispatch_busy() to decide
->> + *		   if the hw_queue is busy using Exponential Weighted Moving
->> + *		   Average algorithm.
->> + *
->> + * @type:	HCTX_TYPE_* flags. Type of hardware queue.
->> + * @nr_ctx:	Number of software queues.
->> + * @ctxs:	Array of software queues.
->> + *
->> + * @dispatch_wait_lock: Lock for dispatch_wait queue.
->> + * @dispatch_wait:	Waitqueue for dispatched requests. Request here will
->> + *			be processed when
->> + *			percpu_ref_is_zero(&q->q_usage_counter) evaluates true
->> + *			for q as a request_queue.
->> + * @wait_index:		Index of next wait queue to be used.
->> + *
->> + * @tags:	Request tags.
->> + * @sched_tags:	Request tags for schedulers.
->> + *
->> + * @queued:	Number of queued requests.
->> + * @run:	Number of dispatched requests.
->> + * @dispatched:	Number of dispatch requests by queue.
->> + *
->> + * @numa_node:	NUMA node index of this hardware queue.
->> + * @queue_num:	Index of this hardware queue.
->> + *
->> + * @nr_active:	Number of active tags.
->> + *
->> + * @cpuhp_dead:	List to store request if some CPU die.
->> + * @kobj:	Kernel object for sysfs.
->> + *
->> + * @poll_considered:	Count times blk_poll() was called.
->> + * @poll_invoked:	Count how many requests blk_poll() polled.
->> + * @poll_success:	Count how many polled requests were completed.
->> + *
->> + * @debugfs_dir:	debugfs directory for this hardware queue. Named
->> + *			as cpu<cpu_number>.
->> + * @sched_debugfs_dir:	debugfs directory for the scheduler.
->> + *
->> + * @hctx_list:		List of all hardware queues.
->> + *
->> + * @srcu:	Sleepable RCU. Use as lock when type of the hardware queue is
->> + *		blocking (BLK_MQ_F_BLOCKING). Must be the last member - see
->> + *		also blk_mq_hw_ctx_size().
->>    */
->>   struct blk_mq_hw_ctx {
->>   	struct {
->>   		spinlock_t		lock;
->>   		struct list_head	dispatch;
->> -		unsigned long		state;		/* BLK_MQ_S_* flags */
->> +		unsigned long		state;
->>   	} ____cacheline_aligned_in_smp;
->>   
->>   	struct delayed_work	run_work;
->> @@ -24,7 +97,7 @@ struct blk_mq_hw_ctx {
->>   	int			next_cpu;
->>   	int			next_cpu_batch;
->>   
->> -	unsigned long		flags;		/* BLK_MQ_F_* flags */
->> +	unsigned long		flags;
->>   
->>   	void			*sched_data;
->>   	struct request_queue	*queue;
->> @@ -72,41 +145,73 @@ struct blk_mq_hw_ctx {
->>   
->>   	struct list_head	hctx_list;
->>   
->> -	/* Must be the last member - see also blk_mq_hw_ctx_size(). */
->>   	struct srcu_struct	srcu[0];
->>   };
+On Mon, Sep 30, 2019 at 08:44:39PM +0800, Zhenzhong Duan wrote:
+> Includes asm/hypervisor.h in order to reference x86_hyper_type.
 > 
-> I like improving how much is documented, but I absolutely don't like how
-> everything is pulled into one section above the struct instead of being
-> documented inline instead.
+> Signed-off-by: Zhenzhong Duan <zhenzhong.duan@oracle.com>
+> Cc: Jonathan Corbet <corbet@lwn.net>
+> Cc: "K. Y. Srinivasan" <kys@microsoft.com>
+> Cc: Haiyang Zhang <haiyangz@microsoft.com>
+> Cc: Stephen Hemminger <sthemmin@microsoft.com>
+> Cc: Sasha Levin <sashal@kernel.org>
+> Cc: Thomas Gleixner <tglx@linutronix.de>
+> Cc: Ingo Molnar <mingo@redhat.com>
+> Cc: Borislav Petkov <bp@alien8.de>
+> Cc: "H. Peter Anvin" <hpa@zytor.com>
+> ---
+>  Documentation/admin-guide/kernel-parameters.txt | 6 +++++-
+>  arch/x86/hyperv/hv_spinlock.c                   | 9 +++++----
+>  2 files changed, 10 insertions(+), 5 deletions(-)
 > 
-> I realize this probably makes it easier to make nice external
-> documentation, but imho that's absolutely secondary to having the
-> documentation being right there where you read the code.
+> diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
+> index 1f0a62f..43f922c 100644
+> --- a/Documentation/admin-guide/kernel-parameters.txt
+> +++ b/Documentation/admin-guide/kernel-parameters.txt
+> @@ -1436,6 +1436,10 @@
+>  	hv_nopvspin	[X86,HYPER_V] Disables the paravirt spinlock optimizations
+>  				      which allow the hypervisor to 'idle' the
+>  				      guest on lock contention.
+> +				      This parameter is obsoleted by "nopvspin"
+> +				      parameter, which has equivalent effect for
+> +				      HYPER_V platform.
+> +
+>  
+>  	keep_bootcon	[KNL]
+>  			Do not unregister boot console at start. This is only
+> @@ -5331,7 +5335,7 @@
+>  			as generic guest with no PV drivers. Currently support
+>  			XEN HVM, KVM, HYPER_V and VMWARE guest.
+>  
+> -	nopvspin	[X86,XEN,KVM] Disables the qspinlock slow path
+> +	nopvspin	[X86,XEN,KVM,HYPER_V] Disables the qspinlock slow path
+>  			using PV optimizations which allow the hypervisor to
+>  			'idle' the guest on lock contention.
+>  
+> diff --git a/arch/x86/hyperv/hv_spinlock.c b/arch/x86/hyperv/hv_spinlock.c
+> index 07f21a0..e00e319 100644
+> --- a/arch/x86/hyperv/hv_spinlock.c
+> +++ b/arch/x86/hyperv/hv_spinlock.c
+> @@ -12,12 +12,11 @@
+>  
+>  #include <linux/spinlock.h>
+>  
+> +#include <asm/hypervisor.h>
+>  #include <asm/mshyperv.h>
+>  #include <asm/paravirt.h>
+>  #include <asm/apic.h>
+>  
+> -static bool __initdata hv_pvspin = true;
+> -
+>  static void hv_qlock_kick(int cpu)
+>  {
+>  	apic->send_IPI(cpu, X86_PLATFORM_IPI_VECTOR);
+> @@ -64,7 +63,7 @@ __visible bool hv_vcpu_is_preempted(int vcpu)
+>  
+>  void __init hv_init_spinlocks(void)
+>  {
+> -	if (!hv_pvspin || !apic ||
+> +	if (!pvspin || !apic ||
+>  	    !(ms_hyperv.hints & HV_X64_CLUSTER_IPI_RECOMMENDED) ||
+>  	    !(ms_hyperv.features & HV_X64_MSR_GUEST_IDLE_AVAILABLE)) {
+>  		pr_info("PV spinlocks disabled\n");
+> @@ -82,7 +81,9 @@ void __init hv_init_spinlocks(void)
+>  
+>  static __init int hv_parse_nopvspin(char *arg)
+>  {
+> -	hv_pvspin = false;
+> +	pr_notice("\"hv_nopvspin\" is deprecated, please use \"nopvspin\" instead\n");
+> +	if (x86_hyper_type == X86_HYPER_MS_HYPERV)
+> +		pvspin = false;
 
-Actually, there is no difference between the two approaches for
-generating the external documentation[1]
+Personal preference would be to keep the hv_pvspin variable and add the
+extra check in hv_init_spinlocks().
 
+>  	return 0;
+>  }
+>  early_param("hv_nopvspin", hv_parse_nopvspin);
+> -- 
+> 1.8.3.1
 > 
->> @@ -142,81 +253,100 @@ typedef bool (busy_fn)(struct request_queue *);
->>   typedef void (complete_fn)(struct request *);
->>   typedef void (cleanup_rq_fn)(struct request *);
->>   
->> -
->> +/**
->> + * struct blk_mq_ops - list of callback functions for blk-mq drivers
->> + */
->>   struct blk_mq_ops {
->> -	/*
->> -	 * Queue request
->> +	/**
->> +	 * @queue_rq: Queue a new request from block IO.
->>   	 */
->>   	queue_rq_fn		*queue_rq;
->>   
->> -	/*
->> -	 * If a driver uses bd->last to judge when to submit requests to
->> -	 * hardware, it must define this function. In case of errors that
->> -	 * make us stop issuing further requests, this hook serves the
->> +	/**
->> +	 * @commit_rqs: If a driver uses bd->last to judge when to submit
->> +	 * requests to hardware, it must define this function. In case of errors
->> +	 * that make us stop issuing further requests, this hook serves the
->>   	 * purpose of kicking the hardware (which the last request otherwise
->>   	 * would have done).
->>   	 */
->>   	commit_rqs_fn		*commit_rqs;
-> 
-> Stuff like this is MUCH better. Why isn't all of it done like this?
-> 
-
-Ok, I'll change that :)
-
-Could you tell me the tree/branch that you had applied Bart's "[PATCH
-0/8] Block layer patches for kernel v5.5"? I'll need to rebase my work
-on top of that because of the patch "[PATCH 6/8] block: Document all
-members of blk_mq_tag_set and bkl_mq_queue_map".
-
-Thanks,
-    André
-
-[1]
-https://www.kernel.org/doc/html/latest/doc-guide/kernel-doc.html#in-line-member-documentation-comments
