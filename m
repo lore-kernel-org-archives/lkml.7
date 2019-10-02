@@ -2,137 +2,153 @@ Return-Path: <SRS0=zem1=X3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A486C10F14
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 21:15:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 262D6C4360C
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 21:16:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6E7872054F
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 21:15:54 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=alliedtelesis.co.nz header.i=@alliedtelesis.co.nz header.b="HDhuKx5G"
+	by mail.kernel.org (Postfix) with ESMTP id 034B02054F
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 21:16:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729452AbfJBVPx (ORCPT
+        id S1729466AbfJBVQB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Oct 2019 17:15:53 -0400
-Received: from gate2.alliedtelesis.co.nz ([202.36.163.20]:55353 "EHLO
-        gate2.alliedtelesis.co.nz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728981AbfJBVPx (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Oct 2019 17:15:53 -0400
-Received: from mmarshal3.atlnz.lc (mmarshal3.atlnz.lc [10.32.18.43])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by gate2.alliedtelesis.co.nz (Postfix) with ESMTPS id 126C4891AA;
-        Thu,  3 Oct 2019 10:15:50 +1300 (NZDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alliedtelesis.co.nz;
-        s=mail181024; t=1570050950;
-        bh=25Xmkl5cio0Zp4+K/8QH29O5rjUHD24kwL+T+bPzVZQ=;
-        h=From:To:CC:Subject:Date:References:In-Reply-To;
-        b=HDhuKx5GinYfi8fD+VkNKJePuxXIbTmU/zeVzIswJVMgaEWwvh0mYq3y8Emf7sxra
-         Qy/8/VXFlzK6EXzgx/AbIACWGnvwbloDsO0JSD2AX+d7LklILJQ0/gGY3f0ajtVLv9
-         V28yB1Q1cDGnoVL3f5BJn8zkoPkkThky1gnl2/MLN+J1awuuqLWV05RazaEUiOZehi
-         J5P6jdlXbAeqvn9msQnpXoWLb566p9VKwlw9WA0JCYyI4ChXhXAE+zhHm5VeMwlQEf
-         Oz+ZpcsAQ+qhV9Dr7gybFC6bSIB/PVQhDZEDea8tQWxs2ubuB+Z9xO1/viyRZVmXLZ
-         eHOm6/+iJ0BEw==
-Received: from svr-chch-ex1.atlnz.lc (Not Verified[10.32.16.77]) by mmarshal3.atlnz.lc with Trustwave SEG (v7,5,8,10121)
-        id <B5d9513860001>; Thu, 03 Oct 2019 10:15:50 +1300
-Received: from svr-chch-ex1.atlnz.lc (2001:df5:b000:bc8::77) by
- svr-chch-ex1.atlnz.lc (2001:df5:b000:bc8::77) with Microsoft SMTP Server
- (TLS) id 15.0.1156.6; Thu, 3 Oct 2019 10:15:49 +1300
-Received: from svr-chch-ex1.atlnz.lc ([fe80::409d:36f5:8899:92e8]) by
- svr-chch-ex1.atlnz.lc ([fe80::409d:36f5:8899:92e8%12]) with mapi id
- 15.00.1156.000; Thu, 3 Oct 2019 10:15:49 +1300
-From:   Chris Packham <Chris.Packham@alliedtelesis.co.nz>
-To:     "rayagonda.kokatanur@broadcom.com" <rayagonda.kokatanur@broadcom.com>,
-        "bcm-kernel-feedback-list@broadcom.com" 
-        <bcm-kernel-feedback-list@broadcom.com>,
-        "f.fainelli@gmail.com" <f.fainelli@gmail.com>,
-        "li.jin@broadcom.com" <li.jin@broadcom.com>,
-        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
-        "sbranden@broadcom.com" <sbranden@broadcom.com>,
-        "rjui@broadcom.com" <rjui@broadcom.com>
-CC:     "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>
-Subject: Re: Problem sharing interrupts between gpioa and uart0 on Broadcom
- Hurricane 2 (iProc)
-Thread-Topic: Problem sharing interrupts between gpioa and uart0 on Broadcom
- Hurricane 2 (iProc)
-Thread-Index: AQHVeAChr1G1lS1DPESIPAb5KujH5KdEPSUAgAAC1QCAAsM3gA==
-Date:   Wed, 2 Oct 2019 21:15:49 +0000
-Message-ID: <e2e887ae92b61b01eda02b53522b6b07935042ea.camel@alliedtelesis.co.nz>
-References: <32c3d1dfe61a656e3250438d887e5ba91bd880d0.camel@alliedtelesis.co.nz>
-         <d72a965a-e4e1-ba5d-cd62-b31939e75e44@gmail.com>
-         <f3a243b1f22cf29075467d236610dbd2e7a20e55.camel@alliedtelesis.co.nz>
-In-Reply-To: <f3a243b1f22cf29075467d236610dbd2e7a20e55.camel@alliedtelesis.co.nz>
-Accept-Language: en-NZ, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-mailer: Evolution 3.28.5-0ubuntu0.18.04.1 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [2001:df5:b000:22:2007:5b4f:51fc:6cd1]
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <180ABB796D214C49B0635D214E52E607@atlnz.lc>
-Content-Transfer-Encoding: base64
+        Wed, 2 Oct 2019 17:16:01 -0400
+Received: from foss.arm.com ([217.140.110.172]:55014 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728981AbfJBVQA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 2 Oct 2019 17:16:00 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 10C1D1000;
+        Wed,  2 Oct 2019 14:16:00 -0700 (PDT)
+Received: from [192.168.1.124] (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 243E53F534;
+        Wed,  2 Oct 2019 14:15:58 -0700 (PDT)
+Subject: Re: [PATCH] dma-mapping: Lift address space checks out of debug code
+To:     Kees Cook <keescook@chromium.org>, Christoph Hellwig <hch@lst.de>
+Cc:     Laura Abbott <labbott@redhat.com>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Jesper Dangaard Brouer <brouer@redhat.com>,
+        Allison Randal <allison@lohutok.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        Semmle Security Reports <security-reports@semmle.com>,
+        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org
+References: <201910021341.7819A660@keescook>
+From:   Robin Murphy <robin.murphy@arm.com>
+Message-ID: <7a5dc7aa-66ec-0249-e73f-285b8807cb73@arm.com>
+Date:   Wed, 2 Oct 2019 22:15:43 +0100
+User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.1
 MIME-Version: 1.0
+In-Reply-To: <201910021341.7819A660@keescook>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gVHVlLCAyMDE5LTEwLTAxIGF0IDE2OjA0ICsxMzAwLCBDaHJpcyBQYWNraGFtIHdyb3RlOg0K
-PiBIaSBGbG9yaWFuLA0KPiANCj4gT24gTW9uLCAyMDE5LTA5LTMwIGF0IDE5OjU0IC0wNzAwLCBG
-bG9yaWFuIEZhaW5lbGxpIHdyb3RlOg0KPiA+IA0KPiA+IE9uIDkvMzAvMjAxOSA3OjMzIFBNLCBD
-aHJpcyBQYWNraGFtIHdyb3RlOg0KPiA+ID4gSGksDQo+ID4gPiANCj4gPiA+IFdlIGhhdmUgYSBw
-bGF0Zm9ybSB1c2luZyB0aGUgQkNNNTMzNDQgaW50ZWdyYXRlZCBzd2l0Y2gvQ1BVLiBUaGlzIGlz
-DQo+ID4gPiBwYXJ0IG9mIHRoZSBIdXJyaWNhbmUgMiAodGVjaG5pY2FsbHkgV29sZmhvdW5kKSBm
-YW1pbHkgb2YgZGV2aWNlcy4NCj4gPiA+IA0KPiA+ID4gQ3VycmVudGx5IHdlJ3JlIHVzaW5nIHBp
-ZWNlcyBvZiBCcm9hZGNvbSdzICJpUHJvYyIgU0RLIGJhc2VkIG9uIGFuIG91dA0KPiA+ID4gb2Yg
-ZGF0ZSBrZXJuZWwgYW5kIHdlJ2QgdmVyeSBtdWNoIGxpa2UgdG8gYmUgcnVubmluZyBhcyBjbG9z
-ZSB0bw0KPiA+ID4gdXBzdHJlYW0gYXMgcG9zc2libGUuIFRoZSBmYWN0IHRoYXQgdGhlIFViaXF1
-aXRpIFVuaUZpIFN3aXRjaCA4IGlzDQo+ID4gPiB1cHN0cmVhbSBnaXZlcyBtZSBzb21lIGhvcGUu
-DQo+ID4gDQo+ID4gRllJLCBJIGNvdWxkIG5vdCBnZXQgZW5vdWdoIGluZm9ybWF0aW9uIGZyb20g
-dGhlIGlQcm9jIFNESyB0byBwb3J0IChvcg0KPiA+IG5vdCkgdGhlIGNsb2NrIGRyaXZlciwgc28g
-aWYgbm90aGluZyBlbHNlLCB0aGF0IGlzIGFuIGFyZWEgdGhhdCBtYXkNCj4gPiByZXF1aXJlIGlt
-bWVkaWF0ZSB3b3JrICh0aG91Z2ggc29tZXRpbWVzIGZpeGVkLWNsb2NrcyB3b3VsZCBkbyBqdXN0
-IGZpbmUpLg0KPiANCj4gU2V0dGluZyBhIGZpeGVkIGNsb2NrIHNlZW1zIHRvIHdvcmsgZm9yIG1l
-LiBBdCBsZWFzdCBmb3Igbm93Lg0KPiANCj4gPiANCj4gPiA+IA0KPiA+ID4gTXkgY3VycmVudCBw
-cm9ibGVtIGlzIHRoZSBmYWN0IHRoYXQgdGhlIHVhcnQwIGludGVycnVwdCBpcyBzaGFyZWQgd2l0
-aA0KPiA+ID4gdGhlIENoaXAgQ29tbW9uIEEgZ3BpbyBibG9jay4gV2hlbiBJIGhhdmUgYW5kIGlu
-dGVycnVwdCBub2RlIG9uIHRoZQ0KPiA+ID4gZ3BpbyBpbiB0aGUgZGV2aWNlIHRyZWUgSSBnZXQg
-YW4gaW5pdCBleGl0IGF0IHN0YXJ0dXAuIElmIEkgcmVtb3ZlIHRoZQ0KPiA+ID4gaW50ZXJydXB0
-IG5vZGUgdGhlIHN5c3RlbSB3aWxsIGJvb3QgKGV4Y2VwdCBJIGRvbid0IGdldCBjYXNjYWRlZA0K
-PiA+ID4gaW50ZXJydXB0cyBmcm9tIHRoZSBHUElPcykuDQo+ID4gPiANCj4gPiA+IExvb2tpbmcg
-YXQgdGhlIHBpbmN0cmwtbnNwLWdwaW8uYyBpdCBsb29rcyBhcyB0aG91Z2ggSSBtaWdodCBiZSBh
-YmxlIHRvDQo+ID4gPiBtYWtlIHRoaXMgd29yayBpZiBJIGNhbiBjb252aW5jZSB0aGUgZ3BpbyBj
-b2RlIHRvIHJldHVybiBJUlFfSEFORExFRCBvcg0KPiA+ID4gSVJRX05PTkUgYnV0IEknbSBzdHJ1
-Z2dsaW5nIGFnYWluc3QgdGhlIGZhY3QgdGhhdCB0aGUgcGluY3RybC1pcHJvYy0NCj4gPiA+IGdw
-aW8uYyBkZWZlcnMgaXQncyBpbnRlcnJ1cHQgaGFuZGluZyB0byB0aGUgZ3BpbyBjb3JlLg0KPiA+
-IA0KPiA+IE5vdCBzdXJlIEkgZm9sbG93IHlvdSBoZXJlLCB3aGF0IHBhcnQgaXMgYmVpbmcgaGFu
-ZGVkIHRvIGdwaW9saWI/IFRoZQ0KPiA+IHRvcCBpbnRlcnJ1cHQgaGFuZGxlciB1bmRlciBuc3Bf
-Z3Bpb19pcnFfaGFuZGxlcigpIHdpbGwgdHJ5IHRvIGRvDQo+ID4gZXhhY3RseSBhcyB5b3UgZGVz
-Y3JpYmVkLiBJbiBmYWN0LCB0aGVyZSBhcmUgb3RoZXIgaVByb2MgZGVzaWducyB3aGVyZQ0KPiA+
-ICJncGlvLWEiIGFuZCBhbm90aGVyIGludGVycnVwdCwgYXJjaC9hcm0vYm9vdC9kdHMvYmNtLW5z
-cC5kdHNpIGlzIG9uZQ0KPiA+IHN1Y2ggZXhhbXBsZSBhbmQgSSBuZXZlciBoYWQgcHJvYmxlbXMg
-d2l0aCB0aGF0IHBhcnQgb2YgTlNQLg0KPiA+IA0KPiANCj4gbnNwX2dwaW9fcHJvYmUoKSBjcmVh
-dGVzIHRoZSBpcnEgZG9tYWluIGRpcmVjdGx5IGFuZA0KPiBuc3BfZ3Bpb19pcnFfaGFuZGxlcigp
-IGRpcmVjdGx5IGRlYWxzIHdpdGggc2hhcmluZyBieSByZXR1cm5pbmcNCj4gSVJRX0hBTkRMRUQg
-b3IgSVJRX05PTkUgZGVwZW5kaW5nIG9uIHdoZXRoZXIgaXQgaGFzIGEgYml0IHNldC4NCj4gDQo+
-IGlwcm9jX2dwaW9fcHJvYmUoKSBvbiB0aGUgc2V0cyBpcHJvY19ncGlvX2lycV9oYW5kbGVyKCkg
-YXMgdGhlDQo+IHBhcmVudF9oYW5kbGVyIGFuZCBkZWZlcnMgdG8gZ3Bpb2xpYiB0byBkZWFsIHdp
-dGggdGhlIGlycSBkb21haW4gZXRjLg0KPiANCj4gSSdtIGN1cnJlbnRseSBhc3N1bWluZyB0aGlz
-IGlzIHdoeSBJIGNhbid0IGhhdmUgdWFydDAgYW5kIGdwaW8NCj4gaW50ZXJydXB0cy4gQnV0IG9m
-IGNvdXJzZSBJIGNvdWxkIGJlIGNvbXBsZXRlbHkgd3JvbmcuDQo+IA0KPiA+ID4gDQo+ID4gPiBJ
-cyB0aGVyZSBhbnkgd2F5IEkgY2FuIGdldCB0aGUgZ3BpbyBjb3JlIHRvIGRlYWwgd2l0aCB0aGUg
-c2hhcmVkDQo+ID4gPiBpbnRlcnJ1cHQ/DQoNCkkgdGhpbmsgYXQgbGVhc3QgcGFydCBvZiBteSBw
-cm9ibGVtIGlzIHRoYXQgdGhlIGlQcm9jIENoaXBDb21tb25CDQpyZWdpc3RlciBsYXlvdXQgaXMg
-ZGlmZmVyZW50IHRvIHRoZSBpUHJvYyBDaGlwQ29tbW9uQS4gSXQncyBjbG9zZXIgdG8NCnRoZSBO
-b3J0aFN0YXIgUGx1cyBidXQgc3RpbGwgZGlmZmVyZW50IGxheW91dC4gSSB0aGluayBJJ2xsIG5l
-ZWQgdG8NCndyaXRlIGEgbmV3IGRyaXZlciByYXRoZXIgdGhhbiB0cnlpbmcgdG8gZ2V0IHBpbmN0
-cmwtbnNwLWdwaW8uYyBvcg0KcGluY3RybC1pcHJvYy1ncGlvLmMgdG8gd29yay4NCg0K
+Hi Kees,
+
+On 2019-10-02 9:46 pm, Kees Cook wrote:
+> As we've seen from USB and other areas, we need to always do runtime
+> checks for DMA operating on memory regions that might be remapped. This
+> consolidates the (existing!) checks and makes them on by default. A
+> warning will be triggered for any drivers still using DMA on the stack
+> (as has been seen in a few recent reports).
+> 
+> Suggested-by: Laura Abbott <labbott@redhat.com>
+> Signed-off-by: Kees Cook <keescook@chromium.org>
+> ---
+>   include/linux/dma-debug.h   |  8 --------
+>   include/linux/dma-mapping.h |  8 +++++++-
+>   kernel/dma/debug.c          | 16 ----------------
+>   3 files changed, 7 insertions(+), 25 deletions(-)
+> 
+> diff --git a/include/linux/dma-debug.h b/include/linux/dma-debug.h
+> index 4208f94d93f7..2af9765d9af7 100644
+> --- a/include/linux/dma-debug.h
+> +++ b/include/linux/dma-debug.h
+> @@ -18,9 +18,6 @@ struct bus_type;
+>   
+>   extern void dma_debug_add_bus(struct bus_type *bus);
+>   
+> -extern void debug_dma_map_single(struct device *dev, const void *addr,
+> -				 unsigned long len);
+> -
+>   extern void debug_dma_map_page(struct device *dev, struct page *page,
+>   			       size_t offset, size_t size,
+>   			       int direction, dma_addr_t dma_addr);
+> @@ -75,11 +72,6 @@ static inline void dma_debug_add_bus(struct bus_type *bus)
+>   {
+>   }
+>   
+> -static inline void debug_dma_map_single(struct device *dev, const void *addr,
+> -					unsigned long len)
+> -{
+> -}
+> -
+>   static inline void debug_dma_map_page(struct device *dev, struct page *page,
+>   				      size_t offset, size_t size,
+>   				      int direction, dma_addr_t dma_addr)
+> diff --git a/include/linux/dma-mapping.h b/include/linux/dma-mapping.h
+> index 4a1c4fca475a..2d6b8382eab1 100644
+> --- a/include/linux/dma-mapping.h
+> +++ b/include/linux/dma-mapping.h
+> @@ -583,7 +583,13 @@ static inline unsigned long dma_get_merge_boundary(struct device *dev)
+>   static inline dma_addr_t dma_map_single_attrs(struct device *dev, void *ptr,
+>   		size_t size, enum dma_data_direction dir, unsigned long attrs)
+>   {
+> -	debug_dma_map_single(dev, ptr, size);
+> +	/* DMA must never operate on stack or other remappable places. */
+> +	WARN_ONCE(is_vmalloc_addr(ptr) || !virt_addr_valid(ptr),
+
+This stands to absolutely cripple I/O performance on arm64, because 
+every valid call will end up going off and scanning the memblock list, 
+which is not something we want on a fastpath in non-debug 
+configurations. We'd need a much better solution to the "pfn_valid() vs. 
+EFI no-map" problem before this might be viable.
+
+Robin.
+
+> +		"%s %s: driver maps %lu bytes from %s area\n",
+> +		dev ? dev_driver_string(dev) : "unknown driver",
+> +		dev ? dev_name(dev) : "unknown device", size,
+> +		is_vmalloc_addr(ptr) ? "vmalloc" : "invalid");
+> +
+>   	return dma_map_page_attrs(dev, virt_to_page(ptr), offset_in_page(ptr),
+>   			size, dir, attrs);
+>   }
+> diff --git a/kernel/dma/debug.c b/kernel/dma/debug.c
+> index 099002d84f46..aa1e6a1990b2 100644
+> --- a/kernel/dma/debug.c
+> +++ b/kernel/dma/debug.c
+> @@ -1232,22 +1232,6 @@ static void check_sg_segment(struct device *dev, struct scatterlist *sg)
+>   #endif
+>   }
+>   
+> -void debug_dma_map_single(struct device *dev, const void *addr,
+> -			    unsigned long len)
+> -{
+> -	if (unlikely(dma_debug_disabled()))
+> -		return;
+> -
+> -	if (!virt_addr_valid(addr))
+> -		err_printk(dev, NULL, "device driver maps memory from invalid area [addr=%p] [len=%lu]\n",
+> -			   addr, len);
+> -
+> -	if (is_vmalloc_addr(addr))
+> -		err_printk(dev, NULL, "device driver maps memory from vmalloc area [addr=%p] [len=%lu]\n",
+> -			   addr, len);
+> -}
+> -EXPORT_SYMBOL(debug_dma_map_single);
+> -
+>   void debug_dma_map_page(struct device *dev, struct page *page, size_t offset,
+>   			size_t size, int direction, dma_addr_t dma_addr)
+>   {
+> 
