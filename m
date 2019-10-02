@@ -2,136 +2,201 @@ Return-Path: <SRS0=zem1=X3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
+	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F1B6C10F14
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 20:22:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B95F7C4360C
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 20:25:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DBCE0217D7
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 20:22:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 89FB521848
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 20:25:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BjDZyYgj"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="av+DOKXz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727608AbfJBUWV (ORCPT
+        id S1727696AbfJBUZM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Oct 2019 16:22:21 -0400
-Received: from mail-qt1-f195.google.com ([209.85.160.195]:46577 "EHLO
-        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727304AbfJBUWU (ORCPT
+        Wed, 2 Oct 2019 16:25:12 -0400
+Received: from mail-qt1-f201.google.com ([209.85.160.201]:42281 "EHLO
+        mail-qt1-f201.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725875AbfJBUZM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Oct 2019 16:22:20 -0400
-Received: by mail-qt1-f195.google.com with SMTP id u22so356460qtq.13;
-        Wed, 02 Oct 2019 13:22:20 -0700 (PDT)
+        Wed, 2 Oct 2019 16:25:12 -0400
+Received: by mail-qt1-f201.google.com with SMTP id f5so496167qto.9
+        for <linux-kernel@vger.kernel.org>; Wed, 02 Oct 2019 13:25:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=fcINkAGrhaxybz9we0aCJ9+w9JUp7C0z8Gn94WWvQGI=;
-        b=BjDZyYgjhfxWcP3NTWkt0mMF/bAuMBjpivsjx7HfXOrCmMr1getLWzGJso+UuJ3zdb
-         K2PaFVMLXTGS2/r7nMFf3pMjf2yg+79Eb3x+suEdXJWcBAvvMgbMyAObfJWypFt4a+ED
-         EooK5rxib95WH0eMz1mwL2sTqVbbyFjGDt7vRPwi8HL7liGAwYiknyv2hIDssS5zx8fQ
-         +QR9Fg0ISZPTwmpGpTI10DbOIKVhpSq9LC/tPUfDLtZWjBgZfOnjGWTcglvLdmyGJZoS
-         vPVYma+ZxpAM7X63vm2eRkThUj42ZUGXwEohT+v+JpVo27Kf9BhZAG/m/ebC8JUIiR4m
-         4lAg==
+        d=google.com; s=20161025;
+        h=date:message-id:mime-version:subject:from:to;
+        bh=fMttwO8IbnrLW6/EKswpdi1khD6zSduQpT9XvrjjN7Q=;
+        b=av+DOKXzdPP3u4At3ye1ET0SbH96S+WyUXLGPf3Z7lWPikd90qjrl6tOIBKZeyd8YB
+         jziIvB65e2r+4ePA9TspIO3U9E+ksCmGXyq/FWkbjz7LgCN2VMVX3UeZu+QfEbOiEdaH
+         /mFSOEFB3nNmT0IEpoBCpgx8nKwmieo0bpZvG1FeTfK6RV7sRvl7J0J5rSqqHp8Zyq3t
+         rz1tA0MFtBozf2MiuLrHhi5GqVnl+p1zw0nZW4Z4tZii5/koIEUr1sVHAeHv9ddUfvFj
+         EmqqqXk/LjawxZBCdIuv0IV9XyO0bSBzRX1H7nFCtA2NZmc3aDd8MljS2V39DmtJcyCx
+         EFKQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=fcINkAGrhaxybz9we0aCJ9+w9JUp7C0z8Gn94WWvQGI=;
-        b=qHSqfwUAPJ+kLMeh/Qr708AdeG6ljvpRPvvRY0lDCmvTcG5YCxVLFP4ZnJWXlbu+sX
-         OoqY5NFIaR5u3MLdRWOl2Ok69PmOs84ywmwzIp4rRSxnkQx/ZvUt0cYh86XculpLO6zn
-         eqOGNs/SaFHLHVQZ9NIyOszRemXiPwCO04sG32suDU34C4jFXZ3h7DFGAKWPRd9T/YAg
-         2WUteIGNnpmqfeQyxZj+mICcke1RsQg8efsh2jrGKtQVmmBIk9t5JCG6cqYduIQfrqIz
-         Tsx6n0ri93VmKgk117ImSqq4MVOlNhWgWwqY4j+Jyax9xlajm/PYiLFzGW03MmZHwd92
-         fTMw==
-X-Gm-Message-State: APjAAAUlDw7kTrA8O82dmChMwK5P6oofKV2J12T7xW7RtY1Y3b7yfK8B
-        pIBxvl0CBTTsXcREhca5fqKW1CBfn5iSbzI7bwI=
-X-Google-Smtp-Source: APXvYqySHhkOEsIOcVw93B6ZEj9ZGqCCSVJ5Fhmq8QghLWxsWgfgVCA11vGgq5CpwZLlJ86+S07y5uvgJMmXx5yUg7I=
-X-Received: by 2002:ac8:1417:: with SMTP id k23mr5869128qtj.93.1570047739558;
- Wed, 02 Oct 2019 13:22:19 -0700 (PDT)
-MIME-Version: 1.0
-References: <20191002191652.11432-1-kpsingh@chromium.org>
-In-Reply-To: <20191002191652.11432-1-kpsingh@chromium.org>
-From:   Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date:   Wed, 2 Oct 2019 13:22:08 -0700
-Message-ID: <CAEf4BzY4tXd=sHbkN=Bbhj5=7=W_PBs_BB=wjGJ4-bHenKz6sw@mail.gmail.com>
-Subject: Re: [PATCH v2] samples/bpf: Add a workaround for asm_inline
-To:     KP Singh <kpsingh@chromium.org>
-Cc:     open list <linux-kernel@vger.kernel.org>,
-        bpf <bpf@vger.kernel.org>, Florent Revest <revest@google.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        Florent Revest <revest@chromium.org>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to;
+        bh=fMttwO8IbnrLW6/EKswpdi1khD6zSduQpT9XvrjjN7Q=;
+        b=gO4CV1HqfDuMQiMk8u3+dRWkUyYrPLqvhEbrXTQ0CQDCWd984YEHZy4kiU1bgtJ8cl
+         GGCf37bc/eezGvvpEqTn1lVMXjulj/nsr21QLu1W1n7Z87NY6XrkJzD2WyGKGhm27BiL
+         FjdMZk1uiD2YF68mb8nH/jD0WhwGUccA13dNioAoSNzNU/CiwGyEUQGt/ZtPwTVP5AVE
+         fmSpt9oUdxjER8HSid9XpPrrgAvjKe2+L2JnMKs5XpFkL2+BA2UOvi9T1perYrQbI5Az
+         YNBBBilXqrMz7UxO9j+cPL9AnGZvuBFVQErQ5Uub9zKCj+P2WMuDcPpncsy+9M0Wi3MA
+         9OUA==
+X-Gm-Message-State: APjAAAXbrCnwCg3Xg9Wkm+YubkgFHN778c4ZWmFaxGzJ/asiiRxMl2uU
+        FhcGQIzzyYwx+rgmTlfJV/RJwUDVuA8=
+X-Google-Smtp-Source: APXvYqyxE2JY46XiHePJwXKI2BZPbxp3pi/S7gZFVJrGpz9HuK7iaqLlhiT8t774SWcwtVoqT58r7osVKAA=
+X-Received: by 2002:ac8:46d8:: with SMTP id h24mr6222814qto.235.1570047909825;
+ Wed, 02 Oct 2019 13:25:09 -0700 (PDT)
+Date:   Wed,  2 Oct 2019 13:24:36 -0700
+Message-Id: <20191002202436.202731-1-dancol@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.23.0.581.g78d2f28ef7-goog
+Subject: [PATCH] Make SPLIT_RSS_COUNTING configurable
+From:   Daniel Colascione <dancol@google.com>
+To:     dancol@google.com, timmurray@google.com, surenb@google.com,
+        linux-mm@vger.kernel.org, linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Oct 2, 2019 at 12:17 PM KP Singh <kpsingh@chromium.org> wrote:
->
-> From: KP Singh <kpsingh@google.com>
->
-> This was added in:
->
->   commit eb111869301e ("compiler-types.h: add asm_inline definition")
->
-> and breaks samples/bpf as clang does not support asm __inline.
->
-> Co-developed-by: Florent Revest <revest@google.com>
-> Signed-off-by: Florent Revest <revest@google.com>
-> Signed-off-by: KP Singh <kpsingh@google.com>
-> ---
->
-> Changes since v1:
->
-> - Dropped the rename from asm_workaround.h to asm_goto_workaround.h
-> - Dropped the fix for task_fd_query_user.c as it is updated in
->   https://lore.kernel.org/bpf/20191001112249.27341-1-bjorn.topel@gmail.com/
->
->  samples/bpf/asm_goto_workaround.h | 13 ++++++++++++-
->  1 file changed, 12 insertions(+), 1 deletion(-)
->
-> diff --git a/samples/bpf/asm_goto_workaround.h b/samples/bpf/asm_goto_workaround.h
-> index 7409722727ca..7048bb3594d6 100644
-> --- a/samples/bpf/asm_goto_workaround.h
-> +++ b/samples/bpf/asm_goto_workaround.h
-> @@ -3,7 +3,8 @@
->  #ifndef __ASM_GOTO_WORKAROUND_H
->  #define __ASM_GOTO_WORKAROUND_H
->
-> -/* this will bring in asm_volatile_goto macro definition
-> +/*
-> + * This will bring in asm_volatile_goto and asm_inline macro definitions
->   * if enabled by compiler and config options.
->   */
->  #include <linux/types.h>
-> @@ -13,5 +14,15 @@
->  #define asm_volatile_goto(x...) asm volatile("invalid use of asm_volatile_goto")
->  #endif
->
-> +/*
-> + * asm_inline is defined as asm __inline in "include/linux/compiler_types.h"
-> + * if supported by the kernel's CC (i.e CONFIG_CC_HAS_ASM_INLINE) which is not
-> + * supported by CLANG.
-> + */
-> +#ifdef asm_inline
-> +#undef asm_inline
-> +#define asm_inline asm
-> +#endif
+Using the new config option, users can disable SPLIT_RSS_COUNTING to
+get increased accuracy in user-visible mm counters.
 
-Would it be better to just #undef CONFIG_CC_HAS_ASM_INLINE for BPF programs?
+Signed-off-by: Daniel Colascione <dancol@google.com>
+---
+ include/linux/mm.h            |  4 ++--
+ include/linux/mm_types_task.h |  5 ++---
+ include/linux/sched.h         |  2 +-
+ kernel/fork.c                 |  2 +-
+ mm/Kconfig                    | 11 +++++++++++
+ mm/memory.c                   |  6 +++---
+ 6 files changed, 20 insertions(+), 10 deletions(-)
 
-> +
->  #define volatile(x...) volatile("")
->  #endif
-> --
-> 2.20.1
->
+diff --git a/include/linux/mm.h b/include/linux/mm.h
+index cc292273e6ba..221395de3cb4 100644
+--- a/include/linux/mm.h
++++ b/include/linux/mm.h
+@@ -1637,7 +1637,7 @@ static inline unsigned long get_mm_counter(struct mm_struct *mm, int member)
+ {
+ 	long val = atomic_long_read(&mm->rss_stat.count[member]);
+ 
+-#ifdef SPLIT_RSS_COUNTING
++#ifdef CONFIG_SPLIT_RSS_COUNTING
+ 	/*
+ 	 * counter is updated in asynchronous manner and may go to minus.
+ 	 * But it's never be expected number for users.
+@@ -1723,7 +1723,7 @@ static inline void setmax_mm_hiwater_rss(unsigned long *maxrss,
+ 		*maxrss = hiwater_rss;
+ }
+ 
+-#if defined(SPLIT_RSS_COUNTING)
++#ifdef CONFIG_SPLIT_RSS_COUNTING
+ void sync_mm_rss(struct mm_struct *mm);
+ #else
+ static inline void sync_mm_rss(struct mm_struct *mm)
+diff --git a/include/linux/mm_types_task.h b/include/linux/mm_types_task.h
+index c1bc6731125c..d2adc8057e65 100644
+--- a/include/linux/mm_types_task.h
++++ b/include/linux/mm_types_task.h
+@@ -48,14 +48,13 @@ enum {
+ 	NR_MM_COUNTERS
+ };
+ 
+-#if USE_SPLIT_PTE_PTLOCKS && defined(CONFIG_MMU)
+-#define SPLIT_RSS_COUNTING
++#ifdef CONFIG_SPLIT_RSS_COUNTING
+ /* per-thread cached information, */
+ struct task_rss_stat {
+ 	int events;	/* for synchronization threshold */
+ 	int count[NR_MM_COUNTERS];
+ };
+-#endif /* USE_SPLIT_PTE_PTLOCKS */
++#endif /* CONFIG_SPLIT_RSS_COUNTING */
+ 
+ struct mm_rss_stat {
+ 	atomic_long_t count[NR_MM_COUNTERS];
+diff --git a/include/linux/sched.h b/include/linux/sched.h
+index 2c2e56bd8913..22f354774540 100644
+--- a/include/linux/sched.h
++++ b/include/linux/sched.h
+@@ -729,7 +729,7 @@ struct task_struct {
+ 	/* Per-thread vma caching: */
+ 	struct vmacache			vmacache;
+ 
+-#ifdef SPLIT_RSS_COUNTING
++#ifdef CONFIG_SPLIT_RSS_COUNTING
+ 	struct task_rss_stat		rss_stat;
+ #endif
+ 	int				exit_state;
+diff --git a/kernel/fork.c b/kernel/fork.c
+index f9572f416126..fc5e0889922b 100644
+--- a/kernel/fork.c
++++ b/kernel/fork.c
+@@ -1917,7 +1917,7 @@ static __latent_entropy struct task_struct *copy_process(
+ 	p->vtime.state = VTIME_INACTIVE;
+ #endif
+ 
+-#if defined(SPLIT_RSS_COUNTING)
++#ifdef CONFIG_SPLIT_RSS_COUNTING
+ 	memset(&p->rss_stat, 0, sizeof(p->rss_stat));
+ #endif
+ 
+diff --git a/mm/Kconfig b/mm/Kconfig
+index a5dae9a7eb51..372ef9449924 100644
+--- a/mm/Kconfig
++++ b/mm/Kconfig
+@@ -736,4 +736,15 @@ config ARCH_HAS_PTE_SPECIAL
+ config ARCH_HAS_HUGEPD
+ 	bool
+ 
++config SPLIT_RSS_COUNTING
++	bool "Per-thread mm counter caching"
++	depends on MMU
++	default y if NR_CPUS >= SPLIT_PTLOCK_CPUS
++	help
++	  Cache mm counter updates in thread structures and
++	  flush them to visible per-process statistics in batches.
++	  Say Y here to slightly reduce cache contention in processes
++	  with many threads at the expense of decreasing the accuracy
++	  of memory statistics in /proc.
++	  
+ endmenu
+diff --git a/mm/memory.c b/mm/memory.c
+index b1ca51a079f2..bf557ed5ba23 100644
+--- a/mm/memory.c
++++ b/mm/memory.c
+@@ -141,7 +141,7 @@ static int __init init_zero_pfn(void)
+ core_initcall(init_zero_pfn);
+ 
+ 
+-#if defined(SPLIT_RSS_COUNTING)
++#ifdef CONFIG_SPLIT_RSS_COUNTING
+ 
+ void sync_mm_rss(struct mm_struct *mm)
+ {
+@@ -177,7 +177,7 @@ static void check_sync_rss_stat(struct task_struct *task)
+ 	if (unlikely(task->rss_stat.events++ > TASK_RSS_EVENTS_THRESH))
+ 		sync_mm_rss(task->mm);
+ }
+-#else /* SPLIT_RSS_COUNTING */
++#else /* CONFIG_SPLIT_RSS_COUNTING */
+ 
+ #define inc_mm_counter_fast(mm, member) inc_mm_counter(mm, member)
+ #define dec_mm_counter_fast(mm, member) dec_mm_counter(mm, member)
+@@ -186,7 +186,7 @@ static void check_sync_rss_stat(struct task_struct *task)
+ {
+ }
+ 
+-#endif /* SPLIT_RSS_COUNTING */
++#endif /* CONFIG_SPLIT_RSS_COUNTING */
+ 
+ /*
+  * Note: this doesn't free the actual pages themselves. That
+-- 
+2.23.0.581.g78d2f28ef7-goog
+
