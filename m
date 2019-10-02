@@ -2,90 +2,70 @@ Return-Path: <SRS0=zem1=X3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F01EBC352AA
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 12:00:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C732CC352AA
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 12:01:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BDA772133F
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 12:00:29 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="XYZZEpu7"
+	by mail.kernel.org (Postfix) with ESMTP id A127821783
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 12:01:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727771AbfJBMA3 (ORCPT
+        id S1728172AbfJBMBr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Oct 2019 08:00:29 -0400
-Received: from mail-lf1-f67.google.com ([209.85.167.67]:40521 "EHLO
-        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725875AbfJBMA2 (ORCPT
+        Wed, 2 Oct 2019 08:01:47 -0400
+Received: from outgoing-auth-1.mit.edu ([18.9.28.11]:46876 "EHLO
+        outgoing.mit.edu" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725875AbfJBMBr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Oct 2019 08:00:28 -0400
-Received: by mail-lf1-f67.google.com with SMTP id d17so12529092lfa.7
-        for <linux-kernel@vger.kernel.org>; Wed, 02 Oct 2019 05:00:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=+sr94GOz0pdmFe8NPbOwLVU6p5EmhKwRfQwRJfRbnBs=;
-        b=XYZZEpu74MT695K5Dhx/fEcUDe2G2eFTqT0vM+pZl4strKcLUGQ3PO4W5WWSVxueYL
-         xelWz1hdlNawP22kgoRzj9+gri56rn4GqB2BzyyFyBo5wmMyFhTEsnWIpHJVg71Doawi
-         X0UmzJ2Mg0sZHfbZGLjudQI7fiLTABciu0ckx66x6R7xiSKCO5fuWaMSTUW6PrAiHtWA
-         qXsW2TsXsD+iH8Fe4lJWM9gQlkWrJ1YM3T7Hk3eA/l1lBEhX0turashSToMDo+qTRV0j
-         EArNvVqF48LbX/WbJ3DoCu+mQYUp8glmcRPEUmIZi/vxLDpk2ipehTRQqN0ofY+uL0bj
-         Kp0g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=+sr94GOz0pdmFe8NPbOwLVU6p5EmhKwRfQwRJfRbnBs=;
-        b=KI46Q/cLKOttxfZRGYVd44Z/dq04JXZ2fBvv21oMEHCW5jx+7l5wkvDtQE0AJlW9Zo
-         1LhHHMAqhwuuUgKw8zxj99zWl4G0cO4PFxYeOJvGIrokdtNFkR+H9aiz0nivtEgN53A6
-         vhgxElerDNAahetDr5T6nhL31gdNv+j8LnnRSznsAufQj9s4D6TYxc/rKyie+KOKsYJm
-         iYEj1NE/9WK4QgNBHm/hfFfS2JlHSKoQTK2dj2dB/xhsufsboIy8+WqzZBfgKu5hTb+c
-         f2qCz3TSsfWziSNAG2OVgIfTofuM/D7R/9W5W4tXI+Mr71xpS7gnSzoudlDMFZAKi03A
-         T3ZA==
-X-Gm-Message-State: APjAAAX5akSq4nDdv8g1irE2c8sMI6wwMzLGlNwDfFPgrajcaZ+BM0ji
-        sZEr8x+CgbBDy3fpbmwJXlKkW/autTAorvtEnwLlBA==
-X-Google-Smtp-Source: APXvYqws7AaUk10K3J+WGNGa9aG6oOMKe/16UpknoRlkcmS+/JnmqWIQR5M1h0Xl7NN+bsfT58Bw3Xn6VFU0J6Gbf1k=
-X-Received: by 2002:a19:14f:: with SMTP id 76mr2052115lfb.92.1570017625360;
- Wed, 02 Oct 2019 05:00:25 -0700 (PDT)
+        Wed, 2 Oct 2019 08:01:47 -0400
+Received: from callcc.thunk.org (guestnat-104-133-0-98.corp.google.com [104.133.0.98] (may be forged))
+        (authenticated bits=0)
+        (User authenticated as tytso@ATHENA.MIT.EDU)
+        by outgoing.mit.edu (8.14.7/8.12.4) with ESMTP id x92C1GcC011091
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 2 Oct 2019 08:01:17 -0400
+Received: by callcc.thunk.org (Postfix, from userid 15806)
+        id 0215B42088C; Wed,  2 Oct 2019 08:01:15 -0400 (EDT)
+Date:   Wed, 2 Oct 2019 08:01:15 -0400
+From:   "Theodore Y. Ts'o" <tytso@mit.edu>
+To:     "Ahmed S. Darwish" <darwish.07@gmail.com>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>, a.darwish@linutronix.de,
+        LKML <linux-kernel@vger.kernel.org>,
+        Nicholas Mc Guire <hofrat@opentech.at>,
+        the arch/x86 maintainers <x86@kernel.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Kees Cook <keescook@chromium.org>
+Subject: Re: x86/random: Speculation to the rescue
+Message-ID: <20191002120115.GA13880@mit.edu>
+References: <alpine.DEB.2.21.1909290010500.2636@nanos.tec.linutronix.de>
+ <CAHk-=wgjC01UaoV35PZvGPnrQ812SRGPoV7Xp63BBFxAsJjvrg@mail.gmail.com>
+ <20191001161448.GA1918@darwi-home-pc>
 MIME-Version: 1.0
-References: <20191002095736.1297224-1-arnd@arndb.de>
-In-Reply-To: <20191002095736.1297224-1-arnd@arndb.de>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Wed, 2 Oct 2019 14:00:14 +0200
-Message-ID: <CACRpkdaVhhGF-g_95zPg2wvXGcGfYG1YUVVuz5nOsRw8GwGQkw@mail.gmail.com>
-Subject: Re: [PATCH] input: ixp4xx-beeper: include linux/io.h
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Enrico Weigelt <info@metux.net>,
-        Linux Input <linux-input@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20191001161448.GA1918@darwi-home-pc>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Oct 2, 2019 at 11:57 AM Arnd Bergmann <arnd@arndb.de> wrote:
+On Tue, Oct 01, 2019 at 06:15:02PM +0200, Ahmed S. Darwish wrote:
+> 
+> Using the "ent" tool, [2] also used to test randomness in the Stephen
+> Müller LRNG paper, on a 500000-byte file, produced the following
+> results:
 
-> asm/io.h may not be included implicitly, causing a rare
-> randconfig build error:
->
-> drivers/input/misc/ixp4xx-beeper.c:48:3: error: implicit declaration of function '__raw_writel' [-Werror,-Wimplicit-function-declaration]
->                 __raw_writel((count & ~IXP4XX_OST_RELOAD_MASK) | IXP4XX_OST_ENABLE,
->
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+The "ent" tool is really, really useless.  If you take any CRNG, even
+intialized with a known seed, "ent" will say that it's *GREAT*!
 
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+If you don't believe me, disable all entropy inputs into the CRNG,
+initialize it with "THE NSA IS OUR LORD AND MASTER", and then run it.
+You'll get substantially the same results.  (And if we didn't the Cha
+Cha 20 encryption algorithm would be totally broken).
 
-I am thinking a bit about the future of this driver. Isn't it more
-reasonable to just make a hrtimer-driven PWM and use the existing
-PWM userspace ABI and timer framework in Linux for this?
-Not that there is a generic timer-driven PWM but ... that is
-essentially what this driver is.
-
-Yours,
-Linus Walleij
+       		  	    	     	     - Ted
