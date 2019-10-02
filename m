@@ -2,125 +2,97 @@ Return-Path: <SRS0=zem1=X3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3AC69C352AA
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 10:46:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 869B8C352AA
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 10:50:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1439421783
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 10:46:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 528AE21783
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 10:50:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728087AbfJBKqk (ORCPT
+        id S1726826AbfJBKus (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Oct 2019 06:46:40 -0400
-Received: from mga09.intel.com ([134.134.136.24]:11672 "EHLO mga09.intel.com"
+        Wed, 2 Oct 2019 06:50:48 -0400
+Received: from foss.arm.com ([217.140.110.172]:41272 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726231AbfJBKqj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Oct 2019 06:46:39 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 02 Oct 2019 03:46:38 -0700
-X-IronPort-AV: E=Sophos;i="5.64,574,1559545200"; 
-   d="scan'208";a="392802855"
-Received: from jnikula-mobl3.fi.intel.com (HELO localhost) ([10.237.66.161])
-  by fmsmga006-auth.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 02 Oct 2019 03:46:36 -0700
-From:   Jani Nikula <jani.nikula@linux.intel.com>
-To:     Daniel Thompson <daniel.thompson@linaro.org>
-Cc:     Mat King <mathewk@google.com>, linux-kernel@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, rafael@kernel.org,
-        gregkh@linuxfoundation.org, Ross Zwisler <zwisler@google.com>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Rajat Jain <rajatja@google.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        Ville =?utf-8?B?U3lyasOkbMOk?= <ville.syrjala@linux.intel.com>
-Subject: Re: New sysfs interface for privacy screens
-In-Reply-To: <20191002102428.zaid63hp6wpd7w34@holly.lan>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-References: <CAL_quvRknSSVvXN3q_Se0hrziw2oTNS3ENNoeHYhvciCRq9Yww@mail.gmail.com> <87h84rbile.fsf@intel.com> <20191002102428.zaid63hp6wpd7w34@holly.lan>
-Date:   Wed, 02 Oct 2019 13:46:20 +0300
-Message-ID: <8736gbbf2b.fsf@intel.com>
+        id S1726231AbfJBKus (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 2 Oct 2019 06:50:48 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 944F41000;
+        Wed,  2 Oct 2019 03:50:47 -0700 (PDT)
+Received: from [10.0.2.15] (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 527983F739;
+        Wed,  2 Oct 2019 03:50:45 -0700 (PDT)
+Subject: Re: [PATCH v3 04/10] sched/fair: rework load_balance
+To:     Vincent Guittot <vincent.guittot@linaro.org>
+Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Phil Auld <pauld@redhat.com>,
+        Srikar Dronamraju <srikar@linux.vnet.ibm.com>,
+        Quentin Perret <quentin.perret@arm.com>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Morten Rasmussen <Morten.Rasmussen@arm.com>,
+        Hillf Danton <hdanton@sina.com>
+References: <1568878421-12301-1-git-send-email-vincent.guittot@linaro.org>
+ <1568878421-12301-5-git-send-email-vincent.guittot@linaro.org>
+ <c752dd1a-731e-aae3-6a2c-aecf88901ac0@arm.com>
+ <CAKfTPtBQNJfNmBqpuaefsLzsTrGxJ=2bTs+tRdbOAa9J3eKuVw@mail.gmail.com>
+From:   Valentin Schneider <valentin.schneider@arm.com>
+Message-ID: <31cac0c1-98e4-c70e-e156-51a70813beff@arm.com>
+Date:   Wed, 2 Oct 2019 11:47:59 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain
+In-Reply-To: <CAKfTPtBQNJfNmBqpuaefsLzsTrGxJ=2bTs+tRdbOAa9J3eKuVw@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 02 Oct 2019, Daniel Thompson <daniel.thompson@linaro.org> wrote:
-> On Wed, Oct 02, 2019 at 12:30:05PM +0300, Jani Nikula wrote:
->> On Tue, 01 Oct 2019, Mat King <mathewk@google.com> wrote:
->> > Resending in plain text mode
->> >
->> > I have been looking into adding Linux support for electronic privacy
->> > screens which is a feature on some new laptops which is built into the
->> > display and allows users to turn it on instead of needing to use a
->> > physical privacy filter. In discussions with my colleagues the idea of
->> > using either /sys/class/backlight or /sys/class/leds but this new
->> > feature does not seem to quite fit into either of those classes.
->> >
->> > I am proposing adding a class called "privacy_screen" to interface
->> > with these devices. The initial API would be simple just a single
->> > property called "privacy_state" which when set to 1 would mean that
->> > privacy is enabled and 0 when privacy is disabled.
->> >
->> > Current known use cases will use ACPI _DSM in order to interface with
->> > the privacy screens, but this class would allow device driver authors
->> > to use other interfaces as well.
->> >
->> > Example:
->> >
->> > # get privacy screen state
->> > cat /sys/class/privacy_screen/cros_privacy/privacy_state # 1: privacy
->> > enabled 0: privacy disabled
->> >
->> > # set privacy enabled
->> > echo 1 > /sys/class/privacy_screen/cros_privacy/privacy_state
->> >
->> >  Does this approach seem to be reasonable?
->> 
->> What part of the userspace would be managing the privacy screen? Should
->> there be a connection between the display and the privacy screen that
->> covers the display? How would the userspace make that connection if it's
->> a sysfs interface?
->> 
->> I don't know how the privacy screen operates, but if it draws any power,
->> you'll want to disable it when you switch off the display it covers.
->> 
->> If the privacy screen control was part of the graphics subsystem (say, a
->> DRM connector property, which feels somewhat natural), I think it would
->> make it easier for userspace to have policies such as enabling the
->> privacy screen automatically depending on the content you're viewing,
->> but only if the content is on the display that has a privacy screen.
->
-> Connectors versus sysfs came up on a backlight thread recently.
->
-> Daniel Vetter wrote an excellent summary on why it has been (and still
-> is) difficult to migrate backlight controls towards the DRM connector
-> interface:
-> https://lkml.org/lkml/2019/8/20/752
->
-> Many of the backlight legacy problems do not apply to privacy screens
-> but I do suggest reading this post and some of the neighbouring parts
-> of the thread. In particular the ACPI driver versus real driver issues
-> Daniel mentioned could occur again. Hopefully not though, I mean how
-> wrong can a 1-bit control go? (actually no... don't answer that).
->
-> It would definitely be a shame to build up an unnecessary sysfs legacy
-> for privacy screens so definitely worth seeing if this can use DRM
-> connector properties.
+On 02/10/2019 09:30, Vincent Guittot wrote:
+>> Isn't that one somewhat risky?
+>>
+>> Say both groups are classified group_has_spare and we do prefer_sibling.
+>> We'd select busiest as the one with the maximum number of busy CPUs, but it
+>> could be so that busiest.sum_h_nr_running < local.sum_h_nr_running (because
+>> pinned tasks or wakeup failed to properly spread stuff).
+>>
+>> The thing should be unsigned so at least we save ourselves from right
+>> shifting a negative value, but we still end up with a gygornous imbalance
+>> (which we then store into env.imbalance which *is* signed... Urgh).
+> 
+> so it's not clear what happen with a right shift on negative signed
+> value and this seems to be compiler dependent so even
+> max_t(long, 0, (local->idle_cpus - busiest->idle_cpus) >> 1) might be wrong
+> 
 
-Indeed. I'm painfully aware of the issues Daniel describes, and that's
-part of the motivation for writing this.
+Yeah, right shift on signed negative values are implementation defined. This
+is what I was worried about initially, but I think the expression resulting
+from the subtraction is unsigned (both terms are unsigned) so this would
+just wrap when busiest < local - but that is still a problem.
 
-Obviously the problem with associating the privacy screen with the DRM
-connector is that then the kernel has to make the connection, somehow,
-instead of just making it a userspace problem.
 
-BR,
-Jani.
+((local->idle_cpus - busiest->idle_cpus) >> 1) should be fine because we do
+have this check in find_busiest_group() before heading off to
+calculate_imbalance():
 
--- 
-Jani Nikula, Intel Open Source Graphics Center
+  if (busiest->group_type != group_overloaded &&
+      (env->idle == CPU_NOT_IDLE ||
+       local->idle_cpus <= (busiest->idle_cpus + 1)))
+	  /* ... */
+	  goto out_balanced;
+
+which ensures the subtraction will be at least 2. We're missing something
+equivalent for the sum_h_nr_running case.
+
+> I'm going to update it
+> 
+> 
+>>
+>> [...]
