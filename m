@@ -2,127 +2,133 @@ Return-Path: <SRS0=zem1=X3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1,USER_IN_DEF_DKIM_WL autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 66E90C10F14
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 22:27:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A47B9C10F14
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 22:32:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 35B6721A4C
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 22:27:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7985820842
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 22:32:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="JgvO7Xtw"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="V3R9DrEK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727832AbfJBW14 (ORCPT
+        id S1727685AbfJBWcY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Oct 2019 18:27:56 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:35503 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726070AbfJBW14 (ORCPT
+        Wed, 2 Oct 2019 18:32:24 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:46135 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725799AbfJBWcY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Oct 2019 18:27:56 -0400
-Received: by mail-wm1-f65.google.com with SMTP id y21so493489wmi.0
-        for <linux-kernel@vger.kernel.org>; Wed, 02 Oct 2019 15:27:54 -0700 (PDT)
+        Wed, 2 Oct 2019 18:32:24 -0400
+Received: by mail-pf1-f195.google.com with SMTP id q5so370741pfg.13
+        for <linux-kernel@vger.kernel.org>; Wed, 02 Oct 2019 15:32:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=WVuyM2HI99wS0wrEjVTuybtyAoge/UdhgX0Riu1yBrw=;
-        b=JgvO7XtwX8H4Z+QL5zkjv5W3cuYCeQaxxkpdk1bbkCf2LfkQavQHb5IuxUAV1/Q2Wr
-         B5alBqCxh4pcNxn/B5njq2rMSzmtHXR8NbTXEtqkFvPR2iIgWgqCI/205qFN6pKpTW5X
-         EgodLXLs3wJY1ViIUMLRBILoVqAv42zDI6sxpZkqr/lnh/+MrloQSy1c3sRcNX8RsT99
-         JcEpYTYslnCN6MtOhpfPTspDva41JJqGHqlxAtLHCMvrmPEdlyX7gWlz59vuBcV6UBov
-         y8AsdkbjfirxsdH2i8BLOoJlvm903gpDuhtSRhwGSXJ9EJ7Vy9MZB6Zg2AAxY4B5pEOz
-         NNqA==
+        d=google.com; s=20161025;
+        h=date:from:to:cc:subject:in-reply-to:message-id:references
+         :user-agent:mime-version;
+        bh=buTOR+XuYU0MIPghMQDv8KGs3GslQzTxyG//kOyO5yE=;
+        b=V3R9DrEKTJiR+lD35Y+rqV+QFb9EnkXNafeQ/JsMTj53qD88WbKVhjlr19oqi1kguz
+         CFHg5WLfrNgP9BviO23742wbWke64BAuKg6P/N43mhHMWx97oTuu0GnChsYqRVrfYIpK
+         +yAkxIMs7bX3M6/9X3xIxMBjY3kKdwOBvDKOc6aRG6gEnfBDHj33Fnf69js2MqrGmrXI
+         1SC8VPTq5gqRN3O4YI6aLoSHRy+/e766UipxxutuWfOH9rGwOnl7Kc3Czj4dk1bZXqBC
+         XEuOHMKReEOGGCLGECHNChlzTurPZubY4TuSqAjZgjh2K/QgA6R1aQKNw8uidxi5K5KP
+         kDxg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=WVuyM2HI99wS0wrEjVTuybtyAoge/UdhgX0Riu1yBrw=;
-        b=Iz0/I2J4N8PfY4rPDT2YlGYPosbk9ZpZ57yZbpbr744RE9JfVbwFmkMzIlbi27JEnd
-         b0VxXKZS8LcDSmloQum5eZNsri4WBz25Ml8+KNmcf9peEgc+mUO6AJiDqcqITarxIemo
-         VLaT04wE2RYtV+N5XN+KHgEYfQmL46h4/4q1k+FMOvgMzT8BNdoLAyiY8hfQ9JwyHLyl
-         kuhKk/j2GYGWJ3OTd557CCeFtaY3YjtEAmkQrG14OWPAax8MJx4KOEhYCBY5Xo029QnP
-         8v58ofFMCcTv7m8cT4EAygZTQNYvQzSL7WfJvxZoQgrtU1UJiGv00jZ6jgh1Wsxz6HM1
-         UCyQ==
-X-Gm-Message-State: APjAAAVX7ZgePEGON1qF5xYKwzxJrKBxCbWisnhqujxbw/RC29X9LMac
-        aGcnbu6+sA+oABDnQZ0yVR+op40mTdviNor+/Flcvg==
-X-Google-Smtp-Source: APXvYqz/9fvt/NJ1VDIHFIXKAcThmwE0MvQ+M3a7SKRoqkqjvrIyn571bbWQVFHXE+01yobIs7fyFhY5VgysNS/Y4vY=
-X-Received: by 2002:a7b:cd99:: with SMTP id y25mr4528872wmj.152.1570055273633;
- Wed, 02 Oct 2019 15:27:53 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:in-reply-to:message-id
+         :references:user-agent:mime-version;
+        bh=buTOR+XuYU0MIPghMQDv8KGs3GslQzTxyG//kOyO5yE=;
+        b=dU7ylEBP03mNekC3siCuLS5cCIYwWC7EJUYK1kFLcnohjb/8dB1x7L9v7/llgeRLdl
+         hdWPxAyzh3H89xakBH+na0WysXtXVlGnkXF6XM5dkdABIpDmp4xWpqiBMPL3P6Yhr4/S
+         I4U++dALt+lvWVglp9I0ByTnCR+Ei0VXoyNvzvVw8F4WOG0j76MOUwSVihSp7ceVfuoN
+         0SGmQdKzH85WNTcSpdXk+/VpI4Sra1Hysfq43Xst0r2U+5NjmSeNQ/zLxuMnOLuqzLpu
+         8o7he3rmqPS0Fn0U5XS/ZyG14L2GP9JCPFzX8zBvGYE70Wxl8yrfiFp+E6iNghRjwXsN
+         a58g==
+X-Gm-Message-State: APjAAAWf1vDkYtVuyZrzYfCEIxNCqo5YmFjI8f0pTeWLeCV1qbwkLr4w
+        we4cHjeszdsrPTJ+vqzH41ZDyQ==
+X-Google-Smtp-Source: APXvYqxx0jbEdMhHvJEauSMn7JFmLYEUfpe0GzCgMisdINsQjK1KW6yyPBnZmZtb3hMMgZP2KUZ0+Q==
+X-Received: by 2002:aa7:928b:: with SMTP id j11mr7457819pfa.237.1570055541573;
+        Wed, 02 Oct 2019 15:32:21 -0700 (PDT)
+Received: from [2620:15c:17:3:3a5:23a7:5e32:4598] ([2620:15c:17:3:3a5:23a7:5e32:4598])
+        by smtp.gmail.com with ESMTPSA id u3sm443014pfn.134.2019.10.02.15.32.20
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 02 Oct 2019 15:32:20 -0700 (PDT)
+Date:   Wed, 2 Oct 2019 15:32:20 -0700 (PDT)
+From:   David Rientjes <rientjes@google.com>
+X-X-Sender: rientjes@chino.kir.corp.google.com
+To:     Michal Hocko <mhocko@kernel.org>
+cc:     Vlastimil Babka <vbabka@suse.cz>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Mel Gorman <mgorman@suse.de>,
+        "Kirill A. Shutemov" <kirill@shutemov.name>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux-MM <linux-mm@kvack.org>
+Subject: Re: [patch for-5.3 0/4] revert immediate fallback to remote
+ hugepages
+In-Reply-To: <20191002103422.GJ15624@dhcp22.suse.cz>
+Message-ID: <alpine.DEB.2.21.1910021525180.63052@chino.kir.corp.google.com>
+References: <20190909193020.GD2063@dhcp22.suse.cz> <20190925070817.GH23050@dhcp22.suse.cz> <alpine.DEB.2.21.1909261149380.39830@chino.kir.corp.google.com> <20190927074803.GB26848@dhcp22.suse.cz> <CAHk-=wgba5zOJtGBFCBP3Oc1m4ma+AR+80s=hy=BbvNr3GqEmA@mail.gmail.com>
+ <20190930112817.GC15942@dhcp22.suse.cz> <20191001054343.GA15624@dhcp22.suse.cz> <fac13297-424f-33b0-e01d-d72b949a73fe@suse.cz> <alpine.DEB.2.21.1910011318050.38265@chino.kir.corp.google.com> <a5abc877-26de-ed3c-eb33-71474301c852@suse.cz>
+ <20191002103422.GJ15624@dhcp22.suse.cz>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-References: <20191002182255.21808-3-john.stultz@linaro.org> <201910030658.lcYVTiTL%lkp@intel.com>
-In-Reply-To: <201910030658.lcYVTiTL%lkp@intel.com>
-From:   John Stultz <john.stultz@linaro.org>
-Date:   Wed, 2 Oct 2019 15:27:41 -0700
-Message-ID: <CALAqxLX7JgUvixQQMn=6thfhOg_Bw1fN02KQPkO9144yRwPwMw@mail.gmail.com>
-Subject: Re: [PATCH v9 2/5] dma-buf: heaps: Add heap helpers
-To:     kbuild test robot <lkp@intel.com>
-Cc:     kbuild-all@01.org, lkml <linux-kernel@vger.kernel.org>,
-        Laura Abbott <labbott@redhat.com>,
-        Benjamin Gaignard <benjamin.gaignard@linaro.org>,
-        Sumit Semwal <sumit.semwal@linaro.org>,
-        Liam Mark <lmark@codeaurora.org>,
-        Pratik Patel <pratikp@codeaurora.org>,
-        Brian Starkey <Brian.Starkey@arm.com>,
-        Vincent Donnefort <Vincent.Donnefort@arm.com>,
-        Sudipto Paul <Sudipto.Paul@arm.com>,
-        "Andrew F . Davis" <afd@ti.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        Chenbo Feng <fengc@google.com>,
-        Alistair Strachan <astrachan@google.com>,
-        Hridya Valsaraju <hridya@google.com>,
-        Hillf Danton <hdanton@sina.com>,
-        dri-devel <dri-devel@lists.freedesktop.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Oct 2, 2019 at 3:10 PM kbuild test robot <lkp@intel.com> wrote:
->
-> Hi John,
->
-> I love your patch! Yet something to improve:
->
-> [auto build test ERROR on linus/master]
-> [cannot apply to v5.4-rc1 next-20191002]
-> [if your patch is applied to the wrong git tree, please drop us a note to help
-> improve the system. BTW, we also suggest to use '--base' option to specify the
-> base tree in git format-patch, please see https://stackoverflow.com/a/37406982]
->
-> url:    https://github.com/0day-ci/linux/commits/John-Stultz/DMA-BUF-Heaps-destaging-ION/20191003-042849
-> config: mips-allmodconfig (attached as .config)
-> compiler: mips-linux-gcc (GCC) 7.4.0
-> reproduce:
->         wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
->         chmod +x ~/bin/make.cross
->         # save the attached .config to linux build tree
->         GCC_VERSION=7.4.0 make.cross ARCH=mips
->
-> If you fix the issue, kindly add following tag
-> Reported-by: kbuild test robot <lkp@intel.com>
->
-> All errors (new ones prefixed by >>):
->
->    drivers/dma-buf/heaps/heap-helpers.c: In function 'dma_heap_map_kernel':
-> >> drivers/dma-buf/heaps/heap-helpers.c:43:10: error: implicit declaration of function 'vmap'; did you mean 'bmap'? [-Werror=implicit-function-declaration]
->      vaddr = vmap(buffer->pages, buffer->pagecount, VM_MAP, PAGE_KERNEL);
->              ^~~~
->              bmap
-> >> drivers/dma-buf/heaps/heap-helpers.c:43:49: error: 'VM_MAP' undeclared (first use in this function); did you mean 'VM_MPX'?
->      vaddr = vmap(buffer->pages, buffer->pagecount, VM_MAP, PAGE_KERNEL);
->                                                     ^~~~~~
->                                                     VM_MPX
+On Wed, 2 Oct 2019, Michal Hocko wrote:
 
+> > > If 
+> > > hugetlb wants to stress this to the fullest extent possible, it already 
+> > > appropriately uses __GFP_RETRY_MAYFAIL.
+> > 
+> > Which doesn't work anymore right now, and should again after this patch.
+> 
+> I didn't get to fully digest the patch Vlastimil is proposing. (Ab)using
+> __GFP_NORETRY is quite subtle but it is already in place with some
+> explanation and a reference to THPs. So while I am not really happy it
+> is at least something you can reason about.
+> 
 
-Ah, looks like I'm missing:
-+#include <linux/vmalloc.h>
+It's a no-op:
 
-Which somehow gets pulled in through the headers on other arches.
+        /* Do not loop if specifically requested */
+        if (gfp_mask & __GFP_NORETRY)
+                goto nopage;
 
-I'll fix that up. Thanks so much!
--john
+        /*
+         * Do not retry costly high order allocations unless they are
+         * __GFP_RETRY_MAYFAIL
+         */
+        if (costly_order && !(gfp_mask & __GFP_RETRY_MAYFAIL))
+                goto nopage;
+
+So I'm not sure we should spend too much time discussing a hunk of a patch 
+that doesn't do anything.
+
+> b39d0ee2632d ("mm, page_alloc: avoid expensive reclaim when compaction
+> may not succeed") on the other hand has added a much more wider change
+> which has clearly broken hugetlb and any __GFP_RETRY_MAYFAIL user of
+> pageblock_order sized allocations. And that is much worse and something
+> I was pointing at during the review and those concerns were never really
+> addressed before merging.
+> 
+> In any case this is something to be fixed ASAP. Do you have any better
+> proposa? I do not assume you would be proposing yet another revert.
+
+I thought Mike Kravetz said[*] that hugetlb was not negatively affected by 
+this?  We could certainly disregard this logic for __GFP_RETRY_MAYFAIL if 
+anybody is relying on excessive reclaim ("swap storms") that does not 
+allow compaction to make forward progress for some reason.
+
+ [*] https://marc.info/?l=linux-kernel&m=156771690024533
+
+If not, for the purposes of this conversation we can disregard 
+__GFP_NORETRY per the above because thp does not use __GFP_RETRY_MAYFAIL.
