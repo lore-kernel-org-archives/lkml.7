@@ -2,115 +2,202 @@ Return-Path: <SRS0=zem1=X3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C0E6ECE58B
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 08:44:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE25BC35280
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 08:48:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D00CE21920
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 08:44:31 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="H4ga2iLE"
+	by mail.kernel.org (Postfix) with ESMTP id 8B6AE218DE
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 08:48:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727128AbfJBIob (ORCPT
+        id S1727156AbfJBIsN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Oct 2019 04:44:31 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:45592 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725988AbfJBIoa (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Oct 2019 04:44:30 -0400
-Received: by mail-wr1-f67.google.com with SMTP id r5so18569730wrm.12;
-        Wed, 02 Oct 2019 01:44:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=8K7h7HUyw90enLd8fQVTYuZsXONTGa9SFgE/KcYk7vs=;
-        b=H4ga2iLEryrxqvflHTtca2vKkCgGeokG+ejsoRMU0WVStBKbBr8fcIcjoXakIR69eT
-         Qpwddh8aBaHsjRgog6AA7cFmSDh+ctXZlDsQ8V2j84lvjACGjeZtU1gQZKMlia8aO5/t
-         7OvtGl+BWcY16ginjj4LY7nyIwNKioxsUwvg2aCCepCJk44+KJF9QVG1wwlUzE65Q0OE
-         d1jB+RKlRDnhBz5CWqBUXNhV66xm5hwyjgqvWqTg/LTCyJWvmIvu+Lb7fRX5F6wiU4zb
-         B83/tC1MXvsEz/JYD+jLfZFd0THvnIwQcJO0XWpVcngBpZ3GDNd25eqbeZBtRnKdZsiP
-         mSWQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=8K7h7HUyw90enLd8fQVTYuZsXONTGa9SFgE/KcYk7vs=;
-        b=PNL9RJp+6FL3t5xXNAOHn8ar1VRLw61ptAn/0HSKR/5U2XngC3ybxuam2X+j/PGe42
-         9HY8gR2esiSnmeEkZ39kh7WzAeTY6BxFgoBD9hiiSzMA03SlpbPf4mElY8OCs6IjB+sz
-         Xy5t182WTmSbZmiaJpXnNPcVfy6Cso6GiPcAGTx8/UeEDFJGdOBxFp83mrd0WGokNIQr
-         ++LymrWFiSog0tUPZ9tZQLHa+/xLry1yxHZH5+5f1NeVjYoOk7Hj97h6N7JpYASfUaB4
-         y6O+tgXUNuixbvUw7IOaXmQY8M/J9ztUtctkohoZAAdm8APKPh4L9pxC2DHKp+ckpwUh
-         bsyA==
-X-Gm-Message-State: APjAAAVxdnbpLO6q9Ncz+z8JHLHp8RaNyBHW5DmxBNx4tZA24f1F94mX
-        WqVNWBU3lUAZZeAJ7AIZ674=
-X-Google-Smtp-Source: APXvYqwU9NBbWZxUMWnf59AxkO4xub+qdOeGyBh+vhJmkqA5LxZqkHxzsR61IjlUIUupcBWIrJEqrQ==
-X-Received: by 2002:adf:e701:: with SMTP id c1mr1759802wrm.296.1570005868747;
-        Wed, 02 Oct 2019 01:44:28 -0700 (PDT)
-Received: from Red ([2a01:cb1d:147:7200:2e56:dcff:fed2:c6d6])
-        by smtp.googlemail.com with ESMTPSA id h10sm4269419wrq.95.2019.10.02.01.44.27
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 02 Oct 2019 01:44:28 -0700 (PDT)
-Date:   Wed, 2 Oct 2019 10:44:26 +0200
-From:   Corentin Labbe <clabbe.montjoie@gmail.com>
-To:     Priit Laes <plaes@plaes.org>
-Cc:     catalin.marinas@arm.com, davem@davemloft.net,
-        herbert@gondor.apana.org.au, linux@armlinux.org.uk,
-        mark.rutland@arm.com, mripard@kernel.org, robh+dt@kernel.org,
-        wens@csie.org, will@kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-crypto@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-sunxi@googlegroups.com
-Subject: Re: [linux-sunxi] [PATCH v2 04/11] ARM: dts: sun8i: R40: add crypto
- engine node
-Message-ID: <20191002084426.GB3101@Red>
-References: <20191001184141.27956-1-clabbe.montjoie@gmail.com>
- <20191001184141.27956-5-clabbe.montjoie@gmail.com>
- <20191002080827.GB6347@plaes.org>
+        Wed, 2 Oct 2019 04:48:13 -0400
+Received: from mga18.intel.com ([134.134.136.126]:3556 "EHLO mga18.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726010AbfJBIsN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 2 Oct 2019 04:48:13 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 02 Oct 2019 01:48:12 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,573,1559545200"; 
+   d="scan'208";a="205281082"
+Received: from lahna.fi.intel.com (HELO lahna) ([10.237.72.157])
+  by fmsmga001.fm.intel.com with SMTP; 02 Oct 2019 01:48:08 -0700
+Received: by lahna (sSMTP sendmail emulation); Wed, 02 Oct 2019 11:48:08 +0300
+Date:   Wed, 2 Oct 2019 11:48:08 +0300
+From:   Mika Westerberg <mika.westerberg@linux.intel.com>
+To:     Mario.Limonciello@dell.com
+Cc:     linux-usb@vger.kernel.org, andreas.noever@gmail.com,
+        michael.jamet@intel.com, YehezkelShB@gmail.com,
+        rajmohan.mani@intel.com,
+        nicholas.johnson-opensource@outlook.com.au, lukas@wunner.de,
+        gregkh@linuxfoundation.org, stern@rowland.harvard.edu,
+        anthony.wong@canonical.com, linux-kernel@vger.kernel.org
+Subject: Re: [RFC PATCH 22/22] thunderbolt: Do not start firmware unless
+ asked by the user
+Message-ID: <20191002084808.GI2714@lahna.fi.intel.com>
+References: <20191001113830.13028-1-mika.westerberg@linux.intel.com>
+ <20191001113830.13028-23-mika.westerberg@linux.intel.com>
+ <10cccc5a8d1a43fd9769ab6c4b53aeba@AUSX13MPC105.AMER.DELL.COM>
+ <20191001145850.GZ2714@lahna.fi.intel.com>
+ <1cec43f38ccd42d9a4d9a9c86365a24a@AUSX13MPC105.AMER.DELL.COM>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191002080827.GB6347@plaes.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <1cec43f38ccd42d9a4d9a9c86365a24a@AUSX13MPC105.AMER.DELL.COM>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Oct 02, 2019 at 08:08:27AM +0000, Priit Laes wrote:
-> On Tue, Oct 01, 2019 at 08:41:34PM +0200, Corentin Labbe wrote:
-> > The Crypto Engine is a hardware cryptographic offloader that supports
-> > many algorithms.
-> > It could be found on most Allwinner SoCs.
+On Tue, Oct 01, 2019 at 04:53:54PM +0000, Mario.Limonciello@dell.com wrote:
+> > -----Original Message-----
+> > From: Mika Westerberg <mika.westerberg@linux.intel.com>
+> > Sent: Tuesday, October 1, 2019 9:59 AM
+> > To: Limonciello, Mario
+> > Cc: linux-usb@vger.kernel.org; andreas.noever@gmail.com;
+> > michael.jamet@intel.com; YehezkelShB@gmail.com; rajmohan.mani@intel.com;
+> > nicholas.johnson-opensource@outlook.com.au; lukas@wunner.de;
+> > gregkh@linuxfoundation.org; stern@rowland.harvard.edu;
+> > anthony.wong@canonical.com; linux-kernel@vger.kernel.org
+> > Subject: Re: [RFC PATCH 22/22] thunderbolt: Do not start firmware unless asked by
+> > the user
 > > 
-> > This patch enables the Crypto Engine on the Allwinner R40 SoC Device-tree.
 > > 
-> > Signed-off-by: Corentin Labbe <clabbe.montjoie@gmail.com>
-> > ---
-> >  arch/arm/boot/dts/sun8i-r40.dtsi | 10 ++++++++++
-> >  1 file changed, 10 insertions(+)
+> > [EXTERNAL EMAIL]
 > > 
-> > diff --git a/arch/arm/boot/dts/sun8i-r40.dtsi b/arch/arm/boot/dts/sun8i-r40.dtsi
-> > index bde068111b85..1fc3297a55ec 100644
-> > --- a/arch/arm/boot/dts/sun8i-r40.dtsi
-> > +++ b/arch/arm/boot/dts/sun8i-r40.dtsi
-> > @@ -266,6 +266,16 @@
-> >  			#phy-cells = <1>;
-> >  		};
-> >  
-> > +		crypto: crypto-engine@1c15000 {
+> > On Tue, Oct 01, 2019 at 02:43:15PM +0000, Mario.Limonciello@dell.com wrote:
+> > > > -----Original Message-----
+> > > > From: Mika Westerberg <mika.westerberg@linux.intel.com>
+> > > > Sent: Tuesday, October 1, 2019 6:39 AM
+> > > > To: linux-usb@vger.kernel.org
+> > > > Cc: Andreas Noever; Michael Jamet; Mika Westerberg; Yehezkel Bernat;
+> > Rajmohan
+> > > > Mani; Nicholas Johnson; Lukas Wunner; Greg Kroah-Hartman; Alan Stern;
+> > > > Limonciello, Mario; Anthony Wong; linux-kernel@vger.kernel.org
+> > > > Subject: [RFC PATCH 22/22] thunderbolt: Do not start firmware unless asked by
+> > the
+> > > > user
+> > > >
+> > > >
+> > > > [EXTERNAL EMAIL]
+> > > >
+> > > > Since now we can do pretty much the same thing in the software
+> > > > connection manager than the firmware would do, there is no point
+> > > > starting it by default. Instead we can just continue using the software
+> > > > connection manager.
+> > > >
+> > > > Make it possible for user to switch between the two by adding a module
+> > > > pararameter (start_icm) which is by default false. Having this ability
+> > > > to enable the firmware may be useful at least when debugging possible
+> > > > issues with the software connection manager implementation.
+> > >
+> > > If the host system firmware didn't start the ICM, does that mean SW connection
+> > > manager would just take over even on systems with discrete AR/TR controllers?
+> > 
+> > Yes. This is pretty much the case with Apple systems now.
 > 
-> All the other .dtsi files have `crypto: crypto@...` instead of crypto-engine.
+> Potentially if system firmware started ICM can we accomplish the same thing by
+> resetting AR/TR that normally use ICM and then SW CM would take over?
 > 
+> Or is the ICM started up automatically when the controller is power cycled based
+> on something in the NVM?
 
-Hello
+It is something in the NVM :)
 
-I will fix that.
+> I'm trying to find a way that I can usefully exercise some of this stuff on pre-USB4
+> controllers like AR/TR/ICL-TBT.
 
-Thanks
-Regards
+Only way I can think of is to find yourself a Mac ;-)
+
+> > > > Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+> > > > ---
+> > > >  drivers/thunderbolt/icm.c | 14 +++++++++++---
+> > > >  drivers/thunderbolt/tb.c  |  4 ----
+> > > >  2 files changed, 11 insertions(+), 7 deletions(-)
+> > > >
+> > > > diff --git a/drivers/thunderbolt/icm.c b/drivers/thunderbolt/icm.c
+> > > > index 9c9c6ea2b790..c4a2de0f2a44 100644
+> > > > --- a/drivers/thunderbolt/icm.c
+> > > > +++ b/drivers/thunderbolt/icm.c
+> > > > @@ -11,6 +11,7 @@
+> > > >
+> > > >  #include <linux/delay.h>
+> > > >  #include <linux/mutex.h>
+> > > > +#include <linux/moduleparam.h>
+> > > >  #include <linux/pci.h>
+> > > >  #include <linux/pm_runtime.h>
+> > > >  #include <linux/platform_data/x86/apple.h>
+> > > > @@ -43,6 +44,10 @@
+> > > >  #define ICM_APPROVE_TIMEOUT		10000	/* ms */
+> > > >  #define ICM_MAX_LINK			4
+> > > >
+> > > > +static bool start_icm;
+> > > > +module_param(start_icm, bool, 0444);
+> > > > +MODULE_PARM_DESC(start_icm, "start ICM firmware if it is not running
+> > (default:
+> > > > false)");
+> > > > +
+> > > >  /**
+> > > >   * struct icm - Internal connection manager private data
+> > > >   * @request_lock: Makes sure only one message is send to ICM at time
+> > > > @@ -1353,13 +1358,16 @@ static bool icm_ar_is_supported(struct tb *tb)
+> > > >  {
+> > > >  	struct pci_dev *upstream_port;
+> > > >  	struct icm *icm = tb_priv(tb);
+> > > > +	u32 val;
+> > > >
+> > > >  	/*
+> > > >  	 * Starting from Alpine Ridge we can use ICM on Apple machines
+> > > >  	 * as well. We just need to reset and re-enable it first.
+> > >
+> > > This comment doesn't really seem as relevant anymore.  The meaning of it
+> > > has nothing to do with Apple anymore.
+> > 
+> > Actually it is still relevant. For USB4 the intent is to have FW/SW CM
+> > switch in ACPI spec instead. But that is still under discussion.
+> 
+> Like read a hint from an ACPI table that indicates which one driver should use?
+
+Yes.
+
+I think it will be extension to _OSC but as it is still under discussion
+so subject to change.
+
+> The idea being early USB4 systems would test and ship with this bit set to
+> FW CM and later USB4 systems can have it set to SW CM?
+
+Correct.
+
+> I like that idea, but I think that you almost want the module parameter to indicate
+> which CM you want to "use" instead so you would override what was set in ACPI
+> either way, but default to auto.
+> 
+> cm=auto
+> TBT3 and less: follow NVM behavior
+> USB4: follow ACPI table, either use FW or SW CM.
+> 
+> cm=icm
+> Start up ICM, or error out if you can't.
+> 
+> cm=sw
+> Stop ICM if it's running, and initialize using kernel CM.
+>
+> That would certainly allow running this across some more configurations really easily then.
+
+The point with start_icm is to act as "chicken bit" in case SW CM (Linux
+driver) does not work properly. Nothing else. User can then switch back
+to FW CM on their Apple system and get more "working" system hopefully
+reporting this to us so we can try to figure out what's wrong with the
+driver :)
+
+I don't think it is good idea to have a module parameter to control
+anything else that is supposed to be set in the BIOS/boot firmware.
