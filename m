@@ -2,531 +2,191 @@ Return-Path: <SRS0=zem1=X3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 73945C35280
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 13:16:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D2BBC352AA
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 13:16:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4B51421A4A
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 13:16:21 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kZz/cXy3"
+	by mail.kernel.org (Postfix) with ESMTP id 4E71B21A4A
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 13:16:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727578AbfJBNQU (ORCPT
+        id S1727705AbfJBNQx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Oct 2019 09:16:20 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:33653 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726295AbfJBNQU (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Oct 2019 09:16:20 -0400
-Received: by mail-pg1-f196.google.com with SMTP id q1so3795958pgb.0;
-        Wed, 02 Oct 2019 06:16:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=3CUsLIsKbGdG0KHeXolj2ApfEkLfBLIL89EPwz47LBg=;
-        b=kZz/cXy3HOMYWu5uKTc8H2St6zNLehqBrr2J7z2o7Jf0/GXueP+Cr48w7j17pw+ikv
-         t9SLZ/TbP4DleqwcOu3qpGwCpz0Xh85WPAEm1+C9tz3AbCkV+1TI2Iydin7+sIjrEYRt
-         iSVPBigeU0K7wtWEJw3XaLWD4f+FenYILGlNYvV0stN+r6gz+Y9F7hLV+tCGTEtssXOP
-         OIBiboIU05fJeI2h9NgiYbCZJblkBLCJGquaL45FWSKw0OGJHGf3+LYEWZwSHmcYHuMG
-         J/i5LECnDFc+ButnHA4qN30VGi2kF+dZuhTeU9kTDPBksF9o1HVNV2Cg5i7FZ7R4nLiy
-         JsFw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:subject:to:cc:references:from:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=3CUsLIsKbGdG0KHeXolj2ApfEkLfBLIL89EPwz47LBg=;
-        b=JEnqvX62OoZ68t46OVtiCRBtSU/UfmicOZq71PpGQhKPE+tkacc/iFIUEq0WYspxab
-         B0m2Ruro/XttS/7em1Nul37oKnshVfRDHHCzvlRun1pt1MCqa6+RB1MMti/48lbfS1lC
-         ONfPFVV6LswqLEZVjEZOPOFnHlge5Sjx9e298O2ZRkNOEbUQacfnRwjI9xIwTPsPqDgg
-         7CHJMyptE+bYNJZeN5BlpNVfJ2pNS4+6bRvpHT/qiVB+PrNJ97pclTeo9v8Zl+OiN4jt
-         frFCOT614Bchz+g57f+kznNT4YlUhLEeF8JeHPCYeAuPzFn2mdfrwI7H80Ax47O1kxnx
-         Rtww==
-X-Gm-Message-State: APjAAAWGmwIH44bL6ISmDRrX2c7Kj58EBlt58z7qXqdoPQldd41C1QQZ
-        NrIWLBKspQ4t9ADxer8Jm28=
-X-Google-Smtp-Source: APXvYqzUL+39QvgmgJXtc4bYT/+VvVpNHE/ysaLJ/opIQx6c04Xd9qM/v4aUkUDSnQ/lQDWGbJxDKA==
-X-Received: by 2002:a63:c645:: with SMTP id x5mr3742780pgg.425.1570022179001;
-        Wed, 02 Oct 2019 06:16:19 -0700 (PDT)
-Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id b3sm5072266pjp.13.2019.10.02.06.16.16
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 02 Oct 2019 06:16:17 -0700 (PDT)
-Subject: Re: [PATCH 2/3] watchdog: sam9x60_wdt: introduce sam9x60 watchdog
- timer driver
-To:     Eugen.Hristev@microchip.com, wim@linux-watchdog.org,
-        robh+dt@kernel.org, linux-watchdog@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.or
-Cc:     Nicolas.Ferre@microchip.com, alexandre.belloni@bootlin.com
-References: <1570001371-8174-1-git-send-email-eugen.hristev@microchip.com>
- <1570001371-8174-2-git-send-email-eugen.hristev@microchip.com>
-From:   Guenter Roeck <linux@roeck-us.net>
-Message-ID: <e58a3ab5-69bc-cad3-5faa-ed00ff7906c7@roeck-us.net>
-Date:   Wed, 2 Oct 2019 06:16:15 -0700
+        Wed, 2 Oct 2019 09:16:53 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:37136 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726781AbfJBNQx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 2 Oct 2019 09:16:53 -0400
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 9972E3090FD6;
+        Wed,  2 Oct 2019 13:16:52 +0000 (UTC)
+Received: from llong.remote.csb (dhcp-17-160.bos.redhat.com [10.18.17.160])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id A53EF60BF4;
+        Wed,  2 Oct 2019 13:16:50 +0000 (UTC)
+Subject: Re: [PATCH 4.19 36/63] locking/lockdep: Add debug_locks check in
+ __lock_downgrade()
+To:     Sasha Levin <sashal@kernel.org>
+Cc:     Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        syzbot+53383ae265fb161ef488@syzkaller.appspotmail.com,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        "Paul E. McKenney" <paulmck@linux.vnet.ibm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Will Deacon <will.deacon@arm.com>,
+        Ingo Molnar <mingo@kernel.org>
+References: <20190929135031.382429403@linuxfoundation.org>
+ <20190929135038.482721804@linuxfoundation.org>
+ <801c81d2-ce72-8eb3-a18b-1b0943270fc4@i-love.sakura.ne.jp>
+ <20190930002828.GQ8171@sasha-vm>
+ <b0203141-297f-1138-5988-607e076cbcf0@i-love.sakura.ne.jp>
+ <b4e4de80-cabc-3de5-9fa7-8366a8582ba9@redhat.com>
+ <20191001222038.GD17454@sasha-vm>
+From:   Waiman Long <longman@redhat.com>
+Organization: Red Hat
+Message-ID: <dbb9d78b-b374-167b-affa-bc3be9837b4a@redhat.com>
+Date:   Wed, 2 Oct 2019 09:16:50 -0400
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-In-Reply-To: <1570001371-8174-2-git-send-email-eugen.hristev@microchip.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
+In-Reply-To: <20191001222038.GD17454@sasha-vm>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.43]); Wed, 02 Oct 2019 13:16:52 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 10/2/19 12:35 AM, Eugen.Hristev@microchip.com wrote:
-> From: Eugen Hristev <eugen.hristev@microchip.com>
-> 
-> This is the driver for SAM9X60 watchdog timer.
-> The offered functionality is the same as sama5d4_wdt.
-> The difference comes in register map, way to configure the timeout and
-> interrupts.
-> Developed starting from sama5d4_wdt.c
-> 
-> Signed-off-by: Eugen Hristev <eugen.hristev@microchip.com>
-> ---
->   drivers/watchdog/Kconfig       |   9 ++
->   drivers/watchdog/Makefile      |   1 +
->   drivers/watchdog/sam9x60_wdt.c | 335 +++++++++++++++++++++++++++++++++++++++++
->   3 files changed, 345 insertions(+)
->   create mode 100644 drivers/watchdog/sam9x60_wdt.c
-> 
-> diff --git a/drivers/watchdog/Kconfig b/drivers/watchdog/Kconfig
-> index 58e7c10..3562e26 100644
-> --- a/drivers/watchdog/Kconfig
-> +++ b/drivers/watchdog/Kconfig
-> @@ -416,6 +416,15 @@ config SAMA5D4_WATCHDOG
->   	  Its Watchdog Timer Mode Register can be written more than once.
->   	  This will reboot your system when the timeout is reached.
->   
-> +config SAM9X60_WATCHDOG
-> +	tristate "Microchip SAM9X60 Watchdog Timer"
-> +	depends on ARCH_AT91 || COMPILE_TEST
+On 10/1/19 6:20 PM, Sasha Levin wrote:
+> On Mon, Sep 30, 2019 at 10:00:35AM -0400, Waiman Long wrote:
+>> On 9/29/19 9:46 PM, Tetsuo Handa wrote:
+>>> On 2019/09/30 9:28, Sasha Levin wrote:
+>>>> On Sun, Sep 29, 2019 at 11:43:38PM +0900, Tetsuo Handa wrote:
+>>>>> On 2019/09/29 22:54, Greg Kroah-Hartman wrote:
+>>>>>> From: Waiman Long <longman@redhat.com>
+>>>>>>
+>>>>>> [ Upstream commit 513e1073d52e55b8024b4f238a48de7587c64ccf ]
+>>>>>>
+>>>>>> Tetsuo Handa had reported he saw an incorrect "downgrading a read
+>>>>>> lock"
+>>>>>> warning right after a previous lockdep warning. It is likely that
+>>>>>> the
+>>>>>> previous warning turned off lock debugging causing the lockdep to
+>>>>>> have
+>>>>>> inconsistency states leading to the lock downgrade warning.
+>>>>>>
+>>>>>> Fix that by add a check for debug_locks at the beginning of
+>>>>>> __lock_downgrade().
+>>>>> Please drop "[PATCH 4.19 36/63] locking/lockdep: Add debug_locks
+>>>>> check in __lock_downgrade()".
+>>>>> We had a revert patch shown below in the past.
+>>>> We had a revert in the stable trees, but that revert was incorrect.
+>>>>
+>>>> Take a look at commit 513e1073d52e55 upstream, it patches
+>>>> __lock_set_class() (even though the subject line says
+>>>> __lock_downgrade()). So this is not a backporting error as the revert
+>>>> said it is, but is rather the intended location to be patched.
+>>>>
+>>>> If this is actually wrong, then it should be addressed upstream first.
+>>>>
+>>> Hmm, upstream has two commits with same author, same date, same
+>>> subject, different hash, different content.
+>>> I couldn't find from
+>>> https://lkml.kernel.org/r/1547093005-26085-1-git-send-email-longman@redhat.com
+>>> that
+>>> we want to patch both __lock_set_class() and __lock_downgrade(), but
+>>> I found that the tip-bot has patched
+>>> __lock_downgrade() on "2019-01-21 11:29" and __lock_set_class() on
+>>> "2019-02-04  8:56".
+>>> Seems that we by error patched both functions, though patching both
+>>> functions should be harmless...
+>>>
+>>> 64aa348ed kernel/lockdep.c         (Peter Zijlstra           
+>>> 2008-08-11 09:30:21 +0200 4115) static int
+>>> 00ef9f734 kernel/lockdep.c         (Peter Zijlstra           
+>>> 2008-12-04 09:00:17 +0100 4116) __lock_set_class(struct lockdep_map
+>>> *lock, const char *name,
+>>> 00ef9f734 kernel/lockdep.c         (Peter Zijlstra           
+>>> 2008-12-04 09:00:17 +0100 4117)            struct lock_class_key
+>>> *key, unsigned int subclass,
+>>> 00ef9f734 kernel/lockdep.c         (Peter Zijlstra           
+>>> 2008-12-04 09:00:17 +0100 4118)            unsigned long ip)
+>>> 64aa348ed kernel/lockdep.c         (Peter Zijlstra           
+>>> 2008-08-11 09:30:21 +0200 4119) {
+>>> 64aa348ed kernel/lockdep.c         (Peter Zijlstra           
+>>> 2008-08-11 09:30:21 +0200 4120)   struct task_struct *curr = current;
+>>> 8c8889d8e kernel/locking/lockdep.c (Imre Deak                
+>>> 2019-05-24 23:15:08 +0300 4121)   unsigned int depth, merged = 0;
+>>> 41c2c5b86 kernel/locking/lockdep.c (J. R. Okajima            
+>>> 2017-02-03 01:38:15 +0900 4122)   struct held_lock *hlock;
+>>> 64aa348ed kernel/lockdep.c         (Peter Zijlstra           
+>>> 2008-08-11 09:30:21 +0200 4123)   struct lock_class *class;
+>>> 64aa348ed kernel/lockdep.c         (Peter Zijlstra           
+>>> 2008-08-11 09:30:21 +0200 4124)   int i;
+>>> 64aa348ed kernel/lockdep.c         (Peter Zijlstra           
+>>> 2008-08-11 09:30:21 +0200 4125)
+>>> 513e1073d kernel/locking/lockdep.c (Waiman Long              
+>>> 2019-01-09 23:03:25 -0500 4126)   if (unlikely(!debug_locks))
+>>> 513e1073d kernel/locking/lockdep.c (Waiman Long              
+>>> 2019-01-09 23:03:25 -0500 4127)           return 0;
+>>> 513e1073d kernel/locking/lockdep.c (Waiman Long              
+>>> 2019-01-09 23:03:25 -0500 4128)
+>>>
+>>> 6419c4af7 kernel/locking/lockdep.c (J. R. Okajima            
+>>> 2017-02-03 01:38:17 +0900 4162) static int __lock_downgrade(struct
+>>> lockdep_map *lock, unsigned long ip)
+>>> 6419c4af7 kernel/locking/lockdep.c (J. R. Okajima            
+>>> 2017-02-03 01:38:17 +0900 4163) {
+>>> 6419c4af7 kernel/locking/lockdep.c (J. R. Okajima            
+>>> 2017-02-03 01:38:17 +0900 4164)   struct task_struct *curr = current;
+>>> 8c8889d8e kernel/locking/lockdep.c (Imre Deak                
+>>> 2019-05-24 23:15:08 +0300 4165)   unsigned int depth, merged = 0;
+>>> 6419c4af7 kernel/locking/lockdep.c (J. R. Okajima            
+>>> 2017-02-03 01:38:17 +0900 4166)   struct held_lock *hlock;
+>>> 6419c4af7 kernel/locking/lockdep.c (J. R. Okajima            
+>>> 2017-02-03 01:38:17 +0900 4167)   int i;
+>>> 6419c4af7 kernel/locking/lockdep.c (J. R. Okajima            
+>>> 2017-02-03 01:38:17 +0900 4168)
+>>> 714925805 kernel/locking/lockdep.c (Waiman Long              
+>>> 2019-01-09 23:03:25 -0500 4169)   if (unlikely(!debug_locks))
+>>> 714925805 kernel/locking/lockdep.c (Waiman Long              
+>>> 2019-01-09 23:03:25 -0500 4170)           return 0;
+>>> 714925805 kernel/locking/lockdep.c (Waiman Long              
+>>> 2019-01-09 23:03:25 -0500 4171)
+>>>
+>>> commit 513e1073d52e55b8024b4f238a48de7587c64ccf
+>>> Author: Waiman Long <longman@redhat.com>
+>>> Date:   Wed Jan 9 23:03:25 2019 -0500
+>>>
+>>>     locking/lockdep: Add debug_locks check in __lock_downgrade()
+>>>
+>>> commit 71492580571467fb7177aade19c18ce7486267f5
+>>> Author: Waiman Long <longman@redhat.com>
+>>> Date:   Wed Jan 9 23:03:25 2019 -0500
+>>>
+>>>     locking/lockdep: Add debug_locks check in __lock_downgrade()
+>>>
+>> As I had said before, it looks like the git-apply mixed up the location
+>> due to the fact that the hunks are exactly the same for both locations.
+>> So if the patch to be applied does not have the right line number, it
+>> will get applied to the wrong location first.
+>
+> I very much agree, my point is that *both* patches are upstream right
+> now, and if one of those patches is wrong then it should be reverted
+> upstream, and we'd be happy to take the revert. 
 
-depends on HAS_IOMEM
+The patch itself shouldn't do any harm even if it is applied to the
+wrong function. So there is no urgency to revert it.
 
-> +	select WATCHDOG_CORE
-> +	help
-> +	  Microchip SAM9X60 watchdog timer is embedded into SAM9X60 chips.
-> +	  Its Watchdog Timer Mode Register can be written more than once.
-> +	  This will reboot your system when the timeout is reached.
-> +
->   config CADENCE_WATCHDOG
->   	tristate "Cadence Watchdog Timer"
->   	depends on HAS_IOMEM
-> diff --git a/drivers/watchdog/Makefile b/drivers/watchdog/Makefile
-> index 2ee352b..93ba599 100644
-> --- a/drivers/watchdog/Makefile
-> +++ b/drivers/watchdog/Makefile
-> @@ -52,6 +52,7 @@ obj-$(CONFIG_IXP4XX_WATCHDOG) += ixp4xx_wdt.o
->   obj-$(CONFIG_S3C2410_WATCHDOG) += s3c2410_wdt.o
->   obj-$(CONFIG_SA1100_WATCHDOG) += sa1100_wdt.o
->   obj-$(CONFIG_SAMA5D4_WATCHDOG) += sama5d4_wdt.o
-> +obj-$(CONFIG_SAM9X60_WATCHDOG) += sam9x60_wdt.o
->   obj-$(CONFIG_DW_WATCHDOG) += dw_wdt.o
->   obj-$(CONFIG_EP93XX_WATCHDOG) += ep93xx_wdt.o
->   obj-$(CONFIG_PNX4008_WATCHDOG) += pnx4008_wdt.o
-> diff --git a/drivers/watchdog/sam9x60_wdt.c b/drivers/watchdog/sam9x60_wdt.c
-> new file mode 100644
-> index 00000000..f612230
-> --- /dev/null
-> +++ b/drivers/watchdog/sam9x60_wdt.c
-> @@ -0,0 +1,335 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * Driver for Microchip SAM9X60 Watchdog Timer
-> + *
-> + * Copyright (C) 2019 Microchip Technology, Inc.
-> + * Author: Eugen Hristev <eugen.hristev@microchip.com>
-> + *
-> + */
-> +
-> +#include <linux/delay.h>
-> +#include <linux/interrupt.h>
-> +#include <linux/io.h>
-> +#include <linux/kernel.h>
-> +#include <linux/module.h>
-> +#include <linux/of.h>
-> +#include <linux/of_irq.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/reboot.h>
-> +#include <linux/watchdog.h>
-> +
-> +#define AT91_WDT_CR		0x00			/* Watchdog Control Register */
-> +#define		AT91_WDT_WDRSTT		BIT(0)		/* Restart */
-> +#define		AT91_WDT_KEY		(0xa5 << 24)		/* KEY Password */
-> +
-> +#define AT91_WDT_MR		0x04			/* Watchdog Mode Register */
-> +#define		AT91_WDT_PERIODRST	BIT(4)		/* Period Reset */
-> +#define		AT91_WDT_RPTHRST	BIT(5)		/* Minimum Restart Period */
-> +#define		AT91_WDT_WDDIS		BIT(12)		/* Disable */
-> +#define		AT91_WDT_WDDBGHLT	BIT(28)		/* Debug Halt */
-> +#define		AT91_WDT_WDIDLEHLT	BIT(29)		/* Idle Halt */
-> +
-> +#define AT91_WDT_VR		0x08			/* Watchdog Timer Value Register */
-> +
-> +#define AT91_WDT_WLR		0x0c
-> +#define		AT91_WDT_COUNTER	(0xfff << 0)		/* Watchdog Period Value */
-> +#define		AT91_WDT_SET_COUNTER(x)	((x) & AT91_WDT_COUNTER)
-> +
-> +#define AT91_WDT_IER		0x14			/* Interrupt Enable Register */
-> +#define		AT91_WDT_PERINT		BIT(0)		/* Period Interrupt Enable */
-> +#define AT91_WDT_IDR		0x18			/* Interrupt Disable Register */
-> +#define AT91_WDT_ISR		0x1c			/* Interrupt Status Register */
-> +
-> +/* minimum and maximum watchdog timeout, in seconds */
-> +#define MIN_WDT_TIMEOUT		1
-> +#define MAX_WDT_TIMEOUT		16
-> +#define WDT_DEFAULT_TIMEOUT	MAX_WDT_TIMEOUT
-> +
-> +#define WDT_SEC2TICKS(s)	((s) ? (((s) << 8) - 1) : 0)
-> +
-> +struct sam9x60_wdt {
-> +	struct watchdog_device	wdd;
-> +	void __iomem		*reg_base;
-> +	u32			mr;
-> +	u32			ir;
-> +	unsigned long		last_ping;
-> +};
-> +
-> +static int wdt_timeout;
-> +static bool nowayout = WATCHDOG_NOWAYOUT;
-> +
-> +module_param(wdt_timeout, int, 0);
-> +MODULE_PARM_DESC(wdt_timeout,
-> +		 "Watchdog timeout in seconds. (default = "
-> +		 __MODULE_STRING(WDT_DEFAULT_TIMEOUT) ")");
-> +
-> +module_param(nowayout, bool, 0);
-> +MODULE_PARM_DESC(nowayout,
-> +		 "Watchdog cannot be stopped once started (default="
-> +		 __MODULE_STRING(WATCHDOG_NOWAYOUT) ")");
-> +
-> +#define wdt_enabled (!(wdt->mr & AT91_WDT_WDDIS))
-
-Please no use in variables in macros without referencing them in the argument.
-
-> +
-> +#define wdt_read(wdt, field) \
-> +	readl_relaxed((wdt)->reg_base + (field))
-> +
-> +/* 4 slow clock periods is 4/32768 = 122.07us*/
-> +#define WDT_DELAY	usecs_to_jiffies(123)
-> +
-> +static void wdt_write(struct sam9x60_wdt *wdt, u32 field, u32 val)
-> +{
-> +	/*
-> +	 * WDT_CR and WDT_MR must not be modified within three slow clock
-> +	 * periods following a restart of the watchdog performed by a write
-> +	 * access in WDT_CR.
-> +	 */
-> +	while (time_before(jiffies, wdt->last_ping + WDT_DELAY))
-> +		usleep_range(30, 125);
-> +	writel_relaxed(val, wdt->reg_base + field);
-> +	wdt->last_ping = jiffies;
-> +}
-> +
-> +static void wdt_write_nosleep(struct sam9x60_wdt *wdt, u32 field, u32 val)
-> +{
-> +	if (time_before(jiffies, wdt->last_ping + WDT_DELAY))
-
-WDT_DELAY is most likely 1 under all circumstances. If the last access was just before
-a tick, this won't guarantee that really 123 uS expired.
-
-In situations like this, I would suggest not to rely on jiffies related functions.
-If the last access time is stored based on ktime_get(), the remaining time in
-us can be calculated using ktime_us_delta(). Then just sleep (or delay in case
-of nosleep) for that amount of microseconds.
-
-Also, I don't see why this second function would be necessary.
-A single function with an if() should be sufficient.
-
-	ktime_t delta = WDT_DELAY_US - ktime_us_delta(ktime_get(), wdt->last_ping);
-
-	if (delta > 0)
-		usleep_range(delta, delta * 2);
-	writel_relaxed(val, wdt->reg_base + field);
-	wdt->last_ping = ktime_get();
-
-> +		usleep_range(123, 250);
-> +	writel_relaxed(val, wdt->reg_base + field);
-> +	wdt->last_ping = jiffies;
-> +}
-> +
-> +static int sam9x60_wdt_start(struct watchdog_device *wdd)
-> +{
-> +	struct sam9x60_wdt *wdt = watchdog_get_drvdata(wdd);
-> +
-> +	wdt->mr &= ~AT91_WDT_WDDIS;
-> +	wdt_write(wdt, AT91_WDT_MR, wdt->mr);
-> +	wdt_write_nosleep(wdt, AT91_WDT_IER, wdt->ir);
-> +
-> +	return 0;
-> +}
-> +
-> +static int sam9x60_wdt_stop(struct watchdog_device *wdd)
-> +{
-> +	struct sam9x60_wdt *wdt = watchdog_get_drvdata(wdd);
-> +
-> +	wdt->mr |= AT91_WDT_WDDIS;
-> +	wdt_write(wdt, AT91_WDT_MR, wdt->mr);
-> +	wdt_write_nosleep(wdt, AT91_WDT_IDR, wdt->ir);
-> +
-> +	return 0;
-> +}
-> +
-> +static int sam9x60_wdt_ping(struct watchdog_device *wdd)
-> +{
-> +	struct sam9x60_wdt *wdt = watchdog_get_drvdata(wdd);
-> +
-> +	wdt_write(wdt, AT91_WDT_CR, AT91_WDT_KEY | AT91_WDT_WDRSTT);
-> +
-> +	return 0;
-> +}
-> +
-> +static int sam9x60_wdt_set_timeout(struct watchdog_device *wdd,
-> +				   unsigned int timeout)
-> +{
-> +	struct sam9x60_wdt *wdt = watchdog_get_drvdata(wdd);
-> +
-> +	wdt_write(wdt, AT91_WDT_WLR,
-> +		  AT91_WDT_SET_COUNTER(WDT_SEC2TICKS(timeout)));
-> +
-> +	wdd->timeout = timeout;
-> +
-> +	return 0;
-> +}
-> +
-> +static const struct watchdog_info sam9x60_wdt_info = {
-> +	.options = WDIOF_SETTIMEOUT | WDIOF_MAGICCLOSE | WDIOF_KEEPALIVEPING,
-> +	.identity = "Microchip SAM9X60 Watchdog",
-> +};
-> +
-> +static const struct watchdog_ops sam9x60_wdt_ops = {
-> +	.owner = THIS_MODULE,
-> +	.start = sam9x60_wdt_start,
-> +	.stop = sam9x60_wdt_stop,
-> +	.ping = sam9x60_wdt_ping,
-> +	.set_timeout = sam9x60_wdt_set_timeout,
-> +};
-> +
-> +static irqreturn_t sam9x60_wdt_irq_handler(int irq, void *dev_id)
-> +{
-> +	struct sam9x60_wdt *wdt = platform_get_drvdata(dev_id);
-> +
-> +	if (wdt_read(wdt, AT91_WDT_ISR)) {
-> +		pr_crit("Microchip Watchdog Software Reset\n");
-> +		emergency_restart();
-> +		pr_crit("Reboot didn't succeed\n");
-> +	}
-> +
-> +	return IRQ_HANDLED;
-> +}
-> +
-> +static int of_sam9x60_wdt_init(struct device_node *np, struct sam9x60_wdt *wdt)
-> +{
-> +	const char *tmp;
-> +
-> +	wdt->mr = AT91_WDT_WDDIS;
-> +
-> +	if (!of_property_read_string(np, "atmel,watchdog-type", &tmp) &&
-> +	    !strcmp(tmp, "software"))
-> +		wdt->ir = AT91_WDT_PERINT;
-> +	else
-> +		wdt->mr |= AT91_WDT_PERIODRST;
-> +
-> +	if (of_property_read_bool(np, "atmel,idle-halt"))
-> +		wdt->mr |= AT91_WDT_WDIDLEHLT;
-> +
-> +	if (of_property_read_bool(np, "atmel,dbg-halt"))
-> +		wdt->mr |= AT91_WDT_WDDBGHLT;
-> +
-> +	return 0;
-> +}
-> +
-> +static int sam9x60_wdt_init(struct sam9x60_wdt *wdt)
-> +{
-> +	u32 reg;
-> +	/*
-> +	 * When booting and resuming, the bootloader may have changed the
-> +	 * watchdog configuration.
-> +	 * If the watchdog is already running, we can safely update it.
-> +	 * Else, we have to disable it properly.
-> +	 */
-> +	if (wdt_enabled) {
-> +		wdt_write_nosleep(wdt, AT91_WDT_MR, wdt->mr);
-> +		wdt_write_nosleep(wdt, AT91_WDT_IER, wdt->ir);
-> +		wdt_write(wdt, AT91_WDT_WLR,
-> +			  AT91_WDT_SET_COUNTER(WDT_SEC2TICKS(WDT_DEFAULT_TIMEOUT)));
-> +
-> +	} else {
-> +		reg = wdt_read(wdt, AT91_WDT_MR);
-> +		if (!(reg & AT91_WDT_WDDIS))
-> +			wdt_write_nosleep(wdt, AT91_WDT_MR,
-> +					  reg | AT91_WDT_WDDIS);
-> +	}
-
-If the watchdog may be running at boot time, the watchdog core
-should be informed about it.
-
-> +	return 0;
-> +}
-> +
-> +static int sam9x60_wdt_probe(struct platform_device *pdev)
-> +{
-> +	struct watchdog_device *wdd;
-> +	struct sam9x60_wdt *wdt;
-> +	struct resource *res;
-> +	void __iomem *regs;
-> +	u32 irq = 0;
-
-Unnecessary initialization.
-
-> +	int ret;
-> +
-> +	wdt = devm_kzalloc(&pdev->dev, sizeof(*wdt), GFP_KERNEL);
-> +	if (!wdt)
-> +		return -ENOMEM;
-> +
-> +	wdd = &wdt->wdd;
-> +	wdd->timeout = WDT_DEFAULT_TIMEOUT;
-> +	wdd->info = &sam9x60_wdt_info;
-> +	wdd->ops = &sam9x60_wdt_ops;
-> +	wdd->min_timeout = MIN_WDT_TIMEOUT;
-> +	wdd->max_timeout = MAX_WDT_TIMEOUT;
-> +	wdt->last_ping = jiffies;
-> +
-> +	watchdog_set_drvdata(wdd, wdt);
-> +
-> +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> +	regs = devm_ioremap_resource(&pdev->dev, res);
-
-devm_platform_ioremap_resource()
-
-> +	if (IS_ERR(regs))
-> +		return PTR_ERR(regs);
-> +
-> +	wdt->reg_base = regs;
-> +
-> +	irq = irq_of_parse_and_map(pdev->dev.of_node, 0);
-> +	if (!irq)
-> +		dev_warn(&pdev->dev, "failed to get IRQ from DT\n");
-> +
-
-The interrupt property is optional. Not providing it does not warrant a warning.
-
-> +	ret = of_sam9x60_wdt_init(pdev->dev.of_node, wdt);
-> +	if (ret)
-> +		return ret;
-> +
-> +	if ((wdt->ir & AT91_WDT_PERINT) && irq) {
-
-... even more so if it isn't actually used in some cases. irq_of_parse_and_map()
-should probably only be called in the first place if AT91_WDT_PERINT is set.
-
-> +		ret = devm_request_irq(&pdev->dev, irq, sam9x60_wdt_irq_handler,
-> +				       IRQF_SHARED | IRQF_IRQPOLL |
-> +				       IRQF_NO_SUSPEND, pdev->name, pdev);
-> +		if (ret) {
-> +			dev_err(&pdev->dev,
-> +				"cannot register interrupt handler\n");
-> +			return ret;
-> +		}
-> +	}
-> +
-> +	watchdog_init_timeout(wdd, wdt_timeout, &pdev->dev);
-> +
-> +	ret = sam9x60_wdt_init(wdt);
-> +	if (ret)
-> +		return ret;
-> +
-> +	watchdog_set_nowayout(wdd, nowayout);
-> +
-> +	ret = watchdog_register_device(wdd);
-> +	if (ret) {
-> +		dev_err(&pdev->dev, "failed to register watchdog device\n");
-> +		return ret;
-> +	}
-> +
-> +	platform_set_drvdata(pdev, wdt);
-> +
-> +	dev_info(&pdev->dev, "initialized (timeout = %d sec, nowayout = %d)\n",
-> +		 wdd->timeout, nowayout);
-> +
-> +	return 0;
-> +}
-> +
-> +static int sam9x60_wdt_remove(struct platform_device *pdev)
-> +{
-> +	struct sam9x60_wdt *wdt = platform_get_drvdata(pdev);
-> +
-> +	sam9x60_wdt_stop(&wdt->wdd);
-> +
-
-Please use watchdog_stop_on_unregister() instead.
-
-> +	watchdog_unregister_device(&wdt->wdd);
-> +
-
-Please use devm_watchdog_register_device() and drop the remove function.
-
-> +	return 0;
-> +}
-> +
-> +static const struct of_device_id sam9x60_wdt_of_match[] = {
-> +	{ .compatible = "microchip,sam9x60-wdt", },
-> +	{ }
-> +};
-> +MODULE_DEVICE_TABLE(of, sam9x60_wdt_of_match);
-> +
-> +#ifdef CONFIG_PM_SLEEP
-
-Please use __maybe_unused
-
-> +static int sam9x60_wdt_resume(struct device *dev)
-> +{
-> +	struct sam9x60_wdt *wdt = dev_get_drvdata(dev);
-> +
-> +	/*
-> +	 * FIXME: writing MR also pings the watchdog which may not be desired.
-> +	 * This should only be done when the registers are lost on suspend but
-> +	 * there is no way to get this information right now.
-> +	 */
-
-This seems wrong. The bootloader may have stopped the watchdog in the
-suspend/resume cycle. This does not properly re-initialize it.
-
-Also, is there really no need to stop the watchdog on suspend ?
-
-> +	sam9x60_wdt_init(wdt);
-> +
-> +	return 0;
-> +}
-> +#endif
-> +
-> +static SIMPLE_DEV_PM_OPS(sam9x60_wdt_pm_ops, NULL,
-> +			 sam9x60_wdt_resume);
-> +
-> +static struct platform_driver sam9x60_wdt_driver = {
-> +	.probe		= sam9x60_wdt_probe,
-> +	.remove		= sam9x60_wdt_remove,
-> +	.driver		= {
-> +		.name	= "sam9x60_wdt",
-> +		.pm	= &sam9x60_wdt_pm_ops,
-> +		.of_match_table = sam9x60_wdt_of_match,
-> +	}
-> +};
-> +module_platform_driver(sam9x60_wdt_driver);
-> +
-> +MODULE_AUTHOR("Eugen Hristev");
-> +MODULE_DESCRIPTION("Microchip SAM9X60 Watchdog Timer driver");
-> +MODULE_LICENSE("GPL v2");
-> 
+Cheers,
+Longman
 
