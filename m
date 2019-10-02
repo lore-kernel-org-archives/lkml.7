@@ -2,99 +2,154 @@ Return-Path: <SRS0=zem1=X3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C050EC47404
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 19:49:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C44AC10F14
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 19:49:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 96FDD217D7
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 19:49:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570045741;
-	bh=7PVCAuEsgrCe442h9KQ9kdWMLRPwweKypkL7yGEgWA4=;
-	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
-	b=hRzOaKBecLL6N8VeWze8prFaEb/TyaUs8XTMgaOFtGct1ahd75yPt3S8N7Iz9DzeR
-	 UduMeBItgFCppiDpIXnVYwxaAcBWQV74bjK3cNsR/817tMs5qbMj94cPvhKHlodHGb
-	 2pJq3lgNlbUNBWE0gjyyJzRwGDC2vV0pkqQ/AgBE=
+	by mail.kernel.org (Postfix) with ESMTP id 0CE9B2133F
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 19:49:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=dell.com header.i=@dell.com header.b="KuxFZlO1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727762AbfJBTtA (ORCPT
+        id S1727884AbfJBTtX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Oct 2019 15:49:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45428 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727186AbfJBTtA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Oct 2019 15:49:00 -0400
-Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net [24.9.64.241])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7270A2133F;
-        Wed,  2 Oct 2019 19:48:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570045739;
-        bh=7PVCAuEsgrCe442h9KQ9kdWMLRPwweKypkL7yGEgWA4=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=Vtizw4ru0jGMqtXcWX97sP+JdmuHPnyTNdkd6Mv1daHMDVSbeZQWIfPrw16SIZG0F
-         pU3P4Fad0j/wJNHxFMfuUnlycfCUr12VcliY6XiBYSKWhyrnXZSc0tisAwo5C/G4NS
-         X3MXCPgFhZkNnKvOrv1kPveLyGvVqpWW24l06Pqw=
-Subject: Re: [PATCH v3 1/2] selftests: watchdog: Validate optional file
- argument
-To:     Eugeniu Rosca <erosca@de.adit-jv.com>
-Cc:     "George G. Davis" <george_davis@mentor.com>,
-        linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Eugeniu Rosca <roscaeugeniu@gmail.com>,
-        shuah <shuah@kernel.org>
-References: <20190917184023.16701-1-erosca@de.adit-jv.com>
- <156996250317.31379.1299334144215961607.git-patchwork-notify@kernel.org>
- <20191002104101.GA6855@vmlxhi-102.adit-jv.com>
-From:   shuah <shuah@kernel.org>
-Message-ID: <2f1d360f-ee56-8d68-c66a-53604baf8907@kernel.org>
-Date:   Wed, 2 Oct 2019 13:48:37 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
-MIME-Version: 1.0
-In-Reply-To: <20191002104101.GA6855@vmlxhi-102.adit-jv.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
+        Wed, 2 Oct 2019 15:49:23 -0400
+Received: from mx0a-00154904.pphosted.com ([148.163.133.20]:22996 "EHLO
+        mx0a-00154904.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727223AbfJBTtW (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 2 Oct 2019 15:49:22 -0400
+Received: from pps.filterd (m0170393.ppops.net [127.0.0.1])
+        by mx0a-00154904.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id x92Jioxb015061;
+        Wed, 2 Oct 2019 15:49:21 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=dell.com; h=from : to : cc :
+ subject : date : message-id : references : in-reply-to : content-type :
+ content-id : content-transfer-encoding : mime-version; s=smtpout1;
+ bh=RmZ+BlTQEGuXdY8dqzyNWFsSYkMxU7IlisLgNQKAmUM=;
+ b=KuxFZlO1bNTgP/5s1cUQwH2xpyURY1WtKssRmZBjDLxib7Q3wy/Bryk+z6KnjRVCtovL
+ u0PDt6d4EA1Kz0SJnVOT9HIm5/AVmHS9cZDckkp4mMn7ilOMMJYvPjCvzP8q+jIV7/E0
+ mATTeizKwIxAyTJIHuoHOYg5Clvrag0e6MROjn8d9FHxNBNY84N0ALq6L5gO5+YmtF8F
+ l57/utifT+aruB0OBj2yH0t6ssVJ39lDKfNnZGOwirf0UDIHQSrkB9hHnFZp2YpwKiry
+ lFcLEiCFdLkcJ0LzPYCnO7U1ZI63IWejYkfLpY09z1z8OYDOD47ytqRfFjuvsnsCYeeI 5Q== 
+Received: from mx0a-00154901.pphosted.com (mx0a-00154901.pphosted.com [67.231.149.39])
+        by mx0a-00154904.pphosted.com with ESMTP id 2va2uk4pwh-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 02 Oct 2019 15:49:21 -0400
+Received: from pps.filterd (m0133268.ppops.net [127.0.0.1])
+        by mx0a-00154901.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id x92JhBM6062520;
+        Wed, 2 Oct 2019 15:49:21 -0400
+Received: from ausxipps301.us.dell.com (ausxipps301.us.dell.com [143.166.148.223])
+        by mx0a-00154901.pphosted.com with ESMTP id 2vamkm10tu-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 02 Oct 2019 15:49:21 -0400
+X-LoopCount0: from 10.166.135.141
+X-PREM-Routing: D-Outbound
+X-IronPort-AV: E=Sophos;i="5.60,349,1549951200"; 
+   d="scan'208";a="404328498"
+From:   <Narendra.K@dell.com>
+To:     <Narendra.K@dell.com>
+CC:     <geert@linux-m68k.org>, <Mario.Limonciello@dell.com>,
+        <ard.biesheuvel@linaro.org>, <linux-efi@vger.kernel.org>,
+        <mingo@kernel.org>, <tglx@linutronix.de>,
+        <linux-kernel@vger.kernel.org>, <james.morse@arm.com>,
+        <tanxiaofei@huawei.com>
+Subject: Re: [PATCH 4/5] efi: Export Runtime Configuration Interface table to
+ sysfs
+Thread-Topic: [PATCH 4/5] efi: Export Runtime Configuration Interface table to
+ sysfs
+Thread-Index: AQHVUR9fTJBv0Z/1EU2zTW0DTQ5+k6dFbG6AgAAA2ACAAAKAgIAACpuAgAA9PgCAAE5zgIAABjuAgAELs4CAAJ5ygA==
+Date:   Wed, 2 Oct 2019 19:49:15 +0000
+Message-ID: <20191002194905.GA3983@localhost.localdomain>
+References: <20190812150452.27983-1-ard.biesheuvel@linaro.org>
+ <20190812150452.27983-5-ard.biesheuvel@linaro.org>
+ <CAMuHMdXY5UH4KhcaNVuxa8-+GN-4bjyvCd0wzPYuFBY5Ch=fNA@mail.gmail.com>
+ <CAKv+Gu-KPypju6roQaVKP0DHE3aZijVVqLGwNyhiRSNqn1r6-w@mail.gmail.com>
+ <CAMuHMdV9m+Dbch46cVNqtn4cyB74qgHa18Qcm=HQv7Wx1rk==w@mail.gmail.com>
+ <CAKv+Gu9iLxkJgmxZR+1yvCTj6GiCDuyfN_QiGXEWBHS7uYUbfQ@mail.gmail.com>
+ <8446d19dd197447a88eed580601f3c4c@AUSX13MPC105.AMER.DELL.COM>
+ <20191001180133.GA2279@localhost.localdomain>
+ <CAMuHMdUMh4mCczCOxFtLn3E0Wu84ixFBsFuXk0p9QVXtg4dmoQ@mail.gmail.com>
+ <20191002102159.GA2109@localhost.localdomain>
+In-Reply-To: <20191002102159.GA2109@localhost.localdomain>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+user-agent: Mutt/1.10.1 (2018-07-13)
+x-ms-exchange-messagesentrepresentingtype: 1
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.143.242.75]
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <6126A2510C56E64E916382175ECCF4B9@dell.com>
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,1.0.8
+ definitions=2019-10-02_08:2019-10-01,2019-10-02 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
+ phishscore=0 adultscore=0 suspectscore=0 priorityscore=1501
+ mlxlogscore=999 bulkscore=0 malwarescore=0 spamscore=0 mlxscore=0
+ clxscore=1015 impostorscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-1908290000 definitions=main-1910020154
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 impostorscore=0 bulkscore=0
+ clxscore=1015 mlxlogscore=999 priorityscore=1501 lowpriorityscore=0
+ spamscore=0 malwarescore=0 phishscore=0 adultscore=0 suspectscore=0
+ mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-1908290000 definitions=main-1910020154
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 10/2/19 4:41 AM, Eugeniu Rosca wrote:
-> Hi Shuah,
-> 
-> On Tue, Oct 01, 2019 at 08:41:43PM +0000, patchwork-bot+linux-kselftest@kernel.org wrote:
->> Hello:
->>
->> This series was applied to shuah/linux-kselftest.git (refs/heads/fixes).
->>
->> On Tue, 17 Sep 2019 20:40:22 +0200 you wrote:
->>> From: "George G. Davis" <george_davis@mentor.com>
->>>
->>> The newly added optional file argument does not validate if the
->>> file is indeed a watchdog, e.g.:
->>>
->>> ./watchdog-test  -f /dev/zero
->>> Watchdog Ticking Away!
->>>
->>> [...]
->>
->> Here is a summary with links:
->>    - [v3,1/2] selftests: watchdog: Validate optional file argument
->>      https://git.kernel.org/shuah/linux-kselftest/c/93c384f5d553bc4fdfb252b89ff378363ee05cee
-> 
-> Could you please update the 'Fixes:' tag in the above commit to:
-> Fixes: a4864a33f56caa ("selftests: watchdog: Add optional file argument")
-> 
-> The warning in https://patchwork.kernel.org/patch/11149287/ clearly says
-> that the fixed commit is from linux-next and it seems to have been
-> updated before landing in mainline. TIA.
-> 
+On Wed, Oct 02, 2019 at 10:22:10AM +0000, K, Narendra wrote:
+[...]
+> > I hope I managed to convince you of the benefits.
+>=20
+> Thank you Geert. The description is helpful. I am working on it.=20
+> As I understand, the issue is 'make oldconfig' provides a prompt to the u=
+ser=20
+> and user is expecting that a prompt is not needed as the option is not
+> relevant.
+>=20
+> I cloned upstream kernel 5.3.2 as it does not have EFI_RCI2_TABLE option
+> and generated a .config by calling 'make defconfig'. The .config has
+> COMPILE_TEST set to n. I copied it to 5.4-rc1 and added 'depends on COMPI=
+LE_TEST'=20
+> to drivers/firmware/efi/Kconfig (did not add CONFIG_X86 because it is
+> set to y by the defconfig from 5.3.2). 'make oldconfig' still provides a
+> prompt for CONFIG_EFI_RCI2_TABLE.=20
+>=20
+> I removed 'depends on COMPILE_TEST' from Kconfig and modified it to
+> include the below change -
+>=20
+>=20
+> config EFI_RCI2_TABLE
+> 	bool=20
+> 	prompt "EFI Runtime Configuration Interface Table Version 2 Support" if =
+COMPILE_TEST
+> 	default n
+> 	help
+>=20
+> Adding the condition to the 'prompt' section seems to have desired
+> result. With this change, 'make oldconfig' did not provide a prompt.=20
+>=20
+> It seems like 'make oldconfig' will provide a prompt to the user if the
+> CONFIG option is new and providing the prompt does not depend on the
+> 'depends on' section. It seems to be dependent on the 'prompt' section.
+>=20
+> Any thoughts ? If the above understanding is correct, I will work to
+> submit a patch with 'prompt' section modified to contain
+>=20
+> prompt "EFI Runtime Configuration Interface Table Version 2 Support" if X=
+86 || COMPILE_TEST
 
-Thanks. My scripts didn't catch it for some reason. Fixed now.
+Geert/Ard,
 
--- Shuah
+I submitted the patch with above approach.=20
+
+--=20
+With regards,
+Narendra K=
