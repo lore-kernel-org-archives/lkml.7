@@ -2,185 +2,156 @@ Return-Path: <SRS0=zem1=X3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 11942C352AA
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 15:08:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B058C35280
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 15:09:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D56E02133F
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 15:08:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570028936;
-	bh=qbPWmyCPvtsnR+1ncID0EgxGK3ePvJHtZflqOCtXPMI=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
-	 From;
-	b=q3GSMGKrVSo3hHlk0xVBu0g0nE4qH+TC25PYqjSiev541irNueGFu4D1lX4eQXUKF
-	 SiYQ/yLRy9PR7m9nPaP04PHIrVJ1CpPi2oAnRPDzPaAbV3xMxJZKoWf7nknGSVMF2t
-	 uDFut7hcuLXmnEwCE4encVPo1B87ad3U8K44O6ns=
+	by mail.kernel.org (Postfix) with ESMTP id 6E54D21920
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 15:09:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=dell.com header.i=@dell.com header.b="aaLEiDcG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728235AbfJBPI4 (ORCPT
+        id S1728274AbfJBPJv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Oct 2019 11:08:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58826 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725766AbfJBPIz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Oct 2019 11:08:55 -0400
-Received: from paulmck-ThinkPad-P72 (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0ED4921920;
-        Wed,  2 Oct 2019 15:08:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570028934;
-        bh=qbPWmyCPvtsnR+1ncID0EgxGK3ePvJHtZflqOCtXPMI=;
-        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-        b=RYBL2yvgV4QC7U/vvBz4qRUTzGLC54uFVBYCOI4yYJI9IF6oXD9c1MXPkM2S99+c9
-         G/GUOkEnsejSoJY+tCHOUOwyYMNSdE4VxszoNv8RI1Gchm5pZ9U2sTx0yzAHYnxax4
-         8mwq2lkgKGKUS8Y39QI5JqNCVW/OBNtVQI7or/1E=
-Date:   Wed, 2 Oct 2019 08:08:52 -0700
-From:   "Paul E. McKenney" <paulmck@kernel.org>
-To:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Cc:     linux-kernel@vger.kernel.org, Dennis Zhou <dennis@kernel.org>,
-        Tejun Heo <tj@kernel.org>, Christoph Lameter <cl@linux.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Peter Zijlstra <peterz@infradead.org>
-Subject: Re: [PATCH] percpu-refcount: Use normal instead of RCU-sched"
-Message-ID: <20191002150852.GB2689@paulmck-ThinkPad-P72>
-Reply-To: paulmck@kernel.org
-References: <20191002112252.ro7wpdylqlrsbamc@linutronix.de>
+        Wed, 2 Oct 2019 11:09:51 -0400
+Received: from mx0a-00154904.pphosted.com ([148.163.133.20]:10708 "EHLO
+        mx0a-00154904.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725766AbfJBPJv (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 2 Oct 2019 11:09:51 -0400
+Received: from pps.filterd (m0170391.ppops.net [127.0.0.1])
+        by mx0a-00154904.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id x92F66Tl012263;
+        Wed, 2 Oct 2019 11:09:50 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=dell.com; h=from : to : cc :
+ subject : date : message-id : references : in-reply-to : content-type :
+ content-transfer-encoding : mime-version; s=smtpout1;
+ bh=sOn88WoOOxEAiUXFVWykYOhOLqPInXGGzmg9K0K8ST8=;
+ b=aaLEiDcG1f5UlZk5jXoe4NyoxFez0DBA2MS1LYYZlO9rDhD5F5/r+6e12aXcbW8z17Rs
+ ySTfJEi4MOvu7rz+HTJXJnzWAd61+KNHE3PnIZiygv3YWVAfP/NF1H2t6b3fJZMS0nK1
+ MpkeIJd7lGHjhy4WEAuxefi9jjqdk/9RQX02bM78pTxN/uNGQEDUUv07PTiWY7WvUGtQ
+ PDG1omgZb5o96sSJmzEZMAUnmzRPd8jSPQxhrtWkBgwZurbzaaA3mmc2F6ZAAJWOx38P
+ 3WRpXU2gThzyIVsSSXPpXqa6Sg9zDB/I76vM9Qi2bx+IXugOSRR/eOjtyQrRIbPZuck/ FA== 
+Received: from mx0b-00154901.pphosted.com (mx0b-00154901.pphosted.com [67.231.157.37])
+        by mx0a-00154904.pphosted.com with ESMTP id 2va2nyugcv-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 02 Oct 2019 11:09:49 -0400
+Received: from pps.filterd (m0089483.ppops.net [127.0.0.1])
+        by mx0b-00154901.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id x92F3Jfg141215;
+        Wed, 2 Oct 2019 11:09:49 -0400
+Received: from ausxippc101.us.dell.com (ausxippc101.us.dell.com [143.166.85.207])
+        by mx0b-00154901.pphosted.com with ESMTP id 2vcp03n1h5-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 02 Oct 2019 11:09:48 -0400
+X-LoopCount0: from 10.166.132.127
+X-PREM-Routing: D-Outbound
+X-IronPort-AV: E=Sophos;i="5.60,346,1549951200"; 
+   d="scan'208";a="1305371468"
+From:   <Mario.Limonciello@dell.com>
+To:     <mika.westerberg@linux.intel.com>
+CC:     <linux-usb@vger.kernel.org>, <andreas.noever@gmail.com>,
+        <michael.jamet@intel.com>, <YehezkelShB@gmail.com>,
+        <rajmohan.mani@intel.com>,
+        <nicholas.johnson-opensource@outlook.com.au>, <lukas@wunner.de>,
+        <gregkh@linuxfoundation.org>, <stern@rowland.harvard.edu>,
+        <anthony.wong@canonical.com>, <linux-kernel@vger.kernel.org>
+Subject: RE: [RFC PATCH 17/22] thunderbolt: Add initial support for USB4
+Thread-Topic: [RFC PATCH 17/22] thunderbolt: Add initial support for USB4
+Thread-Index: AQHVeEzShOhklesInk+gx9St4A7986dGAqiggAATYiCAAUbqgIAAF+Aw
+Date:   Wed, 2 Oct 2019 15:09:46 +0000
+Message-ID: <767f2f97059e4e9f861080672aaa18d3@AUSX13MPC105.AMER.DELL.COM>
+References: <20191001113830.13028-1-mika.westerberg@linux.intel.com>
+ <20191001113830.13028-18-mika.westerberg@linux.intel.com>
+ <184c95fc476146939b240557e54ee2c9@AUSX13MPC105.AMER.DELL.COM>
+ <5357cb96013445d79f5c2016df8a194e@AUSX13MPC105.AMER.DELL.COM>
+ <20191002083913.GG2714@lahna.fi.intel.com>
+In-Reply-To: <20191002083913.GG2714@lahna.fi.intel.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+msip_labels: MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_Enabled=True;
+ MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_SiteId=945c199a-83a2-4e80-9f8c-5a91be5752dd;
+ MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_Owner=Mario_Limonciello@Dell.com;
+ MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_SetDate=2019-10-02T15:09:45.1313028Z;
+ MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_Name=External Public;
+ MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_Application=Microsoft Azure
+ Information Protection;
+ MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_Extended_MSFT_Method=Manual;
+ aiplabel=External Public
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.143.18.86]
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20191002112252.ro7wpdylqlrsbamc@linutronix.de>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,1.0.8
+ definitions=2019-10-02_07:2019-10-01,2019-10-02 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 suspectscore=0
+ priorityscore=1501 impostorscore=0 lowpriorityscore=0 mlxlogscore=999
+ mlxscore=0 spamscore=0 phishscore=0 clxscore=1015 adultscore=0 bulkscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-1908290000
+ definitions=main-1910020139
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 lowpriorityscore=0
+ mlxscore=0 phishscore=0 mlxlogscore=999 priorityscore=1501 impostorscore=0
+ bulkscore=0 spamscore=0 malwarescore=0 clxscore=1015 suspectscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-1908290000
+ definitions=main-1910020139
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Oct 02, 2019 at 01:22:53PM +0200, Sebastian Andrzej Siewior wrote:
-> This is a revert of commit
->    a4244454df129 ("percpu-refcount: use RCU-sched insted of normal RCU")
-> 
-> which claims the only reason for using RCU-sched is
->    "rcu_read_[un]lock() … are slightly more expensive than preempt_disable/enable()"
-> 
-> and
->     "As the RCU critical sections are extremely short, using sched-RCU
->     shouldn't have any latency implications."
-> 
-> The problem with using RCU-sched here is that it disables preemption and
-> the callback must not acquire any sleeping locks like spinlock_t on
-> PREEMPT_RT which is the case with some of the users.
+> -----Original Message-----
+> From: Mika Westerberg <mika.westerberg@linux.intel.com>
+> Sent: Wednesday, October 2, 2019 3:39 AM
+> To: Limonciello, Mario
+> Cc: linux-usb@vger.kernel.org; andreas.noever@gmail.com;
+> michael.jamet@intel.com; YehezkelShB@gmail.com; rajmohan.mani@intel.com;
+> nicholas.johnson-opensource@outlook.com.au; lukas@wunner.de;
+> gregkh@linuxfoundation.org; stern@rowland.harvard.edu;
+> anthony.wong@canonical.com; linux-kernel@vger.kernel.org
+> Subject: Re: [RFC PATCH 17/22] thunderbolt: Add initial support for USB4
+>=20
+>=20
+> [EXTERNAL EMAIL]
+>=20
+> On Tue, Oct 01, 2019 at 06:14:23PM +0000, Mario.Limonciello@dell.com wrot=
+e:
+> > One more thought; would you consider exporting to sysfs sw-
+> >config.vendor_id?
+> > Maybe an attribute that is switch_vendor?
+> >
+> > Userland fwupd also does validation on the NVM and will need to follow =
+this.
+> > The same check will go into fwupd to match the vendor and lack of
+> nvm_non_active0
+> > to mark the device as not updatable.  When the checks in the kernel get
+> relaxed,
+> > some NVM parsing will have to make it over to fwupd too to relax the ch=
+eck at
+> that point.
+>=20
+> The original idea was that the kernel does the basic validation and
+> userspace then does more complex checks. Currently you can compare the
+> two NVM images (active one and the new) and find that information there.
+> I think fwupd is doing just that already. Is that not enough?
 
-Looks good in general, but changing to RCU-preempt does not change the
-fact that the callbacks execute with bh disabled.  There is a newish
-queue_rcu_work() that invokes a workqueue handler after a grace period.
+I guess for fwupd we can do this without the extra attribute:
 
-Or am I missing your point here?
+1) If no NVM files or nvm_version: means unsupported vendor -show that mess=
+aging somewhere.
+This means kernel doesn't know the vendor.
 
-							Thanx, Paul
+2) If NVM file and nvm_version: means kernel knows it
+*fwupd checks the vendor offset for intel.
+-> intel: good, proceed
+->something else: fwupd needs to learn the format for the new vendor, show =
+messaging
 
-> Using rcu_read_lock() on PREEMPTION=n kernels is not any different
-> compared to rcu_read_lock_sched(). On PREEMPTION=y kernels there are
-> already performance issues due to additional preemption points.
-> Looking at the code, the rcu_read_lock() is just an increment and unlock
-> is almost just a decrement unless there is something special to do. Both
-> are functions while disabling preemption is inlined.
-> Doing a small benchmark, the minimal amount of time required was mostly
-> the same. The average time required was higher due to the higher MAX
-> value (which could be preemption). With DEBUG_PREEMPT=y it is
-> rcu_read_lock_sched() that takes a little longer due to the additional
-> debug code.
-> 
-> Convert back to normal RCU.
-> 
-> Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-> ---
-> 
-> Benchmark https://breakpoint.cc/percpu_test.patch
-> 
->  include/linux/percpu-refcount.h | 16 ++++++++--------
->  1 file changed, 8 insertions(+), 8 deletions(-)
-> 
-> diff --git a/include/linux/percpu-refcount.h b/include/linux/percpu-refcount.h
-> index 7aef0abc194a2..390031e816dcd 100644
-> --- a/include/linux/percpu-refcount.h
-> +++ b/include/linux/percpu-refcount.h
-> @@ -186,14 +186,14 @@ static inline void percpu_ref_get_many(struct percpu_ref *ref, unsigned long nr)
->  {
->  	unsigned long __percpu *percpu_count;
->  
-> -	rcu_read_lock_sched();
-> +	rcu_read_lock();
->  
->  	if (__ref_is_percpu(ref, &percpu_count))
->  		this_cpu_add(*percpu_count, nr);
->  	else
->  		atomic_long_add(nr, &ref->count);
->  
-> -	rcu_read_unlock_sched();
-> +	rcu_read_unlock();
->  }
->  
->  /**
-> @@ -223,7 +223,7 @@ static inline bool percpu_ref_tryget(struct percpu_ref *ref)
->  	unsigned long __percpu *percpu_count;
->  	bool ret;
->  
-> -	rcu_read_lock_sched();
-> +	rcu_read_lock();
->  
->  	if (__ref_is_percpu(ref, &percpu_count)) {
->  		this_cpu_inc(*percpu_count);
-> @@ -232,7 +232,7 @@ static inline bool percpu_ref_tryget(struct percpu_ref *ref)
->  		ret = atomic_long_inc_not_zero(&ref->count);
->  	}
->  
-> -	rcu_read_unlock_sched();
-> +	rcu_read_unlock();
->  
->  	return ret;
->  }
-> @@ -257,7 +257,7 @@ static inline bool percpu_ref_tryget_live(struct percpu_ref *ref)
->  	unsigned long __percpu *percpu_count;
->  	bool ret = false;
->  
-> -	rcu_read_lock_sched();
-> +	rcu_read_lock();
->  
->  	if (__ref_is_percpu(ref, &percpu_count)) {
->  		this_cpu_inc(*percpu_count);
-> @@ -266,7 +266,7 @@ static inline bool percpu_ref_tryget_live(struct percpu_ref *ref)
->  		ret = atomic_long_inc_not_zero(&ref->count);
->  	}
->  
-> -	rcu_read_unlock_sched();
-> +	rcu_read_unlock();
->  
->  	return ret;
->  }
-> @@ -285,14 +285,14 @@ static inline void percpu_ref_put_many(struct percpu_ref *ref, unsigned long nr)
->  {
->  	unsigned long __percpu *percpu_count;
->  
-> -	rcu_read_lock_sched();
-> +	rcu_read_lock();
->  
->  	if (__ref_is_percpu(ref, &percpu_count))
->  		this_cpu_sub(*percpu_count, nr);
->  	else if (unlikely(atomic_long_sub_and_test(nr, &ref->count)))
->  		ref->release(ref);
->  
-> -	rcu_read_unlock_sched();
-> +	rcu_read_unlock();
->  }
->  
->  /**
-> -- 
-> 2.23.0
-> 
+There is the unlikely case that kernel knows new vendor format and vendor N=
+VM happened to have
+same value as Intel vendor ID in same location of Intel NVM but another mea=
+ning.
+Hopefully that doesn't happen :)
