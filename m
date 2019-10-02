@@ -8,53 +8,54 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF741C352AA
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 00:37:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DDA6ECE587
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 00:37:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 933A0218DE
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 00:37:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3480920842
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 00:37:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Wrn2n5OR"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FUF/hhM/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727684AbfJBAhf (ORCPT
+        id S1728168AbfJBAhi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Oct 2019 20:37:35 -0400
-Received: from mail-io1-f65.google.com ([209.85.166.65]:34409 "EHLO
-        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727190AbfJBAhe (ORCPT
+        Tue, 1 Oct 2019 20:37:38 -0400
+Received: from mail-io1-f66.google.com ([209.85.166.66]:38196 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727190AbfJBAhh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Oct 2019 20:37:34 -0400
-Received: by mail-io1-f65.google.com with SMTP id q1so52938381ion.1;
-        Tue, 01 Oct 2019 17:37:34 -0700 (PDT)
+        Tue, 1 Oct 2019 20:37:37 -0400
+Received: by mail-io1-f66.google.com with SMTP id u8so52867639iom.5;
+        Tue, 01 Oct 2019 17:37:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
         bh=jcliF93zjSpaTafpPEiTUMAs8EwGUjS9FawXIfHTmOk=;
-        b=Wrn2n5OReD+a85dWS1z7k055rb5DZ8+oHi3v3I8tzx3TblLi/iebka8KYugxSfKaFh
-         lbfEX5veNkmxm81GjQr3aZAm6qrHhm45WPJEuTHcjnqIKe2T0peL14H3fvJiTzwc/704
-         8nA6VV6rtsQAhwcUtN2hJ8srdCKtr7/EYOoEn8HtJmBVafwqmjLt4e5OztHBPRZqfZAD
-         utGaV3q/2zuwHn/9ZMfABfAgMj2ksstLKbCifueWL5Chx3u0ygwisbW6GKdOncQzvKbV
-         vAI8j7vGrALYNdhZAf8Su69kjNhHrVQNyrh6dBM4avxg/MfuSqs7opuDqPP/NaQVTaNM
-         89BA==
+        b=FUF/hhM/vBnKabjpTYNNJuImvyEzWBVpTfaLzBpXWRSHTbAb5wZkSeRPMfK6OpEVmx
+         IOIRahBGB50RIUu6TBi49FNNwcHRR/Ve53r5c/4LZnBqcpYqqkflyECXpVX+H//XOzzM
+         YFUwYGvWvl5hUlb3gveV9qW2kBzhz2XE69E60fYsgGBEufYPRC0cO6XiUEfm6FVLQvIe
+         nqPfP0eWYF+d9lSu3eXkO3ZGz+SSrn96ZYoU6ymh/RnKOVQhsbC5vZHnv1QtDgDHvymb
+         3w6+ht2tVd5Z+oD+vavuAyoOKkhY8U9cFMkFdCruDN1VfRJH3HLJ7JLhrRFWjtwjrpnO
+         m7fQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
         bh=jcliF93zjSpaTafpPEiTUMAs8EwGUjS9FawXIfHTmOk=;
-        b=LEwb5aYe2A1WlCmcevH48NX3b9OjWJLMcI2hHhERmWF6LhokZNVbDV53S98qf/Luti
-         VzzLEGe9PQFhq06OdAwdIOFTCU3X+DVGykBMRicPOEg8vTWTPgAQ8LwviagJvsLKz1R2
-         YzEbEbCe3tFRRdCmiBCaBWmQ1S+QNR+uLiTvHlktrjKZlWlnRCfTuM712o/ll60hPKkl
-         VaX8j8uZqnfFpG1NsnE9TRra89qm86X3n9urC73ntTFdWzpwSXtubpmNm3Co8bmZkm/R
-         91dJffPNJBUDZd6F8zQ8Y3otPookB70VHebbe7jxF6Kq3Klx5ObPLKiqr1ugF7K3QAcZ
-         exWg==
-X-Gm-Message-State: APjAAAUgQtJtIAIOyTKJAOrS+UMQ/8PuuCQaxiBHjxWAgiZn9xxGeNry
-        55HAKZ4I/fK/6lSVDJiIKBU=
-X-Google-Smtp-Source: APXvYqxKW2GcgOaxeK5224SHDsGkHzbQJTQX93RjK75sn/scNHmOLmbaQwd1RmNm9DzZM5chvQMwmw==
-X-Received: by 2002:a6b:2b91:: with SMTP id r139mr996811ior.293.1569976653514;
-        Tue, 01 Oct 2019 17:37:33 -0700 (PDT)
+        b=YN7yb65HA+RiPtO+yuBzZKFUJru8XnaTtqer1wXS2mBL2UwNvLYFz8//3B7rPcBAoQ
+         Br/9EpCbu1DYXOUiciQMopIRTOEWYN7qZs+lfnHO0GhE65LYqX0tlUkzbrGXfJT3cyNp
+         LgzMGMo8F8i82iBNejIOwtSzHh/qKaMUgwTfPq3ElnYurodN2j+6wpMHNAEQGwdRRf4e
+         kniiTHoxCKuNyxu6OtLyHx3NEA1FD0DFUeqlQXjciok34LTx7lvZCJk1dTzdzDE0PQjn
+         mdjT/PvmOsViRZP2T3FiD1Xx+4i93vTViJ1nOBld3hXXxcjWCO6gWZvH4wk77QLBYfH1
+         4S+A==
+X-Gm-Message-State: APjAAAUokgUD5XXtMYqRy7wnGFxBi/efRx0GRiUHCSVaE6O+bjZAIFSr
+        DC3YH363W2rRGSziPp7XnPY=
+X-Google-Smtp-Source: APXvYqy+o3Crh5rKBMJbTtqAeWBE/QuO5VO0Lz6XDvh5VdH4ptgIDSyIgrcPEVz5wsdhEWSpK95zjQ==
+X-Received: by 2002:a92:b09:: with SMTP id b9mr997054ilf.122.1569976655713;
+        Tue, 01 Oct 2019 17:37:35 -0700 (PDT)
 Received: from localhost.localdomain (c-73-37-219-234.hsd1.mn.comcast.net. [73.37.219.234])
-        by smtp.gmail.com with ESMTPSA id v69sm8149604ila.6.2019.10.01.17.37.31
+        by smtp.gmail.com with ESMTPSA id v69sm8149604ila.6.2019.10.01.17.37.33
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 01 Oct 2019 17:37:32 -0700 (PDT)
+        Tue, 01 Oct 2019 17:37:34 -0700 (PDT)
 From:   Adam Ford <aford173@gmail.com>
 To:     linux-arm-kernel@lists.infradead.org
 Cc:     adam.ford@logicpd.com, shawnguo@kernel.org,
@@ -67,9 +68,11 @@ Cc:     adam.ford@logicpd.com, shawnguo@kernel.org,
         NXP Linux Team <linux-imx@nxp.com>,
         devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 Subject: [PATCH] ARM: dts: imx6q-logicpd: Fix 3.3V regulator on SDHC1
-Date:   Tue,  1 Oct 2019 19:37:12 -0500
-Message-Id: <20191002003713.21332-1-aford173@gmail.com>
+Date:   Tue,  1 Oct 2019 19:37:13 -0500
+Message-Id: <20191002003713.21332-2-aford173@gmail.com>
 X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20191002003713.21332-1-aford173@gmail.com>
+References: <20191002003713.21332-1-aford173@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
