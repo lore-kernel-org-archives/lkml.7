@@ -2,122 +2,162 @@ Return-Path: <SRS0=zem1=X3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4B04C4360C
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 21:52:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0540AC4360C
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 21:54:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 70B03222BE
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 21:52:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CAE9C2086A
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 21:54:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CO8EOQJR"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Bt3VWZmA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727451AbfJBVwz (ORCPT
+        id S1727592AbfJBVyC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Oct 2019 17:52:55 -0400
-Received: from mail-io1-f66.google.com ([209.85.166.66]:37654 "EHLO
-        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726081AbfJBVwz (ORCPT
+        Wed, 2 Oct 2019 17:54:02 -0400
+Received: from mail-qk1-f195.google.com ([209.85.222.195]:33722 "EHLO
+        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725928AbfJBVyB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Oct 2019 17:52:55 -0400
-Received: by mail-io1-f66.google.com with SMTP id b19so880256iob.4;
-        Wed, 02 Oct 2019 14:52:53 -0700 (PDT)
+        Wed, 2 Oct 2019 17:54:01 -0400
+Received: by mail-qk1-f195.google.com with SMTP id x134so328939qkb.0;
+        Wed, 02 Oct 2019 14:53:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=0FH/Ql1YZ9Zx9Hb5RkkVkUiTPlW6ZQ9p6QOTNzXQQDY=;
-        b=CO8EOQJRXhdRs0jPpcPQytkdOJC3fm/d3QrojFtX8YXONsarhEHAEdhuFTmktztaiQ
-         2ha9qeSqDiucfqJ5fQ7L+35KzoxZp0uqGeYKCVApTr62uzUUe1oceXQwqNKSQCKyiOwn
-         277tbtvXwGnJVRdAmHZDC4cbf4D8gRuDO+u1M2jh+aAMbsg405zAQ5C2cKLArwIZjBMR
-         3puCssidxOzc827J8yTudVDFzE63bVi3l1dq3JBDnSYwvCLgtxqb42kF7NOYI6MnjO6/
-         uL/v50PqcHxpWW/RQUXuoYHLaaB+b1A5cbT8Y8+DPfb7ZpX/LxbDxLJ94K8QJH5aIBr/
-         KMNA==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=rzOcwXLPCPxOer2OQybfy1++8uKi5OM6q5fIBGrbztg=;
+        b=Bt3VWZmADHxaTGyi0q/esRUsSbOo55sfH7wTfotYnV+6N73XFIXvn3VSvg7sPPBXyV
+         LB8j5V7u3aKyMKTLhyW7LqfSUoAqrFuS4caTEqMFe7rvD6cM0T91cwqW7aDCu3LB/VBp
+         GiIiM7AmZk1sdo4jFj+5OXhW8e72L3QKg0uYhJN5gKH5w5QY/klGOKpAjEIEwZfJWS2D
+         wdiCqYZWUt45PQULbfvpI9uFVioZORPVi0sv/9b/jiFZK+vCgypwBOIK1Hql+WDLRatx
+         /8YRVZ4A3ExpLU1KzXwLNYFee0dRPQIIam09qzqcyC3Uep3hLnEULmhZA0wDlVStOEZW
+         b6SA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=0FH/Ql1YZ9Zx9Hb5RkkVkUiTPlW6ZQ9p6QOTNzXQQDY=;
-        b=PabK/18us4EnzvRZynQEmdpZbxbUyrl5SaNLrfs3bP48UfZSQX0LfQJM12ywscRX4/
-         j+B8A6UGP+zW9bXu676SMyAnRxD6dLvI0zxkvCGempD+WaQ4RSVw8tzbCwwkXBsspxXw
-         9R+D35tLzRuQLJnONT6syLie3z1U556sVbT4gwa/oqatK3tvxv0dt3CN2nb9QYUm9TWS
-         zmuQTFNpQuM0jhMRk5bnT6LsAslKVZ2YbeKiiHNk5kZS09JSvCBLMU4bzQmEh//hEE1q
-         vlWJm8Y99PevJGN72tIDtq9ycZngrw+LZEOL21mEqrDkE+y2L06WZ43pA1wtMyzcwXUY
-         gIbQ==
-X-Gm-Message-State: APjAAAV712pckrvKxeHR00bSzKrlPgCm5TjoceMwL7er9UKA6Xe0kVct
-        Y4eh8z9A2Xrs+vW+WgX7wrM=
-X-Google-Smtp-Source: APXvYqyhyHMRd4OeekOxCoS3Urza6Pc4ZzekQO9DQN2uPvUqIeh31x7k9cTvE7eXYshmJ+MSy5S8PA==
-X-Received: by 2002:a92:5bc4:: with SMTP id c65mr6396088ilg.90.1570053173101;
-        Wed, 02 Oct 2019 14:52:53 -0700 (PDT)
-Received: from cs-dulles.cs.umn.edu (cs-dulles.cs.umn.edu. [128.101.35.54])
-        by smtp.googlemail.com with ESMTPSA id v3sm192370ioh.51.2019.10.02.14.52.51
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 02 Oct 2019 14:52:52 -0700 (PDT)
-From:   Navid Emamdoost <navid.emamdoost@gmail.com>
-To:     dsterba@suse.cz
-Cc:     emamd001@umn.edu, smccaman@umn.edu, kjlu@umn.edu,
-        Navid Emamdoost <navid.emamdoost@gmail.com>,
-        David Sterba <dsterba@suse.com>,
-        Jeff Layton <jlayton@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Deepa Dinamani <deepa.kernel@gmail.com>,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v3] fs: affs: fix a memory leak in affs_remount
-Date:   Wed,  2 Oct 2019 16:52:37 -0500
-Message-Id: <20191002215242.14317-1-navid.emamdoost@gmail.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20191002092221.GJ2751@suse.cz>
-References: <20191002092221.GJ2751@suse.cz>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=rzOcwXLPCPxOer2OQybfy1++8uKi5OM6q5fIBGrbztg=;
+        b=PN815pF20f92v3h9rEIkshbFX1jHhx0Q52xHQSN5N4547nnMxHcY3jWsRNH8GsYGCL
+         nY/Mn0WExDVKBVTL1KYR/2icoKiafH/Lz3oO3oaVYr9uu3UdggA3KMIKzwxoQZWC+nnc
+         lVMoE++WjdTWNOxyvX55Ar2qciq8Aku6xW4qO2FSPBwEQhCgD0intF29dLCLEWDIK1xj
+         IKxb3bzpijTRlcl++DENH5cPHddJHAz6TxUx0t9qJWGayY02CrY9r9JkmtgSiOBBMwvg
+         f7t0vowQp9z/zPzc2P5gXPnnuqZKqkNA6xzZPonPlM1x/czLUCx7K77Wk2fou51OD14O
+         /8LQ==
+X-Gm-Message-State: APjAAAVop0aw8bvcSJwniCdAtu7p7r+l/a1OTVRKEBWFAomDzlWvy29s
+        GMSKXTEnIxNkvtFymTr0vo5/f+oVaNu6Z0UrmH8=
+X-Google-Smtp-Source: APXvYqyOF3z/DzRmunXZYetxTarAMDAqZvSiQ4zdVcvUxuWIyXYpouY4xADzvDjznsZXL/rHW1cH62TG+AVddAUteU4=
+X-Received: by 2002:a37:9fcd:: with SMTP id i196mr1165959qke.92.1570053238615;
+ Wed, 02 Oct 2019 14:53:58 -0700 (PDT)
+MIME-Version: 1.0
+References: <20191001173728.149786-1-brianvv@google.com> <20191001173728.149786-3-brianvv@google.com>
+ <CAEf4BzYxs6Ace8s64ML3pA9H4y0vgdWv_vDF57oy3i-O_G7c-g@mail.gmail.com>
+ <CABCgpaWbPN+2vSNdynHtmDxrgGbyzHa_D-y4-X8hLrQYbhTx=A@mail.gmail.com>
+ <20191002085553.GA6226@pc-66.home> <CAEf4BzZAywR2g4bRu8Bs-YJxzf64GTrR7NvgOaXG2fqaKiJpSQ@mail.gmail.com>
+ <20191002215051.GB9196@pc-66.home>
+In-Reply-To: <20191002215051.GB9196@pc-66.home>
+From:   Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Date:   Wed, 2 Oct 2019 14:53:47 -0700
+Message-ID: <CAEf4BzaftLAc1xv5yiRE2J6MLy_FF4g6_dqExTiPjs6ZDX6e=w@mail.gmail.com>
+Subject: Re: [PATCH bpf 2/2] selftests/bpf: test_progs: don't leak server_fd
+ in test_sockopt_inherit
+To:     Daniel Borkmann <daniel@iogearbox.net>
+Cc:     Brian Vazquez <brianvv.kernel@gmail.com>,
+        Brian Vazquez <brianvv@google.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        "David S . Miller" <davem@davemloft.net>,
+        Stanislav Fomichev <sdf@google.com>,
+        open list <linux-kernel@vger.kernel.org>,
+        Networking <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In affs_remount if data is provided it is duplicated into new_opts.
-The allocated memory for new_opts is only released if pare_options fail.
-But the variable is not used anywhere. So the new_opts should be
-removed.
+On Wed, Oct 2, 2019 at 2:51 PM Daniel Borkmann <daniel@iogearbox.net> wrote:
+>
+> On Wed, Oct 02, 2019 at 01:30:14PM -0700, Andrii Nakryiko wrote:
+> > On Wed, Oct 2, 2019 at 1:56 AM Daniel Borkmann <daniel@iogearbox.net> wrote:
+> > > On Tue, Oct 01, 2019 at 08:42:30PM -0700, Brian Vazquez wrote:
+> > > > Thanks for reviewing the patches Andrii!
+> > > >
+> > > > Although Daniel fixed them and applied them correctly.
+> > >
+> > > After last kernel/maintainer summit at LPC, I reworked all my patchwork scripts [0]
+> > > which I use for bpf trees in order to further reduce manual work and add more sanity
+> > > checks at the same time. Therefore, the broken Fixes: tag was a good test-case. ;-)
+> >
+> > Do you scripts also capitalize first word after libbpf: prefix? Is
+> > that intentional? Is that a recommended subject casing:
+> >
+> > "libbpf: Do awesome stuff" vs "libbpf: do awesome stuff"?
+>
+> Right now we have a bit of a mix on that regard, and basically what the
+> pw-apply script from [0] is doing, is the following to provide some more
+> context:
+>
+> - Pulls the series mbox specified by series id from patchwork, dumps all
+>   necessary information about the series, e.g. whether it's complete and
+>   all patches are present, etc.
+> - Pushes the mbox through mb2q which is a script that x86 maintainers and
+>   few others use for their patch management and spills out a new mbox.
+>   This is effectively 'normalizing' the patches from the mbox to bring in
+>   some more consistency, meaning it adds Link: tags to every patch based
+>   on the message id and checks whether the necessary mailing list aka
+>   bpf was in Cc, so we always have lore BPF archive links, sorts tags so
+>   they all have a consistent order, it allows to propagate Acked-by,
+>   Reviewed-by, Tested-by tags from cover letter into the individual
+>   patches, it also capitalizes the first word after the subsystem prefix.
+> - It applies and merges the resulting mbox, and performs additional checks
+>   for the newly added commit range, that is, it checks whether Fixes tags
+>   are correctly formatted, whether the commit exists at all in the tree or
+>   whether subject / sha is wrong, and throws warnings to me so I can fix
+>   them up if needed or toss out the series again worst case, as well as
+>   checks whether SOB from the patch authors is present and matches their
+>   name.
+> - It allows to set the patches from the series into accepted state in
+>   patchwork.
+>
+> So overall less manual work / checks than what used to be before while
+> improving / ensuring more consistency in the commits at the same time.
+> If you have further suggestions / improvements / patches to pw.git,
+> happy to hear. :)
+>
 
-Fixes: c8f33d0bec99 ("affs: kstrdup() memory handling")
-Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
----
-Changes in v2:
-	-- fix typo
-Changes in v3:
-	-- remove the call to kstrdup, as new_opts is not used anymore.
----
- fs/affs/super.c | 5 -----
- 1 file changed, 5 deletions(-)
+"libbpf: Captilized subj" looks weird, but I can live with that. I'll
+post subsequent patches with that casing. I'm glad a lot of that stuff
+is semi-automated, it's terrible to have to always check all that
+manually :)
 
-diff --git a/fs/affs/super.c b/fs/affs/super.c
-index cc463ae47c12..b6c6080d186c 100644
---- a/fs/affs/super.c
-+++ b/fs/affs/super.c
-@@ -565,10 +565,6 @@ affs_remount(struct super_block *sb, int *flags, char *data)
- 	char			 volume[32];
- 	char			*prefix = NULL;
- 
--	new_opts = kstrdup(data, GFP_KERNEL);
--	if (data && !new_opts)
--		return -ENOMEM;
--
- 	pr_debug("%s(flags=0x%x,opts=\"%s\")\n", __func__, *flags, data);
- 
- 	sync_filesystem(sb);
-@@ -579,7 +575,6 @@ affs_remount(struct super_block *sb, int *flags, char *data)
- 			   &blocksize, &prefix, volume,
- 			   &mount_flags)) {
- 		kfree(prefix);
--		kfree(new_opts);
- 		return -EINVAL;
- 	}
- 
--- 
-2.17.1
-
+> Thanks,
+> Daniel
+>
+> > >   [0] https://git.kernel.org/pub/scm/linux/kernel/git/dborkman/pw.git/
+> > >
+> > > > On Tue, Oct 1, 2019 at 8:20 PM Andrii Nakryiko
+> > > > <andrii.nakryiko@gmail.com> wrote:
+> > > > >
+> > > > > On Tue, Oct 1, 2019 at 10:40 AM Brian Vazquez <brianvv@google.com> wrote:
+> > > > > >
+> > > > >
+> > > > > I don't think there is a need to add "test_progs:" to subject, "
+> > > > > test_sockopt_inherit" is specific enough ;)
+> > > > >
+> > > > > > server_fd needs to be close if pthread can't be created.
+> > > > >
+> > > > > typo: closed
+> > > > >
+> > > > > > Fixes: e3e02e1d9c24 ("selftests/bpf: test_progs: convert test_sockopt_inherit")
+> > > > > > Cc: Stanislav Fomichev <sdf@google.com>
+> > > > > > Signed-off-by: Brian Vazquez <brianvv@google.com>
+> > > > > > ---
+> > > > >
+> > > > > Acked-by: Andrii Nakryiko <andriin@fb.com>
+> > > > >
+> > > > > >  tools/testing/selftests/bpf/prog_tests/sockopt_inherit.c | 2 +-
+> > > > > >  1 file changed, 1 insertion(+), 1 deletion(-)
