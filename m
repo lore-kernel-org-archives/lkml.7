@@ -2,151 +2,82 @@ Return-Path: <SRS0=zem1=X3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 66FD5ECE58A
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 18:52:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F9C8C10F14
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 18:53:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 451C521D82
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 18:52:38 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="TpyYBW2h"
+	by mail.kernel.org (Postfix) with ESMTP id 840AC21D82
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 18:53:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728918AbfJBSwh (ORCPT
+        id S1728968AbfJBSxd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Oct 2019 14:52:37 -0400
-Received: from mail-ed1-f66.google.com ([209.85.208.66]:45254 "EHLO
-        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726708AbfJBSwh (ORCPT
+        Wed, 2 Oct 2019 14:53:33 -0400
+Received: from mail-qt1-f195.google.com ([209.85.160.195]:42236 "EHLO
+        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728000AbfJBSxd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Oct 2019 14:52:37 -0400
-Received: by mail-ed1-f66.google.com with SMTP id h33so75649edh.12
-        for <linux-kernel@vger.kernel.org>; Wed, 02 Oct 2019 11:52:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=yVl3DvwCADMp64mcvKATV/e92AOrRf7vvTQmwDnOrvk=;
-        b=TpyYBW2hiIXk1ZFCht2y3HJcPbCcRo2CDLEfs0/Sn6IRUDFDzcztEQ5+OP3uhfds3p
-         HISNhssIt/0eInvtS1j1l6xoQDFrD9bOvfNWs6uSmd5j9jULKw+LfxVH7cawMse67ooU
-         4/LWsuWbBUEhe3ALND6duir5F1uMOa9p92Dn0=
+        Wed, 2 Oct 2019 14:53:33 -0400
+Received: by mail-qt1-f195.google.com with SMTP id w14so12397qto.9
+        for <linux-kernel@vger.kernel.org>; Wed, 02 Oct 2019 11:53:32 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=yVl3DvwCADMp64mcvKATV/e92AOrRf7vvTQmwDnOrvk=;
-        b=d46qgxsLSdFw/wXPYXfLf+92ptNwQwXozstluvD6262siLrMGbk8bPqOM7YswbFSRw
-         BIqtu6hJWW5LkeCQvyBMsO6SV/AzSaSsV3E6Mdak7Rwa0DEzOSJgFkBEpWPXfQJT7geW
-         95pV01Jj64AY5VacDxGd7ft20swaES4OYGvXyP9PzLEIPebHHubyiSaoOYeavAY/Mjyi
-         AhNxeTWv3Y+Jqerj0dROZXcE3usmo/EYS5/klGGlatUx2OsFd8NK4CHam0hK+oYxjH7b
-         TwtNOzwyJBu0tPowtowSz1T3I4oiPjbajRU5AogKsRs3LH3hXz/hxwUi1y8gN0t2BJHV
-         FTLg==
-X-Gm-Message-State: APjAAAUcnRPrjg3ixxE07KdiVYsoDb3Z+9+yp5hvSnbLnC5uR3JGw26R
-        s/U8O96WO+HCNvdlX7XxvcOfgQ==
-X-Google-Smtp-Source: APXvYqy4nAcB23b6wdIF3ZqiDW0mlD3bK7ADCQW7GZ2ZJE4qpYFJuX+RzPLqxNkLw/iuPYQ1CM6/6Q==
-X-Received: by 2002:a17:906:2ccc:: with SMTP id r12mr4383114ejr.219.1570042355474;
-        Wed, 02 Oct 2019 11:52:35 -0700 (PDT)
-Received: from chromium.org (77-56-209-237.dclient.hispeed.ch. [77.56.209.237])
-        by smtp.gmail.com with ESMTPSA id os27sm2352181ejb.18.2019.10.02.11.52.34
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 02 Oct 2019 11:52:34 -0700 (PDT)
-From:   KP Singh <kpsingh@chromium.org>
-X-Google-Original-From: KP Singh <kpsingh>
-Date:   Wed, 2 Oct 2019 20:52:33 +0200
-To:     Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Cc:     linux-kernel@vger.kernel.org, bpf@vger.kernel.org,
-        Florent Revest <revest@google.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        Florent Revest <revest@chromium.org>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: Re: [PATCH] samples/bpf: Fix broken samples.
-Message-ID: <20191002185233.GA3650@chromium.org>
-References: <20191002174632.28610-1-kpsingh@chromium.org>
- <20191002184506.iauttcpgyzcplope@ast-mbp.dhcp.thefacebook.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=OgMn8hpZTEDtXKP05G/wCdRDIlvQDI9VA80s3qnQFrQ=;
+        b=bUZDb3W8+XUWTBN6BdUdPZGJSsOi/WfDyiPxtWNOF9SjccoYCybT71UtGBSdnzoHdh
+         vBQkx0LmwHCEStXdQ3YD/KSwMXEyGPt5ncX2gvT0W8h6nfQhs3HwMgk1we1NFq7miz83
+         HRS1DRA7ZVd7mkJfD/yi/6YVNvhmtWla3X3Qims7xeUAyGlQ4qU92SEt9jjVllNCzRIE
+         Pu2qpXnxRZWJO8gufmxeHrTNvHbOUrOckgz71Qt6W+Vt3LDt00cYhZ3FPIeqZFGnrswS
+         4LdVgowA/+iiDdq1+PIDiFrGsJFQyR8PchkAcFARqQsyRseP8ViPwG5j+vpxF1Si7P8F
+         eFVg==
+X-Gm-Message-State: APjAAAV9IkqtY0RIPripVIjfaF/ZuFGpKq7GKRCksbBqY2B7IqgfuCHm
+        TkpBmGnY96wZEL6Ook/nJLU2g11LJMli00UcRlk=
+X-Google-Smtp-Source: APXvYqxAl+Rxh2NCLtdzmTkMG+IYTvU3DliWCdDujCeb72QNPVpAcUeZwzPLzn0JfNoMiKtrgiWXhaCj8wvWNzjbU3s=
+X-Received: by 2002:ac8:1a2e:: with SMTP id v43mr5699655qtj.204.1570042412182;
+ Wed, 02 Oct 2019 11:53:32 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191002184506.iauttcpgyzcplope@ast-mbp.dhcp.thefacebook.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20191002120136.1777161-1-arnd@arndb.de> <CADnq5_MLg=J5dmSGzx8jC=1--d2S3HJzWH3EHhyzT6da5a3wcA@mail.gmail.com>
+In-Reply-To: <CADnq5_MLg=J5dmSGzx8jC=1--d2S3HJzWH3EHhyzT6da5a3wcA@mail.gmail.com>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Wed, 2 Oct 2019 20:53:16 +0200
+Message-ID: <CAK8P3a33yAirHFnZq5GCSJFDM3dpub6vTMyTdpnV429WsP5Eyg@mail.gmail.com>
+Subject: Re: [PATCH 0/6] amdgpu build fixes
+To:     Alex Deucher <alexdeucher@gmail.com>
+Cc:     Alex Deucher <alexander.deucher@amd.com>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        Maling list - DRI developers 
+        <dri-devel@lists.freedesktop.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        amd-gfx list <amd-gfx@lists.freedesktop.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 02-Okt 11:45, Alexei Starovoitov wrote:
-> On Wed, Oct 02, 2019 at 07:46:32PM +0200, KP Singh wrote:
-> > From: KP Singh <kpsingh@google.com>
-> > 
-> > Rename asm_goto_workaround.h to asm_workaround.h and add a
-> > workaround for the newly added "asm_inline" in:
-> > 
-> >   commit eb111869301e ("compiler-types.h: add asm_inline definition")
-> > 
-> > Add missing include for <linux/perf_event.h> which was removed from
-> > perf-sys.h in:
-> > 
-> >   commit 91854f9a077e ("perf tools: Move everything related to
-> > 	               sys_perf_event_open() to perf-sys.h")
-> > 
+On Wed, Oct 2, 2019 at 8:47 PM Alex Deucher <alexdeucher@gmail.com> wrote:
+>
+> On Wed, Oct 2, 2019 at 8:02 AM Arnd Bergmann <arnd@arndb.de> wrote:
+> >
+> > Here are a couple of build fixes from my backlog in the randconfig
+> > tree. It would be good to get them all into linux-5.4.
+> >
+> >      Arnd
+> >
+> > Arnd Bergmann (6):
+> >   drm/amdgpu: make pmu support optional, again
+> >   drm/amdgpu: hide another #warning
+> >   drm/amdgpu: display_mode_vba_21: remove uint typedef
+> >   drm/amd/display: fix dcn21 Makefile for clang
+> >   [RESEND] drm/amd/display: hide an unused variable
+> >   [RESEND] drm/amdgpu: work around llvm bug #42576
+>
+> I've applied 1-5 and I'll send them for 5.4.  There still seems to be
+> some debate about 6.
 
-I see this is already fixed in a patch that was sent yesterday and has
-been Acked.
+Awesome, thanks a lot!
 
-  https://lore.kernel.org/bpf/20191001112249.27341-1-bjorn.topel@gmail.com/
-
-I will drop this change from my patch.
-
-> > Co-developed-by: Florent Revest <revest@google.com>
-> > Signed-off-by: Florent Revest <revest@google.com>
-> > Signed-off-by: KP Singh <kpsingh@google.com>
-> > ---
-> >  samples/bpf/Makefile                            |  2 +-
-> >  .../{asm_goto_workaround.h => asm_workaround.h} | 17 ++++++++++++++---
-> >  samples/bpf/task_fd_query_user.c                |  1 +
-> >  3 files changed, 16 insertions(+), 4 deletions(-)
-> >  rename samples/bpf/{asm_goto_workaround.h => asm_workaround.h} (46%)
-> > 
-> > diff --git a/samples/bpf/Makefile b/samples/bpf/Makefile
-> > index 42b571cde177..ab2b4d7ecb4b 100644
-> > --- a/samples/bpf/Makefile
-> > +++ b/samples/bpf/Makefile
-> > @@ -289,7 +289,7 @@ $(obj)/%.o: $(src)/%.c
-> >  		-Wno-gnu-variable-sized-type-not-at-end \
-> >  		-Wno-address-of-packed-member -Wno-tautological-compare \
-> >  		-Wno-unknown-warning-option $(CLANG_ARCH_ARGS) \
-> > -		-I$(srctree)/samples/bpf/ -include asm_goto_workaround.h \
-> > +		-I$(srctree)/samples/bpf/ -include asm_workaround.h \
-> >  		-O2 -emit-llvm -c $< -o -| $(LLC) -march=bpf $(LLC_FLAGS) -filetype=obj -o $@
-> >  ifeq ($(DWARF2BTF),y)
-> >  	$(BTF_PAHOLE) -J $@
-> > diff --git a/samples/bpf/asm_goto_workaround.h b/samples/bpf/asm_workaround.h
-> > similarity index 46%
-> > rename from samples/bpf/asm_goto_workaround.h
-> > rename to samples/bpf/asm_workaround.h
-> > index 7409722727ca..7c99ea6ae98c 100644
-> > --- a/samples/bpf/asm_goto_workaround.h
-> > +++ b/samples/bpf/asm_workaround.h
-> > @@ -1,9 +1,10 @@
-> >  /* SPDX-License-Identifier: GPL-2.0 */
-> >  /* Copyright (c) 2019 Facebook */
-> > -#ifndef __ASM_GOTO_WORKAROUND_H
-> > -#define __ASM_GOTO_WORKAROUND_H
-> > +#ifndef __ASM_WORKAROUND_H
-> > +#define __ASM_WORKAROUND_H
-> 
-> I don't think rename is necessary.
-> This file already has a hack for volatile().
-> Just add asm_inline hack to it.
-
-Thanks, will send an update the patch to reflect this.
-
-- KP
-
-> 
+      Arnd
