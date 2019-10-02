@@ -2,73 +2,169 @@ Return-Path: <SRS0=zem1=X3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C4C32C352AA
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 14:21:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DDF0CECE58A
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 14:26:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 98FC1215EA
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 14:21:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A7A6E21D7B
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 14:26:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gaKYdTsk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728105AbfJBOVK (ORCPT
+        id S1727690AbfJBO0F (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Oct 2019 10:21:10 -0400
-Received: from mx2.suse.de ([195.135.220.15]:47828 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726214AbfJBOVJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Oct 2019 10:21:09 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 0B6DFAC7B;
-        Wed,  2 Oct 2019 14:21:08 +0000 (UTC)
-Message-ID: <1570026066.2472.15.camel@suse.com>
-Subject: Re: [RFC PATCH 06/22] thunderbolt: Add support for lane bonding
-From:   Oliver Neukum <oneukum@suse.com>
-To:     Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Anthony Wong <anthony.wong@canonical.com>,
-        Mario.Limonciello@dell.com,
-        Andreas Noever <andreas.noever@gmail.com>,
-        Yehezkel Bernat <YehezkelShB@gmail.com>,
-        Michael Jamet <michael.jamet@intel.com>,
-        Rajmohan Mani <rajmohan.mani@intel.com>,
-        Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>,
-        Alan Stern <stern@rowland.harvard.edu>,
-        linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
-        Lukas Wunner <lukas@wunner.de>
-Date:   Wed, 02 Oct 2019 16:21:06 +0200
-In-Reply-To: <20191001125320.GN2714@lahna.fi.intel.com>
-References: <20191001113830.13028-1-mika.westerberg@linux.intel.com>
-         <20191001113830.13028-7-mika.westerberg@linux.intel.com>
-         <20191001123808.GA2954373@kroah.com>
-         <20191001125320.GN2714@lahna.fi.intel.com>
+        Wed, 2 Oct 2019 10:26:05 -0400
+Received: from mail-io1-f65.google.com ([209.85.166.65]:32852 "EHLO
+        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725747AbfJBO0E (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 2 Oct 2019 10:26:04 -0400
+Received: by mail-io1-f65.google.com with SMTP id z19so57447935ior.0;
+        Wed, 02 Oct 2019 07:26:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=EZDH5fmtx84N/FA2DzFvaaolbsd+J9iBLD5hVgfYHUw=;
+        b=gaKYdTskfQ4v6HYIY+JvWXJsfXYA5zEifd8viqarIpymnW5yClMh0TTueb5O9TJG4m
+         B4QdL+HrLreSVUqjQM1wMDWrtcoRcIQdzm9s4uOJ6O8+aodZNqtfNr0U917vdd29+i18
+         XveTai6RxBsHly9KdDHGuPCP5nBf4N+N5RB9QHC5lleZy18zbCvSXsyjUsSfPpyGM3dZ
+         5TufF5sE+8fWpAoQys1SlsYwU/5FSsL2Jc/WwmFszl2VDaUUbY/9zAJzFCLZ5IhGrmh6
+         SbHwWwVAQfPM5sJcQmKKRAzZSROPb9rjpSn0eOgJ56DHcWs1GZzWmp85ZSV9EOiyx8tC
+         PRfg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=EZDH5fmtx84N/FA2DzFvaaolbsd+J9iBLD5hVgfYHUw=;
+        b=DIJvy2MMC2++U4u/mcZDxr9K7iKMy11wGTH/0nYJzYqfDDjkeP3yx6scAtsqEc5Bln
+         lO9wILYmhMLxdklW89s9WPsshgxGf9eBrej48Hh7Fp04DBccybr6uvVWzXre6lF9dS0k
+         4qQ2z68GSFCRmy3oQpCkhZv7IefS95rFJR+iDxtpBUqXpd9vTOCFVH5QZTUH4afT3iM5
+         eCPau4TJr2qTDMQt56Fp1nNRnrOUVzyWhFtUGxEvRsp7lK8Y8ejxX5K3K7KBxVvVUxPX
+         NUQ6c3uiWCrTMjj7M4XpiU62jaaxqI2B1JbPervUlmIFP2CbA3WVHlKiG9oBXBCJB5jl
+         VqZg==
+X-Gm-Message-State: APjAAAVSEQyZq73alSNK3qSCuFQ91EsYpGxtd3O3btNASAkisyNf8+4Z
+        Pk9er09yySV16a6HumSUQUtzXmvmNn0U6eJCyuY=
+X-Google-Smtp-Source: APXvYqwSvKuEL2HXaM2JPuO0AJ2TQbqnKScQq+YdzwN3RcglXqDUiH+8EcSdOBI+TqWjYK7nwQrpsxBsXYuWUhCs3y4=
+X-Received: by 2002:a02:8502:: with SMTP id g2mr1532070jai.87.1570026362893;
+ Wed, 02 Oct 2019 07:26:02 -0700 (PDT)
+MIME-Version: 1.0
+References: <20191001152441.27008.99285.stgit@localhost.localdomain>
+ <7233498c-2f64-d661-4981-707b59c78fd5@redhat.com> <1ea1a4e11617291062db81f65745b9c95fd0bb30.camel@linux.intel.com>
+ <8bd303a6-6e50-b2dc-19ab-4c3f176c4b02@redhat.com> <CAKgT0Uf37xAFK2CWqUZJgn7bWznSAi6qncLxBpC55oSpBMG1HQ@mail.gmail.com>
+ <c06b68cb-5e94-ae3e-f84e-48087d675a8f@redhat.com>
+In-Reply-To: <c06b68cb-5e94-ae3e-f84e-48087d675a8f@redhat.com>
+From:   Alexander Duyck <alexander.duyck@gmail.com>
+Date:   Wed, 2 Oct 2019 07:25:50 -0700
+Message-ID: <CAKgT0Ud6TT=XxqFx6ePHzbUYqMp5FHVPozRvnNZK3tKV7j2xjg@mail.gmail.com>
+Subject: Re: [PATCH v11 0/6] mm / virtio: Provide support for unused page reporting
+To:     Nitesh Narayan Lal <nitesh@redhat.com>
+Cc:     Alexander Duyck <alexander.h.duyck@linux.intel.com>,
+        David Hildenbrand <david@redhat.com>,
+        virtio-dev@lists.oasis-open.org, kvm list <kvm@vger.kernel.org>,
+        "Michael S. Tsirkin" <mst@redhat.com>,
+        Dave Hansen <dave.hansen@intel.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Matthew Wilcox <willy@infradead.org>,
+        Michal Hocko <mhocko@kernel.org>,
+        linux-mm <linux-mm@kvack.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Oscar Salvador <osalvador@suse.de>,
+        Yang Zhang <yang.zhang.wz@gmail.com>,
+        Pankaj Gupta <pagupta@redhat.com>,
+        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
+        Rik van Riel <riel@surriel.com>, lcapitulino@redhat.com,
+        "Wang, Wei W" <wei.w.wang@intel.com>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Dan Williams <dan.j.williams@intel.com>
 Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.26.6 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Am Dienstag, den 01.10.2019, 15:53 +0300 schrieb Mika Westerberg:
-> > 
-> > Are we only going to be allowed to "bond" two links together?  Or will
-> > we be doing more than 2 in the future?  If more, then we might want to
-> > think of a different way to specify these...
-> 
-> AFAICT only two lanes are available in USB4. This goes over USB type-C
-> using the two lanes there.
-> 
-> Of course I don't know if in future there will be USB4 1.1 or something
-> that adds more lanes so if you think there is a better way to specify
-> these, I'm happy to implement that instead :) 
+On Wed, Oct 2, 2019 at 3:37 AM Nitesh Narayan Lal <nitesh@redhat.com> wrote:
+>
+>
+> On 10/1/19 8:55 PM, Alexander Duyck wrote:
+> > On Tue, Oct 1, 2019 at 12:16 PM Nitesh Narayan Lal <nitesh@redhat.com> wrote:
+> >>
+> >> On 10/1/19 12:21 PM, Alexander Duyck wrote:
+> >>> On Tue, 2019-10-01 at 17:35 +0200, David Hildenbrand wrote:
+> >>>> On 01.10.19 17:29, Alexander Duyck wrote:
 
-If this ever can become asymmetric this interface is going to turn
-around and bite.
+<snip>
 
-	Regards
-		Oliver
+> >>> Do we have a working patch set for Nitesh's code? The last time I tried
+> >>> running his patch set I ran into issues with kernel panics. If we have a
+> >>> known working/stable patch set I can give it a try.
+> >> Did you try the v12 patch-set [1]?
+> >> I remember that you reported the CPU stall issue, which I fixed in the v12.
+> >>
+> >> [1] https://lkml.org/lkml/2019/8/12/593
+> > So I tried testing with the spin_lock calls replaced with spin_lock
+> > _irq to resolve the IRQ issue. I also had shuffle enabled in order to
+> > increase the number of pages being dirtied.
+> >
+> > With that setup the bitmap approach is running significantly worse
+> > then my approach, even with the boundary removed. Since I had to
+> > modify the code to even getting working I am not comfortable posting
+> > numbers.
+>
+> I didn't face any issue in getting the code work or compile.
+> Before my v12 posting, I did try your previously suggested test
+> (will-it-scale/page_fault1 for 12 hours on a 60 GB) and didn't see any issues.
+> I think it would help more if you can share the setup which you are running.
 
+So one issue with the standard page_fault1 is that it is only
+operating at the 4K page level. You won't see much impact from you
+patches with that as the overhead of splitting a MAX_ORDER - 2 page
+down to a 4K page will end up being the biggest thing you are
+benchmarking.
+
+I think I have brought it up before but I am running with the
+page_fault1 modified to use THP. Making the change is pretty
+straightforward as  all you have to do is add an madvise to the test
+code. All that is needed is to add "madvise(c, MEMSIZE,
+MADV_HUGEPAGE);" between the assert and the for loop in the
+page_fault1 code and then rebuild the test. I actually copied
+page_fault1.c into a file I named page_fault4.c and added the line. As
+a result it seems like the code will build it as an additional test.
+
+The only other alteration I can think of that might have much impact
+would be to enable the page shuffling. The idea is that it will cause
+us to use more pages because half of the pages freed are dumped to the
+tail of the list so we are constantly churning the memory.
+
+> > My suggestion would be to look at reworking the patch set and
+> > post numbers for my patch set versus the bitmap approach and we can
+> > look at them then.
+>
+> Agreed. However, in order to fix an issue I have to reproduce it first.
+
+With the tweak I have suggested above it should make it much easier to
+reproduce. Basically all you need is to have the allocation competing
+against hinting. Currently the hinting isn't doing this because the
+allocations are mostly coming out of 4K pages instead of higher order
+ones.
+
+Alternatively you could just make the suggestion I had proposed about
+using spin_lock/unlock_irq in your worker thread and that resolved it
+for me.
+
+> >  I would prefer not to spend my time fixing and
+> > tuning a patch set that I am still not convinced is viable.
+>
+> You  don't have to, I can fix the issues in my patch-set. :)
+
+Sounds good. Hopefully the stuff I pointed out above helps you to get
+a reproduction and resolve the issues.
+
+- Alex
