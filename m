@@ -2,136 +2,134 @@ Return-Path: <SRS0=zem1=X3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09E01C4360C
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 21:35:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C209C4360C
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 21:36:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CE9AD2070B
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 21:35:20 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="J/j7EnsM"
+	by mail.kernel.org (Postfix) with ESMTP id 482282070B
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 21:36:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729137AbfJBVfU (ORCPT
+        id S1729282AbfJBVgK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Oct 2019 17:35:20 -0400
-Received: from mail-io1-f68.google.com ([209.85.166.68]:44370 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726491AbfJBVfT (ORCPT
+        Wed, 2 Oct 2019 17:36:10 -0400
+Received: from mail-io1-f72.google.com ([209.85.166.72]:49346 "EHLO
+        mail-io1-f72.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726062AbfJBVgK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Oct 2019 17:35:19 -0400
-Received: by mail-io1-f68.google.com with SMTP id w12so690919iol.11;
-        Wed, 02 Oct 2019 14:35:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=gnlFMlNypABzLw5irR8OlMn/0wqoIPMi5PCZlnfktBc=;
-        b=J/j7EnsMpbJA8yJk7WiiiRf2aEycL7N0/yMWKKoWPvWx6QCGnBDEhzH0VAvC2v4CLQ
-         v3V8kAyN7v16sscwmvWO9a+VXf0vyAGdXVGCVxhBdqjC56wlDbQd56WsaVMZ2EvQEPoS
-         mdOyELSWmzbzPmgavFQ/sLMqUIyJNrrId5MQW/V44d41KtB9t8imArRpW9Owl140EBmf
-         s0H0al/rVm9L7tJzM+rnU/Lm66AHNuRJ2vB2HFiBhPb5ssLPCB9jes2JUVQ0zpi1tBsc
-         MFesIM8bAcUAXdJUVEKxyY918T/Z9RW4p4yY65wLFgHxe1mIqxEv1vXT0c7Eg67i6xTW
-         ZxxA==
+        Wed, 2 Oct 2019 17:36:10 -0400
+Received: by mail-io1-f72.google.com with SMTP id e14so1186764iot.16
+        for <linux-kernel@vger.kernel.org>; Wed, 02 Oct 2019 14:36:09 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=gnlFMlNypABzLw5irR8OlMn/0wqoIPMi5PCZlnfktBc=;
-        b=Nb2Ajg/b7P3nn68Gt3TgEDEf0Ef5a2Vy4d3gSmtrB1pcWlALGlF2mLCe0t4NXKksIZ
-         hGE+XOaae45PFWGJC6/qn8OG9md5i02cWfr+37JZPt08r3zGSaE7AfRlA745XXcXc8CU
-         orls7pWaxfWqFxMd4KQXnsyC8buQeB1QQOYXVfWrNbEhT3Ji7WQNwtaKYYG6yiujEO/W
-         Me7IBk/1Sv3lXSH76i6rt+v0hr9Qlpy+r0b4Lmr2rRoC0WJF6G8Jqvw19P+IUaAqGSu9
-         ilVgRw3ldAankApAuUkriWfwhpXjPDNPI7iHBhA1ePtLTTbsbNiELVAsJgtLGSUULreX
-         dXKg==
-X-Gm-Message-State: APjAAAXUrfzNY0F5q2b6akp/JqPvKjB/HgOxMq6LJFKD37nbF9dkuAOt
-        Gc8oBL/wcMusvKlopp5AhwoaK1/O5vMS+sGlJn8=
-X-Google-Smtp-Source: APXvYqzOA3zPAidGAa3rwzBrR+yHc0akSPI7N6kZIMeg+KCx3xKt86FB6MaFniD7JYNR2ESpns2Na4vGi1xWW+XriKI=
-X-Received: by 2002:a92:b112:: with SMTP id t18mr6345688ilh.252.1570052117394;
- Wed, 02 Oct 2019 14:35:17 -0700 (PDT)
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=U6yNaCDsE4C1a0nqy2EzS05kA23AzgH1kqOijvBxX34=;
+        b=mBbtGaNKyMFdfGoYMKRBSTinxTlu9w71Sz+O10oDRT7UxrylbZc5r1tjULVnMSXVS/
+         to6161GrMFuGxkmCNREwqvBMzGDRI7wy5TOyS6ctT9TU0q/hzTWPabOqWfGlCTrxPylj
+         iy9YX7h4ga4rQefCZ237C4L/qF/kHJ8WLXDTrlz+PFKtpw4Ihpdsx6fFIaLqidUIa/4b
+         TkRWdDL2xyTZPLRVAeftmiKxcbQhVUwlG1DP4F738FdmNrTMZ4FxAcQTc8vT/IUXTtW/
+         ZyQphNIwYvIIQf+Zjqn/6QwqG746KHds3/1/A/yWTMawxqwbLlBr63+2eMoK+t0xebZm
+         BEOA==
+X-Gm-Message-State: APjAAAUuPVO06M+1UmkWm0m03lBba/nDlZ68lRIyKfdmMVgznnPePxQF
+        ZmjupsZ0PQrzvuk591xKmnuea58wDSfl1kednQtWNYFpLuFA
+X-Google-Smtp-Source: APXvYqz84p004yWghPZveHBFK3yktOp+B+HGXF1JsVCRYIW9aAb7UHeKwGrNH3CJuRv2mGNrrkSNJI7WCnvD/Ci3aaxjBdUgq/m4
 MIME-Version: 1.0
-References: <20190923050823.GL14368@unreal> <20190923155300.20407-1-navid.emamdoost@gmail.com>
- <20191001135430.GA27086@ziepe.ca>
-In-Reply-To: <20191001135430.GA27086@ziepe.ca>
-From:   Navid Emamdoost <navid.emamdoost@gmail.com>
-Date:   Wed, 2 Oct 2019 16:35:06 -0500
-Message-ID: <CAEkB2EQF0D-Fdg74+E4VdxipZvTaBKseCtKJKnFg7T6ZZE9x6Q@mail.gmail.com>
-Subject: Re: [PATCH v2] RDMA: release allocated skb
-To:     Jason Gunthorpe <jgg@ziepe.ca>
-Cc:     Leon Romanovsky <leon@kernel.org>,
-        Navid Emamdoost <emamd001@umn.edu>,
-        Stephen McCamant <smccaman@umn.edu>, Kangjie Lu <kjlu@umn.edu>,
-        Potnuri Bharat Teja <bharat@chelsio.com>,
-        Doug Ledford <dledford@redhat.com>, linux-rdma@vger.kernel.org,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+X-Received: by 2002:a02:3786:: with SMTP id r128mr6274031jar.76.1570052169345;
+ Wed, 02 Oct 2019 14:36:09 -0700 (PDT)
+Date:   Wed, 02 Oct 2019 14:36:09 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000d537cc0593f441db@google.com>
+Subject: WARNING: lock held when returning to user space in rcu_lock_acquire
+From:   syzbot <syzbot+fef86971c84310f1c8cd@syzkaller.appspotmail.com>
+To:     bp@alien8.de, hpa@zytor.com, linux-kernel@vger.kernel.org,
+        luto@kernel.org, mingo@redhat.com, syzkaller-bugs@googlegroups.com,
+        tglx@linutronix.de, x86@kernel.org
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Jason,
+Hello,
 
-Thanks for the feedback. Yes, you are right if the skb release is
-moved under err4 label it will cause a double free as
-c4iw_ref_send_wait will release skb in case of error.
-So, in order to avoid leaking skb in case of c4iw_bar2_addrs failure,
-the kfree(skb) could be placed under the error check like the way
-patch v1 did. Do you see any mistake in version 1?
-https://lore.kernel.org/patchwork/patch/1128510/
+syzbot found the following crash on:
+
+HEAD commit:    54ecb8f7 Linux 5.4-rc1
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=11c03fcd600000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=fb0b431ccdf08c1c
+dashboard link: https://syzkaller.appspot.com/bug?extid=fef86971c84310f1c8cd
+compiler:       clang version 9.0.0 (/home/glider/llvm/clang  
+80fee25776c2fb61e74c1ecb1a523375c2500b69)
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=10d52e33600000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=1582402b600000
+
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+fef86971c84310f1c8cd@syzkaller.appspotmail.com
+
+================================================
+WARNING: lock held when returning to user space!
+5.4.0-rc1 #0 Not tainted
+------------------------------------------------
+syz-executor670/7923 is leaving the kernel with locks still held!
+1 lock held by syz-executor670/7923:
+  #0: ffffffff888d3cc0 (rcu_read_lock){....}, at: rcu_lock_acquire+0x4/0x30  
+include/linux/rcupdate.h:207
+------------[ cut here ]------------
+WARNING: CPU: 0 PID: 7923 at kernel/rcu/tree_plugin.h:293  
+rcu_note_context_switch+0xdde/0xee0 kernel/rcu/tree_plugin.h:293
+Kernel panic - not syncing: panic_on_warn set ...
+CPU: 0 PID: 7923 Comm: syz-executor670 Not tainted 5.4.0-rc1 #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
+Google 01/01/2011
+Call Trace:
+  __dump_stack lib/dump_stack.c:77 [inline]
+  dump_stack+0x1d8/0x2f8 lib/dump_stack.c:113
+  panic+0x25c/0x799 kernel/panic.c:220
+  __warn+0x20e/0x210 kernel/panic.c:581
+  report_bug+0x1b6/0x2f0 lib/bug.c:195
+  fixup_bug arch/x86/kernel/traps.c:179 [inline]
+  do_error_trap+0xd7/0x440 arch/x86/kernel/traps.c:272
+  do_invalid_op+0x36/0x40 arch/x86/kernel/traps.c:291
+  invalid_op+0x23/0x30 arch/x86/entry/entry_64.S:1028
+RIP: 0010:rcu_note_context_switch+0xdde/0xee0 kernel/rcu/tree_plugin.h:293
+Code: c8 73 4b 00 e9 b8 f3 ff ff 89 d9 80 e1 07 80 c1 03 38 c1 0f 8c 22 f3  
+ff ff 48 89 df e8 4b 73 4b 00 83 3b 00 0f 8e 1a f3 ff ff <0f> 0b e9 13 f3  
+ff ff 89 d9 80 e1 07 80 c1 03 38 c1 0f 8c c9 f2 ff
+RSP: 0000:ffff8880921bfd20 EFLAGS: 00010002
+RAX: 1ffff11012bc6100 RBX: ffff888095e30978 RCX: ffffffff81608604
+RDX: 0000000000000000 RSI: 0000000000000008 RDI: ffffffff88be39a0
+RBP: ffff8880921bfe00 R08: dffffc0000000000 R09: fffffbfff117c735
+R10: fffffbfff117c735 R11: 0000000000000000 R12: dffffc0000000000
+R13: ffff888095e30600 R14: 0000000000000000 R15: ffff8880aea35740
+  __schedule+0xce/0xb80 kernel/sched/core.c:4007
+  schedule+0x131/0x1e0 kernel/sched/core.c:4136
+  exit_to_usermode_loop arch/x86/entry/common.c:149 [inline]
+  prepare_exit_to_usermode+0x2aa/0x580 arch/x86/entry/common.c:194
+  retint_user+0x8/0x18
+RIP: 0033:0x446fb9
+Code: e8 8c 19 03 00 48 83 c4 18 c3 0f 1f 80 00 00 00 00 48 89 f8 48 89 f7  
+48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff  
+ff 0f 83 4b 0e fc ff c3 66 2e 0f 1f 84 00 00 00 00
+RSP: 002b:00007fd680470db8 EFLAGS: 00000246 ORIG_RAX: ffffffffffffff13
+RAX: 0000000000000000 RBX: 00000000006ddc28 RCX: 0000000000446fb9
+RDX: 0000000000446fb9 RSI: 0000000000000000 RDI: 0000000100000008
+RBP: 00000000006ddc20 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 00000000006ddc2c
+R13: 00007fffb42e414f R14: 00007fd6804719c0 R15: 0000000000000000
+Kernel Offset: disabled
+Rebooting in 86400 seconds..
 
 
-Thanks,
-Navid
+---
+This bug is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
-On Tue, Oct 1, 2019 at 8:54 AM Jason Gunthorpe <jgg@ziepe.ca> wrote:
->
-> On Mon, Sep 23, 2019 at 10:52:59AM -0500, Navid Emamdoost wrote:
-> > In create_cq, the allocated skb buffer needs to be released on error
-> > path.
-> > Moved the kfree_skb(skb) under err4 label.
->
-> This didn't move anything
->
-> > Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
-> >  drivers/infiniband/hw/cxgb4/cq.c | 1 +
-> >  1 file changed, 1 insertion(+)
-> >
-> > diff --git a/drivers/infiniband/hw/cxgb4/cq.c b/drivers/infiniband/hw/cxgb4/cq.c
-> > index b1bb61c65f4f..1886c1af10bc 100644
-> > +++ b/drivers/infiniband/hw/cxgb4/cq.c
-> > @@ -173,6 +173,7 @@ static int create_cq(struct c4iw_rdev *rdev, struct t4_cq *cq,
-> >  err4:
-> >       dma_free_coherent(&rdev->lldi.pdev->dev, cq->memsize, cq->queue,
-> >                         dma_unmap_addr(cq, mapping));
-> > +     kfree_skb(skb);
-> >  err3:
-> >       kfree(cq->sw_queue);
-> >  err2:
->
-> This looks wrong to me:
->
-> int c4iw_ofld_send(struct c4iw_rdev *rdev, struct sk_buff *skb)
-> {
->         int     error = 0;
->
->         if (c4iw_fatal_error(rdev)) {
->                 kfree_skb(skb);
->                 pr_err("%s - device in error state - dropping\n", __func__);
->                 return -EIO;
->         }
->         error = cxgb4_ofld_send(rdev->lldi.ports[0], skb);
->         if (error < 0)
->                 kfree_skb(skb);
->         return error < 0 ? error : 0;
-> }
->
-> Jason
-
-
-
--- 
-Navid.
+syzbot will keep track of this bug report. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+syzbot can test patches for this bug, for details see:
+https://goo.gl/tpsmEJ#testing-patches
