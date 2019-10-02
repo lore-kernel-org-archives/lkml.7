@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B3F44C4360C
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 19:11:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 58400C4360C
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 19:11:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9B96E207FF
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 19:11:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3CFC9207FF
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 19:11:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729932AbfJBTKy (ORCPT
+        id S1729984AbfJBTLK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Oct 2019 15:10:54 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:35772 "EHLO
+        Wed, 2 Oct 2019 15:11:10 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:35754 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729296AbfJBTIQ (ORCPT
+        by vger.kernel.org with ESMTP id S1729292AbfJBTIP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Oct 2019 15:08:16 -0400
+        Wed, 2 Oct 2019 15:08:15 -0400
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1iFjyv-00036L-1e; Wed, 02 Oct 2019 20:08:13 +0100
+        id 1iFjyr-00036K-Sm; Wed, 02 Oct 2019 20:08:09 +0100
 Received: from ben by deadeye with local (Exim 4.92.1)
         (envelope-from <ben@decadent.org.uk>)
-        id 1iFjyp-0003fj-Rj; Wed, 02 Oct 2019 20:08:07 +0100
+        id 1iFjyo-0003eL-Tt; Wed, 02 Oct 2019 20:08:06 +0100
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,14 +35,17 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Jan Kara" <jack@suse.cz>, "Ewan D. Milne" <emilne@redhat.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>
+        "Rolf Fokkens" <rolf@rolffokkens.nl>,
+        "Shenghui Wang" <shhuiw@foxmail.com>,
+        "Kent Overstreet" <kent.overstreet@gmail.com>,
+        "Pierre JUHEN" <pierre.juhen@orange.fr>,
+        "Coly Li" <colyli@suse.de>, "Jens Axboe" <axboe@kernel.dk>,
+        "Nix" <nix@esperi.org.uk>
 Date:   Wed, 02 Oct 2019 20:06:51 +0100
-Message-ID: <lsq.1570043211.546562940@decadent.org.uk>
+Message-ID: <lsq.1570043211.30556179@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 73/87] scsi: vmw_pscsi: Fix use-after-free in
- pvscsi_queue_lck()
+Subject: [PATCH 3.16 56/87] bcache: fix stack corruption by PRECEDING_KEY()
 In-Reply-To: <lsq.1570043210.379046399@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -56,49 +59,124 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Jan Kara <jack@suse.cz>
+From: Coly Li <colyli@suse.de>
 
-commit 240b4cc8fd5db138b675297d4226ec46594d9b3b upstream.
+commit 31b90956b124240aa8c63250243ae1a53585c5e2 upstream.
 
-Once we unlock adapter->hw_lock in pvscsi_queue_lck() nothing prevents just
-queued scsi_cmnd from completing and freeing the request. Thus cmd->cmnd[0]
-dereference can dereference already freed request leading to kernel crashes
-or other issues (which one of our customers observed). Store cmd->cmnd[0]
-in a local variable before unlocking adapter->hw_lock to fix the issue.
+Recently people report bcache code compiled with gcc9 is broken, one of
+the buggy behavior I observe is that two adjacent 4KB I/Os should merge
+into one but they don't. Finally it turns out to be a stack corruption
+caused by macro PRECEDING_KEY().
 
-Signed-off-by: Jan Kara <jack@suse.cz>
-Reviewed-by: Ewan D. Milne <emilne@redhat.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+See how PRECEDING_KEY() is defined in bset.h,
+437 #define PRECEDING_KEY(_k)                                       \
+438 ({                                                              \
+439         struct bkey *_ret = NULL;                               \
+440                                                                 \
+441         if (KEY_INODE(_k) || KEY_OFFSET(_k)) {                  \
+442                 _ret = &KEY(KEY_INODE(_k), KEY_OFFSET(_k), 0);  \
+443                                                                 \
+444                 if (!_ret->low)                                 \
+445                         _ret->high--;                           \
+446                 _ret->low--;                                    \
+447         }                                                       \
+448                                                                 \
+449         _ret;                                                   \
+450 })
+
+At line 442, _ret points to address of a on-stack variable combined by
+KEY(), the life range of this on-stack variable is in line 442-446,
+once _ret is returned to bch_btree_insert_key(), the returned address
+points to an invalid stack address and this address is overwritten in
+the following called bch_btree_iter_init(). Then argument 'search' of
+bch_btree_iter_init() points to some address inside stackframe of
+bch_btree_iter_init(), exact address depends on how the compiler
+allocates stack space. Now the stack is corrupted.
+
+Fixes: 0eacac22034c ("bcache: PRECEDING_KEY()")
+Signed-off-by: Coly Li <colyli@suse.de>
+Reviewed-by: Rolf Fokkens <rolf@rolffokkens.nl>
+Reviewed-by: Pierre JUHEN <pierre.juhen@orange.fr>
+Tested-by: Shenghui Wang <shhuiw@foxmail.com>
+Tested-by: Pierre JUHEN <pierre.juhen@orange.fr>
+Cc: Kent Overstreet <kent.overstreet@gmail.com>
+Cc: Nix <nix@esperi.org.uk>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- drivers/scsi/vmw_pvscsi.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ drivers/md/bcache/bset.c | 16 +++++++++++++---
+ drivers/md/bcache/bset.h | 34 ++++++++++++++++++++--------------
+ 2 files changed, 33 insertions(+), 17 deletions(-)
 
---- a/drivers/scsi/vmw_pvscsi.c
-+++ b/drivers/scsi/vmw_pvscsi.c
-@@ -754,6 +754,7 @@ static int pvscsi_queue_lck(struct scsi_
- 	struct pvscsi_adapter *adapter = shost_priv(host);
- 	struct pvscsi_ctx *ctx;
- 	unsigned long flags;
-+	unsigned char op;
+--- a/drivers/md/bcache/bset.c
++++ b/drivers/md/bcache/bset.c
+@@ -823,12 +823,22 @@ unsigned bch_btree_insert_key(struct btr
+ 	struct bset *i = bset_tree_last(b)->data;
+ 	struct bkey *m, *prev = NULL;
+ 	struct btree_iter iter;
++	struct bkey preceding_key_on_stack = ZERO_KEY;
++	struct bkey *preceding_key_p = &preceding_key_on_stack;
  
- 	spin_lock_irqsave(&adapter->hw_lock, flags);
+ 	BUG_ON(b->ops->is_extents && !KEY_SIZE(k));
  
-@@ -766,13 +767,14 @@ static int pvscsi_queue_lck(struct scsi_
- 	}
+-	m = bch_btree_iter_init(b, &iter, b->ops->is_extents
+-				? PRECEDING_KEY(&START_KEY(k))
+-				: PRECEDING_KEY(k));
++	/*
++	 * If k has preceding key, preceding_key_p will be set to address
++	 *  of k's preceding key; otherwise preceding_key_p will be set
++	 * to NULL inside preceding_key().
++	 */
++	if (b->ops->is_extents)
++		preceding_key(&START_KEY(k), &preceding_key_p);
++	else
++		preceding_key(k, &preceding_key_p);
++
++	m = bch_btree_iter_init(b, &iter, preceding_key_p);
  
- 	cmd->scsi_done = done;
-+	op = cmd->cmnd[0];
- 
- 	dev_dbg(&cmd->device->sdev_gendev,
--		"queued cmd %p, ctx %p, op=%x\n", cmd, ctx, cmd->cmnd[0]);
-+		"queued cmd %p, ctx %p, op=%x\n", cmd, ctx, op);
- 
- 	spin_unlock_irqrestore(&adapter->hw_lock, flags);
- 
--	pvscsi_kick_io(adapter, cmd->cmnd[0]);
-+	pvscsi_kick_io(adapter, op);
- 
- 	return 0;
+ 	if (b->ops->insert_fixup(b, k, &iter, replace_key))
+ 		return status;
+--- a/drivers/md/bcache/bset.h
++++ b/drivers/md/bcache/bset.h
+@@ -417,20 +417,26 @@ static inline bool bch_cut_back(const st
+ 	return __bch_cut_back(where, k);
  }
+ 
+-#define PRECEDING_KEY(_k)					\
+-({								\
+-	struct bkey *_ret = NULL;				\
+-								\
+-	if (KEY_INODE(_k) || KEY_OFFSET(_k)) {			\
+-		_ret = &KEY(KEY_INODE(_k), KEY_OFFSET(_k), 0);	\
+-								\
+-		if (!_ret->low)					\
+-			_ret->high--;				\
+-		_ret->low--;					\
+-	}							\
+-								\
+-	_ret;							\
+-})
++/*
++ * Pointer '*preceding_key_p' points to a memory object to store preceding
++ * key of k. If the preceding key does not exist, set '*preceding_key_p' to
++ * NULL. So the caller of preceding_key() needs to take care of memory
++ * which '*preceding_key_p' pointed to before calling preceding_key().
++ * Currently the only caller of preceding_key() is bch_btree_insert_key(),
++ * and it points to an on-stack variable, so the memory release is handled
++ * by stackframe itself.
++ */
++static inline void preceding_key(struct bkey *k, struct bkey **preceding_key_p)
++{
++	if (KEY_INODE(k) || KEY_OFFSET(k)) {
++		(**preceding_key_p) = KEY(KEY_INODE(k), KEY_OFFSET(k), 0);
++		if (!(*preceding_key_p)->low)
++			(*preceding_key_p)->high--;
++		(*preceding_key_p)->low--;
++	} else {
++		(*preceding_key_p) = NULL;
++	}
++}
+ 
+ static inline bool bch_ptr_invalid(struct btree_keys *b, const struct bkey *k)
+ {
 
