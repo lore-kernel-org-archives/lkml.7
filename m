@@ -2,125 +2,109 @@ Return-Path: <SRS0=zem1=X3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0461CC35280
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 12:26:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A263C35280
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 12:28:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CFF1021920
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 12:26:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D664F21920
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 12:28:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QPKITSG0"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Xe4ozWCs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727453AbfJBM0x (ORCPT
+        id S1726681AbfJBM2a (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Oct 2019 08:26:53 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:44808 "EHLO
+        Wed, 2 Oct 2019 08:28:30 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:42402 "EHLO
         mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725875AbfJBM0w (ORCPT
+        with ESMTP id S1725848AbfJBM23 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Oct 2019 08:26:52 -0400
-Received: by mail-wr1-f67.google.com with SMTP id z9so6301011wrl.11;
-        Wed, 02 Oct 2019 05:26:51 -0700 (PDT)
+        Wed, 2 Oct 2019 08:28:29 -0400
+Received: by mail-wr1-f67.google.com with SMTP id n14so19415351wrw.9;
+        Wed, 02 Oct 2019 05:28:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=YsapF76Q1TOEmh1rttebz7zK2OwlZHHTPamgXkWw2iI=;
-        b=QPKITSG0ejX6kL/FKLVFzzcjl/OaEH4/nNl6nT45pNUXIy8uCQekgc/W6ycjA9FmxT
-         459PBRykWQmEEW4XnkDGxjImbHlSt6zrDPY6volB/pi03fJJdiOpl2Aj3znNsZ5U3W9t
-         gqezCM26cWXLYSXtYL9Esof7ZluA96QgSeO2YG5zGnu45f0d4k+TTOi+sxLIQSnA7/i8
-         y57n/thQP1T+wDAHPdxqA65mquBU9HH/nwmtiAU71SlAQJhhu8xSsE5ZlgYorQpJP5oc
-         qGfhv1PLVkNU42rmx6GUmjbXc84XsvXIuDJt65FarnjT0WZ6D/MzJIBAJjfUsQjb1n2e
-         4quA==
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=qP9mbplmTy0EguziRYmdZKFvmKZpgiY1goXlhQxV0/8=;
+        b=Xe4ozWCsxpb6DK1agUyM9eUxlP6G03BBFhI5g4JErak3F1hsMTKXmoyANoMKXxS+UF
+         OWRiAkrVC3cQOJczX/+7HhZQ8bMC3apl96os1jO6/JWJEP2BHZpDAF0bRyJQdbd0lmMA
+         afH1TDc/aCLYhrc6UF4IMSf4Noe9cSvoyQYpo0qgpxktdn7I/jv5ztIFWEVBOuEfDveP
+         hKAmMRuOGlokBd9/+TirOM307HbJYDWAZ8Wko3G+bYcw41RSULf9eN0mQPLmeF/+J9tC
+         XwaypBneeu3VeCmfU/DxP1duZ3pCcnwOu5nrzdHsS6ow28T2CVk8VvAAZGEU1cUIX4Z+
+         +hkw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=YsapF76Q1TOEmh1rttebz7zK2OwlZHHTPamgXkWw2iI=;
-        b=AZWG5QyJzQnBH4ic/ubbk0EZD6vVclyhbiZ+1xBXjapjVck6hNqxfqgXKiNgfb7WC2
-         VM+DKEuMxy+S0XM7L6XVXWyXeWJq89/zuVpdT+qLDlU+YdNHCWv46ORtbo5sQWHVrPTo
-         6cs8hLEUgZM/7OSubRJegUwyc9gZsmy2JJ3f6gnshCCtkpiVmrZIZs1zJzLhGvRZ/SEY
-         /MPyiY+r8s/PomT66qRzQFfJngmudzwbbMOSbukbBa7rmiNr34J+kL1DWTWTEUTXEd66
-         G+XReXa/rnDhDJ3xiRiUiC7OclNMmhCJ+YFHsIN0IryxgEzXaHPgRx8AISI5wmPvhkVK
-         uHnA==
-X-Gm-Message-State: APjAAAVZ+RPhUV/O2iUZGZwarO3Ig9AF+VM9fz4oJ0DzU616MjEJzXoT
-        UfcK6whI/UAy3cXogkTDRAM=
-X-Google-Smtp-Source: APXvYqwNCk9dTLf6PRTkYsS5B9lezj1GIKYCU3LxHDQIG+agVQDk5svygrX8B+BbbrB5sBIE/3Ta+g==
-X-Received: by 2002:a5d:63cb:: with SMTP id c11mr2683779wrw.281.1570019210652;
-        Wed, 02 Oct 2019 05:26:50 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=qP9mbplmTy0EguziRYmdZKFvmKZpgiY1goXlhQxV0/8=;
+        b=akVGfKDGN9KlaS7GfDnHx98C2QeedcAeu8RIoCS8uh0twWVOZMZKbUY6M/2HaZKsPI
+         38mOkZ2CRPyO1EzbpI9UU6hHXfohMTHuWX0pTdvkFXn+TfZPAxJa1fVRhHgOcknkhb/U
+         JBzse/qoFFdlsRK3kY6I+0R1YyyAD2SDlzfax4U6ew8DL0icpWegiNEXnIno/7b6sIt2
+         9u9PEHk+1AdQkgS/tVRAFdVg6rrYMbUFkh1JAYsEED71D2IR38JmdUfjsW0Bi1aohXuz
+         F8LOoB0G33BszHljgknOYlHF4tPGDitMVI+giV3UgwXEWHKFgimUJKOb1nyg+4fcVOLO
+         2g1g==
+X-Gm-Message-State: APjAAAX5YpK/Xf8BgNQ7EyD7TzARRLtN4fRfLcEXIT3fZkDHf5xGyxPi
+        jnbTBpi+UDekDgGOQiVnsoo=
+X-Google-Smtp-Source: APXvYqw9HA6mSwE4O/MajE0OyTuT/xQaPqMRcrU+p/RXgMiP+Q297cH5ORneUFjHbOQpwrdgestsJw==
+X-Received: by 2002:adf:fe05:: with SMTP id n5mr2716992wrr.355.1570019307315;
+        Wed, 02 Oct 2019 05:28:27 -0700 (PDT)
 Received: from localhost (p2E5BE2CE.dip0.t-ipconnect.de. [46.91.226.206])
-        by smtp.gmail.com with ESMTPSA id t203sm8458080wmf.42.2019.10.02.05.26.49
+        by smtp.gmail.com with ESMTPSA id e17sm5719759wma.15.2019.10.02.05.28.25
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 02 Oct 2019 05:26:49 -0700 (PDT)
-Date:   Wed, 2 Oct 2019 14:26:48 +0200
+        Wed, 02 Oct 2019 05:28:26 -0700 (PDT)
 From:   Thierry Reding <thierry.reding@gmail.com>
-To:     Bartosz Golaszewski <brgl@bgdev.pl>
-Cc:     Jens Axboe <axboe@kernel.dk>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        JC Kuo <jckuo@nvidia.com>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Mathias Nyman <mathias.nyman@intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-ide@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
+To:     Linus Walleij <linus.walleij@linaro.org>,
         Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Subject: Re: [PATCH 3/3] usb: host: xhci-tegra: use
- regulator_bulk_set_supply_names()
-Message-ID: <20191002122648.GC3908655@ulmo>
-References: <20191001132333.20146-1-brgl@bgdev.pl>
- <20191001132333.20146-4-brgl@bgdev.pl>
+Cc:     Timo Alho <talho@nvidia.com>, linux-gpio@vger.kernel.org,
+        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH 1/3] gpio: max77620: Use correct unit for debounce times
+Date:   Wed,  2 Oct 2019 14:28:23 +0200
+Message-Id: <20191002122825.3948322-1-thierry.reding@gmail.com>
+X-Mailer: git-send-email 2.23.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="+xNpyl7Qekk2NvDX"
-Content-Disposition: inline
-In-Reply-To: <20191001132333.20146-4-brgl@bgdev.pl>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: Thierry Reding <treding@nvidia.com>
 
---+xNpyl7Qekk2NvDX
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+The gpiod_set_debounce() function takes the debounce time in
+microseconds. Adjust the switch/case values in the MAX77620 GPIO to use
+the correct unit.
 
-On Tue, Oct 01, 2019 at 03:23:33PM +0200, Bartosz Golaszewski wrote:
-> From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
->=20
-> Use the new regulator helper instead of a for loop.
->=20
-> Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-> ---
->  drivers/usb/host/xhci-tegra.c | 5 +++--
->  1 file changed, 3 insertions(+), 2 deletions(-)
+Signed-off-by: Thierry Reding <treding@nvidia.com>
+---
+ drivers/gpio/gpio-max77620.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-Acked-by: Thierry Reding <treding@nvidia.com>
+diff --git a/drivers/gpio/gpio-max77620.c b/drivers/gpio/gpio-max77620.c
+index 47d05e357e61..faf86ea9c51a 100644
+--- a/drivers/gpio/gpio-max77620.c
++++ b/drivers/gpio/gpio-max77620.c
+@@ -192,13 +192,13 @@ static int max77620_gpio_set_debounce(struct max77620_gpio *mgpio,
+ 	case 0:
+ 		val = MAX77620_CNFG_GPIO_DBNC_None;
+ 		break;
+-	case 1 ... 8:
++	case 1000 ... 8000:
+ 		val = MAX77620_CNFG_GPIO_DBNC_8ms;
+ 		break;
+-	case 9 ... 16:
++	case 9000 ... 16000:
+ 		val = MAX77620_CNFG_GPIO_DBNC_16ms;
+ 		break;
+-	case 17 ... 32:
++	case 17000 ... 32000:
+ 		val = MAX77620_CNFG_GPIO_DBNC_32ms;
+ 		break;
+ 	default:
+-- 
+2.23.0
 
---+xNpyl7Qekk2NvDX
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl2Ul4gACgkQ3SOs138+
-s6HhUA/5Ab4y4CUvbNGI3qBuN5kszxhX3js9RnOzfvLMECkxSStw0S9bI4cluZBJ
-Y9T9McYbSoWyoAqGuvVAK5BnqcgytzaqBMvLqmsYb0q5hYxQGCSHeQkpYir0Aq9q
-0GiFHGkbqg0+y5UQkM0SlfWHwIYT7arDhd0XHncmNQtaAWWEKopZTSR2mys4XAE+
-bXskoedemp3oIvjxXIvYQZzMYnJyMXTzLjtjEZFetaOWq1QVXY0Dqf5YasutN5/K
-Urs9TGZtW31qxC9z6T6xWxLuPtS0kXOIhYQ+dlS66+sra4MNQaRse5h+1BWFKeee
-Vmn81FVXniTLbpCMQ0M/gxFSGIoAADiK2EI0sDju3KzoOcq1Ol9gxQGeTnkXklSj
-gXxt/1PwZPQLJxlerrYUvlv2gQLjdv74pRKCgAN5/JOKw25kXzANWjmNfWn3E3p0
-/CUmrVCrCgIFG6yTt9bGGWCMsgMieEQP+scabwBYEi1Vflt+I4lwvxNFMD/3Qk4A
-N7TRvhVMB8o4pa1jls6/NM6edqFnj7KZqBk4RhkCWsYbAECVgDB01rOsCH9sRIj9
-mZMG6HUatyG3auomJxl4PZl4COre1ECfu92u182uqyt6+cIh1xyuZo0fNd9FJCei
-TKkVS8C8ryl0zFEjPnObWBdD0HLb8aQJedzelvubwCU1U1bek28=
-=qTAb
------END PGP SIGNATURE-----
-
---+xNpyl7Qekk2NvDX--
