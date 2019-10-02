@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4017BC4360C
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 19:09:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F7E8C47404
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 19:09:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 290A3222BE
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 19:09:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 758DB222C6
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 19:09:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729366AbfJBTIT (ORCPT
+        id S1729630AbfJBTJ3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Oct 2019 15:08:19 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:35282 "EHLO
+        Wed, 2 Oct 2019 15:09:29 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:36066 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729059AbfJBTIJ (ORCPT
+        by vger.kernel.org with ESMTP id S1729364AbfJBTIT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Oct 2019 15:08:09 -0400
+        Wed, 2 Oct 2019 15:08:19 -0400
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1iFjyn-00035e-RL; Wed, 02 Oct 2019 20:08:05 +0100
+        id 1iFjyx-00036K-Qc; Wed, 02 Oct 2019 20:08:15 +0100
 Received: from ben by deadeye with local (Exim 4.92.1)
         (envelope-from <ben@decadent.org.uk>)
-        id 1iFjyn-0003bG-EA; Wed, 02 Oct 2019 20:08:05 +0100
+        id 1iFjyp-0003eZ-2W; Wed, 02 Oct 2019 20:08:07 +0100
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,16 +35,20 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Eric Dumazet" <edumazet@google.com>,
-        "Xin Long" <lucien.xin@gmail.com>,
-        "Andrey Konovalov" <andreyknvl@google.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        "WANG Cong" <xiyou.wangcong@gmail.com>
+        "Joseph Qi" <joseph.qi@linux.alibaba.com>,
+        "Changwei Ge" <gechangwei@live.cn>,
+        "Joel Becker" <jlbec@evilplan.org>,
+        "Wengang Wang" <wen.gang.wang@oracle.com>,
+        "Junxiao Bi" <junxiao.bi@oracle.com>,
+        "Mark Fasheh" <mark@fasheh.com>, "Jun Piao" <piaojun@huawei.com>,
+        "Daniel Sobe" <daniel.sobe@nxp.com>,
+        "Linus Torvalds" <torvalds@linux-foundation.org>,
+        "Gang He" <ghe@suse.com>
 Date:   Wed, 02 Oct 2019 20:06:51 +0100
-Message-ID: <lsq.1570043211.784749873@decadent.org.uk>
+Message-ID: <lsq.1570043211.332720807@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 18/87] igmp: acquire pmc lock for ip_mc_clear_src()
+Subject: [PATCH 3.16 59/87] fs/ocfs2: fix race in ocfs2_dentry_attach_lock()
 In-Reply-To: <lsq.1570043210.379046399@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -58,80 +62,94 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: WANG Cong <xiyou.wangcong@gmail.com>
+From: Wengang Wang <wen.gang.wang@oracle.com>
 
-commit c38b7d327aafd1e3ad7ff53eefac990673b65667 upstream.
+commit be99ca2716972a712cde46092c54dee5e6192bf8 upstream.
 
-Andrey reported a use-after-free in add_grec():
+ocfs2_dentry_attach_lock() can be executed in parallel threads against the
+same dentry.  Make that race safe.  The race is like this:
 
-        for (psf = *psf_list; psf; psf = psf_next) {
-		...
-                psf_next = psf->sf_next;
+            thread A                               thread B
 
-where the struct ip_sf_list's were already freed by:
+(A1) enter ocfs2_dentry_attach_lock,
+seeing dentry->d_fsdata is NULL,
+and no alias found by
+ocfs2_find_local_alias, so kmalloc
+a new ocfs2_dentry_lock structure
+to local variable "dl", dl1
 
- kfree+0xe8/0x2b0 mm/slub.c:3882
- ip_mc_clear_src+0x69/0x1c0 net/ipv4/igmp.c:2078
- ip_mc_dec_group+0x19a/0x470 net/ipv4/igmp.c:1618
- ip_mc_drop_socket+0x145/0x230 net/ipv4/igmp.c:2609
- inet_release+0x4e/0x1c0 net/ipv4/af_inet.c:411
- sock_release+0x8d/0x1e0 net/socket.c:597
- sock_close+0x16/0x20 net/socket.c:1072
+               .....
 
-This happens because we don't hold pmc->lock in ip_mc_clear_src()
-and a parallel mr_ifc_timer timer could jump in and access them.
+                                    (B1) enter ocfs2_dentry_attach_lock,
+                                    seeing dentry->d_fsdata is NULL,
+                                    and no alias found by
+                                    ocfs2_find_local_alias so kmalloc
+                                    a new ocfs2_dentry_lock structure
+                                    to local variable "dl", dl2.
 
-The RCU lock is there but it is merely for pmc itself, this
-spinlock could actually ensure we don't access them in parallel.
+                                                   ......
 
-Thanks to Eric and Long for discussion on this bug.
+(A2) set dentry->d_fsdata with dl1,
+call ocfs2_dentry_lock() and increase
+dl1->dl_lockres.l_ro_holders to 1 on
+success.
+              ......
 
-Reported-by: Andrey Konovalov <andreyknvl@google.com>
-Cc: Eric Dumazet <edumazet@google.com>
-Cc: Xin Long <lucien.xin@gmail.com>
-Signed-off-by: Cong Wang <xiyou.wangcong@gmail.com>
-Reviewed-by: Xin Long <lucien.xin@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+                                    (B2) set dentry->d_fsdata with dl2
+                                    call ocfs2_dentry_lock() and increase
+				    dl2->dl_lockres.l_ro_holders to 1 on
+				    success.
+
+                                                  ......
+
+(A3) call ocfs2_dentry_unlock()
+and decrease
+dl2->dl_lockres.l_ro_holders to 0
+on success.
+             ....
+
+                                    (B3) call ocfs2_dentry_unlock(),
+                                    decreasing
+				    dl2->dl_lockres.l_ro_holders, but
+				    see it's zero now, panic
+
+Link: http://lkml.kernel.org/r/20190529174636.22364-1-wen.gang.wang@oracle.com
+Signed-off-by: Wengang Wang <wen.gang.wang@oracle.com>
+Reported-by: Daniel Sobe <daniel.sobe@nxp.com>
+Tested-by: Daniel Sobe <daniel.sobe@nxp.com>
+Reviewed-by: Changwei Ge <gechangwei@live.cn>
+Reviewed-by: Joseph Qi <joseph.qi@linux.alibaba.com>
+Cc: Mark Fasheh <mark@fasheh.com>
+Cc: Joel Becker <jlbec@evilplan.org>
+Cc: Junxiao Bi <junxiao.bi@oracle.com>
+Cc: Gang He <ghe@suse.com>
+Cc: Jun Piao <piaojun@huawei.com>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- net/ipv4/igmp.c | 21 +++++++++++++--------
- 1 file changed, 13 insertions(+), 8 deletions(-)
+ fs/ocfs2/dcache.c | 12 ++++++++++++
+ 1 file changed, 12 insertions(+)
 
---- a/net/ipv4/igmp.c
-+++ b/net/ipv4/igmp.c
-@@ -1880,21 +1880,26 @@ static int ip_mc_add_src(struct in_devic
+--- a/fs/ocfs2/dcache.c
++++ b/fs/ocfs2/dcache.c
+@@ -310,6 +310,18 @@ int ocfs2_dentry_attach_lock(struct dent
  
- static void ip_mc_clear_src(struct ip_mc_list *pmc)
- {
--	struct ip_sf_list *psf, *nextpsf;
-+	struct ip_sf_list *psf, *nextpsf, *tomb, *sources;
- 
--	for (psf = pmc->tomb; psf; psf = nextpsf) {
-+	spin_lock_bh(&pmc->lock);
-+	tomb = pmc->tomb;
-+	pmc->tomb = NULL;
-+	sources = pmc->sources;
-+	pmc->sources = NULL;
-+	pmc->sfmode = MCAST_EXCLUDE;
-+	pmc->sfcount[MCAST_INCLUDE] = 0;
-+	pmc->sfcount[MCAST_EXCLUDE] = 1;
-+	spin_unlock_bh(&pmc->lock);
+ out_attach:
+ 	spin_lock(&dentry_attach_lock);
++	if (unlikely(dentry->d_fsdata && !alias)) {
++		/* d_fsdata is set by a racing thread which is doing
++		 * the same thing as this thread is doing. Leave the racing
++		 * thread going ahead and we return here.
++		 */
++		spin_unlock(&dentry_attach_lock);
++		iput(dl->dl_inode);
++		ocfs2_lock_res_free(&dl->dl_lockres);
++		kfree(dl);
++		return 0;
++	}
 +
-+	for (psf = tomb; psf; psf = nextpsf) {
- 		nextpsf = psf->sf_next;
- 		kfree(psf);
- 	}
--	pmc->tomb = NULL;
--	for (psf = pmc->sources; psf; psf = nextpsf) {
-+	for (psf = sources; psf; psf = nextpsf) {
- 		nextpsf = psf->sf_next;
- 		kfree(psf);
- 	}
--	pmc->sources = NULL;
--	pmc->sfmode = MCAST_EXCLUDE;
--	pmc->sfcount[MCAST_INCLUDE] = 0;
--	pmc->sfcount[MCAST_EXCLUDE] = 1;
- }
- 
- 
+ 	dentry->d_fsdata = dl;
+ 	dl->dl_count++;
+ 	spin_unlock(&dentry_attach_lock);
 
