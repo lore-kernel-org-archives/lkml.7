@@ -4,28 +4,28 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5680EC4360C
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 19:38:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 75A61C47404
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 19:38:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 276A3206BB
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 19:38:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 521E2206BB
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 19:38:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728034AbfJBTik (ORCPT
+        id S1728177AbfJBTiq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Oct 2019 15:38:40 -0400
+        Wed, 2 Oct 2019 15:38:46 -0400
 Received: from mga06.intel.com ([134.134.136.31]:10182 "EHLO mga06.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726491AbfJBTih (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Oct 2019 15:38:37 -0400
+        id S1726062AbfJBTii (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 2 Oct 2019 15:38:38 -0400
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from orsmga001.jf.intel.com ([10.7.209.18])
   by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 02 Oct 2019 12:38:36 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.67,249,1566889200"; 
-   d="scan'208";a="275456098"
+   d="scan'208";a="275456101"
 Received: from jacob-builder.jf.intel.com ([10.7.199.155])
   by orsmga001.jf.intel.com with ESMTP; 02 Oct 2019 12:38:35 -0700
 From:   Jacob Pan <jacob.jun.pan@linux.intel.com>
@@ -43,10 +43,11 @@ Cc:     "Yi Liu" <yi.l.liu@intel.com>,
         Jonathan Cameron <jic23@kernel.org>,
         Eric Auger <eric.auger@redhat.com>,
         Jerry Snitselaar <jsnitsel@redhat.com>,
+        Jean-Philippe Brucker <jean-philippe.brucker@arm.com>,
         Jacob Pan <jacob.jun.pan@linux.intel.com>
-Subject: [PATCH v4 1/4] iommu: Introduce cache_invalidate API
-Date:   Wed,  2 Oct 2019 12:42:40 -0700
-Message-Id: <1570045363-24856-2-git-send-email-jacob.jun.pan@linux.intel.com>
+Subject: [PATCH v4 2/4] iommu: Add I/O ASID allocator
+Date:   Wed,  2 Oct 2019 12:42:41 -0700
+Message-Id: <1570045363-24856-3-git-send-email-jacob.jun.pan@linux.intel.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1570045363-24856-1-git-send-email-jacob.jun.pan@linux.intel.com>
 References: <1570045363-24856-1-git-send-email-jacob.jun.pan@linux.intel.com>
@@ -55,215 +56,274 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yi L Liu <yi.l.liu@intel.com>
+From: Jean-Philippe Brucker <jean-philippe.brucker@arm.com>
 
-In any virtualization use case, when the first translation stage
-is "owned" by the guest OS, the host IOMMU driver has no knowledge
-of caching structure updates unless the guest invalidation activities
-are trapped by the virtualizer and passed down to the host.
+Some devices might support multiple DMA address spaces, in particular
+those that have the PCI PASID feature. PASID (Process Address Space ID)
+allows to share process address spaces with devices (SVA), partition a
+device into VM-assignable entities (VFIO mdev) or simply provide
+multiple DMA address space to kernel drivers. Add a global PASID
+allocator usable by different drivers at the same time. Name it I/O ASID
+to avoid confusion with ASIDs allocated by arch code, which are usually
+a separate ID space.
 
-Since the invalidation data can be obtained from user space and will be
-written into physical IOMMU, we must allow security check at various
-layers. Therefore, generic invalidation data format are proposed here,
-model specific IOMMU drivers need to convert them into their own format.
+The IOASID space is global. Each device can have its own PASID space,
+but by convention the IOMMU ended up having a global PASID space, so
+that with SVA, each mm_struct is associated to a single PASID.
 
-Signed-off-by: Yi L Liu <yi.l.liu@intel.com>
+The allocator is primarily used by IOMMU subsystem but in rare occasions
+drivers would like to allocate PASIDs for devices that aren't managed by
+an IOMMU, using the same ID space as IOMMU.
+
+Signed-off-by: Jean-Philippe Brucker <jean-philippe.brucker@arm.com>
 Signed-off-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
-Signed-off-by: Ashok Raj <ashok.raj@intel.com>
-Signed-off-by: Eric Auger <eric.auger@redhat.com>
-Signed-off-by: Jean-Philippe Brucker <jean-philippe@linaro.com>
 ---
- drivers/iommu/iommu.c      |  10 +++++
- include/linux/iommu.h      |  14 ++++++
- include/uapi/linux/iommu.h | 110 +++++++++++++++++++++++++++++++++++++++++++++
- 3 files changed, 134 insertions(+)
+ drivers/iommu/Kconfig  |   4 ++
+ drivers/iommu/Makefile |   1 +
+ drivers/iommu/ioasid.c | 151 +++++++++++++++++++++++++++++++++++++++++++++++++
+ include/linux/ioasid.h |  48 ++++++++++++++++
+ 4 files changed, 204 insertions(+)
+ create mode 100644 drivers/iommu/ioasid.c
+ create mode 100644 include/linux/ioasid.h
 
-diff --git a/drivers/iommu/iommu.c b/drivers/iommu/iommu.c
-index d658c7c6a2ab..6ca9d28c08bb 100644
---- a/drivers/iommu/iommu.c
-+++ b/drivers/iommu/iommu.c
-@@ -1665,6 +1665,16 @@ int iommu_attach_device(struct iommu_domain *domain, struct device *dev)
- }
- EXPORT_SYMBOL_GPL(iommu_attach_device);
+diff --git a/drivers/iommu/Kconfig b/drivers/iommu/Kconfig
+index e3842eabcfdd..fd50ddffffbf 100644
+--- a/drivers/iommu/Kconfig
++++ b/drivers/iommu/Kconfig
+@@ -3,6 +3,10 @@
+ config IOMMU_IOVA
+ 	tristate
  
-+int iommu_cache_invalidate(struct iommu_domain *domain, struct device *dev,
-+			   struct iommu_cache_invalidate_info *inv_info)
++# The IOASID library may also be used by non-IOMMU_API users
++config IOASID
++	tristate
++
+ # IOMMU_API always gets selected by whoever wants it.
+ config IOMMU_API
+ 	bool
+diff --git a/drivers/iommu/Makefile b/drivers/iommu/Makefile
+index 4f405f926e73..35d17094fe3b 100644
+--- a/drivers/iommu/Makefile
++++ b/drivers/iommu/Makefile
+@@ -7,6 +7,7 @@ obj-$(CONFIG_IOMMU_DMA) += dma-iommu.o
+ obj-$(CONFIG_IOMMU_IO_PGTABLE) += io-pgtable.o
+ obj-$(CONFIG_IOMMU_IO_PGTABLE_ARMV7S) += io-pgtable-arm-v7s.o
+ obj-$(CONFIG_IOMMU_IO_PGTABLE_LPAE) += io-pgtable-arm.o
++obj-$(CONFIG_IOASID) += ioasid.o
+ obj-$(CONFIG_IOMMU_IOVA) += iova.o
+ obj-$(CONFIG_OF_IOMMU)	+= of_iommu.o
+ obj-$(CONFIG_MSM_IOMMU) += msm_iommu.o
+diff --git a/drivers/iommu/ioasid.c b/drivers/iommu/ioasid.c
+new file mode 100644
+index 000000000000..aadf500c281c
+--- /dev/null
++++ b/drivers/iommu/ioasid.c
+@@ -0,0 +1,151 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * I/O Address Space ID allocator. There is one global IOASID space, split into
++ * subsets. Users create a subset with DECLARE_IOASID_SET, then allocate and
++ * free IOASIDs with ioasid_alloc and ioasid_free.
++ */
++#include <linux/ioasid.h>
++#include <linux/module.h>
++#include <linux/slab.h>
++#include <linux/spinlock.h>
++#include <linux/xarray.h>
++
++struct ioasid_data {
++	ioasid_t id;
++	struct ioasid_set *set;
++	void *private;
++	struct rcu_head rcu;
++};
++
++static DEFINE_XARRAY_ALLOC(ioasid_xa);
++
++/**
++ * ioasid_set_data - Set private data for an allocated ioasid
++ * @ioasid: the ID to set data
++ * @data:   the private data
++ *
++ * For IOASID that is already allocated, private data can be set
++ * via this API. Future lookup can be done via ioasid_find.
++ */
++int ioasid_set_data(ioasid_t ioasid, void *data)
 +{
-+	if (unlikely(!domain->ops->cache_invalidate))
-+		return -ENODEV;
++	struct ioasid_data *ioasid_data;
++	int ret = 0;
 +
-+	return domain->ops->cache_invalidate(domain, dev, inv_info);
++	xa_lock(&ioasid_xa);
++	ioasid_data = xa_load(&ioasid_xa, ioasid);
++	if (ioasid_data)
++		rcu_assign_pointer(ioasid_data->private, data);
++	else
++		ret = -ENOENT;
++	xa_unlock(&ioasid_xa);
++
++	/*
++	 * Wait for readers to stop accessing the old private data, so the
++	 * caller can free it.
++	 */
++	if (!ret)
++		synchronize_rcu();
++
++	return ret;
 +}
-+EXPORT_SYMBOL_GPL(iommu_cache_invalidate);
++EXPORT_SYMBOL_GPL(ioasid_set_data);
 +
- static void __iommu_detach_device(struct iommu_domain *domain,
- 				  struct device *dev)
- {
-diff --git a/include/linux/iommu.h b/include/linux/iommu.h
-index 29bac5345563..9b22055e6f85 100644
---- a/include/linux/iommu.h
-+++ b/include/linux/iommu.h
-@@ -244,6 +244,7 @@ struct iommu_iotlb_gather {
-  * @sva_unbind: Unbind process address space from device
-  * @sva_get_pasid: Get PASID associated to a SVA handle
-  * @page_response: handle page request response
-+ * @cache_invalidate: invalidate translation caches
-  * @pgsize_bitmap: bitmap of all possible supported page sizes
-  */
- struct iommu_ops {
-@@ -306,6 +307,8 @@ struct iommu_ops {
- 	int (*page_response)(struct device *dev,
- 			     struct iommu_fault_event *evt,
- 			     struct iommu_page_response *msg);
-+	int (*cache_invalidate)(struct iommu_domain *domain, struct device *dev,
-+				struct iommu_cache_invalidate_info *inv_info);
- 
- 	unsigned long pgsize_bitmap;
- };
-@@ -417,6 +420,9 @@ extern int iommu_attach_device(struct iommu_domain *domain,
- 			       struct device *dev);
- extern void iommu_detach_device(struct iommu_domain *domain,
- 				struct device *dev);
-+extern int iommu_cache_invalidate(struct iommu_domain *domain,
-+				  struct device *dev,
-+				  struct iommu_cache_invalidate_info *inv_info);
- extern struct iommu_domain *iommu_get_domain_for_dev(struct device *dev);
- extern struct iommu_domain *iommu_get_dma_domain(struct device *dev);
- extern int iommu_map(struct iommu_domain *domain, unsigned long iova,
-@@ -1005,6 +1011,14 @@ static inline int iommu_sva_get_pasid(struct iommu_sva *handle)
- 	return IOMMU_PASID_INVALID;
- }
- 
-+static inline int
-+iommu_cache_invalidate(struct iommu_domain *domain,
-+		       struct device *dev,
-+		       struct iommu_cache_invalidate_info *inv_info)
++/**
++ * ioasid_alloc - Allocate an IOASID
++ * @set: the IOASID set
++ * @min: the minimum ID (inclusive)
++ * @max: the maximum ID (inclusive)
++ * @private: data private to the caller
++ *
++ * Allocate an ID between @min and @max. The @private pointer is stored
++ * internally and can be retrieved with ioasid_find().
++ *
++ * Return: the allocated ID on success, or %INVALID_IOASID on failure.
++ */
++ioasid_t ioasid_alloc(struct ioasid_set *set, ioasid_t min, ioasid_t max,
++		      void *private)
 +{
-+	return -ENODEV;
++	struct ioasid_data *data;
++	ioasid_t id;
++
++	data = kzalloc(sizeof(*data), GFP_ATOMIC);
++	if (!data)
++		return INVALID_IOASID;
++
++	data->set = set;
++	data->private = private;
++
++	if (xa_alloc(&ioasid_xa, &id, data, XA_LIMIT(min, max), GFP_KERNEL)) {
++		pr_err("Failed to alloc ioasid from %d to %d\n", min, max);
++		goto exit_free;
++	}
++	data->id = id;
++
++	return id;
++exit_free:
++	kfree(data);
++	return INVALID_IOASID;
++}
++EXPORT_SYMBOL_GPL(ioasid_alloc);
++
++/**
++ * ioasid_free - Free an IOASID
++ * @ioasid: the ID to remove
++ */
++void ioasid_free(ioasid_t ioasid)
++{
++	struct ioasid_data *ioasid_data;
++
++	ioasid_data = xa_erase(&ioasid_xa, ioasid);
++
++	kfree_rcu(ioasid_data, rcu);
++}
++EXPORT_SYMBOL_GPL(ioasid_free);
++
++/**
++ * ioasid_find - Find IOASID data
++ * @set: the IOASID set
++ * @ioasid: the IOASID to find
++ * @getter: function to call on the found object
++ *
++ * The optional getter function allows to take a reference to the found object
++ * under the rcu lock. The function can also check if the object is still valid:
++ * if @getter returns false, then the object is invalid and NULL is returned.
++ *
++ * If the IOASID exists, return the private pointer passed to ioasid_alloc.
++ * Private data can be NULL if not set. Return an error if the IOASID is not
++ * found, or if @set is not NULL and the IOASID does not belong to the set.
++ */
++void *ioasid_find(struct ioasid_set *set, ioasid_t ioasid,
++		  bool (*getter)(void *))
++{
++	void *priv;
++	struct ioasid_data *ioasid_data;
++
++	rcu_read_lock();
++	ioasid_data = xa_load(&ioasid_xa, ioasid);
++	if (!ioasid_data) {
++		priv = ERR_PTR(-ENOENT);
++		goto unlock;
++	}
++	if (set && ioasid_data->set != set) {
++		/* data found but does not belong to the set */
++		priv = ERR_PTR(-EACCES);
++		goto unlock;
++	}
++	/* Now IOASID and its set is verified, we can return the private data */
++	priv = rcu_dereference(ioasid_data->private);
++	if (getter && !getter(priv))
++		priv = NULL;
++unlock:
++	rcu_read_unlock();
++
++	return priv;
++}
++EXPORT_SYMBOL_GPL(ioasid_find);
++
++MODULE_AUTHOR("Jean-Philippe Brucker <jean-philippe.brucker@arm.com>");
++MODULE_AUTHOR("Jacob Pan <jacob.jun.pan@linux.intel.com>");
++MODULE_DESCRIPTION("IO Address Space ID (IOASID) allocator");
++MODULE_LICENSE("GPL");
+diff --git a/include/linux/ioasid.h b/include/linux/ioasid.h
+new file mode 100644
+index 000000000000..17337a13f06e
+--- /dev/null
++++ b/include/linux/ioasid.h
+@@ -0,0 +1,48 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++#ifndef __LINUX_IOASID_H
++#define __LINUX_IOASID_H
++
++#include <linux/types.h>
++#include <linux/errno.h>
++
++#define INVALID_IOASID ((ioasid_t)-1)
++typedef unsigned int ioasid_t;
++
++struct ioasid_set {
++	int dummy;
++};
++
++#define DECLARE_IOASID_SET(name) struct ioasid_set name = { 0 }
++
++#if IS_ENABLED(CONFIG_IOASID)
++ioasid_t ioasid_alloc(struct ioasid_set *set, ioasid_t min, ioasid_t max,
++		      void *private);
++void ioasid_free(ioasid_t ioasid);
++void *ioasid_find(struct ioasid_set *set, ioasid_t ioasid,
++		  bool (*getter)(void *));
++int ioasid_set_data(ioasid_t ioasid, void *data);
++
++#else /* !CONFIG_IOASID */
++static inline ioasid_t ioasid_alloc(struct ioasid_set *set, ioasid_t min,
++				    ioasid_t max, void *private)
++{
++	return INVALID_IOASID;
 +}
 +
- #endif /* CONFIG_IOMMU_API */
- 
- #ifdef CONFIG_IOMMU_DEBUGFS
-diff --git a/include/uapi/linux/iommu.h b/include/uapi/linux/iommu.h
-index fc00c5d4741b..f3e96214df8e 100644
---- a/include/uapi/linux/iommu.h
-+++ b/include/uapi/linux/iommu.h
-@@ -152,4 +152,114 @@ struct iommu_page_response {
- 	__u32	code;
- };
- 
-+/* defines the granularity of the invalidation */
-+enum iommu_inv_granularity {
-+	IOMMU_INV_GRANU_DOMAIN,	/* domain-selective invalidation */
-+	IOMMU_INV_GRANU_PASID,	/* PASID-selective invalidation */
-+	IOMMU_INV_GRANU_ADDR,	/* page-selective invalidation */
-+	IOMMU_INV_GRANU_NR,	/* number of invalidation granularities */
-+};
++static inline void ioasid_free(ioasid_t ioasid)
++{
++}
 +
-+/**
-+ * struct iommu_inv_addr_info - Address Selective Invalidation Structure
-+ *
-+ * @flags: indicates the granularity of the address-selective invalidation
-+ * - If the PASID bit is set, the @pasid field is populated and the invalidation
-+ *   relates to cache entries tagged with this PASID and matching the address
-+ *   range.
-+ * - If ARCHID bit is set, @archid is populated and the invalidation relates
-+ *   to cache entries tagged with this architecture specific ID and matching
-+ *   the address range.
-+ * - Both PASID and ARCHID can be set as they may tag different caches.
-+ * - If neither PASID or ARCHID is set, global addr invalidation applies.
-+ * - The LEAF flag indicates whether only the leaf PTE caching needs to be
-+ *   invalidated and other paging structure caches can be preserved.
-+ * @pasid: process address space ID
-+ * @archid: architecture-specific ID
-+ * @addr: first stage/level input address
-+ * @granule_size: page/block size of the mapping in bytes
-+ * @nb_granules: number of contiguous granules to be invalidated
-+ */
-+struct iommu_inv_addr_info {
-+#define IOMMU_INV_ADDR_FLAGS_PASID	(1 << 0)
-+#define IOMMU_INV_ADDR_FLAGS_ARCHID	(1 << 1)
-+#define IOMMU_INV_ADDR_FLAGS_LEAF	(1 << 2)
-+	__u32	flags;
-+	__u32	archid;
-+	__u64	pasid;
-+	__u64	addr;
-+	__u64	granule_size;
-+	__u64	nb_granules;
-+};
++static inline void *ioasid_find(struct ioasid_set *set, ioasid_t ioasid,
++				bool (*getter)(void *))
++{
++	return NULL;
++}
 +
-+/**
-+ * struct iommu_inv_pasid_info - PASID Selective Invalidation Structure
-+ *
-+ * @flags: indicates the granularity of the PASID-selective invalidation
-+ * - If the PASID bit is set, the @pasid field is populated and the invalidation
-+ *   relates to cache entries tagged with this PASID and matching the address
-+ *   range.
-+ * - If the ARCHID bit is set, the @archid is populated and the invalidation
-+ *   relates to cache entries tagged with this architecture specific ID and
-+ *   matching the address range.
-+ * - Both PASID and ARCHID can be set as they may tag different caches.
-+ * - At least one of PASID or ARCHID must be set.
-+ * @pasid: process address space ID
-+ * @archid: architecture-specific ID
-+ */
-+struct iommu_inv_pasid_info {
-+#define IOMMU_INV_PASID_FLAGS_PASID	(1 << 0)
-+#define IOMMU_INV_PASID_FLAGS_ARCHID	(1 << 1)
-+	__u32	flags;
-+	__u32	archid;
-+	__u64	pasid;
-+};
++static inline int ioasid_set_data(ioasid_t ioasid, void *data)
++{
++	return -ENOTSUPP;
++}
 +
-+/**
-+ * struct iommu_cache_invalidate_info - First level/stage invalidation
-+ *     information
-+ * @version: API version of this structure
-+ * @cache: bitfield that allows to select which caches to invalidate
-+ * @granularity: defines the lowest granularity used for the invalidation:
-+ *     domain > PASID > addr
-+ * @padding: reserved for future use (should be zero)
-+ * @pasid_info: invalidation data when @granularity is %IOMMU_INV_GRANU_PASID
-+ * @addr_info: invalidation data when @granularity is %IOMMU_INV_GRANU_ADDR
-+ *
-+ * Not all the combinations of cache/granularity are valid:
-+ *
-+ * +--------------+---------------+---------------+---------------+
-+ * | type /       |   DEV_IOTLB   |     IOTLB     |      PASID    |
-+ * | granularity  |               |               |      cache    |
-+ * +==============+===============+===============+===============+
-+ * | DOMAIN       |       N/A     |       Y       |       Y       |
-+ * +--------------+---------------+---------------+---------------+
-+ * | PASID        |       Y       |       Y       |       Y       |
-+ * +--------------+---------------+---------------+---------------+
-+ * | ADDR         |       Y       |       Y       |       N/A     |
-+ * +--------------+---------------+---------------+---------------+
-+ *
-+ * Invalidations by %IOMMU_INV_GRANU_DOMAIN don't take any argument other than
-+ * @version and @cache.
-+ *
-+ * If multiple cache types are invalidated simultaneously, they all
-+ * must support the used granularity.
-+ */
-+struct iommu_cache_invalidate_info {
-+#define IOMMU_CACHE_INVALIDATE_INFO_VERSION_1 1
-+	__u32	version;
-+/* IOMMU paging structure cache */
-+#define IOMMU_CACHE_INV_TYPE_IOTLB	(1 << 0) /* IOMMU IOTLB */
-+#define IOMMU_CACHE_INV_TYPE_DEV_IOTLB	(1 << 1) /* Device IOTLB */
-+#define IOMMU_CACHE_INV_TYPE_PASID	(1 << 2) /* PASID cache */
-+#define IOMMU_CACHE_INV_TYPE_NR		(3)
-+	__u8	cache;
-+	__u8	granularity;
-+	__u8	padding[2];
-+	union {
-+		struct iommu_inv_pasid_info pasid_info;
-+		struct iommu_inv_addr_info addr_info;
-+	};
-+};
-+
- #endif /* _UAPI_IOMMU_H */
++#endif /* CONFIG_IOASID */
++#endif /* __LINUX_IOASID_H */
 -- 
 2.7.4
 
