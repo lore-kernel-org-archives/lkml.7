@@ -2,123 +2,90 @@ Return-Path: <SRS0=zem1=X3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 53EE5C35280
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 10:39:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 11526C352AA
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 10:41:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 29B83218DE
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 10:39:10 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LCgk8yPh"
+	by mail.kernel.org (Postfix) with ESMTP id DC41A218DE
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 10:41:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728012AbfJBKjJ (ORCPT
+        id S1727985AbfJBKl2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Oct 2019 06:39:09 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:35860 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726200AbfJBKjJ (ORCPT
+        Wed, 2 Oct 2019 06:41:28 -0400
+Received: from smtp1.de.adit-jv.com ([93.241.18.167]:42936 "EHLO
+        smtp1.de.adit-jv.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725851AbfJBKl1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Oct 2019 06:39:09 -0400
-Received: by mail-wm1-f66.google.com with SMTP id m18so6434693wmc.1;
-        Wed, 02 Oct 2019 03:39:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=34wC0n//44F6y79I2b4AAd2CW4tyXa/jyiOQHai4gS8=;
-        b=LCgk8yPhc7jdn3eNstggPqAH1MafZ3eYuEY8P7C5YN5g1R5aludwgXD2nJg95ofiNG
-         4ozU4VPR1n9Yttjm5dPW5nxL8tHIWUZGgorGiy85f8Cz5dRb2G3ozE7PS0MHQWSVZsWH
-         lsx2EjLC2+Q+JagvxQ0JSgS0qsjc76n3R0a8lsGwrn9blviD8Ck2aGmrVQedw2iB9auq
-         LMNQQ72enoHc2AoOggzyfPeshI1XzYIByHrvwbomiXkJZrEoi4nGU2KaX8TM/9+jDnwm
-         0+KvhTEL63nQ3hgangxKkUGt6+tK84Kq16gL7pzV5fxYgCrx86OmWJYkaLTzfjL/9V4A
-         CG7A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=34wC0n//44F6y79I2b4AAd2CW4tyXa/jyiOQHai4gS8=;
-        b=Wc5CjDKZ03UTtoqZbhTd1is8XON/Qz/+FF78tBuhDj7nlMrXJmvZVjuLe/ZYJ/eK3G
-         2bReygAAly/rBFsuPNLIEUPNDoIIasZkwMhwXCCw0h1sUFKvdpefm6ymzDv1XRaJeYDi
-         DDnK3oXEVje9ss6QJbulXbEW7uGHC0P1/GxCkJpYu/PTo9fLQNmtzXH6yy1a+nvUByLh
-         vBSbMp91xEIL6EDxOzWqfcnW8bIJ4Ud/r8wSV2ifg7j79BCxB3p/mG6FHpXip/0rpzpI
-         X/wGWbV2jF02YTEAe+K6vs5MgG9rblWnShbVKyi2fTIMAAR6cZfE6JDgd84YXU2/o8CV
-         Gzhw==
-X-Gm-Message-State: APjAAAVRtXglX3+gfVMjgi5QvmI3iCiZkqBOl6mPlbm9EStWiXteiXbv
-        9b6wSzqxAIrG+kLK2Dh0xSE=
-X-Google-Smtp-Source: APXvYqzKaVdz2ys0q7Ajk0apq2a5ruazTjoX3Ns1yPUR64X5X1zjyBQv/KrerK3HFQV0RaCjeaFObg==
-X-Received: by 2002:a1c:5fd6:: with SMTP id t205mr2286748wmb.124.1570012747064;
-        Wed, 02 Oct 2019 03:39:07 -0700 (PDT)
-Received: from localhost (p2E5BE2CE.dip0.t-ipconnect.de. [46.91.226.206])
-        by smtp.gmail.com with ESMTPSA id c18sm19817723wrv.10.2019.10.02.03.39.05
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 02 Oct 2019 03:39:06 -0700 (PDT)
-Date:   Wed, 2 Oct 2019 12:39:04 +0200
-From:   Thierry Reding <thierry.reding@gmail.com>
-To:     Colin King <colin.king@canonical.com>
-Cc:     Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Maxime Ripard <mripard@kernel.org>,
-        Chen-Yu Tsai <wens@csie.org>, linux-pwm@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] pwm: sun4i: redundant assignment to variable pval
-Message-ID: <20191002103904.GI3716706@ulmo>
-References: <20191002100844.10490-1-colin.king@canonical.com>
+        Wed, 2 Oct 2019 06:41:27 -0400
+Received: from localhost (smtp1.de.adit-jv.com [127.0.0.1])
+        by smtp1.de.adit-jv.com (Postfix) with ESMTP id 88F1C3C057F;
+        Wed,  2 Oct 2019 12:41:25 +0200 (CEST)
+Received: from smtp1.de.adit-jv.com ([127.0.0.1])
+        by localhost (smtp1.de.adit-jv.com [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id VmjJXeBz8g7t; Wed,  2 Oct 2019 12:41:20 +0200 (CEST)
+Received: from HI2EXCH01.adit-jv.com (hi2exch01.adit-jv.com [10.72.92.24])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by smtp1.de.adit-jv.com (Postfix) with ESMTPS id E90553C0585;
+        Wed,  2 Oct 2019 12:41:03 +0200 (CEST)
+Received: from vmlxhi-102.adit-jv.com (10.72.93.184) by HI2EXCH01.adit-jv.com
+ (10.72.92.24) with Microsoft SMTP Server (TLS) id 14.3.468.0; Wed, 2 Oct 2019
+ 12:41:03 +0200
+Date:   Wed, 2 Oct 2019 12:41:01 +0200
+From:   Eugeniu Rosca <erosca@de.adit-jv.com>
+To:     shuah <shuah@kernel.org>
+CC:     Eugeniu Rosca <erosca@de.adit-jv.com>,
+        "George G. Davis" <george_davis@mentor.com>,
+        <linux-kselftest@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        Eugeniu Rosca <roscaeugeniu@gmail.com>
+Subject: Re: [PATCH v3 1/2] selftests: watchdog: Validate optional file
+ argument
+Message-ID: <20191002104101.GA6855@vmlxhi-102.adit-jv.com>
+References: <20190917184023.16701-1-erosca@de.adit-jv.com>
+ <156996250317.31379.1299334144215961607.git-patchwork-notify@kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="RwxaKO075aXzzOz0"
+Content-Type: text/plain; charset="us-ascii"
 Content-Disposition: inline
-In-Reply-To: <20191002100844.10490-1-colin.king@canonical.com>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+In-Reply-To: <156996250317.31379.1299334144215961607.git-patchwork-notify@kernel.org>
+User-Agent: Mutt/1.12.1+40 (7f8642d4ee82) (2019-06-28)
+X-Originating-IP: [10.72.93.184]
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Shuah,
 
---RwxaKO075aXzzOz0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On Tue, Oct 01, 2019 at 08:41:43PM +0000, patchwork-bot+linux-kselftest@kernel.org wrote:
+> Hello:
+> 
+> This series was applied to shuah/linux-kselftest.git (refs/heads/fixes).
+> 
+> On Tue, 17 Sep 2019 20:40:22 +0200 you wrote:
+> > From: "George G. Davis" <george_davis@mentor.com>
+> > 
+> > The newly added optional file argument does not validate if the
+> > file is indeed a watchdog, e.g.:
+> > 
+> > ./watchdog-test  -f /dev/zero
+> > Watchdog Ticking Away!
+> > 
+> > [...]
+> 
+> Here is a summary with links:
+>   - [v3,1/2] selftests: watchdog: Validate optional file argument
+>     https://git.kernel.org/shuah/linux-kselftest/c/93c384f5d553bc4fdfb252b89ff378363ee05cee
 
-On Wed, Oct 02, 2019 at 11:08:44AM +0100, Colin King wrote:
-> From: Colin Ian King <colin.king@canonical.com>
->=20
-> Variable pval is being assigned a value that is never read. The
-> assignment is redundant and hence can be removed.
->=20
-> Addresses-Coverity: ("Unused value")
-> Signed-off-by: Colin Ian King <colin.king@canonical.com>
-> ---
->  drivers/pwm/pwm-sun4i.c | 1 -
->  1 file changed, 1 deletion(-)
+Could you please update the 'Fixes:' tag in the above commit to:
+Fixes: a4864a33f56caa ("selftests: watchdog: Add optional file argument")
 
-Applied, thanks.
+The warning in https://patchwork.kernel.org/patch/11149287/ clearly says
+that the fixed commit is from linux-next and it seems to have been
+updated before landing in mainline. TIA.
 
-Thierry
-
---RwxaKO075aXzzOz0
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl2UfkYACgkQ3SOs138+
-s6EokA//eXZuyZhqQNANMBM0nG+CkHKuKs+iC0DOXQ4NyZMNNoXNy6I2UvGg7Yxr
-hSiF5hYwZqfU12j33qdvne88q+Qh4R6UVyH9+doCh2SYpO928hUyrcBP7cutZ6LQ
-pXxUyssDZCWpzr95yrKXhFdtp1KARRdeIjvnu2qdAUXVbJ9LsYpWVKBZQ+5qzrit
-p0oR4l9K1T8m4wJ+DM9ejM8SPRsT+LMhaqPDWzqSRy6OewNPhcHiQk26XwZ2SWDH
-tUMLk5vuGoHxKHOYorOG3IFjfNjCWqJbsRyYIYdjk0hqBrZ6UWhAI1EKdeb6qK5V
-oPyxLIIhiTMZ6JiSN/RgY3zO+/0Mak0YLrouaVCpt6mI/OcsTh6u6++bDvQchQmB
-vcNFScHVLuwUnNV1Bh4FEjocX3i5ucDQsAhDQfX1HriCX4MTXt3QArdQLx2s1CYS
-AcntnIIYWzT+YIc6FObtL4ml/FPmwBKT6V5F5eA78AwcsRDV6dMcqRO1I8wkkypF
-gAh5KLSjWfibX+nYC2vgMsP8Ab6wD40fu8sa8W8q/Q6A4Yc267hqHgsMKTnVQP4t
-TK/kv4TqVADa7mV6sGsvQUvtKn2+3rBUnv+WU06VXgw4ZhzyjybuZbGi5rkugGm8
-eUDcoodpzE8EJSlgjgpygmouU5EUezWzh/tfCGR3HKeTPQBs47E=
-=VQ2m
------END PGP SIGNATURE-----
-
---RwxaKO075aXzzOz0--
+-- 
+Best Regards,
+Eugeniu
