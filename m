@@ -2,110 +2,207 @@ Return-Path: <SRS0=zem1=X3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6724C35280
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 13:07:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EC30ECE58A
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 13:09:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8A55921920
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 13:07:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D8F0921A4A
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 13:09:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="OcATdm0f"
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="kS7E0aNe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727587AbfJBNHk (ORCPT
+        id S1727574AbfJBNJ3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Oct 2019 09:07:40 -0400
-Received: from mail-oi1-f174.google.com ([209.85.167.174]:36060 "EHLO
-        mail-oi1-f174.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726852AbfJBNHk (ORCPT
+        Wed, 2 Oct 2019 09:09:29 -0400
+Received: from perceval.ideasonboard.com ([213.167.242.64]:34130 "EHLO
+        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726574AbfJBNJ3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Oct 2019 09:07:40 -0400
-Received: by mail-oi1-f174.google.com with SMTP id k20so17574646oih.3
-        for <linux-kernel@vger.kernel.org>; Wed, 02 Oct 2019 06:07:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=intel-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=50mE1GFOx2IDL8fOUBOO94SxADHosM9SfQ7pyxbnHTg=;
-        b=OcATdm0fU0HGv1IIhubCuFeqR/P2N37o7xtR/ZD4irFYeHZyY/QMlcxb9A3jVo1gr4
-         chbxvSvR7VV0Qigg5Ap4In4xkHjYBGjW81DG45OK+R+st0eaUOvKFdRsNtBGfdXXso+G
-         CRT9yAg3GyQINBZ5KBDazaDUYmqZ9vColyWrmK7zf2b7qw3LLSuXB22GA91dRzkb/DN3
-         hVBuovDyfmx09Yu6vWFC0lVHAXaZdX+8e6xTLeBTs8iVaP9DmUzHXZJ5SuCoYXwZ14L3
-         3WdQyTtyBcH2b1o1IoJ8dDqWwniK/IYku412BJ6lj3HdaGvf3lcdbJk/pu8WTervpUsH
-         BKcg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=50mE1GFOx2IDL8fOUBOO94SxADHosM9SfQ7pyxbnHTg=;
-        b=NZeUImhhGGxpP2D3HH2Af6CanQA7JKlaC9zPDgFarImh73yxfCw3ORwtImKFsXC/y4
-         MYEWU9AYRRJ385WWx9qhCR1D/Xj1Mzv8bUw21EdJbt2/McQZoO7ja+z7bXdjUu72Lcrt
-         uy708s0GfBDt7Pg9F87RRRkmeJV+nUELYilP5tvIRQspsbkDlM6vk2gJD0B5HY+69jmJ
-         KtGsCMKrCXRpZhBpztqSx05r3UEs3/SfzV0Da+e8/NWXeVA8D89uB3rO3zlmg2ks15ay
-         Nik4i4rQvfKsSaN2XhFATMLf++e5y0xr/yKucoR/FVoM8DPxVOYgNmU8IMT31dZ99foe
-         i/dw==
-X-Gm-Message-State: APjAAAUv9bY6NYUtsaKpvaWezec7RNZ2gCst7SDvINyX94eVNlgOK5PV
-        6PvFRPKR1B8XzAAxhsBGSheT8iGyhOHwM44qJ1CIKQ==
-X-Google-Smtp-Source: APXvYqxGQ01cpMCqhyT0OZic4du6ntHizaukJRygkeedHLWkQjdo8fNGeQWk8deAiGsRuCSgwYPjlJGf+Xhg9J875/c=
-X-Received: by 2002:aca:eb09:: with SMTP id j9mr2925590oih.105.1570021659582;
- Wed, 02 Oct 2019 06:07:39 -0700 (PDT)
+        Wed, 2 Oct 2019 09:09:29 -0400
+Received: from pendragon.ideasonboard.com (unknown [132.205.230.1])
+        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 7D0242BB;
+        Wed,  2 Oct 2019 15:09:25 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+        s=mail; t=1570021766;
+        bh=urSjyYGTYx0kiUGUdpd7omjpLbcIVpHhGw+J0SSuZv8=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=kS7E0aNeMthVFN4Ydg0yiALmodwlY6cX+t17XcwKm8EewdEng6mbgr3+h+gAn8Uhe
+         slljWm3ZCSEav/Z10uO3rxXjKtXc1n88Ce9QeSEJa3kXzfEGwTe7vAwTG/NfQsNNAc
+         3ceTiqwS2AX9kOM5uv4rJdm/PKP4cLZe2QLys+HA=
+Date:   Wed, 2 Oct 2019 16:09:13 +0300
+From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To:     Will Deacon <will@kernel.org>
+Cc:     linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
+        andreyknvl@google.com, Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Kostya Serebryany <kcc@google.com>, stable@vger.kernel.org
+Subject: Re: [PATCH] media: uvc: Avoid cyclic entity chains due to malformed
+ USB descriptors
+Message-ID: <20191002130913.GA5262@pendragon.ideasonboard.com>
+References: <20191002112753.21630-1-will@kernel.org>
 MIME-Version: 1.0
-References: <20190923190853.GA3781@iweiny-DESK2.sc.intel.com>
- <20190923222620.GC16973@dread.disaster.area> <20190925234602.GB12748@iweiny-DESK2.sc.intel.com>
- <20190930084233.GO16973@dread.disaster.area> <20191001210156.GB5500@iweiny-DESK2.sc.intel.com>
-In-Reply-To: <20191001210156.GB5500@iweiny-DESK2.sc.intel.com>
-From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Wed, 2 Oct 2019 06:07:27 -0700
-Message-ID: <CAPcyv4jpLYUcqA6D_qfGF4FQCu-SuH67FHLcH0fCQTQ-D+hWzQ@mail.gmail.com>
-Subject: Re: Lease semantic proposal
-To:     Ira Weiny <ira.weiny@intel.com>
-Cc:     Dave Chinner <david@fromorbit.com>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        linux-xfs <linux-xfs@vger.kernel.org>,
-        linux-ext4 <linux-ext4@vger.kernel.org>,
-        linux-rdma <linux-rdma@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-nvdimm <linux-nvdimm@lists.01.org>,
-        Linux MM <linux-mm@kvack.org>,
-        Jeff Layton <jlayton@kernel.org>, Jan Kara <jack@suse.cz>,
-        "Theodore Ts'o" <tytso@mit.edu>,
-        John Hubbard <jhubbard@nvidia.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>, Christoph Hellwig <hch@lst.de>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20191002112753.21630-1-will@kernel.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Oct 1, 2019 at 2:02 PM Ira Weiny <ira.weiny@intel.com> wrote:
->
-> On Mon, Sep 30, 2019 at 06:42:33PM +1000, Dave Chinner wrote:
-> > On Wed, Sep 25, 2019 at 04:46:03PM -0700, Ira Weiny wrote:
-> > > On Tue, Sep 24, 2019 at 08:26:20AM +1000, Dave Chinner wrote:
-> > > > Hence, AFIACT, the above definition of a F_RDLCK|F_LAYOUT lease
-> > > > doesn't appear to be compatible with the semantics required by
-> > > > existing users of layout leases.
-> > >
-> > > I disagree.  Other than the addition of F_UNBREAK, I think this is consistent
-> > > with what is currently implemented.  Also, by exporting all this to user space
-> > > we can now write tests for it independent of the RDMA pinning.
-> >
-> > The current usage of F_RDLCK | F_LAYOUT by the pNFS code allows
-> > layout changes to occur to the file while the layout lease is held.
->
-> This was not my understanding.
+Hi Will,
 
-I think you guys are talking past each other. F_RDLCK | F_LAYOUT can
-be broken to allow writes to the file / layout. The new unbreakable
-case would require explicit SIGKILL as "revocation method of last
-resort", but that's the new incremental extension being proposed. No
-changes to the current behavior of F_RDLCK | F_LAYOUT.
+Thank you for the patch.
 
-Dave, the question at hand is whether this new layout lease mode being
-proposed is going to respond to BREAK_WRITE, or just BREAK_UNMAP. It
-seems longterm page pinning conflicts really only care about
-BREAK_UNMAP where pages that were part of the file are being removed
-from the file. The unbreakable case can tolerate layout changes that
-keep pinned pages mapped / allocated to the file.
+On Wed, Oct 02, 2019 at 12:27:53PM +0100, Will Deacon wrote:
+> Way back in 2017, fuzzing the 4.14-rc2 USB stack with syzkaller kicked
+> up the following WARNING from the UVC chain scanning code:
+> 
+>   | list_add double add: new=ffff880069084010, prev=ffff880069084010,
+>   | next=ffff880067d22298.
+>   | ------------[ cut here ]------------
+>   | WARNING: CPU: 1 PID: 1846 at lib/list_debug.c:31 __list_add_valid+0xbd/0xf0
+>   | Modules linked in:
+>   | CPU: 1 PID: 1846 Comm: kworker/1:2 Not tainted
+>   | 4.14.0-rc2-42613-g1488251d1a98 #238
+>   | Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS Bochs 01/01/2011
+>   | Workqueue: usb_hub_wq hub_event
+>   | task: ffff88006b01ca40 task.stack: ffff880064358000
+>   | RIP: 0010:__list_add_valid+0xbd/0xf0 lib/list_debug.c:29
+>   | RSP: 0018:ffff88006435ddd0 EFLAGS: 00010286
+>   | RAX: 0000000000000058 RBX: ffff880067d22298 RCX: 0000000000000000
+>   | RDX: 0000000000000058 RSI: ffffffff85a58800 RDI: ffffed000c86bbac
+>   | RBP: ffff88006435dde8 R08: 1ffff1000c86ba52 R09: 0000000000000000
+>   | R10: 0000000000000002 R11: 0000000000000000 R12: ffff880069084010
+>   | R13: ffff880067d22298 R14: ffff880069084010 R15: ffff880067d222a0
+>   | FS:  0000000000000000(0000) GS:ffff88006c900000(0000) knlGS:0000000000000000
+>   | CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+>   | CR2: 0000000020004ff2 CR3: 000000006b447000 CR4: 00000000000006e0
+>   | Call Trace:
+>   |  __list_add ./include/linux/list.h:59
+>   |  list_add_tail+0x8c/0x1b0 ./include/linux/list.h:92
+>   |  uvc_scan_chain_forward.isra.8+0x373/0x416
+>   | drivers/media/usb/uvc/uvc_driver.c:1471
+>   |  uvc_scan_chain drivers/media/usb/uvc/uvc_driver.c:1585
+>   |  uvc_scan_device drivers/media/usb/uvc/uvc_driver.c:1769
+>   |  uvc_probe+0x77f2/0x8f00 drivers/media/usb/uvc/uvc_driver.c:2104
+> 
+> Looking into the output from usbmon, the interesting part is the
+> following data packet:
+> 
+>   ffff880069c63e00 30710169 C Ci:1:002:0 0 143 = 09028f00 01030080
+>   00090403 00000e01 00000924 03000103 7c003328 010204db
+> 
+> If we drop the lead configuration and interface descriptors, we're left
+> with an output terminal descriptor describing a generic display:
+> 
+>   /* Output terminal descriptor */
+>   buf[0]	09
+>   buf[1]	24
+>   buf[2]	03	/* UVC_VC_OUTPUT_TERMINAL */
+>   buf[3]	00	/* ID */
+>   buf[4]	01	/* type == 0x0301 (UVC_OTT_DISPLAY) */
+>   buf[5]	03
+>   buf[6]	7c
+>   buf[7]	00	/* source ID refers to self! */
+>   buf[8]	33
+> 
+> The problem with this descriptor is that it is self-referential: the
+> source ID of 0 matches itself! This causes the 'struct uvc_entity'
+> representing the display to be added to its chain list twice during
+> 'uvc_scan_chain()': once via 'uvc_scan_chain_entity()' when it is
+> processed directly from the 'dev->entities' list and then again
+> immediately afterwards when trying to follow the source ID in
+> 'uvc_scan_chain_forward()'
+> 
+> Add a check before adding an entity to a chain list to ensure that the
+> entity is not already part of a chain.
+> 
+> Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+> Cc: Mauro Carvalho Chehab <mchehab@kernel.org>
+> Cc: Dmitry Vyukov <dvyukov@google.com>
+> Cc: Kostya Serebryany <kcc@google.com>
+> Cc: <stable@vger.kernel.org>
+> Fixes: c0efd232929c ("V4L/DVB (8145a): USB Video Class driver")
+> Reported-by: Andrey Konovalov <andreyknvl@google.com>
+> Link: https://lore.kernel.org/linux-media/CAAeHK+z+Si69jUR+N-SjN9q4O+o5KFiNManqEa-PjUta7EOb7A@mail.gmail.com/
+> Signed-off-by: Will Deacon <will@kernel.org>
+> ---
+> 
+> I don't have a way to reproduce the original issue, so this change is
+> based purely on inspection. Considering I'm not familiar with USB nor
+> UVC, I may well have missed something!
+
+I may also be missing something, I haven't touched this code for a long
+time :-)
+
+uvc_scan_chain_entity(), at the end of the function, adds the entity to
+the list of entities in the chain with
+
+	list_add_tail(&entity->chain, &chain->entities);
+
+uvc_scan_chain_forward() is then called (from uvc_scan_chain()), and
+iterates over all entities connected to the entity being scanned.
+
+	while (1) {
+		forward = uvc_entity_by_reference(chain->dev, entity->id,
+			forward);
+
+At this point forward may be equal to entity, if entity references
+itself.
+
+		if (forward == NULL)
+			break;
+		if (forward == prev)
+			continue;
+		if (forward->chain.next || forward->chain.prev) {
+			uvc_trace(UVC_TRACE_DESCR, "Found reference to "
+				"entity %d already in chain.\n", forward->id);
+			return -EINVAL;
+		}
+
+But then this check should trigger, as forward == entity and entity is
+in the chain's list of entities.
+
+>  drivers/media/usb/uvc/uvc_driver.c | 12 ++++++++++++
+>  1 file changed, 12 insertions(+)
+> 
+> diff --git a/drivers/media/usb/uvc/uvc_driver.c b/drivers/media/usb/uvc/uvc_driver.c
+> index 66ee168ddc7e..e24420b1750a 100644
+> --- a/drivers/media/usb/uvc/uvc_driver.c
+> +++ b/drivers/media/usb/uvc/uvc_driver.c
+> @@ -1493,6 +1493,11 @@ static int uvc_scan_chain_forward(struct uvc_video_chain *chain,
+>  			break;
+>  		if (forward == prev)
+>  			continue;
+> +		if (forward->chain.next || forward->chain.prev) {
+> +			uvc_trace(UVC_TRACE_DESCR, "Found reference to "
+> +				"entity %d already in chain.\n", forward->id);
+> +			return -EINVAL;
+> +		}
+>  
+>  		switch (UVC_ENTITY_TYPE(forward)) {
+>  		case UVC_VC_EXTENSION_UNIT:
+> @@ -1574,6 +1579,13 @@ static int uvc_scan_chain_backward(struct uvc_video_chain *chain,
+>  				return -1;
+>  			}
+>  
+> +			if (term->chain.next || term->chain.prev) {
+> +				uvc_trace(UVC_TRACE_DESCR, "Found reference to "
+> +					"entity %d already in chain.\n",
+> +					term->id);
+> +				return -EINVAL;
+> +			}
+> +
+>  			if (uvc_trace_param & UVC_TRACE_PROBE)
+>  				printk(KERN_CONT " %d", term->id);
+>  
+
+-- 
+Regards,
+
+Laurent Pinchart
