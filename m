@@ -2,99 +2,253 @@ Return-Path: <SRS0=zem1=X3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80BE1C35280
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 08:58:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 72DFAECE58B
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 08:58:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 58DD8222C2
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 08:58:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4047F215EA
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 08:58:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="mNaI0NVF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727443AbfJBI6J (ORCPT
+        id S1727514AbfJBI6M (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Oct 2019 04:58:09 -0400
-Received: from sauhun.de ([88.99.104.3]:57040 "EHLO pokefinder.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725988AbfJBI6I (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Oct 2019 04:58:08 -0400
-Received: from localhost (p54B33447.dip0.t-ipconnect.de [84.179.52.71])
-        by pokefinder.org (Postfix) with ESMTPSA id 3312A2C3720;
-        Wed,  2 Oct 2019 10:58:06 +0200 (CEST)
-Date:   Wed, 2 Oct 2019 10:58:05 +0200
-From:   Wolfram Sang <wsa@the-dreams.de>
-To:     Geert Uytterhoeven <geert@linux-m68k.org>
-Cc:     Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Wolfram Sang <wsa+renesas@sang-engineering.com>,
-        Jiri Slaby <jslaby@suse.com>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "linux-renesas-soc@vger.kernel.org" 
-        <linux-renesas-soc@vger.kernel.org>,
-        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] mmc: sh_mmcif: Use platform_get_irq_optional() for
- optional interrupt
-Message-ID: <20191002085805.GA10270@ninjato>
-References: <20191001180834.1158-1-geert+renesas@glider.be>
- <20191002081553.GB1388@ninjato>
- <TYAPR01MB454472C76E03930717A2898BD89C0@TYAPR01MB4544.jpnprd01.prod.outlook.com>
- <CAMuHMdWBghL8Em0OoCKjJdU7OiY_pV3Lmc=SXhV2yY=sKJJ-aw@mail.gmail.com>
+        Wed, 2 Oct 2019 04:58:12 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:52614 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727410AbfJBI6K (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 2 Oct 2019 04:58:10 -0400
+Received: by mail-wm1-f65.google.com with SMTP id r19so6265736wmh.2
+        for <linux-kernel@vger.kernel.org>; Wed, 02 Oct 2019 01:58:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=toqSCbDKjKDNRGlIhRc6C/qDd5dUDz6VgJWTVy4eu6w=;
+        b=mNaI0NVFqxeuET9HKNSQdq+4dLrjPuaOqsvskqSt8Eyts9NrwJj1cAiwiEMqkY3LuX
+         JNb2Lzi37aKP7eef9evUvY+hlnVXMLv12DK+XbWm+5e0JN3k9+d5euPbXQ+JqBeoWRWE
+         4W8qHg8p8chBKrmalPnkS22AsyR7cDeYW3Q8PcPEfRELrMoByxgNeUgPk0g5KlhCiC+E
+         LyZJR7VZjltjzgsdZlpTWMPNJb4OdT6MNOlAMVeLlZ9XqcWFxZyyhw8V8RrBk4YRypWg
+         lqZJz/7qQPlKw2Zckn3HV+HSEp/hNXd0U7Jhpl5CQlDI8N8qLGmpwhrz6s6m0ZZducJJ
+         Fxcg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=toqSCbDKjKDNRGlIhRc6C/qDd5dUDz6VgJWTVy4eu6w=;
+        b=Zimtx+uogENR7wesS5UR3EEmUuj4NtCLtfWOnYz3sQk7gfFNM3HrSC1WxZSIPznewJ
+         3hEix/UtnIxJ3jiC2pDfwzr+wo1pgBtH1WcaiEVt9WehmPvZdY00ohxGfAYKu8gXLEm0
+         BJJeVJ+BNQMySv7+ERfhmODYuVeri97XWvstCowTaRhko9jUyj1MITgFIRY1AT45+NiL
+         nnj123n7JLkzLSLLRl/vvTe3QDZG1N0RoZo5Y25fJZIOR3t6mvc4XHISTgaAxFEzxJ9E
+         AVC+IOWQeIhjSrtwDodopc3MXUt7RTQu/a0ohyW4VPxbR5wW1lvLHZrY7zhwq3UbwhSP
+         G//A==
+X-Gm-Message-State: APjAAAVydOC7ZXmKaY1D80g9Sr/flZL8x8pQgkttD5P3yCt+LCe0wuXh
+        9SWhNn6IGc37KiMvuFJ1qjWE3Q==
+X-Google-Smtp-Source: APXvYqz9OH4tpQEQYea+bSGT9Q8PNCBRt6XTtpq4N5s0l0cHZ0LJzdEOZ5ZdpjRV6BidrQ89cScjeQ==
+X-Received: by 2002:a7b:c4c7:: with SMTP id g7mr1880636wmk.11.1570006687787;
+        Wed, 02 Oct 2019 01:58:07 -0700 (PDT)
+Received: from debian-brgl.home ([2a01:cb1d:af:5b00:6d6c:8493:1ab5:dad7])
+        by smtp.gmail.com with ESMTPSA id b186sm10115616wmd.16.2019.10.02.01.58.06
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 02 Oct 2019 01:58:07 -0700 (PDT)
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+To:     Jonathan Cameron <jic23@kernel.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>
+Cc:     linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Subject: [PATCH 1/4] iio: pressure: bmp280: use bulk regulator ops
+Date:   Wed,  2 Oct 2019 10:57:56 +0200
+Message-Id: <20191002085759.13337-2-brgl@bgdev.pl>
+X-Mailer: git-send-email 2.23.0
+In-Reply-To: <20191002085759.13337-1-brgl@bgdev.pl>
+References: <20191002085759.13337-1-brgl@bgdev.pl>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="Nq2Wo0NMKNjxTN9z"
-Content-Disposition: inline
-In-Reply-To: <CAMuHMdWBghL8Em0OoCKjJdU7OiY_pV3Lmc=SXhV2yY=sKJJ-aw@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 
---Nq2Wo0NMKNjxTN9z
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+The vddd and vdda supplies are always operated on together. We can
+shrink the code a bit by using the bulk regulator helpers.
 
+Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+---
+ drivers/iio/pressure/bmp280-core.c | 69 +++++++++++++-----------------
+ 1 file changed, 30 insertions(+), 39 deletions(-)
 
-> Please cherry-pick the top commit from renesas-devel:
-> 6e47c841329eb9b0 ("ARM: fix __get_user_check() in case uaccess_* calls
-> are not inlined")
+diff --git a/drivers/iio/pressure/bmp280-core.c b/drivers/iio/pressure/bmp280-core.c
+index 8d0f15f27dc5..c21f8ce7b09c 100644
+--- a/drivers/iio/pressure/bmp280-core.c
++++ b/drivers/iio/pressure/bmp280-core.c
+@@ -74,6 +74,12 @@ struct bmp280_calib {
+ 	s8  H6;
+ };
+ 
++static const char *const bmp280_supply_names[] = {
++	"vddd", "vdda"
++};
++
++#define BMP280_NUM_SUPPLIES ARRAY_SIZE(bmp280_supply_names)
++
+ struct bmp280_data {
+ 	struct device *dev;
+ 	struct mutex lock;
+@@ -85,8 +91,7 @@ struct bmp280_data {
+ 		struct bmp180_calib bmp180;
+ 		struct bmp280_calib bmp280;
+ 	} calib;
+-	struct regulator *vddd;
+-	struct regulator *vdda;
++	struct regulator_bulk_data supplies[BMP280_NUM_SUPPLIES];
+ 	unsigned int start_up_time; /* in microseconds */
+ 
+ 	/* log of base 2 of oversampling rate */
+@@ -1033,27 +1038,23 @@ int bmp280_common_probe(struct device *dev,
+ 	}
+ 
+ 	/* Bring up regulators */
+-	data->vddd = devm_regulator_get(dev, "vddd");
+-	if (IS_ERR(data->vddd)) {
+-		dev_err(dev, "failed to get VDDD regulator\n");
+-		return PTR_ERR(data->vddd);
+-	}
+-	ret = regulator_enable(data->vddd);
++	regulator_bulk_set_supply_names(data->supplies,
++					bmp280_supply_names,
++					BMP280_NUM_SUPPLIES);
++
++	ret = devm_regulator_bulk_get(dev,
++				      BMP280_NUM_SUPPLIES, data->supplies);
+ 	if (ret) {
+-		dev_err(dev, "failed to enable VDDD regulator\n");
++		dev_err(dev, "failed to get regulators\n");
+ 		return ret;
+ 	}
+-	data->vdda = devm_regulator_get(dev, "vdda");
+-	if (IS_ERR(data->vdda)) {
+-		dev_err(dev, "failed to get VDDA regulator\n");
+-		ret = PTR_ERR(data->vdda);
+-		goto out_disable_vddd;
+-	}
+-	ret = regulator_enable(data->vdda);
++
++	ret = regulator_bulk_enable(BMP280_NUM_SUPPLIES, data->supplies);
+ 	if (ret) {
+-		dev_err(dev, "failed to enable VDDA regulator\n");
+-		goto out_disable_vddd;
++		dev_err(dev, "failed to enable regulators\n");
++		return ret;
+ 	}
++
+ 	/* Wait to make sure we started up properly */
+ 	usleep_range(data->start_up_time, data->start_up_time + 100);
+ 
+@@ -1068,17 +1069,17 @@ int bmp280_common_probe(struct device *dev,
+ 	data->regmap = regmap;
+ 	ret = regmap_read(regmap, BMP280_REG_ID, &chip_id);
+ 	if (ret < 0)
+-		goto out_disable_vdda;
++		goto out_disable_regulators;
+ 	if (chip_id != chip) {
+ 		dev_err(dev, "bad chip id: expected %x got %x\n",
+ 			chip, chip_id);
+ 		ret = -EINVAL;
+-		goto out_disable_vdda;
++		goto out_disable_regulators;
+ 	}
+ 
+ 	ret = data->chip_info->chip_config(data);
+ 	if (ret < 0)
+-		goto out_disable_vdda;
++		goto out_disable_regulators;
+ 
+ 	dev_set_drvdata(dev, indio_dev);
+ 
+@@ -1092,14 +1093,14 @@ int bmp280_common_probe(struct device *dev,
+ 		if (ret < 0) {
+ 			dev_err(data->dev,
+ 				"failed to read calibration coefficients\n");
+-			goto out_disable_vdda;
++			goto out_disable_regulators;
+ 		}
+ 	} else if (chip_id == BMP280_CHIP_ID || chip_id == BME280_CHIP_ID) {
+ 		ret = bmp280_read_calib(data, &data->calib.bmp280, chip_id);
+ 		if (ret < 0) {
+ 			dev_err(data->dev,
+ 				"failed to read calibration coefficients\n");
+-			goto out_disable_vdda;
++			goto out_disable_regulators;
+ 		}
+ 	}
+ 
+@@ -1111,7 +1112,7 @@ int bmp280_common_probe(struct device *dev,
+ 	if (irq > 0 || (chip_id  == BMP180_CHIP_ID)) {
+ 		ret = bmp085_fetch_eoc_irq(dev, name, irq, data);
+ 		if (ret)
+-			goto out_disable_vdda;
++			goto out_disable_regulators;
+ 	}
+ 
+ 	/* Enable runtime PM */
+@@ -1137,10 +1138,8 @@ int bmp280_common_probe(struct device *dev,
+ 	pm_runtime_get_sync(data->dev);
+ 	pm_runtime_put_noidle(data->dev);
+ 	pm_runtime_disable(data->dev);
+-out_disable_vdda:
+-	regulator_disable(data->vdda);
+-out_disable_vddd:
+-	regulator_disable(data->vddd);
++out_disable_regulators:
++	regulator_bulk_disable(BMP280_NUM_SUPPLIES, data->supplies);
+ 	return ret;
+ }
+ EXPORT_SYMBOL(bmp280_common_probe);
+@@ -1154,8 +1153,7 @@ int bmp280_common_remove(struct device *dev)
+ 	pm_runtime_get_sync(data->dev);
+ 	pm_runtime_put_noidle(data->dev);
+ 	pm_runtime_disable(data->dev);
+-	regulator_disable(data->vdda);
+-	regulator_disable(data->vddd);
++	regulator_bulk_disable(BMP280_NUM_SUPPLIES, data->supplies);
+ 	return 0;
+ }
+ EXPORT_SYMBOL(bmp280_common_remove);
+@@ -1165,12 +1163,8 @@ static int bmp280_runtime_suspend(struct device *dev)
+ {
+ 	struct iio_dev *indio_dev = dev_get_drvdata(dev);
+ 	struct bmp280_data *data = iio_priv(indio_dev);
+-	int ret;
+ 
+-	ret = regulator_disable(data->vdda);
+-	if (ret)
+-		return ret;
+-	return regulator_disable(data->vddd);
++	return regulator_bulk_disable(BMP280_NUM_SUPPLIES, data->supplies);
+ }
+ 
+ static int bmp280_runtime_resume(struct device *dev)
+@@ -1179,10 +1173,7 @@ static int bmp280_runtime_resume(struct device *dev)
+ 	struct bmp280_data *data = iio_priv(indio_dev);
+ 	int ret;
+ 
+-	ret = regulator_enable(data->vddd);
+-	if (ret)
+-		return ret;
+-	ret = regulator_enable(data->vdda);
++	ret = regulator_bulk_enable(BMP280_NUM_SUPPLIES, data->supplies);
+ 	if (ret)
+ 		return ret;
+ 	usleep_range(data->start_up_time, data->start_up_time + 100);
+-- 
+2.23.0
 
-Thanks a lot, Geert. I can confirm this patch fixes the issue I was
-seeing:
-
-Tested-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
-
-Could you kindly forward this tag to Yamada-san or bounce me the patch
-so I can do it?
-
-Thanks again,
-
-   Wolfram
-
-
---Nq2Wo0NMKNjxTN9z
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl2UZpkACgkQFA3kzBSg
-Kbbzrw/9Fy0DuET9/QhPpkciG0if9TcmOmULaCWrBLLTLmKs4VG8YrtkFAhLNXg9
-aobUjyTteybY6rXp3b/jlPmr6qgtQNlyYNmHx5h1Z967jnn6hpOMXlrpzMcaFfTS
-TvoaK7a0bFUc90O4PgSL75Lgn3zU5gGZl8ZJAf5h7Oc7cnfyKDr1UVtAvJrNki5Q
-zTjE7+FakyExml+DaPEQGYx5iLYYakIBsWOyVAGmIMHmKpp4nzYTutF+aFR0ezzW
-eKvscgdTBxPWVInFRV/vH4vy0KgMEHr0SG8K2HCAwoXvMni8mYP1gATzBjkJQODc
-szwuNgLfQ6rlrjFh2SDsqUozpk+Bgrz0u77K7ocZtLmBtGTvQ6/7wcKiecxNLSrp
-rAUBfF0VdJvK23BsuwYt3AAnjCYCu16bl/Fg/Sijh0va2MufQEQqISzIu1CNeEmy
-ETOrJV3VDl9u1GgUt4xBzrO1Nc1JrSxx68apKuQ2KmUpSAJ/Oi5FSftCb+Fra9lY
-43uFrAQ6njrGrVb0PbSg7d0PBIngV6KNyDZfwhy3qL8eid/bqn8R8/Pvbpk/5Evg
-oyJjx3fhe5iwdr4cEMaLn3shcbYNO/AaRllhijlaWST6RR3YA3yf5RnHjTs59RHo
-882RvFdxDr7gfBhbhZpDkm1imPA0VdFzxHGnhESstCwtlYNvcX8=
-=Csu1
------END PGP SIGNATURE-----
-
---Nq2Wo0NMKNjxTN9z--
