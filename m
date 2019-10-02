@@ -7,43 +7,50 @@ X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5510DC352AA
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 05:08:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EDBB5C352AA
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 05:10:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1A3452086A
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 05:08:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B645B2086A
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 05:10:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="Lov1/5+a"
+	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="c6Eaq4dG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726705AbfJBFIE (ORCPT
+        id S1726915AbfJBFKP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Oct 2019 01:08:04 -0400
-Received: from mout.web.de ([212.227.15.14]:41291 "EHLO mout.web.de"
+        Wed, 2 Oct 2019 01:10:15 -0400
+Received: from mout.web.de ([212.227.15.4]:37287 "EHLO mout.web.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726326AbfJBFID (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Oct 2019 01:08:03 -0400
+        id S1726326AbfJBFKP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 2 Oct 2019 01:10:15 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
-        s=dbaedf251592; t=1569992872;
+        s=dbaedf251592; t=1569992982;
         bh=kEfl/Iv1CCzaybc5hroeM7fCim74t5N0mvhbCmJZhh4=;
         h=X-UI-Sender-Class:Subject:To:Cc:References:From:Date:In-Reply-To;
-        b=Lov1/5+ayi7kQPFuWY5cE4KjQ8MhpzX1DZikCVg6PiUhB8EQRpDbMDEYwL2PkVSoW
-         Jh5bI6niJk3MoViRPvArofzgj69NVOf2ntz9NuZDEEBzwH7vMpprJoPiNnO8t+HiHP
-         iTQqgBpKYHtM+Cs+a6ZaQoEKefQsYfVdVURMBoGc=
+        b=c6Eaq4dGph0GZ/0fGzCqtYvUDgn79Ds29dpAhILOUn4ZpiYVUP7VpS/xhzLvH5tXh
+         eaRfSka82OYYoBVX8e697FzZjv5GUCnfpvc38orz44Ahrq9C3eBrlheRVJxD+5mS/T
+         KEQSHfGWLpnjLjaKWYGcUcdR7D0vmnhtXLbMWJ6o=
 X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
-Received: from [192.168.1.2] ([93.135.73.205]) by smtp.web.de (mrweb004
- [213.165.67.108]) with ESMTPSA (Nemesis) id 0M95ET-1iPgOr0vcL-00CPyu; Wed, 02
- Oct 2019 07:07:52 +0200
-Subject: Re: [v2] spi: gpio: prevent memory leak in spi_gpio_probe
+Received: from [192.168.1.2] ([93.135.73.205]) by smtp.web.de (mrweb003
+ [213.165.67.108]) with ESMTPSA (Nemesis) id 0LdVty-1hpmrc05Eg-00igcm; Wed, 02
+ Oct 2019 07:09:42 +0200
+Subject: Re: [v2] fs: affs: fix a memory leak in affs_remount
 To:     Navid Emamdoost <navid.emamdoost@gmail.com>,
-        linux-spi@vger.kernel.org
-Cc:     Navid Emamdoost <emamd001@umn.edu>, Kangjie Lu <kjlu@umn.edu>,
-        Stephen McCamant <smccaman@umn.edu>,
-        Mark Brown <broonie@kernel.org>,
+        linux-fsdevel@vger.kernel.org
+Cc:     Navid Emamdoost <emamd001@umn.edu>,
+        Stephen McCamant <smccaman@umn.edu>, Kangjie Lu <kjlu@umn.edu>,
+        David Sterba <dsterba@suse.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Jeff Layton <jlayton@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Deepa Dinamani <deepa.kernel@gmail.com>,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
         LKML <linux-kernel@vger.kernel.org>,
         kernel-janitors@vger.kernel.org
-References: <20190930205241.5483-1-navid.emamdoost@gmail.com>
- <6b55e753-5797-2bdc-fae6-f575a0ef8186@web.de>
- <CAEkB2ES3-gotqS9184izf0fKOigFaFUetBiqekmYJPBgPWbSBQ@mail.gmail.com>
+References: <ec7d3fdb-445b-7f4e-d6e6-77c6ae9a5732@web.de>
+ <20190930210114.6557-1-navid.emamdoost@gmail.com>
+ <44ad775e-3b6f-4cbc-ba6f-455ff7191c58@web.de>
+ <CAEkB2ERMqs=xbt4H-1ro0zAQryoQUH=N5iJop-CKbSOo_mTk3w@mail.gmail.com>
 From:   Markus Elfring <Markus.Elfring@web.de>
 Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
  mQINBFg2+xABEADBJW2hoUoFXVFWTeKbqqif8VjszdMkriilx90WB5c0ddWQX14h6w5bT/A8
@@ -88,37 +95,37 @@ Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
  Z/wsLiWTgKlih2QYULvW61XU+mWsK8+ZlYUrRMpkauN4CJ5yTpvp+Orcz5KixHQmc5tbkLWf
  x0n1QFc1xxJhbzN+r9djSGGN/5IBDfUqSANC8cWzHpWaHmSuU3JSAMB/N+yQjIad2ztTckZY
  pwT6oxng29LzZspTYUEzMz3wK2jQHw+U66qBFk8whA7B2uAU1QdGyPgahLYSOa4XAEGb6wbI FEE=
-Message-ID: <2a5f9775-6cff-4246-435f-9908bfe5b07b@web.de>
-Date:   Wed, 2 Oct 2019 07:07:43 +0200
+Message-ID: <98ab1248-dd45-6dbe-50d4-58529f46a4e6@web.de>
+Date:   Wed, 2 Oct 2019 07:09:39 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.1.1
 MIME-Version: 1.0
-In-Reply-To: <CAEkB2ES3-gotqS9184izf0fKOigFaFUetBiqekmYJPBgPWbSBQ@mail.gmail.com>
+In-Reply-To: <CAEkB2ERMqs=xbt4H-1ro0zAQryoQUH=N5iJop-CKbSOo_mTk3w@mail.gmail.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-X-Provags-ID: V03:K1:EepWscPPqkjTYuRxcpWY7vKWJ9nzH5HBEwCxViXdbhWrtPO1p4A
- Uge/5TWXgiuusXVMduOojmqfGkfOFUWioiXpQHpbl4ws/sA4nxMaFx1gMVkM4llUAESg9qp
- +wgunckd94u8xSliNvlxr2zx1UPMA8jMyvdCph4mUlbM7JmzsbpQXV+mEQ0RR2l6EDC/Zkd
- SN4fMV6kBO6O5Vyrb8X6w==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:75gnEgzxpmY=:H2apDDInJJ8KscY6JK6aWY
- G4BjTe81GQb6HTySg+/2SYQ6h4pfJE3K/KmQviAmJyn6avUw+uRS1xEv+G4T+7IB3dk7QPhwC
- FPJcxAppq/tBrwXZ6Ij0o9w5+Qy4saEykcchlMRi28HfKNiNmdVlEdCc0CB8MlIxHmiy6+LtR
- bfWUFTSuPMYTrcuOrE0Zg7bv653VFOWaE2OifTz7h1BhGr3Tp3bXOx+TLPzXF8T0sYX0+oUPA
- iiu6VGEbkhdj3t0qqMAxDXoVSJClcZIzuiTBtixdcuU0KFcfvuCQjH0ElIrhb3Lu2TOme+RoX
- sqqMdVYU2bti/GzzmDsFPzQe1Y609ArYxRiySxcueXj9pLDwj09MEXE0QGykmIFCo//FF8c38
- ztdfB62plPZ8ubbGGvpKcLiXFCS46KA7xSKjSd1IGs9oXuQYhPFmCYrNWyqJhEMXmapTYVGmk
- 848sez2u0H4OGh4gQ3N06uR8s6Vcr+B8onrcFPkPJe4BrfGRUq+p53+h9/Sqk97KRoW7chv1M
- +dIyg0b1Nqz5LNn7SA+STNgQXi1WApFEAxQxGNStUXMpBzR8gztDKfW4mNLfwcG/LWchEBiGX
- Kp1NQWuorLt+b48HbFoXHNYGJcXB8eQkpXizbsZ/dMMo1+nSCWtrZJ8tiFYy0EcG5NYpYWPtz
- XRS+a+ih1/ZHomZjhy8ZQirMA0uOqBPtysv/CHEg+qKBtxDoFuOqcMj5hGCtOk7Lgra9C0r/8
- ECtldX53Ya+qM1cc/hfJps9GRBdaJHslfrf94oSH0yEVcLbWdiWwy/foPhs7PGG7SzRyJV12W
- OhXV70FE/vXE7HNdFWZ2cEpj6Ga9mXEWAjn39Vskzx8RTzrgZPJkQLwXrREacbySfW1xAyTfc
- J6Ir14a46uIG2cO+BxbYDJqPgJcvu5mRzbNSSjEmmPHJVznuUMOYB/sbm0jdh7ZClTFua74ON
- yxKxhnaoSEuprQRn7boSRsx0VEkWcoRVbHKa92OvExCZikosecJQinHOi5KKn8hJ6q9xq2urO
- m1ctYsyM8y2GV/SS3BmJP0fOhvffRoeFlfHnxfvFetD3zxMfGeq97jUadErNara+HZ4CCyS8r
- todNU+Wep3/fkME9lap6/pj0KDRkoVMFGUw8wkvzIntZA6b+gInrhPCfy/qvTpZifrW+RzO7O
- y2gHZ4FeBzCHCsMzBwD+ne8OIG8LVMH4uoxWrCcLFo/OWoHFzK/YE7QC2z557fIoe4Edkw3ZZ
- dd7bnuQsyZOEgHe8sEapnS8zWfJRHZZAUsL+5tlYfG0VgUCuNTle2pgZHxgE=
+X-Provags-ID: V03:K1:Vojh5b2RlM4zxoK2LQANV+bJtxid2Xj/Bw8Nz5Aax5bW7HimgRM
+ 0mLcTNbLpFWLX617q2J46EdzA95Hd3jc9XtyuGTwp9joAcNYALFRC0LD8gwUa4wfPnXUtFm
+ fz2/AIS3jpwOx8ctqn18U0DUg5qQY5aNW8xWOJfDtCDn5KWFFXP8QnIg5O1eB4MNmq1aaWs
+ 5u9rjbqTYoD/pStguNhWQ==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:Q29j8DspghI=:s3eRxf4ONBSMjYhYQiujwQ
+ W1NyOnOEGNojA046pL60w1XtzoUk9mIKfWfQDne4JQwCTSSw9UeWCRAmeGLCTQbW5irN1bn0Y
+ Fsd2zRyfhwqLUKzrC4qg6o7ojc3XBvjvXMAPzS4TJQtjbpIZNcH+YpW5HvAheVkTS+MrJYUIO
+ Ji98VaRSOvrfJqe9puj0mM73ojmBSzy63e8iz9VIlg5r1VdzypyOiJB85v9Mkcwq6f8pkUxct
+ AwVkHj3S2+t+LC4W9sgbsXy1TSwTVot9Y5rxgxGwQh/TRMDHSLIsnnd98IDG1fgvbHULRbiFV
+ IhhzBEQSm7NY+1mmUKHmRx2hOXjj0aw0+Howhv9VeWXL6oZzP2pOlL9QxKlK/zsHOsH5HUM6i
+ MEviysIFz6rIQT4crc9eOA3YkdCcROfVH9SnVsLZFxZ3aedrdQAyhHjXJhvGHWAR+DpBTZd4o
+ ektQGQE16DeVtMrqP7JA0ndn7r41CYYgt1c9mkFtfKf/uBhBBQ+en5811Yg2eLsxhOF1Zprwp
+ QoCs9tv2z+xF+DosIRRpr7HCby/yFGpFi3JFI9YBoas+pPXYRXFEQLfXbVGsMu5NxNnu3g1hz
+ NbxgrmsSAgjz7Ucce5JqewKYU7KRJceFUsCK+36sbHKG02KqoB+s1sZg1LcgHus69fEswMKhr
+ YV86OWnENwG/ExeeNOdt6B9L7tJ9dhoBpeWp1CA6617KM6NPzsxwzmbP8J46Ech/pXizxMGQ0
+ tm9zZARhQcetKulbx9XO8Z5FYc7a3tRGY2sOqrDtDrveAlxjEEn6gnTEB4LCqahLfkFDVgTgI
+ a9/lZkKLXOiQ8hzABQXbsMznWC2zH3gvxYRXGyrBlKFZDZqtJ2tLSu8SXRU1MGzGeOGncX5fc
+ Dd3a/ItRv6VY8d3wZVtE0W0K8NXCYaIm1fVA4R76qzsVR6SP2xrCFMfzESinLhxXE0HPw+3s/
+ ATj+eVCEeEx3yhTkbOBjMGXAoEe4WRWcl2+khphbhoUdUpB0WSVZ8coHqSuAd38YQFJ+edADa
+ GmPTp8zEwe3EdrnXItDqphv8rcy8qjPeC10SHW3OGAQhQUOPoA14FvPce8LmEVUqFvJJVDhrx
+ HCa5uEGb9vfs8AwqPSxCZkvpQYyDybolIaca9kG7NrMBHkIdEo1MqIP/Ps89vwX6WebmJ+BzN
+ A3k5fdjQjeK8lEBgBZe68OPmq5AK2grbegcHQXUQOyU6DJhYQ7QXNmzrMoV6CLhodsU1aj69M
+ VYL85ONIFGURYiD6CRREej6pMrASupEbbwSmEMasFE9EY2Ds5Vi9b9d+wrTk=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
