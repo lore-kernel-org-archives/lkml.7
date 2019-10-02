@@ -2,168 +2,119 @@ Return-Path: <SRS0=zem1=X3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
-	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8D15C352AA
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 13:33:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 21758C352AA
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 13:34:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BB82520842
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 13:33:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E8C8521783
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 13:34:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="saxHJAYK"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="eZhUeSqI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726718AbfJBNdy (ORCPT
+        id S1727003AbfJBNeY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Oct 2019 09:33:54 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:54299 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726239AbfJBNdy (ORCPT
+        Wed, 2 Oct 2019 09:34:24 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:55320 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726239AbfJBNeX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Oct 2019 09:33:54 -0400
-Received: by mail-wm1-f66.google.com with SMTP id p7so7230970wmp.4;
-        Wed, 02 Oct 2019 06:33:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=C2ZdCqwmctahUnIjBSN/Q/RPRZtg+DYynqp31Zv7If4=;
-        b=saxHJAYK4fZ7OzId92NunP9Z5Jt+Be9zct4aVUpad8ChoBIQ1RYD1p9g9D1jYgWhEY
-         CQeA0DLmm4K8eczRaCcPyDWwGjhIZ+QA32hYdxaZ17Ucrjp/9QvFdNsTJWTgQq9upble
-         FloVYmVRZOo3DaEsxHOuRy+9CZ2wtnCOdbnCegTnyTTV8OBiORFZ2GoAj4N26EUReiDO
-         dvAG5ctjA9wj4vz95XwyVlOyPgtp1TILrf11fZ4WuKDmIt/uCc7bQxYBA5CTcKa9d8SB
-         Ht/9I93WQBSR7uzfS8euw49KsIxey1WWDB8T0GNKfclPL21T5MTPUYzO+CVHQ+OwJDV7
-         MuOw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=C2ZdCqwmctahUnIjBSN/Q/RPRZtg+DYynqp31Zv7If4=;
-        b=VgT4N+ItGVMjnha3mTIAkMMtjKybgxmwvrVLUf/lcl0bTiGKulmGoVvCkhG9uddhOh
-         7vee60oIQHKtfc7DEGyWSGWH57yO4L3be1J2WwX1YeXn+ZppGb+9KPaTz5cXNgu9QEYb
-         QiNBvQzeS2vWeygkgMavSZ1EPvaKy7d29KFsruSWhPK9xnn7paKpivHhogLE2ydNqK0K
-         8/kXRYJRzU1f3T0wPcIkMpzCG5sSu1aiEwtaWRhAQo2pWDGtXB4FFuKyzSnIeKWo2h1e
-         FnKLN//b2VUQ8tF5ZULszFWaKYXg/SW99MLb/VXCAJ7anB0YkDfKzeTuRcYe9QKRc3ar
-         kCcQ==
-X-Gm-Message-State: APjAAAW+/jKjY+b9chdHgEfDbFmnbl5MFuIQrWb1ELn9iWBLT7+RNFEO
-        75PDar3mLJtuQS+vxrKnLtJMet4uiKIjOQ==
-X-Google-Smtp-Source: APXvYqwn6Z9RYlG/ZJ/5RxF01YtmOb7r4KGjSWoiFYXbh43S/a9raLlS4H/uCUp+WyoHKXFfzCEqQA==
-X-Received: by 2002:a05:600c:20e:: with SMTP id 14mr2810628wmi.73.1570023228320;
-        Wed, 02 Oct 2019 06:33:48 -0700 (PDT)
-Received: from LHFYY6Y2.criteois.lan ([91.199.242.236])
-        by smtp.gmail.com with ESMTPSA id q19sm45176832wra.89.2019.10.02.06.33.47
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 02 Oct 2019 06:33:47 -0700 (PDT)
-From:   Jeremy MAURO <jeremy.mauro@gmail.com>
-X-Google-Original-From: Jeremy MAURO <j.mauro@criteo.com>
-Cc:     j.mauro@criteo.com, Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        linux-doc@vger.kernel.org (open list:DOCUMENTATION SCRIPTS),
-        linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH v2 1/2] scripts/sphinx-pre-install: allow checking for multiple missing files
-Date:   Wed,  2 Oct 2019 15:33:39 +0200
-Message-Id: <20191002133340.10854-1-j.mauro@criteo.com>
-X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20191002073526.228fc7e1@coco.lan>
-References: <20191002073526.228fc7e1@coco.lan>
+        Wed, 2 Oct 2019 09:34:23 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x92DY1N9045984;
+        Wed, 2 Oct 2019 13:34:09 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2019-08-05;
+ bh=HWWR1Ldaoc3EnxA5FU/XGgpQ8+k9EqAvpinvMisHgDQ=;
+ b=eZhUeSqIq1nEOJpUn6I3yY3HehLrZxSC4M1DqNk0giG54TOt2zM9+/NpU3/bCxnl2igi
+ XGiioFp8PlJrZOx+0lerTkO5RZ6t6i08RPWtdW+FGYKFfwqJTqX4jb0mDgWOw9oAIVfO
+ 50i+htMn7yya/FjGvAKBxgMVZ4GP82WueBqRxoNmHtYDJsVpv0NnYlN7ciTPueQFZxwV
+ uvgLy1nsPVbBVOHawrR375jWYo6/sj1Q0/EstZzfXRUIN136W/W/2wWceLz5DI1xQ5F9
+ i1lZiQK2FDsIajFLebLi107vutpBY8DSGXhhSlvEKk8tChTOCfzyyDlxNRDLWrzkxcjz Cw== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by userp2130.oracle.com with ESMTP id 2v9xxuw019-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 02 Oct 2019 13:34:08 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x92DWmwF110887;
+        Wed, 2 Oct 2019 13:34:08 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by aserp3020.oracle.com with ESMTP id 2vckynxf8p-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 02 Oct 2019 13:34:07 +0000
+Received: from abhmp0020.oracle.com (abhmp0020.oracle.com [141.146.116.26])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x92DY5Y0013776;
+        Wed, 2 Oct 2019 13:34:05 GMT
+Received: from kadam (/41.57.98.10)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Wed, 02 Oct 2019 06:34:04 -0700
+Date:   Wed, 2 Oct 2019 16:33:57 +0300
+From:   Dan Carpenter <dan.carpenter@oracle.com>
+To:     Colin King <colin.king@canonical.com>
+Cc:     Giuseppe Cavallaro <peppe.cavallaro@st.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        Jose Abreu <joabreu@synopsys.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        netdev@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com,
+        linux-arm-kernel@lists.infradead.org,
+        kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] net: stmmac: xgmac: add missing parentheses to fix
+ precendence error
+Message-ID: <20191002133356.GP22609@kadam>
+References: <20191002110849.13405-1-colin.king@canonical.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-To:     unlisted-recipients:; (no To-header on input)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191002110849.13405-1-colin.king@canonical.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9397 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1908290000 definitions=main-1910020130
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9397 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1908290000
+ definitions=main-1910020130
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The current implementation take a simple file as first argument, this
-change allows to take a list as a first argument.
+On Wed, Oct 02, 2019 at 12:08:49PM +0100, Colin King wrote:
+> From: Colin Ian King <colin.king@canonical.com>
+> 
+> The expression !(hw_cap & XGMAC_HWFEAT_RAVSEL) >> 10 is always zero, so
+> the masking operation is incorrect. Fix this by adding the missing
+> parentheses to correctly bind the negate operator on the entire expression.
+> 
+> Addresses-Coverity: ("Operands don't affect result")
+> Fixes: c2b69474d63b ("net: stmmac: xgmac: Correct RAVSEL field interpretation")
+> Signed-off-by: Colin Ian King <colin.king@canonical.com>
+> ---
+>  drivers/net/ethernet/stmicro/stmmac/dwxgmac2_dma.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/net/ethernet/stmicro/stmmac/dwxgmac2_dma.c b/drivers/net/ethernet/stmicro/stmmac/dwxgmac2_dma.c
+> index 965cbe3e6f51..2e814aa64a5c 100644
+> --- a/drivers/net/ethernet/stmicro/stmmac/dwxgmac2_dma.c
+> +++ b/drivers/net/ethernet/stmicro/stmmac/dwxgmac2_dma.c
+> @@ -369,7 +369,7 @@ static void dwxgmac2_get_hw_feature(void __iomem *ioaddr,
+>  	dma_cap->eee = (hw_cap & XGMAC_HWFEAT_EEESEL) >> 13;
+>  	dma_cap->atime_stamp = (hw_cap & XGMAC_HWFEAT_TSSEL) >> 12;
+>  	dma_cap->av = (hw_cap & XGMAC_HWFEAT_AVSEL) >> 11;
+> -	dma_cap->av &= !(hw_cap & XGMAC_HWFEAT_RAVSEL) >> 10;
+> +	dma_cap->av &= !((hw_cap & XGMAC_HWFEAT_RAVSEL) >> 10);
 
-Some file could have a different path according distribution version
+There is no point to the shift at all.
 
-Signed-off-by: Jeremy MAURO <j.mauro@criteo.com>
----
-Changes in v2:
-- Change the commit message
-
- scripts/sphinx-pre-install | 20 +++++++++++---------
- 1 file changed, 11 insertions(+), 9 deletions(-)
-
-diff --git a/scripts/sphinx-pre-install b/scripts/sphinx-pre-install
-index 3b638c0e1a4f..b5077ae63a4b 100755
---- a/scripts/sphinx-pre-install
-+++ b/scripts/sphinx-pre-install
-@@ -124,11 +124,13 @@ sub add_package($$)
- 
- sub check_missing_file($$$)
- {
--	my $file = shift;
-+	my $files = shift;
- 	my $package = shift;
- 	my $is_optional = shift;
- 
--	return if(-e $file);
-+	for (@$files) {
-+		return if(-e $_);
-+	}
- 
- 	add_package($package, $is_optional);
- }
-@@ -343,10 +345,10 @@ sub give_debian_hints()
- 	);
- 
- 	if ($pdf) {
--		check_missing_file("/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf",
-+		check_missing_file(["/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf"],
- 				   "fonts-dejavu", 2);
- 
--		check_missing_file("/usr/share/fonts/noto-cjk/NotoSansCJK-Regular.ttc",
-+		check_missing_file(["/usr/share/fonts/noto-cjk/NotoSansCJK-Regular.ttc"],
- 				   "fonts-noto-cjk", 2);
- 	}
- 
-@@ -413,7 +415,7 @@ sub give_redhat_hints()
- 	}
- 
- 	if ($pdf) {
--		check_missing_file("/usr/share/fonts/google-noto-cjk/NotoSansCJK-Regular.ttc",
-+		check_missing_file(["/usr/share/fonts/google-noto-cjk/NotoSansCJK-Regular.ttc"],
- 				   "google-noto-sans-cjk-ttc-fonts", 2);
- 	}
- 
-@@ -498,7 +500,7 @@ sub give_mageia_hints()
- 	$map{"latexmk"} = "texlive-collection-basic";
- 
- 	if ($pdf) {
--		check_missing_file("/usr/share/fonts/google-noto-cjk/NotoSansCJK-Regular.ttc",
-+		check_missing_file(["/usr/share/fonts/google-noto-cjk/NotoSansCJK-Regular.ttc"],
- 				   "google-noto-sans-cjk-ttc-fonts", 2);
- 	}
- 
-@@ -528,7 +530,7 @@ sub give_arch_linux_hints()
- 	check_pacman_missing(\@archlinux_tex_pkgs, 2) if ($pdf);
- 
- 	if ($pdf) {
--		check_missing_file("/usr/share/fonts/noto-cjk/NotoSansCJK-Regular.ttc",
-+		check_missing_file(["/usr/share/fonts/noto-cjk/NotoSansCJK-Regular.ttc"],
- 				   "noto-fonts-cjk", 2);
- 	}
- 
-@@ -549,11 +551,11 @@ sub give_gentoo_hints()
- 		"rsvg-convert"		=> "gnome-base/librsvg",
- 	);
- 
--	check_missing_file("/usr/share/fonts/dejavu/DejaVuSans.ttf",
-+	check_missing_file(["/usr/share/fonts/dejavu/DejaVuSans.ttf"],
- 			   "media-fonts/dejavu", 2) if ($pdf);
- 
- 	if ($pdf) {
--		check_missing_file("/usr/share/fonts/noto-cjk/NotoSansCJKsc-Regular.otf",
-+		check_missing_file(["/usr/share/fonts/noto-cjk/NotoSansCJKsc-Regular.otf"],
- 				   "media-fonts/noto-cjk", 2);
- 	}
- 
--- 
-2.23.0
+regards,
+dan carpenter
 
