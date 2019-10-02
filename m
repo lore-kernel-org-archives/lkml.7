@@ -2,65 +2,65 @@ Return-Path: <SRS0=zem1=X3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 64841C4360C
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 21:24:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50BE2C4360C
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 21:27:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 35F3821783
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 21:24:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 16DB721783
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 21:27:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CWOsCp6R"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Vb5V5wS0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729528AbfJBVYx (ORCPT
+        id S1729534AbfJBV1u (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Oct 2019 17:24:53 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:46845 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728220AbfJBVYx (ORCPT
+        Wed, 2 Oct 2019 17:27:50 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:46929 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728883AbfJBV1t (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Oct 2019 17:24:53 -0400
-Received: by mail-wr1-f68.google.com with SMTP id o18so552115wrv.13
-        for <linux-kernel@vger.kernel.org>; Wed, 02 Oct 2019 14:24:51 -0700 (PDT)
+        Wed, 2 Oct 2019 17:27:49 -0400
+Received: by mail-pf1-f193.google.com with SMTP id q5so262126pfg.13
+        for <linux-kernel@vger.kernel.org>; Wed, 02 Oct 2019 14:27:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
+        d=google.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=A8w+FHe5743TtHJppD6AZXCm6HeNHuSZ/rMyNlKuO+I=;
-        b=CWOsCp6RJXD5p63VAhR0/e8P4e16fm4w7VS+yzJkkbFkXb9HUBLq8eKopcqtC/YkfD
-         sK6T9bTA7ZspZkR0XtuaCl9J2wpBdNcZZN9Wg8q9zGQK05aWY0+DmNZo9B5a4QVFV10g
-         nbcBIOgOILYKWpb8umu36AazgoOTJSizgvatsXd+OvlCSU1ZjKDLtGYEZTU3czzmYMlH
-         OtfNImw1iJK3z9mGecbMdqC+5eEyqIEIk7HZkzxwUK+kquDfBXhE2eNI6KAvJibVjNMz
-         4DH4lZYz7TkY3NwARn61gA+Xj7IA7lu3j80mntK1f9iYThbSyfezx8GEy6mxNbvfqnBt
-         5evg==
+        bh=Ff5/X8LijthYfBkRMosRh8V5DWdVMBmSJpWGhDefc4M=;
+        b=Vb5V5wS0B2+OZP1hBBvp/X0BN8J2HU5kfLxwxgDecAUheVPlHvun2OYXtJRwp3FY64
+         B/rNa+xoUubebYIt9wU6UtQvz74/wh9aaLvwc1qLfrA4CcdAcvlG/WnwhXR6tVf3o9Pq
+         6+kyVsT0p3gDAYf45MjahfyuIfSGJTw8yfHpocnjbuDtgx5ctlNxMGLoYG0NXQm/HPkH
+         bgEL6k2l8Alsn0ErHQURhPrnycDhI7j24owjoOxuvFkricWBTQuucujCDaRWvcogBUiu
+         J1w4QRQDUslmdgTvSO+cKA2COYYX84VW86bw6Ncpr4pIp3Fyn+urmRyNQX4v3S1OSWf4
+         QmxA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=A8w+FHe5743TtHJppD6AZXCm6HeNHuSZ/rMyNlKuO+I=;
-        b=VVYULpXADEaIbmdjtNyL1OgrhPs+qq2TSTUqadUzUZk/+Zd9la70dFoqYUsq8qKhrL
-         YxZIcAWvheHbTarAP4BYdqLIHMW4HsYUbOxmp34BRtaQL6rwpV69gy5228jGQ+MMg4z7
-         MJewB+KzB3iO9sgfKVsa28FNX9MzrhxiG0tdRDfY3CgeNSRmJf95e8M1hYflaOBses6a
-         rhOf3mhiTuu6xoYfNdUyDIN0uXi7mlb3J7tmp7TsKess1G3zEY/alUsXEveyRZ6NsWW8
-         pBVph6serBYKpL8xCWgsG+wfpZ2tTpjNDbwkbRe1V0C6o7RJYDeJhmIsC6nXeIHXCw73
-         3GUw==
-X-Gm-Message-State: APjAAAUDzCyrQmlxe5XXdIUicwofx0V/SVDa7PO6/rkm10UqKUwS4lWS
-        qj5V5q+iu63e1m730bJsFdx3UcvsTUCKTfMFdK0=
-X-Google-Smtp-Source: APXvYqwURm4pH78jPsrdQn+DZphGzmWgFOKtmQM5jeQCxCirfuJH7g/TlbaJQvO4fBWtdxeyzi7PwrH5nXwp/CAl4z8=
-X-Received: by 2002:adf:f287:: with SMTP id k7mr4526852wro.206.1570051490794;
- Wed, 02 Oct 2019 14:24:50 -0700 (PDT)
+        bh=Ff5/X8LijthYfBkRMosRh8V5DWdVMBmSJpWGhDefc4M=;
+        b=YEmbLOKnKC4s7u/F9E9JmBGXh4gcq+zSRciVZFA6Lq6ZNTBygj9WlrhpN66EKc46O2
+         hxEDv9TdC1g+x+8IQDAHV3fFSNEf9UOyl252lh3lrY3r8zfkz8R67yaPI0gPNTWGNqyr
+         z0MM5x07YtCXx4NtS+oiewqbNWQ6Evj2uzGMejU8BHtKhCf+HNRUFLsOzvKcOKql3kBS
+         jvg9nwxHTnVTLvvCzJ6BAbYD7Fo4/qKFAnga6BWHjT9LEkG5XSOwObBPtFM+yz1p4EC3
+         ecN2O9XsZHqoUuOv624S0pSvC16uqqCQ8gznUg8y/3gbDSmnykTQhWvFm2bkvNIi+Ze9
+         QGrw==
+X-Gm-Message-State: APjAAAVRRjP4G29GoqaBDlmWNflLlE9GkK6/kwjw3a5CKKqiXVTduHYP
+        Tvrg4/PWa9B0YxwjIb3utwePkyTxdDVGzO8tVVXJZw==
+X-Google-Smtp-Source: APXvYqxNdOGB2WGWCnghLz9uwjolnJyOa8vlr+WnUyO0zmr1/ot3q/S+YF1u1IXNHz8osGDRHnZWrd80t7vHOCyQN88=
+X-Received: by 2002:a17:90a:154f:: with SMTP id y15mr77517pja.73.1570051668780;
+ Wed, 02 Oct 2019 14:27:48 -0700 (PDT)
 MIME-Version: 1.0
 References: <20191002120136.1777161-1-arnd@arndb.de> <20191002120136.1777161-5-arnd@arndb.de>
- <CAKwvOdmjM80XP7VH83iLn=8mz6W1+SbXST2FChEnH0LSRRm4pA@mail.gmail.com>
-In-Reply-To: <CAKwvOdmjM80XP7VH83iLn=8mz6W1+SbXST2FChEnH0LSRRm4pA@mail.gmail.com>
-From:   Alex Deucher <alexdeucher@gmail.com>
-Date:   Wed, 2 Oct 2019 17:24:37 -0400
-Message-ID: <CADnq5_MyUp9OkqM+MUHZ8BpLEe5afBpAqOwQxDwAWgvVvqbpoQ@mail.gmail.com>
+ <CAKwvOdmjM80XP7VH83iLn=8mz6W1+SbXST2FChEnH0LSRRm4pA@mail.gmail.com> <CADnq5_MyUp9OkqM+MUHZ8BpLEe5afBpAqOwQxDwAWgvVvqbpoQ@mail.gmail.com>
+In-Reply-To: <CADnq5_MyUp9OkqM+MUHZ8BpLEe5afBpAqOwQxDwAWgvVvqbpoQ@mail.gmail.com>
+From:   Nick Desaulniers <ndesaulniers@google.com>
+Date:   Wed, 2 Oct 2019 14:27:37 -0700
+Message-ID: <CAKwvOd=+VeD4xchCAyKeBtTD8+qwS6BTVgM=4ZDY1kBQJq3wMQ@mail.gmail.com>
 Subject: Re: [PATCH 4/6] drm/amd/display: fix dcn21 Makefile for clang
-To:     Nick Desaulniers <ndesaulniers@google.com>
+To:     Alex Deucher <alexdeucher@gmail.com>
 Cc:     Arnd Bergmann <arnd@arndb.de>,
         Alex Deucher <alexander.deucher@amd.com>,
         "David (ChunMing) Zhou" <David1.Zhou@amd.com>,
@@ -80,78 +80,22 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Oct 2, 2019 at 5:19 PM Nick Desaulniers <ndesaulniers@google.com> wrote:
+On Wed, Oct 2, 2019 at 2:24 PM Alex Deucher <alexdeucher@gmail.com> wrote:
 >
-> On Wed, Oct 2, 2019 at 5:03 AM Arnd Bergmann <arnd@arndb.de> wrote:
+> On Wed, Oct 2, 2019 at 5:19 PM Nick Desaulniers <ndesaulniers@google.com> wrote:
 > >
-> > Just like all the other variants, this one passes invalid
-> > compile-time options with clang after the new code got
-> > merged:
-> >
-> > clang: error: unknown argument: '-mpreferred-stack-boundary=4'
-> > scripts/Makefile.build:265: recipe for target 'drivers/gpu/drm/amd/amdgpu/../display/dc/dcn21/dcn21_resource.o' failed
-> >
-> > Use the same variant that we have for dcn20 to fix compilation.
-> >
-> > Fixes: eced51f9babb ("drm/amd/display: Add hubp block for Renoir (v2)")
-> > Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+> > Alex, do you know why the AMDGPU driver uses a different stack
+> > alignment (16B) than the rest of the x86 kernel?  (see
+> > arch/x86/Makefile which uses 8B stack alignment).
 >
-> Thanks for the patch!
-> Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
-> Tested-by: Nick Desaulniers <ndesaulniers@google.com>
-> (Though I think it's already been merged)
->
-> Alex, do you know why the AMDGPU driver uses a different stack
-> alignment (16B) than the rest of the x86 kernel?  (see
-> arch/x86/Makefile which uses 8B stack alignment).
+> Not sure.  Maybe Harry can comment.  I think it was added for the
+> floating point stuff.  Not sure if it's strictly required or not.
 
-Not sure.  Maybe Harry can comment.  I think it was added for the
-floating point stuff.  Not sure if it's strictly required or not.
+Can you find out for me please who knows more about this and setup a
+chat with all of us? (I don't want to deride this patch's review
+thread, so let's start a new thread once we know more) We're facing
+some interesting runtime issues when built with Clang.
 
-Alex
-
->
-> > ---
-> >  drivers/gpu/drm/amd/display/dc/dcn21/Makefile | 12 +++++++++++-
-> >  1 file changed, 11 insertions(+), 1 deletion(-)
-> >
-> > diff --git a/drivers/gpu/drm/amd/display/dc/dcn21/Makefile b/drivers/gpu/drm/amd/display/dc/dcn21/Makefile
-> > index 8cd9de8b1a7a..ef673bffc241 100644
-> > --- a/drivers/gpu/drm/amd/display/dc/dcn21/Makefile
-> > +++ b/drivers/gpu/drm/amd/display/dc/dcn21/Makefile
-> > @@ -3,7 +3,17 @@
-> >
-> >  DCN21 = dcn21_hubp.o dcn21_hubbub.o dcn21_resource.o
-> >
-> > -CFLAGS_$(AMDDALPATH)/dc/dcn21/dcn21_resource.o := -mhard-float -msse -mpreferred-stack-boundary=4
-> > +ifneq ($(call cc-option, -mpreferred-stack-boundary=4),)
-> > +       cc_stack_align := -mpreferred-stack-boundary=4
-> > +else ifneq ($(call cc-option, -mstack-alignment=16),)
-> > +       cc_stack_align := -mstack-alignment=16
-> > +endif
-> > +
-> > +CFLAGS_$(AMDDALPATH)/dc/dcn21/dcn21_resource.o := -mhard-float -msse $(cc_stack_align)
-> > +
-> > +ifdef CONFIG_CC_IS_CLANG
-> > +CFLAGS_$(AMDDALPATH)/dc/dcn21/dcn21_resource.o += -msse2
-> > +endif
-> >
-> >  AMD_DAL_DCN21 = $(addprefix $(AMDDALPATH)/dc/dcn21/,$(DCN21))
-> >
-> > --
-> > 2.20.0
-> >
-> > --
-> > You received this message because you are subscribed to the Google Groups "Clang Built Linux" group.
-> > To unsubscribe from this group and stop receiving emails from it, send an email to clang-built-linux+unsubscribe@googlegroups.com.
-> > To view this discussion on the web visit https://groups.google.com/d/msgid/clang-built-linux/20191002120136.1777161-5-arnd%40arndb.de.
->
->
->
-> --
-> Thanks,
-> ~Nick Desaulniers
-> _______________________________________________
-> amd-gfx mailing list
-> amd-gfx@lists.freedesktop.org
-> https://lists.freedesktop.org/mailman/listinfo/amd-gfx
+-- 
+Thanks,
+~Nick Desaulniers
