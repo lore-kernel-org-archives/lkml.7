@@ -2,32 +2,32 @@ Return-Path: <SRS0=zem1=X3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_SBL,URIBL_SBL_A
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A064CC4360C
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 19:10:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37EBAC4360C
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 19:11:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 87677207FF
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 19:10:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1A5DF207FF
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 19:11:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729954AbfJBTK4 (ORCPT
+        id S1729403AbfJBTKz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Oct 2019 15:10:56 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:35784 "EHLO
+        Wed, 2 Oct 2019 15:10:55 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:35778 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729302AbfJBTIP (ORCPT
+        by vger.kernel.org with ESMTP id S1729298AbfJBTIP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 2 Oct 2019 15:08:15 -0400
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1iFjyu-000364-EQ; Wed, 02 Oct 2019 20:08:12 +0100
+        id 1iFjyu-00036H-L2; Wed, 02 Oct 2019 20:08:12 +0100
 Received: from ben by deadeye with local (Exim 4.92.1)
         (envelope-from <ben@decadent.org.uk>)
-        id 1iFjyq-0003gI-94; Wed, 02 Oct 2019 20:08:08 +0100
+        id 1iFjyp-0003ft-VY; Wed, 02 Oct 2019 20:08:07 +0100
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,15 +35,14 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Jiri Pirko" <jiri@resnulli.us>,
-        "David S. Miller" <davem@davemloft.net>,
-        "Jiri Pirko" <jiri@mellanox.com>,
-        "YueHaibing" <yuehaibing@huawei.com>
+        "Ivan Vecera" <ivecera@redhat.com>, "Petr Oros" <poros@redhat.com>,
+        "David S. Miller" <davem@davemloft.net>
 Date:   Wed, 02 Oct 2019 20:06:51 +0100
-Message-ID: <lsq.1570043211.524954219@decadent.org.uk>
+Message-ID: <lsq.1570043211.780333323@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 80/87] bonding: Always enable vlan tx offload
+Subject: [PATCH 3.16 75/87] be2net: fix link failure after ethtool offline
+ test
 In-Reply-To: <lsq.1570043210.379046399@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -57,51 +56,77 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: YueHaibing <yuehaibing@huawei.com>
+From: Petr Oros <poros@redhat.com>
 
-commit 30d8177e8ac776d89d387fad547af6a0f599210e upstream.
+commit 2e5db6eb3c23e5dc8171eb8f6af7a97ef9fcf3a9 upstream.
 
-We build vlan on top of bonding interface, which vlan offload
-is off, bond mode is 802.3ad (LACP) and xmit_hash_policy is
-BOND_XMIT_POLICY_ENCAP34.
+Certain cards in conjunction with certain switches need a little more
+time for link setup that results in ethtool link test failure after
+offline test. Patch adds a loop that waits for a link setup finish.
 
-Because vlan tx offload is off, vlan tci is cleared and skb push
-the vlan header in validate_xmit_vlan() while sending from vlan
-devices. Then in bond_xmit_hash, __skb_flow_dissect() fails to
-get information from protocol headers encapsulated within vlan,
-because 'nhoff' is points to IP header, so bond hashing is based
-on layer 2 info, which fails to distribute packets across slaves.
+Changes in v2:
+- added fixes header
 
-This patch always enable bonding's vlan tx offload, pass the vlan
-packets to the slave devices with vlan tci, let them to handle
-vlan implementation.
-
-Fixes: 278339a42a1b ("bonding: propogate vlan_features to bonding master")
-Suggested-by: Jiri Pirko <jiri@resnulli.us>
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
-Acked-by: Jiri Pirko <jiri@mellanox.com>
+Fixes: 4276e47e2d1c ("be2net: Add link test to list of ethtool self tests.")
+Signed-off-by: Petr Oros <poros@redhat.com>
+Reviewed-by: Ivan Vecera <ivecera@redhat.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
-[bwh: Backported to 3.16: adjust context]
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- drivers/net/bonding/bond_main.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ .../net/ethernet/emulex/benet/be_ethtool.c    | 28 +++++++++++++++----
+ 1 file changed, 22 insertions(+), 6 deletions(-)
 
---- a/drivers/net/bonding/bond_main.c
-+++ b/drivers/net/bonding/bond_main.c
-@@ -4038,13 +4038,13 @@ void bond_setup(struct net_device *bond_
- 	bond_dev->features |= NETIF_F_NETNS_LOCAL;
+--- a/drivers/net/ethernet/emulex/benet/be_ethtool.c
++++ b/drivers/net/ethernet/emulex/benet/be_ethtool.c
+@@ -779,7 +779,7 @@ static void be_self_test(struct net_devi
+ 			 u64 *data)
+ {
+ 	struct be_adapter *adapter = netdev_priv(netdev);
+-	int status;
++	int status, cnt;
+ 	u8 link_status = 0;
  
- 	bond_dev->hw_features = BOND_VLAN_FEATURES |
--				NETIF_F_HW_VLAN_CTAG_TX |
- 				NETIF_F_HW_VLAN_CTAG_RX |
- 				NETIF_F_HW_VLAN_CTAG_FILTER;
+ 	if (adapter->function_caps & BE_FUNCTION_CAPS_SUPER_NIC) {
+@@ -790,6 +790,9 @@ static void be_self_test(struct net_devi
  
- 	bond_dev->hw_features &= ~(NETIF_F_ALL_CSUM & ~NETIF_F_HW_CSUM);
- 	bond_dev->hw_features |= NETIF_F_GSO_UDP_TUNNEL;
- 	bond_dev->features |= bond_dev->hw_features;
-+	bond_dev->features |= NETIF_F_HW_VLAN_CTAG_TX | NETIF_F_HW_VLAN_STAG_TX;
+ 	memset(data, 0, sizeof(u64) * ETHTOOL_TESTS_NUM);
+ 
++	/* check link status before offline tests */
++	link_status = netif_carrier_ok(netdev);
++
+ 	if (test->flags & ETH_TEST_FL_OFFLINE) {
+ 		if (be_loopback_test(adapter, BE_MAC_LOOPBACK, &data[0]) != 0)
+ 			test->flags |= ETH_TEST_FL_FAILED;
+@@ -810,13 +813,26 @@ static void be_self_test(struct net_devi
+ 		test->flags |= ETH_TEST_FL_FAILED;
+ 	}
+ 
+-	status = be_cmd_link_status_query(adapter, NULL, &link_status, 0);
+-	if (status) {
+-		test->flags |= ETH_TEST_FL_FAILED;
+-		data[4] = -1;
+-	} else if (!link_status) {
++	/* link status was down prior to test */
++	if (!link_status) {
+ 		test->flags |= ETH_TEST_FL_FAILED;
+ 		data[4] = 1;
++		return;
++	}
++
++	for (cnt = 10; cnt; cnt--) {
++		status = be_cmd_link_status_query(adapter, NULL, &link_status,
++						  0);
++		if (status) {
++			test->flags |= ETH_TEST_FL_FAILED;
++			data[4] = -1;
++			break;
++		}
++
++		if (link_status)
++			break;
++
++		msleep_interruptible(500);
+ 	}
  }
  
- /*
 
