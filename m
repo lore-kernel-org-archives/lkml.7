@@ -2,211 +2,143 @@ Return-Path: <SRS0=zem1=X3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2ABDBC352AA
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 14:37:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 87A17C352AA
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 14:40:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F2F7221783
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 14:37:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 51D2621920
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 14:40:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="JqDT3j5j"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728257AbfJBOhV convert rfc822-to-8bit (ORCPT
+        id S1726978AbfJBOkX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Oct 2019 10:37:21 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:58712 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726300AbfJBOhU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Oct 2019 10:37:20 -0400
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id B5D0680F91;
-        Wed,  2 Oct 2019 14:37:19 +0000 (UTC)
-Received: from [10.40.204.213] (ovpn-204-213.brq.redhat.com [10.40.204.213])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id BAAEF60C18;
-        Wed,  2 Oct 2019 14:37:02 +0000 (UTC)
-Subject: Re: [PATCH v11 0/6] mm / virtio: Provide support for unused page
- reporting
-To:     Alexander Duyck <alexander.duyck@gmail.com>
-Cc:     Alexander Duyck <alexander.h.duyck@linux.intel.com>,
-        David Hildenbrand <david@redhat.com>,
-        virtio-dev@lists.oasis-open.org, kvm list <kvm@vger.kernel.org>,
-        "Michael S. Tsirkin" <mst@redhat.com>,
-        Dave Hansen <dave.hansen@intel.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Matthew Wilcox <willy@infradead.org>,
-        Michal Hocko <mhocko@kernel.org>,
-        linux-mm <linux-mm@kvack.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Mel Gorman <mgorman@techsingularity.net>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Oscar Salvador <osalvador@suse.de>,
-        Yang Zhang <yang.zhang.wz@gmail.com>,
-        Pankaj Gupta <pagupta@redhat.com>,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        Rik van Riel <riel@surriel.com>, lcapitulino@redhat.com,
-        "Wang, Wei W" <wei.w.wang@intel.com>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Dan Williams <dan.j.williams@intel.com>
-References: <20191001152441.27008.99285.stgit@localhost.localdomain>
- <7233498c-2f64-d661-4981-707b59c78fd5@redhat.com>
- <1ea1a4e11617291062db81f65745b9c95fd0bb30.camel@linux.intel.com>
- <8bd303a6-6e50-b2dc-19ab-4c3f176c4b02@redhat.com>
- <CAKgT0Uf37xAFK2CWqUZJgn7bWznSAi6qncLxBpC55oSpBMG1HQ@mail.gmail.com>
- <c06b68cb-5e94-ae3e-f84e-48087d675a8f@redhat.com>
- <CAKgT0Ud6TT=XxqFx6ePHzbUYqMp5FHVPozRvnNZK3tKV7j2xjg@mail.gmail.com>
-From:   Nitesh Narayan Lal <nitesh@redhat.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=nitesh@redhat.com; prefer-encrypt=mutual; keydata=
- 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
- VujM7c/b4pps
-Organization: Red Hat Inc,
-Message-ID: <10e1f17f-db99-a723-97e2-1ae292fff408@redhat.com>
-Date:   Wed, 2 Oct 2019 10:36:58 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
-MIME-Version: 1.0
-In-Reply-To: <CAKgT0Ud6TT=XxqFx6ePHzbUYqMp5FHVPozRvnNZK3tKV7j2xjg@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8BIT
+        Wed, 2 Oct 2019 10:40:23 -0400
+Received: from mail-eopbgr760045.outbound.protection.outlook.com ([40.107.76.45]:52416
+        "EHLO NAM02-CY1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726000AbfJBOkX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 2 Oct 2019 10:40:23 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=MIMx8GFQlSz4iJBeUSmZDY718Ifq+tmjdqmOG5XdZG+2xKrJFOpDxAP/RIQoq+8YkuYiFvQxfxCilqw1ys6+TFMJkMJT3/oNEvAgc1tMxEpaGX1s9jfNcQ9op+CCHr1Mv2oPVku8e/NsjwbGeHRyxXN7hFNg7jXozlBJM1YKHJuo7Qn4SxcFxlqMgF4z1WhZxzHEQTcDou4uTZhtXiLdDFqm/kVJv5vQksOtJEa7GPC6l+BcFl55fxuQfRI1Jin7UCt8CjHJq6gM//W84bR1EHA5MM5T3oT712GK6TipiaHXm3E3t/4c869NhRscwmGJOzF8k3tX9WDN0K6qiFkNiA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=xghF0apzJHz21EWTOdr2auo9aeCWmqhLZbG4xlbWBRQ=;
+ b=Z5aA+UlOY+nSQnimOxGK2HNqdw8Wyp8hm6i+NEqJMAetOWbioWof3Hfaii+KYLpm/Z2JDj2fJDmHGb/fLkWN+bzzysYlgYvBc1WVrpjKTeoXUgjevbgYyK3Ze2ilESFa1i6liCCfmPLUYuYOBYIo00ADBQkUSTvETi4NEj0y3zxH1gYdFVORpWUut5K/kQDIMjQgX4tBonhGWhFY1hAu6CGjVXmnd8RImorD+J51M9/jN+vhrClUMJsoSctlkWPvQNr5AhufJemVzlmhvBtnUelSGn8HLML6vZOQDaRiZsHMnnAW2XYADjS1NeJiNZ6U7Lsk/m842vyrOtq36kqaWg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=xghF0apzJHz21EWTOdr2auo9aeCWmqhLZbG4xlbWBRQ=;
+ b=JqDT3j5jOy2W0Rqjr0JQh9nqFDwj83neilDxy9CvbsCEXH2lcxJeCOYEHS1PLzxZWZWGtxdPTYi0U7JAYwiAugLymAUAZ4p0WBL2H05+eDtS0JC7MEh5apKdRrDHaqCfOre0Tq951wFPOnv5IxSheJvlQt+vImMp/DnfDywAU4A=
+Received: from MWHPR12MB1453.namprd12.prod.outlook.com (10.172.55.22) by
+ MWHPR12MB1134.namprd12.prod.outlook.com (10.169.203.18) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2305.20; Wed, 2 Oct 2019 14:40:13 +0000
+Received: from MWHPR12MB1453.namprd12.prod.outlook.com
+ ([fe80::4803:438a:eb1d:d6a6]) by MWHPR12MB1453.namprd12.prod.outlook.com
+ ([fe80::4803:438a:eb1d:d6a6%10]) with mapi id 15.20.2305.022; Wed, 2 Oct 2019
+ 14:40:13 +0000
+From:   "Grodzovsky, Andrey" <Andrey.Grodzovsky@amd.com>
+To:     Hillf Danton <hdanton@sina.com>,
+        Neil Armstrong <narmstrong@baylibre.com>
+CC:     "daniel@ffwll.ch" <daniel@ffwll.ch>,
+        "airlied@linux.ie" <airlied@linux.ie>,
+        "Koenig, Christian" <Christian.Koenig@amd.com>,
+        Erico Nunes <nunes.erico@gmail.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "steven.price@arm.com" <steven.price@arm.com>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        Rob Herring <robh@kernel.org>,
+        Tomeu Vizoso <tomeu.vizoso@collabora.com>,
+        "open list:ARM/Amlogic Meson..." <linux-amlogic@lists.infradead.org>
+Subject: Re: drm_sched with panfrost crash on T820
+Thread-Topic: drm_sched with panfrost crash on T820
+Thread-Index: AQHVdQtdjrcnE/APhki/CyOIa6xfH6c/vsAAgASUhACAAyEmgA==
+Date:   Wed, 2 Oct 2019 14:40:13 +0000
+Message-ID: <d2888614-8644-7d04-b73b-3ab7c6623e9a@amd.com>
+References: <e450fbe6-dec7-2704-59c2-db7e869d67f5@baylibre.com>
+ <f0ab487e-8d49-987b-12b8-7a115a6543e1@amd.com>
+ <20190930145228.14000-1-hdanton@sina.com>
+In-Reply-To: <20190930145228.14000-1-hdanton@sina.com>
+Accept-Language: en-GB, en-US
 Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.27]); Wed, 02 Oct 2019 14:37:20 +0000 (UTC)
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: BM1PR0101CA0013.INDPRD01.PROD.OUTLOOK.COM
+ (2603:1096:b00:18::23) To MWHPR12MB1453.namprd12.prod.outlook.com
+ (2603:10b6:301:e::22)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=Andrey.Grodzovsky@amd.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [2607:fea8:3edf:fe95::4]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 9a0377d9-4b49-42f0-1d3e-08d747466eeb
+x-ms-office365-filtering-ht: Tenant
+x-ms-traffictypediagnostic: MWHPR12MB1134:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <MWHPR12MB1134FCCD71B6F8BA42770167EA9C0@MWHPR12MB1134.namprd12.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:635;
+x-forefront-prvs: 0178184651
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(376002)(136003)(366004)(39860400002)(396003)(346002)(189003)(199004)(486006)(476003)(14444005)(256004)(5660300002)(102836004)(76176011)(6116002)(11346002)(446003)(186003)(99286004)(4326008)(2616005)(46003)(25786009)(14454004)(36756003)(2906002)(52116002)(6506007)(386003)(53546011)(478600001)(66446008)(86362001)(64756008)(66556008)(66476007)(7736002)(54906003)(110136005)(305945005)(7416002)(6486002)(229853002)(31686004)(6512007)(66946007)(316002)(6436002)(31696002)(71200400001)(8936002)(71190400001)(8676002)(81156014)(6246003)(81166006);DIR:OUT;SFP:1101;SCL:1;SRVR:MWHPR12MB1134;H:MWHPR12MB1453.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: amd.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: FdDGr04ZF6RCatt9hK+l7i8D0OPv8i/5A7NpU+EAEmo0MXhEP3U09zgwm7Eyzn/eDHi8otK9KlDLkAlaHhV1IhW0nyNjm+Mowchh7EbfkEuc9hhy/Fhyb3Ek4w8HxWd5IC8/2CKvM8mGz0V5mUWVlsPiW1Nt5POM2+xY06h6FRSqaMt09HkCmBUdXcAE0Ji7+EZ9+qyhlGC23NPGd8hQha7R0QNuj2djn8tlfiwfVtxnUsGn2shfovjk9HZWliCYLMXnvCdELUjEYthNBiDOsoY2ByR7XmlSIWMFaA0uSwrYq0kbwgL5Qbmlg3uCL2eOoOaZBiDtRuHHBXP0Mz/FHonejFBgXnxLPbzsZWqH3NpuXhKlNBN05W54AAu4ftYKDxKfJAeABHBu/pBeyJgb+v8TYAWrvrIKbCZgUVZeJbk=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <ED436A90CB4A0E44B92145A18CB20F4D@namprd12.prod.outlook.com>
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 9a0377d9-4b49-42f0-1d3e-08d747466eeb
+X-MS-Exchange-CrossTenant-originalarrivaltime: 02 Oct 2019 14:40:13.2528
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: d1wIrOFq1oXXcOWe6Xss9O5elcex5P2Mif2+s2lpFOl8lQ0sGuAEta3SlNuDM5DCpwffrGX0bRE7zUr4raMiSQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR12MB1134
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-On 10/2/19 10:25 AM, Alexander Duyck wrote:
-> On Wed, Oct 2, 2019 at 3:37 AM Nitesh Narayan Lal <nitesh@redhat.com> wrote:
->>
->> On 10/1/19 8:55 PM, Alexander Duyck wrote:
->>> On Tue, Oct 1, 2019 at 12:16 PM Nitesh Narayan Lal <nitesh@redhat.com> wrote:
->>>> On 10/1/19 12:21 PM, Alexander Duyck wrote:
->>>>> On Tue, 2019-10-01 at 17:35 +0200, David Hildenbrand wrote:
->>>>>> On 01.10.19 17:29, Alexander Duyck wrote:
-> <snip>
->
->>>>> Do we have a working patch set for Nitesh's code? The last time I tried
->>>>> running his patch set I ran into issues with kernel panics. If we have a
->>>>> known working/stable patch set I can give it a try.
->>>> Did you try the v12 patch-set [1]?
->>>> I remember that you reported the CPU stall issue, which I fixed in the v12.
->>>>
->>>> [1] https://lkml.org/lkml/2019/8/12/593
->>> So I tried testing with the spin_lock calls replaced with spin_lock
->>> _irq to resolve the IRQ issue. I also had shuffle enabled in order to
->>> increase the number of pages being dirtied.
->>>
->>> With that setup the bitmap approach is running significantly worse
->>> then my approach, even with the boundary removed. Since I had to
->>> modify the code to even getting working I am not comfortable posting
->>> numbers.
->> I didn't face any issue in getting the code work or compile.
->> Before my v12 posting, I did try your previously suggested test
->> (will-it-scale/page_fault1 for 12 hours on a 60 GB) and didn't see any issues.
->> I think it would help more if you can share the setup which you are running.
-> So one issue with the standard page_fault1 is that it is only
-> operating at the 4K page level. You won't see much impact from you
-> patches with that as the overhead of splitting a MAX_ORDER - 2 page
-> down to a 4K page will end up being the biggest thing you are
-> benchmarking.
->
-> I think I have brought it up before but I am running with the
-> page_fault1 modified to use THP. Making the change is pretty
-> straightforward as  all you have to do is add an madvise to the test
-> code. All that is needed is to add "madvise(c, MEMSIZE,
-> MADV_HUGEPAGE);" between the assert and the for loop in the
-> page_fault1 code and then rebuild the test. I actually copied
-> page_fault1.c into a file I named page_fault4.c and added the line. As
-> a result it seems like the code will build it as an additional test.
-
-Thanks for explaining.
-
->
-> The only other alteration I can think of that might have much impact
-> would be to enable the page shuffling. The idea is that it will cause
-> us to use more pages because half of the pages freed are dumped to the
-> tail of the list so we are constantly churning the memory.
->
->>> My suggestion would be to look at reworking the patch set and
->>> post numbers for my patch set versus the bitmap approach and we can
->>> look at them then.
->> Agreed. However, in order to fix an issue I have to reproduce it first.
-> With the tweak I have suggested above it should make it much easier to
-> reproduce. Basically all you need is to have the allocation competing
-> against hinting. Currently the hinting isn't doing this because the
-> allocations are mostly coming out of 4K pages instead of higher order
-> ones.
-
-Understood.
-
->
-> Alternatively you could just make the suggestion I had proposed about
-> using spin_lock/unlock_irq in your worker thread and that resolved it
-> for me.
-
-I will first reproduce as you suggested and then make the change.
-That will help me to understand the issue in a better way.
-
->
->>>  I would prefer not to spend my time fixing and
->>> tuning a patch set that I am still not convinced is viable.
->> You  don't have to, I can fix the issues in my patch-set. :)
-> Sounds good. Hopefully the stuff I pointed out above helps you to get
-> a reproduction and resolve the issues.
-
-Indeed, I will try these suggestions and fix this issue.
-Did you run into any other issues while building or running?
-
->
-> - Alex
-
--- 
-Thanks
-Nitesh
-
+DQpPbiA5LzMwLzE5IDEwOjUyIEFNLCBIaWxsZiBEYW50b24gd3JvdGU6DQo+IE9uIE1vbiwgMzAg
+U2VwIDIwMTkgMTE6MTc6NDUgKzAyMDAgTmVpbCBBcm1zdHJvbmcgd3JvdGU6DQo+PiBEaWQgYSBu
+ZXcgcnVuIGZyb20gNS4zOg0KPj4NCj4+IFsgICAzNS45NzE5NzJdIENhbGwgdHJhY2U6DQo+PiBb
+ICAgMzUuOTc0MzkxXSAgZHJtX3NjaGVkX2luY3JlYXNlX2thcm1hKzB4NWMvMHhmMA0KPj4gCQkJ
+ZmZmZjAwMDAxMDY2N2YzOAlGRkZGMDAwMDEwNjY3Rjk0DQo+PiAJCQlkcml2ZXJzL2dwdS9kcm0v
+c2NoZWR1bGVyL3NjaGVkX21haW4uYzozMzUNCj4+DQo+PiBUaGUgY3Jhc2hpbmcgbGluZSBpcyA6
+DQo+PiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBpZiAoYmFkLT5zX2ZlbmNlLT5z
+Y2hlZHVsZWQuY29udGV4dCA9PQ0KPj4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgIGVudGl0eS0+ZmVuY2VfY29udGV4dCkgew0KPj4NCj4+IERvZXNuJ3Qgc2VlbSByZWxhdGVk
+IHRvIGd1aWx0eSBqb2IuDQo+IEJhaWwgb3V0IGlmIHNfZmVuY2UgaXMgbm8gbG9uZ2VyIGZyZXNo
+Lg0KPg0KPiAtLS0gYS9kcml2ZXJzL2dwdS9kcm0vc2NoZWR1bGVyL3NjaGVkX21haW4uYw0KPiAr
+KysgYi9kcml2ZXJzL2dwdS9kcm0vc2NoZWR1bGVyL3NjaGVkX21haW4uYw0KPiBAQCAtMzMzLDYg
+KzMzMywxMCBAQCB2b2lkIGRybV9zY2hlZF9pbmNyZWFzZV9rYXJtYShzdHJ1Y3QgZHJtDQo+ICAg
+DQo+ICAgCQkJc3Bpbl9sb2NrKCZycS0+bG9jayk7DQo+ICAgCQkJbGlzdF9mb3JfZWFjaF9lbnRy
+eV9zYWZlKGVudGl0eSwgdG1wLCAmcnEtPmVudGl0aWVzLCBsaXN0KSB7DQo+ICsJCQkJaWYgKCFz
+bXBfbG9hZF9hY3F1aXJlKCZiYWQtPnNfZmVuY2UpKSB7DQo+ICsJCQkJCXNwaW5fdW5sb2NrKCZy
+cS0+bG9jayk7DQo+ICsJCQkJCXJldHVybjsNCj4gKwkJCQl9DQo+ICAgCQkJCWlmIChiYWQtPnNf
+ZmVuY2UtPnNjaGVkdWxlZC5jb250ZXh0ID09DQo+ICAgCQkJCSAgICBlbnRpdHktPmZlbmNlX2Nv
+bnRleHQpIHsNCj4gICAJCQkJCWlmIChhdG9taWNfcmVhZCgmYmFkLT5rYXJtYSkgPg0KPiBAQCAt
+NTQzLDcgKzU0Nyw3IEBAIEVYUE9SVF9TWU1CT0woZHJtX3NjaGVkX2pvYl9pbml0KTsNCj4gICB2
+b2lkIGRybV9zY2hlZF9qb2JfY2xlYW51cChzdHJ1Y3QgZHJtX3NjaGVkX2pvYiAqam9iKQ0KPiAg
+IHsNCj4gICAJZG1hX2ZlbmNlX3B1dCgmam9iLT5zX2ZlbmNlLT5maW5pc2hlZCk7DQo+IC0Jam9i
+LT5zX2ZlbmNlID0gTlVMTDsNCj4gKwlzbXBfc3RvcmVfcmVsZWFzZSgmam9iLT5zX2ZlbmNlLCAw
+KTsNCj4gICB9DQo+ICAgRVhQT1JUX1NZTUJPTChkcm1fc2NoZWRfam9iX2NsZWFudXApOw0KDQoN
+CkRvZXMgdGhpcyBjaGFuZ2UgaGVscCB0aGUgcHJvYmxlbSA/IE5vdGUgdGhhdCBkcm1fc2NoZWRf
+am9iX2NsZWFudXAgaXMgDQpjYWxsZWQgZnJvbSBzY2hlZHVsZXIgdGhyZWFkIHdoaWNoIGlzIHN0
+b3BwZWQgYXQgYWxsIHRpbWVzIHdoZW4gd29ya190ZHIgDQp0aHJlYWQgaXMgcnVubmluZyBhbmQg
+YW55d2F5IHRoZSAnYmFkJyBqb2IgaXMgc3RpbGwgaW4gdGhlIA0KcmluZ19taXJyb3JfbGlzdCB3
+aGlsZSBpdCdzIGJlaW5nIGFjY2Vzc2VkIGZyb23CoCANCmRybV9zY2hlZF9pbmNyZWFzZV9rYXJt
+YSBzbyBJIGRvbid0IHRoaW5rIGRybV9zY2hlZF9qb2JfY2xlYW51cCBjYW4gYmUgDQpjYWxsZWQg
+Zm9yIGl0IEJFRk9SRSBvciB3aGlsZSBkcm1fc2NoZWRfaW5jcmVhc2Vfa2FybWEgaXMgZXhlY3V0
+ZWQuDQoNCkFuZHJleQ0KDQoNCj4gICANCj4gLS0NCj4NCg==
