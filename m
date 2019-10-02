@@ -2,32 +2,32 @@ Return-Path: <SRS0=zem1=X3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNWANTED_LANGUAGE_BODY autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A304CC4360C
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 19:13:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB14BC4360C
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 19:13:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8B43D2133F
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 19:13:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9FD6C207FF
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 19:13:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729705AbfJBTNL (ORCPT
+        id S1730193AbfJBTNT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Oct 2019 15:13:11 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:35378 "EHLO
+        Wed, 2 Oct 2019 15:13:19 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:35328 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729097AbfJBTIK (ORCPT
+        by vger.kernel.org with ESMTP id S1729080AbfJBTIJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Oct 2019 15:08:10 -0400
+        Wed, 2 Oct 2019 15:08:09 -0400
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1iFjyn-00035W-QK; Wed, 02 Oct 2019 20:08:05 +0100
+        id 1iFjyo-000366-LK; Wed, 02 Oct 2019 20:08:06 +0100
 Received: from ben by deadeye with local (Exim 4.92.1)
         (envelope-from <ben@decadent.org.uk>)
-        id 1iFjyn-0003az-A6; Wed, 02 Oct 2019 20:08:05 +0100
+        id 1iFjyn-0003cV-Us; Wed, 02 Oct 2019 20:08:05 +0100
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,14 +35,14 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Madhavan Srinivasan" <maddy@linux.vnet.ibm.com>,
-        "Michael Ellerman" <mpe@ellerman.id.au>,
-        "Ravi Bangoria" <ravi.bangoria@linux.ibm.com>
+        "David S. Miller" <davem@davemloft.net>,
+        "syzbot" <syzkaller@googlegroups.com>,
+        "Eric Dumazet" <edumazet@google.com>
 Date:   Wed, 02 Oct 2019 20:06:51 +0100
-Message-ID: <lsq.1570043211.890916317@decadent.org.uk>
+Message-ID: <lsq.1570043211.857104088@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 15/87] powerpc/perf: Fix MMCRA corruption by bhrb_filter
+Subject: [PATCH 3.16 33/87] llc: fix skb leak in llc_build_and_send_ui_pkt()
 In-Reply-To: <lsq.1570043210.379046399@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -56,80 +56,83 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Ravi Bangoria <ravi.bangoria@linux.ibm.com>
+From: Eric Dumazet <edumazet@google.com>
 
-commit 3202e35ec1c8fc19cea24253ff83edf702a60a02 upstream.
+commit 8fb44d60d4142cd2a440620cd291d346e23c131e upstream.
 
-Consider a scenario where user creates two events:
+If llc_mac_hdr_init() returns an error, we must drop the skb
+since no llc_build_and_send_ui_pkt() caller will take care of this.
 
-  1st event:
-    attr.sample_type |= PERF_SAMPLE_BRANCH_STACK;
-    attr.branch_sample_type = PERF_SAMPLE_BRANCH_ANY;
-    fd = perf_event_open(attr, 0, 1, -1, 0);
+BUG: memory leak
+unreferenced object 0xffff8881202b6800 (size 2048):
+  comm "syz-executor907", pid 7074, jiffies 4294943781 (age 8.590s)
+  hex dump (first 32 bytes):
+    00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+    1a 00 07 40 00 00 00 00 00 00 00 00 00 00 00 00  ...@............
+  backtrace:
+    [<00000000e25b5abe>] kmemleak_alloc_recursive include/linux/kmemleak.h:55 [inline]
+    [<00000000e25b5abe>] slab_post_alloc_hook mm/slab.h:439 [inline]
+    [<00000000e25b5abe>] slab_alloc mm/slab.c:3326 [inline]
+    [<00000000e25b5abe>] __do_kmalloc mm/slab.c:3658 [inline]
+    [<00000000e25b5abe>] __kmalloc+0x161/0x2c0 mm/slab.c:3669
+    [<00000000a1ae188a>] kmalloc include/linux/slab.h:552 [inline]
+    [<00000000a1ae188a>] sk_prot_alloc+0xd6/0x170 net/core/sock.c:1608
+    [<00000000ded25bbe>] sk_alloc+0x35/0x2f0 net/core/sock.c:1662
+    [<000000002ecae075>] llc_sk_alloc+0x35/0x170 net/llc/llc_conn.c:950
+    [<00000000551f7c47>] llc_ui_create+0x7b/0x140 net/llc/af_llc.c:173
+    [<0000000029027f0e>] __sock_create+0x164/0x250 net/socket.c:1430
+    [<000000008bdec225>] sock_create net/socket.c:1481 [inline]
+    [<000000008bdec225>] __sys_socket+0x69/0x110 net/socket.c:1523
+    [<00000000b6439228>] __do_sys_socket net/socket.c:1532 [inline]
+    [<00000000b6439228>] __se_sys_socket net/socket.c:1530 [inline]
+    [<00000000b6439228>] __x64_sys_socket+0x1e/0x30 net/socket.c:1530
+    [<00000000cec820c1>] do_syscall_64+0x76/0x1a0 arch/x86/entry/common.c:301
+    [<000000000c32554f>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
 
-  This sets cpuhw->bhrb_filter to 0 and returns valid fd.
+BUG: memory leak
+unreferenced object 0xffff88811d750d00 (size 224):
+  comm "syz-executor907", pid 7074, jiffies 4294943781 (age 8.600s)
+  hex dump (first 32 bytes):
+    00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+    00 f0 0c 24 81 88 ff ff 00 68 2b 20 81 88 ff ff  ...$.....h+ ....
+  backtrace:
+    [<0000000053026172>] kmemleak_alloc_recursive include/linux/kmemleak.h:55 [inline]
+    [<0000000053026172>] slab_post_alloc_hook mm/slab.h:439 [inline]
+    [<0000000053026172>] slab_alloc_node mm/slab.c:3269 [inline]
+    [<0000000053026172>] kmem_cache_alloc_node+0x153/0x2a0 mm/slab.c:3579
+    [<00000000fa8f3c30>] __alloc_skb+0x6e/0x210 net/core/skbuff.c:198
+    [<00000000d96fdafb>] alloc_skb include/linux/skbuff.h:1058 [inline]
+    [<00000000d96fdafb>] alloc_skb_with_frags+0x5f/0x250 net/core/skbuff.c:5327
+    [<000000000a34a2e7>] sock_alloc_send_pskb+0x269/0x2a0 net/core/sock.c:2225
+    [<00000000ee39999b>] sock_alloc_send_skb+0x32/0x40 net/core/sock.c:2242
+    [<00000000e034d810>] llc_ui_sendmsg+0x10a/0x540 net/llc/af_llc.c:933
+    [<00000000c0bc8445>] sock_sendmsg_nosec net/socket.c:652 [inline]
+    [<00000000c0bc8445>] sock_sendmsg+0x54/0x70 net/socket.c:671
+    [<000000003b687167>] __sys_sendto+0x148/0x1f0 net/socket.c:1964
+    [<00000000922d78d9>] __do_sys_sendto net/socket.c:1976 [inline]
+    [<00000000922d78d9>] __se_sys_sendto net/socket.c:1972 [inline]
+    [<00000000922d78d9>] __x64_sys_sendto+0x2a/0x30 net/socket.c:1972
+    [<00000000cec820c1>] do_syscall_64+0x76/0x1a0 arch/x86/entry/common.c:301
+    [<000000000c32554f>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
 
-  2nd event:
-    attr.sample_type |= PERF_SAMPLE_BRANCH_STACK;
-    attr.branch_sample_type = PERF_SAMPLE_BRANCH_CALL;
-    fd = perf_event_open(attr, 0, 1, -1, 0);
-
-  It overrides cpuhw->bhrb_filter to -1 and returns with error.
-
-Now if power_pmu_enable() gets called by any path other than
-power_pmu_add(), ppmu->config_bhrb(-1) will set MMCRA to -1.
-
-Fixes: 3925f46bb590 ("powerpc/perf: Enable branch stack sampling framework")
-Signed-off-by: Ravi Bangoria <ravi.bangoria@linux.ibm.com>
-Reviewed-by: Madhavan Srinivasan <maddy@linux.vnet.ibm.com>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-[bwh: Backported to 3.16: drop changes in power9-pmu.c]
+Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
+Signed-off-by: Eric Dumazet <edumazet@google.com>
+Reported-by: syzbot <syzkaller@googlegroups.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
---- a/arch/powerpc/perf/core-book3s.c
-+++ b/arch/powerpc/perf/core-book3s.c
-@@ -1726,6 +1726,7 @@ static int power_pmu_event_init(struct p
- 	int n;
- 	int err;
- 	struct cpu_hw_events *cpuhw;
-+	u64 bhrb_filter;
- 
- 	if (!ppmu)
- 		return -ENOENT;
-@@ -1822,13 +1823,14 @@ static int power_pmu_event_init(struct p
- 	err = power_check_constraints(cpuhw, events, cflags, n + 1);
- 
- 	if (has_branch_stack(event)) {
--		cpuhw->bhrb_filter = ppmu->bhrb_filter_map(
-+		bhrb_filter = ppmu->bhrb_filter_map(
- 					event->attr.branch_sample_type);
- 
--		if (cpuhw->bhrb_filter == -1) {
-+		if (bhrb_filter == -1) {
- 			put_cpu_var(cpu_hw_events);
- 			return -EOPNOTSUPP;
- 		}
-+		cpuhw->bhrb_filter = bhrb_filter;
- 	}
- 
- 	put_cpu_var(cpu_hw_events);
---- a/arch/powerpc/perf/power8-pmu.c
-+++ b/arch/powerpc/perf/power8-pmu.c
-@@ -175,6 +175,7 @@
- #define	POWER8_MMCRA_IFM1		0x0000000040000000UL
- #define	POWER8_MMCRA_IFM2		0x0000000080000000UL
- #define	POWER8_MMCRA_IFM3		0x00000000C0000000UL
-+#define	POWER8_MMCRA_BHRB_MASK		0x00000000C0000000UL
- 
- #define ONLY_PLM \
- 	(PERF_SAMPLE_BRANCH_USER        |\
-@@ -666,6 +667,8 @@ static u64 power8_bhrb_filter_map(u64 br
- 
- static void power8_config_bhrb(u64 pmu_bhrb_filter)
- {
-+	pmu_bhrb_filter &= POWER8_MMCRA_BHRB_MASK;
-+
- 	/* Enable BHRB filter in PMU */
- 	mtspr(SPRN_MMCRA, (mfspr(SPRN_MMCRA) | pmu_bhrb_filter));
+ net/llc/llc_output.c | 2 ++
+ 1 file changed, 2 insertions(+)
+
+--- a/net/llc/llc_output.c
++++ b/net/llc/llc_output.c
+@@ -72,6 +72,8 @@ int llc_build_and_send_ui_pkt(struct llc
+ 	rc = llc_mac_hdr_init(skb, skb->dev->dev_addr, dmac);
+ 	if (likely(!rc))
+ 		rc = dev_queue_xmit(skb);
++	else
++		kfree_skb(skb);
+ 	return rc;
  }
+ 
 
