@@ -2,153 +2,125 @@ Return-Path: <SRS0=zem1=X3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 04021C4360C
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 19:27:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 72B63C4360C
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 19:33:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D1F6720700
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 19:27:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3FFC421783
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 19:33:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="iCsBeVOY"
+	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="JYh8Db+2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729159AbfJBT1T (ORCPT
+        id S1728933AbfJBTdZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Oct 2019 15:27:19 -0400
-Received: from gateway20.websitewelcome.com ([192.185.69.18]:19166 "EHLO
-        gateway20.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728000AbfJBT1S (ORCPT
+        Wed, 2 Oct 2019 15:33:25 -0400
+Received: from mail-qk1-f194.google.com ([209.85.222.194]:40008 "EHLO
+        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726076AbfJBTdZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Oct 2019 15:27:18 -0400
-X-Greylist: delayed 1382 seconds by postgrey-1.27 at vger.kernel.org; Wed, 02 Oct 2019 15:27:17 EDT
-Received: from cm11.websitewelcome.com (cm11.websitewelcome.com [100.42.49.5])
-        by gateway20.websitewelcome.com (Postfix) with ESMTP id 39718400F9204
-        for <linux-kernel@vger.kernel.org>; Wed,  2 Oct 2019 12:57:26 -0500 (CDT)
-Received: from gator4166.hostgator.com ([108.167.133.22])
-        by cmsmtp with SMTP
-        id Fjv4iiVexVUVYFjv4iVQsI; Wed, 02 Oct 2019 14:04:14 -0500
-X-Authority-Reason: nr=8
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=embeddedor.com; s=default; h=Content-Type:MIME-Version:Message-ID:Subject:
-        Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
-        List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=lGuFHxBRnjeWcjmv8+OVj8h6DT2+GVr2Gf8sL4rtDWM=; b=iCsBeVOYQ8y5i0JxkH7to0mWYD
-        nHxhmItBEKPjOco0tAuRVIq+WBxiu994Y2EkTRb704t1zGngb5RkHIe6VV8ImtoUtUJEBmU0Kk1nv
-        UL35BlIIoraV6yiT5wmIuoYClrOIKQ0drO01Qw7V2lA8noPMfgeMfjbllZiffnrr5tzZCs9I7imOd
-        KPdWXoupPZalrpljy6xtAK8Y9VFmEP8Ie2/OGmVaLmSsCb/ARPklUkjJSikxUt/+TQn/fclSf0G9n
-        CjRooX9KKaOo/+3WfV7wo1dG0AfS2sWiuuBJNflXy0Zyy3TQ7g/wBzccnCxpN6fKv43zwgQxCpgC8
-        CVS4/Osw==;
-Received: from 187-162-252-62.static.axtel.net ([187.162.252.62]:39692 helo=embeddedor)
-        by gator4166.hostgator.com with esmtpa (Exim 4.92)
-        (envelope-from <gustavo@embeddedor.com>)
-        id 1iFjv3-0047wu-MW; Wed, 02 Oct 2019 14:04:13 -0500
-Date:   Wed, 2 Oct 2019 14:03:41 -0500
-From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-To:     Alasdair Kergon <agk@redhat.com>, Mike Snitzer <snitzer@redhat.com>
-Cc:     dm-devel@redhat.com, linux-kernel@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Subject: [PATCH] md: dm-stripe: Use struct_size() in kmalloc()
-Message-ID: <20191002190341.GA8900@embeddedor>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 187.162.252.62
-X-Source-L: No
-X-Exim-ID: 1iFjv3-0047wu-MW
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: 187-162-252-62.static.axtel.net (embeddedor) [187.162.252.62]:39692
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 4
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
+        Wed, 2 Oct 2019 15:33:25 -0400
+Received: by mail-qk1-f194.google.com with SMTP id y144so16216439qkb.7
+        for <linux-kernel@vger.kernel.org>; Wed, 02 Oct 2019 12:33:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=lca.pw; s=google;
+        h=message-id:subject:from:to:cc:date:mime-version
+         :content-transfer-encoding;
+        bh=vC99SaJEojFpNSx9KA2t2PR97mfI8j+nfD/zaFcYgk8=;
+        b=JYh8Db+2QTBY9rKv5L25450HMvrJjFA2tYqCwFDaszPOQDRaANQ9TkqgFL1MhfgPJ+
+         C98NdRhYduhWEQil4UzG+el8NGez7EaIqslNx+xy9owBLsZc8AbvIn2QRqUjimnSVBxn
+         qbjJhLOn7YjDar0133MpbxFRt4XsXM6eRTs2C3a/KIVBfIUZdIo8Rupzm1s6YEMKQuQo
+         uWeNI4ZhoP6+3+5v0ldelLcgykAfwMNdLmXC4Q1jKxTt02Y9Ki9b0lXrLL9fuAyq5y4M
+         DknFhN7TJx6uR0n/VDB3H/OINuRofSm2uV2JT7/PrNsUYCHbe1ftpDrn1djKqjfl2Dio
+         dM6g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:message-id:subject:from:to:cc:date:mime-version
+         :content-transfer-encoding;
+        bh=vC99SaJEojFpNSx9KA2t2PR97mfI8j+nfD/zaFcYgk8=;
+        b=o21/n3yDwnN3HOPzGraMujOSVz1jsdZvEO/gOOBkstyZzZx4C1HAz9ypJ9vVIh8Hzi
+         bmtw42wg2tsqKkFP0RSJBS4kqCADmyKP0a1cJHTXK5LN7lXrBPaemFhupnpOodTv8hOL
+         D95LGUl8/5YDHbQeKrMQl6u0bMWExPENRCuMgUPCILvZxbbwLFdgGVLOurpu6oRYVRUY
+         znSMcDe3Ksuow/yR6H10P+OcuR7JhijXpaIC2qf/6942KQxXF2PVzA+rfpTmaV01j7xG
+         1sENXjRU5Xg7Kcn1JwFxwSV2oHwrI5D0ElY7O9tRTWhI7xWg1cDBQ9rgDalHqi/Xfq6H
+         YCJA==
+X-Gm-Message-State: APjAAAX+oVgM00SvhF+i6gEd57R/fMgUs1t6KfkstOIm4QANK87B5GtL
+        suswah5qlR9JgsyU7Y7eN/D1DQ==
+X-Google-Smtp-Source: APXvYqxPp6gdC4RYIABsqCcymYFIXs3Xolh8BO7qCvOBUjC+VQw30JHxCyutLj8ijAq6UEv2W3vJHg==
+X-Received: by 2002:a05:620a:13c7:: with SMTP id g7mr460370qkl.21.1570044803983;
+        Wed, 02 Oct 2019 12:33:23 -0700 (PDT)
+Received: from dhcp-41-57.bos.redhat.com (nat-pool-bos-t.redhat.com. [66.187.233.206])
+        by smtp.gmail.com with ESMTPSA id z72sm61363qka.115.2019.10.02.12.33.22
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 02 Oct 2019 12:33:23 -0700 (PDT)
+Message-ID: <1570044801.5576.262.camel@lca.pw>
+Subject: memory leaks in dasd_eckd_check_characteristics() error paths
+From:   Qian Cai <cai@lca.pw>
+To:     Stefan Haberland <sth@linux.ibm.com>,
+        Jan Hoeppner <hoeppner@linux.ibm.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>
+Cc:     linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org
+Date:   Wed, 02 Oct 2019 15:33:21 -0400
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.22.6 (3.22.6-10.el7) 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-One of the more common cases of allocation size calculations is finding
-the size of a structure that has a zero-sized array at the end, along
-with memory for some number of elements for that array. For example:
+For some reasons, dasd_eckd_check_characteristics() received -ENOMEM and then
+dasd_generic_set_online() emits this message,
 
-struct stripe_c {
-        ...
-        struct stripe stripe[0];
-};
+dasd: 0.0.0122 Setting the DASD online with discipline ECKD failed with rc=-12
 
-In this case alloc_context() and dm_array_too_big() are removed and
-replaced by the direct use of the struct_size() helper in kmalloc().
+After that, there are several memory leaks below. There are "config_data" and
+then stored as,
 
-Notice that open-coded form is prone to type mistakes.
+/* store per path conf_data */
+device->path[pos].conf_data = conf_data;
 
-This code was detected with the help of Coccinelle.
+When it processes the error path in  dasd_generic_set_online(), it calls
+dasd_delete_device() which nuke the whole "struct dasd_device" without freeing
+the device->path[].conf_data first. Is it safe to free those in
+dasd_free_device() without worrying about the double-free? Or, is it better to
+free those in dasd_eckd_check_characteristics()'s goto error handling, i.e.,
+out_err*?
 
-Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
----
- drivers/md/dm-stripe.c        | 15 +--------------
- include/linux/device-mapper.h |  3 ---
- 2 files changed, 1 insertion(+), 17 deletions(-)
+--- a/drivers/s390/block/dasd.c
++++ b/drivers/s390/block/dasd.c
+@@ -153,6 +153,9 @@ struct dasd_device *dasd_alloc_device(void)
+  */
+ void dasd_free_device(struct dasd_device *device)
+ {
++       for (int i = 0; i < 8; i++)
++               kfree(device->path[i].conf_data);
++
+        kfree(device->private);
+        free_pages((unsigned long) device->ese_mem, 1);
+        free_page((unsigned long) device->erp_mem);
 
-diff --git a/drivers/md/dm-stripe.c b/drivers/md/dm-stripe.c
-index 8547d7594338..63bbcc20f49a 100644
---- a/drivers/md/dm-stripe.c
-+++ b/drivers/md/dm-stripe.c
-@@ -55,19 +55,6 @@ static void trigger_event(struct work_struct *work)
- 	dm_table_event(sc->ti->table);
- }
- 
--static inline struct stripe_c *alloc_context(unsigned int stripes)
--{
--	size_t len;
--
--	if (dm_array_too_big(sizeof(struct stripe_c), sizeof(struct stripe),
--			     stripes))
--		return NULL;
--
--	len = sizeof(struct stripe_c) + (sizeof(struct stripe) * stripes);
--
--	return kmalloc(len, GFP_KERNEL);
--}
--
- /*
-  * Parse a single <dev> <sector> pair
-  */
-@@ -142,7 +129,7 @@ static int stripe_ctr(struct dm_target *ti, unsigned int argc, char **argv)
- 		return -EINVAL;
- 	}
- 
--	sc = alloc_context(stripes);
-+	sc = kmalloc(struct_size(sc, stripe, stripes), GFP_KERNEL);
- 	if (!sc) {
- 		ti->error = "Memory allocation for striped context "
- 		    "failed";
-diff --git a/include/linux/device-mapper.h b/include/linux/device-mapper.h
-index 399ad8632356..2e13826898b2 100644
---- a/include/linux/device-mapper.h
-+++ b/include/linux/device-mapper.h
-@@ -594,9 +594,6 @@ void *dm_vcalloc(unsigned long nmemb, unsigned long elem_size);
-  */
- #define dm_round_up(n, sz) (dm_div_up((n), (sz)) * (sz))
- 
--#define dm_array_too_big(fixed, obj, num) \
--	((num) > (UINT_MAX - (fixed)) / (obj))
--
- /*
-  * Sector offset taken relative to the start of the target instead of
-  * relative to the start of the device.
--- 
-2.23.0
 
+unreferenced object 0x0fcee900 (size 256):
+  comm "dasdconf.sh", pid 446, jiffies 4294940081 (age 170.340s)
+  hex dump (first 32 bytes):
+    dc 01 01 00 f0 f0 f2 f1 f0 f7 f9 f0 f0 c9 c2 d4  ................
+    f7 f5 f0 f0 f0 f0 f0 f0 f0 c6 d9 c2 f7 f1 62 33  ..............b3
+  backtrace:
+    [<00000000a83b1992>] kmem_cache_alloc_trace+0x200/0x388
+    [<00000000048ef3e2>] dasd_eckd_read_conf+0x408/0x1400 [dasd_eckd_mod]
+    [<00000000ce31f195>] dasd_eckd_check_characteristics+0x3cc/0x938
+[dasd_eckd_mod]
+    [<00000000f6f1759b>] dasd_generic_set_online+0x150/0x4c0
+    [<00000000efca1efa>] ccw_device_set_online+0x324/0x808
+    [<00000000f9779774>] online_store_recog_and_online+0xe8/0x220
+    [<00000000349a5446>] online_store+0x2ce/0x420
+    [<000000005bd145f8>] kernfs_fop_write+0x1bc/0x270
+    [<0000000005664197>] vfs_write+0xce/0x220
+    [<0000000044a8bccb>] ksys_write+0xea/0x190
+    [<0000000037335938>] system_call+0x296/0x2b4
