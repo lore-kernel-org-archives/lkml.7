@@ -2,114 +2,245 @@ Return-Path: <SRS0=zem1=X3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2BECC35280
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 09:20:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5934BC352AA
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 09:20:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D2409206C0
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 09:20:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 254152190F
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 09:20:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1570008027;
+	bh=/x0EEP6RRhJWkxDTeKVFDkMQUwSHZO+xc8cS/ihB7Gc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=G5ODKSdP/tNjIIoqsnr7mXhdvc0RPdmRsg5wIbmGK74dqAJgEZIktI+Cc4+flH/Te
+	 zsQWqlDv1BaLaeM2ZqNFywAwp1qYpBw1i7EdRLBqjUeiObBefz7z0+X9lua0LhxWCk
+	 VdRF/8eP8YW2NjflGCJoZo1kmno5iCC2WANfopNs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727071AbfJBJUU (ORCPT
+        id S1727160AbfJBJU0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Oct 2019 05:20:20 -0400
-Received: from mail-oi1-f194.google.com ([209.85.167.194]:43292 "EHLO
-        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725848AbfJBJUT (ORCPT
+        Wed, 2 Oct 2019 05:20:26 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:42686 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725908AbfJBJUZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Oct 2019 05:20:19 -0400
-Received: by mail-oi1-f194.google.com with SMTP id t84so17012399oih.10;
-        Wed, 02 Oct 2019 02:20:19 -0700 (PDT)
+        Wed, 2 Oct 2019 05:20:25 -0400
+Received: by mail-wr1-f66.google.com with SMTP id n14so18733900wrw.9;
+        Wed, 02 Oct 2019 02:20:23 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=zO+tNlkfwYOYwgo9Rwy/x2Myvg50guhXleT3msC6d9I=;
-        b=IWpZJPr3C2f1Ob3w9MOF5oiaEGyWakS1aZcnOyig8TghwV1ioTpZglQCwbqYQMW7xw
-         knXMlCi82++YgV6dRsl+w4hqNmMXuFvFOV16HwcM8Jb/eWojZmWqvA3rwqJdCaPp2eeo
-         y9sZWMVlsanJZFz7etcnpYG11Oy1IzQO0hrRRcWxtXnsY+RNBAHQuu1IXu4/ekYV9lqr
-         23fLTgHABSQzhad/TJh7M5iMQo9flj8RXQNSQZqcL94tC8XZCRmDAc9GsCtx+TLh1dss
-         v3P3LfMFXCCybPYDdVigclFDgtq0ExtZwW3wor86fpzJAOQw1ZtfoBc2/fXGjKOQlxos
-         Js4Q==
-X-Gm-Message-State: APjAAAVp3HqWr+syyjmM6YbYjeL90um5EvylmoURN3TX+sqPVtmT2kBk
-        beWMTDPiNbnOoJOfr01v7ljqAiUj7FR0tTsVvBuP6Q==
-X-Google-Smtp-Source: APXvYqzLiDbsCQkDX2XprTfHsY1pJfYhBfhQdyM9WeoyJWN0tUTxulbP9vQUMSnHEPokt+69FbDxDqa/Yo6IpNWQ39A=
-X-Received: by 2002:aca:dad4:: with SMTP id r203mr2110251oig.102.1570008018885;
- Wed, 02 Oct 2019 02:20:18 -0700 (PDT)
-MIME-Version: 1.0
-References: <20191001180703.910-1-geert+renesas@glider.be> <bc48041c-df06-8108-9c45-3dfb1d527678@cogentembedded.com>
-In-Reply-To: <bc48041c-df06-8108-9c45-3dfb1d527678@cogentembedded.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Wed, 2 Oct 2019 11:20:07 +0200
-Message-ID: <CAMuHMdW=zF=hf2wHEeUHDciYF7wU7j0XZYuiG=T0vpsvykLCSA@mail.gmail.com>
-Subject: Re: [PATCH] mmc: renesas_sdhi: Do not use platform_get_irq() to count interrupts
-To:     Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=/LNwLMp43Cx4RXv6+JFT5wsgANeYSc59zzeLQnD1VHM=;
+        b=n+A1k7hvXYK2zo3ZO6Z36E3hZflMnyjRjiJNJgRMneTmtYW/ZqSdWwIVT5TOKgUnsB
+         yDD679nMHcLD9R8Galc6qtzg60xkVZequoUGj+cQyL0I5pnXvHDoI58fPbvKpUtMPqDh
+         hymSR/8AMX0MKOiOfE8sj4FUcpOEC0KgEtnAYWsmTRsziea390hvXLwE1Wyei4e14Vo7
+         L2iE1DdkmuMW1UsM9NHINOUQwb11NWJb6vmo6dFduomaQy50uX353BZnhyETc3zKfgMk
+         FCoS2GHqkF/Y0cQiLgHnyHe0GcgXy8Cq3lysg/EFArsG/+uxJXsVfHKjhiqLtmc5vlG2
+         RJMg==
+X-Gm-Message-State: APjAAAUDolAmLNbTTheTh+uhgHV6oPAaxK4KWUZ6sQ2ldcUj+DpPTTq/
+        nOrISVvW8fAIoyLlUXNiO2w=
+X-Google-Smtp-Source: APXvYqwbyAHos9+Zn4wxA2bvS9JMTWnOqnIj0D+jL+AREPyLlLj8ldJJnHV6LEFDbhGkpKgmtaXndg==
+X-Received: by 2002:adf:ce05:: with SMTP id p5mr1906030wrn.48.1570008022113;
+        Wed, 02 Oct 2019 02:20:22 -0700 (PDT)
+Received: from pi3 ([194.230.155.145])
+        by smtp.googlemail.com with ESMTPSA id v11sm5445038wml.30.2019.10.02.02.20.20
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 02 Oct 2019 02:20:21 -0700 (PDT)
+Date:   Wed, 2 Oct 2019 11:20:19 +0200
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     Rob Herring <robh@kernel.org>
+Cc:     Mark Rutland <mark.rutland@arm.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Kevin Hilman <khilman@kernel.org>,
         Ulf Hansson <ulf.hansson@linaro.org>,
-        Wolfram Sang <wsa+renesas@sang-engineering.com>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        Linux MMC List <linux-mmc@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-pm@vger.kernel.org
+Subject: Re: [RFC 2/2] dt-bindings: power: Convert Samsung Exynos Power
+ Domain bindings to json-schema
+Message-ID: <20191002092019.GA9952@pi3>
+References: <20190908152813.20646-1-krzk@kernel.org>
+ <20190908152813.20646-2-krzk@kernel.org>
+ <20190930140600.GA18975@bogus>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20190930140600.GA18975@bogus>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Sergei,
+On Mon, Sep 30, 2019 at 09:06:00AM -0500, Rob Herring wrote:
+> On Sun, Sep 08, 2019 at 05:28:13PM +0200, Krzysztof Kozlowski wrote:
+> > Convert Samsung Exynos Soc Power Domain bindings to DT schema format using
+> > json-schema.
+> > 
+> > Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+> > ---
+> >  .../devicetree/bindings/power/pd-samsung.txt  | 45 ------------
+> >  .../devicetree/bindings/power/pd-samsung.yaml | 70 +++++++++++++++++++
+> >  2 files changed, 70 insertions(+), 45 deletions(-)
+> >  delete mode 100644 Documentation/devicetree/bindings/power/pd-samsung.txt
+> >  create mode 100644 Documentation/devicetree/bindings/power/pd-samsung.yaml
+> > 
+> > diff --git a/Documentation/devicetree/bindings/power/pd-samsung.txt b/Documentation/devicetree/bindings/power/pd-samsung.txt
+> > deleted file mode 100644
+> > index 92ef355e8f64..000000000000
+> > --- a/Documentation/devicetree/bindings/power/pd-samsung.txt
+> > +++ /dev/null
+> > @@ -1,45 +0,0 @@
+> > -* Samsung Exynos Power Domains
+> > -
+> > -Exynos processors include support for multiple power domains which are used
+> > -to gate power to one or more peripherals on the processor.
+> > -
+> > -Required Properties:
+> > -- compatible: should be one of the following.
+> > -    * samsung,exynos4210-pd - for exynos4210 type power domain.
+> > -    * samsung,exynos5433-pd - for exynos5433 type power domain.
+> > -- reg: physical base address of the controller and length of memory mapped
+> > -    region.
+> > -- #power-domain-cells: number of cells in power domain specifier;
+> > -    must be 0.
+> > -
+> > -Optional Properties:
+> > -- label: Human readable string with domain name. Will be visible in userspace
+> > -	to let user to distinguish between multiple domains in SoC.
+> > -- power-domains: phandle pointing to the parent power domain, for more details
+> > -		 see Documentation/devicetree/bindings/power/power_domain.txt
+> > -
+> > -Deprecated Properties:
+> > -- clocks
+> > -- clock-names
+> > -
+> > -Node of a device using power domains must have a power-domains property
+> > -defined with a phandle to respective power domain.
+> > -
+> > -Example:
+> > -
+> > -	lcd0: power-domain-lcd0 {
+> > -		compatible = "samsung,exynos4210-pd";
+> > -		reg = <0x10023C00 0x10>;
+> > -		#power-domain-cells = <0>;
+> > -		label = "LCD0";
+> > -	};
+> > -
+> > -	mfc_pd: power-domain@10044060 {
+> > -		compatible = "samsung,exynos4210-pd";
+> > -		reg = <0x10044060 0x20>;
+> > -		#power-domain-cells = <0>;
+> > -		label = "MFC";
+> > -	};
+> > -
+> > -See Documentation/devicetree/bindings/power/power_domain.txt for description
+> > -of consumer-side bindings.
+> > diff --git a/Documentation/devicetree/bindings/power/pd-samsung.yaml b/Documentation/devicetree/bindings/power/pd-samsung.yaml
+> > new file mode 100644
+> > index 000000000000..0fc012734a79
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/power/pd-samsung.yaml
+> > @@ -0,0 +1,70 @@
+> > +# SPDX-License-Identifier: GPL-2.0
+> > +%YAML 1.2
+> > +---
+> > +$id: http://devicetree.org/schemas/power/pd-samsung.yaml#
+> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > +
+> > +title: Samsung Exynos SoC Power Domains
+> > +
+> > +maintainers:
+> > +  - Krzysztof Kozlowski <krzk@kernel.org>
+> > +
+> > +description: |+
+> > +  Exynos processors include support for multiple power domains which are used
+> > +  to gate power to one or more peripherals on the processor.
+> > +
+> > +allOf:
+> > +  - $ref: power-domain.yaml#
+> > +
+> > +properties:
+> > +  compatible:
+> > +    enum:
+> > +      - samsung,exynos4210-pd
+> > +      - samsung,exynos5433-pd
+> > +
+> > +  reg:
+> > +    maxItems: 1
+> > +
+> > +  clocks:
+> > +    deprecated: true
+> > +    maxItems: 1
+> > +
+> > +  clock-names:
+> > +    deprecated: true
+> > +    maxItems: 1
+> > +
+> > +  label:
+> > +    $ref: /schemas/types.yaml#/definitions/string
+> 
+> label already has a type.
+> 
+> Is there a defined set of values?
 
-On Wed, Oct 2, 2019 at 11:11 AM Sergei Shtylyov
-<sergei.shtylyov@cogentembedded.com> wrote:
-> On 01.10.2019 21:07, Geert Uytterhoeven wrote:
-> > As platform_get_irq() now prints an error when the interrupt does not
-> > exist, counting interrupts by looping until failure causes the printing
->
->    s/the//?
+No, many Exynos SoCs have similar values but newer designs are bringing
+new names.
 
-I believe "the printing" is correct.
-Any native English speakers to comment?
+> 
+> > +    description:
+> > +      Human readable string with domain name. Will be visible in userspace
+> > +      to let user to distinguish between multiple domains in SoC.
+> > +
+> > +  "#power-domain-cells":
+> > +    const: 0
+> > +
+> > +  power-domains:
+> > +    $ref: /schemas/types.yaml#/definitions/phandle
+> 
+> Already has a type.
+> 
+> maxItems: 1
 
-> > of scary messages like:
-> >
-> >      renesas_sdhi_internal_dmac ee140000.sd: IRQ index 1 not found
-> >
-> > Fix this by using the platform_irq_count() helper to avoid touching
-> > non-existent interrupts.
-> >
-> > Fixes: 7723f4c5ecdb8d83 ("driver core: platform: Add an error message to platform_get_irq*()")
-> > Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+OK
 
-> > --- a/drivers/mmc/host/renesas_sdhi_core.c
-> > +++ b/drivers/mmc/host/renesas_sdhi_core.c
-> [...]
-> > @@ -825,24 +825,26 @@ int renesas_sdhi_probe(struct platform_device *pdev,
-> >               host->hs400_complete = renesas_sdhi_hs400_complete;
-> >       }
-> >
-> > -     i = 0;
-> > -     while (1) {
-> > +     /* There must be at least one IRQ source */
-> > +     num_irqs = platform_irq_count(pdev);
-> > +     if (num_irqs < 1) {
-> > +             ret = num_irqs;
-> > +             goto eirq;
->
->     This will return 0 with failed probe if 'num_irqs' is 0, I don't think you
-> want this...
+> 
+> > +    description:
+> > +      Phandle pointing to the parent power domain, for more details
+> > +      see power-domain-consumers.yaml.
+> 
+> Unless there's something specific about this device to say, drop this.
 
-Thanks, will fix.
+Sure.
 
-Gr{oetje,eeting}s,
+Best regards,
+Krzysztof
 
-                        Geert
-
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+> 
+> > +
+> > +required:
+> > +  - compatible
+> > +  - "#power-domain-cells"
+> > +  - reg
+> > +
+> > +examples:
+> > +  - |
+> > +    lcd0: power-domain-lcd0 {
+> > +      compatible = "samsung,exynos4210-pd";
+> > +      reg = <0x10023C00 0x10>;
+> > +      #power-domain-cells = <0>;
+> > +      label = "LCD0";
+> > +    };
+> > +
+> > +    mfc_pd: power-domain@10044060 {
+> > +      compatible = "samsung,exynos4210-pd";
+> > +      reg = <0x10044060 0x20>;
+> > +      #power-domain-cells = <0>;
+> > +      label = "MFC";
+> > +    };
+> > -- 
+> > 2.17.1
+> > 
