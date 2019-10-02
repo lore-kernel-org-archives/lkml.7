@@ -2,170 +2,240 @@ Return-Path: <SRS0=zem1=X3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8031C352AA
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 15:14:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3AB9C35280
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 15:14:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 79ED52133F
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 15:14:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9E9D62133F
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 15:14:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="GnzWAk19"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727462AbfJBPOr (ORCPT
+        id S1728010AbfJBPO6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Oct 2019 11:14:47 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:49931 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725893AbfJBPOr (ORCPT
+        Wed, 2 Oct 2019 11:14:58 -0400
+Received: from mx08-00178001.pphosted.com ([91.207.212.93]:1730 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725893AbfJBPO6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Oct 2019 11:14:47 -0400
-Received: from [213.220.153.21] (helo=localhost.localdomain)
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <christian.brauner@ubuntu.com>)
-        id 1iFgKy-00035s-2J; Wed, 02 Oct 2019 15:14:44 +0000
-From:   Christian Brauner <christian.brauner@ubuntu.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     libc-alpha@sourceware.org, Jonathan Corbet <corbet@lwn.net>,
-        Christian Brauner <christian@brauner.io>,
-        Federico Vaga <federico.vaga@vaga.pv.it>,
-        Alessia Mantegazza <amantegazza@vaga.pv.it>,
-        Guillaume Dore <corwin@poussif.eu>, linux-doc@vger.kernel.org,
-        Christian Brauner <christian.brauner@ubuntu.com>,
-        Aleksa Sarai <cyphar@cyphar.com>
-Subject: [PATCH] Documentation: update about adding syscalls
-Date:   Wed,  2 Oct 2019 17:14:37 +0200
-Message-Id: <20191002151437.5367-1-christian.brauner@ubuntu.com>
-X-Mailer: git-send-email 2.23.0
+        Wed, 2 Oct 2019 11:14:58 -0400
+Received: from pps.filterd (m0046660.ppops.net [127.0.0.1])
+        by mx08-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id x92F121c012976;
+        Wed, 2 Oct 2019 17:14:49 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
+ : date : message-id : mime-version : content-type; s=STMicroelectronics;
+ bh=CXGmlan+Wj/viRlSDj38Z4Gh2UXNOjV1C65oThvMrZk=;
+ b=GnzWAk19LFjuVyNSgWxys4YVKDpI2bCBXnIPLnprFkLfz2HqvHpTG2CGPcGU1Y2iFG67
+ Vw8q+q6kraaBxdSVCl7jm5973IHFDbvdNzy4vZVoj8CE2LSzwoVR9TLuuhmixa7fhs6/
+ MsQgGHoDB/N6/GXYlHcioXG7a2nCZvoWrVj4fyq24AtboTPTh3tVUJy64qWstB+m/dRk
+ +BrQA93CnJu2oGeP9T/I2pezgL7jNFSRdnbGpCw0Ouu2YYsSvaetoEukSSb+r2RCvozQ
+ m41oWHUih1oTJcnbHeTvoo+k2mE20H6ql2KoNBj41ZJhxh1LDoe63Wmq9qvgvrAoWrgj wg== 
+Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
+        by mx08-00178001.pphosted.com with ESMTP id 2v9vnafnx7-1
+        (version=TLSv1 cipher=ECDHE-RSA-AES256-SHA bits=256 verify=NOT);
+        Wed, 02 Oct 2019 17:14:49 +0200
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id 002C24B;
+        Wed,  2 Oct 2019 15:14:45 +0000 (GMT)
+Received: from Webmail-eu.st.com (Safex1hubcas24.st.com [10.75.90.94])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 387E92D3764;
+        Wed,  2 Oct 2019 17:14:45 +0200 (CEST)
+Received: from SAFEX1HUBCAS22.st.com (10.75.90.92) by Safex1hubcas24.st.com
+ (10.75.90.94) with Microsoft SMTP Server (TLS) id 14.3.439.0; Wed, 2 Oct 2019
+ 17:14:45 +0200
+Received: from localhost (10.201.20.122) by Webmail-ga.st.com (10.75.90.48)
+ with Microsoft SMTP Server (TLS) id 14.3.439.0; Wed, 2 Oct 2019 17:14:44
+ +0200
+From:   Benjamin Gaignard <benjamin.gaignard@st.com>
+To:     <mchehab@kernel.org>, <robh+dt@kernel.org>,
+        <alexandre.torgue@st.com>, <hugues.fruchet@st.com>
+CC:     <linux-media@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>,
+        Benjamin Gaignard <benjamin.gaignard@st.com>
+Subject: [PATCH] dt-bindings: media: Convert stm32 dcmi bindings to json-schema
+Date:   Wed, 2 Oct 2019 17:14:42 +0200
+Message-ID: <20191002151442.15428-1-benjamin.gaignard@st.com>
+X-Mailer: git-send-email 2.15.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Originating-IP: [10.201.20.122]
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,1.0.8
+ definitions=2019-10-02_07:2019-10-01,2019-10-02 signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add additional information on how to ensure that syscalls with structure
-arguments are extensible and add a section about naming conventions to
-follow when adding revised versions of already existing syscalls.
+Convert the STM32 dcmi binding to DT schema format using json-schema
 
-Co-Developed-by: Aleksa Sarai <cyphar@cyphar.com>
-Signed-off-by: Aleksa Sarai <cyphar@cyphar.com>
-Signed-off-by: Christian Brauner <christian.brauner@ubuntu.com>
+Signed-off-by: Benjamin Gaignard <benjamin.gaignard@st.com>
 ---
- Documentation/process/adding-syscalls.rst | 82 +++++++++++++++++++----
- 1 file changed, 70 insertions(+), 12 deletions(-)
+ .../devicetree/bindings/media/st,stm32-dcmi.txt    | 45 ----------
+ .../devicetree/bindings/media/st,stm32-dcmi.yaml   | 97 ++++++++++++++++++++++
+ 2 files changed, 97 insertions(+), 45 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/media/st,stm32-dcmi.txt
+ create mode 100644 Documentation/devicetree/bindings/media/st,stm32-dcmi.yaml
 
-diff --git a/Documentation/process/adding-syscalls.rst b/Documentation/process/adding-syscalls.rst
-index 1c3a840d06b9..93e0221fbb9a 100644
---- a/Documentation/process/adding-syscalls.rst
-+++ b/Documentation/process/adding-syscalls.rst
-@@ -79,7 +79,7 @@ flags, and reject the system call (with ``EINVAL``) if it does::
- For more sophisticated system calls that involve a larger number of arguments,
- it's preferred to encapsulate the majority of the arguments into a structure
- that is passed in by pointer.  Such a structure can cope with future extension
--by including a size argument in the structure::
-+by either including a size argument in the structure::
- 
-     struct xyzzy_params {
-         u32 size; /* userspace sets p->size = sizeof(struct xyzzy_params) */
-@@ -87,20 +87,56 @@ by including a size argument in the structure::
-         u64 param_2;
-         u64 param_3;
-     };
-+    int sys_xyzzy(struct xyzzy_params __user *uarg);
-+    /* in case of -E2BIG, p->size is set to the in-kernel size and thus all
-+       extensions after that offset are unsupported. */
- 
--As long as any subsequently added field, say ``param_4``, is designed so that a
--zero value gives the previous behaviour, then this allows both directions of
--version mismatch:
-+or by including a separate argument that specifies the size::
- 
-- - To cope with a later userspace program calling an older kernel, the kernel
--   code should check that any memory beyond the size of the structure that it
--   expects is zero (effectively checking that ``param_4 == 0``).
-- - To cope with an older userspace program calling a newer kernel, the kernel
--   code can zero-extend a smaller instance of the structure (effectively
--   setting ``param_4 = 0``).
-+    struct xyzzy_params {
-+        u32 param_1;
-+        u64 param_2;
-+        u64 param_3;
+diff --git a/Documentation/devicetree/bindings/media/st,stm32-dcmi.txt b/Documentation/devicetree/bindings/media/st,stm32-dcmi.txt
+deleted file mode 100644
+index 3122ded82eb4..000000000000
+--- a/Documentation/devicetree/bindings/media/st,stm32-dcmi.txt
++++ /dev/null
+@@ -1,45 +0,0 @@
+-STMicroelectronics STM32 Digital Camera Memory Interface (DCMI)
+-
+-Required properties:
+-- compatible: "st,stm32-dcmi"
+-- reg: physical base address and length of the registers set for the device
+-- interrupts: should contain IRQ line for the DCMI
+-- resets: reference to a reset controller,
+-          see Documentation/devicetree/bindings/reset/st,stm32-rcc.txt
+-- clocks: list of clock specifiers, corresponding to entries in
+-          the clock-names property
+-- clock-names: must contain "mclk", which is the DCMI peripherial clock
+-- pinctrl: the pincontrol settings to configure muxing properly
+-           for pins that connect to DCMI device.
+-           See Documentation/devicetree/bindings/pinctrl/st,stm32-pinctrl.yaml.
+-- dmas: phandle to DMA controller node,
+-        see Documentation/devicetree/bindings/dma/stm32-dma.txt
+-- dma-names: must contain "tx", which is the transmit channel from DCMI to DMA
+-
+-DCMI supports a single port node with parallel bus. It should contain one
+-'port' child node with child 'endpoint' node. Please refer to the bindings
+-defined in Documentation/devicetree/bindings/media/video-interfaces.txt.
+-
+-Example:
+-
+-	dcmi: dcmi@50050000 {
+-		compatible = "st,stm32-dcmi";
+-		reg = <0x50050000 0x400>;
+-		interrupts = <78>;
+-		resets = <&rcc STM32F4_AHB2_RESET(DCMI)>;
+-		clocks = <&rcc 0 STM32F4_AHB2_CLOCK(DCMI)>;
+-		clock-names = "mclk";
+-		pinctrl-names = "default";
+-		pinctrl-0 = <&dcmi_pins>;
+-		dmas = <&dma2 1 1 0x414 0x3>;
+-		dma-names = "tx";
+-		port {
+-			dcmi_0: endpoint {
+-				remote-endpoint = <...>;
+-				bus-width = <8>;
+-				hsync-active = <0>;
+-				vsync-active = <0>;
+-				pclk-sample = <1>;
+-			};
+-		};
+-	};
+diff --git a/Documentation/devicetree/bindings/media/st,stm32-dcmi.yaml b/Documentation/devicetree/bindings/media/st,stm32-dcmi.yaml
+new file mode 100644
+index 000000000000..50e8cfed06f3
+--- /dev/null
++++ b/Documentation/devicetree/bindings/media/st,stm32-dcmi.yaml
+@@ -0,0 +1,97 @@
++# SPDX-License-Identifier: GPL-2.0
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/media/st,stm32-dcmi.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: STMicroelectronics STM32 Digital Camera Memory Interface (DCMI) binding
++
++maintainers:
++  - Hugues Fruchet <hugues.fruchet@st.com>
++
++properties:
++  compatible:
++    const: st,stm32-dcmi
++
++  reg:
++    maxItems: 1
++
++  interrupts:
++    maxItems: 1
++
++  clocks:
++    items:
++      - description: Module Clock
++
++  clock-names:
++    items:
++      - const: mclk
++
++  pinctrl-names: true
++
++  dmas:
++    description:
++      One DMA channel specifier following the convention outlined
++      in bindings/dma/dma.txt
++    maxItems: 1
++
++  dma-names:
++    description:
++      There must be one channel named "tx" for transmit
++    maxItems: 1
++    additionalItems: true
++    items:
++      - const: tx
++
++  resets:
++        maxItems: 1
++
++  port:
++    type: object
++    description:
++      DCMI supports a single port node with parallel bus. It should contain
++      one 'port' child node with child 'endpoint' node. Please refer to the
++      bindings defined in
++      Documentation/devicetree/bindings/media/video-interfaces.txt.
++
++patternProperties:
++  "^pinctrl-[0-9]+$": true
++
++required:
++  - compatible
++  - reg
++  - interrupts
++  - clocks
++  - clock-names
++  - resets
++  - dmas
++  - dma-names
++  - port
++    
++examples:
++  - |
++    #include <dt-bindings/interrupt-controller/arm-gic.h>
++    #include <dt-bindings/clock/stm32mp1-clks.h>
++    #include <dt-bindings/reset/stm32mp1-resets.h>
++    dcmi: dcmi@4c006000 {
++        compatible = "st,stm32-dcmi";
++        reg = <0x4c006000 0x400>;
++        interrupts = <GIC_SPI 78 IRQ_TYPE_LEVEL_HIGH>;
++        resets = <&rcc CAMITF_R>;
++        clocks = <&rcc DCMI>;
++        clock-names = "mclk";
++        dmas = <&dmamux1 75 0x400 0x0d>;
++        dma-names = "tx";
++
++        port {
++             dcmi_0: endpoint {
++                   remote-endpoint = <&ov5640_0>;
++                   bus-width = <8>;
++                   hsync-active = <0>;
++                   vsync-active = <0>;
++                   pclk-sample = <1>;
++             };
++        };
 +    };
-+    /* userspace sets @usize = sizeof(struct xyzzy_params) */
-+    int sys_xyzzy(struct xyzzy_params __user *uarg, size_t usize);
-+    /* in case of -E2BIG, userspace has to attempt smaller @usize values
-+       to figure out which extensions are unsupported. */
 +
-+Which model you choose to use is down to personal taste. However, please only
-+pick one (for a counter-example, see :manpage:`sched_getattr(2)`).
-+
-+Then, any extensions can be implemented by appending fields to the structure.
-+However, all new fields must be designed such that their zero value results in
-+identical behaviour to the pre-extension syscall. This allows for compatibility
-+between different-vintage kernels and userspace, no matter which is newer:
-+
-+ - If the userspace is newer, then the older kernel can check whether the
-+   fields it doesn't understand are zero-valued. If they are, then it can
-+   safely ignore them (since any future extensions will be backwards-compatible
-+   as described above). If they aren't, then the kernel doesn't support the
-+   feature and can give an error (``-E2BIG`` is traditional).
-+
-+ - If the userspace is older, then the kernel can treat all extensions that
-+   userspace is unaware of as having their zero-value (and effectively
-+   zero-extend the userspace structure when copying it for in-kernel usage).
- 
--See :manpage:`perf_event_open(2)` and the ``perf_copy_attr()`` function (in
--``kernel/events/core.c``) for an example of this approach.
-+ - If they're the same version, just use the structure as-is.
-+
-+As with the simpler flag-only syscalls, you must always check that any unknown
-+values for flag-like parameters in the passed structure are zeroed.
-+
-+It is also critical to ensure your syscall handles larger-sized arguments from
-+the outset, otherwise userspace will have to do additional (fairly pointless)
-+fallbacks for some old kernels. An example where this mistake was made is
-+:manpage:`rt_sigprocmask(2)` (where any unknown-sized arguments are
-+unconditionally rejected).
-+
-+To help implement this correctly, there is a helper function
-+``copy_struct_from_user()`` which handles the compatibility requirements for
-+you. For examples using this helper, see :manpage:`perf_event_open(2)` (which
-+uses the embedded-size model) and :manpage:`clone3(2)` (which uses the
-+separate-argument model).
- 
- 
- Designing the API: Other Considerations
-@@ -173,6 +209,28 @@ registers.  (This concern does not apply if the arguments are part of a
- structure that's passed in by pointer.)
- 
- 
-+Designing the API: Revisions of syscalls
-+-----------------------------------------------
-+
-+Syscalls that were not designed to be extensible or syscalls that use a flag
-+argument for extensions running out of bits (e.g. :manpage:`clone(2)`)
-+sometimes need to be replaced.
-+
-+If the revised syscall provides a superset (or a reasonably large subset, such
-+as when a feature that turned out to be a design mistake is dropped) of the
-+features of the old syscall it is common practice to give it the same name with
-+a number appended. Examples for this include ``dup2``/``dup3``,
-+``epoll_create``/``epoll_create1`` and others.
-+
-+For some syscalls the appended number indicates the number of arguments
-+(``accept``/``accept4``) for others the number of the revision
-+(``clone``/``clone3``, ``epoll_create``/``epoll_create1``). Recent discussions
-+around new syscalls (such as ``clone3``) have pointed to a consensus around
-+naming syscalls revisions by appending the number of the revision to the
-+syscall name. That means, if you were to post a revised version of the
-+``openat`` syscall it should be named ``openat2``.
-+
-+
- Proposing the API
- -----------------
- 
++...
 -- 
-2.23.0
+2.15.0
 
