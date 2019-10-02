@@ -2,151 +2,94 @@ Return-Path: <SRS0=zem1=X3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ADDEAC35280
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 15:42:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 269BFC35280
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 15:43:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7FCAD21A4C
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 15:42:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ED9DB21920
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 15:43:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="azTJwomv"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="raXbWyqu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728240AbfJBPmM (ORCPT
+        id S1728853AbfJBPnS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Oct 2019 11:42:12 -0400
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:44058 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727333AbfJBPmM (ORCPT
+        Wed, 2 Oct 2019 11:43:18 -0400
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:41753 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725875AbfJBPnR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Oct 2019 11:42:12 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1570030930;
-        h=from:from:reply-to:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:mime-version:mime-version:
-         content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=Xrk/iom6SacGfDF1/MM+LslI1lE/sTa+RHmkn0pm1oc=;
-        b=azTJwomv9/VoNcjy9Ik5K5aNeL7f45TW9cTOZ33dkbTg0mwDozxFS9Cvnyx0zdpu2v21eZ
-        KrtVlPgG9snCFLQwzJnlhys1Giwsbh2omvcmt0QkZji9qJE09KWrRsz6kH64gRR69CnfVc
-        xCE8DGcypsFoGmh/n22DJR4EV/jrNcQ=
-Received: from mail-io1-f71.google.com (mail-io1-f71.google.com
- [209.85.166.71]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-250-WDuhs8NSPsyU-pJqW2ATlA-1; Wed, 02 Oct 2019 11:42:08 -0400
-Received: by mail-io1-f71.google.com with SMTP id o11so45204932iop.12
-        for <linux-kernel@vger.kernel.org>; Wed, 02 Oct 2019 08:42:08 -0700 (PDT)
+        Wed, 2 Oct 2019 11:43:17 -0400
+Received: by mail-ot1-f66.google.com with SMTP id g13so15057928otp.8;
+        Wed, 02 Oct 2019 08:43:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=OGFNe2HzuYdA+Ntxb0smhm55h1bjmES+Gg6K1WA4cN4=;
+        b=raXbWyquX8Hu3af70VX0sRqu+Rp/zT806IMzbVnHps5oub1ys+I89CrLXcTKod3XNB
+         FJSlAEXz2GGc7E63ha/lzstR51SSpvovNrpSNgWuMAXaWlYRk32NfVv1EegLlwvG11ss
+         kXM0WMzi+chVMZUXMyhLIe7cTT/y3LAugOTfvseAoXuye5/UiqsmRDt9Imn1NMwvHb8W
+         fFd3/tvKIoKXKrnNW8F8fO9GTyIHcW4DVUDnnyEgaKXUuNVGbi8ks5MruCWPd1QJxdAy
+         4B8HEi6bSJe1JRIrbabZnCmApJy7+6tTk7N0js+Wgjiyw/GjkIbUHpnUd9t3s+OwtE7f
+         9png==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:subject:message-id:reply-to
-         :mail-followup-to:references:mime-version:content-disposition
-         :in-reply-to:user-agent;
-        bh=GNjCC8zynseCVOGAnnSac3El4WfDC7ObgvHi4C+tII0=;
-        b=SVb8GQKlFLvN+iVc8gBMfU/ytGxn0FSq2wC8uIvZB7BeYUWMXR+TC6HuPIVjOTf4bN
-         msgIE2GmIy12/Gx0E0TumwkYD4VaO0cyZmymlDBVhheLgtSekC0NPRkcdf3bGoT7BCVI
-         xBUJYItTt5CAhAV4EIttg7Y+KYkgGFYgn+97orKUuuVjhA3rukAY5R5x5tbr0JKOnAus
-         z/FX+X37qj6WwO5yLTClO/+8Be5TSQrXE0ISPiWxIeRQYmcU1LIsCkvCVq342HGACaN8
-         13znexOMhw2+mKxw3zrBW2KQGE3r5V+ICm8Taod5cSWGRvDt2YIc9RGPMMCjrVUXQHnV
-         3wfw==
-X-Gm-Message-State: APjAAAWd4ahrttQ7kkfwvNy1T90QvPvgcMAIF6beM2pPFWkjJ8YAL3pR
-        Bmm7HOAgxVwwPzZPq2AnfDxAb7n3f1dS6qSC8UeXHYnF1e5VNMo7fl200muJpBxbYkx/W+YhzU4
-        h1atGSpom8cpDKRmGqOQ3xcmz
-X-Received: by 2002:a92:8f19:: with SMTP id j25mr4502262ild.302.1570030928109;
-        Wed, 02 Oct 2019 08:42:08 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqyoz3ZFieRh9HyOfrL85tv/y22VKUjqn3g4HP+t/mcTWx0Pl3pyfxzaeghuDo6XoQJjRpPgDQ==
-X-Received: by 2002:a92:8f19:: with SMTP id j25mr4502246ild.302.1570030927921;
-        Wed, 02 Oct 2019 08:42:07 -0700 (PDT)
-Received: from localhost (ip70-163-223-149.ph.ph.cox.net. [70.163.223.149])
-        by smtp.gmail.com with ESMTPSA id q3sm8208287ioi.68.2019.10.02.08.42.06
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 02 Oct 2019 08:42:07 -0700 (PDT)
-Date:   Wed, 2 Oct 2019 08:42:04 -0700
-From:   Jerry Snitselaar <jsnitsel@redhat.com>
-To:     Sasha Levin <sashal@kernel.org>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        linux-stabley@vger.kernel.org,
-        Vadim Sukhomlinov <sukhomlinov@google.com>,
-        stable@vger.kernel.org, Douglas Anderson <dianders@chromium.org>,
-        Peter Huewe <peterhuewe@gmx.de>,
-        Jason Gunthorpe <jgunthorpe@obsidianresearch.com>,
-        "open list:TPM DEVICE DRIVER" <linux-integrity@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 3/3] tpm: Fix TPM 1.2 Shutdown sequence to prevent future
- TPM operations
-Message-ID: <20191002154204.me4lzgx2l4r6zkpy@cantor>
-Reply-To: Jerry Snitselaar <jsnitsel@redhat.com>
-Mail-Followup-To: Sasha Levin <sashal@kernel.org>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        linux-stabley@vger.kernel.org,
-        Vadim Sukhomlinov <sukhomlinov@google.com>, stable@vger.kernel.org,
-        Douglas Anderson <dianders@chromium.org>,
-        Peter Huewe <peterhuewe@gmx.de>,
-        Jason Gunthorpe <jgunthorpe@obsidianresearch.com>,
-        "open list:TPM DEVICE DRIVER" <linux-integrity@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-References: <20191002131445.7793-1-jarkko.sakkinen@linux.intel.com>
- <20191002131445.7793-4-jarkko.sakkinen@linux.intel.com>
- <20191002135758.GA1738718@kroah.com>
- <20191002151751.GP17454@sasha-vm>
- <20191002153123.wcguist4okoxckis@cantor>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=OGFNe2HzuYdA+Ntxb0smhm55h1bjmES+Gg6K1WA4cN4=;
+        b=NgQqWCvhQwWwdmmmlIoLrUP0xc6TSeCF67izueNk0IiMWFEQQMXiltWhkWrFFDP3UL
+         IqIya/cZOa2IfvRydU9ypMgwJP/QQofuSV+vV+4SONSNgAaEkCGOtF4TrZ/vVxwVUWmu
+         BuSUVbxkZtCHgf6tJohbWix8zVUVBoxwrNI9B2zwNH1Lfa7h1H4pmNiZNn3s1u/OR766
+         RIp3sTVWQvUeMSI5nKy7huCb9RYNzR59ryg4QhBH6JOaeFyrG1NJHVO4O07QjpHd2rf9
+         lZ3hMHHBdM1nbuudNQV6yFE/TL7voP7xpDsoDAThkE2NJVrOsZ90dHAUCXOs64YRGlnV
+         trAg==
+X-Gm-Message-State: APjAAAWicqrE/x5kAT5rv+p6JUml/9HN4cY7fq1soeHG3OpmOboUFpfM
+        AS6zIVUgdihmpRVZcA9BDN7w56VHLKpAzm0LTnk=
+X-Google-Smtp-Source: APXvYqz2bTRZ1lk+yBO4Isg8mfboIRlGpW594gsCbbQJOH3h7RjW0aMGSK3cRnkBb23XrjtG+F8g1zY4fQZepUSwy9Y=
+X-Received: by 2002:a05:6830:1645:: with SMTP id h5mr3137591otr.116.1570030996925;
+ Wed, 02 Oct 2019 08:43:16 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20191002153123.wcguist4okoxckis@cantor>
-User-Agent: NeoMutt/20180716
-X-MC-Unique: WDuhs8NSPsyU-pJqW2ATlA-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=WINDOWS-1252; format=flowed
-Content-Transfer-Encoding: quoted-printable
-Content-Disposition: inline
+References: <20190918183552.28959-1-TheSven73@gmail.com> <20190918183552.28959-4-TheSven73@gmail.com>
+ <20190930140621.GB2280096@kroah.com> <CAGngYiXWF-qwTiC95oUQobYRwuruZ6Uu7USwPRqhhyw-mogv7w@mail.gmail.com>
+ <20191002152358.GA1748000@kroah.com>
+In-Reply-To: <20191002152358.GA1748000@kroah.com>
+From:   Sven Van Asbroeck <thesven73@gmail.com>
+Date:   Wed, 2 Oct 2019 11:43:05 -0400
+Message-ID: <CAGngYiXR733NhnCE87mvxNo2xXzLLEJtvbn98DUTrKMJexvyKg@mail.gmail.com>
+Subject: Re: [PATCH v1 3/5] staging: fieldbus core: add support for device configuration
+To:     Greg KH <gregkh@linuxfoundation.org>
+Cc:     =?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber@suse.de>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Enrico Weigelt <lkml@metux.net>,
+        Oliver Hartkopp <socketcan@hartkopp.net>,
+        "J. Kiszka" <jan.kiszka@siemens.com>,
+        Frank Iwanitz <friw@hms-networks.de>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        netdev <netdev@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed Oct 02 19, Jerry Snitselaar wrote:
->On Wed Oct 02 19, Sasha Levin wrote:
->>On Wed, Oct 02, 2019 at 03:57:58PM +0200, Greg KH wrote:
->>>On Wed, Oct 02, 2019 at 04:14:44PM +0300, Jarkko Sakkinen wrote:
->>>>From: Vadim Sukhomlinov <sukhomlinov@google.com>
->>>>
->>>>commit db4d8cb9c9f2af71c4d087817160d866ed572cc9 upstream
->>>>
->>>>TPM 2.0 Shutdown involve sending TPM2_Shutdown to TPM chip and disablin=
-g
->>>>future TPM operations. TPM 1.2 behavior was different, future TPM
->>>>operations weren't disabled, causing rare issues. This patch ensures
->>>>that future TPM operations are disabled.
->>>>
->>>>Fixes: d1bd4a792d39 ("tpm: Issue a TPM2_Shutdown for TPM2 devices.")
->>>>Cc: stable@vger.kernel.org
->>>>Signed-off-by: Vadim Sukhomlinov <sukhomlinov@google.com>
->>>>[dianders: resolved merge conflicts with mainline]
->>>>Signed-off-by: Douglas Anderson <dianders@chromium.org>
->>>>Reviewed-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
->>>>Signed-off-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
->>>>---
->>>>drivers/char/tpm/tpm-chip.c | 5 +++--
->>>>1 file changed, 3 insertions(+), 2 deletions(-)
->>>
->>>What kernel version(s) is this for?
->>
->>It would go to 4.19, we've recently reverted an incorrect backport of
->>this patch.
->>
->>Jarkko, why is this patch 3/3? We haven't seen the first two on the
->>mailing list, do we need anything besides this patch?
->>
->>--
->>Thanks,
->>Sasha
+On Wed, Oct 2, 2019 at 11:24 AM Greg KH <gregkh@linuxfoundation.org> wrote:
 >
->It looks like there was a problem mailing the earlier patchset, and patche=
-s 1 and 2
->weren't cc'd to stable, but patch 3 was.
+> If the code works with some subset now, then why not work to get this
+> cleaned up properly and out of staging and then add new features like
+> this type of configuration system afterward?
+>
+> Why is this a requirement to add while the code is in staging?
 
-Is linux-stabley@vger.kernel.org a valid address?
+I believe we put this code in staging/ not because there were issues
+with the codebase itself. But rather because the subsystem needs
+more industry interest and developer sign-offs. The TODO reflects that.
 
+And that will be very hard to do without some form of a config interface,
+which this patchset adds.
+
+Perhaps the time isn't ripe for this subsystem yet, although I cannot
+believe that we are the only ones running Linux on fieldbus 'gadgets'.
