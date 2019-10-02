@@ -2,156 +2,108 @@ Return-Path: <SRS0=zem1=X3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C28C1C35280
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 06:05:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43C49ECE58B
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 06:06:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 960CE21783
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 06:05:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="IeouzOu8"
+	by mail.kernel.org (Postfix) with ESMTP id 1063021783
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 06:06:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1569996391;
+	bh=mrR8xebiuz9rTlfAOEfd7Sbt87fGTQ7Pn9IgS0HFSyY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Cdag5XxvE/IhHVNCet8fvhqrQYVrpwz9MMsLbDTZ1G3qKeui0EaWOEoIGi4LadlBL
+	 pzXjoxZAUaX/q6indzbS9i5wtmnT0qg0cSRACb0LAe7clwOu0+9xr5OOXRic85IZiw
+	 6IT1keHIO9BnXkJRkreAuVILBP4mBUlxqpvHYrn8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727478AbfJBGFc (ORCPT
+        id S1727498AbfJBGGa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Oct 2019 02:05:32 -0400
-Received: from mailout2.w1.samsung.com ([210.118.77.12]:51383 "EHLO
-        mailout2.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726965AbfJBGFH (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Oct 2019 02:05:07 -0400
-Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
-        by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20191002060505euoutp02b71bc1212e1a1b6a1084cc901daa36f4~Jv1JYYllO1401814018euoutp02R
-        for <linux-kernel@vger.kernel.org>; Wed,  2 Oct 2019 06:05:05 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20191002060505euoutp02b71bc1212e1a1b6a1084cc901daa36f4~Jv1JYYllO1401814018euoutp02R
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1569996305;
-        bh=Ug7S/ZE6QUpnX3bV0nuiz2vhWYXfhV5caDeoQLh5WRc=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=IeouzOu8cMuJqlIyFZk7R9j6VCnZ7m61x0QZg6kBYcUR2vfEaUNaReWoWbYg7bEIe
-         5/u8SIxDyrI5inhXdJk+D6HYZIVB0OYzVJoT6cRdtZG7fRfJDUJ3t1LIPgZaOixQ9v
-         o5NmfLX1kF4k8KC5gO4Ctvnxs9BsS2Yfo0i00rXg=
-Received: from eusmges3new.samsung.com (unknown [203.254.199.245]) by
-        eucas1p1.samsung.com (KnoxPortal) with ESMTP id
-        20191002060505eucas1p12765bb350b5dc9a32fa717e7ad3135b5~Jv1I_39i51280312803eucas1p1P;
-        Wed,  2 Oct 2019 06:05:05 +0000 (GMT)
-Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
-        eusmges3new.samsung.com (EUCPMTA) with SMTP id 43.62.04374.01E349D5; Wed,  2
-        Oct 2019 07:05:04 +0100 (BST)
-Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
-        eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
-        20191002060504eucas1p2f023677bb85a7f6a1efebf891e8d81df~Jv1IgQHtj0451004510eucas1p2w;
-        Wed,  2 Oct 2019 06:05:04 +0000 (GMT)
-Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
-        eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
-        20191002060504eusmtrp2fb088467c3645c18ce8aa0bb80a5df94~Jv1IfZLdU0112001120eusmtrp2y;
-        Wed,  2 Oct 2019 06:05:04 +0000 (GMT)
-X-AuditID: cbfec7f5-4f7ff70000001116-9f-5d943e1051b9
-Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
-        eusmgms1.samsung.com (EUCPMTA) with SMTP id BD.14.04166.01E349D5; Wed,  2
-        Oct 2019 07:05:04 +0100 (BST)
-Received: from AMDC3778.digital.local (unknown [106.120.51.20]) by
-        eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
-        20191002060503eusmtip2ad095572e421552af8ac29e1ce16d181~Jv1Hul76X3226032260eusmtip2e;
-        Wed,  2 Oct 2019 06:05:03 +0000 (GMT)
-From:   Lukasz Luba <l.luba@partner.samsung.com>
-To:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-pm@vger.kernel.org, linux-samsung-soc@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Cc:     b.zolnierkie@samsung.com, krzk@kernel.org, kgene@kernel.org,
-        mark.rutland@arm.com, cw00.choi@samsung.com,
-        kyungmin.park@samsung.com, m.szyprowski@samsung.com,
-        s.nawrocki@samsung.com, myungjoo.ham@samsung.com,
-        robh+dt@kernel.org, willy.mh.wolff.ml@gmail.com,
-        Lukasz Luba <l.luba@partner.samsung.com>
-Subject: [PATCH v3 1/4] dt-bindings: memory-controllers: Add Exynos5422 DMC
- interrupts description
-Date:   Wed,  2 Oct 2019 08:04:52 +0200
-Message-Id: <20191002060455.3834-2-l.luba@partner.samsung.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20191002060455.3834-1-l.luba@partner.samsung.com>
-X-Brightmail-Tracker: H4sIAAAAAAAAA0WSa0hTYRjHe3d2tjNzdjZFX8ySJkIaalbQm4oV+GEggoF9MSRXHlRyTnfU
-        tAtNKyuvpaYiXrFQ1so1h5dpUs60sjYlvKCJMgPzNiLNLt7a8Uz69nv+z/95/g8vL4GJdbg7
-        kZicRimTZUkSngO3rf+PyY8MLYs5OrkehF5WtuBobHUOR3V9JhwVzy5iyGzW8tGnnCU+mlB5
-        IN3sKI4+G6p5aKWwD6BKcw8HPe+b4qOnY8McNJndzEN3X/XxkXHpHo7W3lnAGZFUU6sB0s6q
-        Kb5Up37Ak7Y+uSV9Y+3mSIv0aiBd0R2M5Ec7hMRRSYkZlDIgNNYhwazdBCmPhZk/5r/gKlCw
-        Nw8ICEiegOtrZsCwmGwGsPWFnOVVANeGwvOAg41XAOxq78Z2B7Y+ZnPZRhOAGvVfwBa2iZrl
-        SVtBEDzSH3aoU5kBF7LRtskYzXgwso0DZ9RrOONxJuNghVbGeLikN9zM6eIyLCRDoX5ilMuG
-        ecJn2tc7wQLyNLROj2PMHkia+HBmJJvPmsKgpbYFZ9kZLgzo7boH3O6s47BMQ1VhA2D5Bpwt
-        rrF7gqFxYHjnHoz0gS2GAFY+CzsXRzFGhqQTHF8WMTJmw5K2CrsshPdzxaz7MNQXDNmDXGGT
-        pty+XAq3cmo57OuUAFhXr8IeAs+q/2H1AKiBG5VOy+Mp+ngyddWflsnp9OR4/8sKuQ7YftLg
-        1sDPDtCzcakXkASQOArHo0pjxLgsg86S9wJIYBIXYchGSYxYGCfLukYpFReV6UkU3Qv2E1yJ
-        m/D6npkLYjJelkZdoagUSrnb5RACdxWINM63lsUKsI6wNNdHXjedqlwHR879PlkWgb0nKXFU
-        2rE7fop8b5NvWPt319QFUbmo4YhiJGN+wfqhwOz1Ldd4PtbCKWssnYvoCvfJ91pJsvhgC/uU
-        KtGpiWaB1q0l+ICh4au12EKP/Uq8jZky6zVtHY791YHTh0xBRX7bbw0SLp0gC/TFlLTsHyyz
-        o/NFAwAA
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprOIsWRmVeSWpSXmKPExsVy+t/xe7oCdlNiDWZMVLDYOGM9q8X1L89Z
-        LeYfOcdq0f/4NbPF+fMb2C3ONr1ht7jVIGOx6fE1VovLu+awWXzuPcJoMeP8PiaLtUfuslss
-        vX6RyeJ24wo2i9a9R9gtDr9pZ7X4duIRo4Ogx5p5axg9ds66y+6xaVUnm8fmJfUeB9/tYfLo
-        27KK0ePzJrkA9ig9m6L80pJUhYz84hJbpWhDCyM9Q0sLPSMTSz1DY/NYKyNTJX07m5TUnMyy
-        1CJ9uwS9jPMb/jIWTOWt+PTyDmsDYw93FyMnh4SAicS/M40sXYxcHEICSxklGvf+Z4NIiElM
-        2redHcIWlvhzrYsNougTo0TfouWsXYwcHGwCehI7VhWCxEUEljNKHFv1lhnEYRY4wiRxdPU1
-        RpBuYYEkiVkrj7GC2CwCqhJ/m3azgNi8AnYSW25dY4HYIC+xesMBZhCbU8Be4t39G8wgC4SA
-        av6fqZzAyLeAkWEVo0hqaXFuem6xoV5xYm5xaV66XnJ+7iZGYKRsO/Zz8w7GSxuDDzEKcDAq
-        8fA2BE2OFWJNLCuuzD3EKMHBrCTCa/NnUqwQb0piZVVqUX58UWlOavEhRlOgmyYyS4km5wOj
-        OK8k3tDU0NzC0tDc2NzYzEJJnLdD4GCMkEB6YklqdmpqQWoRTB8TB6dUA2NsaKRo8ib9+66S
-        X/b07TM7/6Hh641H69efeB2aa5v2fkbyrqY3jwwWaqUGBoYcbjvUKsZ29CWPFIe+d9h9Ga70
-        v62fhLWr7Tw337p8yu7VWY7HjsZpHAdZlvC9Xb6cK3bPlbIVjUqty47e+Kz/v6/wyct/F87a
-        dacodC+75muf3hG1gN057L0SS3FGoqEWc1FxIgDSu1YsqgIAAA==
-X-CMS-MailID: 20191002060504eucas1p2f023677bb85a7f6a1efebf891e8d81df
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20191002060504eucas1p2f023677bb85a7f6a1efebf891e8d81df
-X-EPHeader: CA
-CMS-TYPE: 201P
-X-CMS-RootMailID: 20191002060504eucas1p2f023677bb85a7f6a1efebf891e8d81df
-References: <20191002060455.3834-1-l.luba@partner.samsung.com>
-        <CGME20191002060504eucas1p2f023677bb85a7f6a1efebf891e8d81df@eucas1p2.samsung.com>
+        Wed, 2 Oct 2019 02:06:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48444 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726070AbfJBGG3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 2 Oct 2019 02:06:29 -0400
+Received: from localhost (lfbn-1-10718-76.w90-89.abo.wanadoo.fr [90.89.68.76])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id D285A215EA;
+        Wed,  2 Oct 2019 06:06:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1569996389;
+        bh=mrR8xebiuz9rTlfAOEfd7Sbt87fGTQ7Pn9IgS0HFSyY=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=lFv7h78FZn9gJtdttxlXUBjMRibrhHSjJTUoCcx5i5lnY6MujyHv60z8JWd2Ipyge
+         LtDT7l64DdHrmIJIBMjbDrEodTxOgzKERcvSRicmE0PdFlNVlHxbvpW0/P0e2hBSwM
+         iXBac1sHKS53V4ln39KE9rT2lkVn7dugShF1I43Q=
+Date:   Wed, 2 Oct 2019 08:06:26 +0200
+From:   Maxime Ripard <mripard@kernel.org>
+To:     Jernej Skrabec <jernej.skrabec@siol.net>
+Cc:     wens@csie.org, mturquette@baylibre.com, sboyd@kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] clk: sunxi-ng: h6: Allow GPU to change parent rate
+Message-ID: <20191002060626.kd37juvhu3jlbxrp@gilmour>
+References: <20191001200656.730198-1-jernej.skrabec@siol.net>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="koys76tdgwpzy4oy"
+Content-Disposition: inline
+In-Reply-To: <20191001200656.730198-1-jernej.skrabec@siol.net>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add description for optional interrupt lines. It provides a new operation
-mode, which uses internal performance counters interrupt when overflow.
-This is more reliable than using default polling mode implemented in
-devfreq.
 
-Signed-off-by: Lukasz Luba <l.luba@partner.samsung.com>
----
- .../bindings/memory-controllers/exynos5422-dmc.txt    | 11 +++++++++++
- 1 file changed, 11 insertions(+)
+--koys76tdgwpzy4oy
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-diff --git a/Documentation/devicetree/bindings/memory-controllers/exynos5422-dmc.txt b/Documentation/devicetree/bindings/memory-controllers/exynos5422-dmc.txt
-index 02aeb3b5a820..e2434cac4858 100644
---- a/Documentation/devicetree/bindings/memory-controllers/exynos5422-dmc.txt
-+++ b/Documentation/devicetree/bindings/memory-controllers/exynos5422-dmc.txt
-@@ -31,6 +31,14 @@ Required properties for DMC device for Exynos5422:
- 	The register offsets are in the driver code and specyfic for this SoC
- 	type.
- 
-+Optional properties for DMC device for Exynos5422:
-+- interrupt-parent : The parent interrupt controller.
-+- interrupts : Contains the IRQ line numbers for the DMC internal performance
-+  event counters in DREX0 and DREX1 channels. Align with specification of the
-+  interrupt line(s) in the interrupt-parent controller.
-+- interrupt-names : IRQ names "drex_0" and "drex_1", the order should be the
-+  same as in the 'interrupts' list above.
-+
- Example:
- 
- 	ppmu_dmc0_0: ppmu@10d00000 {
-@@ -70,4 +78,7 @@ Example:
- 		device-handle = <&samsung_K3QF2F20DB>;
- 		vdd-supply = <&buck1_reg>;
- 		samsung,syscon-clk = <&clock>;
-+		interrupt-parent = <&combiner>;
-+		interrupts = <16 0>, <16 1>;
-+		interrupt-names = "drex_0", "drex_1";
- 	};
--- 
-2.17.1
+Hi,
 
+On Tue, Oct 01, 2019 at 10:06:56PM +0200, Jernej Skrabec wrote:
+> GPU PLL was designed with dynamic frequency switching in mind so driver
+> can adjust rate based on the GPU load.
+>
+> Allow GPU clock to change parent rate (GPU PLL is the only possible
+> parent of GPU clock).
+>
+> Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
+> ---
+>  drivers/clk/sunxi-ng/ccu-sun50i-h6.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/drivers/clk/sunxi-ng/ccu-sun50i-h6.c b/drivers/clk/sunxi-ng/ccu-sun50i-h6.c
+> index d89353a3cdec..e254c06c8621 100644
+> --- a/drivers/clk/sunxi-ng/ccu-sun50i-h6.c
+> +++ b/drivers/clk/sunxi-ng/ccu-sun50i-h6.c
+> @@ -290,7 +290,7 @@ static SUNXI_CCU_M_WITH_MUX_GATE(gpu_clk, "gpu", gpu_parents, 0x670,
+>  				       0, 3,	/* M */
+>  				       24, 1,	/* mux */
+>  				       BIT(31),	/* gate */
+> -				       0);
+> +				       CLK_SET_RATE_PARENT);
+>
+>  static SUNXI_CCU_GATE(bus_gpu_clk, "bus-gpu", "psi-ahb1-ahb2",
+>  		      0x67c, BIT(0), 0);
+
+Applied, thanks!
+Maxime
+
+--koys76tdgwpzy4oy
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXZQ+YgAKCRDj7w1vZxhR
+xWXAAQCx7lXrCQV8wI7Ez5oXy+i4MIWGIqE/gik3AIuhe8Yy6gEAjojC/6WxQno2
+IjkWiZ4VGFrkyIK8BuYE1IuDsPHSpQ8=
+=k/gb
+-----END PGP SIGNATURE-----
+
+--koys76tdgwpzy4oy--
