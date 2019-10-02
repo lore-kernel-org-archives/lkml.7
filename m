@@ -2,126 +2,153 @@ Return-Path: <SRS0=zem1=X3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DACD4C35280
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 14:16:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 49D20C35280
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 14:17:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 82FEB20815
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 14:16:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1C72621D7B
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 14:17:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=akamai.com header.i=@akamai.com header.b="PAYUewPi"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="R9JOAAoi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728098AbfJBOQT (ORCPT
+        id S1728086AbfJBORW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Oct 2019 10:16:19 -0400
-Received: from mx0a-00190b01.pphosted.com ([67.231.149.131]:10948 "EHLO
-        mx0a-00190b01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726272AbfJBOQS (ORCPT
+        Wed, 2 Oct 2019 10:17:22 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:55924 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727647AbfJBORW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Oct 2019 10:16:18 -0400
-Received: from pps.filterd (m0122333.ppops.net [127.0.0.1])
-        by mx0a-00190b01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id x92E2TfJ018383;
-        Wed, 2 Oct 2019 15:15:58 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=akamai.com; h=from : to : cc :
- subject : date : message-id : mime-version : content-type; s=jan2016.eng;
- bh=/ZlqzeeYJxZ37rXBIMYZlJVPrpFIy//tFlZEdwpSGYc=;
- b=PAYUewPicYiC3naj7PZoR9Uq0tOK3bJyIWpG7P72D8ynfH3UD5T8ON+U3jtCod87sLsv
- 2DndM30hQj7DZtQi4fbl6FbMUEy12S1ggt124/BNSZqF8OpKyS0my5qoVlWIHJottDP0
- lpg9xxgRNpOn8uaay2s2C/TVGqlAmdEucMQbpHb+BefAp1NENi+Shq7qM+6MdRM1S71P
- QZYk+FKNp6P1Ae8eivCKyGpr0o36SCgwYNs6Houmsk1961RARgySLp3r2T92VbPlQ/Iy
- Hw/Gk6fPBt3roPNyEtQYIKGolaalbPemxVPuqNdaGxFP2z1ex9XGMafjNvKomdaEgmNW aQ== 
-Received: from prod-mail-ppoint2 (prod-mail-ppoint2.akamai.com [184.51.33.19] (may be forged))
-        by mx0a-00190b01.pphosted.com with ESMTP id 2v9xs8dt3u-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 02 Oct 2019 15:15:57 +0100
-Received: from pps.filterd (prod-mail-ppoint2.akamai.com [127.0.0.1])
-        by prod-mail-ppoint2.akamai.com (8.16.0.27/8.16.0.27) with SMTP id x92E1u5f024199;
-        Wed, 2 Oct 2019 10:15:56 -0400
-Received: from email.msg.corp.akamai.com ([172.27.123.34])
-        by prod-mail-ppoint2.akamai.com with ESMTP id 2va2uwbwdn-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
-        Wed, 02 Oct 2019 10:15:56 -0400
-Received: from usma1ex-cas4.msg.corp.akamai.com (172.27.123.57) by
- usma1ex-dag3mb4.msg.corp.akamai.com (172.27.123.56) with Microsoft SMTP
- Server (TLS) id 15.0.1473.3; Wed, 2 Oct 2019 10:15:56 -0400
-Received: from bos-lpii8.kendall.corp.akamai.com (172.29.171.127) by
- usma1ex-cas4.msg.corp.akamai.com (172.27.123.57) with Microsoft SMTP Server
- id 15.0.1473.3 via Frontend Transport; Wed, 2 Oct 2019 07:15:55 -0700
-Received: by bos-lpii8.kendall.corp.akamai.com (Postfix, from userid 42339)
-        id EFE5317F639; Wed,  2 Oct 2019 10:15:55 -0400 (EDT)
-From:   Michael Zhivich <mzhivich@akamai.com>
-To:     <linux-kernel@vger.kernel.org>
-CC:     <tglx@linutronix.de>, <mingo@redhat.com>, <bp@alien8.de>,
-        <hpa@zytor.com>, <rafael.j.wysocki@intel.com>,
-        Michael Zhivich <mzhivich@akamai.com>
-Subject: [PATCH] clocksource: tsc: respect tsc bootparam for clocksource_tsc_early
-Date:   Wed, 2 Oct 2019 10:15:53 -0400
-Message-ID: <20191002141553.7682-1-mzhivich@akamai.com>
-X-Mailer: git-send-email 2.17.1
+        Wed, 2 Oct 2019 10:17:22 -0400
+Received: by mail-wm1-f66.google.com with SMTP id a6so7379084wma.5
+        for <linux-kernel@vger.kernel.org>; Wed, 02 Oct 2019 07:17:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=6ZK/alQJG/DzU2yr4fmPDAWsu9lpuXfvvu9e0XLg0VM=;
+        b=R9JOAAoirQ85aRbnoJE2ghGjMgnYZvgp/+N3TS16/mkj/h2NNpOiHgT9N4Vgb5ZFUr
+         Qvt9YwtL7wwJGnMGjciAyBDekZP08zC/RE3WCJGsu54Kg60BFF1aRjSRZOlAexfn8HUG
+         v9P0wmbcdn6mtEheFbcfdcbYIM7yWN3wnaXSfHIVlUyiWzoG8X+42qteH2PEW6Bod9ij
+         YQ5czd+9r7Q5vkS6EEvyoKKuShp889JJ1P+rxHrMcZ4dTbwOQ7G+QM4EetpDK3dNgOFp
+         bFZG6SemRrWRHzHE4w/TaSw0YYfUN+0ytvHd1Ea3x/2gSMAuj5O4UX3bjWSZ/jPdiEm6
+         UV3Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=6ZK/alQJG/DzU2yr4fmPDAWsu9lpuXfvvu9e0XLg0VM=;
+        b=QlN/b04O6yLvtnU4K0O5aMHFQXt9xlnkdZfki/+cVx0pDlKmfhA3K1nDJLILbjGQ1w
+         +dPj8K1TdE70wiyghwM5qwUFZzoKVUDUfBdXoX0xxjRZ6lHeYuZDKG86F7ySkIEwNNae
+         Cmnq9tdcHMyTq3CCLbabFwtflNr2eB0vGCzJku5bIkSwa5/GmW4hmBjp5456F45gHO30
+         +QrBR8ZeDCilzadAX6y0R3ZVZbQsX+HH/jLzqWTfLn3DzSHZ8HF8ihE0c51toJC+VP3R
+         Li7RrsGNVSDQZrQUM5q/ZoQf69xgwQXHu5dA7IZcChm7OnjU87RabCvWRCukPr6nxeUa
+         je4Q==
+X-Gm-Message-State: APjAAAWGv8dQHH287Ov7pdhDCXy3k67VuBQS//cbWL5nFTenhfMe4kwt
+        9RyaDb/GGspHDvyjXu1BC2O6Ls6frljUvWdakdY=
+X-Google-Smtp-Source: APXvYqyXYHJXAwnKoxIMcQTyz+KVy3BGpZtHLq8GhT6Hy6Pq77R1ldTnCYjHcoDu9jFPjmr39XnZGOn/DLiaiC8kTnQ=
+X-Received: by 2002:a1c:1a45:: with SMTP id a66mr3100375wma.102.1570025839778;
+ Wed, 02 Oct 2019 07:17:19 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-10-02_06:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=1 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=816
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1908290000 definitions=main-1910020135
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,1.0.8
- definitions=2019-10-02_06:2019-10-01,2019-10-02 signatures=0
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 suspectscore=1
- mlxlogscore=798 mlxscore=0 lowpriorityscore=0 malwarescore=0
- priorityscore=1501 bulkscore=0 spamscore=0 phishscore=0 clxscore=1011
- impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-1908290000 definitions=main-1910020136
+References: <20191002120136.1777161-1-arnd@arndb.de> <20191002120136.1777161-5-arnd@arndb.de>
+In-Reply-To: <20191002120136.1777161-5-arnd@arndb.de>
+From:   Alex Deucher <alexdeucher@gmail.com>
+Date:   Wed, 2 Oct 2019 10:17:07 -0400
+Message-ID: <CADnq5_PkTwTBbQY9JatZD2_sWjdU5_hK7V2GLfviEvMh_QB12Q@mail.gmail.com>
+Subject: Re: [PATCH 4/6] drm/amd/display: fix dcn21 Makefile for clang
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Alex Deucher <alexander.deucher@amd.com>,
+        Harry Wentland <harry.wentland@amd.com>,
+        Leo Li <sunpeng.li@amd.com>,
+        =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
+        "David (ChunMing) Zhou" <David1.Zhou@amd.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Maling list - DRI developers 
+        <dri-devel@lists.freedesktop.org>,
+        clang-built-linux@googlegroups.com,
+        amd-gfx list <amd-gfx@lists.freedesktop.org>,
+        Bhawanpreet Lakha <Bhawanpreet.Lakha@amd.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Introduction of clocksource_tsc_early broke functionality of "tsc=reliable"
-and "tsc=nowatchdog" boot params, since clocksource_tsc_early is *always*
-registered with CLOCK_SOURCE_MUST_VERIFY and thus put on the watchdog list.
+On Wed, Oct 2, 2019 at 8:03 AM Arnd Bergmann <arnd@arndb.de> wrote:
+>
+> Just like all the other variants, this one passes invalid
+> compile-time options with clang after the new code got
+> merged:
+>
+> clang: error: unknown argument: '-mpreferred-stack-boundary=3D4'
+> scripts/Makefile.build:265: recipe for target 'drivers/gpu/drm/amd/amdgpu=
+/../display/dc/dcn21/dcn21_resource.o' failed
+>
+> Use the same variant that we have for dcn20 to fix compilation.
+>
+> Fixes: eced51f9babb ("drm/amd/display: Add hubp block for Renoir (v2)")
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 
-If CPU is very busy during boot, the watchdog clocksource may not be
-read frequently enough, resulting in a large difference that is treated as
-"negative" by clocksource_delta() and incorrectly truncated to 0.
+I'm getting an error with gcc with this patch:
+  CC [M]  drivers/gpu/drm/amd/amdgpu/../display/dc/dcn21/dcn21_resource.o
+drivers/gpu/drm/amd/amdgpu/../display/dc/dcn21/dcn21_resource.c: In
+function =E2=80=98calculate_wm_set_for_vlevel=E2=80=99:
+drivers/gpu/drm/amd/amdgpu/../display/dc/dcn21/dcn21_resource.c:964:22:
+error: SSE register return with SSE disabled
+  wm_set->urgent_ns =3D get_wm_urgent(dml, pipes, pipe_cnt) * 1000;
+                      ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+make[4]: *** [scripts/Makefile.build:273:
+drivers/gpu/drm/amd/amdgpu/../display/dc/dcn21/dcn21_resource.o] Error
+1
+make[3]: *** [scripts/Makefile.build:490: drivers/gpu/drm/amd/amdgpu] Error=
+ 2
+make[3]: *** Waiting for unfinished jobs....
+make[2]: *** [scripts/Makefile.build:490: drivers/gpu/drm] Error 2
+make[1]: *** [scripts/Makefile.build:490: drivers/gpu] Error 2
+make: *** [Makefile:1080: drivers] Error 2
 
-This false alarm causes TSC to be declared unstable:
+Alex
 
-  clocksource: timekeeping watchdog on CPU1: Marking clocksource
-               'tsc-early' as unstable because the skew is too large:
-  clocksource: 'refined-jiffies' wd_now: fffb7019 wd_last: fffb6e28
-                mask: ffffffff
-  clocksource: 'tsc-early' cs_now: 52c3918b89d6 cs_last: 52c31d736d2e
-                mask: ffffffffffffffff
-  tsc: Marking TSC unstable due to clocksource watchdog
-
-Work around this issue by respecting "tsc=reliable" or "tsc=nowatchdog"
-boot params when registering clocksource_tsc_early.
-
-Signed-off-by: Michael Zhivich <mzhivich@akamai.com>
----
- arch/x86/kernel/tsc.c | 3 +++
- 1 file changed, 3 insertions(+)
-
-diff --git a/arch/x86/kernel/tsc.c b/arch/x86/kernel/tsc.c
-index c59454c382fd..7e322e2daaf5 100644
---- a/arch/x86/kernel/tsc.c
-+++ b/arch/x86/kernel/tsc.c
-@@ -1505,6 +1505,9 @@ void __init tsc_init(void)
- 		return;
- 	}
- 
-+	if (tsc_clocksource_reliable || no_tsc_watchdog)
-+		clocksource_tsc_early.flags &= ~CLOCK_SOURCE_MUST_VERIFY;
-+
- 	clocksource_register_khz(&clocksource_tsc_early, tsc_khz);
- 	detect_art();
- }
--- 
-2.17.1
-
+> ---
+>  drivers/gpu/drm/amd/display/dc/dcn21/Makefile | 12 +++++++++++-
+>  1 file changed, 11 insertions(+), 1 deletion(-)
+>
+> diff --git a/drivers/gpu/drm/amd/display/dc/dcn21/Makefile b/drivers/gpu/=
+drm/amd/display/dc/dcn21/Makefile
+> index 8cd9de8b1a7a..ef673bffc241 100644
+> --- a/drivers/gpu/drm/amd/display/dc/dcn21/Makefile
+> +++ b/drivers/gpu/drm/amd/display/dc/dcn21/Makefile
+> @@ -3,7 +3,17 @@
+>
+>  DCN21 =3D dcn21_hubp.o dcn21_hubbub.o dcn21_resource.o
+>
+> -CFLAGS_$(AMDDALPATH)/dc/dcn21/dcn21_resource.o :=3D -mhard-float -msse -=
+mpreferred-stack-boundary=3D4
+> +ifneq ($(call cc-option, -mpreferred-stack-boundary=3D4),)
+> +       cc_stack_align :=3D -mpreferred-stack-boundary=3D4
+> +else ifneq ($(call cc-option, -mstack-alignment=3D16),)
+> +       cc_stack_align :=3D -mstack-alignment=3D16
+> +endif
+> +
+> +CFLAGS_$(AMDDALPATH)/dc/dcn21/dcn21_resource.o :=3D -mhard-float -msse $=
+(cc_stack_align)
+> +
+> +ifdef CONFIG_CC_IS_CLANG
+> +CFLAGS_$(AMDDALPATH)/dc/dcn21/dcn21_resource.o +=3D -msse2
+> +endif
+>
+>  AMD_DAL_DCN21 =3D $(addprefix $(AMDDALPATH)/dc/dcn21/,$(DCN21))
+>
+> --
+> 2.20.0
+>
+> _______________________________________________
+> dri-devel mailing list
+> dri-devel@lists.freedesktop.org
+> https://lists.freedesktop.org/mailman/listinfo/dri-devel
