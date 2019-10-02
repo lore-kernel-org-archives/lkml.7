@@ -2,121 +2,186 @@ Return-Path: <SRS0=zem1=X3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4A65ECE58A
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 18:53:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EC85C10F14
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 18:54:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B4BE9222C0
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 18:53:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0854021A4C
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 18:54:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="DeM9KzWe"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Aa7u5mRO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729032AbfJBSxy (ORCPT
+        id S1729086AbfJBSyk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Oct 2019 14:53:54 -0400
-Received: from mout.gmx.net ([212.227.17.20]:33339 "EHLO mout.gmx.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727624AbfJBSxx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Oct 2019 14:53:53 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-        s=badeba3b8450; t=1570042349;
-        bh=gf50tgCxneL5EMyZp44NI1YZQOPxU5aMdpSenTmvcmo=;
-        h=X-UI-Sender-Class:Subject:To:Cc:References:From:Date:In-Reply-To;
-        b=DeM9KzWeINTccN0apbwbQA0VgoA5iZYZVaOVbR0wi+9JSZPSYhljhs8WcIGgyXwmy
-         wwkszvWm8nGEVnGGP9X4EDQbmg75Y3WzfITVdaj862afHrIK7P0CwoFJozLvo3525+
-         CQ0oLHYknGUyvoWOuK7johO1UU4Saqw5ArIwjGgQ=
-X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
-Received: from [192.168.20.60] ([92.116.134.72]) by mail.gmx.com (mrgmx104
- [212.227.17.168]) with ESMTPSA (Nemesis) id 1Md6R1-1hhE8F3b8N-00aFk6; Wed, 02
- Oct 2019 20:52:29 +0200
-Subject: Re: [RFC][PATCH] sysctl: Remove the sysctl system call
-To:     "Eric W. Biederman" <ebiederm@xmission.com>,
-        Kees Cook <keescook@chromium.org>
-Cc:     linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
-        linux-api@vger.kernel.org,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Andi Kleen <andi@firstfloor.org>,
-        Andi Kleen <ak@linux.intel.com>,
-        Cong Wang <xiyou.wangcong@gmail.com>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Apelete Seketeli <apelete@seketeli.net>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Chee Nouk Phoon <cnphoon@altera.com>,
-        Chris Zankel <chris@zankel.net>,
-        Christian Ruppert <christian.ruppert@abilis.com>,
-        Greg Ungerer <gerg@uclinux.org>,
-        Hongliang Tao <taohl@lemote.com>,
-        Huacai Chen <chenhc@lemote.com>,
-        Jonas Jensen <jonas.jensen@gmail.com>,
-        Josh Boyer <jwboyer@gmail.com>, Jun Nie <jun.nie@linaro.org>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Ley Foon Tan <lftan@altera.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Max Filippov <jcmvbkbc@gmail.com>,
-        Olof Johansson <olof@lixom.net>,
-        Paul Burton <paul.burton@mips.com>,
-        Phil Edworthy <phil.edworthy@renesas.com>,
-        Pierrick Hascoet <pierrick.hascoet@abilis.com>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Roland Stigge <stigge@antcom.de>,
-        Vineet Gupta <vgupta@synopsys.com>
-References: <8736gcjosv.fsf@x220.int.ebiederm.org>
- <201910011140.EA0181F13@keescook> <87imp8hyc8.fsf@x220.int.ebiederm.org>
-From:   Helge Deller <deller@gmx.de>
-Message-ID: <1dc9f6c4-d1ff-8add-4d42-1c2d1ae685f6@gmx.de>
-Date:   Wed, 2 Oct 2019 20:52:22 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.0
+        Wed, 2 Oct 2019 14:54:40 -0400
+Received: from mail-io1-f68.google.com ([209.85.166.68]:38470 "EHLO
+        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728946AbfJBSyj (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 2 Oct 2019 14:54:39 -0400
+Received: by mail-io1-f68.google.com with SMTP id u8so59397968iom.5
+        for <linux-kernel@vger.kernel.org>; Wed, 02 Oct 2019 11:54:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=3r5iSDLGZ8r+gXNiaBNLJJqk1fe5WwzEJBwQCe2vUck=;
+        b=Aa7u5mROY4zwTVOvdlxTPP3QwR2ijNoJH5ND5RovBs+s2OzhvsmGt5KxyaUEjSdHSC
+         W9YvwlknPtpfuQ9B3bGNnXbVYl9sWxZh15Pa6dKQgVm5v41CnC/ltU93piXMvDWVQvrP
+         OPvRvmIGu+dHYh3aISWuf/zKrN5ggBkAseDdEy3JYg/aAydf46hqIUovk9TnLDZvKNcA
+         a+uXvcKAjOAiiDPPeBmh3y5v3lyT5JgZc3qUssO/YMkMCcjYuuWWleNiiTWVEJlhQai3
+         PUp++kJyAKCOMYL9mCsxNXxgtG3Vn2Hs17Gby/M5oO6ArPZr1WlkjH9HQ5PA/DTAHFzr
+         6gug==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=3r5iSDLGZ8r+gXNiaBNLJJqk1fe5WwzEJBwQCe2vUck=;
+        b=c50m3S5dbCbA4jjKbuzC9SxW276sRzuF+K1n25FiieBn2AxcLRiIb2y2xB5ozPeYFy
+         Yh3UxNCGNXNovGXJ2h1Bp8hpX5H3WYBgyIar/aZS9BmJHMM90u4AO4MA8op6AJ211+JS
+         oUbPo5Azhn5obYoLVtAjp7Mel5lizQzjizzScJWjzpUhQNPI8NlMWDaS6b+PTh6jXehQ
+         cWEhzpQQ5VyjgGz3xh+AVNQSJSGUsYSOGpHzJIh1tk/RH0RHQ5WfBnPSZ2p3yAz7UWB2
+         Fnt2MDyLB3f93MhzvjjqPQHcAdLfEWGkY4GJ+yjnvZTSpUGFZqeYzgagnmW1TpemL/yw
+         Iz0A==
+X-Gm-Message-State: APjAAAX6K68+rPf9qjAcSXHZXnIn3LfXlB2L2ImCzqQV9BBjrNa2rY/M
+        I0EWpxWh4aX/o4V3PD8fQz2xpmCl+cRfEWl+IlxjzA==
+X-Google-Smtp-Source: APXvYqxGU7SB9vUY0cnrSpSxwIk1DQWFrlBUnyKTd4pXrWzuO00cefZQd4xbUvKX+JT3ealXOPiNXIb4qxPV2/+Q7mM=
+X-Received: by 2002:a92:8e4f:: with SMTP id k15mr6063919ilh.108.1570042477811;
+ Wed, 02 Oct 2019 11:54:37 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <87imp8hyc8.fsf@x220.int.ebiederm.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:DQAGMh4Ko5P2cI/wLHpPo6oM3QodYNWeRmH706TaNGo2oNxaQq8
- yBfKyzR1b/uToJX8hDwMlwWTaX/onk/j3TXNptxpDALp14iKhHJ4aocZoGm2bC7iBkIdz5q
- bNdH1B4HD3l5vl/ryWt4twHoTJAsf6GitjZtqsTqYjVFGGejjFfWStfvPpF7fGBKKyNYe4+
- QsvCqC6P+fBDzGQtwg1Dg==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:WomUAVeJBRA=:n9zCVEbUl4dS4bqaFBvX3H
- on+raA1uvEXl1I0A+uZkYyEweFIH0qn1+PjkYLCqphuq29Y6wb4y6hPHeSRhCIutvLYDUo0rA
- hfWl30UdiDBzkgM3UcPcc1NDIuuewKMG7zgjrHNXPpPJsLRDQuS4UZlCcsD3WgtMqQO4BcSDv
- X4u00vVhHTJDWyAozjOp314i4KIoHJ/tgl1sUb/iJZE8g+PAWNtUi3f1A7tT6ZfJNIMDl1Ub8
- JCl/4XdMOfGC5Z8fSUbXUpIM6H0PFFv3nxsQwEii+W9rUl98gxT9NqifkbVZD8wqgBv0lvQYy
- Z9U0ToPf9hFw9Y9PpKF+QZjD8ZLjiNZ4IgMtYsoqP22q1rRtjwdYKzs4osZXZIMNmfXP9ecHr
- KYk6ootsiSM2WNxRH5OsB27z+OIoVFyjJm9gZ3T1Z0CE9kJbLgxagbMnnjtn6JRMSgLJUUkBf
- wN2oxZSuvjx73NVv4pnav1xHu8NJHBbZ6mb87MxgY8JW0bXcxhjRLGsOHSitUrdECJ2ZDj5lX
- Mds+FH8jW+gRFO1y5YIPcuIxcYetgv/mpK49RCElNuZCSpStxXxKqM8nGDZJDPTxKH+5zuOuz
- MIoMxLS+WbfhGGWOysB31SK6uYw0yDyb0HJ8FZZKG5i+wIOR1kOghTXrGxc/phGdo5yax+Ucp
- tQWpK8vI6faH8Sd5ElO8JMaoLAASz3C8zy37HC7jJz70kdo3ABXtTl7cNCByWNZ0fb3BkllQv
- KBcMIsBWjVB7ZWxJgy/i650wrfzTLLolyFWW2bxIWTe8w4bRaDlSbVuMx/xB4rHdH+jkObInk
- CHLMdXu+OqRw7iFCctimriEQ6M24A5h+tqXl7lcdVeBIcdpKi7gSALRbj3T3WF8xFuRom1rj/
- mDXdAfHshk5+/sz8zHZVPqZ6uMy3NPXhuukA/qLKIQFWrqugqk67S5LBhGla0Ic1/i22tTgxq
- Nzp99T4fO/YpziLuUdAq9YiWl3eZ0JSYxQSD+1nzBS4shb8/F+TB7onTCKM22dK/vVt57fsEf
- Vh9MtayaH3jL/JCfRSePke9nEeAyhN+sZm8+ANxe3m5o8UJjyzseZeIGA1ha1WqtbsmEzRVvk
- 6MP4h7WwQxU9odDq8H7E9gcBqxl0il1TJ6zS2VPjADYQS0TbrS6xn0Y9RagcX1paYjqVnYRkQ
- T9UbHZWu0qbWJTJuU7IeM0HHWGgX0ETuTC/B7Y+3coLI4a9my7Nj7VHmQSKWtCTD3+tN/goqM
- JIzpeGqkAiMfX06ERkLoEgP7S/E5cGXK/Hq9DYw==
+References: <20190927021927.23057-1-weijiang.yang@intel.com> <20190927021927.23057-5-weijiang.yang@intel.com>
+In-Reply-To: <20190927021927.23057-5-weijiang.yang@intel.com>
+From:   Jim Mattson <jmattson@google.com>
+Date:   Wed, 2 Oct 2019 11:54:26 -0700
+Message-ID: <CALMp9eS1V2fRcwogcEkHonvVAgfc9dU=7A4V-D0Rcoc=v82VAw@mail.gmail.com>
+Subject: Re: [PATCH v7 4/7] KVM: VMX: Load Guest CET via VMCS when CET is
+ enabled in Guest
+To:     Yang Weijiang <weijiang.yang@intel.com>
+Cc:     kvm list <kvm@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        "Michael S. Tsirkin" <mst@redhat.com>,
+        =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 02.10.19 00:53, Eric W. Biederman wrote:
-> Kees Cook <keescook@chromium.org> writes:
->>> As there appear to be no users of the sysctl system call, remove the
->>> code....>...
-> I copied everyone who had put this into a defconfig and I will wait a
-> little more to see if anyone screams.  I think it is a safe guess that
-> several of the affected configurations are dead (or at least
-> unmaintained) as I received 17 bounces when copying everyone.
+On Thu, Sep 26, 2019 at 7:17 PM Yang Weijiang <weijiang.yang@intel.com> wrote:
+>
+> "Load Guest CET state" bit controls whether Guest CET states
+> will be loaded at Guest entry. Before doing that, KVM needs
+> to check if CPU CET feature is enabled on host and available
+> to Guest.
+>
+> Note: SHSTK and IBT features share one control MSR:
+> MSR_IA32_{U,S}_CET, which means it's difficult to hide
+> one feature from another in the case of SHSTK != IBT,
+> after discussed in community, it's agreed to allow Guest
+> control two features independently as it won't introduce
+> security hole.
+>
+> Co-developed-by: Zhang Yi Z <yi.z.zhang@linux.intel.com>
+> Signed-off-by: Zhang Yi Z <yi.z.zhang@linux.intel.com>
+> Signed-off-by: Yang Weijiang <weijiang.yang@intel.com>
+> ---
+>  arch/x86/kvm/vmx/vmx.c | 35 +++++++++++++++++++++++++++++++++++
+>  1 file changed, 35 insertions(+)
+>
+> diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
+> index f720baa7a9ba..ba1a83d11e69 100644
+> --- a/arch/x86/kvm/vmx/vmx.c
+> +++ b/arch/x86/kvm/vmx/vmx.c
+> @@ -44,6 +44,7 @@
+>  #include <asm/spec-ctrl.h>
+>  #include <asm/virtext.h>
+>  #include <asm/vmx.h>
+> +#include <asm/cet.h>
+>
+>  #include "capabilities.h"
+>  #include "cpuid.h"
+> @@ -2918,6 +2919,37 @@ void vmx_set_cr3(struct kvm_vcpu *vcpu, unsigned long cr3)
+>         vmcs_writel(GUEST_CR3, guest_cr3);
+>  }
+>
+> +static int set_cet_bit(struct kvm_vcpu *vcpu, unsigned long cr4)
 
-  arch/parisc/configs/c8000_defconfig         |    1 -
-  arch/parisc/configs/generic-32bit_defconfig |    1 -
+Nit: This function does not appear to set CR4.CET, as the name would imply.
 
-I'm not aware that we require the sysctl syscall somewhere on parisc,
-so I think it's safe to remove the code.
+> +{
+> +       struct vcpu_vmx *vmx = to_vmx(vcpu);
+> +       const u64 cet_bits = XFEATURE_MASK_CET_USER | XFEATURE_MASK_CET_KERNEL;
+> +       bool cet_xss = vmx_xsaves_supported() &&
+> +                      (kvm_supported_xss() & cet_bits);
+> +       bool cet_cpuid = guest_cpuid_has(vcpu, X86_FEATURE_SHSTK) ||
+> +                        guest_cpuid_has(vcpu, X86_FEATURE_IBT);
+> +       bool cet_on = !!(cr4 & X86_CR4_CET);
+> +
+> +       if (cet_on && vmx->nested.vmxon)
+> +               return 1;
 
-Helge
+This constraint doesn't appear to be architected. Also, this prevents
+enabling CR4.CET when in VMX operation, but what about the other way
+around (i.e. entering VMX operation with CR4.CET enabled)?
+
+> +       if (cet_on && !cpu_x86_cet_enabled())
+> +               return 1;
+
+This seems odd. Why is kernel support for (SHSTK or IBT) required for
+the guest to use (SHSTK or IBT)? If there's a constraint, shouldn't it
+be 1:1? (i.e. kernel support for SHSTK is required for the guest to
+use SHSTK and kernel support for IBT is required for the guest to use
+IBT?) Either way, enforcement of this constraint seems late, here,
+when the guest is trying to set CR4 to a value that, per the guest
+CPUID information, should be legal. Shouldn't this constraint be
+applied when setting the guest CPUID information, disallowing the
+enumeration of SHSTK and/or IBT support on a platform where these
+features are unavailable or disabled in the kernel?
+
+> +       if (cet_on && !cet_xss)
+> +               return 1;
+
+Again, this constraint seems like it's being applied too late.
+Returning 1 here will result in the guest's MOV-to-CR4 raising #GP,
+even though there is no architected reason for it to do so.
+
+> +       if (cet_on && !cet_cpuid)
+> +               return 1;
+
+What about the constraint that CR4.CET can't be set when CR0.WP is
+clear? (And the reverse needs to be handled in vmx_set_cr0).
+
+> +       if (cet_on)
+> +               vmcs_set_bits(VM_ENTRY_CONTROLS,
+> +                             VM_ENTRY_LOAD_GUEST_CET_STATE);
+
+Have we ensured that this VM-entry control is supported on the platform?
+
+> +       else
+> +               vmcs_clear_bits(VM_ENTRY_CONTROLS,
+> +                               VM_ENTRY_LOAD_GUEST_CET_STATE);
+> +       return 0;
+> +}
+> +
+>  int vmx_set_cr4(struct kvm_vcpu *vcpu, unsigned long cr4)
+>  {
+>         struct vcpu_vmx *vmx = to_vmx(vcpu);
+> @@ -2958,6 +2990,9 @@ int vmx_set_cr4(struct kvm_vcpu *vcpu, unsigned long cr4)
+>                         return 1;
+>         }
+>
+> +       if (set_cet_bit(vcpu, cr4))
+> +               return 1;
+> +
+>         if (vmx->nested.vmxon && !nested_cr4_valid(vcpu, cr4))
+>                 return 1;
+>
+> --
+> 2.17.2
+>
