@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A131CC4360C
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 19:13:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A304CC4360C
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 19:13:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8836D2133F
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 19:13:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8B43D2133F
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 19:13:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730155AbfJBTM7 (ORCPT
+        id S1729705AbfJBTNL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Oct 2019 15:12:59 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:35384 "EHLO
+        Wed, 2 Oct 2019 15:13:11 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:35378 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729098AbfJBTIK (ORCPT
+        by vger.kernel.org with ESMTP id S1729097AbfJBTIK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 2 Oct 2019 15:08:10 -0400
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1iFjyo-00036H-Vy; Wed, 02 Oct 2019 20:08:07 +0100
+        id 1iFjyn-00035W-QK; Wed, 02 Oct 2019 20:08:05 +0100
 Received: from ben by deadeye with local (Exim 4.92.1)
         (envelope-from <ben@decadent.org.uk>)
-        id 1iFjyo-0003d5-5L; Wed, 02 Oct 2019 20:08:06 +0100
+        id 1iFjyn-0003az-A6; Wed, 02 Oct 2019 20:08:05 +0100
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,15 +35,14 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        "syzbot" <syzkaller@googlegroups.com>,
-        "Eric Dumazet" <edumazet@google.com>
+        "Madhavan Srinivasan" <maddy@linux.vnet.ibm.com>,
+        "Michael Ellerman" <mpe@ellerman.id.au>,
+        "Ravi Bangoria" <ravi.bangoria@linux.ibm.com>
 Date:   Wed, 02 Oct 2019 20:06:51 +0100
-Message-ID: <lsq.1570043211.104471262@decadent.org.uk>
+Message-ID: <lsq.1570043211.890916317@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 40/87] net-gro: fix use-after-free read in
- napi_gro_frags()
+Subject: [PATCH 3.16 15/87] powerpc/perf: Fix MMCRA corruption by bhrb_filter
 In-Reply-To: <lsq.1570043210.379046399@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -57,68 +56,80 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Eric Dumazet <edumazet@google.com>
+From: Ravi Bangoria <ravi.bangoria@linux.ibm.com>
 
-commit a4270d6795b0580287453ea55974d948393e66ef upstream.
+commit 3202e35ec1c8fc19cea24253ff83edf702a60a02 upstream.
 
-If a network driver provides to napi_gro_frags() an
-skb with a page fragment of exactly 14 bytes, the call
-to gro_pull_from_frag0() will 'consume' the fragment
-by calling skb_frag_unref(skb, 0), and the page might
-be freed and reused.
+Consider a scenario where user creates two events:
 
-Reading eth->h_proto at the end of napi_frags_skb() might
-read mangled data, or crash under specific debugging features.
+  1st event:
+    attr.sample_type |= PERF_SAMPLE_BRANCH_STACK;
+    attr.branch_sample_type = PERF_SAMPLE_BRANCH_ANY;
+    fd = perf_event_open(attr, 0, 1, -1, 0);
 
-BUG: KASAN: use-after-free in napi_frags_skb net/core/dev.c:5833 [inline]
-BUG: KASAN: use-after-free in napi_gro_frags+0xc6f/0xd10 net/core/dev.c:5841
-Read of size 2 at addr ffff88809366840c by task syz-executor599/8957
+  This sets cpuhw->bhrb_filter to 0 and returns valid fd.
 
-CPU: 1 PID: 8957 Comm: syz-executor599 Not tainted 5.2.0-rc1+ #32
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-Call Trace:
- __dump_stack lib/dump_stack.c:77 [inline]
- dump_stack+0x172/0x1f0 lib/dump_stack.c:113
- print_address_description.cold+0x7c/0x20d mm/kasan/report.c:188
- __kasan_report.cold+0x1b/0x40 mm/kasan/report.c:317
- kasan_report+0x12/0x20 mm/kasan/common.c:614
- __asan_report_load_n_noabort+0xf/0x20 mm/kasan/generic_report.c:142
- napi_frags_skb net/core/dev.c:5833 [inline]
- napi_gro_frags+0xc6f/0xd10 net/core/dev.c:5841
- tun_get_user+0x2f3c/0x3ff0 drivers/net/tun.c:1991
- tun_chr_write_iter+0xbd/0x156 drivers/net/tun.c:2037
- call_write_iter include/linux/fs.h:1872 [inline]
- do_iter_readv_writev+0x5f8/0x8f0 fs/read_write.c:693
- do_iter_write fs/read_write.c:970 [inline]
- do_iter_write+0x184/0x610 fs/read_write.c:951
- vfs_writev+0x1b3/0x2f0 fs/read_write.c:1015
- do_writev+0x15b/0x330 fs/read_write.c:1058
+  2nd event:
+    attr.sample_type |= PERF_SAMPLE_BRANCH_STACK;
+    attr.branch_sample_type = PERF_SAMPLE_BRANCH_CALL;
+    fd = perf_event_open(attr, 0, 1, -1, 0);
 
-Fixes: a50e233c50db ("net-gro: restore frag0 optimization")
-Signed-off-by: Eric Dumazet <edumazet@google.com>
-Reported-by: syzbot <syzkaller@googlegroups.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+  It overrides cpuhw->bhrb_filter to -1 and returns with error.
+
+Now if power_pmu_enable() gets called by any path other than
+power_pmu_add(), ppmu->config_bhrb(-1) will set MMCRA to -1.
+
+Fixes: 3925f46bb590 ("powerpc/perf: Enable branch stack sampling framework")
+Signed-off-by: Ravi Bangoria <ravi.bangoria@linux.ibm.com>
+Reviewed-by: Madhavan Srinivasan <maddy@linux.vnet.ibm.com>
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+[bwh: Backported to 3.16: drop changes in power9-pmu.c]
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- net/core/dev.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
---- a/net/core/dev.c
-+++ b/net/core/dev.c
-@@ -4239,7 +4239,6 @@ static struct sk_buff *napi_frags_skb(st
- 	skb_reset_mac_header(skb);
- 	skb_gro_reset_offset(skb);
+--- a/arch/powerpc/perf/core-book3s.c
++++ b/arch/powerpc/perf/core-book3s.c
+@@ -1726,6 +1726,7 @@ static int power_pmu_event_init(struct p
+ 	int n;
+ 	int err;
+ 	struct cpu_hw_events *cpuhw;
++	u64 bhrb_filter;
  
--	eth = skb_gro_header_fast(skb, 0);
- 	if (unlikely(skb_gro_header_hard(skb, hlen))) {
- 		eth = skb_gro_header_slow(skb, hlen, 0);
- 		if (unlikely(!eth)) {
-@@ -4247,6 +4246,7 @@ static struct sk_buff *napi_frags_skb(st
- 			return NULL;
+ 	if (!ppmu)
+ 		return -ENOENT;
+@@ -1822,13 +1823,14 @@ static int power_pmu_event_init(struct p
+ 	err = power_check_constraints(cpuhw, events, cflags, n + 1);
+ 
+ 	if (has_branch_stack(event)) {
+-		cpuhw->bhrb_filter = ppmu->bhrb_filter_map(
++		bhrb_filter = ppmu->bhrb_filter_map(
+ 					event->attr.branch_sample_type);
+ 
+-		if (cpuhw->bhrb_filter == -1) {
++		if (bhrb_filter == -1) {
+ 			put_cpu_var(cpu_hw_events);
+ 			return -EOPNOTSUPP;
  		}
- 	} else {
-+		eth = (const struct ethhdr *)skb->data;
- 		gro_pull_from_frag0(skb, hlen);
- 		NAPI_GRO_CB(skb)->frag0 += hlen;
- 		NAPI_GRO_CB(skb)->frag0_len -= hlen;
++		cpuhw->bhrb_filter = bhrb_filter;
+ 	}
+ 
+ 	put_cpu_var(cpu_hw_events);
+--- a/arch/powerpc/perf/power8-pmu.c
++++ b/arch/powerpc/perf/power8-pmu.c
+@@ -175,6 +175,7 @@
+ #define	POWER8_MMCRA_IFM1		0x0000000040000000UL
+ #define	POWER8_MMCRA_IFM2		0x0000000080000000UL
+ #define	POWER8_MMCRA_IFM3		0x00000000C0000000UL
++#define	POWER8_MMCRA_BHRB_MASK		0x00000000C0000000UL
+ 
+ #define ONLY_PLM \
+ 	(PERF_SAMPLE_BRANCH_USER        |\
+@@ -666,6 +667,8 @@ static u64 power8_bhrb_filter_map(u64 br
+ 
+ static void power8_config_bhrb(u64 pmu_bhrb_filter)
+ {
++	pmu_bhrb_filter &= POWER8_MMCRA_BHRB_MASK;
++
+ 	/* Enable BHRB filter in PMU */
+ 	mtspr(SPRN_MMCRA, (mfspr(SPRN_MMCRA) | pmu_bhrb_filter));
+ }
 
