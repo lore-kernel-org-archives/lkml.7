@@ -2,46 +2,43 @@ Return-Path: <SRS0=zem1=X3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 16C80C352AA
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 12:30:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8EC66C35280
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 12:33:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ED4B22133F
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 12:30:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6BC7B2133F
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 12:33:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727191AbfJBMa5 (ORCPT
+        id S1726446AbfJBMdK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Oct 2019 08:30:57 -0400
-Received: from relay4-d.mail.gandi.net ([217.70.183.196]:52187 "EHLO
-        relay4-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725848AbfJBMac (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Oct 2019 08:30:32 -0400
-X-Originating-IP: 86.250.200.211
-Received: from localhost.localdomain (lfbn-1-17395-211.w86-250.abo.wanadoo.fr [86.250.200.211])
-        (Authenticated sender: miquel.raynal@bootlin.com)
-        by relay4-d.mail.gandi.net (Postfix) with ESMTPSA id 580F6E001D;
-        Wed,  2 Oct 2019 12:30:30 +0000 (UTC)
-From:   Miquel Raynal <miquel.raynal@bootlin.com>
-To:     Jonathan Cameron <jic23@kernel.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>
-Cc:     <devicetree@vger.kernel.org>, linux-iio@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        Miquel Raynal <miquel.raynal@bootlin.com>
-Subject: [PATCH 2/7] iio: adc: max1027: Make it optional to use interrupts
-Date:   Wed,  2 Oct 2019 14:30:20 +0200
-Message-Id: <20191002123025.21413-3-miquel.raynal@bootlin.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191002123025.21413-1-miquel.raynal@bootlin.com>
-References: <20191002123025.21413-1-miquel.raynal@bootlin.com>
+        Wed, 2 Oct 2019 08:33:10 -0400
+Received: from mga03.intel.com ([134.134.136.65]:27022 "EHLO mga03.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725766AbfJBMdJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 2 Oct 2019 08:33:09 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 02 Oct 2019 05:33:09 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,574,1559545200"; 
+   d="scan'208";a="205330025"
+Received: from black.fi.intel.com (HELO black.fi.intel.com.) ([10.237.72.28])
+  by fmsmga001.fm.intel.com with ESMTP; 02 Oct 2019 05:33:05 -0700
+From:   Heikki Krogerus <heikki.krogerus@linux.intel.com>
+To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [RFC PATCH 0/2] software node: API documentation
+Date:   Wed,  2 Oct 2019 15:33:03 +0300
+Message-Id: <20191002123305.80012-1-heikki.krogerus@linux.intel.com>
+X-Mailer: git-send-email 2.23.0
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -49,89 +46,28 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The chip has a 'start conversion' and a 'end of conversion' pair of
-pins. They can be used but this is absolutely not mandatory as regular
-polling of the value is totally fine with the current internal
-clocking setup. Turn the interrupts optional and do not error out if
-they are not inquired in the device tree. This has the effect to
-prevent triggered buffers use though.
+Hi,
 
-Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
----
- drivers/iio/adc/max1027.c | 57 +++++++++++++++++++++------------------
- 1 file changed, 31 insertions(+), 26 deletions(-)
+I'm sending this as an RFC first. I would like to wait for the API
+change Dmitry proposed [1] before we add the final API documentation
+for the software nodes.
 
-diff --git a/drivers/iio/adc/max1027.c b/drivers/iio/adc/max1027.c
-index 6cdfe9ef73fc..823223b77a70 100644
---- a/drivers/iio/adc/max1027.c
-+++ b/drivers/iio/adc/max1027.c
-@@ -430,35 +430,40 @@ static int max1027_probe(struct spi_device *spi)
- 		return -ENOMEM;
- 	}
- 
--	ret = devm_iio_triggered_buffer_setup(&spi->dev, indio_dev,
--					&iio_pollfunc_store_time,
--					&max1027_trigger_handler, NULL);
--	if (ret < 0) {
--		dev_err(&indio_dev->dev, "Failed to setup buffer\n");
--		return ret;
--	}
-+	if (spi->irq) {
-+		ret = devm_iio_triggered_buffer_setup(&spi->dev, indio_dev,
-+						      &iio_pollfunc_store_time,
-+						      &max1027_trigger_handler,
-+						      NULL);
-+		if (ret < 0) {
-+			dev_err(&indio_dev->dev, "Failed to setup buffer\n");
-+			return ret;
-+		}
- 
--	st->trig = devm_iio_trigger_alloc(&spi->dev, "%s-trigger",
--							indio_dev->name);
--	if (st->trig == NULL) {
--		ret = -ENOMEM;
--		dev_err(&indio_dev->dev, "Failed to allocate iio trigger\n");
--		return ret;
--	}
-+		st->trig = devm_iio_trigger_alloc(&spi->dev, "%s-trigger",
-+						  indio_dev->name);
-+		if (st->trig == NULL) {
-+			ret = -ENOMEM;
-+			dev_err(&indio_dev->dev,
-+				"Failed to allocate iio trigger\n");
-+			return ret;
-+		}
- 
--	st->trig->ops = &max1027_trigger_ops;
--	st->trig->dev.parent = &spi->dev;
--	iio_trigger_set_drvdata(st->trig, indio_dev);
--	iio_trigger_register(st->trig);
-+		st->trig->ops = &max1027_trigger_ops;
-+		st->trig->dev.parent = &spi->dev;
-+		iio_trigger_set_drvdata(st->trig, indio_dev);
-+		iio_trigger_register(st->trig);
- 
--	ret = devm_request_threaded_irq(&spi->dev, spi->irq,
--					iio_trigger_generic_data_rdy_poll,
--					NULL,
--					IRQF_TRIGGER_FALLING,
--					spi->dev.driver->name, st->trig);
--	if (ret < 0) {
--		dev_err(&indio_dev->dev, "Failed to allocate IRQ.\n");
--		return ret;
-+		ret = devm_request_threaded_irq(&spi->dev, spi->irq,
-+						iio_trigger_generic_data_rdy_poll,
-+						NULL,
-+						IRQF_TRIGGER_FALLING,
-+						spi->dev.driver->name,
-+						st->trig);
-+		if (ret < 0) {
-+			dev_err(&indio_dev->dev, "Failed to allocate IRQ.\n");
-+			return ret;
-+		}
- 	}
- 
- 	/* Disable averaging */
+At this point I would like to know if the generic use is explained
+clearly enough and if there is anything missing that should be added.
+
+[1] https://lkml.org/lkml/2019/9/11/8
+
+thanks,
+
+Heikki Krogerus (2):
+  software node: Add missing kernel-doc function descriptions
+  software node: Add documentation
+
+ Documentation/driver-api/software_node.rst | 197 +++++++++++++++++++++
+ drivers/base/swnode.c                      |  23 +++
+ 2 files changed, 220 insertions(+)
+ create mode 100644 Documentation/driver-api/software_node.rst
+
 -- 
-2.20.1
+2.23.0
 
