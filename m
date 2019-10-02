@@ -4,108 +4,86 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B690CECE58A
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 15:48:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 67C24C352AA
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 15:48:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8ECB221D81
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 15:48:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3F23621848
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 15:48:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570031305;
-	bh=JsedYp4w2ADAPpiKFdN6u1P4tSD3N5UGjygwVyZOcjA=;
+	s=default; t=1570031330;
+	bh=qgj+Htm8Ty5XDGtj2mvSIl2LJNQo9b0XVs1LQEEIQ24=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=P/pVqqpoofW4CibWG4jhsMLHW3M6MGp7UNMUCsYlhF9FVQn4ZMIXBpUBVhJ410KUX
-	 7ar0bUZ9mTkHuuYCY21nyEcbWKAM3tWufdD3VYNWezS6DDgYFntEdbeWtIAQ/Vz83i
-	 QOQccd4yzBvc7sU4mv3bDWVKJJlBsvyVW3olEWoA=
+	b=iGj7uNiYNLdPs6DrRHw0xdZ35tgwKN8ZhpPBvqD2zGTIsR8MBabByhtD99mdrrWo6
+	 /Eb/kNb0a6OrYrOPR1iIjgi3sQvSYzd98l7HZP2kNka6wUOInY1ownlrw2XUSHbjFm
+	 cfTh/dLC5nFegjiTRFsM8dmWwcB7gbgTen9F/ASc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729015AbfJBPsZ (ORCPT
+        id S1729027AbfJBPst (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Oct 2019 11:48:25 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:36481 "EHLO
+        Wed, 2 Oct 2019 11:48:49 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:51661 "EHLO
         mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725799AbfJBPsY (ORCPT
+        with ESMTP id S1726208AbfJBPss (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Oct 2019 11:48:24 -0400
-Received: by mail-wm1-f68.google.com with SMTP id m18so7523621wmc.1;
-        Wed, 02 Oct 2019 08:48:23 -0700 (PDT)
+        Wed, 2 Oct 2019 11:48:48 -0400
+Received: by mail-wm1-f68.google.com with SMTP id 7so7770115wme.1;
+        Wed, 02 Oct 2019 08:48:47 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=IwKP6bZ0/M/GNRiVw0vgEg5C/Drz9g4f2GY67meqLWE=;
-        b=I3BhUdD05maN4HlqZnHRXQv+3zKf0pTyiwmB4Mc06OW6G4rLDijaeWzUIJTBZIXoXb
-         jxMYFmuz7Xq70ZnDTPscRPkOuKF3za0nwFObjAAeKyJAuP4NLtWcdTgjs0Nx4XRFDQnK
-         DcwKmpmiYn+5p1xVo/uog+5Nm4pZ/BsyKvBijeU0w7XRAG5lnynUXlQSh4fHr76Yzq1+
-         w1PbskxiX8xTZfaP1HXRGZ/0AzFVPcYn49SkXHKYgfAW8IkCUglqNNjZ8IwiuJx8/iit
-         1m4fwtgfoOgc72Y/Us0BhJmM9PORr98twPReAS0t812R/qOMFi/B7b6EvDTtWdr4+K5/
-         S+Tg==
-X-Gm-Message-State: APjAAAVZzehGYvcvEo5z0yAWVmNUqBJEElGiu8lT72vCMcH0o8zg2tZi
-        dNufGlvmnFiexUp5RMLsfqQ=
-X-Google-Smtp-Source: APXvYqxeZ2BmgRha6QvpGjz+C0CN04lAeTAC36faPuMfUtJeANX0YHIp1xp1+lIX7zNyzHcuV9uAvQ==
-X-Received: by 2002:a1c:1d85:: with SMTP id d127mr3638645wmd.14.1570031302235;
-        Wed, 02 Oct 2019 08:48:22 -0700 (PDT)
+        bh=L+hxNaDSGun9WXAKThcVXAhiXWk+/gt73mQz7EUTjWo=;
+        b=BqaLRTTncpF84Gsoz/HZErrAv5pXFEmj9k5QwkKYcLmnV3EsaaP05XRx5yD1rGh12e
+         fcKKrdwpwqjGRKI7yr9/ef7BRmo6dIdh8gEJpYLSLDqV4cCyK7S84M9QuK++8/2hlkfr
+         JWpze7jLEOdilE7ZO1KCzbUdjOfDE7cOewqzj0/2U/S2eV6Pw2w5ycbm2AMG+1VWNSeu
+         IUGgcdocJR7U2xvhrkCqYk/+9CvUZJQR+OGm+tsrI6L6Cxp7WG1OVLriA8zNYRqqDD89
+         zwuK/t1qNe8FOqZuXCA77xd/4/qQvOm5i8lFE7hN83rJdrkXhkcI5SI5geYNdGRT2vad
+         O2fA==
+X-Gm-Message-State: APjAAAVDaKmNlbEXct84nZYNSjPODn/6FddVpspfx1qd2YcauSdM2vla
+        3EO7yeMrwDCXd7xFxzV8LcXkkuav
+X-Google-Smtp-Source: APXvYqzw/rAoksd2h8xVjx1/aL0+itOfDm4AXqGRq+B96m/2GvsWHUhTmg85JDurWQYKSx+2fLR1AQ==
+X-Received: by 2002:a7b:cf1a:: with SMTP id l26mr3644534wmg.38.1570031326159;
+        Wed, 02 Oct 2019 08:48:46 -0700 (PDT)
 Received: from kozik-lap ([194.230.155.145])
-        by smtp.googlemail.com with ESMTPSA id o1sm3159082wrs.78.2019.10.02.08.48.20
+        by smtp.googlemail.com with ESMTPSA id q15sm42255773wrg.65.2019.10.02.08.48.44
         (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 02 Oct 2019 08:48:21 -0700 (PDT)
-Date:   Wed, 2 Oct 2019 17:48:19 +0200
+        Wed, 02 Oct 2019 08:48:45 -0700 (PDT)
+Date:   Wed, 2 Oct 2019 17:48:43 +0200
 From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     Rob Herring <robh@kernel.org>
-Cc:     Sylwester Nawrocki <s.nawrocki@samsung.com>, vireshk@kernel.org,
-        robh+dt@kernel.org, kgene@kernel.org, devicetree@vger.kernel.org,
-        linux-pm@vger.kernel.org, linux-samsung-soc@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        b.zolnierkie@samsung.com, m.szyprowski@samsung.com
-Subject: Re: [PATCH v4 2/6] dt-bindings: samsung: Update the CHIP ID binding
- documentation
-Message-ID: <20191002154819.GA4072@kozik-lap>
-References: <20190910123618.27985-1-s.nawrocki@samsung.com>
- <CGME20190910123637eucas1p26d2051f9bdd1bdf4510f1908ea98f641@eucas1p2.samsung.com>
- <20190910123618.27985-3-s.nawrocki@samsung.com>
- <20190917181322.GA683@bogus>
+To:     Marek Szyprowski <m.szyprowski@samsung.com>
+Cc:     linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Maciej Falkowski <m.falkowski@samsung.com>,
+        mark.rutland@arm.com, robh@kernel.org, a.hajda@samsung.com
+Subject: Re: [PATCH v2 resend] ARM: dts: exynos: remove obsolete IRQ lines
+Message-ID: <20191002154843.GB4072@kozik-lap>
+References: <CAJKOXPcs5K46U9mF8evCpbEap_j0Sd5kUk-xiWjwyihAL7te=Q@mail.gmail.com>
+ <CGME20190919134622eucas1p1947abc201f86d414bd0b0635f2d91cfe@eucas1p1.samsung.com>
+ <20190919134547.11671-1-m.szyprowski@samsung.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20190917181322.GA683@bogus>
+In-Reply-To: <20190919134547.11671-1-m.szyprowski@samsung.com>
 User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Sep 17, 2019 at 01:13:22PM -0500, Rob Herring wrote:
-> On Tue, 10 Sep 2019 14:36:14 +0200, Sylwester Nawrocki wrote:
-> > This patch adds documentation of a new optional "samsung,asv-bin"
-> > property in the chipid device node and documents requirement of
-> > "syscon" compatible string.  These additions are needed to support
-> > Exynos ASV (Adaptive Supply Voltage) feature.
-> > 
-> > Signed-off-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
-> > ---
-> > Changes since v3:
-> >  - none
-> > 
-> > Changes since v2:
-> >  - corrected patch summary line prefix, the patch moved in the
-> >    sequence
-> > 
-> > Changes since v1 (RFC):
-> >  - new patch
-> > ---
-> >  .../devicetree/bindings/arm/samsung/exynos-chipid.txt  | 10 ++++++++--
-> >  1 file changed, 8 insertions(+), 2 deletions(-)
-> > 
+On Thu, Sep 19, 2019 at 03:45:47PM +0200, Marek Szyprowski wrote:
+> From: Maciej Falkowski <m.falkowski@samsung.com>
 > 
-> Reviewed-by: Rob Herring <robh@kernel.org>
+> In commit 7222e8db2d50 ("iommu/exynos: Fix build errors") Exynos3250
+> iommu driver stopped supporting two IRQ lines. The second IRQ line in DTS
+> is ignored and is not needed.
+> 
+> Signed-off-by: Maciej Falkowski <m.falkowski@samsung.com>
+> Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
+> ---
+>  arch/arm/boot/dts/exynos3250.dtsi | 9 +++------
 
-Dear Sylwester,
-
-This will create conflicts with conversion to dt-schema (already picked
-up by Rob).
-
-Can you convert this patch to dt-schema format and send it for Rob?
+Thanks, applied.
 
 Best regards,
 Krzysztof
