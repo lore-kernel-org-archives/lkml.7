@@ -2,153 +2,135 @@ Return-Path: <SRS0=zem1=X3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FB88C352AA
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 04:59:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5510DC352AA
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 05:08:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D19582133F
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 04:59:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1A3452086A
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 05:08:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="oEVkss6V"
+	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="Lov1/5+a"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726457AbfJBE7z (ORCPT
+        id S1726705AbfJBFIE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Oct 2019 00:59:55 -0400
-Received: from mail-io1-f67.google.com ([209.85.166.67]:41385 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725941AbfJBE7y (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Oct 2019 00:59:54 -0400
-Received: by mail-io1-f67.google.com with SMTP id n26so25437602ioj.8
-        for <linux-kernel@vger.kernel.org>; Tue, 01 Oct 2019 21:59:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=utqwTvRLyjSsVfZRkt/xO+q4bNl5CsJkNoufFxflxJQ=;
-        b=oEVkss6VR+9MCsjpkKg1eW3moidaorvQjMfZN1aobBTuZpUSiliyZAD/ZB+LSjwIzx
-         ffJcXnSgJUT6H0k5VHNZ8N0lAqZTbi+fmGXl1utWTFytCzdYlsCJfaCKQiHMCWa3jbD/
-         HrmS9VKmNkxVQ3WvL5HS7dGXRTvtKi+Pn4ejI9bscexXo9IjPo9FfiiZNmwCoL7uWpiE
-         3EIqDGN7ic+YN6gruIZhX3E2bGkGijDJxJ1YZwQHkPyE2tbdAS5ZUKUNO2Knw+uAkba+
-         Pi+IOwyNQJGwJMIJmh2CvkWbUL8J/ILcEGUo/IeaaUHYG/ZHyg2Z6VcRhkHylVPJcl76
-         w+ow==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=utqwTvRLyjSsVfZRkt/xO+q4bNl5CsJkNoufFxflxJQ=;
-        b=WFaiZP60qQfj9ftGOtYpc95wYSgSQQaZXadYINjH0v6WTbhiJEi332sDgck70+ScIp
-         +RFahhCbr05Zf8AnZFNXcfHZUu1Iayi0Hyz5fz7yUBgACLrPkobasRFVeCkX+hSwG4ul
-         KYJe+ERcoOS1+PLJy2SdejOJJ6KiQBXgVrkJlIrzfsR685+FmepOV3RO87+R35PLT2ev
-         97yCNNWWF7kW5pgI47B51GCPeNKShIxfCOpWiQ6FNKbMr3svX33d5dukPPRrsbLbu4oy
-         9AVr1TpqVWDDbrTOKkx+DEXl9XrtzYxtl/7jt2in7xtRIHC6bgqZ386svHSfsydFBOr+
-         wXQQ==
-X-Gm-Message-State: APjAAAWuQLXW7+7NbfP8uCWOjVU6/o/ATNGbI6wGr1oH8eIK8IBkXqw6
-        GM4TrJ8HlyO6Ba4jtLTbeWo7EWm1y45hGiNAgeU=
-X-Google-Smtp-Source: APXvYqx06rpxC7ziYaQbDjJwNP8n17yaCIyqxnU/Wrn7tsZo+KpOiuVAlHvBbHJp0PTPCVEpajAbIk+YHTgN7/i1XLQ=
-X-Received: by 2002:a92:4a11:: with SMTP id m17mr1998877ilf.142.1569992393636;
- Tue, 01 Oct 2019 21:59:53 -0700 (PDT)
-MIME-Version: 1.0
-References: <1569899984-16272-1-git-send-email-laoar.shao@gmail.com> <20191001144524.GB3321@techsingularity.net>
-In-Reply-To: <20191001144524.GB3321@techsingularity.net>
-From:   Yafang Shao <laoar.shao@gmail.com>
-Date:   Wed, 2 Oct 2019 12:59:14 +0800
-Message-ID: <CALOAHbCCGhxtnpsc7par1K0dDO4HANh6W_X4_5fTDDKwpPkkWw@mail.gmail.com>
-Subject: Re: [PATCH v2] perf script python: integrate page reclaim analyze script
-To:     Mel Gorman <mgorman@techsingularity.net>
-Cc:     tonyj@suse.com, acme@kernel.org,
-        Peter Zijlstra <peterz@infradead.org>, mingo@redhat.com,
-        alexander.shishkin@linux.intel.com, jolsa@redhat.com,
-        namhyung@kernel.org, Andrew Morton <akpm@linux-foundation.org>,
+        Wed, 2 Oct 2019 01:08:04 -0400
+Received: from mout.web.de ([212.227.15.14]:41291 "EHLO mout.web.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726326AbfJBFID (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 2 Oct 2019 01:08:03 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
+        s=dbaedf251592; t=1569992872;
+        bh=kEfl/Iv1CCzaybc5hroeM7fCim74t5N0mvhbCmJZhh4=;
+        h=X-UI-Sender-Class:Subject:To:Cc:References:From:Date:In-Reply-To;
+        b=Lov1/5+ayi7kQPFuWY5cE4KjQ8MhpzX1DZikCVg6PiUhB8EQRpDbMDEYwL2PkVSoW
+         Jh5bI6niJk3MoViRPvArofzgj69NVOf2ntz9NuZDEEBzwH7vMpprJoPiNnO8t+HiHP
+         iTQqgBpKYHtM+Cs+a6ZaQoEKefQsYfVdVURMBoGc=
+X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
+Received: from [192.168.1.2] ([93.135.73.205]) by smtp.web.de (mrweb004
+ [213.165.67.108]) with ESMTPSA (Nemesis) id 0M95ET-1iPgOr0vcL-00CPyu; Wed, 02
+ Oct 2019 07:07:52 +0200
+Subject: Re: [v2] spi: gpio: prevent memory leak in spi_gpio_probe
+To:     Navid Emamdoost <navid.emamdoost@gmail.com>,
+        linux-spi@vger.kernel.org
+Cc:     Navid Emamdoost <emamd001@umn.edu>, Kangjie Lu <kjlu@umn.edu>,
+        Stephen McCamant <smccaman@umn.edu>,
+        Mark Brown <broonie@kernel.org>,
         LKML <linux-kernel@vger.kernel.org>,
-        Linux MM <linux-mm@kvack.org>, Tony Jones <tonyj@suse.de>
-Content-Type: text/plain; charset="UTF-8"
+        kernel-janitors@vger.kernel.org
+References: <20190930205241.5483-1-navid.emamdoost@gmail.com>
+ <6b55e753-5797-2bdc-fae6-f575a0ef8186@web.de>
+ <CAEkB2ES3-gotqS9184izf0fKOigFaFUetBiqekmYJPBgPWbSBQ@mail.gmail.com>
+From:   Markus Elfring <Markus.Elfring@web.de>
+Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
+ 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 FEE=
+Message-ID: <2a5f9775-6cff-4246-435f-9908bfe5b07b@web.de>
+Date:   Wed, 2 Oct 2019 07:07:43 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.1
+MIME-Version: 1.0
+In-Reply-To: <CAEkB2ES3-gotqS9184izf0fKOigFaFUetBiqekmYJPBgPWbSBQ@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+X-Provags-ID: V03:K1:EepWscPPqkjTYuRxcpWY7vKWJ9nzH5HBEwCxViXdbhWrtPO1p4A
+ Uge/5TWXgiuusXVMduOojmqfGkfOFUWioiXpQHpbl4ws/sA4nxMaFx1gMVkM4llUAESg9qp
+ +wgunckd94u8xSliNvlxr2zx1UPMA8jMyvdCph4mUlbM7JmzsbpQXV+mEQ0RR2l6EDC/Zkd
+ SN4fMV6kBO6O5Vyrb8X6w==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:75gnEgzxpmY=:H2apDDInJJ8KscY6JK6aWY
+ G4BjTe81GQb6HTySg+/2SYQ6h4pfJE3K/KmQviAmJyn6avUw+uRS1xEv+G4T+7IB3dk7QPhwC
+ FPJcxAppq/tBrwXZ6Ij0o9w5+Qy4saEykcchlMRi28HfKNiNmdVlEdCc0CB8MlIxHmiy6+LtR
+ bfWUFTSuPMYTrcuOrE0Zg7bv653VFOWaE2OifTz7h1BhGr3Tp3bXOx+TLPzXF8T0sYX0+oUPA
+ iiu6VGEbkhdj3t0qqMAxDXoVSJClcZIzuiTBtixdcuU0KFcfvuCQjH0ElIrhb3Lu2TOme+RoX
+ sqqMdVYU2bti/GzzmDsFPzQe1Y609ArYxRiySxcueXj9pLDwj09MEXE0QGykmIFCo//FF8c38
+ ztdfB62plPZ8ubbGGvpKcLiXFCS46KA7xSKjSd1IGs9oXuQYhPFmCYrNWyqJhEMXmapTYVGmk
+ 848sez2u0H4OGh4gQ3N06uR8s6Vcr+B8onrcFPkPJe4BrfGRUq+p53+h9/Sqk97KRoW7chv1M
+ +dIyg0b1Nqz5LNn7SA+STNgQXi1WApFEAxQxGNStUXMpBzR8gztDKfW4mNLfwcG/LWchEBiGX
+ Kp1NQWuorLt+b48HbFoXHNYGJcXB8eQkpXizbsZ/dMMo1+nSCWtrZJ8tiFYy0EcG5NYpYWPtz
+ XRS+a+ih1/ZHomZjhy8ZQirMA0uOqBPtysv/CHEg+qKBtxDoFuOqcMj5hGCtOk7Lgra9C0r/8
+ ECtldX53Ya+qM1cc/hfJps9GRBdaJHslfrf94oSH0yEVcLbWdiWwy/foPhs7PGG7SzRyJV12W
+ OhXV70FE/vXE7HNdFWZ2cEpj6Ga9mXEWAjn39Vskzx8RTzrgZPJkQLwXrREacbySfW1xAyTfc
+ J6Ir14a46uIG2cO+BxbYDJqPgJcvu5mRzbNSSjEmmPHJVznuUMOYB/sbm0jdh7ZClTFua74ON
+ yxKxhnaoSEuprQRn7boSRsx0VEkWcoRVbHKa92OvExCZikosecJQinHOi5KKn8hJ6q9xq2urO
+ m1ctYsyM8y2GV/SS3BmJP0fOhvffRoeFlfHnxfvFetD3zxMfGeq97jUadErNara+HZ4CCyS8r
+ todNU+Wep3/fkME9lap6/pj0KDRkoVMFGUw8wkvzIntZA6b+gInrhPCfy/qvTpZifrW+RzO7O
+ y2gHZ4FeBzCHCsMzBwD+ne8OIG8LVMH4uoxWrCcLFo/OWoHFzK/YE7QC2z557fIoe4Edkw3ZZ
+ dd7bnuQsyZOEgHe8sEapnS8zWfJRHZZAUsL+5tlYfG0VgUCuNTle2pgZHxgE=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Oct 1, 2019 at 10:45 PM Mel Gorman <mgorman@techsingularity.net> wrote:
->
-> On Mon, Sep 30, 2019 at 11:19:44PM -0400, Yafang Shao wrote:
-> > A new perf script page-reclaim is introduced in this patch. This new script
-> > is used to report the page reclaim details. The possible usage of this
-> > script is as bellow,
-> > - identify latency spike caused by direct reclaim
-> > - whehter the latency spike is relevant with pageout
-> > - why is page reclaim requested, i.e. whether it is because of memory
-> >   fragmentation
-> > - page reclaim efficiency
-> > etc
-> > In the future we may also enhance it to analyze the memcg reclaim.
-> >
->
-> Hi,
->
-> I ended up not reviewing this patch in detail simply because I would
-> approach the same class of problem in an entirely different way today.
-> There is value in accumulating the stats in a report like this;
->
-> >     $ perf script report page-reclaim
-> >     Direct reclaims: 4924
-> >     Direct latency (ms)        total         max         avg         min
-> >                         177823.211    6378.977      36.114       0.051
-> >     Direct file reclaimed 22920
-> >     Direct file scanned 28306
-> >     Direct file sync write I/O 0
-> >     Direct file async write I/O 0
-> >     Direct anon reclaimed 212567
-> >     Direct anon scanned 1446854
-> >     Direct anon sync write I/O 0
-> >     Direct anon async write I/O 278325
-> >     Direct order      0     1     3
-> >                  4870    23    31
-> >     Wake kswapd requests 716
-> >     Wake order      0     1
-> >                 715     1
-> >
-> >     Kswapd reclaims: 9
->
-> However, the basic option I would prefer is having the raw latency
-> information for Direct latency that can be externally parsed by R or any
-> other statistical method. The reason why is because knowing the max latency
-> is not enough, I'd want to know the spread of latencies and whether they
-> were clustered at a point of time or spread out over long periods of
-> time. I would then build the higher-level reports on top if necessary.
->
-> Today, I would also have considered getting the latency figures using eBPF
-> or systemtap instead although having perf do it may be useful too. That's
-> not universally popular though so at minimum I would have;
->
+> Hi Markus, thanks for your suggestions for improving the quality of
+> the patch. At the moment I prefer first get a confirmation from
+> contributors about the leak and then work on any possible improvements
+> for the patch.
 
-eBPF requires newer kernel, while there're still lots of servers
-running with old kernels.
-The systemtap is not convenient as it requires many debug packages,
-and it is still not stable enough to run on the product environment,
-for example, the systemtap deamon may exit without uninstalling the
-systemtap kernel module.
+Please fix this patch as soon as possible if you care for the correctness
+of the provided information.
 
-> perf script record page-reclaim -- capture all page-reclaim tracepoints
-> perf script report page-reclaim -- For reclaim entry/exit, merge the two
->         tracepoints into one that reports latency. Dump the rest out
->         verbatim
->
-> For latencies, I would externally post-process them until such time as I
-> found a common class of bug that needed a high-level report and then
-> build the perf script support for it.
->
-
-This seem like a good suggestion.
-I will try to think about it.
-
-> Please note that I did not spot anything wrong with your script, it's
-> just that I would not use it myself in its current format for debugging
-> a reclaim-related problem.
->
-> --
-> Mel Gorman
-> SUSE Labs
+Regards,
+Markus
