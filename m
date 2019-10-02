@@ -2,112 +2,108 @@ Return-Path: <SRS0=zem1=X3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 575F5ECE587
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 03:20:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B630C352AA
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 03:23:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2D3A92133F
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 03:20:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5A4B22133F
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 03:23:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OOnxpEhN"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kOuTnaXi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729470AbfJBDUU (ORCPT
+        id S1729544AbfJBDXt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Oct 2019 23:20:20 -0400
-Received: from mail-qt1-f196.google.com ([209.85.160.196]:35427 "EHLO
-        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726869AbfJBDUU (ORCPT
+        Tue, 1 Oct 2019 23:23:49 -0400
+Received: from mail-io1-f68.google.com ([209.85.166.68]:44739 "EHLO
+        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725905AbfJBDXs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Oct 2019 23:20:20 -0400
-Received: by mail-qt1-f196.google.com with SMTP id m15so24572872qtq.2;
-        Tue, 01 Oct 2019 20:20:19 -0700 (PDT)
+        Tue, 1 Oct 2019 23:23:48 -0400
+Received: by mail-io1-f68.google.com with SMTP id w12so25475090iol.11;
+        Tue, 01 Oct 2019 20:23:48 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=3efpfs9sL1/jMPSW+62FKUauwr4+fAsqJKtdAl4Znuk=;
-        b=OOnxpEhNAewa4hDSxdaIuGOMrRwwISKvSnNw/D/bO+aQn5BWbAQxtzznvLW9Eh9pup
-         N3RNjc2mcJmzCojIF1aMtWZwkkUg+TCdNBrsXzGDaYgQAAP9alE6JaFWTg1LV2y7iSLm
-         euecTyJrb68l8FGWN0TsCQMRbtnJ1SEEUdiprZ/0y7UwC1sUekqGEEskFRwvtEEd6a3s
-         e83Hc/AEK9KPRpvqaYi+QVZEHWW0Rx2h3Ji6ZO+LKGLx4bVXYyhil0jGdzKQnQpmYx67
-         NwJImDtWql4ihaitq+RfoQSjgNOT1j+c/V3xfxDNiv7WLi+1Qm0qlrIScGSN9k5bfX29
-         2iaQ==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=yI9RSLxWCR6Ot4uEKdHKvzkRAPkPIl0Uimc/YPRNYt0=;
+        b=kOuTnaXiRVaCbKl7zkp2BrejBdpktLIEXYoza20PYozR3ol9msNdB9ngKkRFG41v43
+         kUpaJrPa3/awfKFUN4v+Ab6ls2aYMfJrqGIxaKHtWIkFdxitEdLlI/AByokEfJ6BxK6a
+         zDCp/7zDwbzgwDs4TNhxzrwNK3klAEfbU7Mc1kWRcjDTgYF9MQB+JMedMd0JxweRZmLg
+         hdbuHvMO02JffpWoiaL/mz2bSHZjKtfTGWeazFgQSNf6+MzGzyz+Re6GldVayIMXRYXA
+         qNIuMLs6/4ThvRwhTaXLX8PxaL1uyDxBuQETp9uGc5EAvRZdRRQ/dbsTkyUCsE4OZk3y
+         3m+Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=3efpfs9sL1/jMPSW+62FKUauwr4+fAsqJKtdAl4Znuk=;
-        b=Y0OwNSJSy+rxcXOeTiExsTPljI2/PMpeq6RUlyl++lUY6j8/ZQsbBbnWh5aGE5CYiM
-         prQuEyBsWgK4bvxdxoRqLLRWJXR8YofCWDeo5Y5bOjZv/M16HCmF4HVzcru/e8EjfzOv
-         0Z4PQjgMl5sfgHwY+HaXnIcgoIDN/qf4IT34/Q3SCCzcO2Xf3UkFXD9Y/FLTo8080Z7t
-         Usr4NUzlyvbPiaF1Xogf9bJMoI0lUApBszJB861+uXa2bG9j/DfH5Q0V9VaFakxMgmHp
-         HJRzcdjuLWdQSr6w2Cl1JyASWEJk8lSmzahbbx0WZAnv1f0HHYOlfJZlKfmcElB4S3S9
-         3u7w==
-X-Gm-Message-State: APjAAAWADIzxr7hcAB/QnhnwP1NAOa8Mu9IEU2fu0ZM5kJ0h3/bFTLyz
-        V6wFc6V1KHJlZ3VPKzjgQlOK6rXN8HKrubAZ4PY=
-X-Google-Smtp-Source: APXvYqzOm2BoB9dmMXQqhBxSToBiMgwzyvrvr6ybB7GR7rW1AYzevtXVB1nJAt4rbKfkIuonpEm5+19tVuMwd/v9v4s=
-X-Received: by 2002:ac8:5147:: with SMTP id h7mr1862596qtn.117.1569986418840;
- Tue, 01 Oct 2019 20:20:18 -0700 (PDT)
-MIME-Version: 1.0
-References: <20191001173728.149786-1-brianvv@google.com> <20191001173728.149786-3-brianvv@google.com>
-In-Reply-To: <20191001173728.149786-3-brianvv@google.com>
-From:   Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date:   Tue, 1 Oct 2019 20:20:07 -0700
-Message-ID: <CAEf4BzYxs6Ace8s64ML3pA9H4y0vgdWv_vDF57oy3i-O_G7c-g@mail.gmail.com>
-Subject: Re: [PATCH bpf 2/2] selftests/bpf: test_progs: don't leak server_fd
- in test_sockopt_inherit
-To:     Brian Vazquez <brianvv@google.com>
-Cc:     Brian Vazquez <brianvv.kernel@gmail.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        "David S . Miller" <davem@davemloft.net>,
-        Stanislav Fomichev <sdf@google.com>,
-        open list <linux-kernel@vger.kernel.org>,
-        Networking <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=yI9RSLxWCR6Ot4uEKdHKvzkRAPkPIl0Uimc/YPRNYt0=;
+        b=VYZHbrXDDRFX7nwOjhVzid0P6CBWkncp+nlnrDydntixUWxzXQ7prd+QTnTWpofE3k
+         JOgaPf2Zo/q/PykTrrCHwMuwoFH/kAZIpjIMVUByOgG+Gxn9uKpk5esE2Ko7yMS4O6Ty
+         uQzl4CHrrcijU/6n4mqNFZKbdioQCK9rtxP0Ul6uUtrnnRVWsRJnaQuepq2jPcXLRtdN
+         BROVqCDIRmTPzkZuhwBjb47jP4AzmS1GxbxdLHxw61KUddKs3xKi5KxT3Y7RIj90EBXJ
+         jUP+sOlWzdzP1L7mDBxMdMG3FVe7SN97tEHdewItI49qUrWq0rLxDW3hnTq5ORFXcsvs
+         quBA==
+X-Gm-Message-State: APjAAAXbrSv70aautZhUe+60acquaVhPEtGtxIh77RFD4uJ0wWxng9ZJ
+        xOLL1a18Z2PSLNioLACqlXIL9JIY31M=
+X-Google-Smtp-Source: APXvYqzxoiq9WKVaVbSUa64LlFPZJpYM5lXa05/gzKQSCPYbgkMxeM8i7oUMYHZXKnEUuOye4KqELw==
+X-Received: by 2002:a6b:8b08:: with SMTP id n8mr1384861iod.190.1569986627937;
+        Tue, 01 Oct 2019 20:23:47 -0700 (PDT)
+Received: from cs-dulles.cs.umn.edu (cs-dulles.cs.umn.edu. [128.101.35.54])
+        by smtp.googlemail.com with ESMTPSA id l21sm7548339iok.87.2019.10.01.20.23.46
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 01 Oct 2019 20:23:47 -0700 (PDT)
+From:   Navid Emamdoost <navid.emamdoost@gmail.com>
+To:     jgg@ziepe.ca
+Cc:     emamd001@umn.edu, smccaman@umn.edu, kjlu@umn.edu,
+        Navid Emamdoost <navid.emamdoost@gmail.com>,
+        Mike Marciniszyn <mike.marciniszyn@intel.com>,
+        Dennis Dalessandro <dennis.dalessandro@intel.com>,
+        Doug Ledford <dledford@redhat.com>, linux-rdma@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v2] IB/hfi1: prevent memory leak in sdma_init
+Date:   Tue,  1 Oct 2019 22:23:33 -0500
+Message-Id: <20191002032334.19965-1-navid.emamdoost@gmail.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20191001144019.GA12597@ziepe.ca>
+References: <20191001144019.GA12597@ziepe.ca>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Oct 1, 2019 at 10:40 AM Brian Vazquez <brianvv@google.com> wrote:
->
+In sdma_init if rhashtable_init fails the allocated memory for
+tmp_sdma_rht should be released.
 
-I don't think there is a need to add "test_progs:" to subject, "
-test_sockopt_inherit" is specific enough ;)
+Fixes: 5a52a7acf7e2 ("IB/hfi1: NULL pointer dereference when freeing rhashtable")
+Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
+---
+Changes in v2:
+	-- added Fixes tag.
+---
+ drivers/infiniband/hw/hfi1/sdma.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-> server_fd needs to be close if pthread can't be created.
+diff --git a/drivers/infiniband/hw/hfi1/sdma.c b/drivers/infiniband/hw/hfi1/sdma.c
+index 2395fd4233a7..2ed7bfd5feea 100644
+--- a/drivers/infiniband/hw/hfi1/sdma.c
++++ b/drivers/infiniband/hw/hfi1/sdma.c
+@@ -1526,8 +1526,11 @@ int sdma_init(struct hfi1_devdata *dd, u8 port)
+ 	}
+ 
+ 	ret = rhashtable_init(tmp_sdma_rht, &sdma_rht_params);
+-	if (ret < 0)
++	if (ret < 0) {
++		kfree(tmp_sdma_rht);
+ 		goto bail;
++	}
++
+ 	dd->sdma_rht = tmp_sdma_rht;
+ 
+ 	dd_dev_info(dd, "SDMA num_sdma: %u\n", dd->num_sdma);
+-- 
+2.17.1
 
-typo: closed
-
->
-> Fixes: e3e02e1d9c24 ("selftests/bpf: test_progs: convert test_sockopt_inherit")
-> Cc: Stanislav Fomichev <sdf@google.com>
-> Signed-off-by: Brian Vazquez <brianvv@google.com>
-> ---
-
-Acked-by: Andrii Nakryiko <andriin@fb.com>
-
->  tools/testing/selftests/bpf/prog_tests/sockopt_inherit.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/tools/testing/selftests/bpf/prog_tests/sockopt_inherit.c b/tools/testing/selftests/bpf/prog_tests/sockopt_inherit.c
-> index 6cbeea7b4bf16..8547ecbdc61ff 100644
-> --- a/tools/testing/selftests/bpf/prog_tests/sockopt_inherit.c
-> +++ b/tools/testing/selftests/bpf/prog_tests/sockopt_inherit.c
-> @@ -195,7 +195,7 @@ static void run_test(int cgroup_fd)
->
->         if (CHECK_FAIL(pthread_create(&tid, NULL, server_thread,
->                                       (void *)&server_fd)))
-> -               goto close_bpf_object;
-> +               goto close_server_fd;
->
->         pthread_mutex_lock(&server_started_mtx);
->         pthread_cond_wait(&server_started, &server_started_mtx);
-> --
-> 2.23.0.444.g18eeb5a265-goog
->
