@@ -2,100 +2,227 @@ Return-Path: <SRS0=zem1=X3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 50BE2C4360C
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 21:27:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CA84C4360C
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 21:31:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 16DB721783
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 21:27:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5DA5B2070B
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 21:31:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Vb5V5wS0"
+	dkim=pass (2048-bit key) header.d=gateworks-com.20150623.gappssmtp.com header.i=@gateworks-com.20150623.gappssmtp.com header.b="ndXGQW8d"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729534AbfJBV1u (ORCPT
+        id S1728750AbfJBVbP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Oct 2019 17:27:50 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:46929 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728883AbfJBV1t (ORCPT
+        Wed, 2 Oct 2019 17:31:15 -0400
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:33384 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727938AbfJBVbP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Oct 2019 17:27:49 -0400
-Received: by mail-pf1-f193.google.com with SMTP id q5so262126pfg.13
-        for <linux-kernel@vger.kernel.org>; Wed, 02 Oct 2019 14:27:49 -0700 (PDT)
+        Wed, 2 Oct 2019 17:31:15 -0400
+Received: by mail-wm1-f67.google.com with SMTP id r17so5820354wme.0
+        for <linux-kernel@vger.kernel.org>; Wed, 02 Oct 2019 14:31:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
+        d=gateworks-com.20150623.gappssmtp.com; s=20150623;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Ff5/X8LijthYfBkRMosRh8V5DWdVMBmSJpWGhDefc4M=;
-        b=Vb5V5wS0B2+OZP1hBBvp/X0BN8J2HU5kfLxwxgDecAUheVPlHvun2OYXtJRwp3FY64
-         B/rNa+xoUubebYIt9wU6UtQvz74/wh9aaLvwc1qLfrA4CcdAcvlG/WnwhXR6tVf3o9Pq
-         6+kyVsT0p3gDAYf45MjahfyuIfSGJTw8yfHpocnjbuDtgx5ctlNxMGLoYG0NXQm/HPkH
-         bgEL6k2l8Alsn0ErHQURhPrnycDhI7j24owjoOxuvFkricWBTQuucujCDaRWvcogBUiu
-         J1w4QRQDUslmdgTvSO+cKA2COYYX84VW86bw6Ncpr4pIp3Fyn+urmRyNQX4v3S1OSWf4
-         QmxA==
+         :cc:content-transfer-encoding;
+        bh=D56EsFq+yogK9cZiFVw/DPVTGWBKef8F8jcSR/AKQ3g=;
+        b=ndXGQW8dDRe7QL3ebDDBLuk+VCzPs2kCAhtNkD6GN7Id6Nm107AddEb5XrRS6xOGs5
+         3ewGtj1pU625UJJaF89Fi7YTjOkMNSwKq80EtosEuFY6nlPD2YEqZAbgZVheDMYUDh7X
+         1YcsZPJZ3z8ITpVWHpZNqJglyvmrL42bVATwKnjZdLXBVFMIpNuvFcGL0hTt8dvdcAlP
+         XPNAbid0yeHa+Vb27VSVWI3ZAnWhkbQJ3NiCa6TCDcIFSemhhI/qJmB2EzTjALlEe3ER
+         Spy4z4mT4mZRXKmGJBdpOPM0RvFKv7Q0Xm176Ps/A0nEfgnTTvj9MEn8jzb7J7YLnDg0
+         JQpA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Ff5/X8LijthYfBkRMosRh8V5DWdVMBmSJpWGhDefc4M=;
-        b=YEmbLOKnKC4s7u/F9E9JmBGXh4gcq+zSRciVZFA6Lq6ZNTBygj9WlrhpN66EKc46O2
-         hxEDv9TdC1g+x+8IQDAHV3fFSNEf9UOyl252lh3lrY3r8zfkz8R67yaPI0gPNTWGNqyr
-         z0MM5x07YtCXx4NtS+oiewqbNWQ6Evj2uzGMejU8BHtKhCf+HNRUFLsOzvKcOKql3kBS
-         jvg9nwxHTnVTLvvCzJ6BAbYD7Fo4/qKFAnga6BWHjT9LEkG5XSOwObBPtFM+yz1p4EC3
-         ecN2O9XsZHqoUuOv624S0pSvC16uqqCQ8gznUg8y/3gbDSmnykTQhWvFm2bkvNIi+Ze9
-         QGrw==
-X-Gm-Message-State: APjAAAVRRjP4G29GoqaBDlmWNflLlE9GkK6/kwjw3a5CKKqiXVTduHYP
-        Tvrg4/PWa9B0YxwjIb3utwePkyTxdDVGzO8tVVXJZw==
-X-Google-Smtp-Source: APXvYqxNdOGB2WGWCnghLz9uwjolnJyOa8vlr+WnUyO0zmr1/ot3q/S+YF1u1IXNHz8osGDRHnZWrd80t7vHOCyQN88=
-X-Received: by 2002:a17:90a:154f:: with SMTP id y15mr77517pja.73.1570051668780;
- Wed, 02 Oct 2019 14:27:48 -0700 (PDT)
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=D56EsFq+yogK9cZiFVw/DPVTGWBKef8F8jcSR/AKQ3g=;
+        b=K9TVjC8FA3JaqDGSaXDy+iuNaaBhQkOaKvLw1FRg5jgiLyY/c0LXtm0pioCk5TS5qH
+         oFjHpWxf1ckVYIfnVKv4ssbfecrBBkksa28LePwLPtzBgYg4VJ98JfSDrgx/KvHfsKOh
+         5y+q/+kzb9s5ThaL/m8ijk1cLTsFScujNfgTOvr3CWIwCHYmOUM0REuR8Y/tQ8gpLNmS
+         bgf7J55y4Ocu5S14vzgkCjr7disfR5D8HmRbrt0rh96oeUn8yNow3qdkXLVOzwNWAXNU
+         Ve1nyZxClDdmjtbFgAQEiO5aDt9o0R4o1SQKQm4wjOPO2Vqcc92PDAOVH+PhHYSI9/jr
+         5CXA==
+X-Gm-Message-State: APjAAAVyzfcxWpjWX7PJKr8NxMOwKvVDaGbuJrmJT3StJvNwoxHtiHjo
+        SAkGfskFuTN1kJx7VPNxbfkxkkkhrucFcnHi/cpgjg==
+X-Google-Smtp-Source: APXvYqz2QZS7BdayHg+2SnsBWPxtjj5tVeN8+qLN0rDo7mEdZlszS3Ep4dzs9PAR6oOiJROuk6NKNpPxhN37ESfhQ9c=
+X-Received: by 2002:a05:600c:2059:: with SMTP id p25mr4659990wmg.50.1570051871886;
+ Wed, 02 Oct 2019 14:31:11 -0700 (PDT)
 MIME-Version: 1.0
-References: <20191002120136.1777161-1-arnd@arndb.de> <20191002120136.1777161-5-arnd@arndb.de>
- <CAKwvOdmjM80XP7VH83iLn=8mz6W1+SbXST2FChEnH0LSRRm4pA@mail.gmail.com> <CADnq5_MyUp9OkqM+MUHZ8BpLEe5afBpAqOwQxDwAWgvVvqbpoQ@mail.gmail.com>
-In-Reply-To: <CADnq5_MyUp9OkqM+MUHZ8BpLEe5afBpAqOwQxDwAWgvVvqbpoQ@mail.gmail.com>
-From:   Nick Desaulniers <ndesaulniers@google.com>
-Date:   Wed, 2 Oct 2019 14:27:37 -0700
-Message-ID: <CAKwvOd=+VeD4xchCAyKeBtTD8+qwS6BTVgM=4ZDY1kBQJq3wMQ@mail.gmail.com>
-Subject: Re: [PATCH 4/6] drm/amd/display: fix dcn21 Makefile for clang
-To:     Alex Deucher <alexdeucher@gmail.com>
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        "David (ChunMing) Zhou" <David1.Zhou@amd.com>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        Leo Li <sunpeng.li@amd.com>,
-        Bhawanpreet Lakha <Bhawanpreet.Lakha@amd.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        amd-gfx list <amd-gfx@lists.freedesktop.org>,
-        David Airlie <airlied@linux.ie>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Harry Wentland <harry.wentland@amd.com>,
-        =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>
+References: <20190827215539.1286-1-mmichilot@gateworks.com>
+ <cb3e9be4-9ce6-354f-bb7c-a4710edc1c1b@xs4all.nl> <20190829142931.GZ28351@bigcity.dyn.berto.se>
+ <CAJ+vNU11HTcP8L5J2Xg+Rmhvb8JDYemhJxt-GaGG5Myk3n38Tw@mail.gmail.com>
+ <20190927190454.GA7409@bigcity.dyn.berto.se> <CAJ+vNU2shAbnLO9TY4dtPupLxE4UFvNi9FXoFF4MfPbtbAZo=g@mail.gmail.com>
+ <20190927204340.GB7409@bigcity.dyn.berto.se>
+In-Reply-To: <20190927204340.GB7409@bigcity.dyn.berto.se>
+From:   Tim Harvey <tharvey@gateworks.com>
+Date:   Wed, 2 Oct 2019 14:31:00 -0700
+Message-ID: <CAJ+vNU2=cXvi3f67igJX03rONodaPkuSRPS=x9WPSxwLnOEUvA@mail.gmail.com>
+Subject: Re: [PATCH] media: i2c: adv7180: fix adv7280 BT.656-4 compatibility
+To:     =?UTF-8?Q?Niklas_S=C3=B6derlund?= <niklas.soderlund@ragnatech.se>,
+        Hans Verkuil <hverkuil@xs4all.nl>
+Cc:     Matthew Michilot <matthew.michilot@gmail.com>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        linux-media <linux-media@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        Steve Longerbeam <slongerbeam@gmail.com>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Oct 2, 2019 at 2:24 PM Alex Deucher <alexdeucher@gmail.com> wrote:
+On Fri, Sep 27, 2019 at 1:43 PM Niklas S=C3=B6derlund
+<niklas.soderlund@ragnatech.se> wrote:
 >
-> On Wed, Oct 2, 2019 at 5:19 PM Nick Desaulniers <ndesaulniers@google.com> wrote:
+> Hi Tim,
+>
+> On 2019-09-27 12:26:40 -0700, Tim Harvey wrote:
+> > On Fri, Sep 27, 2019 at 12:04 PM Niklas S=C3=B6derlund
+> > <niklas.soderlund@ragnatech.se> wrote:
+> > >
+> > > Hi Tim,
+> > >
+> > > Sorry for taking to so long to look at this.
+> > >
+> > > On 2019-09-23 15:04:47 -0700, Tim Harvey wrote:
+> > > > On Thu, Aug 29, 2019 at 7:29 AM Niklas S=C3=B6derlund
+> > > > <niklas.soderlund@ragnatech.se> wrote:
+> > > > >
+> > > > > Hi,
+> > > > >
+> > > > > On 2019-08-29 13:43:49 +0200, Hans Verkuil wrote:
+> > > > > > Adding Niklas.
+> > > > > >
+> > > > > > Niklas, can you take a look at this?
+> > > > >
+> > > > > I'm happy to have a look at this. I'm currently moving so all my =
+boards
+> > > > > are in a box somewhere. I hope to have my lab up and running next=
+ week,
+> > > > > so if this is not urgent I will look at it then.
+> > > > >
+> > > >
+> > > > Niklas,
+> > > >
+> > > > Have you looked at this yet? Without this patch the ADV7280A does n=
+ot
+> > > > output proper BT.656. We tested this on a Gateworks Ventana GW5404-=
+G
+> > > > which uses the ADV7280A connected to the IMX6 CSI parallel bus. I'm
+> > > > hoping to see this get merged and perhaps backported to older kerne=
+ls.
+> > >
+> > > I only have access to an adv7180 so I was unable to test this patch.
+> > > After reviewing the documentation I think the patch is OK if what you
+> > > want is to unconditionally switch the driver from outputting BT.656-3=
+ to
+> > > outputting BT.656-4.
+> > >
+> > > As this change would effect a large number of compat strings (adv7280=
+,
+> > > adv7280-m, adv7281, adv7281-m, adv7281-ma, adv7282, adv7282-m) and th=
+e
+> > > goal is to back port it I'm a bit reluctant to adding my tag to this
+> > > patch as I'm not sure if this will break other setups.
+> > >
+> > > From the documentation about the BT.656-4 register (address 0x04 bit =
+7):
+> > >
+> > >     Between Revision 3 and Revision 4 of the ITU-R BT.656 standards,
+> > >     the ITU has changed the toggling position for the V bit within
+> > >     the SAV EAV codes for NTSC. The ITU-R BT.656-4 standard
+> > >     bit allows the user to select an output mode that is compliant
+> > >     with either the previous or new standard. For further information=
+,
+> > >     visit the International Telecommunication Union website.
+> > >
+> > >     Note that the standard change only affects NTSC and has no
+> > >     bearing on PAL.
+> > >
+> > >     When ITU-R BT.656-4 is 0 (default), the ITU-R BT.656-3
+> > >     specification is used. The V bit goes low at EAV of Line 10
+> > >     and Line 273.
+> > >
+> > >     When ITU-R BT.656-4 is 1, the ITU-R BT.656-4 specification is
+> > >     used. The V bit goes low at EAV of Line 20 and Line 283.
+> > >
+> > > Do you know what effects such a change would bring? Looking at the
+> > > driver BT.656-4 seems to be set unconditionally for some adv7180 chip=
+s.
+> > >
 > >
-> > Alex, do you know why the AMDGPU driver uses a different stack
-> > alignment (16B) than the rest of the x86 kernel?  (see
-> > arch/x86/Makefile which uses 8B stack alignment).
+> > Niklas,
+> >
+> > Quite simply, we have a board that has an ADV7180 attached to the
+> > parallel CSI of an IMX6 that worked fine with mainline drivers then
+> > when we revised this board to attach an ADV7280A in the same way
+> > capture failed to sync. Investigation showed that the NEWAVMODE
+> > differed between the two.
 >
-> Not sure.  Maybe Harry can comment.  I think it was added for the
-> floating point stuff.  Not sure if it's strictly required or not.
+> I understand your problem, the driver configures adv7180 and adv7280
+> differently.
+>
+> >
+> > So if the point of the driver is to configure the variants in the same
+> > way, this patch needs to be applied.
+>
+> I'm not sure that is the point of the driver. As the driver today
+> configures different compatible strings differently. Some as ITU-R
+> BT.656-3 and some as ITU-R BT.656-4, I can only assume there is a reason
+> for that.
+>
+> >
+> > I would maintain that the adv7180 comes up with NEWAVMODE enabled and
+> > in order to be compatible we must configure the adv7282 the same.
+> >
+> > The same argument can be made for setting the V bit end position in
+> > NTSC mode - its done for the adv7180 so for compatible output it
+> > should be done for the adv7282.
+>
+> I understand that this is needed to make it a drop-in replacement for
+> the adv7180 in your use-case. But I'm not sure it is a good idea for
+> other users of the driver. What if someone is already using a adv7282 on
+> a board and depends on it providing ITU-R BT.656-3 and the old settings?
+> If this patch is picked up there use-cases may break.
+>
+> I'm not sure what the best way forward is I'm afraid. Looking at
+> video-interfaces.txt we have a device tree property bus-type which is
+> used to describe the bus is a BT.656 bus but not which revision of it.
+>
+> I'm not really found of driver specific bus descriptions, but maybe this
+> is a case where one might consider adding one? Hans what do you think?
+>
 
-Can you find out for me please who knows more about this and setup a
-chat with all of us? (I don't want to deride this patch's review
-thread, so let's start a new thread once we know more) We're facing
-some interesting runtime issues when built with Clang.
+Niklas / Hans,
 
--- 
-Thanks,
-~Nick Desaulniers
+Thanks for the feedback. I thought that the goal of any 'compatible'
+device should be to be configured identically. If that's not the case
+then we need more discussion for sure.
+
+There are 3 registers being changed by this patch which do the
+following for the adv7182/adv7280/adv7181/adv7282:
+- change output from BT656-3 to BT656-4 (as the driver does this for adv718=
+0)
+- enable NEWAVMODE meaning EAV/SAV codes are configurable (new code
+but adv7180 enables this by power-on default and adv7280 does not)
+- configure V bit end count (to be what adv7180 uses; this isn't used
+if NEWAVMODE is disabled)
+
+So its not only the question of how to decide to configure BT656-3 vs
+BT656-4 but how to deal with differences in the EAV/SAV codes. I'm not
+an expert so I don't know what configuration is BT656 compliant and of
+course without knowing who is using these devices we can't tell what
+would break even if we fix something that may be misconfigured already
+(or even completely unused).
+
+I'm cc'ing Steve Longerbeam as well as at one point he was suggesting
+adding a 'newavmode' property to the adv7180 bindings and likely
+recalls the discussions there.
+
+Tim
