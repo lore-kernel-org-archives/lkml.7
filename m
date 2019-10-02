@@ -2,170 +2,56 @@ Return-Path: <SRS0=zem1=X3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 481E9C4360C
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 23:22:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ABA21C4360C
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 23:25:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 277F0215EA
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 23:22:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 85E89222BE
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 23:25:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728696AbfJBXWR (ORCPT
+        id S1728762AbfJBXZT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Oct 2019 19:22:17 -0400
-Received: from cassarossa.samfundet.no ([193.35.52.29]:54223 "EHLO
-        cassarossa.samfundet.no" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727964AbfJBXWR (ORCPT
+        Wed, 2 Oct 2019 19:25:19 -0400
+Received: from shards.monkeyblade.net ([23.128.96.9]:38012 "EHLO
+        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727281AbfJBXZT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Oct 2019 19:22:17 -0400
-X-Greylist: delayed 2394 seconds by postgrey-1.27 at vger.kernel.org; Wed, 02 Oct 2019 19:22:15 EDT
-Received: from egtvedt by cassarossa.samfundet.no with local (Exim 4.92)
-        (envelope-from <egtvedt@samfundet.no>)
-        id 1iFnK7-0001zj-JS; Thu, 03 Oct 2019 00:42:19 +0200
-Date:   Thu, 3 Oct 2019 00:42:19 +0200
-From:   Hans-Christian Noren Egtvedt <egtvedt@samfundet.no>
-To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc:     linux-input@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] Input: gpio_mouse - switch to using input device polling
- mode
-Message-ID: <20191002224219.GA6203@samfundet.no>
-References: <20191002220048.GA137235@dtor-ws>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191002220048.GA137235@dtor-ws>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Wed, 2 Oct 2019 19:25:19 -0400
+Received: from localhost (unknown [IPv6:2601:601:9f00:1e2::3d5])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id 6AE3F1551EF10;
+        Wed,  2 Oct 2019 16:25:18 -0700 (PDT)
+Date:   Wed, 02 Oct 2019 16:25:09 -0700 (PDT)
+Message-Id: <20191002.162509.887188013929694661.davem@davemloft.net>
+To:     mcroce@redhat.com
+Cc:     netdev@vger.kernel.org, antoine.tenart@bootlin.com,
+        maxime.chevallier@bootlin.com, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH net-next] mvpp2: remove misleading comment
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <20191002214904.10887-1-mcroce@redhat.com>
+References: <20191002214904.10887-1-mcroce@redhat.com>
+X-Mailer: Mew version 6.8 on Emacs 26.1
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Wed, 02 Oct 2019 16:25:18 -0700 (PDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Around Wed 02 Oct 2019 15:00:48 -0700 or thereabout, Dmitry Torokhov wrote:
-> Now that instances of input_dev support polling mode natively,
-> we no longer need to create input_polled_dev instance.
-> 
-> Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+From: Matteo Croce <mcroce@redhat.com>
+Date: Wed,  2 Oct 2019 23:49:04 +0200
 
-Acked-by: Hans-Christian Noren Egtvedt <egtvedt@samfundet.no>
-
-> ---
->  drivers/input/mouse/Kconfig      |  1 -
->  drivers/input/mouse/gpio_mouse.c | 45 ++++++++++++++------------------
->  2 files changed, 20 insertions(+), 26 deletions(-)
+> Recycling in mvpp2 has gone long time ago, but two comment still refers
+> to it. Remove those two misleading comments as they generate confusion.
 > 
-> diff --git a/drivers/input/mouse/Kconfig b/drivers/input/mouse/Kconfig
-> index 652c38e3c0b5..bf738d3b7fe4 100644
-> --- a/drivers/input/mouse/Kconfig
-> +++ b/drivers/input/mouse/Kconfig
-> @@ -381,7 +381,6 @@ config MOUSE_VSXXXAA
->  config MOUSE_GPIO
->  	tristate "GPIO mouse"
->  	depends on GPIOLIB || COMPILE_TEST
-> -	select INPUT_POLLDEV
->  	help
->  	  This driver simulates a mouse on GPIO lines of various CPUs (and some
->  	  other chips).
-> diff --git a/drivers/input/mouse/gpio_mouse.c b/drivers/input/mouse/gpio_mouse.c
-> index 461436f6f087..23507fce3a2b 100644
-> --- a/drivers/input/mouse/gpio_mouse.c
-> +++ b/drivers/input/mouse/gpio_mouse.c
-> @@ -8,7 +8,7 @@
->  
->  #include <linux/module.h>
->  #include <linux/platform_device.h>
-> -#include <linux/input-polldev.h>
-> +#include <linux/input.h>
->  #include <linux/gpio/consumer.h>
->  #include <linux/property.h>
->  #include <linux/of.h>
-> @@ -43,10 +43,9 @@ struct gpio_mouse {
->   * Timer function which is run every scan_ms ms when the device is opened.
->   * The dev input variable is set to the the input_dev pointer.
->   */
-> -static void gpio_mouse_scan(struct input_polled_dev *dev)
-> +static void gpio_mouse_scan(struct input_dev *input)
->  {
-> -	struct gpio_mouse *gpio = dev->private;
-> -	struct input_dev *input = dev->input;
-> +	struct gpio_mouse *gpio = input_get_drvdata(input);
->  	int x, y;
->  
->  	if (gpio->bleft)
-> @@ -71,18 +70,17 @@ static int gpio_mouse_probe(struct platform_device *pdev)
->  {
->  	struct device *dev = &pdev->dev;
->  	struct gpio_mouse *gmouse;
-> -	struct input_polled_dev *input_poll;
->  	struct input_dev *input;
-> -	int ret;
-> +	int error;
->  
->  	gmouse = devm_kzalloc(dev, sizeof(*gmouse), GFP_KERNEL);
->  	if (!gmouse)
->  		return -ENOMEM;
->  
->  	/* Assign some default scanning time */
-> -	ret = device_property_read_u32(dev, "scan-interval-ms",
-> -				       &gmouse->scan_ms);
-> -	if (ret || gmouse->scan_ms == 0) {
-> +	error = device_property_read_u32(dev, "scan-interval-ms",
-> +					 &gmouse->scan_ms);
-> +	if (error || gmouse->scan_ms == 0) {
->  		dev_warn(dev, "invalid scan time, set to 50 ms\n");
->  		gmouse->scan_ms = 50;
->  	}
-> @@ -112,23 +110,14 @@ static int gpio_mouse_probe(struct platform_device *pdev)
->  	if (IS_ERR(gmouse->bright))
->  		return PTR_ERR(gmouse->bright);
->  
-> -	input_poll = devm_input_allocate_polled_device(dev);
-> -	if (!input_poll) {
-> -		dev_err(dev, "not enough memory for input device\n");
-> +	input = devm_input_allocate_device(dev);
-> +	if (!input)
->  		return -ENOMEM;
-> -	}
-> -
-> -	platform_set_drvdata(pdev, input_poll);
-> -
-> -	/* set input-polldev handlers */
-> -	input_poll->private = gmouse;
-> -	input_poll->poll = gpio_mouse_scan;
-> -	input_poll->poll_interval = gmouse->scan_ms;
->  
-> -	input = input_poll->input;
->  	input->name = pdev->name;
->  	input->id.bustype = BUS_HOST;
-> -	input->dev.parent = &pdev->dev;
-> +
-> +	input_set_drvdata(input, gmouse);
->  
->  	input_set_capability(input, EV_REL, REL_X);
->  	input_set_capability(input, EV_REL, REL_Y);
-> @@ -139,10 +128,16 @@ static int gpio_mouse_probe(struct platform_device *pdev)
->  	if (gmouse->bright)
->  		input_set_capability(input, EV_KEY, BTN_RIGHT);
->  
-> -	ret = input_register_polled_device(input_poll);
-> -	if (ret) {
-> +	error = input_setup_polling(input, gpio_mouse_scan);
-> +	if (error)
-> +		return error;
-> +
-> +	input_set_poll_interval(input, gmouse->scan_ms);
-> +
-> +	error = input_register_device(input);
-> +	if (error) {
->  		dev_err(dev, "could not register input device\n");
-> -		return ret;
-> +		return error;
->  	}
->  
->  	dev_dbg(dev, "%d ms scan time, buttons: %s%s%s\n",
-> -- 
-> 2.23.0.444.g18eeb5a265-goog
--- 
-mvh
-Hans-Christian Noren Egtvedt
+> Fixes: 7ef7e1d949cd ("net: mvpp2: drop useless fields in mvpp2_bm_pool and related code")
+> Signed-off-by: Matteo Croce <mcroce@redhat.com>
+
+Applied, thanks.
