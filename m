@@ -2,222 +2,126 @@ Return-Path: <SRS0=zem1=X3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4029BC4360C
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 20:45:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EFE7FC10F14
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 20:46:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0C58F2070B
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 20:45:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BEDDD21783
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 20:46:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570049150;
-	bh=hv35gJ916It5E5n4NQJZ6lmL2zLdtKh89Gx4VKZT4C4=;
-	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
-	b=sYtYG7fBFIgit/gxBmlYI7EMYn9ima+FQFjQtgqpiGQGQ3AslU4PGwEZKmNQpq2v6
-	 JE8lOq9/zr9jCmGbo9XStHuzcX1AOPCvS8UzDtItf9BIoCN4Sprze6NFu3ygjip+1o
-	 pSnnMyVpHVei77K5TWHncVzUPewZfarD4LVoCTBY=
+	s=default; t=1570049180;
+	bh=kcx2dv/f2bzZ/7CFtrhKgQS8lyZd1xmVuGcGgdVi1BM=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=s0outN912OCTwb+H06ywCB1oa42oxqU7QbZmCHdQ+VqHYOy7hvhFE/r3yul6EAUyT
+	 jilCJFCPpIH6OhyuiI/KYL8NtfuhkPOUtwlvo4EnU/6YRTywOIhM+51SWfZeTU4Olj
+	 12Yg+FrKJ7aR+0HQnuCVy22al0fq9ABzkJnIgxzk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728541AbfJBUpp (ORCPT
+        id S1728676AbfJBUqU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Oct 2019 16:45:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59016 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728471AbfJBUpp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Oct 2019 16:45:45 -0400
-Received: from [192.168.1.25] (cpe-70-114-128-244.austin.res.rr.com [70.114.128.244])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7FAF3218DE;
-        Wed,  2 Oct 2019 20:45:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570049144;
-        bh=hv35gJ916It5E5n4NQJZ6lmL2zLdtKh89Gx4VKZT4C4=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=1IeAaA31jERyEi5J8bXqM5vUgEanRiXBnjNwZSvkrbF5Ctk6qRtdBcLoPAPbhGGSh
-         tUhyeIJEOGIqlhflGzcq3Sbxy4q9YlHhXLrWbNRhk/ZEy1qVC73lOWQ+i58jG8bjuo
-         iSskn9ScsqrfG3WO7vYfve2WN9WfvlA1sJgJERSk=
-Subject: Re: [PATCHv3] ARM: drivers/amba: release and cleanup the resource to
- allow for deferred probe
-To:     Russell King - ARM Linux admin <linux@armlinux.org.uk>
-Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linus.walleij@linaro.org, p.zabel@pengutronix.de,
-        thor.thayer@linux.intel.com
-References: <20191002143551.32288-1-dinguyen@kernel.org>
- <20191002173209.GT25745@shell.armlinux.org.uk>
-From:   Dinh Nguyen <dinguyen@kernel.org>
-Openpgp: preference=signencrypt
-Autocrypt: addr=dinguyen@kernel.org; prefer-encrypt=mutual; keydata=
- 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
-Message-ID: <2083d164-c998-6990-9e51-86d331a36a07@kernel.org>
-Date:   Wed, 2 Oct 2019 15:45:42 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Wed, 2 Oct 2019 16:46:20 -0400
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:42335 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727875AbfJBUqT (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 2 Oct 2019 16:46:19 -0400
+Received: by mail-lj1-f194.google.com with SMTP id y23so268175lje.9
+        for <linux-kernel@vger.kernel.org>; Wed, 02 Oct 2019 13:46:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=CZoX6/kAyBlNzPm3PxVJHHET8XR6oaEdHzpQ1JHxlxk=;
+        b=WgH48i53OT8OxyAS10xRgTGen79hUl3stcfXDufRhIUV4G8traFDMLYOcDbmARGtri
+         tU39pf48gI+/cvvec8i+m09klNO/DTKi0Xs0KDdSSGqqIUqlnGTnz+5xBoxTqitRtY8f
+         KX6a88Kh0m0W4klfZBa6hR0r/gM5QP+f5tEIM=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=CZoX6/kAyBlNzPm3PxVJHHET8XR6oaEdHzpQ1JHxlxk=;
+        b=Ueuoz+9gDD7U+W/hdlxBc2VpPCbnYpKprpFqmGDg/FKrArJk1E4tCBqjkoNQy6VJyR
+         uhG1t0bZb8zkVDsZKGxFv/tPHZy1u1f1q1vQxN6vIBYOmZQ1LMuoOznD5xJK9dopBbvc
+         Zl+SR61rUo1QZlhC+l2JRv9xBRjZc5ulyFKwcCx3fZ0axANV45KpYDGboFgKOpBahZ8p
+         UuV8Nr31+DzlmHPrK1KOdVU2NjWw7hf819u+TZt/7au3fe/6psjTlRw9YuQej/OJbuCk
+         U9VP/7oDtmt4uPeNS1uzFI6cvOeLhdfMgORiLjcqf6UI6MQpIbQif1hEpraqL0+9Fotm
+         ZepA==
+X-Gm-Message-State: APjAAAWnAgyiyDPjBBbD14kqctvCZvQQAs8YakOYEBr4srcI5N4H7dU7
+        nwL1qgK8OMJCXPNaqv/0rQIGHI/VjRU=
+X-Google-Smtp-Source: APXvYqyWRYucdmohIUxBgGSVEGGQ+Bf4KdIeyVRObbB0lGx3o19quydB6d3iMcmHg8eNl6jFXGpt/g==
+X-Received: by 2002:a2e:1b5c:: with SMTP id b89mr3756710ljb.182.1570049177615;
+        Wed, 02 Oct 2019 13:46:17 -0700 (PDT)
+Received: from mail-lf1-f53.google.com (mail-lf1-f53.google.com. [209.85.167.53])
+        by smtp.gmail.com with ESMTPSA id o15sm34565lff.22.2019.10.02.13.46.17
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 02 Oct 2019 13:46:17 -0700 (PDT)
+Received: by mail-lf1-f53.google.com with SMTP id d17so97693lfa.7
+        for <linux-kernel@vger.kernel.org>; Wed, 02 Oct 2019 13:46:17 -0700 (PDT)
+X-Received: by 2002:ac2:47f8:: with SMTP id b24mr3502326lfp.134.1570048796885;
+ Wed, 02 Oct 2019 13:39:56 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20191002173209.GT25745@shell.armlinux.org.uk>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20190930112636.vx2qxo4hdysvxibl@willie-the-truck>
+ <CAK7LNASQZ82KSOrQW7+Wq1vFDCg2__maBEAPMLqUDqZMLuj1rA@mail.gmail.com>
+ <20190930121803.n34i63scet2ec7ll@willie-the-truck> <CAKwvOdnqn=0LndrX+mUrtSAQqoT1JWRMOJCA5t3e=S=T7zkcCQ@mail.gmail.com>
+ <20191001092823.z4zhlbwvtwnlotwc@willie-the-truck> <CAKwvOdk0h2A6=fb7Yepf+oKbZfq_tqwpGq8EBmHVu1j4mo-a-A@mail.gmail.com>
+ <20191001170142.x66orounxuln7zs3@willie-the-truck> <CAKwvOdnFJqipp+G5xLDRBcOrQRcvMQmn+n8fufWyzyt2QL_QkA@mail.gmail.com>
+ <20191001175512.GK25745@shell.armlinux.org.uk> <CAKwvOdmw_xmTGZLeK8-+Q4nUpjs-UypJjHWks-3jHA670Dxa1A@mail.gmail.com>
+ <20191001181438.GL25745@shell.armlinux.org.uk> <CAKwvOdmBnBVU7F-a6DqPU6QM-BRc8LNn6YRmhTsuGLauCWKUOg@mail.gmail.com>
+ <CAMuHMdWPhE1nNkmL1nj3vpQhB7fP3uDs2i_ZVi0Gf9qij4W2CA@mail.gmail.com>
+In-Reply-To: <CAMuHMdWPhE1nNkmL1nj3vpQhB7fP3uDs2i_ZVi0Gf9qij4W2CA@mail.gmail.com>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Wed, 2 Oct 2019 13:39:40 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wgFODvdFBHzgVf3JjoBz0z6LZhOm8xvMntsvOr66ASmZQ@mail.gmail.com>
+Message-ID: <CAHk-=wgFODvdFBHzgVf3JjoBz0z6LZhOm8xvMntsvOr66ASmZQ@mail.gmail.com>
+Subject: Re: [PATCH] compiler: enable CONFIG_OPTIMIZE_INLINING forcibly
+To:     Geert Uytterhoeven <geert@linux-m68k.org>
+Cc:     Nick Desaulniers <ndesaulniers@google.com>,
+        Russell King - ARM Linux admin <linux@armlinux.org.uk>,
+        Will Deacon <will@kernel.org>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Stefan Wahren <wahrenst@gmx.net>,
+        Kees Cook <keescook@google.com>, Arnd Bergmann <arnd@arndb.de>,
+        clang-built-linux <clang-built-linux@googlegroups.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, Oct 2, 2019 at 5:56 AM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
+>
+> >
+> > Then use the C preprocessor to force the inlining.  I'm sorry it's not
+> > as pretty as static inline functions.
+>
+> Which makes us lose the baby^H^H^H^Htype checking performed
+> on function parameters, requiring to add more ugly checks.
 
+I'm 100% agreed on this.
 
-On 10/2/19 12:32 PM, Russell King - ARM Linux admin wrote:
-> On Wed, Oct 02, 2019 at 09:35:51AM -0500, Dinh Nguyen wrote:
->> With commit "79bdcb202a35 ARM: 8906/1: drivers/amba: add reset control to
->> amba bus probe", the amba bus driver needs to be deferred probe because the
->> reset driver is probed later. However with a deferred probe, the call to
->> request_resource() in the driver returns -EBUSY. The reason is the driver
->> has not released the resource from the previous probe attempt.
->>
->> This patch fixes how we handle the condition of EPROBE_DEFER that is returned
->> from getting the reset controls. For this condition, the patch will jump
->> to defer_probe, which will iounmap, dev_pm_domain_detach, and release the
->> resource.
->>
->> Fixes: 79bdcb202a35 ("ARM: 8906/1: drivers/amba: add reset control to
->> amba bus probe")
->> Signed-off-by: Dinh Nguyen <dinguyen@kernel.org>
->> ---
->> v3: jump to defer_probe where the driver will unmap and pm_detach the
->>     driver resource for the next probe attempt
->> v2: release the resource when of_reset_control_array_get_optional_shared()
->>     returns EPROBE_DEFER
->> ---
->>  drivers/amba/bus.c | 8 ++++++--
->>  1 file changed, 6 insertions(+), 2 deletions(-)
->>
->> diff --git a/drivers/amba/bus.c b/drivers/amba/bus.c
->> index f39f075abff9..4a021b1dab3d 100644
->> --- a/drivers/amba/bus.c
->> +++ b/drivers/amba/bus.c
->> @@ -409,9 +409,12 @@ static int amba_device_try_add(struct amba_device *dev, struct resource *parent)
->>  		 */
->>  		rstc = of_reset_control_array_get_optional_shared(dev->dev.of_node);
->>  		if (IS_ERR(rstc)) {
->> -			if (PTR_ERR(rstc) != -EPROBE_DEFER)
->> +			ret = PTR_ERR(rstc);
->> +			if (ret == -EPROBE_DEFER)
->> +				goto defer_probe;
->> +			else
->>  				dev_err(&dev->dev, "Can't get amba reset!\n");
->> -			return PTR_ERR(rstc);
->> +			return ret;
-> 
-> So, if of_reset_control_array_get_optional_shared() returns an error,
-> we end up leaking the ioremap(), the resource claim, the pclk enable
-> and pm domain?  If it returns -EPROBE_DEFER, we end up leaking the
-> pclk enable?
-> 
-> I think this is going to be quicker if I write the patch - I haven't
-> build-tested this yet though.  Please check whether this works for
-> you.
-> 
-> Thanks.
-> 
-> 8<=====
-> From: Russell King <rmk+kernel@armlinux.org.uk>
-> Subject: [PATCH] drivers/amba: fix reset control error handling
-> 
-> With commit 79bdcb202a35 ("ARM: 8906/1: drivers/amba: add reset control
-> to amba bus probe") it is possible for the the amba bus driver to defer
-> probing the device for its IDs because the reset driver may be probed
-> later.
-> 
-> However when a subsequent probe occurs, the call to request_resource()
-> in the driver returns -EBUSY as the driver has not released the resource
-> from the initial probe attempt - or cleaned up any of the preceding
-> actions.
-> 
-> Fix this both for the deferred probe case as well as a failure to get
-> the reset.
-> 
-> Fixes: 79bdcb202a35 ("ARM: 8906/1: drivers/amba: add reset control to amba bus probe")
-> Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
-> ---
->  drivers/amba/bus.c | 14 +++++++++++---
->  1 file changed, 11 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/amba/bus.c b/drivers/amba/bus.c
-> index f39f075abff9..fe1523664816 100644
-> --- a/drivers/amba/bus.c
-> +++ b/drivers/amba/bus.c
-> @@ -409,9 +409,11 @@ static int amba_device_try_add(struct amba_device *dev, struct resource *parent)
->  		 */
->  		rstc = of_reset_control_array_get_optional_shared(dev->dev.of_node);
->  		if (IS_ERR(rstc)) {
-> -			if (PTR_ERR(rstc) != -EPROBE_DEFER)
-> -				dev_err(&dev->dev, "Can't get amba reset!\n");
-> -			return PTR_ERR(rstc);
-> +			ret = PTR_ERR(rstc);
-> +			if (ret != -EPROBE_DEFER)
-> +				dev_err(&dev->dev, "can't get reset: %d\n",
-> +					ret);
-> +			goto err_reset;
->  		}
->  		reset_control_deassert(rstc);
->  		reset_control_put(rstc);
-> @@ -472,6 +474,12 @@ static int amba_device_try_add(struct amba_device *dev, struct resource *parent)
->  	release_resource(&dev->res);
->   err_out:
->  	return ret;
-> +
-> + err_reset:
-> +	amba_put_disable_pclk(dev);
-> +	iounmap(tmp);
-> +	dev_pm_domain_detach(&dev->dev, true);
-> +	goto err_release;
->  }
->  
->  /*
-> 
+If the inline change is being pushed by people who say "you should
+have used macros instead if you wanted inlining", then I will just
+revert that stupid commit that is causing problems.
 
-Tested-by: Dinh Nguyen <dinguyen@kernel.org>
+No, the preprocessor is not the answer.
 
-Thanks,
-Dinh
+That said, code that relies on inlining for _correctness_ should use
+"__always_inline" and possibly even have a comment about why.
+
+But I am considering just undoing commit 9012d011660e ("compiler:
+allow all arches to enable CONFIG_OPTIMIZE_INLINING") entirely. The
+advantages are questionable, and when the advantages are balanced
+against actual regressions and the arguments are "use macros", that
+just shows how badly thought out this was.
+
+                Linus
