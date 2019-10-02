@@ -2,98 +2,111 @@ Return-Path: <SRS0=zem1=X3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4901AC35280
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 15:48:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B690CECE58A
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 15:48:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 127B621848
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 15:48:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="Or8zBwct"
+	by mail.kernel.org (Postfix) with ESMTP id 8ECB221D81
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 15:48:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1570031305;
+	bh=JsedYp4w2ADAPpiKFdN6u1P4tSD3N5UGjygwVyZOcjA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=P/pVqqpoofW4CibWG4jhsMLHW3M6MGp7UNMUCsYlhF9FVQn4ZMIXBpUBVhJ410KUX
+	 7ar0bUZ9mTkHuuYCY21nyEcbWKAM3tWufdD3VYNWezS6DDgYFntEdbeWtIAQ/Vz83i
+	 QOQccd4yzBvc7sU4mv3bDWVKJJlBsvyVW3olEWoA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728998AbfJBPsE (ORCPT
+        id S1729015AbfJBPsZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Oct 2019 11:48:04 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:37065 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728546AbfJBPsE (ORCPT
+        Wed, 2 Oct 2019 11:48:25 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:36481 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725799AbfJBPsY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Oct 2019 11:48:04 -0400
-Received: by mail-wm1-f67.google.com with SMTP id f22so7516260wmc.2
-        for <linux-kernel@vger.kernel.org>; Wed, 02 Oct 2019 08:48:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=A/WPUaXsRXb4AarLiZQsfAeLGL43b4rhfT5+5/3Bhwg=;
-        b=Or8zBwctsY8Elqzo/0JuCpOf55Q+IXWHSz/Pt+bUD7zKlYNuoUa8delcjy5ux+5YNs
-         HwVk7wfITAIThiOwJ91xWbJ6bnLvJVmhlygYBwdcabmCVOMKaOArlekS5iae072COMBr
-         xK8mM4HM2nDlmv9L4dFM6HjzN3gNwK37enE3hPi1WuytjXHSxfnnZ8wF7Nq9/6n6U8Hm
-         cnQjWxeLFKV0XLFbNdRLyY9A6wm5c91MK0omP7yNKHbpA5WXGEvcHkyw/FHfATYIVMqn
-         5pUAPlUckvjuz3Ms21JUf6+J6XMxt4bvnuoZisaDlOun0AoJZ0AnxpxeckmGby+bbDlZ
-         UhDA==
+        Wed, 2 Oct 2019 11:48:24 -0400
+Received: by mail-wm1-f68.google.com with SMTP id m18so7523621wmc.1;
+        Wed, 02 Oct 2019 08:48:23 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=A/WPUaXsRXb4AarLiZQsfAeLGL43b4rhfT5+5/3Bhwg=;
-        b=ZduHFWW4yPYf9f9hacppPNqYMH4ZnHPldeYNNzM/0IFn/Lu1AYyvdEWXGgm7TXKFBZ
-         2n8cTLQ56PCujjVRoIotRsTzkA3vVm9kSE6XtKNguONf6JRkJ2AsL+Gh9l/pTxxW+yGb
-         IsGTXya6lvrXQEqhsGWGTzB02javgqW5XcPQYhHwmKHwHsJUe8uuav/Vl03xeY9KrybW
-         IZgVgkEeQMeHvPTy2FJQ7mY+oP37ayJ9L4nw5zMVvES0kBx11SWYac7vL/gLZkNLOyLb
-         EbHWDDTsd7X/u3+NrsSljcpm7yuIXfvsx0+yiI29fEWZw9EGNB+/lPnYZbinP8Xt1FL2
-         3nGA==
-X-Gm-Message-State: APjAAAU9C1XqwklQmIG1wUqXDu37Ew2pekKoKdN0U+kXuw7++HPHHciQ
-        I6vYInRS4LdRtax6UR8UGsKiJQ==
-X-Google-Smtp-Source: APXvYqxF4BZbL9PtGJ4FXKof8VYcQOLSXhFigZ7LdNlh9U68F4/M4t+F1WCRBdwt5uQN8sgEvCyV2Q==
-X-Received: by 2002:a05:600c:2:: with SMTP id g2mr3423244wmc.111.1570031281844;
-        Wed, 02 Oct 2019 08:48:01 -0700 (PDT)
-Received: from debian-brgl.home (lfbn-1-7087-108.w90-116.abo.wanadoo.fr. [90.116.255.108])
-        by smtp.gmail.com with ESMTPSA id a2sm2809345wrp.11.2019.10.02.08.48.00
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 02 Oct 2019 08:48:01 -0700 (PDT)
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-To:     Yoshinori Sato <ysato@users.sourceforge.jp>,
-        Rich Felker <dalias@libc.org>
-Cc:     linux-sh@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Subject: [PATCH] sh: kgdb: fix an implicit fallthrough warning
-Date:   Wed,  2 Oct 2019 17:47:56 +0200
-Message-Id: <20191002154756.18924-1-brgl@bgdev.pl>
-X-Mailer: git-send-email 2.23.0
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=IwKP6bZ0/M/GNRiVw0vgEg5C/Drz9g4f2GY67meqLWE=;
+        b=I3BhUdD05maN4HlqZnHRXQv+3zKf0pTyiwmB4Mc06OW6G4rLDijaeWzUIJTBZIXoXb
+         jxMYFmuz7Xq70ZnDTPscRPkOuKF3za0nwFObjAAeKyJAuP4NLtWcdTgjs0Nx4XRFDQnK
+         DcwKmpmiYn+5p1xVo/uog+5Nm4pZ/BsyKvBijeU0w7XRAG5lnynUXlQSh4fHr76Yzq1+
+         w1PbskxiX8xTZfaP1HXRGZ/0AzFVPcYn49SkXHKYgfAW8IkCUglqNNjZ8IwiuJx8/iit
+         1m4fwtgfoOgc72Y/Us0BhJmM9PORr98twPReAS0t812R/qOMFi/B7b6EvDTtWdr4+K5/
+         S+Tg==
+X-Gm-Message-State: APjAAAVZzehGYvcvEo5z0yAWVmNUqBJEElGiu8lT72vCMcH0o8zg2tZi
+        dNufGlvmnFiexUp5RMLsfqQ=
+X-Google-Smtp-Source: APXvYqxeZ2BmgRha6QvpGjz+C0CN04lAeTAC36faPuMfUtJeANX0YHIp1xp1+lIX7zNyzHcuV9uAvQ==
+X-Received: by 2002:a1c:1d85:: with SMTP id d127mr3638645wmd.14.1570031302235;
+        Wed, 02 Oct 2019 08:48:22 -0700 (PDT)
+Received: from kozik-lap ([194.230.155.145])
+        by smtp.googlemail.com with ESMTPSA id o1sm3159082wrs.78.2019.10.02.08.48.20
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 02 Oct 2019 08:48:21 -0700 (PDT)
+Date:   Wed, 2 Oct 2019 17:48:19 +0200
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     Rob Herring <robh@kernel.org>
+Cc:     Sylwester Nawrocki <s.nawrocki@samsung.com>, vireshk@kernel.org,
+        robh+dt@kernel.org, kgene@kernel.org, devicetree@vger.kernel.org,
+        linux-pm@vger.kernel.org, linux-samsung-soc@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        b.zolnierkie@samsung.com, m.szyprowski@samsung.com
+Subject: Re: [PATCH v4 2/6] dt-bindings: samsung: Update the CHIP ID binding
+ documentation
+Message-ID: <20191002154819.GA4072@kozik-lap>
+References: <20190910123618.27985-1-s.nawrocki@samsung.com>
+ <CGME20190910123637eucas1p26d2051f9bdd1bdf4510f1908ea98f641@eucas1p2.samsung.com>
+ <20190910123618.27985-3-s.nawrocki@samsung.com>
+ <20190917181322.GA683@bogus>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20190917181322.GA683@bogus>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+On Tue, Sep 17, 2019 at 01:13:22PM -0500, Rob Herring wrote:
+> On Tue, 10 Sep 2019 14:36:14 +0200, Sylwester Nawrocki wrote:
+> > This patch adds documentation of a new optional "samsung,asv-bin"
+> > property in the chipid device node and documents requirement of
+> > "syscon" compatible string.  These additions are needed to support
+> > Exynos ASV (Adaptive Supply Voltage) feature.
+> > 
+> > Signed-off-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
+> > ---
+> > Changes since v3:
+> >  - none
+> > 
+> > Changes since v2:
+> >  - corrected patch summary line prefix, the patch moved in the
+> >    sequence
+> > 
+> > Changes since v1 (RFC):
+> >  - new patch
+> > ---
+> >  .../devicetree/bindings/arm/samsung/exynos-chipid.txt  | 10 ++++++++--
+> >  1 file changed, 8 insertions(+), 2 deletions(-)
+> > 
+> 
+> Reviewed-by: Rob Herring <robh@kernel.org>
 
-The switch case in arch/sh/kernel/kgdb.c can fallthrough. Add an
-appropriate comment.
+Dear Sylwester,
 
-Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
----
- arch/sh/kernel/kgdb.c | 1 +
- 1 file changed, 1 insertion(+)
+This will create conflicts with conversion to dt-schema (already picked
+up by Rob).
 
-diff --git a/arch/sh/kernel/kgdb.c b/arch/sh/kernel/kgdb.c
-index 6d61f8cf4c13..0d5f3c9d52f3 100644
---- a/arch/sh/kernel/kgdb.c
-+++ b/arch/sh/kernel/kgdb.c
-@@ -266,6 +266,7 @@ int kgdb_arch_handle_exception(int e_vector, int signo, int err_code,
- 		ptr = &remcomInBuffer[1];
- 		if (kgdb_hex2long(&ptr, &addr))
- 			linux_regs->pc = addr;
-+		/* fallthrough */
- 	case 'D':
- 	case 'k':
- 		atomic_set(&kgdb_cpu_doing_single_step, -1);
--- 
-2.23.0
+Can you convert this patch to dt-schema format and send it for Rob?
+
+Best regards,
+Krzysztof
 
