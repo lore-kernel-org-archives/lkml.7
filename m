@@ -2,77 +2,102 @@ Return-Path: <SRS0=zem1=X3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26CBFC35280
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 05:32:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE889C35280
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 05:47:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F2D472190F
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 05:32:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 819E52086A
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 05:47:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ysoft.com header.i=@ysoft.com header.b="lsWbrPuL"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=goldelico.com header.i=@goldelico.com header.b="U5L1CM3B"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727207AbfJBFcp (ORCPT
+        id S1727266AbfJBFrl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Oct 2019 01:32:45 -0400
-Received: from uho.ysoft.cz ([81.19.3.130]:60034 "EHLO uho.ysoft.cz"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727073AbfJBFco (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Oct 2019 01:32:44 -0400
-Received: from [10.1.8.111] (unknown [10.1.8.111])
-        by uho.ysoft.cz (Postfix) with ESMTP id 5B75DA211B;
-        Wed,  2 Oct 2019 07:32:42 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ysoft.com;
-        s=20160406-ysoft-com; t=1569994362;
-        bh=5AcZEITR50EqYwQF+Thz3U0N2SH4PgzQ+ow4rmj91Wg=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=lsWbrPuLkR+N3vdIIaYAxfZVN32AeZZgTP8UbRtHXtoBUrJgnFuYMEy2S9OUTso8T
-         1z4bXsDQH6i4vGDDSf7ezji3fpLHRJtCjO4fOXpEYRDdFnBj6poSxwYp8A+Tws6ygP
-         hQoYmypLsF0vX47CW19QH+//T2ypw15vsac5cLuo=
-Subject: Re: [PATCH] input: touchscreen: imx6ul_tsc: Use 'dev' instead of
- dereferencing it repeatedly
-To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Anson Huang <Anson.Huang@nxp.com>
-Cc:     shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de,
-        festevam@gmail.com, swboyd@chromium.org, mojha@codeaurora.org,
-        linux-input@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, Linux-imx@nxp.com
-References: <1569315731-2387-1-git-send-email-Anson.Huang@nxp.com>
- <20190930230806.GX237523@dtor-ws>
-From:   =?UTF-8?B?TWljaGFsIFZva8OhxI0=?= <michal.vokac@ysoft.com>
-Message-ID: <c0773e65-fc14-8cad-06a3-861bd264a44c@ysoft.com>
-Date:   Wed, 2 Oct 2019 07:32:42 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
-MIME-Version: 1.0
-In-Reply-To: <20190930230806.GX237523@dtor-ws>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
+        Wed, 2 Oct 2019 01:47:41 -0400
+Received: from mo4-p01-ob.smtp.rzone.de ([85.215.255.54]:12193 "EHLO
+        mo4-p01-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726266AbfJBFrj (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 2 Oct 2019 01:47:39 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1569995255;
+        s=strato-dkim-0002; d=goldelico.com;
+        h=To:References:Message-Id:Cc:Date:In-Reply-To:From:Subject:
+        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
+        bh=m4MmnejFIePSpi3WGLlVz9LTEEmUQI0FZsmc67nbE3A=;
+        b=U5L1CM3BWEaRd+2HvFX6EQkGXWY1nN6nQOOoq4bP3JIwXOBcZeArf4ZkQKkkMVIQxu
+        TvS8TBJ7qUpuAPC+DVvWysRZaXOQar4Wc0XlLv12cJ8oLlj1bmOJbHfYC2/Jzb4tRlZk
+        585I+socoe3+t0Yuo0XQlAkEVPWEnEKFMriNBzeag6h83cqz7AZl4dW6l/om7TmsQRWj
+        SNSwuPfQOxbQIfEkyIc7UeQdFw3sM1vP7UK2Q+G8Kw/BBF3EGCX+m2iY5hOv8bpgiMDB
+        Ybgk/Zep7WV+YjUJdvEhw0cS282zVeu5kObgGka2LeMfsY1ZulTUpX3moUP/JWDqTf0h
+        MoKA==
+X-RZG-AUTH: ":JGIXVUS7cutRB/49FwqZ7WcJeFKiMgPgp8VKxflSZ1P34KBj4Qpw9iZeHmMgw47pPLg="
+X-RZG-CLASS-ID: mo00
+Received: from imac.fritz.box
+        by smtp.strato.de (RZmta 44.28.0 DYNA|AUTH)
+        with ESMTPSA id v00409v925l7Zg4
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (curve secp521r1 with 521 ECDH bits, eq. 15360 bits RSA))
+        (Client did not present a certificate);
+        Wed, 2 Oct 2019 07:47:07 +0200 (CEST)
+Content-Type: text/plain; charset=us-ascii
+Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
+Subject: Re: [PATCH v3 0/8] OMAP3: convert opp-v1 to opp-v2 and read speed binned / 720MHz grade bits
+From:   "H. Nikolaus Schaller" <hns@goldelico.com>
+In-Reply-To: <DAF6ACB4-AD7E-4528-9F4B-C54104B5E260@goldelico.com>
+Date:   Wed, 2 Oct 2019 07:47:07 +0200
+Cc:     =?utf-8?Q?Beno=C3=AEt_Cousson?= <bcousson@baylibre.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Adam Ford <aford173@gmail.com>,
+        =?utf-8?Q?Andr=C3=A9_Roth?= <neolynx@gmail.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Enric Balletbo i Serra <eballetbo@gmail.com>,
+        Javier Martinez Canillas <javier@dowhile0.org>,
+        Roger Quadros <rogerq@ti.com>,
+        Teresa Remmet <t.remmet@phytec.de>, linux-omap@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-pm@vger.kernel.org, letux-kernel@openphoenux.org,
+        kernel@pyra-handheld.com, linux-arm-kernel@lists.infradead.org
 Content-Transfer-Encoding: 7bit
+Message-Id: <8C3DD775-07DF-45E0-8E04-2B050CEB5800@goldelico.com>
+References: <cover.1568224032.git.hns@goldelico.com> <20190916162816.GF52127@atomide.com> <DAF6ACB4-AD7E-4528-9F4B-C54104B5E260@goldelico.com>
+To:     Tony Lindgren <tony@atomide.com>
+X-Mailer: Apple Mail (2.3124)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 01. 10. 19 1:08, Dmitry Torokhov wrote:
-> On Tue, Sep 24, 2019 at 05:02:11PM +0800, Anson Huang wrote:
->> Add helper variable dev = &pdev->dev to simply the code.
+Hi Tony,
+
+> Am 17.09.2019 um 16:35 schrieb H. Nikolaus Schaller <hns@goldelico.com>:
 > 
-> Do we get any code savings from this?
+> Hi Tony,
+> 
+>> Am 16.09.2019 um 18:28 schrieb Tony Lindgren <tony@atomide.com>:
+>> 
+>> * H. Nikolaus Schaller <hns@goldelico.com> [190911 17:48]:
+>>> CHANGES V3:
+>>> * make omap36xx control the abb-ldo and properly switch mode
+>>> (suggested by Adam Ford <aford173@gmail.com>)
+>>> * add a note about enabling the turbo-mode OPPs
+>> 
+>> Looks good to me, when applying, please provide a
+>> minimal immutable branch maybe against v5.3 or v5.4-rc1,
+>> that I can also merge in if needed for the dts changes.
+> 
+> Should I resend a v4 with your Acked-By added?
+> 
+> BR and thanks,
+> Nikolaus
+> 
 
-I noticed Anson submitted similar patches into various other subsystems.
-Here [1] is a very detailed response from David Laight shedding some light
-on this topic.
+what is the procedure to get this and Adam's thermal setup into linux-next?
+BR and thanks,
+Nikolaus
 
-[1] https://lkml.org/lkml/2019/9/24/151
-
->>
->> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
->> ---
->>   drivers/input/touchscreen/imx6ul_tsc.c | 37 +++++++++++++++++-----------------
->>   1 file changed, 19 insertions(+), 18 deletions(-)
 
 
