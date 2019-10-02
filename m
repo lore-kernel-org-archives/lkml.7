@@ -2,128 +2,112 @@ Return-Path: <SRS0=zem1=X3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 54A65ECE589
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 03:18:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 575F5ECE587
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 03:20:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2C10421906
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 03:18:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2D3A92133F
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 03:20:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="Hv1zUDAO"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OOnxpEhN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729287AbfJBDSk (ORCPT
+        id S1729470AbfJBDUU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Oct 2019 23:18:40 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:46893 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726869AbfJBDSj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Oct 2019 23:18:39 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 46jhDW3ywMz9sPL;
-        Wed,  2 Oct 2019 13:18:35 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1569986316;
-        bh=zvB9p60r5fI7pASgcHD64s7yCiagKfqUJprubacaDT0=;
-        h=Date:From:To:Cc:Subject:From;
-        b=Hv1zUDAOcRVyKA8vOzX1JwINCwcZenYr/B7rblXs+pElLfPBABLGYArnDQesjyD9q
-         8FXgpp6JZ8Y1VMdavUN6lpGBDKpzpyWTkGtTYgvB/Szacks4x5/1PV4bTp+FeInTXC
-         LNkolabMPn6O+nGizW2YK868M+ESelBROvnOohXubG4cKH+19OzPjVJB+A/5/O4kg0
-         GvdvyxPTxRTpm1THykHRePKcizifUx9qzZrrIUf/yKQJPf86LsJW2dOiAu0xhF/0Pv
-         HWx0yDAcf8RKLuzm4iIx3BiHaqohsx55uXTkYW9SP24Rp94E4arJTbEcqfp9jVGIMC
-         JFeL+VkReIwBQ==
-Date:   Wed, 2 Oct 2019 13:18:35 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Andrew Morton <akpm@linux-foundation.org>,
-        Jonathan Corbet <corbet@lwn.net>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Jon Haslam <jonhaslam@fb.com>,
-        Chris Down <chris@chrisdown.name>
-Subject: linux-next: manual merge of the akpm-current tree with the jc_docs
- tree
-Message-ID: <20191002131835.51809ea9@canb.auug.org.au>
+        Tue, 1 Oct 2019 23:20:20 -0400
+Received: from mail-qt1-f196.google.com ([209.85.160.196]:35427 "EHLO
+        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726869AbfJBDUU (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Oct 2019 23:20:20 -0400
+Received: by mail-qt1-f196.google.com with SMTP id m15so24572872qtq.2;
+        Tue, 01 Oct 2019 20:20:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=3efpfs9sL1/jMPSW+62FKUauwr4+fAsqJKtdAl4Znuk=;
+        b=OOnxpEhNAewa4hDSxdaIuGOMrRwwISKvSnNw/D/bO+aQn5BWbAQxtzznvLW9Eh9pup
+         N3RNjc2mcJmzCojIF1aMtWZwkkUg+TCdNBrsXzGDaYgQAAP9alE6JaFWTg1LV2y7iSLm
+         euecTyJrb68l8FGWN0TsCQMRbtnJ1SEEUdiprZ/0y7UwC1sUekqGEEskFRwvtEEd6a3s
+         e83Hc/AEK9KPRpvqaYi+QVZEHWW0Rx2h3Ji6ZO+LKGLx4bVXYyhil0jGdzKQnQpmYx67
+         NwJImDtWql4ihaitq+RfoQSjgNOT1j+c/V3xfxDNiv7WLi+1Qm0qlrIScGSN9k5bfX29
+         2iaQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=3efpfs9sL1/jMPSW+62FKUauwr4+fAsqJKtdAl4Znuk=;
+        b=Y0OwNSJSy+rxcXOeTiExsTPljI2/PMpeq6RUlyl++lUY6j8/ZQsbBbnWh5aGE5CYiM
+         prQuEyBsWgK4bvxdxoRqLLRWJXR8YofCWDeo5Y5bOjZv/M16HCmF4HVzcru/e8EjfzOv
+         0Z4PQjgMl5sfgHwY+HaXnIcgoIDN/qf4IT34/Q3SCCzcO2Xf3UkFXD9Y/FLTo8080Z7t
+         Usr4NUzlyvbPiaF1Xogf9bJMoI0lUApBszJB861+uXa2bG9j/DfH5Q0V9VaFakxMgmHp
+         HJRzcdjuLWdQSr6w2Cl1JyASWEJk8lSmzahbbx0WZAnv1f0HHYOlfJZlKfmcElB4S3S9
+         3u7w==
+X-Gm-Message-State: APjAAAWADIzxr7hcAB/QnhnwP1NAOa8Mu9IEU2fu0ZM5kJ0h3/bFTLyz
+        V6wFc6V1KHJlZ3VPKzjgQlOK6rXN8HKrubAZ4PY=
+X-Google-Smtp-Source: APXvYqzOm2BoB9dmMXQqhBxSToBiMgwzyvrvr6ybB7GR7rW1AYzevtXVB1nJAt4rbKfkIuonpEm5+19tVuMwd/v9v4s=
+X-Received: by 2002:ac8:5147:: with SMTP id h7mr1862596qtn.117.1569986418840;
+ Tue, 01 Oct 2019 20:20:18 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/AEBcqd=ktfOYS/rhz2q0Jp1";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+References: <20191001173728.149786-1-brianvv@google.com> <20191001173728.149786-3-brianvv@google.com>
+In-Reply-To: <20191001173728.149786-3-brianvv@google.com>
+From:   Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Date:   Tue, 1 Oct 2019 20:20:07 -0700
+Message-ID: <CAEf4BzYxs6Ace8s64ML3pA9H4y0vgdWv_vDF57oy3i-O_G7c-g@mail.gmail.com>
+Subject: Re: [PATCH bpf 2/2] selftests/bpf: test_progs: don't leak server_fd
+ in test_sockopt_inherit
+To:     Brian Vazquez <brianvv@google.com>
+Cc:     Brian Vazquez <brianvv.kernel@gmail.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        "David S . Miller" <davem@davemloft.net>,
+        Stanislav Fomichev <sdf@google.com>,
+        open list <linux-kernel@vger.kernel.org>,
+        Networking <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/AEBcqd=ktfOYS/rhz2q0Jp1
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On Tue, Oct 1, 2019 at 10:40 AM Brian Vazquez <brianvv@google.com> wrote:
+>
 
-Hi all,
+I don't think there is a need to add "test_progs:" to subject, "
+test_sockopt_inherit" is specific enough ;)
 
-Today's linux-next merge of the akpm-current tree got a conflict in:
+> server_fd needs to be close if pthread can't be created.
 
-  Documentation/admin-guide/cgroup-v2.rst
+typo: closed
 
-between commit:
+>
+> Fixes: e3e02e1d9c24 ("selftests/bpf: test_progs: convert test_sockopt_inherit")
+> Cc: Stanislav Fomichev <sdf@google.com>
+> Signed-off-by: Brian Vazquez <brianvv@google.com>
+> ---
 
-  6ee0fac199e1 ("docs: fix memory.low description in cgroup-v2.rst")
+Acked-by: Andrii Nakryiko <andriin@fb.com>
 
-from the jc_docs tree and commit:
-
-  3968bb6dec48 ("mm, memcg: proportional memory.{low,min} reclaim")
-
-from the akpm-current tree.
-
-I fixed it up (see below) and can carry the fix as necessary. This
-is now fixed as far as linux-next is concerned, but any non trivial
-conflicts should be mentioned to your upstream maintainer when your tree
-is submitted for merging.  You may also want to consider cooperating
-with the maintainer of the conflicting tree to minimise any particularly
-complex conflicts.
-
---=20
-Cheers,
-Stephen Rothwell
-
-diff --cc Documentation/admin-guide/cgroup-v2.rst
-index 26d1cde6b34a,5361ebec3361..000000000000
---- a/Documentation/admin-guide/cgroup-v2.rst
-+++ b/Documentation/admin-guide/cgroup-v2.rst
-@@@ -1117,8 -1120,11 +1120,11 @@@ PAGE_SIZE multiple when read back
- =20
-  	Best-effort memory protection.  If the memory usage of a
-  	cgroup is within its effective low boundary, the cgroup's
- -	memory won't be reclaimed unless memory can be reclaimed
- -	from unprotected cgroups.  Above the effective low boundary (or
- -	effective min boundary if it is higher), pages are reclaimed
- -	proportionally to the overage, reducing reclaim pressure for
- -	smaller overages.
- +	memory won't be reclaimed unless there is no reclaimable
-- 	memory available in unprotected cgroups.
-++	memory available in unprotected cgroups.  Above the effective
-++	low boundary (or effective min boundary if it is higher), pages
-++	are reclaimed proportionally to the overage, reducing reclaim
-++	pressure for smaller overages.
- =20
-  	Effective low boundary is limited by memory.low values of
-  	all ancestor cgroups. If there is memory.low overcommitment
-
---Sig_/AEBcqd=ktfOYS/rhz2q0Jp1
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl2UFwsACgkQAVBC80lX
-0GySzwf+LDPf8FOoj4TokjVrD9vvrJ/F/DNgUwmrqmjPHSAkiXBV2xUflJFTW7nL
-RI05gp5nkVMkhVW3okgyEwqKe9lMqVc6AnFxIDePGjRta8p2wTm/W3mRGqtwWIV5
-GDgufsVVWpD6qwl/oR3ufb4bklSAzVpuiAjIDlVXNF3t5xZvGoRQjou63Yfp4oGF
-OeSc9MzMwbdEHjiQ3IUgL4WnOkg5sko6xxIC2CFcKzJ3Uy6PR2gv1GAPwymQ+cnE
-agQITjwCQBXbCqxoKW5acuF2RShj0xWkZfkyXk75HTS2vcVBldsgxrsFyTNsSrro
-nuL0WNKddKTye3Iul1RUJXr44Q/ALA==
-=QUPv
------END PGP SIGNATURE-----
-
---Sig_/AEBcqd=ktfOYS/rhz2q0Jp1--
+>  tools/testing/selftests/bpf/prog_tests/sockopt_inherit.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/tools/testing/selftests/bpf/prog_tests/sockopt_inherit.c b/tools/testing/selftests/bpf/prog_tests/sockopt_inherit.c
+> index 6cbeea7b4bf16..8547ecbdc61ff 100644
+> --- a/tools/testing/selftests/bpf/prog_tests/sockopt_inherit.c
+> +++ b/tools/testing/selftests/bpf/prog_tests/sockopt_inherit.c
+> @@ -195,7 +195,7 @@ static void run_test(int cgroup_fd)
+>
+>         if (CHECK_FAIL(pthread_create(&tid, NULL, server_thread,
+>                                       (void *)&server_fd)))
+> -               goto close_bpf_object;
+> +               goto close_server_fd;
+>
+>         pthread_mutex_lock(&server_started_mtx);
+>         pthread_cond_wait(&server_started, &server_started_mtx);
+> --
+> 2.23.0.444.g18eeb5a265-goog
+>
