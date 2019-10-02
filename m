@@ -2,91 +2,144 @@ Return-Path: <SRS0=zem1=X3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB178ECE58B
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 12:02:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B55CCC352AA
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 12:02:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9C19721783
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 12:02:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 90FF421929
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 12:02:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728272AbfJBMCo (ORCPT
+        id S1728287AbfJBMC6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Oct 2019 08:02:44 -0400
-Received: from mga01.intel.com ([192.55.52.88]:33592 "EHLO mga01.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725875AbfJBMCo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Oct 2019 08:02:44 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 02 Oct 2019 05:02:26 -0700
-X-IronPort-AV: E=Sophos;i="5.64,574,1559545200"; 
-   d="scan'208";a="343311408"
-Received: from paasikivi.fi.intel.com ([10.237.72.42])
-  by orsmga004-auth.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 02 Oct 2019 05:02:22 -0700
-Received: by paasikivi.fi.intel.com (Postfix, from userid 1000)
-        id 7993E20976; Wed,  2 Oct 2019 15:02:20 +0300 (EEST)
-Date:   Wed, 2 Oct 2019 15:02:20 +0300
-From:   Sakari Ailus <sakari.ailus@linux.intel.com>
-To:     Petr Mladek <pmladek@suse.com>
-Cc:     rafael@kernel.org, linux-kernel@vger.kernel.org,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Rob Herring <robh@kernel.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-        Joe Perches <joe@perches.com>, devicetree@vger.kernel.org,
-        linux-acpi@vger.kernel.org
-Subject: Re: [PATCH v7 09/13] lib/vsprintf: Add a note on re-using %pf or %pF
-Message-ID: <20191002120220.GF972@paasikivi.fi.intel.com>
-References: <20190918133419.7969-1-sakari.ailus@linux.intel.com>
- <20190918133419.7969-10-sakari.ailus@linux.intel.com>
- <20190924104549.qiayzhr7zikja7sp@pathway.suse.cz>
+        Wed, 2 Oct 2019 08:02:58 -0400
+Received: from mout.kundenserver.de ([212.227.126.131]:53363 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725875AbfJBMC6 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 2 Oct 2019 08:02:58 -0400
+Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
+ (mreue009 [212.227.15.129]) with ESMTPA (Nemesis) id
+ 1N6srH-1i4Jx02kQB-018Nqd; Wed, 02 Oct 2019 14:02:49 +0200
+From:   Arnd Bergmann <arnd@arndb.de>
+To:     Alex Deucher <alexander.deucher@amd.com>,
+        Harry Wentland <harry.wentland@amd.com>,
+        Leo Li <sunpeng.li@amd.com>,
+        =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
+        "David (ChunMing) Zhou" <David1.Zhou@amd.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>
+Cc:     clang-built-linux@googlegroups.com, amd-gfx@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        Arnd Bergmann <arnd@arndb.de>,
+        Bhawanpreet Lakha <Bhawanpreet.Lakha@amd.com>
+Subject: [PATCH 3/6] drm/amdgpu: display_mode_vba_21: remove uint typedef
+Date:   Wed,  2 Oct 2019 14:01:24 +0200
+Message-Id: <20191002120136.1777161-4-arnd@arndb.de>
+X-Mailer: git-send-email 2.20.0
+In-Reply-To: <20191002120136.1777161-1-arnd@arndb.de>
+References: <20191002120136.1777161-1-arnd@arndb.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190924104549.qiayzhr7zikja7sp@pathway.suse.cz>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
+X-Provags-ID: V03:K1:oBjKGQ3jYf0A2J2ocemwNHrJLF3mvVMEn6zOLTNAGubueuLRYyk
+ BpOHFj8UwLoAn+bAxDpM0Us8z6MwyTwhFaeTAJtXgpd1gN2qJVEkpNfIB76daOLbh6I9g1g
+ ahi1mLhjBji4qSGK5wctAS/ZXegSzGKfel5KNAxFR+4Ew0SuQO7JYnxKngDUC1t/3w0hgkw
+ 0QdnYpJY4kkYs3R/f4iCg==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:eSQ5Yr5a9oE=:9FRtoMlN7bwSrOG9f5YY1I
+ bpZ3Qlyhsku0LcpbDJu5j1GigQk6vUWd/VoWhAWdlLLxtXK+BCdOiQtpfBiQFZdP8FLJ26cuR
+ kV5qGa3w8U+kaC94DSFBi0lHTB2sNsHBjsd2p8WvqTLIZwirBsTcidrQkvC2sa1DPz0RHHLd8
+ U9Vnvws8HuDgF+P7zwa3qcikMwSX3nStW4yO3wtkWdKwr6Uglr1x0i8/QF3LCtLtK4FEzrZVg
+ bM4cQCIHQZpPin18GxcI5pwvpk2Qgoml/0vjZaUvLxFLn2V4iCWTtG43DqQmNKwH+Uu5EPbFE
+ XKXWZUhX8b8lTqAqeEI30b2ahQc932Gp2k9HLD4BRhgWp8Ig9EQRTUgQKWSsTHSTnQtU1cNv+
+ 4wMcWJOh0Doxtl6hUiJzmGCWOFc2YYIcQ9ELhsb9uoUBPdrVP4Cjrk1ffgCIZs6HhA7bvk7NE
+ EZVguXf2MjBwrvsRdR3dXp5q2dELksAz89Tywytd8DQjNspuSufMllFGCsbJxVOgVSEnevN5g
+ fKYidaTAnk8c1QQo9w9YM1DRwbCfHfDbJUTn+5ROSNw8cDuvGt7AjNVZUyBKhRUS3S6hrk7I5
+ 34ybrIVzQiMV1ahqKIPXzQ0zPNdkHLSJNEc5Zt0ixZByldmxHwcytbpqPiVd3k++zjnk1lmAh
+ Cmv0SEdjvSfss1GwwRbvWZi8aTQH32JG2l9zkRPg7Dnv9F3dDWn4s9meRO7HnvAqZHffcxad3
+ vMQ1fsnJ20Ma1FOm07EGM6aLkWoypGrNlbx+lKhhjGOg0kBUxqdy1pVidgfcwS403HhTEwiuL
+ BlKxnY8Yx/kkAUL/1tXVJvhmg2XNXfg78iWD6M/9MmC8aZWKvP915zIr6FNADpRBtcjNi4JOp
+ 8nnSZfI7XGVLOMcy5tjQ==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Sep 24, 2019 at 12:45:49PM +0200, Petr Mladek wrote:
-> On Wed 2019-09-18 16:34:15, Sakari Ailus wrote:
-> > Add a note warning of re-use of obsolete %pf or %pF extensions.
-> > 
-> > Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
-> > Cc: Steven Rostedt <rostedt@goodmis.org>
-> > ---
-> >  lib/vsprintf.c | 2 ++
-> >  1 file changed, 2 insertions(+)
-> > 
-> > diff --git a/lib/vsprintf.c b/lib/vsprintf.c
-> > index b00b57f9f911f..df59818537b52 100644
-> > --- a/lib/vsprintf.c
-> > +++ b/lib/vsprintf.c
-> > @@ -2008,6 +2008,8 @@ static char *kobject_string(char *buf, char *end, void *ptr,
-> >   * - 'S' For symbolic direct pointers (or function descriptors) with offset
-> >   * - 's' For symbolic direct pointers (or function descriptors) without offset
-> >   * - '[Ss]R' as above with __builtin_extract_return_addr() translation
-> > + * - '[Ff]' Obsolete an now unsupported extension for printing direct pointers
-> > + *	    or function descriptors. Be careful when re-using %pf or %pF!
-> 
-> I am not a native speaker but the sentence is hard to parse to me.
-> Also I miss the word 'symbolic'. IMHO, it described that the output
-> was a symbol name.
-> 
-> What about something like?
-> 
->   * - '[Ff]' %pf and %pF were obsoleted and later removed in favor of
->   *	    %ps and %pS. Be careful when re-using these specifiers.
+The type definition for 'uint' clashes with the generic kernel
+headers:
 
-Yes, I'll use this in v8.
+drivers/gpu/drm/amd/amdgpu/../display/dc/dml/dcn21/display_mode_vba_21.c:43:22: error: redefinition of typedef 'uint' is a C11 feature [-Werror,-Wtypedef-redefinition]
+include/linux/types.h:92:23: note: previous definition is here
 
+Just remove this type and use plain 'unsigned int' consistently,
+as it is already use almost everywhere in this file.
+
+Fixes: b04641a3f4c5 ("drm/amd/display: Add Renoir DML")
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+---
+ .../amd/display/dc/dml/dcn21/display_mode_vba_21.c  | 13 +++++--------
+ 1 file changed, 5 insertions(+), 8 deletions(-)
+
+diff --git a/drivers/gpu/drm/amd/display/dc/dml/dcn21/display_mode_vba_21.c b/drivers/gpu/drm/amd/display/dc/dml/dcn21/display_mode_vba_21.c
+index 46cda85d3d63..998970e2f84c 100644
+--- a/drivers/gpu/drm/amd/display/dc/dml/dcn21/display_mode_vba_21.c
++++ b/drivers/gpu/drm/amd/display/dc/dml/dcn21/display_mode_vba_21.c
+@@ -39,9 +39,6 @@
+  * ways. Unless there is something clearly wrong with it the code should
+  * remain as-is as it provides us with a guarantee from HW that it is correct.
+  */
+-
+-typedef unsigned int uint;
+-
+ typedef struct {
+ 	amdgpu_dc_double DPPCLK;
+ 	amdgpu_dc_double DISPCLK;
+@@ -4774,7 +4771,7 @@ void dml21_ModeSupportAndSystemConfigurationFull(struct display_mode_lib *mode_l
+ 				mode_lib->vba.MaximumReadBandwidthWithoutPrefetch = 0.0;
+ 				mode_lib->vba.MaximumReadBandwidthWithPrefetch = 0.0;
+ 				for (k = 0; k <= mode_lib->vba.NumberOfActivePlanes - 1; k++) {
+-					uint m;
++					unsigned int m;
+ 
+ 					locals->cursor_bw[k] = 0;
+ 					locals->cursor_bw_pre[k] = 0;
+@@ -5285,7 +5282,7 @@ static void CalculateWatermarksAndDRAMSpeedChangeSupport(
+ 	amdgpu_dc_double SecondMinActiveDRAMClockChangeMarginOneDisplayInVBLank;
+ 	amdgpu_dc_double FullDETBufferingTimeYStutterCriticalPlane = 0;
+ 	amdgpu_dc_double TimeToFinishSwathTransferStutterCriticalPlane = 0;
+-	uint k, j;
++	unsigned int k, j;
+ 
+ 	mode_lib->vba.TotalActiveDPP = 0;
+ 	mode_lib->vba.TotalDCCActiveDPP = 0;
+@@ -5507,7 +5504,7 @@ static void CalculateDCFCLKDeepSleep(
+ 		amdgpu_dc_double DPPCLK[],
+ 		amdgpu_dc_double *DCFCLKDeepSleep)
+ {
+-	uint k;
++	unsigned int k;
+ 	amdgpu_dc_double DisplayPipeLineDeliveryTimeLuma;
+ 	amdgpu_dc_double DisplayPipeLineDeliveryTimeChroma;
+ 	//amdgpu_dc_double   DCFCLKDeepSleepPerPlane[DC__NUM_DPP__MAX];
+@@ -5727,7 +5724,7 @@ static void CalculatePixelDeliveryTimes(
+ 		amdgpu_dc_double DisplayPipeRequestDeliveryTimeChromaPrefetch[])
+ {
+ 	amdgpu_dc_double req_per_swath_ub;
+-	uint k;
++	unsigned int k;
+ 
+ 	for (k = 0; k < NumberOfActivePlanes; ++k) {
+ 		if (VRatio[k] <= 1) {
+@@ -5869,7 +5866,7 @@ static void CalculateMetaAndPTETimes(
+ 	unsigned int dpte_groups_per_row_chroma_ub;
+ 	unsigned int num_group_per_lower_vm_stage;
+ 	unsigned int num_req_per_lower_vm_stage;
+-	uint k;
++	unsigned int k;
+ 
+ 	for (k = 0; k < NumberOfActivePlanes; ++k) {
+ 		if (GPUVMEnable == true) {
 -- 
-Sakari Ailus
-sakari.ailus@linux.intel.com
+2.20.0
+
