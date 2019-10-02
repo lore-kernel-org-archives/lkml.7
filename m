@@ -4,27 +4,27 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D4A4C352AA
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 12:30:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E6187C352AA
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 12:30:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0B81821920
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 12:30:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C5B5F2133F
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 12:30:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727593AbfJBMar (ORCPT
+        id S1727558AbfJBMan (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Oct 2019 08:30:47 -0400
+        Wed, 2 Oct 2019 08:30:43 -0400
 Received: from relay4-d.mail.gandi.net ([217.70.183.196]:38115 "EHLO
         relay4-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727152AbfJBMaj (ORCPT
+        with ESMTP id S1725747AbfJBMah (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Oct 2019 08:30:39 -0400
+        Wed, 2 Oct 2019 08:30:37 -0400
 X-Originating-IP: 86.250.200.211
 Received: from localhost.localdomain (lfbn-1-17395-211.w86-250.abo.wanadoo.fr [86.250.200.211])
         (Authenticated sender: miquel.raynal@bootlin.com)
-        by relay4-d.mail.gandi.net (Postfix) with ESMTPSA id CFB03E001F;
-        Wed,  2 Oct 2019 12:30:36 +0000 (UTC)
+        by relay4-d.mail.gandi.net (Postfix) with ESMTPSA id B0A44E001B;
+        Wed,  2 Oct 2019 12:30:33 +0000 (UTC)
 From:   Miquel Raynal <miquel.raynal@bootlin.com>
 To:     Jonathan Cameron <jic23@kernel.org>,
         Hartmut Knaack <knaack.h@gmx.de>,
@@ -36,9 +36,9 @@ Cc:     <devicetree@vger.kernel.org>, linux-iio@vger.kernel.org,
         linux-kernel@vger.kernel.org,
         Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
         Miquel Raynal <miquel.raynal@bootlin.com>
-Subject: [PATCH 7/7] dt-bindings: iio: adc: max1027: Document max12xx series compatibles
-Date:   Wed,  2 Oct 2019 14:30:25 +0200
-Message-Id: <20191002123025.21413-8-miquel.raynal@bootlin.com>
+Subject: [PATCH 5/7] iio: adc: max1027: Introduce 12-bit devices support
+Date:   Wed,  2 Oct 2019 14:30:23 +0200
+Message-Id: <20191002123025.21413-6-miquel.raynal@bootlin.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191002123025.21413-1-miquel.raynal@bootlin.com>
 References: <20191002123025.21413-1-miquel.raynal@bootlin.com>
@@ -49,33 +49,108 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Update the bindings documentation with new Maxim ADCs compatibles.
+Maxim's max12xx series is very similar to the max10xx series, with the
+difference of the measurements depth which is upgraded from 10 to 12
+bits per channel. Everything else looks the same.
 
 Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
 ---
- .../devicetree/bindings/iio/adc/max1027-adc.txt        | 10 ++++++++--
- 1 file changed, 8 insertions(+), 2 deletions(-)
+ drivers/iio/adc/Kconfig   |  4 ++--
+ drivers/iio/adc/max1027.c | 41 ++++++++++++++++++++++++++++++++++++++-
+ 2 files changed, 42 insertions(+), 3 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/iio/adc/max1027-adc.txt b/Documentation/devicetree/bindings/iio/adc/max1027-adc.txt
-index 7b23d68f655c..1b703a01d882 100644
---- a/Documentation/devicetree/bindings/iio/adc/max1027-adc.txt
-+++ b/Documentation/devicetree/bindings/iio/adc/max1027-adc.txt
-@@ -1,7 +1,13 @@
--* Maxim 1027/1029/1031 Analog to Digital Converter (ADC)
-+* Maxim 1027/1029/1031/1227/1229/1231 Analog to Digital Converter (ADC)
+diff --git a/drivers/iio/adc/Kconfig b/drivers/iio/adc/Kconfig
+index f0af3a42f53c..6ac16d738822 100644
+--- a/drivers/iio/adc/Kconfig
++++ b/drivers/iio/adc/Kconfig
+@@ -508,8 +508,8 @@ config MAX1027
+ 	select IIO_BUFFER
+ 	select IIO_TRIGGERED_BUFFER
+ 	help
+-	  Say yes here to build support for Maxim SPI ADC models
+-	  max1027, max1029 and max1031.
++	  Say yes here to build support for Maxim SPI {10,12}-bit ADC models:
++	  max1027, max1029, max1031, max1227, max1229 and max1231.
  
- Required properties:
--  - compatible: Should be "maxim,max1027" or "maxim,max1029" or "maxim,max1031"
-+  - compatible: Should be one of:
-+    * "maxim,max1027"
-+    * "maxim,max1029"
-+    * "maxim,max1031"
-+    * "maxim,max1227"
-+    * "maxim,max1229"
-+    * "maxim,max1231"
-   - reg: SPI chip select number for the device
+ 	  To compile this driver as a module, choose M here: the module will be
+ 	  called max1027.
+diff --git a/drivers/iio/adc/max1027.c b/drivers/iio/adc/max1027.c
+index fc75764a6fd7..0d7116e9a63b 100644
+--- a/drivers/iio/adc/max1027.c
++++ b/drivers/iio/adc/max1027.c
+@@ -63,12 +63,18 @@ enum max1027_id {
+ 	max1027,
+ 	max1029,
+ 	max1031,
++	max1227,
++	max1229,
++	max1231,
+ };
  
- Optional properties:
+ static const struct spi_device_id max1027_id[] = {
+ 	{"max1027", max1027},
+ 	{"max1029", max1029},
+ 	{"max1031", max1031},
++	{"max1227", max1227},
++	{"max1229", max1229},
++	{"max1231", max1231},
+ 	{}
+ };
+ MODULE_DEVICE_TABLE(spi, max1027_id);
+@@ -156,6 +162,21 @@ static const struct iio_chan_spec max1031_channels[] = {
+ 	MAX1X31_CHANNELS(10)
+ };
+ 
++static const struct iio_chan_spec max1227_channels[] = {
++	MAX1X27_CHANNELS(12)
++};
++
++static const struct iio_chan_spec max1229_channels[] = {
++	MAX1X27_CHANNELS(12),
++	MAX1X29_CHANNELS(12)
++};
++
++static const struct iio_chan_spec max1231_channels[] = {
++	MAX1X27_CHANNELS(12),
++	MAX1X29_CHANNELS(12),
++	MAX1X31_CHANNELS(12)
++};
++
+ static const unsigned long max1027_available_scan_masks[] = {
+ 	0x000001ff,
+ 	0x00000000,
+@@ -197,6 +218,24 @@ static const struct max1027_chip_info max1027_chip_info_tbl[] = {
+ 		.depth = 10,
+ 		.available_scan_masks = max1031_available_scan_masks,
+ 	},
++	[max1227] = {
++		.channels = max1227_channels,
++		.num_channels = ARRAY_SIZE(max1227_channels),
++		.depth = 12,
++		.available_scan_masks = max1027_available_scan_masks,
++	},
++	[max1229] = {
++		.channels = max1229_channels,
++		.num_channels = ARRAY_SIZE(max1229_channels),
++		.depth = 12,
++		.available_scan_masks = max1029_available_scan_masks,
++	},
++	[max1231] = {
++		.channels = max1231_channels,
++		.num_channels = ARRAY_SIZE(max1231_channels),
++		.depth = 12,
++		.available_scan_masks = max1031_available_scan_masks,
++	},
+ };
+ 
+ struct max1027_state {
+@@ -493,5 +532,5 @@ static struct spi_driver max1027_driver = {
+ module_spi_driver(max1027_driver);
+ 
+ MODULE_AUTHOR("Philippe Reynes <tremyfr@yahoo.fr>");
+-MODULE_DESCRIPTION("MAX1027/MAX1029/MAX1031 ADC");
++MODULE_DESCRIPTION("MAX1X27/MAX1X29/MAX1X31 ADC");
+ MODULE_LICENSE("GPL v2");
 -- 
 2.20.1
 
