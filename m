@@ -2,152 +2,77 @@ Return-Path: <SRS0=zem1=X3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CB4BEC35280
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 12:42:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 470EFC35280
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 12:43:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A38DF21920
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 12:42:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570020144;
-	bh=NLDQQjTMKStTfy+mmZiFdDPpDbYYwDq97K+fyh0rmQA=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=XTBiMlxGMZn5nTmlNMkfgN9/X3FIPpKk7sxp+k1/BYEGbMkYi+FzcSQn7pjU/x5Zv
-	 jXpuHbOg6OvwqnNUtnwei5gKXg4z3AZ9x9gUQE2zQ1tdCkkLfz3CuiZJe+5gDk0zQf
-	 F1W4pqJsDpuY58FAHunwGxyAH43HmKkalfLqswHY=
+	by mail.kernel.org (Postfix) with ESMTP id 1B6462133F
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 12:43:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727116AbfJBMmY (ORCPT
+        id S1726777AbfJBMnh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Oct 2019 08:42:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37398 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726038AbfJBMmX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Oct 2019 08:42:23 -0400
-Received: from localhost.localdomain (236.31.169.217.in-addr.arpa [217.169.31.236])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D7EB02133F;
-        Wed,  2 Oct 2019 12:42:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570020142;
-        bh=NLDQQjTMKStTfy+mmZiFdDPpDbYYwDq97K+fyh0rmQA=;
-        h=From:To:Cc:Subject:Date:From;
-        b=dJnxXL+yQ7XMCepN6ICMOHC9GiR/ws2fcKtNxQRw+uZysq57qIxRjdAP2/IoFE6oI
-         ANUY12euHdOugmdy82+lhqZTOif3n9gul2YuV0qp4hzjK7Ok6+KjDCwIp6tDEa9uWL
-         vh4FKjOByYAVdPWEfWeMGoCFNi+Qs3vzuq8jRtyI=
-From:   Will Deacon <will@kernel.org>
-To:     linux-gpio@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, Will Deacon <will@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>
-Subject: [RESEND PATCH] pinctrl: devicetree: Avoid taking direct reference to device name string
-Date:   Wed,  2 Oct 2019 13:42:06 +0100
-Message-Id: <20191002124206.22928-1-will@kernel.org>
-X-Mailer: git-send-email 2.11.0
+        Wed, 2 Oct 2019 08:43:37 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:43944 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725747AbfJBMnh (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 2 Oct 2019 08:43:37 -0400
+Received: from 1.general.cking.uk.vpn ([10.172.193.212] helo=localhost)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <colin.king@canonical.com>)
+        id 1iFdya-0001MO-T4; Wed, 02 Oct 2019 12:43:28 +0000
+From:   Colin King <colin.king@canonical.com>
+To:     Keith Busch <kbusch@kernel.org>, Jens Axboe <axboe@fb.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Sagi Grimberg <sagi@grimberg.me>,
+        linux-nvme@lists.infradead.org
+Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] nvme: fix uninitialized return of ret when sysfs_create_link fails
+Date:   Wed,  2 Oct 2019 13:43:28 +0100
+Message-Id: <20191002124328.17264-1-colin.king@canonical.com>
+X-Mailer: git-send-email 2.20.1
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When populating the pinctrl mapping table entries for a device, the
-'dev_name' field for each entry is initialised to point directly at the
-string returned by 'dev_name()' for the device and subsequently used by
-'create_pinctrl()' when looking up the mappings for the device being
-probed.
+From: Colin Ian King <colin.king@canonical.com>
 
-This is unreliable in the presence of calls to 'dev_set_name()', which may
-reallocate the device name string leaving the pinctrl mappings with a
-dangling reference. This then leads to a use-after-free every time the
-name is dereferenced by a device probe:
+Currently when the call to sysfs_create_link fails the error exit
+path returns an uninitialized value in variable ret. Fix this by
+returning the error code returned from the failed call to
+sysfs_create_link.
 
-  | BUG: KASAN: invalid-access in strcmp+0x20/0x64
-  | Read of size 1 at addr 13ffffc153494b00 by task modprobe/590
-  | Pointer tag: [13], memory tag: [fe]
-  |
-  | Call trace:
-  |  __kasan_report+0x16c/0x1dc
-  |  kasan_report+0x10/0x18
-  |  check_memory_region
-  |  __hwasan_load1_noabort+0x4c/0x54
-  |  strcmp+0x20/0x64
-  |  create_pinctrl+0x18c/0x7f4
-  |  pinctrl_get+0x90/0x114
-  |  devm_pinctrl_get+0x44/0x98
-  |  pinctrl_bind_pins+0x5c/0x450
-  |  really_probe+0x1c8/0x9a4
-  |  driver_probe_device+0x120/0x1d8
-
-Follow the example of sysfs, and duplicate the device name string before
-stashing it away in the pinctrl mapping entries.
-
-Cc: Linus Walleij <linus.walleij@linaro.org>
-Reported-by: Elena Petrova <lenaptr@google.com>
-Tested-by: Elena Petrova <lenaptr@google.com>
-Signed-off-by: Will Deacon <will@kernel.org>
+Addresses-Coverity: ("Uninitialized scalar variable")
+Fixes: 32fd90c40768 ("nvme: change locking for the per-subsystem controller list")
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
 ---
- drivers/pinctrl/devicetree.c | 25 ++++++++++++++++++++-----
- 1 file changed, 20 insertions(+), 5 deletions(-)
+ drivers/nvme/host/core.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/pinctrl/devicetree.c b/drivers/pinctrl/devicetree.c
-index 88ddbb2e30de..9721ad30c541 100644
---- a/drivers/pinctrl/devicetree.c
-+++ b/drivers/pinctrl/devicetree.c
-@@ -29,6 +29,13 @@ struct pinctrl_dt_map {
- static void dt_free_map(struct pinctrl_dev *pctldev,
- 		     struct pinctrl_map *map, unsigned num_maps)
- {
-+	int i;
-+
-+	for (i = 0; i < num_maps; ++i) {
-+		kfree_const(map[i].dev_name);
-+		map[i].dev_name = NULL;
-+	}
-+
- 	if (pctldev) {
- 		const struct pinctrl_ops *ops = pctldev->desc->pctlops;
- 		if (ops->dt_free_map)
-@@ -63,7 +70,13 @@ static int dt_remember_or_free_map(struct pinctrl *p, const char *statename,
+diff --git a/drivers/nvme/host/core.c b/drivers/nvme/host/core.c
+index 63b37d08ac98..f6acbff3e3bc 100644
+--- a/drivers/nvme/host/core.c
++++ b/drivers/nvme/host/core.c
+@@ -2540,8 +2540,9 @@ static int nvme_init_subsystem(struct nvme_ctrl *ctrl, struct nvme_id_ctrl *id)
+ 		list_add_tail(&subsys->entry, &nvme_subsystems);
+ 	}
  
- 	/* Initialize common mapping table entry fields */
- 	for (i = 0; i < num_maps; i++) {
--		map[i].dev_name = dev_name(p->dev);
-+		const char *devname;
-+
-+		devname = kstrdup_const(dev_name(p->dev), GFP_KERNEL);
-+		if (!devname)
-+			goto err_free_map;
-+
-+		map[i].dev_name = devname;
- 		map[i].name = statename;
- 		if (pctldev)
- 			map[i].ctrl_dev_name = dev_name(pctldev->dev);
-@@ -71,10 +84,8 @@ static int dt_remember_or_free_map(struct pinctrl *p, const char *statename,
- 
- 	/* Remember the converted mapping table entries */
- 	dt_map = kzalloc(sizeof(*dt_map), GFP_KERNEL);
--	if (!dt_map) {
--		dt_free_map(pctldev, map, num_maps);
--		return -ENOMEM;
--	}
-+	if (!dt_map)
-+		goto err_free_map;
- 
- 	dt_map->pctldev = pctldev;
- 	dt_map->map = map;
-@@ -82,6 +93,10 @@ static int dt_remember_or_free_map(struct pinctrl *p, const char *statename,
- 	list_add_tail(&dt_map->node, &p->dt_maps);
- 
- 	return pinctrl_register_map(map, num_maps, false);
-+
-+err_free_map:
-+	dt_free_map(pctldev, map, num_maps);
-+	return -ENOMEM;
- }
- 
- struct pinctrl_dev *of_pinctrl_get(struct device_node *np)
+-	if (sysfs_create_link(&subsys->dev.kobj, &ctrl->device->kobj,
+-			dev_name(ctrl->device))) {
++	ret = sysfs_create_link(&subsys->dev.kobj, &ctrl->device->kobj,
++				dev_name(ctrl->device));
++	if (ret) {
+ 		dev_err(ctrl->device,
+ 			"failed to create sysfs link from subsystem.\n");
+ 		goto out_put_subsystem;
 -- 
-2.23.0.444.g18eeb5a265-goog
+2.20.1
 
