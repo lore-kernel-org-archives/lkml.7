@@ -2,169 +2,98 @@ Return-Path: <SRS0=zem1=X3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DDF0CECE58A
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 14:26:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 61001C35280
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 14:27:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A7A6E21D7B
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 14:26:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gaKYdTsk"
+	by mail.kernel.org (Postfix) with ESMTP id 372E921848
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 14:27:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1570026432;
+	bh=1ImOMJ8oX6upXobqxOhukAIxxbBv3fnv5rBymQOCbao=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=EFTFU0oBn0UFmYH6hLq4seOwRDNjjoKTWd3kqQ6wAbqcI8x4SvMSNq9j4DkecepZF
+	 lrzyE0ogbAq3Eganrk60GQZpjgLRMUFZFDyor1gBuYdwYANNRmIw5sLtNRIdajCyT2
+	 6Kw7R2rnJE75GTRCrWIVbMSFYyIUQXCx5Xv6UV2I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727690AbfJBO0F (ORCPT
+        id S1727955AbfJBO1L (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Oct 2019 10:26:05 -0400
-Received: from mail-io1-f65.google.com ([209.85.166.65]:32852 "EHLO
-        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725747AbfJBO0E (ORCPT
+        Wed, 2 Oct 2019 10:27:11 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:55526 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727691AbfJBO1L (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Oct 2019 10:26:04 -0400
-Received: by mail-io1-f65.google.com with SMTP id z19so57447935ior.0;
-        Wed, 02 Oct 2019 07:26:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=EZDH5fmtx84N/FA2DzFvaaolbsd+J9iBLD5hVgfYHUw=;
-        b=gaKYdTskfQ4v6HYIY+JvWXJsfXYA5zEifd8viqarIpymnW5yClMh0TTueb5O9TJG4m
-         B4QdL+HrLreSVUqjQM1wMDWrtcoRcIQdzm9s4uOJ6O8+aodZNqtfNr0U917vdd29+i18
-         XveTai6RxBsHly9KdDHGuPCP5nBf4N+N5RB9QHC5lleZy18zbCvSXsyjUsSfPpyGM3dZ
-         5TufF5sE+8fWpAoQys1SlsYwU/5FSsL2Jc/WwmFszl2VDaUUbY/9zAJzFCLZ5IhGrmh6
-         SbHwWwVAQfPM5sJcQmKKRAzZSROPb9rjpSn0eOgJ56DHcWs1GZzWmp85ZSV9EOiyx8tC
-         PRfg==
+        Wed, 2 Oct 2019 10:27:11 -0400
+Received: by mail-wm1-f65.google.com with SMTP id a6so7421845wma.5;
+        Wed, 02 Oct 2019 07:27:09 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=EZDH5fmtx84N/FA2DzFvaaolbsd+J9iBLD5hVgfYHUw=;
-        b=DIJvy2MMC2++U4u/mcZDxr9K7iKMy11wGTH/0nYJzYqfDDjkeP3yx6scAtsqEc5Bln
-         lO9wILYmhMLxdklW89s9WPsshgxGf9eBrej48Hh7Fp04DBccybr6uvVWzXre6lF9dS0k
-         4qQ2z68GSFCRmy3oQpCkhZv7IefS95rFJR+iDxtpBUqXpd9vTOCFVH5QZTUH4afT3iM5
-         eCPau4TJr2qTDMQt56Fp1nNRnrOUVzyWhFtUGxEvRsp7lK8Y8ejxX5K3K7KBxVvVUxPX
-         NUQ6c3uiWCrTMjj7M4XpiU62jaaxqI2B1JbPervUlmIFP2CbA3WVHlKiG9oBXBCJB5jl
-         VqZg==
-X-Gm-Message-State: APjAAAVSEQyZq73alSNK3qSCuFQ91EsYpGxtd3O3btNASAkisyNf8+4Z
-        Pk9er09yySV16a6HumSUQUtzXmvmNn0U6eJCyuY=
-X-Google-Smtp-Source: APXvYqwSvKuEL2HXaM2JPuO0AJ2TQbqnKScQq+YdzwN3RcglXqDUiH+8EcSdOBI+TqWjYK7nwQrpsxBsXYuWUhCs3y4=
-X-Received: by 2002:a02:8502:: with SMTP id g2mr1532070jai.87.1570026362893;
- Wed, 02 Oct 2019 07:26:02 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=uObNUHqWJewvYqHBCnMGF7TkZjRFqm/2PPATnntgxrY=;
+        b=aiRMBXFwZ2fx+4yDtABb/0BR0YGccfneZxjdhR/epXeq/VuTXoixZg4CwskzBYv1pu
+         8xlEoCIkGVB5z6zXM0hXnOfgFbZ6ynIm7LwKRyKhStaLLkB15lgM4RmuhSNOfMGe2vo0
+         /+D5jz1armXV7K+2FHVGTZZ1eZXDU0IgRrubdIwIs7eGX+jWYkBWz/1Kpad8crL6F0Cw
+         3gC9t2Ktv188FiJeuLyWLGGtjmbNtM0Rv6KUl/U0qbUhX9ZxZQAjAGpVfJzuFtXCmTAv
+         bhB2GHGElhC/CR4Fg2Z3rFAqkOZ0/yIqXRIkfz7c2Bg8MBHkGtcs0eyN5ni7JdZOoBZi
+         VK0Q==
+X-Gm-Message-State: APjAAAVVmfRlcWHNlktNo9EtAiax3c5hUvF2n9vnkh7ofsqVXJMTxPfX
+        hxhdBDPtanoSWYMPRnYF8WU=
+X-Google-Smtp-Source: APXvYqysX7HSYX87cRrnR2+oscG/k3IGiCv5SJ8a7cJKlBjiDbbsPBGuHSOfaCiO5IvNEEqeSzk9Nw==
+X-Received: by 2002:a1c:a7d2:: with SMTP id q201mr3036457wme.146.1570026428477;
+        Wed, 02 Oct 2019 07:27:08 -0700 (PDT)
+Received: from pi3 ([194.230.155.145])
+        by smtp.googlemail.com with ESMTPSA id u10sm37896458wrg.55.2019.10.02.07.27.06
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 02 Oct 2019 07:27:07 -0700 (PDT)
+Date:   Wed, 2 Oct 2019 16:27:04 +0200
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     Kamil Konieczny <k.konieczny@partner.samsung.com>
+Cc:     Marek Szyprowski <m.szyprowski@samsung.com>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Chanwoo Choi <cw00.choi@samsung.com>,
+        Kukjin Kim <kgene@kernel.org>,
+        Kyungmin Park <kyungmin.park@samsung.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        MyungJoo Ham <myungjoo.ham@samsung.com>,
+        Nishanth Menon <nm@ti.com>, Rob Herring <robh+dt@kernel.org>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Viresh Kumar <vireshk@kernel.org>, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-pm@vger.kernel.org, linux-samsung-soc@vger.kernel.org
+Subject: Re: [RESEND PATCH v5 3/4] ARM: dts: exynos: add initial data for
+ coupled regulators for Exynos5422/5800
+Message-ID: <20191002142704.GA15827@pi3>
+References: <20190808090234.12577-1-k.konieczny@partner.samsung.com>
+ <CGME20190808090252eucas1p2afec3e288965bb7e7aa6f96f67686273@eucas1p2.samsung.com>
+ <20190808090234.12577-4-k.konieczny@partner.samsung.com>
 MIME-Version: 1.0
-References: <20191001152441.27008.99285.stgit@localhost.localdomain>
- <7233498c-2f64-d661-4981-707b59c78fd5@redhat.com> <1ea1a4e11617291062db81f65745b9c95fd0bb30.camel@linux.intel.com>
- <8bd303a6-6e50-b2dc-19ab-4c3f176c4b02@redhat.com> <CAKgT0Uf37xAFK2CWqUZJgn7bWznSAi6qncLxBpC55oSpBMG1HQ@mail.gmail.com>
- <c06b68cb-5e94-ae3e-f84e-48087d675a8f@redhat.com>
-In-Reply-To: <c06b68cb-5e94-ae3e-f84e-48087d675a8f@redhat.com>
-From:   Alexander Duyck <alexander.duyck@gmail.com>
-Date:   Wed, 2 Oct 2019 07:25:50 -0700
-Message-ID: <CAKgT0Ud6TT=XxqFx6ePHzbUYqMp5FHVPozRvnNZK3tKV7j2xjg@mail.gmail.com>
-Subject: Re: [PATCH v11 0/6] mm / virtio: Provide support for unused page reporting
-To:     Nitesh Narayan Lal <nitesh@redhat.com>
-Cc:     Alexander Duyck <alexander.h.duyck@linux.intel.com>,
-        David Hildenbrand <david@redhat.com>,
-        virtio-dev@lists.oasis-open.org, kvm list <kvm@vger.kernel.org>,
-        "Michael S. Tsirkin" <mst@redhat.com>,
-        Dave Hansen <dave.hansen@intel.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Matthew Wilcox <willy@infradead.org>,
-        Michal Hocko <mhocko@kernel.org>,
-        linux-mm <linux-mm@kvack.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Mel Gorman <mgorman@techsingularity.net>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Oscar Salvador <osalvador@suse.de>,
-        Yang Zhang <yang.zhang.wz@gmail.com>,
-        Pankaj Gupta <pagupta@redhat.com>,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        Rik van Riel <riel@surriel.com>, lcapitulino@redhat.com,
-        "Wang, Wei W" <wei.w.wang@intel.com>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Dan Williams <dan.j.williams@intel.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20190808090234.12577-4-k.konieczny@partner.samsung.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Oct 2, 2019 at 3:37 AM Nitesh Narayan Lal <nitesh@redhat.com> wrote:
->
->
-> On 10/1/19 8:55 PM, Alexander Duyck wrote:
-> > On Tue, Oct 1, 2019 at 12:16 PM Nitesh Narayan Lal <nitesh@redhat.com> wrote:
-> >>
-> >> On 10/1/19 12:21 PM, Alexander Duyck wrote:
-> >>> On Tue, 2019-10-01 at 17:35 +0200, David Hildenbrand wrote:
-> >>>> On 01.10.19 17:29, Alexander Duyck wrote:
+On Thu, Aug 08, 2019 at 11:02:33AM +0200, Kamil Konieczny wrote:
+> From: Marek Szyprowski <m.szyprowski@samsung.com>
+> 
+> Declare Exynos5422/5800 voltage ranges for opp points for big cpu core and
+> bus wcore and couple their voltage supllies as vdd_arm and vdd_int should
+> be in 300mV range.
+> 
+> Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
+> [k.konieczny: add missing patch description]
+> Signed-off-by: Kamil Konieczny <k.konieczny@partner.samsung.com>
+> Reviewed-by: Chanwoo Choi <cw00.choi@samsung.com>
 
-<snip>
+The bindings were acked. Can I pick it up?
 
-> >>> Do we have a working patch set for Nitesh's code? The last time I tried
-> >>> running his patch set I ran into issues with kernel panics. If we have a
-> >>> known working/stable patch set I can give it a try.
-> >> Did you try the v12 patch-set [1]?
-> >> I remember that you reported the CPU stall issue, which I fixed in the v12.
-> >>
-> >> [1] https://lkml.org/lkml/2019/8/12/593
-> > So I tried testing with the spin_lock calls replaced with spin_lock
-> > _irq to resolve the IRQ issue. I also had shuffle enabled in order to
-> > increase the number of pages being dirtied.
-> >
-> > With that setup the bitmap approach is running significantly worse
-> > then my approach, even with the boundary removed. Since I had to
-> > modify the code to even getting working I am not comfortable posting
-> > numbers.
->
-> I didn't face any issue in getting the code work or compile.
-> Before my v12 posting, I did try your previously suggested test
-> (will-it-scale/page_fault1 for 12 hours on a 60 GB) and didn't see any issues.
-> I think it would help more if you can share the setup which you are running.
+Best regards,
+Krzysztof
 
-So one issue with the standard page_fault1 is that it is only
-operating at the 4K page level. You won't see much impact from you
-patches with that as the overhead of splitting a MAX_ORDER - 2 page
-down to a 4K page will end up being the biggest thing you are
-benchmarking.
-
-I think I have brought it up before but I am running with the
-page_fault1 modified to use THP. Making the change is pretty
-straightforward as  all you have to do is add an madvise to the test
-code. All that is needed is to add "madvise(c, MEMSIZE,
-MADV_HUGEPAGE);" between the assert and the for loop in the
-page_fault1 code and then rebuild the test. I actually copied
-page_fault1.c into a file I named page_fault4.c and added the line. As
-a result it seems like the code will build it as an additional test.
-
-The only other alteration I can think of that might have much impact
-would be to enable the page shuffling. The idea is that it will cause
-us to use more pages because half of the pages freed are dumped to the
-tail of the list so we are constantly churning the memory.
-
-> > My suggestion would be to look at reworking the patch set and
-> > post numbers for my patch set versus the bitmap approach and we can
-> > look at them then.
->
-> Agreed. However, in order to fix an issue I have to reproduce it first.
-
-With the tweak I have suggested above it should make it much easier to
-reproduce. Basically all you need is to have the allocation competing
-against hinting. Currently the hinting isn't doing this because the
-allocations are mostly coming out of 4K pages instead of higher order
-ones.
-
-Alternatively you could just make the suggestion I had proposed about
-using spin_lock/unlock_irq in your worker thread and that resolved it
-for me.
-
-> >  I would prefer not to spend my time fixing and
-> > tuning a patch set that I am still not convinced is viable.
->
-> You  don't have to, I can fix the issues in my patch-set. :)
-
-Sounds good. Hopefully the stuff I pointed out above helps you to get
-a reproduction and resolve the issues.
-
-- Alex
