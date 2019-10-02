@@ -2,28 +2,28 @@ Return-Path: <SRS0=zem1=X3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0C83C352AA
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 12:20:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 11B28C35280
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 12:21:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CD93121920
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 12:20:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DB78A20700
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 12:21:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727321AbfJBMU1 (ORCPT
+        id S1726943AbfJBMVP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Oct 2019 08:20:27 -0400
-Received: from mx2.suse.de ([195.135.220.15]:54036 "EHLO mx1.suse.de"
+        Wed, 2 Oct 2019 08:21:15 -0400
+Received: from mx2.suse.de ([195.135.220.15]:54792 "EHLO mx1.suse.de"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727121AbfJBMUZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Oct 2019 08:20:25 -0400
+        id S1725747AbfJBMVP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 2 Oct 2019 08:21:15 -0400
 X-Virus-Scanned: by amavisd-new at test-mx.suse.de
 Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id E6591AD09;
-        Wed,  2 Oct 2019 12:20:22 +0000 (UTC)
-Message-ID: <1570019152.22393.0.camel@suse.cz>
+        by mx1.suse.de (Postfix) with ESMTP id 6CEC4ACC3;
+        Wed,  2 Oct 2019 12:21:13 +0000 (UTC)
+Message-ID: <1570019204.22393.1.camel@suse.cz>
 Subject: Re: [PATCH 1/2] x86,sched: Add support for frequency invariance
 From:   Giovanni Gherdovich <ggherdovich@suse.cz>
 To:     Peter Zijlstra <peterz@infradead.org>
@@ -34,11 +34,11 @@ Cc:     srinivas.pandruvada@linux.intel.com, tglx@linutronix.de,
         matt@codeblueprint.co.uk, viresh.kumar@linaro.org,
         juri.lelli@redhat.com, pjt@google.com, vincent.guittot@linaro.org,
         qperret@qperret.net, dietmar.eggemann@arm.com
-Date:   Wed, 02 Oct 2019 14:25:52 +0200
-In-Reply-To: <20190924163053.GA4519@hirez.programming.kicks-ass.net>
+Date:   Wed, 02 Oct 2019 14:26:44 +0200
+In-Reply-To: <20190924160423.GN2369@hirez.programming.kicks-ass.net>
 References: <20190909024216.5942-1-ggherdovich@suse.cz>
          <20190909024216.5942-2-ggherdovich@suse.cz>
-         <20190924163053.GA4519@hirez.programming.kicks-ass.net>
+         <20190924160423.GN2369@hirez.programming.kicks-ass.net>
 Content-Type: text/plain; charset="UTF-8"
 X-Mailer: Evolution 3.26.6 
 Mime-Version: 1.0
@@ -48,64 +48,32 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello Peter,
-
-late replies as I wasn't in the office last week.
-
-On Tue, 2019-09-24 at 18:30 +0200, Peter Zijlstra wrote:
+On Tue, 2019-09-24 at 18:04 +0200, Peter Zijlstra wrote:
 > On Mon, Sep 09, 2019 at 04:42:15AM +0200, Giovanni Gherdovich wrote:
-> > +static const struct x86_cpu_id has_turbo_ratio_group_limits[] = {
-> > +   ICPU(INTEL_FAM6_ATOM_GOLDMONT),
-> > +   ICPU(INTEL_FAM6_ATOM_GOLDMONT_X),
 > 
-> That's GOLDMONT_D in recent tip kernels.
-
-Right, I saw that now.
-
+> > +static void intel_set_cpu_max_freq(void)
+> > +{
+> > +	/*
+> > +	 * TODO: add support for:
+> > +	 *
+> > +	 * - Xeon Phi (KNM, KNL)
+> > +	 * - Xeon Gold/Platinum, Atom Goldmont/Goldmont Plus
+> > +	 * - Atom Silvermont
 > 
-> > +   ICPU(INTEL_FAM6_ATOM_GOLDMONT_PLUS),
-> > +   ICPU(INTEL_FAM6_SKYLAKE_X),
-> 
-> What about KABYLAKE_X and ICELAKE_X ?
+> ISTR I had code for Atom.. what happened with that?
 
-KABYLAKE_X: does it exist? I couldn't find it in
-arch/x86/include/asm/intel-family.h (the tip tree), I only see KABYLAKE_L and
-KABYLAKE.
+I'm being overly zealous and I wanted to get a Silvermont machine to test that
+code before sending.
 
-ICELAKE_X: well, I don't know really. Does this model have the same semantic
-for MSR_TURBO_RATIO_LIMIT as SKYLAKE_X (which is family = 0x6, model = 0x55)?
-This is for Len B. and Srinivas P. (in CC).
+The reason is that your code uses MSR_ATOM_CORE_RATIOS and
+MSR_ATOM_CORE_TURBO_RATIOS which are not documented in the SDM. I wanted to
+make sure those have the expected content on at least one machine before using
+them in my code. I have no doubt you, Srinivas and Len (who uses them in
+turbostat) have already checked but you know, more eyeballs.
 
-The latest Software Developer's Manual (SDM) from May 2019 (volume 4, section
-2.17.3, "MSRs Specific to Intel Xeon Processor Scalable Family") mentions only
-"CPUID DisplayFamily_DisplayModel = 06_55H", which is SKYLAKE_X, as having the
-semantic I'm looking for here (in addition to Atom Goldmont's).
-
-The semantic I'm referring to is that MSR_TURBO_RATIO_LIMIT doesn't contain
-turbo levels for the fixed group sizes 1-2-3-4-... cores, the group sizes are
-specified in a different MSR (and could be 2-4-8-12-... for example).
-
-If the SDM is outdated and ICELAKE_X is also in that category, then the
-turbostat source code is outdated too as it has this function to detect this
-feature:
-
-    int has_turbo_ratio_group_limits(int family, int model)
-    {
-
-            if (!genuine_intel)
-                    return 0;
-
-            switch (model) {
-            case INTEL_FAM6_ATOM_GOLDMONT:
-            case INTEL_FAM6_SKYLAKE_X:
-            case INTEL_FAM6_ATOM_GOLDMONT_X:
-                    return 1;
-            }
-            return 0;
-    }
-
-(from the tree lenb/linux.git, branch "turbostat", turbostat version 19.08.31
-not yet merged into mainline)
+I've talked to Len and Srinivas at LPC, they agreed that those two MSR may not
+have made it to the SDM but said the turbostat source code is the reference in
+this case.
 
 
 Giovanni
