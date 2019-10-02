@@ -6,33 +6,33 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EA21C352AA
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 14:42:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3578BC352AA
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 14:42:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2DBD221D7B
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 14:42:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1810921783
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 14:42:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728305AbfJBOmP (ORCPT
+        id S1728394AbfJBOmT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Oct 2019 10:42:15 -0400
-Received: from foss.arm.com ([217.140.110.172]:45784 "EHLO foss.arm.com"
+        Wed, 2 Oct 2019 10:42:19 -0400
+Received: from foss.arm.com ([217.140.110.172]:45810 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727130AbfJBOmO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Oct 2019 10:42:14 -0400
+        id S1728360AbfJBOmR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 2 Oct 2019 10:42:17 -0400
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B394E1650;
-        Wed,  2 Oct 2019 07:42:13 -0700 (PDT)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9B31C28;
+        Wed,  2 Oct 2019 07:42:16 -0700 (PDT)
 Received: from e119884-lin.cambridge.arm.com (e119884-lin.cambridge.arm.com [10.1.196.72])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 7AE413F706;
-        Wed,  2 Oct 2019 07:42:12 -0700 (PDT)
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 629653F706;
+        Wed,  2 Oct 2019 07:42:15 -0700 (PDT)
 From:   Vincenzo Frascino <vincenzo.frascino@arm.com>
 To:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 Cc:     vincenzo.frascino@arm.com, ard.biesheuvel@linaro.org,
         ndesaulniers@google.com, catalin.marinas@arm.com, will@kernel.org,
         tglx@linutronix.de, luto@kernel.org
-Subject: [PATCH v4 4/6] arm64: vdso32: Remove jump label config option in Makefile
-Date:   Wed,  2 Oct 2019 15:41:54 +0100
-Message-Id: <20191002144156.2174-5-vincenzo.frascino@arm.com>
+Subject: [PATCH v4 6/6] lib: vdso: Remove CROSS_COMPILE_COMPAT_VDSO
+Date:   Wed,  2 Oct 2019 15:41:56 +0100
+Message-Id: <20191002144156.2174-7-vincenzo.frascino@arm.com>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191002144156.2174-1-vincenzo.frascino@arm.com>
 References: <20191002144156.2174-1-vincenzo.frascino@arm.com>
@@ -43,34 +43,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The jump labels are not used in vdso32 since it is not possible to run
-runtime patching on them.
+arm64 was the last architecture using CROSS_COMPILE_COMPAT_VDSO config
+option. With this patch series the dependency in the architecture has
+been removed.
 
-Remove the configuration option from the Makefile.
+Remove CROSS_COMPILE_COMPAT_VDSO from the Unified vDSO library code.
 
-Cc: Will Deacon <will@kernel.org>
-Cc: Catalin Marinas <catalin.marinas@arm.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Andy Lutomirski <luto@kernel.org>
 Signed-off-by: Vincenzo Frascino <vincenzo.frascino@arm.com>
-Acked-by: Catalin Marinas <catalin.marinas@arm.com>
-Tested-by: Catalin Marinas <catalin.marinas@arm.com>
 ---
- arch/arm64/kernel/vdso32/Makefile | 3 ---
- 1 file changed, 3 deletions(-)
+ lib/vdso/Kconfig | 9 ---------
+ 1 file changed, 9 deletions(-)
 
-diff --git a/arch/arm64/kernel/vdso32/Makefile b/arch/arm64/kernel/vdso32/Makefile
-index 77aa61340374..038357a1e835 100644
---- a/arch/arm64/kernel/vdso32/Makefile
-+++ b/arch/arm64/kernel/vdso32/Makefile
-@@ -38,9 +38,6 @@ VDSO_CAFLAGS += $(call cc32-option,-fno-PIE)
- ifdef CONFIG_DEBUG_INFO
- VDSO_CAFLAGS += -g
- endif
--ifeq ($(shell $(CONFIG_SHELL) $(srctree)/scripts/gcc-goto.sh $(COMPATCC)), y)
--VDSO_CAFLAGS += -DCC_HAVE_ASM_GOTO
--endif
+diff --git a/lib/vdso/Kconfig b/lib/vdso/Kconfig
+index cc00364bd2c2..9fe698ff62ec 100644
+--- a/lib/vdso/Kconfig
++++ b/lib/vdso/Kconfig
+@@ -24,13 +24,4 @@ config GENERIC_COMPAT_VDSO
+ 	help
+ 	  This config option enables the compat VDSO layer.
  
- # From arm Makefile
- VDSO_CAFLAGS += $(call cc32-option,-fno-dwarf2-cfi-asm)
+-config CROSS_COMPILE_COMPAT_VDSO
+-	string "32 bit Toolchain prefix for compat vDSO"
+-	default ""
+-	depends on GENERIC_COMPAT_VDSO
+-	help
+-	  Defines the cross-compiler prefix for compiling compat vDSO.
+-	  If a 64 bit compiler (i.e. x86_64) can compile the VDSO for
+-	  32 bit, it does not need to define this parameter.
+-
+ endif
 -- 
 2.23.0
 
