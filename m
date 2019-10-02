@@ -2,164 +2,95 @@ Return-Path: <SRS0=zem1=X3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AB57CC10F14
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 18:28:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DF99DECE58A
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 18:28:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8BDE1218DE
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 18:28:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B5F6B218DE
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 18:28:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nr6ZKcXN"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="CCOLZ4SE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728901AbfJBS2M (ORCPT
+        id S1728925AbfJBS2T (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Oct 2019 14:28:12 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:43682 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726076AbfJBS2L (ORCPT
+        Wed, 2 Oct 2019 14:28:19 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:54112 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726076AbfJBS2S (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Oct 2019 14:28:11 -0400
-Received: by mail-pg1-f196.google.com with SMTP id v27so12326847pgk.10;
-        Wed, 02 Oct 2019 11:28:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=izcdKMTlTPXdg1rZpK9PkNPTeAL5ACc5p0aT6ECn+3o=;
-        b=nr6ZKcXN/729CI5YvKkqVc0Bz2wyp7AqMiNJbnneIbJ2S8a6/RpgT+vQxveooa1g8o
-         Tzstjrebdj0ch6CBEQIhLHedt+Meqh8poQODSN2lg0OykjXXZCvv3ItaPXFO7ZImXqcW
-         RuKmutNc32nfhTfdTSE+Gn+FP0hyvVehIb12ZNHr5rdWDezRIrhU/4qCY2koq02vv9hS
-         0JYsKwzPEkKLeHC0o1yMLr4lNeC7nIidqjJQlgZ17X3hwG7uMGUGlb0FYDKstybAoxSN
-         PuzGKEISFL71Mt9LOzHTLH19Bi/ikZqtSvsTTAUBs/9/pSrhf3mQrJw/Bi+Y2mWPIur/
-         yzHQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=izcdKMTlTPXdg1rZpK9PkNPTeAL5ACc5p0aT6ECn+3o=;
-        b=pmsHGoI1ePqZE8TLIu0Dey8pVqh1NIIj/A8bMidf6zGs1MH2FE1AqnpVY91B+3CLt4
-         8BheWaKNwiIe64AuVFIJOqTmRF+wchCvko/tc6ceKJuIY8xNxd18XG4w7zxqtj7bOmQM
-         23z+BEWQzE3U6Kc5/wR3Ro7gBJr/RNPvTtzVCBwWjkobkxurHdBt8LgZEXKKObj/ijfp
-         V1Z9ByZuI2uY3INWNDsKubaNPWcLw4eDL/a8pIDp789JIRi43c9zAMNUZiMvu13fc4ug
-         oD3vwMBWsm5OejBjBXsSYU+mE8l75Yv7FuI+nl6TSMi5293fIXUyqTuPChzLR1LiXXB7
-         3y7Q==
-X-Gm-Message-State: APjAAAWttjPq1lnPKLQ3CMBX0r/izgeFIFB8DCBRwvf1KTLBlY3nuQVw
-        rLq29wRs+YQEyzQLoW9cqqNMYGeN
-X-Google-Smtp-Source: APXvYqwrs3FB89RH0+kgXBF3ejwmYPZLTgHaLNuUiXE1AjcShSZR76+3xPYW28RCBcE0p63294782w==
-X-Received: by 2002:a17:90a:c214:: with SMTP id e20mr5758828pjt.81.1570040889544;
-        Wed, 02 Oct 2019 11:28:09 -0700 (PDT)
-Received: from [10.69.78.41] ([192.19.223.252])
-        by smtp.gmail.com with ESMTPSA id b14sm162486pfi.95.2019.10.02.11.28.07
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 02 Oct 2019 11:28:08 -0700 (PDT)
-Subject: Re: [PATCH 00/11] of: Fix DMA configuration for non-DT masters
-To:     Robin Murphy <robin.murphy@arm.com>,
-        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        Rob Herring <robh+dt@kernel.org>
-Cc:     "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>, devicetree@vger.kernel.org,
-        Matthias Brugger <mbrugger@suse.com>,
-        Frank Rowand <frowand.list@gmail.com>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        linux-wireless <linux-wireless@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        etnaviv@lists.freedesktop.org,
-        "open list:DMA GENERIC OFFLOAD ENGINE SUBSYSTEM" 
-        <dmaengine@vger.kernel.org>, Stefan Wahren <wahrenst@gmx.net>,
-        james.quinlan@broadcom.com, linux-pci@vger.kernel.org,
-        linux-tegra@vger.kernel.org, xen-devel@lists.xenproject.org,
-        Dan Williams <dan.j.williams@intel.com>,
-        freedreno <freedreno@lists.freedesktop.org>,
-        Linux Media Mailing List <linux-media@vger.kernel.org>
-References: <20190924181244.7159-1-nsaenzjulienne@suse.de>
- <CAL_Jsq+v+svTyna7UzQdRVqfNc5Z_bgWzxNRXv7-Wqv3NwDu2g@mail.gmail.com>
- <d1a31a2ec8eb2f226b1fb41f6c24ffb47c3bf7c7.camel@suse.de>
- <e404c65b-5a66-6f91-5b38-8bf89a7697b2@arm.com>
- <43fb5fe1de317d65a4edf592f88ea150c6e3b8cc.camel@suse.de>
- <CAL_JsqLhx500cx3YLoC7HL1ux3bBpV+fEA2Qnk7D5RFGgiGzSw@mail.gmail.com>
- <aa4c8d62-7990-e385-2bb1-cec55148f0a8@arm.com>
- <CAL_JsqKKYcHPnA80ZwLY=Sk3e5MqrimedUhWQ5+iuPZXQxYHdA@mail.gmail.com>
- <307b988d0c67fb1c42166eca12742bcfda09d92d.camel@suse.de>
- <c27a51e1-1adf-ae6a-dc67-ae76222a1163@arm.com>
-From:   Florian Fainelli <f.fainelli@gmail.com>
-Message-ID: <fbae48ca-fbd4-e32b-e874-92b5bba5df4d@gmail.com>
-Date:   Wed, 2 Oct 2019 11:28:06 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.1
+        Wed, 2 Oct 2019 14:28:18 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=96la58gVKcd/IPrCDjANz2T8kDNFpSL3xM8lpSJtFpc=; b=CCOLZ4SE23QMLmce5D5G1Ec6b
+        sM7VLGa+SfcWpro867kEc183BRJNvnqD4Dal4s7ZKfjkaL/TmTAR2HOONTkks3Npmfz8qVfDmmqfd
+        /0q4P2NjX5W5feBpmQbkwpFLSGaKJp/6sKg68+74i/1VuB+LlMuJY1CfLMwhTvzr1Ai2j4O8joZjg
+        Im+OuW19A6Iji79yUvmcDoeET/1EwIM+5HnYEFFPrEOUedrIOJYRaetluxZ6OZRgsB4LJwuz6mROp
+        bsFjXSNK61Ejnd2bMDynY9xtdQb802h9WJ4ZZaWxVJDn5A6gXOQ2ua/xOgY1JZemuB/nJIXTMyZN2
+        WBPG0qD3Q==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=worktop.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.2 #3 (Red Hat Linux))
+        id 1iFjLx-0004hA-2I; Wed, 02 Oct 2019 18:27:57 +0000
+Received: by worktop.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 0E9979802BF; Wed,  2 Oct 2019 20:27:55 +0200 (CEST)
+Date:   Wed, 2 Oct 2019 20:27:55 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Giovanni Gherdovich <ggherdovich@suse.cz>
+Cc:     Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@suse.de>,
+        Len Brown <lenb@kernel.org>,
+        "Rafael J . Wysocki" <rjw@rjwysocki.net>, x86@kernel.org,
+        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Mel Gorman <mgorman@techsingularity.net>,
+        Matt Fleming <matt@codeblueprint.co.uk>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Paul Turner <pjt@google.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Quentin Perret <qperret@qperret.net>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Doug Smythies <dsmythies@telus.net>
+Subject: Re: [PATCH v2 1/2] x86,sched: Add support for frequency invariance
+Message-ID: <20191002182754.GD4643@worktop.programming.kicks-ass.net>
+References: <20191002122926.385-1-ggherdovich@suse.cz>
+ <20191002122926.385-2-ggherdovich@suse.cz>
 MIME-Version: 1.0
-In-Reply-To: <c27a51e1-1adf-ae6a-dc67-ae76222a1163@arm.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191002122926.385-2-ggherdovich@suse.cz>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, Oct 02, 2019 at 02:29:25PM +0200, Giovanni Gherdovich wrote:
+> +void x86_arch_scale_freq_tick_enable(void)
+> +{
+> +	tick_disable = false;
+> +}
+> +
+> +static void reset_scale_freq(void *arg)
+> +{
+> +	this_cpu_write(arch_cpu_freq, SCHED_CAPACITY_SCALE);
+> +}
+> +
+> +void x86_arch_scale_freq_tick_disable(void)
+> +{
+> +	on_each_cpu(reset_scale_freq, NULL, 1);
+> +	tick_disable = true;
 
+I'm thikning this ought to be the other way around, otherwise we can get
+a tick loosing the 1024 we just wrote in arch_cpu_freq.
 
-On 9/26/2019 4:20 AM, Robin Murphy wrote:
-> On 2019-09-26 11:44 am, Nicolas Saenz Julienne wrote:
->>>>>> Robin, have you looked into supporting multiple dma-ranges? It's the
->>>>>> next thing
->>>>>> we need for BCM STB's PCIe. I'll have a go at it myself if nothing
->>>>>> is in
->>>>>> the
->>>>>> works already.
->>>>>
->>>>> Multiple dma-ranges as far as configuring inbound windows should work
->>>>> already other than the bug when there's any parent translation. But if
->>>>> you mean supporting multiple DMA offsets and masks per device in the
->>>>> DMA API, there's nothing in the works yet.
->>
->> Sorry, I meant supporting multiple DMA offsets[1]. I think I could
->> still make
->> it with a single DMA mask though.
-> 
-> The main problem for supporting that case in general is the disgusting
-> carving up of the physical memory map you may have to do to guarantee
-> that a single buffer allocation cannot ever span two windows with
-> different offsets. I don't think we ever reached a conclusion on whether
-> that was even achievable in practice.
+> +}
 
-It is with the Broadcom STB SoCs which have between 1 and 3 memory
-controllers depending on the SoC, and multiple dma-ranges cells for PCIe
-as a consequence.
-
-Each memory controller has a different physical address aperture in the
-CPU's physical address map (e.g.: MEMC0 is 0x0 - 0x3fff_ffff, MEMC1
-0x4000_0000 - 0x7ffff_ffff and MEMC2 0x8000_0000 - 0xbfff_ffff, not
-counting the extension regions above 4GB), and while the CPU is
-scheduled and arbitrated the same way across all memory controllers
-(thus making it virtually UMA, almost) having a buffer span two memory
-controllers would be problematic because the memory controllers do not
-know how to guarantee the transaction ordering and buffer data
-consistency in both DRAM itself and for other memory controller clients,
-like PCIe.
-
-We historically had to reserve the last 4KB of each memory controller to
-avoid problematic controllers like EHCI to prefetch beyond the end of a
-memory controller's populated memory and that also incidentally takes
-care of never having a buffer cross a controller boundary. Either you
-can allocate the entire buffer on a given memory controller, or you
-cannot allocate memory at all on that zone/region and another one must
-be found (or there is no more memory and there is a genuine OOM).
-
-The way we reserve memory right now is based on the first patch
-submitted by Jim:
-
-https://lore.kernel.org/patchwork/patch/988469/
-
-whereby we read the memory node's "reg" property and we map the physical
-addresses to the memory controller configuration read from the specific
-registers in the CPU's Bus Interface Unit (where the memory controller
-apertures are architecturally defined) and then we use that to call
-memblock_reserve() (not part of that patch, it should be though).
--- 
-Florian
+You've lost the prev_{a,m}perf update, so the first tick after enable
+will see 'funny' values.
