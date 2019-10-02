@@ -2,89 +2,92 @@ Return-Path: <SRS0=zem1=X3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.3 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 61154C352AA
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 08:50:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EBEEDC35280
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 08:56:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CFA65218DE
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 08:50:03 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=fpond.eu header.i=@fpond.eu header.b="fwQnjnwZ"
+	by mail.kernel.org (Postfix) with ESMTP id C345A215EA
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 08:56:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727259AbfJBIuD (ORCPT
+        id S1727262AbfJBI4A (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Oct 2019 04:50:03 -0400
-Received: from mo4-p01-ob.smtp.rzone.de ([85.215.255.54]:30907 "EHLO
-        mo4-p01-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725799AbfJBIuC (ORCPT
+        Wed, 2 Oct 2019 04:56:00 -0400
+Received: from www62.your-server.de ([213.133.104.62]:39636 "EHLO
+        www62.your-server.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725852AbfJBIz7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Oct 2019 04:50:02 -0400
-X-Greylist: delayed 341 seconds by postgrey-1.27 at vger.kernel.org; Wed, 02 Oct 2019 04:50:01 EDT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1570006200;
-        s=strato-dkim-0002; d=fpond.eu;
-        h=Subject:References:In-Reply-To:Message-ID:Cc:To:From:Date:
-        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
-        bh=iUttmko10pMSiNzf83MKiTk9CuVcL1m274VDNhwoUvo=;
-        b=fwQnjnwZGpqSYouAPj03EV3kLB+dGJ/RGE5M5UX6f4bOmTXpmL7QDjz9o44g7Pe/nV
-        KwlLnhotooxXgELLLi2HOzeHToCrbYQuIqfzK3W6tpskvn4XY+K6M6pllUhSKqoo/Vvw
-        UidFNpcYmrqDnjvIH36lgIQEmx55paOCwC09aL2RG6MIN+o8SkeCBssl8CDha+0uC1U4
-        ZdKQtPEb3i99mvOMYJiQodU/LiBgQxe7jlAj5h6Efkdfu0/LcESoxdR6V31AMZTuZjon
-        pqYUYEClFPVa1rsYQi1WmN5ZcmgWdTOsdnK+Tq/KKvaFDSX6imJxi41CneU9sOvOBoRK
-        X2Og==
-X-RZG-AUTH: ":OWANVUa4dPFUgKR/3dpvnYP0Np73amq+g13rqGzmt2bYDnKIKaws6YXTsc4="
-X-RZG-CLASS-ID: mo00
-Received: from oxapp05-03.back.ox.d0m.de
-        by smtp-ox.front (RZmta 44.28.0 AUTH)
-        with ESMTPSA id i07086v928htVNM
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (curve X9_62_prime256v1 with 256 ECDH bits, eq. 3072 bits RSA))
-        (Client did not present a certificate);
-        Wed, 2 Oct 2019 10:43:55 +0200 (CEST)
-Date:   Wed, 2 Oct 2019 10:43:55 +0200 (CEST)
-From:   Ulrich Hecht <uli@fpond.eu>
-To:     Fabien Parent <fparent@baylibre.com>, linux-i2c@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc:     drinkcat@chromium.org, wsa@the-dreams.de, hsinyi@chromium.org,
-        matthias.bgg@gmail.com, tglx@linutronix.de, qii.wang@mediatek.com
-Message-ID: <1733244772.936156.1570005835848@webmail.strato.com>
-In-Reply-To: <20190930152846.5062-1-fparent@baylibre.com>
-References: <20190930152846.5062-1-fparent@baylibre.com>
-Subject: Re: [PATCH v2] i2c: i2c-mt65xx: fix NULL ptr dereference
+        Wed, 2 Oct 2019 04:55:59 -0400
+Received: from [2a02:120b:2c12:c120:71a0:62dd:894c:fd0e] (helo=localhost)
+        by www62.your-server.de with esmtpsa (TLSv1.2:DHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.89_1)
+        (envelope-from <daniel@iogearbox.net>)
+        id 1iFaQL-0004eR-MZ; Wed, 02 Oct 2019 10:55:53 +0200
+Date:   Wed, 2 Oct 2019 10:55:53 +0200
+From:   Daniel Borkmann <daniel@iogearbox.net>
+To:     Brian Vazquez <brianvv.kernel@gmail.com>
+Cc:     Andrii Nakryiko <andrii.nakryiko@gmail.com>,
+        Brian Vazquez <brianvv@google.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        "David S . Miller" <davem@davemloft.net>,
+        Stanislav Fomichev <sdf@google.com>,
+        open list <linux-kernel@vger.kernel.org>,
+        Networking <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>
+Subject: Re: [PATCH bpf 2/2] selftests/bpf: test_progs: don't leak server_fd
+ in test_sockopt_inherit
+Message-ID: <20191002085553.GA6226@pc-66.home>
+References: <20191001173728.149786-1-brianvv@google.com>
+ <20191001173728.149786-3-brianvv@google.com>
+ <CAEf4BzYxs6Ace8s64ML3pA9H4y0vgdWv_vDF57oy3i-O_G7c-g@mail.gmail.com>
+ <CABCgpaWbPN+2vSNdynHtmDxrgGbyzHa_D-y4-X8hLrQYbhTx=A@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Priority: 3
-Importance: Normal
-X-Mailer: Open-Xchange Mailer v7.10.1-Rev20
-X-Originating-IP: 85.212.176.126
-X-Originating-Client: open-xchange-appsuite
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CABCgpaWbPN+2vSNdynHtmDxrgGbyzHa_D-y4-X8hLrQYbhTx=A@mail.gmail.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
+X-Authenticated-Sender: daniel@iogearbox.net
+X-Virus-Scanned: Clear (ClamAV 0.101.4/25589/Tue Oct  1 10:30:33 2019)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-> On September 30, 2019 at 5:28 PM Fabien Parent <fparent@baylibre.com> wrote:
+On Tue, Oct 01, 2019 at 08:42:30PM -0700, Brian Vazquez wrote:
+> Thanks for reviewing the patches Andrii!
 > 
-> 
-> Since commit abf4923e97c3 ("i2c: mediatek: disable zero-length transfers
-> for mt8183"), there is a NULL pointer dereference for all the SoCs
-> that don't have any quirk. mtk_i2c_functionality is not checking that
-> the quirks pointer is not NULL before starting to use it.
-> 
-> This commit add a call to i2c_check_quirks which will check whether
-> the quirks pointer is set, and if so will check if the IP has the
-> NO_ZERO_LEN quirk.
-> 
-> Fixes: abf4923e97c3 ("i2c: mediatek: disable zero-length transfers for mt8183")
-> Signed-off-by: Fabien Parent <fparent@baylibre.com>
+> Although Daniel fixed them and applied them correctly.
 
-Thank you! Tested successfully on Acer R13 Chromebook (mt8173).
+After last kernel/maintainer summit at LPC, I reworked all my patchwork scripts [0]
+which I use for bpf trees in order to further reduce manual work and add more sanity
+checks at the same time. Therefore, the broken Fixes: tag was a good test-case. ;-)
 
-Tested-by: Ulrich Hecht <uli@fpond.eu>
+Thanks,
+Daniel
 
-CU
-Uli
+  [0] https://git.kernel.org/pub/scm/linux/kernel/git/dborkman/pw.git/
+
+> On Tue, Oct 1, 2019 at 8:20 PM Andrii Nakryiko
+> <andrii.nakryiko@gmail.com> wrote:
+> >
+> > On Tue, Oct 1, 2019 at 10:40 AM Brian Vazquez <brianvv@google.com> wrote:
+> > >
+> >
+> > I don't think there is a need to add "test_progs:" to subject, "
+> > test_sockopt_inherit" is specific enough ;)
+> >
+> > > server_fd needs to be close if pthread can't be created.
+> >
+> > typo: closed
+> >
+> > > Fixes: e3e02e1d9c24 ("selftests/bpf: test_progs: convert test_sockopt_inherit")
+> > > Cc: Stanislav Fomichev <sdf@google.com>
+> > > Signed-off-by: Brian Vazquez <brianvv@google.com>
+> > > ---
+> >
+> > Acked-by: Andrii Nakryiko <andriin@fb.com>
+> >
+> > >  tools/testing/selftests/bpf/prog_tests/sockopt_inherit.c | 2 +-
+> > >  1 file changed, 1 insertion(+), 1 deletion(-)
