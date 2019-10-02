@@ -5,58 +5,59 @@ X-Spam-Level:
 X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0C24C352AA
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 12:26:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0461CC35280
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 12:26:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C020B21920
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 12:26:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CFF1021920
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 12:26:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="uepVfLVm"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QPKITSG0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727425AbfJBM0n (ORCPT
+        id S1727453AbfJBM0x (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Oct 2019 08:26:43 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:44791 "EHLO
+        Wed, 2 Oct 2019 08:26:53 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:44808 "EHLO
         mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725875AbfJBM0n (ORCPT
+        with ESMTP id S1725875AbfJBM0w (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Oct 2019 08:26:43 -0400
-Received: by mail-wr1-f67.google.com with SMTP id z9so6300394wrl.11;
-        Wed, 02 Oct 2019 05:26:41 -0700 (PDT)
+        Wed, 2 Oct 2019 08:26:52 -0400
+Received: by mail-wr1-f67.google.com with SMTP id z9so6301011wrl.11;
+        Wed, 02 Oct 2019 05:26:51 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to:user-agent;
-        bh=zcCfEs3KfOKzCbyLEWqayRRUzXnw9D3ddQV5gJK1ZO0=;
-        b=uepVfLVm8rY+dPdz/rllu5OOvyDpdWYbUVdKmYXZi5OVbbLuxF6i0fnA3WXcyvWw50
-         s+7m7zpRsYez7Ua+uzvIPueJRwv9MPEOlAtGeqmOMBta1CpCHJWw0dqcnLFbbNrmLykE
-         cRpaRnWkxrnkewrij4RJdlUFM4B2uXZghuwBptHB3MOEecJW9w2jtoQ2CY0Na1SK9EFU
-         H2HJ0f3G/D9kFaxPRZEOivva2VNJbx5S8lVh4NikI/NZUO+ZuNvoxmrsuBafQL3kQdUK
-         OJEj7kKL1/Crs8eVTO5Lkt85OM17LMZt04HoSTU3Wqe8Z/5ZNxuFT0etcUtpxzlvdIGZ
-         x3qQ==
+        bh=YsapF76Q1TOEmh1rttebz7zK2OwlZHHTPamgXkWw2iI=;
+        b=QPKITSG0ejX6kL/FKLVFzzcjl/OaEH4/nNl6nT45pNUXIy8uCQekgc/W6ycjA9FmxT
+         459PBRykWQmEEW4XnkDGxjImbHlSt6zrDPY6volB/pi03fJJdiOpl2Aj3znNsZ5U3W9t
+         gqezCM26cWXLYSXtYL9Esof7ZluA96QgSeO2YG5zGnu45f0d4k+TTOi+sxLIQSnA7/i8
+         y57n/thQP1T+wDAHPdxqA65mquBU9HH/nwmtiAU71SlAQJhhu8xSsE5ZlgYorQpJP5oc
+         qGfhv1PLVkNU42rmx6GUmjbXc84XsvXIuDJt65FarnjT0WZ6D/MzJIBAJjfUsQjb1n2e
+         4quA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=zcCfEs3KfOKzCbyLEWqayRRUzXnw9D3ddQV5gJK1ZO0=;
-        b=KfUSc3g6Y3chGi+pb+hy1OWmOo/vUwE1x78h+X/WeENpo89qrhUnzu26sNu4TeuXnm
-         AMGP4L54E4lC8KFfritNISWyu2rEGHmTVhnPbHZLDbw6ngo/qdo1hgoIDbQ792g4JyUQ
-         gIY+1k2cS4/zKJUqvNdpBDc1BZYyGiKfAB2Lcxk0TnAx+5Qgr2kZOYYFARaK9D69F/h0
-         w8KqtYRDOOXDwk8jDj40YkMJyhe+9P0Jbe5oBapwcoyVlPqIM5ngvJX2/UXk+mhQowma
-         5RFrJsEBp5AAYi9Gg5gHh73grKTN8YaEpPijRifsLRBf8yuLnYdEyX4XK/8HPfvIqz+A
-         3oyQ==
-X-Gm-Message-State: APjAAAXD30lyTCE6dYhvMA4yzMWqFnlZ3ZRe2n+DZ5nK8yrME/j7cbfL
-        dcKQmQLRy6vR7IhDDKN4+Bs=
-X-Google-Smtp-Source: APXvYqxoybC6gRPh4GDDplN1z+zsSxPdzEXbKLb/SJ5x93pwy7LiuM71IUPziFfqROC5f5SXCOA3Kg==
-X-Received: by 2002:adf:e387:: with SMTP id e7mr2568520wrm.306.1570019200785;
-        Wed, 02 Oct 2019 05:26:40 -0700 (PDT)
+        bh=YsapF76Q1TOEmh1rttebz7zK2OwlZHHTPamgXkWw2iI=;
+        b=AZWG5QyJzQnBH4ic/ubbk0EZD6vVclyhbiZ+1xBXjapjVck6hNqxfqgXKiNgfb7WC2
+         VM+DKEuMxy+S0XM7L6XVXWyXeWJq89/zuVpdT+qLDlU+YdNHCWv46ORtbo5sQWHVrPTo
+         6cs8hLEUgZM/7OSubRJegUwyc9gZsmy2JJ3f6gnshCCtkpiVmrZIZs1zJzLhGvRZ/SEY
+         /MPyiY+r8s/PomT66qRzQFfJngmudzwbbMOSbukbBa7rmiNr34J+kL1DWTWTEUTXEd66
+         G+XReXa/rnDhDJ3xiRiUiC7OclNMmhCJ+YFHsIN0IryxgEzXaHPgRx8AISI5wmPvhkVK
+         uHnA==
+X-Gm-Message-State: APjAAAVZ+RPhUV/O2iUZGZwarO3Ig9AF+VM9fz4oJ0DzU616MjEJzXoT
+        UfcK6whI/UAy3cXogkTDRAM=
+X-Google-Smtp-Source: APXvYqwNCk9dTLf6PRTkYsS5B9lezj1GIKYCU3LxHDQIG+agVQDk5svygrX8B+BbbrB5sBIE/3Ta+g==
+X-Received: by 2002:a5d:63cb:: with SMTP id c11mr2683779wrw.281.1570019210652;
+        Wed, 02 Oct 2019 05:26:50 -0700 (PDT)
 Received: from localhost (p2E5BE2CE.dip0.t-ipconnect.de. [46.91.226.206])
-        by smtp.gmail.com with ESMTPSA id f186sm6769589wmg.21.2019.10.02.05.26.38
+        by smtp.gmail.com with ESMTPSA id t203sm8458080wmf.42.2019.10.02.05.26.49
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 02 Oct 2019 05:26:39 -0700 (PDT)
-Date:   Wed, 2 Oct 2019 14:26:38 +0200
+        Wed, 02 Oct 2019 05:26:49 -0700 (PDT)
+Date:   Wed, 2 Oct 2019 14:26:48 +0200
 From:   Thierry Reding <thierry.reding@gmail.com>
 To:     Bartosz Golaszewski <brgl@bgdev.pl>
 Cc:     Jens Axboe <axboe@kernel.dk>,
@@ -68,15 +69,16 @@ Cc:     Jens Axboe <axboe@kernel.dk>,
         linux-ide@vger.kernel.org, linux-tegra@vger.kernel.org,
         linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
         Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Subject: Re: [PATCH 2/3] phy: tegra: use regulator_bulk_set_supply_names()
-Message-ID: <20191002122638.GB3908655@ulmo>
+Subject: Re: [PATCH 3/3] usb: host: xhci-tegra: use
+ regulator_bulk_set_supply_names()
+Message-ID: <20191002122648.GC3908655@ulmo>
 References: <20191001132333.20146-1-brgl@bgdev.pl>
- <20191001132333.20146-3-brgl@bgdev.pl>
+ <20191001132333.20146-4-brgl@bgdev.pl>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="mxv5cy4qt+RJ9ypb"
+        protocol="application/pgp-signature"; boundary="+xNpyl7Qekk2NvDX"
 Content-Disposition: inline
-In-Reply-To: <20191001132333.20146-3-brgl@bgdev.pl>
+In-Reply-To: <20191001132333.20146-4-brgl@bgdev.pl>
 User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -84,41 +86,41 @@ List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
---mxv5cy4qt+RJ9ypb
+--+xNpyl7Qekk2NvDX
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, Oct 01, 2019 at 03:23:32PM +0200, Bartosz Golaszewski wrote:
+On Tue, Oct 01, 2019 at 03:23:33PM +0200, Bartosz Golaszewski wrote:
 > From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 >=20
 > Use the new regulator helper instead of a for loop.
 >=20
 > Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 > ---
->  drivers/phy/tegra/xusb.c | 6 +++---
->  1 file changed, 3 insertions(+), 3 deletions(-)
+>  drivers/usb/host/xhci-tegra.c | 5 +++--
+>  1 file changed, 3 insertions(+), 2 deletions(-)
 
 Acked-by: Thierry Reding <treding@nvidia.com>
 
---mxv5cy4qt+RJ9ypb
+--+xNpyl7Qekk2NvDX
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl2Ul30ACgkQ3SOs138+
-s6EF5A//Xcp1n7NvMOoJLxPyJaAbj2+9yDBPk8P8XjrOlNnnJKLR/Pi/ZJ3XHx5F
-GUdipz/eE9JwZqsUSbqdBv+77ZeUeSz0SU5B7TNwajOLcInHbbmLqTxbXh+yydC8
-COM6x1+GzPZ/V8c2k1NqQUyKx1xfWe4cEWKIa/Nyssw9YoJfRI4RMZ20NQ2tyYcV
-fEO97xTcG+1ikivOJiqNdJYgSY4GdM5/6gJdHzLk0lBZEDq6EadVvdu/thMloF8i
-mlankGeD5uHIZLZLxw5tnX7TGVJ7kEoIbf8aFdQaFtXVweao8QUGlYaVbFnlPJXT
-/z1n+kLrBI8X6jdbUqzWYrcWI6LzrHSh3xRNdqxqjgW8EppuP1qhcVcdS34Q7/SJ
-dbSivgaTeeGf88Z5RFMXLPxVYpKGsZ3xIi2QSuz6PZG2pJQmWvRlgSZR+ReH/9xg
-YnpBaRCKiAGLpxXTn/ZQNlhca1ZXH90SgPsHEaPSgFB+EencKjbLgvVd3Sq3lNEW
-E2xVPeO+0zwkmwm9alfPI1RP2dUvR37cgEaapu4i+htkcQxb3mctjQrkisixMYYH
-eozSjWqaoKvSzvahgnEpwgd4e+H0qjQSyJ3yK8fWeO1PBmuPH8sOKUtAMnOtoeXN
-Ne0xB7w7DvGhA3+KokaDTdgu4PslLrmmKTQSIKA6BnGhqED6S2k=
-=k7Zf
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl2Ul4gACgkQ3SOs138+
+s6HhUA/5Ab4y4CUvbNGI3qBuN5kszxhX3js9RnOzfvLMECkxSStw0S9bI4cluZBJ
+Y9T9McYbSoWyoAqGuvVAK5BnqcgytzaqBMvLqmsYb0q5hYxQGCSHeQkpYir0Aq9q
+0GiFHGkbqg0+y5UQkM0SlfWHwIYT7arDhd0XHncmNQtaAWWEKopZTSR2mys4XAE+
+bXskoedemp3oIvjxXIvYQZzMYnJyMXTzLjtjEZFetaOWq1QVXY0Dqf5YasutN5/K
+Urs9TGZtW31qxC9z6T6xWxLuPtS0kXOIhYQ+dlS66+sra4MNQaRse5h+1BWFKeee
+Vmn81FVXniTLbpCMQ0M/gxFSGIoAADiK2EI0sDju3KzoOcq1Ol9gxQGeTnkXklSj
+gXxt/1PwZPQLJxlerrYUvlv2gQLjdv74pRKCgAN5/JOKw25kXzANWjmNfWn3E3p0
+/CUmrVCrCgIFG6yTt9bGGWCMsgMieEQP+scabwBYEi1Vflt+I4lwvxNFMD/3Qk4A
+N7TRvhVMB8o4pa1jls6/NM6edqFnj7KZqBk4RhkCWsYbAECVgDB01rOsCH9sRIj9
+mZMG6HUatyG3auomJxl4PZl4COre1ECfu92u182uqyt6+cIh1xyuZo0fNd9FJCei
+TKkVS8C8ryl0zFEjPnObWBdD0HLb8aQJedzelvubwCU1U1bek28=
+=qTAb
 -----END PGP SIGNATURE-----
 
---mxv5cy4qt+RJ9ypb--
+--+xNpyl7Qekk2NvDX--
