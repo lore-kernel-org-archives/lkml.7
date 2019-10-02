@@ -2,103 +2,114 @@ Return-Path: <SRS0=zem1=X3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5638FC352AA
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 09:19:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2BECC35280
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 09:20:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2C11221783
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 09:19:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="jKs7U8eJ"
+	by mail.kernel.org (Postfix) with ESMTP id D2409206C0
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 09:20:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726877AbfJBJT5 (ORCPT
+        id S1727071AbfJBJUU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Oct 2019 05:19:57 -0400
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:43775 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725848AbfJBJT5 (ORCPT
+        Wed, 2 Oct 2019 05:20:20 -0400
+Received: from mail-oi1-f194.google.com ([209.85.167.194]:43292 "EHLO
+        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725848AbfJBJUT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Oct 2019 05:19:57 -0400
-Received: by mail-lj1-f196.google.com with SMTP id n14so16312555ljj.10
-        for <linux-kernel@vger.kernel.org>; Wed, 02 Oct 2019 02:19:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=tVSJ2jAoznxGAzqn26lJBhesiJu1w5Ef6wI0S81yyRk=;
-        b=jKs7U8eJtyt8NgsziFv8n2P7AhTSuJcFBcqGRBUvcExepU97UzP2Wvw7Cb67pKcmnd
-         KrB5pD0N3yZpRTOabIqWJ59k0YqmLz+DRox2nZCVpm1vwJAQsYmZpmLCEvGFaaJAYrKl
-         G0RtV55/jXfVn76PY68EBdfTk6WDW91nE19pDZprwiv9nFzWug679df5IYQUaHyKB7w6
-         e+PgM7Ph2Z9FaxLvcgcq1oL0eq6ZRG41y0SIqtLLgAZpq7k2IPhnGQxoEASQmXISRmWG
-         hSYjSKUUGdUXc8uTxCWeINcTOm2Qex/G0MPRc3yDg+tHudN7F/36D4PpQxeOt08vOxj7
-         SjfQ==
+        Wed, 2 Oct 2019 05:20:19 -0400
+Received: by mail-oi1-f194.google.com with SMTP id t84so17012399oih.10;
+        Wed, 02 Oct 2019 02:20:19 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=tVSJ2jAoznxGAzqn26lJBhesiJu1w5Ef6wI0S81yyRk=;
-        b=rfb31IhW2Q9N4130M2Nb9rh0IW1zZNOQd7UJ2RC+1OS96VORq5ATp3jShtWow6xj5P
-         Pg4s0RwPhDv0CB0iuB/SufzRoRxwqVvEFbL1KFE108ZeJjDOu7i0nuVdQipTsAfWeNak
-         94A+fkFp2j87on/1bvx45P9UNSfScL3BGCeuHa8UlJZkEyK1jXbDrRDlSISEUTjSwgPt
-         GJB/Q11mP+gdpPWRtExjVnNuQrwcTBxBalojW7ViR1imIZ+mbh+3nsVcZKNgLAySRf5c
-         BHwtHokxGgT9sR5q2XJA0XqttKFL18YqqYucdmxH75wF8ubpHp7io2VSAD/6Yizo2vgY
-         5AdQ==
-X-Gm-Message-State: APjAAAWajbRgiA8KhyhMaATPhu80pK3vYxSc+GAodmK3Pao5fqkj31QW
-        UC7Y/dyXUcvC03iGOQf7H46yIw==
-X-Google-Smtp-Source: APXvYqymQBg7OLC919RMbl4ByhwTyA3wxtAD9d6h05l4XMtE9CFbi0q3M5PidVl3u9R56raNCFXmdg==
-X-Received: by 2002:a2e:86c7:: with SMTP id n7mr1645273ljj.227.1570007993519;
-        Wed, 02 Oct 2019 02:19:53 -0700 (PDT)
-Received: from centauri (ua-84-219-138-247.bbcust.telenor.se. [84.219.138.247])
-        by smtp.gmail.com with ESMTPSA id n2sm4593350ljj.30.2019.10.02.02.19.52
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 02 Oct 2019 02:19:52 -0700 (PDT)
-Date:   Wed, 2 Oct 2019 11:19:50 +0200
-From:   Niklas Cassel <niklas.cassel@linaro.org>
-To:     Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
-Cc:     Amit Kucheria <amit.kucheria@linaro.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        MSM <linux-arm-msm@vger.kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Andy Gross <agross@kernel.org>,
-        Marc Gonzalez <marc.w.gonzalez@free.fr>,
-        Sibi Sankar <sibis@codeaurora.org>, daniel.lezcano@linaro.org,
-        Andy Gross <andy.gross@linaro.org>,
-        David Brown <david.brown@linaro.org>,
-        Li Yang <leoyang.li@nxp.com>, Shawn Guo <shawnguo@kernel.org>,
-        DTML <devicetree@vger.kernel.org>
-Subject: Re: [PATCH v2 7/9] arm64: dts: qcom: msm8998: Add PSCI cpuidle low
- power states
-Message-ID: <20191002091950.GA9393@centauri>
-References: <cover.1558430617.git.amit.kucheria@linaro.org>
- <49cf5d94beb9af9ef4e78d4c52f3b0ad20b7c63f.1558430617.git.amit.kucheria@linaro.org>
- <CAOCk7NptTHPOdyEkCAofjTPuDQ5dsnPMQgfC0R8=7cp05xKQiA@mail.gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=zO+tNlkfwYOYwgo9Rwy/x2Myvg50guhXleT3msC6d9I=;
+        b=IWpZJPr3C2f1Ob3w9MOF5oiaEGyWakS1aZcnOyig8TghwV1ioTpZglQCwbqYQMW7xw
+         knXMlCi82++YgV6dRsl+w4hqNmMXuFvFOV16HwcM8Jb/eWojZmWqvA3rwqJdCaPp2eeo
+         y9sZWMVlsanJZFz7etcnpYG11Oy1IzQO0hrRRcWxtXnsY+RNBAHQuu1IXu4/ekYV9lqr
+         23fLTgHABSQzhad/TJh7M5iMQo9flj8RXQNSQZqcL94tC8XZCRmDAc9GsCtx+TLh1dss
+         v3P3LfMFXCCybPYDdVigclFDgtq0ExtZwW3wor86fpzJAOQw1ZtfoBc2/fXGjKOQlxos
+         Js4Q==
+X-Gm-Message-State: APjAAAVp3HqWr+syyjmM6YbYjeL90um5EvylmoURN3TX+sqPVtmT2kBk
+        beWMTDPiNbnOoJOfr01v7ljqAiUj7FR0tTsVvBuP6Q==
+X-Google-Smtp-Source: APXvYqzLiDbsCQkDX2XprTfHsY1pJfYhBfhQdyM9WeoyJWN0tUTxulbP9vQUMSnHEPokt+69FbDxDqa/Yo6IpNWQ39A=
+X-Received: by 2002:aca:dad4:: with SMTP id r203mr2110251oig.102.1570008018885;
+ Wed, 02 Oct 2019 02:20:18 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAOCk7NptTHPOdyEkCAofjTPuDQ5dsnPMQgfC0R8=7cp05xKQiA@mail.gmail.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+References: <20191001180703.910-1-geert+renesas@glider.be> <bc48041c-df06-8108-9c45-3dfb1d527678@cogentembedded.com>
+In-Reply-To: <bc48041c-df06-8108-9c45-3dfb1d527678@cogentembedded.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Wed, 2 Oct 2019 11:20:07 +0200
+Message-ID: <CAMuHMdW=zF=hf2wHEeUHDciYF7wU7j0XZYuiG=T0vpsvykLCSA@mail.gmail.com>
+Subject: Re: [PATCH] mmc: renesas_sdhi: Do not use platform_get_irq() to count interrupts
+To:     Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Wolfram Sang <wsa+renesas@sang-engineering.com>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        Linux MMC List <linux-mmc@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Sep 30, 2019 at 04:20:15PM -0600, Jeffrey Hugo wrote:
-> Amit, the merged version of the below change causes a boot failure
-> (nasty hang, sometimes with RCU stalls) on the msm8998 laptops.  Oddly
-> enough, it seems to be resolved if I remove the cpu-idle-states
-> property from one of the cpu nodes.
-> 
-> I see no issues with the msm8998 MTP.
+Hi Sergei,
 
-Hello Jeffrey, Amit,
+On Wed, Oct 2, 2019 at 11:11 AM Sergei Shtylyov
+<sergei.shtylyov@cogentembedded.com> wrote:
+> On 01.10.2019 21:07, Geert Uytterhoeven wrote:
+> > As platform_get_irq() now prints an error when the interrupt does not
+> > exist, counting interrupts by looping until failure causes the printing
+>
+>    s/the//?
 
-If the PSCI idle states work properly on the msm8998 devboard (MTP),
-but causes crashes on msm8998 laptops, the only logical change is
-that the PSCI firmware is different between the two devices.
+I believe "the printing" is correct.
+Any native English speakers to comment?
 
+> > of scary messages like:
+> >
+> >      renesas_sdhi_internal_dmac ee140000.sd: IRQ index 1 not found
+> >
+> > Fix this by using the platform_irq_count() helper to avoid touching
+> > non-existent interrupts.
+> >
+> > Fixes: 7723f4c5ecdb8d83 ("driver core: platform: Add an error message to platform_get_irq*()")
+> > Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
-Kind regards,
-Niklas
+> > --- a/drivers/mmc/host/renesas_sdhi_core.c
+> > +++ b/drivers/mmc/host/renesas_sdhi_core.c
+> [...]
+> > @@ -825,24 +825,26 @@ int renesas_sdhi_probe(struct platform_device *pdev,
+> >               host->hs400_complete = renesas_sdhi_hs400_complete;
+> >       }
+> >
+> > -     i = 0;
+> > -     while (1) {
+> > +     /* There must be at least one IRQ source */
+> > +     num_irqs = platform_irq_count(pdev);
+> > +     if (num_irqs < 1) {
+> > +             ret = num_irqs;
+> > +             goto eirq;
+>
+>     This will return 0 with failed probe if 'num_irqs' is 0, I don't think you
+> want this...
+
+Thanks, will fix.
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
