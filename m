@@ -2,131 +2,153 @@ Return-Path: <SRS0=zem1=X3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C0C3AECE58B
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 04:50:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FB88C352AA
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 04:59:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 938812133F
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 04:50:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D19582133F
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 04:59:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=renesasgroup.onmicrosoft.com header.i=@renesasgroup.onmicrosoft.com header.b="gLAfVl6q"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="oEVkss6V"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727255AbfJBEuR (ORCPT
+        id S1726457AbfJBE7z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Oct 2019 00:50:17 -0400
-Received: from mail-eopbgr1400103.outbound.protection.outlook.com ([40.107.140.103]:21760
-        "EHLO JPN01-TY1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726457AbfJBEuQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Oct 2019 00:50:16 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=YgUT/T7LohngmRw50kRurBeWTv42W4+vyi028CeEc/txR7uFyWYFgmPZuLLqkuISzR+Sk+Eo2miAGKFekt1Ba7ADGD0OCQf9jp5y+Noz5w9jy9z+xdd00XLXpdiMwqrF5U5vYCImI97nX0LVG1h3NEAzPd5f9ZjtsBm0wjAMm+1j6DlaA7LxxHOSpRnVHBvgjfs0VUKgnox0ac0bvC8wCiJ2dIjlhICTVieuCrJSn3D2Y7+59DNoTLBH2JJU08AE3nrjCFxFFvrgiaPels/0EuL9uZpsyJxkSxS/zsF4MTgDkVdnCr1dWoByIdIG+oT2ebbze/DmtYrLe6uhlVo4uw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=GtMvtdAxSN/TsD9ptmb5UsTUszvbHfK/c4Df3aFt5+w=;
- b=bO1waeBiHOIG76s5usxIPV1UksyYkkjWHaMg8n05aA5LMECJIgmUib+4l3a/XhbWSXjXVrd6kkKe3nIqEEclP6URFmVrxBImROZMyqsDs1jakXaoWUasonqNyyF4b52A8cv8i5ZZUj1S4kL7+PN9L3yVAuTfV3zyq4Z1S3a6XQyN2sfDf8uku7cspXlZZZTS/Gpuiwi3YTFus2OqZZYB0kvgVlVWnHSQefpYojRAYX2kqMZdhVDXgurst7SMu0wYdwFGasJ1pbCFfdm0OWXTdIyFvQBHLl9c4MZ5bKKKCGuy5Qshm520wx1Abw8/WohTGoFu8E7Ty+T9cLGbkGC2Tg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=renesas.com; dmarc=pass action=none header.from=renesas.com;
- dkim=pass header.d=renesas.com; arc=none
+        Wed, 2 Oct 2019 00:59:55 -0400
+Received: from mail-io1-f67.google.com ([209.85.166.67]:41385 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725941AbfJBE7y (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 2 Oct 2019 00:59:54 -0400
+Received: by mail-io1-f67.google.com with SMTP id n26so25437602ioj.8
+        for <linux-kernel@vger.kernel.org>; Tue, 01 Oct 2019 21:59:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=renesasgroup.onmicrosoft.com; s=selector2-renesasgroup-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=GtMvtdAxSN/TsD9ptmb5UsTUszvbHfK/c4Df3aFt5+w=;
- b=gLAfVl6qYjFGXTluDlc5dzsGBVSjoUpY/R0QXWSJHe2dW2PINZnUlAtXLaV18Hes5nRJWH7ruNbxIVl4akVNVYEZmI+whu1zzceKAo2cMzJRIepfuWofb7HfWowKKnFhNKgBMp+qz8TcP/k5OnLJUgH1/S3ld5tPw23s/sKKxx4=
-Received: from TYAPR01MB4544.jpnprd01.prod.outlook.com (20.179.175.203) by
- TYAPR01MB4880.jpnprd01.prod.outlook.com (20.179.186.16) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2305.20; Wed, 2 Oct 2019 04:50:13 +0000
-Received: from TYAPR01MB4544.jpnprd01.prod.outlook.com
- ([fe80::548:32de:c810:1947]) by TYAPR01MB4544.jpnprd01.prod.outlook.com
- ([fe80::548:32de:c810:1947%4]) with mapi id 15.20.2305.022; Wed, 2 Oct 2019
- 04:50:13 +0000
-From:   Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-To:     Geert Uytterhoeven <geert+renesas@glider.be>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-CC:     Stephen Boyd <swboyd@chromium.org>,
-        "linux-renesas-soc@vger.kernel.org" 
-        <linux-renesas-soc@vger.kernel.org>,
-        "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH] phy: renesas: rcar-gen3-usb2: Use
- platform_get_irq_optional() for optional irq
-Thread-Topic: [PATCH] phy: renesas: rcar-gen3-usb2: Use
- platform_get_irq_optional() for optional irq
-Thread-Index: AQHVeIOewimUnab5bUeUXUI+wtgUzadGyDEA
-Date:   Wed, 2 Oct 2019 04:50:13 +0000
-Message-ID: <TYAPR01MB4544AB2F6D2A49FCB0160893D89C0@TYAPR01MB4544.jpnprd01.prod.outlook.com>
-References: <20191001181109.1355-1-geert+renesas@glider.be>
-In-Reply-To: <20191001181109.1355-1-geert+renesas@glider.be>
-Accept-Language: ja-JP, en-US
-Content-Language: ja-JP
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=yoshihiro.shimoda.uh@renesas.com; 
-x-originating-ip: [150.249.235.54]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: c1b14cba-bf3f-497c-8aca-08d746f4034d
-x-ms-office365-filtering-ht: Tenant
-x-ms-traffictypediagnostic: TYAPR01MB4880:
-x-microsoft-antispam-prvs: <TYAPR01MB488081BE78C410E4DA7F0AEBD89C0@TYAPR01MB4880.jpnprd01.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:5236;
-x-forefront-prvs: 0178184651
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(376002)(346002)(366004)(136003)(39850400004)(396003)(199004)(189003)(14454004)(229853002)(81156014)(476003)(86362001)(76176011)(8936002)(7696005)(8676002)(2906002)(186003)(66066001)(486006)(6506007)(14444005)(33656002)(102836004)(6246003)(26005)(256004)(11346002)(99286004)(446003)(6436002)(305945005)(54906003)(52536014)(9686003)(4744005)(5660300002)(74316002)(55016002)(7736002)(6116002)(71190400001)(81166006)(71200400001)(66946007)(66556008)(25786009)(64756008)(66476007)(66446008)(478600001)(4326008)(110136005)(3846002)(316002)(76116006);DIR:OUT;SFP:1102;SCL:1;SRVR:TYAPR01MB4880;H:TYAPR01MB4544.jpnprd01.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: renesas.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: fU2lnZ104LtJ1OiO36oQU4MGxOcQnMkToW57EnaB/fzE5AGBmJrk1vsRIGYawJ9brIPYz6QfqiV3c12IDivQjtOUhCEZOMiyeIPfxPBm8JH61SfCyal1zjLCWBYJSCXtXH9dqaMplnGBp9ULz4zFQSvAdY9h6zD0OLx+gOry8GEunhR8pLIKhfSFsgkCorjLb+XNqnFMlIeCwopyXgsbeIDG01khDW5LfhmdyARotprMgcl80EyMKm5Z+oMbIKl7zU2S2jXU0I2azPWwCVAFNpzYIcMTlGWI5P6wFddNbxC+WPPhW8PSMDPDGhU7OhECpIz1d0RIJm7rV4gB0EO4f/Cu7t/nca0/K9jExBUukGmFgs9Qt/AjrBKLwbCIhwpgl6AdvRp+t7XKSs6oR3gtHIIEYi05BKrv2psRjpnauKs=
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=utqwTvRLyjSsVfZRkt/xO+q4bNl5CsJkNoufFxflxJQ=;
+        b=oEVkss6VR+9MCsjpkKg1eW3moidaorvQjMfZN1aobBTuZpUSiliyZAD/ZB+LSjwIzx
+         ffJcXnSgJUT6H0k5VHNZ8N0lAqZTbi+fmGXl1utWTFytCzdYlsCJfaCKQiHMCWa3jbD/
+         HrmS9VKmNkxVQ3WvL5HS7dGXRTvtKi+Pn4ejI9bscexXo9IjPo9FfiiZNmwCoL7uWpiE
+         3EIqDGN7ic+YN6gruIZhX3E2bGkGijDJxJ1YZwQHkPyE2tbdAS5ZUKUNO2Knw+uAkba+
+         Pi+IOwyNQJGwJMIJmh2CvkWbUL8J/ILcEGUo/IeaaUHYG/ZHyg2Z6VcRhkHylVPJcl76
+         w+ow==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=utqwTvRLyjSsVfZRkt/xO+q4bNl5CsJkNoufFxflxJQ=;
+        b=WFaiZP60qQfj9ftGOtYpc95wYSgSQQaZXadYINjH0v6WTbhiJEi332sDgck70+ScIp
+         +RFahhCbr05Zf8AnZFNXcfHZUu1Iayi0Hyz5fz7yUBgACLrPkobasRFVeCkX+hSwG4ul
+         KYJe+ERcoOS1+PLJy2SdejOJJ6KiQBXgVrkJlIrzfsR685+FmepOV3RO87+R35PLT2ev
+         97yCNNWWF7kW5pgI47B51GCPeNKShIxfCOpWiQ6FNKbMr3svX33d5dukPPRrsbLbu4oy
+         9AVr1TpqVWDDbrTOKkx+DEXl9XrtzYxtl/7jt2in7xtRIHC6bgqZ386svHSfsydFBOr+
+         wXQQ==
+X-Gm-Message-State: APjAAAWuQLXW7+7NbfP8uCWOjVU6/o/ATNGbI6wGr1oH8eIK8IBkXqw6
+        GM4TrJ8HlyO6Ba4jtLTbeWo7EWm1y45hGiNAgeU=
+X-Google-Smtp-Source: APXvYqx06rpxC7ziYaQbDjJwNP8n17yaCIyqxnU/Wrn7tsZo+KpOiuVAlHvBbHJp0PTPCVEpajAbIk+YHTgN7/i1XLQ=
+X-Received: by 2002:a92:4a11:: with SMTP id m17mr1998877ilf.142.1569992393636;
+ Tue, 01 Oct 2019 21:59:53 -0700 (PDT)
 MIME-Version: 1.0
-X-OriginatorOrg: renesas.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: c1b14cba-bf3f-497c-8aca-08d746f4034d
-X-MS-Exchange-CrossTenant-originalarrivaltime: 02 Oct 2019 04:50:13.6063
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 53d82571-da19-47e4-9cb4-625a166a4a2a
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: yGPMAB/ijJi4iCz3JWBAxel3SVelCriZm0F61ZwEyK6ViFy0kEWpUQ+tXDAcdlR/whUHIlnBKXlSa05xK6F2mylMYQMFQj4OsIOo7FllLT5jvlWK9aX/DY1/CqVuuhBi
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: TYAPR01MB4880
+References: <1569899984-16272-1-git-send-email-laoar.shao@gmail.com> <20191001144524.GB3321@techsingularity.net>
+In-Reply-To: <20191001144524.GB3321@techsingularity.net>
+From:   Yafang Shao <laoar.shao@gmail.com>
+Date:   Wed, 2 Oct 2019 12:59:14 +0800
+Message-ID: <CALOAHbCCGhxtnpsc7par1K0dDO4HANh6W_X4_5fTDDKwpPkkWw@mail.gmail.com>
+Subject: Re: [PATCH v2] perf script python: integrate page reclaim analyze script
+To:     Mel Gorman <mgorman@techsingularity.net>
+Cc:     tonyj@suse.com, acme@kernel.org,
+        Peter Zijlstra <peterz@infradead.org>, mingo@redhat.com,
+        alexander.shishkin@linux.intel.com, jolsa@redhat.com,
+        namhyung@kernel.org, Andrew Morton <akpm@linux-foundation.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linux MM <linux-mm@kvack.org>, Tony Jones <tonyj@suse.de>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Geert-san,
+On Tue, Oct 1, 2019 at 10:45 PM Mel Gorman <mgorman@techsingularity.net> wrote:
+>
+> On Mon, Sep 30, 2019 at 11:19:44PM -0400, Yafang Shao wrote:
+> > A new perf script page-reclaim is introduced in this patch. This new script
+> > is used to report the page reclaim details. The possible usage of this
+> > script is as bellow,
+> > - identify latency spike caused by direct reclaim
+> > - whehter the latency spike is relevant with pageout
+> > - why is page reclaim requested, i.e. whether it is because of memory
+> >   fragmentation
+> > - page reclaim efficiency
+> > etc
+> > In the future we may also enhance it to analyze the memcg reclaim.
+> >
+>
+> Hi,
+>
+> I ended up not reviewing this patch in detail simply because I would
+> approach the same class of problem in an entirely different way today.
+> There is value in accumulating the stats in a report like this;
+>
+> >     $ perf script report page-reclaim
+> >     Direct reclaims: 4924
+> >     Direct latency (ms)        total         max         avg         min
+> >                         177823.211    6378.977      36.114       0.051
+> >     Direct file reclaimed 22920
+> >     Direct file scanned 28306
+> >     Direct file sync write I/O 0
+> >     Direct file async write I/O 0
+> >     Direct anon reclaimed 212567
+> >     Direct anon scanned 1446854
+> >     Direct anon sync write I/O 0
+> >     Direct anon async write I/O 278325
+> >     Direct order      0     1     3
+> >                  4870    23    31
+> >     Wake kswapd requests 716
+> >     Wake order      0     1
+> >                 715     1
+> >
+> >     Kswapd reclaims: 9
+>
+> However, the basic option I would prefer is having the raw latency
+> information for Direct latency that can be externally parsed by R or any
+> other statistical method. The reason why is because knowing the max latency
+> is not enough, I'd want to know the spread of latencies and whether they
+> were clustered at a point of time or spread out over long periods of
+> time. I would then build the higher-level reports on top if necessary.
+>
+> Today, I would also have considered getting the latency figures using eBPF
+> or systemtap instead although having perf do it may be useful too. That's
+> not universally popular though so at minimum I would have;
+>
 
-> From: Geert Uytterhoeven, Sent: Wednesday, October 2, 2019 3:11 AM
->=20
-> As platform_get_irq() now prints an error when the interrupt does not
-> exist, a scary warning may be printed for an optional interrupt:
->=20
->     phy_rcar_gen3_usb2 ee0a0200.usb-phy: IRQ index 0 not found
->=20
-> Fix this by calling platform_get_irq_optional() instead.
->=20
-> Fixes: 7723f4c5ecdb8d83 ("driver core: platform: Add an error message to =
-platform_get_irq*()")
-> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> ---
-> This is a fix for v5.4-rc1.
-> ---
+eBPF requires newer kernel, while there're still lots of servers
+running with old kernels.
+The systemtap is not convenient as it requires many debug packages,
+and it is still not stable enough to run on the product environment,
+for example, the systemtap deamon may exit without uninstalling the
+systemtap kernel module.
 
-Thank you for the patch!
+> perf script record page-reclaim -- capture all page-reclaim tracepoints
+> perf script report page-reclaim -- For reclaim entry/exit, merge the two
+>         tracepoints into one that reports latency. Dump the rest out
+>         verbatim
+>
+> For latencies, I would externally post-process them until such time as I
+> found a common class of bug that needed a high-level report and then
+> build the perf script support for it.
+>
 
-Reviewed-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+This seem like a good suggestion.
+I will try to think about it.
 
-And, I tested this patch on R-Car H3. So,
-
-Tested-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-
-Best regards,
-Yoshihiro Shimoda
-
+> Please note that I did not spot anything wrong with your script, it's
+> just that I would not use it myself in its current format for debugging
+> a reclaim-related problem.
+>
+> --
+> Mel Gorman
+> SUSE Labs
