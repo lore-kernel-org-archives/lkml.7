@@ -7,72 +7,73 @@ X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96B58C4360C
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 23:16:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AE71C4360C
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 23:16:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6B536215EA
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 23:16:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C8C9221D82
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 23:16:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="yUio+wwG"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ZexQjMb8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728668AbfJBXQ0 (ORCPT
+        id S1728703AbfJBXQ2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Oct 2019 19:16:26 -0400
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:46615 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728609AbfJBXQY (ORCPT
+        Wed, 2 Oct 2019 19:16:28 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:39655 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728659AbfJBXQ0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Oct 2019 19:16:24 -0400
-Received: by mail-pl1-f193.google.com with SMTP id q24so544864plr.13
-        for <linux-kernel@vger.kernel.org>; Wed, 02 Oct 2019 16:16:24 -0700 (PDT)
+        Wed, 2 Oct 2019 19:16:26 -0400
+Received: by mail-pg1-f193.google.com with SMTP id e1so537671pgj.6
+        for <linux-kernel@vger.kernel.org>; Wed, 02 Oct 2019 16:16:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=rU3ZIe1wEyPAlyBuDaaRw79vpye8Qn/RpKU+olhtNWc=;
-        b=yUio+wwG5BWebxxhvpw7haRUyEyivo6OPVbEi3XIn0sz8A+fsfgZW/IZSGk9ec0w4f
-         k4ZlnzlypckTUxWu2hXxCWjxs8vw7UXlr95Mwpk0gklCavpWrE2yLme/muin40Hf1x9J
-         ZtzTL/CsWMQoKLjUj4m/nIAlZgEjN2F9K2zALdSWKf4ca4eIshDHFjyScWISkS9ezCL6
-         xakFfbbDqt6ZTYKTEyt6iPYey0xWjdaWccEK8xBkX2tPDAq9m0/MdlVA+9kVeTC+Vabd
-         9hM4hLA32mrfL5Y1epXeavibzLHX300cNBtFli9v8J5PuuZWcPHBHLt/wi68gP7/DDEz
-         DmXg==
+        bh=uG2nqozuwo9BwCrw+RwCa9b6zn63vZVGMltNLgbwu2E=;
+        b=ZexQjMb8Ay+ScAsdYaEJSxUduZsElYFnqjVAM6juLiP6Fsox2O9LsZ49VUNprld79k
+         yBP6K7pziYnfii5w8mzqklI5RKVYedOPVgM7xovliKQz1keF3nTrVi+GR+05FrApjMAs
+         9Uw1lPGgfpOdXKbVbu3CLelwgo+zZwuc9wBlA/ui6pFplAY9dX3GuXPymrl2AwaR4Eax
+         yCsfoIiPsy6pkcJRids9x6uVw9zrmTg1TPcEjoAfnz87xXY1xEVxHhTxLGUcb1Xjvv57
+         v4j0b7HFPL7fag3I61PBGiitShfvcvYx9DeQrv5AMIzbI/SPFMAj5K86qHipeZ6E4wPi
+         naMQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=rU3ZIe1wEyPAlyBuDaaRw79vpye8Qn/RpKU+olhtNWc=;
-        b=jhqDm/p5feIi17+2XnfC0un8khY5NmYmTBdzHguEQPEnkZW8E/fazk2kRE7wR3w5t8
-         Q2OMZtCPQuX/SPEbvImeY60xYys324sSYmk/S4XvhsiOP6fnhZaysfila8PaXeSjXl1f
-         OuIf/fM/vN5jEmGVS5lPQR3grlBKAgt40m6hq/H23lxoozIUt0ax6x3/k1qJQ7LTLEj0
-         lSxFZ43imnEkbu40nMTL4airB57fbo9KdK7vYm647mLSOZ/yR10BUXbHjSGYq3bI5aAy
-         HOvpL4k/g9n0U+Ug0vHB/Mxt6ZAFmH8XlI+UiO/7sq+e5Sg262oFCWuumBKR+XTQLCjB
-         fQiQ==
-X-Gm-Message-State: APjAAAWlmU+4SdeENHyZR1E8H7OeCU6u7lee/cU3I06L3o+zphCgrmSo
-        Dueyac5v0FNkgB2NgSdBVwHPq/+CZm8=
-X-Google-Smtp-Source: APXvYqwcoB4Ky8kF2Dkr6DmmT3lpgIWscDqSSRfTpsmolukj/DFBnWE3VjYEeGe1NHexI2kCdvgjsw==
-X-Received: by 2002:a17:902:ff08:: with SMTP id f8mr6340368plj.309.1570058183692;
-        Wed, 02 Oct 2019 16:16:23 -0700 (PDT)
+        bh=uG2nqozuwo9BwCrw+RwCa9b6zn63vZVGMltNLgbwu2E=;
+        b=smC0kBTLeLtY0jqcCSXrEt5S0sKbtLtArDVn//h/oH7UrNDmNrbsRIs32cQmLg0BuD
+         v6II3WsHZZpJtvEseUUTij+515F9IJ+ZqR1TqWv1q2ErTJR8MHdGJfKCoVxUfEKPU5S4
+         KZills+oGF68BgsYGEvFKcwCuoRq3pmawVqnWDuYtRWijWo3FaicfoDkcQp/hR4X3kGi
+         h+2moG/s5qKW7flP00gqM6ZaLA+EDifakKYw7LYc+Bd2U26U0I+mhrOYoVWIQIOYLJ08
+         69PCyc5Zrluxxr8n50iCx/BMjll//yKpidowGWMINS+eT15D6ZV80c55zOk4awlGGHaX
+         88Pg==
+X-Gm-Message-State: APjAAAW7jv3AkqzvKv23ZhhdkCDaPzVw616EdEQMvQ2KYlyRvfqB69RL
+        hkD4VUGMaEs7t9yGK/nXoOiKTjDUPBg=
+X-Google-Smtp-Source: APXvYqxu2u/IQP/LPwB0sAmV4cVg8e5OqNfignEooLRI2THErLoK7DUvR6SLzQPli3BYyhMwbmSigA==
+X-Received: by 2002:a63:225f:: with SMTP id t31mr6320256pgm.50.1570058185308;
+        Wed, 02 Oct 2019 16:16:25 -0700 (PDT)
 Received: from localhost.localdomain ([2601:1c2:680:1319:692:26ff:feda:3a81])
-        by smtp.gmail.com with ESMTPSA id l7sm288791pjy.12.2019.10.02.16.16.21
+        by smtp.gmail.com with ESMTPSA id l7sm288791pjy.12.2019.10.02.16.16.23
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 02 Oct 2019 16:16:22 -0700 (PDT)
+        Wed, 02 Oct 2019 16:16:24 -0700 (PDT)
 From:   John Stultz <john.stultz@linaro.org>
 To:     lkml <linux-kernel@vger.kernel.org>
-Cc:     John Stultz <john.stultz@linaro.org>,
+Cc:     Yu Chen <chenyu56@huawei.com>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
         Heikki Krogerus <heikki.krogerus@linux.intel.com>,
         Suzuki K Poulose <suzuki.poulose@arm.com>,
         Chunfeng Yun <chunfeng.yun@mediatek.com>,
-        Yu Chen <chenyu56@huawei.com>, Felipe Balbi <balbi@kernel.org>,
+        Felipe Balbi <balbi@kernel.org>,
         Hans de Goede <hdegoede@redhat.com>,
         Andy Shevchenko <andy.shevchenko@gmail.com>,
         Jun Li <lijun.kernel@gmail.com>,
         Valentin Schneider <valentin.schneider@arm.com>,
-        linux-usb@vger.kernel.org, devicetree@vger.kernel.org
-Subject: [RFC][PATCH 1/3] dt-bindings: usb: generic: Add role-switch-default-host binding
-Date:   Wed,  2 Oct 2019 23:16:15 +0000
-Message-Id: <20191002231617.3670-2-john.stultz@linaro.org>
+        linux-usb@vger.kernel.org, devicetree@vger.kernel.org,
+        John Stultz <john.stultz@linaro.org>
+Subject: [RFC][PATCH 2/3] usb: roles: Add usb role switch notifier.
+Date:   Wed,  2 Oct 2019 23:16:16 +0000
+Message-Id: <20191002231617.3670-3-john.stultz@linaro.org>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20191002231617.3670-1-john.stultz@linaro.org>
 References: <20191002231617.3670-1-john.stultz@linaro.org>
@@ -81,8 +82,10 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add binding to configure the default role the controller
-assumes is host mode when the usb role is USB_ROLE_NONE.
+From: Yu Chen <chenyu56@huawei.com>
+
+This patch adds notifier for drivers want to be informed of the usb role
+switch.
 
 Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Cc: Rob Herring <robh+dt@kernel.org>
@@ -98,27 +101,116 @@ Cc: Jun Li <lijun.kernel@gmail.com>
 Cc: Valentin Schneider <valentin.schneider@arm.com>
 Cc: linux-usb@vger.kernel.org
 Cc: devicetree@vger.kernel.org
+Suggested-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+Signed-off-by: Yu Chen <chenyu56@huawei.com>
 Signed-off-by: John Stultz <john.stultz@linaro.org>
 ---
- Documentation/devicetree/bindings/usb/generic.txt | 5 +++++
- 1 file changed, 5 insertions(+)
+ drivers/usb/roles/class.c | 35 ++++++++++++++++++++++++++++++++++-
+ include/linux/usb/role.h  | 16 ++++++++++++++++
+ 2 files changed, 50 insertions(+), 1 deletion(-)
 
-diff --git a/Documentation/devicetree/bindings/usb/generic.txt b/Documentation/devicetree/bindings/usb/generic.txt
-index cf5a1ad456e6..013782fde293 100644
---- a/Documentation/devicetree/bindings/usb/generic.txt
-+++ b/Documentation/devicetree/bindings/usb/generic.txt
-@@ -34,6 +34,11 @@ Optional properties:
- 			the USB data role (USB host or USB device) for a given
- 			USB connector, such as Type-C, Type-B(micro).
- 			see connector/usb-connector.txt.
-+ - role-switch-default-host: boolean, indicating if usb-role-switch is enabled
-+			the device default operation mode of controller while
-+			usb role is USB_ROLE_NONE is host mode. If this is not
-+			set or false, it will be assumed the default is device
-+			mode.
+diff --git a/drivers/usb/roles/class.c b/drivers/usb/roles/class.c
+index 94b4e7db2b94..418e762d5d72 100644
+--- a/drivers/usb/roles/class.c
++++ b/drivers/usb/roles/class.c
+@@ -20,6 +20,7 @@ struct usb_role_switch {
+ 	struct device dev;
+ 	struct mutex lock; /* device lock*/
+ 	enum usb_role role;
++	struct blocking_notifier_head nh;
  
- This is an attribute to a USB controller such as:
+ 	/* From descriptor */
+ 	struct device *usb2_port;
+@@ -49,8 +50,10 @@ int usb_role_switch_set_role(struct usb_role_switch *sw, enum usb_role role)
+ 	mutex_lock(&sw->lock);
  
+ 	ret = sw->set(sw->dev.parent, role);
+-	if (!ret)
++	if (!ret) {
+ 		sw->role = role;
++		blocking_notifier_call_chain(&sw->nh, role, NULL);
++	}
+ 
+ 	mutex_unlock(&sw->lock);
+ 
+@@ -58,6 +61,35 @@ int usb_role_switch_set_role(struct usb_role_switch *sw, enum usb_role role)
+ }
+ EXPORT_SYMBOL_GPL(usb_role_switch_set_role);
+ 
++int usb_role_switch_register_notifier(struct usb_role_switch *sw,
++				      struct notifier_block *nb)
++{
++	int ret = blocking_notifier_chain_register(&sw->nh, nb);
++	enum usb_role role;
++
++	if (ret)
++		return ret;
++
++	/* Initialize the notifier that was just registered */
++	mutex_lock(&sw->lock);
++	if (sw->get)
++		role = sw->get(sw->dev.parent);
++	else
++		role = sw->role;
++	blocking_notifier_call_chain(&sw->nh, role, NULL);
++	mutex_unlock(&sw->lock);
++
++	return 0;
++}
++EXPORT_SYMBOL_GPL(usb_role_switch_register_notifier);
++
++int usb_role_switch_unregister_notifier(struct usb_role_switch *sw,
++					struct notifier_block *nb)
++{
++	return blocking_notifier_chain_unregister(&sw->nh, nb);
++}
++EXPORT_SYMBOL_GPL(usb_role_switch_unregister_notifier);
++
+ /**
+  * usb_role_switch_get_role - Get the USB role for a switch
+  * @sw: USB role switch
+@@ -296,6 +328,7 @@ usb_role_switch_register(struct device *parent,
+ 		return ERR_PTR(-ENOMEM);
+ 
+ 	mutex_init(&sw->lock);
++	BLOCKING_INIT_NOTIFIER_HEAD(&sw->nh);
+ 
+ 	sw->allow_userspace_control = desc->allow_userspace_control;
+ 	sw->usb2_port = desc->usb2_port;
+diff --git a/include/linux/usb/role.h b/include/linux/usb/role.h
+index 2d77f97df72d..8dbf7940b7da 100644
+--- a/include/linux/usb/role.h
++++ b/include/linux/usb/role.h
+@@ -54,6 +54,10 @@ struct usb_role_switch *
+ usb_role_switch_register(struct device *parent,
+ 			 const struct usb_role_switch_desc *desc);
+ void usb_role_switch_unregister(struct usb_role_switch *sw);
++int usb_role_switch_register_notifier(struct usb_role_switch *sw,
++				      struct notifier_block *nb);
++int usb_role_switch_unregister_notifier(struct usb_role_switch *sw,
++					struct notifier_block *nb);
+ #else
+ static inline int usb_role_switch_set_role(struct usb_role_switch *sw,
+ 		enum usb_role role)
+@@ -87,6 +91,18 @@ usb_role_switch_register(struct device *parent,
+ }
+ 
+ static inline void usb_role_switch_unregister(struct usb_role_switch *sw) { }
++
++static int usb_role_switch_register_notifier(struct usb_role_switch *sw,
++					     struct notifier_block *nb)
++{
++	return -ENODEV;
++}
++
++static int usb_role_switch_unregister_notifier(struct usb_role_switch *sw,
++					       struct notifier_block *nb)
++{
++	return -ENODEV;
++}
+ #endif
+ 
+ #endif /* __LINUX_USB_ROLE_H */
 -- 
 2.17.1
 
