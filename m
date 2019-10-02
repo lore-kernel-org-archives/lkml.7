@@ -2,182 +2,176 @@ Return-Path: <SRS0=zem1=X3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A698C4360C
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 21:49:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4AEDAC4360C
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 21:50:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5D49A21D82
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 21:49:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1C567218DE
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 21:50:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728674AbfJBVtY (ORCPT
+        id S1729137AbfJBVuN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Oct 2019 17:49:24 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:39478 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728455AbfJBVtX (ORCPT
+        Wed, 2 Oct 2019 17:50:13 -0400
+Received: from mail-io1-f72.google.com ([209.85.166.72]:42062 "EHLO
+        mail-io1-f72.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726300AbfJBVuN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Oct 2019 17:49:23 -0400
-Received: from pps.filterd (m0098396.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x92LkfJu032298
-        for <linux-kernel@vger.kernel.org>; Wed, 2 Oct 2019 17:49:22 -0400
-Received: from e06smtp04.uk.ibm.com (e06smtp04.uk.ibm.com [195.75.94.100])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2vd2vka2tb-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Wed, 02 Oct 2019 17:49:21 -0400
-Received: from localhost
-        by e06smtp04.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <zohar@linux.ibm.com>;
-        Wed, 2 Oct 2019 22:49:19 +0100
-Received: from b06cxnps4075.portsmouth.uk.ibm.com (9.149.109.197)
-        by e06smtp04.uk.ibm.com (192.168.101.134) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Wed, 2 Oct 2019 22:49:14 +0100
-Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
-        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x92LnDE019792014
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 2 Oct 2019 21:49:13 GMT
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 2BA8A4C044;
-        Wed,  2 Oct 2019 21:49:13 +0000 (GMT)
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 339C64C040;
-        Wed,  2 Oct 2019 21:49:11 +0000 (GMT)
-Received: from dhcp-9-31-103-196.watson.ibm.com (unknown [9.31.103.196])
-        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Wed,  2 Oct 2019 21:49:11 +0000 (GMT)
-Subject: Re: [PATCH v6 3/9] powerpc: add support to initialize ima policy
- rules
-From:   Mimi Zohar <zohar@linux.ibm.com>
-To:     Nayna <nayna@linux.vnet.ibm.com>,
-        Thiago Jung Bauermann <bauerman@linux.ibm.com>,
-        Nayna Jain <nayna@linux.ibm.com>
-Cc:     Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org,
-        linux-efi@vger.kernel.org,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Eric Ricther <erichte@linux.ibm.com>,
-        linux-kernel@vger.kernel.org,
-        Claudio Carvalho <cclaudio@linux.ibm.com>,
-        Matthew Garret <matthew.garret@nebula.com>,
-        linuxppc-dev@ozlabs.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Paul Mackerras <paulus@samba.org>, Jeremy Kerr <jk@ozlabs.org>,
-        Elaine Palmer <erpalmer@us.ibm.com>,
-        "Oliver O'Halloran" <oohall@gmail.com>,
-        linux-integrity@vger.kernel.org,
-        George Wilson <gcwilson@linux.ibm.com>
-Date:   Wed, 02 Oct 2019 17:49:10 -0400
-In-Reply-To: <84f057d0-6a0b-d486-0eb6-f1590f32e377@linux.vnet.ibm.com>
-References: <1569594360-7141-1-git-send-email-nayna@linux.ibm.com>
-         <1569594360-7141-4-git-send-email-nayna@linux.ibm.com>
-         <877e5pwa1b.fsf@morokweng.localdomain>
-         <84f057d0-6a0b-d486-0eb6-f1590f32e377@linux.vnet.ibm.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-x-cbid: 19100221-0016-0000-0000-000002B37556
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19100221-0017-0000-0000-000033147C3D
-Message-Id: <1570052950.4421.70.camel@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-10-02_09:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=3 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1908290000 definitions=main-1910020172
+        Wed, 2 Oct 2019 17:50:13 -0400
+Received: by mail-io1-f72.google.com with SMTP id w1so1365335ioj.9
+        for <linux-kernel@vger.kernel.org>; Wed, 02 Oct 2019 14:50:12 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=FVFfSQ1N4e8sms9/3nhKCOCc7RVTElQVbWRSDR4Lz+w=;
+        b=kgoyHCCnyFn+17UErT3VpxcI24o+Yu8YFvqtEW0E5yZBz4LpMfh/NygRJFqCYkSEAR
+         R0oPJJnuKOd3gnpTAL6GDK1VQ2QXbv9dDjCZFMtGR5RfMebR1eO/b23Y+OKWXkHk4pYR
+         sPDq8P+9wVVRMkTs02j1mHgCaJ+xYrtEBBAuLcnr0fP0yEq3qer5bjJluS5B0ILZN8yG
+         UUkx+EZFhX0ak1M6jf6yYMh8b1jHF4lzrwpRz41TjGQB4CECSvrf51YbV5L9ErbJ3VJg
+         a5/Zk9MhmDYJqGmEe14F4bvmDBeGtLuUN9RBdqKUkBTYFikPaDwd8KD7e3EsrMRzQM2v
+         nxFA==
+X-Gm-Message-State: APjAAAXJSpaHJnQFbNawCZatbx8n0teJWSXXj1C/aiCbR59MinPYU/8X
+        YvzZt/pnou0++Co45BIWtSaNYoLYCz5to66N/Y+subU06qBe
+X-Google-Smtp-Source: APXvYqy5U8vEk6m4PI9O3uAMPgUs+AjruWPqkT+uB7XC8rwgLIBqxdvCaMjkxb0GRLWGttlC7FJchJHWsKQgGspmxvME0KMoeaXE
+MIME-Version: 1.0
+X-Received: by 2002:a92:c530:: with SMTP id m16mr6570416ili.44.1570053011937;
+ Wed, 02 Oct 2019 14:50:11 -0700 (PDT)
+Date:   Wed, 02 Oct 2019 14:50:11 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <0000000000000e235d0593f474ba@google.com>
+Subject: KMSAN: uninit-value in mts_usb_probe
+From:   syzbot <syzbot+5630ca7c3b2be5c9da5e@syzkaller.appspotmail.com>
+To:     glider@google.com, gregkh@linuxfoundation.org,
+        linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
+        oliver@neukum.org, syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 2019-10-01 at 12:07 -0400, Nayna wrote:
-> 
-> On 09/30/2019 09:04 PM, Thiago Jung Bauermann wrote:
-> > Hello,
-> 
-> Hi,
-> 
-> >
-> >> diff --git a/arch/powerpc/kernel/ima_arch.c b/arch/powerpc/kernel/ima_arch.c
-> >> new file mode 100644
-> >> index 000000000000..39401b67f19e
-> >> --- /dev/null
-> >> +++ b/arch/powerpc/kernel/ima_arch.c
-> >> @@ -0,0 +1,33 @@
-> >> +// SPDX-License-Identifier: GPL-2.0
-> >> +/*
-> >> + * Copyright (C) 2019 IBM Corporation
-> >> + * Author: Nayna Jain
-> >> + */
-> >> +
-> >> +#include <linux/ima.h>
-> >> +#include <asm/secure_boot.h>
-> >> +
-> >> +bool arch_ima_get_secureboot(void)
-> >> +{
-> >> +	return is_powerpc_os_secureboot_enabled();
-> >> +}
-> >> +
-> >> +/* Defines IMA appraise rules for secureboot */
-> >> +static const char *const arch_rules[] = {
-> >> +	"appraise func=KEXEC_KERNEL_CHECK appraise_type=imasig|modsig",
-> >> +#if !IS_ENABLED(CONFIG_MODULE_SIG)
-> >> +	"appraise func=MODULE_CHECK appraise_type=imasig|modsig",
-> >> +#endif
-> >> +	NULL
-> >> +};
-> >> +
-> >> +/*
-> >> + * Returns the relevant IMA arch policies based on the system secureboot state.
-> >> + */
-> >> +const char *const *arch_get_ima_policy(void)
-> >> +{
-> >> +	if (is_powerpc_os_secureboot_enabled())
-> >> +		return arch_rules;
-> >> +
-> >> +	return NULL;
-> >> +}
-> > If CONFIG_MODULE_SIG is enabled but module signatures aren't enforced,
-> > then IMA won't enforce module signature either. x86's
-> > arch_get_ima_policy() calls set_module_sig_enforced(). Doesn't the
-> > powerpc version need to do that as well?
-> >
-> > On the flip side, if module signatures are enforced by the module
-> > subsystem then IMA will verify the signature a second time since there's
-> > no sharing of signature verification results between the module
-> > subsystem and IMA (this was observed by Mimi).
-> >
-> > IMHO this is a minor issue, since module loading isn't a hot path and
-> > the duplicate work shouldn't impact anything. But it could be avoided by
-> > having a NULL entry in arch_rules, which arch_get_ima_policy() would
-> > dynamically update with the "appraise func=MODULE_CHECK" rule if
-> > is_module_sig_enforced() is true.
-> 
-> Thanks Thiago for reviewing.  I am wondering that this will give two 
-> meanings for NULL. Can we do something like below, there are possibly 
-> two options ?
-> 
-> 1. Set IMA_APPRAISED in the iint->flags if is_module_sig_enforced().
-> 
-> OR
-> 
-> 2. Let ima_get_action() check for is_module_sig_enforced() when policy 
-> is appraise and func is MODULE_CHECK.
+Hello,
 
-I'm a bit hesitant about mixing the module subsystem signature
-verification method with the IMA measure "template=ima-modsig" rules.
- Does it actually work?
+syzbot found the following crash on:
 
-We can at least limit verifying the same appended signature twice to
-when "module.sig_enforce" is specified on the boot command line, by
-changing "!IS_ENABLED(CONFIG_MODULE_SIG)" to test
-"CONFIG_MODULE_SIG_FORCE".
+HEAD commit:    fe36eb20 kmsan: rework SLUB hooks
+git tree:       https://github.com/google/kmsan.git master
+console output: https://syzkaller.appspot.com/x/log.txt?x=17605b6fa00000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=40511ad0c5945201
+dashboard link: https://syzkaller.appspot.com/bug?extid=5630ca7c3b2be5c9da5e
+compiler:       clang version 9.0.0 (/home/glider/llvm/clang  
+80fee25776c2fb61e74c1ecb1a523375c2500b69)
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=11305710600000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=1506787fa00000
 
-Mimi
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+5630ca7c3b2be5c9da5e@syzkaller.appspotmail.com
 
+usb 1-1: config 0 interface 235 altsetting 0 bulk endpoint 0x5 has invalid  
+maxpacket 0
+usb 1-1: New USB device found, idVendor=05da, idProduct=009a,  
+bcdDevice=46.6b
+usb 1-1: New USB device strings: Mfr=0, Product=0, SerialNumber=0
+usb 1-1: config 0 descriptor??
+microtek usb (rev 0.4.3): can only deal with bulk endpoints; endpoint 15 is  
+not bulk.
+microtek usb (rev 0.4.3): can only deal with bulk endpoints; endpoint 10 is  
+not bulk.
+microtek usb (rev 0.4.3): will this work? Command EP is not usually 5
+==================================================================
+BUG: KMSAN: uninit-value in mts_usb_probe+0xd1d/0xfb0  
+drivers/usb/image/microtek.c:754
+CPU: 1 PID: 33 Comm: kworker/1:1 Not tainted 5.2.0-rc4+ #11
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
+Google 01/01/2011
+Workqueue: usb_hub_wq hub_event
+Call Trace:
+  __dump_stack lib/dump_stack.c:77 [inline]
+  dump_stack+0x191/0x1f0 lib/dump_stack.c:113
+  kmsan_report+0x162/0x2d0 mm/kmsan/kmsan_report.c:109
+  __msan_warning+0x75/0xe0 mm/kmsan/kmsan_instr.c:294
+  mts_usb_probe+0xd1d/0xfb0 drivers/usb/image/microtek.c:754
+  usb_probe_interface+0xd19/0x1310 drivers/usb/core/driver.c:361
+  really_probe+0x1344/0x1d90 drivers/base/dd.c:513
+  driver_probe_device+0x1ba/0x510 drivers/base/dd.c:670
+  __device_attach_driver+0x5b8/0x790 drivers/base/dd.c:777
+  bus_for_each_drv+0x28e/0x3b0 drivers/base/bus.c:454
+  __device_attach+0x489/0x750 drivers/base/dd.c:843
+  device_initial_probe+0x4a/0x60 drivers/base/dd.c:890
+  bus_probe_device+0x131/0x390 drivers/base/bus.c:514
+  device_add+0x25b5/0x2df0 drivers/base/core.c:2111
+  usb_set_configuration+0x309f/0x3710 drivers/usb/core/message.c:2027
+  generic_probe+0xe7/0x280 drivers/usb/core/generic.c:210
+  usb_probe_device+0x146/0x200 drivers/usb/core/driver.c:266
+  really_probe+0x1344/0x1d90 drivers/base/dd.c:513
+  driver_probe_device+0x1ba/0x510 drivers/base/dd.c:670
+  __device_attach_driver+0x5b8/0x790 drivers/base/dd.c:777
+  bus_for_each_drv+0x28e/0x3b0 drivers/base/bus.c:454
+  __device_attach+0x489/0x750 drivers/base/dd.c:843
+  device_initial_probe+0x4a/0x60 drivers/base/dd.c:890
+  bus_probe_device+0x131/0x390 drivers/base/bus.c:514
+  device_add+0x25b5/0x2df0 drivers/base/core.c:2111
+  usb_new_device+0x23e5/0x2fb0 drivers/usb/core/hub.c:2534
+  hub_port_connect drivers/usb/core/hub.c:5089 [inline]
+  hub_port_connect_change drivers/usb/core/hub.c:5204 [inline]
+  port_event drivers/usb/core/hub.c:5350 [inline]
+  hub_event+0x5853/0x7320 drivers/usb/core/hub.c:5432
+  process_one_work+0x1572/0x1f00 kernel/workqueue.c:2269
+  worker_thread+0x111b/0x2460 kernel/workqueue.c:2415
+  kthread+0x4b5/0x4f0 kernel/kthread.c:256
+  ret_from_fork+0x35/0x40 arch/x86/entry/entry_64.S:355
+
+Uninit was stored to memory at:
+  kmsan_save_stack_with_flags mm/kmsan/kmsan.c:187 [inline]
+  kmsan_internal_chain_origin+0xcc/0x150 mm/kmsan/kmsan.c:349
+  __msan_chain_origin+0x6b/0xe0 mm/kmsan/kmsan_instr.c:190
+  mts_usb_probe+0xcf7/0xfb0 drivers/usb/image/microtek.c:748
+  usb_probe_interface+0xd19/0x1310 drivers/usb/core/driver.c:361
+  really_probe+0x1344/0x1d90 drivers/base/dd.c:513
+  driver_probe_device+0x1ba/0x510 drivers/base/dd.c:670
+  __device_attach_driver+0x5b8/0x790 drivers/base/dd.c:777
+  bus_for_each_drv+0x28e/0x3b0 drivers/base/bus.c:454
+  __device_attach+0x489/0x750 drivers/base/dd.c:843
+  device_initial_probe+0x4a/0x60 drivers/base/dd.c:890
+  bus_probe_device+0x131/0x390 drivers/base/bus.c:514
+  device_add+0x25b5/0x2df0 drivers/base/core.c:2111
+  usb_set_configuration+0x309f/0x3710 drivers/usb/core/message.c:2027
+  generic_probe+0xe7/0x280 drivers/usb/core/generic.c:210
+  usb_probe_device+0x146/0x200 drivers/usb/core/driver.c:266
+  really_probe+0x1344/0x1d90 drivers/base/dd.c:513
+  driver_probe_device+0x1ba/0x510 drivers/base/dd.c:670
+  __device_attach_driver+0x5b8/0x790 drivers/base/dd.c:777
+  bus_for_each_drv+0x28e/0x3b0 drivers/base/bus.c:454
+  __device_attach+0x489/0x750 drivers/base/dd.c:843
+  device_initial_probe+0x4a/0x60 drivers/base/dd.c:890
+  bus_probe_device+0x131/0x390 drivers/base/bus.c:514
+  device_add+0x25b5/0x2df0 drivers/base/core.c:2111
+  usb_new_device+0x23e5/0x2fb0 drivers/usb/core/hub.c:2534
+  hub_port_connect drivers/usb/core/hub.c:5089 [inline]
+  hub_port_connect_change drivers/usb/core/hub.c:5204 [inline]
+  port_event drivers/usb/core/hub.c:5350 [inline]
+  hub_event+0x5853/0x7320 drivers/usb/core/hub.c:5432
+  process_one_work+0x1572/0x1f00 kernel/workqueue.c:2269
+  worker_thread+0x111b/0x2460 kernel/workqueue.c:2415
+  kthread+0x4b5/0x4f0 kernel/kthread.c:256
+  ret_from_fork+0x35/0x40 arch/x86/entry/entry_64.S:355
+
+Local variable description: ----ep_in_set@mts_usb_probe
+Variable was created at:
+  mts_usb_probe+0x53/0xfb0 drivers/usb/image/microtek.c:666
+  usb_probe_interface+0xd19/0x1310 drivers/usb/core/driver.c:361
+==================================================================
+
+
+---
+This bug is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this bug report. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+syzbot can test patches for this bug, for details see:
+https://goo.gl/tpsmEJ#testing-patches
