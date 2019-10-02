@@ -2,143 +2,126 @@ Return-Path: <SRS0=zem1=X3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FC0EC35280
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 07:51:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BADDC35280
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 07:52:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2237821A4A
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 07:51:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570002685;
-	bh=MCG9vi15eXQf4+3zgtsMMnP8nAjsxBDGSgj+AXLjkh4=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=AUH6UxUO53d3rMFij2n46XFz5Pfp7yGScoe+ICnPv1ohAgIdfxzxev1pK52oFc9TJ
-	 q0NH4Eu3GHIAASc/VUMfUsCH197vsZ20DzPrpPeapLs0MVtlTBn9jEHoZaoJOYzZ24
-	 JeqVmvpkD20ffFR6v/OvyOEfREidrMMBtIYhbwHU=
+	by mail.kernel.org (Postfix) with ESMTP id 672A321920
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 07:52:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727042AbfJBHvY (ORCPT
+        id S1727072AbfJBHww (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Oct 2019 03:51:24 -0400
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:37358 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725988AbfJBHvY (ORCPT
+        Wed, 2 Oct 2019 03:52:52 -0400
+Received: from relay7-d.mail.gandi.net ([217.70.183.200]:56279 "EHLO
+        relay7-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726002AbfJBHww (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Oct 2019 03:51:24 -0400
-Received: by mail-ot1-f65.google.com with SMTP id k32so13896575otc.4;
-        Wed, 02 Oct 2019 00:51:23 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=nicjUzK1aCzTPXfkiTszftUB1bSootFU4r9Af2VZdd4=;
-        b=pI8tMAzhuWe1DDEcfpzJhos0mKr4QoiPl3GM4TPtsGGoOsFWc/ZYNPvnNK7HgO4qMV
-         czkhBZXxLv7EYUNU3uKl/1dn9E6qDIB1Nb9k1BJp5yk7LMkPM9iNJvaklyuDKi5ZmAns
-         uznao+HE6dx67UcSxLF4/2QGDiuntb39OuD3rNGdLWDlP7KyQ4cWECwtEWESa/TL5rvW
-         dWi0VOpkamIgKh1f9xgZ10tNUyozw/TKzE9g+l1Vlk+5WjBsiMrUsd3Mxw+upzscf7Kg
-         ZWHiePNiwZUt1PW60PQXX5BDDuWrrBjtKwzqUj1HDDHJ9oJwL1NZy7RXVnBM1LIvTx9g
-         9kUw==
-X-Gm-Message-State: APjAAAWXHZCuU1YlIojzPJIrZVBJCywKa+RyeC9AZuQyIqwbdaigWAMy
-        QKcaTwlpUJN5CXoCtk4UAYgCkhZ7MhkdgBwpSRc=
-X-Google-Smtp-Source: APXvYqz71nTjSqBxRr4QDswp1ob5aZ+KAvXvpMiCwA5SDyyXDIdUmYP20t6SgsKoFSgzFPZdmYYH4mgWrEHkD4h0TFc=
-X-Received: by 2002:a9d:6a16:: with SMTP id g22mr1570217otn.118.1570002682809;
- Wed, 02 Oct 2019 00:51:22 -0700 (PDT)
+        Wed, 2 Oct 2019 03:52:52 -0400
+X-Originating-IP: 2.224.242.101
+Received: from uno.localdomain (2-224-242-101.ip172.fastwebnet.it [2.224.242.101])
+        (Authenticated sender: jacopo@jmondi.org)
+        by relay7-d.mail.gandi.net (Postfix) with ESMTPSA id DBCFC2000D;
+        Wed,  2 Oct 2019 07:52:48 +0000 (UTC)
+Date:   Wed, 2 Oct 2019 09:54:32 +0200
+From:   Jacopo Mondi <jacopo@jmondi.org>
+To:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Cc:     jacopo+renesas@jmondi.org, kieran.bingham+renesas@ideasonboard.com,
+        laurent.pinchart+renesas@ideasonboard.com,
+        niklas.soderlund+renesas@ragnatech.se, mchehab@kernel.org,
+        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] media: i2c: max9286: Pass default bus type when parsing
+ fwnode endpoint
+Message-ID: <20191002075432.bkee4fl6cfcr25iv@uno.localdomain>
+References: <20191001145503.5170-1-manivannan.sadhasivam@linaro.org>
 MIME-Version: 1.0
-References: <CACO55tvjFPAMgz6DMGmJQ3adtJBX6yYnFRO9gVBEpMVTEBu0og@mail.gmail.com>
- <20191001193427.GA59137@google.com>
-In-Reply-To: <20191001193427.GA59137@google.com>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Wed, 2 Oct 2019 09:51:10 +0200
-Message-ID: <CAJZ5v0gUddEhOPqNvTboO9mL6vcxu5HeCEC+-pJMzippTiAy9Q@mail.gmail.com>
-Subject: Re: [RFC PATCH] pci: prevent putting pcie devices into lower device
- states on certain intel bridges
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Karol Herbst <kherbst@redhat.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Lyude Paul <lyude@redhat.com>,
-        Linux PCI <linux-pci@vger.kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        nouveau <nouveau@lists.freedesktop.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        "Schmauss, Erik" <erik.schmauss@intel.com>,
-        Robert Moore <robert.moore@intel.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="73eelba4s6ofsnjc"
+Content-Disposition: inline
+In-Reply-To: <20191001145503.5170-1-manivannan.sadhasivam@linaro.org>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Oct 1, 2019 at 9:34 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
+
+--73eelba4s6ofsnjc
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+
+Hello Manivannan,
+
+On Tue, Oct 01, 2019 at 08:25:03PM +0530, Manivannan Sadhasivam wrote:
+> The caller of v4l2_fwnode_endpoint_alloc_parse() is expected to pass a
+> valid bus_type parameter for proper working of this API. Hence, pass
+> V4L2_MBUS_CSI2_DPHY as the bus_type parameter as this driver only supports
+> MIPI CSI2 for now. Without this commit, the API fails on 96Boards
+> Dragonboard410c connected to MAX9286 deserializer.
 >
-> On Tue, Oct 01, 2019 at 06:21:28PM +0200, Karol Herbst wrote:
-> > On Tue, Oct 1, 2019 at 3:27 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
-> > > On Mon, Sep 30, 2019 at 06:36:12PM +0200, Karol Herbst wrote:
-> > > > On Mon, Sep 30, 2019 at 6:30 PM Mika Westerberg
-> > > > <mika.westerberg@linux.intel.com> wrote:
-> > > > >
-> > > > > On Mon, Sep 30, 2019 at 06:05:14PM +0200, Karol Herbst wrote:
-> > > > > > still happens with your patch applied. The machine simply gets shut down.
-> > > > > >
-> > > > > > dmesg can be found here:
-> > > > > > https://gist.githubusercontent.com/karolherbst/40eb091c7b7b33ef993525de660f1a3b/raw/2380e31f566e93e5ba7c87ef545420965d4c492c/gistfile1.txt
-> > > > >
-> > > > > Looking your dmesg:
-> > > > >
-> > > > > Sep 30 17:24:27 kernel: nouveau 0000:01:00.0: DRM: DCB version 4.1
-> > > > > Sep 30 17:24:27 kernel: nouveau 0000:01:00.0: DRM: MM: using COPY for buffer copies
-> > > > > Sep 30 17:24:27 kernel: [drm] Initialized nouveau 1.3.1 20120801 for 0000:01:00.0 on minor 1
-> > > > >
-> > > > > I would assume it runtime suspends here. Then it wakes up because of PCI
-> > > > > access from userspace:
-> > > > >
-> > > > > Sep 30 17:24:42 kernel: pci_raw_set_power_state: 56 callbacks suppressed
-> > > > >
-> > > > > and for some reason it does not get resumed properly. There are also few
-> > > > > warnings from ACPI that might be relevant:
-> > > > >
-> > > > > Sep 30 17:24:27 kernel: ACPI Warning: \_SB.PCI0.GFX0._DSM: Argument #4 type mismatch - Found [Buffer], ACPI requires [Package] (20190509/nsarguments-59)
-> > > > > Sep 30 17:24:27 kernel: ACPI Warning: \_SB.PCI0.PEG0.PEGP._DSM: Argument #4 type mismatch - Found [Buffer], ACPI requires [Package] (20190509/nsarguments-59)
-> > > >
-> > > > afaik this is the case for essentially every laptop out there.
-> > >
-> > > I think we should look into this a little bit.
-> > > acpi_ns_check_argument_types() checks the argument type and prints
-> > > this message, but AFAICT it doesn't actually fix anything or prevent
-> > > execution of the method, so I have no idea what happens when we
-> > > actually execute the _DSM.
-> >
-> > I can assure you that this warning happens on every single laptop out
-> > there with dual Nvidia graphics and it's essentially just a firmware
-> > bug. And it never caused any issues on any of the older laptops (or
-> > newest one for that matter).
+> Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> ---
 >
-> Rafael, do you know anything about this?
+> This patch depends on the latest "MAX9286 GMSL Support" series posted
+> by Kieran Bingham.
+>
+>  drivers/media/i2c/max9286.c | 4 +++-
+>  1 file changed, 3 insertions(+), 1 deletion(-)
+>
+> diff --git a/drivers/media/i2c/max9286.c b/drivers/media/i2c/max9286.c
+> index 9390edf5ad9c..6e1299f15493 100644
+> --- a/drivers/media/i2c/max9286.c
+> +++ b/drivers/media/i2c/max9286.c
+> @@ -976,7 +976,9 @@ static int max9286_parse_dt(struct max9286_device *max9286)
+>
+>  		/* For the source endpoint just parse the bus configuration. */
+>  		if (ep.port == MAX9286_SRC_PAD) {
+> -			struct v4l2_fwnode_endpoint vep;
+> +			struct v4l2_fwnode_endpoint vep = {
+> +				.bus_type = V4L2_MBUS_CSI2_DPHY
+> +			};
 
-IIRC ACPICA will simply run the method with the assumption that the
-AML in there will deal with the arguments properly anyway.
+Isn't the bus_type just an hint ? __v4l2_fwnode_endpoint_parse()
+should try to parse CSI2 first, and should be able to to deduct the bus
+type from the properties specified in DT...
 
-> If ACPI has some sort of workaround so it can execute the method correctly
-> anyway, maybe we should remove or reword the warning?
+Anyway, I'm not against this change, the contrary actually, I'm just
+afraid it might hide some more subtile bug, as we don't need this on
+our platforms...
 
-I can agree that printing these warnings on a user system by default
-is not very useful, at least as long as no visible functional issues
-are present, but if there are such issues, it is good to know that
-something fishy is going on.  For instance, while the method may
-execute successfully, the result of that may not be as expected.
+Is the db410c mainline ? Do you have DT snippets for db410c+max9286 to
+share?
 
-So maybe they should be debug level or similar.
+Thanks
+  j
 
-> Or if this does prevent execution of the method, maybe we need to add
-> a workaround since the problem is so prevalent in the field?
+>  			int ret;
+>
+>  			ret = v4l2_fwnode_endpoint_alloc_parse(
+> --
+> 2.17.1
+>
 
-As par the above, no workarounds should be needed, but I'll let Bob
-and Erik (CCed now) confirm or deny this.
+--73eelba4s6ofsnjc
+Content-Type: application/pgp-signature; name="signature.asc"
 
-A side note: please CC all discussions regarding general ACPI issues
-to linux-acpi, so they can get the attention of all of the right
-people (who may not subscribe linux-pci, for example).
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEtcQ9SICaIIqPWDjAcjQGjxahVjwFAl2UV7cACgkQcjQGjxah
+VjxWExAAtghKwPYvUCH7VoaEBwFknLuPPuZHr0trVa+rx+fRqR1uCTfuQJObVH9N
+bNoWunYlzVU000Bs0fOBQyZrjgtwqNycqNXy3blERdXDPDPNOoEeSObUNqKrMse+
+NVcwlsNA/Z/ZffDe9wy0LOvhuXA7ThauMr2PIC6q97NJmZjFKeOH+IOfecbPBhjr
+yWzSkes1b3zJ2TxxaSlxnPOeSxAdTkFUzc5hhZAn7vhIStsVJtATWRyGaAb8o4Lp
+qvldjHq9/3bgLmdVOV4IxoR6n0l9/YYOTBSXDIwVr36OdvB8SksJfIW08iZXX3Y2
+SIu5T9mSIsHFeBTboW1WSFUV5iJmZCNfeWzTeKVapLS9e8wUYjwV6nIGbXz60epU
+cD+h36zq0C+a5OuvQFcDfoZbHy7xBk6UJKZh4a5DnzTFHRF1rKaOAB0J4RQGSNrx
+q5N0hF6ulPxYOKV/siEWbOe+N8zJAin7IzCbBCQy4iu4Qf36WWSlNM9hICw/BOTa
+QmA0lF1rg4r6PZJ2+8U1KmQz9iRxmw1LjB6O/1jrx2qu0lPUW+xRYiBKRwQdKK8n
+n9IDtrpFC4noZsjsz1PwLQKwRdL2tf6p4kuVChJb68Q+nSYmTF3d+sTxoB+G7AE6
+ZfA958GpLdLBd41o0dGgnbZ8OzkrTyt3qnlGtUlu0kddy0KSSuQ=
+=JA7y
+-----END PGP SIGNATURE-----
+
+--73eelba4s6ofsnjc--
