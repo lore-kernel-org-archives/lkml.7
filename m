@@ -2,65 +2,121 @@ Return-Path: <SRS0=zem1=X3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17633C352AA
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 01:24:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F975ECE589
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 01:24:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DA71B215EA
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 01:23:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1F6A62133F
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 01:24:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SELtzi6L"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729676AbfJBBX6 (ORCPT
+        id S1729696AbfJBBY5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Oct 2019 21:23:58 -0400
-Received: from shards.monkeyblade.net ([23.128.96.9]:55264 "EHLO
-        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728984AbfJBBX5 (ORCPT
+        Tue, 1 Oct 2019 21:24:57 -0400
+Received: from mail-io1-f65.google.com ([209.85.166.65]:46160 "EHLO
+        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729681AbfJBBY5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Oct 2019 21:23:57 -0400
-Received: from localhost (unknown [IPv6:2603:3023:50c:85e1:b5c5:ae11:3e54:6a07])
-        (using TLSv1 with cipher AES256-SHA (256/256 bits))
-        (Client did not present a certificate)
-        (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id 1003014D65306;
-        Tue,  1 Oct 2019 18:23:56 -0700 (PDT)
-Date:   Tue, 01 Oct 2019 21:23:55 -0400 (EDT)
-Message-Id: <20191001.212355.540884408544073853.davem@davemloft.net>
-To:     decui@microsoft.com
-Cc:     kys@microsoft.com, haiyangz@microsoft.com, sthemmin@microsoft.com,
-        sashal@kernel.org, stefanha@redhat.com, gregkh@linuxfoundation.org,
-        arnd@arndb.de, deepa.kernel@gmail.com, ytht.net@gmail.com,
-        tglx@linutronix.de, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-hyperv@vger.kernel.org,
-        kvm@vger.kernel.org, virtualization@lists.linux-foundation.org,
-        mikelley@microsoft.com, sgarzare@redhat.com, jhansen@vmware.com
-Subject: Re: [PATCH net v3] vsock: Fix a lockdep warning in
- __vsock_release()
-From:   David Miller <davem@davemloft.net>
-In-Reply-To: <1569868998-56603-1-git-send-email-decui@microsoft.com>
-References: <1569868998-56603-1-git-send-email-decui@microsoft.com>
-X-Mailer: Mew version 6.8 on Emacs 26.1
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Tue, 01 Oct 2019 18:23:56 -0700 (PDT)
+        Tue, 1 Oct 2019 21:24:57 -0400
+Received: by mail-io1-f65.google.com with SMTP id c6so52935145ioo.13;
+        Tue, 01 Oct 2019 18:24:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=WW4/xkSDQIhkfsesG9YoLnUMFaDJjWvzNHAEkW7fJkA=;
+        b=SELtzi6LjPYxNmk8TonlToYJ4dYGk/DN/z7VRaW2PzJqDnDQaeOgeMZP8OI+vQnSpw
+         O4xP5NaXSwqj7tsClZcMPkxop33TffDN5xUboR3xabL07aaIv48fVdZlk4PaEvQT7Qsu
+         T1U2kVyrfKhSP77hvAjdDypCgFCwkYs9LbYyG76k7NGbQ/wCwAZgJP/qyj8d5Mecfluc
+         nTya1o8pxjDteRZSM7GQMakA071DvylNWInlaTtqBevulSTwArJxz8rnBm37bPnzTHyo
+         LXzOTKZvZyqJQ8D6me/wa1HxQmXhOefjLqRI3O80Z782g7ub22+sA1zFlpRJiPWEvGjd
+         EyFQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=WW4/xkSDQIhkfsesG9YoLnUMFaDJjWvzNHAEkW7fJkA=;
+        b=RJcuHXfOFw132Q4b+pYQuXV4atxgh2JFKk9x3KMZFsPh/3x1V/9OY12c/Gk7Hc0hBF
+         SdPk5E6yhB4WaobIcaTndZdvsuAT0oXSe6k0voq5ppEfyo+EHaOzUnLRSyJB7qBtBpoT
+         XODRJr7FxjoVI6pSi59cBN0WAnKitKOCA9hObGxw/SyIcZDHl7n0q+2FpE7MB9bFUqXD
+         o7KKk0AGT0J7jWArBGNjecprRIpmY7UBLCLqX40npL+MC8qrEaOt/LhiJ9a241IX7ByV
+         8c9kNqx/XB6ZBBTEwBh0oVg9kEWd/NGob3+/c8DgtIcTZ0calBLoKWOJBUjBTRnzYjn5
+         vDfA==
+X-Gm-Message-State: APjAAAVIUmV4uwMwAcVSSTFROCWqHBowPnspbzwO7ehF1yeQfGCYQg4L
+        53nWHzN+XE+VzCo9tAxK9TM/Yljbr8ekk20dVUTMepB08rc=
+X-Google-Smtp-Source: APXvYqwPE/tA65lT7b97m29565vMbtiutIr7UlQrMhri6hjabguFSCCYzFrADLTzw+T2Q2e4tXm6uRC+6WwGY65gP3w=
+X-Received: by 2002:a92:d641:: with SMTP id x1mr1188239ilp.272.1569979495933;
+ Tue, 01 Oct 2019 18:24:55 -0700 (PDT)
+MIME-Version: 1.0
+References: <CAH2r5mspD=iMnO-CuyHMf3jmS0zm7fbqNOXe0cqMcKsXfLAu-Q@mail.gmail.com>
+ <20191001231017.67txq4dhrvhyzbu5@desk.local> <CAH2r5mvnYtmfpHY+jeUbN4JehQwY1XfBWYVNSLO+wx1wkAA6gA@mail.gmail.com>
+ <20191002001859.qeyo3btl7tosz3vo@desk.local>
+In-Reply-To: <20191002001859.qeyo3btl7tosz3vo@desk.local>
+From:   Steve French <smfrench@gmail.com>
+Date:   Tue, 1 Oct 2019 20:24:45 -0500
+Message-ID: <CAH2r5mtzAgcJTrGuderq4DEHBXtPujcQ8DWJUzM0w=hHX8WbJQ@mail.gmail.com>
+Subject: Re: Many unexpected warnings with current sparse
+To:     Luc Van Oostenryck <luc.vanoostenryck@gmail.com>,
+        Paulo Alcantara <paulo@paulo.ac>,
+        David Howells <dhowells@redhat.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>, linux-sparse@vger.kernel.org,
+        CIFS <linux-cifs@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dexuan Cui <decui@microsoft.com>
-Date: Mon, 30 Sep 2019 18:43:50 +0000
+On Tue, Oct 1, 2019 at 7:19 PM Luc Van Oostenryck
+<luc.vanoostenryck@gmail.com> wrote:
+>
+> On Tue, Oct 01, 2019 at 06:14:23PM -0500, Steve French wrote:
+> > It may be related to the following sparse make warning:
+> >
+> > No rule to make target
+> > '/usr/include/x86_64-linux-gnu/bits/huge_val.h', needed by
+> > 'sparse-llvm.o'
+> >
+> > I don't see huge_val.h in the Ubuntu 19 version of libc6-dev
+>
+> Yes, I've been bitten myself by this. It's fixed since a little while.
+> So, just doing a clean build or removing all the deps (.*.d)
+> should allow you to build sparse.
+>
+> I've verified the problem with asm and __inline in quota.h:
+> it's autodetected by kconfig (CC_HAS_ASM_INLINE) so the exact config
+> doesn't matter (only gcc's version does) but in all cases recent
+> versions of sparse don't have a problem with it
 
-> Lockdep is unhappy if two locks from the same class are held.
-> 
-> Fix the below warning for hyperv and virtio sockets (vmci socket code
-> doesn't have the issue) by using lock_sock_nested() when __vsock_release()
-> is called recursively:
- ...
-> Tested-by: Stefano Garzarella <sgarzare@redhat.com>
-> Signed-off-by: Dexuan Cui <decui@microsoft.com>
+Removed the dependencies and rebuilt as you suggested and it worked ...
+and even better ... with the noise removed I now see two real bugs
+(endian conversion missing on two lines) and only one possible problem
+with sparse/gcc itself
 
-Applied, thanks.
+Sparse now flags this line from one of Paulo's DFS features merged last year:
+
+      struct smb_vol fake_vol = {0};
+
+with
+
+      "warning: Using plain integer as NULL pointer"
+
+What is the recommended way to initialize a struct to avoid the sparse warning?
+
+
+And what about the "namespace" warnings from the fscache (cache.o)
+code that now show up?  I hadn't seen those before.
+Any easy way to remove them?
+
+"WARNING: module cifs uses symbol sigprocmask from namespace
+fs/cifs/cache.o: $(deps_/home/sfrench/cifs-2.6/fs/cifs/cache.o), but
+does not import it."
+-- 
+Thanks,
+
+Steve
