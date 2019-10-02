@@ -2,98 +2,93 @@ Return-Path: <SRS0=zem1=X3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 770ABC35280
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 06:50:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DBB2FC35280
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 06:51:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4C3EC215EA
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 06:50:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9E379215EA
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 06:51:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="LgRYLVhA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726311AbfJBGuG (ORCPT
+        id S1726411AbfJBGvX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Oct 2019 02:50:06 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:24254 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725860AbfJBGuG (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Oct 2019 02:50:06 -0400
-Received: from pps.filterd (m0098417.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x926grlo122754
-        for <linux-kernel@vger.kernel.org>; Wed, 2 Oct 2019 02:50:04 -0400
-Received: from e06smtp05.uk.ibm.com (e06smtp05.uk.ibm.com [195.75.94.101])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2vcn1rk278-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Wed, 02 Oct 2019 02:50:04 -0400
-Received: from localhost
-        by e06smtp05.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <heiko.carstens@de.ibm.com>;
-        Wed, 2 Oct 2019 07:50:03 +0100
-Received: from b06cxnps4076.portsmouth.uk.ibm.com (9.149.109.198)
-        by e06smtp05.uk.ibm.com (192.168.101.135) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Wed, 2 Oct 2019 07:50:00 +0100
-Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
-        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x926nw9N50593922
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 2 Oct 2019 06:49:58 GMT
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 9ADAFA4040;
-        Wed,  2 Oct 2019 06:49:58 +0000 (GMT)
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 557C0A404D;
-        Wed,  2 Oct 2019 06:49:58 +0000 (GMT)
-Received: from osiris (unknown [9.152.212.201])
-        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
-        Wed,  2 Oct 2019 06:49:58 +0000 (GMT)
-Date:   Wed, 2 Oct 2019 08:49:56 +0200
-From:   Heiko Carstens <heiko.carstens@de.ibm.com>
-To:     Jiri Kosina <jikos@kernel.org>, Vasily Gorbik <gor@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-s390@vger.kernel.org, Michal Kubecek <mkubecek@suse.cz>,
+        Wed, 2 Oct 2019 02:51:23 -0400
+Received: from ozlabs.org ([203.11.71.1]:56067 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726139AbfJBGvX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 2 Oct 2019 02:51:23 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 46jmy04J7Qz9sPL;
+        Wed,  2 Oct 2019 16:51:20 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1569999081;
+        bh=ovxAl5uOUliXRc9fNQlkGlMy3gklUVsepeXTrYR9c80=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=LgRYLVhA6+HmJeFzJnjYWHhNHPiAHCZjm4Jm4lyzDIBYsVicKj6eUGdn+aJi731SE
+         EYKlGQ1f7AvBGN26K2RQNFqQSCgt+VJphMpMXSgtkC9MKjX45bekAuk8BSAmRsC9/t
+         uBmNwpR2T8de2N4Rkr5i9xigPS88U6eUeuQoI+t1/tqwPVfy9AC5+1NKTyMOGVI0/s
+         8ehC4BpFLk7m9US+4nSIPr1D1+WeBXqgiXhEP1G0zllIk9QWSl5WunrhgofJ+iypvi
+         yymuXEsIJZEQH55PF4iEsWwKyHh6A4j6nkv4tijMWzuh0FDwjZa5dph7Bq7jdIbajk
+         /+zSLEMf7Q0Vw==
+Date:   Wed, 2 Oct 2019 16:51:19 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Laurent Dufour <ldufour@linux.ibm.com>
+Cc:     mpe@ellerman.id.au, benh@kernel.crashing.org, paulus@samba.org,
+        aneesh.kumar@linux.ibm.com, npiggin@gmail.com,
+        linuxppc-dev@lists.ozlabs.org, linux-mm@kvack.org,
         linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 5.4-rc1 BUILD FIX] s390: mark __cpacf_query() as
- __always_inline
-References: <nycvar.YFH.7.76.1910012203010.13160@cbobk.fhfr.pm>
- <20191002064605.GA7405@osiris>
+Subject: Re: [PATCH] powerpc/pseries: Remove confusing warning message.
+Message-ID: <20191002165119.2a3d1791@canb.auug.org.au>
+In-Reply-To: <20191001132928.72555-1-ldufour@linux.ibm.com>
+References: <20191001132928.72555-1-ldufour@linux.ibm.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191002064605.GA7405@osiris>
-X-TM-AS-GCONF: 00
-x-cbid: 19100206-0020-0000-0000-000003743B4B
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19100206-0021-0000-0000-000021CA3DB6
-Message-Id: <20191002064956.GB7405@osiris>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-10-02_04:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=1 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1908290000 definitions=main-1910020062
+Content-Type: multipart/signed; boundary="Sig_/AIIknVOCfFA0xQnlgm_sxkq";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Oct 02, 2019 at 08:46:05AM +0200, Heiko Carstens wrote:
-> On Tue, Oct 01, 2019 at 10:08:01PM +0200, Jiri Kosina wrote:
-> > I am wondering how is it possible that none of the build-testing 
-> > infrastructure we have running against linux-next caught this? Not enough 
-> > non-x86 coverage?
-> 
-> Well, there is plenty of s390 coverage with respect to daily builds
-> (also here). It doesn't fail for me with gcc 9.1; so you may either
-> have a different gcc version or different config options(?) so the
-> compiler decided to not inline the function. I'll apply this in any
-> case, since your patch is obviously fine.
-> 
-> Thanks!
+--Sig_/AIIknVOCfFA0xQnlgm_sxkq
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Ok, Christian applied this already a couple of minutes earlier ;)
+Hi Laurent,
 
+On Tue,  1 Oct 2019 15:29:28 +0200 Laurent Dufour <ldufour@linux.ibm.com> w=
+rote:
+>
+> Fixes: 1211ee61b4a8 ("powerpc/pseries: Read TLB Block Invalidate Characte=
+ristics")
+> Reported-by: Stephen Rothwell <sfr@linux.ibm.com>
+
+Please use my external email address <sfr@canb.auug.org.au>, thanks.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/AIIknVOCfFA0xQnlgm_sxkq
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl2USOcACgkQAVBC80lX
+0GwwEAf/cRL7HXJok9Y3fupcfvNbhTUiejF5JlvpNT2ao2CfWejue1IZuJCZVc/c
+brY1YAAIM6EUJSefxNIo9cYJjedv4tkd2Di1HDHUSNuIPtZJ+6r+XZvfGuGnktTe
+AR4vNvw8tZKgrIU4JUqD8llmi3GLJnc5uEfg3x6BkVGFZziuWqyH2tiOjoOYzSN2
+CEWRPPvbNBvsAqDoiXtp3TmpKc8pxm5PmBqzS1CZxGh1ydbir2YhcN+JJeBp3S2z
+U4r075Vln3ByjDztnRfHfAT+0JtY5khOuozC2EPjvnpPFtxwNvlQL6RTJfXyu+Za
+lzMR+y76oZLmFWN56QAJsri52zPsUQ==
+=TqBQ
+-----END PGP SIGNATURE-----
+
+--Sig_/AIIknVOCfFA0xQnlgm_sxkq--
