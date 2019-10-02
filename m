@@ -2,179 +2,93 @@ Return-Path: <SRS0=zem1=X3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70731C10F14
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 17:32:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77262C10F14
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 17:38:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3597521D81
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 17:32:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="zgTnof+p"
+	by mail.kernel.org (Postfix) with ESMTP id 52F2121D81
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 17:38:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1570037902;
+	bh=BiMF+rr+fWqAS746ljdAXP5lde95Gmakphk001kAUpk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=mQdZ6VshxAejRUOEPVjQjbJJZNVjeGXzhJTyVRoCoZLSGyfBIcKEIoAj9JgYfyCSu
+	 WXtSz2V6JlrSdp9ZY2HdshtJdTAeG0eavx/eKIaPhfpMUIswXPN11/xioIxSApndKY
+	 0yjS1JGDKGIRz/AdZMWdr+r8KNM+zHrPosx+rRi0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728145AbfJBRcS (ORCPT
+        id S1728266AbfJBRiV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Oct 2019 13:32:18 -0400
-Received: from pandora.armlinux.org.uk ([78.32.30.218]:58220 "EHLO
-        pandora.armlinux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726669AbfJBRcS (ORCPT
+        Wed, 2 Oct 2019 13:38:21 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:35750 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727357AbfJBRiU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Oct 2019 13:32:18 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=mQqIhWQifybwkhXFJbITg6B075lNi1C6ZO3XIQgSSq4=; b=zgTnof+ptMi/+RkZlGYDebb2H
-        2W5q/lEjU73zjxRbkd282fuRX21gXxqlC7/VZYH4/pH8DSrE8wzw3Vx7Dhpr0/DXBhXDVXRdCvIH7
-        Nc6ZbQo56fAVCWhU0DIXHlbNVuOZBEL1FFx0bvmZTTjUYBS1UbZEPcUBRuXjGKyqPImPVNSkCBLVX
-        f1JbJxlbnx4EQ0yFpUsoK0PbgM65n+XA3s7MTJ+y3NTU3skzF73EaG7R1ErXKgokrj46cnifQVekw
-        M0nGMVHiGNcUpYCCtU3o3o5fuLvgaz25o5ExQJ+dLv61qvsEArDz+N0cR+OkRU58KGHHSwgprXuWW
-        6gLv3K3QQ==;
-Received: from shell.armlinux.org.uk ([2001:4d48:ad52:3201:5054:ff:fe00:4ec]:39248)
-        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.90_1)
-        (envelope-from <linux@armlinux.org.uk>)
-        id 1iFiU0-0001XK-QP; Wed, 02 Oct 2019 18:32:12 +0100
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
-        (envelope-from <linux@shell.armlinux.org.uk>)
-        id 1iFiTy-0000uk-07; Wed, 02 Oct 2019 18:32:10 +0100
-Date:   Wed, 2 Oct 2019 18:32:09 +0100
-From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
-To:     Dinh Nguyen <dinguyen@kernel.org>
-Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linus.walleij@linaro.org, p.zabel@pengutronix.de,
-        thor.thayer@linux.intel.com
-Subject: Re: [PATCHv3] ARM: drivers/amba: release and cleanup the resource to
- allow for deferred probe
-Message-ID: <20191002173209.GT25745@shell.armlinux.org.uk>
-References: <20191002143551.32288-1-dinguyen@kernel.org>
+        Wed, 2 Oct 2019 13:38:20 -0400
+Received: by mail-wr1-f68.google.com with SMTP id v8so13215wrt.2;
+        Wed, 02 Oct 2019 10:38:18 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=YTmH8EafQxbdYgDMckejIA27/8MmwdAdTeYHGHhQuPA=;
+        b=gWY1xml5LcvInf3O4tQ/lV/rFRNxLTuNPhucXdb89v/v6mcIdga8/m89+L3rCJ73/f
+         ADT8gWPf4pAVp7cWcVAx1p+fOb7cjqKmfezu9AgrqTAqvBkb3Yb/L+uC6xV3VL5CEnai
+         1K27G5W7167AgUHudwoiZUqzULu1N6AMrPgHhw7PrzwFEeZDsVLJ83MVlXVO/1z2E9Yh
+         pqr+Oe5fIHauPMBTLM1asAG/ybJcm5CcaXE9xbmjR1oU3YNcrOh1z4D9NaAFALBB3boK
+         /N+luVkh8RWKolGmdABfcu79SsPgkxshVrY0fCYZ6NrVNLcx/LmYeBUGXIOAiMuKpIz2
+         ajew==
+X-Gm-Message-State: APjAAAX1XhY85fE8mscCNcTpxbj589Vye3znTEBKX/8cL3yVngoLfaje
+        N0BdE8G3+jrgjgzNEgi6s94=
+X-Google-Smtp-Source: APXvYqylJhVMEK3ifyltGwEzTf9OuJVwke1QEVnvk2FVIatTz4vfsE+ISc2rNCBhpXG9RhGqGRoxkQ==
+X-Received: by 2002:adf:fe92:: with SMTP id l18mr3630971wrr.369.1570037898167;
+        Wed, 02 Oct 2019 10:38:18 -0700 (PDT)
+Received: from kozik-lap ([194.230.155.145])
+        by smtp.googlemail.com with ESMTPSA id q66sm6742037wme.39.2019.10.02.10.38.16
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 02 Oct 2019 10:38:17 -0700 (PDT)
+Date:   Wed, 2 Oct 2019 19:38:14 +0200
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     Lukasz Luba <l.luba@partner.samsung.com>
+Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-pm@vger.kernel.org, linux-samsung-soc@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, b.zolnierkie@samsung.com,
+        kgene@kernel.org, mark.rutland@arm.com, cw00.choi@samsung.com,
+        kyungmin.park@samsung.com, m.szyprowski@samsung.com,
+        s.nawrocki@samsung.com, myungjoo.ham@samsung.com,
+        robh+dt@kernel.org, willy.mh.wolff.ml@gmail.com
+Subject: Re: [PATCH v3 4/4] memory: samsung: exynos5422-dmc: Add support for
+ interrupt from performance counters
+Message-ID: <20191002173814.GF21463@kozik-lap>
+References: <20191002060455.3834-1-l.luba@partner.samsung.com>
+ <CGME20191002060507eucas1p169394dec59f010e112eb38d83e3fb8ba@eucas1p1.samsung.com>
+ <20191002060455.3834-5-l.luba@partner.samsung.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20191002143551.32288-1-dinguyen@kernel.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20191002060455.3834-5-l.luba@partner.samsung.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Oct 02, 2019 at 09:35:51AM -0500, Dinh Nguyen wrote:
-> With commit "79bdcb202a35 ARM: 8906/1: drivers/amba: add reset control to
-> amba bus probe", the amba bus driver needs to be deferred probe because the
-> reset driver is probed later. However with a deferred probe, the call to
-> request_resource() in the driver returns -EBUSY. The reason is the driver
-> has not released the resource from the previous probe attempt.
+On Wed, Oct 02, 2019 at 08:04:55AM +0200, Lukasz Luba wrote:
+> Introduce a new interrupt driven mechanism for managing speed of the
+> memory controller. The interrupts are generated due to performance
+> counters overflow. The performance counters might track memory reads,
+> writes, transfers, page misses, etc. In the basic algorithm tracking
+> read transfers and calculating memory pressure should be enough to
+> skip polling mode in devfreq.
 > 
-> This patch fixes how we handle the condition of EPROBE_DEFER that is returned
-> from getting the reset controls. For this condition, the patch will jump
-> to defer_probe, which will iounmap, dev_pm_domain_detach, and release the
-> resource.
-> 
-> Fixes: 79bdcb202a35 ("ARM: 8906/1: drivers/amba: add reset control to
-> amba bus probe")
-> Signed-off-by: Dinh Nguyen <dinguyen@kernel.org>
+> Signed-off-by: Lukasz Luba <l.luba@partner.samsung.com>
 > ---
-> v3: jump to defer_probe where the driver will unmap and pm_detach the
->     driver resource for the next probe attempt
-> v2: release the resource when of_reset_control_array_get_optional_shared()
->     returns EPROBE_DEFER
-> ---
->  drivers/amba/bus.c | 8 ++++++--
->  1 file changed, 6 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/amba/bus.c b/drivers/amba/bus.c
-> index f39f075abff9..4a021b1dab3d 100644
-> --- a/drivers/amba/bus.c
-> +++ b/drivers/amba/bus.c
-> @@ -409,9 +409,12 @@ static int amba_device_try_add(struct amba_device *dev, struct resource *parent)
->  		 */
->  		rstc = of_reset_control_array_get_optional_shared(dev->dev.of_node);
->  		if (IS_ERR(rstc)) {
-> -			if (PTR_ERR(rstc) != -EPROBE_DEFER)
-> +			ret = PTR_ERR(rstc);
-> +			if (ret == -EPROBE_DEFER)
-> +				goto defer_probe;
-> +			else
->  				dev_err(&dev->dev, "Can't get amba reset!\n");
-> -			return PTR_ERR(rstc);
-> +			return ret;
+>  drivers/memory/samsung/exynos5422-dmc.c | 345 ++++++++++++++++++++++--
 
-So, if of_reset_control_array_get_optional_shared() returns an error,
-we end up leaking the ioremap(), the resource claim, the pclk enable
-and pm domain?  If it returns -EPROBE_DEFER, we end up leaking the
-pclk enable?
+Thanks, applied.
 
-I think this is going to be quicker if I write the patch - I haven't
-build-tested this yet though.  Please check whether this works for
-you.
+Best regards,
+Krzysztof
 
-Thanks.
-
-8<=====
-From: Russell King <rmk+kernel@armlinux.org.uk>
-Subject: [PATCH] drivers/amba: fix reset control error handling
-
-With commit 79bdcb202a35 ("ARM: 8906/1: drivers/amba: add reset control
-to amba bus probe") it is possible for the the amba bus driver to defer
-probing the device for its IDs because the reset driver may be probed
-later.
-
-However when a subsequent probe occurs, the call to request_resource()
-in the driver returns -EBUSY as the driver has not released the resource
-from the initial probe attempt - or cleaned up any of the preceding
-actions.
-
-Fix this both for the deferred probe case as well as a failure to get
-the reset.
-
-Fixes: 79bdcb202a35 ("ARM: 8906/1: drivers/amba: add reset control to amba bus probe")
-Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
----
- drivers/amba/bus.c | 14 +++++++++++---
- 1 file changed, 11 insertions(+), 3 deletions(-)
-
-diff --git a/drivers/amba/bus.c b/drivers/amba/bus.c
-index f39f075abff9..fe1523664816 100644
---- a/drivers/amba/bus.c
-+++ b/drivers/amba/bus.c
-@@ -409,9 +409,11 @@ static int amba_device_try_add(struct amba_device *dev, struct resource *parent)
- 		 */
- 		rstc = of_reset_control_array_get_optional_shared(dev->dev.of_node);
- 		if (IS_ERR(rstc)) {
--			if (PTR_ERR(rstc) != -EPROBE_DEFER)
--				dev_err(&dev->dev, "Can't get amba reset!\n");
--			return PTR_ERR(rstc);
-+			ret = PTR_ERR(rstc);
-+			if (ret != -EPROBE_DEFER)
-+				dev_err(&dev->dev, "can't get reset: %d\n",
-+					ret);
-+			goto err_reset;
- 		}
- 		reset_control_deassert(rstc);
- 		reset_control_put(rstc);
-@@ -472,6 +474,12 @@ static int amba_device_try_add(struct amba_device *dev, struct resource *parent)
- 	release_resource(&dev->res);
-  err_out:
- 	return ret;
-+
-+ err_reset:
-+	amba_put_disable_pclk(dev);
-+	iounmap(tmp);
-+	dev_pm_domain_detach(&dev->dev, true);
-+	goto err_release;
- }
- 
- /*
--- 
-2.7.4
-
-
--- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTC broadband for 0.8mile line in suburbia: sync at 12.1Mbps down 622kbps up
-According to speedtest.net: 11.9Mbps down 500kbps up
