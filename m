@@ -6,174 +6,113 @@ X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EF91C35280
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 16:47:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3405BC35280
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 16:47:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F001521920
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 16:47:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F083721D81
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 16:47:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727794AbfJBQrY (ORCPT
+        id S1727895AbfJBQrd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Oct 2019 12:47:24 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:3236 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726267AbfJBQrX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Oct 2019 12:47:23 -0400
-Received: from DGGEMS411-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 528A3773250F30F8E166;
-        Thu,  3 Oct 2019 00:47:19 +0800 (CST)
-Received: from [127.0.0.1] (10.202.227.179) by DGGEMS411-HUB.china.huawei.com
- (10.3.19.211) with Microsoft SMTP Server id 14.3.439.0; Thu, 3 Oct 2019
- 00:47:12 +0800
-Subject: Re: [PATCH 2/2] [v2] crypto: hisilicon - allow compile-testing on x86
-To:     Zhou Wang <wangzhou1@hisilicon.com>, Arnd Bergmann <arnd@arndb.de>
-References: <20190919140650.1289963-2-arnd@arndb.de>
- <20190919140917.1290556-1-arnd@arndb.de>
- <f801a4c1-8fa6-8c14-120c-49c24ec84449@huawei.com>
- <CAK8P3a3jCv--VHu9r4ZTnLXXGaCjdJ6royP5LFk_9RCTTRsRBA@mail.gmail.com>
- <CAK8P3a1AgZePpZdYXh2w1BHAJZZbAjZjN8MZyVS4bPo4gVVgPg@mail.gmail.com>
- <531214d6-2caf-2963-0f57-2cd615a18762@huawei.com>
- <5D85FAEC.9060607@hisilicon.com>
-CC:     Herbert Xu <herbert@gondor.apana.org.au>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Kenneth Lee <liguozhu@hisilicon.com>,
-        Mao Wenan <maowenan@huawei.com>,
-        "Hao Fang" <fanghao11@huawei.com>,
-        Shiju Jose <shiju.jose@huawei.com>,
-        "open list:HARDWARE RANDOM NUMBER GENERATOR CORE" 
-        <linux-crypto@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Wed, 2 Oct 2019 12:47:33 -0400
+Received: from mga06.intel.com ([134.134.136.31]:60016 "EHLO mga06.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726267AbfJBQrc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 2 Oct 2019 12:47:32 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 02 Oct 2019 09:47:32 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.67,249,1566889200"; 
+   d="scan'208";a="203652629"
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.41])
+  by orsmga002.jf.intel.com with ESMTP; 02 Oct 2019 09:47:30 -0700
+Date:   Wed, 2 Oct 2019 09:47:30 -0700
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Zhenzhong Duan <zhenzhong.duan@oracle.com>
+Cc:     Vitaly Kuznetsov <vkuznets@redhat.com>,
+        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Radim Krcmar <rkrcmar@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Peter Zijlstra <peterz@infradead.org>,
         Will Deacon <will@kernel.org>
-From:   John Garry <john.garry@huawei.com>
-Message-ID: <9ca33e86-9aa5-9cd0-f57d-1a2ad7d73bc9@huawei.com>
-Date:   Wed, 2 Oct 2019 17:47:04 +0100
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:45.0) Gecko/20100101
- Thunderbird/45.3.0
+Subject: Re: [PATCH 1/3] KVM: X86: Add "nopvspin" parameter to disable PV
+ spinlocks
+Message-ID: <20191002164730.GA9615@linux.intel.com>
+References: <1569759666-26904-1-git-send-email-zhenzhong.duan@oracle.com>
+ <1569759666-26904-2-git-send-email-zhenzhong.duan@oracle.com>
+ <87pnjh3i6i.fsf@vitty.brq.redhat.com>
+ <aae59646-be5f-6455-a033-ed29861107ce@oracle.com>
+ <87eezw3lna.fsf@vitty.brq.redhat.com>
+ <fdd14f28-74e9-5cf9-2f5a-09c884c55110@oracle.com>
 MIME-Version: 1.0
-In-Reply-To: <5D85FAEC.9060607@hisilicon.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.202.227.179]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <fdd14f28-74e9-5cf9-2f5a-09c884c55110@oracle.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 21/09/2019 11:26, Zhou Wang wrote:
-> On 2019/9/20 22:16, John Garry wrote:
->> On 20/09/2019 14:36, Arnd Bergmann wrote:
->>> On Fri, Sep 20, 2019 at 3:26 PM Arnd Bergmann <arnd@arndb.de> wrote:
->>>>
->>>> On Fri, Sep 20, 2019 at 10:34 AM John Garry <john.garry@huawei.com> wrote:
->>>>
->>>>>> +     if (!IS_ENABLED(CONFIG_ARM64)) {
->>>>>> +             memcpy_toio(fun_base, src, 16);
->>>>>> +             wmb();
->>>>>> +             return;
->>>>>> +     }
->>>>>> +
->>>>>>       asm volatile("ldp %0, %1, %3\n"
->>>>>>                    "stp %0, %1, %2\n"
->>>>>>                    "dsb sy\n"
->>>>>>
->>>>>
+On Tue, Oct 01, 2019 at 05:47:00PM +0800, Zhenzhong Duan wrote:
+> 
+> On 2019/10/1 16:39, Vitaly Kuznetsov wrote:
+> >Zhenzhong Duan<zhenzhong.duan@oracle.com>  writes:
+> >
+> >>On 2019/9/30 23:41, Vitaly Kuznetsov wrote:
+> >>>Zhenzhong Duan<zhenzhong.duan@oracle.com>   writes:
+> >>>
+> >>>>There are cases where a guest tries to switch spinlocks to bare metal
+> >>>>behavior (e.g. by setting "xen_nopvspin" on XEN platform and
+> >>>>"hv_nopvspin" on HYPER_V).
+> >>>>
+> >>>>That feature is missed on KVM, add a new parameter "nopvspin" to disable
+> >>>>PV spinlocks for KVM guest.
+> >>>>
+> >>>>This new parameter is also intended to replace "xen_nopvspin" and
+> >>>>"hv_nopvspin" in the future.
+> >>>Any reason to not do it right now? We will probably need to have compat
+> >>>code to support xen_nopvspin/hv_nopvspin too but emit a 'is deprecated'
+> >>>warning.
+> >>Sorry the description isn't clear, I'll fix it.
+> >>
+> >>I did the compat work in the other two patches.
+> >>[PATCH 2/3] xen: Mark "xen_nopvspin" parameter obsolete and map it to "nopvspin"
+> >>[PATCH 3/3] x86/hyperv: Mark "hv_nopvspin" parameter obsolete and map it to "nopvspin"
+> >>
+> >For some reason I got CCed only on the first one and moreover,
+> 
+> The three patches have different maintainers/reviewers by get_maintainer.pl, I added
+> "Cc: maintainers/reviewers" to each patch then git-sendemail picked them automaticly.
+> I meaned to not disturb maintainers with the field they aren't in charge of. It looks
+> I'm wrong.
+> 
+> So what's the correct way dealing with this? Should I send the whole patchset to all
+> the maintainers/reviewers related to all the patches?
 
-***
+There's no one right answer to that question, folks have different
+preferences.  My general rule of thumb is to cc everyone on all patches
+unless the series is obnoxiously large *and* isolated to a specific part
+of the kernel.  The idea being that people are more likely to be annoyed
+if they can't find all patches in a relatively small series (this case)
+than they are about receiving a mail or two that they don't care about.
 
->>>>> As I understand, this operation needs to be done atomically. So - even
->>>>> though your change is just for compile testing - the memcpy_to_io() may
->>>>> not do the same thing on other archs, right?
->>>>>
->>>>> I just wonder if it's right to make that change, or at least warn the
->>>>> imaginary user of possible malfunction for !arm64.
->>>>
->>
->> Hi Arnd,
->>
->>>> It's probably not necessary here. From what I can tell from the documentation,
->>>> this is only safe on ARMv8.4 or higher anyway, earlier ARMv8.x implementations
->>>> don't guarantee that an stp arrives on the bus in one piece either.
->>>>
->>>> Usually, hardware like this has no hard requirement on an atomic store,
->>>> it just needs the individual bits to arrive in a particular order, and then
->>>> triggers the update on the last bit that gets stored. If that is the case here
->>>> as well, it might actually be better to use two writeq_relaxed() and
->>>> a barrier. This would also solve the endianess issue.
->>>
->>> See also https://lkml.org/lkml/2018/1/26/554 for a previous attempt
->>> to introduce 128-bit MMIO accessors, this got rejected since they
->>> are not atomic even on ARMv8.4.
->>
->> So this is proprietary IP integrated with a proprietary ARMv8 implementation,
->> so there could be a tight coupling, the like of which Will mentioned in that thread,
->> but I'm doubtful.
->>
->> I'm looking at the electronically translated documentation on this HW, and it reads
->> "The Mailbox operation performed by the CPU cannot be interleaved", and then tells
->> that software should lock against concurrent accesses or alternatively use a 128-bit
->> access. So it seems that the 128b op used is only to guarantee software is atomic.
->>
->> Wang Zhou can confirm my understanding
->
+At a minimum I would cc everyone involved on the cover letter, and cc the
+relevant mailing lists on all patches.  Sending everyone the cover letter
+provides people a quick overview of the patches they didn't receive, as
+well as a starting point if they want to find those patches.  Cc'ing the
+mailing list(s) can make it even easier to find the patches.  The cover
+letter is also a good place to explain why you didn't cc everyone on all
+patches (or vice versa).
 
-Just to add a few more details here:
-
-> We have to do a 128bit atomic write here to trigger a mailbox. The reason is
-> that one QM hardware entity in one accelerator servers QM mailbox MMIO interfaces in
-> related PF and VFs.
->
-> A mutex can not lock different processing flows in different functions.
-
-This means that we can have userspace drivers and the kernel driver 
-simultaneously accessing these mailboxes.
-
->
-> As Arnd mentioned, v8.4 extends the support for 16 bytes atomic stp to some kinds of
-> normal memory, but for device memory, it is still implementation defined. For this
-> SoC(Kunpeng920) which has QM/ZIP, if the address is 128bit aligned, stp will be atomic.
-> The offset of QM mailbox is 128bit aligned, so it is safe here.
-
-The strange thing (to me) about this hw is that we cannot interleave 
-mailbox accesses on different functions - with 2x 64b accesses, for 
-example. This is the reason that we require 128b accesses.
-
-The upshot is that we can't switch to generic code unfortunately.
-
-But I am not sure if the change is right, as I mentioned originally, 
-above ***.
-
-I'll leave to Arnd's better judgment :)
-
-Thanks,
-John
-
->
-> Best,
-> Zhou
->
->>
->> If true, I see that we seem to be already guaranteeing mutual exclusion in qm_mb(),
->> in taking a mutex.
->>
->> Thanks,
->> John
->>
->>
->>>
->>>     Arnd
->>>
->>> .
->>>
->>
->>
->>
->> .
->>
->
->
-> .
->
-
-
+Also, the cover letter should have the shortlog and overall diffstats.
+'git format-patch --cover-letter' will do the work for you.
