@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A98EC4360C
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 19:12:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2A96C4360C
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 19:12:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EAA24222C2
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 19:12:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7E9692133F
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 19:12:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729616AbfJBTMm (ORCPT
+        id S1730124AbfJBTMv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Oct 2019 15:12:42 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:35412 "EHLO
+        Wed, 2 Oct 2019 15:12:51 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:35396 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729119AbfJBTIK (ORCPT
+        by vger.kernel.org with ESMTP id S1729102AbfJBTIK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 2 Oct 2019 15:08:10 -0400
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1iFjyo-00036B-OO; Wed, 02 Oct 2019 20:08:06 +0100
+        id 1iFjyp-00036K-1g; Wed, 02 Oct 2019 20:08:07 +0100
 Received: from ben by deadeye with local (Exim 4.92.1)
         (envelope-from <ben@decadent.org.uk>)
-        id 1iFjyo-0003cp-1r; Wed, 02 Oct 2019 20:08:06 +0100
+        id 1iFjyo-0003dE-6t; Wed, 02 Oct 2019 20:08:06 +0100
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,16 +35,13 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Jens Remus" <jremus@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        "Benjamin Block" <bblock@linux.ibm.com>,
-        "Steffen Maier" <maier@linux.ibm.com>
+        "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
+        "Kai-Heng Feng" <kai.heng.feng@canonical.com>
 Date:   Wed, 02 Oct 2019 20:06:51 +0100
-Message-ID: <lsq.1570043211.916971204@decadent.org.uk>
+Message-ID: <lsq.1570043211.784782308@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 37/87] scsi: zfcp: fix missing zfcp_port reference
- put on -EBUSY from port_remove
+Subject: [PATCH 3.16 42/87] USB: usb-storage: Add new ID to ums-realtek
 In-Reply-To: <lsq.1570043210.379046399@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -58,32 +55,34 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Steffen Maier <maier@linux.ibm.com>
+From: Kai-Heng Feng <kai.heng.feng@canonical.com>
 
-commit d27e5e07f9c49bf2a6a4ef254ce531c1b4fb5a38 upstream.
+commit 1a6dd3fea131276a4fc44ae77b0f471b0b473577 upstream.
 
-With this early return due to zfcp_unit child(ren), we don't use the
-zfcp_port reference from the earlier zfcp_get_port_by_wwpn() anymore and
-need to put it.
+There is one more Realtek card reader requires ums-realtek to work
+correctly.
 
-Signed-off-by: Steffen Maier <maier@linux.ibm.com>
-Fixes: d99b601b6338 ("[SCSI] zfcp: restore refcount check on port_remove")
-Reviewed-by: Jens Remus <jremus@linux.ibm.com>
-Reviewed-by: Benjamin Block <bblock@linux.ibm.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Add the device ID to support it.
+
+Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- drivers/s390/scsi/zfcp_sysfs.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/usb/storage/unusual_realtek.h | 5 +++++
+ 1 file changed, 5 insertions(+)
 
---- a/drivers/s390/scsi/zfcp_sysfs.c
-+++ b/drivers/s390/scsi/zfcp_sysfs.c
-@@ -261,6 +261,7 @@ static ssize_t zfcp_sysfs_port_remove_st
- 	if (atomic_read(&port->units) > 0) {
- 		retval = -EBUSY;
- 		mutex_unlock(&zfcp_sysfs_port_units_mutex);
-+		put_device(&port->dev); /* undo zfcp_get_port_by_wwpn() */
- 		goto out;
- 	}
- 	/* port is about to be removed, so no more unit_add */
+--- a/drivers/usb/storage/unusual_realtek.h
++++ b/drivers/usb/storage/unusual_realtek.h
+@@ -28,6 +28,11 @@ UNUSUAL_DEV(0x0bda, 0x0138, 0x0000, 0x99
+ 		"USB Card Reader",
+ 		USB_SC_DEVICE, USB_PR_DEVICE, init_realtek_cr, 0),
+ 
++UNUSUAL_DEV(0x0bda, 0x0153, 0x0000, 0x9999,
++		"Realtek",
++		"USB Card Reader",
++		USB_SC_DEVICE, USB_PR_DEVICE, init_realtek_cr, 0),
++
+ UNUSUAL_DEV(0x0bda, 0x0158, 0x0000, 0x9999,
+ 		"Realtek",
+ 		"USB Card Reader",
 
