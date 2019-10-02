@@ -2,96 +2,70 @@ Return-Path: <SRS0=zem1=X3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5F5FECE58B
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 08:36:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E569C35280
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 08:39:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 71FE821A4A
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 08:36:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570005410;
-	bh=Fz3G6JDNACXQd2RhNujXk869SixEzsjL+NkZV4Cq0F8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=bIGJSyn0uwadsk3elXsTdepYKmd7KbIKXq4os4V+sVpTf6wc754PefcHussYwwU6t
-	 Nc4hCohQVJvFRFecJe+1rYP9oNQ2O+8LmMpQRYdatoJO58PcONi7IFbxSyW6R52gTh
-	 IBDTo/vv5NNuhr35Qccm1pcV8d/yBL2kGsk4sJCM=
+	by mail.kernel.org (Postfix) with ESMTP id 8146D206C0
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 08:39:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727854AbfJBIgt (ORCPT
+        id S1727854AbfJBIjT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Oct 2019 04:36:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55758 "EHLO mail.kernel.org"
+        Wed, 2 Oct 2019 04:39:19 -0400
+Received: from mga03.intel.com ([134.134.136.65]:10445 "EHLO mga03.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726078AbfJBIgt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Oct 2019 04:36:49 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 737A1206C0;
-        Wed,  2 Oct 2019 08:36:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570005409;
-        bh=Fz3G6JDNACXQd2RhNujXk869SixEzsjL+NkZV4Cq0F8=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=H/cyj4XQuDZuUnYggEFCdOaT7QbbspwnS2Z+e4L/x6JPny9+x8KuJ/grHK9Tcn3UG
-         uZ24/Ko13j82XZps2OqX7mJDgI6Q8bz6dllZ73XqRfTJWv899MzPCAJPs5Bp7oTX6s
-         RVq3R17S8RhweG9EeeoVQrCLW6iZmAJivn5SeHWE=
-Date:   Wed, 2 Oct 2019 10:36:46 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Michal Suchanek <msuchanek@suse.de>
-Cc:     alsa-devel@alsa-project.org, Vinod Koul <vkoul@kernel.org>,
-        Sanyog Kale <sanyog.r.kale@intel.com>,
-        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-        stable@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/2] soundwire: depend on ACPI || OF
-Message-ID: <20191002083646.GB1687317@kroah.com>
-References: <20191002081717.GA4015@kitsune.suse.cz>
- <91e2fc425e0dea92d7f131da890e52af273de36c.1570005196.git.msuchanek@suse.de>
+        id S1726102AbfJBIjT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 2 Oct 2019 04:39:19 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 02 Oct 2019 01:39:18 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,573,1559545200"; 
+   d="scan'208";a="205279402"
+Received: from lahna.fi.intel.com (HELO lahna) ([10.237.72.157])
+  by fmsmga001.fm.intel.com with SMTP; 02 Oct 2019 01:39:14 -0700
+Received: by lahna (sSMTP sendmail emulation); Wed, 02 Oct 2019 11:39:14 +0300
+Date:   Wed, 2 Oct 2019 11:39:13 +0300
+From:   Mika Westerberg <mika.westerberg@linux.intel.com>
+To:     Mario.Limonciello@dell.com
+Cc:     linux-usb@vger.kernel.org, andreas.noever@gmail.com,
+        michael.jamet@intel.com, YehezkelShB@gmail.com,
+        rajmohan.mani@intel.com,
+        nicholas.johnson-opensource@outlook.com.au, lukas@wunner.de,
+        gregkh@linuxfoundation.org, stern@rowland.harvard.edu,
+        anthony.wong@canonical.com, linux-kernel@vger.kernel.org
+Subject: Re: [RFC PATCH 17/22] thunderbolt: Add initial support for USB4
+Message-ID: <20191002083913.GG2714@lahna.fi.intel.com>
+References: <20191001113830.13028-1-mika.westerberg@linux.intel.com>
+ <20191001113830.13028-18-mika.westerberg@linux.intel.com>
+ <184c95fc476146939b240557e54ee2c9@AUSX13MPC105.AMER.DELL.COM>
+ <5357cb96013445d79f5c2016df8a194e@AUSX13MPC105.AMER.DELL.COM>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <91e2fc425e0dea92d7f131da890e52af273de36c.1570005196.git.msuchanek@suse.de>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+In-Reply-To: <5357cb96013445d79f5c2016df8a194e@AUSX13MPC105.AMER.DELL.COM>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Oct 02, 2019 at 10:33:30AM +0200, Michal Suchanek wrote:
-> Now devicetree is supposrted for probing sondwire as well.
+On Tue, Oct 01, 2019 at 06:14:23PM +0000, Mario.Limonciello@dell.com wrote:
+> One more thought; would you consider exporting to sysfs sw->config.vendor_id?
+> Maybe an attribute that is switch_vendor?
 > 
-> Fixes: a2e484585ad3 ("soundwire: core: add device tree support for slave devices")
-> Signed-off-by: Michal Suchanek <msuchanek@suse.de>
-> ---
->  drivers/soundwire/Kconfig | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/soundwire/Kconfig b/drivers/soundwire/Kconfig
-> index c73bfbaa2659..c8c80df090d1 100644
-> --- a/drivers/soundwire/Kconfig
-> +++ b/drivers/soundwire/Kconfig
-> @@ -5,7 +5,7 @@
->  
->  menuconfig SOUNDWIRE
->  	tristate "SoundWire support"
-> -	depends on ACPI
-> +	depends on ACPI || OF
->  	help
->  	  SoundWire is a 2-Pin interface with data and clock line ratified
->  	  by the MIPI Alliance. SoundWire is used for transporting data
-> -- 
-> 2.23.0
-> 
+> Userland fwupd also does validation on the NVM and will need to follow this.
+> The same check will go into fwupd to match the vendor and lack of nvm_non_active0
+> to mark the device as not updatable.  When the checks in the kernel get relaxed,
+> some NVM parsing will have to make it over to fwupd too to relax the check at that point.
 
-
-<formletter>
-
-This is not the correct way to submit patches for inclusion in the
-stable kernel tree.  Please read:
-    https://www.kernel.org/doc/html/latest/process/stable-kernel-rules.html
-for how to do this properly.
-
-</formletter>
+The original idea was that the kernel does the basic validation and
+userspace then does more complex checks. Currently you can compare the
+two NVM images (active one and the new) and find that information there.
+I think fwupd is doing just that already. Is that not enough?
