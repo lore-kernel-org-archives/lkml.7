@@ -2,103 +2,184 @@ Return-Path: <SRS0=zem1=X3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3728CC10F14
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 17:07:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 21AEBC10F14
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 17:10:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 10A7E2086A
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 17:07:39 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jh17YPqp"
+	by mail.kernel.org (Postfix) with ESMTP id F0D6B222C5
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 17:10:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728238AbfJBRHi (ORCPT
+        id S1728255AbfJBRKI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Oct 2019 13:07:38 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:53472 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727418AbfJBRHh (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Oct 2019 13:07:37 -0400
-Received: by mail-wm1-f68.google.com with SMTP id i16so8021001wmd.3
-        for <linux-kernel@vger.kernel.org>; Wed, 02 Oct 2019 10:07:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=b5t7DfaGuIJVfpW/6AOvG6x/d8yqj3D8O6SWcaOz/1Y=;
-        b=jh17YPqpYrcU+CwePtEtDIfsCOK8JgI4JAEbOUfoN2nARPGX8zArPgMQCz+q57PDBi
-         M24gQg5rQIj9pwthmeqeIp5ZSRSSAQsYPSk0tB3fajGWtDrThDnUyQDxniNuJATOf3th
-         lnq/SDOi/snhoJBXP54CCqWjASa8VtKSGcpYDYCkQWUqUFF5iNVK6+6jiIzuMuftJh1B
-         zJKT6dWzuV43g0BkNI19E3oP9NYC2oCYfbtcP9RQO9Mdex3fYemknycTMXvTzziu8T2l
-         ksqsz9qhsEqnDHCtxf04twdJTYCrTUSLnr5ZRAaguVUHRmZ0GHZaS9CKTUk2tTus+dEe
-         cuFw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=b5t7DfaGuIJVfpW/6AOvG6x/d8yqj3D8O6SWcaOz/1Y=;
-        b=UxlaHzkNAIGozHXR2UyfZoKaMARF6ZritY+qLOg1/NRMl0aiCk7Ema/9uvwXZQ4h6q
-         c/nK7mbtbLv4q8es63cdhcFgAUKbmqj2P64Vec1asZljC6JJyOA5zErpUqeo/YrfSW0Y
-         +UACNCXH32Oj96UKEajcIWvz+gTkMjmOsaSscFvOBO4AGFT5hT8LcnjcksRfMq2jk9mp
-         k60SAN4vmpz9hELI4rg/ralpu3pfEKY861+ShyoF95QWLsT/MxvCrqiGcsdgzp05qneO
-         Ly8mK5r2HWLuKMpvAco07E4vCW19TFA14pNRugXviQ62JBIu4SXxw5phReSyGwyxq32P
-         +rjQ==
-X-Gm-Message-State: APjAAAV1WNljDNYwNeOEss+7laxZTWyH/gOYDaq939tinWesaAkVTJiA
-        dRqlQUlfIXcSdwZjPZtdgzY=
-X-Google-Smtp-Source: APXvYqzX5fLQw5wWj0pE3+sGCTmrFgoY5C9x3lumrbZ+x3yvpHDxD1HoY1ykVnkw0yAf0S1/X3xOxQ==
-X-Received: by 2002:a7b:c34e:: with SMTP id l14mr3397429wmj.123.1570036055644;
-        Wed, 02 Oct 2019 10:07:35 -0700 (PDT)
-Received: from archlinux-threadripper ([2a01:4f8:222:2f1b::2])
-        by smtp.gmail.com with ESMTPSA id c10sm31832408wrf.58.2019.10.02.10.07.34
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 02 Oct 2019 10:07:34 -0700 (PDT)
-Date:   Wed, 2 Oct 2019 10:07:33 -0700
-From:   Nathan Chancellor <natechancellor@gmail.com>
-To:     Nick Desaulniers <ndesaulniers@google.com>
-Cc:     arnd@arndb.de, David1.Zhou@amd.com, Hawking.Zhang@amd.com,
-        airlied@linux.ie, alexander.deucher@amd.com,
-        amd-gfx@lists.freedesktop.org, christian.koenig@amd.com,
-        clang-built-linux@googlegroups.com, daniel@ffwll.ch,
-        dri-devel@lists.freedesktop.org, le.ma@amd.com,
-        linux-kernel@vger.kernel.org, ray.huang@amd.com
-Subject: Re: [PATCH 6/6] [RESEND] drm/amdgpu: work around llvm bug #42576
-Message-ID: <20191002170733.GB1076951@archlinux-threadripper>
-References: <20191002120136.1777161-7-arnd@arndb.de>
- <20191002165137.15726-1-ndesaulniers@google.com>
+        Wed, 2 Oct 2019 13:10:08 -0400
+Received: from mga11.intel.com ([192.55.52.93]:45210 "EHLO mga11.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726798AbfJBRKH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 2 Oct 2019 13:10:07 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 02 Oct 2019 10:10:06 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.67,249,1566889200"; 
+   d="scan'208";a="191001391"
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.41])
+  by fmsmga008.fm.intel.com with ESMTP; 02 Oct 2019 10:10:06 -0700
+Date:   Wed, 2 Oct 2019 10:10:06 -0700
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Zhenzhong Duan <zhenzhong.duan@oracle.com>
+Cc:     linux-kernel@vger.kernel.org, vkuznets@redhat.com,
+        linux-hyperv@vger.kernel.org, kvm@vger.kernel.org,
+        Jonathan Corbet <corbet@lwn.net>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Radim Krcmar <rkrcmar@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Will Deacon <will@kernel.org>
+Subject: Re: [PATCH v3 1/4] x86/kvm: Add "nopvspin" parameter to disable PV
+ spinlocks
+Message-ID: <20191002171006.GB9615@linux.intel.com>
+References: <1569847479-13201-1-git-send-email-zhenzhong.duan@oracle.com>
+ <1569847479-13201-2-git-send-email-zhenzhong.duan@oracle.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191002165137.15726-1-ndesaulniers@google.com>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+In-Reply-To: <1569847479-13201-2-git-send-email-zhenzhong.duan@oracle.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Oct 02, 2019 at 09:51:37AM -0700, 'Nick Desaulniers' via Clang Built Linux wrote:
-> > Apparently this bug is still present in both the released clang-9
-> > and the current development version of clang-10.
-> > I was hoping we would not need a workaround in clang-9+, but
-> > it seems that we do.
+On Mon, Sep 30, 2019 at 08:44:36PM +0800, Zhenzhong Duan wrote:
+> There are cases where a guest tries to switch spinlocks to bare metal
+> behavior (e.g. by setting "xen_nopvspin" on XEN platform and
+> "hv_nopvspin" on HYPER_V).
 > 
-> I think I'd rather:
-> 1. mark AMDGPU BROKEN if CC_IS_CLANG. There are numerous other issues building
->    a working driver here.
+> That feature is missed on KVM, add a new parameter "nopvspin" to disable
+> PV spinlocks for KVM guest.
+> 
+> This new parameter is also used to replace "xen_nopvspin" and
+> "hv_nopvspin".
 
-The only reason I am not thrilled about this is we will lose out on
-warning coverage while the compiler bug gets fixed. I think the AMDGPU
-drivers have been the single biggest source of clang warnings.
+This is confusing as there are no Xen or Hyper-V changes in this patch.
+Please make it clear that you're talking about future patches, e.g.:
 
-I think something like:
+  The new 'nopvspin' parameter will also replace Xen and Hyper-V specific
+  parameters in future patches.
 
-depends on CC_IS_GCC || (CC_IS_CLANG && COMPILE_TEST)
+> 
+> The global variable pvspin isn't defined as __initdata as it's used at
+> runtime by XEN guest.
 
-would end up avoiding the runtime issues and give us warning coverage.
-The only issue is that we would still need this patch...
+Same comment as above regarding what this patch is doing versus what will
+be done in the future.  Arguably you should even mark it __initdata in
+this patch and deal with conflict in the Xen patch, e.g. use it only to
+set the existing xen_pvspin variable.
 
-Cheers,
-Nathan
+> Signed-off-by: Zhenzhong Duan <zhenzhong.duan@oracle.com>
+> Cc: Jonathan Corbet <corbet@lwn.net>
+> Cc: Thomas Gleixner <tglx@linutronix.de>
+> Cc: Ingo Molnar <mingo@redhat.com>
+> Cc: Borislav Petkov <bp@alien8.de>
+> Cc: "H. Peter Anvin" <hpa@zytor.com>
+> Cc: Paolo Bonzini <pbonzini@redhat.com>
+> Cc: Radim Krcmar <rkrcmar@redhat.com>
+> Cc: Sean Christopherson <sean.j.christopherson@intel.com>
+> Cc: Vitaly Kuznetsov <vkuznets@redhat.com>
+> Cc: Wanpeng Li <wanpengli@tencent.com>
+> Cc: Jim Mattson <jmattson@google.com>
+> Cc: Joerg Roedel <joro@8bytes.org>
+> Cc: Peter Zijlstra <peterz@infradead.org>
+> Cc: Will Deacon <will@kernel.org>
+> ---
+>  Documentation/admin-guide/kernel-parameters.txt | 4 ++++
+>  arch/x86/include/asm/qspinlock.h                | 1 +
+>  arch/x86/kernel/kvm.c                           | 7 +++++++
+>  kernel/locking/qspinlock.c                      | 7 +++++++
+>  4 files changed, 19 insertions(+)
+> 
+> diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
+> index c7ac2f3..4b956d8 100644
+> --- a/Documentation/admin-guide/kernel-parameters.txt
+> +++ b/Documentation/admin-guide/kernel-parameters.txt
+> @@ -5330,6 +5330,10 @@
+>  			as generic guest with no PV drivers. Currently support
+>  			XEN HVM, KVM, HYPER_V and VMWARE guest.
+>  
+> +	nopvspin	[X86,KVM] Disables the qspinlock slow path
+> +			using PV optimizations which allow the hypervisor to
+> +			'idle' the guest on lock contention.
+> +
+>  	xirc2ps_cs=	[NET,PCMCIA]
+>  			Format:
+>  			<irq>,<irq_mask>,<io>,<full_duplex>,<do_sound>,<lockup_hack>[,<irq2>[,<irq3>[,<irq4>]]]
+> diff --git a/arch/x86/include/asm/qspinlock.h b/arch/x86/include/asm/qspinlock.h
+> index 444d6fd..34a4484 100644
+> --- a/arch/x86/include/asm/qspinlock.h
+> +++ b/arch/x86/include/asm/qspinlock.h
+> @@ -32,6 +32,7 @@ static __always_inline u32 queued_fetch_set_pending_acquire(struct qspinlock *lo
+>  extern void __pv_init_lock_hash(void);
+>  extern void __pv_queued_spin_lock_slowpath(struct qspinlock *lock, u32 val);
+>  extern void __raw_callee_save___pv_queued_spin_unlock(struct qspinlock *lock);
+> +extern bool pvspin;
+>  
+>  #define	queued_spin_unlock queued_spin_unlock
+>  /**
+> diff --git a/arch/x86/kernel/kvm.c b/arch/x86/kernel/kvm.c
+> index e820568..a4f108d 100644
+> --- a/arch/x86/kernel/kvm.c
+> +++ b/arch/x86/kernel/kvm.c
+> @@ -842,6 +842,13 @@ void __init kvm_spinlock_init(void)
+>  	if (num_possible_cpus() == 1)
+>  		return;
+>  
+> +	if (!pvspin) {
+> +		pr_info("PV spinlocks disabled\n");
+> +		static_branch_disable(&virt_spin_lock_key);
+> +		return;
+> +	}
+> +	pr_info("PV spinlocks enabled\n");
+
+These prints could be confusing as KVM also disables PV spinlocks when it
+sees KVM_HINTS_REALTIME.
+
+> +
+>  	__pv_init_lock_hash();
+>  	pv_ops.lock.queued_spin_lock_slowpath = __pv_queued_spin_lock_slowpath;
+>  	pv_ops.lock.queued_spin_unlock =
+> diff --git a/kernel/locking/qspinlock.c b/kernel/locking/qspinlock.c
+> index 2473f10..945b510 100644
+> --- a/kernel/locking/qspinlock.c
+> +++ b/kernel/locking/qspinlock.c
+> @@ -580,4 +580,11 @@ void queued_spin_lock_slowpath(struct qspinlock *lock, u32 val)
+>  #include "qspinlock_paravirt.h"
+>  #include "qspinlock.c"
+>  
+> +bool pvspin = true;
+
+This can be __ro_after_init, or probably better __initdata and have Xen
+snapshot the value for its use case.
+
+Personal preference: I'd invert the bool and name it nopvspin to make it
+easier to connect the variable to the kernel param.
+
+> +static __init int parse_nopvspin(char *arg)
+> +{
+> +	pvspin = false;
+> +	return 0;
+> +}
+> +early_param("nopvspin", parse_nopvspin);
+>  #endif
+> -- 
+> 1.8.3.1
+> 
