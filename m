@@ -4,33 +4,33 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 703DDC10F14
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 20:45:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4029BC4360C
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 20:45:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3677221A4C
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 20:45:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0C58F2070B
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 20:45:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570049147;
+	s=default; t=1570049150;
 	bh=hv35gJ916It5E5n4NQJZ6lmL2zLdtKh89Gx4VKZT4C4=;
 	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
-	b=Rl+W3C+T8cFQPjQ/L3rGgeQcI7u3Ns07XO7BaUIyUW50u5XJScvgaKapyKUqnXgi8
-	 0aus8DIOyvq7wCeZxbdeRO7lUo0MhDYCpOK7qJ8bXCOQHMYbjfNfXy/bbsn0suMa/K
-	 5Z91C4LiSWLRqHlc5fW8HzwmS3Vdh9MfCnUFX990=
+	b=sYtYG7fBFIgit/gxBmlYI7EMYn9ima+FQFjQtgqpiGQGQ3AslU4PGwEZKmNQpq2v6
+	 JE8lOq9/zr9jCmGbo9XStHuzcX1AOPCvS8UzDtItf9BIoCN4Sprze6NFu3ygjip+1o
+	 pSnnMyVpHVei77K5TWHncVzUPewZfarD4LVoCTBY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728634AbfJBUpq (ORCPT
+        id S1728541AbfJBUpp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Oct 2019 16:45:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59006 "EHLO mail.kernel.org"
+        Wed, 2 Oct 2019 16:45:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59016 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727846AbfJBUpp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1728471AbfJBUpp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 2 Oct 2019 16:45:45 -0400
 Received: from [192.168.1.25] (cpe-70-114-128-244.austin.res.rr.com [70.114.128.244])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 777D321848;
+        by mail.kernel.org (Postfix) with ESMTPSA id 7FAF3218DE;
         Wed,  2 Oct 2019 20:45:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=default; t=1570049144;
@@ -91,7 +91,7 @@ Autocrypt: addr=dinguyen@kernel.org; prefer-encrypt=mutual; keydata=
  cJEJNezizexE0dVclt9OS2U9Xwb3VOjs1ITMEYUf8T1j83iiCCFuXqH4U3Eji0nDEiEN5Ac0
  Jn/EGOBG2qGyKZ4uOec9j5ABF7J6hyO7H6LJaX5bLtp0Z7wUbyVaR4UIGdIOchNgNQk4stfm
  JiyuXyoFl/1ihREfvUG/e7+VAAoOBnMjitE5/qUERDoEkkuQkMcAHyEyd+XZMyXY
-Message-ID: <e3154e63-f52c-f91b-92dc-a86b1697c743@kernel.org>
+Message-ID: <2083d164-c998-6990-9e51-86d331a36a07@kernel.org>
 Date:   Wed, 2 Oct 2019 15:45:42 -0500
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.8.0
