@@ -2,108 +2,92 @@ Return-Path: <SRS0=zem1=X3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A6E2ECE58B
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 04:31:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CDE89C35280
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 04:32:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 00B9920659
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 04:31:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9F46720842
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 04:32:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ds5EsMaP"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="dXnP11bt";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="ZF6OvQYR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729895AbfJBEbQ (ORCPT
+        id S1729910AbfJBEc2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Oct 2019 00:31:16 -0400
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:43575 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726010AbfJBEbP (ORCPT
+        Wed, 2 Oct 2019 00:32:28 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:47918 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725991AbfJBEc2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Oct 2019 00:31:15 -0400
-Received: by mail-ot1-f68.google.com with SMTP id o44so13581136ota.10;
-        Tue, 01 Oct 2019 21:31:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=AYgFz/utX2CouzKGq/of876ifiNaKh9wLXb3Iy4aFb4=;
-        b=Ds5EsMaPGzVMM8DDhvv62+pUiadKKQJ5R4iijkhLFpJLwGR4V6hsZqJ8lu5aWUyXK7
-         gUzhnbAXZi92zmFI2XDFhOcbOLVmwKq1gSa2j6kYsVyupokW4R21bAxbVgXGNYU6T9Zr
-         GfRimKs0uzRmtoxMWBy78Fd+pMBV+hj2M9e4O5yeyMGTo0S3DVwZRjX7svWn3dc3sFVq
-         Z/GxfKm5RceOsY/syu/CjUT1Nyg7N9xsflXt5A5RpTGSrD56mtfNMz0aNp4wQND2Y/Rm
-         EWC+K76S8kIk/BdjoMtTbtAxdVmqNDn6DuOm4NyjdHcGOFUcQMVJhvhX3KkK2uvM4THM
-         mLZQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=AYgFz/utX2CouzKGq/of876ifiNaKh9wLXb3Iy4aFb4=;
-        b=gFHZbtFKRb1PfvdtlqiTpaqAIQajKSE4Ug2ukJ3btk7hdfLFDffGmLcSAb+SSJwquT
-         zjkhQUwIv/ZifxZfgsos4myTkXuZMTGtnkZPMoSe83kyVFiDcvukJHH1JliAYVBdSsDF
-         4DRwWNNcBGvmMZ+MH1qup5T7dU0XcnCIoq3MPStNI6mexroslli7tRQbgh7tQDFaR+Th
-         r2Rm6jtrCdNycppJaSmQTYppFGMVS6ffVsEBOGHgzFv1lNWWcVWCaEcblRRyS5B7JA20
-         KyGKdrHNtTfdw5v2cmmBJA1xu8ydjw2IhQME7jSR1hdF5hA1kJE7wLfamBOCtRZUBawz
-         xU3g==
-X-Gm-Message-State: APjAAAUV5DhCwx9AZaQ1nRO++Xk+0scYlq3soCdhcDhbcSA/t9pew2Gz
-        1S3oHY3fQ8Gd2YbuL+91GEtypa4WLRRlo/m8eW8=
-X-Google-Smtp-Source: APXvYqycNyChGfYo0NoGXSEbQOypCsbYIrk2guwoa/QPuK4yFQSWZlvYnzn2rPeWXxfSIuxE+bvJb+YjNARGDqJMH+o=
-X-Received: by 2002:a9d:5f6:: with SMTP id 109mr1094978otd.358.1569990674840;
- Tue, 01 Oct 2019 21:31:14 -0700 (PDT)
+        Wed, 2 Oct 2019 00:32:28 -0400
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id A0C7A608CC; Wed,  2 Oct 2019 04:32:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1569990747;
+        bh=TcvDj3Q5RUu13Sd8E2UL9tT6L2exfdkRAjTNMgjnipg=;
+        h=Subject:From:In-Reply-To:References:To:Cc:Date:From;
+        b=dXnP11btiyK7xoI6th0r1PYZizOODorIEcSrQa2yhGxKNKgAUKkaH743hUQyreVqp
+         bx/2mzwXxEHLKTJwQc980Obum75HEbR805t5hS7adMfJgLNdUBVBHmofU+y6JmZA91
+         oGkWC0bQ3Hr193Va7xQeJrt9rIyTM89hxxzDdcsE=
+Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: kvalo@smtp.codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 25B5A608CE;
+        Wed,  2 Oct 2019 04:32:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1569990747;
+        bh=TcvDj3Q5RUu13Sd8E2UL9tT6L2exfdkRAjTNMgjnipg=;
+        h=Subject:From:In-Reply-To:References:To:Cc:From;
+        b=ZF6OvQYRG8xVjoCwlC9uPhWXKholwaDeEsO0aPnL59WlfaNXXu796NFg5TbHOqt07
+         LXohoyFOyIRlEys8U9x8AHLyX4zluJW/+0zd89RWDxvuEDglC0U48GJ1Yjg+QKty0n
+         BHbk2oYIux6LZdPqNyqTqAlkR/SJ7CNCNWhX3JRk=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 25B5A608CE
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-References: <20191001211419.11245-1-stuart.w.hayes@gmail.com> <20191002041315.6dpqpis5zikosyyc@wunner.de>
-In-Reply-To: <20191002041315.6dpqpis5zikosyyc@wunner.de>
-From:   Stuart Hayes <stuart.w.hayes@gmail.com>
-Date:   Tue, 1 Oct 2019 23:31:02 -0500
-Message-ID: <CAL5oW02sCZ_Mz17wnY7deRtTat1=eX=uU8Q2HCcKDPTuoruJtw@mail.gmail.com>
-Subject: Re: [PATCH 0/3] PCI: pciehp: Do not turn off slot if presence comes
- up after link
-To:     Lukas Wunner <lukas@wunner.de>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>,
-        Austin Bolen <austin_bolen@dell.com>, keith.busch@intel.com,
-        Alexandru Gagniuc <mr.nuke.me@gmail.com>,
-        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        "Gustavo A . R . Silva" <gustavo@embeddedor.com>,
-        Sinan Kaya <okaya@kernel.org>,
-        Oza Pawandeep <poza@codeaurora.org>, linux-pci@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Subject: Re: [PATCH] rtl8xxxu: prevent leaking urb
+From:   Kalle Valo <kvalo@codeaurora.org>
+In-Reply-To: <20190920030043.30137-1-navid.emamdoost@gmail.com>
+References: <20190920030043.30137-1-navid.emamdoost@gmail.com>
+To:     Navid Emamdoost <navid.emamdoost@gmail.com>
+Cc:     unlisted-recipients:; (no To-header on input) emamd001@umn.edu,
+        smccaman@umn.edu, kjlu@umn.edu,
+        Navid Emamdoost <navid.emamdoost@gmail.com>,
+        Jes Sorensen <Jes.Sorensen@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Illegal-Object: Syntax error in Cc: address found on vger.kernel.org:
+        Cc:     unlisted-recipients:; (no To-header on input)emamd001@umn.edu
+                                                                     ^-missing end of address
+User-Agent: pwcli/0.0.0-git (https://github.com/kvalo/pwcli/) Python/2.7.12
+Message-Id: <20191002043227.A0C7A608CC@smtp.codeaurora.org>
+Date:   Wed,  2 Oct 2019 04:32:27 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Oct 1, 2019 at 11:13 PM Lukas Wunner <lukas@wunner.de> wrote:
->
-> On Tue, Oct 01, 2019 at 05:14:16PM -0400, Stuart Hayes wrote:
-> > This patch set is based on a patch set [1] submitted many months ago by
-> > Alexandru Gagniuc, who is no longer working on it.
-> >
-> > [1] https://patchwork.kernel.org/cover/10909167/
-> >     [v3,0/4] PCI: pciehp: Do not turn off slot if presence comes up after link
->
-> If I'm not mistaken, these two are identical to Alex' patches, right?
->
->   PCI: pciehp: Add support for disabling in-band presence
->   PCI: pciehp: Wait for PDS when in-band presence is disabled
->
-> I'm not sure if it's appropriate to change the author and
-> omit Alex' Signed-off-by.
->
-> Otherwise I have no objections against this series.
->
-> Thanks,
->
-> Lukas
+Navid Emamdoost <navid.emamdoost@gmail.com> wrote:
 
-Thanks!  The first patch is identical to the one Alex submitted, and
-the second is nearly so... they both basically his work.  I wasn't
-sure what proper etiquette was--I was thinking the signed-off-by was
-taking responsibility that the patch was ok (functional, not
-copyrighted by someone else, etc) rather than giving credit, but he
-definitely deserves credit for them.  I'm happy to add a signed-off-by
-for Alex on the first two and resubmit if he doesn't object.
+> In rtl8xxxu_submit_int_urb if usb_submit_urb fails the allocated urb
+> should be released.
+> 
+> Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
+> Reviewed-by: Chris Chiu <chiu@endlessm.com>
+
+Patch applied to wireless-drivers-next.git, thanks.
+
+a2cdd07488e6 rtl8xxxu: prevent leaking urb
+
+-- 
+https://patchwork.kernel.org/patch/11153733/
+
+https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
+
