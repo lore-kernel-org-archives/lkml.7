@@ -2,114 +2,103 @@ Return-Path: <SRS0=zem1=X3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
+	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1694C35280
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 11:00:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B21E0C352AA
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 11:03:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 588F22086A
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 11:00:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8353F20700
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 11:03:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=rasmusvillemoes.dk header.i=@rasmusvillemoes.dk header.b="ISl1taxi"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="UuCC7ZgC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728059AbfJBLAl (ORCPT
+        id S1727718AbfJBLDi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Oct 2019 07:00:41 -0400
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:46583 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726157AbfJBLAl (ORCPT
+        Wed, 2 Oct 2019 07:03:38 -0400
+Received: from mail-vs1-f74.google.com ([209.85.217.74]:41612 "EHLO
+        mail-vs1-f74.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726157AbfJBLDi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Oct 2019 07:00:41 -0400
-Received: by mail-lj1-f196.google.com with SMTP id d1so16603525ljl.13
-        for <linux-kernel@vger.kernel.org>; Wed, 02 Oct 2019 04:00:38 -0700 (PDT)
+        Wed, 2 Oct 2019 07:03:38 -0400
+Received: by mail-vs1-f74.google.com with SMTP id w21so2165177vsi.8
+        for <linux-kernel@vger.kernel.org>; Wed, 02 Oct 2019 04:03:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rasmusvillemoes.dk; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=YqW4lirDp6dhPL53QREOEClblGXQffbz/DGv2dLJs4Q=;
-        b=ISl1taxiHeTMVMMOn0n8wcdg1xJCR1fcz2fZFt8tGPPObtsnfloz8d6yuwZ/9jaDBC
-         EpdDdSIVXj2fa5iKwOBPzK1izqeisJnL+CPOwUoqWwMd4nnpL+vDOFHoSeaHcSqS4GjT
-         iCUvnNTfZGkmnxxuPGn9m+87WKlq8hpi7/JB8=
+        d=google.com; s=20161025;
+        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
+         :cc;
+        bh=F+NGpTeaeb0MugbRhc2tQ0Tvk6r4JBYeMAAiqO9gTaM=;
+        b=UuCC7ZgC3p8JQXrhMdkXzhrP4kUWZxALvN4v4MjrjdsguP6afQybOQaXsLYwCp6huj
+         mywwRxIALZswR4H943Zk6VsigwKkcbHqm+mA8I/oosnIq5+3rLUjQRcmuKFlYGDLxPBw
+         Gky5fxirIx/uOZRd7tfBYT56VodoX5EXipY634HuX/Rwl3HqUTRryNqHE9Lcb0zxkiMl
+         ekvaPBW98oar6qwfBGQXgaPLoAONxJXCYYBlWS10l9yNm/jFzfxm3oU2e9iraGaanFnk
+         6/sve/ZU6HAU2aYoDBzyuRIbrtvb8uLY/ZrtHPM9qGY8dRQYyysYgEeL6tKi2x+osIIz
+         2SJg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=YqW4lirDp6dhPL53QREOEClblGXQffbz/DGv2dLJs4Q=;
-        b=kM657xP4nH2p1I5IAgJ96RXEW61XkH8gn/9sZr6YZT30G1sKsy5DC1aBqrONfPqQHY
-         ZCFzudpUmYqebSTapCP4lYxEnHH3i1wLUoSzAyvtpCsMQo0PMhnmilCT9cYQ+iO8RckD
-         vEtAwMk3iO6ukKU2UgcM1upuA7YxeXHvBpaqyOKTFk44aBODgTzeunLzTkj0hWYuxEP6
-         /SJax4b9BEv7gRyjC2jN07FM/pNxmvEbTbyHLciIOoiWzUPSdpMKh/VKAktUekzEKaif
-         jtJPV3DzsrZqoCglE2r/5Hoyd8botLGrxgX+RnMSwdYWGcTUO6HgGwvFRXKyfXlURe+w
-         v3fA==
-X-Gm-Message-State: APjAAAWgD9GL/Qu8iThlZXLIk4SLm4ZXZ5Wzs3AiOoCAq9JGgODQD2Ji
-        0O1Gyp3QFBC7cTV8ljFEm+0SKQ==
-X-Google-Smtp-Source: APXvYqzu9K6EJ442RqSftT7bhnv6pnQOGABkdQlZVfOHCKr4mFhLt1GwBoceHpgFO7VessYbj9nmHg==
-X-Received: by 2002:a2e:86d5:: with SMTP id n21mr1977522ljj.1.1570014037566;
-        Wed, 02 Oct 2019 04:00:37 -0700 (PDT)
-Received: from [172.16.11.28] ([81.216.59.226])
-        by smtp.gmail.com with ESMTPSA id y22sm4544784lfb.75.2019.10.02.04.00.36
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 02 Oct 2019 04:00:37 -0700 (PDT)
-Subject: Re: [PATCH v3] string-choice: add yesno(), onoff(),
- enableddisabled(), plural() helpers
-To:     Jani Nikula <jani.nikula@intel.com>, linux-kernel@vger.kernel.org
-Cc:     Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-        Rodrigo Vivi <rodrigo.vivi@intel.com>,
-        intel-gfx@lists.freedesktop.org,
-        Vishal Kulkarni <vishal@chelsio.com>, netdev@vger.kernel.org,
+        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
+         :references:subject:from:to:cc;
+        bh=F+NGpTeaeb0MugbRhc2tQ0Tvk6r4JBYeMAAiqO9gTaM=;
+        b=d6C7h16Fx/btz1vyaBHCFGMpVz4OqFuvXprSy5TzojgmOBXujuSBUUW3MaqsJ8Q6TH
+         UgXQEwr+iDdxWQZemh+BMT+GDtvrv8BIpn9rKs5feMA/F7AX5sOlaN8WqFsxb4wPHGib
+         Uc24If8vzqA1L3ug9MIGjxk2aFP4GQWifiIAD7HSUfnsBpVvZbirgUPvJRiKkFNAsEGh
+         dJz8Dl49rDkDsFmAxW1QPzlzmMtuZ7LKDC7Deub6l2QBSTFPsePneXNnEqkBXAsx5woL
+         iUc9XoH9/w9DSNOjI3BkreuRA3uSQM4LqZJAumhBu3e/mTaReyxEou2bibMq4Tf3odk/
+         XcQg==
+X-Gm-Message-State: APjAAAXM8LuWN+eTCPqMG2cidKYvPrM3LESu3tHKnqqwY2fNVaSr0Bld
+        Dn8ENcdyOMJ3X+0ddr5Ka3D81Ds/jMmodvRfAxr0KO8rQZQ1EM9WSeiB31oZO6hsCzO19BrTLP7
+        RdAABZHhW1M+ZQ5tQOKJDD9l6vcxymxDUEt3ZGMqP4tmRsJXFdag9qlcLB+0+fmG0tT/7nLlTBI
+        c=
+X-Google-Smtp-Source: APXvYqxwDxrgl62NuWhGvIiYkm7N2vF3ncBQ66ZIySYKaxgMLJfRNnrjUZNyyuy557usKbBLCIGFeh7EOvrVXA==
+X-Received: by 2002:ab0:6607:: with SMTP id r7mr1307035uam.27.1570014215724;
+ Wed, 02 Oct 2019 04:03:35 -0700 (PDT)
+Date:   Wed,  2 Oct 2019 12:03:12 +0100
+In-Reply-To: <20190917231031.81341-1-maennich@google.com>
+Message-Id: <20191002110312.75749-1-maennich@google.com>
+Mime-Version: 1.0
+References: <20190917231031.81341-1-maennich@google.com>
+X-Mailer: git-send-email 2.23.0.581.g78d2f28ef7-goog
+Subject: [PATCH v3] usb-storage: SCSI glue: use dev_err instead of printk
+From:   Matthias Maennich <maennich@google.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     kernel-team@android.com, maennich@google.com,
+        Alan Stern <stern@rowland.harvard.edu>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-usb@vger.kernel.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Julia Lawall <julia.lawall@lip6.fr>
-References: <8e697984-03b5-44f3-304e-42d303724eaa@rasmusvillemoes.dk>
- <20191001080739.18513-1-jani.nikula@intel.com> <87eezvbgp1.fsf@intel.com>
-From:   Rasmus Villemoes <linux@rasmusvillemoes.dk>
-Message-ID: <dc08714c-c76f-10f1-a5e7-7972beeb4552@rasmusvillemoes.dk>
-Date:   Wed, 2 Oct 2019 13:00:30 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
-MIME-Version: 1.0
-In-Reply-To: <87eezvbgp1.fsf@intel.com>
-Content-Type: text/plain; charset=windows-1252
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        usb-storage@lists.one-eyed-alien.net
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 02/10/2019 12.11, Jani Nikula wrote:
-> On Tue, 01 Oct 2019, Jani Nikula <jani.nikula@intel.com> wrote:
->> While the main goal here is to abstract recurring patterns, and slightly
->> clean up the code base by not open coding the ternary operators, there
->> are also some space savings to be had via better string constant
->> pooling.
-> 
-> Make that
-> 
-> """
-> While the main goal here is to abstract recurring patterns, and slightly
-> clean up the code base by not open coding the ternary operators, using
-> functions to access the strings also makes it easier to seek different
-> implementation options for potential space savings on string constants
-> in the future.
-> """
-> 
-> to be more explicit that this change does not directly translate to any
-> space savings.
-> 
-> Rasmus, okay with that?
+Follow common practice and retire printk(KERN_ERR ...) in favor of
+dev_err().
 
-It's rather fluffy, but it doesn't make unfounded claims about space
-savings, so in that regard I'm fine with it.
+Cc: Alan Stern <stern@rowland.harvard.edu>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: usb-storage@lists.one-eyed-alien.net
+Signed-off-by: Matthias Maennich <maennich@google.com>
+---
+ drivers/usb/storage/scsiglue.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-[It's probably just my lack of imagination, but I still fail to see how
-one could ever achieve better than the linker creating just 1
-vmlinux-wide instance of "enabled", which I believe happens regardless
-of whether one uses these helpers or not.]
-
-Rasmus
+diff --git a/drivers/usb/storage/scsiglue.c b/drivers/usb/storage/scsiglue.c
+index 6737fab94959..4c0c247e4101 100644
+--- a/drivers/usb/storage/scsiglue.c
++++ b/drivers/usb/storage/scsiglue.c
+@@ -379,8 +379,8 @@ static int queuecommand_lck(struct scsi_cmnd *srb,
+ 
+ 	/* check for state-transition errors */
+ 	if (us->srb != NULL) {
+-		printk(KERN_ERR "usb-storage: Error in %s: us->srb = %p\n",
+-			__func__, us->srb);
++		dev_err(&us->pusb_intf->dev,
++			"Error in %s: us->srb = %p\n", __func__, us->srb);
+ 		return SCSI_MLQUEUE_HOST_BUSY;
+ 	}
+ 
+-- 
+2.23.0.581.g78d2f28ef7-goog
 
