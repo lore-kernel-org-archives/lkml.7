@@ -2,136 +2,114 @@ Return-Path: <SRS0=zem1=X3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E57B8C35280
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 11:28:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F437ECE58B
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 11:29:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BD34921783
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 11:28:20 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=zoho.com header.i=zhouyanjie@zoho.com header.b="MugC4L9H"
+	by mail.kernel.org (Postfix) with ESMTP id DA99821783
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 11:29:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727540AbfJBL2U (ORCPT
+        id S1726695AbfJBL3F (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Oct 2019 07:28:20 -0400
-Received: from sender4-pp-o94.zoho.com ([136.143.188.94]:25461 "EHLO
-        sender4-pp-o94.zoho.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725928AbfJBL2T (ORCPT
+        Wed, 2 Oct 2019 07:29:05 -0400
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:41451 "EHLO
+        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725747AbfJBL3E (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Oct 2019 07:28:19 -0400
-ARC-Seal: i=1; a=rsa-sha256; t=1570015567; cv=none; 
-        d=zoho.com; s=zohoarc; 
-        b=C0eQva+jMB+Nw5w9KYTzh4UdJLoPfzQKPfp/X06fitsXZ0y15IaTG88+uaiiT6/k/HI3YHkm81k5u1Rs3cF1NNWnJIZ6g+ooFp5hRuA+QEVCGf9CLlzVbmpho647BTc4k4tpeAMbjJ9i+nBGJv0QK73/dxDXDW85g88fsPrOC4U=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zoho.com; s=zohoarc; 
-        t=1570015567; h=Cc:Date:From:In-Reply-To:Message-ID:References:Subject:To:ARC-Authentication-Results; 
-        bh=eeeCKiM3IXSUywHWZMkuZdPCtxOgvU9X1AipnfM1nB0=; 
-        b=dx3oAMXDQRP0SUbGfli5wBEGHJtqrgCjNfMJ3tYrYBWIBFGr91M1vftbZwyWowsIyXMv8LKmsLYgxaRDMThoH8p8pxk8Y5yzX9O5tL3TMmjSrdDbQ6X5yuYXHQj7HsqHVBOh6zlYwAbbyJ2jD3xsfS404CBn+Omlb+HrtK/pyrA=
-ARC-Authentication-Results: i=1; mx.zoho.com;
-        dkim=pass  header.i=zoho.com;
-        spf=pass  smtp.mailfrom=zhouyanjie@zoho.com;
-        dmarc=pass header.from=<zhouyanjie@zoho.com> header.from=<zhouyanjie@zoho.com>
-DomainKey-Signature: a=rsa-sha1; q=dns; c=nofws; 
-  s=zapps768; d=zoho.com; 
-  h=from:to:cc:subject:date:message-id:in-reply-to:references; 
-  b=UdcQap6U/7QfvHXSuSsc7qvHYCVpJmC6JV2Y+brfxtCAYWP7AOBb1bXmlkbwgM622BU/vksASMWH
-    6hwUkJLSqh/fGtduAVPglm79sorvs49Bzk+OBbHnYm+tnFFhWPN/  
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1570015567;
-        s=zm2019; d=zoho.com; i=zhouyanjie@zoho.com;
-        h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References;
-        l=2275; bh=eeeCKiM3IXSUywHWZMkuZdPCtxOgvU9X1AipnfM1nB0=;
-        b=MugC4L9HPgwp0qqRGcntvU0KrqTnc9oLHrWSO+bksJ96UxV2XgPwV9Ci1Q9RoxOV
-        Nn+8r60xb8NtCvC/YajNaMB2q17IOkFtz1GkN65hlVzpz9Pv9fviEWooayK9Rt3C4jw
-        BfCugmNEVS4uM2G2c/synkP2P2Sj9iauQQfLve8M=
-Received: from zhouyanjie-virtual-machine.localdomain (171.221.113.164 [171.221.113.164]) by mx.zohomail.com
-        with SMTPS id 157001556560418.841606277967458; Wed, 2 Oct 2019 04:26:05 -0700 (PDT)
-From:   Zhou Yanjie <zhouyanjie@zoho.com>
-To:     linux-mips@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, tglx@linutronix.de,
-        paul.burton@mips.com, gregkh@linuxfoundation.org,
-        jason@lakedaemon.net, syq@debian.org, marc.zyngier@arm.com,
-        rfontana@redhat.com, armijn@tjaldur.nl, allison@lohutok.net,
-        paul@crapouillou.net
-Subject: [PATCH 5/5 v5] irqchip: Ingenic: Add process for more than one irq at the same time.
-Date:   Wed,  2 Oct 2019 19:25:25 +0800
-Message-Id: <1570015525-27018-6-git-send-email-zhouyanjie@zoho.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1570015525-27018-1-git-send-email-zhouyanjie@zoho.com>
-References: <1548517123-60058-1-git-send-email-zhouyanjie@zoho.com>
- <1570015525-27018-1-git-send-email-zhouyanjie@zoho.com>
-X-ZohoMailClient: External
+        Wed, 2 Oct 2019 07:29:04 -0400
+Received: by mail-oi1-f195.google.com with SMTP id w65so4490355oiw.8;
+        Wed, 02 Oct 2019 04:29:04 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=VOqaff5GeEyEytif6Y5wcF5pWtKQsDRF2Z5Wt6x2kVA=;
+        b=V64IvvBD8gj4ndDqKVNGC47tt//yOJs0vw3i79uw3Rns6s7dk8xVAPgA+3T73945rf
+         KhXqGLu79dMbd0LdpQo+6ftqFcX1BpKW44qEiH5N9p3w/uQf/Zb++v7I14ubwsr+hbnM
+         E1G1BzaeANawbrNOQzPMMNC7RRXM53VSzYSLvd9oZj6WUuRMHxIS/GqmNHURmAeilSzu
+         1QvbEvreMxCJZvEcsZMOQZeFivkNGYVoYvn5q0v+XjD9p7OR/F4x1D59pBOmZIeFXRkh
+         c39c1JEYn0xdZhvs0tRbHyRQo6vCCHDM2smqEe3cw4dQL2BiCxco0pnQOafAjAXVbJVX
+         vNyg==
+X-Gm-Message-State: APjAAAUzsih/9lOz8XpLiaqX1y95+CyZcJipTLHjAUkky5PPLkqCLYKb
+        y0lVaAWMgujBM8JBfXkUA6xHsQyA36zL+3pKwBE=
+X-Google-Smtp-Source: APXvYqwBp3ilQomjLD8ZkfMcVQbUDlnkJyZhIFzYiVSft3rQ6dhwA8ZhYPipVW9TH7GEhjRXD/8UtxT0SNmyzkb9b90=
+X-Received: by 2002:aca:f305:: with SMTP id r5mr2323471oih.131.1570015743746;
+ Wed, 02 Oct 2019 04:29:03 -0700 (PDT)
+MIME-Version: 1.0
+References: <20191001180743.1041-1-geert+renesas@glider.be> <201910021701.JBV8khAI%lkp@intel.com>
+In-Reply-To: <201910021701.JBV8khAI%lkp@intel.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Wed, 2 Oct 2019 13:28:51 +0200
+Message-ID: <CAMuHMdWQhvWOMjEpJrXV0nuKUc=wT6Zi_ZLjKco0Lkgeis8NyQ@mail.gmail.com>
+Subject: Re: [PATCH] serial: sh-sci: Use platform_get_irq_optional() for
+ optional interrupts
+To:     kbuild test robot <lkp@intel.com>
+Cc:     Geert Uytterhoeven <geert+renesas@glider.be>, kbuild-all@01.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jiri Slaby <jslaby@suse.com>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add process for the situation that more than one irq is coming to
-a single chip at the same time. The original code will only respond
-to the lowest setted bit in JZ_REG_INTC_PENDING, and then exit the
-interrupt dispatch function. After exiting the interrupt dispatch
-function, since the second interrupt has not yet responded, the
-interrupt dispatch function is again entered to process the second
-interrupt. This creates additional unnecessary overhead, and the
-more interrupts that occur at the same time, the more overhead is
-added. The improved method in this patch is to check whether there
-are still unresponsive interrupts after processing the lowest
-setted bit interrupt. If there are any, the processing will be
-processed according to the bit in JZ_REG_INTC_PENDING, and the
-interrupt dispatch function will be exited until all processing
-is completed.
+Hi Kbuild test robot,
 
-Signed-off-by: Zhou Yanjie <zhouyanjie@zoho.com>
----
- drivers/irqchip/irq-ingenic.c | 17 +++++++++++------
- 1 file changed, 11 insertions(+), 6 deletions(-)
+On Wed, Oct 2, 2019 at 11:53 AM kbuild test robot <lkp@intel.com> wrote:
+> I love your patch! Yet something to improve:
+>
+> [auto build test ERROR on tty/tty-testing]
+> [cannot apply to v5.4-rc1 next-20191001]
 
-diff --git a/drivers/irqchip/irq-ingenic.c b/drivers/irqchip/irq-ingenic.c
-index 06ab3ad..c1be3d5 100644
---- a/drivers/irqchip/irq-ingenic.c
-+++ b/drivers/irqchip/irq-ingenic.c
-@@ -1,7 +1,7 @@
- // SPDX-License-Identifier: GPL-2.0-or-later
- /*
-  *  Copyright (C) 2009-2010, Lars-Peter Clausen <lars@metafoo.de>
-- *  JZ4740 platform IRQ support
-+ *  Ingenic XBurst platform IRQ support
-  */
- 
- #include <linux/errno.h>
-@@ -37,18 +37,23 @@ static irqreturn_t intc_cascade(int irq, void *data)
- 	struct ingenic_intc_data *intc = irq_get_handler_data(irq);
- 	struct irq_domain *domain = intc->domain;
- 	struct irq_chip_generic *gc;
--	uint32_t irq_reg;
-+	uint32_t pending;
- 	unsigned i;
- 
- 	for (i = 0; i < intc->num_chips; i++) {
- 		gc = irq_get_domain_generic_chip(domain, i * 32);
- 
--		irq_reg = irq_reg_readl(gc, JZ_REG_INTC_PENDING);
--		if (!irq_reg)
-+		pending = irq_reg_readl(gc, JZ_REG_INTC_PENDING);
-+		if (!pending)
- 			continue;
- 
--		irq = irq_find_mapping(domain, __fls(irq_reg) + (i * 32));
--		generic_handle_irq(irq);
-+		while (pending) {
-+			int bit = __fls(pending);
-+
-+			irq = irq_find_mapping(domain, bit + (i * 32));
-+			generic_handle_irq(irq);
-+			pending &= ~BIT(bit);
-+		}
- 	}
- 
- 	return IRQ_HANDLED;
+Strange, this patch applies to all of v5.4-rc1, tty/tty-testing, and
+next-20191001?
+
+> url:    https://github.com/0day-ci/linux/commits/Geert-Uytterhoeven/serial-sh-sci-Use-platform_get_irq_optional-for-optional-interrupts/20191002-171547
+
+Oh, this is still the old tty/tty-testing before it was rebased to v5.4-rc1,
+i.e. still based on v5.3-rc4.  That explains the build failure.
+
+That does not explain why you couldn't apply this patch to v5.4-rc1 and
+next-20191001, though.
+
+> base:   https://git.kernel.org/pub/scm/linux/kernel/git/gregkh/tty.git tty-testing
+> config: sparc64-allmodconfig (attached as .config)
+> compiler: sparc64-linux-gcc (GCC) 7.4.0
+> reproduce:
+>         wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
+>         chmod +x ~/bin/make.cross
+>         # save the attached .config to linux build tree
+>         GCC_VERSION=7.4.0 make.cross ARCH=sparc64
+>
+> If you fix the issue, kindly add following tag
+> Reported-by: kbuild test robot <lkp@intel.com>
+>
+> All errors (new ones prefixed by >>):
+>
+>    drivers/tty/serial/sh-sci.c: In function 'sci_init_single':
+> >> drivers/tty/serial/sh-sci.c:2899:24: error: implicit declaration of function 'platform_get_irq_optional'; did you mean 'platform_get_irq_byname'? [-Werror=implicit-function-declaration]
+>        sci_port->irqs[i] = platform_get_irq_optional(dev, i);
+>                            ^~~~~~~~~~~~~~~~~~~~~~~~~
+>                            platform_get_irq_byname
+>    cc1: some warnings being treated as errors
+
+FTR, not reproducible on sparc on v5.4-rc1, current tty/tty-testing, and
+next-20191001.
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
 -- 
-2.7.4
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
-
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
