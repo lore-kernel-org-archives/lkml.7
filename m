@@ -2,221 +2,130 @@ Return-Path: <SRS0=zem1=X3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1,
-	USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FAKE_REPLY_C,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ECEA1C352AA
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 00:00:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4B9FECE587
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 00:07:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B281921920
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 00:00:54 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="b6M8s8Kx"
+	by mail.kernel.org (Postfix) with ESMTP id 944DF21920
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 00:07:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1569974842;
+	bh=tc19l2UGyPfaGtKN6q7o1lkGEB1wwDQHwhVr5+o2jIE=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
+	b=h5GJUab9yoISHwn9SfoLfc6mAZLQ3AqSZ9W+mvlNDKW1NW6oO5K3EJFC85t40zMv5
+	 tz2Es8rh9ogfWyv2NdirnkmFVz2WsEnYndirp/hsOn7TbnY/y8M0sOt7zk19n1B5b5
+	 f7j+H8co0ksoyjzPc6vMfqGSVVRLQBvnbbLhhKUM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729422AbfJBAAy (ORCPT
+        id S1729442AbfJBAHW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Oct 2019 20:00:54 -0400
-Received: from mail-io1-f68.google.com ([209.85.166.68]:40802 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726403AbfJBAAx (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Oct 2019 20:00:53 -0400
-Received: by mail-io1-f68.google.com with SMTP id h144so52642487iof.7
-        for <linux-kernel@vger.kernel.org>; Tue, 01 Oct 2019 17:00:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=HRoUIDj1r8i/Ij0NQgXqYrayFN5Nee0d4B0FhL1c8iQ=;
-        b=b6M8s8KxOjS1ZmfLWDD0K48VF/aZb0ck5PqQp7kbunEnIyg1qZfxy72WXGFkyKgEyT
-         gYsqU6v2omDpvO+/qRugfjZYkDaQ5t8d/H/KfvynvAC8Cw7GnqghCQlt5C7Js9iUOldL
-         emkC1mCIHUCdJJ8MWTqSCx1L+nlhkXY3APJlw5iaFWb62RdEn2UNrcccDJMn2FAGLGE4
-         +XjonTJiBJWD8NvkqgoqIwA9PTVo/G4wkgQ12i6p9cNezDFNc1fIL913kFFct+zxw+QT
-         raSk6QdQUD3flDuBkqofdEJhyJ6CHBO1SAhCfT3EuzLjDNwlbMIFvFN8gX7D5nzjzhwP
-         aeIg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=HRoUIDj1r8i/Ij0NQgXqYrayFN5Nee0d4B0FhL1c8iQ=;
-        b=qqn26hmkAeVyuFmBWz5QIDSyPCJrUamKTmwM0Zl5FBFDWb21ZyovJ1chOk7CLSM7L/
-         VcekTGyrtB9vZEnpZ8t78Up0ygTBkONJPXfbe6W2u74Pn4HW8uSLPaDEs2UVEpeyNDfQ
-         3/HLFPmiOwjxpOog/JpnS5wNVvH+950Suc80uYBxqDRyNjhveulxOgvgL3g3+ySEdzmw
-         /z04U/eepXlgNd8anJ6ny09sILyF4hK0bhMGV+Roahu25rNp0HH3sO5GFwA8urMplLnG
-         OdoQ+hCbN1Mt54DgigLpDAqIJhVp2ZNyau+9pF27Q/CRrkbz6PIj5BxMBpb5yIPiDRJH
-         FA1A==
-X-Gm-Message-State: APjAAAURk+D6aL/JlKPtKcBrLu2fpGLy079mpGlAeVX6/zqF7ufsjPdO
-        4kU8SE1QRPMteGp3K1g7fF2HLg==
-X-Google-Smtp-Source: APXvYqzEkD7xquRTtDPw329fI8Jif2fv/j8emc8DGNLITQydAzaOFYo8NZx2LF9UYnO8CSBm8J/ebg==
-X-Received: by 2002:a92:8988:: with SMTP id w8mr882693ilk.86.1569974452245;
-        Tue, 01 Oct 2019 17:00:52 -0700 (PDT)
-Received: from google.com ([2620:15c:183:0:9f3b:444a:4649:ca05])
-        by smtp.gmail.com with ESMTPSA id r138sm7936092iod.59.2019.10.01.17.00.50
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 01 Oct 2019 17:00:51 -0700 (PDT)
-Date:   Tue, 1 Oct 2019 18:00:46 -0600
-From:   Yu Zhao <yuzhao@google.com>
-To:     John Hubbard <jhubbard@nvidia.com>,
-        Mark Rutland <mark.rutland@arm.com>
-Cc:     "Kirill A. Shutemov" <kirill@shutemov.name>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Michal Hocko <mhocko@suse.com>,
-        "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Hugh Dickins <hughd@google.com>,
-        =?iso-8859-1?B?Suly9G1l?= Glisse <jglisse@redhat.com>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        "Aneesh Kumar K . V" <aneesh.kumar@linux.ibm.com>,
-        David Rientjes <rientjes@google.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Lance Roy <ldr709@gmail.com>,
-        Ralph Campbell <rcampbell@nvidia.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Dave Airlie <airlied@redhat.com>,
-        Thomas Hellstrom <thellstrom@vmware.com>,
-        Souptick Joarder <jrdr.linux@gmail.com>,
-        Mel Gorman <mgorman@suse.de>, Jan Kara <jack@suse.cz>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        Huang Ying <ying.huang@intel.com>,
-        Aaron Lu <ziqian.lzq@antfin.com>,
-        Omar Sandoval <osandov@fb.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Vineeth Remanan Pillai <vpillai@digitalocean.com>,
-        Daniel Jordan <daniel.m.jordan@oracle.com>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Alexander Duyck <alexander.h.duyck@linux.intel.com>,
-        Pavel Tatashin <pavel.tatashin@microsoft.com>,
-        David Hildenbrand <david@redhat.com>,
-        Juergen Gross <jgross@suse.com>,
-        Anthony Yznaga <anthony.yznaga@oracle.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        "Darrick J . Wong" <darrick.wong@oracle.com>,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org
-Subject: Re: [PATCH v3 3/4] mm: don't expose non-hugetlb page to fast gup
- prematurely
-Message-ID: <20191002000046.GA60764@google.com>
-References: <20190914070518.112954-1-yuzhao@google.com>
- <20190924232459.214097-1-yuzhao@google.com>
- <20190924232459.214097-3-yuzhao@google.com>
- <20190925082530.GD4536@hirez.programming.kicks-ass.net>
- <20190925222654.GA180125@google.com>
- <20190926102036.od2wamdx2s7uznvq@box>
- <9465df76-0229-1b44-5646-5cced1bc1718@nvidia.com>
- <20190927050648.GA92494@google.com>
- <712513fe-f064-c965-d165-80d43cfc606f@nvidia.com>
+        Tue, 1 Oct 2019 20:07:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35088 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729423AbfJBAHV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Oct 2019 20:07:21 -0400
+Received: from localhost (unknown [69.71.4.100])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id DDF602070B;
+        Wed,  2 Oct 2019 00:07:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1569974840;
+        bh=tc19l2UGyPfaGtKN6q7o1lkGEB1wwDQHwhVr5+o2jIE=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=a2qEyG5KcE2Rv/7aGJIMKvq/xygVIT7MuCU5j3sFnYy1wDfsaNW5zH+Nf72LIbRsC
+         aUyip9FtaySJGi93NnMTlUNGK89qqcNv0g+8hZsi8+gFemSQ/BFTqQ3YaP15NYJfZY
+         XevMHRntHmd9CtKaxE7eWg+yg9t8P++Z1qvK4DTg=
+Date:   Tue, 1 Oct 2019 19:07:18 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Kai-Heng Feng <kai.heng.feng@canonical.com>
+Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Alan Stern <stern@rowland.harvard.edu>,
+        Mathias Nyman <mathias.nyman@intel.com>,
+        Rafael Wysocki <rafael.j.wysocki@intel.com>,
+        Lukas Wunner <lukas@wunner.de>
+Subject: Re: [PATCH] x86/PCI: Remove D0 PME capability on AMD FCH xHCI
+Message-ID: <20191002000718.GA100544@google.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <712513fe-f064-c965-d165-80d43cfc606f@nvidia.com>
+In-Reply-To: <20190902145252.32111-1-kai.heng.feng@canonical.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Oct 01, 2019 at 03:31:51PM -0700, John Hubbard wrote:
-> On 9/26/19 10:06 PM, Yu Zhao wrote:
-> > On Thu, Sep 26, 2019 at 08:26:46PM -0700, John Hubbard wrote:
-> >> On 9/26/19 3:20 AM, Kirill A. Shutemov wrote:
-> >>> On Wed, Sep 25, 2019 at 04:26:54PM -0600, Yu Zhao wrote:
-> >>>> On Wed, Sep 25, 2019 at 10:25:30AM +0200, Peter Zijlstra wrote:
-> >>>>> On Tue, Sep 24, 2019 at 05:24:58PM -0600, Yu Zhao wrote:
-> >> ...
-> >>>>> I'm thinking this patch make stuff rather fragile.. Should we instead
-> >>>>> stick the barrier in set_p*d_at() instead? Or rather, make that store a
-> >>>>> store-release?
-> >>>>
-> >>>> I prefer it this way too, but I suspected the majority would be
-> >>>> concerned with the performance implications, especially those
-> >>>> looping set_pte_at()s in mm/huge_memory.c.
-> >>>
-> >>> We can rename current set_pte_at() to __set_pte_at() or something and
-> >>> leave it in places where barrier is not needed. The new set_pte_at()( will
-> >>> be used in the rest of the places with the barrier inside.
-> >>
-> >> +1, sounds nice. I was unhappy about the wide-ranging changes that would have
-> >> to be maintained. So this seems much better.
-> > 
-> > Just to be clear that doing so will add unnecessary barriers to one
-> > of the two paths that share set_pte_at().
+[+cc Alan, Mathias, Rafael, Lukas]
+
+On Mon, Sep 02, 2019 at 10:52:52PM +0800, Kai-Heng Feng wrote:
+> There's an xHCI device that doesn't wake when a USB 2.0 device gets
+> plugged to its USB 3.0 port. The driver's own runtime suspend callback
+> was called, PME# signaling was enabled, but it stays at PCI D0:
 > 
-> Good point, maybe there's a better place to do it...
+> 00:10.0 USB controller [0c03]: Advanced Micro Devices, Inc. [AMD] FCH USB XHCI Controller [1022:7914] (rev 20) (prog-if 30 [XHCI])
+>         Subsystem: Dell FCH USB XHCI Controller [1028:087e]
+>         Control: I/O- Mem+ BusMaster- SpecCycle- MemWINV- VGASnoop- ParErr- Stepping- SERR- FastB2B- DisINTx+
+>         Status: Cap+ 66MHz- UDF- FastB2B- ParErr- DEVSEL=fast >TAbort- <TAbort- <MAbort- >SERR- <PERR- INTx-
+>         Interrupt: pin A routed to IRQ 18
+>         Region 0: Memory at f0b68000 (64-bit, non-prefetchable) [size=8K]
+>         Capabilities: [50] Power Management version 3
+>                 Flags: PMEClk- DSI- D1- D2- AuxCurrent=0mA PME(D0+,D1-,D2-,D3hot+,D3cold+)
+>                 Status: D0 NoSoftRst+ PME-Enable+ DSel=0 DScale=0 PME-
 > 
+> A PCI device can be runtime suspended while still stays at D0 when it
+> supports D0 PME# and its ACPI _S0W method reports D0. Though plugging
+> USB 3.0 devices can wakeup the xHCI, it doesn't respond to USB 2.0
+> devices.
+
+I don't think _S0W and runtime suspend are relevant here.  What *is*
+relevant is that the device advertises that it can generate PME from
+D0, and it apparently does not do so.
+
+Table 10 in the xHCI spec r1.0, sec 4.15.2.3, says the xHC should
+assert PME# if enabled and the port's WCE bit is set.  Did you ever
+confirm that WCE is set?
+
+I assume WCE *is* set because plugging in a USB3 device *does*
+generate a PME#, and I don't see anything in Table 10 that says it
+would work for USB3 but not USB2.
+
+> So let's disable D0 PME capability on this device to avoid the issue.
 > 
-> > 
-> >>> BTW, have you looked at other levels of page table hierarchy. Do we have
-> >>> the same issue for PMD/PUD/... pages?
-> >>>
-> >>
-> >> Along the lines of "what other memory barriers might be missing for
-> >> get_user_pages_fast(), I'm also concerned that the synchronization between
-> >> get_user_pages_fast() and freeing the page tables might be technically broken,
-> >> due to missing memory barriers on the get_user_pages_fast() side. Details:
-> >>
-> >> gup_fast() disables interrupts, but I think it also needs some sort of
-> >> memory barrier(s), in order to prevent reads of the page table (gup_pgd_range,
-> >> etc) from speculatively happening before the interrupts are disabled. 
-> > 
-> > I was under impression switching back from interrupt context is a
-> > full barrier (otherwise wouldn't we be vulnerable to some side
-> > channel attacks?), so the reader side wouldn't need explicit rmb.
-> > 
+> Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=203673
+> Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+> ---
+>  arch/x86/pci/fixup.c | 11 +++++++++++
+>  1 file changed, 11 insertions(+)
 > 
-> Documentation/memory-barriers.txt points out:
+> diff --git a/arch/x86/pci/fixup.c b/arch/x86/pci/fixup.c
+> index 527e69b12002..0851a05d092f 100644
+> --- a/arch/x86/pci/fixup.c
+> +++ b/arch/x86/pci/fixup.c
+> @@ -588,6 +588,17 @@ static void pci_fixup_amd_ehci_pme(struct pci_dev *dev)
+>  }
+>  DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_AMD, 0x7808, pci_fixup_amd_ehci_pme);
+>  
+> +/*
+> + * Device [1022:7914]
+> + * D0 PME# doesn't get asserted when plugging USB 2.0 device.
+> + */
+> +static void pci_fixup_amd_fch_xhci_pme(struct pci_dev *dev)
+> +{
+> +	dev_info(&dev->dev, "PME# does not work under D0, disabling it\n");
+
+Use pci_info() as in the rest of the file.
+
+> +	dev->pme_support &= ~(PCI_PM_CAP_PME_D0 >> PCI_PM_CAP_PME_SHIFT);
+> +}
+> +DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_AMD, 0x7914, pci_fixup_amd_fch_xhci_pme);
+> +
+>  /*
+>   * Apple MacBook Pro: Avoid [mem 0x7fa00000-0x7fbfffff]
+>   *
+> -- 
+> 2.17.1
 > 
-> INTERRUPT DISABLING FUNCTIONS
-> -----------------------------
-> 
-> Functions that disable interrupts (ACQUIRE equivalent) and enable interrupts
-> (RELEASE equivalent) will act as compiler barriers only.  So if memory or I/O
-> barriers are required in such a situation, they must be provided from some
-> other means.
-> 
-> btw, I'm really sorry I missed your responses over the last 3 or 4 days.
-> I just tracked down something in our email system that was sometimes
-> moving some emails to spam (just few enough to escape immediate attention, argghh!).
-> I think I killed it off for good now. I wasn't ignoring you. :)
-
-Thanks, John. I agree with all you said, including the irq disabling
-function not being a sufficient smp_rmb().
-
-I was hoping somebody could clarify whether ipi handlers used by tlb
-flush are sufficient to prevent CPU 1 from seeing any stale data from
-freed page tables on all supported archs.
-
-	CPU 1			CPU 2
-
-				flush remote tlb by ipi
-				wait for the ipi hanlder
-	<ipi handler>
-				free page table
-	disable irq
-	walk page table
-	enable irq
-
-I think they should because otherwise tlb flush wouldn't work if CPU 1
-still sees stale data from the freed page table, unless there is a
-really strange CPU cache design I'm not aware of.
-
-Quoting comments from x86 ipi handler flush_tlb_func_common():
- * read active_mm's tlb_gen.  We don't need any explicit barriers
- * because all x86 flush operations are serializing and the
- * atomic64_read operation won't be reordered by the compiler.
-
-For ppc64 ipi hander radix__flush_tlb_range(), there is an "eieio"
-instruction:
-  https://www.ibm.com/support/knowledgecenter/en/ssw_aix_72/assembler/idalangref_eieio_instrs.html
-I'm not sure why it's not "sync" -- I'd guess something implicitly
-works as "sync" already (or it's a bug).
-
-I didn't find an ipi handler for tlb flush on arm64. There should be
-one, otherwise fast gup on arm64 would be broken. Mark?
