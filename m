@@ -2,80 +2,114 @@ Return-Path: <SRS0=zem1=X3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A45D4C4360C
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 21:22:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C5D3C4360C
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 21:23:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 67A2421783
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 21:22:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 204FE218DE
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 21:23:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=android.com header.i=@android.com header.b="bNDdQgB1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729502AbfJBVWQ (ORCPT
+        id S1729511AbfJBVXM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Oct 2019 17:22:16 -0400
-Received: from shards.monkeyblade.net ([23.128.96.9]:37100 "EHLO
-        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728713AbfJBVWQ (ORCPT
+        Wed, 2 Oct 2019 17:23:12 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:35859 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728967AbfJBVXM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Oct 2019 17:22:16 -0400
-Received: from localhost (unknown [IPv6:2601:601:9f00:1e2::3d5])
-        (using TLSv1 with cipher AES256-SHA (256/256 bits))
-        (Client did not present a certificate)
-        (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id 7DF32154F41D6;
-        Wed,  2 Oct 2019 14:22:15 -0700 (PDT)
-Date:   Wed, 02 Oct 2019 14:22:14 -0700 (PDT)
-Message-Id: <20191002.142214.252882219207569928.davem@davemloft.net>
-To:     yzhai003@ucr.edu
-Cc:     csong@cs.ucr.edu, zhiyunq@cs.ucr.edu, yisen.zhuang@huawei.com,
-        salil.mehta@huawei.com, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] net: hisilicon: Fix usage of uninitialized variable in
- function mdio_sc_cfg_reg_write()
-From:   David Miller <davem@davemloft.net>
-In-Reply-To: <20191001202439.15766-1-yzhai003@ucr.edu>
-References: <20191001202439.15766-1-yzhai003@ucr.edu>
-X-Mailer: Mew version 6.8 on Emacs 26.1
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Wed, 02 Oct 2019 14:22:15 -0700 (PDT)
+        Wed, 2 Oct 2019 17:23:12 -0400
+Received: by mail-pf1-f195.google.com with SMTP id y22so296412pfr.3
+        for <linux-kernel@vger.kernel.org>; Wed, 02 Oct 2019 14:23:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=android.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=gkWD3FKbpCaOmlNmSaWAbFMYVFKw7GUZL8P7zrFBNqw=;
+        b=bNDdQgB1uj+hDptnsbMFd59gnpNWR4vY0/rGDWxRSZe+7SPnTYVU83wv2B3aAW15Hq
+         StO8G/DST6AQmmlP5rEye2vkKzHCaLS+rDDb6yQ8CxwYyxjBWOCt8nE2Mg96EVRcXHK1
+         qcoxrjXlUKY5CkT20yAWGWdCXiJLSy6+nErDCRr6rmNH6R7XHvAx0hs6z4RLkuQHE5GW
+         HBXbnNdUz62+Y4QBAI0DpToAg8/WmZsdEdsSFalCXR/OpmZYg06AL0bxURTAYWJQJYDu
+         TczibJyc4uxD47jqI7+iWcK23IlUcyBxO5VaSMCcm28yZVml06jXRAaZ4VOnWl1aVQ3P
+         Z9nw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=gkWD3FKbpCaOmlNmSaWAbFMYVFKw7GUZL8P7zrFBNqw=;
+        b=Y7i42KgmA/iZfX0j7gp6MU6XNcYAOJ0H1BF/zBv5djDmFvCbD+nnbTHoL7FaL20hwi
+         hsfuYV2DD4ekmsBImdeHT5Kt7qY1SsNXnET361dRQcLwcBXnVC/zWFp5e23k8SzbEuKx
+         das+ARW7QDM6EqO2sRnTArfq5opG1fNvkJAAYVXZ5ygXKUxHhjGwvizd90unhu9QS0re
+         86ZmDxcV8S0H5NMKwwR9nKPanKtRWknct0O+ZaNZje2bYpGeeFlPGtwmAxodu22JSvyd
+         lvssjbjMO/bIdqU06d712mzqM0zddVYjb3NXonrHegkRXJ+GuAaaFra4sNOKWdSCdL3X
+         1YYQ==
+X-Gm-Message-State: APjAAAXyGLmQOdR2VfGEkOksKGizjsZWa1GHqtLP0xGv6teB48Qwi+Le
+        lFju5qPadnA2LAaF4QmA7iqsrEcehDSOhg==
+X-Google-Smtp-Source: APXvYqzO0DSoowzhXSE00O5GdA1VH41PU6/vpYojcKIASrsGipsud0fd1iiHtjmW/PZKRsSyOaET9g==
+X-Received: by 2002:a63:1e1e:: with SMTP id e30mr5528008pge.405.1570051388864;
+        Wed, 02 Oct 2019 14:23:08 -0700 (PDT)
+Received: from nebulus.mtv.corp.google.com ([2620:15c:211:200:5404:91ba:59dc:9400])
+        by smtp.gmail.com with ESMTPSA id j22sm297855pgg.16.2019.10.02.14.23.07
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 02 Oct 2019 14:23:08 -0700 (PDT)
+From:   Mark Salyzyn <salyzyn@android.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     kernel-team@android.com, Mark Salyzyn <salyzyn@android.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Yue Hu <huyue2@yulong.com>, Mike Rapoport <rppt@linux.ibm.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ryohei Suzuki <ryh.szk.cmnty@gmail.com>,
+        Doug Berger <opendmb@gmail.com>,
+        Andrey Konovalov <andreyknvl@google.com>,
+        Peng Fan <peng.fan@nxp.com>, linux-mm@kvack.org
+Subject: [PATCH] mm: export cma alloc and release
+Date:   Wed,  2 Oct 2019 14:22:48 -0700
+Message-Id: <20191002212257.196849-1-salyzyn@android.com>
+X-Mailer: git-send-email 2.23.0.581.g78d2f28ef7-goog
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yizhuo <yzhai003@ucr.edu>
-Date: Tue,  1 Oct 2019 13:24:39 -0700
+Some drivers can not be turned into a module without cma_alloc and
+cma_release exported.  Examples include ion, and we also found some
+out of tree infiniband and camera drivers.
 
-> In function mdio_sc_cfg_reg_write(), variable "reg_value" could be
-> uninitialized if regmap_read() fails. However, "reg_value" is used
-> to decide the control flow later in the if statement, which is
-> potentially unsafe.
-> 
-> Signed-off-by: Yizhuo <yzhai003@ucr.edu>
+Signed-off-by: Mark Salyzyn <salyzyn@android.com>
+Cc: kernel-team@android.com
+Cc: linux-kernel@vger.kernel.org
+---
+ mm/cma.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-Applied, but really this is such a pervasive problem.
+diff --git a/mm/cma.c b/mm/cma.c
+index 7fe0b8356775..65d830eea3b1 100644
+--- a/mm/cma.c
++++ b/mm/cma.c
+@@ -500,6 +500,7 @@ struct page *cma_alloc(struct cma *cma, size_t count, unsigned int align,
+ 	pr_debug("%s(): returned %p\n", __func__, page);
+ 	return page;
+ }
++EXPORT_SYMBOL_GPL(cma_alloc);
+ 
+ /**
+  * cma_release() - release allocated pages
+@@ -533,6 +534,7 @@ bool cma_release(struct cma *cma, const struct page *pages, unsigned int count)
+ 
+ 	return true;
+ }
++EXPORT_SYMBOL_GPL(cma_release);
+ 
+ int cma_for_each_area(int (*it)(struct cma *cma, void *data), void *data)
+ {
+-- 
+2.23.0.581.g78d2f28ef7-goog
 
-So much code doesn't check the return value from either regmap_read
-or regmap_write.
-
-_EVEN_ in the code you are editing, the patch context shows an unchecked
-regmap_write() call.
-
-> @@ -148,11 +148,15 @@ static int mdio_sc_cfg_reg_write(struct hns_mdio_device *mdio_dev,
->  {
->  	u32 time_cnt;
->  	u32 reg_value;
-> +	int ret;
->  
->  	regmap_write(mdio_dev->subctrl_vbase, cfg_reg, set_val);
-        ^^^^^^^^^^^^
-
-Grepping for regmap_{read,write}() shows how big an issue this is.
-
-I don't know what to do, maybe we can work over time to add checks to
-all calls and then force warnings on unchecked return values so that
-the problem is not introduced in the future.
