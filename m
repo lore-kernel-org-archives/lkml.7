@@ -2,98 +2,90 @@ Return-Path: <SRS0=zem1=X3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A0F3C352AA
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 12:34:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54836C352AA
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 12:35:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 16B7B21D7B
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 12:34:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570019651;
-	bh=Hcr8/BgFHkH04GeUF/ksFgRmU2LHVysqMdnCjrTDy4Q=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=iWdvc0+UUy3gLgSJSOmslHGSM944a1Zx8XoSfzG/8DNT+dQnGg2kZ9cuxnqY/dBbP
-	 /CNpNUXhnoJb2n3Wmm+8UO+qvh9ii3pHC3G3bTJmKBuhG2DGFtDJ0NQ5YxvKqmW2cP
-	 hOnVVEZ6El2tMrWgQGLxjl1rAAOuxHx9Ua2SuExk=
+	by mail.kernel.org (Postfix) with ESMTP id 2C8C02133F
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 12:35:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726902AbfJBMeK (ORCPT
+        id S1726928AbfJBMfU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Oct 2019 08:34:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34504 "EHLO mail.kernel.org"
+        Wed, 2 Oct 2019 08:35:20 -0400
+Received: from mga11.intel.com ([192.55.52.93]:22111 "EHLO mga11.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725765AbfJBMeJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Oct 2019 08:34:09 -0400
-Received: from localhost.localdomain (cpe-70-114-128-244.austin.res.rr.com [70.114.128.244])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CBE6D2133F;
-        Wed,  2 Oct 2019 12:34:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570019649;
-        bh=Hcr8/BgFHkH04GeUF/ksFgRmU2LHVysqMdnCjrTDy4Q=;
-        h=From:To:Cc:Subject:Date:From;
-        b=gx4FyY5nPBmmWoSH2Eg90I3B1GOqMzHr/VGT3TzxQrelIWIU4cTilrHD1IGeKzhDm
-         pTa61pYXrgfxhup0cYM52pTHRCGZlqltDqVHjDIFi1jv7yPijWREJDaSALciCvMeqm
-         03ZkuejCqo/jXpug5SnRx57DYGGO4Y6z8UQMwFXI=
-From:   Dinh Nguyen <dinguyen@kernel.org>
-To:     linux@armlinux.org.uk
-Cc:     dinguyen@kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, linus.walleij@linaro.org,
-        p.zabel@pengutronix.de, thor.thayer@linux.intel.com
-Subject: [PATCHv2] ARM: drivers/amba: release the resource to allow for deferred probe
-Date:   Wed,  2 Oct 2019 07:33:49 -0500
-Message-Id: <20191002123349.23771-1-dinguyen@kernel.org>
-X-Mailer: git-send-email 2.20.0
+        id S1725765AbfJBMfU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 2 Oct 2019 08:35:20 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 02 Oct 2019 05:35:19 -0700
+X-IronPort-AV: E=Sophos;i="5.64,574,1559545200"; 
+   d="scan'208";a="195993400"
+Received: from paasikivi.fi.intel.com ([10.237.72.42])
+  by orsmga006-auth.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 02 Oct 2019 05:35:16 -0700
+Received: by paasikivi.fi.intel.com (Postfix, from userid 1000)
+        id 7657420976; Wed,  2 Oct 2019 15:35:13 +0300 (EEST)
+Date:   Wed, 2 Oct 2019 15:35:13 +0300
+From:   Sakari Ailus <sakari.ailus@linux.intel.com>
+To:     Benoit Parrot <bparrot@ti.com>
+Cc:     Jacopo Mondi <jacopo@jmondi.org>,
+        Hans Verkuil <hverkuil@xs4all.nl>, linux-media@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        hugues.fruchet@st.com
+Subject: Re: [Patch 1/3] media: ov5640: add PIXEL_RATE control
+Message-ID: <20191002123513.GI972@paasikivi.fi.intel.com>
+References: <20190925152301.21645-1-bparrot@ti.com>
+ <20190925152301.21645-2-bparrot@ti.com>
+ <20191001075704.GA5449@paasikivi.fi.intel.com>
+ <20191001162341.f2o7ruar2nifl5ws@ti.com>
+ <20191002075951.afp2xligspqat4ew@uno.localdomain>
+ <20191002121438.g3re6v54q4hit2wv@ti.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191002121438.g3re6v54q4hit2wv@ti.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-With commit "79bdcb202a35 ARM: 8906/1: drivers/amba: add reset control to
-amba bus probe", the amba bus driver needs to be deferred probe because the
-reset driver is probed later. However with a deferred probe, the call to
-request_resource() in the driver returns -EBUSY. The reason is the driver
-has not released the resource from the previous probe attempt.
+Hi Benoit,
 
-This patch fixes how we handle the condition of EPROBE_DEFER that is returned
-from getting the reset controls. For this condition, the patch will jump
-to err_release, which will release the resource.
+On Wed, Oct 02, 2019 at 07:14:38AM -0500, Benoit Parrot wrote:
+> Hi Jacopo,
+> 
+> Maybe, I miss spoke when I mentioned a helper I did not intent a framework
+> level generic function. Just a function to help in this case :)
+> 
+> That being said, I re-read the thread you mentioned. And as Hughes pointed
+> out dynamically generating a "working" link frequency value which can be
+> used by a CSI2 receiver to properly configure its PHY is not trivial.
+> 
+> When I created this patch, I also had another to add V4L2_CID_LINK_FREQ
+> support. I am testing this against the TI CAL CSI2 receiver, which already
+> uses the V4L2_CID_PIXEL_RATE value for that purpose, so I also had a patch
+> to add support for V4L2_CID_LINK_FREQ to that driver as well.
+> 
+> Unfortunately, similar to Hughes' findings I was not able to make it "work"
+> with all supported resolution/framerate.
+> 
+> Unlike my V4L2_CID_PIXEL_RATE solution which now works in all mode with the
+> same receiver.
+> 
+> So long story short I dropped the V4L2_CID_LINK_FREQ patch and focused on
+> V4L2_CID_PIXEL_RATE instead.
 
-Fixes: 79bdcb202a35 ("ARM: 8906/1: drivers/amba: add reset control to
-amba bus probe")
-Signed-off-by: Dinh Nguyen <dinguyen@kernel.org>
----
-v2: release the resource when of_reset_control_array_get_optional_shared()
-    returns EPROBE_DEFER
----
- drivers/amba/bus.c | 7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
+It shouldn't make a difference which one you use; if you know the bus type
+(and if it's CSI-2 with D-PHY, number of lanes and how many bits per pixel
+the media bus format has), you can convert fairly trivially between the
+two.
 
-diff --git a/drivers/amba/bus.c b/drivers/amba/bus.c
-index f39f075abff9..1109437815eb 100644
---- a/drivers/amba/bus.c
-+++ b/drivers/amba/bus.c
-@@ -409,9 +409,12 @@ static int amba_device_try_add(struct amba_device *dev, struct resource *parent)
- 		 */
- 		rstc = of_reset_control_array_get_optional_shared(dev->dev.of_node);
- 		if (IS_ERR(rstc)) {
--			if (PTR_ERR(rstc) != -EPROBE_DEFER)
-+			ret = PTR_ERR(rstc);
-+			if (ret == -EPROBE_DEFER)
-+				goto err_release;
-+			else
- 				dev_err(&dev->dev, "Can't get amba reset!\n");
--			return PTR_ERR(rstc);
-+			return ret;
- 		}
- 		reset_control_deassert(rstc);
- 		reset_control_put(rstc);
 -- 
-2.20.0
-
+Sakari Ailus
+sakari.ailus@linux.intel.com
