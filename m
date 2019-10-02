@@ -2,151 +2,82 @@ Return-Path: <SRS0=zem1=X3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56486C352AA
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 07:02:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9776BC352AA
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 07:03:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 263C3205F4
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 07:02:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569999758;
-	bh=gfvMJztY6ERx8bgCJdAV+p+v7AS+PD1KWinNzWKnGaM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=DFBEk4kaLIKqwp//bY1PsMIrLZbe2lU1A4qPN0WM2Kqy8IlyrpmUhLX7fcu5N1exq
-	 iDtf04nhNMaVwVus46RFysqjP5pa5j+h5sBd465Xfb/I4TSBiZMpmV65GFjzl5QtxI
-	 +xKQ8CcyrlkP9kZ/ITB9CsR0q6+DbBR4G/XKwQ5E=
+	by mail.kernel.org (Postfix) with ESMTP id 6BCEF205F4
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 07:03:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726526AbfJBHCh (ORCPT
+        id S1726656AbfJBHDh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Oct 2019 03:02:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59796 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726010AbfJBHCh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Oct 2019 03:02:37 -0400
-Received: from rapoport-lnx (nesher1.haifa.il.ibm.com [195.110.40.7])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 31DEF205F4;
-        Wed,  2 Oct 2019 07:02:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569999755;
-        bh=gfvMJztY6ERx8bgCJdAV+p+v7AS+PD1KWinNzWKnGaM=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=INBGA54onbDExead9nvuRAysyQDSrniONlAkQrW5MCrghycHdn51SXN2Vq++k3faq
-         DOHBKBseZVjhVToyHIqEgSxM9fn7Td07CFMYvyJ2N7hNdsKQasrvxpCxtLwTV6TrY9
-         QwizayAknp/X3si6G3pYjZuq1NLFJJcDXshI6OIk=
-Date:   Wed, 2 Oct 2019 10:02:29 +0300
-From:   Mike Rapoport <rppt@kernel.org>
-To:     Paul Burton <paul.burton@mips.com>
-Cc:     linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Thomas Bogendoerfer <tbogendoerfer@suse.de>
-Subject: Re: [PATCH v2] mips: sgi-ip27: switch from DISCONTIGMEM to SPARSEMEM
-Message-ID: <20191002070226.GA3897@rapoport-lnx>
-References: <1568632390-20893-1-git-send-email-rppt@kernel.org>
+        Wed, 2 Oct 2019 03:03:37 -0400
+Received: from mx2.suse.de ([195.135.220.15]:44664 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725851AbfJBHDg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 2 Oct 2019 03:03:36 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 8E2A6AE61;
+        Wed,  2 Oct 2019 07:03:34 +0000 (UTC)
+Received: by unicorn.suse.cz (Postfix, from userid 1000)
+        id D30FDE04C7; Wed,  2 Oct 2019 09:03:33 +0200 (CEST)
+Date:   Wed, 2 Oct 2019 09:03:33 +0200
+From:   Michal Kubecek <mkubecek@suse.cz>
+To:     linux-kernel@vger.kernel.org
+Cc:     Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Jiri Kosina <jikos@kernel.org>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        linux-s390@vger.kernel.org
+Subject: Re: [PATCH 5.4-rc1 BUILD FIX] s390: mark __cpacf_query() as
+ __always_inline
+Message-ID: <20191002070333.GE24815@unicorn.suse.cz>
+References: <nycvar.YFH.7.76.1910012203010.13160@cbobk.fhfr.pm>
+ <20191002064605.GA7405@osiris>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1568632390-20893-1-git-send-email-rppt@kernel.org>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <20191002064605.GA7405@osiris>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On Wed, Oct 02, 2019 at 08:46:05AM +0200, Heiko Carstens wrote:
+> On Tue, Oct 01, 2019 at 10:08:01PM +0200, Jiri Kosina wrote:
+> > 
+> >    In file included from arch/s390/kvm/kvm-s390.c:44:
+> >    ./arch/s390/include/asm/cpacf.h: In function '__cpacf_query':
+> >    ./arch/s390/include/asm/cpacf.h:179:2: warning: asm operand 3 probably doesn't match constraints
+> >      179 |  asm volatile(
+> >          |  ^~~
+> >    ./arch/s390/include/asm/cpacf.h:179:2: error: impossible constraint in 'asm'
+> > 
+> > ...
+> > 
+> > I am wondering how is it possible that none of the build-testing 
+> > infrastructure we have running against linux-next caught this? Not enough 
+> > non-x86 coverage?
+> 
+> Well, there is plenty of s390 coverage with respect to daily builds
+> (also here). It doesn't fail for me with gcc 9.1; so you may either
+> have a different gcc version or different config options(?) so the
+> compiler decided to not inline the function.
 
-Any updates on this?
+I think I found the reason: we only hit the build failure with one
+special config used for zfcpdump which has
 
-On Mon, Sep 16, 2019 at 02:13:10PM +0300, Mike Rapoport wrote:
-> From: Mike Rapoport <rppt@linux.ibm.com>
-> 
-> The memory initialization of SGI-IP27 is already half-way to support
-> SPARSEMEM. It only had free_bootmem_with_active_regions() left-overs
-> interfering with sparse_memory_present_with_active_regions().
-> 
-> Replace these calls with simpler memblocks_present() call in prom_meminit()
-> and adjust arch/mips/Kconfig to enable SPARSEMEM and SPARSEMEM_EXTREME for
-> SGI-IP27.
-> 
-> Co-developed-by: Thomas Bogendoerfer <tbogendoerfer@suse.de>
-> Signed-off-by: Thomas Bogendoerfer <tbogendoerfer@suse.de>
-> Signed-off-by: Mike Rapoport <rppt@linux.ibm.com>
-> ---
-> 
-> v2: don't add extra sparse_init() and use memblocks_present() instead of
-> sparse_memory_present_with_active_regions()
-> 
->  arch/mips/Kconfig                | 12 ++----------
->  arch/mips/sgi-ip27/ip27-memory.c |  6 ++----
->  2 files changed, 4 insertions(+), 14 deletions(-)
-> 
-> diff --git a/arch/mips/Kconfig b/arch/mips/Kconfig
-> index d50fafd..e4b02b5 100644
-> --- a/arch/mips/Kconfig
-> +++ b/arch/mips/Kconfig
-> @@ -669,6 +669,7 @@ config SGI_IP22
->  config SGI_IP27
->  	bool "SGI IP27 (Origin200/2000)"
->  	select ARCH_HAS_PHYS_TO_DMA
-> +	select ARCH_SPARSEMEM_ENABLE
->  	select FW_ARC
->  	select FW_ARC64
->  	select BOOT_ELF64
-> @@ -2633,18 +2634,9 @@ config ARCH_FLATMEM_ENABLE
->  	def_bool y
->  	depends on !NUMA && !CPU_LOONGSON2
->  
-> -config ARCH_DISCONTIGMEM_ENABLE
-> -	bool
-> -	default y if SGI_IP27
-> -	help
-> -	  Say Y to support efficient handling of discontiguous physical memory,
-> -	  for architectures which are either NUMA (Non-Uniform Memory Access)
-> -	  or have huge holes in the physical address space for other reasons.
-> -	  See <file:Documentation/vm/numa.rst> for more.
-> -
->  config ARCH_SPARSEMEM_ENABLE
->  	bool
-> -	select SPARSEMEM_STATIC
-> +	select SPARSEMEM_STATIC if !SGI_IP27
->  
->  config NUMA
->  	bool "NUMA Support"
-> diff --git a/arch/mips/sgi-ip27/ip27-memory.c b/arch/mips/sgi-ip27/ip27-memory.c
-> index fb077a9..9db8692 100644
-> --- a/arch/mips/sgi-ip27/ip27-memory.c
-> +++ b/arch/mips/sgi-ip27/ip27-memory.c
-> @@ -406,12 +406,8 @@ static void __init node_mem_init(cnodeid_t node)
->  	slot_freepfn += PFN_UP(sizeof(struct pglist_data) +
->  			       sizeof(struct hub_data));
->  
-> -	free_bootmem_with_active_regions(node, end_pfn);
-> -
->  	memblock_reserve(slot_firstpfn << PAGE_SHIFT,
->  			 ((slot_freepfn - slot_firstpfn) << PAGE_SHIFT));
-> -
-> -	sparse_memory_present_with_active_regions(node);
->  }
->  
->  /*
-> @@ -444,6 +440,8 @@ void __init prom_meminit(void)
->  		}
->  		__node_data[node] = &null_node;
->  	}
-> +
-> +	memblocks_present();
->  }
->  
->  void __init prom_free_prom_memory(void)
-> -- 
-> 2.7.4
-> 
+  CONFIG_CC_OPTIMIZE_FOR_SIZE=y
 
--- 
-Sincerely yours,
-Mike.
+When I switched to CONFIG_CC_OPTIMIZE_FOR_PERFORMANCE=y (which we have
+in other s390x configs and which most people probably prefer), the build
+does not fail even without the patch.
+
+Michal Kubecek
