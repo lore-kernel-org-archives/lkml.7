@@ -2,92 +2,75 @@ Return-Path: <SRS0=zem1=X3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA1DEC35280
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 13:13:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 157A8C35280
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 13:14:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8DCFB21A4A
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 13:13:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570021984;
-	bh=3e4qjCD59H59r+JQxF+7cnk3Ugzw2q1azgwC+2Vshl0=;
-	h=Date:From:To:Cc:Subject:List-ID:From;
-	b=f4IK8IinNIxp6AsKlcYcLPw+BS+gL1/egXsS4YaGE2f2FXz1vxiSM/wK0tRHp83yM
-	 vRWEpuN5OsJ2T3k/sZbhBwlwjal8vI/31sbkwL7XR+uQDoC6U4mPTw8r5PIHnmn8zi
-	 cUQD/ymVr7v1TOs93zbDDTUDqolqdy2aFQ0EORdQ=
+	by mail.kernel.org (Postfix) with ESMTP id EB2B821A4C
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 13:14:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727201AbfJBNND (ORCPT
+        id S1727585AbfJBNOx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Oct 2019 09:13:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43290 "EHLO mail.kernel.org"
+        Wed, 2 Oct 2019 09:14:53 -0400
+Received: from mga11.intel.com ([192.55.52.93]:24909 "EHLO mga11.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725975AbfJBNND (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Oct 2019 09:13:03 -0400
-Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 03A5421920;
-        Wed,  2 Oct 2019 13:13:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570021982;
-        bh=3e4qjCD59H59r+JQxF+7cnk3Ugzw2q1azgwC+2Vshl0=;
-        h=Date:From:To:Cc:Subject:From;
-        b=a/Lp9Dn88fyyGRkxwEghkROxDPyppdGB9hjgASPc9EA9nzyvZnjCI4VZ3Dw8i5ybn
-         c1Aw85yc4ay9Ncc/TLwJH0nbmFMH33z4g0BVMpMEpmB+AYUbgEO7nIWTcQcAH3vaNW
-         lnGJgfDoF6qfGj8305AFPbSPAYwhHDZrpAiKKXFw=
-Date:   Wed, 2 Oct 2019 14:12:59 +0100
-From:   Will Deacon <will@kernel.org>
-To:     joro@8bytes.org
-Cc:     robin.murphy@arm.com, iommu@lists.linux-foundation.org,
-        linux-kernel@vger.kernel.org
-Subject: [GIT PULL] iommu/arm-smmu: Fixes for 5.4-rc2
-Message-ID: <20191002131258.ne5r6clp7hq6lxmx@willie-the-truck>
+        id S1727134AbfJBNOw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 2 Oct 2019 09:14:52 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 02 Oct 2019 06:14:52 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,574,1559545200"; 
+   d="scan'208";a="191798092"
+Received: from jsakkine-mobl1.tm.intel.com (HELO localhost) ([10.237.50.158])
+  by fmsmga007.fm.intel.com with ESMTP; 02 Oct 2019 06:14:50 -0700
+From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+To:     linux-stabley@vger.kernel.org
+Cc:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        Jason Gunthorpe <jgunthorpe@obsidianresearch.com>,
+        linux-integrity@vger.kernel.org (open list:TPM DEVICE DRIVER),
+        linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH 0/3] tpm: Fix TPM 1.2 Shutdown sequence to prevent future TPM operations
+Date:   Wed,  2 Oct 2019 16:14:41 +0300
+Message-Id: <20191002131445.7793-1-jarkko.sakkinen@linux.intel.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: NeoMutt/20170113 (1.7.2)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Joerg,
+commit db4d8cb9c9f2af71c4d087817160d866ed572cc9 upstream
 
-Please can you pull these three arm-smmu fixes for -rc2? They fix a
-missing resource free on an error path and some page-table issues with
-MALI GPUs including broken cacheability attributes and malformed tree
-structure with smaller virtual address ranges.
+This backport is for v4.14 and v4.19 The backport requires non-racy
+behaviour from TPM 1.x sysfs code. Thus, the dependecies for that
+are included.
 
-Thanks,
+NOTE: 1/3 is only needed for v4.14.
 
-Will
+v2:
+* Something happened when merging 3/3 that write lock was taken
+  twice. Fixed in this version. Did also sanity check test with
+  TPM2:
+  echo devices > /sys/power/pm_test && echo mem > /sys/power/state
 
---->8
+Jarkko Sakkinen (2):
+  tpm: migrate pubek_show to struct tpm_buf
+  tpm: use tpm_try_get_ops() in tpm-sysfs.c.
 
-The following changes since commit 54ecb8f7028c5eb3d740bb82b0f1d90f2df63c5c:
+Vadim Sukhomlinov (1):
+  tpm: Fix TPM 1.2 Shutdown sequence to prevent future TPM operations
 
-  Linux 5.4-rc1 (2019-09-30 10:35:40 -0700)
+ drivers/char/tpm/tpm-chip.c  |   5 +-
+ drivers/char/tpm/tpm-sysfs.c | 201 +++++++++++++++++++++--------------
+ drivers/char/tpm/tpm.h       |  13 ---
+ 3 files changed, 124 insertions(+), 95 deletions(-)
 
-are available in the Git repository at:
+-- 
+2.20.1
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/will/linux.git for-joerg/arm-smmu/fixes
-
-for you to fetch changes up to 1be08f458d1602275b02f5357ef069957058f3fd:
-
-  iommu/io-pgtable-arm: Support all Mali configurations (2019-10-01 12:16:47 +0100)
-
-----------------------------------------------------------------
-Liu Xiang (1):
-      iommu/arm-smmu: Free context bitmap in the err path of arm_smmu_init_domain_context
-
-Robin Murphy (2):
-      iommu/io-pgtable-arm: Correct Mali attributes
-      iommu/io-pgtable-arm: Support all Mali configurations
-
- drivers/iommu/arm-smmu.c       |  1 +
- drivers/iommu/io-pgtable-arm.c | 58 ++++++++++++++++++++++++++++++++----------
- 2 files changed, 46 insertions(+), 13 deletions(-)
