@@ -2,67 +2,112 @@ Return-Path: <SRS0=zem1=X3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AF51BC35280
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 08:33:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A26A3C352AA
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 08:33:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9242B206C0
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 08:33:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 743EA218DE
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 08:33:54 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="ig5Wa0bH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727797AbfJBIdo (ORCPT
+        id S1727810AbfJBIdx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Oct 2019 04:33:44 -0400
-Received: from mx2.suse.de ([195.135.220.15]:34512 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725919AbfJBIdm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Oct 2019 04:33:42 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 25490B0B7;
-        Wed,  2 Oct 2019 08:33:41 +0000 (UTC)
-From:   Michal Suchanek <msuchanek@suse.de>
-To:     alsa-devel@alsa-project.org
-Cc:     Michal Suchanek <msuchanek@suse.de>, Vinod Koul <vkoul@kernel.org>,
-        Sanyog Kale <sanyog.r.kale@intel.com>,
-        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-        stable@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 2/2] soundwire: depend on ACPI || OF
-Date:   Wed,  2 Oct 2019 10:33:30 +0200
-Message-Id: <91e2fc425e0dea92d7f131da890e52af273de36c.1570005196.git.msuchanek@suse.de>
+        Wed, 2 Oct 2019 04:33:53 -0400
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:44090 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725919AbfJBIdx (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 2 Oct 2019 04:33:53 -0400
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id x928XoTr028711;
+        Wed, 2 Oct 2019 03:33:50 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1570005231;
+        bh=Lx0PqOkFZnRlGG1vEvlWMVTGc+q6HEDxj3c2tzG4bLs=;
+        h=From:To:CC:Subject:Date;
+        b=ig5Wa0bHgog0DDzmgvazjkSpYC2YGavFl4c7/gUGUm+KvhGYzcBkRcLAjsdv7QT3s
+         XarlGThelfpXo8AAGr5LNBimXDeqrh4mAysaOSmyybopAY2dOSZqnvLoOlsZ/tALI1
+         VJIi7fZSXLFVFT2NRXblKigV84Z6QvOiKpGQxdlk=
+Received: from DLEE107.ent.ti.com (dlee107.ent.ti.com [157.170.170.37])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x928Xohi093820
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 2 Oct 2019 03:33:50 -0500
+Received: from DLEE100.ent.ti.com (157.170.170.30) by DLEE107.ent.ti.com
+ (157.170.170.37) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Wed, 2 Oct
+ 2019 03:33:50 -0500
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE100.ent.ti.com
+ (157.170.170.30) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Wed, 2 Oct 2019 03:33:50 -0500
+Received: from feketebors.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id x928Xlts014195;
+        Wed, 2 Oct 2019 03:33:48 -0500
+From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
+To:     <t-kristo@ti.com>, <mturquette@baylibre.com>
+CC:     <sboyd@kernel.org>, <linux-omap@vger.kernel.org>,
+        <linux-clk@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: [PATCH v2] clk: ti: dra7-atl-clock: Remove ti_clk_add_alias call
+Date:   Wed, 2 Oct 2019 11:34:36 +0300
+Message-ID: <20191002083436.10194-1-peter.ujfalusi@ti.com>
 X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20191002081717.GA4015@kitsune.suse.cz>
-References: <20191002081717.GA4015@kitsune.suse.cz>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Now devicetree is supposrted for probing sondwire as well.
+ti_clk_register() calls it already so the driver should not create
+duplicated alias.
 
-Fixes: a2e484585ad3 ("soundwire: core: add device tree support for slave devices")
-Signed-off-by: Michal Suchanek <msuchanek@suse.de>
+Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
 ---
- drivers/soundwire/Kconfig | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Hi,
 
-diff --git a/drivers/soundwire/Kconfig b/drivers/soundwire/Kconfig
-index c73bfbaa2659..c8c80df090d1 100644
---- a/drivers/soundwire/Kconfig
-+++ b/drivers/soundwire/Kconfig
-@@ -5,7 +5,7 @@
+changes since v1:
+- removed unused ret variable
+
+Regards,
+Peter
+
+ drivers/clk/ti/clk-dra7-atl.c | 6 ------
+ 1 file changed, 6 deletions(-)
+
+diff --git a/drivers/clk/ti/clk-dra7-atl.c b/drivers/clk/ti/clk-dra7-atl.c
+index a01ca9395179..f65e16c4f3c4 100644
+--- a/drivers/clk/ti/clk-dra7-atl.c
++++ b/drivers/clk/ti/clk-dra7-atl.c
+@@ -174,7 +174,6 @@ static void __init of_dra7_atl_clock_setup(struct device_node *node)
+ 	struct clk_init_data init = { NULL };
+ 	const char **parent_names = NULL;
+ 	struct clk *clk;
+-	int ret;
  
- menuconfig SOUNDWIRE
- 	tristate "SoundWire support"
--	depends on ACPI
-+	depends on ACPI || OF
- 	help
- 	  SoundWire is a 2-Pin interface with data and clock line ratified
- 	  by the MIPI Alliance. SoundWire is used for transporting data
+ 	clk_hw = kzalloc(sizeof(*clk_hw), GFP_KERNEL);
+ 	if (!clk_hw) {
+@@ -207,11 +206,6 @@ static void __init of_dra7_atl_clock_setup(struct device_node *node)
+ 	clk = ti_clk_register(NULL, &clk_hw->hw, node->name);
+ 
+ 	if (!IS_ERR(clk)) {
+-		ret = ti_clk_add_alias(NULL, clk, node->name);
+-		if (ret) {
+-			clk_unregister(clk);
+-			goto cleanup;
+-		}
+ 		of_clk_add_provider(node, of_clk_src_simple_get, clk);
+ 		kfree(parent_names);
+ 		return;
 -- 
-2.23.0
+Peter
+
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
 
