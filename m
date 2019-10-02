@@ -2,251 +2,202 @@ Return-Path: <SRS0=zem1=X3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CFE8ECE58B
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 07:57:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6F5EC35280
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 07:58:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 15A932133F
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 07:57:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="uEYG1a06"
+	by mail.kernel.org (Postfix) with ESMTP id 8E5432133F
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 07:58:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727210AbfJBH5N (ORCPT
+        id S1727219AbfJBH6N (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Oct 2019 03:57:13 -0400
-Received: from mx08-00178001.pphosted.com ([91.207.212.93]:28180 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726283AbfJBH5N (ORCPT
+        Wed, 2 Oct 2019 03:58:13 -0400
+Received: from relay10.mail.gandi.net ([217.70.178.230]:43737 "EHLO
+        relay10.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726010AbfJBH6M (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Oct 2019 03:57:13 -0400
-Received: from pps.filterd (m0046660.ppops.net [127.0.0.1])
-        by mx08-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id x927oscW000750;
-        Wed, 2 Oct 2019 09:56:37 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
- : date : message-id : references : in-reply-to : content-type : content-id
- : content-transfer-encoding : mime-version; s=STMicroelectronics;
- bh=EBAixOOqXoAYHZaizljPUim/vdoCPa3lNWiXx9YSRHU=;
- b=uEYG1a06avl8rJoHM54pb3ZIVAgl/cTVls5w7H/RwX+UKwOHmzwOXjXLLLE2fEoU3CLl
- AUbO8//6wTUqaRJ3ZUlMgLQyKQ00epnzeYEG/5CbRutUkld/ZyrDfA4ir00ZqgvokDur
- gyhbdcZ3Or6h7dFZ8pN323FlrsUnuo3Zf3YBmYigEqz6yeSSBb7ofpt0dXiwm8BRF2nY
- IxKVTasbb+oVn2Y/+p0rwgxhE+7LFYpkdgnYXKjEbICH1JXUXTN1UT1yJqyo0wHqlSc9
- 8atlLuUUSw5xNPmEBXnflPd8R0K2u148Tw3vEPKel64Ug/ld9c4GwIJkt+y5+xV2FfAK UA== 
-Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
-        by mx08-00178001.pphosted.com with ESMTP id 2v9vnadmk1-1
-        (version=TLSv1 cipher=ECDHE-RSA-AES256-SHA bits=256 verify=NOT);
-        Wed, 02 Oct 2019 09:56:36 +0200
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id 25BE34C;
-        Wed,  2 Oct 2019 07:56:30 +0000 (GMT)
-Received: from Webmail-eu.st.com (sfhdag3node1.st.com [10.75.127.7])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 1980F2AC6FE;
-        Wed,  2 Oct 2019 09:56:30 +0200 (CEST)
-Received: from SFHDAG3NODE3.st.com (10.75.127.9) by SFHDAG3NODE1.st.com
- (10.75.127.7) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 2 Oct
- 2019 09:56:29 +0200
-Received: from SFHDAG3NODE3.st.com ([fe80::3507:b372:7648:476]) by
- SFHDAG3NODE3.st.com ([fe80::3507:b372:7648:476%20]) with mapi id
- 15.00.1347.000; Wed, 2 Oct 2019 09:56:29 +0200
-From:   Benjamin GAIGNARD <benjamin.gaignard@st.com>
-To:     Jonathan Cameron <jic23@kernel.org>, Yizhuo <yzhai003@ucr.edu>
-CC:     "csong@cs.ucr.edu" <csong@cs.ucr.edu>,
-        "zhiyunq@cs.ucr.edu" <zhiyunq@cs.ucr.edu>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        "Maxime Coquelin" <mcoquelin.stm32@gmail.com>,
-        Alexandre TORGUE <alexandre.torgue@st.com>,
-        "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>,
-        "linux-stm32@st-md-mailman.stormreply.com" 
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] iio: trigger: stm32-timer: fix the usage of uninitialized
- variables
-Thread-Topic: [PATCH] iio: trigger: stm32-timer: fix the usage of
- uninitialized variables
-Thread-Index: AQHVd8/T1FmtbRWUT0qK58d/WXGWcadFV5CAgAGFFIA=
-Date:   Wed, 2 Oct 2019 07:56:29 +0000
-Message-ID: <040e8500-0c32-97b1-8325-f299011033be@st.com>
-References: <20190930204451.28614-1-yzhai003@ucr.edu>
- <20191001094355.65d873a3@archlinux>
-In-Reply-To: <20191001094355.65d873a3@archlinux>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-user-agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
-x-ms-exchange-messagesentrepresentingtype: 1
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.75.127.49]
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <D0446124834DE342AF683861A83EF3A8@st.com>
-Content-Transfer-Encoding: base64
+        Wed, 2 Oct 2019 03:58:12 -0400
+Received: from uno.localdomain (2-224-242-101.ip172.fastwebnet.it [2.224.242.101])
+        (Authenticated sender: jacopo@jmondi.org)
+        by relay10.mail.gandi.net (Postfix) with ESMTPSA id 88340240003;
+        Wed,  2 Oct 2019 07:58:07 +0000 (UTC)
+Date:   Wed, 2 Oct 2019 09:59:51 +0200
+From:   Jacopo Mondi <jacopo@jmondi.org>
+To:     Benoit Parrot <bparrot@ti.com>
+Cc:     Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Hans Verkuil <hverkuil@xs4all.nl>, linux-media@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        hugues.fruchet@st.com
+Subject: Re: [Patch 1/3] media: ov5640: add PIXEL_RATE control
+Message-ID: <20191002075951.afp2xligspqat4ew@uno.localdomain>
+References: <20190925152301.21645-1-bparrot@ti.com>
+ <20190925152301.21645-2-bparrot@ti.com>
+ <20191001075704.GA5449@paasikivi.fi.intel.com>
+ <20191001162341.f2o7ruar2nifl5ws@ti.com>
 MIME-Version: 1.0
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,1.0.8
- definitions=2019-10-02_04:2019-10-01,2019-10-02 signatures=0
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="ikhqxt5tabr5x7tv"
+Content-Disposition: inline
+In-Reply-To: <20191001162341.f2o7ruar2nifl5ws@ti.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-DQpPbiAxMC8xLzE5IDEwOjQzIEFNLCBKb25hdGhhbiBDYW1lcm9uIHdyb3RlOg0KPiBPbiBNb24s
-IDMwIFNlcCAyMDE5IDEzOjQ0OjQ5IC0wNzAwDQo+IFlpemh1byA8eXpoYWkwMDNAdWNyLmVkdT4g
-d3JvdGU6DQo+DQo+PiBTZXZlcmFsIGZ1bmN0aW9ucyBpbiB0aGlzIGZpbGUgYXJlIHRyeWluZyB0
-byB1c2UgcmVnbWFwX3JlYWQoKSB0bw0KPj4gaW5pdGlhbGl6ZSB0aGUgc3BlY2lmaWMgdmFyaWFi
-bGUsIGhvd2V2ZXIsIGlmIHJlZ21hcF9yZWFkKCkgZmFpbHMsDQo+PiB0aGUgdmFyaWFibGUgY291
-bGQgYmUgdW5pbml0aWFsaXplZCBidXQgdXNlZCBkaXJlY3RseSwgd2hpY2ggaXMNCj4+IHBvdGVu
-dGlhbGx5IHVuc2FmZS4gVGhlIHJldHVybiB2YWx1ZSBvZiByZWdtYXBfcmVhZCgpIHNob3VsZCBi
-ZQ0KPj4gY2hlY2tlZCBhbmQgaGFuZGxlZC4gVGhpcyBwYXRjaCBmaXhlcyBtb3N0IG9mIHRoZSB1
-bmluaXRpYWxpemVkDQo+PiB2YXJpYWJsZXMsIGJ1dCB0aG9zZSBpbiBmdW5jdGlvbiBzdG0zMl90
-dF9yZWFkX2ZyZXF1ZW5jeSgpIGFyZQ0KPj4gaGFyZCB0byBoYW5kbGUgYW5kIG5lZWQgZXh0cmEg
-ZWZmb3QuDQo+Pg0KPj4gU2lnbmVkLW9mZi1ieTogWWl6aHVvIDx5emhhaTAwM0B1Y3IuZWR1Pg0K
-PiBIaSBZaXpodW8sDQo+DQo+IFRoaXMgaXMgYSBzbGlnaHRseSBpbnRlcmVzdGluZyBjYXNlLg0K
-Pg0KPiAgRnJvbSBhbiAnb2J2aW91c2x5JyBjb3JyZWN0IHBvaW50IG9mIHZpZXcsIGl0IG1ha2Vz
-IHNlbnNlIHRvDQo+IGFsd2F5cyBoYW5kbGUgdGhlIGVycm9ycyBhbmQgYXZvaWQgdGhlIHBvdGVu
-dGlhbGx5IHVuaW5pdGlhbGlzZWQNCj4gY2FzZXMuDQo+DQo+ICBGcm9tIHRoZSBwb2ludCBvZiB2
-aWV3IG9mIGEgJ2ZpeCcgd2UgbmVlZCB0byBzaG93IGlmIHRoZXNlIGNhbg0KPiBhY3R1YWxseSBo
-YXBwZW4uICBUaGVzZSBjYWxscyBhcmUgcmVnbWFwLW1taW8gc28gdGhlIGVycm9yDQo+IHBhdGgg
-aXMgaW4gY2xvY2sgZW5hYmxlIC8gZGlzYWJsZSBpZiB0aGVyZSBpcyBhIGNsb2NrIHByb3ZpZGVk
-Lg0KPiBMb29raW5nIGF0IG1mZC9zdG0tdGltZXJzLmMgdGhlcmUgaXMgYSBjbG9jayBjYWxsZWQg
-ImludCIgcHJvdmlkZWQuDQo+IE5vdyBpdCdzIHBvc3NpYmxlIHRoYXQgY2xvY2sgZW5hYmxlIGNh
-biBuZXZlciBmYWlsLCBidXQgdGhhdCBpcw0KPiBnZXR0aW5nIHRvbyBoYXJkIHRvIGNoYXNlIGRv
-d24uDQo+DQo+IEFzIHN1Y2gsIEkgdGhpbmsgdGhpcyBmaXggaXMgd29ydGh3aGlsZSwgYnV0IEkn
-bSBub3QgZ29pbmcgdG8NCj4gbWFyayBpdCBmb3Igc3RhYmxlIHdpdGhvdXQgYSByZXBvcnQgb2Yg
-aXQgYWN0dWFsbHkgYmVpbmcNCj4gcG9zc2libGUgdG8gdHJpZ2dlciBpdC4NCj4NCj4gSSdsbCBs
-ZWF2ZSB0aGlzIG9uIHRoZSBsaXN0IGZvciBhIGxpdHRsZSBsb25nZXIgdGhvdWdoIGFzIEknZCBk
-ZWZpbml0ZWx5DQo+IGxpa2UgYW4gYWNrIGZyb20gQmVuamFtaW4gb3Igc29tZW9uZSBlbHNlIG1v
-cmUgZmFtaWxpYXIgd2l0aCB0aGUgZHJpdmVyDQo+IHRoYW4gSSBhbS4NCj4NCj4gVGhhbmtzLA0K
-Pg0KPiBKb25hdGhhbg0KDQpIaSBZaXpodW8sDQoNClRoZSBvbmx5IHJlYXNvbiB0aGF0IGNvdWxk
-IGxlYWQgYSByZWdtYXBfcmVhZCB0byBmYWlsZWQgaXMgYW4gaXNzdWUgb24gDQp0aGUgY2xvY2sN
-CmJ1dCBpcyB0aGlzIGNhc2Ugd2Ugd2lsbCBiZSBibG9ja2VkIGluIHJlZ21hcF9yZWFkKCkgaXRz
-ZWxmIHNvIHRoZSBlcnJvciANCndpbGwgbmV2ZXINCmJlIGRpc3BsYXllZC4NCkZvciBtZSB0ZXN0
-aW5nIGFsbCByZWdtYXBfcmVhZCgpIHJldHVybiB2YWx1ZXMgb25seSBhZGQgY29kZSBhbmQgbm90
-IA0KYnJpbmcgYWRkaXRpb25hbCBpbmZvcm1hdGlvbnMNCnNvIEkgTkFDSyB0aGlzIHBhdGNoLg0K
-DQpCZW5qYW1pbg0KDQo+PiAtLS0NCj4+ICAgZHJpdmVycy9paW8vdHJpZ2dlci9zdG0zMi10aW1l
-ci10cmlnZ2VyLmMgfCA5OCArKysrKysrKysrKysrKysrKysrKy0tLQ0KPj4gICAxIGZpbGUgY2hh
-bmdlZCwgODUgaW5zZXJ0aW9ucygrKSwgMTMgZGVsZXRpb25zKC0pDQo+Pg0KPj4gZGlmZiAtLWdp
-dCBhL2RyaXZlcnMvaWlvL3RyaWdnZXIvc3RtMzItdGltZXItdHJpZ2dlci5jIGIvZHJpdmVycy9p
-aW8vdHJpZ2dlci9zdG0zMi10aW1lci10cmlnZ2VyLmMNCj4+IGluZGV4IGE1ZGZlNjVjZDliOS4u
-ZjhlYTdiY2JiNzM5IDEwMDY0NA0KPj4gLS0tIGEvZHJpdmVycy9paW8vdHJpZ2dlci9zdG0zMi10
-aW1lci10cmlnZ2VyLmMNCj4+ICsrKyBiL2RyaXZlcnMvaWlvL3RyaWdnZXIvc3RtMzItdGltZXIt
-dHJpZ2dlci5jDQo+PiBAQCAtMTA3LDYgKzEwNyw3IEBAIHN0YXRpYyBpbnQgc3RtMzJfdGltZXJf
-c3RhcnQoc3RydWN0IHN0bTMyX3RpbWVyX3RyaWdnZXIgKnByaXYsDQo+PiAgIAl1bnNpZ25lZCBs
-b25nIGxvbmcgcHJkLCBkaXY7DQo+PiAgIAlpbnQgcHJlc2NhbGVyID0gMDsNCj4+ICAgCXUzMiBj
-Y2VyLCBjcjE7DQo+PiArCWludCByZXQ7DQo+PiAgIA0KPj4gICAJLyogUGVyaW9kIGFuZCBwcmVz
-Y2FsZXIgdmFsdWVzIGRlcGVuZHMgb2YgY2xvY2sgcmF0ZSAqLw0KPj4gICAJZGl2ID0gKHVuc2ln
-bmVkIGxvbmcgbG9uZyljbGtfZ2V0X3JhdGUocHJpdi0+Y2xrKTsNCj4+IEBAIC0xMzIsMTEgKzEz
-MywyMSBAQCBzdGF0aWMgaW50IHN0bTMyX3RpbWVyX3N0YXJ0KHN0cnVjdCBzdG0zMl90aW1lcl90
-cmlnZ2VyICpwcml2LA0KPj4gICAJfQ0KPj4gICANCj4+ICAgCS8qIENoZWNrIGlmIG5vYm9keSBl
-bHNlIHVzZSB0aGUgdGltZXIgKi8NCj4+IC0JcmVnbWFwX3JlYWQocHJpdi0+cmVnbWFwLCBUSU1f
-Q0NFUiwgJmNjZXIpOw0KPj4gKwlyZXQgPSByZWdtYXBfcmVhZChwcml2LT5yZWdtYXAsIFRJTV9D
-Q0VSLCAmY2Nlcik7DQo+PiArCWlmIChyZXQpIHsNCj4+ICsJCWRldl9lcnIocHJpdi0+ZGV2LCAi
-ZmFpbCB0byByZWFkIFRJTV9DQ0VSLlxuIik7DQo+PiArCQlyZXR1cm4gcmV0Ow0KPj4gKwl9DQo+
-PiArDQo+PiAgIAlpZiAoY2NlciAmIFRJTV9DQ0VSX0NDWEUpDQo+PiAgIAkJcmV0dXJuIC1FQlVT
-WTsNCj4+ICAgDQo+PiAtCXJlZ21hcF9yZWFkKHByaXYtPnJlZ21hcCwgVElNX0NSMSwgJmNyMSk7
-DQo+PiArCXJldCA9IHJlZ21hcF9yZWFkKHByaXYtPnJlZ21hcCwgVElNX0NSMSwgJmNyMSk7DQo+
-PiArCWlmIChyZXQpIHsNCj4+ICsJCWRldl9lcnIocHJpdi0+ZGV2LCAiZmFpbCB0byByZWFkIFRJ
-TV9DUjEuXG4iKTsNCj4+ICsJCXJldHVybiByZXQ7DQo+PiArCX0NCj4+ICsNCj4+ICAgCWlmICgh
-KGNyMSAmIFRJTV9DUjFfQ0VOKSkNCj4+ICAgCQljbGtfZW5hYmxlKHByaXYtPmNsayk7DQo+PiAg
-IA0KPj4gQEAgLTE2NCwxMiArMTc1LDIzIEBAIHN0YXRpYyBpbnQgc3RtMzJfdGltZXJfc3RhcnQo
-c3RydWN0IHN0bTMyX3RpbWVyX3RyaWdnZXIgKnByaXYsDQo+PiAgIHN0YXRpYyB2b2lkIHN0bTMy
-X3RpbWVyX3N0b3Aoc3RydWN0IHN0bTMyX3RpbWVyX3RyaWdnZXIgKnByaXYpDQo+PiAgIHsNCj4+
-ICAgCXUzMiBjY2VyLCBjcjE7DQo+PiArCWludCByZXQ7DQo+PiArDQo+PiArCXJldCA9IHJlZ21h
-cF9yZWFkKHByaXYtPnJlZ21hcCwgVElNX0NDRVIsICZjY2VyKTsNCj4+ICsJaWYgKHJldCkgew0K
-Pj4gKwkJZGV2X2Vycihwcml2LT5kZXYsICJGYWlsIHRvIHJlYWQgVElNX0NDRVIuXG4iKTsNCj4+
-ICsJCXJldHVybjsNCj4+ICsJfQ0KPj4gICANCj4+IC0JcmVnbWFwX3JlYWQocHJpdi0+cmVnbWFw
-LCBUSU1fQ0NFUiwgJmNjZXIpOw0KPj4gICAJaWYgKGNjZXIgJiBUSU1fQ0NFUl9DQ1hFKQ0KPj4g
-ICAJCXJldHVybjsNCj4+ICAgDQo+PiAtCXJlZ21hcF9yZWFkKHByaXYtPnJlZ21hcCwgVElNX0NS
-MSwgJmNyMSk7DQo+PiArCXJldCA9IHJlZ21hcF9yZWFkKHByaXYtPnJlZ21hcCwgVElNX0NSMSwg
-JmNyMSk7DQo+PiArCWlmIChyZXQpIHsNCj4+ICsJCWRldl9lcnIocHJpdi0+ZGV2LCAiRmFpbCB0
-byByZWFkIFRJTV9DUjEuXG4iKTsNCj4+ICsJCXJldHVybjsNCj4+ICsJfQ0KPj4gKw0KPj4gICAJ
-aWYgKGNyMSAmIFRJTV9DUjFfQ0VOKQ0KPj4gICAJCWNsa19kaXNhYmxlKHByaXYtPmNsayk7DQo+
-PiAgIA0KPj4gQEAgLTQwMywyMCArNDI1LDM2IEBAIHN0YXRpYyBpbnQgc3RtMzJfY291bnRlcl9y
-ZWFkX3JhdyhzdHJ1Y3QgaWlvX2RldiAqaW5kaW9fZGV2LA0KPj4gICB7DQo+PiAgIAlzdHJ1Y3Qg
-c3RtMzJfdGltZXJfdHJpZ2dlciAqcHJpdiA9IGlpb19wcml2KGluZGlvX2Rldik7DQo+PiAgIAl1
-MzIgZGF0Ow0KPj4gKwlpbnQgcmV0Ow0KPj4gICANCj4+ICAgCXN3aXRjaCAobWFzaykgew0KPj4g
-ICAJY2FzZSBJSU9fQ0hBTl9JTkZPX1JBVzoNCj4+IC0JCXJlZ21hcF9yZWFkKHByaXYtPnJlZ21h
-cCwgVElNX0NOVCwgJmRhdCk7DQo+PiArCQlyZXQgPSByZWdtYXBfcmVhZChwcml2LT5yZWdtYXAs
-IFRJTV9DTlQsICZkYXQpOw0KPj4gKwkJaWYgKHJldCkgew0KPj4gKwkJCWRldl9lcnIocHJpdi0+
-ZGV2LCAiZmFpbCB0byByZWFkIFRJTV9DTlQuXG4iKTsNCj4+ICsJCQlyZXR1cm4gcmV0Ow0KPj4g
-KwkJfQ0KPj4gKw0KPj4gICAJCSp2YWwgPSBkYXQ7DQo+PiAgIAkJcmV0dXJuIElJT19WQUxfSU5U
-Ow0KPj4gICANCj4+ICAgCWNhc2UgSUlPX0NIQU5fSU5GT19FTkFCTEU6DQo+PiAtCQlyZWdtYXBf
-cmVhZChwcml2LT5yZWdtYXAsIFRJTV9DUjEsICZkYXQpOw0KPj4gKwkJcmV0ID0gcmVnbWFwX3Jl
-YWQocHJpdi0+cmVnbWFwLCBUSU1fQ1IxLCAmZGF0KTsNCj4+ICsJCWlmIChyZXQpIHsNCj4+ICsJ
-CQlkZXZfZXJyKHByaXYtPmRldiwgImZhaWwgdG8gcmVhZCBUSU1fQ1IxLlxuIik7DQo+PiArCQkJ
-cmV0dXJuIHJldDsNCj4+ICsJCX0NCj4+ICsNCj4+ICAgCQkqdmFsID0gKGRhdCAmIFRJTV9DUjFf
-Q0VOKSA/IDEgOiAwOw0KPj4gICAJCXJldHVybiBJSU9fVkFMX0lOVDsNCj4+ICAgDQo+PiAgIAlj
-YXNlIElJT19DSEFOX0lORk9fU0NBTEU6DQo+PiAtCQlyZWdtYXBfcmVhZChwcml2LT5yZWdtYXAs
-IFRJTV9TTUNSLCAmZGF0KTsNCj4+ICsJCXJldCA9IHJlZ21hcF9yZWFkKHByaXYtPnJlZ21hcCwg
-VElNX1NNQ1IsICZkYXQpOw0KPj4gKwkJaWYgKHJldCkgew0KPj4gKwkJCWRldl9lcnIocHJpdi0+
-ZGV2LCAiZmFpbCB0byByZWFkIFRJTV9TTUNSLlxuIik7DQo+PiArCQkJcmV0dXJuIHJldDsNCj4+
-ICsJCX0NCj4+ICsNCj4+ICAgCQlkYXQgJj0gVElNX1NNQ1JfU01TOw0KPj4gICANCj4+ICAgCQkq
-dmFsID0gMTsNCj4+IEBAIC00MzgsNiArNDc2LDcgQEAgc3RhdGljIGludCBzdG0zMl9jb3VudGVy
-X3dyaXRlX3JhdyhzdHJ1Y3QgaWlvX2RldiAqaW5kaW9fZGV2LA0KPj4gICB7DQo+PiAgIAlzdHJ1
-Y3Qgc3RtMzJfdGltZXJfdHJpZ2dlciAqcHJpdiA9IGlpb19wcml2KGluZGlvX2Rldik7DQo+PiAg
-IAl1MzIgZGF0Ow0KPj4gKwlpbnQgcmV0Ow0KPj4gICANCj4+ICAgCXN3aXRjaCAobWFzaykgew0K
-Pj4gICAJY2FzZSBJSU9fQ0hBTl9JTkZPX1JBVzoNCj4+IEBAIC00NDksMTMgKzQ4OCwyMyBAQCBz
-dGF0aWMgaW50IHN0bTMyX2NvdW50ZXJfd3JpdGVfcmF3KHN0cnVjdCBpaW9fZGV2ICppbmRpb19k
-ZXYsDQo+PiAgIA0KPj4gICAJY2FzZSBJSU9fQ0hBTl9JTkZPX0VOQUJMRToNCj4+ICAgCQlpZiAo
-dmFsKSB7DQo+PiAtCQkJcmVnbWFwX3JlYWQocHJpdi0+cmVnbWFwLCBUSU1fQ1IxLCAmZGF0KTsN
-Cj4+ICsJCQlyZXQgPSByZWdtYXBfcmVhZChwcml2LT5yZWdtYXAsIFRJTV9DUjEsICZkYXQpOw0K
-Pj4gKwkJCWlmIChyZXQpIHsNCj4+ICsJCQkJZGV2X2Vycihwcml2LT5kZXYsICJmYWlsIHRvIHJl
-YWQgVElNX0NSMS5cbiIpOw0KPj4gKwkJCQlyZXR1cm4gcmV0Ow0KPj4gKwkJCX0NCj4+ICsNCj4+
-ICAgCQkJaWYgKCEoZGF0ICYgVElNX0NSMV9DRU4pKQ0KPj4gICAJCQkJY2xrX2VuYWJsZShwcml2
-LT5jbGspOw0KPj4gICAJCQlyZWdtYXBfdXBkYXRlX2JpdHMocHJpdi0+cmVnbWFwLCBUSU1fQ1Ix
-LCBUSU1fQ1IxX0NFTiwNCj4+ICAgCQkJCQkgICBUSU1fQ1IxX0NFTik7DQo+PiAgIAkJfSBlbHNl
-IHsNCj4+IC0JCQlyZWdtYXBfcmVhZChwcml2LT5yZWdtYXAsIFRJTV9DUjEsICZkYXQpOw0KPj4g
-KwkJCXJldCA9IHJlZ21hcF9yZWFkKHByaXYtPnJlZ21hcCwgVElNX0NSMSwgJmRhdCk7DQo+PiAr
-CQkJaWYgKHJldCkgew0KPj4gKwkJCQlkZXZfZXJyKHByaXYtPmRldiwgImZhaWwgdG8gcmVhZCBU
-SU1fQ1IxLlxuIik7DQo+PiArCQkJCXJldHVybiByZXQ7DQo+PiArCQkJfQ0KPj4gKw0KPj4gICAJ
-CQlyZWdtYXBfdXBkYXRlX2JpdHMocHJpdi0+cmVnbWFwLCBUSU1fQ1IxLCBUSU1fQ1IxX0NFTiwN
-Cj4+ICAgCQkJCQkgICAwKTsNCj4+ICAgCQkJaWYgKGRhdCAmIFRJTV9DUjFfQ0VOKQ0KPj4gQEAg
-LTUxNyw4ICs1NjYsMTMgQEAgc3RhdGljIGludCBzdG0zMl9nZXRfdHJpZ2dlcl9tb2RlKHN0cnVj
-dCBpaW9fZGV2ICppbmRpb19kZXYsDQo+PiAgIHsNCj4+ICAgCXN0cnVjdCBzdG0zMl90aW1lcl90
-cmlnZ2VyICpwcml2ID0gaWlvX3ByaXYoaW5kaW9fZGV2KTsNCj4+ICAgCXUzMiBzbWNyOw0KPj4g
-KwlpbnQgcmV0Ow0KPj4gICANCj4+IC0JcmVnbWFwX3JlYWQocHJpdi0+cmVnbWFwLCBUSU1fU01D
-UiwgJnNtY3IpOw0KPj4gKwlyZXQgPSByZWdtYXBfcmVhZChwcml2LT5yZWdtYXAsIFRJTV9TTUNS
-LCAmc21jcik7DQo+PiArCWlmIChyZXQpIHsNCj4+ICsJCWRldl9lcnIocHJpdi0+ZGV2LCAiZmFp
-bCB0byByZWFkIFRJTV9TTUNSLlxuIik7DQo+PiArCQlyZXR1cm4gcmV0Ow0KPj4gKwl9DQo+PiAg
-IA0KPj4gICAJcmV0dXJuIChzbWNyICYgVElNX1NNQ1JfU01TKSA9PSBUSU1fU01DUl9TTVMgPyAw
-IDogLUVJTlZBTDsNCj4+ICAgfQ0KPj4gQEAgLTU1Nyw2ICs2MTEsNyBAQCBzdGF0aWMgaW50IHN0
-bTMyX3NldF9lbmFibGVfbW9kZShzdHJ1Y3QgaWlvX2RldiAqaW5kaW9fZGV2LA0KPj4gICAJc3Ry
-dWN0IHN0bTMyX3RpbWVyX3RyaWdnZXIgKnByaXYgPSBpaW9fcHJpdihpbmRpb19kZXYpOw0KPj4g
-ICAJaW50IHNtcyA9IHN0bTMyX2VuYWJsZV9tb2RlMnNtcyhtb2RlKTsNCj4+ICAgCXUzMiB2YWw7
-DQo+PiArCWludCByZXQ7DQo+PiAgIA0KPj4gICAJaWYgKHNtcyA8IDApDQo+PiAgIAkJcmV0dXJu
-IHNtczsNCj4+IEBAIC01NjUsNyArNjIwLDEyIEBAIHN0YXRpYyBpbnQgc3RtMzJfc2V0X2VuYWJs
-ZV9tb2RlKHN0cnVjdCBpaW9fZGV2ICppbmRpb19kZXYsDQo+PiAgIAkgKiBlbmFibGUgY291bnRl
-ciBjbG9jaywgc28gaXQgY2FuIHVzZSBpdC4gS2VlcHMgaXQgaW4gc3luYyB3aXRoIENFTi4NCj4+
-ICAgCSAqLw0KPj4gICAJaWYgKHNtcyA9PSA2KSB7DQo+PiAtCQlyZWdtYXBfcmVhZChwcml2LT5y
-ZWdtYXAsIFRJTV9DUjEsICZ2YWwpOw0KPj4gKwkJcmV0ID0gcmVnbWFwX3JlYWQocHJpdi0+cmVn
-bWFwLCBUSU1fQ1IxLCAmdmFsKTsNCj4+ICsJCWlmIChyZXQpIHsNCj4+ICsJCQlkZXZfZXJyKHBy
-aXYtPmRldiwgImZhaWwgdG8gcmVhZCBUSU1fQ1IxLlxuIik7DQo+PiArCQkJcmV0dXJuIHJldDsN
-Cj4+ICsJCX0NCj4+ICsNCj4+ICAgCQlpZiAoISh2YWwgJiBUSU1fQ1IxX0NFTikpDQo+PiAgIAkJ
-CWNsa19lbmFibGUocHJpdi0+Y2xrKTsNCj4+ICAgCX0NCj4+IEBAIC01OTQsOCArNjU0LDE0IEBA
-IHN0YXRpYyBpbnQgc3RtMzJfZ2V0X2VuYWJsZV9tb2RlKHN0cnVjdCBpaW9fZGV2ICppbmRpb19k
-ZXYsDQo+PiAgIHsNCj4+ICAgCXN0cnVjdCBzdG0zMl90aW1lcl90cmlnZ2VyICpwcml2ID0gaWlv
-X3ByaXYoaW5kaW9fZGV2KTsNCj4+ICAgCXUzMiBzbWNyOw0KPj4gKwlpbnQgcmV0Ow0KPj4gKw0K
-Pj4gKwlyZXQgPSByZWdtYXBfcmVhZChwcml2LT5yZWdtYXAsIFRJTV9TTUNSLCAmc21jcik7DQo+
-PiArCWlmIChyZXQpIHsNCj4+ICsJCWRldl9lcnIocHJpdi0+ZGV2LCAiZmFpbCB0byByZWFkIFRJ
-TV9TTUNSLlxuIik7DQo+PiArCQlyZXR1cm4gcmV0Ow0KPj4gKwl9DQo+PiAgIA0KPj4gLQlyZWdt
-YXBfcmVhZChwcml2LT5yZWdtYXAsIFRJTV9TTUNSLCAmc21jcik7DQo+PiAgIAlzbWNyICY9IFRJ
-TV9TTUNSX1NNUzsNCj4+ICAgDQo+PiAgIAlyZXR1cm4gc3RtMzJfc21zMmVuYWJsZV9tb2RlKHNt
-Y3IpOw0KPj4gQEAgLTcwNiwxMyArNzcyLDE5IEBAIEVYUE9SVF9TWU1CT0woaXNfc3RtMzJfdGlt
-ZXJfdHJpZ2dlcik7DQo+PiAgIHN0YXRpYyB2b2lkIHN0bTMyX3RpbWVyX2RldGVjdF90cmdvMihz
-dHJ1Y3Qgc3RtMzJfdGltZXJfdHJpZ2dlciAqcHJpdikNCj4+ICAgew0KPj4gICAJdTMyIHZhbDsN
-Cj4+ICsJaW50IHJldDsNCj4+ICAgDQo+PiAgIAkvKg0KPj4gICAJICogTWFzdGVyIG1vZGUgc2Vs
-ZWN0aW9uIDIgYml0cyBjYW4gb25seSBiZSB3cml0dGVuIGFuZCByZWFkIGJhY2sgd2hlbg0KPj4g
-ICAJICogdGltZXIgc3VwcG9ydHMgaXQuDQo+PiAgIAkgKi8NCj4+ICAgCXJlZ21hcF91cGRhdGVf
-Yml0cyhwcml2LT5yZWdtYXAsIFRJTV9DUjIsIFRJTV9DUjJfTU1TMiwgVElNX0NSMl9NTVMyKTsN
-Cj4+IC0JcmVnbWFwX3JlYWQocHJpdi0+cmVnbWFwLCBUSU1fQ1IyLCAmdmFsKTsNCj4+ICsJcmV0
-ID0gcmVnbWFwX3JlYWQocHJpdi0+cmVnbWFwLCBUSU1fQ1IyLCAmdmFsKTsNCj4+ICsJaWYgKHJl
-dCkgew0KPj4gKwkJZGV2X2Vycihwcml2LT5kZXYsICJmYWlsIHRvIHJlYWQgVElNX0NSMi5cbiIp
-Ow0KPj4gKwkJcmV0dXJuOw0KPj4gKwl9DQo+PiArDQo+PiAgIAlyZWdtYXBfdXBkYXRlX2JpdHMo
-cHJpdi0+cmVnbWFwLCBUSU1fQ1IyLCBUSU1fQ1IyX01NUzIsIDApOw0KPj4gICAJcHJpdi0+aGFz
-X3RyZ28yID0gISF2YWw7DQo+PiAgIH0=
+
+--ikhqxt5tabr5x7tv
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+
+Hi Benoit,
+  +Hugues
+
+If you're considering an helper, this thread might be useful to you:
+https://patchwork.kernel.org/patch/11019673/
+
+Thanks
+   j
+
+On Tue, Oct 01, 2019 at 11:23:41AM -0500, Benoit Parrot wrote:
+> Hi Sakari,
+>
+> Thanks for the review.
+>
+> Sakari Ailus <sakari.ailus@linux.intel.com> wrote on Tue [2019-Oct-01 10:57:04 +0300]:
+> > Hi Benoit,
+> >
+> > On Wed, Sep 25, 2019 at 10:22:59AM -0500, Benoit Parrot wrote:
+> > > Add v4l2 controls to report the pixel rates of each mode. This is
+> > > needed by some CSI2 receiver in order to perform proper DPHY
+> > > configuration.
+> > >
+> > > Signed-off-by: Benoit Parrot <bparrot@ti.com>
+> > > ---
+> > >  drivers/media/i2c/ov5640.c | 25 +++++++++++++++++++++++++
+> > >  1 file changed, 25 insertions(+)
+> > >
+> > > diff --git a/drivers/media/i2c/ov5640.c b/drivers/media/i2c/ov5640.c
+> > > index 500d9bbff10b..c2a44f30d56e 100644
+> > > --- a/drivers/media/i2c/ov5640.c
+> > > +++ b/drivers/media/i2c/ov5640.c
+> > > @@ -193,6 +193,9 @@ struct ov5640_mode_info {
+> > >
+> > >  struct ov5640_ctrls {
+> > >  	struct v4l2_ctrl_handler handler;
+> > > +	struct {
+> > > +		struct v4l2_ctrl *pixel_rate;
+> > > +	};
+> > >  	struct {
+> > >  		struct v4l2_ctrl *auto_exp;
+> > >  		struct v4l2_ctrl *exposure;
+> > > @@ -241,6 +244,7 @@ struct ov5640_dev {
+> > >  	const struct ov5640_mode_info *last_mode;
+> > >  	enum ov5640_frame_rate current_fr;
+> > >  	struct v4l2_fract frame_interval;
+> > > +	u64 pixel_rate;
+> > >
+> > >  	struct ov5640_ctrls ctrls;
+> > >
+> > > @@ -2202,6 +2206,7 @@ static int ov5640_set_fmt(struct v4l2_subdev *sd,
+> > >  	const struct ov5640_mode_info *new_mode;
+> > >  	struct v4l2_mbus_framefmt *mbus_fmt = &format->format;
+> > >  	struct v4l2_mbus_framefmt *fmt;
+> > > +	u64 rate;
+> > >  	int ret;
+> > >
+> > >  	if (format->pad != 0)
+> > > @@ -2233,6 +2238,12 @@ static int ov5640_set_fmt(struct v4l2_subdev *sd,
+> > >  	if (mbus_fmt->code != sensor->fmt.code)
+> > >  		sensor->pending_fmt_change = true;
+> > >
+> > > +	rate = sensor->current_mode->vtot * sensor->current_mode->htot;
+> > > +	rate *= ov5640_framerates[sensor->current_fr];
+> > > +	sensor->pixel_rate = rate;
+> > > +
+> > > +	__v4l2_ctrl_s_ctrl_int64(sensor->ctrls.pixel_rate,
+> > > +				 sensor->pixel_rate);
+> > >  out:
+> > >  	mutex_unlock(&sensor->lock);
+> > >  	return ret;
+> > > @@ -2657,6 +2668,13 @@ static int ov5640_init_controls(struct ov5640_dev *sensor)
+> > >  	/* we can use our own mutex for the ctrl lock */
+> > >  	hdl->lock = &sensor->lock;
+> > >
+> > > +	/* Clock related controls */
+> > > +	ctrls->pixel_rate =
+> > > +		v4l2_ctrl_new_std(hdl, ops,
+> > > +				  V4L2_CID_PIXEL_RATE, 0, INT_MAX, 1,
+> > > +				  55969920);
+> >
+> > Could you calculate this value instead of using a seemingly random number?
+>
+> Yes I guess I could, especially if I make a helper function for it :).
+>
+> >
+> > > +	ctrls->pixel_rate->flags |= V4L2_CTRL_FLAG_READ_ONLY;
+> > > +
+> > >  	/* Auto/manual white balance */
+> > >  	ctrls->auto_wb = v4l2_ctrl_new_std(hdl, ops,
+> > >  					   V4L2_CID_AUTO_WHITE_BALANCE,
+> > > @@ -2782,6 +2800,7 @@ static int ov5640_s_frame_interval(struct v4l2_subdev *sd,
+> > >  	struct ov5640_dev *sensor = to_ov5640_dev(sd);
+> > >  	const struct ov5640_mode_info *mode;
+> > >  	int frame_rate, ret = 0;
+> > > +	u64 rate;
+> > >
+> > >  	if (fi->pad != 0)
+> > >  		return -EINVAL;
+> > > @@ -2816,6 +2835,12 @@ static int ov5640_s_frame_interval(struct v4l2_subdev *sd,
+> > >  		sensor->frame_interval = fi->interval;
+> > >  		sensor->current_mode = mode;
+> > >  		sensor->pending_mode_change = true;
+> > > +
+> > > +		rate = sensor->current_mode->vtot * sensor->current_mode->htot;
+> > > +		rate *= ov5640_framerates[sensor->current_fr];
+> > > +		sensor->pixel_rate = rate;
+> >
+> > I think it'd be better to have a function to calculate the value instead of
+> > duplicating the code here.
+>
+> Yes I'll create a helper function.
+>
+> Benoit
+>
+> >
+> > > +		__v4l2_ctrl_s_ctrl_int64(sensor->ctrls.pixel_rate,
+> > > +					 sensor->pixel_rate);
+> > >  	}
+> > >  out:
+> > >  	mutex_unlock(&sensor->lock);
+> >
+> > --
+> > Kind regards,
+> >
+> > Sakari Ailus
+> > sakari.ailus@linux.intel.com
+
+--ikhqxt5tabr5x7tv
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEtcQ9SICaIIqPWDjAcjQGjxahVjwFAl2UWPYACgkQcjQGjxah
+VjyMUBAAv63bbrUWjsL9pUBz7wdu92GfRg/kGitLLZQHVYMs8q0YxiA31AE+vnpY
+fPrDu45KjWSq1IFFX/NaS90fnWXQ9jYslhyyYQiG1zz2Gvw1XiLQD7CkjnNiAr/i
+IJGNcm2I2av/w4eEM4J+QdLgR4k4AHyOptXD+D/xJAOKWjBXehl2PSFCPY7DKDOv
+Or4PFzplX15a14GNHAqgjjATOKKw7yv+I9uLX1BazX2CHvGyeuqm4A5Q7HL1BnWu
+zm5kmuw6p7d5Zgy3eT36u6vixx+w1MpZVzLq1ZqipO4bo0QdvW6a0Ik8jUXxKnjd
+rMpJ/WJkTkf9juSNcaN7ewSy7hGTpBztjwBzZIFr6KiuYdPn1w11QCR1BORiVYFh
+YmMgm0sfmSkauu4LftQaLmMMlfl5p9KzRxjnTc0fkZsst5jrjdSZ+1m9dXXhAz9n
+0A6X3e1RkmnwsvgTmhYh02ICgMipYo6haH+4frS6ABnbhvCd5TdLaVeauwqbiKSH
+2gamkDttXB11urVdKP/fE0qO1ScSktjkEkrkNTqEo9APin8u4jtW3OpFJOWX+DN/
+F4YMhQ6ZdfK6GfI4iCBmXk0nl5RNiwB9orxinZTLt10rJip38PYO8+LKcThZNHrF
++GNsZF5N2OZBRwi1Bx8u14Iok0pdoZIXm7nGtGYAHi1i6s5Z4jE=
+=1XCp
+-----END PGP SIGNATURE-----
+
+--ikhqxt5tabr5x7tv--
