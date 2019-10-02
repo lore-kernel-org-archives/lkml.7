@@ -2,263 +2,542 @@ Return-Path: <SRS0=zem1=X3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-14.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9AB11C352AA
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 12:15:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 15C77C352AA
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 12:18:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6B679218DE
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 12:15:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C799421929
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 12:18:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=endlessm-com.20150623.gappssmtp.com header.i=@endlessm-com.20150623.gappssmtp.com header.b="IzQ3CEkr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726655AbfJBMPV (ORCPT
+        id S1726921AbfJBMSU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Oct 2019 08:15:21 -0400
-Received: from mailgw02.mediatek.com ([210.61.82.184]:19153 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725766AbfJBMPV (ORCPT
+        Wed, 2 Oct 2019 08:18:20 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:40320 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726030AbfJBMST (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Oct 2019 08:15:21 -0400
-X-UUID: 187b45e8e86d4579955d053e51dadfd8-20191002
-X-UUID: 187b45e8e86d4579955d053e51dadfd8-20191002
-Received: from mtkcas08.mediatek.inc [(172.21.101.126)] by mailgw02.mediatek.com
-        (envelope-from <walter-zh.wu@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 721684038; Wed, 02 Oct 2019 20:15:15 +0800
-Received: from mtkcas07.mediatek.inc (172.21.101.84) by
- mtkmbs07n2.mediatek.inc (172.21.101.141) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Wed, 2 Oct 2019 20:15:12 +0800
-Received: from [172.21.84.99] (172.21.84.99) by mtkcas07.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Wed, 2 Oct 2019 20:15:11 +0800
-Message-ID: <1570018513.19702.36.camel@mtksdccf07>
-Subject: Re: [PATCH] kasan: fix the missing underflow in memmove and memcpy
- with CONFIG_KASAN_GENERIC=y
-From:   Walter Wu <walter-zh.wu@mediatek.com>
-To:     Dmitry Vyukov <dvyukov@google.com>
-CC:     Andrey Ryabinin <aryabinin@virtuozzo.com>,
-        Alexander Potapenko <glider@google.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        kasan-dev <kasan-dev@googlegroups.com>,
-        Linux-MM <linux-mm@kvack.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>,
-        wsd_upstream <wsd_upstream@mediatek.com>
-Date:   Wed, 2 Oct 2019 20:15:13 +0800
-In-Reply-To: <1569818173.17361.19.camel@mtksdccf07>
-References: <20190927034338.15813-1-walter-zh.wu@mediatek.com>
-         <CACT4Y+Zxz+R=qQxSMoipXoLjRqyApD3O0eYpK0nyrfGHE4NNPw@mail.gmail.com>
-         <1569594142.9045.24.camel@mtksdccf07>
-         <CACT4Y+YuAxhKtL7ho7jpVAPkjG-JcGyczMXmw8qae2iaZjTh_w@mail.gmail.com>
-         <1569818173.17361.19.camel@mtksdccf07>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.2.3-0ubuntu6 
-Content-Transfer-Encoding: 8bit
+        Wed, 2 Oct 2019 08:18:19 -0400
+Received: by mail-pf1-f195.google.com with SMTP id x127so10227475pfb.7
+        for <linux-kernel@vger.kernel.org>; Wed, 02 Oct 2019 05:18:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=endlessm-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Sfp2tLaDST8/ZP8erVSkv9Uih00uP1+SESoxuDLBlhQ=;
+        b=IzQ3CEkr0/69FpqM+YgWvAgLJ4Og4ffk25e9dipW8Zmp1llQVW2CyYxn0BRedhQgEX
+         w5O5h71YCdYEtLkYyTvmceWykQDRkbeTYzMCLJWo75DhWq/DgLVbngB5W43QHwmLvXfb
+         3y7TQtZ01jGGmFv/yiED9Dxq03DjSmySo954ctv164ejRF6D342YtmLMj8SjjsiJWHq/
+         5MFrbAsmbKGn1rfDumKZhlylBC9dULnxnmgeRYZPq63417gO4NC5izRuaR3fiEdesGfA
+         XQqvumwkLSKwhLPGPJvxESEq2y+y/Fn0fSXWrL1J50z1XAragWq4gniG8W3Mty2TsQyn
+         Nu4w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Sfp2tLaDST8/ZP8erVSkv9Uih00uP1+SESoxuDLBlhQ=;
+        b=XMGnj2zK9k5ekaei1XE93x0q/Jq+4JRg5GHs+CuzP8xFf6RN3EOR2fP+pzK4VByc4E
+         W+UvutxuM9fvQvxXlsZH+sZgYtYtdbmZ+abOJzkYcFKsk1z+5mlc9tiQLfYVnZw8SMMR
+         C8dV0vWyD6k55YFXeP5mp1+wxefNMCiqr1X+/E9b1rJyOWCEMlkUMk0qSeQTP+/aiM+H
+         zaj0DFm1IlofxcypwB6ygLUXIrlguaeFJs/IC2LUApv6uWxGz0llIqetC6h/K54Mq4kA
+         OtqGBsRblAffPWbdh9za/vusW3WyIxuF5fqtqlDivZZYT67t4SusznWEImQ9AgSDkeLY
+         odCw==
+X-Gm-Message-State: APjAAAUlqXsvLYPz1GFfg05Q6mdWhgSuHrw+NxjhrhL7FP20nIiLrZju
+        XMh6zSxPXwZNoboAxOpM4va+vA==
+X-Google-Smtp-Source: APXvYqw/8t9vM7oFC0dIvGTiYKNPzJy/DtXepFo0zMowBnY3ZCddst8CWSbG5JsnxTNEVUsGE0ua5w==
+X-Received: by 2002:a17:90a:ab85:: with SMTP id n5mr3995586pjq.117.1570018698505;
+        Wed, 02 Oct 2019 05:18:18 -0700 (PDT)
+Received: from localhost.localdomain (59-127-47-130.HINET-IP.hinet.net. [59.127.47.130])
+        by smtp.gmail.com with ESMTPSA id w11sm20608307pfd.116.2019.10.02.05.18.16
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Wed, 02 Oct 2019 05:18:17 -0700 (PDT)
+From:   Chris Chiu <chiu@endlessm.com>
+To:     Jes.Sorensen@gmail.com, kvalo@codeaurora.org, davem@davemloft.net
+Cc:     linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux@endlessm.com,
+        Daniel Drake <drake@endlessm.com>
+Subject: [PATCH v8] rtl8xxxu: Improve TX performance of RTL8723BU on rtl8xxxu driver
+Date:   Wed,  2 Oct 2019 20:18:07 +0800
+Message-Id: <20191002121808.59376-1-chiu@endlessm.com>
+X-Mailer: git-send-email 2.20.1 (Apple Git-117)
 MIME-Version: 1.0
-X-MTK:  N
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 2019-09-30 at 12:36 +0800, Walter Wu wrote:
-> On Fri, 2019-09-27 at 21:41 +0200, Dmitry Vyukov wrote:
-> > On Fri, Sep 27, 2019 at 4:22 PM Walter Wu <walter-zh.wu@mediatek.com> wrote:
-> > >
-> > > On Fri, 2019-09-27 at 15:07 +0200, Dmitry Vyukov wrote:
-> > > > On Fri, Sep 27, 2019 at 5:43 AM Walter Wu <walter-zh.wu@mediatek.com> wrote:
-> > > > >
-> > > > > memmove() and memcpy() have missing underflow issues.
-> > > > > When -7 <= size < 0, then KASAN will miss to catch the underflow issue.
-> > > > > It looks like shadow start address and shadow end address is the same,
-> > > > > so it does not actually check anything.
-> > > > >
-> > > > > The following test is indeed not caught by KASAN:
-> > > > >
-> > > > >         char *p = kmalloc(64, GFP_KERNEL);
-> > > > >         memset((char *)p, 0, 64);
-> > > > >         memmove((char *)p, (char *)p + 4, -2);
-> > > > >         kfree((char*)p);
-> > > > >
-> > > > > It should be checked here:
-> > > > >
-> > > > > void *memmove(void *dest, const void *src, size_t len)
-> > > > > {
-> > > > >         check_memory_region((unsigned long)src, len, false, _RET_IP_);
-> > > > >         check_memory_region((unsigned long)dest, len, true, _RET_IP_);
-> > > > >
-> > > > >         return __memmove(dest, src, len);
-> > > > > }
-> > > > >
-> > > > > We fix the shadow end address which is calculated, then generic KASAN
-> > > > > get the right shadow end address and detect this underflow issue.
-> > > > >
-> > > > > [1] https://bugzilla.kernel.org/show_bug.cgi?id=199341
-> > > > >
-> > > > > Signed-off-by: Walter Wu <walter-zh.wu@mediatek.com>
-> > > > > Reported-by: Dmitry Vyukov <dvyukov@google.com>
-> > > > > ---
-> > > > >  lib/test_kasan.c   | 36 ++++++++++++++++++++++++++++++++++++
-> > > > >  mm/kasan/generic.c |  8 ++++++--
-> > > > >  2 files changed, 42 insertions(+), 2 deletions(-)
-> > > > >
-> > > > > diff --git a/lib/test_kasan.c b/lib/test_kasan.c
-> > > > > index b63b367a94e8..8bd014852556 100644
-> > > > > --- a/lib/test_kasan.c
-> > > > > +++ b/lib/test_kasan.c
-> > > > > @@ -280,6 +280,40 @@ static noinline void __init kmalloc_oob_in_memset(void)
-> > > > >         kfree(ptr);
-> > > > >  }
-> > > > >
-> > > > > +static noinline void __init kmalloc_oob_in_memmove_underflow(void)
-> > > > > +{
-> > > > > +       char *ptr;
-> > > > > +       size_t size = 64;
-> > > > > +
-> > > > > +       pr_info("underflow out-of-bounds in memmove\n");
-> > > > > +       ptr = kmalloc(size, GFP_KERNEL);
-> > > > > +       if (!ptr) {
-> > > > > +               pr_err("Allocation failed\n");
-> > > > > +               return;
-> > > > > +       }
-> > > > > +
-> > > > > +       memset((char *)ptr, 0, 64);
-> > > > > +       memmove((char *)ptr, (char *)ptr + 4, -2);
-> > > > > +       kfree(ptr);
-> > > > > +}
-> > > > > +
-> > > > > +static noinline void __init kmalloc_oob_in_memmove_overflow(void)
-> > > > > +{
-> > > > > +       char *ptr;
-> > > > > +       size_t size = 64;
-> > > > > +
-> > > > > +       pr_info("overflow out-of-bounds in memmove\n");
-> > > > > +       ptr = kmalloc(size, GFP_KERNEL);
-> > > > > +       if (!ptr) {
-> > > > > +               pr_err("Allocation failed\n");
-> > > > > +               return;
-> > > > > +       }
-> > > > > +
-> > > > > +       memset((char *)ptr, 0, 64);
-> > > > > +       memmove((char *)ptr + size, (char *)ptr, 2);
-> > > > > +       kfree(ptr);
-> > > > > +}
-> > > > > +
-> > > > >  static noinline void __init kmalloc_uaf(void)
-> > > > >  {
-> > > > >         char *ptr;
-> > > > > @@ -734,6 +768,8 @@ static int __init kmalloc_tests_init(void)
-> > > > >         kmalloc_oob_memset_4();
-> > > > >         kmalloc_oob_memset_8();
-> > > > >         kmalloc_oob_memset_16();
-> > > > > +       kmalloc_oob_in_memmove_underflow();
-> > > > > +       kmalloc_oob_in_memmove_overflow();
-> > > > >         kmalloc_uaf();
-> > > > >         kmalloc_uaf_memset();
-> > > > >         kmalloc_uaf2();
-> > > > > diff --git a/mm/kasan/generic.c b/mm/kasan/generic.c
-> > > > > index 616f9dd82d12..34ca23d59e67 100644
-> > > > > --- a/mm/kasan/generic.c
-> > > > > +++ b/mm/kasan/generic.c
-> > > > > @@ -131,9 +131,13 @@ static __always_inline bool memory_is_poisoned_n(unsigned long addr,
-> > > > >                                                 size_t size)
-> > > > >  {
-> > > > >         unsigned long ret;
-> > > > > +       void *shadow_start = kasan_mem_to_shadow((void *)addr);
-> > > > > +       void *shadow_end = kasan_mem_to_shadow((void *)addr + size - 1) + 1;
-> > > > >
-> > > > > -       ret = memory_is_nonzero(kasan_mem_to_shadow((void *)addr),
-> > > > > -                       kasan_mem_to_shadow((void *)addr + size - 1) + 1);
-> > > > > +       if ((long)size < 0)
-> > > > > +               shadow_end = kasan_mem_to_shadow((void *)addr + size);
-> > > >
-> > > > Hi Walter,
-> > > >
-> > > > Thanks for working on this.
-> > > >
-> > > > If size<0, does it make sense to continue at all? We will still check
-> > > > 1PB of shadow memory? What happens when we pass such huge range to
-> > > > memory_is_nonzero?
-> > > > Perhaps it's better to produce an error and bail out immediately if size<0?
-> > >
-> > > I agree with what you said. when size<0, it is indeed an unreasonable
-> > > behavior, it should be blocked from continuing to do.
-> > >
-> > >
-> > > > Also, what's the failure mode of the tests? Didn't they badly corrupt
-> > > > memory? We tried to keep tests such that they produce the KASAN
-> > > > reports, but don't badly corrupt memory b/c/ we need to run all of
-> > > > them.
-> > >
-> > > Maybe we should first produce KASAN reports and then go to execute
-> > > memmove() or do nothing? It looks like it’s doing the following.or?
-> > >
-> > > void *memmove(void *dest, const void *src, size_t len)
-> > >  {
-> > > +       if (long(len) <= 0)
-> > 
-> > /\/\/\/\/\/\
-> > 
-> > This check needs to be inside of check_memory_region, otherwise we
-> > will have similar problems in all other places that use
-> > check_memory_region.
-> Thanks for your reminder.
-> 
->  bool check_memory_region(unsigned long addr, size_t size, bool write,
->                                 unsigned long ret_ip)
->  {
-> +       if (long(size) < 0) {
-> +               kasan_report_invalid_size(src, dest, len, _RET_IP_);
-> +               return false;
-> +       }
-> +
->         return check_memory_region_inline(addr, size, write, ret_ip);
->  }
-> 
-> > But check_memory_region already returns a bool, so we could check that
-> > bool and return early.
-> 
-> When size<0, we should only show one KASAN report, and should we only
-> limit to return when size<0 is true? If yse, then __memmove() will do
-> nothing.
-> 
-> 
->  void *memmove(void *dest, const void *src, size_t len)
->  {
-> -       check_memory_region((unsigned long)src, len, false, _RET_IP_);
-> +       if(!check_memory_region((unsigned long)src, len, false,
-> _RET_IP_)
-> +               && long(size) < 0)
-> +               return;
-> +
->         check_memory_region((unsigned long)dest, len, true, _RET_IP_);
-> 
->         return __memmove(dest, src, len);
-> 
-> > 
-Hi Dmitry,
+We have 3 laptops which connect the wifi by the same RTL8723BU.
+The PCI VID/PID of the wifi chip is 10EC:B720 which is supported.
+They have the same problem with the in-kernel rtl8xxxu driver, the
+iperf (as a client to an ethernet-connected server) gets ~1Mbps.
+Nevertheless, the signal strength is reported as around -40dBm,
+which is quite good. From the wireshark capture, the tx rate for each
+data and qos data packet is only 1Mbps. Compare to the Realtek driver
+at https://github.com/lwfinger/rtl8723bu, the same iperf test gets
+~12Mbps or better. The signal strength is reported similarly around
+-40dBm. That's why we want to improve.
 
-What do you think the following code is better than the above one.
-In memmmove/memset/memcpy, they need to determine whether size < 0 is
-true. we directly determine whether size is negative in memmove and
-return early. it avoid to generate repeated KASAN report. Is it better?
+After reading the source code of the rtl8xxxu driver and Realtek's, the
+major difference is that Realtek's driver has a watchdog which will keep
+monitoring the signal quality and updating the rate mask just like the
+rtl8xxxu_gen2_update_rate_mask() does if signal quality changes.
+And this kind of watchdog also exists in rtlwifi driver of some specific
+chips, ex rtl8192ee, rtl8188ee, rtl8723ae, rtl8821ae...etc. They have
+the same member function named dm_watchdog and will invoke the
+corresponding dm_refresh_rate_adaptive_mask to adjust the tx rate
+mask.
 
-void *memmove(void *dest, const void *src, size_t len)
-{
-+       if (long(size) < 0) {
-+               kasan_report_invalid_size(src, dest, len, _RET_IP_);
-+               return;
-+       }
+With this commit, the tx rate of each data and qos data packet will
+be 39Mbps (MCS4) with the 0xF00000 as the tx rate mask. The 20th bit
+to 23th bit means MCS4 to MCS7. It means that the firmware still picks
+the lowest rate from the rate mask and explains why the tx rate of
+data and qos data is always lowest 1Mbps because the default rate mask
+passed is always 0xFFFFFFF ranges from the basic CCK rate, OFDM rate,
+and MCS rate. However, with Realtek's driver, the tx rate observed from
+wireshark under the same condition is almost 65Mbps or 72Mbps, which
+indicating that rtl8xxxu could still be further improved.
+
+Signed-off-by: Chris Chiu <chiu@endlessm.com>
+Reviewed-by: Daniel Drake <drake@endlessm.com>
+Acked-by: Jes Sorensen <Jes.Sorensen@gmail.com>
+---
+
+
+Notes:
+  v2:
+   - Fix errors and warnings complained by checkpatch.pl
+   - Replace data structure rate_adaptive by 2 member variables
+   - Make rtl8xxxu_wireless_mode non-static
+   - Runs refresh_rate_mask() only in station mode
+  v3:
+   - Remove ugly rtl8xxxu_watchdog data structure
+   - Make sure only one vif exists
+  v4:
+   - Move cancel_delayed_work from rtl8xxxu_disconnect to rtl8xxxu_stop
+   - Clear priv->vif in rtl8xxxu_remove_interface
+   - Add rateid as the function argument of update_rate_mask
+   - Rephrase the comment for priv->vif more explicit.
+  v5:
+   - Make refresh_rate_mask() generic for all sub-drivers.
+   - Add definitions for SNR related to help determine rssi_level
+  v6:
+   - Fix typo of the comment for priv->vif
+  v7:
+   - Fix reported bug of watchdog stop
+   - refer to the RxPWDBAll in vendor driver for SNR calculation
+  v8:
+   - Add missing break in switch case
+
+
+ .../net/wireless/realtek/rtl8xxxu/rtl8xxxu.h  |  55 ++++-
+ .../wireless/realtek/rtl8xxxu/rtl8xxxu_core.c | 230 +++++++++++++++++-
+ 2 files changed, 278 insertions(+), 7 deletions(-)
+
+diff --git a/drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu.h b/drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu.h
+index ade057d868f7..582c2a346cec 100644
+--- a/drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu.h
++++ b/drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu.h
+@@ -1187,6 +1187,48 @@ struct rtl8723bu_c2h {
+ 
+ struct rtl8xxxu_fileops;
+ 
++/*mlme related.*/
++enum wireless_mode {
++	WIRELESS_MODE_UNKNOWN = 0,
++	/* Sub-Element */
++	WIRELESS_MODE_B = BIT(0),
++	WIRELESS_MODE_G = BIT(1),
++	WIRELESS_MODE_A = BIT(2),
++	WIRELESS_MODE_N_24G = BIT(3),
++	WIRELESS_MODE_N_5G = BIT(4),
++	WIRELESS_AUTO = BIT(5),
++	WIRELESS_MODE_AC = BIT(6),
++	WIRELESS_MODE_MAX = 0x7F,
++};
 +
-        check_memory_region((unsigned long)src, len, false, _RET_IP_);
-        check_memory_region((unsigned long)dest, len, true, _RET_IP_);
-
-
-check_memory_region() still has to check whether the size is negative.
-but memmove/memset/memcpy generate invalid size KASAN report will not be
-there.
-
++/* from rtlwifi/wifi.h */
++enum ratr_table_mode_new {
++	RATEID_IDX_BGN_40M_2SS = 0,
++	RATEID_IDX_BGN_40M_1SS = 1,
++	RATEID_IDX_BGN_20M_2SS_BN = 2,
++	RATEID_IDX_BGN_20M_1SS_BN = 3,
++	RATEID_IDX_GN_N2SS = 4,
++	RATEID_IDX_GN_N1SS = 5,
++	RATEID_IDX_BG = 6,
++	RATEID_IDX_G = 7,
++	RATEID_IDX_B = 8,
++	RATEID_IDX_VHT_2SS = 9,
++	RATEID_IDX_VHT_1SS = 10,
++	RATEID_IDX_MIX1 = 11,
++	RATEID_IDX_MIX2 = 12,
++	RATEID_IDX_VHT_3SS = 13,
++	RATEID_IDX_BGN_3SS = 14,
++};
++
++#define RTL8XXXU_RATR_STA_INIT 0
++#define RTL8XXXU_RATR_STA_HIGH 1
++#define RTL8XXXU_RATR_STA_MID  2
++#define RTL8XXXU_RATR_STA_LOW  3
++
++#define RTL8XXXU_NOISE_FLOOR_MIN	-100
++#define RTL8XXXU_SNR_THRESH_HIGH	50
++#define RTL8XXXU_SNR_THRESH_LOW	20
++
+ struct rtl8xxxu_priv {
+ 	struct ieee80211_hw *hw;
+ 	struct usb_device *udev;
+@@ -1291,6 +1333,13 @@ struct rtl8xxxu_priv {
+ 	u8 pi_enabled:1;
+ 	u8 no_pape:1;
+ 	u8 int_buf[USB_INTR_CONTENT_LENGTH];
++	u8 rssi_level;
++	/*
++	 * Only one virtual interface permitted because only STA mode
++	 * is supported and no iface_combinations are provided.
++	 */
++	struct ieee80211_vif *vif;
++	struct delayed_work ra_watchdog;
+ };
+ 
+ struct rtl8xxxu_rx_urb {
+@@ -1326,7 +1375,7 @@ struct rtl8xxxu_fileops {
+ 	void (*set_tx_power) (struct rtl8xxxu_priv *priv, int channel,
+ 			      bool ht40);
+ 	void (*update_rate_mask) (struct rtl8xxxu_priv *priv,
+-				  u32 ramask, int sgi);
++				  u32 ramask, u8 rateid, int sgi);
+ 	void (*report_connect) (struct rtl8xxxu_priv *priv,
+ 				u8 macid, bool connect);
+ 	void (*fill_txdesc) (struct ieee80211_hw *hw, struct ieee80211_hdr *hdr,
+@@ -1411,9 +1460,9 @@ void rtl8xxxu_gen2_config_channel(struct ieee80211_hw *hw);
+ void rtl8xxxu_gen1_usb_quirks(struct rtl8xxxu_priv *priv);
+ void rtl8xxxu_gen2_usb_quirks(struct rtl8xxxu_priv *priv);
+ void rtl8xxxu_update_rate_mask(struct rtl8xxxu_priv *priv,
+-			       u32 ramask, int sgi);
++			       u32 ramask, u8 rateid, int sgi);
+ void rtl8xxxu_gen2_update_rate_mask(struct rtl8xxxu_priv *priv,
+-				    u32 ramask, int sgi);
++				    u32 ramask, u8 rateid, int sgi);
+ void rtl8xxxu_gen1_report_connect(struct rtl8xxxu_priv *priv,
+ 				  u8 macid, bool connect);
+ void rtl8xxxu_gen2_report_connect(struct rtl8xxxu_priv *priv,
+diff --git a/drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu_core.c b/drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu_core.c
+index 776bbae14a8d..bd5ccb3aa5d7 100644
+--- a/drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu_core.c
++++ b/drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu_core.c
+@@ -4304,7 +4304,8 @@ static void rtl8xxxu_sw_scan_complete(struct ieee80211_hw *hw,
+ 	rtl8xxxu_write8(priv, REG_BEACON_CTRL, val8);
+ }
+ 
+-void rtl8xxxu_update_rate_mask(struct rtl8xxxu_priv *priv, u32 ramask, int sgi)
++void rtl8xxxu_update_rate_mask(struct rtl8xxxu_priv *priv,
++			       u32 ramask, u8 rateid, int sgi)
+ {
+ 	struct h2c_cmd h2c;
+ 
+@@ -4324,7 +4325,7 @@ void rtl8xxxu_update_rate_mask(struct rtl8xxxu_priv *priv, u32 ramask, int sgi)
+ }
+ 
+ void rtl8xxxu_gen2_update_rate_mask(struct rtl8xxxu_priv *priv,
+-				    u32 ramask, int sgi)
++				    u32 ramask, u8 rateid, int sgi)
+ {
+ 	struct h2c_cmd h2c;
+ 	u8 bw = 0;
+@@ -4338,7 +4339,7 @@ void rtl8xxxu_gen2_update_rate_mask(struct rtl8xxxu_priv *priv,
+ 	h2c.b_macid_cfg.ramask3 = (ramask >> 24) & 0xff;
+ 
+ 	h2c.ramask.arg = 0x80;
+-	h2c.b_macid_cfg.data1 = 0;
++	h2c.b_macid_cfg.data1 = rateid;
+ 	if (sgi)
+ 		h2c.b_macid_cfg.data1 |= BIT(7);
+ 
+@@ -4478,6 +4479,40 @@ static void rtl8xxxu_set_basic_rates(struct rtl8xxxu_priv *priv, u32 rate_cfg)
+ 	rtl8xxxu_write8(priv, REG_INIRTS_RATE_SEL, rate_idx);
+ }
+ 
++static u16
++rtl8xxxu_wireless_mode(struct ieee80211_hw *hw, struct ieee80211_sta *sta)
++{
++	u16 network_type = WIRELESS_MODE_UNKNOWN;
++	u32 rate_mask;
++
++	rate_mask = (sta->supp_rates[0] & 0xfff) |
++		    (sta->ht_cap.mcs.rx_mask[0] << 12) |
++		    (sta->ht_cap.mcs.rx_mask[0] << 20);
++
++	if (hw->conf.chandef.chan->band == NL80211_BAND_5GHZ) {
++		if (sta->vht_cap.vht_supported)
++			network_type = WIRELESS_MODE_AC;
++		else if (sta->ht_cap.ht_supported)
++			network_type = WIRELESS_MODE_N_5G;
++
++		network_type |= WIRELESS_MODE_A;
++	} else {
++		if (sta->vht_cap.vht_supported)
++			network_type = WIRELESS_MODE_AC;
++		else if (sta->ht_cap.ht_supported)
++			network_type = WIRELESS_MODE_N_24G;
++
++		if (sta->supp_rates[0] <= 0xf)
++			network_type |= WIRELESS_MODE_B;
++		else if (sta->supp_rates[0] & 0xf)
++			network_type |= (WIRELESS_MODE_B | WIRELESS_MODE_G);
++		else
++			network_type |= WIRELESS_MODE_G;
++	}
++
++	return network_type;
++}
++
+ static void
+ rtl8xxxu_bss_info_changed(struct ieee80211_hw *hw, struct ieee80211_vif *vif,
+ 			  struct ieee80211_bss_conf *bss_conf, u32 changed)
+@@ -4520,7 +4555,10 @@ rtl8xxxu_bss_info_changed(struct ieee80211_hw *hw, struct ieee80211_vif *vif,
+ 				sgi = 1;
+ 			rcu_read_unlock();
+ 
+-			priv->fops->update_rate_mask(priv, ramask, sgi);
++			priv->vif = vif;
++			priv->rssi_level = RTL8XXXU_RATR_STA_INIT;
++
++			priv->fops->update_rate_mask(priv, ramask, 0, sgi);
+ 
+ 			rtl8xxxu_write8(priv, REG_BCN_MAX_ERR, 0xff);
+ 
+@@ -5465,6 +5503,10 @@ static int rtl8xxxu_add_interface(struct ieee80211_hw *hw,
+ 
+ 	switch (vif->type) {
+ 	case NL80211_IFTYPE_STATION:
++		if (!priv->vif)
++			priv->vif = vif;
++		else
++			return -EOPNOTSUPP;
+ 		rtl8xxxu_stop_tx_beacon(priv);
+ 
+ 		val8 = rtl8xxxu_read8(priv, REG_BEACON_CTRL);
+@@ -5488,6 +5530,9 @@ static void rtl8xxxu_remove_interface(struct ieee80211_hw *hw,
+ 	struct rtl8xxxu_priv *priv = hw->priv;
+ 
+ 	dev_dbg(&priv->udev->dev, "%s\n", __func__);
++
++	if (priv->vif)
++		priv->vif = NULL;
+ }
+ 
+ static int rtl8xxxu_config(struct ieee80211_hw *hw, u32 changed)
+@@ -5773,6 +5818,178 @@ rtl8xxxu_ampdu_action(struct ieee80211_hw *hw, struct ieee80211_vif *vif,
+ 	return 0;
+ }
+ 
++static u8 rtl8xxxu_signal_to_snr(int signal)
++{
++	if (signal < RTL8XXXU_NOISE_FLOOR_MIN)
++		signal = RTL8XXXU_NOISE_FLOOR_MIN;
++	else if (signal > 0)
++		signal = 0;
++	return (u8)(signal - RTL8XXXU_NOISE_FLOOR_MIN);
++}
++
++static void rtl8xxxu_refresh_rate_mask(struct rtl8xxxu_priv *priv,
++				       int signal, struct ieee80211_sta *sta)
++{
++	struct ieee80211_hw *hw = priv->hw;
++	u16 wireless_mode;
++	u8 rssi_level, ratr_idx;
++	u8 txbw_40mhz;
++	u8 snr, snr_thresh_high, snr_thresh_low;
++	u8 go_up_gap = 5;
++
++	rssi_level = priv->rssi_level;
++	snr = rtl8xxxu_signal_to_snr(signal);
++	snr_thresh_high = RTL8XXXU_SNR_THRESH_HIGH;
++	snr_thresh_low = RTL8XXXU_SNR_THRESH_LOW;
++	txbw_40mhz = (hw->conf.chandef.width == NL80211_CHAN_WIDTH_40) ? 1 : 0;
++
++	switch (rssi_level) {
++	case RTL8XXXU_RATR_STA_MID:
++		snr_thresh_high += go_up_gap;
++		break;
++	case RTL8XXXU_RATR_STA_LOW:
++		snr_thresh_high += go_up_gap;
++		snr_thresh_low += go_up_gap;
++		break;
++	default:
++		break;
++	}
++
++	if (snr > snr_thresh_high)
++		rssi_level = RTL8XXXU_RATR_STA_HIGH;
++	else if (snr > snr_thresh_low)
++		rssi_level = RTL8XXXU_RATR_STA_MID;
++	else
++		rssi_level = RTL8XXXU_RATR_STA_LOW;
++
++	if (rssi_level != priv->rssi_level) {
++		int sgi = 0;
++		u32 rate_bitmap = 0;
++
++		rcu_read_lock();
++		rate_bitmap = (sta->supp_rates[0] & 0xfff) |
++				(sta->ht_cap.mcs.rx_mask[0] << 12) |
++				(sta->ht_cap.mcs.rx_mask[1] << 20);
++		if (sta->ht_cap.cap &
++		    (IEEE80211_HT_CAP_SGI_40 | IEEE80211_HT_CAP_SGI_20))
++			sgi = 1;
++		rcu_read_unlock();
++
++		wireless_mode = rtl8xxxu_wireless_mode(hw, sta);
++		switch (wireless_mode) {
++		case WIRELESS_MODE_B:
++			ratr_idx = RATEID_IDX_B;
++			if (rate_bitmap & 0x0000000c)
++				rate_bitmap &= 0x0000000d;
++			else
++				rate_bitmap &= 0x0000000f;
++			break;
++		case WIRELESS_MODE_A:
++		case WIRELESS_MODE_G:
++			ratr_idx = RATEID_IDX_G;
++			if (rssi_level == RTL8XXXU_RATR_STA_HIGH)
++				rate_bitmap &= 0x00000f00;
++			else
++				rate_bitmap &= 0x00000ff0;
++			break;
++		case (WIRELESS_MODE_B | WIRELESS_MODE_G):
++			ratr_idx = RATEID_IDX_BG;
++			if (rssi_level == RTL8XXXU_RATR_STA_HIGH)
++				rate_bitmap &= 0x00000f00;
++			else if (rssi_level == RTL8XXXU_RATR_STA_MID)
++				rate_bitmap &= 0x00000ff0;
++			else
++				rate_bitmap &= 0x00000ff5;
++			break;
++		case WIRELESS_MODE_N_24G:
++		case WIRELESS_MODE_N_5G:
++		case (WIRELESS_MODE_G | WIRELESS_MODE_N_24G):
++		case (WIRELESS_MODE_A | WIRELESS_MODE_N_5G):
++			if (priv->tx_paths == 2 && priv->rx_paths == 2)
++				ratr_idx = RATEID_IDX_GN_N2SS;
++			else
++				ratr_idx = RATEID_IDX_GN_N1SS;
++			break;
++		case (WIRELESS_MODE_B | WIRELESS_MODE_G | WIRELESS_MODE_N_24G):
++		case (WIRELESS_MODE_B | WIRELESS_MODE_N_24G):
++			if (txbw_40mhz) {
++				if (priv->tx_paths == 2 && priv->rx_paths == 2)
++					ratr_idx = RATEID_IDX_BGN_40M_2SS;
++				else
++					ratr_idx = RATEID_IDX_BGN_40M_1SS;
++			} else {
++				if (priv->tx_paths == 2 && priv->rx_paths == 2)
++					ratr_idx = RATEID_IDX_BGN_20M_2SS_BN;
++				else
++					ratr_idx = RATEID_IDX_BGN_20M_1SS_BN;
++			}
++
++			if (priv->tx_paths == 2 && priv->rx_paths == 2) {
++				if (rssi_level == RTL8XXXU_RATR_STA_HIGH) {
++					rate_bitmap &= 0x0f8f0000;
++				} else if (rssi_level == RTL8XXXU_RATR_STA_MID) {
++					rate_bitmap &= 0x0f8ff000;
++				} else {
++					if (txbw_40mhz)
++						rate_bitmap &= 0x0f8ff015;
++					else
++						rate_bitmap &= 0x0f8ff005;
++				}
++			} else {
++				if (rssi_level == RTL8XXXU_RATR_STA_HIGH) {
++					rate_bitmap &= 0x000f0000;
++				} else if (rssi_level == RTL8XXXU_RATR_STA_MID) {
++					rate_bitmap &= 0x000ff000;
++				} else {
++					if (txbw_40mhz)
++						rate_bitmap &= 0x000ff015;
++					else
++						rate_bitmap &= 0x000ff005;
++				}
++			}
++			break;
++		default:
++			ratr_idx = RATEID_IDX_BGN_40M_2SS;
++			rate_bitmap &= 0x0fffffff;
++			break;
++		}
++
++		priv->rssi_level = rssi_level;
++		priv->fops->update_rate_mask(priv, rate_bitmap, ratr_idx, sgi);
++	}
++}
++
++static void rtl8xxxu_watchdog_callback(struct work_struct *work)
++{
++	struct ieee80211_vif *vif;
++	struct rtl8xxxu_priv *priv;
++
++	priv = container_of(work, struct rtl8xxxu_priv, ra_watchdog.work);
++	vif = priv->vif;
++
++	if (vif && vif->type == NL80211_IFTYPE_STATION) {
++		int signal;
++		struct ieee80211_sta *sta;
++
++		rcu_read_lock();
++		sta = ieee80211_find_sta(vif, vif->bss_conf.bssid);
++		if (!sta) {
++			struct device *dev = &priv->udev->dev;
++
++			dev_dbg(dev, "%s: no sta found\n", __func__);
++			rcu_read_unlock();
++			goto out;
++		}
++		rcu_read_unlock();
++
++		signal = ieee80211_ave_rssi(vif);
++		rtl8xxxu_refresh_rate_mask(priv, signal, sta);
++	}
++
++out:
++	schedule_delayed_work(&priv->ra_watchdog, 2 * HZ);
++}
++
+ static int rtl8xxxu_start(struct ieee80211_hw *hw)
+ {
+ 	struct rtl8xxxu_priv *priv = hw->priv;
+@@ -5829,6 +6046,8 @@ static int rtl8xxxu_start(struct ieee80211_hw *hw)
+ 
+ 		ret = rtl8xxxu_submit_rx_urb(priv, rx_urb);
+ 	}
++
++	schedule_delayed_work(&priv->ra_watchdog, 2 * HZ);
+ exit:
+ 	/*
+ 	 * Accept all data and mgmt frames
+@@ -5880,6 +6099,8 @@ static void rtl8xxxu_stop(struct ieee80211_hw *hw)
+ 	if (priv->usb_interrupts)
+ 		rtl8xxxu_write32(priv, REG_USB_HIMR, 0);
+ 
++	cancel_delayed_work_sync(&priv->ra_watchdog);
++
+ 	rtl8xxxu_free_rx_resources(priv);
+ 	rtl8xxxu_free_tx_resources(priv);
+ }
+@@ -6052,6 +6273,7 @@ static int rtl8xxxu_probe(struct usb_interface *interface,
+ 	INIT_LIST_HEAD(&priv->rx_urb_pending_list);
+ 	spin_lock_init(&priv->rx_urb_lock);
+ 	INIT_WORK(&priv->rx_urb_wq, rtl8xxxu_rx_urb_work);
++	INIT_DELAYED_WORK(&priv->ra_watchdog, rtl8xxxu_watchdog_callback);
+ 
+ 	usb_set_intfdata(interface, hw);
+ 
+-- 
+2.20.1
 
