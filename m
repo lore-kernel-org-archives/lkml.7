@@ -2,99 +2,178 @@ Return-Path: <SRS0=zem1=X3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 94DEBC10F14
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 17:14:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C4F7C10F14
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 17:15:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6B2D02054F
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 17:14:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="nocZanzK"
+	by mail.kernel.org (Postfix) with ESMTP id 79D22206BB
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 17:15:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728417AbfJBROE (ORCPT
+        id S1728474AbfJBRPw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Oct 2019 13:14:04 -0400
-Received: from mail-yw1-f65.google.com ([209.85.161.65]:41149 "EHLO
-        mail-yw1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727854AbfJBROE (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Oct 2019 13:14:04 -0400
-Received: by mail-yw1-f65.google.com with SMTP id 129so6337039ywb.8
-        for <linux-kernel@vger.kernel.org>; Wed, 02 Oct 2019 10:14:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=isvX3eXp9HYRHix3Qz7Avg+A0LJMKh77nH1Ku9/2tnA=;
-        b=nocZanzKO5o+dhkUoB6MTA2+n2fKLdMHfFVzPeWoIIKMGdREKyjK8IWCDz/yYtPhjC
-         NecwBJh5HsUunx7YNllUqzzgo8xgPBrkvcgUvg/8GsiFIjvZXaQB1p364Wkoa7MNS1Qm
-         /529VxKidohbxfGeDAmnNYmLT5YNEbI7Hw57IxUhjVCjJtqPYZAWV25QPfMTNnsfljUw
-         f3JB0QT6zwJGo3v2Ng5RyoRi7dBHiLqMhArPjg5ovB/hD+WQgSjR1LBr6SsdCXCYc3/S
-         f7CKQzNWu2E3bA/EHhukbSE528gZHXWZpV/wsmV8aqbvnB/WvMW9nnZzPWQZlIZZizfr
-         BqHw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=isvX3eXp9HYRHix3Qz7Avg+A0LJMKh77nH1Ku9/2tnA=;
-        b=eJL6n8di7pIE1UEdzGLmgqeqieZM4vZQbrPn6svdMIsBnZjUVTA84rvd/jd+JyGsSt
-         4ImvLaWX7ypcrBBhNdcepDi7N/fXxuI3KorBHP3QddL+Y34SK0FD8NSsWXWOjCrBgX+G
-         P9l2dSbYLO5I6zPnETb6dIS1pmDQxfzH7zI80dhGmVJ0h0QhMKg9qvpSE6auLF8Kt5Ki
-         GDxUxtsYxmiCQJBw18bV2BoKzDMUHcI2K066IVjVs5u6/fve8BXgNIxMjwb9bAajcawU
-         iBZT1KGDSstigLjT9aKBhTehoHPrJz+bdc9lmadN//Bkd+4KK9+zSshV72/WLBI+OQGI
-         VsAg==
-X-Gm-Message-State: APjAAAW6uvsew9lIjonnzJYNpInm5ahLiba/gNV5iHnnCD9N/VSmIEzL
-        wEzKG1uPPMjFlIifzNtpG9NVutkwMLj/w8EB8QyrWQ==
-X-Google-Smtp-Source: APXvYqxNrcfrNH/xcd61hCMBPnlquQ4F/Zs0WRYrG0173J3rX+ofXbc29QqVkRLk9iILT609t85YZffktNfehz5HxXc=
-X-Received: by 2002:a0d:d1c5:: with SMTP id t188mr3498817ywd.265.1570036442799;
- Wed, 02 Oct 2019 10:14:02 -0700 (PDT)
+        Wed, 2 Oct 2019 13:15:52 -0400
+Received: from mga11.intel.com ([192.55.52.93]:45698 "EHLO mga11.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726076AbfJBRPw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 2 Oct 2019 13:15:52 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 02 Oct 2019 10:15:51 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.67,249,1566889200"; 
+   d="scan'208";a="221471645"
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.41])
+  by fmsmga002.fm.intel.com with ESMTP; 02 Oct 2019 10:15:51 -0700
+Date:   Wed, 2 Oct 2019 10:15:51 -0700
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Zhenzhong Duan <zhenzhong.duan@oracle.com>
+Cc:     linux-kernel@vger.kernel.org, vkuznets@redhat.com,
+        linux-hyperv@vger.kernel.org, kvm@vger.kernel.org,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Radim Krcmar <rkrcmar@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>
+Subject: Re: [PATCH v3 2/4] x86/kvm: Change print code to use pr_*() format
+Message-ID: <20191002171551.GC9615@linux.intel.com>
+References: <1569847479-13201-1-git-send-email-zhenzhong.duan@oracle.com>
+ <1569847479-13201-3-git-send-email-zhenzhong.duan@oracle.com>
 MIME-Version: 1.0
-References: <CAL_quvRknSSVvXN3q_Se0hrziw2oTNS3ENNoeHYhvciCRq9Yww@mail.gmail.com>
- <20191002094650.3fc06a85@lwn.net>
-In-Reply-To: <20191002094650.3fc06a85@lwn.net>
-From:   Mat King <mathewk@google.com>
-Date:   Wed, 2 Oct 2019 11:13:50 -0600
-Message-ID: <CAL_quvTNvnusdercRJhdXYDzBB=qy3cTrsPAuJSpE_tpWhnCmQ@mail.gmail.com>
-Subject: Re: New sysfs interface for privacy screens
-To:     Jonathan Corbet <corbet@lwn.net>
-Cc:     linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        Greg KH <gregkh@linuxfoundation.org>, rafael@kernel.org,
-        Ross Zwisler <zwisler@google.com>,
-        Rajat Jain <rajatja@google.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        Daniel Thompson <daniel.thompson@linaro.org>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Alexander Schremmer <alex@alexanderweb.de>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1569847479-13201-3-git-send-email-zhenzhong.duan@oracle.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Oct 2, 2019 at 9:46 AM Jonathan Corbet <corbet@lwn.net> wrote:
->
-> On Tue, 1 Oct 2019 10:09:46 -0600
-> Mat King <mathewk@google.com> wrote:
->
-> > I have been looking into adding Linux support for electronic privacy
-> > screens which is a feature on some new laptops which is built into the
-> > display and allows users to turn it on instead of needing to use a
-> > physical privacy filter. In discussions with my colleagues the idea of
-> > using either /sys/class/backlight or /sys/class/leds but this new
-> > feature does not seem to quite fit into either of those classes.
->
-> FWIW, it seems that you're not alone in this; 5.4 got some support for
-> such screens if I understand things correctly:
->
->   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=110ea1d833ad
->
-> jon
+On Mon, Sep 30, 2019 at 08:44:37PM +0800, Zhenzhong Duan wrote:
+> pr_*() is preferred than printk(KERN_* ...), after change all the print
+> in arch/x86/kernel/kvm.c will have "KVM: xxx" style.
+> 
+> No functional change.
+> 
+> Suggested-by: Vitaly Kuznetsov <vkuznets@redhat.com>
 
-Thanks Jon, I had seen that as well and I should have mentioned it in
-my original post. That patch exposes the privacy screen using
-/proc/acpi which does not seem ideal when adding more privacy screen
-support into the kernel.
+This wasn't really suggested by Vitaly, he just requested it be done in a
+separate patch.
+
+> Signed-off-by: Zhenzhong Duan <zhenzhong.duan@oracle.com>
+> Cc: Paolo Bonzini <pbonzini@redhat.com>
+> Cc: Radim Krcmar <rkrcmar@redhat.com>
+> Cc: Sean Christopherson <sean.j.christopherson@intel.com>
+> Cc: Vitaly Kuznetsov <vkuznets@redhat.com>
+> Cc: Wanpeng Li <wanpengli@tencent.com>
+> Cc: Jim Mattson <jmattson@google.com>
+> Cc: Joerg Roedel <joro@8bytes.org>
+> Cc: Thomas Gleixner <tglx@linutronix.de>
+> Cc: Ingo Molnar <mingo@redhat.com>
+> Cc: Borislav Petkov <bp@alien8.de>
+> Cc: "H. Peter Anvin" <hpa@zytor.com>
+> ---
+>  arch/x86/kernel/kvm.c | 24 ++++++++++++------------
+>  1 file changed, 12 insertions(+), 12 deletions(-)
+> 
+> diff --git a/arch/x86/kernel/kvm.c b/arch/x86/kernel/kvm.c
+> index a4f108d..ce4f578 100644
+> --- a/arch/x86/kernel/kvm.c
+> +++ b/arch/x86/kernel/kvm.c
+> @@ -7,6 +7,8 @@
+>   *   Authors: Anthony Liguori <aliguori@us.ibm.com>
+>   */
+>  
+> +#define pr_fmt(fmt) "KVM: " fmt
+
+Not a fan of "KVM" as the prefix as it's easily confused with KVM the
+hypervisor.  Maybe "kvm_guest"?
+
+> +
+>  #include <linux/context_tracking.h>
+>  #include <linux/init.h>
+>  #include <linux/kernel.h>
+> @@ -286,8 +288,8 @@ static void kvm_register_steal_time(void)
+>  		return;
+>  
+>  	wrmsrl(MSR_KVM_STEAL_TIME, (slow_virt_to_phys(st) | KVM_MSR_ENABLED));
+> -	pr_info("kvm-stealtime: cpu %d, msr %llx\n",
+> -		cpu, (unsigned long long) slow_virt_to_phys(st));
+> +	pr_info("stealtime: cpu %d, msr %llx\n", cpu,
+> +		(unsigned long long) slow_virt_to_phys(st));
+>  }
+>  
+>  static DEFINE_PER_CPU_DECRYPTED(unsigned long, kvm_apic_eoi) = KVM_PV_EOI_DISABLED;
+> @@ -321,8 +323,7 @@ static void kvm_guest_cpu_init(void)
+>  
+>  		wrmsrl(MSR_KVM_ASYNC_PF_EN, pa);
+>  		__this_cpu_write(apf_reason.enabled, 1);
+> -		printk(KERN_INFO"KVM setup async PF for cpu %d\n",
+> -		       smp_processor_id());
+> +		pr_info("setup async PF for cpu %d\n", smp_processor_id());
+>  	}
+>  
+>  	if (kvm_para_has_feature(KVM_FEATURE_PV_EOI)) {
+> @@ -347,8 +348,7 @@ static void kvm_pv_disable_apf(void)
+>  	wrmsrl(MSR_KVM_ASYNC_PF_EN, 0);
+>  	__this_cpu_write(apf_reason.enabled, 0);
+>  
+> -	printk(KERN_INFO"Unregister pv shared memory for cpu %d\n",
+> -	       smp_processor_id());
+> +	pr_info("Unregister pv shared memory for cpu %d\n", smp_processor_id());
+>  }
+>  
+>  static void kvm_pv_guest_cpu_reboot(void *unused)
+> @@ -509,7 +509,7 @@ static void kvm_setup_pv_ipi(void)
+>  {
+>  	apic->send_IPI_mask = kvm_send_ipi_mask;
+>  	apic->send_IPI_mask_allbutself = kvm_send_ipi_mask_allbutself;
+> -	pr_info("KVM setup pv IPIs\n");
+> +	pr_info("setup pv IPIs\n");
+>  }
+>  
+>  static void kvm_smp_send_call_func_ipi(const struct cpumask *mask)
+> @@ -639,11 +639,11 @@ static void __init kvm_guest_init(void)
+>  	    !kvm_para_has_hint(KVM_HINTS_REALTIME) &&
+>  	    kvm_para_has_feature(KVM_FEATURE_STEAL_TIME)) {
+>  		smp_ops.send_call_func_ipi = kvm_smp_send_call_func_ipi;
+> -		pr_info("KVM setup pv sched yield\n");
+> +		pr_info("setup pv sched yield\n");
+>  	}
+>  	if (cpuhp_setup_state_nocalls(CPUHP_AP_ONLINE_DYN, "x86/kvm:online",
+>  				      kvm_cpu_online, kvm_cpu_down_prepare) < 0)
+> -		pr_err("kvm_guest: Failed to install cpu hotplug callbacks\n");
+> +		pr_err("failed to install cpu hotplug callbacks\n");
+>  #else
+>  	sev_map_percpu_data();
+>  	kvm_guest_cpu_init();
+> @@ -746,7 +746,7 @@ static __init int kvm_setup_pv_tlb_flush(void)
+>  			zalloc_cpumask_var_node(per_cpu_ptr(&__pv_tlb_mask, cpu),
+>  				GFP_KERNEL, cpu_to_node(cpu));
+>  		}
+> -		pr_info("KVM setup pv remote TLB flush\n");
+> +		pr_info("setup pv remote TLB flush\n");
+>  	}
+>  
+>  	return 0;
+> @@ -879,8 +879,8 @@ static void kvm_enable_host_haltpoll(void *i)
+>  void arch_haltpoll_enable(unsigned int cpu)
+>  {
+>  	if (!kvm_para_has_feature(KVM_FEATURE_POLL_CONTROL)) {
+> -		pr_err_once("kvm: host does not support poll control\n");
+> -		pr_err_once("kvm: host upgrade recommended\n");
+> +		pr_err_once("host does not support poll control\n");
+> +		pr_err_once("host upgrade recommended\n");
+>  		return;
+>  	}
+>  
+> -- 
+> 1.8.3.1
+> 
