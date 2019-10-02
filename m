@@ -2,94 +2,105 @@ Return-Path: <SRS0=zem1=X3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10A1DC10F14
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 16:58:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 11DA7C352AA
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 16:59:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CCAC221D81
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 16:58:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570035492;
-	bh=jsLGFhojAf5G90SbKlaQUvingcgW1RLoooHEW/5ICFs=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
-	 From;
-	b=0Zt2cee2VpmpZFOVXvFaOJrVFG6VyDzQi8TBF7b6/HbAaZK0xuftYd2n4UcvKmPvd
-	 p2xlPXGwNfnd3wrqHClk/v8eYTm5Vnhx6M7rMSmcZRX/zDSizTACr5LQecZkk0LNc4
-	 BpHEPnuNtJiYNQVxo30MDqOK5Mb3JTGzikvc3JLM=
+	by mail.kernel.org (Postfix) with ESMTP id DE97221920
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 16:59:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="V4N2hGEp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728230AbfJBQ6M (ORCPT
+        id S1728000AbfJBQ7w (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Oct 2019 12:58:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54844 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726101AbfJBQ6L (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Oct 2019 12:58:11 -0400
-Received: from paulmck-ThinkPad-P72 (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 440B121920;
-        Wed,  2 Oct 2019 16:58:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570035491;
-        bh=jsLGFhojAf5G90SbKlaQUvingcgW1RLoooHEW/5ICFs=;
-        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-        b=bV6h8eaEp+C/efwcIjsoc7wK2epRJYTs54gYajN7qwwmBANeeOOYeg7I8mxCShr5N
-         pPDLsNaPQt+gGbMSi6QbcREqb6qtxEQWCjjmYMuI+QLsoOZtYFonWfzlIBEh7hh7NO
-         mJ2jvPHSN3YNq7J5LneXWHfrUY1Vz260LjBT7DRY=
-Date:   Wed, 2 Oct 2019 09:58:10 -0700
-From:   "Paul E. McKenney" <paulmck@kernel.org>
-To:     "Joel Fernandes (Google)" <joel@joelfernandes.org>
-Cc:     linux-kernel@vger.kernel.org,
-        Alan Stern <stern@rowland.harvard.edu>,
-        "David S. Miller" <davem@davemloft.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH] MAINTAINERS: Add me for Linux Kernel memory consistency
- model (LKMM)
-Message-ID: <20191002165810.GD2689@paulmck-ThinkPad-P72>
-Reply-To: paulmck@kernel.org
-References: <20191002152837.97191-1-joel@joelfernandes.org>
+        Wed, 2 Oct 2019 12:59:52 -0400
+Received: from mail-io1-f68.google.com ([209.85.166.68]:37752 "EHLO
+        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726101AbfJBQ7v (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 2 Oct 2019 12:59:51 -0400
+Received: by mail-io1-f68.google.com with SMTP id b19so30505093iob.4;
+        Wed, 02 Oct 2019 09:59:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=edH88JJdhvk/m92MPK7nfCg4Dk9GmYl/C4LQHI6oVcg=;
+        b=V4N2hGEp0d2Y39s7wVpn/Bk4EUviruUwYOflGFl1F9b8QascqJIKG49jxSvZaziNes
+         cTF0rcV/QtekP7KHzbfAqN6glQunPtXZbBrtH6fK7fnxdq++jQk5E+NTlTBO4/LBqUjE
+         NnqNcXZISZQPFkfdWGRzY5xOEtlgEtyKAm37qr8Yn0N+WzmwGTpnwORjMFznPZc682hG
+         oMan9P6a/rKvuFONLlyBxzKC3qTigKG0YC7Rh0NJnla50L3Uzv+dzHQ7Z9Idr6TbvKd0
+         VrVWtske+SzTOIiOtdYUcKFS3aOEZr2yjZ4NPOXlRGSVc5evScbtaEXW8f85mQpAt/TN
+         XtMg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=edH88JJdhvk/m92MPK7nfCg4Dk9GmYl/C4LQHI6oVcg=;
+        b=Delca1bDpyx8EOeqRvVoVIxJ2Kp+y7d4HRTO7sHbHiJyfI2oQSCdFJxG0CPuh2xoEV
+         gBke6+5N7WJUH+epD99PSAxOIaGNND2Q6o2IudUNf7++H17QybqFeh3QRlGLxTrMMDrw
+         OmGYtikVkfnfu+hP+f0yizvQHe1TY35g31HsTOtVYfBluCbAwqv8CQsy5jf20yDX/jzZ
+         EruxthZ2ThaXuMTH5gDaJcU31zK35uxtVMD0yqhvYgMfDv/OcSSzTCtVeuRN6x46y8bQ
+         NYp7rJeoOWuF/rKwxTf/3hJd/bX5ZP8D/k7GX/hTwHPvFadlKrPS220RVr4nfgFRrPAD
+         0+nw==
+X-Gm-Message-State: APjAAAWuW6fCZnUIHl6EgHgCup+q2Zk9RsolW1MMGKE2Rdh7+/DmVHpq
+        meuOtkdknPp9c+r4chjMLcdgCNphuXmZTPndZsE=
+X-Google-Smtp-Source: APXvYqyTHRFovhUojBsEb0XHEq2pPC73Ho0l0/Gbp4i+D9nBP1s8h7A2c86r1V5mGH1264/hx7ZE9D4VBS1dqX8IETA=
+X-Received: by 2002:a5e:8216:: with SMTP id l22mr1172841iom.252.1570035590957;
+ Wed, 02 Oct 2019 09:59:50 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191002152837.97191-1-joel@joelfernandes.org>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+References: <ec7d3fdb-445b-7f4e-d6e6-77c6ae9a5732@web.de> <20190930210114.6557-1-navid.emamdoost@gmail.com>
+ <20191002092221.GJ2751@suse.cz>
+In-Reply-To: <20191002092221.GJ2751@suse.cz>
+From:   Navid Emamdoost <navid.emamdoost@gmail.com>
+Date:   Wed, 2 Oct 2019 11:59:40 -0500
+Message-ID: <CAEkB2ERBSfAad=EChgH+X9vrPGjH8_sBvb2W9ur8n1Fnh_NuUg@mail.gmail.com>
+Subject: Re: [PATCH v2] fs: affs: fix a memory leak in affs_remount
+To:     David Sterba <dsterba@suse.cz>
+Cc:     Markus Elfring <Markus.Elfring@web.de>,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        Deepa Dinamani <deepa.kernel@gmail.com>,
+        Jeff Layton <jlayton@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        David Sterba <dsterba@suse.com>,
+        Navid Emamdoost <emamd001@umn.edu>, Kangjie Lu <kjlu@umn.edu>,
+        Stephen McCamant <smccaman@umn.edu>,
+        linux-fsdevel@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
+        Al Viro <viro@zeniv.linux.org.uk>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Oct 02, 2019 at 11:28:37AM -0400, Joel Fernandes (Google) wrote:
-> Quite interested in the LKMM, I have submitted patches before and used
-> it a lot. I would like to be a part of the maintainers for this project.
-> 
-> Cc: Paul McKenney <paulmck@kernel.org>
-> Suggested-by: Alan Stern <stern@rowland.harvard.edu>
-> Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
+Thanks David,
 
-Acked-by: Paul E. McKenney <paulmck@kernel.org>
+On Wed, Oct 2, 2019 at 4:22 AM David Sterba <dsterba@suse.cz> wrote:
+>
+> On Mon, Sep 30, 2019 at 04:01:10PM -0500, Navid Emamdoost wrote:
+> > In affs_remount if data is provided it is duplicated into new_opts.
+> > The allocated memory for new_opts is only released if pare_options fail.
+> > The release for new_opts is added.
+>
+> A variable that is allocated and freed without use should ring a bell to
+> look closer at the code. There's a bit of history behind new_options,
+> originally there was save/replace options on the VFS layer so the 'data'
+> passed must not change (thus strdup), this got cleaned up in later
+> patches. But not completely.
+>
+> There's no reason to do the strdup in cases where the filesystem does
+> not need to reuse the 'data' again, because strsep would modify it
+> directly.
+>
+> So new_opts should be removed.
 
-> ---
->  MAINTAINERS | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index 296de2b51c83..ecf6d265a88d 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -9473,6 +9473,7 @@ M:	David Howells <dhowells@redhat.com>
->  M:	Jade Alglave <j.alglave@ucl.ac.uk>
->  M:	Luc Maranget <luc.maranget@inria.fr>
->  M:	"Paul E. McKenney" <paulmck@kernel.org>
-> +M:	Joel Fernandes <joel@joelfernandes.org>
->  R:	Akira Yokosawa <akiyks@gmail.com>
->  R:	Daniel Lustig <dlustig@nvidia.com>
->  L:	linux-kernel@vger.kernel.org
-> -- 
-> 2.23.0.444.g18eeb5a265-goog
-> 
+I will send a new patch with the unused variable removed.
+
+
+-- 
+Navid.
