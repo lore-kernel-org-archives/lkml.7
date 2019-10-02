@@ -2,72 +2,97 @@ Return-Path: <SRS0=zem1=X3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B306BC35280
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 15:06:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EF5EC352AA
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 15:08:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8F4682133F
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 15:06:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6C1552133F
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 15:08:01 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lOa/wbZZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728074AbfJBPGx (ORCPT
+        id S1727667AbfJBPIA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Oct 2019 11:06:53 -0400
-Received: from gofer.mess.org ([88.97.38.141]:47667 "EHLO gofer.mess.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726763AbfJBPGw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Oct 2019 11:06:52 -0400
-Received: by gofer.mess.org (Postfix, from userid 1000)
-        id 01118C63B4; Wed,  2 Oct 2019 16:06:50 +0100 (BST)
-Date:   Wed, 2 Oct 2019 16:06:50 +0100
-From:   Sean Young <sean@mess.org>
-To:     Gonsolo <gonsolo@gmail.com>
-Cc:     mchehab+samsung@kernel.org, crope@iki.fi,
-        linux-media@vger.kernel.org,
-        Linux Kernel <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] si2157: Add support for Logilink VG0022A.
-Message-ID: <20191002150650.GA4227@gofer.mess.org>
-References: <20191001205203.4b1a5fb6@coco.lan>
- <20191002141359.30166-1-gonsolo@gmail.com>
- <20191002141359.30166-2-gonsolo@gmail.com>
- <20191002142744.GA3475@gofer.mess.org>
- <CANL0fFS9TGKJH2rfkXzak78BaLazTNO7GoZhSb4vLBsDrmz3FQ@mail.gmail.com>
+        Wed, 2 Oct 2019 11:08:00 -0400
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:44834 "EHLO
+        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726718AbfJBPIA (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 2 Oct 2019 11:08:00 -0400
+Received: by mail-oi1-f195.google.com with SMTP id w6so17904413oie.11;
+        Wed, 02 Oct 2019 08:07:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=8D7K4SNgNO8Gge2dBZ9l/7+f3o962jFEm28AAS+rD5U=;
+        b=lOa/wbZZCG3LtJE49X70CP2HtOtE7MPfPbsftTjD9pDqXGpMW3/uIW5Yd0N7fA6WH0
+         45L26CADJcoHiRb3L8ZDVJ2MuvPei9LlSbtzv9Ib2BrM5BrS77fWsyuu75Rf/bjcdVF9
+         dWSmHXLStQ33A9Du7tOb8bfpH/iex/M5SwieVSvQv+QogodSAq9QgYq3UApVocp/g6vc
+         gaeJHyNQTSOTrtmSKJkLqILR5BnKi+zGFB9oDhYyW1Y3KyrYVec+kqKBsC05lVr1dgey
+         R8qrjmIkNqm5BAhqX7F/t2PKAcRkDXoSYTOfWUq3PcP1tra67gZkYRpjOE78xqDIbpFk
+         G0yQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=8D7K4SNgNO8Gge2dBZ9l/7+f3o962jFEm28AAS+rD5U=;
+        b=HDFuW6JHJbpZMg1SPrrQQgzicZboJXqg/MXndXND131UZISvjaHKjLqiWnudIeblGa
+         GYR/6iwf/hdXzkypTexeSMIZ6mSHSpTdGQm/8wL4ViMuNmcjhlvqBuW26QHfxrJt+vvM
+         wyO+V4zVu8CYER9f82UGuktpORypmsCbmjwgTLrl767IM2R0rTJtaNF2bTZDklj5d0IW
+         pHVH0Ydn7UdFNjDCOys4fkd+849VspwRaUdZIy1Muz/fA8tMWdWpEYer4rT3K9WG5iBY
+         17DVFNkHOH5AmNtP0vlRNS7AWiB4NNNGZqBGO7tLeE7liP35ZytXSvVJWJPzEp97SHRc
+         2ovA==
+X-Gm-Message-State: APjAAAXqD9/XEkMTfeu01XamlhLnfAPQLbQ0MbxBtTsSrYlhkIJ8kZd7
+        EZhGaYat1hz43Ef7saF3yJlvtNSidBpnAQiSwNyQtPYN
+X-Google-Smtp-Source: APXvYqxY4JDul9/OZkpfkz/q9DgEWbGMbiwZZNNn3rEnuql1J4fjP8sO6y0uQCDajynGIZB0pVp9jtLUXhvsEvES7gk=
+X-Received: by 2002:aca:b902:: with SMTP id j2mr3047808oif.169.1570028879257;
+ Wed, 02 Oct 2019 08:07:59 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CANL0fFS9TGKJH2rfkXzak78BaLazTNO7GoZhSb4vLBsDrmz3FQ@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20190918183552.28959-1-TheSven73@gmail.com> <20190918183552.28959-4-TheSven73@gmail.com>
+ <20190930140621.GB2280096@kroah.com>
+In-Reply-To: <20190930140621.GB2280096@kroah.com>
+From:   Sven Van Asbroeck <thesven73@gmail.com>
+Date:   Wed, 2 Oct 2019 11:07:47 -0400
+Message-ID: <CAGngYiXWF-qwTiC95oUQobYRwuruZ6Uu7USwPRqhhyw-mogv7w@mail.gmail.com>
+Subject: Re: [PATCH v1 3/5] staging: fieldbus core: add support for device configuration
+To:     Greg KH <gregkh@linuxfoundation.org>
+Cc:     =?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber@suse.de>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Enrico Weigelt <lkml@metux.net>,
+        Oliver Hartkopp <socketcan@hartkopp.net>,
+        "J. Kiszka" <jan.kiszka@siemens.com>,
+        Frank Iwanitz <friw@hms-networks.de>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        netdev <netdev@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Oct 02, 2019 at 04:44:24PM +0200, Gonsolo wrote:
-> Hi!
-> 
-> > You need a message and a Signed-off-by: here.
-> 
-> Ok, I'll try to get that right the next time.
-> 
-> > > +     ret = si2157_power_up(dev, client);
-> > > +     if (ret)
-> > > +             goto err;
-> > > +     /* query chip revision */
-> > > +     /* hack: do it here because after the si2168 gets 0101, commands will
-> > > +      * still be executed here but no result
-> >
-> > I don't understand. What problem are you seeing here? Why can't you do a
-> > query chip revision first?
-> 
-> This was explained here: https://lkml.org/lkml/2017/3/15/778. To quote:
+On Mon, Sep 30, 2019 at 10:09 AM Greg KH <gregkh@linuxfoundation.org> wrote:
+>
+> Why is a new way of doing configuration needed here?  What does this
+> provide that the current code doesn't already do?
 
-Antti has some great suggestions in that thread:
-	https://lkml.org/lkml/2017/5/24/245
+The fieldbus core doesn't have a configuration mechanism yet. This
+patch adds one.
+I deliberately omitted configuration when the core was added - I wanted to keep
+complexity to a minimum. I'm sorry I didn't make this clearer.
 
-Also note https://lkml.org/lkml/2017/5/26/357 if you have access to a 
-logic analyser.
+As a result, the current core can only work with cards that either don't require
+any config, or get it straight from the network/PLC. Profinet is a good example
+of this. Most cards do require config however. So does the hms flnet card, which
+I tried to add in the patchset.
 
+> And have you looked at the recent configfs fixes to make sure this code
+> still works with them?  I can't test this so rebasing this on 5.4-rc1
+> would be good for you to do first.
+>
 
-Sean
+Thanks for the heads-up! I will test that out.
