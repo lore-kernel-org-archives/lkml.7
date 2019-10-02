@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98B5EC10F14
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 19:10:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E6CC7C4360C
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 19:10:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 810E22133F
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 19:10:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CC7642133F
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 19:10:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729763AbfJBTKB (ORCPT
+        id S1728946AbfJBTJ7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Oct 2019 15:10:01 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:35982 "EHLO
+        Wed, 2 Oct 2019 15:09:59 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:35980 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729344AbfJBTIS (ORCPT
+        by vger.kernel.org with ESMTP id S1729049AbfJBTIS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 2 Oct 2019 15:08:18 -0400
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1iFjyx-00036L-Tj; Wed, 02 Oct 2019 20:08:16 +0100
+        id 1iFjyx-00035s-RP; Wed, 02 Oct 2019 20:08:15 +0100
 Received: from ben by deadeye with local (Exim 4.92.1)
         (envelope-from <ben@decadent.org.uk>)
-        id 1iFjyo-0003eQ-VS; Wed, 02 Oct 2019 20:08:06 +0100
+        id 1iFjyp-0003f0-Av; Wed, 02 Oct 2019 20:08:07 +0100
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,15 +35,14 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Jens Axboe" <axboe@kernel.dk>,
-        "Hans de Goede" <hdegoede@redhat.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>
+        "David S. Miller" <davem@davemloft.net>,
+        "Ivan Vecera" <ivecera@redhat.com>, "Tianhao" <tizhao@redhat.com>
 Date:   Wed, 02 Oct 2019 20:06:51 +0100
-Message-ID: <lsq.1570043211.585029185@decadent.org.uk>
+Message-ID: <lsq.1570043211.975377919@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 57/87] libata: Extend quirks for the ST1000LM024
- drives with NOLPM quirk
+Subject: [PATCH 3.16 64/87] be2net: Fix number of Rx queues used for flow
+ hashing
 In-Reply-To: <lsq.1570043210.379046399@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -57,39 +56,73 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Hans de Goede <hdegoede@redhat.com>
+From: Ivan Vecera <ivecera@redhat.com>
 
-commit 31f6264e225fb92cf6f4b63031424f20797c297d upstream.
+commit 718f4a2537089ea41903bf357071306163bc7c04 upstream.
 
-We've received a bugreport that using LPM with ST1000LM024 drives leads
-to system lockups. So it seems that these models are buggy in more then
-1 way. Add NOLPM quirk to the existing quirks entry for BROKEN_FPDMA_AA.
+Number of Rx queues used for flow hashing returned by the driver is
+incorrect and this bug prevents user to use the last Rx queue in
+indirection table.
 
-BugLink: https://bugzilla.redhat.com/show_bug.cgi?id=1571330
-Reviewed-by: Martin K. Petersen <martin.petersen@oracle.com>
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Let's say we have a NIC with 6 combined queues:
+
+[root@sm-03 ~]# ethtool -l enp4s0f0
+Channel parameters for enp4s0f0:
+Pre-set maximums:
+RX:             5
+TX:             5
+Other:          0
+Combined:       6
+Current hardware settings:
+RX:             0
+TX:             0
+Other:          0
+Combined:       6
+
+Default indirection table maps all (6) queues equally but the driver
+reports only 5 rings available.
+
+[root@sm-03 ~]# ethtool -x enp4s0f0
+RX flow hash indirection table for enp4s0f0 with 5 RX ring(s):
+    0:      0     1     2     3     4     5     0     1
+    8:      2     3     4     5     0     1     2     3
+   16:      4     5     0     1     2     3     4     5
+   24:      0     1     2     3     4     5     0     1
+...
+
+Now change indirection table somehow:
+
+[root@sm-03 ~]# ethtool -X enp4s0f0 weight 1 1
+[root@sm-03 ~]# ethtool -x enp4s0f0
+RX flow hash indirection table for enp4s0f0 with 6 RX ring(s):
+    0:      0     0     0     0     0     0     0     0
+...
+   64:      1     1     1     1     1     1     1     1
+...
+
+Now it is not possible to change mapping back to equal (default) state:
+
+[root@sm-03 ~]# ethtool -X enp4s0f0 equal 6
+Cannot set RX flow hash configuration: Invalid argument
+
+Fixes: 594ad54a2c3b ("be2net: Add support for setting and getting rx flow hash options")
+Reported-by: Tianhao <tizhao@redhat.com>
+Signed-off-by: Ivan Vecera <ivecera@redhat.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- drivers/ata/libata-core.c | 9 ++++++---
- 1 file changed, 6 insertions(+), 3 deletions(-)
+ drivers/net/ethernet/emulex/benet/be_ethtool.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/ata/libata-core.c
-+++ b/drivers/ata/libata-core.c
-@@ -4176,9 +4176,12 @@ static const struct ata_blacklist_entry
- 	{ "ST3320[68]13AS",	"SD1[5-9]",	ATA_HORKAGE_NONCQ |
- 						ATA_HORKAGE_FIRMWARE_WARN },
- 
--	/* drives which fail FPDMA_AA activation (some may freeze afterwards) */
--	{ "ST1000LM024 HN-M101MBB", "2AR10001",	ATA_HORKAGE_BROKEN_FPDMA_AA },
--	{ "ST1000LM024 HN-M101MBB", "2BA30001",	ATA_HORKAGE_BROKEN_FPDMA_AA },
-+	/* drives which fail FPDMA_AA activation (some may freeze afterwards)
-+	   the ST disks also have LPM issues */
-+	{ "ST1000LM024 HN-M101MBB", "2AR10001",	ATA_HORKAGE_BROKEN_FPDMA_AA |
-+						ATA_HORKAGE_NOLPM, },
-+	{ "ST1000LM024 HN-M101MBB", "2BA30001",	ATA_HORKAGE_BROKEN_FPDMA_AA |
-+						ATA_HORKAGE_NOLPM, },
- 	{ "VB0250EAVER",	"HPG7",		ATA_HORKAGE_BROKEN_FPDMA_AA },
- 
- 	/* Blacklist entries taken from Silicon Image 3124/3132
+--- a/drivers/net/ethernet/emulex/benet/be_ethtool.c
++++ b/drivers/net/ethernet/emulex/benet/be_ethtool.c
+@@ -962,7 +962,7 @@ static int be_get_rxnfc(struct net_devic
+ 		cmd->data = be_get_rss_hash_opts(adapter, cmd->flow_type);
+ 		break;
+ 	case ETHTOOL_GRXRINGS:
+-		cmd->data = adapter->num_rx_qs - 1;
++		cmd->data = adapter->num_rx_qs;
+ 		break;
+ 	default:
+ 		return -EINVAL;
 
