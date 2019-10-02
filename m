@@ -2,148 +2,211 @@ Return-Path: <SRS0=zem1=X3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FAKE_REPLY_C,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A541C47404
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 21:13:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E55EEC4360C
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 21:14:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3119D217D7
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 21:13:32 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="p5/RX4IY"
+	by mail.kernel.org (Postfix) with ESMTP id BCD79218DE
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 21:14:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1570050865;
+	bh=ukk2NQEjN/OXL9KA2LEsDC+CCz/HBeIXkd0X0JHpF4Q=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
+	b=r0x0E0KRrKsyTc0fJEg65gpMnLcqhY72ll6jDDRLJ0qQTc2aZYLfcPLTickFQdVEr
+	 uwBoj3OnlOgQ/m2CrnsGl5wleAF+mYhbRTabmmyPboeCWPublvw7a9fA/MoE/N0ljz
+	 xwwX66ybKZSbx8vwaR6xf0RkoMEvBMcu8btwZNKo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729384AbfJBVNb (ORCPT
+        id S1729400AbfJBVOZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Oct 2019 17:13:31 -0400
-Received: from mail-qk1-f193.google.com ([209.85.222.193]:39278 "EHLO
-        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729293AbfJBVNb (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Oct 2019 17:13:31 -0400
-Received: by mail-qk1-f193.google.com with SMTP id 4so184637qki.6;
-        Wed, 02 Oct 2019 14:13:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=nS55Gc+Wv5/nS3zhWqKGsQA+EFTAinrmi2NmXLvOimM=;
-        b=p5/RX4IYlDc7ukUBIt6El1HamNmNTdFO1AOqwKivIZtpuB59c9V4J7GnoqgOUeSkQ3
-         5bxDF5IgF1YRRpSHWaCkbTdbAA0JXIwTJSomNFSwjcGgtfMRb3oKus1wRN4z5SmN+a7R
-         Y8oV9TywyZ5rCm5wrVbjPUsAYTLKI8wnE0vhGeHFBM/9s6wA1O3Uzr8uswpp/Ti4gg8Y
-         m/vIB6JQl7L0JBvxC5cSp8tY05kRmvEYSBQSGfsd4xMpxM0XhHY6M51ltN/BKA/So7Qa
-         ZUFjaPguL1kE3gd1ESJ+CFhsz854H/0b2SLSoACfC7nk4B+JT3oOpc7+sOEcsphEesDJ
-         EAGQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=nS55Gc+Wv5/nS3zhWqKGsQA+EFTAinrmi2NmXLvOimM=;
-        b=LN7mxXhMTSnBV+g/EKjYyLTv8WNbZTbiYJwcwSg1vssZfOygLGWsraZGabPvndzjmM
-         Ph9I/6xjt/hUXSaxwa55cFdvnGwjfdvsC3ZyQO+0wFxdk3u7J31j6bHfqkNmmXnqxne2
-         sPLhCeX+mFiqtJZzetx5AFLSOocWTc837cAbdtV3ZrHNfTssPdpU6yeZLS/pBtUROEiX
-         uzh2qAs9KQpRpHcOTi1aOG28GhN9xe5DpN0vdNX5OYCxPhdknhV/1B0NT3lCad+BzGxa
-         Hc5GZ3/YjpKmKE4a5T1qOXPBjgQceoppa4ETDEDqXzi59KOappVsbm6VFpooPy5CIf24
-         8Y4A==
-X-Gm-Message-State: APjAAAUXKP4iCz7ZbWd7U3wQLSI4IJkNAZOueAIzzxJkEyH8BaBgK3Zu
-        CVewL8z1hFu3azL5Y8rAnpIKuJ8PUu3bQfYzxtM=
-X-Google-Smtp-Source: APXvYqzOz103T/YDH9M3NoQFnxa0eSLeJtiSfsLzfA23Gn47+eYnLSS9ucBhmDfi6X5TsVTjxANWKXSDURw1zM2p+lw=
-X-Received: by 2002:a37:4e55:: with SMTP id c82mr897485qkb.437.1570050808374;
- Wed, 02 Oct 2019 14:13:28 -0700 (PDT)
+        Wed, 2 Oct 2019 17:14:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37418 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729293AbfJBVOY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 2 Oct 2019 17:14:24 -0400
+Received: from localhost (unknown [69.71.4.100])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2D5F221848;
+        Wed,  2 Oct 2019 21:14:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1570050863;
+        bh=ukk2NQEjN/OXL9KA2LEsDC+CCz/HBeIXkd0X0JHpF4Q=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=ot2euRUiRA+UBPNO+FeMqkkAGJEj3I0YPtiR0oqyr2Va1nyAUhw/e2LMe+Z9ay1Jt
+         JGTo5GuBLp8PO/AkYhI04z0Yu18kSqGRvgMSOqjFCOJwX7+guVnSxn1i45AyD/iutM
+         WmF8xgOJpGORq2fIs8MCb7MvRMv2e/EaJu+wb0Fk=
+Date:   Wed, 2 Oct 2019 16:14:21 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Russell King - ARM Linux admin <linux@armlinux.org.uk>
+Cc:     Xiaowei Bao <xiaowei.bao@nxp.com>, mark.rutland@arm.com,
+        devicetree@vger.kernel.org, lorenzo.pieralisi@arm.com,
+        linux-pci@vger.kernel.org, Zhiqiang.Hou@nxp.com,
+        linux-kernel@vger.kernel.org, leoyang.li@nxp.com,
+        Minghuan.Lian@nxp.com, robh+dt@kernel.org,
+        linux-arm-kernel@lists.infradead.org, andrew.murray@arm.com,
+        kishon@ti.com, shawnguo@kernel.org, mingkai.hu@nxp.com
+Subject: Re: [PATCH 0/6] Add the Mobiveil EP and Layerscape Gen4 EP driver
+ support
+Message-ID: <20191002211421.GA64972@google.com>
 MIME-Version: 1.0
-References: <20191002191652.11432-1-kpsingh@chromium.org> <CAEf4BzY4tXd=sHbkN=Bbhj5=7=W_PBs_BB=wjGJ4-bHenKz6sw@mail.gmail.com>
- <E7A6B893-9E4B-4C22-A0CC-833AF45AF460@fb.com>
-In-Reply-To: <E7A6B893-9E4B-4C22-A0CC-833AF45AF460@fb.com>
-From:   Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date:   Wed, 2 Oct 2019 14:13:16 -0700
-Message-ID: <CAEf4BzZ3jqKRap4h9n-JY=-Sp1RdsDDX=1fnX2ZPxbXURdnvvQ@mail.gmail.com>
-Subject: Re: [PATCH v2] samples/bpf: Add a workaround for asm_inline
-To:     Song Liu <songliubraving@fb.com>
-Cc:     KP Singh <kpsingh@chromium.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        bpf <bpf@vger.kernel.org>, Florent Revest <revest@google.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Martin Lau <kafai@fb.com>, Yonghong Song <yhs@fb.com>,
-        Florent Revest <revest@chromium.org>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190924155223.GX25745@shell.armlinux.org.uk>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Oct 2, 2019 at 2:05 PM Song Liu <songliubraving@fb.com> wrote:
->
->
->
-> > On Oct 2, 2019, at 1:22 PM, Andrii Nakryiko <andrii.nakryiko@gmail.com> wrote:
-> >
-> > On Wed, Oct 2, 2019 at 12:17 PM KP Singh <kpsingh@chromium.org> wrote:
-> >>
-> >> From: KP Singh <kpsingh@google.com>
-> >>
-> >> This was added in:
-> >>
-> >>  commit eb111869301e ("compiler-types.h: add asm_inline definition")
-> >>
-> >> and breaks samples/bpf as clang does not support asm __inline.
-> >>
-> >> Co-developed-by: Florent Revest <revest@google.com>
-> >> Signed-off-by: Florent Revest <revest@google.com>
-> >> Signed-off-by: KP Singh <kpsingh@google.com>
-> >> ---
-> >>
-> >> Changes since v1:
-> >>
-> >> - Dropped the rename from asm_workaround.h to asm_goto_workaround.h
-> >> - Dropped the fix for task_fd_query_user.c as it is updated in
-> >>  https://lore.kernel.org/bpf/20191001112249.27341-1-bjorn.topel@gmail.com/
-> >>
-> >> samples/bpf/asm_goto_workaround.h | 13 ++++++++++++-
-> >> 1 file changed, 12 insertions(+), 1 deletion(-)
-> >>
-> >> diff --git a/samples/bpf/asm_goto_workaround.h b/samples/bpf/asm_goto_workaround.h
-> >> index 7409722727ca..7048bb3594d6 100644
-> >> --- a/samples/bpf/asm_goto_workaround.h
-> >> +++ b/samples/bpf/asm_goto_workaround.h
-> >> @@ -3,7 +3,8 @@
-> >> #ifndef __ASM_GOTO_WORKAROUND_H
-> >> #define __ASM_GOTO_WORKAROUND_H
-> >>
-> >> -/* this will bring in asm_volatile_goto macro definition
-> >> +/*
-> >> + * This will bring in asm_volatile_goto and asm_inline macro definitions
-> >>  * if enabled by compiler and config options.
-> >>  */
-> >> #include <linux/types.h>
-> >> @@ -13,5 +14,15 @@
-> >> #define asm_volatile_goto(x...) asm volatile("invalid use of asm_volatile_goto")
-> >> #endif
-> >>
-> >> +/*
-> >> + * asm_inline is defined as asm __inline in "include/linux/compiler_types.h"
-> >> + * if supported by the kernel's CC (i.e CONFIG_CC_HAS_ASM_INLINE) which is not
-> >> + * supported by CLANG.
-> >> + */
-> >> +#ifdef asm_inline
-> >> +#undef asm_inline
-> >> +#define asm_inline asm
-> >> +#endif
-> >
-> > Would it be better to just #undef CONFIG_CC_HAS_ASM_INLINE for BPF programs?
->
-> I guess that is still useful when gcc fully support BPF?
+On Tue, Sep 24, 2019 at 04:52:23PM +0100, Russell King - ARM Linux admin wrote:
+> On Tue, Sep 24, 2019 at 03:18:47PM +0100, Russell King - ARM Linux admin wrote:
+> > On Mon, Sep 16, 2019 at 10:17:36AM +0800, Xiaowei Bao wrote:
+> > > This patch set are for adding Mobiveil EP driver and adding PCIe Gen4
+> > > EP driver of NXP Layerscape platform.
+> > > 
+> > > This patch set depends on:
+> > > https://patchwork.kernel.org/project/linux-pci/list/?series=159139
+> > > 
+> > > Xiaowei Bao (6):
+> > >   PCI: mobiveil: Add the EP driver support
+> > >   dt-bindings: Add DT binding for PCIE GEN4 EP of the layerscape
+> > >   PCI: mobiveil: Add PCIe Gen4 EP driver for NXP Layerscape SoCs
+> > >   PCI: mobiveil: Add workaround for unsupported request error
+> > >   arm64: dts: lx2160a: Add PCIe EP node
+> > >   misc: pci_endpoint_test: Add the layerscape PCIe GEN4 EP device
+> > >     support
+> > > 
+> > >  .../bindings/pci/layerscape-pcie-gen4.txt          |  28 +-
+> > >  MAINTAINERS                                        |   3 +
+> > >  arch/arm64/boot/dts/freescale/fsl-lx2160a.dtsi     |  56 ++
+> > >  drivers/misc/pci_endpoint_test.c                   |   2 +
+> > >  drivers/pci/controller/mobiveil/Kconfig            |  22 +-
+> > >  drivers/pci/controller/mobiveil/Makefile           |   2 +
+> > >  .../controller/mobiveil/pcie-layerscape-gen4-ep.c  | 169 ++++++
+> > >  drivers/pci/controller/mobiveil/pcie-mobiveil-ep.c | 568 +++++++++++++++++++++
+> > >  drivers/pci/controller/mobiveil/pcie-mobiveil.c    |  99 +++-
+> > >  drivers/pci/controller/mobiveil/pcie-mobiveil.h    |  72 +++
+> > >  10 files changed, 1009 insertions(+), 12 deletions(-)
+> > >  create mode 100644 drivers/pci/controller/mobiveil/pcie-layerscape-gen4-ep.c
+> > >  create mode 100644 drivers/pci/controller/mobiveil/pcie-mobiveil-ep.c
+> > 
+> > Hi,
+> > 
+> > I've applied "PCI: mobiveil: Fix the CPU base address setup in inbound
+> > window" and your patch set to 5.3, which seems to be able to detect the
+> > PCIe card I have plugged in:
+> > 
+> > layerscape-pcie-gen4 3800000.pcie: host bridge /soc/pcie@3800000 ranges:
+> > layerscape-pcie-gen4 3800000.pcie:   MEM 0xa040000000..0xa07fffffff -> 0x40000000
+> > layerscape-pcie-gen4 3800000.pcie: PCI host bridge to bus 0000:00
+> > pci_bus 0000:00: root bus resource [bus 00-ff]
+> > pci_bus 0000:00: root bus resource [mem 0xa040000000-0xa07fffffff] (bus address
+> > [0x40000000-0x7fffffff])
+> > pci 0000:00:00.0: [1957:8d90] type 01 class 0x060400
+> > pci 0000:00:00.0: enabling Extended Tags
+> > pci 0000:00:00.0: supports D1 D2
+> > pci 0000:00:00.0: PME# supported from D0 D1 D2 D3hot D3cold
+> > pci 0000:01:00.0: [15b3:6750] type 00 class 0x020000
+> > pci 0000:01:00.0: reg 0x10: [mem 0xa040000000-0xa0400fffff 64bit]
+> > pci 0000:01:00.0: reg 0x18: [mem 0xa040800000-0xa040ffffff 64bit pref]
+> > pci 0000:01:00.0: reg 0x30: [mem 0xa041000000-0xa0410fffff pref]
+> > pci 0000:00:00.0: up support 3 enabled 0
+> > pci 0000:00:00.0: dn support 1 enabled 0
+> > pci 0000:00:00.0: BAR 9: assigned [mem 0xa040000000-0xa0407fffff 64bit pref]
+> > pci 0000:00:00.0: BAR 8: assigned [mem 0xa040800000-0xa0409fffff]
+> > pci 0000:01:00.0: BAR 2: assigned [mem 0xa040000000-0xa0407fffff 64bit pref]
+> > pci 0000:01:00.0: BAR 0: assigned [mem 0xa040800000-0xa0408fffff 64bit]
+> > pci 0000:01:00.0: BAR 6: assigned [mem 0xa040900000-0xa0409fffff pref]
+> > pci 0000:00:00.0: PCI bridge to [bus 01-ff]
+> > pci 0000:00:00.0:   bridge window [mem 0xa040800000-0xa0409fffff]
+> > pci 0000:00:00.0:   bridge window [mem 0xa040000000-0xa0407fffff 64bit pref]
+> > pci 0000:00:00.0: Max Payload Size set to  256/ 256 (was  128), Max Read Rq  256pci 0000:01:00.0: Max Payload Size set to  256/ 256 (was  128), Max Read Rq  256pcieport 0000:00:00.0: PCIe capabilities: 0x13
+> > pcieport 0000:00:00.0: init_service_irqs: -19
+> > 
+> > However, a bit later in the kernel boot, I get:
+> > 
+> > SError Interrupt on CPU1, code 0xbf000002 -- SError
+> > CPU: 1 PID: 1 Comm: swapper/0 Not tainted 5.3.0+ #392
+> > Hardware name: SolidRun LX2160A COM express type 7 module (DT)
+> > pstate: 60400085 (nZCv daIf +PAN -UAO)
+> > pc : pci_generic_config_read+0xb0/0xc0
+> > lr : pci_generic_config_read+0x1c/0xc0
+> > sp : ffffff8010f9baf0
+> > x29: ffffff8010f9baf0 x28: ffffff8010d620a0
+> > x27: ffffff8010d79000 x26: ffffff8010d62000
+> > x25: ffffff8010cb06d4 x24: 0000000000000000
+> > x23: ffffff8010e499b8 x22: ffffff8010f9bbaf
+> > x21: 0000000000000000 x20: ffffffe2eda11800
+> > x19: ffffff8010f62158 x18: ffffff8010bdede0
+> > x17: ffffff8010bdede8 x16: ffffff8010b96970
+> > x15: ffffffffffffffff x14: ffffffffff000000
+> > x13: ffffffffffffffff x12: 0000000000000030
+> > x11: 0101010101010101 x10: 7f7f7f7f7f7f7f7f
+> > x9 : 2dff716475687163 x8 : ffffffffffffffff
+> > x7 : fefefefefefefefe x6 : 0000000000000000
+> > x5 : 0000000000000000 x4 : ffffff8010f9bb6c
+> > x3 : 0000000000000001 x2 : 0000000000000003
+> > x1 : 0000000000000000 x0 : 0000000000000000
+> > Kernel panic - not syncing: Asynchronous SError Interrupt
+> > CPU: 1 PID: 1 Comm: swapper/0 Not tainted 5.3.0+ #392
+> > Hardware name: SolidRun LX2160A COM express type 7 module (DT)
+> > Call trace:
+> >  dump_backtrace+0x0/0x120
+> >  show_stack+0x14/0x1c
+> >  dump_stack+0x9c/0xc0
+> >  panic+0x148/0x34c
+> >  print_tainted+0x0/0xa8
+> >  arm64_serror_panic+0x74/0x80
+> >  do_serror+0x8c/0x13c
+> >  el1_error+0xbc/0x160
+> >  pci_generic_config_read+0xb0/0xc0
+> >  pci_bus_read_config_byte+0x64/0x90
+> >  pci_read_config_byte+0x40/0x48
+> >  pci_assign_irq+0x34/0xc8
+> >  pci_device_probe+0x28/0x148
+> >  really_probe+0x1c4/0x2d0
+> >  driver_probe_device+0x58/0xfc
+> >  device_driver_attach+0x68/0x70
+> >  __driver_attach+0x94/0xdc
+> >  bus_for_each_dev+0x50/0xa0
+> >  driver_attach+0x20/0x28
+> >  bus_add_driver+0x14c/0x200
+> >  driver_register+0x6c/0x124
+> >  __pci_register_driver+0x48/0x50
+> >  mlx4_init+0x154/0x180
+> >  do_one_initcall+0x30/0x250
+> >  kernel_init_freeable+0x23c/0x32c
+> >  kernel_init+0x10/0xfc
+> >  ret_from_fork+0x10/0x18
+> > SMP: stopping secondary CPUs
+> > Kernel Offset: disabled
+> > CPU features: 0x0002,21006008
+> > Memory Limit: none
+> > 
+> > and there it dies.  Any ideas?
+> 
+> The failing access seems to be:
+> 
+>         pci_read_config_byte(dev, PCI_INTERRUPT_PIN, &pin);
+> 
+> for the Mellanox Ethernet card.  Presumably, being a PCIe ethernet
+> card, it doesn't implement this register (just a guess), and aborts
+> the PCI transaction, which is presumably triggering the above SError.
 
-Ah, I missed that it's Clang-specific, not BPF target-specific thing.
-Yeah, then it makes sense.
+PCIe r5.0, sec 7.5.1.1.13, says Interrupt Pin is a read-only register,
+so there shouldn't be an issue with reading it.
 
-Acked-by: Andrii Nakryiko <andriin@fb.com>
+mobiveil_pcie_ops uses the generic pci_generic_config_read(), which
+will perform a readb() in this case.  Could mobiveil be a bridge that
+only supports 32-bit config accesses?
 
->
-> Thanks,
-> Song
->
+> Note that I've used this card with the Macchiatobin (Armada 8040)
+> without issue.
+> 
+> -- 
+> RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+> FTTC broadband for 0.8mile line in suburbia: sync at 12.1Mbps down 622kbps up
+> According to speedtest.net: 11.9Mbps down 500kbps up
