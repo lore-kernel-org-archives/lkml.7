@@ -2,174 +2,225 @@ Return-Path: <SRS0=zem1=X3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 315ECC4360C
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 19:55:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4791EC47404
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 19:55:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 07E6F21783
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 19:55:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 15ECB2133F
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 19:55:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="giR0dB73"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kH9w1jbD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728260AbfJBTzX (ORCPT
+        id S1728426AbfJBTzY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Oct 2019 15:55:23 -0400
-Received: from mail-ed1-f67.google.com ([209.85.208.67]:45576 "EHLO
-        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727919AbfJBTzX (ORCPT
+        Wed, 2 Oct 2019 15:55:24 -0400
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:50524 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725951AbfJBTzX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 2 Oct 2019 15:55:23 -0400
-Received: by mail-ed1-f67.google.com with SMTP id h33so255134edh.12
-        for <linux-kernel@vger.kernel.org>; Wed, 02 Oct 2019 12:55:21 -0700 (PDT)
+Received: by mail-wm1-f67.google.com with SMTP id 5so212764wmg.0;
+        Wed, 02 Oct 2019 12:55:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=xkIPEeBh6Q97IvXGn4hjLXlT8I4asAfynX43MLqWSPQ=;
-        b=giR0dB73oo9Hev8XpA4FIuuMUIUAo+fUm46PmKWy/t1grR8nLOEBy7KCmuMVBIhpgu
-         DqZZeaB0KYxkD/l2l7XxNtcWmq7enjmcp/2jXBbjSIX8AU503H/mKpZQXxL6yRQ5TO33
-         B8QEZatRcv+rJjm+U6tmafDvI9USkQNQ9Ux0Q37GX5upAgpsR1g+m1EHKB5A2kA4cy1t
-         CTUHuYWYl1EmhaxFnDFjasXylpc9W4iwZ93dlZ27PjGUuGhBBHGX7AAJYHewPra+sJ3Q
-         0QLFjvn1KhuAQmn7rtCHmQjVb8nK3lbzu1O6WQHerx0+p39rod/W2ym+kdT+TdToa1Ap
-         FF7w==
+        h=subject:to:cc:references:from:openpgp:autocrypt:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=/OYBCmaoZBgnH58CWsomF0ic7XrQ33IxvcB/Z227870=;
+        b=kH9w1jbDm264UH0kXGpd9Dw6unxOcEXx8DOVhON8bhaAFIjq65FjJm3Lz7tyNbsVTX
+         UKnYLAFaQWmczzqurLh/bH1L8tVMXStbtFeVtzoCozVzORr7YRT6SXjMCSF8hEzeTi+j
+         idLWzv/bTBsSSwGXi5ON/eeURLRwc+Rld9EDzZTwh9ugu1jW2kUFu9v1ZlIVMJgU8Aob
+         mNxipUEmsooaep/oghO+TmzH3ptalRfCxWxcMN1zJxb2SseYB6TpPW/WDP6gPzO1wlQ5
+         zguJ1nAWpYwIpKg0+TGfoA9M+spEIs6aop1y3DLQtHnzUyPeX+QNHOnz+waQU4cPx1Nl
+         kf7A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=xkIPEeBh6Q97IvXGn4hjLXlT8I4asAfynX43MLqWSPQ=;
-        b=VOa2c8vHuS99mKi9gnhl4Q1oZCfDN/lJRGqklnqm9vfEs/EYULGDIA6nK5YRTiQ7Xm
-         npLYBXbg/TcBd0Ty/DEm6F1hLUF3IDgr27R03mMdV7H1BZNNto2b3BA107U9DHNmzTHl
-         KMiQl2Lspxz0HbFnK+C0oVeL7p0EnkLuGXN/beEoW0RghZEOBd0Qau+8n7HPmDEhInJi
-         mTrw+6cnAIFhNNPtGLMC8Dsz40L6lQX9/XuFl/aqNYfdNuOKsLsbM+OhsXwpmV15XPWn
-         cwjfgfRIyqAtnOi59Y6PFKS+ezHiaT39JolFz6guA2vHLbwiPyXTv6rSBDNnRkQ9VFa1
-         7m9w==
-X-Gm-Message-State: APjAAAWnPN5PCAidWvkOV25piOzE267WNNheU3kECYCJNMjuQgS440KR
-        G42dTnzUHeZUxyQv5Yj7tZ+59M3znicSilLecI0=
-X-Google-Smtp-Source: APXvYqyBZL/DpNeTN5iSVkVr1dDOZLljTZyNX5ooanHL1zA0OBrgXa2VJbpQr5JScE8i4pEBDoDLrK/oJaRcHaqRNBg=
-X-Received: by 2002:a17:906:4c4c:: with SMTP id d12mr4652655ejw.174.1570046120024;
- Wed, 02 Oct 2019 12:55:20 -0700 (PDT)
+        h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=/OYBCmaoZBgnH58CWsomF0ic7XrQ33IxvcB/Z227870=;
+        b=KzF1GtbkhLbiJ9P8ehqoq+YxE047sq6ealoV8GgTLJdA2tyzSkoXsFCcCuDqfBsEs6
+         aiGjYvN1rlJpgwuF7wjtfUT01rhCS5J3POnkPQYCk87jiCKOsGy8T5RRnsEU2v/p7nLr
+         OBEtttWmps/geXaMxhv8OL4LB1sAAQ/AU89r/mEy+YU6cpMVbXJEzAWDSLWZ07WU+raK
+         Ipd3zms5jGFFhSUA5jXWgCyGMyJWIpPQNSJZQK9BspP9eqSLgVlCxYc13le86fCiOkED
+         pNDSWBt/NQYOilrGzvzA9a1eEuGMAYB5CHy08h3X0IDuAAp1IU1oCEJV1l5GviZSitzP
+         TM2A==
+X-Gm-Message-State: APjAAAW+gEa1G/eCbHCmiXK3hdyQCidlGFHab05ru6r2y2zpjWacy9A9
+        9mUj3ReoPIngnFbfuFwpwzpI4TNS
+X-Google-Smtp-Source: APXvYqyOHGEJ5i80627Iuf6XCjE/3F5QUz/Q6A9wHs4OdxzKaSGbjvfOZ8+h3wcoV95w/em0XB5pLA==
+X-Received: by 2002:a1c:7519:: with SMTP id o25mr4053714wmc.16.1570046120037;
+        Wed, 02 Oct 2019 12:55:20 -0700 (PDT)
+Received: from [192.168.1.19] (ckh198.neoplus.adsl.tpnet.pl. [83.31.83.198])
+        by smtp.gmail.com with ESMTPSA id c6sm248741wrm.71.2019.10.02.12.55.18
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 02 Oct 2019 12:55:19 -0700 (PDT)
+Subject: Re: [PATCH 4/5] leds: flash: Add devm_* functions to the flash class
+To:     Dan Murphy <dmurphy@ti.com>, pavel@ucw.cz
+Cc:     linux-leds@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20191001180439.8312-1-dmurphy@ti.com>
+ <20191001180439.8312-4-dmurphy@ti.com>
+ <218b33ac-506b-2014-d37f-3da2da323388@gmail.com>
+ <6e33734d-f1df-bfd9-ecc5-8f013bf86a78@ti.com>
+From:   Jacek Anaszewski <jacek.anaszewski@gmail.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=jacek.anaszewski@gmail.com; prefer-encrypt=mutual; keydata=
+ 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
+Message-ID: <6ec62c8f-1522-b81a-1072-0cfa655f2b6f@gmail.com>
+Date:   Wed, 2 Oct 2019 21:55:17 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-References: <1569634131-13875-1-git-send-email-jsanka@codeaurora.org>
- <1569634131-13875-2-git-send-email-jsanka@codeaurora.org> <20190930103931.GZ1208@intel.com>
- <f6d3c2b6ad897ce8b2fdcaab44993eed@codeaurora.org> <20191002134535.GU1208@intel.com>
-In-Reply-To: <20191002134535.GU1208@intel.com>
-From:   Rob Clark <robdclark@gmail.com>
-Date:   Wed, 2 Oct 2019 15:55:10 -0400
-Message-ID: <CAF6AEGtETiKLggNEKm+YyH8PMzpXpp119PjV2f6jdbU4UYxiAQ@mail.gmail.com>
-Subject: Re: [PATCH] drm: add fb max width/height fields to drm_mode_config
-To:     =?UTF-8?B?VmlsbGUgU3lyasOkbMOk?= <ville.syrjala@linux.intel.com>
-Cc:     Jeykumar Sankaran <jsanka@codeaurora.org>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        Sean Paul <seanpaul@chromium.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        Neil Armstrong <narmstrong@baylibre.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <6e33734d-f1df-bfd9-ecc5-8f013bf86a78@ti.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Oct 2, 2019 at 9:45 AM Ville Syrj=C3=A4l=C3=A4
-<ville.syrjala@linux.intel.com> wrote:
->
-> On Tue, Oct 01, 2019 at 02:20:55PM -0700, Jeykumar Sankaran wrote:
-> > On 2019-09-30 03:39, Ville Syrj=C3=A4l=C3=A4 wrote:
-> > > On Fri, Sep 27, 2019 at 06:28:51PM -0700, Jeykumar Sankaran wrote:
-> > >> The mode_config max width/height values determine the maximum
-> > >> resolution the pixel reader can handle.
-> > >
-> > > Not according to the docs I "fixed" a while ago.
-> > >
-> > >> But the same values are
-> > >> used to restrict the size of the framebuffer creation. Hardware's
-> > >> with scaling blocks can operate on framebuffers larger/smaller than
-> > >> that of the pixel reader resolutions by scaling them down/up before
-> > >> rendering.
-> > >>
-> > >> This changes adds a separate framebuffer max width/height fields
-> > >> in drm_mode_config to allow vendors to set if they are different
-> > >> than that of the default max resolution values.
-> > >
-> > > If you're going to change the meaning of the old values you need
-> > > to fix the drivers too.
-> > >
-> > > Personally I don't see too much point in this since you most likely
-> > > want to validate all the other timings as well, and so likely need
-> > > some kind of mode_valid implementation anyway. Hence to validate
-> > > modes there's not much benefit of having global min/max values.
-> > >
-> > https://patchwork.kernel.org/patch/10467155/
-> >
-> > I believe you are referring to this patch.
-> >
-> > I am primarily interested in the scaling scenario mentioned here. MSM
-> > and a few other hardware have scaling block that are used both ways:
-> >
-> > 1) Where FB limits are larger than the display limits. Scalar blocks ar=
-e
-> > used to
-> >     downscale the framebuffers and render within display limits.
-> >
-> > In this scenario, with your patch, are you suggesting the drivers
-> > maintain the
-> > display limits locally and use those values in fill_modes() /
-> > mode_valid() to filter
-> > out invalid modes explicitly instead of mode_config.max_width/height?
-> >
-> > 2) Where FB limits are smaller than display limits. Enforced for
-> > performance reasons on low tier hardware.
-> > It reduces the fetch bandwidth and uses post blending scalar block to
-> > scale up the pixel stream
-> > to match the display resolution.
->
-> As Daniel mentioned in that discussion your typical userspace
-> assumes that it can use a single unscaled framebuffer with any
-> advertised mode. Hence I believe limiting the mode list based
-> on the max framebuffer size is pretty much required unless
-> you want to break existing userspace.
->
-> In i915 I went a bit further than that recently and now we
-> filter the mode list based on the maximum plane size [1]
-> (which can be less than the max fb size and less than the
-> maximum crtc dimensions). And again that's because userspace
-> assumes that it can just use a single unscaled fullscreen
-> plane to cover the entire crtc.
->
-> These assumption are also carved into the legacy setcrtc uapi
-> where you can't even specify multiple framebuffers. In theory
-> a driver could internally use multiple planes to overcome some
-> of the limitations, but in i915 at least we don't.
->
-> [1] https://cgit.freedesktop.org/drm/drm-intel/commit/?id=3D2d20411e25a3b=
-f3d2914a2219f47ed48dc57aed5
->
-> >
-> > Any suggestions on how this topology can be handled with a single set o=
-f
-> > max/min values?
-> >
->
-> I think a safe way to relax these rules would be to either:
-> a) Add a client cap by which userspace can inform the kernel
->    it understands there are more complicated limits at play
->    and thus can't assume that everything will just work
-> b) Maybe we could just tie that in with the atomic cap since
->    atomic clients are pretty much required to do the TEST_ONLY
->    dance anyway, so one might hope they have a working fallback
->    strategy. Though I suspect eg. the modesetting ddx wouldn't
->    like this. But we no longer allow atomic with X anyway so
->    that partcular argument may not hold much weight anymore.
+Dan,
 
-What was the conclusion of the hack to not expose atomic to
-modesetting ddx, due to the brokenness of it's atomic use?  I guess
-that could also make the modesetting case go away..
+On 10/2/19 2:04 PM, Dan Murphy wrote:
+> Jacek
+> 
+> On 10/1/19 4:06 PM, Jacek Anaszewski wrote:
+>> Dan,
+>>
+>> Thank you for the patch. One funny omission caught my
+>> eye here and in led-class.c when making visual comparison.
+>> Please refer below.
+>>
+>> On 10/1/19 8:04 PM, Dan Murphy wrote:
+>>> Add the missing device managed API for registration and
+>>> unregistration for the LED flash class.
+>>>
+>>> Signed-off-by: Dan Murphy <dmurphy@ti.com>
+>>> ---
+>>>   drivers/leds/led-class-flash.c  | 50 +++++++++++++++++++++++++++++++++
+>>>   include/linux/led-class-flash.h | 14 +++++++++
+>>>   2 files changed, 64 insertions(+)
+>>>
+>>> diff --git a/drivers/leds/led-class-flash.c
+>>> b/drivers/leds/led-class-flash.c
+>>> index 60c3de5c6b9f..c2b4fd02a1bc 100644
+>>> --- a/drivers/leds/led-class-flash.c
+>>> +++ b/drivers/leds/led-class-flash.c
+>>> @@ -327,6 +327,56 @@ void led_classdev_flash_unregister(struct
+>>> led_classdev_flash *fled_cdev)
+>>>   }
+>>>   EXPORT_SYMBOL_GPL(led_classdev_flash_unregister);
+>>>   +static void devm_led_classdev_flash_release(struct device *dev,
+>>> void *res)
+>>> +{
+>>> +    led_classdev_flash_unregister(*(struct led_classdev_flash **)res);
+>>> +}
+>>> +
+>>> +int devm_led_classdev_flash_register_ext(struct device *parent,
+>>> +                     struct led_classdev_flash *fled_cdev,
+>>> +                     struct led_init_data *init_data)
+>>> +{
+>>> +    struct led_classdev_flash **dr;
+>>> +    int ret;
+>>> +
+>>> +    dr = devres_alloc(devm_led_classdev_flash_release, sizeof(*dr),
+>>> +              GFP_KERNEL);
+>>> +    if (!dr)
+>>> +        return -ENOMEM;
+>>> +
+>>> +    ret = led_classdev_flash_register_ext(parent, fled_cdev,
+>>> init_data);
+>>> +    if (ret) {
+>>> +        devres_free(dr);
+>>> +        return ret;
+>>> +    }
+>>> +
+>>> +    *dr = fled_cdev;
+>>> +    devres_add(parent, dr);
+>>> +
+>>> +    return 0;
+>>> +}
+>>> +EXPORT_SYMBOL_GPL(devm_led_classdev_flash_register_ext);
+>>> +
+>>> +static int devm_led_classdev_flash_match(struct device *dev,
+>>> +                          void *res, void *data)
+>>> +{
+>>> +    struct fled_cdev **p = res;
+>> We don't have struct fled_cdev. This name is used for variables
+>> of struct led_clssdev_flash type in drivers.
+>>
+>> We don't get even compiler warning here because this is cast
+>> from void pointer.
+>>
+>> Funny thing is that you seem to have followed similar flaw in
+>> devm_led_classdev_match() where struct led_cdev has been
+>> introduced.
+>>
+>> We need to fix both cases.
+> 
+> OK I will fix the leds-class in a separate patch in case it causes issues.
 
-BR,
--R
+It doesn't cause issues now but is misleading.
+
+-- 
+Best regards,
+Jacek Anaszewski
