@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 792D3C4360C
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 19:09:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A378BC10F14
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 19:09:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 607D8222BE
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 19:09:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8755D222BE
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 19:09:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729606AbfJBTJU (ORCPT
+        id S1729387AbfJBTIV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Oct 2019 15:09:20 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:36110 "EHLO
+        Wed, 2 Oct 2019 15:08:21 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:35314 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729381AbfJBTIW (ORCPT
+        by vger.kernel.org with ESMTP id S1729076AbfJBTIJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Oct 2019 15:08:22 -0400
+        Wed, 2 Oct 2019 15:08:09 -0400
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1iFjyx-00035x-Q7; Wed, 02 Oct 2019 20:08:15 +0100
+        id 1iFjyo-00035y-Gh; Wed, 02 Oct 2019 20:08:06 +0100
 Received: from ben by deadeye with local (Exim 4.92.1)
         (envelope-from <ben@decadent.org.uk>)
-        id 1iFjyp-0003fB-Ep; Wed, 02 Oct 2019 20:08:07 +0100
+        id 1iFjyn-0003cB-Rb; Wed, 02 Oct 2019 20:08:05 +0100
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,24 +35,14 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Michael Ellerman" <mpe@ellerman.id.au>,
-        "Arnaldo Carvalho de Melo" <acme@redhat.com>,
-        "Thomas Gleixner" <tglx@linutronix.de>,
-        "Ingo Molnar" <mingo@kernel.org>,
-        "Ravi Bangoria" <ravi.bangoria@linux.vnet.ibm.com>,
-        "Stephane Eranian" <eranian@google.com>,
-        "Peter Zijlstra" <peterz@infradead.org>,
-        "Young Xiao" <92siuyang@gmail.com>,
-        "Naveen N. Rao" <naveen.n.rao@linux.vnet.ibm.com>,
-        "Jiri Olsa" <jolsa@redhat.com>,
-        "Linus Torvalds" <torvalds@linux-foundation.org>,
-        "Will Deacon" <will.deacon@arm.com>,
-        "Frederic Weisbecker" <fweisbec@gmail.com>
+        "Catalina Mocanu" <catalina.mocanu@gmail.com>,
+        "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>
 Date:   Wed, 02 Oct 2019 20:06:51 +0100
-Message-ID: <lsq.1570043211.918554389@decadent.org.uk>
+Message-ID: <lsq.1570043211.136218297@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 66/87] perf/core: Fix perf_sample_regs_user() mm check
+Subject: [PATCH 3.16 29/87] staging: iio: cdc: Don't put an else right
+ after a return
 In-Reply-To: <lsq.1570043210.379046399@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -66,49 +56,45 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Peter Zijlstra <peterz@infradead.org>
+From: Catalina Mocanu <catalina.mocanu@gmail.com>
 
-commit 085ebfe937d7a7a5df1729f35a12d6d655fea68c upstream.
+commit 288903f6b91e759b0a813219acd376426cbb8f14 upstream.
 
-perf_sample_regs_user() uses 'current->mm' to test for the presence of
-userspace, but this is insufficient, consider use_mm().
+This fixes the following checkpatch.pl warning:
+WARNING: else is not generally useful after a break or return.
 
-A better test is: '!(current->flags & PF_KTHREAD)', exec() clears
-PF_KTHREAD after it sets the new ->mm but before it drops to userspace
-for the first time.
+While at it, remove new line for symmetry with the rest of the code.
 
-Possibly obsoletes: bf05fc25f268 ("powerpc/perf: Fix oops when kthread execs user process")
-
-Reported-by: Ravi Bangoria <ravi.bangoria@linux.vnet.ibm.com>
-Reported-by: Young Xiao <92siuyang@gmail.com>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Acked-by: Will Deacon <will.deacon@arm.com>
-Cc: Arnaldo Carvalho de Melo <acme@redhat.com>
-Cc: Frederic Weisbecker <fweisbec@gmail.com>
-Cc: Jiri Olsa <jolsa@redhat.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Michael Ellerman <mpe@ellerman.id.au>
-Cc: Naveen N. Rao <naveen.n.rao@linux.vnet.ibm.com>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Stephane Eranian <eranian@google.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Fixes: 4018994f3d87 ("perf: Add ability to attach user level registers dump to sample")
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
-[bwh: Backported to 3.16: adjust context]
+Signed-off-by: Catalina Mocanu <catalina.mocanu@gmail.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- kernel/events/core.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/staging/iio/cdc/ad7150.c | 10 +++-------
+ 1 file changed, 3 insertions(+), 7 deletions(-)
 
---- a/kernel/events/core.c
-+++ b/kernel/events/core.c
-@@ -4581,7 +4581,7 @@ static void perf_sample_regs_user(struct
- 				  struct pt_regs *regs)
- {
- 	if (!user_mode(regs)) {
--		if (current->mm)
-+		if (!(current->flags & PF_KTHREAD))
- 			regs = task_pt_regs(current);
- 		else
- 			regs = NULL;
+--- a/drivers/staging/iio/cdc/ad7150.c
++++ b/drivers/staging/iio/cdc/ad7150.c
+@@ -143,19 +143,15 @@ static int ad7150_read_event_config(stru
+ 	case IIO_EV_TYPE_MAG_ADAPTIVE:
+ 		if (dir == IIO_EV_DIR_RISING)
+ 			return adaptive && (threshtype == 0x1);
+-		else
+-			return adaptive && (threshtype == 0x0);
++		return adaptive && (threshtype == 0x0);
+ 	case IIO_EV_TYPE_THRESH_ADAPTIVE:
+ 		if (dir == IIO_EV_DIR_RISING)
+ 			return adaptive && (threshtype == 0x3);
+-		else
+-			return adaptive && (threshtype == 0x2);
+-
++		return adaptive && (threshtype == 0x2);
+ 	case IIO_EV_TYPE_THRESH:
+ 		if (dir == IIO_EV_DIR_RISING)
+ 			return !adaptive && (threshtype == 0x1);
+-		else
+-			return !adaptive && (threshtype == 0x0);
++		return !adaptive && (threshtype == 0x0);
+ 	default:
+ 		break;
+ 	}
 
