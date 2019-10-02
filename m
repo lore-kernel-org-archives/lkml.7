@@ -2,207 +2,120 @@ Return-Path: <SRS0=zem1=X3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EC30ECE58A
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 13:09:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27898C352AA
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 13:09:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D8F0921A4A
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 13:09:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F28CA21920
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 13:09:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="kS7E0aNe"
+	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="rivVgCtt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727574AbfJBNJ3 (ORCPT
+        id S1727616AbfJBNJd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Oct 2019 09:09:29 -0400
-Received: from perceval.ideasonboard.com ([213.167.242.64]:34130 "EHLO
-        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726574AbfJBNJ3 (ORCPT
+        Wed, 2 Oct 2019 09:09:33 -0400
+Received: from mail-io1-f65.google.com ([209.85.166.65]:33935 "EHLO
+        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726297AbfJBNJc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Oct 2019 09:09:29 -0400
-Received: from pendragon.ideasonboard.com (unknown [132.205.230.1])
-        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 7D0242BB;
-        Wed,  2 Oct 2019 15:09:25 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-        s=mail; t=1570021766;
-        bh=urSjyYGTYx0kiUGUdpd7omjpLbcIVpHhGw+J0SSuZv8=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=kS7E0aNeMthVFN4Ydg0yiALmodwlY6cX+t17XcwKm8EewdEng6mbgr3+h+gAn8Uhe
-         slljWm3ZCSEav/Z10uO3rxXjKtXc1n88Ce9QeSEJa3kXzfEGwTe7vAwTG/NfQsNNAc
-         3ceTiqwS2AX9kOM5uv4rJdm/PKP4cLZe2QLys+HA=
-Date:   Wed, 2 Oct 2019 16:09:13 +0300
-From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To:     Will Deacon <will@kernel.org>
-Cc:     linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
-        andreyknvl@google.com, Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Kostya Serebryany <kcc@google.com>, stable@vger.kernel.org
-Subject: Re: [PATCH] media: uvc: Avoid cyclic entity chains due to malformed
- USB descriptors
-Message-ID: <20191002130913.GA5262@pendragon.ideasonboard.com>
-References: <20191002112753.21630-1-will@kernel.org>
+        Wed, 2 Oct 2019 09:09:32 -0400
+Received: by mail-io1-f65.google.com with SMTP id q1so56742331ion.1
+        for <linux-kernel@vger.kernel.org>; Wed, 02 Oct 2019 06:09:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:references:from:message-id:date:user-agent:mime-version
+         :in-reply-to:content-language:content-transfer-encoding;
+        bh=LGBRuLqUYrX9GGEZI9KKoyUAhJq9ZXxDsRWTIcZfJKs=;
+        b=rivVgCttX729kcL32gPJi94oiGeS/ifekn7WfKH0+689qAHuwZ9GMA8DoZ3c1HyAR/
+         hLXUYrXvu/gAXPTX4iddYvXTTqa4Clmf9rHuwEC5ng0E4lqdeTmrusQ/3rMg9Hl8tJ66
+         T/m4Lsd230UKL4EoovEAS51KnE/io9py1nKfWosvvFoE9iykZLeRcp4WbIiPCEXcoAaM
+         BSq09rThM9NHC2ODOBVwG3W/Dl7wBBGv/xnvIoC4NIAcf4Ld3PmW3sXbRdGHT3rKj+CD
+         3QwI4qifLJc1emxI5N20ihafo6GqeuuARQ7FOLsRk9ryt9v0nRr/G404yZpHtpR9ECkF
+         XYEg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=LGBRuLqUYrX9GGEZI9KKoyUAhJq9ZXxDsRWTIcZfJKs=;
+        b=eFkztHYAv8iHAMW/mUReywyhNGnZPA7iOhGj3nLYcJncTh5imK5NwUSZq5X6WJBi9j
+         8JAdel38wqggO7bZCh9z070QszulbW8UHdZNsVLWX4EYvO8E0Oe2Yz6EVoLSF3c9Cphc
+         ctewXctGvdvJGHV5s5dHpa1HyjoItxAyWa5tnxOUOz3e+Obq5LsC9hlYNDRKW2gJe3ao
+         i/j5uGr/Q7quNGEByD58wlWQ7Dr7ONnJk/VCpgT1QNUuWmkGX0HFrzvo06R9HBKemY+n
+         PzdEGmcNg40gWNPuoce22d1EWhF5LcPMrxMee4xCWScK+c+57FlTsDLq96yD/fAHdILt
+         B+gA==
+X-Gm-Message-State: APjAAAVJhN9EM9K+MrGZ9rQlQSfZuDKpCXmiKbY1tG1R3p5VCbNApktS
+        nGZXpNV9Fc1Dm8cvB2Pd4zf/xA==
+X-Google-Smtp-Source: APXvYqxoOv3gPtGv+2gVmJxtYhhJTGAOSpJ5159QObAXDK3v9RjA9LkKGLL73o5+qLKCvndxIogJsA==
+X-Received: by 2002:a5e:8341:: with SMTP id y1mr2926558iom.284.1570021769994;
+        Wed, 02 Oct 2019 06:09:29 -0700 (PDT)
+Received: from [192.168.1.50] ([65.144.74.34])
+        by smtp.gmail.com with ESMTPSA id c4sm7265663ilh.32.2019.10.02.06.09.28
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 02 Oct 2019 06:09:29 -0700 (PDT)
+Subject: Re: [PATCH v2 1/1] blk-mq: Inline request status checkers
+To:     Pavel Begunkov <asml.silence@gmail.com>,
+        Bart Van Assche <bvanassche@acm.org>,
+        Josef Bacik <josef@toxicpanda.com>,
+        Keith Busch <kbusch@kernel.org>,
+        Christoph Hellwig <hch@lst.de>,
+        Sagi Grimberg <sagi@grimberg.me>, linux-block@vger.kernel.org,
+        linux-kernel@vger.kernel.org, nbd@other.debian.org,
+        linux-nvme@lists.infradead.org
+References: <1cd320dad54bd78cb6721f7fe8dd2e197b9fbfa2.1569830796.git.asml.silence@gmail.com>
+ <e6fc239412811140c83de906b75689530661f65d.1569872122.git.asml.silence@gmail.com>
+ <e4d452ad-da24-a1a9-7e2d-f9cd5d0733da@acm.org>
+ <6da099e2-7e29-3c7b-7682-df86835e9e8c@gmail.com>
+From:   Jens Axboe <axboe@kernel.dk>
+Message-ID: <e4fb245a-5587-866b-8bfa-927d0fb0801b@kernel.dk>
+Date:   Wed, 2 Oct 2019 07:09:28 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
+In-Reply-To: <6da099e2-7e29-3c7b-7682-df86835e9e8c@gmail.com>
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20191002112753.21630-1-will@kernel.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Will,
-
-Thank you for the patch.
-
-On Wed, Oct 02, 2019 at 12:27:53PM +0100, Will Deacon wrote:
-> Way back in 2017, fuzzing the 4.14-rc2 USB stack with syzkaller kicked
-> up the following WARNING from the UVC chain scanning code:
+On 9/30/19 2:12 PM, Pavel Begunkov wrote:
+> On 30/09/2019 22:53, Bart Van Assche wrote:
+>> On 9/30/19 12:43 PM, Pavel Begunkov (Silence) wrote:
+>>> @@ -282,7 +282,7 @@ static bool bt_tags_iter(struct sbitmap *bitmap, unsigned int bitnr, void *data)
+>>>   	 * test and set the bit before assining ->rqs[].
+>>>   	 */
+>>>   	rq = tags->rqs[bitnr];
+>>> -	if (rq && blk_mq_request_started(rq))
+>>> +	if (rq && blk_mq_rq_state(rq) != MQ_RQ_IDLE)
+>>>   		return iter_data->fn(rq, iter_data->data, reserved);
+>>>   
+>>>   	return true>
+>>> @@ -360,7 +360,7 @@ static bool blk_mq_tagset_count_completed_rqs(struct request *rq,
+>>>   {
+>>>   	unsigned *count = data;
+>>>   
+>>> -	if (blk_mq_request_completed(rq))
+>>> +	if (blk_mq_rq_state(rq) == MQ_RQ_COMPLETE)
+>>>   		(*count)++;
+>>>   	return true;
+>>>   }
+>>
+>> Changes like the above significantly reduce readability of the code in
+>> the block layer core. I don't like this. I think this patch is a step
+>> backwards instead of a step forwards.
 > 
->   | list_add double add: new=ffff880069084010, prev=ffff880069084010,
->   | next=ffff880067d22298.
->   | ------------[ cut here ]------------
->   | WARNING: CPU: 1 PID: 1846 at lib/list_debug.c:31 __list_add_valid+0xbd/0xf0
->   | Modules linked in:
->   | CPU: 1 PID: 1846 Comm: kworker/1:2 Not tainted
->   | 4.14.0-rc2-42613-g1488251d1a98 #238
->   | Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS Bochs 01/01/2011
->   | Workqueue: usb_hub_wq hub_event
->   | task: ffff88006b01ca40 task.stack: ffff880064358000
->   | RIP: 0010:__list_add_valid+0xbd/0xf0 lib/list_debug.c:29
->   | RSP: 0018:ffff88006435ddd0 EFLAGS: 00010286
->   | RAX: 0000000000000058 RBX: ffff880067d22298 RCX: 0000000000000000
->   | RDX: 0000000000000058 RSI: ffffffff85a58800 RDI: ffffed000c86bbac
->   | RBP: ffff88006435dde8 R08: 1ffff1000c86ba52 R09: 0000000000000000
->   | R10: 0000000000000002 R11: 0000000000000000 R12: ffff880069084010
->   | R13: ffff880067d22298 R14: ffff880069084010 R15: ffff880067d222a0
->   | FS:  0000000000000000(0000) GS:ffff88006c900000(0000) knlGS:0000000000000000
->   | CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
->   | CR2: 0000000020004ff2 CR3: 000000006b447000 CR4: 00000000000006e0
->   | Call Trace:
->   |  __list_add ./include/linux/list.h:59
->   |  list_add_tail+0x8c/0x1b0 ./include/linux/list.h:92
->   |  uvc_scan_chain_forward.isra.8+0x373/0x416
->   | drivers/media/usb/uvc/uvc_driver.c:1471
->   |  uvc_scan_chain drivers/media/usb/uvc/uvc_driver.c:1585
->   |  uvc_scan_device drivers/media/usb/uvc/uvc_driver.c:1769
->   |  uvc_probe+0x77f2/0x8f00 drivers/media/usb/uvc/uvc_driver.c:2104
+> Yep, looks too bulky.
 > 
-> Looking into the output from usbmon, the interesting part is the
-> following data packet:
-> 
->   ffff880069c63e00 30710169 C Ci:1:002:0 0 143 = 09028f00 01030080
->   00090403 00000e01 00000924 03000103 7c003328 010204db
-> 
-> If we drop the lead configuration and interface descriptors, we're left
-> with an output terminal descriptor describing a generic display:
-> 
->   /* Output terminal descriptor */
->   buf[0]	09
->   buf[1]	24
->   buf[2]	03	/* UVC_VC_OUTPUT_TERMINAL */
->   buf[3]	00	/* ID */
->   buf[4]	01	/* type == 0x0301 (UVC_OTT_DISPLAY) */
->   buf[5]	03
->   buf[6]	7c
->   buf[7]	00	/* source ID refers to self! */
->   buf[8]	33
-> 
-> The problem with this descriptor is that it is self-referential: the
-> source ID of 0 matches itself! This causes the 'struct uvc_entity'
-> representing the display to be added to its chain list twice during
-> 'uvc_scan_chain()': once via 'uvc_scan_chain_entity()' when it is
-> processed directly from the 'dev->entities' list and then again
-> immediately afterwards when trying to follow the source ID in
-> 'uvc_scan_chain_forward()'
-> 
-> Add a check before adding an entity to a chain list to ensure that the
-> entity is not already part of a chain.
-> 
-> Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-> Cc: Mauro Carvalho Chehab <mchehab@kernel.org>
-> Cc: Dmitry Vyukov <dvyukov@google.com>
-> Cc: Kostya Serebryany <kcc@google.com>
-> Cc: <stable@vger.kernel.org>
-> Fixes: c0efd232929c ("V4L/DVB (8145a): USB Video Class driver")
-> Reported-by: Andrey Konovalov <andreyknvl@google.com>
-> Link: https://lore.kernel.org/linux-media/CAAeHK+z+Si69jUR+N-SjN9q4O+o5KFiNManqEa-PjUta7EOb7A@mail.gmail.com/
-> Signed-off-by: Will Deacon <will@kernel.org>
-> ---
-> 
-> I don't have a way to reproduce the original issue, so this change is
-> based purely on inspection. Considering I'm not familiar with USB nor
-> UVC, I may well have missed something!
+> Jens, could you consider the first version?
 
-I may also be missing something, I haven't touched this code for a long
-time :-)
-
-uvc_scan_chain_entity(), at the end of the function, adds the entity to
-the list of entities in the chain with
-
-	list_add_tail(&entity->chain, &chain->entities);
-
-uvc_scan_chain_forward() is then called (from uvc_scan_chain()), and
-iterates over all entities connected to the entity being scanned.
-
-	while (1) {
-		forward = uvc_entity_by_reference(chain->dev, entity->id,
-			forward);
-
-At this point forward may be equal to entity, if entity references
-itself.
-
-		if (forward == NULL)
-			break;
-		if (forward == prev)
-			continue;
-		if (forward->chain.next || forward->chain.prev) {
-			uvc_trace(UVC_TRACE_DESCR, "Found reference to "
-				"entity %d already in chain.\n", forward->id);
-			return -EINVAL;
-		}
-
-But then this check should trigger, as forward == entity and entity is
-in the chain's list of entities.
-
->  drivers/media/usb/uvc/uvc_driver.c | 12 ++++++++++++
->  1 file changed, 12 insertions(+)
-> 
-> diff --git a/drivers/media/usb/uvc/uvc_driver.c b/drivers/media/usb/uvc/uvc_driver.c
-> index 66ee168ddc7e..e24420b1750a 100644
-> --- a/drivers/media/usb/uvc/uvc_driver.c
-> +++ b/drivers/media/usb/uvc/uvc_driver.c
-> @@ -1493,6 +1493,11 @@ static int uvc_scan_chain_forward(struct uvc_video_chain *chain,
->  			break;
->  		if (forward == prev)
->  			continue;
-> +		if (forward->chain.next || forward->chain.prev) {
-> +			uvc_trace(UVC_TRACE_DESCR, "Found reference to "
-> +				"entity %d already in chain.\n", forward->id);
-> +			return -EINVAL;
-> +		}
->  
->  		switch (UVC_ENTITY_TYPE(forward)) {
->  		case UVC_VC_EXTENSION_UNIT:
-> @@ -1574,6 +1579,13 @@ static int uvc_scan_chain_backward(struct uvc_video_chain *chain,
->  				return -1;
->  			}
->  
-> +			if (term->chain.next || term->chain.prev) {
-> +				uvc_trace(UVC_TRACE_DESCR, "Found reference to "
-> +					"entity %d already in chain.\n",
-> +					term->id);
-> +				return -EINVAL;
-> +			}
-> +
->  			if (uvc_trace_param & UVC_TRACE_PROBE)
->  				printk(KERN_CONT " %d", term->id);
->  
+Yes, first one is fine, I have applied it. Thanks.
 
 -- 
-Regards,
+Jens Axboe
 
-Laurent Pinchart
