@@ -2,111 +2,154 @@ Return-Path: <SRS0=zem1=X3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FAKE_REPLY_C,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2DB9C352AA
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 16:55:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2311AC35280
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 16:55:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B604B21D81
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 16:55:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="sc5MKpK0"
+	by mail.kernel.org (Postfix) with ESMTP id EF73621D81
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 16:55:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1570035333;
+	bh=mu9aCUvfoBSr+JnILargJwqYnhZcLC84bjaOKSwi0gY=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
+	b=YAUTkwv3QoZ7GLqprEqgS0LCQd2XmdwnAgmlWT3h8nQihSFN67UmAmuDhATtlTql3
+	 Dh7v2kKL0FgLcTVHxsYxJk3RbYawH0V3FxvRw6OX86Fo9piL7jeFhFp9uHZMJ2PCi/
+	 NCz0dTRFGCBi2bsfG1WLfKxA84X0DxCiYGjqjwow=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727822AbfJBQzW (ORCPT
+        id S1728055AbfJBQzc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Oct 2019 12:55:22 -0400
-Received: from mail-qk1-f194.google.com ([209.85.222.194]:41461 "EHLO
-        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725975AbfJBQzW (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Oct 2019 12:55:22 -0400
-Received: by mail-qk1-f194.google.com with SMTP id p10so15708872qkg.8;
-        Wed, 02 Oct 2019 09:55:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=iwP070FtmeuK+3N75GeFgnRVrcbqBEsCTG6FQeHO1Dc=;
-        b=sc5MKpK0FOi6wTaqxv0zmq/glDWjP01Ln7lGfhEjL/hAy0nOY7RJSJO9+Opy9fBM3V
-         BsjFfT0FR1QRuq67piWtm/1Yq/6K5cVrkQZGE92EcBHsj/y53WMixNIMaE18jXEuhF3I
-         aUTIzBsjBIiegFbGWfcuQJyJ9q4fjnnYJcuOcMzKv3pLpRIZyvTORxCSxO/GOQL2f02C
-         2DaCbjFvNKWCj5on8F+jf+EJGQ/ql7vh3ewEXnQmVP4QBrdbNAnbknCUx7AdioHcGm+m
-         5Y08bIb+XVtB6omolG5PRQqK6+5XA4ZnRG2/nOoSyKo4qGfRpIr5ZfQCjfMSZrN0n2h2
-         k1+Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=iwP070FtmeuK+3N75GeFgnRVrcbqBEsCTG6FQeHO1Dc=;
-        b=TqNTWnXnWgcEmx6Jlq+VCQTWuxmgbWis9+XSNgfMWz8vw8ykKJC58WScQ040Jo2M/d
-         ghNb3KbX52n24QtYtPmZL/xSYwHPUsvfwkhunuf+VH+ksj2DNwtTy2/QRB+o2E9dazFs
-         9uGRDqrJcmXWu44ydJ7hsw+hcZYWSzIQIDBnMIYVqmYw3L6aXGohIxtS+Mh8z8R8bZlw
-         lJLsELoTB+gIA/rEJDDDTc7uQK9K7kE3AxH9Jw6RPcwCBhP66+9vi/UpQVZqzvD/XrmO
-         RqORwhkRQSqIp6aSrwVPBrtnF/bCh84EC+fDt210Pix6nGI5C+b0Ods26GkaEj9ZCnc4
-         GDMQ==
-X-Gm-Message-State: APjAAAX8hkn/B2cRHKlD/a0ywR59Q3gE1RZB3apnRV0rlgKFeWOeTu73
-        BrW0DeIQ1BbKcgvqiAaWqIDgo3bhGOvZqSRRgrQ=
-X-Google-Smtp-Source: APXvYqznJfvsAqic7Yte0Cfh1sZVR0edCsCDW5/5o6K1NNRJiOV9X7R2gWkisKyDfH5T0CNTlj8XPfGp1ZnIWK0TLV4=
-X-Received: by 2002:a05:620a:113a:: with SMTP id p26mr4871408qkk.353.1570035319775;
- Wed, 02 Oct 2019 09:55:19 -0700 (PDT)
+        Wed, 2 Oct 2019 12:55:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53748 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725975AbfJBQzc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 2 Oct 2019 12:55:32 -0400
+Received: from localhost (unknown [69.71.4.100])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id B343D21920;
+        Wed,  2 Oct 2019 16:55:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1570035331;
+        bh=mu9aCUvfoBSr+JnILargJwqYnhZcLC84bjaOKSwi0gY=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=O2fGMdskkKM+/grpEgTLlnQNvgWWTge/oAn6KeeJ5GADni7PuCGSQAeyorRRENpaD
+         etZywcmAhPD4cchasHFjMTt6U15ZTRdOkWjZ6Ck2xKuprG/ZDA4pf4oR3kDf6BsYQx
+         ygcMKcthiFKbtSniGJAvaF1Jn/q0+D5q/aE3bmKI=
+Date:   Wed, 2 Oct 2019 11:55:29 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Kai-Heng Feng <kai.heng.feng@canonical.com>
+Cc:     Linux PCI <linux-pci@vger.kernel.org>,
+        linux-kernel@vger.kernel.org,
+        Alan Stern <stern@rowland.harvard.edu>,
+        Mathias Nyman <mathias.nyman@intel.com>,
+        Rafael Wysocki <rafael.j.wysocki@intel.com>,
+        Lukas Wunner <lukas@wunner.de>
+Subject: Re: [PATCH] x86/PCI: Remove D0 PME capability on AMD FCH xHCI
+Message-ID: <20191002165529.GA14065@google.com>
 MIME-Version: 1.0
-References: <cover.1568994791.git.esyr@redhat.com> <CAPhsuW5CvJNRP5OO_M6XVd9q0x-CH9eADWR5oqdJP20eFScCFw@mail.gmail.com>
- <87d4b42f-7aa2-5372-27e4-a28e4c724f37@kernel.dk>
-In-Reply-To: <87d4b42f-7aa2-5372-27e4-a28e4c724f37@kernel.dk>
-From:   Song Liu <liu.song.a23@gmail.com>
-Date:   Wed, 2 Oct 2019 09:55:08 -0700
-Message-ID: <CAPhsuW68rK3zGF3A8HnwArh7bs+-AAvZBtVkt4gcxPnFCGxwAQ@mail.gmail.com>
-Subject: Re: [PATCH v3 0/3] Fix typo in RWH_WRITE_LIFE_NOT_SET constant name
-To:     Jens Axboe <axboe@kernel.dk>
-Cc:     Eugene Syromiatnikov <esyr@redhat.com>,
-        open list <linux-kernel@vger.kernel.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Jeff Layton <jlayton@kernel.org>,
-        "J. Bruce Fields" <bfields@fieldses.org>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Ingo Molnar <mingo@kernel.org>, Shaohua Li <shli@kernel.org>,
-        linux-raid <linux-raid@vger.kernel.org>,
-        Linux-Fsdevel <linux-fsdevel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <30975CE5-7731-4777-B091-1F15F388D5C7@canonical.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Oct 1, 2019 at 5:55 PM Jens Axboe <axboe@kernel.dk> wrote:
->
-> On 10/1/19 5:12 PM, Song Liu wrote:
-> > On Fri, Sep 20, 2019 at 8:58 AM Eugene Syromiatnikov <esyr@redhat.com> wrote:
-> >>
-> >> Hello.
-> >>
-> >> This is a small fix of a typo (or, more specifically, some remnant of
-> >> the old patch version spelling) in RWH_WRITE_LIFE_NOT_SET constant,
-> >> which is named as RWF_WRITE_LIFE_NOT_SET currently.  Since the name
-> >> with "H" is used in man page and everywhere else, it's probably worth
-> >> to make the name used in the fcntl.h UAPI header in line with it.
-> >> The two follow-up patches update usage sites of this constant in kernel
-> >> to use the new spelling.
-> >>
-> >> The old name is retained as it is part of UAPI now.
-> >>
-> >> Changes since v2[1]:
-> >>   * Updated RWF_WRITE_LIFE_NOT_SET constant usage
-> >>     in drivers/md/raid5-ppl.c:ppl_init_log().
-> >>
-> >> Changes since v1[2]:
-> >>   * Changed format of the commit ID in the commit message of the first patch.
-> >>   * Removed bogus Signed-off-by that snuck into the resend of the series.
-> >
-> > Applied to md-next.
->
-> I think the core fs change should core in through a core tree, then
-> the md bits can go in at will after that.
+On Wed, Oct 02, 2019 at 01:32:07PM +0800, Kai-Heng Feng wrote:
+> On Oct 2, 2019, at 08:07, Bjorn Helgaas <helgaas@kernel.org> wrote:
+> > On Mon, Sep 02, 2019 at 10:52:52PM +0800, Kai-Heng Feng wrote:
+> >> There's an xHCI device that doesn't wake when a USB 2.0 device gets
+> >> plugged to its USB 3.0 port. The driver's own runtime suspend callback
+> >> was called, PME# signaling was enabled, but it stays at PCI D0:
+> >> 
+> >> 00:10.0 USB controller [0c03]: Advanced Micro Devices, Inc. [AMD] FCH USB XHCI Controller [1022:7914] (rev 20) (prog-if 30 [XHCI])
+> >>        Subsystem: Dell FCH USB XHCI Controller [1028:087e]
+> >>        Control: I/O- Mem+ BusMaster- SpecCycle- MemWINV- VGASnoop- ParErr- Stepping- SERR- FastB2B- DisINTx+
+> >>        Status: Cap+ 66MHz- UDF- FastB2B- ParErr- DEVSEL=fast >TAbort- <TAbort- <MAbort- >SERR- <PERR- INTx-
+> >>        Interrupt: pin A routed to IRQ 18
+> >>        Region 0: Memory at f0b68000 (64-bit, non-prefetchable) [size=8K]
+> >>        Capabilities: [50] Power Management version 3
+> >>                Flags: PMEClk- DSI- D1- D2- AuxCurrent=0mA PME(D0+,D1-,D2-,D3hot+,D3cold+)
+> >>                Status: D0 NoSoftRst+ PME-Enable+ DSel=0 DScale=0 PME-
+> >> 
+> >> A PCI device can be runtime suspended while still stays at D0 when it
+> >> supports D0 PME# and its ACPI _S0W method reports D0. Though plugging
+> >> USB 3.0 devices can wakeup the xHCI, it doesn't respond to USB 2.0
+> >> devices.
+> > 
+> > I don't think _S0W and runtime suspend are relevant here.  What *is*
+> > relevant is that the device advertises that it can generate PME from
+> > D0, and it apparently does not do so.
+> 
+> Yes that's the case. It doesn't generate PME when USB2.0 or USB1.1
+> device gets plugged.
 
-Good point. I guess I will wait until it shows up in for-5.5/block?
+OK, thanks.  I added a stable tag and applied this to pci/misc for v5.5.
 
-Song
+> > Table 10 in the xHCI spec r1.0, sec 4.15.2.3, says the xHC should
+> > assert PME# if enabled and the port's WCE bit is set.  Did you ever
+> > confirm that WCE is set?
+> 
+> How do I check WCE when xHCI is suspended?  If I want to read WCE
+> then I have the resume the device, but after resuming all USB
+> devices get enumerated, and checking WCE doesn't matter anymore.
+
+Yeah, that's a problem.  I guess you'd have to inspect or instrument
+the driver to ensure WCE is set in that path.  But if you get PME# for
+USB3 devices, it seems safe to assume WCE is set.
+
+> > I assume WCE *is* set because plugging in a USB3 device *does*
+> > generate a PME#, and I don't see anything in Table 10 that says it
+> > would work for USB3 but not USB2.
+> 
+> It should work on all USB speeds, but it didn't.
+> That's why the OEM/ODM use the _S0W workaround on Windows.
+> 
+> Kai-Heng
+> 
+> > 
+> >> So let's disable D0 PME capability on this device to avoid the issue.
+> >> 
+> >> Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=203673
+> >> Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+> >> ---
+> >> arch/x86/pci/fixup.c | 11 +++++++++++
+> >> 1 file changed, 11 insertions(+)
+> >> 
+> >> diff --git a/arch/x86/pci/fixup.c b/arch/x86/pci/fixup.c
+> >> index 527e69b12002..0851a05d092f 100644
+> >> --- a/arch/x86/pci/fixup.c
+> >> +++ b/arch/x86/pci/fixup.c
+> >> @@ -588,6 +588,17 @@ static void pci_fixup_amd_ehci_pme(struct pci_dev *dev)
+> >> }
+> >> DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_AMD, 0x7808, pci_fixup_amd_ehci_pme);
+> >> 
+> >> +/*
+> >> + * Device [1022:7914]
+> >> + * D0 PME# doesn't get asserted when plugging USB 2.0 device.
+> >> + */
+> >> +static void pci_fixup_amd_fch_xhci_pme(struct pci_dev *dev)
+> >> +{
+> >> +	dev_info(&dev->dev, "PME# does not work under D0, disabling it\n");
+> > 
+> > Use pci_info() as in the rest of the file.
+
+Sorry, this was just wrong.  I was assuming this was for
+drivers/pci/quirks.c, where dev_info() has been replaced by
+pci_info().  But that's not the case for this file.
+
+> >> +	dev->pme_support &= ~(PCI_PM_CAP_PME_D0 >> PCI_PM_CAP_PME_SHIFT);
+> >> +}
+> >> +DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_AMD, 0x7914, pci_fixup_amd_fch_xhci_pme);
+> >> +
+> >> /*
+> >>  * Apple MacBook Pro: Avoid [mem 0x7fa00000-0x7fbfffff]
+> >>  *
+> >> -- 
+> >> 2.17.1
+> 
