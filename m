@@ -2,126 +2,169 @@ Return-Path: <SRS0=zem1=X3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EFE7FC10F14
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 20:46:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38C73C4360C
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 20:46:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BEDDD21783
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 20:46:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570049180;
-	bh=kcx2dv/f2bzZ/7CFtrhKgQS8lyZd1xmVuGcGgdVi1BM=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=s0outN912OCTwb+H06ywCB1oa42oxqU7QbZmCHdQ+VqHYOy7hvhFE/r3yul6EAUyT
-	 jilCJFCPpIH6OhyuiI/KYL8NtfuhkPOUtwlvo4EnU/6YRTywOIhM+51SWfZeTU4Olj
-	 12Yg+FrKJ7aR+0HQnuCVy22al0fq9ABzkJnIgxzk=
+	by mail.kernel.org (Postfix) with ESMTP id 06BF42070B
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 20:46:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="d/zOukb8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728676AbfJBUqU (ORCPT
+        id S1728683AbfJBUq6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Oct 2019 16:46:20 -0400
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:42335 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727875AbfJBUqT (ORCPT
+        Wed, 2 Oct 2019 16:46:58 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:36142 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725928AbfJBUq6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Oct 2019 16:46:19 -0400
-Received: by mail-lj1-f194.google.com with SMTP id y23so268175lje.9
-        for <linux-kernel@vger.kernel.org>; Wed, 02 Oct 2019 13:46:18 -0700 (PDT)
+        Wed, 2 Oct 2019 16:46:58 -0400
+Received: by mail-pg1-f195.google.com with SMTP id 23so296410pgk.3
+        for <linux-kernel@vger.kernel.org>; Wed, 02 Oct 2019 13:46:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=CZoX6/kAyBlNzPm3PxVJHHET8XR6oaEdHzpQ1JHxlxk=;
-        b=WgH48i53OT8OxyAS10xRgTGen79hUl3stcfXDufRhIUV4G8traFDMLYOcDbmARGtri
-         tU39pf48gI+/cvvec8i+m09klNO/DTKi0Xs0KDdSSGqqIUqlnGTnz+5xBoxTqitRtY8f
-         KX6a88Kh0m0W4klfZBa6hR0r/gM5QP+f5tEIM=
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition;
+        bh=NXZoaM8JnR0+26PVfw4tVHTn5SdQ45I7gpO85lvpiP0=;
+        b=d/zOukb8JkdaGMJDkXWNp2Q+WzlGXbZZGxLJkrMZ8FFJBwkDoe1BlOgLfvcWlg7OIV
+         FswyVy2UdZ9QywcGA3Shg+vQFos67XMyw9AqTmCvhSNVv+Z7IwtD7IvbVEWeiDoS8aFM
+         McCilSu2GEofjob8stzUmA8e/JlxTLTzVMtbc=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=CZoX6/kAyBlNzPm3PxVJHHET8XR6oaEdHzpQ1JHxlxk=;
-        b=Ueuoz+9gDD7U+W/hdlxBc2VpPCbnYpKprpFqmGDg/FKrArJk1E4tCBqjkoNQy6VJyR
-         uhG1t0bZb8zkVDsZKGxFv/tPHZy1u1f1q1vQxN6vIBYOmZQ1LMuoOznD5xJK9dopBbvc
-         Zl+SR61rUo1QZlhC+l2JRv9xBRjZc5ulyFKwcCx3fZ0axANV45KpYDGboFgKOpBahZ8p
-         UuV8Nr31+DzlmHPrK1KOdVU2NjWw7hf819u+TZt/7au3fe/6psjTlRw9YuQej/OJbuCk
-         U9VP/7oDtmt4uPeNS1uzFI6cvOeLhdfMgORiLjcqf6UI6MQpIbQif1hEpraqL0+9Fotm
-         ZepA==
-X-Gm-Message-State: APjAAAWnAgyiyDPjBBbD14kqctvCZvQQAs8YakOYEBr4srcI5N4H7dU7
-        nwL1qgK8OMJCXPNaqv/0rQIGHI/VjRU=
-X-Google-Smtp-Source: APXvYqyWRYucdmohIUxBgGSVEGGQ+Bf4KdIeyVRObbB0lGx3o19quydB6d3iMcmHg8eNl6jFXGpt/g==
-X-Received: by 2002:a2e:1b5c:: with SMTP id b89mr3756710ljb.182.1570049177615;
-        Wed, 02 Oct 2019 13:46:17 -0700 (PDT)
-Received: from mail-lf1-f53.google.com (mail-lf1-f53.google.com. [209.85.167.53])
-        by smtp.gmail.com with ESMTPSA id o15sm34565lff.22.2019.10.02.13.46.17
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 02 Oct 2019 13:46:17 -0700 (PDT)
-Received: by mail-lf1-f53.google.com with SMTP id d17so97693lfa.7
-        for <linux-kernel@vger.kernel.org>; Wed, 02 Oct 2019 13:46:17 -0700 (PDT)
-X-Received: by 2002:ac2:47f8:: with SMTP id b24mr3502326lfp.134.1570048796885;
- Wed, 02 Oct 2019 13:39:56 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition;
+        bh=NXZoaM8JnR0+26PVfw4tVHTn5SdQ45I7gpO85lvpiP0=;
+        b=A2tY5/wBLPvzWfuffH8Qs4NYK62zIJb6Tr1ukeLQQVU6uD9LxgRE0UIOpWDhiFS6oP
+         5uVzpeghwxRHy64BR4SDyfxkj4juJ2qZFcIOXA/bDr9vVmsj+iUvkpbY4tY4RsaJgPbs
+         23rmV+sSwDCC5ImfVbosJn9Yi2owV6wzxkIhaljZIqZmlZHqeh7WMdYF8qw43k/H7gW1
+         Fov3hfX3X+lF15toK9+HuyZJOfErWnOTt/4evJ5AonyptGsNzT6neyhp44YezJ+te80L
+         6xIY7MQzyyqiFI6GhPsfOzqOpElve/dyyuzEFftm1u7d9XfA//8CdzQZQCK0VIFuA6gy
+         Kx9Q==
+X-Gm-Message-State: APjAAAXOPyqpoeYqCvMwqmVjsbyON5mW6BV9wWHgxH9Alpq5ntJOqVJM
+        m3QpksP5mDavoVUzNsrhJtYh/A==
+X-Google-Smtp-Source: APXvYqz4cuEetDgLVL9xZEkahkfeg3mPz43ZiRkqQe1eIgZwxKs63wCyjcBd+aYAmiRIbW1RZftzuw==
+X-Received: by 2002:a63:4142:: with SMTP id o63mr6002272pga.426.1570049217206;
+        Wed, 02 Oct 2019 13:46:57 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id z13sm359178pfq.121.2019.10.02.13.46.56
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 02 Oct 2019 13:46:56 -0700 (PDT)
+Date:   Wed, 2 Oct 2019 13:46:55 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     Laura Abbott <labbott@redhat.com>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Jesper Dangaard Brouer <brouer@redhat.com>,
+        Allison Randal <allison@lohutok.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        Semmle Security Reports <security-reports@semmle.com>,
+        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] dma-mapping: Lift address space checks out of debug code
+Message-ID: <201910021341.7819A660@keescook>
 MIME-Version: 1.0
-References: <20190930112636.vx2qxo4hdysvxibl@willie-the-truck>
- <CAK7LNASQZ82KSOrQW7+Wq1vFDCg2__maBEAPMLqUDqZMLuj1rA@mail.gmail.com>
- <20190930121803.n34i63scet2ec7ll@willie-the-truck> <CAKwvOdnqn=0LndrX+mUrtSAQqoT1JWRMOJCA5t3e=S=T7zkcCQ@mail.gmail.com>
- <20191001092823.z4zhlbwvtwnlotwc@willie-the-truck> <CAKwvOdk0h2A6=fb7Yepf+oKbZfq_tqwpGq8EBmHVu1j4mo-a-A@mail.gmail.com>
- <20191001170142.x66orounxuln7zs3@willie-the-truck> <CAKwvOdnFJqipp+G5xLDRBcOrQRcvMQmn+n8fufWyzyt2QL_QkA@mail.gmail.com>
- <20191001175512.GK25745@shell.armlinux.org.uk> <CAKwvOdmw_xmTGZLeK8-+Q4nUpjs-UypJjHWks-3jHA670Dxa1A@mail.gmail.com>
- <20191001181438.GL25745@shell.armlinux.org.uk> <CAKwvOdmBnBVU7F-a6DqPU6QM-BRc8LNn6YRmhTsuGLauCWKUOg@mail.gmail.com>
- <CAMuHMdWPhE1nNkmL1nj3vpQhB7fP3uDs2i_ZVi0Gf9qij4W2CA@mail.gmail.com>
-In-Reply-To: <CAMuHMdWPhE1nNkmL1nj3vpQhB7fP3uDs2i_ZVi0Gf9qij4W2CA@mail.gmail.com>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Wed, 2 Oct 2019 13:39:40 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wgFODvdFBHzgVf3JjoBz0z6LZhOm8xvMntsvOr66ASmZQ@mail.gmail.com>
-Message-ID: <CAHk-=wgFODvdFBHzgVf3JjoBz0z6LZhOm8xvMntsvOr66ASmZQ@mail.gmail.com>
-Subject: Re: [PATCH] compiler: enable CONFIG_OPTIMIZE_INLINING forcibly
-To:     Geert Uytterhoeven <geert@linux-m68k.org>
-Cc:     Nick Desaulniers <ndesaulniers@google.com>,
-        Russell King - ARM Linux admin <linux@armlinux.org.uk>,
-        Will Deacon <will@kernel.org>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Stefan Wahren <wahrenst@gmx.net>,
-        Kees Cook <keescook@google.com>, Arnd Bergmann <arnd@arndb.de>,
-        clang-built-linux <clang-built-linux@googlegroups.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Oct 2, 2019 at 5:56 AM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
->
-> >
-> > Then use the C preprocessor to force the inlining.  I'm sorry it's not
-> > as pretty as static inline functions.
->
-> Which makes us lose the baby^H^H^H^Htype checking performed
-> on function parameters, requiring to add more ugly checks.
+As we've seen from USB and other areas, we need to always do runtime
+checks for DMA operating on memory regions that might be remapped. This
+consolidates the (existing!) checks and makes them on by default. A
+warning will be triggered for any drivers still using DMA on the stack
+(as has been seen in a few recent reports).
 
-I'm 100% agreed on this.
+Suggested-by: Laura Abbott <labbott@redhat.com>
+Signed-off-by: Kees Cook <keescook@chromium.org>
+---
+ include/linux/dma-debug.h   |  8 --------
+ include/linux/dma-mapping.h |  8 +++++++-
+ kernel/dma/debug.c          | 16 ----------------
+ 3 files changed, 7 insertions(+), 25 deletions(-)
 
-If the inline change is being pushed by people who say "you should
-have used macros instead if you wanted inlining", then I will just
-revert that stupid commit that is causing problems.
+diff --git a/include/linux/dma-debug.h b/include/linux/dma-debug.h
+index 4208f94d93f7..2af9765d9af7 100644
+--- a/include/linux/dma-debug.h
++++ b/include/linux/dma-debug.h
+@@ -18,9 +18,6 @@ struct bus_type;
+ 
+ extern void dma_debug_add_bus(struct bus_type *bus);
+ 
+-extern void debug_dma_map_single(struct device *dev, const void *addr,
+-				 unsigned long len);
+-
+ extern void debug_dma_map_page(struct device *dev, struct page *page,
+ 			       size_t offset, size_t size,
+ 			       int direction, dma_addr_t dma_addr);
+@@ -75,11 +72,6 @@ static inline void dma_debug_add_bus(struct bus_type *bus)
+ {
+ }
+ 
+-static inline void debug_dma_map_single(struct device *dev, const void *addr,
+-					unsigned long len)
+-{
+-}
+-
+ static inline void debug_dma_map_page(struct device *dev, struct page *page,
+ 				      size_t offset, size_t size,
+ 				      int direction, dma_addr_t dma_addr)
+diff --git a/include/linux/dma-mapping.h b/include/linux/dma-mapping.h
+index 4a1c4fca475a..2d6b8382eab1 100644
+--- a/include/linux/dma-mapping.h
++++ b/include/linux/dma-mapping.h
+@@ -583,7 +583,13 @@ static inline unsigned long dma_get_merge_boundary(struct device *dev)
+ static inline dma_addr_t dma_map_single_attrs(struct device *dev, void *ptr,
+ 		size_t size, enum dma_data_direction dir, unsigned long attrs)
+ {
+-	debug_dma_map_single(dev, ptr, size);
++	/* DMA must never operate on stack or other remappable places. */
++	WARN_ONCE(is_vmalloc_addr(ptr) || !virt_addr_valid(ptr),
++		"%s %s: driver maps %lu bytes from %s area\n",
++		dev ? dev_driver_string(dev) : "unknown driver",
++		dev ? dev_name(dev) : "unknown device", size,
++		is_vmalloc_addr(ptr) ? "vmalloc" : "invalid");
++
+ 	return dma_map_page_attrs(dev, virt_to_page(ptr), offset_in_page(ptr),
+ 			size, dir, attrs);
+ }
+diff --git a/kernel/dma/debug.c b/kernel/dma/debug.c
+index 099002d84f46..aa1e6a1990b2 100644
+--- a/kernel/dma/debug.c
++++ b/kernel/dma/debug.c
+@@ -1232,22 +1232,6 @@ static void check_sg_segment(struct device *dev, struct scatterlist *sg)
+ #endif
+ }
+ 
+-void debug_dma_map_single(struct device *dev, const void *addr,
+-			    unsigned long len)
+-{
+-	if (unlikely(dma_debug_disabled()))
+-		return;
+-
+-	if (!virt_addr_valid(addr))
+-		err_printk(dev, NULL, "device driver maps memory from invalid area [addr=%p] [len=%lu]\n",
+-			   addr, len);
+-
+-	if (is_vmalloc_addr(addr))
+-		err_printk(dev, NULL, "device driver maps memory from vmalloc area [addr=%p] [len=%lu]\n",
+-			   addr, len);
+-}
+-EXPORT_SYMBOL(debug_dma_map_single);
+-
+ void debug_dma_map_page(struct device *dev, struct page *page, size_t offset,
+ 			size_t size, int direction, dma_addr_t dma_addr)
+ {
+-- 
+2.17.1
 
-No, the preprocessor is not the answer.
 
-That said, code that relies on inlining for _correctness_ should use
-"__always_inline" and possibly even have a comment about why.
-
-But I am considering just undoing commit 9012d011660e ("compiler:
-allow all arches to enable CONFIG_OPTIMIZE_INLINING") entirely. The
-advantages are questionable, and when the advantages are balanced
-against actual regressions and the arguments are "use macros", that
-just shows how badly thought out this was.
-
-                Linus
+-- 
+Kees Cook
