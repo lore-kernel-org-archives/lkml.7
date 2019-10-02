@@ -2,304 +2,123 @@ Return-Path: <SRS0=zem1=X3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 38DC2C35280
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 10:37:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53EE5C35280
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 10:39:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 19880218DE
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 10:37:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 29B83218DE
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 10:39:10 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LCgk8yPh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728005AbfJBKhr (ORCPT
+        id S1728012AbfJBKjJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Oct 2019 06:37:47 -0400
-Received: from retiisi.org.uk ([95.216.213.190]:59752 "EHLO
-        hillosipuli.retiisi.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726330AbfJBKhr (ORCPT
+        Wed, 2 Oct 2019 06:39:09 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:35860 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726200AbfJBKjJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Oct 2019 06:37:47 -0400
-Received: from valkosipuli.localdomain (valkosipuli.retiisi.org.uk [IPv6:2a01:4f9:c010:4572::80:2])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by hillosipuli.retiisi.org.uk (Postfix) with ESMTPS id 42D02634C89;
-        Wed,  2 Oct 2019 13:37:17 +0300 (EEST)
-Received: from sailus by valkosipuli.localdomain with local (Exim 4.92)
-        (envelope-from <sakari.ailus@retiisi.org.uk>)
-        id 1iFc0R-0002AN-Nb; Wed, 02 Oct 2019 13:37:15 +0300
-Date:   Wed, 2 Oct 2019 13:37:15 +0300
-From:   Sakari Ailus <sakari.ailus@iki.fi>
-To:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Cc:     mchehab@kernel.org, robh+dt@kernel.org,
-        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        c.barrett@framos.com, a.brela@framos.com
-Subject: Re: [PATCH v3 2/3] media: i2c: Add IMX290 CMOS image sensor driver
-Message-ID: <20191002103715.GR896@valkosipuli.retiisi.org.uk>
-References: <20190830091943.22646-1-manivannan.sadhasivam@linaro.org>
- <20190830091943.22646-3-manivannan.sadhasivam@linaro.org>
- <20190923092209.GL5525@valkosipuli.retiisi.org.uk>
- <20191001184200.GA7739@Mani-XPS-13-9360>
+        Wed, 2 Oct 2019 06:39:09 -0400
+Received: by mail-wm1-f66.google.com with SMTP id m18so6434693wmc.1;
+        Wed, 02 Oct 2019 03:39:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=34wC0n//44F6y79I2b4AAd2CW4tyXa/jyiOQHai4gS8=;
+        b=LCgk8yPhc7jdn3eNstggPqAH1MafZ3eYuEY8P7C5YN5g1R5aludwgXD2nJg95ofiNG
+         4ozU4VPR1n9Yttjm5dPW5nxL8tHIWUZGgorGiy85f8Cz5dRb2G3ozE7PS0MHQWSVZsWH
+         lsx2EjLC2+Q+JagvxQ0JSgS0qsjc76n3R0a8lsGwrn9blviD8Ck2aGmrVQedw2iB9auq
+         LMNQQ72enoHc2AoOggzyfPeshI1XzYIByHrvwbomiXkJZrEoi4nGU2KaX8TM/9+jDnwm
+         0+KvhTEL63nQ3hgangxKkUGt6+tK84Kq16gL7pzV5fxYgCrx86OmWJYkaLTzfjL/9V4A
+         CG7A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=34wC0n//44F6y79I2b4AAd2CW4tyXa/jyiOQHai4gS8=;
+        b=Wc5CjDKZ03UTtoqZbhTd1is8XON/Qz/+FF78tBuhDj7nlMrXJmvZVjuLe/ZYJ/eK3G
+         2bReygAAly/rBFsuPNLIEUPNDoIIasZkwMhwXCCw0h1sUFKvdpefm6ymzDv1XRaJeYDi
+         DDnK3oXEVje9ss6QJbulXbEW7uGHC0P1/GxCkJpYu/PTo9fLQNmtzXH6yy1a+nvUByLh
+         vBSbMp91xEIL6EDxOzWqfcnW8bIJ4Ud/r8wSV2ifg7j79BCxB3p/mG6FHpXip/0rpzpI
+         X/wGWbV2jF02YTEAe+K6vs5MgG9rblWnShbVKyi2fTIMAAR6cZfE6JDgd84YXU2/o8CV
+         Gzhw==
+X-Gm-Message-State: APjAAAVRtXglX3+gfVMjgi5QvmI3iCiZkqBOl6mPlbm9EStWiXteiXbv
+        9b6wSzqxAIrG+kLK2Dh0xSE=
+X-Google-Smtp-Source: APXvYqzKaVdz2ys0q7Ajk0apq2a5ruazTjoX3Ns1yPUR64X5X1zjyBQv/KrerK3HFQV0RaCjeaFObg==
+X-Received: by 2002:a1c:5fd6:: with SMTP id t205mr2286748wmb.124.1570012747064;
+        Wed, 02 Oct 2019 03:39:07 -0700 (PDT)
+Received: from localhost (p2E5BE2CE.dip0.t-ipconnect.de. [46.91.226.206])
+        by smtp.gmail.com with ESMTPSA id c18sm19817723wrv.10.2019.10.02.03.39.05
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 02 Oct 2019 03:39:06 -0700 (PDT)
+Date:   Wed, 2 Oct 2019 12:39:04 +0200
+From:   Thierry Reding <thierry.reding@gmail.com>
+To:     Colin King <colin.king@canonical.com>
+Cc:     Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Maxime Ripard <mripard@kernel.org>,
+        Chen-Yu Tsai <wens@csie.org>, linux-pwm@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] pwm: sun4i: redundant assignment to variable pval
+Message-ID: <20191002103904.GI3716706@ulmo>
+References: <20191002100844.10490-1-colin.king@canonical.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="RwxaKO075aXzzOz0"
 Content-Disposition: inline
-In-Reply-To: <20191001184200.GA7739@Mani-XPS-13-9360>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20191002100844.10490-1-colin.king@canonical.com>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Manivannan,
 
-On Wed, Oct 02, 2019 at 12:12:00AM +0530, Manivannan Sadhasivam wrote:
-> Hi Sakari,
-> 
-> On Mon, Sep 23, 2019 at 12:22:09PM +0300, Sakari Ailus wrote:
-> > Hi Manivannan,
-> > 
-> > On Fri, Aug 30, 2019 at 02:49:42PM +0530, Manivannan Sadhasivam wrote:
-> > > Add driver for Sony IMX290 CMOS image sensor driver. The driver only
-> > > supports I2C interface for programming and MIPI CSI-2 for sensor output.
-> > > 
-> > > Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> > > ---
-> > >  drivers/media/i2c/Kconfig  |  11 +
-> > >  drivers/media/i2c/Makefile |   1 +
-> > >  drivers/media/i2c/imx290.c | 881 +++++++++++++++++++++++++++++++++++++
-> > >  3 files changed, 893 insertions(+)
-> > >  create mode 100644 drivers/media/i2c/imx290.c
-> > > 
-> > > diff --git a/drivers/media/i2c/Kconfig b/drivers/media/i2c/Kconfig
-> > > index 79ce9ec6fc1b..4ebb80b18748 100644
-> > > --- a/drivers/media/i2c/Kconfig
-> > > +++ b/drivers/media/i2c/Kconfig
-> > > @@ -595,6 +595,17 @@ config VIDEO_IMX274
-> > >  	  This is a V4L2 sensor driver for the Sony IMX274
-> > >  	  CMOS image sensor.
-> > >  
-> > > +config VIDEO_IMX290
-> > > +	tristate "Sony IMX290 sensor support"
-> > > +	depends on I2C && VIDEO_V4L2 && VIDEO_V4L2_SUBDEV_API
-> > > +	depends on MEDIA_CAMERA_SUPPORT
-> > 
-> > Please drop this line. It will be redundant very soon.
-> > 
-> 
-> okay.
-> 
-> > > +	help
-> > > +	  This is a Video4Linux2 sensor driver for the Sony
-> > > +	  IMX290 camera sensor.
-> > > +
-> > > +	  To compile this driver as a module, choose M here: the
-> > > +	  module will be called imx290.
-> > > +
-> > >  config VIDEO_IMX319
-> > >  	tristate "Sony IMX319 sensor support"
-> > >  	depends on I2C && VIDEO_V4L2 && VIDEO_V4L2_SUBDEV_API
-> > > diff --git a/drivers/media/i2c/Makefile b/drivers/media/i2c/Makefile
-> > > index fd4ea86dedd5..04411ddb4922 100644
-> > > --- a/drivers/media/i2c/Makefile
-> > > +++ b/drivers/media/i2c/Makefile
-> > > @@ -111,6 +111,7 @@ obj-$(CONFIG_VIDEO_TC358743)	+= tc358743.o
-> > >  obj-$(CONFIG_VIDEO_IMX214)	+= imx214.o
-> > >  obj-$(CONFIG_VIDEO_IMX258)	+= imx258.o
-> > >  obj-$(CONFIG_VIDEO_IMX274)	+= imx274.o
-> > > +obj-$(CONFIG_VIDEO_IMX290)	+= imx290.o
-> > >  obj-$(CONFIG_VIDEO_IMX319)	+= imx319.o
-> > >  obj-$(CONFIG_VIDEO_IMX355)	+= imx355.o
-> > >  obj-$(CONFIG_VIDEO_ST_MIPID02) += st-mipid02.o
-> > > diff --git a/drivers/media/i2c/imx290.c b/drivers/media/i2c/imx290.c
-> > > new file mode 100644
-> > > index 000000000000..db5bb0d69eb8
-> > > --- /dev/null
-> > > +++ b/drivers/media/i2c/imx290.c
-> > > @@ -0,0 +1,881 @@
-> > > +// SPDX-License-Identifier: GPL-2.0
-> > > +/*
-> > > + * Sony IMX290 CMOS Image Sensor Driver
-> > > + *
-> > > + * Copyright (C) 2019 FRAMOS GmbH.
-> > > + *
-> > > + * Copyright (C) 2019 Linaro Ltd.
-> > > + * Author: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> > > + */
-> > > +
-> > > +#include <linux/clk.h>
-> > > +#include <linux/delay.h>
-> > > +#include <linux/gpio/consumer.h>
-> > > +#include <linux/i2c.h>
-> > > +#include <linux/module.h>
-> > > +#include <linux/pm_runtime.h>
-> > > +#include <linux/regmap.h>
-> > > +#include <linux/regulator/consumer.h>
-> > > +#include <media/media-entity.h>
-> > > +#include <media/v4l2-ctrls.h>
-> > > +#include <media/v4l2-device.h>
-> > > +#include <media/v4l2-fwnode.h>
-> > > +#include <media/v4l2-subdev.h>
-> > > +
-> > > +#define IMX290_STANDBY 0x3000
-> > > +#define IMX290_REGHOLD 0x3001
-> > > +#define IMX290_XMSTA 0x3002
-> > > +#define IMX290_GAIN 0x3014
-> > > +
-> > > +#define IMX290_DEFAULT_LINK_FREQ 445500000
-> > > +
-> > > +static const char * const imx290_supply_name[] = {
-> > > +	"vdda",
-> > > +	"vddd",
-> > > +	"vdddo",
-> > > +};
-> > > +
-> > > +#define IMX290_NUM_SUPPLIES ARRAY_SIZE(imx290_supply_name)
-> > > +
-> > > +struct imx290_regval {
-> > > +	u16 reg;
-> > > +	u8 val;
-> > > +};
-> > > +
-> > > +struct imx290_mode {
-> > > +	u32 width;
-> > > +	u32 height;
-> > > +	u32 pixel_rate;
-> > > +	u32 link_freq_index;
-> > > +
-> > > +	const struct imx290_regval *data;
-> > > +	u32 data_size;
-> > > +};
-> > > +
-> > > +struct imx290 {
-> > > +	struct device *dev;
-> > > +	struct clk *xclk;
-> > > +	struct regmap *regmap;
-> > > +
-> > > +	struct v4l2_subdev sd;
-> > > +	struct v4l2_fwnode_endpoint ep;
-> > > +	struct media_pad pad;
-> > > +	struct v4l2_mbus_framefmt current_format;
-> > > +	const struct imx290_mode *current_mode;
-> > > +
-> > > +	struct regulator_bulk_data supplies[IMX290_NUM_SUPPLIES];
-> > > +	struct gpio_desc *rst_gpio;
-> > > +
-> > > +	struct v4l2_ctrl_handler ctrls;
-> > > +	struct v4l2_ctrl *link_freq;
-> > > +	struct v4l2_ctrl *pixel_rate;
-> > > +
-> > > +	struct mutex lock;
-> > > +};
-> > > +
-> > > +struct imx290_pixfmt {
-> > > +	u32 code;
-> > > +};
-> > > +
-> > > +static const struct imx290_pixfmt imx290_formats[] = {
-> > > +	{ MEDIA_BUS_FMT_SRGGB10_1X10 },
-> > 
-> > You have a single format here. You don't need the entire array, do you?
-> > 
-> > Unless you have plans to add more, that is.
-> > 
-> 
-> Yes, the sensor supports RAW12 format as well and it will be added once
-> this driver is merged.
+--RwxaKO075aXzzOz0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Ok. 
+On Wed, Oct 02, 2019 at 11:08:44AM +0100, Colin King wrote:
+> From: Colin Ian King <colin.king@canonical.com>
+>=20
+> Variable pval is being assigned a value that is never read. The
+> assignment is redundant and hence can be removed.
+>=20
+> Addresses-Coverity: ("Unused value")
+> Signed-off-by: Colin Ian King <colin.king@canonical.com>
+> ---
+>  drivers/pwm/pwm-sun4i.c | 1 -
+>  1 file changed, 1 deletion(-)
 
-> 
-> > > +};
-> > > +
-> > > +static struct regmap_config imx290_regmap_config = {
+Applied, thanks.
 
-Should this be const, too?
+Thierry
 
-> > > +	.reg_bits = 16,
-> > > +	.val_bits = 8,
-> > > +	.cache_type = REGCACHE_RBTREE,
-> > > +};
+--RwxaKO075aXzzOz0
+Content-Type: application/pgp-signature; name="signature.asc"
 
-...
+-----BEGIN PGP SIGNATURE-----
 
-> > > +static int imx290_write_buffered_reg(struct imx290 *imx290, u16 address_low,
-> > > +				     u8 nr_regs, u32 value)
-> > > +{
-> > > +	unsigned int i;
-> > > +	int ret;
-> > > +
-> > > +	ret = imx290_write_reg(imx290, IMX290_REGHOLD, 0x01);
-> > > +	if (ret) {
-> > > +		dev_err(imx290->dev, "Error setting hold register\n");
-> > > +		return ret;
-> > > +	}
-> > > +
-> > > +	for (i = 0; i < nr_regs; i++) {
-> > > +		ret = imx290_write_reg(imx290, address_low + i,
-> > > +				       (u8)(value >> (i * 8)));
-> > > +		if (ret) {
-> > > +			dev_err(imx290->dev, "Error writing buffered registers\n");
-> > > +			return ret;
-> > > +		}
-> > > +	}
-> > > +
-> > > +	ret = imx290_write_reg(imx290, IMX290_REGHOLD, 0x00);
-> > > +	if (ret) {
-> > > +		dev_err(imx290->dev, "Error setting hold register\n");
-> > > +		return ret;
-> > > +	}
-> > > +
-> > > +	return ret;
-> > > +}
-> > > +
-> > > +static int imx290_set_gain(struct imx290 *imx290, u32 value)
-> > > +{
-> > > +	int ret;
-> > > +
-> > > +	u32 adjusted_value = (value * 10) / 3;
-> > 
-> > What's the purpose of this? Why not to use the value directly?
-> > 
-> 
-> The gain register accepts the value 10/3 of the actual gain required. Hence,
-> we need to manually do the calculation before updating the value. I can
-> add a comment here to clarify.
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl2UfkYACgkQ3SOs138+
+s6EokA//eXZuyZhqQNANMBM0nG+CkHKuKs+iC0DOXQ4NyZMNNoXNy6I2UvGg7Yxr
+hSiF5hYwZqfU12j33qdvne88q+Qh4R6UVyH9+doCh2SYpO928hUyrcBP7cutZ6LQ
+pXxUyssDZCWpzr95yrKXhFdtp1KARRdeIjvnu2qdAUXVbJ9LsYpWVKBZQ+5qzrit
+p0oR4l9K1T8m4wJ+DM9ejM8SPRsT+LMhaqPDWzqSRy6OewNPhcHiQk26XwZ2SWDH
+tUMLk5vuGoHxKHOYorOG3IFjfNjCWqJbsRyYIYdjk0hqBrZ6UWhAI1EKdeb6qK5V
+oPyxLIIhiTMZ6JiSN/RgY3zO+/0Mak0YLrouaVCpt6mI/OcsTh6u6++bDvQchQmB
+vcNFScHVLuwUnNV1Bh4FEjocX3i5ucDQsAhDQfX1HriCX4MTXt3QArdQLx2s1CYS
+AcntnIIYWzT+YIc6FObtL4ml/FPmwBKT6V5F5eA78AwcsRDV6dMcqRO1I8wkkypF
+gAh5KLSjWfibX+nYC2vgMsP8Ab6wD40fu8sa8W8q/Q6A4Yc267hqHgsMKTnVQP4t
+TK/kv4TqVADa7mV6sGsvQUvtKn2+3rBUnv+WU06VXgw4ZhzyjybuZbGi5rkugGm8
+eUDcoodpzE8EJSlgjgpygmouU5EUezWzh/tfCGR3HKeTPQBs47E=
+=VQ2m
+-----END PGP SIGNATURE-----
 
-It's better to use the register value directly. Otherwise the granularity
-won't be available to the user space.
-
-> 
-> > > +
-> > > +	ret = imx290_write_buffered_reg(imx290, IMX290_GAIN, 1, adjusted_value);
-> > > +	if (ret)
-> > > +		dev_err(imx290->dev, "Unable to write gain\n");
-> > > +
-> > > +	return ret;
-> > > +}
-> > > +
-> > > +static int imx290_set_power_on(struct imx290 *imx290)
-> > > +{
-> > > +	int ret;
-> > > +
-> > > +	ret = clk_prepare_enable(imx290->xclk);
-> > 
-> > Please move the code from this function to the runtime PM runtime suspend
-> > callback. The same for imx290_set_power_off().
-> > 
-> 
-> May I know why? I think since this is being used only once, you're suggesting
-> to move to the callback function itself but please see the comment below. I
-> will reuse this function to power on the device during probe.
-
-Yes, you can call the same function from probe, even if it's used as a
-runtime PM callback.
-
-There's no need to have a function that acts as a wrapper for calling it
-with a different type of an argument.
-
--- 
-Kind regards,
-
-Sakari Ailus
+--RwxaKO075aXzzOz0--
