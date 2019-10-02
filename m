@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B67BEC4360C
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 19:13:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2819C4360C
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 19:14:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9F26B207FF
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 19:13:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AB3F321D82
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 19:14:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730248AbfJBTNz (ORCPT
+        id S1730258AbfJBTOD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Oct 2019 15:13:55 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:35258 "EHLO
+        Wed, 2 Oct 2019 15:14:03 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:35244 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729034AbfJBTII (ORCPT
+        by vger.kernel.org with ESMTP id S1728486AbfJBTII (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 2 Oct 2019 15:08:08 -0400
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1iFjyn-00035R-Ld; Wed, 02 Oct 2019 20:08:05 +0100
+        id 1iFjym-000356-Vi; Wed, 02 Oct 2019 20:08:05 +0100
 Received: from ben by deadeye with local (Exim 4.92.1)
         (envelope-from <ben@decadent.org.uk>)
-        id 1iFjyn-0003ap-8m; Wed, 02 Oct 2019 20:08:05 +0100
+        id 1iFjym-0003Zs-Pq; Wed, 02 Oct 2019 20:08:04 +0100
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,13 +35,15 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Joe Burmeister" <joe.burmeister@devtank.co.uk>,
-        "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>
+        "David S. Miller" <davem@davemloft.net>,
+        "Tariq Toukan" <tariqt@mellanox.com>,
+        "Yunjian Wang" <wangyunjian@huawei.com>
 Date:   Wed, 02 Oct 2019 20:06:51 +0100
-Message-ID: <lsq.1570043211.417578783@decadent.org.uk>
+Message-ID: <lsq.1570043211.29305229@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 13/87] tty: max310x: Fix external crystal register setup
+Subject: [PATCH 3.16 01/87] net/mlx4_core: Change the error print to info
+ print
 In-Reply-To: <lsq.1570043210.379046399@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -55,40 +57,31 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Joe Burmeister <joe.burmeister@devtank.co.uk>
+From: Yunjian Wang <wangyunjian@huawei.com>
 
-commit 5d24f455c182d5116dd5db8e1dc501115ecc9c2c upstream.
+commit 00f9fec48157f3734e52130a119846e67a12314b upstream.
 
-The datasheet states:
+The error print within mlx4_flow_steer_promisc_add() should
+be a info print.
 
-  Bit 4: ClockEnSet the ClockEn bit high to enable an external clocking
-(crystal or clock generator at XIN). Set the ClockEn bit to 0 to disable
-clocking
-  Bit 1: CrystalEnSet the CrystalEn bit high to enable the crystal
-oscillator. When using an external clock source at XIN, CrystalEn must
-be set low.
-
-The bit 4, MAX310X_CLKSRC_EXTCLK_BIT, should be set and was not.
-
-This was required to make the MAX3107 with an external crystal on our
-board able to send or receive data.
-
-Signed-off-by: Joe Burmeister <joe.burmeister@devtank.co.uk>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Fixes: 592e49dda812 ('net/mlx4: Implement promiscuous mode with device managed flow-steering')
+Signed-off-by: Yunjian Wang <wangyunjian@huawei.com>
+Reviewed-by: Tariq Toukan <tariqt@mellanox.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- drivers/tty/serial/max310x.c | 2 +-
+ drivers/net/ethernet/mellanox/mlx4/mcg.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/tty/serial/max310x.c
-+++ b/drivers/tty/serial/max310x.c
-@@ -568,7 +568,7 @@ static int max310x_set_ref_clk(struct ma
- 	}
+--- a/drivers/net/ethernet/mellanox/mlx4/mcg.c
++++ b/drivers/net/ethernet/mellanox/mlx4/mcg.c
+@@ -1329,7 +1329,7 @@ int mlx4_flow_steer_promisc_add(struct m
+ 	rule.port = port;
+ 	rule.qpn = qpn;
+ 	INIT_LIST_HEAD(&rule.list);
+-	mlx4_err(dev, "going promisc on %x\n", port);
++	mlx4_info(dev, "going promisc on %x\n", port);
  
- 	/* Configure clock source */
--	clksrc = xtal ? MAX310X_CLKSRC_CRYST_BIT : MAX310X_CLKSRC_EXTCLK_BIT;
-+	clksrc = MAX310X_CLKSRC_EXTCLK_BIT | (xtal ? MAX310X_CLKSRC_CRYST_BIT : 0);
- 
- 	/* Configure PLL */
- 	if (pllcfg) {
+ 	return  mlx4_flow_attach(dev, &rule, regid_p);
+ }
 
