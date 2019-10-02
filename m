@@ -2,185 +2,221 @@ Return-Path: <SRS0=zem1=X3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 86041C352AA
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 13:50:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 45D21C352AA
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 13:53:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5564E20659
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 13:50:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0E0D621783
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 13:53:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eG+t83qe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727756AbfJBNuy (ORCPT
+        id S1727768AbfJBNxG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Oct 2019 09:50:54 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:46439 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726289AbfJBNuy (ORCPT
+        Wed, 2 Oct 2019 09:53:06 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:50535 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726488AbfJBNxG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Oct 2019 09:50:54 -0400
-Received: from 1.general.cking.uk.vpn ([10.172.193.212])
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <colin.king@canonical.com>)
-        id 1iFf1n-0006KW-UY; Wed, 02 Oct 2019 13:50:51 +0000
-To:     Chris Mason <clm@fb.com>, Josef Bacik <josef@toxicpanda.com>,
-        David Sterba <dsterba@suse.com>, linux-btrfs@vger.kernel.org
-From:   Colin Ian King <colin.king@canonical.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=colin.king@canonical.com; prefer-encrypt=mutual; keydata=
- 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
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: re: Btrfs: add a extent ref verify tool (static analysis bug report)
-Message-ID: <3d1bcdce-16ae-d490-0a68-19d9d9d41d92@canonical.com>
-Date:   Wed, 2 Oct 2019 14:50:51 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Wed, 2 Oct 2019 09:53:06 -0400
+Received: by mail-wm1-f65.google.com with SMTP id 5so7327200wmg.0
+        for <linux-kernel@vger.kernel.org>; Wed, 02 Oct 2019 06:53:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=aqSjigfY7p4Yb42doAbeJgtTy2xM6snKumCbJQAPbZY=;
+        b=eG+t83qemvZkor9r7JgrjbhMLcTSSL2TdhS5P6S1sYX8MaMXEhfYZwyS5efibXib0C
+         wRKUZM9wlm6OjKabpMw2/ZdFx+sPRMTKvssehqwwjH5ACEvwYuUjusxF4XyZ4RQwgeGC
+         YJe3JeD1oTZtDyJxmrfUtUbqU6TxFVUx0hhhTv5jolm9toxhKor/cMZXDVrQGgtnxbuP
+         e1pkhShn4hMpFgd/xTthl3L8hwOAmt2GC/sKOdxcJC2D3kqacBGWFBKTaj6Q4QOt9cbO
+         1SWvWIdUTRAARZrru+2lp7unsltCONYu37Ajf1y16HxouoZX52S7TMD1MIswPkSqt/zG
+         nU/A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=aqSjigfY7p4Yb42doAbeJgtTy2xM6snKumCbJQAPbZY=;
+        b=OTpZMqNnY+QfZ+PMcH0cgSEjN7Oa5Kx1s6KQl0tXs/M71WNduUVVZJaOuluMlHOAh4
+         3xwm4AkMVnn4ucbgw4qz9I8PNNNAs8AdCHbobCrE2Bh7EQNiWYt/O/sBk7F/iBnYvCq+
+         fE9nwfK9mLFPnC3YkmvTz137XG4nctvvdGv5Px/z36HDOFUvIQZXIZ/FcQR1PrMGLo6I
+         PiN8x6yLD6DGF+QK0oo4Bq8HlGW4U6Xlaukds1m/cOX5uYtFK0bUN1sa50YGMZ80b5dG
+         aJRFDsAA0NguU4kwo4A9PH6nP4vdAHUaLING1Hc6dicBftSmTfYZx9GSwU3HGMJOTL8F
+         tI0w==
+X-Gm-Message-State: APjAAAXdCqTPzCBQ219cvgvYUsGiG6nbDCdxgKqepDPJsVMx+NGW/Ukq
+        +GRHYRaHGx1cUM+rOyLQ0/a4ywjoifGQrta8s3k=
+X-Google-Smtp-Source: APXvYqyPvHSbPXW+UE7lB4SzAIzxQEjtgRbdKHaZ4YC4kKszT3QOLL9sVC/glKqlY73eoWNp30WuAmxQwjL0NWNzMEw=
+X-Received: by 2002:a05:600c:54a:: with SMTP id k10mr3183855wmc.127.1570024382909;
+ Wed, 02 Oct 2019 06:53:02 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+References: <20190917032106.32342-1-navid.emamdoost@gmail.com> <CAEkB2ETM9zAnUMkx1GYJmGz2X_QYhkJEmr4Qi5xNV2AX=Qcb-Q@mail.gmail.com>
+In-Reply-To: <CAEkB2ETM9zAnUMkx1GYJmGz2X_QYhkJEmr4Qi5xNV2AX=Qcb-Q@mail.gmail.com>
+From:   Alex Deucher <alexdeucher@gmail.com>
+Date:   Wed, 2 Oct 2019 09:52:49 -0400
+Message-ID: <CADnq5_N_s9qyERmh7BgJhPjvfFb8aZvzbBjBuw9JttQFr85DTA@mail.gmail.com>
+Subject: Re: [PATCH] drm/amd/display: memory leak
+To:     Navid Emamdoost <navid.emamdoost@gmail.com>
+Cc:     Harry Wentland <harry.wentland@amd.com>,
+        =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
+        Nikola Cornij <nikola.cornij@amd.com>,
+        David Airlie <airlied@linux.ie>,
+        Maling list - DRI developers 
+        <dri-devel@lists.freedesktop.org>,
+        LKML <linux-kernel@vger.kernel.org>, Jun Lei <Jun.Lei@amd.com>,
+        "David (ChunMing) Zhou" <David1.Zhou@amd.com>,
+        Bhawanpreet Lakha <Bhawanpreet.Lakha@amd.com>,
+        amd-gfx list <amd-gfx@lists.freedesktop.org>,
+        Navid Emamdoost <emamd001@umn.edu>,
+        Eric Bernstein <Eric.Bernstein@amd.com>,
+        Stephen McCamant <smccaman@umn.edu>,
+        Charlene Liu <Charlene.Liu@amd.com>,
+        Leo Li <sunpeng.li@amd.com>, Kangjie Lu <kjlu@umn.edu>,
+        hersen wu <hersenxs.wu@amd.com>,
+        Tony Cheng <Tony.Cheng@amd.com>,
+        Ken Chalmers <ken.chalmers@amd.com>,
+        Thomas Lim <Thomas.Lim@amd.com>,
+        Eric Yang <Eric.Yang2@amd.com>,
+        Wesley Chalmers <Wesley.Chalmers@amd.com>,
+        Roman Li <Roman.Li@amd.com>,
+        Dmytro Laktyushkin <Dmytro.Laktyushkin@amd.com>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        Nicholas Kazlauskas <nicholas.kazlauskas@amd.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On Tue, Oct 1, 2019 at 5:00 PM Navid Emamdoost
+<navid.emamdoost@gmail.com> wrote:
+>
+> Would you please review this patch?
+>
 
-Static analysis on linux-next with Coverity has picked up a potential
-issue in file fs/btrfs/ref-verify.c, function process_leaf() in the
-following commit:
+Applied.  thanks!
 
-commit fd708b81d972a0714b02a60eb4792fdbf15868c4
-Author: Josef Bacik <josef@toxicpanda.com>
-Date:   Fri Sep 29 15:43:50 2017 -0400
+Alex
 
-    Btrfs: add a extent ref verify tool
-
-The potential issue is when on the unlikely event when all the items
-contain unknown key.types and so ret is not assigned a value. Since ret
-is not initialized then a garbage value is returned by this function in
-this unlikely scenario.
-
-In the previous function process_extent_item any unknown key types are
-flagged up as an error and -EINVAL is returned.  I'm unsure if this kind
-of error handling should also be applied to function process_leaf with
-invalid key types too.
-
-The coverity analysis follows:
-
-495static int process_leaf(struct btrfs_root *root,
-496                        struct btrfs_path *path, u64 *bytenr, u64
-*num_bytes)
-497{
-498        struct btrfs_fs_info *fs_info = root->fs_info;
-499        struct extent_buffer *leaf = path->nodes[0];
-500        struct btrfs_extent_data_ref *dref;
-501        struct btrfs_shared_data_ref *sref;
-
-502        u32 count;
-   1. var_decl: Declaring variable ret without initializer.
-
-503        int i = 0, tree_block_level = 0, ret;
-504        struct btrfs_key key;
-505        int nritems = btrfs_header_nritems(leaf);
-506
-   2. Condition i < nritems, taking true branch.
-
-507        for (i = 0; i < nritems; i++) {
-508                btrfs_item_key_to_cpu(leaf, &key, i);
-   3. Switch case default.
-
-509                switch (key.type) {
-510                case BTRFS_EXTENT_ITEM_KEY:
-511                        *num_bytes = key.offset;
-512                        /* fall through */
-513                case BTRFS_METADATA_ITEM_KEY:
-514                        *bytenr = key.objectid;
-515                        ret = process_extent_item(fs_info, path, &key, i,
-516                                                  &tree_block_level);
-517                        break;
-518                case BTRFS_TREE_BLOCK_REF_KEY:
-519                        ret = add_tree_block(fs_info, key.offset, 0,
-520                                             key.objectid,
-tree_block_level);
-521                        break;
-522                case BTRFS_SHARED_BLOCK_REF_KEY:
-523                        ret = add_tree_block(fs_info, 0, key.offset,
-524                                             key.objectid,
-tree_block_level);
-525                        break;
-526                case BTRFS_EXTENT_DATA_REF_KEY:
-527                        dref = btrfs_item_ptr(leaf, i,
-528                                              struct
-btrfs_extent_data_ref);
-529                        ret = add_extent_data_ref(fs_info, leaf,
-dref, *bytenr,
-530                                                  *num_bytes);
-531                        break;
-532                case BTRFS_SHARED_DATA_REF_KEY:
-533                        sref = btrfs_item_ptr(leaf, i,
-534                                              struct
-btrfs_shared_data_ref);
-535                        count = btrfs_shared_data_ref_count(leaf, sref);
-536                        ret = add_shared_data_ref(fs_info,
-key.offset, count,
-537                                                  *bytenr, *num_bytes);
-538                        break;
-539                default:
-   4. Breaking from switch.
-
-540                        break;
-541                }
-
-   CID 19605 (#1 of 1): Uninitialized scalar variable (UNINIT)
-   5. uninit_use: Using uninitialized value ret.
-
-542                if (ret)
-543                        break;
-544        }
-545        return ret;
-546}
-
-Colin
+>
+> Thanks,
+> Navid.
+>
+> On Mon, Sep 16, 2019 at 10:21 PM Navid Emamdoost
+> <navid.emamdoost@gmail.com> wrote:
+> >
+> > In dcn*_clock_source_create when dcn20_clk_src_construct fails allocated
+> > clk_src needs release.
+> >
+> > Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
+> > ---
+> >  drivers/gpu/drm/amd/display/dc/dce100/dce100_resource.c | 3 ++-
+> >  drivers/gpu/drm/amd/display/dc/dce110/dce110_resource.c | 1 +
+> >  drivers/gpu/drm/amd/display/dc/dce112/dce112_resource.c | 1 +
+> >  drivers/gpu/drm/amd/display/dc/dce120/dce120_resource.c | 1 +
+> >  drivers/gpu/drm/amd/display/dc/dce80/dce80_resource.c   | 1 +
+> >  drivers/gpu/drm/amd/display/dc/dcn10/dcn10_resource.c   | 1 +
+> >  drivers/gpu/drm/amd/display/dc/dcn20/dcn20_resource.c   | 1 +
+> >  7 files changed, 8 insertions(+), 1 deletion(-)
+> >
+> > diff --git a/drivers/gpu/drm/amd/display/dc/dce100/dce100_resource.c b/drivers/gpu/drm/amd/display/dc/dce100/dce100_resource.c
+> > index 6248c8455314..21de230b303a 100644
+> > --- a/drivers/gpu/drm/amd/display/dc/dce100/dce100_resource.c
+> > +++ b/drivers/gpu/drm/amd/display/dc/dce100/dce100_resource.c
+> > @@ -667,7 +667,8 @@ struct clock_source *dce100_clock_source_create(
+> >                 clk_src->base.dp_clk_src = dp_clk_src;
+> >                 return &clk_src->base;
+> >         }
+> > -
+> > +
+> > +       kfree(clk_src);
+> >         BREAK_TO_DEBUGGER();
+> >         return NULL;
+> >  }
+> > diff --git a/drivers/gpu/drm/amd/display/dc/dce110/dce110_resource.c b/drivers/gpu/drm/amd/display/dc/dce110/dce110_resource.c
+> > index 764329264c3b..0cb83b0e0e1e 100644
+> > --- a/drivers/gpu/drm/amd/display/dc/dce110/dce110_resource.c
+> > +++ b/drivers/gpu/drm/amd/display/dc/dce110/dce110_resource.c
+> > @@ -714,6 +714,7 @@ struct clock_source *dce110_clock_source_create(
+> >                 return &clk_src->base;
+> >         }
+> >
+> > +       kfree(clk_src);
+> >         BREAK_TO_DEBUGGER();
+> >         return NULL;
+> >  }
+> > diff --git a/drivers/gpu/drm/amd/display/dc/dce112/dce112_resource.c b/drivers/gpu/drm/amd/display/dc/dce112/dce112_resource.c
+> > index c6136e0ed1a4..147d77173e2b 100644
+> > --- a/drivers/gpu/drm/amd/display/dc/dce112/dce112_resource.c
+> > +++ b/drivers/gpu/drm/amd/display/dc/dce112/dce112_resource.c
+> > @@ -687,6 +687,7 @@ struct clock_source *dce112_clock_source_create(
+> >                 return &clk_src->base;
+> >         }
+> >
+> > +       kfree(clk_src);
+> >         BREAK_TO_DEBUGGER();
+> >         return NULL;
+> >  }
+> > diff --git a/drivers/gpu/drm/amd/display/dc/dce120/dce120_resource.c b/drivers/gpu/drm/amd/display/dc/dce120/dce120_resource.c
+> > index 4a6ba3173a5a..0b5eeff17d00 100644
+> > --- a/drivers/gpu/drm/amd/display/dc/dce120/dce120_resource.c
+> > +++ b/drivers/gpu/drm/amd/display/dc/dce120/dce120_resource.c
+> > @@ -500,6 +500,7 @@ static struct clock_source *dce120_clock_source_create(
+> >                 return &clk_src->base;
+> >         }
+> >
+> > +       kfree(clk_src);
+> >         BREAK_TO_DEBUGGER();
+> >         return NULL;
+> >  }
+> > diff --git a/drivers/gpu/drm/amd/display/dc/dce80/dce80_resource.c b/drivers/gpu/drm/amd/display/dc/dce80/dce80_resource.c
+> > index 860a524ebcfa..952440893fbb 100644
+> > --- a/drivers/gpu/drm/amd/display/dc/dce80/dce80_resource.c
+> > +++ b/drivers/gpu/drm/amd/display/dc/dce80/dce80_resource.c
+> > @@ -701,6 +701,7 @@ struct clock_source *dce80_clock_source_create(
+> >                 return &clk_src->base;
+> >         }
+> >
+> > +       kfree(clk_src);
+> >         BREAK_TO_DEBUGGER();
+> >         return NULL;
+> >  }
+> > diff --git a/drivers/gpu/drm/amd/display/dc/dcn10/dcn10_resource.c b/drivers/gpu/drm/amd/display/dc/dcn10/dcn10_resource.c
+> > index a12530a3ab9c..3f25e8da5396 100644
+> > --- a/drivers/gpu/drm/amd/display/dc/dcn10/dcn10_resource.c
+> > +++ b/drivers/gpu/drm/amd/display/dc/dcn10/dcn10_resource.c
+> > @@ -786,6 +786,7 @@ struct clock_source *dcn10_clock_source_create(
+> >                 return &clk_src->base;
+> >         }
+> >
+> > +       kfree(clk_src);
+> >         BREAK_TO_DEBUGGER();
+> >         return NULL;
+> >  }
+> > diff --git a/drivers/gpu/drm/amd/display/dc/dcn20/dcn20_resource.c b/drivers/gpu/drm/amd/display/dc/dcn20/dcn20_resource.c
+> > index b949e202d6cb..418fdcf1f492 100644
+> > --- a/drivers/gpu/drm/amd/display/dc/dcn20/dcn20_resource.c
+> > +++ b/drivers/gpu/drm/amd/display/dc/dcn20/dcn20_resource.c
+> > @@ -955,6 +955,7 @@ struct clock_source *dcn20_clock_source_create(
+> >                 return &clk_src->base;
+> >         }
+> >
+> > +       kfree(clk_src)
+> >         BREAK_TO_DEBUGGER();
+> >         return NULL;
+> >  }
+> > --
+> > 2.17.1
+> >
+>
+>
+> --
+> Navid.
+> _______________________________________________
+> amd-gfx mailing list
+> amd-gfx@lists.freedesktop.org
+> https://lists.freedesktop.org/mailman/listinfo/amd-gfx
