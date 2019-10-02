@@ -2,175 +2,94 @@ Return-Path: <SRS0=zem1=X3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4814DECE58A
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 16:14:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 897C3C352AA
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 16:14:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1FC00222C2
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 16:14:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570032848;
-	bh=kO8M38DmM9I+02SfH1lZx8c4kQqQUy1vQcjLyNx6/UI=;
-	h=From:To:Subject:Date:List-ID:From;
-	b=hv8KXXIRzc/EtdXYSmX9KO9CkLCReNSqojs4j/RD83+aUdQZWiQVF++5XiMC44mj5
-	 cdjQmwVRdGkwb994SQykABmpm8oHwJ7TADilPgrX+GStSHxYIaLOG2SPOdDEjUspuy
-	 jYK+hqhvkrIiie1ESscX4eNEaO/elMoxCwJtCCr4=
+	by mail.kernel.org (Postfix) with ESMTP id 5D54D21D81
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 16:14:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=pensando.io header.i=@pensando.io header.b="EP1pH7wp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727846AbfJBQOH (ORCPT
+        id S1728049AbfJBQOg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Oct 2019 12:14:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38986 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726215AbfJBQOG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Oct 2019 12:14:06 -0400
-Received: from localhost.localdomain (unknown [194.230.155.145])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4882121D81;
-        Wed,  2 Oct 2019 16:14:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570032845;
-        bh=kO8M38DmM9I+02SfH1lZx8c4kQqQUy1vQcjLyNx6/UI=;
-        h=From:To:Subject:Date:From;
-        b=pTAciPHwF/1ekI5rhATeOVb8L8s04YFa4IDtpwye5eD2HwpcrP8u9snStb72j0OQe
-         G9ymOpPTDfJDoGksbnBOvrC2FeRLF7Kfn1SNbF2/GdUMvGf3gbj4Tn7K0e7M1ll4vF
-         hajl3K1m4oB7OKu+EQOX+Dp4i73QkHkl3KN7vgOw=
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     Matt Mackall <mpm@selenic.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Kukjin Kim <kgene@kernel.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        linux-crypto@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v3] dt-bindings: rng: exynos4-rng: Convert Exynos PRNG bindings to json-schema
-Date:   Wed,  2 Oct 2019 18:13:40 +0200
-Message-Id: <20191002161340.11846-1-krzk@kernel.org>
-X-Mailer: git-send-email 2.17.1
+        Wed, 2 Oct 2019 12:14:36 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:42510 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727181AbfJBQOe (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 2 Oct 2019 12:14:34 -0400
+Received: by mail-pf1-f196.google.com with SMTP id q12so10605503pff.9
+        for <linux-kernel@vger.kernel.org>; Wed, 02 Oct 2019 09:14:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=pensando.io; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-transfer-encoding:content-language;
+        bh=eeyTOg17q9KxMpdnKIdB7cChcxt684Nc0Z/pTXOp8y8=;
+        b=EP1pH7wpiE0TYKvhUm2wWyzT1PRmnrtJW2S9yGvLz+UQS5H6/InXwE+x7vcQn0YkA8
+         FvYrIpIaayfSv4Ts2FZYpj3clWi/NGLG/G3R7XP1QXkQqsFA+p03EIgoGlgNePuVOKte
+         EV2xbhJPg+0sbcZIjH2QWZyQcxkXcsqBDBFBGsAG+au4XuTyaRh7n3OKaPHzKopsBy0D
+         UKEmC1UUp5TnLJB/BzgH+VR7a60BkAmOYCpo8QG8Zz0WcDX/gt+ScP5hZv0bfiIbfid5
+         VtIAGaDfjpZDJsmbs5y6TakZJvKeAeAbclrWPjG2I6CjzEY6C4bLgws3vjG9QhFFf/wO
+         LjJA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-transfer-encoding
+         :content-language;
+        bh=eeyTOg17q9KxMpdnKIdB7cChcxt684Nc0Z/pTXOp8y8=;
+        b=m6lZKvDyFHEeebo1Q6ZLF0msW2zo5w3vWxmy2ug03Zf9ObqXbYxkOhgSOvVoPE88p3
+         NrYZW3wlOlDUfRWxk/XK+FC6mQbGxWbVH+QrrWsm2782T3e36UlR9PbK5gKpWMrDGoiN
+         3TUI8dsx7y5U4QtZiv2Y41owuEpZZ7AH19G4k4wo+aubkkqKllFv4KVe1AsOrqpIgKXI
+         B97DliLUwj1FJWhCsFMoNAqgMw/QwCv/w8V2Y4ctmW9JmMAXMSGnv6vDgszfbaVTTNia
+         nEsO7iNwxKNjXyUhtmjTxCkBwwXKx//GEIHrMaVty8eG80kwn8TOu++dwMzOZaiecqVZ
+         y0lA==
+X-Gm-Message-State: APjAAAX2htEkc1wjTDv/zTDPGTVUKGVy737FFjaEQq9q1pywFfTiuFRU
+        X2kdON6c+2RyfFxNvg1G/Gdn6HgcPZWweg==
+X-Google-Smtp-Source: APXvYqxrTJaVirNXUIMjjQQYz+vd4XBrvrCFGiFDXmev6sjlsTLcobvsJWUnNNcWVcQJlboCNdrkOA==
+X-Received: by 2002:a62:e817:: with SMTP id c23mr5436656pfi.230.1570032873121;
+        Wed, 02 Oct 2019 09:14:33 -0700 (PDT)
+Received: from Shannons-MacBook-Pro.local (static-50-53-47-17.bvtn.or.frontiernet.net. [50.53.47.17])
+        by smtp.gmail.com with ESMTPSA id z25sm18095592pfn.7.2019.10.02.09.14.31
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 02 Oct 2019 09:14:32 -0700 (PDT)
+Subject: Re: [PATCH] Documentation: networking: device drivers: Remove stray
+ asterisks
+To:     =?UTF-8?Q?Jonathan_Neusch=c3=a4fer?= <j.neuschaefer@gmx.net>,
+        linux-doc@vger.kernel.org
+Cc:     Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Pensando Drivers <drivers@pensando.io>,
+        intel-wired-lan@lists.osuosl.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20191002150956.16234-1-j.neuschaefer@gmx.net>
+From:   Shannon Nelson <snelson@pensando.io>
+Message-ID: <1fd5d5df-30ea-2545-daf6-575473879cd6@pensando.io>
+Date:   Wed, 2 Oct 2019 09:14:31 -0700
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:60.0)
+ Gecko/20100101 Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+In-Reply-To: <20191002150956.16234-1-j.neuschaefer@gmx.net>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Convert Samsung Exynos Pseudo Random Number Generator bindings to DT
-schema format using json-schema.
+On 10/2/19 8:09 AM, Jonathan Neuschäfer wrote:
+> These asterisks were once references to a line that said:
+>    "* Other names and brands may be claimed as the property of others."
+> But now, they serve no purpose; they can only irritate the reader.
+>
+[...]
+> Fixes: df69ba43217d ("ionic: Add basic framework for IONIC Network device driver")
 
-Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+Acked-by: Shannon Nelson <snelson@pensando.io>
 
----
-
-Changes since v2:
-1. Add additionalProperties false,
-2. Include clock header and use defines instead of clock numbers.
-
-Changes since v1:
-1. Indent example with four spaces (more readable).
----
- .../bindings/rng/samsung,exynos4-rng.txt      | 19 --------
- .../bindings/rng/samsung,exynos4-rng.yaml     | 45 +++++++++++++++++++
- MAINTAINERS                                   |  2 +-
- 3 files changed, 46 insertions(+), 20 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/rng/samsung,exynos4-rng.txt
- create mode 100644 Documentation/devicetree/bindings/rng/samsung,exynos4-rng.yaml
-
-diff --git a/Documentation/devicetree/bindings/rng/samsung,exynos4-rng.txt b/Documentation/devicetree/bindings/rng/samsung,exynos4-rng.txt
-deleted file mode 100644
-index a13fbdb4bd88..000000000000
---- a/Documentation/devicetree/bindings/rng/samsung,exynos4-rng.txt
-+++ /dev/null
-@@ -1,19 +0,0 @@
--Exynos Pseudo Random Number Generator
--
--Required properties:
--
--- compatible  : One of:
--                - "samsung,exynos4-rng" for Exynos4210 and Exynos4412
--                - "samsung,exynos5250-prng" for Exynos5250+
--- reg         : Specifies base physical address and size of the registers map.
--- clocks      : Phandle to clock-controller plus clock-specifier pair.
--- clock-names : "secss" as a clock name.
--
--Example:
--
--	rng@10830400 {
--		compatible = "samsung,exynos4-rng";
--		reg = <0x10830400 0x200>;
--		clocks = <&clock CLK_SSS>;
--		clock-names = "secss";
--	};
-diff --git a/Documentation/devicetree/bindings/rng/samsung,exynos4-rng.yaml b/Documentation/devicetree/bindings/rng/samsung,exynos4-rng.yaml
-new file mode 100644
-index 000000000000..3362cb1213c0
---- /dev/null
-+++ b/Documentation/devicetree/bindings/rng/samsung,exynos4-rng.yaml
-@@ -0,0 +1,45 @@
-+# SPDX-License-Identifier: GPL-2.0
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/rng/samsung,exynos4-rng.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Samsung Exynos SoC Pseudo Random Number Generator
-+
-+maintainers:
-+  - Krzysztof Kozlowski <krzk@kernel.org>
-+
-+properties:
-+  compatible:
-+    enum:
-+      - samsung,exynos4-rng                   # for Exynos4210 and Exynos4412
-+      - samsung,exynos5250-prng               # for Exynos5250+
-+
-+  reg:
-+    maxItems: 1
-+
-+  clocks:
-+    maxItems: 1
-+
-+  clock-names:
-+    items:
-+      - const: secss
-+
-+required:
-+  - compatible
-+  - reg
-+  - clock-names
-+  - clocks
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    #include <dt-bindings/clock/exynos4.h>
-+
-+    rng@10830400 {
-+        compatible = "samsung,exynos4-rng";
-+        reg = <0x10830400 0x200>;
-+        clocks = <&clock CLK_SSS>;
-+        clock-names = "secss";
-+    };
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 00b75028b280..b26b2009c230 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -14212,7 +14212,7 @@ L:	linux-crypto@vger.kernel.org
- L:	linux-samsung-soc@vger.kernel.org
- S:	Maintained
- F:	drivers/crypto/exynos-rng.c
--F:	Documentation/devicetree/bindings/rng/samsung,exynos4-rng.txt
-+F:	Documentation/devicetree/bindings/rng/samsung,exynos4-rng.yaml
- 
- SAMSUNG EXYNOS TRUE RANDOM NUMBER GENERATOR (TRNG) DRIVER
- M:	Łukasz Stelmach <l.stelmach@samsung.com>
--- 
-2.17.1
 
