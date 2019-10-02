@@ -2,101 +2,107 @@ Return-Path: <SRS0=zem1=X3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E6E21C35280
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 12:03:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66141C352AA
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 12:04:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BF8DE21929
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 12:03:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 34E6421783
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 12:04:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="OmP5kq+z"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728338AbfJBMDf (ORCPT
+        id S1728378AbfJBMER (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Oct 2019 08:03:35 -0400
-Received: from mout.kundenserver.de ([212.227.126.187]:45483 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725747AbfJBMDe (ORCPT
+        Wed, 2 Oct 2019 08:04:17 -0400
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:35473 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727257AbfJBMEQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Oct 2019 08:03:34 -0400
-Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
- (mreue009 [212.227.15.129]) with ESMTPA (Nemesis) id
- 1Mzhar-1htpHS1ojh-00vhrB; Wed, 02 Oct 2019 14:03:27 +0200
-From:   Arnd Bergmann <arnd@arndb.de>
-To:     Alex Deucher <alexander.deucher@amd.com>,
-        =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
-        "David (ChunMing) Zhou" <David1.Zhou@amd.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>
-Cc:     clang-built-linux@googlegroups.com, amd-gfx@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        Arnd Bergmann <arnd@arndb.de>, Le Ma <le.ma@amd.com>,
-        Hawking Zhang <Hawking.Zhang@amd.com>,
-        Huang Rui <ray.huang@amd.com>
-Subject: [PATCH 6/6] [RESEND] drm/amdgpu: work around llvm bug #42576
-Date:   Wed,  2 Oct 2019 14:01:27 +0200
-Message-Id: <20191002120136.1777161-7-arnd@arndb.de>
-X-Mailer: git-send-email 2.20.0
-In-Reply-To: <20191002120136.1777161-1-arnd@arndb.de>
-References: <20191002120136.1777161-1-arnd@arndb.de>
+        Wed, 2 Oct 2019 08:04:16 -0400
+Received: by mail-lj1-f194.google.com with SMTP id m7so16858331lji.2
+        for <linux-kernel@vger.kernel.org>; Wed, 02 Oct 2019 05:04:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=Y95OajR8Z4EhoKVV/d/GtPK38UmcXtK59LFx+wA+Kn4=;
+        b=OmP5kq+z+zbFpIxkBNzdy160yYdL/tMN7p+YDlhaPbcErQwKwPUXwv2VJg5sUXmyup
+         ygBxLJXG5geeSgJTdIEycdXlvcJ4VTiDNeCAcPjC9oX6zR5voiv5Ww3rBRcWuZD7otui
+         XmJuS4uPT/e5ZSoyF4+mdfA9VFyOem72gpoqPJVVo9aWJuI2LHax7Cs3gE8ErSWQazFK
+         JaESnbyXsinx1R/cgxTvkqrAHVdAH6gFw5ZUBlVLwH3Uwfnogt6FlnURjAsPrds0wVmq
+         reyXAR9+mGKS3WAcXU8dMUB8XLZ00ncKR8c6OPrSVvIyojBl/q0L730b+Ns7dEOXDGfS
+         0eeg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=Y95OajR8Z4EhoKVV/d/GtPK38UmcXtK59LFx+wA+Kn4=;
+        b=KE6KCWiScmqSn72EeSKlgewvVTYsz9Yl5agzy9ChDlssf4WYoTDZpnbej86KkvjqPm
+         THDr4QS80f8sGhYpK55vGDi4r3AthZF4xFm45i/j+S96059c74Z3XeKfvi6xHgvb/iO1
+         P4S3SKxjgFCb1xc5Yj8dRmr4Ypc44F7A7/QB/v0IqGnZfXvbSdgzEIKtayPaGhZQIzRl
+         UKwGoTKEKYXIB+MYT9m+/hKtqb2gH4EG0GDsqfcMLnk/yPiMonXLhP40HCq5vfs8I33J
+         f2YtiboKDcB4NAEqRIS8CLFmiOgYugJGbNuhiAt6bQKpmLbivUlxx1sqx+NMK+l/E9k4
+         xHzA==
+X-Gm-Message-State: APjAAAWSLNWpSoGFkwT2Fvask514m4nm+sxiGyKCwUlfuGAyMnmXfTwp
+        GKZ3/l75c2bRpO/jYKYLhLkeDw==
+X-Google-Smtp-Source: APXvYqwCgHv5cQQHT5flHSQGpsA/3qpFgY9BqKRSoHwTcS8bpTuL/U1VGR2qPBiljcvG8ANgpwX2YQ==
+X-Received: by 2002:a2e:5c09:: with SMTP id q9mr2285090ljb.4.1570017853751;
+        Wed, 02 Oct 2019 05:04:13 -0700 (PDT)
+Received: from localhost.localdomain (168-200-94-178.pool.ukrtel.net. [178.94.200.168])
+        by smtp.gmail.com with ESMTPSA id x2sm4833827ljj.94.2019.10.02.05.04.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 02 Oct 2019 05:04:13 -0700 (PDT)
+From:   Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
+To:     shuah@kernel.org, ast@kernel.org, daniel@iogearbox.net
+Cc:     kafai@fb.com, songliubraving@fb.com, yhs@fb.com,
+        linux-kselftest@vger.kernel.org, netdev@vger.kernel.org,
+        bpf@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
+Subject: [PATCH bpf-next 1/2] selftests/bpf: add static to enable_all_controllers()
+Date:   Wed,  2 Oct 2019 15:04:03 +0300
+Message-Id: <20191002120404.26962-2-ivan.khoronzhuk@linaro.org>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20191002120404.26962-1-ivan.khoronzhuk@linaro.org>
+References: <20191002120404.26962-1-ivan.khoronzhuk@linaro.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:YNsgZzHNCw392v1rgjHTUEZ8pz20uykSXH754RL9iIOb5deh2YJ
- VniPYenT1ADFLCFsCzgfROvSsNEN3OnGKEcwzAbZX+eQqWv1FYpwjvY8qgQaQWagz6gA/Hj
- n50Orae4/jwItelwmwUM+w8MCNKZ1bodhPFaG7DBNsILr42QtEuWuTsTPF+I9vNTWhFwdKi
- AC2C3ZG7mUNQXMnuZ9GNg==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:4D48kbU58hA=:M0Ukpx58xOP2bgAOCbesZg
- Ll3K2WKrJMuAIV0rQMg3YrjRgy0vn19WxNhnTpIkrflyRiZWcJOM0wBeRuWKJeyvUs0Rmo5L2
- WT/4Q04J4mCDT0lGHrQHxf0CSt7FRwbIaoymM8ll6+AnjlipM3gBW2vuD399wywXHODhQH/Jj
- kmmHm0vPKelSxnjmyF5QKhW2vPKNuNrxHXBAuShJhblFiaT4Tpite+9Tpqz5t78Mv1d0c4+St
- IPO467Ji+f+nalLEiSfYfSOueaNIp0Zh2ECvF8gYGuCtq4mQgaFQma45iRPDMa0dLQp2LPHv5
- s3HOgLJcrW3+YLL3OgrgSAIqY/JojFmQs6jVGI3Y/iaIHFpiWRvNCCVqhadcZDljlJ6/isT3C
- cWMwh3wga4zB1HZAibk87TdIUOsEWosHOOSejWot8HMi7thZpGsmWSYlpaZpcggNF8Y5ef5cx
- S+AFB9lJCv6tLjnDzT5CItgHD9CSDilvn5DV5AQ2CSUe7CMLtj7FRRuRtxGnzKXWHsDiqUK2X
- dLpSNCwET1M9ENlBeQ5D+BhxBx37HFEUhCYKyJqFJoQbTkGvZkwazmwaChizrxq1gbyD4vDeD
- GqCyA1nhBCBAM2hW+2uyIFVsDMDpeg/OoBtcZMPB8aPwvr2q464wcpu+nmB0VWQnFJx8hRRKp
- kx+eBUDSoB7gkuurGSeum9uDonECxoSFhh//75/Bmdr0Te33FTyRIMUwkUlAfiVlOVC5ga602
- HNuDLNkHHth6E821u1odV2gGvJVg9mgsLl5k0rHpfHXjU15zA2Ww4I8gM2c4ZgC5ypKzC/eg5
- iac5xdsyiVk9Kf4KiWNLvvcteewurG0ZAiyq3Yo5GGXvCGBgLkIfnziVSp+lP21xvwWwPUCJr
- pxfok2TuNB12F2uGor0g==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Code in the amdgpu driver triggers a bug when using clang to build
-an arm64 kernel:
+Add static to enable_all_controllers() to get rid from annoying warn:
 
-/tmp/sdma_v4_0-f95fd3.s: Assembler messages:
-/tmp/sdma_v4_0-f95fd3.s:44: Error: selected processor does not support `bfc w0,#1,#5'
+samples/bpf/../../tools/testing/selftests/bpf/cgroup_helpers.c:44:5:
+warning: no previous prototype for ‘enable_all_controllers’
+[-Wmissing-prototypes]
+ int enable_all_controllers(char *cgroup_path)
 
-I expect this to be fixed in llvm soon, but we can also work around
-it by inserting a barrier() that prevents the optimization.
+while samples/bpf build.
 
-Link: https://bugs.llvm.org/show_bug.cgi?id=42576
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Signed-off-by: Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
 ---
-Apparently this bug is still present in both the released clang-9
-and the current development version of clang-10.
-I was hoping we would not need a workaround in clang-9+, but
-it seems that we do.
----
- drivers/gpu/drm/amd/amdgpu/sdma_v4_0.c | 1 +
- 1 file changed, 1 insertion(+)
+ tools/testing/selftests/bpf/cgroup_helpers.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/amd/amdgpu/sdma_v4_0.c b/drivers/gpu/drm/amd/amdgpu/sdma_v4_0.c
-index 78452cf0115d..39459cd8ddef 100644
---- a/drivers/gpu/drm/amd/amdgpu/sdma_v4_0.c
-+++ b/drivers/gpu/drm/amd/amdgpu/sdma_v4_0.c
-@@ -961,6 +961,7 @@ static uint32_t sdma_v4_0_rb_cntl(struct amdgpu_ring *ring, uint32_t rb_cntl)
- 	/* Set ring buffer size in dwords */
- 	uint32_t rb_bufsz = order_base_2(ring->ring_size / 4);
- 
-+	barrier(); /* work around https://bugs.llvm.org/show_bug.cgi?id=42576 */
- 	rb_cntl = REG_SET_FIELD(rb_cntl, SDMA0_GFX_RB_CNTL, RB_SIZE, rb_bufsz);
- #ifdef __BIG_ENDIAN
- 	rb_cntl = REG_SET_FIELD(rb_cntl, SDMA0_GFX_RB_CNTL, RB_SWAP_ENABLE, 1);
+diff --git a/tools/testing/selftests/bpf/cgroup_helpers.c b/tools/testing/selftests/bpf/cgroup_helpers.c
+index e95c33e333a4..4d74f3c4619b 100644
+--- a/tools/testing/selftests/bpf/cgroup_helpers.c
++++ b/tools/testing/selftests/bpf/cgroup_helpers.c
+@@ -41,7 +41,7 @@
+  *
+  * If successful, 0 is returned.
+  */
+-int enable_all_controllers(char *cgroup_path)
++static int enable_all_controllers(char *cgroup_path)
+ {
+ 	char path[PATH_MAX + 1];
+ 	char buf[PATH_MAX];
 -- 
-2.20.0
+2.17.1
 
