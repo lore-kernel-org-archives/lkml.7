@@ -2,74 +2,110 @@ Return-Path: <SRS0=zem1=X3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC80FC10F14
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 21:00:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 903BCC47404
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 21:00:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8D7A221848
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 21:00:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570050019;
-	bh=lnqWT3HXwWR4KU58WzmU1vAViNtSyLf2IW1JrqTUg3Y=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=alIJMj3ZzG0n3vHuy/bTeJOFzzRgXO6CpCTeDx6lepEfqDBCgge4FZ08T4l8WFjnU
-	 +FUs7qJ3zmoDVIx+1Bvjh+e40di6dLNExFuCMrEg5eQDnA4wcSBDCOQCuiDwiqCr/h
-	 UYn7EEO+AEFxyjWHR5DStn5yXE9Rn+PLBkEfjXeY=
+	by mail.kernel.org (Postfix) with ESMTP id 7035B2070B
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 21:00:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729121AbfJBVAS (ORCPT
+        id S1729181AbfJBVA0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Oct 2019 17:00:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34244 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729030AbfJBVAS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Oct 2019 17:00:18 -0400
-Subject: Re: [GIT PULL] erofs fixes for 5.4-rc2
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570050018;
-        bh=lnqWT3HXwWR4KU58WzmU1vAViNtSyLf2IW1JrqTUg3Y=;
-        h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=qMF4rCuy4Vt+ANcph1DvWjwPFyR+2qf2iJ2WhHDXugSI97tEFBH8vuWDB19zYagVD
-         fY+jnmHFFVhL3h+bo1jqCXESvQKzjSvgcvp04lZ+VDoLx/KAbDl01R+yItd35tGNDw
-         Jw7WFSIC6+U2HtAcbTMBUWoBC4XK+khtysV7/yMM=
-From:   pr-tracker-bot@kernel.org
-In-Reply-To: <20191001090938.GA30542@hsiangkao-HP-ZHAN-66-Pro-G1>
-References: <20191001090938.GA30542@hsiangkao-HP-ZHAN-66-Pro-G1>
-X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20191001090938.GA30542@hsiangkao-HP-ZHAN-66-Pro-G1>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/xiang/erofs.git
- tags/erofs-for-5.4-rc2-fixes
-X-PR-Tracked-Commit-Id: dc76ea8c1087b5c44235566ed4be2202d21a8504
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 65aa35c93cc014c72bae944675ea6e88c47a5497
-Message-Id: <157005001798.25857.18035498047418829076.pr-tracker-bot@kernel.org>
-Date:   Wed, 02 Oct 2019 21:00:17 +0000
-To:     Gao Xiang <hsiangkao@aol.com>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Chao Yu <yuchao0@huawei.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Wed, 2 Oct 2019 17:00:26 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:40338 "EHLO
+        mx0b-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729030AbfJBVAZ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 2 Oct 2019 17:00:25 -0400
+Received: from pps.filterd (m0127361.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x92KpZtE069676
+        for <linux-kernel@vger.kernel.org>; Wed, 2 Oct 2019 17:00:24 -0400
+Received: from e06smtp04.uk.ibm.com (e06smtp04.uk.ibm.com [195.75.94.100])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2vd1sg2nqa-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Wed, 02 Oct 2019 17:00:24 -0400
+Received: from localhost
+        by e06smtp04.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <zohar@linux.ibm.com>;
+        Wed, 2 Oct 2019 22:00:22 +0100
+Received: from b06cxnps4076.portsmouth.uk.ibm.com (9.149.109.198)
+        by e06smtp04.uk.ibm.com (192.168.101.134) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Wed, 2 Oct 2019 22:00:17 +0100
+Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
+        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x92L0FGx50855996
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 2 Oct 2019 21:00:15 GMT
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id AC16F11C050;
+        Wed,  2 Oct 2019 21:00:14 +0000 (GMT)
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id A8B3E11C06C;
+        Wed,  2 Oct 2019 21:00:12 +0000 (GMT)
+Received: from dhcp-9-31-103-196.watson.ibm.com (unknown [9.31.103.196])
+        by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Wed,  2 Oct 2019 21:00:12 +0000 (GMT)
+Subject: Re: [PATCH v6 8/9] ima: deprecate permit_directio, instead use
+ appraise_flag
+From:   Mimi Zohar <zohar@linux.ibm.com>
+To:     Nayna Jain <nayna@linux.ibm.com>, linuxppc-dev@ozlabs.org,
+        linux-efi@vger.kernel.org, linux-integrity@vger.kernel.org,
+        devicetree@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Jeremy Kerr <jk@ozlabs.org>,
+        Matthew Garret <matthew.garret@nebula.com>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-erofs@lists.ozlabs.org, LKML <linux-kernel@vger.kernel.org>,
-        Miao Xie <miaoxie@huawei.com>,
-        Gao Xiang <gaoxiang25@huawei.com>
+        Claudio Carvalho <cclaudio@linux.ibm.com>,
+        George Wilson <gcwilson@linux.ibm.com>,
+        Elaine Palmer <erpalmer@us.ibm.com>,
+        Eric Ricther <erichte@linux.ibm.com>,
+        "Oliver O'Halloran" <oohall@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>
+Date:   Wed, 02 Oct 2019 17:00:12 -0400
+In-Reply-To: <1569594360-7141-9-git-send-email-nayna@linux.ibm.com>
+References: <1569594360-7141-1-git-send-email-nayna@linux.ibm.com>
+         <1569594360-7141-9-git-send-email-nayna@linux.ibm.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+x-cbid: 19100221-0016-0000-0000-000002B372CE
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19100221-0017-0000-0000-00003314799D
+Message-Id: <1570050012.4421.50.camel@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-10-02_08:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=3 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=763 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1908290000 definitions=main-1910020165
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Tue, 1 Oct 2019 17:09:43 +0800:
+Hi Nayna,
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/xiang/erofs.git tags/erofs-for-5.4-rc2-fixes
+On Fri, 2019-09-27 at 10:25 -0400, Nayna Jain wrote:
+> This patch deprecates the existing permit_directio flag, instead adds
+> it as possible value to appraise_flag parameter.
+> For eg.
+> appraise_flag=permit_directio
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/65aa35c93cc014c72bae944675ea6e88c47a5497
+Defining a generic "appraise_flag=", which supports different options,
+is the right direction.  I would really like to depreciate the
+"permit_directio" flag, not just change the policy syntax.  For now,
+let's drop this change.
 
-Thank you!
+Mimi
 
--- 
-Deet-doot-dot, I am a bot.
-https://korg.wiki.kernel.org/userdoc/prtracker
