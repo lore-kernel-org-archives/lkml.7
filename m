@@ -2,103 +2,212 @@ Return-Path: <SRS0=zem1=X3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B984C352AA
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 14:01:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79B37C352AA
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 14:05:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E312621D7B
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 14:01:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4269421D80
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 14:05:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=toxicpanda-com.20150623.gappssmtp.com header.i=@toxicpanda-com.20150623.gappssmtp.com header.b="f5Z+M3Tl"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="prwhLR9S"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727692AbfJBOBn (ORCPT
+        id S1727505AbfJBOFU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Oct 2019 10:01:43 -0400
-Received: from mail-qk1-f195.google.com ([209.85.222.195]:41505 "EHLO
-        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726200AbfJBOBm (ORCPT
+        Wed, 2 Oct 2019 10:05:20 -0400
+Received: from mail-qk1-f194.google.com ([209.85.222.194]:43905 "EHLO
+        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726087AbfJBOFU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Oct 2019 10:01:42 -0400
-Received: by mail-qk1-f195.google.com with SMTP id p10so15057917qkg.8
-        for <linux-kernel@vger.kernel.org>; Wed, 02 Oct 2019 07:01:42 -0700 (PDT)
+        Wed, 2 Oct 2019 10:05:20 -0400
+Received: by mail-qk1-f194.google.com with SMTP id h126so15061649qke.10;
+        Wed, 02 Oct 2019 07:05:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=toxicpanda-com.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=vhowmgkseytW1pHuL0lgJJtUtqRUC7YPO7Hg/w47jj4=;
-        b=f5Z+M3TlEajM14Is5sfbCMdOd2HhlK8i0KmSIAeMyb4aLvRrtXXEXq5FqOgrAJSK2T
-         yAbPBmBn+avTkNPz3tQSGYBZSqdBA1rFyoQ2/yLZbskpWBhmDEbQwkiAYWal6vzP86Ow
-         2iQ2vPs3n+zVFM/UxyNyxEtgUlpfRJ7DyDfkMi/dr9kSNey+knDX9zA6Mv2iZk0rgo4Y
-         pQ6401zA76ug5k1YbtCGXoJJ1TZoHrgVVJlq0A0Fj41rpfwWmnAIkIE7Zidhs10WADig
-         X1IIzF5d3wzTBNiyEt/bYkQ0vvZdRmh7iTmvfq9ctSo73YK1oxqsWkibC0TyZxrx03hb
-         HsFw==
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
+         :user-agent;
+        bh=MPq5XvWYyG+QTyn+vm0iUraemW1tBZKA+C2/b10gM9A=;
+        b=prwhLR9SfxtMz/sDh0Fm4R8ehuNjWiOg/6PaoDg1gmyjWdulJrzUCrY5oM4uE7pQ9W
+         6LM6oZTz5er6MeMwkCmjC98No3bJrF+R61Ng97aAUaCQZ19rwQjVwHoslpgHCBNkorNb
+         PBLsY48zcPUwpEYM5I7KU4jWJ05joBTFbdkQui3dn/9kU4O8sPFS8zxlVtKlWkaQzwYZ
+         JexBoraBbkaPAd6bQOo7NDLVZVDlhD1WY+ZBKKOUE0fbi/q3yk52fqiXnL/AxCV66jsx
+         CDQ7o9L7M9aTfzu4/NRWOhg1FTU568XSn2+GYW1vzkuey1OlEQsKyPobB7wMc7Pqi8kj
+         qxvw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=vhowmgkseytW1pHuL0lgJJtUtqRUC7YPO7Hg/w47jj4=;
-        b=i1EdWJJnavM/mIn5CpaMdKxf0KRUMbiGwxMNDFdwybr2FwcfNo3wefF2Ro9OTLlLR+
-         7c+TeWcYYuO2BG2EXiJ/Yy+3w2dwnghexs/fgumS+egiV/mSXVd0AdQup7lJZgwFbWRT
-         olpjfVDo9muC7xdlvy1HopL8XJI9PLhCV320Pvobfj/wvxWmfN+A5lSYupxTL0/yNijw
-         8xbh8EjjgZkTPcJzBtFsaDIhUg70qOS8sFaVuOJy8pY9hbgigCJObg1fR+UVlR9pD7ML
-         vDgKZoVNlaurc02/q6QQpcLPXxrJbDCM1SRWqPvHZIiDSWSHK/+yCEwS33bUWPM4jdPG
-         4Yog==
-X-Gm-Message-State: APjAAAV7KfGrPimSiyZf4Y6a2WVKhOWw1SUEYtwKdreqhj24aI2Z5GPD
-        SrcwG9JQekr04in5+9GORJf58A==
-X-Google-Smtp-Source: APXvYqyySH0r+WBQZU52aaYxkrLDrFDZU5I5GNsKBRtrlsSyyLyl/sV/Sqxs9OBHY8uGqLsEPmYAlw==
-X-Received: by 2002:a37:6713:: with SMTP id b19mr3658748qkc.301.1570024901663;
-        Wed, 02 Oct 2019 07:01:41 -0700 (PDT)
-Received: from localhost ([107.15.81.208])
-        by smtp.gmail.com with ESMTPSA id p77sm10127501qke.6.2019.10.02.07.01.40
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 02 Oct 2019 07:01:40 -0700 (PDT)
-Date:   Wed, 2 Oct 2019 10:01:39 -0400
-From:   Josef Bacik <josef@toxicpanda.com>
-To:     Colin Ian King <colin.king@canonical.com>
-Cc:     Chris Mason <clm@fb.com>, Josef Bacik <josef@toxicpanda.com>,
-        David Sterba <dsterba@suse.com>, linux-btrfs@vger.kernel.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: Btrfs: add a extent ref verify tool (static analysis bug report)
-Message-ID: <20191002140138.eug7xvwhlsn5qnby@MacBook-Pro-91.local>
-References: <3d1bcdce-16ae-d490-0a68-19d9d9d41d92@canonical.com>
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=MPq5XvWYyG+QTyn+vm0iUraemW1tBZKA+C2/b10gM9A=;
+        b=gM5XvsfxXb8s61OaGJ9nBXWPpAEVX3uKgEUfVRBdnhHDu+qUdDHCl7DMstg3xovS17
+         Ns6g3nbzQVeHfgxonmidmjl7wljWRJH7pZFbuHVp+fRL/qK2ggnFQqJD0GBP/18rag4Y
+         eaF5txsh4GVlsgA9clgFUoVdlwB6mVUxrJ3U/SUyh+ksVOP3xbJGfJ+vy82zvP9kmiEG
+         A4njNyaTLyfjWD1dnILaSIJnPUHf2JvDySZY+gwpWuWOL2/aWEbbJJXId4O0TAsYIB5e
+         5Ce1SU3iAqVan1vpwpUXkO2UhTGpEmii+AeFndbnFk6hOEuwG5UI+Gky/Yk5zeav5S7S
+         9ezw==
+X-Gm-Message-State: APjAAAUe2r6OHlu8X6HN1swAZdfAn22WhLQlwq5ZYmImKwqIELK403iW
+        Mt49+p1mKMG5eM1m9R3yUWYDrcRe1fGH9g==
+X-Google-Smtp-Source: APXvYqzOQ3sxj3tGzqUztNfd/ZTnqw3nHag6A7wTgTBddqa0WtrmSAtpghMC4A4zzCPVUzk3fte8yw==
+X-Received: by 2002:a37:642:: with SMTP id 63mr3861495qkg.29.1570025118685;
+        Wed, 02 Oct 2019 07:05:18 -0700 (PDT)
+Received: from smtp.gmail.com ([132.205.230.13])
+        by smtp.gmail.com with ESMTPSA id m125sm10075076qkd.3.2019.10.02.07.05.17
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 02 Oct 2019 07:05:17 -0700 (PDT)
+Date:   Wed, 2 Oct 2019 11:05:16 -0300
+From:   Rodrigo Siqueira <rodrigosiqueiramelo@gmail.com>
+To:     Keith Packard <keithp@keithp.com>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Ville =?utf-8?B?U3lyasOkbMOk?= <ville.syrjala@linux.intel.com>,
+        Chris Wilson <chris@chris-wilson.co.uk>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
+        Pekka Paalanen <pekka.paalanen@collabora.com>
+Cc:     dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+        kernel-janitors@vger.kernel.org, intel-gfx@lists.freedesktop.org
+Subject: [PATCH V6] drm/drm_vblank: Change EINVAL by the correct errno
+Message-ID: <20191002140516.adeyj3htylimmlmg@smtp.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="rl7p723dixcepzft"
 Content-Disposition: inline
-In-Reply-To: <3d1bcdce-16ae-d490-0a68-19d9d9d41d92@canonical.com>
 User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Oct 02, 2019 at 02:50:51PM +0100, Colin Ian King wrote:
-> Hi,
-> 
-> Static analysis on linux-next with Coverity has picked up a potential
-> issue in file fs/btrfs/ref-verify.c, function process_leaf() in the
-> following commit:
-> 
-> commit fd708b81d972a0714b02a60eb4792fdbf15868c4
-> Author: Josef Bacik <josef@toxicpanda.com>
-> Date:   Fri Sep 29 15:43:50 2017 -0400
-> 
->     Btrfs: add a extent ref verify tool
-> 
-> The potential issue is when on the unlikely event when all the items
-> contain unknown key.types and so ret is not assigned a value. Since ret
-> is not initialized then a garbage value is returned by this function in
-> this unlikely scenario.
-> 
-> In the previous function process_extent_item any unknown key types are
-> flagged up as an error and -EINVAL is returned.  I'm unsure if this kind
-> of error handling should also be applied to function process_leaf with
-> invalid key types too.
-> 
 
-Thanks I'll fix this up.  You can run into block group item key types and we
-don't care about those, so we just need ret = 0;  Thanks,
+--rl7p723dixcepzft
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Josef
+For historical reasons, the function drm_wait_vblank_ioctl always return
+-EINVAL if something gets wrong. This scenario limits the flexibility
+for the userspace to make detailed verification of any problem and take
+some action. In particular, the validation of =E2=80=9Cif (!dev->irq_enable=
+d)=E2=80=9D
+in the drm_wait_vblank_ioctl is responsible for checking if the driver
+support vblank or not. If the driver does not support VBlank, the
+function drm_wait_vblank_ioctl returns EINVAL, which does not represent
+the real issue; this patch changes this behavior by return EOPNOTSUPP.
+Additionally, drm_crtc_get_sequence_ioctl and
+drm_crtc_queue_sequence_ioctl, also returns EINVAL if vblank is not
+supported; this patch also changes the return value to EOPNOTSUPP in
+these functions. Lastly, these functions are invoked by libdrm, which is
+used by many compositors; because of this, it is important to check if
+this change breaks any compositor. In this sense, the following projects
+were examined:
+
+* Drm-hwcomposer
+* Kwin
+* Sway
+* Wlroots
+* Wayland
+* Weston
+* Mutter
+* Xorg (67 different drivers)
+
+For each repository the verification happened in three steps:
+
+* Update the main branch
+* Look for any occurrence of "drmCrtcQueueSequence",
+  "drmCrtcGetSequence", and "drmWaitVBlank" with the command git grep -n
+  "STRING".
+* Look in the git history of the project with the command
+git log -S<STRING>
+
+None of the above projects validate the use of EINVAL when using
+drmWaitVBlank(), which make safe, at least for these projects, to change
+the return values. On the other hand, mesa and xserver project uses
+drmCrtcQueueSequence() and drmCrtcGetSequence(); this change is harmless
+for both projects.
+
+Change since V5 (Pekka Paalanen):
+ - Check if the change also affects Mutter
+
+Change since V4 (Daniel):
+ - Also return EOPNOTSUPP in drm_crtc_[get|queue]_sequence_ioctl
+
+Change since V3:
+ - Return EINVAL for _DRM_VBLANK_SIGNAL (Daniel)
+
+Change since V2:
+ Daniel Vetter and Chris Wilson
+ - Replace ENOTTY by EOPNOTSUPP
+ - Return EINVAL if the parameters are wrong
+
+Cc: Keith Packard <keithp@keithp.com>
+Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>
+Cc: Ville Syrj=C3=A4l=C3=A4 <ville.syrjala@linux.intel.com>
+Cc: Chris Wilson <chris@chris-wilson.co.uk>
+Cc: Daniel Vetter <daniel@ffwll.ch>
+Cc: Pekka Paalanen <pekka.paalanen@collabora.com>
+Signed-off-by: Rodrigo Siqueira <rodrigosiqueiramelo@gmail.com>
+---
+ drivers/gpu/drm/drm_vblank.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/drivers/gpu/drm/drm_vblank.c b/drivers/gpu/drm/drm_vblank.c
+index 9c6899758bc9..71cf2633ac58 100644
+--- a/drivers/gpu/drm/drm_vblank.c
++++ b/drivers/gpu/drm/drm_vblank.c
+@@ -1610,7 +1610,7 @@ int drm_wait_vblank_ioctl(struct drm_device *dev, voi=
+d *data,
+ 	unsigned int flags, pipe, high_pipe;
+=20
+ 	if (!dev->irq_enabled)
+-		return -EINVAL;
++		return -EOPNOTSUPP;
+=20
+ 	if (vblwait->request.type & _DRM_VBLANK_SIGNAL)
+ 		return -EINVAL;
+@@ -1876,7 +1876,7 @@ int drm_crtc_get_sequence_ioctl(struct drm_device *de=
+v, void *data,
+ 		return -EOPNOTSUPP;
+=20
+ 	if (!dev->irq_enabled)
+-		return -EINVAL;
++		return -EOPNOTSUPP;
+=20
+ 	crtc =3D drm_crtc_find(dev, file_priv, get_seq->crtc_id);
+ 	if (!crtc)
+@@ -1934,7 +1934,7 @@ int drm_crtc_queue_sequence_ioctl(struct drm_device *=
+dev, void *data,
+ 		return -EOPNOTSUPP;
+=20
+ 	if (!dev->irq_enabled)
+-		return -EINVAL;
++		return -EOPNOTSUPP;
+=20
+ 	crtc =3D drm_crtc_find(dev, file_priv, queue_seq->crtc_id);
+ 	if (!crtc)
+--=20
+2.23.0
+
+--rl7p723dixcepzft
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCgAdFiEE4tZ+ii1mjMCMQbfkWJzP/comvP8FAl2UrpsACgkQWJzP/com
+vP9Bgw/7B/I5MWK+6MLQD5y+0VUQythB5k6k9wovD2C56y3E0D5IOxknr7iX5xTb
+nNCZCFN8Ks4Zd3lhBRxcHMbetf+CwhvaWSRBhpxfptOSCeJK18WKADoULmTfgii3
+DUeQsN5Ohr79ftYn89vb8TrsoGnAYXFFaCtlfT6IE7iUYw8kAAgIKJ5ngexvwMlt
+MNvluV1MJVaE6kEet73dUbcW25kCwksR+tuSk1GK5w5F1reX6n3m8FAkdMSdVyPU
+DcRHEv3q3D7d3jCGmFfj16MiqxQFBhyN7rjk36kZxNysfLm/mzyfxTl7LiCkUDkI
+jmfZvIww+HHuU3I9D/4yORqfcuGNVHwVdT0IgzYx+RdpOmYej7SlhW2Nur/oP0Du
+vKbyKtoXFGQ2tBAAWVEyPeLeVYUgO3Yczn7qHbbnQflnDGCLhof3V64CtvXjzvCK
+vMrrwTqC8lDF7l9Fm84AFX1whua8+pU7xS99NNyPzmXMLkT37kgDaAHUBzrCKoHM
+mwilQUmgiDLw7n8HTmCYkomWIGK4G3sMii/df4vqQoOEeyYjG3CrzGuXYzNBYamy
+bXqpI2jQUy/hYLg2l9/vgVAvBatIeWEcGsej/+NhssUB4vTMlA1YUqwobJUnnA6e
+5PsyKjJus9M5WJDCfJSfn+DSYUpA2+t/MRWwiS0xZGCl4ebAc90=
+=nh5K
+-----END PGP SIGNATURE-----
+
+--rl7p723dixcepzft--
