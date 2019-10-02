@@ -2,173 +2,131 @@ Return-Path: <SRS0=zem1=X3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.2 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D9EDECE58C
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 13:48:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C1640ECE58A
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 13:48:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2D4D321D82
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 13:48:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9571221D80
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 13:48:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=shipmail.org header.i=@shipmail.org header.b="TP16gsNU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728055AbfJBNsA (ORCPT
+        id S1728068AbfJBNsH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Oct 2019 09:48:00 -0400
-Received: from mailgw01.mediatek.com ([210.61.82.183]:54417 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1728031AbfJBNr6 (ORCPT
+        Wed, 2 Oct 2019 09:48:07 -0400
+Received: from pio-pvt-msa2.bahnhof.se ([79.136.2.41]:37486 "EHLO
+        pio-pvt-msa2.bahnhof.se" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727920AbfJBNrv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Oct 2019 09:47:58 -0400
-X-UUID: a9454dd52135451797b80bf2ba97a4f6-20191002
-X-UUID: a9454dd52135451797b80bf2ba97a4f6-20191002
-Received: from mtkcas08.mediatek.inc [(172.21.101.126)] by mailgw01.mediatek.com
-        (envelope-from <neal.liu@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 727753782; Wed, 02 Oct 2019 21:47:52 +0800
-Received: from mtkcas08.mediatek.inc (172.21.101.126) by
- mtkmbs07n2.mediatek.inc (172.21.101.141) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Wed, 2 Oct 2019 21:47:48 +0800
-Received: from [172.21.77.33] (172.21.77.33) by mtkcas08.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Wed, 2 Oct 2019 21:47:48 +0800
-Message-ID: <1570024070.4002.1.camel@mtkswgap22>
-Subject: Re: [PATCH v4 2/3] dt-bindings: rng: add bindings for MediaTek
- ARMv8 SoCs
-From:   Neal Liu <neal.liu@mediatek.com>
-To:     Rob Herring <robh@kernel.org>
-CC:     Mark Rutland <mark.rutland@arm.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        wsd_upstream <wsd_upstream@mediatek.com>,
-        Sean Wang <sean.wang@kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Crystal Guo =?UTF-8?Q?=28=E9=83=AD=E6=99=B6=29?= 
-        <Crystal.Guo@mediatek.com>,
-        "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>,
-        Matt Mackall <mpm@selenic.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        "linux-mediatek@lists.infradead.org" 
-        <linux-mediatek@lists.infradead.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        Neal Liu <neal.liu@mediatek.com>
-Date:   Wed, 2 Oct 2019 21:47:50 +0800
-In-Reply-To: <1568771054.21700.7.camel@mtkswgap22>
-References: <1561361052-13072-1-git-send-email-neal.liu@mediatek.com>
-         <1561361052-13072-3-git-send-email-neal.liu@mediatek.com>
-         <20190722171320.GA9806@bogus> <1563848465.31451.4.camel@mtkswgap22>
-         <CAL_Jsq+SRhd=-5O2G_CMfJX9Z188kvA05MQOXaU1J8iExwUixQ@mail.gmail.com>
-         <1568771054.21700.7.camel@mtkswgap22>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.2.3-0ubuntu6 
-Content-Transfer-Encoding: 7bit
+        Wed, 2 Oct 2019 09:47:51 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by pio-pvt-msa2.bahnhof.se (Postfix) with ESMTP id B3DB63F5E0;
+        Wed,  2 Oct 2019 15:47:44 +0200 (CEST)
+Authentication-Results: pio-pvt-msa2.bahnhof.se;
+        dkim=pass (1024-bit key; unprotected) header.d=shipmail.org header.i=@shipmail.org header.b=TP16gsNU;
+        dkim-atps=neutral
+X-Virus-Scanned: Debian amavisd-new at bahnhof.se
+Received: from pio-pvt-msa2.bahnhof.se ([127.0.0.1])
+        by localhost (pio-pvt-msa2.bahnhof.se [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id U15VLMZ20c45; Wed,  2 Oct 2019 15:47:40 +0200 (CEST)
+Received: from mail1.shipmail.org (h-205-35.A357.priv.bahnhof.se [155.4.205.35])
+        (Authenticated sender: mb878879)
+        by pio-pvt-msa2.bahnhof.se (Postfix) with ESMTPA id E9E943F530;
+        Wed,  2 Oct 2019 15:47:39 +0200 (CEST)
+Received: from localhost.localdomain.localdomain (h-205-35.A357.priv.bahnhof.se [155.4.205.35])
+        by mail1.shipmail.org (Postfix) with ESMTPSA id 83B9C360058;
+        Wed,  2 Oct 2019 15:47:39 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=shipmail.org; s=mail;
+        t=1570024059; bh=UwPfNrLWUuQMcTAN4GJRHUeo3QfF/FljmexYGHhv844=;
+        h=From:To:Cc:Subject:Date:From;
+        b=TP16gsNUdWGFDwGgS0VmFv047OUIiqPOopnBPreULa4hU3xP32e9IATojg+8GpEef
+         z9QWoelvayrU0j8wPsq9taHWkMwv/z+P+I7osxxQpCOjDNB1tvx+7tTo0D1qFLy4MS
+         0YhixqkytgKIfxy8hpcN/XuEKmWbm0TuG7YQPCxI=
+From:   =?UTF-8?q?Thomas=20Hellstr=C3=B6m=20=28VMware=29?= 
+        <thomas_os@shipmail.org>
+To:     linux-mm@kvack.org, linux-kernel@vger.kernel.org
+Cc:     torvalds@linux-foundation.org,
+        =?UTF-8?q?Thomas=20Hellstr=C3=B6m?= <thellstrom@vmware.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Matthew Wilcox <willy@infradead.org>,
+        Will Deacon <will.deacon@arm.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Rik van Riel <riel@surriel.com>,
+        Minchan Kim <minchan@kernel.org>,
+        Michal Hocko <mhocko@suse.com>,
+        Huang Ying <ying.huang@intel.com>,
+        =?UTF-8?q?J=C3=A9r=C3=B4me=20Glisse?= <jglisse@redhat.com>,
+        "Kirill A . Shutemov" <kirill@shutemov.name>
+Subject: [PATCH v3 0/7] Emulated coherent graphics memory take 2
+Date:   Wed,  2 Oct 2019 15:47:23 +0200
+Message-Id: <20191002134730.40985-1-thomas_os@shipmail.org>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-X-MTK:  N
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Dear Rob,
+From: Thomas Hellström <thellstrom@vmware.com>
 
-Just a gentle ping.
+Graphics APIs like OpenGL 4.4 and Vulkan require the graphics driver
+to provide coherent graphics memory, meaning that the GPU sees any
+content written to the coherent memory on the next GPU operation that
+touches that memory, and the CPU sees any content written by the GPU
+to that memory immediately after any fence object trailing the GPU
+operation is signaled.
 
-Neal
+Paravirtual drivers that otherwise require explicit synchronization
+needs to do this by hooking up dirty tracking to pagefault handlers
+and buffer object validation.
 
-On Wed, 2019-09-18 at 09:44 +0800, Neal Liu wrote:
-> On Tue, 2019-07-23 at 22:35 +0800, Rob Herring wrote:
-> > On Mon, Jul 22, 2019 at 8:21 PM Neal Liu <neal.liu@mediatek.com> wrote:
-> > >
-> > 
-> > Please don't top post to lists.
-> > 
-> > > Dear Rob,
-> > >         You can check my driver for detail:
-> > >         http://patchwork.kernel.org/patch/11012475/ or patchset 3/3
-> > 
-> > I could, or you could just answer my question.
-> > 
-> > >
-> > >         This driver is registered as hardware random number generator, and
-> > > combines with rng-core.
-> > >         We want to add one rng hw based on the dts. Is this proper or do you
-> > > have other suggestion to meet this requirement?
-> > 
-> > It depends. There doesn't appear to be any resource configuration, so
-> > why does it need to be in DT. DT is not the only way instantiate
-> > drivers.
-> > 
-> > Rob
-> > 
-> 
-> We would like to consult more about this patch.
-> We cannot figure out what method should be used instead of DT.
-> The interface to access firmware is "smc" and firmware function only
-> exists on certain platforms.
-> Some DT has similar way, like:
-> http://github.com/torvalds/linux/blob/master/arch/arm64/boot/dts/hisilicon/hi6220-hikey.dts#L470
-> 
-> 	firmware {
-> 		optee {
-> 			compatible = "linaro,optee-tz";
-> 			method = "smc";
-> 		};
-> 	};
-> 
-> Is there any way to instantiate driver on certain platforms without DT?
-> Could you give us some examples?
-> Thanks
-> 
-> > >
-> > >         Thanks
-> > >
-> > >
-> > > On Tue, 2019-07-23 at 01:13 +0800, Rob Herring wrote:
-> > > > On Mon, Jun 24, 2019 at 03:24:11PM +0800, Neal Liu wrote:
-> > > > > Document the binding used by the MediaTek ARMv8 SoCs random
-> > > > > number generator with TrustZone enabled.
-> > > > >
-> > > > > Signed-off-by: Neal Liu <neal.liu@mediatek.com>
-> > > > > ---
-> > > > >  .../devicetree/bindings/rng/mtk-sec-rng.txt        |   10 ++++++++++
-> > > > >  1 file changed, 10 insertions(+)
-> > > > >  create mode 100644 Documentation/devicetree/bindings/rng/mtk-sec-rng.txt
-> > > > >
-> > > > > diff --git a/Documentation/devicetree/bindings/rng/mtk-sec-rng.txt b/Documentation/devicetree/bindings/rng/mtk-sec-rng.txt
-> > > > > new file mode 100644
-> > > > > index 0000000..c04ce15
-> > > > > --- /dev/null
-> > > > > +++ b/Documentation/devicetree/bindings/rng/mtk-sec-rng.txt
-> > > > > @@ -0,0 +1,10 @@
-> > > > > +MediaTek random number generator with TrustZone enabled
-> > > > > +
-> > > > > +Required properties:
-> > > > > +- compatible : Should be "mediatek,mtk-sec-rng"
-> > > >
-> > > > What's the interface to access this?
-> > > >
-> > > > A node with a 'compatible' and nothing else is a sign of something that
-> > > > a parent device should instantiate and doesn't need to be in DT. IOW,
-> > > > what do complete bindings for firmware functions look like?
-> > > >
-> > > > > +
-> > > > > +Example:
-> > > > > +
-> > > > > +hwrng: hwrng {
-> > > > > +   compatible = "mediatek,mtk-sec-rng";
-> > > > > +}
-> > > > > --
-> > > > > 1.7.9.5
-> > > > >
-> > > >
-> > > > _______________________________________________
-> > > > Linux-mediatek mailing list
-> > > > Linux-mediatek@lists.infradead.org
-> > > > http://lists.infradead.org/mailman/listinfo/linux-mediatek
-> > >
-> > >
-> 
+Provide mm helpers needed for this and that also allow for huge pmd-
+and pud entries (patch 1-3), and the associated vmwgfx code (patch 4-7).
 
+The code has been tested and exercised by a tailored version of mesa
+where we disable all explicit synchronization and assume graphics memory
+is coherent. The performance loss varies of course; a typical number is
+around 5%.
 
+I would like to merge this code through the DRM tree, so an ack to include
+the new mm helpers in that merge would be greatly appreciated.
+
+Changes since RFC:
+- Merge conflict changes moved to the correct patch. Fixes intra-patchset
+  compile errors.
+- Be more aggressive when turning ttm vm code into helpers. This makes sure
+  we can use a const qualifier on the vmwgfx vm_ops.
+- Reinstate a lost comment an fix an error path that was broken when turning
+  the ttm vm code into helpers.
+- Remove explicit type-casts of struct vm_area_struct::vm_private_data
+- Clarify the locking inversion that makes us not being able to use the mm
+  pagewalk code.
+
+Changes since v1:
+- Removed the vmwgfx maintainer entry for as_dirty_helpers.c, updated
+  commit message accordingly
+- Removed the TTM patches from the series as they are merged separately
+  through DRM.
+Changes since v2:
+- Split out the pagewalk code from as_dirty_helpers.c and document locking.
+- Add pre_vma and post_vma callbacks to the pagewalk code.
+- Remove huge pmd and -pud asserts that would trip when we protect vmas with
+  struct address_space::i_mmap_rwsem rather than with
+  struct vm_area_struct::mmap_sem.
+- Do some naming cleanup in as_dirty_helpers.c
+
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: Matthew Wilcox <willy@infradead.org>
+Cc: Will Deacon <will.deacon@arm.com>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Rik van Riel <riel@surriel.com>
+Cc: Minchan Kim <minchan@kernel.org>
+Cc: Michal Hocko <mhocko@suse.com>
+Cc: Huang Ying <ying.huang@intel.com>
+Cc: Jérôme Glisse <jglisse@redhat.com>
+Cc: Kirill A. Shutemov <kirill@shutemov.name>
