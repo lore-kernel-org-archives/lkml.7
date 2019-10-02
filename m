@@ -2,93 +2,101 @@ Return-Path: <SRS0=zem1=X3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 77262C10F14
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 17:38:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF1FDC352AA
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 17:40:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 52F2121D81
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 17:38:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570037902;
-	bh=BiMF+rr+fWqAS746ljdAXP5lde95Gmakphk001kAUpk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=mQdZ6VshxAejRUOEPVjQjbJJZNVjeGXzhJTyVRoCoZLSGyfBIcKEIoAj9JgYfyCSu
-	 WXtSz2V6JlrSdp9ZY2HdshtJdTAeG0eavx/eKIaPhfpMUIswXPN11/xioIxSApndKY
-	 0yjS1JGDKGIRz/AdZMWdr+r8KNM+zHrPosx+rRi0=
+	by mail.kernel.org (Postfix) with ESMTP id 7E07521D81
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 17:40:57 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Av1ir+Ao"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728266AbfJBRiV (ORCPT
+        id S1728274AbfJBRk5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Oct 2019 13:38:21 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:35750 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727357AbfJBRiU (ORCPT
+        Wed, 2 Oct 2019 13:40:57 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:33542 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727721AbfJBRk4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Oct 2019 13:38:20 -0400
-Received: by mail-wr1-f68.google.com with SMTP id v8so13215wrt.2;
-        Wed, 02 Oct 2019 10:38:18 -0700 (PDT)
+        Wed, 2 Oct 2019 13:40:56 -0400
+Received: by mail-pg1-f194.google.com with SMTP id q1so4225815pgb.0;
+        Wed, 02 Oct 2019 10:40:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
+         :user-agent;
+        bh=3B+j3JqzIPiwRwXNo1J8LATwL3AzjaBnib1ySfRTIoc=;
+        b=Av1ir+Ao+x17YdibrMWnEgNmaJJCUHEvAu20IEqcps5c8MeVSADHxFvmsBzSUxg8O3
+         GrxFw+usqScrNh1RQeYIyVpUHv1uGf2t+gF5cMY1aDgIeqEGoPSS1sJa1ZdCg/jh7f1o
+         FDME/pZMBiIg0wTkqKlqHts4elcX0nU2s4SEJMM2AIRD6owXrrNz4GKDmsCuJURi2adL
+         IsbAoptvFMsA+SxovgTgVg00Kh0d+lKIrmMAOcWlTysteia/deAgLmcEq5Vf1yCd/ic0
+         yTjpebKbubBmWzk6gPONH0UYT7Hlv95mqI482xgU5rIyA6V0+rHw3M2v7LFsRoCcVsGi
+         JCFQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=YTmH8EafQxbdYgDMckejIA27/8MmwdAdTeYHGHhQuPA=;
-        b=gWY1xml5LcvInf3O4tQ/lV/rFRNxLTuNPhucXdb89v/v6mcIdga8/m89+L3rCJ73/f
-         ADT8gWPf4pAVp7cWcVAx1p+fOb7cjqKmfezu9AgrqTAqvBkb3Yb/L+uC6xV3VL5CEnai
-         1K27G5W7167AgUHudwoiZUqzULu1N6AMrPgHhw7PrzwFEeZDsVLJ83MVlXVO/1z2E9Yh
-         pqr+Oe5fIHauPMBTLM1asAG/ybJcm5CcaXE9xbmjR1oU3YNcrOh1z4D9NaAFALBB3boK
-         /N+luVkh8RWKolGmdABfcu79SsPgkxshVrY0fCYZ6NrVNLcx/LmYeBUGXIOAiMuKpIz2
-         ajew==
-X-Gm-Message-State: APjAAAX1XhY85fE8mscCNcTpxbj589Vye3znTEBKX/8cL3yVngoLfaje
-        N0BdE8G3+jrgjgzNEgi6s94=
-X-Google-Smtp-Source: APXvYqylJhVMEK3ifyltGwEzTf9OuJVwke1QEVnvk2FVIatTz4vfsE+ISc2rNCBhpXG9RhGqGRoxkQ==
-X-Received: by 2002:adf:fe92:: with SMTP id l18mr3630971wrr.369.1570037898167;
-        Wed, 02 Oct 2019 10:38:18 -0700 (PDT)
-Received: from kozik-lap ([194.230.155.145])
-        by smtp.googlemail.com with ESMTPSA id q66sm6742037wme.39.2019.10.02.10.38.16
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 02 Oct 2019 10:38:17 -0700 (PDT)
-Date:   Wed, 2 Oct 2019 19:38:14 +0200
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     Lukasz Luba <l.luba@partner.samsung.com>
-Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-pm@vger.kernel.org, linux-samsung-soc@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, b.zolnierkie@samsung.com,
-        kgene@kernel.org, mark.rutland@arm.com, cw00.choi@samsung.com,
-        kyungmin.park@samsung.com, m.szyprowski@samsung.com,
-        s.nawrocki@samsung.com, myungjoo.ham@samsung.com,
-        robh+dt@kernel.org, willy.mh.wolff.ml@gmail.com
-Subject: Re: [PATCH v3 4/4] memory: samsung: exynos5422-dmc: Add support for
- interrupt from performance counters
-Message-ID: <20191002173814.GF21463@kozik-lap>
-References: <20191002060455.3834-1-l.luba@partner.samsung.com>
- <CGME20191002060507eucas1p169394dec59f010e112eb38d83e3fb8ba@eucas1p1.samsung.com>
- <20191002060455.3834-5-l.luba@partner.samsung.com>
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=3B+j3JqzIPiwRwXNo1J8LATwL3AzjaBnib1ySfRTIoc=;
+        b=BnKW+4KESsbDCac10o2S78zHirKMgI7kL87Ngs6jZjwJMI3TxBwVMugWhH+iHimeF0
+         vISlvPQLkGUcp244AgNp6FNRr/12vDAfkt9WmbLjUmYQKAQVzjTSHW2q8YDX89C0u7V4
+         I33RuTiLhEwY+iJsoWfhE1Nh++Ho0chgrcyfDfw0EMVirCEjh2qoE/WK3Iv/FtnxWEVK
+         sWTwevifZGh86PPyYX+P3/h7wB1s56KVBGKdbp2jzofJtqkZAj7L7rkMfknzlUWLMcTG
+         RscvVCPlmC0nb5AjMYRmd23eOBXLM9yNRFKGwZdMfZ1yfi/d3MvqvHcSEH98ivqY5sRu
+         cb2w==
+X-Gm-Message-State: APjAAAVmdtmMq72cnLYiF1kK5Az1hgGVWMG6dYDmz1W+j8sXiiULlgWZ
+        4anQk1oP02berfR/LlG5Zzg=
+X-Google-Smtp-Source: APXvYqxqcW/QajeJaU/n0ZHFqEjZnuYDGy8tJZXfiBOcltu+XczbqQp5CCKZ30jAlQDR3FdJRVEMzg==
+X-Received: by 2002:a63:f20d:: with SMTP id v13mr4862571pgh.175.1570038055634;
+        Wed, 02 Oct 2019 10:40:55 -0700 (PDT)
+Received: from dtor-ws ([2620:15c:202:201:3adc:b08c:7acc:b325])
+        by smtp.gmail.com with ESMTPSA id r1sm15310pgv.70.2019.10.02.10.40.54
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 02 Oct 2019 10:40:54 -0700 (PDT)
+Date:   Wed, 2 Oct 2019 10:40:52 -0700
+From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
+To:     Darren Hart <dvhart@infradead.org>,
+        Andy Shevchenko <andy@infradead.org>
+Cc:     Azael Avalos <coproscefalo@gmail.com>,
+        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] platform/x86: toshiba_acpi: do not select INPUT_POLLDEV
+Message-ID: <20191002174052.GA37723@dtor-ws>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191002060455.3834-5-l.luba@partner.samsung.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Oct 02, 2019 at 08:04:55AM +0200, Lukasz Luba wrote:
-> Introduce a new interrupt driven mechanism for managing speed of the
-> memory controller. The interrupts are generated due to performance
-> counters overflow. The performance counters might track memory reads,
-> writes, transfers, page misses, etc. In the basic algorithm tracking
-> read transfers and calculating memory pressure should be enough to
-> skip polling mode in devfreq.
-> 
-> Signed-off-by: Lukasz Luba <l.luba@partner.samsung.com>
-> ---
->  drivers/memory/samsung/exynos5422-dmc.c | 345 ++++++++++++++++++++++--
+The driver does not use polling mode of input devices, and this config
+option is going away, so let's not reference it.
 
-Thanks, applied.
+Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+---
+ drivers/platform/x86/Kconfig | 1 -
+ 1 file changed, 1 deletion(-)
 
-Best regards,
-Krzysztof
+diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
+index 8690e311f407..9ecb02226be8 100644
+--- a/drivers/platform/x86/Kconfig
++++ b/drivers/platform/x86/Kconfig
+@@ -830,7 +830,6 @@ config ACPI_TOSHIBA
+ 	depends on ACPI_VIDEO || ACPI_VIDEO = n
+ 	depends on RFKILL || RFKILL = n
+ 	depends on IIO
+-	select INPUT_POLLDEV
+ 	select INPUT_SPARSEKMAP
+ 	---help---
+ 	  This driver adds support for access to certain system settings
+-- 
+2.23.0.444.g18eeb5a265-goog
 
+
+-- 
+Dmitry
