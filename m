@@ -2,308 +2,87 @@ Return-Path: <SRS0=zem1=X3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36196C35280
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 14:51:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B270EC352AA
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 14:51:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0D6B221A4C
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 14:51:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8C16C21848
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 14:51:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728757AbfJBOvS (ORCPT
+        id S1728766AbfJBOv2 convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Oct 2019 10:51:18 -0400
-Received: from foss.arm.com ([217.140.110.172]:46368 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728728AbfJBOvP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Oct 2019 10:51:15 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8327B1597;
-        Wed,  2 Oct 2019 07:51:14 -0700 (PDT)
-Received: from e112269-lin.arm.com (e112269-lin.cambridge.arm.com [10.1.196.133])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 8166A3F706;
-        Wed,  2 Oct 2019 07:51:12 -0700 (PDT)
-From:   Steven Price <steven.price@arm.com>
-To:     Marc Zyngier <maz@kernel.org>, Will Deacon <will@kernel.org>,
-        linux-arm-kernel@lists.infradead.org, kvmarm@lists.cs.columbia.edu
-Cc:     Steven Price <steven.price@arm.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        =?UTF-8?q?Radim=20Kr=C4=8Dm=C3=A1=C5=99?= <rkrcmar@redhat.com>,
-        Russell King <linux@armlinux.org.uk>,
-        James Morse <james.morse@arm.com>,
-        Julien Thierry <julien.thierry.kdev@gmail.com>,
-        Suzuki K Pouloze <suzuki.poulose@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>, kvm@vger.kernel.org,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v5 10/10] arm64: Retrieve stolen time as paravirtualized guest
-Date:   Wed,  2 Oct 2019 15:50:37 +0100
-Message-Id: <20191002145037.51630-11-steven.price@arm.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191002145037.51630-1-steven.price@arm.com>
-References: <20191002145037.51630-1-steven.price@arm.com>
+        Wed, 2 Oct 2019 10:51:28 -0400
+Received: from mail-qt1-f193.google.com ([209.85.160.193]:33790 "EHLO
+        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727718AbfJBOv0 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 2 Oct 2019 10:51:26 -0400
+Received: by mail-qt1-f193.google.com with SMTP id r5so26742149qtd.0
+        for <linux-kernel@vger.kernel.org>; Wed, 02 Oct 2019 07:51:26 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=BFBQJKcoWFEsoedh3fU5Yan3pHcHh9XjwUhZKy85y8A=;
+        b=AvB0iNDL7w2KazAF5hr0rP1gedm6EW+1XAt5sLzt+KXz8gM2SoZX2pGxuSigd6DEud
+         2gFJTtyMmhGQagIuv+xCV7NSPBmb9bTe75R81096DjJrSEG6XWhdYMeAMgIQgPk2bTw2
+         KHUUhAd3n34QTDjg70pi6IkDiwETKl/JxrdRXaCoEPx2fEx8Cset+1O4/4HBC0Ii0VfU
+         vxow06u661vcn18B5bFsCvIlkmxdwVUQxDSh9XYmx6MrSsXOXZggmo+ZqU7ZC4ci5+fq
+         6qieaBFf6iGsJX5L45DOnuT0pm6yDYbIxLHQwXwRl9scBvzRxscPaBf+Zb9xRbgie4YM
+         JmGw==
+X-Gm-Message-State: APjAAAWOnIhhK5JIbsSi6Ou1KkQ9Xnylrcgh73RSItjkIAqdw75uyCD5
+        ZrL1HGXvdpFB/INOlL1Q0YrmAKEkVsojaaAsYdE=
+X-Google-Smtp-Source: APXvYqxytpKY7md+ImYxw2tgO2LdMMwX5MTobPRAkiWizRa+eDP+sDnPS94ixm658TSE7sUrUSJHRI/Q/drWU7Qw1LM=
+X-Received: by 2002:ac8:4a01:: with SMTP id x1mr4410955qtq.304.1570027885656;
+ Wed, 02 Oct 2019 07:51:25 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20191002120136.1777161-1-arnd@arndb.de> <20191002120136.1777161-5-arnd@arndb.de>
+ <CADnq5_PkTwTBbQY9JatZD2_sWjdU5_hK7V2GLfviEvMh_QB12Q@mail.gmail.com>
+In-Reply-To: <CADnq5_PkTwTBbQY9JatZD2_sWjdU5_hK7V2GLfviEvMh_QB12Q@mail.gmail.com>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Wed, 2 Oct 2019 16:51:09 +0200
+Message-ID: <CAK8P3a0KMT437okhobg=Vzi5LRDgUO7L-x35LczBGXE2jYLg2A@mail.gmail.com>
+Subject: Re: [PATCH 4/6] drm/amd/display: fix dcn21 Makefile for clang
+To:     Alex Deucher <alexdeucher@gmail.com>
+Cc:     Alex Deucher <alexander.deucher@amd.com>,
+        Harry Wentland <harry.wentland@amd.com>,
+        Leo Li <sunpeng.li@amd.com>,
+        =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
+        "David (ChunMing) Zhou" <David1.Zhou@amd.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Maling list - DRI developers 
+        <dri-devel@lists.freedesktop.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        amd-gfx list <amd-gfx@lists.freedesktop.org>,
+        Bhawanpreet Lakha <Bhawanpreet.Lakha@amd.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Enable paravirtualization features when running under a hypervisor
-supporting the PV_TIME_ST hypercall.
+On Wed, Oct 2, 2019 at 4:17 PM Alex Deucher <alexdeucher@gmail.com> wrote:
+>
+> I'm getting an error with gcc with this patch:
+>   CC [M]  drivers/gpu/drm/amd/amdgpu/../display/dc/dcn21/dcn21_resource.o
+> drivers/gpu/drm/amd/amdgpu/../display/dc/dcn21/dcn21_resource.c: In
+> function ‘calculate_wm_set_for_vlevel’:
+> drivers/gpu/drm/amd/amdgpu/../display/dc/dcn21/dcn21_resource.c:964:22:
+> error: SSE register return with SSE disabled
 
-For each (v)CPU, we ask the hypervisor for the location of a shared
-page which the hypervisor will use to report stolen time to us. We set
-pv_time_ops to the stolen time function which simply reads the stolen
-value from the shared page for a VCPU. We guarantee single-copy
-atomicity using READ_ONCE which means we can also read the stolen
-time for another VCPU than the currently running one while it is
-potentially being updated by the hypervisor.
+I checked again with gcc-8, but do not see that error message.
 
-Signed-off-by: Steven Price <steven.price@arm.com>
----
- .../admin-guide/kernel-parameters.txt         |   6 +-
- arch/arm64/include/asm/paravirt.h             |   9 +-
- arch/arm64/kernel/paravirt.c                  | 148 ++++++++++++++++++
- arch/arm64/kernel/time.c                      |   3 +
- include/linux/cpuhotplug.h                    |   1 +
- 5 files changed, 163 insertions(+), 4 deletions(-)
+> > -CFLAGS_$(AMDDALPATH)/dc/dcn21/dcn21_resource.o := -mhard-float -msse -mpreferred-stack-boundary=4
+> > +CFLAGS_$(AMDDALPATH)/dc/dcn21/dcn21_resource.o := -mhard-float -msse $(cc_stack_align)
 
-diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
-index c7ac2f3ac99f..346b1c7a4afb 100644
---- a/Documentation/admin-guide/kernel-parameters.txt
-+++ b/Documentation/admin-guide/kernel-parameters.txt
-@@ -3083,9 +3083,9 @@
- 			[X86,PV_OPS] Disable paravirtualized VMware scheduler
- 			clock and use the default one.
- 
--	no-steal-acc	[X86,KVM] Disable paravirtualized steal time accounting.
--			steal time is computed, but won't influence scheduler
--			behaviour
-+	no-steal-acc	[X86,KVM,ARM64] Disable paravirtualized steal time
-+			accounting. steal time is computed, but won't
-+			influence scheduler behaviour
- 
- 	nolapic		[X86-32,APIC] Do not enable or use the local APIC.
- 
-diff --git a/arch/arm64/include/asm/paravirt.h b/arch/arm64/include/asm/paravirt.h
-index 799d9dd6f7cc..125c26c42902 100644
---- a/arch/arm64/include/asm/paravirt.h
-+++ b/arch/arm64/include/asm/paravirt.h
-@@ -21,6 +21,13 @@ static inline u64 paravirt_steal_clock(int cpu)
- {
- 	return pv_ops.time.steal_clock(cpu);
- }
--#endif
-+
-+int __init kvm_guest_init(void);
-+
-+#else
-+
-+#define kvm_guest_init()
-+
-+#endif // CONFIG_PARAVIRT
- 
- #endif
-diff --git a/arch/arm64/kernel/paravirt.c b/arch/arm64/kernel/paravirt.c
-index 4cfed91fe256..5bf3be7ccf7e 100644
---- a/arch/arm64/kernel/paravirt.c
-+++ b/arch/arm64/kernel/paravirt.c
-@@ -6,13 +6,161 @@
-  * Author: Stefano Stabellini <stefano.stabellini@eu.citrix.com>
-  */
- 
-+#define pr_fmt(fmt) "kvmarm-pv: " fmt
-+
-+#include <linux/arm-smccc.h>
-+#include <linux/cpuhotplug.h>
- #include <linux/export.h>
-+#include <linux/io.h>
- #include <linux/jump_label.h>
-+#include <linux/printk.h>
-+#include <linux/psci.h>
-+#include <linux/reboot.h>
-+#include <linux/slab.h>
- #include <linux/types.h>
-+
- #include <asm/paravirt.h>
-+#include <asm/pvclock-abi.h>
-+#include <asm/smp_plat.h>
- 
- struct static_key paravirt_steal_enabled;
- struct static_key paravirt_steal_rq_enabled;
- 
- struct paravirt_patch_template pv_ops;
- EXPORT_SYMBOL_GPL(pv_ops);
-+
-+struct kvmarm_stolen_time_region {
-+	struct pvclock_vcpu_stolen_time *kaddr;
-+};
-+
-+static DEFINE_PER_CPU(struct kvmarm_stolen_time_region, stolen_time_region);
-+
-+static bool steal_acc = true;
-+static int __init parse_no_stealacc(char *arg)
-+{
-+	steal_acc = false;
-+	return 0;
-+}
-+
-+early_param("no-steal-acc", parse_no_stealacc);
-+
-+/* return stolen time in ns by asking the hypervisor */
-+static u64 kvm_steal_clock(int cpu)
-+{
-+	struct kvmarm_stolen_time_region *reg;
-+
-+	reg = per_cpu_ptr(&stolen_time_region, cpu);
-+	if (!reg->kaddr) {
-+		pr_warn_once("stolen time enabled but not configured for cpu %d\n",
-+			     cpu);
-+		return 0;
-+	}
-+
-+	return le64_to_cpu(READ_ONCE(reg->kaddr->stolen_time));
-+}
-+
-+static int disable_stolen_time_current_cpu(void)
-+{
-+	struct kvmarm_stolen_time_region *reg;
-+
-+	reg = this_cpu_ptr(&stolen_time_region);
-+	if (!reg->kaddr)
-+		return 0;
-+
-+	memunmap(reg->kaddr);
-+	memset(reg, 0, sizeof(*reg));
-+
-+	return 0;
-+}
-+
-+static int stolen_time_dying_cpu(unsigned int cpu)
-+{
-+	return disable_stolen_time_current_cpu();
-+}
-+
-+static int init_stolen_time_cpu(unsigned int cpu)
-+{
-+	struct kvmarm_stolen_time_region *reg;
-+	struct arm_smccc_res res;
-+
-+	reg = this_cpu_ptr(&stolen_time_region);
-+
-+	arm_smccc_1_1_invoke(ARM_SMCCC_HV_PV_TIME_ST, &res);
-+
-+	if ((long)res.a0 < 0)
-+		return -EINVAL;
-+
-+	reg->kaddr = memremap(res.a0,
-+			      sizeof(struct pvclock_vcpu_stolen_time),
-+			      MEMREMAP_WB);
-+
-+	if (!reg->kaddr) {
-+		pr_warn("Failed to map stolen time data structure\n");
-+		return -ENOMEM;
-+	}
-+
-+	if (le32_to_cpu(reg->kaddr->revision) != 0 ||
-+	    le32_to_cpu(reg->kaddr->attributes) != 0) {
-+		pr_warn("Unexpected revision or attributes in stolen time data\n");
-+		return -ENXIO;
-+	}
-+
-+	return 0;
-+}
-+
-+static int kvm_arm_init_stolen_time(void)
-+{
-+	int ret;
-+
-+	ret = cpuhp_setup_state(CPUHP_AP_ARM_KVMPV_STARTING,
-+				"hypervisor/kvmarm/pv:starting",
-+				init_stolen_time_cpu, stolen_time_dying_cpu);
-+	if (ret < 0)
-+		return ret;
-+	return 0;
-+}
-+
-+static bool has_kvm_steal_clock(void)
-+{
-+	struct arm_smccc_res res;
-+
-+	/* To detect the presence of PV time support we require SMCCC 1.1+ */
-+	if (psci_ops.smccc_version < SMCCC_VERSION_1_1)
-+		return false;
-+
-+	arm_smccc_1_1_invoke(ARM_SMCCC_ARCH_FEATURES_FUNC_ID,
-+			     ARM_SMCCC_HV_PV_FEATURES, &res);
-+
-+	if (res.a0 != SMCCC_RET_SUCCESS)
-+		return false;
-+
-+	arm_smccc_1_1_invoke(ARM_SMCCC_HV_PV_FEATURES,
-+			     ARM_SMCCC_HV_PV_TIME_ST, &res);
-+
-+	if (res.a0 != SMCCC_RET_SUCCESS)
-+		return false;
-+
-+	return true;
-+}
-+
-+int __init kvm_guest_init(void)
-+{
-+	int ret;
-+
-+	if (!has_kvm_steal_clock())
-+		return 0;
-+
-+	ret = kvm_arm_init_stolen_time();
-+	if (ret)
-+		return ret;
-+
-+	pv_ops.time.steal_clock = kvm_steal_clock;
-+
-+	static_key_slow_inc(&paravirt_steal_enabled);
-+	if (steal_acc)
-+		static_key_slow_inc(&paravirt_steal_rq_enabled);
-+
-+	pr_info("using stolen time PV\n");
-+
-+	return 0;
-+}
-diff --git a/arch/arm64/kernel/time.c b/arch/arm64/kernel/time.c
-index 0b2946414dc9..a52aea14c6ec 100644
---- a/arch/arm64/kernel/time.c
-+++ b/arch/arm64/kernel/time.c
-@@ -30,6 +30,7 @@
- 
- #include <asm/thread_info.h>
- #include <asm/stacktrace.h>
-+#include <asm/paravirt.h>
- 
- unsigned long profile_pc(struct pt_regs *regs)
- {
-@@ -65,4 +66,6 @@ void __init time_init(void)
- 
- 	/* Calibrate the delay loop directly */
- 	lpj_fine = arch_timer_rate / HZ;
-+
-+	kvm_guest_init();
- }
-diff --git a/include/linux/cpuhotplug.h b/include/linux/cpuhotplug.h
-index 068793a619ca..89d75edb5750 100644
---- a/include/linux/cpuhotplug.h
-+++ b/include/linux/cpuhotplug.h
-@@ -136,6 +136,7 @@ enum cpuhp_state {
- 	/* Must be the last timer callback */
- 	CPUHP_AP_DUMMY_TIMER_STARTING,
- 	CPUHP_AP_ARM_XEN_STARTING,
-+	CPUHP_AP_ARM_KVMPV_STARTING,
- 	CPUHP_AP_ARM_CORESIGHT_STARTING,
- 	CPUHP_AP_ARM64_ISNDEP_STARTING,
- 	CPUHP_AP_SMPCFD_DYING,
--- 
-2.20.1
+Nothing should really change with regards to the -msse flag here, only
+the stack alignment flag changed. Maybe there was some other change
+in your Makefile that conflicts with my my patch?
 
+       Arnd
