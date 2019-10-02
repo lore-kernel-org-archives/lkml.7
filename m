@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51EF0C4360C
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 19:08:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C485AC4360C
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 19:08:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3765D21D82
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 19:08:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ACBCC21D82
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 19:08:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729545AbfJBTIm (ORCPT
+        id S1729557AbfJBTIo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Oct 2019 15:08:42 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:36190 "EHLO
+        Wed, 2 Oct 2019 15:08:44 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:36234 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729408AbfJBTIZ (ORCPT
+        by vger.kernel.org with ESMTP id S1729440AbfJBTI2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Oct 2019 15:08:25 -0400
+        Wed, 2 Oct 2019 15:08:28 -0400
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1iFjyo-00035m-5T; Wed, 02 Oct 2019 20:08:06 +0100
+        id 1iFjyo-00035s-EC; Wed, 02 Oct 2019 20:08:06 +0100
 Received: from ben by deadeye with local (Exim 4.92.1)
         (envelope-from <ben@decadent.org.uk>)
-        id 1iFjyn-0003ba-IN; Wed, 02 Oct 2019 20:08:05 +0100
+        id 1iFjyn-0003bw-Np; Wed, 02 Oct 2019 20:08:05 +0100
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,17 +35,16 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Omar Sandoval" <osandov@fb.com>,
-        "Paul E. McKenney" <paulmck@linux.ibm.com>,
-        "Peter Zijlstra" <peterz@infradead.org>,
-        linux-block@vger.kernel.org,
-        "Andrea Parri" <andrea.parri@amarulasolutions.com>,
-        "Jens Axboe" <axboe@kernel.dk>, "Ming Lei" <ming.lei@redhat.com>
+        "Michael Hennerich" <michael.hennerich@analog.com>,
+        "Linus Walleij" <linus.walleij@linaro.org>,
+        "Randy Dunlap" <rdunlap@infradead.org>, linux-gpio@vger.kernel.org,
+        "kbuild test robot" <lkp@intel.com>,
+        "Bartosz Golaszewski" <bgolaszewski@baylibre.com>
 Date:   Wed, 02 Oct 2019 20:06:51 +0100
-Message-ID: <lsq.1570043211.946262289@decadent.org.uk>
+Message-ID: <lsq.1570043211.865311511@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 22/87] sbitmap: fix improper use of smp_mb__before_atomic()
+Subject: [PATCH 3.16 26/87] gpio: fix gpio-adp5588 build errors
 In-Reply-To: <lsq.1570043210.379046399@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -59,42 +58,47 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Andrea Parri <andrea.parri@amarulasolutions.com>
+From: Randy Dunlap <rdunlap@infradead.org>
 
-commit a0934fd2b1208458e55fc4b48f55889809fce666 upstream.
+commit e9646f0f5bb62b7d43f0968f39d536cfe7123b53 upstream.
 
-This barrier only applies to the read-modify-write operations; in
-particular, it does not apply to the atomic_set() primitive.
+The gpio-adp5588 driver uses interfaces that are provided by
+GPIOLIB_IRQCHIP, so select that symbol in its Kconfig entry.
 
-Replace the barrier with an smp_mb().
+Fixes these build errors:
 
-Fixes: 6c0ca7ae292ad ("sbitmap: fix wakeup hang after sbq resize")
-Reported-by: "Paul E. McKenney" <paulmck@linux.ibm.com>
-Reported-by: Peter Zijlstra <peterz@infradead.org>
-Signed-off-by: Andrea Parri <andrea.parri@amarulasolutions.com>
-Reviewed-by: Ming Lei <ming.lei@redhat.com>
-Cc: Jens Axboe <axboe@kernel.dk>
-Cc: Omar Sandoval <osandov@fb.com>
-Cc: Ming Lei <ming.lei@redhat.com>
-Cc: linux-block@vger.kernel.org
-Cc: "Paul E. McKenney" <paulmck@linux.ibm.com>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
-[bwh: Backported to 3.16: adjust filename]
+../drivers/gpio/gpio-adp5588.c: In function ‘adp5588_irq_handler’:
+../drivers/gpio/gpio-adp5588.c:266:26: error: ‘struct gpio_chip’ has no member named ‘irq’
+            dev->gpio_chip.irq.domain, gpio));
+                          ^
+../drivers/gpio/gpio-adp5588.c: In function ‘adp5588_irq_setup’:
+../drivers/gpio/gpio-adp5588.c:298:2: error: implicit declaration of function ‘gpiochip_irqchip_add_nested’ [-Werror=implicit-function-declaration]
+  ret = gpiochip_irqchip_add_nested(&dev->gpio_chip,
+  ^
+../drivers/gpio/gpio-adp5588.c:307:2: error: implicit declaration of function ‘gpiochip_set_nested_irqchip’ [-Werror=implicit-function-declaration]
+  gpiochip_set_nested_irqchip(&dev->gpio_chip,
+  ^
+
+Fixes: 459773ae8dbb ("gpio: adp5588-gpio: support interrupt controller")
+Reported-by: kbuild test robot <lkp@intel.com>
+Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
+Cc: linux-gpio@vger.kernel.org
+Reviewed-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Acked-by: Michael Hennerich <michael.hennerich@analog.com>
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- block/blk-mq-tag.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/gpio/Kconfig | 1 +
+ 1 file changed, 1 insertion(+)
 
---- a/block/blk-mq-tag.c
-+++ b/block/blk-mq-tag.c
-@@ -499,7 +499,7 @@ static void bt_update_count(struct blk_m
- 		 * Pairs with the memory barrier in bt_clear_tag() to ensure
- 		 * that the batch size is updated before the wait counts.
- 		 */
--		smp_mb__before_atomic();
-+		smp_mb();
- 		for (i = 0; i < BT_WAIT_QUEUES; i++)
- 			atomic_set(&bt->bs[i].wait_cnt, 1);
- 	}
+--- a/drivers/gpio/Kconfig
++++ b/drivers/gpio/Kconfig
+@@ -654,6 +654,7 @@ config GPIO_ADP5588
+ config GPIO_ADP5588_IRQ
+ 	bool "Interrupt controller support for ADP5588"
+ 	depends on GPIO_ADP5588=y
++	select GPIOLIB_IRQCHIP
+ 	help
+ 	  Say yes here to enable the adp5588 to be used as an interrupt
+ 	  controller. It requires the driver to be built in the kernel.
 
