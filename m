@@ -2,114 +2,152 @@ Return-Path: <SRS0=zem1=X3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 551DBC352AA
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 12:41:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CB4BEC35280
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 12:42:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 34B6E2133F
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 12:41:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A38DF21920
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 12:42:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1570020144;
+	bh=NLDQQjTMKStTfy+mmZiFdDPpDbYYwDq97K+fyh0rmQA=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=XTBiMlxGMZn5nTmlNMkfgN9/X3FIPpKk7sxp+k1/BYEGbMkYi+FzcSQn7pjU/x5Zv
+	 jXpuHbOg6OvwqnNUtnwei5gKXg4z3AZ9x9gUQE2zQ1tdCkkLfz3CuiZJe+5gDk0zQf
+	 F1W4pqJsDpuY58FAHunwGxyAH43HmKkalfLqswHY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726864AbfJBMl5 (ORCPT
+        id S1727116AbfJBMmY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Oct 2019 08:41:57 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:17548 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726413AbfJBMl5 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Oct 2019 08:41:57 -0400
-Received: from pps.filterd (m0187473.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x92CcSFZ031251
-        for <linux-kernel@vger.kernel.org>; Wed, 2 Oct 2019 08:41:56 -0400
-Received: from e06smtp02.uk.ibm.com (e06smtp02.uk.ibm.com [195.75.94.98])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2vbsjtqtfv-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Wed, 02 Oct 2019 08:41:55 -0400
-Received: from localhost
-        by e06smtp02.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <zohar@linux.ibm.com>;
-        Wed, 2 Oct 2019 13:41:52 +0100
-Received: from b06cxnps4074.portsmouth.uk.ibm.com (9.149.109.196)
-        by e06smtp02.uk.ibm.com (192.168.101.132) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Wed, 2 Oct 2019 13:41:48 +0100
-Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
-        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x92Cfl5p46006340
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 2 Oct 2019 12:41:47 GMT
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 70F5E4C04E;
-        Wed,  2 Oct 2019 12:41:47 +0000 (GMT)
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id E05BA4C044;
-        Wed,  2 Oct 2019 12:41:45 +0000 (GMT)
-Received: from localhost.localdomain (unknown [9.80.234.231])
-        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Wed,  2 Oct 2019 12:41:45 +0000 (GMT)
-Subject: Re: [PATCH] tpm: Detach page allocation from tpm_buf
-From:   Mimi Zohar <zohar@linux.ibm.com>
-To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        James Bottomley <James.Bottomley@HansenPartnership.com>
-Cc:     linux-integrity@vger.kernel.org,
-        Jerry Snitselaar <jsnitsel@redhat.com>,
-        Sumit Garg <sumit.garg@linaro.org>,
-        Stefan Berger <stefanb@linux.vnet.ibm.com>,
-        Peter Huewe <peterhuewe@gmx.de>,
-        Jason Gunthorpe <jgg@ziepe.ca>, Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        open list <linux-kernel@vger.kernel.org>
-Date:   Wed, 02 Oct 2019 08:41:45 -0400
-In-Reply-To: <20190927130657.GA5556@linux.intel.com>
-References: <20190925134842.19305-1-jarkko.sakkinen@linux.intel.com>
-         <1569420226.3642.24.camel@HansenPartnership.com>
-         <20190927130657.GA5556@linux.intel.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-x-cbid: 19100212-0008-0000-0000-0000031D5493
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19100212-0009-0000-0000-00004A3C57B4
-Message-Id: <1570020105.4999.106.camel@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-10-02_06:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=927 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1908290000 definitions=main-1910020120
+        Wed, 2 Oct 2019 08:42:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37398 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726038AbfJBMmX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 2 Oct 2019 08:42:23 -0400
+Received: from localhost.localdomain (236.31.169.217.in-addr.arpa [217.169.31.236])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id D7EB02133F;
+        Wed,  2 Oct 2019 12:42:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1570020142;
+        bh=NLDQQjTMKStTfy+mmZiFdDPpDbYYwDq97K+fyh0rmQA=;
+        h=From:To:Cc:Subject:Date:From;
+        b=dJnxXL+yQ7XMCepN6ICMOHC9GiR/ws2fcKtNxQRw+uZysq57qIxRjdAP2/IoFE6oI
+         ANUY12euHdOugmdy82+lhqZTOif3n9gul2YuV0qp4hzjK7Ok6+KjDCwIp6tDEa9uWL
+         vh4FKjOByYAVdPWEfWeMGoCFNi+Qs3vzuq8jRtyI=
+From:   Will Deacon <will@kernel.org>
+To:     linux-gpio@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, Will Deacon <will@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>
+Subject: [RESEND PATCH] pinctrl: devicetree: Avoid taking direct reference to device name string
+Date:   Wed,  2 Oct 2019 13:42:06 +0100
+Message-Id: <20191002124206.22928-1-will@kernel.org>
+X-Mailer: git-send-email 2.11.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 2019-09-27 at 16:06 +0300, Jarkko Sakkinen wrote:
-> On Wed, Sep 25, 2019 at 10:03:46AM -0400, James Bottomley wrote:
-> > On Wed, 2019-09-25 at 16:48 +0300, Jarkko Sakkinen wrote:
-> > [...]
-> > > +	data_page = alloc_page(GFP_HIGHUSER);
-> > > +	if (!data_page)
-> > > +		return -ENOMEM;
-> > > +
-> > > +	data_ptr = kmap(data_page);
-> > 
-> > I don't think this is such a good idea.  On 64 bit it's no different
-> > from GFP_KERNEL and on 32 bit where we do have highmem, kmap space is
-> > at a premium, so doing a highmem allocation + kmap is more wasteful of
-> > resources than simply doing GFP_KERNEL.  In general, you should only do
-> > GFP_HIGHMEM if the page is going to be mostly used by userspace, which
-> > really isn't the case here.
-> 
-> Changing that in this commit would be wrong even if you are right.
-> After this commit has been applied it is somewhat easier to make
-> best choices for allocation in each call site (probably most will
-> end up using stack).
+When populating the pinctrl mapping table entries for a device, the
+'dev_name' field for each entry is initialised to point directly at the
+string returned by 'dev_name()' for the device and subsequently used by
+'create_pinctrl()' when looking up the mappings for the device being
+probed.
 
-Agreed, but it could be a separate patch, prior to this one.  Why
-duplicate the problem all over only to change it later?
+This is unreliable in the presence of calls to 'dev_set_name()', which may
+reallocate the device name string leaving the pinctrl mappings with a
+dangling reference. This then leads to a use-after-free every time the
+name is dereferenced by a device probe:
 
-Mimi
+  | BUG: KASAN: invalid-access in strcmp+0x20/0x64
+  | Read of size 1 at addr 13ffffc153494b00 by task modprobe/590
+  | Pointer tag: [13], memory tag: [fe]
+  |
+  | Call trace:
+  |  __kasan_report+0x16c/0x1dc
+  |  kasan_report+0x10/0x18
+  |  check_memory_region
+  |  __hwasan_load1_noabort+0x4c/0x54
+  |  strcmp+0x20/0x64
+  |  create_pinctrl+0x18c/0x7f4
+  |  pinctrl_get+0x90/0x114
+  |  devm_pinctrl_get+0x44/0x98
+  |  pinctrl_bind_pins+0x5c/0x450
+  |  really_probe+0x1c8/0x9a4
+  |  driver_probe_device+0x120/0x1d8
+
+Follow the example of sysfs, and duplicate the device name string before
+stashing it away in the pinctrl mapping entries.
+
+Cc: Linus Walleij <linus.walleij@linaro.org>
+Reported-by: Elena Petrova <lenaptr@google.com>
+Tested-by: Elena Petrova <lenaptr@google.com>
+Signed-off-by: Will Deacon <will@kernel.org>
+---
+ drivers/pinctrl/devicetree.c | 25 ++++++++++++++++++++-----
+ 1 file changed, 20 insertions(+), 5 deletions(-)
+
+diff --git a/drivers/pinctrl/devicetree.c b/drivers/pinctrl/devicetree.c
+index 88ddbb2e30de..9721ad30c541 100644
+--- a/drivers/pinctrl/devicetree.c
++++ b/drivers/pinctrl/devicetree.c
+@@ -29,6 +29,13 @@ struct pinctrl_dt_map {
+ static void dt_free_map(struct pinctrl_dev *pctldev,
+ 		     struct pinctrl_map *map, unsigned num_maps)
+ {
++	int i;
++
++	for (i = 0; i < num_maps; ++i) {
++		kfree_const(map[i].dev_name);
++		map[i].dev_name = NULL;
++	}
++
+ 	if (pctldev) {
+ 		const struct pinctrl_ops *ops = pctldev->desc->pctlops;
+ 		if (ops->dt_free_map)
+@@ -63,7 +70,13 @@ static int dt_remember_or_free_map(struct pinctrl *p, const char *statename,
+ 
+ 	/* Initialize common mapping table entry fields */
+ 	for (i = 0; i < num_maps; i++) {
+-		map[i].dev_name = dev_name(p->dev);
++		const char *devname;
++
++		devname = kstrdup_const(dev_name(p->dev), GFP_KERNEL);
++		if (!devname)
++			goto err_free_map;
++
++		map[i].dev_name = devname;
+ 		map[i].name = statename;
+ 		if (pctldev)
+ 			map[i].ctrl_dev_name = dev_name(pctldev->dev);
+@@ -71,10 +84,8 @@ static int dt_remember_or_free_map(struct pinctrl *p, const char *statename,
+ 
+ 	/* Remember the converted mapping table entries */
+ 	dt_map = kzalloc(sizeof(*dt_map), GFP_KERNEL);
+-	if (!dt_map) {
+-		dt_free_map(pctldev, map, num_maps);
+-		return -ENOMEM;
+-	}
++	if (!dt_map)
++		goto err_free_map;
+ 
+ 	dt_map->pctldev = pctldev;
+ 	dt_map->map = map;
+@@ -82,6 +93,10 @@ static int dt_remember_or_free_map(struct pinctrl *p, const char *statename,
+ 	list_add_tail(&dt_map->node, &p->dt_maps);
+ 
+ 	return pinctrl_register_map(map, num_maps, false);
++
++err_free_map:
++	dt_free_map(pctldev, map, num_maps);
++	return -ENOMEM;
+ }
+ 
+ struct pinctrl_dev *of_pinctrl_get(struct device_node *np)
+-- 
+2.23.0.444.g18eeb5a265-goog
 
