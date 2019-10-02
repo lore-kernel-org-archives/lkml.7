@@ -2,103 +2,79 @@ Return-Path: <SRS0=zem1=X3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DEEDCC352AA
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 09:21:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E9ADAC352AA
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 09:22:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AFC42206C0
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 09:21:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C429F206C0
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 09:22:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727410AbfJBJVk (ORCPT
+        id S1727436AbfJBJWI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Oct 2019 05:21:40 -0400
-Received: from foss.arm.com ([217.140.110.172]:39678 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725848AbfJBJVj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Oct 2019 05:21:39 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id AA7FA1570;
-        Wed,  2 Oct 2019 02:21:38 -0700 (PDT)
-Received: from [192.168.0.9] (unknown [172.31.20.19])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id BB2F93F706;
-        Wed,  2 Oct 2019 02:21:36 -0700 (PDT)
-Subject: Re: [PATCH v3 04/10] sched/fair: rework load_balance
-To:     Vincent Guittot <vincent.guittot@linaro.org>
-Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Phil Auld <pauld@redhat.com>,
-        Valentin Schneider <valentin.schneider@arm.com>,
-        Srikar Dronamraju <srikar@linux.vnet.ibm.com>,
-        Quentin Perret <quentin.perret@arm.com>,
-        Morten Rasmussen <Morten.Rasmussen@arm.com>,
-        Hillf Danton <hdanton@sina.com>
-References: <1568878421-12301-1-git-send-email-vincent.guittot@linaro.org>
- <1568878421-12301-5-git-send-email-vincent.guittot@linaro.org>
- <9bfb3252-c268-8c0c-9c72-65f872e9c8b2@arm.com>
- <CAKfTPtDUFMFnD+RZndx0+8A+V9HV9Hv0TN+p=mAge0VsqS6xmA@mail.gmail.com>
- <3dca46c5-c395-e2b3-a7e8-e9208ba741c8@arm.com>
- <CAKfTPtDGxX11=vgJsV-o-jOxgPmbr0VXWmR6LEVuD6WG=VRXyA@mail.gmail.com>
-From:   Dietmar Eggemann <dietmar.eggemann@arm.com>
-Message-ID: <b2d10a98-6688-3909-1bd9-e5700c521d5d@arm.com>
-Date:   Wed, 2 Oct 2019 11:21:20 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Wed, 2 Oct 2019 05:22:08 -0400
+Received: from mx2.suse.de ([195.135.220.15]:57440 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725848AbfJBJWH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 2 Oct 2019 05:22:07 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 9A5ECAE8A;
+        Wed,  2 Oct 2019 09:22:05 +0000 (UTC)
+Received: by ds.suse.cz (Postfix, from userid 10065)
+        id 5D024DA88C; Wed,  2 Oct 2019 11:22:21 +0200 (CEST)
+Date:   Wed, 2 Oct 2019 11:22:21 +0200
+From:   David Sterba <dsterba@suse.cz>
+To:     Navid Emamdoost <navid.emamdoost@gmail.com>
+Cc:     Markus.Elfring@web.de,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        Deepa Dinamani <deepa.kernel@gmail.com>,
+        Jeff Layton <jlayton@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        David Sterba <dsterba@suse.com>, emamd001@umn.edu,
+        kjlu@umn.edu, smccaman@umn.edu, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Al Viro <viro@zeniv.linux.org.uk>
+Subject: Re: [PATCH v2] fs: affs: fix a memory leak in affs_remount
+Message-ID: <20191002092221.GJ2751@suse.cz>
+Reply-To: dsterba@suse.cz
+Mail-Followup-To: dsterba@suse.cz,
+        Navid Emamdoost <navid.emamdoost@gmail.com>, Markus.Elfring@web.de,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        Deepa Dinamani <deepa.kernel@gmail.com>,
+        Jeff Layton <jlayton@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        David Sterba <dsterba@suse.com>, emamd001@umn.edu, kjlu@umn.edu,
+        smccaman@umn.edu, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Al Viro <viro@zeniv.linux.org.uk>
+References: <ec7d3fdb-445b-7f4e-d6e6-77c6ae9a5732@web.de>
+ <20190930210114.6557-1-navid.emamdoost@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <CAKfTPtDGxX11=vgJsV-o-jOxgPmbr0VXWmR6LEVuD6WG=VRXyA@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190930210114.6557-1-navid.emamdoost@gmail.com>
+User-Agent: Mutt/1.5.23.1-rc1 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 02/10/2019 08:44, Vincent Guittot wrote:
-> On Tue, 1 Oct 2019 at 18:53, Dietmar Eggemann <dietmar.eggemann@arm.com> wrote:
->>
->> On 01/10/2019 10:14, Vincent Guittot wrote:
->>> On Mon, 30 Sep 2019 at 18:24, Dietmar Eggemann <dietmar.eggemann@arm.com> wrote:
->>>>
->>>> Hi Vincent,
->>>>
->>>> On 19/09/2019 09:33, Vincent Guittot wrote:
->>
->> [...]
->>
->>>>> @@ -7347,7 +7362,7 @@ static int detach_tasks(struct lb_env *env)
->>>>>   {
->>>>>         struct list_head *tasks = &env->src_rq->cfs_tasks;
->>>>>         struct task_struct *p;
->>>>> -     unsigned long load;
->>>>> +     unsigned long util, load;
->>>>
->>>> Minor: Order by length or reduce scope to while loop ?
->>>
->>> I don't get your point here
->>
->> Nothing dramatic here! Just
->>
->> diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
->> index d0c3aa1dc290..a08f342ead89 100644
->> --- a/kernel/sched/fair.c
->> +++ b/kernel/sched/fair.c
->> @@ -7333,8 +7333,8 @@ static const unsigned int sched_nr_migrate_break = 32;
->>  static int detach_tasks(struct lb_env *env)
->>  {
->>         struct list_head *tasks = &env->src_rq->cfs_tasks;
->> -       struct task_struct *p;
->>         unsigned long load, util;
->> +       struct task_struct *p;
-> 
-> hmm... I still don't get this.
-> We usually gather pointers instead of interleaving them with other varaiables
+On Mon, Sep 30, 2019 at 04:01:10PM -0500, Navid Emamdoost wrote:
+> In affs_remount if data is provided it is duplicated into new_opts.
+> The allocated memory for new_opts is only released if pare_options fail.
+> The release for new_opts is added.
 
-I thought we should always order local variable declarations from
-longest to shortest line but can't find this rule in coding-style.rst
-either.
+A variable that is allocated and freed without use should ring a bell to
+look closer at the code. There's a bit of history behind new_options,
+originally there was save/replace options on the VFS layer so the 'data'
+passed must not change (thus strdup), this got cleaned up in later
+patches. But not completely.
 
-[...]
+There's no reason to do the strdup in cases where the filesystem does
+not need to reuse the 'data' again, because strsep would modify it
+directly.
+
+So new_opts should be removed. 
