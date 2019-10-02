@@ -2,105 +2,261 @@ Return-Path: <SRS0=zem1=X3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1487ECE587
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 00:20:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 959F7ECE587
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 00:20:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 815CD20815
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 00:20:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5F9D320815
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 00:20:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="vVYaH6PI"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="GI0Cmve3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729546AbfJBAUj (ORCPT
+        id S1729560AbfJBAUo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Oct 2019 20:20:39 -0400
-Received: from mail-io1-f68.google.com ([209.85.166.68]:41925 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729509AbfJBAUi (ORCPT
+        Tue, 1 Oct 2019 20:20:44 -0400
+Received: from mailout4.samsung.com ([203.254.224.34]:31380 "EHLO
+        mailout4.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726753AbfJBAUi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 1 Oct 2019 20:20:38 -0400
-Received: by mail-io1-f68.google.com with SMTP id n26so24292427ioj.8;
-        Tue, 01 Oct 2019 17:20:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=E7akn3KWbgNnmMpTo3GpAawa2GrmFKU67ai1nYZy4h8=;
-        b=vVYaH6PIsoBnaTSkvwT3ZG7wmp0QKNo6rURPIizeJWFyDei1P9wMgw1pcI3+7vuHzb
-         nksWAGyzFTeycPPA9/a+MzP3GWY6YaHd7Rxv9yamE4lKlRuag/8UegaaoHNI3PQkocjw
-         bP1dqvPT1zQ4aRcKw7po7jMEoBMGNIiTVvyn3R8QjDYVdnmLSrmqMKmAprIqT1JoWi7c
-         8NmIn7lKfA9/mcb7o/vFqdeviLlbWCAR7QU/wBvTv/4i9KQRp8Gudmn/+oTq8SW1YQ3k
-         nyACI8XyRf8BdU9+7+frK/bLclPcdQQ692+wdauZgeETgfgrG+i3t2zN3JIDsgy36aiQ
-         QOEg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=E7akn3KWbgNnmMpTo3GpAawa2GrmFKU67ai1nYZy4h8=;
-        b=E00nM8cAlfxQw4OZlWzjGF65z5K1a5FfO7CpbiYoDAfZ8V1eMX49oH2KHBUyLKDjpg
-         eJATxSdH69Y9lzLa+rJoXTxQvAwonk2XsZKifUll5Yr6W+1/KikNK4PvtKSEGCnDHee2
-         gx2fC58Ihg6YIQIBhVXZhD9LA/IxIJ292d+3pPHytdsVtjVqqYYH0WhIJ7FS1zJLe4dA
-         0WR2cPgps4bfzsTRXQqpySSJzrk/0ScO0mGnS3OiEjs3gq2DDZFqCD6CPbp+H1o4CzJX
-         S7M4AKSAqWMfnrq7MiV2WnRQky0VFvM9CNal2dBOahmutIoQbreYNUFOdspVWg3SauOp
-         BEiw==
-X-Gm-Message-State: APjAAAUfCge5On4Rs2ToK1uEtI30MJ1xIGKmIExtKaAlo6xkqBQmZRSS
-        f+FE8Xzne9g/FfEA5pR0EF0=
-X-Google-Smtp-Source: APXvYqzwrXn2xZhvP3Fk1t/4f5vCLzNLkyNLHZOCf4L6LjiMIR08b3vcNTz9Q3aZneXGKJ6lt60hlw==
-X-Received: by 2002:a02:1785:: with SMTP id 127mr1133317jah.15.1569975636729;
-        Tue, 01 Oct 2019 17:20:36 -0700 (PDT)
-Received: from localhost.localdomain (c-73-37-219-234.hsd1.mn.comcast.net. [73.37.219.234])
-        by smtp.gmail.com with ESMTPSA id i13sm6703646ils.16.2019.10.01.17.20.35
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 01 Oct 2019 17:20:36 -0700 (PDT)
-From:   Adam Ford <aford173@gmail.com>
-To:     linux-arm-kernel@lists.infradead.org
-Cc:     adam.ford@logicpd.com, Adam Ford <aford173@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] ARM: dts: imx6q-logicpd: Re-Enable SNVS power key
-Date:   Tue,  1 Oct 2019 19:20:29 -0500
-Message-Id: <20191002002029.19189-2-aford173@gmail.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20191002002029.19189-1-aford173@gmail.com>
-References: <20191002002029.19189-1-aford173@gmail.com>
+Received: from epcas1p4.samsung.com (unknown [182.195.41.48])
+        by mailout4.samsung.com (KnoxPortal) with ESMTP id 20191002002034epoutp04881535d8b2a9ece3a337efc56da12ae5~JrIWb1Qe80714807148epoutp04R
+        for <linux-kernel@vger.kernel.org>; Wed,  2 Oct 2019 00:20:34 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout4.samsung.com 20191002002034epoutp04881535d8b2a9ece3a337efc56da12ae5~JrIWb1Qe80714807148epoutp04R
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1569975635;
+        bh=QRIPBG3kP6qcTxkFn4qlrxDCC6zMO78V4+Q6FvPIoFA=;
+        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
+        b=GI0Cmve35GRLEX2vWT/lXV8Fm+pzUMxaRg4RUccUDSH6v+1TwvIjqo4RRbBRg0HH7
+         hZoXxvAJ/wwBKVAHPNr/RHdWg+cB16R2TR/THKySKRmX//j8BlUfWQuoi+G/0uGFHs
+         zCm3hLt2dlW0G1TzGgrKzZsy/Ty7LEXtFUtr1mbk=
+Received: from epsnrtp2.localdomain (unknown [182.195.42.163]) by
+        epcas1p1.samsung.com (KnoxPortal) with ESMTP id
+        20191002002034epcas1p1c4a4947369265914a034c7c0da043bc6~JrIV4EeG41118211182epcas1p1H;
+        Wed,  2 Oct 2019 00:20:34 +0000 (GMT)
+Received: from epsmges1p4.samsung.com (unknown [182.195.40.153]) by
+        epsnrtp2.localdomain (Postfix) with ESMTP id 46jcH40S8LzMqYkk; Wed,  2 Oct
+        2019 00:20:32 +0000 (GMT)
+Received: from epcas1p2.samsung.com ( [182.195.41.46]) by
+        epsmges1p4.samsung.com (Symantec Messaging Gateway) with SMTP id
+        E5.44.04224.F4DE39D5; Wed,  2 Oct 2019 09:20:31 +0900 (KST)
+Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
+        epcas1p1.samsung.com (KnoxPortal) with ESMTPA id
+        20191002002031epcas1p1720a197ed6182f3cf15b17abc881c049~JrISz-BYn1117611176epcas1p1D;
+        Wed,  2 Oct 2019 00:20:31 +0000 (GMT)
+Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
+        epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
+        20191002002031epsmtrp2306bc87eedbb629dcec5b7b3c27ad371~JrISzObpc1200412004epsmtrp2z;
+        Wed,  2 Oct 2019 00:20:31 +0000 (GMT)
+X-AuditID: b6c32a38-d43ff70000001080-ea-5d93ed4f4e7a
+Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
+        epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
+        D1.C5.04081.E4DE39D5; Wed,  2 Oct 2019 09:20:30 +0900 (KST)
+Received: from [10.113.221.102] (unknown [10.113.221.102]) by
+        epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
+        20191002002030epsmtip2076e8d751f85fe15e19fe811132cf731~JrISnP3mX2716127161epsmtip2V;
+        Wed,  2 Oct 2019 00:20:30 +0000 (GMT)
+Subject: Re: [PATCH v6 00/19] More improvements for Tegra30 devfreq driver
+To:     Dmitry Osipenko <digetx@gmail.com>,
+        Thierry Reding <thierry.reding@gmail.com>
+Cc:     MyungJoo Ham <myungjoo.ham@samsung.com>,
+        Kyungmin Park <kyungmin.park@samsung.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Tomeu Vizoso <tomeu.vizoso@collabora.com>,
+        linux-pm@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+From:   Chanwoo Choi <cw00.choi@samsung.com>
+Organization: Samsung Electronics
+Message-ID: <503b2ade-ff8e-c354-3886-3b7b511bd07e@samsung.com>
+Date:   Wed, 2 Oct 2019 09:25:18 +0900
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+        Thunderbird/60.8.0
+MIME-Version: 1.0
+In-Reply-To: <17dabcfc-3351-13a1-b3de-81af88f64d84@gmail.com>
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA02Sa0hTYRjHeXfOzrZq9TZLn/ah5skiBZcnXZ1EK0hyqJBhRgViJ3fYzN3Y
+        mdLlQ5ZZJk1KieqoFdpNJUpRMzMGZoaE3SSwi3ZxUERpNbvYfdsp8tvvufzf5/I+SkJzmdIq
+        8+1u3mXnrDQ1hWy/Ea2PXfuuKieupCeRbfowgth9Yh3J9u99q2AHOmso1u/pQezBcZFin+y5
+        QLETnSdJtuLiA2qVytgxdAYZr4pDCqOnZJQyVrQ2IqO/ZW6mfHNBkoXnTLxLx9vzHKZ8uzmZ
+        Ts/KXZ1rWBrHxDLL2WW0zs7Z+GQ6JSMzdk2+NdAQrSvirIUBVyYnCPTiFUkuR6Gb11kcgjuZ
+        5p0mq3O5Uy9wNqHQbtbnOWyJTFzcEkMgcUuBpfdHB+kc1G+vrrtPFqNf88uRSgk4Aepa/agc
+        TVFqcAeCqpZuQjI+Iui/0qyQjM8IhofKAxFlSFLRiyX/dQQvyo9TkjGGoLm0QRF8Nwynwak7
+        50I8C2fBzcbh0LME3ieD054vRDBA4Rjwvh6kgjwDR8LDryMoyGq8AsRXx0JiEkdB6eOfoZzZ
+        eCN8fH5DLuXMhL4TPjLIKpwM3q53IS2BI+Cx75RM4nlQ0lYdKgz4NwX17T5CmjoFjl4pQxKH
+        wZtbrQqJteAfvU5JvAsa+nooSVyGoNV7Ty4F4sF7tkoW3AWBo+FS52LJHQlXv9f+bWI6jH46
+        JJfWpYay/RopZT4MPB+SSTwH6g8cpA4jWpw0jjhpBHHSCOL/YqcR2YjCeadgM/MC40yY/N0t
+        KHStMWwH6rqT0Y2wEtHT1IPrq3I0cq5I2GHrRqAk6FnqpB+VORq1iduxk3c5cl2FVl7oRobA
+        to8Q2tl5jsDt2925jGFJfHw8m8AsNTAMHaE2motzNNjMufkCnnfyrn86mVKlLUa12ZG24ZRF
+        387vToxeV2v8TpksvdfSpo6n6z3jteG2dLbmVVdUcd6x9tQ5FSv377TUP7s91+Qdw/17SnW/
+        zFufNvksnQNp5zZkTX/ZGHb3qWfqpoUlmzNUjxLeb4+NWjBxd5u/qE/3e2xrmwox1Sv7uhqi
+        ZrCVqVpfRvYT7WGPXaRJwcIxMYRL4P4Am2J6HsMDAAA=
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprJIsWRmVeSWpSXmKPExsWy7bCSvK7f28mxBvevWFus/viY0aJl1iIW
+        i7NNb9gtLu+aw2bxufcIo0Xnl1lsFrcbV7BZ/Nw1j8Wib+0lNgdOjx13lzB67Jx1l92jt/kd
+        m0ffllWMHp83yQWwRnHZpKTmZJalFunbJXBlHPuzg6Xghl7F7EUXWRoY/yl3MXJwSAiYSPQd
+        E+hi5OIQEtjNKLHi0ArWLkZOoLikxLSLR5khaoQlDh8uhqh5yyjx/P4DZpAaYQEvifnnlrGD
+        2CICwRJzll5hAbGZBdqYJN58ioVo2MMocfv4M7ChbAJaEvtf3GADsfkFFCWu/njMCGLzCthJ
+        zHo+HWwQi4CKROutv2A1ogIREod3zIKqEZQ4OfMJ2AJOAVuJ/XveMkIsU5f4M+8SM4QtLnHr
+        yXwmCFteonnrbOYJjMKzkLTPQtIyC0nLLCQtCxhZVjFKphYU56bnFhsWGOallusVJ+YWl+al
+        6yXn525iBEeYluYOxstL4g8xCnAwKvHwNgRNjhViTSwrrsw9xCjBwawkwmvzZ1KsEG9KYmVV
+        alF+fFFpTmrxIUZpDhYlcd6neccihQTSE0tSs1NTC1KLYLJMHJxSDYwrezxlJqyTu6vgLpcf
+        aMD9a1pIS1PZJaG//vf61twPPvbj5rHNuY8UQnylt2vLC/1ldIu13fhh91lN8d/Zid+X3vi+
+        MOyS37kk9fdPuLbENu24c+VNaWb19E96GnfqInVCpn2yWMH2tvZ1nN/SdQXsU+tdi+/atMa6
+        JDfIFUbstd88bznr+w4lluKMREMt5qLiRADGBRkorAIAAA==
+X-CMS-MailID: 20191002002031epcas1p1720a197ed6182f3cf15b17abc881c049
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-Sendblock-Type: SVC_REQ_APPROVE
+CMS-TYPE: 101P
+DLP-Filter: Pass
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20191001211534epcas2p1e5f878969d3f68d4dfcafd82b1538487
+References: <20190811212315.12689-1-digetx@gmail.com>
+        <CGME20191001211534epcas2p1e5f878969d3f68d4dfcafd82b1538487@epcas2p1.samsung.com>
+        <17dabcfc-3351-13a1-b3de-81af88f64d84@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-A previous patch disabled the SNVS power key by default which
-breaks the ability for the imx6q-logicpd board to wake from sleep.
-This patch re-enables this feature for this board.
+Hello Dmitry and Thierry,
 
-Fixes: 770856f0da5d ("ARM: dts: imx6qdl: Enable SNVS power key according to board design")
+On 19. 10. 2. 오전 6:15, Dmitry Osipenko wrote:
+> 12.08.2019 00:22, Dmitry Osipenko пишет:
+>> Hello,
+>>
+>> This series addresses some additional review comments that were made by
+>> Thierry Reding to [1], makes several important changes to the driver,
+>> fixing excessive interrupts activity, and adds new features. In the end
+>> I'm proposing myself as a maintainer for the Tegra devfreq drivers.
+>>
+>> [1] https://lore.kernel.org/lkml/0fb50eb1-a173-1756-6889-2526a10ac707@gmail.com/T/
+>>
+>> Changelog:
+>>
+>> v6:  Addressed review comment that was made by Chanwoo Choi to v5 by
+>>      squashing "Define ACTMON_DEV_CTRL_STOP" patch into the "Use CPUFreq
+>>      notifier" patch.
+>>
+>> v5:  Addressed review comments that were made by Chanwoo Choi to v4 by
+>>      squashing few patches, dropping some questionable patches, rewording
+>>      comments to the code, restructuring the code and etc.
+>>
+>>      These patches are now dropped from the series:
+>>
+>>        PM / devfreq: tegra30: Use tracepoints for debugging
+>>        PM / devfreq: tegra30: Inline all one-line functions
+>>
+>>      The interrupt-optimization patches are squashed into a single patch:
+>>
+>>        PM / devfreq: tegra30: Reduce unnecessary interrupts activity
+>>
+>>      because it's better to keep the optimizations as a separate change and
+>>      this also helps to reduce code churning, since the code changes depend
+>>      on a previous patch in order to stay cleaner.
+>>
+>>      Fixed a lockup bug that I spotted recently, which is caused by a
+>>      clk-notifier->cpufreq_get()->clk_set_rate() sequence. Now a non-blocking
+>>      variant of CPU's frequency retrieving is used, i.e. cpufreq_quick_get().
+>>
+>>      Further optimized the CPUFreq notifier by postponing the delayed
+>>      updating in accordance to the polling interval, this actually uncovered
+>>      the above lockup bug.
+>>
+>>      Implemented new minor driver feature in the new patch:
+>>
+>>        PM / devfreq: tegra30: Support variable polling interval
+>>
+>> v4:  Added two new patches to the series:
+>>
+>>        PM / devfreq: tegra30: Synchronize average count on target's update
+>>        PM / devfreq: tegra30: Increase sampling period to 16ms
+>>
+>>      The first patch addresses problem where governor could get stuck due
+>>      to outdated "average count" value which is snapshoted by ISR and there
+>>      are cases where manual update of the value is required.
+>>
+>>      The second patch is just a minor optimization.
+>>
+>> v3:  Added support for tracepoints, replacing the debug messages.
+>>      Fixed few more bugs with the help of tracepoints.
+>>
+>>      New patches in this version:
+>>
+>>        PM / devfreq: tegra30: Use tracepoints for debugging
+>>        PM / devfreq: tegra30: Optimize CPUFreq notifier
+>>        PM / devfreq: tegra30: Optimize upper consecutive watermark selection
+>>        PM / devfreq: tegra30: Optimize upper average watermark selection
+>>        PM / devfreq: tegra30: Include appropriate header
+>>
+>>      Some of older patches of this series also got some extra minor polish.
+>>
+>> v2:  Added more patches that are cleaning driver's code further and
+>>      squashing another kHz conversion bug.
+>>
+>>      The patch "Rework frequency management logic" of the v1 series is now
+>>      converted to "Set up watermarks properly" because I found some problems
+>>      in the original patch and then realized that there is no need to change
+>>      the logic much. So the logic mostly preserved and only got improvements.
+>>
+>>      The series is based on the today's linux-next (25 Jun) and takes into
+>>      account minor changes that MyungJoo Ham made to the already queued
+>>      patches from the first batch [1].
+>>
+>> Dmitry Osipenko (19):
+>>   PM / devfreq: tegra30: Change irq type to unsigned int
+>>   PM / devfreq: tegra30: Keep interrupt disabled while governor is
+>>     stopped
+>>   PM / devfreq: tegra30: Handle possible round-rate error
+>>   PM / devfreq: tegra30: Drop write-barrier
+>>   PM / devfreq: tegra30: Set up watermarks properly
+>>   PM / devfreq: tegra30: Tune up boosting thresholds
+>>   PM / devfreq: tegra30: Fix integer overflow on CPU's freq max out
+>>   PM / devfreq: tegra30: Ensure that target freq won't overflow
+>>   PM / devfreq: tegra30: Use kHz units uniformly in the code
+>>   PM / devfreq: tegra30: Reduce unnecessary interrupts activity
+>>   PM / devfreq: tegra30: Use CPUFreq notifier
+>>   PM / devfreq: tegra30: Move clk-notifier's registration to governor's
+>>     start
+>>   PM / devfreq: tegra30: Reset boosting on startup
+>>   PM / devfreq: tegra30: Don't enable consecutive-down interrupt on
+>>     startup
+>>   PM / devfreq: tegra30: Constify structs
+>>   PM / devfreq: tegra30: Include appropriate header
+>>   PM / devfreq: tegra30: Increase sampling period to 16ms
+>>   PM / devfreq: tegra30: Support variable polling interval
+>>   PM / devfreq: tegra20/30: Add Dmitry as a maintainer
+>>
+>>  MAINTAINERS                       |   9 +
+>>  drivers/devfreq/tegra30-devfreq.c | 706 +++++++++++++++++++++++-------
+>>  2 files changed, 555 insertions(+), 160 deletions(-)
+>>
+> 
+> Hello Chanwoo,
+> 
+> I don't have any more updates in regards to this series, everything is
+> working flawlessly for now. Will be awesome if we could continue the
+> reviewing and then get the patches into linux-next to get some more testing.
+> 
+> 
 
-Signed-off-by: Adam Ford <aford173@gmail.com>
+Hello Dmitry,
 
-diff --git a/arch/arm/boot/dts/imx6-logicpd-som.dtsi b/arch/arm/boot/dts/imx6-logicpd-som.dtsi
-index 7ceae3573248..547fb141ec0c 100644
---- a/arch/arm/boot/dts/imx6-logicpd-som.dtsi
-+++ b/arch/arm/boot/dts/imx6-logicpd-som.dtsi
-@@ -207,6 +207,10 @@
- 	vin-supply = <&sw1c_reg>;
- };
- 
-+&snvs_poweroff {
-+	status = "okay";
-+};
-+
- &iomuxc {
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&pinctrl_hog>;
+I'm sorry for late reply. Except for patch5, I reviewed the patches.
+Please check my comment. Actually, It is difficult to review the patch5
+without any testing environment and detailed knowledge of watermark of tegra.
+It is not familiar with me.
+
+
+Hello Thierry,
+If possible, Could you review the patch5 related to setting up the watermark
+and other patches?
+
 -- 
-2.17.1
-
+Best Regards,
+Chanwoo Choi
+Samsung Electronics
