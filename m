@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 72A40C10F14
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 19:11:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2FE9C4360C
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 19:11:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4AC9B21D82
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 19:11:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8ADF62133F
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 19:11:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729537AbfJBTLc (ORCPT
+        id S1729993AbfJBTLg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Oct 2019 15:11:32 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:35578 "EHLO
+        Wed, 2 Oct 2019 15:11:36 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:35612 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729193AbfJBTIM (ORCPT
+        by vger.kernel.org with ESMTP id S1729214AbfJBTIM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 2 Oct 2019 15:08:12 -0400
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1iFjyr-00035y-CQ; Wed, 02 Oct 2019 20:08:09 +0100
+        id 1iFjyr-00036H-Pg; Wed, 02 Oct 2019 20:08:09 +0100
 Received: from ben by deadeye with local (Exim 4.92.1)
         (envelope-from <ben@decadent.org.uk>)
-        id 1iFjyo-0003dJ-7b; Wed, 02 Oct 2019 20:08:06 +0100
+        id 1iFjyo-0003eG-RI; Wed, 02 Oct 2019 20:08:06 +0100
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,14 +35,15 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Marco Zatta" <marco@zatta.me>,
-        "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>
+        "Marc Zyngier" <marc.zyngier@arm.com>,
+        "Dave Martin" <Dave.Martin@arm.com>,
+        "Andrew Jones" <drjones@redhat.com>
 Date:   Wed, 02 Oct 2019 20:06:51 +0100
-Message-ID: <lsq.1570043211.548283027@decadent.org.uk>
+Message-ID: <lsq.1570043211.182854195@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 43/87] USB: Fix chipmunk-like voice when using
- Logitech C270 for recording audio.
+Subject: [PATCH 3.16 55/87] KVM: arm64: Filter out invalid core register
+ IDs in KVM_GET_REG_LIST
 In-Reply-To: <lsq.1570043210.379046399@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -56,36 +57,122 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Marco Zatta <marco@zatta.me>
+From: Dave Martin <Dave.Martin@arm.com>
 
-commit bd21f0222adab64974b7d1b4b8c7ce6b23e9ea4d upstream.
+commit df205b5c63281e4f32caac22adda18fd68795e80 upstream.
 
-This patch fixes the chipmunk-like voice that manifets randomly when
-using the integrated mic of the Logitech Webcam HD C270.
+Since commit d26c25a9d19b ("arm64: KVM: Tighten guest core register
+access from userspace"), KVM_{GET,SET}_ONE_REG rejects register IDs
+that do not correspond to a single underlying architectural register.
 
-The issue was solved initially for this device by commit 2394d67e446b
-("USB: add RESET_RESUME for webcams shown to be quirky") but it was then
-reintroduced by e387ef5c47dd ("usb: Add USB_QUIRK_RESET_RESUME for all
-Logitech UVC webcams"). This patch is to have the fix back.
+KVM_GET_REG_LIST was not changed to match however: instead, it
+simply yields a list of 32-bit register IDs that together cover the
+whole kvm_regs struct.  This means that if userspace tries to use
+the resulting list of IDs directly to drive calls to KVM_*_ONE_REG,
+some of those calls will now fail.
 
-Signed-off-by: Marco Zatta <marco@zatta.me>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+This was not the intention.  Instead, iterating KVM_*_ONE_REG over
+the list of IDs returned by KVM_GET_REG_LIST should be guaranteed
+to work.
+
+This patch fixes the problem by splitting validate_core_offset()
+into a backend core_reg_size_from_offset() which does all of the
+work except for checking that the size field in the register ID
+matches, and kvm_arm_copy_reg_indices() and num_core_regs() are
+converted to use this to enumerate the valid offsets.
+
+kvm_arm_copy_reg_indices() now also sets the register ID size field
+appropriately based on the value returned, so the register ID
+supplied to userspace is fully qualified for use with the register
+access ioctls.
+
+Fixes: d26c25a9d19b ("arm64: KVM: Tighten guest core register access from userspace")
+Signed-off-by: Dave Martin <Dave.Martin@arm.com>
+Reviewed-by: Andrew Jones <drjones@redhat.com>
+Tested-by: Andrew Jones <drjones@redhat.com>
+Signed-off-by: Marc Zyngier <marc.zyngier@arm.com>
+[bwh: Backported to 3.16:
+ - Don't add unused vcpu parameter
+ - Adjust context]
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- drivers/usb/core/quirks.c | 3 +++
- 1 file changed, 3 insertions(+)
-
---- a/drivers/usb/core/quirks.c
-+++ b/drivers/usb/core/quirks.c
-@@ -70,6 +70,9 @@ static const struct usb_device_id usb_qu
- 	/* Cherry Stream G230 2.0 (G85-231) and 3.0 (G85-232) */
- 	{ USB_DEVICE(0x046a, 0x0023), .driver_info = USB_QUIRK_RESET_RESUME },
+--- a/arch/arm64/kvm/guest.c
++++ b/arch/arm64/kvm/guest.c
+@@ -46,9 +46,8 @@ static u64 core_reg_offset_from_id(u64 i
+ 	return id & ~(KVM_REG_ARCH_MASK | KVM_REG_SIZE_MASK | KVM_REG_ARM_CORE);
+ }
  
-+	/* Logitech HD Webcam C270 */
-+	{ USB_DEVICE(0x046d, 0x0825), .driver_info = USB_QUIRK_RESET_RESUME },
+-static int validate_core_offset(const struct kvm_one_reg *reg)
++static int core_reg_size_from_offset(u64 off)
+ {
+-	u64 off = core_reg_offset_from_id(reg->id);
+ 	int size;
+ 
+ 	switch (off) {
+@@ -78,13 +77,26 @@ static int validate_core_offset(const st
+ 		return -EINVAL;
+ 	}
+ 
+-	if (KVM_REG_SIZE(reg->id) == size &&
+-	    IS_ALIGNED(off, size / sizeof(__u32)))
+-		return 0;
++	if (IS_ALIGNED(off, size / sizeof(__u32)))
++		return size;
+ 
+ 	return -EINVAL;
+ }
+ 
++static int validate_core_offset(const struct kvm_one_reg *reg)
++{
++	u64 off = core_reg_offset_from_id(reg->id);
++	int size = core_reg_size_from_offset(off);
 +
- 	/* Logitech HD Pro Webcams C920, C920-C, C925e and C930e */
- 	{ USB_DEVICE(0x046d, 0x082d), .driver_info = USB_QUIRK_DELAY_INIT },
- 	{ USB_DEVICE(0x046d, 0x0841), .driver_info = USB_QUIRK_DELAY_INIT },
++	if (size < 0)
++		return -EINVAL;
++
++	if (KVM_REG_SIZE(reg->id) != size)
++		return -EINVAL;
++
++	return 0;
++}
++
+ static int get_core_reg(struct kvm_vcpu *vcpu, const struct kvm_one_reg *reg)
+ {
+ 	/*
+@@ -197,10 +209,33 @@ unsigned long kvm_arm_num_regs(struct kv
+ int kvm_arm_copy_reg_indices(struct kvm_vcpu *vcpu, u64 __user *uindices)
+ {
+ 	unsigned int i;
+-	const u64 core_reg = KVM_REG_ARM64 | KVM_REG_SIZE_U64 | KVM_REG_ARM_CORE;
+ 
+ 	for (i = 0; i < sizeof(struct kvm_regs) / sizeof(__u32); i++) {
+-		if (put_user(core_reg | i, uindices))
++		u64 reg = KVM_REG_ARM64 | KVM_REG_ARM_CORE | i;
++		int size = core_reg_size_from_offset(i);
++
++		if (size < 0)
++			continue;
++
++		switch (size) {
++		case sizeof(__u32):
++			reg |= KVM_REG_SIZE_U32;
++			break;
++
++		case sizeof(__u64):
++			reg |= KVM_REG_SIZE_U64;
++			break;
++
++		case sizeof(__uint128_t):
++			reg |= KVM_REG_SIZE_U128;
++			break;
++
++		default:
++			WARN_ON(1);
++			continue;
++		}
++
++		if (put_user(reg, uindices))
+ 			return -EFAULT;
+ 		uindices++;
+ 	}
 
