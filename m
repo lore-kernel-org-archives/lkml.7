@@ -2,120 +2,141 @@ Return-Path: <SRS0=zem1=X3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BCABECE58A
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 18:06:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D366C10F14
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 18:07:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5583921848
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 18:06:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2DB6D21D82
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 18:07:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1570039626;
+	bh=r/Ma9GOxLkElJodBCpox5WBBhm8RiRWqVvnaKg0xjCs=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=JFJpZPP0SImXQLW6HMMBKJTnl+zEAOznHEnJKMsCTv1125vLNLJ0EJnNaS82qpzHy
+	 AIlisGSUi6wcOdwIsQFSGfrngOvbyTvzFHAnkMQ19ZdHETh5InXgkBSCGeulKolOFN
+	 s28MOT2EpXm1ManlcJwiXuXRhVAUXZTP6qG5SQBc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728740AbfJBSG2 (ORCPT
+        id S1728575AbfJBSHF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Oct 2019 14:06:28 -0400
-Received: from atrey.karlin.mff.cuni.cz ([195.113.26.193]:45259 "EHLO
-        atrey.karlin.mff.cuni.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727357AbfJBSG2 (ORCPT
+        Wed, 2 Oct 2019 14:07:05 -0400
+Received: from mail-lf1-f66.google.com ([209.85.167.66]:46980 "EHLO
+        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726669AbfJBSHE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Oct 2019 14:06:28 -0400
-Received: by atrey.karlin.mff.cuni.cz (Postfix, from userid 512)
-        id 2E31D802D9; Wed,  2 Oct 2019 20:06:11 +0200 (CEST)
-Date:   Wed, 2 Oct 2019 20:06:25 +0200
-From:   Pavel Machek <pavel@denx.de>
-To:     Dan Murphy <dmurphy@ti.com>
-Cc:     Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        Akinobu Mita <akinobu.mita@gmail.com>,
-        linux-leds@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>
-Subject: Re: [PATCH -next 2/2] leds: add /sys/class/leds/<led>/current-trigger
-Message-ID: <20191002180625.GB13492@amd>
-References: <1570029181-11102-1-git-send-email-akinobu.mita@gmail.com>
- <1570029181-11102-3-git-send-email-akinobu.mita@gmail.com>
- <ec4d9d2c-6f8d-97a6-41d7-832a3fc1ca72@ti.com>
- <589ba4d7-31f5-c789-d5ca-c13650cf5b03@gmail.com>
- <79102915-5510-40e7-b4be-073e1c85bda6@ti.com>
+        Wed, 2 Oct 2019 14:07:04 -0400
+Received: by mail-lf1-f66.google.com with SMTP id t8so13380238lfc.13
+        for <linux-kernel@vger.kernel.org>; Wed, 02 Oct 2019 11:07:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=LI8YD1l9wWpd4czC3TbcOWwWakrV1Iiw4AlgOzqD4sc=;
+        b=Dh2G8GYr8EPvelOroqLSHC/KxuCKYDezy/8X2VOtg5D0e92mG2pHLP70TqaN2AfR9k
+         0nLutEeynYTet4qiWK21uAUE+bdD6KLHao28LPAqwhOGZo7KVaP2s21u92x8UDfJvlon
+         JS/hqGTaum4haQPegZco3tzb8IrjpJe1sLu54=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=LI8YD1l9wWpd4czC3TbcOWwWakrV1Iiw4AlgOzqD4sc=;
+        b=jas+Q7bQhxIDEjXJlhT/g8KNboUar9d7UO/cbC3tL3AtYKuNE0uQ0qIcvG05R4oJKq
+         OwJyAqBwfaTwHk3xWhGgkNHS3kYgW4CjUUA+l4tssm+3j4phua+EBwgk06Gy4U4x/6Gg
+         /yZZcxG1ThupPBDhXRFbL/9SgEiYdiCmw2agdYLed5q3v3t63sIigB3rTXhqfZyzmAU+
+         YKROWpNIDRg+Pba8F4oPp3qNtKMAlCSG9c+pK9Vsip1bN+UQrb12pv2Myn7vuWULfYdG
+         7z6GmP1HkbXED3PuSxTXJF3Lnyj64DbE4teFtG7wSPCueY/eLsdlca8VzXXCSMmkF+Ji
+         +/Lg==
+X-Gm-Message-State: APjAAAX0Erngrt89WvCnjgYKyRmgnS0LhQhNP26PQtwuCZrMIb0mGkbq
+        cojGAJR6bIO/duHZgxZLS8VYqpaPmk4=
+X-Google-Smtp-Source: APXvYqyD4hx4SW71VsSsy3LNwQuowODNMKY16uTfHEuI3qaZI+Sby7Z1qSRy4ug5Vp9f5m3sw47Hwg==
+X-Received: by 2002:a19:ee02:: with SMTP id g2mr3116243lfb.113.1570039622337;
+        Wed, 02 Oct 2019 11:07:02 -0700 (PDT)
+Received: from mail-lj1-f180.google.com (mail-lj1-f180.google.com. [209.85.208.180])
+        by smtp.gmail.com with ESMTPSA id s6sm31991ljg.43.2019.10.02.11.06.59
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 02 Oct 2019 11:06:59 -0700 (PDT)
+Received: by mail-lj1-f180.google.com with SMTP id m7so18137865lji.2
+        for <linux-kernel@vger.kernel.org>; Wed, 02 Oct 2019 11:06:59 -0700 (PDT)
+X-Received: by 2002:a2e:551:: with SMTP id 78mr3405968ljf.48.1570039619077;
+ Wed, 02 Oct 2019 11:06:59 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="s2ZSL+KKDSLx8OML"
-Content-Disposition: inline
-In-Reply-To: <79102915-5510-40e7-b4be-073e1c85bda6@ti.com>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+References: <20191002134730.40985-1-thomas_os@shipmail.org> <20191002134730.40985-4-thomas_os@shipmail.org>
+In-Reply-To: <20191002134730.40985-4-thomas_os@shipmail.org>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Wed, 2 Oct 2019 11:06:43 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wic5vXCxpH-+UTtmH_t-EDBKrKnDhxQk=t_N20aiWnqUg@mail.gmail.com>
+Message-ID: <CAHk-=wic5vXCxpH-+UTtmH_t-EDBKrKnDhxQk=t_N20aiWnqUg@mail.gmail.com>
+Subject: Re: [PATCH v3 3/7] mm: Add write-protect and clean utilities for
+ address space ranges
+To:     =?UTF-8?Q?Thomas_Hellstr=C3=B6m_=28VMware=29?= 
+        <thomas_os@shipmail.org>
+Cc:     Linux-MM <linux-mm@kvack.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Thomas Hellstrom <thellstrom@vmware.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Matthew Wilcox <willy@infradead.org>,
+        Will Deacon <will.deacon@arm.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Rik van Riel <riel@surriel.com>,
+        Minchan Kim <minchan@kernel.org>,
+        Michal Hocko <mhocko@suse.com>,
+        Huang Ying <ying.huang@intel.com>,
+        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
+        "Kirill A . Shutemov" <kirill@shutemov.name>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, Oct 2, 2019 at 6:48 AM Thomas Hellstr=C3=B6m (VMware)
+<thomas_os@shipmail.org> wrote:
+>
+> From: Thomas Hellstrom <thellstrom@vmware.com>
+>
+> Add two utilities to a) write-protect and b) clean all ptes pointing into
+> a range of an address space.
 
---s2ZSL+KKDSLx8OML
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+This one I still don't exactly love.
 
-Hi!
+I'm not entirely sure what rubs me the wrong way, but part of it is
+naming. We don't use the name "as", because it reads as (sic) an
+English word.
 
-> >>>diff --git a/Documentation/ABI/testing/sysfs-class-led
-> >>>b/Documentation/ABI/testing/sysfs-class-led
-> >>>index 5f67f7a..fdfed3f 100644
-> >>>--- a/Documentation/ABI/testing/sysfs-class-led
-> >>>+++ b/Documentation/ABI/testing/sysfs-class-led
-> >>>@@ -61,3 +61,16 @@ Description:
-> >>> =A0=A0=A0=A0=A0=A0=A0=A0=A0 gpio and backlight triggers. In case of t=
-he backlight trigger,
-> >>> =A0=A0=A0=A0=A0=A0=A0=A0=A0 it is useful when driving a LED which is =
-intended to indicate
-> >>> =A0=A0=A0=A0=A0=A0=A0=A0=A0 a device in a standby like state.
-> >>>+
-> >>>+What:=A0=A0=A0=A0=A0=A0=A0 /sys/class/leds/<led>/current-trigger
-> >>>+Date:=A0=A0=A0=A0=A0=A0=A0 September 2019
-> >>>+KernelVersion:=A0=A0=A0 5.5
-> >>>+Contact:=A0=A0=A0 linux-leds@vger.kernel.org
-> >>>+Description:
-> >>>+=A0=A0=A0=A0=A0=A0=A0 Set the trigger for this LED. A trigger is a ke=
-rnel based source
-> >>>+=A0=A0=A0=A0=A0=A0=A0 of LED events.
-> >>>+=A0=A0=A0=A0=A0=A0=A0 Writing the trigger name to this file will chan=
-ge the current
-> >>>+=A0=A0=A0=A0=A0=A0=A0 trigger. Trigger specific parameters can appear=
- in
-> >>>+=A0=A0=A0=A0=A0=A0=A0 /sys/class/leds/<led> once a given trigger is s=
-elected. For
-> >>>+=A0=A0=A0=A0=A0=A0=A0 their documentation see sysfs-class-led-trigger=
--*.
-> >>>+=A0=A0=A0=A0=A0=A0=A0 Reading this file will return the current LED t=
-rigger name.
-> >>Why do we need this new file can't we just update the current trigger
-> >>file implementation?
-> >We can't change existing ABI. It doesn't matter if it is documented
-> >or not - it's in place for very long time and you can't guarantee there
-> >are no users relying on triggers file show format.
->=20
-> So if it has been in place for a very long time why do we need another ABI
-> that does sorta the same thing?
->=20
-> This seems to be a bit confusing and extra.
+The name we use for address_space pointers is "mapping", both for
+variables and for existing functions.
 
-Agreed. Lets simply keep the existing ABI.
+See for example "pte_same_as_swp()" which uses "as" as the _word_ 'as'.
 
-Thanks,
-									Pavel
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
+Contrast that with "unmap_mapping_range()" or
+"mapping_set_unevictable()" or "read_mapping_page()" or
+"invalidate_mapping_pages()", that all work on address spaces.
 
---s2ZSL+KKDSLx8OML
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+So please don't use 'as' as shorthand for that - eithe rin the
+function names or the filename.
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
+I'm not sure if that's the _only_ thing that raises my heckles when I
+read this patch, but I think it might be. So I'm not saying "ack with
+naming change", but I suspect that if the naming was changed, it would
+look much better to me.
 
-iEYEARECAAYFAl2U5yEACgkQMOfwapXb+vJIEwCfR85PLF1UbHUG4F2VpQuhPOvZ
-fhgAoIMUuiNqIPLRAARGoLUOtdUfMHVO
-=Pm1l
------END PGP SIGNATURE-----
+Yes, it's a bit more typing. But I really think
+"clean_mapping_dirty_pages()" is just not only more in line with the
+mm naming, I think it's a lot more legible and understandable than
+"as_dirty_clean()", which just makes me go "what the heck does that
+function do?"
 
---s2ZSL+KKDSLx8OML--
+And I really think it needs more than just "as" -> "mapping".
+"mapping_dirty_clean()" still makes me go "what?" in a way that
+"clean_mapping_dirty_pages()" does not. One name reads as a series or
+random words, the other reads as a "this is what the function does".
+
+I know I sometimes get hung up about naming, but I do think naming
+matters.  A descriptive name that just reads as what the function does
+makes it much easier to read the logic of code, imnsho.
+
+              Linus
