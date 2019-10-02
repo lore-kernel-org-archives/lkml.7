@@ -2,122 +2,128 @@ Return-Path: <SRS0=zem1=X3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89B5CC4360C
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 23:14:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 782BFC4360C
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 23:16:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5D0F121D82
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 23:14:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570058076;
-	bh=OZVJeZ22vcNjw/uCU9WIlcSTnKiZymJMTEEQaMbl7TE=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=Wgr+8KkoGzDr0+gM/jkqQ6iKt2ZYnASeqr4oBEChEfOw0bpAj/7F3OntGhLJ6Vd8O
-	 6fMzLghKO/ubKJLIqPXDuOA6XwL/5ouTS5Z3Yu5SAE8WFzb4+gMQDm/w65kcqMSmeF
-	 zv6/T5Al3Yf/UfYvnforT9UiNEvRBHQrQN2USnPI=
+	by mail.kernel.org (Postfix) with ESMTP id 4C07E222BE
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 23:16:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="XuU6hHtC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728453AbfJBXOf (ORCPT
+        id S1728607AbfJBXQX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Oct 2019 19:14:35 -0400
-Received: from mail-io1-f67.google.com ([209.85.166.67]:35153 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726708AbfJBXOf (ORCPT
+        Wed, 2 Oct 2019 19:16:23 -0400
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:40492 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728516AbfJBXQX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Oct 2019 19:14:35 -0400
-Received: by mail-io1-f67.google.com with SMTP id q10so1292725iop.2
-        for <linux-kernel@vger.kernel.org>; Wed, 02 Oct 2019 16:14:33 -0700 (PDT)
+        Wed, 2 Oct 2019 19:16:23 -0400
+Received: by mail-pl1-f193.google.com with SMTP id d22so561339pll.7
+        for <linux-kernel@vger.kernel.org>; Wed, 02 Oct 2019 16:16:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=xvZas5u4F0ANJvTgj3n1e3Kg28XWglgthvIgi7KiUDM=;
-        b=OAmzgMLRqJrsm01/oVo0z52yps2KIsjjA0iSxmFhaj0J88TZvinG5qtiC7/sCqrJct
-         XrgfqrnXnUfbVHpnU/DQZtmNicYVO9mW/frxnGp5y9Aqp4/NAigNRU873DNLZ4Zvu29D
-         LUI0gg2+7ZwzBWUdbPnc7BM6q8a4zpw/xTOws=
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=ze/XvAAk8GBZMksPYjyDCpmqV8AGCwQH61JmBZ7VYXE=;
+        b=XuU6hHtCbzgnLgj5xFdd29USBSRIe9zpmWPOLYUJB/YMxHldDaP1t3RdXqKU7+9qST
+         CHAm4YD7iyFga95zzDWl2BjqU7MUMTB3jy4xz1GdTiRkdD5XgK9GOF16bc+n1vXBwFTs
+         cMRj5LW+ej1CyJRz6V9q57XBmn+T6zAnJz5PabxfyCmUJVXoe9vngSvvZmpQ/kbUIbMa
+         +htweaej41pOqioUGALldV5jmpQexr9STl2LcRl08StyUthb17t34BXsB6Y8avXbOWPG
+         50XyAz92YjpfMHOFwtvoST77qm5oxCyFltxTEA2eGtbBN1yVvp8nGP7eMXXN+zGAZAp8
+         6SEQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=xvZas5u4F0ANJvTgj3n1e3Kg28XWglgthvIgi7KiUDM=;
-        b=ndXYh8dWU450xQBW0C3zOvQbbzTYjrTl2u6UUuEtbh6wv2MgeAsUqO46QJhVeFe5iZ
-         HLlrKUBWlALy6iV4Ped0TMwOipR1QV2fOF4jWzGuO/NXkQYB9IDQwOPyonl017JneXeu
-         0NS8VKnoEGt77zfvTQTCiOxGNKKBeHh7nrJj939tI0Gcoeb2kT3lETWzLDP79xbAWFc8
-         RMRqyK4lwBA+aqjnu+Cs3aRuq6vdDt0BSuDLgU/RogzjO9X/Tm9yxWLBZJ51P2Tk5F3F
-         zp+p015YSKKh2winuwTt5sb/f0Yl+2poVNarm9J+iATXpcDjUIAjQYFPEAoBcE9id/XC
-         YOhg==
-X-Gm-Message-State: APjAAAUyxWdW9F4KuHLWSDCg8WhTH5kQLs6Lt/KStrxlFvT4vrmVGKcd
-        vSSoisuYd7+aPBF3TgbTjPSwEA==
-X-Google-Smtp-Source: APXvYqzuqtspnkYcsNldhwxDFk74uox7GnxjgX02w15feBtduAjf6+BWwfmMwuq7uIhWVVekiK+5hw==
-X-Received: by 2002:a92:b752:: with SMTP id c18mr7008975ilm.42.1570058072984;
-        Wed, 02 Oct 2019 16:14:32 -0700 (PDT)
-Received: from shuah-t480s.internal (c-24-9-64-241.hsd1.co.comcast.net. [24.9.64.241])
-        by smtp.gmail.com with ESMTPSA id m5sm259542ioh.69.2019.10.02.16.14.31
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=ze/XvAAk8GBZMksPYjyDCpmqV8AGCwQH61JmBZ7VYXE=;
+        b=U1ITPeJ+qr3PfZ9qhM6+mVkeUlD5s0KcOi9ohSBlcvqpAxWjyJ9vECCJLlwD+JgfEc
+         fcI/Oe8RFL79bwTMJ8RBsMQEqcyZDTEKqjBvZ02GUkemsfJaM9iwvGx8o8f/C9bbVZZm
+         K7LIHWJOO9ddPSzIFQe0d2o85RFMzOl0MpsiBfZDZPGkXTFamFTTrmjT+1iwFE9oXI/E
+         Gfb+m1UUBFFeBT/QObnfuK3DaQo2P1W0d5ZgHU9HSKEzpLqBn12Y0g37l0pAW5vtfyiQ
+         RE4f9KHA3FFz6hBP+uAcaF+FcvRpFGtHa/aHda/fHrbMhZvdSGJubc+OvcqBax/+wMhj
+         SToQ==
+X-Gm-Message-State: APjAAAVzkGKIxqCnxc3MzqhLLp/vfEjKj2IdG4mCz+wGpF9NHQrxfwE1
+        fJpsnRpGAitXGYZMZg362D/7TT2ccKY=
+X-Google-Smtp-Source: APXvYqwKK+QsXsOrigPf5Vzcddlm1GWn4ouIdnrb8vXeJ7P0jW3FJ31myUBhJrIC1NEdFL3iiaRbbg==
+X-Received: by 2002:a17:902:a40a:: with SMTP id p10mr6399376plq.149.1570058181824;
+        Wed, 02 Oct 2019 16:16:21 -0700 (PDT)
+Received: from localhost.localdomain ([2601:1c2:680:1319:692:26ff:feda:3a81])
+        by smtp.gmail.com with ESMTPSA id l7sm288791pjy.12.2019.10.02.16.16.19
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 02 Oct 2019 16:14:32 -0700 (PDT)
-From:   Shuah Khan <skhan@linuxfoundation.org>
-To:     pbonzini@redhat.com, rkrcmar@redhat.com, shuah@kernel.org
-Cc:     Shuah Khan <skhan@linuxfoundation.org>, kvm@vger.kernel.org,
-        linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v3] selftests: kvm: Fix libkvm build error
-Date:   Wed,  2 Oct 2019 17:14:30 -0600
-Message-Id: <20191002231430.5839-1-skhan@linuxfoundation.org>
-X-Mailer: git-send-email 2.20.1
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Wed, 02 Oct 2019 16:16:21 -0700 (PDT)
+From:   John Stultz <john.stultz@linaro.org>
+To:     lkml <linux-kernel@vger.kernel.org>
+Cc:     John Stultz <john.stultz@linaro.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Chunfeng Yun <chunfeng.yun@mediatek.com>,
+        Yu Chen <chenyu56@huawei.com>, Felipe Balbi <balbi@kernel.org>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Jun Li <lijun.kernel@gmail.com>,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        linux-usb@vger.kernel.org, devicetree@vger.kernel.org
+Subject: [RFC][PATCH 0/3] dwc3 role-switch handling for HiKey960
+Date:   Wed,  2 Oct 2019 23:16:14 +0000
+Message-Id: <20191002231617.3670-1-john.stultz@linaro.org>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fix the following build error from "make TARGETS=kvm kselftest":
+I'm just trying to pick up parts of a patch previously by
+Yu Chen to get HiKey960 dev-board's USB functionality working. 
 
-libkvm.a(assert.o): relocation R_X86_64_32 against `.rodata.str1.1' can not be used when making a PIE object; recompile with -fPIC
+The current full patchset can be found here:
+ https://git.linaro.org/people/john.stultz/android-dev.git/log/?id=12289c95c89e0e3173f8da1ebd3a29e52fd50a44
 
-This error is seen when build is done from the main Makefile using
-kselftest target. In this case KBUILD_CPPFLAGS and CC_OPTION_CFLAGS
-are defined.
+I don't have any real knowledge of the hardware other then the
+code, and what I can intuit from testing, but I tried to
+document the previously undocumented bindings as best I could
+and fixed up a few minor checkpatch issues.
 
-When build is invoked using:
+I'd greatly appreciate feedback or thoughts!
 
-"make -C tools/testing/selftests/kvm" KBUILD_CPPFLAGS and CC_OPTION_CFLAGS
-aren't defined.
+thanks
+-john
 
-There is no need to pass in KBUILD_CPPFLAGS and CC_OPTION_CFLAGS for the
-check to determine if --no-pie is necessary, which is the case when these
-two aren't defined when "make -C tools/testing/selftests/kvm" runs.
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Rob Herring <robh+dt@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+Cc: Suzuki K Poulose <suzuki.poulose@arm.com>
+Cc: Chunfeng Yun <chunfeng.yun@mediatek.com>
+Cc: Yu Chen <chenyu56@huawei.com>
+Cc: Felipe Balbi <balbi@kernel.org>
+Cc: Hans de Goede <hdegoede@redhat.com>
+Cc: Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc: Jun Li <lijun.kernel@gmail.com>
+Cc: Valentin Schneider <valentin.schneider@arm.com>
+Cc: linux-usb@vger.kernel.org
+Cc: devicetree@vger.kernel.org
 
-Fix it by simplifying the no-pie-option logic. With this change, both
-build variations work.
+John Stultz (1):
+  dt-bindings: usb: generic: Add role-switch-default-host binding
 
-"make TARGETS=kvm kselftest"
-"make -C tools/testing/selftests/kvm"
+Yu Chen (2):
+  usb: roles: Add usb role switch notifier.
+  usb: dwc3: Registering a role switch in the DRD code.
 
-Signed-off-by: Shuah Khan <skhan@linuxfoundation.org>
----
-Changes since v2:
--- Removed extra blank line added by accident.
--- Fixed commit log.
+ .../devicetree/bindings/usb/generic.txt       |  5 ++
+ drivers/usb/dwc3/Kconfig                      |  1 +
+ drivers/usb/dwc3/core.h                       |  6 ++
+ drivers/usb/dwc3/drd.c                        | 78 ++++++++++++++++++-
+ drivers/usb/roles/class.c                     | 35 ++++++++-
+ include/linux/usb/role.h                      | 16 ++++
+ 6 files changed, 139 insertions(+), 2 deletions(-)
 
- tools/testing/selftests/kvm/Makefile | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/tools/testing/selftests/kvm/Makefile b/tools/testing/selftests/kvm/Makefile
-index 62c591f87dab..7ee097658ef0 100644
---- a/tools/testing/selftests/kvm/Makefile
-+++ b/tools/testing/selftests/kvm/Makefile
-@@ -48,7 +48,7 @@ CFLAGS += -Wall -Wstrict-prototypes -Wuninitialized -O2 -g -std=gnu99 \
- 	-I$(LINUX_HDR_PATH) -Iinclude -I$(<D) -Iinclude/$(UNAME_M) -I..
- 
- no-pie-option := $(call try-run, echo 'int main() { return 0; }' | \
--        $(CC) -Werror $(KBUILD_CPPFLAGS) $(CC_OPTION_CFLAGS) -no-pie -x c - -o "$$TMP", -no-pie)
-+        $(CC) -Werror -no-pie -x c - -o "$$TMP", -no-pie)
- 
- # On s390, build the testcases KVM-enabled
- pgste-option = $(call try-run, echo 'int main() { return 0; }' | \
 -- 
-2.20.1
+2.17.1
 
