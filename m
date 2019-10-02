@@ -2,110 +2,96 @@ Return-Path: <SRS0=zem1=X3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 903BCC47404
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 21:00:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FE6AC4CED1
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 21:00:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7035B2070B
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 21:00:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0523B21A4C
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 21:00:32 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cTT625y5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729181AbfJBVA0 (ORCPT
+        id S1729250AbfJBVAb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Oct 2019 17:00:26 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:40338 "EHLO
-        mx0b-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729030AbfJBVAZ (ORCPT
+        Wed, 2 Oct 2019 17:00:31 -0400
+Received: from mail-qt1-f196.google.com ([209.85.160.196]:45314 "EHLO
+        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729030AbfJBVAa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Oct 2019 17:00:25 -0400
-Received: from pps.filterd (m0127361.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x92KpZtE069676
-        for <linux-kernel@vger.kernel.org>; Wed, 2 Oct 2019 17:00:24 -0400
-Received: from e06smtp04.uk.ibm.com (e06smtp04.uk.ibm.com [195.75.94.100])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2vd1sg2nqa-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Wed, 02 Oct 2019 17:00:24 -0400
-Received: from localhost
-        by e06smtp04.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <zohar@linux.ibm.com>;
-        Wed, 2 Oct 2019 22:00:22 +0100
-Received: from b06cxnps4076.portsmouth.uk.ibm.com (9.149.109.198)
-        by e06smtp04.uk.ibm.com (192.168.101.134) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Wed, 2 Oct 2019 22:00:17 +0100
-Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
-        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x92L0FGx50855996
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 2 Oct 2019 21:00:15 GMT
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id AC16F11C050;
-        Wed,  2 Oct 2019 21:00:14 +0000 (GMT)
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id A8B3E11C06C;
-        Wed,  2 Oct 2019 21:00:12 +0000 (GMT)
-Received: from dhcp-9-31-103-196.watson.ibm.com (unknown [9.31.103.196])
-        by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Wed,  2 Oct 2019 21:00:12 +0000 (GMT)
-Subject: Re: [PATCH v6 8/9] ima: deprecate permit_directio, instead use
- appraise_flag
-From:   Mimi Zohar <zohar@linux.ibm.com>
-To:     Nayna Jain <nayna@linux.ibm.com>, linuxppc-dev@ozlabs.org,
-        linux-efi@vger.kernel.org, linux-integrity@vger.kernel.org,
-        devicetree@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Jeremy Kerr <jk@ozlabs.org>,
-        Matthew Garret <matthew.garret@nebula.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Claudio Carvalho <cclaudio@linux.ibm.com>,
-        George Wilson <gcwilson@linux.ibm.com>,
-        Elaine Palmer <erpalmer@us.ibm.com>,
-        Eric Ricther <erichte@linux.ibm.com>,
-        "Oliver O'Halloran" <oohall@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>
-Date:   Wed, 02 Oct 2019 17:00:12 -0400
-In-Reply-To: <1569594360-7141-9-git-send-email-nayna@linux.ibm.com>
-References: <1569594360-7141-1-git-send-email-nayna@linux.ibm.com>
-         <1569594360-7141-9-git-send-email-nayna@linux.ibm.com>
+        Wed, 2 Oct 2019 17:00:30 -0400
+Received: by mail-qt1-f196.google.com with SMTP id c21so512144qtj.12;
+        Wed, 02 Oct 2019 14:00:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=8xUoba94hqt21S7poDp6aPO/G0u9HsT4zgQ8TPghFjs=;
+        b=cTT625y51C5KdBmq66gcT5Bb7p9nDEZn3xjeYGYmnw0YlqIi6pL8v4gTBwrSYYHG3g
+         zjZYhcoZQijyMOVQrl4LO/2bPXNWwJIefffiOlqoppEiF22JOe/KQXWTLAn5fP/ZDt6R
+         /ELtSy2/tz55ePuY/d2csV60vxY7z/fCUgyMKoLamU6tKYzz2QPdamcGcqFU7IGkuazR
+         gin0GD/7KW+rpSWrT8VSlpdKy576y9+E+tn+pyEbDAAGFyE9l+AaURTDJf+fYw2AhtWD
+         v6ijPkFmYaGjfno945YRRIJP6ss2jsLWpJp6arg7IEJy/UafC1SgKeNM+19D9hp0aWSZ
+         PCqg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=8xUoba94hqt21S7poDp6aPO/G0u9HsT4zgQ8TPghFjs=;
+        b=uRWEMyNUl4qLQ/c9tq7VQlPmwXMlAWlw//DklBJOBbhoQof8fXtrgS5hAPS/1zY75L
+         Yn8m6hbrqDs8a+EiVAczWEFPRvD3N3eCgvejir6LDnnOmAUlT5dQUMDuE5I+HdhAADVJ
+         Ntt9FMS+JbgSUBbqovulhgJ6GvfQvmTpTso+JUvp1Hd9fQtwlgsyYj/GEHVS7smDSzOb
+         u1DG4gJeeLavrTobpLW/YrqNLmDD4F8uZWpbX13/BI7StN4cuQ9iENKR2hUZMHvBaZSn
+         Tc6gh5ZFnyLzh5iQWhLx6p3iVuehH/ZRdMLfgA5Ggkcx87FBXWq7Kt4Ze41+edt9yGz6
+         aaNA==
+X-Gm-Message-State: APjAAAUzdCBZgE7qB0L4toQ04twjn1dUDHCPj2Fx4vXd+R16Y7aCsmrs
+        CqNsPLu4cLjmTsSzpKN1UnSFNQMFezqGcpOrVwzxIMTw
+X-Google-Smtp-Source: APXvYqzyuH8ESnd6iGaROi8ICK34q9xBqydOF5gDhz2nYRgT2zwgvjWSzOkcHsvMF0kJe66mg/KF0gD9e/HMkze2QuQ=
+X-Received: by 2002:ac8:1099:: with SMTP id a25mr6323923qtj.308.1570050029658;
+ Wed, 02 Oct 2019 14:00:29 -0700 (PDT)
+MIME-Version: 1.0
+References: <20191001113307.27796-1-bjorn.topel@gmail.com> <20191001113307.27796-2-bjorn.topel@gmail.com>
+In-Reply-To: <20191001113307.27796-2-bjorn.topel@gmail.com>
+From:   Song Liu <liu.song.a23@gmail.com>
+Date:   Wed, 2 Oct 2019 14:00:18 -0700
+Message-ID: <CAPhsuW40mXh+fcbGZkmbFUXgKN8Qh6jQ+8Ju6yYXfnavwZxL_w@mail.gmail.com>
+Subject: Re: [PATCH 1/2] perf tools: Make usage of test_attr__* optional for perf-sys.h
+To:     =?UTF-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn.topel@gmail.com>
+Cc:     open list <linux-kernel@vger.kernel.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        =?UTF-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn.topel@intel.com>,
+        Networking <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        adrian.hunter@intel.com, Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>
 Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-x-cbid: 19100221-0016-0000-0000-000002B372CE
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19100221-0017-0000-0000-00003314799D
-Message-Id: <1570050012.4421.50.camel@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-10-02_08:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=3 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=763 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1908290000 definitions=main-1910020165
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Nayna,
+On Tue, Oct 1, 2019 at 4:35 AM Bj=C3=B6rn T=C3=B6pel <bjorn.topel@gmail.com=
+> wrote:
+>
+> From: Bj=C3=B6rn T=C3=B6pel <bjorn.topel@intel.com>
+>
+> For users of perf-sys.h outside perf, e.g. samples/bpf/bpf_load.c,
+> it's convenient not to depend on test_attr__*.
+>
+> After commit 91854f9a077e ("perf tools: Move everything related to
+> sys_perf_event_open() to perf-sys.h"), all users of perf-sys.h will
+> depend on test_attr__enabled and test_attr__open.
+>
+> This commit enables a user to define HAVE_ATTR_TEST to zero in order
+> to omit the test dependency.
+>
+> Fixes: 91854f9a077e ("perf tools: Move everything related to sys_perf_eve=
+nt_open() to perf-sys.h")
+> Signed-off-by: Bj=C3=B6rn T=C3=B6pel <bjorn.topel@intel.com>
 
-On Fri, 2019-09-27 at 10:25 -0400, Nayna Jain wrote:
-> This patch deprecates the existing permit_directio flag, instead adds
-> it as possible value to appraise_flag parameter.
-> For eg.
-> appraise_flag=permit_directio
-
-Defining a generic "appraise_flag=", which supports different options,
-is the right direction.  I would really like to depreciate the
-"permit_directio" flag, not just change the policy syntax.  For now,
-let's drop this change.
-
-Mimi
-
+Acked-by: Song Liu <songliubraving@fb.com>
