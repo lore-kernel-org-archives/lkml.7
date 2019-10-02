@@ -2,688 +2,236 @@ Return-Path: <SRS0=zem1=X3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA453C35280
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 07:13:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D8ACC352AA
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 07:13:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5230520640
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 07:13:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="P1XdxfTW"
+	by mail.kernel.org (Postfix) with ESMTP id 46FD020640
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 07:13:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726931AbfJBHNE (ORCPT
+        id S1726980AbfJBHNt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Oct 2019 03:13:04 -0400
-Received: from mout.web.de ([212.227.15.14]:47565 "EHLO mout.web.de"
+        Wed, 2 Oct 2019 03:13:49 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:60888 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725860AbfJBHNE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Oct 2019 03:13:04 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
-        s=dbaedf251592; t=1570000348;
-        bh=dHb3uqBVM5O4++NJH0W96uSy/4RzWekaWy1y4+8l8W8=;
-        h=X-UI-Sender-Class:Subject:From:To:Cc:References:Date:In-Reply-To;
-        b=P1XdxfTW9HFIBd12DLYD+UiFvdLPMtTNfsoa/G5kZB/C27OkGw1sPXJR5NC8n/Jia
-         K51efXePA8muVpN+6E9ODQtpxcin9EawIAr9kn483WM3cmW+PuuMTEIrnY4FRcY0qA
-         z1RT1vo7gj/CJL4N4J4YIC+9lsvDgHF9CjtA3oJM=
-X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
-Received: from [192.168.1.2] ([93.135.73.205]) by smtp.web.de (mrweb002
- [213.165.67.108]) with ESMTPSA (Nemesis) id 0Lym19-1i2Cct1Nhv-0167Dy; Wed, 02
- Oct 2019 09:12:28 +0200
-Subject: [PATCH 2/2] Coccinelle: Move coccicheck directories into a new
- subdirectory
-From:   Markus Elfring <Markus.Elfring@web.de>
-To:     Gilles Muller <Gilles.Muller@lip6.fr>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jessica Yu <jeyu@kernel.org>,
-        Julia Lawall <julia.lawall@lip6.fr>,
-        Martijn Coenen <maco@android.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Matthias Maennich <maennich@google.com>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Nicolas Palix <nicolas.palix@imag.fr>,
-        Yue Haibing <yuehaibing@huawei.com>,
-        Coccinelle <cocci@systeme.lip6.fr>,
-        kernel-janitors@vger.kernel.org
-Cc:     LKML <linux-kernel@vger.kernel.org>
-References: <20190928094245.45696-1-yuehaibing@huawei.com>
- <7664d59f-78cf-7644-0ee8-304b3d78d752@web.de>
- <alpine.DEB.2.21.1909291840280.3346@hadrien>
- <d8c97f0a-6ce2-0f5a-74a9-63366c17f3a6@web.de>
-Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
- 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 FEE=
-Message-ID: <327d09a5-1efb-5cff-f7c5-d08df09eed23@web.de>
-Date:   Wed, 2 Oct 2019 09:12:27 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.1
+        id S1725860AbfJBHNt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 2 Oct 2019 03:13:49 -0400
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 5FC043084031;
+        Wed,  2 Oct 2019 07:13:48 +0000 (UTC)
+Received: from [10.36.117.58] (ovpn-117-58.ams2.redhat.com [10.36.117.58])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 6C84D6012C;
+        Wed,  2 Oct 2019 07:13:35 +0000 (UTC)
+Subject: Re: [PATCH v11 0/6] mm / virtio: Provide support for unused page
+ reporting
+To:     Alexander Duyck <alexander.duyck@gmail.com>,
+        Nitesh Narayan Lal <nitesh@redhat.com>
+Cc:     Alexander Duyck <alexander.h.duyck@linux.intel.com>,
+        virtio-dev@lists.oasis-open.org, kvm list <kvm@vger.kernel.org>,
+        "Michael S. Tsirkin" <mst@redhat.com>,
+        Dave Hansen <dave.hansen@intel.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Matthew Wilcox <willy@infradead.org>,
+        Michal Hocko <mhocko@kernel.org>,
+        linux-mm <linux-mm@kvack.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Oscar Salvador <osalvador@suse.de>,
+        Yang Zhang <yang.zhang.wz@gmail.com>,
+        Pankaj Gupta <pagupta@redhat.com>,
+        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
+        Rik van Riel <riel@surriel.com>, lcapitulino@redhat.com,
+        "Wang, Wei W" <wei.w.wang@intel.com>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Dan Williams <dan.j.williams@intel.com>
+References: <20191001152441.27008.99285.stgit@localhost.localdomain>
+ <7233498c-2f64-d661-4981-707b59c78fd5@redhat.com>
+ <1ea1a4e11617291062db81f65745b9c95fd0bb30.camel@linux.intel.com>
+ <8bd303a6-6e50-b2dc-19ab-4c3f176c4b02@redhat.com>
+ <CAKgT0Uf37xAFK2CWqUZJgn7bWznSAi6qncLxBpC55oSpBMG1HQ@mail.gmail.com>
+From:   David Hildenbrand <david@redhat.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
+ 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
+ SE+xAvmumFBY
+Organization: Red Hat GmbH
+Message-ID: <0603ca4a-d667-f461-4ba7-ff3c0e9fd4df@redhat.com>
+Date:   Wed, 2 Oct 2019 09:13:34 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-In-Reply-To: <d8c97f0a-6ce2-0f5a-74a9-63366c17f3a6@web.de>
+In-Reply-To: <CAKgT0Uf37xAFK2CWqUZJgn7bWznSAi6qncLxBpC55oSpBMG1HQ@mail.gmail.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:G3d6rjkkWh0ETIgQAKMZLWz1DliyqRK62OlBaQejWmeabuvpspD
- D4mQN2KDw6WeLjhLV1Juj6bQlI2JtHNIXPC4L9kh6vktSvI45xnkYv+dfrcd1k49Xpw9KRk
- JO+M3K3gi1MiUmiOCDID4zzuhNhvRLvp9vYK7pBca2pCUZb+UvDlWLW+3Nzu35fE6KO6Pe8
- +B8lYid/ME5TPBoU0wqEQ==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:eTfmXVAJ5i8=:Lk5gEqWy+GxtVFXWBY2/h5
- L1VNLn8jTugJBhbv9qHEO8W04muHeGo1DUPk66lWHgbCyFMRAGCX08n74UFD9tVQ9dGBkdUQ+
- zzmbwIdjsSntURz/VbShRuPB5whlPVRsbO1YR8wZXgzWRjPZc7pZReTsXQ2FWho4nZCKJ9/Qd
- Rc4iqrnPM0CzlQ2+s8zrURoBNU/zrpP14nMIgTHS0IckYvvXbycBbA3FLn0akGdqX9z+SGwjr
- SgXHtdl6GeGV8iwYLUCefpVu+2Bzn+KxYJTNQYUtFsCwi7UsZGs7dZ3h/REc2xxNL488Eez8z
- 01R6YIxtHJ67JzZhxvF2FCpDxF6rf31bQUsClUBE/62PJJrOviYu5ClYu6pv53HD86sIMeUsd
- GZBwFKzLLdYGVDq5bGky2ikdzTIS3dPKXp3BxzdnD6Nzy9cstESYodbkvzgU8AghVxACAfY2t
- vc+E/HWqHVoeLmBORjHMKK0r32mkSx/u/xuneKQeCz+VTpNqZTLvwNus+kgg3JPIZqkkvIFqo
- eTVqPoTAtYTAf5GP/uC2zOf+lTYLsDmLXpqagDcDWLZCyatp4Wvdg450vpp/gbRf7V8v/DlFt
- vVAl9c5PwnsHfJP1Zi5Ro62xgAkrZFoKfol58nRYwp3PB5M4NvXvJ/4KG354ytsBTZqRPoXcI
- cXYabrKck7RKM7MYzicq1Sn99TK3gCMlyCnLJypQSnlEEQSkuOwP25RMHJc4bQcb7Cl2Pcl22
- aSTT800JjMlH/fFWioTlS8NrkRorp9RhJZUcNlu4M82G7oeA36gQ3a4IHMw2u2oKRbVvrKgn3
- XeGV9ltfe3Sl8IR76NjuWIZlUWzY/ho5YI1CG0cui4Z9CQ3X31U48n7LkxzETQ7DEXRRg5s8D
- 3zx+LuQFnQPjXagd5Z4eBA4ipKFsFMCe6rqOfahLlpgJkk0MuYcnd5C7UCSf/Xkv0v6bU65ea
- DoaINnM+Cgw07rOLKm48GCH0UOEOIvjl8a4dahkvvOjS/0EJZx6d+I/HnZyRLjk1xP9iM8aHJ
- 9PlPM8IzlHLJ7p9ycJvznA6PXcktGIikbP5BI966y5WmjvUlgM6MqffcJBtQijpb9MB4jv0nC
- 5QSmUnR0DEzNuPvc0G8H5tbL0/ILiOyzpdQyFdttcZyqQub1ra9p43UdGisHGwi+wFjiKvtmi
- v6Khp+d1LqzXwtyZe15GjWHpbkhnrC/vl9ePtKeUjNff9sL5R/a+TKVU+Xor41mYeMoEi+EYt
- /zfLnMM3tAMlite74QAt68mr5ZTjjWsSsXxb1P+3QVY8JP/m71MekEfWostc=
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.40]); Wed, 02 Oct 2019 07:13:48 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Markus Elfring <elfring@users.sourceforge.net>
-Date: Wed, 2 Oct 2019 08:33:13 +0200
+On 02.10.19 02:55, Alexander Duyck wrote:
+> On Tue, Oct 1, 2019 at 12:16 PM Nitesh Narayan Lal <nitesh@redhat.com> wrote:
+>>
+>>
+>> On 10/1/19 12:21 PM, Alexander Duyck wrote:
+>>> On Tue, 2019-10-01 at 17:35 +0200, David Hildenbrand wrote:
+>>>> On 01.10.19 17:29, Alexander Duyck wrote:
+>>>>> This series provides an asynchronous means of reporting to a hypervisor
+>>>>> that a guest page is no longer in use and can have the data associated
+>>>>> with it dropped. To do this I have implemented functionality that allows
+>>>>> for what I am referring to as unused page reporting. The advantage of
+>>>>> unused page reporting is that we can support a significant amount of
+>>>>> memory over-commit with improved performance as we can avoid having to
+>>>>> write/read memory from swap as the VM will instead actively participate
+>>>>> in freeing unused memory so it doesn't have to be written.
+>>>>>
+>>>>> The functionality for this is fairly simple. When enabled it will allocate
+>>>>> statistics to track the number of reported pages in a given free area.
+>>>>> When the number of free pages exceeds this value plus a high water value,
+>>>>> currently 32, it will begin performing page reporting which consists of
+>>>>> pulling non-reported pages off of the free lists of a given zone and
+>>>>> placing them into a scatterlist. The scatterlist is then given to the page
+>>>>> reporting device and it will perform the required action to make the pages
+>>>>> "reported", in the case of virtio-balloon this results in the pages being
+>>>>> madvised as MADV_DONTNEED. After this they are placed back on their
+>>>>> original free list. If they are not merged in freeing an additional bit is
+>>>>> set indicating that they are a "reported" buddy page instead of a standard
+>>>>> buddy page. The cycle then repeats with additional non-reported pages
+>>>>> being pulled until the free areas all consist of reported pages.
+>>>>>
+>>>>> In order to try and keep the time needed to find a non-reported page to
+>>>>> a minimum we maintain a "reported_boundary" pointer. This pointer is used
+>>>>> by the get_unreported_pages iterator to determine at what point it should
+>>>>> resume searching for non-reported pages. In order to guarantee pages do
+>>>>> not get past the scan I have modified add_to_free_list_tail so that it
+>>>>> will not insert pages behind the reported_boundary. Doing this allows us
+>>>>> to keep the overhead to a minimum as re-walking the list without the
+>>>>> boundary will result in as much as 18% additional overhead on a 32G VM.
+>>>>>
+>>>>>
+>>> <snip>
+>>>
+>>>>> As far as possible regressions I have focused on cases where performing
+>>>>> the hinting would be non-optimal, such as cases where the code isn't
+>>>>> needed as memory is not over-committed, or the functionality is not in
+>>>>> use. I have been using the will-it-scale/page_fault1 test running with 16
+>>>>> vcpus and have modified it to use Transparent Huge Pages. With this I see
+>>>>> almost no difference with the patches applied and the feature disabled.
+>>>>> Likewise I see almost no difference with the feature enabled, but the
+>>>>> madvise disabled in the hypervisor due to a device being assigned. With
+>>>>> the feature fully enabled in both guest and hypervisor I see a regression
+>>>>> between -1.86% and -8.84% versus the baseline. I found that most of the
+>>>>> overhead was due to the page faulting/zeroing that comes as a result of
+>>>>> the pages having been evicted from the guest.
+>>>> I think Michal asked for a performance comparison against Nitesh's
+>>>> approach, to evaluate if keeping the reported state + tracking inside
+>>>> the buddy is really worth it. Do you have any such numbers already? (or
+>>>> did my tired eyes miss them in this cover letter? :/)
+>>>>
+>>> I thought what Michal was asking for was what was the benefit of using the
+>>> boundary pointer. I added a bit up above and to the description for patch
+>>> 3 as on a 32G VM it adds up to about a 18% difference without factoring in
+>>> the page faulting and zeroing logic that occurs when we actually do the
+>>> madvise.
+>>>
+>>> Do we have a working patch set for Nitesh's code? The last time I tried
+>>> running his patch set I ran into issues with kernel panics. If we have a
+>>> known working/stable patch set I can give it a try.
+>>
+>> Did you try the v12 patch-set [1]?
+>> I remember that you reported the CPU stall issue, which I fixed in the v12.
+>>
+>> [1] https://lkml.org/lkml/2019/8/12/593
+> 
+> So I tried testing with the spin_lock calls replaced with spin_lock
+> _irq to resolve the IRQ issue. I also had shuffle enabled in order to
+> increase the number of pages being dirtied.
+> 
+> With that setup the bitmap approach is running significantly worse
+> then my approach, even with the boundary removed. Since I had to
 
-The standard system configuration for the tool =E2=80=9Ccoccicheck=E2=80=
-=9D depends
-on a specific directory for the selection of files which should be
-automatically executed as scripts for the semantic patch language.
-Move the needed directories into a subdirectory which indicates the suppor=
-t
-for the default operation mode of provided files in this hierarchy.
+It would make sense to share the setup+benchmark+performance indication
+that you measured. You don't have to share the actual numbers.
 
-Fixes: eb8305aecb958e8787e7d603c7765c1dcace3a2b ("scripts: Coccinelle scri=
-pt for namespace dependencies.")
-Signed-off-by: Markus Elfring <elfring@users.sourceforge.net>
-=2D--
- scripts/coccicheck                                              | 2 +-
- .../{ =3D> coccicheck/default}/api/alloc/alloc_cast.cocci         | 0
- .../{ =3D> coccicheck/default}/api/alloc/pool_zalloc-simple.cocci | 0
- .../{ =3D> coccicheck/default}/api/alloc/zalloc-simple.cocci      | 0
- .../{ =3D> coccicheck/default}/api/atomic_as_refcounter.cocci     | 0
- .../{ =3D> coccicheck/default}/api/check_bq27xxx_data.cocci       | 0
- .../coccinelle/{ =3D> coccicheck/default}/api/d_find_alias.cocci  | 0
- .../default}/api/debugfs/debugfs_simple_attr.cocci              | 0
- .../default}/api/devm_platform_ioremap_resource.cocci           | 0
- scripts/coccinelle/{ =3D> coccicheck/default}/api/err_cast.cocci  | 0
- scripts/coccinelle/{ =3D> coccicheck/default}/api/kstrdup.cocci   | 0
- scripts/coccinelle/{ =3D> coccicheck/default}/api/memdup.cocci    | 0
- .../coccinelle/{ =3D> coccicheck/default}/api/memdup_user.cocci   | 0
- .../{ =3D> coccicheck/default}/api/platform_get_irq.cocci         | 0
- .../{ =3D> coccicheck/default}/api/platform_no_drv_owner.cocci    | 0
- .../coccinelle/{ =3D> coccicheck/default}/api/pm_runtime.cocci    | 0
- scripts/coccinelle/{ =3D> coccicheck/default}/api/ptr_ret.cocci   | 0
- .../coccinelle/{ =3D> coccicheck/default}/api/resource_size.cocci | 0
- .../coccinelle/{ =3D> coccicheck/default}/api/simple_open.cocci   | 0
- .../coccinelle/{ =3D> coccicheck/default}/api/stream_open.cocci   | 0
- scripts/coccinelle/{ =3D> coccicheck/default}/api/vma_pages.cocci | 0
- scripts/coccinelle/{ =3D> coccicheck/default}/free/clk_put.cocci  | 0
- .../coccinelle/{ =3D> coccicheck/default}/free/devm_free.cocci    | 0
- .../coccinelle/{ =3D> coccicheck/default}/free/ifnullfree.cocci   | 0
- scripts/coccinelle/{ =3D> coccicheck/default}/free/iounmap.cocci  | 0
- scripts/coccinelle/{ =3D> coccicheck/default}/free/kfree.cocci    | 0
- .../coccinelle/{ =3D> coccicheck/default}/free/kfreeaddr.cocci    | 0
- .../{ =3D> coccicheck/default}/free/pci_free_consistent.cocci     | 0
- .../coccinelle/{ =3D> coccicheck/default}/free/put_device.cocci   | 0
- .../default}/iterators/device_node_continue.cocci               | 0
- scripts/coccinelle/{ =3D> coccicheck/default}/iterators/fen.cocci | 0
- .../coccinelle/{ =3D> coccicheck/default}/iterators/itnull.cocci  | 0
- .../{ =3D> coccicheck/default}/iterators/list_entry_update.cocci  | 0
- .../{ =3D> coccicheck/default}/iterators/use_after_iter.cocci     | 0
- .../coccinelle/{ =3D> coccicheck/default}/locks/call_kern.cocci   | 0
- .../coccinelle/{ =3D> coccicheck/default}/locks/double_lock.cocci | 0
- scripts/coccinelle/{ =3D> coccicheck/default}/locks/flags.cocci   | 0
- .../coccinelle/{ =3D> coccicheck/default}/locks/mini_lock.cocci   | 0
- .../coccinelle/{ =3D> coccicheck/default}/misc/array_size.cocci   | 0
- scripts/coccinelle/{ =3D> coccicheck/default}/misc/badty.cocci    | 0
- scripts/coccinelle/{ =3D> coccicheck/default}/misc/boolconv.cocci | 0
- scripts/coccinelle/{ =3D> coccicheck/default}/misc/boolinit.cocci | 0
- .../coccinelle/{ =3D> coccicheck/default}/misc/boolreturn.cocci   | 0
- scripts/coccinelle/{ =3D> coccicheck/default}/misc/bugon.cocci    | 0
- .../{ =3D> coccicheck/default}/misc/cond_no_effect.cocci          | 0
- scripts/coccinelle/{ =3D> coccicheck/default}/misc/cstptr.cocci   | 0
- .../coccinelle/{ =3D> coccicheck/default}/misc/doubleinit.cocci   | 0
- scripts/coccinelle/{ =3D> coccicheck/default}/misc/ifaddr.cocci   | 0
- scripts/coccinelle/{ =3D> coccicheck/default}/misc/ifcol.cocci    | 0
- .../coccinelle/{ =3D> coccicheck/default}/misc/irqf_oneshot.cocci | 0
- scripts/coccinelle/{ =3D> coccicheck/default}/misc/noderef.cocci  | 0
- scripts/coccinelle/{ =3D> coccicheck/default}/misc/of_table.cocci | 0
- scripts/coccinelle/{ =3D> coccicheck/default}/misc/orplus.cocci   | 0
- .../coccinelle/{ =3D> coccicheck/default}/misc/returnvar.cocci    | 0
- .../coccinelle/{ =3D> coccicheck/default}/misc/semicolon.cocci    | 0
- scripts/coccinelle/{ =3D> coccicheck/default}/misc/warn.cocci     | 0
- scripts/coccinelle/{ =3D> coccicheck/default}/null/badzero.cocci  | 0
- .../coccinelle/{ =3D> coccicheck/default}/null/deref_null.cocci   | 0
- scripts/coccinelle/{ =3D> coccicheck/default}/null/eno.cocci      | 0
- scripts/coccinelle/{ =3D> coccicheck/default}/null/kmerr.cocci    | 0
- .../{ =3D> coccicheck/default}/tests/doublebitand.cocci           | 0
- .../coccinelle/{ =3D> coccicheck/default}/tests/doubletest.cocci  | 0
- .../coccinelle/{ =3D> coccicheck/default}/tests/odd_ptr_err.cocci | 0
- .../default}/tests/unsigned_lesser_than_zero.cocci              | 0
- 64 files changed, 1 insertion(+), 1 deletion(-)
- rename scripts/coccinelle/{ =3D> coccicheck/default}/api/alloc/alloc_cast=
-.cocci (100%)
- rename scripts/coccinelle/{ =3D> coccicheck/default}/api/alloc/pool_zallo=
-c-simple.cocci (100%)
- rename scripts/coccinelle/{ =3D> coccicheck/default}/api/alloc/zalloc-sim=
-ple.cocci (100%)
- rename scripts/coccinelle/{ =3D> coccicheck/default}/api/atomic_as_refcou=
-nter.cocci (100%)
- rename scripts/coccinelle/{ =3D> coccicheck/default}/api/check_bq27xxx_da=
-ta.cocci (100%)
- rename scripts/coccinelle/{ =3D> coccicheck/default}/api/d_find_alias.coc=
-ci (100%)
- rename scripts/coccinelle/{ =3D> coccicheck/default}/api/debugfs/debugfs_=
-simple_attr.cocci (100%)
- rename scripts/coccinelle/{ =3D> coccicheck/default}/api/devm_platform_io=
-remap_resource.cocci (100%)
- rename scripts/coccinelle/{ =3D> coccicheck/default}/api/err_cast.cocci (=
-100%)
- rename scripts/coccinelle/{ =3D> coccicheck/default}/api/kstrdup.cocci (1=
-00%)
- rename scripts/coccinelle/{ =3D> coccicheck/default}/api/memdup.cocci (10=
-0%)
- rename scripts/coccinelle/{ =3D> coccicheck/default}/api/memdup_user.cocc=
-i (100%)
- rename scripts/coccinelle/{ =3D> coccicheck/default}/api/platform_get_irq=
-.cocci (100%)
- rename scripts/coccinelle/{ =3D> coccicheck/default}/api/platform_no_drv_=
-owner.cocci (100%)
- rename scripts/coccinelle/{ =3D> coccicheck/default}/api/pm_runtime.cocci=
- (100%)
- rename scripts/coccinelle/{ =3D> coccicheck/default}/api/ptr_ret.cocci (1=
-00%)
- rename scripts/coccinelle/{ =3D> coccicheck/default}/api/resource_size.co=
-cci (100%)
- rename scripts/coccinelle/{ =3D> coccicheck/default}/api/simple_open.cocc=
-i (100%)
- rename scripts/coccinelle/{ =3D> coccicheck/default}/api/stream_open.cocc=
-i (100%)
- rename scripts/coccinelle/{ =3D> coccicheck/default}/api/vma_pages.cocci =
-(100%)
- rename scripts/coccinelle/{ =3D> coccicheck/default}/free/clk_put.cocci (=
-100%)
- rename scripts/coccinelle/{ =3D> coccicheck/default}/free/devm_free.cocci=
- (100%)
- rename scripts/coccinelle/{ =3D> coccicheck/default}/free/ifnullfree.cocc=
-i (100%)
- rename scripts/coccinelle/{ =3D> coccicheck/default}/free/iounmap.cocci (=
-100%)
- rename scripts/coccinelle/{ =3D> coccicheck/default}/free/kfree.cocci (10=
-0%)
- rename scripts/coccinelle/{ =3D> coccicheck/default}/free/kfreeaddr.cocci=
- (100%)
- rename scripts/coccinelle/{ =3D> coccicheck/default}/free/pci_free_consis=
-tent.cocci (100%)
- rename scripts/coccinelle/{ =3D> coccicheck/default}/free/put_device.cocc=
-i (100%)
- rename scripts/coccinelle/{ =3D> coccicheck/default}/iterators/device_nod=
-e_continue.cocci (100%)
- rename scripts/coccinelle/{ =3D> coccicheck/default}/iterators/fen.cocci =
-(100%)
- rename scripts/coccinelle/{ =3D> coccicheck/default}/iterators/itnull.coc=
-ci (100%)
- rename scripts/coccinelle/{ =3D> coccicheck/default}/iterators/list_entry=
-_update.cocci (100%)
- rename scripts/coccinelle/{ =3D> coccicheck/default}/iterators/use_after_=
-iter.cocci (100%)
- rename scripts/coccinelle/{ =3D> coccicheck/default}/locks/call_kern.cocc=
-i (100%)
- rename scripts/coccinelle/{ =3D> coccicheck/default}/locks/double_lock.co=
-cci (100%)
- rename scripts/coccinelle/{ =3D> coccicheck/default}/locks/flags.cocci (1=
-00%)
- rename scripts/coccinelle/{ =3D> coccicheck/default}/locks/mini_lock.cocc=
-i (100%)
- rename scripts/coccinelle/{ =3D> coccicheck/default}/misc/array_size.cocc=
-i (100%)
- rename scripts/coccinelle/{ =3D> coccicheck/default}/misc/badty.cocci (10=
-0%)
- rename scripts/coccinelle/{ =3D> coccicheck/default}/misc/boolconv.cocci =
-(100%)
- rename scripts/coccinelle/{ =3D> coccicheck/default}/misc/boolinit.cocci =
-(100%)
- rename scripts/coccinelle/{ =3D> coccicheck/default}/misc/boolreturn.cocc=
-i (100%)
- rename scripts/coccinelle/{ =3D> coccicheck/default}/misc/bugon.cocci (10=
-0%)
- rename scripts/coccinelle/{ =3D> coccicheck/default}/misc/cond_no_effect.=
-cocci (100%)
- rename scripts/coccinelle/{ =3D> coccicheck/default}/misc/cstptr.cocci (1=
-00%)
- rename scripts/coccinelle/{ =3D> coccicheck/default}/misc/doubleinit.cocc=
-i (100%)
- rename scripts/coccinelle/{ =3D> coccicheck/default}/misc/ifaddr.cocci (1=
-00%)
- rename scripts/coccinelle/{ =3D> coccicheck/default}/misc/ifcol.cocci (10=
-0%)
- rename scripts/coccinelle/{ =3D> coccicheck/default}/misc/irqf_oneshot.co=
-cci (100%)
- rename scripts/coccinelle/{ =3D> coccicheck/default}/misc/noderef.cocci (=
-100%)
- rename scripts/coccinelle/{ =3D> coccicheck/default}/misc/of_table.cocci =
-(100%)
- rename scripts/coccinelle/{ =3D> coccicheck/default}/misc/orplus.cocci (1=
-00%)
- rename scripts/coccinelle/{ =3D> coccicheck/default}/misc/returnvar.cocci=
- (100%)
- rename scripts/coccinelle/{ =3D> coccicheck/default}/misc/semicolon.cocci=
- (100%)
- rename scripts/coccinelle/{ =3D> coccicheck/default}/misc/warn.cocci (100=
-%)
- rename scripts/coccinelle/{ =3D> coccicheck/default}/null/badzero.cocci (=
-100%)
- rename scripts/coccinelle/{ =3D> coccicheck/default}/null/deref_null.cocc=
-i (100%)
- rename scripts/coccinelle/{ =3D> coccicheck/default}/null/eno.cocci (100%=
-)
- rename scripts/coccinelle/{ =3D> coccicheck/default}/null/kmerr.cocci (10=
-0%)
- rename scripts/coccinelle/{ =3D> coccicheck/default}/tests/doublebitand.c=
-occi (100%)
- rename scripts/coccinelle/{ =3D> coccicheck/default}/tests/doubletest.coc=
-ci (100%)
- rename scripts/coccinelle/{ =3D> coccicheck/default}/tests/odd_ptr_err.co=
-cci (100%)
- rename scripts/coccinelle/{ =3D> coccicheck/default}/tests/unsigned_lesse=
-r_than_zero.cocci (100%)
+> modify the code to even getting working I am not comfortable posting
+> numbers. My suggestion would be to look at reworking the patch set and
+> post numbers for my patch set versus the bitmap approach and we can
+> look at them then. I would prefer not to spend my time fixing and
+> tuning a patch set that I am still not convinced is viable.
 
-diff --git a/scripts/coccicheck b/scripts/coccicheck
-index e04d328210ac..3359f3f528ba 100755
-=2D-- a/scripts/coccicheck
-+++ b/scripts/coccicheck
-@@ -254,7 +254,7 @@ else
- fi
+I agree, I think Nitesh should work on his patch set and try to
+reproduce what you are seeing.
 
- if [ "$COCCI" =3D "" ] ; then
--    for f in `find $srctree/scripts/coccinelle/ -name '*.cocci' -type f |=
- sort`; do
-+    for f in `find $srctree/scripts/coccinelle/coccicheck/default/ -name =
-'*.cocci' -type f | sort`; do
- 	coccinelle $f
-     done
- else
-diff --git a/scripts/coccinelle/api/alloc/alloc_cast.cocci b/scripts/cocci=
-nelle/coccicheck/default/api/alloc/alloc_cast.cocci
-similarity index 100%
-rename from scripts/coccinelle/api/alloc/alloc_cast.cocci
-rename to scripts/coccinelle/coccicheck/default/api/alloc/alloc_cast.cocci
-diff --git a/scripts/coccinelle/api/alloc/pool_zalloc-simple.cocci b/scrip=
-ts/coccinelle/coccicheck/default/api/alloc/pool_zalloc-simple.cocci
-similarity index 100%
-rename from scripts/coccinelle/api/alloc/pool_zalloc-simple.cocci
-rename to scripts/coccinelle/coccicheck/default/api/alloc/pool_zalloc-simp=
-le.cocci
-diff --git a/scripts/coccinelle/api/alloc/zalloc-simple.cocci b/scripts/co=
-ccinelle/coccicheck/default/api/alloc/zalloc-simple.cocci
-similarity index 100%
-rename from scripts/coccinelle/api/alloc/zalloc-simple.cocci
-rename to scripts/coccinelle/coccicheck/default/api/alloc/zalloc-simple.co=
-cci
-diff --git a/scripts/coccinelle/api/atomic_as_refcounter.cocci b/scripts/c=
-occinelle/coccicheck/default/api/atomic_as_refcounter.cocci
-similarity index 100%
-rename from scripts/coccinelle/api/atomic_as_refcounter.cocci
-rename to scripts/coccinelle/coccicheck/default/api/atomic_as_refcounter.c=
-occi
-diff --git a/scripts/coccinelle/api/check_bq27xxx_data.cocci b/scripts/coc=
-cinelle/coccicheck/default/api/check_bq27xxx_data.cocci
-similarity index 100%
-rename from scripts/coccinelle/api/check_bq27xxx_data.cocci
-rename to scripts/coccinelle/coccicheck/default/api/check_bq27xxx_data.coc=
-ci
-diff --git a/scripts/coccinelle/api/d_find_alias.cocci b/scripts/coccinell=
-e/coccicheck/default/api/d_find_alias.cocci
-similarity index 100%
-rename from scripts/coccinelle/api/d_find_alias.cocci
-rename to scripts/coccinelle/coccicheck/default/api/d_find_alias.cocci
-diff --git a/scripts/coccinelle/api/debugfs/debugfs_simple_attr.cocci b/sc=
-ripts/coccinelle/coccicheck/default/api/debugfs/debugfs_simple_attr.cocci
-similarity index 100%
-rename from scripts/coccinelle/api/debugfs/debugfs_simple_attr.cocci
-rename to scripts/coccinelle/coccicheck/default/api/debugfs/debugfs_simple=
-_attr.cocci
-diff --git a/scripts/coccinelle/api/devm_platform_ioremap_resource.cocci b=
-/scripts/coccinelle/coccicheck/default/api/devm_platform_ioremap_resource.=
-cocci
-similarity index 100%
-rename from scripts/coccinelle/api/devm_platform_ioremap_resource.cocci
-rename to scripts/coccinelle/coccicheck/default/api/devm_platform_ioremap_=
-resource.cocci
-diff --git a/scripts/coccinelle/api/err_cast.cocci b/scripts/coccinelle/co=
-ccicheck/default/api/err_cast.cocci
-similarity index 100%
-rename from scripts/coccinelle/api/err_cast.cocci
-rename to scripts/coccinelle/coccicheck/default/api/err_cast.cocci
-diff --git a/scripts/coccinelle/api/kstrdup.cocci b/scripts/coccinelle/coc=
-cicheck/default/api/kstrdup.cocci
-similarity index 100%
-rename from scripts/coccinelle/api/kstrdup.cocci
-rename to scripts/coccinelle/coccicheck/default/api/kstrdup.cocci
-diff --git a/scripts/coccinelle/api/memdup.cocci b/scripts/coccinelle/cocc=
-icheck/default/api/memdup.cocci
-similarity index 100%
-rename from scripts/coccinelle/api/memdup.cocci
-rename to scripts/coccinelle/coccicheck/default/api/memdup.cocci
-diff --git a/scripts/coccinelle/api/memdup_user.cocci b/scripts/coccinelle=
-/coccicheck/default/api/memdup_user.cocci
-similarity index 100%
-rename from scripts/coccinelle/api/memdup_user.cocci
-rename to scripts/coccinelle/coccicheck/default/api/memdup_user.cocci
-diff --git a/scripts/coccinelle/api/platform_get_irq.cocci b/scripts/cocci=
-nelle/coccicheck/default/api/platform_get_irq.cocci
-similarity index 100%
-rename from scripts/coccinelle/api/platform_get_irq.cocci
-rename to scripts/coccinelle/coccicheck/default/api/platform_get_irq.cocci
-diff --git a/scripts/coccinelle/api/platform_no_drv_owner.cocci b/scripts/=
-coccinelle/coccicheck/default/api/platform_no_drv_owner.cocci
-similarity index 100%
-rename from scripts/coccinelle/api/platform_no_drv_owner.cocci
-rename to scripts/coccinelle/coccicheck/default/api/platform_no_drv_owner.=
-cocci
-diff --git a/scripts/coccinelle/api/pm_runtime.cocci b/scripts/coccinelle/=
-coccicheck/default/api/pm_runtime.cocci
-similarity index 100%
-rename from scripts/coccinelle/api/pm_runtime.cocci
-rename to scripts/coccinelle/coccicheck/default/api/pm_runtime.cocci
-diff --git a/scripts/coccinelle/api/ptr_ret.cocci b/scripts/coccinelle/coc=
-cicheck/default/api/ptr_ret.cocci
-similarity index 100%
-rename from scripts/coccinelle/api/ptr_ret.cocci
-rename to scripts/coccinelle/coccicheck/default/api/ptr_ret.cocci
-diff --git a/scripts/coccinelle/api/resource_size.cocci b/scripts/coccinel=
-le/coccicheck/default/api/resource_size.cocci
-similarity index 100%
-rename from scripts/coccinelle/api/resource_size.cocci
-rename to scripts/coccinelle/coccicheck/default/api/resource_size.cocci
-diff --git a/scripts/coccinelle/api/simple_open.cocci b/scripts/coccinelle=
-/coccicheck/default/api/simple_open.cocci
-similarity index 100%
-rename from scripts/coccinelle/api/simple_open.cocci
-rename to scripts/coccinelle/coccicheck/default/api/simple_open.cocci
-diff --git a/scripts/coccinelle/api/stream_open.cocci b/scripts/coccinelle=
-/coccicheck/default/api/stream_open.cocci
-similarity index 100%
-rename from scripts/coccinelle/api/stream_open.cocci
-rename to scripts/coccinelle/coccicheck/default/api/stream_open.cocci
-diff --git a/scripts/coccinelle/api/vma_pages.cocci b/scripts/coccinelle/c=
-occicheck/default/api/vma_pages.cocci
-similarity index 100%
-rename from scripts/coccinelle/api/vma_pages.cocci
-rename to scripts/coccinelle/coccicheck/default/api/vma_pages.cocci
-diff --git a/scripts/coccinelle/free/clk_put.cocci b/scripts/coccinelle/co=
-ccicheck/default/free/clk_put.cocci
-similarity index 100%
-rename from scripts/coccinelle/free/clk_put.cocci
-rename to scripts/coccinelle/coccicheck/default/free/clk_put.cocci
-diff --git a/scripts/coccinelle/free/devm_free.cocci b/scripts/coccinelle/=
-coccicheck/default/free/devm_free.cocci
-similarity index 100%
-rename from scripts/coccinelle/free/devm_free.cocci
-rename to scripts/coccinelle/coccicheck/default/free/devm_free.cocci
-diff --git a/scripts/coccinelle/free/ifnullfree.cocci b/scripts/coccinelle=
-/coccicheck/default/free/ifnullfree.cocci
-similarity index 100%
-rename from scripts/coccinelle/free/ifnullfree.cocci
-rename to scripts/coccinelle/coccicheck/default/free/ifnullfree.cocci
-diff --git a/scripts/coccinelle/free/iounmap.cocci b/scripts/coccinelle/co=
-ccicheck/default/free/iounmap.cocci
-similarity index 100%
-rename from scripts/coccinelle/free/iounmap.cocci
-rename to scripts/coccinelle/coccicheck/default/free/iounmap.cocci
-diff --git a/scripts/coccinelle/free/kfree.cocci b/scripts/coccinelle/cocc=
-icheck/default/free/kfree.cocci
-similarity index 100%
-rename from scripts/coccinelle/free/kfree.cocci
-rename to scripts/coccinelle/coccicheck/default/free/kfree.cocci
-diff --git a/scripts/coccinelle/free/kfreeaddr.cocci b/scripts/coccinelle/=
-coccicheck/default/free/kfreeaddr.cocci
-similarity index 100%
-rename from scripts/coccinelle/free/kfreeaddr.cocci
-rename to scripts/coccinelle/coccicheck/default/free/kfreeaddr.cocci
-diff --git a/scripts/coccinelle/free/pci_free_consistent.cocci b/scripts/c=
-occinelle/coccicheck/default/free/pci_free_consistent.cocci
-similarity index 100%
-rename from scripts/coccinelle/free/pci_free_consistent.cocci
-rename to scripts/coccinelle/coccicheck/default/free/pci_free_consistent.c=
-occi
-diff --git a/scripts/coccinelle/free/put_device.cocci b/scripts/coccinelle=
-/coccicheck/default/free/put_device.cocci
-similarity index 100%
-rename from scripts/coccinelle/free/put_device.cocci
-rename to scripts/coccinelle/coccicheck/default/free/put_device.cocci
-diff --git a/scripts/coccinelle/iterators/device_node_continue.cocci b/scr=
-ipts/coccinelle/coccicheck/default/iterators/device_node_continue.cocci
-similarity index 100%
-rename from scripts/coccinelle/iterators/device_node_continue.cocci
-rename to scripts/coccinelle/coccicheck/default/iterators/device_node_cont=
-inue.cocci
-diff --git a/scripts/coccinelle/iterators/fen.cocci b/scripts/coccinelle/c=
-occicheck/default/iterators/fen.cocci
-similarity index 100%
-rename from scripts/coccinelle/iterators/fen.cocci
-rename to scripts/coccinelle/coccicheck/default/iterators/fen.cocci
-diff --git a/scripts/coccinelle/iterators/itnull.cocci b/scripts/coccinell=
-e/coccicheck/default/iterators/itnull.cocci
-similarity index 100%
-rename from scripts/coccinelle/iterators/itnull.cocci
-rename to scripts/coccinelle/coccicheck/default/iterators/itnull.cocci
-diff --git a/scripts/coccinelle/iterators/list_entry_update.cocci b/script=
-s/coccinelle/coccicheck/default/iterators/list_entry_update.cocci
-similarity index 100%
-rename from scripts/coccinelle/iterators/list_entry_update.cocci
-rename to scripts/coccinelle/coccicheck/default/iterators/list_entry_updat=
-e.cocci
-diff --git a/scripts/coccinelle/iterators/use_after_iter.cocci b/scripts/c=
-occinelle/coccicheck/default/iterators/use_after_iter.cocci
-similarity index 100%
-rename from scripts/coccinelle/iterators/use_after_iter.cocci
-rename to scripts/coccinelle/coccicheck/default/iterators/use_after_iter.c=
-occi
-diff --git a/scripts/coccinelle/locks/call_kern.cocci b/scripts/coccinelle=
-/coccicheck/default/locks/call_kern.cocci
-similarity index 100%
-rename from scripts/coccinelle/locks/call_kern.cocci
-rename to scripts/coccinelle/coccicheck/default/locks/call_kern.cocci
-diff --git a/scripts/coccinelle/locks/double_lock.cocci b/scripts/coccinel=
-le/coccicheck/default/locks/double_lock.cocci
-similarity index 100%
-rename from scripts/coccinelle/locks/double_lock.cocci
-rename to scripts/coccinelle/coccicheck/default/locks/double_lock.cocci
-diff --git a/scripts/coccinelle/locks/flags.cocci b/scripts/coccinelle/coc=
-cicheck/default/locks/flags.cocci
-similarity index 100%
-rename from scripts/coccinelle/locks/flags.cocci
-rename to scripts/coccinelle/coccicheck/default/locks/flags.cocci
-diff --git a/scripts/coccinelle/locks/mini_lock.cocci b/scripts/coccinelle=
-/coccicheck/default/locks/mini_lock.cocci
-similarity index 100%
-rename from scripts/coccinelle/locks/mini_lock.cocci
-rename to scripts/coccinelle/coccicheck/default/locks/mini_lock.cocci
-diff --git a/scripts/coccinelle/misc/array_size.cocci b/scripts/coccinelle=
-/coccicheck/default/misc/array_size.cocci
-similarity index 100%
-rename from scripts/coccinelle/misc/array_size.cocci
-rename to scripts/coccinelle/coccicheck/default/misc/array_size.cocci
-diff --git a/scripts/coccinelle/misc/badty.cocci b/scripts/coccinelle/cocc=
-icheck/default/misc/badty.cocci
-similarity index 100%
-rename from scripts/coccinelle/misc/badty.cocci
-rename to scripts/coccinelle/coccicheck/default/misc/badty.cocci
-diff --git a/scripts/coccinelle/misc/boolconv.cocci b/scripts/coccinelle/c=
-occicheck/default/misc/boolconv.cocci
-similarity index 100%
-rename from scripts/coccinelle/misc/boolconv.cocci
-rename to scripts/coccinelle/coccicheck/default/misc/boolconv.cocci
-diff --git a/scripts/coccinelle/misc/boolinit.cocci b/scripts/coccinelle/c=
-occicheck/default/misc/boolinit.cocci
-similarity index 100%
-rename from scripts/coccinelle/misc/boolinit.cocci
-rename to scripts/coccinelle/coccicheck/default/misc/boolinit.cocci
-diff --git a/scripts/coccinelle/misc/boolreturn.cocci b/scripts/coccinelle=
-/coccicheck/default/misc/boolreturn.cocci
-similarity index 100%
-rename from scripts/coccinelle/misc/boolreturn.cocci
-rename to scripts/coccinelle/coccicheck/default/misc/boolreturn.cocci
-diff --git a/scripts/coccinelle/misc/bugon.cocci b/scripts/coccinelle/cocc=
-icheck/default/misc/bugon.cocci
-similarity index 100%
-rename from scripts/coccinelle/misc/bugon.cocci
-rename to scripts/coccinelle/coccicheck/default/misc/bugon.cocci
-diff --git a/scripts/coccinelle/misc/cond_no_effect.cocci b/scripts/coccin=
-elle/coccicheck/default/misc/cond_no_effect.cocci
-similarity index 100%
-rename from scripts/coccinelle/misc/cond_no_effect.cocci
-rename to scripts/coccinelle/coccicheck/default/misc/cond_no_effect.cocci
-diff --git a/scripts/coccinelle/misc/cstptr.cocci b/scripts/coccinelle/coc=
-cicheck/default/misc/cstptr.cocci
-similarity index 100%
-rename from scripts/coccinelle/misc/cstptr.cocci
-rename to scripts/coccinelle/coccicheck/default/misc/cstptr.cocci
-diff --git a/scripts/coccinelle/misc/doubleinit.cocci b/scripts/coccinelle=
-/coccicheck/default/misc/doubleinit.cocci
-similarity index 100%
-rename from scripts/coccinelle/misc/doubleinit.cocci
-rename to scripts/coccinelle/coccicheck/default/misc/doubleinit.cocci
-diff --git a/scripts/coccinelle/misc/ifaddr.cocci b/scripts/coccinelle/coc=
-cicheck/default/misc/ifaddr.cocci
-similarity index 100%
-rename from scripts/coccinelle/misc/ifaddr.cocci
-rename to scripts/coccinelle/coccicheck/default/misc/ifaddr.cocci
-diff --git a/scripts/coccinelle/misc/ifcol.cocci b/scripts/coccinelle/cocc=
-icheck/default/misc/ifcol.cocci
-similarity index 100%
-rename from scripts/coccinelle/misc/ifcol.cocci
-rename to scripts/coccinelle/coccicheck/default/misc/ifcol.cocci
-diff --git a/scripts/coccinelle/misc/irqf_oneshot.cocci b/scripts/coccinel=
-le/coccicheck/default/misc/irqf_oneshot.cocci
-similarity index 100%
-rename from scripts/coccinelle/misc/irqf_oneshot.cocci
-rename to scripts/coccinelle/coccicheck/default/misc/irqf_oneshot.cocci
-diff --git a/scripts/coccinelle/misc/noderef.cocci b/scripts/coccinelle/co=
-ccicheck/default/misc/noderef.cocci
-similarity index 100%
-rename from scripts/coccinelle/misc/noderef.cocci
-rename to scripts/coccinelle/coccicheck/default/misc/noderef.cocci
-diff --git a/scripts/coccinelle/misc/of_table.cocci b/scripts/coccinelle/c=
-occicheck/default/misc/of_table.cocci
-similarity index 100%
-rename from scripts/coccinelle/misc/of_table.cocci
-rename to scripts/coccinelle/coccicheck/default/misc/of_table.cocci
-diff --git a/scripts/coccinelle/misc/orplus.cocci b/scripts/coccinelle/coc=
-cicheck/default/misc/orplus.cocci
-similarity index 100%
-rename from scripts/coccinelle/misc/orplus.cocci
-rename to scripts/coccinelle/coccicheck/default/misc/orplus.cocci
-diff --git a/scripts/coccinelle/misc/returnvar.cocci b/scripts/coccinelle/=
-coccicheck/default/misc/returnvar.cocci
-similarity index 100%
-rename from scripts/coccinelle/misc/returnvar.cocci
-rename to scripts/coccinelle/coccicheck/default/misc/returnvar.cocci
-diff --git a/scripts/coccinelle/misc/semicolon.cocci b/scripts/coccinelle/=
-coccicheck/default/misc/semicolon.cocci
-similarity index 100%
-rename from scripts/coccinelle/misc/semicolon.cocci
-rename to scripts/coccinelle/coccicheck/default/misc/semicolon.cocci
-diff --git a/scripts/coccinelle/misc/warn.cocci b/scripts/coccinelle/cocci=
-check/default/misc/warn.cocci
-similarity index 100%
-rename from scripts/coccinelle/misc/warn.cocci
-rename to scripts/coccinelle/coccicheck/default/misc/warn.cocci
-diff --git a/scripts/coccinelle/null/badzero.cocci b/scripts/coccinelle/co=
-ccicheck/default/null/badzero.cocci
-similarity index 100%
-rename from scripts/coccinelle/null/badzero.cocci
-rename to scripts/coccinelle/coccicheck/default/null/badzero.cocci
-diff --git a/scripts/coccinelle/null/deref_null.cocci b/scripts/coccinelle=
-/coccicheck/default/null/deref_null.cocci
-similarity index 100%
-rename from scripts/coccinelle/null/deref_null.cocci
-rename to scripts/coccinelle/coccicheck/default/null/deref_null.cocci
-diff --git a/scripts/coccinelle/null/eno.cocci b/scripts/coccinelle/coccic=
-heck/default/null/eno.cocci
-similarity index 100%
-rename from scripts/coccinelle/null/eno.cocci
-rename to scripts/coccinelle/coccicheck/default/null/eno.cocci
-diff --git a/scripts/coccinelle/null/kmerr.cocci b/scripts/coccinelle/cocc=
-icheck/default/null/kmerr.cocci
-similarity index 100%
-rename from scripts/coccinelle/null/kmerr.cocci
-rename to scripts/coccinelle/coccicheck/default/null/kmerr.cocci
-diff --git a/scripts/coccinelle/tests/doublebitand.cocci b/scripts/coccine=
-lle/coccicheck/default/tests/doublebitand.cocci
-similarity index 100%
-rename from scripts/coccinelle/tests/doublebitand.cocci
-rename to scripts/coccinelle/coccicheck/default/tests/doublebitand.cocci
-diff --git a/scripts/coccinelle/tests/doubletest.cocci b/scripts/coccinell=
-e/coccicheck/default/tests/doubletest.cocci
-similarity index 100%
-rename from scripts/coccinelle/tests/doubletest.cocci
-rename to scripts/coccinelle/coccicheck/default/tests/doubletest.cocci
-diff --git a/scripts/coccinelle/tests/odd_ptr_err.cocci b/scripts/coccinel=
-le/coccicheck/default/tests/odd_ptr_err.cocci
-similarity index 100%
-rename from scripts/coccinelle/tests/odd_ptr_err.cocci
-rename to scripts/coccinelle/coccicheck/default/tests/odd_ptr_err.cocci
-diff --git a/scripts/coccinelle/tests/unsigned_lesser_than_zero.cocci b/sc=
-ripts/coccinelle/coccicheck/default/tests/unsigned_lesser_than_zero.cocci
-similarity index 100%
-rename from scripts/coccinelle/tests/unsigned_lesser_than_zero.cocci
-rename to scripts/coccinelle/coccicheck/default/tests/unsigned_lesser_than=
-_zero.cocci
-=2D-
-2.23.0
+Also, I think to make a precise statement of "which overhead comes with
+external tracking", Nitesh should switch to an approach (motivated by
+Michal) like
 
+1. Sense lockless if a page is still free
+2. start_isolate_page_range()
+-> Failed? Skip
+3. test_pages_isolated()
+-> No? undo_isolate_page_range(), skip
+4. Repeat for multiple pages + report
+5. undo_isolate_page_range()
+
+That is the bare minimum any external tracking will need = some overhead
+for the tracking data. As a nice side effect, it get's rid of taking the
+zone lock manually AFAIKS.
+
+But that's unrelated to your series, only to quantify "how much" does
+external tracking actually cost.
+
+-- 
+
+Thanks,
+
+David / dhildenb
