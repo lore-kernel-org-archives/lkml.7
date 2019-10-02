@@ -2,150 +2,156 @@ Return-Path: <SRS0=zem1=X3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CB777C4360C
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 19:52:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F9D3C47404
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 19:53:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 95B382133F
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 19:52:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EA6292133F
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 19:53:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="DbBnVOau"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Zzinorf6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727925AbfJBTwM (ORCPT
+        id S1728073AbfJBTxk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Oct 2019 15:52:12 -0400
-Received: from mail-oi1-f196.google.com ([209.85.167.196]:33055 "EHLO
-        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726207AbfJBTwL (ORCPT
+        Wed, 2 Oct 2019 15:53:40 -0400
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:37695 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726070AbfJBTxj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Oct 2019 15:52:11 -0400
-Received: by mail-oi1-f196.google.com with SMTP id e18so498932oii.0
-        for <linux-kernel@vger.kernel.org>; Wed, 02 Oct 2019 12:52:10 -0700 (PDT)
+        Wed, 2 Oct 2019 15:53:39 -0400
+Received: by mail-wm1-f67.google.com with SMTP id f22so189347wmc.2;
+        Wed, 02 Oct 2019 12:53:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=8UdMjUT2pdLGE8ndpyA/9BXAvjXXhiUaO/cTeSeGp6c=;
-        b=DbBnVOauShbcm7l0q/J9/fw2wbdf91+kUqz5f43RUfHDMuXQWrtNZXQqeRJcDPUaOf
-         hkXW8W33rQxI7uhJ3o430fKOCcpBUY/yXh+twebiRcH3aCqth0om2mK93lhekrhCyyqP
-         uHrNFujwMRsNd+jBxEKVmsSyq4uQrUZeza0bgPgrR9J8NI2vYDUM19jZ0ipHWWTsD4R1
-         JCXdyCWDfxYXK5aOq7uaz7f8OyO78Kkf3oGJmlJQfI69K68zGZrSAD5LNGK5p+30GbCZ
-         fpHEulhvc78VthYynGANKy5J2Bn4/180s093P+J4wbKYH7FuXLHzLu43PZu1dLA9EZNQ
-         VUCg==
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:openpgp:autocrypt:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=K9yfcV7jqI8NxUw9J76/nvZNh29Vby57LkvJugNledo=;
+        b=Zzinorf6S9fwXm86+u6W2bglO/7NbF8Oo2fXVCIiPWa6eAwNPTOa3oo6yVFnUuRMY0
+         DkPsVMTHOEykRee0oiSUoSOr/KUlpaHS48qStIolP7WtFV6ztI2FSTF0aJ0yOub++qp8
+         qFHrTxcftXiySLLr6HK7IHWMF9lsJV6ZQIek8DpKmnHxzcHRzZzVGMlpyN7keiHh3bps
+         gX2FEBawursJtmIXCttZUsIm6gGSeFo6FubIsPqf2Bo7R5k0KqEnhV99+gO1xrMSDykw
+         xk1c73JDNmjbhA0XGJH4NJVvmmKP64rDpDDaEjx1Icbvr9618p1Dyb7hTTJLOgtKV6X8
+         TMxg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=8UdMjUT2pdLGE8ndpyA/9BXAvjXXhiUaO/cTeSeGp6c=;
-        b=SsC5UmGyg0SuJOAnpEADpDbyjn8ipJJ8unyK8WoWebiRbGXpGTH8+qEI+jTvnZRPtV
-         ftKSglIqsh4wTVmuJhzEwVTNE/RJXpictB74MKHDmmpBVb46uJBn3KB0lvspYIfP1KKw
-         6k1K+f3hyPTvjBiyv81ouCC7NmeOhHORgoT5nU83ld72zDyN8beqpZJCH47a7OQ+9/7U
-         0I293P/VuVSM+cj40vXQiFAmKwxcpM+Sv5Enmip4Yg/3LnHvKFEbMli+O3o6bciZIpVT
-         6hBO+b7Thi/71s2YMnzcwSSNFCR0vvU/18mMJc22U2OyIouod0r0d3KrHZros7+5+C7G
-         3qkg==
-X-Gm-Message-State: APjAAAVplBiQwlreJVbl8ZnCO7XTSGCeaPuYPDFRUk6D6xEN+fjua8ma
-        ydk6tB7/PkKPqlMXevY6dqhzRqT1S1wlNKnDbC07ig==
-X-Google-Smtp-Source: APXvYqz1YT3omR1kNDLuBKiDfURMS6bzBNjhTJRlFkZXP+SZaSq2jbrZWP5PYK5tZx2ORhjFFY4ZiuEABFMqmzfEeGQ=
-X-Received: by 2002:a05:6808:13:: with SMTP id u19mr4279200oic.83.1570045929963;
- Wed, 02 Oct 2019 12:52:09 -0700 (PDT)
+        h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=K9yfcV7jqI8NxUw9J76/nvZNh29Vby57LkvJugNledo=;
+        b=IU8LVTTFKpCSNx7hXLVVFV11+Dy2ar7A3El7+KDbP0ULLSxyBpFu7oTo4QWhIlf241
+         tLA4z5bcd8luJmg455XWDa1oZnqMAd0V8FhQLjKHHy9W1N8i7C2u9k3u4VCtFDl7VZEY
+         jNFPZay4GiAk5Y5gvxIxveF+MFURdVXY1vkxAIRFHPKMXSwcn7DyyaHZyyw+lewJDpJN
+         sPhNnJ65N1Uw4s7R598o5+KQ4sEi8tzTOzm7RIHmXJoVSA7rVKcS1q1r5vojy59RoSx3
+         H9hS8hDIJB1Vn+f/3uQHntM5DZ1b4UGpVUgIirBnUactK0M+7e9wv9+yLZ85Iyd7SYHv
+         l2vQ==
+X-Gm-Message-State: APjAAAXpj2rIAteyxWACt/OlVSs04wTHzrLHXqfqj0x5t6XYml0G5spM
+        JDopZ8z/I9fs+OnbeKkhq5NkbiXy
+X-Google-Smtp-Source: APXvYqyqppYN50tjPkZYx6JkQiz9gzlqUbOPUvmkxGU2g9hqw1VPFBzZXZiIq3ViZgzbjckYAikD7A==
+X-Received: by 2002:a05:600c:2052:: with SMTP id p18mr4142788wmg.13.1570046016679;
+        Wed, 02 Oct 2019 12:53:36 -0700 (PDT)
+Received: from [192.168.1.19] (ckh198.neoplus.adsl.tpnet.pl. [83.31.83.198])
+        by smtp.gmail.com with ESMTPSA id c132sm276840wme.27.2019.10.02.12.53.35
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 02 Oct 2019 12:53:36 -0700 (PDT)
+Subject: Re: [PATCH 3/5] leds: flash: Remove extern from the header file
+To:     Dan Murphy <dmurphy@ti.com>, pavel@ucw.cz
+Cc:     linux-leds@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20191001180439.8312-1-dmurphy@ti.com>
+ <20191001180439.8312-3-dmurphy@ti.com>
+ <a6601fe9-0723-baec-d610-aafe7731c80d@gmail.com>
+ <01576f87-9113-1148-438a-5b73c5424535@ti.com>
+From:   Jacek Anaszewski <jacek.anaszewski@gmail.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=jacek.anaszewski@gmail.com; prefer-encrypt=mutual; keydata=
+ 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
+Message-ID: <a9a33038-3005-f716-1448-b0a68cf95e08@gmail.com>
+Date:   Wed, 2 Oct 2019 21:53:34 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-References: <CANpmjNPJ_bHjfLZCAPV23AXFfiPiyXXqqu72n6TgWzb2Gnu1eA@mail.gmail.com>
- <20191001211948.GA42035@google.com>
-In-Reply-To: <20191001211948.GA42035@google.com>
-From:   Marco Elver <elver@google.com>
-Date:   Wed, 2 Oct 2019 21:51:58 +0200
-Message-ID: <CANpmjNNp=zVzM2iGcQwVYxzNHYjBo==_2nito4Dw=kHopy=0Sg@mail.gmail.com>
-Subject: Re: Kernel Concurrency Sanitizer (KCSAN)
-To:     Joel Fernandes <joel@joelfernandes.org>
-Cc:     kasan-dev <kasan-dev@googlegroups.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Andrey Konovalov <andreyknvl@google.com>,
-        Alexander Potapenko <glider@google.com>,
-        "Paul E. McKenney" <paulmck@linux.ibm.com>,
-        Paul Turner <pjt@google.com>, Daniel Axtens <dja@axtens.net>,
-        Anatol Pomazau <anatol@google.com>,
-        Will Deacon <willdeacon@google.com>,
-        Andrea Parri <parri.andrea@gmail.com>,
-        Alan Stern <stern@rowland.harvard.edu>,
-        LKMM Maintainers -- Akira Yokosawa <akiyks@gmail.com>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Boqun Feng <boqun.feng@gmail.com>,
-        Daniel Lustig <dlustig@nvidia.com>,
-        Jade Alglave <j.alglave@ucl.ac.uk>,
-        Luc Maranget <luc.maranget@inria.fr>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <01576f87-9113-1148-438a-5b73c5424535@ti.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Joel,
+On 10/2/19 1:56 PM, Dan Murphy wrote:
+> Jacek
+> 
+> On 10/1/19 3:57 PM, Jacek Anaszewski wrote:
+>> Dan,
+>>
+>> Thank you for the patch.
+>>
+>> Could we have similar patch for leds.h when we are at it,
+>> if you wouldn't mind?
+>>
+> Sure do you want it in this patch or a separate patch?
 
-On Tue, 1 Oct 2019 at 23:19, Joel Fernandes <joel@joelfernandes.org> wrote:
->
-> On Fri, Sep 20, 2019 at 04:18:57PM +0200, Marco Elver wrote:
-> > Hi all,
-> >
-> > We would like to share a new data-race detector for the Linux kernel:
-> > Kernel Concurrency Sanitizer (KCSAN) --
-> > https://github.com/google/ktsan/wiki/KCSAN  (Details:
-> > https://github.com/google/ktsan/blob/kcsan/Documentation/dev-tools/kcsan.rst)
-> >
-> > To those of you who we mentioned at LPC that we're working on a
-> > watchpoint-based KTSAN inspired by DataCollider [1], this is it (we
-> > renamed it to KCSAN to avoid confusion with KTSAN).
-> > [1] http://usenix.org/legacy/events/osdi10/tech/full_papers/Erickson.pdf
-> >
-> > In the coming weeks we're planning to:
-> > * Set up a syzkaller instance.
-> > * Share the dashboard so that you can see the races that are found.
-> > * Attempt to send fixes for some races upstream (if you find that the
-> > kcsan-with-fixes branch contains an important fix, please feel free to
-> > point it out and we'll prioritize that).
-> >
-> > There are a few open questions:
-> > * The big one: most of the reported races are due to unmarked
-> > accesses; prioritization or pruning of races to focus initial efforts
-> > to fix races might be required. Comments on how best to proceed are
-> > welcome. We're aware that these are issues that have recently received
-> > attention in the context of the LKMM
-> > (https://lwn.net/Articles/793253/).
-> > * How/when to upstream KCSAN?
->
-> Looks exciting. I think based on our discussion at LPC, you mentioned
-> one way of pruning is if the compiler generated different code with _ONCE
-> annotations than what would have otherwise been generated. Is that still on
-> the table, for the purposing of pruning the reports?
+Separate please. Thanks!
 
-This might be interesting at first, but it's not entirely clear how
-feasible it is. It's also dangerous, because the real issue would be
-ignored. It may be that one compiler version on a particular
-architecture generates the same code, but any change in compiler or
-architecture and this would no longer be true. Let me know if you have
-any more ideas.
-
-Best,
--- Marco
-
-> Also appreciate a CC on future patches as well.
->
-> thanks,
->
->  - Joel
->
->
-> >
-> > Feel free to test and send feedback.
-> >
-> > Thanks,
-> > -- Marco
->
-> --
-> You received this message because you are subscribed to the Google Groups "kasan-dev" group.
-> To unsubscribe from this group and stop receiving emails from it, send an email to kasan-dev+unsubscribe@googlegroups.com.
-> To view this discussion on the web visit https://groups.google.com/d/msgid/kasan-dev/20191001211948.GA42035%40google.com.
+-- 
+Best regards,
+Jacek Anaszewski
