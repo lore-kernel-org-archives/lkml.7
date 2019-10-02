@@ -2,204 +2,142 @@ Return-Path: <SRS0=zem1=X3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE1FDC10F14
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 19:43:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C530FC47404
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 19:44:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7969A206BB
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 19:43:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A19DA21783
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 19:44:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="f24UR+aS"
+	dkim=pass (2048-bit key) header.d=dell.com header.i=@dell.com header.b="mAA0DqTf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727116AbfJBTnN (ORCPT
+        id S1727484AbfJBToO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Oct 2019 15:43:13 -0400
-Received: from mail-ot1-f41.google.com ([209.85.210.41]:34048 "EHLO
-        mail-ot1-f41.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726070AbfJBTnN (ORCPT
+        Wed, 2 Oct 2019 15:44:14 -0400
+Received: from mx0a-00154904.pphosted.com ([148.163.133.20]:9150 "EHLO
+        mx0a-00154904.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727257AbfJBToN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Oct 2019 15:43:13 -0400
-Received: by mail-ot1-f41.google.com with SMTP id m19so258243otp.1
-        for <linux-kernel@vger.kernel.org>; Wed, 02 Oct 2019 12:43:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=OOyld7LsE/8SoNryaMxnr2dK1DwxpSS1XhCCKoKRX5s=;
-        b=f24UR+aSzpMXeLqx0osZgzhE2tzHMXUFTCMFxRFU1lWRGdRdkttFtk+Hplm1lvkGDs
-         lP6XWbx4cQ6Dx270OuKiROXQgn7743kPGyer7PHnJ/y3mWYycOyEsDzIBAwB+XuKmioX
-         5oe1f92A0OihuKyBJrfgn0vc3w6iU+j0nQawjZE6nNieXM+ZbykaL5eOPV87i5QTJmtW
-         AL62Ow9gNIen0knALnU/LvLEimugHrYmjnkXRllko9gb5wlvFWADemWfCLhUPAFZZ5s7
-         Me+WYBitYQhzphb06KZmg1BfifJpac/h2Zav2UBEXImbN2FrJes47j62EVkC3XqHA24B
-         RCIA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=OOyld7LsE/8SoNryaMxnr2dK1DwxpSS1XhCCKoKRX5s=;
-        b=ltVnIg2lelxe5LisZHWZWzFjBpUiQbBu8D7z3u5MtPXPuaZhXoj4vz9kJ7f7ny8Tty
-         MyrVDEfPP6QOpCW6BDJnHD2OVhRFgBp8OF7xjn4iU7hEMYX3oqMt9z+nexx8qVqoqZpF
-         4jPfKieW9Jul32CjEn1TGkyvV6BXulcoMSWwJGd6d5agVnPedQ9SpSOECY3j+H/aq18/
-         /PuGKViSrnT0arZI/ztOczmO7k0N7KSW+15rghktDBhUqukbLEEYn7QApbczePFmRpBK
-         0ZpkMJJSKG74nfb3+IihRweKWFDt9GJj0bCRRNB9Vvii7kZRB373t1DXb069/mc7LDeA
-         VSaQ==
-X-Gm-Message-State: APjAAAUiuBz8UI0lugLcZOnkJjTFNkin2ntPNgR8vxr9yqK+mjh6SFRs
-        jcOUqessHTeTAqimRj6XDrlhvHOYqpxZmLUI4p44WA==
-X-Google-Smtp-Source: APXvYqzhQ6DikHL001BsnS/U4E3D7wcZrj8YSoDYojXlK9wHmEiGeUV00vj6OuDsE6Vr6TLoQALWtSFZb+D2woGc9V0=
-X-Received: by 2002:a05:6830:101:: with SMTP id i1mr4042375otp.233.1570045390142;
- Wed, 02 Oct 2019 12:43:10 -0700 (PDT)
+        Wed, 2 Oct 2019 15:44:13 -0400
+Received: from pps.filterd (m0170393.ppops.net [127.0.0.1])
+        by mx0a-00154904.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id x92JemoQ029831;
+        Wed, 2 Oct 2019 15:44:12 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=dell.com; h=from : to : cc :
+ subject : date : message-id : content-type : content-id :
+ content-transfer-encoding : mime-version; s=smtpout1;
+ bh=XSeNTl5I855C3uT83to227D7zveqjCiQR4dEW0mojwU=;
+ b=mAA0DqTfmnbi2N7jy1TpGlhS6QTuPqyrRPRBjPuijgRCAh6oaMhwmzKgZWOshHlOREEZ
+ lAv1DCkrqIb1+zWLXOGfKkr+Akxxotuwci6BYTbQokHwCdNMF/1veRPxOlueKXB+HjCL
+ LE9CAomPyuh9yk+xUTKlkphXB+0dQFVhTG8muMP5cWQ7MEcZrCGHF3r242AZ+1wFaaz3
+ wLeMz9zc2fjoqGz0Mg0l6YO65NByMHXgeqCnQcS4RDfj6NYA6Sl66nQymi1w01I7i9Sy
+ VYehOhx0EvITenA9Zi0XUKiJq3jdkHL1JJQUBumGnPWrYfTG/BQaMXASQ4p8TaEhCYZT rw== 
+Received: from mx0b-00154901.pphosted.com (mx0b-00154901.pphosted.com [67.231.157.37])
+        by mx0a-00154904.pphosted.com with ESMTP id 2va2uk4p8j-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 02 Oct 2019 15:44:11 -0400
+Received: from pps.filterd (m0134318.ppops.net [127.0.0.1])
+        by mx0a-00154901.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id x92JhBMc084375;
+        Wed, 2 Oct 2019 15:44:10 -0400
+Received: from ausxipps306.us.dell.com (AUSXIPPS306.us.dell.com [143.166.148.156])
+        by mx0a-00154901.pphosted.com with ESMTP id 2va25gew0y-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 02 Oct 2019 15:44:10 -0400
+X-LoopCount0: from 10.166.132.129
+X-PREM-Routing: D-Outbound
+X-IronPort-AV: E=Sophos;i="5.60,349,1549951200"; 
+   d="scan'208";a="382563207"
+From:   <Narendra.K@dell.com>
+To:     <linux-efi@vger.kernel.org>
+CC:     <Mario.Limonciello@dell.com>, <ard.biesheuvel@linaro.org>,
+        <geert@linux-m68k.org>, <tglx@linutronix.de>,
+        <linux-kernel@vger.kernel.org>, <james.morse@arm.com>,
+        <mingo@kernel.org>, <Narendra.K@dell.com>
+Subject: [PATCH] Ask user input only when CONFIG_X86 or CONFIG_COMPILE_TEST is
+ set to y
+Thread-Topic: [PATCH] Ask user input only when CONFIG_X86 or
+ CONFIG_COMPILE_TEST is set to y
+Thread-Index: AQHVeVm8hd3/NfhPNEW1ErxPMn2a1Q==
+Date:   Wed, 2 Oct 2019 19:44:00 +0000
+Message-ID: <20191002194346.GA3792@localhost.localdomain>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+user-agent: Mutt/1.10.1 (2018-07-13)
+x-ms-exchange-messagesentrepresentingtype: 1
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.143.242.75]
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <73613574CD0BB740BB500DF328D5F721@dell.com>
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-References: <CANpmjNPJ_bHjfLZCAPV23AXFfiPiyXXqqu72n6TgWzb2Gnu1eA@mail.gmail.com>
- <8736gc4j1g.fsf@dja-thinkpad.axtens.net>
-In-Reply-To: <8736gc4j1g.fsf@dja-thinkpad.axtens.net>
-From:   Marco Elver <elver@google.com>
-Date:   Wed, 2 Oct 2019 21:42:58 +0200
-Message-ID: <CANpmjNPh656M2-1J6v5AO1eDL-SShjZwa-wvGOfEdKbKCh-ZJw@mail.gmail.com>
-Subject: Re: Kernel Concurrency Sanitizer (KCSAN)
-To:     Daniel Axtens <dja@axtens.net>
-Cc:     kasan-dev <kasan-dev@googlegroups.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Andrey Konovalov <andreyknvl@google.com>,
-        Alexander Potapenko <glider@google.com>,
-        "Paul E. McKenney" <paulmck@linux.ibm.com>,
-        Paul Turner <pjt@google.com>,
-        Anatol Pomazau <anatol@google.com>,
-        Will Deacon <willdeacon@google.com>,
-        Andrea Parri <parri.andrea@gmail.com>,
-        Alan Stern <stern@rowland.harvard.edu>,
-        LKMM Maintainers -- Akira Yokosawa <akiyks@gmail.com>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Boqun Feng <boqun.feng@gmail.com>,
-        Daniel Lustig <dlustig@nvidia.com>,
-        Jade Alglave <j.alglave@ucl.ac.uk>,
-        Luc Maranget <luc.maranget@inria.fr>
-Content-Type: text/plain; charset="UTF-8"
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,1.0.8
+ definitions=2019-10-02_08:2019-10-01,2019-10-02 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0
+ priorityscore=1501 malwarescore=0 spamscore=0 clxscore=1015 mlxscore=0
+ impostorscore=0 adultscore=0 lowpriorityscore=0 suspectscore=0
+ mlxlogscore=999 bulkscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-1908290000 definitions=main-1910020154
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 impostorscore=0 bulkscore=0
+ clxscore=1015 mlxlogscore=999 priorityscore=1501 lowpriorityscore=0
+ spamscore=0 malwarescore=0 phishscore=0 adultscore=0 suspectscore=0
+ mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-1908290000 definitions=main-1910020153
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Daniel,
+From: Narendra K <Narendra.K@dell.com>
 
-On Tue, 1 Oct 2019 at 16:50, Daniel Axtens <dja@axtens.net> wrote:
->
-> Hi Marco,
->
-> > We would like to share a new data-race detector for the Linux kernel:
-> > Kernel Concurrency Sanitizer (KCSAN) --
-> > https://github.com/google/ktsan/wiki/KCSAN  (Details:
-> > https://github.com/google/ktsan/blob/kcsan/Documentation/dev-tools/kcsan.rst)
->
-> This builds and begins to boot on powerpc, which is fantastic.
->
-> I'm seeing a lot of reports for locks are changed while being watched by
-> kcsan, so many that it floods the console and stalls the boot.
->
-> I think, if I've understood correctly, that this is because powerpc
-> doesn't use the queued lock implementation for its spinlock but rather
-> its own assembler locking code. This means the writes aren't
-> instrumented by the compiler, while some reads are. (see
-> __arch_spin_trylock in e.g. arch/powerpc/include/asm/spinlock.h)
->
-> Would the correct way to deal with this be for the powerpc code to call
-> out to __tsan_readN/__tsan_writeN before invoking the assembler that
-> reads and writes the lock?
+For the EFI_RCI2_TABLE kconfig option, 'make oldconfig' asks the user
+for input as it is a new kconfig option in kernel version 5.4. This patch
+modifies the kconfig option to ask the user for input only when CONFIG_X86
+or CONFIG_COMPILE_TEST is set to y.
 
-This should not be the issue, because with KCSAN, not instrumenting
-something does not lead to false positives. If two accesses are
-involved in a race, and neither of them are instrumented, KCSAN will
-not report a race; if however, 1 of them is instrumented (and the
-uninstrumented access is a write), KCSAN will infer a race due to the
-data value changed ("race at unknown origin").
+The patch also makes EFI_RCI2_TABLE kconfig option depend on CONFIG_EFI.
 
-Rather, if there is spinlock code causing data-races, then there are 2 options:
-1) Actually missing READ_ONCE/WRITE_ONCE somewhere.
-2) You need to disable instrumentation for an entire function with
-__no_sanitize_thread or __no_kcsan_or_inline (for inline functions).
-This should only be needed for arch-specific code (e.g. see the
-changes we made to arch/x86).
+Signed-off-by: Narendra K <Narendra.K@dell.com>
+---
+The patch is created on kernel version 5.4-rc1.
 
-Note: you can explicitly add instrumentation to uninstrumented
-accesses with the API in <linux/kcsan-checks.h>, but this shouldn't be
-the issue here.
+Hi Ard, I have made following changes -
 
-It would be good to symbolize the stack-traces, as otherwise it's hard
-to say exactly what needs to be done.
+- changed the prompt string from "EFI Runtime Configuration
+Interface Table Version 2 Support" to "EFI RCI Table Version 2 Support"
+as the string crossed 80 char limit.=20
 
-Best,
--- Marco
+- added "depends on EFI" so that code builds only when CONFIG_EFI is
+set to y.
 
-> Regards,
-> Daniel
->
->
-> [   24.612864] ==================================================================
-> [   24.614188] BUG: KCSAN: racing read in __spin_yield+0xa8/0x180
-> [   24.614669]
-> [   24.614799] race at unknown origin, with read to 0xc00000003fff9d00 of 4 bytes by task 449 on cpu 11:
-> [   24.616024]  __spin_yield+0xa8/0x180
-> [   24.616377]  _raw_spin_lock_irqsave+0x1a8/0x1b0
-> [   24.616850]  release_pages+0x3a0/0x880
-> [   24.617203]  free_pages_and_swap_cache+0x13c/0x220
-> [   24.622548]  tlb_flush_mmu+0x210/0x2f0
-> [   24.622979]  tlb_finish_mmu+0x12c/0x240
-> [   24.623286]  exit_mmap+0x138/0x2c0
-> [   24.623779]  mmput+0xe0/0x330
-> [   24.624504]  do_exit+0x65c/0x1050
-> [   24.624835]  do_group_exit+0xb4/0x210
-> [   24.625458]  __wake_up_parent+0x0/0x80
-> [   24.625985]  system_call+0x5c/0x70
-> [   24.626415]
-> [   24.626651] Reported by Kernel Concurrency Sanitizer on:
-> [   24.628329] CPU: 11 PID: 449 Comm: systemd-bless-b Not tainted 5.3.0-00007-gad29ff6c190d-dirty #9
-> [   24.629508] ==================================================================
->
-> [   24.672860] ==================================================================
-> [   24.675901] BUG: KCSAN: data-race in _raw_spin_lock_irqsave+0x13c/0x1b0 and _raw_spin_unlock_irqrestore+0x94/0x100
-> [   24.680847]
-> [   24.682743] write to 0xc0000001ffeefe00 of 4 bytes by task 455 on cpu 5:
-> [   24.683402]  _raw_spin_unlock_irqrestore+0x94/0x100
-> [   24.684593]  release_pages+0x250/0x880
-> [   24.685148]  free_pages_and_swap_cache+0x13c/0x220
-> [   24.686068]  tlb_flush_mmu+0x210/0x2f0
-> [   24.690190]  tlb_finish_mmu+0x12c/0x240
-> [   24.691082]  exit_mmap+0x138/0x2c0
-> [   24.693216]  mmput+0xe0/0x330
-> [   24.693597]  do_exit+0x65c/0x1050
-> [   24.694170]  do_group_exit+0xb4/0x210
-> [   24.694658]  __wake_up_parent+0x0/0x80
-> [   24.696230]  system_call+0x5c/0x70
-> [   24.700414]
-> [   24.712991] read to 0xc0000001ffeefe00 of 4 bytes by task 454 on cpu 20:
-> [   24.714419]  _raw_spin_lock_irqsave+0x13c/0x1b0
-> [   24.715018]  pagevec_lru_move_fn+0xfc/0x1d0
-> [   24.715527]  __lru_cache_add+0x124/0x1a0
-> [   24.716072]  lru_cache_add+0x30/0x50
-> [   24.716411]  add_to_page_cache_lru+0x134/0x250
-> [   24.717938]  mpage_readpages+0x220/0x3f0
-> [   24.719737]  blkdev_readpages+0x50/0x80
-> [   24.721891]  read_pages+0xb4/0x340
-> [   24.722834]  __do_page_cache_readahead+0x318/0x350
-> [   24.723290]  force_page_cache_readahead+0x150/0x280
-> [   24.724391]  page_cache_sync_readahead+0xe4/0x110
-> [   24.725087]  generic_file_buffered_read+0xa20/0xdf0
-> [   24.727003]  generic_file_read_iter+0x220/0x310
-> [   24.728906]
-> [   24.730044] Reported by Kernel Concurrency Sanitizer on:
-> [   24.732185] CPU: 20 PID: 454 Comm: systemd-gpt-aut Not tainted 5.3.0-00007-gad29ff6c190d-dirty #9
-> [   24.734317] ==================================================================
->
->
-> >
-> > Thanks,
-> > -- Marco
->
-> --
-> You received this message because you are subscribed to the Google Groups "kasan-dev" group.
-> To unsubscribe from this group and stop receiving emails from it, send an email to kasan-dev+unsubscribe@googlegroups.com.
-> To view this discussion on the web visit https://groups.google.com/d/msgid/kasan-dev/8736gc4j1g.fsf%40dja-thinkpad.axtens.net.
+- added 'default n' for ease of understanding though default is set to n.
+
+ drivers/firmware/efi/Kconfig | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/firmware/efi/Kconfig b/drivers/firmware/efi/Kconfig
+index 178ee8106828..6e4c46e8a954 100644
+--- a/drivers/firmware/efi/Kconfig
++++ b/drivers/firmware/efi/Kconfig
+@@ -181,7 +181,10 @@ config RESET_ATTACK_MITIGATION
+ 	  reboots.
+=20
+ config EFI_RCI2_TABLE
+-	bool "EFI Runtime Configuration Interface Table Version 2 Support"
++	bool
++	prompt "EFI RCI Table Version 2 Support" if X86 || COMPILE_TEST
++	depends on EFI
++	default n
+ 	help
+ 	  Displays the content of the Runtime Configuration Interface
+ 	  Table version 2 on Dell EMC PowerEdge systems as a binary
+--=20
+2.18.1
+
+--=20
+With regards,
+Narendra K=
