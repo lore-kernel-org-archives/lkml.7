@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD25AC4360C
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 19:11:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 41CB3C47404
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 19:11:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 940F52133F
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 19:11:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 20A712133F
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 19:11:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729964AbfJBTLG (ORCPT
+        id S1729234AbfJBTIM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Oct 2019 15:11:06 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:35768 "EHLO
+        Wed, 2 Oct 2019 15:08:12 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:35216 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729295AbfJBTIP (ORCPT
+        by vger.kernel.org with ESMTP id S1728992AbfJBTIH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Oct 2019 15:08:15 -0400
+        Wed, 2 Oct 2019 15:08:07 -0400
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1iFjyu-00035x-EP; Wed, 02 Oct 2019 20:08:12 +0100
+        id 1iFjyn-000358-4Q; Wed, 02 Oct 2019 20:08:05 +0100
 Received: from ben by deadeye with local (Exim 4.92.1)
         (envelope-from <ben@decadent.org.uk>)
-        id 1iFjyq-0003gR-Dh; Wed, 02 Oct 2019 20:08:08 +0100
+        id 1iFjym-0003a6-Sf; Wed, 02 Oct 2019 20:08:04 +0100
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,17 +35,13 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Neil Horman" <nhorman@redhat.com>,
-        "Xin Long" <lucien.xin@gmail.com>,
-        syzbot+afabda3890cc2f765041@syzkaller.appspotmail.com,
-        "David S. Miller" <davem@davemloft.net>,
-        syzbot+276ca1c77a19977c0130@syzkaller.appspotmail.com
+        "Mark Brown" <broonie@kernel.org>,
+        "S.j. Wang" <shengjiu.wang@nxp.com>
 Date:   Wed, 02 Oct 2019 20:06:51 +0100
-Message-ID: <lsq.1570043211.95333315@decadent.org.uk>
+Message-ID: <lsq.1570043211.446424873@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 82/87] sctp: change to hold sk after auth shkey is
- created successfully
+Subject: [PATCH 3.16 04/87] ASoC: cs42xx8: Add regcache mask dirty
 In-Reply-To: <lsq.1570043210.379046399@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -59,51 +55,31 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Xin Long <lucien.xin@gmail.com>
+From: "S.j. Wang" <shengjiu.wang@nxp.com>
 
-commit 25bff6d5478b2a02368097015b7d8eb727c87e16 upstream.
+commit ad6eecbfc01c987e0253371f274c3872042e4350 upstream.
 
-Now in sctp_endpoint_init(), it holds the sk then creates auth
-shkey. But when the creation fails, it doesn't release the sk,
-which causes a sk defcnf leak,
+Add regcache_mark_dirty before regcache_sync for power
+of codec may be lost at suspend, then all the register
+need to be reconfigured.
 
-Here to fix it by only holding the sk when auth shkey is created
-successfully.
-
-Fixes: a29a5bd4f5c3 ("[SCTP]: Implement SCTP-AUTH initializations.")
-Reported-by: syzbot+afabda3890cc2f765041@syzkaller.appspotmail.com
-Reported-by: syzbot+276ca1c77a19977c0130@syzkaller.appspotmail.com
-Signed-off-by: Xin Long <lucien.xin@gmail.com>
-Acked-by: Neil Horman <nhorman@redhat.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-[bwh: Backported to 3.16: adjust context]
+Fixes: 0c516b4ff85c ("ASoC: cs42xx8: Add codec driver
+support for CS42448/CS42888")
+Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- net/sctp/endpointola.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ sound/soc/codecs/cs42xx8.c | 1 +
+ 1 file changed, 1 insertion(+)
 
---- a/net/sctp/endpointola.c
-+++ b/net/sctp/endpointola.c
-@@ -126,10 +126,6 @@ static struct sctp_endpoint *sctp_endpoi
- 	/* Initialize the bind addr area */
- 	sctp_bind_addr_init(&ep->base.bind_addr, 0);
+--- a/sound/soc/codecs/cs42xx8.c
++++ b/sound/soc/codecs/cs42xx8.c
+@@ -557,6 +557,7 @@ static int cs42xx8_runtime_resume(struct
+ 	msleep(5);
  
--	/* Remember who we are attached to.  */
--	ep->base.sk = sk;
--	sock_hold(ep->base.sk);
--
- 	/* Create the lists of associations.  */
- 	INIT_LIST_HEAD(&ep->asocs);
+ 	regcache_cache_only(cs42xx8->regmap, false);
++	regcache_mark_dirty(cs42xx8->regmap);
  
-@@ -165,6 +161,10 @@ static struct sctp_endpoint *sctp_endpoi
- 	ep->auth_hmacs_list = auth_hmacs;
- 	ep->auth_chunk_list = auth_chunks;
- 
-+	/* Remember who we are attached to.  */
-+	ep->base.sk = sk;
-+	sock_hold(ep->base.sk);
-+
- 	return ep;
- 
- nomem_hmacs:
+ 	ret = regcache_sync(cs42xx8->regmap);
+ 	if (ret) {
 
