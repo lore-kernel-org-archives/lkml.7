@@ -2,109 +2,80 @@ Return-Path: <SRS0=zem1=X3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51ECDC4360C
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 21:17:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A45D4C4360C
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 21:22:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2E39D21783
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 21:17:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 67A2421783
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 21:22:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729474AbfJBVR4 (ORCPT
+        id S1729502AbfJBVWQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Oct 2019 17:17:56 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:55148 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728713AbfJBVR4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Oct 2019 17:17:56 -0400
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id C5ACBA44AC6;
-        Wed,  2 Oct 2019 21:17:55 +0000 (UTC)
-Received: from [IPv6:::1] (ovpn04.gateway.prod.ext.phx2.redhat.com [10.5.9.4])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 6BB2160BF3;
-        Wed,  2 Oct 2019 21:17:55 +0000 (UTC)
-To:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        fsdevel <linux-fsdevel@vger.kernel.org>
-From:   Eric Sandeen <sandeen@redhat.com>
-Subject: [PATCH] vfs: Fix EOVERFLOW testing in put_compat_statfs64
-Cc:     Al Viro <viro@zeniv.linux.org.uk>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Message-ID: <6a26185f-f188-0049-b153-1541d7a514b0@redhat.com>
-Date:   Wed, 2 Oct 2019 16:17:54 -0500
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:60.0)
- Gecko/20100101 Thunderbird/60.9.0
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+        Wed, 2 Oct 2019 17:22:16 -0400
+Received: from shards.monkeyblade.net ([23.128.96.9]:37100 "EHLO
+        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728713AbfJBVWQ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 2 Oct 2019 17:22:16 -0400
+Received: from localhost (unknown [IPv6:2601:601:9f00:1e2::3d5])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id 7DF32154F41D6;
+        Wed,  2 Oct 2019 14:22:15 -0700 (PDT)
+Date:   Wed, 02 Oct 2019 14:22:14 -0700 (PDT)
+Message-Id: <20191002.142214.252882219207569928.davem@davemloft.net>
+To:     yzhai003@ucr.edu
+Cc:     csong@cs.ucr.edu, zhiyunq@cs.ucr.edu, yisen.zhuang@huawei.com,
+        salil.mehta@huawei.com, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] net: hisilicon: Fix usage of uninitialized variable in
+ function mdio_sc_cfg_reg_write()
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <20191001202439.15766-1-yzhai003@ucr.edu>
+References: <20191001202439.15766-1-yzhai003@ucr.edu>
+X-Mailer: Mew version 6.8 on Emacs 26.1
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
 Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.68]); Wed, 02 Oct 2019 21:17:56 +0000 (UTC)
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Wed, 02 Oct 2019 14:22:15 -0700 (PDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Today, put_compat_statfs64() disallows nearly any field value over
-2^32 if f_bsize is only 32 bits, but that makes no sense.
-compat_statfs64 is there for the explicit purpose of providing 64-bit
-fields for f_files, f_ffree, etc.  And f_bsize is always only 32 bits.
+From: Yizhuo <yzhai003@ucr.edu>
+Date: Tue,  1 Oct 2019 13:24:39 -0700
 
-As a result, 32-bit userspace gets -EOVERFLOW for i.e. large file
-counts even with -D_FILE_OFFSET_BITS=64 set.
+> In function mdio_sc_cfg_reg_write(), variable "reg_value" could be
+> uninitialized if regmap_read() fails. However, "reg_value" is used
+> to decide the control flow later in the if statement, which is
+> potentially unsafe.
+> 
+> Signed-off-by: Yizhuo <yzhai003@ucr.edu>
 
-In reality, only f_bsize and f_frsize can legitimately overflow
-(fields like f_type and f_namelen should never be large), so test
-only those fields.
+Applied, but really this is such a pervasive problem.
 
-This bug was discussed at length some time ago, and this is the proposal
-Al suggested at https://lkml.org/lkml/2018/8/6/640.  It seemed to get
-dropped amid the discussion of other related changes, but this
-part seems obviously correct on its own, so I've picked it up and
-sent it, for expediency.
+So much code doesn't check the return value from either regmap_read
+or regmap_write.
 
-Fixes: 64d2ab32efe3 ("vfs: fix put_compat_statfs64() does not handle errors")
-Signed-off-by: Eric Sandeen <sandeen@redhat.com>
----
+_EVEN_ in the code you are editing, the patch context shows an unchecked
+regmap_write() call.
 
-Note, if it'd be better form to add:
+> @@ -148,11 +148,15 @@ static int mdio_sc_cfg_reg_write(struct hns_mdio_device *mdio_dev,
+>  {
+>  	u32 time_cnt;
+>  	u32 reg_value;
+> +	int ret;
+>  
+>  	regmap_write(mdio_dev->subctrl_vbase, cfg_reg, set_val);
+        ^^^^^^^^^^^^
 
-From: Al Viro <viro@zeniv.linux.org.uk>
+Grepping for regmap_{read,write}() shows how big an issue this is.
 
-please do so.
-
-Thanks,
--Eric
-
-diff --git a/fs/statfs.c b/fs/statfs.c
-index eea7af6f2f22..2616424012ea 100644
---- a/fs/statfs.c
-+++ b/fs/statfs.c
-@@ -318,19 +318,10 @@ COMPAT_SYSCALL_DEFINE2(fstatfs, unsigned int, fd, struct compat_statfs __user *,
- static int put_compat_statfs64(struct compat_statfs64 __user *ubuf, struct kstatfs *kbuf)
- {
- 	struct compat_statfs64 buf;
--	if (sizeof(ubuf->f_bsize) == 4) {
--		if ((kbuf->f_type | kbuf->f_bsize | kbuf->f_namelen |
--		     kbuf->f_frsize | kbuf->f_flags) & 0xffffffff00000000ULL)
--			return -EOVERFLOW;
--		/* f_files and f_ffree may be -1; it's okay
--		 * to stuff that into 32 bits */
--		if (kbuf->f_files != 0xffffffffffffffffULL
--		 && (kbuf->f_files & 0xffffffff00000000ULL))
--			return -EOVERFLOW;
--		if (kbuf->f_ffree != 0xffffffffffffffffULL
--		 && (kbuf->f_ffree & 0xffffffff00000000ULL))
--			return -EOVERFLOW;
--	}
-+
-+	if ((kbuf->f_bsize | kbuf->f_frsize) & 0xffffffff00000000ULL)
-+		return -EOVERFLOW;
-+
- 	memset(&buf, 0, sizeof(struct compat_statfs64));
- 	buf.f_type = kbuf->f_type;
- 	buf.f_bsize = kbuf->f_bsize;
-
+I don't know what to do, maybe we can work over time to add checks to
+all calls and then force warnings on unchecked return values so that
+the problem is not introduced in the future.
