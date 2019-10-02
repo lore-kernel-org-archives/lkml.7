@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6888C4360C
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 19:08:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69967C4360C
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 19:08:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8C10721D82
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 19:08:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4F97E2133F
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 19:08:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729459AbfJBTI3 (ORCPT
+        id S1729516AbfJBTIg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Oct 2019 15:08:29 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:35624 "EHLO
+        Wed, 2 Oct 2019 15:08:36 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:36040 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729231AbfJBTIM (ORCPT
+        by vger.kernel.org with ESMTP id S1729356AbfJBTIT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Oct 2019 15:08:12 -0400
+        Wed, 2 Oct 2019 15:08:19 -0400
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1iFjyr-00035x-Bv; Wed, 02 Oct 2019 20:08:09 +0100
+        id 1iFjyu-000365-Kv; Wed, 02 Oct 2019 20:08:13 +0100
 Received: from ben by deadeye with local (Exim 4.92.1)
         (envelope-from <ben@decadent.org.uk>)
-        id 1iFjyo-0003dY-Bv; Wed, 02 Oct 2019 20:08:06 +0100
+        id 1iFjyq-0003g8-4Y; Wed, 02 Oct 2019 20:08:08 +0100
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,14 +35,18 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Helge Deller" <deller@gmx.de>,
-        "John David Anglin" <dave.anglin@bell.net>
+        rkrcmar@redhat.com,
+        "Alejandro Jimenez" <alejandro.j.jimenez@oracle.com>,
+        "Thomas Gleixner" <tglx@linutronix.de>,
+        "Mark Kanda" <mark.kanda@oracle.com>,
+        "Liam Merwick" <liam.merwick@oracle.com>, bp@alien8.de,
+        kvm@vger.kernel.org, "Paolo Bonzini" <pbonzini@redhat.com>
 Date:   Wed, 02 Oct 2019 20:06:51 +0100
-Message-ID: <lsq.1570043211.864935705@decadent.org.uk>
+Message-ID: <lsq.1570043211.306085585@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 46/87] parisc: Use implicit space register selection
- for loading the coherence index of I/O pdirs
+Subject: [PATCH 3.16 78/87] x86/speculation: Allow guests to use SSBD even
+ if host does not
 In-Reply-To: <lsq.1570043210.379046399@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -56,55 +60,67 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: John David Anglin <dave.anglin@bell.net>
+From: Alejandro Jimenez <alejandro.j.jimenez@oracle.com>
 
-commit 63923d2c3800919774f5c651d503d1dd2adaddd5 upstream.
+commit c1f7fec1eb6a2c86d01bc22afce772c743451d88 upstream.
 
-We only support I/O to kernel space. Using %sr1 to load the coherence
-index may be racy unless interrupts are disabled. This patch changes the
-code used to load the coherence index to use implicit space register
-selection. This saves one instruction and eliminates the race.
+The bits set in x86_spec_ctrl_mask are used to calculate the guest's value
+of SPEC_CTRL that is written to the MSR before VMENTRY, and control which
+mitigations the guest can enable.  In the case of SSBD, unless the host has
+enabled SSBD always on mode (by passing "spec_store_bypass_disable=on" in
+the kernel parameters), the SSBD bit is not set in the mask and the guest
+can not properly enable the SSBD always on mitigation mode.
 
-Tested on rp3440, c8000 and c3750.
+This has been confirmed by running the SSBD PoC on a guest using the SSBD
+always on mitigation mode (booted with kernel parameter
+"spec_store_bypass_disable=on"), and verifying that the guest is vulnerable
+unless the host is also using SSBD always on mode. In addition, the guest
+OS incorrectly reports the SSB vulnerability as mitigated.
 
-Signed-off-by: John David Anglin <dave.anglin@bell.net>
-Signed-off-by: Helge Deller <deller@gmx.de>
+Always set the SSBD bit in x86_spec_ctrl_mask when the host CPU supports
+it, allowing the guest to use SSBD whether or not the host has chosen to
+enable the mitigation in any of its modes.
+
+Fixes: be6fcb5478e9 ("x86/bugs: Rework spec_ctrl base and mask logic")
+Signed-off-by: Alejandro Jimenez <alejandro.j.jimenez@oracle.com>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Reviewed-by: Liam Merwick <liam.merwick@oracle.com>
+Reviewed-by: Mark Kanda <mark.kanda@oracle.com>
+Reviewed-by: Paolo Bonzini <pbonzini@redhat.com>
+Cc: bp@alien8.de
+Cc: rkrcmar@redhat.com
+Cc: kvm@vger.kernel.org
+Link: https://lkml.kernel.org/r/1560187210-11054-1-git-send-email-alejandro.j.jimenez@oracle.com
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- drivers/parisc/ccio-dma.c  | 4 +---
- drivers/parisc/sba_iommu.c | 3 +--
- 2 files changed, 2 insertions(+), 5 deletions(-)
+ arch/x86/kernel/cpu/bugs.c | 11 ++++++++++-
+ 1 file changed, 10 insertions(+), 1 deletion(-)
 
---- a/drivers/parisc/ccio-dma.c
-+++ b/drivers/parisc/ccio-dma.c
-@@ -563,8 +563,6 @@ ccio_io_pdir_entry(u64 *pdir_ptr, space_
- 	/* We currently only support kernel addresses */
- 	BUG_ON(sid != KERNEL_SPACE);
+--- a/arch/x86/kernel/cpu/bugs.c
++++ b/arch/x86/kernel/cpu/bugs.c
+@@ -960,6 +960,16 @@ static enum ssb_mitigation __init __ssb_
+ 	}
  
--	mtsp(sid,1);
--
  	/*
- 	** WORD 1 - low order word
- 	** "hints" parm includes the VALID bit!
-@@ -595,7 +593,7 @@ ccio_io_pdir_entry(u64 *pdir_ptr, space_
- 	** Grab virtual index [0:11]
- 	** Deposit virt_idx bits into I/O PDIR word
- 	*/
--	asm volatile ("lci %%r0(%%sr1, %1), %0" : "=r" (ci) : "r" (vba));
-+	asm volatile ("lci %%r0(%1), %0" : "=r" (ci) : "r" (vba));
- 	asm volatile ("extru %1,19,12,%0" : "+r" (ci) : "r" (ci));
- 	asm volatile ("depw  %1,15,12,%0" : "+r" (pa) : "r" (ci));
- 
---- a/drivers/parisc/sba_iommu.c
-+++ b/drivers/parisc/sba_iommu.c
-@@ -573,8 +573,7 @@ sba_io_pdir_entry(u64 *pdir_ptr, space_t
- 	pa = virt_to_phys(vba);
- 	pa &= IOVP_MASK;
- 
--	mtsp(sid,1);
--	asm("lci 0(%%sr1, %1), %0" : "=r" (ci) : "r" (vba));
-+	asm("lci 0(%1), %0" : "=r" (ci) : "r" (vba));
- 	pa |= (ci >> PAGE_SHIFT) & 0xff;  /* move CI (8 bits) into lowest byte */
- 
- 	pa |= SBA_PDIR_VALID_BIT;	/* set "valid" bit */
++	 * If SSBD is controlled by the SPEC_CTRL MSR, then set the proper
++	 * bit in the mask to allow guests to use the mitigation even in the
++	 * case where the host does not enable it.
++	 */
++	if (static_cpu_has(X86_FEATURE_SPEC_CTRL_SSBD) ||
++	    static_cpu_has(X86_FEATURE_AMD_SSBD)) {
++		x86_spec_ctrl_mask |= SPEC_CTRL_SSBD;
++	}
++
++	/*
+ 	 * We have three CPU feature flags that are in play here:
+ 	 *  - X86_BUG_SPEC_STORE_BYPASS - CPU is susceptible.
+ 	 *  - X86_FEATURE_SSBD - CPU is able to turn off speculative store bypass
+@@ -976,7 +986,6 @@ static enum ssb_mitigation __init __ssb_
+ 			x86_amd_ssb_disable();
+ 		} else {
+ 			x86_spec_ctrl_base |= SPEC_CTRL_SSBD;
+-			x86_spec_ctrl_mask |= SPEC_CTRL_SSBD;
+ 			wrmsrl(MSR_IA32_SPEC_CTRL, x86_spec_ctrl_base);
+ 		}
+ 	}
 
