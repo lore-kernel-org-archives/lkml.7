@@ -2,40 +2,69 @@ Return-Path: <SRS0=zem1=X3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C3A4C35280
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 14:42:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B5A3C35280
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 14:43:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3AF6F21783
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 14:42:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1072021783
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 14:43:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ahoJ80fO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728413AbfJBOm2 (ORCPT
+        id S1727184AbfJBOnX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Oct 2019 10:42:28 -0400
-Received: from foss.arm.com ([217.140.110.172]:45758 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726811AbfJBOmL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Oct 2019 10:42:11 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id CC56D15A1;
-        Wed,  2 Oct 2019 07:42:10 -0700 (PDT)
-Received: from e119884-lin.cambridge.arm.com (e119884-lin.cambridge.arm.com [10.1.196.72])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 93A443F706;
-        Wed,  2 Oct 2019 07:42:09 -0700 (PDT)
-From:   Vincenzo Frascino <vincenzo.frascino@arm.com>
-To:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc:     vincenzo.frascino@arm.com, ard.biesheuvel@linaro.org,
-        ndesaulniers@google.com, catalin.marinas@arm.com, will@kernel.org,
-        tglx@linutronix.de, luto@kernel.org
-Subject: [PATCH v4 2/6] arm64: vdso32: Detect binutils support for dmb ishld
-Date:   Wed,  2 Oct 2019 15:41:52 +0100
-Message-Id: <20191002144156.2174-3-vincenzo.frascino@arm.com>
+        Wed, 2 Oct 2019 10:43:23 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:44291 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725935AbfJBOnW (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 2 Oct 2019 10:43:22 -0400
+Received: by mail-wr1-f67.google.com with SMTP id z9so6852033wrl.11;
+        Wed, 02 Oct 2019 07:43:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=y9l/1MkRoZLCyZNPXaR5fzwvTbuyIzYA20JLtWuhYR4=;
+        b=ahoJ80fONPxwQPqvbuQRAba40syj0YJFK3SbqTxd0FOzhs1n3WTvNd/gHQ+2WK5WwB
+         8joqipXveUGBgePR1RwHR0oQyDAumewRmSMStvhyCHPeo154CNqZfGQNlbNlRng2QJqd
+         1/Sq8GNJ1DjcLifpHWbCC9LoK5U3UkvdIWHPFx0cqJ+ENvPHkYPr2FdpaZ8jxuJta3TT
+         dplkNk0AsL/tc33KBJbKUSlnYppX878WQXUvnhdB+TRmr5R3dtc5Ewc0TH4h7V1SXTly
+         GiNnbbCc+BKzzqk9PTo/Pqf5dzWcpNDBA1GUkzQZDTXOXXUzBjnlrTaQctjSdE6meWfJ
+         JbDw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=y9l/1MkRoZLCyZNPXaR5fzwvTbuyIzYA20JLtWuhYR4=;
+        b=UIHX/qLK5s52vBAq1L96RTmfJilds1VFNEWvaiCVppi4zLOn6qtnJ4cmYZjb72c9+z
+         zun/k9GlBVIM50W/c7y7n0zS4XlScmCrow1dpSpeoA1MQ0dEEQ6f2VrwTDIu3RSthlLe
+         zIStAcc9gTHOssPfALuZYqYqaidYe0pvVSRnsZLW1401WkHPnL7UW7tZTAVROMBxyQi0
+         tqvRjQIAvqJIxCqjo/eexRrbn7yj1BcZoqSpTPjJc+cXFWfWNvVEfaEZpHarplmdp8GJ
+         q+LXO0MuoxYj02LNkPdr7sVp0V2FJZXVWz4eE4mBSPd8iDICTCAXMajh9XxvzH73bGnp
+         3h8Q==
+X-Gm-Message-State: APjAAAVKAuUfd0by9Hg2x+Fwhj2mqqSMOxL5aD+m3vkxazknSZx87Q+V
+        UCbxEomHvmovLQcmy/xqrtWT0j2d
+X-Google-Smtp-Source: APXvYqyETp8FIXhzzDrv+mhfzHhU0D9h3bcpLQ9oRbkEYPG7JvxLk5RVWx/ooYmku2+exI6oXsHTnA==
+X-Received: by 2002:a5d:4dd0:: with SMTP id f16mr2905889wru.85.1570027400467;
+        Wed, 02 Oct 2019 07:43:20 -0700 (PDT)
+Received: from localhost (p2E5BE2CE.dip0.t-ipconnect.de. [46.91.226.206])
+        by smtp.gmail.com with ESMTPSA id z125sm10251381wme.37.2019.10.02.07.43.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 02 Oct 2019 07:43:19 -0700 (PDT)
+From:   Thierry Reding <thierry.reding@gmail.com>
+To:     Lee Jones <lee.jones@linaro.org>
+Cc:     linux-tegra@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] mfd: max77620: Do not allocate IRQs upfront
+Date:   Wed,  2 Oct 2019 16:43:18 +0200
+Message-Id: <20191002144318.140365-1-thierry.reding@gmail.com>
 X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20191002144156.2174-1-vincenzo.frascino@arm.com>
-References: <20191002144156.2174-1-vincenzo.frascino@arm.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -43,70 +72,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Older versions of binutils that do not support certain types of memory
-barriers can cause build failure of the vdso32 library.
+From: Thierry Reding <treding@nvidia.com>
 
-Add a compilation time mechanism that detects if binutils supports those
-instructions and configure the kernel accordingly.
+regmap_add_irq_chip() will try to allocate all of the IRQ descriptors
+upfront if passed a non-zero irq_base parameter. However, the intention
+is to allocate IRQ descriptors on an as-needed basis if possible. Pass 0
+instead of -1 to fix that use-case.
 
-Cc: Will Deacon <will@kernel.org>
-Cc: Catalin Marinas <catalin.marinas@arm.com>
-Reported-by: Will Deacon <will@kernel.org>
-Signed-off-by: Vincenzo Frascino <vincenzo.frascino@arm.com>
-Reviewed-by: Catalin Marinas <catalin.marinas@arm.com>
-Tested-by: Catalin Marinas <catalin.marinas@arm.com>
+Signed-off-by: Thierry Reding <treding@nvidia.com>
 ---
- arch/arm64/include/asm/vdso/compat_barrier.h | 2 +-
- arch/arm64/kernel/vdso32/Makefile            | 9 +++++++++
- 2 files changed, 10 insertions(+), 1 deletion(-)
+ drivers/mfd/max77620.c       | 5 ++---
+ include/linux/mfd/max77620.h | 1 -
+ 2 files changed, 2 insertions(+), 4 deletions(-)
 
-diff --git a/arch/arm64/include/asm/vdso/compat_barrier.h b/arch/arm64/include/asm/vdso/compat_barrier.h
-index fb60a88b5ed4..3fd8fd6d8fc2 100644
---- a/arch/arm64/include/asm/vdso/compat_barrier.h
-+++ b/arch/arm64/include/asm/vdso/compat_barrier.h
-@@ -20,7 +20,7 @@
+diff --git a/drivers/mfd/max77620.c b/drivers/mfd/max77620.c
+index a851ff473a44..c7ed5c353553 100644
+--- a/drivers/mfd/max77620.c
++++ b/drivers/mfd/max77620.c
+@@ -507,7 +507,6 @@ static int max77620_probe(struct i2c_client *client,
  
- #define dmb(option) __asm__ __volatile__ ("dmb " #option : : : "memory")
+ 	i2c_set_clientdata(client, chip);
+ 	chip->dev = &client->dev;
+-	chip->irq_base = -1;
+ 	chip->chip_irq = client->irq;
+ 	chip->chip_id = (enum max77620_chip_id)id->driver_data;
  
--#if __LINUX_ARM_ARCH__ >= 8
-+#if __LINUX_ARM_ARCH__ >= 8 && defined(CONFIG_AS_DMB_ISHLD)
- #define aarch32_smp_mb()	dmb(ish)
- #define aarch32_smp_rmb()	dmb(ishld)
- #define aarch32_smp_wmb()	dmb(ishst)
-diff --git a/arch/arm64/kernel/vdso32/Makefile b/arch/arm64/kernel/vdso32/Makefile
-index 19e0d3115ffe..77aa61340374 100644
---- a/arch/arm64/kernel/vdso32/Makefile
-+++ b/arch/arm64/kernel/vdso32/Makefile
-@@ -15,6 +15,8 @@ cc32-disable-warning = $(call try-run,\
- 	$(COMPATCC) -W$(strip $(1)) -c -x c /dev/null -o "$$TMP",-Wno-$(strip $(1)))
- cc32-ldoption = $(call try-run,\
-         $(COMPATCC) $(1) -nostdlib -x c /dev/null -o "$$TMP",$(1),$(2))
-+cc32-as-instr = $(call try-run,\
-+	printf "%b\n" "$(1)" | $(COMPATCC) $(VDSO_AFLAGS) -c -x assembler -o "$$TMP" -,$(2),$(3))
+@@ -545,8 +544,8 @@ static int max77620_probe(struct i2c_client *client,
  
- # We cannot use the global flags to compile the vDSO files, the main reason
- # being that the 32-bit compiler may be older than the main (64-bit) compiler
-@@ -53,6 +55,7 @@ endif
- VDSO_CAFLAGS += -fPIC -fno-builtin -fno-stack-protector
- VDSO_CAFLAGS += -DDISABLE_BRANCH_PROFILING
+ 	max77620_top_irq_chip.irq_drv_data = chip;
+ 	ret = devm_regmap_add_irq_chip(chip->dev, chip->rmap, client->irq,
+-				       IRQF_ONESHOT | IRQF_SHARED,
+-				       chip->irq_base, &max77620_top_irq_chip,
++				       IRQF_ONESHOT | IRQF_SHARED, 0,
++				       &max77620_top_irq_chip,
+ 				       &chip->top_irq_data);
+ 	if (ret < 0) {
+ 		dev_err(chip->dev, "Failed to add regmap irq: %d\n", ret);
+diff --git a/include/linux/mfd/max77620.h b/include/linux/mfd/max77620.h
+index 12ba157cb83f..f552ef5b1100 100644
+--- a/include/linux/mfd/max77620.h
++++ b/include/linux/mfd/max77620.h
+@@ -329,7 +329,6 @@ struct max77620_chip {
+ 	struct regmap *rmap;
  
-+
- # Try to compile for ARMv8. If the compiler is too old and doesn't support it,
- # fall back to v7. There is no easy way to check for what architecture the code
- # is being compiled, so define a macro specifying that (see arch/arm/Makefile).
-@@ -89,6 +92,12 @@ VDSO_CFLAGS += -Wno-int-to-pointer-cast
- VDSO_AFLAGS := $(VDSO_CAFLAGS)
- VDSO_AFLAGS += -D__ASSEMBLY__
+ 	int chip_irq;
+-	int irq_base;
  
-+# Check for binutils support for dmb ishld
-+dmbinstr := $(call cc32-as-instr,dmb ishld,-DCONFIG_AS_DMB_ISHLD=1)
-+
-+VDSO_CFLAGS += $(dmbinstr)
-+VDSO_AFLAGS += $(dmbinstr)
-+
- VDSO_LDFLAGS := $(VDSO_CPPFLAGS)
- # From arm vDSO Makefile
- VDSO_LDFLAGS += -Wl,-Bsymbolic -Wl,--no-undefined -Wl,-soname=linux-vdso.so.1
+ 	/* chip id */
+ 	enum max77620_chip_id chip_id;
 -- 
 2.23.0
 
