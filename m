@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2117AC4360C
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 19:10:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6913FC4360C
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 19:10:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 03E862133F
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 19:10:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 50E7221D82
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 19:10:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729919AbfJBTKr (ORCPT
+        id S1729906AbfJBTKp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Oct 2019 15:10:47 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:35834 "EHLO
+        Wed, 2 Oct 2019 15:10:45 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:35866 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729310AbfJBTIQ (ORCPT
+        by vger.kernel.org with ESMTP id S1729311AbfJBTIQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 2 Oct 2019 15:08:16 -0400
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1iFjyu-00036B-RT; Wed, 02 Oct 2019 20:08:12 +0100
+        id 1iFjyu-00035s-EK; Wed, 02 Oct 2019 20:08:12 +0100
 Received: from ben by deadeye with local (Exim 4.92.1)
         (envelope-from <ben@decadent.org.uk>)
-        id 1iFjyq-0003g3-2a; Wed, 02 Oct 2019 20:08:08 +0100
+        id 1iFjyq-0003gg-LL; Wed, 02 Oct 2019 20:08:08 +0100
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,13 +35,14 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Paul Burton" <paul.burton@mips.com>, linux-mips@vger.kernel.org,
-        "Dmitry Korotin" <dkorotin@wavecomp.com>
+        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
+        "Eiichi Tsukata" <devel@etsukata.com>
 Date:   Wed, 02 Oct 2019 20:06:51 +0100
-Message-ID: <lsq.1570043211.121577724@decadent.org.uk>
+Message-ID: <lsq.1570043211.462979156@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 77/87] MIPS: Add missing EHB in mtc0 -> mfc0 sequence.
+Subject: [PATCH 3.16 84/87] tracing/snapshot: Resize spare buffer if size
+ changed
 In-Reply-To: <lsq.1570043210.379046399@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -55,122 +56,103 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Dmitry Korotin <dkorotin@wavecomp.com>
+From: Eiichi Tsukata <devel@etsukata.com>
 
-commit 0b24cae4d535045f4c9e177aa228d4e97bad212c upstream.
+commit 46cc0b44428d0f0e81f11ea98217fc0edfbeab07 upstream.
 
-Add a missing EHB (Execution Hazard Barrier) in mtc0 -> mfc0 sequence.
-Without this execution hazard barrier it's possible for the value read
-back from the KScratch register to be the value from before the mtc0.
+Current snapshot implementation swaps two ring_buffers even though their
+sizes are different from each other, that can cause an inconsistency
+between the contents of buffer_size_kb file and the current buffer size.
 
-Reproducible on P5600 & P6600.
+For example:
 
-The hazard is documented in the MIPS Architecture Reference Manual Vol.
-III: MIPS32/microMIPS32 Privileged Resource Architecture (MD00088), rev
-6.03 table 8.1 which includes:
+  # cat buffer_size_kb
+  7 (expanded: 1408)
+  # echo 1 > events/enable
+  # grep bytes per_cpu/cpu0/stats
+  bytes: 1441020
+  # echo 1 > snapshot             // current:1408, spare:1408
+  # echo 123 > buffer_size_kb     // current:123,  spare:1408
+  # echo 1 > snapshot             // current:1408, spare:123
+  # grep bytes per_cpu/cpu0/stats
+  bytes: 1443700
+  # cat buffer_size_kb
+  123                             // != current:1408
 
-   Producer | Consumer | Hazard
-  ----------|----------|----------------------------
-   mtc0     | mfc0     | any coprocessor 0 register
+And also, a similar per-cpu case hits the following WARNING:
 
-Signed-off-by: Dmitry Korotin <dkorotin@wavecomp.com>
-[paul.burton@mips.com:
-  - Commit message tweaks.
-  - Add Fixes tags.
-  - Mark for stable back to v3.15 where P5600 support was introduced.]
-Signed-off-by: Paul Burton <paul.burton@mips.com>
-Fixes: 3d8bfdd03072 ("MIPS: Use C0_KScratch (if present) to hold PGD pointer.")
-Fixes: 829dcc0a956a ("MIPS: Add MIPS P5600 probe support")
-Cc: linux-mips@vger.kernel.org
+Reproducer:
+
+  # echo 1 > per_cpu/cpu0/snapshot
+  # echo 123 > buffer_size_kb
+  # echo 1 > per_cpu/cpu0/snapshot
+
+WARNING:
+
+  WARNING: CPU: 0 PID: 1946 at kernel/trace/trace.c:1607 update_max_tr_single.part.0+0x2b8/0x380
+  Modules linked in:
+  CPU: 0 PID: 1946 Comm: bash Not tainted 5.2.0-rc6 #20
+  Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.12.0-2.fc30 04/01/2014
+  RIP: 0010:update_max_tr_single.part.0+0x2b8/0x380
+  Code: ff e8 dc da f9 ff 0f 0b e9 88 fe ff ff e8 d0 da f9 ff 44 89 ee bf f5 ff ff ff e8 33 dc f9 ff 41 83 fd f5 74 96 e8 b8 da f9 ff <0f> 0b eb 8d e8 af da f9 ff 0f 0b e9 bf fd ff ff e8 a3 da f9 ff 48
+  RSP: 0018:ffff888063e4fca0 EFLAGS: 00010093
+  RAX: ffff888066214380 RBX: ffffffff99850fe0 RCX: ffffffff964298a8
+  RDX: 0000000000000000 RSI: 00000000fffffff5 RDI: 0000000000000005
+  RBP: 1ffff1100c7c9f96 R08: ffff888066214380 R09: ffffed100c7c9f9b
+  R10: ffffed100c7c9f9a R11: 0000000000000003 R12: 0000000000000000
+  R13: 00000000ffffffea R14: ffff888066214380 R15: ffffffff99851060
+  FS:  00007f9f8173c700(0000) GS:ffff88806d000000(0000) knlGS:0000000000000000
+  CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+  CR2: 0000000000714dc0 CR3: 0000000066fa6000 CR4: 00000000000006f0
+  Call Trace:
+   ? trace_array_printk_buf+0x140/0x140
+   ? __mutex_lock_slowpath+0x10/0x10
+   tracing_snapshot_write+0x4c8/0x7f0
+   ? trace_printk_init_buffers+0x60/0x60
+   ? selinux_file_permission+0x3b/0x540
+   ? tracer_preempt_off+0x38/0x506
+   ? trace_printk_init_buffers+0x60/0x60
+   __vfs_write+0x81/0x100
+   vfs_write+0x1e1/0x560
+   ksys_write+0x126/0x250
+   ? __ia32_sys_read+0xb0/0xb0
+   ? do_syscall_64+0x1f/0x390
+   do_syscall_64+0xc1/0x390
+   entry_SYSCALL_64_after_hwframe+0x49/0xbe
+
+This patch adds resize_buffer_duplicate_size() to check if there is a
+difference between current/spare buffer sizes and resize a spare buffer
+if necessary.
+
+Link: http://lkml.kernel.org/r/20190625012910.13109-1-devel@etsukata.com
+
+Fixes: ad909e21bbe69 ("tracing: Add internal tracing_snapshot() functions")
+Signed-off-by: Eiichi Tsukata <devel@etsukata.com>
+Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
 [bwh: Backported to 3.16: adjust context]
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- arch/mips/mm/tlbex.c | 29 ++++++++++++++++++++---------
- 1 file changed, 20 insertions(+), 9 deletions(-)
+ kernel/trace/trace.c | 10 ++++++----
+ 1 file changed, 6 insertions(+), 4 deletions(-)
 
---- a/arch/mips/mm/tlbex.c
-+++ b/arch/mips/mm/tlbex.c
-@@ -374,6 +374,7 @@ static struct work_registers build_get_w
- static void build_restore_work_registers(u32 **p)
- {
- 	if (scratch_reg >= 0) {
-+		uasm_i_ehb(p);
- 		UASM_i_MFC0(p, 1, c0_kscratch(), scratch_reg);
- 		return;
- 	}
-@@ -665,10 +666,12 @@ static void build_restore_pagemask(u32 *
- 			uasm_i_mtc0(p, 0, C0_PAGEMASK);
- 			uasm_il_b(p, r, lid);
+--- a/kernel/trace/trace.c
++++ b/kernel/trace/trace.c
+@@ -5102,11 +5102,13 @@ tracing_snapshot_write(struct file *filp
+ 			break;
  		}
--		if (scratch_reg >= 0)
-+		if (scratch_reg >= 0) {
-+			uasm_i_ehb(p);
- 			UASM_i_MFC0(p, 1, c0_kscratch(), scratch_reg);
--		else
-+		} else {
- 			UASM_i_LW(p, 1, scratchpad_offset(0), 0);
-+		}
- 	} else {
- 		/* Reset default page size */
- 		if (PM_DEFAULT_MASK >> 16) {
-@@ -906,10 +909,12 @@ build_get_pgd_vmalloc64(u32 **p, struct
- 		uasm_i_jr(p, ptr);
- 
- 		if (mode == refill_scratch) {
--			if (scratch_reg >= 0)
-+			if (scratch_reg >= 0) {
-+				uasm_i_ehb(p);
- 				UASM_i_MFC0(p, 1, c0_kscratch(), scratch_reg);
--			else
-+			} else {
- 				UASM_i_LW(p, 1, scratchpad_offset(0), 0);
-+			}
- 		} else {
- 			uasm_i_nop(p);
- 		}
-@@ -1215,6 +1220,7 @@ build_fast_tlb_refill_handler (u32 **p,
- 	UASM_i_MTC0(p, odd, C0_ENTRYLO1); /* load it */
- 
- 	if (c0_scratch_reg >= 0) {
-+		uasm_i_ehb(p);
- 		UASM_i_MFC0(p, scratch, c0_kscratch(), c0_scratch_reg);
- 		build_tlb_write_entry(p, l, r, tlb_random);
- 		uasm_l_leave(l, *p);
-@@ -1466,12 +1472,14 @@ static void build_setup_pgd(void)
- 		uasm_i_dinsm(&p, a0, 0, 29, 64 - 29);
- 		uasm_l_tlbl_goaround1(&l, p);
- 		UASM_i_SLL(&p, a0, a0, 11);
--		uasm_i_jr(&p, 31);
- 		UASM_i_MTC0(&p, a0, C0_CONTEXT);
-+		uasm_i_jr(&p, 31);
-+		uasm_i_ehb(&p);
- 	} else {
- 		/* PGD in c0_KScratch */
--		uasm_i_jr(&p, 31);
- 		UASM_i_MTC0(&p, a0, c0_kscratch(), pgd_reg);
-+		uasm_i_jr(&p, 31);
-+		uasm_i_ehb(&p);
- 	}
- #else
- #ifdef CONFIG_SMP
-@@ -1485,13 +1493,16 @@ static void build_setup_pgd(void)
- 	UASM_i_LA_mostly(&p, a2, pgdc);
- 	UASM_i_SW(&p, a0, uasm_rel_lo(pgdc), a2);
- #endif /* SMP */
--	uasm_i_jr(&p, 31);
- 
- 	/* if pgd_reg is allocated, save PGD also to scratch register */
--	if (pgd_reg != -1)
-+	if (pgd_reg != -1) {
- 		UASM_i_MTC0(&p, a0, c0_kscratch(), pgd_reg);
--	else
-+		uasm_i_jr(&p, 31);
-+		uasm_i_ehb(&p);
-+	} else {
-+		uasm_i_jr(&p, 31);
- 		uasm_i_nop(&p);
-+	}
  #endif
- 	if (p >= tlbmiss_handler_setup_pgd_end)
- 		panic("tlbmiss_handler_setup_pgd space exceeded");
+-		if (!tr->allocated_snapshot) {
++		if (tr->allocated_snapshot)
++			ret = resize_buffer_duplicate_size(&tr->max_buffer,
++					&tr->trace_buffer, iter->cpu_file);
++		else
+ 			ret = alloc_snapshot(tr);
+-			if (ret < 0)
+-				break;
+-		}
++		if (ret < 0)
++			break;
+ 		local_irq_disable();
+ 		/* Now, we're going to swap */
+ 		if (iter->cpu_file == RING_BUFFER_ALL_CPUS)
 
