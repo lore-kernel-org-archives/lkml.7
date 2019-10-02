@@ -2,123 +2,95 @@ Return-Path: <SRS0=zem1=X3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A0F2EC352AA
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 13:59:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D83F1ECE58A
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 14:00:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 78B8C21920
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 13:59:06 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="s4hfO8XB"
+	by mail.kernel.org (Postfix) with ESMTP id B90D221920
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 14:00:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727692AbfJBN7F (ORCPT
+        id S1727672AbfJBOA3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Oct 2019 09:59:05 -0400
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:46796 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725917AbfJBN7F (ORCPT
+        Wed, 2 Oct 2019 10:00:29 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:57480 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726087AbfJBOA2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Oct 2019 09:59:05 -0400
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id x92Dwqcj111590;
-        Wed, 2 Oct 2019 08:58:52 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1570024732;
-        bh=RaDMxu07D9M++yaf5vgHDeabPM3lihqxOYytrbBSUU0=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=s4hfO8XBCPZmABJZKz9xLcLV1xumo+2UHZ2+aNDDakouuzaZaCbuwZMrUk437umz5
-         vJJjNFUrEhcWyXN1MrOJc/+9swQCw5J872R3gux1SIxbhBacPPqfup96xK3T3tOE7e
-         atmDEnMg2+05Cf54/a6FST1u/zcePHJ8aUvZfG2o=
-Received: from DLEE106.ent.ti.com (dlee106.ent.ti.com [157.170.170.36])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x92Dwqja096089
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 2 Oct 2019 08:58:52 -0500
-Received: from DLEE100.ent.ti.com (157.170.170.30) by DLEE106.ent.ti.com
- (157.170.170.36) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Wed, 2 Oct
- 2019 08:58:51 -0500
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE100.ent.ti.com
- (157.170.170.30) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Wed, 2 Oct 2019 08:58:51 -0500
-Received: from [10.250.99.146] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id x92DwnDw091205;
-        Wed, 2 Oct 2019 08:58:49 -0500
-Subject: Re: [PATCH v7 1/5] leds: populate the device's of_node when possible
-To:     Jacek Anaszewski <jacek.anaszewski@gmail.com>, <pavel@ucw.cz>,
-        <robh+dt@kernel.org>, <mark.rutland@arm.com>,
-        <lee.jones@linaro.org>, <daniel.thompson@linaro.org>
-CC:     <dmurphy@ti.com>, <linux-leds@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <dri-devel@lists.freedesktop.org>,
-        <tomi.valkeinen@ti.com>
-References: <20190918145730.22805-1-jjhiblot@ti.com>
- <20190918145730.22805-2-jjhiblot@ti.com>
- <f543e757-e000-6de4-694b-e75f388e5908@gmail.com>
-From:   Jean-Jacques Hiblot <jjhiblot@ti.com>
-Message-ID: <e9588e03-20d4-7e6d-e514-0b79dae12cce@ti.com>
-Date:   Wed, 2 Oct 2019 15:58:48 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
-MIME-Version: 1.0
-In-Reply-To: <f543e757-e000-6de4-694b-e75f388e5908@gmail.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+        Wed, 2 Oct 2019 10:00:28 -0400
+Received: from pps.filterd (m0098416.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x92Dvicp126173
+        for <linux-kernel@vger.kernel.org>; Wed, 2 Oct 2019 10:00:27 -0400
+Received: from e06smtp03.uk.ibm.com (e06smtp03.uk.ibm.com [195.75.94.99])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2vcvcxsyqn-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Wed, 02 Oct 2019 10:00:27 -0400
+Received: from localhost
+        by e06smtp03.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <zohar@linux.ibm.com>;
+        Wed, 2 Oct 2019 15:00:25 +0100
+Received: from b06avi18878370.portsmouth.uk.ibm.com (9.149.26.194)
+        by e06smtp03.uk.ibm.com (192.168.101.133) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Wed, 2 Oct 2019 15:00:22 +0100
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
+        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x92E0Lx824183122
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 2 Oct 2019 14:00:21 GMT
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 48A62A4067;
+        Wed,  2 Oct 2019 14:00:21 +0000 (GMT)
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id D0B2DA4054;
+        Wed,  2 Oct 2019 14:00:19 +0000 (GMT)
+Received: from localhost.localdomain (unknown [9.80.234.231])
+        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Wed,  2 Oct 2019 14:00:19 +0000 (GMT)
+Subject: Re: [PATCH] KEYS: asym_tpm: Switch to get_random_bytes()
+From:   Mimi Zohar <zohar@linux.ibm.com>
+To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        linux-integrity@vger.kernel.org
+Cc:     stable@vger.kernel.org, David Howells <dhowells@redhat.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        "David S. Miller" <davem@davemloft.net>,
+        "open list:ASYMMETRIC KEYS" <keyrings@vger.kernel.org>,
+        "open list:CRYPTO API" <linux-crypto@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+Date:   Wed, 02 Oct 2019 10:00:19 -0400
+In-Reply-To: <20190926171601.30404-1-jarkko.sakkinen@linux.intel.com>
+References: <20190926171601.30404-1-jarkko.sakkinen@linux.intel.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+x-cbid: 19100214-0012-0000-0000-000003535F73
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19100214-0013-0000-0000-0000218E6336
+Message-Id: <1570024819.4999.119.camel@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-10-02_06:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=607 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1908290000 definitions=main-1910020135
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Jacek,
+On Thu, 2019-09-26 at 20:16 +0300, Jarkko Sakkinen wrote:
+> Only the kernel random pool should be used for generating random numbers.
+> TPM contributes to that pool among the other sources of entropy. In here it
+> is not, agreed, absolutely critical because TPM is what is trusted anyway
+> but in order to remove tpm_get_random() we need to first remove all the
+> call sites.
 
-On 24/09/2019 23:03, Jacek Anaszewski wrote:
-> Hi Jean,
->
-> Thank you for rebasing the set
->
-> On 9/18/19 4:57 PM, Jean-Jacques Hiblot wrote:
->> If initialization data is available and its fwnode is actually a of_node,
->> store this information in the led device's structure. This will allow the
->> device to use or provide OF-based API such (devm_xxx).
->>
->> Signed-off-by: Jean-Jacques Hiblot <jjhiblot@ti.com>
->> ---
->>   drivers/leds/led-class.c | 5 ++++-
->>   1 file changed, 4 insertions(+), 1 deletion(-)
->>
->> diff --git a/drivers/leds/led-class.c b/drivers/leds/led-class.c
->> index 647b1263c579..c2167b66b61f 100644
->> --- a/drivers/leds/led-class.c
->> +++ b/drivers/leds/led-class.c
->> @@ -276,8 +276,11 @@ int led_classdev_register_ext(struct device *parent,
->>   		mutex_unlock(&led_cdev->led_access);
->>   		return PTR_ERR(led_cdev->dev);
->>   	}
->> -	if (init_data && init_data->fwnode)
->> +	if (init_data && init_data->fwnode) {
->>   		led_cdev->dev->fwnode = init_data->fwnode;
->> +		if (is_of_node(init_data->fwnode))
->> +			led_cdev->dev->of_node = to_of_node(init_data->fwnode);
-> It would be step backwards. You can do the conversion in the place of
-> use i.e. in devm_led_get().
+At what point during boot is the kernel random pool available?  Does
+this imply that you're planning on changing trusted keys as well?
 
-Could be done. But it would break another use case I have. I'm also 
-working on the regulator support and for this one, of_node needs to be 
-populated.
+Mimi
 
-Is there a problem populating of_node if the LED is indeed described in 
-the DT ?
-
-JJ
-
->
->> +	}
->>   
->>   	if (ret)
->>   		dev_warn(parent, "Led %s renamed to %s due to name collision",
->>
