@@ -2,126 +2,159 @@ Return-Path: <SRS0=zem1=X3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BADDC35280
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 07:52:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BFA4FC35280
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 07:53:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 672A321920
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 07:52:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8827A218DE
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 07:53:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="I4sE+0YQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727072AbfJBHww (ORCPT
+        id S1727093AbfJBHxN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Oct 2019 03:52:52 -0400
-Received: from relay7-d.mail.gandi.net ([217.70.183.200]:56279 "EHLO
-        relay7-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726002AbfJBHww (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Oct 2019 03:52:52 -0400
-X-Originating-IP: 2.224.242.101
-Received: from uno.localdomain (2-224-242-101.ip172.fastwebnet.it [2.224.242.101])
-        (Authenticated sender: jacopo@jmondi.org)
-        by relay7-d.mail.gandi.net (Postfix) with ESMTPSA id DBCFC2000D;
-        Wed,  2 Oct 2019 07:52:48 +0000 (UTC)
-Date:   Wed, 2 Oct 2019 09:54:32 +0200
-From:   Jacopo Mondi <jacopo@jmondi.org>
-To:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Cc:     jacopo+renesas@jmondi.org, kieran.bingham+renesas@ideasonboard.com,
-        laurent.pinchart+renesas@ideasonboard.com,
-        niklas.soderlund+renesas@ragnatech.se, mchehab@kernel.org,
-        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] media: i2c: max9286: Pass default bus type when parsing
- fwnode endpoint
-Message-ID: <20191002075432.bkee4fl6cfcr25iv@uno.localdomain>
-References: <20191001145503.5170-1-manivannan.sadhasivam@linaro.org>
+        Wed, 2 Oct 2019 03:53:13 -0400
+Received: from mail-eopbgr1320127.outbound.protection.outlook.com ([40.107.132.127]:45664
+        "EHLO APC01-PU1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725852AbfJBHxM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 2 Oct 2019 03:53:12 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=IblUSxUBtvMvaoOKBnbOKPBb4qBtRnrE59T27aTmxIlF/d3Ni//S2a/oeEjM4M82Cm5uKpffKcspo8ZiMbZRUHl62DSPXI9Cj+XKTNoA5jqIWhjX8h7RA69Jh4jraJi6+Jm4D3IPboloW6qAUMS5hdeu5mrfOCtS2im/Ba24iKqVAXYAscICOJcRojWguUCD+dxBKX4OiDKcs9DWsBf+mSDUT8HfIoHvLTY5EAof131NpoP5RLksvELYr7wvc0R7A40W8Kbg5kNjw1aDVlAV9JVdUaWr1DHRdQ9OmGgBEZnnMqTRuoGskzqsqrebr1RtuB6C4sbYcPOBuAcIoXOfhA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=ZXDa3z7CtxUM0rT/KWg5xdmUMq6f1lZL1bcExHOoPkk=;
+ b=n0E6xHgTabBo9sytKmU50Nt/cdTEQuR0CQ5bwhcyi9O10ZF85WBaJXJRxacmMedUxqAkAmZbnfd9wJB29t6U6ZvV7YwVPox5nyNET0Tkm65Sz0aARSy6W+s5WSgjQtXXcuAfVOeW/kRiieH0FSesULM3/jsOUWAAezsNP1YyBGqobo0w6M2pe9EZTDwzhcWtVwECgPx2IXyC7w5t5wvbOJSWAK6myYF/KXkSGZST3X49/0GwiKllV8UPwrrPsnuKBaF/4Uiw+9Od0XPF93NVF1lA0ezAkKzb99FaEAOl/ySN4V7pT9oYBSosIL0FU+tAm2VcPGn659WPCM4Bw/3Q6Q==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=microsoft.com; dmarc=pass action=none
+ header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=ZXDa3z7CtxUM0rT/KWg5xdmUMq6f1lZL1bcExHOoPkk=;
+ b=I4sE+0YQOxQ6S+JXHL+lLFHzscByD3bWbRxeC5B6um7Gh8eqS5wyQnyf8ugNez9bYVpspDQU4trmn+bsORzBUuhfYmmoJZywrFKEF3H6PA79e5IXN30aH+YH5UeTwbFwq9n/Y3D/61gaHMmIW+1CT42CPk9f8mXSH1/DnxBv3lU=
+Received: from PU1P153MB0169.APCP153.PROD.OUTLOOK.COM (10.170.189.13) by
+ PU1P153MB0155.APCP153.PROD.OUTLOOK.COM (10.170.189.11) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2347.6; Wed, 2 Oct 2019 07:52:27 +0000
+Received: from PU1P153MB0169.APCP153.PROD.OUTLOOK.COM
+ ([fe80::fc44:a784:73e6:c1c2]) by PU1P153MB0169.APCP153.PROD.OUTLOOK.COM
+ ([fe80::fc44:a784:73e6:c1c2%7]) with mapi id 15.20.2327.009; Wed, 2 Oct 2019
+ 07:52:27 +0000
+From:   Dexuan Cui <decui@microsoft.com>
+To:     Sasha Levin <sashal@kernel.org>, Wei Hu <weh@microsoft.com>
+CC:     Michael Kelley <mikelley@microsoft.com>,
+        "rdunlap@infradead.org" <rdunlap@infradead.org>,
+        "shc_work@mail.ru" <shc_work@mail.ru>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "lee.jones@linaro.org" <lee.jones@linaro.org>,
+        "alexandre.belloni@bootlin.com" <alexandre.belloni@bootlin.com>,
+        "baijiaju1990@gmail.com" <baijiaju1990@gmail.com>,
+        "fthain@telegraphics.com.au" <fthain@telegraphics.com.au>,
+        "info@metux.net" <info@metux.net>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        "linux-fbdev@vger.kernel.org" <linux-fbdev@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        KY Srinivasan <kys@microsoft.com>
+Subject: RE: [PATCH v5] video: hyperv: hyperv_fb: Support deferred IO for
+ Hyper-V frame buffer driver
+Thread-Topic: [PATCH v5] video: hyperv: hyperv_fb: Support deferred IO for
+ Hyper-V frame buffer driver
+Thread-Index: AQHVeIhjL2AndauzGUaHnigxWapFw6dG+x3A
+Date:   Wed, 2 Oct 2019 07:52:27 +0000
+Message-ID: <PU1P153MB0169724E7E7432F1100EE96ABF9C0@PU1P153MB0169.APCP153.PROD.OUTLOOK.COM>
+References: <20190913060209.3604-1-weh@microsoft.com>
+ <20191001184526.GE8171@sasha-vm>
+In-Reply-To: <20191001184526.GE8171@sasha-vm>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=True;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Owner=decui@microsoft.com;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2019-10-02T07:52:24.4667624Z;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=General;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Application=Microsoft Azure
+ Information Protection;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=547f0316-4218-4dff-a043-6acef2fda046;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Extended_MSFT_Method=Automatic
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=decui@microsoft.com; 
+x-originating-ip: [2601:600:a280:7f70:24b0:cdff:a7c5:c70f]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 5ddb93dd-ff4c-4817-4f16-08d7470d785e
+x-ms-office365-filtering-ht: Tenant
+x-ms-traffictypediagnostic: PU1P153MB0155:|PU1P153MB0155:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <PU1P153MB015560A70E66A6DB5323DBAABF9C0@PU1P153MB0155.APCP153.PROD.OUTLOOK.COM>
+x-ms-oob-tlc-oobclassifiers: OLM:6108;
+x-forefront-prvs: 0178184651
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(396003)(346002)(366004)(136003)(39860400002)(376002)(199004)(189003)(55016002)(2906002)(22452003)(316002)(10290500003)(6506007)(53546011)(305945005)(7736002)(102836004)(33656002)(10090500001)(54906003)(4326008)(52536014)(7416002)(71200400001)(110136005)(71190400001)(8990500004)(5660300002)(186003)(1511001)(14454004)(25786009)(6436002)(14444005)(81166006)(229853002)(8936002)(8676002)(81156014)(256004)(76176011)(476003)(107886003)(6636002)(486006)(86362001)(74316002)(478600001)(66446008)(76116006)(9686003)(6116002)(64756008)(66556008)(66476007)(66946007)(46003)(99286004)(6246003)(11346002)(446003)(7696005);DIR:OUT;SFP:1102;SCL:1;SRVR:PU1P153MB0155;H:PU1P153MB0169.APCP153.PROD.OUTLOOK.COM;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: microsoft.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: mM/Ca0HXHoT5UU4mA4rQPX099PlOd+8hm2k4TvZxjEp9/PBGWed3MtI4YFlTV49rqAx449pMH61ntS+upZgSSRjUS9MUD3iZdJhCxFGEsbYI32PHH3+0wpfFV5yCvbgwu+BDS+MFAIfUX3c3aISv4rXCz1sG0vbMUQ1XshxI/J5va5isvkrAF8tpjaB/73ER1E9uKaLkhGssMhYRJ3+gPvZoB714YSEFkv7JZWwzpAuCUfBIMIIMC6XdBPTqxMdXpIbVXJifjp9BvadnSIwR8HsFY3gw9roD4tj3lTuSjTP4bNZuRgOmpDb4XMKywOYBjk0os86EIvsFs3aE+P7l1bj5tlWbeEb5QH4SXSVoSu3QxU/mKynoyPDEEzlhlOSRUbhhcddFkTQHaeJlPQ2BAboHVP5ygWpbHPT0Hx58kAs=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="73eelba4s6ofsnjc"
-Content-Disposition: inline
-In-Reply-To: <20191001145503.5170-1-manivannan.sadhasivam@linaro.org>
-User-Agent: NeoMutt/20180716
+X-OriginatorOrg: microsoft.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 5ddb93dd-ff4c-4817-4f16-08d7470d785e
+X-MS-Exchange-CrossTenant-originalarrivaltime: 02 Oct 2019 07:52:27.1050
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: 0axoKhLk+q2SVIQHMNQEKEPlRgotOGo0gjgNh9Y+iJE2hCN6KQLFLXouY9uLUmoDXzg3/QOEfDKi0qSIFpWbUw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PU1P153MB0155
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+> From: Sasha Levin <sashal@kernel.org>
+> Sent: Tuesday, October 1, 2019 11:45 AM
+> To: Wei Hu <weh@microsoft.com>
+>=20
+> On Fri, Sep 13, 2019 at 06:02:55AM +0000, Wei Hu wrote:
+> >Without deferred IO support, hyperv_fb driver informs the host to refres=
+h
+> >the entire guest frame buffer at fixed rate, e.g. at 20Hz, no matter the=
+re
+> >is screen update or not. This patch supports deferred IO for screens in
+> >graphics mode and also enables the frame buffer on-demand refresh. The
+> >highest refresh rate is still set at 20Hz.
+> >
+> >Currently Hyper-V only takes a physical address from guest as the starti=
+ng
+> >address of frame buffer. This implies the guest must allocate contiguous
+> >physical memory for frame buffer. In addition, Hyper-V Gen 2 VMs only
+> >accept address from MMIO region as frame buffer address. Due to these
+> >limitations on Hyper-V host, we keep a shadow copy of frame buffer
+> >in the guest. This means one more copy of the dirty rectangle inside
+> >guest when doing the on-demand refresh. This can be optimized in the
+> >future with help from host. For now the host performance gain from defer=
+red
+> >IO outweighs the shadow copy impact in the guest.
+> >
+> >Signed-off-by: Wei Hu <weh@microsoft.com>
+>=20
+> What tree is this based on? I can't get it to apply.
+>=20
+> Thanks,
+> Sasha
 
---73eelba4s6ofsnjc
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+Please use Wei's v6 patch, which can apply on today's hyperv/linux.git/s hy=
+perv-next branch.
 
-Hello Manivannan,
-
-On Tue, Oct 01, 2019 at 08:25:03PM +0530, Manivannan Sadhasivam wrote:
-> The caller of v4l2_fwnode_endpoint_alloc_parse() is expected to pass a
-> valid bus_type parameter for proper working of this API. Hence, pass
-> V4L2_MBUS_CSI2_DPHY as the bus_type parameter as this driver only supports
-> MIPI CSI2 for now. Without this commit, the API fails on 96Boards
-> Dragonboard410c connected to MAX9286 deserializer.
->
-> Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> ---
->
-> This patch depends on the latest "MAX9286 GMSL Support" series posted
-> by Kieran Bingham.
->
->  drivers/media/i2c/max9286.c | 4 +++-
->  1 file changed, 3 insertions(+), 1 deletion(-)
->
-> diff --git a/drivers/media/i2c/max9286.c b/drivers/media/i2c/max9286.c
-> index 9390edf5ad9c..6e1299f15493 100644
-> --- a/drivers/media/i2c/max9286.c
-> +++ b/drivers/media/i2c/max9286.c
-> @@ -976,7 +976,9 @@ static int max9286_parse_dt(struct max9286_device *max9286)
->
->  		/* For the source endpoint just parse the bus configuration. */
->  		if (ep.port == MAX9286_SRC_PAD) {
-> -			struct v4l2_fwnode_endpoint vep;
-> +			struct v4l2_fwnode_endpoint vep = {
-> +				.bus_type = V4L2_MBUS_CSI2_DPHY
-> +			};
-
-Isn't the bus_type just an hint ? __v4l2_fwnode_endpoint_parse()
-should try to parse CSI2 first, and should be able to to deduct the bus
-type from the properties specified in DT...
-
-Anyway, I'm not against this change, the contrary actually, I'm just
-afraid it might hide some more subtile bug, as we don't need this on
-our platforms...
-
-Is the db410c mainline ? Do you have DT snippets for db410c+max9286 to
-share?
-
-Thanks
-  j
-
->  			int ret;
->
->  			ret = v4l2_fwnode_endpoint_alloc_parse(
-> --
-> 2.17.1
->
-
---73eelba4s6ofsnjc
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEtcQ9SICaIIqPWDjAcjQGjxahVjwFAl2UV7cACgkQcjQGjxah
-VjxWExAAtghKwPYvUCH7VoaEBwFknLuPPuZHr0trVa+rx+fRqR1uCTfuQJObVH9N
-bNoWunYlzVU000Bs0fOBQyZrjgtwqNycqNXy3blERdXDPDPNOoEeSObUNqKrMse+
-NVcwlsNA/Z/ZffDe9wy0LOvhuXA7ThauMr2PIC6q97NJmZjFKeOH+IOfecbPBhjr
-yWzSkes1b3zJ2TxxaSlxnPOeSxAdTkFUzc5hhZAn7vhIStsVJtATWRyGaAb8o4Lp
-qvldjHq9/3bgLmdVOV4IxoR6n0l9/YYOTBSXDIwVr36OdvB8SksJfIW08iZXX3Y2
-SIu5T9mSIsHFeBTboW1WSFUV5iJmZCNfeWzTeKVapLS9e8wUYjwV6nIGbXz60epU
-cD+h36zq0C+a5OuvQFcDfoZbHy7xBk6UJKZh4a5DnzTFHRF1rKaOAB0J4RQGSNrx
-q5N0hF6ulPxYOKV/siEWbOe+N8zJAin7IzCbBCQy4iu4Qf36WWSlNM9hICw/BOTa
-QmA0lF1rg4r6PZJ2+8U1KmQz9iRxmw1LjB6O/1jrx2qu0lPUW+xRYiBKRwQdKK8n
-n9IDtrpFC4noZsjsz1PwLQKwRdL2tf6p4kuVChJb68Q+nSYmTF3d+sTxoB+G7AE6
-ZfA958GpLdLBd41o0dGgnbZ8OzkrTyt3qnlGtUlu0kddy0KSSuQ=
-=JA7y
------END PGP SIGNATURE-----
-
---73eelba4s6ofsnjc--
+Thanks,
+-- Dexuan
