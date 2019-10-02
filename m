@@ -2,112 +2,73 @@ Return-Path: <SRS0=zem1=X3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 22E16ECE58A
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 14:20:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4C32C352AA
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 14:21:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0373C215EA
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 14:20:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 98FC1215EA
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 14:21:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727955AbfJBOU6 (ORCPT
+        id S1728105AbfJBOVK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Oct 2019 10:20:58 -0400
-Received: from mga07.intel.com ([134.134.136.100]:36612 "EHLO mga07.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726214AbfJBOU6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Oct 2019 10:20:58 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 02 Oct 2019 07:20:57 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,574,1559545200"; 
-   d="scan'208";a="391592758"
-Received: from zhizhuan-mobl.ccr.corp.intel.com (HELO [10.255.28.55]) ([10.255.28.55])
-  by fmsmga005.fm.intel.com with ESMTP; 02 Oct 2019 07:20:53 -0700
-Subject: Re: [kbuild-all] Re: [PATCH] serial: sh-sci: Use
- platform_get_irq_optional() for optional interrupts
-To:     Geert Uytterhoeven <geert@linux-m68k.org>,
-        kbuild test robot <lkp@intel.com>
-Cc:     Geert Uytterhoeven <geert+renesas@glider.be>, kbuild-all@01.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jiri Slaby <jslaby@suse.com>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-References: <20191001180743.1041-1-geert+renesas@glider.be>
- <201910021701.JBV8khAI%lkp@intel.com>
- <CAMuHMdWQhvWOMjEpJrXV0nuKUc=wT6Zi_ZLjKco0Lkgeis8NyQ@mail.gmail.com>
-From:   "Chen, Rong A" <rong.a.chen@intel.com>
-Message-ID: <26cf2dd9-2788-bc23-03c4-beb8ed68ef97@intel.com>
-Date:   Wed, 2 Oct 2019 22:20:52 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
-MIME-Version: 1.0
-In-Reply-To: <CAMuHMdWQhvWOMjEpJrXV0nuKUc=wT6Zi_ZLjKco0Lkgeis8NyQ@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
+        Wed, 2 Oct 2019 10:21:10 -0400
+Received: from mx2.suse.de ([195.135.220.15]:47828 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726214AbfJBOVJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 2 Oct 2019 10:21:09 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 0B6DFAC7B;
+        Wed,  2 Oct 2019 14:21:08 +0000 (UTC)
+Message-ID: <1570026066.2472.15.camel@suse.com>
+Subject: Re: [RFC PATCH 06/22] thunderbolt: Add support for lane bonding
+From:   Oliver Neukum <oneukum@suse.com>
+To:     Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Anthony Wong <anthony.wong@canonical.com>,
+        Mario.Limonciello@dell.com,
+        Andreas Noever <andreas.noever@gmail.com>,
+        Yehezkel Bernat <YehezkelShB@gmail.com>,
+        Michael Jamet <michael.jamet@intel.com>,
+        Rajmohan Mani <rajmohan.mani@intel.com>,
+        Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>,
+        Alan Stern <stern@rowland.harvard.edu>,
+        linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
+        Lukas Wunner <lukas@wunner.de>
+Date:   Wed, 02 Oct 2019 16:21:06 +0200
+In-Reply-To: <20191001125320.GN2714@lahna.fi.intel.com>
+References: <20191001113830.13028-1-mika.westerberg@linux.intel.com>
+         <20191001113830.13028-7-mika.westerberg@linux.intel.com>
+         <20191001123808.GA2954373@kroah.com>
+         <20191001125320.GN2714@lahna.fi.intel.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.26.6 
+Mime-Version: 1.0
 Content-Transfer-Encoding: 7bit
-Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Geert,
+Am Dienstag, den 01.10.2019, 15:53 +0300 schrieb Mika Westerberg:
+> > 
+> > Are we only going to be allowed to "bond" two links together?  Or will
+> > we be doing more than 2 in the future?  If more, then we might want to
+> > think of a different way to specify these...
+> 
+> AFAICT only two lanes are available in USB4. This goes over USB type-C
+> using the two lanes there.
+> 
+> Of course I don't know if in future there will be USB4 1.1 or something
+> that adds more lanes so if you think there is a better way to specify
+> these, I'm happy to implement that instead :) 
 
-Thanks for your clarification. we are on vacation this week, and we'll 
-take a look asap.
+If this ever can become asymmetric this interface is going to turn
+around and bite.
 
-Best Regards,
-Rong Chen
-
-On 10/2/2019 7:28 PM, Geert Uytterhoeven wrote:
-> Hi Kbuild test robot,
->
-> On Wed, Oct 2, 2019 at 11:53 AM kbuild test robot <lkp@intel.com> wrote:
->> I love your patch! Yet something to improve:
->>
->> [auto build test ERROR on tty/tty-testing]
->> [cannot apply to v5.4-rc1 next-20191001]
-> Strange, this patch applies to all of v5.4-rc1, tty/tty-testing, and
-> next-20191001?
->
->> url:    https://github.com/0day-ci/linux/commits/Geert-Uytterhoeven/serial-sh-sci-Use-platform_get_irq_optional-for-optional-interrupts/20191002-171547
-> Oh, this is still the old tty/tty-testing before it was rebased to v5.4-rc1,
-> i.e. still based on v5.3-rc4.  That explains the build failure.
->
-> That does not explain why you couldn't apply this patch to v5.4-rc1 and
-> next-20191001, though.
->
->> base:   https://git.kernel.org/pub/scm/linux/kernel/git/gregkh/tty.git tty-testing
->> config: sparc64-allmodconfig (attached as .config)
->> compiler: sparc64-linux-gcc (GCC) 7.4.0
->> reproduce:
->>          wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
->>          chmod +x ~/bin/make.cross
->>          # save the attached .config to linux build tree
->>          GCC_VERSION=7.4.0 make.cross ARCH=sparc64
->>
->> If you fix the issue, kindly add following tag
->> Reported-by: kbuild test robot <lkp@intel.com>
->>
->> All errors (new ones prefixed by >>):
->>
->>     drivers/tty/serial/sh-sci.c: In function 'sci_init_single':
->>>> drivers/tty/serial/sh-sci.c:2899:24: error: implicit declaration of function 'platform_get_irq_optional'; did you mean 'platform_get_irq_byname'? [-Werror=implicit-function-declaration]
->>         sci_port->irqs[i] = platform_get_irq_optional(dev, i);
->>                             ^~~~~~~~~~~~~~~~~~~~~~~~~
->>                             platform_get_irq_byname
->>     cc1: some warnings being treated as errors
-> FTR, not reproducible on sparc on v5.4-rc1, current tty/tty-testing, and
-> next-20191001.
->
-> Gr{oetje,eeting}s,
->
->                          Geert
->
+	Regards
+		Oliver
 
