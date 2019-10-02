@@ -2,90 +2,92 @@ Return-Path: <SRS0=zem1=X3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA66AC10F14
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 17:18:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D4363C352AA
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 17:19:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 91CBA21848
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 17:18:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AD5EA21848
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 17:19:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1570036754;
+	bh=SzMBednxOeur9TowNPougkDQHQmhYAAdQ89j3E/TUoQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=rddF70KeCUT3tMkduJ7UHjGfcJxQmXeia9cP6rtIH1hxU730POrkW6UFSDKKKKX/I
+	 nQZm4GtleOO0fnjWVloUjlyuEPHQGLaOFUqnmx8JR6HQkbohlZo748031++Fk15U6m
+	 gFUKbaFlhM5SSAQymJr4lVxi/xnFk4B0yGgXMW28=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728637AbfJBRSb (ORCPT
+        id S1728687AbfJBRTN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Oct 2019 13:18:31 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:37695 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728145AbfJBRSa (ORCPT
+        Wed, 2 Oct 2019 13:19:13 -0400
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:53217 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726798AbfJBRTN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Oct 2019 13:18:30 -0400
-Received: by mail-wm1-f65.google.com with SMTP id f22so7779498wmc.2;
-        Wed, 02 Oct 2019 10:18:27 -0700 (PDT)
+        Wed, 2 Oct 2019 13:19:13 -0400
+Received: by mail-wm1-f67.google.com with SMTP id r19so8057212wmh.2;
+        Wed, 02 Oct 2019 10:19:12 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=BV6L+hqk4XyUS3SFdDC/o0QqOdSd75QbKfMgEhSqMZk=;
-        b=QPnQjoVRc9XWitabtC+modVMCOV0bDKc/xLUe34HxD+QsKRGVsbl61I0nr5W74fz6A
-         MBp9Y+hJScDUrmrhVsN87QLHk9EbwI2ds8NuFeq6XOvbN5ZNJRimL0Pj/SluMpXfiOxe
-         nH09w8hZRIlRuamkBQM17CxZu1cXi9dIFGSnUthAxujeMkJNHts6t65gw9Pi+ulqCFHV
-         +oGi9IkE48+YjjB1NduiP0dwrsR1z9nJpOUI3FRM4m4/fRwZHY9GhiX3GLkcEPrWmYF8
-         odiqL9s8XP/TJ4gFA7dgDvqAU6R71ND/m6HRMSMyi/6xrtlrMhv5bH39T5FKUvPAwAzN
-         BhlQ==
-X-Gm-Message-State: APjAAAWGRPtFvsu3xcdqXfuMbZG4q1Xm22ERdCeFXYQUSbrTAnwowL65
-        xNTGuPUg674IcQuPMYnfYNVnDlYY1b8=
-X-Google-Smtp-Source: APXvYqwG+lrHPxsU/31EHxrkr+onnLQnUGFoFEHXHnVaGTdpXMUNuXO0ovVWYKr/r2+jbzGpMEvIag==
-X-Received: by 2002:a1c:1f47:: with SMTP id f68mr4015480wmf.78.1570036706910;
-        Wed, 02 Oct 2019 10:18:26 -0700 (PDT)
-Received: from green.intra.ispras.ru (bran.ispras.ru. [83.149.199.196])
-        by smtp.googlemail.com with ESMTPSA id y8sm20691987wrm.64.2019.10.02.10.18.25
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 02 Oct 2019 10:18:26 -0700 (PDT)
-From:   Denis Efremov <efremov@linux.com>
-To:     linux-wireless@vger.kernel.org
-Cc:     Denis Efremov <efremov@linux.com>, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Amitkumar Karwar <amitkarwar@gmail.com>,
-        Siva Rebbagondla <siva8118@gmail.com>,
-        Kalle Valo <kvalo@codeaurora.org>
-Subject: [PATCH] rsi: fix potential null dereference in rsi_probe()
-Date:   Wed,  2 Oct 2019 20:18:11 +0300
-Message-Id: <20191002171811.23993-1-efremov@linux.com>
-X-Mailer: git-send-email 2.21.0
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=no+pVuOU4/2ncxfp2PCuYfXSUaMyBiG5X4wKsXpzwTQ=;
+        b=swTaXDKnnqPuZhOZEC0b1nEBZKPcDoYossUaqP6nArs1SrMiCc9O0xfNteBkU1W2cV
+         yuosn9JUdoDtmeoN5pvijQiBKTSrxST1KMXEnFLj/lsXNcoyULoGMOm5zBXC43rJtq27
+         saVjgcYqTjMiQ5x5+ITKbWQyo7l+4Dqk0gHD9dI0acHavGF34dvVvAOQ1ADfHaa3AFRO
+         SCiDmnoKhRlR5LFyuvVdDdjqBZQtQI4FpJatbgtuJ7nqa6lmDAmiV6vO6wNY9dXkrCsx
+         IPhj8r8mo5CrBGlKctOo8vbXPn2/eUaTcU2enNnmKJZPNSr6r1h3jnw6b1D8T2xYUtaC
+         NguA==
+X-Gm-Message-State: APjAAAXvPoGIt5sCH2EPMjpKCdte/WD6refVmHO0xkjzGsS3kEj4/AkO
+        7VuDtqUzFY+roUh3XZHeH3c=
+X-Google-Smtp-Source: APXvYqw/Sxw1D9QQ1ZzdqSb5BBqVgBbTwx0GfHLbZdDtnNnd+IxSlJStKyhtgTNKeqQVDgJz09jEbQ==
+X-Received: by 2002:a7b:c764:: with SMTP id x4mr3662517wmk.62.1570036751382;
+        Wed, 02 Oct 2019 10:19:11 -0700 (PDT)
+Received: from kozik-lap ([194.230.155.145])
+        by smtp.googlemail.com with ESMTPSA id z142sm12591475wmc.24.2019.10.02.10.19.09
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 02 Oct 2019 10:19:10 -0700 (PDT)
+Date:   Wed, 2 Oct 2019 19:19:07 +0200
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     Lukasz Luba <l.luba@partner.samsung.com>
+Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-pm@vger.kernel.org, linux-samsung-soc@vger.kernel.org,
+        linux-clk@vger.kernel.org, mturquette@baylibre.com,
+        sboyd@kernel.org, b.zolnierkie@samsung.com, kgene@kernel.org,
+        mark.rutland@arm.com, robh+dt@kernel.org, cw00.choi@samsung.com,
+        kyungmin.park@samsung.com, m.szyprowski@samsung.com,
+        s.nawrocki@samsung.com, myungjoo.ham@samsung.com,
+        keescook@chromium.org, tony@atomide.com, jroedel@suse.de,
+        treding@nvidia.com, digetx@gmail.com, gregkh@linuxfoundation.org,
+        willy.mh.wolff.ml@gmail.com
+Subject: Re: [PATCH v13 8/8] ARM: exynos_defconfig: enable DMC driver
+Message-ID: <20191002171907.GA21463@kozik-lap>
+References: <20190821104303.32079-1-l.luba@partner.samsung.com>
+ <CGME20190821104326eucas1p1f22b49095a17f0b303910c391ff1e906@eucas1p1.samsung.com>
+ <20190821104303.32079-9-l.luba@partner.samsung.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20190821104303.32079-9-l.luba@partner.samsung.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The id pointer can be NULL in rsi_probe(). It is checked everywhere except
-for the else branch in the idProduct condition. The patch adds NULL check
-before the id dereference in the rsi_dbg() call.
+On Wed, Aug 21, 2019 at 12:43:03PM +0200, Lukasz Luba wrote:
+> Enable driver for Exynos5422 Dynamic Memory Controller supporting
+> dynamic frequency and voltage scaling in Exynos5422 SoCs.
+> 
+> Signed-off-by: Lukasz Luba <l.luba@partner.samsung.com>
+> ---
+>  arch/arm/configs/exynos_defconfig | 1 +
 
-Fixes: 54fdb318c111 ("rsi: add new device model for 9116")
-Cc: Amitkumar Karwar <amitkarwar@gmail.com>
-Cc: Siva Rebbagondla <siva8118@gmail.com>
-Cc: Kalle Valo <kvalo@codeaurora.org>
-Signed-off-by: Denis Efremov <efremov@linux.com>
----
- drivers/net/wireless/rsi/rsi_91x_usb.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Thanks, applied.
 
-diff --git a/drivers/net/wireless/rsi/rsi_91x_usb.c b/drivers/net/wireless/rsi/rsi_91x_usb.c
-index 760eaffeebd6..23a1d00b5f38 100644
---- a/drivers/net/wireless/rsi/rsi_91x_usb.c
-+++ b/drivers/net/wireless/rsi/rsi_91x_usb.c
-@@ -793,7 +793,7 @@ static int rsi_probe(struct usb_interface *pfunction,
- 		adapter->device_model = RSI_DEV_9116;
- 	} else {
- 		rsi_dbg(ERR_ZONE, "%s: Unsupported RSI device id 0x%x\n",
--			__func__, id->idProduct);
-+			__func__, id ? id->idProduct : 0x0);
- 		goto err1;
- 	}
- 
--- 
-2.21.0
+Best regards,
+Krzysztof
 
