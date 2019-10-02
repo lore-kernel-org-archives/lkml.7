@@ -2,144 +2,185 @@ Return-Path: <SRS0=zem1=X3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F0C3C352AA
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 13:49:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86041C352AA
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 13:50:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EA32121783
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 13:49:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="P8maJmFD"
+	by mail.kernel.org (Postfix) with ESMTP id 5564E20659
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 13:50:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728152AbfJBNtg (ORCPT
+        id S1727756AbfJBNuy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Oct 2019 09:49:36 -0400
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:38638 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726150AbfJBNtc (ORCPT
+        Wed, 2 Oct 2019 09:50:54 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:46439 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726289AbfJBNuy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Oct 2019 09:49:32 -0400
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id x92DnQ4k118362;
-        Wed, 2 Oct 2019 08:49:26 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1570024166;
-        bh=+Llvu0H02ru+qaMXOBenkLXZl4BEmVLregk3P6DLIxA=;
-        h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=P8maJmFDe20WuIE5uEJhbRHiryu5Tgj69BIiLGfoVpkrX2BA6o6FJEpVWzjyox8VH
-         GT5rpPU4kPrR6hupSCy4vs7u440B97DP1Ibhn5jP2v/a0ZKjlKBjen/pw1R+YBLnMd
-         beaJwKXWtu+AoAzK3oEXWBLU7dRdoNMK8X+e7nNI=
-Received: from DFLE114.ent.ti.com (dfle114.ent.ti.com [10.64.6.35])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x92DnQpi120626
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 2 Oct 2019 08:49:26 -0500
-Received: from DFLE104.ent.ti.com (10.64.6.25) by DFLE114.ent.ti.com
- (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Wed, 2 Oct
- 2019 08:49:25 -0500
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE104.ent.ti.com
- (10.64.6.25) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Wed, 2 Oct 2019 08:49:25 -0500
-Received: from uda0869644b.dal.design.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id x92DnOm9035733;
-        Wed, 2 Oct 2019 08:49:25 -0500
-From:   Benoit Parrot <bparrot@ti.com>
-To:     Hans Verkuil <hverkuil@xs4all.nl>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>
-CC:     <linux-media@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, Benoit Parrot <bparrot@ti.com>
-Subject: [Patch v2 1/3] media: ov5640: add PIXEL_RATE control
-Date:   Wed, 2 Oct 2019 08:51:32 -0500
-Message-ID: <20191002135134.12273-2-bparrot@ti.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20191002135134.12273-1-bparrot@ti.com>
-References: <20191002135134.12273-1-bparrot@ti.com>
+        Wed, 2 Oct 2019 09:50:54 -0400
+Received: from 1.general.cking.uk.vpn ([10.172.193.212])
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <colin.king@canonical.com>)
+        id 1iFf1n-0006KW-UY; Wed, 02 Oct 2019 13:50:51 +0000
+To:     Chris Mason <clm@fb.com>, Josef Bacik <josef@toxicpanda.com>,
+        David Sterba <dsterba@suse.com>, linux-btrfs@vger.kernel.org
+From:   Colin Ian King <colin.king@canonical.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=colin.king@canonical.com; prefer-encrypt=mutual; keydata=
+ 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
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: re: Btrfs: add a extent ref verify tool (static analysis bug report)
+Message-ID: <3d1bcdce-16ae-d490-0a68-19d9d9d41d92@canonical.com>
+Date:   Wed, 2 Oct 2019 14:50:51 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add v4l2 controls to report the pixel rates of each mode. This is
-needed by some CSI2 receiver in order to perform proper DPHY
-configuration.
+Hi,
 
-Signed-off-by: Benoit Parrot <bparrot@ti.com>
----
- drivers/media/i2c/ov5640.c | 25 +++++++++++++++++++++++++
- 1 file changed, 25 insertions(+)
+Static analysis on linux-next with Coverity has picked up a potential
+issue in file fs/btrfs/ref-verify.c, function process_leaf() in the
+following commit:
 
-diff --git a/drivers/media/i2c/ov5640.c b/drivers/media/i2c/ov5640.c
-index 500d9bbff10b..5198dc887400 100644
---- a/drivers/media/i2c/ov5640.c
-+++ b/drivers/media/i2c/ov5640.c
-@@ -193,6 +193,9 @@ struct ov5640_mode_info {
- 
- struct ov5640_ctrls {
- 	struct v4l2_ctrl_handler handler;
-+	struct {
-+		struct v4l2_ctrl *pixel_rate;
-+	};
- 	struct {
- 		struct v4l2_ctrl *auto_exp;
- 		struct v4l2_ctrl *exposure;
-@@ -2194,6 +2197,16 @@ static int ov5640_try_fmt_internal(struct v4l2_subdev *sd,
- 	return 0;
- }
- 
-+static u64 ov5640_calc_pixel_rate(struct ov5640_dev *sensor)
-+{
-+	u64 rate;
-+
-+	rate = sensor->current_mode->vtot * sensor->current_mode->htot;
-+	rate *= ov5640_framerates[sensor->current_fr];
-+
-+	return rate;
-+}
-+
- static int ov5640_set_fmt(struct v4l2_subdev *sd,
- 			  struct v4l2_subdev_pad_config *cfg,
- 			  struct v4l2_subdev_format *format)
-@@ -2233,6 +2246,8 @@ static int ov5640_set_fmt(struct v4l2_subdev *sd,
- 	if (mbus_fmt->code != sensor->fmt.code)
- 		sensor->pending_fmt_change = true;
- 
-+	__v4l2_ctrl_s_ctrl_int64(sensor->ctrls.pixel_rate,
-+				 ov5640_calc_pixel_rate(sensor));
- out:
- 	mutex_unlock(&sensor->lock);
- 	return ret;
-@@ -2657,6 +2672,13 @@ static int ov5640_init_controls(struct ov5640_dev *sensor)
- 	/* we can use our own mutex for the ctrl lock */
- 	hdl->lock = &sensor->lock;
- 
-+	/* Clock related controls */
-+	ctrls->pixel_rate =
-+		v4l2_ctrl_new_std(hdl, ops,
-+				  V4L2_CID_PIXEL_RATE, 0, INT_MAX, 1,
-+				  ov5640_calc_pixel_rate(sensor));
-+	ctrls->pixel_rate->flags |= V4L2_CTRL_FLAG_READ_ONLY;
-+
- 	/* Auto/manual white balance */
- 	ctrls->auto_wb = v4l2_ctrl_new_std(hdl, ops,
- 					   V4L2_CID_AUTO_WHITE_BALANCE,
-@@ -2816,6 +2838,9 @@ static int ov5640_s_frame_interval(struct v4l2_subdev *sd,
- 		sensor->frame_interval = fi->interval;
- 		sensor->current_mode = mode;
- 		sensor->pending_mode_change = true;
-+
-+		__v4l2_ctrl_s_ctrl_int64(sensor->ctrls.pixel_rate,
-+					 ov5640_calc_pixel_rate(sensor));
- 	}
- out:
- 	mutex_unlock(&sensor->lock);
--- 
-2.17.1
+commit fd708b81d972a0714b02a60eb4792fdbf15868c4
+Author: Josef Bacik <josef@toxicpanda.com>
+Date:   Fri Sep 29 15:43:50 2017 -0400
 
+    Btrfs: add a extent ref verify tool
+
+The potential issue is when on the unlikely event when all the items
+contain unknown key.types and so ret is not assigned a value. Since ret
+is not initialized then a garbage value is returned by this function in
+this unlikely scenario.
+
+In the previous function process_extent_item any unknown key types are
+flagged up as an error and -EINVAL is returned.  I'm unsure if this kind
+of error handling should also be applied to function process_leaf with
+invalid key types too.
+
+The coverity analysis follows:
+
+495static int process_leaf(struct btrfs_root *root,
+496                        struct btrfs_path *path, u64 *bytenr, u64
+*num_bytes)
+497{
+498        struct btrfs_fs_info *fs_info = root->fs_info;
+499        struct extent_buffer *leaf = path->nodes[0];
+500        struct btrfs_extent_data_ref *dref;
+501        struct btrfs_shared_data_ref *sref;
+
+502        u32 count;
+   1. var_decl: Declaring variable ret without initializer.
+
+503        int i = 0, tree_block_level = 0, ret;
+504        struct btrfs_key key;
+505        int nritems = btrfs_header_nritems(leaf);
+506
+   2. Condition i < nritems, taking true branch.
+
+507        for (i = 0; i < nritems; i++) {
+508                btrfs_item_key_to_cpu(leaf, &key, i);
+   3. Switch case default.
+
+509                switch (key.type) {
+510                case BTRFS_EXTENT_ITEM_KEY:
+511                        *num_bytes = key.offset;
+512                        /* fall through */
+513                case BTRFS_METADATA_ITEM_KEY:
+514                        *bytenr = key.objectid;
+515                        ret = process_extent_item(fs_info, path, &key, i,
+516                                                  &tree_block_level);
+517                        break;
+518                case BTRFS_TREE_BLOCK_REF_KEY:
+519                        ret = add_tree_block(fs_info, key.offset, 0,
+520                                             key.objectid,
+tree_block_level);
+521                        break;
+522                case BTRFS_SHARED_BLOCK_REF_KEY:
+523                        ret = add_tree_block(fs_info, 0, key.offset,
+524                                             key.objectid,
+tree_block_level);
+525                        break;
+526                case BTRFS_EXTENT_DATA_REF_KEY:
+527                        dref = btrfs_item_ptr(leaf, i,
+528                                              struct
+btrfs_extent_data_ref);
+529                        ret = add_extent_data_ref(fs_info, leaf,
+dref, *bytenr,
+530                                                  *num_bytes);
+531                        break;
+532                case BTRFS_SHARED_DATA_REF_KEY:
+533                        sref = btrfs_item_ptr(leaf, i,
+534                                              struct
+btrfs_shared_data_ref);
+535                        count = btrfs_shared_data_ref_count(leaf, sref);
+536                        ret = add_shared_data_ref(fs_info,
+key.offset, count,
+537                                                  *bytenr, *num_bytes);
+538                        break;
+539                default:
+   4. Breaking from switch.
+
+540                        break;
+541                }
+
+   CID 19605 (#1 of 1): Uninitialized scalar variable (UNINIT)
+   5. uninit_use: Using uninitialized value ret.
+
+542                if (ret)
+543                        break;
+544        }
+545        return ret;
+546}
+
+Colin
