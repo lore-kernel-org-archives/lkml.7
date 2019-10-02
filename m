@@ -2,120 +2,71 @@ Return-Path: <SRS0=zem1=X3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE6DFECE58B
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 12:06:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EDC2AC35280
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 12:07:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C7CC9218DE
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 12:06:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CEC80218DE
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 12:07:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727199AbfJBMGq (ORCPT
+        id S1727281AbfJBMH1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Oct 2019 08:06:46 -0400
-Received: from mga11.intel.com ([192.55.52.93]:20322 "EHLO mga11.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725852AbfJBMGp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Oct 2019 08:06:45 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 02 Oct 2019 05:06:45 -0700
-X-IronPort-AV: E=Sophos;i="5.64,574,1559545200"; 
-   d="scan'208";a="275338254"
-Received: from paasikivi.fi.intel.com ([10.237.72.42])
-  by orsmga001-auth.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 02 Oct 2019 05:06:42 -0700
-Received: by paasikivi.fi.intel.com (Postfix, from userid 1000)
-        id 6496020976; Wed,  2 Oct 2019 15:06:40 +0300 (EEST)
-Date:   Wed, 2 Oct 2019 15:06:40 +0300
-From:   Sakari Ailus <sakari.ailus@linux.intel.com>
-To:     Petr Mladek <pmladek@suse.com>
-Cc:     rafael@kernel.org, linux-kernel@vger.kernel.org,
-        Rob Herring <robh@kernel.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-        Joe Perches <joe@perches.com>, devicetree@vger.kernel.org,
-        linux-acpi@vger.kernel.org
-Subject: Re: [PATCH v7 08/13] lib/vsprintf: Remove support for %pF and %pf in
- favour of %pS and %ps
-Message-ID: <20191002120640.GG972@paasikivi.fi.intel.com>
-References: <20190918133419.7969-1-sakari.ailus@linux.intel.com>
- <20190918133419.7969-9-sakari.ailus@linux.intel.com>
- <20190924103829.uk4mr3z23hwhqdpe@pathway.suse.cz>
+        Wed, 2 Oct 2019 08:07:27 -0400
+Received: from mail-qt1-f195.google.com ([209.85.160.195]:46547 "EHLO
+        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726329AbfJBMH1 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 2 Oct 2019 08:07:27 -0400
+Received: by mail-qt1-f195.google.com with SMTP id u22so25918042qtq.13;
+        Wed, 02 Oct 2019 05:07:27 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=ex6/oNwBMHfkrNehPUjGFzRyUvsWT0jO6XWSq6yiKHU=;
+        b=blLIkbkJS1wd1VJoOY+NYTDPa4rP3aELNg7nAbLLtgA09PDdZdz6JFkaMA19Z40vVy
+         csnme0aIF4TJcOqty6IvdBTOSswNzHT0wJHDxVVOqw5jZBhwVPJFW3Jk537WzEKPaCWW
+         uhJdJ4gg1F5MIZnthRkbilStw4XBj/MmgGA4EWkb0HydsyXiN9BuLHdXryBplTrNTdj7
+         jOUA98/nRf2faOlAmUW5pmfxqA5e5ppxMzEM24LdENMjRk3wzO8Bqa+4CbNqUHKGgPIE
+         NQj6A+LiAh57JaorDt5RbYehTF6RRt1geU3hosMgDZ9L+mJJV1ikNJ27YK3hSbdX0v5y
+         0v6A==
+X-Gm-Message-State: APjAAAUXFsQCQ6MH77zi9k3XMx1vPuUYpm8bBzIw2prAoKMna8pEXPU4
+        mSamnUhf+AV/1vJ2c1fbLHZ4oskoMkJ89tvrOF0=
+X-Google-Smtp-Source: APXvYqzDip6r97ouSV9gLUoJm4dYFmol3Z3MKhIpWC/42PDoJ1Dtw5g0nyG5uRgmTPJa49nIfbTBt3XARkRdXEy+TrM=
+X-Received: by 2002:a05:6214:2b0:: with SMTP id m16mr2662220qvv.45.1570018046381;
+ Wed, 02 Oct 2019 05:07:26 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190924103829.uk4mr3z23hwhqdpe@pathway.suse.cz>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20191002095736.1297224-1-arnd@arndb.de>
+In-Reply-To: <20191002095736.1297224-1-arnd@arndb.de>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Wed, 2 Oct 2019 14:07:09 +0200
+Message-ID: <CAK8P3a2=V4qJ9CDzZMNCzgOh-nD-24AFdoo83+QRNfc60FxD4Q@mail.gmail.com>
+Subject: Re: [PATCH] input: ixp4xx-beeper: include linux/io.h
+To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc:     Enrico Weigelt <info@metux.net>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        "open list:HID CORE LAYER" <linux-input@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Petr,
+On Wed, Oct 2, 2019 at 11:57 AM Arnd Bergmann <arnd@arndb.de> wrote:
+>
+> asm/io.h may not be included implicitly, causing a rare
+> randconfig build error:
+>
+> drivers/input/misc/ixp4xx-beeper.c:48:3: error: implicit declaration of function '__raw_writel' [-Werror,-Wimplicit-function-declaration]
+>                 __raw_writel((count & ~IXP4XX_OST_RELOAD_MASK) | IXP4XX_OST_ENABLE,
+>
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 
-Thank you for the review.
+Please ignore, this does not apply to mainline and is probably only needed
+on top of another patch that I will submit in the future.
 
-On Tue, Sep 24, 2019 at 12:38:29PM +0200, Petr Mladek wrote:
-> On Wed 2019-09-18 16:34:14, Sakari Ailus wrote:
-> > %pS and %ps are now the preferred conversion specifiers to print function
-> > names. The functionality is equivalent; remove the old, deprecated %pF
-> > and %pf support.
-> > 
-> > --- a/lib/vsprintf.c
-> > +++ b/lib/vsprintf.c
-> > @@ -909,7 +909,7 @@ char *symbol_string(char *buf, char *end, void *ptr,
-> >  #ifdef CONFIG_KALLSYMS
-> >  	if (*fmt == 'B')
-> >  		sprint_backtrace(sym, value);
-> > -	else if (*fmt != 'f' && *fmt != 's')
-> > +	else if (*fmt != 's')
-> >  		sprint_symbol(sym, value);
-> >  	else
-> >  		sprint_symbol_no_offset(sym, value);
-> > @@ -2007,9 +2007,7 @@ static char *kobject_string(char *buf, char *end, void *ptr,
-> >   *
-> >   * - 'S' For symbolic direct pointers (or function descriptors) with offset
-> >   * - 's' For symbolic direct pointers (or function descriptors) without offset
-> > - * - 'F' Same as 'S'
-> > - * - 'f' Same as 's'
-> > - * - '[FfSs]R' as above with __builtin_extract_return_addr() translation
-> > + * - '[Ss]R' as above with __builtin_extract_return_addr() translation
-> >   * - 'B' For backtraced symbolic direct pointers with offset
-> >   * - 'R' For decoded struct resource, e.g., [mem 0x0-0x1f 64bit pref]
-> >   * - 'r' For raw struct resource, e.g., [mem 0x0-0x1f flags 0x201]
-> > @@ -2112,8 +2110,6 @@ char *pointer(const char *fmt, char *buf, char *end, void *ptr,
-> >  	      struct printf_spec spec)
-> >  {
-> >  	switch (*fmt) {
-> > -	case 'F':
-> > -	case 'f':
-> >  	case 'S':
-> >  	case 's':
-> >  		ptr = dereference_symbol_descriptor(ptr);
-> 
-> IMHO, we should do the same also in vbin_printf().
-> 
-> The compatibility with traceevent tools was discussed in the thread
-> https://lkml.kernel.org/r/20190910084707.18380-2-sakari.ailus@linux.intel.com
-> 
-> If I understand it correctly the tools should be able to handle stored
-> 'f' and 'F' modifiers because they might be produced by
-> older kernels. But new kernels should not longer produce them.
-
-Agreed.
-
-> 
-> Otherwise the patch looks good to me. I am getting used to the fact
-> that we will remove the obsolete specifiers completely.
-
-I'll address this in v8 soon.
-
--- 
-Regards,
-
-Sakari Ailus
-sakari.ailus@linux.intel.com
+       Arnd
