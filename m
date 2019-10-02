@@ -2,98 +2,141 @@ Return-Path: <SRS0=zem1=X3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE9C3ECE58B
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 08:02:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9FA7C35280
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 08:04:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 954A0215EA
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 08:02:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 77ACF21783
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 08:04:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="cm5wq/VN";
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=synopsys.onmicrosoft.com header.i=@synopsys.onmicrosoft.com header.b="Aj2N/BXs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727481AbfJBICa (ORCPT
+        id S1727500AbfJBIEO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Oct 2019 04:02:30 -0400
-Received: from sauhun.de ([88.99.104.3]:56604 "EHLO pokefinder.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725852AbfJBICa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Oct 2019 04:02:30 -0400
-Received: from localhost (p54B33447.dip0.t-ipconnect.de [84.179.52.71])
-        by pokefinder.org (Postfix) with ESMTPSA id 846092C3720;
-        Wed,  2 Oct 2019 10:02:28 +0200 (CEST)
-Date:   Wed, 2 Oct 2019 10:02:25 +0200
-From:   Wolfram Sang <wsa@the-dreams.de>
-To:     Geert Uytterhoeven <geert+renesas@glider.be>
-Cc:     Ulf Hansson <ulf.hansson@linaro.org>,
-        Wolfram Sang <wsa+renesas@sang-engineering.com>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-renesas-soc@vger.kernel.org, linux-mmc@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] mmc: renesas_sdhi: Do not use platform_get_irq() to
- count interrupts
-Message-ID: <20191002080225.GA1388@ninjato>
-References: <20191001180703.910-1-geert+renesas@glider.be>
+        Wed, 2 Oct 2019 04:04:14 -0400
+Received: from us03-smtprelay2.synopsys.com ([149.117.87.133]:38744 "EHLO
+        smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726162AbfJBIEN (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 2 Oct 2019 04:04:13 -0400
+X-Greylist: delayed 644 seconds by postgrey-1.27 at vger.kernel.org; Wed, 02 Oct 2019 04:04:13 EDT
+Received: from mailhost.synopsys.com (badc-mailhost1.synopsys.com [10.192.0.17])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+        (No client certificate requested)
+        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id E49C2C0505;
+        Wed,  2 Oct 2019 07:53:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
+        t=1570002809; bh=ZwchJV/hwBcbtxRPC9nW0ViWeKZEfdyL4rfZRkOLwvU=;
+        h=From:To:CC:Subject:Date:References:In-Reply-To:From;
+        b=cm5wq/VNeiLKa3+zvzp3I4ZaZLkm0GgmNBZpzf2iffrvxfh/Yvr+RTP6VgjNz9bBk
+         BJNmIqMaJCLux7ezZCLVQqWX8c8/5J8e4dd6kRhWF3YCgjidgawaLnnfqdThsnR3qi
+         4gOY2SnAOO/+bG5LxFE4o1VFVZjsFSDjp+b5zaEZ/XK0XR9dW4+qZj1G75cYFOwte8
+         /4ArvXpvrgQJqziQra6YrpVKuawwrBtMPEcMrUCRZ5bLGOFgWswGEFMYkpmXaipB1z
+         yGWYUb5VSanslGe6TWq6NpwgwQD9OolxSC7iea8/KF2kPFIj88Kyv0AplgTN8hKSlB
+         pr6bX7GuB2UsA==
+Received: from US01WEHTC3.internal.synopsys.com (us01wehtc3.internal.synopsys.com [10.15.84.232])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mailhost.synopsys.com (Postfix) with ESMTPS id 64018A0079;
+        Wed,  2 Oct 2019 07:53:13 +0000 (UTC)
+Received: from US01HYBRID2.internal.synopsys.com (10.15.246.24) by
+ US01WEHTC3.internal.synopsys.com (10.15.84.232) with Microsoft SMTP Server
+ (TLS) id 14.3.408.0; Wed, 2 Oct 2019 00:52:15 -0700
+Received: from NAM02-BL2-obe.outbound.protection.outlook.com (10.13.134.195)
+ by mrs.synopsys.com (10.15.246.24) with Microsoft SMTP Server (TLS) id
+ 14.3.408.0; Wed, 2 Oct 2019 00:52:15 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=He7nF96q2ceA3bU6DVkhVPdSeN0/auZnRNAMR7TQMd13NX3ePbE2+nPqcQJMuQ668r3FjpObSxHeM9B1H4P5utE5DGjGY+YKeRo2gOhA+2+hZNzZW1GIMEkSAOLMImROIngFp02Fs3K0xCZkv1+MEWCxDTtIJNl/Sw6Q5xFTrs5coySmgNkigkdmdo/mWsa1yQ5kvBLuZSWxu4mwdYfH0N5g5IMdiCpL0UY2FHbx3BmMY3SptZRfEPHAvFNkPkKi65jzlLEmUXVB9Kg1dG4obNXFpKGhH7CWY/6qL+Lvp3S1mRDcpOWmSbPewCsiG6PjOB0p91soVL4s6hHp0eALkA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=ZwchJV/hwBcbtxRPC9nW0ViWeKZEfdyL4rfZRkOLwvU=;
+ b=fa1JqiEwCO2br70t+DJAejtIOq0qt2+PRs7k8GRiE/bHSH0djLvqKptPg9UqXBW7ci7dW5jV6LobJJYYxKRfo/jtIO9sLmgzAVmA2//prdCKZgpACzObcwFLLSixLQmX6TawaDrCyX+Ia3dh9gXvGbamLUcfisKGycUSQvHNJwO6uFi/4sWQRGvH1b5Z37LBPs5xuewhO6VW5uLPC1+nhhvM4nedT2z2bv+E1c25ePh3WohVe+dxcc/OTkLRUBo9zMpl6CEGOCJQPvI668CaxYPUeqcC3dwKKRNu7YHmXbhTBSClIo4JF5U1UwCgVbgAZsFVQqJrQpEoY+vYEWEgqw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=synopsys.com; dmarc=pass action=none header.from=synopsys.com;
+ dkim=pass header.d=synopsys.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=synopsys.onmicrosoft.com; s=selector2-synopsys-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=ZwchJV/hwBcbtxRPC9nW0ViWeKZEfdyL4rfZRkOLwvU=;
+ b=Aj2N/BXsvkmw9amUQsehbBdvJvX7ns/hDqseLBwbnKV3iXMcUqgR73Jc5/w2k4N3c4CtuugDC0hZwcFHlbkTbaIQwURYcDaFoCfYXKZK3q1ZPHmt6UCanmkiuZA27pjgo65jDX+qCg8b1KyNz58ui1NCMyUUcsObQa26Xa5lfPY=
+Received: from BN8PR12MB3266.namprd12.prod.outlook.com (20.179.67.145) by
+ BN8PR12MB3363.namprd12.prod.outlook.com (20.178.212.21) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2305.17; Wed, 2 Oct 2019 07:52:13 +0000
+Received: from BN8PR12MB3266.namprd12.prod.outlook.com
+ ([fe80::59fc:d942:487d:15b8]) by BN8PR12MB3266.namprd12.prod.outlook.com
+ ([fe80::59fc:d942:487d:15b8%7]) with mapi id 15.20.2305.023; Wed, 2 Oct 2019
+ 07:52:13 +0000
+From:   Jose Abreu <Jose.Abreu@synopsys.com>
+To:     Hans Andersson <haan@cellavision.se>,
+        "mcoquelin.stm32@gmail.com" <mcoquelin.stm32@gmail.com>
+CC:     "peppe.cavallaro@st.com" <peppe.cavallaro@st.com>,
+        "alexandre.torgue@st.com" <alexandre.torgue@st.com>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-stm32@st-md-mailman.stormreply.com" 
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Hans Andersson <hans.andersson@cellavision.se>
+Subject: RE: [PATCH] net: stmmac: Read user ID muliple times if needed.
+Thread-Topic: [PATCH] net: stmmac: Read user ID muliple times if needed.
+Thread-Index: AQHVePAsjhS3U+43VE+DGhKYpgL3F6dG8LMA
+Date:   Wed, 2 Oct 2019 07:52:13 +0000
+Message-ID: <BN8PR12MB3266ED591171A79825090BE0D39C0@BN8PR12MB3266.namprd12.prod.outlook.com>
+References: <20191002070721.9916-1-haan@cellavision.se>
+In-Reply-To: <20191002070721.9916-1-haan@cellavision.se>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=joabreu@synopsys.com; 
+x-originating-ip: [83.174.63.141]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 53c8e645-0ba6-4d3b-3f69-08d7470d703c
+x-ms-traffictypediagnostic: BN8PR12MB3363:
+x-microsoft-antispam-prvs: <BN8PR12MB3363F6A0E9D29D5551EE3E20D39C0@BN8PR12MB3363.namprd12.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:7219;
+x-forefront-prvs: 0178184651
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(136003)(366004)(346002)(376002)(396003)(39860400002)(199004)(189003)(25786009)(66946007)(256004)(7696005)(86362001)(71200400001)(71190400001)(99286004)(2501003)(7736002)(305945005)(76176011)(478600001)(6246003)(4326008)(33656002)(186003)(26005)(102836004)(476003)(14454004)(446003)(486006)(6506007)(11346002)(558084003)(8676002)(3846002)(6116002)(81156014)(81166006)(8936002)(229853002)(2906002)(52536014)(9686003)(55016002)(54906003)(5660300002)(316002)(6436002)(66066001)(66446008)(66556008)(7416002)(110136005)(64756008)(74316002)(66476007)(76116006);DIR:OUT;SFP:1102;SCL:1;SRVR:BN8PR12MB3363;H:BN8PR12MB3266.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: synopsys.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: 0oGFrpG1H59KoEraUJBtFJt0hGb0eThNrJzBcD1F04XMHg+GSyNgFZM/j4w/7BXjzJYFNL17U6Z9R300x4MFg9dVWiU9No8BgP7WTiLA8KIGxnuYG0B+WaokUeD60g/RkY7cIqNf3++2eSXIBkDvj7mkEcpJs7hUJxnloYvXNX6+0S4U62IO4l7pbilBdvlC6zMme2CQBEX+sbPiRkXV5lZGscnsvlg8hUFkn7WfEOIHPgRaAitWoCQ12Oju5Vkz3hRGB0futoc22Micfh7qITFxIqUHRX7bVuMObHYQhR9uid+RVqfDKIBb46WV97XJe8hTp2PLhVijMoYpuKRRo4kIfgY6yVLGGiX/1LUkglKJNKJnCuH6LT2AYcTzEuyuZCxJXIA8iTos06oxLMLjfBPOE0X7Lwjg0VwnJY5Cfps=
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="5mCyUwZo2JvN/JJP"
-Content-Disposition: inline
-In-Reply-To: <20191001180703.910-1-geert+renesas@glider.be>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 53c8e645-0ba6-4d3b-3f69-08d7470d703c
+X-MS-Exchange-CrossTenant-originalarrivaltime: 02 Oct 2019 07:52:13.8558
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: c33c9f88-1eb7-4099-9700-16013fd9e8aa
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: Zuwc/pVJylVfdRupVgidR9eaK49YIX4lEN6QPZSueniE7w4eOSN8PkfWgjWQH3SJu4eef/OSeX3eSIF+l4uKXQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN8PR12MB3363
+X-OriginatorOrg: synopsys.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: Hans Andersson <haan@cellavision.se>
+Date: Oct/02/2019, 08:07:21 (UTC+00:00)
 
---5mCyUwZo2JvN/JJP
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+> When we read user ID / Synopsys ID we might still be in reset,
+> so read muliple times if needed.
 
-On Tue, Oct 01, 2019 at 08:07:03PM +0200, Geert Uytterhoeven wrote:
-> As platform_get_irq() now prints an error when the interrupt does not
-> exist, counting interrupts by looping until failure causes the printing
-> of scary messages like:
->=20
->     renesas_sdhi_internal_dmac ee140000.sd: IRQ index 1 not found
->=20
-> Fix this by using the platform_irq_count() helper to avoid touching
-> non-existent interrupts.
->=20
-> Fixes: 7723f4c5ecdb8d83 ("driver core: platform: Add an error message to =
-platform_get_irq*()")
+We shouldn't even try to read it if IP is in reset ...=20
 
-We will see this fixes line a lot :/
-
-> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-
-Have to admit, though, the new code looks much better. Tested on a
-Renesas R-Car M3-N:
-
-Reviewed-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
-Tested-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
-
-
---5mCyUwZo2JvN/JJP
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl2UWY0ACgkQFA3kzBSg
-Kbbu/Q/7BJHrrJMsb89JaYmOqiJQHsO2CvYEyzPFP17WQExQ2jxYjsILSTqWe0hW
-+TvsDMcZ4FSoceakPqdsdm+J0m0qDs6seN4jll4LRAhHz3KYN9CXlyly9xnaPt94
-HpcfzFHy2DGlewIororso78IuY4eMlogf5fsh/U8gimj4I4w7U8onDsUcGqAkHwt
-spb7AjjZVGl9fCWSuSrHg0KvilQ2WvZGIi1grJayYWDRU5JEy5CbxJJx+BUrWOuD
-g/kUjyXXUqCluSq4A9jQkETP/vQfLABmeQ1N32RWeQNmQGY0BN9jMmE4R4scOsyt
-2rdxlgWKXzNx16xdASVvxth17gfv0paVu5FLA8Z/2XnV5loN3XASRPzdr7ULyKXK
-iRg3o53B82xVbiyMMMhvxwQ1XDKRh2MN/ouyWH/hoO9YD83x2SGy9Fln8ayK6rCW
-dAjHSBXsU9RuDAq6PuWZN+NbNt3a/99U2UugvcALABcNkr4qccgboW41ga9Otbah
-KAq5bfwywi8xYex1sNAW4HmSYpfbdM1lOEWJfHzgYSYIr10Gqv7en7zKkDpZK8gl
-iC7zpqhy7Mjz31FtBz1hWDskTQfg2TnB+YWmCDGNpKYxI0cF8po9AHWIiEuWF3af
-/qqfpT+frtN2dGACSDBFvDq0k9ncc1oEDSvs4/CI+gjSi19dzkI=
-=+hQN
------END PGP SIGNATURE-----
-
---5mCyUwZo2JvN/JJP--
+---
+Thanks,
+Jose Miguel Abreu
