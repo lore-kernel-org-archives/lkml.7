@@ -2,143 +2,89 @@ Return-Path: <SRS0=zem1=X3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CAA6C10F14
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 18:56:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E83A5C10F14
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 18:57:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ECDEB20673
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 18:56:21 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="gJqpqcIy"
+	by mail.kernel.org (Postfix) with ESMTP id B3835222C0
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 18:57:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1570042628;
+	bh=WpF8Re3Eqymd/wJChhJPfnpiZTj0YSkk2z09XovLTCI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=KV8IEsWqeZAucYgXuS+jd1uJtePvF35P5ND1jbUjrB9osZmDBlHwSBCaxva/OGO0Q
+	 EpktHQoRbtIxQExhjMO58/QHGMY6iTBeVCrV9bisafmhKXX7+DAuKeHw+p5ezLR8uo
+	 9B/Giqfb5fi6S2uw3qO9r6NcDrX5s5uu1vEyhDxo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728868AbfJBS4V (ORCPT
+        id S1728920AbfJBS5I (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Oct 2019 14:56:21 -0400
-Received: from perceval.ideasonboard.com ([213.167.242.64]:38490 "EHLO
-        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726669AbfJBS4U (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Oct 2019 14:56:20 -0400
-Received: from pendragon.ideasonboard.com (unknown [132.205.229.212])
-        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 5EFB72BB;
-        Wed,  2 Oct 2019 20:56:17 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-        s=mail; t=1570042577;
-        bh=PbWtfJfT3AWYLkOwJItUMiaSDU3tjjAskp4aOSEpGOQ=;
+        Wed, 2 Oct 2019 14:57:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60992 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726708AbfJBS5I (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 2 Oct 2019 14:57:08 -0400
+Received: from linux-8ccs (ip5f5ade65.dynamic.kabel-deutschland.de [95.90.222.101])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4AD5921A4C;
+        Wed,  2 Oct 2019 18:57:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1570042627;
+        bh=WpF8Re3Eqymd/wJChhJPfnpiZTj0YSkk2z09XovLTCI=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=gJqpqcIy/Ynox93mO7HvGxTuyrOys4VaUqnoHi1rZFK1hsgiQV/ACZkRapmTILkXi
-         wiMpzGtpraFthrkAfi22sMtR6n/fNUlbwwo83aPbWTfJqdQOUiABhm+n4YP4WHnO8t
-         KustgNeyUlNXd85nXeh7sChLFAPD+n9zji2X3nog=
-Date:   Wed, 2 Oct 2019 21:56:04 +0300
-From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To:     Will Deacon <will@kernel.org>
-Cc:     linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
-        andreyknvl@google.com, Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Kostya Serebryany <kcc@google.com>, stable@vger.kernel.org
-Subject: Re: [PATCH] media: uvc: Avoid cyclic entity chains due to malformed
- USB descriptors
-Message-ID: <20191002185604.GF5262@pendragon.ideasonboard.com>
-References: <20191002112753.21630-1-will@kernel.org>
- <20191002130913.GA5262@pendragon.ideasonboard.com>
- <20191002131928.yp5r4tyvtvwvuoba@willie-the-truck>
+        b=2uY+KMxa6EHzdWRG8yHRoNenUWG1VSFpPH30eTnifpIFT0PjnmazKkjUnTtCkFL+S
+         e5pxahXIF0JieNXgs7N0PTxiqv/65wo9xzdiMLQuw6OfR48n/TkP1G2bJQpY2Nj7+x
+         VO5KbJtIw0NrtVs6HxuXfVbeQIxXKLiR2t1AEW9Q=
+Date:   Wed, 2 Oct 2019 20:57:02 +0200
+From:   Jessica Yu <jeyu@kernel.org>
+To:     Matthias Maennich <maennich@google.com>
+Cc:     Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Martijn Coenen <maco@android.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Michal Marek <michal.lkml@markovi.net>,
+        Will Deacon <will@kernel.org>, linux-kbuild@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 0/7] module: various bug-fixes and clean-ups for module
+ namespace
+Message-ID: <20191002185701.GA29041@linux-8ccs>
+References: <20190927093603.9140-1-yamada.masahiro@socionext.com>
+ <20190927134108.GC187147@google.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii; format=flowed
 Content-Disposition: inline
-In-Reply-To: <20191002131928.yp5r4tyvtvwvuoba@willie-the-truck>
+In-Reply-To: <20190927134108.GC187147@google.com>
+X-OS:   Linux linux-8ccs 4.12.14-lp150.12.28-default x86_64
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Will,
++++ Matthias Maennich [27/09/19 14:41 +0100]:
+>On Fri, Sep 27, 2019 at 06:35:56PM +0900, Masahiro Yamada wrote:
+>>
+>>I was hit by some problems caused by the module namespace feature
+>>that was merged recently. At least, the breakage of
+>>external module builds is a fatal one. I just took a look at the code
+>>closer, and I noticed some more issues and improvements.
+>>
+>>I hope these patches are mostly OK.
+>>The 4th patch might have room for argument since it is a trade-off
+>>of "cleaner implermentation" vs "code size".
+>>
+>Thanks Masahiro for taking the time to improve the implementation of the
+>symbol namespaces. These are all good points that you addressed!
 
-On Wed, Oct 02, 2019 at 02:19:29PM +0100, Will Deacon wrote:
-> On Wed, Oct 02, 2019 at 04:09:13PM +0300, Laurent Pinchart wrote:
-> > Thank you for the patch.
-> 
-> And thank you for the quick response.
-> 
-> > On Wed, Oct 02, 2019 at 12:27:53PM +0100, Will Deacon wrote:
-> > > I don't have a way to reproduce the original issue, so this change is
-> > > based purely on inspection. Considering I'm not familiar with USB nor
-> > > UVC, I may well have missed something!
-> > 
-> > I may also be missing something, I haven't touched this code for a long
-> > time :-)
-> 
-> Actually, that is pretty helpful because it will make backporting easier
-> if we get to that :)
-> 
-> > uvc_scan_chain_entity(), at the end of the function, adds the entity to
-> > the list of entities in the chain with
-> > 
-> > 	list_add_tail(&entity->chain, &chain->entities);
-> 
-> Yes.
-> 
-> > uvc_scan_chain_forward() is then called (from uvc_scan_chain()), and
-> > iterates over all entities connected to the entity being scanned.
-> > 
-> > 	while (1) {
-> > 		forward = uvc_entity_by_reference(chain->dev, entity->id,
-> > 			forward);
-> 
-> Yes.
-> 
-> > At this point forward may be equal to entity, if entity references
-> > itself.
-> 
-> Correct -- that's indicative of a malformed entity which we want to reject,
-> right?
+Agreed, thanks Masahiro for fixing up all the rough edges! Your series
+of fixes look good to me, I will queue this up on modules-next this
+week with the exception of patch 4 - Matthias, you are planning to
+submit a patch that would supercede patch 04/07, right?
 
-Right. We can reject the whole chain in that case. There's one case
-where we still want to succeed though, which is handled by
-uvc_scan_fallback().
+Thanks!
 
-Looking at the code, uvc_scan_device() does
-
-                if (uvc_scan_chain(chain, term) < 0) {
-                        kfree(chain);
-                        continue;
-                }
-
-It seems that's missing removal of all entities that would have been
-successfully added to the chain. This prevents, I think,
-uvc_scan_fallback() from working properly in some cases.
-
-> > 		if (forward == NULL)
-> > 			break;
-> > 		if (forward == prev)
-> > 			continue;
-> > 		if (forward->chain.next || forward->chain.prev) {
-> > 			uvc_trace(UVC_TRACE_DESCR, "Found reference to "
-> > 				"entity %d already in chain.\n", forward->id);
-> > 			return -EINVAL;
-> > 		}
-> > 
-> > But then this check should trigger, as forward == entity and entity is
-> > in the chain's list of entities.
-> 
-> Right, but this code is added by my patch, no? In mainline, the code only
-> has the first two checks, which both end up comparing against NULL the first
-> time around:
-> 
-> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/media/usb/uvc/uvc_driver.c#n1489
-> 
-> Or are you referring to somewhere else?
-
-Oops. This is embarassing... :-) You're of course right. The second hunk
-seems fine too, even if I would have preferred centralising the check in
-a single place. That should be possible, but it would involve
-refactoring that isn't worth it at the moment.
-
--- 
-Regards,
-
-Laurent Pinchart
+Jessica
