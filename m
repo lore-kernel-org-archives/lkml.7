@@ -2,118 +2,251 @@ Return-Path: <SRS0=zem1=X3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F2A4C352AA
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 14:27:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 58D56C35280
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 14:27:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0222721920
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 14:27:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="Xjuz7ftx"
+	by mail.kernel.org (Postfix) with ESMTP id 2C38C2133F
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 14:27:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728076AbfJBO1e (ORCPT
+        id S1728090AbfJBO1r (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Oct 2019 10:27:34 -0400
-Received: from mail-qk1-f196.google.com ([209.85.222.196]:41434 "EHLO
-        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727691AbfJBO1e (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Oct 2019 10:27:34 -0400
-Received: by mail-qk1-f196.google.com with SMTP id p10so15159450qkg.8
-        for <linux-kernel@vger.kernel.org>; Wed, 02 Oct 2019 07:27:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=j42XyKqFcfiw1cr29A4t69KcsaFULzlrkf42oLnY4+U=;
-        b=Xjuz7ftxaEpV/qP+oM1bSUx7IMqT48FwXeOpaeJAak2QkBGKSVdNMwSG00tuhJKGy5
-         gmQEiW6bBSnS+cuAuSw0aV6KU+c9RElg0ZxKwCEqavwKJf/qLw6hJKXaDA8UrwuDe4p0
-         aQoeFWuHXDVqXXFwI7Lqwxecq1/BfYjsfTxkGzqz2CaS5AH2bt6JF36izHYeny09xTY7
-         wG2aUGDtL0selcwkl7TnDLMYiGK4da2cpmpcmRj1jkJgfE5BLCtpqXrj8WmeJUZ5YRGO
-         xRb8swZ7hSYBdXwbEA/s/5akRjq0v0YYjPWEpgm7f4LHCgStMD8PwAAcYw5h/uwPyhr7
-         b/uA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=j42XyKqFcfiw1cr29A4t69KcsaFULzlrkf42oLnY4+U=;
-        b=OjT4eccEM6HKlQVObih/GdweuRUpPugpzVfOhTIZ/rYZDKkDSd9PJHq1xQXuAK9686
-         q3b4YToY+/gxXOc66+DL6aBdcf3QkwNDl8/6AVbLH6yCeaWqDwhxwAXQlOqT0OkcpbJB
-         rMvQE/7s2Dptw2jczKl43hvih1CgA1RTBktqNTT7rn+wBE0dOl3hbiyTep4OdpJisqY+
-         IViVmuH/7pVUZ8Y0TghYjrGtbcZtcRzpHvV2/4xkmupbJJxvNQt4osXCW1WTdQk+df0t
-         0yqnpha7CAyO5ry5GE/UFo1Lc9MIAYucCrsI0UAQlIRw+KL+S2rlaeVqB6eyRJzRPl9T
-         mzmA==
-X-Gm-Message-State: APjAAAVX1W8ES8/oy/FVaxNMJ1WZTCzqilwChfLnEftEfSqURyYPWGVD
-        J//G0ygUNToo3pRYYG5I2Vji6w==
-X-Google-Smtp-Source: APXvYqy5l1q7x1+hEbogRi+HhsXpijaCnQ4w4w5ms+iIWkrFLypPdnjOoPV+KDeN3liFVu2MNATFWg==
-X-Received: by 2002:a37:a24d:: with SMTP id l74mr3778096qke.200.1570026452312;
-        Wed, 02 Oct 2019 07:27:32 -0700 (PDT)
-Received: from ziepe.ca (hlfxns017vw-142-162-113-180.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.162.113.180])
-        by smtp.gmail.com with ESMTPSA id c14sm12117764qta.80.2019.10.02.07.27.31
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 02 Oct 2019 07:27:31 -0700 (PDT)
-Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
-        (envelope-from <jgg@ziepe.ca>)
-        id 1iFfbH-0006sa-4a; Wed, 02 Oct 2019 11:27:31 -0300
-Date:   Wed, 2 Oct 2019 11:27:31 -0300
-From:   Jason Gunthorpe <jgg@ziepe.ca>
-To:     Alan Mikhak <alan.mikhak@sifive.com>
-Cc:     linux-kernel@vger.kernel.org, martin.petersen@oracle.com,
-        alexios.zavras@intel.com, ming.lei@redhat.com,
-        gregkh@linuxfoundation.org, tglx@linutronix.de,
-        christophe.leroy@c-s.fr, thellstrom@vmware.com,
-        galpress@amazon.com, palmer@sifive.com, paul.walmsley@sifive.com
-Subject: Re: [PATCH] scatterlist: Comment on pages for sg_set_page()
-Message-ID: <20191002142731.GC17152@ziepe.ca>
-References: <1569954770-11477-1-git-send-email-alan.mikhak@sifive.com>
+        Wed, 2 Oct 2019 10:27:47 -0400
+Received: from gofer.mess.org ([88.97.38.141]:53001 "EHLO gofer.mess.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725747AbfJBO1r (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 2 Oct 2019 10:27:47 -0400
+Received: by gofer.mess.org (Postfix, from userid 1000)
+        id C8415C63B4; Wed,  2 Oct 2019 15:27:44 +0100 (BST)
+Date:   Wed, 2 Oct 2019 15:27:44 +0100
+From:   Sean Young <sean@mess.org>
+To:     Gon Solo <gonsolo@gmail.com>
+Cc:     mchehab+samsung@kernel.org, crope@iki.fi,
+        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] si2157: Add support for Logilink VG0022A.
+Message-ID: <20191002142744.GA3475@gofer.mess.org>
+References: <20191001205203.4b1a5fb6@coco.lan>
+ <20191002141359.30166-1-gonsolo@gmail.com>
+ <20191002141359.30166-2-gonsolo@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1569954770-11477-1-git-send-email-alan.mikhak@sifive.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20191002141359.30166-2-gonsolo@gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Oct 01, 2019 at 11:32:50AM -0700, Alan Mikhak wrote:
-> From: Alan Mikhak <alan.mikhak@sifive.com>
+On Wed, Oct 02, 2019 at 04:13:59PM +0200, Gon Solo wrote:
+
+You need a message and a Signed-off-by: here.
+
+> ---
+>  drivers/media/tuners/si2157.c         | 68 +++++++++++++++++----------
+>  drivers/media/tuners/si2157_priv.h    |  1 +
+>  drivers/media/usb/dvb-usb-v2/af9035.c | 47 ++++++++++++++++++
+>  3 files changed, 90 insertions(+), 26 deletions(-)
 > 
-> Update the description of sg_set_page() to communicate current
-> requirements for the page pointer parameter.
-> 
-> Signed-off-by: Alan Mikhak <alan.mikhak@sifive.com>
->  include/linux/scatterlist.h | 6 ++++++
->  1 file changed, 6 insertions(+)
-> 
-> diff --git a/include/linux/scatterlist.h b/include/linux/scatterlist.h
-> index 6eec50fb36c8..6dda865893aa 100644
-> +++ b/include/linux/scatterlist.h
-> @@ -112,6 +112,12 @@ static inline void sg_assign_page(struct scatterlist *sg, struct page *page)
->   *   of the page pointer. See sg_page() for looking up the page belonging
->   *   to an sg entry.
->   *
-> + *   Scatterlist currently expects the page parameter to be a pointer to
-> + *   a page that is backed by a page struct.
-> + *
-> + *   Page pointers derived from addresses obtained from ioremap() are
-> + *   currently not supported since they require use of iomem safe memcpy.
-> + *
->   **/
->  static inline void sg_set_page(struct scatterlist *sg, struct page *page,
->  			       unsigned int len, unsigned int offset)
+> diff --git a/drivers/media/tuners/si2157.c b/drivers/media/tuners/si2157.c
+> index e87040d6eca7..8f9df2485d51 100644
+> --- a/drivers/media/tuners/si2157.c
+> +++ b/drivers/media/tuners/si2157.c
+> @@ -66,6 +66,24 @@ static int si2157_cmd_execute(struct i2c_client *client, struct si2157_cmd *cmd)
+>  	return ret;
+>  }
+>  
+> +static int si2157_power_up(struct si2157_dev *dev, struct i2c_client *client)
+> +{
+> +	struct si2157_cmd cmd;
+> +
+> +	if (dev->chiptype == SI2157_CHIPTYPE_SI2146) {
+> +		memcpy(cmd.args, "\xc0\x05\x01\x00\x00\x0b\x00\x00\x01", 9);
+> +		cmd.wlen = 9;
+> +	} else if (dev->chiptype == SI2157_CHIPTYPE_SI2141) {
+> +		memcpy(cmd.args, "\xc0\x00\x0d\x0e\x00\x01\x01\x01\x01\x03", 10);
+> +		cmd.wlen = 10;
+> +	} else {
+> +		memcpy(cmd.args, "\xc0\x00\x0c\x00\x00\x01\x01\x01\x01\x01\x01\x02\x00\x00\x01", 15);
+> +		cmd.wlen = 15;
+> +	}
+> +	cmd.rlen = 1;
+> +	return si2157_cmd_execute(client, &cmd);
+> +}
+> +
+>  static int si2157_init(struct dvb_frontend *fe)
+>  {
+>  	struct i2c_client *client = fe->tuner_priv;
+> @@ -75,7 +93,7 @@ static int si2157_init(struct dvb_frontend *fe)
+>  	struct si2157_cmd cmd;
+>  	const struct firmware *fw;
+>  	const char *fw_name;
+> -	unsigned int uitmp, chip_id;
+> +	unsigned int uitmp;
+>  
+>  	dev_dbg(&client->dev, "\n");
+>  
+> @@ -93,19 +111,7 @@ static int si2157_init(struct dvb_frontend *fe)
+>  	if (uitmp == dev->if_frequency / 1000)
+>  		goto warm;
+>  
+> -	/* power up */
+> -	if (dev->chiptype == SI2157_CHIPTYPE_SI2146) {
+> -		memcpy(cmd.args, "\xc0\x05\x01\x00\x00\x0b\x00\x00\x01", 9);
+> -		cmd.wlen = 9;
+> -	} else if (dev->chiptype == SI2157_CHIPTYPE_SI2141) {
+> -		memcpy(cmd.args, "\xc0\x00\x0d\x0e\x00\x01\x01\x01\x01\x03", 10);
+> -		cmd.wlen = 10;
+> -	} else {
+> -		memcpy(cmd.args, "\xc0\x00\x0c\x00\x00\x01\x01\x01\x01\x01\x01\x02\x00\x00\x01", 15);
+> -		cmd.wlen = 15;
+> -	}
+> -	cmd.rlen = 1;
+> -	ret = si2157_cmd_execute(client, &cmd);
+> +	ret = si2157_power_up(dev, client);
+>  	if (ret)
+>  		goto err;
+>  
+> @@ -118,17 +124,6 @@ static int si2157_init(struct dvb_frontend *fe)
+>  			goto err;
+>  	}
+>  
+> -	/* query chip revision */
+> -	memcpy(cmd.args, "\x02", 1);
+> -	cmd.wlen = 1;
+> -	cmd.rlen = 13;
+> -	ret = si2157_cmd_execute(client, &cmd);
+> -	if (ret)
+> -		goto err;
+> -
+> -	chip_id = cmd.args[1] << 24 | cmd.args[2] << 16 | cmd.args[3] << 8 |
+> -			cmd.args[4] << 0;
+> -
+>  	#define SI2177_A30 ('A' << 24 | 77 << 16 | '3' << 8 | '0' << 0)
+>  	#define SI2158_A20 ('A' << 24 | 58 << 16 | '2' << 8 | '0' << 0)
+>  	#define SI2148_A20 ('A' << 24 | 48 << 16 | '2' << 8 | '0' << 0)
+> @@ -137,7 +132,7 @@ static int si2157_init(struct dvb_frontend *fe)
+>  	#define SI2146_A10 ('A' << 24 | 46 << 16 | '1' << 8 | '0' << 0)
+>  	#define SI2141_A10 ('A' << 24 | 41 << 16 | '1' << 8 | '0' << 0)
+>  
+> -	switch (chip_id) {
+> +	switch (dev->chip_id) {
+>  	case SI2158_A20:
+>  	case SI2148_A20:
+>  		fw_name = SI2158_A20_FIRMWARE;
+> @@ -456,6 +451,27 @@ static int si2157_probe(struct i2c_client *client,
+>  	memcpy(&fe->ops.tuner_ops, &si2157_ops, sizeof(struct dvb_tuner_ops));
+>  	fe->tuner_priv = client;
+>  
+> +	ret = si2157_power_up(dev, client);
+> +	if (ret)
+> +		goto err;
+> +	/* query chip revision */
+> +	/* hack: do it here because after the si2168 gets 0101, commands will
+> +	 * still be executed here but no result
 
-It seems a bit weird to have a comment explaining that 'struct page
-*page' must actually be a valid pointer. Of course it must.
+I don't understand. What problem are you seeing here? Why can't you do a
+query chip revision first?
 
-Computing a 'struct page *' to something that doesn't actually have a
-struct page is simply a bug in whoever did that.
+This needs resolving of course.
 
-Code should never be interchanging ioremap results with the struct
-page* world.
-
-Jason
+> +	 */
+> +	memcpy(cmd.args, "\x02", 1);
+> +	cmd.wlen = 1;
+> +	cmd.rlen = 13;
+> +	ret = si2157_cmd_execute(client, &cmd);
+> +	if (ret)
+> +		goto err_kfree;
+> +	dev->chip_id = cmd.args[1] << 24 |
+> +		cmd.args[2] << 16 |
+> +		cmd.args[3] << 8 |
+> +		cmd.args[4] << 0;
+> +	dev_info(&client->dev, "found a 'Silicon Labs Si21%d-%c%c%c'\n",
+> +		cmd.args[2], cmd.args[1], cmd.args[3], cmd.args[4]);
+> +
+> +
+>  #ifdef CONFIG_MEDIA_CONTROLLER
+>  	if (cfg->mdev) {
+>  		dev->mdev = cfg->mdev;
+> diff --git a/drivers/media/tuners/si2157_priv.h b/drivers/media/tuners/si2157_priv.h
+> index 2bda903358da..9ab7c88b01b4 100644
+> --- a/drivers/media/tuners/si2157_priv.h
+> +++ b/drivers/media/tuners/si2157_priv.h
+> @@ -28,6 +28,7 @@ struct si2157_dev {
+>  	u8 chiptype;
+>  	u8 if_port;
+>  	u32 if_frequency;
+> +	u32 chip_id;
+>  	struct delayed_work stat_work;
+>  
+>  #if defined(CONFIG_MEDIA_CONTROLLER)
+> diff --git a/drivers/media/usb/dvb-usb-v2/af9035.c b/drivers/media/usb/dvb-usb-v2/af9035.c
+> index 3afd18733614..83e243df59b9 100644
+> --- a/drivers/media/usb/dvb-usb-v2/af9035.c
+> +++ b/drivers/media/usb/dvb-usb-v2/af9035.c
+> @@ -1246,6 +1246,51 @@ static int it930x_frontend_attach(struct dvb_usb_adapter *adap)
+>  
+>  	msleep(200);
+>  
+> +	if (le16_to_cpu(d->udev->descriptor.idVendor) == USB_VID_DEXATEK) {
+> +
+> +		ret = af9035_wr_reg_mask(d, 0xd8b7, 0x01, 0x01);
+> +		if (ret < 0)
+> +			goto err;
+> +
+> +		/* I2C master bus 2 clock speed 300k */
+> +		ret = af9035_wr_reg(d, 0x00f6a7, 0x07);
+> +		if (ret < 0)
+> +			goto err;
+> +
+> +		/* I2C master bus 1,3 clock speed 300k */
+> +		ret = af9035_wr_reg(d, 0x00f103, 0x07);
+> +		if (ret < 0)
+> +			goto err;
+> +
+> +		/* set gpio11 low */
+> +		ret = af9035_wr_reg_mask(d, 0xd8d4, 0x01, 0x01);
+> +		if (ret < 0)
+> +			goto err;
+> +
+> +		ret = af9035_wr_reg_mask(d, 0xd8d5, 0x01, 0x01);
+> +		if (ret < 0)
+> +			goto err;
+> +
+> +		ret = af9035_wr_reg_mask(d, 0xd8d3, 0x01, 0x01);
+> +		if (ret < 0)
+> +			goto err;
+> +
+> +		/* Tuner enable using gpiot2_en, gpiot2_on and gpiot2_o (reset) */
+> +		ret = af9035_wr_reg_mask(d, 0xd8b8, 0x01, 0x01);
+> +		if (ret < 0)
+> +			goto err;
+> +
+> +		ret = af9035_wr_reg_mask(d, 0xd8b9, 0x01, 0x01);
+> +		if (ret < 0)
+> +			goto err;
+> +
+> +		ret = af9035_wr_reg_mask(d, 0xd8b7, 0x00, 0x01);
+> +		if (ret < 0)
+> +			goto err;
+> +
+> +		msleep(200);
+> +	}
+> +
+>  	ret = af9035_wr_reg_mask(d, 0xd8b7, 0x01, 0x01);
+>  	if (ret < 0)
+>  		goto err;
+> @@ -2119,6 +2164,8 @@ static const struct usb_device_id af9035_id_table[] = {
+>  	/* IT930x devices */
+>  	{ DVB_USB_DEVICE(USB_VID_ITETECH, USB_PID_ITETECH_IT9303,
+>  		&it930x_props, "ITE 9303 Generic", NULL) },
+> +	{ DVB_USB_DEVICE(USB_VID_DEXATEK, 0x0100,
+> +		&it930x_props, "Logilink VG0022A", NULL) },
+>  	{ DVB_USB_DEVICE(USB_VID_AVERMEDIA, USB_PID_AVERMEDIA_TD310,
+>  		&it930x_props, "AVerMedia TD310 DVB-T2", NULL) },
+>  	{ }
+> -- 
+> 2.20.1
