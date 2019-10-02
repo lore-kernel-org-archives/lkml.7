@@ -2,116 +2,165 @@ Return-Path: <SRS0=zem1=X3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_2
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51AE6ECE587
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 01:17:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 84B0BC352AA
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 01:20:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 21DAA20818
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 01:17:08 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pth6mtN/"
+	by mail.kernel.org (Postfix) with ESMTP id 57F0020818
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 01:20:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729631AbfJBBRH (ORCPT
+        id S1729640AbfJBBUM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Oct 2019 21:17:07 -0400
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:36894 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725908AbfJBBRH (ORCPT
+        Tue, 1 Oct 2019 21:20:12 -0400
+Received: from mailgw02.mediatek.com ([210.61.82.184]:10390 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725908AbfJBBUM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Oct 2019 21:17:07 -0400
-Received: by mail-pg1-f194.google.com with SMTP id c17so10961134pgg.4;
-        Tue, 01 Oct 2019 18:17:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=cCPpIXwTTzCl7iuvpAsaiH8IIiFwQFVgIh4mGvjHgKc=;
-        b=pth6mtN/O1kCQWnaDAc9gJ8Yz53fBmFaBBj+KGMPaI7AZfqcqivi9TJtUn9u1tfb+d
-         EUx6cO3izmZ1HNma4mewv6WsyCt+c0TJk15Tmufh1n28wfzgqdPFc4ARj0GxBPCJhCBS
-         NTeIdVLo2RmfGAgh9OiNJDS3u8PUi3QIzUi9B8AycxhbfZeXwPjv311gMPDI9a1/+WYu
-         LEPtWz2HeRP0CI6+Do72iKaW4Yyik6QD+kB4/MP+zbYtGWanjIur7GqXwmiPjJIwCRmr
-         c+wfiCwOe2UHVAhMLa1+ZPcIF39IhH37jzxp9b15yR5IgA447n3pK6Cys41fa0rgHqVR
-         Mcrg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=cCPpIXwTTzCl7iuvpAsaiH8IIiFwQFVgIh4mGvjHgKc=;
-        b=kkSom4qfngqL+mAq+SL8Ki//WDK7BBGHfcpI3DLeNtVJs+46PKwEHGKQY/QgB7sJuK
-         2vS+UgyFsNoxBGWp+iTz2JdRvSO11xlmRpM1KA6celW1X4As1k2o+zbJlMoBnEjwKQfJ
-         D/a8zjqn8tPI6e0+Oplx7CjuuLUCOKc4KLcMdY2Jvj2MsCugcvB1cKqBJG8s07WTE1Tv
-         ix0tm1HR3jF0lsTujo4uNM5Yz1wN7n+JrMG1HQoGmEMDftMaL81BHjghQMIfHeM+XLW3
-         JNBCqLJnf1HSRBPn4r+lx+8yuXrHXuQ8MmZGJ1WCmlBImQA3+L2N13rHMdUbjfwUa1yI
-         RP7Q==
-X-Gm-Message-State: APjAAAWh4z8nq/Q9nCje09noi0FS26QvD1ntfbsKaQnn0XpVFcs7beSr
-        w5v53JVibN7m+EotKUB1ldw=
-X-Google-Smtp-Source: APXvYqxqkdoby+o+sRr/vfblT8sSWmSv4tglKRjcJExnFD3acGUtjxZzxR6SBSbaL/7zpGhphwwXug==
-X-Received: by 2002:a17:90a:3209:: with SMTP id k9mr1329341pjb.14.1569979026485;
-        Tue, 01 Oct 2019 18:17:06 -0700 (PDT)
-Received: from aw-bldr-10.qualcomm.com (i-global254.qualcomm.com. [199.106.103.254])
-        by smtp.gmail.com with ESMTPSA id a13sm20414018pfg.10.2019.10.01.18.17.05
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 01 Oct 2019 18:17:06 -0700 (PDT)
-From:   Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
-To:     bjorn.andersson@linaro.org
-Cc:     agross@kernel.org, mturquette@baylibre.com, sboyd@kernel.org,
-        marc.w.gonzalez@free.fr, linux-arm-msm@vger.kernel.org,
-        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
-Subject: [PATCH v4 2/2] arm64: dts: qcom: msm8998: Add gpucc node
-Date:   Tue,  1 Oct 2019 18:17:02 -0700
-Message-Id: <20191002011702.36678-1-jeffrey.l.hugo@gmail.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20191002011555.36571-1-jeffrey.l.hugo@gmail.com>
-References: <20191002011555.36571-1-jeffrey.l.hugo@gmail.com>
+        Tue, 1 Oct 2019 21:20:12 -0400
+X-UUID: c3a51ee9fba84d509627aeab88ea7030-20191002
+X-UUID: c3a51ee9fba84d509627aeab88ea7030-20191002
+Received: from mtkexhb02.mediatek.inc [(172.21.101.103)] by mailgw02.mediatek.com
+        (envelope-from <jing-ting.wu@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 1161986974; Wed, 02 Oct 2019 09:20:07 +0800
+Received: from mtkcas08.mediatek.inc (172.21.101.126) by
+ mtkmbs07n2.mediatek.inc (172.21.101.141) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Wed, 2 Oct 2019 09:20:06 +0800
+Received: from [172.21.77.33] (172.21.77.33) by mtkcas08.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Wed, 2 Oct 2019 09:20:06 +0800
+Message-ID: <1569979206.4892.23.camel@mtkswgap22>
+Subject: Re: [PATCH 1/1] sched/rt: avoid contend with CFS task
+From:   Jing-Ting Wu <jing-ting.wu@mediatek.com>
+To:     Qais Yousef <qais.yousef@arm.com>
+CC:     Vincent Guittot <vincent.guittot@linaro.org>,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        <wsd_upstream@mediatek.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        LAK <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>
+Date:   Wed, 2 Oct 2019 09:20:06 +0800
+In-Reply-To: <20190919151152.m2zmiaspr6s5mcfh@e107158-lin.cambridge.arm.com>
+References: <1567048502-6064-1-git-send-email-jing-ting.wu@mediatek.com>
+         <d5100b2d-46c4-5811-8274-8b06710d2594@arm.com>
+         <20190830145501.zadfv2ffuu7j46ft@e107158-lin.cambridge.arm.com>
+         <1567689999.2389.5.camel@mtkswgap22>
+         <CAKfTPtC3txstND=6YkWBJ16i06cQ7xueUpD5j-j-UfuSf0-z-g@mail.gmail.com>
+         <1568892135.4892.10.camel@mtkswgap22>
+         <CAKfTPtCuWrpW_o6r5cmGhLf_84PFHJhBk0pJ3fcbU_YgcBnTkQ@mail.gmail.com>
+         <20190919142315.vmrrpvljpspqpurp@e107158-lin.cambridge.arm.com>
+         <CAKfTPtA9-JLxs+DdLYjBQ6VfVGNxm++QYYi1wy-xS6o==EAPNw@mail.gmail.com>
+         <CAKfTPtAy1JSh725GAVXmg_x3fby1UfYn504tq4n2rQs1-JMy6Q@mail.gmail.com>
+         <20190919151152.m2zmiaspr6s5mcfh@e107158-lin.cambridge.arm.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.2.3-0ubuntu6 
+Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+X-MTK:  N
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add MSM8998 GPU Clock Controller DT node.
+On Thu, 2019-09-19 at 16:11 +0100, Qais Yousef wrote:
+> On 09/19/19 16:37, Vincent Guittot wrote:
+> > On Thu, 19 Sep 2019 at 16:32, Vincent Guittot
+> > <vincent.guittot@linaro.org> wrote:
+> > >
+> > > On Thu, 19 Sep 2019 at 16:23, Qais Yousef <qais.yousef@arm.com> wrote:
+> > > >
+> > > > On 09/19/19 14:27, Vincent Guittot wrote:
+> > > > > > > > But for requirement of performance, I think it is better to differentiate between idle CPU and CPU has CFS task.
+> > > > > > > >
+> > > > > > > > For example, we use rt-app to evaluate runnable time on non-patched environment.
+> > > > > > > > There are (NR_CPUS-1) heavy CFS tasks and 1 RT Task. When a CFS task is running, the RT task wakes up and choose the same CPU.
+> > > > > > > > The CFS task will be preempted and keep runnable until it is migrated to another cpu by load balance.
+> > > > > > > > But load balance is not triggered immediately, it will be triggered until timer tick hits with some condition satisfied(ex. rq->next_balance).
+> > > > > > >
+> > > > > > > Yes you will have to wait for the next tick that will trigger an idle
+> > > > > > > load balance because you have an idle cpu and 2 runnable tack (1 RT +
+> > > > > > > 1CFS) on the same CPU. But you should not wait for more than  1 tick
+> > > > > > >
+> > > > > > > The current load_balance doesn't handle correctly the situation of 1
+> > > > > > > CFS and 1 RT task on same CPU while 1 CPU is idle. There is a rework
+> > > > > > > of the load_balance that is under review on the mailing list that
+> > > > > > > fixes this problem and your CFS task should migrate to the idle CPU
+> > > > > > > faster than now
+> > > > > > >
+> > > > > >
+> > > > > > Period load balance should be triggered when current jiffies is behind
+> > > > > > rq->next_balance, but rq->next_balance is not often exactly the same
+> > > > > > with next tick.
+> > > > > > If cpu_busy, interval = sd->balance_interval * sd->busy_factor, and
+> > > > >
+> > > > > But if there is an idle CPU on the system, the next idle load balance
+> > > > > should apply shortly because the busy_factor is not used for this CPU
+> > > > > which is  not busy.
+> > > > > In this case, the next_balance interval is sd_weight which is probably
+> > > > > 4ms at cluster level and 8ms at system level in your case. This means
+> > > > > between 1 and 2 ticks
+> > > >
+> > > > But if the CFS task we're preempting was latency sensitive - this 1 or 2 tick
+> > > > is too late of a recovery.
+> > > >
+> > > > So while it's good we recover, but a preventative approach would be useful too.
+> > > > Just saying :-) I'm still not sure if this is the best longer term approach.
+> > >
+> > > like using a rt task ?
+> > 
+> > I mean, RT task should select a sub optimal CPU because of CFS
+> > If you want to favor CFS compared to RT it's probably because your
+> > task should be RT too
+> 
+> Yes possibly. But I don't think this is always doable. Especially when you're
+> running on generic system not a special purposed one.
+> 
+> And we don't need to favor CFS over RT. But I think they can play nicely
+> together.
+> 
+> For example on Android there are few RT tasks and rarely more than 1 runnable
+> RT task at a time. But if it happened to wakeup on the same CPU that is
+> running the UI thread you could lose a frame. And from what I've seen as well
+> we have 1-3 CFS tasks runnable, weighted more towards 1 task. So we do have
+> plenty of idle CPUs on average.
+> 
+> But as I mentioned earlier I couldn't prove yet this being a serious problem.
+> I was hoping the use case presented here is based on a real workload, but it's
+> synthetic. So I agree we need stronger reasons, but I think conceptually we do
+> have a conflict of interest where RT task could unnecessarily hurt the
+> performance of CFS task.
+> 
+> Another way to look at the problem is that the system is not partitioned
+> correctly and the admin could do a better job to prevent this.
+> 
+> --
+> Qais Yousef
 
-Signed-off-by: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
----
- arch/arm64/boot/dts/qcom/msm8998.dtsi | 14 ++++++++++++++
- 1 file changed, 14 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/qcom/msm8998.dtsi b/arch/arm64/boot/dts/qcom/msm8998.dtsi
-index 5a9efd749fa6..896f37c936ee 100644
---- a/arch/arm64/boot/dts/qcom/msm8998.dtsi
-+++ b/arch/arm64/boot/dts/qcom/msm8998.dtsi
-@@ -3,6 +3,7 @@
- 
- #include <dt-bindings/interrupt-controller/arm-gic.h>
- #include <dt-bindings/clock/qcom,gcc-msm8998.h>
-+#include <dt-bindings/clock/qcom,gpucc-msm8998.h>
- #include <dt-bindings/clock/qcom,mmcc-msm8998.h>
- #include <dt-bindings/clock/qcom,rpmcc.h>
- #include <dt-bindings/power/qcom-rpmpd.h>
-@@ -951,6 +952,19 @@
- 			#interrupt-cells = <0x2>;
- 		};
- 
-+		gpucc: clock-controller@5065000 {
-+			compatible = "qcom,gpucc-msm8998";
-+			#clock-cells = <1>;
-+			#reset-cells = <1>;
-+			#power-domain-cells = <1>;
-+			reg = <0x05065000 0x9000>;
-+
-+			clocks = <&rpmcc RPM_SMD_XO_CLK_SRC>,
-+				 <&gcc GPLL0_OUT_MAIN>;
-+			clock-names = "xo",
-+				      "gpll0";
-+		};
-+
- 		spmi_bus: spmi@800f000 {
- 			compatible = "qcom,spmi-pmic-arb";
- 			reg =	<0x0800f000 0x1000>,
--- 
-2.17.1
+I use some third-party application, such as weibo and others, to test
+the application launch time. I apply this RT patch, and compare it with
+original design. Both RT patch test case and original design test case
+are already apply the
+patch:https://lore.kernel.org/patchwork/patch/1129117/
+
+After apply the RT patch, launch time of weibo from 1325.72ms to 1214.88
+ms, its launch time decreases 110.84ms(about 8.36%). Other applications
+also decrease 7~13%.
+
+At original design test case, RT tasks(surfaceflinger) could preempt
+some CFS tasks, if we add all these CFS tasks runnable time, it may have
+some impact on app launch time. So even if we already use the load
+balance patch and reduce a lot of CFS runnable time, I think choose idle
+CPU at RT scheduler could also reduce the some CFS runnable time.
+
+
+
+Best regards,
+Jing-Ting Wu
+
 
