@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E6CC7C4360C
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 19:10:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B85F0C4360C
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 19:10:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CC7642133F
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 19:10:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 95CD02133F
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 19:10:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728946AbfJBTJ7 (ORCPT
+        id S1729795AbfJBTKN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Oct 2019 15:09:59 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:35980 "EHLO
+        Wed, 2 Oct 2019 15:10:13 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:35966 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729049AbfJBTIS (ORCPT
+        by vger.kernel.org with ESMTP id S1729342AbfJBTIS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 2 Oct 2019 15:08:18 -0400
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1iFjyx-00035s-RP; Wed, 02 Oct 2019 20:08:15 +0100
+        id 1iFjyx-000366-Re; Wed, 02 Oct 2019 20:08:16 +0100
 Received: from ben by deadeye with local (Exim 4.92.1)
         (envelope-from <ben@decadent.org.uk>)
-        id 1iFjyp-0003f0-Av; Wed, 02 Oct 2019 20:08:07 +0100
+        id 1iFjyp-0003fF-GS; Wed, 02 Oct 2019 20:08:07 +0100
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,14 +35,15 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        "Ivan Vecera" <ivecera@redhat.com>, "Tianhao" <tizhao@redhat.com>
+        "Ronnie Sahlberg" <lsahlber@redhat.com>,
+        "Pavel Shilovsky" <pshilov@microsoft.com>,
+        "Steve French" <stfrench@microsoft.com>
 Date:   Wed, 02 Oct 2019 20:06:51 +0100
-Message-ID: <lsq.1570043211.975377919@decadent.org.uk>
+Message-ID: <lsq.1570043211.694878814@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 64/87] be2net: Fix number of Rx queues used for flow
- hashing
+Subject: [PATCH 3.16 67/87] SMB3: retry on STATUS_INSUFFICIENT_RESOURCES
+ instead of failing write
 In-Reply-To: <lsq.1570043210.379046399@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -56,73 +57,34 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Ivan Vecera <ivecera@redhat.com>
+From: Steve French <stfrench@microsoft.com>
 
-commit 718f4a2537089ea41903bf357071306163bc7c04 upstream.
+commit 8d526d62db907e786fd88948c75d1833d82bd80e upstream.
 
-Number of Rx queues used for flow hashing returned by the driver is
-incorrect and this bug prevents user to use the last Rx queue in
-indirection table.
+Some servers such as Windows 10 will return STATUS_INSUFFICIENT_RESOURCES
+as the number of simultaneous SMB3 requests grows (even though the client
+has sufficient credits).  Return EAGAIN on STATUS_INSUFFICIENT_RESOURCES
+so that we can retry writes which fail with this status code.
 
-Let's say we have a NIC with 6 combined queues:
+This (for example) fixes large file copies to Windows 10 on fast networks.
 
-[root@sm-03 ~]# ethtool -l enp4s0f0
-Channel parameters for enp4s0f0:
-Pre-set maximums:
-RX:             5
-TX:             5
-Other:          0
-Combined:       6
-Current hardware settings:
-RX:             0
-TX:             0
-Other:          0
-Combined:       6
-
-Default indirection table maps all (6) queues equally but the driver
-reports only 5 rings available.
-
-[root@sm-03 ~]# ethtool -x enp4s0f0
-RX flow hash indirection table for enp4s0f0 with 5 RX ring(s):
-    0:      0     1     2     3     4     5     0     1
-    8:      2     3     4     5     0     1     2     3
-   16:      4     5     0     1     2     3     4     5
-   24:      0     1     2     3     4     5     0     1
-...
-
-Now change indirection table somehow:
-
-[root@sm-03 ~]# ethtool -X enp4s0f0 weight 1 1
-[root@sm-03 ~]# ethtool -x enp4s0f0
-RX flow hash indirection table for enp4s0f0 with 6 RX ring(s):
-    0:      0     0     0     0     0     0     0     0
-...
-   64:      1     1     1     1     1     1     1     1
-...
-
-Now it is not possible to change mapping back to equal (default) state:
-
-[root@sm-03 ~]# ethtool -X enp4s0f0 equal 6
-Cannot set RX flow hash configuration: Invalid argument
-
-Fixes: 594ad54a2c3b ("be2net: Add support for setting and getting rx flow hash options")
-Reported-by: Tianhao <tizhao@redhat.com>
-Signed-off-by: Ivan Vecera <ivecera@redhat.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Steve French <stfrench@microsoft.com>
+Reviewed-by: Ronnie Sahlberg <lsahlber@redhat.com>
+Reviewed-by: Pavel Shilovsky <pshilov@microsoft.com>
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- drivers/net/ethernet/emulex/benet/be_ethtool.c | 2 +-
+ fs/cifs/smb2maperror.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/net/ethernet/emulex/benet/be_ethtool.c
-+++ b/drivers/net/ethernet/emulex/benet/be_ethtool.c
-@@ -962,7 +962,7 @@ static int be_get_rxnfc(struct net_devic
- 		cmd->data = be_get_rss_hash_opts(adapter, cmd->flow_type);
- 		break;
- 	case ETHTOOL_GRXRINGS:
--		cmd->data = adapter->num_rx_qs - 1;
-+		cmd->data = adapter->num_rx_qs;
- 		break;
- 	default:
- 		return -EINVAL;
+--- a/fs/cifs/smb2maperror.c
++++ b/fs/cifs/smb2maperror.c
+@@ -455,7 +455,7 @@ static const struct status_to_posix_erro
+ 	{STATUS_FILE_INVALID, -EIO, "STATUS_FILE_INVALID"},
+ 	{STATUS_ALLOTTED_SPACE_EXCEEDED, -EIO,
+ 	"STATUS_ALLOTTED_SPACE_EXCEEDED"},
+-	{STATUS_INSUFFICIENT_RESOURCES, -EREMOTEIO,
++	{STATUS_INSUFFICIENT_RESOURCES, -EAGAIN,
+ 				"STATUS_INSUFFICIENT_RESOURCES"},
+ 	{STATUS_DFS_EXIT_PATH_FOUND, -EIO, "STATUS_DFS_EXIT_PATH_FOUND"},
+ 	{STATUS_DEVICE_DATA_ERROR, -EIO, "STATUS_DEVICE_DATA_ERROR"},
 
