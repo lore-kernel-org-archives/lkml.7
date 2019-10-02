@@ -2,114 +2,153 @@ Return-Path: <SRS0=zem1=X3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CFE0EC47404
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 22:14:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D02B0C4360C
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 22:14:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A19D920659
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 22:14:01 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YwTraDTn"
+	by mail.kernel.org (Postfix) with ESMTP id A21F621783
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 22:14:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1570054458;
+	bh=kSN1Gyplw7RqXqxsJcmCMVoXdvIiOoy3KBYxUcNcQIg=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=cvcl1ByMlxpmibh0B1pNGAKwjBt6FQlUcv2U/pluAGm4StQbCoEGlGIMkcjrrSJmq
+	 xi/UJAY/SJj9fzLG4mrR4Wip1SewhLeyyvp2et4MqTPGkebGAEspUH0k/QwRGpUQSP
+	 lgAjQXI0lokLcpFP5ISINIaLBf7hBsik99kvlR1g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727456AbfJBWOB (ORCPT
+        id S1727990AbfJBWOS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Oct 2019 18:14:01 -0400
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:32899 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725789AbfJBWOA (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Oct 2019 18:14:00 -0400
-Received: by mail-oi1-f195.google.com with SMTP id e18so829746oii.0;
-        Wed, 02 Oct 2019 15:14:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=Sqk/SFk4ZImYIBcERyKHjU6k+Y9P6R8FWyKPazl8xYA=;
-        b=YwTraDTntg1G+u7Q2S81u1noOW7tjCCMyd7P2/qmF5YM9/0NUfZL0Euw5BaM31YQ1F
-         NaGWJ9zr8QJRcxwPXD1haA3Q0L36Fwq5ltQXJG0BbRJX98ytSUF3DFM/PmA/1ReBpH0j
-         UZxHTpdX8CUPqhtQnX3PwoVKlz+jvNXZB0hFJJqibeqrOGtLM2gzH6NfSh1tMqOQUSAw
-         dETRblrltQ3id0qF8yLWmlRs8Av0X8I4SjGxDhzBzCreBrDudh5uAbVCF83A5je5dpat
-         oBlSkR+a2iLlbRdpX4QGlzdlIxeYDks6kUX6DVpePuLzS3TampizmNJyjj+QU3QwuBon
-         /A7A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=Sqk/SFk4ZImYIBcERyKHjU6k+Y9P6R8FWyKPazl8xYA=;
-        b=GuNaLmTf85Slv9pLqfPtlplv7u98Iow8uVJSIajkc7mecvx368fgv4z3TxcbqZdV+e
-         +EkyDZNuNrvRGPo4vkOTj2YM1+zQxSfZ4yBT16rV9HDKokQ8EAKscylW+RL0Pufhgnai
-         cA7ESPw8j7/Jrq8wT1PG9WrOibW/mQCY32bp+uLiy3QuQn7osTd6ddsUYWIDVxHOVEmg
-         JyM1hAziuPn1i4cgp1t5tC9SoIsg2b1IsgfGGGa9O6waOIEcxwoAYlRsEUT81llIzn1n
-         0wPYspycjVfWDwI354pXvWeJfeOi4Hj2n5Ji6bjwAE1ULa289+MA6QhOmz2omiKLl5ug
-         +NYg==
-X-Gm-Message-State: APjAAAUMn3Ye9F+ca9siQADdUQ9HchlecyoC+xIgWwUG4Iw8Fkm4nlBh
-        rXiNXy5Cdl4gjv2CA5dm1GMYCqbWWRy5Sg==
-X-Google-Smtp-Source: APXvYqy3haKfq5CSi7BfjH3KJ5olSRvyyEnJDllpCOIzv053tu35ipKl7mhVvvPQ8LLSDuZ0RMIZgA==
-X-Received: by 2002:aca:645:: with SMTP id 66mr233481oig.117.1570054439541;
-        Wed, 02 Oct 2019 15:13:59 -0700 (PDT)
-Received: from nuclearis2-1.gtech (c-98-195-139-126.hsd1.tx.comcast.net. [98.195.139.126])
-        by smtp.gmail.com with ESMTPSA id x38sm218466ota.59.2019.10.02.15.13.58
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 02 Oct 2019 15:13:59 -0700 (PDT)
-Subject: Re: [PATCH 0/3] PCI: pciehp: Do not turn off slot if presence comes
- up after link
-To:     Lukas Wunner <lukas@wunner.de>,
-        Stuart Hayes <stuart.w.hayes@gmail.com>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>,
-        Austin Bolen <austin_bolen@dell.com>, keith.busch@intel.com,
-        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        "Gustavo A . R . Silva" <gustavo@embeddedor.com>,
-        Sinan Kaya <okaya@kernel.org>,
-        Oza Pawandeep <poza@codeaurora.org>, linux-pci@vger.kernel.org,
+        Wed, 2 Oct 2019 18:14:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52250 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725789AbfJBWOR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 2 Oct 2019 18:14:17 -0400
+Received: from akpm3.svl.corp.google.com (unknown [104.133.8.65])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8175420659;
+        Wed,  2 Oct 2019 22:14:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1570054456;
+        bh=kSN1Gyplw7RqXqxsJcmCMVoXdvIiOoy3KBYxUcNcQIg=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=x3yRh+edFLTiTWrF/ExG8Ko/QBaRLNy2Q78XMIQfuf6mhooPQrPb7sYKoQRHgbNvu
+         9fYeX4S4q9iMk3zKcAxMIMoyk5ceWMnVLy3jTGcCBTJOFlQT42tw4CGWjwHqIEHpBc
+         6dwdmTJOkAs3aZYsITxs4nCguavz6OHjVwpJHYF8=
+Date:   Wed, 2 Oct 2019 15:14:16 -0700
+From:   Andrew Morton <akpm@linux-foundation.org>
+To:     David Hildenbrand <david@redhat.com>
+Cc:     "Alastair D'Silva" <alastair@au1.ibm.com>, alastair@d-silva.org,
+        Oscar Salvador <osalvador@suse.de>,
+        Michal Hocko <mhocko@suse.com>,
+        Pavel Tatashin <pasha.tatashin@soleen.com>,
+        Dan Williams <dan.j.williams@intel.com>, linux-mm@kvack.org,
         linux-kernel@vger.kernel.org
-References: <20191001211419.11245-1-stuart.w.hayes@gmail.com>
- <20191002041315.6dpqpis5zikosyyc@wunner.de>
-From:   "Alex G." <mr.nuke.me@gmail.com>
-Message-ID: <c494a7c4-8323-e75f-6a3f-5f342ce7b1c7@gmail.com>
-Date:   Wed, 2 Oct 2019 17:13:58 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
-MIME-Version: 1.0
-In-Reply-To: <20191002041315.6dpqpis5zikosyyc@wunner.de>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
+Subject: Re: [PATCH v7 1/1] memory_hotplug: Add a bounds check to
+ __add_pages
+Message-Id: <20191002151416.42bc2e8228fdefc6eb802abc@linux-foundation.org>
+In-Reply-To: <01def17b-1df8-a63a-4cfc-91e99614a2f0@redhat.com>
+References: <20191001004617.7536-1-alastair@au1.ibm.com>
+        <20191001004617.7536-2-alastair@au1.ibm.com>
+        <01def17b-1df8-a63a-4cfc-91e99614a2f0@redhat.com>
+X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 10/1/19 11:13 PM, Lukas Wunner wrote:
-> On Tue, Oct 01, 2019 at 05:14:16PM -0400, Stuart Hayes wrote:
->> This patch set is based on a patch set [1] submitted many months ago by
->> Alexandru Gagniuc, who is no longer working on it.
->>
->> [1] https://patchwork.kernel.org/cover/10909167/
->>      [v3,0/4] PCI: pciehp: Do not turn off slot if presence comes up after link
-> 
-> If I'm not mistaken, these two are identical to Alex' patches, right?
-> 
->    PCI: pciehp: Add support for disabling in-band presence
->    PCI: pciehp: Wait for PDS when in-band presence is disabled
-> 
-> I'm not sure if it's appropriate to change the author and
-> omit Alex' Signed-off-by.
+On Tue, 1 Oct 2019 11:49:47 +0200 David Hildenbrand <david@redhat.com> wrote:
 
-Legally Dell owns the patches. I have no objection on my end.
+> > @@ -278,6 +278,22 @@ static int check_pfn_span(unsigned long pfn, unsigned long nr_pages,
+> >  	return 0;
+> >  }
+> >  
+> > +static int check_hotplug_memory_addressable(unsigned long pfn,
+> > +					    unsigned long nr_pages)
+> > +{
+> > +	const u64 max_addr = PFN_PHYS(pfn + nr_pages) - 1;
+> > +
+> > +	if (max_addr >> MAX_PHYSMEM_BITS) {
+> > +		const u64 max_allowed = (1ull << (MAX_PHYSMEM_BITS + 1)) - 1;
+> > +		WARN(1,
+> > +		     "Hotplugged memory exceeds maximum addressable address, range=%#llx-%#llx, maximum=%#llx\n",
+> > +		     (u64)PFN_PHYS(pfn), max_addr, max_allowed);
+> > +		return -E2BIG;
+> > +	}
+> > +
+> > +	return 0;
+> > +}
+> > +
+> >  /*
+> >   * Reasonably generic function for adding memory.  It is
+> >   * expected that archs that support memory hotplug will
+> > @@ -291,6 +307,10 @@ int __ref __add_pages(int nid, unsigned long pfn, unsigned long nr_pages,
+> >  	unsigned long nr, start_sec, end_sec;
+> >  	struct vmem_altmap *altmap = restrictions->altmap;
+> >  
+> > +	err = check_hotplug_memory_addressable(pfn, nr_pages);
+> > +	if (err)
+> > +		return err;
+> > +
+> >  	if (altmap) {
+> >  		/*
+> >  		 * Validate altmap is within bounds of the total request
+> > 
+> 
+> I actually wanted to give my RB to v7, not v6 :)
+>
 
-Alex
+Given that check_hotplug_memory_addressable() is now static, I'll
+assume that the old [2/2]
+mm-add-a-bounds-check-in-devm_memremap_pages.patch is now obsolete.
 
-> Otherwise I have no objections against this series.
-> 
-> Thanks,
-> 
-> Lukas
-> 
+From: Alastair D'Silva <alastair@d-silva.org>
+Subject: mm/memremap.c: add a bounds check in devm_memremap_pages()
+
+The call to check_hotplug_memory_addressable() validates that the memory
+is fully addressable.
+
+Without this call, it is possible that we may remap pages that is not
+physically addressable, resulting in bogus section numbers being returned
+from __section_nr().
+
+Link: http://lkml.kernel.org/r/20190917010752.28395-3-alastair@au1.ibm.com
+Signed-off-by: Alastair D'Silva <alastair@d-silva.org>
+Acked-by: David Hildenbrand <david@redhat.com>
+Cc: Dan Williams <dan.j.williams@intel.com>
+Cc: Ira Weiny <ira.weiny@intel.com>
+Cc: Jason Gunthorpe <jgg@ziepe.ca>
+Cc: Logan Gunthorpe <logang@deltatee.com>
+Cc: Michal Hocko <mhocko@suse.com>
+Cc: Oscar Salvador <osalvador@suse.com>
+Cc: Pavel Tatashin <pasha.tatashin@soleen.com>
+Cc: Qian Cai <cai@lca.pw>
+Cc: Wei Yang <richard.weiyang@gmail.com>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+---
+
+ mm/memremap.c |    5 +++++
+ 1 file changed, 5 insertions(+)
+
+--- a/mm/memremap.c~mm-add-a-bounds-check-in-devm_memremap_pages
++++ a/mm/memremap.c
+@@ -185,6 +185,11 @@ void *memremap_pages(struct dev_pagemap
+ 	int error, is_ram;
+ 	bool need_devmap_managed = true;
+ 
++	error = check_hotplug_memory_addressable(res->start,
++						 resource_size(res));
++	if (error)
++		return ERR_PTR(error);
++
+ 	switch (pgmap->type) {
+ 	case MEMORY_DEVICE_PRIVATE:
+ 		if (!IS_ENABLED(CONFIG_DEVICE_PRIVATE)) {
+_
+
