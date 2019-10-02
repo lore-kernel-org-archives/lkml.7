@@ -2,104 +2,130 @@ Return-Path: <SRS0=zem1=X3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ACA71C35280
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 09:54:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 40C6CC352AA
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 09:54:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8398B218DE
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 09:54:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 10FF821920
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 09:54:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dQBhzVW8"
+	dkim=pass (1024-bit key) header.d=victronenergy.com header.i=@victronenergy.com header.b="TB3zyZOz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727282AbfJBJyR (ORCPT
+        id S1727338AbfJBJyr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Oct 2019 05:54:17 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:51281 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725765AbfJBJyR (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Oct 2019 05:54:17 -0400
-Received: by mail-wm1-f67.google.com with SMTP id 7so6474758wme.1;
-        Wed, 02 Oct 2019 02:54:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=agKbsf4oTKtJk9MDbyaTih7yTM3kVDJIjSHNfaZ4OSE=;
-        b=dQBhzVW8nJFrZ0a/WmbRtxRsTpSjayY31YVv8a/ZpKkkb1qmRaEYFWAZZX07C4ZXt6
-         kDhWqwKZ+U5epahSOUyqQ6bufSv+iELT2S4aow8npwPKdE26OwzMiQDwQ+znxmwOk+3r
-         +hSyTWaxXxzmljC2FjUWZy+Dm8AdDxuXAfsLmfhgEaTK4/0A4GPQtqWg1HHVf0ehrudU
-         TR0b5X77wHQtmGOyc7jsWmhKgbBIZ/D/YNSGzXy1vMgLt547futUlkNyND8Z/uiv3EhQ
-         mTdihHPlEt0pNzOFActoRaaSkBt55gOtSpH9LUT/CNL5pzyjLTc5yFGKBnw/fVYulfCH
-         JpMQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=agKbsf4oTKtJk9MDbyaTih7yTM3kVDJIjSHNfaZ4OSE=;
-        b=fR2OmoRAJj5WQKtG6owLfj72Dt9kSaTWxAtCv/EegSVHAP5dGPIqiJWbnmxg1RcNX3
-         ZcGAq/zPGg2F5dxMabb2dRVP2pT0Pgf3a5Dq+9vP83Z8fGdg7NJ/eAamo8zFjSL32pst
-         U9GWloZoDX9HGehvCgMsq8VileK9wb/pH89baAJcEUkjUzYXJQ3l3utqjVsOghnb2NVO
-         Kf72jwDzGDdq79QdUJWoLWAYNPxmlr6/KfO7ezdTVRx7H7ru06OvmLxup04V7acLK0KL
-         Zhav08tn6phg189AwHYvPjspE4NEaQUd1K7U5SWLTyTkGxetovbFsk88P+vcQp2JPFtd
-         /UEg==
-X-Gm-Message-State: APjAAAX4UPD8paWOlCWhbxij4wUf/oXlTbE0K+VYPhf34g9p6aSSpy4T
-        BZiuOaa9y/c/ZNDnP7fvPXE=
-X-Google-Smtp-Source: APXvYqz0tYZwuKqd09YKMAOMI2tGhhBxqp2e1NOteuy14YTD5+tPWvNTLyja32hCOLodOEs9l86Pgg==
-X-Received: by 2002:a7b:c744:: with SMTP id w4mr2067060wmk.11.1570010055061;
-        Wed, 02 Oct 2019 02:54:15 -0700 (PDT)
-Received: from LHFYY6Y2.criteois.lan ([91.199.242.236])
-        by smtp.gmail.com with ESMTPSA id y13sm28459042wrg.8.2019.10.02.02.54.14
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 02 Oct 2019 02:54:14 -0700 (PDT)
-From:   Jeremy MAURO <jeremy.mauro@gmail.com>
-X-Google-Original-From: Jeremy MAURO <j.mauro@criteo.com>
-To:     j.mauro@criteo.com
-Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        linux-doc@vger.kernel.org (open list:DOCUMENTATION SCRIPTS),
-        linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH 2/2] scripts/sphinx-pre-install: Add a new path for the debian package "fonts-noto-cjk"
-Date:   Wed,  2 Oct 2019 11:54:06 +0200
-Message-Id: <20191002095406.9918-1-j.mauro@criteo.com>
-X-Mailer: git-send-email 2.23.0
-In-Reply-To: <j.mauro@criteo.com>
-References: <j.mauro@criteo.com>
+        Wed, 2 Oct 2019 05:54:47 -0400
+Received: from mail-eopbgr130090.outbound.protection.outlook.com ([40.107.13.90]:21412
+        "EHLO EUR01-HE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725765AbfJBJyq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 2 Oct 2019 05:54:46 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Euwsstl536tWOpXinu6NAqKTRxfyMZXNWAUWjVooiAMh43mMUEzWUmFkpSB/s1IO7xMu9mrp/eNUckc+1REb4xTvgtCRXxD489Bp1MOJUh/VTlB9dhXdJ25hFl3yJ5N35xqyMSMyZjvdaXbBP7tKqHEuTYzInIJy9RhNeP5fVe9e5r5fULLKSghxBMqJIp/9Dj/at3iMSn1UKfBW6WDY3v8H/vKZ22CpF7h88LR0OAtH+EWhUEmxwXVKxqu3fVLHiM6u1b/ZMK5j53LIl5QrIT4cLFz53+YHiSxr/dSGuYmw4ly/raRmMRZwccZNVIQTmiqWrguQZtyd1bSFoRFomA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=QdtmTh5qtPzh34SA+YSt362Ksvt6EU2GpMlX9eOaf9I=;
+ b=DLDcblhUOGsg9biwyUChANVRYIqxNkvlUvY6qrbS9RaueqrXCpFSHZH7Zrmy7FxKfXzi/8iXka3Jd38ikTN7VdatOVrATuns/GhkKHZiGjhhKfjv+oW8aVoNXm+eSXdGrHBVMRa0qyfk6LaICE3OqbtWTW3lTo8ARzfjrq/tQ3s102sA6tG7dDY1i/KSWgtoVw2B8Ws9ENnqf7iKAPxeI3FLij/+25XUVKMzFrPZuD31m5H9TvUunaatwfOJpX6S9mBeu88SuYzXXxeJ5ToE9RjlGX14F3SgrWl51aJaxtl39vgan7c2+fKJzn++wJJ4BWWy7POicfNY3IC4m9fP1w==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=victronenergy.com; dmarc=pass action=none
+ header.from=victronenergy.com; dkim=pass header.d=victronenergy.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=victronenergy.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=QdtmTh5qtPzh34SA+YSt362Ksvt6EU2GpMlX9eOaf9I=;
+ b=TB3zyZOzMnNoO1une42o4E9NShNn9gf24CbpMIpgKAzaVR7fpxnO4sbwExPCI9sHj9dmkKHztW1IdRFHKhg2heUMnW39WXJoreQ3iYj6Q/Pz5Dbd0Kr9nLqjS6axnlZO1OQpqFuS8oOWS5ijpnCK5SUCUFtEbD+krDNs/ZqvIMs=
+Received: from VI1PR0701MB2623.eurprd07.prod.outlook.com (10.173.82.19) by
+ VI1PR0701MB2656.eurprd07.prod.outlook.com (10.173.82.139) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2327.9; Wed, 2 Oct 2019 09:54:41 +0000
+Received: from VI1PR0701MB2623.eurprd07.prod.outlook.com
+ ([fe80::dc92:2e0d:561a:fbb1]) by VI1PR0701MB2623.eurprd07.prod.outlook.com
+ ([fe80::dc92:2e0d:561a:fbb1%8]) with mapi id 15.20.2305.017; Wed, 2 Oct 2019
+ 09:54:41 +0000
+From:   Jeroen Hofstee <jhofstee@victronenergy.com>
+To:     "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>
+CC:     Jeroen Hofstee <jhofstee@victronenergy.com>,
+        Koen Kooi <koen@dominion.thruhere.net>,
+        =?iso-8859-1?Q?Beno=EEt_Cousson?= <bcousson@baylibre.com>,
+        Tony Lindgren <tony@atomide.com>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: [PATCH] ARM: dts: am335x-sancloud-bbe: Fix PHY mode for ethernet
+Thread-Topic: [PATCH] ARM: dts: am335x-sancloud-bbe: Fix PHY mode for ethernet
+Thread-Index: AQHVeQdofKkOWkby2kaW5oWVx4ahWg==
+Date:   Wed, 2 Oct 2019 09:54:40 +0000
+Message-ID: <20191002095416.19603-1-jhofstee@victronenergy.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [213.126.8.10]
+x-clientproxiedby: AM0PR10CA0015.EURPRD10.PROD.OUTLOOK.COM
+ (2603:10a6:208:17c::25) To VI1PR0701MB2623.eurprd07.prod.outlook.com
+ (2603:10a6:801:b::19)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=jhofstee@victronenergy.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-mailer: git-send-email 2.17.1
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 8e3157eb-5cf6-4131-2af5-08d7471e8b39
+x-ms-traffictypediagnostic: VI1PR0701MB2656:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <VI1PR0701MB26564BEE5520C072ABBA8E3BC09C0@VI1PR0701MB2656.eurprd07.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:5516;
+x-forefront-prvs: 0178184651
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(366004)(346002)(376002)(39850400004)(136003)(396003)(189003)(199004)(186003)(54906003)(6916009)(2906002)(6116002)(4744005)(256004)(14444005)(4326008)(6512007)(66476007)(71190400001)(5640700003)(86362001)(2501003)(6436002)(64756008)(66556008)(71200400001)(316002)(66446008)(6486002)(66946007)(81166006)(81156014)(36756003)(305945005)(8676002)(478600001)(50226002)(7736002)(486006)(2351001)(102836004)(386003)(6506007)(52116002)(8936002)(99286004)(14454004)(3846002)(1076003)(5660300002)(26005)(66066001)(2616005)(25786009)(476003);DIR:OUT;SFP:1102;SCL:1;SRVR:VI1PR0701MB2656;H:VI1PR0701MB2623.eurprd07.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: victronenergy.com does not
+ designate permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: R8RhCAb1MbTsaOvs6TtPb6uU4/aD5E4wOAbHz74yz6hIbW0W/uE+ndfmJne4Qb8KGNQIzDT4e0oZPViIm6/Hbh2xdIBBub4LZXaLd86XEktiLEAqAl5SDExRsrGqpw0PMOrfvtz7HHW7dcFJ9nNVxZ2E75XS0O9KF/oAj+9l2RKmnZU/IqG8MmDZOB+IGe6f+QV0c3djpD3Q7qV+ijn3qpuTQzwhsxX+PD+I32ZtjpxcuI0jKqTCwmsCWwuj9TOwtuyupKVNDeeGlQsdJupPKFVsjpAEPiqNKjaO+CwA6WqmheeU/clKNmtCrP1bI8G8NyBLyNfLNAODKF/7WzQHC2mMSGZpm+Sc78IOmjsNnq8WvXLFzu8TWhMSELJRu7mrQYkZfb5UiOsS0KBhxM/vUdM6xIvHARRIisPYYGcM6+o=
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-OriginatorOrg: victronenergy.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 8e3157eb-5cf6-4131-2af5-08d7471e8b39
+X-MS-Exchange-CrossTenant-originalarrivaltime: 02 Oct 2019 09:54:40.9393
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 60b95f08-3558-4e94-b0f8-d690c498e225
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: CLInNsFEvE63r+ugzjcJxVJmBp5yCm/1R32n2pCFAwrFq/LCa22IMF73PpT2mX7rNaJk24rNNwwauwtvaVdIsZGXHctmOo08h5Og6HceG5c=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR0701MB2656
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The latest debian version "bullseye/sid" has changed the path of the file
-"notoserifcjk-regular.ttc", with the previous change and this change we
-keep the backward compatibility and add the latest debian version
+cd28d1d6e52e: ("net: phy: at803x: Disable phy delay for RGMII mode") broke
+the ethernet networking on the beaglebone enhanced.
 
-Signed-off-by: Jeremy MAURO <j.mauro@criteo.com>
+The board relied on the bug in the at803x driver to always enable the rx
+delay. So change the phy-mode to rgmii-id so it is enabled again.
+
+Signed-off-by: Jeroen Hofstee <jhofstee@victronenergy.com>
+cc: Koen Kooi <koen@dominion.thruhere.net>
 ---
- scripts/sphinx-pre-install | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ arch/arm/boot/dts/am335x-sancloud-bbe.dts | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/scripts/sphinx-pre-install b/scripts/sphinx-pre-install
-index b5077ae63a4b..b5da4202155b 100755
---- a/scripts/sphinx-pre-install
-+++ b/scripts/sphinx-pre-install
-@@ -348,7 +348,8 @@ sub give_debian_hints()
- 		check_missing_file(["/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf"],
- 				   "fonts-dejavu", 2);
- 
--		check_missing_file(["/usr/share/fonts/noto-cjk/NotoSansCJK-Regular.ttc"],
-+		check_missing_file(["/usr/share/fonts/noto-cjk/NotoSansCJK-Regular.ttc",
-+			"/usr/share/fonts/opentype/noto/NotoSerifCJK-Regular.ttc"],
- 				   "fonts-noto-cjk", 2);
- 	}
- 
--- 
-2.23.0
+diff --git a/arch/arm/boot/dts/am335x-sancloud-bbe.dts b/arch/arm/boot/dts/=
+am335x-sancloud-bbe.dts
+index 8678e6e35493..e5fdb7abb0d5 100644
+--- a/arch/arm/boot/dts/am335x-sancloud-bbe.dts
++++ b/arch/arm/boot/dts/am335x-sancloud-bbe.dts
+@@ -108,7 +108,7 @@
+=20
+ &cpsw_emac0 {
+ 	phy-handle =3D <&ethphy0>;
+-	phy-mode =3D "rgmii-txid";
++	phy-mode =3D "rgmii-id";
+ };
+=20
+ &i2c0 {
+--=20
+2.17.1
 
