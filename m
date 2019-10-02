@@ -2,248 +2,318 @@ Return-Path: <SRS0=zem1=X3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CAF0C35280
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 13:54:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CBAFECE58A
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 13:57:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 74346222C6
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 13:54:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6AACF21D7B
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 13:57:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kD/X1jKk"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="LOOnU4O6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728068AbfJBNyu (ORCPT
+        id S1727656AbfJBN5a (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Oct 2019 09:54:50 -0400
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:37216 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725747AbfJBNyu (ORCPT
+        Wed, 2 Oct 2019 09:57:30 -0400
+Received: from mail-qk1-f193.google.com ([209.85.222.193]:35092 "EHLO
+        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725917AbfJBN5a (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Oct 2019 09:54:50 -0400
-Received: by mail-lf1-f68.google.com with SMTP id w67so12804893lff.4;
-        Wed, 02 Oct 2019 06:54:48 -0700 (PDT)
+        Wed, 2 Oct 2019 09:57:30 -0400
+Received: by mail-qk1-f193.google.com with SMTP id w2so15063028qkf.2
+        for <linux-kernel@vger.kernel.org>; Wed, 02 Oct 2019 06:57:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=4QyebvzDhNVZ0Lq/bqD45sBW31/NxHYogWC4c1cktOE=;
-        b=kD/X1jKkfK+81eVMoUWWeT/1LB7qwBONaABVrWWl3O/TWkw1Va3/1/qEcR5IwgZOZL
-         2gPdhvXeAGu2w9FOMJwlS0Fr2mt8/EZxexCAV0dfd0Ko+G0BWtl+gVM1cxoHIPTDjOuC
-         PzTupmEa3hAj31WvcN2rFqR7YWKBLVUt41MAWISevl2yW5KeVRUUJgJXm5ZRPoGknS5U
-         91QYWcaYlKqUoDaORhrTEBo/c7Vpy8OnmUFD1Gcl3ABwJ91mazMee8GjWIUP9N/nJkp2
-         unjJ/IA2mIkZD0niwuagNwO5CshnwAcxOAompGtyI2GsmAhakyqc91Ww9x5UJp3VDQXJ
-         ncCA==
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=V8brLeomy2wdADVlgEAXrAF/graRCxkPl6qeQ6D8/UY=;
+        b=LOOnU4O6HcxEVeYMOxcLyNiuMD9UK6k0R1wPF+rwhxYGaqe/XchZ6Csj1aGv68sGmN
+         PKQ3KzANtaY0LMUlkVOOzI6JQklPtF/el6EN2l7Nk2fe305qhqre7CAEehBp9mrJqyQ3
+         tMJSjpFwxulrZz6rro8gay+6KIerqhJqR31JLqAqGBZ/fIWmK7IPkGchr1LxDknDi1Fq
+         Rp//oB6uRcU2iFjwYvrlnq5P3wheTN97lNXsHU9yQUgFpq0w4L4b8vIKT0J4PYoVsXaf
+         cuWGAmAgYkTu7xFeFIiLavBLXmAQi0EUoMiFL1pyJY8/zUco0XQdU8GjeQyjXc0HXN30
+         wT4w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=4QyebvzDhNVZ0Lq/bqD45sBW31/NxHYogWC4c1cktOE=;
-        b=SwUw3htZTOVDioyK0M6bjVf0LREENvlaFmPXXacrWpOoNgjxAH1JBgNvaC7tNDSSXW
-         DsnBf8y5gowQ+WHGnppl3UHjJi1YSCcHV9jlC6VLnoaZceKUw9XsC4ETtGiGdJghx9P7
-         nxA57UnwHRXH3M2d57ZJQLptE559Of6V1cR2XWOsStDCkgj+tqsDrZ9JwynN4t9n+CSs
-         xDmgq3hGGkhgyuDBe2CkBJJzsxxZpbLLpcnKpwZzoLO4UKDC2SCHezSnJEocetcgux1Q
-         EaND8TMXKd3mmmBTBWw1Wr2nZ+FMaOd3f6asgBgFA9uCXT/m509j2TZs2S02WqAjS5/R
-         kp1g==
-X-Gm-Message-State: APjAAAWJZJ6ceq3zbAEhgvl7ne6ed/uSsgXUlXOQAREwOnyS4UUtbCeh
-        pUPG7o7F53Mep95kxI5V/TqJNTOI
-X-Google-Smtp-Source: APXvYqxKGQbBcReyzTyTCqYNC59U5/IFf2Ux08se0sd7v2guBTEIt15hi5tbJmAekg44nKIO/AVerw==
-X-Received: by 2002:a19:ee02:: with SMTP id g2mr2428220lfb.113.1570024486870;
-        Wed, 02 Oct 2019 06:54:46 -0700 (PDT)
-Received: from [192.168.2.145] ([94.29.34.231])
-        by smtp.googlemail.com with ESMTPSA id h2sm4798936ljb.11.2019.10.02.06.54.45
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 02 Oct 2019 06:54:46 -0700 (PDT)
-Subject: Re: [PATCH v6 00/19] More improvements for Tegra30 devfreq driver
-To:     Chanwoo Choi <cw00.choi@samsung.com>,
-        Thierry Reding <thierry.reding@gmail.com>
-Cc:     MyungJoo Ham <myungjoo.ham@samsung.com>,
-        Kyungmin Park <kyungmin.park@samsung.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Tomeu Vizoso <tomeu.vizoso@collabora.com>,
-        linux-pm@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20190811212315.12689-1-digetx@gmail.com>
- <CGME20191001211534epcas2p1e5f878969d3f68d4dfcafd82b1538487@epcas2p1.samsung.com>
- <17dabcfc-3351-13a1-b3de-81af88f64d84@gmail.com>
- <503b2ade-ff8e-c354-3886-3b7b511bd07e@samsung.com>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <6967777e-b54f-8021-aa6d-8c245e529e10@gmail.com>
-Date:   Wed, 2 Oct 2019 16:54:44 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.1
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=V8brLeomy2wdADVlgEAXrAF/graRCxkPl6qeQ6D8/UY=;
+        b=h1uWaibi2RtnjTIjErE4wgYxHYBHoXcxoCi8KqGukK1O8Ypvn9RvWP7Ti55wfMUhCs
+         z5A9NdbO5cTjyKoVMlhel0smYVbljjaan+bm+cYm3I0xy0z0BRfsaCxB+9DAWmD43Eo4
+         D3905N7KkTiTMACN8EHGS5RejlBjEtV+BrwxV8Lq+58f2NK1D31xIKRE72wSi++JGgwj
+         KS8nQhCTmbN7VzAucL7N8+9ztd245vGiqMvAunTxOMiVuQDuT4VuIFtuyMSfKRPfPoFq
+         Rl2iMO18Tx8szG4eNE45hieXnAXxDFGpJT/UFTMmhOlWW2odSotriydDqllC9F5Y4q+x
+         pwKA==
+X-Gm-Message-State: APjAAAVuMTS61OkLuAAHW3J4nxzULLtx9SkKSLEBfk/OXx4AXpwPBZAO
+        GY9CzvEIpa/j2vrj0J9S2Cq5jwbw3FhX3Z4AvCrOfQ==
+X-Google-Smtp-Source: APXvYqx434i+iUN3OJfFezeHYd+JsYyA6TLa0wDk4YCxX6Uk6K4Yp35J4yfUIFzD0UAL5r7Psj+OiNGbCCdVnVKBQYc=
+X-Received: by 2002:a37:d84:: with SMTP id 126mr3463814qkn.407.1570024648625;
+ Wed, 02 Oct 2019 06:57:28 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <503b2ade-ff8e-c354-3886-3b7b511bd07e@samsung.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+References: <20190927034338.15813-1-walter-zh.wu@mediatek.com>
+ <CACT4Y+Zxz+R=qQxSMoipXoLjRqyApD3O0eYpK0nyrfGHE4NNPw@mail.gmail.com>
+ <1569594142.9045.24.camel@mtksdccf07> <CACT4Y+YuAxhKtL7ho7jpVAPkjG-JcGyczMXmw8qae2iaZjTh_w@mail.gmail.com>
+ <1569818173.17361.19.camel@mtksdccf07> <1570018513.19702.36.camel@mtksdccf07>
+In-Reply-To: <1570018513.19702.36.camel@mtksdccf07>
+From:   Dmitry Vyukov <dvyukov@google.com>
+Date:   Wed, 2 Oct 2019 15:57:16 +0200
+Message-ID: <CACT4Y+bbZhvz9ZpHtgL8rCCsV=ybU5jA6zFnJBL7gY2cNXDLyQ@mail.gmail.com>
+Subject: Re: [PATCH] kasan: fix the missing underflow in memmove and memcpy
+ with CONFIG_KASAN_GENERIC=y
+To:     Walter Wu <walter-zh.wu@mediatek.com>
+Cc:     Andrey Ryabinin <aryabinin@virtuozzo.com>,
+        Alexander Potapenko <glider@google.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        kasan-dev <kasan-dev@googlegroups.com>,
+        Linux-MM <linux-mm@kvack.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        linux-mediatek@lists.infradead.org,
+        wsd_upstream <wsd_upstream@mediatek.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-02.10.2019 03:25, Chanwoo Choi пишет:
-> Hello Dmitry and Thierry,
-> 
-> On 19. 10. 2. 오전 6:15, Dmitry Osipenko wrote:
->> 12.08.2019 00:22, Dmitry Osipenko пишет:
->>> Hello,
->>>
->>> This series addresses some additional review comments that were made by
->>> Thierry Reding to [1], makes several important changes to the driver,
->>> fixing excessive interrupts activity, and adds new features. In the end
->>> I'm proposing myself as a maintainer for the Tegra devfreq drivers.
->>>
->>> [1] https://lore.kernel.org/lkml/0fb50eb1-a173-1756-6889-2526a10ac707@gmail.com/T/
->>>
->>> Changelog:
->>>
->>> v6:  Addressed review comment that was made by Chanwoo Choi to v5 by
->>>      squashing "Define ACTMON_DEV_CTRL_STOP" patch into the "Use CPUFreq
->>>      notifier" patch.
->>>
->>> v5:  Addressed review comments that were made by Chanwoo Choi to v4 by
->>>      squashing few patches, dropping some questionable patches, rewording
->>>      comments to the code, restructuring the code and etc.
->>>
->>>      These patches are now dropped from the series:
->>>
->>>        PM / devfreq: tegra30: Use tracepoints for debugging
->>>        PM / devfreq: tegra30: Inline all one-line functions
->>>
->>>      The interrupt-optimization patches are squashed into a single patch:
->>>
->>>        PM / devfreq: tegra30: Reduce unnecessary interrupts activity
->>>
->>>      because it's better to keep the optimizations as a separate change and
->>>      this also helps to reduce code churning, since the code changes depend
->>>      on a previous patch in order to stay cleaner.
->>>
->>>      Fixed a lockup bug that I spotted recently, which is caused by a
->>>      clk-notifier->cpufreq_get()->clk_set_rate() sequence. Now a non-blocking
->>>      variant of CPU's frequency retrieving is used, i.e. cpufreq_quick_get().
->>>
->>>      Further optimized the CPUFreq notifier by postponing the delayed
->>>      updating in accordance to the polling interval, this actually uncovered
->>>      the above lockup bug.
->>>
->>>      Implemented new minor driver feature in the new patch:
->>>
->>>        PM / devfreq: tegra30: Support variable polling interval
->>>
->>> v4:  Added two new patches to the series:
->>>
->>>        PM / devfreq: tegra30: Synchronize average count on target's update
->>>        PM / devfreq: tegra30: Increase sampling period to 16ms
->>>
->>>      The first patch addresses problem where governor could get stuck due
->>>      to outdated "average count" value which is snapshoted by ISR and there
->>>      are cases where manual update of the value is required.
->>>
->>>      The second patch is just a minor optimization.
->>>
->>> v3:  Added support for tracepoints, replacing the debug messages.
->>>      Fixed few more bugs with the help of tracepoints.
->>>
->>>      New patches in this version:
->>>
->>>        PM / devfreq: tegra30: Use tracepoints for debugging
->>>        PM / devfreq: tegra30: Optimize CPUFreq notifier
->>>        PM / devfreq: tegra30: Optimize upper consecutive watermark selection
->>>        PM / devfreq: tegra30: Optimize upper average watermark selection
->>>        PM / devfreq: tegra30: Include appropriate header
->>>
->>>      Some of older patches of this series also got some extra minor polish.
->>>
->>> v2:  Added more patches that are cleaning driver's code further and
->>>      squashing another kHz conversion bug.
->>>
->>>      The patch "Rework frequency management logic" of the v1 series is now
->>>      converted to "Set up watermarks properly" because I found some problems
->>>      in the original patch and then realized that there is no need to change
->>>      the logic much. So the logic mostly preserved and only got improvements.
->>>
->>>      The series is based on the today's linux-next (25 Jun) and takes into
->>>      account minor changes that MyungJoo Ham made to the already queued
->>>      patches from the first batch [1].
->>>
->>> Dmitry Osipenko (19):
->>>   PM / devfreq: tegra30: Change irq type to unsigned int
->>>   PM / devfreq: tegra30: Keep interrupt disabled while governor is
->>>     stopped
->>>   PM / devfreq: tegra30: Handle possible round-rate error
->>>   PM / devfreq: tegra30: Drop write-barrier
->>>   PM / devfreq: tegra30: Set up watermarks properly
->>>   PM / devfreq: tegra30: Tune up boosting thresholds
->>>   PM / devfreq: tegra30: Fix integer overflow on CPU's freq max out
->>>   PM / devfreq: tegra30: Ensure that target freq won't overflow
->>>   PM / devfreq: tegra30: Use kHz units uniformly in the code
->>>   PM / devfreq: tegra30: Reduce unnecessary interrupts activity
->>>   PM / devfreq: tegra30: Use CPUFreq notifier
->>>   PM / devfreq: tegra30: Move clk-notifier's registration to governor's
->>>     start
->>>   PM / devfreq: tegra30: Reset boosting on startup
->>>   PM / devfreq: tegra30: Don't enable consecutive-down interrupt on
->>>     startup
->>>   PM / devfreq: tegra30: Constify structs
->>>   PM / devfreq: tegra30: Include appropriate header
->>>   PM / devfreq: tegra30: Increase sampling period to 16ms
->>>   PM / devfreq: tegra30: Support variable polling interval
->>>   PM / devfreq: tegra20/30: Add Dmitry as a maintainer
->>>
->>>  MAINTAINERS                       |   9 +
->>>  drivers/devfreq/tegra30-devfreq.c | 706 +++++++++++++++++++++++-------
->>>  2 files changed, 555 insertions(+), 160 deletions(-)
->>>
->>
->> Hello Chanwoo,
->>
->> I don't have any more updates in regards to this series, everything is
->> working flawlessly for now. Will be awesome if we could continue the
->> reviewing and then get the patches into linux-next to get some more testing.
->>
->>
-> 
-> Hello Dmitry,
-> 
-> I'm sorry for late reply. Except for patch5, I reviewed the patches.
-> Please check my comment. Actually, It is difficult to review the patch5
-> without any testing environment and detailed knowledge of watermark of tegra.
-> It is not familiar with me.
+On Wed, Oct 2, 2019 at 2:15 PM Walter Wu <walter-zh.wu@mediatek.com> wrote:
+>
+> On Mon, 2019-09-30 at 12:36 +0800, Walter Wu wrote:
+> > On Fri, 2019-09-27 at 21:41 +0200, Dmitry Vyukov wrote:
+> > > On Fri, Sep 27, 2019 at 4:22 PM Walter Wu <walter-zh.wu@mediatek.com>=
+ wrote:
+> > > >
+> > > > On Fri, 2019-09-27 at 15:07 +0200, Dmitry Vyukov wrote:
+> > > > > On Fri, Sep 27, 2019 at 5:43 AM Walter Wu <walter-zh.wu@mediatek.=
+com> wrote:
+> > > > > >
+> > > > > > memmove() and memcpy() have missing underflow issues.
+> > > > > > When -7 <=3D size < 0, then KASAN will miss to catch the underf=
+low issue.
+> > > > > > It looks like shadow start address and shadow end address is th=
+e same,
+> > > > > > so it does not actually check anything.
+> > > > > >
+> > > > > > The following test is indeed not caught by KASAN:
+> > > > > >
+> > > > > >         char *p =3D kmalloc(64, GFP_KERNEL);
+> > > > > >         memset((char *)p, 0, 64);
+> > > > > >         memmove((char *)p, (char *)p + 4, -2);
+> > > > > >         kfree((char*)p);
+> > > > > >
+> > > > > > It should be checked here:
+> > > > > >
+> > > > > > void *memmove(void *dest, const void *src, size_t len)
+> > > > > > {
+> > > > > >         check_memory_region((unsigned long)src, len, false, _RE=
+T_IP_);
+> > > > > >         check_memory_region((unsigned long)dest, len, true, _RE=
+T_IP_);
+> > > > > >
+> > > > > >         return __memmove(dest, src, len);
+> > > > > > }
+> > > > > >
+> > > > > > We fix the shadow end address which is calculated, then generic=
+ KASAN
+> > > > > > get the right shadow end address and detect this underflow issu=
+e.
+> > > > > >
+> > > > > > [1] https://bugzilla.kernel.org/show_bug.cgi?id=3D199341
+> > > > > >
+> > > > > > Signed-off-by: Walter Wu <walter-zh.wu@mediatek.com>
+> > > > > > Reported-by: Dmitry Vyukov <dvyukov@google.com>
+> > > > > > ---
+> > > > > >  lib/test_kasan.c   | 36 ++++++++++++++++++++++++++++++++++++
+> > > > > >  mm/kasan/generic.c |  8 ++++++--
+> > > > > >  2 files changed, 42 insertions(+), 2 deletions(-)
+> > > > > >
+> > > > > > diff --git a/lib/test_kasan.c b/lib/test_kasan.c
+> > > > > > index b63b367a94e8..8bd014852556 100644
+> > > > > > --- a/lib/test_kasan.c
+> > > > > > +++ b/lib/test_kasan.c
+> > > > > > @@ -280,6 +280,40 @@ static noinline void __init kmalloc_oob_in=
+_memset(void)
+> > > > > >         kfree(ptr);
+> > > > > >  }
+> > > > > >
+> > > > > > +static noinline void __init kmalloc_oob_in_memmove_underflow(v=
+oid)
+> > > > > > +{
+> > > > > > +       char *ptr;
+> > > > > > +       size_t size =3D 64;
+> > > > > > +
+> > > > > > +       pr_info("underflow out-of-bounds in memmove\n");
+> > > > > > +       ptr =3D kmalloc(size, GFP_KERNEL);
+> > > > > > +       if (!ptr) {
+> > > > > > +               pr_err("Allocation failed\n");
+> > > > > > +               return;
+> > > > > > +       }
+> > > > > > +
+> > > > > > +       memset((char *)ptr, 0, 64);
+> > > > > > +       memmove((char *)ptr, (char *)ptr + 4, -2);
+> > > > > > +       kfree(ptr);
+> > > > > > +}
+> > > > > > +
+> > > > > > +static noinline void __init kmalloc_oob_in_memmove_overflow(vo=
+id)
+> > > > > > +{
+> > > > > > +       char *ptr;
+> > > > > > +       size_t size =3D 64;
+> > > > > > +
+> > > > > > +       pr_info("overflow out-of-bounds in memmove\n");
+> > > > > > +       ptr =3D kmalloc(size, GFP_KERNEL);
+> > > > > > +       if (!ptr) {
+> > > > > > +               pr_err("Allocation failed\n");
+> > > > > > +               return;
+> > > > > > +       }
+> > > > > > +
+> > > > > > +       memset((char *)ptr, 0, 64);
+> > > > > > +       memmove((char *)ptr + size, (char *)ptr, 2);
+> > > > > > +       kfree(ptr);
+> > > > > > +}
+> > > > > > +
+> > > > > >  static noinline void __init kmalloc_uaf(void)
+> > > > > >  {
+> > > > > >         char *ptr;
+> > > > > > @@ -734,6 +768,8 @@ static int __init kmalloc_tests_init(void)
+> > > > > >         kmalloc_oob_memset_4();
+> > > > > >         kmalloc_oob_memset_8();
+> > > > > >         kmalloc_oob_memset_16();
+> > > > > > +       kmalloc_oob_in_memmove_underflow();
+> > > > > > +       kmalloc_oob_in_memmove_overflow();
+> > > > > >         kmalloc_uaf();
+> > > > > >         kmalloc_uaf_memset();
+> > > > > >         kmalloc_uaf2();
+> > > > > > diff --git a/mm/kasan/generic.c b/mm/kasan/generic.c
+> > > > > > index 616f9dd82d12..34ca23d59e67 100644
+> > > > > > --- a/mm/kasan/generic.c
+> > > > > > +++ b/mm/kasan/generic.c
+> > > > > > @@ -131,9 +131,13 @@ static __always_inline bool memory_is_pois=
+oned_n(unsigned long addr,
+> > > > > >                                                 size_t size)
+> > > > > >  {
+> > > > > >         unsigned long ret;
+> > > > > > +       void *shadow_start =3D kasan_mem_to_shadow((void *)addr=
+);
+> > > > > > +       void *shadow_end =3D kasan_mem_to_shadow((void *)addr +=
+ size - 1) + 1;
+> > > > > >
+> > > > > > -       ret =3D memory_is_nonzero(kasan_mem_to_shadow((void *)a=
+ddr),
+> > > > > > -                       kasan_mem_to_shadow((void *)addr + size=
+ - 1) + 1);
+> > > > > > +       if ((long)size < 0)
+> > > > > > +               shadow_end =3D kasan_mem_to_shadow((void *)addr=
+ + size);
+> > > > >
+> > > > > Hi Walter,
+> > > > >
+> > > > > Thanks for working on this.
+> > > > >
+> > > > > If size<0, does it make sense to continue at all? We will still c=
+heck
+> > > > > 1PB of shadow memory? What happens when we pass such huge range t=
+o
+> > > > > memory_is_nonzero?
+> > > > > Perhaps it's better to produce an error and bail out immediately =
+if size<0?
+> > > >
+> > > > I agree with what you said. when size<0, it is indeed an unreasonab=
+le
+> > > > behavior, it should be blocked from continuing to do.
+> > > >
+> > > >
+> > > > > Also, what's the failure mode of the tests? Didn't they badly cor=
+rupt
+> > > > > memory? We tried to keep tests such that they produce the KASAN
+> > > > > reports, but don't badly corrupt memory b/c/ we need to run all o=
+f
+> > > > > them.
+> > > >
+> > > > Maybe we should first produce KASAN reports and then go to execute
+> > > > memmove() or do nothing? It looks like it=E2=80=99s doing the follo=
+wing.or?
+> > > >
+> > > > void *memmove(void *dest, const void *src, size_t len)
+> > > >  {
+> > > > +       if (long(len) <=3D 0)
+> > >
+> > > /\/\/\/\/\/\
+> > >
+> > > This check needs to be inside of check_memory_region, otherwise we
+> > > will have similar problems in all other places that use
+> > > check_memory_region.
+> > Thanks for your reminder.
+> >
+> >  bool check_memory_region(unsigned long addr, size_t size, bool write,
+> >                                 unsigned long ret_ip)
+> >  {
+> > +       if (long(size) < 0) {
+> > +               kasan_report_invalid_size(src, dest, len, _RET_IP_);
+> > +               return false;
+> > +       }
+> > +
+> >         return check_memory_region_inline(addr, size, write, ret_ip);
+> >  }
+> >
+> > > But check_memory_region already returns a bool, so we could check tha=
+t
+> > > bool and return early.
+> >
+> > When size<0, we should only show one KASAN report, and should we only
+> > limit to return when size<0 is true? If yse, then __memmove() will do
+> > nothing.
+> >
+> >
+> >  void *memmove(void *dest, const void *src, size_t len)
+> >  {
+> > -       check_memory_region((unsigned long)src, len, false, _RET_IP_);
+> > +       if(!check_memory_region((unsigned long)src, len, false,
+> > _RET_IP_)
+> > +               && long(size) < 0)
+> > +               return;
+> > +
+> >         check_memory_region((unsigned long)dest, len, true, _RET_IP_);
+> >
+> >         return __memmove(dest, src, len);
+> >
+> > >
+> Hi Dmitry,
+>
+> What do you think the following code is better than the above one.
+> In memmmove/memset/memcpy, they need to determine whether size < 0 is
+> true. we directly determine whether size is negative in memmove and
+> return early. it avoid to generate repeated KASAN report. Is it better?
+>
+> void *memmove(void *dest, const void *src, size_t len)
+> {
+> +       if (long(size) < 0) {
+> +               kasan_report_invalid_size(src, dest, len, _RET_IP_);
+> +               return;
+> +       }
+> +
+>         check_memory_region((unsigned long)src, len, false, _RET_IP_);
+>         check_memory_region((unsigned long)dest, len, true, _RET_IP_);
+>
+>
+> check_memory_region() still has to check whether the size is negative.
+> but memmove/memset/memcpy generate invalid size KASAN report will not be
+> there.
 
-Thank you very much! I'll go through yours comments and reply to them.
 
-I understand that it's not easy for you to review patch5, but probably
-you don't need to go into details and a brief-generic review of the code
-will be enough in that case.
+If check_memory_region() will do the check, why do we need to
+duplicate it inside of memmove and all other range functions?
 
-The hardware is actually very simple, there are watermarks that
-correspond to a memory activity that hardware accounts over a given
-period of time. Once watermark is reached, hardware generates interrupt.
-There are two types of watermarks: average and consecutive. In case of
-the average, the memory activity is collected over a larger window of
-time. For the consecutive case, the memory activity is collected over
-each period (16ms by default in the driver). Memory client may breach
-average watermark very frequently, although that may not affect much the
-average value and for some memory clients (like CPU) it is more
-preferred to not completely ignore those short bursts of memory
-activity. The consecutive watermarks are used in order to detect those
-short bursts, which we account in the driver in a form of boosting. You
-may notice that boost_up_coeff for the CPU's memory client is set to a
-higher value in the driver.
+I would do:
 
-> Hello Thierry,
-> If possible, Could you review the patch5 related to setting up the watermark
-> and other patches?
-> 
+void *memmove(void *dest, const void *src, size_t len)
+{
+        if (check_memory_region((unsigned long)src, len, false, _RET_IP_))
+                return;
 
-Indeed, will be very nice if Thierry could also take a look at this
-series. Although.. I could be wrong here, but it looks to me that
-Thierry also isn't closely familiar with this driver and the hardware.
-
-Thierry, at least please let us know if you're interested in taking a
-look at the patches, I'm pretty sure that you're quite busy with other
-things ;)
+This avoids duplicating the check, adds minimal amount of code to
+range functions and avoids adding kasan_report_invalid_size.
