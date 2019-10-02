@@ -2,173 +2,103 @@ Return-Path: <SRS0=zem1=X3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.2 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E06CC35280
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 09:21:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DEEDCC352AA
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 09:21:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EDCD321783
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 09:21:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AFC42206C0
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 09:21:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727344AbfJBJVe (ORCPT
+        id S1727410AbfJBJVk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Oct 2019 05:21:34 -0400
-Received: from mailgw01.mediatek.com ([210.61.82.183]:15585 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725848AbfJBJVe (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Oct 2019 05:21:34 -0400
-X-UUID: 3c26d45595b54b3584ae1990c3361025-20191002
-X-UUID: 3c26d45595b54b3584ae1990c3361025-20191002
-Received: from mtkexhb02.mediatek.inc [(172.21.101.103)] by mailgw01.mediatek.com
-        (envelope-from <mark-mc.lee@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 1288188747; Wed, 02 Oct 2019 17:21:30 +0800
-Received: from mtkcas08.mediatek.inc (172.21.101.126) by
- mtkmbs05n1.mediatek.inc (172.21.101.15) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Wed, 2 Oct 2019 17:21:27 +0800
-Received: from [172.21.84.99] (172.21.84.99) by mtkcas08.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Wed, 2 Oct 2019 17:21:27 +0800
-Message-ID: <1570008088.13954.14.camel@mtksdccf07>
-Subject: Re: [PATCH net 2/2] arm: dts: mediatek: Fix mt7629 dts to reflect
- the latest dt-binding
-From:   mtk15127 <Mark-MC.Lee@mediatek.com>
-To:     =?ISO-8859-1?Q?Ren=E9?= van Dorst <opensource@vdorst.com>
-CC:     "David S. Miller" <davem@davemloft.net>,
-        Sean Wang <sean.wang@mediatek.com>,
-        John Crispin <john@phrozen.org>,
-        Felix Fietkau <nbd@openwrt.org>,
-        Nelson Chang <nelson.chang@mediatek.com>,
-        "Matthias Brugger" <matthias.bgg@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        "Mark Rutland" <mark.rutland@arm.com>,
-        <devicetree@vger.kernel.org>, <netdev@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, MarkLee <Mark-MC.Lee@mediatek.com>
-Date:   Wed, 2 Oct 2019 17:21:28 +0800
-In-Reply-To: <20191001135608.Horde.OSYef8s44rR0XHw22Bf55r8@www.vdorst.com>
-References: <20191001123150.23135-1-Mark-MC.Lee@mediatek.com>
-         <20191001123150.23135-3-Mark-MC.Lee@mediatek.com>
-         <20191001135608.Horde.OSYef8s44rR0XHw22Bf55r8@www.vdorst.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.2.3-0ubuntu6 
-Content-Transfer-Encoding: 8bit
+        Wed, 2 Oct 2019 05:21:40 -0400
+Received: from foss.arm.com ([217.140.110.172]:39678 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725848AbfJBJVj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 2 Oct 2019 05:21:39 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id AA7FA1570;
+        Wed,  2 Oct 2019 02:21:38 -0700 (PDT)
+Received: from [192.168.0.9] (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id BB2F93F706;
+        Wed,  2 Oct 2019 02:21:36 -0700 (PDT)
+Subject: Re: [PATCH v3 04/10] sched/fair: rework load_balance
+To:     Vincent Guittot <vincent.guittot@linaro.org>
+Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Phil Auld <pauld@redhat.com>,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        Srikar Dronamraju <srikar@linux.vnet.ibm.com>,
+        Quentin Perret <quentin.perret@arm.com>,
+        Morten Rasmussen <Morten.Rasmussen@arm.com>,
+        Hillf Danton <hdanton@sina.com>
+References: <1568878421-12301-1-git-send-email-vincent.guittot@linaro.org>
+ <1568878421-12301-5-git-send-email-vincent.guittot@linaro.org>
+ <9bfb3252-c268-8c0c-9c72-65f872e9c8b2@arm.com>
+ <CAKfTPtDUFMFnD+RZndx0+8A+V9HV9Hv0TN+p=mAge0VsqS6xmA@mail.gmail.com>
+ <3dca46c5-c395-e2b3-a7e8-e9208ba741c8@arm.com>
+ <CAKfTPtDGxX11=vgJsV-o-jOxgPmbr0VXWmR6LEVuD6WG=VRXyA@mail.gmail.com>
+From:   Dietmar Eggemann <dietmar.eggemann@arm.com>
+Message-ID: <b2d10a98-6688-3909-1bd9-e5700c521d5d@arm.com>
+Date:   Wed, 2 Oct 2019 11:21:20 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-X-MTK:  N
+In-Reply-To: <CAKfTPtDGxX11=vgJsV-o-jOxgPmbr0VXWmR6LEVuD6WG=VRXyA@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 2019-10-01 at 13:56 +0000, René van Dorst wrote:
-> Hi MarkLee,
+On 02/10/2019 08:44, Vincent Guittot wrote:
+> On Tue, 1 Oct 2019 at 18:53, Dietmar Eggemann <dietmar.eggemann@arm.com> wrote:
+>>
+>> On 01/10/2019 10:14, Vincent Guittot wrote:
+>>> On Mon, 30 Sep 2019 at 18:24, Dietmar Eggemann <dietmar.eggemann@arm.com> wrote:
+>>>>
+>>>> Hi Vincent,
+>>>>
+>>>> On 19/09/2019 09:33, Vincent Guittot wrote:
+>>
+>> [...]
+>>
+>>>>> @@ -7347,7 +7362,7 @@ static int detach_tasks(struct lb_env *env)
+>>>>>   {
+>>>>>         struct list_head *tasks = &env->src_rq->cfs_tasks;
+>>>>>         struct task_struct *p;
+>>>>> -     unsigned long load;
+>>>>> +     unsigned long util, load;
+>>>>
+>>>> Minor: Order by length or reduce scope to while loop ?
+>>>
+>>> I don't get your point here
+>>
+>> Nothing dramatic here! Just
+>>
+>> diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+>> index d0c3aa1dc290..a08f342ead89 100644
+>> --- a/kernel/sched/fair.c
+>> +++ b/kernel/sched/fair.c
+>> @@ -7333,8 +7333,8 @@ static const unsigned int sched_nr_migrate_break = 32;
+>>  static int detach_tasks(struct lb_env *env)
+>>  {
+>>         struct list_head *tasks = &env->src_rq->cfs_tasks;
+>> -       struct task_struct *p;
+>>         unsigned long load, util;
+>> +       struct task_struct *p;
 > 
-> Quoting MarkLee <Mark-MC.Lee@mediatek.com>:
-> 
-> > * Removes mediatek,physpeed property from dtsi that is useless in PHYLINK
-> > * Set gmac0 to fixed-link sgmii 2.5Gbit mode
-> > * Set gmac1 to gmii mode that connect to a internal gphy
-> >
-> > Signed-off-by: MarkLee <Mark-MC.Lee@mediatek.com>
-> > ---
-> >  arch/arm/boot/dts/mt7629-rfb.dts | 13 ++++++++++++-
-> >  arch/arm/boot/dts/mt7629.dtsi    |  2 --
-> >  2 files changed, 12 insertions(+), 3 deletions(-)
-> >
-> > diff --git a/arch/arm/boot/dts/mt7629-rfb.dts  
-> > b/arch/arm/boot/dts/mt7629-rfb.dts
-> > index 3621b7d2b22a..6bf1f7d8ddb5 100644
-> > --- a/arch/arm/boot/dts/mt7629-rfb.dts
-> > +++ b/arch/arm/boot/dts/mt7629-rfb.dts
-> > @@ -66,9 +66,21 @@
-> >  	pinctrl-1 = <&ephy_leds_pins>;
-> >  	status = "okay";
-> >
-> > +	gmac0: mac@0 {
-> > +		compatible = "mediatek,eth-mac";
-> > +		reg = <0>;
-> > +		phy-mode = "sgmii";
-> > +		fixed-link {
-> > +			speed = <2500>;
-> > +			full-duplex;
-> > +			pause;
-> > +		};
-> > +	};
-> > +
-> >  	gmac1: mac@1 {
-> >  		compatible = "mediatek,eth-mac";
-> >  		reg = <1>;
-> > +		phy-mode = "gmii";
-> >  		phy-handle = <&phy0>;
-> >  	};
-> >
-> > @@ -78,7 +90,6 @@
-> >
-> >  		phy0: ethernet-phy@0 {
-> >  			reg = <0>;
-> > -			phy-mode = "gmii";
-> >  		};
-> >  	};
-> >  };
-> > diff --git a/arch/arm/boot/dts/mt7629.dtsi b/arch/arm/boot/dts/mt7629.dtsi
-> > index 9608bc2ccb3f..867b88103b9d 100644
-> > --- a/arch/arm/boot/dts/mt7629.dtsi
-> > +++ b/arch/arm/boot/dts/mt7629.dtsi
-> > @@ -468,14 +468,12 @@
-> >  			compatible = "mediatek,mt7629-sgmiisys", "syscon";
-> >  			reg = <0x1b128000 0x3000>;
-> >  			#clock-cells = <1>;
-> > -			mediatek,physpeed = "2500";
-> >  		};
-> >
-> >  		sgmiisys1: syscon@1b130000 {
-> >  			compatible = "mediatek,mt7629-sgmiisys", "syscon";
-> >  			reg = <0x1b130000 0x3000>;
-> >  			#clock-cells = <1>;
-> > -			mediatek,physpeed = "2500";
-> >  		};
-> >  	};
-> >  };
-> > --
-> > 2.17.1
-> 
-> Does MT7629 soc has the same SGMII IP block as on the MT7622?
-> If that is the case then phy-mode should set to "2500base-x".
-  Yes,MT7629 and MT7622 use the same SGMII block. 
-  Thanks for your suggestion, will change gmac0 phy-mode to "2500base-x"
-  in the next patch.
+> hmm... I still don't get this.
+> We usually gather pointers instead of interleaving them with other varaiables
 
-Mark
-> See discussion about the MT7622 [1] and dts of  
-> mt7622-bananapi-bpi-r64.dts[2][3]
-> 
-> Note the code only set the phy in overclock mode if phymode =  
-> 2500base-x and the
-> link is a fixed-link, see [4].
-> Alsp the current code doesn't support sgmii so well. Sgmii at 2.5Gbit is not
-> supported at all.
-> 
-> Greats,
-> 
-> René
-> 
-> [1]:  
-> https://lore.kernel.org/netdev/20190822144433.GT13294@shell.armlinux.org.uk/
-> [2]:  
-> https://lore.kernel.org/netdev/20190825174341.20750-4-opensource@vdorst.com/
-> [3]:  
-> https://git.kernel.org/pub/scm/linux/kernel/git/davem/net.git/tree/arch/arm64/boot/dts/mediatek/mt7622-bananapi-bpi-r64.dts#n122
-> [4]:  
-> https://git.kernel.org/pub/scm/linux/kernel/git/davem/net.git/tree/drivers/net/ethernet/mediatek/mtk_sgmii.c#n72
-> 
-> 
-> 
-> 
-> 
+I thought we should always order local variable declarations from
+longest to shortest line but can't find this rule in coding-style.rst
+either.
 
-
+[...]
