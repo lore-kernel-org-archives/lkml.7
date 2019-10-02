@@ -2,191 +2,124 @@ Return-Path: <SRS0=zem1=X3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D2BBC352AA
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 13:16:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 05EF2C35280
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 13:18:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4E71B21A4A
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 13:16:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CA80921783
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 13:18:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="oXPd2+g7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727705AbfJBNQx (ORCPT
+        id S1727733AbfJBNSL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Oct 2019 09:16:53 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:37136 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726781AbfJBNQx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Oct 2019 09:16:53 -0400
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 9972E3090FD6;
-        Wed,  2 Oct 2019 13:16:52 +0000 (UTC)
-Received: from llong.remote.csb (dhcp-17-160.bos.redhat.com [10.18.17.160])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id A53EF60BF4;
-        Wed,  2 Oct 2019 13:16:50 +0000 (UTC)
-Subject: Re: [PATCH 4.19 36/63] locking/lockdep: Add debug_locks check in
- __lock_downgrade()
-To:     Sasha Levin <sashal@kernel.org>
-Cc:     Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        syzbot+53383ae265fb161ef488@syzkaller.appspotmail.com,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        "Paul E. McKenney" <paulmck@linux.vnet.ibm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Will Deacon <will.deacon@arm.com>,
-        Ingo Molnar <mingo@kernel.org>
-References: <20190929135031.382429403@linuxfoundation.org>
- <20190929135038.482721804@linuxfoundation.org>
- <801c81d2-ce72-8eb3-a18b-1b0943270fc4@i-love.sakura.ne.jp>
- <20190930002828.GQ8171@sasha-vm>
- <b0203141-297f-1138-5988-607e076cbcf0@i-love.sakura.ne.jp>
- <b4e4de80-cabc-3de5-9fa7-8366a8582ba9@redhat.com>
- <20191001222038.GD17454@sasha-vm>
-From:   Waiman Long <longman@redhat.com>
-Organization: Red Hat
-Message-ID: <dbb9d78b-b374-167b-affa-bc3be9837b4a@redhat.com>
-Date:   Wed, 2 Oct 2019 09:16:50 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        Wed, 2 Oct 2019 09:18:11 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:48276 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726208AbfJBNSK (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 2 Oct 2019 09:18:10 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x92DEIDE023643;
+        Wed, 2 Oct 2019 13:17:47 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2019-08-05;
+ bh=kXMcu5VQ15D9xKnPxBh3+Ftt1CqLJTYpiEFrjq4TfAg=;
+ b=oXPd2+g7d2yTwj+5qSOr+7FRpGcabuyFeGEeo2TA05LUJIHKm1JRRDqEB5FtshMTcpFa
+ 1c1OSWe2ssUMcoExnFOnbQDKLWj+LuqnMrEiIf+omI+z693lrOTngxgec+1+GeKNnagq
+ V4R205JA2fpUTMxyG4VK04yN1a+FGkxX+hXUIw/HFyVVaosgi/jT893FdKdLoMMSKlWb
+ Aky/+5/KdbHU/SIzqqxRaLV1k/Fl0mUz0Sb7/+CS+8EkRuKf74l37X6bOxiKzaM1Baka
+ GiOz1kXcQr+5tq4m7Bd0DNeReTgxfPvf5HrFOaGx9Rw2mYGQ7DGcHI5Ku3kjPyvWlZgD ww== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by userp2120.oracle.com with ESMTP id 2va05rvs48-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 02 Oct 2019 13:17:47 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x92DEAjg161263;
+        Wed, 2 Oct 2019 13:17:46 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by aserp3030.oracle.com with ESMTP id 2vbsm3ugxg-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 02 Oct 2019 13:17:46 +0000
+Received: from abhmp0007.oracle.com (abhmp0007.oracle.com [141.146.116.13])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x92DHhbE013341;
+        Wed, 2 Oct 2019 13:17:43 GMT
+Received: from kadam (/41.57.98.10)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Wed, 02 Oct 2019 06:17:43 -0700
+Date:   Wed, 2 Oct 2019 16:17:35 +0300
+From:   Dan Carpenter <dan.carpenter@oracle.com>
+To:     Colin King <colin.king@canonical.com>,
+        Lubomir Rintel <lkundrak@v3.sk>
+Cc:     Kalle Valo <kvalo@codeaurora.org>,
+        "David S . Miller" <davem@davemloft.net>,
+        libertas-dev@lists.infradead.org, linux-wireless@vger.kernel.org,
+        netdev@vger.kernel.org, kernel-janitors@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] libertas: remove redundant assignment to variable ret
+Message-ID: <20191002131734.GN22609@kadam>
+References: <20191002101517.10836-1-colin.king@canonical.com>
 MIME-Version: 1.0
-In-Reply-To: <20191001222038.GD17454@sasha-vm>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.43]); Wed, 02 Oct 2019 13:16:52 +0000 (UTC)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191002101517.10836-1-colin.king@canonical.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9397 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1908290000 definitions=main-1910020127
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9397 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1908290000
+ definitions=main-1910020127
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 10/1/19 6:20 PM, Sasha Levin wrote:
-> On Mon, Sep 30, 2019 at 10:00:35AM -0400, Waiman Long wrote:
->> On 9/29/19 9:46 PM, Tetsuo Handa wrote:
->>> On 2019/09/30 9:28, Sasha Levin wrote:
->>>> On Sun, Sep 29, 2019 at 11:43:38PM +0900, Tetsuo Handa wrote:
->>>>> On 2019/09/29 22:54, Greg Kroah-Hartman wrote:
->>>>>> From: Waiman Long <longman@redhat.com>
->>>>>>
->>>>>> [ Upstream commit 513e1073d52e55b8024b4f238a48de7587c64ccf ]
->>>>>>
->>>>>> Tetsuo Handa had reported he saw an incorrect "downgrading a read
->>>>>> lock"
->>>>>> warning right after a previous lockdep warning. It is likely that
->>>>>> the
->>>>>> previous warning turned off lock debugging causing the lockdep to
->>>>>> have
->>>>>> inconsistency states leading to the lock downgrade warning.
->>>>>>
->>>>>> Fix that by add a check for debug_locks at the beginning of
->>>>>> __lock_downgrade().
->>>>> Please drop "[PATCH 4.19 36/63] locking/lockdep: Add debug_locks
->>>>> check in __lock_downgrade()".
->>>>> We had a revert patch shown below in the past.
->>>> We had a revert in the stable trees, but that revert was incorrect.
->>>>
->>>> Take a look at commit 513e1073d52e55 upstream, it patches
->>>> __lock_set_class() (even though the subject line says
->>>> __lock_downgrade()). So this is not a backporting error as the revert
->>>> said it is, but is rather the intended location to be patched.
->>>>
->>>> If this is actually wrong, then it should be addressed upstream first.
->>>>
->>> Hmm, upstream has two commits with same author, same date, same
->>> subject, different hash, different content.
->>> I couldn't find from
->>> https://lkml.kernel.org/r/1547093005-26085-1-git-send-email-longman@redhat.com
->>> that
->>> we want to patch both __lock_set_class() and __lock_downgrade(), but
->>> I found that the tip-bot has patched
->>> __lock_downgrade() on "2019-01-21 11:29" and __lock_set_class() on
->>> "2019-02-04  8:56".
->>> Seems that we by error patched both functions, though patching both
->>> functions should be harmless...
->>>
->>> 64aa348ed kernel/lockdep.c         (Peter Zijlstra           
->>> 2008-08-11 09:30:21 +0200 4115) static int
->>> 00ef9f734 kernel/lockdep.c         (Peter Zijlstra           
->>> 2008-12-04 09:00:17 +0100 4116) __lock_set_class(struct lockdep_map
->>> *lock, const char *name,
->>> 00ef9f734 kernel/lockdep.c         (Peter Zijlstra           
->>> 2008-12-04 09:00:17 +0100 4117)            struct lock_class_key
->>> *key, unsigned int subclass,
->>> 00ef9f734 kernel/lockdep.c         (Peter Zijlstra           
->>> 2008-12-04 09:00:17 +0100 4118)            unsigned long ip)
->>> 64aa348ed kernel/lockdep.c         (Peter Zijlstra           
->>> 2008-08-11 09:30:21 +0200 4119) {
->>> 64aa348ed kernel/lockdep.c         (Peter Zijlstra           
->>> 2008-08-11 09:30:21 +0200 4120)   struct task_struct *curr = current;
->>> 8c8889d8e kernel/locking/lockdep.c (Imre Deak                
->>> 2019-05-24 23:15:08 +0300 4121)   unsigned int depth, merged = 0;
->>> 41c2c5b86 kernel/locking/lockdep.c (J. R. Okajima            
->>> 2017-02-03 01:38:15 +0900 4122)   struct held_lock *hlock;
->>> 64aa348ed kernel/lockdep.c         (Peter Zijlstra           
->>> 2008-08-11 09:30:21 +0200 4123)   struct lock_class *class;
->>> 64aa348ed kernel/lockdep.c         (Peter Zijlstra           
->>> 2008-08-11 09:30:21 +0200 4124)   int i;
->>> 64aa348ed kernel/lockdep.c         (Peter Zijlstra           
->>> 2008-08-11 09:30:21 +0200 4125)
->>> 513e1073d kernel/locking/lockdep.c (Waiman Long              
->>> 2019-01-09 23:03:25 -0500 4126)   if (unlikely(!debug_locks))
->>> 513e1073d kernel/locking/lockdep.c (Waiman Long              
->>> 2019-01-09 23:03:25 -0500 4127)           return 0;
->>> 513e1073d kernel/locking/lockdep.c (Waiman Long              
->>> 2019-01-09 23:03:25 -0500 4128)
->>>
->>> 6419c4af7 kernel/locking/lockdep.c (J. R. Okajima            
->>> 2017-02-03 01:38:17 +0900 4162) static int __lock_downgrade(struct
->>> lockdep_map *lock, unsigned long ip)
->>> 6419c4af7 kernel/locking/lockdep.c (J. R. Okajima            
->>> 2017-02-03 01:38:17 +0900 4163) {
->>> 6419c4af7 kernel/locking/lockdep.c (J. R. Okajima            
->>> 2017-02-03 01:38:17 +0900 4164)   struct task_struct *curr = current;
->>> 8c8889d8e kernel/locking/lockdep.c (Imre Deak                
->>> 2019-05-24 23:15:08 +0300 4165)   unsigned int depth, merged = 0;
->>> 6419c4af7 kernel/locking/lockdep.c (J. R. Okajima            
->>> 2017-02-03 01:38:17 +0900 4166)   struct held_lock *hlock;
->>> 6419c4af7 kernel/locking/lockdep.c (J. R. Okajima            
->>> 2017-02-03 01:38:17 +0900 4167)   int i;
->>> 6419c4af7 kernel/locking/lockdep.c (J. R. Okajima            
->>> 2017-02-03 01:38:17 +0900 4168)
->>> 714925805 kernel/locking/lockdep.c (Waiman Long              
->>> 2019-01-09 23:03:25 -0500 4169)   if (unlikely(!debug_locks))
->>> 714925805 kernel/locking/lockdep.c (Waiman Long              
->>> 2019-01-09 23:03:25 -0500 4170)           return 0;
->>> 714925805 kernel/locking/lockdep.c (Waiman Long              
->>> 2019-01-09 23:03:25 -0500 4171)
->>>
->>> commit 513e1073d52e55b8024b4f238a48de7587c64ccf
->>> Author: Waiman Long <longman@redhat.com>
->>> Date:   Wed Jan 9 23:03:25 2019 -0500
->>>
->>>     locking/lockdep: Add debug_locks check in __lock_downgrade()
->>>
->>> commit 71492580571467fb7177aade19c18ce7486267f5
->>> Author: Waiman Long <longman@redhat.com>
->>> Date:   Wed Jan 9 23:03:25 2019 -0500
->>>
->>>     locking/lockdep: Add debug_locks check in __lock_downgrade()
->>>
->> As I had said before, it looks like the git-apply mixed up the location
->> due to the fact that the hunks are exactly the same for both locations.
->> So if the patch to be applied does not have the right line number, it
->> will get applied to the wrong location first.
->
-> I very much agree, my point is that *both* patches are upstream right
-> now, and if one of those patches is wrong then it should be reverted
-> upstream, and we'd be happy to take the revert. 
+Added Lubomir Rintel to the CC list.
 
-The patch itself shouldn't do any harm even if it is applied to the
-wrong function. So there is no urgency to revert it.
+On Wed, Oct 02, 2019 at 11:15:17AM +0100, Colin King wrote:
+> From: Colin Ian King <colin.king@canonical.com>
+> 
+> The variable ret is being assigned a value that is never read and is
+> being re-assigned a little later on. The assignment is redundant and hence
+> can be removed.
+> 
+> Addresses-Coverity: ("Unused value")
+> Signed-off-by: Colin Ian King <colin.king@canonical.com>
+> ---
+>  drivers/net/wireless/marvell/libertas/mesh.c | 1 -
+>  1 file changed, 1 deletion(-)
+> 
+> diff --git a/drivers/net/wireless/marvell/libertas/mesh.c b/drivers/net/wireless/marvell/libertas/mesh.c
+> index 2747c957d18c..44c8a550da4c 100644
+> --- a/drivers/net/wireless/marvell/libertas/mesh.c
+> +++ b/drivers/net/wireless/marvell/libertas/mesh.c
+> @@ -1003,7 +1003,6 @@ static int lbs_add_mesh(struct lbs_private *priv)
+>  	if (priv->mesh_tlv) {
+>  		sprintf(mesh_wdev->ssid, "mesh");
+>  		mesh_wdev->mesh_id_up_len = 4;
+> -		ret = 1;
+>  	}
 
-Cheers,
-Longman
+Removing this is fine.  "ret = 1" is a mistake.
 
+This was copy and pasted in commit 2199c9817670 ("libertas: use
+mesh_wdev->ssid instead of priv->mesh_ssid").  The return value was
+never used so it's not clear what returning 1 vs 0 was supposed to mean.
+
+lbs_init_mesh() should just be a void function.
+
+Reviewed-by: Dan Carpenter <dan.carpenter@oracle.com>
+
+regards,
+dan carpenter
