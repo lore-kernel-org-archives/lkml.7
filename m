@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1E21C4360C
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 19:08:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 89DB7C4360C
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 19:09:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 87F192133F
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 19:08:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 712F42133F
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 19:09:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729469AbfJBTIb (ORCPT
+        id S1729446AbfJBTI2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Oct 2019 15:08:31 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:35646 "EHLO
+        Wed, 2 Oct 2019 15:08:28 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:35620 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729236AbfJBTIN (ORCPT
+        by vger.kernel.org with ESMTP id S1729217AbfJBTIM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Oct 2019 15:08:13 -0400
+        Wed, 2 Oct 2019 15:08:12 -0400
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1iFjyr-000365-Kl; Wed, 02 Oct 2019 20:08:09 +0100
+        id 1iFjyr-000364-G9; Wed, 02 Oct 2019 20:08:09 +0100
 Received: from ben by deadeye with local (Exim 4.92.1)
         (envelope-from <ben@decadent.org.uk>)
-        id 1iFjyo-0003eB-Oe; Wed, 02 Oct 2019 20:08:06 +0100
+        id 1iFjyo-0003ds-Hj; Wed, 02 Oct 2019 20:08:06 +0100
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,13 +35,14 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Russell King" <rmk+kernel@armlinux.org.uk>,
-        "Wolfram Sang" <wsa@the-dreams.de>
+        "Oliver Hartkopp" <socketcan@hartkopp.net>,
+        "YueHaibing" <yuehaibing@huawei.com>,
+        "Marc Kleine-Budde" <mkl@pengutronix.de>
 Date:   Wed, 02 Oct 2019 20:06:51 +0100
-Message-ID: <lsq.1570043211.787427591@decadent.org.uk>
+Message-ID: <lsq.1570043211.670489694@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 54/87] i2c: acorn: fix i2c warning
+Subject: [PATCH 3.16 50/87] can: af_can: Fix error path of can_init()
 In-Reply-To: <lsq.1570043210.379046399@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -55,30 +56,64 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Russell King <rmk+kernel@armlinux.org.uk>
+From: YueHaibing <yuehaibing@huawei.com>
 
-commit ca21f851cc9643af049226d57fabc3c883ea648e upstream.
+commit c5a3aed1cd3152429348ee1fe5cdcca65fe901ce upstream.
 
-The Acorn i2c driver (for RiscPC) triggers the "i2c adapter has no name"
-warning in the I2C core driver, resulting in the RTC being inaccessible.
-Fix this.
+This patch add error path for can_init() to avoid possible crash if some
+error occurs.
 
-Fixes: 2236baa75f70 ("i2c: Sanity checks on adapter registration")
-Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
-Signed-off-by: Wolfram Sang <wsa@the-dreams.de>
+Fixes: 0d66548a10cb ("[CAN]: Add PF_CAN core module")
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+Acked-by: Oliver Hartkopp <socketcan@hartkopp.net>
+Signed-off-by: Marc Kleine-Budde <mkl@pengutronix.de>
+[bwh: Backported to 3.16:
+ - af_can doesn't register any pernet_operations
+ - It does start a global timer and add procfs entries that need to be
+   cleaned up on the error path]
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- drivers/i2c/busses/i2c-acorn.c | 1 +
- 1 file changed, 1 insertion(+)
-
---- a/drivers/i2c/busses/i2c-acorn.c
-+++ b/drivers/i2c/busses/i2c-acorn.c
-@@ -83,6 +83,7 @@ static struct i2c_algo_bit_data ioc_data
+--- a/net/can/af_can.c
++++ b/net/can/af_can.c
+@@ -899,6 +899,8 @@ static struct notifier_block can_netdev_
  
- static struct i2c_adapter ioc_ops = {
- 	.nr			= 0,
-+	.name			= "ioc",
- 	.algo_data		= &ioc_data,
- };
+ static __init int can_init(void)
+ {
++	int err;
++
+ 	/* check for correct padding to be able to use the structs similarly */
+ 	BUILD_BUG_ON(offsetof(struct can_frame, can_dlc) !=
+ 		     offsetof(struct canfd_frame, len) ||
+@@ -924,12 +926,29 @@ static __init int can_init(void)
+ 	can_init_proc();
  
+ 	/* protocol register */
+-	sock_register(&can_family_ops);
+-	register_netdevice_notifier(&can_netdev_notifier);
++	err = sock_register(&can_family_ops);
++	if (err)
++		goto out_sock;
++	err = register_netdevice_notifier(&can_netdev_notifier);
++	if (err)
++		goto out_notifier;
++
+ 	dev_add_pack(&can_packet);
+ 	dev_add_pack(&canfd_packet);
+ 
+ 	return 0;
++
++out_notifier:
++	sock_unregister(PF_CAN);
++out_sock:
++	kmem_cache_destroy(rcv_cache);
++
++	if (stats_timer)
++		del_timer_sync(&can_stattimer);
++
++	can_remove_proc();
++
++	return err;
+ }
+ 
+ static __exit void can_exit(void)
 
