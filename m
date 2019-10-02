@@ -2,133 +2,203 @@ Return-Path: <SRS0=zem1=X3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F39C4ECE58A
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 15:29:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 58D51C35280
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 15:30:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D5FA021920
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 15:29:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2622F21A4C
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 15:30:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1570030227;
+	bh=s0Z0BD8S/+85IH85cLLnC9zo42Wcl0+eeRx2SA7ru30=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=TTTlIwKVDLT7/+peHmwU0QipkscQiCK2Tm4Vfi8F+46NfcXcSiHhlPIGt9fTXJJuo
+	 kyO98yKxE3ZNw4SWYU0poJV3/8TO49fPfGJkNx73ErEgGXYmzxhGiaF8H9PT8n/V8Q
+	 KEU1jQT9im2qlu1WiDudkDuGN6FkCi31fRVSuVec=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727235AbfJBP3u (ORCPT
+        id S1727438AbfJBPa0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Oct 2019 11:29:50 -0400
-Received: from laurent.telenet-ops.be ([195.130.137.89]:60490 "EHLO
-        laurent.telenet-ops.be" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726330AbfJBP3t (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Oct 2019 11:29:49 -0400
-Received: from ramsan ([84.194.98.4])
-        by laurent.telenet-ops.be with bizsmtp
-        id 8fVn2100n05gfCL01fVnvm; Wed, 02 Oct 2019 17:29:48 +0200
-Received: from rox.of.borg ([192.168.97.57])
-        by ramsan with esmtp (Exim 4.90_1)
-        (envelope-from <geert@linux-m68k.org>)
-        id 1iFgZX-0000sZ-LH; Wed, 02 Oct 2019 17:29:47 +0200
-Received: from geert by rox.of.borg with local (Exim 4.90_1)
-        (envelope-from <geert@linux-m68k.org>)
-        id 1iFgZX-00031d-Is; Wed, 02 Oct 2019 17:29:47 +0200
-From:   Geert Uytterhoeven <geert+renesas@glider.be>
-To:     Ulf Hansson <ulf.hansson@linaro.org>
-Cc:     Stephen Boyd <swboyd@chromium.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>,
-        linux-renesas-soc@vger.kernel.org, linux-mmc@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH v2] mmc: renesas_sdhi: Do not use platform_get_irq() to count interrupts
-Date:   Wed,  2 Oct 2019 17:29:46 +0200
-Message-Id: <20191002152946.11586-1-geert+renesas@glider.be>
-X-Mailer: git-send-email 2.17.1
+        Wed, 2 Oct 2019 11:30:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39004 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725875AbfJBPa0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 2 Oct 2019 11:30:26 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 96E8E21A4C;
+        Wed,  2 Oct 2019 15:30:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1570030223;
+        bh=s0Z0BD8S/+85IH85cLLnC9zo42Wcl0+eeRx2SA7ru30=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=1mFGB2qFK1CdZPpL/0S3pREGphuWKXj1mQHMz57bz5AaJ3wqlHLedkJSoHLpgZG+f
+         3iHKz3Lc6ucpflblaZsrt2iJZpmR1tKDI2AyKdwAdLww2SORKTu0LbTPTA0najnG7x
+         8YzIi467cFcBBnubdHlxSQBwyGYkBt/RoY4roXBg=
+Date:   Wed, 2 Oct 2019 17:30:20 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Akinobu Mita <akinobu.mita@gmail.com>
+Cc:     linux-leds@vger.kernel.org, linux-kernel@vger.kernel.org,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>
+Subject: Re: [PATCH -next 2/2] leds: add /sys/class/leds/<led>/current-trigger
+Message-ID: <20191002153020.GD1748000@kroah.com>
+References: <1570029181-11102-1-git-send-email-akinobu.mita@gmail.com>
+ <1570029181-11102-3-git-send-email-akinobu.mita@gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1570029181-11102-3-git-send-email-akinobu.mita@gmail.com>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-As platform_get_irq() now prints an error when the interrupt does not
-exist, counting interrupts by looping until failure causes the printing
-of scary messages like:
+On Thu, Oct 03, 2019 at 12:13:01AM +0900, Akinobu Mita wrote:
+> Reading /sys/class/leds/<led>/trigger returns all available LED triggers.
+> However, this violates the "one value per file" rule of sysfs.
+> 
+> This provides /sys/class/leds/<led>/current-trigger which is almost
+> identical to /sys/class/leds/<led>/trigger.  The only difference is that
+> 'current-trigger' only shows the current trigger name.
+> 
+> This new file follows the "one value per file" rule of sysfs.
+> We can find all available LED triggers by listing the
+> /sys/devices/virtual/led-trigger/ directory.
+> 
+> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> Cc: "Rafael J. Wysocki" <rafael@kernel.org>
+> Cc: Jacek Anaszewski <jacek.anaszewski@gmail.com>
+> Cc: Pavel Machek <pavel@ucw.cz>
+> Cc: Dan Murphy <dmurphy@ti.com>
+> Signed-off-by: Akinobu Mita <akinobu.mita@gmail.com>
+> ---
+>  Documentation/ABI/testing/sysfs-class-led | 13 +++++++++++
+>  drivers/leds/led-class.c                  | 10 ++++++++
+>  drivers/leds/led-triggers.c               | 38 +++++++++++++++++++++++++++----
+>  drivers/leds/leds.h                       |  5 ++++
+>  4 files changed, 62 insertions(+), 4 deletions(-)
+> 
+> diff --git a/Documentation/ABI/testing/sysfs-class-led b/Documentation/ABI/testing/sysfs-class-led
+> index 5f67f7a..fdfed3f 100644
+> --- a/Documentation/ABI/testing/sysfs-class-led
+> +++ b/Documentation/ABI/testing/sysfs-class-led
+> @@ -61,3 +61,16 @@ Description:
+>  		gpio and backlight triggers. In case of the backlight trigger,
+>  		it is useful when driving a LED which is intended to indicate
+>  		a device in a standby like state.
+> +
+> +What:		/sys/class/leds/<led>/current-trigger
+> +Date:		September 2019
+> +KernelVersion:	5.5
+> +Contact:	linux-leds@vger.kernel.org
+> +Description:
+> +		Set the trigger for this LED. A trigger is a kernel based source
+> +		of LED events.
+> +		Writing the trigger name to this file will change the current
+> +		trigger. Trigger specific parameters can appear in
+> +		/sys/class/leds/<led> once a given trigger is selected. For
+> +		their documentation see sysfs-class-led-trigger-*.
+> +		Reading this file will return the current LED trigger name.
+> diff --git a/drivers/leds/led-class.c b/drivers/leds/led-class.c
+> index 3f04334..3cb0d8a 100644
+> --- a/drivers/leds/led-class.c
+> +++ b/drivers/leds/led-class.c
+> @@ -74,12 +74,22 @@ static ssize_t max_brightness_show(struct device *dev,
+>  static DEVICE_ATTR_RO(max_brightness);
+>  
+>  #ifdef CONFIG_LEDS_TRIGGERS
+> +
+> +static DEVICE_ATTR(current_trigger, 0644, led_current_trigger_show,
+> +		   led_current_trigger_store);
 
-    renesas_sdhi_internal_dmac ee140000.sd: IRQ index 1 not found
+DEVICE_ATTR_RW() please.
 
-Fix this by using the platform_irq_count() helper to avoid touching
-non-existent interrupts.
+> +static struct attribute *led_current_trigger_attrs[] = {
+> +	&dev_attr_current_trigger.attr,
+> +	NULL,
+> +};
+> +
+>  static BIN_ATTR(trigger, 0644, led_trigger_read, led_trigger_write, 0);
+>  static struct bin_attribute *led_trigger_bin_attrs[] = {
+>  	&bin_attr_trigger,
+>  	NULL,
+>  };
+>  static const struct attribute_group led_trigger_group = {
+> +	.attrs = led_current_trigger_attrs,
+>  	.bin_attrs = led_trigger_bin_attrs,
+>  };
+>  #endif
+> diff --git a/drivers/leds/led-triggers.c b/drivers/leds/led-triggers.c
+> index 0b810cf..a2ef674 100644
+> --- a/drivers/leds/led-triggers.c
+> +++ b/drivers/leds/led-triggers.c
+> @@ -27,11 +27,9 @@ LIST_HEAD(trigger_list);
+>  
+>   /* Used by LED Class */
+>  
+> -ssize_t led_trigger_write(struct file *filp, struct kobject *kobj,
+> -			  struct bin_attribute *bin_attr, char *buf,
+> -			  loff_t pos, size_t count)
+> +static ssize_t led_trigger_store(struct device *dev, const char *buf,
+> +				 size_t count)
+>  {
+> -	struct device *dev = kobj_to_dev(kobj);
+>  	struct led_classdev *led_cdev = dev_get_drvdata(dev);
+>  	struct led_trigger *trig;
+>  	int ret = count;
+> @@ -67,8 +65,25 @@ ssize_t led_trigger_write(struct file *filp, struct kobject *kobj,
+>  	mutex_unlock(&led_cdev->led_access);
+>  	return ret;
+>  }
+> +
+> +ssize_t led_trigger_write(struct file *filp, struct kobject *kobj,
+> +			  struct bin_attribute *bin_attr, char *buf,
+> +			  loff_t pos, size_t count)
+> +{
+> +	struct device *dev = kobj_to_dev(kobj);
+> +
+> +	return led_trigger_store(dev, buf, count);
+> +}
+>  EXPORT_SYMBOL_GPL(led_trigger_write);
+>  
+> +ssize_t led_current_trigger_store(struct device *dev,
+> +				struct device_attribute *attr, const char *buf,
+> +				size_t count)
+> +{
+> +	return led_trigger_store(dev, buf, count);
+> +}
+> +EXPORT_SYMBOL_GPL(led_current_trigger_store);
+> +
+>  __printf(3, 4)
+>  static int led_trigger_snprintf(char *buf, ssize_t size, const char *fmt, ...)
+>  {
+> @@ -144,6 +159,21 @@ ssize_t led_trigger_read(struct file *filp, struct kobject *kobj,
+>  }
+>  EXPORT_SYMBOL_GPL(led_trigger_read);
+>  
+> +ssize_t led_current_trigger_show(struct device *dev,
+> +				 struct device_attribute *attr, char *buf)
+> +{
+> +	struct led_classdev *led_cdev = dev_get_drvdata(dev);
+> +	int len;
+> +
+> +	down_read(&led_cdev->trigger_lock);
+> +	len = scnprintf(buf, PAGE_SIZE, "%s\n", led_cdev->trigger ?
 
-Fixes: 7723f4c5ecdb8d83 ("driver core: platform: Add an error message to platform_get_irq*()")
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Reviewed-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Reviewed-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
-Tested-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Tested-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
----
-v2:
-  - Add Reviewed-by, Tested-by,
-  - Return failure in case num_irqs is zero, as before.
+No need for "scnprintf() when writing a single number to a buffer.  Just
+use sprintf() please.
 
-This is a fix for v5.4-rc1.
----
- drivers/mmc/host/renesas_sdhi_core.c | 31 +++++++++++++++++-----------
- 1 file changed, 19 insertions(+), 12 deletions(-)
+> +			led_cdev->trigger->name : "none");
 
-diff --git a/drivers/mmc/host/renesas_sdhi_core.c b/drivers/mmc/host/renesas_sdhi_core.c
-index d4ada5cca2d14f6a..234551a68739b65b 100644
---- a/drivers/mmc/host/renesas_sdhi_core.c
-+++ b/drivers/mmc/host/renesas_sdhi_core.c
-@@ -646,8 +646,8 @@ int renesas_sdhi_probe(struct platform_device *pdev,
- 	struct tmio_mmc_dma *dma_priv;
- 	struct tmio_mmc_host *host;
- 	struct renesas_sdhi *priv;
-+	int num_irqs, irq, ret, i;
- 	struct resource *res;
--	int irq, ret, i;
- 	u16 ver;
- 
- 	of_data = of_device_get_match_data(&pdev->dev);
-@@ -825,24 +825,31 @@ int renesas_sdhi_probe(struct platform_device *pdev,
- 		host->hs400_complete = renesas_sdhi_hs400_complete;
- 	}
- 
--	i = 0;
--	while (1) {
-+	num_irqs = platform_irq_count(pdev);
-+	if (num_irqs < 0) {
-+		ret = num_irqs;
-+		goto eirq;
-+	}
-+
-+	/* There must be at least one IRQ source */
-+	if (!num_irqs) {
-+		ret = -ENXIO;
-+		goto eirq;
-+	}
-+
-+	for (i = 0; i < num_irqs; i++) {
- 		irq = platform_get_irq(pdev, i);
--		if (irq < 0)
--			break;
--		i++;
-+		if (irq < 0) {
-+			ret = irq;
-+			goto eirq;
-+		}
-+
- 		ret = devm_request_irq(&pdev->dev, irq, tmio_mmc_irq, 0,
- 				       dev_name(&pdev->dev), host);
- 		if (ret)
- 			goto eirq;
- 	}
- 
--	/* There must be at least one IRQ source */
--	if (!i) {
--		ret = irq;
--		goto eirq;
--	}
--
- 	dev_info(&pdev->dev, "%s base at 0x%08lx max clock rate %u MHz\n",
- 		 mmc_hostname(host->mmc), (unsigned long)
- 		 (platform_get_resource(pdev, IORESOURCE_MEM, 0)->start),
--- 
-2.17.1
+Can you have a trigger named "none"? :)
 
+thanks,
+
+greg k-h
