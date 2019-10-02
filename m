@@ -6,46 +6,46 @@ X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
 	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 11FB8C352AA
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 04:21:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 29CFDC352AA
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 04:29:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CF6D221906
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 04:21:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E45CE2086A
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 04:29:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="MaaB8Mkv";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="DDq9+5p2"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="PxDtrRd9";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="aXi7aoGa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729834AbfJBEVd (ORCPT
+        id S1729871AbfJBE3N (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Oct 2019 00:21:33 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:45796 "EHLO
+        Wed, 2 Oct 2019 00:29:13 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:46722 "EHLO
         smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725766AbfJBEVd (ORCPT
+        with ESMTP id S1725766AbfJBE3M (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Oct 2019 00:21:33 -0400
+        Wed, 2 Oct 2019 00:29:12 -0400
 Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id 1E0FD60A4E; Wed,  2 Oct 2019 04:21:32 +0000 (UTC)
+        id 6FB52611C5; Wed,  2 Oct 2019 04:29:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1569990092;
-        bh=H5ZPrtTIbfEmm+LU0AYaQhfReN0+WJaYDfZWbZE/rOk=;
+        s=default; t=1569990551;
+        bh=ShTKPTs4KOdaImLZFk6yFEClFsbgGy3rpclnBAkALO8=;
         h=Subject:From:In-Reply-To:References:To:Cc:Date:From;
-        b=MaaB8MkvEqv3F3BpmVkBhKRmwU0lDmb7cjDm7uFzpVetuAfPTsGGa0MVfS1Q3+rup
-         CDbMiQ07eZMHHqx4Z4yAVOD5JCo+vrymFyy5RUDVxvyba+AvpL8XO/k2ind5eAaAj5
-         OwMlfPG5/wlsvu5SgCJIPIu1WQPDZJsHfQICywSA=
+        b=PxDtrRd9iWyLeIoep1axeT0pDjKslnlcU+I/ZXdIDIxVMndxHLaCoRbFvVt7kndyW
+         e2+0Ly1gSg5QMiPwaBeldBCuPLu10+8n6VglQ6ak2HMUusUf6zTHkGx6n2OsFJzquH
+         3ZdFoXVdq730zyYABSwkbcG7QbXjBgm+U6kCSbFA=
 Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
         (Authenticated sender: kvalo@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id CB6C1601E7;
-        Wed,  2 Oct 2019 04:21:29 +0000 (UTC)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 40191608CC;
+        Wed,  2 Oct 2019 04:29:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1569990091;
-        bh=H5ZPrtTIbfEmm+LU0AYaQhfReN0+WJaYDfZWbZE/rOk=;
+        s=default; t=1569990550;
+        bh=ShTKPTs4KOdaImLZFk6yFEClFsbgGy3rpclnBAkALO8=;
         h=Subject:From:In-Reply-To:References:To:Cc:From;
-        b=DDq9+5p2zT2lCaTl3QxYrpLHYOicdnEXN2wJpt0NH6MTtT5u3au+rrz9AjhyAv4hQ
-         mIOfUUJ3qSRLjPOGl4pQrg12rpa8Lr5k62jmqyJqNv93mAKSgqdLVkgRn/YJBxM9lF
-         XULjkBsJUBs7L4RQs5tIX0FESklyct++u+xASsJ0=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org CB6C1601E7
+        b=aXi7aoGaHtbaezobUtr1BxMha4SVYgsM6XrSqSQbQGANpWRQY+o0xO9ItfoR2ub0Q
+         qu5ghSISXEMjdxZErz587OGh14tOTMqDZ0uAfUN5gGC1lPLc2GJtlxgCbeAx7uVOwa
+         tCWOmxyzD4GaXOAWfrPpZpir4vYhuRnwYc0m8HG4=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 40191608CC
 Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
 Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
 Content-Type: text/plain; charset="utf-8"
@@ -61,8 +61,8 @@ Cc:     Jes.Sorensen@gmail.com, davem@davemloft.net,
         linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
         linux-kernel@vger.kernel.org, linux@endlessm.com
 User-Agent: pwcli/0.0.0-git (https://github.com/kvalo/pwcli/) Python/2.7.12
-Message-Id: <20191002042132.1E0FD60A4E@smtp.codeaurora.org>
-Date:   Wed,  2 Oct 2019 04:21:32 +0000 (UTC)
+Message-Id: <20191002042911.6FB52611C5@smtp.codeaurora.org>
+Date:   Wed,  2 Oct 2019 04:29:11 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -93,9 +93,15 @@ Chris Chiu <chiu@endlessm.com> wrote:
 > 
 > Signed-off-by: Chris Chiu <chiu@endlessm.com>
 
-As Jes was positive about this in v1 and had only cosmetic comments, I'm
-planning to apply this. If there are any changes needed, those can be fixed in
-a followup patch.
+Failed to apply, please rebase on top of wireless-drivers-next.
+
+fatal: sha1 information is lacking or useless (drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu.h).
+error: could not build fake ancestor
+Applying: rtl8xxxu: add bluetooth co-existence support for single antenna
+Patch failed at 0001 rtl8xxxu: add bluetooth co-existence support for single antenna
+The copy of the patch that failed is found in: .git/rebase-apply/patch
+
+Patch set to Changes Requested.
 
 -- 
 https://patchwork.kernel.org/patch/11140223/
