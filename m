@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 41CB3C47404
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 19:11:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 72A40C10F14
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 19:11:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 20A712133F
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 19:11:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4AC9B21D82
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 19:11:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729234AbfJBTIM (ORCPT
+        id S1729537AbfJBTLc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Oct 2019 15:08:12 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:35216 "EHLO
+        Wed, 2 Oct 2019 15:11:32 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:35578 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728992AbfJBTIH (ORCPT
+        by vger.kernel.org with ESMTP id S1729193AbfJBTIM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Oct 2019 15:08:07 -0400
+        Wed, 2 Oct 2019 15:08:12 -0400
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1iFjyn-000358-4Q; Wed, 02 Oct 2019 20:08:05 +0100
+        id 1iFjyr-00035y-CQ; Wed, 02 Oct 2019 20:08:09 +0100
 Received: from ben by deadeye with local (Exim 4.92.1)
         (envelope-from <ben@decadent.org.uk>)
-        id 1iFjym-0003a6-Sf; Wed, 02 Oct 2019 20:08:04 +0100
+        id 1iFjyo-0003dJ-7b; Wed, 02 Oct 2019 20:08:06 +0100
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,13 +35,14 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Mark Brown" <broonie@kernel.org>,
-        "S.j. Wang" <shengjiu.wang@nxp.com>
+        "Marco Zatta" <marco@zatta.me>,
+        "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>
 Date:   Wed, 02 Oct 2019 20:06:51 +0100
-Message-ID: <lsq.1570043211.446424873@decadent.org.uk>
+Message-ID: <lsq.1570043211.548283027@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 04/87] ASoC: cs42xx8: Add regcache mask dirty
+Subject: [PATCH 3.16 43/87] USB: Fix chipmunk-like voice when using
+ Logitech C270 for recording audio.
 In-Reply-To: <lsq.1570043210.379046399@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -55,31 +56,36 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: "S.j. Wang" <shengjiu.wang@nxp.com>
+From: Marco Zatta <marco@zatta.me>
 
-commit ad6eecbfc01c987e0253371f274c3872042e4350 upstream.
+commit bd21f0222adab64974b7d1b4b8c7ce6b23e9ea4d upstream.
 
-Add regcache_mark_dirty before regcache_sync for power
-of codec may be lost at suspend, then all the register
-need to be reconfigured.
+This patch fixes the chipmunk-like voice that manifets randomly when
+using the integrated mic of the Logitech Webcam HD C270.
 
-Fixes: 0c516b4ff85c ("ASoC: cs42xx8: Add codec driver
-support for CS42448/CS42888")
-Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
-Signed-off-by: Mark Brown <broonie@kernel.org>
+The issue was solved initially for this device by commit 2394d67e446b
+("USB: add RESET_RESUME for webcams shown to be quirky") but it was then
+reintroduced by e387ef5c47dd ("usb: Add USB_QUIRK_RESET_RESUME for all
+Logitech UVC webcams"). This patch is to have the fix back.
+
+Signed-off-by: Marco Zatta <marco@zatta.me>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- sound/soc/codecs/cs42xx8.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/usb/core/quirks.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
---- a/sound/soc/codecs/cs42xx8.c
-+++ b/sound/soc/codecs/cs42xx8.c
-@@ -557,6 +557,7 @@ static int cs42xx8_runtime_resume(struct
- 	msleep(5);
+--- a/drivers/usb/core/quirks.c
++++ b/drivers/usb/core/quirks.c
+@@ -70,6 +70,9 @@ static const struct usb_device_id usb_qu
+ 	/* Cherry Stream G230 2.0 (G85-231) and 3.0 (G85-232) */
+ 	{ USB_DEVICE(0x046a, 0x0023), .driver_info = USB_QUIRK_RESET_RESUME },
  
- 	regcache_cache_only(cs42xx8->regmap, false);
-+	regcache_mark_dirty(cs42xx8->regmap);
- 
- 	ret = regcache_sync(cs42xx8->regmap);
- 	if (ret) {
++	/* Logitech HD Webcam C270 */
++	{ USB_DEVICE(0x046d, 0x0825), .driver_info = USB_QUIRK_RESET_RESUME },
++
+ 	/* Logitech HD Pro Webcams C920, C920-C, C925e and C930e */
+ 	{ USB_DEVICE(0x046d, 0x082d), .driver_info = USB_QUIRK_DELAY_INIT },
+ 	{ USB_DEVICE(0x046d, 0x0841), .driver_info = USB_QUIRK_DELAY_INIT },
 
