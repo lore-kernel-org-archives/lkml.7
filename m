@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EBAFFC4360C
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 19:09:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2036AC4360C
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 19:09:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D37CE222C0
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 19:09:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 03281222C0
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 19:09:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729643AbfJBTJc (ORCPT
+        id S1729659AbfJBTJe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Oct 2019 15:09:32 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:35962 "EHLO
+        Wed, 2 Oct 2019 15:09:34 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:35950 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729340AbfJBTIS (ORCPT
+        by vger.kernel.org with ESMTP id S1729336AbfJBTIS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 2 Oct 2019 15:08:18 -0400
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1iFjyx-000368-Qn; Wed, 02 Oct 2019 20:08:15 +0100
+        id 1iFjyx-00035n-Qc; Wed, 02 Oct 2019 20:08:15 +0100
 Received: from ben by deadeye with local (Exim 4.92.1)
         (envelope-from <ben@decadent.org.uk>)
-        id 1iFjyp-0003ep-7q; Wed, 02 Oct 2019 20:08:07 +0100
+        id 1iFjyp-0003fe-Q6; Wed, 02 Oct 2019 20:08:07 +0100
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,13 +35,14 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Josef Bacik" <jbacik@fb.com>, "Filipe Manana" <fdmanana@suse.com>
+        "Ursula Braun" <ubraun@linux.ibm.com>,
+        "Julian Wiedmann" <jwi@linux.ibm.com>,
+        "David S. Miller" <davem@davemloft.net>
 Date:   Wed, 02 Oct 2019 20:06:51 +0100
-Message-ID: <lsq.1570043211.937153269@decadent.org.uk>
+Message-ID: <lsq.1570043211.930203351@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 62/87] Btrfs: fix race between readahead and device
- replace/removal
+Subject: [PATCH 3.16 72/87] net/af_iucv: always register net_device notifier
 In-Reply-To: <lsq.1570043210.379046399@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -55,79 +56,78 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Filipe Manana <fdmanana@suse.com>
+From: Julian Wiedmann <jwi@linux.ibm.com>
 
-commit ce7791ffee1e1ee9f97193b817c7dd1fa6746aad upstream.
+commit 06996c1d4088a0d5f3e7789d7f96b4653cc947cc upstream.
 
-The list of devices is protected by the device_list_mutex and the device
-replace code, in its finishing phase correctly takes that mutex before
-removing the source device from that list. However the readahead code was
-iterating that list without acquiring the respective mutex leading to
-crashes later on due to invalid memory accesses:
+Even when running as VM guest (ie pr_iucv != NULL), af_iucv can still
+open HiperTransport-based connections. For robust operation these
+connections require the af_iucv_netdev_notifier, so register it
+unconditionally.
 
-[125671.831036] general protection fault: 0000 [#1] PREEMPT SMP
-[125671.832129] Modules linked in: btrfs dm_flakey dm_mod crc32c_generic xor raid6_pq acpi_cpufreq tpm_tis tpm ppdev evdev parport_pc psmouse sg parport
-processor ser
-[125671.834973] CPU: 10 PID: 19603 Comm: kworker/u32:19 Tainted: G        W       4.6.0-rc7-btrfs-next-29+ #1
-[125671.834973] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS by qemu-project.org 04/01/2014
-[125671.834973] Workqueue: btrfs-readahead btrfs_readahead_helper [btrfs]
-[125671.834973] task: ffff8801ac520540 ti: ffff8801ac918000 task.ti: ffff8801ac918000
-[125671.834973] RIP: 0010:[<ffffffff81270479>]  [<ffffffff81270479>] __radix_tree_lookup+0x6a/0x105
-[125671.834973] RSP: 0018:ffff8801ac91bc28  EFLAGS: 00010206
-[125671.834973] RAX: 0000000000000000 RBX: 6b6b6b6b6b6b6b6a RCX: 0000000000000000
-[125671.834973] RDX: 0000000000000000 RSI: 00000000000c1bff RDI: ffff88002ebd62a8
-[125671.834973] RBP: ffff8801ac91bc70 R08: 0000000000000001 R09: 0000000000000000
-[125671.834973] R10: ffff8801ac91bc70 R11: 0000000000000000 R12: ffff88002ebd62a8
-[125671.834973] R13: 0000000000000000 R14: 0000000000000000 R15: 00000000000c1bff
-[125671.834973] FS:  0000000000000000(0000) GS:ffff88023fd40000(0000) knlGS:0000000000000000
-[125671.834973] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-[125671.834973] CR2: 000000000073cae4 CR3: 00000000b7723000 CR4: 00000000000006e0
-[125671.834973] Stack:
-[125671.834973]  0000000000000000 ffff8801422d5600 ffff8802286bbc00 0000000000000000
-[125671.834973]  0000000000000001 ffff8802286bbc00 00000000000c1bff 0000000000000000
-[125671.834973]  ffff88002e639eb8 ffff8801ac91bc80 ffffffff81270541 ffff8801ac91bcb0
-[125671.834973] Call Trace:
-[125671.834973]  [<ffffffff81270541>] radix_tree_lookup+0xd/0xf
-[125671.834973]  [<ffffffffa04ae6a6>] reada_peer_zones_set_lock+0x3e/0x60 [btrfs]
-[125671.834973]  [<ffffffffa04ae8b9>] reada_pick_zone+0x29/0x103 [btrfs]
-[125671.834973]  [<ffffffffa04af42f>] reada_start_machine_worker+0x129/0x2d3 [btrfs]
-[125671.834973]  [<ffffffffa04880be>] btrfs_scrubparity_helper+0x185/0x3aa [btrfs]
-[125671.834973]  [<ffffffffa0488341>] btrfs_readahead_helper+0xe/0x10 [btrfs]
-[125671.834973]  [<ffffffff81069691>] process_one_work+0x271/0x4e9
-[125671.834973]  [<ffffffff81069dda>] worker_thread+0x1eb/0x2c9
-[125671.834973]  [<ffffffff81069bef>] ? rescuer_thread+0x2b3/0x2b3
-[125671.834973]  [<ffffffff8106f403>] kthread+0xd4/0xdc
-[125671.834973]  [<ffffffff8149e242>] ret_from_fork+0x22/0x40
-[125671.834973]  [<ffffffff8106f32f>] ? kthread_stop+0x286/0x286
+Also handle any error that register_netdevice_notifier() returns.
 
-So fix this by taking the device_list_mutex in the readahead code. We
-can't use here the lighter approach of using a rcu_read_lock() and
-rcu_read_unlock() pair together with a list_for_each_entry_rcu() call
-because we end up doing calls to sleeping functions (kzalloc()) in the
-respective code path.
-
-Signed-off-by: Filipe Manana <fdmanana@suse.com>
-Reviewed-by: Josef Bacik <jbacik@fb.com>
+Fixes: 9fbd87d41392 ("af_iucv: handle netdev events")
+Signed-off-by: Julian Wiedmann <jwi@linux.ibm.com>
+Reviewed-by: Ursula Braun <ubraun@linux.ibm.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- fs/btrfs/reada.c | 2 ++
- 1 file changed, 2 insertions(+)
+ net/iucv/af_iucv.c | 27 ++++++++++++++++++++-------
+ 1 file changed, 20 insertions(+), 7 deletions(-)
 
---- a/fs/btrfs/reada.c
-+++ b/fs/btrfs/reada.c
-@@ -766,12 +766,14 @@ static void __reada_start_machine(struct
+--- a/net/iucv/af_iucv.c
++++ b/net/iucv/af_iucv.c
+@@ -2399,6 +2399,13 @@ out:
+ 	return err;
+ }
  
- 	do {
- 		enqueued = 0;
-+		mutex_lock(&fs_devices->device_list_mutex);
- 		list_for_each_entry(device, &fs_devices->devices, dev_list) {
- 			if (atomic_read(&device->reada_in_flight) <
- 			    MAX_IN_FLIGHT)
- 				enqueued += reada_start_machine_dev(fs_info,
- 								    device);
- 		}
-+		mutex_unlock(&fs_devices->device_list_mutex);
- 		total += enqueued;
- 	} while (enqueued && total < 10000);
++static void afiucv_iucv_exit(void)
++{
++	device_unregister(af_iucv_dev);
++	driver_unregister(&af_iucv_driver);
++	pr_iucv->iucv_unregister(&af_iucv_handler, 0);
++}
++
+ static int __init afiucv_init(void)
+ {
+ 	int err;
+@@ -2432,11 +2439,18 @@ static int __init afiucv_init(void)
+ 		err = afiucv_iucv_init();
+ 		if (err)
+ 			goto out_sock;
+-	} else
+-		register_netdevice_notifier(&afiucv_netdev_notifier);
++	}
++
++	err = register_netdevice_notifier(&afiucv_netdev_notifier);
++	if (err)
++		goto out_notifier;
++
+ 	dev_add_pack(&iucv_packet_type);
+ 	return 0;
  
++out_notifier:
++	if (pr_iucv)
++		afiucv_iucv_exit();
+ out_sock:
+ 	sock_unregister(PF_IUCV);
+ out_proto:
+@@ -2450,12 +2464,11 @@ out:
+ static void __exit afiucv_exit(void)
+ {
+ 	if (pr_iucv) {
+-		device_unregister(af_iucv_dev);
+-		driver_unregister(&af_iucv_driver);
+-		pr_iucv->iucv_unregister(&af_iucv_handler, 0);
++		afiucv_iucv_exit();
+ 		symbol_put(iucv_if);
+-	} else
+-		unregister_netdevice_notifier(&afiucv_netdev_notifier);
++	}
++
++	unregister_netdevice_notifier(&afiucv_netdev_notifier);
+ 	dev_remove_pack(&iucv_packet_type);
+ 	sock_unregister(PF_IUCV);
+ 	proto_unregister(&iucv_proto);
 
