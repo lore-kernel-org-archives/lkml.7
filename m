@@ -2,100 +2,198 @@ Return-Path: <SRS0=zem1=X3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0FB2C4360C
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 22:00:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 07D9BC4360C
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 22:00:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1F3DD20842
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 22:00:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D02D121848
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 22:00:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=alliedtelesis.co.nz header.i=@alliedtelesis.co.nz header.b="IwimoNCr"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="holuGGpe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728257AbfJBWAl (ORCPT
+        id S1728303AbfJBWAx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Oct 2019 18:00:41 -0400
-Received: from gate2.alliedtelesis.co.nz ([202.36.163.20]:55483 "EHLO
-        gate2.alliedtelesis.co.nz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725789AbfJBWAl (ORCPT
+        Wed, 2 Oct 2019 18:00:53 -0400
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:39198 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725789AbfJBWAx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Oct 2019 18:00:41 -0400
-Received: from mmarshal3.atlnz.lc (mmarshal3.atlnz.lc [10.32.18.43])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by gate2.alliedtelesis.co.nz (Postfix) with ESMTPS id 268A1891A9;
-        Thu,  3 Oct 2019 11:00:38 +1300 (NZDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alliedtelesis.co.nz;
-        s=mail181024; t=1570053638;
-        bh=YLkP+2lAHWkPfMgk6pb+w4QEvy7mnsmDv74TU3Uz62c=;
-        h=From:To:Cc:Subject:Date;
-        b=IwimoNCrsPFplXawmbt8wLuLtStub2nm0qotITdAm+Su6EDzjvmeEwP6xDbE/8knz
-         +VQ16/PSyzdtoU2XwAyc+Eg3gtCcF+eJg7uRWZy84gFAdW0sg2HquLTbZCojqe0Qgg
-         nzpIOifjgsYyYkAbXKBYGCsv7zUPYW8wpJp32ktC3KMvRVunNRLHyrH/EL5vcFzori
-         GtVPv9VjOYkWobRJoWn8U2kVBAtw09eTJQXjQSZZSRrzoefRuqKb/jboBYLKRHAbKc
-         lZI4viHWHZ5fLcDPJuKQNr29s2cTWBaGiZIV+X7ir3dGLqv/f1iLKdJy5fPahDWESA
-         dnTS9t+GzSsDw==
-Received: from smtp (Not Verified[10.32.16.33]) by mmarshal3.atlnz.lc with Trustwave SEG (v7,5,8,10121)
-        id <B5d951e060000>; Thu, 03 Oct 2019 11:00:38 +1300
-Received: from chrisp-dl.ws.atlnz.lc (chrisp-dl.ws.atlnz.lc [10.33.22.20])
-        by smtp (Postfix) with ESMTP id B015913EEC9;
-        Thu,  3 Oct 2019 11:00:41 +1300 (NZDT)
-Received: by chrisp-dl.ws.atlnz.lc (Postfix, from userid 1030)
-        id D493228003E; Thu,  3 Oct 2019 11:00:37 +1300 (NZDT)
-From:   Chris Packham <chris.packham@alliedtelesis.co.nz>
-To:     linus.walleij@linaro.org, rjui@broadcom.com, sbranden@broadcom.com,
-        bcm-kernel-feedback-list@broadcom.com,
-        rayagonda.kokatanur@broadcom.com, li.jin@broadcom.com
-Cc:     linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org,
-        Chris Packham <chris.packham@alliedtelesis.co.nz>
-Subject: [PATCH] pinctrl: iproc: improve error handling
-Date:   Thu,  3 Oct 2019 11:00:33 +1300
-Message-Id: <20191002220034.2034-1-chris.packham@alliedtelesis.co.nz>
-X-Mailer: git-send-email 2.23.0
+        Wed, 2 Oct 2019 18:00:53 -0400
+Received: by mail-pl1-f193.google.com with SMTP id s17so486157plp.6;
+        Wed, 02 Oct 2019 15:00:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
+         :user-agent;
+        bh=XtJX6WehuzWp0yTsb+ruE15i0GDXa67mF2dVnQpvDrI=;
+        b=holuGGpeMs4znwZ9KSU2pImhyIrp73fP32p+QbIj/sixNPbhk7myiBy5ZImLzVEhZV
+         2TQa1FzXUMw2lTpDeJnKwBfT/hXRKCZS7KBPdOQuWlJ72EfeDUYg2gOu7MuvPe+V0lRj
+         S/Rm9LbkkEBZhr/3dAcvbBG8atIniV/nB/L74zlmtgHXYkZKWE2mX6J3NzJbjIZjeZ1/
+         RqWhSUM4pdwvvF+KU/HUyVbkkgLg2x+51AZbLn+3dW4B7yB5AuruKyZ85nVUDLM90gJb
+         0XnqaVd5kTFudc9C//57Jdn7pIiXYZiEwZ0k1kaDCXyZl9wSwAbV+cbznJ2Wh2cB0/KX
+         pX+Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=XtJX6WehuzWp0yTsb+ruE15i0GDXa67mF2dVnQpvDrI=;
+        b=I3XYl0FeCnifK2kY9iq3ScbfB16UGKWHwBUQ/uys2CltiQoTFC3rFpyJgPgnYnoDAp
+         z7b74b0Ts7U2PAxY/M7Ag0KvmLACEjeVn2F2JYKstj3izE/PEXDCfOcxPeo29J2YuDA0
+         DcwRDRmUcJPX2YEaZYSsGywpkRcdkA2BNNLe4W7Opg9ZSQiBtL4bKQObbTQQ4y/U7gUt
+         tYAghoUmfDtFEJOMJpxep2BjHXcY4WPSRMwhFiq5furBeCDfRAm+GRCyCwogynOYXr/v
+         pFmq1gwQYL+k1Hj2PlSwwTgO/QWeM/wHDQKdUbT+9sOHs+JFsAsGwdlTBzkvfxw4zjSX
+         OPWg==
+X-Gm-Message-State: APjAAAWPUBEtI31mi7uIyMGB1H2WRnhn7POWRGWQ6uqvGKTuKn0OspHy
+        5e6AMQwUHlri0iBwbOy3Yq0jdtJs
+X-Google-Smtp-Source: APXvYqxVYoSP5FHk3SKVCWh6YBgbG+zTEYtdw4TNvcwR0H/9rTk5BWTZC/ehfmy1slhNtpX2bA3b9Q==
+X-Received: by 2002:a17:902:6c:: with SMTP id 99mr6157111pla.89.1570053650553;
+        Wed, 02 Oct 2019 15:00:50 -0700 (PDT)
+Received: from dtor-ws ([2620:15c:202:201:3adc:b08c:7acc:b325])
+        by smtp.gmail.com with ESMTPSA id g9sm202652pjl.20.2019.10.02.15.00.49
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 02 Oct 2019 15:00:50 -0700 (PDT)
+Date:   Wed, 2 Oct 2019 15:00:48 -0700
+From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
+To:     linux-input@vger.kernel.org
+Cc:     Hans-Christian Noren Egtvedt <egtvedt@samfundet.no>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] Input: gpio_mouse - switch to using input device polling mode
+Message-ID: <20191002220048.GA137235@dtor-ws>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-x-atlnz-ls: pat
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-platform_get_irq() can return an error code. Allow for this when getting
-the irq.  While we're here use the dev_name(dev) for the irqc->name so
-that we get unique names when we have multiple instances of this driver.
+Now that instances of input_dev support polling mode natively,
+we no longer need to create input_polled_dev instance.
 
-Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
+Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
 ---
-Noticed this while debugging another problem.
+ drivers/input/mouse/Kconfig      |  1 -
+ drivers/input/mouse/gpio_mouse.c | 45 ++++++++++++++------------------
+ 2 files changed, 20 insertions(+), 26 deletions(-)
 
- drivers/pinctrl/bcm/pinctrl-iproc-gpio.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+diff --git a/drivers/input/mouse/Kconfig b/drivers/input/mouse/Kconfig
+index 652c38e3c0b5..bf738d3b7fe4 100644
+--- a/drivers/input/mouse/Kconfig
++++ b/drivers/input/mouse/Kconfig
+@@ -381,7 +381,6 @@ config MOUSE_VSXXXAA
+ config MOUSE_GPIO
+ 	tristate "GPIO mouse"
+ 	depends on GPIOLIB || COMPILE_TEST
+-	select INPUT_POLLDEV
+ 	help
+ 	  This driver simulates a mouse on GPIO lines of various CPUs (and some
+ 	  other chips).
+diff --git a/drivers/input/mouse/gpio_mouse.c b/drivers/input/mouse/gpio_mouse.c
+index 461436f6f087..23507fce3a2b 100644
+--- a/drivers/input/mouse/gpio_mouse.c
++++ b/drivers/input/mouse/gpio_mouse.c
+@@ -8,7 +8,7 @@
+ 
+ #include <linux/module.h>
+ #include <linux/platform_device.h>
+-#include <linux/input-polldev.h>
++#include <linux/input.h>
+ #include <linux/gpio/consumer.h>
+ #include <linux/property.h>
+ #include <linux/of.h>
+@@ -43,10 +43,9 @@ struct gpio_mouse {
+  * Timer function which is run every scan_ms ms when the device is opened.
+  * The dev input variable is set to the the input_dev pointer.
+  */
+-static void gpio_mouse_scan(struct input_polled_dev *dev)
++static void gpio_mouse_scan(struct input_dev *input)
+ {
+-	struct gpio_mouse *gpio = dev->private;
+-	struct input_dev *input = dev->input;
++	struct gpio_mouse *gpio = input_get_drvdata(input);
+ 	int x, y;
+ 
+ 	if (gpio->bleft)
+@@ -71,18 +70,17 @@ static int gpio_mouse_probe(struct platform_device *pdev)
+ {
+ 	struct device *dev = &pdev->dev;
+ 	struct gpio_mouse *gmouse;
+-	struct input_polled_dev *input_poll;
+ 	struct input_dev *input;
+-	int ret;
++	int error;
+ 
+ 	gmouse = devm_kzalloc(dev, sizeof(*gmouse), GFP_KERNEL);
+ 	if (!gmouse)
+ 		return -ENOMEM;
+ 
+ 	/* Assign some default scanning time */
+-	ret = device_property_read_u32(dev, "scan-interval-ms",
+-				       &gmouse->scan_ms);
+-	if (ret || gmouse->scan_ms == 0) {
++	error = device_property_read_u32(dev, "scan-interval-ms",
++					 &gmouse->scan_ms);
++	if (error || gmouse->scan_ms == 0) {
+ 		dev_warn(dev, "invalid scan time, set to 50 ms\n");
+ 		gmouse->scan_ms = 50;
+ 	}
+@@ -112,23 +110,14 @@ static int gpio_mouse_probe(struct platform_device *pdev)
+ 	if (IS_ERR(gmouse->bright))
+ 		return PTR_ERR(gmouse->bright);
+ 
+-	input_poll = devm_input_allocate_polled_device(dev);
+-	if (!input_poll) {
+-		dev_err(dev, "not enough memory for input device\n");
++	input = devm_input_allocate_device(dev);
++	if (!input)
+ 		return -ENOMEM;
+-	}
+-
+-	platform_set_drvdata(pdev, input_poll);
+-
+-	/* set input-polldev handlers */
+-	input_poll->private = gmouse;
+-	input_poll->poll = gpio_mouse_scan;
+-	input_poll->poll_interval = gmouse->scan_ms;
+ 
+-	input = input_poll->input;
+ 	input->name = pdev->name;
+ 	input->id.bustype = BUS_HOST;
+-	input->dev.parent = &pdev->dev;
++
++	input_set_drvdata(input, gmouse);
+ 
+ 	input_set_capability(input, EV_REL, REL_X);
+ 	input_set_capability(input, EV_REL, REL_Y);
+@@ -139,10 +128,16 @@ static int gpio_mouse_probe(struct platform_device *pdev)
+ 	if (gmouse->bright)
+ 		input_set_capability(input, EV_KEY, BTN_RIGHT);
+ 
+-	ret = input_register_polled_device(input_poll);
+-	if (ret) {
++	error = input_setup_polling(input, gpio_mouse_scan);
++	if (error)
++		return error;
++
++	input_set_poll_interval(input, gmouse->scan_ms);
++
++	error = input_register_device(input);
++	if (error) {
+ 		dev_err(dev, "could not register input device\n");
+-		return ret;
++		return error;
+ 	}
+ 
+ 	dev_dbg(dev, "%d ms scan time, buttons: %s%s%s\n",
+-- 
+2.23.0.444.g18eeb5a265-goog
 
-diff --git a/drivers/pinctrl/bcm/pinctrl-iproc-gpio.c b/drivers/pinctrl/b=
-cm/pinctrl-iproc-gpio.c
-index 6f7d3a2f2e97..c24d49d436ce 100644
---- a/drivers/pinctrl/bcm/pinctrl-iproc-gpio.c
-+++ b/drivers/pinctrl/bcm/pinctrl-iproc-gpio.c
-@@ -853,12 +853,12 @@ static int iproc_gpio_probe(struct platform_device =
-*pdev)
-=20
- 	/* optional GPIO interrupt support */
- 	irq =3D platform_get_irq(pdev, 0);
--	if (irq) {
-+	if (irq > 0) {
- 		struct irq_chip *irqc;
- 		struct gpio_irq_chip *girq;
-=20
- 		irqc =3D &chip->irqchip;
--		irqc->name =3D "bcm-iproc-gpio";
-+		irqc->name =3D dev_name(dev);
- 		irqc->irq_ack =3D iproc_gpio_irq_ack;
- 		irqc->irq_mask =3D iproc_gpio_irq_mask;
- 		irqc->irq_unmask =3D iproc_gpio_irq_unmask;
---=20
-2.23.0
 
+-- 
+Dmitry
