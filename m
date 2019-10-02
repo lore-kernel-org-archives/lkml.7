@@ -2,32 +2,32 @@ Return-Path: <SRS0=zem1=X3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNWANTED_LANGUAGE_BODY autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 210F9C4360C
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 19:12:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80407C4360C
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 19:12:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 052992133F
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 19:12:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 689F6222C0
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 19:12:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730132AbfJBTMy (ORCPT
+        id S1730142AbfJBTM5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Oct 2019 15:12:54 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:35402 "EHLO
+        Wed, 2 Oct 2019 15:12:57 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:35406 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729107AbfJBTIK (ORCPT
+        by vger.kernel.org with ESMTP id S1729110AbfJBTIK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 2 Oct 2019 15:08:10 -0400
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1iFjyo-00035i-3w; Wed, 02 Oct 2019 20:08:06 +0100
+        id 1iFjyo-000368-P0; Wed, 02 Oct 2019 20:08:06 +0100
 Received: from ben by deadeye with local (Exim 4.92.1)
         (envelope-from <ben@decadent.org.uk>)
-        id 1iFjyn-0003bV-HF; Wed, 02 Oct 2019 20:08:05 +0100
+        id 1iFjyo-0003cf-0J; Wed, 02 Oct 2019 20:08:06 +0100
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,14 +35,15 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Eric Dumazet" <edumazet@google.com>,
-        "kbuild test robot" <lkp@intel.com>,
-        "David S. Miller" <davem@davemloft.net>
+        "Julian Wiedmann" <jwi@linux.ibm.com>,
+        "Harald Freudenberger" <freude@linux.ibm.com>,
+        "Heiko Carstens" <heiko.carstens@de.ibm.com>
 Date:   Wed, 02 Oct 2019 20:06:51 +0100
-Message-ID: <lsq.1570043211.259555730@decadent.org.uk>
+Message-ID: <lsq.1570043211.71050877@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 21/87] ipv4/igmp: fix build error if !CONFIG_IP_MULTICAST
+Subject: [PATCH 3.16 35/87] s390/crypto: fix possible sleep during
+ spinlock aquired
 In-Reply-To: <lsq.1570043210.379046399@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -56,57 +57,119 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Eric Dumazet <edumazet@google.com>
+From: Harald Freudenberger <freude@linux.ibm.com>
 
-commit 903869bd10e6719b9df6718e785be7ec725df59f upstream.
+commit 1c2c7029c008922d4d48902cc386250502e73d51 upstream.
 
-ip_sf_list_clear_all() needs to be defined even if !CONFIG_IP_MULTICAST
+This patch fixes a complain about possible sleep during
+spinlock aquired
+"BUG: sleeping function called from invalid context at
+include/crypto/algapi.h:426"
+for the ctr(aes) and ctr(des) s390 specific ciphers.
 
-Fixes: 3580d04aa674 ("ipv4/igmp: fix another memory leak in igmpv3_del_delrec()")
-Signed-off-by: Eric Dumazet <edumazet@google.com>
-Reported-by: kbuild test robot <lkp@intel.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Instead of using a spinlock this patch introduces a mutex
+which is save to be held in sleeping context. Please note
+a deadlock is not possible as mutex_trylock() is used.
+
+Signed-off-by: Harald Freudenberger <freude@linux.ibm.com>
+Reported-by: Julian Wiedmann <jwi@linux.ibm.com>
+Signed-off-by: Heiko Carstens <heiko.carstens@de.ibm.com>
+[bwh: Backported to 3.16:
+ - Replace spin_unlock() on all exit paths
+ - Adjust context]
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- net/ipv4/igmp.c | 22 +++++++++++-----------
- 1 file changed, 11 insertions(+), 11 deletions(-)
-
---- a/net/ipv4/igmp.c
-+++ b/net/ipv4/igmp.c
-@@ -192,6 +192,17 @@ static void ip_ma_put(struct ip_mc_list
- 	     pmc != NULL;					\
- 	     pmc = rtnl_dereference(pmc->next_rcu))
+--- a/arch/s390/crypto/aes_s390.c
++++ b/arch/s390/crypto/aes_s390.c
+@@ -25,7 +25,7 @@
+ #include <linux/err.h>
+ #include <linux/module.h>
+ #include <linux/init.h>
+-#include <linux/spinlock.h>
++#include <linux/mutex.h>
+ #include "crypt_s390.h"
  
-+static void ip_sf_list_clear_all(struct ip_sf_list *psf)
-+{
-+	struct ip_sf_list *next;
-+
-+	while (psf) {
-+		next = psf->sf_next;
-+		kfree(psf);
-+		psf = next;
-+	}
-+}
-+
- #ifdef CONFIG_IP_MULTICAST
+ #define AES_KEYLEN_128		1
+@@ -33,7 +33,7 @@
+ #define AES_KEYLEN_256		4
  
- /*
-@@ -614,17 +625,6 @@ static void igmpv3_clear_zeros(struct ip
- 	}
- }
+ static u8 *ctrblk;
+-static DEFINE_SPINLOCK(ctrblk_lock);
++static DEFINE_MUTEX(ctrblk_lock);
+ static char keylen_flag;
  
--static void ip_sf_list_clear_all(struct ip_sf_list *psf)
--{
--	struct ip_sf_list *next;
--
--	while (psf) {
--		next = psf->sf_next;
--		kfree(psf);
--		psf = next;
--	}
--}
--
- static void kfree_pmc(struct ip_mc_list *pmc)
- {
- 	ip_sf_list_clear_all(pmc->sources);
+ struct s390_aes_ctx {
+@@ -785,7 +785,7 @@ static int ctr_aes_crypt(struct blkciphe
+ 	if (!walk->nbytes)
+ 		return ret;
+ 
+-	if (spin_trylock(&ctrblk_lock))
++	if (mutex_trylock(&ctrblk_lock))
+ 		ctrptr = ctrblk;
+ 
+ 	memcpy(ctrptr, walk->iv, AES_BLOCK_SIZE);
+@@ -801,7 +801,7 @@ static int ctr_aes_crypt(struct blkciphe
+ 					       n, ctrptr);
+ 			if (ret < 0 || ret != n) {
+ 				if (ctrptr == ctrblk)
+-					spin_unlock(&ctrblk_lock);
++					mutex_unlock(&ctrblk_lock);
+ 				return -EIO;
+ 			}
+ 			if (n > AES_BLOCK_SIZE)
+@@ -819,7 +819,7 @@ static int ctr_aes_crypt(struct blkciphe
+ 			memcpy(ctrbuf, ctrptr, AES_BLOCK_SIZE);
+ 		else
+ 			memcpy(walk->iv, ctrptr, AES_BLOCK_SIZE);
+-		spin_unlock(&ctrblk_lock);
++		mutex_unlock(&ctrblk_lock);
+ 	} else {
+ 		if (!nbytes)
+ 			memcpy(walk->iv, ctrptr, AES_BLOCK_SIZE);
+--- a/arch/s390/crypto/des_s390.c
++++ b/arch/s390/crypto/des_s390.c
+@@ -17,6 +17,7 @@
+ #include <linux/init.h>
+ #include <linux/module.h>
+ #include <linux/crypto.h>
++#include <linux/mutex.h>
+ #include <crypto/algapi.h>
+ #include <crypto/des.h>
+ 
+@@ -25,7 +26,7 @@
+ #define DES3_KEY_SIZE	(3 * DES_KEY_SIZE)
+ 
+ static u8 *ctrblk;
+-static DEFINE_SPINLOCK(ctrblk_lock);
++static DEFINE_MUTEX(ctrblk_lock);
+ 
+ struct s390_des_ctx {
+ 	u8 iv[DES_BLOCK_SIZE];
+@@ -394,7 +395,7 @@ static int ctr_desall_crypt(struct blkci
+ 	if (!walk->nbytes)
+ 		return ret;
+ 
+-	if (spin_trylock(&ctrblk_lock))
++	if (mutex_trylock(&ctrblk_lock))
+ 		ctrptr = ctrblk;
+ 
+ 	memcpy(ctrptr, walk->iv, DES_BLOCK_SIZE);
+@@ -410,7 +411,7 @@ static int ctr_desall_crypt(struct blkci
+ 					       n, ctrptr);
+ 			if (ret < 0 || ret != n) {
+ 				if (ctrptr == ctrblk)
+-					spin_unlock(&ctrblk_lock);
++					mutex_unlock(&ctrblk_lock);
+ 				return -EIO;
+ 			}
+ 			if (n > DES_BLOCK_SIZE)
+@@ -428,7 +429,7 @@ static int ctr_desall_crypt(struct blkci
+ 			memcpy(ctrbuf, ctrptr, DES_BLOCK_SIZE);
+ 		else
+ 			memcpy(walk->iv, ctrptr, DES_BLOCK_SIZE);
+-		spin_unlock(&ctrblk_lock);
++		mutex_unlock(&ctrblk_lock);
+ 	} else {
+ 		if (!nbytes)
+ 			memcpy(walk->iv, ctrptr, DES_BLOCK_SIZE);
 
