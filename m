@@ -2,147 +2,109 @@ Return-Path: <SRS0=zem1=X3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AF34DC352AA
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 14:33:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E39D1ECE58A
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 14:36:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8210C21D7B
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 14:33:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AAB7721783
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 14:36:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570026797;
-	bh=8rypImOI20mflcydnpWAP+bSkIa1Qz0JkPOZ+HbbW6w=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Oasq44FYdEAgfj81tqEhiydm6ggHraQd+0afuugN4MGtZA+Im4683g/eYgP+nX+uB
-	 7Kq0T8OYCLLo2/zVd6dH4+FapWRkg8zywlZz8Izngvkv/9mjIjMG6QQOvSGP9taI6O
-	 YuqLeVEVOBvSwQs59YzwoLzjG8M9/Ciu219IIMCU=
+	s=default; t=1570026963;
+	bh=Bm2O2u6t2yaiuz7SLXAiNV1/Uq8x19unELLdKvJJbww=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=IONJSFWKepdpmrQGnn2MfIaF3c81ZkzKEjvRZaeASKGpayxe1guFvjDPPJXXH7bvw
+	 jI5NeRbBPgEIAJ9Ddz0ZL19tQLcCLYBhbQJef3FoXQyw7Rz9COoAI5m+l6YK/TF4j3
+	 ha9DRcNSkAK2Ne+xTchORRlIrc60l/bLGNgzxAhw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728130AbfJBOdR (ORCPT
+        id S1728219AbfJBOgD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Oct 2019 10:33:17 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:54611 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726444AbfJBOdQ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Oct 2019 10:33:16 -0400
-Received: by mail-wm1-f66.google.com with SMTP id p7so7476217wmp.4;
-        Wed, 02 Oct 2019 07:33:14 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=AVTETs+oGeEC2u9tBgMMkGrKf43RbFMMIseBuCEUcM8=;
-        b=MuyHgSkNJQ2AeuGS+WNbkSvVcdfYoaJlIoTr5Ces1bmPbfcp8R4EhdwJ6XMZeNLy9s
-         UCrqpTs5Z3/mj8gd3EjGhuPfeexPZg1bdysYZ59RDWmY5mjXVZZLJowskbO+SW8frfme
-         +2jg2moqgbApt1vk7nqN6EfCvrGy5M26/5VdgulnH9i7FaHz7+aQwYAmXvM/KIqkp+FM
-         fOMnC4cVqJgCyRW76IFKWisReV0AZpz8KyZVkdzXsSDzVZPlbkN9HDk4foE1KkVvkKvx
-         SHDeWdHh+8Fah/jQRL8IvWGcxBgl0QLWuLBB+I7PIceYyeCtOH0FWOOW4o8cdep8tUou
-         v+BA==
-X-Gm-Message-State: APjAAAWGB/Lzn99cFjBaPm86AhWkWuRGNVxpSuUfQ7j/V0RFCqc2StGm
-        QmrEdQjxCX64+W0OGL6syBLv3Z01
-X-Google-Smtp-Source: APXvYqwmFvHm7rFsTvQq0Zwc4A11TsV7mmn1KrgwfBt5cGv22d6M4/7ffFDvl4S5Z0mArAq50hK9rw==
-X-Received: by 2002:a1c:4d0d:: with SMTP id o13mr3249429wmh.19.1570026793907;
-        Wed, 02 Oct 2019 07:33:13 -0700 (PDT)
-Received: from pi3 ([194.230.155.145])
-        by smtp.googlemail.com with ESMTPSA id s12sm40423949wra.82.2019.10.02.07.33.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 02 Oct 2019 07:33:12 -0700 (PDT)
-Date:   Wed, 2 Oct 2019 16:33:10 +0200
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     Sylwester Nawrocki <s.nawrocki@samsung.com>
-Cc:     vireshk@kernel.org, robh+dt@kernel.org, kgene@kernel.org,
-        devicetree@vger.kernel.org, linux-pm@vger.kernel.org,
-        linux-samsung-soc@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        b.zolnierkie@samsung.com, m.szyprowski@samsung.com
-Subject: Re: [PATCH v4 1/6] opp: Handle target/min/max voltage in
- dev_pm_opp_adjust_voltage()
-Message-ID: <20191002143310.GA15898@pi3>
-References: <20190910123618.27985-1-s.nawrocki@samsung.com>
- <CGME20190910123636eucas1p250ec04901f227b947cc38936563f63b2@eucas1p2.samsung.com>
- <20190910123618.27985-2-s.nawrocki@samsung.com>
+        Wed, 2 Oct 2019 10:36:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45948 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728135AbfJBOgA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 2 Oct 2019 10:36:00 -0400
+Received: from localhost.localdomain (cpe-70-114-128-244.austin.res.rr.com [70.114.128.244])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2066621920;
+        Wed,  2 Oct 2019 14:35:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1570026959;
+        bh=Bm2O2u6t2yaiuz7SLXAiNV1/Uq8x19unELLdKvJJbww=;
+        h=From:To:Cc:Subject:Date:From;
+        b=oQvjJj2gdaEuB8qqxNRmNCZRGmh2CIBDlFBLog249ZqvD0j+3z1mAXtRCtQriFdAu
+         TpSlphE/MQJMIKBpxYTUBRh9yebPAsIlJOikPaqaibSEC2Yqdd1yEsV67jZhqkqQ4A
+         WMRNolUsKn6y4D09kwkEITpUHzrkHRXa+N95h9Sg=
+From:   Dinh Nguyen <dinguyen@kernel.org>
+To:     linux@armlinux.org.uk
+Cc:     dinguyen@kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, linus.walleij@linaro.org,
+        p.zabel@pengutronix.de, thor.thayer@linux.intel.com
+Subject: [PATCHv3] ARM: drivers/amba: release and cleanup the resource to allow for deferred probe
+Date:   Wed,  2 Oct 2019 09:35:51 -0500
+Message-Id: <20191002143551.32288-1-dinguyen@kernel.org>
+X-Mailer: git-send-email 2.20.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20190910123618.27985-2-s.nawrocki@samsung.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Sep 10, 2019 at 02:36:13PM +0200, Sylwester Nawrocki wrote:
-> To be squashed with patch "PM / OPP: Support adjusting OPP voltages
-> at runtime".
-> 
-> Signed-off-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
-> ---
-> Changes since v3:
->  - new patch
-> 
->  drivers/opp/core.c     | 10 ++++++++--
->  include/linux/pm_opp.h |  3 ++-
->  2 files changed, 10 insertions(+), 3 deletions(-)
+With commit "79bdcb202a35 ARM: 8906/1: drivers/amba: add reset control to
+amba bus probe", the amba bus driver needs to be deferred probe because the
+reset driver is probed later. However with a deferred probe, the call to
+request_resource() in the driver returns -EBUSY. The reason is the driver
+has not released the resource from the previous probe attempt.
 
-I'll take the ASV driver via samsung-soc but I see it depends on this
-one.  Please provide me a stable tag with it or an Ack.
+This patch fixes how we handle the condition of EPROBE_DEFER that is returned
+from getting the reset controls. For this condition, the patch will jump
+to defer_probe, which will iounmap, dev_pm_domain_detach, and release the
+resource.
 
-Best regards,
-Krzysztof
+Fixes: 79bdcb202a35 ("ARM: 8906/1: drivers/amba: add reset control to
+amba bus probe")
+Signed-off-by: Dinh Nguyen <dinguyen@kernel.org>
+---
+v3: jump to defer_probe where the driver will unmap and pm_detach the
+    driver resource for the next probe attempt
+v2: release the resource when of_reset_control_array_get_optional_shared()
+    returns EPROBE_DEFER
+---
+ drivers/amba/bus.c | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
 
+diff --git a/drivers/amba/bus.c b/drivers/amba/bus.c
+index f39f075abff9..4a021b1dab3d 100644
+--- a/drivers/amba/bus.c
++++ b/drivers/amba/bus.c
+@@ -409,9 +409,12 @@ static int amba_device_try_add(struct amba_device *dev, struct resource *parent)
+ 		 */
+ 		rstc = of_reset_control_array_get_optional_shared(dev->dev.of_node);
+ 		if (IS_ERR(rstc)) {
+-			if (PTR_ERR(rstc) != -EPROBE_DEFER)
++			ret = PTR_ERR(rstc);
++			if (ret == -EPROBE_DEFER)
++				goto defer_probe;
++			else
+ 				dev_err(&dev->dev, "Can't get amba reset!\n");
+-			return PTR_ERR(rstc);
++			return ret;
+ 		}
+ 		reset_control_deassert(rstc);
+ 		reset_control_put(rstc);
+@@ -448,6 +451,7 @@ static int amba_device_try_add(struct amba_device *dev, struct resource *parent)
+ 			ret = -ENODEV;
+ 	}
+ 
++ defer_probe:
+ 	iounmap(tmp);
+ 	dev_pm_domain_detach(&dev->dev, true);
+ 
+-- 
+2.20.0
 
-> 
-> diff --git a/drivers/opp/core.c b/drivers/opp/core.c
-> index 407a07f29b12..4ebe5a6c280b 100644
-> --- a/drivers/opp/core.c
-> +++ b/drivers/opp/core.c
-> @@ -2057,14 +2057,18 @@ static int _opp_set_availability(struct device *dev, unsigned long freq,
->   * dev_pm_opp_adjust_voltage() - helper to change the voltage of an OPP
->   * @dev:		device for which we do this operation
->   * @freq:		OPP frequency to adjust voltage of
-> - * @u_volt:		new OPP voltage
-> + * @u_volt:		new OPP target voltage
-> + * @u_volt_min:		new OPP min voltage
-> + * @u_volt_max:		new OPP max voltage
->   *
->   * Return: -EINVAL for bad pointers, -ENOMEM if no memory available for the
->   * copy operation, returns 0 if no modifcation was done OR modification was
->   * successful.
->   */
->  int dev_pm_opp_adjust_voltage(struct device *dev, unsigned long freq,
-> -			      unsigned long u_volt)
-> +			      unsigned long u_volt, unsigned long u_volt_min,
-> +			      unsigned long u_volt_max)
-> +
->  {
->  	struct opp_table *opp_table;
->  	struct dev_pm_opp *tmp_opp, *opp = ERR_PTR(-ENODEV);
-> @@ -2098,6 +2102,8 @@ int dev_pm_opp_adjust_voltage(struct device *dev, unsigned long freq,
->  		goto adjust_unlock;
-> 
->  	opp->supplies->u_volt = u_volt;
-> +	opp->supplies->u_volt_min = u_volt_min;
-> +	opp->supplies->u_volt_max = u_volt_max;
-> 
->  	dev_pm_opp_get(opp);
->  	mutex_unlock(&opp_table->lock);
-> diff --git a/include/linux/pm_opp.h b/include/linux/pm_opp.h
-> index 86947d53e8c4..0ee1daafe6af 100644
-> --- a/include/linux/pm_opp.h
-> +++ b/include/linux/pm_opp.h
-> @@ -113,7 +113,8 @@ void dev_pm_opp_remove(struct device *dev, unsigned long freq);
->  void dev_pm_opp_remove_all_dynamic(struct device *dev);
-> 
->  int dev_pm_opp_adjust_voltage(struct device *dev, unsigned long freq,
-> -			      unsigned long u_volt);
-> +			      unsigned long u_volt, unsigned long u_volt_min,
-> +			      unsigned long u_volt_max);
-> 
->  int dev_pm_opp_enable(struct device *dev, unsigned long freq);
-> 
-> --
-> 2.17.1
-> 
