@@ -2,59 +2,118 @@ Return-Path: <SRS0=zem1=X3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E794C352AA
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 01:27:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 29BA4ECE587
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 01:27:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4182C2086A
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 01:27:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0A2372086A
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 01:27:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729719AbfJBB1c (ORCPT
+        id S1729737AbfJBB1n (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Oct 2019 21:27:32 -0400
-Received: from shards.monkeyblade.net ([23.128.96.9]:55300 "EHLO
-        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727880AbfJBB1c (ORCPT
+        Tue, 1 Oct 2019 21:27:43 -0400
+Received: from mail105.syd.optusnet.com.au ([211.29.132.249]:44643 "EHLO
+        mail105.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729723AbfJBB1m (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Oct 2019 21:27:32 -0400
-Received: from localhost (unknown [IPv6:2603:3023:50c:85e1:b5c5:ae11:3e54:6a07])
-        (using TLSv1 with cipher AES256-SHA (256/256 bits))
-        (Client did not present a certificate)
-        (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id AD73414D8BB4A;
-        Tue,  1 Oct 2019 18:27:31 -0700 (PDT)
-Date:   Tue, 01 Oct 2019 21:27:28 -0400 (EDT)
-Message-Id: <20191001.212728.1087995517897062240.davem@davemloft.net>
-To:     matiasevara@gmail.com
-Cc:     stefanha@redhat.com, kvm@vger.kernel.org,
-        virtualization@lists.linux-foundation.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, sgarzare@redhat.com,
-        eric.dumazet@gmail.com
-Subject: Re: [PATCH net-next v2] vsock/virtio: add support for MSG_PEEK
-From:   David Miller <davem@davemloft.net>
-In-Reply-To: <1569867923-28200-1-git-send-email-matiasevara@gmail.com>
-References: <1569867923-28200-1-git-send-email-matiasevara@gmail.com>
-X-Mailer: Mew version 6.8 on Emacs 26.1
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Tue, 01 Oct 2019 18:27:32 -0700 (PDT)
+        Tue, 1 Oct 2019 21:27:42 -0400
+Received: from dimstar.local.net (n122-110-44-45.sun2.vic.optusnet.com.au [122.110.44.45])
+        by mail105.syd.optusnet.com.au (Postfix) with SMTP id 91F86363099
+        for <linux-kernel@vger.kernel.org>; Wed,  2 Oct 2019 11:27:27 +1000 (AEST)
+Received: (qmail 6573 invoked by uid 501); 2 Oct 2019 01:27:26 -0000
+Date:   Wed, 2 Oct 2019 11:27:26 +1000
+From:   Duncan Roe <duncan_roe@optusnet.com.au>
+To:     Julian Anastasov <ja@ssi.bg>
+Cc:     Haishuang Yan <yanhaishuang@cmss.chinamobile.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Pablo Neira Ayuso <pablo@netfilter.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Simon Horman <horms@verge.net.au>,
+        linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
+        lvs-devel@vger.kernel.org, netfilter-devel@vger.kernel.org
+Subject: Re: [PATCH v3 0/3] selftests: netfilter: introduce test cases for
+ ipvs
+Message-ID: <20191002012726.GB9810@dimstar.local.net>
+Mail-Followup-To: Julian Anastasov <ja@ssi.bg>,
+        Haishuang Yan <yanhaishuang@cmss.chinamobile.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Pablo Neira Ayuso <pablo@netfilter.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Simon Horman <horms@verge.net.au>, linux-kernel@vger.kernel.org,
+        linux-kselftest@vger.kernel.org, lvs-devel@vger.kernel.org,
+        netfilter-devel@vger.kernel.org
+References: <1569939599-1872-1-git-send-email-yanhaishuang@cmss.chinamobile.com>
+ <alpine.LFD.2.21.1910012133330.3887@ja.home.ssi.bg>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <alpine.LFD.2.21.1910012133330.3887@ja.home.ssi.bg>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Optus-CM-Score: 0
+X-Optus-CM-Analysis: v=2.2 cv=D+Q3ErZj c=1 sm=1 tr=0
+        a=4DzML1vCOQ6Odsy8BUtSXQ==:117 a=4DzML1vCOQ6Odsy8BUtSXQ==:17
+        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=XobE76Q3jBoA:10
+        a=TCTL6qu2tCVPfYteyd8A:9 a=CjuIK1q_8ugA:10
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Matias Ezequiel Vara Larsen <matiasevara@gmail.com>
-Date: Mon, 30 Sep 2019 18:25:23 +0000
+On Tue, Oct 01, 2019 at 09:34:13PM +0300, Julian Anastasov wrote:
+>
+> 	Hello,
+>
+> On Tue, 1 Oct 2019, Haishuang Yan wrote:
+>
+> > This series patch include test cases for ipvs.
+> >
+> > The test topology is who as below:
+> > +--------------------------------------------------------------+
+> > |                      |                                       |
+> > |         ns0          |         ns1                           |
+> > |      -----------     |     -----------    -----------        |
+> > |      | veth01  | --------- | veth10  |    | veth12  |        |
+> > |      -----------    peer   -----------    -----------        |
+> > |           |          |                        |              |
+> > |      -----------     |                        |              |
+> > |      |  br0    |     |-----------------  peer |--------------|
+> > |      -----------     |                        |              |
+> > |           |          |                        |              |
+> > |      ----------     peer   ----------      -----------       |
+> > |      |  veth02 | --------- |  veth20 |     | veth12  |       |
+> > |      ----------      |     ----------      -----------       |
+> > |                      |         ns2                           |
+> > |                      |                                       |
+> > +--------------------------------------------------------------+
+> >
+> > Test results:
+> > # selftests: netfilter: ipvs.sh
+> > # Testing DR mode...
+> > # Testing NAT mode...
+> > # Testing Tunnel mode...
+> > # ipvs.sh: PASS
+> > ok 6 selftests: netfilter: ipvs.sh
+> >
+> > Haishuang Yan (3):
+> >   selftests: netfilter: add ipvs test script
+> >   selftests: netfilter: add ipvs nat test case
+> >   selftests: netfilter: add ipvs tunnel test case
+>
+> Acked-by: Julian Anastasov <ja@ssi.bg>
+>
+> >  tools/testing/selftests/netfilter/Makefile |   2 +-
+> >  tools/testing/selftests/netfilter/ipvs.sh  | 234 +++++++++++++++++++++++++++++
+> >  2 files changed, 235 insertions(+), 1 deletion(-)
+> >  create mode 100755 tools/testing/selftests/netfilter/ipvs.sh
+>
+> Regards
+>
+> --
+> Julian Anastasov <ja@ssi.bg>
 
-> This patch adds support for MSG_PEEK. In such a case, packets are not
-> removed from the rx_queue and credit updates are not sent.
-> 
-> Signed-off-by: Matias Ezequiel Vara Larsen <matiasevara@gmail.com>
-> Reviewed-by: Stefano Garzarella <sgarzare@redhat.com>
-> Tested-by: Stefano Garzarella <sgarzare@redhat.com>
+I still prefer #!/bin/sh in 1/3. You never know what's in someone's environment
 
-Applied.
+Cheers ... Duncan.
