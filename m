@@ -2,106 +2,105 @@ Return-Path: <SRS0=zem1=X3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92577C352AA
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 15:11:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 76FEEC352AA
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 15:13:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 650EB2133F
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 15:11:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4E4432133F
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 15:13:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="XPnzdde1"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fKS5ds0V"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727923AbfJBPLT (ORCPT
+        id S1728347AbfJBPNS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Oct 2019 11:11:19 -0400
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:36110 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726225AbfJBPLT (ORCPT
+        Wed, 2 Oct 2019 11:13:18 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:42868 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728076AbfJBPNR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Oct 2019 11:11:19 -0400
-Received: by mail-pl1-f193.google.com with SMTP id j11so3858130plk.3
-        for <linux-kernel@vger.kernel.org>; Wed, 02 Oct 2019 08:11:19 -0700 (PDT)
+        Wed, 2 Oct 2019 11:13:17 -0400
+Received: by mail-pg1-f195.google.com with SMTP id z12so11983171pgp.9;
+        Wed, 02 Oct 2019 08:13:17 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=joelfernandes.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=r9nWn38buM/4T/AKqINYRkYr3VyumpV3BT15lao/Piw=;
-        b=XPnzdde173lm9zRUQ18sUcRC14N6t/0IJ2sdAei/F4xJYWHAI5BXDJETzMzdp+ooli
-         ExQEKR+calO6Wvt9U/U6JpwnubDxFvETjsKQ3QnZUFGw55YimnSfO62it6zWbaUhmBor
-         q/Hzrte7ei5hWHDO0DmIC/mA57pNvGWsidgCQ=
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=4Lk6X+8663rlL2uCTHfqJkJzTZluu7khYUv6X9toXdg=;
+        b=fKS5ds0V7eIwZHJZclPEIpM7T12M6C4dwK2clTRewG9tCcDo7/GEP1rV4IbItDbnsz
+         DTD72BqH/mBQnR13mCeekJektDnt/qAp6GtQvH9b2KIlg68LRpiPrrBmX/J5K/l7IwAb
+         lFIy2tTfdG6xhKqhSIf1MxCOzqHxBX13MN2ql8sYUt7HX54k3p/tuBQTSC06AqdIfMox
+         /pyy0rD3QuLC4Y7IrZ6Tn3KyW8NmqX5OdPWJchRgjCxjq2u9lzcu78qbLvtBm+QCLiA4
+         n8d123o6QFyfw1lm1XokHoeBgODKCHBNbTE2ND+jTR/4OGpe0FSS+xBwtmd1U3m2jN3l
+         5UGA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=r9nWn38buM/4T/AKqINYRkYr3VyumpV3BT15lao/Piw=;
-        b=klbiWf1+7kqHVMc+GBt1U080ezBkVikGtUMFgsISWCg1e89Bk0zIPMhoKCs/D98Bv3
-         WwUBZlDVbhXXndCE6rV31QaHbWovO8xd4PJwYj6qai/x+PYGwODhG01pNEhZ2r9BlJOR
-         KQP8/KJ8mbaQxDFzRK6mcELjlUPLICP2648k8X/7X42TI2DBYjI04kRPQcKz5arm52Hw
-         v8rOgHx1yypVzJHKGUt3QKqfN9AAS19/FadEudw9rxMNX+QVrPEeFjXDg3yMquJHC4EB
-         a5FZFuj0+eOu+JmrbPVZFcsM8RSVxWW6CKZ+H6JpmpTrsGW7e7zuGUJTOpcT307avjv+
-         WwWQ==
-X-Gm-Message-State: APjAAAWlCxqhpR8WiZ81gYjbzMVkyyq9NE0uV9vtogNNtde9H2U1nE0L
-        NE5AkRFRw2c4i6j9p5/f8Ph+TQ==
-X-Google-Smtp-Source: APXvYqwQNvtL47FRvYlwpsl0MoYYZ8wF7D42Tv5pAM9vqYvJ9M9HUsQP8CD9stCXY/I6xxy7ioeIkg==
-X-Received: by 2002:a17:902:5a89:: with SMTP id r9mr4041301pli.206.1570029078602;
-        Wed, 02 Oct 2019 08:11:18 -0700 (PDT)
-Received: from localhost ([2620:15c:6:12:9c46:e0da:efbf:69cc])
-        by smtp.gmail.com with ESMTPSA id s5sm5716903pjn.24.2019.10.02.08.11.17
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 02 Oct 2019 08:11:17 -0700 (PDT)
-Date:   Wed, 2 Oct 2019 11:11:16 -0400
-From:   Joel Fernandes <joel@joelfernandes.org>
-To:     Alan Stern <stern@rowland.harvard.edu>
-Cc:     LKMM Maintainers -- Akira Yokosawa <akiyks@gmail.com>,
-        Andrea Parri <parri.andrea@gmail.com>,
-        Boqun Feng <boqun.feng@gmail.com>,
-        Daniel Lustig <dlustig@nvidia.com>,
-        David Howells <dhowells@redhat.com>,
-        Jade Alglave <j.alglave@ucl.ac.uk>,
-        Luc Maranget <luc.maranget@inria.fr>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Will Deacon <will@kernel.org>,
-        Kernel development list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 1/3] tools/memory-model/Documentation: Fix typos in
- explanation.txt
-Message-ID: <20191002151116.GA88588@google.com>
-References: <20191001210123.GA41667@google.com>
- <Pine.LNX.4.44L0.1910021012541.1552-100000@iolanthe.rowland.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Pine.LNX.4.44L0.1910021012541.1552-100000@iolanthe.rowland.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=4Lk6X+8663rlL2uCTHfqJkJzTZluu7khYUv6X9toXdg=;
+        b=amRYccKkSzbpyNmT8VB1KAvLHUIdQlyDDsohkfAISSdLD7JUUWptVVw6dn5Yh7pzSu
+         q9rfjcqRzoUUz4Tly5CM4VvT1sLAC+6obHwc2+fABPYxHVXuUjo81IamWaAoKfRQvWi9
+         0Z6I6WgwGyx5ZujMiqyzqJO9OfsOqWyjIIe8Wo0P9rrLC1udGtHl/dv8xJ0ku8mAi44d
+         V8VPHdF7hfQzxbR6Xw/i0ZfwQjLrKN8wiGWUgWMKb7WI9XyEMNkLeFki2hMlOfxt20z3
+         +tgBQw2KC2e1JF9VijSRP4mhMGRy0l3QjPPJry52QfrAYVYk1LqhuBMkIF0K5vFf2RI7
+         OlYA==
+X-Gm-Message-State: APjAAAUomNq9cW+bEnqW/tt5LtW3X06J+hdj9sr6kGaWm8PSi0jFrDA0
+        vaNJtpkFFPHT+BeF5Ij49YLFDfEY
+X-Google-Smtp-Source: APXvYqwOCrdZMbz0ngy90R9ypGhrS8Fj8XkN/dl4q/hVTlza5DRNGUVpiJMxPipg4NThNroT3rGkWw==
+X-Received: by 2002:a63:e444:: with SMTP id i4mr4316529pgk.45.1570029196229;
+        Wed, 02 Oct 2019 08:13:16 -0700 (PDT)
+Received: from localhost.localdomain ([240f:34:212d:1:8161:a821:b9aa:cfb2])
+        by smtp.gmail.com with ESMTPSA id k23sm21397937pgg.73.2019.10.02.08.13.13
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Wed, 02 Oct 2019 08:13:15 -0700 (PDT)
+From:   Akinobu Mita <akinobu.mita@gmail.com>
+To:     linux-leds@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     Akinobu Mita <akinobu.mita@gmail.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>
+Subject: [PATCH -next 0/2] leds: add substitutes for /sys/class/leds/<led>/trigger
+Date:   Thu,  3 Oct 2019 00:12:59 +0900
+Message-Id: <1570029181-11102-1-git-send-email-akinobu.mita@gmail.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Oct 02, 2019 at 10:13:43AM -0400, Alan Stern wrote:
-> On Tue, 1 Oct 2019, Joel Fernandes wrote:
-> 
-> > On Tue, Oct 01, 2019 at 01:39:47PM -0400, Alan Stern wrote:
-> > > This patch fixes a few minor typos and improves word usage in a few
-> > > places in the Linux Kernel Memory Model's explanation.txt file.
-> > > 
-> > > Signed-off-by: Alan Stern <stern@rowland.harvard.edu>
-> > > 
-> > 
-> > Reviewed-by: Joel Fernandes (Google) <joel@joelfernandes.org>
-> 
-> Joel, if you're sufficiently interested in all this stuff, would you 
-> like to add yourself as a maintainer for the LKMM?
+Reading /sys/class/leds/<led>/trigger returns all available LED triggers.
+However, this violates the "one value per file" rule of sysfs.
 
-Absolutely I am quite interested. I will submit a patch for this. Thanks for
-the suggestion, Alan!
+This series provides a new /sys/devices/virtual/led-trigger/ directory and
+/sys/class/leds/<led>/current-trigger. The new api follows the "one value
+per file" rule of sysfs.
 
-thanks,
+This series was previously developed as a part of the series "leds: fix
+/sys/class/leds/<led>/trigger and add new api" [1].  Now this version
+only contains the new api part.
 
- - Joel
+[1] https://lore.kernel.org/r/1567946472-10075-1-git-send-email-akinobu.mita@gmail.com
+
+Akinobu Mita (2):
+  leds: add /sys/devices/virtual/led-trigger/
+  leds: add /sys/class/leds/<led>/current-trigger
+
+ Documentation/ABI/testing/sysfs-class-led          | 13 +++
+ .../ABI/testing/sysfs-devices-virtual-led-trigger  |  8 ++
+ drivers/leds/led-class.c                           | 10 +++
+ drivers/leds/led-triggers.c                        | 95 +++++++++++++++++++++-
+ drivers/leds/leds.h                                |  5 ++
+ include/linux/leds.h                               |  3 +
+ 6 files changed, 130 insertions(+), 4 deletions(-)
+ create mode 100644 Documentation/ABI/testing/sysfs-devices-virtual-led-trigger
+
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: "Rafael J. Wysocki" <rafael@kernel.org>
+Cc: Jacek Anaszewski <jacek.anaszewski@gmail.com>
+Cc: Pavel Machek <pavel@ucw.cz>
+Cc: Dan Murphy <dmurphy@ti.com>
+-- 
+2.7.4
 
