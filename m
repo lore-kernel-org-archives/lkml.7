@@ -2,102 +2,390 @@ Return-Path: <SRS0=zem1=X3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 54DD2C35280
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 13:45:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A96BC352AA
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 13:45:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 28F9421D80
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 13:45:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570023910;
-	bh=MTpTC+HpWq0B/7qUmDdlkEO78yXoAdbvg8w/6mM/2Ew=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=k6SUCDpaNF/OTwODewBgA7frP8cQqx/EQIfAC5MVAmW/HzdMEL/1v8ooTBdMksmzX
-	 6lcys6bxNiUalEtHYBQp+gWu8et2T3wcFhmLywxxmyRIHwUld9o7a10FVBQWtzM+QN
-	 B4+x6JcuKixn259fWMepmVwbuks8Gph+8Y4FW9ww=
+	by mail.kernel.org (Postfix) with ESMTP id 3EED221783
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 13:45:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727803AbfJBNpJ (ORCPT
+        id S1727771AbfJBNp3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Oct 2019 09:45:09 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:48476 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726565AbfJBNpJ (ORCPT
+        Wed, 2 Oct 2019 09:45:29 -0400
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:36067 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726775AbfJBNp3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Oct 2019 09:45:09 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Subject:Cc:To:
-        From:Date:Sender:Reply-To:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=nIye/+66snLtHmUYM3YmcJEBkBWMtqxkl+uqaI4t2ys=; b=AVCfkaJyqXZkIhqPOgL5rwltd
-        B/ul2LTAfoelXfmdTG5odKiWDhc0qrl9KxSNRlchZdpPU0TsOyd3KkYQIOV7x+5HhKj9oJYcIQTuw
-        5ir/x7ZdGOGK8ZFMup4LTb6Pgyry2FLNT3ncHx0YbBlGfOAJXrOPwXciLWwA2A4l4Y4jWWx+ttblK
-        pcnHKrz9efXruzcWljiarQ9ITiHqqvVELUBsmD1ZStOzZ8DAbEjv2hMNA/i5yhkbqB/fXFDmHqjMs
-        gx5RCZn8S3joy8dRWfwrlrWGqBGjLALB8G52RYX9rfkFivqM8cyIxu1bZxvpssjWxLsq6u8FnFjA1
-        SJZhGOg9A==;
-Received: from 177.157.127.95.dynamic.adsl.gvt.net.br ([177.157.127.95] helo=coco.lan)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.2 #3 (Red Hat Linux))
-        id 1iFewF-0005et-V2; Wed, 02 Oct 2019 13:45:08 +0000
-Date:   Wed, 2 Oct 2019 10:45:04 -0300
-From:   Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-To:     Jeremy MAURO <jeremy.mauro@gmail.com>
-Cc:     j.mauro@criteo.com, Jonathan Corbet <corbet@lwn.net>,
-        linux-doc@vger.kernel.org (open list:DOCUMENTATION SCRIPTS),
-        linux-kernel@vger.kernel.org (open list)
-Subject: Re: [PATCH v2 2/2] scripts/sphinx-pre-install: Add a new path for
- the debian package "fonts-noto-cjk"
-Message-ID: <20191002104504.515c6b7d@coco.lan>
-In-Reply-To: <20191002133543.10909-1-j.mauro@criteo.com>
-References: <20191002073636.68ad85de@coco.lan>
-        <20191002133543.10909-1-j.mauro@criteo.com>
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+        Wed, 2 Oct 2019 09:45:29 -0400
+Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <mfe@pengutronix.de>)
+        id 1iFewU-0005iV-6M; Wed, 02 Oct 2019 15:45:22 +0200
+Received: from mfe by pty.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <mfe@pengutronix.de>)
+        id 1iFewT-0002xo-NH; Wed, 02 Oct 2019 15:45:21 +0200
+Date:   Wed, 2 Oct 2019 15:45:21 +0200
+From:   Marco Felsch <m.felsch@pengutronix.de>
+To:     Adam Thomson <Adam.Thomson.Opensource@diasemi.com>,
+        broonie@kernel.org
+Cc:     "broonie@kernel.org" <broonie@kernel.org>,
+        Support Opensource <Support.Opensource@diasemi.com>,
+        "lee.jones@linaro.org" <lee.jones@linaro.org>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "lgirdwood@gmail.com" <lgirdwood@gmail.com>,
+        Steve Twiss <stwiss.opensource@diasemi.com>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 2/5] dt-bindings: mfd: da9062: add regulator voltage
+ selection documentation
+Message-ID: <20191002134521.zcree6w4loutjrud@pengutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <AM5PR1001MB0994316EA8AD903B2943CE2080820@AM5PR1001MB0994.EURPRD10.PROD.OUTLOOK.COM>
+X-Sent-From: Pengutronix Hildesheim
+X-URL:  http://www.pengutronix.de/
+X-IRC:  #ptxdist @freenode
+X-Accept-Language: de,en
+X-Accept-Content-Type: text/plain
+X-Uptime: 15:22:54 up 137 days, 19:41, 94 users,  load average: 0.13, 0.11,
+ 0.08
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
+X-SA-Exim-Mail-From: mfe@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Wed,  2 Oct 2019 15:35:42 +0200
-Jeremy MAURO <jeremy.mauro@gmail.com> escreveu:
-
-> The latest debian version "bullseye/sid" has changed the path of the file
-> "notoserifcjk-regular.ttc", with the previous change and this change we
-> keep the backward compatibility and add the latest debian version
+On 19-09-30 09:53, Adam Thomson wrote:
+> On 26 September 2019 15:39, Marco Felsch wrote:
 > 
-> Signed-off-by: Jeremy MAURO <j.mauro@criteo.com>
-
-Reviewed-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-
-> ---
-> Changes in V2:
-> - Align all lines
+> > On 19-09-26 14:04, Adam Thomson wrote:
+> > > On 26 September 2019 12:44, Marco Felsch wrote:
+> > >
+> > > > On 19-09-26 10:17, Adam Thomson wrote:
+> > > > > On 26 September 2019 09:10, Marco Felsch wrote:
+> > > > >
+> > > > > > On 19-09-25 16:18, Adam Thomson wrote:
+> > > > > > > On 25 September 2019 16:52, Marco Felsch wrote:
+> > > > > > >
+> > > > > > > > Hi Adam,
+> > > > > > > >
+> > > > > > > > On 19-09-24 09:23, Adam Thomson wrote:
+> > > > > > > > > On 17 September 2019 13:43, Marco Felsch wrote:
+> > > > > > > > >
+> > > > > > > > > > Add the documentation which describe the voltage selection gpio
+> > > > > > support.
+> > > > > > > > > > This property can be applied to each subnode within the
+> > 'regulators'
+> > > > > > > > > > node so each regulator can be configured differently.
+> > > > > > > > > >
+> > > > > > > > > > Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
+> > > > > > > > > > ---
+> > > > > > > > > >  Documentation/devicetree/bindings/mfd/da9062.txt | 9
+> > +++++++++
+> > > > > > > > > >  1 file changed, 9 insertions(+)
+> > > > > > > > > >
+> > > > > > > > > > diff --git a/Documentation/devicetree/bindings/mfd/da9062.txt
+> > > > > > > > > > b/Documentation/devicetree/bindings/mfd/da9062.txt
+> > > > > > > > > > index edca653a5777..9d9820d8177d 100644
+> > > > > > > > > > --- a/Documentation/devicetree/bindings/mfd/da9062.txt
+> > > > > > > > > > +++ b/Documentation/devicetree/bindings/mfd/da9062.txt
+> > > > > > > > > > @@ -66,6 +66,15 @@ Sub-nodes:
+> > > > > > > > > >    details of individual regulator device can be found in:
+> > > > > > > > > >    Documentation/devicetree/bindings/regulator/regulator.txt
+> > > > > > > > > >
+> > > > > > > > > > +  Optional regulator device-specific properties:
+> > > > > > > > > > +  - dlg,vsel-sense-gpios : The GPIO reference which should be
+> > used
+> > > > by
+> > > > > > the
+> > > > > > > > > > +    regulator to switch the voltage between active/suspend
+> > voltage
+> > > > > > settings.
+> > > > > > > > If
+> > > > > > > > > > +    the signal is active the active-settings are applied else the
+> > suspend
+> > > > > > > > > > +    settings are applied. Attention: Sharing the same gpio for other
+> > > > > > purposes
+> > > > > > > > > > +    or across multiple regulators is possible but the gpio settings
+> > must
+> > > > be
+> > > > > > the
+> > > > > > > > > > +    same. Also the gpio phandle must refer to to the dlg,da9062-
+> > gpio
+> > > > > > device
+> > > > > > > > > > +    other gpios are not allowed and make no sense.
+> > > > > > > > > > +
+> > > > > > > > >
+> > > > > > > > > Should we not use the binding names that are defined in 'gpio-
+> > > > > > regulator.yaml'
+> > > > > > > > as
+> > > > > > > > > these seem to be generic and would probably serve the purpose
+> > here?
+> > > > > > > >
+> > > > > > > > Hm.. as the description says:
+> > > > > > > >
+> > > > > > > > 8<--------------------------------------------------
+> > > > > > > > gpios:
+> > > > > > > >    description: Array of one or more GPIO pins used to select the
+> > > > > > > >    regulator voltage/current listed in "states".
+> > > > > > > > 8<--------------------------------------------------
+> > > > > > > >
+> > > > > > > > But we don't have a "states" property and we can't select between
+> > > > > > > > voltage or current.
+> > > > > > >
+> > > > > > > Yes I think I was at cross purposes when I made this remark. The
+> > bindings
+> > > > there
+> > > > > > > describe the GPOs that are used to enable/disable and set
+> > voltage/current
+> > > > for
+> > > > > > > regulators and the supported voltage/current levels that can be
+> > configured
+> > > > in
+> > > > > > > this manner. What you're describing is the GPI for DA9061/2. If you look
+> > at
+> > > > > > > GPIO handling in existing regulator drivers I believe they all deal with
+> > > > external
+> > > > > > > GPOs that are configured to enable/disable and set voltage/current
+> > limits
+> > > > > > rather
+> > > > > > > than the GPI on the PMIC itself. That's why I'm thinking that the
+> > > > configurations
+> > > > > > > you're doing here should actually be in a pinctrl or GPIO driver.
+> > > > > >
+> > > > > > That's true, the common gpio bindings are from the view of the
+> > > > > > processor, e.g. which gpio must the processor drive to enable/switch the
+> > > > > > regualtor. So one reasone more to use a non-common binding.
+> > > > > >
+> > > > > > Please take a look on my other comment I made :) I don't use the
+> > > > > > gpio-alternative function. I use it as an input.
+> > > > >
+> > > > > I know in the datasheet this isn't marked as an alternate function specifically
+> > > > > but to me having regulator control by the chip's own GPI is an alternative
+> > > > > function for that GPIO pin, in the same way a specific pin can be used for
+> > > > > SYS_EN or Watchdog control. It's a dedicated purpose rather than being a
+> > > > normal
+> > > > > GPI.
+> > > >
+> > > > Nope, SYS_EN or Watchdog is a special/alternate function and not a
+> > > > normal input.
+> > >
+> > > Having spoken with our HW team there's essentially no real difference.
+> >
+> > So I don't have to configure the gpio to alternate to use it as SYS_EN?
 > 
->  scripts/sphinx-pre-install | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
+> Yes you do, but the effect is much the same as manually configuring the GPIO as
+> input, just that the IC does it for you. The regulator control features could
+> well have been done in a similar manner. Guess that was a design choice.
 > 
-> diff --git a/scripts/sphinx-pre-install b/scripts/sphinx-pre-install
-> index b5077ae63a4b..1f9285274587 100755
-> --- a/scripts/sphinx-pre-install
-> +++ b/scripts/sphinx-pre-install
-> @@ -348,7 +348,8 @@ sub give_debian_hints()
->  		check_missing_file(["/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf"],
->  				   "fonts-dejavu", 2);
->  
-> -		check_missing_file(["/usr/share/fonts/noto-cjk/NotoSansCJK-Regular.ttc"],
-> +		check_missing_file(["/usr/share/fonts/noto-cjk/NotoSansCJK-Regular.ttc",
-> +				   "/usr/share/fonts/opentype/noto/NotoSerifCJK-Regular.ttc"],
->  				   "fonts-noto-cjk", 2);
->  	}
->  
+> >
+> > > >
+> > > > > See the following as an example of what I'm suggesting:
+> > > > >
+> > > > >
+> > > >
+> > https://elixir.bootlin.com/linux/latest/source/Documentation/devicetree/bindin
+> > > > gs/pinctrl/pinctrl-palmas.txt
+> > > > >
+> > > > > You could then pass the pinctrl information to the regulator driver and use
+> > > > > that rather than having device specific bindings for this. That's at least my
+> > > > > current interpretation of this anyway.
+> > > >
+> > > > For me pinctrl decides which function should be assigned to a pin. So in
+> > > > our case this would be:
+> > > >   - alternate
+> > > >   - gpo
+> > > >   - gpi
+> > > >
+> > > > In our use-case it is a gpi..
+> > >
+> > > It's not being used as a normal GPI as such. It's being used to enable/disable
+> > > the regulator so I disagree.
+> >
+> > This one is used as voltage-selection. What is a "normal" GPI in your
+> > point of view?
+> 
+> With the voltage selection and enable/disable control the actual work of
+> handling the GPI state is all done internally in the IC. There is no control
+> required from SW other than setting of initial direction. For a normal GPI
 
+Thats correct and setting the direction and active levels can be done
+perfectly by the gpio-interface.
 
+> I would expect SW to be involved in the handling of that GPI state, for example
+> as part of a bit banging interface.
+> 
+> >
+> > > >
+> > > > An other reason why pinctrl seems not be the right solution is that the
+> > > > regulator must be configured to use this gpi. This decision can't be
+> > > > made globally because each regulator can be configured differently.. For
+> > > > me its just a local gpio.
+> > >
+> > > You'd pass pinctrl information, via DT, to the regulator driver so it can set
+> > > accordingly. At least that's my take here, unless I'm missing something. The
+> > > regulator driver would be the consumer and could set the regulator control
+> > > accordingly.
+> >
+> > IMHO this is what I have done. I use the gpi so the regulator is the
+> > consumer. Since the gpi can be used by several regulators for voltage
+> > selection or enable/disable action this gpi is marked as shared. If I
+> > got you right than you would do something like for regulatorX.
+> >
+> >   pinctrl-node {
+> >
+> >   	gpio2 {
+> > 		func = "vsel";
+> > 	}
+> >   }
+> >
+> > But the gpi(o)2 can also be used to enable/disable a regulatorY if I
+> > understood the datasheet correctly. I other words:
+> >
+> >
+> >
+> >          +--> Alternate function
+> >       /
+> >   ---+   +--> GPI ----> Edge detection ---> more processing
+> >    |       |                |
+> >    |       |                +-----> Regulator control
+> >    |       |                          |
+> >    \__  __/ \__________  _______
+> >       \/               \/
+> >    pinctrl            gpio
+> >
+> > This is how I understood the pinctrl use-case. I configure the pin as
+> > gpio and then the regulator driver consume a gpio.
+> 
+> How I see it is that you configure the function through pinctrl as
+> 'regulator_switch' or 'regulator_vsel' (or whatever name is deemed sensible to
 
-Thanks,
-Mauro
+The case is that it can be "muxed" for both at same time so there is no
+or instead it is a or/and. Depending on the design some regulators can
+be turned off and some should be switched upon that signal.
+
+> cover the two types of functionality) and then the pinctrl driver code would do
+> the work of requesting and configuring the relevant GPIO as input so it's no
+> longer available for use as something else (basically what you do in the
+> regulator driver right now).
+
+So by this I avoided the user-space to get this gpio and this seems fine
+to me. What a driver does with a gpio is up to the driver but the gpio
+shouldn't be reachable from the user-space.
+
+> I believe you can have more than one consumer of a pinctrl pin so it could be
+> provided to both regulator X and Y to indicate that this is the chosen
+> functionality of that pin and so the regulator can then be marked as being
+> controlled by that pin. Using pinctrl also would mean you're using standard
+> bindings as well rather than something which is device specific.
+
+That seems wrong to me because pinctrl should assign a dedicated function
+to that pin e.g. regulator_switch or regulator_vsel. But thats wrong as
+I pointed out above. On the other hand the gpio as the name says is
+general purpose and each regulator gives the meaning to it.
+
+> > > At the end of the day I'm not the gatekeeper here so I think Mark's input is
+> > > necessary as he will likely have a view on how this should be done. I appreciate
+> > > the work you've done here but I want to be sure we have a generic solution
+> > > as this would also apply to DA9063 and possibly other devices too.
+> >
+> > Why should this only apply to da9062 devices? IMHO this property can be
+> > used by any other dlg pmic as well if it is supported. Comments and suggestions
+> > are welcome so no worries ;)
+> 
+> You're right. You can do the same for DA9063 and other devices potentially. I
+> would just like to make sure we take the right/agreed approach. Potentially
+> this could be used in non-Dialog products as well which have similar
+> functionality.
+
+Yeah, but I think we should consider about that after an other device
+appears with that funcitonality.
+
+> As I say, Mark is really the gatekeeper so his input is also key in this.
+
+That's right, I added Mark to To.
+
+Regards,
+  Marco
+
+> 
+> >
+> > Regards,
+> >   Marco
+> >
+> > > Have added Mark to the 'To' in this e-mail thread so he might see it.
+> > > >
+> > > > Regards,
+> > > >   Marco
+> > > >
+> > > > > >
+> > > > > > Regards,
+> > > > > >   Marco
+> > > > > >
+> > > > > >
+> > > > > > > I'd be interested in hearing Mark's view on this though as he has far
+> > more
+> > > > > > > experience in this area than I do.
+> > > > > > >
+> > > > > > > >
+> > > > > > > > Regards,
+> > > > > > > >   Marco
+> > > > > > > >
+> > > > > > > > > >  - rtc : This node defines settings required for the Real-Time Clock
+> > > > > > associated
+> > > > > > > > > >    with the DA9062. There are currently no entries in this binding,
+> > > > however
+> > > > > > > > > >    compatible = "dlg,da9062-rtc" should be added if a node is
+> > created.
+> > > > > > > > > > --
+> > > > > > > > > > 2.20.1
+> > > > > > > > >
+> > > > > > > > >
+> > > > > > > >
+> > > > > > > > --
+> > > > > > > > Pengutronix e.K.                           |                             |
+> > > > > > > > Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+> > > > > > > > Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-
+> > 0
+> > > > |
+> > > > > > > > Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555
+> > |
+> > > > > > >
+> > > > > >
+> > > > > > --
+> > > > > > Pengutronix e.K.                           |                             |
+> > > > > > Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+> > > > > > Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0
+> > |
+> > > > > > Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+> > > > >
+> > > >
+> > > > --
+> > > > Pengutronix e.K.                           |                             |
+> > > > Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+> > > > Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
+> > > > Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+> > >
+> >
+> > --
+> > Pengutronix e.K.                           |                             |
+> > Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+> > Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
+> > Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+> 
+
+-- 
+Pengutronix e.K.                           |                             |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
