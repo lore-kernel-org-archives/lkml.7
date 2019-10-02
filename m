@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA2B7C4360C
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 19:08:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 51EF0C4360C
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 19:08:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A1A402133F
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 19:08:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3765D21D82
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 19:08:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728806AbfJBTIj (ORCPT
+        id S1729545AbfJBTIm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Oct 2019 15:08:39 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:36126 "EHLO
+        Wed, 2 Oct 2019 15:08:42 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:36190 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729385AbfJBTIW (ORCPT
+        by vger.kernel.org with ESMTP id S1729408AbfJBTIZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Oct 2019 15:08:22 -0400
+        Wed, 2 Oct 2019 15:08:25 -0400
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1iFjyu-000368-RX; Wed, 02 Oct 2019 20:08:12 +0100
+        id 1iFjyo-00035m-5T; Wed, 02 Oct 2019 20:08:06 +0100
 Received: from ben by deadeye with local (Exim 4.92.1)
         (envelope-from <ben@decadent.org.uk>)
-        id 1iFjyq-0003fy-10; Wed, 02 Oct 2019 20:08:08 +0100
+        id 1iFjyn-0003ba-IN; Wed, 02 Oct 2019 20:08:05 +0100
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,21 +35,17 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        mpe@ellerman.id.au, "Ravi Bangoria" <ravi.bangoria@linux.ibm.com>,
-        "Thomas Gleixner" <tglx@linutronix.de>,
-        "Arnaldo Carvalho de Melo" <acme@redhat.com>,
-        "Ingo Molnar" <mingo@kernel.org>, linuxppc-dev@lists.ozlabs.org,
-        "Stephane Eranian" <eranian@google.com>, maddy@linux.vnet.ibm.com,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        "Alexander Shishkin" <alexander.shishkin@linux.intel.com>,
-        "Vince Weaver" <vincent.weaver@maine.edu>, acme@kernel.org,
-        "Jiri Olsa" <jolsa@redhat.com>,
-        "Linus Torvalds" <torvalds@linux-foundation.org>
+        "Omar Sandoval" <osandov@fb.com>,
+        "Paul E. McKenney" <paulmck@linux.ibm.com>,
+        "Peter Zijlstra" <peterz@infradead.org>,
+        linux-block@vger.kernel.org,
+        "Andrea Parri" <andrea.parri@amarulasolutions.com>,
+        "Jens Axboe" <axboe@kernel.dk>, "Ming Lei" <ming.lei@redhat.com>
 Date:   Wed, 02 Oct 2019 20:06:51 +0100
-Message-ID: <lsq.1570043211.910896713@decadent.org.uk>
+Message-ID: <lsq.1570043211.946262289@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 76/87] perf/ioctl: Add check for the sample_period value
+Subject: [PATCH 3.16 22/87] sbitmap: fix improper use of smp_mb__before_atomic()
 In-Reply-To: <lsq.1570043210.379046399@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -63,52 +59,42 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Ravi Bangoria <ravi.bangoria@linux.ibm.com>
+From: Andrea Parri <andrea.parri@amarulasolutions.com>
 
-commit 913a90bc5a3a06b1f04c337320e9aeee2328dd77 upstream.
+commit a0934fd2b1208458e55fc4b48f55889809fce666 upstream.
 
-perf_event_open() limits the sample_period to 63 bits. See:
+This barrier only applies to the read-modify-write operations; in
+particular, it does not apply to the atomic_set() primitive.
 
-  0819b2e30ccb ("perf: Limit perf_event_attr::sample_period to 63 bits")
+Replace the barrier with an smp_mb().
 
-Make ioctl() consistent with it.
-
-Also on PowerPC, negative sample_period could cause a recursive
-PMIs leading to a hang (reported when running perf-fuzzer).
-
-Signed-off-by: Ravi Bangoria <ravi.bangoria@linux.ibm.com>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Arnaldo Carvalho de Melo <acme@redhat.com>
-Cc: Jiri Olsa <jolsa@redhat.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Fixes: 6c0ca7ae292ad ("sbitmap: fix wakeup hang after sbq resize")
+Reported-by: "Paul E. McKenney" <paulmck@linux.ibm.com>
+Reported-by: Peter Zijlstra <peterz@infradead.org>
+Signed-off-by: Andrea Parri <andrea.parri@amarulasolutions.com>
+Reviewed-by: Ming Lei <ming.lei@redhat.com>
+Cc: Jens Axboe <axboe@kernel.dk>
+Cc: Omar Sandoval <osandov@fb.com>
+Cc: Ming Lei <ming.lei@redhat.com>
+Cc: linux-block@vger.kernel.org
+Cc: "Paul E. McKenney" <paulmck@linux.ibm.com>
 Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Stephane Eranian <eranian@google.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Vince Weaver <vincent.weaver@maine.edu>
-Cc: acme@kernel.org
-Cc: linuxppc-dev@lists.ozlabs.org
-Cc: maddy@linux.vnet.ibm.com
-Cc: mpe@ellerman.id.au
-Fixes: 0819b2e30ccb ("perf: Limit perf_event_attr::sample_period to 63 bits")
-Link: https://lkml.kernel.org/r/20190604042953.914-1-ravi.bangoria@linux.ibm.com
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
-[bwh: Backported to 3.16: adjust context]
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
+[bwh: Backported to 3.16: adjust filename]
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- kernel/events/core.c | 3 +++
- 1 file changed, 3 insertions(+)
+ block/blk-mq-tag.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/kernel/events/core.c
-+++ b/kernel/events/core.c
-@@ -3823,6 +3823,9 @@ static int perf_event_period(struct perf
- 	if (perf_event_check_period(event, value))
- 		return -EINVAL;
- 
-+	if (!event->attr.freq && (value & (1ULL << 63)))
-+		return -EINVAL;
-+
- 	task = ctx->task;
- 	pe.value = value;
- 
+--- a/block/blk-mq-tag.c
++++ b/block/blk-mq-tag.c
+@@ -499,7 +499,7 @@ static void bt_update_count(struct blk_m
+ 		 * Pairs with the memory barrier in bt_clear_tag() to ensure
+ 		 * that the batch size is updated before the wait counts.
+ 		 */
+-		smp_mb__before_atomic();
++		smp_mb();
+ 		for (i = 0; i < BT_WAIT_QUEUES; i++)
+ 			atomic_set(&bt->bs[i].wait_cnt, 1);
+ 	}
 
