@@ -2,108 +2,122 @@ Return-Path: <SRS0=zem1=X3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 12175C35280
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 07:29:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC898C352AA
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 07:31:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E3A92222C3
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 07:29:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 84E2E222CB
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 07:31:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726435AbfJBH3g (ORCPT
+        id S1726657AbfJBHbV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Oct 2019 03:29:36 -0400
-Received: from kirsty.vergenet.net ([202.4.237.240]:54588 "EHLO
-        kirsty.vergenet.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725991AbfJBH3f (ORCPT
+        Wed, 2 Oct 2019 03:31:21 -0400
+Received: from mail-qt1-f194.google.com ([209.85.160.194]:39494 "EHLO
+        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725991AbfJBHbU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Oct 2019 03:29:35 -0400
-Received: from reginn.horms.nl (watermunt.horms.nl [80.127.179.77])
-        by kirsty.vergenet.net (Postfix) with ESMTPA id 9D0E925B7E3;
-        Wed,  2 Oct 2019 17:29:33 +1000 (AEST)
-Received: by reginn.horms.nl (Postfix, from userid 7100)
-        id A9CD4940376; Wed,  2 Oct 2019 09:29:31 +0200 (CEST)
-Date:   Wed, 2 Oct 2019 09:29:31 +0200
-From:   Simon Horman <horms@verge.net.au>
-To:     Julian Anastasov <ja@ssi.bg>,
-        Haishuang Yan <yanhaishuang@cmss.chinamobile.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Pablo Neira Ayuso <pablo@netfilter.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
-        lvs-devel@vger.kernel.org, netfilter-devel@vger.kernel.org
-Subject: Re: [PATCH v3 0/3] selftests: netfilter: introduce test cases for
- ipvs
-Message-ID: <20191002072931.fmrxcfggn7b5stud@verge.net.au>
-References: <1569939599-1872-1-git-send-email-yanhaishuang@cmss.chinamobile.com>
- <alpine.LFD.2.21.1910012133330.3887@ja.home.ssi.bg>
- <20191002012726.GB9810@dimstar.local.net>
+        Wed, 2 Oct 2019 03:31:20 -0400
+Received: by mail-qt1-f194.google.com with SMTP id n7so25116161qtb.6;
+        Wed, 02 Oct 2019 00:31:18 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=5WGNRsjSRmemddwGXPWsCXOzzSeiEp7JkL4q/D6jMrQ=;
+        b=bDRSgC/RwoK9Sx1p7XWfDK3G6BjVc3qNe0DSL4DAQzXM7dYbQ09JzvHLi2SJNYTEV9
+         ahVNv7ulviEphH3Jzlj/4H9G6RQXa2lBgQkKfqU0p6tnoRgkofJ/wQn4eIIKV7p6N7pi
+         HioUsZ0x2bOQl/hUGL02sO6O80IcUZBIDUEZBi8uEnzlwL7HYzZ3KvXcgn+PlAFu/l8z
+         vFhERPgkljkUozlhVEdNgihC/05bEvGOsP3I8Gs6F5sLoQPbyP+jIfN4FYT32Oi208TI
+         Sv0gVJlWN2QpGPAJT7o8FoX2j1RoDRM7V054Yg8eucD21zaweISZhOUZmq/Zewb0jfDD
+         3TUA==
+X-Gm-Message-State: APjAAAU7WTI3Pfr8xG7F1u+kLWes52QE0Q/0bcE8Tpnjlb1mo7oUkthd
+        0Rc5hDd3tD7ReBSDKmzLgRlgJ+K3IW4t/ejawxg=
+X-Google-Smtp-Source: APXvYqw28yN8VC30hFQhQe8SwCFurMsx1x13bc9bSbVlYqX1K++q8bKPSr+MxRV5v+POcc3GEFHfY5L5IKDEmE00RxU=
+X-Received: by 2002:ac8:4a01:: with SMTP id x1mr2634596qtq.304.1570001477755;
+ Wed, 02 Oct 2019 00:31:17 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191002012726.GB9810@dimstar.local.net>
-Organisation: Horms Solutions BV
-User-Agent: NeoMutt/20170113 (1.7.2)
+References: <8736gcjosv.fsf@x220.int.ebiederm.org> <201910011140.EA0181F13@keescook>
+ <87imp8hyc8.fsf@x220.int.ebiederm.org>
+In-Reply-To: <87imp8hyc8.fsf@x220.int.ebiederm.org>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Wed, 2 Oct 2019 09:31:01 +0200
+Message-ID: <CAK8P3a1zLATC7rzYxSpAK-z=NJ1rw7-3ZgHqCOJUUf6b9HwK1A@mail.gmail.com>
+Subject: Re: [RFC][PATCH] sysctl: Remove the sysctl system call
+To:     "Eric W. Biederman" <ebiederm@xmission.com>
+Cc:     Kees Cook <keescook@chromium.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        Linux API <linux-api@vger.kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Andi Kleen <andi@firstfloor.org>,
+        Andi Kleen <ak@linux.intel.com>,
+        Cong Wang <xiyou.wangcong@gmail.com>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Apelete Seketeli <apelete@seketeli.net>,
+        Chee Nouk Phoon <cnphoon@altera.com>,
+        Chris Zankel <chris@zankel.net>,
+        Christian Ruppert <christian.ruppert@abilis.com>,
+        Greg Ungerer <gerg@uclinux.org>, Helge Deller <deller@gmx.de>,
+        Hongliang Tao <taohl@lemote.com>,
+        Huacai Chen <chenhc@lemote.com>,
+        Jonas Jensen <jonas.jensen@gmail.com>,
+        Josh Boyer <jwboyer@gmail.com>, Jun Nie <jun.nie@linaro.org>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Ley Foon Tan <lftan@altera.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Max Filippov <jcmvbkbc@gmail.com>,
+        Olof Johansson <olof@lixom.net>,
+        Paul Burton <paul.burton@mips.com>,
+        Phil Edworthy <phil.edworthy@renesas.com>,
+        Pierrick Hascoet <pierrick.hascoet@abilis.com>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Roland Stigge <stigge@antcom.de>,
+        Vineet Gupta <vgupta@synopsys.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Oct 02, 2019 at 11:27:26AM +1000, Duncan Roe wrote:
-> On Tue, Oct 01, 2019 at 09:34:13PM +0300, Julian Anastasov wrote:
+On Wed, Oct 2, 2019 at 12:54 AM Eric W. Biederman <ebiederm@xmission.com> wrote:
+> Kees Cook <keescook@chromium.org> writes:
+> > On Tue, Oct 01, 2019 at 01:36:32PM -0500, Eric W. Biederman wrote:
 > >
-> > 	Hello,
-> >
-> > On Tue, 1 Oct 2019, Haishuang Yan wrote:
-> >
-> > > This series patch include test cases for ipvs.
-> > >
-> > > The test topology is who as below:
-> > > +--------------------------------------------------------------+
-> > > |                      |                                       |
-> > > |         ns0          |         ns1                           |
-> > > |      -----------     |     -----------    -----------        |
-> > > |      | veth01  | --------- | veth10  |    | veth12  |        |
-> > > |      -----------    peer   -----------    -----------        |
-> > > |           |          |                        |              |
-> > > |      -----------     |                        |              |
-> > > |      |  br0    |     |-----------------  peer |--------------|
-> > > |      -----------     |                        |              |
-> > > |           |          |                        |              |
-> > > |      ----------     peer   ----------      -----------       |
-> > > |      |  veth02 | --------- |  veth20 |     | veth12  |       |
-> > > |      ----------      |     ----------      -----------       |
-> > > |                      |         ns2                           |
-> > > |                      |                                       |
-> > > +--------------------------------------------------------------+
-> > >
-> > > Test results:
-> > > # selftests: netfilter: ipvs.sh
-> > > # Testing DR mode...
-> > > # Testing NAT mode...
-> > > # Testing Tunnel mode...
-> > > # ipvs.sh: PASS
-> > > ok 6 selftests: netfilter: ipvs.sh
-> > >
-> > > Haishuang Yan (3):
-> > >   selftests: netfilter: add ipvs test script
-> > >   selftests: netfilter: add ipvs nat test case
-> > >   selftests: netfilter: add ipvs tunnel test case
-> >
-> > Acked-by: Julian Anastasov <ja@ssi.bg>
-> >
-> > >  tools/testing/selftests/netfilter/Makefile |   2 +-
-> > >  tools/testing/selftests/netfilter/ipvs.sh  | 234 +++++++++++++++++++++++++++++
-> > >  2 files changed, 235 insertions(+), 1 deletion(-)
-> > >  create mode 100755 tools/testing/selftests/netfilter/ipvs.sh
-> >
-> > Regards
-> >
-> > --
-> > Julian Anastasov <ja@ssi.bg>
-> 
-> I still prefer #!/bin/sh in 1/3. You never know what's in someone's environment
+> > I think you can actually take this further and remove (or at least
+> > empty) the uapi/linux/sysctl.h file too.
+>
+> I copied everyone who had put this into a defconfig and I will wait a
+> little more to see if anyone screams.  I think it is a safe guess that
+> several of the affected configurations are dead (or at least
+> unmaintained) as I received 17 bounces when copying everyone.
 
-That would be my preference too.
+Looking at the arm defconfigs:
+
+> arch/arm/configs/axm55xx_defconfig:CONFIG_SYSCTL_SYSCALL=y
+
+No notable work on this platform since it got sold to Intel in 2014.
+I think they still use it but not with mainline kernels that lack support
+for most drivers and the later chips.
+
+> arch/arm/configs/keystone_defconfig:CONFIG_SYSCTL_SYSCALL=y
+
+Not that old either, but this hardware is mostly obsoleted by newer variants
+that we support with the arm64 defconfig.
+
+> arch/arm/configs/lpc32xx_defconfig:CONFIG_SYSCTL_SYSCALL=y
+> arch/arm/configs/moxart_defconfig:CONFIG_SYSCTL_SYSCALL=y
+
+Ancient hardware, but still in active use. These tend to have very little
+RAM, but they both enable CONFIG_PROC_FS.
+
+> arch/arm/configs/qcom_defconfig:CONFIG_SYSCTL_SYSCALL=y
+> arch/arm/configs/zx_defconfig:CONFIG_SYSCTL_SYSCALL=y
+
+These are for older Qualcomm and LG chips that tend to be used
+with Android rather than the defconfig here. Maybe double-check
+if the official android-common tree enables SYSCTL_SYSCALL.
+
+      Arnd
