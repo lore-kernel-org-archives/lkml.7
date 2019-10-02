@@ -2,130 +2,249 @@ Return-Path: <SRS0=zem1=X3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A039C352AA
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 13:39:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF6D8ECE58A
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 13:39:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3BF5021D80
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 13:39:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A710C20873
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 13:39:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EmzgMvl/"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pYWF3ACo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727505AbfJBNjn (ORCPT
+        id S1727611AbfJBNjp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Oct 2019 09:39:43 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:52019 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726179AbfJBNjm (ORCPT
+        Wed, 2 Oct 2019 09:39:45 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:35565 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726687AbfJBNjn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Oct 2019 09:39:42 -0400
-Received: by mail-wm1-f65.google.com with SMTP id 7so7262063wme.1
-        for <linux-kernel@vger.kernel.org>; Wed, 02 Oct 2019 06:39:42 -0700 (PDT)
+        Wed, 2 Oct 2019 09:39:43 -0400
+Received: by mail-pg1-f194.google.com with SMTP id a24so11875912pgj.2;
+        Wed, 02 Oct 2019 06:39:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=7C/lmvhnOK2ftbFYct5zRz8/v/Ze5kOZrnGinFzRgjI=;
-        b=EmzgMvl/cYe7h2v3GRBOlUfZcm7b3Blw3Q6HGG1ZYwjZZjOM7qquPWWzUP4IIpRNuK
-         x+OZTSIigZUvASgyv6pKxtCEp1TiiK6+tCqouiYPc5eKthuuiPBxg7+tWs0ByTx3iQ0x
-         u6HHGYdd25KkRi2jYBZW0lK37XvFT9vLNeqdM7lXe1grBO7JdGhu1h5Dim1I+xr+LvGX
-         WkfXB23EDKqMmy9YyooyQ+ixCwHfUwbXcedn54zJ7ovCteYTMdeBNKrluLQVjCEU7Eic
-         v4t1xqdOyBtpaLbJCfeYGfdBgRoYybC+UaFGQqzzwbswCz8HniR3AKU1AWRj+UkIfonZ
-         j0yQ==
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=6VcOYbiMtfSp75brRYu+wOZCVtITZ2k75g02wJDdsQQ=;
+        b=pYWF3ACokblJI+Ye2mivZYsXL1z1gfKKeuJAFd17eoLlctS++pukFZ8oZWlk4fC7Rl
+         62B6MoBjzdPobwSjBdyn1TP3od98G/fu9mbxkMeqEL/gj5xs6TIb2JVeH/gAlevz8yvf
+         G1GQ/LtAzAtF71kjlIfdM/vSk0S85vcYRz3YvwWjfjljKv0P2eWP/1CxSLmoVyAQD5ep
+         4z/8RcBmBA7maMmbDyTy2tQb9ec9laiXlpNLZq9Xf/0b6mDGiebH/bkPIzczqpwQkqP7
+         SPcWwDenSifG1UIZwSEPDQPoivLvFTXoQ2iKQgazsKAQHujwYZ+kscwgYUi78WJJdY5H
+         olPg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=7C/lmvhnOK2ftbFYct5zRz8/v/Ze5kOZrnGinFzRgjI=;
-        b=DBLSUIKSsc6AeBSF3sZWyKgNR3HslTNLKYGIFuMDOUH+4q0PlxHX6dG4x41yKOq5Me
-         dO0qqEbyQ0bhu4MbSIdBnefOYRH+5AghIGufMgcc32ANkReZ/BBiKE2W/SGQlcQkwmjM
-         FV1exFInvDm3TUq1dk3xiWpPdsSVxI+RWFCKiypwV+pL0rf5cz5Mgz7+Tz6gwwSkrj9H
-         R3s2p54M0Pv2DzpsMBEP9VYkzZ/cZIEI76CV+i78QC6CvPi+6zPMUYS5HfB0W26ubgYT
-         5D19gyxcQonvYRf8lI4PrJ+uCmXsYeNdIM0hI7S8LastzlwryXeVF68JXHiZJY7bOblf
-         7/hQ==
-X-Gm-Message-State: APjAAAXaqBFyuu1bf9cb5WfnTYMjK89J+V1KjONSacu57XJj5R/Kdof5
-        Xyv/TM24vz9uO7Nfhwkpje/+WdOh9qJd22AGow81HA==
-X-Google-Smtp-Source: APXvYqx5i5lPDDGn9linzRM7km60QUouiBdUZ6pNR81GRD+PFpCXfkZdbsDh4kZ/25N4vrvmnxAAVd7MhXAnP4vB2fQ=
-X-Received: by 2002:a05:600c:54a:: with SMTP id k10mr3134474wmc.127.1570023581249;
- Wed, 02 Oct 2019 06:39:41 -0700 (PDT)
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=6VcOYbiMtfSp75brRYu+wOZCVtITZ2k75g02wJDdsQQ=;
+        b=aQk5EDMk0PEppi2bOyhpMTXRHg7rg1kxODVP7IHEvSbh7ZOBby6ns25HroT4zI68MT
+         tIImr9dNm6ekltLPRg9PKunMP84oOTOMeRlkvNkea4I+svr2H4FUY5Q3HRqzGuUsiOrC
+         H+ow7OnZX0KwTJFZkji970xV4qEt9hSCeLlniuBgyWJrJlshkxGUwrARrKQkbLun0gfF
+         wukmb148GlKqh8oIR5TWB4cE6IcYLzKC8h4rgCaVVSXr2a+tyEKoJMJM00DDYaA8RU9B
+         TzsZGsEAWNB4b9TbhSHtRy7zycn09uCWzM2KLkYBRbuPfA/8hB4XDclNiw2drYumLvl8
+         gnQQ==
+X-Gm-Message-State: APjAAAWp0RBSjCrESzq2lswwXzgcEIduPA9j5xYRT+84HI3VE4sp7Zc2
+        F6jYs+7oM9hp0S9BTAo9EXQ=
+X-Google-Smtp-Source: APXvYqwNGNt1SHI/Kw11oFI1x12Y7sHTzCioXskj8GgCT3rfCp8rn89Xg15Ak8p7yfNjIVKbO4yfHw==
+X-Received: by 2002:aa7:96ab:: with SMTP id g11mr4796821pfk.61.1570023581602;
+        Wed, 02 Oct 2019 06:39:41 -0700 (PDT)
+Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id r1sm17307241pgv.70.2019.10.02.06.39.40
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 02 Oct 2019 06:39:40 -0700 (PDT)
+Date:   Wed, 2 Oct 2019 06:39:40 -0700
+From:   Guenter Roeck <linux@roeck-us.net>
+To:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Cc:     Linux Doc Mailing List <linux-doc@vger.kernel.org>, corbet@lwn.net,
+        Mauro Carvalho Chehab <mchehab@infradead.org>,
+        linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Jean Delvare <jdelvare@suse.com>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Paul Burton <paul.burton@mips.com>,
+        James Hogan <jhogan@kernel.org>,
+        Saeed Mahameed <saeedm@mellanox.com>,
+        Leon Romanovsky <leon@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Shannon Nelson <snelson@pensando.io>,
+        Pensando Drivers <drivers@pensando.io>,
+        Steve French <sfrench@samba.org>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Palmer Dabbelt <palmer@sifive.com>,
+        Albert Ou <aou@eecs.berkeley.edu>, devicetree@vger.kernel.org,
+        linux-gpio@vger.kernel.org, linux-hwmon@vger.kernel.org,
+        linux-mips@vger.kernel.org, netdev@vger.kernel.org,
+        linux-rdma@vger.kernel.org, linux-cifs@vger.kernel.org,
+        samba-technical@lists.samba.org, linux-riscv@lists.infradead.org
+Subject: Re: [PATCH 1/3] docs: fix some broken references
+Message-ID: <20191002133940.GA29214@roeck-us.net>
+References: <b87385b2ac6ce6c75df82062fce2976149bbaa6b.1569330078.git.mchehab+samsung@kernel.org>
 MIME-Version: 1.0
-References: <20191002051759.GA161133@LGEARND20B15>
-In-Reply-To: <20191002051759.GA161133@LGEARND20B15>
-From:   Alex Deucher <alexdeucher@gmail.com>
-Date:   Wed, 2 Oct 2019 09:39:28 -0400
-Message-ID: <CADnq5_OsUSP0OXWfB4=XfLuHmDMtPDyWY7EwbMPGEbz3+mi=SQ@mail.gmail.com>
-Subject: Re: [PATCH] drm/amdgpu: Drop unused variable and statement
-To:     Austin Kim <austindh.kim@gmail.com>
-Cc:     "Deucher, Alexander" <alexander.deucher@amd.com>,
-        "Quan, Evan" <evan.quan@amd.com>,
-        Christian Koenig <christian.koenig@amd.com>,
-        Chunming Zhou <David1.Zhou@amd.com>,
-        Dave Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Maling list - DRI developers 
-        <dri-devel@lists.freedesktop.org>,
-        amd-gfx list <amd-gfx@lists.freedesktop.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <b87385b2ac6ce6c75df82062fce2976149bbaa6b.1569330078.git.mchehab+samsung@kernel.org>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Oct 2, 2019 at 3:19 AM Austin Kim <austindh.kim@gmail.com> wrote:
->
-> Even though 'smu8_smu' is declared, it is not used after below statement.
->
->    smu8_smu =3D hwmgr->smu_backend;
->
-> So 'unused variable' could be safely removed
-> to stop warning message as below:
->
->    drivers/gpu/drm/amd/amdgpu/../powerplay/smumgr/smu8_smumgr.c:180:22:
->    warning: variable =E2=80=98smu8_smu=E2=80=99 set but not used
->    [-Wunused-but-set-variable]
->
->    struct smu8_smumgr *smu8_smu;
->              ^
-> Signed-off-by: Austin Kim <austindh.kim@gmail.com>
-
-Applied.  Thanks!
-
-Alex
-
+On Tue, Sep 24, 2019 at 10:01:28AM -0300, Mauro Carvalho Chehab wrote:
+> There are a number of documentation files that got moved or
+> renamed. update their references.
+> 
+> Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+> Acked-by: Shannon Nelson <snelson@pensando.io>
 > ---
->  drivers/gpu/drm/amd/powerplay/smumgr/smu8_smumgr.c | 2 --
->  1 file changed, 2 deletions(-)
->
-> diff --git a/drivers/gpu/drm/amd/powerplay/smumgr/smu8_smumgr.c b/drivers=
-/gpu/drm/amd/powerplay/smumgr/smu8_smumgr.c
-> index 4728aa2..7dca04a 100644
-> --- a/drivers/gpu/drm/amd/powerplay/smumgr/smu8_smumgr.c
-> +++ b/drivers/gpu/drm/amd/powerplay/smumgr/smu8_smumgr.c
-> @@ -177,12 +177,10 @@ static int smu8_load_mec_firmware(struct pp_hwmgr *=
-hwmgr)
->         uint32_t tmp;
->         int ret =3D 0;
->         struct cgs_firmware_info info =3D {0};
-> -       struct smu8_smumgr *smu8_smu;
->
->         if (hwmgr =3D=3D NULL || hwmgr->device =3D=3D NULL)
->                 return -EINVAL;
->
-> -       smu8_smu =3D hwmgr->smu_backend;
->         ret =3D cgs_get_firmware_info(hwmgr->device,
->                                                 CGS_UCODE_ID_CP_MEC, &inf=
-o);
->
-> --
-> 2.6.2
->
-> _______________________________________________
-> amd-gfx mailing list
-> amd-gfx@lists.freedesktop.org
-> https://lists.freedesktop.org/mailman/listinfo/amd-gfx
+>  Documentation/devicetree/bindings/cpu/cpu-topology.txt    | 2 +-
+>  Documentation/devicetree/bindings/timer/ingenic,tcu.txt   | 2 +-
+>  Documentation/driver-api/gpio/driver.rst                  | 2 +-
+>  Documentation/hwmon/inspur-ipsps1.rst                     | 2 +-
+
+For hwmon:
+
+Acked-by: Guenter Roeck <linux@roeck-us.net>
+
+>  Documentation/mips/ingenic-tcu.rst                        | 2 +-
+>  Documentation/networking/device_drivers/mellanox/mlx5.rst | 2 +-
+>  MAINTAINERS                                               | 2 +-
+>  drivers/net/ethernet/faraday/ftgmac100.c                  | 2 +-
+>  drivers/net/ethernet/pensando/ionic/ionic_if.h            | 4 ++--
+>  fs/cifs/cifsfs.c                                          | 2 +-
+>  10 files changed, 11 insertions(+), 11 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/cpu/cpu-topology.txt b/Documentation/devicetree/bindings/cpu/cpu-topology.txt
+> index 99918189403c..9bd530a35d14 100644
+> --- a/Documentation/devicetree/bindings/cpu/cpu-topology.txt
+> +++ b/Documentation/devicetree/bindings/cpu/cpu-topology.txt
+> @@ -549,5 +549,5 @@ Example 3: HiFive Unleashed (RISC-V 64 bit, 4 core system)
+>  [2] Devicetree NUMA binding description
+>      Documentation/devicetree/bindings/numa.txt
+>  [3] RISC-V Linux kernel documentation
+> -    Documentation/devicetree/bindings/riscv/cpus.txt
+> +    Documentation/devicetree/bindings/riscv/cpus.yaml
+>  [4] https://www.devicetree.org/specifications/
+> diff --git a/Documentation/devicetree/bindings/timer/ingenic,tcu.txt b/Documentation/devicetree/bindings/timer/ingenic,tcu.txt
+> index 5a4b9ddd9470..7f6fe20503f5 100644
+> --- a/Documentation/devicetree/bindings/timer/ingenic,tcu.txt
+> +++ b/Documentation/devicetree/bindings/timer/ingenic,tcu.txt
+> @@ -2,7 +2,7 @@ Ingenic JZ47xx SoCs Timer/Counter Unit devicetree bindings
+>  ==========================================================
+>  
+>  For a description of the TCU hardware and drivers, have a look at
+> -Documentation/mips/ingenic-tcu.txt.
+> +Documentation/mips/ingenic-tcu.rst.
+>  
+>  Required properties:
+>  
+> diff --git a/Documentation/driver-api/gpio/driver.rst b/Documentation/driver-api/gpio/driver.rst
+> index 3fdb32422f8a..9076cc76d5bf 100644
+> --- a/Documentation/driver-api/gpio/driver.rst
+> +++ b/Documentation/driver-api/gpio/driver.rst
+> @@ -493,7 +493,7 @@ available but we try to move away from this:
+>    gpiochip. It will pass the struct gpio_chip* for the chip to all IRQ
+>    callbacks, so the callbacks need to embed the gpio_chip in its state
+>    container and obtain a pointer to the container using container_of().
+> -  (See Documentation/driver-model/design-patterns.txt)
+> +  (See Documentation/driver-api/driver-model/design-patterns.rst)
+>  
+>  - gpiochip_irqchip_add_nested(): adds a nested cascaded irqchip to a gpiochip,
+>    as discussed above regarding different types of cascaded irqchips. The
+> diff --git a/Documentation/hwmon/inspur-ipsps1.rst b/Documentation/hwmon/inspur-ipsps1.rst
+> index 2b871ae3448f..ed32a65c30e1 100644
+> --- a/Documentation/hwmon/inspur-ipsps1.rst
+> +++ b/Documentation/hwmon/inspur-ipsps1.rst
+> @@ -17,7 +17,7 @@ Usage Notes
+>  -----------
+>  
+>  This driver does not auto-detect devices. You will have to instantiate the
+> -devices explicitly. Please see Documentation/i2c/instantiating-devices for
+> +devices explicitly. Please see Documentation/i2c/instantiating-devices.rst for
+>  details.
+>  
+>  Sysfs entries
+> diff --git a/Documentation/mips/ingenic-tcu.rst b/Documentation/mips/ingenic-tcu.rst
+> index c4ef4c45aade..c5a646b14450 100644
+> --- a/Documentation/mips/ingenic-tcu.rst
+> +++ b/Documentation/mips/ingenic-tcu.rst
+> @@ -68,4 +68,4 @@ and frameworks can be controlled from the same registers, all of these
+>  drivers access their registers through the same regmap.
+>  
+>  For more information regarding the devicetree bindings of the TCU drivers,
+> -have a look at Documentation/devicetree/bindings/mfd/ingenic,tcu.txt.
+> +have a look at Documentation/devicetree/bindings/timer/ingenic,tcu.txt.
+> diff --git a/Documentation/networking/device_drivers/mellanox/mlx5.rst b/Documentation/networking/device_drivers/mellanox/mlx5.rst
+> index d071c6b49e1f..a74422058351 100644
+> --- a/Documentation/networking/device_drivers/mellanox/mlx5.rst
+> +++ b/Documentation/networking/device_drivers/mellanox/mlx5.rst
+> @@ -258,7 +258,7 @@ mlx5 tracepoints
+>  ================
+>  
+>  mlx5 driver provides internal trace points for tracking and debugging using
+> -kernel tracepoints interfaces (refer to Documentation/trace/ftrase.rst).
+> +kernel tracepoints interfaces (refer to Documentation/trace/ftrace.rst).
+>  
+>  For the list of support mlx5 events check /sys/kernel/debug/tracing/events/mlx5/
+>  
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 54f1286087e9..65b7d9a0a44a 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -3680,7 +3680,7 @@ M:	Oleksij Rempel <o.rempel@pengutronix.de>
+>  R:	Pengutronix Kernel Team <kernel@pengutronix.de>
+>  L:	linux-can@vger.kernel.org
+>  S:	Maintained
+> -F:	Documentation/networking/j1939.txt
+> +F:	Documentation/networking/j1939.rst
+>  F:	net/can/j1939/
+>  F:	include/uapi/linux/can/j1939.h
+>  
+> diff --git a/drivers/net/ethernet/faraday/ftgmac100.c b/drivers/net/ethernet/faraday/ftgmac100.c
+> index 9b7af94a40bb..8abe5e90d268 100644
+> --- a/drivers/net/ethernet/faraday/ftgmac100.c
+> +++ b/drivers/net/ethernet/faraday/ftgmac100.c
+> @@ -1835,7 +1835,7 @@ static int ftgmac100_probe(struct platform_device *pdev)
+>  		}
+>  
+>  		/* Indicate that we support PAUSE frames (see comment in
+> -		 * Documentation/networking/phy.txt)
+> +		 * Documentation/networking/phy.rst)
+>  		 */
+>  		phy_support_asym_pause(phy);
+>  
+> diff --git a/drivers/net/ethernet/pensando/ionic/ionic_if.h b/drivers/net/ethernet/pensando/ionic/ionic_if.h
+> index 5bfdda19f64d..80028f781c83 100644
+> --- a/drivers/net/ethernet/pensando/ionic/ionic_if.h
+> +++ b/drivers/net/ethernet/pensando/ionic/ionic_if.h
+> @@ -596,8 +596,8 @@ enum ionic_txq_desc_opcode {
+>   *                      the @encap is set, the device will
+>   *                      offload the outer header checksums using
+>   *                      LCO (local checksum offload) (see
+> - *                      Documentation/networking/checksum-
+> - *                      offloads.txt for more info).
+> + *                      Documentation/networking/checksum-offloads.rst
+> + *                      for more info).
+>   *
+>   *                   IONIC_TXQ_DESC_OPCODE_CSUM_HW:
+>   *
+> diff --git a/fs/cifs/cifsfs.c b/fs/cifs/cifsfs.c
+> index 2e9c7f493f99..811f510578cb 100644
+> --- a/fs/cifs/cifsfs.c
+> +++ b/fs/cifs/cifsfs.c
+> @@ -1529,7 +1529,7 @@ init_cifs(void)
+>  	/*
+>  	 * Consider in future setting limit!=0 maybe to min(num_of_cores - 1, 3)
+>  	 * so that we don't launch too many worker threads but
+> -	 * Documentation/workqueue.txt recommends setting it to 0
+> +	 * Documentation/core-api/workqueue.rst recommends setting it to 0
+>  	 */
+>  
+>  	/* WQ_UNBOUND allows decrypt tasks to run on any CPU */
