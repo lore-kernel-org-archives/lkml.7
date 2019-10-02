@@ -4,74 +4,86 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2115EC352AA
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 08:40:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42E69C35280
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 08:43:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DC848206C0
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 08:40:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0DA76218DE
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 08:43:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570005621;
-	bh=9iYG16RFO8fPLClYXABEDJTEgFb40EFDVuR8BqssZCY=;
+	s=default; t=1570005789;
+	bh=OyFoROku+CsfYKtu7sKtTNfvQGoqNKGoTC41v+/r+6c=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=PQLUVuF37BjRo3uYmS4DfcfzcqmIEkEjhV3PmMu22FOXHjue/aS/1Bkocbd0eAg1u
-	 5IZRe4WvnH15ErIWgWzx7DRTeyawvExMETJPYO3TzgmElaGdXKWlun1yWlaQ0tgsJV
-	 4NzlfbBD9sXJerW06/ufFtEVgR9kt8tSEB05puEU=
+	b=zXlYUrk0F7KUvbWzFuR0d+ZBLCCOpPN5JZpw2Vt7x4r50A1kSKtKjuOQ2Edg38jyx
+	 I/1xeanae5i/hsNArp58opxKohtvcO3qtFpDk09DTEJuhUVDMhDig3KH/J9kNF1N+n
+	 9RBkq9cjtBPqzcwm2v3TQpOKZf9N5cWtTJiYXZvI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727867AbfJBIkU (ORCPT
+        id S1727837AbfJBInI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Oct 2019 04:40:20 -0400
-Received: from mx2.suse.de ([195.135.220.15]:37194 "EHLO mx1.suse.de"
+        Wed, 2 Oct 2019 04:43:08 -0400
+Received: from mx2.suse.de ([195.135.220.15]:38802 "EHLO mx1.suse.de"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726102AbfJBIkT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Oct 2019 04:40:19 -0400
+        id S1725991AbfJBInH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 2 Oct 2019 04:43:07 -0400
 X-Virus-Scanned: by amavisd-new at test-mx.suse.de
 Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 35023ACE1;
-        Wed,  2 Oct 2019 08:40:16 +0000 (UTC)
-Date:   Wed, 2 Oct 2019 10:40:14 +0200
+        by mx1.suse.de (Postfix) with ESMTP id D8FA1AE8A;
+        Wed,  2 Oct 2019 08:43:04 +0000 (UTC)
+Date:   Wed, 2 Oct 2019 10:43:04 +0200
 From:   Michal Hocko <mhocko@kernel.org>
 To:     Yang Shi <yang.shi@linux.alibaba.com>
 Cc:     kirill.shutemov@linux.intel.com, ktkhai@virtuozzo.com,
         hannes@cmpxchg.org, hughd@google.com, shakeelb@google.com,
         rientjes@google.com, akpm@linux-foundation.org, linux-mm@kvack.org,
         linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] mm thp: shrink deferred split THPs harder
-Message-ID: <20191002084014.GH15624@dhcp22.suse.cz>
-References: <1569974210-55366-1-git-send-email-yang.shi@linux.alibaba.com>
+Subject: Re: [PATCH] mm: thp: move deferred split queue to memcg's nodeinfo
+Message-ID: <20191002084304.GI15624@dhcp22.suse.cz>
+References: <1569968203-64647-1-git-send-email-yang.shi@linux.alibaba.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1569974210-55366-1-git-send-email-yang.shi@linux.alibaba.com>
+In-Reply-To: <1569968203-64647-1-git-send-email-yang.shi@linux.alibaba.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed 02-10-19 07:56:50, Yang Shi wrote:
-> The deferred split THPs may get accumulated with some workloads, they
-> would get shrunk when memory pressure is hit.  Now we use DEFAULT_SEEKS
-> to determine how many objects would get scanned then split if possible,
-> but actually they are not like other system cache objects, i.e. inode
-> cache which would incur extra I/O if over reclaimed, the unmapped pages
-> will not be accessed anymore, so we could shrink them more aggressively.
+On Wed 02-10-19 06:16:43, Yang Shi wrote:
+> The commit 87eaceb3faa59b9b4d940ec9554ce251325d83fe ("mm: thp: make
+> deferred split shrinker memcg aware") makes deferred split queue per
+> memcg to resolve memcg pre-mature OOM problem.  But, all nodes end up
+> sharing the same queue instead of one queue per-node before the commit.
+> It is not a big deal for memcg limit reclaim, but it may cause global
+> kswapd shrink THPs from a different node.
 > 
-> We could shrink THPs more pro-actively even though memory pressure is not
-> hit, however, IMHO waiting for memory pressure is still a good
-> compromise and trade-off.  And, we do have simpler ways to shrink these
-> objects harder until we have to take other means do pro-actively drain.
+> And, 0-day testing reported -19.6% regression of stress-ng's madvise
+> test [1].  I didn't see that much regression on my test box (24 threads,
+> 48GB memory, 2 nodes), with the same test (stress-ng --timeout 1
+> --metrics-brief --sequential 72  --class vm --exclude spawn,exec), I saw
+> average -3% (run the same test 10 times then calculate the average since
+> the test itself may have most 15% variation according to my test)
+> regression sometimes (not every time, sometimes I didn't see regression
+> at all).
 > 
-> Change shrinker->seeks to 0 to shrink deferred split THPs harder.
+> This might be caused by deferred split queue lock contention.  With some
+> configuration (i.e. just one root memcg) the lock contention my be worse
+> than before (given 2 nodes, two locks are reduced to one lock).
+> 
+> So, moving deferred split queue to memcg's nodeinfo to make it NUMA
+> aware again.
+> 
+> With this change stress-ng's madvise test shows average 4% improvement
+> sometimes and I didn't see degradation anymore.
 
-Do you have any numbers on the effect of this patch.
+My concern about this getting more and more complex
+(http://lkml.kernel.org/r/20191002084014.GH15624@dhcp22.suse.cz) holds
+here even more. Can we step back and reconsider the whole thing please?
 
-Btw. the whole thing is getting more and more complex and I still
-believe the approach is just wrong. We are tunning for something that
-doesn't really belong to the memory reclaim in the first place IMHO.
- 
+> [1]: https://lore.kernel.org/lkml/20190930084604.GC17687@shao2-debian/
+> 
 > Cc: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
 > Cc: Kirill Tkhai <ktkhai@virtuozzo.com>
 > Cc: Johannes Weiner <hannes@cmpxchg.org>
@@ -81,22 +93,160 @@ doesn't really belong to the memory reclaim in the first place IMHO.
 > Cc: David Rientjes <rientjes@google.com>
 > Signed-off-by: Yang Shi <yang.shi@linux.alibaba.com>
 > ---
->  mm/huge_memory.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+>  include/linux/memcontrol.h |  8 ++++----
+>  mm/huge_memory.c           | 15 +++++++++------
+>  mm/memcontrol.c            | 29 +++++++++++++++++------------
+>  3 files changed, 30 insertions(+), 22 deletions(-)
 > 
+> diff --git a/include/linux/memcontrol.h b/include/linux/memcontrol.h
+> index 9b60863..4b5c791 100644
+> --- a/include/linux/memcontrol.h
+> +++ b/include/linux/memcontrol.h
+> @@ -137,6 +137,10 @@ struct mem_cgroup_per_node {
+>  	bool			congested;	/* memcg has many dirty pages */
+>  						/* backed by a congested BDI */
+>  
+> +#ifdef CONFIG_TRANSPARENT_HUGEPAGE
+> +	struct deferred_split deferred_split_queue;
+> +#endif
+> +
+>  	struct mem_cgroup	*memcg;		/* Back pointer, we cannot */
+>  						/* use container_of	   */
+>  };
+> @@ -330,10 +334,6 @@ struct mem_cgroup {
+>  	struct list_head event_list;
+>  	spinlock_t event_list_lock;
+>  
+> -#ifdef CONFIG_TRANSPARENT_HUGEPAGE
+> -	struct deferred_split deferred_split_queue;
+> -#endif
+> -
+>  	struct mem_cgroup_per_node *nodeinfo[0];
+>  	/* WARNING: nodeinfo must be the last member here */
+>  };
 > diff --git a/mm/huge_memory.c b/mm/huge_memory.c
-> index 3b78910..1d6b1f1 100644
+> index c5cb6dc..3b78910 100644
 > --- a/mm/huge_memory.c
 > +++ b/mm/huge_memory.c
-> @@ -2955,7 +2955,7 @@ static unsigned long deferred_split_scan(struct shrinker *shrink,
->  static struct shrinker deferred_split_shrinker = {
->  	.count_objects = deferred_split_count,
->  	.scan_objects = deferred_split_scan,
-> -	.seeks = DEFAULT_SEEKS,
-> +	.seeks = 0,
->  	.flags = SHRINKER_NUMA_AWARE | SHRINKER_MEMCG_AWARE |
->  		 SHRINKER_NONSLAB,
->  };
+> @@ -500,10 +500,11 @@ pmd_t maybe_pmd_mkwrite(pmd_t pmd, struct vm_area_struct *vma)
+>  static inline struct deferred_split *get_deferred_split_queue(struct page *page)
+>  {
+>  	struct mem_cgroup *memcg = compound_head(page)->mem_cgroup;
+> -	struct pglist_data *pgdat = NODE_DATA(page_to_nid(page));
+> +	int nid = page_to_nid(page);
+> +	struct pglist_data *pgdat = NODE_DATA(nid);
+>  
+>  	if (memcg)
+> -		return &memcg->deferred_split_queue;
+> +		return &memcg->nodeinfo[nid]->deferred_split_queue;
+>  	else
+>  		return &pgdat->deferred_split_queue;
+>  }
+> @@ -2882,12 +2883,13 @@ void deferred_split_huge_page(struct page *page)
+>  static unsigned long deferred_split_count(struct shrinker *shrink,
+>  		struct shrink_control *sc)
+>  {
+> -	struct pglist_data *pgdata = NODE_DATA(sc->nid);
+> +	int nid = sc->nid;
+> +	struct pglist_data *pgdata = NODE_DATA(nid);
+>  	struct deferred_split *ds_queue = &pgdata->deferred_split_queue;
+>  
+>  #ifdef CONFIG_MEMCG
+>  	if (sc->memcg)
+> -		ds_queue = &sc->memcg->deferred_split_queue;
+> +		ds_queue = &sc->memcg->nodeinfo[nid]->deferred_split_queue;
+>  #endif
+>  	return READ_ONCE(ds_queue->split_queue_len);
+>  }
+> @@ -2895,7 +2897,8 @@ static unsigned long deferred_split_count(struct shrinker *shrink,
+>  static unsigned long deferred_split_scan(struct shrinker *shrink,
+>  		struct shrink_control *sc)
+>  {
+> -	struct pglist_data *pgdata = NODE_DATA(sc->nid);
+> +	int nid = sc->nid;
+> +	struct pglist_data *pgdata = NODE_DATA(nid);
+>  	struct deferred_split *ds_queue = &pgdata->deferred_split_queue;
+>  	unsigned long flags;
+>  	LIST_HEAD(list), *pos, *next;
+> @@ -2904,7 +2907,7 @@ static unsigned long deferred_split_scan(struct shrinker *shrink,
+>  
+>  #ifdef CONFIG_MEMCG
+>  	if (sc->memcg)
+> -		ds_queue = &sc->memcg->deferred_split_queue;
+> +		ds_queue = &sc->memcg->nodeinfo[nid]->deferred_split_queue;
+>  #endif
+>  
+>  	spin_lock_irqsave(&ds_queue->split_queue_lock, flags);
+> diff --git a/mm/memcontrol.c b/mm/memcontrol.c
+> index c313c49..19d4295 100644
+> --- a/mm/memcontrol.c
+> +++ b/mm/memcontrol.c
+> @@ -4989,6 +4989,12 @@ static int alloc_mem_cgroup_per_node_info(struct mem_cgroup *memcg, int node)
+>  	pn->on_tree = false;
+>  	pn->memcg = memcg;
+>  
+> +#ifdef CONFIG_TRANSPARENT_HUGEPAGE
+> +	spin_lock_init(&pn->deferred_split_queue.split_queue_lock);
+> +	INIT_LIST_HEAD(&pn->deferred_split_queue.split_queue);
+> +	pn->deferred_split_queue.split_queue_len = 0;
+> +#endif
+> +
+>  	memcg->nodeinfo[node] = pn;
+>  	return 0;
+>  }
+> @@ -5081,11 +5087,6 @@ static struct mem_cgroup *mem_cgroup_alloc(void)
+>  		memcg->cgwb_frn[i].done =
+>  			__WB_COMPLETION_INIT(&memcg_cgwb_frn_waitq);
+>  #endif
+> -#ifdef CONFIG_TRANSPARENT_HUGEPAGE
+> -	spin_lock_init(&memcg->deferred_split_queue.split_queue_lock);
+> -	INIT_LIST_HEAD(&memcg->deferred_split_queue.split_queue);
+> -	memcg->deferred_split_queue.split_queue_len = 0;
+> -#endif
+>  	idr_replace(&mem_cgroup_idr, memcg, memcg->id.id);
+>  	return memcg;
+>  fail:
+> @@ -5419,6 +5420,8 @@ static int mem_cgroup_move_account(struct page *page,
+>  	unsigned int nr_pages = compound ? hpage_nr_pages(page) : 1;
+>  	int ret;
+>  	bool anon;
+> +	struct deferred_split *ds_queue;
+> +	int nid = page_to_nid(page);
+>  
+>  	VM_BUG_ON(from == to);
+>  	VM_BUG_ON_PAGE(PageLRU(page), page);
+> @@ -5466,10 +5469,11 @@ static int mem_cgroup_move_account(struct page *page,
+>  
+>  #ifdef CONFIG_TRANSPARENT_HUGEPAGE
+>  	if (compound && !list_empty(page_deferred_list(page))) {
+> -		spin_lock(&from->deferred_split_queue.split_queue_lock);
+> +		ds_queue = &from->nodeinfo[nid]->deferred_split_queue;
+> +		spin_lock(&ds_queue->split_queue_lock);
+>  		list_del_init(page_deferred_list(page));
+> -		from->deferred_split_queue.split_queue_len--;
+> -		spin_unlock(&from->deferred_split_queue.split_queue_lock);
+> +		ds_queue->split_queue_len--;
+> +		spin_unlock(&ds_queue->split_queue_lock);
+>  	}
+>  #endif
+>  	/*
+> @@ -5483,11 +5487,12 @@ static int mem_cgroup_move_account(struct page *page,
+>  
+>  #ifdef CONFIG_TRANSPARENT_HUGEPAGE
+>  	if (compound && list_empty(page_deferred_list(page))) {
+> -		spin_lock(&to->deferred_split_queue.split_queue_lock);
+> +		ds_queue = &to->nodeinfo[nid]->deferred_split_queue;
+> +		spin_lock(&ds_queue->split_queue_lock);
+>  		list_add_tail(page_deferred_list(page),
+> -			      &to->deferred_split_queue.split_queue);
+> -		to->deferred_split_queue.split_queue_len++;
+> -		spin_unlock(&to->deferred_split_queue.split_queue_lock);
+> +			      &ds_queue->split_queue);
+> +		ds_queue->split_queue_len++;
+> +		spin_unlock(&ds_queue->split_queue_lock);
+>  	}
+>  #endif
+>  
 > -- 
 > 1.8.3.1
 
