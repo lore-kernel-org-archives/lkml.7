@@ -2,253 +2,127 @@ Return-Path: <SRS0=zem1=X3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D38CC4360C
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 20:48:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 767FDC4360C
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 20:48:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 16D6C2070B
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 20:48:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 414EA2070B
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 20:48:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=digitalocean.com header.i=@digitalocean.com header.b="An15MEpM"
+	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="Qu4lNN6y"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728719AbfJBUsa (ORCPT
+        id S1728753AbfJBUsj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Oct 2019 16:48:30 -0400
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:39823 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727911AbfJBUsa (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Oct 2019 16:48:30 -0400
-Received: by mail-oi1-f195.google.com with SMTP id w144so601714oia.6
-        for <linux-kernel@vger.kernel.org>; Wed, 02 Oct 2019 13:48:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=digitalocean.com; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=AEbG0e9SVlOvdqd5lS6UQt/0LUXQ3Pzs6cUXmwlgj2s=;
-        b=An15MEpMxrfLIrUSBszoUbhxmzYv80e8jb19G8ikUYtaOK0yZDQmuDkoaLvCok2aVr
-         qPo2wV6Laj733065pkVk6sb/CSyJZ6VZ5D6DRYBzELSofblKm4aPP8bR1h/yCXCjSG16
-         omKnb6MHKnqcncVB32rhj7vGO37C88j2zCLqI=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=AEbG0e9SVlOvdqd5lS6UQt/0LUXQ3Pzs6cUXmwlgj2s=;
-        b=NgoNJwWGC+DwO5GQA+rgjmlr3TywXsRfUEmf4iyXumAyPeJF0xMN/j8CMJOWoBSlCs
-         uXMex7ZZgwxuuyJm5NGsP37XvFQWeyoRhv6KgooeCxZNcExCt1vmdjDrdJOutcMeUDY/
-         3FtlG8hxArtAHiCI08Gj7BZLkRXeJ9icfsjkI1EsNw1SEma5axJvhVAabSvfaiYziYML
-         Muzhd0uFdzQEI1ywlbYHZi9HTopqL0ICNSUu4GK75lseJJ9UGP4KAoJ5DjnQxFONjkH6
-         VQ9ZQPrxDkg5cI/OKLTpKk1LCvfhmR56NUM6UN/a5Dj+rACdpPoV5zMwM0dDs7JVB/32
-         Ujzg==
-X-Gm-Message-State: APjAAAWgC7xqds5KfjEtSVbJLNYnr5gBaR+uaMnAemDJL0NuQuytchAI
-        zP6oALjYb7D69hU7NDZkxH3zsaYMpJxoLlh/VI/jlw==
-X-Google-Smtp-Source: APXvYqwd95FnkWwLe44gfdqOQmFfpoyNR0ryu3eNLL1KwcZdDEuiJtTTjij9ZJIMPQys0ApKrcdENky0j83MxC5hcOQ=
-X-Received: by 2002:aca:ab84:: with SMTP id u126mr4184593oie.115.1570049306806;
- Wed, 02 Oct 2019 13:48:26 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190725143003.GA992@aaronlu> <20190726152101.GA27884@sinkpad>
- <7dc86e3c-aa3f-905f-3745-01181a3b0dac@linux.intel.com> <20190802153715.GA18075@sinkpad>
- <eec72c2d533b7600c63de3c8001cc6ab9e915afe.camel@suse.com> <69cd9bca-da28-1d35-3913-1efefe0c1c22@linux.intel.com>
- <fab8eabb-1cfa-9bf6-02af-3afdff3f955d@linux.intel.com> <20190911140204.GA52872@aaronlu>
- <7b001860-05b4-4308-df0e-8b60037b8000@linux.intel.com> <CANaguZCH-jjHrWwycU3vz6RfNkW9xN+DoRkHnL3n8-DneNV3FQ@mail.gmail.com>
- <20190912123532.GB16200@aaronlu> <CANaguZBTiLQiRQU9MJR2Qys8S2S=-PTe66_ZPi5DVzpPbJ93zw@mail.gmail.com>
-In-Reply-To: <CANaguZBTiLQiRQU9MJR2Qys8S2S=-PTe66_ZPi5DVzpPbJ93zw@mail.gmail.com>
-From:   Vineeth Remanan Pillai <vpillai@digitalocean.com>
-Date:   Wed, 2 Oct 2019 16:48:14 -0400
-Message-ID: <CANaguZDOb+rVcDPMS+SR1DKc73fnctkBK0EbfBrf90dztr8t=Q@mail.gmail.com>
-Subject: Re: [RFC PATCH v3 00/16] Core scheduling v3
-To:     Aaron Lu <aaron.lu@linux.alibaba.com>
-Cc:     Tim Chen <tim.c.chen@linux.intel.com>,
-        Julien Desfossez <jdesfossez@digitalocean.com>,
-        Dario Faggioli <dfaggioli@suse.com>,
-        "Li, Aubrey" <aubrey.li@linux.intel.com>,
-        Aubrey Li <aubrey.intel@gmail.com>,
-        Nishanth Aravamudan <naravamudan@digitalocean.com>,
+        Wed, 2 Oct 2019 16:48:39 -0400
+Received: from mail-eopbgr700133.outbound.protection.outlook.com ([40.107.70.133]:24064
+        "EHLO NAM04-SN1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728722AbfJBUsi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 2 Oct 2019 16:48:38 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=BW5NK1u+bx7gwhYPkGwTz0VOKQI+RS0nPUUYbwXs1mafC7QbPCWXqZBJXeP7Me55/c9qawHMm+iNsnYPnaAIWXCMGTk4ecB4a5kWrfopY1JjYdnO6FLBtNYeYIbYqFvIfE9Z+Qk5G07IZsKYz/cc7Q21XOcmv1mAyupoEylCbq7lBDAhpUw4iA0IuDQoo8ZVPeCjAuaHElSrtBP3nDg0yKge+O+VfGDl9NSs7DJFx9DAeEW8qMefy0dhLkhhemTv1Ulx6X78MIrcNZRGimHeIHg5TaC2gr88BLdaB9QqGrWcEMR2gggdlzgiKCeXAvoZcCUkDYMqu0t2ltBf/66pSw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=eBPzpTXppfjdL5KNXQs0g2YBHtKZaKeqqUtZFl45Tjw=;
+ b=NvHTkXSVzBw2/lAqMQDA9czGWbG1gL8yLuCDFwG1hbnjSlOE2WrpCuXymGw22atnpyZypMhRgYACjn0KG7qnIzv/n9mG0uDB6hXNQfW5jbDeva5qSNJ3tX93MEbsJ0yS6rFxWwCGzGLxXZuUxT8dVzA/2PdrPgPuK3tNxtB8tTUVLFl+L5b/pHk1Q5BqoiwGXKjk1KOqWK198gsPyRjYIhwcet4NqEY8pzHjfkc8VG8jaF/XSqV7GJzygpy14HDn9n7BUi722I4m3J/qYC1WltphcRONnqrsqpK2KVUfzalk0AbrH2UxwGq37TR1xXVoU0l/Ikabl/BgVrHQfFe9NA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=microsoft.com; dmarc=pass action=none
+ header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=eBPzpTXppfjdL5KNXQs0g2YBHtKZaKeqqUtZFl45Tjw=;
+ b=Qu4lNN6yZq+p8caMXOjdES7QWUQv1dRPaSX71ghJwMw7PggBUmo/MPaKg1w69V8KaPi2T+7WRU+4iMwkvD1GQkXndULQDX4v2VkhqOAUrEhAvG/+XfF1dzdjQECT8ywIqoEVcg3yEtGBnVybUy3HB6VjTg+gMMPPtp0AIe98MVg=
+Received: from BN8PR21MB1362.namprd21.prod.outlook.com (20.179.76.155) by
+ BN8PR21MB1219.namprd21.prod.outlook.com (20.179.73.203) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2347.6; Wed, 2 Oct 2019 20:48:36 +0000
+Received: from BN8PR21MB1362.namprd21.prod.outlook.com
+ ([fe80::6cea:8074:a394:f20d]) by BN8PR21MB1362.namprd21.prod.outlook.com
+ ([fe80::6cea:8074:a394:f20d%9]) with mapi id 15.20.2327.017; Wed, 2 Oct 2019
+ 20:48:36 +0000
+From:   Steve MacLean <Steve.MacLean@microsoft.com>
+To:     Jiri Olsa <jolsa@redhat.com>
+CC:     Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>,
         Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Paul Turner <pjt@google.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
-        =?UTF-8?B?RnLDqWTDqXJpYyBXZWlzYmVja2Vy?= <fweisbec@gmail.com>,
-        Kees Cook <keescook@chromium.org>,
-        Greg Kerr <kerrnel@google.com>, Phil Auld <pauld@redhat.com>,
-        Valentin Schneider <valentin.schneider@arm.com>,
-        Mel Gorman <mgorman@techsingularity.net>,
-        Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
-        Paolo Bonzini <pbonzini@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
+        Ingo Molnar <mingo@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Eric Saint-Etienne <eric.saint.etienne@oracle.com>,
+        John Keeping <john@metanate.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        Song Liu <songliubraving@fb.com>,
+        Davidlohr Bueso <dave@stgolabs.net>,
+        Leo Yan <leo.yan@linaro.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Brian Robbins <brianrob@microsoft.com>,
+        Tom McDonald <Thomas.McDonald@microsoft.com>,
+        John Salem <josalem@microsoft.com>,
+        Stephane Eranian <eranian@google.com>
+Subject: RE: [PATCH 3/4 RESEND] perf inject --jit: Remove //anon mmap events
+Thread-Topic: [PATCH 3/4 RESEND] perf inject --jit: Remove //anon mmap events
+Thread-Index: AdV30UpDWyGhNX8tTHCRL/VpRSaZoAAZKRmAAEsjzRA=
+Date:   Wed, 2 Oct 2019 20:48:36 +0000
+Message-ID: <BN8PR21MB1362E6377A5663BA1C2DF14EF79C0@BN8PR21MB1362.namprd21.prod.outlook.com>
+References: <BN8PR21MB13622159D33A3EBCADDF4B2FF7820@BN8PR21MB1362.namprd21.prod.outlook.com>
+ <20191001085511.GB30823@krava>
+In-Reply-To: <20191001085511.GB30823@krava>
+Accept-Language: en-US, en-GB
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=True;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Owner=stmaclea@microsoft.com;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2019-10-02T20:48:35.1375330Z;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=General;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Application=Microsoft Azure
+ Information Protection;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=247eaaff-94a0-4930-a3b4-1d37f04ff329;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Extended_MSFT_Method=Automatic
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=Steve.MacLean@microsoft.com; 
+x-originating-ip: [24.163.126.65]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 24c279f0-5e97-4f0e-d7b8-08d74779e5d0
+x-ms-office365-filtering-ht: Tenant
+x-ms-traffictypediagnostic: BN8PR21MB1219:|BN8PR21MB1219:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <BN8PR21MB1219836FF8644BDB612FCF70F79C0@BN8PR21MB1219.namprd21.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:4502;
+x-forefront-prvs: 0178184651
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(376002)(39860400002)(396003)(136003)(366004)(346002)(189003)(199004)(3846002)(74316002)(9686003)(6436002)(7736002)(54906003)(2906002)(8676002)(81156014)(229853002)(33656002)(8936002)(81166006)(86362001)(55016002)(64756008)(71190400001)(256004)(66446008)(66556008)(99286004)(305945005)(66066001)(14444005)(71200400001)(66476007)(66946007)(316002)(22452003)(52536014)(558084003)(5660300002)(6916009)(7416002)(6116002)(10090500001)(26005)(186003)(6246003)(76176011)(6506007)(4326008)(102836004)(7696005)(14454004)(10290500003)(25786009)(478600001)(476003)(486006)(446003)(11346002)(8990500004)(76116006);DIR:OUT;SFP:1102;SCL:1;SRVR:BN8PR21MB1219;H:BN8PR21MB1362.namprd21.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: microsoft.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: +ufpUItS+ECdLf6RJ7VGu9RHR3acV+q5lniO8ucVaJk9BGyjXzW2mb+pvN6Xybj70bK5Yjt3pyZJGZPjNWnmr0M85cwN7J1uHq3EKElOf646kzPfjoIpzZGFAF5dz05T3GU4Ro3MHwPUddZE6VxJiGMRr3PpIGk1vtdA7pbYX3QUNvdAhOwrqVXJq0/35LT159P0rkYDOyuWFxwPxypBIBfUYehQAYzRJ6BHQsGIJazw286bgHqtOL214ukmsjpRBqGkQvILJEgnRIwNgX2dBus+z26KbRHNpg4uJ2vqJKAF+MH+1thdXljvaU1p4a00bQru9Lb/PihrrEQ/dDLM/HXzEeR89Xy+upwrzCoO+LiZWn+Gg+O54ikKxvh9Cu/XxqDYMxm7qgBxkhI+eFBEOjMUnTa+ttSVfXL4JtoyWl8=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: microsoft.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 24c279f0-5e97-4f0e-d7b8-08d74779e5d0
+X-MS-Exchange-CrossTenant-originalarrivaltime: 02 Oct 2019 20:48:36.6849
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: I6om4fEyW4FignAZ2kkE4Z2po3Uk4fE0Czvv8xdbNZeviBHt1twku9TLOUSX9sMq5VOwKqhEOTeZB6Q9gN7oWw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN8PR21MB1219
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Sep 30, 2019 at 7:53 AM Vineeth Remanan Pillai
-<vpillai@digitalocean.com> wrote:
->
-> >
-> Sorry, I misunderstood the fix and I did not initially see the core wide
-> min_vruntime that you tried to maintain in the rq->core. This approach
-> seems reasonable. I think we can fix the potential starvation that you
-> mentioned in the comment by adjusting for the difference in all the children
-> cfs_rq when we set the minvruntime in rq->core. Since we take the lock for
-> both the queues, it should be doable and I am trying to see how we can best
-> do that.
->
-Attaching here with, the 2 patches I was working on in preparation of v4.
+> looks like Andi is right, I'm still getting malformed patch error
 
-Patch 1 is an improvement of patch 2 of Aaron where I am propagating the
-vruntime changes to the whole tree.
-Patch 2 is an improvement for patch 3 of Aaron where we do resched_curr
-only when the sibling is forced idle.
+> the patch has extra characters '=3D20' and broken lines, like:
 
-Micro benchmarks seems good. Will be doing larger set of tests and hopefully
-posting v4 by end of week. Please let me know what you think of these patches
-(patch 1 is on top of Aaron's patch 2, patch 2 replaces Aaron's patch 3)
+My apologies, I was trying to get by with an inappropriate mailer.=20
 
-Thanks,
-Vineeth
-
-[PATCH 1/2] sched/fair: propagate the min_vruntime change to the whole rq tree
-
-When we adjust the min_vruntime of rq->core, we need to propgate
-that down the tree so as to not cause starvation of existing tasks
-based on previous vruntime.
----
- kernel/sched/fair.c | 24 ++++++++++++++++++++++--
- 1 file changed, 22 insertions(+), 2 deletions(-)
-
-diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-index 59cb01a1563b..e8dd78a8c54d 100644
---- a/kernel/sched/fair.c
-+++ b/kernel/sched/fair.c
-@@ -476,6 +476,23 @@ static inline u64 cfs_rq_min_vruntime(struct
-cfs_rq *cfs_rq)
-                return cfs_rq->min_vruntime;
- }
-
-+static void coresched_adjust_vruntime(struct cfs_rq *cfs_rq, u64 delta)
-+{
-+       struct sched_entity *se, *next;
-+
-+       if (!cfs_rq)
-+               return;
-+
-+       cfs_rq->min_vruntime -= delta;
-+       rbtree_postorder_for_each_entry_safe(se, next,
-+                       &cfs_rq->tasks_timeline.rb_root, run_node) {
-+               if (se->vruntime > delta)
-+                       se->vruntime -= delta;
-+               if (se->my_q)
-+                       coresched_adjust_vruntime(se->my_q, delta);
-+       }
-+}
-+
- static void update_core_cfs_rq_min_vruntime(struct cfs_rq *cfs_rq)
- {
-        struct cfs_rq *cfs_rq_core;
-@@ -487,8 +504,11 @@ static void
-update_core_cfs_rq_min_vruntime(struct cfs_rq *cfs_rq)
-                return;
-
-        cfs_rq_core = core_cfs_rq(cfs_rq);
--       cfs_rq_core->min_vruntime = max(cfs_rq_core->min_vruntime,
--                                       cfs_rq->min_vruntime);
-+       if (cfs_rq_core != cfs_rq &&
-+           cfs_rq->min_vruntime < cfs_rq_core->min_vruntime) {
-+               u64 delta = cfs_rq_core->min_vruntime - cfs_rq->min_vruntime;
-+               coresched_adjust_vruntime(cfs_rq_core, delta);
-+       }
- }
-
- bool cfs_prio_less(struct task_struct *a, struct task_struct *b)
---
-2.17.1
-
-[PATCH 2/2] sched/fair : Wake up forced idle siblings if needed
-
-If a cpu has only one task and if it has used up its timeslice,
-then we should try to wake up the sibling to give the forced idle
-thread a chance.
-We do that by triggering schedule which will IPI the sibling if
-the task in the sibling wins the priority check.
----
- kernel/sched/fair.c | 43 +++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 43 insertions(+)
-
-diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-index e8dd78a8c54d..ba4d929abae6 100644
---- a/kernel/sched/fair.c
-+++ b/kernel/sched/fair.c
-@@ -4165,6 +4165,13 @@ dequeue_entity(struct cfs_rq *cfs_rq, struct
-sched_entity *se, int flags)
-                update_min_vruntime(cfs_rq);
- }
-
-+static inline bool
-+__entity_slice_used(struct sched_entity *se)
-+{
-+       return (se->sum_exec_runtime - se->prev_sum_exec_runtime) >
-+               sched_slice(cfs_rq_of(se), se);
-+}
-+
- /*
-  * Preempt the current task with a newly woken task if needed:
-  */
-@@ -10052,6 +10059,39 @@ static void rq_offline_fair(struct rq *rq)
-
- #endif /* CONFIG_SMP */
-
-+#ifdef CONFIG_SCHED_CORE
-+/*
-+ * If runqueue has only one task which used up its slice and
-+ * if the sibling is forced idle, then trigger schedule
-+ * to give forced idle task a chance.
-+ */
-+static void resched_forceidle(struct rq *rq, struct sched_entity *se)
-+{
-+       int cpu = cpu_of(rq), sibling_cpu;
-+       if (rq->cfs.nr_running > 1 || !__entity_slice_used(se))
-+               return;
-+
-+       for_each_cpu(sibling_cpu, cpu_smt_mask(cpu)) {
-+               struct rq *sibling_rq;
-+               if (sibling_cpu == cpu)
-+                       continue;
-+               if (cpu_is_offline(sibling_cpu))
-+                       continue;
-+
-+               sibling_rq = cpu_rq(sibling_cpu);
-+               if (sibling_rq->core_forceidle) {
-+                       resched_curr(rq);
-+                       break;
-+               }
-+       }
-+}
-+#else
-+static inline void resched_forceidle(struct rq *rq, struct sched_entity *se)
-+{
-+}
-+#endif
-+
-+
- /*
-  * scheduler tick hitting a task of our scheduling class.
-  *
-@@ -10075,6 +10115,9 @@ static void task_tick_fair(struct rq *rq,
-struct task_struct *curr, int queued)
-
-        update_misfit_status(curr, rq);
-        update_overutilized_status(task_rq(curr));
-+
-+       if (sched_core_enabled(rq))
-+               resched_forceidle(rq, &curr->se);
- }
-
- /*
---
-2.17.1
+I have an sendmail account now, and will resend.
