@@ -2,112 +2,119 @@ Return-Path: <SRS0=zem1=X3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E75D3C35280
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 12:38:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4AE93C35280
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 12:38:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BE64021A4C
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 12:38:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570019924;
-	bh=HQMmTzo9+zvRqR/nVhQaW+N2GPTpVZp7d3nBoEoTmPE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=fS30kWcSKRvgV8xO7sRFw++TyRh71GfF/Ck2JgYyHZe8wOvnbiFBDSwze7xOE0t0E
-	 YxB/RMRnXzXTvPyCnLyvRpiTGTbV30JGOym/65ZqIbiwtdkMNVGf/6zqfTCKAKwSQ6
-	 BI75NaXlWQoGjTXi02bzAxLnGW1+jzl4j3M+GXFc=
+	by mail.kernel.org (Postfix) with ESMTP id 2298421920
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 12:38:56 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="ckjObRSw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727096AbfJBMio (ORCPT
+        id S1727181AbfJBMiz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Oct 2019 08:38:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35422 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726152AbfJBMin (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Oct 2019 08:38:43 -0400
-Received: from localhost (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CD21B21920;
-        Wed,  2 Oct 2019 12:38:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570019923;
-        bh=HQMmTzo9+zvRqR/nVhQaW+N2GPTpVZp7d3nBoEoTmPE=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=SFPxZuRdNvktOe4qMXQU9eQM9VwnajP5nw/OAfYArBagDdU9ddNNwUwZE7y0o+YNO
-         tcw0hZklpBDfeIfzvpgKDFuhg72ZJLk7qHdIW07NH5CA7aaRyHzzpeaOxTbUjanSrr
-         gUV3+b1accmguO0oYIXi7OGVYjxVI74VXVSc3/CA=
-Date:   Wed, 2 Oct 2019 08:38:41 -0400
-From:   Sasha Levin <sashal@kernel.org>
-To:     Dexuan Cui <decui@microsoft.com>
-Cc:     Michael Kelley <mikelley@microsoft.com>,
-        Wei Hu <weh@microsoft.com>,
-        "b.zolnierkie@samsung.com" <b.zolnierkie@samsung.com>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        "linux-fbdev@vger.kernel.org" <linux-fbdev@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        KY Srinivasan <kys@microsoft.com>,
-        Iouri Tarassov <iourit@microsoft.com>
-Subject: Re: [PATCH v4] video: hyperv: hyperv_fb: Obtain screen resolution
- from Hyper-V host
-Message-ID: <20191002123841.GK17454@sasha-vm>
-References: <20190905091120.16761-1-weh@microsoft.com>
- <DM5PR21MB0137D40DF705CDB372497266D7BB0@DM5PR21MB0137.namprd21.prod.outlook.com>
- <PU1P153MB0169656B3EC48BFCF4D8C134BFB30@PU1P153MB0169.APCP153.PROD.OUTLOOK.COM>
+        Wed, 2 Oct 2019 08:38:55 -0400
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:53928 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726152AbfJBMiz (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 2 Oct 2019 08:38:55 -0400
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id x92Cch5D014533;
+        Wed, 2 Oct 2019 07:38:43 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1570019923;
+        bh=6k/1/L8qVzBnkiN3DQ8sBlvddq0xsy4C1W0U2GgT2tc=;
+        h=Date:From:To:CC:Subject:References:In-Reply-To;
+        b=ckjObRSwAAxO4JX5G88yKRjMZ2g/hf5dGI8dK+zvxCOePp/Voa9SMYMVL3p0SMoUa
+         NTf2aN8lVDrriaLaQg2fgPtJIwNJSdY8IyPpdueORyrhttt8C8ba1MoRwkVUDpFr44
+         HhoiBQ5NeUiyVtK8SDoBqBy4etam5Lw1B8YwTBHM=
+Received: from DFLE105.ent.ti.com (dfle105.ent.ti.com [10.64.6.26])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x92CchlD007388
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 2 Oct 2019 07:38:43 -0500
+Received: from DFLE105.ent.ti.com (10.64.6.26) by DFLE105.ent.ti.com
+ (10.64.6.26) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Wed, 2 Oct
+ 2019 07:38:43 -0500
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE105.ent.ti.com
+ (10.64.6.26) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Wed, 2 Oct 2019 07:38:43 -0500
+Received: from ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with SMTP id x92Cch6J093041;
+        Wed, 2 Oct 2019 07:38:43 -0500
+Date:   Wed, 2 Oct 2019 07:40:54 -0500
+From:   Benoit Parrot <bparrot@ti.com>
+To:     Sakari Ailus <sakari.ailus@linux.intel.com>
+CC:     Jacopo Mondi <jacopo@jmondi.org>,
+        Hans Verkuil <hverkuil@xs4all.nl>,
+        <linux-media@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <hugues.fruchet@st.com>
+Subject: Re: [Patch 1/3] media: ov5640: add PIXEL_RATE control
+Message-ID: <20191002124054.gqw5l6tdyxqalpod@ti.com>
+References: <20190925152301.21645-1-bparrot@ti.com>
+ <20190925152301.21645-2-bparrot@ti.com>
+ <20191001075704.GA5449@paasikivi.fi.intel.com>
+ <20191001162341.f2o7ruar2nifl5ws@ti.com>
+ <20191002075951.afp2xligspqat4ew@uno.localdomain>
+ <20191002121438.g3re6v54q4hit2wv@ti.com>
+ <20191002123513.GI972@paasikivi.fi.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Type: text/plain; charset="us-ascii"
 Content-Disposition: inline
-In-Reply-To: <PU1P153MB0169656B3EC48BFCF4D8C134BFB30@PU1P153MB0169.APCP153.PROD.OUTLOOK.COM>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20191002123513.GI972@paasikivi.fi.intel.com>
+User-Agent: NeoMutt/20171215
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Sep 13, 2019 at 06:38:42AM +0000, Dexuan Cui wrote:
->> From: Michael Kelley <mikelley@microsoft.com>
->> Sent: Thursday, September 5, 2019 7:06 AM
->>
->> From: Wei Hu <weh@microsoft.com> Sent: Thursday, September 5, 2019 2:12
->> AM
->> >
->> > Beginning from Windows 10 RS5+, VM screen resolution is obtained from
->> host.
->> > The "video=hyperv_fb" boot time option is not needed, but still can be
->> > used to overwrite what the host specifies. The VM resolution on the host
->> > could be set by executing the powershell "set-vmvideo" command.
->> >
->> > Signed-off-by: Iouri Tarassov <iourit@microsoft.com>
->> > Signed-off-by: Wei Hu <weh@microsoft.com>
->> > ---
->> >     v2:
->> >     - Implemented fallback when version negotiation failed.
->> >     - Defined full size for supported_resolution array.
->> >
->> >     v3:
->> >     - Corrected the synthvid major and minor version comparison problem.
->> >
->> >     v4:
->> >     - Changed function name to synthvid_ver_ge().
->> >
->> >  drivers/video/fbdev/hyperv_fb.c | 159
->> +++++++++++++++++++++++++++++---
->> >  1 file changed, 147 insertions(+), 12 deletions(-)
->> >
->>
->> Reviewed-by: Michael Kelley <mikelley@microsoft.com>
->
->Looks good to me.
->
->Reviewed-by: Dexuan Cui <decui@microsoft.com>
+Sakari Ailus <sakari.ailus@linux.intel.com> wrote on Wed [2019-Oct-02 15:35:13 +0300]:
+> Hi Benoit,
+> 
+> On Wed, Oct 02, 2019 at 07:14:38AM -0500, Benoit Parrot wrote:
+> > Hi Jacopo,
+> > 
+> > Maybe, I miss spoke when I mentioned a helper I did not intent a framework
+> > level generic function. Just a function to help in this case :)
+> > 
+> > That being said, I re-read the thread you mentioned. And as Hughes pointed
+> > out dynamically generating a "working" link frequency value which can be
+> > used by a CSI2 receiver to properly configure its PHY is not trivial.
+> > 
+> > When I created this patch, I also had another to add V4L2_CID_LINK_FREQ
+> > support. I am testing this against the TI CAL CSI2 receiver, which already
+> > uses the V4L2_CID_PIXEL_RATE value for that purpose, so I also had a patch
+> > to add support for V4L2_CID_LINK_FREQ to that driver as well.
+> > 
+> > Unfortunately, similar to Hughes' findings I was not able to make it "work"
+> > with all supported resolution/framerate.
+> > 
+> > Unlike my V4L2_CID_PIXEL_RATE solution which now works in all mode with the
+> > same receiver.
+> > 
+> > So long story short I dropped the V4L2_CID_LINK_FREQ patch and focused on
+> > V4L2_CID_PIXEL_RATE instead.
+> 
+> It shouldn't make a difference which one you use; if you know the bus type
+> (and if it's CSI-2 with D-PHY, number of lanes and how many bits per pixel
+> the media bus format has), you can convert fairly trivially between the
+> two.
 
-Queued up for hyperv-next, thank you.
+Sakari,
 
---
-Thanks,
-Sasha
+Yes I get that, but at this point as they say I will leave that as an
+exercise to the reader...
+
+Benoit
+
+> 
+> -- 
+> Sakari Ailus
+> sakari.ailus@linux.intel.com
