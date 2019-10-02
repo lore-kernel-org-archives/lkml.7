@@ -2,306 +2,136 @@ Return-Path: <SRS0=zem1=X3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA032C352AA
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 01:34:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC880ECE589
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 01:35:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7BD8920842
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 01:34:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C379D20842
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 01:35:44 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GEIq/Ki3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729724AbfJBBeZ (ORCPT
+        id S1729747AbfJBBfo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Oct 2019 21:34:25 -0400
-Received: from mail104.syd.optusnet.com.au ([211.29.132.246]:45020 "EHLO
-        mail104.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729534AbfJBBeY (ORCPT
+        Tue, 1 Oct 2019 21:35:44 -0400
+Received: from mail-ed1-f66.google.com ([209.85.208.66]:34923 "EHLO
+        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729676AbfJBBfn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Oct 2019 21:34:24 -0400
-X-Greylist: delayed 1110 seconds by postgrey-1.27 at vger.kernel.org; Tue, 01 Oct 2019 21:34:22 EDT
-Received: from dimstar.local.net (n122-110-44-45.sun2.vic.optusnet.com.au [122.110.44.45])
-        by mail104.syd.optusnet.com.au (Postfix) with SMTP id 0D2E643E341
-        for <linux-kernel@vger.kernel.org>; Wed,  2 Oct 2019 11:15:38 +1000 (AEST)
-Received: (qmail 5337 invoked by uid 501); 2 Oct 2019 01:15:38 -0000
-Date:   Wed, 2 Oct 2019 11:15:38 +1000
-From:   Duncan Roe <duncan_roe@optusnet.com.au>
-To:     Simon Horman <horms@verge.net.au>
-Cc:     Haishuang Yan <yanhaishuang@cmss.chinamobile.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Pablo Neira Ayuso <pablo@netfilter.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Julian Anastasov <ja@ssi.bg>, linux-kernel@vger.kernel.org,
-        linux-kselftest@vger.kernel.org, lvs-devel@vger.kernel.org,
-        netfilter-devel@vger.kernel.org
-Subject: Re: [PATCH v2 1/3] selftests: netfilter: add ipvs test script
-Message-ID: <20191002011538.GA9810@dimstar.local.net>
-Mail-Followup-To: Simon Horman <horms@verge.net.au>,
-        Haishuang Yan <yanhaishuang@cmss.chinamobile.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Pablo Neira Ayuso <pablo@netfilter.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Julian Anastasov <ja@ssi.bg>, linux-kernel@vger.kernel.org,
-        linux-kselftest@vger.kernel.org, lvs-devel@vger.kernel.org,
-        netfilter-devel@vger.kernel.org
-References: <1569565266-31566-1-git-send-email-yanhaishuang@cmss.chinamobile.com>
- <1569565266-31566-2-git-send-email-yanhaishuang@cmss.chinamobile.com>
- <20191001095032.4uxaw3k45afvyp4j@verge.net.au>
+        Tue, 1 Oct 2019 21:35:43 -0400
+Received: by mail-ed1-f66.google.com with SMTP id v8so13744949eds.2;
+        Tue, 01 Oct 2019 18:35:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=Tc3oEsXss3L57smcg7ET5YqKd/3q1IBNjIpWHSb/fJo=;
+        b=GEIq/Ki30tVD1G/ULWtFJFur8kJhcmFiMY+RFm8a2l3TslyzqlV1XKFXcY6yCm33EY
+         7ce+RL4sYllsb7v0fs4Ugs6sjYUfJ+VmqT2Mlt6BZwv0pzMc7xpo6OVZg6T8SW6WAn6/
+         ofU1K5X1d6JEbb3tFKhybysHXe6TLYkWiluzuBe85qvSqF8i8PMpmuGQ6W4gzQUeiNPk
+         RSPHsnh6eJYS2UUn1HoPuuQI/QuZie5sEPTC/VRvgTL2xUJ4nwVuFAuEdJdtKNYz6uRa
+         RJRclUvHAK5wYUnG5Kd5szhVJOWvrnDnSGGqxFqu8qwG0B25o2mufERVQeZkIh1uFYkK
+         J1/w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=Tc3oEsXss3L57smcg7ET5YqKd/3q1IBNjIpWHSb/fJo=;
+        b=SnLBDewtJJSPpvLN/sB7yEiQgubzAoRYJJditVe7ZwqB26td3P6+N9lQcG0H9zMt1r
+         evca82OIUESO/4vIrkAoej05HWHYGCdBdtbeJsUbu2dbtRVMydShc60F1m2uAQzuQwdL
+         hjzp6njzJt+KGgivfcKcurVVsUMHN5lKvmTml/3u5UEdCznbTRXbzVcTtDhxGLeOhyh0
+         yr1dyVsbv4bJ7s7MsKFG0YKM8dRUeJ/j94qpIWjOPz5ROor66klPvkPFyG9/S0MHL9LH
+         c4pXs44kxnlah4IxCpveiGKxuohXoWskuBFjeIgdW5UKHZLEzCcTqWKvJNRHsCXFg4Gv
+         2kdg==
+X-Gm-Message-State: APjAAAWEaDnR8dC6ApJM/zA/2TTKZ3zJGEbhE8E7uSHBBipTGgxvEWCQ
+        +h57A9gPMHqOuFlNcOOspS5/HFeA
+X-Google-Smtp-Source: APXvYqypX0UC/5A4bMaHYM9pMkJplQsRcU9RlCV+/REJUwI4kkQiIMDsvE2sPjeIc3y3rqt8pNAEwg==
+X-Received: by 2002:a17:906:b84d:: with SMTP id ga13mr993370ejb.236.1569980140067;
+        Tue, 01 Oct 2019 18:35:40 -0700 (PDT)
+Received: from desk.local ([2a02:a03f:4080:1900:c8a8:489c:8544:d3e4])
+        by smtp.gmail.com with ESMTPSA id f36sm3525242ede.28.2019.10.01.18.35.39
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 01 Oct 2019 18:35:39 -0700 (PDT)
+Date:   Wed, 2 Oct 2019 03:35:38 +0200
+From:   Luc Van Oostenryck <luc.vanoostenryck@gmail.com>
+To:     Steve French <smfrench@gmail.com>
+Cc:     Paulo Alcantara <paulo@paulo.ac>,
+        David Howells <dhowells@redhat.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-sparse@vger.kernel.org, CIFS <linux-cifs@vger.kernel.org>
+Subject: Re: Many unexpected warnings with current sparse
+Message-ID: <20191002013537.2bfopy3ke5kkmqep@desk.local>
+References: <CAH2r5mspD=iMnO-CuyHMf3jmS0zm7fbqNOXe0cqMcKsXfLAu-Q@mail.gmail.com>
+ <20191001231017.67txq4dhrvhyzbu5@desk.local>
+ <CAH2r5mvnYtmfpHY+jeUbN4JehQwY1XfBWYVNSLO+wx1wkAA6gA@mail.gmail.com>
+ <20191002001859.qeyo3btl7tosz3vo@desk.local>
+ <CAH2r5mtzAgcJTrGuderq4DEHBXtPujcQ8DWJUzM0w=hHX8WbJQ@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191001095032.4uxaw3k45afvyp4j@verge.net.au>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Optus-CM-Score: 0
-X-Optus-CM-Analysis: v=2.2 cv=P6RKvmIu c=1 sm=1 tr=0
-        a=4DzML1vCOQ6Odsy8BUtSXQ==:117 a=4DzML1vCOQ6Odsy8BUtSXQ==:17
-        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=XobE76Q3jBoA:10
-        a=R5C9hjxsAAAA:8 a=2aO1E-p6fpyk-GGDXMwA:9 a=CjuIK1q_8ugA:10
-        a=KpS7wOGxO9l4JKx0McS0:22
+In-Reply-To: <CAH2r5mtzAgcJTrGuderq4DEHBXtPujcQ8DWJUzM0w=hHX8WbJQ@mail.gmail.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Oct 01, 2019 at 11:50:33AM +0200, Simon Horman wrote:
-> On Fri, Sep 27, 2019 at 02:21:04PM +0800, Haishuang Yan wrote:
-> > Test virutal server via directing routing for IPv4.
+On Tue, Oct 01, 2019 at 08:24:45PM -0500, Steve French wrote:
+> On Tue, Oct 1, 2019 at 7:19 PM Luc Van Oostenryck
+> <luc.vanoostenryck@gmail.com> wrote:
 > >
-> > Tested:
+> > On Tue, Oct 01, 2019 at 06:14:23PM -0500, Steve French wrote:
+> > > It may be related to the following sparse make warning:
+> > >
+> > > No rule to make target
+> > > '/usr/include/x86_64-linux-gnu/bits/huge_val.h', needed by
+> > > 'sparse-llvm.o'
+> > >
+> > > I don't see huge_val.h in the Ubuntu 19 version of libc6-dev
 > >
-> > # selftests: netfilter: ipvs.sh
-> > # Testing DR mode...
-> > # ipvs.sh: PASS
-> > ok 6 selftests: netfilter: ipvs.sh
+> > Yes, I've been bitten myself by this. It's fixed since a little while.
+> > So, just doing a clean build or removing all the deps (.*.d)
+> > should allow you to build sparse.
 > >
-> > Signed-off-by: Haishuang Yan <yanhaishuang@cmss.chinamobile.com>
-> > ---
-> > v2: optimize test script
-> > ---
-> >  tools/testing/selftests/netfilter/Makefile |   2 +-
-> >  tools/testing/selftests/netfilter/ipvs.sh  | 184 +++++++++++++++++++++++++++++
-> >  2 files changed, 185 insertions(+), 1 deletion(-)
-> >  create mode 100755 tools/testing/selftests/netfilter/ipvs.sh
-> >
-> > diff --git a/tools/testing/selftests/netfilter/Makefile b/tools/testing/selftests/netfilter/Makefile
-> > index 4144984..de1032b 100644
-> > --- a/tools/testing/selftests/netfilter/Makefile
-> > +++ b/tools/testing/selftests/netfilter/Makefile
-> > @@ -2,6 +2,6 @@
-> >  # Makefile for netfilter selftests
-> >
-> >  TEST_PROGS := nft_trans_stress.sh nft_nat.sh bridge_brouter.sh \
-> > -	conntrack_icmp_related.sh nft_flowtable.sh
-> > +	conntrack_icmp_related.sh nft_flowtable.sh ipvs.sh
-> >
-> >  include ../lib.mk
-> > diff --git a/tools/testing/selftests/netfilter/ipvs.sh b/tools/testing/selftests/netfilter/ipvs.sh
-> > new file mode 100755
-> > index 0000000..658c06b
-> > --- /dev/null
-> > +++ b/tools/testing/selftests/netfilter/ipvs.sh
-> > @@ -0,0 +1,184 @@
-> > +#!/bin/sh
-> > +# SPDX-License-Identifier: GPL-2.0
-> > +#
-> > +# End-to-end ipvs test suite
-> > +# Topology:
-> > +#--------------------------------------------------------------+
-> > +#                      |                                       |
-> > +#         ns0          |         ns1                           |
-> > +#      -----------     |     -----------    -----------        |
-> > +#      | veth01  | --------- | veth10  |    | veth12  |        |
-> > +#      -----------    peer   -----------    -----------        |
-> > +#           |          |                        |              |
-> > +#      -----------     |                        |              |
-> > +#      |  br0    |     |-----------------  peer |--------------|
-> > +#      -----------     |                        |              |
-> > +#           |          |                        |              |
-> > +#      ----------     peer   ----------      -----------       |
-> > +#      |  veth02 | --------- |  veth20 |     | veth21  |       |
-> > +#      ----------      |     ----------      -----------       |
-> > +#                      |         ns2                           |
-> > +#                      |                                       |
-> > +#--------------------------------------------------------------+
-> > +#
-> > +# We assume that all network driver are loaded
-> > +#
-> > +
-> > +# Kselftest framework requirement - SKIP code is 4.
-> > +ksft_skip=4
-> > +ret=0
-> > +GREEN='\033[0;92m'
-> > +RED='\033[0;31m'
-> > +NC='\033[0m' # No Color
-> > +
-> > +readonly port=8080
-> > +
-> > +readonly vip_v4=207.175.44.110
-> > +readonly cip_v4=10.0.0.2
-> > +readonly gip_v4=10.0.0.1
-> > +readonly dip_v4=172.16.0.1
-> > +readonly rip_v4=172.16.0.2
-> > +readonly sip_v4=10.0.0.3
-> > +
-> > +readonly infile="$(mktemp)"
-> > +readonly outfile="$(mktemp)"
-> > +
-> > +sysipvsnet=/proc/sys/net/ipv4/vs/
-> > +if [ ! -d /proc/sys/net/ipv4/vs/ ]; then
-> > +    modprobe -q ip_vs
-> > +    if [ $? -ne 0 ]; then
-> > +        echo "SKIP: Could not run test without ipvs module"
-> > +    	exit $ksft_skip
-> > +    fi
-> > +fi
-> > +
-> > +ip -Version > /dev/null 2>&1
-> > +if [ $? -ne 0 ]; then
-> > +	echo "SKIP: Could not run test without ip tool"
-> > +	exit $ksft_skip
-> > +fi
-> > +
-> > +ipvsadm -v > /dev/null 2>&1
-> > +if [ $? -ne 0 ]; then
-> > +	echo "SKIP: Could not run test without ipvsadm"
-> > +	exit $ksft_skip
-> > +fi
-> > +
-> > +nc --version > /dev/null 2>&1
-> > +if [ $? -ne 0 ]; then
-> > +	echo "SKIP: Could not run test without ncat"
-> > +	exit $ksft_skip
-> > +fi
-> > +
-> > +setup() {
-> > +    ip netns add ns0
-> > +    ip netns add ns1
-> > +    ip netns add ns2
-> > +
-> > +    ip link add veth01 netns ns0 type veth peer name veth10 netns ns1
-> > +    ip link add veth02 netns ns0 type veth peer name veth20 netns ns2
-> > +    ip link add veth12 netns ns1 type veth peer name veth21 netns ns2
-> > +
-> > +    ip netns exec ns0 ip link set veth01 up
-> > +    ip netns exec ns0 ip link set veth02 up
-> > +    ip netns exec ns0 ip link add br0 type bridge
-> > +    ip netns exec ns0 ip link set veth01 master br0
-> > +    ip netns exec ns0 ip link set veth02 master br0
-> > +    ip netns exec ns0 ip link set br0 up
-> > +    ip netns exec ns0 ip addr add ${cip_v4}/24 dev br0
-> > +
-> > +    ip netns exec ns1 ip link set lo up
-> > +    ip netns exec ns1 ip link set veth10 up
-> > +    ip netns exec ns1 ip addr add ${gip_v4}/24 dev veth10
-> > +    ip netns exec ns1 ip link set veth12 up
-> > +    ip netns exec ns1 ip addr add ${dip_v4}/24 dev veth12
-> > +
-> > +    ip netns exec ns2 ip link set lo up
-> > +    ip netns exec ns2 ip link set veth21 up
-> > +    ip netns exec ns2 ip addr add ${rip_v4}/24 dev veth21
-> > +    ip netns exec ns2 ip link set veth20 up
-> > +    ip netns exec ns2 ip addr add ${sip_v4}/24 dev veth20
-> > +}
-> > +
-> > +cleanup() {
-> > +    for i in 0 1 2
-> > +    do
-> > +	ip netns del ns$i > /dev/null 2>&1
-> > +    done
-> > +    pkill nc
-> > +}
-> > +
-> > +server_listen() {
-> > +	ip netns exec ns2 nc -l -p 8080 > "${outfile}" &
-> > +	server_pid=$!
-> > +	sleep 0.2
-> > +}
-> > +
-> > +client_connect() {
-> > +	ip netns exec ns0 timeout 2 nc -w 1 ${vip_v4} ${port} < "${infile}"
-> > +}
-> > +
-> > +verify_data() {
-> > +	wait "${server_pid}"
-> > +	# sha1sum returns two fields [sha1] [filepath]
-> > +	# convert to bash array and access first elem
-> > +	insum=($(sha1sum ${infile}))
->
-> When /bin/sh is dash the line above results in an error
->
-> ./ipvs.sh: 125: ./ipvs.sh: Syntax error: "(" unexpected (expecting "}")
->
-> Could you work on making the script free of bashisms.
-> Or, if that proves to be an exceisive burden, use #!/bin/bash
+> > I've verified the problem with asm and __inline in quota.h:
+> > it's autodetected by kconfig (CC_HAS_ASM_INLINE) so the exact config
+> > doesn't matter (only gcc's version does) but in all cases recent
+> > versions of sparse don't have a problem with it
+> 
+> Removed the dependencies and rebuilt as you suggested and it worked ...
+> and even better ... with the noise removed I now see two real bugs
 
-Better use #!/bin/bash -p, to prevent bash using functions from the environment
+Ahh, good!
 
-Cheers ... Duncan.
->
-> Thanks!
->
-> > +	outsum=($(sha1sum ${outfile}))
-> > +	if [[ "${insum[0]}" != "${outsum[0]}" ]]; then
-> > +		echo "data mismatch"
-> > +		exit 1
-> > +	fi
-> > +}
-> > +
-> > +test_service() {
-> > +    server_listen
-> > +    client_connect
-> > +    ret=$?
-> > +    if [ $ret -ne 0 ]; then
-> > +	return $ret
-> > +    fi
-> > +    verify_data
-> > +}
-> > +
-> > +
-> > +test_dr() {
-> > +    ip netns exec ns0 ip route add ${vip_v4} via ${gip_v4} dev br0
-> > +
-> > +    ip netns exec ns1 sysctl -qw net.ipv4.ip_forward=1
-> > +    ip netns exec ns1 ipvsadm -A -t ${vip_v4}:${port} -s rr
-> > +    ip netns exec ns1 ipvsadm -a -t ${vip_v4}:${port} -r ${rip_v4}:${port}
-> > +    ip netns exec ns1 ip addr add ${vip_v4}/32 dev lo:1
-> > +
-> > +    # avoid incorrect arp response
-> > +    ip netns exec ns2 sysctl -qw net.ipv4.conf.all.arp_ignore=1
-> > +    ip netns exec ns2 sysctl -qw net.ipv4.conf.all.arp_announce=2
-> > +    # avoid reverse route lookup
-> > +    ip netns exec ns2 sysctl -qw  net.ipv4.conf.all.rp_filter=0
-> > +    ip netns exec ns2 sysctl -qw  net.ipv4.conf.veth21.rp_filter=0
-> > +    ip netns exec ns2 ip addr add ${vip_v4}/32 dev lo:1
-> > +
-> > +    test_service
-> > +}
-> > +
-> > +run_tests() {
-> > +	local errors=
-> > +
-> > +	echo "Testing DR mode..."
-> > +	setup
-> > +	test_dr
-> > +	errors=$(( $errors + $? ))
-> > +
-> > +	return $errors
-> > +}
-> > +
-> > +trap cleanup EXIT
-> > +
-> > +cleanup
-> > +run_tests
-> > +
-> > +if [ $? -ne 0 ]; then
-> > +	echo -e "$(basename $0): ${RED}FAIL${NC}"
-> > +	exit 1
-> > +fi
-> > +echo -e "$(basename $0): ${GREEN}PASS${NC}"
-> > +exit 0
-> > --
-> > 1.8.3.1
-> >
-> >
-> >
+> (endian conversion missing on two lines) and only one possible problem
+> with sparse/gcc itself
+> 
+> Sparse now flags this line from one of Paulo's DFS features merged last year:
+> 
+>       struct smb_vol fake_vol = {0};
+> 
+> with
+> 
+>       "warning: Using plain integer as NULL pointer"
+> 
+> What is the recommended way to initialize a struct to avoid the sparse warning?
+
+Well, personally, I simply use '{}'. GCC and sparse are happy with it but, IIRC,
+it's not allowed by the standard...
+
+> And what about the "namespace" warnings from the fscache (cache.o)
+> code that now show up?  I hadn't seen those before.
+> Any easy way to remove them?
+> 
+> "WARNING: module cifs uses symbol sigprocmask from namespace
+> fs/cifs/cache.o: $(deps_/home/sfrench/cifs-2.6/fs/cifs/cache.o), but
+> does not import it."
+
+This one is not from sparse, it's from modpost (see EXPORT_SYMBOL_NS).
+
+Cheers,
+-- Luc
