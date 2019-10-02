@@ -4,58 +4,58 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B4A7C10F14
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 17:04:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D016C352AA
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 17:04:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C22C221D81
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 17:04:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 740AC21D82
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 17:04:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="HGQ3gNIg"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ff5iuJGq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728873AbfJBREP (ORCPT
+        id S1728889AbfJBRET (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Oct 2019 13:04:15 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:35599 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728693AbfJBRD5 (ORCPT
+        Wed, 2 Oct 2019 13:04:19 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:35637 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728612AbfJBRDz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Oct 2019 13:03:57 -0400
-Received: by mail-wr1-f66.google.com with SMTP id v8so20560123wrt.2
-        for <linux-kernel@vger.kernel.org>; Wed, 02 Oct 2019 10:03:56 -0700 (PDT)
+        Wed, 2 Oct 2019 13:03:55 -0400
+Received: by mail-wm1-f66.google.com with SMTP id y21so7752390wmi.0
+        for <linux-kernel@vger.kernel.org>; Wed, 02 Oct 2019 10:03:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=WvNNDWNhX2Fb3QLVftkYDMZhyGKIzxVRGVz9KnZzIlA=;
-        b=HGQ3gNIggfEXj7AYkwnJT9Qjz0IwaBjNifqvg2AUMkYBpkURvXrJ3mFFLx8YmRM01s
-         MQFAu94mNsU0c82mxdT74zHcr8NAMDdqG/CQgoyxhTzvckbEFrY8NEfFHOxXy2DBxiIL
-         kAVVbEoN5qr+o+totHIOgapck7eivCrc047FPvxseQattsch16J4/BhPLidznQjuCZQ2
-         BaSOlYPJ3RSY0Ld4a15n0DWzM7NP4SgsUIp/U4lobd0ucRCYxUu+oLRYZwofmZYXR+b9
-         j2G1/EkIlxdKPW9ZKbQEPAt369KCTEIqTm0hb3O7o8te55yL4yFi4c+TeWxwznbJtmLM
-         TFJg==
+        bh=I5173HAo8p1LhYV3fg4+aqN0iEH53Ly0slEkdev9Cjg=;
+        b=ff5iuJGqQwK7W8NVggxafmcrET7AQ8KvAtXc439Vhn0YvaoKt3O9eY1Fwk4QhOXb3y
+         b/+lntD2LNGbaNUSQGbZ+9adA2U/h6YUtnqyL3Wl1f5WwwwxSKvZajfn+d+vk6El/F1D
+         B72GlPDKrkfRtJiSH3sKLpJtSzqtM+LOfa8qHZh0wjRAV4UM46VEOVYyBsci5IgRA46a
+         CzstOvEmTXTz8s1hYmNAg+q72lzi62qJjkXoFM59AOpPKif5nn+FfDTXkLuD4e/SzQeA
+         bC19QNkNg3SKzzusUKZwIEu+ws0mJh5XGPzVbDj62+Tb/FrNrgvRLxEVFF7gSUJBuZ1c
+         cX+A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=WvNNDWNhX2Fb3QLVftkYDMZhyGKIzxVRGVz9KnZzIlA=;
-        b=j5I7T9oVQhvw3O7jgqdMW81Gy097DRINSTJWWM4aebmjahBg+xRo6khxTc5mws4mBk
-         yP0rk9v8LYM7DIWdh8BMMTTVBzqf/1Na4lsQLfsXzhx9ntnNYwgXkkwUWtPI3SWONT+D
-         oYSS+0h8nJyr6JMX5YqrIAPKdmepOxXZjIp+C5fq8hBKmzJaCgYZ+n0iqf7VbETVl0qu
-         2MnSMtslFsRJhd5+nACqctCaHarUfy8D6DqaSVfsJR6KpShq1UUtRebpnzQDhyg3+WK4
-         vcke4oL1g0rQBlkO2wRwf50Gk2tyeKzEkSfpKzRB13r8eogHNu77HsmOEtNeRhyCBqST
-         A0UQ==
-X-Gm-Message-State: APjAAAXa09YaRzgZcGMYtUYKfoVy6XsTyLhJOS4T6rgTQokUYmmv+pic
-        nfoJVepAa3TW/2zUWic4t5QipQ==
-X-Google-Smtp-Source: APXvYqwrQBO8A3rwHTnKPxIeVjz0IPXL0H/YrWpwVQJZXWaJcoQXydKEl0dLpN5PIdPS798Wpk78qA==
-X-Received: by 2002:a5d:490f:: with SMTP id x15mr3410913wrq.375.1570035835970;
-        Wed, 02 Oct 2019 10:03:55 -0700 (PDT)
+        bh=I5173HAo8p1LhYV3fg4+aqN0iEH53Ly0slEkdev9Cjg=;
+        b=SRPyubbfg4seVEStQNa3U6I6qfLID5ivopvEv1dTcmNB+5zKV/9cR/hmDCsOf3+JlF
+         B+QPnMdlubZ5SbyXJzR9LB7f5b2Kdr+WYUb0UWm03xIfFUN5q0kxWeKOwQbqA1uemTk9
+         4WboumWqABc766iKsnO8D9DM6ZCNaB5MwFKUAbAHMgNmQhjiLvgT5WdGdSsRxy5zTRhU
+         ePdE7eDLEIgiLJPoQ2Bg3eBi5rgcIjMa+h8VRdtd8vZ+pAoiwbWSWWO2xrTZcy2A5yfw
+         10eBQZqCr7oIrLaDVrjx+GCZaOM4m2Pblpaf7lHckSR2qhd8a2TmeKvOAbFt0GWPgqeK
+         7Tgg==
+X-Gm-Message-State: APjAAAUeQgRJlcZBv3Kdq+SS6KbSRevLctjC5XjLR9DnMZLxqIWJfOm3
+        KyQE/PrK5xYkzXP0yfrFWJ0vVQ==
+X-Google-Smtp-Source: APXvYqzRU9v5iB8bXQCVIqJYRqFON6vt7RbKcCaKUjNl+xnm8AnxImyNX9t1t04BarMYjjZn5E5Apw==
+X-Received: by 2002:a1c:3bd6:: with SMTP id i205mr3561886wma.135.1570035833039;
+        Wed, 02 Oct 2019 10:03:53 -0700 (PDT)
 Received: from sudo.home ([2a01:cb1d:112:6f00:f145:3252:fc29:76c9])
-        by smtp.gmail.com with ESMTPSA id f18sm7085459wmh.43.2019.10.02.10.03.54
+        by smtp.gmail.com with ESMTPSA id f18sm7085459wmh.43.2019.10.02.10.03.51
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 02 Oct 2019 10:03:55 -0700 (PDT)
+        Wed, 02 Oct 2019 10:03:52 -0700 (PDT)
 From:   Ard Biesheuvel <ard.biesheuvel@linaro.org>
 To:     linux-efi@vger.kernel.org, Ingo Molnar <mingo@kernel.org>,
         Thomas Gleixner <tglx@linutronix.de>
@@ -70,9 +70,9 @@ Cc:     Ard Biesheuvel <ard.biesheuvel@linaro.org>,
         Matthew Garrett <mjg59@google.com>,
         Octavian Purdila <octavian.purdila@intel.com>,
         Peter Jones <pjones@redhat.com>, Scott Talbert <swt@techie.net>
-Subject: [PATCH 5/7] efi/tpm: only set efi_tpm_final_log_size after successful event log parsing
-Date:   Wed,  2 Oct 2019 18:59:02 +0200
-Message-Id: <20191002165904.8819-6-ard.biesheuvel@linaro.org>
+Subject: [PATCH 3/7] efi/tpm: Don't access event->count when it isn't mapped.
+Date:   Wed,  2 Oct 2019 18:59:00 +0200
+Message-Id: <20191002165904.8819-4-ard.biesheuvel@linaro.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191002165904.8819-1-ard.biesheuvel@linaro.org>
 References: <20191002165904.8819-1-ard.biesheuvel@linaro.org>
@@ -83,141 +83,79 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jerry Snitselaar <jsnitsel@redhat.com>
+From: Peter Jones <pjones@redhat.com>
 
-If __calc_tpm2_event_size fails to parse an event it will return 0,
-resulting tpm2_calc_event_log_size returning -1. Currently there is
-no check of this return value, and efi_tpm_final_log_size can end up
-being set to this negative value resulting in a panic like the
-the one given below.
+Some machines generate a lot of event log entries.  When we're
+iterating over them, the code removes the old mapping and adds a
+new one, so once we cross the page boundary we're unmapping the page
+with the count on it.  Hilarity ensues.
 
-Also __calc_tpm2_event_size returns a size of 0 when it fails
-to parse an event, so update function documentation to reflect this.
+This patch keeps the info from the header in local variables so we don't
+need to access that page again or keep track of if it's mapped.
 
-[    0.774340] BUG: unable to handle page fault for address: ffffbc8fc00866ad
-[    0.774788] #PF: supervisor read access in kernel mode
-[    0.774788] #PF: error_code(0x0000) - not-present page
-[    0.774788] PGD 107d36067 P4D 107d36067 PUD 107d37067 PMD 107d38067 PTE 0
-[    0.774788] Oops: 0000 [#1] SMP PTI
-[    0.774788] CPU: 0 PID: 1 Comm: swapper/0 Not tainted 5.3.0-0.rc2.1.elrdy.x86_64 #1
-[    0.774788] Hardware name: LENOVO 20HGS22D0W/20HGS22D0W, BIOS N1WET51W (1.30 ) 09/14/2018
-[    0.774788] RIP: 0010:memcpy_erms+0x6/0x10
-[    0.774788] Code: 90 90 90 90 eb 1e 0f 1f 00 48 89 f8 48 89 d1 48 c1 e9 03 83 e2 07 f3 48 a5 89 d1 f3 a4 c3 66 0f 1f 44 00 00 48 89 f8 48 89 d1 <f3> a4 c3 0f 1f 80 00 00 00 00 48 89 f8 48 83 fa 20 72 7e 40 38 fe
-[    0.774788] RSP: 0000:ffffbc8fc0073b30 EFLAGS: 00010286
-[    0.774788] RAX: ffff9b1fc7c5b367 RBX: ffff9b1fc8390000 RCX: ffffffffffffe962
-[    0.774788] RDX: ffffffffffffe962 RSI: ffffbc8fc00866ad RDI: ffff9b1fc7c5b367
-[    0.774788] RBP: ffff9b1c10ca7018 R08: ffffbc8fc0085fff R09: 8000000000000063
-[    0.774788] R10: 0000000000001000 R11: 000fffffffe00000 R12: 0000000000003367
-[    0.774788] R13: ffff9b1fcc47c010 R14: ffffbc8fc0085000 R15: 0000000000000002
-[    0.774788] FS:  0000000000000000(0000) GS:ffff9b1fce200000(0000) knlGS:0000000000000000
-[    0.774788] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-[    0.774788] CR2: ffffbc8fc00866ad CR3: 000000029f60a001 CR4: 00000000003606f0
-[    0.774788] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-[    0.774788] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-[    0.774788] Call Trace:
-[    0.774788]  tpm_read_log_efi+0x156/0x1a0
-[    0.774788]  tpm_bios_log_setup+0xc8/0x190
-[    0.774788]  tpm_chip_register+0x50/0x1c0
-[    0.774788]  tpm_tis_core_init.cold.9+0x28c/0x466
-[    0.774788]  tpm_tis_plat_probe+0xcc/0xea
-[    0.774788]  platform_drv_probe+0x35/0x80
-[    0.774788]  really_probe+0xef/0x390
-[    0.774788]  driver_probe_device+0xb4/0x100
-[    0.774788]  device_driver_attach+0x4f/0x60
-[    0.774788]  __driver_attach+0x86/0x140
-[    0.774788]  ? device_driver_attach+0x60/0x60
-[    0.774788]  bus_for_each_dev+0x76/0xc0
-[    0.774788]  ? klist_add_tail+0x3b/0x70
-[    0.774788]  bus_add_driver+0x14a/0x1e0
-[    0.774788]  ? tpm_init+0xea/0xea
-[    0.774788]  ? do_early_param+0x8e/0x8e
-[    0.774788]  driver_register+0x6b/0xb0
-[    0.774788]  ? tpm_init+0xea/0xea
-[    0.774788]  init_tis+0x86/0xd8
-[    0.774788]  ? do_early_param+0x8e/0x8e
-[    0.774788]  ? driver_register+0x94/0xb0
-[    0.774788]  do_one_initcall+0x46/0x1e4
-[    0.774788]  ? do_early_param+0x8e/0x8e
-[    0.774788]  kernel_init_freeable+0x199/0x242
-[    0.774788]  ? rest_init+0xaa/0xaa
-[    0.774788]  kernel_init+0xa/0x106
-[    0.774788]  ret_from_fork+0x35/0x40
-[    0.774788] Modules linked in:
-[    0.774788] CR2: ffffbc8fc00866ad
-[    0.774788] ---[ end trace 42930799f8d6eaea ]---
-[    0.774788] RIP: 0010:memcpy_erms+0x6/0x10
-[    0.774788] Code: 90 90 90 90 eb 1e 0f 1f 00 48 89 f8 48 89 d1 48 c1 e9 03 83 e2 07 f3 48 a5 89 d1 f3 a4 c3 66 0f 1f 44 00 00 48 89 f8 48 89 d1 <f3> a4 c3 0f 1f 80 00 00 00 00 48 89 f8 48 83 fa 20 72 7e 40 38 fe
-[    0.774788] RSP: 0000:ffffbc8fc0073b30 EFLAGS: 00010286
-[    0.774788] RAX: ffff9b1fc7c5b367 RBX: ffff9b1fc8390000 RCX: ffffffffffffe962
-[    0.774788] RDX: ffffffffffffe962 RSI: ffffbc8fc00866ad RDI: ffff9b1fc7c5b367
-[    0.774788] RBP: ffff9b1c10ca7018 R08: ffffbc8fc0085fff R09: 8000000000000063
-[    0.774788] R10: 0000000000001000 R11: 000fffffffe00000 R12: 0000000000003367
-[    0.774788] R13: ffff9b1fcc47c010 R14: ffffbc8fc0085000 R15: 0000000000000002
-[    0.774788] FS:  0000000000000000(0000) GS:ffff9b1fce200000(0000) knlGS:0000000000000000
-[    0.774788] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-[    0.774788] CR2: ffffbc8fc00866ad CR3: 000000029f60a001 CR4: 00000000003606f0
-[    0.774788] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-[    0.774788] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-[    0.774788] Kernel panic - not syncing: Fatal exception
-[    0.774788] Kernel Offset: 0x1d000000 from 0xffffffff81000000 (relocation range: 0xffffffff80000000-0xffffffffbfffffff)
-[    0.774788] ---[ end Kernel panic - not syncing: Fatal exception ]---
-
-The root cause of the issue that caused the failure of event parsing
-in this case is resolved by Peter Jone's patchset dealing with large
-event logs where crossing over a page boundary causes the page with
-the event count to be unmapped.
-
-Fixes: c46f3405692de ("tpm: Reserve the TPM final events table")
+Fixes: 44038bc514a2 ("tpm: Abstract crypto agile event size calculations")
 Cc: linux-efi@vger.kernel.org
 Cc: linux-integrity@vger.kernel.org
 Cc: stable@vger.kernel.org
-Cc: Matthew Garrett <mjg59@google.com>
-Cc: Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Cc: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Signed-off-by: Jerry Snitselaar <jsnitsel@redhat.com>
+Signed-off-by: Peter Jones <pjones@redhat.com>
+Tested-by: Lyude Paul <lyude@redhat.com>
+Reviewed-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+Acked-by: Matthew Garrett <mjg59@google.com>
+Acked-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Signed-off-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
 Signed-off-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
 ---
- drivers/firmware/efi/tpm.c   | 9 ++++++++-
- include/linux/tpm_eventlog.h | 2 +-
- 2 files changed, 9 insertions(+), 2 deletions(-)
+ include/linux/tpm_eventlog.h | 14 +++++++++++---
+ 1 file changed, 11 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/firmware/efi/tpm.c b/drivers/firmware/efi/tpm.c
-index b9ae5c6f9b9c..703469c1ab8e 100644
---- a/drivers/firmware/efi/tpm.c
-+++ b/drivers/firmware/efi/tpm.c
-@@ -85,11 +85,18 @@ int __init efi_tpm_eventlog_init(void)
- 						    final_tbl->nr_events,
- 						    log_tbl->log);
- 	}
-+
-+	if (tbl_size < 0) {
-+		pr_err(FW_BUG "Failed to parse event in TPM Final Events Log\n");
-+		goto out_calc;
-+	}
-+
- 	memblock_reserve((unsigned long)final_tbl,
- 			 tbl_size + sizeof(*final_tbl));
--	early_memunmap(final_tbl, sizeof(*final_tbl));
- 	efi_tpm_final_log_size = tbl_size;
- 
-+out_calc:
-+	early_memunmap(final_tbl, sizeof(*final_tbl));
- out:
- 	early_memunmap(log_tbl, sizeof(*log_tbl));
- 	return ret;
 diff --git a/include/linux/tpm_eventlog.h b/include/linux/tpm_eventlog.h
-index 12584b69a3f3..2dfdd63ac034 100644
+index 63238c84dc0b..12584b69a3f3 100644
 --- a/include/linux/tpm_eventlog.h
 +++ b/include/linux/tpm_eventlog.h
-@@ -152,7 +152,7 @@ struct tcg_algorithm_info {
-  * total. Once we've done this we know the offset of the data length field,
-  * and can calculate the total size of the event.
-  *
-- * Return: size of the event on success, <0 on failure
-+ * Return: size of the event on success, 0 on failure
-  */
+@@ -170,6 +170,7 @@ static inline int __calc_tpm2_event_size(struct tcg_pcr_event2_head *event,
+ 	u16 halg;
+ 	int i;
+ 	int j;
++	u32 count, event_type;
  
- static inline int __calc_tpm2_event_size(struct tcg_pcr_event2_head *event,
+ 	marker = event;
+ 	marker_start = marker;
+@@ -190,16 +191,22 @@ static inline int __calc_tpm2_event_size(struct tcg_pcr_event2_head *event,
+ 	}
+ 
+ 	event = (struct tcg_pcr_event2_head *)mapping;
++	/*
++	 * the loop below will unmap these fields if the log is larger than
++	 * one page, so save them here for reference.
++	 */
++	count = READ_ONCE(event->count);
++	event_type = READ_ONCE(event->event_type);
+ 
+ 	efispecid = (struct tcg_efi_specid_event_head *)event_header->event;
+ 
+ 	/* Check if event is malformed. */
+-	if (event->count > efispecid->num_algs) {
++	if (count > efispecid->num_algs) {
+ 		size = 0;
+ 		goto out;
+ 	}
+ 
+-	for (i = 0; i < event->count; i++) {
++	for (i = 0; i < count; i++) {
+ 		halg_size = sizeof(event->digests[i].alg_id);
+ 
+ 		/* Map the digest's algorithm identifier */
+@@ -256,8 +263,9 @@ static inline int __calc_tpm2_event_size(struct tcg_pcr_event2_head *event,
+ 		+ event_field->event_size;
+ 	size = marker - marker_start;
+ 
+-	if ((event->event_type == 0) && (event_field->event_size == 0))
++	if (event_type == 0 && event_field->event_size == 0)
+ 		size = 0;
++
+ out:
+ 	if (do_mapping)
+ 		TPM_MEMUNMAP(mapping, mapping_size);
 -- 
 2.20.1
 
