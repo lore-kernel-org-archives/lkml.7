@@ -2,77 +2,136 @@ Return-Path: <SRS0=zem1=X3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A99BCC4360C
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 20:21:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F1B6C10F14
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 20:22:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 830E1217D7
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 20:21:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DBCE0217D7
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 20:22:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BjDZyYgj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727461AbfJBUVc (ORCPT
+        id S1727608AbfJBUWV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Oct 2019 16:21:32 -0400
-Received: from shards.monkeyblade.net ([23.128.96.9]:36544 "EHLO
-        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726364AbfJBUVc (ORCPT
+        Wed, 2 Oct 2019 16:22:21 -0400
+Received: from mail-qt1-f195.google.com ([209.85.160.195]:46577 "EHLO
+        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727304AbfJBUWU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Oct 2019 16:21:32 -0400
-Received: from localhost (unknown [IPv6:2601:601:9f00:1e2::3d5])
-        (using TLSv1 with cipher AES256-SHA (256/256 bits))
-        (Client did not present a certificate)
-        (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id 8CE9315501857;
-        Wed,  2 Oct 2019 13:21:31 -0700 (PDT)
-Date:   Wed, 02 Oct 2019 13:21:21 -0700 (PDT)
-Message-Id: <20191002.132121.402975401040540710.davem@davemloft.net>
-To:     keescook@chromium.org
-Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
-        pankaj.laxminarayan.bharadiya@intel.com, joe@perches.com,
-        adobriyan@gmail.com, netdev@vger.kernel.org
-Subject: Re: renaming FIELD_SIZEOF to sizeof_member
-From:   David Miller <davem@davemloft.net>
-In-Reply-To: <201910021115.9888E9B@keescook>
-References: <CAHk-=wg8+eNK+SK1Ekqm0qNQHVM6e6YOdZx3yhsX6Ajo3gEupg@mail.gmail.com>
-        <201909261347.3F04AFA0@keescook>
-        <201910021115.9888E9B@keescook>
-X-Mailer: Mew version 6.8 on Emacs 26.1
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Wed, 02 Oct 2019 13:21:31 -0700 (PDT)
+        Wed, 2 Oct 2019 16:22:20 -0400
+Received: by mail-qt1-f195.google.com with SMTP id u22so356460qtq.13;
+        Wed, 02 Oct 2019 13:22:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=fcINkAGrhaxybz9we0aCJ9+w9JUp7C0z8Gn94WWvQGI=;
+        b=BjDZyYgjhfxWcP3NTWkt0mMF/bAuMBjpivsjx7HfXOrCmMr1getLWzGJso+UuJ3zdb
+         K2PaFVMLXTGS2/r7nMFf3pMjf2yg+79Eb3x+suEdXJWcBAvvMgbMyAObfJWypFt4a+ED
+         EooK5rxib95WH0eMz1mwL2sTqVbbyFjGDt7vRPwi8HL7liGAwYiknyv2hIDssS5zx8fQ
+         +QR9Fg0ISZPTwmpGpTI10DbOIKVhpSq9LC/tPUfDLtZWjBgZfOnjGWTcglvLdmyGJZoS
+         vPVYma+ZxpAM7X63vm2eRkThUj42ZUGXwEohT+v+JpVo27Kf9BhZAG/m/ebC8JUIiR4m
+         4lAg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=fcINkAGrhaxybz9we0aCJ9+w9JUp7C0z8Gn94WWvQGI=;
+        b=qHSqfwUAPJ+kLMeh/Qr708AdeG6ljvpRPvvRY0lDCmvTcG5YCxVLFP4ZnJWXlbu+sX
+         OoqY5NFIaR5u3MLdRWOl2Ok69PmOs84ywmwzIp4rRSxnkQx/ZvUt0cYh86XculpLO6zn
+         eqOGNs/SaFHLHVQZ9NIyOszRemXiPwCO04sG32suDU34C4jFXZ3h7DFGAKWPRd9T/YAg
+         2WUteIGNnpmqfeQyxZj+mICcke1RsQg8efsh2jrGKtQVmmBIk9t5JCG6cqYduIQfrqIz
+         Tsx6n0ri93VmKgk117ImSqq4MVOlNhWgWwqY4j+Jyax9xlajm/PYiLFzGW03MmZHwd92
+         fTMw==
+X-Gm-Message-State: APjAAAUlDw7kTrA8O82dmChMwK5P6oofKV2J12T7xW7RtY1Y3b7yfK8B
+        pIBxvl0CBTTsXcREhca5fqKW1CBfn5iSbzI7bwI=
+X-Google-Smtp-Source: APXvYqySHhkOEsIOcVw93B6ZEj9ZGqCCSVJ5Fhmq8QghLWxsWgfgVCA11vGgq5CpwZLlJ86+S07y5uvgJMmXx5yUg7I=
+X-Received: by 2002:ac8:1417:: with SMTP id k23mr5869128qtj.93.1570047739558;
+ Wed, 02 Oct 2019 13:22:19 -0700 (PDT)
+MIME-Version: 1.0
+References: <20191002191652.11432-1-kpsingh@chromium.org>
+In-Reply-To: <20191002191652.11432-1-kpsingh@chromium.org>
+From:   Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Date:   Wed, 2 Oct 2019 13:22:08 -0700
+Message-ID: <CAEf4BzY4tXd=sHbkN=Bbhj5=7=W_PBs_BB=wjGJ4-bHenKz6sw@mail.gmail.com>
+Subject: Re: [PATCH v2] samples/bpf: Add a workaround for asm_inline
+To:     KP Singh <kpsingh@chromium.org>
+Cc:     open list <linux-kernel@vger.kernel.org>,
+        bpf <bpf@vger.kernel.org>, Florent Revest <revest@google.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        Florent Revest <revest@chromium.org>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kees Cook <keescook@chromium.org>
-Date: Wed, 2 Oct 2019 11:19:16 -0700
+On Wed, Oct 2, 2019 at 12:17 PM KP Singh <kpsingh@chromium.org> wrote:
+>
+> From: KP Singh <kpsingh@google.com>
+>
+> This was added in:
+>
+>   commit eb111869301e ("compiler-types.h: add asm_inline definition")
+>
+> and breaks samples/bpf as clang does not support asm __inline.
+>
+> Co-developed-by: Florent Revest <revest@google.com>
+> Signed-off-by: Florent Revest <revest@google.com>
+> Signed-off-by: KP Singh <kpsingh@google.com>
+> ---
+>
+> Changes since v1:
+>
+> - Dropped the rename from asm_workaround.h to asm_goto_workaround.h
+> - Dropped the fix for task_fd_query_user.c as it is updated in
+>   https://lore.kernel.org/bpf/20191001112249.27341-1-bjorn.topel@gmail.com/
+>
+>  samples/bpf/asm_goto_workaround.h | 13 ++++++++++++-
+>  1 file changed, 12 insertions(+), 1 deletion(-)
+>
+> diff --git a/samples/bpf/asm_goto_workaround.h b/samples/bpf/asm_goto_workaround.h
+> index 7409722727ca..7048bb3594d6 100644
+> --- a/samples/bpf/asm_goto_workaround.h
+> +++ b/samples/bpf/asm_goto_workaround.h
+> @@ -3,7 +3,8 @@
+>  #ifndef __ASM_GOTO_WORKAROUND_H
+>  #define __ASM_GOTO_WORKAROUND_H
+>
+> -/* this will bring in asm_volatile_goto macro definition
+> +/*
+> + * This will bring in asm_volatile_goto and asm_inline macro definitions
+>   * if enabled by compiler and config options.
+>   */
+>  #include <linux/types.h>
+> @@ -13,5 +14,15 @@
+>  #define asm_volatile_goto(x...) asm volatile("invalid use of asm_volatile_goto")
+>  #endif
+>
+> +/*
+> + * asm_inline is defined as asm __inline in "include/linux/compiler_types.h"
+> + * if supported by the kernel's CC (i.e CONFIG_CC_HAS_ASM_INLINE) which is not
+> + * supported by CLANG.
+> + */
+> +#ifdef asm_inline
+> +#undef asm_inline
+> +#define asm_inline asm
+> +#endif
 
-> On Thu, Sep 26, 2019 at 01:56:55PM -0700, Kees Cook wrote:
->> On Thu, Sep 26, 2019 at 01:06:01PM -0700, Linus Torvalds wrote:
->> >  (a) why didn't this use the already existing and well-named macro
->> > that nobody really had issues with?
->> 
->> That was suggested, but other folks wanted the more accurate "member"
->> instead of "field" since a treewide change was happening anyway:
->> https://www.openwall.com/lists/kernel-hardening/2019/07/02/2
->> 
->> At the end of the day, I really don't care -- I just want to have _one_
->> macro. :)
->> 
->> >  (b) I see no sign of the networking people having been asked about
->> > their preferences.
->> 
->> Yeah, that's entirely true. Totally my mistake; it seemed like a trivial
->> enough change that I didn't want to bother too many people. But let's
->> fix that now... Dave, do you have any concerns about this change of
->> FIELD_SIZEOF() to sizeof_member() (or if it prevails, sizeof_field())?
-> 
-> David, can you weight in on this? Are you okay with a mass renaming of
-> FIELD_SIZEOF() to sizeof_member(), as the largest user of the old macro
-> is in networking?
+Would it be better to just #undef CONFIG_CC_HAS_ASM_INLINE for BPF programs?
 
-I have no objection to moving to sizeof_member().
+> +
+>  #define volatile(x...) volatile("")
+>  #endif
+> --
+> 2.20.1
+>
