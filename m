@@ -2,168 +2,128 @@ Return-Path: <SRS0=zem1=X3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 07601C35280
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 15:04:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D9804C352AA
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 15:05:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BEC552133F
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 15:04:38 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=dell.com header.i=@dell.com header.b="OUQvDO4+"
+	by mail.kernel.org (Postfix) with ESMTP id B93C821D7B
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 15:05:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728001AbfJBPEi (ORCPT
+        id S1728073AbfJBPFI convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Oct 2019 11:04:38 -0400
-Received: from mx0b-00154904.pphosted.com ([148.163.137.20]:35424 "EHLO
-        mx0b-00154904.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725766AbfJBPEh (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Oct 2019 11:04:37 -0400
-Received: from pps.filterd (m0170394.ppops.net [127.0.0.1])
-        by mx0b-00154904.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id x92ElNI7011345;
-        Wed, 2 Oct 2019 11:04:36 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=dell.com; h=from : to : cc :
- subject : date : message-id : references : in-reply-to : content-type :
- content-transfer-encoding : mime-version; s=smtpout1;
- bh=Fne4wKYhGsShISfTecSpQhEctBbJgVgrRkq91FzVd5M=;
- b=OUQvDO4+eIjflLJTbjhxIGyelEz/AqhnS08zQkc07qEmrNq9q+MHiPjTVrXHMdvHNPXV
- ZkhVDKrQEytftQmDTA47U0RmvHUPXjazSql86E1EZUH98RsGHpdT2tAwPhxnRBbWv1aI
- dx5+mmUR6A+VMPRKhaQOXiUg4SVA1SokjBdAZhAIXmC9t1MxGbQ0jyjcq4Nnsmuo/+f3
- Kpjay24+Bbf6niW8oraaa4wg4PhfqW7TEy+qkYfNMasLqCpEY5mCnqZIvVfnVN3A9eSV
- Uh5m8Ae1XOiXoSkbArPHURkO6iDhseMBg/y6eDWqKXSiFiVShvBH7QxVZjUPSuheAvu6 Pw== 
-Received: from mx0b-00154901.pphosted.com (mx0a-00154901.pphosted.com [67.231.149.39])
-        by mx0b-00154904.pphosted.com with ESMTP id 2va238bk2h-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 02 Oct 2019 11:04:36 -0400
-Received: from pps.filterd (m0090350.ppops.net [127.0.0.1])
-        by mx0b-00154901.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id x92F3RIK123751;
-        Wed, 2 Oct 2019 11:04:35 -0400
-Received: from ausxippc106.us.dell.com (AUSXIPPC106.us.dell.com [143.166.85.156])
-        by mx0b-00154901.pphosted.com with ESMTP id 2vca1war6j-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 02 Oct 2019 11:04:35 -0400
-X-LoopCount0: from 10.166.132.130
-X-PREM-Routing: D-Outbound
-X-IronPort-AV: E=Sophos;i="5.60,349,1549951200"; 
-   d="scan'208";a="467769692"
-From:   <Mario.Limonciello@dell.com>
-To:     <mika.westerberg@linux.intel.com>
-CC:     <linux-usb@vger.kernel.org>, <andreas.noever@gmail.com>,
-        <michael.jamet@intel.com>, <YehezkelShB@gmail.com>,
-        <rajmohan.mani@intel.com>,
-        <nicholas.johnson-opensource@outlook.com.au>, <lukas@wunner.de>,
-        <gregkh@linuxfoundation.org>, <stern@rowland.harvard.edu>,
-        <anthony.wong@canonical.com>, <linux-kernel@vger.kernel.org>
-Subject: RE: [RFC PATCH 17/22] thunderbolt: Add initial support for USB4
-Thread-Topic: [RFC PATCH 17/22] thunderbolt: Add initial support for USB4
-Thread-Index: AQHVeEzShOhklesInk+gx9St4A7986dGAqiggAFZDQCAABiIsA==
-Date:   Wed, 2 Oct 2019 15:04:33 +0000
-Message-ID: <46d927da41d9430196f9aed10ed33d91@AUSX13MPC105.AMER.DELL.COM>
-References: <20191001113830.13028-1-mika.westerberg@linux.intel.com>
- <20191001113830.13028-18-mika.westerberg@linux.intel.com>
- <184c95fc476146939b240557e54ee2c9@AUSX13MPC105.AMER.DELL.COM>
- <20191002083446.GF2714@lahna.fi.intel.com>
-In-Reply-To: <20191002083446.GF2714@lahna.fi.intel.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-msip_labels: MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_Enabled=True;
- MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_SiteId=945c199a-83a2-4e80-9f8c-5a91be5752dd;
- MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_Owner=Mario_Limonciello@Dell.com;
- MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_SetDate=2019-10-02T15:04:31.9392793Z;
- MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_Name=External Public;
- MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_Application=Microsoft Azure
- Information Protection;
- MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_Extended_MSFT_Method=Manual;
- aiplabel=External Public
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.143.18.86]
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Wed, 2 Oct 2019 11:05:08 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:7768 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725766AbfJBPFH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 2 Oct 2019 11:05:07 -0400
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 9C6E081127;
+        Wed,  2 Oct 2019 15:05:06 +0000 (UTC)
+Received: from [10.40.204.213] (ovpn-204-213.brq.redhat.com [10.40.204.213])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id BFA28608C2;
+        Wed,  2 Oct 2019 15:04:47 +0000 (UTC)
+Subject: Re: [PATCH v11 0/6] mm / virtio: Provide support for unused page
+ reporting
+To:     Dave Hansen <dave.hansen@intel.com>,
+        Alexander Duyck <alexander.h.duyck@linux.intel.com>,
+        David Hildenbrand <david@redhat.com>,
+        Alexander Duyck <alexander.duyck@gmail.com>,
+        virtio-dev@lists.oasis-open.org, kvm@vger.kernel.org,
+        mst@redhat.com, linux-kernel@vger.kernel.org, willy@infradead.org,
+        mhocko@kernel.org, linux-mm@kvack.org, akpm@linux-foundation.org,
+        mgorman@techsingularity.net, vbabka@suse.cz, osalvador@suse.de
+Cc:     yang.zhang.wz@gmail.com, pagupta@redhat.com,
+        konrad.wilk@oracle.com, riel@surriel.com, lcapitulino@redhat.com,
+        wei.w.wang@intel.com, aarcange@redhat.com, pbonzini@redhat.com,
+        dan.j.williams@intel.com
+References: <20191001152441.27008.99285.stgit@localhost.localdomain>
+ <7233498c-2f64-d661-4981-707b59c78fd5@redhat.com>
+ <1ea1a4e11617291062db81f65745b9c95fd0bb30.camel@linux.intel.com>
+ <8bd303a6-6e50-b2dc-19ab-4c3f176c4b02@redhat.com>
+ <d21e6fce694f286ecaf227697a1ec5555734520b.camel@linux.intel.com>
+ <b45c9ea924cbb8b8dc390082d5a0b4bd91e7a8f8.camel@linux.intel.com>
+ <150e09b3-42c0-567e-55b8-7be6b45fd576@intel.com>
+From:   Nitesh Narayan Lal <nitesh@redhat.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=nitesh@redhat.com; prefer-encrypt=mutual; keydata=
+ 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
+ VujM7c/b4pps
+Organization: Red Hat Inc,
+Message-ID: <46593efd-4a97-cdcc-fe22-01a5400d23c9@redhat.com>
+Date:   Wed, 2 Oct 2019 11:04:44 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,1.0.8
- definitions=2019-10-02_07:2019-10-01,2019-10-02 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 phishscore=0
- mlxscore=0 malwarescore=0 priorityscore=1501 lowpriorityscore=0
- clxscore=1015 spamscore=0 mlxlogscore=999 bulkscore=0 impostorscore=0
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-1908290000 definitions=main-1910020139
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 impostorscore=0 spamscore=0
- lowpriorityscore=0 mlxlogscore=999 priorityscore=1501 mlxscore=0
- phishscore=0 adultscore=0 malwarescore=0 clxscore=1015 bulkscore=0
- suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-1908290000 definitions=main-1910020138
+In-Reply-To: <150e09b3-42c0-567e-55b8-7be6b45fd576@intel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8BIT
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.27]); Wed, 02 Oct 2019 15:05:07 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> -----Original Message-----
-> From: Mika Westerberg <mika.westerberg@linux.intel.com>
-> Sent: Wednesday, October 2, 2019 3:35 AM
-> To: Limonciello, Mario
-> Cc: linux-usb@vger.kernel.org; andreas.noever@gmail.com;
-> michael.jamet@intel.com; YehezkelShB@gmail.com; rajmohan.mani@intel.com;
-> nicholas.johnson-opensource@outlook.com.au; lukas@wunner.de;
-> gregkh@linuxfoundation.org; stern@rowland.harvard.edu;
-> anthony.wong@canonical.com; linux-kernel@vger.kernel.org
-> Subject: Re: [RFC PATCH 17/22] thunderbolt: Add initial support for USB4
->=20
->=20
-> [EXTERNAL EMAIL]
->=20
-> On Tue, Oct 01, 2019 at 05:05:09PM +0000, Mario.Limonciello@dell.com wrot=
-e:
-> > > @@ -322,9 +398,21 @@ static int tb_switch_nvm_add(struct tb_switch *s=
-w)
-> > >  	u32 val;
-> > >  	int ret;
-> > >
-> > > -	if (!sw->dma_port)
-> > > +	if (!nvm_readable(sw))
-> > >  		return 0;
-> > >
-> > > +	/*
-> > > +	 * The NVM format of non-Intel hardware is not known so
-> > > +	 * currently restrict NVM upgrade for Intel hardware. We may
-> > > +	 * relax this in the future when we learn other NVM formats.
-> > > +	 */
-> > > +	if (sw->config.vendor_id !=3D PCI_VENDOR_ID_INTEL) {
-> > > +		dev_info(&sw->dev,
-> > > +			 "NVM format of vendor %#x is not known, disabling
-> NVM
-> > > upgrade\n",
-> > > +			 sw->config.vendor_id);
-> > > +		return 0;
-> > > +	}
-> > > +
-> >
-> > Don't you actually have an attribute you can use here for this exact pu=
-rpose
-> that you
-> > could  be setting rather than returning immediately?
-> > sw->no_nvm_upgrade
-> >
-> > Then potentially you can at least let users "dump out" the nvm on !Inte=
-l but
-> don't let
-> > it be written until ready to relax further.
->=20
-> Problem is that we currently read NVM version and size from a known
-> location in the NVM. If we don't know the format we can't do that so
-> that would mean we need to expose active NVM with some size and hide
-> nvm_version. I would rather have this support included in the kernel
-> driver and expose standard set of attributes but no strong feelings from
-> one way or another.
 
-I agree with you; this is a safer and smarter approach to wait until detail=
-s of format
-for other vendors is known and export attributes only when it is.  This wil=
-l also
-encourage other vendors to open up their format if the only way to access N=
-VM is
-to document the headers.
+On 10/1/19 4:51 PM, Dave Hansen wrote:
+> On 10/1/19 1:49 PM, Alexander Duyck wrote:
+>> So it looks like v12 still has issues. I'm pretty sure you should be using
+>> spin_lock_irq(), not spin_lock() in page_reporting.c to avoid the
+>> possibility of an IRQ firing and causing lock recursion on the zone lock.
+> Lockdep should make all of this a lot easier to find.  Is it being used?
+
+I do have it in the function which returns the pages to the buddy but I missed
+it in the function that isolates the pages.
+I will correct this.
+
+
+-- 
+Thanks
+Nitesh
+
