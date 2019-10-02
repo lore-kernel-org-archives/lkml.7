@@ -2,164 +2,140 @@ Return-Path: <SRS0=zem1=X3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 22A7FC35280
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 15:52:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC9B2C35280
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 15:54:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EF06321848
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 15:52:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 80E92222C2
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 15:54:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="kJROyQbd"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="Rik/3mFa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729101AbfJBPws (ORCPT
+        id S1729102AbfJBPyu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Oct 2019 11:52:48 -0400
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:56962 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728735AbfJBPwr (ORCPT
+        Wed, 2 Oct 2019 11:54:50 -0400
+Received: from mailout1.w1.samsung.com ([210.118.77.11]:46212 "EHLO
+        mailout1.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725747AbfJBPyu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Oct 2019 11:52:47 -0400
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id x92FqiDY000525;
-        Wed, 2 Oct 2019 10:52:44 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1570031564;
-        bh=jUwzOTACrW4PgJU67Xj0iedFoATHNagNtWCjRbCTGg0=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=kJROyQbdRzOnGD8xqRmwuWaE8GP2RkagkiXIDSSmL4jACJBGB1QY6IPN9JjRd647L
-         3rOJqwGdJATRp8WSlIbgjcWmyrlXajXZZIX/2m35QqVyitzbW7MvDa3ODfH4jSv2Nj
-         FONyyKi9utgfh2J9SDB5RmpcPFwEH8BELIDOQ3Nk=
-Received: from DLEE103.ent.ti.com (dlee103.ent.ti.com [157.170.170.33])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x92Fqi3I024303
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 2 Oct 2019 10:52:44 -0500
-Received: from DLEE106.ent.ti.com (157.170.170.36) by DLEE103.ent.ti.com
- (157.170.170.33) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Wed, 2 Oct
- 2019 10:52:33 -0500
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE106.ent.ti.com
- (157.170.170.36) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Wed, 2 Oct 2019 10:52:44 -0500
-Received: from [10.250.65.13] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id x92Fqhmi099976;
-        Wed, 2 Oct 2019 10:52:44 -0500
-Subject: Re: [PATCH v10 00/16] Multicolor Framework
-To:     <jacek.anaszewski@gmail.com>, <pavel@ucw.cz>
-CC:     <linux-leds@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-References: <20191001145620.11123-1-dmurphy@ti.com>
-From:   Dan Murphy <dmurphy@ti.com>
-Message-ID: <3092db49-04de-4a3d-1562-e4728f000e53@ti.com>
-Date:   Wed, 2 Oct 2019 10:53:26 -0500
+        Wed, 2 Oct 2019 11:54:50 -0400
+Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
+        by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20191002155448euoutp01050c600cbb412f8fb2b5ab6a4c7ec0b0~J34CjPBkh1330813308euoutp018
+        for <linux-kernel@vger.kernel.org>; Wed,  2 Oct 2019 15:54:48 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20191002155448euoutp01050c600cbb412f8fb2b5ab6a4c7ec0b0~J34CjPBkh1330813308euoutp018
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1570031688;
+        bh=dO98rwiJ4tvmdexXBQqD68SKjJaPBN1+ST7RvpER/yg=;
+        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
+        b=Rik/3mFaYggaSmisUCEjz6jwDaT5L7pU+idLcipx6RMJhyH/1rTHn+kaev0sFH/6D
+         nNX7o8wl1Jv5dA7PJgQd1ErzWjdTsGpAg5VtNm7pXn1db0n6owuOw7OuCo1QCYTbHP
+         k7kxbqHVv/j3Yd75EAAL730fUxvAYqR1ozQqSt74=
+Received: from eusmges2new.samsung.com (unknown [203.254.199.244]) by
+        eucas1p2.samsung.com (KnoxPortal) with ESMTP id
+        20191002155448eucas1p246e67cfa52a412c3d3e41a8f6bd78b71~J34CDIQjb3055930559eucas1p2X;
+        Wed,  2 Oct 2019 15:54:48 +0000 (GMT)
+Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
+        eusmges2new.samsung.com (EUCPMTA) with SMTP id 5B.22.04309.848C49D5; Wed,  2
+        Oct 2019 16:54:48 +0100 (BST)
+Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
+        eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
+        20191002155447eucas1p27fedafa6277bb3fbff62be76ecec61d3~J34BwhW5d2815328153eucas1p2y;
+        Wed,  2 Oct 2019 15:54:47 +0000 (GMT)
+Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
+        eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
+        20191002155447eusmtrp1994d135604b7ad804df78150467540fc~J34Bv4hwf1558815588eusmtrp1G;
+        Wed,  2 Oct 2019 15:54:47 +0000 (GMT)
+X-AuditID: cbfec7f4-ae1ff700000010d5-92-5d94c8486127
+Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
+        eusmgms1.samsung.com (EUCPMTA) with SMTP id 77.35.04166.748C49D5; Wed,  2
+        Oct 2019 16:54:47 +0100 (BST)
+Received: from [106.120.51.75] (unknown [106.120.51.75]) by
+        eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
+        20191002155447eusmtip2f9fcb187e200c69f7015f72d91c42f9d~J34BOmENe0880708807eusmtip23;
+        Wed,  2 Oct 2019 15:54:47 +0000 (GMT)
+Subject: Re: [PATCH v4 1/6] opp: Handle target/min/max voltage in
+ dev_pm_opp_adjust_voltage()
+To:     Krzysztof Kozlowski <krzk@kernel.org>, vireshk@kernel.org
+Cc:     robh+dt@kernel.org, kgene@kernel.org, devicetree@vger.kernel.org,
+        linux-pm@vger.kernel.org, linux-samsung-soc@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        b.zolnierkie@samsung.com, m.szyprowski@samsung.com
+From:   Sylwester Nawrocki <s.nawrocki@samsung.com>
+Message-ID: <ada1bb2f-a824-c34e-6561-04a35782a9b8@samsung.com>
+Date:   Wed, 2 Oct 2019 17:54:46 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Thunderbird/60.8.0
 MIME-Version: 1.0
-In-Reply-To: <20191001145620.11123-1-dmurphy@ti.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
+In-Reply-To: <20191002143310.GA15898@pi3>
+Content-Language: en-GB
 Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrJKsWRmVeSWpSXmKPExsWy7djP87oeJ6bEGlz5z26xccZ6Vov5R86x
+        WvQ/fs1scf78BnaLTY+vsVpc3jWHzeJz7xFGixnn9zFZrD1yl92ide8RdovND46xOXB7bFrV
+        yeaxeUm9R9+WVYwenzfJBbBEcdmkpOZklqUW6dslcGUsfn+EseAKW8XCpp3MDYxbWbsYOTgk
+        BEwkFu8P6mLk4hASWMEo8X7XcRYI5wujRN/TN4wQzmdGibttd4E6OME6Vq/9ApVYzijx+Osj
+        RpCEkMBbRonzN71BbGGBeIkdkw6wg9giArYSd75OARvLLPCfUeJQ3082kASbgKFE79E+sGZe
+        ATuJH3vngW1gEVCReNa8mAnEFhWIkPj04DArRI2gxMmZT1hAbE4BTYlPl06D1TALiEs0fVnJ
+        CmHLS2x/O4cZZJmEwCl2ia4Ve5ggznaR+LT6HDOELSzx6vgWdghbRuL05B4WiIZmRome3bfZ
+        IZwJjBL3jy9ghKiyljh8/CI4yJiBVq/fpQ8RdpR483w3GyQk+SRuvBWEOIJPYtK26cwQYV6J
+        jjYhiGoVid+rpkOdIyXR/eQ/ywRGpVlIXpuF5J1ZSN6ZhbB3ASPLKkbx1NLi3PTUYqO81HK9
+        4sTc4tK8dL3k/NxNjMAEdfrf8S87GHf9STrEKMDBqMTD2xA0OVaINbGsuDL3EKMEB7OSCO+l
+        9VNihXhTEiurUovy44tKc1KLDzFKc7AoifNWMzyIFhJITyxJzU5NLUgtgskycXBKNTAy7pg2
+        I0eSS11d56nM1L4fBw1m6f78LG6i/SGHdcnN9TWdMmWa6zYVnGEXvGxdXad6lt0o+1m62bvA
+        fTu+cwW92L/2xU5dn+V9U4TXPZSNj/H7pWcQ3XrTPaI0Zf5CpsMruH7clBRu92g6PvcPC8PL
+        2ccep0VYqMlo9SXIMYWof3Gou30vm0uJpTgj0VCLuag4EQC7epL4TAMAAA==
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrDIsWRmVeSWpSXmKPExsVy+t/xe7ruJ6bEGvxoMbTYOGM9q8X8I+dY
+        Lfofv2a2OH9+A7vFpsfXWC0u75rDZvG59wijxYzz+5gs1h65y27RuvcIu8XmB8fYHLg9Nq3q
+        ZPPYvKTeo2/LKkaPz5vkAlii9GyK8ktLUhUy8otLbJWiDS2M9AwtLfSMTCz1DI3NY62MTJX0
+        7WxSUnMyy1KL9O0S9DIWvz/CWHCFrWJh007mBsatrF2MnBwSAiYSq9d+Yexi5OIQEljKKHHw
+        wGumLkYOoISUxPwWJYgaYYk/17rYIGpeM0q0d25mA0kIC8RL7Jh0gB3EFhGwlbjzdQoLSBGz
+        wH9Gia6uw1Ad9xglfvQeZAGpYhMwlOg92scIYvMK2En82DsP7AwWARWJZ82LmUBsUYEIicM7
+        ZkHVCEqcnPkErJdTQFPi06XTYDXMAuoSf+ZdYoawxSWavqxkhbDlJba/ncM8gVFoFpL2WUha
+        ZiFpmYWkZQEjyypGkdTS4tz03GJDveLE3OLSvHS95PzcTYzAmNx27OfmHYyXNgYfYhTgYFTi
+        4W0ImhwrxJpYVlyZe4hRgoNZSYT30vopsUK8KYmVValF+fFFpTmpxYcYTYGem8gsJZqcD0wX
+        eSXxhqaG5haWhubG5sZmFkrivB0CB2OEBNITS1KzU1MLUotg+pg4OKUaGC1CLSK/lEy4n5hm
+        Z6xU579LtPlJnDULE/uVW8L3/wbvnmmSyXji8XxDjmmKudfyHrR+it7SfW+7u+nBgvqmYouy
+        azPkwl9sS6yfNveGqZxKX1D0sw8mBbIZS1jky/ayz9ZwZDylcnfHq8K4+giJ+8Ga7/ebtl6R
+        ePleubTsUYmDt6Dil22LlFiKMxINtZiLihMB6R928t8CAAA=
+X-CMS-MailID: 20191002155447eucas1p27fedafa6277bb3fbff62be76ecec61d3
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20190910123636eucas1p250ec04901f227b947cc38936563f63b2
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20190910123636eucas1p250ec04901f227b947cc38936563f63b2
+References: <20190910123618.27985-1-s.nawrocki@samsung.com>
+        <CGME20190910123636eucas1p250ec04901f227b947cc38936563f63b2@eucas1p2.samsung.com>
+        <20190910123618.27985-2-s.nawrocki@samsung.com> <20191002143310.GA15898@pi3>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello
-
-On 10/1/19 9:56 AM, Dan Murphy wrote:
-> Hello
+On 10/2/19 16:33, Krzysztof Kozlowski wrote:
+> On Tue, Sep 10, 2019 at 02:36:13PM +0200, Sylwester Nawrocki wrote:
+>> To be squashed with patch "PM / OPP: Support adjusting OPP voltages
+>> at runtime".
+>>
+>> Signed-off-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
+>> ---
+>>
+>>  drivers/opp/core.c     | 10 ++++++++--
+>>  include/linux/pm_opp.h |  3 ++-
+>>  2 files changed, 10 insertions(+), 3 deletions(-)
 >
-> I have updated the code per v9 review comments
-> https://lore.kernel.org/patchwork/project/lkml/list/?series=411824
+> I'll take the ASV driver via samsung-soc but I see it depends on this
+> one.  Please provide me a stable tag with it or an Ack.
 
-I have a v11 version ready to go would like to include any v10 comments
+There is further dependency on patch 
+"[PATCH v4 6/8] PM / OPP: Support adjusting OPP voltages at runtime"
+https://lore.kernel.org/linux-arm-kernel/1565703113-31479-7-git-send-email-andrew-sh.cheng@mediatek.com
 
-So v11 changes include
+Viresh, what are your plans WRT to those patches?
 
-- Adding inline MC framework functions for devices that do not have a 
-direct dependency on the MC framework (ie LP55xx)
-
-- Update and fixed the devm_* MC framework functions (fixed the struct 
-in match and added the devm_*_ext functions)
-
-- Removed the hard dependency on the MC framework in the Kconfig for the 
-LP55xx_common code.
-
-Dan
-
-
-> Some notable changes:
->
-> MC framework 4/16
->   - Added a color structure for device drivers to use to associate color IDs with
->   brightness values
->   - Name of structure may need some work but this is for proof of concept.
->   - Added back in the devm_* APIs
->   - Inlined function led_classdev_multicolor_register
->
-> LP55xx
->   - Fixed binding doc to add "@" to nodes [8/16]
->   - Fixed associated DT file to add the "@" to each node [9,10,11/16]
->   - Separate the LP5523 code changes from the LP55xx common code change
->   - Added channel to color ID mapping for LP55xx [12/16]
->
-> LP5523
->   - Separated out this code from LP55xx
->
-> LP5521
->   - New patch adding multicolor framework support for this device
->
-> Dan
->
-> Dan Murphy (16):
->    dt: bindings: Add multicolor class dt bindings documention
->    dt-bindings: leds: Add multicolor ID to the color ID list
->    leds: Add multicolor ID to the color ID list
->    leds: multicolor: Introduce a multicolor class definition
->    dt: bindings: lp50xx: Introduce the lp50xx family of RGB drivers
->    leds: lp50xx: Add the LP50XX family of the RGB LED driver
->    dt: bindings: lp55xx: Be consistent in the document with LED acronym
->    dt: bindings: lp55xx: Update binding for Multicolor Framework
->    ARM: dts: n900: Add reg property to the LP5523 channel node
->    ARM: dts: imx6dl-yapp4: Add reg property to the lp5562 channel node
->    ARM: dts: ste-href: Add reg property to the LP5521 channel nodes
->    leds: lp55xx: Add multicolor framework support to lp55xx
->    leds: lp5523: Update the lp5523 code to add intensity function
->    leds: lp5521: Add multicolor framework intensity support
->    leds: lp55xx: Fix checkpatch file permissions issues
->    leds: lp5523: Fix checkpatch issues in the code
->
->   .../ABI/testing/sysfs-class-led-multicolor    |  35 +
->   .../bindings/leds/leds-class-multicolor.txt   |  98 +++
->   .../devicetree/bindings/leds/leds-lp50xx.txt  | 148 ++++
->   .../devicetree/bindings/leds/leds-lp55xx.txt  | 155 +++-
->   Documentation/leds/index.rst                  |   1 +
->   Documentation/leds/leds-class-multicolor.rst  |  96 +++
->   arch/arm/boot/dts/imx6dl-yapp4-common.dtsi    |  14 +-
->   arch/arm/boot/dts/omap3-n900.dts              |  29 +-
->   arch/arm/boot/dts/ste-href.dtsi               |  22 +-
->   drivers/leds/Kconfig                          |  22 +
->   drivers/leds/Makefile                         |   2 +
->   drivers/leds/led-class-multicolor.c           | 268 ++++++
->   drivers/leds/led-core.c                       |   1 +
->   drivers/leds/leds-lp50xx.c                    | 784 ++++++++++++++++++
->   drivers/leds/leds-lp5521.c                    |  14 +
->   drivers/leds/leds-lp5523.c                    |  33 +-
->   drivers/leds/leds-lp55xx-common.c             | 191 ++++-
->   drivers/leds/leds-lp55xx-common.h             |  11 +
->   include/dt-bindings/leds/common.h             |   3 +-
->   include/linux/led-class-multicolor.h          |  88 ++
->   include/linux/platform_data/leds-lp55xx.h     |   6 +
->   21 files changed, 1928 insertions(+), 93 deletions(-)
->   create mode 100644 Documentation/ABI/testing/sysfs-class-led-multicolor
->   create mode 100644 Documentation/devicetree/bindings/leds/leds-class-multicolor.txt
->   create mode 100644 Documentation/devicetree/bindings/leds/leds-lp50xx.txt
->   create mode 100644 Documentation/leds/leds-class-multicolor.rst
->   create mode 100644 drivers/leds/led-class-multicolor.c
->   create mode 100644 drivers/leds/leds-lp50xx.c
->   create mode 100644 include/linux/led-class-multicolor.h
->
+-- 
+Thanks,
+Sylwester
