@@ -2,94 +2,178 @@ Return-Path: <SRS0=zem1=X3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 87CD4C35280
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 13:20:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 24827C352AA
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 13:22:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 51BFB21A4A
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 13:20:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570022431;
-	bh=g3t5nhV3guqKXwJxMUuc0EepL7CxVYfQMy0uPF6xuNg=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=C41UNGOnxn3sIdnRxeCPC02nC1AOkZiblk4B6Vvx4duwwnl4IfkY+dYmE4Ed3GE46
-	 aJYVTHdxOnGM9pgBciEhSJ7GlCeiHLJr9sBFnPrzQ+srZ1ocFJJIHwlMrRMh7IkAdd
-	 SVTxFPF9JQODHLncUZJnEDs8vxY1usn8T6VeM6vw=
+	by mail.kernel.org (Postfix) with ESMTP id 02CC721783
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 13:22:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727772AbfJBNUa (ORCPT
+        id S1727751AbfJBNW4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Oct 2019 09:20:30 -0400
-Received: from inca-roads.misterjones.org ([213.251.177.50]:38292 "EHLO
-        inca-roads.misterjones.org" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725999AbfJBNUa (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Oct 2019 09:20:30 -0400
-Received: from 78.163-31-62.static.virginmediabusiness.co.uk ([62.31.163.78] helo=why)
-        by cheepnis.misterjones.org with esmtpsa (TLSv1.2:AES256-GCM-SHA384:256)
-        (Exim 4.80)
-        (envelope-from <maz@kernel.org>)
-        id 1iFeYL-00083Y-Qs; Wed, 02 Oct 2019 15:20:25 +0200
-Date:   Wed, 2 Oct 2019 14:20:24 +0100
-From:   Marc Zyngier <maz@kernel.org>
-To:     Thierry Reding <thierry.reding@gmail.com>
-Cc:     Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] arm64: errata: Update stale comment
-Message-ID: <20191002142024.60c6bab8@why>
-In-Reply-To: <20190923091229.14675-1-thierry.reding@gmail.com>
-References: <20190923091229.14675-1-thierry.reding@gmail.com>
-Organization: Approximate
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Wed, 2 Oct 2019 09:22:56 -0400
+Received: from mx2.suse.de ([195.135.220.15]:36012 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725851AbfJBNWz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 2 Oct 2019 09:22:55 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 49CDEB368;
+        Wed,  2 Oct 2019 13:22:53 +0000 (UTC)
+Date:   Wed, 2 Oct 2019 15:22:52 +0200
+From:   Petr Mladek <pmladek@suse.com>
+To:     Miroslav Benes <mbenes@suse.cz>
+Cc:     jikos@kernel.org, jpoimboe@redhat.com, joe.lawrence@redhat.com,
+        nstange@suse.de, live-patching@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [RFC PATCH v2 1/3] livepatch: Clear relocation targets on a
+ module removal
+Message-ID: <20191002132252.wufgbd23sgqptyye@pathway.suse.cz>
+References: <20190905124514.8944-1-mbenes@suse.cz>
+ <20190905124514.8944-2-mbenes@suse.cz>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-SA-Exim-Connect-IP: 62.31.163.78
-X-SA-Exim-Rcpt-To: thierry.reding@gmail.com, catalin.marinas@arm.com, will@kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on cheepnis.misterjones.org); SAEximRunCond expanded to false
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190905124514.8944-2-mbenes@suse.cz>
+User-Agent: NeoMutt/20170912 (1.9.0)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 23 Sep 2019 11:12:29 +0200
-Thierry Reding <thierry.reding@gmail.com> wrote:
-
-> From: Thierry Reding <treding@nvidia.com>
+On Thu 2019-09-05 14:45:12, Miroslav Benes wrote:
+> We thus decided to reverse the relocation patching (clear all relocation
+> targets on x86_64, or return back nops on powerpc). The solution is not
+> universal and is too much arch-specific, but it may prove to be simpler
+> in the end.
 > 
-> Commit 73f381660959 ("arm64: Advertise mitigation of Spectre-v2, or lack
-> thereof") renamed the caller of the install_bp_hardening_cb() function
-> but forgot to update a comment, which can be confusing when trying to
-> follow the code flow.
-> 
-> Fixes: 73f381660959 ("arm64: Advertise mitigation of Spectre-v2, or lack thereof")
-> Signed-off-by: Thierry Reding <treding@nvidia.com>
-> ---
->  arch/arm64/kernel/cpu_errata.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/arch/arm64/kernel/cpu_errata.c b/arch/arm64/kernel/cpu_errata.c
-> index 1e43ba5c79b7..f593f4cffc0d 100644
-> --- a/arch/arm64/kernel/cpu_errata.c
-> +++ b/arch/arm64/kernel/cpu_errata.c
-> @@ -128,8 +128,8 @@ static void install_bp_hardening_cb(bp_hardening_cb_t fn,
->  	int cpu, slot = -1;
+> diff --git a/arch/powerpc/kernel/module_64.c b/arch/powerpc/kernel/module_64.c
+> index a93b10c48000..e461d456e447 100644
+> --- a/arch/powerpc/kernel/module_64.c
+> +++ b/arch/powerpc/kernel/module_64.c
+> @@ -741,6 +741,51 @@ int apply_relocate_add(Elf64_Shdr *sechdrs,
+>  	return 0;
+>  }
 >  
->  	/*
-> -	 * enable_smccc_arch_workaround_1() passes NULL for the hyp_vecs
-> -	 * start/end if we're a guest. Skip the hyp-vectors work.
-> +	 * detect_harden_bp_fw() passes NULL for the hyp_vecs start/end if
-> +	 * we're a guest. Skip the hyp-vectors work.
->  	 */
->  	if (!hyp_vecs_start) {
->  		__this_cpu_write(bp_hardening_data.fn, fn);
+> +#ifdef CONFIG_LIVEPATCH
+> +void clear_relocate_add(Elf64_Shdr *sechdrs,
+> +		       const char *strtab,
+> +		       unsigned int symindex,
+> +		       unsigned int relsec,
+> +		       struct module *me)
+> +{
+> +	unsigned int i;
+> +	Elf64_Rela *rela = (void *)sechdrs[relsec].sh_addr;
+> +	Elf64_Sym *sym;
+> +	unsigned long *location;
+> +	const char *symname;
+> +	u32 *instruction;
+> +
+> +	pr_debug("Applying ADD relocate section %u to %u\n", relsec,
 
-Acked-by: Marc Zyngier <maz@kernel.org>
+s/Applying/Clearing/
 
--- 
-Without deviation from the norm, progress is not possible.
+> +	       sechdrs[relsec].sh_info);
+> +
+> +	for (i = 0; i < sechdrs[relsec].sh_size / sizeof(*rela); i++) {
+> +		location = (void *)sechdrs[sechdrs[relsec].sh_info].sh_addr
+> +			+ rela[i].r_offset;
+> +		sym = (Elf64_Sym *)sechdrs[symindex].sh_addr
+> +			+ ELF64_R_SYM(rela[i].r_info);
+> +		symname = me->core_kallsyms.strtab
+> +			+ sym->st_name;
+> +
+> +		if (ELF64_R_TYPE(rela[i].r_info) != R_PPC_REL24)
+> +			continue;
+
+I expected that the code below would reverse the operations
+in apply_relocate_add() for case R_PPC_REL24. But it is not
+obvious for me.
+
+It might be because I am not familiar with the code. Or would
+it deserve some comments?
+
+> +
+> +		if (sym->st_shndx != SHN_UNDEF &&
+> +		    sym->st_shndx != SHN_LIVEPATCH)
+> +			continue;
+> +
+> +		instruction = (u32 *)location;
+> +		if (is_mprofile_mcount_callsite(symname, instruction))
+> +			continue;
+> +
+> +		if (!instr_is_relative_link_branch(*instruction))
+> +			continue;
+> +
+> +		instruction += 1;
+> +		*instruction = PPC_INST_NOP;
+> +	}
+> +}
+> +#endif
+> +
+>  #ifdef CONFIG_DYNAMIC_FTRACE
+>  
+> diff --git a/kernel/livepatch/core.c b/kernel/livepatch/core.c
+> index ab4a4606d19b..f0b380d2a17a 100644
+> --- a/kernel/livepatch/core.c
+> +++ b/kernel/livepatch/core.c
+> @@ -295,6 +295,45 @@ static int klp_write_object_relocations(struct module *pmod,
+>  	return ret;
+>  }
+>  
+> +static void klp_clear_object_relocations(struct module *pmod,
+> +					struct klp_object *obj)
+> +{
+> +	int i, cnt;
+> +	const char *objname, *secname;
+> +	char sec_objname[MODULE_NAME_LEN];
+> +	Elf_Shdr *sec;
+> +
+> +	objname = klp_is_module(obj) ? obj->name : "vmlinux";
+> +
+> +	/* For each klp relocation section */
+> +	for (i = 1; i < pmod->klp_info->hdr.e_shnum; i++) {
+> +		sec = pmod->klp_info->sechdrs + i;
+> +		secname = pmod->klp_info->secstrings + sec->sh_name;
+> +		if (!(sec->sh_flags & SHF_RELA_LIVEPATCH))
+> +			continue;
+> +
+> +		/*
+> +		 * Format: .klp.rela.sec_objname.section_name
+> +		 * See comment in klp_resolve_symbols() for an explanation
+> +		 * of the selected field width value.
+> +		 */
+> +		secname = pmod->klp_info->secstrings + sec->sh_name;
+> +		cnt = sscanf(secname, ".klp.rela.%55[^.]", sec_objname);
+> +		if (cnt != 1) {
+> +			pr_err("section %s has an incorrectly formatted name\n",
+> +			       secname);
+> +			continue;
+> +		}
+> +
+> +		if (strcmp(objname, sec_objname))
+> +			continue;
+> +
+
+It would make the review easier when the order of 1st and 2nd
+patch was swaped. I mean that I would not need to check twice
+that the two functions actually share the same code.
+
+> +		clear_relocate_add(pmod->klp_info->sechdrs,
+> +				   pmod->core_kallsyms.strtab,
+> +				   pmod->klp_info->symndx, i, pmod);
+> +	}
+> +}
+> +
+>  /*
+>   * Sysfs Interface
+>   *
+
+I was not able to check correctness of the ppc and s390 parts.
+Otherwise, it looks good to me.
+
+Best Regards,
+Petr
