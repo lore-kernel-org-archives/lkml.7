@@ -2,78 +2,121 @@ Return-Path: <SRS0=zem1=X3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 16A25C35280
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 07:55:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48C80C352AA
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 07:55:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E8C75218DE
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 07:55:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1FD182190F
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 07:55:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1570002948;
+	bh=CeWo+ICeaxiQGkLhXwBsakw/IQzeWcwu7/y9FMX94E8=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=wLRFXofzOacWIFZ1/FvezaEZAHULOpnkQw095Ajx64NRY5uolhBibuy1JF26SgLhK
+	 8WqX4etZJxuCbDM/B1dEuNA0qju4+pS6MIMM+hhI3mFk9Smc8/mIIUP/OIxNjP9cKC
+	 wRnrKiFc6P8uqY4iTUJLY438kJ98V0119Fk+JKi0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727152AbfJBHze (ORCPT
+        id S1727175AbfJBHzr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Oct 2019 03:55:34 -0400
-Received: from mga04.intel.com ([192.55.52.120]:2269 "EHLO mga04.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726321AbfJBHze (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Oct 2019 03:55:34 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 02 Oct 2019 00:55:33 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,573,1559545200"; 
-   d="scan'208";a="205273107"
-Received: from zeliteleevi.tm.intel.com ([10.237.55.130])
-  by fmsmga001.fm.intel.com with ESMTP; 02 Oct 2019 00:55:32 -0700
-Date:   Wed, 2 Oct 2019 10:55:31 +0300 (EEST)
-From:   Kai Vehmanen <kai.vehmanen@linux.intel.com>
-X-X-Sender: kvehmane@zeliteleevi
-To:     Stephen Rothwell <sfr@canb.auug.org.au>
-cc:     Mark Brown <broonie@kernel.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Kai Vehmanen <kai.vehmanen@linux.intel.com>,
-        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Subject: Re: linux-next: Fixes tag needs some work in the sound-asoc-fixes
- tree
-In-Reply-To: <20191002082904.4eef7f15@canb.auug.org.au>
-Message-ID: <alpine.DEB.2.21.1910021043590.16459@zeliteleevi>
-References: <20191002082904.4eef7f15@canb.auug.org.au>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7 02160 Espoo
+        Wed, 2 Oct 2019 03:55:47 -0400
+Received: from mail-oi1-f194.google.com ([209.85.167.194]:38232 "EHLO
+        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726038AbfJBHzr (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 2 Oct 2019 03:55:47 -0400
+Received: by mail-oi1-f194.google.com with SMTP id m16so16862239oic.5;
+        Wed, 02 Oct 2019 00:55:46 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=QclJuRY72MdDp8jaVWHz7GodR3RToc7WJQTayvwTp3c=;
+        b=kC2gnKKgX9TajMnfZYHs7kGh3ftILQCnu62FXBp1/4g+OV3bU5YAWapTtwZoU3ZL98
+         EikOZla/pyxVR5a01hrz5bex+aCma6AjKm9YLruE//juVRDAoae01csTgnUCjuLcQomY
+         PYBCFpQ73HFR2zMuts5LshMdSCaKGNX5gg56D3LRrvR32fH/TdP1AvQiqOOfHPewkJXb
+         ekzjeNe+4Aqz3a6oWIfLruKQea0fyWtCUKRsegpiypbuvGcUE+zwcxxkzYUQLo+xoNPC
+         o15GyZQ/7IxIO7fCOWQTU+ixBKVpd2mRctybNohdLh+ZgRDP4XnYR5pdFMTnrxgfLdQD
+         Qiyw==
+X-Gm-Message-State: APjAAAVV1wD+ny6lHFgWvUdtuXGclrmOVkaePmRccVQA+mhlsD82qZe5
+        srpARVJRZX373YStAUBjWmIQWhJ02xABiX1kRqc=
+X-Google-Smtp-Source: APXvYqyvd7SG7LoMuuKXntk1Mpdg/tvIGEsHdzjmV+zL6w4c+HnQEkMdonbkpe5/j9xp0XcEr8lfOmkRlbGvpFr4Bvc=
+X-Received: by 2002:aca:50ca:: with SMTP id e193mr1848851oib.110.1570002945947;
+ Wed, 02 Oct 2019 00:55:45 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+References: <20190926150406.v1.1.I07a769ad7b00376777c9815fb169322cde7b9171@changeid>
+ <20190927044239.589e7c4c@oasis.local.home> <20191001163542.GB87296@google.com>
+ <20191001130343.4480afe3@gandalf.local.home> <20191001174235.GC87296@google.com>
+ <20191001140846.65d7866c@gandalf.local.home> <20191001193701.GD87296@google.com>
+In-Reply-To: <20191001193701.GD87296@google.com>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Wed, 2 Oct 2019 09:55:33 +0200
+Message-ID: <CAJZ5v0iepu-WAdT=kLcXruRGAerjfPqzgxK_003OpjRho4OrPg@mail.gmail.com>
+Subject: Re: [PATCH v1] PM / Domains: Add tracepoints
+To:     Matthias Kaehlcke <mka@chromium.org>
+Cc:     Steven Rostedt <rostedt@goodmis.org>,
+        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
+        Kevin Hilman <khilman@kernel.org>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Len Brown <len.brown@intel.com>, Pavel Machek <pavel@ucw.cz>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Douglas Anderson <dianders@chromium.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        Amit Kucheria <amit.kucheria@linaro.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Ravi Chandra Sadineni <ravisadineni@chromium.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On Tue, Oct 1, 2019 at 9:37 PM Matthias Kaehlcke <mka@chromium.org> wrote:
+>
+> On Tue, Oct 01, 2019 at 02:08:46PM -0400, Steven Rostedt wrote:
+> > On Tue, 1 Oct 2019 10:42:35 -0700
+> > Matthias Kaehlcke <mka@chromium.org> wrote:
+> >
+> > > On Tue, Oct 01, 2019 at 01:03:43PM -0400, Steven Rostedt wrote:
+> > > > On Tue, 1 Oct 2019 09:35:42 -0700
+> > > > Matthias Kaehlcke <mka@chromium.org> wrote:
+> > > >
+> > > > > How about this instead:
+> > > > >
+> > > > >   Add tracepoints for genpd_power_on, genpd_power_off and
+> > > > >   genpd_set_performance_state. The tracepoints can help with
+> > > > >   understanding power domain behavior of a given device, which
+> > > > >   may be particularly interesting for battery powered devices
+> > > > >   and suspend/resume.
+> > > >
+> > > > Do you have a use case example to present?
+> > >
+> > > TBH I'm not looking into a specific use case right now. While
+> > > peeking around in /sys/kernel/debug/tracing/events to learn more
+> > > about existing tracepoints that might be relevant for my work
+> > > I noticed the absence of genpd ones and it seemed a good idea to
+> > > add them preemptively. Conceptually they seem similar to the
+> > > existing regulator_enable/disable and cpu_idle tracepoints.
+> > >
+> > > As an abstract use case I could see power analysis on battery
+> > > powered devices during suspend. genpd_power_on/off allow to see
+> > > which power domains remain on during suspend, and might give
+> > > insights for possible power saving options. Examples could be that
+> > > a power domain stays unexpectedly on due to a misconfiguration, or
+> > > two power domains remain on when it could be only one if you just
+> > > moved that one pin/port over to the other domain in the next
+> > > hardware revision.
+> >
+> > If the power management maintainers have no issues with adding these,
+> > then neither do I ;-)  It would be them who would pull them in anyway.
+>
+> Ok, I'll send a new version with the changes you suggested and some more
+> info in the commit message, unless PM maintainers raise concerns before
+> that.
 
-On Wed, 2 Oct 2019, Stephen Rothwell wrote:
-
-> In commit
-> 
->   e66e52c5b742 ("ASoC: SOF: pcm: fix resource leak in hw_free")
-> 
-> Fixes tag
-> 
->   Fixes: c29d96c3b9b4 ("ASoC: SOF: reset DMA state in prepare")
-> 
-> has these problem(s):
-> 
->   - Target SHA1 does not exist
-> 
-> Did you mean
-> 
-> Fixes: 04c8027764bc ("ASoC: SOF: reset DMA state in prepare")
-
-yes, you are correct. This was a mistake in original patch submission, 
-which had a fixes SHA1 pointing to the patch SOF project's git tree and 
-not the merged patch.
-
-Br, Kai
+I have no problems with adding tracepoints (or trace events to be more
+precise) in there, but Ulf has been taking care of that code for quite
+some time, so his opinion matters more than mine in that respect.
