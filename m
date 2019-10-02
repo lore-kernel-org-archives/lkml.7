@@ -2,167 +2,309 @@ Return-Path: <SRS0=zem1=X3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4AAC8C352AA
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 06:44:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A4A0C35280
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 06:45:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 137F12086A
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 06:44:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 36BF22086A
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 06:45:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="IpD0RgpS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726010AbfJBGo2 (ORCPT
+        id S1726139AbfJBGpG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Oct 2019 02:44:28 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:26332 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725851AbfJBGo1 (ORCPT
+        Wed, 2 Oct 2019 02:45:06 -0400
+Received: from mail-lf1-f66.google.com ([209.85.167.66]:46214 "EHLO
+        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725851AbfJBGpF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Oct 2019 02:44:27 -0400
-Received: from pps.filterd (m0098404.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x926gt48140993
-        for <linux-kernel@vger.kernel.org>; Wed, 2 Oct 2019 02:44:26 -0400
-Received: from e06smtp05.uk.ibm.com (e06smtp05.uk.ibm.com [195.75.94.101])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2vckrncv04-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Wed, 02 Oct 2019 02:44:26 -0400
-Received: from localhost
-        by e06smtp05.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <borntraeger@de.ibm.com>;
-        Wed, 2 Oct 2019 07:44:24 +0100
-Received: from b06cxnps4075.portsmouth.uk.ibm.com (9.149.109.197)
-        by e06smtp05.uk.ibm.com (192.168.101.135) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Wed, 2 Oct 2019 07:44:21 +0100
-Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
-        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x926iKGR47186000
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 2 Oct 2019 06:44:20 GMT
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id B05ED11C050;
-        Wed,  2 Oct 2019 06:44:20 +0000 (GMT)
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 677E211C058;
-        Wed,  2 Oct 2019 06:44:20 +0000 (GMT)
-Received: from oc7455500831.ibm.com (unknown [9.152.224.146])
-        by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Wed,  2 Oct 2019 06:44:20 +0000 (GMT)
-Subject: Re: [PATCH 5.4-rc1 BUILD FIX] s390: mark __cpacf_query() as
- __always_inline
-To:     Jiri Kosina <jikos@kernel.org>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     linux-s390@vger.kernel.org, Michal Kubecek <mkubecek@suse.cz>,
-        linux-kernel@vger.kernel.org
-References: <nycvar.YFH.7.76.1910012203010.13160@cbobk.fhfr.pm>
-From:   Christian Borntraeger <borntraeger@de.ibm.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=borntraeger@de.ibm.com; prefer-encrypt=mutual; keydata=
- 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
- syiRa+UVlsKmx1hsEg==
-Date:   Wed, 2 Oct 2019 08:44:20 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Wed, 2 Oct 2019 02:45:05 -0400
+Received: by mail-lf1-f66.google.com with SMTP id t8so11775393lfc.13
+        for <linux-kernel@vger.kernel.org>; Tue, 01 Oct 2019 23:45:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=4OtR3naGyQowawH2mmeSJPtdsB+JfD14a91q4v8Mut4=;
+        b=IpD0RgpS2LYBMiwwuaArS1K8KLVRgxh2aOR1/BVWcaChPYeEH+9Pi6QeMSMBJxvvOs
+         Ig4HijHQBdguqN6pqnyX7gKPw3J7wstAC91uzwpyIeovejSFoKa+Oqj/xf1iDAB/4eQ5
+         VD12F/NqsNRCfL++Or47hFHXaQiSPNAB3mBTIokNisapvqbt17sZ2SgonOXL9U1IS70w
+         gHJPG/b9mcIUm2MfAO5BncQBs9obXFgyBaKt2AIhWMZqxtoIqTRs8H+D0q3lbATKzS0C
+         GYlY9xopBgZ76AEhdtq8FsfeQbaGCcaUKff17mDLE0rd86QK4v9ljHu32iFui0zz7Ghe
+         42+A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=4OtR3naGyQowawH2mmeSJPtdsB+JfD14a91q4v8Mut4=;
+        b=J5rnT6CqOFwn/MW4Z4ot2WmIHm6S4clzfn7K4w4/gHKElOZw1tAmNx0VOqii4mu6nq
+         fgnf4Hnr0S2yjRWqh9oSrVFMlD9MLbXciNtXqrNkD/dSb0wElZMdWrrGSq3Wi6K1Fshu
+         qQk4r0Bnf6gF9EuWe5i3iGrJccJdE1L/7HwTUT2SWaJ5kYUAHRtM+CbSkDgibTkS7hD1
+         hRMsxXDDSdwnd05macYrs+xgA/RKV7e1funOx/+nY0d5TR7mqsDP1AuHrZR0COAxACnv
+         8XVtMuwoUxgJ4QvcrJE3lzL32XltPdakNX0cbaGpQmbSLwE9btNAPHcoAJtsnanCo51v
+         NLHw==
+X-Gm-Message-State: APjAAAVWaRZZNvhxzy2MOe/D/90FCoh8ySxPxKRpy+EFwdOGbPFN/k30
+        nuJiWYn0wdmiSg7jGI3y/ROQpcLqT92hiuiefizWCw==
+X-Google-Smtp-Source: APXvYqy6+X60Gn6P6523Pf3kaDAobFeY8RK93haDpjiL9ay6p2ItI3ZFN1onVLq7yrB8DFqje/YLT5AD3C/7gptkR7c=
+X-Received: by 2002:a05:6512:304:: with SMTP id t4mr1194019lfp.15.1569998702932;
+ Tue, 01 Oct 2019 23:45:02 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <nycvar.YFH.7.76.1910012203010.13160@cbobk.fhfr.pm>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-x-cbid: 19100206-0020-0000-0000-000003743B0E
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19100206-0021-0000-0000-000021CA3D72
-Message-Id: <dc7f77bd-18d4-5f0e-6749-b00b23647f53@de.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-10-02_04:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1908290000 definitions=main-1910020062
+References: <1568878421-12301-1-git-send-email-vincent.guittot@linaro.org>
+ <1568878421-12301-5-git-send-email-vincent.guittot@linaro.org>
+ <9bfb3252-c268-8c0c-9c72-65f872e9c8b2@arm.com> <CAKfTPtDUFMFnD+RZndx0+8A+V9HV9Hv0TN+p=mAge0VsqS6xmA@mail.gmail.com>
+ <3dca46c5-c395-e2b3-a7e8-e9208ba741c8@arm.com>
+In-Reply-To: <3dca46c5-c395-e2b3-a7e8-e9208ba741c8@arm.com>
+From:   Vincent Guittot <vincent.guittot@linaro.org>
+Date:   Wed, 2 Oct 2019 08:44:51 +0200
+Message-ID: <CAKfTPtDGxX11=vgJsV-o-jOxgPmbr0VXWmR6LEVuD6WG=VRXyA@mail.gmail.com>
+Subject: Re: [PATCH v3 04/10] sched/fair: rework load_balance
+To:     Dietmar Eggemann <dietmar.eggemann@arm.com>
+Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Phil Auld <pauld@redhat.com>,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        Srikar Dronamraju <srikar@linux.vnet.ibm.com>,
+        Quentin Perret <quentin.perret@arm.com>,
+        Morten Rasmussen <Morten.Rasmussen@arm.com>,
+        Hillf Danton <hdanton@sina.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, 1 Oct 2019 at 18:53, Dietmar Eggemann <dietmar.eggemann@arm.com> wrote:
+>
+> On 01/10/2019 10:14, Vincent Guittot wrote:
+> > On Mon, 30 Sep 2019 at 18:24, Dietmar Eggemann <dietmar.eggemann@arm.com> wrote:
+> >>
+> >> Hi Vincent,
+> >>
+> >> On 19/09/2019 09:33, Vincent Guittot wrote:
+>
+> [...]
+>
+> >>> @@ -7347,7 +7362,7 @@ static int detach_tasks(struct lb_env *env)
+> >>>   {
+> >>>         struct list_head *tasks = &env->src_rq->cfs_tasks;
+> >>>         struct task_struct *p;
+> >>> -     unsigned long load;
+> >>> +     unsigned long util, load;
+> >>
+> >> Minor: Order by length or reduce scope to while loop ?
+> >
+> > I don't get your point here
+>
+> Nothing dramatic here! Just
+>
+> diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+> index d0c3aa1dc290..a08f342ead89 100644
+> --- a/kernel/sched/fair.c
+> +++ b/kernel/sched/fair.c
+> @@ -7333,8 +7333,8 @@ static const unsigned int sched_nr_migrate_break = 32;
+>  static int detach_tasks(struct lb_env *env)
+>  {
+>         struct list_head *tasks = &env->src_rq->cfs_tasks;
+> -       struct task_struct *p;
+>         unsigned long load, util;
+> +       struct task_struct *p;
 
-On 01.10.19 22:08, Jiri Kosina wrote:
-> arch/s390/kvm/kvm-s390.c calls on several places __cpacf_query() directly, 
-> which makes it impossible to meet the "i" constraint for the asm operands 
-> (opcode in this case).
-> 
-> As we are now force-enabling CONFIG_OPTIMIZE_INLINING on all 
-> architectures, this causes a build failure on s390:
-> 
->    In file included from arch/s390/kvm/kvm-s390.c:44:
->    ./arch/s390/include/asm/cpacf.h: In function '__cpacf_query':
->    ./arch/s390/include/asm/cpacf.h:179:2: warning: asm operand 3 probably doesn't match constraints
->      179 |  asm volatile(
->          |  ^~~
->    ./arch/s390/include/asm/cpacf.h:179:2: error: impossible constraint in 'asm'
-> 
-> Mark __cpacf_query() as __always_inline in order to fix that, analogically 
-> how we fixes __cpacf_check_opcode(), cpacf_query_func() and scpacf_query() 
-> already.
-> 
-> Reported-and-tested-by: Michal Kubecek <mkubecek@suse.cz>
-> Fixes: d83623c5eab2 ("s390: mark __cpacf_check_opcode() and cpacf_query_func() as __always_inline")
-> Fixes: e60fb8bf68d4 ("s390/cpacf: mark scpacf_query() as __always_inline")
-> Fixes: ac7c3e4ff401 ("compiler: enable CONFIG_OPTIMIZE_INLINING forcibly")
-> Fixes: 9012d011660e ("compiler: allow all arches to enable CONFIG_OPTIMIZE_INLINING")
-> Signed-off-by: Jiri Kosina <jkosina@suse.cz>
+hmm... I still don't get this.
+We usually gather pointers instead of interleaving them with other varaiables
 
-Thanks applied. 
+>         int detached = 0;
+>
+>         lockdep_assert_held(&env->src_rq->lock);
+>
+> or
+>
+> diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+> index d0c3aa1dc290..4d1864d43ed7 100644
+> --- a/kernel/sched/fair.c
+> +++ b/kernel/sched/fair.c
+> @@ -7334,7 +7334,6 @@ static int detach_tasks(struct lb_env *env)
+>  {
+>         struct list_head *tasks = &env->src_rq->cfs_tasks;
+>         struct task_struct *p;
+> -       unsigned long load, util;
+>         int detached = 0;
+>
+>         lockdep_assert_held(&env->src_rq->lock);
+> @@ -7343,6 +7342,8 @@ static int detach_tasks(struct lb_env *env)
+>                 return 0;
+>
+>         while (!list_empty(tasks)) {
+> +               unsigned long load, util;
+> +
+>                 /*
+>
+> [...]
+>
+> >>> @@ -8042,14 +8104,24 @@ static inline void update_sg_lb_stats(struct lb_env *env,
+> >>>                 }
+> >>>         }
+> >>>
+> >>> -     /* Adjust by relative CPU capacity of the group */
+> >>> +     /* Check if dst cpu is idle and preferred to this group */
+> >>
+> >> s/preferred to/preferred by ? or the preferred CPU of this group ?
+> >
+> > dst cpu doesn't belong to this group. We compare asym_prefer_cpu of
+> > this group vs dst_cpu which belongs to another group
+>
+> Ah, in the sense of 'preferred over'. Got it now!
+>
+> [...]
+>
+> >>> +     if (busiest->group_type == group_imbalanced) {
+> >>> +             /*
+> >>> +              * In the group_imb case we cannot rely on group-wide averages
+> >>> +              * to ensure CPU-load equilibrium, try to move any task to fix
+> >>> +              * the imbalance. The next load balance will take care of
+> >>> +              * balancing back the system.
+> >>
+> >> balancing back ?
+> >
+> > In case of imbalance, we don't try to balance the system but only try
+> > to get rid of the pinned tasks problem. The system will still be
+> > unbalanced after the migration and the next load balance will take
+> > care of balancing the system
+>
+> OK.
+>
+> [...]
+>
+> >>>         /*
+> >>> -      * Avg load of busiest sg can be less and avg load of local sg can
+> >>> -      * be greater than avg load across all sgs of sd because avg load
+> >>> -      * factors in sg capacity and sgs with smaller group_type are
+> >>> -      * skipped when updating the busiest sg:
+> >>> +      * Try to use spare capacity of local group without overloading it or
+> >>> +      * emptying busiest
+> >>>          */
+> >>> -     if (busiest->group_type != group_misfit_task &&
+> >>> -         (busiest->avg_load <= sds->avg_load ||
+> >>> -          local->avg_load >= sds->avg_load)) {
+> >>> -             env->imbalance = 0;
+> >>> +     if (local->group_type == group_has_spare) {
+> >>> +             if (busiest->group_type > group_fully_busy) {
+> >>
+> >> So this could be 'busiest->group_type == group_overloaded' here to match
+> >> the comment below? Since you handle group_misfit_task,
+> >> group_asym_packing, group_imbalanced above and return.
+> >
+> > This is just to be more robust in case some new states are added later
+>
+> OK, although I doubt that additional states can be added easily w/o
+> carefully auditing the entire lb code ;-)
+>
+> [...]
+>
+> >>> +             if (busiest->group_weight == 1 || sds->prefer_sibling) {
+> >>> +                     /*
+> >>> +                      * When prefer sibling, evenly spread running tasks on
+> >>> +                      * groups.
+> >>> +                      */
+> >>> +                     env->balance_type = migrate_task;
+> >>> +                     env->imbalance = (busiest->sum_h_nr_running - local->sum_h_nr_running) >> 1;
+> >>> +                     return;
+> >>> +             }
+> >>> +
+> >>> +             /*
+> >>> +              * If there is no overload, we just want to even the number of
+> >>> +              * idle cpus.
+> >>> +              */
+> >>> +             env->balance_type = migrate_task;
+> >>> +             env->imbalance = max_t(long, 0, (local->idle_cpus - busiest->idle_cpus) >> 1);
+> >>
+> >> Why do we need a max_t(long, 0, ...) here and not for the 'if
+> >> (busiest->group_weight == 1 || sds->prefer_sibling)' case?
+> >
+> > For env->imbalance = (busiest->sum_h_nr_running - local->sum_h_nr_running) >> 1;
+> >
+> > either we have sds->prefer_sibling && busiest->sum_nr_running >
+> > local->sum_nr_running + 1
+>
+> I see, this corresponds to
+>
+> /* Try to move all excess tasks to child's sibling domain */
+>        if (sds.prefer_sibling && local->group_type == group_has_spare &&
+>            busiest->sum_h_nr_running > local->sum_h_nr_running + 1)
+>                goto force_balance;
+>
+> in find_busiest_group, I assume.
 
+yes, it is
 
-> 
-> I am wondering how is it possible that none of the build-testing 
-> infrastructure we have running against linux-next caught this? Not enough 
-> non-x86 coverage?
+>
+> Haven't been able to recreate this yet on my arm64 platform since there
+> is no prefer_sibling and in case local and busiest have
 
-We do build-test linux-next daily. Maybe our compiler just made a different
-inlining decision.
+You probably have a b.L platform for which the flag is cleared because
+the hikey (dual quad cores arm64) takes advantage of  prefer sibling
+at DIE level to spread tasks
 
+> group_type=group_has_spare they bailout in
+>
+>          if (busiest->group_type != group_overloaded &&
+>               (env->idle == CPU_NOT_IDLE ||
+>                local->idle_cpus <= (busiest->idle_cpus + 1)))
+>                  goto out_balanced;
+>
+>
+> [...]
+>
+> >>> -     if (busiest->group_type == group_overloaded &&
+> >>> -         local->group_type   == group_overloaded) {
+> >>> -             load_above_capacity = busiest->sum_h_nr_running * SCHED_CAPACITY_SCALE;
+> >>> -             if (load_above_capacity > busiest->group_capacity) {
+> >>> -                     load_above_capacity -= busiest->group_capacity;
+> >>> -                     load_above_capacity *= scale_load_down(NICE_0_LOAD);
+> >>> -                     load_above_capacity /= busiest->group_capacity;
+> >>> -             } else
+> >>> -                     load_above_capacity = ~0UL;
+> >>> +     if (local->group_type < group_overloaded) {
+> >>> +             /*
+> >>> +              * Local will become overloaded so the avg_load metrics are
+> >>> +              * finally needed.
+> >>> +              */
+> >>
+> >> How does this relate to the decision_matrix[local, busiest] (dm[])? E.g.
+> >> dm[overload, overload] == avg_load or dm[fully_busy, overload] == force.
+> >> It would be nice to be able to match all allowed fields of dm to code sections.
+> >
+> > decision_matrix describes how it decides between balanced or unbalanced.
+> > In case of dm[overload, overload], we use the avg_load to decide if it
+> > is balanced or not
+>
+> OK, that's why you calculate sgs->avg_load in update_sg_lb_stats() only
+> for 'sgs->group_type == group_overloaded'.
+>
+> > In case of dm[fully_busy, overload], the groups are unbalanced because
+> > fully_busy < overload and we force the balance. Then
+> > calculate_imbalance() uses the avg_load to decide how much will be
+> > moved
+>
+> And in this case 'local->group_type < group_overloaded' in
+> calculate_imbalance(), 'local->avg_load' and 'sds->avg_load' have to be
+> calculated before using them in env->imbalance = min(...).
+>
+> OK, got it now.
+>
+> > dm[overload, overload]=force means that we force the balance and we
+> > will compute later the imbalance. avg_load may be used to calculate
+> > the imbalance
+> > dm[overload, overload]=avg_load means that we compare the avg_load to
+> > decide whether we need to balance load between groups
+> > dm[overload, overload]=nr_idle means that we compare the number of
+> > idle cpus to decide whether we need to balance.  In fact this is no
+> > more true with patch 7 because we also take into account the number of
+> > nr_h_running when weight =1
+>
+> This becomes clearer now ... slowly.
+>
+> [...]
