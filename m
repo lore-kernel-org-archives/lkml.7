@@ -2,93 +2,92 @@ Return-Path: <SRS0=zem1=X3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 33BAFC352AA
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 17:29:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 896D4C352AA
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 17:29:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 03706222C2
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 17:29:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570037380;
-	bh=ixObYksDcwdxsYpVuABnzIv7db50ZTLDQefHZ5mzzVo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Ux63gAnUSVP4lzeTsUaW69BiBCAf1FbA4hN1Xr2FEBnI8s7TvErZfnaH5tnpmNcNs
-	 fE8sHgYjlQayD6FuiBky+80ZVmLSFfHOz6AZExvTvu9nuZwQidNcsheDa6WqHgORHj
-	 sdEn7xSOP7zpx7QJ4poovUfZVFDRRIiKcKY/C9R0=
+	by mail.kernel.org (Postfix) with ESMTP id 5D8DC21848
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 17:29:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728635AbfJBR3j (ORCPT
+        id S1728787AbfJBR3p (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Oct 2019 13:29:39 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:54143 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726669AbfJBR3j (ORCPT
+        Wed, 2 Oct 2019 13:29:45 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:57560 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726669AbfJBR3o (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Oct 2019 13:29:39 -0400
-Received: by mail-wm1-f66.google.com with SMTP id i16so8085462wmd.3;
-        Wed, 02 Oct 2019 10:29:35 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=knUYYHU2RbGFZMJdC/t7iP8HF/H6gnHVaApA8Esfhxo=;
-        b=Z1xOXOi8giWYdBPsef30cFsZDIGE91qMj6llDgJPW4MAnTRsze81s3Kt21KZmE3BSc
-         QGlspolGvKF4BNpt2F3kZ9KF/4itPArZYTl/BNoHNHP//3TfdFxYP8QozdwUA5O6mwfT
-         tm0rnM2XkGoQCEwYUHlRVeCOl2XkRt+1tznNCmAOvGn6oQ1y4LupJCA9LZ+gAE9tZvCF
-         FEDhvfCCq5lXO3BN5I1JrKc/iQfi3EWTk1Z+vpop+uwyzFznEJ2TuO5S8YXmSb0Lb4m1
-         82GSVrKRg4Z1RqNjG16aRMDX7a+k1/Fa132GGVyxOjBKuPVBMoG/s8CB8r28GVipSSCn
-         bSSA==
-X-Gm-Message-State: APjAAAUST5AX9Hs/ljqKDY8T6zIZv4/vdHHvdxSLVVCTV3i0hplH4eCg
-        SEtxQFtToUnpz44AtM5AgJM=
-X-Google-Smtp-Source: APXvYqyH9fArHRTfXWfzqVQgaYVpo3bxfKpOmbUVndDKpAsFqO6SiYYHhg1MSaFN+BTdgbZp7amG7Q==
-X-Received: by 2002:a1c:f004:: with SMTP id a4mr3750737wmb.42.1570037374987;
-        Wed, 02 Oct 2019 10:29:34 -0700 (PDT)
-Received: from kozik-lap ([194.230.155.145])
-        by smtp.googlemail.com with ESMTPSA id n8sm11547015wma.7.2019.10.02.10.29.33
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 02 Oct 2019 10:29:34 -0700 (PDT)
-Date:   Wed, 2 Oct 2019 19:29:31 +0200
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     Lukasz Luba <l.luba@partner.samsung.com>
-Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-pm@vger.kernel.org, linux-samsung-soc@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, b.zolnierkie@samsung.com,
-        kgene@kernel.org, mark.rutland@arm.com, cw00.choi@samsung.com,
-        kyungmin.park@samsung.com, m.szyprowski@samsung.com,
-        s.nawrocki@samsung.com, myungjoo.ham@samsung.com,
-        robh+dt@kernel.org, willy.mh.wolff.ml@gmail.com
-Subject: Re: [PATCH v3 3/4] ARM: dts: exynos: map 0x10000 SFR instead of
- 0x100 in DMC Exynos5422
-Message-ID: <20191002172931.GE21463@kozik-lap>
-References: <20191002060455.3834-1-l.luba@partner.samsung.com>
- <CGME20191002060506eucas1p28c9670128f5adfb628d7e84ce55c6e60@eucas1p2.samsung.com>
- <20191002060455.3834-4-l.luba@partner.samsung.com>
+        Wed, 2 Oct 2019 13:29:44 -0400
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: ezequiel)
+        with ESMTPSA id 64B6C28A146
+From:   Ezequiel Garcia <ezequiel@collabora.com>
+To:     Joerg Roedel <joro@8bytes.org>, Heiko Stuebner <heiko@sntech.de>
+Cc:     iommu@lists.linux-foundation.org,
+        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
+        kernel@collabora.com, Ezequiel Garcia <ezequiel@collabora.com>
+Subject: [PATCH] iommu: rockchip: Free domain on .domain_free
+Date:   Wed,  2 Oct 2019 14:29:23 -0300
+Message-Id: <20191002172923.22430-1-ezequiel@collabora.com>
+X-Mailer: git-send-email 2.22.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20191002060455.3834-4-l.luba@partner.samsung.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Oct 02, 2019 at 08:04:54AM +0200, Lukasz Luba wrote:
-> There is a need to access registers at address offset near 0x10000.
-> These registers are private DMC performance counters, which might be used
-> as interrupt trigger when overflow. Potential usage is to skip polling
-> in devfreq framework and switch to interrupt managed bandwidth control.
-> 
-> Signed-off-by: Lukasz Luba <l.luba@partner.samsung.com>
-> ---
->  arch/arm/boot/dts/exynos5420.dtsi | 2 +-
+IOMMU domain resource life is well-defined, managed
+by .domain_alloc and .domain_free.
 
-Thanks, applied but re-ordered with previous one. Applying first
-interrupts enables the interrupt mode which does not make sense without
-extended mapping
+Therefore, domain-specific resources shouldn't be tied to
+the device life, but instead to its domain.
 
-Best regards,
-Krzysztof
+Signed-off-by: Ezequiel Garcia <ezequiel@collabora.com>
+---
+ drivers/iommu/rockchip-iommu.c | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/iommu/rockchip-iommu.c b/drivers/iommu/rockchip-iommu.c
+index 26290f310f90..e845bd01a1a2 100644
+--- a/drivers/iommu/rockchip-iommu.c
++++ b/drivers/iommu/rockchip-iommu.c
+@@ -979,13 +979,13 @@ static struct iommu_domain *rk_iommu_domain_alloc(unsigned type)
+ 	if (!dma_dev)
+ 		return NULL;
+ 
+-	rk_domain = devm_kzalloc(dma_dev, sizeof(*rk_domain), GFP_KERNEL);
++	rk_domain = kzalloc(sizeof(*rk_domain), GFP_KERNEL);
+ 	if (!rk_domain)
+ 		return NULL;
+ 
+ 	if (type == IOMMU_DOMAIN_DMA &&
+ 	    iommu_get_dma_cookie(&rk_domain->domain))
+-		return NULL;
++		goto err_free_domain;
+ 
+ 	/*
+ 	 * rk32xx iommus use a 2 level pagetable.
+@@ -1020,6 +1020,8 @@ static struct iommu_domain *rk_iommu_domain_alloc(unsigned type)
+ err_put_cookie:
+ 	if (type == IOMMU_DOMAIN_DMA)
+ 		iommu_put_dma_cookie(&rk_domain->domain);
++err_free_domain:
++	kfree(rk_domain);
+ 
+ 	return NULL;
+ }
+@@ -1048,6 +1050,7 @@ static void rk_iommu_domain_free(struct iommu_domain *domain)
+ 
+ 	if (domain->type == IOMMU_DOMAIN_DMA)
+ 		iommu_put_dma_cookie(&rk_domain->domain);
++	kfree(rk_domain);
+ }
+ 
+ static int rk_iommu_add_device(struct device *dev)
+-- 
+2.22.0
 
