@@ -2,71 +2,112 @@ Return-Path: <SRS0=zem1=X3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EDC2AC35280
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 12:07:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 397E1C35280
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 12:12:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CEC80218DE
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 12:07:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 076A6218DE
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 12:12:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="F0ZBUFy8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727281AbfJBMH1 (ORCPT
+        id S1726396AbfJBMMk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Oct 2019 08:07:27 -0400
-Received: from mail-qt1-f195.google.com ([209.85.160.195]:46547 "EHLO
-        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726329AbfJBMH1 (ORCPT
+        Wed, 2 Oct 2019 08:12:40 -0400
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:35762 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725766AbfJBMMj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Oct 2019 08:07:27 -0400
-Received: by mail-qt1-f195.google.com with SMTP id u22so25918042qtq.13;
-        Wed, 02 Oct 2019 05:07:27 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ex6/oNwBMHfkrNehPUjGFzRyUvsWT0jO6XWSq6yiKHU=;
-        b=blLIkbkJS1wd1VJoOY+NYTDPa4rP3aELNg7nAbLLtgA09PDdZdz6JFkaMA19Z40vVy
-         csnme0aIF4TJcOqty6IvdBTOSswNzHT0wJHDxVVOqw5jZBhwVPJFW3Jk537WzEKPaCWW
-         uhJdJ4gg1F5MIZnthRkbilStw4XBj/MmgGA4EWkb0HydsyXiN9BuLHdXryBplTrNTdj7
-         jOUA98/nRf2faOlAmUW5pmfxqA5e5ppxMzEM24LdENMjRk3wzO8Bqa+4CbNqUHKGgPIE
-         NQj6A+LiAh57JaorDt5RbYehTF6RRt1geU3hosMgDZ9L+mJJV1ikNJ27YK3hSbdX0v5y
-         0v6A==
-X-Gm-Message-State: APjAAAUXFsQCQ6MH77zi9k3XMx1vPuUYpm8bBzIw2prAoKMna8pEXPU4
-        mSamnUhf+AV/1vJ2c1fbLHZ4oskoMkJ89tvrOF0=
-X-Google-Smtp-Source: APXvYqzDip6r97ouSV9gLUoJm4dYFmol3Z3MKhIpWC/42PDoJ1Dtw5g0nyG5uRgmTPJa49nIfbTBt3XARkRdXEy+TrM=
-X-Received: by 2002:a05:6214:2b0:: with SMTP id m16mr2662220qvv.45.1570018046381;
- Wed, 02 Oct 2019 05:07:26 -0700 (PDT)
+        Wed, 2 Oct 2019 08:12:39 -0400
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id x92CCRQs082861;
+        Wed, 2 Oct 2019 07:12:27 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1570018347;
+        bh=BY8geDIzMt6+Ioryuldlxg8hyLYttBQCYwF+MAIrCvQ=;
+        h=Date:From:To:CC:Subject:References:In-Reply-To;
+        b=F0ZBUFy8/WJo8ehdXp3ee1h6ElZ5waQIoVQBnQL8DibGXbGEEjmsyEM+1R+0rHh5H
+         8qpzS3UL+wLIslPqMA6GvgMmd8W+pNWBgaSmh8Tb5nMtcixzsbcp7D28Iz+wC8vCSD
+         dzVSUFrgor02Mso2bB50ti1sBqh8xZ7qh3RRR4GY=
+Received: from DFLE109.ent.ti.com (dfle109.ent.ti.com [10.64.6.30])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x92CCRxR078079
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 2 Oct 2019 07:12:27 -0500
+Received: from DFLE114.ent.ti.com (10.64.6.35) by DFLE109.ent.ti.com
+ (10.64.6.30) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Wed, 2 Oct
+ 2019 07:12:16 -0500
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE114.ent.ti.com
+ (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Wed, 2 Oct 2019 07:12:27 -0500
+Received: from ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with SMTP id x92CCRVp014399;
+        Wed, 2 Oct 2019 07:12:27 -0500
+Date:   Wed, 2 Oct 2019 07:14:38 -0500
+From:   Benoit Parrot <bparrot@ti.com>
+To:     Jacopo Mondi <jacopo@jmondi.org>
+CC:     Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Hans Verkuil <hverkuil@xs4all.nl>,
+        <linux-media@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <hugues.fruchet@st.com>
+Subject: Re: [Patch 1/3] media: ov5640: add PIXEL_RATE control
+Message-ID: <20191002121438.g3re6v54q4hit2wv@ti.com>
+References: <20190925152301.21645-1-bparrot@ti.com>
+ <20190925152301.21645-2-bparrot@ti.com>
+ <20191001075704.GA5449@paasikivi.fi.intel.com>
+ <20191001162341.f2o7ruar2nifl5ws@ti.com>
+ <20191002075951.afp2xligspqat4ew@uno.localdomain>
 MIME-Version: 1.0
-References: <20191002095736.1297224-1-arnd@arndb.de>
-In-Reply-To: <20191002095736.1297224-1-arnd@arndb.de>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Wed, 2 Oct 2019 14:07:09 +0200
-Message-ID: <CAK8P3a2=V4qJ9CDzZMNCzgOh-nD-24AFdoo83+QRNfc60FxD4Q@mail.gmail.com>
-Subject: Re: [PATCH] input: ixp4xx-beeper: include linux/io.h
-To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc:     Enrico Weigelt <info@metux.net>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        "open list:HID CORE LAYER" <linux-input@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20191002075951.afp2xligspqat4ew@uno.localdomain>
+User-Agent: NeoMutt/20171215
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Oct 2, 2019 at 11:57 AM Arnd Bergmann <arnd@arndb.de> wrote:
->
-> asm/io.h may not be included implicitly, causing a rare
-> randconfig build error:
->
-> drivers/input/misc/ixp4xx-beeper.c:48:3: error: implicit declaration of function '__raw_writel' [-Werror,-Wimplicit-function-declaration]
->                 __raw_writel((count & ~IXP4XX_OST_RELOAD_MASK) | IXP4XX_OST_ENABLE,
->
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Hi Jacopo,
 
-Please ignore, this does not apply to mainline and is probably only needed
-on top of another patch that I will submit in the future.
+Maybe, I miss spoke when I mentioned a helper I did not intent a framework
+level generic function. Just a function to help in this case :)
 
-       Arnd
+That being said, I re-read the thread you mentioned. And as Hughes pointed
+out dynamically generating a "working" link frequency value which can be
+used by a CSI2 receiver to properly configure its PHY is not trivial.
+
+When I created this patch, I also had another to add V4L2_CID_LINK_FREQ
+support. I am testing this against the TI CAL CSI2 receiver, which already
+uses the V4L2_CID_PIXEL_RATE value for that purpose, so I also had a patch
+to add support for V4L2_CID_LINK_FREQ to that driver as well.
+
+Unfortunately, similar to Hughes' findings I was not able to make it "work"
+with all supported resolution/framerate.
+
+Unlike my V4L2_CID_PIXEL_RATE solution which now works in all mode with the
+same receiver.
+
+So long story short I dropped the V4L2_CID_LINK_FREQ patch and focused on
+V4L2_CID_PIXEL_RATE instead.
+
+Regard,
+Benoit
+
+Jacopo Mondi <jacopo@jmondi.org> wrote on Wed [2019-Oct-02 09:59:51 +0200]:
+> Hi Benoit,
+>   +Hugues
+> 
+> If you're considering an helper, this thread might be useful to you:
+> https://patchwork.kernel.org/patch/11019673/
+> 
+> Thanks
+>    j
+> 
+
+
