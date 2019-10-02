@@ -2,90 +2,129 @@ Return-Path: <SRS0=zem1=X3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E132ECE58B
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 12:52:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 24116C352AA
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 12:56:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 20467222C7
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 12:52:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EDE6920842
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 12:56:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726325AbfJBMwu convert rfc822-to-8bit (ORCPT
+        id S1726677AbfJBM4D (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Oct 2019 08:52:50 -0400
-Received: from relay1-d.mail.gandi.net ([217.70.183.193]:56113 "EHLO
-        relay1-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725765AbfJBMwu (ORCPT
+        Wed, 2 Oct 2019 08:56:03 -0400
+Received: from mail-oi1-f196.google.com ([209.85.167.196]:39816 "EHLO
+        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726087AbfJBM4D (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Oct 2019 08:52:50 -0400
-X-Originating-IP: 86.250.200.211
-Received: from xps13 (lfbn-1-17395-211.w86-250.abo.wanadoo.fr [86.250.200.211])
-        (Authenticated sender: miquel.raynal@bootlin.com)
-        by relay1-d.mail.gandi.net (Postfix) with ESMTPSA id 9D9C5240018;
-        Wed,  2 Oct 2019 12:52:47 +0000 (UTC)
-Date:   Wed, 2 Oct 2019 14:52:46 +0200
-From:   Miquel Raynal <miquel.raynal@bootlin.com>
-To:     Jonathan Cameron <jic23@kernel.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>
-Cc:     <devicetree@vger.kernel.org>, linux-iio@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Subject: Re: [PATCH 4/7] iio: adc: max1027: Prepare the introduction of
- different resolutions
-Message-ID: <20191002145246.491e2760@xps13>
-In-Reply-To: <20191002123025.21413-5-miquel.raynal@bootlin.com>
-References: <20191002123025.21413-1-miquel.raynal@bootlin.com>
-        <20191002123025.21413-5-miquel.raynal@bootlin.com>
-Organization: Bootlin
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Wed, 2 Oct 2019 08:56:03 -0400
+Received: by mail-oi1-f196.google.com with SMTP id w144so17509772oia.6;
+        Wed, 02 Oct 2019 05:56:02 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=jdK03n3+2me9Sk19EdnaoVUhfmldNzf5bSdl3P4k3vY=;
+        b=MOly8uCnmzYYz+9aKY5gmsgwWRFU2ZTLX0qM4JSEQvxvnj4GRT0naw9sq3bKVOqUCm
+         mpNf0bq+vhMzeFrQtSwGUhLt/I7WErgFqGTRZ5UNGh7HOTLkcyHsmX8W4yoM1a91V1Lx
+         BNaBl8RVepiVIoXQmMLS2llTuRdCxAydWfhFUCkhypleXikhdJS/dtsxRAjHeyumg2Ni
+         yqEBx66NtFDiYqhQH3DpvPm+HdZqeqbSe5AAQ3VOIcQ7dNCYsBtO0gBUK3H9RdeWKuGv
+         4zIfuihwHr4M77rBsGK09BuzByc24IU186nIOKPYS2uWJzZL+NWtHTdYSOwhsZPp3Qwe
+         08vA==
+X-Gm-Message-State: APjAAAWrj+dZ6N6OBsCT09H7E0ut2ICIO9hvj9yI1wRiPqHVQN6Helay
+        4a92RrVBqgD7PHiw1RV8s5edFxgNtz2PSzWOJFQ=
+X-Google-Smtp-Source: APXvYqzU1MgQE5NJFF64vkAcQB5Y8/wYO3KQbh9gwqE/n127GIcUuBYJp52kR5qIxlSQPIBlNHi8a4L/TiF5BpuRXTE=
+X-Received: by 2002:aca:3908:: with SMTP id g8mr2794516oia.54.1570020961944;
+ Wed, 02 Oct 2019 05:56:01 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+References: <20190930112636.vx2qxo4hdysvxibl@willie-the-truck>
+ <CAK7LNASQZ82KSOrQW7+Wq1vFDCg2__maBEAPMLqUDqZMLuj1rA@mail.gmail.com>
+ <20190930121803.n34i63scet2ec7ll@willie-the-truck> <CAKwvOdnqn=0LndrX+mUrtSAQqoT1JWRMOJCA5t3e=S=T7zkcCQ@mail.gmail.com>
+ <20191001092823.z4zhlbwvtwnlotwc@willie-the-truck> <CAKwvOdk0h2A6=fb7Yepf+oKbZfq_tqwpGq8EBmHVu1j4mo-a-A@mail.gmail.com>
+ <20191001170142.x66orounxuln7zs3@willie-the-truck> <CAKwvOdnFJqipp+G5xLDRBcOrQRcvMQmn+n8fufWyzyt2QL_QkA@mail.gmail.com>
+ <20191001175512.GK25745@shell.armlinux.org.uk> <CAKwvOdmw_xmTGZLeK8-+Q4nUpjs-UypJjHWks-3jHA670Dxa1A@mail.gmail.com>
+ <20191001181438.GL25745@shell.armlinux.org.uk> <CAKwvOdmBnBVU7F-a6DqPU6QM-BRc8LNn6YRmhTsuGLauCWKUOg@mail.gmail.com>
+In-Reply-To: <CAKwvOdmBnBVU7F-a6DqPU6QM-BRc8LNn6YRmhTsuGLauCWKUOg@mail.gmail.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Wed, 2 Oct 2019 14:55:50 +0200
+Message-ID: <CAMuHMdWPhE1nNkmL1nj3vpQhB7fP3uDs2i_ZVi0Gf9qij4W2CA@mail.gmail.com>
+Subject: Re: [PATCH] compiler: enable CONFIG_OPTIMIZE_INLINING forcibly
+To:     Nick Desaulniers <ndesaulniers@google.com>
+Cc:     Russell King - ARM Linux admin <linux@armlinux.org.uk>,
+        Will Deacon <will@kernel.org>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Stefan Wahren <wahrenst@gmx.net>,
+        Kees Cook <keescook@google.com>, Arnd Bergmann <arnd@arndb.de>,
+        clang-built-linux <clang-built-linux@googlegroups.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+Hi Nick,
 
-Miquel Raynal <miquel.raynal@bootlin.com> wrote on Wed,  2 Oct 2019
-14:30:22 +0200:
+On Wed, Oct 2, 2019 at 6:33 AM Nick Desaulniers <ndesaulniers@google.com> wrote:
+> On Tue, Oct 1, 2019 at 11:14 AM Russell King - ARM Linux admin
+> <linux@armlinux.org.uk> wrote:
+> > On Tue, Oct 01, 2019 at 11:00:11AM -0700, Nick Desaulniers wrote:
+> > > On Tue, Oct 1, 2019 at 10:55 AM Russell King - ARM Linux admin
+> > > <linux@armlinux.org.uk> wrote:
+> > > > On Tue, Oct 01, 2019 at 10:44:43AM -0700, Nick Desaulniers wrote:
+> > > > > I apologize; I don't mean to be difficult.  I would just like to avoid
+> > > > > surprises when code written with the assumption that it will be
+> > > > > inlined is not.  It sounds like we found one issue in arm32 and one in
+> > > > > arm64 related to outlining.  If we fix those two cases, I think we're
+> > > > > close to proceeding with Masahiro's cleanup, which I view as a good
+> > > > > thing for the health of the Linux kernel codebase.
+> > > >
+> > > > Except, using the C preprocessor for this turns the arm32 code into
+> > > > yuck:
+> > > >
+> > > > 1. We'd need to turn get_domain() and set_domain() into multi-line
+> > > >    preprocessor macro definitions, using the GCC ({ }) extension
+> > > >    so that get_domain() can return a value.
+> > > >
+> > > > 2. uaccess_save_and_enable() and uaccess_restore() also need to
+> > > >    become preprocessor macro definitions too.
+> > > >
+> > > > So, we end up with multiple levels of nested preprocessor macros.
+> > > > When something goes wrong, the compiler warning/error message is
+> > > > going to be utterly _horrid_.
+> > >
+> > > That's why I preferred V1 of Masahiro's patch, that fixed the inline
+> > > asm not to make use of caller saved registers before calling a
+> > > function that might not be inlined.
+> >
+> > ... which I objected to based on the fact that this uaccess stuff is
+> > supposed to add protection against the kernel being fooled into
+> > accessing userspace when it shouldn't.  The whole intention there is
+> > that [sg]et_domain(), and uaccess_*() are _always_ inlined as close
+> > as possible to the call site of the accessor touching userspace.
+>
+> Then use the C preprocessor to force the inlining.  I'm sorry it's not
+> as pretty as static inline functions.
 
-> Maxim's max1027/29/31 series returns the measured voltages with a
-> resolution of 10 bits. There is a very similar series, max1227/29/31
-> which works very similarly but uses a resolution of 12 bits. Prepare
-> the support for these chips by turning the 'depth' into a macro
-> parameter instead of hardcoding it everywhere. Also reorganize just a
-> bit the macros at the top to avoid repeating tens of lines when adding
-> support for a new chip.
-> 
-> Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
-> ---
->  drivers/iio/adc/max1027.c | 81 +++++++++++++++++++--------------------
->  1 file changed, 39 insertions(+), 42 deletions(-)
-> 
-> diff --git a/drivers/iio/adc/max1027.c b/drivers/iio/adc/max1027.c
-> index f9b473ee6711..fc75764a6fd7 100644
-> --- a/drivers/iio/adc/max1027.c
-> +++ b/drivers/iio/adc/max1027.c
-> @@ -78,12 +78,15 @@ static const struct of_device_id max1027_adc_dt_ids[] = {
->  	{ .compatible = "maxim,max1027" },
->  	{ .compatible = "maxim,max1029" },
->  	{ .compatible = "maxim,max1031" },
-> +	{ .compatible = "maxim,max1227" },
-> +	{ .compatible = "maxim,max1229" },
-> +	{ .compatible = "maxim,max1231" },
+Which makes us lose the baby^H^H^H^Htype checking performed
+on function parameters, requiring to add more ugly checks.
 
-Just spotted a mistake here: the addition of these three lines, while
-harmless, should have come in patch 5/7.
+Gr{oetje,eeting}s,
 
-Let me respin the series with this corrected.
+                        Geert
 
-Thanks and sorry for the noise,
-Miquèl
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
