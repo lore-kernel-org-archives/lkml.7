@@ -2,70 +2,185 @@ Return-Path: <SRS0=zem1=X3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85B0AC352AA
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 15:08:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 11942C352AA
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 15:08:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 66AE72133F
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 15:08:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D56E02133F
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 15:08:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1570028936;
+	bh=qbPWmyCPvtsnR+1ncID0EgxGK3ePvJHtZflqOCtXPMI=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
+	 From;
+	b=q3GSMGKrVSo3hHlk0xVBu0g0nE4qH+TC25PYqjSiev541irNueGFu4D1lX4eQXUKF
+	 SiYQ/yLRy9PR7m9nPaP04PHIrVJ1CpPi2oAnRPDzPaAbV3xMxJZKoWf7nknGSVMF2t
+	 uDFut7hcuLXmnEwCE4encVPo1B87ad3U8K44O6ns=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728208AbfJBPIn convert rfc822-to-8bit (ORCPT
+        id S1728235AbfJBPI4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Oct 2019 11:08:43 -0400
-Received: from shards.monkeyblade.net ([23.128.96.9]:32798 "EHLO
-        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725766AbfJBPIm (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Oct 2019 11:08:42 -0400
-Received: from localhost (unknown [IPv6:2603:3023:50c:85e1:b5c5:ae11:3e54:6a07])
-        (using TLSv1 with cipher AES256-SHA (256/256 bits))
-        (Client did not present a certificate)
-        (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id AE8EE14BBED93;
-        Wed,  2 Oct 2019 08:08:41 -0700 (PDT)
-Date:   Wed, 02 Oct 2019 11:08:41 -0400 (EDT)
-Message-Id: <20191002.110841.1635125794151710562.davem@davemloft.net>
-To:     valex@mellanox.com
-Cc:     mkubecek@suse.cz, saeedm@mellanox.com, leon@kernel.org,
-        bp@alien8.de, stephen@networkplumber.org, netdev@vger.kernel.org,
-        linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net] mlx5: avoid 64-bit division in
- dr_icm_pool_mr_create()
-From:   David Miller <davem@davemloft.net>
-In-Reply-To: <57dc9ea7-e925-e8e8-af71-35326bb5c673@mellanox.com>
-References: <20191002121241.D74DAE04C7@unicorn.suse.cz>
-        <57dc9ea7-e925-e8e8-af71-35326bb5c673@mellanox.com>
-X-Mailer: Mew version 6.8 on Emacs 26.1
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=iso-8859-1
-Content-Transfer-Encoding: 8BIT
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Wed, 02 Oct 2019 08:08:42 -0700 (PDT)
+        Wed, 2 Oct 2019 11:08:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58826 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725766AbfJBPIz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 2 Oct 2019 11:08:55 -0400
+Received: from paulmck-ThinkPad-P72 (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0ED4921920;
+        Wed,  2 Oct 2019 15:08:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1570028934;
+        bh=qbPWmyCPvtsnR+1ncID0EgxGK3ePvJHtZflqOCtXPMI=;
+        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+        b=RYBL2yvgV4QC7U/vvBz4qRUTzGLC54uFVBYCOI4yYJI9IF6oXD9c1MXPkM2S99+c9
+         G/GUOkEnsejSoJY+tCHOUOwyYMNSdE4VxszoNv8RI1Gchm5pZ9U2sTx0yzAHYnxax4
+         8mwq2lkgKGKUS8Y39QI5JqNCVW/OBNtVQI7or/1E=
+Date:   Wed, 2 Oct 2019 08:08:52 -0700
+From:   "Paul E. McKenney" <paulmck@kernel.org>
+To:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Cc:     linux-kernel@vger.kernel.org, Dennis Zhou <dennis@kernel.org>,
+        Tejun Heo <tj@kernel.org>, Christoph Lameter <cl@linux.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Peter Zijlstra <peterz@infradead.org>
+Subject: Re: [PATCH] percpu-refcount: Use normal instead of RCU-sched"
+Message-ID: <20191002150852.GB2689@paulmck-ThinkPad-P72>
+Reply-To: paulmck@kernel.org
+References: <20191002112252.ro7wpdylqlrsbamc@linutronix.de>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20191002112252.ro7wpdylqlrsbamc@linutronix.de>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alex Vesker <valex@mellanox.com>
-Date: Wed, 2 Oct 2019 14:58:44 +0000
+On Wed, Oct 02, 2019 at 01:22:53PM +0200, Sebastian Andrzej Siewior wrote:
+> This is a revert of commit
+>    a4244454df129 ("percpu-refcount: use RCU-sched insted of normal RCU")
+> 
+> which claims the only reason for using RCU-sched is
+>    "rcu_read_[un]lock() â€¦ are slightly more expensive than preempt_disable/enable()"
+> 
+> and
+>     "As the RCU critical sections are extremely short, using sched-RCU
+>     shouldn't have any latency implications."
+> 
+> The problem with using RCU-sched here is that it disables preemption and
+> the callback must not acquire any sleeping locks like spinlock_t on
+> PREEMPT_RT which is the case with some of the users.
 
-> On 10/2/2019 3:12 PM, Michal Kubecek wrote:
->> Recently added code introduces 64-bit division in dr_icm_pool_mr_create()
->> so that build on 32-bit architectures fails with
->>
->>    ERROR: "__umoddi3" [drivers/net/ethernet/mellanox/mlx5/core/mlx5_core.ko] undefined!
->>
->> As the divisor is always a power of 2, we can use bitwise operation
->> instead.
->>
->> Fixes: 29cf8febd185 ("net/mlx5: DR, ICM pool memory allocator")
->> Reported-by: Borislav Petkov <bp@alien8.de>
->> Signed-off-by: Michal Kubecek <mkubecek@suse.cz>
- ...
-> Align diff is power of 2,  looks good to me.
-> Thanks for fixing it Michal.
+Looks good in general, but changing to RCU-preempt does not change the
+fact that the callbacks execute with bh disabled.  There is a newish
+queue_rcu_work() that invokes a workqueue handler after a grace period.
 
-I'll just apply this directly, thanks everyone.
+Or am I missing your point here?
 
+							Thanx, Paul
+
+> Using rcu_read_lock() on PREEMPTION=n kernels is not any different
+> compared to rcu_read_lock_sched(). On PREEMPTION=y kernels there are
+> already performance issues due to additional preemption points.
+> Looking at the code, the rcu_read_lock() is just an increment and unlock
+> is almost just a decrement unless there is something special to do. Both
+> are functions while disabling preemption is inlined.
+> Doing a small benchmark, the minimal amount of time required was mostly
+> the same. The average time required was higher due to the higher MAX
+> value (which could be preemption). With DEBUG_PREEMPT=y it is
+> rcu_read_lock_sched() that takes a little longer due to the additional
+> debug code.
+> 
+> Convert back to normal RCU.
+> 
+> Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+> ---
+> 
+> Benchmark https://breakpoint.cc/percpu_test.patch
+> 
+>  include/linux/percpu-refcount.h | 16 ++++++++--------
+>  1 file changed, 8 insertions(+), 8 deletions(-)
+> 
+> diff --git a/include/linux/percpu-refcount.h b/include/linux/percpu-refcount.h
+> index 7aef0abc194a2..390031e816dcd 100644
+> --- a/include/linux/percpu-refcount.h
+> +++ b/include/linux/percpu-refcount.h
+> @@ -186,14 +186,14 @@ static inline void percpu_ref_get_many(struct percpu_ref *ref, unsigned long nr)
+>  {
+>  	unsigned long __percpu *percpu_count;
+>  
+> -	rcu_read_lock_sched();
+> +	rcu_read_lock();
+>  
+>  	if (__ref_is_percpu(ref, &percpu_count))
+>  		this_cpu_add(*percpu_count, nr);
+>  	else
+>  		atomic_long_add(nr, &ref->count);
+>  
+> -	rcu_read_unlock_sched();
+> +	rcu_read_unlock();
+>  }
+>  
+>  /**
+> @@ -223,7 +223,7 @@ static inline bool percpu_ref_tryget(struct percpu_ref *ref)
+>  	unsigned long __percpu *percpu_count;
+>  	bool ret;
+>  
+> -	rcu_read_lock_sched();
+> +	rcu_read_lock();
+>  
+>  	if (__ref_is_percpu(ref, &percpu_count)) {
+>  		this_cpu_inc(*percpu_count);
+> @@ -232,7 +232,7 @@ static inline bool percpu_ref_tryget(struct percpu_ref *ref)
+>  		ret = atomic_long_inc_not_zero(&ref->count);
+>  	}
+>  
+> -	rcu_read_unlock_sched();
+> +	rcu_read_unlock();
+>  
+>  	return ret;
+>  }
+> @@ -257,7 +257,7 @@ static inline bool percpu_ref_tryget_live(struct percpu_ref *ref)
+>  	unsigned long __percpu *percpu_count;
+>  	bool ret = false;
+>  
+> -	rcu_read_lock_sched();
+> +	rcu_read_lock();
+>  
+>  	if (__ref_is_percpu(ref, &percpu_count)) {
+>  		this_cpu_inc(*percpu_count);
+> @@ -266,7 +266,7 @@ static inline bool percpu_ref_tryget_live(struct percpu_ref *ref)
+>  		ret = atomic_long_inc_not_zero(&ref->count);
+>  	}
+>  
+> -	rcu_read_unlock_sched();
+> +	rcu_read_unlock();
+>  
+>  	return ret;
+>  }
+> @@ -285,14 +285,14 @@ static inline void percpu_ref_put_many(struct percpu_ref *ref, unsigned long nr)
+>  {
+>  	unsigned long __percpu *percpu_count;
+>  
+> -	rcu_read_lock_sched();
+> +	rcu_read_lock();
+>  
+>  	if (__ref_is_percpu(ref, &percpu_count))
+>  		this_cpu_sub(*percpu_count, nr);
+>  	else if (unlikely(atomic_long_sub_and_test(nr, &ref->count)))
+>  		ref->release(ref);
+>  
+> -	rcu_read_unlock_sched();
+> +	rcu_read_unlock();
+>  }
+>  
+>  /**
+> -- 
+> 2.23.0
+> 
