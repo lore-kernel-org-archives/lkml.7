@@ -2,121 +2,128 @@ Return-Path: <SRS0=zem1=X3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C5F73C35280
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 09:09:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE2CDECE58B
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 09:11:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 976FC21783
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 09:09:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AA9FB21924
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 09:11:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="IV1QR0NX"
+	dkim=pass (2048-bit key) header.d=cogentembedded-com.20150623.gappssmtp.com header.i=@cogentembedded-com.20150623.gappssmtp.com header.b="M/2NAixW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726411AbfJBJJg (ORCPT
+        id S1726462AbfJBJLv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Oct 2019 05:09:36 -0400
-Received: from mail-io1-f68.google.com ([209.85.166.68]:45730 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725908AbfJBJJg (ORCPT
+        Wed, 2 Oct 2019 05:11:51 -0400
+Received: from mail-lf1-f65.google.com ([209.85.167.65]:45674 "EHLO
+        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725908AbfJBJLv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Oct 2019 05:09:36 -0400
-Received: by mail-io1-f68.google.com with SMTP id c25so55119267iot.12
-        for <linux-kernel@vger.kernel.org>; Wed, 02 Oct 2019 02:09:36 -0700 (PDT)
+        Wed, 2 Oct 2019 05:11:51 -0400
+Received: by mail-lf1-f65.google.com with SMTP id r134so12112436lff.12
+        for <linux-kernel@vger.kernel.org>; Wed, 02 Oct 2019 02:11:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=hlThU/0+3HTSxVJIpbAfEl3+62sbcU01NeSU7eG4LqY=;
-        b=IV1QR0NXPUhoMOjxwHh18ibizuWPQ+4/OYrnffr2ZXKuvvWAf9gmljv0v7HkbZEiVt
-         zARhx2Xi6V3Nma7orMBFSNGs/EK8tnXF2zJKtrGR34m4X9Sia9oZtwTdZ9YW68LPKN7a
-         sxBQJcC+4R6XsKKVlRNkM/0/FBQ7Y/7hFIrNmvYAlvyHYVprDoSwhQ4lMamuwfcnCAU6
-         Fx1R6ch3q3XUxYYCKd5KWw5MceInpGHhV7byF+XrHXmBPIDopaGbx75hbB8VUd8ACpkp
-         lgy4b+MOUeirAgVbku/LVB97akEMZURhy8bCooqQyQNd8UKbUVBLCisXuU4kzgw7Z/r0
-         nIpQ==
+        d=cogentembedded-com.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=snm/Nrqs5QlS5PiXAWfvh6paeZp4yNlu1hsumZL0i1o=;
+        b=M/2NAixWfPaMv3ZQW8Iwvj3sYZDoLYGfcGEUPMvVVvRTO0GZtIAGlDedHIPNizgtIs
+         /PLzYWTMsIkba6wIwEff4EucUGUk8nrIsz6BPQM3MbVfUA9LRQ+07VcP/QoWSp+XTN+K
+         JIccWCDorvAIj8F3AMn9ahODS2anPU/p9rqnJr/uzBkaGYdCwIQdsI1kz6bLqe8kUdrj
+         lE1kW7iIdsH7hTOiCe2dQKT4LufypcTvTrZYYOiDTGM6/D1FWO9PNg1ooBveodsGmmK5
+         8prq4eTWC19Vtg8J1G/aI/3slaof/k2pbJ/5Ol+djQc6jbctJ3JvALeC02h/qNrFaCHo
+         A4aw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=hlThU/0+3HTSxVJIpbAfEl3+62sbcU01NeSU7eG4LqY=;
-        b=FreXBkHKQUs0QyNxvj5ZoaDCcnTBf0/Ys8sSXc4s00kExy+PcG6nUR14BfaeRrCnj0
-         xI8nHfYUbVRX/1mXsqx2aBSm6vOnM4IBEKq5r1ULdyVImF+jCD96Fn0IvCSbI58h4VE8
-         Bjrvnn3Hg3tma/wZmeWgO5oW5OaaDYipZdR5paajWGN35CueURymJbDEzSF/4Hv1xJFf
-         Iswx0ge/IUcKchWnOhM+7ztc1TD5bn9IgAW4pQ5XwnKm2/EVhnniEfVK9wyq6pTA3FSJ
-         NHH0/eWrI6LdLHkTHQqWQ2VO5dY3wW55tW06Q6GaO0gwk4B0BhAP5NsN7VCib+rLYmw3
-         7Stg==
-X-Gm-Message-State: APjAAAWRu6T8r4w2JDXkv1T/mdmD8e6WhsQpM6sWTBvkSHSluiNiaqGa
-        4ZLvS1zrufrlwjn4tGZ+6/Ucc6XCOonMzK7JYVkndA==
-X-Google-Smtp-Source: APXvYqzIoyvaXbrjboO82pq9HbUiv4XbYQZhJ+E6TRlLc9GG+m0ukGOgfxcjEGQG58Y44wkqcLgO7h1hPaR44lh3y9I=
-X-Received: by 2002:a02:b156:: with SMTP id s22mr2834772jah.102.1570007375665;
- Wed, 02 Oct 2019 02:09:35 -0700 (PDT)
-MIME-Version: 1.0
-References: <20191001132333.20146-1-brgl@bgdev.pl> <20191001133807.GB3563296@ulmo>
-In-Reply-To: <20191001133807.GB3563296@ulmo>
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Wed, 2 Oct 2019 11:09:24 +0200
-Message-ID: <CAMRc=Me5tC2pFc56oWrcdLqu3YULYWPFXLXLW6uciZ5OPO7_Ug@mail.gmail.com>
-Subject: Re: [PATCH 0/3] tegra: use regulator_bulk_set_supply_names()
-To:     Thierry Reding <thierry.reding@gmail.com>
-Cc:     Jens Axboe <axboe@kernel.dk>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        JC Kuo <jckuo@nvidia.com>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Mathias Nyman <mathias.nyman@intel.com>,
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=snm/Nrqs5QlS5PiXAWfvh6paeZp4yNlu1hsumZL0i1o=;
+        b=JSQNRu0PqdzCOyOsnjp78GufFplUtDKgmGX0hmSBCwIOi618jzmwRHKD6EcJQ7HDyl
+         ZFgQ4GVeDcEYuOwynDO+tFsBpC6oZMKi9q/aQK8Op4wau5XHnpKysLk9go5poF9OMzsr
+         ww2P9RjpVkZYaXV5p88X6DGovVSCoqBbiHp/j7HybsAIFSQh/1wxrxphgRcb28y4iPuV
+         gXgPldy/+icEyMF+rszDvl/Vq7RHowEblqvyknvLhFXYJwOMCigL3B31H/GyJLgFHd6g
+         uaOWYa9jlyec3XbaDdeIOcrAWpev+32AVio0b+LSdf5yZV8NfnjUE/3LFItCT72Xdpv1
+         sYZQ==
+X-Gm-Message-State: APjAAAVv4F35UVdncgN6N8cvfDwSeQJKmBvnraNJzz+j/1UfFiQoCUZ+
+        +Wue2S6lVzzDpiWBSdekVN0wske2dxxnAA==
+X-Google-Smtp-Source: APXvYqxhVv3O71kzK8dErCIIZ8yCZStE0Zsvx1RSL5mpco8IJyDXSeXrRGypv1WRJKcw21Z5DvsCWw==
+X-Received: by 2002:a05:6512:210:: with SMTP id a16mr1605247lfo.42.1570007509119;
+        Wed, 02 Oct 2019 02:11:49 -0700 (PDT)
+Received: from ?IPv6:2a00:1fa0:445f:5d29:e99c:20bb:1ee3:467? ([2a00:1fa0:445f:5d29:e99c:20bb:1ee3:467])
+        by smtp.gmail.com with ESMTPSA id k8sm5693214ljg.9.2019.10.02.02.11.47
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 02 Oct 2019 02:11:48 -0700 (PDT)
+Subject: Re: [PATCH] mmc: renesas_sdhi: Do not use platform_get_irq() to count
+ interrupts
+To:     Geert Uytterhoeven <geert+renesas@glider.be>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Wolfram Sang <wsa+renesas@sang-engineering.com>
+Cc:     Stephen Boyd <swboyd@chromium.org>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-ide@vger.kernel.org, linux-tegra@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-usb@vger.kernel.org,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        linux-renesas-soc@vger.kernel.org, linux-mmc@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20191001180703.910-1-geert+renesas@glider.be>
+From:   Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Message-ID: <bc48041c-df06-8108-9c45-3dfb1d527678@cogentembedded.com>
+Date:   Wed, 2 Oct 2019 12:11:45 +0300
+User-Agent: Mozilla/5.0 (Windows NT 6.3; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
+MIME-Version: 1.0
+In-Reply-To: <20191001180703.910-1-geert+renesas@glider.be>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-wt., 1 pa=C5=BA 2019 o 15:38 Thierry Reding <thierry.reding@gmail.com> napi=
-sa=C5=82(a):
->
-> On Tue, Oct 01, 2019 at 03:23:30PM +0200, Bartosz Golaszewski wrote:
-> > From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-> >
-> > The regulator_bulk_set_supply_names() helper was merged upstream. Use i=
-t
-> > in a couple tegra drivers.
-> >
-> > Bartosz Golaszewski (3):
-> >   ahci: tegra: use regulator_bulk_set_supply_names()
-> >   phy: tegra: use regulator_bulk_set_supply_names()
-> >   usb: host: xhci-tegra: use regulator_bulk_set_supply_names()
-> >
-> >  drivers/ata/ahci_tegra.c      | 6 +++---
-> >  drivers/phy/tegra/xusb.c      | 6 +++---
-> >  drivers/usb/host/xhci-tegra.c | 5 +++--
-> >  3 files changed, 9 insertions(+), 8 deletions(-)
->
-> I really don't see the point here. You've got a positive diffstat here,
-> which means all that churn is without benefit.
->
+On 01.10.2019 21:07, Geert Uytterhoeven wrote:
 
-A hand-coded for loop is replaced with a single function call. The
-actual generated code is smaller - I posted bloat-o-meter results last
-time. The only reason the number of lines of code doesn't really
-change is because the line is broken due to the function and argument
-names being too long.
+> As platform_get_irq() now prints an error when the interrupt does not
+> exist, counting interrupts by looping until failure causes the printing
 
-> Is there some subsequent work based on this that will actually improve
-> things?
+   s/the//?
 
-I'd argue that replacing a common operation that's reimplemented
-explicitly by hand in many places with a helper function is already an
-improvement. Consolidation is almost always good.
+> of scary messages like:
+> 
+>      renesas_sdhi_internal_dmac ee140000.sd: IRQ index 1 not found
+> 
+> Fix this by using the platform_irq_count() helper to avoid touching
+> non-existent interrupts.
+> 
+> Fixes: 7723f4c5ecdb8d83 ("driver core: platform: Add an error message to platform_get_irq*()")
+> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> ---
+> This is a fix for v5.4-rc1.
+> ---
+>   drivers/mmc/host/renesas_sdhi_core.c | 26 ++++++++++++++------------
+>   1 file changed, 14 insertions(+), 12 deletions(-)
+> 
+> diff --git a/drivers/mmc/host/renesas_sdhi_core.c b/drivers/mmc/host/renesas_sdhi_core.c
+> index d4ada5cca2d14f6a..122f429602d825bd 100644
+> --- a/drivers/mmc/host/renesas_sdhi_core.c
+> +++ b/drivers/mmc/host/renesas_sdhi_core.c
+[...]
+> @@ -825,24 +825,26 @@ int renesas_sdhi_probe(struct platform_device *pdev,
+>   		host->hs400_complete = renesas_sdhi_hs400_complete;
+>   	}
+>   
+> -	i = 0;
+> -	while (1) {
+> +	/* There must be at least one IRQ source */
+> +	num_irqs = platform_irq_count(pdev);
+> +	if (num_irqs < 1) {
+> +		ret = num_irqs;
+> +		goto eirq;
 
-That being said, I like your idea about the regulator_get_from_names
-helper, but it will take more time as we have to cover optional
-multiple regulators as well. In other words: it's on my TODO list, but
-in the meantime there's no harm in using this since Mark decided to
-make it a part of the regulator API anyway.
+    This will return 0 with failed probe if 'num_irqs' is 0, I don't think you 
+want this...
 
-Bart
+[...]
+
+MBR, Sergei
