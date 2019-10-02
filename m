@@ -2,152 +2,121 @@ Return-Path: <SRS0=zem1=X3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F236C4360C
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 21:57:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5AC65C4360C
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 21:58:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5466F20842
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 21:57:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2EA2920842
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 21:58:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=anastas.io header.i=@anastas.io header.b="OkiJU5ys"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="p/LKn8xy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728039AbfJBV5s (ORCPT
+        id S1728180AbfJBV6R (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Oct 2019 17:57:48 -0400
-Received: from alpha.anastas.io ([104.248.188.109]:34097 "EHLO
-        alpha.anastas.io" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727287AbfJBV5s (ORCPT
+        Wed, 2 Oct 2019 17:58:17 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:42155 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726924AbfJBV6R (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Oct 2019 17:57:48 -0400
-Received: from authenticated-user (alpha.anastas.io [104.248.188.109])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by alpha.anastas.io (Postfix) with ESMTPSA id D71817EB12;
-        Wed,  2 Oct 2019 16:57:46 -0500 (CDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=anastas.io; s=mail;
-        t=1570053467; bh=y3OBjlDVg2FJ0yEN3zcnKsGCFNiMul3cWckup+8voJE=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=OkiJU5ys+qIY0qOH+7XmamXUWwglbCZTE7DryCLTRZUrNYj47xJzve8GqJC1JghCV
-         hqgOKLwkuDAJeLpE+7WVfUOfcwMImWwvUAQ2Mnob2Tj+t4kiJF1qOxZWvWxNRWyO2S
-         jiF0e5/57/IqXGsQRhXlCgq4MkqIN5AhVG0lnQdcnKVhZna4ivgRXCf9JCy66n+4N4
-         a2zTMTjnXxeAJavXJ7j/wziGssZeEOpBb8YLlhiCAtKdESje3r+KliDNNxPVn+s00p
-         sC1DRWlCPNGv0swlZPFHoHO3FB5YPT2ku/BPgFXMs4B2apHlsDW1I2K1ZWVydvJhYq
-         vXTSGGFcOBzRw==
-Subject: Re: [PATCH RFC 0/1] VFIO: Region-specific file descriptors
-To:     Alex Williamson <alex.williamson@redhat.com>
-Cc:     kvm@vger.kernel.org, cohuck@redhat.com,
-        linux-kernel@vger.kernel.org, Donald Dutile <ddutile@redhat.com>
-References: <20190930235533.2759-1-shawn@anastas.io>
- <20191001093852.5c1d9c7c@x1.home>
-From:   Shawn Anastasio <shawn@anastas.io>
-Message-ID: <7b953e86-82a4-cf58-24d5-b8f9b5ae8d55@anastas.io>
-Date:   Wed, 2 Oct 2019 16:57:45 -0500
+        Wed, 2 Oct 2019 17:58:17 -0400
+Received: by mail-pf1-f194.google.com with SMTP id q12so337228pff.9;
+        Wed, 02 Oct 2019 14:58:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
+         :user-agent;
+        bh=nW78YaON9ftxGXW1Xz94QjRHfMC0isgsL2LzRRL5B3I=;
+        b=p/LKn8xyaCC9zZK0L02ezYYnpAnd+6biRqCJLy3WXmypv1FK4+o5B0Vh1tz5AEnujZ
+         GH3XEDgoupBqH9rwnYrtcw0IziykawQnZy/Ggb8Am+KIv+vy9Tl5z9vPFUUXZYz1UUxu
+         Epe4Nfl833nFYwwwgomYktYRZXGHK4mmFg9oHjDMuXgJ+yqkH/Qr3L+zPlrlRW0RSh9L
+         EGD+nt+GaPbPaGvv+GjqFAsbbPbAkGZoBW5DH1rL3dNJQ5/iNbil3wHiApP3oK49FlAx
+         YC1Ac2GAzaWlsRtyRygOlxEQppu38ddSuaVlAqNqDgi6JKXlesoxul73rVP3ewjgBY+H
+         nYhg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=nW78YaON9ftxGXW1Xz94QjRHfMC0isgsL2LzRRL5B3I=;
+        b=fUHlfVGT8e0cfPSvZtGmIi1t9B61HUnF/kg5+EBlOmcQYsI2x4bmPkTwdPrE0fzmTJ
+         58oNXab2noI6VM2ZEG5avjvMS+Qn/1lI8PSMbYAFrAu2ONDLC6fxiTnuCBX5S9F9c2Es
+         0/wKnOCd0pVlDgZ1mda6a776irtaENfQOi0ANqSb7sVjV30XbMmNItdSxDCISrIGBdW6
+         UVm9OI41+NpEEGUTvNK1gj882/nISaDbMO37gSHUWkjCZpCtGdFkqR5WDVoorRXcsi6v
+         90L58Nkpb9NoOWfT0pQSwDOhlT/OAvrxmo6CIKPSQO6DyOxKNi0/0UwoBJpgtQtIyWyW
+         qO2Q==
+X-Gm-Message-State: APjAAAXiwXovEMX8twfnlgL9D2i/5OxHq0RgQ9G5zT4yHfqqu6qx0E5o
+        8NBeyu07Ol/KMHYjbGA8aI1ykbgf
+X-Google-Smtp-Source: APXvYqxOdT2iF+VGb/xNhZQ3sWU6mcLeX1EFw/Lfw7VDzrPnwkP4P58XsYWLNKhkFdNyMgvppWFg/g==
+X-Received: by 2002:a63:f113:: with SMTP id f19mr5878239pgi.75.1570053495683;
+        Wed, 02 Oct 2019 14:58:15 -0700 (PDT)
+Received: from dtor-ws ([2620:15c:202:201:3adc:b08c:7acc:b325])
+        by smtp.gmail.com with ESMTPSA id a8sm402067pfo.118.2019.10.02.14.58.14
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 02 Oct 2019 14:58:14 -0700 (PDT)
+Date:   Wed, 2 Oct 2019 14:58:12 -0700
+From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
+To:     linux-input@vger.kernel.org
+Cc:     Benjamin Tissoires <benjamin.tissoires@redhat.com>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] Input: add input_get_poll_interval()
+Message-ID: <20191002215812.GA135681@dtor-ws>
 MIME-Version: 1.0
-In-Reply-To: <20191001093852.5c1d9c7c@x1.home>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 10/1/19 10:38 AM, Alex Williamson wrote:
-> On Mon, 30 Sep 2019 18:55:32 -0500 Shawn Anastasio <shawn@anastas.io>
-> wrote:
-> 
->> This patch adds region file descriptors to VFIO, a simple file
->> descriptor type that allows read/write/mmap operations on a single
->> region of a VFIO device.
->> 
->> This feature is particularly useful for privileged applications
->> that use VFIO and wish to share file descriptors with unprivileged
->> applications without handing over full control of the device.
-> 
-> Such as?  How do we defined "privileged"?  VFIO already allows 
-> "unprivileged applications" to own a device, only file permissions
-> are necessary for the VFIO group.  Does region level granularity
-> really allow us to claim that the consumer of this fd doesn't have
-> full control of the device?  Clearly device ioctls, including
-> interrupts, and DMA mappings are not granted with only access to a
-> region, but said unprivileged application may have absolute full
-> control of the device itself via that region.
+Some drivers need to be able to know the current polling interval for
+devices working in polling mode, let's allow them fetching it.
 
-Yes, that's true - determining whether any control was restricted will
-depend on the specifics of the device and region shared.
+Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+---
+ drivers/input/input-poller.c | 9 +++++++++
+ include/linux/input.h        | 1 +
+ 2 files changed, 10 insertions(+)
 
-The use case I had in mind when implementing this was QEMU's ivshmem
-device. I'm writing a daemon that uses VFIO to establish a shared
-memory channel with the host via ivshmem devices and then passes
-the shared memory region to unprivileged clients over unix domain
-sockets. In this case, it is beneficial to have a way to only share
-BAR 2 of the ivshmem device (the shared memory region) without giving
-control over device configuration and interrupts.
+diff --git a/drivers/input/input-poller.c b/drivers/input/input-poller.c
+index 1b3d28964bb2..7d6b4e8879f1 100644
+--- a/drivers/input/input-poller.c
++++ b/drivers/input/input-poller.c
+@@ -123,6 +123,15 @@ void input_set_max_poll_interval(struct input_dev *dev, unsigned int interval)
+ }
+ EXPORT_SYMBOL(input_set_max_poll_interval);
+ 
++int input_get_poll_interval(struct input_dev *dev)
++{
++	if (!dev->poller)
++		return -EINVAL;
++
++	return dev->poller->poll_interval;
++}
++EXPORT_SYMBOL(input_get_poll_interval);
++
+ /* SYSFS interface */
+ 
+ static ssize_t input_dev_get_poll_interval(struct device *dev,
+diff --git a/include/linux/input.h b/include/linux/input.h
+index 31da4feaa1d8..a420324b7882 100644
+--- a/include/linux/input.h
++++ b/include/linux/input.h
+@@ -387,6 +387,7 @@ int input_setup_polling(struct input_dev *dev,
+ void input_set_poll_interval(struct input_dev *dev, unsigned int interval);
+ void input_set_min_poll_interval(struct input_dev *dev, unsigned int interval);
+ void input_set_max_poll_interval(struct input_dev *dev, unsigned int interval);
++int input_get_poll_interval(struct input_dev *dev);
+ 
+ int __must_check input_register_handler(struct input_handler *);
+ void input_unregister_handler(struct input_handler *);
+-- 
+2.23.0.444.g18eeb5a265-goog
 
-It would also perhaps be useful to restrict the read/write/mmap
-abilities of a region fd at time of creation, though the patch
-as-is doesn't implement that.
 
->> It also allows applications to use regular offsets in
->> read/write/mmap instead of the region index + offset that must be
->> used with device file descriptors.
-> 
-> How is this actually an issue that needs a solution?
-
-It allows applications that expect memfd/shm style semantics to
-work without modification. In the use case I mentioned, it allows
-the unprivileged clients to use any received shared memory fds without
-knowledge of VFIO-specific semantics. This means that the code paths for
-the host, where regular memfds are passed, and the guest, where VFIO
-region fds are passed can be the same.
-
->> The current implementation is very raw (PCI only, no reference
->> counting which is probably wrong), but I wanted to get a sense to
->> see if this feature is desired. If it is, tips on how to implement
->> this more correctly are appreciated.
-> 
-> Handling the ownership and life cycle of the region fds is the more 
-> complicated problem.  If an unprivileged user has an mmap to a
-> device owned by a privileged user, how does it get revoked by the
-> privileged part of this equation?
-
-Yes, this is something that I've been thinking about. IIUC, the current
-patch results in all region fds being invalidated when the privileged
-process drops the device fd, but this may not be the best solution.
-
-Perhaps having region fds bump the device struct reference counts
-so that region fds can outlive device fds makes more sense. This
-wouldn't allow the privileged process to revoke region access, though.
-
-> How do we decide which regions merit this support, for instance a
-> device specific region could have just as viable a use case as a BAR.
-> Why does this code limit support to regions supporting mmap but then
-> support read/write as well?
-
-This was an arbitrary decision I made while testing and not necessarily
-the behavior I wish to keep. Perhaps it would make sense to allow
-region fd creation for regions that support any of r, w, mmap.
-
-> Technically, isn't the extent of functionality provided in this RFC 
-> already available via the PCI resource files in sysfs?
-
-That's a good point, though having the functionality within the
-VFIO framework would be nice as well. There's plenty of functionality
-already duplicated between sysfs, UIO, and VFIO.
-
-> Without a concrete use case, this looks like a solution in search of
-> a problem.  Thanks,
-
-Hopefully the use case I described above makes sense. This is my first
-time writing a PCI driver, so I don't know if this use case is a bit
-contrived and not applicable outside my specific application.
-
-I don't think it's too unreasonable to think that there are some
-other applications where restricting access to specific regions
-would be useful, though.
-
-Thanks,
-Shawn
+-- 
+Dmitry
