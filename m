@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90ADFC4360C
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 19:14:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 763C7C4CED1
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 19:14:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 666A7207FF
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 19:14:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4EEB7207FF
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 19:14:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730269AbfJBTON (ORCPT
+        id S1729355AbfJBTOS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Oct 2019 15:14:13 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:35238 "EHLO
+        Wed, 2 Oct 2019 15:14:18 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:35232 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728999AbfJBTII (ORCPT
+        by vger.kernel.org with ESMTP id S1728997AbfJBTII (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 2 Oct 2019 15:08:08 -0400
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1iFjyn-00035A-4X; Wed, 02 Oct 2019 20:08:05 +0100
+        id 1iFjyn-00035I-De; Wed, 02 Oct 2019 20:08:05 +0100
 Received: from ben by deadeye with local (Exim 4.92.1)
         (envelope-from <ben@decadent.org.uk>)
-        id 1iFjym-0003aA-TP; Wed, 02 Oct 2019 20:08:04 +0100
+        id 1iFjyn-0003aa-2x; Wed, 02 Oct 2019 20:08:05 +0100
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,15 +35,14 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Saurav Kashyap" <skashyap@marvell.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        "Colin Ian King" <colin.king@canonical.com>
+        "Hans de Goede" <hdegoede@redhat.com>,
+        "Patrik Jakobsson" <patrik.r.jakobsson@gmail.com>
 Date:   Wed, 02 Oct 2019 20:06:51 +0100
-Message-ID: <lsq.1570043211.850770727@decadent.org.uk>
+Message-ID: <lsq.1570043211.29533281@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 05/87] scsi: bnx2fc: fix incorrect cast to u64 on
- shift operation
+Subject: [PATCH 3.16 10/87] drm/gma500/cdv: Check vbt config bits when
+ detecting lvds panels
 In-Reply-To: <lsq.1570043210.379046399@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -57,33 +56,57 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Colin Ian King <colin.king@canonical.com>
+From: Patrik Jakobsson <patrik.r.jakobsson@gmail.com>
 
-commit d0c0d902339249c75da85fd9257a86cbb98dfaa5 upstream.
+commit 7c420636860a719049fae9403e2c87804f53bdde upstream.
 
-Currently an int is being shifted and the result is being cast to a u64
-which leads to undefined behaviour if the shift is more than 31 bits. Fix
-this by casting the integer value 1 to u64 before the shift operation.
+Some machines have an lvds child device in vbt even though a panel is
+not attached. To make detection more reliable we now also check the lvds
+config bits available in the vbt.
 
-Addresses-Coverity: ("Bad shift operation")
-Fixes: 7b594769120b ("[SCSI] bnx2fc: Handle REC_TOV error code from firmware")
-Signed-off-by: Colin Ian King <colin.king@canonical.com>
-Acked-by: Saurav Kashyap <skashyap@marvell.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Bugzilla: https://bugzilla.redhat.com/show_bug.cgi?id=1665766
+Reviewed-by: Hans de Goede <hdegoede@redhat.com>
+Signed-off-by: Patrik Jakobsson <patrik.r.jakobsson@gmail.com>
+Link: https://patchwork.freedesktop.org/patch/msgid/20190416114607.1072-1-patrik.r.jakobsson@gmail.com
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- drivers/scsi/bnx2fc/bnx2fc_hwi.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/gpu/drm/gma500/cdv_intel_lvds.c | 3 +++
+ drivers/gpu/drm/gma500/intel_bios.c     | 3 +++
+ drivers/gpu/drm/gma500/psb_drv.h        | 1 +
+ 3 files changed, 7 insertions(+)
 
---- a/drivers/scsi/bnx2fc/bnx2fc_hwi.c
-+++ b/drivers/scsi/bnx2fc/bnx2fc_hwi.c
-@@ -828,7 +828,7 @@ ret_err_rqe:
- 			((u64)err_entry->data.err_warn_bitmap_hi << 32) |
- 			(u64)err_entry->data.err_warn_bitmap_lo;
- 		for (i = 0; i < BNX2FC_NUM_ERR_BITS; i++) {
--			if (err_warn_bit_map & (u64) (1 << i)) {
-+			if (err_warn_bit_map & ((u64)1 << i)) {
- 				err_warn = i;
- 				break;
- 			}
+--- a/drivers/gpu/drm/gma500/cdv_intel_lvds.c
++++ b/drivers/gpu/drm/gma500/cdv_intel_lvds.c
+@@ -620,6 +620,9 @@ void cdv_intel_lvds_init(struct drm_devi
+ 	int pipe;
+ 	u8 pin;
+ 
++	if (!dev_priv->lvds_enabled_in_vbt)
++		return;
++
+ 	pin = GMBUS_PORT_PANEL;
+ 	if (!lvds_is_present_in_vbt(dev, &pin)) {
+ 		DRM_DEBUG_KMS("LVDS is not present in VBT\n");
+--- a/drivers/gpu/drm/gma500/intel_bios.c
++++ b/drivers/gpu/drm/gma500/intel_bios.c
+@@ -436,6 +436,9 @@ parse_driver_features(struct drm_psb_pri
+ 	if (driver->lvds_config == BDB_DRIVER_FEATURE_EDP)
+ 		dev_priv->edp.support = 1;
+ 
++	dev_priv->lvds_enabled_in_vbt = driver->lvds_config != 0;
++	DRM_DEBUG_KMS("LVDS VBT config bits: 0x%x\n", driver->lvds_config);
++
+ 	/* This bit means to use 96Mhz for DPLL_A or not */
+ 	if (driver->primary_lfp_id)
+ 		dev_priv->dplla_96mhz = true;
+--- a/drivers/gpu/drm/gma500/psb_drv.h
++++ b/drivers/gpu/drm/gma500/psb_drv.h
+@@ -533,6 +533,7 @@ struct drm_psb_private {
+ 	int lvds_ssc_freq;
+ 	bool is_lvds_on;
+ 	bool is_mipi_on;
++	bool lvds_enabled_in_vbt;
+ 	u32 mipi_ctrl_display;
+ 
+ 	unsigned int core_freq;
 
