@@ -2,129 +2,108 @@ Return-Path: <SRS0=zem1=X3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D07C7C35280
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 12:03:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE6BBC352AA
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 12:03:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A803E21929
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 12:03:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="gsoanE9y"
+	by mail.kernel.org (Postfix) with ESMTP id 8B6F821A4C
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 12:03:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728305AbfJBMDB (ORCPT
+        id S1728318AbfJBMDJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Oct 2019 08:03:01 -0400
-Received: from aserp2120.oracle.com ([141.146.126.78]:50644 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725875AbfJBMDB (ORCPT
+        Wed, 2 Oct 2019 08:03:09 -0400
+Received: from mout.kundenserver.de ([212.227.126.135]:35039 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725875AbfJBMDJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Oct 2019 08:03:01 -0400
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x92BwidV115138;
-        Wed, 2 Oct 2019 12:02:30 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2019-08-05;
- bh=5f9WP1t5ZUCUnAU3TFbU22auufKBsGd2ReO5WAV1EVQ=;
- b=gsoanE9ypOdaIJvz2Lmkws6zLs50sjloWhfxTGFIniRY5XGdYQxqfshsvI7qZ7QVVoaH
- YtY0w9g6HoZWV8rDGohb4keAR73zQY2nhrKRUYtwJ8FXZhoC3nUU7wi5fXKVvhf2IdxC
- bEufY9WBp3AkTmNLA2/vkFkUqoDzL8KGVYgE1hY/dd7JTL3+AwK+Hgwbt2TsjkI4G73O
- CNlx9HpqUTjesEmSJUTAyolzL8wPV9u4GRDqgQoym0z1ro3D/0py18majTtuN2oneM8O
- qiZL+FisqUOl4WUi+mwM+qs3h+3VAU/ZhKhK+DTtBzTT1xifbJzmzI7Yr2GtH8vvEdp3 wQ== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by aserp2120.oracle.com with ESMTP id 2v9yfqcen5-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 02 Oct 2019 12:02:30 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x92Bw3kx076918;
-        Wed, 2 Oct 2019 12:00:29 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by aserp3020.oracle.com with ESMTP id 2vckyntqya-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 02 Oct 2019 12:00:29 +0000
-Received: from abhmp0009.oracle.com (abhmp0009.oracle.com [141.146.116.15])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x92C0OHP020718;
-        Wed, 2 Oct 2019 12:00:24 GMT
-Received: from tomti.i.net-space.pl (/10.175.221.225)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Wed, 02 Oct 2019 05:00:23 -0700
-Date:   Wed, 2 Oct 2019 14:00:18 +0200
-From:   Daniel Kiper <daniel.kiper@oracle.com>
-To:     "H. Peter Anvin" <hpa@zytor.com>
-Cc:     linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        x86@kernel.org, bp@alien8.de, corbet@lwn.net,
-        dpsmith@apertussolutions.com, eric.snowberg@oracle.com,
-        kanth.ghatraju@oracle.com, konrad.wilk@oracle.com,
-        mingo@redhat.com, ross.philipson@oracle.com, tglx@linutronix.de
-Subject: Re: [PATCH v2 1/3] x86/boot: Introduce the kernel_info
-Message-ID: <20191002120018.d7wbpf3zusl4dcsc@tomti.i.net-space.pl>
-References: <20190704163612.14311-1-daniel.kiper@oracle.com>
- <20190704163612.14311-2-daniel.kiper@oracle.com>
- <5633066F-01BE-437D-A564-150FD48B6D92@zytor.com>
- <20190930150110.ekir52wu3w67v2fk@tomti.i.net-space.pl>
- <c9eb5a39-ced5-b35d-616d-6ffbe15c1396@zytor.com>
- <20191001114133.xy5nuhepzzixhuh4@tomti.i.net-space.pl>
- <dda802de-2efe-3d22-7816-6da36bf9ebf8@zytor.com>
+        Wed, 2 Oct 2019 08:03:09 -0400
+Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
+ (mreue009 [212.227.15.129]) with ESMTPA (Nemesis) id
+ 1N17gw-1i9YkR0zSk-012aQY; Wed, 02 Oct 2019 14:03:01 +0200
+From:   Arnd Bergmann <arnd@arndb.de>
+To:     Alex Deucher <alexander.deucher@amd.com>,
+        Harry Wentland <harry.wentland@amd.com>,
+        Leo Li <sunpeng.li@amd.com>,
+        =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
+        "David (ChunMing) Zhou" <David1.Zhou@amd.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>
+Cc:     clang-built-linux@googlegroups.com, amd-gfx@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        Arnd Bergmann <arnd@arndb.de>,
+        Bhawanpreet Lakha <Bhawanpreet.Lakha@amd.com>
+Subject: [PATCH 4/6] drm/amd/display: fix dcn21 Makefile for clang
+Date:   Wed,  2 Oct 2019 14:01:25 +0200
+Message-Id: <20191002120136.1777161-5-arnd@arndb.de>
+X-Mailer: git-send-email 2.20.0
+In-Reply-To: <20191002120136.1777161-1-arnd@arndb.de>
+References: <20191002120136.1777161-1-arnd@arndb.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <dda802de-2efe-3d22-7816-6da36bf9ebf8@zytor.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9397 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1908290000 definitions=main-1910020115
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9397 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1908290000
- definitions=main-1910020115
+Content-Transfer-Encoding: 8bit
+X-Provags-ID: V03:K1:iyh+vgBexJi73bPkiI60pHY80NTDCFDTYEIUMn80jY7xmFLFyN1
+ lOYL3f+3oMpNTxy5GNVwJ3KsEs68xZViW7fENNgg3Jn5U+V1egRUjVEO1ktCKff0Pvq9jvM
+ 4GUnHYGOIUtOw3K3Thgb50nUN7iI5JiiL8myJPlaQsN9Bhcd/4wqCRRjdXAaL1TbjWAsBvu
+ 6OdkBy9ayup/rm6WjvHtA==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:osAlctbyQR8=:PMoF551m2feK1yVfj5p1si
+ 0NsF0Vw7jCbM3UjyL2s9+FckHGlfjS2CR5RQ8ZjWJhwRIW19TTs3Fw3o/8QRBcxnadhwrtTJs
+ u/bBXHhGLUf9GfY2GQ5YbtfE6Y7lDCTClYdkNAJ8Om7NUJ15ngHT+BeANDCC82sO5P1P7Kqrh
+ 7Apo4JVc9XpchQly/4+AJ0Aoslcr3xTdDH5crjBlFoaDwiir6YfXa8q/A2NB+y9jW5M7x50XF
+ srjEuZqSdlsFcY53m4r47Ckm04Oc6X6P0hzM6HlKXipty1ePvojObDCjOD4A6rOwtGpDymgeZ
+ pBJZtnC0J9T4DuvTuqqKWrZu3V2YoQQAnt7Wau0Ilkrn1k599PEbivZl3lDzXMh3rvlY96RiC
+ AOKVbfVyiCZp7JCioSHddRzgaQEB9GB7kbhKpSoJm7aHxNQtm3IYJ0uZQney+UIZaeQF2euu9
+ YXFAjzM4HyyOrmVMv1aD981VTUfnCH7kdTE68ncoLBAb0fhu3TQrBSZZEuDifhvCNwA1J0twW
+ 2P/Qby4iOItQ+N35i0xNBN0GglcxPdx7QfPYUbI2ihJK7uCKf3vhi2svF336F5xsnoQF6B2zL
+ 1g43JHYgF2hPy4ufjpnwOIW1vm7jMUnQnwY6RuCw/yEPlIqH+quLN6685+4nZoZIEOgk7Jc65
+ UxSLEC7Z69DRdRNoyAErimL5mBLoTsyLuSIbdAMu9Aigcmnu8+xozb1hJsZWGs+rsqXPILL7e
+ w3wNvnPx6deHku0JWxLzCTmFfzWVVjPFMoSWC+xdE1vSuqn0s5+nbd6GGDRxaVRT7IBOycOCh
+ BYn334EnghabAFgHkq9Hz/KzKXLfVdhlTgwqF36uo2mh1mUfOsaoYot2aaMLxAFooFvsTN5TR
+ ov53b8Y7fCwiurBPSYww==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Oct 01, 2019 at 03:28:01PM -0700, H. Peter Anvin wrote:
-> On 2019-10-01 04:41, Daniel Kiper wrote:
-> >
-> > OK, so, this is more or less what I had in my v3 patch before sending
-> > this email. So, it looks that I am on good track. Great! Though I am not
-> > sure that we should have magic for chunked objects. If yes could you
-> > explain why? I would just leave len for chunked objects.
-> >
->
-> It makes it easier to validate the contents (bugs happen...), and would allow
-> for multiple chunks that could come from different object files if it ever
-> becomes necessary for some reason.
+Just like all the other variants, this one passes invalid
+compile-time options with clang after the new code got
+merged:
 
-OK.
+clang: error: unknown argument: '-mpreferred-stack-boundary=4'
+scripts/Makefile.build:265: recipe for target 'drivers/gpu/drm/amd/amdgpu/../display/dc/dcn21/dcn21_resource.o' failed
 
-> We could also just say that dynamic chunks don't even have pointers, and let
-> the boot loader just walk the list.
+Use the same variant that we have for dcn20 to fix compilation.
 
-Yeah... That seams simpler. I will do that.
+Fixes: eced51f9babb ("drm/amd/display: Add hubp block for Renoir (v2)")
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+---
+ drivers/gpu/drm/amd/display/dc/dcn21/Makefile | 12 +++++++++++-
+ 1 file changed, 11 insertions(+), 1 deletion(-)
 
-> >> Also "InfO" is a pretty hideous magic. In general, all-ASCII magics have much
-> >> higher risk of collision than *RANDOM* binary numbers. However, for a chunked
-> >> architecture they do have the advantage that they can be used also as a human
-> >> name or file name for the chunk, e.,g. in sysfs, so maybe something like
-> >> "LnuX" or even "LToP" for the top-level chunk might make sense.
-> >>
-> >> How does that sound?
-> >
-> > Well, your proposals are more cryptic, especially the second one, than
-> > mine but I tend to agree that more *RANDOM* magics are better. So,
-> > I would choose "LToP" if you decipher it for me. Linux Top?
-> >
->
-> Yes, Linux top [structure].
+diff --git a/drivers/gpu/drm/amd/display/dc/dcn21/Makefile b/drivers/gpu/drm/amd/display/dc/dcn21/Makefile
+index 8cd9de8b1a7a..ef673bffc241 100644
+--- a/drivers/gpu/drm/amd/display/dc/dcn21/Makefile
++++ b/drivers/gpu/drm/amd/display/dc/dcn21/Makefile
+@@ -3,7 +3,17 @@
+ 
+ DCN21 = dcn21_hubp.o dcn21_hubbub.o dcn21_resource.o
+ 
+-CFLAGS_$(AMDDALPATH)/dc/dcn21/dcn21_resource.o := -mhard-float -msse -mpreferred-stack-boundary=4
++ifneq ($(call cc-option, -mpreferred-stack-boundary=4),)
++	cc_stack_align := -mpreferred-stack-boundary=4
++else ifneq ($(call cc-option, -mstack-alignment=16),)
++	cc_stack_align := -mstack-alignment=16
++endif
++
++CFLAGS_$(AMDDALPATH)/dc/dcn21/dcn21_resource.o := -mhard-float -msse $(cc_stack_align)
++
++ifdef CONFIG_CC_IS_CLANG
++CFLAGS_$(AMDDALPATH)/dc/dcn21/dcn21_resource.o += -msse2
++endif
+ 
+ AMD_DAL_DCN21 = $(addprefix $(AMDDALPATH)/dc/dcn21/,$(DCN21))
+ 
+-- 
+2.20.0
 
-Thx!
-
-Daniel
