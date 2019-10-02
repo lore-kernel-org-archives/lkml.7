@@ -2,68 +2,76 @@ Return-Path: <SRS0=zem1=X3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 07D9BC4360C
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 22:00:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BE15C4360C
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 22:04:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D02D121848
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 22:00:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="holuGGpe"
+	by mail.kernel.org (Postfix) with ESMTP id 44BB620659
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 22:04:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1570053852;
+	bh=cjJfPm0Ek2GzDPZ/lEqRjnaOoaQ29ytqucXUUqe18Os=;
+	h=Date:From:To:Cc:Subject:List-ID:From;
+	b=jGNODv8afvwU8g/tqBQrdq5WDDCNvp9EypnG9cuKKjun/Qug7UJwtMWawajKupd96
+	 k4egyrZPsIyYD093IcwdYjNsl3DmUoGWqD7wwI1u9Ef9YQodUy2GRnoYM/XiVfqvGM
+	 umYTJIMbPC1XIQDXBrq3Se/2Ekd6AThcX0NAGBCo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728303AbfJBWAx (ORCPT
+        id S1726823AbfJBWEL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Oct 2019 18:00:53 -0400
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:39198 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725789AbfJBWAx (ORCPT
+        Wed, 2 Oct 2019 18:04:11 -0400
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:34115 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725875AbfJBWEL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Oct 2019 18:00:53 -0400
-Received: by mail-pl1-f193.google.com with SMTP id s17so486157plp.6;
-        Wed, 02 Oct 2019 15:00:51 -0700 (PDT)
+        Wed, 2 Oct 2019 18:04:11 -0400
+Received: by mail-wm1-f67.google.com with SMTP id y135so5868299wmc.1
+        for <linux-kernel@vger.kernel.org>; Wed, 02 Oct 2019 15:04:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
-         :user-agent;
-        bh=XtJX6WehuzWp0yTsb+ruE15i0GDXa67mF2dVnQpvDrI=;
-        b=holuGGpeMs4znwZ9KSU2pImhyIrp73fP32p+QbIj/sixNPbhk7myiBy5ZImLzVEhZV
-         2TQa1FzXUMw2lTpDeJnKwBfT/hXRKCZS7KBPdOQuWlJ72EfeDUYg2gOu7MuvPe+V0lRj
-         S/Rm9LbkkEBZhr/3dAcvbBG8atIniV/nB/L74zlmtgHXYkZKWE2mX6J3NzJbjIZjeZ1/
-         RqWhSUM4pdwvvF+KU/HUyVbkkgLg2x+51AZbLn+3dW4B7yB5AuruKyZ85nVUDLM90gJb
-         0XnqaVd5kTFudc9C//57Jdn7pIiXYZiEwZ0k1kaDCXyZl9wSwAbV+cbznJ2Wh2cB0/KX
-         pX+Q==
+        h=sender:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=mCFqTkVnKK1k9p/md9KIkY0flsD08/UGZyGSki1ovfI=;
+        b=PSi4KKWIwGEg0MJFhjUVnAaK7P2oOlA8eK9uE29wmIAlvhqQWBwNNAKc1aa8K4SBvU
+         b+RsDEVNLhpRuZ3sW6hNCZXt9GS9OsF69SfcPH0RLUXRJxfW8B7IRq6R+OEIAbjmeH2V
+         Czr1ZOr7hZ7x2AsOBdSudk+3OdeE2mSyvvqjfRziAanMt/2pbl/bHEkvD9GryfBtJc+3
+         nxCVgp4/Owhl7u0e8/Qp0bGpcMEB1Q3lN9Fj81Xk3wWpndL7eNNyXKXHZKFJjP6DqYkd
+         xDPacvylm1To/jhyQjDNM7PQ2GUeL+YZ7iRQ6jcHYEUQtiW/PDVQyYWIPrS1DIVLnY6K
+         a31Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=XtJX6WehuzWp0yTsb+ruE15i0GDXa67mF2dVnQpvDrI=;
-        b=I3XYl0FeCnifK2kY9iq3ScbfB16UGKWHwBUQ/uys2CltiQoTFC3rFpyJgPgnYnoDAp
-         z7b74b0Ts7U2PAxY/M7Ag0KvmLACEjeVn2F2JYKstj3izE/PEXDCfOcxPeo29J2YuDA0
-         DcwRDRmUcJPX2YEaZYSsGywpkRcdkA2BNNLe4W7Opg9ZSQiBtL4bKQObbTQQ4y/U7gUt
-         tYAghoUmfDtFEJOMJpxep2BjHXcY4WPSRMwhFiq5furBeCDfRAm+GRCyCwogynOYXr/v
-         pFmq1gwQYL+k1Hj2PlSwwTgO/QWeM/wHDQKdUbT+9sOHs+JFsAsGwdlTBzkvfxw4zjSX
-         OPWg==
-X-Gm-Message-State: APjAAAWPUBEtI31mi7uIyMGB1H2WRnhn7POWRGWQ6uqvGKTuKn0OspHy
-        5e6AMQwUHlri0iBwbOy3Yq0jdtJs
-X-Google-Smtp-Source: APXvYqxVYoSP5FHk3SKVCWh6YBgbG+zTEYtdw4TNvcwR0H/9rTk5BWTZC/ehfmy1slhNtpX2bA3b9Q==
-X-Received: by 2002:a17:902:6c:: with SMTP id 99mr6157111pla.89.1570053650553;
-        Wed, 02 Oct 2019 15:00:50 -0700 (PDT)
-Received: from dtor-ws ([2620:15c:202:201:3adc:b08c:7acc:b325])
-        by smtp.gmail.com with ESMTPSA id g9sm202652pjl.20.2019.10.02.15.00.49
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :mime-version:content-disposition:user-agent;
+        bh=mCFqTkVnKK1k9p/md9KIkY0flsD08/UGZyGSki1ovfI=;
+        b=B/0mfWb49QOS704Ns1zBPHf/eyV2seWvs+hHzKVoqY2LEhpFjKa/zr2zIlcBMJVY7q
+         jiXlhqgSW8+xVg6KcMq2OMOtI0rmdg8raRJH6LIxCIh2tg20/HBSzsBnFO7jLNSVD932
+         bxKkp+EoCEm2KAdQWfkzce0TEHurezQgU0QFjndyCvr+NsRRUo1JZ40IfCAZmQ+Qnpk4
+         9v+TnIDQCfZ+6ixxISAcmI3HyawY+7jiRSru4jg0LW6z3Su/t2fmuakDFO9N3tv6Sjt7
+         XE6nwqeWYy2avtTYErOTbKpcdA82ksZxOLa00bX+I7b0fVDiaFcAcAC93jxqXjV6I9Kx
+         3HDg==
+X-Gm-Message-State: APjAAAX+ogbu5/un4W3rIsRxeXNHSuK9AscdSS5heOFcRSatog7wyfeO
+        q+07Hil0LKsNtcILxL4YaEs=
+X-Google-Smtp-Source: APXvYqyj6JRGuyKFVe5vaGWRh4o1Xm/1hckUsY1CBqdwbP6Ef7LPKpdfFvd9VQyx97Z6/0qfItIGLw==
+X-Received: by 2002:a1c:1aca:: with SMTP id a193mr4633488wma.120.1570053848892;
+        Wed, 02 Oct 2019 15:04:08 -0700 (PDT)
+Received: from gmail.com (2E8B0CD5.catv.pool.telekom.hu. [46.139.12.213])
+        by smtp.gmail.com with ESMTPSA id r13sm813895wrn.0.2019.10.02.15.04.07
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 02 Oct 2019 15:00:50 -0700 (PDT)
-Date:   Wed, 2 Oct 2019 15:00:48 -0700
-From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
-To:     linux-input@vger.kernel.org
-Cc:     Hans-Christian Noren Egtvedt <egtvedt@samfundet.no>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] Input: gpio_mouse - switch to using input device polling mode
-Message-ID: <20191002220048.GA137235@dtor-ws>
+        Wed, 02 Oct 2019 15:04:08 -0700 (PDT)
+Date:   Thu, 3 Oct 2019 00:04:06 +0200
+From:   Ingo Molnar <mingo@kernel.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     linux-kernel@vger.kernel.org,
+        Peter Zijlstra <a.p.zijlstra@chello.nl>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>
+Subject: [GIT PULL] membarrier fix
+Message-ID: <20191002220406.GA50484@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
@@ -73,127 +81,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Now that instances of input_dev support polling mode natively,
-we no longer need to create input_polled_dev instance.
+Linus,
 
-Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
----
- drivers/input/mouse/Kconfig      |  1 -
- drivers/input/mouse/gpio_mouse.c | 45 ++++++++++++++------------------
- 2 files changed, 20 insertions(+), 26 deletions(-)
+Please pull the latest sched-urgent-for-linus git tree from:
 
-diff --git a/drivers/input/mouse/Kconfig b/drivers/input/mouse/Kconfig
-index 652c38e3c0b5..bf738d3b7fe4 100644
---- a/drivers/input/mouse/Kconfig
-+++ b/drivers/input/mouse/Kconfig
-@@ -381,7 +381,6 @@ config MOUSE_VSXXXAA
- config MOUSE_GPIO
- 	tristate "GPIO mouse"
- 	depends on GPIOLIB || COMPILE_TEST
--	select INPUT_POLLDEV
- 	help
- 	  This driver simulates a mouse on GPIO lines of various CPUs (and some
- 	  other chips).
-diff --git a/drivers/input/mouse/gpio_mouse.c b/drivers/input/mouse/gpio_mouse.c
-index 461436f6f087..23507fce3a2b 100644
---- a/drivers/input/mouse/gpio_mouse.c
-+++ b/drivers/input/mouse/gpio_mouse.c
-@@ -8,7 +8,7 @@
- 
- #include <linux/module.h>
- #include <linux/platform_device.h>
--#include <linux/input-polldev.h>
-+#include <linux/input.h>
- #include <linux/gpio/consumer.h>
- #include <linux/property.h>
- #include <linux/of.h>
-@@ -43,10 +43,9 @@ struct gpio_mouse {
-  * Timer function which is run every scan_ms ms when the device is opened.
-  * The dev input variable is set to the the input_dev pointer.
-  */
--static void gpio_mouse_scan(struct input_polled_dev *dev)
-+static void gpio_mouse_scan(struct input_dev *input)
- {
--	struct gpio_mouse *gpio = dev->private;
--	struct input_dev *input = dev->input;
-+	struct gpio_mouse *gpio = input_get_drvdata(input);
- 	int x, y;
- 
- 	if (gpio->bleft)
-@@ -71,18 +70,17 @@ static int gpio_mouse_probe(struct platform_device *pdev)
- {
- 	struct device *dev = &pdev->dev;
- 	struct gpio_mouse *gmouse;
--	struct input_polled_dev *input_poll;
- 	struct input_dev *input;
--	int ret;
-+	int error;
- 
- 	gmouse = devm_kzalloc(dev, sizeof(*gmouse), GFP_KERNEL);
- 	if (!gmouse)
- 		return -ENOMEM;
- 
- 	/* Assign some default scanning time */
--	ret = device_property_read_u32(dev, "scan-interval-ms",
--				       &gmouse->scan_ms);
--	if (ret || gmouse->scan_ms == 0) {
-+	error = device_property_read_u32(dev, "scan-interval-ms",
-+					 &gmouse->scan_ms);
-+	if (error || gmouse->scan_ms == 0) {
- 		dev_warn(dev, "invalid scan time, set to 50 ms\n");
- 		gmouse->scan_ms = 50;
- 	}
-@@ -112,23 +110,14 @@ static int gpio_mouse_probe(struct platform_device *pdev)
- 	if (IS_ERR(gmouse->bright))
- 		return PTR_ERR(gmouse->bright);
- 
--	input_poll = devm_input_allocate_polled_device(dev);
--	if (!input_poll) {
--		dev_err(dev, "not enough memory for input device\n");
-+	input = devm_input_allocate_device(dev);
-+	if (!input)
- 		return -ENOMEM;
--	}
--
--	platform_set_drvdata(pdev, input_poll);
--
--	/* set input-polldev handlers */
--	input_poll->private = gmouse;
--	input_poll->poll = gpio_mouse_scan;
--	input_poll->poll_interval = gmouse->scan_ms;
- 
--	input = input_poll->input;
- 	input->name = pdev->name;
- 	input->id.bustype = BUS_HOST;
--	input->dev.parent = &pdev->dev;
-+
-+	input_set_drvdata(input, gmouse);
- 
- 	input_set_capability(input, EV_REL, REL_X);
- 	input_set_capability(input, EV_REL, REL_Y);
-@@ -139,10 +128,16 @@ static int gpio_mouse_probe(struct platform_device *pdev)
- 	if (gmouse->bright)
- 		input_set_capability(input, EV_KEY, BTN_RIGHT);
- 
--	ret = input_register_polled_device(input_poll);
--	if (ret) {
-+	error = input_setup_polling(input, gpio_mouse_scan);
-+	if (error)
-+		return error;
-+
-+	input_set_poll_interval(input, gmouse->scan_ms);
-+
-+	error = input_register_device(input);
-+	if (error) {
- 		dev_err(dev, "could not register input device\n");
--		return ret;
-+		return error;
- 	}
- 
- 	dev_dbg(dev, "%d ms scan time, buttons: %s%s%s\n",
--- 
-2.23.0.444.g18eeb5a265-goog
+   git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git sched-urgent-for-linus
+
+   # HEAD: 73956fc07dd7b25d4a33ab3fdd6247c60d0b237c membarrier: Fix RCU locking bug caused by faulty merge
+
+Fix a merge bug that resulted in broken locking within 
+membarrier_private_expedited().
+
+ Thanks,
+
+	Ingo
+
+------------------>
+Peter Zijlstra (1):
+      membarrier: Fix RCU locking bug caused by faulty merge
 
 
--- 
-Dmitry
+ kernel/sched/membarrier.c | 1 -
+ 1 file changed, 1 deletion(-)
+
+diff --git a/kernel/sched/membarrier.c b/kernel/sched/membarrier.c
+index a39bed2c784f..168479a7d61b 100644
+--- a/kernel/sched/membarrier.c
++++ b/kernel/sched/membarrier.c
+@@ -174,7 +174,6 @@ static int membarrier_private_expedited(int flags)
+ 		 */
+ 		if (cpu == raw_smp_processor_id())
+ 			continue;
+-		rcu_read_lock();
+ 		p = rcu_dereference(cpu_rq(cpu)->curr);
+ 		if (p && p->mm == mm)
+ 			__cpumask_set_cpu(cpu, tmpmask);
