@@ -2,127 +2,102 @@ Return-Path: <SRS0=zem1=X3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A1C3C352AA
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 13:44:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54DD2C35280
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 13:45:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0CEEF21783
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 13:44:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ye/pTVYQ"
+	by mail.kernel.org (Postfix) with ESMTP id 28F9421D80
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 13:45:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1570023910;
+	bh=MTpTC+HpWq0B/7qUmDdlkEO78yXoAdbvg8w/6mM/2Ew=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=k6SUCDpaNF/OTwODewBgA7frP8cQqx/EQIfAC5MVAmW/HzdMEL/1v8ooTBdMksmzX
+	 6lcys6bxNiUalEtHYBQp+gWu8et2T3wcFhmLywxxmyRIHwUld9o7a10FVBQWtzM+QN
+	 B4+x6JcuKixn259fWMepmVwbuks8Gph+8Y4FW9ww=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727756AbfJBNos (ORCPT
+        id S1727803AbfJBNpJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Oct 2019 09:44:48 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:43086 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726373AbfJBNor (ORCPT
+        Wed, 2 Oct 2019 09:45:09 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:48476 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726565AbfJBNpJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Oct 2019 09:44:47 -0400
-Received: by mail-wr1-f66.google.com with SMTP id q17so19737494wrx.10
-        for <linux-kernel@vger.kernel.org>; Wed, 02 Oct 2019 06:44:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=swletV/9Ea56z3ErdxOJ1Fe6ppq+ypIuhlo7LrZAw5c=;
-        b=Ye/pTVYQXw0AJTkJOM/7eWunxdVfn+VJBs+aoSIrLsjH37amOhRXQKPOAfPqAiSEwS
-         fnX+0VGR7GNJhVkHUcwZfFRQ0GH21d5pbZyKi14d5T3IK9JNUbopSmrSOMBmlw1W18Fh
-         4ur8+qPD/INvDydn/E3apOl4MyGPUoWnGX17W7nNUBYg1qrrSaVvGbGymwGvz0Gnd0V7
-         Ds2CdaKAx7XloBIGaNYR0n4+aYRK5UAmJNRcUeGvQfnswWt36doe450Rc3XtuwWVzeSn
-         q4wdIOh3j2ZzDGG/tVeeqnc4iCb8K8+mfDTSoZh3w4aboySiXWFiEZHifXeVTy+g5kO/
-         t0FA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=swletV/9Ea56z3ErdxOJ1Fe6ppq+ypIuhlo7LrZAw5c=;
-        b=bJfqCQxMdap5/fWNO2M14m7hC5gAWSkuj1goHGUcI5umSdvlcL4ehM1V8kyTSNrOOG
-         NHZejF5Cz+F5V0OfenC6VlgMylYBerEi/rScc3ts0KghZgQeE3ZCkx4UCgJ9t0SBpbbC
-         m2Gyj6cXY7ONwUNXe7U/2m2+8RHNbo4MPdfAppSStgsacRT5z7bzU0XGS4z+EA2h6yfF
-         pLM0PlG5PygUclzjX3rObfKiPKSubIsKSKpgLY9XLI1ZzCFNLmu//UmEEQKt207/+gRX
-         Y8E/gHJErj+zEvik1SBHP0FRGC05MeC+Jnved49TSxco/jlGqXMAfbtu8T2sdJxKXX0w
-         pq4Q==
-X-Gm-Message-State: APjAAAW/RPaiGOLvXN0BtuU8d2cWol1JDCrTamAHbQZs89ZsWrjrDyE1
-        gNs3aX6c4QRH9CPpgIkHySQeu96H/EbillH6/iBAnQ==
-X-Google-Smtp-Source: APXvYqxKTxhnpg2AyMrL2X4XJUMdK2yC+342yEmFWr4ij0AFYB9EWXT7uvSApKEavuLbpY+9fKxm56f7a1bxynvf9nQ=
-X-Received: by 2002:adf:f287:: with SMTP id k7mr2961045wro.206.1570023883610;
- Wed, 02 Oct 2019 06:44:43 -0700 (PDT)
+        Wed, 2 Oct 2019 09:45:09 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Subject:Cc:To:
+        From:Date:Sender:Reply-To:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=nIye/+66snLtHmUYM3YmcJEBkBWMtqxkl+uqaI4t2ys=; b=AVCfkaJyqXZkIhqPOgL5rwltd
+        B/ul2LTAfoelXfmdTG5odKiWDhc0qrl9KxSNRlchZdpPU0TsOyd3KkYQIOV7x+5HhKj9oJYcIQTuw
+        5ir/x7ZdGOGK8ZFMup4LTb6Pgyry2FLNT3ncHx0YbBlGfOAJXrOPwXciLWwA2A4l4Y4jWWx+ttblK
+        pcnHKrz9efXruzcWljiarQ9ITiHqqvVELUBsmD1ZStOzZ8DAbEjv2hMNA/i5yhkbqB/fXFDmHqjMs
+        gx5RCZn8S3joy8dRWfwrlrWGqBGjLALB8G52RYX9rfkFivqM8cyIxu1bZxvpssjWxLsq6u8FnFjA1
+        SJZhGOg9A==;
+Received: from 177.157.127.95.dynamic.adsl.gvt.net.br ([177.157.127.95] helo=coco.lan)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.2 #3 (Red Hat Linux))
+        id 1iFewF-0005et-V2; Wed, 02 Oct 2019 13:45:08 +0000
+Date:   Wed, 2 Oct 2019 10:45:04 -0300
+From:   Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+To:     Jeremy MAURO <jeremy.mauro@gmail.com>
+Cc:     j.mauro@criteo.com, Jonathan Corbet <corbet@lwn.net>,
+        linux-doc@vger.kernel.org (open list:DOCUMENTATION SCRIPTS),
+        linux-kernel@vger.kernel.org (open list)
+Subject: Re: [PATCH v2 2/2] scripts/sphinx-pre-install: Add a new path for
+ the debian package "fonts-noto-cjk"
+Message-ID: <20191002104504.515c6b7d@coco.lan>
+In-Reply-To: <20191002133543.10909-1-j.mauro@criteo.com>
+References: <20191002073636.68ad85de@coco.lan>
+        <20191002133543.10909-1-j.mauro@criteo.com>
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-References: <1569760723-119944-1-git-send-email-yukuai3@huawei.com>
-In-Reply-To: <1569760723-119944-1-git-send-email-yukuai3@huawei.com>
-From:   Alex Deucher <alexdeucher@gmail.com>
-Date:   Wed, 2 Oct 2019 09:44:31 -0400
-Message-ID: <CADnq5_N9a+s5stOOX8QaMZXWJ680povytY975QvO0Eu7Y=UBYA@mail.gmail.com>
-Subject: Re: [PATCH] drm/amdgpu: remove set but not used variable 'pipe'
-To:     yu kuai <yukuai3@huawei.com>
-Cc:     "Deucher, Alexander" <alexander.deucher@amd.com>,
-        Christian Koenig <christian.koenig@amd.com>,
-        Chunming Zhou <David1.Zhou@amd.com>,
-        Dave Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>, yi.zhang@huawei.com,
-        LKML <linux-kernel@vger.kernel.org>,
-        Maling list - DRI developers 
-        <dri-devel@lists.freedesktop.org>, zhengbin13@huawei.com,
-        amd-gfx list <amd-gfx@lists.freedesktop.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Sep 30, 2019 at 3:03 AM yu kuai <yukuai3@huawei.com> wrote:
->
-> Fixes gcc '-Wunused-but-set-variable' warning:
->
-> rivers/gpu/drm/amd/amdgpu/amdgpu_gfx.c: In function
-> =E2=80=98amdgpu_gfx_graphics_queue_acquire=E2=80=99:
-> drivers/gpu/drm/amd/amdgpu/amdgpu_gfx.c:234:16: warning:
-> variable =E2=80=98pipe=E2=80=99 set but not used [-Wunused-but-set-variab=
-le]
->
-> It is never used, so can be removed.
->
-> Reported-by: Hulk Robot <hulkci@huawei.com>
-> Signed-off-by: yu kuai <yukuai3@huawei.com>
+Em Wed,  2 Oct 2019 15:35:42 +0200
+Jeremy MAURO <jeremy.mauro@gmail.com> escreveu:
 
-Applied.  thanks!
+> The latest debian version "bullseye/sid" has changed the path of the file
+> "notoserifcjk-regular.ttc", with the previous change and this change we
+> keep the backward compatibility and add the latest debian version
+> 
+> Signed-off-by: Jeremy MAURO <j.mauro@criteo.com>
 
-Alex
+Reviewed-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 
 > ---
->  drivers/gpu/drm/amd/amdgpu/amdgpu_gfx.c | 4 +---
->  1 file changed, 1 insertion(+), 3 deletions(-)
->
-> diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_gfx.c b/drivers/gpu/drm/am=
-d/amdgpu/amdgpu_gfx.c
-> index f9bef31..c1035a3 100644
-> --- a/drivers/gpu/drm/amd/amdgpu/amdgpu_gfx.c
-> +++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_gfx.c
-> @@ -231,12 +231,10 @@ void amdgpu_gfx_compute_queue_acquire(struct amdgpu=
-_device *adev)
->
->  void amdgpu_gfx_graphics_queue_acquire(struct amdgpu_device *adev)
->  {
-> -       int i, queue, pipe, me;
-> +       int i, queue, me;
->
->         for (i =3D 0; i < AMDGPU_MAX_GFX_QUEUES; ++i) {
->                 queue =3D i % adev->gfx.me.num_queue_per_pipe;
-> -               pipe =3D (i / adev->gfx.me.num_queue_per_pipe)
-> -                       % adev->gfx.me.num_pipe_per_me;
->                 me =3D (i / adev->gfx.me.num_queue_per_pipe)
->                       / adev->gfx.me.num_pipe_per_me;
->
-> --
-> 2.7.4
->
-> _______________________________________________
-> amd-gfx mailing list
-> amd-gfx@lists.freedesktop.org
-> https://lists.freedesktop.org/mailman/listinfo/amd-gfx
+> Changes in V2:
+> - Align all lines
+> 
+>  scripts/sphinx-pre-install | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
+> 
+> diff --git a/scripts/sphinx-pre-install b/scripts/sphinx-pre-install
+> index b5077ae63a4b..1f9285274587 100755
+> --- a/scripts/sphinx-pre-install
+> +++ b/scripts/sphinx-pre-install
+> @@ -348,7 +348,8 @@ sub give_debian_hints()
+>  		check_missing_file(["/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf"],
+>  				   "fonts-dejavu", 2);
+>  
+> -		check_missing_file(["/usr/share/fonts/noto-cjk/NotoSansCJK-Regular.ttc"],
+> +		check_missing_file(["/usr/share/fonts/noto-cjk/NotoSansCJK-Regular.ttc",
+> +				   "/usr/share/fonts/opentype/noto/NotoSerifCJK-Regular.ttc"],
+>  				   "fonts-noto-cjk", 2);
+>  	}
+>  
+
+
+
+Thanks,
+Mauro
