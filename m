@@ -2,104 +2,274 @@ Return-Path: <SRS0=zem1=X3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1E3CC47404
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 19:24:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 36200C10F14
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 19:27:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7E87120700
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 19:24:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1418F21783
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 19:27:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729147AbfJBTYy convert rfc822-to-8bit (ORCPT
+        id S1729071AbfJBT1N (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Oct 2019 15:24:54 -0400
-Received: from mx2.suse.de ([195.135.220.15]:60996 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726076AbfJBTYy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Oct 2019 15:24:54 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 6EB2FAD09;
-        Wed,  2 Oct 2019 19:24:51 +0000 (UTC)
-Date:   Wed, 2 Oct 2019 21:08:31 +0200
-From:   Thomas Bogendoerfer <tbogendoerfer@suse.de>
-To:     Paul Burton <paul.burton@mips.com>
-Cc:     Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        James Hogan <jhogan@kernel.org>,
-        Lee Jones <lee.jones@linaro.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jiri Slaby <jslaby@suse.com>,
-        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-rtc@vger.kernel.org" <linux-rtc@vger.kernel.org>,
-        "linux-serial@vger.kernel.org" <linux-serial@vger.kernel.org>
-Subject: Re: [PATCH v6 1/4] nvmem: core: add nvmem_device_find
-Message-Id: <20191002210831.f7fa10ad7f055801df26669d@suse.de>
-In-Reply-To: <20191002183327.grhkxlbyu65vvhr4@pburton-laptop>
-References: <20190923114636.6748-1-tbogendoerfer@suse.de>
-        <20190923114636.6748-2-tbogendoerfer@suse.de>
-        <ce44c762-f9a6-b4ef-fa8a-19ee4a6d391f@linaro.org>
-        <20191002183327.grhkxlbyu65vvhr4@pburton-laptop>
-X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.32; x86_64-suse-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 8BIT
+        Wed, 2 Oct 2019 15:27:13 -0400
+Received: from fieldses.org ([173.255.197.46]:40764 "EHLO fieldses.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728000AbfJBT1N (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 2 Oct 2019 15:27:13 -0400
+Received: by fieldses.org (Postfix, from userid 2815)
+        id BF8801513; Wed,  2 Oct 2019 15:27:11 -0400 (EDT)
+Date:   Wed, 2 Oct 2019 15:27:11 -0400
+To:     Jeff Layton <jlayton@kernel.org>
+Cc:     Ira Weiny <ira.weiny@intel.com>, linux-fsdevel@vger.kernel.org,
+        linux-xfs@vger.kernel.org, linux-ext4@vger.kernel.org,
+        linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-nvdimm@lists.01.org, linux-mm@kvack.org,
+        Dave Chinner <david@fromorbit.com>, Jan Kara <jack@suse.cz>,
+        Theodore Ts'o <tytso@mit.edu>,
+        John Hubbard <jhubbard@nvidia.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>
+Subject: Re: Lease semantic proposal
+Message-ID: <20191002192711.GA21386@fieldses.org>
+References: <20190923190853.GA3781@iweiny-DESK2.sc.intel.com>
+ <5d5a93637934867e1b3352763da8e3d9f9e6d683.camel@kernel.org>
+ <20191001181659.GA5500@iweiny-DESK2.sc.intel.com>
+ <2b42cf4ae669cedd061c937103674babad758712.camel@kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <2b42cf4ae669cedd061c937103674babad758712.camel@kernel.org>
+User-Agent: Mutt/1.5.21 (2010-09-15)
+From:   bfields@fieldses.org (J. Bruce Fields)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 2 Oct 2019 18:33:28 +0000
-Paul Burton <paul.burton@mips.com> wrote:
-
-> Hello,
-> 
-> On Tue, Oct 01, 2019 at 11:11:58AM +0100, Srinivas Kandagatla wrote:
-> > On 23/09/2019 12:46, Thomas Bogendoerfer wrote:
-> > > nvmem_device_find provides a way to search for nvmem devices with
-> > > the help of a match function simlair to bus_find_device.
+On Wed, Oct 02, 2019 at 08:28:40AM -0400, Jeff Layton wrote:
+> On Tue, 2019-10-01 at 11:17 -0700, Ira Weiny wrote:
+> > On Mon, Sep 23, 2019 at 04:17:59PM -0400, Jeff Layton wrote:
+> > > On Mon, 2019-09-23 at 12:08 -0700, Ira Weiny wrote:
+> > > > Since the last RFC patch set[1] much of the discussion of supporting RDMA with
+> > > > FS DAX has been around the semantics of the lease mechanism.[2]  Within that
+> > > > thread it was suggested I try and write some documentation and/or tests for the
+> > > > new mechanism being proposed.  I have created a foundation to test lease
+> > > > functionality within xfstests.[3] This should be close to being accepted.
+> > > > Before writing additional lease tests, or changing lots of kernel code, this
+> > > > email presents documentation for the new proposed "layout lease" semantic.
+> > > > 
+> > > > At Linux Plumbers[4] just over a week ago, I presented the current state of the
+> > > > patch set and the outstanding issues.  Based on the discussion there, well as
+> > > > follow up emails, I propose the following addition to the fcntl() man page.
+> > > > 
+> > > > Thank you,
+> > > > Ira
+> > > > 
+> > > > [1] https://lkml.org/lkml/2019/8/9/1043
+> > > > [2] https://lkml.org/lkml/2019/8/9/1062
+> > > > [3] https://www.spinics.net/lists/fstests/msg12620.html
+> > > > [4] https://linuxplumbersconf.org/event/4/contributions/368/
+> > > > 
+> > > > 
 > > > 
-> > > Signed-off-by: Thomas Bogendoerfer <tbogendoerfer@suse.de>
-> > > ---
+> > > Thank you so much for doing this, Ira. This allows us to debate the
+> > > user-visible behavior semantics without getting bogged down in the
+> > > implementation details. More comments below:
 > > 
-> > Thanks for the patch,
-> > This patch looks good for me.
+> > Thanks.  Sorry for the delay in response.  Turns out this email was in my
+> > spam...  :-/  I'll need to work out why.
 > > 
-> > Do you know which tree is going to pick this series up?
+> > > > <fcntl man page addition>
+> > > > Layout Leases
+> > > > -------------
+> > > > 
+> > > > Layout (F_LAYOUT) leases are special leases which can be used to control and/or
+> > > > be informed about the manipulation of the underlying layout of a file.
+> > > > 
+> > > > A layout is defined as the logical file block -> physical file block mapping
+> > > > including the file size and sharing of physical blocks among files.  Note that
+> > > > the unwritten state of a block is not considered part of file layout.
+> > > > 
+> > > > **Read layout lease F_RDLCK | F_LAYOUT**
+> > > > 
+> > > > Read layout leases can be used to be informed of layout changes by the
+> > > > system or other users.  This lease is similar to the standard read (F_RDLCK)
+> > > > lease in that any attempt to change the _layout_ of the file will be reported to
+> > > > the process through the lease break process.  But this lease is different
+> > > > because the file can be opened for write and data can be read and/or written to
+> > > > the file as long as the underlying layout of the file does not change.
+> > > > Therefore, the lease is not broken if the file is simply open for write, but
+> > > > _may_ be broken if an operation such as, truncate(), fallocate() or write()
+> > > > results in changing the underlying layout.
+> > > > 
+> > > > **Write layout lease (F_WRLCK | F_LAYOUT)**
+> > > > 
+> > > > Write Layout leases can be used to break read layout leases to indicate that
+> > > > the process intends to change the underlying layout lease of the file.
+> > > > 
+> > > > A process which has taken a write layout lease has exclusive ownership of the
+> > > > file layout and can modify that layout as long as the lease is held.
+> > > > Operations which change the layout are allowed by that process.  But operations
+> > > > from other file descriptors which attempt to change the layout will break the
+> > > > lease through the standard lease break process.  The F_LAYOUT flag is used to
+> > > > indicate a difference between a regular F_WRLCK and F_WRLCK with F_LAYOUT.  In
+> > > > the F_LAYOUT case opens for write do not break the lease.  But some operations,
+> > > > if they change the underlying layout, may.
+> > > > 
+> > > > The distinction between read layout leases and write layout leases is that
+> > > > write layout leases can change the layout without breaking the lease within the
+> > > > owning process.  This is useful to guarantee a layout prior to specifying the
+> > > > unbreakable flag described below.
+> > > > 
+> > > > 
+> > > 
+> > > The above sounds totally reasonable. You're essentially exposing the
+> > > behavior of nfsd's layout leases to userland. To be clear, will F_LAYOUT
+> > > leases work the same way as "normal" leases, wrt signals and timeouts?
 > > 
-> > I can either apply this patch to nvmem tree
+> > That was my intention, yes.
+> >
+> > > I do wonder if we're better off not trying to "or" in flags for this,
+> > > and instead have a separate set of commands (maybe F_RDLAYOUT,
+> > > F_WRLAYOUT, F_UNLAYOUT). Maybe I'm just bikeshedding though -- I don't
+> > > feel terribly strongly about it.
 > > 
-> > or here is my Ack for this patch to take it via other trees.
+> > I'm leaning that was as well.  To make these even more distinct from
+> > F_SETLEASE.
 > > 
-> > Reviewed-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-> > Acked-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+> > > Also, at least in NFSv4, layouts are handed out for a particular byte
+> > > range in a file. Should we consider doing this with an API that allows
+> > > for that in the future? Is this something that would be desirable for
+> > > your RDMA+DAX use-cases?
+> > 
+> > I don't see this.  I've thought it would be a nice thing to have but I don't
+> > know of any hard use case.  But first I'd like to understand how this works for
+> > NFS.
+> > 
 > 
-> Thanks - if you don't mind I'll take this through mips-next along with
-> the following patch that depends on it.
+> The NFSv4.1 spec allows the client to request the layouts for a
+> particular range in the file:
 > 
-> Thomas: I see patch 3 has an issue reported by the kbuild test robot,
+> https://tools.ietf.org/html/rfc5661#page-538
+> 
+> The knfsd only hands out whole-file layouts at present. Eventually we
+> may want to make better use of segmented layouts, at which point we'd
+> need something like a byte-range lease.
+> 
+> > > We could add a new F_SETLEASE variant that takes a struct with a byte
+> > > range (something like struct flock).
+> > 
+> > I think this would be another reason to introduce F_[RD|WR|UN]LAYOUT as a
+> > command.  Perhaps supporting smaller byte ranges could be added later?
+> > 
+> 
+> I'd definitely not multiplex this over F_SETLEASE. An F_SETLAYOUT cmd
+> would probably be sufficient, and maybe just reuse
+> F_RDLCK/F_WRLCK/F_UNLCK for the iomode?
+> 
+> For the byte ranges, the catch there is that extending the userland
+> interface for that later will be difficult.
 
-yes, that's because kbuild robot tries to build it 32bit. I'm going to make
-it depend on 64bit all possible ioc3 platforms only support 64bit kernels.
+Why would it be difficult?
 
->         and still needs acks from the MFD & network maintainers. Can I
-> 	presume it's safe to apply patches 1 & 2 without 3 & 4 in the
-> 	meantime?
+> What I'd probably suggest
+> (and what would jive with the way pNFS works) would be to go ahead and
+> add an offset and length to the arguments and result (maybe also
+> whence?).
 
-yes, thank you.
+Why not add new commands with range arguments later if it turns out to
+be necessary?
 
-Thomas.
+--b.
 
--- 
-SUSE Software Solutions Germany GmbH
-HRB 247165 (AG München)
-Geschäftsführer: Felix Imendörffer
+> 
+> The current kernel implementation could be free to deliver a larger
+> range than requested and only hand out full-file layouts for now.
+> Eventually we could rework the internals to allow for byte-range layout
+> leases.
+> 
+> I think this means that you'll probably require an argument struct for
+> layouts, analogous to struct flock for F_SETLK.
+> 
+> > > > **Unbreakable Layout Leases (F_UNBREAK)**
+> > > > 
+> > > > In order to support pinning of file pages by direct user space users an
+> > > > unbreakable flag (F_UNBREAK) can be used to modify the read and write layout
+> > > > lease.  When specified, F_UNBREAK indicates that any user attempting to break
+> > > > the lease will fail with ETXTBUSY rather than follow the normal breaking
+> > > > procedure.
+> > > > 
+> > > > Both read and write layout leases can have the unbreakable flag (F_UNBREAK)
+> > > > specified.  The difference between an unbreakable read layout lease and an
+> > > > unbreakable write layout lease are that an unbreakable read layout lease is
+> > > > _not_ exclusive.  This means that once a layout is established on a file,
+> > > > multiple unbreakable read layout leases can be taken by multiple processes and
+> > > > used to pin the underlying pages of that file.
+> > > > 
+> > > > Care must therefore be taken to ensure that the layout of the file is as the
+> > > > user wants prior to using the unbreakable read layout lease.  A safe mechanism
+> > > > to do this would be to take a write layout lease and use fallocate() to set the
+> > > > layout of the file.  The layout lease can then be "downgraded" to unbreakable
+> > > > read layout as long as no other user broke the write layout lease.
+> > > > 
+> > > 
+> > > Will userland require any special privileges in order to set an
+> > > F_UNBREAK lease? This seems like something that could be used for DoS. I
+> > > assume that these will never time out.
+> > 
+> > Dan and I discussed this some more and yes I think the uid of the process needs
+> > to be the owner of the file.  I think that is a reasonable mechanism.
+> > 
+> 
+> If that's the model we want to use, then I think the owner of the file
+> will need some mechanism to forcibly seize the layout in this event.
+> 
+> What happens when the file is chowned in that case. Is that also denied?
+> If I set an F_UNBREAK layout (maybe as root) and then setuid(), do I get
+> to keep the layout?
+> 
+> > > How will we deal with the case where something is is squatting on an
+> > > F_UNBREAK lease and isn't letting it go?
+> > 
+> > That is a good question.  I had not considered someone taking the UNBREAK
+> > without pinning the file.
+> > 
+> 
+> Even if the file is "pinned", I think this is still something that could
+> be abused. We need to try to consider how we will address those
+> situations up front.
+> 
+> In that same vein, I know you mentioned that conflicting activity will
+> just be denied when there is an outstanding F_UNBREAK lease. Will the
+> process holding one be notified in some fashion when another task
+> attempts to do some conflicting activity?
+> 
+> > > Leases are technically "owned" by the file description -- we can't
+> > > necessarily trace it back to a single task in a threaded program. The
+> > > kernel task that set the lease may have exited by the time we go
+> > > looking.
+> > > 
+> > > Will we be content trying to determine this using /proc/locks+lsof, etc,
+> > > or will we need something better?
+> > 
+> > I think using /proc/locks is our best bet.  Similar to my intention to report
+> > files being pinned.[1]
+> > 
+> > In fact should we consider files with F_UNBREAK leases "pinned" and just report
+> > them there?
+> > 
+> > [1] https://lkml.org/lkml/2019/8/9/1043
+> 
+> Sure, but eventually you'll want to track that back to a process that is
+> holding the thing. /proc/locks just shows you dev+ino for a particular
+> lock. You'll need to use something like lsof to figure out who is
+> holding the file open.
+> 
+> Since layouts aren't necessarily broken on open, there may be a bunch of
+> tasks that have the file open. How will you identify which one holds the
+> F_UNBREAK layout?
+> -- 
+> Jeff Layton <jlayton@kernel.org>
