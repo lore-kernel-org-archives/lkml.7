@@ -2,205 +2,136 @@ Return-Path: <SRS0=zem1=X3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F2F3C35280
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 08:25:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BF13C352AA
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 08:26:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C834B21783
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 08:25:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6176B20815
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 08:26:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="aAoxC1Lv"
+	dkim=pass (1024-bit key) header.d=renesasgroup.onmicrosoft.com header.i=@renesasgroup.onmicrosoft.com header.b="M6Ep3XWf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726877AbfJBIZd (ORCPT
+        id S1727343AbfJBI0F (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Oct 2019 04:25:33 -0400
-Received: from pandora.armlinux.org.uk ([78.32.30.218]:51610 "EHLO
-        pandora.armlinux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725843AbfJBIZc (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Oct 2019 04:25:32 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=G6wh5zbXgBDLuP9wlLDjydf/CNQhrMAVw4p6MMswNVU=; b=aAoxC1LvNDpEqScdAPP/zYbKj
-        R+Td06DiA/dklhOpga9/ZliqLMzpAkkgxTabdfYkAtod4kJuUrjMA6ZFQ87eLjE3u25Us94rlfihe
-        PK0Z0nUWe9w+jIR2wZsbVevE1cF+A82P9tb6+01qyTpTKjX9KZLeX0Lk7JM6vIQ9XV2aSbbrlfwe9
-        YByP2DhhQybSeGPQhcwqXF+nnXSBrODhvicV34wQ3BTsuxOmvTz+eqOJ5mG3ooyTdCXzcVntFlhpi
-        0eFkndq7xWxqB29GbAygQ9iPM3yU5ar37noYKFl0UhlG9/A1vMD34wnNJuS1APOCECCQAtmFmLFTc
-        joikpkIAg==;
-Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:50746)
-        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.90_1)
-        (envelope-from <linux@armlinux.org.uk>)
-        id 1iFZwT-0007aT-6L; Wed, 02 Oct 2019 09:25:01 +0100
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
-        (envelope-from <linux@shell.armlinux.org.uk>)
-        id 1iFZwM-0000Wl-RU; Wed, 02 Oct 2019 09:24:54 +0100
-Date:   Wed, 2 Oct 2019 09:24:54 +0100
-From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
-To:     Nick Desaulniers <ndesaulniers@google.com>
-Cc:     Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Olof Johansson <olof@lixom.net>, Arnd Bergmann <arnd@arndb.de>,
-        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        Allison Randal <allison@lohutok.net>,
-        Enrico Weigelt <info@metux.net>,
+        Wed, 2 Oct 2019 04:26:05 -0400
+Received: from mail-eopbgr1410135.outbound.protection.outlook.com ([40.107.141.135]:31205
+        "EHLO JPN01-OS2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725843AbfJBI0F (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 2 Oct 2019 04:26:05 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=FKSoiDbLH/A1TH9XBTEryuADY3aXzN3i9lh1igpk1hSjvwQJMRe0u6erOI3vHVShJimbwWll2v6OSWiG+Lmyuz7fbQzHWBF3zN91oo/YxazPh5SQx+eyTZTnjFjG+vRvJbXCP25eMHMMA27B3JeejP3AyrMzJQg+t00FWw4MPj2D1hA/CbgjTWxFWVJ97YsTDAyoJyOCUiEW6BNKN+31AN9ht4Rze8hG+GdVVn+BL9R9aI3IDN0GaolCPKeDcXmyMDIn+3aDpy2F3iHEm7eSYVjhGlWcM+2qSBvLkvBQzIss9Z+Dbz437sGtQ11r/MlQJrl7xd9d0aZouxOOvRIigA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=bHsUcaSl+Fq+a5FiLMNQbBEFAIpeqjZd1JmAw9kkw5I=;
+ b=Rbr7CfgqPdHM1fElswGGX1cKAoAV+z9FUjfv3WB5+6IPrghxKP+BS0+7Z5Kdj/ZzWubjfebJUezl3XCZoAK0zjZj+lJupjwFkfS9q4YdQ/km3rZrJ4OoayPDg6WjwvE+ZHJPUjYgBE+g9H0HxgjbDMc5axji2QFx7qgQAH5/118P9ytDr/eXxvDNsFKdJcCIKkwYam4VE2H4zvnppbDf+0iaVROM7CNBudmwAWZKgCavszQAwpOzKwqiZwaVK2+vWHsTE0MwVIQPkGlDhSrYVgfIoguRk2EO8lQ4njMRIcpz/sf1O+R4RECZjqTrtkHAMSn4KhLqLfuOGDXFJZWzjA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=renesas.com; dmarc=pass action=none header.from=renesas.com;
+ dkim=pass header.d=renesas.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=renesasgroup.onmicrosoft.com; s=selector2-renesasgroup-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=bHsUcaSl+Fq+a5FiLMNQbBEFAIpeqjZd1JmAw9kkw5I=;
+ b=M6Ep3XWfBI3LBGrLIjRgJiRWs2LVrNIip8GsyRTCjOS1A6WsaqmrK0ypkAvr8awa73/aTJCpS/6vcBzQaFQ2tqqyw3qGuG7GtmWvHHdS6zt7qNKjZfqxTfzi3fAB6vTWLKT5jEbrLyOjzW+GIpxkuogIQB734CR0ULd0MJSBnZw=
+Received: from TYAPR01MB4544.jpnprd01.prod.outlook.com (20.179.175.203) by
+ TYAPR01MB4494.jpnprd01.prod.outlook.com (20.179.173.146) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2305.20; Wed, 2 Oct 2019 08:26:00 +0000
+Received: from TYAPR01MB4544.jpnprd01.prod.outlook.com
+ ([fe80::548:32de:c810:1947]) by TYAPR01MB4544.jpnprd01.prod.outlook.com
+ ([fe80::548:32de:c810:1947%4]) with mapi id 15.20.2305.022; Wed, 2 Oct 2019
+ 08:26:00 +0000
+From:   Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+To:     Wolfram Sang <wsa@the-dreams.de>,
+        Geert Uytterhoeven <geert+renesas@glider.be>
+CC:     Ulf Hansson <ulf.hansson@linaro.org>,
+        Wolfram Sang <wsa+renesas@sang-engineering.com>,
+        Jiri Slaby <jslaby@suse.com>,
+        Stephen Boyd <swboyd@chromium.org>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Julien Thierry <julien.thierry.kdev@gmail.com>,
-        Kate Stewart <kstewart@linuxfoundation.org>,
-        Stefan Agner <stefan@agner.ch>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Vincent Whitchurch <vincent.whitchurch@axis.com>,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2] ARM: add __always_inline to functions called from
- __get_user_check()
-Message-ID: <20191002082454.GQ25745@shell.armlinux.org.uk>
-References: <20191001083701.27207-1-yamada.masahiro@socionext.com>
- <CAKwvOd=NObDXDL3jz9ZX9wo4tn747peBJPTj0DXyLerixgL+wQ@mail.gmail.com>
+        "linux-renesas-soc@vger.kernel.org" 
+        <linux-renesas-soc@vger.kernel.org>,
+        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH] mmc: sh_mmcif: Use platform_get_irq_optional() for
+ optional interrupt
+Thread-Topic: [PATCH] mmc: sh_mmcif: Use platform_get_irq_optional() for
+ optional interrupt
+Thread-Index: AQHVeINBliwm7hLnmUKaPfQ88mi/3KdHAjCAgAABsOA=
+Date:   Wed, 2 Oct 2019 08:26:00 +0000
+Message-ID: <TYAPR01MB454472C76E03930717A2898BD89C0@TYAPR01MB4544.jpnprd01.prod.outlook.com>
+References: <20191001180834.1158-1-geert+renesas@glider.be>
+ <20191002081553.GB1388@ninjato>
+In-Reply-To: <20191002081553.GB1388@ninjato>
+Accept-Language: ja-JP, en-US
+Content-Language: ja-JP
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=yoshihiro.shimoda.uh@renesas.com; 
+x-originating-ip: [150.249.235.54]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 216a38e9-5231-44a0-0516-08d747122837
+x-ms-office365-filtering-ht: Tenant
+x-ms-traffictypediagnostic: TYAPR01MB4494:
+x-microsoft-antispam-prvs: <TYAPR01MB4494B0BFCCD932B8C2B3CBDDD89C0@TYAPR01MB4494.jpnprd01.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:6430;
+x-forefront-prvs: 0178184651
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(346002)(396003)(376002)(366004)(136003)(39850400004)(199004)(189003)(229853002)(74316002)(66446008)(5660300002)(25786009)(3846002)(4326008)(305945005)(7736002)(66066001)(256004)(76176011)(7696005)(33656002)(4744005)(6506007)(81156014)(81166006)(8936002)(6436002)(55016002)(102836004)(8676002)(6116002)(478600001)(9686003)(71200400001)(54906003)(14454004)(86362001)(110136005)(71190400001)(26005)(316002)(446003)(2906002)(64756008)(186003)(52536014)(11346002)(66476007)(66556008)(76116006)(486006)(99286004)(7416002)(476003)(66946007)(6246003);DIR:OUT;SFP:1102;SCL:1;SRVR:TYAPR01MB4494;H:TYAPR01MB4544.jpnprd01.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: renesas.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: PXbqr3F2iLxDZoE2LcWauN4lMujez+6W5mAQBIipsbJWn5V5iRxe2fUiAoCfquZyhEJdpO0NhHw0JMN97ZUNfVwbxk13LYTJ18LBJ+LK0APvHit3FgHj6VD2I/fGh5twA5muACs5YXMKj6IRxMMoeWgUHZ5jOAufnUkaFQuSDvxB6AYHWXHBT+JrcqgwaqemgmasAoDyC2UdGk8xphVwQpa0657jXA9hreK2JYUhvIe/wb51xZ2XE+YdNBYM4R3wZGNzJdcSjVyWJzJrWIk4kY/LWzBY/wS6SMFzwiIM+p1gMs8YxFhC9cdUA3Kd+SDVbfuxY/FWc7T6HgERf8HTZrGaDHKc+OCq91LnfgIMeT1sqC8QMaqvWwzM9EJdbGm9SK0DvoaP+LuiSK/XW5QGaWN8+ZlTDXNqrkjucvrldhI=
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAKwvOd=NObDXDL3jz9ZX9wo4tn747peBJPTj0DXyLerixgL+wQ@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-OriginatorOrg: renesas.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 216a38e9-5231-44a0-0516-08d747122837
+X-MS-Exchange-CrossTenant-originalarrivaltime: 02 Oct 2019 08:26:00.3893
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 53d82571-da19-47e4-9cb4-625a166a4a2a
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: iweZAXp0tLK+iMV8Y7XpoASWlxa+yxFaCybbOQkOHhZXzFoFHPpQ04a9g77flyedhA/dUPio+AuLSKBNsQ0Djj9zOxOwYpWkmDaNhL+C71dgzGnrRLQ5AW5oZFGVzLaz
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: TYAPR01MB4494
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Oct 01, 2019 at 10:03:50AM -0700, Nick Desaulniers wrote:
-> On Tue, Oct 1, 2019 at 1:37 AM Masahiro Yamada
-> <yamada.masahiro@socionext.com> wrote:
-> >
-> > KernelCI reports that bcm2835_defconfig is no longer booting since
-> > commit ac7c3e4ff401 ("compiler: enable CONFIG_OPTIMIZE_INLINING
-> > forcibly") (https://lkml.org/lkml/2019/9/26/825).
-> >
-> > I also received a regression report from Nicolas Saenz Julienne
-> > (https://lkml.org/lkml/2019/9/27/263).
-> >
-> > This problem has cropped up on bcm2835_defconfig because it enables
-> > CONFIG_CC_OPTIMIZE_FOR_SIZE. The compiler tends to prefer not inlining
-> > functions with -Os. I was able to reproduce it with other boards and
-> > defconfig files by manually enabling CONFIG_CC_OPTIMIZE_FOR_SIZE.
-> >
-> > The __get_user_check() specifically uses r0, r1, r2 registers.
-> > So, uaccess_save_and_enable() and uaccess_restore() must be inlined.
-> > Otherwise, those register assignments would be entirely dropped,
-> > according to my analysis of the disassembly.
-> >
-> > Prior to commit 9012d011660e ("compiler: allow all arches to enable
-> > CONFIG_OPTIMIZE_INLINING"), the 'inline' marker was always enough for
-> > inlining functions, except on x86.
-> >
-> > Since that commit, all architectures can enable CONFIG_OPTIMIZE_INLINING.
-> > So, __always_inline is now the only guaranteed way of forcible inlining.
-> 
-> No, the C preprocessor is the only guaranteed way of inlining.  I
-> preferred v1; if you're going to <strikethrough>play with
-> fire</strikethrough>write assembly, don't get burned.
+Hi,
 
-It seems we disagree on that.
+> From: Wolfram Sang, Sent: Wednesday, October 2, 2019 5:16 PM
+<snip>
+> Tested on a R-Car H2: it does make the error message go away and the
+> MMCIF device acts normal during boot. Can't enter userspace currently
+> with v5.4-rc1 but this is unrelated to this patch and MMCIF. Looks like a
+> configuration thing on my side, so I will still give:
 
-Masahiro Yamada, please send this to the patch system, thanks.
+I also should have reported this though, my environment (R-Car H2 + NFS +
+buildroot on v5.4-rc1 with shmobile_defconfig) also has a similar issue
+like the following:
 
-> 
-> >
-> > I also added __always_inline to 4 functions in the call-graph from the
-> > __get_user_check() macro.
-> >
-> > Fixes: 9012d011660e ("compiler: allow all arches to enable CONFIG_OPTIMIZE_INLINING")
-> > Reported-by: "kernelci.org bot" <bot@kernelci.org>
-> > Reported-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-> > Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
-> > ---
-> >
-> > Changes in v2:
-> >   - Use __always_inline instead of changing the function call places
-> >      (per Russell King)
-> >   - The previous submission is: https://lore.kernel.org/patchwork/patch/1132459/
-> >
-> >  arch/arm/include/asm/domain.h  | 8 ++++----
-> >  arch/arm/include/asm/uaccess.h | 4 ++--
-> >  2 files changed, 6 insertions(+), 6 deletions(-)
-> >
-> > diff --git a/arch/arm/include/asm/domain.h b/arch/arm/include/asm/domain.h
-> > index 567dbede4785..f1d0a7807cd0 100644
-> > --- a/arch/arm/include/asm/domain.h
-> > +++ b/arch/arm/include/asm/domain.h
-> > @@ -82,7 +82,7 @@
-> >  #ifndef __ASSEMBLY__
-> >
-> >  #ifdef CONFIG_CPU_CP15_MMU
-> > -static inline unsigned int get_domain(void)
-> > +static __always_inline unsigned int get_domain(void)
-> >  {
-> >         unsigned int domain;
-> >
-> > @@ -94,7 +94,7 @@ static inline unsigned int get_domain(void)
-> >         return domain;
-> >  }
-> >
-> > -static inline void set_domain(unsigned val)
-> > +static __always_inline void set_domain(unsigned int val)
-> >  {
-> >         asm volatile(
-> >         "mcr    p15, 0, %0, c3, c0      @ set domain"
-> > @@ -102,12 +102,12 @@ static inline void set_domain(unsigned val)
-> >         isb();
-> >  }
-> >  #else
-> > -static inline unsigned int get_domain(void)
-> > +static __always_inline unsigned int get_domain(void)
-> >  {
-> >         return 0;
-> >  }
-> >
-> > -static inline void set_domain(unsigned val)
-> > +static __always_inline void set_domain(unsigned int val)
-> >  {
-> >  }
-> >  #endif
-> > diff --git a/arch/arm/include/asm/uaccess.h b/arch/arm/include/asm/uaccess.h
-> > index 303248e5b990..98c6b91be4a8 100644
-> > --- a/arch/arm/include/asm/uaccess.h
-> > +++ b/arch/arm/include/asm/uaccess.h
-> > @@ -22,7 +22,7 @@
-> >   * perform such accesses (eg, via list poison values) which could then
-> >   * be exploited for priviledge escalation.
-> >   */
-> > -static inline unsigned int uaccess_save_and_enable(void)
-> > +static __always_inline unsigned int uaccess_save_and_enable(void)
-> >  {
-> >  #ifdef CONFIG_CPU_SW_DOMAIN_PAN
-> >         unsigned int old_domain = get_domain();
-> > @@ -37,7 +37,7 @@ static inline unsigned int uaccess_save_and_enable(void)
-> >  #endif
-> >  }
-> >
-> > -static inline void uaccess_restore(unsigned int flags)
-> > +static __always_inline void uaccess_restore(unsigned int flags)
-> >  {
-> >  #ifdef CONFIG_CPU_SW_DOMAIN_PAN
-> >         /* Restore the user access mask */
-> > --
-> > 2.17.1
-> >
-> 
-> 
-> -- 
-> Thanks,
-> ~Nick Desaulniers
-> 
+[    3.573488] VFS: Mounted root (nfs filesystem) on device 0:16.
+[    3.579869] devtmpfs: mounted
+[    3.588014] Freeing unused kernel memory: 1024K
+[    3.651771] Run /sbin/init as init process
+Starting syslogd: OK
+Starting klogd: OK
+Initializing random number generator... [    4.073629] random: dd: uninitia=
+lized urandom read (512 bytes read)
+urandom start: failed.
+done.
+Starting network: ip: OVERRUN: Bad address
+ip: OVERRUN: Bad address
+ip: OVERRUN: Bad address
 
--- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTC broadband for 0.8mile line in suburbia: sync at 12.1Mbps down 622kbps up
-According to speedtest.net: 11.9Mbps down 500kbps up
+Best regards,
+Yoshihiro Shimoda
+
