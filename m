@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B85F0C4360C
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 19:10:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 18968C10F14
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 19:10:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 95CD02133F
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 19:10:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 000A42133F
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 19:10:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729795AbfJBTKN (ORCPT
+        id S1729814AbfJBTKR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Oct 2019 15:10:13 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:35966 "EHLO
+        Wed, 2 Oct 2019 15:10:17 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:35944 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729342AbfJBTIS (ORCPT
+        by vger.kernel.org with ESMTP id S1729334AbfJBTIR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Oct 2019 15:08:18 -0400
+        Wed, 2 Oct 2019 15:08:17 -0400
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1iFjyx-000366-Re; Wed, 02 Oct 2019 20:08:16 +0100
+        id 1iFjyx-00035t-RV; Wed, 02 Oct 2019 20:08:15 +0100
 Received: from ben by deadeye with local (Exim 4.92.1)
         (envelope-from <ben@decadent.org.uk>)
-        id 1iFjyp-0003fF-GS; Wed, 02 Oct 2019 20:08:07 +0100
+        id 1iFjyp-0003fZ-OB; Wed, 02 Oct 2019 20:08:07 +0100
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,15 +35,16 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Ronnie Sahlberg" <lsahlber@redhat.com>,
-        "Pavel Shilovsky" <pshilov@microsoft.com>,
-        "Steve French" <stfrench@microsoft.com>
+        "David S. Miller" <davem@davemloft.net>,
+        "Hendrik Brueckner" <brueckner@linux.ibm.com>,
+        "Ursula Braun" <ubraun@linux.ibm.com>,
+        "Julian Wiedmann" <jwi@linux.ibm.com>
 Date:   Wed, 02 Oct 2019 20:06:51 +0100
-Message-ID: <lsq.1570043211.694878814@decadent.org.uk>
+Message-ID: <lsq.1570043211.678252578@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 67/87] SMB3: retry on STATUS_INSUFFICIENT_RESOURCES
- instead of failing write
+Subject: [PATCH 3.16 71/87] net/af_iucv: remove GFP_DMA restriction for
+ HiperTransport
 In-Reply-To: <lsq.1570043210.379046399@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -57,34 +58,60 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Steve French <stfrench@microsoft.com>
+From: Julian Wiedmann <jwi@linux.ibm.com>
 
-commit 8d526d62db907e786fd88948c75d1833d82bd80e upstream.
+commit fdbf6326912d578a31ac4ca0933c919eadf1d54c upstream.
 
-Some servers such as Windows 10 will return STATUS_INSUFFICIENT_RESOURCES
-as the number of simultaneous SMB3 requests grows (even though the client
-has sufficient credits).  Return EAGAIN on STATUS_INSUFFICIENT_RESOURCES
-so that we can retry writes which fail with this status code.
+af_iucv sockets over z/VM IUCV require that their skbs are allocated
+in DMA memory. This restriction doesn't apply to connections over
+HiperSockets. So only set this limit for z/VM IUCV sockets, thereby
+increasing the likelihood that the large (and linear!) allocations for
+HiperTransport messages succeed.
 
-This (for example) fixes large file copies to Windows 10 on fast networks.
-
-Signed-off-by: Steve French <stfrench@microsoft.com>
-Reviewed-by: Ronnie Sahlberg <lsahlber@redhat.com>
-Reviewed-by: Pavel Shilovsky <pshilov@microsoft.com>
+Fixes: 3881ac441f64 ("af_iucv: add HiperSockets transport")
+Signed-off-by: Julian Wiedmann <jwi@linux.ibm.com>
+Reviewed-by: Ursula Braun <ubraun@linux.ibm.com>
+Reviewed-by: Hendrik Brueckner <brueckner@linux.ibm.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- fs/cifs/smb2maperror.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ net/iucv/af_iucv.c | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
---- a/fs/cifs/smb2maperror.c
-+++ b/fs/cifs/smb2maperror.c
-@@ -455,7 +455,7 @@ static const struct status_to_posix_erro
- 	{STATUS_FILE_INVALID, -EIO, "STATUS_FILE_INVALID"},
- 	{STATUS_ALLOTTED_SPACE_EXCEEDED, -EIO,
- 	"STATUS_ALLOTTED_SPACE_EXCEEDED"},
--	{STATUS_INSUFFICIENT_RESOURCES, -EREMOTEIO,
-+	{STATUS_INSUFFICIENT_RESOURCES, -EAGAIN,
- 				"STATUS_INSUFFICIENT_RESOURCES"},
- 	{STATUS_DFS_EXIT_PATH_FOUND, -EIO, "STATUS_DFS_EXIT_PATH_FOUND"},
- 	{STATUS_DEVICE_DATA_ERROR, -EIO, "STATUS_DEVICE_DATA_ERROR"},
+--- a/net/iucv/af_iucv.c
++++ b/net/iucv/af_iucv.c
+@@ -568,7 +568,6 @@ static struct sock *iucv_sock_alloc(stru
+ 
+ 	sk->sk_destruct = iucv_sock_destruct;
+ 	sk->sk_sndtimeo = IUCV_CONN_TIMEOUT;
+-	sk->sk_allocation = GFP_DMA;
+ 
+ 	sock_reset_flag(sk, SOCK_ZAPPED);
+ 
+@@ -762,6 +761,7 @@ vm_bind:
+ 		memcpy(iucv->src_user_id, iucv_userid, 8);
+ 		sk->sk_state = IUCV_BOUND;
+ 		iucv->transport = AF_IUCV_TRANS_IUCV;
++		sk->sk_allocation |= GFP_DMA;
+ 		if (!iucv->msglimit)
+ 			iucv->msglimit = IUCV_QUEUELEN_DEFAULT;
+ 		goto done_unlock;
+@@ -786,6 +786,8 @@ static int iucv_sock_autobind(struct soc
+ 		return -EPROTO;
+ 
+ 	memcpy(iucv->src_user_id, iucv_userid, 8);
++	iucv->transport = AF_IUCV_TRANS_IUCV;
++	sk->sk_allocation |= GFP_DMA;
+ 
+ 	write_lock_bh(&iucv_sk_list.lock);
+ 	__iucv_auto_name(iucv);
+@@ -1737,6 +1739,8 @@ static int iucv_callback_connreq(struct
+ 
+ 	niucv = iucv_sk(nsk);
+ 	iucv_sock_init(nsk, sk);
++	niucv->transport = AF_IUCV_TRANS_IUCV;
++	nsk->sk_allocation |= GFP_DMA;
+ 
+ 	/* Set the new iucv_sock */
+ 	memcpy(niucv->dst_name, ipuser + 8, 8);
 
