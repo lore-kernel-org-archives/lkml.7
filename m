@@ -2,131 +2,168 @@ Return-Path: <SRS0=zem1=X3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
+	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 19DA1C35280
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 13:30:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8D15C352AA
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 13:33:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E9E0621783
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 13:30:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BB82520842
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 13:33:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="saxHJAYK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727935AbfJBNad (ORCPT
+        id S1726718AbfJBNdy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Oct 2019 09:30:33 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:45891 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726657AbfJBNab (ORCPT
+        Wed, 2 Oct 2019 09:33:54 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:54299 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726239AbfJBNdy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Oct 2019 09:30:31 -0400
-Received: from 1.general.cking.uk.vpn ([10.172.193.212])
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <colin.king@canonical.com>)
-        id 1iFei6-0005Fq-Et; Wed, 02 Oct 2019 13:30:30 +0000
-Subject: Re: [PATCH] pwm: sun4i: redundant assignment to variable pval
-To:     Dan Carpenter <dan.carpenter@oracle.com>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>,
-        Maxime Ripard <mripard@kernel.org>,
-        Chen-Yu Tsai <wens@csie.org>, linux-pwm@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20191002100844.10490-1-colin.king@canonical.com>
- <20191002132506.GO22609@kadam> <20191002132933.GO29696@kadam>
-From:   Colin Ian King <colin.king@canonical.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=colin.king@canonical.com; prefer-encrypt=mutual; keydata=
- mQINBE6TJCgBEACo6nMNvy06zNKj5tiwDsXXS+LhT+LwtEsy9EnraKYXAf2xwazcICSjX06e
- fanlyhB0figzQO0n/tP7BcfMVNG7n1+DC71mSyRK1ZERcG1523ajvdZOxbBCTvTitYOy3bjs
- +LXKqeVMhK3mRvdTjjmVpWnWqJ1LL+Hn12ysDVVfkbtuIm2NoaSEC8Ae8LSSyCMecd22d9Pn
- LR4UeFgrWEkQsqROq6ZDJT9pBLGe1ZS0pVGhkRyBP9GP65oPev39SmfAx9R92SYJygCy0pPv
- BMWKvEZS/7bpetPNx6l2xu9UvwoeEbpzUvH26PHO3DDAv0ynJugPCoxlGPVf3zcfGQxy3oty
- dNTWkP6Wh3Q85m+AlifgKZudjZLrO6c+fAw/jFu1UMjNuyhgShtFU7NvEzL3RqzFf9O1qM2m
- uj83IeFQ1FZ65QAiCdTa3npz1vHc7N4uEQBUxyXgXfCI+A5yDnjHwzU0Y3RYS52TA3nfa08y
- LGPLTf5wyAREkFYou20vh5vRvPASoXx6auVf1MuxokDShVhxLpryBnlKCobs4voxN54BUO7m
- zuERXN8kadsxGFzItAyfKYzEiJrpUB1yhm78AecDyiPlMjl99xXk0zs9lcKriaByVUv/NsyJ
- FQj/kmdxox3XHi9K29kopFszm1tFiDwCFr/xumbZcMY17Yi2bQARAQABtCVDb2xpbiBLaW5n
- IDxjb2xpbi5raW5nQGNhbm9uaWNhbC5jb20+iQI2BBMBCAAhBQJOkyQoAhsDBQsJCAcDBRUK
- CQgLBRYCAwEAAh4BAheAAAoJEGjCh9/GqAImsBcP9i6C/qLewfi7iVcOwqF9avfGzOPf7CVr
- n8CayQnlWQPchmGKk6W2qgnWI2YLIkADh53TS0VeSQ7Tetj8f1gV75eP0Sr/oT/9ovn38QZ2
- vN8hpZp0GxOUrzkvvPjpH+zdmKSaUsHGp8idfPpZX7XeBO0yojAs669+3BrnBcU5wW45SjSV
- nfmVj1ZZj3/yBunb+hgNH1QRcm8ZPICpjvSsGFClTdB4xu2AR28eMiL/TTg9k8Gt72mOvhf0
- fS0/BUwcP8qp1TdgOFyiYpI8CGyzbfwwuGANPSupGaqtIRVf+/KaOdYUM3dx/wFozZb93Kws
- gXR4z6tyvYCkEg3x0Xl9BoUUyn9Jp5e6FOph2t7TgUvv9dgQOsZ+V9jFJplMhN1HPhuSnkvP
- 5/PrX8hNOIYuT/o1AC7K5KXQmr6hkkxasjx16PnCPLpbCF5pFwcXc907eQ4+b/42k+7E3fDA
- Erm9blEPINtt2yG2UeqEkL+qoebjFJxY9d4r8PFbEUWMT+t3+dmhr/62NfZxrB0nTHxDVIia
- u8xM+23iDRsymnI1w0R78yaa0Eea3+f79QsoRW27Kvu191cU7QdW1eZm05wO8QUvdFagVVdW
- Zg2DE63Fiin1AkGpaeZG9Dw8HL3pJAJiDe0KOpuq9lndHoGHs3MSa3iyQqpQKzxM6sBXWGfk
- EkK5Ag0ETpMkKAEQAMX6HP5zSoXRHnwPCIzwz8+inMW7mJ60GmXSNTOCVoqExkopbuUCvinN
- 4Tg+AnhnBB3R1KTHreFGoz3rcV7fmJeut6CWnBnGBtsaW5Emmh6gZbO5SlcTpl7QDacgIUuT
- v1pgewVHCcrKiX0zQDJkcK8FeLUcB2PXuJd6sJg39kgsPlI7R0OJCXnvT/VGnd3XPSXXoO4K
- cr5fcjsZPxn0HdYCvooJGI/Qau+imPHCSPhnX3WY/9q5/WqlY9cQA8tUC+7mgzt2VMjFft1h
- rp/CVybW6htm+a1d4MS4cndORsWBEetnC6HnQYwuC4bVCOEg9eXMTv88FCzOHnMbE+PxxHzW
- 3Gzor/QYZGcis+EIiU6hNTwv4F6fFkXfW6611JwfDUQCAHoCxF3B13xr0BH5d2EcbNB6XyQb
- IGngwDvnTyKHQv34wE+4KtKxxyPBX36Z+xOzOttmiwiFWkFp4c2tQymHAV70dsZTBB5Lq06v
- 6nJs601Qd6InlpTc2mjd5mRZUZ48/Y7i+vyuNVDXFkwhYDXzFRotO9VJqtXv8iqMtvS4xPPo
- 2DtJx6qOyDE7gnfmk84IbyDLzlOZ3k0p7jorXEaw0bbPN9dDpw2Sh9TJAUZVssK119DJZXv5
- 2BSc6c+GtMqkV8nmWdakunN7Qt/JbTcKlbH3HjIyXBy8gXDaEto5ABEBAAGJAh8EGAEIAAkF
- Ak6TJCgCGwwACgkQaMKH38aoAiZ4lg/+N2mkx5vsBmcsZVd3ys3sIsG18w6RcJZo5SGMxEBj
- t1UgyIXWI9lzpKCKIxKx0bskmEyMy4tPEDSRfZno/T7p1mU7hsM4owi/ic0aGBKP025Iok9G
- LKJcooP/A2c9dUV0FmygecRcbIAUaeJ27gotQkiJKbi0cl2gyTRlolKbC3R23K24LUhYfx4h
- pWj8CHoXEJrOdHO8Y0XH7059xzv5oxnXl2SD1dqA66INnX+vpW4TD2i+eQNPgfkECzKzGj+r
- KRfhdDZFBJj8/e131Y0t5cu+3Vok1FzBwgQqBnkA7dhBsQm3V0R8JTtMAqJGmyOcL+JCJAca
- 3Yi81yLyhmYzcRASLvJmoPTsDp2kZOdGr05Dt8aGPRJL33Jm+igfd8EgcDYtG6+F8MCBOult
- TTAu+QAijRPZv1KhEJXwUSke9HZvzo1tNTlY3h6plBsBufELu0mnqQvHZmfa5Ay99dF+dL1H
- WNp62+mTeHsX6v9EACH4S+Cw9Q1qJElFEu9/1vFNBmGY2vDv14gU2xEiS2eIvKiYl/b5Y85Q
- QLOHWV8up73KK5Qq/6bm4BqVd1rKGI9un8kezUQNGBKre2KKs6wquH8oynDP/baoYxEGMXBg
- GF/qjOC6OY+U7kNUW3N/A7J3M2VdOTLu3hVTzJMZdlMmmsg74azvZDV75dUigqXcwjE=
-Message-ID: <d67c2091-3029-1cf1-5548-b9f3116cd139@canonical.com>
-Date:   Wed, 2 Oct 2019 14:30:29 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Wed, 2 Oct 2019 09:33:54 -0400
+Received: by mail-wm1-f66.google.com with SMTP id p7so7230970wmp.4;
+        Wed, 02 Oct 2019 06:33:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=C2ZdCqwmctahUnIjBSN/Q/RPRZtg+DYynqp31Zv7If4=;
+        b=saxHJAYK4fZ7OzId92NunP9Z5Jt+Be9zct4aVUpad8ChoBIQ1RYD1p9g9D1jYgWhEY
+         CQeA0DLmm4K8eczRaCcPyDWwGjhIZ+QA32hYdxaZ17Ucrjp/9QvFdNsTJWTgQq9upble
+         FloVYmVRZOo3DaEsxHOuRy+9CZ2wtnCOdbnCegTnyTTV8OBiORFZ2GoAj4N26EUReiDO
+         dvAG5ctjA9wj4vz95XwyVlOyPgtp1TILrf11fZ4WuKDmIt/uCc7bQxYBA5CTcKa9d8SB
+         Ht/9I93WQBSR7uzfS8euw49KsIxey1WWDB8T0GNKfclPL21T5MTPUYzO+CVHQ+OwJDV7
+         MuOw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=C2ZdCqwmctahUnIjBSN/Q/RPRZtg+DYynqp31Zv7If4=;
+        b=VgT4N+ItGVMjnha3mTIAkMMtjKybgxmwvrVLUf/lcl0bTiGKulmGoVvCkhG9uddhOh
+         7vee60oIQHKtfc7DEGyWSGWH57yO4L3be1J2WwX1YeXn+ZppGb+9KPaTz5cXNgu9QEYb
+         QiNBvQzeS2vWeygkgMavSZ1EPvaKy7d29KFsruSWhPK9xnn7paKpivHhogLE2ydNqK0K
+         8/kXRYJRzU1f3T0wPcIkMpzCG5sSu1aiEwtaWRhAQo2pWDGtXB4FFuKyzSnIeKWo2h1e
+         FnKLN//b2VUQ8tF5ZULszFWaKYXg/SW99MLb/VXCAJ7anB0YkDfKzeTuRcYe9QKRc3ar
+         kCcQ==
+X-Gm-Message-State: APjAAAW+/jKjY+b9chdHgEfDbFmnbl5MFuIQrWb1ELn9iWBLT7+RNFEO
+        75PDar3mLJtuQS+vxrKnLtJMet4uiKIjOQ==
+X-Google-Smtp-Source: APXvYqwn6Z9RYlG/ZJ/5RxF01YtmOb7r4KGjSWoiFYXbh43S/a9raLlS4H/uCUp+WyoHKXFfzCEqQA==
+X-Received: by 2002:a05:600c:20e:: with SMTP id 14mr2810628wmi.73.1570023228320;
+        Wed, 02 Oct 2019 06:33:48 -0700 (PDT)
+Received: from LHFYY6Y2.criteois.lan ([91.199.242.236])
+        by smtp.gmail.com with ESMTPSA id q19sm45176832wra.89.2019.10.02.06.33.47
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 02 Oct 2019 06:33:47 -0700 (PDT)
+From:   Jeremy MAURO <jeremy.mauro@gmail.com>
+X-Google-Original-From: Jeremy MAURO <j.mauro@criteo.com>
+Cc:     j.mauro@criteo.com, Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        linux-doc@vger.kernel.org (open list:DOCUMENTATION SCRIPTS),
+        linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH v2 1/2] scripts/sphinx-pre-install: allow checking for multiple missing files
+Date:   Wed,  2 Oct 2019 15:33:39 +0200
+Message-Id: <20191002133340.10854-1-j.mauro@criteo.com>
+X-Mailer: git-send-email 2.23.0
+In-Reply-To: <20191002073526.228fc7e1@coco.lan>
+References: <20191002073526.228fc7e1@coco.lan>
 MIME-Version: 1.0
-In-Reply-To: <20191002132933.GO29696@kadam>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 02/10/2019 14:29, Dan Carpenter wrote:
-> On Wed, Oct 02, 2019 at 04:25:06PM +0300, Dan Carpenter wrote:
->> On Wed, Oct 02, 2019 at 11:08:44AM +0100, Colin King wrote:
->>> From: Colin Ian King <colin.king@canonical.com>
->>>
->>> Variable pval is being assigned a value that is never read. The
->>> assignment is redundant and hence can be removed.
->>>
->>> Addresses-Coverity: ("Unused value")
->>> Signed-off-by: Colin Ian King <colin.king@canonical.com>
->>> ---
->>>  drivers/pwm/pwm-sun4i.c | 1 -
->>>  1 file changed, 1 deletion(-)
->>>
->>> diff --git a/drivers/pwm/pwm-sun4i.c b/drivers/pwm/pwm-sun4i.c
->>> index 6f5840a1a82d..53970d4ba695 100644
->>> --- a/drivers/pwm/pwm-sun4i.c
->>> +++ b/drivers/pwm/pwm-sun4i.c
->>> @@ -156,7 +156,6 @@ static int sun4i_pwm_calculate(struct sun4i_pwm_chip *sun4i_pwm,
->>>  	if (sun4i_pwm->data->has_prescaler_bypass) {
->>>  		/* First, test without any prescaler when available */
->>>  		prescaler = PWM_PRESCAL_MASK;
->>> -		pval = 1;
->>>  		/*
->>>  		 * When not using any prescaler, the clock period in nanoseconds
->>>  		 * is not an integer so round it half up instead of
->>
->> Are you sure?  It looks used to me.
-> 
-> Ah.  Never mind.  My tree was out of date.
+The current implementation take a simple file as first argument, this
+change allows to take a list as a first argument.
 
-No problem. I appreciated you eyeballing my fixes.
-> 
-> regards,
-> dan carpenter
-> 
+Some file could have a different path according distribution version
+
+Signed-off-by: Jeremy MAURO <j.mauro@criteo.com>
+---
+Changes in v2:
+- Change the commit message
+
+ scripts/sphinx-pre-install | 20 +++++++++++---------
+ 1 file changed, 11 insertions(+), 9 deletions(-)
+
+diff --git a/scripts/sphinx-pre-install b/scripts/sphinx-pre-install
+index 3b638c0e1a4f..b5077ae63a4b 100755
+--- a/scripts/sphinx-pre-install
++++ b/scripts/sphinx-pre-install
+@@ -124,11 +124,13 @@ sub add_package($$)
+ 
+ sub check_missing_file($$$)
+ {
+-	my $file = shift;
++	my $files = shift;
+ 	my $package = shift;
+ 	my $is_optional = shift;
+ 
+-	return if(-e $file);
++	for (@$files) {
++		return if(-e $_);
++	}
+ 
+ 	add_package($package, $is_optional);
+ }
+@@ -343,10 +345,10 @@ sub give_debian_hints()
+ 	);
+ 
+ 	if ($pdf) {
+-		check_missing_file("/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf",
++		check_missing_file(["/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf"],
+ 				   "fonts-dejavu", 2);
+ 
+-		check_missing_file("/usr/share/fonts/noto-cjk/NotoSansCJK-Regular.ttc",
++		check_missing_file(["/usr/share/fonts/noto-cjk/NotoSansCJK-Regular.ttc"],
+ 				   "fonts-noto-cjk", 2);
+ 	}
+ 
+@@ -413,7 +415,7 @@ sub give_redhat_hints()
+ 	}
+ 
+ 	if ($pdf) {
+-		check_missing_file("/usr/share/fonts/google-noto-cjk/NotoSansCJK-Regular.ttc",
++		check_missing_file(["/usr/share/fonts/google-noto-cjk/NotoSansCJK-Regular.ttc"],
+ 				   "google-noto-sans-cjk-ttc-fonts", 2);
+ 	}
+ 
+@@ -498,7 +500,7 @@ sub give_mageia_hints()
+ 	$map{"latexmk"} = "texlive-collection-basic";
+ 
+ 	if ($pdf) {
+-		check_missing_file("/usr/share/fonts/google-noto-cjk/NotoSansCJK-Regular.ttc",
++		check_missing_file(["/usr/share/fonts/google-noto-cjk/NotoSansCJK-Regular.ttc"],
+ 				   "google-noto-sans-cjk-ttc-fonts", 2);
+ 	}
+ 
+@@ -528,7 +530,7 @@ sub give_arch_linux_hints()
+ 	check_pacman_missing(\@archlinux_tex_pkgs, 2) if ($pdf);
+ 
+ 	if ($pdf) {
+-		check_missing_file("/usr/share/fonts/noto-cjk/NotoSansCJK-Regular.ttc",
++		check_missing_file(["/usr/share/fonts/noto-cjk/NotoSansCJK-Regular.ttc"],
+ 				   "noto-fonts-cjk", 2);
+ 	}
+ 
+@@ -549,11 +551,11 @@ sub give_gentoo_hints()
+ 		"rsvg-convert"		=> "gnome-base/librsvg",
+ 	);
+ 
+-	check_missing_file("/usr/share/fonts/dejavu/DejaVuSans.ttf",
++	check_missing_file(["/usr/share/fonts/dejavu/DejaVuSans.ttf"],
+ 			   "media-fonts/dejavu", 2) if ($pdf);
+ 
+ 	if ($pdf) {
+-		check_missing_file("/usr/share/fonts/noto-cjk/NotoSansCJKsc-Regular.otf",
++		check_missing_file(["/usr/share/fonts/noto-cjk/NotoSansCJKsc-Regular.otf"],
+ 				   "media-fonts/noto-cjk", 2);
+ 	}
+ 
+-- 
+2.23.0
 
