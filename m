@@ -2,82 +2,121 @@ Return-Path: <SRS0=zem1=X3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F9C8C10F14
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 18:53:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D4A65ECE58A
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 18:53:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 840AC21D82
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 18:53:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B4BE9222C0
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 18:53:54 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="DeM9KzWe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728968AbfJBSxd (ORCPT
+        id S1729032AbfJBSxy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Oct 2019 14:53:33 -0400
-Received: from mail-qt1-f195.google.com ([209.85.160.195]:42236 "EHLO
-        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728000AbfJBSxd (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Oct 2019 14:53:33 -0400
-Received: by mail-qt1-f195.google.com with SMTP id w14so12397qto.9
-        for <linux-kernel@vger.kernel.org>; Wed, 02 Oct 2019 11:53:32 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=OgMn8hpZTEDtXKP05G/wCdRDIlvQDI9VA80s3qnQFrQ=;
-        b=bUZDb3W8+XUWTBN6BdUdPZGJSsOi/WfDyiPxtWNOF9SjccoYCybT71UtGBSdnzoHdh
-         vBQkx0LmwHCEStXdQ3YD/KSwMXEyGPt5ncX2gvT0W8h6nfQhs3HwMgk1we1NFq7miz83
-         HRS1DRA7ZVd7mkJfD/yi/6YVNvhmtWla3X3Qims7xeUAyGlQ4qU92SEt9jjVllNCzRIE
-         Pu2qpXnxRZWJO8gufmxeHrTNvHbOUrOckgz71Qt6W+Vt3LDt00cYhZ3FPIeqZFGnrswS
-         4LdVgowA/+iiDdq1+PIDiFrGsJFQyR8PchkAcFARqQsyRseP8ViPwG5j+vpxF1Si7P8F
-         eFVg==
-X-Gm-Message-State: APjAAAV9IkqtY0RIPripVIjfaF/ZuFGpKq7GKRCksbBqY2B7IqgfuCHm
-        TkpBmGnY96wZEL6Ook/nJLU2g11LJMli00UcRlk=
-X-Google-Smtp-Source: APXvYqxAl+Rxh2NCLtdzmTkMG+IYTvU3DliWCdDujCeb72QNPVpAcUeZwzPLzn0JfNoMiKtrgiWXhaCj8wvWNzjbU3s=
-X-Received: by 2002:ac8:1a2e:: with SMTP id v43mr5699655qtj.204.1570042412182;
- Wed, 02 Oct 2019 11:53:32 -0700 (PDT)
+        Wed, 2 Oct 2019 14:53:54 -0400
+Received: from mout.gmx.net ([212.227.17.20]:33339 "EHLO mout.gmx.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727624AbfJBSxx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 2 Oct 2019 14:53:53 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
+        s=badeba3b8450; t=1570042349;
+        bh=gf50tgCxneL5EMyZp44NI1YZQOPxU5aMdpSenTmvcmo=;
+        h=X-UI-Sender-Class:Subject:To:Cc:References:From:Date:In-Reply-To;
+        b=DeM9KzWeINTccN0apbwbQA0VgoA5iZYZVaOVbR0wi+9JSZPSYhljhs8WcIGgyXwmy
+         wwkszvWm8nGEVnGGP9X4EDQbmg75Y3WzfITVdaj862afHrIK7P0CwoFJozLvo3525+
+         CQ0oLHYknGUyvoWOuK7johO1UU4Saqw5ArIwjGgQ=
+X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
+Received: from [192.168.20.60] ([92.116.134.72]) by mail.gmx.com (mrgmx104
+ [212.227.17.168]) with ESMTPSA (Nemesis) id 1Md6R1-1hhE8F3b8N-00aFk6; Wed, 02
+ Oct 2019 20:52:29 +0200
+Subject: Re: [RFC][PATCH] sysctl: Remove the sysctl system call
+To:     "Eric W. Biederman" <ebiederm@xmission.com>,
+        Kees Cook <keescook@chromium.org>
+Cc:     linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
+        linux-api@vger.kernel.org,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Andi Kleen <andi@firstfloor.org>,
+        Andi Kleen <ak@linux.intel.com>,
+        Cong Wang <xiyou.wangcong@gmail.com>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Apelete Seketeli <apelete@seketeli.net>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Chee Nouk Phoon <cnphoon@altera.com>,
+        Chris Zankel <chris@zankel.net>,
+        Christian Ruppert <christian.ruppert@abilis.com>,
+        Greg Ungerer <gerg@uclinux.org>,
+        Hongliang Tao <taohl@lemote.com>,
+        Huacai Chen <chenhc@lemote.com>,
+        Jonas Jensen <jonas.jensen@gmail.com>,
+        Josh Boyer <jwboyer@gmail.com>, Jun Nie <jun.nie@linaro.org>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Ley Foon Tan <lftan@altera.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Max Filippov <jcmvbkbc@gmail.com>,
+        Olof Johansson <olof@lixom.net>,
+        Paul Burton <paul.burton@mips.com>,
+        Phil Edworthy <phil.edworthy@renesas.com>,
+        Pierrick Hascoet <pierrick.hascoet@abilis.com>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Roland Stigge <stigge@antcom.de>,
+        Vineet Gupta <vgupta@synopsys.com>
+References: <8736gcjosv.fsf@x220.int.ebiederm.org>
+ <201910011140.EA0181F13@keescook> <87imp8hyc8.fsf@x220.int.ebiederm.org>
+From:   Helge Deller <deller@gmx.de>
+Message-ID: <1dc9f6c4-d1ff-8add-4d42-1c2d1ae685f6@gmx.de>
+Date:   Wed, 2 Oct 2019 20:52:22 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.0
 MIME-Version: 1.0
-References: <20191002120136.1777161-1-arnd@arndb.de> <CADnq5_MLg=J5dmSGzx8jC=1--d2S3HJzWH3EHhyzT6da5a3wcA@mail.gmail.com>
-In-Reply-To: <CADnq5_MLg=J5dmSGzx8jC=1--d2S3HJzWH3EHhyzT6da5a3wcA@mail.gmail.com>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Wed, 2 Oct 2019 20:53:16 +0200
-Message-ID: <CAK8P3a33yAirHFnZq5GCSJFDM3dpub6vTMyTdpnV429WsP5Eyg@mail.gmail.com>
-Subject: Re: [PATCH 0/6] amdgpu build fixes
-To:     Alex Deucher <alexdeucher@gmail.com>
-Cc:     Alex Deucher <alexander.deucher@amd.com>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        Maling list - DRI developers 
-        <dri-devel@lists.freedesktop.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        amd-gfx list <amd-gfx@lists.freedesktop.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <87imp8hyc8.fsf@x220.int.ebiederm.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:DQAGMh4Ko5P2cI/wLHpPo6oM3QodYNWeRmH706TaNGo2oNxaQq8
+ yBfKyzR1b/uToJX8hDwMlwWTaX/onk/j3TXNptxpDALp14iKhHJ4aocZoGm2bC7iBkIdz5q
+ bNdH1B4HD3l5vl/ryWt4twHoTJAsf6GitjZtqsTqYjVFGGejjFfWStfvPpF7fGBKKyNYe4+
+ QsvCqC6P+fBDzGQtwg1Dg==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:WomUAVeJBRA=:n9zCVEbUl4dS4bqaFBvX3H
+ on+raA1uvEXl1I0A+uZkYyEweFIH0qn1+PjkYLCqphuq29Y6wb4y6hPHeSRhCIutvLYDUo0rA
+ hfWl30UdiDBzkgM3UcPcc1NDIuuewKMG7zgjrHNXPpPJsLRDQuS4UZlCcsD3WgtMqQO4BcSDv
+ X4u00vVhHTJDWyAozjOp314i4KIoHJ/tgl1sUb/iJZE8g+PAWNtUi3f1A7tT6ZfJNIMDl1Ub8
+ JCl/4XdMOfGC5Z8fSUbXUpIM6H0PFFv3nxsQwEii+W9rUl98gxT9NqifkbVZD8wqgBv0lvQYy
+ Z9U0ToPf9hFw9Y9PpKF+QZjD8ZLjiNZ4IgMtYsoqP22q1rRtjwdYKzs4osZXZIMNmfXP9ecHr
+ KYk6ootsiSM2WNxRH5OsB27z+OIoVFyjJm9gZ3T1Z0CE9kJbLgxagbMnnjtn6JRMSgLJUUkBf
+ wN2oxZSuvjx73NVv4pnav1xHu8NJHBbZ6mb87MxgY8JW0bXcxhjRLGsOHSitUrdECJ2ZDj5lX
+ Mds+FH8jW+gRFO1y5YIPcuIxcYetgv/mpK49RCElNuZCSpStxXxKqM8nGDZJDPTxKH+5zuOuz
+ MIoMxLS+WbfhGGWOysB31SK6uYw0yDyb0HJ8FZZKG5i+wIOR1kOghTXrGxc/phGdo5yax+Ucp
+ tQWpK8vI6faH8Sd5ElO8JMaoLAASz3C8zy37HC7jJz70kdo3ABXtTl7cNCByWNZ0fb3BkllQv
+ KBcMIsBWjVB7ZWxJgy/i650wrfzTLLolyFWW2bxIWTe8w4bRaDlSbVuMx/xB4rHdH+jkObInk
+ CHLMdXu+OqRw7iFCctimriEQ6M24A5h+tqXl7lcdVeBIcdpKi7gSALRbj3T3WF8xFuRom1rj/
+ mDXdAfHshk5+/sz8zHZVPqZ6uMy3NPXhuukA/qLKIQFWrqugqk67S5LBhGla0Ic1/i22tTgxq
+ Nzp99T4fO/YpziLuUdAq9YiWl3eZ0JSYxQSD+1nzBS4shb8/F+TB7onTCKM22dK/vVt57fsEf
+ Vh9MtayaH3jL/JCfRSePke9nEeAyhN+sZm8+ANxe3m5o8UJjyzseZeIGA1ha1WqtbsmEzRVvk
+ 6MP4h7WwQxU9odDq8H7E9gcBqxl0il1TJ6zS2VPjADYQS0TbrS6xn0Y9RagcX1paYjqVnYRkQ
+ T9UbHZWu0qbWJTJuU7IeM0HHWGgX0ETuTC/B7Y+3coLI4a9my7Nj7VHmQSKWtCTD3+tN/goqM
+ JIzpeGqkAiMfX06ERkLoEgP7S/E5cGXK/Hq9DYw==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Oct 2, 2019 at 8:47 PM Alex Deucher <alexdeucher@gmail.com> wrote:
->
-> On Wed, Oct 2, 2019 at 8:02 AM Arnd Bergmann <arnd@arndb.de> wrote:
-> >
-> > Here are a couple of build fixes from my backlog in the randconfig
-> > tree. It would be good to get them all into linux-5.4.
-> >
-> >      Arnd
-> >
-> > Arnd Bergmann (6):
-> >   drm/amdgpu: make pmu support optional, again
-> >   drm/amdgpu: hide another #warning
-> >   drm/amdgpu: display_mode_vba_21: remove uint typedef
-> >   drm/amd/display: fix dcn21 Makefile for clang
-> >   [RESEND] drm/amd/display: hide an unused variable
-> >   [RESEND] drm/amdgpu: work around llvm bug #42576
->
-> I've applied 1-5 and I'll send them for 5.4.  There still seems to be
-> some debate about 6.
+On 02.10.19 00:53, Eric W. Biederman wrote:
+> Kees Cook <keescook@chromium.org> writes:
+>>> As there appear to be no users of the sysctl system call, remove the
+>>> code....>...
+> I copied everyone who had put this into a defconfig and I will wait a
+> little more to see if anyone screams.  I think it is a safe guess that
+> several of the affected configurations are dead (or at least
+> unmaintained) as I received 17 bounces when copying everyone.
 
-Awesome, thanks a lot!
+  arch/parisc/configs/c8000_defconfig         |    1 -
+  arch/parisc/configs/generic-32bit_defconfig |    1 -
 
-      Arnd
+I'm not aware that we require the sysctl syscall somewhere on parisc,
+so I think it's safe to remove the code.
+
+Helge
