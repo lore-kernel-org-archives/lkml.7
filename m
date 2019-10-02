@@ -2,97 +2,102 @@ Return-Path: <SRS0=zem1=X3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC803C352AA
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 00:19:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D64BC352AA
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 00:20:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8C3D620815
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 00:19:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D540E20815
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 00:20:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lX5IRl2R"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="F3c6aFkk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729501AbfJBATE (ORCPT
+        id S1729527AbfJBAUh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Oct 2019 20:19:04 -0400
-Received: from mail-ed1-f52.google.com ([209.85.208.52]:45493 "EHLO
-        mail-ed1-f52.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727772AbfJBATE (ORCPT
+        Tue, 1 Oct 2019 20:20:37 -0400
+Received: from mail-io1-f67.google.com ([209.85.166.67]:37216 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729509AbfJBAUh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Oct 2019 20:19:04 -0400
-Received: by mail-ed1-f52.google.com with SMTP id h33so13583405edh.12;
-        Tue, 01 Oct 2019 17:19:03 -0700 (PDT)
+        Tue, 1 Oct 2019 20:20:37 -0400
+Received: by mail-io1-f67.google.com with SMTP id b19so24717891iob.4;
+        Tue, 01 Oct 2019 17:20:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=vXTRO1f51dgsXqDnzTMvAOy1VZP11Ly8hhLKToBULAo=;
-        b=lX5IRl2RlNZha1HXLktMhgB/5k4qHFwvd9UqTf7hObClzrkt0eUpl8SXu7M2VBcGYd
-         KuhENfxEunjTKlcjKvOV8liv/5oVtHoaPz/kx3gjYktm1+ekHBOqSDKwR6EzTUlp2LzL
-         UJfXkWe9GFaDIqtaGM0LG4he/1D0LLp61aPSvfraa1muHW1UmBGP8458Y4G59jZBdOni
-         fTeJ9W0R5JyWw5ZOY0hRNavfjpAwY1xAupzsdnZ6nocAf2WOxsmbtIy4XxNNKTGH/NiB
-         2qSoxB+qMrHaQYLic2A0YgF7TeLeOeydvdIHmoDTZGT5WSGpCTvBKycuBc6p995xxlki
-         ZhhA==
+        h=from:to:cc:subject:date:message-id;
+        bh=E7akn3KWbgNnmMpTo3GpAawa2GrmFKU67ai1nYZy4h8=;
+        b=F3c6aFkkT9udTeRsQq65f8rfAAgP1ivklKvMzWsaHAEsYa4XU61XzysDKiiFs1GIce
+         y9tDnJZi07BVq3ak1k/ck57w5vdGWOdnRrY0imEpxxoMZJNvu/kIQ3IsIScOidtYiFu2
+         Zw/V8Aw36OocuVQt1ulbuDbZh8OhWPkhsNMNa3b8BBkOzLKt0wTcs1hW/LD3+CTxTtdx
+         9YDTkHPkNQs+wBc3tJo0O5T8hvFqYmxv5kpQeX/dZ1ZsT43q3hms+WCgPnB/UBVuSaHo
+         2+jnUGndHbJ22tlzhxNM373PBIY5Njg8J5Dju2OL0+iH/pyBxiHbWkPioOEULvHu6xFx
+         HIHQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=vXTRO1f51dgsXqDnzTMvAOy1VZP11Ly8hhLKToBULAo=;
-        b=DifVsFBQK4JWXH0zgE24PAbcWGSFIVXTDSJ4+ZhPQ9d49/fPjPv6saMM4DcPZG7MGf
-         Fqc5Ez1feCGMIhWFV63MHIL/Svf3S5aDic1TVlDV5T9Lf9MuSTh1ph+vlF/o2gINEjYE
-         czKNfPXPM1jSLQjcpa59kB1ZuFFSxNnhvZBAF2tQx/RqTgoz1L4C+OsNhl0/HLw2ZYAS
-         sH1/SzMYHOBydUO+/j06jcrmPy5A5EIAqUfBtHWxXs0gA5RtaWFax5GncgzN954vk3TO
-         uA0owI/naaJpaK0l4fKbgCQPyFEJwiZyOSzbLYO9upcSzKrozdRxIi9bsXr+fn4rh1H4
-         WuvQ==
-X-Gm-Message-State: APjAAAW0gaSlwQRzd2agFJ9m0pfLyXOppPY0Cfg5k/yqnpSzbzf7W/H4
-        je60IWJHnZ1x1DQYYfkfFqQS2hpm
-X-Google-Smtp-Source: APXvYqyepFLItQQIhnNxmZQVwH+9yDq2SSVyiaYcwsLhEEbfrewUgifttjiwVED08Wc6POTeJoec/w==
-X-Received: by 2002:aa7:c4d0:: with SMTP id p16mr1014976edr.266.1569975542438;
-        Tue, 01 Oct 2019 17:19:02 -0700 (PDT)
-Received: from desk.local ([2a02:a03f:4080:1900:c8a8:489c:8544:d3e4])
-        by smtp.gmail.com with ESMTPSA id z39sm3487833edd.46.2019.10.01.17.19.01
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=E7akn3KWbgNnmMpTo3GpAawa2GrmFKU67ai1nYZy4h8=;
+        b=dSWfWwjSwEtvIlmhFaDb1/oCZAKPD6PH+lnLjGLgxVyWXak/fIUivPAF2Z0dOGRyz4
+         6Xm3xrAS4CtOIqJJSW/fp3DnNDuNom7VTUBG3uqB4FL8gHmhrPxd1EbzQrkPQlQZ0wBl
+         JEHfL9vud4uSsFn02Ln7IEtoDVNO6Ulw54sehejyW0X/yDHgITx2TivdvNJor/X4qjnU
+         2wgiOxRIqYvf047gEVfpOqOgkF1QEQiy8wfcZebUCRyWm5zWGOzW82wilNVYRm0fqdra
+         8zhm7OM34eFETo4b36LHRgE697gElLvgD8EjEfXN0J2DiuMQoG4QrjmkIMf2GpFUHiNV
+         5/Sg==
+X-Gm-Message-State: APjAAAWwI5tJUa5Pjj+PRR2lhJHpmXw+2yQNceQGfGYBjM55hnSSDQD1
+        MOUBj4Rc+ooYzJefCRsfW7o=
+X-Google-Smtp-Source: APXvYqz4A/KOLM0TIzmmQxVPsPwNSr7qx9lzpyTV4UAEwH9hZCGAdGpdtb2S4AEc3Ugu8biyi6Gcbg==
+X-Received: by 2002:a6b:1646:: with SMTP id 67mr879880iow.11.1569975635262;
+        Tue, 01 Oct 2019 17:20:35 -0700 (PDT)
+Received: from localhost.localdomain (c-73-37-219-234.hsd1.mn.comcast.net. [73.37.219.234])
+        by smtp.gmail.com with ESMTPSA id i13sm6703646ils.16.2019.10.01.17.20.34
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 01 Oct 2019 17:19:01 -0700 (PDT)
-Date:   Wed, 2 Oct 2019 02:19:00 +0200
-From:   Luc Van Oostenryck <luc.vanoostenryck@gmail.com>
-To:     Steve French <smfrench@gmail.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>, linux-sparse@vger.kernel.org
-Subject: Re: Many unexpected warnings with current sparse
-Message-ID: <20191002001859.qeyo3btl7tosz3vo@desk.local>
-References: <CAH2r5mspD=iMnO-CuyHMf3jmS0zm7fbqNOXe0cqMcKsXfLAu-Q@mail.gmail.com>
- <20191001231017.67txq4dhrvhyzbu5@desk.local>
- <CAH2r5mvnYtmfpHY+jeUbN4JehQwY1XfBWYVNSLO+wx1wkAA6gA@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAH2r5mvnYtmfpHY+jeUbN4JehQwY1XfBWYVNSLO+wx1wkAA6gA@mail.gmail.com>
-User-Agent: NeoMutt/20180716
+        Tue, 01 Oct 2019 17:20:34 -0700 (PDT)
+From:   Adam Ford <aford173@gmail.com>
+To:     linux-arm-kernel@lists.infradead.org
+Cc:     adam.ford@logicpd.com, Adam Ford <aford173@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] ARM: dts: imx6q-logicpd: Re-Enable SNVS power key
+Date:   Tue,  1 Oct 2019 19:20:28 -0500
+Message-Id: <20191002002029.19189-1-aford173@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Oct 01, 2019 at 06:14:23PM -0500, Steve French wrote:
-> It may be related to the following sparse make warning:
-> 
-> No rule to make target
-> '/usr/include/x86_64-linux-gnu/bits/huge_val.h', needed by
-> 'sparse-llvm.o'
-> 
-> I don't see huge_val.h in the Ubuntu 19 version of libc6-dev
+A previous patch disabled the SNVS power key by default which
+breaks the ability for the imx6q-logicpd board to wake from sleep.
+This patch re-enables this feature for this board.
 
-Yes, I've been bitten myself by this. It's fixed since a little while.
-So, just doing a clean build or removing all the deps (.*.d)
-should allow you to build sparse.
+Fixes: 770856f0da5d ("ARM: dts: imx6qdl: Enable SNVS power key according to board design")
+
+Signed-off-by: Adam Ford <aford173@gmail.com>
+
+diff --git a/arch/arm/boot/dts/imx6-logicpd-som.dtsi b/arch/arm/boot/dts/imx6-logicpd-som.dtsi
+index 7ceae3573248..547fb141ec0c 100644
+--- a/arch/arm/boot/dts/imx6-logicpd-som.dtsi
++++ b/arch/arm/boot/dts/imx6-logicpd-som.dtsi
+@@ -207,6 +207,10 @@
+ 	vin-supply = <&sw1c_reg>;
+ };
  
-I've verified the problem with asm and __inline in quota.h:
-it's autodetected by kconfig (CC_HAS_ASM_INLINE) so the exact config
-doesn't matter (only gcc's version does) but in all cases recent
-versions of sparse don't have a problem with it (an upstream version
-of `sparse --version` should return "v0.6.1-rc1-37-gd466a0281").
++&snvs_poweroff {
++	status = "okay";
++};
++
+ &iomuxc {
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&pinctrl_hog>;
+-- 
+2.17.1
 
-Best regards,
--- Luc
