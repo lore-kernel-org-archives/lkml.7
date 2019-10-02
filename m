@@ -2,215 +2,128 @@ Return-Path: <SRS0=zem1=X3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8833C352AA
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 18:49:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DF83C10F14
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 18:51:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C708821D82
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 18:49:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5D1B8222C3
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 18:51:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570042172;
-	bh=Gj1BKcNluGAdh7FuVwODdJtKSgcbEdOpOaYo44pu8WY=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=WZLdnVumU2yehHpXLjXilKoLs4OQU1ooggVIfp0j1V/kUadMwiMI8xizKS1VtMD/S
-	 RYvuJC/V+C4DTkLULDqqgSwA+Ppj8IPGAQli0r0t7KOuME63zFk/hAUHB82zuszX7a
-	 jVhZRhUuTw7E166XaUR9T44uUTZHPZYhA7z2C6XE=
+	s=default; t=1570042302;
+	bh=CRQhS30YGps7394nDLglJ442PO7GILfwsW96COK8hZA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=xnERNnHQY4ggGfdGvisoOhUfjN/4NLXQqDX/tOp75boLEDItzDjVstdfi2rQNlS3V
+	 MCp64JWmXlAydAW19hmMhLfEpdqHW51wg8YHARiufkhSJm4zKH4VuIYjQoPw2OFHOF
+	 0f9zxaS+9IwptY1s+4dt3519cdbTqarlSks4Z++s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729010AbfJBStc (ORCPT
+        id S1728814AbfJBSvl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Oct 2019 14:49:32 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:57672 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726708AbfJBStb (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Oct 2019 14:49:31 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Subject:Cc:To:
-        From:Date:Sender:Reply-To:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=wUnZwvjJy/SR7Md0G0Vpiggc+QNzc3d1y1Epk6yyVOQ=; b=NfFebkNuyhWz+OlrPzkAYibBD
-        PliwIEkOqDDImq5rCfEtNVZaKDiYZbPCnkbdcRiGiwvlEq/7q30bqpZwo7VstjIDfZ7s6P+Lwm0yK
-        uhnYmiqZvEp1U3cMCX0Tf67QlY7x+imM0XoZlAO1YmAOVy/Q1wqASuuYyVqWUfjn/5J0n50yda98x
-        OgDHTv2//ougLpujno0I3yD/dKRVR7soAM4MzD0vFnYd0ZuKqF6ZKK0m18bVe5AfW1NycSprT15GE
-        3bAJUBdedNAZytALygECAWvHr/ZzLxMp85LcEsybuM7ejEnJhj9F5Gxll4EGeEiSgOxa2Xz0HTxZ8
-        Vy4Iz1T9w==;
-Received: from 177.133.68.49.dynamic.adsl.gvt.net.br ([177.133.68.49] helo=coco.lan)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.2 #3 (Red Hat Linux))
-        id 1iFjgk-0002rx-IW; Wed, 02 Oct 2019 18:49:26 +0000
-Date:   Wed, 2 Oct 2019 15:49:22 -0300
-From:   Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-To:     JP <jp@jpvw.nl>, crope@iki.fi
-Cc:     Gonsolo <gonsolo@gmail.com>, Sean Young <sean@mess.org>,
-        linux-media@vger.kernel.org,
-        Linux Kernel <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] si2157: Add support for Logilink VG0022A.
-Message-ID: <20191002154922.7f1cfc76@coco.lan>
-In-Reply-To: <29ab2e43-4374-a3ea-6ae1-a4267867eaa4@jpvw.nl>
-References: <20191001205203.4b1a5fb6@coco.lan>
-        <20191002141359.30166-1-gonsolo@gmail.com>
-        <20191002141359.30166-2-gonsolo@gmail.com>
-        <20191002142744.GA3475@gofer.mess.org>
-        <CANL0fFS9TGKJH2rfkXzak78BaLazTNO7GoZhSb4vLBsDrmz3FQ@mail.gmail.com>
-        <20191002150650.GA4227@gofer.mess.org>
-        <CANL0fFRoL6NxOCbNC=XjQ6LDkeeqAayaLUbm9xARWX9ttqfPFg@mail.gmail.com>
-        <29ab2e43-4374-a3ea-6ae1-a4267867eaa4@jpvw.nl>
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+        Wed, 2 Oct 2019 14:51:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59688 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726708AbfJBSvl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 2 Oct 2019 14:51:41 -0400
+Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1F2ED21A4C;
+        Wed,  2 Oct 2019 18:51:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1570042300;
+        bh=CRQhS30YGps7394nDLglJ442PO7GILfwsW96COK8hZA=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=2jKtiPHBM4opCi8aDykOrFKWS3TvFjuWgksMPKcN/llJii5FgB1youQL+qF2c77I2
+         Py+wnMifC2SjORaWtWQzOqj1TNZQbAjIQj/DOrLGEZszPwa1f0Tk7RpUQf1h/5BTAK
+         RX4szP/nOWesKrzE1/RKdgpHwveT8zH76rrKkQWw=
+Date:   Wed, 2 Oct 2019 19:51:33 +0100
+From:   Will Deacon <will@kernel.org>
+To:     Geert Uytterhoeven <geert@linux-m68k.org>
+Cc:     Nick Desaulniers <ndesaulniers@google.com>,
+        Russell King - ARM Linux admin <linux@armlinux.org.uk>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Stefan Wahren <wahrenst@gmx.net>,
+        Kees Cook <keescook@google.com>, Arnd Bergmann <arnd@arndb.de>,
+        clang-built-linux <clang-built-linux@googlegroups.com>
+Subject: Re: [PATCH] compiler: enable CONFIG_OPTIMIZE_INLINING forcibly
+Message-ID: <20191002185133.n6pldb4exyjfesfh@willie-the-truck>
+References: <CAKwvOdnqn=0LndrX+mUrtSAQqoT1JWRMOJCA5t3e=S=T7zkcCQ@mail.gmail.com>
+ <20191001092823.z4zhlbwvtwnlotwc@willie-the-truck>
+ <CAKwvOdk0h2A6=fb7Yepf+oKbZfq_tqwpGq8EBmHVu1j4mo-a-A@mail.gmail.com>
+ <20191001170142.x66orounxuln7zs3@willie-the-truck>
+ <CAKwvOdnFJqipp+G5xLDRBcOrQRcvMQmn+n8fufWyzyt2QL_QkA@mail.gmail.com>
+ <20191001175512.GK25745@shell.armlinux.org.uk>
+ <CAKwvOdmw_xmTGZLeK8-+Q4nUpjs-UypJjHWks-3jHA670Dxa1A@mail.gmail.com>
+ <20191001181438.GL25745@shell.armlinux.org.uk>
+ <CAKwvOdmBnBVU7F-a6DqPU6QM-BRc8LNn6YRmhTsuGLauCWKUOg@mail.gmail.com>
+ <CAMuHMdWPhE1nNkmL1nj3vpQhB7fP3uDs2i_ZVi0Gf9qij4W2CA@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAMuHMdWPhE1nNkmL1nj3vpQhB7fP3uDs2i_ZVi0Gf9qij4W2CA@mail.gmail.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Wed, 2 Oct 2019 19:23:02 +0200
-JP <jp@jpvw.nl> escreveu:
-
-> Hi all.
+On Wed, Oct 02, 2019 at 02:55:50PM +0200, Geert Uytterhoeven wrote:
+> On Wed, Oct 2, 2019 at 6:33 AM Nick Desaulniers <ndesaulniers@google.com> wrote:
+> > On Tue, Oct 1, 2019 at 11:14 AM Russell King - ARM Linux admin
+> > <linux@armlinux.org.uk> wrote:
+> > > On Tue, Oct 01, 2019 at 11:00:11AM -0700, Nick Desaulniers wrote:
+> > > > On Tue, Oct 1, 2019 at 10:55 AM Russell King - ARM Linux admin
+> > > > <linux@armlinux.org.uk> wrote:
+> > > > > On Tue, Oct 01, 2019 at 10:44:43AM -0700, Nick Desaulniers wrote:
+> > > > > > I apologize; I don't mean to be difficult.  I would just like to avoid
+> > > > > > surprises when code written with the assumption that it will be
+> > > > > > inlined is not.  It sounds like we found one issue in arm32 and one in
+> > > > > > arm64 related to outlining.  If we fix those two cases, I think we're
+> > > > > > close to proceeding with Masahiro's cleanup, which I view as a good
+> > > > > > thing for the health of the Linux kernel codebase.
+> > > > >
+> > > > > Except, using the C preprocessor for this turns the arm32 code into
+> > > > > yuck:
+> > > > >
+> > > > > 1. We'd need to turn get_domain() and set_domain() into multi-line
+> > > > >    preprocessor macro definitions, using the GCC ({ }) extension
+> > > > >    so that get_domain() can return a value.
+> > > > >
+> > > > > 2. uaccess_save_and_enable() and uaccess_restore() also need to
+> > > > >    become preprocessor macro definitions too.
+> > > > >
+> > > > > So, we end up with multiple levels of nested preprocessor macros.
+> > > > > When something goes wrong, the compiler warning/error message is
+> > > > > going to be utterly _horrid_.
+> > > >
+> > > > That's why I preferred V1 of Masahiro's patch, that fixed the inline
+> > > > asm not to make use of caller saved registers before calling a
+> > > > function that might not be inlined.
+> > >
+> > > ... which I objected to based on the fact that this uaccess stuff is
+> > > supposed to add protection against the kernel being fooled into
+> > > accessing userspace when it shouldn't.  The whole intention there is
+> > > that [sg]et_domain(), and uaccess_*() are _always_ inlined as close
+> > > as possible to the call site of the accessor touching userspace.
+> >
+> > Then use the C preprocessor to force the inlining.  I'm sorry it's not
+> > as pretty as static inline functions.
 > 
-> On 10/2/19 5:21 PM, Gonsolo wrote:
-> > Hi!
-> >  
-> >> Antti has some great suggestions in that thread:
-> >>          https://lkml.org/lkml/2017/5/24/245
-> >>
-> >> Also note https://lkml.org/lkml/2017/5/26/357 if you have access to a
-> >> logic analyser.  
-> > I read that thread. Unfortunately I'm not a hardware engineer nor do I
-> > have access to a logic analyser, just the device and a remote hope not
-> > to keep my custom 4.13 kernel forever or to have to buy a new DVB T2
-> > device. :(
-> > In the above thread it is mentioned that even the Windows driver
-> > receives the ffff's so maybe it is a hardware bug?  
-> Looks like it is:
-> http://lkml.iu.edu/hypermail/linux/kernel/1710.3/03205.html
+> Which makes us lose the baby^H^H^H^Htype checking performed
+> on function parameters, requiring to add more ugly checks.
 
-Hmm... changing the pull-up register will very likely change the
-timings.
+Indeed, and the resulting mess is (at least in my opinion) considerably
+worse than where we were in 5.3 and earlier kernels with 'inline' defined
+as '__always_inline'.
 
-There's a logic at the driver that changes the I2C bus speed to
-300k (with is non-standard):
-
-
-		/* I2C master bus 2 clock speed 300k */
-		ret = af9035_wr_reg(d, 0x00f6a7, 0x07);
-		if (ret < 0)
-			goto err;
-
-		/* I2C master bus 1,3 clock speed 300k */
-		ret = af9035_wr_reg(d, 0x00f103, 0x07);
-		if (ret < 0)
-			goto err;
-
-Perhaps if we reduce the bus speed to 100k, the device will work
-without the hacks.
-
-I don't have af9035 datasheets. Perhaps Antti could shed some
-light about how to change the speed to 100k, but on a quick search 
-at the Internet, I found this:
-
-	https://lore.kernel.org/linux-media/1312539895.2763.33.camel@Jason-Linux/
-
-With has a comment that explains how the I2C speed is calculated on those
-ITE devices:
-
-	#define    p_reg_one_cycle_counter_tuner	0xF103
-
-	/* Define I2C master speed, the default value 0x07 means 366KHz (1000000000 / (24.4 * 16 * User_I2C_SPEED)). */
-	#define User_I2C_SPEED 0x07
-
-	error =
-	    it9135_write_reg(data, 0, PROCESSOR_LINK,
-			     p_reg_one_cycle_counter_tuner, User_I2C_SPEED);
-
-So, in summary, the value for the I2C speed register is given by:
-
-	I2C_speed_register = (1000000000 / (24.4 * 16 * I2C_speed))
-
-So, for 100 kbps, the I2C speed register should be set with a value
-close to ~25,6.
-
-Doing the reverse math, we have:
-
-	I2C_speed_register = 25 -> I2C_speed = 102,46 kbps
-	I2C_speed_register = 26 -> I2C_speed = 98,52 kbps
-
-So, if we do:
-
-		/* I2C master bus 2 clock speed ~100k */
-		ret = af9035_wr_reg(d, 0x00f6a7, 26);
-		if (ret < 0)
-			goto err;
-
-		/* I2C master bus 1,3 clock speed ~100k */
-		ret = af9035_wr_reg(d, 0x00f103, 26);
-		if (ret < 0)
-			goto err;
-
-The bus speed will reduce to 98,52 kbps, with is a typical nominal
-value for I2C tuners and other devices. With that, the device should 
-probably work fine without needing to replace the pull up resistor.
-
-Ok, tuner firmware load would be ~3,7 times slower, but this is
-something that we do just once need a firmware). 
-
-All other I2C messages are short enough to not cause any real difference.
-
-
-Could you please test the enclosing patch and see if, with that, you
-can remove the hacks you added for the tuner probe to work?
-
-Regards,
-Mauro
-
-[PATCH] media: af9035: slow down I2C bus speed on it930x devices
-
-We have a few reports about tuner probing instability with
-some it930x devices.
-
-As it is better safe than sorry, let's slow down the I2C,
-using the formula found at an old patch:
-
-https://lore.kernel.org/linux-media/1312539895.2763.33.camel@Jason-Linux/
-
-Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-
-diff --git a/drivers/media/usb/dvb-usb-v2/af9035.c b/drivers/media/usb/dvb-usb-v2/af9035.c
-index 3afd18733614..df2c75b84be8 100644
---- a/drivers/media/usb/dvb-usb-v2/af9035.c
-+++ b/drivers/media/usb/dvb-usb-v2/af9035.c
-@@ -1197,6 +1197,9 @@ static int af9035_frontend_attach(struct dvb_usb_adapter *adap)
- 	return ret;
- }
- 
-+/* I2C speed register = (1000000000 / (24.4 * 16 * I2C_speed)) */
-+#define I2C_SPEED_REGISTER 26
-+
- static int it930x_frontend_attach(struct dvb_usb_adapter *adap)
- {
- 	struct state *state = adap_to_priv(adap);
-@@ -1208,13 +1211,13 @@ static int it930x_frontend_attach(struct dvb_usb_adapter *adap)
- 
- 	dev_dbg(&intf->dev, "adap->id=%d\n", adap->id);
- 
--	/* I2C master bus 2 clock speed 300k */
--	ret = af9035_wr_reg(d, 0x00f6a7, 0x07);
-+	/* I2C master bus 2 clock speed ~100k */
-+	ret = af9035_wr_reg(d, 0x00f6a7, I2C_SPEED_REGISTER);
- 	if (ret < 0)
- 		goto err;
- 
--	/* I2C master bus 1,3 clock speed 300k */
--	ret = af9035_wr_reg(d, 0x00f103, 0x07);
-+	/* I2C master bus 1,3 clock speed ~100k */
-+	ret = af9035_wr_reg(d, 0x00f103, I2C_SPEED_REGISTER);
- 	if (ret < 0)
- 		goto err;
- 
-
+Will
