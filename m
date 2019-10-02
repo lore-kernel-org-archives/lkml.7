@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18968C10F14
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 19:10:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ACD9DC10F14
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 19:10:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 000A42133F
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 19:10:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 95CAD2133F
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 19:10:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729814AbfJBTKR (ORCPT
+        id S1729831AbfJBTKS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Oct 2019 15:10:17 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:35944 "EHLO
+        Wed, 2 Oct 2019 15:10:18 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:35936 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729334AbfJBTIR (ORCPT
+        by vger.kernel.org with ESMTP id S1729333AbfJBTIR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 2 Oct 2019 15:08:17 -0400
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1iFjyx-00035t-RV; Wed, 02 Oct 2019 20:08:15 +0100
+        id 1iFjyx-00035v-Q5; Wed, 02 Oct 2019 20:08:15 +0100
 Received: from ben by deadeye with local (Exim 4.92.1)
         (envelope-from <ben@decadent.org.uk>)
-        id 1iFjyp-0003fZ-OB; Wed, 02 Oct 2019 20:08:07 +0100
+        id 1iFjyp-0003fU-MK; Wed, 02 Oct 2019 20:08:07 +0100
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,16 +35,15 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        "Hendrik Brueckner" <brueckner@linux.ibm.com>,
-        "Ursula Braun" <ubraun@linux.ibm.com>,
-        "Julian Wiedmann" <jwi@linux.ibm.com>
+        "Avri Altman" <avri.altman@wdc.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        "Stanley Chu" <stanley.chu@mediatek.com>
 Date:   Wed, 02 Oct 2019 20:06:51 +0100
-Message-ID: <lsq.1570043211.678252578@decadent.org.uk>
+Message-ID: <lsq.1570043211.955969694@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 71/87] net/af_iucv: remove GFP_DMA restriction for
- HiperTransport
+Subject: [PATCH 3.16 70/87] scsi: ufs: Avoid runtime suspend possibly
+ being blocked forever
 In-Reply-To: <lsq.1570043210.379046399@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -58,60 +57,67 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Julian Wiedmann <jwi@linux.ibm.com>
+From: Stanley Chu <stanley.chu@mediatek.com>
 
-commit fdbf6326912d578a31ac4ca0933c919eadf1d54c upstream.
+commit 24e2e7a19f7e4b83d0d5189040d997bce3596473 upstream.
 
-af_iucv sockets over z/VM IUCV require that their skbs are allocated
-in DMA memory. This restriction doesn't apply to connections over
-HiperSockets. So only set this limit for z/VM IUCV sockets, thereby
-increasing the likelihood that the large (and linear!) allocations for
-HiperTransport messages succeed.
+UFS runtime suspend can be triggered after pm_runtime_enable() is invoked
+in ufshcd_pltfrm_init(). However if the first runtime suspend is triggered
+before binding ufs_hba structure to ufs device structure via
+platform_set_drvdata(), then UFS runtime suspend will be no longer
+triggered in the future because its dev->power.runtime_error was set in the
+first triggering and does not have any chance to be cleared.
 
-Fixes: 3881ac441f64 ("af_iucv: add HiperSockets transport")
-Signed-off-by: Julian Wiedmann <jwi@linux.ibm.com>
-Reviewed-by: Ursula Braun <ubraun@linux.ibm.com>
-Reviewed-by: Hendrik Brueckner <brueckner@linux.ibm.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+To be more clear, dev->power.runtime_error is set if hba is NULL in
+ufshcd_runtime_suspend() which returns -EINVAL to rpm_callback() where
+dev->power.runtime_error is set as -EINVAL. In this case, any future
+rpm_suspend() for UFS device fails because rpm_check_suspend_allowed()
+fails due to non-zero
+dev->power.runtime_error.
+
+To resolve this issue, make sure the first UFS runtime suspend get valid
+"hba" in ufshcd_runtime_suspend(): Enable UFS runtime PM only after hba is
+successfully bound to UFS device structure.
+
+Fixes: 62694735ca95 ([SCSI] ufs: Add runtime PM support for UFS host controller driver)
+Signed-off-by: Stanley Chu <stanley.chu@mediatek.com>
+Reviewed-by: Avri Altman <avri.altman@wdc.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+[bwh: Backported to 3.16:
+ - ufshcd_pltrfm_probe() doesn't allocate or free the host structure
+ - Adjust context]
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- net/iucv/af_iucv.c | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+ drivers/scsi/ufs/ufshcd-pltfrm.c | 11 ++++-------
+ 1 file changed, 4 insertions(+), 7 deletions(-)
 
---- a/net/iucv/af_iucv.c
-+++ b/net/iucv/af_iucv.c
-@@ -568,7 +568,6 @@ static struct sock *iucv_sock_alloc(stru
+--- a/drivers/scsi/ufs/ufshcd-pltfrm.c
++++ b/drivers/scsi/ufs/ufshcd-pltfrm.c
+@@ -150,22 +150,19 @@ static int ufshcd_pltfrm_probe(struct pl
+ 		goto out;
+ 	}
  
- 	sk->sk_destruct = iucv_sock_destruct;
- 	sk->sk_sndtimeo = IUCV_CONN_TIMEOUT;
--	sk->sk_allocation = GFP_DMA;
+-	pm_runtime_set_active(&pdev->dev);
+-	pm_runtime_enable(&pdev->dev);
+-
+ 	err = ufshcd_init(dev, &hba, mmio_base, irq);
+ 	if (err) {
+ 		dev_err(dev, "Intialization failed\n");
+-		goto out_disable_rpm;
++		goto out;
+ 	}
  
- 	sock_reset_flag(sk, SOCK_ZAPPED);
+ 	platform_set_drvdata(pdev, hba);
  
-@@ -762,6 +761,7 @@ vm_bind:
- 		memcpy(iucv->src_user_id, iucv_userid, 8);
- 		sk->sk_state = IUCV_BOUND;
- 		iucv->transport = AF_IUCV_TRANS_IUCV;
-+		sk->sk_allocation |= GFP_DMA;
- 		if (!iucv->msglimit)
- 			iucv->msglimit = IUCV_QUEUELEN_DEFAULT;
- 		goto done_unlock;
-@@ -786,6 +786,8 @@ static int iucv_sock_autobind(struct soc
- 		return -EPROTO;
++	pm_runtime_set_active(&pdev->dev);
++	pm_runtime_enable(&pdev->dev);
++
+ 	return 0;
  
- 	memcpy(iucv->src_user_id, iucv_userid, 8);
-+	iucv->transport = AF_IUCV_TRANS_IUCV;
-+	sk->sk_allocation |= GFP_DMA;
- 
- 	write_lock_bh(&iucv_sk_list.lock);
- 	__iucv_auto_name(iucv);
-@@ -1737,6 +1739,8 @@ static int iucv_callback_connreq(struct
- 
- 	niucv = iucv_sk(nsk);
- 	iucv_sock_init(nsk, sk);
-+	niucv->transport = AF_IUCV_TRANS_IUCV;
-+	nsk->sk_allocation |= GFP_DMA;
- 
- 	/* Set the new iucv_sock */
- 	memcpy(niucv->dst_name, ipuser + 8, 8);
+-out_disable_rpm:
+-	pm_runtime_disable(&pdev->dev);
+-	pm_runtime_set_suspended(&pdev->dev);
+ out:
+ 	return err;
+ }
 
