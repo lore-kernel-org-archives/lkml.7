@@ -2,111 +2,81 @@ Return-Path: <SRS0=zem1=X3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC50CC10F14
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 18:47:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B6BEC352AA
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 18:48:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B7A9021A4C
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 18:47:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E50EB222C7
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 18:48:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="azaA/Cc2"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="UMsvqJO9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728990AbfJBSrZ (ORCPT
+        id S1728996AbfJBSsS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Oct 2019 14:47:25 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:34989 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726076AbfJBSrY (ORCPT
+        Wed, 2 Oct 2019 14:48:18 -0400
+Received: from merlin.infradead.org ([205.233.59.134]:44372 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726076AbfJBSsS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Oct 2019 14:47:24 -0400
-Received: by mail-wm1-f68.google.com with SMTP id y21so28718wmi.0
-        for <linux-kernel@vger.kernel.org>; Wed, 02 Oct 2019 11:47:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=rl3HwNc1oPPqrMvALhFW3tFOkISeqhdk4UKaPBcY6s0=;
-        b=azaA/Cc2WKbblHOERF1vzi7jLDwr6FIH836aAU4kxozXuaEVRWIrk2ayHEmJ6MP8iG
-         7aXeTyQcvL6Gq6M2WGSQ/28uNNEuh5Sk+Wb8lDMJmtg0U19KU+TfSM06N54QFV2ytHLe
-         6TT3WglYH2oMlHLNMc7jNg6rKJ1RPE2OwuMjUwULL45KaOhLj1AmJc94IldmDG/TcJjt
-         pQ4D0y7Tc374OZ59vjD0p2XegEz5DAT3wo/h/xf07hKe86jRbIZWEu4h6FoQw2xYq16R
-         aqpoMgBsr5nb1p67OTE9jmExlVs4fzMYAHkcKW6TThhd8akohCbf7npIwFg9mSvvsdm7
-         dFWQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=rl3HwNc1oPPqrMvALhFW3tFOkISeqhdk4UKaPBcY6s0=;
-        b=XHTd2+j/KLbIqCVdtW7CgoLlrwaVQJzCLM+GRX4Ofca2qD4Sff85Rr2D0HYoYsgnbY
-         vnXGIiRVUtv93jEmI7OrYyXMXEzYYijDxujEFoF4mkS/0+Qke8BV5MjAg522pn7RiL+G
-         X90JL1AEjZvYrNloL6c96nq3SCMHbrB7QYFZXIK2R2CbtibDRQVtSJdVibaalrAUY7Bb
-         w7MDJmCmUg8zkwlM8b0Ce/QF/Qz6aVGYbDi8nOzP9HeHgLBzIhbDJDS8W7RglSjZ8tPb
-         yL377lj25t1qU4RvXhOwyIhixxL45w4aFOr1ZGvQkVYVMN27O5YDz2NoppTOGIsmu8ID
-         AXtg==
-X-Gm-Message-State: APjAAAVcrLT8ANZzpq9taDHEFBaixK48MgXpYu1+VmwW6d0LSrOY9JtC
-        VL+pCRZMDVhBI04In3QcHmAaQ0uL069sUfn4Jok=
-X-Google-Smtp-Source: APXvYqyadvQZt/5r+wPSV1oq1Tc7kuGgYq0Qtbq3Xvtf/2EtBqF6rMDvmldFOj48UiW4aroqZt4JfknMTY9l3qmJeMM=
-X-Received: by 2002:a1c:1a45:: with SMTP id a66mr3986539wma.102.1570042042540;
- Wed, 02 Oct 2019 11:47:22 -0700 (PDT)
+        Wed, 2 Oct 2019 14:48:18 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=f8mAyZhBV/yu9HtV7Xf/051+CCc7dJkpNzFzIX8htq0=; b=UMsvqJO9uRYsqbfk3scnuZD3f
+        6aYbs+GulG0vslpSx2eoCS2n9qklVcj0LUnmhtMafPWe3nZImPC4QLd9PH6JIvoBYAReNnSEUt5rl
+        JAsPreh89kbcGStbE0oECyhTlJq+54oNVfAL2p/G2Egf8qscyfCHEl/Ba0YmrcmP9ebojiLspln4k
+        2M8z39oVFlOlydAKHitv1dyaI8Y0RAiRj0+ZB53+YzgnAAp+JgUxpaMLKyi4f8vj68+2PHi0LXW6H
+        wK874Kj2PnEdwbshF/tXQngLvqbADN2aLgKt8XPSkI/PIbGgG4zb/0ScUaRrwkIMDb1mNirjU/1PB
+        crIzRwz9A==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=worktop.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.2 #3 (Red Hat Linux))
+        id 1iFjfL-0004b8-Qf; Wed, 02 Oct 2019 18:48:00 +0000
+Received: by worktop.programming.kicks-ass.net (Postfix, from userid 1000)
+        id F2ABF9802BF; Wed,  2 Oct 2019 20:47:57 +0200 (CEST)
+Date:   Wed, 2 Oct 2019 20:47:57 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Giovanni Gherdovich <ggherdovich@suse.cz>
+Cc:     srinivas.pandruvada@linux.intel.com, tglx@linutronix.de,
+        mingo@redhat.com, bp@suse.de, lenb@kernel.org, rjw@rjwysocki.net,
+        x86@kernel.org, linux-pm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, mgorman@techsingularity.net,
+        matt@codeblueprint.co.uk, viresh.kumar@linaro.org,
+        juri.lelli@redhat.com, pjt@google.com, vincent.guittot@linaro.org,
+        qperret@qperret.net, dietmar.eggemann@arm.com
+Subject: Re: [PATCH 1/2] x86,sched: Add support for frequency invariance
+Message-ID: <20191002184757.GG4643@worktop.programming.kicks-ass.net>
+References: <20190909024216.5942-1-ggherdovich@suse.cz>
+ <20190909024216.5942-2-ggherdovich@suse.cz>
+ <20190924163053.GA4519@hirez.programming.kicks-ass.net>
+ <1570019152.22393.0.camel@suse.cz>
 MIME-Version: 1.0
-References: <20191002120136.1777161-1-arnd@arndb.de>
-In-Reply-To: <20191002120136.1777161-1-arnd@arndb.de>
-From:   Alex Deucher <alexdeucher@gmail.com>
-Date:   Wed, 2 Oct 2019 14:47:10 -0400
-Message-ID: <CADnq5_MLg=J5dmSGzx8jC=1--d2S3HJzWH3EHhyzT6da5a3wcA@mail.gmail.com>
-Subject: Re: [PATCH 0/6] amdgpu build fixes
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     Alex Deucher <alexander.deucher@amd.com>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        Maling list - DRI developers 
-        <dri-devel@lists.freedesktop.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        amd-gfx list <amd-gfx@lists.freedesktop.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1570019152.22393.0.camel@suse.cz>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Oct 2, 2019 at 8:02 AM Arnd Bergmann <arnd@arndb.de> wrote:
->
-> Here are a couple of build fixes from my backlog in the randconfig
-> tree. It would be good to get them all into linux-5.4.
->
->      Arnd
->
-> Arnd Bergmann (6):
->   drm/amdgpu: make pmu support optional, again
->   drm/amdgpu: hide another #warning
->   drm/amdgpu: display_mode_vba_21: remove uint typedef
->   drm/amd/display: fix dcn21 Makefile for clang
->   [RESEND] drm/amd/display: hide an unused variable
->   [RESEND] drm/amdgpu: work around llvm bug #42576
+On Wed, Oct 02, 2019 at 02:25:52PM +0200, Giovanni Gherdovich wrote:
 
-I've applied 1-5 and I'll send them for 5.4.  There still seems to be
-some debate about 6.
+> > What about KABYLAKE_X and ICELAKE_X ?
+> 
+> KABYLAKE_X: does it exist? I couldn't find it in
+> arch/x86/include/asm/intel-family.h (the tip tree), I only see KABYLAKE_L and
+> KABYLAKE.
 
-Thanks.
+My bad, I must've been staring cross-eyed at intel-family.h.
 
-Alex
+> If the SDM is outdated and ICELAKE_X is also in that category, then the
+> turbostat source code is outdated too as it has this function to detect this
+> feature:
 
->
->  drivers/gpu/drm/amd/amdgpu/Makefile                 |  2 +-
->  drivers/gpu/drm/amd/amdgpu/sdma_v4_0.c              |  1 +
->  drivers/gpu/drm/amd/amdgpu/soc15.c                  |  2 --
->  drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c   |  2 ++
->  drivers/gpu/drm/amd/display/dc/dcn21/Makefile       | 12 +++++++++++-
->  .../amd/display/dc/dml/dcn21/display_mode_vba_21.c  | 13 +++++--------
->  6 files changed, 20 insertions(+), 12 deletions(-)
->
-> --
-> 2.20.0
->
-> _______________________________________________
-> dri-devel mailing list
-> dri-devel@lists.freedesktop.org
-> https://lists.freedesktop.org/mailman/listinfo/dri-devel
+I think you can trust the turbostat code.
