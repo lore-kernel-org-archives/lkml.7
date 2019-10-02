@@ -2,162 +2,245 @@ Return-Path: <SRS0=zem1=X3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E204C47404
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 20:58:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C8196C4360C
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 20:59:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 756A221783
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 20:58:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 99AB121783
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 20:59:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="YM7PrqwY"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="C+xShXgR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728967AbfJBU6t (ORCPT
+        id S1729020AbfJBU7E (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Oct 2019 16:58:49 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:40451 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728055AbfJBU6s (ORCPT
+        Wed, 2 Oct 2019 16:59:04 -0400
+Received: from linux.microsoft.com ([13.77.154.182]:46076 "EHLO
+        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728495AbfJBU7D (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Oct 2019 16:58:48 -0400
-Received: by mail-pf1-f194.google.com with SMTP id x127so207556pfb.7
-        for <linux-kernel@vger.kernel.org>; Wed, 02 Oct 2019 13:58:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=KX5XeevGScIhOFues3GQkV78ozucGw/LYZ1l8L5X6bo=;
-        b=YM7PrqwY/F7Vm9PudRT17T2mqcMDRwHbIT7qw3mpkzdEEzHkANg4PLltdxVjuLFB4q
-         mOMigow1C99Fxn3258qWATdkH6FCy/iw8I1WAaM+BP4aM7NWNDxHcJANq1Drp3mh+m2H
-         /aEO9TVSFVtczdY6PmO9rseb3o8Dna0PVSt1s=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=KX5XeevGScIhOFues3GQkV78ozucGw/LYZ1l8L5X6bo=;
-        b=kW1+iYfDhNtj+W8l8CFNgPhzK2VOy97ZrQHXv64QnY3vm1qJKE80f6GWpHnY5u1foE
-         svnu2ww+guK6WKFsIpNxtTOgLiCK7+HPjQ1kk30yzyCKae7O15foh+8iCLa3R2FjL3V+
-         TTseZqwGcXMPBT/iY6C5zrVZcuSxa8jcHYOhm/moc5TpRnfABn09ItxqIJj8LY4YVLXX
-         CYfdN0Tq2n07QIKNMir/VkdhepezXeOPViejEBFdpoVwYjPNuXjTjzfUvQA1tU6XXQnR
-         iahLC882wHwKD78RkHFFxqDbjldxlNrF5oLJrYRfuIk1SnVoxoRxo/sYOf2pXxYzdwap
-         6qQQ==
-X-Gm-Message-State: APjAAAVJnEIxH4z3InaN6NjM/lRjt0UIZ3l2JQkICIPf/UxUQiO9ULVE
-        z97bjLSKl4fU5vw5Uo2oKlZ1Tg==
-X-Google-Smtp-Source: APXvYqyKNOmRPkS1Q8AKw0jUMUMu27C3e3zFkbZCALS8GZ9yijv6oqy5W8ctOfywkUEq/6vs+Euvuw==
-X-Received: by 2002:aa7:97b0:: with SMTP id d16mr7065724pfq.54.1570049927960;
-        Wed, 02 Oct 2019 13:58:47 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id p190sm354504pfb.160.2019.10.02.13.58.46
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 02 Oct 2019 13:58:47 -0700 (PDT)
-Date:   Wed, 2 Oct 2019 13:58:46 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Will Deacon <will@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        contact@xogium.me, Russell King <linux@armlinux.org.uk>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Wed, 2 Oct 2019 16:59:03 -0400
+Received: by linux.microsoft.com (Postfix, from userid 1040)
+        id AB3AF2008710; Wed,  2 Oct 2019 13:59:01 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com AB3AF2008710
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+        s=default; t=1570049941;
+        bh=6cdP5JQykPhsXL1WHCxNWZjQbGC+Xk2I7XWWY4Qki8Q=;
+        h=From:To:Cc:Subject:Date:From;
+        b=C+xShXgRsfEkSHmQU/gbe1gObYmhOAelOMco4me/BjCfmQ19V9n4lFEBoytjteixA
+         XAVhb8QIJku5Ki3kNhi26ydMEVBh8fEP9N0S3Wk1xIVm+L07pgsy+pJ1w78gHKft/V
+         22A5Amr+bSpM2BUITmkngh0yYSIy35ynijv2jkPo=
+From:   Steve MacLean <steve.maclean@linux.microsoft.com>
+Cc:     Steve MacLean <Steve.MacLean@Microsoft.com>,
+        Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        stable@vger.kernel.org, Feng Tang <feng.tang@intel.com>,
-        Petr Mladek <pmladek@suse.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
-Subject: Re: [PATCH] panic: Ensure preemption is disabled during panic()
-Message-ID: <201910021355.E578D2FFAF@keescook>
-References: <20191002123538.22609-1-will@kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191002123538.22609-1-will@kernel.org>
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Stephane Eranian <eranian@google.com>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH 3/4] perf inject --jit: Remove //anon mmap events
+Date:   Wed,  2 Oct 2019 13:58:21 -0700
+Message-Id: <1570049901-115628-1-git-send-email-steve.maclean@linux.microsoft.com>
+X-Mailer: git-send-email 1.8.3.1
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Oct 02, 2019 at 01:35:38PM +0100, Will Deacon wrote:
-> Calling 'panic()' on a kernel with CONFIG_PREEMPT=y can leave the
-> calling CPU in an infinite loop, but with interrupts and preemption
-> enabled. From this state, userspace can continue to be scheduled,
-> despite the system being "dead" as far as the kernel is concerned. This
-> is easily reproducible on arm64 when booting with "nosmp" on the command
-> line; a couple of shell scripts print out a periodic "Ping" message
-> whilst another triggers a crash by writing to /proc/sysrq-trigger:
-> 
->   | sysrq: Trigger a crash
->   | Kernel panic - not syncing: sysrq triggered crash
->   | CPU: 0 PID: 1 Comm: init Not tainted 5.2.15 #1
->   | Hardware name: linux,dummy-virt (DT)
->   | Call trace:
->   |  dump_backtrace+0x0/0x148
->   |  show_stack+0x14/0x20
->   |  dump_stack+0xa0/0xc4
->   |  panic+0x140/0x32c
->   |  sysrq_handle_reboot+0x0/0x20
->   |  __handle_sysrq+0x124/0x190
->   |  write_sysrq_trigger+0x64/0x88
->   |  proc_reg_write+0x60/0xa8
->   |  __vfs_write+0x18/0x40
->   |  vfs_write+0xa4/0x1b8
->   |  ksys_write+0x64/0xf0
->   |  __arm64_sys_write+0x14/0x20
->   |  el0_svc_common.constprop.0+0xb0/0x168
->   |  el0_svc_handler+0x28/0x78
->   |  el0_svc+0x8/0xc
->   | Kernel Offset: disabled
->   | CPU features: 0x0002,24002004
->   | Memory Limit: none
->   | ---[ end Kernel panic - not syncing: sysrq triggered crash ]---
->   |  Ping 2!
->   |  Ping 1!
->   |  Ping 1!
->   |  Ping 2!
-> 
-> The issue can also be triggered on x86 kernels if CONFIG_SMP=n, otherwise
-> local interrupts are disabled in 'smp_send_stop()'.
-> 
-> Disable preemption in 'panic()' before re-enabling interrupts.
+From: Steve MacLean <Steve.MacLean@Microsoft.com>
 
-Is this perhaps the correct solution for what commit c39ea0b9dd24 ("panic:
-avoid the extra noise dmesg") was trying to fix?
+While a JIT is jitting code it will eventually need to commit more pages and
+change these pages to executable permissions.
 
-Either way:
+Typically the JIT will want these colocated to minimize branch displacements.
 
-Reviewed-by: Kees Cook <keescook@chromium.org>
+The kernel will coalesce these anonymous mapping with identical permissions
+before sending an MMAP event for the new pages. This means the mmap event for
+the new pages will include the older pages.
 
--Kees
+These anonymous mmap events will obscure the jitdump injected pseudo events.
+This means that the jitdump generated symbols, machine code, debugging info,
+and unwind info will no longer be used.
 
-> 
-> Cc: Russell King <linux@armlinux.org.uk>
-> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> Cc: Ingo Molnar <mingo@redhat.com>
-> Cc: Kees Cook <keescook@chromium.org>
-> Cc: Andrew Morton <akpm@linux-foundation.org>
-> Cc: <stable@vger.kernel.org>
-> Link: https://lore.kernel.org/r/BX1W47JXPMR8.58IYW53H6M5N@dragonstone
-> Reported-by: Xogium <contact@xogium.me>
-> Signed-off-by: Will Deacon <will@kernel.org>
-> ---
->  kernel/panic.c | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/kernel/panic.c b/kernel/panic.c
-> index 47e8ebccc22b..f470a038b05b 100644
-> --- a/kernel/panic.c
-> +++ b/kernel/panic.c
-> @@ -180,6 +180,7 @@ void panic(const char *fmt, ...)
->  	 * after setting panic_cpu) from invoking panic() again.
->  	 */
->  	local_irq_disable();
-> +	preempt_disable_notrace();
->  
->  	/*
->  	 * It's possible to come here directly from a panic-assertion and
-> -- 
-> 2.23.0.444.g18eeb5a265-goog
-> 
+Observations:
 
+When a process emits a jit dump marker and a jitdump file, the perf-xxx.map
+file represents inferior information which has been superseded by the
+jitdump jit-xxx.dump file.
+
+Further the '//anon*' mmap events are only required for the legacy
+perf-xxx.map mapping.
+
+Summary:
+
+Add rbtree to track which pids have successfully injected a jitdump file.
+
+During "perf inject --jit", discard "//anon*" mmap events for any pid which
+has successfully processed a jitdump file.
+
+Committer testing:
+
+// jitdump case
+perf record <app with jitdump>
+perf inject --jit --input perf.data --output perfjit.data
+
+// verify mmap "//anon" events present initially
+perf script --input perf.data --show-mmap-events | grep '//anon'
+// verify mmap "//anon" events removed
+perf script --input perfjit.data --show-mmap-events | grep '//anon'
+
+// no jitdump case
+perf record <app without jitdump>
+perf inject --jit --input perf.data --output perfjit.data
+
+// verify mmap "//anon" events present initially
+perf script --input perf.data --show-mmap-events | grep '//anon'
+// verify mmap "//anon" events not removed
+perf script --input perfjit.data --show-mmap-events | grep '//anon'
+
+Repro:
+
+This issue was discovered while testing the initial CoreCLR jitdump
+implementation. https://github.com/dotnet/coreclr/pull/26897.
+
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Jiri Olsa <jolsa@redhat.com>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Stephane Eranian <eranian@google.com>
+Cc: linux-kernel@vger.kernel.org
+Signed-off-by: Steve MacLean <Steve.MacLean@Microsoft.com>
+---
+ tools/perf/builtin-inject.c |  4 +--
+ tools/perf/util/jitdump.c   | 63 +++++++++++++++++++++++++++++++++++++++++++++
+ 2 files changed, 65 insertions(+), 2 deletions(-)
+
+diff --git a/tools/perf/builtin-inject.c b/tools/perf/builtin-inject.c
+index c14f40b8..4c921e0 100644
+--- a/tools/perf/builtin-inject.c
++++ b/tools/perf/builtin-inject.c
+@@ -261,7 +261,7 @@ static int perf_event__jit_repipe_mmap(struct perf_tool *tool,
+ 	 * if jit marker, then inject jit mmaps and generate ELF images
+ 	 */
+ 	ret = jit_process(inject->session, &inject->output, machine,
+-			  event->mmap.filename, sample->pid, &n);
++			  event->mmap.filename, event->mmap.pid, &n);
+ 	if (ret < 0)
+ 		return ret;
+ 	if (ret) {
+@@ -299,7 +299,7 @@ static int perf_event__jit_repipe_mmap2(struct perf_tool *tool,
+ 	 * if jit marker, then inject jit mmaps and generate ELF images
+ 	 */
+ 	ret = jit_process(inject->session, &inject->output, machine,
+-			  event->mmap2.filename, sample->pid, &n);
++			  event->mmap2.filename, event->mmap2.pid, &n);
+ 	if (ret < 0)
+ 		return ret;
+ 	if (ret) {
+diff --git a/tools/perf/util/jitdump.c b/tools/perf/util/jitdump.c
+index 22d09c4..6a1563f 100644
+--- a/tools/perf/util/jitdump.c
++++ b/tools/perf/util/jitdump.c
+@@ -751,6 +751,59 @@ static int jit_repipe_debug_info(struct jit_buf_desc *jd, union jr_entry *jr)
+ 	return 0;
+ }
+ 
++struct pid_rbtree
++{
++	struct rb_node node;
++	pid_t pid;
++};
++
++static void jit_add_pid(struct rb_root *root, pid_t pid)
++{
++	struct rb_node **new = &(root->rb_node), *parent = NULL;
++	struct pid_rbtree* data = NULL;
++
++	/* Figure out where to put new node */
++	while (*new) {
++		struct pid_rbtree *this = container_of(*new, struct pid_rbtree, node);
++		pid_t nodePid = this->pid;
++
++		parent = *new;
++		if (pid < nodePid)
++			new = &((*new)->rb_left);
++		else if (pid > nodePid)
++			new = &((*new)->rb_right);
++		else
++			return;
++	}
++
++	data = malloc(sizeof(struct pid_rbtree));
++	data->pid = pid;
++
++	/* Add new node and rebalance tree. */
++	rb_link_node(&data->node, parent, new);
++	rb_insert_color(&data->node, root);
++
++	return;
++}
++
++static bool jit_has_pid(struct rb_root *root, pid_t pid)
++{
++	struct rb_node *node = root->rb_node;
++
++	while (node) {
++		struct pid_rbtree *this = container_of(node, struct pid_rbtree, node);
++		pid_t nodePid = this->pid;
++
++		if (pid < nodePid)
++			node = node->rb_left;
++		else if (pid > nodePid)
++			node = node->rb_right;
++		else
++			return 1;
++	}
++	return 0;
++}
++
+ int
+ jit_process(struct perf_session *session,
+ 	    struct perf_data *output,
+@@ -762,12 +815,21 @@ static int jit_repipe_debug_info(struct jit_buf_desc *jd, union jr_entry *jr)
+ 	struct evsel *first;
+ 	struct jit_buf_desc jd;
+ 	int ret;
++	static struct rb_root jitdump_pids = RB_ROOT;
+ 
+ 	/*
+ 	 * first, detect marker mmap (i.e., the jitdump mmap)
+ 	 */
+ 	if (jit_detect(filename, pid))
++	{
++		/*
++		 * Strip //anon* mmaps if we processed a jitdump for this pid
++		 */
++		if (jit_has_pid(&jitdump_pids, pid) && (strncmp(filename, "//anon", 6) == 0))
++			return 1;
++
+ 		return 0;
++	}
+ 
+ 	memset(&jd, 0, sizeof(jd));
+ 
+@@ -786,6 +848,7 @@ static int jit_repipe_debug_info(struct jit_buf_desc *jd, union jr_entry *jr)
+ 
+ 	ret = jit_inject(&jd, filename);
+ 	if (!ret) {
++		jit_add_pid(&jitdump_pids, pid);
+ 		*nbytes = jd.bytes_written;
+ 		ret = 1;
+ 	}
 -- 
-Kees Cook
+1.8.3.1
+
