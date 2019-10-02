@@ -6,165 +6,128 @@ X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 25C16C35280
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 14:19:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 28E15C35280
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 14:19:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EDE5921920
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 14:19:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F00D021920
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 14:19:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570025960;
-	bh=Vzuian8Bu7FXqsipTWGm6x1ViiH1+f24fekbDdmF1gs=;
+	s=default; t=1570025964;
+	bh=5HXOhtVDyZKs4AjG/w53JvUHq6ITwThsrvK7hd6/ih4=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=wCocJdxb+yKbbkThQsJC+5+JuMCXA1oodAQPgZYSQXh+/hRJSk1noAtyVxLY/TyXG
-	 xRlw/aO/VMXPNZknhlGFxcxUNKiJO9jVrQNfuMF4RHKMSDmgxtCZ6OS1wg2ukkcqvS
-	 RMJmQ+VMK2P3G5MuxjaANu1f5c+AqGXyDHcpLncc=
+	b=byR2NIMtDhx0UVYWp8HgRy6r/4/XTQNQMOH0LMYc4ERZ/YgXWVhViaC20Tkq2vzan
+	 fUQNyBV34WBLE+H9Nn/aGp9ma14YMWHG+vPcmQWUlqHfqCWRlY9YbQ2Wi7cYlZ6soy
+	 z/UVrCLPHIOaVfGewy89jQdDBjiXPKQT+gvp9F6k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728208AbfJBOTT (ORCPT
+        id S1728192AbfJBOTS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Oct 2019 10:19:19 -0400
-Received: from mail-qt1-f195.google.com ([209.85.160.195]:43669 "EHLO
-        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728091AbfJBOTR (ORCPT
+        Wed, 2 Oct 2019 10:19:18 -0400
+Received: from mail-qt1-f193.google.com ([209.85.160.193]:41159 "EHLO
+        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726200AbfJBOTQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Oct 2019 10:19:17 -0400
-Received: by mail-qt1-f195.google.com with SMTP id c3so26509081qtv.10;
-        Wed, 02 Oct 2019 07:19:15 -0700 (PDT)
+        Wed, 2 Oct 2019 10:19:16 -0400
+Received: by mail-qt1-f193.google.com with SMTP id d16so5942503qtq.8;
+        Wed, 02 Oct 2019 07:19:16 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+        h=x-gm-message-state:message-id:date:from:to:cc:subject:references
          :mime-version:content-disposition:in-reply-to;
-        bh=/4BkNlRVIojwkaNlJiwgslAKNSOU+8zzG4UZka4qDBU=;
-        b=QdiKq9FI8LIqZDQt0b0cxmBM1BmxXdXQ9sZMwZTZuaeWiJUxHzK71Wh8b48pwTP4BZ
-         +uURXCfnFjBCE8QMVWEUZagzYcF8f692XAa4sfcjPVp+Y1u+xa1/sa/05xYXOOMRzy6P
-         3ENbwHVOydCJhc6//1T6yPU9XQzFVrlhKzCcmctGYqnO0DFH6uYCf02hJegj88XqZggc
-         wvcIVivdyQg+HR5+FtLLiA3VqWlzfnM8y6LvlqzDsOuv6sGZxxr5FhvqFtkTFoW1F/a4
-         OJqxqobggjewfUmfyVUFoU1pGLAlLcY/iOBC9P7LpjQ9e7CCldQMKHqeJV+fkbmq6nij
-         xhdw==
-X-Gm-Message-State: APjAAAW296l9VuKafbZjfWmY6ATXEVlh84RyaIJUdWgy6ScC9JpyCC8N
-        pjr8UphfaGIoCOmH428BIQ==
-X-Google-Smtp-Source: APXvYqyiCJ1kbtSTzcBUjuOuqu8ar7W4uCqJ/bf5oUMfYFYLi0a4ONnP7ChHGR3HF15IPGyvftP9iw==
-X-Received: by 2002:ac8:2c86:: with SMTP id 6mr4217724qtw.113.1570025954662;
-        Wed, 02 Oct 2019 07:19:14 -0700 (PDT)
+        bh=qdHVcKy1GZjDuNv8mm9CbMrs4v740j7IGcsM8HIISNE=;
+        b=MezZWIIPVTrNnpTxWXZuyn7kHgkASFzN254Wrz4xIW8c595/5oezAFgxlhHtXjZPB3
+         jyDX9gQ9mAhdRsVI+Pc2yU63eRsILs6e/k3dRgKNFPCqb/lnrVehK0Lapgt5AOho5fJt
+         t0SOu4Cqlmb+5OKLVZZDzSHSOub1DnlOnLBARxS69gfmCl4gfosLXfuU0l2C0uEG3bYT
+         qPaLgQFZCUdi+e0+/+vthou69c0G0sUYYXJXqRQWsJUT3rhfQYH6tkK2CbLrFUDfwI/4
+         YeKovZM73fQN3Sffg0HqwxyoFn6Pei2ptKRaSTnch3K+80zo8TPkbVyD3g/ZLtOmkpr0
+         oiYA==
+X-Gm-Message-State: APjAAAUur+Cv/5xKiuvki33fmz8SoGIaHO9zy/JH4VjtEnnmdkbtOmO/
+        Ljfm+GEfWcsyeMqioK++wA==
+X-Google-Smtp-Source: APXvYqxLo7HVIvhIgLQdK4wtlGRPcW55wJ7e24/iQcl8VNS8WTCBa6nei+T6U8I6wqtQbPAQsuiajw==
+X-Received: by 2002:aed:27c1:: with SMTP id m1mr4213362qtg.197.1570025955786;
+        Wed, 02 Oct 2019 07:19:15 -0700 (PDT)
 Received: from localhost ([132.205.230.8])
-        by smtp.gmail.com with ESMTPSA id e7sm13698395qtb.94.2019.10.02.07.19.13
+        by smtp.gmail.com with ESMTPSA id 131sm9546617qkg.1.2019.10.02.07.19.15
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 02 Oct 2019 07:19:14 -0700 (PDT)
-Date:   Wed, 02 Oct 2019 09:19:11 -0500
+        Wed, 02 Oct 2019 07:19:15 -0700 (PDT)
+Message-ID: <5d94b1e3.1c69fb81.9d89.1cce@mx.google.com>
+Date:   Wed, 02 Oct 2019 09:19:12 -0500
 From:   Rob Herring <robh@kernel.org>
-To:     Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Cc:     narmstrong@baylibre.com, jbrunet@baylibre.com,
-        mark.rutland@arm.com, linux-amlogic@lists.infradead.org,
-        devicetree@vger.kernel.org, khilman@baylibre.com,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-clk@vger.kernel.org
-Subject: Re: [PATCH 1/6] dt-bindings: clock: add the Amlogic Meson8 DDR clock
- controller binding
-Message-ID: <20191001235650.GA11980@bogus>
-References: <20190921151835.770263-1-martin.blumenstingl@googlemail.com>
- <20190921151835.770263-2-martin.blumenstingl@googlemail.com>
+To:     Heiko Schocher <hs@denx.de>
+Cc:     linux-kernel@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>,
+        devicetree@vger.kernel.org
+Subject: Re: [PATCH 1/2] misc: add cc1101 devicetree binding
+References: <20190922060356.58763-1-hs@denx.de>
+ <20190922060356.58763-2-hs@denx.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190921151835.770263-2-martin.blumenstingl@googlemail.com>
-X-Mutt-References: <20190921151835.770263-2-martin.blumenstingl@googlemail.com>
+In-Reply-To: <20190922060356.58763-2-hs@denx.de>
+X-Mutt-References: <20190922060356.58763-2-hs@denx.de>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Sep 21, 2019 at 05:18:30PM +0200, Martin Blumenstingl wrote:
-> Amlogic Meson8, Meson8b and Meson8m2 SoCs have a DDR clock controller in
-> the MMCBUS registers. There is no public documentation on this, but the
-> GPL u-boot sources from the Amlogic BSP show that:
-> - it uses the same XTAL input as the main clock controller
-> - it contains a PLL which seems to be implemented just like the other
->   PLLs in this SoC
-> - there is a power-of-two PLL post-divider
+On Sun, Sep 22, 2019 at 08:03:55AM +0200, Heiko Schocher wrote:
+> add devicetree binding for cc1101 misc driver.
 > 
-> Add the documentation and header file for this DDR clock controller.
-> 
-> Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+> Signed-off-by: Heiko Schocher <hs@denx.de>
 > ---
->  .../clock/amlogic,meson8-ddr-clkc.yaml        | 50 +++++++++++++++++++
->  include/dt-bindings/clock/meson8-ddr-clkc.h   |  4 ++
->  2 files changed, 54 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/clock/amlogic,meson8-ddr-clkc.yaml
->  create mode 100644 include/dt-bindings/clock/meson8-ddr-clkc.h
 > 
-> diff --git a/Documentation/devicetree/bindings/clock/amlogic,meson8-ddr-clkc.yaml b/Documentation/devicetree/bindings/clock/amlogic,meson8-ddr-clkc.yaml
+>  .../devicetree/bindings/misc/cc1101.txt       | 27 +++++++++++++++++++
+>  1 file changed, 27 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/misc/cc1101.txt
+
+Can you please convert this to DT schema.
+
+> 
+> diff --git a/Documentation/devicetree/bindings/misc/cc1101.txt b/Documentation/devicetree/bindings/misc/cc1101.txt
 > new file mode 100644
-> index 000000000000..bf3ca5888485
+> index 0000000000000..afea6acf4a9c5
 > --- /dev/null
-> +++ b/Documentation/devicetree/bindings/clock/amlogic,meson8-ddr-clkc.yaml
-> @@ -0,0 +1,50 @@
-> +# SPDX-License-Identifier: GPL-2.0
+> +++ b/Documentation/devicetree/bindings/misc/cc1101.txt
 
-(GPL-2.0-only OR BSD-2-Clause) for new bindings please.
+Normal naming is to use compatible string. So ti,cc1101.yaml for schema.
 
-With that,
+> @@ -0,0 +1,27 @@
+> +driver cc1101 Low-Power Sub-1 GHz RF Transceiver chip from Texas
+> +Instruments.
+> +
+> +Requires node properties:
+> +- compatible : should be "ti,cc1101";
+> +- reg        : Chip select address of device, see:
+> +               Documentation/devicetree/bindings/spi/spi-bus.txt
+> +- gpios      : list of 2 gpios, first gpio is for GDO0 pin
+> +               second for GDO2 pin, see more:
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+Is there a GDO1? Would be hard to add later because you can't change the 
+indices once defined.
 
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/clock/amlogic,meson8-ddr-clkc.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +               Documentation/devicetree/bindings/gpio/gpio.txt
 > +
-> +title: Amlogic DDR Clock Controller Device Tree Bindings
+> +Recommended properties:
+> + - spi-max-frequency: Definition as per
+> +                Documentation/devicetree/bindings/spi/spi-bus.txt
+
+Notice that this file is now just in redirection...
+
+> + - freq       : used spi frequency for communication with cc1101 chip
+
+What's this? Doesn't spi-max-frequency cover it?
+
 > +
-> +maintainers:
-> +  - Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+> +example:
 > +
-> +properties:
-> +  compatible:
-> +    enum:
-> +      - amlogic,meson8-ddr-clkc
-> +      - amlogic,meson8b-ddr-clkc
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  clocks:
-> +    maxItems: 1
-> +
-> +  clock-names:
-> +    items:
-> +      - const: xtal
-> +
-> +  "#clock-cells":
-> +    const: 1
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - clocks
-> +  - clock-names
-> +  - "#clock-cells"
-> +
-> +additionalProperties: false
-> +
-> +examples:
-> +  - |
-> +    ddr_clkc: clock-controller@400 {
-> +      compatible = "amlogic,meson8-ddr-clkc";
-> +      reg = <0x400 0x20>;
-> +      clocks = <&xtal>;
-> +      clock-names = "xtal";
-> +      #clock-cells = <1>;
-> +    };
-> +
-> +...
-> diff --git a/include/dt-bindings/clock/meson8-ddr-clkc.h b/include/dt-bindings/clock/meson8-ddr-clkc.h
-> new file mode 100644
-> index 000000000000..a8e0fa2987ab
-> --- /dev/null
-> +++ b/include/dt-bindings/clock/meson8-ddr-clkc.h
-> @@ -0,0 +1,4 @@
-> +/* SPDX-License-Identifier: GPL-2.0 */
-> +
-> +#define DDR_CLKID_DDR_PLL_DCO			0
-> +#define DDR_CLKID_DDR_PLL			1
+> +&ecspi4 {
+> +        cc1101@0 {
+> +                compatible = "ti,cc1101";
+> +                spi-max-frequency = <10000000>;
+> +                reg = <0>;
+> +                freq = <5000000>;
+> +                gpios = <&gpio2 11 GPIO_ACTIVE_HIGH &gpio5 8 GPIO_ACTIVE_HIGH>;
+> +        };
+> +};
 > -- 
-> 2.23.0
+> 2.21.0
 > 
 
