@@ -2,257 +2,120 @@ Return-Path: <SRS0=zem1=X3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C503FC352AA
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 11:27:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D4A5CC352AA
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 11:27:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 97EAE21A4C
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 11:27:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AA5B921783
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 11:27:04 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=zoho.com header.i=zhouyanjie@zoho.com header.b="G/fOF/Ce"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728201AbfJBL07 (ORCPT
+        id S1728227AbfJBL1D (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Oct 2019 07:26:59 -0400
-Received: from hermes.aosc.io ([199.195.250.187]:42462 "EHLO hermes.aosc.io"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727538AbfJBL07 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Oct 2019 07:26:59 -0400
-Received: from localhost (localhost [127.0.0.1]) (Authenticated sender: icenowy@aosc.io)
-        by hermes.aosc.io (Postfix) with ESMTPSA id BFE2482D3A;
-        Wed,  2 Oct 2019 11:26:54 +0000 (UTC)
-From:   Icenowy Zheng <icenowy@aosc.io>
-To:     Sebastian Reichel <sre@kernel.org>, Chen-Yu Tsai <wens@csie.org>
-Cc:     linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-sunxi@googlegroups.com, Icenowy Zheng <icenowy@aosc.io>
-Subject: [PATCH 2/2] power: supply: axp20x_usb_power: add applied max Vbus support for AXP813
-Date:   Wed,  2 Oct 2019 19:25:45 +0800
-Message-Id: <20191002112545.58481-3-icenowy@aosc.io>
-In-Reply-To: <20191002112545.58481-1-icenowy@aosc.io>
-References: <20191002112545.58481-1-icenowy@aosc.io>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Wed, 2 Oct 2019 07:27:03 -0400
+Received: from sender4-pp-o94.zoho.com ([136.143.188.94]:25423 "EHLO
+        sender4-pp-o94.zoho.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727538AbfJBL1B (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 2 Oct 2019 07:27:01 -0400
+ARC-Seal: i=1; a=rsa-sha256; t=1570015553; cv=none; 
+        d=zoho.com; s=zohoarc; 
+        b=ZRH2LD3NKPXYJOHAfc+0hpiTR/BIapgirHyhUkaJ2oi2mX9TMEb0r463o5c1DdSE/xI7633E5HGqwqt5lcp+vWzZwGk3vTG1PhjnFBbSAurcIqQuIh0xiDpv6Eku3EmnvVMHS7pQukkuh+WB5R76tFoXvlfByJ+IegFpLrWsSiM=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zoho.com; s=zohoarc; 
+        t=1570015553; h=Cc:Date:From:In-Reply-To:Message-ID:References:Subject:To:ARC-Authentication-Results; 
+        bh=RD+GgwISDkeJ0+9zJglsbMp0cCqSbix3YRD8dlXbAd4=; 
+        b=UdmMl+4cCIYn5Ef3KCrPGDLlx9e7Tnn5j31lAAmhOM2mdqV3siR+vG5yXi6Ly6CcckeXq/UI/M7CNxUAfA1AdxJVNo2aHuflr+4qq+FG6TbNRIXzDBFyKB3/xjdQDnj+fSeznzA1ln8KHAEv35qI11rt7nfNtI2Dh1xGcpOje0o=
+ARC-Authentication-Results: i=1; mx.zoho.com;
+        dkim=pass  header.i=zoho.com;
+        spf=pass  smtp.mailfrom=zhouyanjie@zoho.com;
+        dmarc=pass header.from=<zhouyanjie@zoho.com> header.from=<zhouyanjie@zoho.com>
+DomainKey-Signature: a=rsa-sha1; q=dns; c=nofws; 
+  s=zapps768; d=zoho.com; 
+  h=from:to:cc:subject:date:message-id:in-reply-to:references; 
+  b=vLkjGjtGHs9whOE1YYrXTas5p2kpIk44yA0ibhSlq9NNlCocrwwaXyYrJZr+FbxkEFa0IhPQCba6
+    0/kYk/s6YKii+q7CuElr/8pPBeHCZCZ1gZqs4aA4lKQGF0yxmyIg  
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1570015553;
+        s=zm2019; d=zoho.com; i=zhouyanjie@zoho.com;
+        h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References;
+        l=1394; bh=RD+GgwISDkeJ0+9zJglsbMp0cCqSbix3YRD8dlXbAd4=;
+        b=G/fOF/CeHi2AQShAHP4BpJFgIUtB3y3w4z3lo6tV1KkY71oBssVBSNgfL+whT00P
+        Fp/VFISRYF0h7kemxzrtn2l3WDoiZz1TFYTzNvHY49xUxVggYRbSaALhZ8VztZ2K80p
+        PLb+7Xn6296ylSI8eJUQa4PZhxgkswGSTX17dR44=
+Received: from zhouyanjie-virtual-machine.localdomain (171.221.113.164 [171.221.113.164]) by mx.zohomail.com
+        with SMTPS id 1570015550669586.2947400949221; Wed, 2 Oct 2019 04:25:50 -0700 (PDT)
+From:   Zhou Yanjie <zhouyanjie@zoho.com>
+To:     linux-mips@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, tglx@linutronix.de,
+        paul.burton@mips.com, gregkh@linuxfoundation.org,
+        jason@lakedaemon.net, syq@debian.org, marc.zyngier@arm.com,
+        rfontana@redhat.com, armijn@tjaldur.nl, allison@lohutok.net,
+        paul@crapouillou.net
+Subject: [PATCH 2/5 v5] irqchip: ingenic: Error out if IRQ domain creation failed
+Date:   Wed,  2 Oct 2019 19:25:22 +0800
+Message-Id: <1570015525-27018-3-git-send-email-zhouyanjie@zoho.com>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1570015525-27018-1-git-send-email-zhouyanjie@zoho.com>
+References: <1548517123-60058-1-git-send-email-zhouyanjie@zoho.com>
+ <1570015525-27018-1-git-send-email-zhouyanjie@zoho.com>
+X-ZohoMailClient: External
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-AXP813 PMIC has two Vbus maximum value settings -- one is the default
-value, which is currently the only supported one; the other is the
-really applied value, which is set according to the default value if the
-BC detection module detected a charging port, or 500mA if no charging
-port is detected.
+From: Paul Cercueil <paul@crapouillou.net>
 
-Add support for reading and writing of the really applied Vbus maxmium
-value. Interestingly it has a larger range than the default value.
+If we cannot create the IRQ domain, the driver should fail to probe
+instead of succeeding with just a warning message.
 
-Signed-off-by: Icenowy Zheng <icenowy@aosc.io>
+Signed-off-by: Paul Cercueil <paul@crapouillou.net>
 ---
- drivers/power/supply/axp20x_usb_power.c | 132 +++++++++++++++++++++++-
- 1 file changed, 129 insertions(+), 3 deletions(-)
+ drivers/irqchip/irq-ingenic.c | 15 ++++++++++-----
+ 1 file changed, 10 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/power/supply/axp20x_usb_power.c b/drivers/power/supply/axp20x_usb_power.c
-index 5f0a5722b19e..905668a2727f 100644
---- a/drivers/power/supply/axp20x_usb_power.c
-+++ b/drivers/power/supply/axp20x_usb_power.c
-@@ -50,6 +50,18 @@
- 
- #define AXP813_BC_EN		BIT(0)
- 
-+#define AXP813_VBUS_CLIMIT_REAL_MASK	GENMASK(7, 4)
-+#define AXP813_VBUS_CLIMIT_REAL_100mA	(0 << 4)
-+#define AXP813_VBUS_CLIMIT_REAL_500mA	(1 << 4)
-+#define AXP813_VBUS_CLIMIT_REAL_900mA	(2 << 4)
-+#define AXP813_VBUS_CLIMIT_REAL_1500mA	(3 << 4)
-+#define AXP813_VBUS_CLIMIT_REAL_2000mA	(4 << 4)
-+#define AXP813_VBUS_CLIMIT_REAL_2500mA	(5 << 4)
-+#define AXP813_VBUS_CLIMIT_REAL_3000mA	(6 << 4)
-+#define AXP813_VBUS_CLIMIT_REAL_3500mA	(7 << 4)
-+#define AXP813_VBUS_CLIMIT_REAL_4000mA	(8 << 4)
-+/* The remaining values are all 4000mA according to the datasheet */
-+
- /*
-  * Note do not raise the debounce time, we must report Vusb high within
-  * 100ms otherwise we get Vbus errors in musb.
-@@ -159,6 +171,47 @@ static int axp813_get_current_max(struct axp20x_usb_power *power, int *val)
- 	return 0;
- }
- 
-+static int axp813_get_input_current_limit(struct axp20x_usb_power *power, int *val)
-+{
-+	unsigned int v;
-+	int ret = regmap_read(power->regmap, AXP22X_CHRG_CTRL3, &v);
-+
-+	if (ret)
-+		return ret;
-+
-+	switch (v & AXP813_VBUS_CLIMIT_REAL_MASK) {
-+	case AXP813_VBUS_CLIMIT_REAL_100mA:
-+		*val = 100000;
-+		break;
-+	case AXP813_VBUS_CLIMIT_REAL_500mA:
-+		*val = 500000;
-+		break;
-+	case AXP813_VBUS_CLIMIT_REAL_900mA:
-+		*val = 900000;
-+		break;
-+	case AXP813_VBUS_CLIMIT_REAL_1500mA:
-+		*val = 1500000;
-+		break;
-+	case AXP813_VBUS_CLIMIT_REAL_2000mA:
-+		*val = 2000000;
-+		break;
-+	case AXP813_VBUS_CLIMIT_REAL_2500mA:
-+		*val = 2500000;
-+		break;
-+	case AXP813_VBUS_CLIMIT_REAL_3000mA:
-+		*val = 3000000;
-+		break;
-+	case AXP813_VBUS_CLIMIT_REAL_3500mA:
-+		*val = 3500000;
-+		break;
-+	default:
-+		/* All other cases are 4000mA */
-+		*val = 4000000;
-+		break;
-+	}
-+	return 0;
-+}
-+
- static int axp20x_usb_power_get_property(struct power_supply *psy,
- 	enum power_supply_property psp, union power_supply_propval *val)
- {
-@@ -200,6 +253,8 @@ static int axp20x_usb_power_get_property(struct power_supply *psy,
- 		if (power->axp20x_id == AXP813_ID)
- 			return axp813_get_current_max(power, &val->intval);
- 		return axp20x_get_current_max(power, &val->intval);
-+	case POWER_SUPPLY_PROP_INPUT_CURRENT_LIMIT:
-+		return axp813_get_input_current_limit(power, &val->intval);
- 	case POWER_SUPPLY_PROP_CURRENT_NOW:
- 		if (IS_ENABLED(CONFIG_AXP20X_ADC)) {
- 			ret = iio_read_channel_processed(power->vbus_i,
-@@ -338,6 +393,48 @@ static int axp20x_usb_power_set_current_max(struct axp20x_usb_power *power,
- 	return -EINVAL;
- }
- 
-+static int axp20x_usb_power_set_input_current_limit(struct axp20x_usb_power *power,
-+						    int intval)
-+{
-+	int val;
-+
-+	switch (intval) {
-+	case 100000:
-+		val = AXP813_VBUS_CLIMIT_REAL_100mA;
-+		break;
-+	case 500000:
-+		val = AXP813_VBUS_CLIMIT_REAL_500mA;
-+		break;
-+	case 900000:
-+		val = AXP813_VBUS_CLIMIT_REAL_900mA;
-+		break;
-+	case 1500000:
-+		val = AXP813_VBUS_CLIMIT_REAL_1500mA;
-+		break;
-+	case 2000000:
-+		val = AXP813_VBUS_CLIMIT_REAL_2000mA;
-+		break;
-+	case 2500000:
-+		val = AXP813_VBUS_CLIMIT_REAL_2500mA;
-+		break;
-+	case 3000000:
-+		val = AXP813_VBUS_CLIMIT_REAL_3000mA;
-+		break;
-+	case 3500000:
-+		val = AXP813_VBUS_CLIMIT_REAL_3500mA;
-+		break;
-+	case 4000000:
-+		val = AXP813_VBUS_CLIMIT_REAL_4000mA;
-+		break;
-+	default:
-+		return -EINVAL;
-+	}
-+
-+	return regmap_update_bits(power->regmap,
-+				  AXP22X_CHRG_CTRL3,
-+				  AXP813_VBUS_CLIMIT_REAL_MASK, val);
-+}
-+
- static int axp20x_usb_power_set_property(struct power_supply *psy,
- 					 enum power_supply_property psp,
- 					 const union power_supply_propval *val)
-@@ -354,6 +451,9 @@ static int axp20x_usb_power_set_property(struct power_supply *psy,
- 								val->intval);
- 		return axp20x_usb_power_set_current_max(power, val->intval);
- 
-+	case POWER_SUPPLY_PROP_INPUT_CURRENT_LIMIT:
-+		return axp20x_usb_power_set_input_current_limit(power, val->intval);
-+
- 	default:
- 		return -EINVAL;
+diff --git a/drivers/irqchip/irq-ingenic.c b/drivers/irqchip/irq-ingenic.c
+index 06fa810..d97a3a5 100644
+--- a/drivers/irqchip/irq-ingenic.c
++++ b/drivers/irqchip/irq-ingenic.c
+@@ -87,6 +87,14 @@ static int __init ingenic_intc_of_init(struct device_node *node,
+ 		goto out_unmap_irq;
  	}
-@@ -365,7 +465,8 @@ static int axp20x_usb_power_prop_writeable(struct power_supply *psy,
- 					   enum power_supply_property psp)
- {
- 	return psp == POWER_SUPPLY_PROP_VOLTAGE_MIN ||
--	       psp == POWER_SUPPLY_PROP_CURRENT_MAX;
-+	       psp == POWER_SUPPLY_PROP_CURRENT_MAX ||
-+	       psp == POWER_SUPPLY_PROP_INPUT_CURRENT_LIMIT;
- }
  
- static enum power_supply_property axp20x_usb_power_properties[] = {
-@@ -386,6 +487,15 @@ static enum power_supply_property axp22x_usb_power_properties[] = {
- 	POWER_SUPPLY_PROP_CURRENT_MAX,
- };
++	domain = irq_domain_add_legacy(node, num_chips * 32,
++				       JZ4740_IRQ_BASE, 0,
++				       &irq_domain_simple_ops, NULL);
++	if (!domain) {
++		err = -ENOMEM;
++		goto out_unmap_base;
++	}
++
+ 	for (i = 0; i < num_chips; i++) {
+ 		/* Mask all irqs */
+ 		writel(0xffffffff, intc->base + (i * CHIP_SIZE) +
+@@ -112,14 +120,11 @@ static int __init ingenic_intc_of_init(struct device_node *node,
+ 				       IRQ_NOPROBE | IRQ_LEVEL);
+ 	}
  
-+static enum power_supply_property axp813_usb_power_properties[] = {
-+	POWER_SUPPLY_PROP_HEALTH,
-+	POWER_SUPPLY_PROP_PRESENT,
-+	POWER_SUPPLY_PROP_ONLINE,
-+	POWER_SUPPLY_PROP_VOLTAGE_MIN,
-+	POWER_SUPPLY_PROP_CURRENT_MAX,
-+	POWER_SUPPLY_PROP_INPUT_CURRENT_LIMIT,
-+};
-+
- static const struct power_supply_desc axp20x_usb_power_desc = {
- 	.name = "axp20x-usb",
- 	.type = POWER_SUPPLY_TYPE_USB,
-@@ -406,6 +516,16 @@ static const struct power_supply_desc axp22x_usb_power_desc = {
- 	.set_property = axp20x_usb_power_set_property,
- };
+-	domain = irq_domain_add_legacy(node, num_chips * 32, JZ4740_IRQ_BASE, 0,
+-				       &irq_domain_simple_ops, NULL);
+-	if (!domain)
+-		pr_warn("unable to register IRQ domain\n");
+-
+ 	setup_irq(parent_irq, &intc_cascade_action);
+ 	return 0;
  
-+static const struct power_supply_desc axp813_usb_power_desc = {
-+	.name = "axp20x-usb",
-+	.type = POWER_SUPPLY_TYPE_USB,
-+	.properties = axp813_usb_power_properties,
-+	.num_properties = ARRAY_SIZE(axp813_usb_power_properties),
-+	.property_is_writeable = axp20x_usb_power_prop_writeable,
-+	.get_property = axp20x_usb_power_get_property,
-+	.set_property = axp20x_usb_power_set_property,
-+};
-+
- static int configure_iio_channels(struct platform_device *pdev,
- 				  struct axp20x_usb_power *power)
- {
-@@ -487,10 +607,16 @@ static int axp20x_usb_power_probe(struct platform_device *pdev)
- 		usb_power_desc = &axp20x_usb_power_desc;
- 		irq_names = axp20x_irq_names;
- 	} else if (power->axp20x_id == AXP221_ID ||
--		   power->axp20x_id == AXP223_ID ||
--		   power->axp20x_id == AXP813_ID) {
-+		   power->axp20x_id == AXP223_ID) {
- 		usb_power_desc = &axp22x_usb_power_desc;
- 		irq_names = axp22x_irq_names;
-+	} else if (power->axp20x_id == AXP813_ID) {
-+		usb_power_desc = &axp813_usb_power_desc;
-+		irq_names = axp22x_irq_names;
-+
-+		/* Enable USB Battery Charging specification detection */
-+		regmap_update_bits(axp20x->regmap, AXP288_BC_GLOBAL,
-+				   AXP813_BC_EN, AXP813_BC_EN);
- 	} else {
- 		dev_err(&pdev->dev, "Unsupported AXP variant: %ld\n",
- 			axp20x->variant);
++out_unmap_base:
++	iounmap(intc->base);
+ out_unmap_irq:
+ 	irq_dispose_mapping(parent_irq);
+ out_free:
 -- 
-2.21.0
+2.7.4
+
 
