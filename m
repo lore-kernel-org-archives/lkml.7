@@ -2,96 +2,133 @@ Return-Path: <SRS0=zem1=X3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1A04C10F14
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 19:01:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 312ACC10F14
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 19:04:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8D73D218DE
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 19:01:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 06E68218DE
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 19:04:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kaUlL3j6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728773AbfJBTBp (ORCPT
+        id S1728903AbfJBTEG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Oct 2019 15:01:45 -0400
-Received: from outbound.smtp.vt.edu ([198.82.183.121]:51122 "EHLO
-        omr1.cc.vt.edu" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726076AbfJBTBp (ORCPT
+        Wed, 2 Oct 2019 15:04:06 -0400
+Received: from mail-io1-f68.google.com ([209.85.166.68]:34657 "EHLO
+        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726076AbfJBTEF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Oct 2019 15:01:45 -0400
-Received: from mr1.cc.vt.edu (mail.ipv6.vt.edu [IPv6:2607:b400:92:9:0:9d:8fcb:4116])
-        by omr1.cc.vt.edu (8.14.4/8.14.4) with ESMTP id x92J1him001905
-        for <linux-kernel@vger.kernel.org>; Wed, 2 Oct 2019 15:01:43 -0400
-Received: from mail-qk1-f200.google.com (mail-qk1-f200.google.com [209.85.222.200])
-        by mr1.cc.vt.edu (8.14.7/8.14.7) with ESMTP id x92J1cgL008407
-        for <linux-kernel@vger.kernel.org>; Wed, 2 Oct 2019 15:01:43 -0400
-Received: by mail-qk1-f200.google.com with SMTP id n135so19468474qke.23
-        for <linux-kernel@vger.kernel.org>; Wed, 02 Oct 2019 12:01:43 -0700 (PDT)
+        Wed, 2 Oct 2019 15:04:05 -0400
+Received: by mail-io1-f68.google.com with SMTP id q1so59542510ion.1;
+        Wed, 02 Oct 2019 12:04:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=St/5Yx9IAdho5qVopBMcN0+NvHaC/UJiWRlETASobFI=;
+        b=kaUlL3j6+0GmaCUe6vpBY5PoTGdlqVWCuZBArGh4SbLS0unPdcxIETP2WXDtya3J/7
+         Pk9jW8ioH0dWaNgAUdcsqjSe+ptGhqMISbLg5dm+hvb2S+u4qcUVzhr7JGR/hZWaA3Tl
+         aXOf2pISMsJzFG4lPCx/mZi0cditrZ3P6CdICEdcy25sACwFF9VVvPYz+D8H5IZNf+zk
+         wH9Sj8+S7I2eWwhlTFkk9rL3mkHlmq7nkou3hRNkTXV6lADFcrRg59W1EymyGTJkhzZW
+         PHG8mN8uvM3vyGO4Cki8S/OHDQPNUuwvGsQDV+DUOF9zHFcrVJJ6ayS4j3yml5T2RHr/
+         RgtA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:to:cc:subject:mime-version:date
-         :message-id;
-        bh=aK+dlxh4aWZdy/McFZvh8C645g1tT1N+aiJMD9e/VE4=;
-        b=pUbQ0TAze2/8GFtHi6SXfy2C9tqhPwzENxUK06pBeA8vNW0eyD/lDmQB3e7GXros6k
-         hzYn2eD0p4EF0VW/McQiV+UjPW0mgHmegAx/jQsDjwfPyNL4dwyuQIrVgxt21bQlDcHF
-         Du18e30I9WPsK/pND918xieVdniH5/vtHyNSHHcVcU4D5ECSNgx4uYckzDZaPQVRQhpY
-         v55eN1bR1HS9qdpbiw2OD3WAiHg4vKdwse6Lfon2O/8Hah+KVHjCZOp0nEAWOUG151OY
-         bBqAEy+4AUCNc6HlEggUISQoR8X2tWUK0PzFQ7kNz6RSOIZMBF7PDZRqqr/zFqfCUcjX
-         xvWA==
-X-Gm-Message-State: APjAAAWvbHWOWzBnqz0iOXhSEcA94qeptqY+3YJAszPfcQWpDznuRYd4
-        D5OyGNDPApqEAFIlr67T1WlX4rp+AHQ7dBQvQW3MFDHDSPNIcXPKKcsEMEbutwdDa0aep0fUMIK
-        8UCPtW+D1GWtBOHNh/x7V5vDIitl5yQ859oA=
-X-Received: by 2002:ac8:6658:: with SMTP id j24mr5949604qtp.364.1570042898282;
-        Wed, 02 Oct 2019 12:01:38 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqxtfMNWCtc5hidqz4lQIF71wwyWtG81Px7YNTfqRMWzh6KooZ1G7po3RNaHOVP2tbEWtMjLWg==
-X-Received: by 2002:ac8:6658:: with SMTP id j24mr5949578qtp.364.1570042897998;
-        Wed, 02 Oct 2019 12:01:37 -0700 (PDT)
-Received: from turing-police ([2601:5c0:c001:4341::9ca])
-        by smtp.gmail.com with ESMTPSA id h10sm155063qtk.18.2019.10.02.12.01.35
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 02 Oct 2019 12:01:36 -0700 (PDT)
-From:   "Valdis =?utf-8?Q?Kl=c4=93tnieks?=" <valdis.kletnieks@vt.edu>
-X-Google-Original-From: "Valdis =?utf-8?Q?Kl=c4=93tnieks?=" <Valdis.Kletnieks@vt.edu>
-X-Mailer: exmh version 2.9.0 11/07/2018 with nmh-1.7+dev
-To:     gregkh@linuxfoundation.org
-cc:     devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] drivers/staging/exfat - explain the fs_sync() issue in TODO
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Date:   Wed, 02 Oct 2019 15:01:35 -0400
-Message-ID: <9837.1570042895@turing-police>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=St/5Yx9IAdho5qVopBMcN0+NvHaC/UJiWRlETASobFI=;
+        b=LoB6OUaFeI6sDHNdbS0CsMOzJ2agxfMQBPilN3iJ2ruNoVYG18GNajwBkCEswu269W
+         FSC5oeU0lcDTPSXLdseU3xJasMkweWldA5me7XMiX0ZiDxKqcBE8E8rI7xhhK27s8sH6
+         R5Kiu6S/B3wUeeRMvRNWaQV8Tio9zen+1YdPvCjSR2gsqk21uq5z3X0IL2ihZQLaVjum
+         VPliQyMmqf58ru58hzf/u19wOZIlgcteHjFfMEPu99QZAEQ37UPmGW0671/3fOI28W7e
+         kKeFQBAFF/YDbMPtfBTTs4j3jxN08A7tJ8QzJ9N5dF0H5HYJSXXci9RaxmgNJxScgOlE
+         TPZw==
+X-Gm-Message-State: APjAAAWAbaiUygYbsXNDl0CdU/MPe91X2g4OIZe2Rj3uqcZUdqRBLR9y
+        obmDnWTZH8kx3L7X3cQnSGtfO1sPeviGdhTetL4=
+X-Google-Smtp-Source: APXvYqyBDRqzCOURp0bIg87hcNlK+OwvFnOdUWlJtXBAuGTiO64hQFSh/cP5qStkleVFnxHHNCRKAk8bKbmsvDUw5BU=
+X-Received: by 2002:a92:3314:: with SMTP id a20mr5448246ilf.276.1570043044661;
+ Wed, 02 Oct 2019 12:04:04 -0700 (PDT)
+MIME-Version: 1.0
+References: <20181221011752.25627-1-sre@kernel.org> <4f47f7f2-3abb-856c-4db5-675caf8057c7@xs4all.nl>
+ <20190319133154.7tbfafy7pguzw2tk@earth.universe>
+In-Reply-To: <20190319133154.7tbfafy7pguzw2tk@earth.universe>
+From:   Adam Ford <aford173@gmail.com>
+Date:   Wed, 2 Oct 2019 14:03:52 -0500
+Message-ID: <CAHCN7xLffcvC0LVnfrhf4cA=y1PRMx+COa3c8rBm1xOj179vEA@mail.gmail.com>
+Subject: Re: [PATCH 00/14] Add support for FM radio in hcill and kill TI_ST
+To:     Sebastian Reichel <sre@kernel.org>
+Cc:     Hans Verkuil <hverkuil@xs4all.nl>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Marcel Holtmann <marcel@holtmann.org>,
+        Tony Lindgren <tony@atomide.com>,
+        Rob Herring <robh@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Pavel Machek <pavel@ucw.cz>,
+        "open list:BLUETOOTH DRIVERS" <linux-bluetooth@vger.kernel.org>,
+        linux-media@vger.kernel.org,
+        Linux-OMAP <linux-omap@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-We've seen several incorrect patches for fs_sync() calls in the exfat driver.
-Add code to the TODO that explains this isn't just a delete code and refactor,
-but that actual analysis of when the filesystem should be flushed to disk
-needs to be done.
+On Tue, Mar 19, 2019 at 8:33 AM Sebastian Reichel <sre@kernel.org> wrote:
+>
+> Hi Hans,
+>
+> On Thu, Mar 14, 2019 at 09:20:10AM +0100, Hans Verkuil wrote:
+> > On 12/21/18 2:17 AM, Sebastian Reichel wrote:
+> > > This moves all remaining users of the legacy TI_ST driver to hcill (patches
+> > > 1-3). Then patches 4-7 convert wl128x-radio driver to a standard platform
+> > > device driver with support for multiple instances. Patch 7 will result in
+> > > (userless) TI_ST driver no longer supporting radio at runtime. Patch 8-11 do
+> > > some cleanups in the wl128x-radio driver. Finally patch 12 removes the TI_ST
+> > > specific parts from wl128x-radio and adds the required infrastructure to use it
+> > > with the serdev hcill driver instead. The remaining patches 13 and 14 remove
+> > > the old TI_ST code.
+> > >
+> > > The new code has been tested on the Motorola Droid 4. For testing the audio
+> > > should be configured to route Ext to Speaker or Headphone. Then you need to
+> > > plug headphone, since its cable is used as antenna. For testing there is a
+> > > 'radio' utility packages in Debian. When you start the utility you need to
+> > > specify a frequency, since initial get_frequency returns an error:
+> >
+> > What is the status of this series?
+> >
+> > Based on some of the replies (from Adam Ford in particular) it appears that
+> > this isn't ready to be merged, so is a v2 planned?
+>
+> Yes, a v2 is planned, but I'm super busy at the moment. I don't
+> expect to send something for this merge window. Neither LogicPD
+> nor IGEP use FM radio, so I can just remove FM support from the
+> TI_ST framework. Converting those platforms to hci_ll can be done
+> in a different patchset.
+>
 
-Signed-off-by: Valdis Kletnieks <valdis.kletnieks@vt.edu>
+Sebastian,
 
----
-diff --git a/drivers/staging/exfat/TODO b/drivers/staging/exfat/TODO
-index a3eb282f9efc..77c302acfcb8 100644
---- a/drivers/staging/exfat/TODO
-+++ b/drivers/staging/exfat/TODO
-@@ -3,6 +3,15 @@ same for ffsWriteFile.
- 
- exfat_core.c - fs_sync(sb,0) all over the place looks fishy as hell.
- There's only one place that calls it with a non-zero argument.
-+Randomly removing fs_sync() calls is *not* the right answer, especially
-+if the removal then leaves a call to fs_set_vol_flags(VOL_CLEAN), as that
-+says the file system is clean and synced when we *know* it isn't.
-+The proper fix here is to go through and actually analyze how DELAYED_SYNC
-+should work, and any time we're setting VOL_CLEAN, ensure the file system
-+has in fact been synced to disk.  In other words, changing the 'false' to
-+'true' is probably more correct. Also, it's likely that the one current
-+place where it actually does an bdev_sync isn't sufficient in the DELAYED_SYNC
-+case.
- 
- ffsTruncateFile -  if (old_size <= new_size) {
- That doesn't look right. How did it ever work? Are they relying on lazy
+After a bunch of testing, I think the issue I was having was the BTS
+file being pulled in from linux-firmware.  I was able to successfully
+load a BTS file that I have from Logic PD with working BLE and BT
+working together.  I have to run some tests, but if you wouldn't mind
+re-basing your code and pushing it again for review, I can most likely
+add my 'tested-by'
+I am not sure who to discuss my perceived bug in the BTS blob.  I have
+to go find the old BTS editor and see if I can determine the cause,
+but the fact that I can use the BTS file that corresponds to the FCC
+certified file that Logic PD used is more important to me than using
+the generic BTS file provided by TI, however it would be nice for the
+reference BTS file to operate without error.
 
+adam
+> If that was the only issue there would be a v2 already. But Marcel
+> Holtmann suggested to pass the custom packet data through the BT
+> subsystem, which is non-trivial (at least for me) :)
+>
+> -- Sebastian
