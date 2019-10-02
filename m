@@ -2,133 +2,126 @@ Return-Path: <SRS0=zem1=X3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 312ACC10F14
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 19:04:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DFC7FC10F14
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 19:04:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 06E68218DE
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 19:04:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kaUlL3j6"
+	by mail.kernel.org (Postfix) with ESMTP id C4924218DE
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 19:04:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728903AbfJBTEG (ORCPT
+        id S1728934AbfJBTE1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Oct 2019 15:04:06 -0400
-Received: from mail-io1-f68.google.com ([209.85.166.68]:34657 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726076AbfJBTEF (ORCPT
+        Wed, 2 Oct 2019 15:04:27 -0400
+Received: from outbound.smtp.vt.edu ([198.82.183.121]:54258 "EHLO
+        omr2.cc.vt.edu" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726076AbfJBTE0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Oct 2019 15:04:05 -0400
-Received: by mail-io1-f68.google.com with SMTP id q1so59542510ion.1;
-        Wed, 02 Oct 2019 12:04:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=St/5Yx9IAdho5qVopBMcN0+NvHaC/UJiWRlETASobFI=;
-        b=kaUlL3j6+0GmaCUe6vpBY5PoTGdlqVWCuZBArGh4SbLS0unPdcxIETP2WXDtya3J/7
-         Pk9jW8ioH0dWaNgAUdcsqjSe+ptGhqMISbLg5dm+hvb2S+u4qcUVzhr7JGR/hZWaA3Tl
-         aXOf2pISMsJzFG4lPCx/mZi0cditrZ3P6CdICEdcy25sACwFF9VVvPYz+D8H5IZNf+zk
-         wH9Sj8+S7I2eWwhlTFkk9rL3mkHlmq7nkou3hRNkTXV6lADFcrRg59W1EymyGTJkhzZW
-         PHG8mN8uvM3vyGO4Cki8S/OHDQPNUuwvGsQDV+DUOF9zHFcrVJJ6ayS4j3yml5T2RHr/
-         RgtA==
+        Wed, 2 Oct 2019 15:04:26 -0400
+Received: from mr4.cc.vt.edu (mr4.cc.vt.edu [IPv6:2607:b400:92:8300:0:7b:e2b1:6a29])
+        by omr2.cc.vt.edu (8.14.4/8.14.4) with ESMTP id x92J4Pdn021099
+        for <linux-kernel@vger.kernel.org>; Wed, 2 Oct 2019 15:04:25 -0400
+Received: from mail-qk1-f200.google.com (mail-qk1-f200.google.com [209.85.222.200])
+        by mr4.cc.vt.edu (8.14.7/8.14.7) with ESMTP id x92J4K4F018888
+        for <linux-kernel@vger.kernel.org>; Wed, 2 Oct 2019 15:04:25 -0400
+Received: by mail-qk1-f200.google.com with SMTP id x77so28847qka.11
+        for <linux-kernel@vger.kernel.org>; Wed, 02 Oct 2019 12:04:25 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=St/5Yx9IAdho5qVopBMcN0+NvHaC/UJiWRlETASobFI=;
-        b=LoB6OUaFeI6sDHNdbS0CsMOzJ2agxfMQBPilN3iJ2ruNoVYG18GNajwBkCEswu269W
-         FSC5oeU0lcDTPSXLdseU3xJasMkweWldA5me7XMiX0ZiDxKqcBE8E8rI7xhhK27s8sH6
-         R5Kiu6S/B3wUeeRMvRNWaQV8Tio9zen+1YdPvCjSR2gsqk21uq5z3X0IL2ihZQLaVjum
-         VPliQyMmqf58ru58hzf/u19wOZIlgcteHjFfMEPu99QZAEQ37UPmGW0671/3fOI28W7e
-         kKeFQBAFF/YDbMPtfBTTs4j3jxN08A7tJ8QzJ9N5dF0H5HYJSXXci9RaxmgNJxScgOlE
-         TPZw==
-X-Gm-Message-State: APjAAAWAbaiUygYbsXNDl0CdU/MPe91X2g4OIZe2Rj3uqcZUdqRBLR9y
-        obmDnWTZH8kx3L7X3cQnSGtfO1sPeviGdhTetL4=
-X-Google-Smtp-Source: APXvYqyBDRqzCOURp0bIg87hcNlK+OwvFnOdUWlJtXBAuGTiO64hQFSh/cP5qStkleVFnxHHNCRKAk8bKbmsvDUw5BU=
-X-Received: by 2002:a92:3314:: with SMTP id a20mr5448246ilf.276.1570043044661;
- Wed, 02 Oct 2019 12:04:04 -0700 (PDT)
-MIME-Version: 1.0
-References: <20181221011752.25627-1-sre@kernel.org> <4f47f7f2-3abb-856c-4db5-675caf8057c7@xs4all.nl>
- <20190319133154.7tbfafy7pguzw2tk@earth.universe>
-In-Reply-To: <20190319133154.7tbfafy7pguzw2tk@earth.universe>
-From:   Adam Ford <aford173@gmail.com>
-Date:   Wed, 2 Oct 2019 14:03:52 -0500
-Message-ID: <CAHCN7xLffcvC0LVnfrhf4cA=y1PRMx+COa3c8rBm1xOj179vEA@mail.gmail.com>
-Subject: Re: [PATCH 00/14] Add support for FM radio in hcill and kill TI_ST
-To:     Sebastian Reichel <sre@kernel.org>
-Cc:     Hans Verkuil <hverkuil@xs4all.nl>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Marcel Holtmann <marcel@holtmann.org>,
-        Tony Lindgren <tony@atomide.com>,
-        Rob Herring <robh@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Pavel Machek <pavel@ucw.cz>,
-        "open list:BLUETOOTH DRIVERS" <linux-bluetooth@vger.kernel.org>,
-        linux-media@vger.kernel.org,
-        Linux-OMAP <linux-omap@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:sender:from:to:cc:subject:in-reply-to:references
+         :mime-version:content-transfer-encoding:date:message-id;
+        bh=dobeNOp3H7EgZ2CD0/RvF0nXbG/3YQqE1zu1Q3zAY9E=;
+        b=T37bc3bReuWzh61WTqMCLT2JxGjb4WdRdVd+3mTlx6R30uzRa7AbL513O77Pdz7QYg
+         TpKQfUtM4rm5fgJlQe2Ud7MM/KdXyUaAfOQcWhKncZHgjbASaQQATDcVvoqXivrPKzt+
+         zF9FbnSqwsb1Y2V52GCbPUdxMX4S0il0/EO7Q+WmaDAUDnKlJza0QfHCwQkOtq0GLHDq
+         tbs2K980aOzGGA8mM2Mk1LX8CTutq/B2FoUBKWF4RDHB5QEGJkzBQrsf1Gckfes7AXsS
+         gu5JoNMEijNk7CAQEH51qHax57RbxjsX70qH2yyD7wEyP2TYwSJNKq7hJZXRqPGz4l+c
+         PGpQ==
+X-Gm-Message-State: APjAAAUyIGHL0NJj7P2x993jxkKhoZ/2trg6th+wOLXpFM0GWRPeLugo
+        5Qk7t6D+hQ6zXCvoXJ/s9oLnIFZ8BQ1RDReb3OExH9DAKkyZJ+S3Th5Kvz4s4FqnPheHURcvdNd
+        4M1Hjq/AAOTqjRveycTD9aIaJHFLdzy1DjIM=
+X-Received: by 2002:a37:5f47:: with SMTP id t68mr275518qkb.497.1570043060001;
+        Wed, 02 Oct 2019 12:04:20 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqzfdEnd5F+47KVCHpyvKRTi+Y0IF9ayDTCSW4G25pB3tGXL/763JGRm19HdEr+JSJ2z/oBuDw==
+X-Received: by 2002:a37:5f47:: with SMTP id t68mr275488qkb.497.1570043059705;
+        Wed, 02 Oct 2019 12:04:19 -0700 (PDT)
+Received: from turing-police ([2601:5c0:c001:4341::9ca])
+        by smtp.gmail.com with ESMTPSA id t40sm131106qta.36.2019.10.02.12.04.15
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 02 Oct 2019 12:04:16 -0700 (PDT)
+From:   "Valdis Kl=?utf-8?Q?=c4=93?=tnieks" <valdis.kletnieks@vt.edu>
+X-Google-Original-From: "Valdis Kl=?utf-8?Q?=c4=93?=tnieks" <Valdis.Kletnieks@vt.edu>
+X-Mailer: exmh version 2.9.0 11/07/2018 with nmh-1.7+dev
+To:     Saiyam Doshi <saiyamdoshi.in@gmail.com>
+Cc:     gregkh@linuxfoundation.org, devel@driverdev.osuosl.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] staging: exfat: use bdev_sync function directly where needed
+In-Reply-To: <20191002151703.GA6594@SD>
+References: <20191002151703.GA6594@SD>
+Mime-Version: 1.0
+Content-Type: multipart/signed; boundary="==_Exmh_1570043055_7127P";
+         micalg=pgp-sha1; protocol="application/pgp-signature"
+Content-Transfer-Encoding: 7bit
+Date:   Wed, 02 Oct 2019 15:04:15 -0400
+Message-ID: <9938.1570043055@turing-police>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 19, 2019 at 8:33 AM Sebastian Reichel <sre@kernel.org> wrote:
->
-> Hi Hans,
->
-> On Thu, Mar 14, 2019 at 09:20:10AM +0100, Hans Verkuil wrote:
-> > On 12/21/18 2:17 AM, Sebastian Reichel wrote:
-> > > This moves all remaining users of the legacy TI_ST driver to hcill (patches
-> > > 1-3). Then patches 4-7 convert wl128x-radio driver to a standard platform
-> > > device driver with support for multiple instances. Patch 7 will result in
-> > > (userless) TI_ST driver no longer supporting radio at runtime. Patch 8-11 do
-> > > some cleanups in the wl128x-radio driver. Finally patch 12 removes the TI_ST
-> > > specific parts from wl128x-radio and adds the required infrastructure to use it
-> > > with the serdev hcill driver instead. The remaining patches 13 and 14 remove
-> > > the old TI_ST code.
-> > >
-> > > The new code has been tested on the Motorola Droid 4. For testing the audio
-> > > should be configured to route Ext to Speaker or Headphone. Then you need to
-> > > plug headphone, since its cable is used as antenna. For testing there is a
-> > > 'radio' utility packages in Debian. When you start the utility you need to
-> > > specify a frequency, since initial get_frequency returns an error:
-> >
-> > What is the status of this series?
-> >
-> > Based on some of the replies (from Adam Ford in particular) it appears that
-> > this isn't ready to be merged, so is a v2 planned?
->
-> Yes, a v2 is planned, but I'm super busy at the moment. I don't
-> expect to send something for this merge window. Neither LogicPD
-> nor IGEP use FM radio, so I can just remove FM support from the
-> TI_ST framework. Converting those platforms to hci_ll can be done
-> in a different patchset.
->
+--==_Exmh_1570043055_7127P
+Content-Type: text/plain; charset=us-ascii
 
-Sebastian,
-
-After a bunch of testing, I think the issue I was having was the BTS
-file being pulled in from linux-firmware.  I was able to successfully
-load a BTS file that I have from Logic PD with working BLE and BT
-working together.  I have to run some tests, but if you wouldn't mind
-re-basing your code and pushing it again for review, I can most likely
-add my 'tested-by'
-I am not sure who to discuss my perceived bug in the BTS blob.  I have
-to go find the old BTS editor and see if I can determine the cause,
-but the fact that I can use the BTS file that corresponds to the FCC
-certified file that Logic PD used is more important to me than using
-the generic BTS file provided by TI, however it would be nice for the
-reference BTS file to operate without error.
-
-adam
-> If that was the only issue there would be a v2 already. But Marcel
-> Holtmann suggested to pass the custom packet data through the BT
-> subsystem, which is non-trivial (at least for me) :)
+On Wed, 02 Oct 2019 20:47:03 +0530, Saiyam Doshi said:
+> fs_sync() is wrapper to bdev_sync(). When fs_sync is called with
+> non-zero argument, bdev_sync gets called.
 >
-> -- Sebastian
+> Most instances of fs_sync is called with false and very few with
+> true. Refactor this and makes direct call to bdev_sync() where
+> needed and removes fs_sync definition.
+
+Did you do an actual analysis of where bdev_sync() *should*
+be called?
+
+The note in the TODO was intended to point out that many of the calls
+are called with 'false' and probably should not be.
+
+ #ifdef CONFIG_EXFAT_DELAYED_SYNC
+-	fs_sync(sb, false);
+ 	fs_set_vol_flags(sb, VOL_CLEAN);
+ #endif
+
+Consider - with this patch, we are now setting the volume state to clean - but
+we've not actually flushed the filesystem to disk, which means it's almost
+guaranteed that the file system is *NOT* in fact clean.
+
+Changing all the 'false' that happen before a VOL_CLEAN to 'true' is
+probably more correct - but still totally wrong if DELAYED_SYNC isn't defined
+because then we *aren't* syncing to disk at all.
+
+
+
+--==_Exmh_1570043055_7127P
+Content-Type: application/pgp-signature
+
+-----BEGIN PGP SIGNATURE-----
+Comment: Exmh version 2.9.0 11/07/2018
+
+iQIVAwUBXZT0rgdmEQWDXROgAQIBKg//X9lHdUpw66i/cHOTZ7lqpmV2mkPQ5/+p
+fG58bja0kg2YSZrHSWHzvD93HZmV228K1vBOitP2kjsU1IUFJ0qicx5irJzZzjdk
+qZ3G5e3o6on3BuyP7b5uF+rI/+v+4HMZ3xLwCSEH9rRk1u5vPwH8BT7AXGp3YXNw
+zZI65DtJB6nNnqSITc5tIXluDeSo11AjJ6E9nINYJWyL053UcV3ScsABZUJdCUQE
+RsaFDhNv7pM8FwMdYMXT8aapB8BG4aUT/RiSHboa3dQ9AcQSlmBKs8w9lTSt2I1Y
+aPCfkY2+VrGvv9Hn6EiiZKsPf3dBnHbVa/jEthcB+sfQwUqvQMZXZ1ketqhC4Do3
+QJ+n3Blj1tAoN/ibXAEBx/PLzbzMxVfw6dOXCetx34cpb1waQ79kGZtcte/sWEAD
+zQWKQUJLbCtHJwder/DX5TjbESmX3U7twxgSTTFhxyl0IQ2gRB4ZUN9NcRWJFDQV
+thldWb65CcJP1rHfC/lembJIvIB6TGaaI2GCFvEqAHjUmWBzgBGhNfpDakTDekwU
+zLTljhXFyEh/VgTxh3Cv4JMB1gqiAZPzlEiJn/oolBok3OeAjhXzJIj3Pkvp7tVs
++Jv4NBNxl3B4xEpay5lDK7VhcQAa5/Gah5HhJIxG+9QMNGDFqD638XpIxoN6MN0I
+OOGl4QJUGIE=
+=eIW1
+-----END PGP SIGNATURE-----
+
+--==_Exmh_1570043055_7127P--
