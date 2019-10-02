@@ -3,136 +3,147 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 73904C10F14
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 21:12:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A541C47404
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 21:13:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 42C1B217D7
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 21:12:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3119D217D7
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 21:13:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=paul-moore-com.20150623.gappssmtp.com header.i=@paul-moore-com.20150623.gappssmtp.com header.b="O8BrNr27"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="p5/RX4IY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729373AbfJBVMP (ORCPT
+        id S1729384AbfJBVNb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Oct 2019 17:12:15 -0400
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:33193 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729311AbfJBVMP (ORCPT
+        Wed, 2 Oct 2019 17:13:31 -0400
+Received: from mail-qk1-f193.google.com ([209.85.222.193]:39278 "EHLO
+        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729293AbfJBVNb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Oct 2019 17:12:15 -0400
-Received: by mail-lj1-f196.google.com with SMTP id a22so390572ljd.0
-        for <linux-kernel@vger.kernel.org>; Wed, 02 Oct 2019 14:12:14 -0700 (PDT)
+        Wed, 2 Oct 2019 17:13:31 -0400
+Received: by mail-qk1-f193.google.com with SMTP id 4so184637qki.6;
+        Wed, 02 Oct 2019 14:13:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=paul-moore-com.20150623.gappssmtp.com; s=20150623;
+        d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=Q2JSS08Ms57UqEsZfow4fHq4+PEYXwM7+yB7IFgfXSw=;
-        b=O8BrNr27QXvmNqQqCPd87Q34YcNRBGNZygSd5rEl8zhICGOlt34sSpk4usntjKcnug
-         1/WbRDmOoshrLLvkZn51WuDY9r8Y4AMn3uAHHIjRkxy3t53U2Kias4Vl6Gv28bkF7bhf
-         mmZZjI0YNbWDyo8B8eBw3LasbJo/z9WigOs51+Wtvb/rJdi7YqZzk8n84YPX1aDQbDvL
-         sCLh/SHl2G56jiYm3WglyjdxCfb3sC9FTAPFlroY0Ki2oPYCAg4OspWbJbyYeT9nvSZ7
-         Wy+Ks1SGgCdkNVLmdtISHAeoYCRv2u8eqtd4xSBsqSxjLE+/dfqbPJzE0NxYFuhkpOvp
-         q3Tg==
+        bh=nS55Gc+Wv5/nS3zhWqKGsQA+EFTAinrmi2NmXLvOimM=;
+        b=p5/RX4IYlDc7ukUBIt6El1HamNmNTdFO1AOqwKivIZtpuB59c9V4J7GnoqgOUeSkQ3
+         5bxDF5IgF1YRRpSHWaCkbTdbAA0JXIwTJSomNFSwjcGgtfMRb3oKus1wRN4z5SmN+a7R
+         Y8oV9TywyZ5rCm5wrVbjPUsAYTLKI8wnE0vhGeHFBM/9s6wA1O3Uzr8uswpp/Ti4gg8Y
+         m/vIB6JQl7L0JBvxC5cSp8tY05kRmvEYSBQSGfsd4xMpxM0XhHY6M51ltN/BKA/So7Qa
+         ZUFjaPguL1kE3gd1ESJ+CFhsz854H/0b2SLSoACfC7nk4B+JT3oOpc7+sOEcsphEesDJ
+         EAGQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=Q2JSS08Ms57UqEsZfow4fHq4+PEYXwM7+yB7IFgfXSw=;
-        b=GQx6sXStJ3v/dJXgLUgEyyf1unaVyfdg1LwSRbHK9cbnyYazYC6wt13MFqtMqm0Dr7
-         gECWgaN1a29qdWdUUVrzyCPpakmIyn73q3U/QgZd/FDH21K7dSLd53C/dGLhaWHKKgwB
-         0OGBlTAB/zutPEs2s5u5B9suCLxdkdZ5h3pO6XSxBN3ExfRyiQQFDd9lEqexPQvlOJo9
-         uOIYze1VvD9e622DeIFBbEpI2Ly4fTo0VRNp5/GdH0Jz6/wext0gJ+7nSgSMK/M7ucfK
-         UGYIrXu3seiXb5GIoWlnqRrkk2M3e4URepC/u0eFXqIQ7RttR+NF7SwuAD7luiGl2JON
-         UsEw==
-X-Gm-Message-State: APjAAAVsUuZ3ACGjv5/scUnhBxZDD3XCnZjsWO/f29PqNdZU/E/At4Gv
-        ILec8vV4cjNoEHV+7xHp9JfAdjV2gTwrFDabS614
-X-Google-Smtp-Source: APXvYqxLPUEu90fIr51j/ZlGZU7LVnF40q+p+8nV43id+zxjf17VYMDmWZtju1P5RtNnFnFv9JBQFsueA01CfQe020o=
-X-Received: by 2002:a2e:5418:: with SMTP id i24mr3665540ljb.126.1570050732902;
- Wed, 02 Oct 2019 14:12:12 -0700 (PDT)
+        bh=nS55Gc+Wv5/nS3zhWqKGsQA+EFTAinrmi2NmXLvOimM=;
+        b=LN7mxXhMTSnBV+g/EKjYyLTv8WNbZTbiYJwcwSg1vssZfOygLGWsraZGabPvndzjmM
+         Ph9I/6xjt/hUXSaxwa55cFdvnGwjfdvsC3ZyQO+0wFxdk3u7J31j6bHfqkNmmXnqxne2
+         sPLhCeX+mFiqtJZzetx5AFLSOocWTc837cAbdtV3ZrHNfTssPdpU6yeZLS/pBtUROEiX
+         uzh2qAs9KQpRpHcOTi1aOG28GhN9xe5DpN0vdNX5OYCxPhdknhV/1B0NT3lCad+BzGxa
+         Hc5GZ3/YjpKmKE4a5T1qOXPBjgQceoppa4ETDEDqXzi59KOappVsbm6VFpooPy5CIf24
+         8Y4A==
+X-Gm-Message-State: APjAAAUXKP4iCz7ZbWd7U3wQLSI4IJkNAZOueAIzzxJkEyH8BaBgK3Zu
+        CVewL8z1hFu3azL5Y8rAnpIKuJ8PUu3bQfYzxtM=
+X-Google-Smtp-Source: APXvYqzOz103T/YDH9M3NoQFnxa0eSLeJtiSfsLzfA23Gn47+eYnLSS9ucBhmDfi6X5TsVTjxANWKXSDURw1zM2p+lw=
+X-Received: by 2002:a37:4e55:: with SMTP id c82mr897485qkb.437.1570050808374;
+ Wed, 02 Oct 2019 14:13:28 -0700 (PDT)
 MIME-Version: 1.0
-References: <201910010945.CAABF57@keescook>
-In-Reply-To: <201910010945.CAABF57@keescook>
-From:   Paul Moore <paul@paul-moore.com>
-Date:   Wed, 2 Oct 2019 17:12:01 -0400
-Message-ID: <CAHC9VhTwyNsW5xVNsb+jXhgoLL86daZL1cWG9d+DVB0dQJAgMQ@mail.gmail.com>
-Subject: Re: [PATCH v2] audit: Report suspicious O_CREAT usage
-To:     Kees Cook <keescook@chromium.org>
-Cc:     linux-kernel@vger.kernel.org,
-        =?UTF-8?Q?J=C3=A9r=C3=A9mie_Galarneau?= 
-        <jeremie.galarneau@efficios.com>, s.mesoraca16@gmail.com,
-        viro@zeniv.linux.org.uk, dan.carpenter@oracle.com,
-        akpm@linux-foundation.org,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        kernel-hardening@lists.openwall.com, linux-audit@redhat.com,
-        Linus Torvalds <torvalds@linux-foundation.org>
+References: <20191002191652.11432-1-kpsingh@chromium.org> <CAEf4BzY4tXd=sHbkN=Bbhj5=7=W_PBs_BB=wjGJ4-bHenKz6sw@mail.gmail.com>
+ <E7A6B893-9E4B-4C22-A0CC-833AF45AF460@fb.com>
+In-Reply-To: <E7A6B893-9E4B-4C22-A0CC-833AF45AF460@fb.com>
+From:   Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Date:   Wed, 2 Oct 2019 14:13:16 -0700
+Message-ID: <CAEf4BzZ3jqKRap4h9n-JY=-Sp1RdsDDX=1fnX2ZPxbXURdnvvQ@mail.gmail.com>
+Subject: Re: [PATCH v2] samples/bpf: Add a workaround for asm_inline
+To:     Song Liu <songliubraving@fb.com>
+Cc:     KP Singh <kpsingh@chromium.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        bpf <bpf@vger.kernel.org>, Florent Revest <revest@google.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Martin Lau <kafai@fb.com>, Yonghong Song <yhs@fb.com>,
+        Florent Revest <revest@chromium.org>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Oct 1, 2019 at 12:48 PM Kees Cook <keescook@chromium.org> wrote:
+On Wed, Oct 2, 2019 at 2:05 PM Song Liu <songliubraving@fb.com> wrote:
 >
-> This renames the very specific audit_log_link_denied() to
-> audit_log_path_denied() and adds the AUDIT_* type as an argument. This
-> allows for the creation of the new AUDIT_ANOM_CREAT that can be used to
-> report the fifo/regular file creation restrictions that were introduced
-> in commit 30aba6656f61 ("namei: allow restricted O_CREAT of FIFOs and
-> regular files"). Additionally further clarifies the existing
-> "operations" strings.
 >
-> Signed-off-by: Kees Cook <keescook@chromium.org>
-> ---
-> v2:
->  - fix build failure typo in CONFIG_AUDIT=n case
->  - improve operations naming (paul)
-> ---
->  fs/namei.c                 |  8 ++++++--
->  include/linux/audit.h      |  5 +++--
->  include/uapi/linux/audit.h |  1 +
->  kernel/audit.c             | 11 ++++++-----
->  4 files changed, 16 insertions(+), 9 deletions(-)
-
-Thanks for the update, but I think we need another respin, see below.
-
-> diff --git a/fs/namei.c b/fs/namei.c
-> index 671c3c1a3425..2d5d245ae723 100644
-> --- a/fs/namei.c
-> +++ b/fs/namei.c
-> @@ -925,7 +925,7 @@ static inline int may_follow_link(struct nameidata *nd)
->                 return -ECHILD;
 >
->         audit_inode(nd->name, nd->stack[0].link.dentry, 0);
-> -       audit_log_link_denied("follow_link");
-> +       audit_log_path_denied(AUDIT_ANOM_LINK, "sticky_follow_link");
-
-Maybe I should have been more clear in the last patch thread, but my
-suggested name change was only for the new records you are adding; we
-don't want to change the operation/op names for existing records.  In
-the above change, "follow_link" should stay "follow_link".
-
-> @@ -993,7 +993,7 @@ static int may_linkat(struct path *link)
->         if (safe_hardlink_source(inode) || inode_owner_or_capable(inode))
->                 return 0;
+> > On Oct 2, 2019, at 1:22 PM, Andrii Nakryiko <andrii.nakryiko@gmail.com> wrote:
+> >
+> > On Wed, Oct 2, 2019 at 12:17 PM KP Singh <kpsingh@chromium.org> wrote:
+> >>
+> >> From: KP Singh <kpsingh@google.com>
+> >>
+> >> This was added in:
+> >>
+> >>  commit eb111869301e ("compiler-types.h: add asm_inline definition")
+> >>
+> >> and breaks samples/bpf as clang does not support asm __inline.
+> >>
+> >> Co-developed-by: Florent Revest <revest@google.com>
+> >> Signed-off-by: Florent Revest <revest@google.com>
+> >> Signed-off-by: KP Singh <kpsingh@google.com>
+> >> ---
+> >>
+> >> Changes since v1:
+> >>
+> >> - Dropped the rename from asm_workaround.h to asm_goto_workaround.h
+> >> - Dropped the fix for task_fd_query_user.c as it is updated in
+> >>  https://lore.kernel.org/bpf/20191001112249.27341-1-bjorn.topel@gmail.com/
+> >>
+> >> samples/bpf/asm_goto_workaround.h | 13 ++++++++++++-
+> >> 1 file changed, 12 insertions(+), 1 deletion(-)
+> >>
+> >> diff --git a/samples/bpf/asm_goto_workaround.h b/samples/bpf/asm_goto_workaround.h
+> >> index 7409722727ca..7048bb3594d6 100644
+> >> --- a/samples/bpf/asm_goto_workaround.h
+> >> +++ b/samples/bpf/asm_goto_workaround.h
+> >> @@ -3,7 +3,8 @@
+> >> #ifndef __ASM_GOTO_WORKAROUND_H
+> >> #define __ASM_GOTO_WORKAROUND_H
+> >>
+> >> -/* this will bring in asm_volatile_goto macro definition
+> >> +/*
+> >> + * This will bring in asm_volatile_goto and asm_inline macro definitions
+> >>  * if enabled by compiler and config options.
+> >>  */
+> >> #include <linux/types.h>
+> >> @@ -13,5 +14,15 @@
+> >> #define asm_volatile_goto(x...) asm volatile("invalid use of asm_volatile_goto")
+> >> #endif
+> >>
+> >> +/*
+> >> + * asm_inline is defined as asm __inline in "include/linux/compiler_types.h"
+> >> + * if supported by the kernel's CC (i.e CONFIG_CC_HAS_ASM_INLINE) which is not
+> >> + * supported by CLANG.
+> >> + */
+> >> +#ifdef asm_inline
+> >> +#undef asm_inline
+> >> +#define asm_inline asm
+> >> +#endif
+> >
+> > Would it be better to just #undef CONFIG_CC_HAS_ASM_INLINE for BPF programs?
 >
-> -       audit_log_link_denied("linkat");
-> +       audit_log_path_denied(AUDIT_ANOM_LINK, "unowned_linkat");
+> I guess that is still useful when gcc fully support BPF?
 
-See above, this should stay as "linkat".
+Ah, I missed that it's Clang-specific, not BPF target-specific thing.
+Yeah, then it makes sense.
 
-> @@ -1031,6 +1031,10 @@ static int may_create_in_sticky(struct dentry * const dir,
->             (dir->d_inode->i_mode & 0020 &&
->              ((sysctl_protected_fifos >= 2 && S_ISFIFO(inode->i_mode)) ||
->               (sysctl_protected_regular >= 2 && S_ISREG(inode->i_mode))))) {
-> +               const char *operation = S_ISFIFO(inode->i_mode) ?
-> +                                       "sticky_create_fifo" :
-> +                                       "sticky_create_regular";
-> +               audit_log_path_denied(AUDIT_ANOM_CREAT, operation);
+Acked-by: Andrii Nakryiko <andriin@fb.com>
 
-This is a new record, so this is fine.  Thanks for changing this.
-
--- 
-paul moore
-www.paul-moore.com
+>
+> Thanks,
+> Song
+>
