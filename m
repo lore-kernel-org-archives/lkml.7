@@ -2,87 +2,114 @@ Return-Path: <SRS0=zem1=X3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 01EF3C4360C
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 22:12:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CFE0EC47404
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 22:14:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C1F2920659
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 22:12:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A19D920659
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 22:14:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="Ef5BFGbe"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YwTraDTn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727959AbfJBWMd (ORCPT
+        id S1727456AbfJBWOB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Oct 2019 18:12:33 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:60627 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726062AbfJBWMd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Oct 2019 18:12:33 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 46k9Nt55jRz9sP7;
-        Thu,  3 Oct 2019 08:12:30 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1570054350;
-        bh=W1eDZ5VIsU8MXT4woar8/3j6QFLMNiRoiYNv26dvW9I=;
-        h=Date:From:To:Cc:Subject:From;
-        b=Ef5BFGbeX1shKLf370eqOXO0uSafHUvjzHkNZNS3X1ARTAPkrUYHPjivP9NudXa9O
-         ErR6JynNeKdzuaEQH1/Y/8jnLHqePBtZxzeuC5lSd+sySuSila2Cm7qT7obLw3CEu0
-         BBOwHxqVnR9wFCgwLX9cBd+L/N56ELUatuxM+FGq6DzbHv8XCwbI4vPLQ55ew1ujNE
-         dScQOThlnIBi4YlN6gYhZn2VW1UcnME8umV6cDJhHRAuvrY5Z0XHnnD1Cmu/4bXG4S
-         eP3kecA3OnqYNrDbKwv8e7oPEuLKEeCdsPvU/e1j0Jf0qY1q58sZTV8HOA0Qd27omb
-         LM8Fo1dDyXWfg==
-Date:   Thu, 3 Oct 2019 08:12:29 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Alex Deucher <alexdeucher@gmail.com>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: linux-next: Signed-off-by missing for commits in the amdgpu tree
-Message-ID: <20191003081229.6b3b8a9a@canb.auug.org.au>
+        Wed, 2 Oct 2019 18:14:01 -0400
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:32899 "EHLO
+        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725789AbfJBWOA (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 2 Oct 2019 18:14:00 -0400
+Received: by mail-oi1-f195.google.com with SMTP id e18so829746oii.0;
+        Wed, 02 Oct 2019 15:14:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=Sqk/SFk4ZImYIBcERyKHjU6k+Y9P6R8FWyKPazl8xYA=;
+        b=YwTraDTntg1G+u7Q2S81u1noOW7tjCCMyd7P2/qmF5YM9/0NUfZL0Euw5BaM31YQ1F
+         NaGWJ9zr8QJRcxwPXD1haA3Q0L36Fwq5ltQXJG0BbRJX98ytSUF3DFM/PmA/1ReBpH0j
+         UZxHTpdX8CUPqhtQnX3PwoVKlz+jvNXZB0hFJJqibeqrOGtLM2gzH6NfSh1tMqOQUSAw
+         dETRblrltQ3id0qF8yLWmlRs8Av0X8I4SjGxDhzBzCreBrDudh5uAbVCF83A5je5dpat
+         oBlSkR+a2iLlbRdpX4QGlzdlIxeYDks6kUX6DVpePuLzS3TampizmNJyjj+QU3QwuBon
+         /A7A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=Sqk/SFk4ZImYIBcERyKHjU6k+Y9P6R8FWyKPazl8xYA=;
+        b=GuNaLmTf85Slv9pLqfPtlplv7u98Iow8uVJSIajkc7mecvx368fgv4z3TxcbqZdV+e
+         +EkyDZNuNrvRGPo4vkOTj2YM1+zQxSfZ4yBT16rV9HDKokQ8EAKscylW+RL0Pufhgnai
+         cA7ESPw8j7/Jrq8wT1PG9WrOibW/mQCY32bp+uLiy3QuQn7osTd6ddsUYWIDVxHOVEmg
+         JyM1hAziuPn1i4cgp1t5tC9SoIsg2b1IsgfGGGa9O6waOIEcxwoAYlRsEUT81llIzn1n
+         0wPYspycjVfWDwI354pXvWeJfeOi4Hj2n5Ji6bjwAE1ULa289+MA6QhOmz2omiKLl5ug
+         +NYg==
+X-Gm-Message-State: APjAAAUMn3Ye9F+ca9siQADdUQ9HchlecyoC+xIgWwUG4Iw8Fkm4nlBh
+        rXiNXy5Cdl4gjv2CA5dm1GMYCqbWWRy5Sg==
+X-Google-Smtp-Source: APXvYqy3haKfq5CSi7BfjH3KJ5olSRvyyEnJDllpCOIzv053tu35ipKl7mhVvvPQ8LLSDuZ0RMIZgA==
+X-Received: by 2002:aca:645:: with SMTP id 66mr233481oig.117.1570054439541;
+        Wed, 02 Oct 2019 15:13:59 -0700 (PDT)
+Received: from nuclearis2-1.gtech (c-98-195-139-126.hsd1.tx.comcast.net. [98.195.139.126])
+        by smtp.gmail.com with ESMTPSA id x38sm218466ota.59.2019.10.02.15.13.58
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 02 Oct 2019 15:13:59 -0700 (PDT)
+Subject: Re: [PATCH 0/3] PCI: pciehp: Do not turn off slot if presence comes
+ up after link
+To:     Lukas Wunner <lukas@wunner.de>,
+        Stuart Hayes <stuart.w.hayes@gmail.com>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>,
+        Austin Bolen <austin_bolen@dell.com>, keith.busch@intel.com,
+        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        "Gustavo A . R . Silva" <gustavo@embeddedor.com>,
+        Sinan Kaya <okaya@kernel.org>,
+        Oza Pawandeep <poza@codeaurora.org>, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20191001211419.11245-1-stuart.w.hayes@gmail.com>
+ <20191002041315.6dpqpis5zikosyyc@wunner.de>
+From:   "Alex G." <mr.nuke.me@gmail.com>
+Message-ID: <c494a7c4-8323-e75f-6a3f-5f342ce7b1c7@gmail.com>
+Date:   Wed, 2 Oct 2019 17:13:58 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/F.qlmoe+T9m+6zkzIKlnDyX";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+In-Reply-To: <20191002041315.6dpqpis5zikosyyc@wunner.de>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/F.qlmoe+T9m+6zkzIKlnDyX
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On 10/1/19 11:13 PM, Lukas Wunner wrote:
+> On Tue, Oct 01, 2019 at 05:14:16PM -0400, Stuart Hayes wrote:
+>> This patch set is based on a patch set [1] submitted many months ago by
+>> Alexandru Gagniuc, who is no longer working on it.
+>>
+>> [1] https://patchwork.kernel.org/cover/10909167/
+>>      [v3,0/4] PCI: pciehp: Do not turn off slot if presence comes up after link
+> 
+> If I'm not mistaken, these two are identical to Alex' patches, right?
+> 
+>    PCI: pciehp: Add support for disabling in-band presence
+>    PCI: pciehp: Wait for PDS when in-band presence is disabled
+> 
+> I'm not sure if it's appropriate to change the author and
+> omit Alex' Signed-off-by.
 
-Hi all,
+Legally Dell owns the patches. I have no objection on my end.
 
-Commits
+Alex
 
-  e2c6983e3533 ("drm/amd/display: Revert fixup DPP programming sequence")
-  79312258f95d ("drm/amd/display: Do not double-buffer DTO adjustments")
-
-are missing a Signed-off-by from their committer.
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/F.qlmoe+T9m+6zkzIKlnDyX
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl2VIM0ACgkQAVBC80lX
-0Gw+rAgAiqVzyPIRES5MO3ZywZGHVUW+zSsdgnSII12PezX1LVnq6KXDvYNoiSpt
-DxDMSUfDAPy2o0b7ih6YZ3LXfSex+YpU71PCPJKYm67pbyQOiKLVAG1ZXZXDijhH
-FPfP+F/mcuhE/Q9DhWXiDeieKX2JFPUc9XrE/Aiy4+utbD/qqw67jYnI2EOnyerg
-uGCNi6u6vf7iii491c/Xaobu64n/9rARALtVCexFVxmNTBsXpU17VK/eyCjt0XYp
-vP8j2nJKAqXMlT8xZ+CE4e7rEYfPrPnY25GJXCLMAjgfCUtYhkgiQ1/YYmMni7iw
-Qln7YBxjUzYZyMdlzZpM6dloyHnQ5w==
-=VOtR
------END PGP SIGNATURE-----
-
---Sig_/F.qlmoe+T9m+6zkzIKlnDyX--
+> Otherwise I have no objections against this series.
+> 
+> Thanks,
+> 
+> Lukas
+> 
