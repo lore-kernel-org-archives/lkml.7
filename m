@@ -2,365 +2,227 @@ Return-Path: <SRS0=zem1=X3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D2F75ECE58A
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 00:13:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 883FEECE58A
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 00:15:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9B7F82070B
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 00:13:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 524DD215EA
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 00:15:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="SgIKjTZQ"
+	dkim=pass (2048-bit key) header.d=shutemov-name.20150623.gappssmtp.com header.i=@shutemov-name.20150623.gappssmtp.com header.b="sUG/hAV5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729459AbfJBANx (ORCPT
+        id S1729470AbfJBAPY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Oct 2019 20:13:53 -0400
-Received: from mailout3.samsung.com ([203.254.224.33]:37462 "EHLO
-        mailout3.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727109AbfJBANw (ORCPT
+        Tue, 1 Oct 2019 20:15:24 -0400
+Received: from mail-ed1-f68.google.com ([209.85.208.68]:38483 "EHLO
+        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727109AbfJBAPY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Oct 2019 20:13:52 -0400
-Received: from epcas1p1.samsung.com (unknown [182.195.41.45])
-        by mailout3.samsung.com (KnoxPortal) with ESMTP id 20191002001346epoutp035155cec3080d3ffdf6acd712625c4eef~JrCacJJjA0713007130epoutp03g
-        for <linux-kernel@vger.kernel.org>; Wed,  2 Oct 2019 00:13:46 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout3.samsung.com 20191002001346epoutp035155cec3080d3ffdf6acd712625c4eef~JrCacJJjA0713007130epoutp03g
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1569975226;
-        bh=cZleCx6C90T5L2JKqTjIk2QjcIaG98wQOYNppwhBHCg=;
-        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
-        b=SgIKjTZQK7W76M9ZOE2QZ9rbvHZOQ8XVse/oWcJjkzZDy5lCqRBWEl/UmTUl50CPD
-         YAGIsPp68HfjeTEyYSYZuJsPhxG7UN4zW2joISaXVM0sNQSV9Z7O+YHJ/Bq/4tvcvJ
-         TNdylOk+0bgBTTZBdRe/5loq6QmF8PlEq210xPzU=
-Received: from epsnrtp4.localdomain (unknown [182.195.42.165]) by
-        epcas1p1.samsung.com (KnoxPortal) with ESMTP id
-        20191002001346epcas1p127ae6286340d66b3ad3c2d1dfffce572~JrCZ3Lw2b1651816518epcas1p1S;
-        Wed,  2 Oct 2019 00:13:46 +0000 (GMT)
-Received: from epsmges1p2.samsung.com (unknown [182.195.40.156]) by
-        epsnrtp4.localdomain (Postfix) with ESMTP id 46jc7C72yRzMqYkg; Wed,  2 Oct
-        2019 00:13:43 +0000 (GMT)
-Received: from epcas1p4.samsung.com ( [182.195.41.48]) by
-        epsmges1p2.samsung.com (Symantec Messaging Gateway) with SMTP id
-        2F.88.04135.7BBE39D5; Wed,  2 Oct 2019 09:13:43 +0900 (KST)
-Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
-        epcas1p3.samsung.com (KnoxPortal) with ESMTPA id
-        20191002001343epcas1p3cd70c7b729378103a969cefd3fd37f2d~JrCXY4TTr1657116571epcas1p3S;
-        Wed,  2 Oct 2019 00:13:43 +0000 (GMT)
-Received: from epsmgms1p2new.samsung.com (unknown [182.195.42.42]) by
-        epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
-        20191002001343epsmtrp263b06e033bd32e557f4c17e1bdc3743c~JrCXYHBLZ0621306213epsmtrp2e;
-        Wed,  2 Oct 2019 00:13:43 +0000 (GMT)
-X-AuditID: b6c32a36-7e3ff70000001027-36-5d93ebb78702
-Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
-        epsmgms1p2new.samsung.com (Symantec Messaging Gateway) with SMTP id
-        74.85.03889.7BBE39D5; Wed,  2 Oct 2019 09:13:43 +0900 (KST)
-Received: from [10.113.221.102] (unknown [10.113.221.102]) by
-        epsmtip1.samsung.com (KnoxPortal) with ESMTPA id
-        20191002001343epsmtip119dec1a9a5c363bbe16b074998b796e5~JrCXL2Jps2266422664epsmtip1b;
-        Wed,  2 Oct 2019 00:13:43 +0000 (GMT)
-Subject: Re: [PATCH v6 18/19] PM / devfreq: tegra30: Support variable
- polling interval
-To:     Dmitry Osipenko <digetx@gmail.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        MyungJoo Ham <myungjoo.ham@samsung.com>,
-        Kyungmin Park <kyungmin.park@samsung.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Tomeu Vizoso <tomeu.vizoso@collabora.com>
-Cc:     linux-pm@vger.kernel.org, linux-tegra@vger.kernel.org,
+        Tue, 1 Oct 2019 20:15:24 -0400
+Received: by mail-ed1-f68.google.com with SMTP id l21so13596015edr.5
+        for <linux-kernel@vger.kernel.org>; Tue, 01 Oct 2019 17:15:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=shutemov-name.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=Hssg091wPGh70kq4IclYwYoqi2SbHSQw2ojdCBcYtjg=;
+        b=sUG/hAV5gUvFOwJrYb5i/jzGN7avy4aABIK7HzAPTA9gnZJ0cEoGYJvsrlBSW/ARid
+         I2VlGDwOkTMyNM70TYVZl17Cy828CvMV5sAzqbSQKz0JBYqwbMsbM+A2CGEHOqEQulfz
+         Mq/9Qpne5q2QxVNlgQZfYRU19PtJoWVyZRwuXGiueBgUzITHAZyzydtJUIt3Zj1HvisH
+         ailYrTPwfulOB+Zz3qzk6VRZ6ksp2kXJ55zeKrHlBSn1DKAlJhEGoat0FrGEF5FZ0LuK
+         S/6kkbBoZK8PR6oRM0F2upxD3IHo767gmVyHv9Y8iFbE1ZqTocI/H5fSSjWB3v3TgnRw
+         +Shw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=Hssg091wPGh70kq4IclYwYoqi2SbHSQw2ojdCBcYtjg=;
+        b=mnQDeUbPwrELs8EtfauOtWdEWvgoz2moCCSY5Nrv8jJqsliTVfYHLoCG4P2QXS25gv
+         yLfl4SILAqxr6EmcrMDqVDkead8AcRA5n0TzdyMn/dh/pDCKj+8gXKVQ5b9C8iCWaNqT
+         QHoXIwQwB7gddBawPU8HmjAyFMQxq5766SD7tJ4TkRBmS0aiNVRUyEpE7T7SyWlYXSqk
+         ow6dgAjQ4veydU6moottPwc5wRATgQwTvlqY/NWG+KWgFGzBIaxnPXdo9whHshenoLXS
+         GWtSV8nNKqem555wWHUWfjNAp6MPNK6UBOfbcXP+aa3UxeDHAsPmk298oRjd4cx1tBUb
+         F64g==
+X-Gm-Message-State: APjAAAUtJfEQo7SRlGKUtvFFOkaFofuL+19LI1xe/oksTBUYjUcHD+T6
+        0qI8YTdpKIjX3P1sCQ3U25NQbA==
+X-Google-Smtp-Source: APXvYqxm4E66L7PYZqx0zX9Tu97iAJmOn2ArTlYXkYefnaJW8prrXFNXTMtkeRwPQy/yKCMC5QkNAQ==
+X-Received: by 2002:a17:906:5a96:: with SMTP id l22mr716817ejq.310.1569975321992;
+        Tue, 01 Oct 2019 17:15:21 -0700 (PDT)
+Received: from box.localdomain ([86.57.175.117])
+        by smtp.gmail.com with ESMTPSA id b53sm3489554ede.96.2019.10.01.17.15.20
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 01 Oct 2019 17:15:21 -0700 (PDT)
+Received: by box.localdomain (Postfix, from userid 1000)
+        id 27B1E10202F; Wed,  2 Oct 2019 03:15:21 +0300 (+03)
+Date:   Wed, 2 Oct 2019 03:15:21 +0300
+From:   "Kirill A. Shutemov" <kirill@shutemov.name>
+To:     William Kucharski <william.kucharski@oracle.com>
+Cc:     Matthew Wilcox <willy@infradead.org>,
+        linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
         linux-kernel@vger.kernel.org
-From:   Chanwoo Choi <cw00.choi@samsung.com>
-Organization: Samsung Electronics
-Message-ID: <721c4dd0-d667-f83d-64b5-74e4b58a7a1c@samsung.com>
-Date:   Wed, 2 Oct 2019 09:18:31 +0900
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
-        Thunderbird/60.8.0
+Subject: Re: [PATCH 14/15] mm: Align THP mappings for non-DAX
+Message-ID: <20191002001521.agi22gnscsitznqd@box.shutemov.name>
+References: <20190925005214.27240-1-willy@infradead.org>
+ <20190925005214.27240-15-willy@infradead.org>
+ <20191001104558.rdcqhjdz7frfuhca@box>
+ <A935F599-BB18-40C3-90DD-47B7700743D6@oracle.com>
+ <20191001113216.3qbrkqmb2b2xtwkd@box>
+ <5dc7b5c1-6d7d-90ee-9423-6eda9ecb005c@oracle.com>
+ <20191001142018.wpordswdkadac6kt@box>
+ <85868A27-CA43-4AF5-B8A0-2D037C2207FD@oracle.com>
 MIME-Version: 1.0
-In-Reply-To: <20190811212315.12689-19-digetx@gmail.com>
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA01Sa1BMYRj27Z49bcbyWaVXGrbDD1LZ09o6qAZRazSjkUsua51pz2xpb3PO
-        FvFDZFIol2hYYacQuY2EaqRRkX5ojMuMWyNTM4xMKIQMds9h9O/5nud5r9+rlKsvkcHKTLuL
-        4+2slSJHEtdbpmsjbvSWGrW1h2OY85+6EbPTXUEw93e892MeNZSTzEBxK2KKPrtJ5sX2syTz
-        veEEwZRcfEjO8zfUdZ5Chnp3p5+hOL+PNJTUViPDQM2kFMWarNgMjjVzvIazpzvMmXZLHLUk
-        1ZRg0kdr6Qh6NhNDaeysjYujFianRCRmWr0NUZoc1prtpVJYQaBmxsfyjmwXp8lwCK44inOa
-        rc7ZzkiBtQnZdktkusM2h9Zqo/Re44asjCsl450/4jf/Lr8ry0Nu3W7krwQ8C55fbpHtRiOV
-        alyHoKPbI/MJatyPoPxBriR8RdB+oc4rKMWII4NGiW9E8Pb3OSQ9PiCo7r9O+qLH4TTw3B6S
-        +4QA/AtB0fd8UZDj1dBSf14sQeIwaHr7VOTH4FB48q0b+bAKx0Pj62eEDxN4KvSeOSr6A71J
-        +7taFJJnLLQf7RE9/jgGCnqbZFL+IHjec/Ivngz5146JTQAeIuHYm0G5NPRCuFrcQUp4HLxr
-        q/WTcDAM9DX+5bfCufZWUgouRFDb9EAhCTpoOl0q7kKOp8PlhpkSHQr1Q8eRVHg09H3Zq5DW
-        pYLCArVkmQKPujplEp4AlbuKyP2Icg8bxz1sBPewEdz/i3kQUY3Gc07BZuEE2hk1/LNrkHir
-        YdF1qKIjuRlhJaJGqZ4uLzWqFWyOkGtrRqCUUwGq2J8HjWqVmc3dwvEOE59t5YRmpPdu+4A8
-        ODDd4b18u8tE66N0Oh0zi47W0zQVpEqy5BnV2MK6uCyOc3L8vziZ0j84D42pnMsvqCKqV2wL
-        IdQ9y6LCL0V4tnjWds0w6xP9bq52Ls1ZFF74OMueoBlMu3dn6FX8oRcvb+zDy9ZH86mPP1S2
-        VXkejvi85838smkr909MtnafuhtYT73eZgpf1NgWsqmmjMQbjR2LR6Un6VtXTUgLiruQcGvd
-        xyeDtmcVY0+EFOS/pAghg6XD5LzA/gETokUAwQMAAA==
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprJIsWRmVeSWpSXmKPExsWy7bCSnO7215NjDV5tVLJY/fExo0XLrEUs
-        Fmeb3rBbXN41h83ic+8RRovOL7PYLG43rmCz+LlrHotF39pLbA6cHjvuLmH02DnrLrtHb/M7
-        No++LasYPT5vkgtgjeKySUnNySxLLdK3S+DK2NgnVvDLruL/nGNMDYyzjLsYOTgkBEwkZnyP
-        7WLk4hAS2M0oMW/JTKYuRk6guKTEtItHmSFqhCUOHy6GqHnLKPGpZREbSI2wQITEpI0v2EES
-        IgJNTBKbei+wgySYBSIleuZuYYPo2MYo0bFwPgtIgk1AS2L/ixtg3fwCihJXfzxmBLF5Bewk
-        9j68CVbDIqAi8XoZxBWiQBsO75gFVSMocXLmE7AaTgFzibbX+5kglqlL/Jl3iRnCFpe49WQ+
-        VFxeonnrbOYJjMKzkLTPQtIyC0nLLCQtCxhZVjFKphYU56bnFhsWGOWllusVJ+YWl+al6yXn
-        525iBEeYltYOxhMn4g8xCnAwKvHw3giZHCvEmlhWXJl7iFGCg1lJhNfmz6RYId6UxMqq1KL8
-        +KLSnNTiQ4zSHCxK4rzy+ccihQTSE0tSs1NTC1KLYLJMHJxSDYzNmxuvsP9q93bTfHh15eqW
-        SSVet9b3MsUZ9bJc//TkfG6EqkO5wSUZPRfD5ohjrxlm358unrnzn+Bct0k5L9uLUmp0DBh0
-        WSM7fE4tWWDXJ2JxtelsVuaerObUa9MZY/OuPa4sn3HNa97zFUdK1k3cLug9IfY1k/WtXkF2
-        tfJTF/yfuIj67lViKc5INNRiLipOBABo2gE7rAIAAA==
-X-CMS-MailID: 20191002001343epcas1p3cd70c7b729378103a969cefd3fd37f2d
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-Sendblock-Type: SVC_REQ_APPROVE
-CMS-TYPE: 101P
-DLP-Filter: Pass
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20190811212509epcas4p20ec245213cedfcc066f7b0032b912a39
-References: <20190811212315.12689-1-digetx@gmail.com>
-        <CGME20190811212509epcas4p20ec245213cedfcc066f7b0032b912a39@epcas4p2.samsung.com>
-        <20190811212315.12689-19-digetx@gmail.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <85868A27-CA43-4AF5-B8A0-2D037C2207FD@oracle.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
-
-On 19. 8. 12. 오전 6:23, Dmitry Osipenko wrote:
-> The ACTMON governor is interrupt-driven and currently hardware's polling
-> interval is fixed to 16ms in the driver. Devfreq supports variable polling
-> interval by the generic governors, let's re-use the generic interface for
-> changing of the polling interval. Now the polling interval can be changed
-> dynamically via /sys/class/devfreq/devfreq0/polling_interval.
+On Tue, Oct 01, 2019 at 10:08:30AM -0600, William Kucharski wrote:
 > 
-> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
-> ---
->  drivers/devfreq/tegra30-devfreq.c | 71 ++++++++++++++++++++++---------
->  1 file changed, 50 insertions(+), 21 deletions(-)
 > 
-> diff --git a/drivers/devfreq/tegra30-devfreq.c b/drivers/devfreq/tegra30-devfreq.c
-> index 8adc0ff48b45..e30314bd571a 100644
-> --- a/drivers/devfreq/tegra30-devfreq.c
-> +++ b/drivers/devfreq/tegra30-devfreq.c
-> @@ -12,6 +12,7 @@
->  #include <linux/interrupt.h>
->  #include <linux/io.h>
->  #include <linux/irq.h>
-> +#include <linux/jiffies.h>
->  #include <linux/module.h>
->  #include <linux/of_device.h>
->  #include <linux/platform_device.h>
-> @@ -236,7 +237,7 @@ tegra_actmon_dev_avg_dependency_freq(struct tegra_devfreq *tegra,
->  				     struct tegra_devfreq_device *dev)
->  {
->  	return dev->config->avg_dependency_threshold /
-> -		ACTMON_SAMPLING_PERIOD;
-> +		tegra->devfreq->profile->polling_ms;
->  }
->  
->  static unsigned long
-> @@ -314,8 +315,8 @@ static void tegra_actmon_get_lower_upper(struct tegra_devfreq *tegra,
->  	 */
->  	*upper = tegra_actmon_account_cpu_freq(tegra, dev, *upper);
->  
-> -	*lower *= ACTMON_SAMPLING_PERIOD;
-> -	*upper *= ACTMON_SAMPLING_PERIOD;
-> +	*lower *= tegra->devfreq->profile->polling_ms;
-> +	*upper *= tegra->devfreq->profile->polling_ms;
->  }
->  
->  static void tegra_devfreq_update_avg_wmark(struct tegra_devfreq *tegra,
-> @@ -341,8 +342,8 @@ static void tegra_devfreq_update_avg_wmark(struct tegra_devfreq *tegra,
->  	 * result, but this one is probably the least churning, although
->  	 * it may look a bit convoluted.
->  	 */
-> -	if (freq * ACTMON_SAMPLING_PERIOD > upper)
-> -		upper = freq * ACTMON_SAMPLING_PERIOD;
-> +	if (freq * tegra->devfreq->profile->polling_ms > upper)
-> +		upper = freq * tegra->devfreq->profile->polling_ms;
->  
->  	/*
->  	 * We want to get interrupts when MCCPU client crosses the
-> @@ -420,7 +421,7 @@ static void actmon_isr_device(struct tegra_devfreq *tegra,
->  	avg_count = device_readl(dev, ACTMON_DEV_AVG_COUNT);
->  	dev_ctrl = device_readl(dev, ACTMON_DEV_CTRL);
->  
-> -	dev->avg_freq = avg_count / ACTMON_SAMPLING_PERIOD;
-> +	dev->avg_freq = avg_count / tegra->devfreq->profile->polling_ms;
->  
->  	avg_intr_mask = ACTMON_DEV_INTR_AVG_BELOW_WMARK |
->  			ACTMON_DEV_INTR_AVG_ABOVE_WMARK;
-> @@ -499,7 +500,7 @@ static unsigned long actmon_update_target(struct tegra_devfreq *tegra,
->  	 * outdated.
->  	 */
->  	avg_count = device_readl(dev, ACTMON_DEV_AVG_COUNT);
-> -	avg_freq = avg_count / ACTMON_SAMPLING_PERIOD;
-> +	avg_freq = avg_count / tegra->devfreq->profile->polling_ms;
->  
->  	old_upper = tegra_actmon_upper_freq(tegra, dev->avg_freq);
->  	new_upper = tegra_actmon_upper_freq(tegra, avg_freq);
-> @@ -675,7 +676,7 @@ static int tegra_actmon_cpu_notify_cb(struct notifier_block *nb,
->  	 * here for too long, otherwise CPUFreq's core will complain with a
->  	 * warning splat.
->  	 */
-> -	delay = msecs_to_jiffies(ACTMON_SAMPLING_PERIOD);
-> +	delay = msecs_to_jiffies(tegra->devfreq->profile->polling_ms);
->  	schedule_delayed_work(&tegra->cpufreq_update_work, delay);
->  
->  	return NOTIFY_OK;
-> @@ -690,7 +691,7 @@ static void tegra_actmon_configure_device(struct tegra_devfreq *tegra,
->  	dev->boost_freq = 0;
->  
->  	dev->avg_freq = clk_get_rate(tegra->emc_clock) / KHZ;
-> -	device_writel(dev, dev->avg_freq * ACTMON_SAMPLING_PERIOD,
-> +	device_writel(dev, dev->avg_freq * tegra->devfreq->profile->polling_ms,
->  		      ACTMON_DEV_INIT_AVG);
->  
->  	tegra_devfreq_update_avg_wmark(tegra, dev, dev->avg_freq);
-> @@ -725,7 +726,14 @@ static int tegra_actmon_start(struct tegra_devfreq *tegra)
->  	unsigned int i;
->  	int err;
->  
-> -	actmon_writel(tegra, ACTMON_SAMPLING_PERIOD - 1,
-> +	if (!tegra->devfreq->stop_polling)
-
-I don't prefer to change the 'stop_polling' on each device driver direclty
-without devfreq interface. Don't access it directly.
-
-> +		return 0;
-> +
-> +	tegra->devfreq->previous_freq = clk_get_rate(tegra->emc_clock) / KHZ;
-> +	tegra->devfreq->last_stat_updated = jiffies;
-> +	tegra->devfreq->stop_polling = false;
-
-ditto.
-
-> +
-> +	actmon_writel(tegra, tegra->devfreq->profile->polling_ms - 1,
->  		      ACTMON_GLB_PERIOD_CTRL);
->  
->  	/*
-> @@ -776,6 +784,11 @@ static void tegra_actmon_stop(struct tegra_devfreq *tegra)
->  {
->  	unsigned int i;
->  
-> +	if (tegra->devfreq->stop_polling)
-
-ditto.
-
-> +		return;
-> +
-> +	mutex_unlock(&tegra->devfreq->lock);
-> +
->  	disable_irq(tegra->irq);
->  
->  	cpufreq_unregister_notifier(&tegra->cpu_rate_change_nb,
-> @@ -783,10 +796,16 @@ static void tegra_actmon_stop(struct tegra_devfreq *tegra)
->  
->  	cancel_delayed_work_sync(&tegra->cpufreq_update_work);
->  
-> +	mutex_lock(&tegra->devfreq->lock);
-> +
->  	for (i = 0; i < ARRAY_SIZE(tegra->devices); i++)
->  		tegra_actmon_stop_device(&tegra->devices[i]);
->  
->  	clk_notifier_unregister(tegra->emc_clock, &tegra->clk_rate_change_nb);
-> +
-> +	devfreq_update_status(tegra->devfreq, tegra->devfreq->previous_freq);
-> +
-> +	tegra->devfreq->stop_polling = true;
-
-ditto.
-
->  }
->  
->  static int tegra_devfreq_target(struct device *dev, unsigned long *freq,
-> @@ -846,7 +865,7 @@ static int tegra_devfreq_get_dev_status(struct device *dev,
->  	stat->busy_time *= 100 / BUS_SATURATION_RATIO;
->  
->  	/* Number of cycles in a sampling period */
-> -	stat->total_time = cur_freq * ACTMON_SAMPLING_PERIOD;
-> +	stat->total_time = cur_freq * tegra->devfreq->profile->polling_ms;
->  
->  	stat->busy_time = min(stat->busy_time, stat->total_time);
->  
-> @@ -854,7 +873,7 @@ static int tegra_devfreq_get_dev_status(struct device *dev,
->  }
->  
->  static struct devfreq_dev_profile tegra_devfreq_profile = {
-> -	.polling_ms	= 0,
-> +	.polling_ms	= ACTMON_SAMPLING_PERIOD,
->  	.target		= tegra_devfreq_target,
->  	.get_dev_status	= tegra_devfreq_get_dev_status,
->  };
-> @@ -895,8 +914,11 @@ static int tegra_governor_event_handler(struct devfreq *devfreq,
->  					unsigned int event, void *data)
->  {
->  	struct tegra_devfreq *tegra = dev_get_drvdata(devfreq->dev.parent);
-> +	unsigned int new_delay, *delay_ptr = data;
->  	int ret = 0;
->  
-> +	mutex_lock(&devfreq->lock);
-> +
->  	/*
->  	 * Couple device with the governor early as it is needed at
->  	 * the moment of governor's start (used by ISR).
-> @@ -905,26 +927,33 @@ static int tegra_governor_event_handler(struct devfreq *devfreq,
->  
->  	switch (event) {
->  	case DEVFREQ_GOV_START:
-> -		devfreq_monitor_start(devfreq);
-> +		devfreq->stop_polling = true;
-
-It is not proper to initialize the 'stop_polling' on device driver directly.
-
-> +		/* fall through */
-> +	case DEVFREQ_GOV_RESUME:
->  		ret = tegra_actmon_start(tegra);
->  		break;
->  
->  	case DEVFREQ_GOV_STOP:
-> -		tegra_actmon_stop(tegra);
-> -		devfreq_monitor_stop(devfreq);
-
-Why do you remove them?
-
-> -		break;
-> -
-> +		/* fall through */
->  	case DEVFREQ_GOV_SUSPEND:
->  		tegra_actmon_stop(tegra);
-> -		devfreq_monitor_suspend(devfreq);
-
-Why do you remove it?
-
->  		break;
->  
-> -	case DEVFREQ_GOV_RESUME:
-> -		devfreq_monitor_resume(devfreq);
-> -		ret = tegra_actmon_start(tegra);
-> +	case DEVFREQ_GOV_INTERVAL:
-> +		new_delay = *delay_ptr;
-> +
-> +		if (!new_delay || new_delay > 256) {
-> +			ret = -EINVAL;
-> +		} else {
-> +			tegra_actmon_stop(tegra);
-> +			devfreq->profile->polling_ms = new_delay;
-> +			ret = tegra_actmon_start(tegra);
-> +		}
->  		break;
->  	}
->  
-> +	mutex_unlock(&devfreq->lock);
-> +
->  	return ret;
->  }
->  
+> > On Oct 1, 2019, at 8:20 AM, Kirill A. Shutemov <kirill@shutemov.name> wrote:
+> > 
+> > On Tue, Oct 01, 2019 at 06:18:28AM -0600, William Kucharski wrote:
+> >> 
+> >> 
+> >> On 10/1/19 5:32 AM, Kirill A. Shutemov wrote:
+> >>> On Tue, Oct 01, 2019 at 05:21:26AM -0600, William Kucharski wrote:
+> >>>> 
+> >>>> 
+> >>>>> On Oct 1, 2019, at 4:45 AM, Kirill A. Shutemov <kirill@shutemov.name> wrote:
+> >>>>> 
+> >>>>> On Tue, Sep 24, 2019 at 05:52:13PM -0700, Matthew Wilcox wrote:
+> >>>>>> 
+> >>>>>> diff --git a/mm/huge_memory.c b/mm/huge_memory.c
+> >>>>>> index cbe7d0619439..670a1780bd2f 100644
+> >>>>>> --- a/mm/huge_memory.c
+> >>>>>> +++ b/mm/huge_memory.c
+> >>>>>> @@ -563,8 +563,6 @@ unsigned long thp_get_unmapped_area(struct file *filp, unsigned long addr,
+> >>>>>> 
+> >>>>>> 	if (addr)
+> >>>>>> 		goto out;
+> >>>>>> -	if (!IS_DAX(filp->f_mapping->host) || !IS_ENABLED(CONFIG_FS_DAX_PMD))
+> >>>>>> -		goto out;
+> >>>>>> 
+> >>>>>> 	addr = __thp_get_unmapped_area(filp, len, off, flags, PMD_SIZE);
+> >>>>>> 	if (addr)
+> >>>>> 
+> >>>>> I think you reducing ASLR without any real indication that THP is relevant
+> >>>>> for the VMA. We need to know if any huge page allocation will be
+> >>>>> *attempted* for the VMA or the file.
+> >>>> 
+> >>>> Without a properly aligned address the code will never even attempt allocating
+> >>>> a THP.
+> >>>> 
+> >>>> I don't think rounding an address to one that would be properly aligned to map
+> >>>> to a THP if possible is all that detrimental to ASLR and without the ability to
+> >>>> pick an aligned address it's rather unlikely anyone would ever map anything to
+> >>>> a THP unless they explicitly designate an address with MAP_FIXED.
+> >>>> 
+> >>>> If you do object to the slight reduction of the ASLR address space, what
+> >>>> alternative would you prefer to see?
+> >>> 
+> >>> We need to know by the time if THP is allowed for this
+> >>> file/VMA/process/whatever. Meaning that we do not give up ASLR entropy for
+> >>> nothing.
+> >>> 
+> >>> For instance, if THP is disabled globally, there is no reason to align the
+> >>> VMA to the THP requirements.
+> >> 
+> >> I understand, but this code is in thp_get_unmapped_area(), which is only called
+> >> if THP is configured and the VMA can support it.
+> >> 
+> >> I don't see it in Matthew's patchset, so I'm not sure if it was inadvertently
+> >> missed in his merge or if he has other ideas for how it would eventually be
+> >> called, but in my last patch revision the code calling it in do_mmap()
+> >> looked like this:
+> >> 
+> >> #ifdef CONFIG_RO_EXEC_FILEMAP_HUGE_FAULT_THP
+> >>        /*
+> >>         * If THP is enabled, it's a read-only executable that is
+> >>         * MAP_PRIVATE mapped, the length is larger than a PMD page
+> >>         * and either it's not a MAP_FIXED mapping or the passed address is
+> >>         * properly aligned for a PMD page, attempt to get an appropriate
+> >>         * address at which to map a PMD-sized THP page, otherwise call the
+> >>         * normal routine.
+> >>         */
+> >>        if ((prot & PROT_READ) && (prot & PROT_EXEC) &&
+> >>                (!(prot & PROT_WRITE)) && (flags & MAP_PRIVATE) &&
+> >>                (!(flags & MAP_FIXED)) && len >= HPAGE_PMD_SIZE) {
+> > 
+> > len and MAP_FIXED is already handled by thp_get_unmapped_area().
+> > 
+> > 	if (prot & (PROT_READ|PROT_WRITE|PROT_READ) == (PROT_READ|PROT_EXEC) &&
+> > 		(flags & MAP_PRIVATE)) {
 > 
+> It is, but I wanted to avoid even calling it if conditions weren't right.
+> 
+> Checking twice is non-optimal but I didn't want to alter the existing use of
+> the routine for anon THP.
 
+It's not used by anon THP. It used for DAX.
+
+> > 
+> > 
+> >>                addr = thp_get_unmapped_area(file, addr, len, pgoff, flags);
+> >> 
+> >>                if (addr && (!(addr & ~HPAGE_PMD_MASK))) {
+> > 
+> > This check is broken.
+> > 
+> > For instance, if pgoff is one, (addr & ~HPAGE_PMD_MASK) has to be equal to
+> > PAGE_SIZE to have chance to get a huge page in the mapping.
+> > 
+> 
+> If the address isn't PMD-aligned, we will never be able to map it with a THP
+> anyway.
+
+The opposite is true. I tried to explain it few times, but let's try
+again.
+
+If the address here is PMD-aligned, it will get a mismatch with page cache
+alignment.
+
+Consider the case with 2 huge pages in page cache, starting at the
+beginning of the file.
+
+The key to understanding: huge pages always aligned naturally in page
+cache. Page cache lives longer than any mapping of the file.
+
+If user calls mmap(.pgoff = 1) and it returns PMD-aligned address, we will
+never have a huge page in the mapping. At the PMD-aligned address you will
+get the second 4k of the first huge page and you will have to map it with
+PTE. At the second PMD-aligned address of the mapping, the situation will
+repeat for the second huge page, again misaligned, PTE-mapped second
+subpage.
+
+The solution here is to return address aligned to PMD_SIZE + PAGE_SIZE, if
+user asked for mmap(.pgoff = 1). The user will not get first huge page
+mapped with PMD, because mapping truncates it from the beginning per user
+request. But the second (and any following huge page) will land on the
+right alignment and can be mapped with PMD.
+
+Does it make sense?
+
+> >>                        /*
+> >>                         * If we got a suitable THP mapping address, shut off
+> >>                         * VM_MAYWRITE for the region, since it's never what
+> >>                         * we would want.
+> >>                         */
+> >>                        vm_maywrite = 0;
+> > 
+> > Wouldn't it break uprobe, for instance?
+> 
+> I'm not sure; does uprobe allow COW to insert the probe even for mappings
+> explicitly marked read-only?
+
+Yes. See FOLL_FORCE usage.
 
 -- 
-Best Regards,
-Chanwoo Choi
-Samsung Electronics
+ Kirill A. Shutemov
