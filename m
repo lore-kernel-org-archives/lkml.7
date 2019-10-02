@@ -2,109 +2,177 @@ Return-Path: <SRS0=zem1=X3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A522BC4360C
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 20:30:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 926A8C4360C
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 20:31:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 83595207FF
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 20:30:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 63EE9218DE
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 20:31:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1570048314;
+	bh=2WYhvLcVLSMEzXpg5qlewn+Ca793Z6CYPcHmcJoAuKA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=pqWdGRnzRIqlqggBp19oy90HxuZ8KrFiqxdJOAgttmK/ctSgaJtxTi+8w2PBME7NG
+	 uZbVeikEafWU/YcsjFHe2kYNaUJkFbwvN/7+O3G5ogddu3i3XViq/YfAwWIWwKFOZo
+	 U/UhdiY8LxYEwOUOL5+zLo6GJClSftaOnAout2tE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728113AbfJBUa5 (ORCPT
+        id S1728223AbfJBUbx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Oct 2019 16:30:57 -0400
-Received: from avon.wwwdotorg.org ([104.237.132.123]:44176 "EHLO
-        avon.wwwdotorg.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725799AbfJBUa4 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Oct 2019 16:30:56 -0400
-Received: from [10.20.204.51] (unknown [216.228.112.24])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        Wed, 2 Oct 2019 16:31:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55168 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727920AbfJBUbx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 2 Oct 2019 16:31:53 -0400
+Received: from earth.universe (unknown [185.62.205.105])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by avon.wwwdotorg.org (Postfix) with ESMTPSA id 1D3BD1C00ED;
-        Wed,  2 Oct 2019 14:30:55 -0600 (MDT)
-X-Virus-Status: Clean
-X-Virus-Scanned: clamav-milter 0.100.3 at avon.wwwdotorg.org
-Subject: Re: [PATCH] arm64: tegra: only map accessible sysram
-To:     Mian Yousaf Kaukab <ykaukab@suse.de>
-Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        treding@nvidia.com, jonathanh@nvidia.com,
-        linux-tegra@vger.kernel.org
-References: <20190929200851.14228-1-ykaukab@suse.de>
- <5d2e47ec-8304-d648-9c4a-80c7c02050a9@wwwdotorg.org>
- <20190930100212.GA21324@suse.de>
-From:   Stephen Warren <swarren@wwwdotorg.org>
-Message-ID: <c7d64f56-cb44-cb3a-aa7a-ee7b5c01d6db@wwwdotorg.org>
-Date:   Wed, 2 Oct 2019 14:30:53 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        by mail.kernel.org (Postfix) with ESMTPSA id 9720B21783;
+        Wed,  2 Oct 2019 20:31:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1570048311;
+        bh=2WYhvLcVLSMEzXpg5qlewn+Ca793Z6CYPcHmcJoAuKA=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=o6lmZ1WgebksVHOrIid4jjR2hrh/DJsATwataRLEwP3tQR66WUfsjG66hsuQZh1Sv
+         YFbwIz6byESts5cHB4ZASC+iR57uiiV+t87DgIF/aY4EpCUtLYgIFddeZxT9THgIsR
+         HLFTgRuNhJ3fH6UljH5vn0v7wSoco1kJkuLo1V64=
+Received: by earth.universe (Postfix, from userid 1000)
+        id 11C943C0CA1; Wed,  2 Oct 2019 22:31:49 +0200 (CEST)
+Date:   Wed, 2 Oct 2019 22:31:49 +0200
+From:   Sebastian Reichel <sre@kernel.org>
+To:     Adam Ford <aford173@gmail.com>
+Cc:     linux-bluetooth@vger.kernel.org, marcel@holtmann.org,
+        johan.hedberg@gmail.com, linux-kernel@vger.kernel.org,
+        adam.ford@logicpd.com
+Subject: Re: [PATCH] Revert "Bluetooth: hci_ll: set operational frequency
+ earlier"
+Message-ID: <20191002203149.g22igmfndbve7m3n@earth.universe>
+References: <20191002114626.12407-1-aford173@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20190930100212.GA21324@suse.de>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="oce6v5i3llqwjvjc"
+Content-Disposition: inline
+In-Reply-To: <20191002114626.12407-1-aford173@gmail.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 9/30/19 4:02 AM, Mian Yousaf Kaukab wrote:
-> On Sun, Sep 29, 2019 at 11:28:43PM -0600, Stephen Warren wrote:
->> On 9/29/19 2:08 PM, Mian Yousaf Kaukab wrote:
->>> Most of the SysRAM is secure and only accessible by TF-A.
->>> Don't map this inaccessible memory in kernel. Only map pages
->>> used by bpmp driver.
->>
->> I don't believe this change is correct. The actual patch doesn't
->> implement mapping a subset of the RAM (a software issue), but rather it
->> changes the DT representation of the SYSRAM hardware. The SYSRAM
->> hardware always does start at 0x30000000, even if a subset of the
->> address range is dedicated to a specific purpose. If the kernel must map
->> only part of the RAM, then some additional property should indicate
->> this.[...]
-> I agree the hardware description becomes inaccurate with this change.
-> 
-> In the current setup complete 0x3000_0000 to 0x3005_0000 range is being mapped
-> as normal memory (MT_NORMAL_NC). Though only 0x3004_E000 to 0x3005_0000 are
-> accessible by the kernel.
 
-Nit: I expect that a much larger region than that is *accessible*, 
-although it's quite plausible that only that region is actually 
-*accessed*/used right now.
+--oce6v5i3llqwjvjc
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> I am seeing an issue where a read access (which I
-> believe is speculative) to inaccessible range causes an SError. Another
-> solution for this problem could be to add "no-memory-wc" to SysRAM node so that
-> it is mapped as device memory (MT_DEVICE_nGnRE). Would that be acceptable?
+Hi,
 
-Why does the driver blindly map the entire memory at all? Surely it 
-should only map the portions of RAM that other drivers request/use? And 
-surely the BPMP driver or DT node is already providing that information?
+On Wed, Oct 02, 2019 at 06:46:26AM -0500, Adam Ford wrote:
+> As nice as it would be to update firmware faster, that patch broke
+> at least two different boards, an OMAP4+WL1285 based Motorola Droid
+> 4, as reported by Sebasian Reichel and the Logic PD i.MX6Q +
+> WL1837MOD.
+>=20
+> This reverts commit a2e02f38eff84f199c8e32359eb213f81f270047.
+>
+> Signed-off-by: Adam Ford <aford173@gmail.com>
 
-But yes, changing the mapping type to avoid speculation might be an 
-acceptable solution for now, although I think we'd want to work things 
-out better later. I don't know if there would be any impact to the BPMP 
-driver related to the slower SRAM access due to this change. Best 
-consult a BPMP expert or Tegra maintainer about that.
+Acked-by: Sebastian Reichel <sebastian.reichel@collabora.com>
 
->> [...] Also, I believe it's incorrect to hard-code into the kernel's DT
->> the range of addresses used by the secure monitor/OS, since this can
->> vary depending on what the user actually chooses to install as the
->> secure monitor/OS. Any indication of such regions should be filled in at
->> runtime by some boot firmware or the secure monitor/OS itself, or
->> retrieved using some runtime API rather than DT.
-> Secure-OS addresses are not of interest here. SysRAM is partitioned
-> between secure-OS and BPMP and kernel is only interested in the BPMP
-> part. The firmware can update these addresses in the device-tree if it
-> wants to. Would you prefer something similar implemented in u-boot so
-> that it updates SysRAM node to only expose kernel accessible part of it
-> to the kernel?
-> 
-> Can u-boot dynamically figure out the Secure-OS vs BPMP partition?
-> 
-> BR,
-> Yousaf
-> 
+This should be backported stable
 
+-- Sebastian
+
+> diff --git a/drivers/bluetooth/hci_ll.c b/drivers/bluetooth/hci_ll.c
+> index 285706618f8a..d9a4c6c691e0 100644
+> --- a/drivers/bluetooth/hci_ll.c
+> +++ b/drivers/bluetooth/hci_ll.c
+> @@ -621,13 +621,6 @@ static int ll_setup(struct hci_uart *hu)
+> =20
+>  	serdev_device_set_flow_control(serdev, true);
+> =20
+> -	if (hu->oper_speed)
+> -		speed =3D hu->oper_speed;
+> -	else if (hu->proto->oper_speed)
+> -		speed =3D hu->proto->oper_speed;
+> -	else
+> -		speed =3D 0;
+> -
+>  	do {
+>  		/* Reset the Bluetooth device */
+>  		gpiod_set_value_cansleep(lldev->enable_gpio, 0);
+> @@ -639,20 +632,6 @@ static int ll_setup(struct hci_uart *hu)
+>  			return err;
+>  		}
+> =20
+> -		if (speed) {
+> -			__le32 speed_le =3D cpu_to_le32(speed);
+> -			struct sk_buff *skb;
+> -
+> -			skb =3D __hci_cmd_sync(hu->hdev,
+> -					     HCI_VS_UPDATE_UART_HCI_BAUDRATE,
+> -					     sizeof(speed_le), &speed_le,
+> -					     HCI_INIT_TIMEOUT);
+> -			if (!IS_ERR(skb)) {
+> -				kfree_skb(skb);
+> -				serdev_device_set_baudrate(serdev, speed);
+> -			}
+> -		}
+> -
+>  		err =3D download_firmware(lldev);
+>  		if (!err)
+>  			break;
+> @@ -677,7 +656,25 @@ static int ll_setup(struct hci_uart *hu)
+>  	}
+> =20
+>  	/* Operational speed if any */
+> +	if (hu->oper_speed)
+> +		speed =3D hu->oper_speed;
+> +	else if (hu->proto->oper_speed)
+> +		speed =3D hu->proto->oper_speed;
+> +	else
+> +		speed =3D 0;
+> +
+> +	if (speed) {
+> +		__le32 speed_le =3D cpu_to_le32(speed);
+> +		struct sk_buff *skb;
+> =20
+> +		skb =3D __hci_cmd_sync(hu->hdev, HCI_VS_UPDATE_UART_HCI_BAUDRATE,
+> +				     sizeof(speed_le), &speed_le,
+> +				     HCI_INIT_TIMEOUT);
+> +		if (!IS_ERR(skb)) {
+> +			kfree_skb(skb);
+> +			serdev_device_set_baudrate(serdev, speed);
+> +		}
+> +	}
+> =20
+>  	return 0;
+>  }
+> --=20
+> 2.17.1
+>=20
+
+--oce6v5i3llqwjvjc
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAl2VCSkACgkQ2O7X88g7
++priwg//WmOF0VYpnbAnBIyU0dH6K9I3h+5P5hx3bKGWzJo5y943l8m5CDt0Egq1
+qvsw7K4b9SinxoG7Em1DVbhIEiuExf3bHqeX6tv+VlpFI1tmAPkrkuUPiItV4pRl
+mAk142dQaiLNMlQNevvw9bx0lC0T1P2vWrjELRK9IWZWe4HshRhHc2jULBZNuQrP
+SpZjEgZ6t6jr3U3NrFIgfHef9A6QClzsDsf8ekPBABsVm3FwJpf/UENsANi0oEE9
+QseUbGmu65ROKtP7rRRB3tnlZfklQm71CHVHh6yChqeGLvgLmdvNpzV26v3vb0LH
+vpU4Z4wvHUSlN9as1tJGQffzqyoH0E3E/3OrQjYZWIZbQCvU5+CjHiXsbj/Bw48U
+cgXSWnXAMtE+1g04Tus2lGrNEAJQiOZcyGvpjaGKVaCbWEFjwQ5k4jUXFSIaVbh+
+8rsoeeDkQxDPmWjf5XtVj4mQtDyEZcc4WZ+NoU4gMot4R733Yj29vd/V7AE6YTuT
+qP/a1MygeuJ5YmLSpmPmcJ4dUNbVlCUQjBQUPkWeDPIMUdZsEUZmI5fv+f0ltZmJ
+OsNccPHJLsfFJ2+s2TRk+XO4RnuQtpTNC+mrQkAQE72y4c3za6Jyhl10InmJ2fvM
+Q7iV9O3i5Ovuk77ekTp9c4O6SOARLVEECtJNSglNirRpxhhP69k=
+=gWno
+-----END PGP SIGNATURE-----
+
+--oce6v5i3llqwjvjc--
