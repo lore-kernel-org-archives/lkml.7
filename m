@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DA77C352AA
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 16:44:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DCEAC35280
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 16:44:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EB6B1222C3
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 16:44:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 65C5F21848
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 16:44:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570034683;
-	bh=Q6ZC+YMZc+afmN9lO3DNkdipLaLdS0r6zWZ0wjzsdbk=;
+	s=default; t=1570034689;
+	bh=+s5Aendlt2pjyaSZzeQUNm82lkdAyFArqb1VFwYPYJQ=;
 	h=From:To:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=yMn/1vqL9EhhyoDHknXEW1Qa4rS5rhkaYaG4R8AJJDfTx/7G6AMxaspH6WyN5pv/N
-	 7t/Stx5GcpZCrDb5KF3pRe/8Py8S3Fbjc3jNgXBlVDS9CsDjGmDWSKV5GaFPJBFP4w
-	 ud8L34YYGnL/e7Ex1QIuzJBYahmRhIwDTzfOQfnw=
+	b=dYT87w4S1szsKWo4ql9xBJrelHzQAUitKoRdPNryVzQieLxfe06tzy+7z56yNi2y7
+	 R6mYkBn012G744NRP3pL9SEVCSYplSGUGNBzPT1bBLZOaCmbZwdmeWyfbVcfbUjTpW
+	 38CMRPNnciMza+2iKwSAKaKPscAImALh8uBYRJzI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728355AbfJBQom (ORCPT
+        id S1728424AbfJBQos (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Oct 2019 12:44:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49048 "EHLO mail.kernel.org"
+        Wed, 2 Oct 2019 12:44:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49186 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726708AbfJBQol (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Oct 2019 12:44:41 -0400
+        id S1726708AbfJBQos (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 2 Oct 2019 12:44:48 -0400
 Received: from localhost.localdomain (unknown [194.230.155.145])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 943D421848;
-        Wed,  2 Oct 2019 16:44:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BF4ED21D81;
+        Wed,  2 Oct 2019 16:44:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570034681;
-        bh=Q6ZC+YMZc+afmN9lO3DNkdipLaLdS0r6zWZ0wjzsdbk=;
+        s=default; t=1570034687;
+        bh=+s5Aendlt2pjyaSZzeQUNm82lkdAyFArqb1VFwYPYJQ=;
         h=From:To:Subject:Date:In-Reply-To:References:From;
-        b=WXJ4zGDsfqX1/4a+q/NwfgvRr49aH9WKa//CrxKEsTX46haVjjmU5Wy2lyvzV0xdA
-         +yM8/f/jcqugleXTO9p6CQ3mdutQYRfdBeINjkkOnK5TgNlaZUzGdXaFuqd+Sn8jRI
-         8mnl/USrLhDAaVSKu2ZsMcmBP2kPtoJttOZpzzRY=
+        b=kpHC7Mh4WQVlnH0Fj9TyYyBI4gmqNySnF0ZOgfMYYW6LvJQaIZ/9AKD5qboTv7u+b
+         EuYTQ/ZI8XNk1Wp6kYA2w3JqAlfom5qD3x2IBV7WvB5n5Jx2F8wpXDPC3EmauUYBRz
+         dVSU1huQ4hFqVlUhRjOZXwRs2ka6Ik11hF4TVFJI=
 From:   Krzysztof Kozlowski <krzk@kernel.org>
 To:     Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
@@ -62,9 +62,9 @@ To:     Rob Herring <robh+dt@kernel.org>,
         linux-arm-kernel@lists.infradead.org,
         linux-samsung-soc@vger.kernel.org, linux-omap@vger.kernel.org,
         linux-tegra@vger.kernel.org
-Subject: [PATCH v3 08/10] ARM: dts: tegra: Rename "iram" node to "sram"
-Date:   Wed,  2 Oct 2019 18:43:14 +0200
-Message-Id: <20191002164316.14905-8-krzk@kernel.org>
+Subject: [PATCH v3 09/10] ARM: dts: am: Rename "ocmcram" node to "sram"
+Date:   Wed,  2 Oct 2019 18:43:15 +0200
+Message-Id: <20191002164316.14905-9-krzk@kernel.org>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20191002164316.14905-1-krzk@kernel.org>
 References: <20191002164316.14905-1-krzk@kernel.org>
@@ -74,41 +74,41 @@ List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 The device node name should reflect generic class of a device so rename
-the "iram" node to "sram".  This will be also in sync with upcoming DT
+the "ocmcram" node to "sram".  This will be also in sync with upcoming DT
 schema.  No functional change.
 
 Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 ---
- arch/arm/boot/dts/tegra20.dtsi | 2 +-
- arch/arm/boot/dts/tegra30.dtsi | 2 +-
+ arch/arm/boot/dts/am33xx.dtsi | 2 +-
+ arch/arm/boot/dts/am4372.dtsi | 2 +-
  2 files changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/arch/arm/boot/dts/tegra20.dtsi b/arch/arm/boot/dts/tegra20.dtsi
-index 8c942e60703e..a7cf42cde13e 100644
---- a/arch/arm/boot/dts/tegra20.dtsi
-+++ b/arch/arm/boot/dts/tegra20.dtsi
-@@ -16,7 +16,7 @@
- 		reg = <0 0>;
- 	};
- 
--	iram@40000000 {
-+	sram@40000000 {
- 		compatible = "mmio-sram";
- 		reg = <0x40000000 0x40000>;
- 		#address-cells = <1>;
-diff --git a/arch/arm/boot/dts/tegra30.dtsi b/arch/arm/boot/dts/tegra30.dtsi
-index e074258d4518..55860a46f2b4 100644
---- a/arch/arm/boot/dts/tegra30.dtsi
-+++ b/arch/arm/boot/dts/tegra30.dtsi
-@@ -96,7 +96,7 @@
+diff --git a/arch/arm/boot/dts/am33xx.dtsi b/arch/arm/boot/dts/am33xx.dtsi
+index fb6b8aa12cc5..3e37ae7241a4 100644
+--- a/arch/arm/boot/dts/am33xx.dtsi
++++ b/arch/arm/boot/dts/am33xx.dtsi
+@@ -393,7 +393,7 @@
+ 			};
  		};
- 	};
  
--	iram@40000000 {
-+	sram@40000000 {
- 		compatible = "mmio-sram";
- 		reg = <0x40000000 0x40000>;
- 		#address-cells = <1>;
+-		ocmcram: ocmcram@40300000 {
++		ocmcram: sram@40300000 {
+ 			compatible = "mmio-sram";
+ 			reg = <0x40300000 0x10000>; /* 64k */
+ 			ranges = <0x0 0x40300000 0x10000>;
+diff --git a/arch/arm/boot/dts/am4372.dtsi b/arch/arm/boot/dts/am4372.dtsi
+index 848e2a8884e2..d7775aed7483 100644
+--- a/arch/arm/boot/dts/am4372.dtsi
++++ b/arch/arm/boot/dts/am4372.dtsi
+@@ -349,7 +349,7 @@
+ 			};
+ 		};
+ 
+-		ocmcram: ocmcram@40300000 {
++		ocmcram: sram@40300000 {
+ 			compatible = "mmio-sram";
+ 			reg = <0x40300000 0x40000>; /* 256k */
+ 			ranges = <0x0 0x40300000 0x40000>;
 -- 
 2.17.1
 
