@@ -2,161 +2,90 @@ Return-Path: <SRS0=zem1=X3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A560ECE58C
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 17:18:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA66AC10F14
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 17:18:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5A283222BE
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 17:18:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 91CBA21848
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 17:18:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728545AbfJBRSG (ORCPT
+        id S1728637AbfJBRSb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Oct 2019 13:18:06 -0400
-Received: from mga04.intel.com ([192.55.52.120]:52665 "EHLO mga04.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726798AbfJBRSG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Oct 2019 13:18:06 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 02 Oct 2019 10:18:05 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.67,249,1566889200"; 
-   d="scan'208";a="275417382"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.41])
-  by orsmga001.jf.intel.com with ESMTP; 02 Oct 2019 10:18:05 -0700
-Date:   Wed, 2 Oct 2019 10:18:05 -0700
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Zhenzhong Duan <zhenzhong.duan@oracle.com>
-Cc:     linux-kernel@vger.kernel.org, vkuznets@redhat.com,
-        linux-hyperv@vger.kernel.org, kvm@vger.kernel.org,
-        Jonathan Corbet <corbet@lwn.net>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Juergen Gross <jgross@suse.com>,
-        Stefano Stabellini <sstabellini@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>
-Subject: Re: [PATCH v3 3/4] xen: Mark "xen_nopvspin" parameter obsolete and
- map it to "nopvspin"
-Message-ID: <20191002171805.GD9615@linux.intel.com>
-References: <1569847479-13201-1-git-send-email-zhenzhong.duan@oracle.com>
- <1569847479-13201-4-git-send-email-zhenzhong.duan@oracle.com>
+        Wed, 2 Oct 2019 13:18:31 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:37695 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728145AbfJBRSa (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 2 Oct 2019 13:18:30 -0400
+Received: by mail-wm1-f65.google.com with SMTP id f22so7779498wmc.2;
+        Wed, 02 Oct 2019 10:18:27 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=BV6L+hqk4XyUS3SFdDC/o0QqOdSd75QbKfMgEhSqMZk=;
+        b=QPnQjoVRc9XWitabtC+modVMCOV0bDKc/xLUe34HxD+QsKRGVsbl61I0nr5W74fz6A
+         MBp9Y+hJScDUrmrhVsN87QLHk9EbwI2ds8NuFeq6XOvbN5ZNJRimL0Pj/SluMpXfiOxe
+         nH09w8hZRIlRuamkBQM17CxZu1cXi9dIFGSnUthAxujeMkJNHts6t65gw9Pi+ulqCFHV
+         +oGi9IkE48+YjjB1NduiP0dwrsR1z9nJpOUI3FRM4m4/fRwZHY9GhiX3GLkcEPrWmYF8
+         odiqL9s8XP/TJ4gFA7dgDvqAU6R71ND/m6HRMSMyi/6xrtlrMhv5bH39T5FKUvPAwAzN
+         BhlQ==
+X-Gm-Message-State: APjAAAWGRPtFvsu3xcdqXfuMbZG4q1Xm22ERdCeFXYQUSbrTAnwowL65
+        xNTGuPUg674IcQuPMYnfYNVnDlYY1b8=
+X-Google-Smtp-Source: APXvYqwG+lrHPxsU/31EHxrkr+onnLQnUGFoFEHXHnVaGTdpXMUNuXO0ovVWYKr/r2+jbzGpMEvIag==
+X-Received: by 2002:a1c:1f47:: with SMTP id f68mr4015480wmf.78.1570036706910;
+        Wed, 02 Oct 2019 10:18:26 -0700 (PDT)
+Received: from green.intra.ispras.ru (bran.ispras.ru. [83.149.199.196])
+        by smtp.googlemail.com with ESMTPSA id y8sm20691987wrm.64.2019.10.02.10.18.25
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 02 Oct 2019 10:18:26 -0700 (PDT)
+From:   Denis Efremov <efremov@linux.com>
+To:     linux-wireless@vger.kernel.org
+Cc:     Denis Efremov <efremov@linux.com>, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Amitkumar Karwar <amitkarwar@gmail.com>,
+        Siva Rebbagondla <siva8118@gmail.com>,
+        Kalle Valo <kvalo@codeaurora.org>
+Subject: [PATCH] rsi: fix potential null dereference in rsi_probe()
+Date:   Wed,  2 Oct 2019 20:18:11 +0300
+Message-Id: <20191002171811.23993-1-efremov@linux.com>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1569847479-13201-4-git-send-email-zhenzhong.duan@oracle.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Sep 30, 2019 at 08:44:38PM +0800, Zhenzhong Duan wrote:
-> Fix stale description of "xen_nopvspin" as we use qspinlock now.
-> 
-> Signed-off-by: Zhenzhong Duan <zhenzhong.duan@oracle.com>
-> Reviewed-by: Juergen Gross <jgross@suse.com>
-> Cc: Jonathan Corbet <corbet@lwn.net>
-> Cc: Boris Ostrovsky <boris.ostrovsky@oracle.com>
-> Cc: Juergen Gross <jgross@suse.com>
-> Cc: Stefano Stabellini <sstabellini@kernel.org>
-> Cc: Thomas Gleixner <tglx@linutronix.de>
-> Cc: Ingo Molnar <mingo@redhat.com>
-> Cc: Borislav Petkov <bp@alien8.de>
-> Cc: "H. Peter Anvin" <hpa@zytor.com>
-> ---
->  Documentation/admin-guide/kernel-parameters.txt |  7 ++++---
->  arch/x86/xen/spinlock.c                         | 13 +++++++------
->  2 files changed, 11 insertions(+), 9 deletions(-)
-> 
-> diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
-> index 4b956d8..1f0a62f 100644
-> --- a/Documentation/admin-guide/kernel-parameters.txt
-> +++ b/Documentation/admin-guide/kernel-parameters.txt
-> @@ -5303,8 +5303,9 @@
->  			never -- do not unplug even if version check succeeds
->  
->  	xen_nopvspin	[X86,XEN]
-> -			Disables the ticketlock slowpath using Xen PV
-> -			optimizations.
-> +			Disables the qspinlock slowpath using Xen PV optimizations.
-> +			This parameter is obsoleted by "nopvspin" parameter, which
-> +			has equivalent effect for XEN platform.
->  
->  	xen_nopv	[X86]
->  			Disables the PV optimizations forcing the HVM guest to
-> @@ -5330,7 +5331,7 @@
->  			as generic guest with no PV drivers. Currently support
->  			XEN HVM, KVM, HYPER_V and VMWARE guest.
->  
-> -	nopvspin	[X86,KVM] Disables the qspinlock slow path
-> +	nopvspin	[X86,XEN,KVM] Disables the qspinlock slow path
->  			using PV optimizations which allow the hypervisor to
->  			'idle' the guest on lock contention.
->  
-> diff --git a/arch/x86/xen/spinlock.c b/arch/x86/xen/spinlock.c
-> index 6deb490..092a53f 100644
-> --- a/arch/x86/xen/spinlock.c
-> +++ b/arch/x86/xen/spinlock.c
-> @@ -18,7 +18,6 @@
->  static DEFINE_PER_CPU(int, lock_kicker_irq) = -1;
->  static DEFINE_PER_CPU(char *, irq_name);
->  static DEFINE_PER_CPU(atomic_t, xen_qlock_wait_nest);
-> -static bool xen_pvspin = true;
->  
->  static void xen_qlock_kick(int cpu)
->  {
-> @@ -68,7 +67,7 @@ void xen_init_lock_cpu(int cpu)
->  	int irq;
->  	char *name;
->  
-> -	if (!xen_pvspin)
-> +	if (!pvspin)
->  		return;
->  
->  	WARN(per_cpu(lock_kicker_irq, cpu) >= 0, "spinlock on CPU%d exists on IRQ%d!\n",
-> @@ -93,7 +92,7 @@ void xen_init_lock_cpu(int cpu)
->  
->  void xen_uninit_lock_cpu(int cpu)
->  {
-> -	if (!xen_pvspin)
-> +	if (!pvspin)
->  		return;
->  
->  	unbind_from_irqhandler(per_cpu(lock_kicker_irq, cpu), NULL);
-> @@ -117,9 +116,9 @@ void __init xen_init_spinlocks(void)
->  
->  	/*  Don't need to use pvqspinlock code if there is only 1 vCPU. */
->  	if (num_possible_cpus() == 1)
-> -		xen_pvspin = false;
-> +		pvspin = false;
+The id pointer can be NULL in rsi_probe(). It is checked everywhere except
+for the else branch in the idProduct condition. The patch adds NULL check
+before the id dereference in the rsi_dbg() call.
 
-As suggested in the other patch, if you incorporate pvspin (or nopvspin)
-into xen_pvspin then the param can be __initdata and the diff for this
-patch will be smaller, e.g. you wouldn't need the xen_domain() shenanigans
-in xen_parse_nopvspin().
+Fixes: 54fdb318c111 ("rsi: add new device model for 9116")
+Cc: Amitkumar Karwar <amitkarwar@gmail.com>
+Cc: Siva Rebbagondla <siva8118@gmail.com>
+Cc: Kalle Valo <kvalo@codeaurora.org>
+Signed-off-by: Denis Efremov <efremov@linux.com>
+---
+ drivers/net/wireless/rsi/rsi_91x_usb.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-> -	if (!xen_pvspin) {
-> +	if (!pvspin) {
->  		printk(KERN_DEBUG "xen: PV spinlocks disabled\n");
->  		static_branch_disable(&virt_spin_lock_key);
->  		return;
-> @@ -137,7 +136,9 @@ void __init xen_init_spinlocks(void)
->  
->  static __init int xen_parse_nopvspin(char *arg)
->  {
-> -	xen_pvspin = false;
-> +	pr_notice("\"xen_nopvspin\" is deprecated, please use \"nopvspin\" instead\n");
-> +	if (xen_domain())
-> +		pvspin = false;
->  	return 0;
->  }
->  early_param("xen_nopvspin", xen_parse_nopvspin);
-> -- 
-> 1.8.3.1
-> 
+diff --git a/drivers/net/wireless/rsi/rsi_91x_usb.c b/drivers/net/wireless/rsi/rsi_91x_usb.c
+index 760eaffeebd6..23a1d00b5f38 100644
+--- a/drivers/net/wireless/rsi/rsi_91x_usb.c
++++ b/drivers/net/wireless/rsi/rsi_91x_usb.c
+@@ -793,7 +793,7 @@ static int rsi_probe(struct usb_interface *pfunction,
+ 		adapter->device_model = RSI_DEV_9116;
+ 	} else {
+ 		rsi_dbg(ERR_ZONE, "%s: Unsupported RSI device id 0x%x\n",
+-			__func__, id->idProduct);
++			__func__, id ? id->idProduct : 0x0);
+ 		goto err1;
+ 	}
+ 
+-- 
+2.21.0
+
