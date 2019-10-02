@@ -2,116 +2,128 @@ Return-Path: <SRS0=zem1=X3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 11D1DECE587
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 03:18:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54A65ECE589
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 03:18:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DD3B520818
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 03:18:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2C10421906
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 03:18:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IhspJJTC"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="Hv1zUDAO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729077AbfJBDSC (ORCPT
+        id S1729287AbfJBDSk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Oct 2019 23:18:02 -0400
-Received: from mail-qt1-f194.google.com ([209.85.160.194]:36570 "EHLO
-        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726869AbfJBDSC (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Oct 2019 23:18:02 -0400
-Received: by mail-qt1-f194.google.com with SMTP id o12so24558994qtf.3;
-        Tue, 01 Oct 2019 20:18:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=DkfOxbgDr7IYTTOG7aOBpzhIL2nlLLSARJt6E+jjVXU=;
-        b=IhspJJTCUMExojADiKr2W/9JHFM0sVu94fB83wkgQSgbKLnWmSlRyg7OBZ2wEQ6zFV
-         yQRvkabi8UL5SqFLiyi6m1SPuhofDVvoaLHj2L0C5sx0uSySug1ibL7hNfGwvie86GJZ
-         NPDitckoC0vaohlnMQmYOv3L4Gzsz5OKIx1/tNUWeRcIkDPLdjAYtuaq5ZnE6QFg6YmW
-         b/ZHkclTCiwtvPp0BZ9CKTdn7ZAX02ne0DRLfidO2AcVv8LtvDpS+06BS7nGcH+8xBzy
-         hX8Um03GcW04FPtVizP/47K82r2th84FqA7j86y5kLcTI9+J/FmtI6oDhKZ47QCYRd6j
-         1uUA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=DkfOxbgDr7IYTTOG7aOBpzhIL2nlLLSARJt6E+jjVXU=;
-        b=k8/+Nuij7PdJh+FT1554aeGnvu1e0FUYGRpJejN6MVLrH8wAhMM+VilQcA94S7Ydj0
-         ++eCCbw0aItGuCT8cuoqLLIwbLcithTsKBz46XF1soHZ5K4VD102ktbHyp1/vUt33UXK
-         D7VOX6XvBvSseVVPbVqmCVAp4wRtYpRxVGQfF0L4HJV52yejlOTVUXiaVw86FmBBqca6
-         CdWYMwe2Ac8voOHHcuqT0IfSC4jBUJzbWTQAPzDhrQYAX1PxOF6tJHOFtKCxAWNrtbx/
-         5UckLgHmwAEOXyCzRX2bDAc/QEkDeRFyaVauscvdVQyOFFgyy5prtRXUbbiI3Mkde6fl
-         WgJg==
-X-Gm-Message-State: APjAAAUY42veVtfPMZQsiJ/6OdarslG9yOBcJ9wTSkbl0jG8Fe+cnI8G
-        p+UYUeTeMS+Uc5XwPGT5yCN/75xdG8bAx3MY/Nw=
-X-Google-Smtp-Source: APXvYqw3Go3PwnQpyK3Qdr1NGe4I3IFRGZ1+38xzNKIt7ca1IGQDBDYkiZWNeqhmy2nhKIfw6qymUYBbF/yKvCcGtUk=
-X-Received: by 2002:a0c:88f0:: with SMTP id 45mr1215730qvo.78.1569986280629;
- Tue, 01 Oct 2019 20:18:00 -0700 (PDT)
+        Tue, 1 Oct 2019 23:18:40 -0400
+Received: from bilbo.ozlabs.org ([203.11.71.1]:46893 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726869AbfJBDSj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Oct 2019 23:18:39 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 46jhDW3ywMz9sPL;
+        Wed,  2 Oct 2019 13:18:35 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1569986316;
+        bh=zvB9p60r5fI7pASgcHD64s7yCiagKfqUJprubacaDT0=;
+        h=Date:From:To:Cc:Subject:From;
+        b=Hv1zUDAOcRVyKA8vOzX1JwINCwcZenYr/B7rblXs+pElLfPBABLGYArnDQesjyD9q
+         8FXgpp6JZ8Y1VMdavUN6lpGBDKpzpyWTkGtTYgvB/Szacks4x5/1PV4bTp+FeInTXC
+         LNkolabMPn6O+nGizW2YK868M+ESelBROvnOohXubG4cKH+19OzPjVJB+A/5/O4kg0
+         GvdvyxPTxRTpm1THykHRePKcizifUx9qzZrrIUf/yKQJPf86LsJW2dOiAu0xhF/0Pv
+         HWx0yDAcf8RKLuzm4iIx3BiHaqohsx55uXTkYW9SP24Rp94E4arJTbEcqfp9jVGIMC
+         JFeL+VkReIwBQ==
+Date:   Wed, 2 Oct 2019 13:18:35 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Andrew Morton <akpm@linux-foundation.org>,
+        Jonathan Corbet <corbet@lwn.net>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Jon Haslam <jonhaslam@fb.com>,
+        Chris Down <chris@chrisdown.name>
+Subject: linux-next: manual merge of the akpm-current tree with the jc_docs
+ tree
+Message-ID: <20191002131835.51809ea9@canb.auug.org.au>
 MIME-Version: 1.0
-References: <20191001173728.149786-1-brianvv@google.com> <20191001173728.149786-2-brianvv@google.com>
-In-Reply-To: <20191001173728.149786-2-brianvv@google.com>
-From:   Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date:   Tue, 1 Oct 2019 20:17:49 -0700
-Message-ID: <CAEf4Bzb7ag=bdhuAuDHuxk_+jQj7ZudU3Bd2zk3OPz8GSYVFtA@mail.gmail.com>
-Subject: Re: [PATCH bpf 1/2] selftests/bpf: test_progs: don't leak server_fd
- in tcp_rtt
-To:     Brian Vazquez <brianvv@google.com>
-Cc:     Brian Vazquez <brianvv.kernel@gmail.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        "David S . Miller" <davem@davemloft.net>,
-        Stanislav Fomichev <sdf@google.com>,
-        open list <linux-kernel@vger.kernel.org>,
-        Networking <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; boundary="Sig_/AEBcqd=ktfOYS/rhz2q0Jp1";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Oct 1, 2019 at 10:39 AM Brian Vazquez <brianvv@google.com> wrote:
->
-> server_fd needs to be closed if pthread can't be created.
->
-> Fixes: 8a03222f508b ("selftests/bpf: test_progs: fix client/server race
-> in tcp_rtt")
+--Sig_/AEBcqd=ktfOYS/rhz2q0Jp1
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Fixes tag hast to be on single line, no wrapping. Besides that:
+Hi all,
 
-Acked-by: Andrii Nakryiko <andriin@fb.com>
+Today's linux-next merge of the akpm-current tree got a conflict in:
 
-> Cc: Stanislav Fomichev <sdf@google.com>
->
-> Signed-off-by: Brian Vazquez <brianvv@google.com>
-> ---
->  tools/testing/selftests/bpf/prog_tests/tcp_rtt.c | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
->
-> diff --git a/tools/testing/selftests/bpf/prog_tests/tcp_rtt.c b/tools/testing/selftests/bpf/prog_tests/tcp_rtt.c
-> index a82da555b1b02..f4cd60d6fba2e 100644
-> --- a/tools/testing/selftests/bpf/prog_tests/tcp_rtt.c
-> +++ b/tools/testing/selftests/bpf/prog_tests/tcp_rtt.c
-> @@ -260,13 +260,14 @@ void test_tcp_rtt(void)
->
->         if (CHECK_FAIL(pthread_create(&tid, NULL, server_thread,
->                                       (void *)&server_fd)))
-> -               goto close_cgroup_fd;
-> +               goto close_server_fd;
->
->         pthread_mutex_lock(&server_started_mtx);
->         pthread_cond_wait(&server_started, &server_started_mtx);
->         pthread_mutex_unlock(&server_started_mtx);
->
->         CHECK_FAIL(run_test(cgroup_fd, server_fd));
-> +close_server_fd:
->         close(server_fd);
->  close_cgroup_fd:
->         close(cgroup_fd);
-> --
-> 2.23.0.444.g18eeb5a265-goog
->
+  Documentation/admin-guide/cgroup-v2.rst
+
+between commit:
+
+  6ee0fac199e1 ("docs: fix memory.low description in cgroup-v2.rst")
+
+from the jc_docs tree and commit:
+
+  3968bb6dec48 ("mm, memcg: proportional memory.{low,min} reclaim")
+
+from the akpm-current tree.
+
+I fixed it up (see below) and can carry the fix as necessary. This
+is now fixed as far as linux-next is concerned, but any non trivial
+conflicts should be mentioned to your upstream maintainer when your tree
+is submitted for merging.  You may also want to consider cooperating
+with the maintainer of the conflicting tree to minimise any particularly
+complex conflicts.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+diff --cc Documentation/admin-guide/cgroup-v2.rst
+index 26d1cde6b34a,5361ebec3361..000000000000
+--- a/Documentation/admin-guide/cgroup-v2.rst
++++ b/Documentation/admin-guide/cgroup-v2.rst
+@@@ -1117,8 -1120,11 +1120,11 @@@ PAGE_SIZE multiple when read back
+ =20
+  	Best-effort memory protection.  If the memory usage of a
+  	cgroup is within its effective low boundary, the cgroup's
+ -	memory won't be reclaimed unless memory can be reclaimed
+ -	from unprotected cgroups.  Above the effective low boundary (or
+ -	effective min boundary if it is higher), pages are reclaimed
+ -	proportionally to the overage, reducing reclaim pressure for
+ -	smaller overages.
+ +	memory won't be reclaimed unless there is no reclaimable
+- 	memory available in unprotected cgroups.
+++	memory available in unprotected cgroups.  Above the effective
+++	low boundary (or effective min boundary if it is higher), pages
+++	are reclaimed proportionally to the overage, reducing reclaim
+++	pressure for smaller overages.
+ =20
+  	Effective low boundary is limited by memory.low values of
+  	all ancestor cgroups. If there is memory.low overcommitment
+
+--Sig_/AEBcqd=ktfOYS/rhz2q0Jp1
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl2UFwsACgkQAVBC80lX
+0GySzwf+LDPf8FOoj4TokjVrD9vvrJ/F/DNgUwmrqmjPHSAkiXBV2xUflJFTW7nL
+RI05gp5nkVMkhVW3okgyEwqKe9lMqVc6AnFxIDePGjRta8p2wTm/W3mRGqtwWIV5
+GDgufsVVWpD6qwl/oR3ufb4bklSAzVpuiAjIDlVXNF3t5xZvGoRQjou63Yfp4oGF
+OeSc9MzMwbdEHjiQ3IUgL4WnOkg5sko6xxIC2CFcKzJ3Uy6PR2gv1GAPwymQ+cnE
+agQITjwCQBXbCqxoKW5acuF2RShj0xWkZfkyXk75HTS2vcVBldsgxrsFyTNsSrro
+nuL0WNKddKTye3Iul1RUJXr44Q/ALA==
+=QUPv
+-----END PGP SIGNATURE-----
+
+--Sig_/AEBcqd=ktfOYS/rhz2q0Jp1--
