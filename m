@@ -2,140 +2,181 @@ Return-Path: <SRS0=zem1=X3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AC9B2C35280
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 15:54:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 70932C35280
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 15:55:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 80E92222C2
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 15:54:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3A1C121848
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 15:55:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="Rik/3mFa"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=ucr.edu header.i=@ucr.edu header.b="HZK27wtX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729102AbfJBPyu (ORCPT
+        id S1729120AbfJBPzG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Oct 2019 11:54:50 -0400
-Received: from mailout1.w1.samsung.com ([210.118.77.11]:46212 "EHLO
-        mailout1.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725747AbfJBPyu (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Oct 2019 11:54:50 -0400
-Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
-        by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20191002155448euoutp01050c600cbb412f8fb2b5ab6a4c7ec0b0~J34CjPBkh1330813308euoutp018
-        for <linux-kernel@vger.kernel.org>; Wed,  2 Oct 2019 15:54:48 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20191002155448euoutp01050c600cbb412f8fb2b5ab6a4c7ec0b0~J34CjPBkh1330813308euoutp018
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1570031688;
-        bh=dO98rwiJ4tvmdexXBQqD68SKjJaPBN1+ST7RvpER/yg=;
-        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
-        b=Rik/3mFaYggaSmisUCEjz6jwDaT5L7pU+idLcipx6RMJhyH/1rTHn+kaev0sFH/6D
-         nNX7o8wl1Jv5dA7PJgQd1ErzWjdTsGpAg5VtNm7pXn1db0n6owuOw7OuCo1QCYTbHP
-         k7kxbqHVv/j3Yd75EAAL730fUxvAYqR1ozQqSt74=
-Received: from eusmges2new.samsung.com (unknown [203.254.199.244]) by
-        eucas1p2.samsung.com (KnoxPortal) with ESMTP id
-        20191002155448eucas1p246e67cfa52a412c3d3e41a8f6bd78b71~J34CDIQjb3055930559eucas1p2X;
-        Wed,  2 Oct 2019 15:54:48 +0000 (GMT)
-Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
-        eusmges2new.samsung.com (EUCPMTA) with SMTP id 5B.22.04309.848C49D5; Wed,  2
-        Oct 2019 16:54:48 +0100 (BST)
-Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
-        eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
-        20191002155447eucas1p27fedafa6277bb3fbff62be76ecec61d3~J34BwhW5d2815328153eucas1p2y;
-        Wed,  2 Oct 2019 15:54:47 +0000 (GMT)
-Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
-        eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
-        20191002155447eusmtrp1994d135604b7ad804df78150467540fc~J34Bv4hwf1558815588eusmtrp1G;
-        Wed,  2 Oct 2019 15:54:47 +0000 (GMT)
-X-AuditID: cbfec7f4-ae1ff700000010d5-92-5d94c8486127
-Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
-        eusmgms1.samsung.com (EUCPMTA) with SMTP id 77.35.04166.748C49D5; Wed,  2
-        Oct 2019 16:54:47 +0100 (BST)
-Received: from [106.120.51.75] (unknown [106.120.51.75]) by
-        eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
-        20191002155447eusmtip2f9fcb187e200c69f7015f72d91c42f9d~J34BOmENe0880708807eusmtip23;
-        Wed,  2 Oct 2019 15:54:47 +0000 (GMT)
-Subject: Re: [PATCH v4 1/6] opp: Handle target/min/max voltage in
- dev_pm_opp_adjust_voltage()
-To:     Krzysztof Kozlowski <krzk@kernel.org>, vireshk@kernel.org
-Cc:     robh+dt@kernel.org, kgene@kernel.org, devicetree@vger.kernel.org,
-        linux-pm@vger.kernel.org, linux-samsung-soc@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        b.zolnierkie@samsung.com, m.szyprowski@samsung.com
-From:   Sylwester Nawrocki <s.nawrocki@samsung.com>
-Message-ID: <ada1bb2f-a824-c34e-6561-04a35782a9b8@samsung.com>
-Date:   Wed, 2 Oct 2019 17:54:46 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
-        Thunderbird/60.8.0
-MIME-Version: 1.0
-In-Reply-To: <20191002143310.GA15898@pi3>
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrJKsWRmVeSWpSXmKPExsWy7djP87oeJ6bEGlz5z26xccZ6Vov5R86x
-        WvQ/fs1scf78BnaLTY+vsVpc3jWHzeJz7xFGixnn9zFZrD1yl92ide8RdovND46xOXB7bFrV
-        yeaxeUm9R9+WVYwenzfJBbBEcdmkpOZklqUW6dslcGUsfn+EseAKW8XCpp3MDYxbWbsYOTgk
-        BEwkFu8P6mLk4hASWMEo8X7XcRYI5wujRN/TN4wQzmdGibttd4E6OME6Vq/9ApVYzijx+Osj
-        RpCEkMBbRonzN71BbGGBeIkdkw6wg9giArYSd75OARvLLPCfUeJQ3082kASbgKFE79E+sGZe
-        ATuJH3vngW1gEVCReNa8mAnEFhWIkPj04DArRI2gxMmZT1hAbE4BTYlPl06D1TALiEs0fVnJ
-        CmHLS2x/O4cZZJmEwCl2ia4Ve5ggznaR+LT6HDOELSzx6vgWdghbRuL05B4WiIZmRome3bfZ
-        IZwJjBL3jy9ghKiyljh8/CI4yJiBVq/fpQ8RdpR483w3GyQk+SRuvBWEOIJPYtK26cwQYV6J
-        jjYhiGoVid+rpkOdIyXR/eQ/ywRGpVlIXpuF5J1ZSN6ZhbB3ASPLKkbx1NLi3PTUYqO81HK9
-        4sTc4tK8dL3k/NxNjMAEdfrf8S87GHf9STrEKMDBqMTD2xA0OVaINbGsuDL3EKMEB7OSCO+l
-        9VNihXhTEiurUovy44tKc1KLDzFKc7AoifNWMzyIFhJITyxJzU5NLUgtgskycXBKNTAy7pg2
-        I0eSS11d56nM1L4fBw1m6f78LG6i/SGHdcnN9TWdMmWa6zYVnGEXvGxdXad6lt0o+1m62bvA
-        fTu+cwW92L/2xU5dn+V9U4TXPZSNj/H7pWcQ3XrTPaI0Zf5CpsMruH7clBRu92g6PvcPC8PL
-        2ccep0VYqMlo9SXIMYWof3Gou30vm0uJpTgj0VCLuag4EQC7epL4TAMAAA==
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrDIsWRmVeSWpSXmKPExsVy+t/xe7ruJ6bEGvxoMbTYOGM9q8X8I+dY
-        Lfofv2a2OH9+A7vFpsfXWC0u75rDZvG59wijxYzz+5gs1h65y27RuvcIu8XmB8fYHLg9Nq3q
-        ZPPYvKTeo2/LKkaPz5vkAlii9GyK8ktLUhUy8otLbJWiDS2M9AwtLfSMTCz1DI3NY62MTJX0
-        7WxSUnMyy1KL9O0S9DIWvz/CWHCFrWJh007mBsatrF2MnBwSAiYSq9d+Yexi5OIQEljKKHHw
-        wGumLkYOoISUxPwWJYgaYYk/17rYIGpeM0q0d25mA0kIC8RL7Jh0gB3EFhGwlbjzdQoLSBGz
-        wH9Gia6uw1Ad9xglfvQeZAGpYhMwlOg92scIYvMK2En82DsP7AwWARWJZ82LmUBsUYEIicM7
-        ZkHVCEqcnPkErJdTQFPi06XTYDXMAuoSf+ZdYoawxSWavqxkhbDlJba/ncM8gVFoFpL2WUha
-        ZiFpmYWkZQEjyypGkdTS4tz03GJDveLE3OLSvHS95PzcTYzAmNx27OfmHYyXNgYfYhTgYFTi
-        4W0ImhwrxJpYVlyZe4hRgoNZSYT30vopsUK8KYmVValF+fFFpTmpxYcYTYGem8gsJZqcD0wX
-        eSXxhqaG5haWhubG5sZmFkrivB0CB2OEBNITS1KzU1MLUotg+pg4OKUaGC1CLSK/lEy4n5hm
-        Z6xU579LtPlJnDULE/uVW8L3/wbvnmmSyXji8XxDjmmKudfyHrR+it7SfW+7u+nBgvqmYouy
-        azPkwl9sS6yfNveGqZxKX1D0sw8mBbIZS1jky/ayz9ZwZDylcnfHq8K4+giJ+8Ga7/ebtl6R
-        ePleubTsUYmDt6Dil22LlFiKMxINtZiLihMB6R928t8CAAA=
-X-CMS-MailID: 20191002155447eucas1p27fedafa6277bb3fbff62be76ecec61d3
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20190910123636eucas1p250ec04901f227b947cc38936563f63b2
-X-EPHeader: CA
-CMS-TYPE: 201P
-X-CMS-RootMailID: 20190910123636eucas1p250ec04901f227b947cc38936563f63b2
-References: <20190910123618.27985-1-s.nawrocki@samsung.com>
-        <CGME20190910123636eucas1p250ec04901f227b947cc38936563f63b2@eucas1p2.samsung.com>
-        <20190910123618.27985-2-s.nawrocki@samsung.com> <20191002143310.GA15898@pi3>
+        Wed, 2 Oct 2019 11:55:06 -0400
+Received: from mx3.ucr.edu ([138.23.248.64]:18668 "EHLO mx3.ucr.edu"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725747AbfJBPzG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 2 Oct 2019 11:55:06 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=ucr.edu; i=@ucr.edu; q=dns/txt; s=selector3;
+  t=1570031706; x=1601567706;
+  h=from:to:cc:subject:date:message-id;
+  bh=bj0cxGKPfe8MhxQf55HPC2pGXsBBiMQq3I7Z648xezQ=;
+  b=HZK27wtX1WTcMPpk0LC51VzUsI+vnilSGs9G9fIRLx/ZooTEdD4LcGFO
+   0Cb6PgHFlZcvaeA6VD6YOuMNyWw2tDANdniVW8+P386cu7N1IMWGgaN5o
+   m7Z+IIsx/ndBB/qbcmTLT0ee4iVqU6HM+BQG5QCC6KlxfdfYalgnLEv3V
+   m49d4JV2+ga/9NNaumPDEd0eaG5nD74nKs+ch2fz3uTrK0A5ypfUvkHdE
+   2nBtTPUwHUitCQuU+F6ItXEUdPkrbSxTepmrUpvbU+wg+DkYSu4mFz8ru
+   hTnPhihaEHQAyT0OIlycXVZab1aIjRWHwpM4pGaDJ4Hw+99jZoZB+zVXa
+   A==;
+IronPort-SDR: r2q/yjjxPelVpMAzC4qRy5Q8UJZHrHFD4NLrIzSXMdwMHZo7tcR323m91l5zzI+aabDkgBHOE1
+ aJA8h3sNgTZWQdSNDOIYRL+C3D1I+pVBTLveyiy+ax4gFrRPE2222hqxthpJyv0lBviyWdZ/sW
+ o0unA2NYldvZuSGM8GgIn6HLrzZ3ojs9yfub76ClV5pih8Q6s38lGIKlteTvWq54OfdFbv7Uw1
+ poo2ZdSXDXWXBb6tLCV2t/ifPg9ozGIV5PIKpOpNMIa+78N5jeYjYus0n0FQ/jPhK5J+6fffz9
+ bcA=
+IronPort-PHdr: =?us-ascii?q?9a23=3A589tChPY9w6xrCgy47sl6mtUPXoX/o7sNwtQ0K?=
+ =?us-ascii?q?IMzox0LfX6rarrMEGX3/hxlliBBdydt6sfzbaI+PG7EUU7or+5+EgYd5JNUx?=
+ =?us-ascii?q?JXwe43pCcHRPC/NEvgMfTxZDY7FskRHHVs/nW8LFQHUJ2mPw6arXK99yMdFQ?=
+ =?us-ascii?q?viPgRpOOv1BpTSj8Oq3Oyu5pHfeQpFiCezbL9oIxi7rArdu80YjIB/Nqs/1x?=
+ =?us-ascii?q?zFr2dSde9L321oP1WTnxj95se04pFu9jlbtuwi+cBdT6j0Zrw0QrNEAjsoNW?=
+ =?us-ascii?q?A1/9DrugLYTQST/HscU34ZnQRODgPY8Rz1RJbxsi/9tupgxCmXOND9QL4oVT?=
+ =?us-ascii?q?i+6apgVQTlgzkbOTEn7G7Xi9RwjKNFrxKnuxx/2JPfbIWMOPZjYq/RYdYWSG?=
+ =?us-ascii?q?xEXsZQTCxBGYK8b40AD+EcI+hWtpT2p1UPrRSgAQmjGf7kxjtGi3Pq2KE31f?=
+ =?us-ascii?q?kqHwPb0ww6B98AsGraosj7OqkRVu6417XEwSnZYv9Kwzrx9JTEfxY8qv+MR7?=
+ =?us-ascii?q?Jwds/RxFEtGAPEj1SQqZHlPzSI3ekKs2ma7upgWviui2I7tw18rCOixtowhY?=
+ =?us-ascii?q?nTnI4a1E3L9ThgzYszONa2S1Z7bMa6HJdMsyyWLYh7T8M4T212pSo21qcKtY?=
+ =?us-ascii?q?O/cSUO0Jgr2h/SZvidf4SW7B/uVPydLSl5iX5/er+yiBC/+lW6xOLmTMm7yl?=
+ =?us-ascii?q?NKozJAktnLq38CyQTe6tOCSvth5keh3iuP1xzL5uFEP080ka3bJoYkwrEql5?=
+ =?us-ascii?q?oTtV3PHjf4mEnrlaOWeFgo9+ys5uj9bbXmoZicN4Bwig7gKKghhsu/AeEgPg?=
+ =?us-ascii?q?gPWWiU5/i82aX98UHlRLhGlP47n6nDvJzEOMgXurS1DxJR34sn8xq/Ci2p0N?=
+ =?us-ascii?q?UcnXkJNlJFfxeHgpDpOlDPIPD3F/a/j0iwnDpl3P3GI6HuAo/XInfdjbjhYK?=
+ =?us-ascii?q?5x61RAxwor0dBf+5VUB6kFIPLyXE/xqdPZAgY6MwOq2ebnDsty1ocFVGKRDa?=
+ =?us-ascii?q?+WLrnSvUWL5u0xOemMYpEauDLnJ/gi/f7ugixxt0UaePyY3IkXdXfwSuV0I0?=
+ =?us-ascii?q?yYOSK3qsoKCyEHshdoH7+is0GLTTMGPyX6ZKk7/DxuTd3+AA=3D=3D?=
+X-IronPort-Anti-Spam-Filtered: true
+X-IronPort-Anti-Spam-Result: =?us-ascii?q?A2F4BAAdyJRdgMfSVdFmHgEGEoVFTBC?=
+ =?us-ascii?q?NIIYpBos+cYV6gwuHIgEIAQEBDAEBLQIBAYRAgkAjOBMCAwkBAQUBAQEBAQU?=
+ =?us-ascii?q?EAQECEAEBCQ0JCCeFQoI6KYM1CxYVUoEVAQUBNSI5gkcBgXYUpASBAzyMJTO?=
+ =?us-ascii?q?IYwEJDYFICQEIgSKHNYRZgRCBB4RhhCiDPYJEBIE3AQEBizsHiWFwlV0BBgK?=
+ =?us-ascii?q?CEBSBeJMSJ4Q6iT2LQQEtjA2bGAIKBwYPI4FGgXtNJYFsCoFEUBAUgVsXFY4?=
+ =?us-ascii?q?uITOBCJA8AQ?=
+X-IPAS-Result: =?us-ascii?q?A2F4BAAdyJRdgMfSVdFmHgEGEoVFTBCNIIYpBos+cYV6g?=
+ =?us-ascii?q?wuHIgEIAQEBDAEBLQIBAYRAgkAjOBMCAwkBAQUBAQEBAQUEAQECEAEBCQ0JC?=
+ =?us-ascii?q?CeFQoI6KYM1CxYVUoEVAQUBNSI5gkcBgXYUpASBAzyMJTOIYwEJDYFICQEIg?=
+ =?us-ascii?q?SKHNYRZgRCBB4RhhCiDPYJEBIE3AQEBizsHiWFwlV0BBgKCEBSBeJMSJ4Q6i?=
+ =?us-ascii?q?T2LQQEtjA2bGAIKBwYPI4FGgXtNJYFsCoFEUBAUgVsXFY4uITOBCJA8AQ?=
+X-IronPort-AV: E=Sophos;i="5.67,249,1566889200"; 
+   d="scan'208";a="84526235"
+Received: from mail-pf1-f199.google.com ([209.85.210.199])
+  by smtp3.ucr.edu with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 02 Oct 2019 08:55:01 -0700
+Received: by mail-pf1-f199.google.com with SMTP id z13so12908380pfr.15
+        for <linux-kernel@vger.kernel.org>; Wed, 02 Oct 2019 08:55:01 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=j3XM934BgcvR4S3GWK972GfeJ1Pu9gnBBD2xLxEu5nI=;
+        b=ZnLZS54cWn+PdRyPnl1bW/UPnhNj7eQ+pwgbS0udbhpbko/oad6rjgTIB0rmEKbQMp
+         uJRvKJknKXknGuVCLG50jFimtScMkLtXXUqPd0T7S8pqnHE9JPzpPfZV3PMH+OLG9pWF
+         47LQnAMlneVxTk9r3hACqcylg6a5khV+G6AQNS4B/wJiarDvpEnarDY7LIjd3thJu7/r
+         VuhqOn7unWscb3h5IXQYAMy2yWou1LfCkbmKXt3RGYiIu2iRkwlR+PHGucYkEeOf7fSB
+         FoPkES3Qlmf0Sf14mLjscEqmoex3UzOH//eWMkvgZ+U1BzKTutrX6z7r1pc4bPbhOrOn
+         Zctg==
+X-Gm-Message-State: APjAAAV3O3jJ/sANqDyB64rjiNqIykVteE9UaYBGjt+bhs+CY9jhubkC
+        +pNMSrzviXY1OoWeaALrqHV8ySzO9S+dhbffMvaspWED0JTvH81j26Y9VU23bQPk5lOw9NtuqWB
+        p+UaZaUyjLvL0jkBx7ZCX3E/WZw==
+X-Received: by 2002:a17:90a:ba91:: with SMTP id t17mr5190852pjr.116.1570031700665;
+        Wed, 02 Oct 2019 08:55:00 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqzaceMrlI3m0IF4H1HJAHPFI0DTM8kNCQIWt1N9YAjTQ/sgOnhDPuMQdGUPQsL0yw7vmAbfzA==
+X-Received: by 2002:a17:90a:ba91:: with SMTP id t17mr5190829pjr.116.1570031700402;
+        Wed, 02 Oct 2019 08:55:00 -0700 (PDT)
+Received: from Yizhuo.cs.ucr.edu (yizhuo.cs.ucr.edu. [169.235.26.74])
+        by smtp.googlemail.com with ESMTPSA id p17sm18198326pfn.50.2019.10.02.08.54.59
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 02 Oct 2019 08:54:59 -0700 (PDT)
+From:   Yizhuo <yzhai003@ucr.edu>
+Cc:     csong@cs.ucr.edu, zhiyunq@cs.ucr.edu, Yizhuo <yzhai003@ucr.edu>,
+        Sebastian Reichel <sre@kernel.org>, linux-pm@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] power: supply: max17042_battery: fix some usage of uninitialized variables
+Date:   Wed,  2 Oct 2019 08:55:47 -0700
+Message-Id: <20191002155547.9137-1-yzhai003@ucr.edu>
+X-Mailer: git-send-email 2.17.1
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 10/2/19 16:33, Krzysztof Kozlowski wrote:
-> On Tue, Sep 10, 2019 at 02:36:13PM +0200, Sylwester Nawrocki wrote:
->> To be squashed with patch "PM / OPP: Support adjusting OPP voltages
->> at runtime".
->>
->> Signed-off-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
->> ---
->>
->>  drivers/opp/core.c     | 10 ++++++++--
->>  include/linux/pm_opp.h |  3 ++-
->>  2 files changed, 10 insertions(+), 3 deletions(-)
->
-> I'll take the ASV driver via samsung-soc but I see it depends on this
-> one.  Please provide me a stable tag with it or an Ack.
+Several functions in this file are trying to use regmap_read() to
+initialize the specific variable, however, if regmap_read() fails,
+the variable could be uninitialized but used directly, which is
+potentially unsafe. The return value of regmap_read() should be
+checked and handled. The same case also happens in function
+max17042_thread_handler() but it needs more effort to patch.
 
-There is further dependency on patch 
-"[PATCH v4 6/8] PM / OPP: Support adjusting OPP voltages at runtime"
-https://lore.kernel.org/linux-arm-kernel/1565703113-31479-7-git-send-email-andrew-sh.cheng@mediatek.com
+Signed-off-by: Yizhuo <yzhai003@ucr.edu>
+---
+ drivers/power/supply/max17042_battery.c | 23 +++++++++++++++++++----
+ 1 file changed, 19 insertions(+), 4 deletions(-)
 
-Viresh, what are your plans WRT to those patches?
-
+diff --git a/drivers/power/supply/max17042_battery.c b/drivers/power/supply/max17042_battery.c
+index e6a2dacaa730..8e5727010ed2 100644
+--- a/drivers/power/supply/max17042_battery.c
++++ b/drivers/power/supply/max17042_battery.c
+@@ -675,8 +675,12 @@ static void max17042_reset_vfsoc0_reg(struct max17042_chip *chip)
+ {
+ 	unsigned int vfSoc;
+ 	struct regmap *map = chip->regmap;
++	int ret;
++
++	ret = regmap_read(map, MAX17042_VFSOC, &vfSoc);
++	if (ret)
++		return;
+ 
+-	regmap_read(map, MAX17042_VFSOC, &vfSoc);
+ 	regmap_write(map, MAX17042_VFSOC0Enable, VFSOC0_UNLOCK);
+ 	max17042_write_verify_reg(map, MAX17042_VFSOC0, vfSoc);
+ 	regmap_write(map, MAX17042_VFSOC0Enable, VFSOC0_LOCK);
+@@ -686,12 +690,18 @@ static void max17042_load_new_capacity_params(struct max17042_chip *chip)
+ {
+ 	u32 full_cap0, rep_cap, dq_acc, vfSoc;
+ 	u32 rem_cap;
++	int ret;
+ 
+ 	struct max17042_config_data *config = chip->pdata->config_data;
+ 	struct regmap *map = chip->regmap;
+ 
+-	regmap_read(map, MAX17042_FullCAP0, &full_cap0);
+-	regmap_read(map, MAX17042_VFSOC, &vfSoc);
++	ret = regmap_read(map, MAX17042_FullCAP0, &full_cap0);
++	if (ret)
++		return ret;
++
++	ret = regmap_read(map, MAX17042_VFSOC, &vfSoc);
++	if (ret)
++		return ret;
+ 
+ 	/* fg_vfSoc needs to shifted by 8 bits to get the
+ 	 * perc in 1% accuracy, to get the right rem_cap multiply
+@@ -1108,7 +1118,12 @@ static int max17042_probe(struct i2c_client *client,
+ 	if (!client->irq)
+ 		regmap_write(chip->regmap, MAX17042_SALRT_Th, 0xff00);
+ 
+-	regmap_read(chip->regmap, MAX17042_STATUS, &val);
++	ret = regmap_read(chip->regmap, MAX17042_STATUS, &val);
++	if (ret) {
++		dev_err(&client->dev, "Failed to get MAX17042_STATUS.\n");
++		return ret;
++	}
++
+ 	if (val & STATUS_POR_BIT) {
+ 		INIT_WORK(&chip->work, max17042_init_worker);
+ 		ret = devm_add_action(&client->dev, max17042_stop_work, chip);
 -- 
-Thanks,
-Sylwester
+2.17.1
+
