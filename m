@@ -2,103 +2,159 @@ Return-Path: <SRS0=zem1=X3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 700C1C35280
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 14:50:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA3F7C35280
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 14:50:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4F5CE21D82
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 14:50:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C578021783
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 14:50:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728494AbfJBOua (ORCPT
+        id S1728515AbfJBOux (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Oct 2019 10:50:30 -0400
-Received: from out01.mta.xmission.com ([166.70.13.231]:54494 "EHLO
-        out01.mta.xmission.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726411AbfJBOua (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Oct 2019 10:50:30 -0400
-Received: from in01.mta.xmission.com ([166.70.13.51])
-        by out01.mta.xmission.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.87)
-        (envelope-from <ebiederm@xmission.com>)
-        id 1iFfxU-0001ee-Bs; Wed, 02 Oct 2019 08:50:28 -0600
-Received: from ip68-227-160-95.om.om.cox.net ([68.227.160.95] helo=x220.xmission.com)
-        by in01.mta.xmission.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.87)
-        (envelope-from <ebiederm@xmission.com>)
-        id 1iFfxT-0001fT-MJ; Wed, 02 Oct 2019 08:50:28 -0600
-From:   ebiederm@xmission.com (Eric W. Biederman)
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     Kees Cook <keescook@chromium.org>,
-        "linux-kernel\@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        Linux API <linux-api@vger.kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Andi Kleen <andi@firstfloor.org>,
-        Andi Kleen <ak@linux.intel.com>,
-        Cong Wang <xiyou.wangcong@gmail.com>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Apelete Seketeli <apelete@seketeli.net>,
-        Chee Nouk Phoon <cnphoon@altera.com>,
-        Chris Zankel <chris@zankel.net>,
-        Christian Ruppert <christian.ruppert@abilis.com>,
-        Greg Ungerer <gerg@uclinux.org>, Helge Deller <deller@gmx.de>,
-        Hongliang Tao <taohl@lemote.com>,
-        Huacai Chen <chenhc@lemote.com>,
-        Jonas Jensen <jonas.jensen@gmail.com>,
-        Josh Boyer <jwboyer@gmail.com>, Jun Nie <jun.nie@linaro.org>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Ley Foon Tan <lftan@altera.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Max Filippov <jcmvbkbc@gmail.com>,
-        Olof Johansson <olof@lixom.net>,
-        Paul Burton <paul.burton@mips.com>,
-        Phil Edworthy <phil.edworthy@renesas.com>,
-        Pierrick Hascoet <pierrick.hascoet@abilis.com>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Roland Stigge <stigge@antcom.de>,
-        Vineet Gupta <vgupta@synopsys.com>
-References: <8736gcjosv.fsf@x220.int.ebiederm.org>
-        <201910011140.EA0181F13@keescook>
-        <87imp8hyc8.fsf@x220.int.ebiederm.org>
-        <CAK8P3a1zLATC7rzYxSpAK-z=NJ1rw7-3ZgHqCOJUUf6b9HwK1A@mail.gmail.com>
-Date:   Wed, 02 Oct 2019 09:49:48 -0500
-In-Reply-To: <CAK8P3a1zLATC7rzYxSpAK-z=NJ1rw7-3ZgHqCOJUUf6b9HwK1A@mail.gmail.com>
-        (Arnd Bergmann's message of "Wed, 2 Oct 2019 09:31:01 +0200")
-Message-ID: <87v9t7gq2b.fsf@x220.int.ebiederm.org>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
+        Wed, 2 Oct 2019 10:50:53 -0400
+Received: from foss.arm.com ([217.140.110.172]:46182 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726411AbfJBOuw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 2 Oct 2019 10:50:52 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 02FCD28;
+        Wed,  2 Oct 2019 07:50:52 -0700 (PDT)
+Received: from e112269-lin.arm.com (e112269-lin.cambridge.arm.com [10.1.196.133])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id F37553F706;
+        Wed,  2 Oct 2019 07:50:49 -0700 (PDT)
+From:   Steven Price <steven.price@arm.com>
+To:     Marc Zyngier <maz@kernel.org>, Will Deacon <will@kernel.org>,
+        linux-arm-kernel@lists.infradead.org, kvmarm@lists.cs.columbia.edu
+Cc:     Steven Price <steven.price@arm.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        =?UTF-8?q?Radim=20Kr=C4=8Dm=C3=A1=C5=99?= <rkrcmar@redhat.com>,
+        Russell King <linux@armlinux.org.uk>,
+        James Morse <james.morse@arm.com>,
+        Julien Thierry <julien.thierry.kdev@gmail.com>,
+        Suzuki K Pouloze <suzuki.poulose@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>, kvm@vger.kernel.org,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v5 00/10] arm64: Stolen time support
+Date:   Wed,  2 Oct 2019 15:50:27 +0100
+Message-Id: <20191002145037.51630-1-steven.price@arm.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain
-X-XM-SPF: eid=1iFfxT-0001fT-MJ;;;mid=<87v9t7gq2b.fsf@x220.int.ebiederm.org>;;;hst=in01.mta.xmission.com;;;ip=68.227.160.95;;;frm=ebiederm@xmission.com;;;spf=neutral
-X-XM-AID: U2FsdGVkX1/UEBXD5WP39qJHI4Xhd6CvSgTp9fMBYRU=
-X-SA-Exim-Connect-IP: 68.227.160.95
-X-SA-Exim-Mail-From: ebiederm@xmission.com
-Subject: Re: [RFC][PATCH] sysctl: Remove the sysctl system call
-X-SA-Exim-Version: 4.2.1 (built Thu, 05 May 2016 13:38:54 -0600)
-X-SA-Exim-Scanned: Yes (on in01.mta.xmission.com)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Arnd Bergmann <arnd@arndb.de> writes:
+This series add support for paravirtualized time for arm64 guests and
+KVM hosts following the specification in Arm's document DEN 0057A:
 
-> On Wed, Oct 2, 2019 at 12:54 AM Eric W. Biederman <ebiederm@xmission.com> wrote:
+https://developer.arm.com/docs/den0057/a
 
->> arch/arm/configs/lpc32xx_defconfig:CONFIG_SYSCTL_SYSCALL=y
->> arch/arm/configs/moxart_defconfig:CONFIG_SYSCTL_SYSCALL=y
->
-> Ancient hardware, but still in active use. These tend to have very little
-> RAM, but they both enable CONFIG_PROC_FS.
+It implements support for stolen time, allowing the guest to
+identify time when it is forcibly not executing.
 
-You actually have to enable CONFIG_PROC_FS to enable
-CONFIG_SYSCTL_SYSCALL at this point.  CONFIG_SYSCTL_SYSCALL is just an
-emulation of the old interface built on top of /proc.
+Note that Live Physical Time (LPT) which was previously part of the
+above specification has now been removed.
 
-Thank you for the feedback.
+Also available as a git tree:
+git://linux-arm.org/linux-sp.git stolen_time/v5
 
-Eric
+Changes from v4:
+https://lore.kernel.org/kvm/20190830084255.55113-1-steven.price@arm.com/
+ * Rebased to v5.4-rc1
+ * Renamed KVM_ARM_VCPU_PVTIME_SET_IPA to remove _SET as it is used for
+   both set/get operations
+ * Added kvm/arm_hypercalls.h to header-test-$(CONFIG_ARM{,64}) as it is
+   only buildable on arm/arm64
+ * Documented no-steal-acc kernel parameter
+
+Changes from v3:
+https://lore.kernel.org/lkml/20190821153656.33429-1-steven.price@arm.com/
+ * There's no longer a PV_TIME device, instead there are attributes on
+   the VCPU. This allows the stolen time structures to be places
+   arbitrarily by user space (subject to 64 byte alignment).
+ * Split documentation between information on the hypercalls and the
+   attributes on the VCPU
+ * Fixed the type of SMCCC functions to return long not int
+
+Changes from v2:
+https://lore.kernel.org/lkml/20190819140436.12207-1-steven.price@arm.com/
+ * Switched from using gfn_to_hva_cache to a new macro kvm_put_guest()
+   that can provide the single-copy atomicity required (on arm64). This
+   macro is added in patch 4.
+ * Tidied up the locking for kvm_update_stolen_time().
+   pagefault_disable() was unnecessary and the caller didn't need to
+   take kvm->srcu as the function does it itself.
+ * Removed struct kvm_arch_pvtime from the arm implementation, replaced
+   instead with inline static functions which are empty for arm.
+ * Fixed a few checkpatch --strict warnings.
+
+Changes from v1:
+https://lore.kernel.org/lkml/20190802145017.42543-1-steven.price@arm.com/
+ * Host kernel no longer allocates the stolen time structure, instead it
+   is allocated by user space. This means the save/restore functionality
+   can be removed.
+ * Refactored the code so arm has stub implementations and to avoid
+   initcall
+ * Rebased to pick up Documentation/{virt->virtual} change
+ * Bunch of typo fixes
+
+Christoffer Dall (1):
+  KVM: arm/arm64: Factor out hypercall handling from PSCI code
+
+Steven Price (9):
+  KVM: arm64: Document PV-time interface
+  KVM: arm64: Implement PV_FEATURES call
+  KVM: Implement kvm_put_guest()
+  KVM: arm64: Support stolen time reporting via shared structure
+  KVM: Allow kvm_device_ops to be const
+  KVM: arm64: Provide VCPU attributes for stolen time
+  arm/arm64: Provide a wrapper for SMCCC 1.1 calls
+  arm/arm64: Make use of the SMCCC 1.1 wrapper
+  arm64: Retrieve stolen time as paravirtualized guest
+
+ .../admin-guide/kernel-parameters.txt         |   6 +-
+ Documentation/virt/kvm/arm/pvtime.txt         |  65 ++++++++
+ Documentation/virt/kvm/devices/vcpu.txt       |  14 ++
+ arch/arm/include/asm/kvm_host.h               |  26 +++
+ arch/arm/kvm/Makefile                         |   2 +-
+ arch/arm/kvm/handle_exit.c                    |   2 +-
+ arch/arm/mm/proc-v7-bugs.c                    |  13 +-
+ arch/arm64/include/asm/kvm_host.h             |  30 +++-
+ arch/arm64/include/asm/paravirt.h             |   9 +-
+ arch/arm64/include/asm/pvclock-abi.h          |  17 ++
+ arch/arm64/include/uapi/asm/kvm.h             |   2 +
+ arch/arm64/kernel/cpu_errata.c                |  80 ++++------
+ arch/arm64/kernel/paravirt.c                  | 148 ++++++++++++++++++
+ arch/arm64/kernel/time.c                      |   3 +
+ arch/arm64/kvm/Kconfig                        |   1 +
+ arch/arm64/kvm/Makefile                       |   2 +
+ arch/arm64/kvm/guest.c                        |   9 ++
+ arch/arm64/kvm/handle_exit.c                  |   4 +-
+ include/Kbuild                                |   2 +
+ include/kvm/arm_hypercalls.h                  |  43 +++++
+ include/kvm/arm_psci.h                        |   2 +-
+ include/linux/arm-smccc.h                     |  58 +++++++
+ include/linux/cpuhotplug.h                    |   1 +
+ include/linux/kvm_host.h                      |  26 ++-
+ include/linux/kvm_types.h                     |   2 +
+ include/uapi/linux/kvm.h                      |   2 +
+ virt/kvm/arm/arm.c                            |  11 ++
+ virt/kvm/arm/hypercalls.c                     |  68 ++++++++
+ virt/kvm/arm/psci.c                           |  84 +---------
+ virt/kvm/arm/pvtime.c                         | 124 +++++++++++++++
+ virt/kvm/kvm_main.c                           |   6 +-
+ 31 files changed, 705 insertions(+), 157 deletions(-)
+ create mode 100644 Documentation/virt/kvm/arm/pvtime.txt
+ create mode 100644 arch/arm64/include/asm/pvclock-abi.h
+ create mode 100644 include/kvm/arm_hypercalls.h
+ create mode 100644 virt/kvm/arm/hypercalls.c
+ create mode 100644 virt/kvm/arm/pvtime.c
+
+-- 
+2.20.1
 
