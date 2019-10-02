@@ -2,171 +2,136 @@ Return-Path: <SRS0=zem1=X3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 157D2C352AA
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 11:28:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E57B8C35280
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 11:28:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DC73A21783
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 11:28:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570015682;
-	bh=CaHmIq7vPjwe7nHbx34JvcVJQqWo4bw3l2Epb8/j/CA=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=unQkiJINLY1FbOtPPRQfUfSnRAdEh552OW60g86qGP/O8J5YkYmyromK/5MmwDwTP
-	 mrTVyWWye1ViuGZl5dxr2+zYlNeibHd3+dHDt5OrSq64KSp8G5TKeOVj26ysHwicE6
-	 hUJ417AZp3YxSpuT0itPd0c8ntcG0ZB6iRqpJHzA=
+	by mail.kernel.org (Postfix) with ESMTP id BD34921783
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 11:28:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=zoho.com header.i=zhouyanjie@zoho.com header.b="MugC4L9H"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728254AbfJBL2C (ORCPT
+        id S1727540AbfJBL2U (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Oct 2019 07:28:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43046 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726069AbfJBL17 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Oct 2019 07:27:59 -0400
-Received: from localhost.localdomain (236.31.169.217.in-addr.arpa [217.169.31.236])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1F75521783;
-        Wed,  2 Oct 2019 11:27:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570015678;
-        bh=CaHmIq7vPjwe7nHbx34JvcVJQqWo4bw3l2Epb8/j/CA=;
-        h=From:To:Cc:Subject:Date:From;
-        b=Ur9Q+s0aiLvLcQ3WVgmxUPDAd5FE1YJGyqRs6WujXwFrxOSIjIVvXA+IHie5bO9V0
-         829KhGw6x552j5D9T6hhzYRJUu0ULUmEZ/7drddS8N04NoMrz1lpLH8wHVZPvlWj5M
-         3fH+5462Gf0dCKnJcAC343Hyq+p/WMvVQ8Ihj3uQ=
-From:   Will Deacon <will@kernel.org>
-To:     linux-media@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, andreyknvl@google.com,
-        Will Deacon <will@kernel.org>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Kostya Serebryany <kcc@google.com>, stable@vger.kernel.org
-Subject: [PATCH] media: uvc: Avoid cyclic entity chains due to malformed USB descriptors
-Date:   Wed,  2 Oct 2019 12:27:53 +0100
-Message-Id: <20191002112753.21630-1-will@kernel.org>
-X-Mailer: git-send-email 2.11.0
+        Wed, 2 Oct 2019 07:28:20 -0400
+Received: from sender4-pp-o94.zoho.com ([136.143.188.94]:25461 "EHLO
+        sender4-pp-o94.zoho.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725928AbfJBL2T (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 2 Oct 2019 07:28:19 -0400
+ARC-Seal: i=1; a=rsa-sha256; t=1570015567; cv=none; 
+        d=zoho.com; s=zohoarc; 
+        b=C0eQva+jMB+Nw5w9KYTzh4UdJLoPfzQKPfp/X06fitsXZ0y15IaTG88+uaiiT6/k/HI3YHkm81k5u1Rs3cF1NNWnJIZ6g+ooFp5hRuA+QEVCGf9CLlzVbmpho647BTc4k4tpeAMbjJ9i+nBGJv0QK73/dxDXDW85g88fsPrOC4U=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zoho.com; s=zohoarc; 
+        t=1570015567; h=Cc:Date:From:In-Reply-To:Message-ID:References:Subject:To:ARC-Authentication-Results; 
+        bh=eeeCKiM3IXSUywHWZMkuZdPCtxOgvU9X1AipnfM1nB0=; 
+        b=dx3oAMXDQRP0SUbGfli5wBEGHJtqrgCjNfMJ3tYrYBWIBFGr91M1vftbZwyWowsIyXMv8LKmsLYgxaRDMThoH8p8pxk8Y5yzX9O5tL3TMmjSrdDbQ6X5yuYXHQj7HsqHVBOh6zlYwAbbyJ2jD3xsfS404CBn+Omlb+HrtK/pyrA=
+ARC-Authentication-Results: i=1; mx.zoho.com;
+        dkim=pass  header.i=zoho.com;
+        spf=pass  smtp.mailfrom=zhouyanjie@zoho.com;
+        dmarc=pass header.from=<zhouyanjie@zoho.com> header.from=<zhouyanjie@zoho.com>
+DomainKey-Signature: a=rsa-sha1; q=dns; c=nofws; 
+  s=zapps768; d=zoho.com; 
+  h=from:to:cc:subject:date:message-id:in-reply-to:references; 
+  b=UdcQap6U/7QfvHXSuSsc7qvHYCVpJmC6JV2Y+brfxtCAYWP7AOBb1bXmlkbwgM622BU/vksASMWH
+    6hwUkJLSqh/fGtduAVPglm79sorvs49Bzk+OBbHnYm+tnFFhWPN/  
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1570015567;
+        s=zm2019; d=zoho.com; i=zhouyanjie@zoho.com;
+        h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References;
+        l=2275; bh=eeeCKiM3IXSUywHWZMkuZdPCtxOgvU9X1AipnfM1nB0=;
+        b=MugC4L9HPgwp0qqRGcntvU0KrqTnc9oLHrWSO+bksJ96UxV2XgPwV9Ci1Q9RoxOV
+        Nn+8r60xb8NtCvC/YajNaMB2q17IOkFtz1GkN65hlVzpz9Pv9fviEWooayK9Rt3C4jw
+        BfCugmNEVS4uM2G2c/synkP2P2Sj9iauQQfLve8M=
+Received: from zhouyanjie-virtual-machine.localdomain (171.221.113.164 [171.221.113.164]) by mx.zohomail.com
+        with SMTPS id 157001556560418.841606277967458; Wed, 2 Oct 2019 04:26:05 -0700 (PDT)
+From:   Zhou Yanjie <zhouyanjie@zoho.com>
+To:     linux-mips@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, tglx@linutronix.de,
+        paul.burton@mips.com, gregkh@linuxfoundation.org,
+        jason@lakedaemon.net, syq@debian.org, marc.zyngier@arm.com,
+        rfontana@redhat.com, armijn@tjaldur.nl, allison@lohutok.net,
+        paul@crapouillou.net
+Subject: [PATCH 5/5 v5] irqchip: Ingenic: Add process for more than one irq at the same time.
+Date:   Wed,  2 Oct 2019 19:25:25 +0800
+Message-Id: <1570015525-27018-6-git-send-email-zhouyanjie@zoho.com>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1570015525-27018-1-git-send-email-zhouyanjie@zoho.com>
+References: <1548517123-60058-1-git-send-email-zhouyanjie@zoho.com>
+ <1570015525-27018-1-git-send-email-zhouyanjie@zoho.com>
+X-ZohoMailClient: External
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Way back in 2017, fuzzing the 4.14-rc2 USB stack with syzkaller kicked
-up the following WARNING from the UVC chain scanning code:
+Add process for the situation that more than one irq is coming to
+a single chip at the same time. The original code will only respond
+to the lowest setted bit in JZ_REG_INTC_PENDING, and then exit the
+interrupt dispatch function. After exiting the interrupt dispatch
+function, since the second interrupt has not yet responded, the
+interrupt dispatch function is again entered to process the second
+interrupt. This creates additional unnecessary overhead, and the
+more interrupts that occur at the same time, the more overhead is
+added. The improved method in this patch is to check whether there
+are still unresponsive interrupts after processing the lowest
+setted bit interrupt. If there are any, the processing will be
+processed according to the bit in JZ_REG_INTC_PENDING, and the
+interrupt dispatch function will be exited until all processing
+is completed.
 
-  | list_add double add: new=ffff880069084010, prev=ffff880069084010,
-  | next=ffff880067d22298.
-  | ------------[ cut here ]------------
-  | WARNING: CPU: 1 PID: 1846 at lib/list_debug.c:31 __list_add_valid+0xbd/0xf0
-  | Modules linked in:
-  | CPU: 1 PID: 1846 Comm: kworker/1:2 Not tainted
-  | 4.14.0-rc2-42613-g1488251d1a98 #238
-  | Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS Bochs 01/01/2011
-  | Workqueue: usb_hub_wq hub_event
-  | task: ffff88006b01ca40 task.stack: ffff880064358000
-  | RIP: 0010:__list_add_valid+0xbd/0xf0 lib/list_debug.c:29
-  | RSP: 0018:ffff88006435ddd0 EFLAGS: 00010286
-  | RAX: 0000000000000058 RBX: ffff880067d22298 RCX: 0000000000000000
-  | RDX: 0000000000000058 RSI: ffffffff85a58800 RDI: ffffed000c86bbac
-  | RBP: ffff88006435dde8 R08: 1ffff1000c86ba52 R09: 0000000000000000
-  | R10: 0000000000000002 R11: 0000000000000000 R12: ffff880069084010
-  | R13: ffff880067d22298 R14: ffff880069084010 R15: ffff880067d222a0
-  | FS:  0000000000000000(0000) GS:ffff88006c900000(0000) knlGS:0000000000000000
-  | CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-  | CR2: 0000000020004ff2 CR3: 000000006b447000 CR4: 00000000000006e0
-  | Call Trace:
-  |  __list_add ./include/linux/list.h:59
-  |  list_add_tail+0x8c/0x1b0 ./include/linux/list.h:92
-  |  uvc_scan_chain_forward.isra.8+0x373/0x416
-  | drivers/media/usb/uvc/uvc_driver.c:1471
-  |  uvc_scan_chain drivers/media/usb/uvc/uvc_driver.c:1585
-  |  uvc_scan_device drivers/media/usb/uvc/uvc_driver.c:1769
-  |  uvc_probe+0x77f2/0x8f00 drivers/media/usb/uvc/uvc_driver.c:2104
-
-Looking into the output from usbmon, the interesting part is the
-following data packet:
-
-  ffff880069c63e00 30710169 C Ci:1:002:0 0 143 = 09028f00 01030080
-  00090403 00000e01 00000924 03000103 7c003328 010204db
-
-If we drop the lead configuration and interface descriptors, we're left
-with an output terminal descriptor describing a generic display:
-
-  /* Output terminal descriptor */
-  buf[0]	09
-  buf[1]	24
-  buf[2]	03	/* UVC_VC_OUTPUT_TERMINAL */
-  buf[3]	00	/* ID */
-  buf[4]	01	/* type == 0x0301 (UVC_OTT_DISPLAY) */
-  buf[5]	03
-  buf[6]	7c
-  buf[7]	00	/* source ID refers to self! */
-  buf[8]	33
-
-The problem with this descriptor is that it is self-referential: the
-source ID of 0 matches itself! This causes the 'struct uvc_entity'
-representing the display to be added to its chain list twice during
-'uvc_scan_chain()': once via 'uvc_scan_chain_entity()' when it is
-processed directly from the 'dev->entities' list and then again
-immediately afterwards when trying to follow the source ID in
-'uvc_scan_chain_forward()'
-
-Add a check before adding an entity to a chain list to ensure that the
-entity is not already part of a chain.
-
-Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: Mauro Carvalho Chehab <mchehab@kernel.org>
-Cc: Dmitry Vyukov <dvyukov@google.com>
-Cc: Kostya Serebryany <kcc@google.com>
-Cc: <stable@vger.kernel.org>
-Fixes: c0efd232929c ("V4L/DVB (8145a): USB Video Class driver")
-Reported-by: Andrey Konovalov <andreyknvl@google.com>
-Link: https://lore.kernel.org/linux-media/CAAeHK+z+Si69jUR+N-SjN9q4O+o5KFiNManqEa-PjUta7EOb7A@mail.gmail.com/
-Signed-off-by: Will Deacon <will@kernel.org>
+Signed-off-by: Zhou Yanjie <zhouyanjie@zoho.com>
 ---
+ drivers/irqchip/irq-ingenic.c | 17 +++++++++++------
+ 1 file changed, 11 insertions(+), 6 deletions(-)
 
-I don't have a way to reproduce the original issue, so this change is
-based purely on inspection. Considering I'm not familiar with USB nor
-UVC, I may well have missed something!
-
- drivers/media/usb/uvc/uvc_driver.c | 12 ++++++++++++
- 1 file changed, 12 insertions(+)
-
-diff --git a/drivers/media/usb/uvc/uvc_driver.c b/drivers/media/usb/uvc/uvc_driver.c
-index 66ee168ddc7e..e24420b1750a 100644
---- a/drivers/media/usb/uvc/uvc_driver.c
-+++ b/drivers/media/usb/uvc/uvc_driver.c
-@@ -1493,6 +1493,11 @@ static int uvc_scan_chain_forward(struct uvc_video_chain *chain,
- 			break;
- 		if (forward == prev)
+diff --git a/drivers/irqchip/irq-ingenic.c b/drivers/irqchip/irq-ingenic.c
+index 06ab3ad..c1be3d5 100644
+--- a/drivers/irqchip/irq-ingenic.c
++++ b/drivers/irqchip/irq-ingenic.c
+@@ -1,7 +1,7 @@
+ // SPDX-License-Identifier: GPL-2.0-or-later
+ /*
+  *  Copyright (C) 2009-2010, Lars-Peter Clausen <lars@metafoo.de>
+- *  JZ4740 platform IRQ support
++ *  Ingenic XBurst platform IRQ support
+  */
+ 
+ #include <linux/errno.h>
+@@ -37,18 +37,23 @@ static irqreturn_t intc_cascade(int irq, void *data)
+ 	struct ingenic_intc_data *intc = irq_get_handler_data(irq);
+ 	struct irq_domain *domain = intc->domain;
+ 	struct irq_chip_generic *gc;
+-	uint32_t irq_reg;
++	uint32_t pending;
+ 	unsigned i;
+ 
+ 	for (i = 0; i < intc->num_chips; i++) {
+ 		gc = irq_get_domain_generic_chip(domain, i * 32);
+ 
+-		irq_reg = irq_reg_readl(gc, JZ_REG_INTC_PENDING);
+-		if (!irq_reg)
++		pending = irq_reg_readl(gc, JZ_REG_INTC_PENDING);
++		if (!pending)
  			continue;
-+		if (forward->chain.next || forward->chain.prev) {
-+			uvc_trace(UVC_TRACE_DESCR, "Found reference to "
-+				"entity %d already in chain.\n", forward->id);
-+			return -EINVAL;
-+		}
  
- 		switch (UVC_ENTITY_TYPE(forward)) {
- 		case UVC_VC_EXTENSION_UNIT:
-@@ -1574,6 +1579,13 @@ static int uvc_scan_chain_backward(struct uvc_video_chain *chain,
- 				return -1;
- 			}
- 
-+			if (term->chain.next || term->chain.prev) {
-+				uvc_trace(UVC_TRACE_DESCR, "Found reference to "
-+					"entity %d already in chain.\n",
-+					term->id);
-+				return -EINVAL;
-+			}
+-		irq = irq_find_mapping(domain, __fls(irq_reg) + (i * 32));
+-		generic_handle_irq(irq);
++		while (pending) {
++			int bit = __fls(pending);
 +
- 			if (uvc_trace_param & UVC_TRACE_PROBE)
- 				printk(KERN_CONT " %d", term->id);
++			irq = irq_find_mapping(domain, bit + (i * 32));
++			generic_handle_irq(irq);
++			pending &= ~BIT(bit);
++		}
+ 	}
  
+ 	return IRQ_HANDLED;
 -- 
-2.23.0.444.g18eeb5a265-goog
+2.7.4
+
 
