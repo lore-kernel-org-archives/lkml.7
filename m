@@ -2,203 +2,146 @@ Return-Path: <SRS0=zem1=X3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58D51C35280
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 15:30:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 05D91C352AA
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 15:31:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2622F21A4C
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 15:30:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570030227;
-	bh=s0Z0BD8S/+85IH85cLLnC9zo42Wcl0+eeRx2SA7ru30=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=TTTlIwKVDLT7/+peHmwU0QipkscQiCK2Tm4Vfi8F+46NfcXcSiHhlPIGt9fTXJJuo
-	 kyO98yKxE3ZNw4SWYU0poJV3/8TO49fPfGJkNx73ErEgGXYmzxhGiaF8H9PT8n/V8Q
-	 KEU1jQT9im2qlu1WiDudkDuGN6FkCi31fRVSuVec=
+	by mail.kernel.org (Postfix) with ESMTP id D231B21A4C
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 15:31:31 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="bbmp5E0s"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727438AbfJBPa0 (ORCPT
+        id S1728696AbfJBPbb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Oct 2019 11:30:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39004 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725875AbfJBPa0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Oct 2019 11:30:26 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 96E8E21A4C;
-        Wed,  2 Oct 2019 15:30:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570030223;
-        bh=s0Z0BD8S/+85IH85cLLnC9zo42Wcl0+eeRx2SA7ru30=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=1mFGB2qFK1CdZPpL/0S3pREGphuWKXj1mQHMz57bz5AaJ3wqlHLedkJSoHLpgZG+f
-         3iHKz3Lc6ucpflblaZsrt2iJZpmR1tKDI2AyKdwAdLww2SORKTu0LbTPTA0najnG7x
-         8YzIi467cFcBBnubdHlxSQBwyGYkBt/RoY4roXBg=
-Date:   Wed, 2 Oct 2019 17:30:20 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Akinobu Mita <akinobu.mita@gmail.com>
-Cc:     linux-leds@vger.kernel.org, linux-kernel@vger.kernel.org,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>
-Subject: Re: [PATCH -next 2/2] leds: add /sys/class/leds/<led>/current-trigger
-Message-ID: <20191002153020.GD1748000@kroah.com>
-References: <1570029181-11102-1-git-send-email-akinobu.mita@gmail.com>
- <1570029181-11102-3-git-send-email-akinobu.mita@gmail.com>
+        Wed, 2 Oct 2019 11:31:31 -0400
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:48414 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727235AbfJBPba (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 2 Oct 2019 11:31:30 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1570030289;
+        h=from:from:reply-to:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=z2WmFGxjjikT5Miosenuf0vEZuAWzLD/xn8HBAOrnNE=;
+        b=bbmp5E0sYYcHpQz2cF3eDTL4JOYguMUFWCrd2xx8bobEK6AZBIwEsKzUFaNV7z9fC+LxAq
+        x3xTlbFONjrqaeRkGOBw/jAwfD+UEjEA6tJvtg5YIWAECr3FkWTTggxHo+axRkGb7HvqvA
+        eaJlmun97LH4f0kwluyqBRk5GpJF77Q=
+Received: from mail-io1-f71.google.com (mail-io1-f71.google.com
+ [209.85.166.71]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-234-dRkTEF3UPym6DtvHXOORZA-1; Wed, 02 Oct 2019 11:31:26 -0400
+Received: by mail-io1-f71.google.com with SMTP id e6so43705424iog.5
+        for <linux-kernel@vger.kernel.org>; Wed, 02 Oct 2019 08:31:26 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:reply-to
+         :mail-followup-to:references:mime-version:content-disposition
+         :in-reply-to:user-agent;
+        bh=3qwXQsR3lou+ROCRc4yzFy/Jy2vjM/kmf8Di06ZjAII=;
+        b=WYKwJTguIfw2GdrGs3ZknsEi/i7mf3rBRBDT6wq6AsaxhX65QuNNbW3wuKC3RHThjO
+         YZdDM1tFdG9oBrZ8zmLaoAG3ddXSjrGlsO62D8EAhPu9wzE0NgmWY3ktPzC3E3XJTO78
+         bQpgC/4eXrqRMMqvOF3rNp+2KlBoh40zz8UQTWTmcpF+5x3sijAaSj5ydphQBCrlPLdL
+         LlaPOYHT1TKWTcesGoR5631hKtBRfHOUPsWheoKgxJXzwjo+duJBpQSvFK29hZERywwz
+         J1LBNyHFmX5sNn7d7c+9mQ3QQFAh0TPoKzlWqPCVxwtPv/lpSS8wYYrFVPQxDPrNVxqs
+         kFYQ==
+X-Gm-Message-State: APjAAAUWoTilzk93G1xwO4RAhjEvKhFIQFoz/J2kFFv4NBwxJbaYeDca
+        6cbvYX5nxgutddF6C9Hk+mrt4C6MNhE8Ob1PsbxZW7YZm7/ifwMKqel4raE+sKGpiBWhnJtbC1s
+        5UYuxXCX3HW3kVj4yVfsrlvME
+X-Received: by 2002:a92:6507:: with SMTP id z7mr4198220ilb.191.1570030285581;
+        Wed, 02 Oct 2019 08:31:25 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqx+A+4yeVQjgeYT4HlzAe6H/s5Sv36JwzxxIHXFwEfqwmULlLMujGvlChw2Hgybdyt37xLQvA==
+X-Received: by 2002:a92:6507:: with SMTP id z7mr4198180ilb.191.1570030285293;
+        Wed, 02 Oct 2019 08:31:25 -0700 (PDT)
+Received: from localhost (ip70-163-223-149.ph.ph.cox.net. [70.163.223.149])
+        by smtp.gmail.com with ESMTPSA id l82sm11873096ilh.23.2019.10.02.08.31.24
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 02 Oct 2019 08:31:24 -0700 (PDT)
+Date:   Wed, 2 Oct 2019 08:31:23 -0700
+From:   Jerry Snitselaar <jsnitsel@redhat.com>
+To:     Sasha Levin <sashal@kernel.org>
+Cc:     Greg KH <gregkh@linuxfoundation.org>,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        linux-stabley@vger.kernel.org,
+        Vadim Sukhomlinov <sukhomlinov@google.com>,
+        stable@vger.kernel.org, Douglas Anderson <dianders@chromium.org>,
+        Peter Huewe <peterhuewe@gmx.de>,
+        Jason Gunthorpe <jgunthorpe@obsidianresearch.com>,
+        "open list:TPM DEVICE DRIVER" <linux-integrity@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 3/3] tpm: Fix TPM 1.2 Shutdown sequence to prevent future
+ TPM operations
+Message-ID: <20191002153123.wcguist4okoxckis@cantor>
+Reply-To: Jerry Snitselaar <jsnitsel@redhat.com>
+Mail-Followup-To: Sasha Levin <sashal@kernel.org>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        linux-stabley@vger.kernel.org,
+        Vadim Sukhomlinov <sukhomlinov@google.com>, stable@vger.kernel.org,
+        Douglas Anderson <dianders@chromium.org>,
+        Peter Huewe <peterhuewe@gmx.de>,
+        Jason Gunthorpe <jgunthorpe@obsidianresearch.com>,
+        "open list:TPM DEVICE DRIVER" <linux-integrity@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+References: <20191002131445.7793-1-jarkko.sakkinen@linux.intel.com>
+ <20191002131445.7793-4-jarkko.sakkinen@linux.intel.com>
+ <20191002135758.GA1738718@kroah.com>
+ <20191002151751.GP17454@sasha-vm>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+In-Reply-To: <20191002151751.GP17454@sasha-vm>
+User-Agent: NeoMutt/20180716
+X-MC-Unique: dRkTEF3UPym6DtvHXOORZA-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=WINDOWS-1252; format=flowed
+Content-Transfer-Encoding: quoted-printable
 Content-Disposition: inline
-In-Reply-To: <1570029181-11102-3-git-send-email-akinobu.mita@gmail.com>
-User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Oct 03, 2019 at 12:13:01AM +0900, Akinobu Mita wrote:
-> Reading /sys/class/leds/<led>/trigger returns all available LED triggers.
-> However, this violates the "one value per file" rule of sysfs.
-> 
-> This provides /sys/class/leds/<led>/current-trigger which is almost
-> identical to /sys/class/leds/<led>/trigger.  The only difference is that
-> 'current-trigger' only shows the current trigger name.
-> 
-> This new file follows the "one value per file" rule of sysfs.
-> We can find all available LED triggers by listing the
-> /sys/devices/virtual/led-trigger/ directory.
-> 
-> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> Cc: "Rafael J. Wysocki" <rafael@kernel.org>
-> Cc: Jacek Anaszewski <jacek.anaszewski@gmail.com>
-> Cc: Pavel Machek <pavel@ucw.cz>
-> Cc: Dan Murphy <dmurphy@ti.com>
-> Signed-off-by: Akinobu Mita <akinobu.mita@gmail.com>
-> ---
->  Documentation/ABI/testing/sysfs-class-led | 13 +++++++++++
->  drivers/leds/led-class.c                  | 10 ++++++++
->  drivers/leds/led-triggers.c               | 38 +++++++++++++++++++++++++++----
->  drivers/leds/leds.h                       |  5 ++++
->  4 files changed, 62 insertions(+), 4 deletions(-)
-> 
-> diff --git a/Documentation/ABI/testing/sysfs-class-led b/Documentation/ABI/testing/sysfs-class-led
-> index 5f67f7a..fdfed3f 100644
-> --- a/Documentation/ABI/testing/sysfs-class-led
-> +++ b/Documentation/ABI/testing/sysfs-class-led
-> @@ -61,3 +61,16 @@ Description:
->  		gpio and backlight triggers. In case of the backlight trigger,
->  		it is useful when driving a LED which is intended to indicate
->  		a device in a standby like state.
-> +
-> +What:		/sys/class/leds/<led>/current-trigger
-> +Date:		September 2019
-> +KernelVersion:	5.5
-> +Contact:	linux-leds@vger.kernel.org
-> +Description:
-> +		Set the trigger for this LED. A trigger is a kernel based source
-> +		of LED events.
-> +		Writing the trigger name to this file will change the current
-> +		trigger. Trigger specific parameters can appear in
-> +		/sys/class/leds/<led> once a given trigger is selected. For
-> +		their documentation see sysfs-class-led-trigger-*.
-> +		Reading this file will return the current LED trigger name.
-> diff --git a/drivers/leds/led-class.c b/drivers/leds/led-class.c
-> index 3f04334..3cb0d8a 100644
-> --- a/drivers/leds/led-class.c
-> +++ b/drivers/leds/led-class.c
-> @@ -74,12 +74,22 @@ static ssize_t max_brightness_show(struct device *dev,
->  static DEVICE_ATTR_RO(max_brightness);
->  
->  #ifdef CONFIG_LEDS_TRIGGERS
-> +
-> +static DEVICE_ATTR(current_trigger, 0644, led_current_trigger_show,
-> +		   led_current_trigger_store);
+On Wed Oct 02 19, Sasha Levin wrote:
+>On Wed, Oct 02, 2019 at 03:57:58PM +0200, Greg KH wrote:
+>>On Wed, Oct 02, 2019 at 04:14:44PM +0300, Jarkko Sakkinen wrote:
+>>>From: Vadim Sukhomlinov <sukhomlinov@google.com>
+>>>
+>>>commit db4d8cb9c9f2af71c4d087817160d866ed572cc9 upstream
+>>>
+>>>TPM 2.0 Shutdown involve sending TPM2_Shutdown to TPM chip and disabling
+>>>future TPM operations. TPM 1.2 behavior was different, future TPM
+>>>operations weren't disabled, causing rare issues. This patch ensures
+>>>that future TPM operations are disabled.
+>>>
+>>>Fixes: d1bd4a792d39 ("tpm: Issue a TPM2_Shutdown for TPM2 devices.")
+>>>Cc: stable@vger.kernel.org
+>>>Signed-off-by: Vadim Sukhomlinov <sukhomlinov@google.com>
+>>>[dianders: resolved merge conflicts with mainline]
+>>>Signed-off-by: Douglas Anderson <dianders@chromium.org>
+>>>Reviewed-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+>>>Signed-off-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+>>>---
+>>> drivers/char/tpm/tpm-chip.c | 5 +++--
+>>> 1 file changed, 3 insertions(+), 2 deletions(-)
+>>
+>>What kernel version(s) is this for?
+>
+>It would go to 4.19, we've recently reverted an incorrect backport of
+>this patch.
+>
+>Jarkko, why is this patch 3/3? We haven't seen the first two on the
+>mailing list, do we need anything besides this patch?
+>
+>--
+>Thanks,
+>Sasha
 
-DEVICE_ATTR_RW() please.
+It looks like there was a problem mailing the earlier patchset, and patches=
+ 1 and 2
+weren't cc'd to stable, but patch 3 was.
 
-> +static struct attribute *led_current_trigger_attrs[] = {
-> +	&dev_attr_current_trigger.attr,
-> +	NULL,
-> +};
-> +
->  static BIN_ATTR(trigger, 0644, led_trigger_read, led_trigger_write, 0);
->  static struct bin_attribute *led_trigger_bin_attrs[] = {
->  	&bin_attr_trigger,
->  	NULL,
->  };
->  static const struct attribute_group led_trigger_group = {
-> +	.attrs = led_current_trigger_attrs,
->  	.bin_attrs = led_trigger_bin_attrs,
->  };
->  #endif
-> diff --git a/drivers/leds/led-triggers.c b/drivers/leds/led-triggers.c
-> index 0b810cf..a2ef674 100644
-> --- a/drivers/leds/led-triggers.c
-> +++ b/drivers/leds/led-triggers.c
-> @@ -27,11 +27,9 @@ LIST_HEAD(trigger_list);
->  
->   /* Used by LED Class */
->  
-> -ssize_t led_trigger_write(struct file *filp, struct kobject *kobj,
-> -			  struct bin_attribute *bin_attr, char *buf,
-> -			  loff_t pos, size_t count)
-> +static ssize_t led_trigger_store(struct device *dev, const char *buf,
-> +				 size_t count)
->  {
-> -	struct device *dev = kobj_to_dev(kobj);
->  	struct led_classdev *led_cdev = dev_get_drvdata(dev);
->  	struct led_trigger *trig;
->  	int ret = count;
-> @@ -67,8 +65,25 @@ ssize_t led_trigger_write(struct file *filp, struct kobject *kobj,
->  	mutex_unlock(&led_cdev->led_access);
->  	return ret;
->  }
-> +
-> +ssize_t led_trigger_write(struct file *filp, struct kobject *kobj,
-> +			  struct bin_attribute *bin_attr, char *buf,
-> +			  loff_t pos, size_t count)
-> +{
-> +	struct device *dev = kobj_to_dev(kobj);
-> +
-> +	return led_trigger_store(dev, buf, count);
-> +}
->  EXPORT_SYMBOL_GPL(led_trigger_write);
->  
-> +ssize_t led_current_trigger_store(struct device *dev,
-> +				struct device_attribute *attr, const char *buf,
-> +				size_t count)
-> +{
-> +	return led_trigger_store(dev, buf, count);
-> +}
-> +EXPORT_SYMBOL_GPL(led_current_trigger_store);
-> +
->  __printf(3, 4)
->  static int led_trigger_snprintf(char *buf, ssize_t size, const char *fmt, ...)
->  {
-> @@ -144,6 +159,21 @@ ssize_t led_trigger_read(struct file *filp, struct kobject *kobj,
->  }
->  EXPORT_SYMBOL_GPL(led_trigger_read);
->  
-> +ssize_t led_current_trigger_show(struct device *dev,
-> +				 struct device_attribute *attr, char *buf)
-> +{
-> +	struct led_classdev *led_cdev = dev_get_drvdata(dev);
-> +	int len;
-> +
-> +	down_read(&led_cdev->trigger_lock);
-> +	len = scnprintf(buf, PAGE_SIZE, "%s\n", led_cdev->trigger ?
-
-No need for "scnprintf() when writing a single number to a buffer.  Just
-use sprintf() please.
-
-> +			led_cdev->trigger->name : "none");
-
-Can you have a trigger named "none"? :)
-
-thanks,
-
-greg k-h
