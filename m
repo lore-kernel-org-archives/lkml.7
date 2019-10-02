@@ -2,60 +2,60 @@ Return-Path: <SRS0=zem1=X3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 82DBFC10F14
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 17:03:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C4B0C10F14
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 17:03:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4F1312086A
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 17:03:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0DAED21D82
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 17:03:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="I3ma6LtM"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="rNrSpN2f"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728575AbfJBRDu (ORCPT
+        id S1728685AbfJBRDz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Oct 2019 13:03:50 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:41422 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728049AbfJBRDu (ORCPT
+        Wed, 2 Oct 2019 13:03:55 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:38458 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728484AbfJBRDy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Oct 2019 13:03:50 -0400
-Received: by mail-wr1-f65.google.com with SMTP id q9so1743521wrm.8
-        for <linux-kernel@vger.kernel.org>; Wed, 02 Oct 2019 10:03:49 -0700 (PDT)
+        Wed, 2 Oct 2019 13:03:54 -0400
+Received: by mail-wr1-f68.google.com with SMTP id w12so20534468wro.5
+        for <linux-kernel@vger.kernel.org>; Wed, 02 Oct 2019 10:03:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=BYYfVQIfFtpOzEISpfYA8mada12Gi+by+EuvgLlTqFs=;
-        b=I3ma6LtMenHnUmcpuK5EauyVCCDOO/mq1nFzq1/qCLqwWVUQzOv19WX3l2eYhKYNbo
-         iK7BapnntZY0k2eht5rZTc8xCP68vdLvhPmnsnIpo7+Nk1MjynmDQfAATc8OeJdI2RlG
-         ZamUbSthr2YnREgTluCf2qL8/bPhBlJFvIcQ3PhvURk9/QdLREqYsH5SKTklYmAGH/jE
-         C+CareO8YOz6+t1LNuY61w/s7oCdSMGyZULGQ7QvQEhOdxasIWBS2982WtZWX1oh5Gmf
-         8GUaOZuI9tUzhp0E7XD3+Ib2DJJ714TsqCjFgZ5Ah5k/WwfX7XOBEP3kcWEkvRhKfL94
-         W/3Q==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=TNYLGJx+lu9+SgPr9a/2JABv2HQmtSq9Qr99wIga2I8=;
+        b=rNrSpN2fIml21+JUO1szkLdGWyZora2ylQ6bw5F7f6ogf4DamBuc3Xq6GoKoTawH+G
+         8Gn9nGylOrnQYYzu0IiorMdMNunHOEvIi7ZKh49gsQV9PUWdjCMMuxAd6zHDKao+Uu4X
+         7npGmKdct0a0u8DCW7XocS5rpPhBi6hf6U5yZinYSbdal+++tjG2N9sLY9R9DtuMUEfr
+         kjrazD0vJy1kDoTR3HufHNQLJ1J75VZU+KgunYObAvCkFJhzK18MT5ZH6Jp1dQ3SmXQ2
+         +h8Mk4lFiAfMuMOu1URy375g2NLitC7Ymi2hmW027ZxoaBL3BZ4NcRkOxNMkhfR3z6EQ
+         cWuQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=BYYfVQIfFtpOzEISpfYA8mada12Gi+by+EuvgLlTqFs=;
-        b=tLOBuID7Y572VaMtCJcnuBicHCmYIfMwioLKnwR3vVW7JcFatisMF9jCxr312oxsy4
-         mciipov6c4h4wtpK6WLZRLOvWGGZD52H0fJaG7J//f1dz8rR3unQEcwSgM+ljOPrlPTe
-         nvwaxFV5QPEqX457p8mLTnFKzcVEi5vo3rNiPKohe75rU+yVxH/iBFbtVakD8l8nHo/7
-         qocfQGpwQO8ZkA0xfIvYJtmiHBoCDLW5ORrzglbAPP8iWARWOSclXknBxjGOJLD+nrHN
-         7OOzam3/CNKD5H3He+NjsA/4H2vm/X1TCFvk1haqGTLM0Pee2lRS0aR/y+KkijuLNEXg
-         FqsA==
-X-Gm-Message-State: APjAAAWKT6abGIBBOe0VgDrybkLF1pnb8IUyh2ChRqyQ6mKKAjwdCz8L
-        ShgGo7gVf91b15s1sIszXH8Hww==
-X-Google-Smtp-Source: APXvYqzXLD7bD20WEf4fYahS92VBaU8Nfz7zJCiUjw+YXBjU6Eadhx+AVtevlqIIL2bsBkVfwA9OPg==
-X-Received: by 2002:adf:e348:: with SMTP id n8mr3213078wrj.299.1570035828925;
-        Wed, 02 Oct 2019 10:03:48 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=TNYLGJx+lu9+SgPr9a/2JABv2HQmtSq9Qr99wIga2I8=;
+        b=JOBlRtK3djil2CrS96MqvC3bW2Ipncg/xgpYthoVfv60MwFekYvgllnUNVgpCvJo6u
+         MI0KNShs5M+iGfrH+H/x5uoP15RDaUTsjdGFDaIsRVd543DVn1K/M57LpuiFFnJEhyiA
+         r1u7fHg1ffSckfd8orYyxQKK8kEk9Xl570ZVhB2oDP8zJgm1rNxtlSEl5x6yP/FbSfEn
+         zrqrk2/xk2a6KlsvfuiEb4Vd+Nn6oscX8Xj+AgvFLNqOEJG5EsCIB0H6O1UAxYvgP3kE
+         LZLQoQ/o/frrk9q0K2+maWtG8P6tpNNVdqX4pfD/3o4i7/TLtWr0K3TGBQmeFzbG8E7s
+         bw0Q==
+X-Gm-Message-State: APjAAAX7NMgQV0GxX33uPlW8OyiiFG4IrO7Ri4ixsxsdc0Id6gHVrj5L
+        ZDeWNd0Kjmq/yk6HKJZH5yHJUA==
+X-Google-Smtp-Source: APXvYqxzw0EIk5yjsnYERrcIwhF9r+RUPl1ghTs6gf7rl1+mx8FjpN331RcRW3IfXOwMM5mqABvN/g==
+X-Received: by 2002:a5d:4a01:: with SMTP id m1mr3517743wrq.343.1570035831778;
+        Wed, 02 Oct 2019 10:03:51 -0700 (PDT)
 Received: from sudo.home ([2a01:cb1d:112:6f00:f145:3252:fc29:76c9])
-        by smtp.gmail.com with ESMTPSA id f18sm7085459wmh.43.2019.10.02.10.03.47
+        by smtp.gmail.com with ESMTPSA id f18sm7085459wmh.43.2019.10.02.10.03.50
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 02 Oct 2019 10:03:48 -0700 (PDT)
+        Wed, 02 Oct 2019 10:03:51 -0700 (PDT)
 From:   Ard Biesheuvel <ard.biesheuvel@linaro.org>
 To:     linux-efi@vger.kernel.org, Ingo Molnar <mingo@kernel.org>,
         Thomas Gleixner <tglx@linutronix.de>
@@ -70,10 +70,12 @@ Cc:     Ard Biesheuvel <ard.biesheuvel@linaro.org>,
         Matthew Garrett <mjg59@google.com>,
         Octavian Purdila <octavian.purdila@intel.com>,
         Peter Jones <pjones@redhat.com>, Scott Talbert <swt@techie.net>
-Subject: [GIT PULL 0/7] EFI fixes for v5.4
-Date:   Wed,  2 Oct 2019 18:58:57 +0200
-Message-Id: <20191002165904.8819-1-ard.biesheuvel@linaro.org>
+Subject: [PATCH 2/7] efivar/ssdt: don't iterate over EFI vars if no SSDT override was specified
+Date:   Wed,  2 Oct 2019 18:58:59 +0200
+Message-Id: <20191002165904.8819-3-ard.biesheuvel@linaro.org>
 X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20191002165904.8819-1-ard.biesheuvel@linaro.org>
+References: <20191002165904.8819-1-ard.biesheuvel@linaro.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -81,52 +83,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following changes since commit 54ecb8f7028c5eb3d740bb82b0f1d90f2df63c5c:
+The kernel command line option efivar_ssdt= allows the name to be
+specified of an EFI variable containing an ACPI SSDT table that should
+be loaded into memory by the OS, and treated as if it was provided by
+the firmware.
 
-  Linux 5.4-rc1 (2019-09-30 10:35:40 -0700)
+Currently, that code will always iterate over the EFI variables and
+compare each name with the provided name, even if the command line
+option wasn't set to begin with.
 
-are available in the Git repository at:
+So bail early when no variable name was provided. This works around a
+boot regression on the 2012 Mac Pro, as reported by Scott.
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/efi/efi.git tags/efi-urgent
+Fixes: 475fb4e8b2f4 ("efi / ACPI: load SSTDs from EFI variables")
+Cc: <stable@vger.kernel.org> # v4.9+
+Cc: Octavian Purdila <octavian.purdila@intel.com>
+Tested-by: Scott Talbert <swt@techie.net>
+Signed-off-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+---
+ drivers/firmware/efi/efi.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-for you to fetch changes up to d45bb93ac68495a8c53126742b4d2223101cfb7f:
+diff --git a/drivers/firmware/efi/efi.c b/drivers/firmware/efi/efi.c
+index 8d3e778e988b..69f00f7453a3 100644
+--- a/drivers/firmware/efi/efi.c
++++ b/drivers/firmware/efi/efi.c
+@@ -267,6 +267,9 @@ static __init int efivar_ssdt_load(void)
+ 	void *data;
+ 	int ret;
+ 
++	if (!efivar_ssdt[0])
++		return 0;
++
+ 	ret = efivar_init(efivar_ssdt_iter, &entries, true, &entries);
+ 
+ 	list_for_each_entry_safe(entry, aux, &entries, list) {
+-- 
+2.20.1
 
-  efi/x86: do not clean dummy variable in kexec path (2019-10-02 18:44:23 +0200)
-
-----------------------------------------------------------------
-A couple of EFI fixes for v5.4:
-- a cosmetic fix for the byte order of PCI class codes in CPER error reports
-- bail early instead of pointlessly iterating over all EFI variables looking
-  for the one containing a supplementary ACPI SSDT table if we never specified
-  a variable name to begin with
-- some fixes for TPM event log parsing
-- fix kexec hangs on OVMF/x86 caused by attempts to delete a dummy variable
-  which shouldn't even exist at that point.
-
-----------------------------------------------------------------
-Ard Biesheuvel (1):
-      efivar/ssdt: don't iterate over EFI vars if no SSDT override was specified
-
-Ben Dooks (1):
-      efi: make unexported efi_rci2_sysfs_init static
-
-Dave Young (1):
-      efi/x86: do not clean dummy variable in kexec path
-
-Jerry Snitselaar (1):
-      efi/tpm: only set efi_tpm_final_log_size after successful event log parsing
-
-Lukas Wunner (1):
-      efi: cper: Fix endianness of PCIe class code
-
-Peter Jones (2):
-      efi/tpm: Don't access event->count when it isn't mapped.
-      efi/tpm: don't traverse an event log with no events
-
- arch/x86/platform/efi/efi.c       |  3 ---
- drivers/firmware/efi/cper.c       |  2 +-
- drivers/firmware/efi/efi.c        |  3 +++
- drivers/firmware/efi/rci2-table.c |  2 +-
- drivers/firmware/efi/tpm.c        | 24 ++++++++++++++++++------
- include/linux/tpm_eventlog.h      | 16 ++++++++++++----
- 6 files changed, 35 insertions(+), 15 deletions(-)
