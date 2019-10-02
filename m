@@ -2,211 +2,141 @@ Return-Path: <SRS0=zem1=X3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FAKE_REPLY_C,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E55EEC4360C
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 21:14:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59398C10F14
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 21:14:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BCD79218DE
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 21:14:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570050865;
-	bh=ukk2NQEjN/OXL9KA2LEsDC+CCz/HBeIXkd0X0JHpF4Q=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
-	b=r0x0E0KRrKsyTc0fJEg65gpMnLcqhY72ll6jDDRLJ0qQTc2aZYLfcPLTickFQdVEr
-	 uwBoj3OnlOgQ/m2CrnsGl5wleAF+mYhbRTabmmyPboeCWPublvw7a9fA/MoE/N0ljz
-	 xwwX66ybKZSbx8vwaR6xf0RkoMEvBMcu8btwZNKo=
+	by mail.kernel.org (Postfix) with ESMTP id 2832F217D7
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 21:14:43 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="q9BbE0GO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729400AbfJBVOZ (ORCPT
+        id S1729426AbfJBVOm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Oct 2019 17:14:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37418 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729293AbfJBVOY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Oct 2019 17:14:24 -0400
-Received: from localhost (unknown [69.71.4.100])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2D5F221848;
-        Wed,  2 Oct 2019 21:14:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570050863;
-        bh=ukk2NQEjN/OXL9KA2LEsDC+CCz/HBeIXkd0X0JHpF4Q=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=ot2euRUiRA+UBPNO+FeMqkkAGJEj3I0YPtiR0oqyr2Va1nyAUhw/e2LMe+Z9ay1Jt
-         JGTo5GuBLp8PO/AkYhI04z0Yu18kSqGRvgMSOqjFCOJwX7+guVnSxn1i45AyD/iutM
-         WmF8xgOJpGORq2fIs8MCb7MvRMv2e/EaJu+wb0Fk=
-Date:   Wed, 2 Oct 2019 16:14:21 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Russell King - ARM Linux admin <linux@armlinux.org.uk>
-Cc:     Xiaowei Bao <xiaowei.bao@nxp.com>, mark.rutland@arm.com,
-        devicetree@vger.kernel.org, lorenzo.pieralisi@arm.com,
-        linux-pci@vger.kernel.org, Zhiqiang.Hou@nxp.com,
-        linux-kernel@vger.kernel.org, leoyang.li@nxp.com,
-        Minghuan.Lian@nxp.com, robh+dt@kernel.org,
-        linux-arm-kernel@lists.infradead.org, andrew.murray@arm.com,
-        kishon@ti.com, shawnguo@kernel.org, mingkai.hu@nxp.com
-Subject: Re: [PATCH 0/6] Add the Mobiveil EP and Layerscape Gen4 EP driver
- support
-Message-ID: <20191002211421.GA64972@google.com>
+        Wed, 2 Oct 2019 17:14:42 -0400
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:44796 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729293AbfJBVOm (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 2 Oct 2019 17:14:42 -0400
+Received: by mail-pl1-f196.google.com with SMTP id q15so409812pll.11
+        for <linux-kernel@vger.kernel.org>; Wed, 02 Oct 2019 14:14:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=iHYXT2MapQxKdVQ7MnzMSwJjofrDGs/mMoboG0lEVTY=;
+        b=q9BbE0GObEk4vG/jJQ0YhLUz1bCBYIbTLNZetkjn6SHRgl3kt8KZJrGK1Tsh2z6ny3
+         rvHM0yq5mK/VsmL5dflFyowjNdGsZLa3DqmZurfCRLnoFFe9PLQFznn2ekPcO1ZQ7h4/
+         LT2HcpG8jJCe3Qz0l/FHM95jgQSltvUcOmtvBNFNJFU4E+e4Bzh/5pm7ylzLg8Wjl4H0
+         f+qkN1H/r8SXX07bGvr+mIDfaUG7pZ62TyLGVWu7gva2uU8wXztk/EI4fmdyTi5jufU7
+         xItUvO0XmbH9ob6UK2tvmz4vHwQ1KmB61cN//NqcoJgAFvtlE3ZHuok5RFNzlVOHEXNy
+         2Iyw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=iHYXT2MapQxKdVQ7MnzMSwJjofrDGs/mMoboG0lEVTY=;
+        b=WokvJqGOSuT/IEr0n05DIg4w1eYfdvUQZLEUYAfw+j5/xCIEApgqb4JdwU+/4Z5JSW
+         84JzGiw4j3aysvlCJCXsJ4dl5SuBhlS5TFRBAkSXEIlaBqXK0W095mNifeiwycE4IsEd
+         vKIsnyE7HFuwrZOTyFFlOekBkm/s87fQc4eJnUSW6SoQaQdFTGB768WVCLOsNBQTj7W5
+         tFIIBhwGV4edIxyU5l4wiiXw4wXVwkZ74s0fWhYxRZy1SOMOEC34L5ueYDwFHq9IQ8Zs
+         g+CosKdGMQkMQdnxjfj57GRPRiZ9meCe8NzwxMasXcMy9MuKXyOTjdtPcCcrBCEUHXPJ
+         ysNQ==
+X-Gm-Message-State: APjAAAVEFTenHNRUyjmjjVE/4Len3wzUClBjJEoBdm6637sWxull3wRY
+        avX6kccG1DC4C/4CMqlcC4o+vPRSoCueVVCPA4917A==
+X-Google-Smtp-Source: APXvYqxscMTSRx/XiSzosNRZGgs61rijzLWHJd6F0wCfXuLQb53BowxR8X4US85qSpRvMEwBdGgmXlVN1rxd4bJrnCY=
+X-Received: by 2002:a17:902:7c08:: with SMTP id x8mr5677826pll.119.1570050880892;
+ Wed, 02 Oct 2019 14:14:40 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190924155223.GX25745@shell.armlinux.org.uk>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20191002120136.1777161-1-arnd@arndb.de> <20191002120136.1777161-5-arnd@arndb.de>
+In-Reply-To: <20191002120136.1777161-5-arnd@arndb.de>
+From:   Nick Desaulniers <ndesaulniers@google.com>
+Date:   Wed, 2 Oct 2019 14:14:29 -0700
+Message-ID: <CAKwvOdmjM80XP7VH83iLn=8mz6W1+SbXST2FChEnH0LSRRm4pA@mail.gmail.com>
+Subject: Re: [PATCH 4/6] drm/amd/display: fix dcn21 Makefile for clang
+To:     Arnd Bergmann <arnd@arndb.de>,
+        Alex Deucher <alexander.deucher@amd.com>
+Cc:     Harry Wentland <harry.wentland@amd.com>,
+        Leo Li <sunpeng.li@amd.com>,
+        =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
+        "David (ChunMing) Zhou" <David1.Zhou@amd.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        amd-gfx@lists.freedesktop.org, LKML <linux-kernel@vger.kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        Bhawanpreet Lakha <Bhawanpreet.Lakha@amd.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Sep 24, 2019 at 04:52:23PM +0100, Russell King - ARM Linux admin wrote:
-> On Tue, Sep 24, 2019 at 03:18:47PM +0100, Russell King - ARM Linux admin wrote:
-> > On Mon, Sep 16, 2019 at 10:17:36AM +0800, Xiaowei Bao wrote:
-> > > This patch set are for adding Mobiveil EP driver and adding PCIe Gen4
-> > > EP driver of NXP Layerscape platform.
-> > > 
-> > > This patch set depends on:
-> > > https://patchwork.kernel.org/project/linux-pci/list/?series=159139
-> > > 
-> > > Xiaowei Bao (6):
-> > >   PCI: mobiveil: Add the EP driver support
-> > >   dt-bindings: Add DT binding for PCIE GEN4 EP of the layerscape
-> > >   PCI: mobiveil: Add PCIe Gen4 EP driver for NXP Layerscape SoCs
-> > >   PCI: mobiveil: Add workaround for unsupported request error
-> > >   arm64: dts: lx2160a: Add PCIe EP node
-> > >   misc: pci_endpoint_test: Add the layerscape PCIe GEN4 EP device
-> > >     support
-> > > 
-> > >  .../bindings/pci/layerscape-pcie-gen4.txt          |  28 +-
-> > >  MAINTAINERS                                        |   3 +
-> > >  arch/arm64/boot/dts/freescale/fsl-lx2160a.dtsi     |  56 ++
-> > >  drivers/misc/pci_endpoint_test.c                   |   2 +
-> > >  drivers/pci/controller/mobiveil/Kconfig            |  22 +-
-> > >  drivers/pci/controller/mobiveil/Makefile           |   2 +
-> > >  .../controller/mobiveil/pcie-layerscape-gen4-ep.c  | 169 ++++++
-> > >  drivers/pci/controller/mobiveil/pcie-mobiveil-ep.c | 568 +++++++++++++++++++++
-> > >  drivers/pci/controller/mobiveil/pcie-mobiveil.c    |  99 +++-
-> > >  drivers/pci/controller/mobiveil/pcie-mobiveil.h    |  72 +++
-> > >  10 files changed, 1009 insertions(+), 12 deletions(-)
-> > >  create mode 100644 drivers/pci/controller/mobiveil/pcie-layerscape-gen4-ep.c
-> > >  create mode 100644 drivers/pci/controller/mobiveil/pcie-mobiveil-ep.c
-> > 
-> > Hi,
-> > 
-> > I've applied "PCI: mobiveil: Fix the CPU base address setup in inbound
-> > window" and your patch set to 5.3, which seems to be able to detect the
-> > PCIe card I have plugged in:
-> > 
-> > layerscape-pcie-gen4 3800000.pcie: host bridge /soc/pcie@3800000 ranges:
-> > layerscape-pcie-gen4 3800000.pcie:   MEM 0xa040000000..0xa07fffffff -> 0x40000000
-> > layerscape-pcie-gen4 3800000.pcie: PCI host bridge to bus 0000:00
-> > pci_bus 0000:00: root bus resource [bus 00-ff]
-> > pci_bus 0000:00: root bus resource [mem 0xa040000000-0xa07fffffff] (bus address
-> > [0x40000000-0x7fffffff])
-> > pci 0000:00:00.0: [1957:8d90] type 01 class 0x060400
-> > pci 0000:00:00.0: enabling Extended Tags
-> > pci 0000:00:00.0: supports D1 D2
-> > pci 0000:00:00.0: PME# supported from D0 D1 D2 D3hot D3cold
-> > pci 0000:01:00.0: [15b3:6750] type 00 class 0x020000
-> > pci 0000:01:00.0: reg 0x10: [mem 0xa040000000-0xa0400fffff 64bit]
-> > pci 0000:01:00.0: reg 0x18: [mem 0xa040800000-0xa040ffffff 64bit pref]
-> > pci 0000:01:00.0: reg 0x30: [mem 0xa041000000-0xa0410fffff pref]
-> > pci 0000:00:00.0: up support 3 enabled 0
-> > pci 0000:00:00.0: dn support 1 enabled 0
-> > pci 0000:00:00.0: BAR 9: assigned [mem 0xa040000000-0xa0407fffff 64bit pref]
-> > pci 0000:00:00.0: BAR 8: assigned [mem 0xa040800000-0xa0409fffff]
-> > pci 0000:01:00.0: BAR 2: assigned [mem 0xa040000000-0xa0407fffff 64bit pref]
-> > pci 0000:01:00.0: BAR 0: assigned [mem 0xa040800000-0xa0408fffff 64bit]
-> > pci 0000:01:00.0: BAR 6: assigned [mem 0xa040900000-0xa0409fffff pref]
-> > pci 0000:00:00.0: PCI bridge to [bus 01-ff]
-> > pci 0000:00:00.0:   bridge window [mem 0xa040800000-0xa0409fffff]
-> > pci 0000:00:00.0:   bridge window [mem 0xa040000000-0xa0407fffff 64bit pref]
-> > pci 0000:00:00.0: Max Payload Size set to  256/ 256 (was  128), Max Read Rq  256pci 0000:01:00.0: Max Payload Size set to  256/ 256 (was  128), Max Read Rq  256pcieport 0000:00:00.0: PCIe capabilities: 0x13
-> > pcieport 0000:00:00.0: init_service_irqs: -19
-> > 
-> > However, a bit later in the kernel boot, I get:
-> > 
-> > SError Interrupt on CPU1, code 0xbf000002 -- SError
-> > CPU: 1 PID: 1 Comm: swapper/0 Not tainted 5.3.0+ #392
-> > Hardware name: SolidRun LX2160A COM express type 7 module (DT)
-> > pstate: 60400085 (nZCv daIf +PAN -UAO)
-> > pc : pci_generic_config_read+0xb0/0xc0
-> > lr : pci_generic_config_read+0x1c/0xc0
-> > sp : ffffff8010f9baf0
-> > x29: ffffff8010f9baf0 x28: ffffff8010d620a0
-> > x27: ffffff8010d79000 x26: ffffff8010d62000
-> > x25: ffffff8010cb06d4 x24: 0000000000000000
-> > x23: ffffff8010e499b8 x22: ffffff8010f9bbaf
-> > x21: 0000000000000000 x20: ffffffe2eda11800
-> > x19: ffffff8010f62158 x18: ffffff8010bdede0
-> > x17: ffffff8010bdede8 x16: ffffff8010b96970
-> > x15: ffffffffffffffff x14: ffffffffff000000
-> > x13: ffffffffffffffff x12: 0000000000000030
-> > x11: 0101010101010101 x10: 7f7f7f7f7f7f7f7f
-> > x9 : 2dff716475687163 x8 : ffffffffffffffff
-> > x7 : fefefefefefefefe x6 : 0000000000000000
-> > x5 : 0000000000000000 x4 : ffffff8010f9bb6c
-> > x3 : 0000000000000001 x2 : 0000000000000003
-> > x1 : 0000000000000000 x0 : 0000000000000000
-> > Kernel panic - not syncing: Asynchronous SError Interrupt
-> > CPU: 1 PID: 1 Comm: swapper/0 Not tainted 5.3.0+ #392
-> > Hardware name: SolidRun LX2160A COM express type 7 module (DT)
-> > Call trace:
-> >  dump_backtrace+0x0/0x120
-> >  show_stack+0x14/0x1c
-> >  dump_stack+0x9c/0xc0
-> >  panic+0x148/0x34c
-> >  print_tainted+0x0/0xa8
-> >  arm64_serror_panic+0x74/0x80
-> >  do_serror+0x8c/0x13c
-> >  el1_error+0xbc/0x160
-> >  pci_generic_config_read+0xb0/0xc0
-> >  pci_bus_read_config_byte+0x64/0x90
-> >  pci_read_config_byte+0x40/0x48
-> >  pci_assign_irq+0x34/0xc8
-> >  pci_device_probe+0x28/0x148
-> >  really_probe+0x1c4/0x2d0
-> >  driver_probe_device+0x58/0xfc
-> >  device_driver_attach+0x68/0x70
-> >  __driver_attach+0x94/0xdc
-> >  bus_for_each_dev+0x50/0xa0
-> >  driver_attach+0x20/0x28
-> >  bus_add_driver+0x14c/0x200
-> >  driver_register+0x6c/0x124
-> >  __pci_register_driver+0x48/0x50
-> >  mlx4_init+0x154/0x180
-> >  do_one_initcall+0x30/0x250
-> >  kernel_init_freeable+0x23c/0x32c
-> >  kernel_init+0x10/0xfc
-> >  ret_from_fork+0x10/0x18
-> > SMP: stopping secondary CPUs
-> > Kernel Offset: disabled
-> > CPU features: 0x0002,21006008
-> > Memory Limit: none
-> > 
-> > and there it dies.  Any ideas?
-> 
-> The failing access seems to be:
-> 
->         pci_read_config_byte(dev, PCI_INTERRUPT_PIN, &pin);
-> 
-> for the Mellanox Ethernet card.  Presumably, being a PCIe ethernet
-> card, it doesn't implement this register (just a guess), and aborts
-> the PCI transaction, which is presumably triggering the above SError.
+On Wed, Oct 2, 2019 at 5:03 AM Arnd Bergmann <arnd@arndb.de> wrote:
+>
+> Just like all the other variants, this one passes invalid
+> compile-time options with clang after the new code got
+> merged:
+>
+> clang: error: unknown argument: '-mpreferred-stack-boundary=4'
+> scripts/Makefile.build:265: recipe for target 'drivers/gpu/drm/amd/amdgpu/../display/dc/dcn21/dcn21_resource.o' failed
+>
+> Use the same variant that we have for dcn20 to fix compilation.
+>
+> Fixes: eced51f9babb ("drm/amd/display: Add hubp block for Renoir (v2)")
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 
-PCIe r5.0, sec 7.5.1.1.13, says Interrupt Pin is a read-only register,
-so there shouldn't be an issue with reading it.
+Thanks for the patch!
+Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
+Tested-by: Nick Desaulniers <ndesaulniers@google.com>
+(Though I think it's already been merged)
 
-mobiveil_pcie_ops uses the generic pci_generic_config_read(), which
-will perform a readb() in this case.  Could mobiveil be a bridge that
-only supports 32-bit config accesses?
+Alex, do you know why the AMDGPU driver uses a different stack
+alignment (16B) than the rest of the x86 kernel?  (see
+arch/x86/Makefile which uses 8B stack alignment).
 
-> Note that I've used this card with the Macchiatobin (Armada 8040)
-> without issue.
-> 
-> -- 
-> RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-> FTTC broadband for 0.8mile line in suburbia: sync at 12.1Mbps down 622kbps up
-> According to speedtest.net: 11.9Mbps down 500kbps up
+> ---
+>  drivers/gpu/drm/amd/display/dc/dcn21/Makefile | 12 +++++++++++-
+>  1 file changed, 11 insertions(+), 1 deletion(-)
+>
+> diff --git a/drivers/gpu/drm/amd/display/dc/dcn21/Makefile b/drivers/gpu/drm/amd/display/dc/dcn21/Makefile
+> index 8cd9de8b1a7a..ef673bffc241 100644
+> --- a/drivers/gpu/drm/amd/display/dc/dcn21/Makefile
+> +++ b/drivers/gpu/drm/amd/display/dc/dcn21/Makefile
+> @@ -3,7 +3,17 @@
+>
+>  DCN21 = dcn21_hubp.o dcn21_hubbub.o dcn21_resource.o
+>
+> -CFLAGS_$(AMDDALPATH)/dc/dcn21/dcn21_resource.o := -mhard-float -msse -mpreferred-stack-boundary=4
+> +ifneq ($(call cc-option, -mpreferred-stack-boundary=4),)
+> +       cc_stack_align := -mpreferred-stack-boundary=4
+> +else ifneq ($(call cc-option, -mstack-alignment=16),)
+> +       cc_stack_align := -mstack-alignment=16
+> +endif
+> +
+> +CFLAGS_$(AMDDALPATH)/dc/dcn21/dcn21_resource.o := -mhard-float -msse $(cc_stack_align)
+> +
+> +ifdef CONFIG_CC_IS_CLANG
+> +CFLAGS_$(AMDDALPATH)/dc/dcn21/dcn21_resource.o += -msse2
+> +endif
+>
+>  AMD_DAL_DCN21 = $(addprefix $(AMDDALPATH)/dc/dcn21/,$(DCN21))
+>
+> --
+> 2.20.0
+>
+> --
+> You received this message because you are subscribed to the Google Groups "Clang Built Linux" group.
+> To unsubscribe from this group and stop receiving emails from it, send an email to clang-built-linux+unsubscribe@googlegroups.com.
+> To view this discussion on the web visit https://groups.google.com/d/msgid/clang-built-linux/20191002120136.1777161-5-arnd%40arndb.de.
+
+
+
+-- 
+Thanks,
+~Nick Desaulniers
