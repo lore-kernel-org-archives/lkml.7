@@ -2,170 +2,188 @@ Return-Path: <SRS0=zem1=X3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EFEF9C352AA
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 15:15:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9CEBC35280
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 15:17:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CB95921920
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 15:15:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 88C6821920
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 15:17:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ajn7nzoW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728076AbfJBPPW (ORCPT
+        id S1727697AbfJBPRQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Oct 2019 11:15:22 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:49978 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725893AbfJBPPV (ORCPT
+        Wed, 2 Oct 2019 11:17:16 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:45021 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726330AbfJBPRQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Oct 2019 11:15:21 -0400
-Received: from 61-220-137-37.hinet-ip.hinet.net ([61.220.137.37] helo=localhost)
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <kai.heng.feng@canonical.com>)
-        id 1iFgLW-00039D-7G; Wed, 02 Oct 2019 15:15:18 +0000
-From:   Kai-Heng Feng <kai.heng.feng@canonical.com>
-To:     mathias.nyman@intel.com, gregkh@linuxfoundation.org
-Cc:     linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Kai-Heng Feng <kai.heng.feng@canonical.com>
-Subject: [PATCH] Revert "usb: Avoid unnecessary LPM enabling and disabling during suspend and resume"
-Date:   Wed,  2 Oct 2019 23:15:12 +0800
-Message-Id: <20191002151512.28517-1-kai.heng.feng@canonical.com>
-X-Mailer: git-send-email 2.17.1
+        Wed, 2 Oct 2019 11:17:16 -0400
+Received: by mail-pf1-f195.google.com with SMTP id q21so10491856pfn.11
+        for <linux-kernel@vger.kernel.org>; Wed, 02 Oct 2019 08:17:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
+         :user-agent;
+        bh=DZSOt9Pzw/sZocePyfLHQpL8Fkq0jbtYd2wgMDKhCqM=;
+        b=Ajn7nzoWgwuFExiQu4a64f5qiRKcBxnoUUA2BEjU4mmf93CJyplrjXQD4sA3IYpBF+
+         SBdS/dd/ukcqblpmQhU1pSRs0U6oVi2zUasvgBZNH2Dz0mj9SWEuLBmfzam1WjbI6TOH
+         ranrd13sFUSaloX3j9J07mIF/nXR5kPZ2Ou0feXo0CvjbLMwWQwtMKm23nrouwJn4z6M
+         MZtXGGQ0zVODOo6bOm/aQLUh1cJl9PI2aQ5BO7LFVhSxc7TnzzhDhXydP7LiygwiMLqV
+         aj3ZWg0vakY+dp0u484aod38Fxenaq4vfQ4DINteuItZdxQxyS1nJHm0lmukLYTCNx10
+         xmUw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=DZSOt9Pzw/sZocePyfLHQpL8Fkq0jbtYd2wgMDKhCqM=;
+        b=o8EG7A7W/YyyIMVCcD2DGOKCpQe0lT7k/Z0eGNKVMiWSX3102/1XmeL2BIehKw3I8e
+         I0gI93ywbxo2d/D5sTGOmSzeUWHHUgp4NBCL6Bdwk4d62frSbr0L14eJGRLxOHZdRSjI
+         4eqk5YLtoVwtvY9FHUTIb5qpYLRnWfeT7yrhx4pDZdoIQpwpHg79NPLefWQ8w20qD8pB
+         z0DxhanHM8qrNnS7zQ0jVavBYoa0tcm8fSs5SSf3V+GfNzDSQHIsL/FubzQ8n0zPvvs7
+         qYI9XIBOkA8ozTE6DBL/gYIm9Mq+fxYo96LW9fpHvLLZH6M4kTiD6KbT5vZPGGYrCQuc
+         9S/A==
+X-Gm-Message-State: APjAAAXeRDm8RYYsJ8wukoCWNW1YZXXtNmn5KQMmIGbOvvCoYg6nlpBB
+        3dlrXV4kMZfaxy61pgkU79EDa/td
+X-Google-Smtp-Source: APXvYqyFO35UL16HG5jpoiu0hk9yaM4WsKFIVqvWMZWwVLFqGkfUZpOxTcNsoLLfJ6lnXaz/NvTmeg==
+X-Received: by 2002:a62:1888:: with SMTP id 130mr5274314pfy.72.1570029435297;
+        Wed, 02 Oct 2019 08:17:15 -0700 (PDT)
+Received: from SD ([106.222.11.213])
+        by smtp.gmail.com with ESMTPSA id q71sm6509341pjb.26.2019.10.02.08.17.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 02 Oct 2019 08:17:14 -0700 (PDT)
+Date:   Wed, 2 Oct 2019 20:47:03 +0530
+From:   Saiyam Doshi <saiyamdoshi.in@gmail.com>
+To:     valdis.kletnieks@vt.edu, gregkh@linuxfoundation.org
+Cc:     devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] staging: exfat: use bdev_sync function directly where needed
+Message-ID: <20191002151703.GA6594@SD>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This reverts commit d590c23111505635e1beb01006612971e5ede8aa.
+fs_sync() is wrapper to bdev_sync(). When fs_sync is called with
+non-zero argument, bdev_sync gets called.
 
-Dell WD15 dock has a topology like this:
-/:  Bus 04.Port 1: Dev 1, Class=root_hub, Driver=xhci_hcd/2p, 10000M
-    |__ Port 1: Dev 2, If 0, Class=Hub, Driver=hub/7p, 5000M
-            |__ Port 2: Dev 3, If 0, Class=Vendor Specific Class, Driver=r8152, 5000M
+Most instances of fs_sync is called with false and very few with
+true. Refactor this and makes direct call to bdev_sync() where
+needed and removes fs_sync definition.
 
-Their IDs:
-Bus 004 Device 001: ID 1d6b:0003 Linux Foundation 3.0 root hub
-Bus 004 Device 002: ID 0424:5537 Standard Microsystems Corp.
-Bus 004 Device 004: ID 0bda:8153 Realtek Semiconductor Corp.
-
-Ethernet cannot be detected after plugging ethernet cable to the dock,
-the hub and roothub get runtime resumed and runtime suspended
-immediately:
-...
-[  433.315169] xhci_hcd 0000:3a:00.0: hcd_pci_runtime_resume: 0
-[  433.315204] usb usb4: usb auto-resume
-[  433.315226] hub 4-0:1.0: hub_resume
-[  433.315239] xhci_hcd 0000:3a:00.0: Get port status 4-1 read: 0x10202e2, return 0x10343
-[  433.315264] usb usb4-port1: status 0343 change 0001
-[  433.315279] xhci_hcd 0000:3a:00.0: clear port1 connect change, portsc: 0x10002e2
-[  433.315293] xhci_hcd 0000:3a:00.0: Get port status 4-2 read: 0x2a0, return 0x2a0
-[  433.317012] xhci_hcd 0000:3a:00.0: xhci_hub_status_data: stopping port polling.
-[  433.422282] xhci_hcd 0000:3a:00.0: Get port status 4-1 read: 0x10002e2, return 0x343
-
-At this point the SMSC hub (usb 4-1) goes into compliance mode
-(USB_SS_PORT_LS_COMP_MOD), and USB core tries to warm-reset it,
-
-[  433.422307] usb usb4-port1: do warm reset
-[  433.422311] usb 4-1: device reset not allowed in state 8
-[  433.422339] hub 4-0:1.0: state 7 ports 2 chg 0002 evt 0000
-[  433.422346] xhci_hcd 0000:3a:00.0: Get port status 4-1 read: 0x10002e2, return 0x343
-[  433.422356] usb usb4-port1: do warm reset
-[  433.422358] usb 4-1: device reset not allowed in state 8
-[  433.422428] xhci_hcd 0000:3a:00.0: set port remote wake mask, actual port 0 status  = 0xf0002e2
-[  433.422455] xhci_hcd 0000:3a:00.0: set port remote wake mask, actual port 1 status  = 0xe0002a0
-[  433.422465] hub 4-0:1.0: hub_suspend
-[  433.422475] usb usb4: bus auto-suspend, wakeup 1
-[  433.426161] xhci_hcd 0000:3a:00.0: xhci_hub_status_data: stopping port polling.
-[  433.466209] xhci_hcd 0000:3a:00.0: port 0 polling in bus suspend, waiting
-[  433.510204] xhci_hcd 0000:3a:00.0: port 0 polling in bus suspend, waiting
-[  433.554051] xhci_hcd 0000:3a:00.0: port 0 polling in bus suspend, waiting
-[  433.598235] xhci_hcd 0000:3a:00.0: port 0 polling in bus suspend, waiting
-[  433.642154] xhci_hcd 0000:3a:00.0: port 0 polling in bus suspend, waiting
-[  433.686204] xhci_hcd 0000:3a:00.0: port 0 polling in bus suspend, waiting
-[  433.730205] xhci_hcd 0000:3a:00.0: port 0 polling in bus suspend, waiting
-[  433.774203] xhci_hcd 0000:3a:00.0: port 0 polling in bus suspend, waiting
-[  433.818207] xhci_hcd 0000:3a:00.0: port 0 polling in bus suspend, waiting
-[  433.862040] xhci_hcd 0000:3a:00.0: port 0 polling in bus suspend, waiting
-[  433.862053] xhci_hcd 0000:3a:00.0: xhci_hub_status_data: stopping port polling.
-[  433.862077] xhci_hcd 0000:3a:00.0: xhci_suspend: stopping port polling.
-[  433.862096] xhci_hcd 0000:3a:00.0: // Setting command ring address to 0x8578fc001
-[  433.862312] xhci_hcd 0000:3a:00.0: hcd_pci_runtime_suspend: 0
-[  433.862445] xhci_hcd 0000:3a:00.0: PME# enabled
-[  433.902376] xhci_hcd 0000:3a:00.0: restoring config space at offset 0xc (was 0x0, writing 0x20)
-[  433.902395] xhci_hcd 0000:3a:00.0: restoring config space at offset 0x4 (was 0x100000, writing 0x100403)
-[  433.902490] xhci_hcd 0000:3a:00.0: PME# disabled
-[  433.902504] xhci_hcd 0000:3a:00.0: enabling bus mastering
-[  433.902547] xhci_hcd 0000:3a:00.0: // Setting command ring address to 0x8578fc001
-[  433.902649] pcieport 0000:00:1b.0: PME: Spurious native interrupt!
-[  433.902839] xhci_hcd 0000:3a:00.0: Port change event, 4-1, id 3, portsc: 0xb0202e2
-[  433.902842] xhci_hcd 0000:3a:00.0: resume root hub
-[  433.902845] xhci_hcd 0000:3a:00.0: handle_port_status: starting port polling.
-[  433.902877] xhci_hcd 0000:3a:00.0: xhci_resume: starting port polling.
-[  433.902889] xhci_hcd 0000:3a:00.0: xhci_hub_status_data: stopping port polling.
-[  433.902891] xhci_hcd 0000:3a:00.0: hcd_pci_runtime_resume: 0
-[  433.902919] usb usb4: usb wakeup-resume
-[  433.902942] usb usb4: usb auto-resume
-[  433.902966] hub 4-0:1.0: hub_resume
-...
-
-However the warm-reset never success, the asserted PCI PME keeps the
-runtime-resume, warm-reset and runtime-suspend loop which never bring it back
-causing spurious interrupts floods.
-
-After some trial and errors, the issue goes away if LPM on the SMSC hub
-is disabled. Digging further, enabling and disabling LPM during runtime
-resume and runtime suspend respectively can solve the issue.
-
-So bring back the old LPM behavior, which the SMSC hub inside Dell WD15
-depends on.
-
-Fixes: d590c2311150 ("usb: Avoid unnecessary LPM enabling and disabling during suspend and resume")
-Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+Signed-off-by: Saiyam Doshi <saiyamdoshi.in@gmail.com>
 ---
- drivers/usb/core/hub.c | 13 +++++++++++--
- 1 file changed, 11 insertions(+), 2 deletions(-)
+ drivers/staging/exfat/exfat_super.c | 19 +++----------------
+ 1 file changed, 3 insertions(+), 16 deletions(-)
 
-diff --git a/drivers/usb/core/hub.c b/drivers/usb/core/hub.c
-index 236313f41f4a..22a96d279b14 100644
---- a/drivers/usb/core/hub.c
-+++ b/drivers/usb/core/hub.c
-@@ -3269,6 +3269,12 @@ int usb_port_suspend(struct usb_device *udev, pm_message_t msg)
- 		if (PMSG_IS_AUTO(msg))
- 			goto err_ltm;
+diff --git a/drivers/staging/exfat/exfat_super.c b/drivers/staging/exfat/exfat_super.c
+index 229ecabe7a93..3d3b0f0eebdc 100644
+--- a/drivers/staging/exfat/exfat_super.c
++++ b/drivers/staging/exfat/exfat_super.c
+@@ -285,12 +285,6 @@ static const struct dentry_operations exfat_dentry_ops = {
+ 
+ static DEFINE_SEMAPHORE(z_sem);
+ 
+-static inline void fs_sync(struct super_block *sb, bool do_sync)
+-{
+-	if (do_sync)
+-		bdev_sync(sb);
+-}
+-
+ /*
+  * If ->i_mode can't hold S_IWUGO (i.e. ATTR_RO), we use ->i_attrs to
+  * save ATTR_RO instead of ->i_mode.
+@@ -458,7 +452,6 @@ static int ffsUmountVol(struct super_block *sb)
+ 	/* acquire the lock for file system critical section */
+ 	down(&p_fs->v_sem);
+ 
+-	fs_sync(sb, false);
+ 	fs_set_vol_flags(sb, VOL_CLEAN);
+ 
+ 	if (p_fs->vol_type == EXFAT) {
+@@ -527,7 +520,9 @@ static int ffsSyncVol(struct super_block *sb, bool do_sync)
+ 	down(&p_fs->v_sem);
+ 
+ 	/* synchronize the file system */
+-	fs_sync(sb, do_sync);
++	if (do_sync)
++		bdev_sync(sb);
++
+ 	fs_set_vol_flags(sb, VOL_CLEAN);
+ 
+ 	if (p_fs->dev_ejected)
+@@ -667,7 +662,6 @@ static int ffsCreateFile(struct inode *inode, char *path, u8 mode,
+ 	ret = create_file(inode, &dir, &uni_name, mode, fid);
+ 
+ #ifdef CONFIG_EXFAT_DELAYED_SYNC
+-	fs_sync(sb, false);
+ 	fs_set_vol_flags(sb, VOL_CLEAN);
+ #endif
+ 
+@@ -1040,7 +1034,6 @@ static int ffsWriteFile(struct inode *inode, struct file_id_t *fid,
  	}
-+	if (usb_unlocked_disable_lpm(udev)) {
-+		dev_err(&udev->dev, "Failed to disable LPM before suspend\n.");
-+		status = -ENOMEM;
-+		if (PMSG_IS_AUTO(msg))
-+			goto err_lpm3;
-+	}
  
- 	/* see 7.1.7.6 */
- 	if (hub_is_superspeed(hub->hdev))
-@@ -3295,7 +3301,9 @@ int usb_port_suspend(struct usb_device *udev, pm_message_t msg)
- 	if (status) {
- 		dev_dbg(&port_dev->dev, "can't suspend, status %d\n", status);
+ #ifdef CONFIG_EXFAT_DELAYED_SYNC
+-	fs_sync(sb, false);
+ 	fs_set_vol_flags(sb, VOL_CLEAN);
+ #endif
  
--		/* Try to enable USB3 LTM again */
-+		/* Try to enable USB3 LPM and LTM again */
-+		usb_unlocked_enable_lpm(udev);
-+ err_lpm3:
- 		usb_enable_ltm(udev);
-  err_ltm:
- 		/* Try to enable USB2 hardware LPM again */
-@@ -3584,8 +3592,9 @@ int usb_port_resume(struct usb_device *udev, pm_message_t msg)
- 		/* Try to enable USB2 hardware LPM */
- 		usb_enable_usb2_hardware_lpm(udev);
+@@ -1180,7 +1173,6 @@ static int ffsTruncateFile(struct inode *inode, u64 old_size, u64 new_size)
+ 		fid->rwoffset = fid->size;
  
--		/* Try to enable USB3 LTM */
-+		/* Try to enable USB3 LTM and LPM */
- 		usb_enable_ltm(udev);
-+		usb_unlocked_enable_lpm(udev);
+ #ifdef CONFIG_EXFAT_DELAYED_SYNC
+-	fs_sync(sb, false);
+ 	fs_set_vol_flags(sb, VOL_CLEAN);
+ #endif
+ 
+@@ -1328,7 +1320,6 @@ static int ffsMoveFile(struct inode *old_parent_inode, struct file_id_t *fid,
+ 	}
+ out:
+ #ifdef CONFIG_EXFAT_DELAYED_SYNC
+-	fs_sync(sb, false);
+ 	fs_set_vol_flags(sb, VOL_CLEAN);
+ #endif
+ 
+@@ -1390,7 +1381,6 @@ static int ffsRemoveFile(struct inode *inode, struct file_id_t *fid)
+ 	fid->flags = (p_fs->vol_type == EXFAT) ? 0x03 : 0x01;
+ 
+ #ifdef CONFIG_EXFAT_DELAYED_SYNC
+-	fs_sync(sb, false);
+ 	fs_set_vol_flags(sb, VOL_CLEAN);
+ #endif
+ 
+@@ -1479,7 +1469,6 @@ static int ffsSetAttr(struct inode *inode, u32 attr)
  	}
  
- 	usb_unlock_port(port_dev);
+ #ifdef CONFIG_EXFAT_DELAYED_SYNC
+-	fs_sync(sb, false);
+ 	fs_set_vol_flags(sb, VOL_CLEAN);
+ #endif
+ 
+@@ -1917,7 +1906,6 @@ static int ffsCreateDir(struct inode *inode, char *path, struct file_id_t *fid)
+ 	ret = create_dir(inode, &dir, &uni_name, fid);
+ 
+ #ifdef CONFIG_EXFAT_DELAYED_SYNC
+-	fs_sync(sb, false);
+ 	fs_set_vol_flags(sb, VOL_CLEAN);
+ #endif
+ 
+@@ -2178,7 +2166,6 @@ static int ffsRemoveDir(struct inode *inode, struct file_id_t *fid)
+ 	fid->flags = (p_fs->vol_type == EXFAT) ? 0x03 : 0x01;
+ 
+ #ifdef CONFIG_EXFAT_DELAYED_SYNC
+-	fs_sync(sb, false);
+ 	fs_set_vol_flags(sb, VOL_CLEAN);
+ #endif
+ 
 -- 
-2.17.1
+2.20.1
 
