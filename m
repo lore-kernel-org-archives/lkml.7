@@ -2,119 +2,129 @@ Return-Path: <SRS0=zem1=X3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4AE93C35280
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 12:38:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38401C352AA
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 12:40:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2298421920
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 12:38:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="ckjObRSw"
+	by mail.kernel.org (Postfix) with ESMTP id 103FB21920
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 12:40:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1570020006;
+	bh=C27WP3WjY83XjqK00FA77hEI/TbJNxmgHsX3G7ohuJY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Y5IuFm3a6QTFDa05jBjBUUwtfDTJ3DDaKLyZQHtxf2wmaUlJJyvdYOv70Kk0APkXd
+	 vYaUEnSDLkYNIXj1obmAubFO1syOUnYNJ17WqN0KgY0yOEUnNPPZbWaJeJvvbJq4Lq
+	 b7WW6wh75GweHFQwoeCPunxpoRJFhBZDaUuWoW1Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727181AbfJBMiz (ORCPT
+        id S1727127AbfJBMkF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Oct 2019 08:38:55 -0400
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:53928 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726152AbfJBMiz (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Oct 2019 08:38:55 -0400
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id x92Cch5D014533;
-        Wed, 2 Oct 2019 07:38:43 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1570019923;
-        bh=6k/1/L8qVzBnkiN3DQ8sBlvddq0xsy4C1W0U2GgT2tc=;
-        h=Date:From:To:CC:Subject:References:In-Reply-To;
-        b=ckjObRSwAAxO4JX5G88yKRjMZ2g/hf5dGI8dK+zvxCOePp/Voa9SMYMVL3p0SMoUa
-         NTf2aN8lVDrriaLaQg2fgPtJIwNJSdY8IyPpdueORyrhttt8C8ba1MoRwkVUDpFr44
-         HhoiBQ5NeUiyVtK8SDoBqBy4etam5Lw1B8YwTBHM=
-Received: from DFLE105.ent.ti.com (dfle105.ent.ti.com [10.64.6.26])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x92CchlD007388
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 2 Oct 2019 07:38:43 -0500
-Received: from DFLE105.ent.ti.com (10.64.6.26) by DFLE105.ent.ti.com
- (10.64.6.26) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Wed, 2 Oct
- 2019 07:38:43 -0500
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE105.ent.ti.com
- (10.64.6.26) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Wed, 2 Oct 2019 07:38:43 -0500
-Received: from ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with SMTP id x92Cch6J093041;
-        Wed, 2 Oct 2019 07:38:43 -0500
-Date:   Wed, 2 Oct 2019 07:40:54 -0500
-From:   Benoit Parrot <bparrot@ti.com>
-To:     Sakari Ailus <sakari.ailus@linux.intel.com>
-CC:     Jacopo Mondi <jacopo@jmondi.org>,
-        Hans Verkuil <hverkuil@xs4all.nl>,
-        <linux-media@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <hugues.fruchet@st.com>
-Subject: Re: [Patch 1/3] media: ov5640: add PIXEL_RATE control
-Message-ID: <20191002124054.gqw5l6tdyxqalpod@ti.com>
-References: <20190925152301.21645-1-bparrot@ti.com>
- <20190925152301.21645-2-bparrot@ti.com>
- <20191001075704.GA5449@paasikivi.fi.intel.com>
- <20191001162341.f2o7ruar2nifl5ws@ti.com>
- <20191002075951.afp2xligspqat4ew@uno.localdomain>
- <20191002121438.g3re6v54q4hit2wv@ti.com>
- <20191002123513.GI972@paasikivi.fi.intel.com>
+        Wed, 2 Oct 2019 08:40:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35818 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726325AbfJBMkF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 2 Oct 2019 08:40:05 -0400
+Received: from localhost (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 430082133F;
+        Wed,  2 Oct 2019 12:40:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1570020003;
+        bh=C27WP3WjY83XjqK00FA77hEI/TbJNxmgHsX3G7ohuJY=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=r1ISHHmlUa3ArxhsAN1rIrYFbdp7E9Nft088x4rC2BWSc1rug9fMRZiNAEvlaN9sk
+         psxK5zJ4K0fRIworDS+q3PHxoLSWsTxwjQE2GdAQfEPZ2BVH804MSe+aysCm4f7xwy
+         KNwsXlVW8+wyrVavZo30CoO4tzHc6UVNjBTRJcfA=
+Date:   Wed, 2 Oct 2019 08:40:02 -0400
+From:   Sasha Levin <sashal@kernel.org>
+To:     Dexuan Cui <decui@microsoft.com>
+Cc:     Michael Kelley <mikelley@microsoft.com>,
+        Wei Hu <weh@microsoft.com>,
+        "rdunlap@infradead.org" <rdunlap@infradead.org>,
+        "shc_work@mail.ru" <shc_work@mail.ru>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "lee.jones@linaro.org" <lee.jones@linaro.org>,
+        "alexandre.belloni@bootlin.com" <alexandre.belloni@bootlin.com>,
+        "baijiaju1990@gmail.com" <baijiaju1990@gmail.com>,
+        "info@metux.net" <info@metux.net>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        "linux-fbdev@vger.kernel.org" <linux-fbdev@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        KY Srinivasan <kys@microsoft.com>
+Subject: Re: [PATHC v6] video: hyperv: hyperv_fb: Support deferred IO for
+ Hyper-V frame buffer driver
+Message-ID: <20191002124002.GL17454@sasha-vm>
+References: <20190918060227.6834-1-weh@microsoft.com>
+ <DM5PR21MB0137DA408FE59E8C1171CFFCD78E0@DM5PR21MB0137.namprd21.prod.outlook.com>
+ <DM5PR21MB01375E8543451D4550D622CDD7880@DM5PR21MB0137.namprd21.prod.outlook.com>
+ <20191001184828.GF8171@sasha-vm>
+ <PU1P153MB0169811097EA55DF795888B2BF9C0@PU1P153MB0169.APCP153.PROD.OUTLOOK.COM>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=us-ascii; format=flowed
 Content-Disposition: inline
-In-Reply-To: <20191002123513.GI972@paasikivi.fi.intel.com>
-User-Agent: NeoMutt/20171215
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+In-Reply-To: <PU1P153MB0169811097EA55DF795888B2BF9C0@PU1P153MB0169.APCP153.PROD.OUTLOOK.COM>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Sakari Ailus <sakari.ailus@linux.intel.com> wrote on Wed [2019-Oct-02 15:35:13 +0300]:
-> Hi Benoit,
-> 
-> On Wed, Oct 02, 2019 at 07:14:38AM -0500, Benoit Parrot wrote:
-> > Hi Jacopo,
-> > 
-> > Maybe, I miss spoke when I mentioned a helper I did not intent a framework
-> > level generic function. Just a function to help in this case :)
-> > 
-> > That being said, I re-read the thread you mentioned. And as Hughes pointed
-> > out dynamically generating a "working" link frequency value which can be
-> > used by a CSI2 receiver to properly configure its PHY is not trivial.
-> > 
-> > When I created this patch, I also had another to add V4L2_CID_LINK_FREQ
-> > support. I am testing this against the TI CAL CSI2 receiver, which already
-> > uses the V4L2_CID_PIXEL_RATE value for that purpose, so I also had a patch
-> > to add support for V4L2_CID_LINK_FREQ to that driver as well.
-> > 
-> > Unfortunately, similar to Hughes' findings I was not able to make it "work"
-> > with all supported resolution/framerate.
-> > 
-> > Unlike my V4L2_CID_PIXEL_RATE solution which now works in all mode with the
-> > same receiver.
-> > 
-> > So long story short I dropped the V4L2_CID_LINK_FREQ patch and focused on
-> > V4L2_CID_PIXEL_RATE instead.
-> 
-> It shouldn't make a difference which one you use; if you know the bus type
-> (and if it's CSI-2 with D-PHY, number of lanes and how many bits per pixel
-> the media bus format has), you can convert fairly trivially between the
-> two.
+On Wed, Oct 02, 2019 at 08:09:41AM +0000, Dexuan Cui wrote:
+>> -----Original Message-----
+>> From: Sasha Levin <sashal@kernel.org>
+>> Sent: Tuesday, October 1, 2019 11:48 AM
+>>
+>> On Fri, Sep 20, 2019 at 05:26:34PM +0000, Michael Kelley wrote:
+>> >From: Michael Kelley <mikelley@microsoft.com>  Sent: Wednesday,
+>> September 18, 2019 2:48 PM
+>> >> >
+>> >> > Without deferred IO support, hyperv_fb driver informs the host to refresh
+>> >> > the entire guest frame buffer at fixed rate, e.g. at 20Hz, no matter there
+>> >> > is screen update or not. This patch supports deferred IO for screens in
+>> >> > graphics mode and also enables the frame buffer on-demand refresh. The
+>> >> > highest refresh rate is still set at 20Hz.
+>> >> >
+>> >> > Currently Hyper-V only takes a physical address from guest as the starting
+>> >> > address of frame buffer. This implies the guest must allocate contiguous
+>> >> > physical memory for frame buffer. In addition, Hyper-V Gen 2 VMs only
+>> >> > accept address from MMIO region as frame buffer address. Due to these
+>> >> > limitations on Hyper-V host, we keep a shadow copy of frame buffer
+>> >> > in the guest. This means one more copy of the dirty rectangle inside
+>> >> > guest when doing the on-demand refresh. This can be optimized in the
+>> >> > future with help from host. For now the host performance gain from
+>> deferred
+>> >> > IO outweighs the shadow copy impact in the guest.
+>> >> >
+>> >> > Signed-off-by: Wei Hu <weh@microsoft.com>
+>> >
+>> >Sasha -- this patch and one other from Wei Hu for the Hyper-V frame buffer
+>> >driver should be ready.  Both patches affect only the Hyper-V frame buffer
+>> >driver so can go through the Hyper-V tree.  Can you pick these up?  Thx.
+>>
+>> I can't get this to apply anywhere, what tree is it based on?
+>>
+>> --
+>> Thanks,
+>> Sasha
+>
+>Hi Sasha,
+>Today's hyperv/linux.git's hyperv-next branch's top commit is
+>    48b72a2697d5 ("hv_netvsc: Add the support of hibernation").
+>
+>Please pick up two patches from Wei Hu:
+>#1: [PATCH v4] video: hyperv: hyperv_fb: Obtain screen resolution from Hyper-V host
+>#2: [PATHC v6] video: hyperv: hyperv_fb: Support deferred IO for Hyper-V frame buffer driver
 
-Sakari,
+Ah, I guess I was missing the first one. I've queued both for
+hyperv-next, thanks!
 
-Yes I get that, but at this point as they say I will leave that as an
-exercise to the reader...
-
-Benoit
-
-> 
-> -- 
-> Sakari Ailus
-> sakari.ailus@linux.intel.com
+--
+Thanks,
+Sasha
