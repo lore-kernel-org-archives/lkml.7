@@ -2,70 +2,118 @@ Return-Path: <SRS0=zem1=X3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D0EAC352AA
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 08:48:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60BF2ECE58B
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 08:49:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4A31F215EA
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 08:48:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4196E215EA
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 08:49:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727216AbfJBIsi (ORCPT
+        id S1727242AbfJBIt0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Oct 2019 04:48:38 -0400
-Received: from mx2.suse.de ([195.135.220.15]:43540 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727158AbfJBIsi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Oct 2019 04:48:38 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 9A765B155;
-        Wed,  2 Oct 2019 08:48:36 +0000 (UTC)
-Date:   Wed, 2 Oct 2019 10:48:44 +0200
-From:   Jean Delvare <jdelvare@suse.de>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Arnd Bergmann <arnd@arndb.de>
-Cc:     LKML <linux-kernel@vger.kernel.org>
-Subject: [PATCH] eeprom: Warn that the driver is deprecated
-Message-ID: <20191002104844.1dc4d8f3@endymion>
-Organization: SUSE Linux
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-suse-linux-gnu)
+        Wed, 2 Oct 2019 04:49:26 -0400
+Received: from mga11.intel.com ([192.55.52.93]:57077 "EHLO mga11.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725799AbfJBIt0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 2 Oct 2019 04:49:26 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 02 Oct 2019 01:49:25 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,573,1559545200"; 
+   d="scan'208";a="205281421"
+Received: from lahna.fi.intel.com (HELO lahna) ([10.237.72.157])
+  by fmsmga001.fm.intel.com with SMTP; 02 Oct 2019 01:49:21 -0700
+Received: by lahna (sSMTP sendmail emulation); Wed, 02 Oct 2019 11:49:21 +0300
+Date:   Wed, 2 Oct 2019 11:49:21 +0300
+From:   Mika Westerberg <mika.westerberg@linux.intel.com>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Oliver Neukum <oneukum@suse.com>,
+        Anthony Wong <anthony.wong@canonical.com>,
+        Mario.Limonciello@dell.com,
+        Andreas Noever <andreas.noever@gmail.com>,
+        Yehezkel Bernat <YehezkelShB@gmail.com>,
+        Michael Jamet <michael.jamet@intel.com>,
+        Rajmohan Mani <rajmohan.mani@intel.com>,
+        Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>,
+        Alan Stern <stern@rowland.harvard.edu>,
+        linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
+        Lukas Wunner <lukas@wunner.de>
+Subject: Re: [RFC PATCH 17/22] thunderbolt: Add initial support for USB4
+Message-ID: <20191002084921.GJ2714@lahna.fi.intel.com>
+References: <20191001113830.13028-1-mika.westerberg@linux.intel.com>
+ <20191001113830.13028-18-mika.westerberg@linux.intel.com>
+ <20191001124748.GH2954373@kroah.com>
+ <20191001130905.GO2714@lahna.fi.intel.com>
+ <20191001145354.GA3366714@kroah.com>
+ <20191001150734.GA2714@lahna.fi.intel.com>
+ <1569947262.2639.15.camel@suse.com>
+ <20191002083034.GE2714@lahna.fi.intel.com>
+ <20191002083954.GD1687317@kroah.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191002083954.GD1687317@kroah.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Deprecating the driver in Kconfig is one thing, but we also need to
-let the users themselves know. Log a warning each time a device is
-bound to the deprecated eeprom driver.
+On Wed, Oct 02, 2019 at 10:39:54AM +0200, Greg Kroah-Hartman wrote:
+> On Wed, Oct 02, 2019 at 11:30:34AM +0300, Mika Westerberg wrote:
+> > On Tue, Oct 01, 2019 at 06:27:42PM +0200, Oliver Neukum wrote:
+> > > Am Dienstag, den 01.10.2019, 18:07 +0300 schrieb Mika Westerberg:
+> > > 
+> > > Hi,
+> > > 
+> > > > OK, but does that break existing .configs? I mean if you have already
+> > > > CONFIG_THUNDERBOLT in your .config/defconfig does it now just get
+> > > > dropped silently?
+> > > 
+> > > People will have to look at this new stuff anyway.
+> > > 
+> > > > For example firewire has CONFIG_FIREWIRE even though the "standard" name
+> > > > is IEEE 1394. I was thinking maybe we can do the same for
+> > > > USB4/Thunderbolt
+> > > 
+> > > USB and Thunderbolt used to be distinct protocols. Whereas Firewire
+> > > was just a colloquial name for IEEE1394. Please be wordy here.
+> > > "Unified support for USB4 and Thunderbolt4"
+> > 
+> > OK.
+> > 
+> > I've been thinking this bit more and since Thunderbolt will stick around
+> > as well (it basically implements all the optional USB4 features and
+> > more) so would it make sense to have the Kconfig option be
+> > CONFIG_THUNDERBOLT_USB4 (or CONFIG_USB4_THUNDERBOLT)? That should cover
+> > both.
+> 
+> I would stick with CONFIG_USB4 but put both in the Kconfig text.  Again,
+> it will be easier to handle this over time.
 
-Signed-off-by: Jean Delvare <jdelvare@suse.de>
-Cc: Arnd Bergmann <arnd@arndb.de>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- drivers/misc/eeprom/eeprom.c |    4 ++++
- 1 file changed, 4 insertions(+)
+OK, thanks Greg!
 
---- linux-5.2.orig/drivers/misc/eeprom/eeprom.c	2019-07-08 00:41:56.000000000 +0200
-+++ linux-5.2/drivers/misc/eeprom/eeprom.c	2019-10-02 10:46:23.363974060 +0200
-@@ -175,6 +175,10 @@ static int eeprom_probe(struct i2c_clien
- 		}
- 	}
- 
-+	/* Let the users know they are using deprecated driver */
-+	dev_notice(&client->dev,
-+		   "eeprom driver is deprecated, please use at24 instead\n");
-+
- 	/* create the sysfs eeprom file */
- 	return sysfs_create_bin_file(&client->dev.kobj, &eeprom_attr);
- }
+> > Comments?
+> > 
+> > Also does anyone have any thoughts about keeping the driver under
+> > drivers/thunderbolt vs. moving it under usb like
+> > drivers/usb/thunderbolt? I'm thinking if anyone not familiar with this
+> > tries to enable support for USB4 so the first place he/she probably
+> > looks is under "USB support" menuconfig entry.
+> 
+> You are not sharing/needing any of the drivers/usb/ code just yet,
+> right? 
 
+Yes, that's correct.
 
--- 
-Jean Delvare
-SUSE L3 Support
+> I imagine that will happen "soon" and when it does, then sure,
+> moving stuff is fine with me.
+
+OK thanks!
