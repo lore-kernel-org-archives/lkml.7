@@ -2,139 +2,121 @@ Return-Path: <SRS0=zem1=X3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 579C9ECE58A
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 13:28:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7883CC35280
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 13:29:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2EF2C21783
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 13:28:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 48C6B21A4A
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 13:29:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=shipmail.org header.i=@shipmail.org header.b="nVm9z/Us"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="c+Mg75kV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727824AbfJBN2R (ORCPT
+        id S1727861AbfJBN36 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Oct 2019 09:28:17 -0400
-Received: from pio-pvt-msa2.bahnhof.se ([79.136.2.41]:35728 "EHLO
-        pio-pvt-msa2.bahnhof.se" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725917AbfJBN2Q (ORCPT
+        Wed, 2 Oct 2019 09:29:58 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:33810 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725917AbfJBN36 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Oct 2019 09:28:16 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by pio-pvt-msa2.bahnhof.se (Postfix) with ESMTP id AE1453F4B9;
-        Wed,  2 Oct 2019 15:28:13 +0200 (CEST)
-Authentication-Results: pio-pvt-msa2.bahnhof.se;
-        dkim=pass (1024-bit key; unprotected) header.d=shipmail.org header.i=@shipmail.org header.b=nVm9z/Us;
-        dkim-atps=neutral
-X-Virus-Scanned: Debian amavisd-new at bahnhof.se
-Received: from pio-pvt-msa2.bahnhof.se ([127.0.0.1])
-        by localhost (pio-pvt-msa2.bahnhof.se [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id l3Tlv0lnB0UB; Wed,  2 Oct 2019 15:28:12 +0200 (CEST)
-Received: from mail1.shipmail.org (h-205-35.A357.priv.bahnhof.se [155.4.205.35])
-        (Authenticated sender: mb878879)
-        by pio-pvt-msa2.bahnhof.se (Postfix) with ESMTPA id DC4CE3F3FF;
-        Wed,  2 Oct 2019 15:28:10 +0200 (CEST)
-Received: from localhost.localdomain (h-205-35.A357.priv.bahnhof.se [155.4.205.35])
-        by mail1.shipmail.org (Postfix) with ESMTPSA id 49E1F36016A;
-        Wed,  2 Oct 2019 15:28:10 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=shipmail.org; s=mail;
-        t=1570022890; bh=/EBugeJrTD+nCNKHyemgWq/G9ItARTz8ze1eDBUS3kA=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=nVm9z/UsSusOXVV/5lmZ5iCgZMAg7oYsmpJvJCpcTBb7wuwFjhUs9DI8sKTgsAmua
-         Nh+RigK157768aZhapIU3mwPUQkaHFZC8Jv37gBY9bz1lGoPZMvlNQKMt1qUkH+vJV
-         Jn6xfmiBeA7HevOIv1Mf3hP+CfOLMp4yLXewUEko=
-Subject: Re: Ack to merge through DRM? WAS Re: [PATCH v2 1/5] mm: Add
- write-protect and clean utilities for address space ranges
-To:     "Kirill A. Shutemov" <kirill@shutemov.name>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        Linux-MM <linux-mm@kvack.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Matthew Wilcox <willy@infradead.org>
-References: <20190926115548.44000-1-thomas_os@shipmail.org>
- <20190926115548.44000-2-thomas_os@shipmail.org>
- <85e31bcf-d3c8-2fcf-e659-2c9f82ebedc7@shipmail.org>
- <CAHk-=wifjLeeMEtMPytiMAKiWkqPorjf1P4PbB3dj17Y3Jcqag@mail.gmail.com>
- <a48a93d2-03e9-40d3-3b4c-a301632d3121@shipmail.org>
- <CAHk-=whwN+CvaorsmczZRwFhSV+1x98xg-zajVD1qKmN=9JhBQ@mail.gmail.com>
- <50e83aeb-e971-f0ad-f034-ed592588eba7@shipmail.org>
- <20191002131819.asjr2tsx6lcmmbof@box>
-From:   =?UTF-8?Q?Thomas_Hellstr=c3=b6m_=28VMware=29?= 
-        <thomas_os@shipmail.org>
-Organization: VMware Inc.
-Message-ID: <b574e08e-70ce-2cce-03d9-0052bb3f9f87@shipmail.org>
-Date:   Wed, 2 Oct 2019 15:28:10 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Wed, 2 Oct 2019 09:29:58 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x92DSx1F037156;
+        Wed, 2 Oct 2019 13:29:44 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2019-08-05;
+ bh=EM3e9nI3amV6xVGJaxjxz45i18U04uaHvQ94gCdzIIs=;
+ b=c+Mg75kVq8y09t0ZUPlttkci0ZJew3k1BY8yYl6R2HwYdCKfYoLmY9l1reOE9bz5Iwmk
+ 9qHxc3IYdyJXJOQi9GLggW1mULgFeIwMYInD1cpLYUS+HlyIe7FAIIYhRLErr8hiGs4h
+ z3Apaqb/sayWPcMzdwAClBeDI6QlANcXRInSK2MIWsDctDHdekyY2ZiosW9Yp9A1akI0
+ QhwsYMEdxpau7JeQqxYWsKyeigNoYCHv/u18pjMFZJaXxa95L+W4a1M9c4fOBD4WG8IS
+ JCXENDAt3XgmB3iA7+dTaeup3n+lvZUdsYHnNOiRjItp0Kbp3YNVSIvdH2qkMrzSlgSf lQ== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by userp2120.oracle.com with ESMTP id 2va05rvuf9-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 02 Oct 2019 13:29:44 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x92DSlsc098366;
+        Wed, 2 Oct 2019 13:29:44 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by aserp3020.oracle.com with ESMTP id 2vckynx97t-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 02 Oct 2019 13:29:43 +0000
+Received: from abhmp0006.oracle.com (abhmp0006.oracle.com [141.146.116.12])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x92DThq4028591;
+        Wed, 2 Oct 2019 13:29:43 GMT
+Received: from kadam (/41.57.98.10)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Wed, 02 Oct 2019 06:29:42 -0700
+Date:   Wed, 2 Oct 2019 16:29:33 +0300
+From:   Dan Carpenter <dan.carpenter@oracle.com>
+To:     Colin King <colin.king@canonical.com>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Maxime Ripard <mripard@kernel.org>,
+        Chen-Yu Tsai <wens@csie.org>, linux-pwm@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] pwm: sun4i: redundant assignment to variable pval
+Message-ID: <20191002132933.GO29696@kadam>
+References: <20191002100844.10490-1-colin.king@canonical.com>
+ <20191002132506.GO22609@kadam>
 MIME-Version: 1.0
-In-Reply-To: <20191002131819.asjr2tsx6lcmmbof@box>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191002132506.GO22609@kadam>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9397 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1908290000 definitions=main-1910020129
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9397 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1908290000
+ definitions=main-1910020129
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 10/2/19 3:18 PM, Kirill A. Shutemov wrote:
-> On Wed, Oct 02, 2019 at 11:21:01AM +0200, Thomas Hellström (VMware) wrote:
->> On 9/26/19 10:16 PM, Linus Torvalds wrote:
->>> On Thu, Sep 26, 2019 at 1:09 PM Thomas Hellström (VMware)
->>> <thomas_os@shipmail.org> wrote:
->>>> That said, if people are OK with me modifying the assert in
->>>> pud_trans_huge_lock() and make __walk_page_range non-static, it should
->>>> probably be possible to make it work, yes.
->>> I don't think you need to modify that assert at all.
->>>
->>> That thing only exists when there's a "pud_entry" op in the walker,
->>> and then you absolutely need to have that mmap_lock.
->>>
->>> As far as I can tell, you fundamentally only ever work on a pte level
->>> in your address space walker already and actually have a WARN_ON() on
->>> the pud_huge thing, so no pud entry can possibly apply.
->>>
->>> So no, the assert in pud_trans_huge_lock() does not seem to be a
->>> reason not to just use the existing page table walkers.
->>>
->>> And once you get rid of the walking, what is left? Just the "iterate
->>> over the inode mappings" part. Which could just be done in
->>> mm/pagewalk.c, and then you don't even need to remove the static.
->>>
->>> So making it be just another walking in pagewalk.c would seem to be
->>> the simplest model.
->>>
->>> Call it "walk_page_mapping()". And talk extensively about how the
->>> locking differs a lot from the usual "walk_page_vma()" things.
->>>
->>> The then actual "apply" functions (what a horrid name) could be in the
->>> users. They shouldn't be mixed in with the walking functions anyway.
->>> They are callbacks, not walkers.
->>>
->>>                Linus
->> Linus, Kirill
->>
->> I've pushed a reworked version based on the pagewalk code here:
->>
->> https://cgit.freedesktop.org/~thomash/linux/log/?h=pagewalk
->>
->> (top three patched)
->>
->> with users included here:
->>
->> https://cgit.freedesktop.org/~thomash/linux/log/?h=coherent-rebased
->>
->> Do you think this could work? The reason that the "mm: Add write-protect and
->> clean.." code is still in mm as a set of helpers, is of course that much of
->> the needed functionality is not exported, presumably since we want to keep
->> page table manipulation in mm.
-> Could you post it to the mailing list? It's easier to review this way.
->
-Sure.
+On Wed, Oct 02, 2019 at 04:25:06PM +0300, Dan Carpenter wrote:
+> On Wed, Oct 02, 2019 at 11:08:44AM +0100, Colin King wrote:
+> > From: Colin Ian King <colin.king@canonical.com>
+> > 
+> > Variable pval is being assigned a value that is never read. The
+> > assignment is redundant and hence can be removed.
+> > 
+> > Addresses-Coverity: ("Unused value")
+> > Signed-off-by: Colin Ian King <colin.king@canonical.com>
+> > ---
+> >  drivers/pwm/pwm-sun4i.c | 1 -
+> >  1 file changed, 1 deletion(-)
+> > 
+> > diff --git a/drivers/pwm/pwm-sun4i.c b/drivers/pwm/pwm-sun4i.c
+> > index 6f5840a1a82d..53970d4ba695 100644
+> > --- a/drivers/pwm/pwm-sun4i.c
+> > +++ b/drivers/pwm/pwm-sun4i.c
+> > @@ -156,7 +156,6 @@ static int sun4i_pwm_calculate(struct sun4i_pwm_chip *sun4i_pwm,
+> >  	if (sun4i_pwm->data->has_prescaler_bypass) {
+> >  		/* First, test without any prescaler when available */
+> >  		prescaler = PWM_PRESCAL_MASK;
+> > -		pval = 1;
+> >  		/*
+> >  		 * When not using any prescaler, the clock period in nanoseconds
+> >  		 * is not an integer so round it half up instead of
+> 
+> Are you sure?  It looks used to me.
 
-/Thomas
+Ah.  Never mind.  My tree was out of date.
 
+regards,
+dan carpenter
 
