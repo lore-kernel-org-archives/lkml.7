@@ -2,91 +2,123 @@ Return-Path: <SRS0=zem1=X3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 53767C352AA
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 13:58:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0F2EC352AA
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 13:59:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 21A7A21D82
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 13:58:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570024682;
-	bh=hsQC6o71ybFmccqFc2OdD/0cntqTXO/+R3g0oF5wrIo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=soWn/OnSCsP2fbusMyTgq0HWZufK9snwkOLBgCqNbtrnBRSWN+oHAz5YiT8FYYudU
-	 6eJu2odiv59ibpFZxXdidPkG2G9oZ9IrXmRZg2bCl4YhbFNjsKNRuAypZIg9nuKC8k
-	 ruNkKGDXCXDWDJJ3wO+UeoxiWvTUtc1+YdXBGB2U=
+	by mail.kernel.org (Postfix) with ESMTP id 78B8C21920
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 13:59:06 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="s4hfO8XB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727710AbfJBN6B (ORCPT
+        id S1727692AbfJBN7F (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Oct 2019 09:58:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56604 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725917AbfJBN6B (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Oct 2019 09:58:01 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1CFF821783;
-        Wed,  2 Oct 2019 13:57:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570024680;
-        bh=hsQC6o71ybFmccqFc2OdD/0cntqTXO/+R3g0oF5wrIo=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=MP93ep4PEeCoVB8M7Bp6DhF7bZ2t5zKmQvmHd+npc4tzxZwucONmILipwmt/ZYxf3
-         Yd0F3Qb3YchV5ISjDJ2W2nknpkAr9Vlx7JaIr6ki2QhFIup1CfXaW+QSW25mEbB6HZ
-         7SwGFZQU1K85uO1scv4oX3rxW60qeuz6fYaSDi64=
-Date:   Wed, 2 Oct 2019 15:57:58 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Cc:     linux-stabley@vger.kernel.org,
-        Vadim Sukhomlinov <sukhomlinov@google.com>,
-        stable@vger.kernel.org, Douglas Anderson <dianders@chromium.org>,
-        Peter Huewe <peterhuewe@gmx.de>,
-        Jason Gunthorpe <jgunthorpe@obsidianresearch.com>,
-        "open list:TPM DEVICE DRIVER" <linux-integrity@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 3/3] tpm: Fix TPM 1.2 Shutdown sequence to prevent future
- TPM operations
-Message-ID: <20191002135758.GA1738718@kroah.com>
-References: <20191002131445.7793-1-jarkko.sakkinen@linux.intel.com>
- <20191002131445.7793-4-jarkko.sakkinen@linux.intel.com>
+        Wed, 2 Oct 2019 09:59:05 -0400
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:46796 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725917AbfJBN7F (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 2 Oct 2019 09:59:05 -0400
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id x92Dwqcj111590;
+        Wed, 2 Oct 2019 08:58:52 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1570024732;
+        bh=RaDMxu07D9M++yaf5vgHDeabPM3lihqxOYytrbBSUU0=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=s4hfO8XBCPZmABJZKz9xLcLV1xumo+2UHZ2+aNDDakouuzaZaCbuwZMrUk437umz5
+         vJJjNFUrEhcWyXN1MrOJc/+9swQCw5J872R3gux1SIxbhBacPPqfup96xK3T3tOE7e
+         atmDEnMg2+05Cf54/a6FST1u/zcePHJ8aUvZfG2o=
+Received: from DLEE106.ent.ti.com (dlee106.ent.ti.com [157.170.170.36])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x92Dwqja096089
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 2 Oct 2019 08:58:52 -0500
+Received: from DLEE100.ent.ti.com (157.170.170.30) by DLEE106.ent.ti.com
+ (157.170.170.36) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Wed, 2 Oct
+ 2019 08:58:51 -0500
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE100.ent.ti.com
+ (157.170.170.30) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Wed, 2 Oct 2019 08:58:51 -0500
+Received: from [10.250.99.146] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id x92DwnDw091205;
+        Wed, 2 Oct 2019 08:58:49 -0500
+Subject: Re: [PATCH v7 1/5] leds: populate the device's of_node when possible
+To:     Jacek Anaszewski <jacek.anaszewski@gmail.com>, <pavel@ucw.cz>,
+        <robh+dt@kernel.org>, <mark.rutland@arm.com>,
+        <lee.jones@linaro.org>, <daniel.thompson@linaro.org>
+CC:     <dmurphy@ti.com>, <linux-leds@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <dri-devel@lists.freedesktop.org>,
+        <tomi.valkeinen@ti.com>
+References: <20190918145730.22805-1-jjhiblot@ti.com>
+ <20190918145730.22805-2-jjhiblot@ti.com>
+ <f543e757-e000-6de4-694b-e75f388e5908@gmail.com>
+From:   Jean-Jacques Hiblot <jjhiblot@ti.com>
+Message-ID: <e9588e03-20d4-7e6d-e514-0b79dae12cce@ti.com>
+Date:   Wed, 2 Oct 2019 15:58:48 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191002131445.7793-4-jarkko.sakkinen@linux.intel.com>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+In-Reply-To: <f543e757-e000-6de4-694b-e75f388e5908@gmail.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Oct 02, 2019 at 04:14:44PM +0300, Jarkko Sakkinen wrote:
-> From: Vadim Sukhomlinov <sukhomlinov@google.com>
-> 
-> commit db4d8cb9c9f2af71c4d087817160d866ed572cc9 upstream
-> 
-> TPM 2.0 Shutdown involve sending TPM2_Shutdown to TPM chip and disabling
-> future TPM operations. TPM 1.2 behavior was different, future TPM
-> operations weren't disabled, causing rare issues. This patch ensures
-> that future TPM operations are disabled.
-> 
-> Fixes: d1bd4a792d39 ("tpm: Issue a TPM2_Shutdown for TPM2 devices.")
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Vadim Sukhomlinov <sukhomlinov@google.com>
-> [dianders: resolved merge conflicts with mainline]
-> Signed-off-by: Douglas Anderson <dianders@chromium.org>
-> Reviewed-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-> Signed-off-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-> ---
->  drivers/char/tpm/tpm-chip.c | 5 +++--
->  1 file changed, 3 insertions(+), 2 deletions(-)
+Hi Jacek,
 
-What kernel version(s) is this for?
+On 24/09/2019 23:03, Jacek Anaszewski wrote:
+> Hi Jean,
+>
+> Thank you for rebasing the set
+>
+> On 9/18/19 4:57 PM, Jean-Jacques Hiblot wrote:
+>> If initialization data is available and its fwnode is actually a of_node,
+>> store this information in the led device's structure. This will allow the
+>> device to use or provide OF-based API such (devm_xxx).
+>>
+>> Signed-off-by: Jean-Jacques Hiblot <jjhiblot@ti.com>
+>> ---
+>>   drivers/leds/led-class.c | 5 ++++-
+>>   1 file changed, 4 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/drivers/leds/led-class.c b/drivers/leds/led-class.c
+>> index 647b1263c579..c2167b66b61f 100644
+>> --- a/drivers/leds/led-class.c
+>> +++ b/drivers/leds/led-class.c
+>> @@ -276,8 +276,11 @@ int led_classdev_register_ext(struct device *parent,
+>>   		mutex_unlock(&led_cdev->led_access);
+>>   		return PTR_ERR(led_cdev->dev);
+>>   	}
+>> -	if (init_data && init_data->fwnode)
+>> +	if (init_data && init_data->fwnode) {
+>>   		led_cdev->dev->fwnode = init_data->fwnode;
+>> +		if (is_of_node(init_data->fwnode))
+>> +			led_cdev->dev->of_node = to_of_node(init_data->fwnode);
+> It would be step backwards. You can do the conversion in the place of
+> use i.e. in devm_led_get().
 
-thanks,
+Could be done. But it would break another use case I have. I'm also 
+working on the regulator support and for this one, of_node needs to be 
+populated.
 
-greg k-h
+Is there a problem populating of_node if the LED is indeed described in 
+the DT ?
+
+JJ
+
+>
+>> +	}
+>>   
+>>   	if (ret)
+>>   		dev_warn(parent, "Led %s renamed to %s due to name collision",
+>>
