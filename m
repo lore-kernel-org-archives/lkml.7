@@ -2,91 +2,116 @@ Return-Path: <SRS0=zem1=X3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B7E8C10F14
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 20:52:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B8E77C4360C
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 20:53:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 31D922070B
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 20:52:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8FB172070B
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 20:53:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="njfHQ0Pj"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="jlO+NBPy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728671AbfJBUwv (ORCPT
+        id S1728796AbfJBUxG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Oct 2019 16:52:51 -0400
-Received: from mail-qt1-f194.google.com ([209.85.160.194]:44709 "EHLO
-        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725975AbfJBUwv (ORCPT
+        Wed, 2 Oct 2019 16:53:06 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:44309 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725975AbfJBUxF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Oct 2019 16:52:51 -0400
-Received: by mail-qt1-f194.google.com with SMTP id u40so492118qth.11;
-        Wed, 02 Oct 2019 13:52:50 -0700 (PDT)
+        Wed, 2 Oct 2019 16:53:05 -0400
+Received: by mail-pg1-f196.google.com with SMTP id i14so272336pgt.11
+        for <linux-kernel@vger.kernel.org>; Wed, 02 Oct 2019 13:53:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=dV7G2LykqgYT5rhZ0q2+Dl9UTjM6dUdhYsDLKx2iJ7w=;
-        b=njfHQ0Pj2mArKtJe69H3lcP4vF+5C3hV7R/QQb/tDNWLFG4JppbZXB9w28vCynRyls
-         puQkBWu6UMUwfybBipZJ1Rw6SvHSvcb2VqlMJMU6VSXcQXNbxMlNqKMjCrMhc5TjoKeA
-         OztSzIUKI7xszZ9TFFrvCWpbbQnczKoIbHnhEMFujmzBUG6t4/YELDphmB8XHiPDehbr
-         81j0yeNkAIrESvDDQFGvzEikxZ+JIikblhtppodDgRvoET0W/2Wp+Qb7H+eO8XNGMcJs
-         2E5Fb8NrvgMiCaslFyWB3mLssZMGI1iRc1bxuuNwQ4XD31OD4JIetOzRh6UfoOHz8D+l
-         rCzw==
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=Teht8krjV9I4yoAGotugiVYKYlwLiVfKSfSqCO8cNf4=;
+        b=jlO+NBPyz5tQDZY3RDxFnyu8Rcjfnq1ndJUH+zU/dejpBmvQ1oYCQL37A62CESeFsA
+         OLZXA9IM92ZVhJl/Gdz8aaqfWhniBPVbkgjzL2OhtNuvL8I/qJuWcdMUg6t7T1J7kQ7X
+         VED/vH0i8d/iEIoMjDbmzKYBysNutlFszdEVQ=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=dV7G2LykqgYT5rhZ0q2+Dl9UTjM6dUdhYsDLKx2iJ7w=;
-        b=n8x0UX8ne4Ilhk2ayRlpNvv0tEkxbmRZNHFZP91fJq7i3Wa81A/SeJcTtDM7RMVHcv
-         KhGHLYb9DU2zSsLMqF2wgr9O75xkpIydIWYkFdm1Fwf1DaiHTnwPKQewY6GGI0t01/51
-         Nonxi3o4sZSFpZ2e98CF6RJvCRTmJcrk9XngkDgAx/WTBIs3gzA94k0iuwxwkis7fTPd
-         EDHJq7IhAIJQ+u/raHO1tiHPVHl8ANojtlz1E4aNavRVvSS+ioBVjxlK1VPgouq34FkW
-         JbNovBmMonY3jPUy80o2zWn25NZ17g0TCH3rVveE+bkeyvVQRNknYCm/Y7k3yMdqDgi2
-         qIyg==
-X-Gm-Message-State: APjAAAU5lGez2to8EvJAa8QL43iqDXR6WF71D+ARIdoWc1RsufA6JNZH
-        51RYVj6Gnb8o4pxRJScr+Jn7hJ+pk37XuU1EY7c=
-X-Google-Smtp-Source: APXvYqydMlkQMGe8h2Djsj5sssvOku+IQi/vN4XfsKNs2+Dobgptdmt8myS/rr/raKPEITL0iycEqxzpL4WTEaw3LxM=
-X-Received: by 2002:ac8:37cb:: with SMTP id e11mr6510756qtc.22.1570049569865;
- Wed, 02 Oct 2019 13:52:49 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=Teht8krjV9I4yoAGotugiVYKYlwLiVfKSfSqCO8cNf4=;
+        b=Hre1lcMeEET3XTJe0moT2SbTb9R6FG/PUUV8PUHh6gwCyAiAFq++G1K8uXGE5H0glx
+         rfcnMHP0wqomLMhtWhTO1Z624y2tP89fbQInIH3vVWyazZG4JD8AVOxwSNDZ62jhRdi1
+         9CAcqvlEG+obdVibSecHYkjQf39ZPmL51HB0HoWyLr9eYCwfKSYnXezyU7kvdxbFkuyx
+         9tmK+UVD48FBRPxFTwcQJM9GVEa54P1Rr0HXavMXrlN4Vhj/JKf2MEAXOP7TAfLZJxK5
+         roxp15lxO8a/idIwKfm/nXBhdWkwOA66bEohxWEMHey0WI9YKJ7Ml3nRL3mpKV/Fszgu
+         83ug==
+X-Gm-Message-State: APjAAAURduHGESDxRYfkpOFid3dwySZmL1rfpjZqqQnoKwDghHbTCO35
+        WPe0fRqUzqc/tmUDK9yLRWb+ewuEJ54=
+X-Google-Smtp-Source: APXvYqz56NGqvNvM7wNZehM8lOTKZaqznv7OGeNO25LGl5UqtgpsSqdJxQLNnpGeTB2FDnioEMMVzA==
+X-Received: by 2002:a63:5356:: with SMTP id t22mr5429101pgl.400.1570049582624;
+        Wed, 02 Oct 2019 13:53:02 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id j24sm340646pff.71.2019.10.02.13.53.01
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 02 Oct 2019 13:53:01 -0700 (PDT)
+Date:   Wed, 2 Oct 2019 13:53:00 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     torvalds@linux-foundation.org
+Cc:     linux-kernel@vger.kernel.org,
+        pankaj.laxminarayan.bharadiya@intel.com, joe@perches.com,
+        adobriyan@gmail.com, netdev@vger.kernel.org,
+        David Miller <davem@davemloft.net>
+Subject: Re: renaming FIELD_SIZEOF to sizeof_member
+Message-ID: <201910021349.9B19DCFD6@keescook>
+References: <CAHk-=wg8+eNK+SK1Ekqm0qNQHVM6e6YOdZx3yhsX6Ajo3gEupg@mail.gmail.com>
+ <201909261347.3F04AFA0@keescook>
+ <201910021115.9888E9B@keescook>
+ <20191002.132121.402975401040540710.davem@davemloft.net>
 MIME-Version: 1.0
-References: <20191002191652.11432-1-kpsingh@chromium.org>
-In-Reply-To: <20191002191652.11432-1-kpsingh@chromium.org>
-From:   Song Liu <liu.song.a23@gmail.com>
-Date:   Wed, 2 Oct 2019 13:52:38 -0700
-Message-ID: <CAPhsuW4nSxnghVUmObi1Mo95Jb1nMVHbSKbAMU3rD765enL+dg@mail.gmail.com>
-Subject: Re: [PATCH v2] samples/bpf: Add a workaround for asm_inline
-To:     KP Singh <kpsingh@chromium.org>
-Cc:     open list <linux-kernel@vger.kernel.org>,
-        bpf <bpf@vger.kernel.org>, Florent Revest <revest@google.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        Florent Revest <revest@chromium.org>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191002.132121.402975401040540710.davem@davemloft.net>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Oct 2, 2019 at 12:17 PM KP Singh <kpsingh@chromium.org> wrote:
->
-> From: KP Singh <kpsingh@google.com>
->
-> This was added in:
->
->   commit eb111869301e ("compiler-types.h: add asm_inline definition")
->
-> and breaks samples/bpf as clang does not support asm __inline.
->
-> Co-developed-by: Florent Revest <revest@google.com>
-> Signed-off-by: Florent Revest <revest@google.com>
-> Signed-off-by: KP Singh <kpsingh@google.com>
+On Wed, Oct 02, 2019 at 01:21:21PM -0700, David Miller wrote:
+> From: Kees Cook <keescook@chromium.org>
+> Date: Wed, 2 Oct 2019 11:19:16 -0700
+> 
+> > On Thu, Sep 26, 2019 at 01:56:55PM -0700, Kees Cook wrote:
+> >> On Thu, Sep 26, 2019 at 01:06:01PM -0700, Linus Torvalds wrote:
+> >> >  (a) why didn't this use the already existing and well-named macro
+> >> > that nobody really had issues with?
+> >> 
+> >> That was suggested, but other folks wanted the more accurate "member"
+> >> instead of "field" since a treewide change was happening anyway:
+> >> https://www.openwall.com/lists/kernel-hardening/2019/07/02/2
+> >> 
+> >> At the end of the day, I really don't care -- I just want to have _one_
+> >> macro. :)
+> >> 
+> >> >  (b) I see no sign of the networking people having been asked about
+> >> > their preferences.
+> >> 
+> >> Yeah, that's entirely true. Totally my mistake; it seemed like a trivial
+> >> enough change that I didn't want to bother too many people. But let's
+> >> fix that now... Dave, do you have any concerns about this change of
+> >> FIELD_SIZEOF() to sizeof_member() (or if it prevails, sizeof_field())?
+> > 
+> > David, can you weight in on this? Are you okay with a mass renaming of
+> > FIELD_SIZEOF() to sizeof_member(), as the largest user of the old macro
+> > is in networking?
+> 
+> I have no objection to moving to sizeof_member().
 
-Acked-by: Song Liu <songliubraving@fb.com>
+Great; thank you!
+
+Linus, are you still open to taking this series with Dave's buy-in? I'd
+really hate to break it up since it's such a mechanical treewide
+change. I'm also happy to wait until the next -rc1 window; whatever you
+think is best here.
+
+Thanks!
+
+-- 
+Kees Cook
