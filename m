@@ -2,222 +2,146 @@ Return-Path: <SRS0=zem1=X3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB3BFC352AA
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 08:09:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A4F3AC35280
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 08:10:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A6C3B215EA
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 08:09:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6450621783
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 08:10:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="RD4k1duk"
+	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="FuSM9rPL";
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=synopsys.onmicrosoft.com header.i=@synopsys.onmicrosoft.com header.b="kHhkPBaA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727558AbfJBIJr (ORCPT
+        id S1727577AbfJBIJ7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Oct 2019 04:09:47 -0400
-Received: from mail-eopbgr1320137.outbound.protection.outlook.com ([40.107.132.137]:30736
-        "EHLO APC01-PU1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726137AbfJBIJq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Oct 2019 04:09:46 -0400
+        Wed, 2 Oct 2019 04:09:59 -0400
+Received: from us03-smtprelay2.synopsys.com ([149.117.87.133]:38936 "EHLO
+        smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726137AbfJBIJ7 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 2 Oct 2019 04:09:59 -0400
+Received: from mailhost.synopsys.com (badc-mailhost2.synopsys.com [10.192.0.18])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+        (No client certificate requested)
+        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 5452FC2FDF;
+        Wed,  2 Oct 2019 08:09:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
+        t=1570003797; bh=vn0G241cd27H583bR7iMZeAnN8UsIjqOFTSq7kbzAyM=;
+        h=From:To:CC:Subject:Date:References:In-Reply-To:From;
+        b=FuSM9rPLb3h+YBjIh2oHYOUd1ivD6KX9ZjDrjtVslXSH0hW68/cw95y1dkbmxTCJE
+         D/ww+Mz9HIPYD0Ppp3nzO8J6OU00jjGm2Qndxf7X80aZyWciZu6DR5s8MZQf7IlUOl
+         dvI4d+rB+xOlQWk/vQSpFR4HIU++rbZI7ts8sWO4c6BlFPGSHJ9o/D6UR8mahjfquN
+         GD+TTfOIByY0NGJ5QlBWMAd8uMyWe8PxdUYeV3GksDWKKEJ6hyMmc1Hnv2eUfhjE8A
+         eXF7vPFdc8oYgsbsVLneGe8urSKuNc9eDdiZ9MWTBsWgrsq4Q4Qmh6mar8knm3hgQg
+         XnWnW/QV9ti0A==
+Received: from US01WEHTC3.internal.synopsys.com (us01wehtc3.internal.synopsys.com [10.15.84.232])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mailhost.synopsys.com (Postfix) with ESMTPS id D3EA2A0067;
+        Wed,  2 Oct 2019 08:09:50 +0000 (UTC)
+Received: from US01HYBRID2.internal.synopsys.com (10.15.246.24) by
+ US01WEHTC3.internal.synopsys.com (10.15.84.232) with Microsoft SMTP Server
+ (TLS) id 14.3.408.0; Wed, 2 Oct 2019 01:08:42 -0700
+Received: from NAM02-CY1-obe.outbound.protection.outlook.com (10.13.134.195)
+ by mrs.synopsys.com (10.15.246.24) with Microsoft SMTP Server (TLS) id
+ 14.3.408.0; Wed, 2 Oct 2019 01:08:42 -0700
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=RMrnildEcgRFlJjgowOrvGM5vM413b34K1ldkkVuXMBvhaQAz60lkhxGKGjI0IjReDH/O6gS+BMrI9WzsGl6y71jJaJOSAArzOlgrZH/nkS5luP0l4XIGXuyFlKLiZt1YuA7OMthY8lPWnz+J01TuvuF9HUEO2li9ahdJPUQcFIhJ3PyCx+qKcFbsNFWJFjOg6T0FD5jKHTY0MEnilB7oSK+B0z0vam6Y8bB+IXLiL/en8QRoZ0DtTT/wFzOO9Kn2IiFztpAFxWgST15v8Ano0LNdGvF2UfjSRN34G6kHDVK1j4KMuu+jf1kiUyQGt07Vt74pNiWgZChLN98SsGC5A==
+ b=M/obS/QMtvtt/yhHasQLCqGuKs17MN1q6ilIk5AY3mlP6nAAvsvZY/0OXHfEekh+olGqHB44GiunFx0efFYGlW4Bzm/ltmAfhW0lLi1G3gTgXYbikC24j8H1+d0GjTiMq4Ns/C3QCk8WiIbE0HyjOTzB+WKk6XV68cLP2YqyrDAGsgdgA6aIRnJ4ec59uUL5m9apZ2Ch4k0JzkIp80E5vsmDEMhuftsCCHwYDFyJBEBpiwJZgE+dQeqLH3jvoL2XMRRpGCIIVQBGV534SM/jFou5TIyu2QaznwTy+DqgPPgRO/4og8RrHHeuGstraOL2sApR9XlOiWMtIfv20uEJiA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=eJwVl3WJYnafSgffs3DQz3Z0TI04pDwpTp1DXjtOEMU=;
- b=MPLJ27ClyRT5sAUYnJdBVUoUaV3YdkMpWKRNkn5OpFvgb6s9V1so65InQcLNVJ5SUjSFqMrHOd/NnIBE3Lzyt54qQm9oyjpdF0YBbM1TRgYes/souWHizagelP/6rlugtRQT5kN37SZUMjT4dXuQxHXvrUjOcV44Yqnp84WW2pwHk9aU0XTuWdzIxy4XYNb7idPyvjmzPXM6pX9oYvXtWApHZ1Qxzn+mdvaVKTKr7q2t05ERZEADIcRnVbdA/s+49vifog4QWL0r61UpUiEKRnoXmygXCagdaeU6GB535BCtGyw73tmmyjNLC00dHjPadwjFvvoopu+v44W0uEW4hA==
+ bh=vn0G241cd27H583bR7iMZeAnN8UsIjqOFTSq7kbzAyM=;
+ b=fbdd3/ZsAGSR01oERHuzgoKGzrdCyirbcUvsUv2KB/CDoT2Qbw/3GtEdgvo8RGNzCezQSKbhUh99z4oceVLQF99LgKNR02jn5W7Wmo9FqrQgM4GeG572kROW4nUx1hJQJIkAHInfF09bo7fSZrPsmWDS5Ii0n5e3Q4VheJc+WfMzzoK+Wm/jfYkeL4LuLO5/O2E8BBSWlkB13f8+qCPatIIouv6bxXAJQPBo4UjDJzeGndPGF/ovCDe5MnqvpX5w/vGZg2eJ4+QH4998b/4C8LxE+ey8dPVJK2pnZB5cHmzvTwSUpYC88y5+7tn9GawwLRgSL10Xy00QNSFStO2ZyA==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microsoft.com; dmarc=pass action=none
- header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=selector2;
+ smtp.mailfrom=synopsys.com; dmarc=pass action=none header.from=synopsys.com;
+ dkim=pass header.d=synopsys.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=synopsys.onmicrosoft.com; s=selector2-synopsys-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=eJwVl3WJYnafSgffs3DQz3Z0TI04pDwpTp1DXjtOEMU=;
- b=RD4k1dukXwNu7p0R/BbsLaUWdYHKvXQq8IBmN/5Cf8Xyi1jg4QBA0i6n5QFfjw8p6eBqF4YPSEU2gbrnnBjCjgIV1FdBsYlRtnBcaF5SHBzhXeCRES+POMgQPTArxfHR0PwQ3j9F+VB9iN70r05GvAqq41s2ZUe4TRi4IQJqJk8=
-Received: from PU1P153MB0169.APCP153.PROD.OUTLOOK.COM (10.170.189.13) by
- PU1P153MB0105.APCP153.PROD.OUTLOOK.COM (10.170.188.10) with Microsoft SMTP
+ bh=vn0G241cd27H583bR7iMZeAnN8UsIjqOFTSq7kbzAyM=;
+ b=kHhkPBaA/fVfDpHgaTyYCOhWV9SEtO+tmGv1RAP3BX6xIYh/KoyvluG6LABygYN43EnCXM1e7jKO15kes0ksNCi/54Ss+Zkmr9Q7+16XBjdjGvD7S4R4DWuSuqM7R3saVfNupMP2DciNkOAoZEskoHCF2lGI9KnANNCFYyG6N14=
+Received: from BN8PR12MB3266.namprd12.prod.outlook.com (20.179.67.145) by
+ BN8PR12MB3507.namprd12.prod.outlook.com (20.179.67.160) with Microsoft SMTP
  Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2327.5; Wed, 2 Oct 2019 08:09:41 +0000
-Received: from PU1P153MB0169.APCP153.PROD.OUTLOOK.COM
- ([fe80::fc44:a784:73e6:c1c2]) by PU1P153MB0169.APCP153.PROD.OUTLOOK.COM
- ([fe80::fc44:a784:73e6:c1c2%7]) with mapi id 15.20.2327.009; Wed, 2 Oct 2019
- 08:09:41 +0000
-From:   Dexuan Cui <decui@microsoft.com>
-To:     Sasha Levin <sashal@kernel.org>,
-        Michael Kelley <mikelley@microsoft.com>
-CC:     Wei Hu <weh@microsoft.com>,
-        "rdunlap@infradead.org" <rdunlap@infradead.org>,
-        "shc_work@mail.ru" <shc_work@mail.ru>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "lee.jones@linaro.org" <lee.jones@linaro.org>,
-        "alexandre.belloni@bootlin.com" <alexandre.belloni@bootlin.com>,
-        "baijiaju1990@gmail.com" <baijiaju1990@gmail.com>,
-        "info@metux.net" <info@metux.net>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        "linux-fbdev@vger.kernel.org" <linux-fbdev@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        KY Srinivasan <kys@microsoft.com>
-Subject: RE: [PATHC v6] video: hyperv: hyperv_fb: Support deferred IO for
- Hyper-V frame buffer driver
-Thread-Topic: [PATHC v6] video: hyperv: hyperv_fb: Support deferred IO for
- Hyper-V frame buffer driver
-Thread-Index: AQHVeIjQ21J2EyXx3k2x6FCXKaeI5qdG+8Hg
-Date:   Wed, 2 Oct 2019 08:09:41 +0000
-Message-ID: <PU1P153MB0169811097EA55DF795888B2BF9C0@PU1P153MB0169.APCP153.PROD.OUTLOOK.COM>
-References: <20190918060227.6834-1-weh@microsoft.com>
- <DM5PR21MB0137DA408FE59E8C1171CFFCD78E0@DM5PR21MB0137.namprd21.prod.outlook.com>
- <DM5PR21MB01375E8543451D4550D622CDD7880@DM5PR21MB0137.namprd21.prod.outlook.com>
- <20191001184828.GF8171@sasha-vm>
-In-Reply-To: <20191001184828.GF8171@sasha-vm>
+ 15.20.2305.20; Wed, 2 Oct 2019 08:08:40 +0000
+Received: from BN8PR12MB3266.namprd12.prod.outlook.com
+ ([fe80::59fc:d942:487d:15b8]) by BN8PR12MB3266.namprd12.prod.outlook.com
+ ([fe80::59fc:d942:487d:15b8%7]) with mapi id 15.20.2305.023; Wed, 2 Oct 2019
+ 08:08:40 +0000
+From:   Jose Abreu <Jose.Abreu@synopsys.com>
+To:     Hans Andersson <Hans.Andersson@CELLAVISION.SE>,
+        Jose Abreu <Jose.Abreu@synopsys.com>,
+        "mcoquelin.stm32@gmail.com" <mcoquelin.stm32@gmail.com>
+CC:     "peppe.cavallaro@st.com" <peppe.cavallaro@st.com>,
+        "alexandre.torgue@st.com" <alexandre.torgue@st.com>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-stm32@st-md-mailman.stormreply.com" 
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH] net: stmmac: Read user ID muliple times if needed.
+Thread-Topic: [PATCH] net: stmmac: Read user ID muliple times if needed.
+Thread-Index: AQHVePAsjhS3U+43VE+DGhKYpgL3F6dG8LMAgAAMxQCAAAG8IA==
+Date:   Wed, 2 Oct 2019 08:08:40 +0000
+Message-ID: <BN8PR12MB3266CE04997F30E3ED74E9AFD39C0@BN8PR12MB3266.namprd12.prod.outlook.com>
+References: <20191002070721.9916-1-haan@cellavision.se>
+ <BN8PR12MB3266ED591171A79825090BE0D39C0@BN8PR12MB3266.namprd12.prod.outlook.com>
+ <e878e0e4036a4d69b05dcee717fd7ac5@DRCELLEX03.cellavision.se>
+In-Reply-To: <e878e0e4036a4d69b05dcee717fd7ac5@DRCELLEX03.cellavision.se>
 Accept-Language: en-US
 Content-Language: en-US
 X-MS-Has-Attach: 
 X-MS-TNEF-Correlator: 
-msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=True;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Owner=decui@microsoft.com;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2019-10-02T08:09:39.9301205Z;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=General;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Application=Microsoft Azure
- Information Protection;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=91d0fc58-9008-4c8a-bfab-da233f5ee236;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Extended_MSFT_Method=Automatic
 authentication-results: spf=none (sender IP is )
- smtp.mailfrom=decui@microsoft.com; 
-x-originating-ip: [2601:600:a280:7f70:24b0:cdff:a7c5:c70f]
+ smtp.mailfrom=joabreu@synopsys.com; 
+x-originating-ip: [83.174.63.141]
 x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 74787cce-d125-49d6-55dd-08d7470fe0dc
-x-ms-office365-filtering-ht: Tenant
-x-ms-traffictypediagnostic: PU1P153MB0105:|PU1P153MB0105:
+x-ms-office365-filtering-correlation-id: 73b84679-e7bd-4d27-5d96-08d7470fbc83
+x-ms-traffictypediagnostic: BN8PR12MB3507:
 x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <PU1P153MB0105F0A00A1F11A5D842A1BFBF9C0@PU1P153MB0105.APCP153.PROD.OUTLOOK.COM>
-x-ms-oob-tlc-oobclassifiers: OLM:597;
+x-microsoft-antispam-prvs: <BN8PR12MB35073FAC9BA3BF1F17697116D39C0@BN8PR12MB3507.namprd12.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:7691;
 x-forefront-prvs: 0178184651
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(39860400002)(376002)(396003)(346002)(136003)(366004)(189003)(199004)(13464003)(66476007)(76116006)(7736002)(66556008)(5660300002)(54906003)(6246003)(107886003)(229853002)(4326008)(256004)(10290500003)(110136005)(55016002)(1511001)(22452003)(316002)(66446008)(64756008)(9686003)(52536014)(14444005)(478600001)(66946007)(8990500004)(8936002)(8676002)(81166006)(81156014)(10090500001)(446003)(6636002)(6436002)(6116002)(7416002)(11346002)(74316002)(2906002)(476003)(14454004)(6506007)(99286004)(25786009)(102836004)(46003)(76176011)(33656002)(7696005)(186003)(71200400001)(71190400001)(305945005)(486006)(86362001);DIR:OUT;SFP:1102;SCL:1;SRVR:PU1P153MB0105;H:PU1P153MB0169.APCP153.PROD.OUTLOOK.COM;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: microsoft.com does not designate
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(39860400002)(366004)(346002)(396003)(376002)(136003)(189003)(199004)(66476007)(66556008)(3846002)(6116002)(33656002)(66066001)(316002)(99286004)(256004)(7696005)(76176011)(102836004)(6506007)(4326008)(6246003)(11346002)(486006)(446003)(476003)(2501003)(186003)(86362001)(2906002)(55016002)(6436002)(9686003)(229853002)(305945005)(7736002)(74316002)(25786009)(54906003)(71190400001)(71200400001)(110136005)(26005)(8936002)(4744005)(52536014)(14454004)(478600001)(5660300002)(8676002)(66446008)(81156014)(64756008)(81166006)(66946007)(76116006);DIR:OUT;SFP:1102;SCL:1;SRVR:BN8PR12MB3507;H:BN8PR12MB3266.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: synopsys.com does not designate
  permitted sender hosts)
 x-ms-exchange-senderadcheck: 1
 x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: 9+EtooMTeXaMqNDi9YllcOTa9sdLXuxoHWfeX0zMnPBUyL4gHJiL1xbwO5Slu46pjX3ZTLzUdriAoAr8PvvW2laWgQdH8bmElXRNk/2mY9INakwWLuh52NbnJA8oW/vKrJHkRLS5kFZUKS8wqMgXasR6IYqNOZI5WaCxVh4C++4AgKITgJ+o4z0HdOdDgGqRegr03Fj1QWGNvPQ7NdCYQfh7nlY/LOt8qs3vEVrRZH42tTgVym4HSWm8/3UmTF78KX6JbUNfh8wN8xAW4pHWtZJ4uAPVSxD674ewJe0HCb7iXzpm1gwjEd0hGymd1pBa/u+4wSIypyjhJZhAGcqGYO0QPMPSMkkNmLVvQzSwPy2oIuq1CY7erlQrd/cISFvl58RPMr+dmqBQ9F8v64efYqTJ+N8s+JP9MtW4ht/hA5Q=
+x-microsoft-antispam-message-info: T2isTynuu0ElCFk1SZFEhUwYPqAcOVNCe5ZEkC2sW4HiyVC8v+KXyqAOYDmCFy0VeYe4VEKbiocnGN7ywoEkoxsPv7VUEqsYNAO3ix2rOra4CuJDFzYPvAU96b+r9G1ZnsA33gfz26s/Ux8j7p/YCCqzu4gVrzTdPACoKX0ltRrhMt4wogM8GJCqh/v7q+d34LvM6xTcoM4vXZjNIsfBU754loOvR4vKtiTEQMAKtD4+egstZO6EUPy2y5MWsYRPeGSf7GiKvUz4xXQ16ZV0hbDcR1OIsmGoMivJqiAT3UFmSpLu34LyGZTyXqKVDCwdtUc6b6vhpQIpXF762mwTKCTOwDO85/z6eeRuuUz4Wbez/HyQSHSOKJx1R06+eZG3eAylC9VW+vXhs431c3qIAWe0biQeZCz5eoShvcsRh98=
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 74787cce-d125-49d6-55dd-08d7470fe0dc
-X-MS-Exchange-CrossTenant-originalarrivaltime: 02 Oct 2019 08:09:41.4584
+X-MS-Exchange-CrossTenant-Network-Message-Id: 73b84679-e7bd-4d27-5d96-08d7470fbc83
+X-MS-Exchange-CrossTenant-originalarrivaltime: 02 Oct 2019 08:08:40.8222
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
+X-MS-Exchange-CrossTenant-id: c33c9f88-1eb7-4099-9700-16013fd9e8aa
 X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: DQkI60V2i6Y1/HoDD7fdYEexYnKH33ZuvWsTLFmRKOyUCRAbDmErVpwHKqKLxwNbNotweBwsyXFAxMWxXfhUEQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PU1P153MB0105
+X-MS-Exchange-CrossTenant-userprincipalname: nZvHI4Dv5YAVsrkkpzYESICwc6zUympdk4Wb1l/QRs238UoSEgTC9DS0qmMSeSb7kcNbMje8empGXWd1nCWgmw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN8PR12MB3507
+X-OriginatorOrg: synopsys.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> -----Original Message-----
-> From: Sasha Levin <sashal@kernel.org>
-> Sent: Tuesday, October 1, 2019 11:48 AM
->=20
-> On Fri, Sep 20, 2019 at 05:26:34PM +0000, Michael Kelley wrote:
-> >From: Michael Kelley <mikelley@microsoft.com>  Sent: Wednesday,
-> September 18, 2019 2:48 PM
-> >> >
-> >> > Without deferred IO support, hyperv_fb driver informs the host to re=
-fresh
-> >> > the entire guest frame buffer at fixed rate, e.g. at 20Hz, no matter=
- there
-> >> > is screen update or not. This patch supports deferred IO for screens=
- in
-> >> > graphics mode and also enables the frame buffer on-demand refresh. T=
-he
-> >> > highest refresh rate is still set at 20Hz.
-> >> >
-> >> > Currently Hyper-V only takes a physical address from guest as the st=
-arting
-> >> > address of frame buffer. This implies the guest must allocate contig=
-uous
-> >> > physical memory for frame buffer. In addition, Hyper-V Gen 2 VMs onl=
-y
-> >> > accept address from MMIO region as frame buffer address. Due to thes=
-e
-> >> > limitations on Hyper-V host, we keep a shadow copy of frame buffer
-> >> > in the guest. This means one more copy of the dirty rectangle inside
-> >> > guest when doing the on-demand refresh. This can be optimized in the
-> >> > future with help from host. For now the host performance gain from
-> deferred
-> >> > IO outweighs the shadow copy impact in the guest.
-> >> >
-> >> > Signed-off-by: Wei Hu <weh@microsoft.com>
-> >
-> >Sasha -- this patch and one other from Wei Hu for the Hyper-V frame buff=
-er
-> >driver should be ready.  Both patches affect only the Hyper-V frame buff=
-er
-> >driver so can go through the Hyper-V tree.  Can you pick these up?  Thx.
->=20
-> I can't get this to apply anywhere, what tree is it based on?
->=20
-> --
-> Thanks,
-> Sasha
+From: Hans Andersson <Hans.Andersson@CELLAVISION.SE>
+Date: Oct/02/2019, 09:02:02 (UTC+00:00)
 
-Hi Sasha,
-Today's hyperv/linux.git's hyperv-next branch's top commit is
-    48b72a2697d5 ("hv_netvsc: Add the support of hibernation").
+> We assert / de-assert the reset line, but the CPU is too fast and the IP =
+is still=20
+> in reset when we later try to read user ID / Synopsys ID. Another option =
+would
+> be to add a delay after we reset.
 
-Please pick up two patches from Wei Hu:
-#1: [PATCH v4] video: hyperv: hyperv_fb: Obtain screen resolution from Hype=
-r-V host
-#2: [PATHC v6] video: hyperv: hyperv_fb: Support deferred IO for Hyper-V fr=
-ame buffer driver
+Then I think you should fix the reset driver to only return when the=20
+reset is fully done.
 
-I can apply the 2 patches on the hyperv-next branch (the top commit is 48b7=
-2a2697d5):
-
-[decui@localhost linux]$ patch -p1 < 1.diff
-patching file drivers/video/fbdev/hyperv_fb.c
-Hunk #2 succeeded at 53 (offset 1 line).
-Hunk #3 succeeded at 95 (offset 1 line).
-Hunk #4 succeeded at 124 (offset 1 line).
-Hunk #5 succeeded at 222 (offset 1 line).
-Hunk #6 succeeded at 262 (offset 2 lines).
-Hunk #7 succeeded at 394 (offset 2 lines).
-Hunk #8 succeeded at 441 (offset 2 lines).
-Hunk #9 succeeded at 480 (offset 2 lines).
-Hunk #10 succeeded at 558 (offset 2 lines).
-Hunk #11 succeeded at 590 (offset 2 lines).
-Hunk #12 succeeded at 785 (offset 2 lines).
-Hunk #13 succeeded at 823 (offset 2 lines).
-
-[decui@localhost linux]$ patch -p1 < 2.diff
-patching file drivers/video/fbdev/Kconfig
-Hunk #1 succeeded at 2214 (offset -27 lines).
-patching file drivers/video/fbdev/hyperv_fb.c
-Hunk #1 succeeded at 238 (offset 1 line).
-Hunk #2 succeeded at 259 (offset 2 lines).
-Hunk #3 succeeded at 277 (offset 2 lines).
-Hunk #4 succeeded at 364 (offset 2 lines).
-Hunk #5 succeeded at 692 (offset 2 lines).
-Hunk #6 succeeded at 702 (offset 2 lines).
-Hunk #7 succeeded at 719 (offset 2 lines).
-Hunk #8 succeeded at 801 (offset 2 lines).
-Hunk #9 succeeded at 863 (offset 2 lines).
-Hunk #10 succeeded at 876 (offset 2 lines).
-Hunk #11 succeeded at 889 (offset 2 lines).
-Hunk #12 succeeded at 951 (offset 2 lines).
-Hunk #13 succeeded at 988 (offset 2 lines).
-Hunk #14 succeeded at 1007 (offset 2 lines).
-Hunk #15 succeeded at 1041 (offset 2 lines).
-
+---
 Thanks,
--- Dexuan
-
+Jose Miguel Abreu
