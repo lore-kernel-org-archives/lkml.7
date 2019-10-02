@@ -2,122 +2,160 @@ Return-Path: <SRS0=zem1=X3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3992CC352AA
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 15:39:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1F7EC35280
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 15:39:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 08A4221920
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 15:39:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8636921920
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 15:39:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="kWLlsgWp"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="XLgkpgrp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727783AbfJBPjQ (ORCPT
+        id S1727837AbfJBPjT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Oct 2019 11:39:16 -0400
-Received: from mout.gmx.net ([212.227.17.22]:49815 "EHLO mout.gmx.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726233AbfJBPjP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Oct 2019 11:39:15 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-        s=badeba3b8450; t=1570030737;
-        bh=7UNQa6APdXCQXKmz4/u06gNevWXgMiwFA0a8UcA0ctY=;
-        h=X-UI-Sender-Class:From:To:Cc:Subject:Date:In-Reply-To:References;
-        b=kWLlsgWpRAk+ojVf5qCKKag7laV6AiQCVwaZH6gmYMO8klQbYPOY9jS13xFSFrHfB
-         WzYjDxMO6ErVjF9yrhZFIL3cS58U4ODEKKeSybs/NddlxMjp/PqrqQFAz+USzNs0BB
-         T1z42Qxz37Vm2EY0yzupKEMph4ZcczZrFcqV4dPQ=
-X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
-Received: from longitude ([109.90.233.87]) by mail.gmx.com (mrgmx104
- [212.227.17.168]) with ESMTPSA (Nemesis) id 1M26vB-1iIAky2d21-002ZYR; Wed, 02
- Oct 2019 17:38:57 +0200
-From:   =?UTF-8?q?Jonathan=20Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>
-To:     dri-devel@lists.freedesktop.org
-Cc:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Sean Paul <sean@poorly.run>, Jonathan Corbet <corbet@lwn.net>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        =?UTF-8?q?Jonathan=20Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>
-Subject: [PATCH 2/2] drm/mcde: Fix Sphinx formatting
-Date:   Wed,  2 Oct 2019 17:38:27 +0200
-Message-Id: <20191002153827.23026-2-j.neuschaefer@gmx.net>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191002153827.23026-1-j.neuschaefer@gmx.net>
-References: <20191002153827.23026-1-j.neuschaefer@gmx.net>
+        Wed, 2 Oct 2019 11:39:19 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:50252 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726233AbfJBPjS (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 2 Oct 2019 11:39:18 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x92FNpcl152678;
+        Wed, 2 Oct 2019 15:38:53 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2019-08-05;
+ bh=VfRxfeWs1nJoNP3kT5ZXTpLac0Gq+oyCCllmNnro7IA=;
+ b=XLgkpgrp66zXs8MNybhkD0sanL46h2WsbqHpz64XXAmEaCi3pvJi04j7EV5ZWNl2qapC
+ AhoP6UKmR3OcC/8YIpuObL9XQZH1ig3acJjidJ0DTPEnjzC1qqsg8yrhMTKrPhzWLhkx
+ MiPNkhQORVMkhi/rBnlH5uceWbZAcpgZSQ9y58N2jP61Zx2DzAfx8X4tcQfDWSoHc3BZ
+ 2zt+JHlaZlw5dBBEtNTn2qUpIxTh2HmPy9uRoXppWiXi8/+p+1+ATsmWDS/EO+L2/AUE
+ vrf8n/OhyG7THPcwdsOol9FuYpbIoojUBqiyqQNpRAAhEm8GhUgZzLGHQ/WE9lecqLyB 7g== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by userp2130.oracle.com with ESMTP id 2v9xxuwuxy-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 02 Oct 2019 15:38:53 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x92FNjnN073831;
+        Wed, 2 Oct 2019 15:38:53 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by userp3020.oracle.com with ESMTP id 2vc9dkref5-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 02 Oct 2019 15:38:52 +0000
+Received: from abhmp0022.oracle.com (abhmp0022.oracle.com [141.146.116.28])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x92Fcpw4000547;
+        Wed, 2 Oct 2019 15:38:51 GMT
+Received: from localhost (/67.169.218.210)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Wed, 02 Oct 2019 08:38:51 -0700
+Date:   Wed, 2 Oct 2019 08:38:50 -0700
+From:   "Darrick J. Wong" <darrick.wong@oracle.com>
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     Damien Le Moal <Damien.LeMoal@wdc.com>,
+        Andreas Gruenbacher <agruenba@redhat.com>,
+        linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 06/11] xfs: remove the readpage / readpages tracing code
+Message-ID: <20191002153850.GH13108@magnolia>
+References: <20191001071152.24403-1-hch@lst.de>
+ <20191001071152.24403-7-hch@lst.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:+HGwyEkEJ1bTWVKUnQD498SQcfuBEXN7W3Cj2BGlplSjTF4nz8f
- cBUw6lk5d0t6dvZbTJEE0d3SOQTGqREpxLdnWvFCAT0RVu51e1dc03+JVBM+f6FILbK5lqA
- 8DIH19MLF2K5FCSv83/YTi+Y5kG5g9G+P/NYzqFHgNz8SSVUzP4Yh9CPwzyyIpWRJQRi8kz
- pkHWoe2H4jisRK4hILzvQ==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:P8/WDH8GVeE=:6b+d5EuIc/tVdwLd5A16CG
- BuM36A4vHcQb1ol4jEVAMCpAfjgb3WWIzJ8gC4d71cVGbSjg1rAsK6Jgnb/iiD28VZUjzU45e
- 5O96n3cpNR0lHAjzrjJfUMujf39LfDPF5dLXPodCCigFNMnre2kJPJ1raa20o51coUNP5ReH6
- KX4I0jc1+VVrB5Ug9liLNNbGqxisUBiBkc/EbdisjI5ekxfCSMVdGV9x/OBpQmFBJziprBLy0
- C1lf5Vli46BMrembrkjYsjP0WLw7TBMqgyzgDspVroE+cfkc9CLc6vkOndW6JaMgy1VsfqzmT
- +Bb1yZm4FUIpkXk9TCM6orKGpKHszWV7v4U4UbtIAmazoFPtXyMFsyv96OlKcbph4oZl+zEmH
- ht/kud1GLODIr4eCRdJWVHR+yz0/arq1VkllN76f7/8gj2FnQ4jZjhYDQVk1BBKEJVJTFXVGy
- +iDEm1nA/qO1zaV3W+M1yoA6n2N2niVGMUYTagS3Fya0S4Rd3BQ5QrvIDEHdjo3f4QkOG4B62
- ao2FMZ6rRveeQ9cj1xgSMOAyDN8NKBaREVV2nM8Ywn0RUQAwA4p6S7iL88dAR3937iJpXbcx3
- s8zf7vAACbuwo+8alJCoIu0/p1440kqKXkIOOxN8btKtzQRNeAwxqDuyMD6+uo45XCDwueH3N
- eI+7+rUGcVKzT+rW4VjF9n8z25T1dLw+9+DkGsSsJajvFJacRH4qi0u2CDgCcukJkC5fbUHKA
- T8zuo/ujkV8Vn1QRxE3ZjLok2NsAIdAa+bk3HcXWUM5CazJcQHin5fwcFDHEeR4CYb77cf31t
- 45xmVgB2MH5wVhGgQ4LuQWv4LTGtzddVfIuMeF+MyBkXfo7BizEnMq02HuKzfNs4LMYfrclZj
- G43I1rkIH9bNLV5dq5VFopiuOdNDbYGzPEjcVE/VutyGlVJPmlgwwhyKdi3R5FUKrz+PuVeiG
- xOJpWlV4dWUNbgDJz+eRv+9kdRerhI6ZDQhDcDf/JhCH26+fU3VuHbY6ebmHBWbJT82SqDZle
- t8Tze4K8fuNmgg4TWi/Kxps347pHZ3Nh1A5MDjiGYCrxQbEfZXQyyVw7lo/Uf6gyb0EdvR+Kw
- OB4LVkRJpeEtPnXf6wxyd1t/1WmM4fQsufeZb27IPu2jdajVOmlNw19ecaJpB7QVMv0jSCRL0
- C9fDO15mANqZFvDAca5EvqMUj2BiDDljV9RlfHzW1xVGns6XEXQsv5jMp8Kg8refqKCKM/bl8
- umAQ+YaRtF5q/lRjv1sH3P7MvvaXrcgS/xNI5kz0IJKsdbsBZGY41DgThUt8=
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191001071152.24403-7-hch@lst.de>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9398 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1908290000 definitions=main-1910020140
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9398 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1908290000
+ definitions=main-1910020140
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-- Format the pipe diagram as a monospace block.
-- Fix formatting of the list. Without the empty line, the first dash is
-  not parsed as a bullet point.
+On Tue, Oct 01, 2019 at 09:11:47AM +0200, Christoph Hellwig wrote:
+> The actual iomap implementations now have equivalent trace points.
+> 
+> Signed-off-by: Christoph Hellwig <hch@lst.de>
 
-Signed-off-by: Jonathan Neusch=C3=A4fer <j.neuschaefer@gmx.net>
-=2D--
- drivers/gpu/drm/mcde/mcde_drv.c | 9 +++++----
- 1 file changed, 5 insertions(+), 4 deletions(-)
+Looks ok,
+Reviewed-by: Darrick J. Wong <darrick.wong@oracle.com>
 
-diff --git a/drivers/gpu/drm/mcde/mcde_drv.c b/drivers/gpu/drm/mcde/mcde_d=
-rv.c
-index 9a09eba53182..c535abed4765 100644
-=2D-- a/drivers/gpu/drm/mcde/mcde_drv.c
-+++ b/drivers/gpu/drm/mcde/mcde_drv.c
-@@ -20,11 +20,11 @@
-  * input formats including most variants of RGB and YUV.
-  *
-  * The hardware has four display pipes, and the layout is a little
-- * bit like this:
-+ * bit like this::
-  *
-- * Memory     -> Overlay -> Channel -> FIFO -> 5 formatters -> DSI/DPI
-- * External      0..5       0..3       A,B,    3 x DSI         bridge
-- * source 0..9                         C0,C1   2 x DPI
-+ *   Memory     -> Overlay -> Channel -> FIFO -> 5 formatters -> DSI/DPI
-+ *   External      0..5       0..3       A,B,    3 x DSI         bridge
-+ *   source 0..9                         C0,C1   2 x DPI
-  *
-  * FIFOs A and B are for LCD and HDMI while FIFO CO/C1 are for
-  * panels with embedded buffer.
-@@ -43,6 +43,7 @@
-  * to change as we exploit more of the hardware capabilities.
-  *
-  * TODO:
-+ *
-  * - Enabled damaged rectangles using drm_plane_enable_fb_damage_clips()
-  *   so we can selectively just transmit the damaged area to a
-  *   command-only display.
-=2D-
-2.20.1
+--D
 
+> ---
+>  fs/xfs/xfs_aops.c  |  2 --
+>  fs/xfs/xfs_trace.h | 26 --------------------------
+>  2 files changed, 28 deletions(-)
+> 
+> diff --git a/fs/xfs/xfs_aops.c b/fs/xfs/xfs_aops.c
+> index f16d5f196c6b..b6101673c8fb 100644
+> --- a/fs/xfs/xfs_aops.c
+> +++ b/fs/xfs/xfs_aops.c
+> @@ -1160,7 +1160,6 @@ xfs_vm_readpage(
+>  	struct file		*unused,
+>  	struct page		*page)
+>  {
+> -	trace_xfs_vm_readpage(page->mapping->host, 1);
+>  	return iomap_readpage(page, &xfs_iomap_ops);
+>  }
+>  
+> @@ -1171,7 +1170,6 @@ xfs_vm_readpages(
+>  	struct list_head	*pages,
+>  	unsigned		nr_pages)
+>  {
+> -	trace_xfs_vm_readpages(mapping->host, nr_pages);
+>  	return iomap_readpages(mapping, pages, nr_pages, &xfs_iomap_ops);
+>  }
+>  
+> diff --git a/fs/xfs/xfs_trace.h b/fs/xfs/xfs_trace.h
+> index eaae275ed430..eae4b29c174e 100644
+> --- a/fs/xfs/xfs_trace.h
+> +++ b/fs/xfs/xfs_trace.h
+> @@ -1197,32 +1197,6 @@ DEFINE_PAGE_EVENT(xfs_writepage);
+>  DEFINE_PAGE_EVENT(xfs_releasepage);
+>  DEFINE_PAGE_EVENT(xfs_invalidatepage);
+>  
+> -DECLARE_EVENT_CLASS(xfs_readpage_class,
+> -	TP_PROTO(struct inode *inode, int nr_pages),
+> -	TP_ARGS(inode, nr_pages),
+> -	TP_STRUCT__entry(
+> -		__field(dev_t, dev)
+> -		__field(xfs_ino_t, ino)
+> -		__field(int, nr_pages)
+> -	),
+> -	TP_fast_assign(
+> -		__entry->dev = inode->i_sb->s_dev;
+> -		__entry->ino = inode->i_ino;
+> -		__entry->nr_pages = nr_pages;
+> -	),
+> -	TP_printk("dev %d:%d ino 0x%llx nr_pages %d",
+> -		  MAJOR(__entry->dev), MINOR(__entry->dev),
+> -		  __entry->ino,
+> -		  __entry->nr_pages)
+> -)
+> -
+> -#define DEFINE_READPAGE_EVENT(name)		\
+> -DEFINE_EVENT(xfs_readpage_class, name,	\
+> -	TP_PROTO(struct inode *inode, int nr_pages), \
+> -	TP_ARGS(inode, nr_pages))
+> -DEFINE_READPAGE_EVENT(xfs_vm_readpage);
+> -DEFINE_READPAGE_EVENT(xfs_vm_readpages);
+> -
+>  DECLARE_EVENT_CLASS(xfs_imap_class,
+>  	TP_PROTO(struct xfs_inode *ip, xfs_off_t offset, ssize_t count,
+>  		 int whichfork, struct xfs_bmbt_irec *irec),
+> -- 
+> 2.20.1
+> 
