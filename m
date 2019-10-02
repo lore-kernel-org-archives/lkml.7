@@ -2,80 +2,85 @@ Return-Path: <SRS0=zem1=X3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1830DC35280
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 11:56:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A2C1C352AA
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 11:56:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DDCD12133F
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 11:56:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4BE2221929
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 11:56:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="Ko3ZUoKv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727196AbfJBL4V (ORCPT
+        id S1727526AbfJBL4Y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Oct 2019 07:56:21 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:39165 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725875AbfJBL4V (ORCPT
+        Wed, 2 Oct 2019 07:56:24 -0400
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:34002 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725875AbfJBL4X (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Oct 2019 07:56:21 -0400
-Received: from 1.general.cking.uk.vpn ([10.172.193.212] helo=localhost)
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <colin.king@canonical.com>)
-        id 1iFdEP-0008Vo-P2; Wed, 02 Oct 2019 11:55:45 +0000
-From:   Colin King <colin.king@canonical.com>
-To:     Kan Liang <kan.liang@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Borislav Petkov <bp@alien8.de>,
-        "H . Peter Anvin" <hpa@zytor.com>, x86@kernel.org
-Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] perf/x86/intel/uncore: fix integer overflow on shift of a u32 integer
-Date:   Wed,  2 Oct 2019 12:55:45 +0100
-Message-Id: <20191002115545.15570-1-colin.king@canonical.com>
-X-Mailer: git-send-email 2.20.1
+        Wed, 2 Oct 2019 07:56:23 -0400
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id x92BuFWE078912;
+        Wed, 2 Oct 2019 06:56:15 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1570017375;
+        bh=EtJMrbtufpIrfDV4euQaW70sWTGMkCb/y5EXKsUYjdY=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=Ko3ZUoKvyR3NdLUZHgrlBP6nt70tku8CtKPmTBPNIeAHZGJcIzeLq1f8Or63SWYJ9
+         VKvU3w/27JTLypJRtaoGYuvNFCgRTpkzBUnBmg/+imyI0wfwY2zLlb/i7FbazKSXS7
+         fImGlzjfZxt1904xXPIbOygwwvJim9vcmC4GZwTk=
+Received: from DFLE113.ent.ti.com (dfle113.ent.ti.com [10.64.6.34])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x92BuFck084734
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 2 Oct 2019 06:56:15 -0500
+Received: from DFLE109.ent.ti.com (10.64.6.30) by DFLE113.ent.ti.com
+ (10.64.6.34) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Wed, 2 Oct
+ 2019 06:56:04 -0500
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE109.ent.ti.com
+ (10.64.6.30) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Wed, 2 Oct 2019 06:56:04 -0500
+Received: from [10.250.65.13] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id x92BuEYc030884;
+        Wed, 2 Oct 2019 06:56:14 -0500
+Subject: Re: [PATCH 3/5] leds: flash: Remove extern from the header file
+To:     Jacek Anaszewski <jacek.anaszewski@gmail.com>, <pavel@ucw.cz>
+CC:     <linux-leds@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+References: <20191001180439.8312-1-dmurphy@ti.com>
+ <20191001180439.8312-3-dmurphy@ti.com>
+ <a6601fe9-0723-baec-d610-aafe7731c80d@gmail.com>
+From:   Dan Murphy <dmurphy@ti.com>
+Message-ID: <01576f87-9113-1148-438a-5b73c5424535@ti.com>
+Date:   Wed, 2 Oct 2019 06:56:53 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <a6601fe9-0723-baec-d610-aafe7731c80d@gmail.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Colin Ian King <colin.king@canonical.com>
+Jacek
 
-Shifting the u32 integer result of (pci_dword & SNR_IMC_MMIO_BASE_MASK)
-will end up with an overflow when pci_dword greater than 0x1ff. Fix this
-by casting pci_dword to a resource_size_t before masking and shifting it.
+On 10/1/19 3:57 PM, Jacek Anaszewski wrote:
+> Dan,
+>
+> Thank you for the patch.
+>
+> Could we have similar patch for leds.h when we are at it,
+> if you wouldn't mind?
+>
+Sure do you want it in this patch or a separate patch?
 
-Addresses-Coverity: ("Unintentional integer overflow")
-Fixes: ee49532b38dd ("perf/x86/intel/uncore: Add IMC uncore support for Snow Ridge")
-Signed-off-by: Colin Ian King <colin.king@canonical.com>
----
- arch/x86/events/intel/uncore_snbep.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/arch/x86/events/intel/uncore_snbep.c b/arch/x86/events/intel/uncore_snbep.c
-index b10a5ec79e48..ed69df1340d9 100644
---- a/arch/x86/events/intel/uncore_snbep.c
-+++ b/arch/x86/events/intel/uncore_snbep.c
-@@ -4415,7 +4415,7 @@ static void snr_uncore_mmio_init_box(struct intel_uncore_box *box)
- 		return;
- 
- 	pci_read_config_dword(pdev, SNR_IMC_MMIO_BASE_OFFSET, &pci_dword);
--	addr = (pci_dword & SNR_IMC_MMIO_BASE_MASK) << 23;
-+	addr = ((resource_size_t)pci_dword & SNR_IMC_MMIO_BASE_MASK) << 23;
- 
- 	pci_read_config_dword(pdev, SNR_IMC_MMIO_MEM0_OFFSET, &pci_dword);
- 	addr |= (pci_dword & SNR_IMC_MMIO_MEM0_MASK) << 12;
--- 
-2.20.1
+Dan
 
