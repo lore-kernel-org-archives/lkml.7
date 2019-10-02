@@ -2,154 +2,100 @@ Return-Path: <SRS0=zem1=X3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47727C352AA
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 14:19:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA27FECE58C
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 14:19:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1D64B21920
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 14:19:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B2CDC21D80
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 14:19:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570025972;
-	bh=GoZ65xAL0SVjoBf8dzBx9PjDE0FjbTkrG8MBTLxSrlg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=ngZtWQeWdiop9YlO+33J0GKTP4Fn7Svobwindvcimo8N0cN+XYX7fzGg72OfSioNB
-	 rW+7RTm4UffdzQZpaMuEq5YQX7ZzR2rAbtuMNZZFfv6pjbQ1o7PA37nvWr+n+wIZvy
-	 uItPj8ekcA3xhMDmvivesBco7JDWX/H4dN+mtqks=
+	s=default; t=1570025977;
+	bh=5jwa5QU4b2kuiK9FRfyDKeWSAKSHZMeR41cXrtbsnHQ=;
+	h=Date:From:Subject:References:In-Reply-To:Cc:Cc:To:List-ID:From;
+	b=Q++yHpgzaZm8nUOPEP7EBFeFrkziLb5MGPZaBu03XkxJPYSpHeDvvPbj5EixfeWFo
+	 l8fRXBVvfKfr6Sqhg3auHIOYkN41wBykpCR0QZtvB8k9qfyo74gmLEYuVf82iNDNIY
+	 VcVgMU8JiB9m+eV+0UYvZ2Apr1/95PZtoYBTRDCs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728279AbfJBOTb (ORCPT
+        id S1728338AbfJBOTh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Oct 2019 10:19:31 -0400
-Received: from mail-qk1-f196.google.com ([209.85.222.196]:44112 "EHLO
-        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728230AbfJBOT0 (ORCPT
+        Wed, 2 Oct 2019 10:19:37 -0400
+Received: from mail-qt1-f196.google.com ([209.85.160.196]:45345 "EHLO
+        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728230AbfJBOTe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Oct 2019 10:19:26 -0400
-Received: by mail-qk1-f196.google.com with SMTP id u22so15120787qkk.11;
-        Wed, 02 Oct 2019 07:19:25 -0700 (PDT)
+        Wed, 2 Oct 2019 10:19:34 -0400
+Received: by mail-qt1-f196.google.com with SMTP id c21so26492019qtj.12;
+        Wed, 02 Oct 2019 07:19:33 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:date:from:to:cc:subject:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=ohxhS7j8qWWGNPOAmtHqFz2vVoD0+7/SI/0UtR2WuvI=;
-        b=SkpAKRKDBLQKsf1uxaFz7cr4Y7A8v8Ll8bQfrrNkycGcUFc1XnLZX0m7pTRHefH+l5
-         /Nv5juJHYgd5nAAuaO+f955PTqoRu0NjO30NsggdoDaGYz8cwbHTWODLgfwvtlAriIc6
-         9AUMPBJwUc2JNPyZRTmQfDu4pEod/FkokXI70IgprmcGzFksEerYTz5LN2iENlGzAZQA
-         cfhAjLd8qwYCPJnxpKCq7Z0xVWVSGhw5l0EK0sNVDUvEcUa2afqRhkqHskYADWzygKOh
-         fHWeLHgWsOA0z5cEwIuIK8mPRSZ4r/hVt9PMy8xQKiFVfFNv5OZq6dJwFEa7OMzoXoU4
-         5wNA==
-X-Gm-Message-State: APjAAAVd6eqyZa3PceyHmkHR0qPNBoT3N153Xs6/XfWyXvbTdfkVqQBL
-        H+Zk9NKg8IomuP54FjTnTw==
-X-Google-Smtp-Source: APXvYqwWsLlH+FQ6F+eHLBi8M/PJn/BZl+hY+I2v9eAHVo5zIA7RzJv0id08JFiyhXd55o/TfZDPkQ==
-X-Received: by 2002:a37:b702:: with SMTP id h2mr4038210qkf.166.1570025965021;
-        Wed, 02 Oct 2019 07:19:25 -0700 (PDT)
+        h=x-gm-message-state:message-id:date:from:subject:references
+         :in-reply-to:mime-version:content-transfer-encoding:cc:cc:to;
+        bh=xEcXpQ/NEwyCKzNgI7asImKqcpzGOLlroU+HXRPzw4Y=;
+        b=pbl8cfHVjygWxRJrxDOT49+2J+Ri/7m9++D1QRchMBW3FEQG7zQUcPOUe3cs5urfnb
+         Q0gi2YkQr/rIhtBd4h2+T8G1NFLNChz2+zexhlEqwu4rmW2YMR9lB7T64NehQhKocP4q
+         9Oof/LI67NNKSHmCrrDHJEOuPP6bBGCyBGC5smgkm7/bkFddY6Ro0A5olq3/DoKy8LPT
+         VSz4k0vEnlmGSeeBekTIGef9GXNwC/JLQmW6DhDUdufbYzI+SLB5g9gL1v8HuBvHeHht
+         7F7uup4R07DdNjMlFi/n+lQ8sl+Q5OYoOegcWTcoFqzJjEBOqGmw4nIkEZp46o3gLEfY
+         HqUg==
+X-Gm-Message-State: APjAAAUH2F5bdtEQ+UKEMKF0F+bvtIM7tC0pjFVK6R7af0s0XgIMZNEW
+        OOmvhU5p749tQMYsynvR6f4F9yQQOA==
+X-Google-Smtp-Source: APXvYqxaLnHeciWkdlweE2LBBH7eoNN5RyZrMPdqv69QmbChVl6tENsSTpMqu/HDsjtpBHL6zYeZPA==
+X-Received: by 2002:a0c:a5a5:: with SMTP id z34mr3240240qvz.110.1570025972605;
+        Wed, 02 Oct 2019 07:19:32 -0700 (PDT)
 Received: from localhost ([132.205.230.8])
-        by smtp.gmail.com with ESMTPSA id g45sm10574897qtc.9.2019.10.02.07.19.24
+        by smtp.gmail.com with ESMTPSA id d45sm12737320qtc.70.2019.10.02.07.19.31
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 02 Oct 2019 07:19:24 -0700 (PDT)
-Message-ID: <5d94b1ec.1c69fb81.bb720.6d97@mx.google.com>
-Date:   Wed, 02 Oct 2019 09:19:21 -0500
+        Wed, 02 Oct 2019 07:19:32 -0700 (PDT)
+Message-ID: <5d94b1f4.1c69fb81.6f9ad.2586@mx.google.com>
+Date:   Wed, 02 Oct 2019 09:19:29 -0500
 From:   Rob Herring <robh@kernel.org>
-To:     Andreas Klinger <ak@it-klinger.de>
-Cc:     jic23@kernel.org, knaack.h@gmx.de, lars@metafoo.de,
-        pmeerw@pmeerw.net, mark.rutland@arm.com, linux-iio@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] dt-bindings: iio: maxbotix,mb1232.yaml: transform to yaml
-References: <20190923174605.mhrbmdic3ynaw22o@arbad>
+Subject: Re: [PATCH 1/3] docs: fix some broken references
+References: <b87385b2ac6ce6c75df82062fce2976149bbaa6b.1569330078.git.mchehab+samsung@kernel.org>
+In-Reply-To: <b87385b2ac6ce6c75df82062fce2976149bbaa6b.1569330078.git.mchehab+samsung@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190923174605.mhrbmdic3ynaw22o@arbad>
-X-Mutt-References: <20190923174605.mhrbmdic3ynaw22o@arbad>
+Content-Transfer-Encoding: 8bit
+Cc:     Linux Doc Mailing List <linux-doc@vger.kernel.org>, corbet@lwn.net
+Cc:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Mauro Carvalho Chehab <mchehab@infradead.org>,
+        linux-kernel@vger.kernel.org,
+        "David S. Miller" <davem@davemloft.net>,
+        Shannon Nelson <snelson@pensando.io>,
+        Pensando Drivers <drivers@pensando.io>,
+        Steve French <sfrench@samba.org>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Palmer Dabbelt <palmer@sifive.com>,
+        Albert Ou <aou@eecs.berkeley.edu>, devicetree@vger.kernel.org,
+        linux-gpio@vger.kernel.org, linux-hwmon@vger.kernel.org,
+        linux-mips@vger.kernel.org, netdev@vger.kernel.org,
+        linux-rdma@vger.kernel.org, linux-cifs@vger.kernel.org,
+        samba-technical@lists.samba.org, linux-riscv@lists.infradead.org
+To:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Sep 23, 2019 at 07:46:34PM +0200, Andreas Klinger wrote:
-> transform existing documentation of maxbotix,mb1232 ultrasonic ranger
-> from text documentation format into yaml.
+On Tue, 24 Sep 2019 10:01:28 -0300, Mauro Carvalho Chehab wrote:
+> There are a number of documentation files that got moved or
+> renamed. update their references.
 > 
-> Signed-off-by: Andreas Klinger <ak@it-klinger.de>
+> Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 > ---
->  .../bindings/iio/proximity/maxbotix,mb1232.txt     | 29 -----------
->  .../bindings/iio/proximity/maxbotix,mb1232.yaml    | 56 ++++++++++++++++++++++
->  2 files changed, 56 insertions(+), 29 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/iio/proximity/maxbotix,mb1232.txt
->  create mode 100644 Documentation/devicetree/bindings/iio/proximity/maxbotix,mb1232.yaml
+>  Documentation/devicetree/bindings/cpu/cpu-topology.txt    | 2 +-
+>  Documentation/devicetree/bindings/timer/ingenic,tcu.txt   | 2 +-
+>  Documentation/driver-api/gpio/driver.rst                  | 2 +-
+>  Documentation/hwmon/inspur-ipsps1.rst                     | 2 +-
+>  Documentation/mips/ingenic-tcu.rst                        | 2 +-
+>  Documentation/networking/device_drivers/mellanox/mlx5.rst | 2 +-
+>  MAINTAINERS                                               | 2 +-
+>  drivers/net/ethernet/faraday/ftgmac100.c                  | 2 +-
+>  drivers/net/ethernet/pensando/ionic/ionic_if.h            | 4 ++--
+>  fs/cifs/cifsfs.c                                          | 2 +-
+>  10 files changed, 11 insertions(+), 11 deletions(-)
+> 
 
-> diff --git a/Documentation/devicetree/bindings/iio/proximity/maxbotix,mb1232.yaml b/Documentation/devicetree/bindings/iio/proximity/maxbotix,mb1232.yaml
-> new file mode 100644
-> index 000000000000..8301a1ad2a47
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/iio/proximity/maxbotix,mb1232.yaml
-> @@ -0,0 +1,56 @@
-> +# SPDX-License-Identifier: GPL-2.0
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/iio/proximity/maxbotix,mb1232.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: MaxBotix I2CXL-MaxSonar ultrasonic distance sensor
-> +
-> +maintainers:
-> +  - Andreas Klinger <ak@it-klinger.de>
-> +
-> +description: |
-> +  MaxBotix I2CXL-MaxSonar ultrasonic distance sensor of type  mb1202,
-> +  mb1212, mb1222, mb1232, mb1242, mb7040 or mb7137 using the i2c interface
-> +  for ranging
-> +
-> +  Specifications about the devices can be found at:
-> +  https://www.maxbotix.com/documents/I2CXL-MaxSonar-EZ_Datasheet.pdf
-> +
-> +properties:
-> +  compatible:
-> +    enum:
-> +      - maxbotix,mb1202
-> +      - maxbotix,mb1212
-> +      - maxbotix,mb1222
-> +      - maxbotix,mb1232
-> +      - maxbotix,mb1242
-> +      - maxbotix,mb7040
-> +      - maxbotix,mb7137
-> +
-> +  reg:
-> +    description:
-> +      i2c address of the device, see also i2c/i2c.txt
-
-Drop this.
-
-> +    maxItems: 1
-> +
-> +  interrupts:
-> +    description:
-> +      Interrupt used to announce the preceding reading request has finished
-> +      and that data is available.  If no interrupt is specified the device
-> +      driver falls back to wait a fixed amount of time until data can be
-> +      retrieved.
-> +    maxItems: 1
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +
-
-Add a:
-
-additionalProperties: false
-
-> +examples:
-> +  - |
-> +    #include <dt-bindings/interrupt-controller/irq.h>
-> +    proximity@70 {
-> +      compatible = "maxbotix,mb1232";
-> +      reg = <0x70>;
-> +      interrupt-parent = <&gpio2>;
-> +      interrupts = <2 IRQ_TYPE_EDGE_FALLING>;
-> +    };
-> -- 
-> 2.11.0
+Acked-by: Rob Herring <robh@kernel.org>
 
