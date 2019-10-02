@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2FE9C4360C
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 19:11:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2943C4360C
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 19:11:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8ADF62133F
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 19:11:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A6970222BE
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 19:11:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729993AbfJBTLg (ORCPT
+        id S1729474AbfJBTLk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Oct 2019 15:11:36 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:35612 "EHLO
+        Wed, 2 Oct 2019 15:11:40 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:35614 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729214AbfJBTIM (ORCPT
+        by vger.kernel.org with ESMTP id S1729215AbfJBTIM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 2 Oct 2019 15:08:12 -0400
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1iFjyr-00036H-Pg; Wed, 02 Oct 2019 20:08:09 +0100
+        id 1iFjyr-00035n-4r; Wed, 02 Oct 2019 20:08:09 +0100
 Received: from ben by deadeye with local (Exim 4.92.1)
         (envelope-from <ben@decadent.org.uk>)
-        id 1iFjyo-0003eG-RI; Wed, 02 Oct 2019 20:08:06 +0100
+        id 1iFjyo-0003dT-BC; Wed, 02 Oct 2019 20:08:06 +0100
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,15 +35,14 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Marc Zyngier" <marc.zyngier@arm.com>,
-        "Dave Martin" <Dave.Martin@arm.com>,
-        "Andrew Jones" <drjones@redhat.com>
+        "Robert Hancock" <hancock@sedsystems.ca>,
+        "Guenter Roeck" <linux@roeck-us.net>
 Date:   Wed, 02 Oct 2019 20:06:51 +0100
-Message-ID: <lsq.1570043211.182854195@decadent.org.uk>
+Message-ID: <lsq.1570043211.873035239@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 55/87] KVM: arm64: Filter out invalid core register
- IDs in KVM_GET_REG_LIST
+Subject: [PATCH 3.16 45/87] hwmon: (pmbus/core) Treat parameters as paged
+ if on multiple pages
 In-Reply-To: <lsq.1570043210.379046399@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -57,122 +56,96 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Dave Martin <Dave.Martin@arm.com>
+From: Robert Hancock <hancock@sedsystems.ca>
 
-commit df205b5c63281e4f32caac22adda18fd68795e80 upstream.
+commit 4a60570dce658e3f8885bbcf852430b99f65aca5 upstream.
 
-Since commit d26c25a9d19b ("arm64: KVM: Tighten guest core register
-access from userspace"), KVM_{GET,SET}_ONE_REG rejects register IDs
-that do not correspond to a single underlying architectural register.
+Some chips have attributes which exist on more than one page but the
+attribute is not presently marked as paged. This causes the attributes
+to be generated with the same label, which makes it impossible for
+userspace to tell them apart.
 
-KVM_GET_REG_LIST was not changed to match however: instead, it
-simply yields a list of 32-bit register IDs that together cover the
-whole kvm_regs struct.  This means that if userspace tries to use
-the resulting list of IDs directly to drive calls to KVM_*_ONE_REG,
-some of those calls will now fail.
+Marking all such attributes as paged would result in the page suffix
+being added regardless of whether they were present on more than one
+page or not, which might break existing setups. Therefore, we add a
+second check which treats the attribute as paged, even if not marked as
+such, if it is present on multiple pages.
 
-This was not the intention.  Instead, iterating KVM_*_ONE_REG over
-the list of IDs returned by KVM_GET_REG_LIST should be guaranteed
-to work.
-
-This patch fixes the problem by splitting validate_core_offset()
-into a backend core_reg_size_from_offset() which does all of the
-work except for checking that the size field in the register ID
-matches, and kvm_arm_copy_reg_indices() and num_core_regs() are
-converted to use this to enumerate the valid offsets.
-
-kvm_arm_copy_reg_indices() now also sets the register ID size field
-appropriately based on the value returned, so the register ID
-supplied to userspace is fully qualified for use with the register
-access ioctls.
-
-Fixes: d26c25a9d19b ("arm64: KVM: Tighten guest core register access from userspace")
-Signed-off-by: Dave Martin <Dave.Martin@arm.com>
-Reviewed-by: Andrew Jones <drjones@redhat.com>
-Tested-by: Andrew Jones <drjones@redhat.com>
-Signed-off-by: Marc Zyngier <marc.zyngier@arm.com>
-[bwh: Backported to 3.16:
- - Don't add unused vcpu parameter
- - Adjust context]
+Fixes: b4ce237b7f7d ("hwmon: (pmbus) Introduce infrastructure to detect sensors and limit registers")
+Signed-off-by: Robert Hancock <hancock@sedsystems.ca>
+Signed-off-by: Guenter Roeck <linux@roeck-us.net>
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
---- a/arch/arm64/kvm/guest.c
-+++ b/arch/arm64/kvm/guest.c
-@@ -46,9 +46,8 @@ static u64 core_reg_offset_from_id(u64 i
- 	return id & ~(KVM_REG_ARCH_MASK | KVM_REG_SIZE_MASK | KVM_REG_ARM_CORE);
- }
- 
--static int validate_core_offset(const struct kvm_one_reg *reg)
-+static int core_reg_size_from_offset(u64 off)
+ drivers/hwmon/pmbus/pmbus_core.c | 34 ++++++++++++++++++++++++++++----
+ 1 file changed, 30 insertions(+), 4 deletions(-)
+
+--- a/drivers/hwmon/pmbus/pmbus_core.c
++++ b/drivers/hwmon/pmbus/pmbus_core.c
+@@ -987,14 +987,15 @@ static int pmbus_add_sensor_attrs_one(st
+ 				      const struct pmbus_driver_info *info,
+ 				      const char *name,
+ 				      int index, int page,
+-				      const struct pmbus_sensor_attr *attr)
++				      const struct pmbus_sensor_attr *attr,
++				      bool paged)
  {
--	u64 off = core_reg_offset_from_id(reg->id);
- 	int size;
+ 	struct pmbus_sensor *base;
+ 	int ret;
  
- 	switch (off) {
-@@ -78,13 +77,26 @@ static int validate_core_offset(const st
- 		return -EINVAL;
+ 	if (attr->label) {
+ 		ret = pmbus_add_label(data, name, index, attr->label,
+-				      attr->paged ? page + 1 : 0);
++				      paged ? page + 1 : 0);
+ 		if (ret)
+ 			return ret;
  	}
- 
--	if (KVM_REG_SIZE(reg->id) == size &&
--	    IS_ALIGNED(off, size / sizeof(__u32)))
--		return 0;
-+	if (IS_ALIGNED(off, size / sizeof(__u32)))
-+		return size;
- 
- 	return -EINVAL;
+@@ -1026,6 +1027,30 @@ static int pmbus_add_sensor_attrs_one(st
+ 	return 0;
  }
  
-+static int validate_core_offset(const struct kvm_one_reg *reg)
++static bool pmbus_sensor_is_paged(const struct pmbus_driver_info *info,
++				  const struct pmbus_sensor_attr *attr)
 +{
-+	u64 off = core_reg_offset_from_id(reg->id);
-+	int size = core_reg_size_from_offset(off);
++	int p;
 +
-+	if (size < 0)
-+		return -EINVAL;
++	if (attr->paged)
++		return true;
 +
-+	if (KVM_REG_SIZE(reg->id) != size)
-+		return -EINVAL;
-+
-+	return 0;
++	/*
++	 * Some attributes may be present on more than one page despite
++	 * not being marked with the paged attribute. If that is the case,
++	 * then treat the sensor as being paged and add the page suffix to the
++	 * attribute name.
++	 * We don't just add the paged attribute to all such attributes, in
++	 * order to maintain the un-suffixed labels in the case where the
++	 * attribute is only on page 0.
++	 */
++	for (p = 1; p < info->pages; p++) {
++		if (info->func[p] & attr->func)
++			return true;
++	}
++	return false;
 +}
 +
- static int get_core_reg(struct kvm_vcpu *vcpu, const struct kvm_one_reg *reg)
- {
- 	/*
-@@ -197,10 +209,33 @@ unsigned long kvm_arm_num_regs(struct kv
- int kvm_arm_copy_reg_indices(struct kvm_vcpu *vcpu, u64 __user *uindices)
- {
- 	unsigned int i;
--	const u64 core_reg = KVM_REG_ARM64 | KVM_REG_SIZE_U64 | KVM_REG_ARM_CORE;
+ static int pmbus_add_sensor_attrs(struct i2c_client *client,
+ 				  struct pmbus_data *data,
+ 				  const char *name,
+@@ -1039,14 +1064,15 @@ static int pmbus_add_sensor_attrs(struct
+ 	index = 1;
+ 	for (i = 0; i < nattrs; i++) {
+ 		int page, pages;
++		bool paged = pmbus_sensor_is_paged(info, attrs);
  
- 	for (i = 0; i < sizeof(struct kvm_regs) / sizeof(__u32); i++) {
--		if (put_user(core_reg | i, uindices))
-+		u64 reg = KVM_REG_ARM64 | KVM_REG_ARM_CORE | i;
-+		int size = core_reg_size_from_offset(i);
-+
-+		if (size < 0)
-+			continue;
-+
-+		switch (size) {
-+		case sizeof(__u32):
-+			reg |= KVM_REG_SIZE_U32;
-+			break;
-+
-+		case sizeof(__u64):
-+			reg |= KVM_REG_SIZE_U64;
-+			break;
-+
-+		case sizeof(__uint128_t):
-+			reg |= KVM_REG_SIZE_U128;
-+			break;
-+
-+		default:
-+			WARN_ON(1);
-+			continue;
-+		}
-+
-+		if (put_user(reg, uindices))
- 			return -EFAULT;
- 		uindices++;
- 	}
+-		pages = attrs->paged ? info->pages : 1;
++		pages = paged ? info->pages : 1;
+ 		for (page = 0; page < pages; page++) {
+ 			if (!(info->func[page] & attrs->func))
+ 				continue;
+ 			ret = pmbus_add_sensor_attrs_one(client, data, info,
+ 							 name, index, page,
+-							 attrs);
++							 attrs, paged);
+ 			if (ret)
+ 				return ret;
+ 			index++;
 
