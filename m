@@ -2,134 +2,197 @@ Return-Path: <SRS0=zem1=X3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C2DE8C4360C
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 19:44:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 35FC8C47404
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 19:47:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9C5D521783
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 19:44:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 070EA2133F
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 19:47:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="BDeT9Q2r"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TVI8bgL+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727700AbfJBToQ (ORCPT
+        id S1727483AbfJBTr0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Oct 2019 15:44:16 -0400
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:41472 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727257AbfJBToP (ORCPT
+        Wed, 2 Oct 2019 15:47:26 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:38833 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726034AbfJBTrZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Oct 2019 15:44:15 -0400
-Received: by mail-pg1-f194.google.com with SMTP id s1so120892pgv.8
-        for <linux-kernel@vger.kernel.org>; Wed, 02 Oct 2019 12:44:14 -0700 (PDT)
+        Wed, 2 Oct 2019 15:47:25 -0400
+Received: by mail-wr1-f65.google.com with SMTP id w12so371535wro.5;
+        Wed, 02 Oct 2019 12:47:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:openpgp:autocrypt:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=5RG+TGpIbWGK66ii3aX/c/mLwtrL9t7Co+9YPIDroe0=;
-        b=BDeT9Q2rS460oUk++puZT/bURg9A9s+tehyWG6BTR4fBXjpn6dnc+y/qwlxbuUmlDM
-         EXy+7jMvhu5+8Eg5lHgfSj6UqA8SYT8vNKZQLBcRyAfLAJN6KXBB3/xFFn4vg88dzkEa
-         7hB0jLtDHVB7YYKgwEl5/peZADD5F5ENUBB5k=
+        bh=XC7LA55iHiUITo+83QzxAVmoetQd0JqQF8Gg112JjJQ=;
+        b=TVI8bgL+0zY79i9zDnmSeL3V5D3k8c5dUaQlFSw+o+Pl+hcTUJmnd/icqybX32e1dh
+         TORtaW8b7jSpFTeXHCb2O1HtYNoOXm3HbH8iXiujD7iNP1ccqJJSffjeIT0xlusq635f
+         cfA8deGNzjEjZq/o4NIiSJJFaxcvGmRcH78w7sCYW7GXST4NXMahA+baJEkX4d8TklGU
+         mheCkQdLzryCbjRmYTqzE7hcUOMxGFPWhm7QEJMQ6iAizHChiRlAxyvbuPaakkIpiOIG
+         AUZscZUFBJWJim7yRKvDQ2g7++Fsj/guprIlQwbbPVvSOxPy6tQII9qIzAAYuH3kVHy7
+         L9TQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=5RG+TGpIbWGK66ii3aX/c/mLwtrL9t7Co+9YPIDroe0=;
-        b=jDguDDir7gndmgnDhL1YpkHRAVdVojWeh2G9K+RnSivlBXNTKocPQbShCuMtoZz+ay
-         00/8mJssOtsI4rgsI3gMJfd+Yop3cmg5FEnRSn+oyN2fFe1AuKl+UUNTMXisdoESJBJH
-         9IeGIZiyrZq8Xm0optlKLHuNQuHtLePdAbFMGzH5p8hilSa+Gz3m/lfddp2E0mZHDQ7P
-         CtCoX8Q/IFe/hAXKCZv/UdwPCA7Y6kNsw+CCtbhOy7W3VJNAcuzAznBeKTDpNPEbaxrL
-         VJgKBYTRc9kwOTPxpAF9v5DvIY8MtGF7fJ5OCxx9Fk7ibXR+p/l4kLOyg+fA6NZNfY9W
-         CoPA==
-X-Gm-Message-State: APjAAAU1sngPiIvJbjOjikmKFJ1NHrsa3V9iH5QEqguRpnXacEREXiND
-        Tn/a1yESmTdJy7D7b5yF762Vmg==
-X-Google-Smtp-Source: APXvYqwCRR5aDz75Ce/P5Hmy07jPu4Aqvt3K38tktyiDQ8tJemrn+5jUTMbbw8q6Rh4bGgQCLaXTIw==
-X-Received: by 2002:a63:6803:: with SMTP id d3mr5361330pgc.183.1570045453990;
-        Wed, 02 Oct 2019 12:44:13 -0700 (PDT)
-Received: from localhost ([2620:15c:202:1:4fff:7a6b:a335:8fde])
-        by smtp.gmail.com with ESMTPSA id b4sm68127pju.16.2019.10.02.12.44.13
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 02 Oct 2019 12:44:13 -0700 (PDT)
-From:   Matthias Kaehlcke <mka@chromium.org>
-To:     Archit Taneja <architt@codeaurora.org>,
-        Andrzej Hajda <a.hajda@samsung.com>,
-        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
-        David Airlie <airlied@linux.ie>
-Cc:     Douglas Anderson <dianders@chromium.org>,
-        Sean Paul <sean@poorly.run>,
-        Matthias Kaehlcke <mka@chromium.org>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Yakir Yang <kuankuan.y@gmail.com>,
+        h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=XC7LA55iHiUITo+83QzxAVmoetQd0JqQF8Gg112JjJQ=;
+        b=Uo/1HgAHEs5arqyohhnRgYEDV+m4QPAanoDDVIGfZcrk2oYDKuuC2Fm2pbaO+wQvyN
+         ZvUpzJmuovHeGPzN5VcxCI7RSdN6UUydGVXqUBizuMXmJTzMpP7gevtRIKjYwe8cZNG+
+         g8ctoa4dhf+anA0+o7NC9IxJ6Cu+CMYxqH7vqQs2nEk7CCMKuwdxdk9mmG1RaU0Eh9WO
+         PXXsocfxp+1Qiw/aJKz67L9aYYx51Im3P/bpr/SqpYzS5g/jxMB3HIAHifIml640NuXj
+         npQtxs4FwnBM/hVipFgSzO/f12t9g6gc716sXnXFBWHwucJL6VhsFR3QwtreyxjK7vmw
+         Ya5w==
+X-Gm-Message-State: APjAAAUx7qemam1qyXw5nYxfaF/v0JCmD7fbhCZ6LiHjJTRCGTZkq31V
+        K6n6HNTUVt/yV0UCFYDAtTw=
+X-Google-Smtp-Source: APXvYqxmXlFoHspoGGfhtQtVCMlMyjp0i+wHw/MOyFzuuPKkitH7WZnXt1PsKKhwB8WE33W/gSqlXw==
+X-Received: by 2002:a5d:4a84:: with SMTP id o4mr3954548wrq.165.1570045641581;
+        Wed, 02 Oct 2019 12:47:21 -0700 (PDT)
+Received: from [192.168.1.19] (ckh198.neoplus.adsl.tpnet.pl. [83.31.83.198])
+        by smtp.gmail.com with ESMTPSA id m62sm141201wmm.35.2019.10.02.12.47.19
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 02 Oct 2019 12:47:20 -0700 (PDT)
+Subject: Re: [PATCH v7 1/5] leds: populate the device's of_node when possible
+To:     Jean-Jacques Hiblot <jjhiblot@ti.com>, pavel@ucw.cz,
+        robh+dt@kernel.org, mark.rutland@arm.com, lee.jones@linaro.org,
+        daniel.thompson@linaro.org
+Cc:     dmurphy@ti.com, linux-leds@vger.kernel.org,
         linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        Tzung-Bi Shih <tzungbi@chromium.org>,
-        Jerome Brunet <jbrunet@baylibre.com>,
-        Jernej Skrabec <jernej.skrabec@siol.net>,
-        Cheng-Yi Chiang <cychiang@chromium.org>
-Subject: [PATCH v2] drm/bridge: dw-hdmi: Refuse DDC/CI transfers on the internal I2C controller
-Date:   Wed,  2 Oct 2019 12:44:06 -0700
-Message-Id: <20191002124354.v2.1.I709dfec496f5f0b44a7b61dcd4937924da8d8382@changeid>
-X-Mailer: git-send-email 2.23.0.444.g18eeb5a265-goog
+        tomi.valkeinen@ti.com
+References: <20190918145730.22805-1-jjhiblot@ti.com>
+ <20190918145730.22805-2-jjhiblot@ti.com>
+ <f543e757-e000-6de4-694b-e75f388e5908@gmail.com>
+ <e9588e03-20d4-7e6d-e514-0b79dae12cce@ti.com>
+From:   Jacek Anaszewski <jacek.anaszewski@gmail.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=jacek.anaszewski@gmail.com; prefer-encrypt=mutual; keydata=
+ mQINBFWjfaEBEADd66EQbd6yd8YjG0kbEDT2QIkx8C7BqMXR8AdmA1OMApbfSvEZFT1D/ECR
+ eWFBS8XtApKQx1xAs1j5z70k3zebk2eeNs5ahxi6vM4Qh89vBM46biSKeeX5fLcv7asmGb/a
+ FnHPAfQaKFyG/Bj9V+//ef67hpjJWR3s74C6LZCFLcbZM0z/wTH+baA5Jwcnqr4h/ygosvhP
+ X3gkRzJLSFYekmEv+WHieeKXLrJdsUPUvPJTZtvi3ELUxHNOZwX2oRJStWpmL2QGMwPokRNQ
+ 29GvnueQdQrIl2ylhul6TSrClMrKZqOajDFng7TLgvNfyVZE8WQwmrkTrdzBLfu3kScjE14Q
+ Volq8OtQpTsw5570D4plVKh2ahlhrwXdneSot0STk9Dh1grEB/Jfw8dknvqkdjALUrrM45eF
+ FM4FSMxIlNV8WxueHDss9vXRbCUxzGw37Ck9JWYo0EpcpcvwPf33yntYCbnt+RQRjv7vy3w5
+ osVwRR4hpbL/fWt1AnZ+RvbP4kYSptOCPQ+Pp1tCw16BOaPjtlqSTcrlD2fo2IbaB5D21SUa
+ IsdZ/XkD+V2S9jCrN1yyK2iKgxtDoUkWiqlfRgH2Ep1tZtb4NLF/S0oCr7rNLO7WbqLZQh1q
+ ShfZR16h7YW//1/NFwnyCVaG1CP/L/io719dPWgEd/sVSKT2TwARAQABtC1KYWNlayBBbmFz
+ emV3c2tpIDxqYWNlay5hbmFzemV3c2tpQGdtYWlsLmNvbT6JAlgEEwEIAEICGwMHCwkIBwMC
+ AQYVCAIJCgsDFgIBAh4BAheABQkJZgNMFiEEvx38ClaPBfeVdXCQvWpQHLeLfCYFAl05/9sC
+ GQEACgkQvWpQHLeLfCarMQ/9FN/WqJdN2tf6xkP0RFyS4ft0sT04zkOCFfOMxs8mZ+KZoMU+
+ X3a+fEppDL7xgRFpHyGaEel7lSi1eqtzsqZ5JiHbDS1Ht1G8TtATb8q8id68qeSeW2mfzaLQ
+ 98NPELGfUXFoUqUQkG5z2p92UrGF4Muj1vOIW93pwvE4uDpNsl+jriwHomLtjIUoZtIRjGfZ
+ RCyUQI0vi5LYzXCebuzAjGD7Jh2YAp7fDGrv3qTq8sX+DUJ4H/+I8PiL+jXKkEeppqIhlBJJ
+ l4WcgggMu3c2uljYDuqRYghte33BXyCPAocfO2/sN+yJRUTVuRFlOxUk4srz/W8SQDwOAwtK
+ V7TzdyF1/jOGBxWwS13EjMb4u3XwPMzcPlEQNdIqz76NFmJ99xYEvgkAmFmRioxuBTRv8Fs1
+ c1jQ00WWJ5vezqY6lccdDroPalXWeFzfPjIhKbV3LAYTlqv0It75GW9+0TBhPqdTM15DrCVX
+ B7Ues7UnD5FBtWwewTnwr+cu8te449VDMzN2I+a9YKJ1s6uZmzh5HnuKn6tAfGyQh8MujSOM
+ lZrNHrRsIsLXOjeGVa84Qk/watEcOoyQ7d+YaVosU0OCZl0GldvbGp1z2u8cd2N/HJ7dAgFh
+ Q7dtGXmdXpt2WKQvTvQXhIrCWVQErNYbDZDD2V0TZtlPBaZP4fkUDkvH+Sy5Ag0EVaN9oQEQ
+ AMPNymBNoCWc13U6qOztXrIKBVsLGZXq/yOaR2n7gFbFACD0TU7XuH2UcnwvNR+uQFwSrRqa
+ EczX2V6iIy2CITXKg5Yvg12yn09gTmafuoIyKoU16XvC3aZQQ2Bn3LO2sRP0j/NuMD9GlO37
+ pHCVRpI2DPxFE39TMm1PLbHnDG8+lZql+dpNwWw8dDaRgyXx2Le542CcTBT52VCeeWDtqd2M
+ wOr4LioYlfGfAqmwcwucBdTEBUxklQaOR3VbJQx6ntI2oDOBlNGvjnVDzZe+iREd5l40l+Oj
+ TaiWvBGXkv6OI+wx5TFPp+BM6ATU+6UzFRTUWbj+LqVA/JMqYHQp04Y4H5GtjbHCa8abRvBw
+ IKEvpwTyWZlfXPtp8gRlNmxYn6gQlTyEZAWodXwE7CE+KxNnq7bPHeLvrSn8bLNK682PoTGr
+ 0Y00bguYLfyvEwuDYek1/h9YSXtHaCR3CEj4LU1B561G1j7FVaeYbX9bKBAoy/GxAW8J5O1n
+ mmw7FnkSHuwO/QDe0COoO0QZ620Cf9IBWYHW4m2M2yh5981lUaiMcNM2kPgsJFYloFo2XGn6
+ lWU9BrWjEoNDhHZtF+yaPEuwjZo6x/3E2Tu3E5Jj0VpVcE9U1Zq/fquDY79l2RJn5ENogOs5
+ +Pi0GjVpEYQVWfm0PTCxNPOzOzGR4QB3BNFvABEBAAGJAiUEGAEIAA8FAlWjfaECGwwFCQlm
+ AYAACgkQvWpQHLeLfCZqGxAAlWBWVvjU6xj70GwengiqYZwmW1i8gfS4TNibQT/KRq0zkBnE
+ wgKwXRbVoW38pYVuGa5x/JDQMJDrLAJ0wrCOS3XxbSHCWOl/k2ZD9OaxUeXq6N+OmGTzfrYv
+ PUvWS1Hy04q9AD1dIaMNruZQmvnRfkOk2UDncDIg0166/NTHiYI09H5mpWGpHn/2aT6dmpVw
+ uoM9/rHlF5s5qAAo95tZ0QW2BtIceG9/rbYlL57waSMPF49awvwLQX5RhWoF8mPS5LsBrXXK
+ hmizIsn40tLbi2RtWjzDWgZYitqmmqijeCnDvISN4qJ/nCLO4DjiSGs59w5HR+l0nwePDhOC
+ A4RYZqS1e2Clx1VSkDXFpL3egabcIsqK7CZ6a21r8lXVpo4RnMlQsmXZTnRx4SajFvX7PrRg
+ /02C811fLfh2r5O5if8sKQ6BKKlHpuuioqfj/w9z3B0aQ71e4n1zNJBO1kcdznikPLAbr7jG
+ gkBUXT1yJiwpTfRQr5y2Uo12IJsKxohnNFVYtK8X/R6S0deKPjrZWvAkllgIPcHjMi2Va8yw
+ KTj/JgcpUO5KN906Pf7ywZISe7Kbcc/qnE0YjPPSqFOvoeZvHe6EZCMW9+xZsaipvlqpByQV
+ UHnVg09K9YFvjUBsBPdC8ef6YwgfR9o6AnPmxl0oMUIXkCCC5c99fzJY/k+JAq0EGAEIACAW
+ IQS/HfwKVo8F95V1cJC9alAct4t8JgUCWwqKhgIbAgCBCRC9alAct4t8JnYgBBkWCAAdFiEE
+ FMMcSshOZf56bfAEYhBsURv0pdsFAlsKioYACgkQYhBsURv0pdvELgD/U+y3/hsz0bIjMQJY
+ 0LLxM/rFY9Vz1L43+lQHXjL3MPsA/1lNm5sailsY7aFBVJxAzTa8ZAGWBdVaGo6KCvimDB8G
+ 7joP/jx+oGOmdRogs7mG//H+w9DTnBfPpnfkeiiokGYo/+huWO5V0Ac9tTqZeFc//t/YuYJn
+ wWvS0Rx+KL0fT3eh9BQo47uF4yDiZIiWLNh4Agpup1MUSVsz4MjD0lW6ghtnLcGlIgoVHW0v
+ tPW1m9jATYyJSOG/MC1iDrcYcp9uVYn5tKfkEeQNspuG6iSfS0q3tajPKnT1nJxMTxVOD2RW
+ EIGfaV9Scrou92VD/eC+/8INRsiWS93j3hOKIAV5XRNINFqtzkagPYAP8r6wksjSjh01fSTB
+ p5zxjfsIwWDDzDrqgzwv83CvrLXRV3OlG1DNUDYA52qJr47paH5QMWmHW5TNuoBX8qb6RW/H
+ M3DzPgT+l+r1pPjMPfvL1t7civZUoPuNzoyFpQRj6TvWi2bGGMQKryeYksXG2zi2+avMFnLe
+ lOxGdUZ7jn1SJ6Abba5WL3VrXCP+TUE6bZLgfw8kYa8QSXP3ysyeMI0topHFntBZ8a0KXBNs
+ qqFCBWmTHXfwsfW0VgBmRtPO7eXVBybjJ1VXKR2RZxwSq/GoNXh/yrRXQxbcpZ+QP3/Tttsb
+ FdKciZ4u3ts+5UwYra0BRuvb51RiZR2wRNnUeBnXWagJVTlG7RHBO/2jJOE6wrcdCMjs0Iiw
+ PNWmiVoZA930TvHA5UeGENxdGqo2MvMdRJ54YaIR
+Message-ID: <b7b3409b-97bd-79b4-a712-6c03c6eabd56@gmail.com>
+Date:   Wed, 2 Oct 2019 21:47:18 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
+In-Reply-To: <e9588e03-20d4-7e6d-e514-0b79dae12cce@ti.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The DDC/CI protocol involves sending a multi-byte request to the
-display via I2C, which is typically followed by a multi-byte
-response. The internal I2C controller only allows single byte
-reads/writes or reads of 8 sequential bytes, hence DDC/CI is not
-supported when the internal I2C controller is used. The I2C
-transfers complete without errors, however the data in the response
-is garbage. Abort transfers to/from slave address 0x37 (DDC) with
--EOPNOTSUPP, to make it evident that the communication is failing.
+Hi Jean,
 
-Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
-Reviewed-by: Douglas Anderson <dianders@chromium.org>
-Reviewed-by: Sean Paul <sean@poorly.run>
-Acked-by: Neil Armstrong <narmstrong@baylibre.com>
----
-Sorry for the delay with sending v2, I completely forgot about this patch ...
+On 10/2/19 3:58 PM, Jean-Jacques Hiblot wrote:
+> Hi Jacek,
+> 
+> On 24/09/2019 23:03, Jacek Anaszewski wrote:
+>> Hi Jean,
+>>
+>> Thank you for rebasing the set
+>>
+>> On 9/18/19 4:57 PM, Jean-Jacques Hiblot wrote:
+>>> If initialization data is available and its fwnode is actually a
+>>> of_node,
+>>> store this information in the led device's structure. This will allow
+>>> the
+>>> device to use or provide OF-based API such (devm_xxx).
+>>>
+>>> Signed-off-by: Jean-Jacques Hiblot <jjhiblot@ti.com>
+>>> ---
+>>>   drivers/leds/led-class.c | 5 ++++-
+>>>   1 file changed, 4 insertions(+), 1 deletion(-)
+>>>
+>>> diff --git a/drivers/leds/led-class.c b/drivers/leds/led-class.c
+>>> index 647b1263c579..c2167b66b61f 100644
+>>> --- a/drivers/leds/led-class.c
+>>> +++ b/drivers/leds/led-class.c
+>>> @@ -276,8 +276,11 @@ int led_classdev_register_ext(struct device
+>>> *parent,
+>>>           mutex_unlock(&led_cdev->led_access);
+>>>           return PTR_ERR(led_cdev->dev);
+>>>       }
+>>> -    if (init_data && init_data->fwnode)
+>>> +    if (init_data && init_data->fwnode) {
+>>>           led_cdev->dev->fwnode = init_data->fwnode;
+>>> +        if (is_of_node(init_data->fwnode))
+>>> +            led_cdev->dev->of_node = to_of_node(init_data->fwnode);
+>> It would be step backwards. You can do the conversion in the place of
+>> use i.e. in devm_led_get().
+> 
+> Could be done. But it would break another use case I have. I'm also
+> working on the regulator support and for this one, of_node needs to be
+> populated.
 
-Changes in v2:
-- updated comment with 'TOFIX' entry as requested by Neil
-- added Neil's 'Acked-by' tag
+I thought that regulator core can do the conversion to of_node itself,
+but this seems not to be the case.
 
- drivers/gpu/drm/bridge/synopsys/dw-hdmi.c | 10 ++++++++++
- 1 file changed, 10 insertions(+)
+> Is there a problem populating of_node if the LED is indeed described in
+> the DT ?
 
-diff --git a/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c b/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c
-index 52d220a70362..ac24bceaf415 100644
---- a/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c
-+++ b/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c
-@@ -41,6 +41,7 @@
- 
- #include <media/cec-notifier.h>
- 
-+#define DDC_CI_ADDR		0x37
- #define DDC_SEGMENT_ADDR	0x30
- 
- #define HDMI_EDID_LEN		512
-@@ -439,6 +440,15 @@ static int dw_hdmi_i2c_xfer(struct i2c_adapter *adap,
- 	u8 addr = msgs[0].addr;
- 	int i, ret = 0;
- 
-+	if (addr == DDC_CI_ADDR)
-+		/*
-+		 * The internal I2C controller does not support the multi-byte
-+		 * read and write operations needed for DDC/CI.
-+		 * TOFIX: Blacklist the DDC/CI address until we filter out
-+		 * unsupported I2C operations.
-+		 */
-+		return -EOPNOTSUPP;
-+
- 	dev_dbg(hdmi->dev, "xfer: num: %d, addr: %#x\n", num, addr);
- 
- 	for (i = 0; i < num; i++) {
+No, if it is not possible to do it otherwise.
+
 -- 
-2.23.0.444.g18eeb5a265-goog
-
+Best regards,
+Jacek Anaszewski
