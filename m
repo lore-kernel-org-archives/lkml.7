@@ -4,67 +4,67 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1643AECE58A
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 17:03:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 33D5FC352AA
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 17:03:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E0F7A21D81
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 17:03:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 07D2A2086A
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 17:03:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="L6N9pRfd"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="MWVzQOQN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728414AbfJBRDJ (ORCPT
+        id S1728432AbfJBRDM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Oct 2019 13:03:09 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:45515 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728332AbfJBRDG (ORCPT
+        Wed, 2 Oct 2019 13:03:12 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:54490 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728284AbfJBRDF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Oct 2019 13:03:06 -0400
-Received: by mail-wr1-f65.google.com with SMTP id r5so20473672wrm.12
-        for <linux-kernel@vger.kernel.org>; Wed, 02 Oct 2019 10:03:05 -0700 (PDT)
+        Wed, 2 Oct 2019 13:03:05 -0400
+Received: by mail-wm1-f66.google.com with SMTP id p7so8003623wmp.4
+        for <linux-kernel@vger.kernel.org>; Wed, 02 Oct 2019 10:03:04 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=rDg/oCUqYEzccttXvMqYSX8GdnJPBKI6UdslmgaXVWA=;
-        b=L6N9pRfdNKjGQZwKKv8C2r2Kf7vgpMl3rpb3wSFuKc2vo3d7dN/AYq+ui79H2Ivhn5
-         FaPeKYR4Qu098ARC28xXad1oWZyt0DFoEVfa0GqN7hzDqPPRCewq5ubn6swDWIIOO6wk
-         TLMB0LJDZBrkwJw0z2UXthD8cR1SzIOy6HzL7M8G8ZLxeZ2v9mXeZ9xvWPbmV8syw9oQ
-         W0fE5/ZTjW0Z6PTKQ6VvRQXt+5PGyweQtH4LMoCriizkVvHC3DoWN9ssL24CwLuO0JKc
-         maSflJD7MmHCsdQVoTxpIlWlkcgmZPpbULIJje+x4KJsYxwuXB5Dm7QbJNuNm9R6/3TX
-         19aw==
+        bh=ay1R6FhENJS8iuSt2hpBFZDMGFIotJho7ukRf5r3dck=;
+        b=MWVzQOQN+uVNRPqyDGE93yTy5SoALgAqpLtzI7wvkE7DSnqH4tkxj6RbzO4XraolUb
+         ma9o+W+VQJ0XgwIgfsDHYifdihGE9/VS3e1vL+8r3uQn876yl+lXcwg8MepgJpWnCdfA
+         IL7Dvc/R5z9kD1C/6i9E2SsUg5rjAxoaXZtjMOkWGaGsTThQcGCoNX+jSAe2MB6Esmit
+         8R7SCTcZnZe3S6O+W21LtAzfagisBoyWTBUiNtzrqb1pGX7hINXwmSLYnTA4m0tf0FA6
+         CQmrWF/DLXj2KE9iXXop4VOauA3jsJQIRqBe+UqaojMJdyN1saBYLO1QWZgF4bJ8zPGr
+         bgpw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=rDg/oCUqYEzccttXvMqYSX8GdnJPBKI6UdslmgaXVWA=;
-        b=Il9tjkU8irvuA9RU0ZYNLvpUEk8iId8f2OSwAl0kRnrmh0nZv5P2PrYw359U/ixA1y
-         cKyUvjaHM5yXdhX+CqXLlU6HEqW9RnwYmKifnk4z5yVnQCViM/kCmF3XrdTtynvaTZW+
-         xpnwPNTSgh0LYWqqzCy9dbGLdF1F7lzkCQIEbQcWOkQYZQku009oUpK33AG3ODzud+v4
-         p+skoobUsWOXCqEoOeA/RIaya+iUhwAiUQrLpzoBPY621rAjieHIw4/Wl3iuTtvWc0IJ
-         sTx1IIukbyOF54bNnM3EACL1ZiwTyeJ39jnlUbc8cfdkX+xOFwMorfmlvTc1+sZQ03LY
-         A55g==
-X-Gm-Message-State: APjAAAUxmUAs/a9BJGBL/9+gUSh8VAtsqDXTLYEWpnB/UT11N3kUAEFI
-        2mpgW4zr+rwxv8hznCGY5TFeRQ==
-X-Google-Smtp-Source: APXvYqxjEIGXUeps2oiqIQsb5u8jH5layFZN3LcUfKmBM6o+rFVRX3XpVpwHi0PYv/f2FyJWbfV6og==
-X-Received: by 2002:a5d:560a:: with SMTP id l10mr3625629wrv.387.1570035784721;
-        Wed, 02 Oct 2019 10:03:04 -0700 (PDT)
+        bh=ay1R6FhENJS8iuSt2hpBFZDMGFIotJho7ukRf5r3dck=;
+        b=MNobgB0jNuZrMpYGHetcXLe9l/mFtDVZRm43hws3juwGH949xbt9zk0wYMYpwAJc8P
+         u/QS9wsBnH6XlO2Dc8o7SU5e4QZaTnT2dTmjwKZu+U2qf6F83z+AI9YymUTlKGd+rgSO
+         U1zR50Szfls1gl6ObtxRTcWJxtivKw4VXFuNPCzFTXsse6Sk82FIq5csSYhCbw41SsPj
+         LZufcpolwWacmmFzwkMyoja5JXstM3YqLjJ1uKVLODZN4dusD+8WSy+G3PDjFIzg+X5O
+         OOPEkGO77iNI3WNUtDBQx2vRKT2MiGFDi9YSMwxmSNcfwM3XVVd+RikPbKknRlI1E5xv
+         wBug==
+X-Gm-Message-State: APjAAAUsw5hobtVM1QJGqGJJ8r0M0RQy7LUB+lqsVmrJAhrZb8s61Hlh
+        aE2XCLz0MoKX8MrYE7YrcTOBkA==
+X-Google-Smtp-Source: APXvYqz22BjvpDGrKPhqCAJTVhgzXE+CXeU8J/gVwlnoocSXs5j7yKxbBPTecnnvvmjh8rOlPzlRpQ==
+X-Received: by 2002:a1c:c14a:: with SMTP id r71mr3812504wmf.46.1570035783552;
+        Wed, 02 Oct 2019 10:03:03 -0700 (PDT)
 Received: from debian-brgl.home ([2a01:cb1d:af:5b00:6d6c:8493:1ab5:dad7])
-        by smtp.gmail.com with ESMTPSA id b62sm11188575wmc.13.2019.10.02.10.03.03
+        by smtp.gmail.com with ESMTPSA id b62sm11188575wmc.13.2019.10.02.10.03.02
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 02 Oct 2019 10:03:04 -0700 (PDT)
+        Wed, 02 Oct 2019 10:03:02 -0700 (PDT)
 From:   Bartosz Golaszewski <brgl@bgdev.pl>
 To:     Linus Walleij <linus.walleij@linaro.org>,
         Geert Uytterhoeven <geert+renesas@glider.be>,
         Alban Bedel <albeu@free.fr>
 Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
         Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Subject: [PATCH 6/6] gpio: htc-egpio: remove redundant error message
-Date:   Wed,  2 Oct 2019 19:02:49 +0200
-Message-Id: <20191002170249.17366-7-brgl@bgdev.pl>
+Subject: [PATCH 5/6] gpio: htc-egpio: use devm_platform_ioremap_resource()
+Date:   Wed,  2 Oct 2019 19:02:48 +0200
+Message-Id: <20191002170249.17366-6-brgl@bgdev.pl>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191002170249.17366-1-brgl@bgdev.pl>
 References: <20191002170249.17366-1-brgl@bgdev.pl>
@@ -77,97 +77,35 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 
-There's no need to emit an error message on probe failure unless we're
-printing some meaningful info. Otherwise the core driver code will
-inform us about a probe error. Also: the driver currently drops info
-about errors propagated from called functions by default to returning
--EINVAL. This fixes it as well.
+There's no need to use the nocache variant of ioremap(). Switch to
+using devm_platform_ioremap_resource().
 
 Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 ---
- drivers/gpio/gpio-htc-egpio.c | 28 +++++++++++-----------------
- 1 file changed, 11 insertions(+), 17 deletions(-)
+ drivers/gpio/gpio-htc-egpio.c | 9 ++-------
+ 1 file changed, 2 insertions(+), 7 deletions(-)
 
 diff --git a/drivers/gpio/gpio-htc-egpio.c b/drivers/gpio/gpio-htc-egpio.c
-index 2d4b0b888f66..8aa23d70b1e6 100644
+index 6eb56f7ab9c9..2d4b0b888f66 100644
 --- a/drivers/gpio/gpio-htc-egpio.c
 +++ b/drivers/gpio/gpio-htc-egpio.c
-@@ -265,7 +265,6 @@ static int __init egpio_probe(struct platform_device *pdev)
- 	struct gpio_chip  *chip;
- 	unsigned int      irq, irq_end;
- 	int               i;
--	int               ret;
- 
- 	/* Initialize ei data structure. */
- 	ei = devm_kzalloc(&pdev->dev, sizeof(*ei), GFP_KERNEL);
-@@ -275,7 +274,6 @@ static int __init egpio_probe(struct platform_device *pdev)
- 	spin_lock_init(&ei->lock);
- 
- 	/* Find chained irq */
--	ret = -EINVAL;
- 	res = platform_get_resource(pdev, IORESOURCE_IRQ, 0);
- 	if (res)
+@@ -281,14 +281,9 @@ static int __init egpio_probe(struct platform_device *pdev)
  		ei->chained_irq = res->start;
-@@ -283,15 +281,17 @@ static int __init egpio_probe(struct platform_device *pdev)
+ 
  	/* Map egpio chip into virtual address space. */
- 	ei->base_addr = devm_platform_ioremap_resource(pdev, 0);
- 	if (IS_ERR(ei->base_addr))
+-	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+-	if (!res)
++	ei->base_addr = devm_platform_ioremap_resource(pdev, 0);
++	if (IS_ERR(ei->base_addr))
+ 		goto fail;
+-	ei->base_addr = devm_ioremap_nocache(&pdev->dev, res->start,
+-					     resource_size(res));
+-	if (!ei->base_addr)
 -		goto fail;
-+		return PTR_ERR(ei->base_addr);
+-	pr_debug("EGPIO phys=%08x virt=%p\n", (u32)res->start, ei->base_addr);
  
  	if ((pdata->bus_width != 16) && (pdata->bus_width != 32))
--		goto fail;
-+		return -EINVAL;
-+
- 	ei->bus_shift = fls(pdata->bus_width - 1) - 3;
- 	pr_debug("bus_shift = %d\n", ei->bus_shift);
- 
- 	if ((pdata->reg_width != 8) && (pdata->reg_width != 16))
--		goto fail;
-+		return -EINVAL;
-+
- 	ei->reg_shift = fls(pdata->reg_width - 1);
- 	pr_debug("reg_shift = %d\n", ei->reg_shift);
- 
-@@ -303,10 +303,9 @@ static int __init egpio_probe(struct platform_device *pdev)
- 	ei->chip = devm_kcalloc(&pdev->dev,
- 				ei->nchips, sizeof(struct egpio_chip),
- 				GFP_KERNEL);
--	if (!ei->chip) {
--		ret = -ENOMEM;
--		goto fail;
--	}
-+	if (!ei->chip)
-+		return -ENOMEM;
-+
- 	for (i = 0; i < ei->nchips; i++) {
- 		ei->chip[i].reg_start = pdata->chip[i].reg_start;
- 		ei->chip[i].cached_values = pdata->chip[i].initial_values;
-@@ -316,10 +315,9 @@ static int __init egpio_probe(struct platform_device *pdev)
- 		chip->label = devm_kasprintf(&pdev->dev, GFP_KERNEL,
- 					     "htc-egpio-%d",
- 					     i);
--		if (!chip->label) {
--			ret = -ENOMEM;
--			goto fail;
--		}
-+		if (!chip->label)
-+			return -ENOMEM;
-+
- 		chip->parent          = &pdev->dev;
- 		chip->owner           = THIS_MODULE;
- 		chip->get             = egpio_get;
-@@ -361,10 +359,6 @@ static int __init egpio_probe(struct platform_device *pdev)
- 	}
- 
- 	return 0;
--
--fail:
--	printk(KERN_ERR "EGPIO failed to setup\n");
--	return ret;
- }
- 
- #ifdef CONFIG_PM
+ 		goto fail;
 -- 
 2.23.0
 
