@@ -2,32 +2,32 @@ Return-Path: <SRS0=zem1=X3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39E4AC47404
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 19:08:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D26F7C4360C
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 19:08:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1A5C0222BE
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 19:08:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BA45321D82
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 19:08:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729339AbfJBTIR (ORCPT
+        id S1728864AbfJBTIZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Oct 2019 15:08:17 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:35274 "EHLO
+        Wed, 2 Oct 2019 15:08:25 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:35374 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729049AbfJBTIJ (ORCPT
+        by vger.kernel.org with ESMTP id S1729096AbfJBTIK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Oct 2019 15:08:09 -0400
+        Wed, 2 Oct 2019 15:08:10 -0400
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1iFjyn-00035c-QY; Wed, 02 Oct 2019 20:08:05 +0100
+        id 1iFjyo-000365-N4; Wed, 02 Oct 2019 20:08:06 +0100
 Received: from ben by deadeye with local (Exim 4.92.1)
         (envelope-from <ben@decadent.org.uk>)
-        id 1iFjyn-0003bB-DM; Wed, 02 Oct 2019 20:08:05 +0100
+        id 1iFjyn-0003cQ-Tm; Wed, 02 Oct 2019 20:08:05 +0100
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,13 +35,14 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Jisheng Zhang" <Jisheng.Zhang@synaptics.com>,
-        "David S. Miller" <davem@davemloft.net>
+        "Christoph Hellwig" <hch@lst.de>,
+        "Sahitya Tummala" <stummala@codeaurora.org>
 Date:   Wed, 02 Oct 2019 20:06:51 +0100
-Message-ID: <lsq.1570043211.594136502@decadent.org.uk>
+Message-ID: <lsq.1570043211.915808643@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 17/87] net: stmmac: fix reset gpio free missing
+Subject: [PATCH 3.16 32/87] configfs: Fix use-after-free when accessing
+ sd->s_dentry
 In-Reply-To: <lsq.1570043210.379046399@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -55,36 +56,54 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Jisheng Zhang <Jisheng.Zhang@synaptics.com>
+From: Sahitya Tummala <stummala@codeaurora.org>
 
-commit 49ce881c0d4c4a7a35358d9dccd5f26d0e56fc61 upstream.
+commit f6122ed2a4f9c9c1c073ddf6308d1b2ac10e0781 upstream.
 
-Commit 984203ceff27 ("net: stmmac: mdio: remove reset gpio free")
-removed the reset gpio free, when the driver is unbinded or rmmod,
-we miss the gpio free.
+In the vfs_statx() context, during path lookup, the dentry gets
+added to sd->s_dentry via configfs_attach_attr(). In the end,
+vfs_statx() kills the dentry by calling path_put(), which invokes
+configfs_d_iput(). Ideally, this dentry must be removed from
+sd->s_dentry but it doesn't if the sd->s_count >= 3. As a result,
+sd->s_dentry is holding reference to a stale dentry pointer whose
+memory is already freed up. This results in use-after-free issue,
+when this stale sd->s_dentry is accessed later in
+configfs_readdir() path.
 
-This patch uses managed API to request the reset gpio, so that the
-gpio could be freed properly.
+This issue can be easily reproduced, by running the LTP test case -
+sh fs_racer_file_list.sh /config
+(https://github.com/linux-test-project/ltp/blob/master/testcases/kernel/fs/racer/fs_racer_file_list.sh)
 
-Fixes: 984203ceff27 ("net: stmmac: mdio: remove reset gpio free")
-Signed-off-by: Jisheng Zhang <Jisheng.Zhang@synaptics.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-[bwh: Backported to 3.16: adjust context]
+Fixes: 76ae281f6307 ('configfs: fix race between dentry put and lookup')
+Signed-off-by: Sahitya Tummala <stummala@codeaurora.org>
+Signed-off-by: Christoph Hellwig <hch@lst.de>
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- drivers/net/ethernet/stmicro/stmmac/stmmac_mdio.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ fs/configfs/dir.c | 14 ++++++--------
+ 1 file changed, 6 insertions(+), 8 deletions(-)
 
---- a/drivers/net/ethernet/stmicro/stmmac/stmmac_mdio.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_mdio.c
-@@ -159,7 +159,8 @@ int stmmac_mdio_reset(struct mii_bus *bu
- 		reset_gpio = data->reset_gpio;
- 		active_low = data->active_low;
+--- a/fs/configfs/dir.c
++++ b/fs/configfs/dir.c
+@@ -58,15 +58,13 @@ static void configfs_d_iput(struct dentr
+ 	if (sd) {
+ 		/* Coordinate with configfs_readdir */
+ 		spin_lock(&configfs_dirent_lock);
+-		/* Coordinate with configfs_attach_attr where will increase
+-		 * sd->s_count and update sd->s_dentry to new allocated one.
+-		 * Only set sd->dentry to null when this dentry is the only
+-		 * sd owner.
+-		 * If not do so, configfs_d_iput may run just after
+-		 * configfs_attach_attr and set sd->s_dentry to null
+-		 * even it's still in use.
++		/*
++		 * Set sd->s_dentry to null only when this dentry is the one
++		 * that is going to be killed.  Otherwise configfs_d_iput may
++		 * run just after configfs_attach_attr and set sd->s_dentry to
++		 * NULL even it's still in use.
+ 		 */
+-		if (atomic_read(&sd->s_count) <= 2)
++		if (sd->s_dentry == dentry)
+ 			sd->s_dentry = NULL;
  
--		if (!gpio_request(reset_gpio, "mdio-reset")) {
-+		if (!devm_gpio_request(priv->device, reset_gpio,
-+				      "mdio-reset")) {
- 			gpio_direction_output(reset_gpio, active_low ? 1 : 0);
- 			udelay(data->delays[0]);
- 			gpio_set_value(reset_gpio, active_low ? 0 : 1);
+ 		spin_unlock(&configfs_dirent_lock);
 
