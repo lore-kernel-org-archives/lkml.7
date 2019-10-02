@@ -4,41 +4,44 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65D74ECE58A
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 14:05:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF557C35280
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 14:05:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4650621A4C
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 14:05:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D1ACA21D7B
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 14:05:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727870AbfJBOFo (ORCPT
+        id S1728020AbfJBOFr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Oct 2019 10:05:44 -0400
-Received: from inva021.nxp.com ([92.121.34.21]:52390 "EHLO inva021.nxp.com"
+        Wed, 2 Oct 2019 10:05:47 -0400
+Received: from inva020.nxp.com ([92.121.34.13]:50364 "EHLO inva020.nxp.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727705AbfJBOFn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Oct 2019 10:05:43 -0400
-Received: from inva021.nxp.com (localhost [127.0.0.1])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id BE65420068B;
-        Wed,  2 Oct 2019 16:05:42 +0200 (CEST)
+        id S1726373AbfJBOFo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 2 Oct 2019 10:05:44 -0400
+Received: from inva020.nxp.com (localhost [127.0.0.1])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id A8D741A02D1;
+        Wed,  2 Oct 2019 16:05:41 +0200 (CEST)
 Received: from inva024.eu-rdc02.nxp.com (inva024.eu-rdc02.nxp.com [134.27.226.22])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id B0576200141;
-        Wed,  2 Oct 2019 16:05:42 +0200 (CEST)
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 9B3E01A0048;
+        Wed,  2 Oct 2019 16:05:41 +0200 (CEST)
 Received: from fsr-ub1664-121.ea.freescale.net (fsr-ub1664-121.ea.freescale.net [10.171.82.171])
-        by inva024.eu-rdc02.nxp.com (Postfix) with ESMTP id 301982060C;
-        Wed,  2 Oct 2019 16:05:42 +0200 (CEST)
+        by inva024.eu-rdc02.nxp.com (Postfix) with ESMTP id 0FE102060C;
+        Wed,  2 Oct 2019 16:05:41 +0200 (CEST)
 From:   Laurentiu Palcu <laurentiu.palcu@nxp.com>
-To:     Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>
-Cc:     agx@sigxcpu.org, l.stach@pengutronix.de, linux-imx@nxp.com,
+To:     Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>
+Cc:     agx@sigxcpu.org, l.stach@pengutronix.de,
         Laurentiu Palcu <laurentiu.palcu@nxp.com>,
-        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v2 2/5] drm/imx: compile imx directory by default
-Date:   Wed,  2 Oct 2019 17:04:54 +0300
-Message-Id: <1570025100-5634-3-git-send-email-laurentiu.palcu@nxp.com>
+        Abel Vesa <abel.vesa@nxp.com>, linux-clk@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org
+Subject: [PATCH v2 1/5] clk: imx8mq: Add VIDEO2_PLL clock
+Date:   Wed,  2 Oct 2019 17:04:53 +0300
+Message-Id: <1570025100-5634-2-git-send-email-laurentiu.palcu@nxp.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1570025100-5634-1-git-send-email-laurentiu.palcu@nxp.com>
 References: <1570025100-5634-1-git-send-email-laurentiu.palcu@nxp.com>
@@ -48,31 +51,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Currently the drm/imx/ directory is compiled only if DRM_IMX is set. Adding a
-new IMX related IP in the same directory would need DRM_IMX to be set, which would
-bring in also IPUv3 core driver...
-
-The current patch would allow adding new IPs in the imx/ directory without needing
-to set DRM_IMX.
+This clock is needed by DCSS when high resolutions are used.
 
 Signed-off-by: Laurentiu Palcu <laurentiu.palcu@nxp.com>
+CC: Abel Vesa <abel.vesa@nxp.com>
 ---
- drivers/gpu/drm/Makefile | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/clk/imx/clk-imx8mq.c             | 4 ++++
+ include/dt-bindings/clock/imx8mq-clock.h | 4 +++-
+ 2 files changed, 7 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/Makefile b/drivers/gpu/drm/Makefile
-index 82ff826..a6191f8 100644
---- a/drivers/gpu/drm/Makefile
-+++ b/drivers/gpu/drm/Makefile
-@@ -98,7 +98,7 @@ obj-$(CONFIG_DRM_MSM) += msm/
- obj-$(CONFIG_DRM_TEGRA) += tegra/
- obj-$(CONFIG_DRM_STM) += stm/
- obj-$(CONFIG_DRM_STI) += sti/
--obj-$(CONFIG_DRM_IMX) += imx/
-+obj-y 			+= imx/
- obj-$(CONFIG_DRM_INGENIC) += ingenic/
- obj-$(CONFIG_DRM_MEDIATEK) += mediatek/
- obj-$(CONFIG_DRM_MESON)	+= meson/
+diff --git a/drivers/clk/imx/clk-imx8mq.c b/drivers/clk/imx/clk-imx8mq.c
+index 41fc9c6..05ece7b 100644
+--- a/drivers/clk/imx/clk-imx8mq.c
++++ b/drivers/clk/imx/clk-imx8mq.c
+@@ -38,6 +38,7 @@ static const char * const sys1_pll_out_sels[] = {"sys1_pll1_ref_sel", };
+ static const char * const sys2_pll_out_sels[] = {"sys1_pll1_ref_sel", "sys2_pll1_ref_sel", };
+ static const char * const sys3_pll_out_sels[] = {"sys3_pll1_ref_sel", "sys2_pll1_ref_sel", };
+ static const char * const dram_pll_out_sels[] = {"dram_pll1_ref_sel", };
++static const char * const video2_pll_out_sels[] = {"video2_pll1_ref_sel", };
+ 
+ /* CCM ROOT */
+ static const char * const imx8mq_a53_sels[] = {"osc_25m", "arm_pll_out", "sys2_pll_500m", "sys2_pll_1000m",
+@@ -311,6 +312,7 @@ static int imx8mq_clocks_probe(struct platform_device *pdev)
+ 	clks[IMX8MQ_SYS2_PLL1_REF_SEL]	= imx_clk_mux("sys2_pll1_ref_sel", base + 0x3c, 0, 2, pll_ref_sels, ARRAY_SIZE(pll_ref_sels));
+ 	clks[IMX8MQ_SYS3_PLL1_REF_SEL]	= imx_clk_mux("sys3_pll1_ref_sel", base + 0x48, 0, 2, pll_ref_sels, ARRAY_SIZE(pll_ref_sels));
+ 	clks[IMX8MQ_DRAM_PLL1_REF_SEL]	= imx_clk_mux("dram_pll1_ref_sel", base + 0x60, 0, 2, pll_ref_sels, ARRAY_SIZE(pll_ref_sels));
++	clks[IMX8MQ_VIDEO2_PLL1_REF_SEL] = imx_clk_mux("video2_pll1_ref_sel", base + 0x54, 0, 2, pll_ref_sels, ARRAY_SIZE(pll_ref_sels));
+ 
+ 	clks[IMX8MQ_ARM_PLL_REF_DIV]	= imx_clk_divider("arm_pll_ref_div", "arm_pll_ref_sel", base + 0x28, 5, 6);
+ 	clks[IMX8MQ_GPU_PLL_REF_DIV]	= imx_clk_divider("gpu_pll_ref_div", "gpu_pll_ref_sel", base + 0x18, 5, 6);
+@@ -346,6 +348,8 @@ static int imx8mq_clocks_probe(struct platform_device *pdev)
+ 	clks[IMX8MQ_SYS2_PLL_OUT] = imx_clk_sccg_pll("sys2_pll_out", sys2_pll_out_sels, ARRAY_SIZE(sys2_pll_out_sels), 0, 0, 1, base + 0x3c, CLK_IS_CRITICAL);
+ 	clks[IMX8MQ_SYS3_PLL_OUT] = imx_clk_sccg_pll("sys3_pll_out", sys3_pll_out_sels, ARRAY_SIZE(sys3_pll_out_sels), 0, 0, 1, base + 0x48, CLK_IS_CRITICAL);
+ 	clks[IMX8MQ_DRAM_PLL_OUT] = imx_clk_sccg_pll("dram_pll_out", dram_pll_out_sels, ARRAY_SIZE(dram_pll_out_sels), 0, 0, 0, base + 0x60, CLK_IS_CRITICAL);
++	clks[IMX8MQ_VIDEO2_PLL_OUT] = imx_clk_sccg_pll("video2_pll_out", video2_pll_out_sels, ARRAY_SIZE(video2_pll_out_sels), 0, 0, 0, base + 0x54, 0);
++
+ 	/* SYS PLL fixed output */
+ 	clks[IMX8MQ_SYS1_PLL_40M] = imx_clk_fixed_factor("sys1_pll_40m", "sys1_pll_out", 1, 20);
+ 	clks[IMX8MQ_SYS1_PLL_80M] = imx_clk_fixed_factor("sys1_pll_80m", "sys1_pll_out", 1, 10);
+diff --git a/include/dt-bindings/clock/imx8mq-clock.h b/include/dt-bindings/clock/imx8mq-clock.h
+index 6546367..35b9ed9 100644
+--- a/include/dt-bindings/clock/imx8mq-clock.h
++++ b/include/dt-bindings/clock/imx8mq-clock.h
+@@ -403,5 +403,7 @@
+ #define IMX8MQ_CLK_SNVS_ROOT			264
+ #define IMX8MQ_CLK_GIC				265
+ 
+-#define IMX8MQ_CLK_END				266
++#define IMX8MQ_VIDEO2_PLL1_REF_SEL		266
++
++#define IMX8MQ_CLK_END				267
+ #endif /* __DT_BINDINGS_CLOCK_IMX8MQ_H */
 -- 
 2.7.4
 
