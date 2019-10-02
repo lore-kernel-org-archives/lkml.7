@@ -2,147 +2,65 @@ Return-Path: <SRS0=zem1=X3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EF28C10F14
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 17:24:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD230C352AA
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 17:24:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 01DDF21848
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 17:24:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570037061;
-	bh=YlXNwGlT2eJ6qJy8EkI46gzxND77WvaE/JF2FA9/MBs=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=w501Ec6YMU3PYAMCbjKxWbNow8WPD9eloXgby/BY4JK5YnKfv5qNXgWpxmjCQc1wn
-	 xu/G0UB88ko5UbL8GqqUP0o0MCwxXm9y3xQ3PGWAADVtiFHpZGePvpA3s6mg2RXB3x
-	 hQbF5AYckickD3XlKyGiELeZG+847IcKQDCDNxDo=
+	by mail.kernel.org (Postfix) with ESMTP id A120121848
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 17:24:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728864AbfJBRYU (ORCPT
+        id S1727751AbfJBRYY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Oct 2019 13:24:20 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:41638 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726669AbfJBRYT (ORCPT
+        Wed, 2 Oct 2019 13:24:24 -0400
+Received: from shards.monkeyblade.net ([23.128.96.9]:34488 "EHLO
+        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726669AbfJBRYW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Oct 2019 13:24:19 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Subject:Cc:To:
-        From:Date:Sender:Reply-To:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=+MLBofc4j9osl2yU3VJpS38KKBod3J16m+z6vlWoOKA=; b=jvJPgcEcMJjE7yiZmjiveLggJ
-        owTCmfyjq8tommOTzuIFpBzmDBkz/xz9P2cMGIiZs6TSy8v70mSvHaUBApDQc7bcb0xWUlia1SFzY
-        BweSqEPKhwhow2//jdTnStg2Agww+zAtB753OW4JMbCl/zWxGSkjvOCY4KFGmR7rEn2wsaaRc0xWZ
-        v6sC1t8bqlCltMXps80jFXsU2CdkoLfdmdlxn5Z79x3T01PrmKqfUnXEzBRA3H8d293J84/6aFfhn
-        LGBz9aWpAQ073pYQ19dg57IQjqP4yEdlgYHzNTn3tSeyOiHriBzR1XkeS+FG3RV1TQN6rvVxhUHeu
-        djP/5gu1Q==;
-Received: from 177.133.68.49.dynamic.adsl.gvt.net.br ([177.133.68.49] helo=coco.lan)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.2 #3 (Red Hat Linux))
-        id 1iFiML-00029Q-9h; Wed, 02 Oct 2019 17:24:17 +0000
-Date:   Wed, 2 Oct 2019 14:24:13 -0300
-From:   Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-To:     Jonathan Corbet <corbet@lwn.net>
-Cc:     Kees Cook <keescook@chromium.org>,
-        Jani Nikula <jani.nikula@linux.intel.com>,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 0/2] docs: Programmatically render MAINTAINERS into
- ReST
-Message-ID: <20191002142413.09a12266@coco.lan>
-In-Reply-To: <20191002102535.1e518877@lwn.net>
-References: <20191001182532.21538-1-keescook@chromium.org>
-        <20191002102535.1e518877@lwn.net>
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+        Wed, 2 Oct 2019 13:24:22 -0400
+Received: from localhost (unknown [IPv6:2601:601:9f00:1e2::3d5])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id 83D8E1542A3B8;
+        Wed,  2 Oct 2019 10:24:20 -0700 (PDT)
+Date:   Wed, 02 Oct 2019 10:24:17 -0700 (PDT)
+Message-Id: <20191002.102417.205729199993915832.davem@davemloft.net>
+To:     guillaume.tucker@collabora.com
+Cc:     yamada.masahiro@socionext.com, torvalds@linux-foundation.org,
+        mgalka@collabora.com, broonie@kernel.org, matthew.hart@linaro.org,
+        khilman@baylibre.com, enric.balletbo@collabora.com,
+        ndesaulniers@google.com, akpm@linux-foundation.org,
+        tomeu.vizoso@collabora.com, urezki@gmail.com,
+        joe.lawrence@redhat.com, keescook@chromium.org,
+        linux-kernel@vger.kernel.org, andriy.shevchenko@linux.intel.com,
+        changbin.du@intel.com, penguin-kernel@i-love.sakura.ne.jp,
+        schowdary@nvidia.com, catalin.marinas@arm.com
+Subject: Re: net-next/master boot bisection: v5.3-13203-gc01ebd6c4698 on
+ bcm2836-rpi-2-b
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <d8357536-6750-d9ba-e114-30944d8f95ab@collabora.com>
+References: <5d94766b.1c69fb81.6d9f4.dc6d@mx.google.com>
+        <d8357536-6750-d9ba-e114-30944d8f95ab@collabora.com>
+X-Mailer: Mew version 6.8 on Emacs 26.1
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
 Content-Transfer-Encoding: 7bit
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Wed, 02 Oct 2019 10:24:21 -0700 (PDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Wed, 2 Oct 2019 10:25:35 -0600
-Jonathan Corbet <corbet@lwn.net> escreveu:
+From: Guillaume Tucker <guillaume.tucker@collabora.com>
+Date: Wed, 2 Oct 2019 18:21:31 +0100
 
-> On Tue,  1 Oct 2019 11:25:30 -0700
-> Kees Cook <keescook@chromium.org> wrote:
-> 
-> > v1: https://lore.kernel.org/lkml/20190924230208.12414-1-keescook@chromium.org
-> > 
-> > v2: fix python2 utf-8 issue thanks to Jonathan Corbet
-> > 
-> > 
-> > Commit log from Patch 2 repeated here for cover letter:
-> > 
-> > In order to have the MAINTAINERS file visible in the rendered ReST
-> > output, this makes some small changes to the existing MAINTAINERS file
-> > to allow for better machine processing, and adds a new Sphinx directive
-> > "maintainers-include" to perform the rendering.  
-> 
-> OK, I've applied this.  Some notes, none of which really require any
-> action...
-> 
-> It adds a new warning:
-> 
->   /stuff/k/git/kernel/MAINTAINERS:40416: WARNING: unknown document: ../misc-devices/xilinx_sdfec           
-> 
-> I wonder if it's worth checking to be sure that documents referenced in
-> MAINTAINERS actually exist.  OTOH, things as they are generate a warning,
-> which is what we want anyway.
+> It seems like this isn't the case on the Raspberry Pi 2b with
+> bcm2835_defconfig.  Here's an example of the kernel errors:
 
-We check already links that start with Documentation/ and :doc: via the
-scripts/documentation-file-ref-check script. It shouldn't probably be hard
-to check other files at MAINTAINERS, although some care should be taken
-for this to not take too long.
+This has been fixed upstream I believe, it was some ARM assembler issue
+or something like that.
 
-Right now, the script is very fast here (SSD), doing all the checks on
-less than one second.
-
-> I did various experiments corrupting the MAINTAINERS file and got some
-> fairly unphotogenic results.  Again, though, I'm not sure that adding a
-> bunch of code to generate warnings is really worth the trouble.
-> 
-> The resulting HTML file is 3.4MB and definitely makes my browser sweat when
-> loading it :)
-
-In the future, the script could split the MAINTAINERS output into multiple
-files, for example:
-
-	maintainers.rst (with an index file)
-	maintainers_a.rst	# entries that starts with A
-	maintainers_b.rst	# entries that starts with B
-	...
-	maintainers_z.rst	# entries that starts with Z
-
-
-> 
-> It adds about 20 seconds to a full "make htmldocs" build, which takes just
-> over 3 minutes on the system in question.  So a 10% overhead, essentially.
-
-Python is slow. On my tests with ABI automation, I also noticed some
-performance degradation, and did some measurements. Reading all the
-ABI files was very fast (specially since there I opted to use Perl,
-with is a lot faster than Python). It was equally fast to output the data
-(I wrote .rst files at the Python extension during my tests). What really
-took almost all of the time of the extension was the Sphinx's internal
-logic that parses ReST, which makes sense.
-
-I guess that the increase of time for "make *docs" targets is
-unavoidable: more documentation input means that it will take more time
-to produce an output.
-
-I suspect that, if we split the MAINTAINERS into multiple rst files,
-the script will speedup, as Sphinx could better use the existing CPUs
-in order to split its workload.
-
-> 
-> All told, it does what it's expected to do.  Thanks for doing this.
-> 
-> jon
-
-
-
-Thanks,
-Mauro
+In any event, definitely not a networking problem. :-)
