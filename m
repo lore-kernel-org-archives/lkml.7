@@ -2,158 +2,248 @@ Return-Path: <SRS0=zem1=X3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0AD2C35280
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 13:54:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CAF0C35280
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 13:54:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C467C21783
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 13:54:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 74346222C6
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 13:54:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="hw0oCQP2"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kD/X1jKk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728017AbfJBNyj (ORCPT
+        id S1728068AbfJBNyu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Oct 2019 09:54:39 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:51656 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725747AbfJBNyj (ORCPT
+        Wed, 2 Oct 2019 09:54:50 -0400
+Received: from mail-lf1-f68.google.com ([209.85.167.68]:37216 "EHLO
+        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725747AbfJBNyu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Oct 2019 09:54:39 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Transfer-Encoding
-        :Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
-        Sender:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=I+rlKx0E0VhGVcz2gnhriX/DpMY+Lt7Foh8DXUD24cY=; b=hw0oCQP24Wyb5uZtrQUsgbMSvH
-        wvvHSo034IiKeD9YUDPBbW8TiWSQ9cKvlP8BktvvqGt6iW6mSz73TyMv2xwDNtZW26KrMaxzbLTHU
-        qMdoQiCJGR0c+Wfv39w0EkwCfp7hOkQo7DmgFP697dzP7qdxpq9Bc2n0JAy9r9rMn7f2cYLN/ZWfI
-        Nt7zHk72qQ/IbTr1QWm1pf4A0Zig3vpdQVym7PmzrpWuP2jDOxRfR8Lud6BCvJkUVn1iU1tl9z18i
-        t6WITzU6xXhbx9pw5uQXybdFduZSHTQirbkfRRTukyCIWTttEnPjW1LGeIWGF8KFvq1G4o8WSinqJ
-        JjYC5T0g==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.2 #3 (Red Hat Linux))
-        id 1iFf5A-0000ia-FY; Wed, 02 Oct 2019 13:54:21 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 6362C304B4C;
-        Wed,  2 Oct 2019 15:53:28 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 32BBA29CB4B64; Wed,  2 Oct 2019 15:54:17 +0200 (CEST)
-Date:   Wed, 2 Oct 2019 15:54:17 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Nadav Amit <namit@vmware.com>
-Cc:     the arch/x86 maintainers <x86@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Jason Baron <jbaron@akamai.com>, Jiri Kosina <jkosina@suse.cz>,
-        David Laight <David.Laight@ACULAB.COM>,
-        Borislav Petkov <bp@alien8.de>,
-        Julia Cartwright <julia@ni.com>, Jessica Yu <jeyu@kernel.org>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Edward Cree <ecree@solarflare.com>,
-        Daniel Bristot de Oliveira <bristot@redhat.com>,
-        Josh Poimboeuf <jpoimboe@redhat.com>
-Subject: Re: [PATCH 10/15] static_call: Add basic static call infrastructure
-Message-ID: <20191002135417.GS4519@hirez.programming.kicks-ass.net>
-References: <20190605130753.327195108@infradead.org>
- <20190605131945.125037517@infradead.org>
- <DD54886F-77C6-4230-A711-BF10DD44C52C@vmware.com>
- <20190607082851.GV3419@hirez.programming.kicks-ass.net>
+        Wed, 2 Oct 2019 09:54:50 -0400
+Received: by mail-lf1-f68.google.com with SMTP id w67so12804893lff.4;
+        Wed, 02 Oct 2019 06:54:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=4QyebvzDhNVZ0Lq/bqD45sBW31/NxHYogWC4c1cktOE=;
+        b=kD/X1jKkfK+81eVMoUWWeT/1LB7qwBONaABVrWWl3O/TWkw1Va3/1/qEcR5IwgZOZL
+         2gPdhvXeAGu2w9FOMJwlS0Fr2mt8/EZxexCAV0dfd0Ko+G0BWtl+gVM1cxoHIPTDjOuC
+         PzTupmEa3hAj31WvcN2rFqR7YWKBLVUt41MAWISevl2yW5KeVRUUJgJXm5ZRPoGknS5U
+         91QYWcaYlKqUoDaORhrTEBo/c7Vpy8OnmUFD1Gcl3ABwJ91mazMee8GjWIUP9N/nJkp2
+         unjJ/IA2mIkZD0niwuagNwO5CshnwAcxOAompGtyI2GsmAhakyqc91Ww9x5UJp3VDQXJ
+         ncCA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=4QyebvzDhNVZ0Lq/bqD45sBW31/NxHYogWC4c1cktOE=;
+        b=SwUw3htZTOVDioyK0M6bjVf0LREENvlaFmPXXacrWpOoNgjxAH1JBgNvaC7tNDSSXW
+         DsnBf8y5gowQ+WHGnppl3UHjJi1YSCcHV9jlC6VLnoaZceKUw9XsC4ETtGiGdJghx9P7
+         nxA57UnwHRXH3M2d57ZJQLptE559Of6V1cR2XWOsStDCkgj+tqsDrZ9JwynN4t9n+CSs
+         xDmgq3hGGkhgyuDBe2CkBJJzsxxZpbLLpcnKpwZzoLO4UKDC2SCHezSnJEocetcgux1Q
+         EaND8TMXKd3mmmBTBWw1Wr2nZ+FMaOd3f6asgBgFA9uCXT/m509j2TZs2S02WqAjS5/R
+         kp1g==
+X-Gm-Message-State: APjAAAWJZJ6ceq3zbAEhgvl7ne6ed/uSsgXUlXOQAREwOnyS4UUtbCeh
+        pUPG7o7F53Mep95kxI5V/TqJNTOI
+X-Google-Smtp-Source: APXvYqxKGQbBcReyzTyTCqYNC59U5/IFf2Ux08se0sd7v2guBTEIt15hi5tbJmAekg44nKIO/AVerw==
+X-Received: by 2002:a19:ee02:: with SMTP id g2mr2428220lfb.113.1570024486870;
+        Wed, 02 Oct 2019 06:54:46 -0700 (PDT)
+Received: from [192.168.2.145] ([94.29.34.231])
+        by smtp.googlemail.com with ESMTPSA id h2sm4798936ljb.11.2019.10.02.06.54.45
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 02 Oct 2019 06:54:46 -0700 (PDT)
+Subject: Re: [PATCH v6 00/19] More improvements for Tegra30 devfreq driver
+To:     Chanwoo Choi <cw00.choi@samsung.com>,
+        Thierry Reding <thierry.reding@gmail.com>
+Cc:     MyungJoo Ham <myungjoo.ham@samsung.com>,
+        Kyungmin Park <kyungmin.park@samsung.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Tomeu Vizoso <tomeu.vizoso@collabora.com>,
+        linux-pm@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20190811212315.12689-1-digetx@gmail.com>
+ <CGME20191001211534epcas2p1e5f878969d3f68d4dfcafd82b1538487@epcas2p1.samsung.com>
+ <17dabcfc-3351-13a1-b3de-81af88f64d84@gmail.com>
+ <503b2ade-ff8e-c354-3886-3b7b511bd07e@samsung.com>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <6967777e-b54f-8021-aa6d-8c245e529e10@gmail.com>
+Date:   Wed, 2 Oct 2019 16:54:44 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.1
 MIME-Version: 1.0
+In-Reply-To: <503b2ade-ff8e-c354-3886-3b7b511bd07e@samsung.com>
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190607082851.GV3419@hirez.programming.kicks-ass.net>
-User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 07, 2019 at 10:28:51AM +0200, Peter Zijlstra wrote:
-> On Thu, Jun 06, 2019 at 10:44:23PM +0000, Nadav Amit wrote:
-> > > + * Usage example:
-> > > + *
-> > > + *   # Start with the following functions (with identical prototypes):
-> > > + *   int func_a(int arg1, int arg2);
-> > > + *   int func_b(int arg1, int arg2);
-> > > + *
-> > > + *   # Define a 'my_key' reference, associated with func_a() by default
-> > > + *   DEFINE_STATIC_CALL(my_key, func_a);
-> > > + *
-> > > + *   # Call func_a()
-> > > + *   static_call(my_key, arg1, arg2);
-> > > + *
-> > > + *   # Update 'my_key' to point to func_b()
-> > > + *   static_call_update(my_key, func_b);
-> > > + *
-> > > + *   # Call func_b()
-> > > + *   static_call(my_key, arg1, arg2);
-> > 
-> > I think that this calling interface is not very intuitive.
+02.10.2019 03:25, Chanwoo Choi пишет:
+> Hello Dmitry and Thierry,
 > 
-> Yeah, it is somewhat unfortunate..
+> On 19. 10. 2. 오전 6:15, Dmitry Osipenko wrote:
+>> 12.08.2019 00:22, Dmitry Osipenko пишет:
+>>> Hello,
+>>>
+>>> This series addresses some additional review comments that were made by
+>>> Thierry Reding to [1], makes several important changes to the driver,
+>>> fixing excessive interrupts activity, and adds new features. In the end
+>>> I'm proposing myself as a maintainer for the Tegra devfreq drivers.
+>>>
+>>> [1] https://lore.kernel.org/lkml/0fb50eb1-a173-1756-6889-2526a10ac707@gmail.com/T/
+>>>
+>>> Changelog:
+>>>
+>>> v6:  Addressed review comment that was made by Chanwoo Choi to v5 by
+>>>      squashing "Define ACTMON_DEV_CTRL_STOP" patch into the "Use CPUFreq
+>>>      notifier" patch.
+>>>
+>>> v5:  Addressed review comments that were made by Chanwoo Choi to v4 by
+>>>      squashing few patches, dropping some questionable patches, rewording
+>>>      comments to the code, restructuring the code and etc.
+>>>
+>>>      These patches are now dropped from the series:
+>>>
+>>>        PM / devfreq: tegra30: Use tracepoints for debugging
+>>>        PM / devfreq: tegra30: Inline all one-line functions
+>>>
+>>>      The interrupt-optimization patches are squashed into a single patch:
+>>>
+>>>        PM / devfreq: tegra30: Reduce unnecessary interrupts activity
+>>>
+>>>      because it's better to keep the optimizations as a separate change and
+>>>      this also helps to reduce code churning, since the code changes depend
+>>>      on a previous patch in order to stay cleaner.
+>>>
+>>>      Fixed a lockup bug that I spotted recently, which is caused by a
+>>>      clk-notifier->cpufreq_get()->clk_set_rate() sequence. Now a non-blocking
+>>>      variant of CPU's frequency retrieving is used, i.e. cpufreq_quick_get().
+>>>
+>>>      Further optimized the CPUFreq notifier by postponing the delayed
+>>>      updating in accordance to the polling interval, this actually uncovered
+>>>      the above lockup bug.
+>>>
+>>>      Implemented new minor driver feature in the new patch:
+>>>
+>>>        PM / devfreq: tegra30: Support variable polling interval
+>>>
+>>> v4:  Added two new patches to the series:
+>>>
+>>>        PM / devfreq: tegra30: Synchronize average count on target's update
+>>>        PM / devfreq: tegra30: Increase sampling period to 16ms
+>>>
+>>>      The first patch addresses problem where governor could get stuck due
+>>>      to outdated "average count" value which is snapshoted by ISR and there
+>>>      are cases where manual update of the value is required.
+>>>
+>>>      The second patch is just a minor optimization.
+>>>
+>>> v3:  Added support for tracepoints, replacing the debug messages.
+>>>      Fixed few more bugs with the help of tracepoints.
+>>>
+>>>      New patches in this version:
+>>>
+>>>        PM / devfreq: tegra30: Use tracepoints for debugging
+>>>        PM / devfreq: tegra30: Optimize CPUFreq notifier
+>>>        PM / devfreq: tegra30: Optimize upper consecutive watermark selection
+>>>        PM / devfreq: tegra30: Optimize upper average watermark selection
+>>>        PM / devfreq: tegra30: Include appropriate header
+>>>
+>>>      Some of older patches of this series also got some extra minor polish.
+>>>
+>>> v2:  Added more patches that are cleaning driver's code further and
+>>>      squashing another kHz conversion bug.
+>>>
+>>>      The patch "Rework frequency management logic" of the v1 series is now
+>>>      converted to "Set up watermarks properly" because I found some problems
+>>>      in the original patch and then realized that there is no need to change
+>>>      the logic much. So the logic mostly preserved and only got improvements.
+>>>
+>>>      The series is based on the today's linux-next (25 Jun) and takes into
+>>>      account minor changes that MyungJoo Ham made to the already queued
+>>>      patches from the first batch [1].
+>>>
+>>> Dmitry Osipenko (19):
+>>>   PM / devfreq: tegra30: Change irq type to unsigned int
+>>>   PM / devfreq: tegra30: Keep interrupt disabled while governor is
+>>>     stopped
+>>>   PM / devfreq: tegra30: Handle possible round-rate error
+>>>   PM / devfreq: tegra30: Drop write-barrier
+>>>   PM / devfreq: tegra30: Set up watermarks properly
+>>>   PM / devfreq: tegra30: Tune up boosting thresholds
+>>>   PM / devfreq: tegra30: Fix integer overflow on CPU's freq max out
+>>>   PM / devfreq: tegra30: Ensure that target freq won't overflow
+>>>   PM / devfreq: tegra30: Use kHz units uniformly in the code
+>>>   PM / devfreq: tegra30: Reduce unnecessary interrupts activity
+>>>   PM / devfreq: tegra30: Use CPUFreq notifier
+>>>   PM / devfreq: tegra30: Move clk-notifier's registration to governor's
+>>>     start
+>>>   PM / devfreq: tegra30: Reset boosting on startup
+>>>   PM / devfreq: tegra30: Don't enable consecutive-down interrupt on
+>>>     startup
+>>>   PM / devfreq: tegra30: Constify structs
+>>>   PM / devfreq: tegra30: Include appropriate header
+>>>   PM / devfreq: tegra30: Increase sampling period to 16ms
+>>>   PM / devfreq: tegra30: Support variable polling interval
+>>>   PM / devfreq: tegra20/30: Add Dmitry as a maintainer
+>>>
+>>>  MAINTAINERS                       |   9 +
+>>>  drivers/devfreq/tegra30-devfreq.c | 706 +++++++++++++++++++++++-------
+>>>  2 files changed, 555 insertions(+), 160 deletions(-)
+>>>
+>>
+>> Hello Chanwoo,
+>>
+>> I don't have any more updates in regards to this series, everything is
+>> working flawlessly for now. Will be awesome if we could continue the
+>> reviewing and then get the patches into linux-next to get some more testing.
+>>
+>>
 > 
-> > I understand that
-> > the macros/objtool cannot allow the calling interface to be completely
-> > transparent (as compiler plugin could). But, can the macros be used to
-> > paste the key with the “static_call”? I think that having something like:
-> > 
-> >   static_call__func(arg1, arg2)
-> > 
-> > Is more readable than
-> > 
-> >   static_call(func, arg1, arg2)
+> Hello Dmitry,
 > 
-> Doesn't really make it much better for me; I think I'd prefer to switch
-> to the GCC plugin scheme over this.  ISTR there being some propotypes
-> there, but I couldn't quickly locate them.
+> I'm sorry for late reply. Except for patch5, I reviewed the patches.
+> Please check my comment. Actually, It is difficult to review the patch5
+> without any testing environment and detailed knowledge of watermark of tegra.
+> It is not familiar with me.
 
-How about something like:
+Thank you very much! I'll go through yours comments and reply to them.
 
-	static_call(key)(arg1, arg2);
+I understand that it's not easy for you to review patch5, but probably
+you don't need to go into details and a brief-generic review of the code
+will be enough in that case.
 
-which is very close to the regular indirect call syntax. Furthermore,
-how about we put the trampolines in .static_call.text instead of relying
-on prefixes?
+The hardware is actually very simple, there are watermarks that
+correspond to a memory activity that hardware accounts over a given
+period of time. Once watermark is reached, hardware generates interrupt.
+There are two types of watermarks: average and consecutive. In case of
+the average, the memory activity is collected over a larger window of
+time. For the consecutive case, the memory activity is collected over
+each period (16ms by default in the driver). Memory client may breach
+average watermark very frequently, although that may not affect much the
+average value and for some memory clients (like CPU) it is more
+preferred to not completely ignore those short bursts of memory
+activity. The consecutive watermarks are used in order to detect those
+short bursts, which we account in the driver in a form of boosting. You
+may notice that boost_up_coeff for the CPU's memory client is set to a
+higher value in the driver.
 
-Also, I think I can shrink static_call_key by half:
+> Hello Thierry,
+> If possible, Could you review the patch5 related to setting up the watermark
+> and other patches?
+> 
 
- - we can do away with static_call_key::tramp; there are only two usage
-   sites:
+Indeed, will be very nice if Thierry could also take a look at this
+series. Although.. I could be wrong here, but it looks to me that
+Thierry also isn't closely familiar with this driver and the hardware.
 
-     o __static_call_update, the static_call() macro can provide the
-       address of STATIC_CALL_TRAMP(key) directly
-
-     o static_call_add_module(), has two cases:
-
-       * the trampoline is from outside the module; in this case
-         it will already have been updated by a previous call to
-	 __static_call_update.
-       * the trampoline is from inside the module; in this case
-         it will have the default value and it doesn't need an
-	 update.
-
-       so in no case does static_call_add_module() need to modify a
-       trampoline.
-
-  - we can change static_call_key::site_mods into a single next pointer,
-    just like jump_label's static_key.
-
-But so far all the schemes I've come up with require 'key' to be a name,
-it cannot be an actual 'struct static_call_key *' value. And therefore
-usage from within structures isn't allowed.
-
-
+Thierry, at least please let us know if you're interested in taking a
+look at the patches, I'm pretty sure that you're quite busy with other
+things ;)
