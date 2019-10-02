@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A378BC10F14
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 19:09:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4017BC4360C
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 19:09:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8755D222BE
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 19:09:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 290A3222BE
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 19:09:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729387AbfJBTIV (ORCPT
+        id S1729366AbfJBTIT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Oct 2019 15:08:21 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:35314 "EHLO
+        Wed, 2 Oct 2019 15:08:19 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:35282 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729076AbfJBTIJ (ORCPT
+        by vger.kernel.org with ESMTP id S1729059AbfJBTIJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 2 Oct 2019 15:08:09 -0400
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1iFjyo-00035y-Gh; Wed, 02 Oct 2019 20:08:06 +0100
+        id 1iFjyn-00035e-RL; Wed, 02 Oct 2019 20:08:05 +0100
 Received: from ben by deadeye with local (Exim 4.92.1)
         (envelope-from <ben@decadent.org.uk>)
-        id 1iFjyn-0003cB-Rb; Wed, 02 Oct 2019 20:08:05 +0100
+        id 1iFjyn-0003bG-EA; Wed, 02 Oct 2019 20:08:05 +0100
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,14 +35,16 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Catalina Mocanu" <catalina.mocanu@gmail.com>,
-        "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>
+        "Eric Dumazet" <edumazet@google.com>,
+        "Xin Long" <lucien.xin@gmail.com>,
+        "Andrey Konovalov" <andreyknvl@google.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        "WANG Cong" <xiyou.wangcong@gmail.com>
 Date:   Wed, 02 Oct 2019 20:06:51 +0100
-Message-ID: <lsq.1570043211.136218297@decadent.org.uk>
+Message-ID: <lsq.1570043211.784749873@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 29/87] staging: iio: cdc: Don't put an else right
- after a return
+Subject: [PATCH 3.16 18/87] igmp: acquire pmc lock for ip_mc_clear_src()
 In-Reply-To: <lsq.1570043210.379046399@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -56,45 +58,80 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Catalina Mocanu <catalina.mocanu@gmail.com>
+From: WANG Cong <xiyou.wangcong@gmail.com>
 
-commit 288903f6b91e759b0a813219acd376426cbb8f14 upstream.
+commit c38b7d327aafd1e3ad7ff53eefac990673b65667 upstream.
 
-This fixes the following checkpatch.pl warning:
-WARNING: else is not generally useful after a break or return.
+Andrey reported a use-after-free in add_grec():
 
-While at it, remove new line for symmetry with the rest of the code.
+        for (psf = *psf_list; psf; psf = psf_next) {
+		...
+                psf_next = psf->sf_next;
 
-Signed-off-by: Catalina Mocanu <catalina.mocanu@gmail.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+where the struct ip_sf_list's were already freed by:
+
+ kfree+0xe8/0x2b0 mm/slub.c:3882
+ ip_mc_clear_src+0x69/0x1c0 net/ipv4/igmp.c:2078
+ ip_mc_dec_group+0x19a/0x470 net/ipv4/igmp.c:1618
+ ip_mc_drop_socket+0x145/0x230 net/ipv4/igmp.c:2609
+ inet_release+0x4e/0x1c0 net/ipv4/af_inet.c:411
+ sock_release+0x8d/0x1e0 net/socket.c:597
+ sock_close+0x16/0x20 net/socket.c:1072
+
+This happens because we don't hold pmc->lock in ip_mc_clear_src()
+and a parallel mr_ifc_timer timer could jump in and access them.
+
+The RCU lock is there but it is merely for pmc itself, this
+spinlock could actually ensure we don't access them in parallel.
+
+Thanks to Eric and Long for discussion on this bug.
+
+Reported-by: Andrey Konovalov <andreyknvl@google.com>
+Cc: Eric Dumazet <edumazet@google.com>
+Cc: Xin Long <lucien.xin@gmail.com>
+Signed-off-by: Cong Wang <xiyou.wangcong@gmail.com>
+Reviewed-by: Xin Long <lucien.xin@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- drivers/staging/iio/cdc/ad7150.c | 10 +++-------
- 1 file changed, 3 insertions(+), 7 deletions(-)
+ net/ipv4/igmp.c | 21 +++++++++++++--------
+ 1 file changed, 13 insertions(+), 8 deletions(-)
 
---- a/drivers/staging/iio/cdc/ad7150.c
-+++ b/drivers/staging/iio/cdc/ad7150.c
-@@ -143,19 +143,15 @@ static int ad7150_read_event_config(stru
- 	case IIO_EV_TYPE_MAG_ADAPTIVE:
- 		if (dir == IIO_EV_DIR_RISING)
- 			return adaptive && (threshtype == 0x1);
--		else
--			return adaptive && (threshtype == 0x0);
-+		return adaptive && (threshtype == 0x0);
- 	case IIO_EV_TYPE_THRESH_ADAPTIVE:
- 		if (dir == IIO_EV_DIR_RISING)
- 			return adaptive && (threshtype == 0x3);
--		else
--			return adaptive && (threshtype == 0x2);
--
-+		return adaptive && (threshtype == 0x2);
- 	case IIO_EV_TYPE_THRESH:
- 		if (dir == IIO_EV_DIR_RISING)
- 			return !adaptive && (threshtype == 0x1);
--		else
--			return !adaptive && (threshtype == 0x0);
-+		return !adaptive && (threshtype == 0x0);
- 	default:
- 		break;
+--- a/net/ipv4/igmp.c
++++ b/net/ipv4/igmp.c
+@@ -1880,21 +1880,26 @@ static int ip_mc_add_src(struct in_devic
+ 
+ static void ip_mc_clear_src(struct ip_mc_list *pmc)
+ {
+-	struct ip_sf_list *psf, *nextpsf;
++	struct ip_sf_list *psf, *nextpsf, *tomb, *sources;
+ 
+-	for (psf = pmc->tomb; psf; psf = nextpsf) {
++	spin_lock_bh(&pmc->lock);
++	tomb = pmc->tomb;
++	pmc->tomb = NULL;
++	sources = pmc->sources;
++	pmc->sources = NULL;
++	pmc->sfmode = MCAST_EXCLUDE;
++	pmc->sfcount[MCAST_INCLUDE] = 0;
++	pmc->sfcount[MCAST_EXCLUDE] = 1;
++	spin_unlock_bh(&pmc->lock);
++
++	for (psf = tomb; psf; psf = nextpsf) {
+ 		nextpsf = psf->sf_next;
+ 		kfree(psf);
  	}
+-	pmc->tomb = NULL;
+-	for (psf = pmc->sources; psf; psf = nextpsf) {
++	for (psf = sources; psf; psf = nextpsf) {
+ 		nextpsf = psf->sf_next;
+ 		kfree(psf);
+ 	}
+-	pmc->sources = NULL;
+-	pmc->sfmode = MCAST_EXCLUDE;
+-	pmc->sfcount[MCAST_INCLUDE] = 0;
+-	pmc->sfcount[MCAST_EXCLUDE] = 1;
+ }
+ 
+ 
 
