@@ -2,1185 +2,245 @@ Return-Path: <SRS0=zem1=X3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 279D8ECE58B
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 10:44:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E637AC352AA
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 10:45:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F3623218DE
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 10:44:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B002F218DE
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 10:45:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727989AbfJBKoW (ORCPT
+        id S1728021AbfJBKpP convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Oct 2019 06:44:22 -0400
-Received: from mga03.intel.com ([134.134.136.65]:19132 "EHLO mga03.intel.com"
+        Wed, 2 Oct 2019 06:45:15 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:34566 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725851AbfJBKoV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Oct 2019 06:44:21 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 02 Oct 2019 03:44:20 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,574,1559545200"; 
-   d="scan'208";a="366669613"
-Received: from jsakkine-mobl1.tm.intel.com (HELO localhost) ([10.237.50.158])
-  by orsmga005.jf.intel.com with ESMTP; 02 Oct 2019 03:44:16 -0700
-From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-To:     linux-integrity@vger.kernel.org
-Cc:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        Mimi Zohar <zohar@linux.ibm.com>,
-        Jerry Snitselaar <jsnitsel@redhat.com>,
-        James Bottomley <James.Bottomley@HansenPartnership.com>,
-        Sumit Garg <sumit.garg@linaro.org>,
-        Stefan Berger <stefanb@linux.vnet.ibm.com>,
-        Peter Huewe <peterhuewe@gmx.de>,
-        Jason Gunthorpe <jgg@ziepe.ca>, Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH v2] tpm: Detach page allocation from tpm_buf
-Date:   Wed,  2 Oct 2019 13:44:11 +0300
-Message-Id: <20191002104411.7401-1-jarkko.sakkinen@linux.intel.com>
-X-Mailer: git-send-email 2.20.1
+        id S1725851AbfJBKpO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 2 Oct 2019 06:45:14 -0400
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 8F56D30860BD;
+        Wed,  2 Oct 2019 10:45:13 +0000 (UTC)
+Received: from [10.40.204.213] (ovpn-204-213.brq.redhat.com [10.40.204.213])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 4460E5C226;
+        Wed,  2 Oct 2019 10:44:51 +0000 (UTC)
+Subject: Re: [PATCH v11 0/6] mm / virtio: Provide support for unused page
+ reporting
+To:     David Hildenbrand <david@redhat.com>,
+        Alexander Duyck <alexander.duyck@gmail.com>
+Cc:     Alexander Duyck <alexander.h.duyck@linux.intel.com>,
+        virtio-dev@lists.oasis-open.org, kvm list <kvm@vger.kernel.org>,
+        "Michael S. Tsirkin" <mst@redhat.com>,
+        Dave Hansen <dave.hansen@intel.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Matthew Wilcox <willy@infradead.org>,
+        Michal Hocko <mhocko@kernel.org>,
+        linux-mm <linux-mm@kvack.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Oscar Salvador <osalvador@suse.de>,
+        Yang Zhang <yang.zhang.wz@gmail.com>,
+        Pankaj Gupta <pagupta@redhat.com>,
+        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
+        Rik van Riel <riel@surriel.com>, lcapitulino@redhat.com,
+        "Wang, Wei W" <wei.w.wang@intel.com>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Dan Williams <dan.j.williams@intel.com>
+References: <20191001152441.27008.99285.stgit@localhost.localdomain>
+ <7233498c-2f64-d661-4981-707b59c78fd5@redhat.com>
+ <1ea1a4e11617291062db81f65745b9c95fd0bb30.camel@linux.intel.com>
+ <8bd303a6-6e50-b2dc-19ab-4c3f176c4b02@redhat.com>
+ <CAKgT0Uf37xAFK2CWqUZJgn7bWznSAi6qncLxBpC55oSpBMG1HQ@mail.gmail.com>
+ <0603ca4a-d667-f461-4ba7-ff3c0e9fd4df@redhat.com>
+From:   Nitesh Narayan Lal <nitesh@redhat.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=nitesh@redhat.com; prefer-encrypt=mutual; keydata=
+ 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
+ VujM7c/b4pps
+Organization: Red Hat Inc,
+Message-ID: <020ef7af-dae7-4d57-bed8-1ce912d50c1d@redhat.com>
+Date:   Wed, 2 Oct 2019 06:44:48 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <0603ca4a-d667-f461-4ba7-ff3c0e9fd4df@redhat.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8BIT
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.44]); Wed, 02 Oct 2019 10:45:13 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-As has been seen recently, binding the buffer allocation and tpm_buf
-together is sometimes far from optimal. The buffer might come from the
-caller namely when tpm_send() is used by another subsystem. In addition we
-can stability in call sites w/o rollback (e.g. power events)>
 
-Take allocation out of the tpm_buf framework and make it purely a wrapper
-for the data buffer.
+On 10/2/19 3:13 AM, David Hildenbrand wrote:
+> On 02.10.19 02:55, Alexander Duyck wrote:
+>> On Tue, Oct 1, 2019 at 12:16 PM Nitesh Narayan Lal <nitesh@redhat.com> wrote:
+>>>
+>>> On 10/1/19 12:21 PM, Alexander Duyck wrote:
+>>>> On Tue, 2019-10-01 at 17:35 +0200, David Hildenbrand wrote:
+>>>>> On 01.10.19 17:29, Alexander Duyck wrote:
+>>>>>> This series provides an asynchronous means of reporting to a hypervisor
+>>>>>> that a guest page is no longer in use and can have the data associated
+>>>>>> with it dropped. To do this I have implemented functionality that allows
+>>>>>> for what I am referring to as unused page reporting. The advantage of
+>>>>>> unused page reporting is that we can support a significant amount of
+>>>>>> memory over-commit with improved performance as we can avoid having to
+>>>>>> write/read memory from swap as the VM will instead actively participate
+>>>>>> in freeing unused memory so it doesn't have to be written.
+>>>>>>
+>>>>>> The functionality for this is fairly simple. When enabled it will allocate
+>>>>>> statistics to track the number of reported pages in a given free area.
+>>>>>> When the number of free pages exceeds this value plus a high water value,
+>>>>>> currently 32, it will begin performing page reporting which consists of
+>>>>>> pulling non-reported pages off of the free lists of a given zone and
+>>>>>> placing them into a scatterlist. The scatterlist is then given to the page
+>>>>>> reporting device and it will perform the required action to make the pages
+>>>>>> "reported", in the case of virtio-balloon this results in the pages being
+>>>>>> madvised as MADV_DONTNEED. After this they are placed back on their
+>>>>>> original free list. If they are not merged in freeing an additional bit is
+>>>>>> set indicating that they are a "reported" buddy page instead of a standard
+>>>>>> buddy page. The cycle then repeats with additional non-reported pages
+>>>>>> being pulled until the free areas all consist of reported pages.
+>>>>>>
+>>>>>> In order to try and keep the time needed to find a non-reported page to
+>>>>>> a minimum we maintain a "reported_boundary" pointer. This pointer is used
+>>>>>> by the get_unreported_pages iterator to determine at what point it should
+>>>>>> resume searching for non-reported pages. In order to guarantee pages do
+>>>>>> not get past the scan I have modified add_to_free_list_tail so that it
+>>>>>> will not insert pages behind the reported_boundary. Doing this allows us
+>>>>>> to keep the overhead to a minimum as re-walking the list without the
+>>>>>> boundary will result in as much as 18% additional overhead on a 32G VM.
+>>>>>>
+>>>>>>
+>>>> <snip>
+>>>>
+>>>>>> As far as possible regressions I have focused on cases where performing
+>>>>>> the hinting would be non-optimal, such as cases where the code isn't
+>>>>>> needed as memory is not over-committed, or the functionality is not in
+>>>>>> use. I have been using the will-it-scale/page_fault1 test running with 16
+>>>>>> vcpus and have modified it to use Transparent Huge Pages. With this I see
+>>>>>> almost no difference with the patches applied and the feature disabled.
+>>>>>> Likewise I see almost no difference with the feature enabled, but the
+>>>>>> madvise disabled in the hypervisor due to a device being assigned. With
+>>>>>> the feature fully enabled in both guest and hypervisor I see a regression
+>>>>>> between -1.86% and -8.84% versus the baseline. I found that most of the
+>>>>>> overhead was due to the page faulting/zeroing that comes as a result of
+>>>>>> the pages having been evicted from the guest.
+>>>>> I think Michal asked for a performance comparison against Nitesh's
+>>>>> approach, to evaluate if keeping the reported state + tracking inside
+>>>>> the buddy is really worth it. Do you have any such numbers already? (or
+>>>>> did my tired eyes miss them in this cover letter? :/)
+>>>>>
+>>>> I thought what Michal was asking for was what was the benefit of using the
+>>>> boundary pointer. I added a bit up above and to the description for patch
+>>>> 3 as on a 32G VM it adds up to about a 18% difference without factoring in
+>>>> the page faulting and zeroing logic that occurs when we actually do the
+>>>> madvise.
+>>>>
+>>>> Do we have a working patch set for Nitesh's code? The last time I tried
+>>>> running his patch set I ran into issues with kernel panics. If we have a
+>>>> known working/stable patch set I can give it a try.
+>>> Did you try the v12 patch-set [1]?
+>>> I remember that you reported the CPU stall issue, which I fixed in the v12.
+>>>
+>>> [1] https://lkml.org/lkml/2019/8/12/593
+>> So I tried testing with the spin_lock calls replaced with spin_lock
+>> _irq to resolve the IRQ issue. I also had shuffle enabled in order to
+>> increase the number of pages being dirtied.
+>>
+>> With that setup the bitmap approach is running significantly worse
+>> then my approach, even with the boundary removed. Since I had to
+> It would make sense to share the setup+benchmark+performance indication
+> that you measured. You don't have to share the actual numbers.
 
-Link: https://patchwork.kernel.org/patch/11146585/
-Cc: Mimi Zohar <zohar@linux.ibm.com>
-Cc: Jerry Snitselaar <jsnitsel@redhat.com>
-Cc: James Bottomley <James.Bottomley@HansenPartnership.com>
-Cc: Sumit Garg <sumit.garg@linaro.org>
-Cc: Stefan Berger <stefanb@linux.vnet.ibm.com>
-Signed-off-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
----
-v2:
-* In tpm2_get_random(), TPM2_CC_GET_RANDOM was accidently switched to
-  TPM2_CC_PCR_EXTEND. Now it has been switched back.
- drivers/char/tpm/tpm-sysfs.c      |  19 ++-
- drivers/char/tpm/tpm.h            |  40 ++---
- drivers/char/tpm/tpm1-cmd.c       | 114 +++++++++----
- drivers/char/tpm/tpm2-cmd.c       | 265 +++++++++++++++++++-----------
- drivers/char/tpm/tpm2-space.c     |  64 +++++---
- drivers/char/tpm/tpm_vtpm_proxy.c |  24 +--
- 6 files changed, 333 insertions(+), 193 deletions(-)
++1
 
-diff --git a/drivers/char/tpm/tpm-sysfs.c b/drivers/char/tpm/tpm-sysfs.c
-index edfa89160010..eeb90c9225b9 100644
---- a/drivers/char/tpm/tpm-sysfs.c
-+++ b/drivers/char/tpm/tpm-sysfs.c
-@@ -32,21 +32,26 @@ struct tpm_readpubek_out {
- static ssize_t pubek_show(struct device *dev, struct device_attribute *attr,
- 			  char *buf)
- {
--	struct tpm_buf tpm_buf;
--	struct tpm_readpubek_out *out;
--	int i;
--	char *str = buf;
- 	struct tpm_chip *chip = to_tpm_chip(dev);
-+	struct tpm_readpubek_out *out;
-+	struct page *data_page;
-+	struct tpm_buf tpm_buf;
- 	char anti_replay[20];
-+	char *str = buf;
-+	int i;
- 
- 	memset(&anti_replay, 0, sizeof(anti_replay));
- 
- 	if (tpm_try_get_ops(chip))
- 		return 0;
- 
--	if (tpm_buf_init(&tpm_buf, TPM_TAG_RQU_COMMAND, TPM_ORD_READPUBEK))
-+	data_page = alloc_page(GFP_HIGHUSER);
-+	if (!data_page)
- 		goto out_ops;
- 
-+	tpm_buf_reset(&tpm_buf, kmap(data_page), PAGE_SIZE, TPM_TAG_RQU_COMMAND,
-+		      TPM_ORD_READPUBEK);
-+
- 	tpm_buf_append(&tpm_buf, anti_replay, sizeof(anti_replay));
- 
- 	if (tpm_transmit_cmd(chip, &tpm_buf, READ_PUBEK_RESULT_MIN_BODY_SIZE,
-@@ -83,7 +88,9 @@ static ssize_t pubek_show(struct device *dev, struct device_attribute *attr,
- 	}
- 
- out_buf:
--	tpm_buf_destroy(&tpm_buf);
-+	kunmap(data_page);
-+	__free_page(data_page);
-+
- out_ops:
- 	tpm_put_ops(chip);
- 	return str - buf;
-diff --git a/drivers/char/tpm/tpm.h b/drivers/char/tpm/tpm.h
-index a7fea3e0ca86..45316e5d2d36 100644
---- a/drivers/char/tpm/tpm.h
-+++ b/drivers/char/tpm/tpm.h
-@@ -284,36 +284,30 @@ enum tpm_buf_flags {
- };
- 
- struct tpm_buf {
--	struct page *data_page;
--	unsigned int flags;
- 	u8 *data;
-+	unsigned int size;
-+	unsigned int flags;
- };
- 
--static inline void tpm_buf_reset(struct tpm_buf *buf, u16 tag, u32 ordinal)
-+static inline void tpm_buf_reset(struct tpm_buf *buf, u8 *data,
-+	unsigned int size, u16 tag, u32 ordinal)
- {
--	struct tpm_header *head = (struct tpm_header *)buf->data;
-+	struct tpm_header *head = (struct tpm_header *)data;
- 
--	head->tag = cpu_to_be16(tag);
--	head->length = cpu_to_be32(sizeof(*head));
--	head->ordinal = cpu_to_be32(ordinal);
--}
--
--static inline int tpm_buf_init(struct tpm_buf *buf, u16 tag, u32 ordinal)
--{
--	buf->data_page = alloc_page(GFP_HIGHUSER);
--	if (!buf->data_page)
--		return -ENOMEM;
-+	/* sanity check */
-+	if (size < TPM_HEADER_SIZE) {
-+		WARN(1, "tpm_buf: overflow\n");
-+		buf->flags |= TPM_BUF_OVERFLOW;
-+		return;
-+	}
- 
-+	buf->data = data;
-+	buf->size = size;
- 	buf->flags = 0;
--	buf->data = kmap(buf->data_page);
--	tpm_buf_reset(buf, tag, ordinal);
--	return 0;
--}
- 
--static inline void tpm_buf_destroy(struct tpm_buf *buf)
--{
--	kunmap(buf->data_page);
--	__free_page(buf->data_page);
-+	head->tag = cpu_to_be16(tag);
-+	head->length = cpu_to_be32(sizeof(*head));
-+	head->ordinal = cpu_to_be32(ordinal);
- }
- 
- static inline u32 tpm_buf_length(struct tpm_buf *buf)
-@@ -341,7 +335,7 @@ static inline void tpm_buf_append(struct tpm_buf *buf,
- 	if (buf->flags & TPM_BUF_OVERFLOW)
- 		return;
- 
--	if ((len + new_len) > PAGE_SIZE) {
-+	if ((len + new_len) > buf->size) {
- 		WARN(1, "tpm_buf: overflow\n");
- 		buf->flags |= TPM_BUF_OVERFLOW;
- 		return;
-diff --git a/drivers/char/tpm/tpm1-cmd.c b/drivers/char/tpm/tpm1-cmd.c
-index 149e953ca369..2753699454ab 100644
---- a/drivers/char/tpm/tpm1-cmd.c
-+++ b/drivers/char/tpm/tpm1-cmd.c
-@@ -323,19 +323,25 @@ unsigned long tpm1_calc_ordinal_duration(struct tpm_chip *chip, u32 ordinal)
-  */
- static int tpm1_startup(struct tpm_chip *chip)
- {
-+	struct page *data_page;
- 	struct tpm_buf buf;
- 	int rc;
- 
- 	dev_info(&chip->dev, "starting up the TPM manually\n");
- 
--	rc = tpm_buf_init(&buf, TPM_TAG_RQU_COMMAND, TPM_ORD_STARTUP);
--	if (rc < 0)
--		return rc;
-+	data_page = alloc_page(GFP_HIGHUSER);
-+	if (!data_page)
-+		return -ENOMEM;
-+
-+	tpm_buf_reset(&buf, kmap(data_page), PAGE_SIZE, TPM_TAG_RQU_COMMAND,
-+		      TPM_ORD_STARTUP);
- 
- 	tpm_buf_append_u16(&buf, TPM_ST_CLEAR);
- 
- 	rc = tpm_transmit_cmd(chip, &buf, 0, "attempting to start the TPM");
--	tpm_buf_destroy(&buf);
-+
-+	kunmap(data_page);
-+	__free_page(data_page);
- 	return rc;
- }
- 
-@@ -448,18 +454,24 @@ int tpm1_get_timeouts(struct tpm_chip *chip)
- int tpm1_pcr_extend(struct tpm_chip *chip, u32 pcr_idx, const u8 *hash,
- 		    const char *log_msg)
- {
-+	struct page *data_page;
- 	struct tpm_buf buf;
- 	int rc;
- 
--	rc = tpm_buf_init(&buf, TPM_TAG_RQU_COMMAND, TPM_ORD_PCR_EXTEND);
--	if (rc)
--		return rc;
-+	data_page = alloc_page(GFP_HIGHUSER);
-+	if (!data_page)
-+		return -ENOMEM;
-+
-+	tpm_buf_reset(&buf, kmap(data_page), PAGE_SIZE, TPM_TAG_RQU_COMMAND,
-+		      TPM_ORD_PCR_EXTEND);
- 
- 	tpm_buf_append_u32(&buf, pcr_idx);
- 	tpm_buf_append(&buf, hash, TPM_DIGEST_SIZE);
- 
- 	rc = tpm_transmit_cmd(chip, &buf, TPM_DIGEST_SIZE, log_msg);
--	tpm_buf_destroy(&buf);
-+
-+	kunmap(data_page);
-+	__free_page(data_page);
- 	return rc;
- }
- 
-@@ -467,12 +479,16 @@ int tpm1_pcr_extend(struct tpm_chip *chip, u32 pcr_idx, const u8 *hash,
- ssize_t tpm1_getcap(struct tpm_chip *chip, u32 subcap_id, cap_t *cap,
- 		    const char *desc, size_t min_cap_length)
- {
-+	struct page *data_page;
- 	struct tpm_buf buf;
- 	int rc;
- 
--	rc = tpm_buf_init(&buf, TPM_TAG_RQU_COMMAND, TPM_ORD_GET_CAP);
--	if (rc)
--		return rc;
-+	data_page = alloc_page(GFP_HIGHUSER);
-+	if (!data_page)
-+		return -ENOMEM;
-+
-+	tpm_buf_reset(&buf, kmap(data_page), PAGE_SIZE, TPM_TAG_RQU_COMMAND,
-+		      TPM_ORD_GET_CAP);
- 
- 	if (subcap_id == TPM_CAP_VERSION_1_1 ||
- 	    subcap_id == TPM_CAP_VERSION_1_2) {
-@@ -491,7 +507,9 @@ ssize_t tpm1_getcap(struct tpm_chip *chip, u32 subcap_id, cap_t *cap,
- 	rc = tpm_transmit_cmd(chip, &buf, min_cap_length, desc);
- 	if (!rc)
- 		*cap = *(cap_t *)&buf.data[TPM_HEADER_SIZE + 4];
--	tpm_buf_destroy(&buf);
-+
-+	kunmap(data_page);
-+	__free_page(data_page);
- 	return rc;
- }
- EXPORT_SYMBOL_GPL(tpm1_getcap);
-@@ -514,19 +532,26 @@ struct tpm1_get_random_out {
-  */
- int tpm1_get_random(struct tpm_chip *chip, u8 *dest, size_t max)
- {
--	struct tpm1_get_random_out *out;
- 	u32 num_bytes =  min_t(u32, max, TPM_MAX_RNG_DATA);
-+	struct tpm1_get_random_out *out;
-+	struct page *data_page;
- 	struct tpm_buf buf;
--	u32 total = 0;
- 	int retries = 5;
-+	void *data_ptr;
-+	u32 total = 0;
- 	u32 recd;
- 	int rc;
- 
--	rc = tpm_buf_init(&buf, TPM_TAG_RQU_COMMAND, TPM_ORD_GET_RANDOM);
--	if (rc)
--		return rc;
-+	data_page = alloc_page(GFP_HIGHUSER);
-+	if (!data_page)
-+		return -ENOMEM;
-+
-+	data_ptr = kmap(data_page);
- 
- 	do {
-+		tpm_buf_reset(&buf, data_ptr, PAGE_SIZE, TPM_TAG_RQU_COMMAND,
-+			      TPM_ORD_GET_RANDOM);
-+
- 		tpm_buf_append_u32(&buf, num_bytes);
- 
- 		rc = tpm_transmit_cmd(chip, &buf, sizeof(out->rng_data_len),
-@@ -555,25 +580,29 @@ int tpm1_get_random(struct tpm_chip *chip, u8 *dest, size_t max)
- 		dest += recd;
- 		total += recd;
- 		num_bytes -= recd;
--
--		tpm_buf_reset(&buf, TPM_TAG_RQU_COMMAND, TPM_ORD_GET_RANDOM);
- 	} while (retries-- && total < max);
- 
- 	rc = total ? (int)total : -EIO;
-+
- out:
--	tpm_buf_destroy(&buf);
-+	kunmap(data_page);
-+	__free_page(data_page);
- 	return rc;
- }
- 
- #define TPM_ORD_PCRREAD 21
- int tpm1_pcr_read(struct tpm_chip *chip, u32 pcr_idx, u8 *res_buf)
- {
-+	struct page *data_page;
- 	struct tpm_buf buf;
- 	int rc;
- 
--	rc = tpm_buf_init(&buf, TPM_TAG_RQU_COMMAND, TPM_ORD_PCRREAD);
--	if (rc)
--		return rc;
-+	data_page = alloc_page(GFP_HIGHUSER);
-+	if (!data_page)
-+		return -ENOMEM;
-+
-+	tpm_buf_reset(&buf, kmap(data_page), PAGE_SIZE, TPM_TAG_RQU_COMMAND,
-+		      TPM_ORD_PCRREAD);
- 
- 	tpm_buf_append_u32(&buf, pcr_idx);
- 
-@@ -590,7 +619,8 @@ int tpm1_pcr_read(struct tpm_chip *chip, u32 pcr_idx, u8 *res_buf)
- 	memcpy(res_buf, &buf.data[TPM_HEADER_SIZE], TPM_DIGEST_SIZE);
- 
- out:
--	tpm_buf_destroy(&buf);
-+	kunmap(data_page);
-+	__free_page(data_page);
- 	return rc;
- }
- 
-@@ -604,15 +634,21 @@ int tpm1_pcr_read(struct tpm_chip *chip, u32 pcr_idx, u8 *res_buf)
-  */
- static int tpm1_continue_selftest(struct tpm_chip *chip)
- {
-+	struct page *data_page;
- 	struct tpm_buf buf;
- 	int rc;
- 
--	rc = tpm_buf_init(&buf, TPM_TAG_RQU_COMMAND, TPM_ORD_CONTINUE_SELFTEST);
--	if (rc)
--		return rc;
-+	data_page = alloc_page(GFP_HIGHUSER);
-+	if (!data_page)
-+		return -ENOMEM;
-+
-+	tpm_buf_reset(&buf, kmap(data_page), PAGE_SIZE, TPM_TAG_RQU_COMMAND,
-+		      TPM_ORD_CONTINUE_SELFTEST);
- 
- 	rc = tpm_transmit_cmd(chip, &buf, 0, "continue selftest");
--	tpm_buf_destroy(&buf);
-+
-+	kunmap(data_page);
-+	__free_page(data_page);
- 	return rc;
- }
- 
-@@ -722,21 +758,28 @@ int tpm1_auto_startup(struct tpm_chip *chip)
- int tpm1_pm_suspend(struct tpm_chip *chip, u32 tpm_suspend_pcr)
- {
- 	u8 dummy_hash[TPM_DIGEST_SIZE] = { 0 };
-+	struct page *data_page;
- 	struct tpm_buf buf;
- 	unsigned int try;
-+	void *data_ptr;
- 	int rc;
- 
--
- 	/* for buggy tpm, flush pcrs with extend to selected dummy */
- 	if (tpm_suspend_pcr)
- 		rc = tpm1_pcr_extend(chip, tpm_suspend_pcr, dummy_hash,
- 				     "extending dummy pcr before suspend");
- 
--	rc = tpm_buf_init(&buf, TPM_TAG_RQU_COMMAND, TPM_ORD_SAVESTATE);
--	if (rc)
--		return rc;
-+	data_page = alloc_page(GFP_HIGHUSER);
-+	if (!data_page)
-+		return -ENOMEM;
-+
-+	data_ptr = kmap(data_page);
-+
- 	/* now do the actual savestate */
- 	for (try = 0; try < TPM_RETRY; try++) {
-+		tpm_buf_reset(&buf, data_ptr, PAGE_SIZE,
-+			      TPM_TAG_RQU_COMMAND, TPM_ORD_SAVESTATE);
-+
- 		rc = tpm_transmit_cmd(chip, &buf, 0, NULL);
- 		/*
- 		 * If the TPM indicates that it is too busy to respond to
-@@ -750,9 +793,8 @@ int tpm1_pm_suspend(struct tpm_chip *chip, u32 tpm_suspend_pcr)
- 		 */
- 		if (rc != TPM_WARN_RETRY)
- 			break;
--		tpm_msleep(TPM_TIMEOUT_RETRY);
- 
--		tpm_buf_reset(&buf, TPM_TAG_RQU_COMMAND, TPM_ORD_SAVESTATE);
-+		tpm_msleep(TPM_TIMEOUT_RETRY);
- 	}
- 
- 	if (rc)
-@@ -762,8 +804,8 @@ int tpm1_pm_suspend(struct tpm_chip *chip, u32 tpm_suspend_pcr)
- 		dev_warn(&chip->dev, "TPM savestate took %dms\n",
- 			 try * TPM_TIMEOUT_RETRY);
- 
--	tpm_buf_destroy(&buf);
--
-+	kunmap(data_page);
-+	__free_page(data_page);
- 	return rc;
- }
- 
-diff --git a/drivers/char/tpm/tpm2-cmd.c b/drivers/char/tpm/tpm2-cmd.c
-index ba9acae83bff..50674710aed0 100644
---- a/drivers/char/tpm/tpm2-cmd.c
-+++ b/drivers/char/tpm/tpm2-cmd.c
-@@ -175,13 +175,14 @@ struct tpm2_pcr_read_out {
- int tpm2_pcr_read(struct tpm_chip *chip, u32 pcr_idx,
- 		  struct tpm_digest *digest, u16 *digest_size_ptr)
- {
--	int i;
--	int rc;
--	struct tpm_buf buf;
--	struct tpm2_pcr_read_out *out;
- 	u8 pcr_select[TPM2_PCR_SELECT_MIN] = {0};
--	u16 digest_size;
-+	struct tpm2_pcr_read_out *out;
- 	u16 expected_digest_size = 0;
-+	struct page *data_page;
-+	struct tpm_buf buf;
-+	u16 digest_size;
-+	int rc;
-+	int i;
- 
- 	if (pcr_idx >= TPM2_PLATFORM_PCR)
- 		return -EINVAL;
-@@ -197,9 +198,12 @@ int tpm2_pcr_read(struct tpm_chip *chip, u32 pcr_idx,
- 		expected_digest_size = chip->allocated_banks[i].digest_size;
- 	}
- 
--	rc = tpm_buf_init(&buf, TPM2_ST_NO_SESSIONS, TPM2_CC_PCR_READ);
--	if (rc)
--		return rc;
-+	data_page = alloc_page(GFP_HIGHUSER);
-+	if (!data_page)
-+		return -ENOMEM;
-+
-+	tpm_buf_reset(&buf, kmap(data_page), PAGE_SIZE, TPM2_ST_NO_SESSIONS,
-+		      TPM2_CC_PCR_READ);
- 
- 	pcr_select[pcr_idx >> 3] = 1 << (pcr_idx & 0x7);
- 
-@@ -225,8 +229,10 @@ int tpm2_pcr_read(struct tpm_chip *chip, u32 pcr_idx,
- 		*digest_size_ptr = digest_size;
- 
- 	memcpy(digest->digest, out->digest, digest_size);
-+
- out:
--	tpm_buf_destroy(&buf);
-+	kunmap(data_page);
-+	__free_page(data_page);
- 	return rc;
- }
- 
-@@ -249,14 +255,18 @@ struct tpm2_null_auth_area {
- int tpm2_pcr_extend(struct tpm_chip *chip, u32 pcr_idx,
- 		    struct tpm_digest *digests)
- {
--	struct tpm_buf buf;
- 	struct tpm2_null_auth_area auth_area;
-+	struct page *data_page;
-+	struct tpm_buf buf;
- 	int rc;
- 	int i;
- 
--	rc = tpm_buf_init(&buf, TPM2_ST_SESSIONS, TPM2_CC_PCR_EXTEND);
--	if (rc)
--		return rc;
-+	data_page = alloc_page(GFP_HIGHUSER);
-+	if (!data_page)
-+		return -ENOMEM;
-+
-+	tpm_buf_reset(&buf, kmap(data_page), PAGE_SIZE, TPM2_ST_SESSIONS,
-+		      TPM2_CC_PCR_EXTEND);
- 
- 	tpm_buf_append_u32(&buf, pcr_idx);
- 
-@@ -278,8 +288,8 @@ int tpm2_pcr_extend(struct tpm_chip *chip, u32 pcr_idx,
- 
- 	rc = tpm_transmit_cmd(chip, &buf, 0, "attempting extend a PCR value");
- 
--	tpm_buf_destroy(&buf);
--
-+	kunmap(data_page);
-+	__free_page(data_page);
- 	return rc;
- }
- 
-@@ -302,23 +312,29 @@ struct tpm2_get_random_out {
- int tpm2_get_random(struct tpm_chip *chip, u8 *dest, size_t max)
- {
- 	struct tpm2_get_random_out *out;
-+	struct page *data_page;
-+	u8 *dest_ptr = dest;
-+	u32 num_bytes = max;
- 	struct tpm_buf buf;
-+	void *data_ptr;
-+	int retries = 5;
-+	int total = 0;
- 	u32 recd;
--	u32 num_bytes = max;
- 	int err;
--	int total = 0;
--	int retries = 5;
--	u8 *dest_ptr = dest;
- 
- 	if (!num_bytes || max > TPM_MAX_RNG_DATA)
- 		return -EINVAL;
- 
--	err = tpm_buf_init(&buf, 0, 0);
--	if (err)
--		return err;
-+	data_page = alloc_page(GFP_HIGHUSER);
-+	if (!data_page)
-+		return -ENOMEM;
-+
-+	data_ptr = kmap(data_page);
- 
- 	do {
--		tpm_buf_reset(&buf, TPM2_ST_NO_SESSIONS, TPM2_CC_GET_RANDOM);
-+		tpm_buf_reset(&buf, data_ptr, PAGE_SIZE,
-+			      TPM2_ST_NO_SESSIONS, TPM2_CC_PCR_EXTEND);
-+
- 		tpm_buf_append_u16(&buf, num_bytes);
- 		err = tpm_transmit_cmd(chip, &buf,
- 				       offsetof(struct tpm2_get_random_out,
-@@ -347,10 +363,13 @@ int tpm2_get_random(struct tpm_chip *chip, u8 *dest, size_t max)
- 		num_bytes -= recd;
- 	} while (retries-- && total < max);
- 
--	tpm_buf_destroy(&buf);
-+	kunmap(data_page);
-+	__free_page(data_page);
- 	return total ? total : -EIO;
-+
- out:
--	tpm_buf_destroy(&buf);
-+	kunmap(data_page);
-+	__free_page(data_page);
- 	return err;
- }
- 
-@@ -361,20 +380,24 @@ int tpm2_get_random(struct tpm_chip *chip, u8 *dest, size_t max)
-  */
- void tpm2_flush_context(struct tpm_chip *chip, u32 handle)
- {
-+	struct page *data_page;
- 	struct tpm_buf buf;
--	int rc;
- 
--	rc = tpm_buf_init(&buf, TPM2_ST_NO_SESSIONS, TPM2_CC_FLUSH_CONTEXT);
--	if (rc) {
--		dev_warn(&chip->dev, "0x%08x was not flushed, out of memory\n",
--			 handle);
-+	data_page = alloc_page(GFP_HIGHUSER);
-+	if (!data_page) {
-+		WARN(1, "tpm: out of memory");
- 		return;
- 	}
- 
-+	tpm_buf_reset(&buf, kmap(data_page), PAGE_SIZE, TPM2_ST_NO_SESSIONS,
-+		      TPM2_CC_FLUSH_CONTEXT);
-+
- 	tpm_buf_append_u32(&buf, handle);
- 
- 	tpm_transmit_cmd(chip, &buf, 0, "flushing context");
--	tpm_buf_destroy(&buf);
-+
-+	kunmap(data_page);
-+	__free_page(data_page);
- }
- 
- /**
-@@ -420,6 +443,7 @@ int tpm2_seal_trusted(struct tpm_chip *chip,
- 		      struct trusted_key_payload *payload,
- 		      struct trusted_key_options *options)
- {
-+	struct page *data_page;
- 	unsigned int blob_len;
- 	struct tpm_buf buf;
- 	u32 hash;
-@@ -436,9 +460,12 @@ int tpm2_seal_trusted(struct tpm_chip *chip,
- 	if (i == ARRAY_SIZE(tpm2_hash_map))
- 		return -EINVAL;
- 
--	rc = tpm_buf_init(&buf, TPM2_ST_SESSIONS, TPM2_CC_CREATE);
--	if (rc)
--		return rc;
-+	data_page = alloc_page(GFP_HIGHUSER);
-+	if (!data_page)
-+		return -ENOMEM;
-+
-+	tpm_buf_reset(&buf, kmap(data_page), PAGE_SIZE, TPM2_ST_SESSIONS,
-+		      TPM2_CC_CREATE);
- 
- 	tpm_buf_append_u32(&buf, options->keyhandle);
- 	tpm2_buf_append_auth(&buf, TPM2_RS_PW,
-@@ -505,7 +532,8 @@ int tpm2_seal_trusted(struct tpm_chip *chip,
- 	payload->blob_len = blob_len;
- 
- out:
--	tpm_buf_destroy(&buf);
-+	kunmap(data_page);
-+	__free_page(data_page);
- 
- 	if (rc > 0) {
- 		if (tpm2_rc_value(rc) == TPM2_RC_HASH)
-@@ -535,10 +563,11 @@ static int tpm2_load_cmd(struct tpm_chip *chip,
- 			 struct trusted_key_options *options,
- 			 u32 *blob_handle)
- {
--	struct tpm_buf buf;
- 	unsigned int private_len;
- 	unsigned int public_len;
-+	struct page *data_page;
- 	unsigned int blob_len;
-+	struct tpm_buf buf;
- 	int rc;
- 
- 	private_len = be16_to_cpup((__be16 *) &payload->blob[0]);
-@@ -550,9 +579,12 @@ static int tpm2_load_cmd(struct tpm_chip *chip,
- 	if (blob_len > payload->blob_len)
- 		return -E2BIG;
- 
--	rc = tpm_buf_init(&buf, TPM2_ST_SESSIONS, TPM2_CC_LOAD);
--	if (rc)
--		return rc;
-+	data_page = alloc_page(GFP_HIGHUSER);
-+	if (!data_page)
-+		return -ENOMEM;
-+
-+	tpm_buf_reset(&buf, kmap(data_page), PAGE_SIZE, TPM2_ST_SESSIONS,
-+		      TPM2_CC_LOAD);
- 
- 	tpm_buf_append_u32(&buf, options->keyhandle);
- 	tpm2_buf_append_auth(&buf, TPM2_RS_PW,
-@@ -574,7 +606,8 @@ static int tpm2_load_cmd(struct tpm_chip *chip,
- 			(__be32 *) &buf.data[TPM_HEADER_SIZE]);
- 
- out:
--	tpm_buf_destroy(&buf);
-+	kunmap(data_page);
-+	__free_page(data_page);
- 
- 	if (rc > 0)
- 		rc = -EPERM;
-@@ -599,14 +632,18 @@ static int tpm2_unseal_cmd(struct tpm_chip *chip,
- 			   struct trusted_key_options *options,
- 			   u32 blob_handle)
- {
-+	struct page *data_page;
- 	struct tpm_buf buf;
- 	u16 data_len;
- 	u8 *data;
- 	int rc;
- 
--	rc = tpm_buf_init(&buf, TPM2_ST_SESSIONS, TPM2_CC_UNSEAL);
--	if (rc)
--		return rc;
-+	data_page = alloc_page(GFP_HIGHUSER);
-+	if (!data_page)
-+		return -ENOMEM;
-+
-+	tpm_buf_reset(&buf, kmap(data_page), PAGE_SIZE, TPM2_ST_SESSIONS,
-+		      TPM2_CC_UNSEAL);
- 
- 	tpm_buf_append_u32(&buf, blob_handle);
- 	tpm2_buf_append_auth(&buf,
-@@ -641,7 +678,8 @@ static int tpm2_unseal_cmd(struct tpm_chip *chip,
- 	}
- 
- out:
--	tpm_buf_destroy(&buf);
-+	kunmap(data_page);
-+	__free_page(data_page);
- 	return rc;
- }
- 
-@@ -693,12 +731,17 @@ ssize_t tpm2_get_tpm_pt(struct tpm_chip *chip, u32 property_id,  u32 *value,
- 			const char *desc)
- {
- 	struct tpm2_get_cap_out *out;
-+	struct page *data_page;
- 	struct tpm_buf buf;
- 	int rc;
- 
--	rc = tpm_buf_init(&buf, TPM2_ST_NO_SESSIONS, TPM2_CC_GET_CAPABILITY);
--	if (rc)
--		return rc;
-+	data_page = alloc_page(GFP_HIGHUSER);
-+	if (!data_page)
-+		return -ENOMEM;
-+
-+	tpm_buf_reset(&buf, kmap(data_page), PAGE_SIZE, TPM2_ST_NO_SESSIONS,
-+		      TPM2_CC_GET_CAPABILITY);
-+
- 	tpm_buf_append_u32(&buf, TPM2_CAP_TPM_PROPERTIES);
- 	tpm_buf_append_u32(&buf, property_id);
- 	tpm_buf_append_u32(&buf, 1);
-@@ -708,7 +751,9 @@ ssize_t tpm2_get_tpm_pt(struct tpm_chip *chip, u32 property_id,  u32 *value,
- 			&buf.data[TPM_HEADER_SIZE];
- 		*value = be32_to_cpu(out->value);
- 	}
--	tpm_buf_destroy(&buf);
-+
-+	kunmap(data_page);
-+	__free_page(data_page);
- 	return rc;
- }
- EXPORT_SYMBOL_GPL(tpm2_get_tpm_pt);
-@@ -725,15 +770,23 @@ EXPORT_SYMBOL_GPL(tpm2_get_tpm_pt);
-  */
- void tpm2_shutdown(struct tpm_chip *chip, u16 shutdown_type)
- {
-+	struct page *data_page;
- 	struct tpm_buf buf;
--	int rc;
- 
--	rc = tpm_buf_init(&buf, TPM2_ST_NO_SESSIONS, TPM2_CC_SHUTDOWN);
--	if (rc)
-+	data_page = alloc_page(GFP_HIGHUSER);
-+	if (!data_page) {
-+		WARN(1, "tpm: out of memory");
- 		return;
-+	}
-+
-+	tpm_buf_reset(&buf, kmap(data_page), PAGE_SIZE, TPM2_ST_NO_SESSIONS,
-+		      TPM2_CC_SHUTDOWN);
-+
- 	tpm_buf_append_u16(&buf, shutdown_type);
- 	tpm_transmit_cmd(chip, &buf, 0, "stopping the TPM");
--	tpm_buf_destroy(&buf);
-+
-+	kunmap(data_page);
-+	__free_page(data_page);
- }
- 
- /**
-@@ -751,26 +804,36 @@ void tpm2_shutdown(struct tpm_chip *chip, u16 shutdown_type)
-  */
- static int tpm2_do_selftest(struct tpm_chip *chip)
- {
-+	struct page *data_page;
- 	struct tpm_buf buf;
-+	void *data_ptr;
- 	int full;
- 	int rc;
- 
-+	data_page = alloc_page(GFP_HIGHUSER);
-+	if (!data_page)
-+		return -ENOMEM;
-+
-+	data_ptr = kmap(data_page);
-+
- 	for (full = 0; full < 2; full++) {
--		rc = tpm_buf_init(&buf, TPM2_ST_NO_SESSIONS, TPM2_CC_SELF_TEST);
--		if (rc)
--			return rc;
-+		tpm_buf_reset(&buf, data_ptr, PAGE_SIZE, TPM2_ST_NO_SESSIONS,
-+			      TPM2_CC_SELF_TEST);
- 
- 		tpm_buf_append_u8(&buf, full);
-+
- 		rc = tpm_transmit_cmd(chip, &buf, 0,
- 				      "attempting the self test");
--		tpm_buf_destroy(&buf);
- 
- 		if (rc == TPM2_RC_TESTING)
- 			rc = TPM2_RC_SUCCESS;
-+
- 		if (rc == TPM2_RC_INITIALIZE || rc == TPM2_RC_SUCCESS)
--			return rc;
-+			break;
- 	}
- 
-+	kunmap(data_page);
-+	__free_page(data_page);
- 	return rc;
- }
- 
-@@ -788,16 +851,22 @@ static int tpm2_do_selftest(struct tpm_chip *chip)
-  */
- int tpm2_probe(struct tpm_chip *chip)
- {
-+	struct page *data_page;
- 	struct tpm_header *out;
- 	struct tpm_buf buf;
- 	int rc;
- 
--	rc = tpm_buf_init(&buf, TPM2_ST_NO_SESSIONS, TPM2_CC_GET_CAPABILITY);
--	if (rc)
--		return rc;
-+	data_page = alloc_page(GFP_HIGHUSER);
-+	if (!data_page)
-+		return -ENOMEM;
-+
-+	tpm_buf_reset(&buf, kmap(data_page), PAGE_SIZE, TPM2_ST_NO_SESSIONS,
-+		      TPM2_CC_GET_CAPABILITY);
-+
- 	tpm_buf_append_u32(&buf, TPM2_CAP_TPM_PROPERTIES);
- 	tpm_buf_append_u32(&buf, TPM_PT_TOTAL_COMMANDS);
- 	tpm_buf_append_u32(&buf, 1);
-+
- 	rc = tpm_transmit_cmd(chip, &buf, 0, NULL);
- 	/* We ignore TPM return codes on purpose. */
- 	if (rc >=  0) {
-@@ -805,7 +874,9 @@ int tpm2_probe(struct tpm_chip *chip)
- 		if (be16_to_cpu(out->tag) == TPM2_ST_NO_SESSIONS)
- 			chip->flags |= TPM_CHIP_FLAG_TPM2;
- 	}
--	tpm_buf_destroy(&buf);
-+
-+	kunmap(data_page);
-+	__free_page(data_page);
- 	return 0;
- }
- EXPORT_SYMBOL_GPL(tpm2_probe);
-@@ -843,21 +914,25 @@ struct tpm2_pcr_selection {
- ssize_t tpm2_get_pcr_allocation(struct tpm_chip *chip)
- {
- 	struct tpm2_pcr_selection pcr_selection;
--	struct tpm_buf buf;
--	void *marker;
--	void *end;
--	void *pcr_select_offset;
- 	u32 sizeof_pcr_selection;
--	u32 nr_possible_banks;
-+	void *pcr_select_offset;
- 	u32 nr_alloc_banks = 0;
-+	struct page *data_page;
-+	u32 nr_possible_banks;
-+	struct tpm_buf buf;
- 	u16 hash_alg;
-+	void *marker;
- 	u32 rsp_len;
--	int rc;
- 	int i = 0;
-+	void *end;
-+	int rc;
- 
--	rc = tpm_buf_init(&buf, TPM2_ST_NO_SESSIONS, TPM2_CC_GET_CAPABILITY);
--	if (rc)
--		return rc;
-+	data_page = alloc_page(GFP_HIGHUSER);
-+	if (!data_page)
-+		return -ENOMEM;
-+
-+	tpm_buf_reset(&buf, kmap(data_page), PAGE_SIZE, TPM2_ST_NO_SESSIONS,
-+		      TPM2_CC_GET_CAPABILITY);
- 
- 	tpm_buf_append_u32(&buf, TPM2_CAP_PCRS);
- 	tpm_buf_append_u32(&buf, 0);
-@@ -913,14 +988,16 @@ ssize_t tpm2_get_pcr_allocation(struct tpm_chip *chip)
- 	}
- 
- 	chip->nr_allocated_banks = nr_alloc_banks;
--out:
--	tpm_buf_destroy(&buf);
- 
-+out:
-+	kunmap(data_page);
-+	__free_page(data_page);
- 	return rc;
- }
- 
- static int tpm2_get_cc_attrs_tbl(struct tpm_chip *chip)
- {
-+	struct page *data_page;
- 	struct tpm_buf buf;
- 	u32 nr_commands;
- 	__be32 *attrs;
-@@ -930,35 +1007,32 @@ static int tpm2_get_cc_attrs_tbl(struct tpm_chip *chip)
- 
- 	rc = tpm2_get_tpm_pt(chip, TPM_PT_TOTAL_COMMANDS, &nr_commands, NULL);
- 	if (rc)
--		goto out;
-+		return rc;
- 
--	if (nr_commands > 0xFFFFF) {
--		rc = -EFAULT;
--		goto out;
--	}
-+	if (nr_commands > 0xFFFFF)
-+		return -EFAULT;
- 
- 	chip->cc_attrs_tbl = devm_kcalloc(&chip->dev, 4, nr_commands,
- 					  GFP_KERNEL);
- 
--	rc = tpm_buf_init(&buf, TPM2_ST_NO_SESSIONS, TPM2_CC_GET_CAPABILITY);
--	if (rc)
--		goto out;
-+	data_page = alloc_page(GFP_HIGHUSER);
-+	if (!data_page)
-+		return -ENOMEM;
-+
-+	tpm_buf_reset(&buf, kmap(data_page), PAGE_SIZE, TPM2_ST_NO_SESSIONS,
-+		      TPM2_CC_GET_CAPABILITY);
- 
- 	tpm_buf_append_u32(&buf, TPM2_CAP_COMMANDS);
- 	tpm_buf_append_u32(&buf, TPM2_CC_FIRST);
- 	tpm_buf_append_u32(&buf, nr_commands);
- 
- 	rc = tpm_transmit_cmd(chip, &buf, 9 + 4 * nr_commands, NULL);
--	if (rc) {
--		tpm_buf_destroy(&buf);
-+	if (rc)
- 		goto out;
--	}
- 
- 	if (nr_commands !=
--	    be32_to_cpup((__be32 *)&buf.data[TPM_HEADER_SIZE + 5])) {
--		tpm_buf_destroy(&buf);
-+	    be32_to_cpup((__be32 *)&buf.data[TPM_HEADER_SIZE + 5]))
- 		goto out;
--	}
- 
- 	chip->nr_commands = nr_commands;
- 
-@@ -974,11 +1048,13 @@ static int tpm2_get_cc_attrs_tbl(struct tpm_chip *chip)
- 		}
- 	}
- 
--	tpm_buf_destroy(&buf);
--
- out:
-+	kunmap(data_page);
-+	__free_page(data_page);
-+
- 	if (rc > 0)
- 		rc = -ENODEV;
-+
- 	return rc;
- }
- 
-@@ -995,19 +1071,24 @@ static int tpm2_get_cc_attrs_tbl(struct tpm_chip *chip)
- 
- static int tpm2_startup(struct tpm_chip *chip)
- {
-+	struct page *data_page;
- 	struct tpm_buf buf;
- 	int rc;
- 
- 	dev_info(&chip->dev, "starting up the TPM manually\n");
- 
--	rc = tpm_buf_init(&buf, TPM2_ST_NO_SESSIONS, TPM2_CC_STARTUP);
--	if (rc < 0)
--		return rc;
-+	data_page = alloc_page(GFP_HIGHUSER);
-+	if (!data_page)
-+		return -ENOMEM;
-+
-+	tpm_buf_reset(&buf, kmap(data_page), PAGE_SIZE, TPM2_ST_NO_SESSIONS,
-+		      TPM2_CC_STARTUP);
- 
- 	tpm_buf_append_u16(&buf, TPM2_SU_CLEAR);
- 	rc = tpm_transmit_cmd(chip, &buf, 0, "attempting to start the TPM");
--	tpm_buf_destroy(&buf);
- 
-+	kunmap(data_page);
-+	__free_page(data_page);
- 	return rc;
- }
- 
-diff --git a/drivers/char/tpm/tpm2-space.c b/drivers/char/tpm/tpm2-space.c
-index 982d341d8837..1d3e47392f23 100644
---- a/drivers/char/tpm/tpm2-space.c
-+++ b/drivers/char/tpm/tpm2-space.c
-@@ -68,14 +68,18 @@ void tpm2_del_space(struct tpm_chip *chip, struct tpm_space *space)
- static int tpm2_load_context(struct tpm_chip *chip, u8 *buf,
- 			     unsigned int *offset, u32 *handle)
- {
--	struct tpm_buf tbuf;
- 	struct tpm2_context *ctx;
-+	struct page *data_page;
- 	unsigned int body_size;
-+	struct tpm_buf tbuf;
- 	int rc;
- 
--	rc = tpm_buf_init(&tbuf, TPM2_ST_NO_SESSIONS, TPM2_CC_CONTEXT_LOAD);
--	if (rc)
--		return rc;
-+	data_page = alloc_page(GFP_HIGHUSER);
-+	if (!data_page)
-+		return -ENOMEM;
-+
-+	tpm_buf_reset(&tbuf, kmap(data_page), PAGE_SIZE, TPM2_ST_NO_SESSIONS,
-+		      TPM2_CC_CONTEXT_LOAD);
- 
- 	ctx = (struct tpm2_context *)&buf[*offset];
- 	body_size = sizeof(*ctx) + be16_to_cpu(ctx->blob_size);
-@@ -85,8 +89,8 @@ static int tpm2_load_context(struct tpm_chip *chip, u8 *buf,
- 	if (rc < 0) {
- 		dev_warn(&chip->dev, "%s: failed with a system error %d\n",
- 			 __func__, rc);
--		tpm_buf_destroy(&tbuf);
--		return -EFAULT;
-+		rc = -EFAULT;
-+		goto out;
- 	} else if (tpm2_rc_value(rc) == TPM2_RC_HANDLE ||
- 		   rc == TPM2_RC_REFERENCE_H0) {
- 		/*
-@@ -100,62 +104,70 @@ static int tpm2_load_context(struct tpm_chip *chip, u8 *buf,
- 		 * flushed outside the space
- 		 */
- 		*handle = 0;
--		tpm_buf_destroy(&tbuf);
--		return -ENOENT;
-+		rc = -ENOENT;
-+		goto out;
- 	} else if (rc > 0) {
- 		dev_warn(&chip->dev, "%s: failed with a TPM error 0x%04X\n",
- 			 __func__, rc);
--		tpm_buf_destroy(&tbuf);
--		return -EFAULT;
-+		rc = -EFAULT;
-+		goto out;
- 	}
- 
- 	*handle = be32_to_cpup((__be32 *)&tbuf.data[TPM_HEADER_SIZE]);
- 	*offset += body_size;
- 
--	tpm_buf_destroy(&tbuf);
--	return 0;
-+out:
-+	kunmap(data_page);
-+	__free_page(data_page);
-+	return rc;
- }
- 
- static int tpm2_save_context(struct tpm_chip *chip, u32 handle, u8 *buf,
- 			     unsigned int buf_size, unsigned int *offset)
- {
--	struct tpm_buf tbuf;
- 	unsigned int body_size;
-+	struct page *data_page;
-+	struct tpm_buf tbuf;
- 	int rc;
- 
--	rc = tpm_buf_init(&tbuf, TPM2_ST_NO_SESSIONS, TPM2_CC_CONTEXT_SAVE);
--	if (rc)
--		return rc;
-+	data_page = alloc_page(GFP_HIGHUSER);
-+	if (!data_page)
-+		return -ENOMEM;
- 
-+	tpm_buf_reset(&tbuf, kmap(data_page), PAGE_SIZE, TPM2_ST_NO_SESSIONS,
-+		      TPM2_CC_CONTEXT_SAVE);
- 	tpm_buf_append_u32(&tbuf, handle);
- 
- 	rc = tpm_transmit_cmd(chip, &tbuf, 0, NULL);
- 	if (rc < 0) {
- 		dev_warn(&chip->dev, "%s: failed with a system error %d\n",
- 			 __func__, rc);
--		tpm_buf_destroy(&tbuf);
--		return -EFAULT;
-+		rc = -EFAULT;
-+		goto out;
- 	} else if (tpm2_rc_value(rc) == TPM2_RC_REFERENCE_H0) {
--		tpm_buf_destroy(&tbuf);
--		return -ENOENT;
-+		rc = -ENOENT;
-+		goto out;
- 	} else if (rc) {
- 		dev_warn(&chip->dev, "%s: failed with a TPM error 0x%04X\n",
- 			 __func__, rc);
--		tpm_buf_destroy(&tbuf);
--		return -EFAULT;
-+		rc = -EFAULT;
-+		goto out;
- 	}
- 
- 	body_size = tpm_buf_length(&tbuf) - TPM_HEADER_SIZE;
- 	if ((*offset + body_size) > buf_size) {
- 		dev_warn(&chip->dev, "%s: out of backing storage\n", __func__);
--		tpm_buf_destroy(&tbuf);
--		return -ENOMEM;
-+		rc = -ENOMEM;
-+		goto out;
- 	}
- 
- 	memcpy(&buf[*offset], &tbuf.data[TPM_HEADER_SIZE], body_size);
- 	*offset += body_size;
--	tpm_buf_destroy(&tbuf);
--	return 0;
-+
-+out:
-+	kunmap(data_page);
-+	__free_page(data_page);
-+	return rc;
- }
- 
- void tpm2_flush_space(struct tpm_chip *chip)
-diff --git a/drivers/char/tpm/tpm_vtpm_proxy.c b/drivers/char/tpm/tpm_vtpm_proxy.c
-index 2f6e087ec496..e6e89be0e149 100644
---- a/drivers/char/tpm/tpm_vtpm_proxy.c
-+++ b/drivers/char/tpm/tpm_vtpm_proxy.c
-@@ -394,19 +394,23 @@ static bool vtpm_proxy_tpm_req_canceled(struct tpm_chip  *chip, u8 status)
- 
- static int vtpm_proxy_request_locality(struct tpm_chip *chip, int locality)
- {
-+	struct proxy_dev *proxy_dev = dev_get_drvdata(&chip->dev);
-+	const struct tpm_header *header;
-+	struct page *data_page;
- 	struct tpm_buf buf;
- 	int rc;
--	const struct tpm_header *header;
--	struct proxy_dev *proxy_dev = dev_get_drvdata(&chip->dev);
-+
-+	data_page = alloc_page(GFP_HIGHUSER);
-+	if (!data_page)
-+		return -ENOMEM;
- 
- 	if (chip->flags & TPM_CHIP_FLAG_TPM2)
--		rc = tpm_buf_init(&buf, TPM2_ST_SESSIONS,
--				  TPM2_CC_SET_LOCALITY);
-+		tpm_buf_reset(&buf, kmap(data_page), PAGE_SIZE,
-+			      TPM2_ST_SESSIONS, TPM2_CC_SET_LOCALITY);
- 	else
--		rc = tpm_buf_init(&buf, TPM_TAG_RQU_COMMAND,
--				  TPM_ORD_SET_LOCALITY);
--	if (rc)
--		return rc;
-+		tpm_buf_reset(&buf, kmap(data_page), PAGE_SIZE,
-+			      TPM_TAG_RQU_COMMAND, TPM_ORD_SET_LOCALITY);
-+
- 	tpm_buf_append_u8(&buf, locality);
- 
- 	proxy_dev->state |= STATE_DRIVER_COMMAND;
-@@ -426,8 +430,8 @@ static int vtpm_proxy_request_locality(struct tpm_chip *chip, int locality)
- 		locality = -1;
- 
- out:
--	tpm_buf_destroy(&buf);
--
-+	kunmap(data_page);
-+	__free_page(data_page);
- 	return locality;
- }
- 
+>
+>> modify the code to even getting working I am not comfortable posting
+>> numbers. My suggestion would be to look at reworking the patch set and
+>> post numbers for my patch set versus the bitmap approach and we can
+>> look at them then. I would prefer not to spend my time fixing and
+>> tuning a patch set that I am still not convinced is viable.
+> I agree, I think Nitesh should work on his patch set and try to
+> reproduce what you are seeing.
+
+Sure.
+I am always open to suggestions of different benchmarks/setup
+where I can run my patch-set.
+
+>
+> Also, I think to make a precise statement of "which overhead comes with
+> external tracking", Nitesh should switch to an approach (motivated by
+> Michal) like
+>
+> 1. Sense lockless if a page is still free
+> 2. start_isolate_page_range()
+> -> Failed? Skip
+> 3. test_pages_isolated()
+> -> No? undo_isolate_page_range(), skip
+> 4. Repeat for multiple pages + report
+> 5. undo_isolate_page_range()
+>
+> That is the bare minimum any external tracking will need = some overhead
+> for the tracking data. As a nice side effect, it get's rid of taking the
+> zone lock manually AFAIKS.
+>
+> But that's unrelated to your series, only to quantify "how much" does
+> external tracking actually cost.
+
+Exactly, first, we need to be sure that the overhead caused by bitmap
+scanning is not significant. If we are fine with the approach, I will
+certainly look into this as this would be an excellent enhancement.
+
 -- 
-2.20.1
+Thanks
+Nitesh
 
