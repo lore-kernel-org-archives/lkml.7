@@ -2,86 +2,111 @@ Return-Path: <SRS0=zem1=X3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 19E27ECE58A
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 17:41:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 921B4C10F14
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 17:44:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EAF1021D82
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 17:41:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 67923222C3
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 17:44:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1570038255;
+	bh=MZYQ5QLRxsH5Lm/zp4Xs3ZdRx+OF3lS8A4Qr/ENHFmY=;
+	h=From:To:Subject:Date:List-ID:From;
+	b=1eBliFtsqOLb7BzAiUEUBdKUe/XbKqezZlAL87nDGVZmjB4M1Le/AbHmd0C0bfmzH
+	 uUyJm+EMCM8iDHE/8Pe8cX84FUHk+/zzHgaEOS8JnBocOoIbM+uLnKgik3PMjX5yzd
+	 oI+2arPysLbEzUJBn3gc4jtZtplHFk5qME98heyo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728480AbfJBRlO (ORCPT
+        id S1728520AbfJBRoP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Oct 2019 13:41:14 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:40853 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727721AbfJBRlO (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Oct 2019 13:41:14 -0400
-Received: by mail-wr1-f65.google.com with SMTP id l3so20635392wru.7;
-        Wed, 02 Oct 2019 10:41:12 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=mUZyNZheTJw4GC5851yKEfVpxUBc4f7pMP1DSM9q8jg=;
-        b=TxqaMUzCDK4ovLkDJMl/hpwV9fisOrEBcq8rG7EFqfIoZeFC4i4T1p2HigugaA7msj
-         cctE6s7h9qSHrtGNYOxs8FEUeqK+Fq4Z7iMWIlrhymawCSg7eo+2M2k8ejJfQKJ/ENO1
-         grQwjgkUuJE4gV+WWodrZV+Y63EhFrKD8nqUt/zep7YJ8UHpAyrgN+0cP8NcYObZy0L8
-         AjZtiO3U/8TFtSFzSxVWoio8/fLOXKImCw96MdNJOMf2/QyFjVRN485GVuMsqtaQzcGM
-         8kzKfuslP92PB/irvSi4CPg3XcjF88w6yFIcUpQjS3GXRoG6K5E7LALUVJy2CBCaf5BB
-         QJhQ==
-X-Gm-Message-State: APjAAAV3cokkqB/SUKK45mKjxZm+tvMU3bxuNQ8hJjUdXk13bVD/mk1l
-        XbyHUyEhXoHYQnqhvaK9jAg=
-X-Google-Smtp-Source: APXvYqzWaLLj84b5DPgMGqOH66TFh2UVD9sMvffhg/6fPjFOWddMdm6yky7HGz0wVtcCSZ6uiKB5pg==
-X-Received: by 2002:adf:e689:: with SMTP id r9mr3970235wrm.62.1570038072117;
-        Wed, 02 Oct 2019 10:41:12 -0700 (PDT)
-Received: from green.intra.ispras.ru (bran.ispras.ru. [83.149.199.196])
-        by smtp.googlemail.com with ESMTPSA id f186sm7879628wmg.21.2019.10.02.10.41.10
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 02 Oct 2019 10:41:11 -0700 (PDT)
-From:   Denis Efremov <efremov@linux.com>
-To:     devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
-Cc:     Denis Efremov <efremov@linux.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org
-Subject: [PATCH] staging: wlan-ng: fix uninitialized variable
-Date:   Wed,  2 Oct 2019 20:41:03 +0300
-Message-Id: <20191002174103.1274-1-efremov@linux.com>
-X-Mailer: git-send-email 2.21.0
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Wed, 2 Oct 2019 13:44:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42476 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726076AbfJBRoO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 2 Oct 2019 13:44:14 -0400
+Received: from localhost.localdomain (unknown [194.230.155.145])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id DA15221D81;
+        Wed,  2 Oct 2019 17:44:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1570038253;
+        bh=MZYQ5QLRxsH5Lm/zp4Xs3ZdRx+OF3lS8A4Qr/ENHFmY=;
+        h=From:To:Subject:Date:From;
+        b=B6EQLsiyV2WDt8tyVi5J3ORL9Qfx9JZa0Vniop0dnsfyqz4zo0SEzy7rAOTqu3E+h
+         vEGELl6rkQy2Vb5oNtHGMWmp213uVAdOmqAed0SL/6IUulw+ufw8irmG3PKg5dq/rw
+         9ltiv4qOVeqc9733aEdZuhclwmwyTNJNUQwOf3sY=
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Kukjin Kim <kgene@kernel.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Lukasz Luba <l.luba@partner.samsung.com>,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] dt-bindings: memory-controllers: exynos5422-dmc: Correct example syntax and memory region
+Date:   Wed,  2 Oct 2019 19:44:01 +0200
+Message-Id: <20191002174401.17590-1-krzk@kernel.org>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The result variable in prism2_connect() can be used uninitialized on path
-!channel --> ... --> is_wep --> sme->key --> sme->key_idx >= NUM_WEPKEYS.
-This patch initializes result with 0.
+After adding the interrupt properties to Exynos5422 DMC bindings
+example, the mapped memory region must be big enough to access
+performance counters registers.
 
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: stable@vger.kernel.org
-Signed-off-by: Denis Efremov <efremov@linux.com>
+Fix also syntax errors (semicolons) and adjust indentation.
+
+Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+
 ---
- drivers/staging/wlan-ng/cfg80211.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/staging/wlan-ng/cfg80211.c b/drivers/staging/wlan-ng/cfg80211.c
-index eee1998c4b18..d426905e187e 100644
---- a/drivers/staging/wlan-ng/cfg80211.c
-+++ b/drivers/staging/wlan-ng/cfg80211.c
-@@ -441,7 +441,7 @@ static int prism2_connect(struct wiphy *wiphy, struct net_device *dev,
- 	int chan = -1;
- 	int is_wep = (sme->crypto.cipher_group == WLAN_CIPHER_SUITE_WEP40) ||
- 	    (sme->crypto.cipher_group == WLAN_CIPHER_SUITE_WEP104);
--	int result;
-+	int result = 0;
- 	int err = 0;
+Rebased on top of my for-next branch as exynos5422-dmc.txt bindings were
+applied by me.
+---
+ .../bindings/memory-controllers/exynos5422-dmc.txt        | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
+
+diff --git a/Documentation/devicetree/bindings/memory-controllers/exynos5422-dmc.txt b/Documentation/devicetree/bindings/memory-controllers/exynos5422-dmc.txt
+index e2434cac4858..02e4a1f862f1 100644
+--- a/Documentation/devicetree/bindings/memory-controllers/exynos5422-dmc.txt
++++ b/Documentation/devicetree/bindings/memory-controllers/exynos5422-dmc.txt
+@@ -55,7 +55,7 @@ Example:
  
- 	/* Set the channel */
+ 	dmc: memory-controller@10c20000 {
+ 		compatible = "samsung,exynos5422-dmc";
+-		reg = <0x10c20000 0x100>, <0x10c30000 0x100>,
++		reg = <0x10c20000 0x10000>, <0x10c30000 0x10000>;
+ 		clocks = <&clock CLK_FOUT_SPLL>,
+ 			 <&clock CLK_MOUT_SCLK_SPLL>,
+ 			 <&clock CLK_FF_DOUT_SPLL2>,
+@@ -63,7 +63,7 @@ Example:
+ 			 <&clock CLK_MOUT_BPLL>,
+ 			 <&clock CLK_SCLK_BPLL>,
+ 			 <&clock CLK_MOUT_MX_MSPLL_CCORE>,
+-			 <&clock CLK_MOUT_MCLK_CDREX>,
++			 <&clock CLK_MOUT_MCLK_CDREX>;
+ 		clock-names = "fout_spll",
+ 			      "mout_sclk_spll",
+ 			      "ff_dout_spll2",
+@@ -71,10 +71,10 @@ Example:
+ 			      "mout_bpll",
+ 			      "sclk_bpll",
+ 			      "mout_mx_mspll_ccore",
+-			      "mout_mclk_cdrex",
++			      "mout_mclk_cdrex";
+ 		operating-points-v2 = <&dmc_opp_table>;
+ 		devfreq-events = <&ppmu_event3_dmc0_0>,	<&ppmu_event3_dmc0_1>,
+-				<&ppmu_event3_dmc1_0>, <&ppmu_event3_dmc1_1>;
++				 <&ppmu_event3_dmc1_0>, <&ppmu_event3_dmc1_1>;
+ 		device-handle = <&samsung_K3QF2F20DB>;
+ 		vdd-supply = <&buck1_reg>;
+ 		samsung,syscon-clk = <&clock>;
 -- 
-2.21.0
+2.17.1
 
