@@ -2,92 +2,145 @@ Return-Path: <SRS0=zem1=X3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D40F7C35280
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 13:42:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A93BECE58A
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 13:43:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B058C21783
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 13:42:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 61F1721783
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 13:43:30 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SfMmz+ye"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727633AbfJBNmV (ORCPT
+        id S1727646AbfJBNn3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Oct 2019 09:42:21 -0400
-Received: from mx2.suse.de ([195.135.220.15]:51522 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725917AbfJBNmV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Oct 2019 09:42:21 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id C41EAACA4;
-        Wed,  2 Oct 2019 13:42:19 +0000 (UTC)
-Subject: Re: [Xen-devel] [PATCH] x86/xen: Return from panic notifier
-To:     Boris Ostrovsky <boris.ostrovsky@oracle.com>
-Cc:     james@dingwall.me.uk, xen-devel@lists.xenproject.org,
-        Juergen Gross <jgross@suse.com>, linux-kernel@vger.kernel.org
-References: <20191001151633.1659-1-boris.ostrovsky@oracle.com>
- <9b3f955c-ad76-601f-2b58-fa9dc4608c72@suse.com>
- <924f41b2-7779-9c56-9b71-56523756ecdc@oracle.com>
-From:   Jan Beulich <jbeulich@suse.com>
-Message-ID: <5650904d-b616-5ee7-216a-a0ac28d7426d@suse.com>
-Date:   Wed, 2 Oct 2019 15:42:26 +0200
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Wed, 2 Oct 2019 09:43:29 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:36565 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725917AbfJBNn3 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 2 Oct 2019 09:43:29 -0400
+Received: by mail-pg1-f195.google.com with SMTP id 23so3337822pgk.3;
+        Wed, 02 Oct 2019 06:43:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=M5CvC+h5yCnkY1BjUVLMtr/c8i3cN60VqIKOIpHtvR0=;
+        b=SfMmz+yepUgjUJaZKZzn6gbu3Z5O9wNPukhpzN1stfdz6II8TX823NUGrXE8Zj5Iew
+         xIBaBIIEH88OXjC4qkFTB196KxFxsjGgpkWGsPg+7VfO2nGWRfwXGOa3XOIBhl0uoI4m
+         SlptoPG9K5jx4UshfZNSvQKRNGE0xvF64uTzj6ypgi86le2gJfq9O57tJ2Mkw6kIYRE/
+         YRirAwlPLhfSb7YVPZ8fQU+RBr/SjbKt6fio88cAtIh4Q3BK0gCTDjsDK5OF6mkbgbMp
+         4Y7oFenstdJWRx90Agw1AnXu8m4ohqOCCj+e2jGVt01wSloLlxcUa20NvZll70xZt2oC
+         JHbQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=M5CvC+h5yCnkY1BjUVLMtr/c8i3cN60VqIKOIpHtvR0=;
+        b=EA9Gcav2ENzWAi1jXJL41FDwf1i3JXISg92l6DK/vuL9YAAe7V9HdGIe+hLTxqSMhB
+         I+bZni1IHawq4NS7yiwkVSAxldxIFW7+w9S1k3CL9d1L5zuvEzBXQKAZaX9cYeko8pPz
+         SLjtbsamM3/LLoFinrEfmdPjCQ5NrQHnf18ue7DicUvAH2zpyK8SOFNmOgvZYbGF/Bzh
+         6+yuVdtHVDSs9yhsEU8uVbd0O35ZVDvmBZiOdP75pZI15ZfigH+KXteVyHNAhXJHWexD
+         1NUiywAXDA6XyvLMVkS9QMUM8zG+S7opaUcyBvoJqWyQ+ul5aDjAIWF2XAccT5oj3Mg6
+         0NFg==
+X-Gm-Message-State: APjAAAVcd4WrLm6KBkytq/rxy/QoA10jTNBY5Zg0hMHK9h28q0/TudD9
+        J28JxSUedcjUc1C0oAKkhGI=
+X-Google-Smtp-Source: APXvYqyBzSF286Q4c2p0CJNW+7hZ36KWzPniD4/7nOlUmTS6twkinQLBRBfgggDW7uT38NPPcd6/5g==
+X-Received: by 2002:a63:d05:: with SMTP id c5mr3784421pgl.182.1570023808617;
+        Wed, 02 Oct 2019 06:43:28 -0700 (PDT)
+Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id z29sm27937773pff.23.2019.10.02.06.43.27
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 02 Oct 2019 06:43:28 -0700 (PDT)
+Date:   Wed, 2 Oct 2019 06:43:27 -0700
+From:   Guenter Roeck <linux@roeck-us.net>
+To:     Amy.Shih@advantech.com.tw
+Cc:     she90122@gmail.com, oakley.ding@advantech.com.tw,
+        bichan.lu@advantech.com.tw, Jean Delvare <jdelvare@suse.com>,
+        linux-hwmon@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [v1,1/1] hwmon: (nct7904) Add array fan_alarm and vsen_alarm to
+ store the alarms in nct7904_data struct.
+Message-ID: <20191002134327.GA9272@roeck-us.net>
+References: <20190919030205.11440-1-Amy.Shih@advantech.com.tw>
 MIME-Version: 1.0
-In-Reply-To: <924f41b2-7779-9c56-9b71-56523756ecdc@oracle.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190919030205.11440-1-Amy.Shih@advantech.com.tw>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 02.10.2019 15:24, Boris Ostrovsky wrote:
-> On 10/2/19 3:40 AM, Jan Beulich wrote:
->> On 01.10.2019 17:16, Boris Ostrovsky wrote:
->>> Currently execution of panic() continues until Xen's panic notifier
->>> (xen_panic_event()) is called at which point we make a hypercall that
->>> never returns.
->>>
->>> This means that any notifier that is supposed to be called later as
->>> well as significant part of panic() code (such as pstore writes from
->>> kmsg_dump()) is never executed.
->> Back at the time when this was introduced into the XenoLinux tree,
->> I think this behavior was intentional for at least DomU-s. I wonder
->> whether you wouldn't want your change to further distinguish Dom0
->> and DomU behavior.
+On Thu, Sep 19, 2019 at 11:02:05AM +0800, Amy.Shih@advantech.com.tw wrote:
+> From: "amy.shih" <amy.shih@advantech.com.tw>
 > 
-> Do you remember what the reason for that was?
-
-I can only guess that the thinking probably was that e.g. external
-dumping (by the tool stack) would be more reliable (including but
-not limited to this meaning less change of state from when the
-original crash reason was detected) than having the domain dump
-itself.
-
-> I think having ability to call kmsg_dump() on a panic is a useful thing
-> to have for domUs as well. Besides, there may be other functionality
-> added post-notifiers in panic() in the future. Or another notifier may
-> be registered later with the same lowest priority.
+> SMI# interrupt for fan and voltage is Two-Times Interrupt Mode.
+> Fan or voltage exceeds high limit or going below low limit,
+> it will causes an interrupt if the previous interrupt has been
+> reset by reading all the interrupt Status Register. Thus, add the
+> array fan_alarm and vsen_alarm to store the alarms for all of the
+> fan and voltage sensors.
 > 
-> Is there a downside in allowing domUs to fall through panic() all the
-> way to emergency_restart()?
+> Signed-off-by: amy.shih <amy.shih@advantech.com.tw>
 
-See above.
+Applied.
 
->>> There is no reason for xen_panic_event() to be this last point in
->>> execution since panic()'s emergency_restart() will call into
->>> xen_emergency_restart() from where we can perform our hypercall.
->> Did you consider, as an alternative, to lower the notifier's
->> priority?
+Thanks,
+Guenter
+
+> ---
+>  drivers/hwmon/nct7904.c | 22 ++++++++++++++++++++--
+>  1 file changed, 20 insertions(+), 2 deletions(-)
 > 
-> I didn't but that wouldn't help with the original problem that James
-> reported --- we'd still not get to kmsg_dump() call.
-
-True. I guess more control over the behavior needs to be given to
-the admin, as either approach has its up- and downsides
-
-Jan
+> diff --git a/drivers/hwmon/nct7904.c b/drivers/hwmon/nct7904.c
+> index f62dd1882451..b26419dbe840 100644
+> --- a/drivers/hwmon/nct7904.c
+> +++ b/drivers/hwmon/nct7904.c
+> @@ -99,6 +99,8 @@ struct nct7904_data {
+>  	u8 enable_dts;
+>  	u8 has_dts;
+>  	u8 temp_mode; /* 0: TR mode, 1: TD mode */
+> +	u8 fan_alarm[2];
+> +	u8 vsen_alarm[3];
+>  };
+>  
+>  /* Access functions */
+> @@ -214,7 +216,15 @@ static int nct7904_read_fan(struct device *dev, u32 attr, int channel,
+>  				       SMI_STS5_REG + (channel >> 3));
+>  		if (ret < 0)
+>  			return ret;
+> -		*val = (ret >> (channel & 0x07)) & 1;
+> +		if (!data->fan_alarm[channel >> 3])
+> +			data->fan_alarm[channel >> 3] = ret & 0xff;
+> +		else
+> +			/* If there is new alarm showing up */
+> +			data->fan_alarm[channel >> 3] |= (ret & 0xff);
+> +		*val = (data->fan_alarm[channel >> 3] >> (channel & 0x07)) & 1;
+> +		/* Needs to clean the alarm if alarm existing */
+> +		if (*val)
+> +			data->fan_alarm[channel >> 3] ^= 1 << (channel & 0x07);
+>  		return 0;
+>  	default:
+>  		return -EOPNOTSUPP;
+> @@ -298,7 +308,15 @@ static int nct7904_read_in(struct device *dev, u32 attr, int channel,
+>  				       SMI_STS1_REG + (index >> 3));
+>  		if (ret < 0)
+>  			return ret;
+> -		*val = (ret >> (index & 0x07)) & 1;
+> +		if (!data->vsen_alarm[index >> 3])
+> +			data->vsen_alarm[index >> 3] = ret & 0xff;
+> +		else
+> +			/* If there is new alarm showing up */
+> +			data->vsen_alarm[index >> 3] |= (ret & 0xff);
+> +		*val = (data->vsen_alarm[index >> 3] >> (index & 0x07)) & 1;
+> +		/* Needs to clean the alarm if alarm existing */
+> +		if (*val)
+> +			data->vsen_alarm[index >> 3] ^= 1 << (index & 0x07);
+>  		return 0;
+>  	default:
+>  		return -EOPNOTSUPP;
