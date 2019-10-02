@@ -2,116 +2,158 @@ Return-Path: <SRS0=zem1=X3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3526C4360C
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 19:56:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C6FEC4360C
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 19:56:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C908721783
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 19:56:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EC7D921783
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 19:56:43 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="UHPrEXbF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728581AbfJBT4R (ORCPT
+        id S1728709AbfJBT4n (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Oct 2019 15:56:17 -0400
-Received: from mail-io1-f71.google.com ([209.85.166.71]:35757 "EHLO
-        mail-io1-f71.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728544AbfJBT4O (ORCPT
+        Wed, 2 Oct 2019 15:56:43 -0400
+Received: from mail-io1-f65.google.com ([209.85.166.65]:39871 "EHLO
+        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726435AbfJBT4m (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Oct 2019 15:56:14 -0400
-Received: by mail-io1-f71.google.com with SMTP id r5so773461iop.2
-        for <linux-kernel@vger.kernel.org>; Wed, 02 Oct 2019 12:56:12 -0700 (PDT)
+        Wed, 2 Oct 2019 15:56:42 -0400
+Received: by mail-io1-f65.google.com with SMTP id a1so144014ioc.6
+        for <linux-kernel@vger.kernel.org>; Wed, 02 Oct 2019 12:56:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=dk1xiojtdSxbPGVXOgkiOKlECGbF1OR24opXqDPKZxw=;
+        b=UHPrEXbFQrG0siwewfg75PiGVJckTDFJGuIFc7BRtiCWnhRu7nMnAhwIcV/3QvpmNi
+         zcer5zsYAVVv8CzO9Aipmv7PzerrS0WlSawFvoOY1Py8/CHUKwoPYqYr+k9J/uwZu1rl
+         /+Y/O/WAV3PpFVbT4PdpYtHHCAesZYHsEWMdpw6nUU1FpfgK48zpyYxVdqmAj0fqLq7r
+         NY6YGf+uWBEGF+IB2b8R5gCMLGhtqt0hcK1L3OYqBymxcq9IFPDOcSDdaiy4ZVhRD60E
+         XKpSqkh4EiAwndm3lyGqfmsK4FMiQ2Lrc+zVgaLOo6rW7OAFPgYklgRkIFHmRzFp8mz0
+         3rtg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=JmmhvD56+86cKmGJpC46U0DMJFQEjRV4WR2YbpopV7Q=;
-        b=gOYSiFU1ZxHucGism5R2RNtyBIjPKdJ4qWSq1qipwEMQ0fAVYDawlVXejswyD+tN80
-         Ppw4NXK5em13iKGjPhrjUAbFcEmTdIberSfU3P1W2+wJvp0puaSUjl8bQmk6YEWmexSI
-         8IU9ig0RODtWjQrksS79OP2IwpO+o6dxP4uMLN7em4EhwxlxY3S/QTDK0C9zoiShQIWU
-         5uPQd9LOatosZbtOoKIPUuf9+CoDcNSb85RLFlBz7Y2BpOjsCT6/jahyz2n8sKT/WZ2R
-         mRacPkndq1PG7Ezp2AYqaRpLxZREAolhBPA4c6VAdFQYRN0Q0sWDV5XxS0VPVnDUEOQP
-         jB5Q==
-X-Gm-Message-State: APjAAAXIlnq1BSE89X3V437zKtKNKJ+SGTTF3LjiIFA576dNkJF0zOfq
-        44r7A4AP1i8jM9/2ZsTk22FdFN9z9elJeXQJoAGdXIPKAxbq
-X-Google-Smtp-Source: APXvYqyKWFQ9nMYaeB+adjLLYq+GWCbEqjA5HKFVq3Wi4PvimrZwawHHv0M8lKnOp3YqEfVpzW5RXVsseabjBLfm+59ou6SvFEzr
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=dk1xiojtdSxbPGVXOgkiOKlECGbF1OR24opXqDPKZxw=;
+        b=Cf7ejqv/ErdU89WVcvqyvOrvlyFMDZmSzl66O3JSoTjElzZ7hr8+g06y0S0bfJow/l
+         LsDrYC4nHxNxC4agu4+WBauBggGhw0QVadJ8Vj+3n1atNkpNlBZ+BQQDEqk3g/8SBsDx
+         1QrKEmuwxN8LjRo815Rp8YQ0NSeXEz1TXQNMPZ9UHJpwF+WxwJPn4s/qQghsM+/yfRvv
+         jCYCGNVLvmiog8vC/OJS1k5kvTVe1FDUoeAXAv/5bzL181IH+U5syjXUJ/cCXl7icYNZ
+         tXiRpZ5b89Ungvri48hnJ/L1Or1RuImD0IiHKdarRCVhUtAwKDDZg39nKom5cN98xGaE
+         HnvA==
+X-Gm-Message-State: APjAAAXNZD4t1RLygej6BQmiZM2+eA7PgfXh3ZdLVOIVIpOfrxFXENW4
+        Po/68vXNy5fhkWmFUtpaqyzSxQ6lWMW1DpA8Hs7QeA==
+X-Google-Smtp-Source: APXvYqzpCMAUM0lWb0fNaqUjO6Ds3dQt38NZVJvOQUhcm7ricfA/gS7sIorLBcvFx0a/X97pDGUE2EJMWy+KF8x6Eog=
+X-Received: by 2002:a5e:8a43:: with SMTP id o3mr5067318iom.296.1570046201654;
+ Wed, 02 Oct 2019 12:56:41 -0700 (PDT)
 MIME-Version: 1.0
-X-Received: by 2002:a02:cd06:: with SMTP id g6mr5596386jaq.89.1570046172033;
- Wed, 02 Oct 2019 12:56:12 -0700 (PDT)
-Date:   Wed, 02 Oct 2019 12:56:12 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <0000000000005d7df10593f2dc07@google.com>
-Subject: KMSAN: uninit-value in read_rio
-From:   syzbot <syzbot+a3b2314912629b97f231@syzkaller.appspotmail.com>
-To:     glider@google.com, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com,
-        viro@zeniv.linux.org.uk
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+References: <20190927021927.23057-1-weijiang.yang@intel.com> <20190927021927.23057-7-weijiang.yang@intel.com>
+In-Reply-To: <20190927021927.23057-7-weijiang.yang@intel.com>
+From:   Jim Mattson <jmattson@google.com>
+Date:   Wed, 2 Oct 2019 12:56:30 -0700
+Message-ID: <CALMp9eRouyhkKeadM_w80bisWB-VSBCf3NSei5hZXcDsRR7GJg@mail.gmail.com>
+Subject: Re: [PATCH v7 6/7] KVM: x86: Load Guest fpu state when accessing MSRs
+ managed by XSAVES
+To:     Yang Weijiang <weijiang.yang@intel.com>
+Cc:     kvm list <kvm@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        "Michael S. Tsirkin" <mst@redhat.com>,
+        =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+On Thu, Sep 26, 2019 at 7:17 PM Yang Weijiang <weijiang.yang@intel.com> wrote:
+>
+> From: Sean Christopherson <sean.j.christopherson@intel.com>
+>
+> A handful of CET MSRs are not context switched through "traditional"
+> methods, e.g. VMCS or manual switching, but rather are passed through
+> to the guest and are saved and restored by XSAVES/XRSTORS, i.e. the
+> guest's FPU state.
+>
+> Load the guest's FPU state if userspace is accessing MSRs whose values
+> are managed by XSAVES so that the MSR helper, e.g. vmx_{get,set}_msr(),
+> can simply do {RD,WR}MSR to access the guest's value.
+>
+> Note that guest_cpuid_has() is not queried as host userspace is allowed
+> to access MSRs that have not been exposed to the guest, e.g. it might do
+> KVM_SET_MSRS prior to KVM_SET_CPUID2.
+>
+> Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
+> Co-developed-by: Yang Weijiang <weijiang.yang@intel.com>
+> Signed-off-by: Yang Weijiang <weijiang.yang@intel.com>
+> ---
+>  arch/x86/kvm/x86.c | 22 +++++++++++++++++++++-
+>  1 file changed, 21 insertions(+), 1 deletion(-)
+>
+> diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+> index 290c3c3efb87..5b8116028a59 100644
+> --- a/arch/x86/kvm/x86.c
+> +++ b/arch/x86/kvm/x86.c
+> @@ -104,6 +104,8 @@ static void enter_smm(struct kvm_vcpu *vcpu);
+>  static void __kvm_set_rflags(struct kvm_vcpu *vcpu, unsigned long rflags);
+>  static void store_regs(struct kvm_vcpu *vcpu);
+>  static int sync_regs(struct kvm_vcpu *vcpu);
+> +static void kvm_load_guest_fpu(struct kvm_vcpu *vcpu);
+> +static void kvm_put_guest_fpu(struct kvm_vcpu *vcpu);
+>
+>  struct kvm_x86_ops *kvm_x86_ops __read_mostly;
+>  EXPORT_SYMBOL_GPL(kvm_x86_ops);
+> @@ -2999,6 +3001,12 @@ int kvm_get_msr_common(struct kvm_vcpu *vcpu, struct msr_data *msr_info)
+>  }
+>  EXPORT_SYMBOL_GPL(kvm_get_msr_common);
+>
+> +static bool is_xsaves_msr(u32 index)
+> +{
+> +       return index == MSR_IA32_U_CET ||
+> +              (index >= MSR_IA32_PL0_SSP && index <= MSR_IA32_PL3_SSP);
+> +}
+> +
+>  /*
+>   * Read or write a bunch of msrs. All parameters are kernel addresses.
+>   *
+> @@ -3009,11 +3017,23 @@ static int __msr_io(struct kvm_vcpu *vcpu, struct kvm_msrs *msrs,
+>                     int (*do_msr)(struct kvm_vcpu *vcpu,
+>                                   unsigned index, u64 *data))
+>  {
+> +       bool fpu_loaded = false;
+>         int i;
+> +       const u64 cet_bits = XFEATURE_MASK_CET_USER | XFEATURE_MASK_CET_KERNEL;
+> +       bool cet_xss = kvm_x86_ops->xsaves_supported() &&
+> +                      (kvm_supported_xss() & cet_bits);
 
-syzbot found the following crash on:
+It seems like I've seen a lot of checks like this. Can this be
+simplified (throughout this series) by sinking the
+kvm_x86_ops->xsaves_supported() check into kvm_supported_xss()? That
+is, shouldn't kvm_supported_xss() return 0 if
+kvm_x86_ops->xsaves_supported() is false?
 
-HEAD commit:    1e76a3e5 kmsan: replace __GFP_NO_KMSAN_SHADOW with kmsan_i..
-git tree:       https://github.com/google/kmsan.git master
-console output: https://syzkaller.appspot.com/x/log.txt?x=13806633600000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=f03c659d0830ab8d
-dashboard link: https://syzkaller.appspot.com/bug?extid=a3b2314912629b97f231
-compiler:       clang version 9.0.0 (/home/glider/llvm/clang  
-80fee25776c2fb61e74c1ecb1a523375c2500b69)
-
-Unfortunately, I don't have any reproducer for this crash yet.
-
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+a3b2314912629b97f231@syzkaller.appspotmail.com
-
-usb 5-1: Rio opened.
-=====================================================
-BUG: KMSAN: uninit-value in __vfs_read+0x1a9/0xc90 fs/read_write.c:425
-CPU: 1 PID: 12169 Comm: syz-executor.4 Not tainted 5.3.0-rc7+ #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
-Google 01/01/2011
-Call Trace:
-  __dump_stack lib/dump_stack.c:77 [inline]
-  dump_stack+0x191/0x1f0 lib/dump_stack.c:113
-  kmsan_report+0x13a/0x2b0 mm/kmsan/kmsan_report.c:108
-  __msan_warning+0x73/0xe0 mm/kmsan/kmsan_instr.c:250
-  read_rio+0x55d/0x860 drivers/usb/misc/rio500.c:404
-  __vfs_read+0x1a9/0xc90 fs/read_write.c:425
-  vfs_read+0x359/0x6f0 fs/read_write.c:461
-  ksys_read+0x265/0x430 fs/read_write.c:587
-  __do_sys_read fs/read_write.c:597 [inline]
-  __se_sys_read+0x92/0xb0 fs/read_write.c:595
-  __x64_sys_read+0x4a/0x70 fs/read_write.c:595
-  do_syscall_64+0xbc/0xf0 arch/x86/entry/common.c:297
-  entry_SYSCALL_64_after_hwframe+0x63/0xe7
-RIP: 0033:0x459a29
-Code: fd b7 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89 f7  
-48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff  
-ff 0f 83 cb b7 fb ff c3 66 2e 0f 1f 84 00 00 00 00
-RSP: 002b:00007fd0a6183c78 EFLAGS: 00000246 ORIG_RAX: 0000000000000000
-RAX: ffffffffffffffda RBX: 0000000000000003 RCX: 0000000000459a29
-RDX: 0000000000000009 RSI: 0000000020000040 RDI: 0000000000000004
-RBP: 000000000075bf20 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 00007fd0a61846d4
-R13: 00000000004c7066 R14: 00000000004dc8c8 R15: 00000000ffffffff
-
-Local variable description: ----partial@read_rio
-Variable was created at:
-  read_rio+0xff/0x860 drivers/usb/misc/rio500.c:360
-  __vfs_read+0x1a9/0xc90 fs/read_write.c:425
-=====================================================
-
-
----
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+> -       for (i = 0; i < msrs->nmsrs; ++i)
+> +       for (i = 0; i < msrs->nmsrs; ++i) {
+> +               if (!fpu_loaded && cet_xss &&
+> +                   is_xsaves_msr(entries[i].index)) {
+> +                       kvm_load_guest_fpu(vcpu);
+> +                       fpu_loaded = true;
+> +               }
+>                 if (do_msr(vcpu, entries[i].index, &entries[i].data))
+>                         break;
+> +       }
+> +       if (fpu_loaded)
+> +               kvm_put_guest_fpu(vcpu);
+>
+>         return i;
+>  }
+> --
+> 2.17.2
+>
