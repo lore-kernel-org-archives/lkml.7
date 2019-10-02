@@ -2,132 +2,103 @@ Return-Path: <SRS0=zem1=X3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CCDB8C352AA
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 09:17:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5638FC352AA
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 09:19:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AEE5D206C0
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 09:17:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2C11221783
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 09:19:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="jKs7U8eJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727072AbfJBJRj (ORCPT
+        id S1726877AbfJBJT5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Oct 2019 05:17:39 -0400
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:41772 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725848AbfJBJRi (ORCPT
+        Wed, 2 Oct 2019 05:19:57 -0400
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:43775 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725848AbfJBJT5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Oct 2019 05:17:38 -0400
-Received: by mail-ot1-f65.google.com with SMTP id g13so14063050otp.8;
-        Wed, 02 Oct 2019 02:17:38 -0700 (PDT)
+        Wed, 2 Oct 2019 05:19:57 -0400
+Received: by mail-lj1-f196.google.com with SMTP id n14so16312555ljj.10
+        for <linux-kernel@vger.kernel.org>; Wed, 02 Oct 2019 02:19:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=tVSJ2jAoznxGAzqn26lJBhesiJu1w5Ef6wI0S81yyRk=;
+        b=jKs7U8eJtyt8NgsziFv8n2P7AhTSuJcFBcqGRBUvcExepU97UzP2Wvw7Cb67pKcmnd
+         KrB5pD0N3yZpRTOabIqWJ59k0YqmLz+DRox2nZCVpm1vwJAQsYmZpmLCEvGFaaJAYrKl
+         G0RtV55/jXfVn76PY68EBdfTk6WDW91nE19pDZprwiv9nFzWug679df5IYQUaHyKB7w6
+         e+PgM7Ph2Z9FaxLvcgcq1oL0eq6ZRG41y0SIqtLLgAZpq7k2IPhnGQxoEASQmXISRmWG
+         hSYjSKUUGdUXc8uTxCWeINcTOm2Qex/G0MPRc3yDg+tHudN7F/36D4PpQxeOt08vOxj7
+         SjfQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Ls6EK3vubSTuihO8bhZK7PjFeD0RgzqQTr2Z4JO8PkE=;
-        b=HVgwShvbvsIuGc03VzYv+tXBhEd7uvXoV3wX/9+ylPvUhOALYYQY7fmbUzcrXAuF4f
-         fsjwUmUpVTCRd/kTZMsvwmnAo0PPIRVpH+1nYVVEjdKSA4ilnEd0uPN8+mNWQv86P5Ao
-         Rt6v6pDpTCgc1sYs5RrEVpPhDSUsYTvqFPln6XlQA5CV09T9/ECJdl1ekqlyM1CBdoe8
-         F8IyNnVbJjQSnYdA9xfN8VRpRp69/YstqD27MBvvUILTiCzDUglfliPzDnZWMZwaldQG
-         qGhUY8bhmNgayN2fhMhI7nB3Rm3ywscDe95TTgsijg1V/DY7X5q0no1mv68SAeDJwLwF
-         VxoQ==
-X-Gm-Message-State: APjAAAUk9GAlsPIOVCwk9atEcm3Z2KM/PQSItM4QxNOgrRa0JVWcwErb
-        VK8cv6BrdOO1iglKRgXNdK0awjVJC0GqjuXOVRn2QLMo
-X-Google-Smtp-Source: APXvYqy+Nj/99JkY+AGWCoI9iuwNtvxD/sJXf6Ney2dGy6HlRLq+mQUTdRIlpehSzHEHq3WZ2Fmrs1jkwV4XzPvS5oY=
-X-Received: by 2002:a9d:730d:: with SMTP id e13mr1857379otk.145.1570007857612;
- Wed, 02 Oct 2019 02:17:37 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=tVSJ2jAoznxGAzqn26lJBhesiJu1w5Ef6wI0S81yyRk=;
+        b=rfb31IhW2Q9N4130M2Nb9rh0IW1zZNOQd7UJ2RC+1OS96VORq5ATp3jShtWow6xj5P
+         Pg4s0RwPhDv0CB0iuB/SufzRoRxwqVvEFbL1KFE108ZeJjDOu7i0nuVdQipTsAfWeNak
+         94A+fkFp2j87on/1bvx45P9UNSfScL3BGCeuHa8UlJZkEyK1jXbDrRDlSISEUTjSwgPt
+         GJB/Q11mP+gdpPWRtExjVnNuQrwcTBxBalojW7ViR1imIZ+mbh+3nsVcZKNgLAySRf5c
+         BHwtHokxGgT9sR5q2XJA0XqttKFL18YqqYucdmxH75wF8ubpHp7io2VSAD/6Yizo2vgY
+         5AdQ==
+X-Gm-Message-State: APjAAAWajbRgiA8KhyhMaATPhu80pK3vYxSc+GAodmK3Pao5fqkj31QW
+        UC7Y/dyXUcvC03iGOQf7H46yIw==
+X-Google-Smtp-Source: APXvYqymQBg7OLC919RMbl4ByhwTyA3wxtAD9d6h05l4XMtE9CFbi0q3M5PidVl3u9R56raNCFXmdg==
+X-Received: by 2002:a2e:86c7:: with SMTP id n7mr1645273ljj.227.1570007993519;
+        Wed, 02 Oct 2019 02:19:53 -0700 (PDT)
+Received: from centauri (ua-84-219-138-247.bbcust.telenor.se. [84.219.138.247])
+        by smtp.gmail.com with ESMTPSA id n2sm4593350ljj.30.2019.10.02.02.19.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 02 Oct 2019 02:19:52 -0700 (PDT)
+Date:   Wed, 2 Oct 2019 11:19:50 +0200
+From:   Niklas Cassel <niklas.cassel@linaro.org>
+To:     Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+Cc:     Amit Kucheria <amit.kucheria@linaro.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        MSM <linux-arm-msm@vger.kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Andy Gross <agross@kernel.org>,
+        Marc Gonzalez <marc.w.gonzalez@free.fr>,
+        Sibi Sankar <sibis@codeaurora.org>, daniel.lezcano@linaro.org,
+        Andy Gross <andy.gross@linaro.org>,
+        David Brown <david.brown@linaro.org>,
+        Li Yang <leoyang.li@nxp.com>, Shawn Guo <shawnguo@kernel.org>,
+        DTML <devicetree@vger.kernel.org>
+Subject: Re: [PATCH v2 7/9] arm64: dts: qcom: msm8998: Add PSCI cpuidle low
+ power states
+Message-ID: <20191002091950.GA9393@centauri>
+References: <cover.1558430617.git.amit.kucheria@linaro.org>
+ <49cf5d94beb9af9ef4e78d4c52f3b0ad20b7c63f.1558430617.git.amit.kucheria@linaro.org>
+ <CAOCk7NptTHPOdyEkCAofjTPuDQ5dsnPMQgfC0R8=7cp05xKQiA@mail.gmail.com>
 MIME-Version: 1.0
-References: <20191002085809.16381-1-geert@linux-m68k.org>
-In-Reply-To: <20191002085809.16381-1-geert@linux-m68k.org>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Wed, 2 Oct 2019 11:17:26 +0200
-Message-ID: <CAMuHMdUHG-4=HEOspGH=-6P_nTdbR_wYnyKdyUR9+-2=r1fNkQ@mail.gmail.com>
-Subject: Re: Build regressions/improvements in v5.4-rc1
-To:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Cc:     linux-mips@vger.kernel.org, Matthew Wilcox <willy@infradead.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        David Daney <ddaney.cavm@gmail.com>,
-        Alex Vesker <valex@mellanox.com>,
-        Matt Fleming <matt@codeblueprint.co.uk>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAOCk7NptTHPOdyEkCAofjTPuDQ5dsnPMQgfC0R8=7cp05xKQiA@mail.gmail.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Oct 2, 2019 at 11:05 AM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
-> Below is the list of build error/warning regressions/improvements in
-> v5.4-rc1[1] compared to v5.3[2].
->
-> Summarized:
->   - build errors: +15/-3
->   - build warnings: +215/-117
->
-> Note that there may be false regressions, as some logs are incomplete.
-> Still, they're build errors/warnings.
->
-> Happy fixing! ;-)
->
-> Thanks to the linux-next team for providing the build service.
->
-> [1] http://kisskb.ellerman.id.au/kisskb/branch/linus/head/54ecb8f7028c5eb3d740bb82b0f1d90f2df63c5c/ (233 out of 242 configs)
-> [2] http://kisskb.ellerman.id.au/kisskb/branch/linus/head/4d856f72c10ecb060868ed10ff1b1453943fc6c8/ (all 242 configs)
->
->
-> *** ERRORS ***
->
-> 15 error regressions:
->   + /kisskb/build/tmp/cc1Or5dj.s: Error: can't resolve `_start' {*UND* section} - `L0 ' {.text section}:  => 663, 1200, 222, 873, 1420
->   + /kisskb/build/tmp/cc2uWmof.s: Error: can't resolve `_start' {*UND* section} - `L0 ' {.text section}:  => 1213, 919, 688, 1434, 226
->   + /kisskb/build/tmp/ccc6hBqd.s: Error: can't resolve `_start' {*UND* section} - `L0 ' {.text section}:  => 513, 1279, 1058, 727
->   + /kisskb/build/tmp/cclSQ19p.s: Error: can't resolve `_start' {*UND* section} - `L0 ' {.text section}:  => 1396, 881, 1175, 671, 226
->   + /kisskb/build/tmp/ccu3SlxY.s: Error: can't resolve `_start' {*UND* section} - `L0 ' {.text section}:  => 1238, 911, 222, 680, 1457
+On Mon, Sep 30, 2019 at 04:20:15PM -0600, Jeffrey Hugo wrote:
+> Amit, the merged version of the below change causes a boot failure
+> (nasty hang, sometimes with RCU stalls) on the msm8998 laptops.  Oddly
+> enough, it seems to be resolved if I remove the cpu-idle-states
+> property from one of the cpu nodes.
+> 
+> I see no issues with the msm8998 MTP.
 
-Various mips (allmodconfig, allnoconfig, malta_defconfig, ip22_defconfig)
+Hello Jeffrey, Amit,
 
-Related to
+If the PSCI idle states work properly on the msm8998 devboard (MTP),
+but causes crashes on msm8998 laptops, the only logical change is
+that the PSCI firmware is different between the two devices.
 
-    /kisskb/src/arch/mips/vdso/Makefile:61: MIPS VDSO requires binutils >= 2.25
 
-?
-
->   + /kisskb/src/arch/mips/include/asm/octeon/cvmx-ipd.h: error: 'CVMX_PIP_SFT_RST' undeclared (first use in this function):  => 331:36
->   + /kisskb/src/arch/mips/include/asm/octeon/cvmx-ipd.h: error: 'CVMX_PIP_SFT_RST' undeclared (first use in this function); did you mean 'CVMX_CIU_SOFT_RST'?:  => 331:36
->   + /kisskb/src/arch/mips/include/asm/octeon/cvmx-ipd.h: error: storage size of 'pip_sft_rst' isn't known:  => 330:27
-
-mips-allmodconfig (CC Matthew Wilcox)
-
->   + /kisskb/src/drivers/watchdog/cpwd.c: error: 'compat_ptr_ioctl' undeclared here (not in a function):  => 500:19
-
-sparc64-allmodconfig (CC Arnd Bergmann)
-
->   + error: "__delay" [drivers/net/phy/mdio-cavium.ko] undefined!:  => N/A
-
-sh-allmodconfig (CC David Daney)
-
->   + error: "__moddi3" [drivers/net/ethernet/mellanox/mlx5/core/mlx5_core.ko] undefined!:  => N/A
->   + error: "__umoddi3" [drivers/net/ethernet/mellanox/mlx5/core/mlx5_core.ko] undefined!:  => N/A
-
-parisc-allmodconfig (CC Alex Vesker)
-
->   + error: c2p_iplan2.c: undefined reference to `c2p_unsupported':  => .text+0xc4), .text+0x150)
->   + error: c2p_planar.c: undefined reference to `c2p_unsupported':  => .text+0xd6), .text+0x1dc)
-
-m68k-defconfig (https://lore.kernel.org/lkml/20190927094708.11563-1-geert@linux-m68k.org/)
-
->   + error: page_alloc.c: undefined reference to `node_reclaim_distance':  => .text+0x3180), .text+0x3148)
-
-Various sh4 (migor_defconfig, se7722_defconfig, ul2_defconfig) (CC Matt Fleming)
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+Kind regards,
+Niklas
