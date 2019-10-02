@@ -2,128 +2,144 @@ Return-Path: <SRS0=zem1=X3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 756D7C35280
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 15:20:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78115C352AA
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 15:20:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3FB9F21848
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 15:20:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4D82321920
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 15:20:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nLE1/iHW"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="e+HZAJr8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728261AbfJBPUp (ORCPT
+        id S1728513AbfJBPUt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Oct 2019 11:20:45 -0400
-Received: from mail-yw1-f68.google.com ([209.85.161.68]:40636 "EHLO
-        mail-yw1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726708AbfJBPUp (ORCPT
+        Wed, 2 Oct 2019 11:20:49 -0400
+Received: from mail-lf1-f65.google.com ([209.85.167.65]:33202 "EHLO
+        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726708AbfJBPUr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Oct 2019 11:20:45 -0400
-Received: by mail-yw1-f68.google.com with SMTP id e205so6199875ywc.7
-        for <linux-kernel@vger.kernel.org>; Wed, 02 Oct 2019 08:20:44 -0700 (PDT)
+        Wed, 2 Oct 2019 11:20:47 -0400
+Received: by mail-lf1-f65.google.com with SMTP id y127so13071147lfc.0
+        for <linux-kernel@vger.kernel.org>; Wed, 02 Oct 2019 08:20:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
+        d=google.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=VaE7w1CaTRczQgzzFI2ExCLX+A6tMdd72aOZN4Z0QKo=;
-        b=nLE1/iHWa7XE0yBbCQsMddzPXDMYx7T4sjIBuOZqqXZgejKTiKwtDFPNxWFQbx8KPF
-         jszcdAsTTJNxBc1JHRulzs5bfBibve3/UJgW0TMYdIFY5wuxcv0faMIo5dI++rfYLYJt
-         /PMsuwgWLH2n3vXCWACK6ITP1xOJpQSf3igP8zQtoza3UOwpT8/dKHsGV1FIyqYMyf9I
-         00+ZJFee/TjjHhNh+QCI31xd/7tqwDF01IAQEIjoMF9krRmcoTMDOw5ZuN7I63ACgsG0
-         TYqFKEXHnhWWpMZQ3Mg9VyAyNfkTNVBTnSf2DxiAmp1TbQSrrEklfutDIi/HK4Whanqn
-         yNXw==
+         :cc;
+        bh=Cm5y6/ru/C9I2VSusEbg3+NWiE1oNKxKWJ8nI5eVPpE=;
+        b=e+HZAJr8AzekfpjpvDICihE65P2buZXwIBxjnPwoZjUaa8DYIlZ411wS9EH2Wqx+L0
+         3IIG8qyNstNMWhX7MV1QihCRQKoZXXMGKTs4PWndclmhIsERWI2BlCQHgmm887jK/X4s
+         4LSh6oyFIbqiC5xhJtc71w2JGJd98PVfXjNlCN6GVR9bIWfwprqsxKpAl4Dh1GDOm4Uf
+         KkFqAdqcObzoSOtmU6zUaXmwXz8h65j2MURhjZuxBvLZTZfX1GtpcYV+ZEof01IIQYYx
+         E0dhPukf1KSSEJqO6kaaFkc1egOnoliejLLs3Culpb7JQAQvhqu/uJ4ixkijBLwVqoor
+         bBdw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=VaE7w1CaTRczQgzzFI2ExCLX+A6tMdd72aOZN4Z0QKo=;
-        b=k7zOVNU6+WAnPa6bRbF7/bGCfXwj852a81YdvKfncLpRZz8BInnZte3Q9FJzAH5K/I
-         tUzGMgqZvllcoXXVSyGC+NrDtljtZogFS3zIyhsvpf6wIGy1+y4XTchoYhpiNivo2iK9
-         ZTDmG7zd0NWOCowIi/EEHKy3KrCwb2yrvhlS0Yvmg3RmqftcbaCaBsQB7I0xvCUnuU/r
-         rSt5+w6lD6x+gxGde9qr1arFQXyrAZjmCwv1VEWOkHwzRDZ0A/CzLLwujyecmEFQ6LF0
-         hf5NRuhkU4GKbkKv7vhJiXPsFE4+kuwIJDN0gRiWLlv9e5e2fMw+vsK6gZdeN9bi0sQ5
-         Ea4Q==
-X-Gm-Message-State: APjAAAUt70BesMcAODa6PzXMwcHfDmSc+daSnQPZPPH9CjEM1uoQQJYO
-        +Xu8MEM5Su0mn4yC45NKYnDB/gQ+Y5K3/FgurzI=
-X-Google-Smtp-Source: APXvYqx7/3JZinR3TrxpzIRdJHu65zew2z/VyGmSS7W5Ui+1dZIXWQ/1ooSR2vIXkGdizxdKtOnY3kC5vWqx2R8BKLI=
-X-Received: by 2002:a81:4a04:: with SMTP id x4mr2900984ywa.168.1570029163271;
- Wed, 02 Oct 2019 08:12:43 -0700 (PDT)
+         :message-id:subject:to:cc;
+        bh=Cm5y6/ru/C9I2VSusEbg3+NWiE1oNKxKWJ8nI5eVPpE=;
+        b=UPpu/0gMPSFCgbfT8MxI8gFDQIKRR7HGk5wmPjfvkrj5MxhnMAb8x6LETIAzseGLfb
+         mqiNY6DNjs9gslgccp1Gl/g10e3PNl1CKY3V4Qi5C3pLl57KjsVsIxUAqNo3WadgCQr5
+         5sV24FqXPSyf2RvQxGMfGg2z7QPtrpVHZlzc+pc5pe3gzi6TbTMbaLGCfCo8hx9wi7GG
+         uqy4Srm1lqaMlrg99ar9wZsQW1yowrPQqJTlIFHy64+W7EKT0Q5PKNSAO36NI65JZ04Q
+         wE4drXOe+UDfqwhW+tuP6MZM3sySVvpy/USQuZAYOFJGlS4CzBHNjx+EVPbK2Aw5ipB7
+         +7hg==
+X-Gm-Message-State: APjAAAUddh93lhwFli7OVGZAQRH+nyLCC6N/qQ0IJNBGpkNtHBWVRuGX
+        coItZ8RCiLDkNWyTwbSQ8yuHANgIGVJpyg/cdhpCsA==
+X-Google-Smtp-Source: APXvYqx7gWDvkA6xvZrimGK8XznLipqzN+AmU8yulSOEUx6+7QMOXqK5DEy91JhesL1ch8MperNChxT0leTXt1RiHYQ=
+X-Received: by 2002:ac2:4114:: with SMTP id b20mr2720783lfi.19.1570029645385;
+ Wed, 02 Oct 2019 08:20:45 -0700 (PDT)
 MIME-Version: 1.0
-References: <20191002120136.1777161-1-arnd@arndb.de> <20191002120136.1777161-5-arnd@arndb.de>
- <CADnq5_PkTwTBbQY9JatZD2_sWjdU5_hK7V2GLfviEvMh_QB12Q@mail.gmail.com> <CAK8P3a0KMT437okhobg=Vzi5LRDgUO7L-x35LczBGXE2jYLg2A@mail.gmail.com>
-In-Reply-To: <CAK8P3a0KMT437okhobg=Vzi5LRDgUO7L-x35LczBGXE2jYLg2A@mail.gmail.com>
-From:   Alex Deucher <alexdeucher@gmail.com>
-Date:   Wed, 2 Oct 2019 11:12:31 -0400
-Message-ID: <CADnq5_PWWndBomBOXTYgmFqo+U8f8d8+OdJ5Ym3+a2mgO5=E0A@mail.gmail.com>
-Subject: Re: [PATCH 4/6] drm/amd/display: fix dcn21 Makefile for clang
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     Alex Deucher <alexander.deucher@amd.com>,
-        Harry Wentland <harry.wentland@amd.com>,
-        Leo Li <sunpeng.li@amd.com>,
-        =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
-        "David (ChunMing) Zhou" <David1.Zhou@amd.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Maling list - DRI developers 
-        <dri-devel@lists.freedesktop.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        amd-gfx list <amd-gfx@lists.freedesktop.org>,
-        Bhawanpreet Lakha <Bhawanpreet.Lakha@amd.com>
+References: <20190925203209.79941-1-ncrews@chromium.org> <20191001195342.GH4106@piout.net>
+ <CAE_wzQ8ugGgRsjfQwfncxhmy4EDOxKdoNm8CJ5AF=Mc5N6X7WQ@mail.gmail.com> <20191002103236.GM4106@piout.net>
+In-Reply-To: <20191002103236.GM4106@piout.net>
+From:   Dmitry Torokhov <dtor@google.com>
+Date:   Wed, 2 Oct 2019 08:20:34 -0700
+Message-ID: <CAE_wzQ9AodXUEANpDEQM+VYMVuxWmLoF0_1k-m5HdAfx+=01-A@mail.gmail.com>
+Subject: Re: [PATCH v3] rtc: wilco-ec: Handle reading invalid times
+To:     Alexandre Belloni <alexandre.belloni@bootlin.com>
+Cc:     Nick Crews <ncrews@chromium.org>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        linux-rtc@vger.kernel.org, lkml <linux-kernel@vger.kernel.org>,
+        Pavel Machek <pavel@ucw.cz>, enric.balletbo@collabora.com,
+        Benson Leung <bleung@chromium.org>, dlaurie@chromium.org,
+        Daniel Kurtz <djkurtz@chromium.org>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Oct 2, 2019 at 10:51 AM Arnd Bergmann <arnd@arndb.de> wrote:
+On Wed, Oct 2, 2019 at 3:32 AM Alexandre Belloni
+<alexandre.belloni@bootlin.com> wrote:
 >
-> On Wed, Oct 2, 2019 at 4:17 PM Alex Deucher <alexdeucher@gmail.com> wrote=
-:
+> On 01/10/2019 13:42:24-0700, Dmitry Torokhov wrote:
+> > On Tue, Oct 1, 2019 at 12:53 PM Alexandre Belloni
+> > <alexandre.belloni@bootlin.com> wrote:
+> > >
+> > > Hi Nick,
+> > >
+> > > On 25/09/2019 14:32:09-0600, Nick Crews wrote:
+> > > > If the RTC HW returns an invalid time, the rtc_year_days()
+> > > > call would crash. This patch adds error logging in this
+> > > > situation, and removes the tm_yday and tm_wday calculations.
+> > > > These fields should not be relied upon by userspace
+> > > > according to man rtc, and thus we don't need to calculate
+> > > > them.
+> > > >
+> > > > Signed-off-by: Nick Crews <ncrews@chromium.org>
+> > > > ---
+> > > >  drivers/rtc/rtc-wilco-ec.c | 13 +++++++++----
+> > > >  1 file changed, 9 insertions(+), 4 deletions(-)
+> > > >
+> > > > diff --git a/drivers/rtc/rtc-wilco-ec.c b/drivers/rtc/rtc-wilco-ec.c
+> > > > index 8ad4c4e6d557..53da355d996a 100644
+> > > > --- a/drivers/rtc/rtc-wilco-ec.c
+> > > > +++ b/drivers/rtc/rtc-wilco-ec.c
+> > > > @@ -110,10 +110,15 @@ static int wilco_ec_rtc_read(struct device *dev, struct rtc_time *tm)
+> > > >       tm->tm_mday     = rtc.day;
+> > > >       tm->tm_mon      = rtc.month - 1;
+> > > >       tm->tm_year     = rtc.year + (rtc.century * 100) - 1900;
+> > > > -     tm->tm_yday     = rtc_year_days(tm->tm_mday, tm->tm_mon, tm->tm_year);
+> > > > -
+> > > > -     /* Don't compute day of week, we don't need it. */
+> > > > -     tm->tm_wday = -1;
+> > > > +     /* Ignore other tm fields, man rtc says userspace shouldn't use them. */
+> > > > +
+> > > > +     if (rtc_valid_tm(tm)) {
+> > > > +             dev_err(dev,
+> > > > +                      "Time from RTC is invalid: second=%u, minute=%u, hour=%u, day=%u, month=%u, year=%u, century=%u",
+> > > > +                      rtc.second, rtc.minute, rtc.hour, rtc.day, rtc.month,
+> > > > +                      rtc.year, rtc.century);
+> > >
+> > > Do you mind using %ptR? At this point you already filled the tm struct
+> > > anyway and if you print century separately, you can infer tm_year.
 > >
-> > I'm getting an error with gcc with this patch:
-> >   CC [M]  drivers/gpu/drm/amd/amdgpu/../display/dc/dcn21/dcn21_resource=
-.o
-> > drivers/gpu/drm/amd/amdgpu/../display/dc/dcn21/dcn21_resource.c: In
-> > function =E2=80=98calculate_wm_set_for_vlevel=E2=80=99:
-> > drivers/gpu/drm/amd/amdgpu/../display/dc/dcn21/dcn21_resource.c:964:22:
-> > error: SSE register return with SSE disabled
+> > I do not think this is a good idea: we have just established that tm
+> > does not contain valid data. Does %ptR guarantee that it handles junk
+> > better than, let's say, rtc_year_days(), and does not crash when
+> > presented with garbage?
+> >
 >
-> I checked again with gcc-8, but do not see that error message.
+> It is safe to use. You can also use %ptRr if you want to ensure no
+> extra operations are done on the value before printing them out.
+
+OK, I'll keeo this in mind then.
+
 >
-> > > -CFLAGS_$(AMDDALPATH)/dc/dcn21/dcn21_resource.o :=3D -mhard-float -ms=
-se -mpreferred-stack-boundary=3D4
-> > > +CFLAGS_$(AMDDALPATH)/dc/dcn21/dcn21_resource.o :=3D -mhard-float -ms=
-se $(cc_stack_align)
->
-> Nothing should really change with regards to the -msse flag here, only
-> the stack alignment flag changed. Maybe there was some other change
-> in your Makefile that conflicts with my my patch?
+> I'm still not convinced it is useful to have an error in dmesg when the
+> time is invalid, as long as userspace knows it is invalid. What is the
+> course of action for the end user when that happens?
 
-This patch on top of yours seems to fix it and aligns better with the
-other Makefiles:
+Report it, or, in our case, we will see it in the feedback logs.
+However I do agree that it is not the best option, even if we report
+error to userspace I am not sure if it will handle it properly. What
+userspace is supposed to do when presented with -EIO or similar?
 
-diff --git a/drivers/gpu/drm/amd/display/dc/dcn21/Makefile
-b/drivers/gpu/drm/amd/display/dc/dcn21/Makefile
-index ef673bffc241..e71f3ee76cd1 100644
---- a/drivers/gpu/drm/amd/display/dc/dcn21/Makefile
-+++ b/drivers/gpu/drm/amd/display/dc/dcn21/Makefile
-@@ -9,10 +9,10 @@ else ifneq ($(call cc-option, -mstack-alignment=3D16),)
-        cc_stack_align :=3D -mstack-alignment=3D16
- endif
+Nick, do we know the root cause of the EC/RTC reporting invalid time?
 
--CFLAGS_$(AMDDALPATH)/dc/dcn21/dcn21_resource.o :=3D -mhard-float -msse
-$(cc_stack_align)
-+CFLAGS_dcn21_resource.o :=3D -mhard-float -msse $(cc_stack_align)
-
- ifdef CONFIG_CC_IS_CLANG
--CFLAGS_$(AMDDALPATH)/dc/dcn21/dcn21_resource.o +=3D -msse2
-+CFLAGS_dcn21_resource.o +=3D -msse2
- endif
-
- AMD_DAL_DCN21 =3D $(addprefix $(AMDDALPATH)/dc/dcn21/,$(DCN21))
+Thanks,
+Dmitry
