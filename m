@@ -2,125 +2,102 @@ Return-Path: <SRS0=zem1=X3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E63BC35280
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 13:00:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EEA56C352AA
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 13:02:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 24C1120842
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 13:00:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6D3CE21920
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 13:02:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="GXDNtZP2"
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="e7KQ0Gmm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726777AbfJBNAW (ORCPT
+        id S1726943AbfJBNCj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Oct 2019 09:00:22 -0400
-Received: from mail-yw1-f68.google.com ([209.85.161.68]:39846 "EHLO
-        mail-yw1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725747AbfJBNAW (ORCPT
+        Wed, 2 Oct 2019 09:02:39 -0400
+Received: from conssluserg-05.nifty.com ([210.131.2.90]:47728 "EHLO
+        conssluserg-05.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726239AbfJBNCj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Oct 2019 09:00:22 -0400
-Received: by mail-yw1-f68.google.com with SMTP id n11so6039450ywn.6
-        for <linux-kernel@vger.kernel.org>; Wed, 02 Oct 2019 06:00:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=7MxrKuI5sPe4orcfFy2pIM27MTW0kfpe0fT8luuNjM4=;
-        b=GXDNtZP2zjopSwjq0nyxQ5XSQ5zGN38LpZib81E3XoR1dL9OW17mrq7PEoZhW+LAcU
-         EhuerB9ZdlFoKPdqXPMxy9S7Hx6bEtL723TN9APpkthiTTPwLhcVwrq5mDjypyDve0hd
-         ads9QQUqzHFd22hABBj+VClQ/PjWF6BeW/qrm1WN7lTpJ9z5KIL3A6p/F5XRCCEt2TuJ
-         rcIGaE8iznAR0nYG9XeRpiBVR1+6Tm+ISFiCmuXVgi+OraSqJyHJPIEH2gFdXEbuMDrS
-         PBGQ3Zgqv7pc3DdgPORlw+3gfRE8ikBnLNurksJeaAuFVM21wy5eKbOOIV/tcFB6we25
-         N6DA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=7MxrKuI5sPe4orcfFy2pIM27MTW0kfpe0fT8luuNjM4=;
-        b=OD+OnzM/oj0YQ/hbXNR8AeH6dCx5qrxDdz4077GTRobhUWyoFtSSj+COK15XOqpdpw
-         Io7HfHi3NI0L/1LFdOLwIrYMdeGusQHtFOILEOlxm5hStfasYfZdlEQ7Guqz4uerl73u
-         /bELNEvBFFV96r6vSheWRlK25Weesng7avHEdA8qkIcz98R8SwFTH/AyQsJO+patOKgi
-         tiJj79t9y/u5WgMLdT8k7uX4BEt13BMwoClpmQOHi3oWntcj2fb3L8LM06JyuVtOXVPy
-         6+FB130WTzCsQ2ZHeYLKZMDwEzznZOouTK0bT34TWUJPKuYp1NZYiZ77MDM4iP1LjMYk
-         SUOQ==
-X-Gm-Message-State: APjAAAUT6Y5McBqTp1q1MHa0JdyqngT388A4pC+9P0sFiYqwnne2348k
-        0gvqaK5snseyyyiZn7CTFcPesmYvmJnCXkVD+EXe/J3tdbE=
-X-Google-Smtp-Source: APXvYqzR7JQn1ndsqASj0leEIvy9DfGHuMILlcQ8HgYMNL5BSQ5MAUFSHVCs0BGJ63vyGGkLWxswGdtyfzCUo0H5MTI=
-X-Received: by 2002:a81:92c8:: with SMTP id j191mr2566314ywg.57.1570021219382;
- Wed, 02 Oct 2019 06:00:19 -0700 (PDT)
+        Wed, 2 Oct 2019 09:02:39 -0400
+Received: from mail-vs1-f46.google.com (mail-vs1-f46.google.com [209.85.217.46]) (authenticated)
+        by conssluserg-05.nifty.com with ESMTP id x92D2SBY012647
+        for <linux-kernel@vger.kernel.org>; Wed, 2 Oct 2019 22:02:29 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-05.nifty.com x92D2SBY012647
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1570021349;
+        bh=naK8kM5SZ9FnjhI80E7EMP71Bdn5aGS80ykKGF8bPWg=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=e7KQ0GmmCZL4ZLkjn8OPMjFQ5lmCbzPXwIXK6xTxKl14LwpoQNqMleFaTFj1rLeOA
+         wHEL3TgUrgw+Lp5+AfzY4Ez0VrKV7qfd9BYSaQcg4QOzFSrmuKe4PK2o01ZOUmiJsW
+         0IyFKjuiEYsEfXH+CbwjwVH1V4Hl8CIDXQmYaxY/0InCEVucoN39caI/luT2IeYvm1
+         HzgNp70mA4sEdEUAza1M1CF3GZm3MaaOd3Utoqw+H+1xGB0fOsuzeIhUkD4JDLDr55
+         vqrYKqURwSYL7bsjZ6ZbDK+axBeYaaGTM8lEuXzUqkLtrgnYYGzgSsNjIbI6kzHvxg
+         hhr2LS1aPYtlQ==
+X-Nifty-SrcIP: [209.85.217.46]
+Received: by mail-vs1-f46.google.com with SMTP id d3so11861503vsr.1
+        for <linux-kernel@vger.kernel.org>; Wed, 02 Oct 2019 06:02:29 -0700 (PDT)
+X-Gm-Message-State: APjAAAW7aqVS6HQOES9yqKhgP1kbKJZm7b/gqBB0f8+0z/yoHgiIZC6R
+        XHJw2xhz/v60zBBGmnaoM5AZxQeVUfl7/zdkliM=
+X-Google-Smtp-Source: APXvYqyBenjkYSUxWNp12EkMSkjddqEmAJpImt9JMd2IBuuxcgEX6OeS4Ob+yymPNFD4gVXFz2G7SGNWe3Ro1LO2Q3I=
+X-Received: by 2002:a67:1a41:: with SMTP id a62mr1776452vsa.54.1570021348040;
+ Wed, 02 Oct 2019 06:02:28 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190905214553.1643060-1-guro@fb.com> <20191001151202.GA6678@blackbody.suse.cz>
- <20191002020906.GB6436@castle.dhcp.thefacebook.com>
-In-Reply-To: <20191002020906.GB6436@castle.dhcp.thefacebook.com>
-From:   Suleiman Souhlal <suleiman@google.com>
-Date:   Wed, 2 Oct 2019 22:00:07 +0900
-Message-ID: <CABCjUKBZxJJrUzpgXafqtXOYXZbYXEh0ku8fZLpPHXWnrTw1hg@mail.gmail.com>
-Subject: Re: [PATCH RFC 00/14] The new slab memory controller
-To:     Roman Gushchin <guro@fb.com>
-Cc:     =?UTF-8?Q?Michal_Koutn=C3=BD?= <mkoutny@suse.com>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        Michal Hocko <mhocko@kernel.org>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Kernel Team <Kernel-team@fb.com>,
-        Shakeel Butt <shakeelb@google.com>,
-        Vladimir Davydov <vdavydov.dev@gmail.com>,
-        Waiman Long <longman@redhat.com>
+References: <20191001083701.27207-1-yamada.masahiro@socionext.com> <CAKwvOd=NObDXDL3jz9ZX9wo4tn747peBJPTj0DXyLerixgL+wQ@mail.gmail.com>
+In-Reply-To: <CAKwvOd=NObDXDL3jz9ZX9wo4tn747peBJPTj0DXyLerixgL+wQ@mail.gmail.com>
+From:   Masahiro Yamada <yamada.masahiro@socionext.com>
+Date:   Wed, 2 Oct 2019 22:01:51 +0900
+X-Gmail-Original-Message-ID: <CAK7LNATvGykFY10mOXez84zPV_k3snefgS9zymcn2_7k3EMxAg@mail.gmail.com>
+Message-ID: <CAK7LNATvGykFY10mOXez84zPV_k3snefgS9zymcn2_7k3EMxAg@mail.gmail.com>
+Subject: Re: [PATCH v2] ARM: add __always_inline to functions called from __get_user_check()
+To:     Nick Desaulniers <ndesaulniers@google.com>
+Cc:     Kate Stewart <kstewart@linuxfoundation.org>,
+        Arnd Bergmann <arnd@arndb.de>, Enrico Weigelt <info@metux.net>,
+        Vincent Whitchurch <vincent.whitchurch@axis.com>,
+        Allison Randal <allison@lohutok.net>,
+        Russell King <linux@armlinux.org.uk>,
+        Stefan Agner <stefan@agner.ch>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Russell King <rmk+kernel@armlinux.org.uk>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Olof Johansson <olof@lixom.net>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Julien Thierry <julien.thierry.kdev@gmail.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Oct 2, 2019 at 11:09 AM Roman Gushchin <guro@fb.com> wrote:
->
-> On Tue, Oct 01, 2019 at 05:12:02PM +0200, Michal Koutn=C3=BD wrote:
-> > On Thu, Sep 05, 2019 at 02:45:44PM -0700, Roman Gushchin <guro@fb.com> =
-wrote:
-> > > Roman Gushchin (14):
-> > > [...]
-> > >   mm: memcg/slab: use one set of kmem_caches for all memory cgroups
-> > From that commit's message:
-> >
-> > > 6) obsoletes kmem.slabinfo cgroup v1 interface file, as there are
-> > >   no per-memcg kmem_caches anymore (empty output is printed)
-> >
-> > The empty file means no allocations took place in the particular cgroup=
-.
-> > I find this quite a surprising change for consumers of these stats.
-> >
-> > I understand obtaining the same data efficiently from the proposed
-> > structures is difficult, however, such a change should be avoided. (In
-> > my understanding, obsoleted file ~ not available in v2, however, it
-> > should not disappear from v1.)
->
-> Well, my assumption is that nobody is using this file for anything except
-> debugging purposes (I might be wrong, if somebody has an automation based
-> on it, please, let me know). A number of allocations of each type per mem=
-ory
-> cgroup is definitely a useful debug information, but currently it barely =
-works
-> (displayed numbers show mostly the number of allocated pages, not the num=
-ber
-> of active objects). We can support it, but it comes with the price, and
-> most users don't really need it. So I don't think it worth it to make all
-> allocations slower just to keep some debug interface working for some
-> cgroup v1 users. Do you have examples when it's really useful and worth
-> extra cpu cost?
->
-> Unfortunately, we can't enable it conditionally, as a user can switch
-> between cgroup v1 and cgroup v2 memory controllers dynamically.
+Hi Nick,
 
-kmem.slabinfo has been absolutely invaluable for debugging, in my experienc=
-e.
-I am however not aware of any automation based on it.
+On Wed, Oct 2, 2019 at 2:04 AM Nick Desaulniers <ndesaulniers@google.com> wrote:
+> > Since that commit, all architectures can enable CONFIG_OPTIMIZE_INLINING.
+> > So, __always_inline is now the only guaranteed way of forcible inlining.
+>
+> No, the C preprocessor is the only guaranteed way of inlining.
 
-Maybe it might be worth adding it to cgroup v2 and have a CONFIG
-option to enable it?
 
--- Suleiman
+I do not think this is fatal if I understood this correctly:
+https://lore.kernel.org/patchwork/patch/1122097/#1331784
+
+
+For GCC, we at least get a warning if a function with
+ __always_inline is not inlined.
+I am fine with adding -Werror=attributes to the top Makefile
+(unless we have unpleasant side-effects).
+
+You filed the bug for Clang, and hopefully it will be OK
+in the future releases?
+
+
+
+
+--
+Best Regards
+Masahiro Yamada
