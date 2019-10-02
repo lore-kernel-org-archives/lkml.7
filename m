@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85776C4360C
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 19:12:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 76541C4360C
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 19:12:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6ACB3207FF
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 19:12:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 52C54207FF
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 19:12:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729609AbfJBTMY (ORCPT
+        id S1730094AbfJBTM0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Oct 2019 15:12:24 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:35478 "EHLO
+        Wed, 2 Oct 2019 15:12:26 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:35470 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729155AbfJBTIK (ORCPT
+        by vger.kernel.org with ESMTP id S1729150AbfJBTIK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 2 Oct 2019 15:08:10 -0400
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1iFjyn-00035Q-LB; Wed, 02 Oct 2019 20:08:05 +0100
+        id 1iFjyo-000364-Ll; Wed, 02 Oct 2019 20:08:06 +0100
 Received: from ben by deadeye with local (Exim 4.92.1)
         (envelope-from <ben@decadent.org.uk>)
-        id 1iFjyn-0003ak-5j; Wed, 02 Oct 2019 20:08:05 +0100
+        id 1iFjyn-0003cL-T5; Wed, 02 Oct 2019 20:08:05 +0100
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,18 +35,14 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Michael Rodin" <mrodin@de.adit-jv.com>,
-        "Wolfram Sang" <wsa+renesas@sang-engineering.com>,
-        "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
-        "George G. Davis" <george_davis@mentor.com>,
-        "Geert Uytterhoeven" <geert+renesas@glider.be>,
-        "Simon Horman" <horms+renesas@verge.net.au>,
-        "Eugeniu Rosca" <erosca@de.adit-jv.com>
+        "Wolfram Sang" <wsa@the-dreams.de>,
+        "Yingjoe Chen" <yingjoe.chen@mediatek.com>
 Date:   Wed, 02 Oct 2019 20:06:51 +0100
-Message-ID: <lsq.1570043211.904590300@decadent.org.uk>
+Message-ID: <lsq.1570043211.134919505@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 12/87] serial: sh-sci: disable DMA for uart_console
+Subject: [PATCH 3.16 31/87] i2c: dev: fix potential memory leak in
+ i2cdev_ioctl_rdwr
 In-Reply-To: <lsq.1570043210.379046399@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -60,44 +56,29 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: "George G. Davis" <george_davis@mentor.com>
+From: Yingjoe Chen <yingjoe.chen@mediatek.com>
 
-commit 099506cbbc79c0bd52b19cb6b930f256dabc3950 upstream.
+commit a0692f0eef91354b62c2b4c94954536536be5425 upstream.
 
-As noted in commit 84b40e3b57ee ("serial: 8250: omap: Disable DMA for
-console UART"), UART console lines use low-level PIO only access functions
-which will conflict with use of the line when DMA is enabled, e.g. when
-the console line is also used for systemd messages. So disable DMA
-support for UART console lines.
+If I2C_M_RECV_LEN check failed, msgs[i].buf allocated by memdup_user
+will not be freed. Pump index up so it will be freed.
 
-Reported-by: Michael Rodin <mrodin@de.adit-jv.com>
-Link: https://patchwork.kernel.org/patch/10929511/
-Tested-by: Eugeniu Rosca <erosca@de.adit-jv.com>
-Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
-Reviewed-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Signed-off-by: George G. Davis <george_davis@mentor.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-[bwh: Backported to 3.16: adjust context]
+Fixes: 838bfa6049fb ("i2c-dev: Add support for I2C_M_RECV_LEN")
+Signed-off-by: Yingjoe Chen <yingjoe.chen@mediatek.com>
+Signed-off-by: Wolfram Sang <wsa@the-dreams.de>
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- drivers/tty/serial/sh-sci.c | 7 +++++++
- 1 file changed, 7 insertions(+)
+ drivers/i2c/i2c-dev.c | 1 +
+ 1 file changed, 1 insertion(+)
 
---- a/drivers/tty/serial/sh-sci.c
-+++ b/drivers/tty/serial/sh-sci.c
-@@ -1600,6 +1600,13 @@ static void sci_request_dma(struct uart_
- 
- 	dev_dbg(port->dev, "%s: port %d\n", __func__, port->line);
- 
-+	/*
-+	 * DMA on console may interfere with Kernel log messages which use
-+	 * plain putchar(). So, simply don't use it with a console.
-+	 */
-+	if (uart_console(port))
-+		return;
-+
- 	if (s->cfg->dma_slave_tx <= 0 || s->cfg->dma_slave_rx <= 0)
- 		return;
- 
+--- a/drivers/i2c/i2c-dev.c
++++ b/drivers/i2c/i2c-dev.c
+@@ -300,6 +300,7 @@ static noinline int i2cdev_ioctl_rdrw(st
+ 			    rdwr_pa[i].buf[0] < 1 ||
+ 			    rdwr_pa[i].len < rdwr_pa[i].buf[0] +
+ 					     I2C_SMBUS_BLOCK_MAX) {
++				i++;
+ 				res = -EINVAL;
+ 				break;
+ 			}
 
