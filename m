@@ -2,162 +2,201 @@ Return-Path: <SRS0=zem1=X3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0540AC4360C
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 21:54:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7E11C10F14
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 21:54:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CAE9C2086A
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 21:54:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Bt3VWZmA"
+	by mail.kernel.org (Postfix) with ESMTP id 96F1E222BE
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 21:54:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727592AbfJBVyC (ORCPT
+        id S1727922AbfJBVyu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Oct 2019 17:54:02 -0400
-Received: from mail-qk1-f195.google.com ([209.85.222.195]:33722 "EHLO
-        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725928AbfJBVyB (ORCPT
+        Wed, 2 Oct 2019 17:54:50 -0400
+Received: from relay11.mail.gandi.net ([217.70.178.231]:58889 "EHLO
+        relay11.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726128AbfJBVyt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Oct 2019 17:54:01 -0400
-Received: by mail-qk1-f195.google.com with SMTP id x134so328939qkb.0;
-        Wed, 02 Oct 2019 14:53:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=rzOcwXLPCPxOer2OQybfy1++8uKi5OM6q5fIBGrbztg=;
-        b=Bt3VWZmADHxaTGyi0q/esRUsSbOo55sfH7wTfotYnV+6N73XFIXvn3VSvg7sPPBXyV
-         LB8j5V7u3aKyMKTLhyW7LqfSUoAqrFuS4caTEqMFe7rvD6cM0T91cwqW7aDCu3LB/VBp
-         GiIiM7AmZk1sdo4jFj+5OXhW8e72L3QKg0uYhJN5gKH5w5QY/klGOKpAjEIEwZfJWS2D
-         wdiCqYZWUt45PQULbfvpI9uFVioZORPVi0sv/9b/jiFZK+vCgypwBOIK1Hql+WDLRatx
-         /8YRVZ4A3ExpLU1KzXwLNYFee0dRPQIIam09qzqcyC3Uep3hLnEULmhZA0wDlVStOEZW
-         b6SA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=rzOcwXLPCPxOer2OQybfy1++8uKi5OM6q5fIBGrbztg=;
-        b=PN815pF20f92v3h9rEIkshbFX1jHhx0Q52xHQSN5N4547nnMxHcY3jWsRNH8GsYGCL
-         nY/Mn0WExDVKBVTL1KYR/2icoKiafH/Lz3oO3oaVYr9uu3UdggA3KMIKzwxoQZWC+nnc
-         lVMoE++WjdTWNOxyvX55Ar2qciq8Aku6xW4qO2FSPBwEQhCgD0intF29dLCLEWDIK1xj
-         IKxb3bzpijTRlcl++DENH5cPHddJHAz6TxUx0t9qJWGayY02CrY9r9JkmtgSiOBBMwvg
-         f7t0vowQp9z/zPzc2P5gXPnnuqZKqkNA6xzZPonPlM1x/czLUCx7K77Wk2fou51OD14O
-         /8LQ==
-X-Gm-Message-State: APjAAAVop0aw8bvcSJwniCdAtu7p7r+l/a1OTVRKEBWFAomDzlWvy29s
-        GMSKXTEnIxNkvtFymTr0vo5/f+oVaNu6Z0UrmH8=
-X-Google-Smtp-Source: APXvYqyOF3z/DzRmunXZYetxTarAMDAqZvSiQ4zdVcvUxuWIyXYpouY4xADzvDjznsZXL/rHW1cH62TG+AVddAUteU4=
-X-Received: by 2002:a37:9fcd:: with SMTP id i196mr1165959qke.92.1570053238615;
- Wed, 02 Oct 2019 14:53:58 -0700 (PDT)
+        Wed, 2 Oct 2019 17:54:49 -0400
+Received: from aptenodytes (unknown [132.205.230.6])
+        (Authenticated sender: paul.kocialkowski@bootlin.com)
+        by relay11.mail.gandi.net (Postfix) with ESMTPSA id AA261100003;
+        Wed,  2 Oct 2019 21:54:44 +0000 (UTC)
+Date:   Wed, 2 Oct 2019 17:54:42 -0400
+From:   Paul Kocialkowski <paul.kocialkowski@bootlin.com>
+To:     Jernej Skrabec <jernej.skrabec@siol.net>
+Cc:     mripard@kernel.org, mchehab@kernel.org, hverkuil-cisco@xs4all.nl,
+        gregkh@linuxfoundation.org, wens@csie.org,
+        linux-media@vger.kernel.org, devel@driverdev.osuosl.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 1/3] media: cedrus: Fix decoding for some H264 videos
+Message-ID: <20191002215442.GA24151@aptenodytes>
+References: <20191002193553.1633467-1-jernej.skrabec@siol.net>
+ <20191002193553.1633467-2-jernej.skrabec@siol.net>
 MIME-Version: 1.0
-References: <20191001173728.149786-1-brianvv@google.com> <20191001173728.149786-3-brianvv@google.com>
- <CAEf4BzYxs6Ace8s64ML3pA9H4y0vgdWv_vDF57oy3i-O_G7c-g@mail.gmail.com>
- <CABCgpaWbPN+2vSNdynHtmDxrgGbyzHa_D-y4-X8hLrQYbhTx=A@mail.gmail.com>
- <20191002085553.GA6226@pc-66.home> <CAEf4BzZAywR2g4bRu8Bs-YJxzf64GTrR7NvgOaXG2fqaKiJpSQ@mail.gmail.com>
- <20191002215051.GB9196@pc-66.home>
-In-Reply-To: <20191002215051.GB9196@pc-66.home>
-From:   Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date:   Wed, 2 Oct 2019 14:53:47 -0700
-Message-ID: <CAEf4BzaftLAc1xv5yiRE2J6MLy_FF4g6_dqExTiPjs6ZDX6e=w@mail.gmail.com>
-Subject: Re: [PATCH bpf 2/2] selftests/bpf: test_progs: don't leak server_fd
- in test_sockopt_inherit
-To:     Daniel Borkmann <daniel@iogearbox.net>
-Cc:     Brian Vazquez <brianvv.kernel@gmail.com>,
-        Brian Vazquez <brianvv@google.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        "David S . Miller" <davem@davemloft.net>,
-        Stanislav Fomichev <sdf@google.com>,
-        open list <linux-kernel@vger.kernel.org>,
-        Networking <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="3V7upXqbjpZ4EhLz"
+Content-Disposition: inline
+In-Reply-To: <20191002193553.1633467-2-jernej.skrabec@siol.net>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Oct 2, 2019 at 2:51 PM Daniel Borkmann <daniel@iogearbox.net> wrote:
->
-> On Wed, Oct 02, 2019 at 01:30:14PM -0700, Andrii Nakryiko wrote:
-> > On Wed, Oct 2, 2019 at 1:56 AM Daniel Borkmann <daniel@iogearbox.net> wrote:
-> > > On Tue, Oct 01, 2019 at 08:42:30PM -0700, Brian Vazquez wrote:
-> > > > Thanks for reviewing the patches Andrii!
-> > > >
-> > > > Although Daniel fixed them and applied them correctly.
-> > >
-> > > After last kernel/maintainer summit at LPC, I reworked all my patchwork scripts [0]
-> > > which I use for bpf trees in order to further reduce manual work and add more sanity
-> > > checks at the same time. Therefore, the broken Fixes: tag was a good test-case. ;-)
-> >
-> > Do you scripts also capitalize first word after libbpf: prefix? Is
-> > that intentional? Is that a recommended subject casing:
-> >
-> > "libbpf: Do awesome stuff" vs "libbpf: do awesome stuff"?
->
-> Right now we have a bit of a mix on that regard, and basically what the
-> pw-apply script from [0] is doing, is the following to provide some more
-> context:
->
-> - Pulls the series mbox specified by series id from patchwork, dumps all
->   necessary information about the series, e.g. whether it's complete and
->   all patches are present, etc.
-> - Pushes the mbox through mb2q which is a script that x86 maintainers and
->   few others use for their patch management and spills out a new mbox.
->   This is effectively 'normalizing' the patches from the mbox to bring in
->   some more consistency, meaning it adds Link: tags to every patch based
->   on the message id and checks whether the necessary mailing list aka
->   bpf was in Cc, so we always have lore BPF archive links, sorts tags so
->   they all have a consistent order, it allows to propagate Acked-by,
->   Reviewed-by, Tested-by tags from cover letter into the individual
->   patches, it also capitalizes the first word after the subsystem prefix.
-> - It applies and merges the resulting mbox, and performs additional checks
->   for the newly added commit range, that is, it checks whether Fixes tags
->   are correctly formatted, whether the commit exists at all in the tree or
->   whether subject / sha is wrong, and throws warnings to me so I can fix
->   them up if needed or toss out the series again worst case, as well as
->   checks whether SOB from the patch authors is present and matches their
->   name.
-> - It allows to set the patches from the series into accepted state in
->   patchwork.
->
-> So overall less manual work / checks than what used to be before while
-> improving / ensuring more consistency in the commits at the same time.
-> If you have further suggestions / improvements / patches to pw.git,
-> happy to hear. :)
->
 
-"libbpf: Captilized subj" looks weird, but I can live with that. I'll
-post subsequent patches with that casing. I'm glad a lot of that stuff
-is semi-automated, it's terrible to have to always check all that
-manually :)
+--3V7upXqbjpZ4EhLz
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> Thanks,
-> Daniel
+Hi,
+
+On Wed 02 Oct 19, 21:35, Jernej Skrabec wrote:
+> It seems that for some H264 videos at least one bitstream parsing
+> trigger must be called in order to be decoded correctly. There is no
+> explanation why this helps, but it was observed that two sample videos
+> with this fix are now decoded correctly and there is no regression with
+> others.
+
+I understand there might be some magic going on under the hood here, but I =
+would
+be interested in trying to understand what's really going on.
+
+For instance, comparing register dumps of the whole H264 block before/after
+calling the hardware parser could help, and comparing that to using the pre=
+vious
+code (without hardware parsing).
+
+I could try and have a look if you have an available sample for testing the
+erroneous case!
+
+Another minor thing: do you have some idea of whether the udelay call adds
+significant delay in the process?
+
+Cheers and thanks for the patch!
+
+Paul
+
+> Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
+> ---
+>  .../staging/media/sunxi/cedrus/cedrus_h264.c  | 30 +++++++++++++++++--
+>  .../staging/media/sunxi/cedrus/cedrus_regs.h  |  3 ++
+>  2 files changed, 30 insertions(+), 3 deletions(-)
+>=20
+> diff --git a/drivers/staging/media/sunxi/cedrus/cedrus_h264.c b/drivers/s=
+taging/media/sunxi/cedrus/cedrus_h264.c
+> index d6a782703c9b..bd848146eada 100644
+> --- a/drivers/staging/media/sunxi/cedrus/cedrus_h264.c
+> +++ b/drivers/staging/media/sunxi/cedrus/cedrus_h264.c
+> @@ -6,6 +6,7 @@
+>   * Copyright (c) 2018 Bootlin
+>   */
+> =20
+> +#include <linux/delay.h>
+>  #include <linux/types.h>
+> =20
+>  #include <media/videobuf2-dma-contig.h>
+> @@ -289,6 +290,28 @@ static void cedrus_write_pred_weight_table(struct ce=
+drus_ctx *ctx,
+>  	}
+>  }
+> =20
+> +/*
+> + * It turns out that using VE_H264_VLD_OFFSET to skip bits is not reliab=
+le. In
+> + * rare cases frame is not decoded correctly. However, setting offset to=
+ 0 and
+> + * skipping appropriate amount of bits with flush bits trigger always wo=
+rks.
+> + */
+> +static void cedrus_skip_bits(struct cedrus_dev *dev, int num)
+> +{
+> +	int count =3D 0;
+> +
+> +	while (count < num) {
+> +		int tmp =3D min(num - count, 32);
 >
-> > >   [0] https://git.kernel.org/pub/scm/linux/kernel/git/dborkman/pw.git/
-> > >
-> > > > On Tue, Oct 1, 2019 at 8:20 PM Andrii Nakryiko
-> > > > <andrii.nakryiko@gmail.com> wrote:
-> > > > >
-> > > > > On Tue, Oct 1, 2019 at 10:40 AM Brian Vazquez <brianvv@google.com> wrote:
-> > > > > >
-> > > > >
-> > > > > I don't think there is a need to add "test_progs:" to subject, "
-> > > > > test_sockopt_inherit" is specific enough ;)
-> > > > >
-> > > > > > server_fd needs to be close if pthread can't be created.
-> > > > >
-> > > > > typo: closed
-> > > > >
-> > > > > > Fixes: e3e02e1d9c24 ("selftests/bpf: test_progs: convert test_sockopt_inherit")
-> > > > > > Cc: Stanislav Fomichev <sdf@google.com>
-> > > > > > Signed-off-by: Brian Vazquez <brianvv@google.com>
-> > > > > > ---
-> > > > >
-> > > > > Acked-by: Andrii Nakryiko <andriin@fb.com>
-> > > > >
-> > > > > >  tools/testing/selftests/bpf/prog_tests/sockopt_inherit.c | 2 +-
-> > > > > >  1 file changed, 1 insertion(+), 1 deletion(-)
+> +
+> +		cedrus_write(dev, VE_H264_TRIGGER_TYPE,
+> +			     VE_H264_TRIGGER_TYPE_FLUSH_BITS |
+> +			     VE_H264_TRIGGER_TYPE_N_BITS(tmp));
+> +		while (cedrus_read(dev, VE_H264_STATUS) & VE_H264_STATUS_VLD_BUSY)
+> +			udelay(1);
+> +
+> +		count +=3D tmp;
+> +	}
+> +}
+> +
+>  static void cedrus_set_params(struct cedrus_ctx *ctx,
+>  			      struct cedrus_run *run)
+>  {
+> @@ -299,12 +322,11 @@ static void cedrus_set_params(struct cedrus_ctx *ct=
+x,
+>  	struct vb2_buffer *src_buf =3D &run->src->vb2_buf;
+>  	struct cedrus_dev *dev =3D ctx->dev;
+>  	dma_addr_t src_buf_addr;
+> -	u32 offset =3D slice->header_bit_size;
+> -	u32 len =3D (slice->size * 8) - offset;
+> +	u32 len =3D slice->size * 8;
+>  	u32 reg;
+> =20
+>  	cedrus_write(dev, VE_H264_VLD_LEN, len);
+> -	cedrus_write(dev, VE_H264_VLD_OFFSET, offset);
+> +	cedrus_write(dev, VE_H264_VLD_OFFSET, 0);
+> =20
+>  	src_buf_addr =3D vb2_dma_contig_plane_dma_addr(src_buf, 0);
+>  	cedrus_write(dev, VE_H264_VLD_END,
+> @@ -323,6 +345,8 @@ static void cedrus_set_params(struct cedrus_ctx *ctx,
+>  	cedrus_write(dev, VE_H264_TRIGGER_TYPE,
+>  		     VE_H264_TRIGGER_TYPE_INIT_SWDEC);
+> =20
+> +	cedrus_skip_bits(dev, slice->header_bit_size);
+> +
+>  	if (((pps->flags & V4L2_H264_PPS_FLAG_WEIGHTED_PRED) &&
+>  	     (slice->slice_type =3D=3D V4L2_H264_SLICE_TYPE_P ||
+>  	      slice->slice_type =3D=3D V4L2_H264_SLICE_TYPE_SP)) ||
+> diff --git a/drivers/staging/media/sunxi/cedrus/cedrus_regs.h b/drivers/s=
+taging/media/sunxi/cedrus/cedrus_regs.h
+> index 3329f9aaf975..b52926a54025 100644
+> --- a/drivers/staging/media/sunxi/cedrus/cedrus_regs.h
+> +++ b/drivers/staging/media/sunxi/cedrus/cedrus_regs.h
+> @@ -538,13 +538,16 @@
+>  					 VE_H264_CTRL_SLICE_DECODE_INT)
+> =20
+>  #define VE_H264_TRIGGER_TYPE		0x224
+> +#define VE_H264_TRIGGER_TYPE_N_BITS(x)		(((x) & 0x3f) << 8)
+>  #define VE_H264_TRIGGER_TYPE_AVC_SLICE_DECODE	(8 << 0)
+>  #define VE_H264_TRIGGER_TYPE_INIT_SWDEC		(7 << 0)
+> +#define VE_H264_TRIGGER_TYPE_FLUSH_BITS		(3 << 0)
+> =20
+>  #define VE_H264_STATUS			0x228
+>  #define VE_H264_STATUS_VLD_DATA_REQ_INT		VE_H264_CTRL_VLD_DATA_REQ_INT
+>  #define VE_H264_STATUS_DECODE_ERR_INT		VE_H264_CTRL_DECODE_ERR_INT
+>  #define VE_H264_STATUS_SLICE_DECODE_INT		VE_H264_CTRL_SLICE_DECODE_INT
+> +#define VE_H264_STATUS_VLD_BUSY			BIT(8)
+> =20
+>  #define VE_H264_STATUS_INT_MASK			VE_H264_CTRL_INT_MASK
+> =20
+> --=20
+> 2.23.0
+>=20
+
+--3V7upXqbjpZ4EhLz
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEEJZpWjZeIetVBefti3cLmz3+fv9EFAl2VHKIACgkQ3cLmz3+f
+v9Fh/Af9GyVy5KNZkifK5kCwy7+K0g6QPZG35LlJmVdVto99qVx6UcgP9NZS/uBX
+EebSolJysTj4DgpkXz/vsQy1gdMzMylUQAY0mqb6WCXlyyHkI54vOiXP1TcACSO2
+9z2eK1RuJfOxxTxWqoo7CP46Fl5tAKnEGox60Xt8B+ouPDsE4aFTNYhxz9szJj0O
+E3W5oCWdsoKVnp7zlTwrNTk0rQKJcKxSWVOtE+AvZUYRNqDysIYs1UNje70XLGjM
+fQKjAP29I8XShgJqRtZVHHGyWS2EooK3r7UJw9dhbGQZ+jJGJuGdd3Bj858sRBC2
+5Pxis3T4ttOXAvBWtDX2jBZgqZG78g==
+=R09t
+-----END PGP SIGNATURE-----
+
+--3V7upXqbjpZ4EhLz--
