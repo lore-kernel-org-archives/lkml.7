@@ -2,102 +2,139 @@ Return-Path: <SRS0=zem1=X3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C6AFECE58A
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 18:41:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CFCDC352AA
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 18:45:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1AA1321783
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 18:41:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2BA4D21783
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 18:45:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="sBQB5FHA"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YRfnqiN3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728987AbfJBSl4 (ORCPT
+        id S1728897AbfJBSpL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Oct 2019 14:41:56 -0400
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:46252 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726076AbfJBSl4 (ORCPT
+        Wed, 2 Oct 2019 14:45:11 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:33696 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726708AbfJBSpL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Oct 2019 14:41:56 -0400
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id x92Ifprj046365;
-        Wed, 2 Oct 2019 13:41:51 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1570041711;
-        bh=+spmMCalRYp1KmZp1TuVW9ikVfMlhtrnfO2BlXZmNic=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=sBQB5FHAnbY4HxsNIIJNE8aBVT9EGOv1BA9RHeZGtr2S1TaSeglDO+urtugUajqbX
-         aD59zBde8G7x3HY1rjNTeBj3xjUBto/70rsw8/0H/HQcVGgikhi0xGYrIAr+QngKvl
-         YqKdhp7uBUJzg7+QBymimWuSB8QD22M1Ip6g85sI=
-Received: from DFLE108.ent.ti.com (dfle108.ent.ti.com [10.64.6.29])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x92Ifpp9107814
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 2 Oct 2019 13:41:51 -0500
-Received: from DFLE109.ent.ti.com (10.64.6.30) by DFLE108.ent.ti.com
- (10.64.6.29) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Wed, 2 Oct
- 2019 13:41:40 -0500
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE109.ent.ti.com
- (10.64.6.30) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Wed, 2 Oct 2019 13:41:40 -0500
-Received: from [10.250.65.13] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id x92IfoM3129258;
-        Wed, 2 Oct 2019 13:41:50 -0500
-Subject: Re: [RFC PATCH] leds: core: Fix LED_COLOR_MAX_ID
-To:     Pavel Machek <pavel@ucw.cz>
-CC:     <jacek.anaszewski@gmail.com>, <linux-leds@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-References: <20191002163400.25317-1-dmurphy@ti.com>
- <20191002183603.GC13492@amd>
-From:   Dan Murphy <dmurphy@ti.com>
-Message-ID: <fae233c1-7c5b-7468-33c1-5309c036fd66@ti.com>
-Date:   Wed, 2 Oct 2019 13:42:36 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Wed, 2 Oct 2019 14:45:11 -0400
+Received: by mail-pg1-f195.google.com with SMTP id q1so24747pgb.0;
+        Wed, 02 Oct 2019 11:45:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=13XjhSMoHUotvnT/6gwxwCtrPn3U5+PA5KF+bM08Ss0=;
+        b=YRfnqiN3dWX/UrQ6CZOPA/blP8louSmAQ6zZCzZP0U2fmjHo1pHrlyc+dPrVes9OL5
+         qYOEc8n7g2QXcas0+eyI9fXplBpjNuvhSiubE2FCT41tjt1oKujdHC7fbqyXjooCdkLv
+         cY5pKiqwv+gW4sqMwaowfquV60QrJbIRf3AO6FTP1msiql0PpC4He+32d9yt0zY3tVoV
+         FxqwNe7IvDy5Oa4151la5BatjlGZpyrZ3U58Kb84JB1MHEFWPX5vkZJyWUPY9Vn2aIgN
+         Xpx9wj3bksnWsIqPcoDzo1P9+GJLOa2s7waBCAYOXM9p84c+bcBPzYgAR1gcsapAZsHk
+         ErWA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=13XjhSMoHUotvnT/6gwxwCtrPn3U5+PA5KF+bM08Ss0=;
+        b=EF8qo+N+MC9SJBQrzlFy1EIr8/UWorUMcmI3PnDeGQkP4ZDtStAQ2nsjZsdu/m370Q
+         WiKWzZslHYnEhsFBhQ+h9VdcVu0knMhqZVwK20LgJRuRwKiH+6IfIplRE6G9dRfO9Jh2
+         1b6VhqqrixWc8NF1z3gXJzInNzrflhxonReXh5vlDKiHXBgCdenkIIoXiYOc7jLvBd/9
+         WCH6uLpHIi62ERMiuvzOEw1cznA2hGOYCWAhLN3FENZDV1+Kd9HegRtT3qcHJ+1oRbBg
+         pEhHL2bl3NW/cxbzH7hUreVj673QEpBCmTBP59QIB2XhlTTBP+PXRjRUHaDj45Ex1nVY
+         6K0Q==
+X-Gm-Message-State: APjAAAX4m5aEA5U+nT3sPng+DmmPzNxT192N7MruoQ5r/l7Zr5oMxEzx
+        h6SeuNMdM62QNJsr6sAOtlfz5E90
+X-Google-Smtp-Source: APXvYqx80cVbYWHFmM2bz4jjyJYogCOlPZwpPDUVGOIM8XYwhneMKU4TZJmTvcQKOEFP+f+2/jwNUg==
+X-Received: by 2002:a62:8142:: with SMTP id t63mr6402522pfd.246.1570041910288;
+        Wed, 02 Oct 2019 11:45:10 -0700 (PDT)
+Received: from ast-mbp.dhcp.thefacebook.com ([2620:10d:c090:200::1:2790])
+        by smtp.gmail.com with ESMTPSA id q2sm176804pfg.144.2019.10.02.11.45.08
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 02 Oct 2019 11:45:09 -0700 (PDT)
+Date:   Wed, 2 Oct 2019 11:45:08 -0700
+From:   Alexei Starovoitov <alexei.starovoitov@gmail.com>
+To:     KP Singh <kpsingh@chromium.org>
+Cc:     linux-kernel@vger.kernel.org, bpf@vger.kernel.org,
+        Florent Revest <revest@google.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        Florent Revest <revest@chromium.org>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>
+Subject: Re: [PATCH] samples/bpf: Fix broken samples.
+Message-ID: <20191002184506.iauttcpgyzcplope@ast-mbp.dhcp.thefacebook.com>
+References: <20191002174632.28610-1-kpsingh@chromium.org>
 MIME-Version: 1.0
-In-Reply-To: <20191002183603.GC13492@amd>
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191002174632.28610-1-kpsingh@chromium.org>
+User-Agent: NeoMutt/20180223
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello
+On Wed, Oct 02, 2019 at 07:46:32PM +0200, KP Singh wrote:
+> From: KP Singh <kpsingh@google.com>
+> 
+> Rename asm_goto_workaround.h to asm_workaround.h and add a
+> workaround for the newly added "asm_inline" in:
+> 
+>   commit eb111869301e ("compiler-types.h: add asm_inline definition")
+> 
+> Add missing include for <linux/perf_event.h> which was removed from
+> perf-sys.h in:
+> 
+>   commit 91854f9a077e ("perf tools: Move everything related to
+> 	               sys_perf_event_open() to perf-sys.h")
+> 
+> Co-developed-by: Florent Revest <revest@google.com>
+> Signed-off-by: Florent Revest <revest@google.com>
+> Signed-off-by: KP Singh <kpsingh@google.com>
+> ---
+>  samples/bpf/Makefile                            |  2 +-
+>  .../{asm_goto_workaround.h => asm_workaround.h} | 17 ++++++++++++++---
+>  samples/bpf/task_fd_query_user.c                |  1 +
+>  3 files changed, 16 insertions(+), 4 deletions(-)
+>  rename samples/bpf/{asm_goto_workaround.h => asm_workaround.h} (46%)
+> 
+> diff --git a/samples/bpf/Makefile b/samples/bpf/Makefile
+> index 42b571cde177..ab2b4d7ecb4b 100644
+> --- a/samples/bpf/Makefile
+> +++ b/samples/bpf/Makefile
+> @@ -289,7 +289,7 @@ $(obj)/%.o: $(src)/%.c
+>  		-Wno-gnu-variable-sized-type-not-at-end \
+>  		-Wno-address-of-packed-member -Wno-tautological-compare \
+>  		-Wno-unknown-warning-option $(CLANG_ARCH_ARGS) \
+> -		-I$(srctree)/samples/bpf/ -include asm_goto_workaround.h \
+> +		-I$(srctree)/samples/bpf/ -include asm_workaround.h \
+>  		-O2 -emit-llvm -c $< -o -| $(LLC) -march=bpf $(LLC_FLAGS) -filetype=obj -o $@
+>  ifeq ($(DWARF2BTF),y)
+>  	$(BTF_PAHOLE) -J $@
+> diff --git a/samples/bpf/asm_goto_workaround.h b/samples/bpf/asm_workaround.h
+> similarity index 46%
+> rename from samples/bpf/asm_goto_workaround.h
+> rename to samples/bpf/asm_workaround.h
+> index 7409722727ca..7c99ea6ae98c 100644
+> --- a/samples/bpf/asm_goto_workaround.h
+> +++ b/samples/bpf/asm_workaround.h
+> @@ -1,9 +1,10 @@
+>  /* SPDX-License-Identifier: GPL-2.0 */
+>  /* Copyright (c) 2019 Facebook */
+> -#ifndef __ASM_GOTO_WORKAROUND_H
+> -#define __ASM_GOTO_WORKAROUND_H
+> +#ifndef __ASM_WORKAROUND_H
+> +#define __ASM_WORKAROUND_H
 
-On 10/2/19 1:36 PM, Pavel Machek wrote:
-> On Wed 2019-10-02 11:34:00, Dan Murphy wrote:
->> The LED_COLOR_MAX_ID is incorrect.  THe MAX_ID should
->> be the last COLOR_ID in the list.  If an array was allocate
->> with MAX_ID the allocation would be correct but the meaning
->> is wrong.
->>
->> So for array allocation the code should use LED_NUM_COLOR_IDS
->> which will allocate MAX_ID + 1.  Whent the code needs to validate
->> that the color ID is not out of bounds then the code should use
->> LED_COLOR_MAX_ID.
-> Renaming original define might have been okay. Having two defines is
-> not. I'd say we can keep it as is...
+I don't think rename is necessary.
+This file already has a hack for volatile().
+Just add asm_inline hack to it.
 
-OK.  It was just not logical that MAX_ID will always be 1 more then the 
-actual MAX_ID.
-
-So every ID boundary check will need to be ">=" as opposed to ">" which 
-means we have to take care in reviews to make sure this is what is intended.
-
-But it was just a RFC so I am not pushing this fix.  It would mean I 
-would have to re-touch the MC framework patches.
-
-Dan
-
-
->
-> 								Pavel
-> 								
