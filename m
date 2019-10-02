@@ -2,95 +2,116 @@ Return-Path: <SRS0=zem1=X3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B876C352AA
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 09:14:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54E56C352AA
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 09:15:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5776C218DE
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 09:14:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2625321783
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 09:15:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="zc2FBs7z"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726395AbfJBJOO (ORCPT
+        id S1726559AbfJBJPg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Oct 2019 05:14:14 -0400
-Received: from mail-oi1-f194.google.com ([209.85.167.194]:36963 "EHLO
-        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725765AbfJBJOO (ORCPT
+        Wed, 2 Oct 2019 05:15:36 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:40328 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725852AbfJBJPg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Oct 2019 05:14:14 -0400
-Received: by mail-oi1-f194.google.com with SMTP id i16so17020448oie.4;
-        Wed, 02 Oct 2019 02:14:13 -0700 (PDT)
+        Wed, 2 Oct 2019 05:15:36 -0400
+Received: by mail-wr1-f65.google.com with SMTP id l3so18722515wru.7
+        for <linux-kernel@vger.kernel.org>; Wed, 02 Oct 2019 02:15:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=yH4ZTSk2dw1y5h5K76pORaKv4pdr0m6BUkDf5tas0UM=;
+        b=zc2FBs7z5S2aHmF35iyYbauzzs8pRQm213RXAZUZaRZNWslRhXz7GnASQPLyM9q/en
+         7T7cS+egsJAyLZFRLbx7NDJfF7bR4qg2p6bVpUTK7EaYjSnkaN9TwDBdnYS2FZv1OMze
+         OArWpi9IQhYJzBZzu34oUWewKmSIdOSPNjcmqEyjVXDHLLr94SmkSWe2CD5IobsS/yu7
+         s7m2DrWXIVweiWMi4MPzTIjSnx7kc11PmofHBo8+h23lqLKL0gOc6ET0NNqAzz04sM4B
+         m9HbhJo3a9IIGRKYGLLFR5NiFHKFsv2DGOZBtC71SWrsD90AKlEaov7T1msz1ppAHosn
+         yQ8Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=YbSUQaaVHYU+GgUB7AUhY2SfEFnEp/dDb1f2xcRz088=;
-        b=Yzj4fzf3v01CFSYQuvBT51oVcCXGqkoZWDTwycbun4v30Bh4i0bK1eAzDpC584qIvV
-         YxjTrpif3Jlw7q5s4/d+hZpxGBM8msNKbB/hw0juVCymnrgQ05skgpfcSTori8UIog9h
-         PAOgnUd8moPUCOiO8D5/aErb03nrsmrcDPEIchHvf19R9kZ1tlWyKZ/WgQEVHRXb8HHV
-         bepOtXIsFBa3PYSd3WVhL+K9JVjh3fs1wpLg0B45+PWRAAFx5QIH8tdE4uS7Zpr7X0Rr
-         7t+2iRXpTBYhNU7zLoAh3kgKdQMQAz3B7SQNJVJjF0VtlNPMtMz584IjN/HLMi1tvcDD
-         KEbw==
-X-Gm-Message-State: APjAAAWGGXrNLH/eG+1NRFaBV9Qstr7VNGI3qArPHPducqpZIDt08+XU
-        hCwNdzyS4G22ZBQFbuoPpVa6nAfAmvYRCgzxgjU=
-X-Google-Smtp-Source: APXvYqxhH0oDbm1ZZEiq8U+wLl4xx2krNMT4dTzVJ7F12oC2fUh2a8N8PtUQJ31gbVNRhAnkQb1h0ZxFpnx0jBa7kh0=
-X-Received: by 2002:aca:dad4:: with SMTP id r203mr2092018oig.102.1570007653508;
- Wed, 02 Oct 2019 02:14:13 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=yH4ZTSk2dw1y5h5K76pORaKv4pdr0m6BUkDf5tas0UM=;
+        b=GCYd3FCO+sJQDvdUf7EeSXsPnk3TYKI2hyQ8K/QaYIhfRB+ME+29CGA2yi7urHMcVZ
+         Ky33bEhkfDv348YLvCT4uwaN/zAdpJ7WOqleRUy3b9UFVpL4JHYiZtb/oxPdlHyj4JKR
+         9Ba6fejQvxvxqdBU5zVrDhTzWVaahrSkbRt999saic/rsmjFAKOPICf5/JTHTcMTXGio
+         W4vEq1nQZPFrzAWiMpoP2qPx79Mg4LaU56o2NOQk8nG0G6Uv/qE+2uZAZ4tP7WA6Yt9v
+         rJ6RJwQlMWC8yGlo/huvDfbOV42bRh9pr8VM/k3zreiRQMRrKFbtKzvbhkg8Zy2vD+71
+         gn5g==
+X-Gm-Message-State: APjAAAVoXX/4oAJHFOcZxMTfCMmKhXacRsOHkabHlIi2+sZp9I4dj6rL
+        X93T1STjIgl7JY+sZv3e3bNn/Q==
+X-Google-Smtp-Source: APXvYqzswOHaJVWMVNqCnIuTNovQzfrpQ6257D/8Uph/LNaRknSti77zAUS9MQUECjWMbtME96+0MA==
+X-Received: by 2002:adf:d08b:: with SMTP id y11mr1934045wrh.50.1570007732457;
+        Wed, 02 Oct 2019 02:15:32 -0700 (PDT)
+Received: from starbuck.baylibre.local (lmontsouris-657-1-212-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
+        by smtp.googlemail.com with ESMTPSA id r13sm32913737wrn.0.2019.10.02.02.15.31
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 02 Oct 2019 02:15:31 -0700 (PDT)
+From:   Jerome Brunet <jbrunet@baylibre.com>
+To:     Neil Armstrong <narmstrong@baylibre.com>
+Cc:     Jerome Brunet <jbrunet@baylibre.com>,
+        Kevin Hilman <khilman@baylibre.com>,
+        linux-amlogic@lists.infradead.org, linux-clk@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v3 0/7] clk: meson: axg-audio: add sm1 support
+Date:   Wed,  2 Oct 2019 11:15:22 +0200
+Message-Id: <20191002091529.17112-1-jbrunet@baylibre.com>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-References: <20191001180834.1158-1-geert+renesas@glider.be>
- <20191002081553.GB1388@ninjato> <TYAPR01MB454472C76E03930717A2898BD89C0@TYAPR01MB4544.jpnprd01.prod.outlook.com>
- <CAMuHMdWBghL8Em0OoCKjJdU7OiY_pV3Lmc=SXhV2yY=sKJJ-aw@mail.gmail.com> <20191002085805.GA10270@ninjato>
-In-Reply-To: <20191002085805.GA10270@ninjato>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Wed, 2 Oct 2019 11:14:02 +0200
-Message-ID: <CAMuHMdXo0knrst754b7rvBRGC8kBxO7PLJ2XR6E2-q6wumBSGQ@mail.gmail.com>
-Subject: Re: [PATCH] mmc: sh_mmcif: Use platform_get_irq_optional() for
- optional interrupt
-To:     Wolfram Sang <wsa@the-dreams.de>
-Cc:     Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Wolfram Sang <wsa+renesas@sang-engineering.com>,
-        Jiri Slaby <jslaby@suse.com>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "linux-renesas-soc@vger.kernel.org" 
-        <linux-renesas-soc@vger.kernel.org>,
-        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Wolfram,
+The purpose of this patchset is to add the sm1 support to the amlogic audio
+clock controller. The line count is lot higher than what I hoped for. Even
+if extremely similar, there is a shift in the register address on the sm1
+which makes a bit of a mess.
 
-On Wed, Oct 2, 2019 at 10:58 AM Wolfram Sang <wsa@the-dreams.de> wrote:
-> > Please cherry-pick the top commit from renesas-devel:
-> > 6e47c841329eb9b0 ("ARM: fix __get_user_check() in case uaccess_* calls
-> > are not inlined")
->
-> Thanks a lot, Geert. I can confirm this patch fixes the issue I was
-> seeing:
->
-> Tested-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
->
-> Could you kindly forward this tag to Yamada-san or bounce me the patch
-> so I can do it?
+I could have patched the address on the fly if running on sm1 but the end
+result did not save much lines and would have been a pain to maintain and
+scale in the future
 
-Please check your linux-renesas-soc folder.  I CCed the list when providing
-my own Tested-by yesterday.
+Instead I choose to re-arrange the driver to share the macros and declare
+separate clocks for the clock which have changed.
 
-Gr{oetje,eeting}s,
+Changes since v2 [1]:
+ - Add missing gate ops for
+  * sm1_clk81_en
+  * sm1_sysclk_a_en
+  * sm1_sysclk_b_en
 
-                        Geert
+Changes since v1 [0]:
+ - Fix newline in the last patch
+
+[0]: https://lkml.kernel.org/r/20190924153356.24103-1-jbrunet@baylibre.com
+[1]: https://lkml.kernel.org/r/20191001115511.17357-1-jbrunet@baylibre.com>
+
+Jerome Brunet (7):
+  dt-bindings: clk: axg-audio: add sm1 bindings
+  dt-bindings: clock: meson: add sm1 resets to the axg-audio controller
+  clk: meson: axg-audio: remove useless defines
+  clk: meson: axg-audio: fix regmap last register
+  clk: meson: axg-audio: prepare sm1 addition
+  clk: meson: axg-audio: provide clk top signal name
+  clk: meson: axg_audio: add sm1 support
+
+ .../bindings/clock/amlogic,axg-audio-clkc.txt |    3 +-
+ drivers/clk/meson/axg-audio.c                 | 2021 +++++++++++------
+ drivers/clk/meson/axg-audio.h                 |   21 +-
+ include/dt-bindings/clock/axg-audio-clkc.h    |   10 +
+ .../reset/amlogic,meson-g12a-audio-reset.h    |   15 +
+ 5 files changed, 1373 insertions(+), 697 deletions(-)
 
 -- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+2.21.0
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
