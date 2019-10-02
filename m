@@ -2,90 +2,137 @@ Return-Path: <SRS0=zem1=X3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F039C35280
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 08:20:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82C76C35280
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 08:20:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 58420218DE
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 08:20:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5AAB8218DE
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 08:20:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="b6kEri6n"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727647AbfJBIUQ (ORCPT
+        id S1727672AbfJBIUX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Oct 2019 04:20:16 -0400
-Received: from mx2.suse.de ([195.135.220.15]:52202 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726067AbfJBIUQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Oct 2019 04:20:16 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id EA74CACC6;
-        Wed,  2 Oct 2019 08:20:14 +0000 (UTC)
-Date:   Wed, 2 Oct 2019 10:20:06 +0200
-From:   Michal =?iso-8859-1?Q?Such=E1nek?= <msuchanek@suse.de>
-To:     Vinod Koul <vkoul@kernel.org>
-Cc:     Randy Dunlap <rdunlap@infradead.org>, alsa-devel@alsa-project.org,
-        Sanyog Kale <sanyog.r.kale@intel.com>,
-        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] soundwire: slave: Fix unused function warning on !ACPI
-Message-ID: <20191002081717.GA4015@kitsune.suse.cz>
-References: <20190830185212.25144-1-msuchanek@suse.de>
- <f8c58d45-e641-5071-33bf-2927a61cb419@infradead.org>
- <20190904093052.GQ2672@vkoul-mobl>
- <20190904124803.1700a65a@naga>
- <20190904114059.GU2672@vkoul-mobl>
+        Wed, 2 Oct 2019 04:20:23 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:39620 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727650AbfJBIUX (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 2 Oct 2019 04:20:23 -0400
+Received: by mail-wr1-f66.google.com with SMTP id r3so18545470wrj.6
+        for <linux-kernel@vger.kernel.org>; Wed, 02 Oct 2019 01:20:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:openpgp:autocrypt:message-id:date
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=7wzUFXF7wK9XYz2rOpybUs704S8i3ga6y6oP1J1Vz28=;
+        b=b6kEri6nb09ILkYxLII5zQNpcvQ8qiIJOKYRnROpWqXK62dnms9uC94NF6MJicHIVx
+         CaXWEbI30xm/rV+EPbdTAOZ3sVMb0LIxFgpXjzeYllJjRBkkKSR7jVTV3BPtt7iVXvNr
+         t/fXqodsJLe1LvifG3G2+IWyFnWpP/a30KvdSZrlmxkNkrFYYNNAgpcH0W7MZjKEm7nD
+         BKNH2IaSMTyDERRXlknkauXl80Qr/FmSPGbZnEoPMrgd3vnYclt1oUjofByLcmf4+zqe
+         5Tld+K4IGwc5NBsTIM8892i3Pw6Sc4v5rCxH8C/2lq85YitjchhRPtCvMsjdv1IyUpn6
+         Lfjw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
+         :message-id:date:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=7wzUFXF7wK9XYz2rOpybUs704S8i3ga6y6oP1J1Vz28=;
+        b=lozqk6xG3jlk7j6Q24eq7ofobiJymzcxKnCPn13jJGIDMnGmoJJX2fsA/qnaQkKHGU
+         LPrVNNaQqq1/RiUIDzTE1ZT2LO0djgwR+OsY6cR0CpoEZ5Kq3YuGATclfREOrcw2jSHc
+         +pRKBzvxIpqaBrOLnzlUDtPw3RDB2SufkhxBfSDhV43V7PfhJ0nZtAwZQd9wElQH6krS
+         JqbvF7SsMfBwpmTNBBmIEYwdP9yIXTYaoqiZSgztdbPc6wetAdooiSV4HE5zZ3w4GnVn
+         bDlC0T9Fb4n0k4ubhvEvBf9UVUCj4BUCOVuVx2oC97RDGJn5uOLQnamveYONKqlbYgV6
+         YJbQ==
+X-Gm-Message-State: APjAAAVvenwFSp/1Ft0V4jXL7jfCfjGoCt86/1yzb2oyATj5rdKlOHGn
+        fZL8d8CJUMmX53/smeT7OqzKDA==
+X-Google-Smtp-Source: APXvYqx71p2MA7x5bcV4o/uxfUyeXTsg9DVALYdknfhfxmJX2WlklOH73Ug2nD6XwyGdR2gFI7aQrw==
+X-Received: by 2002:a5d:4f0b:: with SMTP id c11mr1622832wru.63.1570004421123;
+        Wed, 02 Oct 2019 01:20:21 -0700 (PDT)
+Received: from [10.44.66.8] ([212.45.67.2])
+        by smtp.googlemail.com with ESMTPSA id t6sm9487103wmf.8.2019.10.02.01.20.19
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 02 Oct 2019 01:20:20 -0700 (PDT)
+Subject: Re: [PATCH v2 1/2] venus: use on-chip interconnect API
+To:     Stanimir Varbanov <stanimir.varbanov@linaro.org>,
+        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org
+Cc:     Vikash Garodia <vgarodia@codeaurora.org>,
+        Andy Gross <agross@kernel.org>,
+        Linux PM list <linux-pm@vger.kernel.org>
+References: <20190912082948.22836-1-stanimir.varbanov@linaro.org>
+ <20190912082948.22836-2-stanimir.varbanov@linaro.org>
+From:   Georgi Djakov <georgi.djakov@linaro.org>
+Openpgp: preference=signencrypt
+Autocrypt: addr=georgi.djakov@linaro.org; prefer-encrypt=mutual; keydata=
+ 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
+ KEmKjLDvB0pePJkdTw==
+Message-ID: <c1e242ee-f7ec-de35-d5ae-9964473d473e@linaro.org>
+Date:   Wed, 2 Oct 2019 11:20:18 +0300
 MIME-Version: 1.0
+In-Reply-To: <20190912082948.22836-2-stanimir.varbanov@linaro.org>
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190904114059.GU2672@vkoul-mobl>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Sep 04, 2019 at 05:10:59PM +0530, Vinod Koul wrote:
-> On 04-09-19, 12:48, Michal Suchánek wrote:
-> > On Wed, 4 Sep 2019 15:00:52 +0530
-> > Vinod Koul <vkoul@kernel.org> wrote:
-> > 
-> > > On 30-08-19, 11:56, Randy Dunlap wrote:
-> > > > On 8/30/19 11:52 AM, Michal Suchanek wrote:  
-> > > > > Fixes the following warning on !ACPI systems:
-> > > > > 
-> > > > > drivers/soundwire/slave.c:16:12: warning: ‘sdw_slave_add’ defined but
-> > > > > not used [-Wunused-function]
-> > > > >  static int sdw_slave_add(struct sdw_bus *bus,
-> > > > >             ^~~~~~~~~~~~~
-> > > > > 
-> > > > > Signed-off-by: Michal Suchanek <msuchanek@suse.de>  
-> > > > 
-> > > > Acked-by: Randy Dunlap <rdunlap@infradead.org>
-> > > > 
-> > > > I was about to send the same patch.  
-> > > 
-> > > So I have applied Srini's patches which add DT support and they use
-> > > sdw_slave_add(). So next tomorrow should not see this error as it is now
-> > > used by DT parts as well.
-> > > 
-> > > So dropping this patch
-> > > 
-> > 
-> > That should fix the issue for me. I wonder if !ACPI !DT platforms are
-> > still a thing.
+Hi Stan,
+
+On 9/12/19 01:29, Stanimir Varbanov wrote:
+> This aims to add a requests for bandwidth scaling depending
+> on the resolution and framerate (macroblocks per second). The
+> exact value of the requested bandwidth is get from a
+> pre-calculated tables for encoder and decoder.
 > 
-> Heh that should trigger this if we have one :D so should a lot more
-> which depend on some firmware!
+> Signed-off-by: Stanimir Varbanov <stanimir.varbanov@linaro.org>
 
-Actually s390x is built with !ACPI and !OF. While it supports PCI an
-virtio in practice only sound devices emulated by qemu are available.
-Also AFAICT the sounwire driver is useless without ACPI or OF so it
-should depend on them.
+Acked-by: Georgi Djakov <georgi.djakov@linaro.org>
 
-Thanks
-
-Michal
+Thanks,
+Georgi
