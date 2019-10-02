@@ -2,204 +2,122 @@ Return-Path: <SRS0=zem1=X3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70131C10F14
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 18:18:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90EEBC352AA
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 18:18:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3E7EF218DE
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 18:18:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6EFE9218DE
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 18:18:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Mt8Hq+v9"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eRzFCqQe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728637AbfJBSSq (ORCPT
+        id S1728740AbfJBSSu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Oct 2019 14:18:46 -0400
-Received: from mail-io1-f68.google.com ([209.85.166.68]:45355 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726669AbfJBSSq (ORCPT
+        Wed, 2 Oct 2019 14:18:50 -0400
+Received: from mail-io1-f65.google.com ([209.85.166.65]:40951 "EHLO
+        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726669AbfJBSSt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Oct 2019 14:18:46 -0400
-Received: by mail-io1-f68.google.com with SMTP id c25so59095953iot.12
-        for <linux-kernel@vger.kernel.org>; Wed, 02 Oct 2019 11:18:44 -0700 (PDT)
+        Wed, 2 Oct 2019 14:18:49 -0400
+Received: by mail-io1-f65.google.com with SMTP id h144so59079735iof.7;
+        Wed, 02 Oct 2019 11:18:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
+        d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=sE4hIPJblfldPa9zZyykYwpbgFP0hJyev1rPxUtG4KU=;
-        b=Mt8Hq+v9ToEnDoCvIp6M0wjAgGNEwNOPReg2epy6vYbvl/pMZPfTqzbi+pk6693Jwo
-         b8M6cYYmjK1ZA9JIQXLHOwAtFvG/hfoywsmkqz4dn+9VfYL+RW0Z4vzptkiFMlh/WvTV
-         4n3+9gPw8qxd3sMf2A3oEYcnTjtREneF0GiH6EQS4nxh/jBAjNsvGxMry+tnPKU97zq7
-         kpliKL2gMwMzMOLsTucnIC6kfAP/hCLX2iIoe+Iec4J8CBzhbWYHLrvwfkaOXLhxobVf
-         21c5xnNTrKj2SdD58SwnMGLOec0RuNnO/eGjNbHIUjTWG2WNNQK4jdsPklpRux3YMHXO
-         GbKQ==
+        bh=eG6ofvrckUFcFRYXwx/ccEp5zbwUgI4UE493A1wR4no=;
+        b=eRzFCqQe4nvNRGO5zbc7vgTWV5c8zYTtTrbRd770nTtsJNwmMCYJLSiO4h2k1DrsuZ
+         62XWZvx0kPFUhkur2RFvwrd4gsi4/cO2A4Bt15ywfZNYne9TWPqG2X+5/ALs7eOV1mm+
+         KppNrSUsi4PuPhIRxsgKFsGSLguuq+HffYC5ksmIuHNOsuc7dY93DYi5RMHmjgGYW8fS
+         m/x8E9QBLa9U9RlWS2GQM6MyORB5fIW2Za7HIBKRc8y7xU7xyghufZZq9ZXWbZYOZ71a
+         xOFdQpRiKVSWyhl0LmbvEy7I/xmkD9ksVFS/38CVNTxDJf0Ek908Nxo/7LBMD5kZyk/4
+         zBAg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=sE4hIPJblfldPa9zZyykYwpbgFP0hJyev1rPxUtG4KU=;
-        b=GSvhc0UCG4l3/kKTlF7CtdruJjU5pAp5QGDR53/X5gLbCm32B+dMVo6wzhsidTjY6b
-         KeDSm53i6BARhhnJrs0UgwIuywbhcS7r38qJawtruizsa20hCR56ARnJarWeHgepow1D
-         rra0w4nJeQ0FRZ/hBmAQO/yzDDQ4fsR8Yz+aOiEAycuIc+cHW3u+dHV3hUmUvI7e1fuH
-         VgBRh3cpj+4GG7oOzXDxTWOgwwdj7lFXKoxZk6pTH7I04e33//nJGhMd3ENL0hAFFoMp
-         HdMZyI6w6M+oluu5peZeKqgBLo7XR7nMP6LN9d4B2N5Nu5ppym+qDZnsbisciU3nKvtP
-         9Y4A==
-X-Gm-Message-State: APjAAAXiM67Lt17juMuLgFodK2/XQPVtuNkxOlkjZVFotVTgSJvXStCg
-        /kT7wykDzXUZphjKlUvwT9T2lNUmQSCjVmbYXOvUwDcA
-X-Google-Smtp-Source: APXvYqwLHrC3Z9URNH0104suwg+CjvRZfUUk7UJDrxyz3QC44afn5OStLQHrqzc3UxYA3K+ftuCXSLBAk1kB7I5s4yw=
-X-Received: by 2002:a92:b09:: with SMTP id b9mr1924153ilf.26.1570040323223;
- Wed, 02 Oct 2019 11:18:43 -0700 (PDT)
+        bh=eG6ofvrckUFcFRYXwx/ccEp5zbwUgI4UE493A1wR4no=;
+        b=HF4EUxxL9YndIHIpIq2T3+mYsJ1oX3RsruS1Vs6N33ayoUIXU9bnfRP60jkTDs+mGN
+         GQl6tM7lXQu7belpxbcRULEDhpDIWA1uyDN3Uk1zGT19rK/HhWizb4RuoZFTf66nvBLY
+         gzsZqvvYTBYwpOuPIMYpndXHyccoD528KKeNTeWl5wNnL1NqYA139jtXFEaP5ecbu2Vn
+         V1fPWLobFkqUNJ9fGfv8XY33XyG9TLdHLrAng/R/MOJ9t4ED5nzPe1O9u6J4Hl3R7wLf
+         27ENMdWNz3O60xtmWdEjrKTBlz7oDS/QP8gUMuLUWxIuIZWKHwfMyKzawv6oXJv3TfJL
+         Ukhg==
+X-Gm-Message-State: APjAAAUQJKaVm63Dfj7VsPKLytR1hWofA3TyZmy0zWN/JwQ0efdzovcq
+        +U43gxJCrjfA9kZ9QNtU8c/j+pzrJfxlqVXJBAU=
+X-Google-Smtp-Source: APXvYqzeGOG+vjdbOlerjELbGdZs+cwv0jd4E+qA7STc6TTnUbh87zuNhWs38yf4kxrOP6qiE/fmRvTpGxP8XFDpqFg=
+X-Received: by 2002:a02:cd2d:: with SMTP id h13mr5165251jaq.19.1570040328827;
+ Wed, 02 Oct 2019 11:18:48 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190927021927.23057-1-weijiang.yang@intel.com> <20190927021927.23057-4-weijiang.yang@intel.com>
-In-Reply-To: <20190927021927.23057-4-weijiang.yang@intel.com>
-From:   Jim Mattson <jmattson@google.com>
-Date:   Wed, 2 Oct 2019 11:18:32 -0700
-Message-ID: <CALMp9eT3HJ3S6Mzzntje2Kb4m-y86GvkhaNXun-mLJukEy6wbA@mail.gmail.com>
-Subject: Re: [PATCH v7 3/7] KVM: VMX: Pass through CET related MSRs to Guest
-To:     Yang Weijiang <weijiang.yang@intel.com>
-Cc:     kvm list <kvm@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        "Michael S. Tsirkin" <mst@redhat.com>,
-        =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>
+References: <cover.1558430617.git.amit.kucheria@linaro.org>
+ <49cf5d94beb9af9ef4e78d4c52f3b0ad20b7c63f.1558430617.git.amit.kucheria@linaro.org>
+ <CAOCk7NptTHPOdyEkCAofjTPuDQ5dsnPMQgfC0R8=7cp05xKQiA@mail.gmail.com>
+ <20191002091950.GA9393@centauri> <20191002092734.GA15523@centauri>
+In-Reply-To: <20191002092734.GA15523@centauri>
+From:   Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+Date:   Wed, 2 Oct 2019 12:18:37 -0600
+Message-ID: <CAOCk7Nqqm6d3bR9hFJH6rp1jMPmx2e2qmJtnOuw5viaGWohEZA@mail.gmail.com>
+Subject: Re: [PATCH v2 7/9] arm64: dts: qcom: msm8998: Add PSCI cpuidle low
+ power states
+To:     Niklas Cassel <niklas.cassel@linaro.org>
+Cc:     Amit Kucheria <amit.kucheria@linaro.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        MSM <linux-arm-msm@vger.kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Andy Gross <agross@kernel.org>,
+        Marc Gonzalez <marc.w.gonzalez@free.fr>,
+        Sibi Sankar <sibis@codeaurora.org>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        David Brown <david.brown@linaro.org>,
+        Li Yang <leoyang.li@nxp.com>, Shawn Guo <shawnguo@kernel.org>,
+        DTML <devicetree@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Sep 26, 2019 at 7:17 PM Yang Weijiang <weijiang.yang@intel.com> wrote:
+On Wed, Oct 2, 2019 at 3:27 AM Niklas Cassel <niklas.cassel@linaro.org> wrote:
 >
-> CET MSRs pass through Guest directly to enhance performance.
-> CET runtime control settings are stored in MSR_IA32_{U,S}_CET,
-> Shadow Stack Pointer(SSP) are stored in MSR_IA32_PL{0,1,2,3}_SSP,
-> SSP table base address is stored in MSR_IA32_INT_SSP_TAB,
-> these MSRs are defined in kernel and re-used here.
-
-All of these new guest MSRs will have to be enumerated by
-KVM_GET_MSR_INDEX_LIST.
-
-> MSR_IA32_U_CET and MSR_IA32_PL3_SSP are used for user mode protection,
-> the contents could differ from process to process, therefore,
-> kernel needs to save/restore them during context switch, it makes
-> sense to pass through them so that the guest kernel can
-> use xsaves/xrstors to operate them efficiently. Other MSRs are used
-> for non-user mode protection. See CET spec for detailed info.
-
-I assume that XSAVES & XRSTORS bypass the MSR permission bitmap, like
-other instructions that manipulate MSRs (e.g. SWAPGS, RDTSCP, etc.).
-Is the guest OS likely to use RDMSR/WRMSR to access these MSRs?
-
-> The difference between CET VMCS state fields and xsave components is that,
-> the former used for CET state storage during VMEnter/VMExit,
-> whereas the latter used for state retention between Guest task/process
-> switch.
+> On Wed, Oct 02, 2019 at 11:19:50AM +0200, Niklas Cassel wrote:
+> > On Mon, Sep 30, 2019 at 04:20:15PM -0600, Jeffrey Hugo wrote:
+> > > Amit, the merged version of the below change causes a boot failure
+> > > (nasty hang, sometimes with RCU stalls) on the msm8998 laptops.  Oddly
+> > > enough, it seems to be resolved if I remove the cpu-idle-states
+> > > property from one of the cpu nodes.
+> > >
+> > > I see no issues with the msm8998 MTP.
+> >
+> > Hello Jeffrey, Amit,
+> >
+> > If the PSCI idle states work properly on the msm8998 devboard (MTP),
+> > but causes crashes on msm8998 laptops, the only logical change is
+> > that the PSCI firmware is different between the two devices.
 >
-> Co-developed-by: Zhang Yi Z <yi.z.zhang@linux.intel.com>
-> Signed-off-by: Zhang Yi Z <yi.z.zhang@linux.intel.com>
-> Signed-off-by: Yang Weijiang <weijiang.yang@intel.com>
-> ---
->  arch/x86/kvm/cpuid.c   |  1 +
->  arch/x86/kvm/cpuid.h   |  2 ++
->  arch/x86/kvm/vmx/vmx.c | 39 +++++++++++++++++++++++++++++++++++++++
->  3 files changed, 42 insertions(+)
->
-> diff --git a/arch/x86/kvm/cpuid.c b/arch/x86/kvm/cpuid.c
-> index 1aa86b87b6ab..0a47b9e565be 100644
-> --- a/arch/x86/kvm/cpuid.c
-> +++ b/arch/x86/kvm/cpuid.c
-> @@ -66,6 +66,7 @@ u64 kvm_supported_xss(void)
->  {
->         return KVM_SUPPORTED_XSS & kvm_x86_ops->supported_xss();
->  }
-> +EXPORT_SYMBOL_GPL(kvm_supported_xss);
->
->  #define F(x) bit(X86_FEATURE_##x)
->
-> diff --git a/arch/x86/kvm/cpuid.h b/arch/x86/kvm/cpuid.h
-> index d78a61408243..1d77b880084d 100644
-> --- a/arch/x86/kvm/cpuid.h
-> +++ b/arch/x86/kvm/cpuid.h
-> @@ -27,6 +27,8 @@ bool kvm_cpuid(struct kvm_vcpu *vcpu, u32 *eax, u32 *ebx,
->
->  int cpuid_query_maxphyaddr(struct kvm_vcpu *vcpu);
->
-> +u64 kvm_supported_xss(void);
-> +
->  static inline int cpuid_maxphyaddr(struct kvm_vcpu *vcpu)
->  {
->         return vcpu->arch.maxphyaddr;
-> diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
-> index a84198cff397..f720baa7a9ba 100644
-> --- a/arch/x86/kvm/vmx/vmx.c
-> +++ b/arch/x86/kvm/vmx/vmx.c
-> @@ -7001,6 +7001,43 @@ static void update_intel_pt_cfg(struct kvm_vcpu *vcpu)
->                 vmx->pt_desc.ctl_bitmask &= ~(0xfULL << (32 + i * 4));
->  }
->
-> +static void vmx_intercept_cet_msrs(struct kvm_vcpu *vcpu)
+> Since the msm8998 laptops boot using ACPI, perhaps these laptops
+> doesn't support PSCI/have any PSCI firmware at all.
 
-Nit: It seems like this function adjusts the MSR permission bitmap so
-as *not* to intercept the CET MSRs.
+They have PSCI.  If there was no PSCI, I would expect the PSCI
+get_version request from Linux to fail, and all PSCI functionality to
+be disabled.
 
-> +{
-> +       struct vcpu_vmx *vmx = to_vmx(vcpu);
-> +       unsigned long *msr_bitmap;
-> +       u64 kvm_xss;
-> +       bool cet_en;
-> +
-> +       msr_bitmap = vmx->vmcs01.msr_bitmap;
+However, your mention about ACPI sparked a thought.  ACPI describes
+the idle states, along with the PSCI info, in the ACPI0007 devices.
+Those exist on the laptops, and the info mostly correlates with Amit's
+patch (ACPI seems to be a bit more conservative about the latencies,
+and describes one additional deeper state).  However, upon a detailed
+analysis of the ACPI description, I did find something relevant - the
+retention state is not enabled.
 
-What about nested guests? (i.e. vmcs02).
+So, I hacked out the retention state from Amit's patch, and I did not
+observe a hang.  I used sysfs, and appeared able to validate that the
+power collapse state was being used successfully.
 
-> +       kvm_xss = kvm_supported_xss();
-> +       cet_en = guest_cpuid_has(vcpu, X86_FEATURE_SHSTK) ||
-> +                guest_cpuid_has(vcpu, X86_FEATURE_IBT);
-> +       /*
-> +        * U_CET is a must for USER CET, per CET spec., U_CET and PL3_SPP are
-> +        * a bundle for USER CET xsaves.
-> +        */
-> +       if (cet_en && (kvm_xss & XFEATURE_MASK_CET_USER)) {
-> +               vmx_disable_intercept_for_msr(msr_bitmap, MSR_IA32_U_CET, MSR_TYPE_RW);
-> +               vmx_disable_intercept_for_msr(msr_bitmap, MSR_IA32_PL3_SSP, MSR_TYPE_RW);
-> +       }
+I'm guessing that something is weird with the laptops, where the CPUs
+can go into retention, but not come out, thus causing issues.
 
-Since this is called from vmx_cpuid_update, what happens if cet_en was
-previously true and now it's false?
-
-> +       /*
-> +        * S_CET is a must for KERNEL CET, PL0_SSP ... PL2_SSP are a bundle
-> +        * for CET KERNEL xsaves.
-> +        */
-> +       if (cet_en && (kvm_xss & XFEATURE_MASK_CET_KERNEL)) {
-> +               vmx_disable_intercept_for_msr(msr_bitmap, MSR_IA32_S_CET, MSR_TYPE_RW);
-> +               vmx_disable_intercept_for_msr(msr_bitmap, MSR_IA32_PL0_SSP, MSR_TYPE_RW);
-> +               vmx_disable_intercept_for_msr(msr_bitmap, MSR_IA32_PL1_SSP, MSR_TYPE_RW);
-> +               vmx_disable_intercept_for_msr(msr_bitmap, MSR_IA32_PL2_SSP, MSR_TYPE_RW);
-> +
-> +               /* SSP_TAB only available for KERNEL SHSTK.*/
-> +               if (guest_cpuid_has(vcpu, X86_FEATURE_SHSTK))
-> +                       vmx_disable_intercept_for_msr(msr_bitmap, MSR_IA32_INT_SSP_TAB,
-> +                                                     MSR_TYPE_RW);
-> +       }
-> +}
-> +
->  static void vmx_cpuid_update(struct kvm_vcpu *vcpu)
->  {
->         struct vcpu_vmx *vmx = to_vmx(vcpu);
-> @@ -7025,6 +7062,8 @@ static void vmx_cpuid_update(struct kvm_vcpu *vcpu)
->         if (boot_cpu_has(X86_FEATURE_INTEL_PT) &&
->                         guest_cpuid_has(vcpu, X86_FEATURE_INTEL_PT))
->                 update_intel_pt_cfg(vcpu);
-> +
-> +       vmx_intercept_cet_msrs(vcpu);
->  }
->
->  static void vmx_set_supported_cpuid(u32 func, struct kvm_cpuid_entry2 *entry)
-> --
-> 2.17.2
->
+I'll post a patch to fix up the laptops.  Thanks for all the help.
