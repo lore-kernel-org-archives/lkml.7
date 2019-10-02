@@ -2,122 +2,109 @@ Return-Path: <SRS0=zem1=X3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A6DCC4360C
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 20:30:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A522BC4360C
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 20:30:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4F6A4217D7
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 20:30:28 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gkVMntSd"
+	by mail.kernel.org (Postfix) with ESMTP id 83595207FF
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Oct 2019 20:30:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728048AbfJBUa1 (ORCPT
+        id S1728113AbfJBUa5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Oct 2019 16:30:27 -0400
-Received: from mail-qk1-f193.google.com ([209.85.222.193]:44761 "EHLO
-        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726374AbfJBUa1 (ORCPT
+        Wed, 2 Oct 2019 16:30:57 -0400
+Received: from avon.wwwdotorg.org ([104.237.132.123]:44176 "EHLO
+        avon.wwwdotorg.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725799AbfJBUa4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Oct 2019 16:30:27 -0400
-Received: by mail-qk1-f193.google.com with SMTP id u22so26190qkk.11;
-        Wed, 02 Oct 2019 13:30:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=H/l1Z6mqe+sew18UxIihneHwJjZNG3zHFInnW5dLs3Y=;
-        b=gkVMntSdsPeklPKD+UqQ33URkWswRRQAsbO0bdUwGWUuswAnqJfCLsvfj/KSKV723K
-         zlbgYL7cJs1m1Zvr6dTAWffEAH2gB/yAdLNeTmNNSMVahyOyTeUXHILKnj2c7xuSw/p3
-         7BniCHczZQcd609FnnSsaZOc+TxBrLJdTHu0OxwNemggbAU2XMVNHoaYZwSKc+fyVuJL
-         FsfqMj+zKX53eEBpgLRlDC6WIw5KkR5HxrAR5Uy3J55tRl5yJw+I9jWsp7EY74ifPddJ
-         1kf02djXfyI8Xrg12EMR9M0/bTIGK5KQMxytQGEXCLO5DJZ8J1Pn9gM3Lag0jDxnnOTv
-         o1WQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=H/l1Z6mqe+sew18UxIihneHwJjZNG3zHFInnW5dLs3Y=;
-        b=mD87W6nmIu3yIWMiiNa7TDZ/4B6wE2GN6F2XEZcwpYHrP47PicjnT1kgy2mpF2G26Y
-         +BjrjnDCv1VPkMZ3MV+pCE3Yi1S1eekrBKekWsD3Y2FWynaCSYLQLvZRKspJRVWLZpX9
-         zWgtsc83m7xYRT9Rbsw22Opyc6EJejse+QdDwqGE7S8smtCdXZjnMecihpanEmde5gpH
-         GOzt5hMNyoHCLWyFZhsdjoXT4ri7/FGP6XqIAHZ/XSTvLW14EBoq1rie9T1Jj86SFCjI
-         mnVnuqVlkl5QztbV7F+h3FBYDDv/W3xT+5n260ixo3XWD/cNvpJrdpXHL0s4Pixnv5Kw
-         cyuw==
-X-Gm-Message-State: APjAAAWMICQdOwlQlrd/74g5GPTmw3sFF/oZ1LioEMbzBKDlEkujVSUt
-        AvDIAQJmplxI8NT4gYOQIkUgYpu052l/MankCeo=
-X-Google-Smtp-Source: APXvYqyYUlULdUWEftFIOGiwzSS3v9o59oPmGXc7uRSh/abRXSUEn9PHsXKjygA8vcQSFo914oM9gzGYrp0DUL0sW9E=
-X-Received: by 2002:a37:98f:: with SMTP id 137mr722298qkj.449.1570048225831;
- Wed, 02 Oct 2019 13:30:25 -0700 (PDT)
+        Wed, 2 Oct 2019 16:30:56 -0400
+Received: from [10.20.204.51] (unknown [216.228.112.24])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by avon.wwwdotorg.org (Postfix) with ESMTPSA id 1D3BD1C00ED;
+        Wed,  2 Oct 2019 14:30:55 -0600 (MDT)
+X-Virus-Status: Clean
+X-Virus-Scanned: clamav-milter 0.100.3 at avon.wwwdotorg.org
+Subject: Re: [PATCH] arm64: tegra: only map accessible sysram
+To:     Mian Yousaf Kaukab <ykaukab@suse.de>
+Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        treding@nvidia.com, jonathanh@nvidia.com,
+        linux-tegra@vger.kernel.org
+References: <20190929200851.14228-1-ykaukab@suse.de>
+ <5d2e47ec-8304-d648-9c4a-80c7c02050a9@wwwdotorg.org>
+ <20190930100212.GA21324@suse.de>
+From:   Stephen Warren <swarren@wwwdotorg.org>
+Message-ID: <c7d64f56-cb44-cb3a-aa7a-ee7b5c01d6db@wwwdotorg.org>
+Date:   Wed, 2 Oct 2019 14:30:53 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-References: <20191001173728.149786-1-brianvv@google.com> <20191001173728.149786-3-brianvv@google.com>
- <CAEf4BzYxs6Ace8s64ML3pA9H4y0vgdWv_vDF57oy3i-O_G7c-g@mail.gmail.com>
- <CABCgpaWbPN+2vSNdynHtmDxrgGbyzHa_D-y4-X8hLrQYbhTx=A@mail.gmail.com> <20191002085553.GA6226@pc-66.home>
-In-Reply-To: <20191002085553.GA6226@pc-66.home>
-From:   Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date:   Wed, 2 Oct 2019 13:30:14 -0700
-Message-ID: <CAEf4BzZAywR2g4bRu8Bs-YJxzf64GTrR7NvgOaXG2fqaKiJpSQ@mail.gmail.com>
-Subject: Re: [PATCH bpf 2/2] selftests/bpf: test_progs: don't leak server_fd
- in test_sockopt_inherit
-To:     Daniel Borkmann <daniel@iogearbox.net>
-Cc:     Brian Vazquez <brianvv.kernel@gmail.com>,
-        Brian Vazquez <brianvv@google.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        "David S . Miller" <davem@davemloft.net>,
-        Stanislav Fomichev <sdf@google.com>,
-        open list <linux-kernel@vger.kernel.org>,
-        Networking <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20190930100212.GA21324@suse.de>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Oct 2, 2019 at 1:56 AM Daniel Borkmann <daniel@iogearbox.net> wrote:
->
-> On Tue, Oct 01, 2019 at 08:42:30PM -0700, Brian Vazquez wrote:
-> > Thanks for reviewing the patches Andrii!
-> >
-> > Although Daniel fixed them and applied them correctly.
->
-> After last kernel/maintainer summit at LPC, I reworked all my patchwork scripts [0]
-> which I use for bpf trees in order to further reduce manual work and add more sanity
-> checks at the same time. Therefore, the broken Fixes: tag was a good test-case. ;-)
+On 9/30/19 4:02 AM, Mian Yousaf Kaukab wrote:
+> On Sun, Sep 29, 2019 at 11:28:43PM -0600, Stephen Warren wrote:
+>> On 9/29/19 2:08 PM, Mian Yousaf Kaukab wrote:
+>>> Most of the SysRAM is secure and only accessible by TF-A.
+>>> Don't map this inaccessible memory in kernel. Only map pages
+>>> used by bpmp driver.
+>>
+>> I don't believe this change is correct. The actual patch doesn't
+>> implement mapping a subset of the RAM (a software issue), but rather it
+>> changes the DT representation of the SYSRAM hardware. The SYSRAM
+>> hardware always does start at 0x30000000, even if a subset of the
+>> address range is dedicated to a specific purpose. If the kernel must map
+>> only part of the RAM, then some additional property should indicate
+>> this.[...]
+> I agree the hardware description becomes inaccurate with this change.
+> 
+> In the current setup complete 0x3000_0000 to 0x3005_0000 range is being mapped
+> as normal memory (MT_NORMAL_NC). Though only 0x3004_E000 to 0x3005_0000 are
+> accessible by the kernel.
 
-Do you scripts also capitalize first word after libbpf: prefix? Is
-that intentional? Is that a recommended subject casing:
+Nit: I expect that a much larger region than that is *accessible*, 
+although it's quite plausible that only that region is actually 
+*accessed*/used right now.
 
-"libbpf: Do awesome stuff" vs "libbpf: do awesome stuff"?
+> I am seeing an issue where a read access (which I
+> believe is speculative) to inaccessible range causes an SError. Another
+> solution for this problem could be to add "no-memory-wc" to SysRAM node so that
+> it is mapped as device memory (MT_DEVICE_nGnRE). Would that be acceptable?
 
->
-> Thanks,
-> Daniel
->
->   [0] https://git.kernel.org/pub/scm/linux/kernel/git/dborkman/pw.git/
->
-> > On Tue, Oct 1, 2019 at 8:20 PM Andrii Nakryiko
-> > <andrii.nakryiko@gmail.com> wrote:
-> > >
-> > > On Tue, Oct 1, 2019 at 10:40 AM Brian Vazquez <brianvv@google.com> wrote:
-> > > >
-> > >
-> > > I don't think there is a need to add "test_progs:" to subject, "
-> > > test_sockopt_inherit" is specific enough ;)
-> > >
-> > > > server_fd needs to be close if pthread can't be created.
-> > >
-> > > typo: closed
-> > >
-> > > > Fixes: e3e02e1d9c24 ("selftests/bpf: test_progs: convert test_sockopt_inherit")
-> > > > Cc: Stanislav Fomichev <sdf@google.com>
-> > > > Signed-off-by: Brian Vazquez <brianvv@google.com>
-> > > > ---
-> > >
-> > > Acked-by: Andrii Nakryiko <andriin@fb.com>
-> > >
-> > > >  tools/testing/selftests/bpf/prog_tests/sockopt_inherit.c | 2 +-
-> > > >  1 file changed, 1 insertion(+), 1 deletion(-)
+Why does the driver blindly map the entire memory at all? Surely it 
+should only map the portions of RAM that other drivers request/use? And 
+surely the BPMP driver or DT node is already providing that information?
+
+But yes, changing the mapping type to avoid speculation might be an 
+acceptable solution for now, although I think we'd want to work things 
+out better later. I don't know if there would be any impact to the BPMP 
+driver related to the slower SRAM access due to this change. Best 
+consult a BPMP expert or Tegra maintainer about that.
+
+>> [...] Also, I believe it's incorrect to hard-code into the kernel's DT
+>> the range of addresses used by the secure monitor/OS, since this can
+>> vary depending on what the user actually chooses to install as the
+>> secure monitor/OS. Any indication of such regions should be filled in at
+>> runtime by some boot firmware or the secure monitor/OS itself, or
+>> retrieved using some runtime API rather than DT.
+> Secure-OS addresses are not of interest here. SysRAM is partitioned
+> between secure-OS and BPMP and kernel is only interested in the BPMP
+> part. The firmware can update these addresses in the device-tree if it
+> wants to. Would you prefer something similar implemented in u-boot so
+> that it updates SysRAM node to only expose kernel accessible part of it
+> to the kernel?
+> 
+> Can u-boot dynamically figure out the Secure-OS vs BPMP partition?
+> 
+> BR,
+> Yousaf
+> 
+
