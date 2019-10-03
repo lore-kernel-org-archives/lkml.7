@@ -2,117 +2,196 @@ Return-Path: <SRS0=6dNS=X4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 24742C10F14
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:03:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60F84C32792
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:03:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ED2B5222C2
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:03:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570118629;
-	bh=swuvJGaJwBakwanR/G+vSFD19YGaauRGoUgnyeYHYuA=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=aYn1nD4Nldf6iF+EaGs4WWEpj8zXxivFJ21jleBOs00OkgEj/STV4SKNwHoS6QVnf
-	 W4iex5+moK4UVaC+z3IC+BirMAg1dSm8jj/yFMBSXhBqrFglUjF97qsxAZ55Cu4sxH
-	 gmqj1ylENFLGiXIzBkeTgKYIQYKABtmIfPf+m5B0=
+	by mail.kernel.org (Postfix) with ESMTP id 3069C222C4
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:03:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZeibTNY2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732289AbfJCQDr (ORCPT
+        id S1730353AbfJCQDv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 12:03:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49154 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730258AbfJCQDl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:03:41 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C5B84215EA;
-        Thu,  3 Oct 2019 16:03:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570118620;
-        bh=swuvJGaJwBakwanR/G+vSFD19YGaauRGoUgnyeYHYuA=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Y6pDJSubnWs/l7tInvL8w/+OdQfxtSrvQMkCEyvvrW4wLyvhkfx5L+qLR5lySbVNw
-         RAfCxXx9DsjsDzRl2L7m3zklg1c+LKc90ra8NYchm9NL/F40yUWHVBNakbmL4vPiP/
-         TTRamIcF6en++JEBC1Nm8QB/PRbr7qhQ/dquBmZE=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Oleksandr Suvorov <oleksandr.suvorov@toradex.com>,
-        Marcel Ziswiler <marcel.ziswiler@toradex.com>,
-        Igor Opaniuk <igor.opaniuk@toradex.com>,
-        Fabio Estevam <festevam@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 041/129] ASoC: sgtl5000: Fix charge pump source assignment
-Date:   Thu,  3 Oct 2019 17:52:44 +0200
-Message-Id: <20191003154336.212472489@linuxfoundation.org>
-X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20191003154318.081116689@linuxfoundation.org>
-References: <20191003154318.081116689@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Thu, 3 Oct 2019 12:03:51 -0400
+Received: from mail-ed1-f66.google.com ([209.85.208.66]:34463 "EHLO
+        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732186AbfJCQDo (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:03:44 -0400
+Received: by mail-ed1-f66.google.com with SMTP id p10so3047518edq.1;
+        Thu, 03 Oct 2019 09:03:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=NGQymOeii/8u7ybBEVyOrKWvkTVy5HWB9no5Hp5H0h0=;
+        b=ZeibTNY2FtTM/tdwEP3KO4172JAvF6xxOyq4PV1tZOfmuAfpA67VZHGoAmK3C1zsPH
+         q4Fymypmi+QDBEueRZijaf232ms/2LmmCIYTTsDoMT5qAO/9O4DPiaQ2GJ1IZ5pqGjOs
+         q2VmpWiRFwKCGPrpXg/H6Fo1yUlPxy+PZjNG37oBgPGZHG0h9VkR+L13oY7MFZ2rh7wz
+         ARN2ZU3Lp/IfF+8DrGDjP6paXF028NM1briRU4jKgKPpDZYtctuTuGDmgNpg3KhUoNso
+         Z1KxxmX/pMs4z5JbgKZDuizSMLp5K/zLGQZyItrF9vLi7pgM4v3zel03U5O7eXCmMxmj
+         tVyQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=NGQymOeii/8u7ybBEVyOrKWvkTVy5HWB9no5Hp5H0h0=;
+        b=Sy3BR/UhBYlNj+hexMuCwMFWYyX8nFklDQkdtT5AKDtHV9B98I12hT4JFRAScKlP2T
+         xbZK2D5Ml78ONyieZQa0uMmSXR/JxaBNFXc7S8c36kYHM1CJxzrQRKPo0wntHZIq03uM
+         uACSaJSy0Kdo27wNT9bZc88aJYgB6YRtJ/yglQrDDzBMxjANxzJ76wsu+g/VyV9h9hVW
+         mUFtQ5/S19Rh+uMBzJV9Gc2AUgzPhpeKe72ole1BUBD/R1zcsOM5dnClfNdSD8Of+GBe
+         0vzjUVuATNgomrRe7LufAUywZTYSyg62PQYIZqAbss+OJC8keYz1P35bob0U/F7msfgB
+         0RVQ==
+X-Gm-Message-State: APjAAAXlBxI2VGwH1fTsD+b+rsHBG8d9av+9WUNjuf15NIcsru4JXtSy
+        0j6uaBu6k1GghcjRdKXGE1k=
+X-Google-Smtp-Source: APXvYqxRmO9j0Q/sT5w1mZZciooBAqG+upOU5i9nXg7bjBom7MLxYstxtRekd6C9Iq4uTpJsr/aVsA==
+X-Received: by 2002:a50:ab58:: with SMTP id t24mr10313327edc.131.1570118621685;
+        Thu, 03 Oct 2019 09:03:41 -0700 (PDT)
+Received: from Limone ([46.114.33.103])
+        by smtp.gmail.com with ESMTPSA id gl4sm298708ejb.6.2019.10.03.09.03.39
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 03 Oct 2019 09:03:39 -0700 (PDT)
+Date:   Thu, 3 Oct 2019 18:03:36 +0200
+From:   Gon Solo <gonsolo@gmail.com>
+To:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Cc:     JP <jp@jpvw.nl>, crope@iki.fi, Sean Young <sean@mess.org>,
+        linux-media@vger.kernel.org,
+        Linux Kernel <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] si2157: Add support for Logilink VG0022A.
+Message-ID: <20191003160336.GA5125@Limone>
+References: <20191002142744.GA3475@gofer.mess.org>
+ <CANL0fFS9TGKJH2rfkXzak78BaLazTNO7GoZhSb4vLBsDrmz3FQ@mail.gmail.com>
+ <20191002150650.GA4227@gofer.mess.org>
+ <CANL0fFRoL6NxOCbNC=XjQ6LDkeeqAayaLUbm9xARWX9ttqfPFg@mail.gmail.com>
+ <29ab2e43-4374-a3ea-6ae1-a4267867eaa4@jpvw.nl>
+ <20191002154922.7f1cfc76@coco.lan>
+ <CANL0fFRJZBfEDWK_c2w1TomvB5-i4g09LopyJUbO5NtOwKdDTg@mail.gmail.com>
+ <20191003080539.2b13c03b@coco.lan>
+ <CANL0fFSmvEEJhnA=qjTuEPr4N8q8eWLeYC5du+OoTMxe1Gnh5Q@mail.gmail.com>
+ <20191003120238.75811da6@coco.lan>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191003120238.75811da6@coco.lan>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Oleksandr Suvorov <oleksandr.suvorov@toradex.com>
+> With the original patch you proposed, what are the logs?
 
-[ Upstream commit b6319b061ba279577fd7030a9848fbd6a17151e3 ]
+With the following patch applied to media_tree master:
 
-If VDDA != VDDIO and any of them is greater than 3.1V, charge pump
-source can be assigned automatically [1].
-
-[1] https://www.nxp.com/docs/en/data-sheet/SGTL5000.pdf
-
-Signed-off-by: Oleksandr Suvorov <oleksandr.suvorov@toradex.com>
-Reviewed-by: Marcel Ziswiler <marcel.ziswiler@toradex.com>
-Reviewed-by: Igor Opaniuk <igor.opaniuk@toradex.com>
-Reviewed-by: Fabio Estevam <festevam@gmail.com>
-Link: https://lore.kernel.org/r/20190719100524.23300-7-oleksandr.suvorov@toradex.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- sound/soc/codecs/sgtl5000.c | 15 ++++++++++-----
- 1 file changed, 10 insertions(+), 5 deletions(-)
-
-diff --git a/sound/soc/codecs/sgtl5000.c b/sound/soc/codecs/sgtl5000.c
-index 3dba5550a6659..d81ac4e499aab 100644
---- a/sound/soc/codecs/sgtl5000.c
-+++ b/sound/soc/codecs/sgtl5000.c
-@@ -987,12 +987,17 @@ static int sgtl5000_set_power_regs(struct snd_soc_codec *codec)
- 					SGTL5000_INT_OSC_EN);
- 		/* Enable VDDC charge pump */
- 		ana_pwr |= SGTL5000_VDDC_CHRGPMP_POWERUP;
--	} else if (vddio >= 3100 && vdda >= 3100) {
-+	} else {
- 		ana_pwr &= ~SGTL5000_VDDC_CHRGPMP_POWERUP;
--		/* VDDC use VDDIO rail */
--		lreg_ctrl |= SGTL5000_VDDC_ASSN_OVRD;
--		lreg_ctrl |= SGTL5000_VDDC_MAN_ASSN_VDDIO <<
--			    SGTL5000_VDDC_MAN_ASSN_SHIFT;
-+		/*
-+		 * if vddio == vdda the source of charge pump should be
-+		 * assigned manually to VDDIO
-+		 */
-+		if (vddio == vdda) {
-+			lreg_ctrl |= SGTL5000_VDDC_ASSN_OVRD;
-+			lreg_ctrl |= SGTL5000_VDDC_MAN_ASSN_VDDIO <<
-+				    SGTL5000_VDDC_MAN_ASSN_SHIFT;
-+		}
- 	}
+diff --git a/drivers/media/tuners/si2157.c b/drivers/media/tuners/si2157.c
+index e87040d6eca7..4c1ab0b6876a 100644
+--- a/drivers/media/tuners/si2157.c
++++ b/drivers/media/tuners/si2157.c
+@@ -129,13 +129,14 @@ static int si2157_init(struct dvb_frontend *fe)
+ 	chip_id = cmd.args[1] << 24 | cmd.args[2] << 16 | cmd.args[3] << 8 |
+ 			cmd.args[4] << 0;
  
- 	snd_soc_write(codec, SGTL5000_CHIP_LINREG_CTRL, lreg_ctrl);
--- 
-2.20.1
+-	#define SI2177_A30 ('A' << 24 | 77 << 16 | '3' << 8 | '0' << 0)
+-	#define SI2158_A20 ('A' << 24 | 58 << 16 | '2' << 8 | '0' << 0)
+-	#define SI2148_A20 ('A' << 24 | 48 << 16 | '2' << 8 | '0' << 0)
+-	#define SI2157_A30 ('A' << 24 | 57 << 16 | '3' << 8 | '0' << 0)
+-	#define SI2147_A30 ('A' << 24 | 47 << 16 | '3' << 8 | '0' << 0)
+-	#define SI2146_A10 ('A' << 24 | 46 << 16 | '1' << 8 | '0' << 0)
+-	#define SI2141_A10 ('A' << 24 | 41 << 16 | '1' << 8 | '0' << 0)
++	#define SI2177_A30 ('A' << 24 |  77 << 16 | '3' << 8 | '0' << 0)
++	#define SI2158_A20 ('A' << 24 |  58 << 16 | '2' << 8 | '0' << 0)
++	#define SI2148_A20 ('A' << 24 |  48 << 16 | '2' << 8 | '0' << 0)
++	#define SI2157_A30 ('A' << 24 |  57 << 16 | '3' << 8 | '0' << 0)
++	#define SI2147_A30 ('A' << 24 |  47 << 16 | '3' << 8 | '0' << 0)
++	#define SI2146_A10 ('A' << 24 |  46 << 16 | '1' << 8 | '0' << 0)
++	#define SI2141_A10 ('A' << 24 |  41 << 16 | '1' << 8 | '0' << 0)
++	#define SI_BOGUS   (255 << 24 | 255 << 16 | 255 << 8 | 255 << 0)
+ 
+ 	switch (chip_id) {
+ 	case SI2158_A20:
+@@ -148,6 +149,10 @@ static int si2157_init(struct dvb_frontend *fe)
+ 	case SI2177_A30:
+ 		fw_name = SI2157_A30_FIRMWARE;
+ 		break;
++	case SI_BOGUS:
++		dev_info(&client->dev, "Bogus chip version, trying with no firmware\n");
++		fw_name = NULL;
++		break;
+ 	case SI2157_A30:
+ 	case SI2147_A30:
+ 	case SI2146_A10:
+@@ -225,6 +230,7 @@ static int si2157_init(struct dvb_frontend *fe)
+ 
+ 	dev_info(&client->dev, "firmware version: %c.%c.%d\n",
+ 			cmd.args[6], cmd.args[7], cmd.args[8]);
+ warm:
+ 	/* init statistics in order signal app which are supported */
+ 	c->strength.len = 1;
+diff --git a/drivers/media/usb/dvb-usb-v2/af9035.c b/drivers/media/usb/dvb-usb-v2/af9035.c
+index 3afd18733614..a8d59cf06b1e 100644
+--- a/drivers/media/usb/dvb-usb-v2/af9035.c
++++ b/drivers/media/usb/dvb-usb-v2/af9035.c
+@@ -1197,6 +1197,11 @@ static int af9035_frontend_attach(struct dvb_usb_adapter *adap)
+ 	return ret;
+ }
+ 
++/* I2C speed register = (1000000000 / (24.4 * 16 * I2C_speed))
++ * 7 equals ~400k, 26 ~100k and 260 ~10k.
++ * */
++#define I2C_SPEED_REGISTER 7
++
+ static int it930x_frontend_attach(struct dvb_usb_adapter *adap)
+ {
+ 	struct state *state = adap_to_priv(adap);
+@@ -1208,13 +1213,13 @@ static int it930x_frontend_attach(struct dvb_usb_adapter *adap)
+ 
+ 	dev_dbg(&intf->dev, "adap->id=%d\n", adap->id);
+ 
+-	/* I2C master bus 2 clock speed 300k */
+-	ret = af9035_wr_reg(d, 0x00f6a7, 0x07);
++	/* I2C master bus 2 clock speed */
++	ret = af9035_wr_reg(d, 0x00f6a7, I2C_SPEED_REGISTER);
+ 	if (ret < 0)
+ 		goto err;
+ 
+-	/* I2C master bus 1,3 clock speed 300k */
+-	ret = af9035_wr_reg(d, 0x00f103, 0x07);
++	/* I2C master bus 1,3 clock speed */
++	ret = af9035_wr_reg(d, 0x00f103, I2C_SPEED_REGISTER);
+ 	if (ret < 0)
+ 		goto err;
+ 
+@@ -2119,6 +2124,8 @@ static const struct usb_device_id af9035_id_table[] = {
+ 	/* IT930x devices */
+ 	{ DVB_USB_DEVICE(USB_VID_ITETECH, USB_PID_ITETECH_IT9303,
+ 		&it930x_props, "ITE 9303 Generic", NULL) },
++	{ DVB_USB_DEVICE(USB_VID_DEXATEK, 0x0100,
++		&it930x_props, "Logilink VG0022A", NULL) },
+ 	{ DVB_USB_DEVICE(USB_VID_AVERMEDIA, USB_PID_AVERMEDIA_TD310,
+ 		&it930x_props, "AVerMedia TD310 DVB-T2", NULL) },
+ 	{ }
 
+the Messages at boot time are
 
+[    4.262882] si2168 1-0067: Silicon Labs Si2168-B40 successfully identified
+[    4.262884] si2168 1-0067: firmware version: B 4.0.2
+[    4.262902] usb 2-1: DVB: registering adapter 0 frontend 0 (Silicon Labs Si2168)...
+[    4.262908] dvbdev: dvb_create_media_entity: media entity 'Silicon Labs Si2168' registered.
+[    4.289776] si2157 2-0063: Silicon Labs Si2147/2148/2157/2158 successfully attached
+
+and the messages when running vlc (successfully) are
+
+[  486.537128] si2168 1-0067: downloading firmware from file 'dvb-demod-si2168-b40-01.fw'
+[  487.795436] si2168 1-0067: firmware version: B 4.0.25
+[  487.807614] si2157 2-0063: Bogus chip version, trying with no firmware
+[  487.807618] si2157 2-0063: found a 'Silicon Labs Si21255-\xff\xff\xff'
+[  487.833876] si2157 2-0063: firmware version: \xff.\xff.255
+
+g
 
