@@ -4,50 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5AC27C32792
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:03:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 24742C10F14
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:03:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 276B321848
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:03:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ED2B5222C2
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:03:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570118625;
-	bh=SLxjNf84mAviyJIDDDeYg9vbSXlaZiy8tJqwyFdeBKY=;
+	s=default; t=1570118629;
+	bh=swuvJGaJwBakwanR/G+vSFD19YGaauRGoUgnyeYHYuA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wJaNqutjQq14zi5YgSU5zVX2mEH6TQnh0dJKJnIwcEV3gizIFGg/kb3zqr2KNeqEb
-	 ZyuURcoZ+Sr7x2JmP80caueRTwodYt0nmwv/wkb3Kv26KMsAhGhYKEZX7/KQN9NixU
-	 kZDsKc9G1yXxxo7FTBDZd3eJ3AjBhHUvC1sYitk4=
+	b=aYn1nD4Nldf6iF+EaGs4WWEpj8zXxivFJ21jleBOs00OkgEj/STV4SKNwHoS6QVnf
+	 W4iex5+moK4UVaC+z3IC+BirMAg1dSm8jj/yFMBSXhBqrFglUjF97qsxAZ55Cu4sxH
+	 gmqj1ylENFLGiXIzBkeTgKYIQYKABtmIfPf+m5B0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732283AbfJCQDo (ORCPT
+        id S1732289AbfJCQDr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 12:03:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49086 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 12:03:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49154 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729441AbfJCQDk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:03:40 -0400
+        id S1730258AbfJCQDl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:03:41 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2487721848;
-        Thu,  3 Oct 2019 16:03:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C5B84215EA;
+        Thu,  3 Oct 2019 16:03:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570118617;
-        bh=SLxjNf84mAviyJIDDDeYg9vbSXlaZiy8tJqwyFdeBKY=;
+        s=default; t=1570118620;
+        bh=swuvJGaJwBakwanR/G+vSFD19YGaauRGoUgnyeYHYuA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=dYLa5GSAK1Ix5PfZ1JJ6mcFzmopo+t6wVAfONJh+47JZOjOJAsBhnXx+49ywsBN5k
-         xwvgwB8v3snuxd9Lq9fQhs0WeJPBvipMVLXGbgoc41LHlYdE13DOKANq73/nIOgxDz
-         0nm5HVdhfDIKDm1eymg9aAppMacE1cAzs2O+Xz1I=
+        b=Y6pDJSubnWs/l7tInvL8w/+OdQfxtSrvQMkCEyvvrW4wLyvhkfx5L+qLR5lySbVNw
+         RAfCxXx9DsjsDzRl2L7m3zklg1c+LKc90ra8NYchm9NL/F40yUWHVBNakbmL4vPiP/
+         TTRamIcF6en++JEBC1Nm8QB/PRbr7qhQ/dquBmZE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Axel Lin <axel.lin@ingics.com>,
+        stable@vger.kernel.org,
+        Oleksandr Suvorov <oleksandr.suvorov@toradex.com>,
+        Marcel Ziswiler <marcel.ziswiler@toradex.com>,
+        Igor Opaniuk <igor.opaniuk@toradex.com>,
+        Fabio Estevam <festevam@gmail.com>,
         Mark Brown <broonie@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 040/129] regulator: lm363x: Fix off-by-one n_voltages for lm3632 ldo_vpos/ldo_vneg
-Date:   Thu,  3 Oct 2019 17:52:43 +0200
-Message-Id: <20191003154335.861368140@linuxfoundation.org>
+Subject: [PATCH 4.9 041/129] ASoC: sgtl5000: Fix charge pump source assignment
+Date:   Thu,  3 Oct 2019 17:52:44 +0200
+Message-Id: <20191003154336.212472489@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191003154318.081116689@linuxfoundation.org>
 References: <20191003154318.081116689@linuxfoundation.org>
@@ -60,50 +64,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Axel Lin <axel.lin@ingics.com>
+From: Oleksandr Suvorov <oleksandr.suvorov@toradex.com>
 
-[ Upstream commit 1e2cc8c5e0745b545d4974788dc606d678b6e564 ]
+[ Upstream commit b6319b061ba279577fd7030a9848fbd6a17151e3 ]
 
-According to the datasheet https://www.ti.com/lit/ds/symlink/lm3632a.pdf
-Table 20. VPOS Bias Register Field Descriptions VPOS[5:0]
-Sets the Positive Display Bias (LDO) Voltage (50 mV per step)
-000000: 4 V
-000001: 4.05 V
-000010: 4.1 V
-....................
-011101: 5.45 V
-011110: 5.5 V (Default)
-011111: 5.55 V
-....................
-100111: 5.95 V
-101000: 6 V
-Note: Codes 101001 to 111111 map to 6 V
+If VDDA != VDDIO and any of them is greater than 3.1V, charge pump
+source can be assigned automatically [1].
 
-The LM3632_LDO_VSEL_MAX should be 0b101000 (0x28), so the maximum voltage
-can match the datasheet.
+[1] https://www.nxp.com/docs/en/data-sheet/SGTL5000.pdf
 
-Fixes: 3a8d1a73a037 ("regulator: add LM363X driver")
-Signed-off-by: Axel Lin <axel.lin@ingics.com>
-Link: https://lore.kernel.org/r/20190626132632.32629-1-axel.lin@ingics.com
+Signed-off-by: Oleksandr Suvorov <oleksandr.suvorov@toradex.com>
+Reviewed-by: Marcel Ziswiler <marcel.ziswiler@toradex.com>
+Reviewed-by: Igor Opaniuk <igor.opaniuk@toradex.com>
+Reviewed-by: Fabio Estevam <festevam@gmail.com>
+Link: https://lore.kernel.org/r/20190719100524.23300-7-oleksandr.suvorov@toradex.com
 Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/regulator/lm363x-regulator.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ sound/soc/codecs/sgtl5000.c | 15 ++++++++++-----
+ 1 file changed, 10 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/regulator/lm363x-regulator.c b/drivers/regulator/lm363x-regulator.c
-index f53e63301a205..e71117d7217bc 100644
---- a/drivers/regulator/lm363x-regulator.c
-+++ b/drivers/regulator/lm363x-regulator.c
-@@ -33,7 +33,7 @@
+diff --git a/sound/soc/codecs/sgtl5000.c b/sound/soc/codecs/sgtl5000.c
+index 3dba5550a6659..d81ac4e499aab 100644
+--- a/sound/soc/codecs/sgtl5000.c
++++ b/sound/soc/codecs/sgtl5000.c
+@@ -987,12 +987,17 @@ static int sgtl5000_set_power_regs(struct snd_soc_codec *codec)
+ 					SGTL5000_INT_OSC_EN);
+ 		/* Enable VDDC charge pump */
+ 		ana_pwr |= SGTL5000_VDDC_CHRGPMP_POWERUP;
+-	} else if (vddio >= 3100 && vdda >= 3100) {
++	} else {
+ 		ana_pwr &= ~SGTL5000_VDDC_CHRGPMP_POWERUP;
+-		/* VDDC use VDDIO rail */
+-		lreg_ctrl |= SGTL5000_VDDC_ASSN_OVRD;
+-		lreg_ctrl |= SGTL5000_VDDC_MAN_ASSN_VDDIO <<
+-			    SGTL5000_VDDC_MAN_ASSN_SHIFT;
++		/*
++		 * if vddio == vdda the source of charge pump should be
++		 * assigned manually to VDDIO
++		 */
++		if (vddio == vdda) {
++			lreg_ctrl |= SGTL5000_VDDC_ASSN_OVRD;
++			lreg_ctrl |= SGTL5000_VDDC_MAN_ASSN_VDDIO <<
++				    SGTL5000_VDDC_MAN_ASSN_SHIFT;
++		}
+ 	}
  
- /* LM3632 */
- #define LM3632_BOOST_VSEL_MAX		0x26
--#define LM3632_LDO_VSEL_MAX		0x29
-+#define LM3632_LDO_VSEL_MAX		0x28
- #define LM3632_VBOOST_MIN		4500000
- #define LM3632_VLDO_MIN			4000000
- 
+ 	snd_soc_write(codec, SGTL5000_CHIP_LINREG_CTRL, lreg_ctrl);
 -- 
 2.20.1
 
