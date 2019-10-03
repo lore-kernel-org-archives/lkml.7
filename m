@@ -2,131 +2,130 @@ Return-Path: <SRS0=6dNS=X4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B13FCC10F14
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:31:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DFFAC10F14
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:31:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 82BE52070B
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:31:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570120310;
-	bh=ZaoPHwtLHsvaA+ZAcx1/9Bq15BWjd0+3loZmP5V6Kmo=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=G2hZ8Q5vsY2MQNXOJ9UpAG+b0h0rPGSrtqgjwvs8au2GT5Cm/L0GJbUVADNDu6puU
-	 OVD0DbSGSeHa+vOmqMEugHU1YedLvaPhEe3aRmGz8sQqnFvEwUeZ+NrbWAs9K+SA2v
-	 H5c8IFAoo/dH5KKwsz/pC5kVq6G4BljtEOsugZKE=
+	by mail.kernel.org (Postfix) with ESMTP id 745B82086A
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:31:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="HRz2dE0k"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403909AbfJCQbt (ORCPT
+        id S2403922AbfJCQbw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 12:31:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38854 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391344AbfJCQbo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:31:44 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A8FDB2054F;
-        Thu,  3 Oct 2019 16:31:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570120303;
-        bh=ZaoPHwtLHsvaA+ZAcx1/9Bq15BWjd0+3loZmP5V6Kmo=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ooo2kDsLj58KJQELkg3e//65zb2XncDxGNOmpxqxJynuobcOmrn8goYnd0MGOLHOw
-         EhdIFaQnBNt5rqJUAy+Ua/wPq6ulyWkrpKhrH0+6nJLfSC1xf4GsFwZMbZmDKmlvU9
-         EdAZKEnwhT3elAVNwG3GHhzvy+3ebgPu6QLTxJxM=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Vicki Pfau <vi@endrift.com>,
-        Marcel Bocu <marcel.p.bocu@gmail.com>,
+        Thu, 3 Oct 2019 12:31:52 -0400
+Received: from mail.efficios.com ([167.114.142.138]:40570 "EHLO
+        mail.efficios.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2403884AbfJCQbk (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:31:40 -0400
+Received: from localhost (ip6-localhost [IPv6:::1])
+        by mail.efficios.com (Postfix) with ESMTP id 0E47B33ACF0;
+        Thu,  3 Oct 2019 12:31:39 -0400 (EDT)
+Received: from mail.efficios.com ([IPv6:::1])
+        by localhost (mail02.efficios.com [IPv6:::1]) (amavisd-new, port 10032)
+        with ESMTP id ZMVYT95oWAXT; Thu,  3 Oct 2019 12:31:38 -0400 (EDT)
+Received: from localhost (ip6-localhost [IPv6:::1])
+        by mail.efficios.com (Postfix) with ESMTP id 84E1733ACED;
+        Thu,  3 Oct 2019 12:31:38 -0400 (EDT)
+DKIM-Filter: OpenDKIM Filter v2.10.3 mail.efficios.com 84E1733ACED
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=efficios.com;
+        s=default; t=1570120298;
+        bh=Xa4tdzxQuYNj6KgrYhA4aLJ8ZuVzRaG5b/3vwfcSUKY=;
+        h=Date:From:To:Message-ID:MIME-Version;
+        b=HRz2dE0k19vaOBDAn9NaI8MfJQ8pY9RF4PTVC0Xlwep0nYLWyNHK+05Ai1OXf0VXG
+         T6E84w097FHLOUm8iPHe57pX8N8ziTZmZVlLQIMk/89aaVHBxIauDQtVPJMN32vrnG
+         bh5gIT4Uh2ARfLkGH1BB7nBq/u3pSN9j6LPr4AXnzPI/Ow5WGtnRrrz0i6mw91dfhx
+         L3o5WtRhJNkGZSkalrE27yydwfyShXQlC6+6JfD/uXinC3LnaHytIYEt4oxxmSqjh1
+         U01Pu9I7Ex8pyxwoDBDM6S7CResfW/fzBn58MPRSdnss2s0WTyJpkHjrRDSt1YtZYt
+         ZLq5hKlLD6Sqg==
+X-Virus-Scanned: amavisd-new at efficios.com
+Received: from mail.efficios.com ([IPv6:::1])
+        by localhost (mail02.efficios.com [IPv6:::1]) (amavisd-new, port 10026)
+        with ESMTP id 9g9rzWrEvl57; Thu,  3 Oct 2019 12:31:38 -0400 (EDT)
+Received: from mail02.efficios.com (mail02.efficios.com [167.114.142.138])
+        by mail.efficios.com (Postfix) with ESMTP id 611F333ACD2;
+        Thu,  3 Oct 2019 12:31:38 -0400 (EDT)
+Date:   Thu, 3 Oct 2019 12:31:38 -0400 (EDT)
+From:   Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+To:     rostedt <rostedt@goodmis.org>
+Cc:     David Howells <dhowells@redhat.com>, paulmck@kernel.org,
+        rcu <rcu@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Lai Jiangshan <jiangshanlai@gmail.com>,
+        dipankar <dipankar@in.ibm.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Josh Triplett <josh@joshtriplett.org>,
         Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
-        "Woods, Brian" <Brian.Woods@amd.com>,
-        Clemens Ladisch <clemens@ladisch.de>,
-        Jean Delvare <jdelvare@suse.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        linux-hwmon@vger.kernel.org, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 173/313] hwmon: (k10temp) Add support for AMD family 17h, model 70h CPUs
-Date:   Thu,  3 Oct 2019 17:52:31 +0200
-Message-Id: <20191003154550.029036243@linuxfoundation.org>
-X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20191003154533.590915454@linuxfoundation.org>
-References: <20191003154533.590915454@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Peter Zijlstra <peterz@infradead.org>,
+        Eric Dumazet <edumazet@google.com>,
+        fweisbec <fweisbec@gmail.com>, Oleg Nesterov <oleg@redhat.com>,
+        "Joel Fernandes, Google" <joel@joelfernandes.org>,
+        Bart Van Assche <bart.vanassche@wdc.com>,
+        Christoph Hellwig <hch@lst.de>, Hannes Reinecke <hare@suse.de>,
+        Johannes Thumshirn <jthumshirn@suse.de>,
+        Shane M Seymour <shane.seymour@hpe.com>,
+        "Martin K . Petersen" <martin.petersen@oracle.com>
+Message-ID: <561448323.948.1570120298211.JavaMail.zimbra@efficios.com>
+In-Reply-To: <20191003090850.1e2561b3@gandalf.local.home>
+References: <20191003014310.13262-1-paulmck@kernel.org> <20191003014153.GA13156@paulmck-ThinkPad-P72> <25408.1570091957@warthog.procyon.org.uk> <20191003090850.1e2561b3@gandalf.local.home>
+Subject: Re: [PATCH tip/core/rcu 1/9] rcu: Upgrade rcu_swap_protected() to
+ rcu_replace()
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [167.114.142.138]
+X-Mailer: Zimbra 8.8.15_GA_3847 (ZimbraWebClient - FF69 (Linux)/8.8.15_GA_3847)
+Thread-Topic: Upgrade rcu_swap_protected() to rcu_replace()
+Thread-Index: V+Isuv29ciiT7lw1a+SgtJRKwn+KMg==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Marcel Bocu <marcel.p.bocu@gmail.com>
+----- On Oct 3, 2019, at 9:08 AM, rostedt rostedt@goodmis.org wrote:
 
-[ Upstream commit 12163cfbfc0f804cc7d27bc20e8d266ce7459260 ]
+> On Thu, 03 Oct 2019 09:39:17 +0100
+> David Howells <dhowells@redhat.com> wrote:
+> 
+>> paulmck@kernel.org wrote:
+>> 
+>> > +#define rcu_replace(rcu_ptr, ptr, c)					\
+>> > +({									\
+>> > +	typeof(ptr) __tmp = rcu_dereference_protected((rcu_ptr), (c));	\
+>> > +	rcu_assign_pointer((rcu_ptr), (ptr));				\
+>> > +	__tmp;								\
+>> > +})
+>> 
+>> Does it make sense to actually use xchg() if that's supported by the arch?
+>> 
+> 
+> Hmm, is there really any arch that doesn't support xchg()? It would be
+> very hard to do any kind of atomic operations without it.
+> 
+> cmpxchg() is the one that I understand is optional by the arch.
 
-It would seem like model 70h is behaving in the same way as model 30h,
-so let's just add the new F3 PCI ID to the list of compatible devices.
+I remember going through all kernel arch headers myself and introduce
+irq-off-based xchg and cmpxchg generic implementations for all UP
+architectures lacking cmpxchg/xchg instructions.
 
-Unlike previous Ryzen/Threadripper, Ryzen gen 3 processors do not need
-temperature offsets anymore. This has been reported in the press and
-verified on my Ryzen 3700X by checking that the idle temperature
-reported by k10temp is matching the temperature reported by the
-firmware.
+We might want to consider simply using xchg() here.
 
-Vicki Pfau sent an identical patch after I checked that no-one had
-written this patch. I would have been happy about dropping my patch but
-unlike for his patch series, I had already Cc:ed the x86 people and
-they already reviewed the changes. Since Vicki has not answered to
-any email after his initial series, let's assume she is on vacation
-and let's avoid duplication of reviews from the maintainers and merge
-my series. To acknowledge Vicki's anteriority, I added her S-o-b to
-the patch.
+FWIW, the API exposed by the Userspace RCU project (liburcu) for this
+is:
 
-v2, suggested by Guenter Roeck and Brian Woods:
-  - rename from 71h to 70h
+  rcu_xchg_pointer()
 
-Signed-off-by: Vicki Pfau <vi@endrift.com>
-Signed-off-by: Marcel Bocu <marcel.p.bocu@gmail.com>
-Tested-by: Marcel Bocu <marcel.p.bocu@gmail.com>
+Thanks,
 
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: Borislav Petkov <bp@alien8.de>
-Cc: "H. Peter Anvin" <hpa@zytor.com>
-Cc: x86@kernel.org
-Cc: "Woods, Brian" <Brian.Woods@amd.com>
-Cc: Clemens Ladisch <clemens@ladisch.de>
-Cc: Jean Delvare <jdelvare@suse.com>
-Cc: Guenter Roeck <linux@roeck-us.net>
-Cc: linux-hwmon@vger.kernel.org
-Link: https://lore.kernel.org/r/20190722174653.2391-1-marcel.p.bocu@gmail.com
-Signed-off-by: Guenter Roeck <linux@roeck-us.net>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/hwmon/k10temp.c | 1 +
- 1 file changed, 1 insertion(+)
+Mathieu
 
-diff --git a/drivers/hwmon/k10temp.c b/drivers/hwmon/k10temp.c
-index c77e89239dcd9..5c1dddde193c3 100644
---- a/drivers/hwmon/k10temp.c
-+++ b/drivers/hwmon/k10temp.c
-@@ -349,6 +349,7 @@ static const struct pci_device_id k10temp_id_table[] = {
- 	{ PCI_VDEVICE(AMD, PCI_DEVICE_ID_AMD_17H_DF_F3) },
- 	{ PCI_VDEVICE(AMD, PCI_DEVICE_ID_AMD_17H_M10H_DF_F3) },
- 	{ PCI_VDEVICE(AMD, PCI_DEVICE_ID_AMD_17H_M30H_DF_F3) },
-+	{ PCI_VDEVICE(AMD, PCI_DEVICE_ID_AMD_17H_M70H_DF_F3) },
- 	{ PCI_VDEVICE(HYGON, PCI_DEVICE_ID_AMD_17H_DF_F3) },
- 	{}
- };
+
 -- 
-2.20.1
-
-
-
+Mathieu Desnoyers
+EfficiOS Inc.
+http://www.efficios.com
