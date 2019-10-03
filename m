@@ -2,107 +2,105 @@ Return-Path: <SRS0=6dNS=X4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E861DC32792
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 21:51:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 87877C4CED1
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 21:51:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BB746215EA
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 21:51:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="wMMj8W01"
+	by mail.kernel.org (Postfix) with ESMTP id 62C3C215EA
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 21:51:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730436AbfJCVvK (ORCPT
+        id S1731058AbfJCVvb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 17:51:10 -0400
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:36823 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727326AbfJCVvJ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 17:51:09 -0400
-Received: by mail-pl1-f193.google.com with SMTP id j11so2141112plk.3
-        for <linux-kernel@vger.kernel.org>; Thu, 03 Oct 2019 14:51:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=u1kLHx9hv/uJrNQB6ahsx1gOt2otfNUWLEU9WGV5Q6w=;
-        b=wMMj8W01v0c6TBX4YKoTsjZXCHhuvsim3OX99DX8f1E4V2zWBe1sm2HcSU89S4dOjN
-         1PgrJSlIJ9BcM7WWCgbrFJ3W/+rBDIuXdNADs+mpQJ4qK1Oy1+143AylzqaZXowCsi5Y
-         46NAJayqxluDFriZNGmeN+Rokj+fB/vLXI7+nwkuZFGasXnmMRytVLW5jDwnjouAtXPt
-         DPSTLiqvVyuWE4ZnFzgp9G98tThA/3YyIXsd8DwtulGKG1aGwxLkNPRY4IvRUm8SK0Y7
-         m4VU3k5vjbSi0rcrbbQk20k75A1/ObNlQJKSvvO7uTTMdIxU6Vp72tFZQAVCBcfnQ//z
-         f8Xw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=u1kLHx9hv/uJrNQB6ahsx1gOt2otfNUWLEU9WGV5Q6w=;
-        b=hZWTsMS/jmO5Hli3wwe5hQdSxcOrnqFDNLyu4JSrmPPSxVFXKxu8IWF3J8uPsYGOh8
-         YhvRPUoz+slvgUGbRUp+v9C4+F2ghYR93B6JK4e9MdYhYEVYrWx5CRW1nNP26jV++oHV
-         9HYEjYe3tY5sICW/lhsZMQ8LhrBUaewXEej+AJNNk2o1tGHdIkq2kQVqLZv+GdAOG7az
-         dTlhC3wlbb7+KSGbd+Ux1N57+jX4FylttZumclkrBjAk9A7NVG/ZGp8SpsNYOyLj4lzp
-         DL5DBrhYGT5w9aBOXCLcpXYxbOhcxGBYJUIPNPAV5WYi6kojnDaXNmYZQ7cWW7u1ngG3
-         shog==
-X-Gm-Message-State: APjAAAVxuroRdjiu4aDE/tOSh5w47UUvAxCaG0Cu/2dmWG0CmlEbzLlA
-        kP4iovhb80gVfWx/q7v8z5i9udJlTvbIcMF460Yo8w==
-X-Google-Smtp-Source: APXvYqw9MGIP2qFWRcdt/2BFhkRt7r9d2GKSY8mVi8jppDndhl/UlLNYHSE6Z3rRmjSuRnw4bEgrKNZzGLaqOx5Hhgs=
-X-Received: by 2002:a17:902:bb87:: with SMTP id m7mr11548031pls.179.1570139467569;
- Thu, 03 Oct 2019 14:51:07 -0700 (PDT)
+        Thu, 3 Oct 2019 17:51:31 -0400
+Received: from mga11.intel.com ([192.55.52.93]:32422 "EHLO mga11.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726982AbfJCVva (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 17:51:30 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 03 Oct 2019 14:51:29 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.67,253,1566889200"; 
+   d="scan'208";a="191393096"
+Received: from okiselev-mobl1.ccr.corp.intel.com (HELO localhost) ([10.251.93.117])
+  by fmsmga008.fm.intel.com with ESMTP; 03 Oct 2019 14:51:26 -0700
+Date:   Fri, 4 Oct 2019 00:51:25 +0300
+From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+To:     Mimi Zohar <zohar@linux.ibm.com>
+Cc:     David Safford <david.safford@ge.com>,
+        linux-integrity@vger.kernel.org, stable@vger.kernel.org,
+        David Howells <dhowells@redhat.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        "David S. Miller" <davem@davemloft.net>,
+        "open list:ASYMMETRIC KEYS" <keyrings@vger.kernel.org>,
+        "open list:CRYPTO API" <linux-crypto@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] KEYS: asym_tpm: Switch to get_random_bytes()
+Message-ID: <20191003215125.GA30511@linux.intel.com>
+References: <20190926171601.30404-1-jarkko.sakkinen@linux.intel.com>
+ <1570024819.4999.119.camel@linux.ibm.com>
+ <20191003114119.GF8933@linux.intel.com>
+ <1570107752.4421.183.camel@linux.ibm.com>
+ <20191003175854.GB19679@linux.intel.com>
+ <1570128827.5046.19.camel@linux.ibm.com>
 MIME-Version: 1.0
-References: <20191003174838.8872-1-vincenzo.frascino@arm.com>
- <20191003174838.8872-3-vincenzo.frascino@arm.com> <CAKwvOdmhyVHREHvyB0wL2GfMsE8GcJ1Ouj_8ifrR4hU8kBYukQ@mail.gmail.com>
- <20191003204944.6wuzflqkjdpawzvp@willie-the-truck> <CAKwvOdm4ccfhXDDSKXgdN4qkn2NHwAHKCwRV7OqLEG_PQj09vQ@mail.gmail.com>
- <20191003205931.d3vp4bh7wdu4oe7u@willie-the-truck>
-In-Reply-To: <20191003205931.d3vp4bh7wdu4oe7u@willie-the-truck>
-From:   Nick Desaulniers <ndesaulniers@google.com>
-Date:   Thu, 3 Oct 2019 14:50:55 -0700
-Message-ID: <CAKwvOdmMMXOG_GH6-+9iJ=2-+BA-Fg+o+33nyh5m46Rh63FBdQ@mail.gmail.com>
-Subject: Re: [PATCH v5 2/6] arm64: vdso32: Detect binutils support for dmb ishld
-To:     Will Deacon <will@kernel.org>
-Cc:     Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Andy Lutomirski <luto@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <1570128827.5046.19.camel@linux.ibm.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Oct 3, 2019 at 1:59 PM Will Deacon <will@kernel.org> wrote:
->
-> On Thu, Oct 03, 2019 at 01:56:39PM -0700, Nick Desaulniers wrote:
-> > On Thu, Oct 3, 2019 at 1:49 PM Will Deacon <will@kernel.org> wrote:
-> > >
-> > > On Thu, Oct 03, 2019 at 01:18:16PM -0700, Nick Desaulniers wrote:
-> > > > On Thu, Oct 3, 2019 at 10:48 AM Vincenzo Frascino
-> > > > <vincenzo.frascino@arm.com> wrote:
-> > > > >
-> > > > > Older versions of binutils that do not support certain types of memory
-> > > > > barriers can cause build failure of the vdso32 library.
-> > > >
-> > > > Do you know specific version numbers of binutils that are affected?
-> > > > May be helpful to have in the commit message just for future
-> > > > travelers.
-> > >
-> > > A quick bit of archaeology suggests e797f7e0b2be added this back in 2012,
-> > > which seems to correlate with the 2.24 release.
-> >
-> > Cool, thanks for digging.  Vincenzo, can we please add that to the
-> > commit message?
->
-> If this is the only change, then I can add it when I apply -- no need to
-> respin just for this! (although I'm also writing this to remind myself :)
+On Thu, Oct 03, 2019 at 02:53:47PM -0400, Mimi Zohar wrote:
+> [Cc'ing David Safford]
+> 
+> On Thu, 2019-10-03 at 20:58 +0300, Jarkko Sakkinen wrote:
+> > On Thu, Oct 03, 2019 at 09:02:32AM -0400, Mimi Zohar wrote:
+> > > On Thu, 2019-10-03 at 14:41 +0300, Jarkko Sakkinen wrote:
+> > > > On Wed, Oct 02, 2019 at 10:00:19AM -0400, Mimi Zohar wrote:
+> > > > > On Thu, 2019-09-26 at 20:16 +0300, Jarkko Sakkinen wrote:
+> > > > > > Only the kernel random pool should be used for generating random numbers.
+> > > > > > TPM contributes to that pool among the other sources of entropy. In here it
+> > > > > > is not, agreed, absolutely critical because TPM is what is trusted anyway
+> > > > > > but in order to remove tpm_get_random() we need to first remove all the
+> > > > > > call sites.
+> > > > > 
+> > > > > At what point during boot is the kernel random pool available?  Does
+> > > > > this imply that you're planning on changing trusted keys as well?
+> > > > 
+> > > > Well trusted keys *must* be changed to use it. It is not a choice
+> > > > because using a proprietary random number generator instead of defacto
+> > > > one in the kernel can be categorized as a *regression*.
+> > > 
+> > > I really don't see how using the TPM random number for TPM trusted
+> > > keys would be considered a regression.  That by definition is a
+> > > trusted key.  If anything, changing what is currently being done would
+> > > be the regression. 
+> > 
+> > It is really not a TPM trusted key. It trusted key that gets sealed with
+> > the TPM. The key itself is used in clear by kernel. The random number
+> > generator exists in the kernel to for a reason.
+> > 
+> > It is without doubt a regression.
+> 
+> You're misusing the term "regression" here.  A regression is something
+> that previously worked and has stopped working.  In this case, trusted
+> keys has always been based on the TPM random number generator.  Before
+> changing this, there needs to be some guarantees that the kernel
+> random number generator has a pool of random numbers early, on all
+> systems including embedded devices, not just servers.
 
-Yep that's cool with me.  Feel free to add my Acked by tag to the
-series as well.  Thanks for pursuing this Vincenzo.
--- 
-Thanks,
-~Nick Desaulniers
+I'm not using the term regression incorrectly here. Wrong function
+was used to generate random numbers for the payload here. It is an
+obvious bug.
+
+/Jarkko
