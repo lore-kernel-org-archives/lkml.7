@@ -2,55 +2,52 @@ Return-Path: <SRS0=6dNS=X4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88763C10F14
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:04:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C047C10F14
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:04:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 54680222C2
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:04:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 51A7821A4C
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:04:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570118688;
-	bh=bQXgERs5HNkt856KZoZ+nhh0jj7Vt4h9CVNgWVts0zs=;
+	s=default; t=1570118695;
+	bh=4VoAc1yvZwRE0X8+pm99fjf3hGnKk12dJhyILIPYcAQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=CAVPFNeMmIPqTUhf3PR1Qbcz03k/swaiS8Ierli+w+tdtFKMT+HyRiv4EI9NSp3kt
-	 I5xbO/CYlsdRvDa+82X76U9wIR9gsMcZEk0+iEL6BuiZBKnVv4ZmgBxtUzOGTDqDm1
-	 m9AfotqoZ90lYTeqYoOCyk+unSV+SEcdoAMExGHA=
+	b=rZkLgZW81dFRMdu/flLOUxawrTadJisJDUy0ppDF9ZaGThccMs6LakQjBWps2tPDs
+	 619zlc9XasPmHF27DklNI7u1XEjp/bZV+mTj50HuJq8JViVOYytIQEQJQjnep7FpMq
+	 IAG0V0rvxrFd3alYAF1Hn2AVxjDEe0YqIXSFJlZI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729795AbfJCQEr (ORCPT
+        id S1730393AbfJCQEx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 12:04:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50962 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 12:04:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51116 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731004AbfJCQEp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:04:45 -0400
+        id S1732467AbfJCQEt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:04:49 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 206DA21D81;
-        Thu,  3 Oct 2019 16:04:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8037E222CD;
+        Thu,  3 Oct 2019 16:04:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570118683;
-        bh=bQXgERs5HNkt856KZoZ+nhh0jj7Vt4h9CVNgWVts0zs=;
+        s=default; t=1570118689;
+        bh=4VoAc1yvZwRE0X8+pm99fjf3hGnKk12dJhyILIPYcAQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=f/GT1FtjNW9UK4W5d1cfh4ViVRSby/muAp9BlawO4cfTFPtTTVo4Hudk++5Lz6JUX
-         Xuo1EX8l9E8/NTkrZhvINeH2O9Me3NsTR3NoFcnd6rb0Hmft1Kikkpqe5YueEg5orP
-         DE2kKl8a+ghPzeX4F1i7RxiSKKBCEJOXN8mrjo2A=
+        b=OIqOSFnzp0n6p5yogXgqljhw6QHVvRL/Qxko73dGMndyvxH9qFJ7CycFAVhgjvGqs
+         MQXr7f2lniWcYpMWywWdRMeUJX8a5hsBdkUSjS1fI40Git24P48rKfqiBnkiZhFGTJ
+         NF49XT6+U59JoE7Rai/aOBntpDLTJvMGDzzqqHkY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Mike Marciniszyn <mike.marciniszyn@intel.com>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Kaike Wan <kaike.wan@intel.com>,
-        Dennis Dalessandro <dennis.dalessandro@intel.com>,
-        Jason Gunthorpe <jgg@mellanox.com>
-Subject: [PATCH 4.9 100/129] IB/hfi1: Define variables as unsigned long to fix KASAN warning
-Date:   Thu,  3 Oct 2019 17:53:43 +0200
-Message-Id: <20191003154405.154831095@linuxfoundation.org>
+        stable@vger.kernel.org, Al Stone <ahs3@redhat.com>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.9 075/129] ACPI / CPPC: do not require the _PSD method
+Date:   Thu,  3 Oct 2019 17:53:18 +0200
+Message-Id: <20191003154352.723992673@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191003154318.081116689@linuxfoundation.org>
 References: <20191003154318.081116689@linuxfoundation.org>
@@ -63,255 +60,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ira Weiny <ira.weiny@intel.com>
+From: Al Stone <ahs3@redhat.com>
 
-commit f8659d68e2bee5b86a1beaf7be42d942e1fc81f4 upstream.
+[ Upstream commit 4c4cdc4c63853fee48c02e25c8605fb65a6c9924 ]
 
-Define the working variables to be unsigned long to be compatible with
-for_each_set_bit and change types as needed.
+According to the ACPI 6.3 specification, the _PSD method is optional
+when using CPPC.  The underlying assumption is that each CPU can change
+frequency independently from all other CPUs; _PSD is provided to tell
+the OS that some processors can NOT do that.
 
-While we are at it remove unused variables from a couple of functions.
+However, the acpi_get_psd() function returns ENODEV if there is no _PSD
+method present, or an ACPI error status if an error occurs when evaluating
+_PSD, if present.  This makes _PSD mandatory when using CPPC, in violation
+of the specification, and only on Linux.
 
-This was found because of the following KASAN warning:
- ==================================================================
-   BUG: KASAN: stack-out-of-bounds in find_first_bit+0x19/0x70
-   Read of size 8 at addr ffff888362d778d0 by task kworker/u308:2/1889
+This has forced some firmware writers to provide a dummy _PSD, even though
+it is irrelevant, but only because Linux requires it; other OSPMs follow
+the spec.  We really do not want to have OS specific ACPI tables, though.
 
-   CPU: 21 PID: 1889 Comm: kworker/u308:2 Tainted: G W         5.3.0-rc2-mm1+ #2
-   Hardware name: Intel Corporation W2600CR/W2600CR, BIOS SE5C600.86B.02.04.0003.102320141138 10/23/2014
-   Workqueue: ib-comp-unb-wq ib_cq_poll_work [ib_core]
-   Call Trace:
-    dump_stack+0x9a/0xf0
-    ? find_first_bit+0x19/0x70
-    print_address_description+0x6c/0x332
-    ? find_first_bit+0x19/0x70
-    ? find_first_bit+0x19/0x70
-    __kasan_report.cold.6+0x1a/0x3b
-    ? find_first_bit+0x19/0x70
-    kasan_report+0xe/0x12
-    find_first_bit+0x19/0x70
-    pma_get_opa_portstatus+0x5cc/0xa80 [hfi1]
-    ? ret_from_fork+0x3a/0x50
-    ? pma_get_opa_port_ectrs+0x200/0x200 [hfi1]
-    ? stack_trace_consume_entry+0x80/0x80
-    hfi1_process_mad+0x39b/0x26c0 [hfi1]
-    ? __lock_acquire+0x65e/0x21b0
-    ? clear_linkup_counters+0xb0/0xb0 [hfi1]
-    ? check_chain_key+0x1d7/0x2e0
-    ? lock_downgrade+0x3a0/0x3a0
-    ? match_held_lock+0x2e/0x250
-    ib_mad_recv_done+0x698/0x15e0 [ib_core]
-    ? clear_linkup_counters+0xb0/0xb0 [hfi1]
-    ? ib_mad_send_done+0xc80/0xc80 [ib_core]
-    ? mark_held_locks+0x79/0xa0
-    ? _raw_spin_unlock_irqrestore+0x44/0x60
-    ? rvt_poll_cq+0x1e1/0x340 [rdmavt]
-    __ib_process_cq+0x97/0x100 [ib_core]
-    ib_cq_poll_work+0x31/0xb0 [ib_core]
-    process_one_work+0x4ee/0xa00
-    ? pwq_dec_nr_in_flight+0x110/0x110
-    ? do_raw_spin_lock+0x113/0x1d0
-    worker_thread+0x57/0x5a0
-    ? process_one_work+0xa00/0xa00
-    kthread+0x1bb/0x1e0
-    ? kthread_create_on_node+0xc0/0xc0
-    ret_from_fork+0x3a/0x50
+So, correct acpi_get_psd() so that it does not return an error if there
+is no _PSD method present, but does return a failure when the method can
+not be executed properly.  This allows _PSD to be optional as it should
+be.
 
-   The buggy address belongs to the page:
-   page:ffffea000d8b5dc0 refcount:0 mapcount:0 mapping:0000000000000000 index:0x0
-   flags: 0x17ffffc0000000()
-   raw: 0017ffffc0000000 0000000000000000 ffffea000d8b5dc8 0000000000000000
-   raw: 0000000000000000 0000000000000000 00000000ffffffff 0000000000000000
-   page dumped because: kasan: bad access detected
-
-   addr ffff888362d778d0 is located in stack of task kworker/u308:2/1889 at offset 32 in frame:
-    pma_get_opa_portstatus+0x0/0xa80 [hfi1]
-
-   this frame has 1 object:
-    [32, 36) 'vl_select_mask'
-
-   Memory state around the buggy address:
-    ffff888362d77780: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-    ffff888362d77800: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-   >ffff888362d77880: 00 00 00 00 00 00 f1 f1 f1 f1 04 f2 f2 f2 00 00
-                                                    ^
-    ffff888362d77900: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-    ffff888362d77980: 00 00 00 00 00 00 00 00 f1 f1 f1 f1 04 f2 f2 f2
-
- ==================================================================
-
-Cc: <stable@vger.kernel.org>
-Fixes: 7724105686e7 ("IB/hfi1: add driver files")
-Link: https://lore.kernel.org/r/20190911113053.126040.47327.stgit@awfm-01.aw.intel.com
-Reviewed-by: Mike Marciniszyn <mike.marciniszyn@intel.com>
-Signed-off-by: Ira Weiny <ira.weiny@intel.com>
-Signed-off-by: Kaike Wan <kaike.wan@intel.com>
-Signed-off-by: Dennis Dalessandro <dennis.dalessandro@intel.com>
-Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Signed-off-by: Al Stone <ahs3@redhat.com>
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/infiniband/hw/hfi1/mad.c |   45 ++++++++++++++++-----------------------
- 1 file changed, 19 insertions(+), 26 deletions(-)
+ drivers/acpi/cppc_acpi.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
---- a/drivers/infiniband/hw/hfi1/mad.c
-+++ b/drivers/infiniband/hw/hfi1/mad.c
-@@ -2016,7 +2016,7 @@ struct opa_port_status_req {
- 	__be32 vl_select_mask;
- };
+diff --git a/drivers/acpi/cppc_acpi.c b/drivers/acpi/cppc_acpi.c
+index e0ea8f56d2bfd..9ec4618df5338 100644
+--- a/drivers/acpi/cppc_acpi.c
++++ b/drivers/acpi/cppc_acpi.c
+@@ -360,8 +360,10 @@ static int acpi_get_psd(struct cpc_desc *cpc_ptr, acpi_handle handle)
+ 	union acpi_object  *psd = NULL;
+ 	struct acpi_psd_package *pdomain;
  
--#define VL_MASK_ALL		0x000080ff
-+#define VL_MASK_ALL		0x00000000000080ffUL
+-	status = acpi_evaluate_object_typed(handle, "_PSD", NULL, &buffer,
+-			ACPI_TYPE_PACKAGE);
++	status = acpi_evaluate_object_typed(handle, "_PSD", NULL,
++					    &buffer, ACPI_TYPE_PACKAGE);
++	if (status == AE_NOT_FOUND)	/* _PSD is optional */
++		return 0;
+ 	if (ACPI_FAILURE(status))
+ 		return -ENODEV;
  
- struct opa_port_status_rsp {
- 	__u8 port_num;
-@@ -2315,15 +2315,14 @@ static int pma_get_opa_classportinfo(str
- }
- 
- static void a0_portstatus(struct hfi1_pportdata *ppd,
--			  struct opa_port_status_rsp *rsp, u32 vl_select_mask)
-+			  struct opa_port_status_rsp *rsp)
- {
- 	if (!is_bx(ppd->dd)) {
- 		unsigned long vl;
- 		u64 sum_vl_xmit_wait = 0;
--		u32 vl_all_mask = VL_MASK_ALL;
-+		unsigned long vl_all_mask = VL_MASK_ALL;
- 
--		for_each_set_bit(vl, (unsigned long *)&(vl_all_mask),
--				 8 * sizeof(vl_all_mask)) {
-+		for_each_set_bit(vl, &vl_all_mask, BITS_PER_LONG) {
- 			u64 tmp = sum_vl_xmit_wait +
- 				  read_port_cntr(ppd, C_TX_WAIT_VL,
- 						 idx_from_vl(vl));
-@@ -2347,12 +2346,12 @@ static int pma_get_opa_portstatus(struct
- 		(struct opa_port_status_req *)pmp->data;
- 	struct hfi1_devdata *dd = dd_from_ibdev(ibdev);
- 	struct opa_port_status_rsp *rsp;
--	u32 vl_select_mask = be32_to_cpu(req->vl_select_mask);
-+	unsigned long vl_select_mask = be32_to_cpu(req->vl_select_mask);
- 	unsigned long vl;
- 	size_t response_data_size;
- 	u32 nports = be32_to_cpu(pmp->mad_hdr.attr_mod) >> 24;
- 	u8 port_num = req->port_num;
--	u8 num_vls = hweight32(vl_select_mask);
-+	u8 num_vls = hweight64(vl_select_mask);
- 	struct _vls_pctrs *vlinfo;
- 	struct hfi1_ibport *ibp = to_iport(ibdev, port);
- 	struct hfi1_pportdata *ppd = ppd_from_ibp(ibp);
-@@ -2386,7 +2385,7 @@ static int pma_get_opa_portstatus(struct
- 
- 	hfi1_read_link_quality(dd, &rsp->link_quality_indicator);
- 
--	rsp->vl_select_mask = cpu_to_be32(vl_select_mask);
-+	rsp->vl_select_mask = cpu_to_be32((u32)vl_select_mask);
- 	rsp->port_xmit_data = cpu_to_be64(read_dev_cntr(dd, C_DC_XMIT_FLITS,
- 					  CNTR_INVALID_VL));
- 	rsp->port_rcv_data = cpu_to_be64(read_dev_cntr(dd, C_DC_RCV_FLITS,
-@@ -2449,8 +2448,7 @@ static int pma_get_opa_portstatus(struct
- 	 * So in the for_each_set_bit() loop below, we don't need
- 	 * any additional checks for vl.
- 	 */
--	for_each_set_bit(vl, (unsigned long *)&(vl_select_mask),
--			 8 * sizeof(vl_select_mask)) {
-+	for_each_set_bit(vl, &vl_select_mask, BITS_PER_LONG) {
- 		memset(vlinfo, 0, sizeof(*vlinfo));
- 
- 		tmp = read_dev_cntr(dd, C_DC_RX_FLIT_VL, idx_from_vl(vl));
-@@ -2487,7 +2485,7 @@ static int pma_get_opa_portstatus(struct
- 		vfi++;
- 	}
- 
--	a0_portstatus(ppd, rsp, vl_select_mask);
-+	a0_portstatus(ppd, rsp);
- 
- 	if (resp_len)
- 		*resp_len += response_data_size;
-@@ -2534,16 +2532,14 @@ static u64 get_error_counter_summary(str
- 	return error_counter_summary;
- }
- 
--static void a0_datacounters(struct hfi1_pportdata *ppd, struct _port_dctrs *rsp,
--			    u32 vl_select_mask)
-+static void a0_datacounters(struct hfi1_pportdata *ppd, struct _port_dctrs *rsp)
- {
- 	if (!is_bx(ppd->dd)) {
- 		unsigned long vl;
- 		u64 sum_vl_xmit_wait = 0;
--		u32 vl_all_mask = VL_MASK_ALL;
-+		unsigned long vl_all_mask = VL_MASK_ALL;
- 
--		for_each_set_bit(vl, (unsigned long *)&(vl_all_mask),
--				 8 * sizeof(vl_all_mask)) {
-+		for_each_set_bit(vl, &vl_all_mask, BITS_PER_LONG) {
- 			u64 tmp = sum_vl_xmit_wait +
- 				  read_port_cntr(ppd, C_TX_WAIT_VL,
- 						 idx_from_vl(vl));
-@@ -2599,7 +2595,7 @@ static int pma_get_opa_datacounters(stru
- 	u64 port_mask;
- 	u8 port_num;
- 	unsigned long vl;
--	u32 vl_select_mask;
-+	unsigned long vl_select_mask;
- 	int vfi;
- 
- 	num_ports = be32_to_cpu(pmp->mad_hdr.attr_mod) >> 24;
-@@ -2668,8 +2664,7 @@ static int pma_get_opa_datacounters(stru
- 	 * So in the for_each_set_bit() loop below, we don't need
- 	 * any additional checks for vl.
- 	 */
--	for_each_set_bit(vl, (unsigned long *)&(vl_select_mask),
--			 8 * sizeof(req->vl_select_mask)) {
-+	for_each_set_bit(vl, &vl_select_mask, BITS_PER_LONG) {
- 		memset(vlinfo, 0, sizeof(*vlinfo));
- 
- 		rsp->vls[vfi].port_vl_xmit_data =
-@@ -2712,7 +2707,7 @@ static int pma_get_opa_datacounters(stru
- 		vfi++;
- 	}
- 
--	a0_datacounters(ppd, rsp, vl_select_mask);
-+	a0_datacounters(ppd, rsp);
- 
- 	if (resp_len)
- 		*resp_len += response_data_size;
-@@ -2807,7 +2802,7 @@ static int pma_get_opa_porterrors(struct
- 	struct _vls_ectrs *vlinfo;
- 	unsigned long vl;
- 	u64 port_mask, tmp;
--	u32 vl_select_mask;
-+	unsigned long vl_select_mask;
- 	int vfi;
- 
- 	req = (struct opa_port_error_counters64_msg *)pmp->data;
-@@ -2866,8 +2861,7 @@ static int pma_get_opa_porterrors(struct
- 	vlinfo = &rsp->vls[0];
- 	vfi = 0;
- 	vl_select_mask = be32_to_cpu(req->vl_select_mask);
--	for_each_set_bit(vl, (unsigned long *)&(vl_select_mask),
--			 8 * sizeof(req->vl_select_mask)) {
-+	for_each_set_bit(vl, &vl_select_mask, BITS_PER_LONG) {
- 		memset(vlinfo, 0, sizeof(*vlinfo));
- 		rsp->vls[vfi].port_vl_xmit_discards =
- 			cpu_to_be64(read_port_cntr(ppd, C_SW_XMIT_DSCD_VL,
-@@ -3077,7 +3071,7 @@ static int pma_set_opa_portstatus(struct
- 	u32 nports = be32_to_cpu(pmp->mad_hdr.attr_mod) >> 24;
- 	u64 portn = be64_to_cpu(req->port_select_mask[3]);
- 	u32 counter_select = be32_to_cpu(req->counter_select_mask);
--	u32 vl_select_mask = VL_MASK_ALL; /* clear all per-vl cnts */
-+	unsigned long vl_select_mask = VL_MASK_ALL; /* clear all per-vl cnts */
- 	unsigned long vl;
- 
- 	if ((nports != 1) || (portn != 1 << port)) {
-@@ -3169,8 +3163,7 @@ static int pma_set_opa_portstatus(struct
- 	if (counter_select & CS_UNCORRECTABLE_ERRORS)
- 		write_dev_cntr(dd, C_DC_UNC_ERR, CNTR_INVALID_VL, 0);
- 
--	for_each_set_bit(vl, (unsigned long *)&(vl_select_mask),
--			 8 * sizeof(vl_select_mask)) {
-+	for_each_set_bit(vl, &vl_select_mask, BITS_PER_LONG) {
- 		if (counter_select & CS_PORT_XMIT_DATA)
- 			write_port_cntr(ppd, C_TX_FLIT_VL, idx_from_vl(vl), 0);
- 
+-- 
+2.20.1
+
 
 
