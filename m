@@ -2,110 +2,122 @@ Return-Path: <SRS0=6dNS=X4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB812C10F14
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 13:42:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96B47C10F14
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 13:43:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8867220830
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 13:42:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6787121783
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 13:43:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570110143;
-	bh=2YcAnzBdAV7qyRpwx2YdNckb96mGyoFb2wx9qLfpgi4=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=AjA9RRMvauHV0s1CK1VNPB72HOg4wIfoRSVjf/h1SN69etaxR2iRrM51Su9TYPjBk
-	 CZ7mkICJdZxjpIrmlEVrANgOB4dUsvK6Q329ao1GUjbJ2Mx/G46zKldGXfgk0XvbIP
-	 pJnglLRl0GcNQgSQnMcq537EqJdhZOKrSHNzhDa4=
+	s=default; t=1570110184;
+	bh=abRlt0tWQx8wHRdQAm2ffKGRAzb4Fb6wF3dHUvT+a9g=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=0R9fQm11cj+XwDvyAzqJtejPpxThGBZYFbx9N4+ymIB+ou3EdICJjKB10DqdYgVem
+	 VzCFumNi4GmXn++ZpwNJR/K2G+oOtJ6KKDSiDLd2sD1Cw0KsJjpCcaAososTNsbR1A
+	 gNyQXMA/FnYIwZXuowmQ5hDU7xXbY6YcRB/qwNlc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730598AbfJCNmW (ORCPT
+        id S1730623AbfJCNnE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 09:42:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53322 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 09:43:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53954 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729655AbfJCNmE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 09:42:04 -0400
-Received: from jupiter.universe (dyndsl-037-138-174-173.ewe-ip-backbone.de [37.138.174.173])
+        id S1729655AbfJCNnD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 09:43:03 -0400
+Received: from earth.universe (dyndsl-037-138-174-173.ewe-ip-backbone.de [37.138.174.173])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 88A5920865;
-        Thu,  3 Oct 2019 13:42:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7DD3520830;
+        Thu,  3 Oct 2019 13:43:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570110123;
-        bh=2YcAnzBdAV7qyRpwx2YdNckb96mGyoFb2wx9qLfpgi4=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=fiUS24t2tYDYlclxqzqVdyh8KBgheC5Zjm9ZeVnEGKotElY8AsuN5+F97TTpm160M
-         bW9Qbo/J6ohiBwEadZ7Ahf/PQZFzpnfhdZ8t0dlQbYBTTA7sH+U90jo4Zvo6IWRo7Z
-         wFHvdYgvjPV/mTH7NeRas7dxJAJxJ+1L/k5xGwLU=
-Received: by jupiter.universe (Postfix, from userid 1000)
-        id 8F9CE4800C3; Thu,  3 Oct 2019 15:42:01 +0200 (CEST)
+        s=default; t=1570110181;
+        bh=abRlt0tWQx8wHRdQAm2ffKGRAzb4Fb6wF3dHUvT+a9g=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=01ipPJ1T73AEkeXxjuzYiLpHcOBEyTJfYrMMQhaz23nOkeBj8M2bp0l5wNdDlW/pz
+         h6BIJihrVbI5rHohhty4QxkbD+afipPAZJUoAEq3lXB5lo8Yq36///mKoT0ZtgtHfF
+         kA3T1fpfZr1rLEbIb7Wt6Ep6mhD7Vl+3Na3KgkSw=
+Received: by earth.universe (Postfix, from userid 1000)
+        id 71EB23C0CA1; Thu,  3 Oct 2019 15:42:59 +0200 (CEST)
+Date:   Thu, 3 Oct 2019 15:42:59 +0200
 From:   Sebastian Reichel <sre@kernel.org>
-To:     Sebastian Reichel <sre@kernel.org>,
+To:     Adam Ford <aford173@gmail.com>
+Cc:     Hans Verkuil <hverkuil@xs4all.nl>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
         Marcel Holtmann <marcel@holtmann.org>,
-        Tony Lindgren <tony@atomide.com>
-Cc:     Adam Ford <aford173@gmail.com>,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        linux-bluetooth@vger.kernel.org, linux-omap@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kernel@collabora.com,
-        Sebastian Reichel <sebastian.reichel@collabora.com>
-Subject: [PATCHv2 2/4] ARM: dts: IGEP: Add WiLink UART node
-Date:   Thu,  3 Oct 2019 15:41:45 +0200
-Message-Id: <20191003134147.9458-3-sre@kernel.org>
-X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20191003134147.9458-1-sre@kernel.org>
-References: <20191003134147.9458-1-sre@kernel.org>
+        Tony Lindgren <tony@atomide.com>,
+        Rob Herring <robh@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Pavel Machek <pavel@ucw.cz>,
+        "open list:BLUETOOTH DRIVERS" <linux-bluetooth@vger.kernel.org>,
+        linux-media@vger.kernel.org,
+        Linux-OMAP <linux-omap@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 00/14] Add support for FM radio in hcill and kill TI_ST
+Message-ID: <20191003134259.bmrhgkvvkyjdvsr3@earth.universe>
+References: <20181221011752.25627-1-sre@kernel.org>
+ <4f47f7f2-3abb-856c-4db5-675caf8057c7@xs4all.nl>
+ <20190319133154.7tbfafy7pguzw2tk@earth.universe>
+ <CAHCN7xLffcvC0LVnfrhf4cA=y1PRMx+COa3c8rBm1xOj179vEA@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="3hs23bfjj5434d43"
+Content-Disposition: inline
+In-Reply-To: <CAHCN7xLffcvC0LVnfrhf4cA=y1PRMx+COa3c8rBm1xOj179vEA@mail.gmail.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sebastian Reichel <sebastian.reichel@collabora.com>
 
-Add a node for the UART part of WiLink chip.
+--3hs23bfjj5434d43
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Tested-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
-Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.com>
----
- arch/arm/boot/dts/omap3-igep0020-rev-f.dts | 8 ++++++++
- arch/arm/boot/dts/omap3-igep0030-rev-g.dts | 8 ++++++++
- 2 files changed, 16 insertions(+)
+Hi Adam,
 
-diff --git a/arch/arm/boot/dts/omap3-igep0020-rev-f.dts b/arch/arm/boot/dts/omap3-igep0020-rev-f.dts
-index 03dcd05fb8a0..001decc20b3d 100644
---- a/arch/arm/boot/dts/omap3-igep0020-rev-f.dts
-+++ b/arch/arm/boot/dts/omap3-igep0020-rev-f.dts
-@@ -49,3 +49,11 @@
- 		interrupts = <17 IRQ_TYPE_EDGE_RISING>; /* gpio 177 */
- 	};
- };
-+
-+&uart2 {
-+	bluetooth {
-+		compatible = "ti,wl1835-st";
-+		enable-gpios = <&gpio5 9 GPIO_ACTIVE_HIGH>; /* gpio 137 */
-+		max-speed = <300000>;
-+	};
-+};
-diff --git a/arch/arm/boot/dts/omap3-igep0030-rev-g.dts b/arch/arm/boot/dts/omap3-igep0030-rev-g.dts
-index 060acd1e803a..9a8975799e16 100644
---- a/arch/arm/boot/dts/omap3-igep0030-rev-g.dts
-+++ b/arch/arm/boot/dts/omap3-igep0030-rev-g.dts
-@@ -71,3 +71,11 @@
- 		interrupts = <8 IRQ_TYPE_EDGE_RISING>; /* gpio 136 */
- 	};
- };
-+
-+&uart2 {
-+	bluetooth {
-+		compatible = "ti,wl1835-st";
-+		enable-gpios = <&gpio5 9 GPIO_ACTIVE_HIGH>; /* gpio 137 */
-+		max-speed = <300000>;
-+	};
-+};
--- 
-2.23.0
+On Wed, Oct 02, 2019 at 02:03:52PM -0500, Adam Ford wrote:
+> On Tue, Mar 19, 2019 at 8:33 AM Sebastian Reichel <sre@kernel.org> wrote:
+> After a bunch of testing, I think the issue I was having was the BTS
+> file being pulled in from linux-firmware.  I was able to successfully
+> load a BTS file that I have from Logic PD with working BLE and BT
+> working together.  I have to run some tests, but if you wouldn't mind
+> re-basing your code and pushing it again for review, I can most likely
+> add my 'tested-by'.
+>
+> I am not sure who to discuss my perceived bug in the BTS blob.  I have
+> to go find the old BTS editor and see if I can determine the cause,
+> but the fact that I can use the BTS file that corresponds to the FCC
+> certified file that Logic PD used is more important to me than using
+> the generic BTS file provided by TI, however it would be nice for the
+> reference BTS file to operate without error.
 
+nice :) I just send a rebased partial series. I need some more time
+for the FM radio part (I plan to work on that within the next 3
+weeks).
+
+-- Sebastian
+
+--3hs23bfjj5434d43
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAl2V+t4ACgkQ2O7X88g7
++pqntw//XWtlZbSO/mbBluBjdqneqq8If142mAI8pY6Z1yv9hZV4H4ybUiS4czE8
+5aWvAeye7uUZYbj85bELesffkWiKDShkT2K0mmfnY+apgcRRRsGhNMVN0+lNOHrV
+Ekm2sVokpe+BKHu2hPPiCTsMMSfd4Z6Xga7KeClQJgJFYtmst3e4/k0pTTNNu9tV
+O6J1j+baQzjiJEs7rz24vIrE6PoSvYmh8VRzOv2VwZ3kfcABu2vnz1JPxCSJvDfD
+swO2nW3uZiMdeTDvI027iHCWupdkCc+XReqVHKu7VhiwnEiUg/8YuUxFL43bnFvY
+vVRhJarFYkTvarwA2d1phCPH8DfH+uQ3nvFhpCjHUs+5KEEYWmiZhxkC7urL6xFY
+KvvKQVm0bvNnWtHLOSwrkQD0nRVYEAm3Cjk9DtnwjMemVs7F1vYq9OA6u6GDflty
+FSBlOZMplAA34TzvS3AcFjnKwzfmQqp43britTK1k+FDWcsBM2NWBN6aEOfcxmTs
+hGmFfOOzckx2cf6xPnkkjhzpvMsZHWMcdKp67MWBJxglOBMRpvY+0+JtaXbvDoXQ
+p7GfLTdLP7xkCMcTwXLFD6VvN2lbLioCPBQXCY+HbZ9AseDrHZlSzIM4MXE8nr/v
+qRQ8UFg2GG+KfwxV5uM4IEFOfAdPAtCcWClbYvmcOsJxrbBmqt4=
+=MOKK
+-----END PGP SIGNATURE-----
+
+--3hs23bfjj5434d43--
