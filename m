@@ -2,54 +2,53 @@ Return-Path: <SRS0=6dNS=X4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2854AC10F14
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:33:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE3B8C10F14
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:34:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E8B3B2133F
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:33:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 866C02070B
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:34:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570120436;
-	bh=c/3eVmy+tc8mTD9hs64Cm6vfp43ZcUUAsBwfB3rTaF4=;
+	s=default; t=1570120441;
+	bh=BZapDg6ZGXM9Rg5kPcRilfrz2LUQyzrkxIwwMOM1Xy0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Zo9NZX+vHpMgFpbsqNa8d0vyatGPlGtaNE4XrarFKbVcG5rimlJnjOLBGe+Wx4nwv
-	 J6kc9ZYiZP+5ePyClRhE6FVM75bBL+eLsPfXynp5iFR9Wq3sNPHS3l9m+nRcQDu9Cx
-	 G458vsIbtpg/vPe4h4/KHFbr8VQZ2hYpPfdPfnRE=
+	b=CC5jWEJ0sqLJKqznDrtoM/Plm9/LE/ytMg2PG9f6aLvnCvwqGLV7lIXqTtHfBLt1I
+	 wELKRdIiM+vDaZ7l+6Eiz+u6s9SwYlE7WceDiQMadxE213Skt/kbHkNKxPdKrEQLdg
+	 rYJc+Z92EyaSs13bL6rrylOJFY38e7bjfRzHSFsA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392068AbfJCQdy (ORCPT
+        id S2392081AbfJCQeA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 12:33:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42018 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 12:34:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42094 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392057AbfJCQdv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:33:51 -0400
+        id S2391065AbfJCQdx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:33:53 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9DC212070B;
-        Thu,  3 Oct 2019 16:33:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 40F9320830;
+        Thu,  3 Oct 2019 16:33:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570120430;
-        bh=c/3eVmy+tc8mTD9hs64Cm6vfp43ZcUUAsBwfB3rTaF4=;
+        s=default; t=1570120432;
+        bh=BZapDg6ZGXM9Rg5kPcRilfrz2LUQyzrkxIwwMOM1Xy0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=MrFge/VWDnQR6ohfZcDi6zRxjj/cXhvpevGAdV+HvNgW2sgXv/XbtOYXF65bm80wc
-         uLopZebsjlxyFUqk0ow4InD/aHkjjMcQbFI21w8NLoUmnfP/iLqwUttOtbZtKA0H5Q
-         kxK8Wcxt8i6TcoieP24LNgqzSlDuP0n5M65p2+SQ=
+        b=nbzpc49mwYYk/iN8FrZRD97MSg2E6WVAnofWx20LK3i7Tfp9geNLQnnmBxAmHvfjx
+         djorp6whvxKOrSG2+4yiQmdx1ZmngAsEZ77YziKTMpVybRqf4bZmtnoq1IcVJVKw+0
+         8esmDatWwl+mBJZ3d74DSgql+K1nY04JkS0j7XS4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
+To:     linux-kernel@vger.kernel.org, rostedt@goodmis.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        =?UTF-8?q?G=C3=B6ran=20Uddeborg?= <goeran@uddeborg.se>,
-        Daniel Vetter <daniel.vetter@ffwll.ch>,
-        Jani Nikula <jani.nikula@intel.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 202/313] drm: fix module name in edid_firmware log message
-Date:   Thu,  3 Oct 2019 17:53:00 +0200
-Message-Id: <20191003154552.869414766@linuxfoundation.org>
+        Vincent Whitchurch <vincent.whitchurch@axis.com>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Petr Mladek <pmladek@suse.com>
+Subject: [PATCH 5.2 220/313] printk: Do not lose last line in kmsg buffer dump
+Date:   Thu,  3 Oct 2019 17:53:18 +0200
+Message-Id: <20191003154554.709877128@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191003154533.590915454@linuxfoundation.org>
 References: <20191003154533.590915454@linuxfoundation.org>
@@ -62,38 +61,70 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jani Nikula <jani.nikula@intel.com>
+From: Vincent Whitchurch <vincent.whitchurch@axis.com>
 
-[ Upstream commit ade925995b172f1d7410d1c665b2f47c5e99bef0 ]
+commit c9dccacfccc72c32692eedff4a27a4b0833a2afd upstream.
 
-The module is drm_kms_helper, not drm_kms_firmware.
+kmsg_dump_get_buffer() is supposed to select all the youngest log
+messages which fit into the provided buffer.  It determines the correct
+start index by using msg_print_text() with a NULL buffer to calculate
+the size of each entry.  However, when performing the actual writes,
+msg_print_text() only writes the entry to the buffer if the written len
+is lesser than the size of the buffer.  So if the lengths of the
+selected youngest log messages happen to precisely fill up the provided
+buffer, the last log message is not included.
 
-Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=204549
-Reported-by: Göran Uddeborg <goeran@uddeborg.se>
-Fixes: ac6c35a4d8c7 ("drm: add backwards compatibility support for drm_kms_helper.edid_firmware")
-Reviewed-by: Daniel Vetter <daniel.vetter@ffwll.ch>
-Signed-off-by: Jani Nikula <jani.nikula@intel.com>
-Link: https://patchwork.freedesktop.org/patch/msgid/20190821094312.5514-1-jani.nikula@intel.com
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+We don't want to modify msg_print_text() to fill up the buffer and start
+returning a length which is equal to the size of the buffer, since
+callers of its other users, such as kmsg_dump_get_line(), depend upon
+the current behaviour.
+
+Instead, fix kmsg_dump_get_buffer() to compensate for this.
+
+For example, with the following two final prints:
+
+[    6.427502] AAAAAAAAAAAAA
+[    6.427769] BBBBBBBB12345
+
+A dump of a 64-byte buffer filled by kmsg_dump_get_buffer(), before this
+patch:
+
+ 00000000: 3c 30 3e 5b 20 20 20 20 36 2e 35 32 32 31 39 37  <0>[    6.522197
+ 00000010: 5d 20 41 41 41 41 41 41 41 41 41 41 41 41 41 0a  ] AAAAAAAAAAAAA.
+ 00000020: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+ 00000030: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+
+After this patch:
+
+ 00000000: 3c 30 3e 5b 20 20 20 20 36 2e 34 35 36 36 37 38  <0>[    6.456678
+ 00000010: 5d 20 42 42 42 42 42 42 42 42 31 32 33 34 35 0a  ] BBBBBBBB12345.
+ 00000020: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+ 00000030: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+
+Link: http://lkml.kernel.org/r/20190711142937.4083-1-vincent.whitchurch@axis.com
+Fixes: e2ae715d66bf4bec ("kmsg - kmsg_dump() use iterator to receive log buffer content")
+To: rostedt@goodmis.org
+Cc: linux-kernel@vger.kernel.org
+Cc: <stable@vger.kernel.org> # v3.5+
+Signed-off-by: Vincent Whitchurch <vincent.whitchurch@axis.com>
+Reviewed-by: Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
+Signed-off-by: Petr Mladek <pmladek@suse.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- drivers/gpu/drm/drm_kms_helper_common.c | 2 +-
+ kernel/printk/printk.c |    2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/drm_kms_helper_common.c b/drivers/gpu/drm/drm_kms_helper_common.c
-index 9c5ae825c5078..69917ecd4af67 100644
---- a/drivers/gpu/drm/drm_kms_helper_common.c
-+++ b/drivers/gpu/drm/drm_kms_helper_common.c
-@@ -39,7 +39,7 @@ MODULE_LICENSE("GPL and additional rights");
- /* Backward compatibility for drm_kms_helper.edid_firmware */
- static int edid_firmware_set(const char *val, const struct kernel_param *kp)
- {
--	DRM_NOTE("drm_kms_firmware.edid_firmware is deprecated, please use drm.edid_firmware instead.\n");
-+	DRM_NOTE("drm_kms_helper.edid_firmware is deprecated, please use drm.edid_firmware instead.\n");
+--- a/kernel/printk/printk.c
++++ b/kernel/printk/printk.c
+@@ -3274,7 +3274,7 @@ bool kmsg_dump_get_buffer(struct kmsg_du
+ 	/* move first record forward until length fits into the buffer */
+ 	seq = dumper->cur_seq;
+ 	idx = dumper->cur_idx;
+-	while (l > size && seq < dumper->next_seq) {
++	while (l >= size && seq < dumper->next_seq) {
+ 		struct printk_log *msg = log_from_idx(idx);
  
- 	return __drm_set_edid_firmware_path(val);
- }
--- 
-2.20.1
-
+ 		l -= msg_print_text(msg, true, time, NULL, 0);
 
 
