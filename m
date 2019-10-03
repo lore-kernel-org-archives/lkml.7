@@ -2,78 +2,84 @@ Return-Path: <SRS0=6dNS=X4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AF881C4CED1
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 09:09:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BD22C10F14
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 09:09:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 83B9F217D7
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 09:09:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 76F8721848
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 09:09:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728966AbfJCJJO (ORCPT
+        id S1728998AbfJCJJ0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 05:09:14 -0400
-Received: from mx2.suse.de ([195.135.220.15]:52602 "EHLO mx1.suse.de"
+        Thu, 3 Oct 2019 05:09:26 -0400
+Received: from mx2.suse.de ([195.135.220.15]:52698 "EHLO mx1.suse.de"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727357AbfJCJJN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 05:09:13 -0400
+        id S1727382AbfJCJJ0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 05:09:26 -0400
 X-Virus-Scanned: by amavisd-new at test-mx.suse.de
 Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id DFFDAB14B;
-        Thu,  3 Oct 2019 09:09:11 +0000 (UTC)
-Date:   Thu, 3 Oct 2019 11:08:47 +0200 (CEST)
-From:   Miroslav Benes <mbenes@suse.cz>
-To:     Petr Mladek <pmladek@suse.com>
-cc:     jikos@kernel.org, jpoimboe@redhat.com, joe.lawrence@redhat.com,
-        nstange@suse.de, live-patching@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [RFC PATCH v2 3/3] livepatch: Clean up klp_update_object_relocations()
- return paths
-In-Reply-To: <20191002134623.b6mwrvenrywgwdce@pathway.suse.cz>
-Message-ID: <alpine.LSU.2.21.1910031100150.9011@pobox.suse.cz>
-References: <20190905124514.8944-1-mbenes@suse.cz> <20190905124514.8944-4-mbenes@suse.cz> <20191002134623.b6mwrvenrywgwdce@pathway.suse.cz>
-User-Agent: Alpine 2.21 (LSU 202 2017-01-01)
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+        by mx1.suse.de (Postfix) with ESMTP id BECD7B14B;
+        Thu,  3 Oct 2019 09:09:24 +0000 (UTC)
+From:   Daniel Wagner <dwagner@suse.de>
+To:     linux-mm@kvack.org
+Cc:     linux-kernel@vger.kernel.org, linux-rt-users@vger.kernel.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Daniel Wagner <dwagner@suse.de>,
+        Uladzislau Rezki <urezki@gmail.com>
+Subject: [PATCH] mm: vmalloc: Use the vmap_area_lock to protect ne_fit_preload_node
+Date:   Thu,  3 Oct 2019 11:09:06 +0200
+Message-Id: <20191003090906.1261-1-dwagner@suse.de>
+X-Mailer: git-send-email 2.16.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 2 Oct 2019, Petr Mladek wrote:
+Replace preempt_enable() and preempt_disable() with the vmap_area_lock
+spin_lock instead. Calling spin_lock() with preempt disabled is
+illegal for -rt. Furthermore, enabling preemption inside the
+spin_lock() doesn't really make sense.
 
-> On Thu 2019-09-05 14:45:14, Miroslav Benes wrote:
-> > Signed-off-by: Miroslav Benes <mbenes@suse.cz>
-> 
-> This might depend on personal preferences.
+Fixes: 82dd23e84be3 ("mm/vmalloc.c: preload a CPU with one object for
+split purpose")
+Cc: Uladzislau Rezki (Sony) <urezki@gmail.com>
+Signed-off-by: Daniel Wagner <dwagner@suse.de>
+---
+ mm/vmalloc.c | 9 +++------
+ 1 file changed, 3 insertions(+), 6 deletions(-)
 
-True.
+diff --git a/mm/vmalloc.c b/mm/vmalloc.c
+index 08c134aa7ff3..0d1175673583 100644
+--- a/mm/vmalloc.c
++++ b/mm/vmalloc.c
+@@ -1091,11 +1091,11 @@ static struct vmap_area *alloc_vmap_area(unsigned long size,
+ 	 * Even if it fails we do not really care about that. Just proceed
+ 	 * as it is. "overflow" path will refill the cache we allocate from.
+ 	 */
+-	preempt_disable();
++	spin_lock(&vmap_area_lock);
+ 	if (!__this_cpu_read(ne_fit_preload_node)) {
+-		preempt_enable();
++		spin_unlock(&vmap_area_lock);
+ 		pva = kmem_cache_alloc_node(vmap_area_cachep, GFP_KERNEL, node);
+-		preempt_disable();
++		spin_lock(&vmap_area_lock);
+ 
+ 		if (__this_cpu_cmpxchg(ne_fit_preload_node, NULL, pva)) {
+ 			if (pva)
+@@ -1103,9 +1103,6 @@ static struct vmap_area *alloc_vmap_area(unsigned long size,
+ 		}
+ 	}
+ 
+-	spin_lock(&vmap_area_lock);
+-	preempt_enable();
+-
+ 	/*
+ 	 * If an allocation fails, the "vend" address is
+ 	 * returned. Therefore trigger the overflow path.
+-- 
+2.16.4
 
-> What was the motivation
-> for this patch, please? Did it just follow some common
-> style in this source file?
-
-We had it like this once, so it is only going back to the original code. 
-And yes, I think it is better.
-
-Commit b56b36ee6751 ("livepatch: Cleanup module page permission changes") 
-changed it due to the error handling. Commit 255e732c61db ("livepatch: use 
-arch_klp_init_object_loaded() to finish arch-specific tasks") removed the 
-reason for the change but did not cleanup the rest.
-
-> To make it clear. I have no real preference. I just want to avoid
-> some back and forth changes of the code depending on who touches
-> it at the moment.
-
-I have no real preference either. I noticed something I did not like while 
-touching the code and that's it.
-
-> I would prefer to either remove this patch or explain the motivation
-> in the commit message. Beside that
-> 
-> Reviewed-by: Petr Mladek <pmladek@suse.com>
-
-Ok, thanks.
-Miroslav
