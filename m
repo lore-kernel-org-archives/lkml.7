@@ -2,284 +2,226 @@ Return-Path: <SRS0=6dNS=X4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 93265C32792
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 05:35:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EE5D4C4CED1
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 05:35:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 62514222C4
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 05:35:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BB754222BE
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 05:35:28 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="AUxQIsBq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727695AbfJCFfE (ORCPT
+        id S1727811AbfJCFf2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 01:35:04 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:13706 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727611AbfJCFfE (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 01:35:04 -0400
-Received: from pps.filterd (m0098421.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x935VmKq042199
-        for <linux-kernel@vger.kernel.org>; Thu, 3 Oct 2019 01:35:02 -0400
-Received: from e06smtp04.uk.ibm.com (e06smtp04.uk.ibm.com [195.75.94.100])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2vd9e6j3dg-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Thu, 03 Oct 2019 01:35:01 -0400
-Received: from localhost
-        by e06smtp04.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <rppt@linux.ibm.com>;
-        Thu, 3 Oct 2019 06:35:00 +0100
-Received: from b06avi18626390.portsmouth.uk.ibm.com (9.149.26.192)
-        by e06smtp04.uk.ibm.com (192.168.101.134) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Thu, 3 Oct 2019 06:34:55 +0100
-Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
-        by b06avi18626390.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x935YPRR34603498
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 3 Oct 2019 05:34:26 GMT
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id AA6CD11C04A;
-        Thu,  3 Oct 2019 05:34:54 +0000 (GMT)
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id B844211C050;
-        Thu,  3 Oct 2019 05:34:53 +0000 (GMT)
-Received: from linux.ibm.com (unknown [9.148.8.153])
-        by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
-        Thu,  3 Oct 2019 05:34:53 +0000 (GMT)
-Date:   Thu, 3 Oct 2019 08:34:52 +0300
-From:   Mike Rapoport <rppt@linux.ibm.com>
-To:     Adam Ford <aford173@gmail.com>
-Cc:     Fabio Estevam <festevam@gmail.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Christoph Hellwig <hch@lst.de>,
-        Russell King <linux@armlinux.org.uk>,
-        The etnaviv authors <etnaviv@lists.freedesktop.org>,
-        arm-soc <linux-arm-kernel@lists.infradead.org>,
-        Linux Memory Management List <linux-mm@kvack.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Lucas Stach <l.stach@pengutronix.de>
-Subject: Re: [PATCH v2 00/21] Refine memblock API
-References: <CAHCN7xJdzEppn8-74SvzACsA25bUHGdV7v=CfS08xzSi59Z2uw@mail.gmail.com>
- <CAOMZO5D2uzR6Sz1QnX3G-Ce_juxU-0PO_vBZX+nR1mpQB8s8-w@mail.gmail.com>
- <CAHCN7xJ32BYZu-DVTVLSzv222U50JDb8F0A_tLDERbb8kPdRxg@mail.gmail.com>
- <20190926160433.GD32311@linux.ibm.com>
- <CAHCN7xL1sFXDhKUpj04d3eDZNgLA1yGAOqwEeCxedy1Qm-JOfQ@mail.gmail.com>
- <20190928073331.GA5269@linux.ibm.com>
- <CAHCN7xJEvS2Si=M+BYtz+kY0M4NxmqDjiX9Nwq6_3GGBh3yg=w@mail.gmail.com>
- <CAHCN7xKLhWw4P9-sZKXQcfSfh2r3J_+rLxuxACW0UVgimCzyVw@mail.gmail.com>
- <20191002073605.GA30433@linux.ibm.com>
- <CAHCN7xL1MkJh44N3W_1+08DHmX__SqnfH6dqUzYzr2Wpg0kQyQ@mail.gmail.com>
+        Thu, 3 Oct 2019 01:35:28 -0400
+Received: from mail-eopbgr1310139.outbound.protection.outlook.com ([40.107.131.139]:35472
+        "EHLO APC01-SG2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727611AbfJCFf1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 01:35:27 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=TlKMC4r3Oc6G0fajnB2UUTArjlVTOlc7NOabe0gBJDpTrxbfyL77NDuBBXYlMFuFTbLCzKqXXE36XV1aQniDzfYkpUA0q0lCeRBoQrZ9fUWaIWOTCYn+vmwC63GlXdAfOMGm/0pQBJkBhpQ4NRvqtcglzzv8uiaeQ3q0PEm1iJoP6m2cxgKXWkQuxTFa7JY0y2uZ4fRaez8KDcyKgThjbd3eQwZNO88HkyOgngSWD/YjyC9960ZLs7AvCkKwJaSUlSfMvMU6Scx0wMExSO0GV0sf+bM/yHTVTAoRSloRXlD6hg3gd6ACC0qTk18KJ34J3bCxeYObpDI1AecNWVWMvA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=RgjkGEEEOjBuV4Lx1zE1tocj/YVSscLes+ZlAkbkhbQ=;
+ b=Ehla9Rl6FCtLn9fkmwcCQ7CnISk90yiasDFOtKZgUPEfuZb4Y+UHfYEhzvskBwizdr784MxfnWQMn8BFM9QtJZb1JEkC9JdtfbbhNAuX0blwC3fOVd6KW+YlKsd0Vc92Oq5OUaRhnpuSx+TMd6SEznTtMBvudswIgn+FHjW53IhzIV9IRYkvxdnWgMkHQ5JftsISFfbiOXR1zhYkagXK0bnfAIXdAO9iLMn131QxG0NxN4b1Q8CMukVEBSkPbTOdMf1rWIwQEpGXURBugWuZ4uWwHCaezzANkQ+DiW7mUx7yVYU+f0POszOxb+kb+PciPbL8qDcF6uCILo0y2uuoDQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=microsoft.com; dmarc=pass action=none
+ header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=RgjkGEEEOjBuV4Lx1zE1tocj/YVSscLes+ZlAkbkhbQ=;
+ b=AUxQIsBqlchHd+XkVvUOLqFS3WzJzR9KpZUSRqGMhi8KYjiGb0iGLvwO6SC/voAVHwT+cNrZUZK9GQSo97x1YZfbDQ4WGA2311VOr9eND3sPPoyKqmRUcuWkepzrj3BrANSclFeG7nMTcPRyHog1AMGNnpJWxR2n1QPqpjxLB8o=
+Received: from PU1P153MB0169.APCP153.PROD.OUTLOOK.COM (10.170.189.13) by
+ PU1P153MB0203.APCP153.PROD.OUTLOOK.COM (52.133.194.146) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2327.4; Thu, 3 Oct 2019 05:35:15 +0000
+Received: from PU1P153MB0169.APCP153.PROD.OUTLOOK.COM
+ ([fe80::fc44:a784:73e6:c1c2]) by PU1P153MB0169.APCP153.PROD.OUTLOOK.COM
+ ([fe80::fc44:a784:73e6:c1c2%7]) with mapi id 15.20.2327.021; Thu, 3 Oct 2019
+ 05:35:15 +0000
+From:   Dexuan Cui <decui@microsoft.com>
+To:     "dmitry.torokhov@gmail.com" <dmitry.torokhov@gmail.com>
+CC:     KY Srinivasan <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        "sashal@kernel.org" <sashal@kernel.org>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Michael Kelley <mikelley@microsoft.com>
+Subject: RE: [PATCH] Input: hyperv-keyboard: Add the support of hibernation
+Thread-Topic: [PATCH] Input: hyperv-keyboard: Add the support of hibernation
+Thread-Index: AQHVbwXQRPtGDntMcU+sv4R8q5dPMac1q4VggAqesgCABFerkIAAR5AAgAAEvxA=
+Date:   Thu, 3 Oct 2019 05:35:14 +0000
+Message-ID: <PU1P153MB01696258D9983DF59D68E748BF9F0@PU1P153MB0169.APCP153.PROD.OUTLOOK.COM>
+References: <1568244975-66795-1-git-send-email-decui@microsoft.com>
+ <20190919161752.GS237523@dtor-ws>
+ <PU1P153MB016914A7C827CA35D7FEB66ABF8B0@PU1P153MB0169.APCP153.PROD.OUTLOOK.COM>
+ <20190928003156.GU237523@dtor-ws>
+ <PU1P153MB0169C315F7F9EBEBED4C7A7DBF820@PU1P153MB0169.APCP153.PROD.OUTLOOK.COM>
+ <20190930230652.GW237523@dtor-ws>
+In-Reply-To: <20190930230652.GW237523@dtor-ws>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=True;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Owner=decui@microsoft.com;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2019-10-03T05:35:12.9166695Z;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=General;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Application=Microsoft Azure
+ Information Protection;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=b8fbbc20-ec57-44eb-b763-8c5867f66517;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Extended_MSFT_Method=Automatic
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=decui@microsoft.com; 
+x-originating-ip: [2601:600:a280:7f70:24b0:cdff:a7c5:c70f]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: d8d470c6-5712-424c-4791-08d747c377ea
+x-ms-office365-filtering-ht: Tenant
+x-ms-traffictypediagnostic: PU1P153MB0203:|PU1P153MB0203:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <PU1P153MB0203E5A23B037137E4F6F74ABF9F0@PU1P153MB0203.APCP153.PROD.OUTLOOK.COM>
+x-ms-oob-tlc-oobclassifiers: OLM:10000;
+x-forefront-prvs: 01792087B6
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(366004)(376002)(396003)(39850400004)(136003)(346002)(199004)(189003)(54906003)(14454004)(9686003)(1361003)(6116002)(186003)(316002)(476003)(4326008)(66446008)(2501003)(66556008)(55016002)(64756008)(66946007)(478600001)(25786009)(6246003)(66476007)(10090500001)(22452003)(71200400001)(229853002)(71190400001)(81156014)(86362001)(99286004)(11346002)(486006)(8676002)(446003)(76176011)(81166006)(7696005)(5640700003)(76116006)(7736002)(46003)(2351001)(5660300002)(52536014)(107886003)(256004)(2906002)(102836004)(6506007)(14444005)(8990500004)(6436002)(33656002)(6916009)(74316002)(8936002)(10290500003)(305945005)(21314003);DIR:OUT;SFP:1102;SCL:1;SRVR:PU1P153MB0203;H:PU1P153MB0169.APCP153.PROD.OUTLOOK.COM;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: microsoft.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: fPEIC1wADQU5mrukixqhca8IllrBqU09ZN4crZe9TqwJEvwJJd7yia4DUQ3cegVH0YDvEgTeIKvIdJZGb0hf475uK+Qwa9zA8zIaaI2PnHjsR2dG91qUUcnnB/pWu9ELeh0DnlFqhw+RXMK3M9FlITuJiSRnWly2CcCDPTXJAvagsBNHYxnsMI1oCAlkMi3cL6nYkL9CNEo1MgFu6+CXN2/o0091CFAHONbdwiY/tm4jbzlQ4KuhLgF2xvD+9WkygBrbiQTpR4TvqiHKLJGkwfNxcENIN7yHd5PRJfEs9c6k4LQmKgvHaIxebjtLUA18HzF4pchdh9NrLw7gJZrV4wR0iHLvGdFjfeYTmv8LyzY2cE661rguXYMuVhZqtkwste6goLe7atejuFvXSk0A3QCjSmehKIAzsSd74jCSJrk=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAHCN7xL1MkJh44N3W_1+08DHmX__SqnfH6dqUzYzr2Wpg0kQyQ@mail.gmail.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-TM-AS-GCONF: 00
-x-cbid: 19100305-0016-0000-0000-000002B38CC0
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19100305-0017-0000-0000-00003314947D
-Message-Id: <20191003053451.GA23397@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-10-03_02:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1908290000 definitions=main-1910030053
+X-OriginatorOrg: microsoft.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: d8d470c6-5712-424c-4791-08d747c377ea
+X-MS-Exchange-CrossTenant-originalarrivaltime: 03 Oct 2019 05:35:14.8433
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: IcX6ua6+lTKsTumZDmMoYZxak0iBwe5poiioEzeeZv6/BBTHtp3R8teIxp/A5r6LsSodJT/hQjP7AXuPk5nA0g==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PU1P153MB0203
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-(trimmed the CC)
-
-On Wed, Oct 02, 2019 at 06:14:11AM -0500, Adam Ford wrote:
-> On Wed, Oct 2, 2019 at 2:36 AM Mike Rapoport <rppt@linux.ibm.com> wrote:
-> >
-> 
-> Before the patch:
-> 
-> # cat /sys/kernel/debug/memblock/memory
->    0: 0x10000000..0x8fffffff
-> # cat /sys/kernel/debug/memblock/reserved
->    0: 0x10004000..0x10007fff
->   34: 0x2fffff88..0x3fffffff
-> 
-> 
-> After the patch:
-> # cat /sys/kernel/debug/memblock/memory
->    0: 0x10000000..0x8fffffff
-> # cat /sys/kernel/debug/memblock/reserved
->    0: 0x10004000..0x10007fff
->   36: 0x80000000..0x8fffffff
-
-I'm still not convinced that the memblock refactoring didn't uncovered an
-issue in etnaviv driver.
-
-Why moving the CMA area from 0x80000000 to 0x30000000 makes it fail?
-
-BTW, the code that complained about "command buffer outside valid memory
-window" has been removed by the commit 17e4660ae3d7 ("drm/etnaviv:
-implement per-process address spaces on MMUv2"). 
-
-Could be that recent changes to MMU management of etnaviv resolve the
-issue?
-
-> > From 06529f861772b7dea2912fc2245debe4690139b8 Mon Sep 17 00:00:00 2001
-> > From: Mike Rapoport <rppt@linux.ibm.com>
-> > Date: Wed, 2 Oct 2019 10:14:17 +0300
-> > Subject: [PATCH] mm: memblock: do not enforce current limit for memblock_phys*
-> >  family
-> >
-> > Until commit 92d12f9544b7 ("memblock: refactor internal allocation
-> > functions") the maximal address for memblock allocations was forced to
-> > memblock.current_limit only for the allocation functions returning virtual
-> > address. The changes introduced by that commit moved the limit enforcement
-> > into the allocation core and as a result the allocation functions returning
-> > physical address also started to limit allocations to
-> > memblock.current_limit.
-> >
-> > This caused breakage of etnaviv GPU driver:
-> >
-> > [    3.682347] etnaviv etnaviv: bound 130000.gpu (ops gpu_ops)
-> > [    3.688669] etnaviv etnaviv: bound 134000.gpu (ops gpu_ops)
-> > [    3.695099] etnaviv etnaviv: bound 2204000.gpu (ops gpu_ops)
-> > [    3.700800] etnaviv-gpu 130000.gpu: model: GC2000, revision: 5108
-> > [    3.723013] etnaviv-gpu 130000.gpu: command buffer outside valid
-> > memory window
-> > [    3.731308] etnaviv-gpu 134000.gpu: model: GC320, revision: 5007
-> > [    3.752437] etnaviv-gpu 134000.gpu: command buffer outside valid
-> > memory window
-> > [    3.760583] etnaviv-gpu 2204000.gpu: model: GC355, revision: 1215
-> > [    3.766766] etnaviv-gpu 2204000.gpu: Ignoring GPU with VG and FE2.0
-> >
-> > Restore the behaviour of memblock_phys* family so that these functions will
-> > not enforce memblock.current_limit.
-> >
-> 
-> This fixed the issue.  Thank you
-> 
-> Tested-by: Adam Ford <aford173@gmail.com> #imx6q-logicpd
-> 
-> > Fixes: 92d12f9544b7 ("memblock: refactor internal allocation functions")
-> > Reported-by: Adam Ford <aford173@gmail.com>
-> > Signed-off-by: Mike Rapoport <rppt@linux.ibm.com>
-> > ---
-> >  mm/memblock.c | 6 +++---
-> >  1 file changed, 3 insertions(+), 3 deletions(-)
-> >
-> > diff --git a/mm/memblock.c b/mm/memblock.c
-> > index 7d4f61a..c4b16ca 100644
-> > --- a/mm/memblock.c
-> > +++ b/mm/memblock.c
-> > @@ -1356,9 +1356,6 @@ static phys_addr_t __init memblock_alloc_range_nid(phys_addr_t size,
-> >                 align = SMP_CACHE_BYTES;
-> >         }
-> >
-> > -       if (end > memblock.current_limit)
-> > -               end = memblock.current_limit;
-> > -
-> >  again:
-> >         found = memblock_find_in_range_node(size, align, start, end, nid,
-> >                                             flags);
-> > @@ -1469,6 +1466,9 @@ static void * __init memblock_alloc_internal(
-> >         if (WARN_ON_ONCE(slab_is_available()))
-> >                 return kzalloc_node(size, GFP_NOWAIT, nid);
-> >
-> > +       if (max_addr > memblock.current_limit)
-> > +               max_addr = memblock.current_limit;
-> > +
-> >         alloc = memblock_alloc_range_nid(size, align, min_addr, max_addr, nid);
-> >
-> >         /* retry allocation without lower limit */
-> > --
-> > 2.7.4
-> >
-> >
-> > > > adam
-> > > >
-> > > > On Sat, Sep 28, 2019 at 2:33 AM Mike Rapoport <rppt@linux.ibm.com> wrote:
-> > > > >
-> > > > > On Thu, Sep 26, 2019 at 02:35:53PM -0500, Adam Ford wrote:
-> > > > > > On Thu, Sep 26, 2019 at 11:04 AM Mike Rapoport <rppt@linux.ibm.com> wrote:
-> > > > > > >
-> > > > > > > Hi,
-> > > > > > >
-> > > > > > > On Thu, Sep 26, 2019 at 08:09:52AM -0500, Adam Ford wrote:
-> > > > > > > > On Wed, Sep 25, 2019 at 10:17 AM Fabio Estevam <festevam@gmail.com> wrote:
-> > > > > > > > >
-> > > > > > > > > On Wed, Sep 25, 2019 at 9:17 AM Adam Ford <aford173@gmail.com> wrote:
-> > > > > > > > >
-> > > > > > > > > > I tried cma=256M and noticed the cma dump at the beginning didn't
-> > > > > > > > > > change.  Do we need to setup a reserved-memory node like
-> > > > > > > > > > imx6ul-ccimx6ulsom.dtsi did?
-> > > > > > > > >
-> > > > > > > > > I don't think so.
-> > > > > > > > >
-> > > > > > > > > Were you able to identify what was the exact commit that caused such regression?
-> > > > > > > >
-> > > > > > > > I was able to narrow it down the 92d12f9544b7 ("memblock: refactor
-> > > > > > > > internal allocation functions") that caused the regression with
-> > > > > > > > Etnaviv.
-> > > > > > >
-> > > > > > >
-> > > > > > > Can you please test with this change:
-> > > > > > >
-> > > > > >
-> > > > > > That appears to have fixed my issue.  I am not sure what the impact
-> > > > > > is, but is this a safe option?
-> > > > >
-> > > > > It's not really a fix, I just wanted to see how exactly 92d12f9544b7 ("memblock:
-> > > > > refactor internal allocation functions") broke your setup.
-> > > > >
-> > > > > Can you share the dts you are using and the full kernel log?
-> > > > >
-> > > > > > adam
-> > > > > >
-> > > > > > > diff --git a/mm/memblock.c b/mm/memblock.c
-> > > > > > > index 7d4f61a..1f5a0eb 100644
-> > > > > > > --- a/mm/memblock.c
-> > > > > > > +++ b/mm/memblock.c
-> > > > > > > @@ -1356,9 +1356,6 @@ static phys_addr_t __init memblock_alloc_range_nid(phys_addr_t size,
-> > > > > > >                 align = SMP_CACHE_BYTES;
-> > > > > > >         }
-> > > > > > >
-> > > > > > > -       if (end > memblock.current_limit)
-> > > > > > > -               end = memblock.current_limit;
-> > > > > > > -
-> > > > > > >  again:
-> > > > > > >         found = memblock_find_in_range_node(size, align, start, end, nid,
-> > > > > > >                                             flags);
-> > > > > > >
-> > > > > > > > I also noticed that if I create a reserved memory node as was done one
-> > > > > > > > imx6ul-ccimx6ulsom.dtsi the 3D seems to work again, but without it, I
-> > > > > > > > was getting errors regardless of the 'cma=256M' or not.
-> > > > > > > > I don't have a problem using the reserved memory, but I guess I am not
-> > > > > > > > sure what the amount should be.  I know for the video decoding 1080p,
-> > > > > > > > I have historically used cma=128M, but with the 3D also needing some
-> > > > > > > > memory allocation, is that enough or should I use 256M?
-> > > > > > > >
-> > > > > > > > adam
-> > > > > > >
-> > > > > > > --
-> > > > > > > Sincerely yours,
-> > > > > > > Mike.
-> > > > > > >
-> > > > >
-> > > > > --
-> > > > > Sincerely yours,
-> > > > > Mike.
-> > > > >
-> >
-> > --
-> > Sincerely yours,
-> > Mike.
-> >
-
--- 
-Sincerely yours,
-Mike.
-
+PiBGcm9tOiBkbWl0cnkudG9yb2tob3ZAZ21haWwuY29tIDxkbWl0cnkudG9yb2tob3ZAZ21haWwu
+Y29tPg0KPiBTZW50OiBNb25kYXksIFNlcHRlbWJlciAzMCwgMjAxOSA0OjA3IFBNDQo+IA0KPiBP
+biBNb24sIFNlcCAzMCwgMjAxOSBhdCAxMDowOToyN1BNICswMDAwLCBEZXh1YW4gQ3VpIHdyb3Rl
+Og0KPiA+ID4gRnJvbTogZG1pdHJ5LnRvcm9raG92QGdtYWlsLmNvbSA8ZG1pdHJ5LnRvcm9raG92
+QGdtYWlsLmNvbT4NCj4gPiA+IFNlbnQ6IEZyaWRheSwgU2VwdGVtYmVyIDI3LCAyMDE5IDU6MzIg
+UE0NCj4gPiA+ID4gLi4uDQo+ID4gPiA+IHBtX3dha2V1cF9wZW5kaW5nKCkgaXMgdGVzdGVkIGlu
+IGEgbG90IG9mIHBsYWNlcyBpbiB0aGUgc3VzcGVuZA0KPiA+ID4gPiBwcm9jZXNzIGFuZCBldmVu
+dHVhbGx5IGFuIHVuaW50ZW50aW9uYWwga2V5c3Ryb2tlIChvciBtb3VzZSBtb3ZlbWVudCwNCj4g
+PiA+ID4gd2hlbiBpdCBjb21lcyB0byB0aGUgSHlwZXItViBtb3VzZSBkcml2ZXIgZHJpdmVycy9o
+aWQvaGlkLWh5cGVydi5jKQ0KPiA+ID4gPiBjYXVzZXMgdGhlIHdob2xlIGhpYmVybmF0aW9uIHBy
+b2Nlc3MgdG8gYmUgYWJvcnRlZC4gVXN1YWxseSB0aGlzDQo+ID4gPiA+IGJlaGF2aW9yIGlzIG5v
+dCBleHBlY3RlZCBieSB0aGUgdXNlciwgSSB0aGluay4NCj4gPiA+DQo+ID4gPiBXaHkgbm90PyBJ
+ZiBhIGRldmljZSBpcyBjb25maWd1cmVkIGFzIHdha2V1cCBzb3VyY2UsIHRoZW4gaXQgYWN0aXZp
+dHkNCj4gPiA+IHNob3VsZCB3YWtlIHVwIHRoZSBzeXN0ZW0sIHVubGVzcyB5b3UgZGlzYWJsZSBp
+dC4NCj4gPg0KPiA+IEdlbmVyYWxseSBzcGVha2luZywgSSBhZ3JlZSwgYnV0IGNvbXBhcmVkIHRv
+IGEgcGh5c2ljYWwgbWFjaGluZSwgSU1PDQo+ID4gdGhlIHNjZW5hcmlvIGlzIGEgbGl0dGxlIGRp
+ZmZlcmVudCB3aGVuIGl0IGNvbWVzIHRvIGEgVk0gcnVubmluZyBvbiBIeXBlci1WOg0KPiA+IG9u
+IHRoZSBob3N0IHRoZXJlIGlzIGEgd2luZG93IHRoYXQgcmVwcmVzZW50cyB0aGUgVk0sIGFuZCB0
+aGUgdXNlciBjYW4NCj4gPiB1bmludGVudGlvbmFsbHkgc3dpdGNoIHRoZSBrZXlib2FyZCBpbnB1
+dCBmb2N1cyB0byB0aGUgd2luZG93IChvciBtb3ZlDQo+ID4gdGhlIG1vdXNlL2N1cnNvciBvdmVy
+IHRoZSB3aW5kb3cpIGFuZCB0aGVuIHRoZSBob3N0IGF1dG9tYXRpY2FsbHkNCj4gPiBzZW5kcyBz
+b21lIHNwZWNpYWwga2V5c3Ryb2tlcyAoYW5kIG1vdXNlIGV2ZW50cykgLCBhbmQgdGhpcyBhYm9y
+dHMgdGhlDQo+ID4gaGliZXJuYXRpb24gcHJvY2Vzcy4NCj4gPg0KPiA+IEFuZCwgd2hlbiBpdCBj
+b21lcyB0byB0aGUgSHlwZXItViBtb3VzZSBkZXZpY2UsIElNTyBpdCdzIGVhc3kgZm9yIHRoZQ0K
+PiA+IHVzZXIgdG8gdW5pbnRlbnRpb25hbGx5IG1vdmUgdGhlIG1vdXNlIGFmdGVyIHRoZSAiaGli
+ZXJuYXRpb24iIGJ1dHRvbg0KPiA+IGlzIGNsaWNrZWQuIEkgc3VwcG9zZSBhIHBoeXNpY2FsIG1h
+Y2hpbmUgd291bGQgaGF2ZSB0aGUgc2FtZSBpc3N1ZSwgdGhvdWdoLg0KPiANCj4gSWYgd2FraW5n
+IHRoZSBtYWNoaW5lIHVwIGJ5IG1vdXNlL2tleWJvYXJkIGFjdGl2aXR5IGlzIG5vdCBkZXNpcmVk
+IGluDQo+IEh5cGVyLVYgZW52aXJvbm1lbnQsIHRoZW4gc2ltcGx5IGRpc2FibGUgdGhlbSBhcyB3
+YWtldXAgc291cmNlcy4NCg0KU29ycnkgZm9yIHRoZSBsYXRlIHJlcGx5ISBJIGhhdmUgYmVlbiBz
+aWRldHJhY2tlZCBieSBzb21ldGhpbmcgZWxzZS4uLg0KDQpTZXZlcmFsIHllYXJzIGFnbywgd2Ug
+bWFya2VkIEh5cGVyLVYgbW91c2Uva2V5Ym9hcmQgZGV2aWNlcyBhcyB3YWtlIA0Kc291cmNlcyB0
+byBmaXggc3VjaCBhIGJ1ZzogdGhlIFZNIGNhbiBub3QgYmUgd29rZW4gdXAgYWZ0ZXIgd2UgcnVu
+DQoiZWNobyBmcmVlemUgPiAvc3lzL3Bvd2VyL3N0YXRlIi4gSU1PIHdlIHNob3VsZCBrZWVwIHRo
+ZSBtb3VzZS9rZXlib2FyZA0KYXMgd2FrZXVwIHNvdXJjZXMuDQogDQo+ID4NCj4gPiA+ID4gU28s
+IEkgdXNlIHRoZSBub3RpZmllciB0byBzZXQgdGhlIGZsYWcgdmFyaWFibGUgYW5kIHdpdGggaXQg
+dGhlIGRyaXZlciBjYW4NCj4gPiA+ID4ga25vdyB3aGVuIGl0IHNob3VsZCBub3QgY2FsbCBwbV93
+YWtldXBfaGFyZF9ldmVudCgpLg0KPiA+ID4NCj4gPiA+IE5vLCBwbGVhc2UgaW1wbGVtZW50IGhp
+YmVybmF0aW9uIHN1cHBvcnQgcHJvcGVybHksIGFzIG5vdGlmaWVyICsgZmxhZyBpcw0KPiA+ID4g
+YSBoYWNrLg0KPiA+DQo+ID4gVGhlIGtleWJvYXJkL21vdXNlIGRyaXZlciBjYW4gYXZvaWQgdGhl
+IGZsYWcgYnkgZGlzYWJsaW5nIHRoZQ0KPiA+IGtleWJvYXJkL21vdXNlIGV2ZW50IGhhbmRsaW5n
+LCBidXQgdGhlIHByb2JsZW0gaXMgdGhhdCB0aGV5IGRvbid0IGtub3cNCj4gPiB3aGVuIGV4YWN0
+bHkgdGhleSBzaG91bGQgZGlzYWJsZSB0aGUgZXZlbnQgaGFuZGxpbmcuIEkgdGhpbmsgdGhlIFBN
+DQo+ID4gbm90aWZpZXIgaXMgdGhlIG9ubHkgd2F5IHRvIHRlbGwgdGhlIGRyaXZlcnMgYSBoaWJl
+cm5hdGlvbiBwcm9jZXNzIGlzIG9uZ29pbmcuDQo+IA0KPiBXaGF0ZXZlciBpbml0aWF0ZXMgaGli
+ZXJuYXRpb24gKGluIHVzZXJzcGFjZSkgY2FuIGFkanVzdCB3YWtldXAgc291cmNlcw0KPiBhcyBu
+ZWVkZWQgaWYgeW91IHdhbnQgdGhlbSBkaXNhYmxlZCBjb21wbGV0ZWx5Lg0KDQpHb29kIHRvIGtu
+b3cgdGhpcyEgSSBqdXN0IGZvdW5kIHRoZSB1c2Vyc3BhY2UgaXMgYWJsZSB0byBkaXNhYmxlIHRo
+ZSBIeXBlci1WDQptb3VzZS9rZXlib2FyZCBhcyB3YWtldXAgc291cmNlcyBieSBzb21ldGhpbmcg
+bGlrZToNCg0KZWNobyBkaXNhYmxlZCA+ICAvc3lzL2J1cy92bWJ1cy9kZXZpY2VzL1hYWC9wb3dl
+ci93YWtldXANCihYWFggaXMgdGhlIGRldmljZSBHVUlEKS4NCiANCj4gPg0KPiA+IERvIHlvdSB0
+aGluayB0aGlzIGlkZWEgKG5vdGlmaWVyICsgZGlzYWJsaW5nIGV2ZW50IGhhbmRsaW5nKSBpcyBh
+Y2NlcHRhYmxlPw0KPiANCj4gTm8sIEkgYmVsaWV2ZSB0aGlzIGEgaGFjaywgdGhhdCBpcyB3aHkg
+SSBhbSBwdXNoaW5nIGJhY2sgb24gdGhpcy4NCg0KT2ssIEkgdGhpbmsgd2UgY2FuIGdldCByaWQg
+b2YgdGhlIG5vdGlmaWVyIGNvbXBsZXRlbHksIGFuZCB0ZWxsIHRoZSB1c2VycyB0byBkaXNhYmxl
+DQp0aGUgMiB3YWtldXAgc291cmNlcywgaWYgdGhleSB0aGluayB0aGUgd2FrZXVwIGJlaGF2aW9y
+IGlzIHVuZGVzaXJlZC4NCiANCj4gPg0KPiA+IElmIG5vdCwgdGhlbiBJJ2xsIGhhdmUgdG8gcmVt
+b3ZlIHRoZSBub3RpZmllciBjb21wbGV0ZWx5LCBhbmQgZG9jdW1lbnQgdGhpcyBhcw0KPiA+IGEg
+a25vd24gaXNzdWUgdG8gdGhlIHVzZXI6IHdoZW4gYSBoaWJlcm5hdGlvbiBwcm9jZXNzIGlzIHN0
+YXJ0ZWQsIGJlIGNhcmVmdWwNCj4gPiB0byBub3Qgc3dpdGNoIGlucHV0IGZvY3VzIGFuZCBub3Qg
+dG91Y2ggdGhlIGtleWJvYXJkL21vdXNlIHVudGlsIHRoZQ0KPiA+IGhpYmVybmF0aW9uIHByb2Nl
+c3MgaXMgZmluaXNoZWQuIDotKQ0KPiA+DQo+ID4gPiBJbiB0aGlzIHBhcnRpY3VsYXIgY2FzZSB5
+b3UgZG8gbm90IHdhbnQgdG8gaGF2ZSB5b3VyDQo+ID4gPiBodl9rYmRfcmVzdW1lKCkgdG8gYmUg
+Y2FsbGVkIGluIHBsYWNlIG9mIHBtX29wcy0+dGhhdygpIGFzIHRoYXQgaXMgd2hhdA0KPiA+ID4g
+cmVlbmFibGVzIHRoZSBrZXlib2FyZCB2bWJ1cyBjaGFubmVsIGFuZCBjYXVzZXMgdGhlIHVuZGVz
+aXJlZCB3YWtldXANCj4gPiA+IGV2ZW50cy4NCj4gPg0KPiA+IFRoaXMgaXMgb25seSBwYXJ0IG9m
+IHRoZSBpc3N1ZXMuIEFub3RoZXIgZXhhbXBsZTogYmVmb3JlIHRoZQ0KPiA+IHBtX29wcygpLT5m
+cmVlemUoKSdzIG9mIGFsbCB0aGUgZGV2aWNlcyBhcmUgY2FsbGVkLCBwbV93YWtldXBfcGVuZGlu
+ZygpDQo+ID4gaXMgYWxyZWFkeSB0ZXN0ZWQgaW4gYSBsb3Qgb2YgcGxhY2VzIChlLmcuIGluIHRy
+eV90b19mcmVlemVfdGFza3MgKCkpIGluIHRoZQ0KPiA+IHN1c3BlbmQgcHJvY2VzcywgYW5kIGNh
+biBhYm9ydCB0aGUgd2hvbGUgc3VzcGVuZCBwcm9jZXNzIHVwb24gdGhlIHVzZXIncw0KPiA+IHVu
+aW50ZW50aW9uYWwgaW5wdXQgZm9jdXMgc3dpdGNoLCBrZXlzdHJva2UgYW5kIG1vdXNlIG1vdmVt
+ZW50Lg0KPiANCj4gSG93IGxvbmcgaXMgdGhlIHByZXBhcmUoKSBwaGFzZSBvbiB5b3VyIHN5c3Rl
+bXM/IA0KDQpJIGhhdmUgbm8gc3BlY2lmaWMgZGF0YSwgYnV0IEkga25vdyBpdCdzIGZhc3QuDQoN
+Cj4gVXNlciBtYXkgd2lnZ2xlIG1vdXNlIGF0IGFueSB0aW1lIHJlYWxseSwgZXZlbiBiZWZvcmUg
+dGhlIG5vdGlmaWVyIGZpcmVzIHVwLg0KDQpUaGlzIGRvZXNuJ3QgbWF0dGVyLCBiZWNhdXNlIHRo
+ZSBjb3VudGVyICJwbV9hYm9ydF9zdXNwZW5kIiBpcyBjbGVhcmVkIGF0DQphIGxhdGVyIHBsYWNl
+LiBUaGUgY29kZSBwYXRoIGlzOg0KDQpoaWJlcm5hdGUoKSAtPg0KICBfX3BtX25vdGlmaWVyX2Nh
+bGxfY2hhaW4oUE1fSElCRVJOQVRJT05fUFJFUEFSRSwgLTEsICZucl9jYWxscykNCiAgZnJlZXpl
+X3Byb2Nlc3NlcygpIC0+DQogICAgcG1fd2FrZXVwX2NsZWFyKCkgLT4gDQogICAgICBhdG9taWNf
+c2V0KCZwbV9hYm9ydF9zdXNwZW5kLCAwKTsNCg0KVGhpcyBwYXRjaCBzZXRzIHRoZSBmbGFnIGlu
+IHRoZSBQTV9ISUJFUk5BVElPTl9QUkVQQVJFIG5vdGlmaWVyLCBzbw0KdGhlcmUgaXMgbm8gcmFj
+ZS4NCg0KU2luY2UgSSdtIGdvaW5nIHRvIGdldCByaWQgb2YgdGhlIG5vdGlmaWVyLCB3ZSBkb24n
+dCBjYXJlIGF0IGFsbCBhYm91dCB0aGlzIG5vdy4NCiANCj4gPg0KPiA+ID4gWW91ciB2bWJ1cyBp
+bXBsZW1lbnRhdGlvbiBzaG91bGQgYWxsb3cgaW5kaXZpZHVhbCBkcml2ZXJzIHRvDQo+ID4gPiBj
+b250cm9sIHRoZSBzZXQgb2YgUE0gb3BlcmF0aW9ucyB0aGF0IHRoZXkgd2lzaCB0byB1c2UsIGlu
+c3RlYWQgb2YNCj4gPiA+IGZvcmNpbmcgZXZlcnl0aGluZyB0aHJvdWdoIHN1c3BlbmQvcmVzdW1l
+Lg0KPiA+ID4NCj4gPiA+IERtaXRyeQ0KPiA+DQo+ID4gU2luY2UgdGhlIGRldmljZXMgYXJlIHB1
+cmUgc29mdHdhcmUtZW11bGF0ZWQgZGV2aWNlcywgbm8gUE0gb3BlcmF0aW9uIHdhcw0KPiA+IHN1
+cHBvcnRlZCBpbiB0aGUgcGFzdCwgYW5kIG5vdyBzdXNwZW5kL3Jlc3VtZSBhcmUgdGhlIG9ubHkg
+dHdvIFBNDQo+IG9wZXJhdGlvbnMNCj4gPiB3ZSdyZSBnb2luZyB0byBzdXBwb3J0LiBJZiB0aGUg
+aWRlYSAobm90aWZpZXIgKyBkaXNhYmxpbmcgZXZlbnQgaGFuZGxpbmcpIGlzIG5vdA0KPiA+IGdv
+b2QgZW5vdWdoLCB3ZSdsbCBoYXZlIHRvIGRvY3VtZW50IHRoZSBpc3N1ZSB0byB0aGUgdXNlciwg
+YXMgSSBkZXNjcmliZWQNCj4gYWJvdmUuDQo+IA0KPiDCr1xfKOODhClfL8KvIElmIHlvdSBkbyBu
+b3Qgd2FudCB0byBpbXBsZW1lbnQgaGliZXJuYXRpb24gcHJvcGVybHkgaW4gdm1idXMNCj4gY29k
+ZSB0aGF0IGlzIHRvdGFsbHkgdXAgdG8geW91IChoYXZlIHlvdSByZWFkIGluIHBtLmggaG93IGZy
+ZWV6ZSgpIGlzDQo+IGRpZmZlcmVudCBmcm9tIHN1c3BlbmQoKT8pLg0KPiBEbWl0cnkNCg0KSSB1
+bmRlcnN0YW5kIGZyZWV6ZSgpIGlzIGRpZmZlcmVudCBmcm9tIHN1c3BlbmQoKS4gSGVyZSBJIHRy
+ZWF0IHN1c3BlbmQoKSBhcyBhDQpoZWF2eXdlaWdodCBmcmVlemUoKSBmb3Igc2ltcGxpY2l0eSBh
+bmQgSU1ITyB0aGUgZXh0cmEgY29zdCBvZiB0aW1lIGlzDQpuZWdsZWN0YWJsZSBjb25zaWRlcmlu
+ZyB0aGUgbG9uZyBoaWJlcm5hdGlvbiBwcm9jZXNzLCB3aGljaCBjYW4gdGFrZSANCjV+MTArIHNl
+Y29uZHMuDQoNCkV2ZW4gaWYgSSBpbXBsZW1lbnQgYWxsIHRoZSBwbSBvcHMsIElNTyB0aGUgaXNz
+dWUgd2UncmUgdGFsa2luZyBhYm91dA0KKGkuZS4gdGhlIGhpYmVybmF0aW9uIHByb2Nlc3MgY2Fu
+IGJlIGFib3J0ZWQgYnkgdXNlcidzIGtleWJvYXJkL21vdXNlDQphY3Rpdml0aWVzKSBzdGlsbCBl
+eGlzdHMuIEFjdHVhbGx5IEkgdGhpbmsgYSBwaHlzaWNhbCBMaW51eCBtYWNoaW5lIHNob3VsZCBo
+YXZlDQp0aGUgc2FtZSBpc3N1ZS4NCg0KSW4gcHJhY3RpY2UsIElNTyB0aGUgaXNzdWUgaXMgbm90
+IGEgYmlnIGNvbmNlcm4sIGFzIHRoZSBWTSB1c3VhbGx5IHJ1bnMgaW4NCmEgcmVtb3RlIGRhdGEg
+Y2VudGVyLCBhbmQgdGhlIHVzZXIgaGFzIG5vIGFjY2VzcyB0byB0aGUgVk0ncyANCmtleWJvYXJk
+L21vdXNlLiA6LSkNCg0KSSBob3BlIEkgdW5kZXJzdG9vZCB5b3VyIGNvbW1lbnRzLiBJJ2xsIHBv
+c3QgYSB2MiB3aXRob3V0IHRoZSBub3RpZmllci4gDQpQbGVhc2UgQWNrIHRoZSB2MiBpZiBpdCBs
+b29rcyBnb29kIHRvIHlvdS4NCg0KVGhhbmtzLA0KLS0gRGV4dWFuDQo=
