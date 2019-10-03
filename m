@@ -2,112 +2,101 @@ Return-Path: <SRS0=6dNS=X4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D3B5C4360C
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 01:27:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 28CE6C4360C
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 01:27:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2D948222C2
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 01:27:12 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="kUSSaEsD"
+	by mail.kernel.org (Postfix) with ESMTP id F3B1E222C2
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 01:27:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1570066065;
+	bh=8ZCaaA6AFUsU8OaxZpSsxPMAlRb869d3eZL7IS4H6LA=;
+	h=Date:From:To:Cc:Subject:Reply-To:List-ID:From;
+	b=u7RcKxnPO7OcT2SVZvuVWFXgMVxy38FNBdMH77g2/dcEBtqS79oJPknn+eYhuJq7H
+	 l40c78+5hKlPIlmi0gcqFTKFiUB7/W9qG4LojUCdJBk80ofzzykMkgAOrywJ6IUhhN
+	 HhH01iWJZSfAzSdJBwbboLB9iI5diLkR/B/lf1r8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727273AbfJCB1L (ORCPT
+        id S1727334AbfJCB1o (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Oct 2019 21:27:11 -0400
-Received: from conssluserg-01.nifty.com ([210.131.2.80]:49234 "EHLO
-        conssluserg-01.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726948AbfJCB1K (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Oct 2019 21:27:10 -0400
-Received: from mail-ua1-f43.google.com (mail-ua1-f43.google.com [209.85.222.43]) (authenticated)
-        by conssluserg-01.nifty.com with ESMTP id x931Qkxq032090;
-        Thu, 3 Oct 2019 10:26:46 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-01.nifty.com x931Qkxq032090
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1570066007;
-        bh=x6/8l8kVsC1NbNuoqq4xa9uPDopH488YlyQtX+qP+3U=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=kUSSaEsDmZz8ALmJHVOaLQGYfBrsuUIYZCgjVjDx6ZEgkw0Ei0TaP05NDwD3aQBnx
-         JXuM+slUKDoOBTu7+hzWsF7LNWO5ogCaacgz6BW1MMhfCy2nZMwiyVXIU1suq/QNjs
-         WmrsfRc8HHAXCOvASsIFh2Nt986I9B6UGR60htgeWpRPG1ZxEV6yLI9mJsyHrp6N/H
-         BjXA//0rtpdzUTiRkYlFTZrapg1xSizFGsGlPZFGvXLzmsjn68Mf1l2lB3Lg5kLFQg
-         fgoE2jrolyP8hbawBJYtTTJFUoskrwrciZbP7td06xhv/Lh6WIZwTrx2nz5x0Aliug
-         B8EJPrwoiTYGA==
-X-Nifty-SrcIP: [209.85.222.43]
-Received: by mail-ua1-f43.google.com with SMTP id u31so380833uah.0;
-        Wed, 02 Oct 2019 18:26:46 -0700 (PDT)
-X-Gm-Message-State: APjAAAU+OkGKMvn2f936XI8xH9FIz/NdjbRTyx8USMtNa8R5FLqJKdZz
-        uf5Vt1YNXAYNKbNXhM06LEhoAL7rAHDd6uP/mlg=
-X-Google-Smtp-Source: APXvYqzd0f8HET8II/UsIBzv70d/UG4czUDbi94oH82Ta/IsxIWI235KX/if2tQktrEkYTlgpyqXUkKUig5vpKEcNxw=
-X-Received: by 2002:ab0:20b4:: with SMTP id y20mr3537503ual.121.1570066005679;
- Wed, 02 Oct 2019 18:26:45 -0700 (PDT)
+        Wed, 2 Oct 2019 21:27:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40540 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726165AbfJCB1o (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 2 Oct 2019 21:27:44 -0400
+Received: from paulmck-ThinkPad-P72 (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3BB8C21A4C;
+        Thu,  3 Oct 2019 01:27:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1570066063;
+        bh=8ZCaaA6AFUsU8OaxZpSsxPMAlRb869d3eZL7IS4H6LA=;
+        h=Date:From:To:Cc:Subject:Reply-To:From;
+        b=E65ZuflvXYkzJZal68FQ6qjTb1rtYYQACP171ukJ3HMIH1csuET68YAWbwU8pKzpp
+         sOtHBS93tSR3Lqw71IqCu4yNutSydRC77yubE3WmrTFsFB5gRtRmLbqsPiJOWwmHkB
+         jOB4rk0V9y/jDX3Z/RXdk7dZN67NM5BLnRKQ8KJg=
+Date:   Wed, 2 Oct 2019 18:27:42 -0700
+From:   "Paul E. McKenney" <paulmck@kernel.org>
+To:     rcu@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, mingo@kernel.org,
+        jiangshanlai@gmail.com, dipankar@in.ibm.com,
+        akpm@linux-foundation.org, mathieu.desnoyers@efficios.com,
+        josh@joshtriplett.org, tglx@linutronix.de, peterz@infradead.org,
+        rostedt@goodmis.org, dhowells@redhat.com, edumazet@google.com,
+        fweisbec@gmail.com, oleg@redhat.com, joel@joelfernandes.org
+Subject: [PATCH tip/core/rcu 0/9] Documentation updates for v5.5
+Message-ID: <20191003012741.GA12456@paulmck-ThinkPad-P72>
+Reply-To: paulmck@kernel.org
 MIME-Version: 1.0
-References: <20190927093603.9140-1-yamada.masahiro@socionext.com>
- <20190927134108.GC187147@google.com> <20191002185701.GA29041@linux-8ccs>
-In-Reply-To: <20191002185701.GA29041@linux-8ccs>
-From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-Date:   Thu, 3 Oct 2019 10:26:09 +0900
-X-Gmail-Original-Message-ID: <CAK7LNATbKVEf8Q82k5374UOQVxFJX1U7eU4ywW-LdGvHOq+tPw@mail.gmail.com>
-Message-ID: <CAK7LNATbKVEf8Q82k5374UOQVxFJX1U7eU4ywW-LdGvHOq+tPw@mail.gmail.com>
-Subject: Re: [PATCH 0/7] module: various bug-fixes and clean-ups for module namespace
-To:     Jessica Yu <jeyu@kernel.org>
-Cc:     Matthias Maennich <maennich@google.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Martijn Coenen <maco@android.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Will Deacon <will@kernel.org>,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-H Jessica,
+Hello!
 
-On Thu, Oct 3, 2019 at 3:57 AM Jessica Yu <jeyu@kernel.org> wrote:
->
-> +++ Matthias Maennich [27/09/19 14:41 +0100]:
-> >On Fri, Sep 27, 2019 at 06:35:56PM +0900, Masahiro Yamada wrote:
-> >>
-> >>I was hit by some problems caused by the module namespace feature
-> >>that was merged recently. At least, the breakage of
-> >>external module builds is a fatal one. I just took a look at the code
-> >>closer, and I noticed some more issues and improvements.
-> >>
-> >>I hope these patches are mostly OK.
-> >>The 4th patch might have room for argument since it is a trade-off
-> >>of "cleaner implermentation" vs "code size".
-> >>
-> >Thanks Masahiro for taking the time to improve the implementation of the
-> >symbol namespaces. These are all good points that you addressed!
->
-> Agreed, thanks Masahiro for fixing up all the rough edges! Your series
-> of fixes look good to me, I will queue this up on modules-next this
-> week
+This series provides documentation updates:
 
-Since these are bug fixes,
-please send them before v5.4.
+1-2.	Revert a pair of documentation updates conflicting with later
+	ReST-ification, courtesy of Joel Fernandes.
 
-Thanks.
+3.	Convert some RCU articles to ReST, courtesy of Mauro Carvalho
+	Chehab.
 
+4-5.	ReST adjustments, courtesy of Joel Fernandes.
 
+6-7.	Reapply the reverted pair of updates, but in ReST form,
+	courtesy of Joel Fernandes.
 
-> with the exception of patch 4 - Matthias, you are planning to
-> submit a patch that would supercede patch 04/07, right?
->
-> Thanks!
->
-> Jessica
+8.	Update list_for_each_entry_rcu() documentation, courtesy of
+	Joel Fernandes.
 
+9.	Rename rcu_node_context_switch() to rcu_note_context_switch(),
+	courtesy of Sebastian Andrzej Siewior.
 
+							Thanx, Paul
 
--- 
-Best Regards
-Masahiro Yamada
+------------------------------------------------------------------------
+
+ /Documentation/RCU/Design/Requirements/Requirements.html                       | 3330 ----------
+ Documentation/RCU/Design/Data-Structures/Data-Structures.html                  | 1391 ----
+ Documentation/RCU/Design/Expedited-Grace-Periods/Expedited-Grace-Periods.html  |  668 --
+ Documentation/RCU/Design/Memory-Ordering/Tree-RCU-Diagram.html                 |    9 
+ Documentation/RCU/Design/Memory-Ordering/Tree-RCU-Memory-Ordering.html         |  704 --
+ b/Documentation/RCU/Design/Data-Structures/Data-Structures.rst                 | 1163 +++
+ b/Documentation/RCU/Design/Expedited-Grace-Periods/Expedited-Grace-Periods.rst |  521 +
+ b/Documentation/RCU/Design/Memory-Ordering/Tree-RCU-Memory-Ordering.rst        |  644 +
+ b/Documentation/RCU/Design/Memory-Ordering/TreeRCU-gp.svg                      |    2 
+ b/Documentation/RCU/Design/Memory-Ordering/TreeRCU-qs.svg                      |    2 
+ b/Documentation/RCU/Design/Requirements/Requirements.html                      |   73 
+ b/Documentation/RCU/Design/Requirements/Requirements.rst                       | 2808 ++++++++
+ b/Documentation/RCU/index.rst                                                  |    7 
+ b/Documentation/RCU/lockdep.txt                                                |   18 
+ b/Documentation/RCU/whatisRCU.txt                                              |   14 
+ 15 files changed, 5108 insertions(+), 6246 deletions(-)
