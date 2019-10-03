@@ -2,111 +2,74 @@ Return-Path: <SRS0=6dNS=X4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7396EC4CED1
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:44:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 999F2C10F14
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:45:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 41237206BB
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:44:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570121096;
-	bh=IW9B/HeSgNw2BYZ4ZZx2Ue6CPKz5wPi/K6VoRd80Rnc=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=VKoDMfevFJUtDJugdcJavFtwwZQTE6p9O0ZaCVRLLm32N/Dvef8BEpHi3rqDZ8Fg5
-	 zl/PBMFJO8lugvFomWYCzJ453awE4nTm+sNuoYRzej9WP/XbZmnQiL1RFbEMTdeO8D
-	 DqdVjuhOX1J+RCHm3taKJuxWy6ZiHRYXsfUUZa6s=
+	by mail.kernel.org (Postfix) with ESMTP id 76E57206BB
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:45:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405101AbfJCQm4 (ORCPT
+        id S2405455AbfJCQo6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 12:42:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54106 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 12:44:58 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:34468 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392696AbfJCQmw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:42:52 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S2405428AbfJCQor (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:44:47 -0400
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0F52B20865;
-        Thu,  3 Oct 2019 16:42:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570120971;
-        bh=IW9B/HeSgNw2BYZ4ZZx2Ue6CPKz5wPi/K6VoRd80Rnc=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=g5MwBKDCp5tnDIDPouwSn2LkX+O3hJY4NuW0E+bXKm/Lpwus4UDvgqu+rab+wdWvo
-         mj//1igFUAmDdL/dj+W+JlsDf9ffUjtLRFqFc8Ejz1p78IpD6JpGCYsEPPowH1sPDi
-         +6cMJAhGLhkXgJrKjp5rGdq00avOU7Sd7XDqQ4Ic=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jia-Ju Bai <baijiaju1990@gmail.com>,
-        Takashi Iwai <tiwai@suse.de>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.3 070/344] ALSA: i2c: ak4xxx-adda: Fix a possible null pointer dereference in build_adc_controls()
-Date:   Thu,  3 Oct 2019 17:50:35 +0200
-Message-Id: <20191003154547.030082171@linuxfoundation.org>
-X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20191003154540.062170222@linuxfoundation.org>
-References: <20191003154540.062170222@linuxfoundation.org>
-User-Agent: quilt/0.66
+        by mx1.redhat.com (Postfix) with ESMTPS id 7447E8830A;
+        Thu,  3 Oct 2019 16:44:47 +0000 (UTC)
+Received: from warthog.procyon.org.uk (ovpn-125-72.rdu2.redhat.com [10.10.125.72])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 9D3AD5D9E1;
+        Thu,  3 Oct 2019 16:44:45 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+ Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+ Kingdom.
+ Registered in England and Wales under Company Registration No. 3798903
+Subject: [PATCH net] rxrpc: Fix rxrpc_recvmsg tracepoint
+From:   David Howells <dhowells@redhat.com>
+To:     netdev@vger.kernel.org
+Cc:     dhowells@redhat.com, linux-afs@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Date:   Thu, 03 Oct 2019 17:44:44 +0100
+Message-ID: <157012108434.20904.8998254800982940866.stgit@warthog.procyon.org.uk>
+User-Agent: StGit/unknown-version
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.28]); Thu, 03 Oct 2019 16:44:47 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jia-Ju Bai <baijiaju1990@gmail.com>
+Fix the rxrpc_recvmsg tracepoint to handle being called with a NULL call
+parameter.
 
-[ Upstream commit 2127c01b7f63b06a21559f56a8c81a3c6535bd1a ]
-
-In build_adc_controls(), there is an if statement on line 773 to check
-whether ak->adc_info is NULL:
-    if (! ak->adc_info ||
-        ! ak->adc_info[mixer_ch].switch_name)
-
-When ak->adc_info is NULL, it is used on line 792:
-    knew.name = ak->adc_info[mixer_ch].selector_name;
-
-Thus, a possible null-pointer dereference may occur.
-
-To fix this bug, referring to lines 773 and 774, ak->adc_info
-and ak->adc_info[mixer_ch].selector_name are checked before being used.
-
-This bug is found by a static analysis tool STCheck written by us.
-
-Signed-off-by: Jia-Ju Bai <baijiaju1990@gmail.com>
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Fixes: a25e21f0bcd2 ("rxrpc, afs: Use debug_ids rather than pointers in traces")
+Signed-off-by: David Howells <dhowells@redhat.com>
 ---
- sound/i2c/other/ak4xxx-adda.c | 7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
 
-diff --git a/sound/i2c/other/ak4xxx-adda.c b/sound/i2c/other/ak4xxx-adda.c
-index 5f59316f982ae..7d15093844b92 100644
---- a/sound/i2c/other/ak4xxx-adda.c
-+++ b/sound/i2c/other/ak4xxx-adda.c
-@@ -775,11 +775,12 @@ static int build_adc_controls(struct snd_akm4xxx *ak)
- 				return err;
+ include/trace/events/rxrpc.h |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/include/trace/events/rxrpc.h b/include/trace/events/rxrpc.h
+index a13a62db3565..edc5c887a44c 100644
+--- a/include/trace/events/rxrpc.h
++++ b/include/trace/events/rxrpc.h
+@@ -1068,7 +1068,7 @@ TRACE_EVENT(rxrpc_recvmsg,
+ 			     ),
  
- 			memset(&knew, 0, sizeof(knew));
--			knew.name = ak->adc_info[mixer_ch].selector_name;
--			if (!knew.name) {
-+			if (!ak->adc_info ||
-+				!ak->adc_info[mixer_ch].selector_name) {
- 				knew.name = "Capture Channel";
- 				knew.index = mixer_ch + ak->idx_offset * 2;
--			}
-+			} else
-+				knew.name = ak->adc_info[mixer_ch].selector_name;
- 
- 			knew.iface = SNDRV_CTL_ELEM_IFACE_MIXER;
- 			knew.info = ak4xxx_capture_source_info;
--- 
-2.20.1
-
-
+ 	    TP_fast_assign(
+-		    __entry->call = call->debug_id;
++		    __entry->call = call ? call->debug_id : 0;
+ 		    __entry->why = why;
+ 		    __entry->seq = seq;
+ 		    __entry->offset = offset;
 
