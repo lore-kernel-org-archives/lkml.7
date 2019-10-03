@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE1C0C32792
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:55:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F4209C10F14
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:55:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 97D0C2054F
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:55:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C861C2070B
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:55:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570121701;
-	bh=BpjS6IUJhmox+vBPnpbgrvbr5+HsoBdVE8y3Pth3xdE=;
+	s=default; t=1570121710;
+	bh=uAVntkjPLgHA5UmSzzCWhj6ohpZsu17PsT4M5wIMo7M=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Iv5V1TeVpk+WpTvz11uI6oiq+6Q83tVCa34FYdRHH7RRsLkVPyqG+9P6f66XcB952
-	 J6+WG4rVGJiz4vDv8ZdOOu5RWBzj4DYlMf9XWnqg98lNCNN7Tk8fewXSLmPw8Z70S5
-	 nFToUxrVR6X97QrpZ4nj7O0EqGCiSCYtpb6oEn04=
+	b=pO84A/QbUltxbS2Gz+UJTTRDsDQxTRAfd/lXavFRr34Bxzt5Ln4Q5W7t0fUYlVyeA
+	 UMI6Ynj/jEPUnnhI2lbrxlRd9eHKeLlDYfUWW36mIPv0M5UAv7raw2dvyu5gvBccYa
+	 Bj04NDyiE6q7Pi/GL79c8krA9aDZJ0mHSC9MNIZ4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405530AbfJCQzA (ORCPT
+        id S2406300AbfJCQzJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 12:55:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40874 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 12:55:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40452 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2406295AbfJCQxA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:53:00 -0400
+        id S2405787AbfJCQwm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:52:42 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9C28A20867;
-        Thu,  3 Oct 2019 16:52:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B1DAC2054F;
+        Thu,  3 Oct 2019 16:52:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570121580;
-        bh=BpjS6IUJhmox+vBPnpbgrvbr5+HsoBdVE8y3Pth3xdE=;
+        s=default; t=1570121561;
+        bh=uAVntkjPLgHA5UmSzzCWhj6ohpZsu17PsT4M5wIMo7M=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=E/g8+2HStfyKzZtdVeA5QteFihNeJL+Xe106TA/lgCkxcuz481wFD4dtrshlMD7YG
-         Zei6Ab7VrIWAs4kkuGJNlq/dqUzKQXd/gg0JsHE8s4Y+feqv+NjYbNxxlFCqQ8/B25
-         HaiBjtQO1vmk16uAefAZgymHIi9G7BSN/ZSblbO8=
+        b=ZuNhSek81yHeT4dXZNQAxO+o8ULvGfdRGjMUorrpr4BpuxrMT4/ceWxV5XNOPUwVD
+         f5ylN9+vE4rLO16GsZITt5fEpWaWXfnaMaQtUH0wGK6pjoVsm2xdUQ1qEGcnUk7UYa
+         gAOm5B6f+rcbUaFBup1Y/ixew3VT95SZYwwAsJog=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Rakesh Pandit <rakesh@tuxera.com>,
-        Theodore Tso <tytso@mit.edu>, stable@kernel.org
-Subject: [PATCH 5.3 330/344] ext4: fix warning inside ext4_convert_unwritten_extents_endio
-Date:   Thu,  3 Oct 2019 17:54:55 +0200
-Message-Id: <20191003154611.335437065@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>,
+        syzbot <syzbot+8ab2d0f39fb79fe6ca40@syzkaller.appspotmail.com>
+Subject: [PATCH 5.3 324/344] /dev/mem: Bail out upon SIGKILL.
+Date:   Thu,  3 Oct 2019 17:54:49 +0200
+Message-Id: <20191003154610.907994070@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191003154540.062170222@linuxfoundation.org>
 References: <20191003154540.062170222@linuxfoundation.org>
@@ -59,37 +60,112 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Rakesh Pandit <rakesh@tuxera.com>
+From: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
 
-commit e3d550c2c4f2f3dba469bc3c4b83d9332b4e99e1 upstream.
+commit 8619e5bdeee8b2c685d686281f2d2a6017c4bc15 upstream.
 
-Really enable warning when CONFIG_EXT4_DEBUG is set and fix missing
-first argument.  This was introduced in commit ff95ec22cd7f ("ext4:
-add warning to ext4_convert_unwritten_extents_endio") and splitting
-extents inside endio would trigger it.
+syzbot found that a thread can stall for minutes inside read_mem() or
+write_mem() after that thread was killed by SIGKILL [1]. Reading from
+iomem areas of /dev/mem can be slow, depending on the hardware.
+While reading 2GB at one read() is legal, delaying termination of killed
+thread for minutes is bad. Thus, allow reading/writing /dev/mem and
+/dev/kmem to be preemptible and killable.
 
-Fixes: ff95ec22cd7f ("ext4: add warning to ext4_convert_unwritten_extents_endio")
-Signed-off-by: Rakesh Pandit <rakesh@tuxera.com>
-Signed-off-by: Theodore Ts'o <tytso@mit.edu>
-Cc: stable@kernel.org
+  [ 1335.912419][T20577] read_mem: sz=4096 count=2134565632
+  [ 1335.943194][T20577] read_mem: sz=4096 count=2134561536
+  [ 1335.978280][T20577] read_mem: sz=4096 count=2134557440
+  [ 1336.011147][T20577] read_mem: sz=4096 count=2134553344
+  [ 1336.041897][T20577] read_mem: sz=4096 count=2134549248
+
+Theoretically, reading/writing /dev/mem and /dev/kmem can become
+"interruptible". But this patch chose "killable". Future patch will make
+them "interruptible" so that we can revert to "killable" if some program
+regressed.
+
+[1] https://syzkaller.appspot.com/bug?id=a0e3436829698d5824231251fad9d8e998f94f5e
+
+Signed-off-by: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
+Cc: stable <stable@vger.kernel.org>
+Reported-by: syzbot <syzbot+8ab2d0f39fb79fe6ca40@syzkaller.appspotmail.com>
+Link: https://lore.kernel.org/r/1566825205-10703-1-git-send-email-penguin-kernel@I-love.SAKURA.ne.jp
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/ext4/extents.c |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/char/mem.c |   21 +++++++++++++++++++++
+ 1 file changed, 21 insertions(+)
 
---- a/fs/ext4/extents.c
-+++ b/fs/ext4/extents.c
-@@ -3813,8 +3813,8 @@ static int ext4_convert_unwritten_extent
- 	 * illegal.
- 	 */
- 	if (ee_block != map->m_lblk || ee_len > map->m_len) {
--#ifdef EXT4_DEBUG
--		ext4_warning("Inode (%ld) finished: extent logical block %llu,"
-+#ifdef CONFIG_EXT4_DEBUG
-+		ext4_warning(inode->i_sb, "Inode (%ld) finished: extent logical block %llu,"
- 			     " len %u; IO logical block %llu, len %u",
- 			     inode->i_ino, (unsigned long long)ee_block, ee_len,
- 			     (unsigned long long)map->m_lblk, map->m_len);
+--- a/drivers/char/mem.c
++++ b/drivers/char/mem.c
+@@ -97,6 +97,13 @@ void __weak unxlate_dev_mem_ptr(phys_add
+ }
+ #endif
+ 
++static inline bool should_stop_iteration(void)
++{
++	if (need_resched())
++		cond_resched();
++	return fatal_signal_pending(current);
++}
++
+ /*
+  * This funcion reads the *physical* memory. The f_pos points directly to the
+  * memory location.
+@@ -175,6 +182,8 @@ static ssize_t read_mem(struct file *fil
+ 		p += sz;
+ 		count -= sz;
+ 		read += sz;
++		if (should_stop_iteration())
++			break;
+ 	}
+ 	kfree(bounce);
+ 
+@@ -251,6 +260,8 @@ static ssize_t write_mem(struct file *fi
+ 		p += sz;
+ 		count -= sz;
+ 		written += sz;
++		if (should_stop_iteration())
++			break;
+ 	}
+ 
+ 	*ppos += written;
+@@ -468,6 +479,10 @@ static ssize_t read_kmem(struct file *fi
+ 			read += sz;
+ 			low_count -= sz;
+ 			count -= sz;
++			if (should_stop_iteration()) {
++				count = 0;
++				break;
++			}
+ 		}
+ 	}
+ 
+@@ -492,6 +507,8 @@ static ssize_t read_kmem(struct file *fi
+ 			buf += sz;
+ 			read += sz;
+ 			p += sz;
++			if (should_stop_iteration())
++				break;
+ 		}
+ 		free_page((unsigned long)kbuf);
+ 	}
+@@ -544,6 +561,8 @@ static ssize_t do_write_kmem(unsigned lo
+ 		p += sz;
+ 		count -= sz;
+ 		written += sz;
++		if (should_stop_iteration())
++			break;
+ 	}
+ 
+ 	*ppos += written;
+@@ -595,6 +614,8 @@ static ssize_t write_kmem(struct file *f
+ 			buf += sz;
+ 			virtr += sz;
+ 			p += sz;
++			if (should_stop_iteration())
++				break;
+ 		}
+ 		free_page((unsigned long)kbuf);
+ 	}
 
 
