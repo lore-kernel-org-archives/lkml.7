@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 514C5C10F14
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:07:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42A09C32792
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:07:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 23F4B207FF
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:07:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0B569207FF
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:07:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570118870;
-	bh=+bNUG/oqhrahqwz2Yis2lfQUtjMX25SCpvLFa0RrmRw=;
+	s=default; t=1570118875;
+	bh=Qd6Fx4HR0MEy1fkhsPPqO3Z/s2WW9q4MQSyVMAfTlqw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=I+C1oZL+jpTIm5v0UFbEM5iDrGO+p3IrJMCv/OBc99gDZm/8X+IeHTxmtOTF5LVv6
-	 JiA0f72qkh7ffOXM/ncL1CU2/0sz04GoZfxDv5Ep3LoJqX1Oa8/gzpWc9An6n9CSn/
-	 NZ9VWPs145vBTQRkPoC38l3uXSPfB3aDI+3M/bSY=
+	b=xkB30W1dAIFT7OFlJPaM282JTkBSV5dULo9waJS7axF2cGGLo+qlk1ehXa1tsLU/H
+	 vP5ZwhOKcXnMSfN1rUXpvwl5nFAqlJCgBs9z/7A+/wlBcBD0JTBunn3e+SYNzY98//
+	 d1DlQ+1bi4I9i+B8ukF3VPcVb5A+ESBkNp+s12rw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731705AbfJCQHt (ORCPT
+        id S1731046AbfJCQHx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 12:07:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55608 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 12:07:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55758 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732972AbfJCQHo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:07:44 -0400
+        id S1733002AbfJCQHt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:07:49 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D59DB20865;
-        Thu,  3 Oct 2019 16:07:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2817920865;
+        Thu,  3 Oct 2019 16:07:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570118863;
-        bh=+bNUG/oqhrahqwz2Yis2lfQUtjMX25SCpvLFa0RrmRw=;
+        s=default; t=1570118868;
+        bh=Qd6Fx4HR0MEy1fkhsPPqO3Z/s2WW9q4MQSyVMAfTlqw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=kJoxUbY5r73JV5o3l1rxeRxjsk2xA0GFZijgneHHs07Cky240QYchr4EPfn+ALhy0
-         uB+98Z96TInEWF27ZE1BTFjnd7Qx84asw7RVtzwlebusMHgatt4W4jQM4LAQRFCUB7
-         4wPl63jDd5zU2kFzNQulSovzh9/tajY1nnIqhRRc=
+        b=QMy3egQSz0hb5GzBmjvJ9nqbjgeAwwGB6CclapMLVKlLQvuaZRG7+hvx1/3U6e8j8
+         AaskTuUxIA6knT/n5oj15eyJ9pSq0t84c2hlb6J+qjqctdiIsZ2y6Z1gvyxKn/iopa
+         aVvSwc+Y7GoxOg/m6j2Qrs1sNFb7a5u970PmSqcc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Xiumei Mu <xmu@redhat.com>,
-        Fei Liu <feliu@redhat.com>, Xin Long <lucien.xin@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.14 036/185] macsec: drop skb sk before calling gro_cells_receive
-Date:   Thu,  3 Oct 2019 17:51:54 +0200
-Message-Id: <20191003154445.670735437@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Jakub Kicinski <jakub.kicinski@netronome.com>
+Subject: [PATCH 4.14 038/185] net: qrtr: Stop rx_worker before freeing node
+Date:   Thu,  3 Oct 2019 17:51:56 +0200
+Message-Id: <20191003154446.167148984@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191003154437.541662648@linuxfoundation.org>
 References: <20191003154437.541662648@linuxfoundation.org>
@@ -60,61 +60,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Xin Long <lucien.xin@gmail.com>
+From: Bjorn Andersson <bjorn.andersson@linaro.org>
 
-[ Upstream commit ba56d8ce38c8252fff5b745db3899cf092578ede ]
+[ Upstream commit 73f0c11d11329a0d6d205d4312b6e5d2512af7c5 ]
 
-Fei Liu reported a crash when doing netperf on a topo of macsec
-dev over veth:
+As the endpoint is unregistered there might still be work pending to
+handle incoming messages, which will result in a use after free
+scenario. The plan is to remove the rx_worker, but until then (and for
+stable@) ensure that the work is stopped before the node is freed.
 
-  [  448.919128] refcount_t: underflow; use-after-free.
-  [  449.090460] Call trace:
-  [  449.092895]  refcount_sub_and_test+0xb4/0xc0
-  [  449.097155]  tcp_wfree+0x2c/0x150
-  [  449.100460]  ip_rcv+0x1d4/0x3a8
-  [  449.103591]  __netif_receive_skb_core+0x554/0xae0
-  [  449.108282]  __netif_receive_skb+0x28/0x78
-  [  449.112366]  netif_receive_skb_internal+0x54/0x100
-  [  449.117144]  napi_gro_complete+0x70/0xc0
-  [  449.121054]  napi_gro_flush+0x6c/0x90
-  [  449.124703]  napi_complete_done+0x50/0x130
-  [  449.128788]  gro_cell_poll+0x8c/0xa8
-  [  449.132351]  net_rx_action+0x16c/0x3f8
-  [  449.136088]  __do_softirq+0x128/0x320
-
-The issue was caused by skb's true_size changed without its sk's
-sk_wmem_alloc increased in tcp/skb_gro_receive(). Later when the
-skb is being freed and the skb's truesize is subtracted from its
-sk's sk_wmem_alloc in tcp_wfree(), underflow occurs.
-
-macsec is calling gro_cells_receive() to receive a packet, which
-actually requires skb->sk to be NULL. However when macsec dev is
-over veth, it's possible the skb->sk is still set if the skb was
-not unshared or expanded from the peer veth.
-
-ip_rcv() is calling skb_orphan() to drop the skb's sk for tproxy,
-but it is too late for macsec's calling gro_cells_receive(). So
-fix it by dropping the skb's sk earlier on rx path of macsec.
-
-Fixes: 5491e7c6b1a9 ("macsec: enable GRO and RPS on macsec devices")
-Reported-by: Xiumei Mu <xmu@redhat.com>
-Reported-by: Fei Liu <feliu@redhat.com>
-Signed-off-by: Xin Long <lucien.xin@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Fixes: bdabad3e363d ("net: Add Qualcomm IPC router")
+Cc: stable@vger.kernel.org
+Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+Signed-off-by: Jakub Kicinski <jakub.kicinski@netronome.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/macsec.c |    1 +
+ net/qrtr/qrtr.c |    1 +
  1 file changed, 1 insertion(+)
 
---- a/drivers/net/macsec.c
-+++ b/drivers/net/macsec.c
-@@ -1234,6 +1234,7 @@ deliver:
- 		macsec_rxsa_put(rx_sa);
- 	macsec_rxsc_put(rx_sc);
+--- a/net/qrtr/qrtr.c
++++ b/net/qrtr/qrtr.c
+@@ -129,6 +129,7 @@ static void __qrtr_node_release(struct k
+ 	list_del(&node->item);
+ 	mutex_unlock(&qrtr_node_lock);
  
-+	skb_orphan(skb);
- 	ret = gro_cells_receive(&macsec->gro_cells, skb);
- 	if (ret == NET_RX_SUCCESS)
- 		count_rx(dev, skb->len);
++	cancel_work_sync(&node->work);
+ 	skb_queue_purge(&node->rx_queue);
+ 	kfree(node);
+ }
 
 
