@@ -2,130 +2,112 @@ Return-Path: <SRS0=6dNS=X4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.9 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1,
+	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D2A0C10F14
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 19:54:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 41ECFC10F14
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 19:56:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D146A207FF
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 19:54:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 11C9C207FF
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 19:56:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="u2zaPc8G"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="a1EJxm/Q"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387904AbfJCTyl (ORCPT
+        id S2387908AbfJCT4y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 15:54:41 -0400
-Received: from mail-ed1-f65.google.com ([209.85.208.65]:44071 "EHLO
-        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730787AbfJCTyk (ORCPT
+        Thu, 3 Oct 2019 15:56:54 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:33173 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730707AbfJCT4y (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 15:54:40 -0400
-Received: by mail-ed1-f65.google.com with SMTP id r16so3707322edq.11;
-        Thu, 03 Oct 2019 12:54:38 -0700 (PDT)
+        Thu, 3 Oct 2019 15:56:54 -0400
+Received: by mail-pg1-f196.google.com with SMTP id q1so2407037pgb.0
+        for <linux-kernel@vger.kernel.org>; Thu, 03 Oct 2019 12:56:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=vCANBX3Ox20ir7Rnd71k7qK1oIfWgWYZ+Zijy9thnRQ=;
-        b=u2zaPc8GXJbXYFfBiXepdfldy29Y56jlxdJgs6pMzI19+zuoR7jASA2ogeUdIPX5F4
-         cXlNsdsf1pyLCNGQeZVQ/18dtHgfwyzt33ulPOZj4raoDtvmbfcFE7yb5uRawOQbVSMS
-         KW1Dv45cWwbiUB8gOBY6NnQ1MdbZLXN8vZNNcxbpMqspjGcEfnCwXffYPiobuCtCQPLL
-         vUjHLfnKCjjU76HC5TgMc5r/mRWiHs+f8mTPPt/RgFB9nmB3IkRmLbNO6xRuvStc8ZmI
-         wquUT/RsUYk8+JbJOb+X0iBvkcpkpnlXKnHFHWjKbWluezEjYbmZhQwghdsSxNLhMUOa
-         pIPw==
+        d=google.com; s=20161025;
+        h=date:from:to:cc:subject:in-reply-to:message-id:references
+         :user-agent:mime-version;
+        bh=FpqHOIoVU1737EmyU07jel9c07Q0bDOX22emmTBHpLI=;
+        b=a1EJxm/Q0JDE4y2LZEksHOUr95u4m/JhwoWf161iHSLEn/XdooAn8mwqlTlUV7K4H1
+         ZZUT//1ZMdb3ES/TcgoKtxZFDt9IFo2MOhEXK5FnCpSRwtZ6I5oNaRmHBgO4shL/YNPr
+         UX7re8kEjMF4wUBSh21qZWFHvgIq3W4GuGpWPkFF79Zs51fSXJf+I39jYdeiIE6LrrCE
+         ZD3pwkOMdi6hy1ZVJcb0rEdOpZT4QLchUdC+kvMT2w2KdhJIsXxKfi7hpZFIFe+51/nr
+         B9WidoqGrPGmEnOa3YWLw+5XBEuwHpx1S6MWKMbMaUqvmGcMabJwCdqhC7lWxgAA7L2G
+         rtFw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=vCANBX3Ox20ir7Rnd71k7qK1oIfWgWYZ+Zijy9thnRQ=;
-        b=m57VDlRafucQmiPUMOox0U2ojaHsT9uCt77ax2gBF3K+pQ8Et7AM4Ik4opiY4mSxZx
-         mpImD3vpS+3Xs29RXyhhLkDJYkGPRrAlRdITqG65co6YzXIHQY5pWKSf9glezbjoYcLd
-         4vfJyNbmzSY+xZb56kMkChJFugFtZFJpZAayicrf+8CU4GUZ5/DMAoO0BPSGdh+R/QDa
-         BLQXpG8rQ94BWUxmthf0PEFPIvIpWI8cupOJfm94TIC9SpedO6UXBLvPfASKkH5SKEe4
-         uobYz6g2KmwE1O26TCiFqYEJ2D+eG2E905u3l8WbfD83N/kRz1BXEAxfJPEyjnuSRA4p
-         j41w==
-X-Gm-Message-State: APjAAAUFNou2jMtUelmjbrDgEt2AfcZ9/8XOICjB4U/oGhH0ehnJjSE7
-        z+3+TFtSnpDaOUAHigTZpjADgrhpD/bdWp/5s7U=
-X-Google-Smtp-Source: APXvYqy+b7puDNAizNWXrhfSQqWIBuHAJZhIsUw09ZPXCWgN6mhw/BYh3I+xZX4l8hoxta2hmrTD3lXAKtlApkKy7dU=
-X-Received: by 2002:a17:906:d797:: with SMTP id pj23mr9300759ejb.70.1570132477537;
- Thu, 03 Oct 2019 12:54:37 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:in-reply-to:message-id
+         :references:user-agent:mime-version;
+        bh=FpqHOIoVU1737EmyU07jel9c07Q0bDOX22emmTBHpLI=;
+        b=jXspaqDYnpn1hjvuU8KowP0ZUbsTCEq5IH3L/7xu6YTasa6b2vsWXuPvTFkeLtOELX
+         Lj3Vt/3Tlnxe1W3cAvJ/iRWJOC2E8PITxUtWYeu7qU2CmR8dfOWRJ926w4cRpI3q0pzt
+         iZlIFE82n/QRApxAuBUrii2qO5AyNfyrFo5XfoNCCuTV/o01s6YsTgbws6MniAaz1CZg
+         /hE7y9HDOlupuD8Wbzbn6+klimntWB2503CeyKaHSldRX3HKzWLQI4w61rsFff/jMonB
+         WaHX1jfQMUVxSEVrVNSokRXV1JLIIU9xyqxDOZOJ2XEv32DsH7Dt/KR6oAmcW+ro5sMQ
+         h6Jw==
+X-Gm-Message-State: APjAAAWCShulJ2aZXIa8xvux56eowz38O8d9uxik8jWA+Wu6bFtquaDd
+        piTkqP38r6l7fSmxORQJeMLwKg==
+X-Google-Smtp-Source: APXvYqxablx3usrIF1UrUs/DTDaAacGZmTd1VN3KZfp72pueBlxewGznpyo0qDgZG6mnbSI7vFbfVw==
+X-Received: by 2002:a17:90a:890c:: with SMTP id u12mr12527842pjn.121.1570132612836;
+        Thu, 03 Oct 2019 12:56:52 -0700 (PDT)
+Received: from [2620:15c:17:3:3a5:23a7:5e32:4598] ([2620:15c:17:3:3a5:23a7:5e32:4598])
+        by smtp.gmail.com with ESMTPSA id b18sm3350336pfi.157.2019.10.03.12.56.51
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 03 Oct 2019 12:56:52 -0700 (PDT)
+Date:   Thu, 3 Oct 2019 12:56:51 -0700 (PDT)
+From:   David Rientjes <rientjes@google.com>
+X-X-Sender: rientjes@chino.kir.corp.google.com
+To:     Qian Cai <cai@lca.pw>
+cc:     akpm@linux-foundation.org, cl@linux.com, penberg@kernel.org,
+        tj@kernel.org, vdavydov.dev@gmail.com, hannes@cmpxchg.org,
+        guro@fb.com, linux-mm@kvack.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] mm/slub: fix a deadlock in show_slab_objects()
+In-Reply-To: <1570131869-2545-1-git-send-email-cai@lca.pw>
+Message-ID: <alpine.DEB.2.21.1910031255100.88296@chino.kir.corp.google.com>
+References: <1570131869-2545-1-git-send-email-cai@lca.pw>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-References: <20191003184352.24356-1-f.fainelli@gmail.com> <20191003185116.GA21875@lunn.ch>
- <0d5e4195-c407-2915-de96-3c4b3713ada0@gmail.com> <20191003190651.GB21875@lunn.ch>
-In-Reply-To: <20191003190651.GB21875@lunn.ch>
-From:   Vladimir Oltean <olteanv@gmail.com>
-Date:   Thu, 3 Oct 2019 22:54:26 +0300
-Message-ID: <CA+h21hp0-zdJjt+dXkp0ZjZk5wG64kwPV01Js3cPMNS9qySqGQ@mail.gmail.com>
-Subject: Re: [PATCH 0/2] net: phy: broadcom: RGMII delays fixes
-To:     Andrew Lunn <andrew@lunn.ch>
-Cc:     Florian Fainelli <f.fainelli@gmail.com>,
-        netdev <netdev@vger.kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        open list <linux-kernel@vger.kernel.org>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        bcm-kernel-feedback-list@broadcom.com,
-        manasa.mudireddy@broadcom.com, ray.jui@broadcom.com,
-        rafal@milecki.pl
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Andrew,
+On Thu, 3 Oct 2019, Qian Cai wrote:
 
-On Thu, 3 Oct 2019 at 22:06, Andrew Lunn <andrew@lunn.ch> wrote:
->
-> On Thu, Oct 03, 2019 at 11:55:40AM -0700, Florian Fainelli wrote:
-> > Hi Andrew,
-> >
-> > On 10/3/19 11:51 AM, Andrew Lunn wrote:
-> > > On Thu, Oct 03, 2019 at 11:43:50AM -0700, Florian Fainelli wrote:
-> > >> Hi all,
-> > >>
-> > >> This patch series fixes the BCM54210E RGMII delay configuration which
-> > >> could only have worked in a PHY_INTERFACE_MODE_RGMII configuration.
-> > >
-> > > Hi Florian
-> > >
-> > > So any DT blob which incorrectly uses one of the other RGMII modes is
-> > > now going to break, where as before it was ignored.
-> >
-> > Potentially yes. There is a precedent with the at803x PHY driver
->
-> Hi Florian
->
-> Yes that was an interesting learning experience. I'm not sure we want
-> to do that again. A lot of devices broken, and a lot of people were
-> unhappy.
->
-> If we are looking at a similar scale of breakage, i think i would
-> prefer to add a broadcom,bcm54210e-phy-mode property in the DT which
-> if present would override the phy_interface_t passed to the driver.
->
->    Andrew
+> diff --git a/mm/slub.c b/mm/slub.c
+> index 42c1b3af3c98..922cdcf5758a 100644
+> --- a/mm/slub.c
+> +++ b/mm/slub.c
+> @@ -4838,7 +4838,15 @@ static ssize_t show_slab_objects(struct kmem_cache *s,
+>  		}
+>  	}
+>  
+> -	get_online_mems();
+> +/*
+> + * It is not possible to take "mem_hotplug_lock" here, as it has already held
+> + * "kernfs_mutex" which could race with the lock order:
+> + *
+> + * mem_hotplug_lock->slab_mutex->kernfs_mutex
+> + *
+> + * In the worest case, it might be mis-calculated while doing NUMA node
+> + * hotplug, but it shall be corrected by later reads of the same files.
+> + */
+>  #ifdef CONFIG_SLUB_DEBUG
+>  	if (flags & SO_ALL) {
+>  		struct kmem_cache_node *n;
 
-What is the breakage concern here?
-The driver was unconditionally clearing the RGMII delays. Therefore,
-any board that needed them would have noticed really fast, IMO. That
-should include people who configure 'rgmii-id' in the DT in the hope
-that it would solve some problems.
-The typical RGMII delay breakage is not realizing you need Linux to
-enable RGMII delays (perhaps due to strapping) and specifying plain
-"rgmii" in the phy-mode, then somebody 'fixing' those and disabling
-them.
-But in this case, the only breakage would be "hmmm, let's just enable
-RGMII delays everywhere. So it works with rgmii-id on both the PHY and
-the MAC side of things? Great, time for lunch!". I just hope that did
-not happen. And maybe even if it did, AFAIK the BCM54xx skews the data
-lines by 1.9 ns (unfortunately not configurable), that leaves an extra
-~2.1 ns of timing budget until the next RGMII clock transition,
-considering a 50% duty cycle? Maybe that's enough to fit the MAC's
-RGMII I/O buffer delays without breaking anything, and then it doesn't
-really matter?
+No objection to removing the {get,put}_online_mems() but the comment 
+doesn't match the kernel style.  I actually don't think we need the 
+comment at all, actually.
 
-Regards,
--Vladimir
+> @@ -4879,7 +4887,6 @@ static ssize_t show_slab_objects(struct kmem_cache *s,
+>  			x += sprintf(buf + x, " N%d=%lu",
+>  					node, nodes[node]);
+>  #endif
+> -	put_online_mems();
+>  	kfree(nodes);
+>  	return x + sprintf(buf + x, "\n");
+>  }
