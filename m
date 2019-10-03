@@ -2,260 +2,143 @@ Return-Path: <SRS0=6dNS=X4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D88EDC32792
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:27:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CDA02C10F14
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:28:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A5F6E20830
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:27:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570123676;
-	bh=NqjaflZa+4i1b02BgIZ5yPMmo/h3wsvAqapPDnfW1Lg=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=VjSlYrzsoRzP4+aJ58ODn6kC7i8rgnN16bje/jLG0ErHv1WW4byQ6e7Uiv4URUAf2
-	 q71B3cwGtbkNrDF0kGBYtAxvcH3lUaNSt0yM9sgyD9wBqLKeDlbMGJpgJXxDYx1sA9
-	 UlgS3VTopsjyHhv8ZvSawxWdAa1F7jWDKUVRqXkI=
+	by mail.kernel.org (Postfix) with ESMTP id A2C4120865
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:28:01 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="YJoEtvR8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729589AbfJCR14 (ORCPT
+        id S1729722AbfJCR2A (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 13:27:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37598 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388574AbfJCQOW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:14:22 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EF99021A4C;
-        Thu,  3 Oct 2019 16:14:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570119260;
-        bh=NqjaflZa+4i1b02BgIZ5yPMmo/h3wsvAqapPDnfW1Lg=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=rfVmMYCYWOloizkfGunXNhqZL8YbRVYwFgA2U0Z1cPttJKSTkViSWbEEWefghR0OY
-         Wm1CpgPMdpb4MCILIEehGYDShZJdPtf2GiKdy/cf3ISPHPTJcW6N6guk2VtJMXuOo8
-         iw7dQJVyVaVTEN+RyOKAp5XmoI6ZeDOAeb/v5ZEo=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Josef Bacik <josef@toxicpanda.com>,
-        Filipe Manana <fdmanana@suse.com>,
-        David Sterba <dsterba@suse.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 185/185] Btrfs: fix race setting up and completing qgroup rescan workers
-Date:   Thu,  3 Oct 2019 17:54:23 +0200
-Message-Id: <20191003154522.680688344@linuxfoundation.org>
-X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20191003154437.541662648@linuxfoundation.org>
-References: <20191003154437.541662648@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Thu, 3 Oct 2019 13:28:00 -0400
+Received: from condef-03.nifty.com ([202.248.20.68]:31723 "EHLO
+        condef-03.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729199AbfJCR1z (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 13:27:55 -0400
+Received: from conssluserg-02.nifty.com ([10.126.8.81])by condef-03.nifty.com with ESMTP id x93HOMtO024256;
+        Fri, 4 Oct 2019 02:24:22 +0900
+Received: from mail-ua1-f42.google.com (mail-ua1-f42.google.com [209.85.222.42]) (authenticated)
+        by conssluserg-02.nifty.com with ESMTP id x93HODVW006126;
+        Fri, 4 Oct 2019 02:24:13 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-02.nifty.com x93HODVW006126
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1570123454;
+        bh=LJ8ChLvuFkxOnRaAfzcwPHpVO6iA3brJ5hpU1BX1eNM=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=YJoEtvR8gerE47Ilqm+9qHWrT5ejo7mmyCPWUxRwjrQvhDoKpmFyNhYPZB4P/3lQn
+         m488NTZCmfDrSSxvZNiBb4vzFF6bfUzr8wWSvzqs6bipD4/fBJJN6aRgVAL+k7ASSn
+         +GsIyXeenTGPRExtiYn25nAM5HOkCRpBUW/qksdN3Mj2p0pGQ5G2gU+aOnUp/Cj4Ux
+         xxFHclgj2gvSgXwDfv4le3HKJm6T7xR6cGQt4SD4Jz7wUIugAB3BPkYNcNyxJ3jTg9
+         lmGKs4KldhJ3f1ziivjjmo+VDN5TZEfwPFd2BYBKf/OfFUss37s7QKJA6ZjbndzKXI
+         fZIWQl7F8eHkA==
+X-Nifty-SrcIP: [209.85.222.42]
+Received: by mail-ua1-f42.google.com with SMTP id u31so1184450uah.0;
+        Thu, 03 Oct 2019 10:24:13 -0700 (PDT)
+X-Gm-Message-State: APjAAAX39GdNDrAv1m1XPuAjZBhuYpCZNBh0URvJFTXpMAWwUGBeQboo
+        KNtb5DGQHQ8q4Gkv0Cpk9AYJ1vD1aM29Qr5UmXU=
+X-Google-Smtp-Source: APXvYqxcbafJe04SN1qeT5pWEmiFMIsMMij9Z6/1CaqUF5SYJfUPY3akBZRbK+HKr3EEke1jiD5zOefK+INWk5Gr9hA=
+X-Received: by 2002:a9f:21f6:: with SMTP id 109mr3156310uac.109.1570123452512;
+ Thu, 03 Oct 2019 10:24:12 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <20190930112636.vx2qxo4hdysvxibl@willie-the-truck>
+ <CAK7LNASQZ82KSOrQW7+Wq1vFDCg2__maBEAPMLqUDqZMLuj1rA@mail.gmail.com>
+ <20190930121803.n34i63scet2ec7ll@willie-the-truck> <CAKwvOdnqn=0LndrX+mUrtSAQqoT1JWRMOJCA5t3e=S=T7zkcCQ@mail.gmail.com>
+ <20191001092823.z4zhlbwvtwnlotwc@willie-the-truck> <CAKwvOdk0h2A6=fb7Yepf+oKbZfq_tqwpGq8EBmHVu1j4mo-a-A@mail.gmail.com>
+ <20191001170142.x66orounxuln7zs3@willie-the-truck> <CAKwvOdnFJqipp+G5xLDRBcOrQRcvMQmn+n8fufWyzyt2QL_QkA@mail.gmail.com>
+ <20191001175512.GK25745@shell.armlinux.org.uk> <CAKwvOdmw_xmTGZLeK8-+Q4nUpjs-UypJjHWks-3jHA670Dxa1A@mail.gmail.com>
+ <20191001181438.GL25745@shell.armlinux.org.uk> <CAKwvOdmBnBVU7F-a6DqPU6QM-BRc8LNn6YRmhTsuGLauCWKUOg@mail.gmail.com>
+ <CAMuHMdWPhE1nNkmL1nj3vpQhB7fP3uDs2i_ZVi0Gf9qij4W2CA@mail.gmail.com>
+ <CAHk-=wgFODvdFBHzgVf3JjoBz0z6LZhOm8xvMntsvOr66ASmZQ@mail.gmail.com>
+ <CAK7LNARM2jVSdgCDJWDbvVxYLiUR_CFgTPg0nxzbCszSKcx+pg@mail.gmail.com> <CAHk-=wiMm3rN15WmiAqMHjC-pakL_b8qgWsPPri0+YLFORT-ZA@mail.gmail.com>
+In-Reply-To: <CAHk-=wiMm3rN15WmiAqMHjC-pakL_b8qgWsPPri0+YLFORT-ZA@mail.gmail.com>
+From:   Masahiro Yamada <yamada.masahiro@socionext.com>
+Date:   Fri, 4 Oct 2019 02:23:36 +0900
+X-Gmail-Original-Message-ID: <CAK7LNATSoOD0g=Aarui6Y26E_YB035NsaPpHxqtBNyw0K0UXVw@mail.gmail.com>
+Message-ID: <CAK7LNATSoOD0g=Aarui6Y26E_YB035NsaPpHxqtBNyw0K0UXVw@mail.gmail.com>
+Subject: Re: [PATCH] compiler: enable CONFIG_OPTIMIZE_INLINING forcibly
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Geert Uytterhoeven <geert@linux-m68k.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Russell King - ARM Linux admin <linux@armlinux.org.uk>,
+        Will Deacon <will@kernel.org>,
+        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Stefan Wahren <wahrenst@gmx.net>,
+        Kees Cook <keescook@google.com>, Arnd Bergmann <arnd@arndb.de>,
+        clang-built-linux <clang-built-linux@googlegroups.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Filipe Manana <fdmanana@suse.com>
+On Fri, Oct 4, 2019 at 2:02 AM Linus Torvalds
+<torvalds@linux-foundation.org> wrote:
+>
+> On Wed, Oct 2, 2019 at 7:11 PM Masahiro Yamada
+> <yamada.masahiro@socionext.com> wrote:
+> >
+> > Macrofying the 'inline' is a horrid mistake that makes incorrect code work.
+> > It would eternally prevent people from writing portable, correct code.
+> > Please do not encourage to hide problems.
+>
+> Honestly, if the alternative to hiding problems is "use a macro", then
+> I'd rather hide the problems and just make "inline" means "inline".
+>
+> If "inline" means "it's just a hint, use macros", then inline is useless.
 
-[ Upstream commit 13fc1d271a2e3ab8a02071e711add01fab9271f6 ]
-
-There is a race between setting up a qgroup rescan worker and completing
-a qgroup rescan worker that can lead to callers of the qgroup rescan wait
-ioctl to either not wait for the rescan worker to complete or to hang
-forever due to missing wake ups. The following diagram shows a sequence
-of steps that illustrates the race.
-
-        CPU 1                                                         CPU 2                                  CPU 3
-
- btrfs_ioctl_quota_rescan()
-  btrfs_qgroup_rescan()
-   qgroup_rescan_init()
-    mutex_lock(&fs_info->qgroup_rescan_lock)
-    spin_lock(&fs_info->qgroup_lock)
-
-    fs_info->qgroup_flags |=
-      BTRFS_QGROUP_STATUS_FLAG_RESCAN
-
-    init_completion(
-      &fs_info->qgroup_rescan_completion)
-
-    fs_info->qgroup_rescan_running = true
-
-    mutex_unlock(&fs_info->qgroup_rescan_lock)
-    spin_unlock(&fs_info->qgroup_lock)
-
-    btrfs_init_work()
-     --> starts the worker
-
-                                                        btrfs_qgroup_rescan_worker()
-                                                         mutex_lock(&fs_info->qgroup_rescan_lock)
-
-                                                         fs_info->qgroup_flags &=
-                                                           ~BTRFS_QGROUP_STATUS_FLAG_RESCAN
-
-                                                         mutex_unlock(&fs_info->qgroup_rescan_lock)
-
-                                                         starts transaction, updates qgroup status
-                                                         item, etc
-
-                                                                                                           btrfs_ioctl_quota_rescan()
-                                                                                                            btrfs_qgroup_rescan()
-                                                                                                             qgroup_rescan_init()
-                                                                                                              mutex_lock(&fs_info->qgroup_rescan_lock)
-                                                                                                              spin_lock(&fs_info->qgroup_lock)
-
-                                                                                                              fs_info->qgroup_flags |=
-                                                                                                                BTRFS_QGROUP_STATUS_FLAG_RESCAN
-
-                                                                                                              init_completion(
-                                                                                                                &fs_info->qgroup_rescan_completion)
-
-                                                                                                              fs_info->qgroup_rescan_running = true
-
-                                                                                                              mutex_unlock(&fs_info->qgroup_rescan_lock)
-                                                                                                              spin_unlock(&fs_info->qgroup_lock)
-
-                                                                                                              btrfs_init_work()
-                                                                                                               --> starts another worker
-
-                                                         mutex_lock(&fs_info->qgroup_rescan_lock)
-
-                                                         fs_info->qgroup_rescan_running = false
-
-                                                         mutex_unlock(&fs_info->qgroup_rescan_lock)
-
-							 complete_all(&fs_info->qgroup_rescan_completion)
-
-Before the rescan worker started by the task at CPU 3 completes, if
-another task calls btrfs_ioctl_quota_rescan(), it will get -EINPROGRESS
-because the flag BTRFS_QGROUP_STATUS_FLAG_RESCAN is set at
-fs_info->qgroup_flags, which is expected and correct behaviour.
-
-However if other task calls btrfs_ioctl_quota_rescan_wait() before the
-rescan worker started by the task at CPU 3 completes, it will return
-immediately without waiting for the new rescan worker to complete,
-because fs_info->qgroup_rescan_running is set to false by CPU 2.
-
-This race is making test case btrfs/171 (from fstests) to fail often:
-
-  btrfs/171 9s ... - output mismatch (see /home/fdmanana/git/hub/xfstests/results//btrfs/171.out.bad)
-#      --- tests/btrfs/171.out     2018-09-16 21:30:48.505104287 +0100
-#      +++ /home/fdmanana/git/hub/xfstests/results//btrfs/171.out.bad      2019-09-19 02:01:36.938486039 +0100
-#      @@ -1,2 +1,3 @@
-#       QA output created by 171
-#      +ERROR: quota rescan failed: Operation now in progress
-#       Silence is golden
-#      ...
-#      (Run 'diff -u /home/fdmanana/git/hub/xfstests/tests/btrfs/171.out /home/fdmanana/git/hub/xfstests/results//btrfs/171.out.bad'  to see the entire diff)
-
-That is because the test calls the btrfs-progs commands "qgroup quota
-rescan -w", "qgroup assign" and "qgroup remove" in a sequence that makes
-calls to the rescan start ioctl fail with -EINPROGRESS (note the "btrfs"
-commands 'qgroup assign' and 'qgroup remove' often call the rescan start
-ioctl after calling the qgroup assign ioctl,
-btrfs_ioctl_qgroup_assign()), since previous waits didn't actually wait
-for a rescan worker to complete.
-
-Another problem the race can cause is missing wake ups for waiters,
-since the call to complete_all() happens outside a critical section and
-after clearing the flag BTRFS_QGROUP_STATUS_FLAG_RESCAN. In the sequence
-diagram above, if we have a waiter for the first rescan task (executed
-by CPU 2), then fs_info->qgroup_rescan_completion.wait is not empty, and
-if after the rescan worker clears BTRFS_QGROUP_STATUS_FLAG_RESCAN and
-before it calls complete_all() against
-fs_info->qgroup_rescan_completion, the task at CPU 3 calls
-init_completion() against fs_info->qgroup_rescan_completion which
-re-initilizes its wait queue to an empty queue, therefore causing the
-rescan worker at CPU 2 to call complete_all() against an empty queue,
-never waking up the task waiting for that rescan worker.
-
-Fix this by clearing BTRFS_QGROUP_STATUS_FLAG_RESCAN and setting
-fs_info->qgroup_rescan_running to false in the same critical section,
-delimited by the mutex fs_info->qgroup_rescan_lock, as well as doing the
-call to complete_all() in that same critical section. This gives the
-protection needed to avoid rescan wait ioctl callers not waiting for a
-running rescan worker and the lost wake ups problem, since setting that
-rescan flag and boolean as well as initializing the wait queue is done
-already in a critical section delimited by that mutex (at
-qgroup_rescan_init()).
-
-Fixes: 57254b6ebce4ce ("Btrfs: add ioctl to wait for qgroup rescan completion")
-Fixes: d2c609b834d62f ("btrfs: properly track when rescan worker is running")
-CC: stable@vger.kernel.org # 4.4+
-Reviewed-by: Josef Bacik <josef@toxicpanda.com>
-Signed-off-by: Filipe Manana <fdmanana@suse.com>
-Signed-off-by: David Sterba <dsterba@suse.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- fs/btrfs/qgroup.c |   33 +++++++++++++++++++--------------
- 1 file changed, 19 insertions(+), 14 deletions(-)
-
---- a/fs/btrfs/qgroup.c
-+++ b/fs/btrfs/qgroup.c
-@@ -2645,9 +2645,6 @@ out:
- 	btrfs_free_path(path);
- 
- 	mutex_lock(&fs_info->qgroup_rescan_lock);
--	if (!btrfs_fs_closing(fs_info))
--		fs_info->qgroup_flags &= ~BTRFS_QGROUP_STATUS_FLAG_RESCAN;
--
- 	if (err > 0 &&
- 	    fs_info->qgroup_flags & BTRFS_QGROUP_STATUS_FLAG_INCONSISTENT) {
- 		fs_info->qgroup_flags &= ~BTRFS_QGROUP_STATUS_FLAG_INCONSISTENT;
-@@ -2663,16 +2660,30 @@ out:
- 	trans = btrfs_start_transaction(fs_info->quota_root, 1);
- 	if (IS_ERR(trans)) {
- 		err = PTR_ERR(trans);
-+		trans = NULL;
- 		btrfs_err(fs_info,
- 			  "fail to start transaction for status update: %d",
- 			  err);
--		goto done;
- 	}
--	ret = update_qgroup_status_item(trans);
--	if (ret < 0) {
--		err = ret;
--		btrfs_err(fs_info, "fail to update qgroup status: %d", err);
-+
-+	mutex_lock(&fs_info->qgroup_rescan_lock);
-+	if (!btrfs_fs_closing(fs_info))
-+		fs_info->qgroup_flags &= ~BTRFS_QGROUP_STATUS_FLAG_RESCAN;
-+	if (trans) {
-+		ret = update_qgroup_status_item(trans);
-+		if (ret < 0) {
-+			err = ret;
-+			btrfs_err(fs_info, "fail to update qgroup status: %d",
-+				  err);
-+		}
- 	}
-+	fs_info->qgroup_rescan_running = false;
-+	complete_all(&fs_info->qgroup_rescan_completion);
-+	mutex_unlock(&fs_info->qgroup_rescan_lock);
-+
-+	if (!trans)
-+		return;
-+
- 	btrfs_end_transaction(trans);
- 
- 	if (btrfs_fs_closing(fs_info)) {
-@@ -2683,12 +2694,6 @@ out:
- 	} else {
- 		btrfs_err(fs_info, "qgroup scan failed with %d", err);
- 	}
--
--done:
--	mutex_lock(&fs_info->qgroup_rescan_lock);
--	fs_info->qgroup_rescan_running = false;
--	mutex_unlock(&fs_info->qgroup_rescan_lock);
--	complete_all(&fs_info->qgroup_rescan_completion);
- }
- 
- /*
+For clarification,
+I am not saying "use macros" at all.
 
 
+I just want to annotate __always_inline for the case
+"2. code that if not inlined is somehow not correct."
+
+
+
+> If "inline" means "using this means that there are known compiler
+> bugs, but we don't know where they trigger", then inline is _worse_
+> than useless.
+>
+> I do not see the big advantage of letting the compiler say "yeah, I'm
+> not going to do that, Dave".
+>
+> And I see a *huge* disadvantage when people are ignoring compiler
+> bugs, and are saying "use a macro". Seriously.
+
+
+Again, not saying "use a macro".
+
+
+
+>
+> Right now we see the obvious compiler bugs that cause build breakages.
+> How many non-obvious compiler bugs do we have? And how sure are you
+> that our code is "correct" after fixing a couple of obvious cases?
+>
+> As to "portable", nobody cares. We're a kernel. We aren't portable,
+> and never were.
+>
+> If this is purely about the fact that x86 is different from other
+> architectures, then let's remove the "compiler can do stupid things"
+> option on x86 too. It was never clear that it was a huge advantage.
+>
+>                Linus
+
+
+
+-- 
+Best Regards
+Masahiro Yamada
