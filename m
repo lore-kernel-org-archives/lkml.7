@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C155C32792
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:30:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B5D9C32792
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:30:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CC2CC2054F
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:30:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 35DD020830
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:30:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570120242;
-	bh=rpLu/oS3jQttqG3AiJBi6ubdqtvP3hbrdcN6X/C/dR4=;
+	s=default; t=1570120248;
+	bh=/rangsZ0ELaQluOZKEg4V40zOt8+RCVaCUrHYUx7Wvw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=MCbnXoyFs1cYnoX7MgH66/ekBWDPL4t+mLRyFjM31OC4pUXgkZ+dvPoevpzjiRm1i
-	 BmRNAEwR7StHy3o9PmZ3qnflFpIyRbnhwhxzGz+VU6+WwUPRL6THLfK6vE28VKCNwm
-	 XSQH/+3XLLf/UZ3xCYLgNAWzTuSrjDUIGLhisgZw=
+	b=nTBX/+D1Lv2kZcsuyTyleohHH8Po2SVoaHDsW8DdSw2925Gdmq9N24VsusdSABEdL
+	 o4Q6fZarflQKJlB7ucu7iYwz/KJdSiKIPizwx4ROyihTJ7nOaxPRfuvLBh8Th2d+3P
+	 wh4vNqbp7mj21BOLX6+turq8tjcXhnuYlP7CQ5Pw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391783AbfJCQal (ORCPT
+        id S2391789AbfJCQaq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 12:30:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36830 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 12:30:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37024 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391773AbfJCQag (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:30:36 -0400
+        id S2391190AbfJCQal (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:30:41 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 64D522054F;
-        Thu,  3 Oct 2019 16:30:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C68C720830;
+        Thu,  3 Oct 2019 16:30:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570120235;
-        bh=rpLu/oS3jQttqG3AiJBi6ubdqtvP3hbrdcN6X/C/dR4=;
+        s=default; t=1570120241;
+        bh=/rangsZ0ELaQluOZKEg4V40zOt8+RCVaCUrHYUx7Wvw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=11+90N1uG7Ru377jQqtqaP3p8NlfF7xp1m+MFUZBK+wJxZPQt9sS1XWfyfpH3g3mm
-         IcVHZR4rmKLkHTjHAG0JN2AnXsQCgB26TccKgliYpcQUyYiQJDWNwSqmngBLKwDBlh
-         1lwjfof+r135SbuFsWlaZ7D4KuCCBTQyfsgYnVwI=
+        b=SDqnRZmnDbmFmTc2wv7VsCygL5KaHGjtW3Aqa3WmYZvtYtkzKXEvLzE3RRNTix9xI
+         3PGb4pGvj7tFgHUmhnfC2xuEqMBgQ7vSjEW7r1RWB9AwqhHM9Bs6iIU5NZOTUOe64p
+         UTXXe1CEo81/p+VwbXLZhAbdXIP0waK1D92Dq164=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Wenwen Wang <wenwen@cs.uga.edu>,
-        Pavel Machek <pavel@ucw.cz>,
-        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        stable@vger.kernel.org, Eddie James <eajames@linux.ibm.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 120/313] led: triggers: Fix a memory leak bug
-Date:   Thu,  3 Oct 2019 17:51:38 +0200
-Message-Id: <20191003154544.782495162@linuxfoundation.org>
+Subject: [PATCH 5.2 148/313] media: aspeed-video: address a protential usage of an unitialized var
+Date:   Thu,  3 Oct 2019 17:52:06 +0200
+Message-Id: <20191003154547.501267239@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191003154533.590915454@linuxfoundation.org>
 References: <20191003154533.590915454@linuxfoundation.org>
@@ -61,36 +60,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wenwen Wang <wenwen@cs.uga.edu>
+From: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 
-[ Upstream commit 60e2dde1e91ae0addb21ac380cc36ebee7534e49 ]
+[ Upstream commit 31b8b0bd6e55c3ea5a08bb8141fa5d3c90600e3b ]
 
-In led_trigger_set(), 'event' is allocated in kasprintf(). However, it is
-not deallocated in the following execution if the label 'err_activate' or
-'err_add_groups' is entered, leading to memory leaks. To fix this issue,
-free 'event' before returning the error.
+While this might not occur in practice, if the device is doing
+the right thing, it would be teoretically be possible to have
+both hsync_counter and vsync_counter negatives.
 
-Fixes: 52c47742f79d ("leds: triggers: send uevent when changing triggers")
-Signed-off-by: Wenwen Wang <wenwen@cs.uga.edu>
-Acked-by: Pavel Machek <pavel@ucw.cz>
-Signed-off-by: Jacek Anaszewski <jacek.anaszewski@gmail.com>
+If this ever happen, ctrl will be undefined, but the driver
+will still call:
+
+	aspeed_video_update(video, VE_CTRL, 0, ctrl);
+
+Change the code to prevent this to happen.
+
+This was warned by cppcheck:
+
+	[drivers/media/platform/aspeed-video.c:653]: (error) Uninitialized variable: ctrl
+
+Reviewed-by: Eddie James <eajames@linux.ibm.com>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/leds/led-triggers.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/media/platform/aspeed-video.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/leds/led-triggers.c b/drivers/leds/led-triggers.c
-index 8d11a5e232271..eff1bda8b5200 100644
---- a/drivers/leds/led-triggers.c
-+++ b/drivers/leds/led-triggers.c
-@@ -173,6 +173,7 @@ int led_trigger_set(struct led_classdev *led_cdev, struct led_trigger *trig)
- 	list_del(&led_cdev->trig_list);
- 	write_unlock_irqrestore(&led_cdev->trigger->leddev_list_lock, flags);
- 	led_set_brightness(led_cdev, LED_OFF);
-+	kfree(event);
+diff --git a/drivers/media/platform/aspeed-video.c b/drivers/media/platform/aspeed-video.c
+index de0f192afa8b1..388c32a11345d 100644
+--- a/drivers/media/platform/aspeed-video.c
++++ b/drivers/media/platform/aspeed-video.c
+@@ -632,7 +632,7 @@ static void aspeed_video_check_and_set_polarity(struct aspeed_video *video)
+ 	}
  
- 	return ret;
+ 	if (hsync_counter < 0 || vsync_counter < 0) {
+-		u32 ctrl;
++		u32 ctrl = 0;
+ 
+ 		if (hsync_counter < 0) {
+ 			ctrl = VE_CTRL_HSYNC_POL;
+@@ -652,7 +652,8 @@ static void aspeed_video_check_and_set_polarity(struct aspeed_video *video)
+ 				V4L2_DV_VSYNC_POS_POL;
+ 		}
+ 
+-		aspeed_video_update(video, VE_CTRL, 0, ctrl);
++		if (ctrl)
++			aspeed_video_update(video, VE_CTRL, 0, ctrl);
+ 	}
  }
+ 
 -- 
 2.20.1
 
