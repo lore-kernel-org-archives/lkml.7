@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8682C32792
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:17:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D9A97C10F14
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:17:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AC20520865
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:17:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A75BA20865
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:17:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570119432;
-	bh=2ZDyCA/W82QMIcVj4QKv0dW3+M4TLs0nbEMoSYY3yjc=;
+	s=default; t=1570119437;
+	bh=qv9ygTfvEiKSBYql2/cnEalR9CuEm7hiXBuwEhcKLyI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=mztWMoFFb3txsk5eVy+q9GTJP+sCIgX3N4KWZxXKqehTJ89J2p1FjCkt/G2qBdU+D
-	 eqr0LZLedIVJXUOmRmtJNTTISudfNsRjz3sMzKF9j6md8xVKQS+i14v86UqsaXHXts
-	 f0652D6kC++wifBQXaigfCSsfBQCSnglB61FZ9qs=
+	b=bZHNx8V4AGz444yG4C8ASPJw+f+nASXONq4IQdvuqvfKY6qHKsn4bq78oJW2GTRS8
+	 oMJ6eHMJ4VO36Cjmmtqz4wvBBwe51spCIcQcGTNOFLoeRRsVjSfvn4ZiXbMGLXp0nO
+	 tWH3rK7xF9dtRDjVz9Oi3dR+Zqg+rDPRf/FWhwEo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389186AbfJCQRL (ORCPT
+        id S2389201AbfJCQRP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 12:17:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42588 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 12:17:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42672 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389143AbfJCQRG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:17:06 -0400
+        id S2389171AbfJCQRJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:17:09 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4F9E92133F;
-        Thu,  3 Oct 2019 16:17:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 189CB20865;
+        Thu,  3 Oct 2019 16:17:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570119425;
-        bh=2ZDyCA/W82QMIcVj4QKv0dW3+M4TLs0nbEMoSYY3yjc=;
+        s=default; t=1570119428;
+        bh=qv9ygTfvEiKSBYql2/cnEalR9CuEm7hiXBuwEhcKLyI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=uoQU3yfyu5tFfWIJPo/W1V9yItdrZfPnzli2g2kuXZHs0DHy+i/5I9CoG2bZsYLZB
-         8bF+lk+p5ixUlQjN6ufR6Io9HylbfNv2QHv1m/49CDn0WaX3RWgYl5MjZZJjWtydKD
-         YHrFxpaJsh1kQzQsYAObVwmuNi412w+ABowF5FPM=
+        b=TvHc88VYQMPY2SdiL9nVJQdwQRQeQFwTe1esTj100DTlim+HCjbqk9gv1DhijsRtJ
+         /TZdBpBugbnK8fGpWGObRdu8h+yDNKusdc6+8txz8EDb0oVYse0SkO9dgs3qET3wi2
+         m30iTXNQ7wTN6rW6rEgl1k6qwrexuduCcBkW1HQw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jiri Slaby <jslaby@suse.cz>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        stable@vger.kernel.org, Jens Axboe <axboe@kernel.dk>,
+        Alessio Balsini <balsini@android.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 059/211] ACPI / processor: dont print errors for processorIDs == 0xff
-Date:   Thu,  3 Oct 2019 17:52:05 +0200
-Message-Id: <20191003154501.897612747@linuxfoundation.org>
+Subject: [PATCH 4.19 060/211] loop: Add LOOP_SET_DIRECT_IO to compat ioctl
+Date:   Thu,  3 Oct 2019 17:52:06 +0200
+Message-Id: <20191003154502.001730641@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191003154447.010950442@linuxfoundation.org>
 References: <20191003154447.010950442@linuxfoundation.org>
@@ -60,66 +60,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jiri Slaby <jslaby@suse.cz>
+From: Alessio Balsini <balsini@android.com>
 
-[ Upstream commit 2c2b005f549544c13ef4cfb0e4842949066889bc ]
+[ Upstream commit fdbe4eeeb1aac219b14f10c0ed31ae5d1123e9b8 ]
 
-Some platforms define their processors in this manner:
-    Device (SCK0)
-    {
-	Name (_HID, "ACPI0004" /* Module Device */)  // _HID: Hardware ID
-	Name (_UID, "CPUSCK0")  // _UID: Unique ID
-	Processor (CP00, 0x00, 0x00000410, 0x06){}
-	Processor (CP01, 0x02, 0x00000410, 0x06){}
-	Processor (CP02, 0x04, 0x00000410, 0x06){}
-	Processor (CP03, 0x06, 0x00000410, 0x06){}
-	Processor (CP04, 0x01, 0x00000410, 0x06){}
-	Processor (CP05, 0x03, 0x00000410, 0x06){}
-	Processor (CP06, 0x05, 0x00000410, 0x06){}
-	Processor (CP07, 0x07, 0x00000410, 0x06){}
-	Processor (CP08, 0xFF, 0x00000410, 0x06){}
-	Processor (CP09, 0xFF, 0x00000410, 0x06){}
-	Processor (CP0A, 0xFF, 0x00000410, 0x06){}
-	Processor (CP0B, 0xFF, 0x00000410, 0x06){}
-...
+Enabling Direct I/O with loop devices helps reducing memory usage by
+avoiding double caching.  32 bit applications running on 64 bits systems
+are currently not able to request direct I/O because is missing from the
+lo_compat_ioctl.
 
-The processors marked as 0xff are invalid, there are only 8 of them in
-this case.
+This patch fixes the compatibility issue mentioned above by exporting
+LOOP_SET_DIRECT_IO as additional lo_compat_ioctl() entry.
+The input argument for this ioctl is a single long converted to a 1-bit
+boolean, so compatibility is preserved.
 
-So do not print an error on ids == 0xff, just print an info message.
-Actually, we could return ENODEV even on the first CPU with ID 0xff, but
-ACPI spec does not forbid the 0xff value to be a processor ID. Given
-0xff could be a correct one, we would break working systems if we
-returned ENODEV.
-
-Signed-off-by: Jiri Slaby <jslaby@suse.cz>
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Cc: Jens Axboe <axboe@kernel.dk>
+Signed-off-by: Alessio Balsini <balsini@android.com>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/acpi/acpi_processor.c | 10 +++++++---
- 1 file changed, 7 insertions(+), 3 deletions(-)
+ drivers/block/loop.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/acpi/acpi_processor.c b/drivers/acpi/acpi_processor.c
-index fc447410ae4d1..a448cdf567188 100644
---- a/drivers/acpi/acpi_processor.c
-+++ b/drivers/acpi/acpi_processor.c
-@@ -282,9 +282,13 @@ static int acpi_processor_get_info(struct acpi_device *device)
- 	}
- 
- 	if (acpi_duplicate_processor_id(pr->acpi_id)) {
--		dev_err(&device->dev,
--			"Failed to get unique processor _UID (0x%x)\n",
--			pr->acpi_id);
-+		if (pr->acpi_id == 0xff)
-+			dev_info_once(&device->dev,
-+				"Entry not well-defined, consider updating BIOS\n");
-+		else
-+			dev_err(&device->dev,
-+				"Failed to get unique processor _UID (0x%x)\n",
-+				pr->acpi_id);
- 		return -ENODEV;
- 	}
- 
+diff --git a/drivers/block/loop.c b/drivers/block/loop.c
+index cef8e00c9d9d6..126c2c5146732 100644
+--- a/drivers/block/loop.c
++++ b/drivers/block/loop.c
+@@ -1719,6 +1719,7 @@ static int lo_compat_ioctl(struct block_device *bdev, fmode_t mode,
+ 	case LOOP_SET_FD:
+ 	case LOOP_CHANGE_FD:
+ 	case LOOP_SET_BLOCK_SIZE:
++	case LOOP_SET_DIRECT_IO:
+ 		err = lo_ioctl(bdev, mode, cmd, arg);
+ 		break;
+ 	default:
 -- 
 2.20.1
 
