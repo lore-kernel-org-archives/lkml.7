@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26913C32792
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:40:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 606CAC10F14
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:40:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EF8F52133F
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:40:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3213820830
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:40:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570120849;
-	bh=DLP1AqzXPyQo7RTgACGq4bqkMEbMnow28zR6YnRP12o=;
+	s=default; t=1570120853;
+	bh=YRxLwZTD2kyRklJzSvxmQ6ggHmLqbT6T6h2wJ2/43pQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=e928veTkcabCNZTmGF61OYr2LKwa5aXdtHrMK20n51lwQfCHYOgYXM5FhOGCSyvh2
-	 qOOslff2F18eE2cJS+qwH1wiWu0OnJdbjj9sSxWj3qVB8AwIyyblvgK4rQPc9YMgJr
-	 2CPdDVGnb9iYm0opH9/mnEQYIaPqAeaBPpw5KKiw=
+	b=iUujRIaltQ9OoptTuGm87apo8t7tRDu+awfC6CVt8jnqBWoHJYAjsN8KVB11bE/5/
+	 sROozTT3ovo6qkYy+TqpxcgtJ5m+H1+QEx6NOwfslzzi4t2TOnf3d0DW0n4doCMokp
+	 L7B5AbZPgoKzp0iGTMm6v2n0m0XdHSu6WwQ06tO0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404956AbfJCQkr (ORCPT
+        id S2404510AbfJCQkv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 12:40:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50818 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 12:40:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50976 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404929AbfJCQkf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:40:35 -0400
+        id S2404939AbfJCQko (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:40:44 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BC6712070B;
-        Thu,  3 Oct 2019 16:40:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0F0A521848;
+        Thu,  3 Oct 2019 16:40:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570120835;
-        bh=DLP1AqzXPyQo7RTgACGq4bqkMEbMnow28zR6YnRP12o=;
+        s=default; t=1570120843;
+        bh=YRxLwZTD2kyRklJzSvxmQ6ggHmLqbT6T6h2wJ2/43pQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=NEh0SEFEWz4TrMZFiWSb3uuq+tMT+doNEZBO6DC8hMMX6vregmg+cD/k3diK7DEWm
-         P2J2WEiDq8O5U+Nzhs4ZkiZDWby1Xi5KGmOP1TfLNyNRxoumISZJAbHnFbm6Kqj/3K
-         tD7H2yKHIBu6S5rzOXMlk05KSef7VpoG8dD3Ozis=
+        b=w1/mHfiWwA9U6el05IHiv/6UyJnjr7zcNMvJUC7pL7g0aI8Ir9i8+GiMeoxF6vpdW
+         5ls4DWXccsRSuMVHoObER7y2y1hkDGNQ903BD56VoXtkgR9zQBb4omJgdc3d6xL8Zn
+         vYd0qwUFrX5TTTZ0VccbBc8cx6/rWcTLji1GewP8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Wen Yang <wen.yang99@zte.com.cn>,
+        stable@vger.kernel.org, Michael Tretter <m.tretter@pengutronix.de>,
         Hans Verkuil <hverkuil-cisco@xs4all.nl>,
         Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.3 055/344] media: exynos4-is: fix leaked of_node references
-Date:   Thu,  3 Oct 2019 17:50:20 +0200
-Message-Id: <20191003154545.585089283@linuxfoundation.org>
+Subject: [PATCH 5.3 057/344] media: vb2: reorder checks in vb2_poll()
+Date:   Thu,  3 Oct 2019 17:50:22 +0200
+Message-Id: <20191003154545.765419448@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191003154540.062170222@linuxfoundation.org>
 References: <20191003154540.062170222@linuxfoundation.org>
@@ -61,62 +61,60 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wen Yang <wen.yang99@zte.com.cn>
+From: Michael Tretter <m.tretter@pengutronix.de>
 
-[ Upstream commit da79bf41a4d170ca93cc8f3881a70d734a071c37 ]
+[ Upstream commit 8d86a15649957c182e90fa2b1267c16699bc12f1 ]
 
-The call to of_get_child_by_name returns a node pointer with refcount
-incremented thus it must be explicitly decremented after the last
-usage.
+When reaching the end of stream, V4L2 clients may expect the
+V4L2_EOS_EVENT before being able to dequeue the last buffer, which has
+the V4L2_BUF_FLAG_LAST flag set.
 
-Detected by coccinelle with the following warnings:
-drivers/media/platform/exynos4-is/fimc-is.c:813:2-8: ERROR: missing of_node_put; acquired a node pointer with refcount incremented on line 807, but without a corresponding object release within this function.
-drivers/media/platform/exynos4-is/fimc-is.c:870:1-7: ERROR: missing of_node_put; acquired a node pointer with refcount incremented on line 807, but without a corresponding object release within this function.
-drivers/media/platform/exynos4-is/fimc-is.c:885:1-7: ERROR: missing of_node_put; acquired a node pointer with refcount incremented on line 807, but without a corresponding object release within this function.
-drivers/media/platform/exynos4-is/media-dev.c:545:1-7: ERROR: missing of_node_put; acquired a node pointer with refcount incremented on line 541, but without a corresponding object release within this function.
-drivers/media/platform/exynos4-is/media-dev.c:528:1-7: ERROR: missing of_node_put; acquired a node pointer with refcount incremented on line 499, but without a corresponding object release within this function.
-drivers/media/platform/exynos4-is/media-dev.c:534:1-7: ERROR: missing of_node_put; acquired a node pointer with refcount incremented on line 499, but without a corresponding object release within this function.
+If the vb2_poll() function first checks for events and afterwards if
+buffers are available, a driver can queue the V4L2_EOS_EVENT event and
+return the buffer after the check for events but before the check for
+buffers. This causes vb2_poll() to signal that the buffer with
+V4L2_BUF_FLAG_LAST can be read without the V4L2_EOS_EVENT being
+available.
 
-Signed-off-by: Wen Yang <wen.yang99@zte.com.cn>
+First, check for available buffers and afterwards for events to ensure
+that if vb2_poll() signals POLLIN | POLLRDNORM for the
+V4L2_BUF_FLAG_LAST buffer, it also signals POLLPRI for the
+V4L2_EOS_EVENT.
+
+Signed-off-by: Michael Tretter <m.tretter@pengutronix.de>
 Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
 Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/platform/exynos4-is/fimc-is.c   | 1 +
- drivers/media/platform/exynos4-is/media-dev.c | 2 ++
- 2 files changed, 3 insertions(+)
+ drivers/media/common/videobuf2/videobuf2-v4l2.c | 8 +++++---
+ 1 file changed, 5 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/media/platform/exynos4-is/fimc-is.c b/drivers/media/platform/exynos4-is/fimc-is.c
-index e043d55133a31..b7cc8e651e327 100644
---- a/drivers/media/platform/exynos4-is/fimc-is.c
-+++ b/drivers/media/platform/exynos4-is/fimc-is.c
-@@ -806,6 +806,7 @@ static int fimc_is_probe(struct platform_device *pdev)
- 		return -ENODEV;
+diff --git a/drivers/media/common/videobuf2/videobuf2-v4l2.c b/drivers/media/common/videobuf2/videobuf2-v4l2.c
+index 40d76eb4c2fe7..5a9ba3846f0a5 100644
+--- a/drivers/media/common/videobuf2/videobuf2-v4l2.c
++++ b/drivers/media/common/videobuf2/videobuf2-v4l2.c
+@@ -872,17 +872,19 @@ EXPORT_SYMBOL_GPL(vb2_queue_release);
+ __poll_t vb2_poll(struct vb2_queue *q, struct file *file, poll_table *wait)
+ {
+ 	struct video_device *vfd = video_devdata(file);
+-	__poll_t res = 0;
++	__poll_t res;
++
++	res = vb2_core_poll(q, file, wait);
  
- 	is->pmu_regs = of_iomap(node, 0);
-+	of_node_put(node);
- 	if (!is->pmu_regs)
- 		return -ENOMEM;
+ 	if (test_bit(V4L2_FL_USES_V4L2_FH, &vfd->flags)) {
+ 		struct v4l2_fh *fh = file->private_data;
  
-diff --git a/drivers/media/platform/exynos4-is/media-dev.c b/drivers/media/platform/exynos4-is/media-dev.c
-index d53427a8db11d..a838189d44902 100644
---- a/drivers/media/platform/exynos4-is/media-dev.c
-+++ b/drivers/media/platform/exynos4-is/media-dev.c
-@@ -501,6 +501,7 @@ static int fimc_md_register_sensor_entities(struct fimc_md *fmd)
- 			continue;
+ 		poll_wait(file, &fh->wait, wait);
+ 		if (v4l2_event_pending(fh))
+-			res = EPOLLPRI;
++			res |= EPOLLPRI;
+ 	}
  
- 		ret = fimc_md_parse_port_node(fmd, port, index);
-+		of_node_put(port);
- 		if (ret < 0) {
- 			of_node_put(node);
- 			goto cleanup;
-@@ -542,6 +543,7 @@ static int __of_get_csis_id(struct device_node *np)
- 	if (!np)
- 		return -EINVAL;
- 	of_property_read_u32(np, "reg", &reg);
-+	of_node_put(np);
- 	return reg - FIMC_INPUT_MIPI_CSI2_0;
+-	return res | vb2_core_poll(q, file, wait);
++	return res;
  }
+ EXPORT_SYMBOL_GPL(vb2_poll);
  
 -- 
 2.20.1
