@@ -4,53 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 254CAC32792
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:59:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A5F9C32792
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:59:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E254A20830
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:59:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2EABC20830
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:59:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570121977;
-	bh=u0T2dyeWQ2iXGTmKLsR8pupBhDmMNegGZokKL2UQOkQ=;
+	s=default; t=1570121985;
+	bh=U+fTeMg7eR4bzJKvKMnVWPprEFx1Xn1JUmgx6apz7Ho=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=cH8xXSrAAK37IimqTeNJmBZyiT8Yctn6KpJCVxAR1XF1GDC8JzQKp1Ac/fpp9Lfgt
-	 4/rCAtuKJAw6tGbfPlcEUx83bkgoVGuBpaSob2so/ayf7r9+nIppc8getjPZClR+o3
-	 9vT6sg3puvLDFMddaIN49aJESTT05Dvt36cvqQKs=
+	b=LXVhCFVpZ9EI2J1PD5Zg/9KO5imkhO0rruSL9PpEJ+sej5aN2msrr35wss7uIOQH+
+	 pyN5XOm3ao0N8CIBXSYN1TGcrnoGAjxFcn0I42TcRIoBWUftbeGVFQ7tolIh2LJtTR
+	 ciDpQkKWjVCft6qIZV+Pedjg6TEivw40T40WHUNs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392979AbfJCQq6 (ORCPT
+        id S2406064AbfJCQ7o (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 12:46:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60326 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 12:59:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60086 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392962AbfJCQqy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:46:54 -0400
+        id S2390523AbfJCQqq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:46:46 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2FF9D215EA;
-        Thu,  3 Oct 2019 16:46:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E954C20830;
+        Thu,  3 Oct 2019 16:46:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570121213;
-        bh=u0T2dyeWQ2iXGTmKLsR8pupBhDmMNegGZokKL2UQOkQ=;
+        s=default; t=1570121205;
+        bh=U+fTeMg7eR4bzJKvKMnVWPprEFx1Xn1JUmgx6apz7Ho=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Uc6tZ3d3uVEPFH9QQz5qf82NcHY+8tTSYiXKTS7u4J2o4yKoNSWvfWgAmnqTXxboT
-         umAdxnV4j6xP839yoGQoeZzpYl4QXb4PpzOabyZX/UQIVORQS+eVFsAkQUbApCL7D1
-         KcGYVh8SHqEXyH/BwI+QF/oBPBCml34EZOJ9WQls=
+        b=xlzfMDRGIxND0sYkS4CtTb27LjoCMZn4JHIDmXeUN8X8sG++BaXSJIFfrV60bAo/I
+         Y/m7Ewtn2NLiO0G+L+9+moRTo3lMPd7EMgZn9Fs1rQUC0UWAoyXtsnWekX4iRumo9R
+         W19K5t5piJqHt0eGnEShbYPSioo+omwz8ZTdVh6U=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Borislav Petkov <bp@alien8.de>,
-        Yunsheng Lin <linyunsheng@huawei.com>,
-        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.3 197/344] x86/mm: Fix cpumask_of_node() error condition
-Date:   Thu,  3 Oct 2019 17:52:42 +0200
-Message-Id: <20191003154559.643594255@linuxfoundation.org>
+        stable@vger.kernel.org, NeilBrown <neilb@suse.de>,
+        Yufen Yu <yuyufen@huawei.com>,
+        Song Liu <songliubraving@fb.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.3 194/344] md/raid1: fail run raid1 array when active disk less than one
+Date:   Thu,  3 Oct 2019 17:52:39 +0200
+Message-Id: <20191003154559.356985526@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191003154540.062170222@linuxfoundation.org>
 References: <20191003154540.062170222@linuxfoundation.org>
@@ -63,48 +61,76 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Peter Zijlstra <peterz@infradead.org>
+From: Yufen Yu <yuyufen@huawei.com>
 
-[ Upstream commit bc04a049f058a472695aa22905d57e2b1f4c77d9 ]
+[ Upstream commit 07f1a6850c5d5a65c917c3165692b5179ac4cb6b ]
 
-When CONFIG_DEBUG_PER_CPU_MAPS=y we validate that the @node argument of
-cpumask_of_node() is a valid node_id. It however forgets to check for
-negative numbers. Fix this by explicitly casting to unsigned int.
+When run test case:
+  mdadm -CR /dev/md1 -l 1 -n 4 /dev/sd[a-d] --assume-clean --bitmap=internal
+  mdadm -S /dev/md1
+  mdadm -A /dev/md1 /dev/sd[b-c] --run --force
 
-  (unsigned)node >= nr_node_ids
+  mdadm --zero /dev/sda
+  mdadm /dev/md1 -a /dev/sda
 
-verifies: 0 <= node < nr_node_ids
+  echo offline > /sys/block/sdc/device/state
+  echo offline > /sys/block/sdb/device/state
+  sleep 5
+  mdadm -S /dev/md1
 
-Also ammend the error message to match the condition.
+  echo running > /sys/block/sdb/device/state
+  echo running > /sys/block/sdc/device/state
+  mdadm -A /dev/md1 /dev/sd[a-c] --run --force
 
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Borislav Petkov <bp@alien8.de>
-Cc: Yunsheng Lin <linyunsheng@huawei.com>
-Link: https://lkml.kernel.org/r/20190903075352.GY2369@hirez.programming.kicks-ass.net
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
+mdadm run fail with kernel message as follow:
+[  172.986064] md: kicking non-fresh sdb from array!
+[  173.004210] md: kicking non-fresh sdc from array!
+[  173.022383] md/raid1:md1: active with 0 out of 4 mirrors
+[  173.022406] md1: failed to create bitmap (-5)
+
+In fact, when active disk in raid1 array less than one, we
+need to return fail in raid1_run().
+
+Reviewed-by: NeilBrown <neilb@suse.de>
+Signed-off-by: Yufen Yu <yuyufen@huawei.com>
+Signed-off-by: Song Liu <songliubraving@fb.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/mm/numa.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/md/raid1.c | 13 ++++++++++++-
+ 1 file changed, 12 insertions(+), 1 deletion(-)
 
-diff --git a/arch/x86/mm/numa.c b/arch/x86/mm/numa.c
-index e6dad600614c2..4123100e0eafe 100644
---- a/arch/x86/mm/numa.c
-+++ b/arch/x86/mm/numa.c
-@@ -861,9 +861,9 @@ void numa_remove_cpu(int cpu)
-  */
- const struct cpumask *cpumask_of_node(int node)
- {
--	if (node >= nr_node_ids) {
-+	if ((unsigned)node >= nr_node_ids) {
- 		printk(KERN_WARNING
--			"cpumask_of_node(%d): node > nr_node_ids(%u)\n",
-+			"cpumask_of_node(%d): (unsigned)node >= nr_node_ids(%u)\n",
- 			node, nr_node_ids);
- 		dump_stack();
- 		return cpu_none_mask;
+diff --git a/drivers/md/raid1.c b/drivers/md/raid1.c
+index 501a3b4d82f33..5afbb7df06e70 100644
+--- a/drivers/md/raid1.c
++++ b/drivers/md/raid1.c
+@@ -3129,6 +3129,13 @@ static int raid1_run(struct mddev *mddev)
+ 		    !test_bit(In_sync, &conf->mirrors[i].rdev->flags) ||
+ 		    test_bit(Faulty, &conf->mirrors[i].rdev->flags))
+ 			mddev->degraded++;
++	/*
++	 * RAID1 needs at least one disk in active
++	 */
++	if (conf->raid_disks - mddev->degraded < 1) {
++		ret = -EINVAL;
++		goto abort;
++	}
+ 
+ 	if (conf->raid_disks - mddev->degraded == 1)
+ 		mddev->recovery_cp = MaxSector;
+@@ -3162,8 +3169,12 @@ static int raid1_run(struct mddev *mddev)
+ 	ret = md_integrity_register(mddev);
+ 	if (ret) {
+ 		md_unregister_thread(&mddev->thread);
+-		raid1_free(mddev, conf);
++		goto abort;
+ 	}
++	return 0;
++
++abort:
++	raid1_free(mddev, conf);
+ 	return ret;
+ }
+ 
 -- 
 2.20.1
 
