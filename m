@@ -2,174 +2,222 @@ Return-Path: <SRS0=6dNS=X4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7264BC32792
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 21:40:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B020CC10F14
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 21:40:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 439462086A
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 21:40:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8338A2133F
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 21:40:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389309AbfJCVkH (ORCPT
+        id S2389501AbfJCVkM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 17:40:07 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:48228 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2389234AbfJCVkF (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 17:40:05 -0400
-Received: from pps.filterd (m0098396.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x93LY6QW095049;
-        Thu, 3 Oct 2019 17:38:54 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2vdr8yhka7-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 03 Oct 2019 17:38:54 -0400
-Received: from m0098396.ppops.net (m0098396.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.27/8.16.0.27) with SMTP id x93LYAsl095218;
-        Thu, 3 Oct 2019 17:38:52 -0400
-Received: from ppma04dal.us.ibm.com (7a.29.35a9.ip4.static.sl-reverse.com [169.53.41.122])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2vdr8yhk9n-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 03 Oct 2019 17:38:52 -0400
-Received: from pps.filterd (ppma04dal.us.ibm.com [127.0.0.1])
-        by ppma04dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id x93LaZRU030836;
-        Thu, 3 Oct 2019 21:38:51 GMT
-Received: from b01cxnp22035.gho.pok.ibm.com (b01cxnp22035.gho.pok.ibm.com [9.57.198.25])
-        by ppma04dal.us.ibm.com with ESMTP id 2v9y58kdsw-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 03 Oct 2019 21:38:51 +0000
-Received: from b01ledav006.gho.pok.ibm.com (b01ledav006.gho.pok.ibm.com [9.57.199.111])
-        by b01cxnp22035.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x93Lcorl50135478
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 3 Oct 2019 21:38:50 GMT
-Received: from b01ledav006.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 8AFACAC059;
-        Thu,  3 Oct 2019 21:38:50 +0000 (GMT)
-Received: from b01ledav006.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 37268AC05F;
-        Thu,  3 Oct 2019 21:38:44 +0000 (GMT)
-Received: from leobras.br.ibm.com (unknown [9.18.235.190])
-        by b01ledav006.gho.pok.ibm.com (Postfix) with ESMTP;
-        Thu,  3 Oct 2019 21:38:44 +0000 (GMT)
-Message-ID: <4e9e864856fc165b5dea8119eade871bc0e6f019.camel@linux.ibm.com>
-Subject: Re: [PATCH v5 00/11] Introduces new count-based method for tracking
- lockless pagetable walks
-From:   Leonardo Bras <leonardo@linux.ibm.com>
-To:     John Hubbard <jhubbard@nvidia.com>,
-        Peter Zijlstra <peterz@infradead.org>
-Cc:     Song Liu <songliubraving@fb.com>, Michal Hocko <mhocko@suse.com>,
-        "Dmitry V. Levin" <ldv@altlinux.org>,
-        Keith Busch <keith.busch@intel.com>, linux-mm@kvack.org,
-        Paul Mackerras <paulus@samba.org>,
-        Christoph Lameter <cl@linux.com>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Elena Reshetova <elena.reshetova@intel.com>,
-        linux-arch@vger.kernel.org, Santosh Sivaraj <santosh@fossix.org>,
-        Davidlohr Bueso <dave@stgolabs.net>,
-        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Mahesh Salgaonkar <mahesh@linux.vnet.ibm.com>,
-        Andrey Ryabinin <aryabinin@virtuozzo.com>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Ingo Molnar <mingo@kernel.org>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Ralph Campbell <rcampbell@nvidia.com>,
-        Arnd Bergmann <arnd@arndb.de>, Jann Horn <jannh@google.com>,
-        Jesper Dangaard Brouer <brouer@redhat.com>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        =?ISO-8859-1?Q?J=E9r=F4me?= Glisse <jglisse@redhat.com>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        kvm-ppc@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
-        Reza Arbab <arbab@linux.ibm.com>,
-        Allison Randal <allison@lohutok.net>,
-        Christian Brauner <christian.brauner@ubuntu.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org,
-        Logan Gunthorpe <logang@deltatee.com>,
-        Souptick Joarder <jrdr.linux@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        linuxppc-dev@lists.ozlabs.org, Roman Gushchin <guro@fb.com>,
-        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-        Al Viro <viro@zeniv.linux.org.uk>
-Date:   Thu, 03 Oct 2019 18:38:40 -0300
-In-Reply-To: <99754d82-33c5-a54f-8607-b6bf151069d4@nvidia.com>
-References: <20191003013325.2614-1-leonardo@linux.ibm.com>
-         <20191003072952.GN4536@hirez.programming.kicks-ass.net>
-         <c46d6c7301314a2d998cffc47d69b404f2c26ad3.camel@linux.ibm.com>
-         <99754d82-33c5-a54f-8607-b6bf151069d4@nvidia.com>
-Content-Type: multipart/signed; micalg="pgp-sha256";
-        protocol="application/pgp-signature"; boundary="=-+T6TWqK4ZitmnubF89r5"
-User-Agent: Evolution 3.30.5 (3.30.5-1.fc29) 
-MIME-Version: 1.0
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-10-03_08:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1908290000 definitions=main-1910030173
+        Thu, 3 Oct 2019 17:40:12 -0400
+Received: from mga09.intel.com ([134.134.136.24]:52651 "EHLO mga09.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731058AbfJCVi6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 17:38:58 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 03 Oct 2019 14:38:57 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.67,253,1566889200"; 
+   d="scan'208";a="186051612"
+Received: from linksys13920.jf.intel.com (HELO rpedgeco-DESK5.jf.intel.com) ([10.54.75.11])
+  by orsmga008.jf.intel.com with ESMTP; 03 Oct 2019 14:38:57 -0700
+From:   Rick Edgecombe <rick.p.edgecombe@intel.com>
+To:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org, x86@kernel.org,
+        linux-mm@kvack.org, luto@kernel.org, peterz@infradead.org,
+        dave.hansen@intel.com, pbonzini@redhat.com,
+        sean.j.christopherson@intel.com, keescook@chromium.org
+Cc:     kristen@linux.intel.com, deneen.t.dock@intel.com,
+        Rick Edgecombe <rick.p.edgecombe@intel.com>
+Subject: [RFC PATCH 00/13] XOM for KVM guest userspace
+Date:   Thu,  3 Oct 2019 14:23:47 -0700
+Message-Id: <20191003212400.31130-1-rick.p.edgecombe@intel.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+This patchset enables the ability for KVM guests to create execute-only (XO)
+memory by utilizing EPT based XO permissions. XO memory is currently supported
+on Intel hardware natively for CPU's with PKU, but this enables it on older
+platforms, and can support XO for kernel memory as well.
 
---=-+T6TWqK4ZitmnubF89r5
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In the guest, this patchset enables XO memory for userspace, using the existing
+interface (mprotect PROT_EXEC && !PROT_READ) used for arm64 and x86 PKU HW. A
+larger follow on to this enables setting the kernel text as XO, but this is just
+the KVM pieces and guest userspace. The yet un-posted QEMU patches to work with
+these changes are here:
+https://github.com/redgecombe/qemu/
 
-On Thu, 2019-10-03 at 13:49 -0700, John Hubbard wrote:
-> Yes. And to clarify, I was assuming that the changes to mm/gup.c were=20
-> required in order to accomplish your goals. Given that assumption, I=20
-> wanted the generic code to be "proper", and that's what that feedback
-> is about.
+Guest Interface
+===============
+The way XO is exposed to the guest is by creating a virtual XO permission bit in
+the guest page tables.
 
-You assumed right. On my counting approach it's necessary count all
-'lockless pagetable walks', including the ones in generic code.
+There are normally four kinds of page table bits:
+1. Bits ignored by the hardware
+2. Bits that must be 0 or else the hardware throws a RSVD page fault
+3. Bits used by the hardware for addresses
+4. Bits used by the hardware for permissions and other features
 
-And, I think even without the counting approach, it was a good way
-focus this 'lockless pagetable walk' routine in a single place.
+We want to find a bit in the guest page tables to use to mean execute-only
+memory so that guest can map the same physical memory with different permissions
+simultaneously like other permission bits. We also want the translations to be
+done by the hardware, which means we can't use ignored or reserved bits. We also
+can't easily re-purpose a feature bit. This leaves address bits. The idea here
+is we will take an address bit and re-purpose it as a feature bit.
 
->=20
-> Although the other questions about file-backed THP
-> make it sound like some rethinking across the board is required now.
+The first thing we have to do is tell the guest that it can't use the address
+bit we are stealing. Luckily there is an existing CPUID leaf that conveys the
+number of physical address bits which is already intercepted by KVM, and so we
+can reduce it as needed. This puts what was previously the top physical address
+bit into what is defined as the "reserved area" of the PTE.
 
-Yeap, I need to better understand how the file-backed THP problem
-works.
+Here is how the PTE would be transformed, where M is the number of physical bits
+exposed by the CPUID leaf.
 
-Thanks,
+Normal:
+|--------------------------------------------------------|
+| .. |     RSVD (51 to M)     |   PFN (M-1 to 12)   | .. |
+|--------------------------------------------------------|
 
-Leonardo Br=C3=A1s
+KVM XO (with M reduced by 1):
+|--------------------------------------------------------|
+| .. |  RSVD (51 to M+1) | XO |   PFN (M-1 to 12)   | .. |
+|--------------------------------------------------------|
 
---=-+T6TWqK4ZitmnubF89r5
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-Content-Transfer-Encoding: 7bit
+So the way XOM is exposed to the guest is by having the VMM provide two aliases
+in the guest physical address space for the same memory. The first half has
+normal EPT permissions, and the second half has XO permissions. This way the
+high PFN bit in the guest page tables acts like an XO permission bit. The VMM
+reports to the guest a number of physical address bits that exclude the XO bit,
+so from the guest perspective the XO bit is in the region that would be
+"reserved", and from the CPU's perspective the bit is still a normal PFN bit.
 
------BEGIN PGP SIGNATURE-----
+Backwards Compatibility
+-----------------------
+Since software would have previously received a #PF with the RSVD error code
+set, when the HW encountered any set bits in the region 51 to M, there was some
+internal discussion on whether this should have a virtual MSR for the OS to turn
+it on only if the OS knows it isn't relying on this behavior for bit M. The
+argument against needing an MSR is this blurb from the Intel SDM about reserved
+bits:
+"Bits reserved in the paging-structure entries are reserved for future
+functionality. Software developers should be aware that such bits may be used in
+the future and that a paging-structure entry that causes a page-fault exception
+on one processor might not do so in the future."
 
-iQIzBAABCAAdFiEEMdeUgIzgjf6YmUyOlQYWtz9SttQFAl2WamAACgkQlQYWtz9S
-ttT+5A//d6Der3cfKkY0anP/E6uyI6e77Kt+RWmN9+RuhxKKyMvN3vR0lOiAxvuE
-mr0LmRnING4Jsvhz54FB9xPIJzEH+5tPXrX9TkHYOFqQfkyvDtx8LaCHf+gN+xQx
-l2ukNHr6gqjA6Sb8eQEm0RKeiidLX6NPo03/OwiAWs44z+XofzyFuUa13VmE2+YE
-oe27ZXb/UsLlrO8rB7cG+DyGuRBTlivjCpDp+JEDkdRH8tePICRaAtV0nR+YxeA7
-4NiBcgM9ONQeJOKViKmWdqhC/2K2gVeSFE7WpidAUOrRUJR9FyFisZ7x8MKrW06f
-GRSRrSisMdvHlgbZHcT+n0tqNPcRzmGmTnkZ/nlnoM7w5qKgsMGIBOBYH5CW2FPg
-19xIRhUMX+ShhSPc8H8TIeaHxRmJrJYmnfib+MY4IZhrZmAUEqYDSnjzvypUSvFF
-HUly+f6MpQlOv+RHgi4BV/zdyO8ucaaSCMh2yGREJ5FEuDAEKm5AHz6RwtRMtoY0
-v8Y+7IEPVKPdV4sL8z5vfInKDeRU3FP0CPlKCKg6FcRvGNMGCEkP9ZtuzHxVb/Xs
-JNa3VDiiijvnu/tDsdNS/6aHLtANNlLvaNGAuESrxAJRFzziLN92i+RXMLBaQCZo
-/pZH9phCxN/HZly4uA7Ek1TbRKsNstB/CvsXTJBF91f6L7m0Awc=
-=4hRX
------END PGP SIGNATURE-----
+So in the current patchset there is no MSR write required for the guest to turn
+on this feature. It will have this behavior whenever qemu is run with
+"-cpu +xo".
 
---=-+T6TWqK4ZitmnubF89r5--
+KVM XO CPUID Feature Bit
+------------------------
+Althrough this patchset targets KVM, the idea is that this interface might be
+implemented by other hypervisors. Especially since as it appears especially like
+a normal CPU feature it would be nice if there was a single CPUID bit to check
+for different implementations like there often is for real CPU features. In the
+past there was a proposal for "generic leaves" [1], where regions are assigned
+for VMMs to define, but where the behavior will not change across VMMs. This
+patchset follows this proposal and defines a bit in a new leaf to expose the
+presense of the above described behavior. I'm hoping to get some suggestions on
+the right way to expose it by this RFC.
+
+Injecting Page Faults
+---------------------
+When there is an attempt to read memory from an XO address range, a #PF is
+injected into the guest with P=1, W/R=0, RSVD=0, I/D=0. When there is an attempt
+to write, it is P=1, W/R=1, RSVD=0, I/D=0.
+
+Implementation
+==============
+In KVM this patchset adds a new memslot, KVM_MEM_EXECONLY, which maps memory as
+execute-only via EPT permissions, and will inject a PF to the guest if there is
+a violation. The x86 emulator is also made aware of XO memory perissions, and
+virtualized features that act on PFN's are made aware that VTs view of the GFN
+includes the permission bit (and so needs to be masked to get the guests view of
+the PFN).
+
+QEMU manipulates the physical address bits exposed to the guest and adds an
+extra KVM_MEM_EXECONLY memslot that points to the same userspace memory in the
+XO range for every memslot added in the normal range.
+
+The violating linear address is determined from the EPT feature that provides
+the linear address of the violation if availible, and if not availible emulates
+the violating instruction to determine which linear address to use in the
+injected fault.
+
+Performance
+===========
+The performance impact is not fully characterized yet. In the larger patchset
+that sets kernel text to be XO, there wasn't any measurable impact compiling
+the kernel. The hope is that there will not be a large impact, but more testing
+is needed.
+
+Status
+======
+Regression testing is still needed including the nested virtualization case and
+impact of XO in the other memslot address spaces. This is based on 5.3.
+
+[1] https://lwn.net/Articles/301888/
+
+
+Rick Edgecombe (13):
+  kvm: Enable MTRR to work with GFNs with perm bits
+  kvm: Add support for X86_FEATURE_KVM_XO
+  kvm: Add XO memslot type
+  kvm, vmx: Add support for gva exit qualification
+  kvm: Add #PF injection for KVM XO
+  kvm: Add KVM_CAP_EXECONLY_MEM
+  kvm: Add docs for KVM_CAP_EXECONLY_MEM
+  x86/boot: Rename USE_EARLY_PGTABLE_L5
+  x86/cpufeature: Add detection of KVM XO
+  x86/mm: Add NR page bit for KVM XO
+  x86, ptdump: Add NR bit to page table dump
+  mmap: Add XO support for KVM XO
+  x86/Kconfig: Add Kconfig for KVM based XO
+
+ Documentation/virt/kvm/api.txt                | 16 ++--
+ arch/x86/Kconfig                              | 13 +++
+ arch/x86/boot/compressed/misc.h               |  2 +-
+ arch/x86/include/asm/cpufeature.h             |  7 +-
+ arch/x86/include/asm/cpufeatures.h            |  5 +-
+ arch/x86/include/asm/disabled-features.h      |  3 +-
+ arch/x86/include/asm/kvm_host.h               |  7 ++
+ arch/x86/include/asm/pgtable_32_types.h       |  1 +
+ arch/x86/include/asm/pgtable_64_types.h       | 30 ++++++-
+ arch/x86/include/asm/pgtable_types.h          | 13 +++
+ arch/x86/include/asm/required-features.h      |  3 +-
+ arch/x86/include/asm/sparsemem.h              |  4 +-
+ arch/x86/include/asm/vmx.h                    |  1 +
+ arch/x86/include/uapi/asm/kvm_para.h          |  3 +
+ arch/x86/kernel/cpu/common.c                  |  7 +-
+ arch/x86/kernel/head64.c                      | 43 +++++++++-
+ arch/x86/kvm/cpuid.c                          |  7 ++
+ arch/x86/kvm/cpuid.h                          |  1 +
+ arch/x86/kvm/mmu.c                            | 79 +++++++++++++++++--
+ arch/x86/kvm/mtrr.c                           |  8 ++
+ arch/x86/kvm/paging_tmpl.h                    | 29 +++++--
+ arch/x86/kvm/svm.c                            |  6 ++
+ arch/x86/kvm/vmx/vmx.c                        |  6 ++
+ arch/x86/kvm/x86.c                            |  9 ++-
+ arch/x86/mm/dump_pagetables.c                 |  6 +-
+ arch/x86/mm/init.c                            |  3 +
+ arch/x86/mm/kasan_init_64.c                   |  2 +-
+ include/uapi/linux/kvm.h                      |  2 +
+ mm/mmap.c                                     | 30 +++++--
+ .../arch/x86/include/asm/disabled-features.h  |  3 +-
+ tools/include/uapi/linux/kvm.h                |  1 +
+ virt/kvm/kvm_main.c                           | 15 +++-
+ 32 files changed, 322 insertions(+), 43 deletions(-)
+
+-- 
+2.17.1
 
