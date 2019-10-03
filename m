@@ -4,49 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 95F63C32792
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 15:59:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A4FE5C32792
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 15:59:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5FF5420830
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 15:59:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 69D9C21783
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 15:59:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570118374;
-	bh=1/YZ4lN4FMqcUT8nbaioNtWfW697Qpib4gtPmCCVTqI=;
+	s=default; t=1570118376;
+	bh=E/lSzvPqTxdIB5ncEwxU1w/9V+oMwQfMO5+3WkZbCeA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xATSShKAt/QiYBR1qiH6L1AISQaSiil5GKvzEYMf2p8dygjauhIJcIUb6qY0zqefW
-	 Y+b6Ts+LhioMLJdPXG4bVU08CcuMeCDUoQvcJUpHXLcmUwOwW+Pu2rVsenQy99nIll
-	 md9viEnnrE+2D1tQYmWZSgCyEerIvRLltqKfL0qs=
+	b=I6Po0q0q7jTUs9j8tv6eFd4KNnlFrRviAoX5ssKVfSUhKsOW9DtFClq7u//Y9hWEG
+	 iw/fAbIIWBQC31XDVS2ZW4tFQ4jbGH5BTZLMQeCo+5ozv9wpmHdZ3aa8RzR11Ydhqe
+	 oDguBe03Jjy6ZK2WWyIkukU1Piwyx7Am721TJyfE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730617AbfJCP7d (ORCPT
+        id S1731360AbfJCP7f (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 11:59:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42460 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 11:59:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42626 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730500AbfJCP72 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 11:59:28 -0400
+        id S1731349AbfJCP7d (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 11:59:33 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AFCC620700;
-        Thu,  3 Oct 2019 15:59:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3ADF320830;
+        Thu,  3 Oct 2019 15:59:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570118367;
-        bh=1/YZ4lN4FMqcUT8nbaioNtWfW697Qpib4gtPmCCVTqI=;
+        s=default; t=1570118372;
+        bh=E/lSzvPqTxdIB5ncEwxU1w/9V+oMwQfMO5+3WkZbCeA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=e9p247W5rtra4GOcQDcemjQuRAQExGRKLBRexYnPRfSy2ts+BrhuNHFzbG2UxHDed
-         a51YYzbE48K7U2ic7OKB2zPo5gjNktgCJBGvsD0tJ4S7R5PsVzQwsmwd70KcZ85CzJ
-         gkSDV1E7o+7NEqGaQnO5oRLYAXYAjnimNhO8cK/w=
+        b=v4mj7inrV5fDG9CXc2fSacWP6Ah6i96LcoSrXFpgxdh0Yh6efLlRr+aHpnKD57TJu
+         1Q0Q+n5mElgpFDolbpOxFNbHUcr2EI0KChH90Qbpsn+8Gidzrs9P5xwllBaj40CLjo
+         8F8PbSL154nm4dNc0t7khel7Hji5BkecSHNDclXc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ard van Breemen <ard@kwaak.net>,
-        Takashi Iwai <tiwai@suse.de>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 47/99] ALSA: usb-audio: Skip bSynchAddress endpoint check if it is invalid
-Date:   Thu,  3 Oct 2019 17:53:10 +0200
-Message-Id: <20191003154317.871182505@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Guoqing Jiang <guoqing.jiang@cloud.ionos.com>,
+        Song Liu <songliubraving@fb.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.4 49/99] md: dont call spare_active in md_reap_sync_thread if all member devices cant work
+Date:   Thu,  3 Oct 2019 17:53:12 +0200
+Message-Id: <20191003154318.885118288@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191003154252.297991283@linuxfoundation.org>
 References: <20191003154252.297991283@linuxfoundation.org>
@@ -59,37 +61,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ard van Breemen <ard@kwaak.net>
+From: Guoqing Jiang <jgq516@gmail.com>
 
-[ Upstream commit 1b34121d9f26d272b0b2334209af6b6fc82d4bf1 ]
+[ Upstream commit 0d8ed0e9bf9643f27f4816dca61081784dedb38d ]
 
-The Linux kernel assumes that get_endpoint(alts,0) and
-get_endpoint(alts,1) are eachothers feedback endpoints.
-To reassure that validity it will test bsynchaddress to comply with that
-assumption. But if the bsyncaddress is 0 (invalid), it will flag that as
-a wrong assumption and return an error.
-Fix: Skip the test if bSynchAddress is 0.
-Note: those with a valid bSynchAddress should have a code quirck added.
+When add one disk to array, the md_reap_sync_thread is responsible
+to activate the spare and set In_sync flag for the new member in
+spare_active().
 
-Signed-off-by: Ard van Breemen <ard@kwaak.net>
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+But if raid1 has one member disk A, and disk B is added to the array.
+Then we offline A before all the datas are synchronized from A to B,
+obviously B doesn't have the latest data as A, but B is still marked
+with In_sync flag.
+
+So let's not call spare_active under the condition, otherwise B is
+still showed with 'U' state which is not correct.
+
+Signed-off-by: Guoqing Jiang <guoqing.jiang@cloud.ionos.com>
+Signed-off-by: Song Liu <songliubraving@fb.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/usb/pcm.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/md/md.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/sound/usb/pcm.c b/sound/usb/pcm.c
-index 1ea1384bc2369..f84c55ecd0fb4 100644
---- a/sound/usb/pcm.c
-+++ b/sound/usb/pcm.c
-@@ -460,6 +460,7 @@ static int set_sync_endpoint(struct snd_usb_substream *subs,
- 	}
- 	ep = get_endpoint(alts, 1)->bEndpointAddress;
- 	if (get_endpoint(alts, 0)->bLength >= USB_DT_ENDPOINT_AUDIO_SIZE &&
-+	    get_endpoint(alts, 0)->bSynchAddress != 0 &&
- 	    ((is_playback && ep != (unsigned int)(get_endpoint(alts, 0)->bSynchAddress | USB_DIR_IN)) ||
- 	     (!is_playback && ep != (unsigned int)(get_endpoint(alts, 0)->bSynchAddress & ~USB_DIR_IN)))) {
- 		dev_err(&dev->dev,
+diff --git a/drivers/md/md.c b/drivers/md/md.c
+index 067af77bb729a..d1b09657c1939 100644
+--- a/drivers/md/md.c
++++ b/drivers/md/md.c
+@@ -8445,7 +8445,8 @@ void md_reap_sync_thread(struct mddev *mddev)
+ 	/* resync has finished, collect result */
+ 	md_unregister_thread(&mddev->sync_thread);
+ 	if (!test_bit(MD_RECOVERY_INTR, &mddev->recovery) &&
+-	    !test_bit(MD_RECOVERY_REQUESTED, &mddev->recovery)) {
++	    !test_bit(MD_RECOVERY_REQUESTED, &mddev->recovery) &&
++	    mddev->degraded != mddev->raid_disks) {
+ 		/* success...*/
+ 		/* activate any spares */
+ 		if (mddev->pers->spare_active(mddev)) {
 -- 
 2.20.1
 
