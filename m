@@ -2,116 +2,105 @@ Return-Path: <SRS0=6dNS=X4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3683CC32792
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 23:42:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C26DEC4CED1
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 23:44:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 11EED2133F
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 23:42:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9614321783
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 23:44:04 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="KR7A3mH7";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="PkAGomt4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732270AbfJCXmN (ORCPT
+        id S1730445AbfJCXoE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 19:42:13 -0400
-Received: from mga11.intel.com ([192.55.52.93]:39183 "EHLO mga11.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731728AbfJCXlh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 19:41:37 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 03 Oct 2019 16:41:36 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.67,254,1566889200"; 
-   d="scan'208";a="343819274"
-Received: from skuppusw-desk.jf.intel.com ([10.54.74.33])
-  by orsmga004.jf.intel.com with ESMTP; 03 Oct 2019 16:41:35 -0700
-From:   sathyanarayanan.kuppuswamy@linux.intel.com
-To:     bhelgaas@google.com
-Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        ashok.raj@intel.com, keith.busch@intel.com,
-        sathyanarayanan.kuppuswamy@linux.intel.com
-Subject: [PATCH v9 0/8] Add Error Disconnect Recover (EDR) support
-Date:   Thu,  3 Oct 2019 16:38:56 -0700
-Message-Id: <cover.1570145778.git.sathyanarayanan.kuppuswamy@linux.intel.com>
-X-Mailer: git-send-email 2.21.0
+        Thu, 3 Oct 2019 19:44:04 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:44780 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727452AbfJCXoD (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 19:44:03 -0400
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id 81EEA619F9; Thu,  3 Oct 2019 23:44:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1570146242;
+        bh=xXDm0IoORHj+KX8F1sz/PoDzwJGxR7sIGiaUfIuABsw=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=KR7A3mH7C+soXw/x+zvhVHMDvFVVv3Sk1luB6/MzqX3E7wBg+6U+5ItB3C88BblmD
+         uqfR0Wbmbwuo8S1wmoS5LNfihdnPUP6yM0mAZJQ2dlVvHB08yhIJo8x5DhiUlWzM8w
+         8VY8FqJ39MXqnjgxESDDcjhmZhkaDDYQDt+EbA0E=
+Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
+        by smtp.codeaurora.org (Postfix) with ESMTP id 87D3A60312;
+        Thu,  3 Oct 2019 23:44:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1570146241;
+        bh=xXDm0IoORHj+KX8F1sz/PoDzwJGxR7sIGiaUfIuABsw=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=PkAGomt4xIPzFsTZVyOVW7bdskfgFjepad90CJajiQKHg/tIPchzxlSFyF6W8eRZQ
+         sPGBFTL2tjjvDK6bejFbQRslnRJF3zb/ft2VPErHTwTWKwVInCM1eyt3uaKkOL80nt
+         58rQ0eiaWe0S6IZVvSJtE2VDZeRdBzjG+eOmVPvs=
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Thu, 03 Oct 2019 16:44:01 -0700
+From:   mnalajal@codeaurora.org
+To:     Stephen Boyd <swboyd@chromium.org>
+Cc:     gregkh@linuxfoundation.org, rafael@kernel.org,
+        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        bjorn.andersson@linaro.org
+Subject: Re: [PATCH] base: soc: Handle custom soc information sysfs entries
+In-Reply-To: <5d9682d5.1c69fb81.4efda.d786@mx.google.com>
+References: <1570061174-4918-1-git-send-email-mnalajal@codeaurora.org>
+ <5d9682d5.1c69fb81.4efda.d786@mx.google.com>
+Message-ID: <ce2f11601c3d2203069487b7bc2364d8@codeaurora.org>
+X-Sender: mnalajal@codeaurora.org
+User-Agent: Roundcube Webmail/1.2.5
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
-
-This patchset adds support for following features:
-
-1. Error Disconnect Recover (EDR) support.
-2. _OSC based negotiation support for DPC.
-
-You can find EDR spec in the following link.
-
-https://members.pcisig.com/wg/PCI-SIG/document/12614
-
-Changes since v8:
- * Rebased on top of v5.4-rc1
-
-Changes since v7:
- * Updated DSM version number to match the spec.
-
-Changes since v6:
- * Modified the order of patches to enable EDR only after all necessary support is added in kernel.
- * Addressed Bjorn comments.
-
-Changes since v5:
- * Addressed Keith's comments.
- * Added additional check for FF mode in pci_aer_init().
- * Updated commit history of "PCI/DPC: Add support for DPC recovery on NON_FATAL errors" patch.
-
-Changes since v4:
- * Rebased on top of v5.3-rc1
- * Fixed lock/unlock issue in edr_handle_event().
- * Merged "Update error status after reset_link()" patch into this patchset.
-
-Changes since v3:
- * Moved EDR related ACPI functions/definitions to pci-acpi.c
- * Modified commit history in few patches to include spec reference.
- * Added support to handle DPC triggered by NON_FATAL errors.
- * Added edr_lock to protect PCI device receiving duplicate EDR notifications.
- * Addressed Bjorn comments.
-
-Changes since v2:
- * Split EDR support patch into multiple patches.
- * Addressed Bjorn comments.
-
-Changes since v1:
- * Rebased on top of v5.1-rc1
-
-Kuppuswamy Sathyanarayanan (8):
-  PCI/ERR: Update error status after reset_link()
-  PCI/DPC: Allow dpc_probe() even if firmware first mode is enabled
-  PCI/DPC: Add dpc_process_error() wrapper function
-  PCI/DPC: Add Error Disconnect Recover (EDR) support
-  PCI/AER: Allow clearing Error Status Register in FF mode
-  PCI/DPC: Update comments related to DPC recovery on NON_FATAL errors
-  PCI/DPC: Clear AER registers in EDR mode
-  PCI/ACPI: Enable EDR support
-
- drivers/acpi/pci_root.c         |   9 ++
- drivers/pci/pci-acpi.c          |  91 +++++++++++++++
- drivers/pci/pcie/Kconfig        |  10 ++
- drivers/pci/pcie/aer.c          |  12 +-
- drivers/pci/pcie/dpc.c          | 194 +++++++++++++++++++++++++++++---
- drivers/pci/pcie/err.c          |  10 +-
- drivers/pci/pcie/portdrv_core.c |   8 +-
- drivers/pci/probe.c             |   1 +
- include/linux/acpi.h            |   6 +-
- include/linux/pci-acpi.h        |  11 ++
- include/linux/pci.h             |   3 +-
- 11 files changed, 321 insertions(+), 34 deletions(-)
-
--- 
-2.21.0
-
+On 2019-10-03 16:22, Stephen Boyd wrote:
+> Quoting Murali Nalajala (2019-10-02 17:06:14)
+>> @@ -121,6 +118,7 @@ static void soc_release(struct device *dev)
+>>  struct soc_device *soc_device_register(struct soc_device_attribute 
+>> *soc_dev_attr)
+>>  {
+>>         struct soc_device *soc_dev;
+>> +       const struct attribute_group **soc_attr_groups = NULL;
+> 
+> Don't initialize this to NULL because it is only tested after it's been
+> unconditionally assigned to the result of the allocation.
+Done
+> 
+>>         int ret;
+>> 
+>>         if (!soc_bus_type.p) {
+>> @@ -136,10 +134,20 @@ struct soc_device *soc_device_register(struct 
+>> soc_device_attribute *soc_dev_attr
+>>                 goto out1;
+>>         }
+>> 
+>> +       soc_attr_groups = kzalloc(sizeof(*soc_attr_groups) *
+> 
+> Please use kcalloc() instead and drop the define for NUM_ATTR_GROUPS
+> because it's used once.
+> 
+done
+>> +                                               NUM_ATTR_GROUPS, 
+>> GFP_KERNEL);
+>> +       if (!soc_attr_groups) {
+>> +               ret = -ENOMEM;
+>> +               goto out2;
+>> +       }
+>> +       soc_attr_groups[0] = &soc_attr_group;
+>> +       soc_attr_groups[1] = soc_dev_attr->custom_attr_group;
+>> +       soc_attr_groups[2] = NULL;
+> 
+> Drop this assignment to NULL because kzalloc() and kcalloc() zero out
+> the memory anyway.
+done
