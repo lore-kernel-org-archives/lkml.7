@@ -4,61 +4,61 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9503EC32792
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 11:42:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AB448C10F14
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 11:42:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6A659218DE
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 11:42:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7D9B520830
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 11:42:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="KUHnsWOZ"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="fwQKUaUF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730222AbfJCLme (ORCPT
+        id S1730245AbfJCLms (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 07:42:34 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:36406 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730185AbfJCLmd (ORCPT
+        Thu, 3 Oct 2019 07:42:48 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:34330 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730229AbfJCLms (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 07:42:33 -0400
-Received: by mail-wm1-f66.google.com with SMTP id m18so2050945wmc.1
-        for <linux-kernel@vger.kernel.org>; Thu, 03 Oct 2019 04:42:31 -0700 (PDT)
+        Thu, 3 Oct 2019 07:42:48 -0400
+Received: by mail-wr1-f68.google.com with SMTP id a11so2604979wrx.1
+        for <linux-kernel@vger.kernel.org>; Thu, 03 Oct 2019 04:42:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:content-transfer-encoding:in-reply-to
          :user-agent;
-        bh=cHvDsFcekIPBjH5IQouCdyPdPjje7XItWyIIEhMEyPI=;
-        b=KUHnsWOZhhK6SSsl82Z+eu8JxSen5PB6zveEcc7ZS/DZqL2xMoZCrsOM+Cgj/s/GZU
-         jm2bl+2+AgLJLDfMc0Rgk0E8CwafVlGkNSIEa2jrBFRY2tZxr5dHjI4NXYJ1BSl49Vy6
-         chNXh8bWIusGKFXGeCSOxPhRTfC0FQOeSssodjmRhFw6ZuJKZ2mXORD2jeT5hi0qDFnh
-         oyV4QmcBNWJvY4STPmI08IqiWkcXLqNGzrkm7U24CqRxt/ucuuBeDSqJeVkDwEPoForM
-         ZhCxnXCK2QTLZbkH8OL2+8qxHL9O5N1zLJXAEMU4ZS5vjfOKggq2k2pD9y4XKySoKnoD
-         /BpQ==
+        bh=jT+9een9mM2KMQc2NI2nr4Y5VakV7H0J0wclQgkUils=;
+        b=fwQKUaUFQ6a/78eZtJv4rTrh8NiDMuR7wU5XIhUa32e5TXH0+uEfqBrFFkdozLykq1
+         GQSrne3+R37jhPKfIGFJf311r73w02PYfez7FjwTcAvND4U6++vYOlaw9c7WX4E2oyY2
+         nikycED8a/vkMoQonBwpaQpGZVVqHZtSoxd6HWOawqobtNEPaBTphaIe8FghuMyKs8M7
+         Si1Ey/dynw5twF+TVb6+G/a0w5QVMtNTUe+ZkLXqRKR5eM/AqOW7nzpR5fVSezqZ8q7p
+         32T39Ez4eEhSJ4vkH30VuovExTH5yDqeqWSaWP4tiMu+75u2sBIPXVp+uzQum8/3hiUN
+         VJwg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:content-transfer-encoding
          :in-reply-to:user-agent;
-        bh=cHvDsFcekIPBjH5IQouCdyPdPjje7XItWyIIEhMEyPI=;
-        b=VjkY0nhx4eMjKy11mAFYxW0JMoH/ScfJHt86w2tybkPxcAWzI57+YcqZ2Tt33+KaaJ
-         wBlnt9eVY8pkuCmeMgmXDleI8IQtbEFV6/VI30aBpMvW3sB1vVTLsP5GL5O9lIEfUnWS
-         E5ds6GVZQ8YRMRgF/QPmPIUNAxLNxPsBP2JeWEFzwQ8xqhQGWbnIL3cH2Z8SHLEI/eV0
-         cFv8YNK9i/5Nu9vErjFgqe6l3K+ZaUuilaQBGxR2qysfuxYR72B1oLIl1HyL+kjgpEbt
-         iYPugIXALS6CuoQnv5BFrFTCrN7IsJsg86wdx4zUdkhBgRz/H/0BYN+ESOy6m+icol4o
-         9lTQ==
-X-Gm-Message-State: APjAAAUIJTCHHGngBrXXPJ/lOCXLRIJCA0jQNNcpFukeZ3lAOQztsQoA
-        SmXXL6qA0weOvLvNv+UTbSL5aA==
-X-Google-Smtp-Source: APXvYqw1NwetRlcDBzEKd3mk6MdQNZN+YmmIwRP4K/p2HZFkqtNAeXNCEmkgLAMiYM73jRZWrIMe1w==
-X-Received: by 2002:a7b:cf12:: with SMTP id l18mr7069293wmg.25.1570102950452;
-        Thu, 03 Oct 2019 04:42:30 -0700 (PDT)
+        bh=jT+9een9mM2KMQc2NI2nr4Y5VakV7H0J0wclQgkUils=;
+        b=jzmHcgliOnRyepkFtF2ArO8KfZGE8/dH9SZNU5Zu81skCQF/SirMvl/6ZyN9sMVIwg
+         s7dWa+k3YNY+/xqBECjrd1I9bOGO05Nw3F7AANyyzAjN/O8594bHaEJO1FxhrrfjPrBo
+         QnzThCYJqUXFJNhQb98ZzmN/n3tI2fM3IhcF0OhISx9NhAP9SN0BdhMyWV/hAzewF9yl
+         MX9MbCizGBD/KB4yGQ3eve604h9fpXcLUK/Z3mTKeATu2Ptvqi6HrZRyr+1M4//pY1LG
+         spQUQw0IvM24JJCYHCqy9dakEbiHDfb671dfUuDqK9LHsxvwFhpgMar5OVM4pZqvC0MF
+         oinw==
+X-Gm-Message-State: APjAAAXLhTsRINVXy9fU8yvY0MFAfbfVnVlMh+hVgWQ4chDjacNTTho0
+        FC15+/AKhsO77PsUMBHjIXoTLg==
+X-Google-Smtp-Source: APXvYqz82V76dcSOpmIIaTo777Rc74WPo1TLzktFeak8EAx8pWm//EW5b77wEGmszSGc+Q2Gg+GDIw==
+X-Received: by 2002:a5d:6704:: with SMTP id o4mr6839593wru.365.1570102966533;
+        Thu, 03 Oct 2019 04:42:46 -0700 (PDT)
 Received: from dell ([2.27.167.122])
-        by smtp.gmail.com with ESMTPSA id m62sm2235472wmm.35.2019.10.03.04.42.28
+        by smtp.gmail.com with ESMTPSA id 36sm3014735wrp.30.2019.10.03.04.42.44
         (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 03 Oct 2019 04:42:29 -0700 (PDT)
-Date:   Thu, 3 Oct 2019 12:42:26 +0100
+        Thu, 03 Oct 2019 04:42:46 -0700 (PDT)
+Date:   Thu, 3 Oct 2019 12:42:42 +0100
 From:   Lee Jones <lee.jones@linaro.org>
 To:     Andreas Kemnade <andreas@kemnade.info>
 Cc:     daniel.thompson@linaro.org, jingoohan1@gmail.com,
@@ -67,16 +67,16 @@ Cc:     daniel.thompson@linaro.org, jingoohan1@gmail.com,
         dri-devel@lists.freedesktop.org, linux-leds@vger.kernel.org,
         devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-fbdev@vger.kernel.org
-Subject: Re: [PATCH v4 1/2] dt-bindings: backlight: lm3630a: Add enable-gpios
- to describe HWEN pin
-Message-ID: <20191003114226.GD21172@dell>
+Subject: Re: [PATCH v4 2/2] backlight: lm3630a: Add an enable gpio for the
+ HWEN pin
+Message-ID: <20191003114242.GE21172@dell>
 References: <20190912213257.24147-1-andreas@kemnade.info>
- <20190912213257.24147-2-andreas@kemnade.info>
+ <20190912213257.24147-3-andreas@kemnade.info>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190912213257.24147-2-andreas@kemnade.info>
+In-Reply-To: <20190912213257.24147-3-andreas@kemnade.info>
 User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -85,19 +85,26 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 On Thu, 12 Sep 2019, Andreas Kemnade wrote:
 
-> Provide DT documentation for enable-gpios.
+> For now just enable it in the probe function to allow I2C
+> access. Disabling also means resetting the register values
+> to default and according to the datasheet does not give
+> power savings.
+> 
+> Tested on Kobo Clara HD.
 > 
 > Signed-off-by: Andreas Kemnade <andreas@kemnade.info>
-> Acked-by: Daniel Thompson <daniel.thompson@linaro.org>
-> Reviewed-by: Rob Herring <robh@kernel.org>
 > Reviewed-by: Dan Murphy <dmurphy@ti.com>
+> Reviewed-by: Daniel Thompson <daniel.thompson@linaro.org>
 > ---
-> changes in v2: added example
-> changes in v3: added Acked-by
-> changes in v4: moved enable-gpios to the right position
->   in the example
->  .../bindings/leds/backlight/lm3630a-backlight.yaml           | 5 +++++
->  1 file changed, 5 insertions(+)
+> changes in v2:
+> - simplification
+> - correct gpio direction initialisation
+> 
+> changes in v3:
+> - removed legacy include
+> 
+>  drivers/video/backlight/lm3630a_bl.c | 9 +++++++++
+>  1 file changed, 9 insertions(+)
 
 Applied, thanks.
 
