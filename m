@@ -2,78 +2,90 @@ Return-Path: <SRS0=6dNS=X4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 55B15C10F14
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:01:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A51B2C10F14
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:01:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2663D207FF
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:01:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6AE97222CC
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:01:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1570118502;
+	bh=kkSBR+c0g8g/8nWU/VkMes6KGJAkUReibvt3+FKxTc4=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=S4cfBMYGrvAwvkbgWIcsKkwNbPd2f4nabXnULG45WcZVIIChVr75hpfk6SJHIek5l
+	 LNNNDlAQZbzST7pSyMiW9qHEIo7eU/3RS9fjA70c8QY1Pj3DWIhd4f94cCcniQ+UHl
+	 klCBzLWKOLkxuMWZxMmxEIl7mo07jVRhb+I5beqU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731865AbfJCQBj (ORCPT
+        id S1731882AbfJCQBl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 12:01:39 -0400
-Received: from mga05.intel.com ([192.55.52.43]:32377 "EHLO mga05.intel.com"
+        Thu, 3 Oct 2019 12:01:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46074 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730311AbfJCQBg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:01:36 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 03 Oct 2019 09:01:19 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.67,253,1566889200"; 
-   d="scan'208";a="196387830"
-Received: from unknown (HELO [10.232.112.172]) ([10.232.112.172])
-  by orsmga006.jf.intel.com with ESMTP; 03 Oct 2019 09:01:18 -0700
-Subject: Re: [PATCH 1/2] block: sed-opal: fix sparse warning: obsolete array
- init.
-To:     Scott Bauer <sbauer@plzdonthack.me>,
-        Randy Dunlap <rdunlap@infradead.org>
-Cc:     "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>, axboe <axboe@kernel.dk>,
-        jonathan.derrick@intel.com
-References: <807d7b7f-623b-75f0-baab-13b1b0c02e9d@infradead.org>
- <20191003154227.GB2450@hacktheplanet>
-From:   "Rajashekar, Revanth" <revanth.rajashekar@intel.com>
-Message-ID: <dd7ddcb5-1037-6b77-5376-9db417299566@intel.com>
-Date:   Thu, 3 Oct 2019 10:01:18 -0600
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        id S1731860AbfJCQBj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:01:39 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 18226207FF;
+        Thu,  3 Oct 2019 16:01:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1570118498;
+        bh=kkSBR+c0g8g/8nWU/VkMes6KGJAkUReibvt3+FKxTc4=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=OkyOh6eW7Xwj63Uuhn9vKFBdfwJxqYsOoF/Ltqs/5mo9X+A/ipcmVswhWmDf08hEL
+         vB3Y7m4+L/WZzlujsnxjoOavaA0kqs6F4w+WwQkW/ZjVnmQY3bKy15XnlYttUfJYPF
+         hSjmHHFuWHK5lZdrXoOSVISX6rnP5RaEF0ZzEMvk=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Benoit <benoit.sansoni@gmail.com>,
+        Stephen Hemminger <stephen@networkplumber.org>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.9 031/129] skge: fix checksum byte order
+Date:   Thu,  3 Oct 2019 17:52:34 +0200
+Message-Id: <20191003154333.372124180@linuxfoundation.org>
+X-Mailer: git-send-email 2.23.0
+In-Reply-To: <20191003154318.081116689@linuxfoundation.org>
+References: <20191003154318.081116689@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-In-Reply-To: <20191003154227.GB2450@hacktheplanet>
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: Stephen Hemminger <stephen@networkplumber.org>
 
-On 10/3/2019 9:42 AM, Scott Bauer wrote:
-> On Wed, Oct 02, 2019 at 07:23:05PM -0700, Randy Dunlap wrote:
->> From: Randy Dunlap <rdunlap@infradead.org>
->>
->> Fix sparse warning: (missing '=')
->> ../block/sed-opal.c:133:17: warning: obsolete array initializer, use C99 syntax
->>
->> Fixes: ff91064ea37c ("block: sed-opal: check size of shadow mbr")
->> Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
->> Cc: Jens Axboe <axboe@kernel.dk>
->> Cc: linux-block@vger.kernel.org
->> Cc: Jonas Rabenstein <jonas.rabenstein@studium.uni-erlangen.de>
->> Cc: David Kozub <zub@linux.fjfi.cvut.cz>
->> ---
-> Un cc'd David and Jonas, +CC'd Jon and Revanth.
->
-> This looks fine to me too.
->
-> Reviewed-by: Scott Bauer <sbauer@plzdonthack.me>
+[ Upstream commit 5aafeb74b5bb65b34cc87c7623f9fa163a34fa3b ]
 
-the patch set looks fine for me
+Running old skge driver on PowerPC causes checksum errors
+because hardware reported 1's complement checksum is in little-endian
+byte order.
 
-Reviewed-by:  Revanth Rajashekar <revanth.rajashekar@intel.com>
+Reported-by: Benoit <benoit.sansoni@gmail.com>
+Signed-off-by: Stephen Hemminger <stephen@networkplumber.org>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+---
+ drivers/net/ethernet/marvell/skge.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+--- a/drivers/net/ethernet/marvell/skge.c
++++ b/drivers/net/ethernet/marvell/skge.c
+@@ -3114,7 +3114,7 @@ static struct sk_buff *skge_rx_get(struc
+ 	skb_put(skb, len);
+ 
+ 	if (dev->features & NETIF_F_RXCSUM) {
+-		skb->csum = csum;
++		skb->csum = le16_to_cpu(csum);
+ 		skb->ip_summed = CHECKSUM_COMPLETE;
+ 	}
+ 
+
 
