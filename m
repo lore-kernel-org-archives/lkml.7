@@ -2,53 +2,58 @@ Return-Path: <SRS0=6dNS=X4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E884BC4CED1
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:48:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DADFDC10F14
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:49:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B57FC2070B
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:48:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B04B42070B
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:49:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570121338;
-	bh=o9aX2bau2Ui2FjhVZKIimH8ZL1iyt0Febi4Bh0UHciM=;
+	s=default; t=1570121341;
+	bh=gDoMJ/kb/DKmiZLAj1iPf+wvICmVlOUmxNJiEv9/iT8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=HV6f93Qc/EFXo0F/E3qgq9n0rB/5eCW1E25tGef0V25DKTZtpTat6xBnGRSNAKrPX
-	 PlVCgPjawGAzJmY0MRat4emPsUi4HEGa1w+VGfDumfW1aQZyl0OUMjCj/HWXg9W+lp
-	 yXZUDv8njWPw6o4CsFaP90J9Snwu9IUmpdtdrtfA=
+	b=r9msYEUceLV/c46+5MxwdBm3A2QKDVKus8noZYkHATchQyjDMGCOEXFQlqiOVo7M7
+	 4oZ8Yc2wE9jTgpkkDtBPfr8VFQfyWRubSuWuPcXf+GFU6LqKes2wxOJ0eiwY/vk7A5
+	 QcCZeAXbSupJin28/qnxqDUvGeYDfJFuBchRwpp8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405785AbfJCQs5 (ORCPT
+        id S2405794AbfJCQtA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 12:48:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35060 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 12:49:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33588 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2405098AbfJCQsz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:48:55 -0400
+        id S2405642AbfJCQsC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:48:02 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DA6FE2070B;
-        Thu,  3 Oct 2019 16:48:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 64C062070B;
+        Thu,  3 Oct 2019 16:48:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570121334;
-        bh=o9aX2bau2Ui2FjhVZKIimH8ZL1iyt0Febi4Bh0UHciM=;
+        s=default; t=1570121280;
+        bh=gDoMJ/kb/DKmiZLAj1iPf+wvICmVlOUmxNJiEv9/iT8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=vmr9WnZ8nu2NoUPKWHn56L5Fynht0bf5+c9dl16qIUrI0/RfiFnv2yPLfMRaEPKAf
-         frVVb7FnWjCm2v5pnHTstq8I0Z2KQvJrX5jZxmL/BoXQ4q/2Qhr4azxGSzvuhZDqx5
-         JevnYokYJUqBlAhQTgmgVQA59rV6f551EiYEu6Fs=
+        b=HiU/jD7Yij8b4/TLqnFkq4kWi3vd6xiF6X8MtZ6L74rotjv10s1BabXhodCmUAXVj
+         /TB4Kcx/84MmO8nOQQkuLOCfDhQozNnH+gFoM5FPWSPbjVyZojM5W1sy3TOv6gJEF1
+         ZPGz3g380uW9/A653NUVDe7/C38Qz0EH+Pht54q4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Martin Wilck <mwilck@suse.com>,
-        Ales Novak <alnovak@suse.cz>,
-        Shane Seymour <shane.seymour@hpe.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>
-Subject: [PATCH 5.3 240/344] scsi: scsi_dh_rdac: zero cdb in send_mode_select()
-Date:   Thu,  3 Oct 2019 17:53:25 +0200
-Message-Id: <20191003154604.068940589@linuxfoundation.org>
+        stable@vger.kernel.org, Patrick McLean <chutzpah@gentoo.org>,
+        Tzvetomir Stoyanov <tstoyanov@vmware.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        linux-trace-devel@vger.kernel.org,
+        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.3 185/344] libtraceevent: Change users plugin directory
+Date:   Thu,  3 Oct 2019 17:52:30 +0200
+Message-Id: <20191003154558.469963340@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191003154540.062170222@linuxfoundation.org>
 References: <20191003154540.062170222@linuxfoundation.org>
@@ -61,43 +66,70 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Martin Wilck <Martin.Wilck@suse.com>
+From: Tzvetomir Stoyanov <tstoyanov@vmware.com>
 
-commit 57adf5d4cfd3198aa480e7c94a101fc8c4e6109d upstream.
+[ Upstream commit e97fd1383cd77c467d2aed7fa4e596789df83977 ]
 
-cdb in send_mode_select() is not zeroed and is only partially filled in
-rdac_failover_get(), which leads to some random data getting to the
-device. Users have reported storage responding to such commands with
-INVALID FIELD IN CDB. Code before commit 327825574132 was not affected, as
-it called blk_rq_set_block_pc().
+To be compliant with XDG user directory layout, the user's plugin
+directory is changed from ~/.traceevent/plugins to
+~/.local/lib/traceevent/plugins/
 
-Fix this by zeroing out the cdb first.
-
-Identified & fix proposed by HPE.
-
-Fixes: 327825574132 ("scsi_dh_rdac: switch to scsi_execute_req_flags()")
-Cc: stable@vger.kernel.org
-Link: https://lore.kernel.org/r/20190904155205.1666-1-martin.wilck@suse.com
-Signed-off-by: Martin Wilck <mwilck@suse.com>
-Acked-by: Ales Novak <alnovak@suse.cz>
-Reviewed-by: Shane Seymour <shane.seymour@hpe.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Suggested-by: Patrick McLean <chutzpah@gentoo.org>
+Signed-off-by: Tzvetomir Stoyanov <tstoyanov@vmware.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: Jiri Olsa <jolsa@redhat.com>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Patrick McLean <chutzpah@gentoo.org>
+Cc: linux-trace-devel@vger.kernel.org
+Link: https://lore.kernel.org/linux-trace-devel/20190313144206.41e75cf8@patrickm/
+Link: http://lore.kernel.org/linux-trace-devel/20190801074959.22023-4-tz.stoyanov@gmail.com
+Link: http://lore.kernel.org/lkml/20190805204355.344622683@goodmis.org
+Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/device_handler/scsi_dh_rdac.c |    2 ++
- 1 file changed, 2 insertions(+)
+ tools/lib/traceevent/Makefile       | 6 +++---
+ tools/lib/traceevent/event-plugin.c | 2 +-
+ 2 files changed, 4 insertions(+), 4 deletions(-)
 
---- a/drivers/scsi/device_handler/scsi_dh_rdac.c
-+++ b/drivers/scsi/device_handler/scsi_dh_rdac.c
-@@ -546,6 +546,8 @@ static void send_mode_select(struct work
- 	spin_unlock(&ctlr->ms_lock);
+diff --git a/tools/lib/traceevent/Makefile b/tools/lib/traceevent/Makefile
+index 3292c290654f6..86ce17a1f7fb6 100644
+--- a/tools/lib/traceevent/Makefile
++++ b/tools/lib/traceevent/Makefile
+@@ -62,15 +62,15 @@ set_plugin_dir := 1
  
-  retry:
-+	memset(cdb, 0, sizeof(cdb));
-+
- 	data_size = rdac_failover_get(ctlr, &list, cdb);
+ # Set plugin_dir to preffered global plugin location
+ # If we install under $HOME directory we go under
+-# $(HOME)/.traceevent/plugins
++# $(HOME)/.local/lib/traceevent/plugins
+ #
+ # We dont set PLUGIN_DIR in case we install under $HOME
+ # directory, because by default the code looks under:
+-# $(HOME)/.traceevent/plugins by default.
++# $(HOME)/.local/lib/traceevent/plugins by default.
+ #
+ ifeq ($(plugin_dir),)
+ ifeq ($(prefix),$(HOME))
+-override plugin_dir = $(HOME)/.traceevent/plugins
++override plugin_dir = $(HOME)/.local/lib/traceevent/plugins
+ set_plugin_dir := 0
+ else
+ override plugin_dir = $(libdir)/traceevent/plugins
+diff --git a/tools/lib/traceevent/event-plugin.c b/tools/lib/traceevent/event-plugin.c
+index 8ca28de9337a5..e1f7ddd5a6cf0 100644
+--- a/tools/lib/traceevent/event-plugin.c
++++ b/tools/lib/traceevent/event-plugin.c
+@@ -18,7 +18,7 @@
+ #include "event-utils.h"
+ #include "trace-seq.h"
  
- 	RDAC_LOG(RDAC_LOG_FAILOVER, sdev, "array %s, ctlr %d, "
+-#define LOCAL_PLUGIN_DIR ".traceevent/plugins"
++#define LOCAL_PLUGIN_DIR ".local/lib/traceevent/plugins/"
+ 
+ static struct registered_plugin_options {
+ 	struct registered_plugin_options	*next;
+-- 
+2.20.1
+
 
 
