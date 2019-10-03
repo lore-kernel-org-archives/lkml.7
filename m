@@ -4,54 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 848DDC10F14
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:11:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B872C4CED1
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:11:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 55DFB20673
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:11:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DF55121D81
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:11:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570122665;
-	bh=U5Yzc058CKUXqtCAG/wb8P/YKKdVwl+o0hV2j/cpivM=;
+	s=default; t=1570122668;
+	bh=u0T2dyeWQ2iXGTmKLsR8pupBhDmMNegGZokKL2UQOkQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=yGEiunza/hrF69bRBzLpf6hCGHSwOAvCx4GRTHA0c93tyGfsc058HrDd5jZciuIPT
-	 xaiRtebrlYVWb2wWB/eiexJTnejhV20N85B9JK9cp0aiOpdDGl/GiYsmxm/dmRLKcL
-	 olUCQmBA3REpsA1RY9YqUseJ2+ZdKx7kVo0S0bHE=
+	b=uOa2dxrWP68vovIwLx2uUCkd/6k9ITvetPskq+hrEHq9atpB2m8nhB4vOmYl7Ragv
+	 ZbV0ulJ/zdll7gdathxNf3T4cek7MhZOjAczG+TBart/l9CadfNjS4un2eqLf5lbki
+	 xfWepTxFMy2KMmozXDnWGBflXqaOp+pJ4L0OxE9g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392724AbfJCRLE (ORCPT
+        id S2391862AbfJCQcK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 13:11:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39600 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391863AbfJCQcK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 3 Oct 2019 12:32:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39240 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2403884AbfJCQb5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:31:57 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B05822086A;
-        Thu,  3 Oct 2019 16:32:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6CA8B2086A;
+        Thu,  3 Oct 2019 16:31:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570120330;
-        bh=U5Yzc058CKUXqtCAG/wb8P/YKKdVwl+o0hV2j/cpivM=;
+        s=default; t=1570120316;
+        bh=u0T2dyeWQ2iXGTmKLsR8pupBhDmMNegGZokKL2UQOkQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gxtxZ12N46XBXY7iDqAkENKd40oZrOQACaKCIp+ClWzv6sA4/SZ7y4MngY20K8HNu
-         yZZVBidygn0nxyRkO0vLkrtf0D5XygdQ0FCB0Bypr67z6c0UlYNz6t0fLqeOEH2qyz
-         RR/fvJwIupeTUMVFu4034TSsL25OHTR8xaNR5S3k=
+        b=tXmv5wXSTzyMYcwG+ZfIvkhsHhgb1WcuZNMAyZ2cvAbJEMWOWW89ItiB1SkKPQFOl
+         v035RwJdBXcjquP19EkYPGA0fsAtOGeNWD0Tzi/E9U5k58gv69/rRcXuXJANH7P4HU
+         FQAGxaav8ANrqRXZL6QPXpLo4Pu0LQ9lJeIh8L2M=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Tony Luck <tony.luck@intel.com>,
-        Gayatri Kammela <gayatri.kammela@intel.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Rahul Tanwar <rahul.tanwar@linux.intel.com>,
+        stable@vger.kernel.org,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
         Thomas Gleixner <tglx@linutronix.de>,
+        Borislav Petkov <bp@alien8.de>,
+        Yunsheng Lin <linyunsheng@huawei.com>,
         Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 182/313] x86/cpu: Add Tiger Lake to Intel family
-Date:   Thu,  3 Oct 2019 17:52:40 +0200
-Message-Id: <20191003154550.904397844@linuxfoundation.org>
+Subject: [PATCH 5.2 178/313] x86/mm: Fix cpumask_of_node() error condition
+Date:   Thu,  3 Oct 2019 17:52:36 +0200
+Message-Id: <20191003154550.530954607@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191003154533.590915454@linuxfoundation.org>
 References: <20191003154533.590915454@linuxfoundation.org>
@@ -64,42 +63,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Gayatri Kammela <gayatri.kammela@intel.com>
+From: Peter Zijlstra <peterz@infradead.org>
 
-[ Upstream commit 6e1c32c5dbb4b90eea8f964c2869d0bde050dbe0 ]
+[ Upstream commit bc04a049f058a472695aa22905d57e2b1f4c77d9 ]
 
-Add the model numbers/CPUIDs of Tiger Lake mobile and desktop to the
-Intel family.
+When CONFIG_DEBUG_PER_CPU_MAPS=y we validate that the @node argument of
+cpumask_of_node() is a valid node_id. It however forgets to check for
+negative numbers. Fix this by explicitly casting to unsigned int.
 
-Suggested-by: Tony Luck <tony.luck@intel.com>
-Signed-off-by: Gayatri Kammela <gayatri.kammela@intel.com>
-Signed-off-by: Tony Luck <tony.luck@intel.com>
-Reviewed-by: Tony Luck <tony.luck@intel.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
+  (unsigned)node >= nr_node_ids
+
+verifies: 0 <= node < nr_node_ids
+
+Also ammend the error message to match the condition.
+
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
 Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Rahul Tanwar <rahul.tanwar@linux.intel.com>
 Cc: Thomas Gleixner <tglx@linutronix.de>
-Link: https://lkml.kernel.org/r/20190905193020.14707-2-tony.luck@intel.com
+Cc: Borislav Petkov <bp@alien8.de>
+Cc: Yunsheng Lin <linyunsheng@huawei.com>
+Link: https://lkml.kernel.org/r/20190903075352.GY2369@hirez.programming.kicks-ass.net
 Signed-off-by: Ingo Molnar <mingo@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/include/asm/intel-family.h | 3 +++
- 1 file changed, 3 insertions(+)
+ arch/x86/mm/numa.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/arch/x86/include/asm/intel-family.h b/arch/x86/include/asm/intel-family.h
-index f60ddd655c787..82a57d344b9bc 100644
---- a/arch/x86/include/asm/intel-family.h
-+++ b/arch/x86/include/asm/intel-family.h
-@@ -58,6 +58,9 @@
- #define INTEL_FAM6_ICELAKE_MOBILE	0x7E
- #define INTEL_FAM6_ICELAKE_NNPI		0x9D
- 
-+#define INTEL_FAM6_TIGERLAKE_L		0x8C
-+#define INTEL_FAM6_TIGERLAKE		0x8D
-+
- /* "Small Core" Processors (Atom) */
- 
- #define INTEL_FAM6_ATOM_BONNELL		0x1C /* Diamondville, Pineview */
+diff --git a/arch/x86/mm/numa.c b/arch/x86/mm/numa.c
+index e6dad600614c2..4123100e0eafe 100644
+--- a/arch/x86/mm/numa.c
++++ b/arch/x86/mm/numa.c
+@@ -861,9 +861,9 @@ void numa_remove_cpu(int cpu)
+  */
+ const struct cpumask *cpumask_of_node(int node)
+ {
+-	if (node >= nr_node_ids) {
++	if ((unsigned)node >= nr_node_ids) {
+ 		printk(KERN_WARNING
+-			"cpumask_of_node(%d): node > nr_node_ids(%u)\n",
++			"cpumask_of_node(%d): (unsigned)node >= nr_node_ids(%u)\n",
+ 			node, nr_node_ids);
+ 		dump_stack();
+ 		return cpu_none_mask;
 -- 
 2.20.1
 
