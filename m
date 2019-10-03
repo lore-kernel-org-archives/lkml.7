@@ -2,244 +2,173 @@ Return-Path: <SRS0=6dNS=X4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14E56C10F14
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 13:05:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6559C10F14
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 13:08:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D2DD62133F
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 13:05:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 94AE62133F
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 13:08:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="D8Naiej5"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="X/kzO0Mf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730309AbfJCNFX (ORCPT
+        id S1730310AbfJCNIr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 09:05:23 -0400
-Received: from merlin.infradead.org ([205.233.59.134]:51412 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729677AbfJCNFW (ORCPT
+        Thu, 3 Oct 2019 09:08:47 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:38192 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729763AbfJCNIr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 09:05:22 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=yj3GzRvDkjYyXd5+HITj3dFBQboLCILF2cbMOcJINQ0=; b=D8Naiej5VlnbcqM+0mf3Be6P8
-        UimvXZWsgLCLIWA/Eoj7V0/L/85hmHqvvoVY9VAtD3sFE1ewLNjgbgodJjkiHIG1qTZR+RmO7R57e
-        r0ElLmU2K68dDWYZYu6JgKNzutWe3f/2w0FsBsrm8/96yqe59X5fVkGYEh/1MT3+iY8d0RkeGYdmm
-        +FrE57n9LSympH+JhMxb8L6dfB3XuEOoimjCk6jeUKVq/rOpBpaFuJHVnxSTPC5Xm9Z7kQfKVh4oq
-        QfLtaBXFho7n2AbF1UykoTuMa5DQfa0HAZYB2h6Zq+NzB+bUdVjNjEIu/oi7tHO0KfkSoLEmvaTKi
-        +bc+IteKQ==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92.2 #3 (Red Hat Linux))
-        id 1iG0n9-0007GB-Lt; Thu, 03 Oct 2019 13:05:12 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 95F27301B59;
-        Thu,  3 Oct 2019 15:04:20 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id C376E2653E3EB; Thu,  3 Oct 2019 15:05:09 +0200 (CEST)
-Date:   Thu, 3 Oct 2019 15:05:09 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Masami Hiramatsu <mhiramat@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, x86@kernel.org,
-        Nadav Amit <nadav.amit@gmail.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Song Liu <songliubraving@fb.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Daniel Bristot de Oliveira <bristot@redhat.com>
-Subject: Re: [PATCH 1/3] x86/alternatives: Teach text_poke_bp() to emulate
- instructions
-Message-ID: <20191003130509.GL4581@hirez.programming.kicks-ass.net>
-References: <20190827180622.159326993@infradead.org>
- <20190827181147.053490768@infradead.org>
- <20191003140050.1d4cf59d3de8b5396d36c269@kernel.org>
- <20191003082751.GQ4536@hirez.programming.kicks-ass.net>
+        Thu, 3 Oct 2019 09:08:47 -0400
+Received: by mail-wr1-f65.google.com with SMTP id w12so2842367wro.5
+        for <linux-kernel@vger.kernel.org>; Thu, 03 Oct 2019 06:08:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Gw44OhLwQH/CUylU7AC4CHwJnvlb/yfwJWpgjG0sVUc=;
+        b=X/kzO0Mf8rp6JZbTiG3DaCWVH2uV5D1spjhSzxDM04qlnvV1ZoRN3QOzZ/9nqxa/zp
+         tdwHcsd3l+4EYuqpn5cBFbk0o84KyVO9d7lERByJbO2rJAbm0BLvjt1ldyaFFMLdgN1X
+         7UZTdiJbnxHzLwGG6IWoqiwEb98+1sTYoA6VT8l08diTELNCv8xpUGcv6hP8ma1dPbp9
+         X31T1cBs89lfR86fvQrZRVc6/q6zxcxMFFlhrZ0yjs75d5fPTvbzdsLnNonrvRSICnv0
+         nXhT6m+ns+AObjmTCJL6XiI5tCPE6iFFqow3usBNluC+056y/CLuizemf28eEXii3L7R
+         QBGw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Gw44OhLwQH/CUylU7AC4CHwJnvlb/yfwJWpgjG0sVUc=;
+        b=fWsMT+ecEWIgbR+8ApAfJcjuGPC5eniQxuQgs3Kf7KBp2uyZNnYrTXxKSgwr+daCrf
+         HAMt6Cj+eAEEy3S5KbY/7AClLaqJXNlxfBdFfkCIWbdzpaD6yHlMJy2wt0/9zbl6/ixA
+         UQqRkucEnz3ndJfQtwv9gWtcipfJKg7hbzmYyPscI5tNi42wUcKiuq3iCtVTz+Q/EYVY
+         nedXJV90vbDmCmfMzGYEtFuY9fFbpu1DtC5hy3l4WExvkM25Ls9NjRe7ZPnpKZ8kix4L
+         bMCWl46R69Lwa1qFQGze7A3sdIOn9rCMemSt44iCUG4/wZ8w2r/T7ZHJqOQ5UaNnxxfM
+         v9yA==
+X-Gm-Message-State: APjAAAVv5BY/BK6ka+VpTSKuOPgd3Tu7ceQeSnDvJW/7s1MN3TerJah0
+        nEsWVwRx+USIa/BwihyM0zCunA==
+X-Google-Smtp-Source: APXvYqyeIE9AetKtVnUHsr637KtU42j4dmzDlDnD4GEC3YwDwFMKDCM+icveVvh1Nm7BM1NCsLRREg==
+X-Received: by 2002:a5d:458b:: with SMTP id p11mr7388306wrq.196.1570108123645;
+        Thu, 03 Oct 2019 06:08:43 -0700 (PDT)
+Received: from bender.baylibre.local (lmontsouris-657-1-212-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
+        by smtp.gmail.com with ESMTPSA id 90sm3868870wrr.1.2019.10.03.06.08.42
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 03 Oct 2019 06:08:43 -0700 (PDT)
+From:   Neil Armstrong <narmstrong@baylibre.com>
+To:     khilman@baylibre.com
+Cc:     Neil Armstrong <narmstrong@baylibre.com>,
+        linux-amlogic@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Maxime Jourdan <mjourdan@baylibre.com>
+Subject: [PATCH] arm64: dts: meson-g12: add support for simplefb
+Date:   Thu,  3 Oct 2019 15:08:41 +0200
+Message-Id: <20191003130841.8412-1-narmstrong@baylibre.com>
+X-Mailer: git-send-email 2.22.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191003082751.GQ4536@hirez.programming.kicks-ass.net>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Oct 03, 2019 at 10:27:51AM +0200, Peter Zijlstra wrote:
-> On Thu, Oct 03, 2019 at 02:00:50PM +0900, Masami Hiramatsu wrote:
-> 
-> > > This fits almost all text_poke_bp() users, except
-> > > arch_unoptimize_kprobe() which restores random text, and for that site
-> > > we have to build an explicit emulate instruction.
-> > 
-> > OK, and in this case, I would like to change RELATIVEJUMP_OPCODE
-> > to JMP32_INSN_OPCODE for readability. (or at least
-> > making RELATIVEJUMP_OPCODE as an alias of JMP32_INSN_OPCODE)
-> 
-> > > @@ -448,12 +447,18 @@ void arch_optimize_kprobes(struct list_h
-> > >  void arch_unoptimize_kprobe(struct optimized_kprobe *op)
-> > >  {
-> > >  	u8 insn_buff[RELATIVEJUMP_SIZE];
-> > > +	u8 emulate_buff[RELATIVEJUMP_SIZE];
-> > >  
-> > >  	/* Set int3 to first byte for kprobes */
-> > >  	insn_buff[0] = BREAKPOINT_INSTRUCTION;
-> > >  	memcpy(insn_buff + 1, op->optinsn.copied_insn, RELATIVE_ADDR_SIZE);
-> > > +
-> > > +	emulate_buff[0] = RELATIVEJUMP_OPCODE;
-> > > +	*(s32 *)(&emulate_buff[1]) = (s32)((long)op->optinsn.insn -
-> > > +			((long)op->kp.addr + RELATIVEJUMP_SIZE));
-> 
-> I'm halfway through a patch introducing:
-> 
->   union text_poke_insn {
-> 	u8 code[POKE_MAX_OPCODE_SUZE];
-> 	struct {
-> 		u8 opcode;
-> 		s32 disp;
-> 	} __attribute__((packed));
->   };
-> 
-> to text-patching.h to unify all such custom unions we have all over the
-> place. I'll mob up the above in that.
+SimpleFB allows transferring a framebuffer from the firmware/bootloader
+to the kernel, while making sure the related clocks and power supplies
+stay enabled.
 
-How's something like so?
+Add nodes for CVBS and HDMI Simple Framebuffers, based on the GXBB/GXL/GXM
+support at [1].
 
---- a/arch/x86/include/asm/text-patching.h
-+++ b/arch/x86/include/asm/text-patching.h
-@@ -49,6 +49,8 @@ extern void text_poke_bp(void *addr, con
- extern void text_poke_queue(void *addr, const void *opcode, size_t len, const void *emulate);
- extern void text_poke_finish(void);
+[1] 03b370357907 ("arm64: dts: meson-gx: add support for simplef")
+
+Cc: Maxime Jourdan <mjourdan@baylibre.com>
+Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+---
+This will be handled in the in-review U-Boot Video support for G12A at [1]
+and the simplefb handling code at [2] and simplefb removal in DRM driver at [3].
+
+[1] https://patchwork.ozlabs.org/cover/1155898/
+[2] https://gitlab.denx.de/u-boot/u-boot/blob/v2019.07/drivers/video/meson/meson_vpu.c#L145
+[3] https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/gpu/drm/meson/meson_drv.c?h=v5.3#n158
+
+ .../boot/dts/amlogic/meson-g12-common.dtsi    | 26 +++++++++++++++++++
+ arch/arm64/boot/dts/amlogic/meson-g12.dtsi    |  8 ++++++
+ arch/arm64/boot/dts/amlogic/meson-sm1.dtsi    |  8 ++++++
+ 3 files changed, 42 insertions(+)
+
+diff --git a/arch/arm64/boot/dts/amlogic/meson-g12-common.dtsi b/arch/arm64/boot/dts/amlogic/meson-g12-common.dtsi
+index f76773cabdb1..21c155f4508c 100644
+--- a/arch/arm64/boot/dts/amlogic/meson-g12-common.dtsi
++++ b/arch/arm64/boot/dts/amlogic/meson-g12-common.dtsi
+@@ -16,6 +16,32 @@
+ 	#address-cells = <2>;
+ 	#size-cells = <2>;
  
-+extern void *text_gen_insn(u8 opcode, unsigned long addr, unsigned long dest);
++	chosen {
++		#address-cells = <2>;
++		#size-cells = <2>;
++		ranges;
 +
- extern int after_bootmem;
- extern __ro_after_init struct mm_struct *poking_mm;
- extern __ro_after_init unsigned long poking_addr;
---- a/arch/x86/kernel/alternative.c
-+++ b/arch/x86/kernel/alternative.c
-@@ -1237,3 +1237,39 @@ void text_poke_bp(void *addr, const void
- 	text_poke_loc_init(&tp, addr, opcode, len, emulate);
- 	text_poke_bp_batch(&tp, 1);
- }
++		simplefb_cvbs: framebuffer-cvbs {
++			compatible = "amlogic,simple-framebuffer",
++				     "simple-framebuffer";
++			amlogic,pipeline = "vpu-cvbs";
++			clocks = <&clkc CLKID_HDMI>,
++				 <&clkc CLKID_HTX_PCLK>,
++				 <&clkc CLKID_VPU_INTR>;
++			status = "disabled";
++		};
 +
-+union text_poke_insn {
-+	u8 text[POKE_MAX_OPCODE_SIZE];
-+	struct {
-+		u8 opcode;
-+		s32 disp;
-+	} __attribute__((packed));
++		simplefb_hdmi: framebuffer-hdmi {
++			compatible = "amlogic,simple-framebuffer",
++				    "simple-framebuffer";
++			amlogic,pipeline = "vpu-hdmi";
++			clocks = <&clkc CLKID_HDMI>,
++				 <&clkc CLKID_HTX_PCLK>,
++				 <&clkc CLKID_VPU_INTR>;
++			status = "disabled";
++		};
++	};
++
+ 	efuse: efuse {
+ 		compatible = "amlogic,meson-gxbb-efuse";
+ 		clocks = <&clkc CLKID_EFUSE>;
+diff --git a/arch/arm64/boot/dts/amlogic/meson-g12.dtsi b/arch/arm64/boot/dts/amlogic/meson-g12.dtsi
+index 0d9df29994f3..d80d8a982917 100644
+--- a/arch/arm64/boot/dts/amlogic/meson-g12.dtsi
++++ b/arch/arm64/boot/dts/amlogic/meson-g12.dtsi
+@@ -342,3 +342,11 @@
+ &sd_emmc_a {
+ 	amlogic,dram-access-quirk;
+ };
++
++&simplefb_cvbs {
++	power-domains = <&pwrc PWRC_G12A_VPU_ID>;
 +};
 +
-+void *text_gen_insn(u8 opcode, unsigned long addr, unsigned long dest)
-+{
-+	static union text_poke_insn insn; /* text_mutex */
-+	int size = 0;
++&simplefb_hdmi {
++	power-domains = <&pwrc PWRC_G12A_VPU_ID>;
++};
+diff --git a/arch/arm64/boot/dts/amlogic/meson-sm1.dtsi b/arch/arm64/boot/dts/amlogic/meson-sm1.dtsi
+index 1fdc5af5ae23..f89d744c9648 100644
+--- a/arch/arm64/boot/dts/amlogic/meson-sm1.dtsi
++++ b/arch/arm64/boot/dts/amlogic/meson-sm1.dtsi
+@@ -147,6 +147,14 @@
+ 	compatible = "amlogic,meson-sm1-pwrc";
+ };
+ 
++&simplefb_cvbs {
++	power-domains = <&pwrc PWRC_SM1_VPU_ID>;
++};
 +
-+	lockdep_assert_held(&text_mutex);
++&simplefb_hdmi {
++	power-domains = <&pwrc PWRC_SM1_VPU_ID>;
++};
 +
-+	insn.opcode = opcode;
-+
-+#define __CASE(insn)	\
-+	case insn##_INSN_OPCODE: size = insn##_INSN_SIZE; break
-+
-+	switch(opcode) {
-+	__CASE(INT3);
-+	__CASE(CALL);
-+	__CASE(JMP32);
-+	__CASE(JMP8);
-+	}
-+
-+	if (size > 1) {
-+		insn.disp = dest - (addr + size);
-+		if (size == 2)
-+			BUG_ON((insn.disp >> 31) != (insn.disp >> 7));
-+	}
-+
-+	return &insn.text;
-+}
---- a/arch/x86/kernel/jump_label.c
-+++ b/arch/x86/kernel/jump_label.c
-@@ -16,14 +16,6 @@
- #include <asm/alternative.h>
- #include <asm/text-patching.h>
- 
--union jump_code_union {
--	char code[JUMP_LABEL_NOP_SIZE];
--	struct {
--		char jump;
--		int offset;
--	} __attribute__((packed));
--};
--
- static void bug_at(unsigned char *ip, int line)
- {
- 	/*
-@@ -38,33 +30,29 @@ static void bug_at(unsigned char *ip, in
- static const void *
- __jump_label_set_jump_code(struct jump_entry *entry, enum jump_label_type type, int init)
- {
--	static union jump_code_union code; /* relies on text_mutex */
- 	const unsigned char default_nop[] = { STATIC_KEY_INIT_NOP };
- 	const unsigned char *ideal_nop = ideal_nops[NOP_ATOMIC5];
--	const void *expect;
-+	const void *expect, *code;
- 	int line;
- 
--	lockdep_assert_held(&text_mutex);
--
--	code.jump = JMP32_INSN_OPCODE;
--	code.offset = jump_entry_target(entry) -
--		       (jump_entry_code(entry) + JUMP_LABEL_NOP_SIZE);
-+	code = text_gen_insn(JMP32_INSN_OPCODE, jump_entry_code(entry),
-+						jump_entry_target(entry));
- 
- 	if (init) {
- 		expect = default_nop; line = __LINE__;
- 	} else if (type == JUMP_LABEL_JMP) {
- 		expect = ideal_nop; line = __LINE__;
- 	} else {
--		expect = code.code; line = __LINE__;
-+		expect = code; line = __LINE__;
- 	}
- 
- 	if (memcmp((void *)jump_entry_code(entry), expect, JUMP_LABEL_NOP_SIZE))
- 		bug_at((void *)jump_entry_code(entry), line);
- 
- 	if (type == JUMP_LABEL_NOP)
--		memcpy(&code, ideal_nop, JUMP_LABEL_NOP_SIZE);
-+		code = ideal_nop;
- 
--	return &code;
-+	return code;
- }
- 
- static void inline __jump_label_transform(struct jump_entry *entry,
---- a/arch/x86/kernel/kprobes/opt.c
-+++ b/arch/x86/kernel/kprobes/opt.c
-@@ -447,18 +447,13 @@ void arch_optimize_kprobes(struct list_h
- void arch_unoptimize_kprobe(struct optimized_kprobe *op)
- {
- 	u8 insn_buff[RELATIVEJUMP_SIZE];
--	u8 emulate_buff[RELATIVEJUMP_SIZE];
- 
- 	/* Set int3 to first byte for kprobes */
- 	insn_buff[0] = BREAKPOINT_INSTRUCTION;
- 	memcpy(insn_buff + 1, op->optinsn.copied_insn, RELATIVE_ADDR_SIZE);
- 
--	emulate_buff[0] = RELATIVEJUMP_OPCODE;
--	*(s32 *)(&emulate_buff[1]) = (s32)((long)op->optinsn.insn -
--			((long)op->kp.addr + RELATIVEJUMP_SIZE));
--
- 	text_poke_bp(op->kp.addr, insn_buff, RELATIVEJUMP_SIZE,
--		     emulate_buff);
-+		     text_gen_insn(JMP32_INSN_OPCODE, (long)op->kp.addr, (long)op->optinsn.insn));
- }
- 
- /*
+ &vpu {
+ 	power-domains = <&pwrc PWRC_SM1_VPU_ID>;
+ };
+-- 
+2.22.0
+
