@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02149C32792
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:51:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B2D3EC10F14
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:51:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C9059215EA
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:51:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8A2C02054F
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:51:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570121461;
-	bh=60vSsisF/vTpEUWXN2OtyUqye/8pSQ8hFzP0MuHfmlA=;
+	s=default; t=1570121465;
+	bh=M6VcYHds2t3Z7mJRluXiW0l6s3aloK5gfnKNOcKV3R4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=m2/amPTD7lSPWuvK0wr1tIbBMJcwFB5KhnQhl0dNUZhALeqW5Yekcg4hzzYK+9WxI
-	 dI+WkhMh7QUjlR3ChZGwOI/mkYfIFdjeovJ0eOg8MhXdelNttqMtFwT4rdT1y94vcq
-	 /WoZeC2NhIxTOgP7T9kPL3Me+vGzbInfaG7qTqN4=
+	b=1LAMrEp2hJ7TyBRh/cRspGYDIMwfC7D0Juqc2h21/7rZozAq/X4GagtLO29yqaABh
+	 DG/HQvao20ZrrXNLLf2FOKOuxzEHIVV9GbTPP5pU2wqql0uI4O/tTNfq+3dqHkM/Uv
+	 XnNurdruDrVsB4RrnsPwK6FeBw+OP3EO09Dl76uk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405977AbfJCQvA (ORCPT
+        id S2405988AbfJCQvD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 12:51:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38166 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 12:51:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38260 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404623AbfJCQut (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:50:49 -0400
+        id S2393016AbfJCQuy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:50:54 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B768721783;
-        Thu,  3 Oct 2019 16:50:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1274620865;
+        Thu,  3 Oct 2019 16:50:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570121448;
-        bh=60vSsisF/vTpEUWXN2OtyUqye/8pSQ8hFzP0MuHfmlA=;
+        s=default; t=1570121453;
+        bh=M6VcYHds2t3Z7mJRluXiW0l6s3aloK5gfnKNOcKV3R4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=r7+9x9lX7Lq505w6XsY0Wx0O15kEmsksr3+X46veaAt4O+PCGGa2FZh27jMSnm223
-         DVZ/VXFtu887Xgh4+LM/M/ma28ioktyvtqm/UkYZgTT0lmOhnoYfUB64Ss7CpGaQe5
-         S78u+LM2G5Uy49XkGnIm3OhSm9xD1NGQZWGz3KkU=
+        b=nogjFYfSD5hBagKQT72iIEZRrYvpsYxQdVohVrPtnYyZ9il29OrdwXYPuvKwNTyIk
+         wDB+VrKnPQEViMnEOJ9ZfRwTXiPX4w1LtC41PKVA08ZJNQ16VMwXq3+8JPEVEhOu1O
+         CDuYwV2AvzdReNf3OJf0KJBROm5u/DMxSsWaUzj4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>,
+        stable@vger.kernel.org, Robin Murphy <robin.murphy@arm.com>,
         Will Deacon <will@kernel.org>
-Subject: [PATCH 5.3 282/344] arm64: tlb: Ensure we execute an ISB following walk cache invalidation
-Date:   Thu,  3 Oct 2019 17:54:07 +0200
-Message-Id: <20191003154607.775075179@linuxfoundation.org>
+Subject: [PATCH 5.3 284/344] iommu/arm-smmu-v3: Disable detection of ATS and PRI
+Date:   Thu,  3 Oct 2019 17:54:09 +0200
+Message-Id: <20191003154607.910791690@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191003154540.062170222@linuxfoundation.org>
 References: <20191003154540.062170222@linuxfoundation.org>
@@ -61,35 +61,43 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Will Deacon <will@kernel.org>
 
-commit 51696d346c49c6cf4f29e9b20d6e15832a2e3408 upstream.
+commit b5e86196b83fd68e065a7c811ab8925fb0dc3893 upstream.
 
-05f2d2f83b5a ("arm64: tlbflush: Introduce __flush_tlb_kernel_pgtable")
-added a new TLB invalidation helper which is used when freeing
-intermediate levels of page table used for kernel mappings, but is
-missing the required ISB instruction after completion of the TLBI
-instruction.
+Detecting the ATS capability of the SMMU at probe time introduces a
+spinlock into the ->unmap() fast path, even when ATS is not actually
+in use. Furthermore, the ATC invalidation that exists is broken, as it
+occurs before invalidation of the main SMMU TLB which leaves a window
+where the ATC can be repopulated with stale entries.
 
-Add the missing barrier.
+Given that ATS is both a new feature and a specialist sport, disable it
+for now whilst we fix it properly in subsequent patches. Since PRI
+requires ATS, disable that too.
 
 Cc: <stable@vger.kernel.org>
-Fixes: 05f2d2f83b5a ("arm64: tlbflush: Introduce __flush_tlb_kernel_pgtable")
-Reviewed-by: Mark Rutland <mark.rutland@arm.com>
+Fixes: 9ce27afc0830 ("iommu/arm-smmu-v3: Add support for PCI ATS")
+Acked-by: Robin Murphy <robin.murphy@arm.com>
 Signed-off-by: Will Deacon <will@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/arm64/include/asm/tlbflush.h |    1 +
- 1 file changed, 1 insertion(+)
+ drivers/iommu/arm-smmu-v3.c |    2 ++
+ 1 file changed, 2 insertions(+)
 
---- a/arch/arm64/include/asm/tlbflush.h
-+++ b/arch/arm64/include/asm/tlbflush.h
-@@ -251,6 +251,7 @@ static inline void __flush_tlb_kernel_pg
- 	dsb(ishst);
- 	__tlbi(vaae1is, addr);
- 	dsb(ish);
-+	isb();
- }
- #endif
+--- a/drivers/iommu/arm-smmu-v3.c
++++ b/drivers/iommu/arm-smmu-v3.c
+@@ -2843,11 +2843,13 @@ static int arm_smmu_device_hw_probe(stru
+ 	}
  
+ 	/* Boolean feature flags */
++#if 0	/* ATS invalidation is slow and broken */
+ 	if (IS_ENABLED(CONFIG_PCI_PRI) && reg & IDR0_PRI)
+ 		smmu->features |= ARM_SMMU_FEAT_PRI;
+ 
+ 	if (IS_ENABLED(CONFIG_PCI_ATS) && reg & IDR0_ATS)
+ 		smmu->features |= ARM_SMMU_FEAT_ATS;
++#endif
+ 
+ 	if (reg & IDR0_SEV)
+ 		smmu->features |= ARM_SMMU_FEAT_SEV;
 
 
