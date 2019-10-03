@@ -2,129 +2,100 @@ Return-Path: <SRS0=6dNS=X4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C4BBC4CED1
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:26:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B462C10F14
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:26:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EE3DB222CE
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:26:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6251D20867
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:26:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1570119973;
+	bh=dFcVQl6E0c+wU1d5wfNevRmUe9k+SvO0hOvFIQK6V7I=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=aH9/iZDmNH9GwrFiiVPneSB2MHBHWOYS3cAHRoM5L6Hrsa/1IZ7dQfKNNEwM+mHiS
+	 zl+GG7HzuU56ZMk5o7aXffpPKlFAY8ZrpqZSp72ZTvNKN7taAMcmcsL7ipzUuG65Q5
+	 VCLihT9fkDBQyQ8PMpBDnhHaotQOX00uzHMzvU3w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391027AbfJCQ0J (ORCPT
+        id S2391035AbfJCQ0M (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 12:26:09 -0400
-Received: from foss.arm.com ([217.140.110.172]:48920 "EHLO foss.arm.com"
+        Thu, 3 Oct 2019 12:26:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56728 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390979AbfJCQZy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:25:54 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0722D1000;
-        Thu,  3 Oct 2019 09:25:54 -0700 (PDT)
-Received: from [192.168.0.9] (unknown [172.31.20.19])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id B2C883F739;
-        Thu,  3 Oct 2019 09:25:52 -0700 (PDT)
-Subject: Re: [PATCH 1/1] sched/rt: avoid contend with CFS task
-To:     Jing-Ting Wu <jing-ting.wu@mediatek.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>
-Cc:     wsd_upstream@mediatek.com, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org,
-        Steven Rostedt <rostedt@goodmis.org>
-References: <1567048502-6064-1-git-send-email-jing-ting.wu@mediatek.com>
-From:   Dietmar Eggemann <dietmar.eggemann@arm.com>
-Message-ID: <7bd9506b-9930-0bf8-a024-8c7d7d8bf86e@arm.com>
-Date:   Thu, 3 Oct 2019 18:25:30 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        id S2391000AbfJCQ0B (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:26:01 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8A933222CD;
+        Thu,  3 Oct 2019 16:26:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1570119961;
+        bh=dFcVQl6E0c+wU1d5wfNevRmUe9k+SvO0hOvFIQK6V7I=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=BuFBqs+pLET0XO1N1HJhhHJXdG9ZeMPMYGzRtrJoCA98ogxrPiJO8fiLXMBeizpm6
+         RKNpaRj7B8zwTg8oxL4lFsm77HI+uTjbonnlnl+dDJc51iwdNEK4n5gxUcD5/Tf7Gt
+         kUobC/e2cCHGOy+9EmHr477cqr1SN4xBjrtkfGeY=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Pan Xiuli <xiuli.pan@linux.intel.com>,
+        Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
+        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+        Mark Brown <broonie@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.2 046/313] ASoC: SOF: pci: mark last_busy value at runtime PM init
+Date:   Thu,  3 Oct 2019 17:50:24 +0200
+Message-Id: <20191003154537.681403696@linuxfoundation.org>
+X-Mailer: git-send-email 2.23.0
+In-Reply-To: <20191003154533.590915454@linuxfoundation.org>
+References: <20191003154533.590915454@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-In-Reply-To: <1567048502-6064-1-git-send-email-jing-ting.wu@mediatek.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[+ Steven Rostedt <rostedt@goodmis.org>]
+From: Pan Xiuli <xiuli.pan@linux.intel.com>
 
-On 29/08/2019 05:15, Jing-Ting Wu wrote:
-> At original linux design, RT & CFS scheduler are independent.
-> Current RT task placement policy will select the first cpu in
-> lowest_mask, even if the first CPU is running a CFS task.
-> This may put RT task to a running cpu and let CFS task runnable.
-> 
-> So we select idle cpu in lowest_mask first to avoid preempting
-> CFS task.
-> 
-> Signed-off-by: Jing-Ting Wu <jing-ting.wu@mediatek.com>
-> ---
->  kernel/sched/rt.c |   42 +++++++++++++++++-------------------------
->  1 file changed, 17 insertions(+), 25 deletions(-)
-> 
-> diff --git a/kernel/sched/rt.c b/kernel/sched/rt.c
-> index a532558..626ca27 100644
-> --- a/kernel/sched/rt.c
-> +++ b/kernel/sched/rt.c
-> @@ -1388,7 +1388,6 @@ static void yield_task_rt(struct rq *rq)
->  static int
->  select_task_rq_rt(struct task_struct *p, int cpu, int sd_flag, int flags)
->  {
-> -	struct task_struct *curr;
->  	struct rq *rq;
->  
->  	/* For anything but wake ups, just return the task_cpu */
-> @@ -1398,33 +1397,15 @@ static void yield_task_rt(struct rq *rq)
->  	rq = cpu_rq(cpu);
->  
->  	rcu_read_lock();
-> -	curr = READ_ONCE(rq->curr); /* unlocked access */
->  
->  	/*
-> -	 * If the current task on @p's runqueue is an RT task, then
-> -	 * try to see if we can wake this RT task up on another
-> -	 * runqueue. Otherwise simply start this RT task
-> -	 * on its current runqueue.
-> -	 *
-> -	 * We want to avoid overloading runqueues. If the woken
-> -	 * task is a higher priority, then it will stay on this CPU
-> -	 * and the lower prio task should be moved to another CPU.
-> -	 * Even though this will probably make the lower prio task
-> -	 * lose its cache, we do not want to bounce a higher task
-> -	 * around just because it gave up its CPU, perhaps for a
-> -	 * lock?
-> -	 *
-> -	 * For equal prio tasks, we just let the scheduler sort it out.
-> -	 *
-> -	 * Otherwise, just let it ride on the affined RQ and the
-> -	 * post-schedule router will push the preempted task away
-> -	 *
-> -	 * This test is optimistic, if we get it wrong the load-balancer
-> -	 * will have to sort it out.
-> +	 * If the task p is allowed to put more than one CPU or
-> +	 * it is not allowed to put on this CPU.
-> +	 * Let p use find_lowest_rq to choose other idle CPU first,
-> +	 * instead of choose this cpu and preempt curr cfs task.
->  	 */
-> -	if (curr && unlikely(rt_task(curr)) &&
-> -	    (curr->nr_cpus_allowed < 2 ||
-> -	     curr->prio <= p->prio)) {
-> +	if ((p->nr_cpus_allowed > 1) ||
-> +	    (!cpumask_test_cpu(cpu, p->cpus_ptr))) {
->  		int target = find_lowest_rq(p);
+[ Upstream commit f1b1b9b136827915624136624ff54aba5890a15b ]
 
-I'm sure RT folks don't like the idea to change this condition.
+If last_busy value is not set at runtime PM enable, the device will be
+suspend immediately after usage counter is 0. Set the last_busy value to
+make sure delay is working at first boot up.
 
-I remember a similar approach and Steven Rostedt NAKed the idea back:
+Signed-off-by: Pan Xiuli <xiuli.pan@linux.intel.com>
+Signed-off-by: Ranjani Sridharan <ranjani.sridharan@linux.intel.com>
+Signed-off-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Link: https://lore.kernel.org/r/20190722141402.7194-2-pierre-louis.bossart@linux.intel.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ sound/soc/sof/sof-pci-dev.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-https://lore.kernel.org/r/1415099585-31174-2-git-send-email-pang.xunlei@linaro.org
+diff --git a/sound/soc/sof/sof-pci-dev.c b/sound/soc/sof/sof-pci-dev.c
+index b778dffb2d25c..49daf1390dac0 100644
+--- a/sound/soc/sof/sof-pci-dev.c
++++ b/sound/soc/sof/sof-pci-dev.c
+@@ -203,6 +203,9 @@ static void sof_pci_probe_complete(struct device *dev)
+ 	 */
+ 	pm_runtime_allow(dev);
+ 
++	/* mark last_busy for pm_runtime to make sure not suspend immediately */
++	pm_runtime_mark_last_busy(dev);
++
+ 	/* follow recommendation in pci-driver.c to decrement usage counter */
+ 	pm_runtime_put_noidle(dev);
+ }
+-- 
+2.20.1
 
-Back then, Xunlei Pang even tried to create a lower mask of idle CPUs,
-for find_lower_mask() to return:
 
-https://lore.kernel.org/r/1415099585-31174-1-git-send-email-pang.xunlei@linaro.org
 
-[...]
