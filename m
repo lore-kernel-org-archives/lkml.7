@@ -4,53 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 94231C4CED1
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:15:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7CC5C32792
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:15:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 678A420673
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:15:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8D9D120830
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:15:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570122903;
-	bh=u/cx5Fx7ocHi7GpON+az0NLHqlFEw3vSZrk3Gb0TNFw=;
+	s=default; t=1570122907;
+	bh=VR7Qr2sSZDvvWUGGowSu7a6WGDqx1uqcGdlqRG8+qwM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xSLX+//mXH/VDO341e6I5gjHMOP7J1bopE4MuF+HzEwOEic8em/xbuWudBeVuWL6Y
-	 jZtly0SzgzQVSF56tBhtzYjTy3j8DvmiM5X11r6guI9EBeD8KRHk5ApCIrHZW5MMXn
-	 pWGsKNMZPcOBvZBmRnQj3C+eQD5J/NjKZ0Gh/fHc=
+	b=GCPSTwMy2dTUq0rbB0g36SmtjuuOQ2PyODBTuPh2gWOYYDtc7Ap9adGa23gtwDAw9
+	 v1a/UZs8/buJBo/y0164Ld58GLxN0n6KWMXepBUbEDzZK4dIZQmTtMx7mEOgiwB+Uz
+	 lh6iDFcSa4Vt0D74Its+FCtdX9Mp5kWp33zkciDo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390350AbfJCQ0Y (ORCPT
+        id S2404206AbfJCRPG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 12:26:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57204 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 13:15:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57472 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391006AbfJCQ0P (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:26:15 -0400
+        id S2391063AbfJCQ0X (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:26:23 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0E5B62133F;
-        Thu,  3 Oct 2019 16:26:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0F2D120867;
+        Thu,  3 Oct 2019 16:26:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570119974;
-        bh=u/cx5Fx7ocHi7GpON+az0NLHqlFEw3vSZrk3Gb0TNFw=;
+        s=default; t=1570119982;
+        bh=VR7Qr2sSZDvvWUGGowSu7a6WGDqx1uqcGdlqRG8+qwM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=cLqeM+g19IlSngVmYO8KF5bJRdTuNP/6W8ACfJSOBnou60DOe309M8tyxNegeh3sk
-         rSh9b6/2Le1RZHA3l/n841bdwF9a7S8GtIUdDZ2fOl5iZCHJiJ/jBKz6dJ7mdZZUbB
-         fXBOEAwFLLqzZAaWFKmZGktBzr6/avvVLgUnGCPQ=
+        b=U+//bAofW5n3o0eTLRKEah11ljQrVsLxl+VtdIQz9T1sezcxCiM29VBU/2n6GSICN
+         UHT6eGzZR4Zk0p2mj6y7eTKwV63T96QsMqerQu6HvCnRFcPwxC9sJ2IVVgzPnbhsrA
+         QV1n2zsn9OFx5Kk2G1hpxBeJl/tJ9En/nfHhe3sg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Luke Nowakowski-Krijger <lnowakow@eng.ucsd.edu>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Sasha Levin <sashal@kernel.org>,
-        syzbot+aac8d0d7205f112045d2@syzkaller.appspotmail.com
-Subject: [PATCH 5.2 051/313] media: hdpvr: Add device num check and handling
-Date:   Thu,  3 Oct 2019 17:50:29 +0200
-Message-Id: <20191003154538.126270389@linuxfoundation.org>
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.2 054/313] sched/fair: Fix imbalance due to CPU affinity
+Date:   Thu,  3 Oct 2019 17:50:32 +0200
+Message-Id: <20191003154538.389857532@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191003154533.590915454@linuxfoundation.org>
 References: <20191003154533.590915454@linuxfoundation.org>
@@ -63,57 +63,64 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Luke Nowakowski-Krijger <lnowakow@eng.ucsd.edu>
+From: Vincent Guittot <vincent.guittot@linaro.org>
 
-[ Upstream commit d4a6a9537bc32811486282206ecfb7c53754b74d ]
+[ Upstream commit f6cad8df6b30a5d2bbbd2e698f74b4cafb9fb82b ]
 
-Add hdpvr device num check and error handling
+The load_balance() has a dedicated mecanism to detect when an imbalance
+is due to CPU affinity and must be handled at parent level. In this case,
+the imbalance field of the parent's sched_group is set.
 
-We need to increment the device count atomically before we checkout a
-device to make sure that we do not reach the max count, otherwise we get
-out-of-bounds errors as reported by syzbot.
+The description of sg_imbalanced() gives a typical example of two groups
+of 4 CPUs each and 4 tasks each with a cpumask covering 1 CPU of the first
+group and 3 CPUs of the second group. Something like:
 
-Reported-and-tested-by: syzbot+aac8d0d7205f112045d2@syzkaller.appspotmail.com
+	{ 0 1 2 3 } { 4 5 6 7 }
+	        *     * * *
 
-Signed-off-by: Luke Nowakowski-Krijger <lnowakow@eng.ucsd.edu>
-Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+But the load_balance fails to fix this UC on my octo cores system
+made of 2 clusters of quad cores.
+
+Whereas the load_balance is able to detect that the imbalanced is due to
+CPU affinity, it fails to fix it because the imbalance field is cleared
+before letting parent level a chance to run. In fact, when the imbalance is
+detected, the load_balance reruns without the CPU with pinned tasks. But
+there is no other running tasks in the situation described above and
+everything looks balanced this time so the imbalance field is immediately
+cleared.
+
+The imbalance field should not be cleared if there is no other task to move
+when the imbalance is detected.
+
+Signed-off-by: Vincent Guittot <vincent.guittot@linaro.org>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Link: https://lkml.kernel.org/r/1561996022-28829-1-git-send-email-vincent.guittot@linaro.org
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/usb/hdpvr/hdpvr-core.c | 12 +++++++++++-
- 1 file changed, 11 insertions(+), 1 deletion(-)
+ kernel/sched/fair.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/media/usb/hdpvr/hdpvr-core.c b/drivers/media/usb/hdpvr/hdpvr-core.c
-index 9b9d894d29bcb..a0905c81d2cb2 100644
---- a/drivers/media/usb/hdpvr/hdpvr-core.c
-+++ b/drivers/media/usb/hdpvr/hdpvr-core.c
-@@ -271,6 +271,7 @@ static int hdpvr_probe(struct usb_interface *interface,
- #endif
- 	size_t buffer_size;
- 	int i;
-+	int dev_num;
- 	int retval = -ENOMEM;
+diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+index b07672e793a81..f72bf8122fe4e 100644
+--- a/kernel/sched/fair.c
++++ b/kernel/sched/fair.c
+@@ -9319,9 +9319,10 @@ static int load_balance(int this_cpu, struct rq *this_rq,
+ out_balanced:
+ 	/*
+ 	 * We reach balance although we may have faced some affinity
+-	 * constraints. Clear the imbalance flag if it was set.
++	 * constraints. Clear the imbalance flag only if other tasks got
++	 * a chance to move and fix the imbalance.
+ 	 */
+-	if (sd_parent) {
++	if (sd_parent && !(env.flags & LBF_ALL_PINNED)) {
+ 		int *group_imbalance = &sd_parent->groups->sgc->imbalance;
  
- 	/* allocate memory for our device state and initialize it */
-@@ -368,8 +369,17 @@ static int hdpvr_probe(struct usb_interface *interface,
- 	}
- #endif
- 
-+	dev_num = atomic_inc_return(&dev_nr);
-+	if (dev_num >= HDPVR_MAX) {
-+		v4l2_err(&dev->v4l2_dev,
-+			 "max device number reached, device register failed\n");
-+		atomic_dec(&dev_nr);
-+		retval = -ENODEV;
-+		goto reg_fail;
-+	}
-+
- 	retval = hdpvr_register_videodev(dev, &interface->dev,
--				    video_nr[atomic_inc_return(&dev_nr)]);
-+				    video_nr[dev_num]);
- 	if (retval < 0) {
- 		v4l2_err(&dev->v4l2_dev, "registering videodev failed\n");
- 		goto reg_fail;
+ 		if (*group_imbalance)
 -- 
 2.20.1
 
