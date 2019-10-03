@@ -2,92 +2,80 @@ Return-Path: <SRS0=6dNS=X4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F191C4360C
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 00:03:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C17EC4360C
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 00:03:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6C81A222C6
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 00:03:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DD7B2215EA
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 00:03:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Jr2s+a1r"
+	dkim=pass (2048-bit key) header.d=alliedtelesis.co.nz header.i=@alliedtelesis.co.nz header.b="Ln3yz2pk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729199AbfJCADN (ORCPT
+        id S1729293AbfJCADR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Oct 2019 20:03:13 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:42124 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727327AbfJCADN (ORCPT
+        Wed, 2 Oct 2019 20:03:17 -0400
+Received: from gate2.alliedtelesis.co.nz ([202.36.163.20]:55781 "EHLO
+        gate2.alliedtelesis.co.nz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727327AbfJCADP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Oct 2019 20:03:13 -0400
-Received: by mail-pg1-f195.google.com with SMTP id z12so581710pgp.9
-        for <linux-kernel@vger.kernel.org>; Wed, 02 Oct 2019 17:03:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=KhRAPRqFky/Twme7rRpazN2EJx68CVDyfTsQWc0na50=;
-        b=Jr2s+a1rz0D0GDCFf6FmcbiezAPoqvv++8pYb9rM96BOWy1LjM1uCe08ZsS5f/RrrM
-         88Dw7g6RUOU2bLLM8zwP5bBNK+R/1k9U5WfLPKrmkASsdIZ9tvfYKL9delhD++zjTiTD
-         v7/5JGchy5dEJWgZJ8hR79DRlOJFYT+59JZa4=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=KhRAPRqFky/Twme7rRpazN2EJx68CVDyfTsQWc0na50=;
-        b=oMqlstfLLxrqrWeQG5IiveFY4jdGN91yOe1jXZouib2lKUs/1RrfdtT4uz2anywZti
-         Ip7K7F56YjhCyH2culCcfW3ddvgdii2//KNZFBZb8eDp4d7eh5kTUeaLZzW4m8xcBIV3
-         3BCgDsQ1Z0MeW554/uM+UeqYzhWizfCxsAXvpCSV95oLJogPK57OgTQtvrek60vHAUnn
-         BRx2VfIK2d4/JbTBZ+LZtQft/yGoB5xy4GzNCnSn02dhdZcMp7SQBtVXNFVo6q2GKSzt
-         Ixla5kklv2uux9WAV+3c7rMcqr+iA7ONFc6S67W12reG19qTv2qTPiG7MrLSigTO6yY8
-         8r/Q==
-X-Gm-Message-State: APjAAAVk0eccPkB8LbMpg/g6o3CEkU4oykcAjhU7WYxXY/WIAsGE4Te9
-        8PmBqE/sffX+DJ/fdfk9feQyaw==
-X-Google-Smtp-Source: APXvYqyaX4YrbwSWFAdl7mDjfBV92NHPW2JrFBqt88faJkZxLNYM/3lTBXzq+fIn8WJ+7uKkPQoCSQ==
-X-Received: by 2002:a62:2ad6:: with SMTP id q205mr7626671pfq.46.1570060990969;
-        Wed, 02 Oct 2019 17:03:10 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id 20sm546342pfp.153.2019.10.02.17.03.08
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 02 Oct 2019 17:03:09 -0700 (PDT)
-Date:   Wed, 2 Oct 2019 17:03:08 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Robin Murphy <robin.murphy@arm.com>
-Cc:     Christoph Hellwig <hch@lst.de>, Laura Abbott <labbott@redhat.com>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Jesper Dangaard Brouer <brouer@redhat.com>,
-        Allison Randal <allison@lohutok.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        Semmle Security Reports <security-reports@semmle.com>,
-        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] dma-mapping: Lift address space checks out of debug code
-Message-ID: <201910021659.96269C05@keescook>
-References: <201910021341.7819A660@keescook>
- <7a5dc7aa-66ec-0249-e73f-285b8807cb73@arm.com>
- <201910021643.75E856C@keescook>
+        Wed, 2 Oct 2019 20:03:15 -0400
+Received: from mmarshal3.atlnz.lc (mmarshal3.atlnz.lc [10.32.18.43])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by gate2.alliedtelesis.co.nz (Postfix) with ESMTPS id 74CBE891AA;
+        Thu,  3 Oct 2019 13:03:13 +1300 (NZDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alliedtelesis.co.nz;
+        s=mail181024; t=1570060993;
+        bh=duga9/EcB9ODsepVPk+Bsd/e1jD6BQ1JTdG2Xp6Vhgs=;
+        h=From:To:Cc:Subject:Date;
+        b=Ln3yz2pkIrGyGvOK3h2DunrTNzXsdqldTqPuBEwweioGCxbbI/kouzm6cpPOw3fqM
+         CSaDrKYDB4EZY9nLDGSmMC2qG/gHz01URAl2TL4kRGd6AfN5Py4VHrluv0wFeFLP59
+         BB8/WfWjp0AztmhDCt7CUGHHe+qF+fRfl6oArbynpgZHPFyQ7hHFTd5hq4iM1qTavp
+         M1FIkaBfe//iEGzoxyh7kHZknqZKLwVpVKAbQq3WGzejOclbY/zTcxb6V4BxwPeDr4
+         qK2l09a1zZDqEBDfh95fAdZD0zM3LUn5i1DI9hILQGlS3/Xvf3LC1DM/AnaVdOIgy+
+         riITwvBPZuy1w==
+Received: from smtp (Not Verified[10.32.16.33]) by mmarshal3.atlnz.lc with Trustwave SEG (v7,5,8,10121)
+        id <B5d953ac10001>; Thu, 03 Oct 2019 13:03:13 +1300
+Received: from chrisp-dl.ws.atlnz.lc (chrisp-dl.ws.atlnz.lc [10.33.22.20])
+        by smtp (Postfix) with ESMTP id 0CDBA13EEC9;
+        Thu,  3 Oct 2019 13:03:17 +1300 (NZDT)
+Received: by chrisp-dl.ws.atlnz.lc (Postfix, from userid 1030)
+        id 331FE28003E; Thu,  3 Oct 2019 13:03:13 +1300 (NZDT)
+From:   Chris Packham <chris.packham@alliedtelesis.co.nz>
+To:     linus.walleij@linaro.org, rjui@broadcom.com, sbranden@broadcom.com,
+        bcm-kernel-feedback-list@broadcom.com,
+        rayagonda.kokatanur@broadcom.com, li.jin@broadcom.com
+Cc:     linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org,
+        Chris Packham <chris.packham@alliedtelesis.co.nz>
+Subject: [PATCH v2 0/2] pinctrl: iproc: improve error handling
+Date:   Thu,  3 Oct 2019 13:03:08 +1300
+Message-Id: <20191003000310.17099-1-chris.packham@alliedtelesis.co.nz>
+X-Mailer: git-send-email 2.23.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <201910021643.75E856C@keescook>
+Content-Transfer-Encoding: quoted-printable
+x-atlnz-ls: pat
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Oct 02, 2019 at 04:58:39PM -0700, Kees Cook wrote:
-> In the USB case, it'll actually refuse to do the operation. Should
-> dma_map_single() similarly fail? I could push these checks down into
-> dma_map_single(), which would be a no-change on behavior for USB and
-> gain the checks on all other callers...
+I noticed these when debugging another issue. The first patch is a fix
+to address some error handling. The second is just cosmetic.
 
-Which begs the question: are all callers actually checking the result of
-dma_map_single(). Many are paired with dma_mapping_error(), but lots
-more aren't...
+Changes in v2:
+- split bug-fix from cosmetic change
 
--- 
-Kees Cook
+Chris Packham (2):
+  pinctrl: iproc: allow for error from platform_get_irq()
+  pinctrl: iproc: use unique name for irq chip
+
+ drivers/pinctrl/bcm/pinctrl-iproc-gpio.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+--=20
+2.23.0
+
