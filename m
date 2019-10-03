@@ -2,139 +2,113 @@ Return-Path: <SRS0=6dNS=X4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E978EC47404
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 00:45:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03753C4360C
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 00:59:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BFD1921A4C
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 00:45:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C125A222C2
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 00:59:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="A1BGquUd"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Sqr/+PBJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726830AbfJCApX (ORCPT
+        id S1726811AbfJCA7M (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Oct 2019 20:45:23 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:43925 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726411AbfJCApX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Oct 2019 20:45:23 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 46kDnC6RpSz9sDB;
-        Thu,  3 Oct 2019 10:45:19 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1570063520;
-        bh=jRTOajq986cWcmFtVUQ4PMeTlohkfc8VNsgeLWIw0Mo=;
-        h=Date:From:To:Cc:Subject:From;
-        b=A1BGquUd3xSLm3IiMz8LolMo7FD/MiRL0xtyLtQuwBDDwcFk2PWldUa05l8r70/kq
-         VDXpaSbI3Ow0mZmGFyNT44GEpOl4VyJ7+LNcNt4qctENweoZ4b2Tb/6w1M5lrLsIdI
-         p5MnVOva+TQ4y7hTKqgVtZ+N3jtjYL05d+XSGmNKzszd1o20EEOyaII8snFxeqD3RM
-         GV3K5vbUm1vSC56FygeILOJdrWt7SpPJewxUxQzgVMw/zJ8M7tXHONvuG1iSx5jD8T
-         ZNjSgQY/NkRNerwxbVxAqVS+9N040V8ZtY5X1YPYMr+aA7/iA7972vehDXCIaQ3r4L
-         hHTlZo6wq6ZnQ==
-Date:   Thu, 3 Oct 2019 10:45:19 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     David Howells <dhowells@redhat.com>,
-        James Hogan <jhogan@kernel.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Paul Burton <paul.burton@mips.com>
-Subject: linux-next: manual merge of the keys tree with the mips-fixes tree
-Message-ID: <20191003104519.4f607d28@canb.auug.org.au>
+        Wed, 2 Oct 2019 20:59:12 -0400
+Received: from mail-qk1-f195.google.com ([209.85.222.195]:42079 "EHLO
+        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725799AbfJCA7M (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 2 Oct 2019 20:59:12 -0400
+Received: by mail-qk1-f195.google.com with SMTP id f16so641128qkl.9
+        for <linux-kernel@vger.kernel.org>; Wed, 02 Oct 2019 17:59:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=55RbO+WJOZQM19PtQHPKSMAcog+78GCdZAbUU16u3QY=;
+        b=Sqr/+PBJ5fEYkxrO1ypoC2tYCBLiV47GV9vCT/nTGcrpbllCs/FDKV880+zZt9x0Gj
+         5iTgP7DGuJJrNOGCHiFtLtKi5jn2nY9rNJfhEWYFzdN0OaP8kecSwpHFuU2IVDaPoWxq
+         bMerE5fK9wIhPN40VUcqlDb6C3sYp3feqhxSY=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=55RbO+WJOZQM19PtQHPKSMAcog+78GCdZAbUU16u3QY=;
+        b=fyXnqJaqKYca2IFRajQfj87XB6Xoea/FmiBzcpBT3pcnyrvTMiKxY+VgQMC5333NsO
+         /x/ebN3tI0SCima7qdLfnhT6iCC6I4/tsE8HnF1I9eqG8Q5BKqVHJ295mFVWuL6J3Dcr
+         /FawGPrzgNnhbxYSXvXeLoldoP9JXjETM9Gr6RIaAxSWc9IRMcb22AXmqiHVegXxHPdQ
+         +fmBGwG364VD8mgV64P2m6fpDfc1vZEhoQWCnl3P67oSmi0CA/p3mFPgrTcfW/Lrhhgs
+         9O1wQLnjT5AbJ6zlJOeArbJMjsDNXXcicSSx+nMCMD/yuF8u1K8Yu57kwnxvXM8/h8hk
+         UOTA==
+X-Gm-Message-State: APjAAAXeniT/vP7SejLDimfT6Ty0noPXooDUj5ipHHpp8/kPKxKdWwo0
+        oau0wMlKwAeyQfvJHGXiq9cIX6b9c34=
+X-Google-Smtp-Source: APXvYqygE4Mp/XeLNGjBukaqgPriWmpfVuFrIA7LNNqCCMWC1g959s+xH9QhUc/Qd5GkoGfHQ4B8yg==
+X-Received: by 2002:a37:aa02:: with SMTP id t2mr1844244qke.154.1570064350786;
+        Wed, 02 Oct 2019 17:59:10 -0700 (PDT)
+Received: from mail-qt1-f178.google.com (mail-qt1-f178.google.com. [209.85.160.178])
+        by smtp.gmail.com with ESMTPSA id t17sm1075932qtt.57.2019.10.02.17.59.08
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 02 Oct 2019 17:59:09 -0700 (PDT)
+Received: by mail-qt1-f178.google.com with SMTP id u22so1202880qtq.13
+        for <linux-kernel@vger.kernel.org>; Wed, 02 Oct 2019 17:59:08 -0700 (PDT)
+X-Received: by 2002:ac8:6047:: with SMTP id k7mr7395287qtm.238.1570064347909;
+ Wed, 02 Oct 2019 17:59:07 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/QGTZrhqjkaq1aJ2OlBHvkpX";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+References: <1534402113-14337-1-git-send-email-wgong@codeaurora.org>
+ <20181114225910.GA220599@google.com> <CA+ASDXMh7vdfkA5jtJqWEU-g-4Ta5Xvy046zujyASZcESCGhAQ@mail.gmail.com>
+ <87woe5aehr.fsf@kamboji.qca.qualcomm.com> <40854e84bd4b4a9699b60530b1c373ad@aptaiexm02f.ap.qualcomm.com>
+ <87pnjvctjh.fsf@codeaurora.org>
+In-Reply-To: <87pnjvctjh.fsf@codeaurora.org>
+From:   Brian Norris <briannorris@chromium.org>
+Date:   Wed, 2 Oct 2019 17:58:56 -0700
+X-Gmail-Original-Message-ID: <CA+ASDXNXZrBS8dZW4jmXkg7c8-sK=pcYtQtj5KPxCDCEc8XqYA@mail.gmail.com>
+Message-ID: <CA+ASDXNXZrBS8dZW4jmXkg7c8-sK=pcYtQtj5KPxCDCEc8XqYA@mail.gmail.com>
+Subject: Re: [PATCH v3] ath10k: support NET_DETECT WoWLAN feature
+To:     Kalle Valo <kvalo@codeaurora.org>
+Cc:     Wen Gong <wgong@qti.qualcomm.com>,
+        linux-wireless <linux-wireless@vger.kernel.org>,
+        Linux Kernel <linux-kernel@vger.kernel.org>,
+        "ath10k@lists.infradead.org" <ath10k@lists.infradead.org>,
+        Wen Gong <wgong@codeaurora.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/QGTZrhqjkaq1aJ2OlBHvkpX
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+Hi Kalle,
 
-Hi all,
+Sorry, I failed to follow up on some of this.
 
-Today's linux-next merge of the keys tree got conflicts in:
+On Fri, Sep 20, 2019 at 12:32 AM Kalle Valo <kvalo@codeaurora.org> wrote:
+> But I mixed up the flags. I meant that can we enable
+> NL80211_FEATURE_SCAN_RANDOM_MAC_ADDR in ath10k? Does the firmware
+> releases which have WMI_SERVICE_NLO support
+> NL80211_FEATURE_SCAN_RANDOM_MAC_ADDR as well?
 
-  arch/mips/kernel/syscalls/syscall_n32.tbl
-  arch/mips/kernel/syscalls/syscall_n64.tbl
-  arch/mips/kernel/syscalls/syscall_o32.tbl
+I'm looking at firmware which supports WMI_SERVICE_NLO and
+WMI_SERVICE_SPOOF_MAC_SUPPORT. This leads to support for
+NL80211_FEATURE_SCAN_RANDOM_MAC_ADDR and
+NL80211_WOWLAN_TRIG_NET_DETECT (good!), but it also leads to
+NL80211_CMD_START_SCHED_SCAN support and *not*
+NL80211_FEATURE_SCHED_SCAN_RANDOM_MAC_ADDR, which is inconsistent
+(bad!).
 
-between commit:
+(I think a few times in here you noted the FEATURE_SCAN variant, when
+you probably meant FEATURE_SCHED_SCAN.)
 
-  0671c5b84e9e ("MIPS: Wire up clone3 syscall")
+If I understand Wen correctly, he is working on dropping
+NL80211_CMD_START_SCHED_SCAN, which would fix the inconsistency.
 
-from the mips-fixes tree and commit:
+But I also noticed that ath10k does not support
+NL80211_FEATURE_ND_RANDOM_MAC_ADDR, which is again an inconsistency:
+we're going to lose randomization when in WoWLAN + NET_DETECT mode. I
+don't suspect we (Chrome OS) would ever enable this feature in that
+state.
 
-  e711c800fdba ("Add a general, global device notification watch list")
-
-from the keys tree.
-
-I fixed it up (see below) and can carry the fix as necessary. This
-is now fixed as far as linux-next is concerned, but any non trivial
-conflicts should be mentioned to your upstream maintainer when your tree
-is submitted for merging.  You may also want to consider cooperating
-with the maintainer of the conflicting tree to minimise any particularly
-complex conflicts.
-
---=20
-Cheers,
-Stephen Rothwell
-
-diff --cc arch/mips/kernel/syscalls/syscall_n32.tbl
-index e7c5ab38e403,2ba5b649f0ab..000000000000
---- a/arch/mips/kernel/syscalls/syscall_n32.tbl
-+++ b/arch/mips/kernel/syscalls/syscall_n32.tbl
-@@@ -373,4 -373,5 +373,5 @@@
-  432	n32	fsmount				sys_fsmount
-  433	n32	fspick				sys_fspick
-  434	n32	pidfd_open			sys_pidfd_open
- -# 435 reserved for clone3
- +435	n32	clone3				__sys_clone3
-+ 436	n32	watch_devices			sys_watch_devices
-diff --cc arch/mips/kernel/syscalls/syscall_n64.tbl
-index 13cd66581f3b,ff350988584d..000000000000
---- a/arch/mips/kernel/syscalls/syscall_n64.tbl
-+++ b/arch/mips/kernel/syscalls/syscall_n64.tbl
-@@@ -349,4 -349,5 +349,5 @@@
-  432	n64	fsmount				sys_fsmount
-  433	n64	fspick				sys_fspick
-  434	n64	pidfd_open			sys_pidfd_open
- -# 435 reserved for clone3
- +435	n64	clone3				__sys_clone3
-+ 436	n64	watch_devices			sys_watch_devices
-diff --cc arch/mips/kernel/syscalls/syscall_o32.tbl
-index 353539ea4140,7b26bd39900e..000000000000
---- a/arch/mips/kernel/syscalls/syscall_o32.tbl
-+++ b/arch/mips/kernel/syscalls/syscall_o32.tbl
-@@@ -422,4 -422,5 +422,5 @@@
-  432	o32	fsmount				sys_fsmount
-  433	o32	fspick				sys_fspick
-  434	o32	pidfd_open			sys_pidfd_open
- -# 435 reserved for clone3
- +435	o32	clone3				__sys_clone3
-+ 436	o32	watch_devices			sys_watch_devices
-
---Sig_/QGTZrhqjkaq1aJ2OlBHvkpX
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl2VRJ8ACgkQAVBC80lX
-0GyhSwf/dOODCbXBNkjOdgrDs+LHCM2xGgAGjJ/5kFLF5eNycPLJRngo7qfKPAHS
-PACA+3wy4Px52CKqFaG3ImoWCT9yRUh1NkxU5frD8SmDj4mIfXE69E3JTBOYbJFt
-ALahodmh24KrlfUMdT9aN6gbh0kSDNV9/fsZENdtwW7sO7mLSUfn7SAzn+zEVyOn
-SRZ8eIodjgTKvoO1saW4WWZfD5kty88G+Gc/8oetLhNqv1E19eboCrBPv1TkDBVh
-oOOyvE0JTTH/q0I4BeihecjtqncACNK+jRPU0bJ4LH05GaSUBNxTFQsKP4kOF0u1
-Awh2HXk56nmA5dMzlJW+9gq7b8HioQ==
-=a2qp
------END PGP SIGNATURE-----
-
---Sig_/QGTZrhqjkaq1aJ2OlBHvkpX--
+Regards,
+Brian
