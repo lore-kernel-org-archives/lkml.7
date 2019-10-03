@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15FB5C10F14
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:10:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D4F3CC32792
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:10:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CF95020865
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:10:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9BDBE20865
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:10:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570122615;
-	bh=UxrkhlOJ5LfTfHbwZvKs7QiZcYpNZh7w2BoGwiaiP/4=;
+	s=default; t=1570122625;
+	bh=9SO459Tx95hQLcr6M3fZdhK5p3dMn/Dz2ldcdyi20Qc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=b6GF/GOuVKC1pBvv+1sANwJDbreLN3rkwvpcK8MDf0dUK4UIP72aAtbrMwJnv/CVb
-	 EsPRmEWtxRg+5Gbu4X32kfsWyaGZ7oaZDGF4aNy0gYwX6zuPLJnzyzetrp0ETizyrZ
-	 zzlsozO1UOdZu3MiPUaZn/++ob4iYQI7lQ/kokkY=
+	b=QadxOYk1HoYcfL2xWH5M0VEC/ASG1ZlRF2bkv85+fBcwbBdFb1S02C/qkpeYErJ9p
+	 oTQjon6n88cqHNuzlWBXl44HfXCUwnOQSz5Jt1pqxJXekJn0ZGj2juwGO7orqKQ0f1
+	 8CRSJ2Cq+F5ugKknKrNInapsUGvKwWmtOgQaIAiE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393443AbfJCRKP (ORCPT
+        id S2391982AbfJCQdQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 13:10:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41498 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 12:33:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41056 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404109AbfJCQd3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:33:29 -0400
+        id S2390880AbfJCQdK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:33:10 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 30B5420830;
-        Thu,  3 Oct 2019 16:33:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1D34320830;
+        Thu,  3 Oct 2019 16:33:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570120408;
-        bh=UxrkhlOJ5LfTfHbwZvKs7QiZcYpNZh7w2BoGwiaiP/4=;
+        s=default; t=1570120389;
+        bh=9SO459Tx95hQLcr6M3fZdhK5p3dMn/Dz2ldcdyi20Qc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=lOEHA7TR90Z/qhB2PKaeXBtbDjTEWrJoTnTtkmMuSc47kXnAaUl/rMXnCgHwfI1/z
-         Cs82UYtn9k/W0Mml47SJwTSWcZLLivQ/SPjGcSgB4cMErc9udjuGVcN5D962b5v266
-         Qkrsc/hPojxEe7dgQlfgwB1ilQAwdS1wBzR8/f9Q=
+        b=b63VNdnBZNldewZPfA5xPVQritekO/WHznHhudjwoj+yFSL1C/bRUKsaMp2IxYtn/
+         WY7bXCMJrdI5kJ4aILK0XlE1K4t+KTf0wofFWdtw5IMpWkSVPRjH3Z1wcOf6vbnqpk
+         B+0PhK4+ujnB4nnJ0/plB8HctGSPqcCStG0dYBhw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Stephen Rothwell <sfr@canb.auug.org.au>,
-        MyungJoo Ham <myungjoo.ham@samsung.com>,
+        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
+        Jinyu Qi <jinyuqi@huawei.com>, Joerg Roedel <jroedel@suse.de>,
+        Robin Murphy <robin.murphy@arm.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 212/313] PM / devfreq: passive: fix compiler warning
-Date:   Thu,  3 Oct 2019 17:53:10 +0200
-Message-Id: <20191003154553.868738806@linuxfoundation.org>
+Subject: [PATCH 5.2 166/313] iommu/iova: Avoid false sharing on fq_timer_on
+Date:   Thu,  3 Oct 2019 17:52:24 +0200
+Message-Id: <20191003154549.324600329@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191003154533.590915454@linuxfoundation.org>
 References: <20191003154533.590915454@linuxfoundation.org>
@@ -60,33 +61,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: MyungJoo Ham <myungjoo.ham@samsung.com>
+From: Eric Dumazet <edumazet@google.com>
 
-[ Upstream commit 0465814831a926ce2f83e8f606d067d86745234e ]
+[ Upstream commit 0d87308cca2c124f9bce02383f1d9632c9be89c4 ]
 
-The recent commit of
-PM / devfreq: passive: Use non-devm notifiers
-had incurred compiler warning, "unused variable 'dev'".
+In commit 14bd9a607f90 ("iommu/iova: Separate atomic variables
+to improve performance") Jinyu Qi identified that the atomic_cmpxchg()
+in queue_iova() was causing a performance loss and moved critical fields
+so that the false sharing would not impact them.
 
-Reported-by: Stephen Rothwell <sfr@canb.auug.org.au>
-Signed-off-by: MyungJoo Ham <myungjoo.ham@samsung.com>
+However, avoiding the false sharing in the first place seems easy.
+We should attempt the atomic_cmpxchg() no more than 100 times
+per second. Adding an atomic_read() will keep the cache
+line mostly shared.
+
+This false sharing came with commit 9a005a800ae8
+("iommu/iova: Add flush timer").
+
+Signed-off-by: Eric Dumazet <edumazet@google.com>
+Fixes: 9a005a800ae8 ('iommu/iova: Add flush timer')
+Cc: Jinyu Qi <jinyuqi@huawei.com>
+Cc: Joerg Roedel <jroedel@suse.de>
+Acked-by: Robin Murphy <robin.murphy@arm.com>
+Signed-off-by: Joerg Roedel <jroedel@suse.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/devfreq/governor_passive.c | 1 -
- 1 file changed, 1 deletion(-)
+ drivers/iommu/iova.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/devfreq/governor_passive.c b/drivers/devfreq/governor_passive.c
-index da485477065c5..be6eeab9c814e 100644
---- a/drivers/devfreq/governor_passive.c
-+++ b/drivers/devfreq/governor_passive.c
-@@ -149,7 +149,6 @@ static int devfreq_passive_notifier_call(struct notifier_block *nb,
- static int devfreq_passive_event_handler(struct devfreq *devfreq,
- 				unsigned int event, void *data)
- {
--	struct device *dev = devfreq->dev.parent;
- 	struct devfreq_passive_data *p_data
- 			= (struct devfreq_passive_data *)devfreq->data;
- 	struct devfreq *parent = (struct devfreq *)p_data->parent;
+diff --git a/drivers/iommu/iova.c b/drivers/iommu/iova.c
+index 3e1a8a6755723..41c605b0058f9 100644
+--- a/drivers/iommu/iova.c
++++ b/drivers/iommu/iova.c
+@@ -577,7 +577,9 @@ void queue_iova(struct iova_domain *iovad,
+ 
+ 	spin_unlock_irqrestore(&fq->lock, flags);
+ 
+-	if (atomic_cmpxchg(&iovad->fq_timer_on, 0, 1) == 0)
++	/* Avoid false sharing as much as possible. */
++	if (!atomic_read(&iovad->fq_timer_on) &&
++	    !atomic_cmpxchg(&iovad->fq_timer_on, 0, 1))
+ 		mod_timer(&iovad->fq_timer,
+ 			  jiffies + msecs_to_jiffies(IOVA_FQ_TIMEOUT));
+ }
 -- 
 2.20.1
 
