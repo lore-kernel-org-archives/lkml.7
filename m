@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C2A55C32792
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:45:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6AB11C32792
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:45:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 88A2420830
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:45:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 315CC20867
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:45:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570121105;
-	bh=Jr0wGQmS0muJUE7fHZrs67QdfVNAOhdhj82RmrQrEgE=;
+	s=default; t=1570121111;
+	bh=6Ktj9zXXi9b3bAjU5OSe3uz1uAckroEcPDIgl37r6dk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=C24N7w4rkZeqwOU43Cwdq1uZfF4nLgc5sOf8/Bs38Xb3rAQkBxCjs9nxDiu8HmOjz
-	 F4B9lYGwSPI94SuaswutczaFZ182QE3YpNmxeNhYiR1gmU0BtWd/p3awJslJ8sNstY
-	 +2/vqvNQVP3fPGy8ioIfGEVFphBGQ4QAoZLOf2+A=
+	b=taPqsxeRIBr0CqJcoQZMHBgraF3inixVEexnyjsQhvCL/I2MkVaVrNoYa0FsA06yR
+	 0zftArJJ2gMq5pvRhy1HGK8fi1uDwElyG73WmCYvpTnH26gfLxzMQdxr1wxUrt94pu
+	 CTJ/J5+jo1a/Ug1xin7QAkO21kztqrr4FJGCzldc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405475AbfJCQpE (ORCPT
+        id S2405103AbfJCQpK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 12:45:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54176 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 12:45:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57564 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404806AbfJCQmz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:42:55 -0400
+        id S2405482AbfJCQpG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:45:06 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CAC5D2054F;
-        Thu,  3 Oct 2019 16:42:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BCE2D222D3;
+        Thu,  3 Oct 2019 16:45:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570120974;
-        bh=Jr0wGQmS0muJUE7fHZrs67QdfVNAOhdhj82RmrQrEgE=;
+        s=default; t=1570121106;
+        bh=6Ktj9zXXi9b3bAjU5OSe3uz1uAckroEcPDIgl37r6dk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=oI5P9mxyiyqe+PK4SHXWVAWvtsyQEEWsRj+Xti7r5mbzToNUhYpOJnrKcCnvsX8nr
-         noWUyiWK43S9P+bo5DDi+23D9LAvlBmC1XK7srDPwpvyyTA8Zd/LhOn9sgmkggIk86
-         j5RWswJnjwKozp9DuGj84dHLX6R8gq9uDZeRo/OQ=
+        b=bW8MOEpOlnRZYzwAG0GK9KAL8TbG64UrQtL3SAgpjjBJ9TOWPbtgKu1fW4XLo+nIn
+         AsV+84rqyHuJPs/66gQBwtBoHzACIxSBAHdL2ijwt+dWguOoXi5235WCF38fc/qR0T
+         A9KDIZMhCXZZMoC4kNEEIZMbe2xRPGvyF3yp3ikU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Andrea Arcangeli <aarcange@redhat.com>,
-        "Paul E. McKenney" <paulmck@linux.ibm.com>,
+        stable@vger.kernel.org, Wenwen Wang <wenwen@cs.uga.edu>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.3 071/344] rcu: Add destroy_work_on_stack() to match INIT_WORK_ONSTACK()
-Date:   Thu,  3 Oct 2019 17:50:36 +0200
-Message-Id: <20191003154547.138807171@linuxfoundation.org>
+Subject: [PATCH 5.3 157/344] media: saa7146: add cleanup in hexium_attach()
+Date:   Thu,  3 Oct 2019 17:52:02 +0200
+Message-Id: <20191003154555.710581995@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191003154540.062170222@linuxfoundation.org>
 References: <20191003154540.062170222@linuxfoundation.org>
@@ -60,52 +61,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Paul E. McKenney <paulmck@linux.ibm.com>
+From: Wenwen Wang <wenwen@cs.uga.edu>
 
-[ Upstream commit fbad01af8c3bb9618848abde8054ab7e0c2330fe ]
+[ Upstream commit 42e64117d3b4a759013f77bbcf25ab6700e55de7 ]
 
-The synchronize_rcu_expedited() function has an INIT_WORK_ONSTACK(),
-but lacks the corresponding destroy_work_on_stack().  This commit
-therefore adds destroy_work_on_stack().
+If saa7146_register_device() fails, no cleanup is executed, leading to
+memory/resource leaks. To fix this issue, perform necessary cleanup work
+before returning the error.
 
-Reported-by: Andrea Arcangeli <aarcange@redhat.com>
-Signed-off-by: Paul E. McKenney <paulmck@linux.ibm.com>
-Acked-by: Andrea Arcangeli <aarcange@redhat.com>
+Signed-off-by: Wenwen Wang <wenwen@cs.uga.edu>
+Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/rcu/tree_exp.h | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+ drivers/media/pci/saa7146/hexium_gemini.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/kernel/rcu/tree_exp.h b/kernel/rcu/tree_exp.h
-index af7e7b9c86afa..513b403b683b7 100644
---- a/kernel/rcu/tree_exp.h
-+++ b/kernel/rcu/tree_exp.h
-@@ -792,6 +792,7 @@ static int rcu_print_task_exp_stall(struct rcu_node *rnp)
-  */
- void synchronize_rcu_expedited(void)
- {
-+	bool boottime = (rcu_scheduler_active == RCU_SCHEDULER_INIT);
- 	struct rcu_exp_work rew;
- 	struct rcu_node *rnp;
- 	unsigned long s;
-@@ -817,7 +818,7 @@ void synchronize_rcu_expedited(void)
- 		return;  /* Someone else did our work for us. */
+diff --git a/drivers/media/pci/saa7146/hexium_gemini.c b/drivers/media/pci/saa7146/hexium_gemini.c
+index dca20a3d98e25..f962269306707 100644
+--- a/drivers/media/pci/saa7146/hexium_gemini.c
++++ b/drivers/media/pci/saa7146/hexium_gemini.c
+@@ -292,6 +292,9 @@ static int hexium_attach(struct saa7146_dev *dev, struct saa7146_pci_extension_d
+ 	ret = saa7146_register_device(&hexium->video_dev, dev, "hexium gemini", VFL_TYPE_GRABBER);
+ 	if (ret < 0) {
+ 		pr_err("cannot register capture v4l2 device. skipping.\n");
++		saa7146_vv_release(dev);
++		i2c_del_adapter(&hexium->i2c_adapter);
++		kfree(hexium);
+ 		return ret;
+ 	}
  
- 	/* Ensure that load happens before action based on it. */
--	if (unlikely(rcu_scheduler_active == RCU_SCHEDULER_INIT)) {
-+	if (unlikely(boottime)) {
- 		/* Direct call during scheduler init and early_initcalls(). */
- 		rcu_exp_sel_wait_wake(s);
- 	} else {
-@@ -835,5 +836,8 @@ void synchronize_rcu_expedited(void)
- 
- 	/* Let the next expedited grace period start. */
- 	mutex_unlock(&rcu_state.exp_mutex);
-+
-+	if (likely(!boottime))
-+		destroy_work_on_stack(&rew.rew_work);
- }
- EXPORT_SYMBOL_GPL(synchronize_rcu_expedited);
 -- 
 2.20.1
 
