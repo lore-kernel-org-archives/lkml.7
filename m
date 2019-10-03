@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9006C32792
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:12:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5E07C10F14
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:12:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BE9EF21A4C
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:12:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B7F6E2054F
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:12:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570119170;
-	bh=3yddxp/vFdZ4ENu0ylnkR9jwYRR7o/rqNiHIgmu0RGg=;
+	s=default; t=1570119173;
+	bh=tcows2Fe6qTgqG6c2nLak3rU9iEea/wKHyBqFYyjQco=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=FcOkpR3yHa//DOYnM7ajYQNUISaOpmTE8K/tzlPTIbQcYl+jtNs4CwL/kLcsQB/fk
-	 /koty8IutdTlqelcLraj5RT4sBg64SG/gc2MO6b6iJYRBTR2huV+t1b3DRXUTSi/Pm
-	 mHnohr8Lv4SiCIPb73BY+zdZHE2axTOmrFjJu/Xw=
+	b=eBuB/myVHj+jTyBVnhZTeQM1nm/LsGnHGgLrIF+nuyPxZVm8KWSkHZhkmTLs02fud
+	 B/q9xARnvJD6jAitk8lyWRPEKLAuF//EffHfYkR9dln4OLqHPxRSj0yFPYhlFz3xa9
+	 n/eNhRTHklSqJYxGLvfL8oIl2qFf3UlGMipf1iZo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388126AbfJCQMt (ORCPT
+        id S2388141AbfJCQMw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 12:12:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35172 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 12:12:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35250 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388112AbfJCQMr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:12:47 -0400
+        id S2388127AbfJCQMu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:12:50 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 037E020865;
-        Thu,  3 Oct 2019 16:12:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id ECA7F21783;
+        Thu,  3 Oct 2019 16:12:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570119166;
-        bh=3yddxp/vFdZ4ENu0ylnkR9jwYRR7o/rqNiHIgmu0RGg=;
+        s=default; t=1570119169;
+        bh=tcows2Fe6qTgqG6c2nLak3rU9iEea/wKHyBqFYyjQco=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1Qmw+8VGSLQTV4hykhSd+JcRsHuOa8hxnI2mhcJGcYovep/CB7iQ35J4NkkY/ZLDf
-         GoKjuA2ro4BSRewHQngbgZvty4hLLf2o3FzfSq1fggL70P8QEOvypted9PW3s1RMLb
-         3ak1JdhMVlicbS0ex125QfB5YHIpfF6Rj0JQFH+4=
+        b=t9s1S9J/MOCleWeda3qwj8Fw1Rn/MN5r51qJHg9BwZuFfbORzr3mEtgADteQCRWtj
+         zuUqmpn7N32DNJPByWxxPS0LZ0OM+MCd9rBF5glPQ/XWIAyoRG7heXcu/5ncWoGXeS
+         6g9AXIgSUxQRcg/X4iGlQhQdJ8bf79/2t9u5AM3U=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
@@ -47,9 +47,9 @@ Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Denis Plotnikov <dplotnikov@virtuozzo.com>,
         Jan Dakinevich <jan.dakinevich@virtuozzo.com>,
         Paolo Bonzini <pbonzini@redhat.com>
-Subject: [PATCH 4.14 150/185] KVM: x86: always stop emulation on page fault
-Date:   Thu,  3 Oct 2019 17:53:48 +0200
-Message-Id: <20191003154513.292205405@linuxfoundation.org>
+Subject: [PATCH 4.14 151/185] KVM: x86: set ctxt->have_exception in x86_decode_insn()
+Date:   Thu,  3 Oct 2019 17:53:49 +0200
+Message-Id: <20191003154513.502794218@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191003154437.541662648@linuxfoundation.org>
 References: <20191003154437.541662648@linuxfoundation.org>
@@ -64,23 +64,11 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Jan Dakinevich <jan.dakinevich@virtuozzo.com>
 
-commit 8530a79c5a9f4e29e6ffb35ec1a79d81f4968ec8 upstream.
+commit c8848cee74ff05638e913582a476bde879c968ad upstream.
 
-inject_emulated_exception() returns true if and only if nested page
-fault happens. However, page fault can come from guest page tables
-walk, either nested or not nested. In both cases we should stop an
-attempt to read under RIP and give guest to step over its own page
-fault handler.
-
-This is also visible when an emulated instruction causes a #GP fault
-and the VMware backdoor is enabled.  To handle the VMware backdoor,
-KVM intercepts #GP faults; with only the next patch applied,
-x86_emulate_instruction() injects a #GP but returns EMULATE_FAIL
-instead of EMULATE_DONE.   EMULATE_FAIL causes handle_exception_nmi()
-(or gp_interception() for SVM) to re-inject the original #GP because it
-thinks emulation failed due to a non-VMware opcode.  This patch prevents
-the issue as x86_emulate_instruction() will return EMULATE_DONE after
-injecting the #GP.
+x86_emulate_instruction() takes into account ctxt->have_exception flag
+during instruction decoding, but in practice this flag is never set in
+x86_decode_insn().
 
 Fixes: 6ea6e84309ca ("KVM: x86: inject exceptions produced by x86_decode_insn")
 Cc: stable@vger.kernel.org
@@ -92,22 +80,35 @@ Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/x86/kvm/x86.c |    4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ arch/x86/kvm/emulate.c |    2 ++
+ arch/x86/kvm/x86.c     |    6 ++++++
+ 2 files changed, 8 insertions(+)
 
+--- a/arch/x86/kvm/emulate.c
++++ b/arch/x86/kvm/emulate.c
+@@ -5298,6 +5298,8 @@ done_prefixes:
+ 					ctxt->memopp->addr.mem.ea + ctxt->_eip);
+ 
+ done:
++	if (rc == X86EMUL_PROPAGATE_FAULT)
++		ctxt->have_exception = true;
+ 	return (rc != X86EMUL_CONTINUE) ? EMULATION_FAILED : EMULATION_OK;
+ }
+ 
 --- a/arch/x86/kvm/x86.c
 +++ b/arch/x86/kvm/x86.c
-@@ -5892,8 +5892,10 @@ int x86_emulate_instruction(struct kvm_v
- 			if (reexecute_instruction(vcpu, cr2, write_fault_to_spt,
+@@ -5893,6 +5893,12 @@ int x86_emulate_instruction(struct kvm_v
  						emulation_type))
  				return EMULATE_DONE;
--			if (ctxt->have_exception && inject_emulated_exception(vcpu))
-+			if (ctxt->have_exception) {
-+				inject_emulated_exception(vcpu);
+ 			if (ctxt->have_exception) {
++				/*
++				 * #UD should result in just EMULATION_FAILED, and trap-like
++				 * exception should not be encountered during decode.
++				 */
++				WARN_ON_ONCE(ctxt->exception.vector == UD_VECTOR ||
++					     exception_type(ctxt->exception.vector) == EXCPT_TRAP);
+ 				inject_emulated_exception(vcpu);
  				return EMULATE_DONE;
-+			}
- 			if (emulation_type & EMULTYPE_SKIP)
- 				return EMULATE_FAIL;
- 			return handle_emulation_failure(vcpu);
+ 			}
 
 
