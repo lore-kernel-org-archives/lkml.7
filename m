@@ -2,120 +2,85 @@ Return-Path: <SRS0=6dNS=X4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BCDBC10F14
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 18:44:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DD0CBC4CED1
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 18:46:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 56FE020865
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 18:44:08 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mE65RoOF"
+	by mail.kernel.org (Postfix) with ESMTP id C011320862
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 18:46:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389440AbfJCSoH (ORCPT
+        id S1730478AbfJCSq3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 14:44:07 -0400
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:42574 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728458AbfJCSoF (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 14:44:05 -0400
-Received: by mail-pl1-f193.google.com with SMTP id e5so1912308pls.9;
-        Thu, 03 Oct 2019 11:44:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=2zykc3aIa4pRoxK9eihG+83EwwxjGFm5ctchyIo+HaI=;
-        b=mE65RoOFj4VFuDMRx6anpOikl7WDLVt0K8+HiD6p4wyBWqIKVM8IgwFXh7ikK+DFmW
-         JcdeIggzyxjHoWJW4GkS6mx1g3mhkj0ErOa2F56BDKis1tLg2kJFwl9+DyrntuhmGGaY
-         3oTxDOy8rENeWJF8gLWnYAaer2dTBw3ygpnWXiGuYDSjWThqdiqN6q7AMzh5DtL3g2UZ
-         qQQEXYRXq652+vz6RFR2WRGcVEets1az6PSDi4f9N+cTwjOBHoF++mW2FdlERQKpBlOY
-         6unfXXqdKPEUyGK9YvLMn2OnHJyZ1nuwMkhAH8KK2oxGVOXWiSLOY1sZoaTKZygh7RFu
-         Da4w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=2zykc3aIa4pRoxK9eihG+83EwwxjGFm5ctchyIo+HaI=;
-        b=LEsVMLzNQCprpVr3cTO+b81SGOc9IN+HG3mxNTnMQFRXcdvRZb9zVtBTa0XyWVmVeV
-         ZC3n3hXembfR782HHmUslRxcYq3m8ZNhh5doRsmk8fHATmNsZShP2dZv9B5pdD8oDsoo
-         TdTQ8GMpqf8C9TScdqkrD7StsYCZBvyi8tYjR+X9RWx72g3EQbrw7tkQdbHri4Nv/j3B
-         mdt9U7oxIker3nO1kMRXQ5t5VjR5g6J8J/R7Q4J3m3JlF0gp0Ns28Vqy84e6Az6Px4Ih
-         l9+YIRUZte+/9XJ4Yo1G3YKJXonoVB4uAQqhiFKaL5Dt3SLVXSe+eZT8bx+DBNaFdhdb
-         /qCA==
-X-Gm-Message-State: APjAAAXt+LEIeYd+lTrz+oH4E+VUE7XQ3SD8OsqqRpZe9aew1fLf6uya
-        vViwRFlhFy+Wv/EBH1eda2ts574h
-X-Google-Smtp-Source: APXvYqwtIG33yCwYu8qdw8jZIOqf2kJEkqHo8XNTly/DI92Ej7oI7T7PhejIx/EKr0oMHOZscDRI5w==
-X-Received: by 2002:a17:902:7c0c:: with SMTP id x12mr11189557pll.238.1570128242589;
-        Thu, 03 Oct 2019 11:44:02 -0700 (PDT)
-Received: from fainelli-desktop.igp.broadcom.net ([192.19.223.252])
-        by smtp.gmail.com with ESMTPSA id x9sm3568268pje.27.2019.10.03.11.44.00
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 03 Oct 2019 11:44:01 -0700 (PDT)
-From:   Florian Fainelli <f.fainelli@gmail.com>
-To:     netdev@vger.kernel.org
-Cc:     Florian Fainelli <f.fainelli@gmail.com>,
-        Andrew Lunn <andrew@lunn.ch>,
-        "David S. Miller" <davem@davemloft.net>,
-        linux-kernel@vger.kernel.org (open list), hkallweit1@gmail.com,
-        bcm-kernel-feedback-list@broadcom.com,
-        manasa.mudireddy@broadcom.com, ray.jui@broadcom.com,
-        olteanv@gmail.com, rafal@milecki.pl
-Subject: [PATCH 2/2] net: phy: broadcom: Use bcm54xx_config_clock_delay() for BCM54612E
-Date:   Thu,  3 Oct 2019 11:43:52 -0700
-Message-Id: <20191003184352.24356-3-f.fainelli@gmail.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20191003184352.24356-1-f.fainelli@gmail.com>
-References: <20191003184352.24356-1-f.fainelli@gmail.com>
+        Thu, 3 Oct 2019 14:46:29 -0400
+Received: from mga17.intel.com ([192.55.52.151]:58749 "EHLO mga17.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728458AbfJCSq2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 14:46:28 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 03 Oct 2019 11:46:28 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.67,253,1566889200"; 
+   d="scan'208";a="393302412"
+Received: from okiselev-mobl1.ccr.corp.intel.com (HELO localhost) ([10.251.93.117])
+  by fmsmga006.fm.intel.com with ESMTP; 03 Oct 2019 11:46:25 -0700
+From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+To:     linux-stable@vger.kernel.org
+Cc:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        linux-integrity@vger.kernel.org,
+        Greg KH <gregkh@linuxfoundation.org>,
+        Vadim Sukhomlinov <sukhomlinov@google.com>,
+        Jason Gunthorpe <jgunthorpe@obsidianresearch.com>,
+        linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH v3 0/3] tpm: Fix TPM 1.2 Shutdown sequence to prevent future TPM operations
+Date:   Thu,  3 Oct 2019 21:46:20 +0300
+Message-Id: <20191003184623.25580-1-jarkko.sakkinen@linux.intel.com>
+X-Mailer: git-send-email 2.20.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-bcm54612e_config_init() duplicates what bcm54xx_config_clock_delay()
-does with respect to configuring RGMII TX/RX delays appropriately.
+commit db4d8cb9c9f2af71c4d087817160d866ed572cc9 upstream
 
-Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
----
- drivers/net/phy/broadcom.c | 21 +--------------------
- 1 file changed, 1 insertion(+), 20 deletions(-)
+This backport is for v4.14 and v4.19 The backport requires non-racy
+behaviour from TPM 1.x sysfs code. Thus, the dependecies for that
+are included.
 
-diff --git a/drivers/net/phy/broadcom.c b/drivers/net/phy/broadcom.c
-index 5e956089bf52..4313c74b4fd8 100644
---- a/drivers/net/phy/broadcom.c
-+++ b/drivers/net/phy/broadcom.c
-@@ -47,26 +47,7 @@ static int bcm54612e_config_init(struct phy_device *phydev)
- {
- 	int reg;
- 
--	/* Clear TX internal delay unless requested. */
--	if ((phydev->interface != PHY_INTERFACE_MODE_RGMII_ID) &&
--	    (phydev->interface != PHY_INTERFACE_MODE_RGMII_TXID)) {
--		/* Disable TXD to GTXCLK clock delay (default set) */
--		/* Bit 9 is the only field in shadow register 00011 */
--		bcm_phy_write_shadow(phydev, 0x03, 0);
--	}
--
--	/* Clear RX internal delay unless requested. */
--	if ((phydev->interface != PHY_INTERFACE_MODE_RGMII_ID) &&
--	    (phydev->interface != PHY_INTERFACE_MODE_RGMII_RXID)) {
--		reg = bcm54xx_auxctl_read(phydev,
--					  MII_BCM54XX_AUXCTL_SHDWSEL_MISC);
--		/* Disable RXD to RXC delay (default set) */
--		reg &= ~MII_BCM54XX_AUXCTL_SHDWSEL_MISC_RGMII_SKEW_EN;
--		/* Clear shadow selector field */
--		reg &= ~MII_BCM54XX_AUXCTL_SHDWSEL_MASK;
--		bcm54xx_auxctl_write(phydev, MII_BCM54XX_AUXCTL_SHDWSEL_MISC,
--				     MII_BCM54XX_AUXCTL_MISC_WREN | reg);
--	}
-+	bcm54xx_config_clock_delay(phydev);
- 
- 	/* Enable CLK125 MUX on LED4 if ref clock is enabled. */
- 	if (!(phydev->dev_flags & PHY_BRCM_RX_REFCLK_UNUSED)) {
+NOTE: 1/3 is only needed for v4.14.
+
+v3:
+* Fixed the cover letter and the subject prefix. My deepest apologies
+  for all the hassle :-(
+v2:
+* Something happened when merging 3/3 that write lock was taken
+  twice. Fixed in this version. Did also sanity check test with
+  TPM2:
+  echo devices > /sys/power/pm_test && echo mem > /sys/power/state
+
+Cc: linux-integrity@vger.kernel.org
+Cc: Greg KH <gregkh@linuxfoundation.org>
+Cc: Vadim Sukhomlinov <sukhomlinov@google.com>
+Link: https://lore.kernel.org/stable/20190712152734.GA13940@kroah.com/
+
+Jarkko Sakkinen (2):
+  tpm: migrate pubek_show to struct tpm_buf
+  tpm: use tpm_try_get_ops() in tpm-sysfs.c.
+
+Vadim Sukhomlinov (1):
+  tpm: Fix TPM 1.2 Shutdown sequence to prevent future TPM operations
+
+ drivers/char/tpm/tpm-chip.c  |   5 +-
+ drivers/char/tpm/tpm-sysfs.c | 201 +++++++++++++++++++++--------------
+ drivers/char/tpm/tpm.h       |  13 ---
+ 3 files changed, 124 insertions(+), 95 deletions(-)
+
 -- 
-2.17.1
+2.20.1
 
