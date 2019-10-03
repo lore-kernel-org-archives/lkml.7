@@ -2,117 +2,109 @@ Return-Path: <SRS0=6dNS=X4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+X-Spam-Status: No, score=-1.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_SBL,URIBL_SBL_A,
 	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A649C32792
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 12:54:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EDFD6C32792
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 12:59:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2F01120700
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 12:54:47 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ki7WXgc3"
+	by mail.kernel.org (Postfix) with ESMTP id C7B38222C7
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 12:59:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730304AbfJCMyq (ORCPT
+        id S1730283AbfJCM7j (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 08:54:46 -0400
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:36402 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730208AbfJCMyq (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 08:54:46 -0400
-Received: by mail-pg1-f194.google.com with SMTP id 23so1747785pgk.3;
-        Thu, 03 Oct 2019 05:54:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=3KwiyzQXnyUJv1x/MpX8d1dxJ0H+8l16xNQfdlBiu7Q=;
-        b=Ki7WXgc3hN/m65nEvTuJa+uSDNFti0pDLKU0okGj1ewDEUaaeJHorGdPZtOksopZpl
-         DKDH5I5rAEOnD894ytQVVWiAv0YTUDVgOpxXblBzaqDR6yJhS6dXUqWAmTPvHFE72rqT
-         IMfui+z3v77jS1XjCRtzy8RhFKgUqQjsZKYHnZ4lX05WApaHrlAbkubZONZKchxO9QlL
-         D4gwXaUb12kYGrh9WKWfRs9ef6sjT4ERyIk6C6lpIsBI+lgWlxgwZ6bbvlGQkHW84dzC
-         lJZZYO22PQfFCoILqICadeFaikNHBMW3aNbBGHFNWdC1r+r/xI6kirTjjVhnQZp7TAC8
-         tW1w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:subject:to:cc:references:from:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=3KwiyzQXnyUJv1x/MpX8d1dxJ0H+8l16xNQfdlBiu7Q=;
-        b=q/G6vE4mvtbVUoxA5VHp9rOUP+dIyTy9S0qFILANdNTwqcfu9SL1XWZU2Yfv7DrDlz
-         DAXrQpVXI48og+nJE2LtDRseAlWYlaOy4+Ge8MUeyNPgVwkP/csHPHn6cHI4ioxmVUCa
-         slCGJkPPyzNlClFI6Us6x7x1u0K2U9+MQ/Q9F02cQpDjtzDCZJPj5fETPYNkJ3FZyP7x
-         1BtCNiIIN2VZqDPeaAqNVQq7VTojND9nAbLZVdFeVldW0xmVF//xVP5zFpGW1bU+l7dv
-         26n4ECGJX9lZBgtMUQOhvdJvaXIu65OsPvoYcXgJGH+MCO8buLiPptjo7Ve8xCrWIxBI
-         whFg==
-X-Gm-Message-State: APjAAAXof1aysUbSrGiZ8zvC6Y6zctyWd0QqxP1cqtOMNkzdW9zQ/uc4
-        adnsC671sPrzBb6ErIiB4lM=
-X-Google-Smtp-Source: APXvYqyEIaDgDSzD8DdoQRFBDstfMRvl2zMjJnbtV8041AXWaa/1PccwYt4WDZQDa124/NUEXYAcpg==
-X-Received: by 2002:a17:90a:356d:: with SMTP id q100mr10627772pjb.53.1570107283855;
-        Thu, 03 Oct 2019 05:54:43 -0700 (PDT)
-Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id c6sm5516569pgk.65.2019.10.03.05.54.41
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 03 Oct 2019 05:54:42 -0700 (PDT)
-Subject: Re: [PATCH 3.16 00/87] 3.16.75-rc1 review
-To:     Ben Hutchings <ben@decadent.org.uk>, linux-kernel@vger.kernel.org,
-        stable@vger.kernel.org
-Cc:     torvalds@linux-foundation.org, akpm@linux-foundation.org,
-        Denis Kirjanov <kda@linux-powerpc.org>
-References: <lsq.1570043210.379046399@decadent.org.uk>
-From:   Guenter Roeck <linux@roeck-us.net>
-Message-ID: <1a374d67-9908-6c7d-c428-219ee6d79ee4@roeck-us.net>
-Date:   Thu, 3 Oct 2019 05:54:41 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Thu, 3 Oct 2019 08:59:39 -0400
+Received: from mga12.intel.com ([192.55.52.136]:50012 "EHLO mga12.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727911AbfJCM7i (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 08:59:38 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 03 Oct 2019 05:59:38 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.67,252,1566889200"; 
+   d="scan'208";a="192112809"
+Received: from local-michael-cet-test.sh.intel.com (HELO localhost) ([10.239.159.128])
+  by fmsmga007.fm.intel.com with ESMTP; 03 Oct 2019 05:59:36 -0700
+Date:   Thu, 3 Oct 2019 21:01:45 +0800
+From:   Yang Weijiang <weijiang.yang@intel.com>
+To:     Jim Mattson <jmattson@google.com>
+Cc:     Yang Weijiang <weijiang.yang@intel.com>,
+        kvm list <kvm@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        "Michael S. Tsirkin" <mst@redhat.com>,
+        Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>
+Subject: Re: [PATCH v7 0/7] Introduce support for Guest CET feature
+Message-ID: <20191003130145.GA25798@local-michael-cet-test.sh.intel.com>
+References: <20190927021927.23057-1-weijiang.yang@intel.com>
+ <CALMp9eQ13Lve+9+61qCF1-7mQkeLLnhDufd-geKtz=34+YJdEg@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <lsq.1570043210.379046399@decadent.org.uk>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CALMp9eQ13Lve+9+61qCF1-7mQkeLLnhDufd-geKtz=34+YJdEg@mail.gmail.com>
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 10/2/19 12:06 PM, Ben Hutchings wrote:
-> This is the start of the stable review cycle for the 3.16.75 release.
-> There are 87 patches in this series, which will be posted as responses
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
+On Wed, Oct 02, 2019 at 03:40:20PM -0700, Jim Mattson wrote:
+> On Thu, Sep 26, 2019 at 7:17 PM Yang Weijiang <weijiang.yang@intel.com> wrote:
+> >
+> > Control-flow Enforcement Technology (CET) provides protection against
+> > Return/Jump-Oriented Programming (ROP/JOP) attack. It includes two
+> > sub-features: Shadow Stack (SHSTK) and Indirect Branch Tracking (IBT).
+> >
+> > KVM modification is required to support Guest CET feature.
+> > This patch serial implemented CET related CPUID/XSAVES enumeration, MSRs
+> > and VMEntry configuration etc.so that Guest kernel can setup CET
+> > runtime infrastructure based on them. Some MSRs and related feature
+> > flags used in the patches reference the definitions in kernel patch.
 > 
-> Responses should be made by Fri Oct 04 19:06:50 UTC 2019.
-> Anything received after that time might be too late.
->
-For v3.16.74-87-g815992c3a9a0:
+> I am still trying to make my way through the 358 page (!) spec for
+> this feature, but I already have some questions/comments about this
+> series:
+> 
+> 1. Does CET "just work" with shadow paging? Shadow paging knows
+> nothing about "shadow-stack pages," and it's not clear to me how
+> shadow-stack pages will interact with dirty tracking.
+> 2. I see non-trivial changes to task switch under CET. Does
+> emulator_do_task_switch need to be updated?
+> 3. What about all of the emulator routines that emulate control
+> transfers (e.g. em_jmp_{far,abs}, em_call_(near_abs,far},
+> em_ret_{far,far_imm,near_imm}, etc)? Don't these have to be modified
+> to work correctly when CR4.CET is set?
+> 4. You don't use the new "enable supervisor shadow stack control" bit
+> in the EPTP. I assume that this is entirely optional, right?
+> 5. I think the easiest way to handle the nested issue (rather than
+> your explicit check for vmxon when setting CR4.CET when the vCPU is in
+> VMX operation) is just to leave CR4.CET out of IA32_VMX_CR4_FIXED1
+> (which is already the case).
+> 6. The function, exception_class(), in x86.c, should be updated to
+> categorize #CP as contributory.
+> 7. The function, x86_exception_has_error_code(), in x86.h, should be
+> updated to include #CP.
+> 8. There appear to be multiple changes to SMM that you haven't
+> implemented (e.g saving/restoring the SSP registers in/from SMRAM.
+> 
+> CET is quite complex. Without any tests, I don't see how you can have
+> any confidence in the correctness of this patch series.
+Thanks Jim for the detailed comments. 
 
-Build results:
-	total: 136 pass: 122 fail: 14
-Failed builds:
-	alpha:allmodconfig
-	arm:allmodconfig
-	arm64:allmodconfig
-	i386:allyesconfig
-	i386:allmodconfig
-	m68k:allmodconfig
-	mips:allmodconfig
-	parisc:allmodconfig
-	powerpc:allmodconfig
-	s390:allmodconfig
-	sparc64:allmodconfig
-	x86_64:allyesconfig
-	x86_64:allmodconfig
-	xtensa:allmodconfig
-Qemu test results:
-	total: 229 pass: 229 fail: 0
+I missed adding test platform and
+result introduction in cover letter. This serial of patch has passed CET
+test in guest on Intel x86 emulator platform and develop machine. 
+Some feature mentioned in the spec. has not been implemented yet. e.g., 
+"supervisor shadow stack control". 
 
-The error is:
+CET feature itself is complex, most of the enabling work is
+inside kernel, the role of KVM is to expose CET related CPUID and MSRs
+etc. to guest, and make guest take over control of the MSRs directly so that
+CET can work efficiently for guest. There're QEMU patches for CET too.
 
-drivers/staging/iio/cdc/ad7150.c:9:10: fatal error: linux/bitfield.h: No such file or directory
-
-which indeed does not exist in v3.16.y. Culprit is commit 6117323f0fbfb
-("staging:iio:ad7150: fix threshold mode config bit".
-
-Guenter
+I'll review your comments carefully, thank you again!
