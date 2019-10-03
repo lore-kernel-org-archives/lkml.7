@@ -2,187 +2,174 @@ Return-Path: <SRS0=6dNS=X4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CBD65C4CED1
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 08:55:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FB36C10F14
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 08:59:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AE3C22086A
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 08:55:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DD8FB215EA
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 08:59:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728985AbfJCIzg (ORCPT
+        id S1728812AbfJCI7d (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 04:55:36 -0400
-Received: from mx2.suse.de ([195.135.220.15]:48432 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727912AbfJCIze (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 04:55:34 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id E6793B15F;
-        Thu,  3 Oct 2019 08:55:32 +0000 (UTC)
-Date:   Thu, 3 Oct 2019 10:55:08 +0200 (CEST)
-From:   Miroslav Benes <mbenes@suse.cz>
-To:     Petr Mladek <pmladek@suse.com>
-cc:     jikos@kernel.org, jpoimboe@redhat.com, joe.lawrence@redhat.com,
-        nstange@suse.de, live-patching@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [RFC PATCH v2 1/3] livepatch: Clear relocation targets on a
- module removal
-In-Reply-To: <20191002132252.wufgbd23sgqptyye@pathway.suse.cz>
-Message-ID: <alpine.LSU.2.21.1910031050440.9011@pobox.suse.cz>
-References: <20190905124514.8944-1-mbenes@suse.cz> <20190905124514.8944-2-mbenes@suse.cz> <20191002132252.wufgbd23sgqptyye@pathway.suse.cz>
-User-Agent: Alpine 2.21 (LSU 202 2017-01-01)
+        Thu, 3 Oct 2019 04:59:33 -0400
+Received: from mga03.intel.com ([134.134.136.65]:40937 "EHLO mga03.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727611AbfJCI7c (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 04:59:32 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 03 Oct 2019 01:59:31 -0700
+X-IronPort-AV: E=Sophos;i="5.67,251,1566889200"; 
+   d="scan'208";a="195154654"
+Received: from jnikula-mobl3.fi.intel.com (HELO localhost) ([10.237.66.161])
+  by orsmga003-auth.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 03 Oct 2019 01:59:26 -0700
+From:   Jani Nikula <jani.nikula@linux.intel.com>
+To:     Mat King <mathewk@google.com>
+Cc:     Daniel Thompson <daniel.thompson@linaro.org>,
+        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        rafael@kernel.org, Greg KH <gregkh@linuxfoundation.org>,
+        Ross Zwisler <zwisler@google.com>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Rajat Jain <rajatja@google.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        Ville =?utf-8?B?U3lyasOkbMOk?= <ville.syrjala@linux.intel.com>,
+        David Airlie <airlied@redhat.com>,
+        Daniel Vetter <daniel.vetter@ffwll.ch>,
+        Alexander Schremmer <alex@alexanderweb.de>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: Re: New sysfs interface for privacy screens
+In-Reply-To: <CAL_quvQkFjkBjJC5wH2t5XmyEq9OKWYSbAv39BJWT1hrKO7j8g@mail.gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+References: <CAL_quvRknSSVvXN3q_Se0hrziw2oTNS3ENNoeHYhvciCRq9Yww@mail.gmail.com> <87h84rbile.fsf@intel.com> <20191002102428.zaid63hp6wpd7w34@holly.lan> <8736gbbf2b.fsf@intel.com> <CAL_quvQkFjkBjJC5wH2t5XmyEq9OKWYSbAv39BJWT1hrKO7j8g@mail.gmail.com>
+Date:   Thu, 03 Oct 2019 11:59:24 +0300
+Message-ID: <87h84q9pcj.fsf@intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 2 Oct 2019, Petr Mladek wrote:
+On Wed, 02 Oct 2019, Mat King <mathewk@google.com> wrote:
+> On Wed, Oct 2, 2019 at 4:46 AM Jani Nikula <jani.nikula@linux.intel.com> wrote:
+>>
+>> On Wed, 02 Oct 2019, Daniel Thompson <daniel.thompson@linaro.org> wrote:
+>> > On Wed, Oct 02, 2019 at 12:30:05PM +0300, Jani Nikula wrote:
+>> >> On Tue, 01 Oct 2019, Mat King <mathewk@google.com> wrote:
+>> >> > Resending in plain text mode
+>> >> >
+>> >> > I have been looking into adding Linux support for electronic privacy
+>> >> > screens which is a feature on some new laptops which is built into the
+>> >> > display and allows users to turn it on instead of needing to use a
+>> >> > physical privacy filter. In discussions with my colleagues the idea of
+>> >> > using either /sys/class/backlight or /sys/class/leds but this new
+>> >> > feature does not seem to quite fit into either of those classes.
+>> >> >
+>> >> > I am proposing adding a class called "privacy_screen" to interface
+>> >> > with these devices. The initial API would be simple just a single
+>> >> > property called "privacy_state" which when set to 1 would mean that
+>> >> > privacy is enabled and 0 when privacy is disabled.
+>> >> >
+>> >> > Current known use cases will use ACPI _DSM in order to interface with
+>> >> > the privacy screens, but this class would allow device driver authors
+>> >> > to use other interfaces as well.
+>> >> >
+>> >> > Example:
+>> >> >
+>> >> > # get privacy screen state
+>> >> > cat /sys/class/privacy_screen/cros_privacy/privacy_state # 1: privacy
+>> >> > enabled 0: privacy disabled
+>> >> >
+>> >> > # set privacy enabled
+>> >> > echo 1 > /sys/class/privacy_screen/cros_privacy/privacy_state
+>> >> >
+>> >> >  Does this approach seem to be reasonable?
+>> >>
+>> >> What part of the userspace would be managing the privacy screen? Should
+>> >> there be a connection between the display and the privacy screen that
+>> >> covers the display? How would the userspace make that connection if it's
+>> >> a sysfs interface?
+>> >>
+>> >> I don't know how the privacy screen operates, but if it draws any power,
+>> >> you'll want to disable it when you switch off the display it covers.
+>> >>
+>> >> If the privacy screen control was part of the graphics subsystem (say, a
+>> >> DRM connector property, which feels somewhat natural), I think it would
+>> >> make it easier for userspace to have policies such as enabling the
+>> >> privacy screen automatically depending on the content you're viewing,
+>> >> but only if the content is on the display that has a privacy screen.
+>> >
+>> > Connectors versus sysfs came up on a backlight thread recently.
+>> >
+>> > Daniel Vetter wrote an excellent summary on why it has been (and still
+>> > is) difficult to migrate backlight controls towards the DRM connector
+>> > interface:
+>> > https://lkml.org/lkml/2019/8/20/752
+>> >
+>> > Many of the backlight legacy problems do not apply to privacy screens
+>> > but I do suggest reading this post and some of the neighbouring parts
+>> > of the thread. In particular the ACPI driver versus real driver issues
+>> > Daniel mentioned could occur again. Hopefully not though, I mean how
+>> > wrong can a 1-bit control go? (actually no... don't answer that).
+>> >
+>> > It would definitely be a shame to build up an unnecessary sysfs legacy
+>> > for privacy screens so definitely worth seeing if this can use DRM
+>> > connector properties.
+>>
+>> Indeed. I'm painfully aware of the issues Daniel describes, and that's
+>> part of the motivation for writing this.
+>>
+>> Obviously the problem with associating the privacy screen with the DRM
+>> connector is that then the kernel has to make the connection, somehow,
+>> instead of just making it a userspace problem.
+>>
+>> BR,
+>> Jani.
+>>
+>> --
+>> Jani Nikula, Intel Open Source Graphics Center
+>
+> I am not familiar with the DRM connector interface and I don't quite
+> understand how it would work in this case. How would the connector
+> provide control to userspace? Is there documentation or example code
+> somewhere that you could point me to?
 
-> On Thu 2019-09-05 14:45:12, Miroslav Benes wrote:
-> > We thus decided to reverse the relocation patching (clear all relocation
-> > targets on x86_64, or return back nops on powerpc). The solution is not
-> > universal and is too much arch-specific, but it may prove to be simpler
-> > in the end.
-> > 
-> > diff --git a/arch/powerpc/kernel/module_64.c b/arch/powerpc/kernel/module_64.c
-> > index a93b10c48000..e461d456e447 100644
-> > --- a/arch/powerpc/kernel/module_64.c
-> > +++ b/arch/powerpc/kernel/module_64.c
-> > @@ -741,6 +741,51 @@ int apply_relocate_add(Elf64_Shdr *sechdrs,
-> >  	return 0;
-> >  }
-> >  
-> > +#ifdef CONFIG_LIVEPATCH
-> > +void clear_relocate_add(Elf64_Shdr *sechdrs,
-> > +		       const char *strtab,
-> > +		       unsigned int symindex,
-> > +		       unsigned int relsec,
-> > +		       struct module *me)
-> > +{
-> > +	unsigned int i;
-> > +	Elf64_Rela *rela = (void *)sechdrs[relsec].sh_addr;
-> > +	Elf64_Sym *sym;
-> > +	unsigned long *location;
-> > +	const char *symname;
-> > +	u32 *instruction;
-> > +
-> > +	pr_debug("Applying ADD relocate section %u to %u\n", relsec,
-> 
-> s/Applying/Clearing/
+Here are some links, from the general to more specific. Don't get
+overwhelmed. ;)
 
-Ugh. Thanks for noticing.
- 
-> > +	       sechdrs[relsec].sh_info);
-> > +
-> > +	for (i = 0; i < sechdrs[relsec].sh_size / sizeof(*rela); i++) {
-> > +		location = (void *)sechdrs[sechdrs[relsec].sh_info].sh_addr
-> > +			+ rela[i].r_offset;
-> > +		sym = (Elf64_Sym *)sechdrs[symindex].sh_addr
-> > +			+ ELF64_R_SYM(rela[i].r_info);
-> > +		symname = me->core_kallsyms.strtab
-> > +			+ sym->st_name;
-> > +
-> > +		if (ELF64_R_TYPE(rela[i].r_info) != R_PPC_REL24)
-> > +			continue;
-> 
-> I expected that the code below would reverse the operations
-> in apply_relocate_add() for case R_PPC_REL24. But it is not
-> obvious for me.
+https://www.kernel.org/doc/html/latest/gpu/index.html
+https://www.kernel.org/doc/html/latest/gpu/drm-kms.html
+https://www.kernel.org/doc/html/latest/gpu/drm-kms.html#kms-properties
 
-It should, but it is not obvious. See restore_r2(). We only need to 
-replace PPC_INST_LD_TOC instruction with PPC_INST_NOP and that's it.
+The kms userspace tests have some example code. Likely pretty far from
+what a nice userspace would actually look like, but you get the idea.
 
-> It might be because I am not familiar with the code. Or would
-> it deserve some comments?
+https://gitlab.freedesktop.org/drm/igt-gpu-tools/blob/master/tests/kms_properties.c
 
-Maybe.
+Finally, the larger point all along in exposing this via connector
+properties is that this could be integrated to some graphics userspace
+for a nice user experience, instead of scattering a bunch of userspace
+APIs for the same feature across the kernel, and then desperately trying
+to gather them to a coherent experience in userspace.
 
-> > +
-> > +		if (sym->st_shndx != SHN_UNDEF &&
-> > +		    sym->st_shndx != SHN_LIVEPATCH)
-> > +			continue;
-> > +
-> > +		instruction = (u32 *)location;
-> > +		if (is_mprofile_mcount_callsite(symname, instruction))
-> > +			continue;
-> > +
-> > +		if (!instr_is_relative_link_branch(*instruction))
-> > +			continue;
-> > +
-> > +		instruction += 1;
-> > +		*instruction = PPC_INST_NOP;
-> > +	}
-> > +}
-> > +#endif
-> > +
-> >  #ifdef CONFIG_DYNAMIC_FTRACE
-> >  
-> > diff --git a/kernel/livepatch/core.c b/kernel/livepatch/core.c
-> > index ab4a4606d19b..f0b380d2a17a 100644
-> > --- a/kernel/livepatch/core.c
-> > +++ b/kernel/livepatch/core.c
-> > @@ -295,6 +295,45 @@ static int klp_write_object_relocations(struct module *pmod,
-> >  	return ret;
-> >  }
-> >  
-> > +static void klp_clear_object_relocations(struct module *pmod,
-> > +					struct klp_object *obj)
-> > +{
-> > +	int i, cnt;
-> > +	const char *objname, *secname;
-> > +	char sec_objname[MODULE_NAME_LEN];
-> > +	Elf_Shdr *sec;
-> > +
-> > +	objname = klp_is_module(obj) ? obj->name : "vmlinux";
-> > +
-> > +	/* For each klp relocation section */
-> > +	for (i = 1; i < pmod->klp_info->hdr.e_shnum; i++) {
-> > +		sec = pmod->klp_info->sechdrs + i;
-> > +		secname = pmod->klp_info->secstrings + sec->sh_name;
-> > +		if (!(sec->sh_flags & SHF_RELA_LIVEPATCH))
-> > +			continue;
-> > +
-> > +		/*
-> > +		 * Format: .klp.rela.sec_objname.section_name
-> > +		 * See comment in klp_resolve_symbols() for an explanation
-> > +		 * of the selected field width value.
-> > +		 */
-> > +		secname = pmod->klp_info->secstrings + sec->sh_name;
-> > +		cnt = sscanf(secname, ".klp.rela.%55[^.]", sec_objname);
-> > +		if (cnt != 1) {
-> > +			pr_err("section %s has an incorrectly formatted name\n",
-> > +			       secname);
-> > +			continue;
-> > +		}
-> > +
-> > +		if (strcmp(objname, sec_objname))
-> > +			continue;
-> > +
-> 
-> It would make the review easier when the order of 1st and 2nd
-> patch was swaped. I mean that I would not need to check twice
-> that the two functions actually share the same code.
+In fact, to that end we have rather more strict requirements for
+userspace APIs in drm than perhaps the rest of the kernel:
 
-Ok.
- 
-> > +		clear_relocate_add(pmod->klp_info->sechdrs,
-> > +				   pmod->core_kallsyms.strtab,
-> > +				   pmod->klp_info->symndx, i, pmod);
-> > +	}
-> > +}
-> > +
-> >  /*
-> >   * Sysfs Interface
-> >   *
-> 
-> I was not able to check correctness of the ppc and s390 parts.
-> Otherwise, it looks good to me.
+https://www.kernel.org/doc/html/latest/gpu/drm-uapi.html#open-source-userspace-requirements
 
-Thanks
-Miroslav
+Just shoving this into sysfs or procfs to get the kernel part done is
+technical debt that ultimately has to be paid by userspace. The
+backlight sysfs interface is ancient, and we didn't know better. We
+don't have that excuse anymore.
+
+
+BR,
+Jani.
+
+
+-- 
+Jani Nikula, Intel Open Source Graphics Center
