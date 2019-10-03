@@ -2,141 +2,90 @@ Return-Path: <SRS0=6dNS=X4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 59667C10F14
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 12:39:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3997CC32792
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 12:45:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 364C120862
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 12:39:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0D4C920700
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 12:45:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QLU9n8bB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729785AbfJCMjV (ORCPT
+        id S1729093AbfJCMpq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 08:39:21 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:45152 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727242AbfJCMjV (ORCPT
+        Thu, 3 Oct 2019 08:45:46 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:55849 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725827AbfJCMpp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 08:39:21 -0400
-Received: from pps.filterd (m0098414.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x93Cbe4s063855
-        for <linux-kernel@vger.kernel.org>; Thu, 3 Oct 2019 08:39:19 -0400
-Received: from e06smtp01.uk.ibm.com (e06smtp01.uk.ibm.com [195.75.94.97])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2vdfcjv0j5-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Thu, 03 Oct 2019 08:39:19 -0400
-Received: from localhost
-        by e06smtp01.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <zohar@linux.ibm.com>;
-        Thu, 3 Oct 2019 13:39:17 +0100
-Received: from b06avi18878370.portsmouth.uk.ibm.com (9.149.26.194)
-        by e06smtp01.uk.ibm.com (192.168.101.131) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Thu, 3 Oct 2019 13:39:13 +0100
-Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
-        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x93CdCTH28115388
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 3 Oct 2019 12:39:12 GMT
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id B94F111C05E;
-        Thu,  3 Oct 2019 12:39:12 +0000 (GMT)
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 4F8F511C04A;
-        Thu,  3 Oct 2019 12:39:11 +0000 (GMT)
-Received: from localhost.localdomain (unknown [9.85.158.158])
-        by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Thu,  3 Oct 2019 12:39:11 +0000 (GMT)
-Subject: Re: [PATCH] tpm: Detach page allocation from tpm_buf
-From:   Mimi Zohar <zohar@linux.ibm.com>
-To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Cc:     linux-integrity@vger.kernel.org,
-        Jerry Snitselaar <jsnitsel@redhat.com>,
-        James Bottomley <James.Bottomley@HansenPartnership.com>,
-        Sumit Garg <sumit.garg@linaro.org>,
-        Stefan Berger <stefanb@linux.vnet.ibm.com>,
-        Peter Huewe <peterhuewe@gmx.de>,
-        Jason Gunthorpe <jgg@ziepe.ca>, Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        open list <linux-kernel@vger.kernel.org>
-Date:   Thu, 03 Oct 2019 08:39:10 -0400
-In-Reply-To: <20191003113211.GC8933@linux.intel.com>
-References: <20190925134842.19305-1-jarkko.sakkinen@linux.intel.com>
-         <20190926124635.GA6040@linux.intel.com>
-         <20190926131227.GA6582@linux.intel.com>
-         <1570020024.4999.104.camel@linux.ibm.com>
-         <20191003113211.GC8933@linux.intel.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
-Mime-Version: 1.0
+        Thu, 3 Oct 2019 08:45:45 -0400
+Received: by mail-wm1-f66.google.com with SMTP id a6so2153104wma.5;
+        Thu, 03 Oct 2019 05:45:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=JwNDq6/SadVRzUHCqVoOmovQ7PK6KJzhM3n6l1+VwQw=;
+        b=QLU9n8bBhqXmt8lGv7af64X51iGtqGBHhT0fkxfwZ8AAKxnLLqMws4iyMnkXs9cYTu
+         mG04JBsDBVYAF0JFcKa2cXiKAH4R7nbS8s7tq5H6sV2P/YVzcphEHB8K/0s69tyJ0Q+N
+         t5pTB8dSpXjhmB5A6cBp4IGHacuXTK4IIF6C9HqD5mUXoxG7V0A28WxmuUHZVDAnAL0m
+         ZPhVj/o/8rk3GPHkShYLLYGksuaRUGa/JaQbja7qe69AkkxmIhtabIRKPYsHheYWpG45
+         a1ec5v5s7aariSunAqS53SGjzTfT0XLm8LWmyFIitoFO8Uwafxl4cIDmgeKqUOu9zleA
+         TWBQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=JwNDq6/SadVRzUHCqVoOmovQ7PK6KJzhM3n6l1+VwQw=;
+        b=DLI7PTURMtobGDZDvU5C2/CGiUlACut4QL4NDLtTf+ijw65tCWJBkQOn16Yiav5FMk
+         xFDylpX16Xqdhskw5X6B7VYeWNr6aLldk/OT3qjNEjEp1EavJubYlfkwNj6akMKGjgQ1
+         rziUBak1ptdOD50OO1MDzgRxIDOKr5pXTdnJjzoaqq6gegzbvmfWu+gdgsBLaHcfbElX
+         6y5Q2rhV6L0mp/EHcX+TWGPz+myMhSWvAQKvq91tWR0PaY2O4SluKbcll3k5v+rv0gi4
+         cFfbyFAuC3DPDHc4DV9pOZ/VeDHRjnFJM/uNGQ/lH5W3vOGnrciZi9GtLyOqQpgjGB8E
+         PFqg==
+X-Gm-Message-State: APjAAAXAyKoY98st0686ZRpbhPkLEUbZpYLYTossoiADxUq1Yy3rsnf8
+        kh1vxxk6E/ucvRPA/MBSi0Y=
+X-Google-Smtp-Source: APXvYqzFVdDRYehCTkSXgwbUMPcJUvaLQ/qFVs0OlFYGCy22gnleF6yu+1qt/f9/WtiFnxJc6ATTEQ==
+X-Received: by 2002:a1c:3904:: with SMTP id g4mr7134014wma.116.1570106743615;
+        Thu, 03 Oct 2019 05:45:43 -0700 (PDT)
+Received: from localhost.localdomain ([46.114.33.103])
+        by smtp.googlemail.com with ESMTPSA id y3sm12880507wmg.2.2019.10.03.05.45.41
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 03 Oct 2019 05:45:42 -0700 (PDT)
+From:   Gon Solo <gonsolo@gmail.com>
+To:     mchehab+samsung@kernel.org
+Cc:     sean@mess.org, crope@iki.fi, linux-media@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Gon Solo <gonsolo@gmail.com>
+Subject: [PATCH 0/3] Add support for Logilink VG0022A
+Date:   Thu,  3 Oct 2019 14:45:29 +0200
+Message-Id: <20191003124532.10945-1-gonsolo@gmail.com>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20191003122027.GA2674@Limone>
+References: <20191003122027.GA2674@Limone>
+MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-x-cbid: 19100312-4275-0000-0000-0000036DAE14
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19100312-4276-0000-0000-00003880B43C
-Message-Id: <1570106350.4421.166.camel@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-10-03_05:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1908290000 definitions=main-1910030117
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 2019-10-03 at 14:32 +0300, Jarkko Sakkinen wrote:
-> On Wed, Oct 02, 2019 at 08:40:24AM -0400, Mimi Zohar wrote:
-> > On Thu, 2019-09-26 at 16:12 +0300, Jarkko Sakkinen wrote:
-> > > On Thu, Sep 26, 2019 at 03:46:35PM +0300, Jarkko Sakkinen wrote:
-> > > > On Wed, Sep 25, 2019 at 04:48:41PM +0300, Jarkko Sakkinen wrote:
-> > > > > -		tpm_buf_reset(&buf, TPM2_ST_NO_SESSIONS, TPM2_CC_GET_RANDOM);
-> > > > > +		tpm_buf_reset(&buf, data_ptr, PAGE_SIZE,
-> > > > > +			      TPM2_ST_NO_SESSIONS, TPM2_CC_PCR_EXTEND);
-> > > > 
-> > > > Oops.
-> > > 
-> > > Maybe we could use random as the probe for TPM version since we anyway
-> > > send a TPM command as a probe for TPM version:
-> > > 
-> > > 1. Try TPM2 get random.
-> > > 2. If fail, try TPM1 get random.
-> > > 3. Output random number to klog.
-> > > 
-> > > Something like 8 bytes would be sufficient. This would make sure that
-> > > no new change breaks tpm_get_random() and also this would give some
-> > > feedback that TPM is at least somewhat working.
-> > 
-> > That involves sending 2 TPM commands.  At what point does this occur?
-> >  On registration?  Whenever getting a random number?  Is the result
-> > cached in chip->flags?
-> 
-> On registeration. It is just printed to klog.
+These three patches make the Logilink VG0022A work.
+Being cheap hardware a bogus chip version is returned but this is catched in
+the driver.
 
-What sets "TPM_CHIP_FLAG_TPM2" in chip->flags?  And when?
+Gon Solo (3):
+  af9035: Better explain how i2c bus speed is computed.
+  s2157: Handle bogus chip version.
+  af9035: Add Logilink VG0022A id.
 
-> 
-> > Will this delay the TPM initialization, causing IMA to go into "TPM
-> > bypass mode"?
-> 
-> Of course it will delay the init.
+ drivers/media/tuners/si2157.c         | 19 ++++++++++++-------
+ drivers/media/usb/dvb-usb-v2/af9035.c | 13 +++++++++----
+ 2 files changed, 21 insertions(+), 11 deletions(-)
 
-Delaying the init will most likely cause regressions on systems with
-TPM 1.2 systems.
-
-Instead of sending the TPM 2.0 command and on failure sending the TPM
-1.2 version of the command, could chip->flags be tested?  And if not
-chip->flags, then provide the TPM version as part of registration.
-
-> 
-> As I've stated before the real fix for the bypass issue would be
-> to make TPM as part of the core but this has not received much
-> appeal. I think I've sent patch for this once.
-
-I must have missed this discussion.
-
-Mimi
+-- 
+2.20.1
 
