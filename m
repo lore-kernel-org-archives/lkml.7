@@ -2,129 +2,122 @@ Return-Path: <SRS0=6dNS=X4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DE4EC32792
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:29:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82ABCC4CED1
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:29:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 26A9720830
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:29:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5608020830
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:29:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570123785;
-	bh=lJ6ETzuUgh+usujMpgSo9zVOaxUbPzms0ZR6mLWa65U=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zdrU9D0dH3XIavW+s+pJGuhI4RkIRcIoTE8943tc6LVa/bOy83xLTOQF8+GcB2elh
-	 krVjoh8y9nrobFGTC6TKoFTmQ1N6me/3abwicQWOhAzLoHeOHrVV3XIuzbLAIfJfWQ
-	 Gz6IdDfMQWeqvQYupj7ygT2SrcuJHhcRg1kt2PqM=
+	s=default; t=1570123786;
+	bh=QGeozehB18NxcCkyfYqnxXbStaIMKUEBAeYjYYNc+NM=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=1QndydU957/M9+v7Nde+8LIJ3zlX+yVRpmXK0J8vC6UL3+pg2vJmiin4rhko2DsUH
+	 Pp1ggZK98IRfzYBDcPdq/v+cNxeRJUQgl4Aa7h12UTh62O/orzDyYp1FWKDUl5+YhX
+	 +3zFGMDeLfp0XzGh3F3FNX4+lexUguiU4eGwVgXY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730628AbfJCR3n (ORCPT
+        id S1730736AbfJCR3p (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Thu, 3 Oct 2019 13:29:45 -0400
+Received: from mail-lf1-f67.google.com ([209.85.167.67]:33842 "EHLO
+        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730558AbfJCR3n (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 3 Oct 2019 13:29:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34650 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388043AbfJCQM1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:12:27 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E334A215EA;
-        Thu,  3 Oct 2019 16:12:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570119147;
-        bh=lJ6ETzuUgh+usujMpgSo9zVOaxUbPzms0ZR6mLWa65U=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=oGtUYRZbI7RfJPARGSTt1I8Ato+BcyZlzXssB447kJ2eSsYvB+EeaPc5joh2Q02Fb
-         mO1keQz22hgGuEUr1V3Qsg6Z5QVa5P81hSKQV1R85W7wTU1v3LojPnp07mCq6TDHCu
-         Teay70Jm7DT3Edw2N2FJDFFQnnACTj5gV0IUrNgc=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org, rostedt@goodmis.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Vincent Whitchurch <vincent.whitchurch@axis.com>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Petr Mladek <pmladek@suse.com>
-Subject: [PATCH 4.14 143/185] printk: Do not lose last line in kmsg buffer dump
-Date:   Thu,  3 Oct 2019 17:53:41 +0200
-Message-Id: <20191003154510.225988177@linuxfoundation.org>
-X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20191003154437.541662648@linuxfoundation.org>
-References: <20191003154437.541662648@linuxfoundation.org>
-User-Agent: quilt/0.66
+Received: by mail-lf1-f67.google.com with SMTP id r22so2488973lfm.1
+        for <linux-kernel@vger.kernel.org>; Thu, 03 Oct 2019 10:29:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=8ZVEazC37+BdYsUUwYDYhErEg09v7WhRGEkqCbHO0ks=;
+        b=RPXZgCaexY2Zm6d9kF62WZV2HjWT9s5h167SaV6Ngphi1rMoYR5sDMd7JP8nFxcvYF
+         Eh4EV5kyIIxb7dH3ZX7onDXYIrgX6swFRJoYDqwN7BI9I/QqzG6azoIIoIa4evdilqxu
+         0mEQ0+Fig1AOcYuhpzqpY17x0W0NtiJ8K/bx0=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=8ZVEazC37+BdYsUUwYDYhErEg09v7WhRGEkqCbHO0ks=;
+        b=bOysl/DHEiH1u1jePUyIlB3kasliDO8RxlRBbMc80Pxn7eISduLzZ1PUsgaOZb8e7Y
+         TznNMO7b1i+6hOFNvn2uED3QnZTRJjJwxxgveUUSn0dmEbBhzFRkL80uNkMDWZzH1ziK
+         7Ju5bqX3qmB7gMU9YL7k7sBFP8bPxGK7H2G3F0swsXdmX+aBCI9mioCo/LN5cCd7rTGr
+         UU9S0/lv8Nk1rDcBiV+LR0bKrQurzyCgvqGcLJ4hKN6U7ArFEI/zEXgShelpKduEbABb
+         mD7SSnw7AvJ2ZN0LB8oIYXj+M6uZjb2K5qolZVnpKfrDyz3vFrVexc6bBvcmEnlJpO5q
+         Nc/Q==
+X-Gm-Message-State: APjAAAWH2K8P3BaWZVq+pvF9UB6Czj268SXfER2E2md4IgMaxtr2QOaX
+        TJJ8agZVCqqZtmRWZSg1hNz5QBTFYis=
+X-Google-Smtp-Source: APXvYqySGpa9YqXEGaXK4qiQBELLkq3ar6hDwxIs/hBA07QUzW2/CE89VajNWRNkmbVt42641u/AQA==
+X-Received: by 2002:ac2:4a8f:: with SMTP id l15mr6501282lfp.21.1570123780236;
+        Thu, 03 Oct 2019 10:29:40 -0700 (PDT)
+Received: from mail-lj1-f176.google.com (mail-lj1-f176.google.com. [209.85.208.176])
+        by smtp.gmail.com with ESMTPSA id z20sm781495ljk.63.2019.10.03.10.29.38
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 03 Oct 2019 10:29:38 -0700 (PDT)
+Received: by mail-lj1-f176.google.com with SMTP id q64so3644617ljb.12
+        for <linux-kernel@vger.kernel.org>; Thu, 03 Oct 2019 10:29:38 -0700 (PDT)
+X-Received: by 2002:a2e:86d5:: with SMTP id n21mr6811909ljj.1.1570123777769;
+ Thu, 03 Oct 2019 10:29:37 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <20190930112636.vx2qxo4hdysvxibl@willie-the-truck>
+ <CAK7LNASQZ82KSOrQW7+Wq1vFDCg2__maBEAPMLqUDqZMLuj1rA@mail.gmail.com>
+ <20190930121803.n34i63scet2ec7ll@willie-the-truck> <CAKwvOdnqn=0LndrX+mUrtSAQqoT1JWRMOJCA5t3e=S=T7zkcCQ@mail.gmail.com>
+ <20191001092823.z4zhlbwvtwnlotwc@willie-the-truck> <CAKwvOdk0h2A6=fb7Yepf+oKbZfq_tqwpGq8EBmHVu1j4mo-a-A@mail.gmail.com>
+ <20191001170142.x66orounxuln7zs3@willie-the-truck> <CAKwvOdnFJqipp+G5xLDRBcOrQRcvMQmn+n8fufWyzyt2QL_QkA@mail.gmail.com>
+ <20191001175512.GK25745@shell.armlinux.org.uk> <CAKwvOdmw_xmTGZLeK8-+Q4nUpjs-UypJjHWks-3jHA670Dxa1A@mail.gmail.com>
+ <20191001181438.GL25745@shell.armlinux.org.uk> <CAKwvOdmBnBVU7F-a6DqPU6QM-BRc8LNn6YRmhTsuGLauCWKUOg@mail.gmail.com>
+ <CAMuHMdWPhE1nNkmL1nj3vpQhB7fP3uDs2i_ZVi0Gf9qij4W2CA@mail.gmail.com>
+ <CAHk-=wgFODvdFBHzgVf3JjoBz0z6LZhOm8xvMntsvOr66ASmZQ@mail.gmail.com>
+ <CAK7LNARM2jVSdgCDJWDbvVxYLiUR_CFgTPg0nxzbCszSKcx+pg@mail.gmail.com>
+ <CAHk-=wiMm3rN15WmiAqMHjC-pakL_b8qgWsPPri0+YLFORT-ZA@mail.gmail.com> <CAK7LNATSoOD0g=Aarui6Y26E_YB035NsaPpHxqtBNyw0K0UXVw@mail.gmail.com>
+In-Reply-To: <CAK7LNATSoOD0g=Aarui6Y26E_YB035NsaPpHxqtBNyw0K0UXVw@mail.gmail.com>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Thu, 3 Oct 2019 10:29:21 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wj9Dbom1x7qDfrXgNbjdFa_84bAUMdGigs4sELQQW28wg@mail.gmail.com>
+Message-ID: <CAHk-=wj9Dbom1x7qDfrXgNbjdFa_84bAUMdGigs4sELQQW28wg@mail.gmail.com>
+Subject: Re: [PATCH] compiler: enable CONFIG_OPTIMIZE_INLINING forcibly
+To:     Masahiro Yamada <yamada.masahiro@socionext.com>
+Cc:     Geert Uytterhoeven <geert@linux-m68k.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Russell King - ARM Linux admin <linux@armlinux.org.uk>,
+        Will Deacon <will@kernel.org>,
+        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Stefan Wahren <wahrenst@gmx.net>,
+        Kees Cook <keescook@google.com>, Arnd Bergmann <arnd@arndb.de>,
+        clang-built-linux <clang-built-linux@googlegroups.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vincent Whitchurch <vincent.whitchurch@axis.com>
+On Thu, Oct 3, 2019 at 10:24 AM Masahiro Yamada
+<yamada.masahiro@socionext.com> wrote:
+>
+> I just want to annotate __always_inline for the case
+> "2. code that if not inlined is somehow not correct."
 
-commit c9dccacfccc72c32692eedff4a27a4b0833a2afd upstream.
+Oh, I support that entirely - if only for documentation.
 
-kmsg_dump_get_buffer() is supposed to select all the youngest log
-messages which fit into the provided buffer.  It determines the correct
-start index by using msg_print_text() with a NULL buffer to calculate
-the size of each entry.  However, when performing the actual writes,
-msg_print_text() only writes the entry to the buffer if the written len
-is lesser than the size of the buffer.  So if the lengths of the
-selected youngest log messages happen to precisely fill up the provided
-buffer, the last log message is not included.
+But I do *not* support the dismissal of the architecture maintainers
+concerns about "does it work?" and apparently known compiler bugs.
 
-We don't want to modify msg_print_text() to fill up the buffer and start
-returning a length which is equal to the size of the buffer, since
-callers of its other users, such as kmsg_dump_get_line(), depend upon
-the current behaviour.
+> Again, not saying "use a macro".
 
-Instead, fix kmsg_dump_get_buffer() to compensate for this.
+Other people did, though.
 
-For example, with the following two final prints:
+And there seemed to be little balancing of the pain vs the gain. The
+gain really isn't that obvious. If the code shrinks by a couple of kB,
+is that good or bad? Maybe it is smaller, but is it _better_?
 
-[    6.427502] AAAAAAAAAAAAA
-[    6.427769] BBBBBBBB12345
-
-A dump of a 64-byte buffer filled by kmsg_dump_get_buffer(), before this
-patch:
-
- 00000000: 3c 30 3e 5b 20 20 20 20 36 2e 35 32 32 31 39 37  <0>[    6.522197
- 00000010: 5d 20 41 41 41 41 41 41 41 41 41 41 41 41 41 0a  ] AAAAAAAAAAAAA.
- 00000020: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
- 00000030: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
-
-After this patch:
-
- 00000000: 3c 30 3e 5b 20 20 20 20 36 2e 34 35 36 36 37 38  <0>[    6.456678
- 00000010: 5d 20 42 42 42 42 42 42 42 42 31 32 33 34 35 0a  ] BBBBBBBB12345.
- 00000020: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
- 00000030: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
-
-Link: http://lkml.kernel.org/r/20190711142937.4083-1-vincent.whitchurch@axis.com
-Fixes: e2ae715d66bf4bec ("kmsg - kmsg_dump() use iterator to receive log buffer content")
-To: rostedt@goodmis.org
-Cc: linux-kernel@vger.kernel.org
-Cc: <stable@vger.kernel.org> # v3.5+
-Signed-off-by: Vincent Whitchurch <vincent.whitchurch@axis.com>
-Reviewed-by: Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
-Signed-off-by: Petr Mladek <pmladek@suse.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
----
- kernel/printk/printk.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
---- a/kernel/printk/printk.c
-+++ b/kernel/printk/printk.c
-@@ -3189,7 +3189,7 @@ bool kmsg_dump_get_buffer(struct kmsg_du
- 	/* move first record forward until length fits into the buffer */
- 	seq = dumper->cur_seq;
- 	idx = dumper->cur_idx;
--	while (l > size && seq < dumper->next_seq) {
-+	while (l >= size && seq < dumper->next_seq) {
- 		struct printk_log *msg = log_from_idx(idx);
- 
- 		l -= msg_print_text(msg, true, NULL, 0);
-
-
+            Linus
