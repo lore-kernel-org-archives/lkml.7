@@ -7,49 +7,46 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E0AB0C32792
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:27:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 538FDC10F14
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:27:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A685C21A4C
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:27:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2907C222BE
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:27:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570120030;
-	bh=xKTppu/GDfJLMQWpfzwwiblwXnUW9uwticGihbh1hF8=;
+	s=default; t=1570120034;
+	bh=Efrs07DtXo6dlB5edLomXEd/SCJQyQCva1c9N4iPxMY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=NXcmgBSfYYs2mZYA+KoOoP/j0QmuPOr1xRIsxVgPbWXZr09REf7HzuhMQr6TJjFcu
-	 3gx/MyKKLVwfclKpj5H1xwCgSikClTREGuhOCkz3kTWnxIdMvdyYLFVY0DJqEprxZT
-	 jWPJzu1NGN0DF1d1p3D6gM4B75IefaprDDZEHPBQ=
+	b=ncux4MYym2NAVe+Bk42fsM+Rd2n9QEs60mDEumk63Pcj2m+LW0Og65apR4BQmbr3J
+	 Ecb1mI3exbA4kRuRuQcVq/FcQJj5Uk8eJ7I2Ouji2KZolb7TRSBFjJvGIiOUepZsDT
+	 VL8qiwgierQtjzhDRMuqAWC5ObHK7GoxEDqaMygY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391208AbfJCQ1K (ORCPT
+        id S2391216AbfJCQ1N (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 12:27:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58732 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 12:27:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58834 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391195AbfJCQ1G (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:27:06 -0400
+        id S2391203AbfJCQ1J (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:27:09 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 385BC20867;
-        Thu,  3 Oct 2019 16:27:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E3A662054F;
+        Thu,  3 Oct 2019 16:27:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570120025;
-        bh=xKTppu/GDfJLMQWpfzwwiblwXnUW9uwticGihbh1hF8=;
+        s=default; t=1570120028;
+        bh=Efrs07DtXo6dlB5edLomXEd/SCJQyQCva1c9N4iPxMY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0mfvbSGv5ZBdNojMeyVtyj3NU31gv6gztN0C2EZ2r6CQrJjYjH92r4YrErSxyHnRo
-         vtjjSa5K42qKRhXf+5nwACSel+kEXruA3WEOSnfk7mzDl5V2SppkmWqT/HJ3nja2Hi
-         wxJoN8E1VQ52/MlMn0BGmIZJ/KxfJzLFbNQ6lWPI=
+        b=Xuo7QPtCTL0QtyXkq6oFTEuM76R8BWw1+H2RKT1f/Db5bMOcvfw2d9wXxOhxkQPnD
+         oah2iu7e+zofyzE00P2dh2np2ON7NruZTCFOkJ5mmmWMOZLX/BDPPHmONaUUhyq80V
+         uZfwSSEVpuZc4Fj55y8CN/pYJwxGo/RZfGnUmg9E=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Vinod Koul <vkoul@kernel.org>,
-        Vaishali Thakkar <vaishali.thakkar@linaro.org>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 068/313] base: soc: Export soc_device_register/unregister APIs
-Date:   Thu,  3 Oct 2019 17:50:46 +0200
-Message-Id: <20191003154539.598967096@linuxfoundation.org>
+        stable@vger.kernel.org, Ard van Breemen <ard@kwaak.net>,
+        Takashi Iwai <tiwai@suse.de>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.2 069/313] ALSA: usb-audio: Skip bSynchAddress endpoint check if it is invalid
+Date:   Thu,  3 Oct 2019 17:50:47 +0200
+Message-Id: <20191003154539.682300060@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191003154533.590915454@linuxfoundation.org>
 References: <20191003154533.590915454@linuxfoundation.org>
@@ -62,45 +59,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vinod Koul <vkoul@kernel.org>
+From: Ard van Breemen <ard@kwaak.net>
 
-[ Upstream commit f7ccc7a397cf2ef64aebb2f726970b93203858d2 ]
+[ Upstream commit 1b34121d9f26d272b0b2334209af6b6fc82d4bf1 ]
 
-Qcom Socinfo driver can be built as a module, so
-export these two APIs.
+The Linux kernel assumes that get_endpoint(alts,0) and
+get_endpoint(alts,1) are eachothers feedback endpoints.
+To reassure that validity it will test bsynchaddress to comply with that
+assumption. But if the bsyncaddress is 0 (invalid), it will flag that as
+a wrong assumption and return an error.
+Fix: Skip the test if bSynchAddress is 0.
+Note: those with a valid bSynchAddress should have a code quirck added.
 
-Tested-by: Vinod Koul <vkoul@kernel.org>
-Signed-off-by: Vinod Koul <vkoul@kernel.org>
-Signed-off-by: Vaishali Thakkar <vaishali.thakkar@linaro.org>
-Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Reviewed-by: Stephen Boyd <swboyd@chromium.org>
-Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+Signed-off-by: Ard van Breemen <ard@kwaak.net>
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/base/soc.c | 2 ++
- 1 file changed, 2 insertions(+)
+ sound/usb/pcm.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/base/soc.c b/drivers/base/soc.c
-index 10b280f30217b..7e91894a380b5 100644
---- a/drivers/base/soc.c
-+++ b/drivers/base/soc.c
-@@ -157,6 +157,7 @@ struct soc_device *soc_device_register(struct soc_device_attribute *soc_dev_attr
- out1:
- 	return ERR_PTR(ret);
- }
-+EXPORT_SYMBOL_GPL(soc_device_register);
- 
- /* Ensure soc_dev->attr is freed prior to calling soc_device_unregister. */
- void soc_device_unregister(struct soc_device *soc_dev)
-@@ -166,6 +167,7 @@ void soc_device_unregister(struct soc_device *soc_dev)
- 	device_unregister(&soc_dev->dev);
- 	early_soc_dev_attr = NULL;
- }
-+EXPORT_SYMBOL_GPL(soc_device_unregister);
- 
- static int __init soc_bus_register(void)
- {
+diff --git a/sound/usb/pcm.c b/sound/usb/pcm.c
+index e4bbf79de956e..33cd26763c0ee 100644
+--- a/sound/usb/pcm.c
++++ b/sound/usb/pcm.c
+@@ -457,6 +457,7 @@ static int set_sync_endpoint(struct snd_usb_substream *subs,
+ 	}
+ 	ep = get_endpoint(alts, 1)->bEndpointAddress;
+ 	if (get_endpoint(alts, 0)->bLength >= USB_DT_ENDPOINT_AUDIO_SIZE &&
++	    get_endpoint(alts, 0)->bSynchAddress != 0 &&
+ 	    ((is_playback && ep != (unsigned int)(get_endpoint(alts, 0)->bSynchAddress | USB_DIR_IN)) ||
+ 	     (!is_playback && ep != (unsigned int)(get_endpoint(alts, 0)->bSynchAddress & ~USB_DIR_IN)))) {
+ 		dev_err(&dev->dev,
 -- 
 2.20.1
 
