@@ -2,131 +2,90 @@ Return-Path: <SRS0=6dNS=X4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 194E5C4CED1
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 12:11:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78D1FC32792
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 12:12:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EAF3F20842
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 12:11:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4BF6B20700
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 12:12:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1570104732;
+	bh=KK0fmeHTMIKj0HO4+Es7aivDcLkSEBjt3U1OKtPhwkc=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=gSGQpkUHfy3b+c6N08bXZMDm6RY4Qu5XwnuNtjtOGjP+8LuojEJndv1OxxE3Ps53f
+	 NC++2U4uHVLIdyF+Fw5n2b+ksSoDZzeQDsPSHdcm3PjE0m9XSd6ZnXAMtEUVOTTsYv
+	 i7Z2k1VRr0+n7vLH3LtR/sNFG/h7qhPXaNVHCiVA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729735AbfJCMLl (ORCPT
+        id S1729890AbfJCMML (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 08:11:41 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:39780 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729316AbfJCMLY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 08:11:24 -0400
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id D4FC0302C07C;
-        Thu,  3 Oct 2019 12:11:24 +0000 (UTC)
-Received: from prarit.bos.redhat.com (prarit-guest.khw1.lab.eng.bos.redhat.com [10.16.200.63])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 550F75C226;
-        Thu,  3 Oct 2019 12:11:24 +0000 (UTC)
-From:   Prarit Bhargava <prarit@redhat.com>
-To:     platform-driver-x86@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, srinivas.pandruvada@linux.intel.com,
-        Prarit Bhargava <prarit@redhat.com>
-Subject: [PATCH v2 5/7] intel-speed-select: Implement CascadeLake-N help and command functions structures
-Date:   Thu,  3 Oct 2019 08:11:10 -0400
-Message-Id: <20191003121112.25870-6-prarit@redhat.com>
-In-Reply-To: <20191003121112.25870-1-prarit@redhat.com>
-References: <20191003121112.25870-1-prarit@redhat.com>
+        Thu, 3 Oct 2019 08:12:11 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:60598 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729733AbfJCMML (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 08:12:11 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Subject:Cc:To:
+        From:Date:Sender:Reply-To:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=Z6z+KsbbvfNDmZ8hWhm3ZrpQ2X1uMleoDabYVy67j9Q=; b=js3Fmk4c6buCzxnUeBl6k2K0M
+        MN2liDvDktfLQ1nJX89ieB+sCpLVkGxzYRQHUs1Jv6G/MBpSCY0mUpSjCSxCuL2T3MQrEVbpG2uW9
+        b3/1trU0q9tTzqyTuUJ1vurX5dOyhA18s/dtvs0R/wYceaWSW7Mgem1HQcZs0ePkrMf26RrXKaetF
+        W6pg3esZATuDHnToGMg8IYo5+7UX+4qn4mXLfxpqgwQMKCdDsCMwWo5DQCMTFidVqkOsOTztJrITU
+        fxCP51Dp7LFiNakWNO0jehMcyBDUAJQrvQFdtKR/AL9rHla3yfBHRy+H2NQfOXwQFmdOOLCz4v34I
+        tkDohY8vQ==;
+Received: from 177.133.68.49.dynamic.adsl.gvt.net.br ([177.133.68.49] helo=coco.lan)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.2 #3 (Red Hat Linux))
+        id 1iFzxl-000839-MY; Thu, 03 Oct 2019 12:12:06 +0000
+Date:   Thu, 3 Oct 2019 09:12:01 -0300
+From:   Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+To:     Gon Solo <gonsolo@gmail.com>
+Cc:     JP <jp@jpvw.nl>, crope@iki.fi, Sean Young <sean@mess.org>,
+        linux-media@vger.kernel.org,
+        Linux Kernel <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] si2157: Add support for Logilink VG0022A.
+Message-ID: <20191003091201.7e94c617@coco.lan>
+In-Reply-To: <20191003120143.GA2995@Limone>
+References: <20191002141359.30166-2-gonsolo@gmail.com>
+        <20191002142744.GA3475@gofer.mess.org>
+        <CANL0fFS9TGKJH2rfkXzak78BaLazTNO7GoZhSb4vLBsDrmz3FQ@mail.gmail.com>
+        <20191002150650.GA4227@gofer.mess.org>
+        <CANL0fFRoL6NxOCbNC=XjQ6LDkeeqAayaLUbm9xARWX9ttqfPFg@mail.gmail.com>
+        <29ab2e43-4374-a3ea-6ae1-a4267867eaa4@jpvw.nl>
+        <20191002154922.7f1cfc76@coco.lan>
+        <CANL0fFRJZBfEDWK_c2w1TomvB5-i4g09LopyJUbO5NtOwKdDTg@mail.gmail.com>
+        <CANL0fFTwJ4yRO+5q6WkL0+DtwdrRti6r_WY1intisYJhs5En8w@mail.gmail.com>
+        <20191003081742.0933264b@coco.lan>
+        <20191003120143.GA2995@Limone>
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.46]); Thu, 03 Oct 2019 12:11:24 +0000 (UTC)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-CascadeLake-N only supports SST-BF and needs some of the perf-profile
-commands, and the base-freq commands.
+Em Thu, 3 Oct 2019 14:01:43 +0200
+Gon Solo <gonsolo@gmail.com> escreveu:
 
-Add help functions, and create an empty command structures (the functions
-will be implemented later in this patchset).  Call these functions
-when running on CascadeLake-N.
+> Hi!
+> 
+>  
+> > Btw, could you please try the enclosed hack and post the results?  
+>  
+> [  210.178948] si2168 1-0067: downloading firmware from file 'dvb-demod-si2168-b40-01.fw'
+> [  212.404011] si2168 1-0067: firmware version: B 4.0.25
+> [  212.656467] si2157 2-0063: Needed to wait 100 ms to get chip version
+> [  212.656470] si2157 2-0063: Unable to retrieve chip version
 
-Signed-off-by: Prarit Bhargava <prarit@redhat.com>
----
- .../x86/intel-speed-select/isst-config.c      | 37 ++++++++++++++-----
- 1 file changed, 27 insertions(+), 10 deletions(-)
+well, you could try to increase the timeout - although 100 ms seems a lot
+of time to me.
 
-diff --git a/tools/power/x86/intel-speed-select/isst-config.c b/tools/power/x86/intel-speed-select/isst-config.c
-index 164c4e5e6ccb..3ab0edade5ec 100644
---- a/tools/power/x86/intel-speed-select/isst-config.c
-+++ b/tools/power/x86/intel-speed-select/isst-config.c
-@@ -1632,6 +1632,10 @@ static void get_clos_assoc(int arg)
- 	isst_ctdp_display_information_end(outf);
- }
- 
-+static struct process_cmd_struct clx_n_cmds[] = {
-+	{ NULL, NULL, NULL, 0 }
-+};
-+
- static struct process_cmd_struct isst_cmds[] = {
- 	{ "perf-profile", "get-lock-status", get_tdp_locked, 0 },
- 	{ "perf-profile", "get-config-levels", get_tdp_levels, 0 },
-@@ -1820,12 +1824,15 @@ static void isst_help(void)
- 		TDP, etc.\n");
- 	printf("\nCommands : For feature=perf-profile\n");
- 	printf("\tinfo\n");
--	printf("\tget-lock-status\n");
--	printf("\tget-config-levels\n");
--	printf("\tget-config-version\n");
--	printf("\tget-config-enabled\n");
--	printf("\tget-config-current-level\n");
--	printf("\tset-config-level\n");
-+
-+	if (!is_clx_n_platform()) {
-+		printf("\tget-lock-status\n");
-+		printf("\tget-config-levels\n");
-+		printf("\tget-config-version\n");
-+		printf("\tget-config-enabled\n");
-+		printf("\tget-config-current-level\n");
-+		printf("\tset-config-level\n");
-+	}
- }
- 
- static void pbf_help(void)
-@@ -1875,6 +1882,12 @@ static struct process_cmd_help_struct isst_help_cmds[] = {
- 	{ NULL, NULL }
- };
- 
-+static struct process_cmd_help_struct clx_n_help_cmds[] = {
-+	{ "perf-profile", isst_help },
-+	{ "base-freq", pbf_help },
-+	{ NULL, NULL }
-+};
-+
- void process_command(int argc, char **argv,
- 		     struct process_cmd_help_struct *help_cmds,
- 		     struct process_cmd_struct *cmds)
-@@ -2031,11 +2044,15 @@ static void cmdline(int argc, char **argv)
- 	set_max_cpu_num();
- 	set_cpu_present_cpu_mask();
- 	set_cpu_target_cpu_mask();
--	ret = isst_fill_platform_info();
--	if (ret)
--		goto out;
- 
--	process_command(argc, argv, isst_help_cmds, isst_cmds);
-+	if (!is_clx_n_platform()) {
-+		ret = isst_fill_platform_info();
-+		if (ret)
-+			goto out;
-+		process_command(argc, argv, isst_help_cmds, isst_cmds);
-+	} else {
-+		process_command(argc, argv, clx_n_help_cmds, clx_n_cmds);
-+	}
- out:
- 	free_cpu_set(present_cpumask);
- 	free_cpu_set(target_cpumask);
--- 
-2.18.1
-
+Thanks,
+Mauro
