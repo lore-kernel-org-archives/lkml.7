@@ -2,100 +2,117 @@ Return-Path: <SRS0=6dNS=X4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C617AC10F14
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 15:56:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 95AD2C10F14
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 15:56:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8CBE321A4C
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 15:56:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5CCF520700
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 15:56:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570118198;
-	bh=GlG6YVR+WVVS/QczyKCvj70xObEFrfnsuA3DId/ZobM=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zyqW07CZwp8k/ogT+wP4mmrW6yC3M/zsl4fdfDE3Fx1YUHGJzK2xnCn+Zk9Zg7M+s
-	 T0OfQS86DGK+K9TqKjKfsA7tQT5KubmInu+3fb9xx3DjdqDyOI6tdLVTvhUwP53+ra
-	 xQKZ6MJN27eU0s0q5YSvW9/czu4CVeVxJLG3/vzQ=
+	s=default; t=1570118201;
+	bh=i4Gdla/qLYCwUY8TXC0PxpCn/O4eLhZk3Oh4yJNbqjQ=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=zInew2YK1cFog0YAbCman5KS5Do7hV8wSqzlKB7M+JEFw5qBZua/bmVKyl96zw4hq
+	 dfy+OdHpkGwGvoJTTsVqXNWsQo5UTrfiZRj+x15Oi2Ta4sNk28148KZwsJf6lgf82c
+	 qC76hhQM41f3uo4x/qibrt/BWdW0SfFaWIqK3R/4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730699AbfJCP4i (ORCPT
+        id S1730712AbfJCP4k (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 11:56:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38342 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 11:56:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38458 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730606AbfJCP4a (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 11:56:30 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1730614AbfJCP4c (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 11:56:32 -0400
+Received: from mail-qt1-f170.google.com (mail-qt1-f170.google.com [209.85.160.170])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3519D21848;
-        Thu,  3 Oct 2019 15:56:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2B18C222C8;
+        Thu,  3 Oct 2019 15:56:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570118188;
-        bh=GlG6YVR+WVVS/QczyKCvj70xObEFrfnsuA3DId/ZobM=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gf/U7xccfSyzg31sY44jczP2TbzlkOh4IOv5JRMV4zrIV1mANhWMSpCQvGptj08kh
-         E4m9ywI5VLkt7FR4gLqeBw3nhjS75g9a+Y2ht+pGaiT8qSmAABFCvXmdsClORL355s
-         Kh5tGMQPlUtkP2CEAlHrbdhFjXAbg8QqVPkrr9cc=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        syzbot+ce366e2b8296e25d84f5@syzkaller.appspotmail.com,
-        =?UTF-8?q?Bj=C3=B8rn=20Mork?= <bjorn@mork.no>,
-        Jakub Kicinski <jakub.kicinski@netronome.com>
-Subject: [PATCH 4.4 21/99] cdc_ncm: fix divide-by-zero caused by invalid wMaxPacketSize
-Date:   Thu,  3 Oct 2019 17:52:44 +0200
-Message-Id: <20191003154304.368107309@linuxfoundation.org>
-X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20191003154252.297991283@linuxfoundation.org>
-References: <20191003154252.297991283@linuxfoundation.org>
-User-Agent: quilt/0.66
+        s=default; t=1570118191;
+        bh=i4Gdla/qLYCwUY8TXC0PxpCn/O4eLhZk3Oh4yJNbqjQ=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=y+LYdsAyYVPU+ogedopimwB/UhsnGsp2oUl5tLvk654eTHDmIeoSWG2nCGII7q6zW
+         8/Axawckxy8TxeX/6wm6AHbtuWHbXt5CjRRIqm68o9nzigMg4+pQjLefid3sH8WUKU
+         BEnk+1qMQXkvQCMtJdagzQSxknxFVWIvIJHvHP7U=
+Received: by mail-qt1-f170.google.com with SMTP id n7so4287238qtb.6;
+        Thu, 03 Oct 2019 08:56:31 -0700 (PDT)
+X-Gm-Message-State: APjAAAXmlS7+fJ+TCZeTTUwZUbiSyFC4mD20SWVSlrHlcalh1isF0IVD
+        19fiWqBYLdnmAq2IrNU5s82NfCD3LZqHh0OP7w==
+X-Google-Smtp-Source: APXvYqx6BBDgfwU9lYgWoBXJNLC1ki+lOywVLMS4eE76V10EcL1hEp0zvvi4cS5atfEMr32Ls+zx4zC9aO+o+md64fo=
+X-Received: by 2002:ac8:31b3:: with SMTP id h48mr11022378qte.300.1570118190216;
+ Thu, 03 Oct 2019 08:56:30 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <1568837198-27211-1-git-send-email-vincent.cheng.xh@renesas.com>
+ <5d93ce84.1c69fb81.8e964.4dc1@mx.google.com> <20191003145546.GA19695@renesas.com>
+In-Reply-To: <20191003145546.GA19695@renesas.com>
+From:   Rob Herring <robh@kernel.org>
+Date:   Thu, 3 Oct 2019 10:56:19 -0500
+X-Gmail-Original-Message-ID: <CAL_JsqK12p48gqZdwNfYGNsBafmjMY=5U=QcHPHZy5sD-nGntA@mail.gmail.com>
+Message-ID: <CAL_JsqK12p48gqZdwNfYGNsBafmjMY=5U=QcHPHZy5sD-nGntA@mail.gmail.com>
+Subject: Re: [PATCH 1/2] dt-bindings: ptp: Add binding doc for IDT ClockMatrix
+ based PTP clock
+To:     Vincent Cheng <vincent.cheng.xh@renesas.com>
+Cc:     "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "richardcochran@gmail.com" <richardcochran@gmail.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bjørn Mork <bjorn@mork.no>
+On Thu, Oct 3, 2019 at 10:12 AM Vincent Cheng
+<vincent.cheng.xh@renesas.com> wrote:
+>
+> On Tue, Oct 01, 2019 at 06:09:06PM EDT, Rob Herring wrote:
+> >On Wed, Sep 18, 2019 at 04:06:37PM -0400, vincent.cheng.xh@renesas.com wrote:
+> >> From: Vincent Cheng <vincent.cheng.xh@renesas.com>
+>
+> Hi Rob,
+>
+> Welcome back.  Thank-you for providing feedback.
+>
+> >>
+> >> Add device tree binding doc for the IDT ClockMatrix PTP clock driver.
+> >
+> >Bindings are for h/w, not drivers...
+>
+> Yes, will remove 'driver'.
+>
+> >>  Documentation/devicetree/bindings/ptp/ptp-idtcm.txt | 15 +++++++++++++++
+> >>  1 file changed, 15 insertions(+)
+> >>  create mode 100644 Documentation/devicetree/bindings/ptp/ptp-idtcm.txt
+> >
+> >Please make this a DT schema.
+>
+> Sure, will give it a try.
+>
+> >> +  - compatible  Should be "idt,8a3400x-ptp" for System Synchronizer
+> >> +                Should be "idt,8a3401x-ptp" for Port Synchronizer
+> >> +                Should be "idt,8a3404x-ptp" for Universal Frequency Translator (UFT)
+> >
+> >If PTP is the only function of the chip, you don't need to append
+> >'-ptp'.
+>
+> Okay, will remove '-ptp'.  Thanks.
+>
+>
+> >What's the 'x' for? We generally don't use wildcards in compatible
+> >strings.
+>
+> We were hoping to use 'x' to represent a single driver to match the various
+> part numbers 8A34001, 8A34002, 8A34003, 8A34004, 8A34011, 8A34012, etc.
+>
+> What should be used instead of 'x'?
 
-[ Upstream commit 3fe4b3351301660653a2bc73f2226da0ebd2b95e ]
+Enumerate all the part numbers. Are the differences discoverable in
+some other way? If so, then 'x' is fine, but just add a note how
+models are distinguished.
 
-Endpoints with zero wMaxPacketSize are not usable for transferring
-data. Ignore such endpoints when looking for valid in, out and
-status pipes, to make the driver more robust against invalid and
-meaningless descriptors.
-
-The wMaxPacketSize of the out pipe is used as divisor. So this change
-fixes a divide-by-zero bug.
-
-Reported-by: syzbot+ce366e2b8296e25d84f5@syzkaller.appspotmail.com
-Signed-off-by: Bjørn Mork <bjorn@mork.no>
-Signed-off-by: Jakub Kicinski <jakub.kicinski@netronome.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- drivers/net/usb/cdc_ncm.c |    6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
-
---- a/drivers/net/usb/cdc_ncm.c
-+++ b/drivers/net/usb/cdc_ncm.c
-@@ -636,8 +636,12 @@ cdc_ncm_find_endpoints(struct usbnet *de
- 	u8 ep;
- 
- 	for (ep = 0; ep < intf->cur_altsetting->desc.bNumEndpoints; ep++) {
--
- 		e = intf->cur_altsetting->endpoint + ep;
-+
-+		/* ignore endpoints which cannot transfer data */
-+		if (!usb_endpoint_maxp(&e->desc))
-+			continue;
-+
- 		switch (e->desc.bmAttributes & USB_ENDPOINT_XFERTYPE_MASK) {
- 		case USB_ENDPOINT_XFER_INT:
- 			if (usb_endpoint_dir_in(&e->desc)) {
-
-
+Rob
