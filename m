@@ -6,73 +6,93 @@ X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57CC3C32792
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 11:31:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B826C4CED1
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 11:32:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2C43420830
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 11:31:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E7C7120830
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 11:32:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730094AbfJCLby (ORCPT
+        id S1730112AbfJCLcP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 07:31:54 -0400
-Received: from foss.arm.com ([217.140.110.172]:42318 "EHLO foss.arm.com"
+        Thu, 3 Oct 2019 07:32:15 -0400
+Received: from mga11.intel.com ([192.55.52.93]:49045 "EHLO mga11.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729987AbfJCLby (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 07:31:54 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 97378337;
-        Thu,  3 Oct 2019 04:31:53 -0700 (PDT)
-Received: from [10.162.40.180] (p8cg001049571a15.blr.arm.com [10.162.40.180])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 695B83F706;
-        Thu,  3 Oct 2019 04:31:50 -0700 (PDT)
-Subject: Re: [PATCH] mm/page_alloc: Add a reason for reserved pages in
- has_unmovable_pages()
-To:     Qian Cai <cai@lca.pw>
-Cc:     linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>,
-        Michal Hocko <mhocko@suse.com>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Oscar Salvador <osalvador@suse.de>,
-        Mel Gorman <mgorman@techsingularity.net>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Pavel Tatashin <pavel.tatashin@microsoft.com>,
-        linux-kernel@vger.kernel.org
-References: <37b43978-5652-576c-8990-451e751b7c67@arm.com>
- <285C0297-BF27-4095-87B6-AFC88C1F3C0F@lca.pw>
-From:   Anshuman Khandual <anshuman.khandual@arm.com>
-Message-ID: <d3a88afd-63c6-1091-cf4c-75cd10b7f547@arm.com>
-Date:   Thu, 3 Oct 2019 17:02:11 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.9.1
+        id S1729961AbfJCLcO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 07:32:14 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 03 Oct 2019 04:32:14 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.67,251,1566889200"; 
+   d="scan'208";a="198504653"
+Received: from jsakkine-mobl1.tm.intel.com (HELO localhost) ([10.237.50.161])
+  by FMSMGA003.fm.intel.com with ESMTP; 03 Oct 2019 04:32:11 -0700
+Date:   Thu, 3 Oct 2019 14:32:11 +0300
+From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+To:     Mimi Zohar <zohar@linux.ibm.com>
+Cc:     linux-integrity@vger.kernel.org,
+        Jerry Snitselaar <jsnitsel@redhat.com>,
+        James Bottomley <James.Bottomley@HansenPartnership.com>,
+        Sumit Garg <sumit.garg@linaro.org>,
+        Stefan Berger <stefanb@linux.vnet.ibm.com>,
+        Peter Huewe <peterhuewe@gmx.de>,
+        Jason Gunthorpe <jgg@ziepe.ca>, Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] tpm: Detach page allocation from tpm_buf
+Message-ID: <20191003113211.GC8933@linux.intel.com>
+References: <20190925134842.19305-1-jarkko.sakkinen@linux.intel.com>
+ <20190926124635.GA6040@linux.intel.com>
+ <20190926131227.GA6582@linux.intel.com>
+ <1570020024.4999.104.camel@linux.ibm.com>
 MIME-Version: 1.0
-In-Reply-To: <285C0297-BF27-4095-87B6-AFC88C1F3C0F@lca.pw>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <1570020024.4999.104.camel@linux.ibm.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, Oct 02, 2019 at 08:40:24AM -0400, Mimi Zohar wrote:
+> On Thu, 2019-09-26 at 16:12 +0300, Jarkko Sakkinen wrote:
+> > On Thu, Sep 26, 2019 at 03:46:35PM +0300, Jarkko Sakkinen wrote:
+> > > On Wed, Sep 25, 2019 at 04:48:41PM +0300, Jarkko Sakkinen wrote:
+> > > > -		tpm_buf_reset(&buf, TPM2_ST_NO_SESSIONS, TPM2_CC_GET_RANDOM);
+> > > > +		tpm_buf_reset(&buf, data_ptr, PAGE_SIZE,
+> > > > +			      TPM2_ST_NO_SESSIONS, TPM2_CC_PCR_EXTEND);
+> > > 
+> > > Oops.
+> > 
+> > Maybe we could use random as the probe for TPM version since we anyway
+> > send a TPM command as a probe for TPM version:
+> > 
+> > 1. Try TPM2 get random.
+> > 2. If fail, try TPM1 get random.
+> > 3. Output random number to klog.
+> > 
+> > Something like 8 bytes would be sufficient. This would make sure that
+> > no new change breaks tpm_get_random() and also this would give some
+> > feedback that TPM is at least somewhat working.
+> 
+> That involves sending 2 TPM commands.  At what point does this occur?
+>  On registration?  Whenever getting a random number?  Is the result
+> cached in chip->flags?
 
+On registeration. It is just printed to klog.
 
-On 10/03/2019 04:49 PM, Qian Cai wrote:
-> 
-> 
->> On Oct 3, 2019, at 5:32 AM, Anshuman Khandual <Anshuman.Khandual@arm.com> wrote:
->>
->> Even though page flags does contain reserved bit information, the problem
->> is that we are explicitly printing the reason for this page dump. In this
->> case it is caused by the fact that it is a reserved page.
->>
->> page dumped because: <reason>
->>
->> The proposed change makes it explicit that the dump is caused because a
->> non movable page with reserved bit set. It also helps in differentiating 
->> between reserved bit condition and the last one "if (found > count)".
-> 
-> Then, someone later would like to add a reason for every different page flags just because they *think* they are special.
-> 
+> Will this delay the TPM initialization, causing IMA to go into "TPM
+> bypass mode"?
 
-Ohh, never meant that the 'Reserved' bit is anything special here but it
-is a reason to make a page unmovable unlike many other flags.
+Of course it will delay the init.
+
+As I've stated before the real fix for the bypass issue would be
+to make TPM as part of the core but this has not received much
+appeal. I think I've sent patch for this once.
+
+/Jarkko
