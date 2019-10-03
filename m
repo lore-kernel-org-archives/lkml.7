@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EFBA4C32792
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:09:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13D6BC10F14
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:09:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C564221783
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:09:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DC3FF21848
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:09:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570118974;
-	bh=di/LEEoX9xwrR2IcaRxTlEuaG7kUjZEk3SJJ3usJhEA=;
+	s=default; t=1570118979;
+	bh=14EbOH0XAvEPQOaJJj0L0hn8plnIwTmS2PmGUyKvBX0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=memFxLWWH8Z2ciV6SGPIcEwh36LB3Nut2SZKJoqj2zZ5hig9xsy0NllzYvbEz0haB
-	 H0d2IehXzq2YyUnlNS+4pQrBIZSkrMkIfC37ojt+Hf3mJU0laa5fTf4HEv9k18GcDf
-	 kg3I3Ol04mbLhJO7EfqPFrS4iL2RO6JfNFMGLcHI=
+	b=bExhbM0759zJnb5BPUYsckXMNnFxmdcaXeXIPqedzHY3wJg/TeOL1peINuNwY+oJm
+	 twMi8k3ryHirE0b3rL2+Qok9DujfwEoiLaLN73KFiDuEnrStLEY/QOFqpp4pQ62wIk
+	 Kxl8tKxFfcaEncjXB8G+TmzDf8FhObOULnzZkFJg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733198AbfJCQJd (ORCPT
+        id S2387489AbfJCQJj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 12:09:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58268 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 12:09:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58500 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731103AbfJCQJ1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:09:27 -0400
+        id S1733205AbfJCQJg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:09:36 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A4ADF21848;
-        Thu,  3 Oct 2019 16:09:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9BCA5215EA;
+        Thu,  3 Oct 2019 16:09:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570118967;
-        bh=di/LEEoX9xwrR2IcaRxTlEuaG7kUjZEk3SJJ3usJhEA=;
+        s=default; t=1570118975;
+        bh=14EbOH0XAvEPQOaJJj0L0hn8plnIwTmS2PmGUyKvBX0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=i7AcBQJGIJ/uJJstR/8+DC2vSTrjEE9eRREOCLuXdLxGISQFE7D7gafenoO7TxbYl
-         BvDd79klbenmfc9pPD9LUP2JWtGjcSAKBZEh4G7Sv4Y0LChXMHUxMcVaitWEJbHAUG
-         +0VwO0T+PD157NuBUmi9KL5J1qZzKI9uNkb3WiIw=
+        b=dky9YNolcp5NZ1MF1din0No/EKQBNPG6xIkKFFCZnnTXQ86L/Fsw10vL4tm+sZWeG
+         OTpvluryxH1CX2NNl6raGjT8OX1VgXcWUlignRa8I6/WSFJLCPm6Yst2hP+ZCOKUBV
+         nsp+QZdlrVfMvu6E0J7m1g2wwJL9kAc6msCcfrRk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Leon Kong <Leon.KONG@cn.bosch.com>,
-        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
-        Mark Brown <broonie@kernel.org>,
+        stable@vger.kernel.org,
+        Guoqing Jiang <guoqing.jiang@cloud.ionos.com>,
+        Song Liu <songliubraving@fb.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 075/185] ASoC: rsnd: dont call clk_get_rate() under atomic context
-Date:   Thu,  3 Oct 2019 17:52:33 +0200
-Message-Id: <20191003154454.516362566@linuxfoundation.org>
+Subject: [PATCH 4.14 078/185] md: dont set In_sync if array is frozen
+Date:   Thu,  3 Oct 2019 17:52:36 +0200
+Message-Id: <20191003154455.019955860@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191003154437.541662648@linuxfoundation.org>
 References: <20191003154437.541662648@linuxfoundation.org>
@@ -61,87 +61,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
+From: Guoqing Jiang <jgq516@gmail.com>
 
-[ Upstream commit 06e8f5c842f2dbb232897ba967ea7b422745c271 ]
+[ Upstream commit 062f5b2ae12a153644c765e7ba3b0f825427be1d ]
 
-ADG is using clk_get_rate() under atomic context, thus, we might
-have scheduling issue.
-To avoid this issue, we need to get/keep clk rate under
-non atomic context.
+When a disk is added to array, the following path is called in mdadm.
 
-We need to handle ADG as special device at Renesas Sound driver.
->From SW point of view, we want to impletent it as
-rsnd_mod_ops :: prepare, but it makes code just complicate.
+Manage_subdevs -> sysfs_freeze_array
+               -> Manage_add
+               -> sysfs_set_str(&info, NULL, "sync_action","idle")
 
-To avoid complicated code/patch, this patch adds new clk_rate[] array,
-and keep clk IN rate when rsnd_adg_clk_enable() was called.
+Then from kernel side, Manage_add invokes the path (add_new_disk ->
+validate_super = super_1_validate) to set In_sync flag.
 
-Reported-by: Leon Kong <Leon.KONG@cn.bosch.com>
-Signed-off-by: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
-Tested-by: Leon Kong <Leon.KONG@cn.bosch.com>
-Link: https://lore.kernel.org/r/87v9vb0xkp.wl-kuninori.morimoto.gx@renesas.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Since In_sync means "device is in_sync with rest of array", and the new
+added disk need to resync thread to help the synchronization of data.
+And md_reap_sync_thread would call spare_active to set In_sync for the
+new added disk finally. So don't set In_sync if array is in frozen.
+
+Signed-off-by: Guoqing Jiang <guoqing.jiang@cloud.ionos.com>
+Signed-off-by: Song Liu <songliubraving@fb.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/sh/rcar/adg.c | 21 +++++++++++++++------
- 1 file changed, 15 insertions(+), 6 deletions(-)
+ drivers/md/md.c | 11 +++++++++--
+ 1 file changed, 9 insertions(+), 2 deletions(-)
 
-diff --git a/sound/soc/sh/rcar/adg.c b/sound/soc/sh/rcar/adg.c
-index eb7879bcc6a79..686401bcd1f53 100644
---- a/sound/soc/sh/rcar/adg.c
-+++ b/sound/soc/sh/rcar/adg.c
-@@ -33,6 +33,7 @@ struct rsnd_adg {
- 	struct clk *clkout[CLKOUTMAX];
- 	struct clk_onecell_data onecell;
- 	struct rsnd_mod mod;
-+	int clk_rate[CLKMAX];
- 	u32 flags;
- 	u32 ckr;
- 	u32 rbga;
-@@ -110,9 +111,9 @@ static void __rsnd_adg_get_timesel_ratio(struct rsnd_priv *priv,
- 	unsigned int val, en;
- 	unsigned int min, diff;
- 	unsigned int sel_rate[] = {
--		clk_get_rate(adg->clk[CLKA]),	/* 0000: CLKA */
--		clk_get_rate(adg->clk[CLKB]),	/* 0001: CLKB */
--		clk_get_rate(adg->clk[CLKC]),	/* 0010: CLKC */
-+		adg->clk_rate[CLKA],	/* 0000: CLKA */
-+		adg->clk_rate[CLKB],	/* 0001: CLKB */
-+		adg->clk_rate[CLKC],	/* 0010: CLKC */
- 		adg->rbga_rate_for_441khz,	/* 0011: RBGA */
- 		adg->rbgb_rate_for_48khz,	/* 0100: RBGB */
- 	};
-@@ -328,7 +329,7 @@ int rsnd_adg_clk_query(struct rsnd_priv *priv, unsigned int rate)
- 	 * AUDIO_CLKA/AUDIO_CLKB/AUDIO_CLKC/AUDIO_CLKI.
- 	 */
- 	for_each_rsnd_clk(clk, adg, i) {
--		if (rate == clk_get_rate(clk))
-+		if (rate == adg->clk_rate[i])
- 			return sel_table[i];
- 	}
- 
-@@ -394,10 +395,18 @@ void rsnd_adg_clk_control(struct rsnd_priv *priv, int enable)
- 
- 	for_each_rsnd_clk(clk, adg, i) {
- 		ret = 0;
--		if (enable)
-+		if (enable) {
- 			ret = clk_prepare_enable(clk);
--		else
-+
-+			/*
-+			 * We shouldn't use clk_get_rate() under
-+			 * atomic context. Let's keep it when
-+			 * rsnd_adg_clk_enable() was called
-+			 */
-+			adg->clk_rate[i] = clk_get_rate(adg->clk[i]);
-+		} else {
- 			clk_disable_unprepare(clk);
-+		}
- 
- 		if (ret < 0)
- 			dev_warn(dev, "can't use clk %d\n", i);
+diff --git a/drivers/md/md.c b/drivers/md/md.c
+index d185725e100c0..f86082ee62a69 100644
+--- a/drivers/md/md.c
++++ b/drivers/md/md.c
+@@ -1763,8 +1763,15 @@ static int super_1_validate(struct mddev *mddev, struct md_rdev *rdev)
+ 				if (!(le32_to_cpu(sb->feature_map) &
+ 				      MD_FEATURE_RECOVERY_BITMAP))
+ 					rdev->saved_raid_disk = -1;
+-			} else
+-				set_bit(In_sync, &rdev->flags);
++			} else {
++				/*
++				 * If the array is FROZEN, then the device can't
++				 * be in_sync with rest of array.
++				 */
++				if (!test_bit(MD_RECOVERY_FROZEN,
++					      &mddev->recovery))
++					set_bit(In_sync, &rdev->flags);
++			}
+ 			rdev->raid_disk = role;
+ 			break;
+ 		}
 -- 
 2.20.1
 
