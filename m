@@ -2,159 +2,133 @@ Return-Path: <SRS0=6dNS=X4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FCE9C10F14
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 09:53:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 74408C10F14
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 09:53:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6071921A4C
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 09:53:12 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="AsjiUbBH"
+	by mail.kernel.org (Postfix) with ESMTP id 545AE21A4C
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 09:53:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729671AbfJCJxL (ORCPT
+        id S1729528AbfJCJwy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 05:53:11 -0400
-Received: from aserp2120.oracle.com ([141.146.126.78]:40000 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728812AbfJCJxK (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 05:53:10 -0400
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x939n7cB003263;
-        Thu, 3 Oct 2019 09:51:27 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=corp-2019-08-05;
- bh=OGCsoYWUTAHGPkhKorSnO+N61wFEeMCh2U+hapf2L9Y=;
- b=AsjiUbBHCDlKLuYuC11WX7hHW8Az5zIEhG3Dwi19aST/2w8PkzqayVo0h4MGdH06HLs5
- 33QJbmEJ4qA4XUxqkS4j+8BR2HATBHSLjN+tDY9Q+Ar72ZMndoAXNYJgEa7gJC+4Aten
- /4I7C30qUXIj/8FeZEVVRTB4vC8FvWKI1HqRWv7YgCy7rzBfS86gFkvtpjFn4qfHYdox
- Mlt0zYpiJKsDsw7m96kDsRjbOyM6iCvOHkjmLYUOUMwvdnndmynMmnrhfRxrcRklC1Kb
- 5GfTUSCl/Jbqs3FalkU/BcpqQUgvvInWi6qGB0Vodq01XVMTscdKZ6k0fIZEq0WX6/W/ Aw== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by aserp2120.oracle.com with ESMTP id 2v9yfqjp0g-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 03 Oct 2019 09:51:27 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x939n1MW159306;
-        Thu, 3 Oct 2019 09:51:26 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by userp3030.oracle.com with ESMTP id 2vcg63a19k-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 03 Oct 2019 09:51:26 +0000
-Received: from abhmp0014.oracle.com (abhmp0014.oracle.com [141.146.116.20])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x939pCcs025867;
-        Thu, 3 Oct 2019 09:51:12 GMT
-Received: from [10.191.0.240] (/10.191.0.240)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Thu, 03 Oct 2019 02:51:12 -0700
-Subject: Re: [PATCH 1/3] KVM: X86: Add "nopvspin" parameter to disable PV
- spinlocks
-To:     Sean Christopherson <sean.j.christopherson@intel.com>
-Cc:     Vitaly Kuznetsov <vkuznets@redhat.com>,
-        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Radim Krcmar <rkrcmar@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Will Deacon <will@kernel.org>
-References: <1569759666-26904-1-git-send-email-zhenzhong.duan@oracle.com>
- <1569759666-26904-2-git-send-email-zhenzhong.duan@oracle.com>
- <87pnjh3i6i.fsf@vitty.brq.redhat.com>
- <aae59646-be5f-6455-a033-ed29861107ce@oracle.com>
- <87eezw3lna.fsf@vitty.brq.redhat.com>
- <fdd14f28-74e9-5cf9-2f5a-09c884c55110@oracle.com>
- <20191002164730.GA9615@linux.intel.com>
-From:   Zhenzhong Duan <zhenzhong.duan@oracle.com>
-Organization: Oracle Corporation
-Message-ID: <07f979cc-04b8-6901-b7b0-3e9f06655eb6@oracle.com>
-Date:   Thu, 3 Oct 2019 17:51:07 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
-MIME-Version: 1.0
-In-Reply-To: <20191002164730.GA9615@linux.intel.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9398 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1908290000 definitions=main-1910030091
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9398 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1908290000
- definitions=main-1910030091
+        Thu, 3 Oct 2019 05:52:54 -0400
+Received: from mx2.suse.de ([195.135.220.15]:37284 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728992AbfJCJww (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 05:52:52 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 67E80B14A;
+        Thu,  3 Oct 2019 09:52:49 +0000 (UTC)
+From:   Thomas Bogendoerfer <tbogendoerfer@suse.de>
+To:     Jonathan Corbet <corbet@lwn.net>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Paul Burton <paul.burton@mips.com>,
+        James Hogan <jhogan@kernel.org>,
+        Lee Jones <lee.jones@linaro.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jiri Slaby <jslaby@suse.com>, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-mips@vger.kernel.org,
+        netdev@vger.kernel.org, linux-rtc@vger.kernel.org,
+        linux-serial@vger.kernel.org
+Subject: [PATCH v7 0/5] Use MFD framework for SGI IOC3 drivers
+Date:   Thu,  3 Oct 2019 11:52:28 +0200
+Message-Id: <20191003095235.5158-1-tbogendoerfer@suse.de>
+X-Mailer: git-send-email 2.16.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+SGI IOC3 ASIC includes support for ethernet, PS2 keyboard/mouse,
+NIC (number in a can), GPIO and a byte  bus. By attaching a
+SuperIO chip to it, it also supports serial lines and a parallel
+port. The chip is used on a variety of SGI systems with different
+configurations. This patchset moves code out of the network driver,
+which doesn't belong there, into its new place a MFD driver and
+specific platform drivers for the different subfunctions.
 
-On 2019/10/3 0:47, Sean Christopherson wrote:
-> On Tue, Oct 01, 2019 at 05:47:00PM +0800, Zhenzhong Duan wrote:
->> On 2019/10/1 16:39, Vitaly Kuznetsov wrote:
->>> Zhenzhong Duan<zhenzhong.duan@oracle.com>  writes:
->>>
->>>> On 2019/9/30 23:41, Vitaly Kuznetsov wrote:
->>>>> Zhenzhong Duan<zhenzhong.duan@oracle.com>   writes:
->>>>>
->>>>>> There are cases where a guest tries to switch spinlocks to bare metal
->>>>>> behavior (e.g. by setting "xen_nopvspin" on XEN platform and
->>>>>> "hv_nopvspin" on HYPER_V).
->>>>>>
->>>>>> That feature is missed on KVM, add a new parameter "nopvspin" to disable
->>>>>> PV spinlocks for KVM guest.
->>>>>>
->>>>>> This new parameter is also intended to replace "xen_nopvspin" and
->>>>>> "hv_nopvspin" in the future.
->>>>> Any reason to not do it right now? We will probably need to have compat
->>>>> code to support xen_nopvspin/hv_nopvspin too but emit a 'is deprecated'
->>>>> warning.
->>>> Sorry the description isn't clear, I'll fix it.
->>>>
->>>> I did the compat work in the other two patches.
->>>> [PATCH 2/3] xen: Mark "xen_nopvspin" parameter obsolete and map it to "nopvspin"
->>>> [PATCH 3/3] x86/hyperv: Mark "hv_nopvspin" parameter obsolete and map it to "nopvspin"
->>>>
->>> For some reason I got CCed only on the first one and moreover,
->> The three patches have different maintainers/reviewers by get_maintainer.pl, I added
->> "Cc: maintainers/reviewers" to each patch then git-sendemail picked them automaticly.
->> I meaned to not disturb maintainers with the field they aren't in charge of. It looks
->> I'm wrong.
->>
->> So what's the correct way dealing with this? Should I send the whole patchset to all
->> the maintainers/reviewers related to all the patches?
-> There's no one right answer to that question, folks have different
-> preferences.  My general rule of thumb is to cc everyone on all patches
-> unless the series is obnoxiously large *and* isolated to a specific part
-> of the kernel.  The idea being that people are more likely to be annoyed
-> if they can't find all patches in a relatively small series (this case)
-> than they are about receiving a mail or two that they don't care about.
->
-> At a minimum I would cc everyone involved on the cover letter, and cc the
-> relevant mailing lists on all patches.  Sending everyone the cover letter
-> provides people a quick overview of the patches they didn't receive, as
-> well as a starting point if they want to find those patches.  Cc'ing the
-> mailing list(s) can make it even easier to find the patches.  The cover
-> letter is also a good place to explain why you didn't cc everyone on all
-> patches (or vice versa).
->
-> Also, the cover letter should have the shortlog and overall diffstats.
-> 'git format-patch --cover-letter' will do the work for you.
+Changes in v7:
+ - added patch to enable ethernet phy for Origin 200 systems
+ - depend on 64bit for ioc3 mfd driver
 
-Thanks for your detailed reply, I's clear to me what to do now.
+Changes in v6:
+ - dropped patches accepted for v5.4-rc1
+ - moved serio patch to ip30 patch series
+ - adapted nvmem patch
 
-Zhenzhong
+Changes in v5:
+ - requested by Jakub I've splited ioc3 ethernet driver changes into
+   more steps to make the transition more visible; on the way there 
+   I've "checkpatched" the driver and reduced code reorderings
+ - dropped all uint16_t and uint32_t
+ - added nvmem API extension to the documenation file
+ - changed to use request_irq/free_irq in serio driver
+ - removed wrong kfree() in serio error path
+
+Changes in v4:
+ - added w1 drivers to the series after merge in 5.3 failed because
+   of no response from maintainer and other parts of this series
+   won't work without that drivers
+ - moved ip30 systemboard support to the ip30 series, which will
+   deal with rtc oddity Lee found
+ - converted to use devm_platform_ioremap_resource
+ - use PLATFORM_DEVID_AUTO for serial, ethernet and serio in mfd driver
+ - fixed reverse christmas order in ioc3-eth.c
+ - formating issue found by Lee
+ - re-worked irq request/free in serio driver to avoid crashes during
+   probe/remove
+
+Changes in v3:
+ - use 1-wire subsystem for handling proms
+ - pci-xtalk driver uses prom information to create PCI subsystem
+   ids for use in MFD driver
+ - changed MFD driver to only use static declared mfd_cells
+ - added IP30 system board setup to MFD driver
+ - mac address is now read from ioc3-eth driver with nvmem framework
+
+Changes in v2:
+ - fixed issue in ioc3kbd.c reported by Dmitry Torokhov
+ - merged IP27 RTC removal and 8250 serial driver addition into
+   main MFD patch to keep patches bisectable
+
+Thomas Bogendoerfer (5):
+  nvmem: core: add nvmem_device_find
+  MIPS: PCI: use information from 1-wire PROM for IOC3 detection
+  mfd: ioc3: Add driver for SGI IOC3 chip
+  MIPS: SGI-IP27: fix readb/writeb addressing
+  MIPS: SGI-IP27: Enable ethernet phy on second Origin 200 module
+
+ Documentation/driver-api/nvmem.rst            |   2 +
+ arch/mips/include/asm/mach-ip27/mangle-port.h |   4 +-
+ arch/mips/include/asm/pci/bridge.h            |   1 +
+ arch/mips/include/asm/sn/ioc3.h               |  47 ++-
+ arch/mips/pci/pci-ip27.c                      |  22 +
+ arch/mips/pci/pci-xtalk-bridge.c              | 135 +++++-
+ arch/mips/sgi-ip27/ip27-timer.c               |  20 -
+ arch/mips/sgi-ip27/ip27-xtalk.c               |  38 +-
+ drivers/mfd/Kconfig                           |  13 +
+ drivers/mfd/Makefile                          |   1 +
+ drivers/mfd/ioc3.c                            | 585 ++++++++++++++++++++++++++
+ drivers/net/ethernet/sgi/Kconfig              |   4 +-
+ drivers/net/ethernet/sgi/ioc3-eth.c           | 561 +++++-------------------
+ drivers/nvmem/core.c                          |  61 ++-
+ drivers/rtc/rtc-m48t35.c                      |  11 +
+ drivers/tty/serial/8250/8250_ioc3.c           |  98 +++++
+ drivers/tty/serial/8250/Kconfig               |  11 +
+ drivers/tty/serial/8250/Makefile              |   1 +
+ include/linux/nvmem-consumer.h                |   9 +
+ 19 files changed, 1076 insertions(+), 548 deletions(-)
+ create mode 100644 drivers/mfd/ioc3.c
+ create mode 100644 drivers/tty/serial/8250/8250_ioc3.c
+
+-- 
+2.16.4
 
