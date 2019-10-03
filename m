@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 87799C10F14
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:41:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B32BC32792
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:41:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5A6D020867
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:41:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C94AB20830
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:41:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570120894;
-	bh=j0TUDoph8IoeSXQzvxDkWduSrhUB92EJS6NKJ4xuYsI=;
+	s=default; t=1570120898;
+	bh=0UFRwrVqMUuMsxtnEtdiDjvOApLR5fVd8zynEbyvw2A=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=TKSrTab9oVE3jFr2Pv2e8XtcBI0rha3XsYTJQ6YI6yVN66BqRD8WEXVsZuKahvDb3
-	 K5EL5EkSEILumtKO8FXoN6dMX0Otiq7XWZqYX1Xab1+27vXv6ITfH+0QG/qD/XyHTd
-	 Dsw2XKyujFLHcSvF8FAgIfX+XGWPE8JuKTVshrpM=
+	b=I2wqTLeh4clkRbQ3lYUnQ+EnWOI65kvKqGvTpdrPzFK5+81HUrZ1pttGD15oOmGbJ
+	 ebxZ3duLIuhxwQIXdHnTGJYnG5uW2UZ4eCsI98wc1ARMTq6fs2sXHZvIZaAX8ji4oJ
+	 Yq3KknxFrYFK0Jmmp87P0QXsBQ0lwUzx/TsgCmPU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405048AbfJCQlc (ORCPT
+        id S2405060AbfJCQlh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 12:41:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51916 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 12:41:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52030 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2405032AbfJCQl2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:41:28 -0400
+        id S2405045AbfJCQlc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:41:32 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 384522054F;
-        Thu,  3 Oct 2019 16:41:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8AEA620830;
+        Thu,  3 Oct 2019 16:41:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570120886;
-        bh=j0TUDoph8IoeSXQzvxDkWduSrhUB92EJS6NKJ4xuYsI=;
+        s=default; t=1570120891;
+        bh=0UFRwrVqMUuMsxtnEtdiDjvOApLR5fVd8zynEbyvw2A=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=zNa5lsuk5wuu8dZsd7q9Z1Tf8Hc6TxsUbiO7cAzJ0dUnj2E0a66ffRHn8mZv7uHH6
-         waAeDtjxh4nTohdvRukSH+VnXL7EFXhDZWKoyoLiOQdwFmvBovUP8WpbmeTicESEjd
-         Hh291AN8vRvq+wmOXvQw2E1Ckg65UjhOfzfjRJPM=
+        b=0BB8nRSI7hAQVc/mXf0+/4RoP7yy0VTn5LczjK9SlO3jbcf8KTwOOe8Q8zJHbLHPg
+         5n/n6dwLXivVT+sh2aImb1NEfhEGRbYU9mG89mV4ooc/gm9veDB0RbdOvphKqGOIj8
+         a1sNdIQGdMkJAnYHtrsyGJM9/4HMlqBFNPiJVyU0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        Charles Keepax <ckeepax@opensource.cirrus.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.3 075/344] cpuidle: teo: Allow tick to be stopped if PM QoS is used
-Date:   Thu,  3 Oct 2019 17:50:40 +0200
-Message-Id: <20191003154547.528590075@linuxfoundation.org>
+Subject: [PATCH 5.3 077/344] gpio: madera: Add support for Cirrus Logic CS47L92
+Date:   Thu,  3 Oct 2019 17:50:42 +0200
+Message-Id: <20191003154547.748478547@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191003154540.062170222@linuxfoundation.org>
 References: <20191003154540.062170222@linuxfoundation.org>
@@ -60,123 +61,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+From: Charles Keepax <ckeepax@opensource.cirrus.com>
 
-[ Upstream commit cab09f3d2d2a0a6cb3dfb678660d67a2c3764f50 ]
+[ Upstream commit 74d2d0e68701bcd53d2cf771dd3b3cb9f84bed5c ]
 
-The TEO goveror prevents the scheduler tick from being stopped (unless
-stopped already) if there is a PM QoS latency constraint for the given
-CPU and the target residency of the deepest idle state matching that
-constraint is below the tick boundary.
+As the gpio is common to all madera codecs all that is needed
+is to setup the correct number of GPIO pins for the CS47L92.
 
-However, that is problematic if CPUs with PM QoS latency constraints
-are idle for long times, because it effectively causes the tick to
-run on them all the time which is wasteful.  [It is also confusing
-and questionable if they are full dynticks CPUs.]
-
-To address that issue, modify the TEO governor to carry out the
-entire search for the most suitable idle state (from the target
-residency perspective) even if a latency constraint is present,
-to allow it to determine the expected idle duration in all cases.
-
-Also, when using the last several measured idle duration values
-to refine the idle state selection, make it compare those values
-with the current expected idle duration value (instead of
-comparing them with the target residency of the idle state
-selected so far) which should prevent the tick from being
-retained when it makes sense to stop it sometimes (especially
-in the presence of PM QoS latency constraints).
-
-Fixes: b26bf6ab716f ("cpuidle: New timer events oriented governor for tickless systems")
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Signed-off-by: Charles Keepax <ckeepax@opensource.cirrus.com>
+Link: https://lore.kernel.org/r/20190722090748.20807-4-ckeepax@opensource.cirrus.com
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/cpuidle/governors/teo.c | 32 ++++++++++++++++----------------
- 1 file changed, 16 insertions(+), 16 deletions(-)
+ drivers/gpio/gpio-madera.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/drivers/cpuidle/governors/teo.c b/drivers/cpuidle/governors/teo.c
-index 7d05efdbd3c66..12d9e6cecf1de 100644
---- a/drivers/cpuidle/governors/teo.c
-+++ b/drivers/cpuidle/governors/teo.c
-@@ -242,7 +242,7 @@ static int teo_select(struct cpuidle_driver *drv, struct cpuidle_device *dev,
- 	struct teo_cpu *cpu_data = per_cpu_ptr(&teo_cpus, dev->cpu);
- 	int latency_req = cpuidle_governor_latency_req(dev->cpu);
- 	unsigned int duration_us, count;
--	int max_early_idx, idx, i;
-+	int max_early_idx, constraint_idx, idx, i;
- 	ktime_t delta_tick;
- 
- 	if (cpu_data->last_state >= 0) {
-@@ -257,6 +257,7 @@ static int teo_select(struct cpuidle_driver *drv, struct cpuidle_device *dev,
- 
- 	count = 0;
- 	max_early_idx = -1;
-+	constraint_idx = drv->state_count;
- 	idx = -1;
- 
- 	for (i = 0; i < drv->state_count; i++) {
-@@ -286,16 +287,8 @@ static int teo_select(struct cpuidle_driver *drv, struct cpuidle_device *dev,
- 		if (s->target_residency > duration_us)
- 			break;
- 
--		if (s->exit_latency > latency_req) {
--			/*
--			 * If we break out of the loop for latency reasons, use
--			 * the target residency of the selected state as the
--			 * expected idle duration to avoid stopping the tick
--			 * as long as that target residency is low enough.
--			 */
--			duration_us = drv->states[idx].target_residency;
--			goto refine;
--		}
-+		if (s->exit_latency > latency_req && constraint_idx > i)
-+			constraint_idx = i;
- 
- 		idx = i;
- 
-@@ -321,7 +314,13 @@ static int teo_select(struct cpuidle_driver *drv, struct cpuidle_device *dev,
- 		duration_us = drv->states[idx].target_residency;
- 	}
- 
--refine:
-+	/*
-+	 * If there is a latency constraint, it may be necessary to use a
-+	 * shallower idle state than the one selected so far.
-+	 */
-+	if (constraint_idx < idx)
-+		idx = constraint_idx;
-+
- 	if (idx < 0) {
- 		idx = 0; /* No states enabled. Must use 0. */
- 	} else if (idx > 0) {
-@@ -331,13 +330,12 @@ static int teo_select(struct cpuidle_driver *drv, struct cpuidle_device *dev,
- 
- 		/*
- 		 * Count and sum the most recent idle duration values less than
--		 * the target residency of the state selected so far, find the
--		 * max.
-+		 * the current expected idle duration value.
- 		 */
- 		for (i = 0; i < INTERVALS; i++) {
- 			unsigned int val = cpu_data->intervals[i];
- 
--			if (val >= drv->states[idx].target_residency)
-+			if (val >= duration_us)
- 				continue;
- 
- 			count++;
-@@ -356,8 +354,10 @@ static int teo_select(struct cpuidle_driver *drv, struct cpuidle_device *dev,
- 			 * would be too shallow.
- 			 */
- 			if (!(tick_nohz_tick_stopped() && avg_us < TICK_USEC)) {
--				idx = teo_find_shallower_state(drv, dev, idx, avg_us);
- 				duration_us = avg_us;
-+				if (drv->states[idx].target_residency > avg_us)
-+					idx = teo_find_shallower_state(drv, dev,
-+								       idx, avg_us);
- 			}
- 		}
- 	}
+diff --git a/drivers/gpio/gpio-madera.c b/drivers/gpio/gpio-madera.c
+index 19db5a500eb0d..be963113f6722 100644
+--- a/drivers/gpio/gpio-madera.c
++++ b/drivers/gpio/gpio-madera.c
+@@ -150,6 +150,11 @@ static int madera_gpio_probe(struct platform_device *pdev)
+ 	case CS47L91:
+ 		madera_gpio->gpio_chip.ngpio = CS47L90_NUM_GPIOS;
+ 		break;
++	case CS42L92:
++	case CS47L92:
++	case CS47L93:
++		madera_gpio->gpio_chip.ngpio = CS47L92_NUM_GPIOS;
++		break;
+ 	default:
+ 		dev_err(&pdev->dev, "Unknown chip variant %d\n", madera->type);
+ 		return -EINVAL;
 -- 
 2.20.1
 
