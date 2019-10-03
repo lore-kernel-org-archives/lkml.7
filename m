@@ -7,50 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FF2EC10F14
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:42:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CAD2C32792
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:42:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2317520830
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:42:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ECEBD2054F
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:42:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570120967;
-	bh=TO36sxAHD4Bn+D3eeOaeB/DIge7EXOLy0Ew7V3AN8EU=;
+	s=default; t=1570120971;
+	bh=unuKwpicSk29FKeSUfdYaEpXIULrQ/T9E4PrM81Rjt0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=L1sPcA1tUiLaTyccs27wURnk7qbe9sgUBb17Y2WVUbCbWyRCIK8o++LcrcNzmoxow
-	 nQqCEEqmbr/eF/dgZoWXh7SFTRwJ1rfbsk/3ZY+LUMldqhL/OLbmQ+GLuxrwJlM/yJ
-	 +kDER9mocBicZGVorSzqxv2dlT9aKop22SPCWfb0=
+	b=fas3yipvUtG7jSuyGlI2P6WOP2kzEaR1mCyVc/Ed+/rNDy9z0kisds+8rRdjdp/5o
+	 9LgSubLSVzwwSqh1CdUr4BD9qot+Q7GS0037J0pr4JlJLd2hQXPpyXkWciPQkxj4Cz
+	 6DdphLCPB6IkUyuLVJ/WrDjakaYgzrw/GuWuo6CI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405093AbfJCQmp (ORCPT
+        id S2390806AbfJCQmt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 12:42:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53800 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 12:42:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53950 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392687AbfJCQml (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:42:41 -0400
+        id S2391394AbfJCQmq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:42:46 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5594A2054F;
-        Thu,  3 Oct 2019 16:42:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A68E220867;
+        Thu,  3 Oct 2019 16:42:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570120960;
-        bh=TO36sxAHD4Bn+D3eeOaeB/DIge7EXOLy0Ew7V3AN8EU=;
+        s=default; t=1570120966;
+        bh=unuKwpicSk29FKeSUfdYaEpXIULrQ/T9E4PrM81Rjt0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=TjOU/xFLFRx+D1mIvI1+hsBGdPEBsS8yzeJbgTTb8VYhzBlxqKSyKYXILFVdmrfPm
-         dNUVz2TCOkdLLcOYiSt5Bl9PiMdcpUr2wwuO3S7P0MIuyVTqrvfB9qm8VH6B0mXp8E
-         m9OZRehBIp6ePDktyxwkDjfrBJyPT/B1OTIcolvc=
+        b=lidnUEAbg1VW/rDGY1qxx9BtjoBGCgeP+JqIAQ1uFJEilIKMuLroqJwxRgtcufN2f
+         LfF/WkzlXiZAS8mmJ/utbdCGLyhbgAjd3sohqF6T0fz9wBIgkgYSbe2oX9Q6wm7HJE
+         Xd4Ny+Zykg9vNoNzOOrZKXSm5tYePmH61yDfJLJM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Peter Zijlstra <peterz@infradead.org>,
-        Frederic Weisbecker <fweisbec@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@kernel.org>,
-        "Paul E. McKenney" <paulmck@linux.ibm.com>,
+        stable@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.3 101/344] idle: Prevent late-arriving interrupts from disrupting offline
-Date:   Thu,  3 Oct 2019 17:51:06 +0200
-Message-Id: <20191003154550.161023591@linuxfoundation.org>
+Subject: [PATCH 5.3 068/344] x86/apic: Soft disable APIC before initializing it
+Date:   Thu,  3 Oct 2019 17:50:33 +0200
+Message-Id: <20191003154546.825979984@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191003154540.062170222@linuxfoundation.org>
 References: <20191003154540.062170222@linuxfoundation.org>
@@ -63,109 +60,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Peter Zijlstra <peterz@infradead.org>
+From: Thomas Gleixner <tglx@linutronix.de>
 
-[ Upstream commit e78a7614f3876ac649b3df608789cb6ef74d0480 ]
+[ Upstream commit 2640da4cccf5cc613bf26f0998b9e340f4b5f69c ]
 
-Scheduling-clock interrupts can arrive late in the CPU-offline process,
-after idle entry and the subsequent call to cpuhp_report_idle_dead().
-Once execution passes the call to rcu_report_dead(), RCU is ignoring
-the CPU, which results in lockdep complaints when the interrupt handler
-uses RCU:
+If the APIC was already enabled on entry of setup_local_APIC() then
+disabling it soft via the SPIV register makes a lot of sense.
 
-------------------------------------------------------------------------
+That masks all LVT entries and brings it into a well defined state.
 
-=============================
-WARNING: suspicious RCU usage
-5.2.0-rc1+ #681 Not tainted
------------------------------
-kernel/sched/fair.c:9542 suspicious rcu_dereference_check() usage!
+Otherwise previously enabled LVTs which are not touched in the setup
+function stay unmasked and might surprise the just booting kernel.
 
-other info that might help us debug this:
-
-RCU used illegally from offline CPU!
-rcu_scheduler_active = 2, debug_locks = 1
-no locks held by swapper/5/0.
-
-stack backtrace:
-CPU: 5 PID: 0 Comm: swapper/5 Not tainted 5.2.0-rc1+ #681
-Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS Bochs 01/01/2011
-Call Trace:
- <IRQ>
- dump_stack+0x5e/0x8b
- trigger_load_balance+0xa8/0x390
- ? tick_sched_do_timer+0x60/0x60
- update_process_times+0x3b/0x50
- tick_sched_handle+0x2f/0x40
- tick_sched_timer+0x32/0x70
- __hrtimer_run_queues+0xd3/0x3b0
- hrtimer_interrupt+0x11d/0x270
- ? sched_clock_local+0xc/0x74
- smp_apic_timer_interrupt+0x79/0x200
- apic_timer_interrupt+0xf/0x20
- </IRQ>
-RIP: 0010:delay_tsc+0x22/0x50
-Code: ff 0f 1f 80 00 00 00 00 65 44 8b 05 18 a7 11 48 0f ae e8 0f 31 48 89 d6 48 c1 e6 20 48 09 c6 eb 0e f3 90 65 8b 05 fe a6 11 48 <41> 39 c0 75 18 0f ae e8 0f 31 48 c1 e2 20 48 09 c2 48 89 d0 48 29
-RSP: 0000:ffff8f92c0157ed0 EFLAGS: 00000212 ORIG_RAX: ffffffffffffff13
-RAX: 0000000000000005 RBX: ffff8c861f356400 RCX: ffff8f92c0157e64
-RDX: 000000321214c8cc RSI: 00000032120daa7f RDI: 0000000000260f15
-RBP: 0000000000000005 R08: 0000000000000005 R09: 0000000000000000
-R10: 0000000000000001 R11: 0000000000000001 R12: 0000000000000000
-R13: 0000000000000000 R14: ffff8c861ee18000 R15: ffff8c861ee18000
- cpuhp_report_idle_dead+0x31/0x60
- do_idle+0x1d5/0x200
- ? _raw_spin_unlock_irqrestore+0x2d/0x40
- cpu_startup_entry+0x14/0x20
- start_secondary+0x151/0x170
- secondary_startup_64+0xa4/0xb0
-
-------------------------------------------------------------------------
-
-This happens rarely, but can be forced by happen more often by
-placing delays in cpuhp_report_idle_dead() following the call to
-rcu_report_dead().  With this in place, the following rcutorture
-scenario reproduces the problem within a few minutes:
-
-tools/testing/selftests/rcutorture/bin/kvm.sh --cpus 8 --duration 5 --kconfig "CONFIG_DEBUG_LOCK_ALLOC=y CONFIG_PROVE_LOCKING=y" --configs "TREE04"
-
-This commit uses the crude but effective expedient of moving the disabling
-of interrupts within the idle loop to precede the cpu_is_offline()
-check.  It also invokes tick_nohz_idle_stop_tick() instead of
-tick_nohz_idle_stop_tick_protected() to shut off the scheduling-clock
-interrupt.
-
-Signed-off-by: Peter Zijlstra <peterz@infradead.org>
-Cc: Frederic Weisbecker <fweisbec@gmail.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Ingo Molnar <mingo@kernel.org>
-[ paulmck: Revert tick_nohz_idle_stop_tick_protected() removal, new callers. ]
-Signed-off-by: Paul E. McKenney <paulmck@linux.ibm.com>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Link: https://lkml.kernel.org/r/20190722105219.068290579@linutronix.de
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/sched/idle.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ arch/x86/kernel/apic/apic.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-diff --git a/kernel/sched/idle.c b/kernel/sched/idle.c
-index 80940939b7336..e4bc4aa739b83 100644
---- a/kernel/sched/idle.c
-+++ b/kernel/sched/idle.c
-@@ -241,13 +241,14 @@ static void do_idle(void)
- 		check_pgt_cache();
- 		rmb();
+diff --git a/arch/x86/kernel/apic/apic.c b/arch/x86/kernel/apic/apic.c
+index 436d462dde715..ad0d5ced82b30 100644
+--- a/arch/x86/kernel/apic/apic.c
++++ b/arch/x86/kernel/apic/apic.c
+@@ -1583,6 +1583,14 @@ static void setup_local_APIC(void)
+ 		return;
+ 	}
  
-+		local_irq_disable();
++	/*
++	 * If this comes from kexec/kcrash the APIC might be enabled in
++	 * SPIV. Soft disable it before doing further initialization.
++	 */
++	value = apic_read(APIC_SPIV);
++	value &= ~APIC_SPIV_APIC_ENABLED;
++	apic_write(APIC_SPIV, value);
 +
- 		if (cpu_is_offline(cpu)) {
--			tick_nohz_idle_stop_tick_protected();
-+			tick_nohz_idle_stop_tick();
- 			cpuhp_report_idle_dead();
- 			arch_cpu_idle_dead();
- 		}
- 
--		local_irq_disable();
- 		arch_cpu_idle_enter();
- 
- 		/*
+ #ifdef CONFIG_X86_32
+ 	/* Pound the ESR really hard over the head with a big hammer - mbligh */
+ 	if (lapic_is_integrated() && apic->disable_esr) {
 -- 
 2.20.1
 
