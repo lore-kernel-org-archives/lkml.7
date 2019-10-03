@@ -2,159 +2,118 @@ Return-Path: <SRS0=6dNS=X4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E0F1C32792
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 14:05:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55652C32792
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 14:06:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 32966215EA
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 14:05:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="YOXOx+Tp"
+	by mail.kernel.org (Postfix) with ESMTP id 278DA207FF
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 14:06:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1570111563;
+	bh=GH4taLsUBDAr8HKIqVU8lz5qUiBhWaxiGGrIcZImd2E=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=iV14FPO8zv0BCDtC6bT6X4owwzVESPqUiez+gXRa8zO49URyOe2TjcjvhNverE+HA
+	 Chw26gAs8Au3DClQZzLUAg8/BZsWCbgs8THq4LY4iNI3fa5D5dIKtGvJo59yFF9e7f
+	 TeCtZcvgunFWBK7c86Qjmizuka1BEjb32QSSAW5M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730104AbfJCOFe (ORCPT
+        id S1730313AbfJCOGC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 10:05:34 -0400
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:45617 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729535AbfJCOFe (ORCPT
+        Thu, 3 Oct 2019 10:06:02 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:39996 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730114AbfJCOGC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 10:05:34 -0400
-Received: by mail-ot1-f66.google.com with SMTP id 41so2345768oti.12
-        for <linux-kernel@vger.kernel.org>; Thu, 03 Oct 2019 07:05:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=CjkcCbQk4BfKYjIfcsA27jNMdWtxDDNMFITjeJ5N6Yo=;
-        b=YOXOx+TpchFlAH//++YWGEZLm1lokUcPLph2RU/Nu9ijloryGxTZofWrIGe7Ku03q1
-         Tzs93SvjWVnXX4Ix9pEmfQIydneey+OnWoUywuxD3xJQPit7fR4RUkv3aCY0Kc+nZUxm
-         74IRyYDFNglOCzz0yKXO9ne/egBQUOI6ITzGRMC12TIdQSjjilUgUphdDgCgCpck92wN
-         r2cHZIFAaEc1uAzwLfz4edoSRcU/EkpLCUMNfxMbwb1NTL3TEaklMlhG+jHSbZ0c5eHH
-         9NjN3q0urk1H//CSeEOj3BexelnRhpkPQ8G+WhdF02b5vB5+lmVLGU4A1NMUd2nN6D4Q
-         Q0cw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=CjkcCbQk4BfKYjIfcsA27jNMdWtxDDNMFITjeJ5N6Yo=;
-        b=s8XgFyP+R/2Lev1tp0uV2wtyH3xWV9yqgy78oNG1pAzPcG14JT+gM9KHaB+Ghj4c0r
-         BeFxa8V5rg2nO10dk1gg0YQWng9OIOH2MC/Vbvl7aQ1eyD+pp3YDlqa3ooygcIewbML+
-         VqlhJZD9qZKmp4yFNWKspPcBd/jOCTBMYc2hqSlaGYc0breSTfmPmXq2WztcgLydibks
-         78Y6vd49bH8obSq3P+Sd1zm7oR7ME7En2sSEvB47AYkoFY1C2kKVPOG3+zV2rERI4Dww
-         POoaBsyprq/aBzwW0QJP2gFxxaAd7d0WqF4/jTWWGYr1Bk1PP2HnPf5V8rb1E5PuLODo
-         /oDA==
-X-Gm-Message-State: APjAAAWcc1Xy4wM+RtSQkpjLaUHu0pF/834eHAOt9HWBDN5htBG+I9mo
-        On14ddMBjDnnNNzuWpO9POe88Z7vXZfsxkPKrpVteA==
-X-Google-Smtp-Source: APXvYqzJLEJexAn72R2rPNacy6O7n9DNnITIY6sTbrSg2g0w3x+cqeu7psGfMmvb0/+z5UR1x9WrNfk4Bm8i08YwGxo=
-X-Received: by 2002:a05:6830:609:: with SMTP id w9mr6937958oti.292.1570111533275;
- Thu, 03 Oct 2019 07:05:33 -0700 (PDT)
+        Thu, 3 Oct 2019 10:06:02 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Subject:Cc:To:
+        From:Date:Sender:Reply-To:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=g5ZI7dzXc6DzdoiPhmhftNfql4ZQHg2viebNXmQcCkQ=; b=e2riPOA0ky61D/JeXl4NU791k
+        Mb5LkuuosQPgMBB6vmxhq3Tq2v8pRqruZDMU8402qmhQFDEy6klXdTbNfMqw2kGpQFUQNJmuNxM8k
+        tPHUD9eP81bo64My3g28MdiBj5Rf8hxpBFMZq3VfhqPMQd5/1PYjI8uPiFh6qMeh868q8ZzKGPu3Q
+        cZoQ8KwqRCEVQGfkdD27/3FL/y8qiJRsuQIKyYOntBLFQFMcQ4R7WUMCKuBep0jF1QTFUlAeZ6C8i
+        oQIYhhwl3u0SJ9LJNvq/ZJ7WCDjQ43OJ/wnUE/3cvZLrXmE3/mnTU6F2QCoPD3BQwoi3G5YABx+rT
+        mdvVYrLGQ==;
+Received: from 177.133.68.49.dynamic.adsl.gvt.net.br ([177.133.68.49] helo=coco.lan)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.2 #3 (Red Hat Linux))
+        id 1iG1jv-000161-V2; Thu, 03 Oct 2019 14:05:56 +0000
+Date:   Thu, 3 Oct 2019 11:05:51 -0300
+From:   Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+To:     Gonsolo <gonsolo@gmail.com>
+Cc:     JP <jp@jpvw.nl>, crope@iki.fi, Sean Young <sean@mess.org>,
+        linux-media@vger.kernel.org,
+        Linux Kernel <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] si2157: Add support for Logilink VG0022A.
+Message-ID: <20191003110551.19f06922@coco.lan>
+In-Reply-To: <CANL0fFQR4KDU5PKeedK6wF45nSTu6dUyz_MBwmP1QsJxYQAWNg@mail.gmail.com>
+References: <20191002150650.GA4227@gofer.mess.org>
+        <CANL0fFRoL6NxOCbNC=XjQ6LDkeeqAayaLUbm9xARWX9ttqfPFg@mail.gmail.com>
+        <29ab2e43-4374-a3ea-6ae1-a4267867eaa4@jpvw.nl>
+        <20191002154922.7f1cfc76@coco.lan>
+        <CANL0fFRJZBfEDWK_c2w1TomvB5-i4g09LopyJUbO5NtOwKdDTg@mail.gmail.com>
+        <CANL0fFTwJ4yRO+5q6WkL0+DtwdrRti6r_WY1intisYJhs5En8w@mail.gmail.com>
+        <20191003081742.0933264b@coco.lan>
+        <CANL0fFTtHn4ocL4BD4cVKhVzjLhnQ0a45yq5x4MxWAVu-tD8sw@mail.gmail.com>
+        <20191003094904.3aa5fdc7@coco.lan>
+        <20191003095237.2efa0e7f@coco.lan>
+        <20191003130224.GA2596@Limone>
+        <CANL0fFQR4KDU5PKeedK6wF45nSTu6dUyz_MBwmP1QsJxYQAWNg@mail.gmail.com>
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-References: <20190927100407.1863293-1-paul.kocialkowski@bootlin.com>
- <20190927100407.1863293-4-paul.kocialkowski@bootlin.com> <CAMpxmJUHPuGPPPFSctyhtfj0oAk6oJ+=mvgN4=7jmLxAfHs45Q@mail.gmail.com>
- <20191003112610.GA28856@aptenodytes>
-In-Reply-To: <20191003112610.GA28856@aptenodytes>
-From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Date:   Thu, 3 Oct 2019 16:05:22 +0200
-Message-ID: <CAMpxmJVfgDTNcwk6qmCwfwQkp_tw+8CVbO1mSeHQkBzJgoWLXg@mail.gmail.com>
-Subject: Re: [PATCH v3 3/5] gpio: syscon: Add support for a custom get operation
-To:     Paul Kocialkowski <paul.kocialkowski@bootlin.com>
-Cc:     linux-gpio <linux-gpio@vger.kernel.org>,
-        linux-devicetree <devicetree@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-czw., 3 pa=C5=BA 2019 o 13:26 Paul Kocialkowski
-<paul.kocialkowski@bootlin.com> napisa=C5=82(a):
->
-> Hi,
->
-> On Thu 03 Oct 19, 10:24, Bartosz Golaszewski wrote:
-> > pt., 27 wrz 2019 o 12:04 Paul Kocialkowski
-> > <paul.kocialkowski@bootlin.com> napisa=C5=82(a):
-> > >
-> > > Some drivers might need a custom get operation to match custom
-> > > behavior implemented in the set operation.
-> > >
-> > > Add plumbing for supporting that.
-> > >
-> > > Signed-off-by: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
-> > > ---
-> > >  drivers/gpio/gpio-syscon.c | 7 ++++---
-> > >  1 file changed, 4 insertions(+), 3 deletions(-)
-> > >
-> > > diff --git a/drivers/gpio/gpio-syscon.c b/drivers/gpio/gpio-syscon.c
-> > > index 31f332074d7d..05c537ed73f1 100644
-> > > --- a/drivers/gpio/gpio-syscon.c
-> > > +++ b/drivers/gpio/gpio-syscon.c
-> > > @@ -43,8 +43,9 @@ struct syscon_gpio_data {
-> > >         unsigned int    bit_count;
-> > >         unsigned int    dat_bit_offset;
-> > >         unsigned int    dir_bit_offset;
-> > > -       void            (*set)(struct gpio_chip *chip,
-> > > -                              unsigned offset, int value);
-> > > +       int             (*get)(struct gpio_chip *chip, unsigned offse=
-t);
-> > > +       void            (*set)(struct gpio_chip *chip, unsigned offse=
-t,
-> > > +                              int value);
-> >
-> > Why did you change this line? Doesn't seem necessary and pollutes the h=
-istory.
->
-> This is for consistency since both the "chip" and "offset" arguments can =
-fit
-> in a single line. Since I want the "get" addition to fit in a single line=
-,
-> bringing back "offset" on the previous line of "set" makes things consist=
-ent.
-> There's probably no particular reason for the split in the first place.
->
-> Do you think it needs a separate cosmetic commit only for that?
-> I'd rather add a note in the commit message and keep the change as-is.
->
+Em Thu, 3 Oct 2019 15:53:30 +0200
+Gonsolo <gonsolo@gmail.com> escreveu:
 
-The line is still broken - just in a different place. I'd prefer to
-leave it as it is frankly, there's nothing wrong with it.
+> Hi!
+> 
+> I tried downloading a new firmware via
+> 
+>        case SI_BOGUS:
+> -               dev_info(&client->dev, "Bogus chip version, trying
+> with no firmware\n");
+> -               fw_name = NULL;
+> +               dev_info(&client->dev, "Bogus chip version, trying
+> with new firmware\n");
+> +               fw_name = SI2157_A30_FIRMWARE;
+>                 break;
+> 
+> which I downloaded from
+> 
+> +               //
+> https://github.com/CoreELEC/dvb-firmware/blob/master/firmware/dvb-tuner-si2157-a30-01.fw
+> 
+> resulting in
+> 
+> [  209.312086] si2168 1-0067: downloading firmware from file
+> 'dvb-demod-si2168-b40-01.fw'
+> [  211.535097] si2168 1-0067: firmware version: B 4.0.25
+> [  211.554938] si2157 2-0063: Bogus chip version, trying with new firmware
+> [  211.554944] si2157 2-0063: found a 'Silicon Labs Si21255-\xff\xff\xff'
+> [  211.557978] si2157 2-0063: downloading firmware from file
+> 'dvb-tuner-si2157-a30-01.fw'
+> [  215.739092] si2157 2-0063: rebooting tuner...
+> [  215.755271] si2157 2-0063: querying firmware version...
+> [  215.760756] si2157 2-0063: firmware version: \xff.\xff.255
+> 
+> . So even with a new firmware the queried numbers are bogus.
 
-Bart
+Try to reduce the bus speed to 10kbps
+> 
+> g
 
-> Cheers,
->
-> Paul
->
-> > Bart
-> >
-> > >  };
-> > >
-> > >  struct syscon_gpio_priv {
-> > > @@ -252,7 +253,7 @@ static int syscon_gpio_probe(struct platform_devi=
-ce *pdev)
-> > >         priv->chip.label =3D dev_name(dev);
-> > >         priv->chip.base =3D -1;
-> > >         priv->chip.ngpio =3D priv->data->bit_count;
-> > > -       priv->chip.get =3D syscon_gpio_get;
-> > > +       priv->chip.get =3D priv->data->get ? : syscon_gpio_get;
-> > >         if (priv->data->flags & GPIO_SYSCON_FEAT_IN)
-> > >                 priv->chip.direction_input =3D syscon_gpio_dir_in;
-> > >         if (priv->data->flags & GPIO_SYSCON_FEAT_OUT) {
-> > > --
-> > > 2.23.0
-> > >
->
-> --
-> Paul Kocialkowski, Bootlin
-> Embedded Linux and kernel engineering
-> https://bootlin.com
+
+
+Thanks,
+Mauro
