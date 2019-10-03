@@ -2,176 +2,285 @@ Return-Path: <SRS0=6dNS=X4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F8D7C10F14
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 10:30:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DBA7C32792
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 10:31:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1D1F221A4C
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 10:30:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 45AF521D71
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 10:31:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="DUtb3Alp"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="GeuzTzJN";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="EV1z/mkw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729378AbfJCKaP (ORCPT
+        id S1729426AbfJCKbY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 06:30:15 -0400
-Received: from conuserg-10.nifty.com ([210.131.2.77]:49391 "EHLO
-        conuserg-10.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728919AbfJCKaN (ORCPT
+        Thu, 3 Oct 2019 06:31:24 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:44206 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728503AbfJCKbY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 06:30:13 -0400
-Received: from localhost.localdomain (p14092-ipngnfx01kyoto.kyoto.ocn.ne.jp [153.142.97.92]) (authenticated)
-        by conuserg-10.nifty.com with ESMTP id x93ATIYw014338;
-        Thu, 3 Oct 2019 19:29:20 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-10.nifty.com x93ATIYw014338
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1570098560;
-        bh=DlfvIJ7TNPo8SCZtpXZn6EtbMqn7kWyCU+GUqdyLtYI=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=DUtb3Alp1sqmTbsP8jUWlNMigWaAp8UWUZX/l65EB596ArVof+HMPAU3TiEdtu5Qf
-         riXr60YjvdXoAnjnk5t4tFgmYLYyH70x5Oz3VUyd1RM/pnUfq3RfqXRmsTWosSBrHy
-         uAcUMFdP60EIpT/et8LeV2D5OIat/gcQMloznmkzTQQBcMHdryGSXSfVGjKLCurLgx
-         PrZxnks5kgeVl/cuCqpzJeA40XYuB8UzdDsUDHyi0pmiCOyyqtLHqyyMaGfaa36NBz
-         lgwv/um1AUfO0jZZ8gkq21Ep0wgDyb9CyKPbMnl1xNclgtJ6CTHnfchU+XtvfPqVmh
-         2iKj+twhd7rdw==
-X-Nifty-SrcIP: [153.142.97.92]
-From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-To:     linux-kbuild@vger.kernel.org
-Cc:     Sam Ravnborg <sam@ravnborg.org>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Michal Marek <michal.lkml@markovi.net>,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 3/4] kbuild: do not read $(KBUILD_EXTMOD)/Module.symvers
-Date:   Thu,  3 Oct 2019 19:29:14 +0900
-Message-Id: <20191003102915.28301-3-yamada.masahiro@socionext.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20191003102915.28301-1-yamada.masahiro@socionext.com>
-References: <20191003102915.28301-1-yamada.masahiro@socionext.com>
+        Thu, 3 Oct 2019 06:31:24 -0400
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id 2E5646115D; Thu,  3 Oct 2019 10:31:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1570098682;
+        bh=HyX1/FILi1Ga/lSpbk5aOyhw1PtgxVhFbJGC0NtbZy0=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=GeuzTzJNetBVwO69h0RI6chi4Z9hF3FuessztwHfSkkWGvqyUhc+c3ktExVnUoeyg
+         nm7kzaO527yNny62gxgqm4D6rngq8AX8+noYI46MyJk2K8BhNwNqC+WZjV1y0tnAX/
+         CfRkGUUryLMoPpvpnv3IDjo+lLQoJDVjbukF/kdI=
+Received: from [10.206.28.9] (blr-c-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.19.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: tdas@smtp.codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id D89EB60AD9;
+        Thu,  3 Oct 2019 10:31:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1570098681;
+        bh=HyX1/FILi1Ga/lSpbk5aOyhw1PtgxVhFbJGC0NtbZy0=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=EV1z/mkwMJvJLpao3tVcx00pWly+VW9qeQiwegpI3sNpsXF7ypygK6qOIlCZLZytk
+         Ln0InihWJwKyEmevKVmWQA1LC43RBpvN3pZAnQEg0WWrzeeToJBpNZ02lRSxV1KjMx
+         PZJ61UmF6SyaiWlZPp7HemlfS2zCHb2EjvPt3r+Q=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org D89EB60AD9
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=tdas@codeaurora.org
+Subject: Re: [PATCH v3 3/3] clk: qcom: Add Global Clock controller (GCC)
+ driver for SC7180
+To:     Stephen Boyd <sboyd@kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>, robh+dt@kernel.org
+Cc:     David Brown <david.brown@linaro.org>,
+        Rajendra Nayak <rnayak@codeaurora.org>,
+        linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org,
+        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org
+References: <20190918095018.17979-1-tdas@codeaurora.org>
+ <20190918095018.17979-4-tdas@codeaurora.org>
+ <20190918213946.DC03521924@mail.kernel.org>
+ <a3cd82c9-8bfa-f4a3-ab1f-2e397fbd9d16@codeaurora.org>
+ <20190924231223.9012C207FD@mail.kernel.org>
+ <347780b9-c66b-01c4-b547-b03de2cf3078@codeaurora.org>
+ <20190925130346.42E0820640@mail.kernel.org>
+ <35f8b699-6ff7-9104-5e3d-ef4ee8635832@codeaurora.org>
+ <20191001143825.CD3212054F@mail.kernel.org>
+From:   Taniya Das <tdas@codeaurora.org>
+Message-ID: <7ac5f6bf-33c5-580e-bd40-e82f3052d460@codeaurora.org>
+Date:   Thu, 3 Oct 2019 16:01:15 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
+MIME-Version: 1.0
+In-Reply-To: <20191001143825.CD3212054F@mail.kernel.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Since commit 040fcc819a2e ("kbuild: improved modversioning support for
-external modules"), the external module build reads Module.symvers in
-the directory of the module itself, then dumps symbols back into it.
-It accumulates stale symbols in the file when you build an external
-module incrementally.
+Hi Stephen,
 
-The idea behind it was, as the commit log explained, you can copy
-Modules.symvers from one module to another when you need to pass symbol
-information between two modules. However, the manual copy of the file
-sounds questionable to me, and containing stale symbols is a downside.
+On 10/1/2019 8:08 PM, Stephen Boyd wrote:
+> Quoting Taniya Das (2019-09-27 00:37:57)
+>> Hi Stephen,
+>>
+>> On 9/25/2019 6:33 PM, Stephen Boyd wrote:
+>>> Quoting Taniya Das (2019-09-25 04:20:07)
+>>>> Hi Stephen,
+>>>>
+>>>> Please find my comments.
+>>>>
+>>>> On 9/25/2019 4:42 AM, Stephen Boyd wrote:
+>>>>> Quoting Taniya Das (2019-09-23 01:01:11)
+>>>>>> Hi Stephen,
+>>>>>>
+>>>>>> Thanks for your comments.
+>>>>>>
+>>>>>> On 9/19/2019 3:09 AM, Stephen Boyd wrote:
+>>>>>>> Quoting Taniya Das (2019-09-18 02:50:18)
+>>>>>>>> diff --git a/drivers/clk/qcom/gcc-sc7180.c b/drivers/clk/qcom/gcc-sc7180.c
+>>>>>>>> new file mode 100644
+>>>>>>>> index 000000000000..d47865d5408f
+>>>>>>>> --- /dev/null
+>>>>>>>> +++ b/drivers/clk/qcom/gcc-sc7180.c
+>>>>>>>> +                       .ops = &clk_branch2_ops,
+>>>>>>>> +               },
+>>>>>>>> +       },
+>>>>>>>> +};
+>>>>>>>> +
+>>>>> [...]
+>>>>>>>> +static struct clk_branch gcc_ufs_phy_phy_aux_clk = {
+>>>>>>>> +       .halt_reg = 0x77094,
+>>>>>>>> +       .halt_check = BRANCH_HALT,
+>>>>>>>> +       .hwcg_reg = 0x77094,
+>>>>>>>> +       .hwcg_bit = 1,
+>>>>>>>> +       .clkr = {
+>>>>>>>> +               .enable_reg = 0x77094,
+>>>>>>>> +               .enable_mask = BIT(0),
+>>>>>>>> +               .hw.init = &(struct clk_init_data){
+>>>>>>>> +                       .name = "gcc_ufs_phy_phy_aux_clk",
+>>>>>>>> +                       .parent_data = &(const struct clk_parent_data){
+>>>>>>>> +                               .hw = &gcc_ufs_phy_phy_aux_clk_src.clkr.hw,
+>>>>>>>> +                       },
+>>>>>>>> +                       .num_parents = 1,
+>>>>>>>> +                       .flags = CLK_SET_RATE_PARENT,
+>>>>>>>> +                       .ops = &clk_branch2_ops,
+>>>>>>>> +               },
+>>>>>>>> +       },
+>>>>>>>> +};
+>>>>>>>> +
+>>>>>>>> +static struct clk_branch gcc_ufs_phy_rx_symbol_0_clk = {
+>>>>>>>> +       .halt_reg = 0x7701c,
+>>>>>>>> +       .halt_check = BRANCH_HALT_SKIP,
+>>>>>>>
+>>>>>>> Again, nobody has fixed the UFS driver to not need to do this halt skip
+>>>>>>> check for these clks? It's been over a year.
+>>>>>>>
+>>>>>>
+>>>>>> The UFS_PHY_RX/TX clocks could be left enabled due to certain HW boot
+>>>>>> configuration and thus during the late initcall of clk_disable there
+>>>>>> could be warnings of "clock stuck ON" in the dmesg. That is the reason
+>>>>>> also to use the BRANCH_HALT_SKIP flag.
+>>>>>
+>>>>> Oh that's bad. Why do the clks stay on when we try to turn them off?
+>>>>>
+>>>>
+>>>> Those could be due to the configuration selected by HW and SW cannot
+>>>> override them, so traditionally we have never polled for CLK_OFF for
+>>>> these clocks.
+>>>
+>>> Is that the case or just a guess?
+>>>
+>>
+>> This is the behavior :).
+> 
+> Ok. It's the same as sdm845 so I guess it's OK.
+> 
 
-Some time later, commit 0d96fb20b7ed ("kbuild: Add new Kbuild variable
-KBUILD_EXTRA_SYMBOLS") introduced a saner approach.
+Thanks.
 
-So, this commit removes the former one. Going forward, the external
-module build dumps symbols into Module.symvers to be carried via
-KBUILD_EXTRA_SYMBOLS, but never reads it automatically.
+>>
+>>>>
+>>>>>>
+>>>>>> I would also check internally for the UFS driver fix you are referring here.
+>>>>>
+>>>>> Sure. I keep asking but nothing is done :(
+>>>>>
+>>>>>>
+>>>>>>>> +       .clkr = {
+>>>>>>>> +               .enable_reg = 0x7701c,
+>>>>>>>> +               .enable_mask = BIT(0),
+>>>>>>>> +               .hw.init = &(struct clk_init_data){
+>>>>>>>> +                       .name = "gcc_ufs_phy_rx_symbol_0_clk",
+>>>>>>>> +                       .ops = &clk_branch2_ops,
+>>>>>>>> +               },
+>>>>>>>> +       },
+>>>>>>>> +};
+>>>>>>>> +
+>>>>> [...]
+>>>>>>>> +
+>>>>>>>> +static struct clk_branch gcc_usb3_prim_phy_pipe_clk = {
+>>>>>>>> +       .halt_reg = 0xf058,
+>>>>>>>> +       .halt_check = BRANCH_HALT_SKIP,
+>>>>>>>
+>>>>>>> Why does this need halt_skip?
+>>>>>>
+>>>>>> This is required as the source is external PHY, so we want to not check
+>>>>>> for HALT.
+>>>>>
+>>>>> This doesn't really answer my question. If the source is an external phy
+>>>>> then it should be listed as a clock in the DT binding and the parent
+>>>>> should be specified here. Unless something doesn't work because of that?
+>>>>>
+>>>>
+>>>> The USB phy is managed by the USB driver and clock driver is not aware
+>>>> if USB driver models the phy as a clock. Thus we do want to keep a
+>>>> dependency on the parent and not poll for CLK_ENABLE.
+>>>
+>>> The clk driver should be aware of the USB driver modeling the phy as a
+>>> clk. We do that for other phys so what is the difference here?
+>>>
+>>
+>> Let me check with the USB team, but could we keep them for now?
+> 
+> Ok. It's also the same as sdm845 so I guess it's OK. Would be nice to
+> properly model it though so we can be certain the clk is actually
+> enabled.
+> 
 
-With the -I option removed, there is no one to set the external_module
-flag unless KBUILD_EXTRA_SYMBOLS is passed. Now the -i option does it
-instead.
+I am going to follow it up and close on this.
 
-Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
----
+>>
+>>>>
+>>>>>>
+>>>>>>>
+>>>>>>>> +       .clkr = {
+>>>>>>>> +               .enable_reg = 0xf058,
+>>>>>>>> +               .enable_mask = BIT(0),
+>>>>>>>> +               .hw.init = &(struct clk_init_data){
+>>>>>>>> +                       .name = "gcc_usb3_prim_phy_pipe_clk",
+>>>>>>>> +                       .ops = &clk_branch2_ops,
+>>>>>>>> +               },
+>>>>>>>> +       },
+>>>>>>>> +};
+>>>>>>>> +
+>>>>>>>> +static struct clk_branch gcc_usb_phy_cfg_ahb2phy_clk = {
+>>>>>>>> +       .halt_reg = 0x6a004,
+>>>>>>>> +       .halt_check = BRANCH_HALT,
+>>>>>>>> +       .hwcg_reg = 0x6a004,
+>>>>>>>> +       .hwcg_bit = 1,
+>>>>>>>> +       .clkr = {
+>>>>>>>> +               .enable_reg = 0x6a004,
+>>>>>>>> +               .enable_mask = BIT(0),
+>>>>>>>> +               .hw.init = &(struct clk_init_data){
+>>>>>>>> +                       .name = "gcc_usb_phy_cfg_ahb2phy_clk",
+>>>>>>>> +                       .ops = &clk_branch2_ops,
+>>>>>>>> +               },
+>>>>>>>> +       },
+>>>>>>>> +};
+>>>>>>>> +
+>>>>>>>> +/* Leave the clock ON for parent config_noc_clk to be kept enabled */
+>>>>>>>
+>>>>>>> There's no parent though... So I guess this means it keeps it enabled
+>>>>>>> implicitly in hardware?
+>>>>>>>
+>>>>>>
+>>>>>> These are not left enabled, but want to leave them enabled for clients
+>>>>>> on config NOC.
+>>>>>
+>>>>> Sure. It just doesn't make sense to create clk structures and expose
+>>>>> them in the kernel when we just want to turn the bits on and leave them
+>>>>> on forever. Why not just do some register writes in probe for this
+>>>>> driver? Doesn't that work just as well and use less memory?
+>>>>>
+>>>>
+>>>> Even if I write these registers during probe, the late init check
+>>>> 'clk_core_is_enabled' would return true and would be turned OFF, that is
+>>>> the reason for marking them CRITICAL.
+>>>>
+>>>
+>>> That wouldn't happen if the clks weren't registered though, no?
+>>>
+>>
+>> I want to keep these clock CRITICAL and registered for now, but we
+>> should be able to revisit/clean them up later.
+>>
+> 
+> Why do you want to keep them critical and registered? I'm suggesting
+> that any clk that is marked critical and doesn't have a parent should
+> instead become a register write in probe to turn the clk on.
+> 
+Sure, let me do a one-time enable from probe for the clocks which 
+doesn't have a parent.
+But I would now have to educate the clients of these clocks to remove 
+using them.
 
- Documentation/kbuild/modules.rst | 13 +++++--------
- scripts/Makefile.modpost         |  1 -
- scripts/mod/modpost.c            |  9 ++-------
- 3 files changed, 7 insertions(+), 16 deletions(-)
-
-diff --git a/Documentation/kbuild/modules.rst b/Documentation/kbuild/modules.rst
-index dd1d2a0688e8..4c74f683bb2b 100644
---- a/Documentation/kbuild/modules.rst
-+++ b/Documentation/kbuild/modules.rst
-@@ -492,18 +492,15 @@ build.
- 	to the symbols from the kernel to check if all external symbols
- 	are defined. This is done in the MODPOST step. modpost obtains
- 	the symbols by reading Module.symvers from the kernel source
--	tree. If a Module.symvers file is present in the directory
--	where the external module is being built, this file will be
--	read too. During the MODPOST step, a new Module.symvers file
--	will be written containing all exported symbols that were not
--	defined in the kernel.
-+	tree. During the MODPOST step, a new Module.symvers file will be
-+	written containing all exported symbols from that external module.
- 
- --- 6.3 Symbols From Another External Module
- 
- 	Sometimes, an external module uses exported symbols from
- 	another external module. Kbuild needs to have full knowledge of
- 	all symbols to avoid spitting out warnings about undefined
--	symbols. Three solutions exist for this situation.
-+	symbols. Two solutions exist for this situation.
- 
- 	NOTE: The method with a top-level kbuild file is recommended
- 	but may be impractical in certain situations.
-@@ -543,8 +540,8 @@ build.
- 		all symbols defined and not part of the kernel.
- 
- 	Use "make" variable KBUILD_EXTRA_SYMBOLS
--		If it is impractical to copy Module.symvers from
--		another module, you can assign a space separated list
-+		If it is impractical to add a top-level kbuild file,
-+		you can assign a space separated list
- 		of files to KBUILD_EXTRA_SYMBOLS in your build file.
- 		These files will be loaded by modpost during the
- 		initialization of its symbol tables.
-diff --git a/scripts/Makefile.modpost b/scripts/Makefile.modpost
-index 72109d201196..01c0a992d293 100644
---- a/scripts/Makefile.modpost
-+++ b/scripts/Makefile.modpost
-@@ -50,7 +50,6 @@ MODPOST = scripts/mod/modpost						\
- 	$(if $(CONFIG_MODVERSIONS),-m)					\
- 	$(if $(CONFIG_MODULE_SRCVERSION_ALL),-a)			\
- 	$(if $(KBUILD_EXTMOD),-i,-o) $(kernelsymfile)			\
--	$(if $(KBUILD_EXTMOD),-I $(modulesymfile))			\
- 	$(if $(KBUILD_EXTMOD),$(addprefix -e ,$(KBUILD_EXTRA_SYMBOLS)))	\
- 	$(if $(KBUILD_EXTMOD),-o $(modulesymfile))			\
- 	$(if $(CONFIG_SECTION_MISMATCH_WARN_ONLY),,-E)			\
-diff --git a/scripts/mod/modpost.c b/scripts/mod/modpost.c
-index 936d3ad23c83..5234555cf550 100644
---- a/scripts/mod/modpost.c
-+++ b/scripts/mod/modpost.c
-@@ -2540,7 +2540,7 @@ int main(int argc, char **argv)
- {
- 	struct module *mod;
- 	struct buffer buf = { };
--	char *kernel_read = NULL, *module_read = NULL;
-+	char *kernel_read = NULL;
- 	char *dump_write = NULL, *files_source = NULL;
- 	int opt;
- 	int err;
-@@ -2548,13 +2548,10 @@ int main(int argc, char **argv)
- 	struct ext_sym_list *extsym_iter;
- 	struct ext_sym_list *extsym_start = NULL;
- 
--	while ((opt = getopt(argc, argv, "i:I:e:mnsT:o:awEd")) != -1) {
-+	while ((opt = getopt(argc, argv, "i:e:mnsT:o:awEd")) != -1) {
- 		switch (opt) {
- 		case 'i':
- 			kernel_read = optarg;
--			break;
--		case 'I':
--			module_read = optarg;
- 			external_module = 1;
- 			break;
- 		case 'e':
-@@ -2599,8 +2596,6 @@ int main(int argc, char **argv)
- 
- 	if (kernel_read)
- 		read_dump(kernel_read, 1);
--	if (module_read)
--		read_dump(module_read, 0);
- 	while (extsym_start) {
- 		read_dump(extsym_start->file, 0);
- 		extsym_iter = extsym_start->next;
 -- 
-2.17.1
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+of Code Aurora Forum, hosted by The Linux Foundation.
 
+--
