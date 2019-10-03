@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A97DC32792
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 15:57:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BD41C10F14
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 15:57:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5E7F0222C2
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 15:57:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D7B8C222BE
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 15:57:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570118236;
-	bh=74yDVWR/ILsO2aE70U+M2wJKsF551xYFuOmbv1Er/4I=;
+	s=default; t=1570118241;
+	bh=R1bNk2/hCaKw1ytY+Ws4ld/IUdVpxotA409O+wn8ryo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=oElUfJy+sXBD9X+Nage1W7rLAjb6/7doLnD+302DhdFZdlMfiliXnsYO7gOZvIplo
-	 kMaZxQjKJsJnrZWNiVoRBUyQP+Gl5cj3HBgMymzFDCLClCTJXyiUM9WwteQdlx3Sga
-	 RRCU0Q36WMR4VZ1Xz3MrqzN0bOgyU1GNKXREj/X0=
+	b=MTptKnsza1uhVbL29sx32Xo2KrfSlYHUjq0/gWGM65U7fnAygBO8x1yrPmwEGa1DQ
+	 7Q/gtMPfEtSptF3khzcUxCZIWW9rV2uAS12+IMjFwvb1iUXWjTsgEP88lw/xRkBlS7
+	 VNggW5tVZgwZT3hNuiNj7Ip8QGnstJXXZxlGAg1E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730914AbfJCP5P (ORCPT
+        id S1730923AbfJCP5U (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 11:57:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39574 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 11:57:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39624 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730895AbfJCP5O (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 11:57:14 -0400
+        id S1726863AbfJCP5Q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 11:57:16 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E8D50207FF;
-        Thu,  3 Oct 2019 15:57:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B99EB21783;
+        Thu,  3 Oct 2019 15:57:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570118233;
-        bh=74yDVWR/ILsO2aE70U+M2wJKsF551xYFuOmbv1Er/4I=;
+        s=default; t=1570118236;
+        bh=R1bNk2/hCaKw1ytY+Ws4ld/IUdVpxotA409O+wn8ryo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=WFvxC6UMLP5nBLRqIL6rsZIrcSMq5qi1eYiDBXMAD6S7stc20aLqzdZi0HSBKCDfp
-         NOo43vgI1JWGfT3cNDyWmsIiMKWbq2lUYeC92nhK6Y67K930brTwhOpTNnSTrdcFys
-         xFGYmugVZS4VF4dDe2VPRgi9BPeRHY+GSQbr+v1g=
+        b=BD2Ks0nZNR0MU+cY+KTrkfg9z1f3MjHsfuNn7WZkKXOUGGTOzR20gmjlv09wT4+VT
+         7JmAYQh1REYxvRYc5EzDAimeqwA7+hnGK3PPDpKE6rK4DXHEFJ8YBEigQI+CebdrXA
+         uZpnkCYZMiT15fTz5KyRe5xaI4zsfIUIOJIbCMPI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Nick Stoughton <nstoughton@logitech.com>,
-        Pavel Machek <pavel@ucw.cz>,
-        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        stable@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
+        Sean Young <sean@mess.org>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 36/99] leds: leds-lp5562 allow firmware files up to the maximum length
-Date:   Thu,  3 Oct 2019 17:52:59 +0200
-Message-Id: <20191003154312.340633690@linuxfoundation.org>
+Subject: [PATCH 4.4 37/99] media: dib0700: fix link error for dibx000_i2c_set_speed
+Date:   Thu,  3 Oct 2019 17:53:00 +0200
+Message-Id: <20191003154313.072250631@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191003154252.297991283@linuxfoundation.org>
 References: <20191003154252.297991283@linuxfoundation.org>
@@ -61,41 +61,67 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nick Stoughton <nstoughton@logitech.com>
+From: Arnd Bergmann <arnd@arndb.de>
 
-[ Upstream commit ed2abfebb041473092b41527903f93390d38afa7 ]
+[ Upstream commit 765bb8610d305ee488b35d07e2a04ae52fb2df9c ]
 
-Firmware files are in ASCII, using 2 hex characters per byte. The
-maximum length of a firmware string is therefore
+When CONFIG_DVB_DIB9000 is disabled, we can still compile code that
+now fails to link against dibx000_i2c_set_speed:
 
-16 (commands) * 2 (bytes per command) * 2 (characters per byte) = 64
+drivers/media/usb/dvb-usb/dib0700_devices.o: In function `dib01x0_pmu_update.constprop.7':
+dib0700_devices.c:(.text.unlikely+0x1c9c): undefined reference to `dibx000_i2c_set_speed'
 
-Fixes: ff45262a85db ("leds: add new LP5562 LED driver")
-Signed-off-by: Nick Stoughton <nstoughton@logitech.com>
-Acked-by: Pavel Machek <pavel@ucw.cz>
-Signed-off-by: Jacek Anaszewski <jacek.anaszewski@gmail.com>
+The call sites are both through dib01x0_pmu_update(), which gets passed
+an 'i2c' pointer from dib9000_get_i2c_master(), which has returned
+NULL. Checking this pointer seems to be a good idea anyway, and it avoids
+the link failure in most cases.
+
+Sean Young found another case that is not fixed by that, where certain
+gcc versions leave an unused function in place that causes the link error,
+but adding an explict IS_ENABLED() check also solves this.
+
+Fixes: b7f54910ce01 ("V4L/DVB (4647): Added module for DiB0700 based devices")
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Signed-off-by: Sean Young <sean@mess.org>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/leds/leds-lp5562.c | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+ drivers/media/usb/dvb-usb/dib0700_devices.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-diff --git a/drivers/leds/leds-lp5562.c b/drivers/leds/leds-lp5562.c
-index 0360c59dbdc91..fc8b2e7bcfef6 100644
---- a/drivers/leds/leds-lp5562.c
-+++ b/drivers/leds/leds-lp5562.c
-@@ -263,7 +263,11 @@ static void lp5562_firmware_loaded(struct lp55xx_chip *chip)
- {
- 	const struct firmware *fw = chip->fw;
+diff --git a/drivers/media/usb/dvb-usb/dib0700_devices.c b/drivers/media/usb/dvb-usb/dib0700_devices.c
+index 38c03283a4417..e1316c7b7c2e5 100644
+--- a/drivers/media/usb/dvb-usb/dib0700_devices.c
++++ b/drivers/media/usb/dvb-usb/dib0700_devices.c
+@@ -2418,9 +2418,13 @@ static int dib9090_tuner_attach(struct dvb_usb_adapter *adap)
+ 		8, 0x0486,
+ 	};
  
--	if (fw->size > LP5562_PROGRAM_LENGTH) {
-+	/*
-+	 * the firmware is encoded in ascii hex character, with 2 chars
-+	 * per byte
-+	 */
-+	if (fw->size > (LP5562_PROGRAM_LENGTH * 2)) {
- 		dev_err(&chip->cl->dev, "firmware data size overflow: %zu\n",
- 			fw->size);
- 		return;
++	if (!IS_ENABLED(CONFIG_DVB_DIB9000))
++		return -ENODEV;
+ 	if (dvb_attach(dib0090_fw_register, adap->fe_adap[0].fe, i2c, &dib9090_dib0090_config) == NULL)
+ 		return -ENODEV;
+ 	i2c = dib9000_get_i2c_master(adap->fe_adap[0].fe, DIBX000_I2C_INTERFACE_GPIO_1_2, 0);
++	if (!i2c)
++		return -ENODEV;
+ 	if (dib01x0_pmu_update(i2c, data_dib190, 10) != 0)
+ 		return -ENODEV;
+ 	dib0700_set_i2c_speed(adap->dev, 1500);
+@@ -2496,10 +2500,14 @@ static int nim9090md_tuner_attach(struct dvb_usb_adapter *adap)
+ 		0, 0x00ef,
+ 		8, 0x0406,
+ 	};
++	if (!IS_ENABLED(CONFIG_DVB_DIB9000))
++		return -ENODEV;
+ 	i2c = dib9000_get_tuner_interface(adap->fe_adap[0].fe);
+ 	if (dvb_attach(dib0090_fw_register, adap->fe_adap[0].fe, i2c, &nim9090md_dib0090_config[0]) == NULL)
+ 		return -ENODEV;
+ 	i2c = dib9000_get_i2c_master(adap->fe_adap[0].fe, DIBX000_I2C_INTERFACE_GPIO_1_2, 0);
++	if (!i2c)
++		return -ENODEV;
+ 	if (dib01x0_pmu_update(i2c, data_dib190, 10) < 0)
+ 		return -ENODEV;
+ 
 -- 
 2.20.1
 
