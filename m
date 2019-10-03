@@ -3,116 +3,121 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC3BAC10F14
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 22:10:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BC854C4CED1
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 22:10:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8BA77215EA
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 22:10:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9BE3D21848
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 22:10:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730221AbfJCWKt (ORCPT
+        id S1731136AbfJCWKz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 18:10:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49424 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 18:10:55 -0400
+Received: from mga04.intel.com ([192.55.52.120]:55666 "EHLO mga04.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728795AbfJCWKt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 18:10:49 -0400
-Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7655C20867;
-        Thu,  3 Oct 2019 22:10:47 +0000 (UTC)
-Date:   Thu, 3 Oct 2019 18:10:45 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Daniel Bristot de Oliveira <bristot@redhat.com>,
-        linux-kernel@vger.kernel.org, x86@kernel.org,
-        Nadav Amit <nadav.amit@gmail.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Song Liu <songliubraving@fb.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>
-Subject: Re: [PATCH 3/3] x86/ftrace: Use text_poke()
-Message-ID: <20191003181045.7fb1a5b3@gandalf.local.home>
-In-Reply-To: <20191002182106.GC4643@worktop.programming.kicks-ass.net>
-References: <20190827180622.159326993@infradead.org>
-        <20190827181147.166658077@infradead.org>
-        <aaffb32f-6ca9-f9e3-9b1a-627125c563ed@redhat.com>
-        <20191002182106.GC4643@worktop.programming.kicks-ass.net>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        id S1730232AbfJCWKy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 18:10:54 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 03 Oct 2019 15:10:53 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.67,253,1566889200"; 
+   d="scan'208";a="191397905"
+Received: from okiselev-mobl1.ccr.corp.intel.com (HELO localhost) ([10.251.93.117])
+  by fmsmga008.fm.intel.com with ESMTP; 03 Oct 2019 15:10:48 -0700
+Date:   Fri, 4 Oct 2019 01:10:42 +0300
+From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+To:     Mimi Zohar <zohar@linux.ibm.com>
+Cc:     David Safford <david.safford@ge.com>,
+        linux-integrity@vger.kernel.org, stable@vger.kernel.org,
+        David Howells <dhowells@redhat.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        "David S. Miller" <davem@davemloft.net>,
+        "open list:ASYMMETRIC KEYS" <keyrings@vger.kernel.org>,
+        "open list:CRYPTO API" <linux-crypto@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] KEYS: asym_tpm: Switch to get_random_bytes()
+Message-ID: <20191003221042.GA3363@linux.intel.com>
+References: <20190926171601.30404-1-jarkko.sakkinen@linux.intel.com>
+ <1570024819.4999.119.camel@linux.ibm.com>
+ <20191003114119.GF8933@linux.intel.com>
+ <1570107752.4421.183.camel@linux.ibm.com>
+ <20191003175854.GB19679@linux.intel.com>
+ <1570128827.5046.19.camel@linux.ibm.com>
+ <20191003215125.GA30511@linux.intel.com>
+ <20191003215743.GB30511@linux.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20191003215743.GB30511@linux.intel.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 2 Oct 2019 20:21:06 +0200
-Peter Zijlstra <peterz@infradead.org> wrote:
-
-> On Wed, Oct 02, 2019 at 06:35:26PM +0200, Daniel Bristot de Oliveira wrote:
-> 
-> > ftrace was already batching the updates, for instance, causing 3 IPIs to enable
-> > all functions. The text_poke() batching also works. But because of the limited
-> > buffer [ see the reply to the patch 2/3 ], it is flushing the buffer during the
-> > operation, causing more IPIs than the previous code. Using the 5.4-rc1 in a VM,
-> > when enabling the function tracer, I see 250+ intermediate text_poke_finish()
-> > because of a full buffer...
+On Fri, Oct 04, 2019 at 12:57:43AM +0300, Jarkko Sakkinen wrote:
+> On Fri, Oct 04, 2019 at 12:51:25AM +0300, Jarkko Sakkinen wrote:
+> > On Thu, Oct 03, 2019 at 02:53:47PM -0400, Mimi Zohar wrote:
+> > > [Cc'ing David Safford]
+> > > 
+> > > On Thu, 2019-10-03 at 20:58 +0300, Jarkko Sakkinen wrote:
+> > > > On Thu, Oct 03, 2019 at 09:02:32AM -0400, Mimi Zohar wrote:
+> > > > > On Thu, 2019-10-03 at 14:41 +0300, Jarkko Sakkinen wrote:
+> > > > > > On Wed, Oct 02, 2019 at 10:00:19AM -0400, Mimi Zohar wrote:
+> > > > > > > On Thu, 2019-09-26 at 20:16 +0300, Jarkko Sakkinen wrote:
+> > > > > > > > Only the kernel random pool should be used for generating random numbers.
+> > > > > > > > TPM contributes to that pool among the other sources of entropy. In here it
+> > > > > > > > is not, agreed, absolutely critical because TPM is what is trusted anyway
+> > > > > > > > but in order to remove tpm_get_random() we need to first remove all the
+> > > > > > > > call sites.
+> > > > > > > 
+> > > > > > > At what point during boot is the kernel random pool available?  Does
+> > > > > > > this imply that you're planning on changing trusted keys as well?
+> > > > > > 
+> > > > > > Well trusted keys *must* be changed to use it. It is not a choice
+> > > > > > because using a proprietary random number generator instead of defacto
+> > > > > > one in the kernel can be categorized as a *regression*.
+> > > > > 
+> > > > > I really don't see how using the TPM random number for TPM trusted
+> > > > > keys would be considered a regression.  That by definition is a
+> > > > > trusted key.  If anything, changing what is currently being done would
+> > > > > be the regression. 
+> > > > 
+> > > > It is really not a TPM trusted key. It trusted key that gets sealed with
+> > > > the TPM. The key itself is used in clear by kernel. The random number
+> > > > generator exists in the kernel to for a reason.
+> > > > 
+> > > > It is without doubt a regression.
+> > > 
+> > > You're misusing the term "regression" here.  A regression is something
+> > > that previously worked and has stopped working.  In this case, trusted
+> > > keys has always been based on the TPM random number generator.  Before
+> > > changing this, there needs to be some guarantees that the kernel
+> > > random number generator has a pool of random numbers early, on all
+> > > systems including embedded devices, not just servers.
 > > 
-> > Would this be the case of trying to use a dynamically allocated buffer?
-> > 
-> > Thoughts?  
+> > I'm not using the term regression incorrectly here. Wrong function
+> > was used to generate random numbers for the payload here. It is an
+> > obvious bug.
 > 
-> Is it a problem? I tried growing the buffer (IIRC I made it 10 times
-> bigger) and didn't see any performance improvements because of it.
+> At the time when trusted keys was introduced I'd say that it was a wrong
+> design decision and badly implemented code. But you are right in that as
+> far that code is considered it would unfair to speak of a regression.
+> 
+> asym-tpm.c on the other hand this is fresh new code. There has been
+> *countless* of discussions over the years that random numbers should
+> come from multiple sources of entropy. There is no other categorization
+> than a bug for the tpm_get_random() there.
 
-I'm just worried if people are going to complain about the IPI burst.
-Although, I just tried it out before applying this patch, and there's
-still a bit of a burst. Not sure why. I did:
+Saying that regression is something that "stopped working" is very blunt
+and naive definition of regression, and is not true. Any misbehaviour
+can be categorized as a regression.
 
-# cat /proc/interrupts > /tmp/before; echo function > /debug/tracing/current_tracer; cat /proc/interrupts > /tmp/after
-# cat /proc/interrupts > /tmp/before1; echo nop > /debug/tracing/current_tracer; cat /proc/interrupts > /tmp/after1
-
-Before this patch:
-
-# diff /tmp/before /tmp/after
-< CAL:       2342       2347       2116       2175       2446       2030       2416       2222   Function call interrupts
----
-> CAL:       2462       2467       2236       2295       2446       2150       2536       2342   Function call interrupts
-
-(Just showing the function call interrupts)
-
-There appears to be 120 IPIs sent to all CPUS for enabling function tracer.
-
-# diff /tmp/before1 /tmp/after1
-< CAL:       2462       2467       2236       2295       2446       2150       2536       2342   Function call interrupts
----
-> CAL:       2577       2582       2351       2410       2446       2265       2651       2457   Function call interrupts
-
-And 151 IPIs for disabling it.
-
-After applying this patch:
-
-# diff /tmp/before /tmp/after
-< CAL:      66070      46620      59955      59236      68707      63397      61644      62742   Function call interrupts
----
-> CAL:      66727      47277      59955      59893      69364      64054      62301      63399   Function call interrupts
-
-# diff /tmp/before1 /tmp/after1
-< CAL:      66727      47277      59955      59893      69364      64054      62301      63399   Function call interrupts
----
-> CAL:      67358      47938      59985      60554      70025      64715      62962      64060   Function call interrupts
-
-
-We get 657 IPIs for enabling function tracer, and 661 for disabling it.
-Funny how it's more on the disable than the enable with the patch but
-the other way without it.
-
-But still, we are going from 120 to 660 IPIs for every CPU. Not saying
-it's a problem, but something that we should note. Someone (those that
-don't like kernel interference) may complain.
-
--- Steve
+/Jarkko
