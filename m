@@ -2,85 +2,171 @@ Return-Path: <SRS0=6dNS=X4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 27D48C10F14
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 11:43:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 57054C10F14
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 11:46:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F344220830
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 11:43:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2CBAE218DE
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 11:46:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1570103202;
+	bh=rZXyTCe8Ve7vHC9DAOD50UwJrWsPWN27OLElnsbF2ak=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=cqKTyMl9sUiH5k1CtFWQaoAOlG6dO8PaUB1Cn2MyopmTVFsT8FAaXJoFaLYApfpCn
+	 V6FYmxL1rSpX5T823Ih/+IjYMWN9D6jHhWDPjdC2e6mWMmqIbT6wvD4QK2qMEfWG2s
+	 RVpQQKdLDXwlLWLZfzHXrxsy9gVyrF0cH7snQjEc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730276AbfJCLnt (ORCPT
+        id S1730154AbfJCLql (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 07:43:49 -0400
-Received: from mga12.intel.com ([192.55.52.136]:45043 "EHLO mga12.intel.com"
+        Thu, 3 Oct 2019 07:46:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34634 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729823AbfJCLnt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 07:43:49 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 03 Oct 2019 04:43:48 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.67,252,1566889200"; 
-   d="scan'208";a="393178220"
-Received: from jsakkine-mobl1.tm.intel.com (HELO localhost) ([10.237.50.161])
-  by fmsmga006.fm.intel.com with ESMTP; 03 Oct 2019 04:43:45 -0700
-Date:   Thu, 3 Oct 2019 14:43:44 +0300
-From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-To:     Mimi Zohar <zohar@linux.ibm.com>
-Cc:     linux-integrity@vger.kernel.org, stable@vger.kernel.org,
-        David Howells <dhowells@redhat.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        "David S. Miller" <davem@davemloft.net>,
-        "open list:ASYMMETRIC KEYS" <keyrings@vger.kernel.org>,
-        "open list:CRYPTO API" <linux-crypto@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] KEYS: asym_tpm: Switch to get_random_bytes()
-Message-ID: <20191003114344.GG8933@linux.intel.com>
-References: <20190926171601.30404-1-jarkko.sakkinen@linux.intel.com>
- <1570024819.4999.119.camel@linux.ibm.com>
- <20191003114119.GF8933@linux.intel.com>
+        id S1729823AbfJCLql (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 07:46:41 -0400
+Received: from localhost (lfbn-1-10718-76.w90-89.abo.wanadoo.fr [90.89.68.76])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 219D02070B;
+        Thu,  3 Oct 2019 11:46:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1570103199;
+        bh=rZXyTCe8Ve7vHC9DAOD50UwJrWsPWN27OLElnsbF2ak=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=Fk9TfOQdKkrfXA+BV72LZAo2ee2u/I18By1yu0xrL3XqvxyZjSzev1gLHO9UUztUu
+         6NIe7cp3hszcjq6mMOIgl4++kDKGi7oJEcY1Iy7Fx2FawPbfs9RVn3LDu2TFYf1Ky8
+         j0SbtjERUcdTGZg6ppk9VV0F1amb0UDG6Ku7c2RQ=
+Date:   Thu, 3 Oct 2019 13:46:37 +0200
+From:   Maxime Ripard <mripard@kernel.org>
+To:     Jagan Teki <jagan@amarulasolutions.com>
+Cc:     Chen-Yu Tsai <wens@csie.org>, David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Michael Trimarchi <michael@amarulasolutions.com>,
+        Icenowy Zheng <icenowy@aosc.io>,
+        linux-sunxi <linux-sunxi@googlegroups.com>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        devicetree <devicetree@vger.kernel.org>
+Subject: Re: [PATCH v11 5/7] drm/sun4i: sun6i_mipi_dsi: Add VCC-DSI regulator
+ support
+Message-ID: <20191003114637.qd723p4jviwbns26@gilmour>
+References: <20191003064527.15128-1-jagan@amarulasolutions.com>
+ <20191003064527.15128-6-jagan@amarulasolutions.com>
+ <CAGb2v64RJeHXSDknPvH3RrDLqPzSvR-p2k2vA73Zt1xsOd5TSw@mail.gmail.com>
+ <CAMty3ZBmY+wZ4MZD1ipjnfhVy3gBRCqsAXGqF79mo+eaX=L2fA@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="sioambykdk554e5i"
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20191003114119.GF8933@linux.intel.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <CAMty3ZBmY+wZ4MZD1ipjnfhVy3gBRCqsAXGqF79mo+eaX=L2fA@mail.gmail.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Oct 03, 2019 at 02:41:19PM +0300, Jarkko Sakkinen wrote:
-> On Wed, Oct 02, 2019 at 10:00:19AM -0400, Mimi Zohar wrote:
-> > On Thu, 2019-09-26 at 20:16 +0300, Jarkko Sakkinen wrote:
-> > > Only the kernel random pool should be used for generating random numbers.
-> > > TPM contributes to that pool among the other sources of entropy. In here it
-> > > is not, agreed, absolutely critical because TPM is what is trusted anyway
-> > > but in order to remove tpm_get_random() we need to first remove all the
-> > > call sites.
-> > 
-> > At what point during boot is the kernel random pool available?  Does
-> > this imply that you're planning on changing trusted keys as well?
-> 
-> Well trusted keys *must* be changed to use it. It is not a choice
-> because using a proprietary random number generator instead of defacto
-> one in the kernel can be categorized as a *regression*.
-> 
-> Also, TEE trusted keys cannot use the TPM option.
-> 
-> If it was not initialized early enough we would need fix that too.
-> 
-> I don't think there should be a problem anyway since encrypted keys is
-> already using get_random_bytes().
 
-Looking at asym_tpm.c the implementation copies all the anti-patterns
-from trusted keys, which is really unfortunate. I don't know how that
-has passed through all the filters.
+--sioambykdk554e5i
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-/Jarkko
+On Thu, Oct 03, 2019 at 12:31:31PM +0530, Jagan Teki wrote:
+> On Thu, Oct 3, 2019 at 12:26 PM Chen-Yu Tsai <wens@csie.org> wrote:
+> >
+> > On Thu, Oct 3, 2019 at 2:46 PM Jagan Teki <jagan@amarulasolutions.com> wrote:
+> > >
+> > > Allwinner MIPI DSI controllers are supplied with SoC
+> > > DSI power rails via VCC-DSI pin.
+> > >
+> > > Add support for this supply pin by adding voltage
+> > > regulator handling code to MIPI DSI driver.
+> > >
+> > > Tested-by: Merlijn Wajer <merlijn@wizzup.org>
+> > > Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
+> > > ---
+> > >  drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c | 14 ++++++++++++++
+> > >  drivers/gpu/drm/sun4i/sun6i_mipi_dsi.h |  2 ++
+> > >  2 files changed, 16 insertions(+)
+> > >
+> > > diff --git a/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c b/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c
+> > > index 446dc56cc44b..fe9a3667f3a1 100644
+> > > --- a/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c
+> > > +++ b/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c
+> > > @@ -1110,6 +1110,12 @@ static int sun6i_dsi_probe(struct platform_device *pdev)
+> > >                 return PTR_ERR(base);
+> > >         }
+> > >
+> > > +       dsi->regulator = devm_regulator_get(dev, "vcc-dsi");
+> > > +       if (IS_ERR(dsi->regulator)) {
+> > > +               dev_err(dev, "Couldn't get VCC-DSI supply\n");
+> > > +               return PTR_ERR(dsi->regulator);
+> > > +       }
+> > > +
+> > >         dsi->regs = devm_regmap_init_mmio_clk(dev, "bus", base,
+> > >                                               &sun6i_dsi_regmap_config);
+> > >         if (IS_ERR(dsi->regs)) {
+> > > @@ -1183,6 +1189,13 @@ static int sun6i_dsi_remove(struct platform_device *pdev)
+> > >  static int __maybe_unused sun6i_dsi_runtime_resume(struct device *dev)
+> > >  {
+> > >         struct sun6i_dsi *dsi = dev_get_drvdata(dev);
+> > > +       int err;
+> > > +
+> > > +       err = regulator_enable(dsi->regulator);
+> > > +       if (err) {
+> > > +               dev_err(dsi->dev, "failed to enable VCC-DSI supply: %d\n", err);
+> > > +               return err;
+> > > +       }
+> > >
+> > >         reset_control_deassert(dsi->reset);
+> > >         clk_prepare_enable(dsi->mod_clk);
+> > > @@ -1215,6 +1228,7 @@ static int __maybe_unused sun6i_dsi_runtime_suspend(struct device *dev)
+> > >
+> > >         clk_disable_unprepare(dsi->mod_clk);
+> > >         reset_control_assert(dsi->reset);
+> > > +       regulator_disable(dsi->regulator);
+> > >
+> > >         return 0;
+> > >  }
+> > > diff --git a/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.h b/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.h
+> > > index 5c3ad5be0690..a01d44e9e461 100644
+> > > --- a/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.h
+> > > +++ b/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.h
+> > > @@ -12,6 +12,7 @@
+> > >  #include <drm/drm_connector.h>
+> > >  #include <drm/drm_encoder.h>
+> > >  #include <drm/drm_mipi_dsi.h>
+> > > +#include <linux/regulator/consumer.h>
+> >
+> > You don't need to include the header file since you are only
+> > including a pointer to the struct, and nothing else.
+>
+> Yes, make sense. I will drop it.
+>
+> >
+> > Otherwise,
+> >
+> > Reviewed-by: Chen-Yu Tsai <wens@csie.org>
+>
+> thanks.
+
+I've moved the include to the driver that was lacking it while
+applying, thanks!
+
+Maxime
+
+--sioambykdk554e5i
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXZXfnQAKCRDj7w1vZxhR
+xdo1AP9qbRxlDAMsATrfD1TcpRGv8AL/+bvjh0JOK0bF9TnEsAD/cPQeOM7j0eND
+SGuUJnDS/wwejedPPPjCzS3+gawyeQo=
+=fbpL
+-----END PGP SIGNATURE-----
+
+--sioambykdk554e5i--
