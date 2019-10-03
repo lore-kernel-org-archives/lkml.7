@@ -4,50 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31B6AC32792
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:55:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0379CC10F14
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:55:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 06C2920865
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:55:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CA90C2054F
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:55:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570121748;
-	bh=/kmuV4wuEj92n2i95I0f1iloxkNnae/rPOTXumlWj2k=;
+	s=default; t=1570121750;
+	bh=7wQgprOa/A5NQw61VKjaGs5HQp9uRZ46wli16VtzPbk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Jyh2g0mDqkeoOE8zdc++Vaqp3gHiRXLSxfLZO+9aET8v/J2FX+2M+2kkzS8zNBFag
-	 IcKP0gWKtz8uoDTCJ7KMyLOp8br64xIQl+fkIdHOqGch5k769b/aV9jlPSZv+4RuBm
-	 Sy3LdfPlhYI4dXo/4RSh1HDTeHHuYT+grn+uu8pk=
+	b=gzFSLZxGI2xxAb3xt3u4wwVO72HUmkPjgwr7cTxvOe7QMqoofRW2Y0IBJzK5oykjK
+	 Z9IXNre1ZSWHGHAnpfkJQsJwRbw4y0iSLrAFlxpnkMsNU6mXZbfAafdl//D1fn8BQv
+	 SIM0CqiPxFCp9dxgY1F+N+1++yUPQglEAF8U4d1Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406126AbfJCQvy (ORCPT
+        id S2406117AbfJCQvw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 12:51:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39366 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 12:51:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39314 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2406091AbfJCQvv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:51:51 -0400
+        id S2406101AbfJCQvr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:51:47 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 84F5B20862;
-        Thu,  3 Oct 2019 16:51:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C40A42070B;
+        Thu,  3 Oct 2019 16:51:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570121510;
-        bh=/kmuV4wuEj92n2i95I0f1iloxkNnae/rPOTXumlWj2k=;
+        s=default; t=1570121507;
+        bh=7wQgprOa/A5NQw61VKjaGs5HQp9uRZ46wli16VtzPbk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=sAgxSMksC6rw4YvK3T/ntxXN68+rviO7T0isZCNEhqro9NhsEfmgSA8B4lPfFGBq+
-         JyBpvfiWWrOGJTLTkoSgqNzTUalxa7yUd2wFCmLZQ6i1mn0PRzst/1ScFrZZNrSb8b
-         R41GWjE2ghaMTKM9V7bi2no85xLlFJ5z9CAKn9T8=
+        b=sSnRhSM5kEHcWSF11kXRU+LNikCTaYCG7OD0t2cfY+0yL16s88AHOv4J+vuxednr2
+         RoiklHOpfNI1tj4fLBpOo1PZLfjwsJpOu4OMxZN5PAlMVLBcZwvnQPeBnUaUDekJZN
+         F1zu3fxi8h9NKPfiRtbv90itfAlWwPHkZWzn2dfA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
+        stable@vger.kernel.org, Jim Mattson <jmattson@google.com>,
+        Peter Shier <pshier@google.com>,
+        Steve Rutherford <srutherford@google.com>,
+        Krish Sadhukhan <krish.sadhukhan@oracle.com>,
         Paolo Bonzini <pbonzini@redhat.com>
-Subject: [PATCH 5.3 267/344] KVM: x86/mmu: Use fast invalidate mechanism to zap MMIO sptes
-Date:   Thu,  3 Oct 2019 17:53:52 +0200
-Message-Id: <20191003154606.686576364@linuxfoundation.org>
+Subject: [PATCH 5.3 266/344] kvm: x86: Add "significant index" flag to a few CPUID leaves
+Date:   Thu,  3 Oct 2019 17:53:51 +0200
+Message-Id: <20191003154606.614872551@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191003154540.062170222@linuxfoundation.org>
 References: <20191003154540.062170222@linuxfoundation.org>
@@ -60,91 +62,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sean Christopherson <sean.j.christopherson@intel.com>
+From: Jim Mattson <jmattson@google.com>
 
-commit 92f58b5c0181596d9f1e317b49ada2e728fb76eb upstream.
+commit a06dcd625d6181747fac7f4c140b5a4c397a778c upstream.
 
-Use the fast invalidate mechasim to zap MMIO sptes on a MMIO generation
-wrap.  The fast invalidate flow was reintroduced to fix a livelock bug
-in kvm_mmu_zap_all() that can occur if kvm_mmu_zap_all() is invoked when
-the guest has live vCPUs.  I.e. using kvm_mmu_zap_all() to handle the
-MMIO generation wrap is theoretically susceptible to the livelock bug.
+According to the Intel SDM, volume 2, "CPUID," the index is
+significant (or partially significant) for CPUID leaves 0FH, 10H, 12H,
+17H, 18H, and 1FH.
 
-This effectively reverts commit 4771450c345dc ("Revert "KVM: MMU: drop
-kvm_mmu_zap_mmio_sptes""), i.e. restores the behavior of commit
-a8eca9dcc656a ("KVM: MMU: drop kvm_mmu_zap_mmio_sptes").
+Add the corresponding flag to these CPUID leaves in do_host_cpuid().
 
-Note, this actually fixes commit 571c5af06e303 ("KVM: x86/mmu:
-Voluntarily reschedule as needed when zapping MMIO sptes"), but there
-is no need to incrementally revert back to using fast invalidate, e.g.
-doing so doesn't provide any bisection or stability benefits.
-
-Fixes: 571c5af06e303 ("KVM: x86/mmu: Voluntarily reschedule as needed when zapping MMIO sptes")
+Signed-off-by: Jim Mattson <jmattson@google.com>
+Reviewed-by: Peter Shier <pshier@google.com>
+Reviewed-by: Steve Rutherford <srutherford@google.com>
+Fixes: a87f2d3a6eadab ("KVM: x86: Add Intel CPUID.1F cpuid emulation support")
+Reviewed-by: Krish Sadhukhan <krish.sadhukhan@oracle.com>
 Cc: stable@vger.kernel.org
-Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
 Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/x86/kvm/mmu.c |   17 +++--------------
- 1 file changed, 3 insertions(+), 14 deletions(-)
+ arch/x86/kvm/cpuid.c |    6 ++++++
+ 1 file changed, 6 insertions(+)
 
---- a/arch/x86/kvm/mmu.c
-+++ b/arch/x86/kvm/mmu.c
-@@ -395,8 +395,6 @@ static void mark_mmio_spte(struct kvm_vc
- 	mask |= (gpa & shadow_nonpresent_or_rsvd_mask)
- 		<< shadow_nonpresent_or_rsvd_mask_len;
- 
--	page_header(__pa(sptep))->mmio_cached = true;
--
- 	trace_mark_mmio_spte(sptep, gfn, access, gen);
- 	mmu_spte_set(sptep, mask);
- }
-@@ -5956,7 +5954,7 @@ void kvm_mmu_slot_set_dirty(struct kvm *
- }
- EXPORT_SYMBOL_GPL(kvm_mmu_slot_set_dirty);
- 
--static void __kvm_mmu_zap_all(struct kvm *kvm, bool mmio_only)
-+void kvm_mmu_zap_all(struct kvm *kvm)
- {
- 	struct kvm_mmu_page *sp, *node;
- 	LIST_HEAD(invalid_list);
-@@ -5965,14 +5963,10 @@ static void __kvm_mmu_zap_all(struct kvm
- 	spin_lock(&kvm->mmu_lock);
- restart:
- 	list_for_each_entry_safe(sp, node, &kvm->arch.active_mmu_pages, link) {
--		if (mmio_only && !sp->mmio_cached)
--			continue;
- 		if (sp->role.invalid && sp->root_count)
- 			continue;
--		if (__kvm_mmu_prepare_zap_page(kvm, sp, &invalid_list, &ign)) {
--			WARN_ON_ONCE(mmio_only);
-+		if (__kvm_mmu_prepare_zap_page(kvm, sp, &invalid_list, &ign))
- 			goto restart;
--		}
- 		if (cond_resched_lock(&kvm->mmu_lock))
- 			goto restart;
- 	}
-@@ -5981,11 +5975,6 @@ restart:
- 	spin_unlock(&kvm->mmu_lock);
- }
- 
--void kvm_mmu_zap_all(struct kvm *kvm)
--{
--	return __kvm_mmu_zap_all(kvm, false);
--}
--
- void kvm_mmu_invalidate_mmio_sptes(struct kvm *kvm, u64 gen)
- {
- 	WARN_ON(gen & KVM_MEMSLOT_GEN_UPDATE_IN_PROGRESS);
-@@ -6007,7 +5996,7 @@ void kvm_mmu_invalidate_mmio_sptes(struc
- 	 */
- 	if (unlikely(gen == 0)) {
- 		kvm_debug_ratelimited("kvm: zapping shadow pages for mmio generation wraparound\n");
--		__kvm_mmu_zap_all(kvm, true);
-+		kvm_mmu_zap_all_fast(kvm);
- 	}
- }
- 
+--- a/arch/x86/kvm/cpuid.c
++++ b/arch/x86/kvm/cpuid.c
+@@ -304,7 +304,13 @@ static void do_host_cpuid(struct kvm_cpu
+ 	case 7:
+ 	case 0xb:
+ 	case 0xd:
++	case 0xf:
++	case 0x10:
++	case 0x12:
+ 	case 0x14:
++	case 0x17:
++	case 0x18:
++	case 0x1f:
+ 	case 0x8000001d:
+ 		entry->flags |= KVM_CPUID_FLAG_SIGNIFCANT_INDEX;
+ 		break;
 
 
