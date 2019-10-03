@@ -2,143 +2,167 @@ Return-Path: <SRS0=6dNS=X4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9B5AC4CED1
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 14:48:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 259F0C32792
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 14:49:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AB1DA21D81
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 14:48:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 05F4620700
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 14:49:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727902AbfJCOsE (ORCPT
+        id S1729580AbfJCOtR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 10:48:04 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:41660 "EHLO
-        shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729617AbfJCOsD (ORCPT
+        Thu, 3 Oct 2019 10:49:17 -0400
+Received: from mail-out.m-online.net ([212.18.0.9]:40511 "EHLO
+        mail-out.m-online.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725907AbfJCOtR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 10:48:03 -0400
-Received: from [192.168.4.242] (helo=deadeye)
-        by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <ben@decadent.org.uk>)
-        id 1iG2Oe-00020B-Jy; Thu, 03 Oct 2019 15:48:00 +0100
-Received: from ben by deadeye with local (Exim 4.92.1)
-        (envelope-from <ben@decadent.org.uk>)
-        id 1iG2Oe-0006A4-Dt; Thu, 03 Oct 2019 15:48:00 +0100
-Message-ID: <3fe1cd65a7860464d3780b57c734d12880df4b92.camel@decadent.org.uk>
-Subject: Re: [PATCH 3.16 29/87] staging: iio: cdc: Don't put an else right
- after a return
-From:   Ben Hutchings <ben@decadent.org.uk>
-To:     Joe Perches <joe@perches.com>, linux-kernel@vger.kernel.org,
-        stable@vger.kernel.org
-Cc:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        Catalina Mocanu <catalina.mocanu@gmail.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Date:   Thu, 03 Oct 2019 15:47:49 +0100
-In-Reply-To: <6436567dd141e5528a5363dd3aaad21815a1c111.camel@perches.com>
-References: <lsq.1570043211.136218297@decadent.org.uk>
-         <6436567dd141e5528a5363dd3aaad21815a1c111.camel@perches.com>
-Content-Type: multipart/signed; micalg="pgp-sha512";
-        protocol="application/pgp-signature"; boundary="=-KcJewQ6EZ1qfkZkd7xZA"
-User-Agent: Evolution 3.30.5-1.1 
+        Thu, 3 Oct 2019 10:49:17 -0400
+Received: from frontend01.mail.m-online.net (unknown [192.168.8.182])
+        by mail-out.m-online.net (Postfix) with ESMTP id 46kbVy1gqNz1rLG6;
+        Thu,  3 Oct 2019 16:49:14 +0200 (CEST)
+Received: from localhost (dynscan1.mnet-online.de [192.168.6.70])
+        by mail.m-online.net (Postfix) with ESMTP id 46kbVy1GqLz1qqkM;
+        Thu,  3 Oct 2019 16:49:14 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at mnet-online.de
+Received: from mail.mnet-online.de ([192.168.8.182])
+        by localhost (dynscan1.mail.m-online.net [192.168.6.70]) (amavisd-new, port 10024)
+        with ESMTP id bVuJONtXl7OR; Thu,  3 Oct 2019 16:49:12 +0200 (CEST)
+X-Auth-Info: P1s/ox1Xkhv1qmwiCPHFbv5l8xjDq2ldsvkRpp7qGTM=
+Received: from jawa (85-222-111-42.dynamic.chello.pl [85.222.111.42])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.mnet-online.de (Postfix) with ESMTPSA;
+        Thu,  3 Oct 2019 16:49:12 +0200 (CEST)
+Date:   Thu, 3 Oct 2019 16:49:06 +0200
+From:   Lukasz Majewski <lukma@denx.de>
+To:     Alexandre Belloni <alexandre.belloni@bootlin.com>
+Cc:     Alessandro Zummo <a.zummo@towertech.it>, linux-rtc@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] rtc: Add support for century bits to m41t62 (rv4162)
+ RTC devices
+Message-ID: <20191003164906.2f4a1676@jawa>
+In-Reply-To: <20191003142341.GD575@piout.net>
+References: <20190911154803.15969-1-lukma@denx.de>
+        <20191003114831.GR4106@piout.net>
+        <20191003142150.3d73a9d7@jawa>
+        <20191003123538.GS4106@piout.net>
+        <20191003151434.49762715@jawa>
+        <20191003134329.GB575@piout.net>
+        <20191003161054.1eeae401@jawa>
+        <20191003142341.GD575@piout.net>
+Organization: denx.de
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-X-SA-Exim-Connect-IP: 192.168.4.242
-X-SA-Exim-Mail-From: ben@decadent.org.uk
-X-SA-Exim-Scanned: No (on shadbolt.decadent.org.uk); SAEximRunCond expanded to false
+Content-Type: multipart/signed; micalg=pgp-sha512;
+ boundary="Sig_/5rEXxMzAzgMgAL0.XHeDrkz"; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
---=-KcJewQ6EZ1qfkZkd7xZA
-Content-Type: text/plain; charset="UTF-8"
+--Sig_/5rEXxMzAzgMgAL0.XHeDrkz
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, 2019-10-02 at 14:36 -0700, Joe Perches wrote:
-> On Wed, 2019-10-02 at 20:06 +0100, Ben Hutchings wrote:
-> > 3.16.75-rc1 review patch.  If anyone has any objections, please let me =
-know.
+Hi Alexandre,
+
+> On 03/10/2019 16:10:53+0200, Lukasz Majewski wrote:
+> > Sorry, but I do see some inconsistency here.
+> >=20
+> > The application note [1] says that the correction shall be done in
+> > application SW.
+> >=20
+> > The rtc-range.c program [2] sets and reads the time via ioctl (e.g.
+> > RTC_SET_TIME, RTC_RD_TIME).
+> >=20
+> > To pass your tests one needs to do the correction in linux kernel
+> > driver for drivers/rtc/rtc-m41t80.c.=20
+> >=20
+> > Please correct me if I'm wrong, but IMHO it shall be enough to
+> > adjust 2100, 2200, 2300, years in this driver (the submitted patch
+> > shall be adjusted to support it - I can prepare proper v2).
+> >  =20
 >=20
-> This doesn't look necessary.
+> There is no way you will be able to know when to adjust the date
+> because Linux may or may not be running when the boundary is crossed.
+>=20
 
-It allows the next patch to apply cleanly.
+I'm rather thinking about following use cases:
 
-Ben.
+I. Adjusting time:
 
-> > ------------------
-> >=20
-> > From: Catalina Mocanu <catalina.mocanu@gmail.com>
-> >=20
-> > commit 288903f6b91e759b0a813219acd376426cbb8f14 upstream.
-> >=20
-> > This fixes the following checkpatch.pl warning:
-> > WARNING: else is not generally useful after a break or return.
-> >=20
-> > While at it, remove new line for symmetry with the rest of the code.
-> >=20
-> > Signed-off-by: Catalina Mocanu <catalina.mocanu@gmail.com>
-> > Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> > Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
-> > ---
-> >  drivers/staging/iio/cdc/ad7150.c | 10 +++-------
-> >  1 file changed, 3 insertions(+), 7 deletions(-)
-> >=20
-> > --- a/drivers/staging/iio/cdc/ad7150.c
-> > +++ b/drivers/staging/iio/cdc/ad7150.c
-> > @@ -143,19 +143,15 @@ static int ad7150_read_event_config(stru
-> >  	case IIO_EV_TYPE_MAG_ADAPTIVE:
-> >  		if (dir =3D=3D IIO_EV_DIR_RISING)
-> >  			return adaptive && (threshtype =3D=3D 0x1);
-> > -		else
-> > -			return adaptive && (threshtype =3D=3D 0x0);
-> > +		return adaptive && (threshtype =3D=3D 0x0);
-> >  	case IIO_EV_TYPE_THRESH_ADAPTIVE:
-> >  		if (dir =3D=3D IIO_EV_DIR_RISING)
-> >  			return adaptive && (threshtype =3D=3D 0x3);
-> > -		else
-> > -			return adaptive && (threshtype =3D=3D 0x2);
-> > -
-> > +		return adaptive && (threshtype =3D=3D 0x2);
-> >  	case IIO_EV_TYPE_THRESH:
-> >  		if (dir =3D=3D IIO_EV_DIR_RISING)
-> >  			return !adaptive && (threshtype =3D=3D 0x1);
-> > -		else
-> > -			return !adaptive && (threshtype =3D=3D 0x0);
-> > +		return !adaptive && (threshtype =3D=3D 0x0);
-> >  	default:
-> >  		break;
-> >  	}
-> >=20
---=20
-Ben Hutchings
-Unix is many things to many people,
-but it's never been everything to anybody.
+1. I start with time < 01.01.2099
+
+2. I issue ioctl to set the time to e.g. 2100
+
+	- When driver receives such request I setup century bits
+
+	- and also perform in kernel driver time correction (and store
+	  corrected time in RTC)
+
+3. Subsequent reads from rtc use century bits to provide the time
+(after year 2100). Century bits are set, so the correction may be
+performed if needed.
 
 
+II. The system is started at year 2098 and is supposed to run for e.g. 3
+years:
 
---=-KcJewQ6EZ1qfkZkd7xZA
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
+1. The time is read from the rtc - the "passing" of centuries need to
+be detected.
+
+=46rom the documentation [1] (point 4.5):
+
+"The two century bits, CB1 and CB0, are bits 7 and 6, respectively, in
+the Month / Century register at address 06h. Together, they comprise a
+2 - bit counter which increments at the turn of each century. CB1 is
+the most significant bit."
+
+If those bits increment when we pass century boundaries, we can detect
+this fact and correct time when ioctl is issued.
+
+> The only useful range for an RTC is its fully contiguous range.=20
+
+Does the automatic increment of century bits count to "contiguous
+range" ?
+
+> If it
+> needs software to run to support an extended range, it can't be used
+> in the context of Linux.
+>=20
+
+
+[1] -
+https://www.microcrystal.com/fileadmin/Media/Products/RTC/App.Manual/RV-416=
+2-C7_App-Manual.pdf
+
+Best regards,
+
+Lukasz Majewski
+
+--
+
+DENX Software Engineering GmbH,      Managing Director: Wolfgang Denk
+HRB 165235 Munich, Office: Kirchenstr.5, D-82194 Groebenzell, Germany
+Phone: (+49)-8142-66989-59 Fax: (+49)-8142-66989-80 Email: lukma@denx.de
+
+--Sig_/5rEXxMzAzgMgAL0.XHeDrkz
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
 
 -----BEGIN PGP SIGNATURE-----
 
-iQIzBAABCgAdFiEErCspvTSmr92z9o8157/I7JWGEQkFAl2WChUACgkQ57/I7JWG
-EQntehAA0+HkJV3LROwrDyJi08Zdjvgi7F7cPNgylHPy7zOR6jR4FJeieCvhNF6W
-vYOttr6E72uAMDqdB3EZPGn2rL8016re1CqioDOCtWa9rBcCb/JLFFFBkeHeCthk
-eBeQHOittYdEUvLhQyWGI9xAzY+9F0Yex+mFrykOP7P//YJ11nKl6ETHreY5Gobd
-qxH4mC+A2VQ+/7wXm5CMti7sz3I2NwbdSjH4+C4ZVPRcr15ZVDk0S0xnMiHlEWAl
-nmuW6+DMxWFnfa2pVDQQo53x0BJiYQNtQZlJWVI0EMTsZp05bMTWULvUkAShp5/C
-BEO2R+MCbWoO/fNt7z43SNC8Q3ch+a6mVLELs8/KcZbEsneHqUJ0wzdGJRyyxyH3
-ik15AYNqBpwb7quVmhzcDP3UHGCBBw5EuPRPXoP3pEsIGOZgtNIHuQaTQCf2tFj9
-0/Mh2baQ0quWTwrleD1UTVR/bGARwpOv2WYYEiTGwF53r5rc2SoDVD1RFYOFKFNd
-82Mqu1f+XNJLG5DI3awkP3myhPk6cUb0nxTgUpKKM6qlMEEOA9n/hO7BaAV5y4I3
-oriKD16LLJ2TAYDzNMA4W9WPkbI9y/tWnC4WzUD9uno4jBFbUJnMI4X6nf/PVqQk
-ELlDpXlrmbsezqh5UsJcggQJpSDi9bMknHBP8NrOGkNrWiazdxo=
-=uPEd
+iQEzBAEBCgAdFiEEgAyFJ+N6uu6+XupJAR8vZIA0zr0FAl2WCmIACgkQAR8vZIA0
+zr2f3wf+NVE9Qtq8jPUko8YieoihbZToT+u1MPNK7UWIwY7ZaWHtEJqmQ/e8TFjU
+Z7aOZoGgwXRdAso/QO/3ufe9wUGh4B6HoxynaUWzOh084OH6PaO771HkFBmFqXdW
+jx28ysmeBvr8IO0WZ9CAJb8vYZAowZlS4yq5SCEWdjkEpMbO0mDWYNQUCyev49GR
+G+xexqYKuiWYBydrS/dmHaIPdvyBslz1riWytxYbi8iQy3NE/Q3M7BdYbGUPtGXF
+tClsz6kzsAXm1cR6ren/DAdOGQzRisN3zM7OBKPZniapWnSIUgj57E0CZwpEEABK
+xZFCfXu13qCEXKillJyn5Z5NuxYF4w==
+=eHpn
 -----END PGP SIGNATURE-----
 
---=-KcJewQ6EZ1qfkZkd7xZA--
+--Sig_/5rEXxMzAzgMgAL0.XHeDrkz--
