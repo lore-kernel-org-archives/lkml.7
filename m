@@ -4,30 +4,30 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE463C4CED1
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 14:56:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB17FC10F14
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 14:56:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B634D21783
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 14:56:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B1D4A21783
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 14:56:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730445AbfJCO43 (ORCPT
+        id S1730473AbfJCO4d (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 10:56:29 -0400
-Received: from mx2.mailbox.org ([80.241.60.215]:11590 "EHLO mx2.mailbox.org"
+        Thu, 3 Oct 2019 10:56:33 -0400
+Received: from mx2.mailbox.org ([80.241.60.215]:11816 "EHLO mx2.mailbox.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726364AbfJCO41 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 10:56:27 -0400
+        id S1726364AbfJCO4c (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 10:56:32 -0400
 Received: from smtp2.mailbox.org (smtp1.mailbox.org [80.241.60.240])
         (using TLSv1.2 with cipher ECDHE-RSA-CHACHA20-POLY1305 (256/256 bits))
         (No client certificate requested)
-        by mx2.mailbox.org (Postfix) with ESMTPS id 3A0BEA34F4;
-        Thu,  3 Oct 2019 16:56:24 +0200 (CEST)
+        by mx2.mailbox.org (Postfix) with ESMTPS id 15597A2693;
+        Thu,  3 Oct 2019 16:56:29 +0200 (CEST)
 X-Virus-Scanned: amavisd-new at heinlein-support.de
 Received: from smtp2.mailbox.org ([80.241.60.240])
         by gerste.heinlein-support.de (gerste.heinlein-support.de [91.198.250.173]) (amavisd-new, port 10030)
-        with ESMTP id F8iJo-L6HAKE; Thu,  3 Oct 2019 16:56:20 +0200 (CEST)
+        with ESMTP id rdPXOhepP3dm; Thu,  3 Oct 2019 16:56:25 +0200 (CEST)
 From:   Aleksa Sarai <cyphar@cyphar.com>
 To:     Al Viro <viro@zeniv.linux.org.uk>,
         Michael Kerrisk <mtk.manpages@gmail.com>
@@ -35,9 +35,9 @@ Cc:     Aleksa Sarai <cyphar@cyphar.com>,
         Christian Brauner <christian@brauner.io>,
         Aleksa Sarai <asarai@suse.de>, linux-man@vger.kernel.org,
         linux-api@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH RFC 3/3] openat2.2: document new openat2(2) syscall
-Date:   Fri,  4 Oct 2019 00:55:41 +1000
-Message-Id: <20191003145542.17490-4-cyphar@cyphar.com>
+Subject: [PATCH RFC 3/3] openat2.2: document new syscall
+Date:   Fri,  4 Oct 2019 00:55:42 +1000
+Message-Id: <20191003145542.17490-5-cyphar@cyphar.com>
 In-Reply-To: <20191003145542.17490-1-cyphar@cyphar.com>
 References: <20191003145542.17490-1-cyphar@cyphar.com>
 MIME-Version: 1.0
@@ -46,12 +46,6 @@ Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
-
-Rather than trying to merge the new syscall documentation into open.2
-(which would probably result in the man-page being incomprehensible),
-instead the new syscall gets its own dedicated page with links between
-open(2) and openat2(2) to avoid duplicating information such as the list
-of O_* flags or common errors.
 
 Signed-off-by: Aleksa Sarai <cyphar@cyphar.com>
 ---
