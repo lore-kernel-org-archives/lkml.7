@@ -2,235 +2,121 @@ Return-Path: <SRS0=6dNS=X4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A78D7C32792
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 21:13:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0ED0DC32792
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 21:14:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 877DA20862
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 21:13:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D8A1A2133F
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 21:14:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731467AbfJCVNu (ORCPT
+        id S1732004AbfJCVON (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 17:13:50 -0400
-Received: from mga06.intel.com ([134.134.136.31]:45891 "EHLO mga06.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727789AbfJCVNu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 17:13:50 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 03 Oct 2019 14:13:49 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.67,253,1566889200"; 
-   d="scan'208";a="191384446"
-Received: from linux.intel.com ([10.54.29.200])
-  by fmsmga008.fm.intel.com with ESMTP; 03 Oct 2019 14:13:49 -0700
-Received: from [10.54.74.33] (skuppusw-desk.jf.intel.com [10.54.74.33])
-        by linux.intel.com (Postfix) with ESMTP id 39CE35803DA;
-        Thu,  3 Oct 2019 14:13:49 -0700 (PDT)
-Reply-To: sathyanarayanan.kuppuswamy@linux.intel.com
-Subject: Re: [PATCH v7 1/7] PCI/ATS: Fix pci_prg_resp_pasid_required()
- dependency issues
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        ashok.raj@intel.com, keith.busch@intel.com
-References: <20191003210128.GA200289@google.com>
-From:   Kuppuswamy Sathyanarayanan 
-        <sathyanarayanan.kuppuswamy@linux.intel.com>
-Organization: Intel
-Message-ID: <1b310600-045a-2f02-d82b-edb44cbcffcd@linux.intel.com>
-Date:   Thu, 3 Oct 2019 14:11:28 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Thu, 3 Oct 2019 17:14:13 -0400
+Received: from excelsior.roeckx.be ([195.234.45.115]:35061 "EHLO
+        excelsior.roeckx.be" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727789AbfJCVOM (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 17:14:12 -0400
+Received: from intrepid.roeckx.be (localhost [127.0.0.1])
+        by excelsior.roeckx.be (Postfix) with ESMTP id 48DDAA8A13A6;
+        Thu,  3 Oct 2019 21:14:10 +0000 (UTC)
+Received: by intrepid.roeckx.be (Postfix, from userid 1000)
+        id 1A8661FE0C13; Thu,  3 Oct 2019 23:14:09 +0200 (CEST)
+Date:   Thu, 3 Oct 2019 23:14:09 +0200
+From:   Kurt Roeckx <kurt@roeckx.be>
+To:     "Theodore Y. Ts'o" <tytso@mit.edu>
+Cc:     linux-kernel@vger.kernel.org
+Subject: Re: Stop breaking the CSRNG
+Message-ID: <20191003211409.GB18282@roeckx.be>
+References: <20191002165533.GA18282@roeckx.be>
+ <20191003033655.GA3226@mit.edu>
 MIME-Version: 1.0
-In-Reply-To: <20191003210128.GA200289@google.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191003033655.GA3226@mit.edu>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, Oct 02, 2019 at 11:36:55PM -0400, Theodore Y. Ts'o wrote:
+> On Wed, Oct 02, 2019 at 06:55:33PM +0200, Kurt Roeckx wrote:
+> > 
+> > But it seems people are now thinking about breaking getrandom() too,
+> > to let it return data when it's not initialized by default. Please
+> > don't.
+> 
+> "It's complicated"
+> 
+> The problem is that whether a CRNG can be considered secure is a
+> property of the entire system, including the hardware, and given the
+> large number of hardware configurations which the kernel and OpenSSL
+> can be used, in practice, we can't assure that getrandom(2) is
+> "secure" without making certain assumptions.
 
-On 10/3/19 2:01 PM, Bjorn Helgaas wrote:
-> On Thu, Oct 03, 2019 at 01:37:26PM -0700, Kuppuswamy Sathyanarayanan wrote:
->> On Thu, Oct 03, 2019 at 02:04:13PM -0500, Bjorn Helgaas wrote:
->>> On Thu, Oct 03, 2019 at 10:20:24AM -0700, Kuppuswamy Sathyanarayanan wrote:
->>>> Hi Bjorn,
->>>>
->>>> Thanks for looking into this patch set.
->>>>
->>>> On 9/5/19 12:18 PM, Bjorn Helgaas wrote:
->>>>> On Wed, Aug 28, 2019 at 03:14:01PM -0700, sathyanarayanan.kuppuswamy@linux.intel.com wrote:
->>>>>> From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
->>>>>>
->>>>>> Since pci_prg_resp_pasid_required() function has dependency on both
->>>>>> PASID and PRI, define it only if both CONFIG_PCI_PRI and
->>>>>> CONFIG_PCI_PASID config options are enabled.
->>>>>>
->>>>>> Fixes: e5567f5f6762 ("PCI/ATS: Add pci_prg_resp_pasid_required()
->>>>>> interface.")
->>>>> [Don't split tags, including "Fixes:" across lines]
->>>>>
->>>>> This definitely doesn't fix e5567f5f6762.  That commit added
->>>>> pci_prg_resp_pasid_required(), but with no dependency on
->>>>> CONFIG_PCI_PRI or CONFIG_PCI_PASID.
->>>>>
->>>>> This patch is only required when a subsequent patch is applied.  It
->>>>> should be squashed into the commit that requires it so it's obvious
->>>>> why it's needed.
->>>>>
->>>>> I've been poking at this series, and I'll post a v8 soon with this and
->>>>> other fixes.
->>>> In your v8 submission you did not merge this patch. You did not use
->>>> pri_cap or pasid_cap cached values. Instead you have re-read the
->>>> value from register. Is this intentional?
->>>>
->>>> Since this function will be called for every VF device we might loose some
->>>> performance benefit.
->>> This particular patch doesn't do any caching.  IIRC it fiddles with
->>> ifdefs to solve a problem that would be introduced by a future patch.
->>> I don't remember the exact details, but I think the series I merged
->>> doesn't have that problem.  If it does, let me know the details and we
->>> can fix it.
->> This patch by itself does not do any caching. But your caching patch
->> missed modifying this function to use cached values. Please check the
->> current implementation of this function. It still reads
->> PCI_EXT_CAP_ID_PRI register instead of using cached value. Please let
->> me know your comments.
->>
->> int pci_prg_resp_pasid_required(struct pci_dev *pdev)
->> {
->>      u16 status;
->>      int pri;
->>
->>      if (pdev->is_virtfn)
->>          pdev = pci_physfn(pdev);
->>
->>      pri = pci_find_ext_capability(pdev, PCI_EXT_CAP_ID_PRI);
->>      if (!pri)
->>          return 0;
->>
->>      pci_read_config_word(pdev, pri + PCI_PRI_STATUS, &status);
->>
->>      if (status & PCI_PRI_STATUS_PASID)
->>          return 1;
->>
->>      return 0;
->> }
->> EXPORT_SYMBOL_GPL(pci_prg_resp_pasid_required);
->>
->> If caching is applied to this function then we need this #ifdef
->> dependency correction patch.
-> IIRC this #ifdef patch wasn't connected to the actual *need* for the
-> #ifdef, so it was very difficult to review.  I thought this function
-> would be infrequently used and it wasn't worth trying to sort out the
-> #ifdef muddle to do the caching.  But it does seem sort of pointless
-> to chase the capability list again here, so maybe it *is* worth
-> optimizing.
->
-> The PRG Response PASID Required bit is read-only, so I wonder if it
-> would be simpler if we just read PCI_PRI_STATUS once and save the bit
-> in the struct pci_dev?  We could do that in pci_enable_pri(), or if we
-> might need the value before that's called, we could add a
-> pci_pri_init() and do it there.
+I'm not saying it's easy. But getrandom() is documented as only
+returning data after it has been initialized, which is an
+important property of that interface and the main reason to switch
+to it. And it seems that because someone's laptop hung during boot
+because it doesn't find enough entrpoy is enough to break the
+security of the rest. It seems that the only important thing is
+that applications don't stop working, because it's clearly visible
+that it's not working. Returning data before it's been initialized
+doesn't have the effect of being visibly broken, but it's just as
+broken, which is in my opinion worse.
 
-Yes, caching PASID Required bit in pci_pri_init() function would provide 
-performance
-benefits. But another thing to consider is, since this bit is same for 
-both PF/VF, is it worth to
-add this bit it to struct pci_dev?or struct pci_sriov is the more 
-appropriate place?
+> But if you assume that there is no hardware random number generator,
+> and everything is driven from a single master oscillator, with no
+> exernal input, and the CPU is utterly simple, with speculation or
+> anything else that might be non-determinstic, AND if we assume that
+> the idiots who make an IOT device use the same random seed across
+> millions of devices all cloned off of the same master imagine, there
+> is ***absoutely*** nothing the kernel can do to guarantee, with 100%
+> certainty, that the CRNG will be initialzied.  (This is especially
+> true if the idiots who design the IOT device call OpenSSL to generate
+> their long-term private key the moment the device is first plugged in,
+> before any networking device is brought on-line.)
 
->
->>> I did include the caching patches for both PRI and PASID capabilities,
->>> but they're only performance optimizations so I moved them to the end
->>> so the functional fixes would be smaller and earlier in the series.
->>>
->>>>>> Signed-off-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
->>>>>> ---
->>>>>>    drivers/pci/ats.c       | 10 ++++++----
->>>>>>    include/linux/pci-ats.h | 12 +++++++++---
->>>>>>    2 files changed, 15 insertions(+), 7 deletions(-)
->>>>>>
->>>>>> diff --git a/drivers/pci/ats.c b/drivers/pci/ats.c
->>>>>> index e18499243f84..cdd936d10f68 100644
->>>>>> --- a/drivers/pci/ats.c
->>>>>> +++ b/drivers/pci/ats.c
->>>>>> @@ -395,6 +395,8 @@ int pci_pasid_features(struct pci_dev *pdev)
->>>>>>    }
->>>>>>    EXPORT_SYMBOL_GPL(pci_pasid_features);
->>>>>> +#ifdef CONFIG_PCI_PRI
->>>>>> +
->>>>>>    /**
->>>>>>     * pci_prg_resp_pasid_required - Return PRG Response PASID Required bit
->>>>>>     *				 status.
->>>>>> @@ -402,10 +404,8 @@ EXPORT_SYMBOL_GPL(pci_pasid_features);
->>>>>>     *
->>>>>>     * Returns 1 if PASID is required in PRG Response Message, 0 otherwise.
->>>>>>     *
->>>>>> - * Even though the PRG response PASID status is read from PRI Status
->>>>>> - * Register, since this API will mainly be used by PASID users, this
->>>>>> - * function is defined within #ifdef CONFIG_PCI_PASID instead of
->>>>>> - * CONFIG_PCI_PRI.
->>>>>> + * Since this API has dependency on both PRI and PASID, protect it
->>>>>> + * with both CONFIG_PCI_PRI and CONFIG_PCI_PASID.
->>>>>>     */
->>>>>>    int pci_prg_resp_pasid_required(struct pci_dev *pdev)
->>>>>>    {
->>>>>> @@ -425,6 +425,8 @@ int pci_prg_resp_pasid_required(struct pci_dev *pdev)
->>>>>>    }
->>>>>>    EXPORT_SYMBOL_GPL(pci_prg_resp_pasid_required);
->>>>>> +#endif
->>>>>> +
->>>>>>    #define PASID_NUMBER_SHIFT	8
->>>>>>    #define PASID_NUMBER_MASK	(0x1f << PASID_NUMBER_SHIFT)
->>>>>>    /**
->>>>>> diff --git a/include/linux/pci-ats.h b/include/linux/pci-ats.h
->>>>>> index 1ebb88e7c184..1a0bdaee2f32 100644
->>>>>> --- a/include/linux/pci-ats.h
->>>>>> +++ b/include/linux/pci-ats.h
->>>>>> @@ -40,7 +40,6 @@ void pci_disable_pasid(struct pci_dev *pdev);
->>>>>>    void pci_restore_pasid_state(struct pci_dev *pdev);
->>>>>>    int pci_pasid_features(struct pci_dev *pdev);
->>>>>>    int pci_max_pasids(struct pci_dev *pdev);
->>>>>> -int pci_prg_resp_pasid_required(struct pci_dev *pdev);
->>>>>>    #else  /* CONFIG_PCI_PASID */
->>>>>> @@ -67,11 +66,18 @@ static inline int pci_max_pasids(struct pci_dev *pdev)
->>>>>>    	return -EINVAL;
->>>>>>    }
->>>>>> +#endif /* CONFIG_PCI_PASID */
->>>>>> +
->>>>>> +#if defined(CONFIG_PCI_PRI) && defined(CONFIG_PCI_PASID)
->>>>>> +
->>>>>> +int pci_prg_resp_pasid_required(struct pci_dev *pdev);
->>>>>> +
->>>>>> +#else /* CONFIG_PCI_PASID && CONFIG_PCI_PRI */
->>>>>> +
->>>>>>    static inline int pci_prg_resp_pasid_required(struct pci_dev *pdev)
->>>>>>    {
->>>>>>    	return 0;
->>>>>>    }
->>>>>> -#endif /* CONFIG_PCI_PASID */
->>>>>> -
->>>>>> +#endif
->>>>>>    #endif /* LINUX_PCI_ATS_H*/
->>>>>> -- 
->>>>>> 2.21.0
->>>>>>
->>>> -- 
->>>> Sathyanarayanan Kuppuswamy
->>>> Linux kernel developer
->>>>
->> -- 
->> Sathyanarayanan Kuppuswamy
->> Linux kernel developer
+And returning data before it's been initialized will only make
+that situtation worse. We can only hope that by refusing to return
+data the idiot will properly fix it.
 
--- 
-Sathyanarayanan Kuppuswamy
-Linux kernel developer
+If the hardware can't provide it, the kernel shouldn't just pretend
+the hardware did provide it.
+
+> There really are no good choices here.  The one thing which Linus has
+> made very clear is that hanging at boot is Not Acceptable.
+
+And I think it's not a kernel problem but a combination of
+hardware, configuration and user space problem. The kernel can of
+course be improved, and I'm sure it will.
+
+I wonder if it's useful to extend getrandom() to provide an option
+where the application can indicate it doesn't care about security
+and just wants some number, like what /dev/urandom provides but
+then as a system call. Other options could be that you're happy
+with to get data after got an estimated 64 bit of entropy.
+
+> And given that many users are just installing some kind of userspace
+> jitter entropy to square this particular circle, even though I don't
+> trust a jitter entropy scheme, even if it is insecure, we're also
+> using RDRAND, and ultimately I'll trust RDRAND more than I trust a
+> jitter entropy scheme.  And that's where we are right now.  Linus has
+> introduced a simple in-kernel jitter entropy system
+
+I don't trust it much either. And I think we should at least try
+to estimate how much entropy it actually provides on various
+systems, knowing that there will probably be systems where it
+provides much less than what we think it does.
+
+I'm willing to help analyze data if people can provide a list
+of TSCs that are being added. The more samples the better. I think
+you want to do this on an idle system.
+
+
+Kurt
 
