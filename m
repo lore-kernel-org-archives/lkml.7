@@ -4,50 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88291C32792
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:21:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FFF5C4CED1
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:21:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4AF8320659
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:21:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 778AD20659
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:21:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570119664;
-	bh=KS9mc+G7pCfLAaMMt/8H5uffrUx/u6NG7KsmJeFiZE0=;
+	s=default; t=1570119667;
+	bh=339YpOVUXON1p699Fxwxl842FXdvqBAkfsF5O0p+Hnk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=FphRKb9aqD3lWbrkT90wGAeBpwxdoGRkJx/3a5Cxxzv2nch8l0iy+I5ju7LzI2d4K
-	 og5fl7MkgBVO7k37dbGcc2DQ4oYYJu2nzmMfjyZW7G62mdVLBtAuPEylN37V8/IpdX
-	 6hgfAEYHT803z4lbbh6YcwQS3mqab1Co9bPKz3ew=
+	b=Y7tJZqQpeJRTFGgjcRhFDY5wJ9DprrOD18hYibGZ6Vwc7/lv+pcwDaj5gEQNS9MLk
+	 /zZ7PH2Ht81LNEZyp8wZyN2Ejo6eiLb2sVKykzmvbotj0aiH2u3aZywL7FrrQX9ABo
+	 mukEdaOOjEC3Y8/X1enHRGCupW600KlsaNPCFXkk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390049AbfJCQVC (ORCPT
+        id S2390070AbfJCQVG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 12:21:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49080 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 12:21:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49198 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389165AbfJCQU7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:20:59 -0400
+        id S2389208AbfJCQVE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:21:04 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8E0AE20865;
-        Thu,  3 Oct 2019 16:20:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C97CA2054F;
+        Thu,  3 Oct 2019 16:21:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570119658;
-        bh=KS9mc+G7pCfLAaMMt/8H5uffrUx/u6NG7KsmJeFiZE0=;
+        s=default; t=1570119663;
+        bh=339YpOVUXON1p699Fxwxl842FXdvqBAkfsF5O0p+Hnk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=PcOGfqBcBvAdelvrrkAETwOkiMdxEvVH6ab7gV7mkSK82AMLGHdXJq3C7r0bEqkxE
-         4J0TFLblU3K/aoRo3jY0KioE8jHV3iYAmcpuGBxyMN3y1UfmcnXFnRyQ4BBKhg8VZw
-         /wzlq3UhfOhSyiEbhNcj7DZyLX6mO6GNKHEmwK/g=
+        b=OqsxxNadIpMIonNdXgq6Br3MQbcWJKs5wDROD1DzFkohdxpbvaF28vwT9c7bvJgw5
+         sppJ/y5f+DYz7QiT4kiPY2v6Ujb4jWggT2vrBJtrgIf4vUBwf2j2Ykd8O+S7iRavqA
+         4UoDE/z/9ETNgLLL6RgjEDjVwh0sWVCsNba8Zjqo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, kbuild test robot <lkp@intel.com>,
-        Kai-Heng Feng <kai.heng.feng@canonical.com>,
-        Joerg Roedel <jroedel@suse.de>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 144/211] iommu/amd: Override wrong IVRS IOAPIC on Raven Ridge systems
-Date:   Thu,  3 Oct 2019 17:53:30 +0200
-Message-Id: <20191003154520.313937633@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 146/211] media: omap3isp: Set device on omap3isp subdevs
+Date:   Thu,  3 Oct 2019 17:53:32 +0200
+Message-Id: <20191003154521.003187707@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191003154447.010950442@linuxfoundation.org>
 References: <20191003154447.010950442@linuxfoundation.org>
@@ -60,192 +62,99 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kai-Heng Feng <kai.heng.feng@canonical.com>
+From: Sakari Ailus <sakari.ailus@linux.intel.com>
 
-[ Upstream commit 93d051550ee02eaff9a2541d825605a7bd778027 ]
+[ Upstream commit e9eb103f027725053a4b02f93d7f2858b56747ce ]
 
-Raven Ridge systems may have malfunction touchpad or hang at boot if
-incorrect IVRS IOAPIC is provided by BIOS.
+The omap3isp driver registered subdevs without the dev field being set. Do
+that now.
 
-Users already found correct "ivrs_ioapic=" values, let's put them inside
-kernel to workaround buggy BIOS.
-
-BugLink: https://bugs.launchpad.net/bugs/1795292
-BugLink: https://bugs.launchpad.net/bugs/1837688
-Reported-by: kbuild test robot <lkp@intel.com>
-Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
-Signed-off-by: Joerg Roedel <jroedel@suse.de>
+Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/iommu/Makefile           |  2 +-
- drivers/iommu/amd_iommu.h        | 14 +++++
- drivers/iommu/amd_iommu_init.c   |  5 +-
- drivers/iommu/amd_iommu_quirks.c | 92 ++++++++++++++++++++++++++++++++
- 4 files changed, 111 insertions(+), 2 deletions(-)
- create mode 100644 drivers/iommu/amd_iommu.h
- create mode 100644 drivers/iommu/amd_iommu_quirks.c
+ drivers/media/platform/omap3isp/ispccdc.c    | 1 +
+ drivers/media/platform/omap3isp/ispccp2.c    | 1 +
+ drivers/media/platform/omap3isp/ispcsi2.c    | 1 +
+ drivers/media/platform/omap3isp/isppreview.c | 1 +
+ drivers/media/platform/omap3isp/ispresizer.c | 1 +
+ drivers/media/platform/omap3isp/ispstat.c    | 2 ++
+ 6 files changed, 7 insertions(+)
 
-diff --git a/drivers/iommu/Makefile b/drivers/iommu/Makefile
-index ab5eba6edf82b..e13ea199f5896 100644
---- a/drivers/iommu/Makefile
-+++ b/drivers/iommu/Makefile
-@@ -10,7 +10,7 @@ obj-$(CONFIG_IOMMU_IO_PGTABLE_LPAE) += io-pgtable-arm.o
- obj-$(CONFIG_IOMMU_IOVA) += iova.o
- obj-$(CONFIG_OF_IOMMU)	+= of_iommu.o
- obj-$(CONFIG_MSM_IOMMU) += msm_iommu.o
--obj-$(CONFIG_AMD_IOMMU) += amd_iommu.o amd_iommu_init.o
-+obj-$(CONFIG_AMD_IOMMU) += amd_iommu.o amd_iommu_init.o amd_iommu_quirks.o
- obj-$(CONFIG_AMD_IOMMU_DEBUGFS) += amd_iommu_debugfs.o
- obj-$(CONFIG_AMD_IOMMU_V2) += amd_iommu_v2.o
- obj-$(CONFIG_ARM_SMMU) += arm-smmu.o
-diff --git a/drivers/iommu/amd_iommu.h b/drivers/iommu/amd_iommu.h
-new file mode 100644
-index 0000000000000..12d540d9b59b0
---- /dev/null
-+++ b/drivers/iommu/amd_iommu.h
-@@ -0,0 +1,14 @@
-+/* SPDX-License-Identifier: GPL-2.0-only */
-+
-+#ifndef AMD_IOMMU_H
-+#define AMD_IOMMU_H
-+
-+int __init add_special_device(u8 type, u8 id, u16 *devid, bool cmd_line);
-+
-+#ifdef CONFIG_DMI
-+void amd_iommu_apply_ivrs_quirks(void);
-+#else
-+static void amd_iommu_apply_ivrs_quirks(void) { }
-+#endif
-+
-+#endif
-diff --git a/drivers/iommu/amd_iommu_init.c b/drivers/iommu/amd_iommu_init.c
-index 66b4800bcdd8b..1e9a5da562f0d 100644
---- a/drivers/iommu/amd_iommu_init.c
-+++ b/drivers/iommu/amd_iommu_init.c
-@@ -39,6 +39,7 @@
- #include <asm/irq_remapping.h>
+diff --git a/drivers/media/platform/omap3isp/ispccdc.c b/drivers/media/platform/omap3isp/ispccdc.c
+index 77b73e27a2746..412438dce2854 100644
+--- a/drivers/media/platform/omap3isp/ispccdc.c
++++ b/drivers/media/platform/omap3isp/ispccdc.c
+@@ -2605,6 +2605,7 @@ int omap3isp_ccdc_register_entities(struct isp_ccdc_device *ccdc,
+ 	int ret;
  
- #include <linux/crash_dump.h>
-+#include "amd_iommu.h"
- #include "amd_iommu_proto.h"
- #include "amd_iommu_types.h"
- #include "irq_remapping.h"
-@@ -1002,7 +1003,7 @@ static void __init set_dev_entry_from_acpi(struct amd_iommu *iommu,
- 	set_iommu_for_device(iommu, devid);
+ 	/* Register the subdev and video node. */
++	ccdc->subdev.dev = vdev->mdev->dev;
+ 	ret = v4l2_device_register_subdev(vdev, &ccdc->subdev);
+ 	if (ret < 0)
+ 		goto error;
+diff --git a/drivers/media/platform/omap3isp/ispccp2.c b/drivers/media/platform/omap3isp/ispccp2.c
+index e062939d0d054..47b0d3fe87d80 100644
+--- a/drivers/media/platform/omap3isp/ispccp2.c
++++ b/drivers/media/platform/omap3isp/ispccp2.c
+@@ -1034,6 +1034,7 @@ int omap3isp_ccp2_register_entities(struct isp_ccp2_device *ccp2,
+ 	int ret;
+ 
+ 	/* Register the subdev and video nodes. */
++	ccp2->subdev.dev = vdev->mdev->dev;
+ 	ret = v4l2_device_register_subdev(vdev, &ccp2->subdev);
+ 	if (ret < 0)
+ 		goto error;
+diff --git a/drivers/media/platform/omap3isp/ispcsi2.c b/drivers/media/platform/omap3isp/ispcsi2.c
+index a4d3d030e81e2..e45292a1bf6c5 100644
+--- a/drivers/media/platform/omap3isp/ispcsi2.c
++++ b/drivers/media/platform/omap3isp/ispcsi2.c
+@@ -1201,6 +1201,7 @@ int omap3isp_csi2_register_entities(struct isp_csi2_device *csi2,
+ 	int ret;
+ 
+ 	/* Register the subdev and video nodes. */
++	csi2->subdev.dev = vdev->mdev->dev;
+ 	ret = v4l2_device_register_subdev(vdev, &csi2->subdev);
+ 	if (ret < 0)
+ 		goto error;
+diff --git a/drivers/media/platform/omap3isp/isppreview.c b/drivers/media/platform/omap3isp/isppreview.c
+index 3195f7c8b8b7e..591c6de498f89 100644
+--- a/drivers/media/platform/omap3isp/isppreview.c
++++ b/drivers/media/platform/omap3isp/isppreview.c
+@@ -2228,6 +2228,7 @@ int omap3isp_preview_register_entities(struct isp_prev_device *prev,
+ 	int ret;
+ 
+ 	/* Register the subdev and video nodes. */
++	prev->subdev.dev = vdev->mdev->dev;
+ 	ret = v4l2_device_register_subdev(vdev, &prev->subdev);
+ 	if (ret < 0)
+ 		goto error;
+diff --git a/drivers/media/platform/omap3isp/ispresizer.c b/drivers/media/platform/omap3isp/ispresizer.c
+index 0b6a87508584f..2035e3c6a9dee 100644
+--- a/drivers/media/platform/omap3isp/ispresizer.c
++++ b/drivers/media/platform/omap3isp/ispresizer.c
+@@ -1684,6 +1684,7 @@ int omap3isp_resizer_register_entities(struct isp_res_device *res,
+ 	int ret;
+ 
+ 	/* Register the subdev and video nodes. */
++	res->subdev.dev = vdev->mdev->dev;
+ 	ret = v4l2_device_register_subdev(vdev, &res->subdev);
+ 	if (ret < 0)
+ 		goto error;
+diff --git a/drivers/media/platform/omap3isp/ispstat.c b/drivers/media/platform/omap3isp/ispstat.c
+index 47353fee26c32..bfa2d05046466 100644
+--- a/drivers/media/platform/omap3isp/ispstat.c
++++ b/drivers/media/platform/omap3isp/ispstat.c
+@@ -1029,6 +1029,8 @@ void omap3isp_stat_unregister_entities(struct ispstat *stat)
+ int omap3isp_stat_register_entities(struct ispstat *stat,
+ 				    struct v4l2_device *vdev)
+ {
++	stat->subdev.dev = vdev->mdev->dev;
++
+ 	return v4l2_device_register_subdev(vdev, &stat->subdev);
  }
  
--static int __init add_special_device(u8 type, u8 id, u16 *devid, bool cmd_line)
-+int __init add_special_device(u8 type, u8 id, u16 *devid, bool cmd_line)
- {
- 	struct devid_map *entry;
- 	struct list_head *list;
-@@ -1153,6 +1154,8 @@ static int __init init_iommu_from_acpi(struct amd_iommu *iommu,
- 	if (ret)
- 		return ret;
- 
-+	amd_iommu_apply_ivrs_quirks();
-+
- 	/*
- 	 * First save the recommended feature enable bits from ACPI
- 	 */
-diff --git a/drivers/iommu/amd_iommu_quirks.c b/drivers/iommu/amd_iommu_quirks.c
-new file mode 100644
-index 0000000000000..c235f79b7a200
---- /dev/null
-+++ b/drivers/iommu/amd_iommu_quirks.c
-@@ -0,0 +1,92 @@
-+/* SPDX-License-Identifier: GPL-2.0-only */
-+
-+/*
-+ * Quirks for AMD IOMMU
-+ *
-+ * Copyright (C) 2019 Kai-Heng Feng <kai.heng.feng@canonical.com>
-+ */
-+
-+#ifdef CONFIG_DMI
-+#include <linux/dmi.h>
-+
-+#include "amd_iommu.h"
-+
-+#define IVHD_SPECIAL_IOAPIC		1
-+
-+struct ivrs_quirk_entry {
-+	u8 id;
-+	u16 devid;
-+};
-+
-+enum {
-+	DELL_INSPIRON_7375 = 0,
-+	DELL_LATITUDE_5495,
-+	LENOVO_IDEAPAD_330S_15ARR,
-+};
-+
-+static const struct ivrs_quirk_entry ivrs_ioapic_quirks[][3] __initconst = {
-+	/* ivrs_ioapic[4]=00:14.0 ivrs_ioapic[5]=00:00.2 */
-+	[DELL_INSPIRON_7375] = {
-+		{ .id = 4, .devid = 0xa0 },
-+		{ .id = 5, .devid = 0x2 },
-+		{}
-+	},
-+	/* ivrs_ioapic[4]=00:14.0 */
-+	[DELL_LATITUDE_5495] = {
-+		{ .id = 4, .devid = 0xa0 },
-+		{}
-+	},
-+	/* ivrs_ioapic[32]=00:14.0 */
-+	[LENOVO_IDEAPAD_330S_15ARR] = {
-+		{ .id = 32, .devid = 0xa0 },
-+		{}
-+	},
-+	{}
-+};
-+
-+static int __init ivrs_ioapic_quirk_cb(const struct dmi_system_id *d)
-+{
-+	const struct ivrs_quirk_entry *i;
-+
-+	for (i = d->driver_data; i->id != 0 && i->devid != 0; i++)
-+		add_special_device(IVHD_SPECIAL_IOAPIC, i->id, (u16 *)&i->devid, 0);
-+
-+	return 0;
-+}
-+
-+static const struct dmi_system_id ivrs_quirks[] __initconst = {
-+	{
-+		.callback = ivrs_ioapic_quirk_cb,
-+		.ident = "Dell Inspiron 7375",
-+		.matches = {
-+			DMI_MATCH(DMI_SYS_VENDOR, "Dell Inc."),
-+			DMI_MATCH(DMI_PRODUCT_NAME, "Inspiron 7375"),
-+		},
-+		.driver_data = (void *)&ivrs_ioapic_quirks[DELL_INSPIRON_7375],
-+	},
-+	{
-+		.callback = ivrs_ioapic_quirk_cb,
-+		.ident = "Dell Latitude 5495",
-+		.matches = {
-+			DMI_MATCH(DMI_SYS_VENDOR, "Dell Inc."),
-+			DMI_MATCH(DMI_PRODUCT_NAME, "Latitude 5495"),
-+		},
-+		.driver_data = (void *)&ivrs_ioapic_quirks[DELL_LATITUDE_5495],
-+	},
-+	{
-+		.callback = ivrs_ioapic_quirk_cb,
-+		.ident = "Lenovo ideapad 330S-15ARR",
-+		.matches = {
-+			DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
-+			DMI_MATCH(DMI_PRODUCT_NAME, "81FB"),
-+		},
-+		.driver_data = (void *)&ivrs_ioapic_quirks[LENOVO_IDEAPAD_330S_15ARR],
-+	},
-+	{}
-+};
-+
-+void __init amd_iommu_apply_ivrs_quirks(void)
-+{
-+	dmi_check_system(ivrs_quirks);
-+}
-+#endif
 -- 
 2.20.1
 
