@@ -2,127 +2,172 @@ Return-Path: <SRS0=6dNS=X4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 60A43C10F14
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 07:17:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3AFC6C10F14
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 07:22:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 39F6E20842
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 07:17:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1B77B2133F
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 07:22:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727796AbfJCHRU (ORCPT
+        id S1728031AbfJCHW4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 03:17:20 -0400
-Received: from retiisi.org.uk ([95.216.213.190]:39174 "EHLO
-        hillosipuli.retiisi.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725879AbfJCHRU (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 03:17:20 -0400
-Received: from valkosipuli.localdomain (valkosipuli.retiisi.org.uk [IPv6:2a01:4f9:c010:4572::80:2])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by hillosipuli.retiisi.org.uk (Postfix) with ESMTPS id 9D432634C87;
-        Thu,  3 Oct 2019 10:16:47 +0300 (EEST)
-Received: from sailus by valkosipuli.localdomain with local (Exim 4.92)
-        (envelope-from <sakari.ailus@retiisi.org.uk>)
-        id 1iFvLy-0002Ge-4R; Thu, 03 Oct 2019 10:16:46 +0300
-Date:   Thu, 3 Oct 2019 10:16:46 +0300
-From:   Sakari Ailus <sakari.ailus@iki.fi>
-To:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Cc:     mchehab@kernel.org, robh+dt@kernel.org,
-        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        c.barrett@framos.com, a.brela@framos.com
-Subject: Re: [PATCH v3 2/3] media: i2c: Add IMX290 CMOS image sensor driver
-Message-ID: <20191003071646.GZ896@valkosipuli.retiisi.org.uk>
-References: <20190830091943.22646-1-manivannan.sadhasivam@linaro.org>
- <20190830091943.22646-3-manivannan.sadhasivam@linaro.org>
- <20190923092209.GL5525@valkosipuli.retiisi.org.uk>
- <20191001184200.GA7739@Mani-XPS-13-9360>
- <20191002103715.GR896@valkosipuli.retiisi.org.uk>
- <20191003053338.GA7868@Mani-XPS-13-9360>
+        Thu, 3 Oct 2019 03:22:56 -0400
+Received: from mga05.intel.com ([192.55.52.43]:59686 "EHLO mga05.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726002AbfJCHW4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 03:22:56 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 03 Oct 2019 00:22:54 -0700
+X-IronPort-AV: E=Sophos;i="5.67,251,1566889200"; 
+   d="scan'208";a="216718209"
+Received: from paasikivi.fi.intel.com ([10.237.72.42])
+  by fmsmga004-auth.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 03 Oct 2019 00:22:53 -0700
+Received: by paasikivi.fi.intel.com (Postfix, from userid 1000)
+        id 2E3D221ACC; Thu,  3 Oct 2019 10:22:51 +0300 (EEST)
+Date:   Thu, 3 Oct 2019 10:22:51 +0300
+From:   Sakari Ailus <sakari.ailus@linux.intel.com>
+To:     Jacopo Mondi <jacopo@jmondi.org>
+Cc:     Benoit Parrot <bparrot@ti.com>, Hans Verkuil <hverkuil@xs4all.nl>,
+        linux-media@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [Patch v2 1/3] media: ov5640: add PIXEL_RATE control
+Message-ID: <20191003072251.GA14917@paasikivi.fi.intel.com>
+References: <20191002135134.12273-1-bparrot@ti.com>
+ <20191002135134.12273-2-bparrot@ti.com>
+ <20191003071714.zyldxfoollm26o4u@uno.localdomain>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191003053338.GA7868@Mani-XPS-13-9360>
+In-Reply-To: <20191003071714.zyldxfoollm26o4u@uno.localdomain>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Manivannan,
+Hi Jacopo, Benoit,
 
-On Thu, Oct 03, 2019 at 11:03:38AM +0530, Manivannan Sadhasivam wrote:
-....
-> > > > > +static int imx290_set_gain(struct imx290 *imx290, u32 value)
-> > > > > +{
-> > > > > +	int ret;
-> > > > > +
-> > > > > +	u32 adjusted_value = (value * 10) / 3;
-> > > > 
-> > > > What's the purpose of this? Why not to use the value directly?
-> > > > 
-> > > 
-> > > The gain register accepts the value 10/3 of the actual gain required. Hence,
-> > > we need to manually do the calculation before updating the value. I can
-> > > add a comment here to clarify.
-> > 
-> > It's better to use the register value directly. Otherwise the granularity
-> > won't be available to the user space.
-> > 
+On Thu, Oct 03, 2019 at 09:17:14AM +0200, Jacopo Mondi wrote:
+> Hi Benoit,
 > 
-> The sensor datasheet clearly defines that the 10/3'rd of the expected gain
-> should be set to this register. So, IMO we should be setting the value as
+> On Wed, Oct 02, 2019 at 08:51:32AM -0500, Benoit Parrot wrote:
+> > Add v4l2 controls to report the pixel rates of each mode. This is
+> > needed by some CSI2 receiver in order to perform proper DPHY
+> > configuration.
+> >
+> > Signed-off-by: Benoit Parrot <bparrot@ti.com>
+> > ---
+> >  drivers/media/i2c/ov5640.c | 25 +++++++++++++++++++++++++
+> >  1 file changed, 25 insertions(+)
+> >
+> > diff --git a/drivers/media/i2c/ov5640.c b/drivers/media/i2c/ov5640.c
+> > index 500d9bbff10b..5198dc887400 100644
+> > --- a/drivers/media/i2c/ov5640.c
+> > +++ b/drivers/media/i2c/ov5640.c
+> > @@ -193,6 +193,9 @@ struct ov5640_mode_info {
+> >
+> >  struct ov5640_ctrls {
+> >  	struct v4l2_ctrl_handler handler;
+> > +	struct {
+> > +		struct v4l2_ctrl *pixel_rate;
+> > +	};
+> 
+> Do you need to wrap this v4l2_ctrl in it's own unnamed struct? Other
+> controls here declared in this way are clustered and, if I'm not
+> mistaken, using unnamed struct to wrap them is just a typographically
+> nice way to convey that. I think your new control could be declared
+> without a wrapping struct { }.
+> 
+> >  	struct {
+> >  		struct v4l2_ctrl *auto_exp;
+> >  		struct v4l2_ctrl *exposure;
+> > @@ -2194,6 +2197,16 @@ static int ov5640_try_fmt_internal(struct v4l2_subdev *sd,
+> >  	return 0;
+> >  }
+> >
+> > +static u64 ov5640_calc_pixel_rate(struct ov5640_dev *sensor)
+> > +{
+> > +	u64 rate;
+> > +
+> > +	rate = sensor->current_mode->vtot * sensor->current_mode->htot;
+> > +	rate *= ov5640_framerates[sensor->current_fr];
+> > +
+> > +	return rate;
+> > +}
+> > +
+> 
+> Just to point out this is the -theoretical- pixel rate, and might be
+> quite different from the one calculated by the clock tree tuning
+> procedure (which should be updated to match Hugues' latest findings).
 
-The unit of that gain is decibels, but the controls do not have a unit.
-Register value is really preferred here.
+Hmm. Considering the xclk rate may be pretty much anything, I'd suppose
+the value above would only be correct for a given xclk rate.
 
-> mentioned in the datasheet. I agree that we are missing the userspace
-> granularity here but sticking to the device limitation shouldn't be a problem.
-> As I said, I'll add a comment here to clarify.
-
-The comment isn't visible in the uAPI.
+Could this be simply calculated from the clock tree configuration, to get
+the right value in all cases?
 
 > 
-> > > 
-> > > > > +
-> > > > > +	ret = imx290_write_buffered_reg(imx290, IMX290_GAIN, 1, adjusted_value);
-> > > > > +	if (ret)
-> > > > > +		dev_err(imx290->dev, "Unable to write gain\n");
-> > > > > +
-> > > > > +	return ret;
-> > > > > +}
-> > > > > +
-> > > > > +static int imx290_set_power_on(struct imx290 *imx290)
-> > > > > +{
-> > > > > +	int ret;
-> > > > > +
-> > > > > +	ret = clk_prepare_enable(imx290->xclk);
-> > > > 
-> > > > Please move the code from this function to the runtime PM runtime suspend
-> > > > callback. The same for imx290_set_power_off().
-> > > > 
-> > > 
-> > > May I know why? I think since this is being used only once, you're suggesting
-> > > to move to the callback function itself but please see the comment below. I
-> > > will reuse this function to power on the device during probe.
-> > 
-> > Yes, you can call the same function from probe, even if it's used as a
-> > runtime PM callback.
-> > 
-> > There's no need to have a function that acts as a wrapper for calling it
-> > with a different type of an argument.
-> > 
+> >  static int ov5640_set_fmt(struct v4l2_subdev *sd,
+> >  			  struct v4l2_subdev_pad_config *cfg,
+> >  			  struct v4l2_subdev_format *format)
+> > @@ -2233,6 +2246,8 @@ static int ov5640_set_fmt(struct v4l2_subdev *sd,
+> >  	if (mbus_fmt->code != sensor->fmt.code)
+> >  		sensor->pending_fmt_change = true;
+> >
+> > +	__v4l2_ctrl_s_ctrl_int64(sensor->ctrls.pixel_rate,
+> > +				 ov5640_calc_pixel_rate(sensor));
+> >  out:
+> >  	mutex_unlock(&sensor->lock);
+> >  	return ret;
+> > @@ -2657,6 +2672,13 @@ static int ov5640_init_controls(struct ov5640_dev *sensor)
+> >  	/* we can use our own mutex for the ctrl lock */
+> >  	hdl->lock = &sensor->lock;
+> >
+> > +	/* Clock related controls */
+> > +	ctrls->pixel_rate =
+> > +		v4l2_ctrl_new_std(hdl, ops,
 > 
-> You mean directly calling imx290_runtime_resume() from probe is fine?
+> If you like it better, this could fit in 1 line
+> 
+> 	ctrls->pixel_rate = v4l2_ctrl_new_std(hdl, ops, V4L2_CID_PIXEL_RATE,
+> 					      0, INT_MAX, 1,
+> 					      ov5640_calc_pixel_rate(sensor)
+> 
+> Thanks
+>    j
+> 
+> > +				  V4L2_CID_PIXEL_RATE, 0, INT_MAX, 1,
+> > +				  ov5640_calc_pixel_rate(sensor));
+> 
+> 
+> > +	ctrls->pixel_rate->flags |= V4L2_CTRL_FLAG_READ_ONLY;
 
-Yes. Feel free to call it e.g. imx290_power_on or something.
+Note that ctrls->pixel_rate is NULL if e.g. memory allocation fails when
+creating the control.
+
+> > +
+> >  	/* Auto/manual white balance */
+> >  	ctrls->auto_wb = v4l2_ctrl_new_std(hdl, ops,
+> >  					   V4L2_CID_AUTO_WHITE_BALANCE,
+> > @@ -2816,6 +2838,9 @@ static int ov5640_s_frame_interval(struct v4l2_subdev *sd,
+> >  		sensor->frame_interval = fi->interval;
+> >  		sensor->current_mode = mode;
+> >  		sensor->pending_mode_change = true;
+> > +
+> > +		__v4l2_ctrl_s_ctrl_int64(sensor->ctrls.pixel_rate,
+> > +					 ov5640_calc_pixel_rate(sensor));
+> >  	}
+> >  out:
+> >  	mutex_unlock(&sensor->lock);
 
 -- 
 Regards,
 
 Sakari Ailus
+sakari.ailus@linux.intel.com
