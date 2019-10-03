@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 16913C4360C
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 00:27:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CD25C4CED1
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 00:28:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D9B73222C0
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 00:27:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DD752222C0
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 00:28:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570062477;
-	bh=iRcDEBfxkv8l6bTP78ExNhW+MMZBsa+eN+470HQBJsw=;
+	s=default; t=1570062481;
+	bh=AgAZVt8ojXz25ApW7p0Ly+IAOq2WbPRoCoKBGu7hVRY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=XwkN/MXLnFAx0nnOSR6RAHwBA3UAMLw0iNhayJgUuUAJnc+nAyMvyUTYLD8+OLVJg
-	 ocHFV7PhD7bEGhw4haghhsBM5HsGnP8BQ3/P4yjuaLG3DoS+4IF45BTxx/+PSwYmun
-	 qnIluFXn4tn2JVSB3LwLuvQdPMVIO4Il88gr7lOs=
+	b=uXxuUP2+bEwI8A0K6LEwkDWtHOLJrNHp8XAxzXdrq+Agpb+Qc4bhp6tOGxrJFAD0K
+	 YkYVF8GaGVOihuxo4yXBHm9gp7zD1Wzb57LOvejMxcXCh+8vidHnhfac/+rJZqpn2a
+	 FOPittu26ffD43m1Pe0DB9P0x4+CaYz3/2wCff9w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729560AbfJCA14 (ORCPT
+        id S1726076AbfJCA2A (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Oct 2019 20:27:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56100 "EHLO mail.kernel.org"
+        Wed, 2 Oct 2019 20:28:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56166 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729677AbfJCA07 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1727664AbfJCA07 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 2 Oct 2019 20:26:59 -0400
 Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D00FA22466;
+        by mail.kernel.org (Postfix) with ESMTPSA id 88ECF22459;
         Thu,  3 Oct 2019 00:26:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570062419;
-        bh=iRcDEBfxkv8l6bTP78ExNhW+MMZBsa+eN+470HQBJsw=;
+        s=default; t=1570062418;
+        bh=AgAZVt8ojXz25ApW7p0Ly+IAOq2WbPRoCoKBGu7hVRY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=aWEDJNKCh5pXzzR3ICpOOO2zGkVVw7thLxif/IRqx65ZZpeK6RNaBnlHfOkPwUV3r
-         H1vmW+RTh67kk8lq3nAZM0eI5bsXrKViBqpq8tSkthiZMVA0hQ+poBBU63LAlDOYr5
-         ZOrc0B3lJEk76ux4k09pyGan1/xconWxKFsR2sBY=
+        b=xaYN3aGdfBfTUJRovA+6kxYhluSbZ9Od/8wTFlL8yliJri2Av/yduVRb98V5TVLvL
+         YekFalBk1ySztBD214okV/JN10u6dzP8LqzXLAeVSFj1vrotFGW5OaMrFrZ4fBsA23
+         ZXLI2+9lK/67NWAemgyuMsNDJJewXBue2CgnC6Zg=
 From:   paulmck@kernel.org
 To:     linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
         mingo@kernel.org
@@ -46,9 +46,9 @@ Cc:     stern@rowland.harvard.edu, parri.andrea@gmail.com, will@kernel.org,
         peterz@infradead.org, boqun.feng@gmail.com, npiggin@gmail.com,
         dhowells@redhat.com, j.alglave@ucl.ac.uk, luc.maranget@inria.fr,
         akiyks@gmail.com, "Paul E. McKenney" <paulmck@linux.ibm.com>
-Subject: [PATCH tip/core/rcu 23/32] tools/memory-model: Implement --hw support for checkghlitmus.sh
-Date:   Wed,  2 Oct 2019 17:26:41 -0700
-Message-Id: <20191003002650.11249-23-paulmck@kernel.org>
+Subject: [PATCH tip/core/rcu 22/32] tools/memory-model: Add -v flag to jingle7 runs
+Date:   Wed,  2 Oct 2019 17:26:40 -0700
+Message-Id: <20191003002650.11249-22-paulmck@kernel.org>
 X-Mailer: git-send-email 2.9.5
 In-Reply-To: <20191003001039.GA8027@paulmck-ThinkPad-P72>
 References: <20191003001039.GA8027@paulmck-ThinkPad-P72>
@@ -59,149 +59,34 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: "Paul E. McKenney" <paulmck@linux.ibm.com>
 
-This commits enables the "--hw" argument for the checkghlitmus.sh script,
-causing it to convert any applicable C-language litmus tests to the
-specified flavor of assembly language, to verify these assembly-language
-litmus tests, and checking compatibility of the outcomes.
+Adding the -v flag to jingle7 invocations gives much useful information
+on why jingle7 didn't like a given litmus test.  This commit therefore
+adds this flag and saves off any such information into a .err file.
 
-Note that the conversion does not yet handle locking, RCU, SRCU, plain
-C-language memory accesses, or casts.
-
+Suggested-by: Luc Maranget <luc.maranget@inria.fr>
 Signed-off-by: Paul E. McKenney <paulmck@linux.ibm.com>
 ---
- tools/memory-model/scripts/checkghlitmus.sh |  9 +++++----
- tools/memory-model/scripts/hwfnseg.sh       | 20 ++++++++++++++++++++
- tools/memory-model/scripts/runlitmushist.sh | 27 +++++++++++++++++----------
- 3 files changed, 42 insertions(+), 14 deletions(-)
- create mode 100755 tools/memory-model/scripts/hwfnseg.sh
+ tools/memory-model/scripts/runlitmus.sh | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/tools/memory-model/scripts/checkghlitmus.sh b/tools/memory-model/scripts/checkghlitmus.sh
-index 6589fbb..2ea220d 100755
---- a/tools/memory-model/scripts/checkghlitmus.sh
-+++ b/tools/memory-model/scripts/checkghlitmus.sh
-@@ -10,6 +10,7 @@
- # parseargs.sh scripts for arguments.
+diff --git a/tools/memory-model/scripts/runlitmus.sh b/tools/memory-model/scripts/runlitmus.sh
+index 5f2d29b..dfdb1f0 100755
+--- a/tools/memory-model/scripts/runlitmus.sh
++++ b/tools/memory-model/scripts/runlitmus.sh
+@@ -68,10 +68,11 @@ fi
  
- . scripts/parseargs.sh
-+. scripts/hwfnseg.sh
- 
- T=/tmp/checkghlitmus.sh.$$
- trap 'rm -rf $T' 0
-@@ -32,9 +33,9 @@ then
- 	( cd "$LKMM_DESTDIR"; sed -e 's/^/mkdir -p /' | sh )
+ # Generate the assembly code and run herd7 on it.
+ gen_theme7 -n 10 -map $mapfile -call Linux.call > $themefile
+-jingle7 -theme $themefile $litmus > $LKMM_DESTDIR/$hwlitmus 2> $T/$hwlitmusfile.jingle7.out
++jingle7 -v -theme $themefile $litmus > $LKMM_DESTDIR/$hwlitmus 2> $T/$hwlitmusfile.jingle7.out
+ if grep -q "Generated 0 tests" $T/$hwlitmusfile.jingle7.out
+ then
+-	echo ' !!! ' jingle7 failed, no $hwlitmus generated
++	echo ' !!! ' jingle7 failed, errors in $hwlitmus.err
++	cp $T/$hwlitmusfile.jingle7.out $LKMM_DESTDIR/$hwlitmus.err
+ 	exit 253
  fi
- 
--# Create a list of the C-language litmus tests previously run.
--( cd $LKMM_DESTDIR; find litmus -name '*.litmus.out' -print ) |
--	sed -e 's/\.out$//' |
-+# Create a list of the specified litmus tests previously run.
-+( cd $LKMM_DESTDIR; find litmus -name "*.litmus${hwfnseg}.out" -print ) |
-+	sed -e "s/${hwfnseg}"'\.out$//' |
- 	xargs -r egrep -l '^ \* Result: (Never|Sometimes|Always|DEADLOCK)' |
- 	xargs -r grep -L "^P${LKMM_PROCS}"> $T/list-C-already
- 
-@@ -44,7 +45,7 @@ find litmus -name '*.litmus' -exec grep -l -m 1 "^C " {} \; > $T/list-C
- xargs < $T/list-C -r egrep -l '^ \* Result: (Never|Sometimes|Always|DEADLOCK)' > $T/list-C-result
- xargs < $T/list-C-result -r grep -L "^P${LKMM_PROCS}" > $T/list-C-result-short
- 
--# Form list of tests without corresponding .litmus.out files
-+# Form list of tests without corresponding .out files
- sort $T/list-C-already $T/list-C-result-short | uniq -u > $T/list-C-needed
- 
- # Run any needed tests.
-diff --git a/tools/memory-model/scripts/hwfnseg.sh b/tools/memory-model/scripts/hwfnseg.sh
-new file mode 100755
-index 0000000..580c328
---- /dev/null
-+++ b/tools/memory-model/scripts/hwfnseg.sh
-@@ -0,0 +1,20 @@
-+#!/bin/sh
-+# SPDX-License-Identifier: GPL-2.0+
-+#
-+# Generate the hardware extension to the litmus-test filename, or the
-+# empty string if this is an LKMM run.  The extension is placed in
-+# the shell variable hwfnseg.
-+#
-+# Usage:
-+#	. hwfnseg.sh
-+#
-+# Copyright IBM Corporation, 2019
-+#
-+# Author: Paul E. McKenney <paulmck@linux.ibm.com>
-+
-+if test -z "$LKMM_HW_MAP_FILE"
-+then
-+	hwfnseg=
-+else
-+	hwfnseg=".$LKMM_HW_MAP_FILE"
-+fi
-diff --git a/tools/memory-model/scripts/runlitmushist.sh b/tools/memory-model/scripts/runlitmushist.sh
-index 852786f..c6c2bdc 100755
---- a/tools/memory-model/scripts/runlitmushist.sh
-+++ b/tools/memory-model/scripts/runlitmushist.sh
-@@ -15,6 +15,8 @@
- #
- # Author: Paul E. McKenney <paulmck@linux.ibm.com>
- 
-+. scripts/hwfnseg.sh
-+
- T=/tmp/runlitmushist.sh.$$
- trap 'rm -rf $T' 0
- mkdir $T
-@@ -30,15 +32,12 @@ fi
- # Prefixes for per-CPU scripts
- for ((i=0;i<$LKMM_JOBS;i++))
- do
--	echo dir="$LKMM_DESTDIR" > $T/$i.sh
- 	echo T=$T >> $T/$i.sh
--	echo herdoptions=\"$LKMM_HERD_OPTIONS\" >> $T/$i.sh
- 	cat << '___EOF___' >> $T/$i.sh
- 	runtest () {
--		echo ' ... ' /usr/bin/time $LKMM_TIMEOUT_CMD herd7 $herdoptions $1 '>' $dir/$1.out '2>&1'
--		if /usr/bin/time $LKMM_TIMEOUT_CMD herd7 $herdoptions $1 > $dir/$1.out 2>&1
-+		if scripts/runlitmus.sh $1
- 		then
--			if ! grep -q '^Observation ' $dir/$1.out
-+			if ! grep -q '^Observation ' $LKMM_DESTDIR/$1$2.out
- 			then
- 				echo ' !!! Herd failed, no Observation:' $1
- 			fi
-@@ -47,10 +46,16 @@ do
- 			if test "$exitcode" -eq 124
- 			then
- 				exitmsg="timed out"
-+			elif test "$exitcode" -eq 253
-+			then
-+				exitmsg=
- 			else
- 				exitmsg="failed, exit code $exitcode"
- 			fi
--			echo ' !!! Herd' ${exitmsg}: $1
-+			if test -n "$exitmsg"
-+			then
-+				echo ' !!! Herd' ${exitmsg}: $1
-+			fi
- 		fi
- 	}
- ___EOF___
-@@ -59,11 +64,13 @@ done
- awk -v q="'" -v b='\\' '
- {
- 	print "echo `grep " q "^P[0-9]" b "+(" q " " $0 " | tail -1 | sed -e " q "s/^P" b "([0-9]" b "+" b ")(.*$/" b "1/" q "` " $0
--}' | bash |
--sort -k1n |
--awk -v ncpu=$LKMM_JOBS -v t=$T '
-+}' | sh | sort -k1n |
-+awk -v dq='"' -v hwfnseg="$hwfnseg" -v ncpu="$LKMM_JOBS" -v t="$T" '
- {
--	print "runtest " $2 >> t "/" NR % ncpu ".sh";
-+	print "if test -z " dq hwfnseg dq " || scripts/simpletest.sh " dq $2 dq
-+	print "then"
-+	print "\techo runtest " dq $2 dq " " hwfnseg " >> " t "/" NR % ncpu ".sh";
-+	print "fi"
- }
- 
- END {
+ /usr/bin/time $LKMM_TIMEOUT_CMD herd7 $LKMM_DESTDIR/$hwlitmus > $LKMM_DESTDIR/$hwlitmus.out 2>&1
 -- 
 2.9.5
 
