@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA41BC10F14
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:30:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2ED8C32792
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:30:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9686A20700
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:30:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 96DC42054F
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:30:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570120215;
-	bh=J2I7SM7bMsl2OQ6fr2CABIWGTg6EorLiy5htaNXQeuo=;
+	s=default; t=1570120218;
+	bh=Iqq+ihm3MEyO7MocIdtefL66drtCw5MVI0GpPu7TVtI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=tgBAEK284h+5S2Z41SrwXHynX0pVr1M4fGOsfNnZlFag1Us3/mCzo46rSwMB01fwW
-	 9RGqPKugctAQBaxkqJ11q0i3mfl/W0pRi+AijAyNzySam8ebfQlHsxwsaZbBA/dlUc
-	 thHnEWQTSPTD2FAhzW2X4xZlY3jTbMMvjjkncLI8=
+	b=E0WbZZNnCzNg86QLAjZubLEfercb1dUSdNa8IET3ry6FpNdxxGIDCpgCs4vM1UBeC
+	 9P8u1NfL8iRHWDWgJHXz1Tt5g3ZGAsCllwAXkQURCK0L/bOYhnHDv1ma7+PiY5s1S4
+	 oVy0yRwFFu0+5w/5aUmFrlJe/BKGdFb62yfSLaRI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389910AbfJCQaP (ORCPT
+        id S2391697AbfJCQaR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 12:30:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36020 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 12:30:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36082 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391054AbfJCQaJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:30:09 -0400
+        id S2391678AbfJCQaM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:30:12 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7972820700;
-        Thu,  3 Oct 2019 16:30:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2A53C2054F;
+        Thu,  3 Oct 2019 16:30:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570120209;
-        bh=J2I7SM7bMsl2OQ6fr2CABIWGTg6EorLiy5htaNXQeuo=;
+        s=default; t=1570120211;
+        bh=Iqq+ihm3MEyO7MocIdtefL66drtCw5MVI0GpPu7TVtI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=nkzYmDpcX/fz5lPYmQjeCLKHQGs0+Fl8Sg4q6FU/eriUZqgIrU5HLM75stpmiNC1Z
-         NYlAlviad5GV4j7t3Uy1BQTpBLeepvHP+efPqj7iJlSvBkR8977S+dcFGOZHajAD6K
-         N2qKh1oR5ScvYY+74emko8SOiceMlsYAt+M7LKk4=
+        b=1e5XnYUZPjyxvUN2tlPVZvkOoo7DfDuB0rm9rGyr6tb4h81a0Qh7w0mCaITWQm3bj
+         xGyV+DWbWz3CYVWIVT8o/yt7n/t2pLV+DiTxOAputC0uFs/hTq+QI0PfC+lLNICicF
+         GVDNlksOxypblKuWAN43J63+KooUZ85rHyRmaVzY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ezequiel Garcia <ezequiel@collabora.com>,
-        Chanwoo Choi <cw00.choi@samsung.com>,
-        MyungJoo Ham <myungjoo.ham@samsung.com>,
+        stable@vger.kernel.org,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Keerthy <j-keerthy@ti.com>, Tony Lindgren <tony@atomide.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 137/313] PM / devfreq: Fix kernel oops on governor module load
-Date:   Thu,  3 Oct 2019 17:51:55 +0200
-Message-Id: <20191003154546.372351240@linuxfoundation.org>
+Subject: [PATCH 5.2 138/313] ARM: OMAP2+: move platform-specific asm-offset.h to arch/arm/mach-omap2
+Date:   Thu,  3 Oct 2019 17:51:56 +0200
+Message-Id: <20191003154546.468390520@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191003154533.590915454@linuxfoundation.org>
 References: <20191003154533.590915454@linuxfoundation.org>
@@ -61,44 +61,118 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ezequiel Garcia <ezequiel@collabora.com>
+From: Masahiro Yamada <yamada.masahiro@socionext.com>
 
-[ Upstream commit 7544fd7f384591038646d3cd9efb311ab4509e24 ]
+[ Upstream commit ccf4975dca233b1d6a74752d6ab35c239edc0d58 ]
 
-A bit unexpectedly (but still documented), request_module may
-return a positive value, in case of a modprobe error.
-This is currently causing issues in the devfreq framework.
+<generated/ti-pm-asm-offsets.h> is only generated and included by
+arch/arm/mach-omap2/, so it does not need to reside in the globally
+visible include/generated/.
 
-When a request_module exits with a positive value, we currently
-return that via ERR_PTR. However, because the value is positive,
-it's not a ERR_VALUE proper, and is therefore treated as a
-valid struct devfreq_governor pointer, leading to a kernel oops.
+I renamed it to arch/arm/mach-omap2/pm-asm-offsets.h since the prefix
+'ti-' is just redundant in mach-omap2/.
 
-Fix this by returning -EINVAL if request_module returns a positive
-value.
+My main motivation of this change is to avoid the race condition for
+the parallel build (-j) when CONFIG_IKHEADERS is enabled.
 
-Fixes: b53b0128052ff ("PM / devfreq: Fix static checker warning in try_then_request_governor")
-Signed-off-by: Ezequiel Garcia <ezequiel@collabora.com>
-Reviewed-by: Chanwoo Choi <cw00.choi@samsung.com>
-Signed-off-by: MyungJoo Ham <myungjoo.ham@samsung.com>
+When it is enabled, all the headers under include/ are archived into
+kernel/kheaders_data.tar.xz and exposed in the sysfs.
+
+In the parallel build, we have no idea in which order files are built.
+
+ - If ti-pm-asm-offsets.h is built before kheaders_data.tar.xz,
+   the header will be included in the archive. Probably nobody will
+   use it, but it is harmless except that it will increase the archive
+   size needlessly.
+
+ - If kheaders_data.tar.xz is built before ti-pm-asm-offsets.h,
+   the header will not be included in the archive. However, in the next
+   build, the archive will be re-generated to include the newly-found
+   ti-pm-asm-offsets.h. This is not nice from the build system point
+   of view.
+
+ - If ti-pm-asm-offsets.h and kheaders_data.tar.xz are built at the
+   same time, the corrupted header might be included in the archive,
+   which does not look nice either.
+
+This commit fixes the race.
+
+Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+Tested-by: Keerthy <j-keerthy@ti.com>
+Signed-off-by: Tony Lindgren <tony@atomide.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/devfreq/devfreq.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/arm/mach-omap2/.gitignore  | 1 +
+ arch/arm/mach-omap2/Makefile    | 5 +++--
+ arch/arm/mach-omap2/sleep33xx.S | 2 +-
+ arch/arm/mach-omap2/sleep43xx.S | 2 +-
+ 4 files changed, 6 insertions(+), 4 deletions(-)
+ create mode 100644 arch/arm/mach-omap2/.gitignore
 
-diff --git a/drivers/devfreq/devfreq.c b/drivers/devfreq/devfreq.c
-index ab22bf8a12d69..a0e19802149fc 100644
---- a/drivers/devfreq/devfreq.c
-+++ b/drivers/devfreq/devfreq.c
-@@ -254,7 +254,7 @@ static struct devfreq_governor *try_then_request_governor(const char *name)
- 		/* Restore previous state before return */
- 		mutex_lock(&devfreq_list_lock);
- 		if (err)
--			return ERR_PTR(err);
-+			return (err < 0) ? ERR_PTR(err) : ERR_PTR(-EINVAL);
+diff --git a/arch/arm/mach-omap2/.gitignore b/arch/arm/mach-omap2/.gitignore
+new file mode 100644
+index 0000000000000..79a8d6ea71520
+--- /dev/null
++++ b/arch/arm/mach-omap2/.gitignore
+@@ -0,0 +1 @@
++pm-asm-offsets.h
+diff --git a/arch/arm/mach-omap2/Makefile b/arch/arm/mach-omap2/Makefile
+index 85d1b13c9215b..26baeb6477aff 100644
+--- a/arch/arm/mach-omap2/Makefile
++++ b/arch/arm/mach-omap2/Makefile
+@@ -236,9 +236,10 @@ obj-y					+= omap_phy_internal.o
  
- 		governor = find_devfreq_governor(name);
- 	}
+ obj-$(CONFIG_MACH_OMAP2_TUSB6010)	+= usb-tusb6010.o
+ 
+-include/generated/ti-pm-asm-offsets.h: arch/arm/mach-omap2/pm-asm-offsets.s FORCE
++$(obj)/pm-asm-offsets.h: $(obj)/pm-asm-offsets.s FORCE
+ 	$(call filechk,offsets,__TI_PM_ASM_OFFSETS_H__)
+ 
+-$(obj)/sleep33xx.o $(obj)/sleep43xx.o: include/generated/ti-pm-asm-offsets.h
++$(obj)/sleep33xx.o $(obj)/sleep43xx.o: $(obj)/pm-asm-offsets.h
+ 
+ targets += pm-asm-offsets.s
++clean-files += pm-asm-offsets.h
+diff --git a/arch/arm/mach-omap2/sleep33xx.S b/arch/arm/mach-omap2/sleep33xx.S
+index 47a816468cdb4..a003769121aaa 100644
+--- a/arch/arm/mach-omap2/sleep33xx.S
++++ b/arch/arm/mach-omap2/sleep33xx.S
+@@ -6,7 +6,6 @@
+  *	Dave Gerlach, Vaibhav Bedia
+  */
+ 
+-#include <generated/ti-pm-asm-offsets.h>
+ #include <linux/linkage.h>
+ #include <linux/platform_data/pm33xx.h>
+ #include <linux/ti-emif-sram.h>
+@@ -15,6 +14,7 @@
+ 
+ #include "iomap.h"
+ #include "cm33xx.h"
++#include "pm-asm-offsets.h"
+ 
+ #define AM33XX_CM_CLKCTRL_MODULESTATE_DISABLED			0x00030000
+ #define AM33XX_CM_CLKCTRL_MODULEMODE_DISABLE			0x0003
+diff --git a/arch/arm/mach-omap2/sleep43xx.S b/arch/arm/mach-omap2/sleep43xx.S
+index 0c1031442571f..27b13d47cf193 100644
+--- a/arch/arm/mach-omap2/sleep43xx.S
++++ b/arch/arm/mach-omap2/sleep43xx.S
+@@ -6,7 +6,6 @@
+  *	Dave Gerlach, Vaibhav Bedia
+  */
+ 
+-#include <generated/ti-pm-asm-offsets.h>
+ #include <linux/linkage.h>
+ #include <linux/ti-emif-sram.h>
+ #include <linux/platform_data/pm33xx.h>
+@@ -19,6 +18,7 @@
+ #include "iomap.h"
+ #include "omap-secure.h"
+ #include "omap44xx.h"
++#include "pm-asm-offsets.h"
+ #include "prm33xx.h"
+ #include "prcm43xx.h"
+ 
 -- 
 2.20.1
 
