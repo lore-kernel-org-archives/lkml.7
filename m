@@ -2,113 +2,93 @@ Return-Path: <SRS0=6dNS=X4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D6FDFC10F14
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 09:14:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE885C10F14
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 09:16:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AE5E621A4C
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 09:14:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 91DB52133F
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 09:16:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="f2YDZuhu"
+	dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b="WNR7kSjr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729298AbfJCJOp (ORCPT
+        id S1729194AbfJCJQE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 05:14:45 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:37484 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727995AbfJCJOo (ORCPT
+        Thu, 3 Oct 2019 05:16:04 -0400
+Received: from mx0a-001ae601.pphosted.com ([67.231.149.25]:54400 "EHLO
+        mx0b-001ae601.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728769AbfJCJQE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 05:14:44 -0400
-Received: by mail-pf1-f194.google.com with SMTP id y5so1343043pfo.4
-        for <linux-kernel@vger.kernel.org>; Thu, 03 Oct 2019 02:14:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sifive.com; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=2vKbldndzFc1Ual386BQ7E3WFEYeo8xZQGDApFlT8dI=;
-        b=f2YDZuhud4dK2X9PKXRDWQgtsC8YmWa/pMHZn7PGBMkvcvIh5c0kaqJBzSrD6W48++
-         ulqgy+niqIsVPTGUN1HMRou0c9gxKQMNxJ7BOTESuppvEH+io35C1L5HXrYtHBcZ7nBz
-         aMSmQ34saNLtImo5kikISUDY6J0KXI3u84MOhaACp/b95sW6JHlwgzMzP0Lbz8XL+Rn0
-         +LskHMYAeCDMFrOZ+ajkUmy2KTW3ylMORBzrrvdE9xLD2Dnl+xLrFoR+tZPGkLBg4AVv
-         reKHZVmG9MkgZ56l47Sc01EHOPKqPZYyE7gVpwM8GNfmTKyFwpvxj2hiAp+nOQnsdmee
-         /5sQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=2vKbldndzFc1Ual386BQ7E3WFEYeo8xZQGDApFlT8dI=;
-        b=pbykZL91Ib9QpvpV7PQizQwLkCGMnpYjz4No1HoJPHG9aR/Uw8t3a+yMHUiFJfzIio
-         2PkxyZen+Ts5KBo/bTQdDuOXZ34vJTE3KqA1VPVBCzgkJbyMwbnNJGgW/fjzrP4xBtlW
-         PiL0V2lm5GAlkBVv44EjkBQ3wJ7L4FyhXJLPwKCmWu5pBXMtQJB8IOfIcO+jIfUIv+xx
-         zsWndm4AZb2AswlRcTUBaMotERFk2cPy9HufDuVRkcQ0w2fKH2oeL7DPmHMucnTrv1Eh
-         DSTO4z3asGgtEL48IpvGMuwTw3kbc3kl1MxgnQuE4z5bnL4lWsMkcrCxTX69KilnAk3Y
-         FFzw==
-X-Gm-Message-State: APjAAAUyGPiJbCZb0UptvzklPkUcsFI8vT0euGlx0hjNDtN3nY2AOxNF
-        RxKBR18SRkAfVHfWMoa0EF+gCA==
-X-Google-Smtp-Source: APXvYqzcQ1k2avDmG3DyS4ozTUbUn772X9S8sGX+mjjQG1JqrLKlw/f6wAjumUBurg6Y5zOWSte2uA==
-X-Received: by 2002:a65:56c8:: with SMTP id w8mr8535370pgs.100.1570094082866;
-        Thu, 03 Oct 2019 02:14:42 -0700 (PDT)
-Received: from localhost.localdomain (111-241-164-136.dynamic-ip.hinet.net. [111.241.164.136])
-        by smtp.gmail.com with ESMTPSA id f128sm3445422pfg.143.2019.10.03.02.14.39
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 03 Oct 2019 02:14:42 -0700 (PDT)
-From:   Green Wan <green.wan@sifive.com>
-To:     linux-hackers@sifive.com
-Cc:     Green Wan <green.wan@sifive.com>, Vinod Koul <vkoul@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Palmer Dabbelt <palmer@sifive.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        "Paul E. McKenney" <paulmck@linux.ibm.com>,
-        Bin Meng <bmeng.cn@gmail.com>,
-        Yash Shah <yash.shah@sifive.com>,
-        Sagar Kadam <sagar.kadam@sifive.com>,
-        dmaengine@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v4 4/4] MAINTAINERS: Add Green as SiFive PDMA driver maintainer
-Date:   Thu,  3 Oct 2019 17:09:04 +0800
-Message-Id: <20191003090945.29210-5-green.wan@sifive.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20191003090945.29210-1-green.wan@sifive.com>
-References: <20191003090945.29210-1-green.wan@sifive.com>
+        Thu, 3 Oct 2019 05:16:04 -0400
+Received: from pps.filterd (m0077473.ppops.net [127.0.0.1])
+        by mx0a-001ae601.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id x939F9Ri018996;
+        Thu, 3 Oct 2019 04:16:01 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cirrus.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=PODMain02222019;
+ bh=32tst5POj7PScFdPdfx0Z/MiaN40vsOvfcG/uNUm0qc=;
+ b=WNR7kSjriWXCBCBs8t9F6A+fPAvds2TeTUrWSgybGgSnxZBG+8d5OuuopBY3Fw4ECdEn
+ kPdOGWdu4NHexpB1obJXdQyIlXwIpgpQk03zRRuQDbTP3F1EUnIev13nvg8c9oMTDw5X
+ +sPflv8Jigp8BAS9gr2s+YdKhfonIuG5Qw3B9/NEQ8mVU3CRNd+IoU8KXyc1v2/lE4yg
+ dlRqOVtbTVhDGL1r/6ypW3c/Ay7oovyay7+kpH6M240YbaExar6f0To7oji9UpPzZrMl
+ hDYFeGLb6SPYZm1h+YrdGhgmKIlODE/Wo//GNdb1v89AG3iSrfkmvDUXy4oxe9MTXuAW qg== 
+Authentication-Results: ppops.net;
+        spf=fail smtp.mailfrom=ckeepax@opensource.cirrus.com
+Received: from ediex01.ad.cirrus.com ([87.246.76.36])
+        by mx0a-001ae601.pphosted.com with ESMTP id 2va4x4r3nw-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
+        Thu, 03 Oct 2019 04:16:01 -0500
+Received: from EDIEX01.ad.cirrus.com (198.61.84.80) by EDIEX01.ad.cirrus.com
+ (198.61.84.80) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1591.10; Thu, 3 Oct
+ 2019 10:15:59 +0100
+Received: from ediswmail.ad.cirrus.com (198.61.86.93) by EDIEX01.ad.cirrus.com
+ (198.61.84.80) with Microsoft SMTP Server id 15.1.1591.10 via Frontend
+ Transport; Thu, 3 Oct 2019 10:15:59 +0100
+Received: from ediswmail.ad.cirrus.com (ediswmail.ad.cirrus.com [198.61.86.93])
+        by ediswmail.ad.cirrus.com (Postfix) with ESMTP id 1FCBA2A1;
+        Thu,  3 Oct 2019 09:15:59 +0000 (UTC)
+Date:   Thu, 3 Oct 2019 09:15:59 +0000
+From:   Charles Keepax <ckeepax@opensource.cirrus.com>
+To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>
+CC:     Lee Jones <lee.jones@linaro.org>, Mark Brown <broonie@kernel.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] mfd: arizona: switch to using devm_gpiod_get()
+Message-ID: <20191003091559.GU10204@ediswmail.ad.cirrus.com>
+References: <20191003002832.GA13466@dtor-ws>
+MIME-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20191003002832.GA13466@dtor-ws>
+User-Agent: Mutt/1.5.21 (2010-09-15)
+X-Proofpoint-SPF-Result: fail
+X-Proofpoint-SPF-Record: v=spf1 include:spf-001ae601.pphosted.com include:spf.protection.outlook.com
+ -all
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 mlxlogscore=807
+ malwarescore=0 adultscore=0 phishscore=0 impostorscore=0
+ priorityscore=1501 suspectscore=0 bulkscore=0 mlxscore=0 clxscore=1015
+ lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-1908290000 definitions=main-1910030088
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Update MAINTAINERS for SiFive PDMA driver.
+On Wed, Oct 02, 2019 at 05:28:32PM -0700, Dmitry Torokhov wrote:
+> Now that gpiolib recognizes wlf,reset legacy GPIO and will handle it
+> even if DTS uses it without -gpio[s] suffix, we can switch to more
+> standard devm_gpiod_get() and later remove devm_gpiod_get_from_of_node().
+> 
+> Note that we will lose "arizona /RESET" custom GPIO label, but since we
+> do not set such custom label when using the modern binding, I opted to
+> not having it here either.
+> 
+> Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+> ---
 
-Signed-off-by: Green Wan <green.wan@sifive.com>
----
- MAINTAINERS | 6 ++++++
- 1 file changed, 6 insertions(+)
+Acked-by: Charles Keepax <ckeepax@opensource.cirrus.com>
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 30a5b4028d2f..6c12da0a324d 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -14779,6 +14779,12 @@ F:	drivers/media/usb/siano/
- F:	drivers/media/usb/siano/
- F:	drivers/media/mmc/siano/
- 
-+SIFIVE PDMA DRIVER
-+M:	Green Wan <green.wan@sifive.com>
-+S:	Maintained
-+F:	drivers/dma/sf-pdma/
-+F:	Documentation/devicetree/bindings/dma/sifive,fu540-c000-pdma.yaml
-+
- SIFIVE DRIVERS
- M:	Palmer Dabbelt <palmer@sifive.com>
- M:	Paul Walmsley <paul.walmsley@sifive.com>
--- 
-2.17.1
-
+Thanks,
+Charles
