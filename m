@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DACCDC4CED1
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:59:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 51AB9C10F14
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:59:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A72852070B
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:59:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 28F8C2070B
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:59:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570121960;
-	bh=5eDikgOSaSe6iEg5YcefwyC0Wju1DF4Oj1szVWREBus=;
+	s=default; t=1570121969;
+	bh=284s9J8GB6AczDfW5clFHx94KyPZCImw8LyR3mWFV40=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=nkIRfiVJIBV4TiIG91ONmac1pnjGr8yGwjmqa5dfMrsl5WdmFwiYGxiptQ8clLT7j
-	 nBNPFghR3uzJ+gwGxpraybE3VfN+KH7pfdSevlQREU1ZDWcuAgYgfpC4FrDblyJ8OH
-	 VrW92nGzIyxE7kQVs4l/7GwhwSZSOeVVIrBa48I4=
+	b=mug4k+NDmxnRP8jtHXty4buAp769YkDeIFOpvuz6xBwCvNMs53/vDrO4atnIfyCSH
+	 ZgJ+D0Nb5RYX/2GlZ4l6S12cDF36gFpRQ7U1tOAQ8Hq0bi4MH+oI+JfvrRt2hZEDOS
+	 opc1kDSjRas6b3kWU/hT5fTjhribc2JkjizUNscU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405143AbfJCQrV (ORCPT
+        id S2406175AbfJCQ72 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 12:47:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60832 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 12:59:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60654 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391908AbfJCQrS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:47:18 -0400
+        id S2404876AbfJCQrK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:47:10 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5E83F20865;
-        Thu,  3 Oct 2019 16:47:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 598D921848;
+        Thu,  3 Oct 2019 16:47:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570121237;
-        bh=5eDikgOSaSe6iEg5YcefwyC0Wju1DF4Oj1szVWREBus=;
+        s=default; t=1570121229;
+        bh=284s9J8GB6AczDfW5clFHx94KyPZCImw8LyR3mWFV40=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=YuUQJhDhGJFMf4KHgw1ZTdRVexGhwKo4LYug0ywSINCLrY9hIZOvhzjfGcixRf/9w
-         fTOuRaUIDLVkKxakaSHMtLGaEky7+W5LWO0zV9CYCDbCTktmxacP8w96TypE5ZNkak
-         YwYEDHHNn1g1cnMJJ3/RKWZMlmsPO9moaZAT9EtM=
+        b=yjzh+9XLslcnb+aG8r3qsYoTcGyeHAnv+++Z798+YXUQXGqR9uZQ2UzYNNc+OSJ/j
+         2Zmwp5u46lY2eCk8ympG7ZAQGdho0+Wckf932ZULAEcu13PAmaSz7W2rozcQrvueWs
+         3A26YT+T87oDPr1oDcX51PBTKk2ip5sMNfUVoTrk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Peter Ujfalusi <peter.ujfalusi@ti.com>,
-        Arthur She <arthur.she@linaro.org>,
-        Mark Brown <broonie@kernel.org>,
+        stable@vger.kernel.org, "M. Vefa Bicakci" <m.v.b@runbox.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.3 205/344] ASoC: dmaengine: Make the pcm->name equal to pcm->id if the name is not set
-Date:   Thu,  3 Oct 2019 17:52:50 +0200
-Message-Id: <20191003154600.493014307@linuxfoundation.org>
+Subject: [PATCH 5.3 202/344] platform/x86: intel_pmc_core: Do not ioremap RAM
+Date:   Thu,  3 Oct 2019 17:52:47 +0200
+Message-Id: <20191003154600.180915290@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191003154540.062170222@linuxfoundation.org>
 References: <20191003154540.062170222@linuxfoundation.org>
@@ -61,44 +60,61 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Peter Ujfalusi <peter.ujfalusi@ti.com>
+From: M. Vefa Bicakci <m.v.b@runbox.com>
 
-[ Upstream commit 2ec42f3147e1610716f184b02e65d7f493eed925 ]
+[ Upstream commit 7d505758b1e556cdf65a5e451744fe0ae8063d17 ]
 
-Some tools use the snd_pcm_info_get_name() to try to identify PCMs or for
-other purposes.
+On a Xen-based PVH virtual machine with more than 4 GiB of RAM,
+intel_pmc_core fails initialization with the following warning message
+from the kernel, indicating that the driver is attempting to ioremap
+RAM:
 
-Currently it is left empty with the dmaengine-pcm, in this case copy the
-pcm->id string as pcm->name.
+  ioremap on RAM at 0x00000000fe000000 - 0x00000000fe001fff
+  WARNING: CPU: 1 PID: 434 at arch/x86/mm/ioremap.c:186 __ioremap_caller.constprop.0+0x2aa/0x2c0
+...
+  Call Trace:
+   ? pmc_core_probe+0x87/0x2d0 [intel_pmc_core]
+   pmc_core_probe+0x87/0x2d0 [intel_pmc_core]
 
-For example IGT is using this to find the HDMI PCM for testing audio on it.
+This issue appears to manifest itself because of the following fallback
+mechanism in the driver:
 
-Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
-Reported-by: Arthur She <arthur.she@linaro.org>
-Link: https://lore.kernel.org/r/20190906055524.7393-1-peter.ujfalusi@ti.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
+	if (lpit_read_residency_count_address(&slp_s0_addr))
+		pmcdev->base_addr = PMC_BASE_ADDR_DEFAULT;
+
+The validity of address PMC_BASE_ADDR_DEFAULT (i.e., 0xFE000000) is not
+verified by the driver, which is what this patch introduces. With this
+patch, if address PMC_BASE_ADDR_DEFAULT is in RAM, then the driver will
+not attempt to ioremap the aforementioned address.
+
+Signed-off-by: M. Vefa Bicakci <m.v.b@runbox.com>
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/soc-generic-dmaengine-pcm.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+ drivers/platform/x86/intel_pmc_core.c | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
 
-diff --git a/sound/soc/soc-generic-dmaengine-pcm.c b/sound/soc/soc-generic-dmaengine-pcm.c
-index 748f5f641002e..d93db2c2b5270 100644
---- a/sound/soc/soc-generic-dmaengine-pcm.c
-+++ b/sound/soc/soc-generic-dmaengine-pcm.c
-@@ -306,6 +306,12 @@ static int dmaengine_pcm_new(struct snd_soc_pcm_runtime *rtd)
+diff --git a/drivers/platform/x86/intel_pmc_core.c b/drivers/platform/x86/intel_pmc_core.c
+index c510d0d724759..3b6b8dcc47678 100644
+--- a/drivers/platform/x86/intel_pmc_core.c
++++ b/drivers/platform/x86/intel_pmc_core.c
+@@ -878,10 +878,14 @@ static int pmc_core_probe(struct platform_device *pdev)
+ 	if (pmcdev->map == &spt_reg_map && !pci_dev_present(pmc_pci_ids))
+ 		pmcdev->map = &cnp_reg_map;
  
- 		if (!dmaengine_pcm_can_report_residue(dev, pcm->chan[i]))
- 			pcm->flags |= SND_DMAENGINE_PCM_FLAG_NO_RESIDUE;
+-	if (lpit_read_residency_count_address(&slp_s0_addr))
++	if (lpit_read_residency_count_address(&slp_s0_addr)) {
+ 		pmcdev->base_addr = PMC_BASE_ADDR_DEFAULT;
+-	else
 +
-+		if (rtd->pcm->streams[i].pcm->name[0] == '\0') {
-+			strncpy(rtd->pcm->streams[i].pcm->name,
-+				rtd->pcm->streams[i].pcm->id,
-+				sizeof(rtd->pcm->streams[i].pcm->name));
-+		}
- 	}
++		if (page_is_ram(PHYS_PFN(pmcdev->base_addr)))
++			return -ENODEV;
++	} else {
+ 		pmcdev->base_addr = slp_s0_addr - pmcdev->map->slp_s0_offset;
++	}
  
- 	return 0;
+ 	pmcdev->regbase = ioremap(pmcdev->base_addr,
+ 				  pmcdev->map->regmap_length);
 -- 
 2.20.1
 
