@@ -2,53 +2,54 @@ Return-Path: <SRS0=6dNS=X4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EABFC10F14
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:08:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59E63C10F14
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:08:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2C5AB21783
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:08:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 30E3621783
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:08:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570118934;
-	bh=VBJNM2vTUgCaLDng6wOKnNX5G5DEU3d89JMapHsEbvQ=;
+	s=default; t=1570118937;
+	bh=BIohoXAlhVB4rZBWYriKGkkUxUnJUI9fxltSi2I7I1k=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=WS0NcEZla7ttYe7aFBNbhTBwbwfhBsN3g2OjG/nLrdiLnzhxmGa9yHASyOntlk7+M
-	 dKl0SEYyqIJLPfdxWH70n6N4n7BAOwxyoJ4gxztN39T+FNg5A0XMq7VfUA/8q8DFEB
-	 vgaUXJfJmVxAJCV3t6EVLNsP9Sin7R9kiojOC0oU=
+	b=wC63a4MyVrMCDs37BzNRPxIYdq3EZ/HqmjQ/1Uqn/c282Q+Zt45HDkOYab3UtRw3Q
+	 reTFQzh+DY49hcZMVg7nKi2utqRvpbWtIH7IjLWLEY+irAFGmYLFGN3FYEQhqSqmu+
+	 2BiVbLhlJ47p0/NVH2JWkSHmQMiB/l7PlWy2B/As=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731393AbfJCQIx (ORCPT
+        id S1733062AbfJCQH7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 12:08:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57220 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 12:07:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55828 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731439AbfJCQIu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:08:50 -0400
+        id S1733013AbfJCQHw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:07:52 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7CFFE20865;
-        Thu,  3 Oct 2019 16:08:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CF2E9207FF;
+        Thu,  3 Oct 2019 16:07:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570118930;
-        bh=VBJNM2vTUgCaLDng6wOKnNX5G5DEU3d89JMapHsEbvQ=;
+        s=default; t=1570118871;
+        bh=BIohoXAlhVB4rZBWYriKGkkUxUnJUI9fxltSi2I7I1k=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=UXsq78dWxITJ3sQVCeqXvoOu63a3NfM6WTCrWqT11T38grg53gfwF4IaO34Psqt5Y
-         +JNezUAA+Gw98dy2Hd3dfDLw/GkHdn/Ja9T3NRiuI8qRLr7GDi+fNX4CPsFgk4RxPc
-         A2HsB8+IwLQ2xV7aaRuszWW8qb1Lziz9ylvRZ5Jg=
+        b=KihU/GQvfkjg5KNMhTuTIEHjj+Fh66SmX8sT51mlHy5GGkSPiXr/6pmJ0NMmkggAC
+         6+ThM7rWfXwwRj38pCl2XGX6iHWFiz0BJmZKAAQNne3YwKg+swzVjQ+H12iZ7H4SZE
+         lnN85LJNxWgN+n2237sVqR3H0oWQU0dumiTSD9c4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Fabio Estevam <festevam@gmail.com>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 062/185] media: i2c: ov5640: Check for devm_gpiod_get_optional() error
-Date:   Thu,  3 Oct 2019 17:52:20 +0200
-Message-Id: <20191003154451.282144792@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Jack Morgenstein <jackm@dev.mellanox.co.il>,
+        Leon Romanovsky <leonro@mellanox.com>,
+        Sagi Grimberg <sagi@grimberg.m>,
+        Jason Gunthorpe <jgg@mellanox.com>
+Subject: [PATCH 4.14 004/185] IB/core: Add an unbound WQ type to the new CQ API
+Date:   Thu,  3 Oct 2019 17:51:22 +0200
+Message-Id: <20191003154438.325611744@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191003154437.541662648@linuxfoundation.org>
 References: <20191003154437.541662648@linuxfoundation.org>
@@ -61,43 +62,167 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Fabio Estevam <festevam@gmail.com>
+From: Jack Morgenstein <jackm@dev.mellanox.co.il>
 
-[ Upstream commit 8791a102ce579346cea9d2f911afef1c1985213c ]
+commit f794809a7259dfaa3d47d90ef5a86007cf48b1ce upstream.
 
-The power down and reset GPIO are optional, but the return value
-from devm_gpiod_get_optional() needs to be checked and propagated
-in the case of error, so that probe deferral can work.
+The upstream kernel commit cited below modified the workqueue in the
+new CQ API to be bound to a specific CPU (instead of being unbound).
+This caused ALL users of the new CQ API to use the same bound WQ.
 
-Signed-off-by: Fabio Estevam <festevam@gmail.com>
-Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Specifically, MAD handling was severely delayed when the CPU bound
+to the WQ was busy handling (higher priority) interrupts.
+
+This caused a delay in the MAD "heartbeat" response handling,
+which resulted in ports being incorrectly classified as "down".
+
+To fix this, add a new "unbound" WQ type to the new CQ API, so that users
+have the option to choose either a bound WQ or an unbound WQ.
+
+For MADs, choose the new "unbound" WQ.
+
+Fixes: b7363e67b23e ("IB/device: Convert ib-comp-wq to be CPU-bound")
+Signed-off-by: Jack Morgenstein <jackm@dev.mellanox.co.il>
+Signed-off-by: Leon Romanovsky <leonro@mellanox.com>
+Reviewed-by: Sagi Grimberg <sagi@grimberg.m>
+Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- drivers/media/i2c/ov5640.c | 5 +++++
- 1 file changed, 5 insertions(+)
+ drivers/infiniband/core/cq.c     |    8 ++++++--
+ drivers/infiniband/core/device.c |   15 ++++++++++++++-
+ drivers/infiniband/core/mad.c    |    2 +-
+ include/rdma/ib_verbs.h          |    9 ++++++---
+ 4 files changed, 27 insertions(+), 7 deletions(-)
 
-diff --git a/drivers/media/i2c/ov5640.c b/drivers/media/i2c/ov5640.c
-index acf5c8a55bbd2..69f564b0837a7 100644
---- a/drivers/media/i2c/ov5640.c
-+++ b/drivers/media/i2c/ov5640.c
-@@ -2261,9 +2261,14 @@ static int ov5640_probe(struct i2c_client *client,
- 	/* request optional power down pin */
- 	sensor->pwdn_gpio = devm_gpiod_get_optional(dev, "powerdown",
- 						    GPIOD_OUT_HIGH);
-+	if (IS_ERR(sensor->pwdn_gpio))
-+		return PTR_ERR(sensor->pwdn_gpio);
+--- a/drivers/infiniband/core/cq.c
++++ b/drivers/infiniband/core/cq.c
+@@ -112,12 +112,12 @@ static void ib_cq_poll_work(struct work_
+ 				    IB_POLL_BATCH);
+ 	if (completed >= IB_POLL_BUDGET_WORKQUEUE ||
+ 	    ib_req_notify_cq(cq, IB_POLL_FLAGS) > 0)
+-		queue_work(ib_comp_wq, &cq->work);
++		queue_work(cq->comp_wq, &cq->work);
+ }
+ 
+ static void ib_cq_completion_workqueue(struct ib_cq *cq, void *private)
+ {
+-	queue_work(ib_comp_wq, &cq->work);
++	queue_work(cq->comp_wq, &cq->work);
+ }
+ 
+ /**
+@@ -169,9 +169,12 @@ struct ib_cq *ib_alloc_cq(struct ib_devi
+ 		ib_req_notify_cq(cq, IB_CQ_NEXT_COMP);
+ 		break;
+ 	case IB_POLL_WORKQUEUE:
++	case IB_POLL_UNBOUND_WORKQUEUE:
+ 		cq->comp_handler = ib_cq_completion_workqueue;
+ 		INIT_WORK(&cq->work, ib_cq_poll_work);
+ 		ib_req_notify_cq(cq, IB_CQ_NEXT_COMP);
++		cq->comp_wq = (cq->poll_ctx == IB_POLL_WORKQUEUE) ?
++				ib_comp_wq : ib_comp_unbound_wq;
+ 		break;
+ 	default:
+ 		ret = -EINVAL;
+@@ -206,6 +209,7 @@ void ib_free_cq(struct ib_cq *cq)
+ 		irq_poll_disable(&cq->iop);
+ 		break;
+ 	case IB_POLL_WORKQUEUE:
++	case IB_POLL_UNBOUND_WORKQUEUE:
+ 		cancel_work_sync(&cq->work);
+ 		break;
+ 	default:
+--- a/drivers/infiniband/core/device.c
++++ b/drivers/infiniband/core/device.c
+@@ -61,6 +61,7 @@ struct ib_client_data {
+ };
+ 
+ struct workqueue_struct *ib_comp_wq;
++struct workqueue_struct *ib_comp_unbound_wq;
+ struct workqueue_struct *ib_wq;
+ EXPORT_SYMBOL_GPL(ib_wq);
+ 
+@@ -1202,10 +1203,19 @@ static int __init ib_core_init(void)
+ 		goto err;
+ 	}
+ 
++	ib_comp_unbound_wq =
++		alloc_workqueue("ib-comp-unb-wq",
++				WQ_UNBOUND | WQ_HIGHPRI | WQ_MEM_RECLAIM |
++				WQ_SYSFS, WQ_UNBOUND_MAX_ACTIVE);
++	if (!ib_comp_unbound_wq) {
++		ret = -ENOMEM;
++		goto err_comp;
++	}
 +
- 	/* request optional reset pin */
- 	sensor->reset_gpio = devm_gpiod_get_optional(dev, "reset",
- 						     GPIOD_OUT_HIGH);
-+	if (IS_ERR(sensor->reset_gpio))
-+		return PTR_ERR(sensor->reset_gpio);
+ 	ret = class_register(&ib_class);
+ 	if (ret) {
+ 		pr_warn("Couldn't create InfiniBand device class\n");
+-		goto err_comp;
++		goto err_comp_unbound;
+ 	}
  
- 	v4l2_i2c_subdev_init(&sensor->sd, client, &ov5640_subdev_ops);
+ 	ret = rdma_nl_init();
+@@ -1254,6 +1264,8 @@ err_ibnl:
+ 	rdma_nl_exit();
+ err_sysfs:
+ 	class_unregister(&ib_class);
++err_comp_unbound:
++	destroy_workqueue(ib_comp_unbound_wq);
+ err_comp:
+ 	destroy_workqueue(ib_comp_wq);
+ err:
+@@ -1272,6 +1284,7 @@ static void __exit ib_core_cleanup(void)
+ 	addr_cleanup();
+ 	rdma_nl_exit();
+ 	class_unregister(&ib_class);
++	destroy_workqueue(ib_comp_unbound_wq);
+ 	destroy_workqueue(ib_comp_wq);
+ 	/* Make sure that any pending umem accounting work is done. */
+ 	destroy_workqueue(ib_wq);
+--- a/drivers/infiniband/core/mad.c
++++ b/drivers/infiniband/core/mad.c
+@@ -3178,7 +3178,7 @@ static int ib_mad_port_open(struct ib_de
+ 	}
  
--- 
-2.20.1
-
+ 	port_priv->cq = ib_alloc_cq(port_priv->device, port_priv, cq_size, 0,
+-			IB_POLL_WORKQUEUE);
++			IB_POLL_UNBOUND_WORKQUEUE);
+ 	if (IS_ERR(port_priv->cq)) {
+ 		dev_err(&device->dev, "Couldn't create ib_mad CQ\n");
+ 		ret = PTR_ERR(port_priv->cq);
+--- a/include/rdma/ib_verbs.h
++++ b/include/rdma/ib_verbs.h
+@@ -68,6 +68,7 @@
+ 
+ extern struct workqueue_struct *ib_wq;
+ extern struct workqueue_struct *ib_comp_wq;
++extern struct workqueue_struct *ib_comp_unbound_wq;
+ 
+ union ib_gid {
+ 	u8	raw[16];
+@@ -1544,9 +1545,10 @@ struct ib_ah {
+ typedef void (*ib_comp_handler)(struct ib_cq *cq, void *cq_context);
+ 
+ enum ib_poll_context {
+-	IB_POLL_DIRECT,		/* caller context, no hw completions */
+-	IB_POLL_SOFTIRQ,	/* poll from softirq context */
+-	IB_POLL_WORKQUEUE,	/* poll from workqueue */
++	IB_POLL_DIRECT,		   /* caller context, no hw completions */
++	IB_POLL_SOFTIRQ,	   /* poll from softirq context */
++	IB_POLL_WORKQUEUE,	   /* poll from workqueue */
++	IB_POLL_UNBOUND_WORKQUEUE, /* poll from unbound workqueue */
+ };
+ 
+ struct ib_cq {
+@@ -1563,6 +1565,7 @@ struct ib_cq {
+ 		struct irq_poll		iop;
+ 		struct work_struct	work;
+ 	};
++	struct workqueue_struct *comp_wq;
+ };
+ 
+ struct ib_srq {
 
 
