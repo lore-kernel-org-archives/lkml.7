@@ -7,47 +7,54 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BD302C10F14
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 15:58:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DADD7C10F14
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 15:58:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 856B621848
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 15:58:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9B27B222C9
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 15:58:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570118318;
-	bh=pR+ClgwAa37N/fDxFJEZeh8L9HIoIcDQe8dndEsAvIE=;
+	s=default; t=1570118323;
+	bh=vjBaosXqtd9ltgOm7s+SR9vWpf2jQAJtR0eeELBX1YY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=tPyZFhME1xjFYmWDDSrbJgbu9FAoSk7mF2G0F4ecXlWW2XP0yfO7s0Py02lnusE2p
-	 c/hwfrx90XbAz+eMHfycXesCzOt5qBIj2iZDhi9eDXIhwEOG5HvS9DXfjCJGX4Uj5p
-	 HrKJmc5dZRwAuYmP9lV0sxOqNS71FUooxXD13AQo=
+	b=pWPD6Vh9xwilRXQgz0pdVcA2pYX8aKnb+Rx8K/H2PEepqEiVDJlLzf61uodjr43tG
+	 nbJr0ZiECWhe3SUez3aMp4z4ZAjdI5WSl6KS+zg8j7eDlcebkt134YWEPv7NKmr7vp
+	 fheVxEYOug3s4p9JpJmgDnf3hIpCkJnwm5tNJmpk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731264AbfJCP6h (ORCPT
+        id S1731278AbfJCP6m (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 11:58:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41220 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 11:58:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41482 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731228AbfJCP63 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 11:58:29 -0400
+        id S1730091AbfJCP6k (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 11:58:40 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3F7DD20830;
-        Thu,  3 Oct 2019 15:58:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4A31421848;
+        Thu,  3 Oct 2019 15:58:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570118308;
-        bh=pR+ClgwAa37N/fDxFJEZeh8L9HIoIcDQe8dndEsAvIE=;
+        s=default; t=1570118319;
+        bh=vjBaosXqtd9ltgOm7s+SR9vWpf2jQAJtR0eeELBX1YY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2YgItTmk6/nLAEvOz7CH123pKqbzdu24Td7c0y9dR79N6HhDESwVbEHP9FHBN5hv2
-         w+bvR7okD4eKBu/xD2i4RXmQAMbgQNoroOIgRWlQDEStRq4bamJiBcsJpRtytENJPa
-         OIrrAMZ9laWzktJ+J1CwYU+2eAvZrtsVSg/+bzBo=
+        b=llxWVXiOvb/pFN8LN8MhAMFSBIOIVVr7CeJ1Tn00fs898pJtE4RlqEk5kopQH8UlD
+         ojTA01GCcgBL9hML2htwZMnRvMfjh9jiAP5yVvkjgwNlQjRl8rZRcFSmuNmeHOJW74
+         Pbqcl48PUfARV+Xruw4DRDWzzUlUs8g5YVRELQLg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Wenwen Wang <wenwen@cs.uga.edu>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 64/99] ACPI: custom_method: fix memory leaks
-Date:   Thu,  3 Oct 2019 17:53:27 +0200
-Message-Id: <20191003154328.303751707@linuxfoundation.org>
+        stable@vger.kernel.org, Masami Hiramatsu <mhiramat@kernel.org>,
+        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
+        "Naveen N. Rao" <naveen.n.rao@linux.vnet.ibm.com>,
+        Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        "Naveen N . Rao" <naveen.n.rao@linux.ibm.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.4 68/99] kprobes: Prohibit probing on BUG() and WARN() address
+Date:   Thu,  3 Oct 2019 17:53:31 +0200
+Message-Id: <20191003154329.926825063@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191003154252.297991283@linuxfoundation.org>
 References: <20191003154252.297991283@linuxfoundation.org>
@@ -60,46 +67,68 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wenwen Wang <wenwen@cs.uga.edu>
+From: Masami Hiramatsu <mhiramat@kernel.org>
 
-[ Upstream commit 03d1571d9513369c17e6848476763ebbd10ec2cb ]
+[ Upstream commit e336b4027775cb458dc713745e526fa1a1996b2a ]
 
-In cm_write(), 'buf' is allocated through kzalloc(). In the following
-execution, if an error occurs, 'buf' is not deallocated, leading to memory
-leaks. To fix this issue, free 'buf' before returning the error.
+Since BUG() and WARN() may use a trap (e.g. UD2 on x86) to
+get the address where the BUG() has occurred, kprobes can not
+do single-step out-of-line that instruction. So prohibit
+probing on such address.
 
-Fixes: 526b4af47f44 ("ACPI: Split out custom_method functionality into an own driver")
-Signed-off-by: Wenwen Wang <wenwen@cs.uga.edu>
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Without this fix, if someone put a kprobe on WARN(), the
+kernel will crash with invalid opcode error instead of
+outputing warning message, because kernel can not find
+correct bug address.
+
+Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
+Acked-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+Acked-by: Naveen N. Rao <naveen.n.rao@linux.vnet.ibm.com>
+Cc: Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>
+Cc: David S . Miller <davem@davemloft.net>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Naveen N . Rao <naveen.n.rao@linux.ibm.com>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Steven Rostedt <rostedt@goodmis.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Link: https://lkml.kernel.org/r/156750890133.19112.3393666300746167111.stgit@devnote2
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/acpi/custom_method.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ include/linux/bug.h | 5 +++++
+ kernel/kprobes.c    | 3 ++-
+ 2 files changed, 7 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/acpi/custom_method.c b/drivers/acpi/custom_method.c
-index c68e72414a67a..435bd0ffc8c02 100644
---- a/drivers/acpi/custom_method.c
-+++ b/drivers/acpi/custom_method.c
-@@ -48,8 +48,10 @@ static ssize_t cm_write(struct file *file, const char __user * user_buf,
- 	if ((*ppos > max_size) ||
- 	    (*ppos + count > max_size) ||
- 	    (*ppos + count < count) ||
--	    (count > uncopied_bytes))
-+	    (count > uncopied_bytes)) {
-+		kfree(buf);
- 		return -EINVAL;
-+	}
+diff --git a/include/linux/bug.h b/include/linux/bug.h
+index 7f4818673c41f..581a53dfbd310 100644
+--- a/include/linux/bug.h
++++ b/include/linux/bug.h
+@@ -102,6 +102,11 @@ int is_valid_bugaddr(unsigned long addr);
  
- 	if (copy_from_user(buf + (*ppos), user_buf, count)) {
- 		kfree(buf);
-@@ -69,6 +71,7 @@ static ssize_t cm_write(struct file *file, const char __user * user_buf,
- 		add_taint(TAINT_OVERRIDDEN_ACPI_TABLE, LOCKDEP_NOW_UNRELIABLE);
+ #else	/* !CONFIG_GENERIC_BUG */
+ 
++static inline void *find_bug(unsigned long bugaddr)
++{
++	return NULL;
++}
++
+ static inline enum bug_trap_type report_bug(unsigned long bug_addr,
+ 					    struct pt_regs *regs)
+ {
+diff --git a/kernel/kprobes.c b/kernel/kprobes.c
+index a53998cba804c..fdde50d39a46d 100644
+--- a/kernel/kprobes.c
++++ b/kernel/kprobes.c
+@@ -1454,7 +1454,8 @@ static int check_kprobe_address_safe(struct kprobe *p,
+ 	/* Ensure it is not in reserved area nor out of text */
+ 	if (!kernel_text_address((unsigned long) p->addr) ||
+ 	    within_kprobe_blacklist((unsigned long) p->addr) ||
+-	    jump_label_text_reserved(p->addr, p->addr)) {
++	    jump_label_text_reserved(p->addr, p->addr) ||
++	    find_bug((unsigned long)p->addr)) {
+ 		ret = -EINVAL;
+ 		goto out;
  	}
- 
-+	kfree(buf);
- 	return count;
- }
- 
 -- 
 2.20.1
 
