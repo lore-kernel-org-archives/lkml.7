@@ -4,53 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B872C4CED1
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:11:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7232C10F14
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:11:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DF55121D81
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:11:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 89AF520673
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:11:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570122668;
-	bh=u0T2dyeWQ2iXGTmKLsR8pupBhDmMNegGZokKL2UQOkQ=;
+	s=default; t=1570122671;
+	bh=gVJ5XNv35Wj2YquIGuUHJ24XMfhRoDYe2lPrgEnThQ8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=uOa2dxrWP68vovIwLx2uUCkd/6k9ITvetPskq+hrEHq9atpB2m8nhB4vOmYl7Ragv
-	 ZbV0ulJ/zdll7gdathxNf3T4cek7MhZOjAczG+TBart/l9CadfNjS4un2eqLf5lbki
-	 xfWepTxFMy2KMmozXDnWGBflXqaOp+pJ4L0OxE9g=
+	b=Wgc7+ApoNdstX8pVAwzhFDjfJcxn7fgl99qRx+1mw3CREKD5LOVB3rZTYzOUJc1jz
+	 NfliKoiLwTLDzUh682RsST0cSEZoWOUKBK1W37egOUy3lRjSJr4KRYSK8c9QUSgTcw
+	 saaOeTtvVo1NnhP/9KPPNSAwyYku2R1e6dr/cAGs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391862AbfJCQcK (ORCPT
+        id S2404113AbfJCRLL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 12:32:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39240 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 13:11:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39506 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2403884AbfJCQb5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:31:57 -0400
+        id S2391389AbfJCQcG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:32:06 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6CA8B2086A;
-        Thu,  3 Oct 2019 16:31:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5DFBC215EA;
+        Thu,  3 Oct 2019 16:32:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570120316;
-        bh=u0T2dyeWQ2iXGTmKLsR8pupBhDmMNegGZokKL2UQOkQ=;
+        s=default; t=1570120324;
+        bh=gVJ5XNv35Wj2YquIGuUHJ24XMfhRoDYe2lPrgEnThQ8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=tXmv5wXSTzyMYcwG+ZfIvkhsHhgb1WcuZNMAyZ2cvAbJEMWOWW89ItiB1SkKPQFOl
-         v035RwJdBXcjquP19EkYPGA0fsAtOGeNWD0Tzi/E9U5k58gv69/rRcXuXJANH7P4HU
-         FQAGxaav8ANrqRXZL6QPXpLo4Pu0LQ9lJeIh8L2M=
+        b=ElJzDAkoiPrJwfDy2/+vzynQLeEtGE3J4hkWYxYvXxLxrQtHYy5ifMl2VaT/Dasop
+         TpY5z9QpaGK6I7IlClhvdk55PegsvUMt9SWJDVnGxqS45XNiVCBhVqlR5/ydkM2k21
+         onVJALbL117iQ/GRuO16RxNl0KZGr5fhOllXGpmg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Borislav Petkov <bp@alien8.de>,
-        Yunsheng Lin <linyunsheng@huawei.com>,
-        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 178/313] x86/mm: Fix cpumask_of_node() error condition
-Date:   Thu,  3 Oct 2019 17:52:36 +0200
-Message-Id: <20191003154550.530954607@linuxfoundation.org>
+        Harald Freudenberger <freude@linux.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.2 180/313] s390/crypto: xts-aes-s390 fix extra run-time crypto self tests finding
+Date:   Thu,  3 Oct 2019 17:52:38 +0200
+Message-Id: <20191003154550.735220295@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191003154533.590915454@linuxfoundation.org>
 References: <20191003154533.590915454@linuxfoundation.org>
@@ -63,48 +61,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Peter Zijlstra <peterz@infradead.org>
+From: Harald Freudenberger <freude@linux.ibm.com>
 
-[ Upstream commit bc04a049f058a472695aa22905d57e2b1f4c77d9 ]
+[ Upstream commit 9e323d45ba94262620a073a3f9945ca927c07c71 ]
 
-When CONFIG_DEBUG_PER_CPU_MAPS=y we validate that the @node argument of
-cpumask_of_node() is a valid node_id. It however forgets to check for
-negative numbers. Fix this by explicitly casting to unsigned int.
+With 'extra run-time crypto self tests' enabled, the selftest
+for s390-xts fails with
 
-  (unsigned)node >= nr_node_ids
+  alg: skcipher: xts-aes-s390 encryption unexpectedly succeeded on
+  test vector "random: len=0 klen=64"; expected_error=-22,
+  cfg="random: inplace use_digest nosimd src_divs=[2.61%@+4006,
+  84.44%@+21, 1.55%@+13, 4.50%@+344, 4.26%@+21, 2.64%@+27]"
 
-verifies: 0 <= node < nr_node_ids
+This special case with nbytes=0 is not handled correctly and this
+fix now makes sure that -EINVAL is returned when there is en/decrypt
+called with 0 bytes to en/decrypt.
 
-Also ammend the error message to match the condition.
-
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Borislav Petkov <bp@alien8.de>
-Cc: Yunsheng Lin <linyunsheng@huawei.com>
-Link: https://lkml.kernel.org/r/20190903075352.GY2369@hirez.programming.kicks-ass.net
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Signed-off-by: Harald Freudenberger <freude@linux.ibm.com>
+Signed-off-by: Vasily Gorbik <gor@linux.ibm.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/mm/numa.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ arch/s390/crypto/aes_s390.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/arch/x86/mm/numa.c b/arch/x86/mm/numa.c
-index e6dad600614c2..4123100e0eafe 100644
---- a/arch/x86/mm/numa.c
-+++ b/arch/x86/mm/numa.c
-@@ -861,9 +861,9 @@ void numa_remove_cpu(int cpu)
-  */
- const struct cpumask *cpumask_of_node(int node)
- {
--	if (node >= nr_node_ids) {
-+	if ((unsigned)node >= nr_node_ids) {
- 		printk(KERN_WARNING
--			"cpumask_of_node(%d): node > nr_node_ids(%u)\n",
-+			"cpumask_of_node(%d): (unsigned)node >= nr_node_ids(%u)\n",
- 			node, nr_node_ids);
- 		dump_stack();
- 		return cpu_none_mask;
+diff --git a/arch/s390/crypto/aes_s390.c b/arch/s390/crypto/aes_s390.c
+index d00f84add5f4c..6d2dbb5089d5c 100644
+--- a/arch/s390/crypto/aes_s390.c
++++ b/arch/s390/crypto/aes_s390.c
+@@ -586,6 +586,9 @@ static int xts_aes_encrypt(struct blkcipher_desc *desc,
+ 	struct s390_xts_ctx *xts_ctx = crypto_blkcipher_ctx(desc->tfm);
+ 	struct blkcipher_walk walk;
+ 
++	if (!nbytes)
++		return -EINVAL;
++
+ 	if (unlikely(!xts_ctx->fc))
+ 		return xts_fallback_encrypt(desc, dst, src, nbytes);
+ 
+@@ -600,6 +603,9 @@ static int xts_aes_decrypt(struct blkcipher_desc *desc,
+ 	struct s390_xts_ctx *xts_ctx = crypto_blkcipher_ctx(desc->tfm);
+ 	struct blkcipher_walk walk;
+ 
++	if (!nbytes)
++		return -EINVAL;
++
+ 	if (unlikely(!xts_ctx->fc))
+ 		return xts_fallback_decrypt(desc, dst, src, nbytes);
+ 
 -- 
 2.20.1
 
