@@ -2,123 +2,119 @@ Return-Path: <SRS0=6dNS=X4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FCF6C10F14
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:05:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 884C3C4CED1
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:05:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 003672070B
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:05:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5827320865
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:05:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1570122341;
+	bh=JgBrlH+Itu1vKsvB8lGZbiO4ta09eCPbLm2aSAuszJc=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=lVzKphKlXxxL/5EIMIZhpLHfyBFUcvxqwkHTCo/rQUzg/UxRGoTKck9/tN+pvHSFM
+	 x9Lvhxj0nFEkoQKfQphE+iT+EZ6zNgQ9gLEPbACx/ZKboR/fKDOOt5zpdyZGW2Eq2m
+	 NrTxesdfZ3UBv+yc9b5/S1DZWPkXJrEsp8lMuJl8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404906AbfJCRF1 (ORCPT
+        id S2404339AbfJCQjX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 13:05:27 -0400
-Received: from mga18.intel.com ([134.134.136.126]:14911 "EHLO mga18.intel.com"
+        Thu, 3 Oct 2019 12:39:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49224 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2393369AbfJCRFZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 13:05:25 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 03 Oct 2019 10:05:24 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.67,253,1566889200"; 
-   d="scan'208";a="392014697"
-Received: from iweiny-desk2.sc.intel.com ([10.3.52.157])
-  by fmsmga005.fm.intel.com with ESMTP; 03 Oct 2019 10:05:23 -0700
-Date:   Thu, 3 Oct 2019 10:05:23 -0700
-From:   Ira Weiny <ira.weiny@intel.com>
-To:     Jan Kara <jack@suse.cz>
-Cc:     Jeff Layton <jlayton@kernel.org>, linux-fsdevel@vger.kernel.org,
-        linux-xfs@vger.kernel.org, linux-ext4@vger.kernel.org,
-        linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-nvdimm@lists.01.org, linux-mm@kvack.org,
-        Dave Chinner <david@fromorbit.com>,
-        Theodore Ts'o <tytso@mit.edu>,
-        John Hubbard <jhubbard@nvidia.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>
-Subject: Re: Lease semantic proposal
-Message-ID: <20191003170523.GC31174@iweiny-DESK2.sc.intel.com>
-References: <20190923190853.GA3781@iweiny-DESK2.sc.intel.com>
- <5d5a93637934867e1b3352763da8e3d9f9e6d683.camel@kernel.org>
- <20191001181659.GA5500@iweiny-DESK2.sc.intel.com>
- <20191003090110.GC17911@quack2.suse.cz>
+        id S2404041AbfJCQjT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:39:19 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 59E632070B;
+        Thu,  3 Oct 2019 16:39:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1570120758;
+        bh=JgBrlH+Itu1vKsvB8lGZbiO4ta09eCPbLm2aSAuszJc=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=RmMMJCHghdSUKLg45Q0S6DYptr86ICWcmHsfKZ7aRwI47FrAY2/woNIzbHUJdLFpR
+         OahMgOTCNkFv3h3WioksGwToB0ID61JohiNm6S5Ed2b3vdCP6aRZReBq3JEKbVrg4X
+         cpw7DdEsAZHlO7FB2cMX0vawI+yHAOe7yKJ2aMI0=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Xiumei Mu <xmu@redhat.com>,
+        Fei Liu <feliu@redhat.com>, Xin Long <lucien.xin@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 5.3 004/344] macsec: drop skb sk before calling gro_cells_receive
+Date:   Thu,  3 Oct 2019 17:49:29 +0200
+Message-Id: <20191003154540.498425829@linuxfoundation.org>
+X-Mailer: git-send-email 2.23.0
+In-Reply-To: <20191003154540.062170222@linuxfoundation.org>
+References: <20191003154540.062170222@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191003090110.GC17911@quack2.suse.cz>
-User-Agent: Mutt/1.11.1 (2018-12-01)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Oct 03, 2019 at 11:01:10AM +0200, Jan Kara wrote:
-> On Tue 01-10-19 11:17:00, Ira Weiny wrote:
-> > On Mon, Sep 23, 2019 at 04:17:59PM -0400, Jeff Layton wrote:
-> > > On Mon, 2019-09-23 at 12:08 -0700, Ira Weiny wrote:
-> > > 
-> > > Will userland require any special privileges in order to set an
-> > > F_UNBREAK lease? This seems like something that could be used for DoS. I
-> > > assume that these will never time out.
-> > 
-> > Dan and I discussed this some more and yes I think the uid of the process needs
-> > to be the owner of the file.  I think that is a reasonable mechanism.
-> 
-> Honestly, I'm not convinced anything more than open-for-write should be
-> required. Sure unbreakable lease may result in failing truncate and other
-> ops but as we discussed at LFS/MM, this is not hugely different from
-> executing a file resulting in ETXTBUSY for any truncate attempt (even from
-> root). So sufficiently priviledged user has to be able to easily find which
-> process(es) owns the lease so that he can kill it / take other
-> administrative action to release the lease. But that's about it.
+From: Xin Long <lucien.xin@gmail.com>
 
-Well that was kind of what I was thinking.  However I wanted to be careful
-about requiring write permission when doing a F_RDLCK.  I think that it has to
-be clearly documented _why_ write permission is required.
+[ Upstream commit ba56d8ce38c8252fff5b745db3899cf092578ede ]
 
->  
-> > > How will we deal with the case where something is is squatting on an
-> > > F_UNBREAK lease and isn't letting it go?
-> > 
-> > That is a good question.  I had not considered someone taking the UNBREAK
-> > without pinning the file.
-> 
-> IMHO the same answer as above - sufficiently priviledged user should be
-> able to easily find the process holding the lease and kill it. Given the
-> lease owner has to have write access to the file, he better should be from
-> the same "security domain"...
-> 
-> > > Leases are technically "owned" by the file description -- we can't
-> > > necessarily trace it back to a single task in a threaded program. The
-> > > kernel task that set the lease may have exited by the time we go
-> > > looking.
-> > > 
-> > > Will we be content trying to determine this using /proc/locks+lsof, etc,
-> > > or will we need something better?
-> > 
-> > I think using /proc/locks is our best bet.  Similar to my intention to report
-> > files being pinned.[1]
-> > 
-> > In fact should we consider files with F_UNBREAK leases "pinned" and just report
-> > them there?
-> 
-> As Jeff wrote later, /proc/locks is not enough. You need PID(s) which have
-> access to the lease and hold it alive. Your /proc/<pid>/ files you had in your
-> patches should do that, shouldn't they? Maybe they were not tied to the
-> right structure... They really need to be tied to the existence of a lease.
+Fei Liu reported a crash when doing netperf on a topo of macsec
+dev over veth:
 
-Yes, sorry.  I misspoke above.
+  [  448.919128] refcount_t: underflow; use-after-free.
+  [  449.090460] Call trace:
+  [  449.092895]  refcount_sub_and_test+0xb4/0xc0
+  [  449.097155]  tcp_wfree+0x2c/0x150
+  [  449.100460]  ip_rcv+0x1d4/0x3a8
+  [  449.103591]  __netif_receive_skb_core+0x554/0xae0
+  [  449.108282]  __netif_receive_skb+0x28/0x78
+  [  449.112366]  netif_receive_skb_internal+0x54/0x100
+  [  449.117144]  napi_gro_complete+0x70/0xc0
+  [  449.121054]  napi_gro_flush+0x6c/0x90
+  [  449.124703]  napi_complete_done+0x50/0x130
+  [  449.128788]  gro_cell_poll+0x8c/0xa8
+  [  449.132351]  net_rx_action+0x16c/0x3f8
+  [  449.136088]  __do_softirq+0x128/0x320
 
-Right now /proc/<pid>/file_pins indicates that the file is pinned by GUP.  I
-think it may be reasonable to extend that to any file which has F_UNBREAK
-specified.  'file_pins' may be the wrong name when we include F_UNBREAK'ed
-leased files, so I will think on the name.  But I think this is possible and
-desired.
+The issue was caused by skb's true_size changed without its sk's
+sk_wmem_alloc increased in tcp/skb_gro_receive(). Later when the
+skb is being freed and the skb's truesize is subtracted from its
+sk's sk_wmem_alloc in tcp_wfree(), underflow occurs.
 
-Ira
+macsec is calling gro_cells_receive() to receive a packet, which
+actually requires skb->sk to be NULL. However when macsec dev is
+over veth, it's possible the skb->sk is still set if the skb was
+not unshared or expanded from the peer veth.
+
+ip_rcv() is calling skb_orphan() to drop the skb's sk for tproxy,
+but it is too late for macsec's calling gro_cells_receive(). So
+fix it by dropping the skb's sk earlier on rx path of macsec.
+
+Fixes: 5491e7c6b1a9 ("macsec: enable GRO and RPS on macsec devices")
+Reported-by: Xiumei Mu <xmu@redhat.com>
+Reported-by: Fei Liu <feliu@redhat.com>
+Signed-off-by: Xin Long <lucien.xin@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+---
+ drivers/net/macsec.c |    1 +
+ 1 file changed, 1 insertion(+)
+
+--- a/drivers/net/macsec.c
++++ b/drivers/net/macsec.c
+@@ -1235,6 +1235,7 @@ deliver:
+ 		macsec_rxsa_put(rx_sa);
+ 	macsec_rxsc_put(rx_sc);
+ 
++	skb_orphan(skb);
+ 	ret = gro_cells_receive(&macsec->gro_cells, skb);
+ 	if (ret == NET_RX_SUCCESS)
+ 		count_rx(dev, skb->len);
+
 
