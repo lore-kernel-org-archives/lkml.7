@@ -2,152 +2,128 @@ Return-Path: <SRS0=6dNS=X4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02BFAC4CED1
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:08:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BAF19C10F14
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:08:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CCBFD2086A
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:08:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8EA2E20830
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:08:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570122510;
-	bh=ZgCkLt2JG903zWS9Ruydm29M6HwhLE/8rg89Q6YLjK0=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=JK+RFnABK4YAVlP4THxVneSCLALuxznoCooxirGQPHhL3OAgvP0zHCXNl7V72J2Wx
-	 kQHtq3cslX8SK4RUoEsjobOzGPi+IWwzaSEfQYoxFWAQCycG/zBn7BtBY+Bo6coqPj
-	 jAP+WuF9da6bOHCnPxiZSqqE3WUpOw8hYySqUS7M=
+	s=default; t=1570122515;
+	bh=CBJzPvyt1+zrY3RnJCyFAcmCfv/Az6AnUlEgasJMdyY=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=Ovx6VdOgzXKMvOzfxH1QrEuwv4o+ZEWT3zmyIBGu7bdvlR7VBrz6Vl60OjwEJaWoh
+	 Y/ZRiR0U0mUq9Mij9TyVIVDs//XsqI/3meLhMBKps8w8fuokztrzTFKPiB27vwYaUR
+	 X+YrPdojGx5TH8RPCC++y2ha0DSM2MBr4q7EyGgU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403889AbfJCQfR (ORCPT
+        id S2393463AbfJCRIe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 12:35:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44086 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404256AbfJCQfO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:35:14 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 104B82086A;
-        Thu,  3 Oct 2019 16:35:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570120513;
-        bh=ZgCkLt2JG903zWS9Ruydm29M6HwhLE/8rg89Q6YLjK0=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qK1lO6g5K30xjNxupeKQ8FJaZCblwn7XVIcfPIN0Gks1kzLMK4x00AKprcpj3LPIK
-         6mF4cbUb+9nFFol9oHlvNe5wGk6GlSLRNCpIz6ruZWo2QEfr1cmTuSkT0G8Y0rJDdo
-         2GkftVkkoI4/+kFDV+oY1ppPPTpCfQXb0vnyi31U=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Alexander Graf <graf@amazon.com>,
-        Liran Alon <liran.alon@oracle.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Paolo Bonzini <pbonzini@redhat.com>
-Subject: [PATCH 5.2 243/313] KVM: x86: Disable posted interrupts for non-standard IRQs delivery modes
-Date:   Thu,  3 Oct 2019 17:53:41 +0200
-Message-Id: <20191003154556.956790264@linuxfoundation.org>
-X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20191003154533.590915454@linuxfoundation.org>
-References: <20191003154533.590915454@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Thu, 3 Oct 2019 13:08:34 -0400
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:33398 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2393437AbfJCRIc (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 13:08:32 -0400
+Received: by mail-lj1-f195.google.com with SMTP id a22so3643395ljd.0
+        for <linux-kernel@vger.kernel.org>; Thu, 03 Oct 2019 10:08:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=xGPNBFqVYtxez447o7VfzpEEdWGUXuNgcxnMZZtHxhw=;
+        b=JQlxhcyH0jHwarYabbpi6wNpJW+TQGKZ3Q/o2mSONQp+edqEcUDbfc+bZRMV+49X8b
+         6iqsJ6W2xVarc2Qbqm9lYLbIQOaubfS2b2d2RR4HW+NziK3KAuGvVuwqS5GOwXs3hULK
+         jTZNUAkzsyFNJMvYZMy8abMpYXNOFhEkahnBA=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=xGPNBFqVYtxez447o7VfzpEEdWGUXuNgcxnMZZtHxhw=;
+        b=oYfeS1MOJvU0l7wacN3BzVdxj//AJwgyhCDy1xddHhvbdL9ThV2VFwtyeGKRxMWGBD
+         aCt8ub9Ivuk7/wsBif3iIFS7Vcl66Wctp8vY5ypNesSB8jlfui5nJwWds2TTo5ZUX48Z
+         Gz+vK8l1sY7+neYucPpftln7zGEvPZxbTcYC5yzAaLM1KsvjRUKcLRjwxDHEu62OXoOm
+         Pr5GUW0WHU7eNhVBgPnszhJF9T4YyEHICyCCmHLCZW/8o9zyB7EMUPZ3F5JIb1Ogj0/k
+         xVgq92v342emlgxHnbztP8NzqNxPvKl2Qc+wP8wKon1zC8l4OtaFSAjE8LNyRnyyZSpD
+         jAxQ==
+X-Gm-Message-State: APjAAAW/9v3Z4smIzWYpdmKvy8xRjI0t+GQ1qgK0JnoKWyX+wduItw9J
+        wsbqXVe/Ne9EDO89l9h2tUIged/juKM=
+X-Google-Smtp-Source: APXvYqzqMY8b60y4cEPN1JW3g4aYGF4KZ6oD9pfYiP1GZAnS7Z25Y3BXKMiS030byZ5sAwZWyIdS7Q==
+X-Received: by 2002:a2e:8199:: with SMTP id e25mr3993242ljg.246.1570122509079;
+        Thu, 03 Oct 2019 10:08:29 -0700 (PDT)
+Received: from mail-lj1-f169.google.com (mail-lj1-f169.google.com. [209.85.208.169])
+        by smtp.gmail.com with ESMTPSA id g27sm658951lja.33.2019.10.03.10.08.26
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 03 Oct 2019 10:08:27 -0700 (PDT)
+Received: by mail-lj1-f169.google.com with SMTP id n14so3579022ljj.10
+        for <linux-kernel@vger.kernel.org>; Thu, 03 Oct 2019 10:08:26 -0700 (PDT)
+X-Received: by 2002:a2e:86d5:: with SMTP id n21mr6759265ljj.1.1570122505822;
+ Thu, 03 Oct 2019 10:08:25 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <20190930112636.vx2qxo4hdysvxibl@willie-the-truck>
+ <CAK7LNASQZ82KSOrQW7+Wq1vFDCg2__maBEAPMLqUDqZMLuj1rA@mail.gmail.com>
+ <20190930121803.n34i63scet2ec7ll@willie-the-truck> <CAKwvOdnqn=0LndrX+mUrtSAQqoT1JWRMOJCA5t3e=S=T7zkcCQ@mail.gmail.com>
+ <20191001092823.z4zhlbwvtwnlotwc@willie-the-truck> <CAKwvOdk0h2A6=fb7Yepf+oKbZfq_tqwpGq8EBmHVu1j4mo-a-A@mail.gmail.com>
+ <20191001170142.x66orounxuln7zs3@willie-the-truck> <CAKwvOdnFJqipp+G5xLDRBcOrQRcvMQmn+n8fufWyzyt2QL_QkA@mail.gmail.com>
+ <20191001175512.GK25745@shell.armlinux.org.uk> <CAKwvOdmw_xmTGZLeK8-+Q4nUpjs-UypJjHWks-3jHA670Dxa1A@mail.gmail.com>
+ <20191001181438.GL25745@shell.armlinux.org.uk> <CAKwvOdmBnBVU7F-a6DqPU6QM-BRc8LNn6YRmhTsuGLauCWKUOg@mail.gmail.com>
+ <CAMuHMdWPhE1nNkmL1nj3vpQhB7fP3uDs2i_ZVi0Gf9qij4W2CA@mail.gmail.com>
+ <CAHk-=wgFODvdFBHzgVf3JjoBz0z6LZhOm8xvMntsvOr66ASmZQ@mail.gmail.com>
+ <CAK7LNARM2jVSdgCDJWDbvVxYLiUR_CFgTPg0nxzbCszSKcx+pg@mail.gmail.com> <CAHk-=wiMm3rN15WmiAqMHjC-pakL_b8qgWsPPri0+YLFORT-ZA@mail.gmail.com>
+In-Reply-To: <CAHk-=wiMm3rN15WmiAqMHjC-pakL_b8qgWsPPri0+YLFORT-ZA@mail.gmail.com>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Thu, 3 Oct 2019 10:08:09 -0700
+X-Gmail-Original-Message-ID: <CAHk-=whkB+g0R0JqLB+Y4piUZf9A8P1ugi5T92LjFLNY+epBeg@mail.gmail.com>
+Message-ID: <CAHk-=whkB+g0R0JqLB+Y4piUZf9A8P1ugi5T92LjFLNY+epBeg@mail.gmail.com>
+Subject: Re: [PATCH] compiler: enable CONFIG_OPTIMIZE_INLINING forcibly
+To:     Masahiro Yamada <yamada.masahiro@socionext.com>
+Cc:     Geert Uytterhoeven <geert@linux-m68k.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Russell King - ARM Linux admin <linux@armlinux.org.uk>,
+        Will Deacon <will@kernel.org>,
+        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Stefan Wahren <wahrenst@gmx.net>,
+        Kees Cook <keescook@google.com>, Arnd Bergmann <arnd@arndb.de>,
+        clang-built-linux <clang-built-linux@googlegroups.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alexander Graf <graf@amazon.com>
+On Thu, Oct 3, 2019 at 10:01 AM Linus Torvalds
+<torvalds@linux-foundation.org> wrote:
+>
+> If this is purely about the fact that x86 is different from other
+> architectures, then let's remove the "compiler can do stupid things"
+> option on x86 too. It was never clear that it was a huge advantage.
 
-commit fdcf756213756c23b533ca4974d1f48c6a4d4281 upstream.
+Side note: what might be an actual advantage would be to have a mode
+where you see when the compiler would choose to not inline things.
 
-We can easily route hardware interrupts directly into VM context when
-they target the "Fixed" or "LowPriority" delivery modes.
+Maybe we have things that are marked "inline" that simply shouldn't
+be. We do tend to have this history of adding small helper functions
+to header files, and then they grow and grow and grow. And now they
+shouldn't be in a header file any more, but they still are.
 
-However, on modes such as "SMI" or "Init", we need to go via KVM code
-to actually put the vCPU into a different mode of operation, so we can
-not post the interrupt
+So having a "compiler doesn't want to inline this" flag might be
+useful for finding those, but it might also be useful for people
+looking for what triggers bugs.
 
-Add code in the VMX and SVM PI logic to explicitly refuse to establish
-posted mappings for advanced IRQ deliver modes. This reflects the logic
-in __apic_accept_irq() which also only ever passes Fixed and LowPriority
-interrupts as posted interrupts into the guest.
+But honestly, the last time I saw somebody argue for "I don't want
+inlining", it was the broken "I want to compiler the kernel with no
+optimizations so that it's easier to look at the resulting code". That
+was just a _bad_ bad patch. And if it is concerns like that that are
+driving this "compiler doesn't have to inline", then we should stop it
+immediately.
 
-This fixes a bug I have with code which configures real hardware to
-inject virtual SMIs into my guest.
-
-Signed-off-by: Alexander Graf <graf@amazon.com>
-Reviewed-by: Liran Alon <liran.alon@oracle.com>
-Reviewed-by: Sean Christopherson <sean.j.christopherson@intel.com>
-Reviewed-by: Wanpeng Li <wanpengli@tencent.com>
-Cc: stable@vger.kernel.org
-Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
----
- arch/x86/include/asm/kvm_host.h |    7 +++++++
- arch/x86/kvm/svm.c              |    4 +++-
- arch/x86/kvm/vmx/vmx.c          |    6 +++++-
- 3 files changed, 15 insertions(+), 2 deletions(-)
-
---- a/arch/x86/include/asm/kvm_host.h
-+++ b/arch/x86/include/asm/kvm_host.h
-@@ -1576,6 +1576,13 @@ bool kvm_intr_is_single_vcpu(struct kvm
- void kvm_set_msi_irq(struct kvm *kvm, struct kvm_kernel_irq_routing_entry *e,
- 		     struct kvm_lapic_irq *irq);
- 
-+static inline bool kvm_irq_is_postable(struct kvm_lapic_irq *irq)
-+{
-+	/* We can only post Fixed and LowPrio IRQs */
-+	return (irq->delivery_mode == dest_Fixed ||
-+		irq->delivery_mode == dest_LowestPrio);
-+}
-+
- static inline void kvm_arch_vcpu_blocking(struct kvm_vcpu *vcpu)
- {
- 	if (kvm_x86_ops->vcpu_blocking)
---- a/arch/x86/kvm/svm.c
-+++ b/arch/x86/kvm/svm.c
-@@ -5252,7 +5252,8 @@ get_pi_vcpu_info(struct kvm *kvm, struct
- 
- 	kvm_set_msi_irq(kvm, e, &irq);
- 
--	if (!kvm_intr_is_single_vcpu(kvm, &irq, &vcpu)) {
-+	if (!kvm_intr_is_single_vcpu(kvm, &irq, &vcpu) ||
-+	    !kvm_irq_is_postable(&irq)) {
- 		pr_debug("SVM: %s: use legacy intr remap mode for irq %u\n",
- 			 __func__, irq.vector);
- 		return -1;
-@@ -5306,6 +5307,7 @@ static int svm_update_pi_irte(struct kvm
- 		 * 1. When cannot target interrupt to a specific vcpu.
- 		 * 2. Unsetting posted interrupt.
- 		 * 3. APIC virtialization is disabled for the vcpu.
-+		 * 4. IRQ has incompatible delivery mode (SMI, INIT, etc)
- 		 */
- 		if (!get_pi_vcpu_info(kvm, e, &vcpu_info, &svm) && set &&
- 		    kvm_vcpu_apicv_active(&svm->vcpu)) {
---- a/arch/x86/kvm/vmx/vmx.c
-+++ b/arch/x86/kvm/vmx/vmx.c
-@@ -7325,10 +7325,14 @@ static int vmx_update_pi_irte(struct kvm
- 		 * irqbalance to make the interrupts single-CPU.
- 		 *
- 		 * We will support full lowest-priority interrupt later.
-+		 *
-+		 * In addition, we can only inject generic interrupts using
-+		 * the PI mechanism, refuse to route others through it.
- 		 */
- 
- 		kvm_set_msi_irq(kvm, e, &irq);
--		if (!kvm_intr_is_single_vcpu(kvm, &irq, &vcpu)) {
-+		if (!kvm_intr_is_single_vcpu(kvm, &irq, &vcpu) ||
-+		    !kvm_irq_is_postable(&irq)) {
- 			/*
- 			 * Make sure the IRTE is in remapped mode if
- 			 * we don't handle it in posted mode.
-
-
+             Linus
