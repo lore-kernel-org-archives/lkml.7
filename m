@@ -2,52 +2,52 @@ Return-Path: <SRS0=6dNS=X4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C951C4CED1
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:07:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F7D3C10F14
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:07:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5D610207FF
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:07:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D869C207FF
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:07:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570118854;
-	bh=1LUJwptwuEKrRHmrKifsxa6dnt9TLOJz1E43bpOEK+g=;
+	s=default; t=1570118856;
+	bh=1lKHTcCsWkLc8EvABdysHSBmYWJ2OqaHgt8qCssaoII=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=hbvb56jyuEZtoO6h7XtN9Y4Hy7syKBsls/0pdaDrOF8X43VGJb+hoovG99XQESTA6
-	 rVEQ0EIoEOTSkwxMPFLHdOFnXpcUfoCunUCJK1AdA+sahsI7/lzB+joMjQD34yYWp9
-	 jnJqnOAq0QPvsA04xcMiVa3qyP+HJVn3FOHQKCX0=
+	b=P8dnzUk8ccxCISs3BRR6TyQ5Z3Li6GBHagCsnpwenCWtQYGCo3H/6Gvg5FuoD/8nd
+	 YKIe5AfDt/l2o22Op2vD/93h3mN1yEY1J2555woT91sCIA4LRUC9k8W8FGq3935VEG
+	 okZNVDg10toRXmfDS0OF+cLAHLTnQu+7Sl9qDsfw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732957AbfJCQH2 (ORCPT
+        id S1732975AbfJCQHg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 12:07:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55192 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 12:07:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55370 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730672AbfJCQHZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:07:25 -0400
+        id S1731814AbfJCQHd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:07:33 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1BE1F215EA;
-        Thu,  3 Oct 2019 16:07:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3E2A321783;
+        Thu,  3 Oct 2019 16:07:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570118844;
-        bh=1LUJwptwuEKrRHmrKifsxa6dnt9TLOJz1E43bpOEK+g=;
+        s=default; t=1570118852;
+        bh=1lKHTcCsWkLc8EvABdysHSBmYWJ2OqaHgt8qCssaoII=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2KEkv7B4J6hVCMJi7twB7gakPcGgLiH6PrWt+nh/5RhQN7gkDcqlZH5ymz5YCUu/+
-         0BqttHTf9aGI4cwljGN/nwuaxaqk9hcCOxjXv2/129SJD/tqAg1BQU060e3s5de8nh
-         7SsMPr27ZaE9nVLM/dx4/TAQc1i89hrcGcaOtwf0=
+        b=bUSmf4HayOqD7O1ehmBAzvFAtDERLn1wbR4aZUPGKICUeKz53Begi/E1l+1pStiOI
+         +3sivJiwJw5G7yvkV4qbC0UUdbjRliV8uIZQARgryzseEAoWCdWOU2QF4PebGi1QLu
+         RpIEya5m4Cjv8QVhx/qMG9VHtvjt6b3fMk7KnMrc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Rolf Eike Beer <eb@emlix.com>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>
-Subject: [PATCH 4.14 003/185] objtool: Query pkg-config for libelf location
-Date:   Thu,  3 Oct 2019 17:51:21 +0200
-Message-Id: <20191003154438.213505914@linuxfoundation.org>
+        stable@vger.kernel.org, Jian-Hong Pan <jian-hong@endlessm.com>,
+        Marcel Holtmann <marcel@holtmann.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 032/185] Bluetooth: btrtl: Additional Realtek 8822CE Bluetooth devices
+Date:   Thu,  3 Oct 2019 17:51:50 +0200
+Message-Id: <20191003154444.993370236@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191003154437.541662648@linuxfoundation.org>
 References: <20191003154437.541662648@linuxfoundation.org>
@@ -60,60 +60,70 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Rolf Eike Beer <eb@emlix.com>
+From: Jian-Hong Pan <jian-hong@endlessm.com>
 
-commit 056d28d135bca0b1d0908990338e00e9dadaf057 upstream.
+[ Upstream commit 6d0762b19c5963ff9e178e8af3626532ee04d93d ]
 
-If it is not in the default location, compilation fails at several points.
+The ASUS X412FA laptop contains a Realtek RTL8822CE device with an
+associated BT chip using a USB ID of 04ca:4005. This ID is added to the
+driver.
 
-Signed-off-by: Rolf Eike Beer <eb@emlix.com>
-Signed-off-by: Josh Poimboeuf <jpoimboe@redhat.com>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Cc: stable@vger.kernel.org
-Link: https://lkml.kernel.org/r/91a25e992566a7968fedc89ec80e7f4c83ad0548.1553622500.git.jpoimboe@redhat.com
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+The /sys/kernel/debug/usb/devices portion for this device is:
 
+T:  Bus=01 Lev=01 Prnt=01 Port=09 Cnt=04 Dev#=  4 Spd=12   MxCh= 0
+D:  Ver= 1.00 Cls=e0(wlcon) Sub=01 Prot=01 MxPS=64 #Cfgs=  1
+P:  Vendor=04ca ProdID=4005 Rev= 0.00
+S:  Manufacturer=Realtek
+S:  Product=Bluetooth Radio
+S:  SerialNumber=00e04c000001
+C:* #Ifs= 2 Cfg#= 1 Atr=a0 MxPwr=500mA
+I:* If#= 0 Alt= 0 #EPs= 3 Cls=e0(wlcon) Sub=01 Prot=01 Driver=btusb
+E:  Ad=81(I) Atr=03(Int.) MxPS=  16 Ivl=1ms
+E:  Ad=02(O) Atr=02(Bulk) MxPS=  64 Ivl=0ms
+E:  Ad=82(I) Atr=02(Bulk) MxPS=  64 Ivl=0ms
+I:* If#= 1 Alt= 0 #EPs= 2 Cls=e0(wlcon) Sub=01 Prot=01 Driver=btusb
+E:  Ad=03(O) Atr=01(Isoc) MxPS=   0 Ivl=1ms
+E:  Ad=83(I) Atr=01(Isoc) MxPS=   0 Ivl=1ms
+I:  If#= 1 Alt= 1 #EPs= 2 Cls=e0(wlcon) Sub=01 Prot=01 Driver=btusb
+E:  Ad=03(O) Atr=01(Isoc) MxPS=   9 Ivl=1ms
+E:  Ad=83(I) Atr=01(Isoc) MxPS=   9 Ivl=1ms
+I:  If#= 1 Alt= 2 #EPs= 2 Cls=e0(wlcon) Sub=01 Prot=01 Driver=btusb
+E:  Ad=03(O) Atr=01(Isoc) MxPS=  17 Ivl=1ms
+E:  Ad=83(I) Atr=01(Isoc) MxPS=  17 Ivl=1ms
+I:  If#= 1 Alt= 3 #EPs= 2 Cls=e0(wlcon) Sub=01 Prot=01 Driver=btusb
+E:  Ad=03(O) Atr=01(Isoc) MxPS=  25 Ivl=1ms
+E:  Ad=83(I) Atr=01(Isoc) MxPS=  25 Ivl=1ms
+I:  If#= 1 Alt= 4 #EPs= 2 Cls=e0(wlcon) Sub=01 Prot=01 Driver=btusb
+E:  Ad=03(O) Atr=01(Isoc) MxPS=  33 Ivl=1ms
+E:  Ad=83(I) Atr=01(Isoc) MxPS=  33 Ivl=1ms
+I:  If#= 1 Alt= 5 #EPs= 2 Cls=e0(wlcon) Sub=01 Prot=01 Driver=btusb
+E:  Ad=03(O) Atr=01(Isoc) MxPS=  49 Ivl=1ms
+E:  Ad=83(I) Atr=01(Isoc) MxPS=  49 Ivl=1ms
+
+Buglink: https://bugzilla.kernel.org/show_bug.cgi?id=204707
+Signed-off-by: Jian-Hong Pan <jian-hong@endlessm.com>
+Signed-off-by: Marcel Holtmann <marcel@holtmann.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- Makefile               |    4 +++-
- tools/objtool/Makefile |    7 +++++--
- 2 files changed, 8 insertions(+), 3 deletions(-)
+ drivers/bluetooth/btusb.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
---- a/Makefile
-+++ b/Makefile
-@@ -949,9 +949,11 @@ mod_sign_cmd = true
- endif
- export mod_sign_cmd
+diff --git a/drivers/bluetooth/btusb.c b/drivers/bluetooth/btusb.c
+index 7b5a06b277464..73561bfd95d43 100644
+--- a/drivers/bluetooth/btusb.c
++++ b/drivers/bluetooth/btusb.c
+@@ -388,6 +388,9 @@ static const struct usb_device_id blacklist_table[] = {
+ 	/* Additional Realtek 8822BE Bluetooth devices */
+ 	{ USB_DEVICE(0x0b05, 0x185c), .driver_info = BTUSB_REALTEK },
  
-+HOST_LIBELF_LIBS = $(shell pkg-config libelf --libs 2>/dev/null || echo -lelf)
++	/* Additional Realtek 8822CE Bluetooth devices */
++	{ USB_DEVICE(0x04ca, 0x4005), .driver_info = BTUSB_REALTEK },
 +
- ifdef CONFIG_STACK_VALIDATION
-   has_libelf := $(call try-run,\
--		echo "int main() {}" | $(HOSTCC) -xc -o /dev/null -lelf -,1,0)
-+		echo "int main() {}" | $(HOSTCC) -xc -o /dev/null $(HOST_LIBELF_LIBS) -,1,0)
-   ifeq ($(has_libelf),1)
-     objtool_target := tools/objtool FORCE
-   else
---- a/tools/objtool/Makefile
-+++ b/tools/objtool/Makefile
-@@ -26,14 +26,17 @@ LIBSUBCMD		= $(LIBSUBCMD_OUTPUT)libsubcm
- OBJTOOL    := $(OUTPUT)objtool
- OBJTOOL_IN := $(OBJTOOL)-in.o
+ 	/* Silicon Wave based devices */
+ 	{ USB_DEVICE(0x0c10, 0x0000), .driver_info = BTUSB_SWAVE },
  
-+LIBELF_FLAGS := $(shell pkg-config libelf --cflags 2>/dev/null)
-+LIBELF_LIBS  := $(shell pkg-config libelf --libs 2>/dev/null || echo -lelf)
-+
- all: $(OBJTOOL)
- 
- INCLUDES := -I$(srctree)/tools/include \
- 	    -I$(srctree)/tools/arch/$(HOSTARCH)/include/uapi \
- 	    -I$(srctree)/tools/objtool/arch/$(ARCH)/include
- WARNINGS := $(EXTRA_WARNINGS) -Wno-switch-default -Wno-switch-enum -Wno-packed
--CFLAGS   += -Wall -Werror $(WARNINGS) -fomit-frame-pointer -O2 -g $(INCLUDES)
--LDFLAGS  += -lelf $(LIBSUBCMD)
-+CFLAGS   += -Wall -Werror $(WARNINGS) -fomit-frame-pointer -O2 -g $(INCLUDES) $(LIBELF_FLAGS)
-+LDFLAGS  += $(LIBELF_LIBS) $(LIBSUBCMD)
- 
- # Allow old libelf to be used:
- elfshdr := $(shell echo '$(pound)include <libelf.h>' | $(CC) $(CFLAGS) -x c -E - | grep elf_getshdr)
+-- 
+2.20.1
+
 
 
