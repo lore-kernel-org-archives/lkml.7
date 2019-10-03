@@ -2,190 +2,100 @@ Return-Path: <SRS0=6dNS=X4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3884C32792
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 11:57:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A4E1C10F14
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 11:58:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B9F1C21A4C
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 11:57:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 32DA021D81
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 11:58:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="iMuJquSU"
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="jxSl5GBY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730326AbfJCL5v (ORCPT
+        id S1728234AbfJCL6g (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 07:57:51 -0400
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:53646 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726523AbfJCL5u (ORCPT
+        Thu, 3 Oct 2019 07:58:36 -0400
+Received: from conssluserg-04.nifty.com ([210.131.2.83]:63779 "EHLO
+        conssluserg-04.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725892AbfJCL6g (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 07:57:50 -0400
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id x93BviRF009994;
-        Thu, 3 Oct 2019 06:57:44 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1570103864;
-        bh=frGIJpIlzjIigeJImvZp4ZAbaDGCi3lcoK+18Z8zEnk=;
-        h=Date:From:To:CC:Subject:References:In-Reply-To;
-        b=iMuJquSUKMXpDEn8ieTDCj4cEVxzfm4VKN2kONUOYqHBbemL+jkekPHgIE9JBNaQU
-         nXy8wspZTzMJ7/O+1tlKhloTMw+XVAiPC2TckSt9PL56Gye+gZBYkycXURdeorYJOZ
-         QGJ+W472p5DWZos8P9C+/a2s98Atmx0GpnakezA0=
-Received: from DLEE103.ent.ti.com (dlee103.ent.ti.com [157.170.170.33])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x93Bviev117912
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 3 Oct 2019 06:57:44 -0500
-Received: from DLEE102.ent.ti.com (157.170.170.32) by DLEE103.ent.ti.com
- (157.170.170.33) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Thu, 3 Oct
- 2019 06:57:32 -0500
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE102.ent.ti.com
- (157.170.170.32) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Thu, 3 Oct 2019 06:57:33 -0500
-Received: from ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with SMTP id x93BvhRf071871;
-        Thu, 3 Oct 2019 06:57:43 -0500
-Date:   Thu, 3 Oct 2019 06:59:55 -0500
-From:   Benoit Parrot <bparrot@ti.com>
-To:     Jacopo Mondi <jacopo@jmondi.org>
-CC:     Hans Verkuil <hverkuil@xs4all.nl>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        <linux-media@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: Re: [Patch v2 1/3] media: ov5640: add PIXEL_RATE control
-Message-ID: <20191003115955.mnkd3w666miyzuoo@ti.com>
-References: <20191002135134.12273-1-bparrot@ti.com>
- <20191002135134.12273-2-bparrot@ti.com>
- <20191003071714.zyldxfoollm26o4u@uno.localdomain>
+        Thu, 3 Oct 2019 07:58:36 -0400
+Received: from mail-vk1-f172.google.com (mail-vk1-f172.google.com [209.85.221.172]) (authenticated)
+        by conssluserg-04.nifty.com with ESMTP id x93BwLW8002306
+        for <linux-kernel@vger.kernel.org>; Thu, 3 Oct 2019 20:58:22 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-04.nifty.com x93BwLW8002306
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1570103902;
+        bh=zCd51wQccV5gCP/s+G8hMogXPErk6qWPCtDB4gKUwAg=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=jxSl5GBYZ47LoeuI94u7/1pbamdvKCjWyxwIPVR7GQDRLs1SwBT51qQOYHt4DeCWJ
+         ci4+Gvecenow8EXNQ4ZhG6rbMB0hsD2GcogNnkl3FAzeN0jG7iNVTvssEjI3oBJQKm
+         lqeoq476TsoWYldR0irpAm0inuNMqJxtD9GvwcEvAlJAphYk8xAvOpde0H7F16ZKBZ
+         OvXQRqFaNoQ3/vuJ7hflU+vuyeIj385S9xurGq2FKy1hHQtPa94mM7XOD1pMcLos2t
+         YCrIlsmWwZMtbGt0aEN6B7DCTl2vf4eQ0F+GDDBEmufK13jkqfF/sPErKHn8XlJCwD
+         qmqJ36Jw9ehCg==
+X-Nifty-SrcIP: [209.85.221.172]
+Received: by mail-vk1-f172.google.com with SMTP id p189so539159vkf.10
+        for <linux-kernel@vger.kernel.org>; Thu, 03 Oct 2019 04:58:22 -0700 (PDT)
+X-Gm-Message-State: APjAAAUaWpYeaFe++Vj3NRsiVjVNq+zeqGv63i8ZIGVJVCxkuOAlwMe7
+        PjQLsM7w5H1A1JejaAzC3awUzGEnVv5WvCiI0Xo=
+X-Google-Smtp-Source: APXvYqzZHz8CSCVCVlLQNQD0edqz1ZrjTUCeWnebM1P72kAuAJyMwfOJJKqkQ8DvnM8O25hZbWzEXqQJs7TrE0eVaGE=
+X-Received: by 2002:a1f:2343:: with SMTP id j64mr4670136vkj.84.1570103901321;
+ Thu, 03 Oct 2019 04:58:21 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20191003071714.zyldxfoollm26o4u@uno.localdomain>
-User-Agent: NeoMutt/20171215
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+References: <20190928094245.45696-1-yuehaibing@huawei.com> <alpine.DEB.2.21.1909280542490.2168@hadrien>
+ <2c109d6b-45ad-b3ca-1951-bde4dac91d2a@huawei.com> <alpine.DEB.2.21.1909291810300.3346@hadrien>
+ <ac79cb42-1713-8801-37e4-edde540f101c@huawei.com> <alpine.DEB.2.21.1910011500470.13162@hadrien>
+In-Reply-To: <alpine.DEB.2.21.1910011500470.13162@hadrien>
+From:   Masahiro Yamada <yamada.masahiro@socionext.com>
+Date:   Thu, 3 Oct 2019 20:57:45 +0900
+X-Gmail-Original-Message-ID: <CAK7LNATAqM9QHRqotFQsmh64rww_AxNm4gdV2t5TuYxHA++zSg@mail.gmail.com>
+Message-ID: <CAK7LNATAqM9QHRqotFQsmh64rww_AxNm4gdV2t5TuYxHA++zSg@mail.gmail.com>
+Subject: Re: [RFC PATCH] scripts: Fix coccicheck failed
+To:     Julia Lawall <julia.lawall@lip6.fr>
+Cc:     Yuehaibing <yuehaibing@huawei.com>,
+        Gilles Muller <Gilles.Muller@lip6.fr>,
+        Nicolas Palix <nicolas.palix@imag.fr>,
+        Michal Marek <michal.lkml@markovi.net>,
+        Matthias Maennich <maennich@google.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Coccinelle <cocci@systeme.lip6.fr>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Jacopo Mondi <jacopo@jmondi.org> wrote on Thu [2019-Oct-03 09:17:14 +0200]:
-> Hi Benoit,
-> 
-> On Wed, Oct 02, 2019 at 08:51:32AM -0500, Benoit Parrot wrote:
-> > Add v4l2 controls to report the pixel rates of each mode. This is
-> > needed by some CSI2 receiver in order to perform proper DPHY
-> > configuration.
+On Tue, Oct 1, 2019 at 10:01 PM Julia Lawall <julia.lawall@lip6.fr> wrote:
+> > diff --git a/scripts/coccinelle/misc/add_namespace.cocci b/scripts/coccinelle/misc/add_namespace.cocci
+> > index c832bb6445a8..99e93a6c2e24 100644
+> > --- a/scripts/coccinelle/misc/add_namespace.cocci
+> > +++ b/scripts/coccinelle/misc/add_namespace.cocci
+> > @@ -6,6 +6,8 @@
+> >  /// add a missing namespace tag to a module source file.
+> >  ///
 > >
-> > Signed-off-by: Benoit Parrot <bparrot@ti.com>
-> > ---
-> >  drivers/media/i2c/ov5640.c | 25 +++++++++++++++++++++++++
-> >  1 file changed, 25 insertions(+)
-> >
-> > diff --git a/drivers/media/i2c/ov5640.c b/drivers/media/i2c/ov5640.c
-> > index 500d9bbff10b..5198dc887400 100644
-> > --- a/drivers/media/i2c/ov5640.c
-> > +++ b/drivers/media/i2c/ov5640.c
-> > @@ -193,6 +193,9 @@ struct ov5640_mode_info {
-> >
-> >  struct ov5640_ctrls {
-> >  	struct v4l2_ctrl_handler handler;
-> > +	struct {
-> > +		struct v4l2_ctrl *pixel_rate;
-> > +	};
-> 
-> Do you need to wrap this v4l2_ctrl in it's own unnamed struct? Other
-> controls here declared in this way are clustered and, if I'm not
-> mistaken, using unnamed struct to wrap them is just a typographically
-> nice way to convey that. I think your new control could be declared
-> without a wrapping struct { }.
-
-Probably not, just tried to be consistent with the rest of code here.
-
-> 
-> >  	struct {
-> >  		struct v4l2_ctrl *auto_exp;
-> >  		struct v4l2_ctrl *exposure;
-> > @@ -2194,6 +2197,16 @@ static int ov5640_try_fmt_internal(struct v4l2_subdev *sd,
-> >  	return 0;
-> >  }
-> >
-> > +static u64 ov5640_calc_pixel_rate(struct ov5640_dev *sensor)
-> > +{
-> > +	u64 rate;
+> > +virtual report
 > > +
-> > +	rate = sensor->current_mode->vtot * sensor->current_mode->htot;
-> > +	rate *= ov5640_framerates[sensor->current_fr];
-> > +
-> > +	return rate;
-> > +}
-> > +
-> 
-> Just to point out this is the -theoretical- pixel rate, and might be
-> quite different from the one calculated by the clock tree tuning
-> procedure (which should be updated to match Hugues' latest findings).
-
-True, and to my surprise my receiver worked with all of those value even if
-some actual value maybe off, I guess in my case they were close enough.
-
-> 
-> >  static int ov5640_set_fmt(struct v4l2_subdev *sd,
-> >  			  struct v4l2_subdev_pad_config *cfg,
-> >  			  struct v4l2_subdev_format *format)
-> > @@ -2233,6 +2246,8 @@ static int ov5640_set_fmt(struct v4l2_subdev *sd,
-> >  	if (mbus_fmt->code != sensor->fmt.code)
-> >  		sensor->pending_fmt_change = true;
+> >  @has_ns_import@
+> >  declarer name MODULE_IMPORT_NS;
+> >  identifier virtual.ns;
 > >
-> > +	__v4l2_ctrl_s_ctrl_int64(sensor->ctrls.pixel_rate,
-> > +				 ov5640_calc_pixel_rate(sensor));
-> >  out:
-> >  	mutex_unlock(&sensor->lock);
-> >  	return ret;
-> > @@ -2657,6 +2672,13 @@ static int ov5640_init_controls(struct ov5640_dev *sensor)
-> >  	/* we can use our own mutex for the ctrl lock */
-> >  	hdl->lock = &sensor->lock;
 > >
-> > +	/* Clock related controls */
-> > +	ctrls->pixel_rate =
-> > +		v4l2_ctrl_new_std(hdl, ops,
-> 
-> If you like it better, this could fit in 1 line
-> 
-> 	ctrls->pixel_rate = v4l2_ctrl_new_std(hdl, ops, V4L2_CID_PIXEL_RATE,
-> 					      0, INT_MAX, 1,
-> 					      ov5640_calc_pixel_rate(sensor)
+> >
+> > Adding virtual report make the coccicheck go ahead smoothly.
+>
+> Acked-by: Julia Lawall <julia.lawall@lip6.fr>
 >
 
-Either way works for me.
 
-Benoit
- 
-> Thanks
->    j
-> 
-> > +				  V4L2_CID_PIXEL_RATE, 0, INT_MAX, 1,
-> > +				  ov5640_calc_pixel_rate(sensor));
-> 
-> 
-> > +	ctrls->pixel_rate->flags |= V4L2_CTRL_FLAG_READ_ONLY;
-> > +
-> >  	/* Auto/manual white balance */
-> >  	ctrls->auto_wb = v4l2_ctrl_new_std(hdl, ops,
-> >  					   V4L2_CID_AUTO_WHITE_BALANCE,
-> > @@ -2816,6 +2838,9 @@ static int ov5640_s_frame_interval(struct v4l2_subdev *sd,
-> >  		sensor->frame_interval = fi->interval;
-> >  		sensor->current_mode = mode;
-> >  		sensor->pending_mode_change = true;
-> > +
-> > +		__v4l2_ctrl_s_ctrl_int64(sensor->ctrls.pixel_rate,
-> > +					 ov5640_calc_pixel_rate(sensor));
-> >  	}
-> >  out:
-> >  	mutex_unlock(&sensor->lock);
-> > --
-> > 2.17.1
-> >
+Was this patch posted somewhere?
 
 
+
+-- 
+Best Regards
+Masahiro Yamada
