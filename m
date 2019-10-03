@@ -7,49 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 041E7C4CED1
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:38:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DE52C10F14
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:38:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C989D2086A
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:38:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EF9FF20865
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:38:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570124305;
-	bh=UlCki8zg9JHsMFVYDz5UUcbj6ctigQ8WdJABiuxnRAs=;
+	s=default; t=1570124309;
+	bh=/ysRQqNMeKecQLyftEsr3RWSE3M08IG9c29G8hT03sQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ma8bwSrmWfdyPaa1WhwlVibQAGYvUWb5+HrZP5HYwOJEr7hFuOXJRYgPDRjtXpobf
-	 G7Nq0qt3DNjCUto9JfA1J/rYOFVzHIjqvEy6NcTl3Ja4mEDIcxm95dFhEOrUSvncNw
-	 7lVSZuRBe9Oxz5eJoup4dN+cqDDMBI1hVul0ePeg=
+	b=Vj3xq1R9pharxhJU66W7Z09XM6R+PX4VTw/Dq2SpkSbZ9x/okzHiUJp90z6/pL99Q
+	 /TR7U9grZLUj9EmlCwh/T1+8jTgu4e7BBbBUzjSXybKnAr6xFhRMX/EQViDxuLvuva
+	 FR/at8rmMfdHMkRvLzxDbPpDUk0ugy9tzdugoyew=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732049AbfJCQCo (ORCPT
+        id S1732012AbfJCQCe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 12:02:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47562 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 12:02:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47300 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730678AbfJCQCg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:02:36 -0400
+        id S1729597AbfJCQCZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:02:25 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6EB7820700;
-        Thu,  3 Oct 2019 16:02:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 89570215EA;
+        Thu,  3 Oct 2019 16:02:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570118555;
-        bh=UlCki8zg9JHsMFVYDz5UUcbj6ctigQ8WdJABiuxnRAs=;
+        s=default; t=1570118545;
+        bh=/ysRQqNMeKecQLyftEsr3RWSE3M08IG9c29G8hT03sQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=lptlYNPAY/zFvkS22Nxgz5xDva8KvYU8Z/D0hfYthmxl0JSMoLZ6uQTqYWt14h25e
-         9zOYCVIkexo/ElVxk4E3PFYQJXwaxI2wtfxQxBW7AFYO/X3BSSk9msuSOQVqjBQQDG
-         llzTwhl73CeqIiBAMl9thXy5y+SHY30faD07qvW4=
+        b=feBXWflt4AodduC0C7Ue43wkOG3+ziq36DGaNwhgDzWQNkNxJXxcqhqu5IgxdDrfg
+         ctjXc8ZEswGGwSatvRDePx/xwy8+CYiHq247V+Nvrp1dvnAv9Al6EbiiX9QkcmaVra
+         pRk+uHeCyW1NMHzqugL7bgzegef5CRbH8LTW5TBg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        syzbot+01a77b82edaa374068e1@syzkaller.appspotmail.com,
-        Oliver Neukum <oneukum@suse.com>, Sean Young <sean@mess.org>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        stable@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 053/129] media: iguanair: add sanity checks
-Date:   Thu,  3 Oct 2019 17:52:56 +0200
-Message-Id: <20191003154341.718370638@linuxfoundation.org>
+Subject: [PATCH 4.9 050/129] x86/apic: Soft disable APIC before initializing it
+Date:   Thu,  3 Oct 2019 17:52:53 +0200
+Message-Id: <20191003154339.591386690@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191003154318.081116689@linuxfoundation.org>
 References: <20191003154318.081116689@linuxfoundation.org>
@@ -62,59 +60,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Oliver Neukum <oneukum@suse.com>
+From: Thomas Gleixner <tglx@linutronix.de>
 
-[ Upstream commit ab1cbdf159beba7395a13ab70bc71180929ca064 ]
+[ Upstream commit 2640da4cccf5cc613bf26f0998b9e340f4b5f69c ]
 
-The driver needs to check the endpoint types, too, as opposed
-to the number of endpoints. This also requires moving the check earlier.
+If the APIC was already enabled on entry of setup_local_APIC() then
+disabling it soft via the SPIV register makes a lot of sense.
 
-Reported-by: syzbot+01a77b82edaa374068e1@syzkaller.appspotmail.com
-Signed-off-by: Oliver Neukum <oneukum@suse.com>
-Signed-off-by: Sean Young <sean@mess.org>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+That masks all LVT entries and brings it into a well defined state.
+
+Otherwise previously enabled LVTs which are not touched in the setup
+function stay unmasked and might surprise the just booting kernel.
+
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Link: https://lkml.kernel.org/r/20190722105219.068290579@linutronix.de
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/rc/iguanair.c | 15 +++++++--------
- 1 file changed, 7 insertions(+), 8 deletions(-)
+ arch/x86/kernel/apic/apic.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-diff --git a/drivers/media/rc/iguanair.c b/drivers/media/rc/iguanair.c
-index 5f634545ddd81..25470395c43f1 100644
---- a/drivers/media/rc/iguanair.c
-+++ b/drivers/media/rc/iguanair.c
-@@ -430,6 +430,10 @@ static int iguanair_probe(struct usb_interface *intf,
- 	int ret, pipein, pipeout;
- 	struct usb_host_interface *idesc;
- 
-+	idesc = intf->altsetting;
-+	if (idesc->desc.bNumEndpoints < 2)
-+		return -ENODEV;
-+
- 	ir = kzalloc(sizeof(*ir), GFP_KERNEL);
- 	rc = rc_allocate_device();
- 	if (!ir || !rc) {
-@@ -444,18 +448,13 @@ static int iguanair_probe(struct usb_interface *intf,
- 	ir->urb_in = usb_alloc_urb(0, GFP_KERNEL);
- 	ir->urb_out = usb_alloc_urb(0, GFP_KERNEL);
- 
--	if (!ir->buf_in || !ir->packet || !ir->urb_in || !ir->urb_out) {
-+	if (!ir->buf_in || !ir->packet || !ir->urb_in || !ir->urb_out ||
-+	    !usb_endpoint_is_int_in(&idesc->endpoint[0].desc) ||
-+	    !usb_endpoint_is_int_out(&idesc->endpoint[1].desc)) {
- 		ret = -ENOMEM;
- 		goto out;
+diff --git a/arch/x86/kernel/apic/apic.c b/arch/x86/kernel/apic/apic.c
+index 928ffdc21873c..232350519062b 100644
+--- a/arch/x86/kernel/apic/apic.c
++++ b/arch/x86/kernel/apic/apic.c
+@@ -1303,6 +1303,14 @@ void setup_local_APIC(void)
+ 		return;
  	}
  
--	idesc = intf->altsetting;
--
--	if (idesc->desc.bNumEndpoints < 2) {
--		ret = -ENODEV;
--		goto out;
--	}
--
- 	ir->rc = rc;
- 	ir->dev = &intf->dev;
- 	ir->udev = udev;
++	/*
++	 * If this comes from kexec/kcrash the APIC might be enabled in
++	 * SPIV. Soft disable it before doing further initialization.
++	 */
++	value = apic_read(APIC_SPIV);
++	value &= ~APIC_SPIV_APIC_ENABLED;
++	apic_write(APIC_SPIV, value);
++
+ #ifdef CONFIG_X86_32
+ 	/* Pound the ESR really hard over the head with a big hammer - mbligh */
+ 	if (lapic_is_integrated() && apic->disable_esr) {
 -- 
 2.20.1
 
