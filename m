@@ -7,50 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FC99C10F14
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:58:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF258C32792
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:59:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 602F42070B
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:58:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 88E1220673
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:59:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570121939;
-	bh=/F0eqdyJKABuAv6cUV90z+rRaHqrSXh+R+pUYfvNIeM=;
+	s=default; t=1570121944;
+	bh=HiwsV5TpdnN+VgtHgx7ikNQaIghLwyuaB9/PgqbRLeY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=LFdTD3rnzmt6CbKLtSomRCulga3muoPN/MmcCHAiPhF9nSqZTdSFFvx3+J/l1GiV4
-	 N39DKyVbBViLTXTDAir/r+nR22DNe3XgozcTSjAypkQ+gSbjb9G8D5aTGLSEF6wFGY
-	 FGvjuT8uVmdIyNtknBMhe9lQmxbIJLOMAwoUcBtE=
+	b=HYAbdn0DPRQHnf44mXezIyxQ453D80W3bISiw6CQSG35kzKRml1BkSa7DAdKfy6b6
+	 u9S6P8lRyhS8qdrYz+MwToyImVEypzckoQVmTt+JZHvqiUDKVDUhEpbbWnwjvPQ3qY
+	 raViqnjQ7ugV+icXPtWh3ZUT9EuLouG6UJVtKYGA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405548AbfJCQrq (ORCPT
+        id S2406155AbfJCQ7D (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 12:47:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33072 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 12:59:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33204 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2405509AbfJCQrk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:47:40 -0400
+        id S2405539AbfJCQrp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:47:45 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C1E9E2070B;
-        Thu,  3 Oct 2019 16:47:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4FB9D20865;
+        Thu,  3 Oct 2019 16:47:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570121259;
-        bh=/F0eqdyJKABuAv6cUV90z+rRaHqrSXh+R+pUYfvNIeM=;
+        s=default; t=1570121264;
+        bh=HiwsV5TpdnN+VgtHgx7ikNQaIghLwyuaB9/PgqbRLeY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=iKVKmIsP7LVq7LiOD9IFKfVO4UKCSI0+X7w866iGWgkmrywWutgrhQ1JhBm11ggPA
-         0knkaca88xZgNheSRnClUPLqPjCsm0bar3jKYgQcOZM9A4dMq/Keq2TciSi0/+SHNv
-         Ytzk0yCke5B6Y8MueSqGf5/e5GAxGGVp/iuKEjNY=
+        b=xcdGSCHPPiPbVjNlKOczMHiCX9ZhQCuP3EnSq0khEV7AY1nZbjwJOSqvnsDkJHUBX
+         dG09DkhRncupc9jIqrg5cTVEKoVP9mJJp2UUmOhjZBdZOtzWgm4RPln9RnYk89wQ+6
+         MNl73XkcfBvirVYP6f5X7ojqON74FiNB20ESq/q4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Miles Chen <miles.chen@mediatek.com>,
-        linux-mediatek@lists.infradead.org, wsd_upstream@mediatek.com,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.3 212/344] sched/psi: Correct overly pessimistic size calculation
-Date:   Thu,  3 Oct 2019 17:52:57 +0200
-Message-Id: <20191003154601.206292517@linuxfoundation.org>
+        stable@vger.kernel.org, Matthias Kaehlcke <mka@chromium.org>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Douglas Anderson <dianders@chromium.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.3 214/344] mmc: core: Add helper function to indicate if SDIO IRQs is enabled
+Date:   Thu,  3 Oct 2019 17:52:59 +0200
+Message-Id: <20191003154601.403868995@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191003154540.062170222@linuxfoundation.org>
 References: <20191003154540.062170222@linuxfoundation.org>
@@ -63,84 +61,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Miles Chen <miles.chen@mediatek.com>
+From: Ulf Hansson <ulf.hansson@linaro.org>
 
-[ Upstream commit 4adcdcea717cb2d8436bef00dd689aa5bc76f11b ]
+[ Upstream commit bd880b00697befb73eff7220ee20bdae4fdd487b ]
 
-When passing a equal or more then 32 bytes long string to psi_write(),
-psi_write() copies 31 bytes to its buf and overwrites buf[30]
-with '\0'. Which makes the input string 1 byte shorter than
-it should be.
+To avoid each host driver supporting SDIO IRQs, from keeping track
+internally about if SDIO IRQs has been claimed, let's introduce a common
+helper function, sdio_irq_claimed().
 
-Fix it by copying sizeof(buf) bytes when nbytes >= sizeof(buf).
+The function returns true if SDIO IRQs are claimed, via using the
+information about the number of claimed irqs. This is safe, even without
+any locks, as long as the helper function is called only from
+runtime/system suspend callbacks of the host driver.
 
-This does not cause problems in normal use case like:
-"some 500000 10000000" or "full 500000 10000000" because they
-are less than 32 bytes in length.
-
-	/* assuming nbytes == 35 */
-	char buf[32];
-
-	buf_size = min(nbytes, (sizeof(buf) - 1)); /* buf_size = 31 */
-	if (copy_from_user(buf, user_buf, buf_size))
-		return -EFAULT;
-
-	buf[buf_size - 1] = '\0'; /* buf[30] = '\0' */
-
-Before:
-
- %cd /proc/pressure/
- %echo "123456789|123456789|123456789|1234" > memory
- [   22.473497] nbytes=35,buf_size=31
- [   22.473775] 123456789|123456789|123456789| (print 30 chars)
- %sh: write error: Invalid argument
-
- %echo "123456789|123456789|123456789|1" > memory
- [   64.916162] nbytes=32,buf_size=31
- [   64.916331] 123456789|123456789|123456789| (print 30 chars)
- %sh: write error: Invalid argument
-
-After:
-
- %cd /proc/pressure/
- %echo "123456789|123456789|123456789|1234" > memory
- [  254.837863] nbytes=35,buf_size=32
- [  254.838541] 123456789|123456789|123456789|1 (print 31 chars)
- %sh: write error: Invalid argument
-
- %echo "123456789|123456789|123456789|1" > memory
- [ 9965.714935] nbytes=32,buf_size=32
- [ 9965.715096] 123456789|123456789|123456789|1 (print 31 chars)
- %sh: write error: Invalid argument
-
-Also remove the superfluous parentheses.
-
-Signed-off-by: Miles Chen <miles.chen@mediatek.com>
-Cc: <linux-mediatek@lists.infradead.org>
-Cc: <wsd_upstream@mediatek.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Link: https://lkml.kernel.org/r/20190912103452.13281-1-miles.chen@mediatek.com
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Tested-by: Matthias Kaehlcke <mka@chromium.org>
+Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
+Reviewed-by: Douglas Anderson <dianders@chromium.org>
+Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/sched/psi.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ include/linux/mmc/host.h | 9 +++++++++
+ 1 file changed, 9 insertions(+)
 
-diff --git a/kernel/sched/psi.c b/kernel/sched/psi.c
-index 6e52b67b420e7..517e3719027e6 100644
---- a/kernel/sched/psi.c
-+++ b/kernel/sched/psi.c
-@@ -1198,7 +1198,7 @@ static ssize_t psi_write(struct file *file, const char __user *user_buf,
- 	if (static_branch_likely(&psi_disabled))
- 		return -EOPNOTSUPP;
+diff --git a/include/linux/mmc/host.h b/include/linux/mmc/host.h
+index 4a351cb7f20fc..cf87c673cbb81 100644
+--- a/include/linux/mmc/host.h
++++ b/include/linux/mmc/host.h
+@@ -493,6 +493,15 @@ void mmc_command_done(struct mmc_host *host, struct mmc_request *mrq);
  
--	buf_size = min(nbytes, (sizeof(buf) - 1));
-+	buf_size = min(nbytes, sizeof(buf));
- 	if (copy_from_user(buf, user_buf, buf_size))
- 		return -EFAULT;
+ void mmc_cqe_request_done(struct mmc_host *host, struct mmc_request *mrq);
  
++/*
++ * May be called from host driver's system/runtime suspend/resume callbacks,
++ * to know if SDIO IRQs has been claimed.
++ */
++static inline bool sdio_irq_claimed(struct mmc_host *host)
++{
++	return host->sdio_irqs > 0;
++}
++
+ static inline void mmc_signal_sdio_irq(struct mmc_host *host)
+ {
+ 	host->ops->enable_sdio_irq(host, 0);
 -- 
 2.20.1
 
