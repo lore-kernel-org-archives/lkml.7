@@ -4,52 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C9D3ECE58B
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:54:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00B13C10F14
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:54:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 02FB72054F
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:54:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BEF9B2054F
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:54:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570121685;
-	bh=t0GA2v6fvFiux/WPQnrE38XMOaw+w5RrtHyxdHxuHQ8=;
+	s=default; t=1570121689;
+	bh=4hyWZ9KPyne415qCjeglQQpp/ccP8ux7zuW1iEDyABU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=UOBEZYZbwapPAzPRFiJ/z3hAxGGnEHUgn3n+F+bNn3Da9CyTqZdsVzXLXrAqM4IDX
-	 oXF5ByK894MnQUbUfybjItaOmyQ9nm7gPhU6Y63F1dIo00r9yYJSBje+QbB5wKs5ln
-	 d871qzHxi2kogu+ukteqTa/lHTfyjdY4hsYz5m54=
+	b=lyaFjsLlePu7CPsXQgaHrebZ6G5pe0kSHXfdJYVy4zyHUWJslbSBsJxSei8mrZ+9l
+	 dqTJcsLCtxbq7gtVwVqsPnmDBILAM+yHKtw5fR/MU06N9weOzR7UgznxF9C5YcDuXL
+	 OeJPD1tU8rZh6jKCJs7+5mOReRU0d9GGuTNSwtVw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406393AbfJCQxI (ORCPT
+        id S2406404AbfJCQyt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 12:53:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40770 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 12:54:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40904 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2406266AbfJCQwz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:52:55 -0400
+        id S2406371AbfJCQxD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:53:03 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4AA7720867;
-        Thu,  3 Oct 2019 16:52:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4B12A20862;
+        Thu,  3 Oct 2019 16:53:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570121574;
-        bh=t0GA2v6fvFiux/WPQnrE38XMOaw+w5RrtHyxdHxuHQ8=;
+        s=default; t=1570121582;
+        bh=4hyWZ9KPyne415qCjeglQQpp/ccP8ux7zuW1iEDyABU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Rg+Y7eLFtdaw5YpZ85SDtZx+767Uhl795Oskz1j8gWX66Ug6HFOOeTKZtSWffe/XW
-         RvOCIBpsKo9CbVfb/H2floTBN73Dq3stp6vcU6r3cRLvUOtENbcC4YF5x0sQkskj5s
-         aK33GyLNQwvbtJsfUeBis03r9IpIU4pZTzi3/6s4=
+        b=sYK0+Cut5oVaNYJZ+8t+zm+fGfTqxMh1Mp3Ko1afBVyUbcq1fRUKnGuBibccSPeYZ
+         1pdGJ7qVGfUPHVhxAoiPVblzWK+0WsGSL5E2cQuk72P72S+UEvmzu7K9Ncw53kyNdR
+         5pTYMfHKtQVMR6gTZXGu3BQtVrXLOI35jCmepuvw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hans Holmberg <Hans.Holmberg@wdc.com>,
-        Hans Holmberg <hans.holmberg@wdc.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Damien Le Moal <damien.lemoal@wdc.com>,
-        Jens Axboe <axboe@kernel.dk>
-Subject: [PATCH 5.3 302/344] block: mq-deadline: Fix queue restart handling
-Date:   Thu,  3 Oct 2019 17:54:27 +0200
-Message-Id: <20191003154609.217449351@linuxfoundation.org>
+        stable@vger.kernel.org, Theodore Tso <tytso@mit.edu>
+Subject: [PATCH 5.3 331/344] ext4: fix punch hole for inline_data file systems
+Date:   Thu,  3 Oct 2019 17:54:56 +0200
+Message-Id: <20191003154611.405091207@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191003154540.062170222@linuxfoundation.org>
 References: <20191003154540.062170222@linuxfoundation.org>
@@ -62,107 +58,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Damien Le Moal <damien.lemoal@wdc.com>
+From: Theodore Ts'o <tytso@mit.edu>
 
-commit cb8acabbe33b110157955a7425ee876fb81e6bbc upstream.
+commit c1e8220bd316d8ae8e524df39534b8a412a45d5e upstream.
 
-Commit 7211aef86f79 ("block: mq-deadline: Fix write completion
-handling") added a call to blk_mq_sched_mark_restart_hctx() in
-dd_dispatch_request() to make sure that write request dispatching does
-not stall when all target zones are locked. This fix left a subtle race
-when a write completion happens during a dispatch execution on another
-CPU:
+If a program attempts to punch a hole on an inline data file, we need
+to convert it to a normal file first.
 
-CPU 0: Dispatch			CPU1: write completion
+This was detected using ext4/032 using the adv configuration.  Simple
+reproducer:
 
-dd_dispatch_request()
-    lock(&dd->lock);
-    ...
-    lock(&dd->zone_lock);	dd_finish_request()
-    rq = find request		lock(&dd->zone_lock);
-    unlock(&dd->zone_lock);
-    				zone write unlock
-				unlock(&dd->zone_lock);
-				...
-				__blk_mq_free_request
-                                      check restart flag (not set)
-				      -> queue not run
-    ...
-    if (!rq && have writes)
-        blk_mq_sched_mark_restart_hctx()
-    unlock(&dd->lock)
+mke2fs -Fq -t ext4 -O inline_data /dev/vdc
+mount /vdc
+echo "" > /vdc/testfile
+xfs_io -c 'truncate 33554432' /vdc/testfile
+xfs_io -c 'fpunch 0 1048576' /vdc/testfile
+umount /vdc
+e2fsck -fy /dev/vdc
 
-Since the dispatch context finishes after the write request completion
-handling, marking the queue as needing a restart is not seen from
-__blk_mq_free_request() and blk_mq_sched_restart() not executed leading
-to the dispatch stall under 100% write workloads.
-
-Fix this by moving the call to blk_mq_sched_mark_restart_hctx() from
-dd_dispatch_request() into dd_finish_request() under the zone lock to
-ensure full mutual exclusion between write request dispatch selection
-and zone unlock on write request completion.
-
-Fixes: 7211aef86f79 ("block: mq-deadline: Fix write completion handling")
 Cc: stable@vger.kernel.org
-Reported-by: Hans Holmberg <Hans.Holmberg@wdc.com>
-Reviewed-by: Hans Holmberg <hans.holmberg@wdc.com>
-Reviewed-by: Christoph Hellwig <hch@lst.de>
-Signed-off-by: Damien Le Moal <damien.lemoal@wdc.com>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Signed-off-by: Theodore Ts'o <tytso@mit.edu>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- block/mq-deadline.c |   19 +++++++++----------
- 1 file changed, 9 insertions(+), 10 deletions(-)
+ fs/ext4/inode.c |    9 +++++++++
+ 1 file changed, 9 insertions(+)
 
---- a/block/mq-deadline.c
-+++ b/block/mq-deadline.c
-@@ -377,13 +377,6 @@ done:
-  * hardware queue, but we may return a request that is for a
-  * different hardware queue. This is because mq-deadline has shared
-  * state for all hardware queues, in terms of sorting, FIFOs, etc.
-- *
-- * For a zoned block device, __dd_dispatch_request() may return NULL
-- * if all the queued write requests are directed at zones that are already
-- * locked due to on-going write requests. In this case, make sure to mark
-- * the queue as needing a restart to ensure that the queue is run again
-- * and the pending writes dispatched once the target zones for the ongoing
-- * write requests are unlocked in dd_finish_request().
-  */
- static struct request *dd_dispatch_request(struct blk_mq_hw_ctx *hctx)
- {
-@@ -392,9 +385,6 @@ static struct request *dd_dispatch_reque
+--- a/fs/ext4/inode.c
++++ b/fs/ext4/inode.c
+@@ -4297,6 +4297,15 @@ int ext4_punch_hole(struct inode *inode,
  
- 	spin_lock(&dd->lock);
- 	rq = __dd_dispatch_request(dd);
--	if (!rq && blk_queue_is_zoned(hctx->queue) &&
--	    !list_empty(&dd->fifo_list[WRITE]))
--		blk_mq_sched_mark_restart_hctx(hctx);
- 	spin_unlock(&dd->lock);
+ 	trace_ext4_punch_hole(inode, offset, length, 0);
  
- 	return rq;
-@@ -561,6 +551,13 @@ static void dd_prepare_request(struct re
-  * spinlock so that the zone is never unlocked while deadline_fifo_request()
-  * or deadline_next_request() are executing. This function is called for
-  * all requests, whether or not these requests complete successfully.
-+ *
-+ * For a zoned block device, __dd_dispatch_request() may have stopped
-+ * dispatching requests if all the queued requests are write requests directed
-+ * at zones that are already locked due to on-going write requests. To ensure
-+ * write request dispatch progress in this case, mark the queue as needing a
-+ * restart to ensure that the queue is run again after completion of the
-+ * request and zones being unlocked.
-  */
- static void dd_finish_request(struct request *rq)
- {
-@@ -572,6 +569,8 @@ static void dd_finish_request(struct req
- 
- 		spin_lock_irqsave(&dd->zone_lock, flags);
- 		blk_req_zone_write_unlock(rq);
-+		if (!list_empty(&dd->fifo_list[WRITE]))
-+			blk_mq_sched_mark_restart_hctx(rq->mq_hctx);
- 		spin_unlock_irqrestore(&dd->zone_lock, flags);
- 	}
- }
++	ext4_clear_inode_state(inode, EXT4_STATE_MAY_INLINE_DATA);
++	if (ext4_has_inline_data(inode)) {
++		down_write(&EXT4_I(inode)->i_mmap_sem);
++		ret = ext4_convert_inline_data(inode);
++		up_write(&EXT4_I(inode)->i_mmap_sem);
++		if (ret)
++			return ret;
++	}
++
+ 	/*
+ 	 * Write out all dirty pages to avoid race conditions
+ 	 * Then release them.
 
 
