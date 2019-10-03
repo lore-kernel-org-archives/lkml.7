@@ -2,107 +2,159 @@ Return-Path: <SRS0=6dNS=X4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A0B52C4CED1
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 09:10:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF6C1C32792
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 09:10:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6BC20218DE
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 09:10:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570093851;
-	bh=MMxJEs96BVXDKmKuJCphNcJwHlAfmZsNg6vA8HtDNS0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=e6WyLC51C0ST+HAbxhJytXs8vHBgD/RdcWAb1Kt+iFFWaXPgB7N0EM7H12L2Mht7Z
-	 JV5A8yI1/66ewN4HD+lQB4cdUx08wSJ8wLmmw5DK7tf2ffMlMMr11bXaPJTH9xRg7x
-	 /ALHYLKY+ddPhi3Fk4cnQtzLugouX20R9gTKFpfk=
+	by mail.kernel.org (Postfix) with ESMTP id A95A4217D7
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 09:10:56 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="UXdpOExk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729153AbfJCJKu (ORCPT
+        id S1729190AbfJCJK4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 05:10:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51290 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727912AbfJCJKu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 05:10:50 -0400
-Received: from X250 (li937-157.members.linode.com [45.56.119.157])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9FAA3217D7;
-        Thu,  3 Oct 2019 09:10:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570093849;
-        bh=MMxJEs96BVXDKmKuJCphNcJwHlAfmZsNg6vA8HtDNS0=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Z8S71spy+Xp8DisodNAuE7wi8wIsa9qQOR+VeMzwJLbpw4Dz2CBl4oDhZUZg7KyCI
-         jKIATNnmJs4DhCYtb3wotBj33BxFRZNeLBIbIBtbocDEhzMwCTQxJd7mBGOpEAFDOG
-         rXAe6mVQ6Y0Su2CLdU80pQ4UTH4eE+qWy+ExCBTc=
-Date:   Thu, 3 Oct 2019 17:10:33 +0800
-From:   Shawn Guo <shawnguo@kernel.org>
-To:     Xiaowei Bao <xiaowei.bao@nxp.com>
-Cc:     robh+dt@kernel.org, mark.rutland@arm.com, leoyang.li@nxp.com,
-        minghuan.Lian@nxp.com, mingkai.hu@nxp.com, roy.zang@nxp.com,
-        lorenzo.pieralisi@arm.com, linux-pci@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linuxppc-dev@lists.ozlabs.org, bhelgaas@google.com,
-        Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
-Subject: Re: [PATCH v6 3/3] PCI: layerscape: Add LS1028a support
-Message-ID: <20191003091019.GB22491@X250>
-References: <20190902034319.14026-1-xiaowei.bao@nxp.com>
- <20190902034319.14026-3-xiaowei.bao@nxp.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190902034319.14026-3-xiaowei.bao@nxp.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+        Thu, 3 Oct 2019 05:10:56 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:39079 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729157AbfJCJKz (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 05:10:55 -0400
+Received: by mail-pg1-f194.google.com with SMTP id e1so1367237pgj.6
+        for <linux-kernel@vger.kernel.org>; Thu, 03 Oct 2019 02:10:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=sifive.com; s=google;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=cl61NZhY5d45/Lbiju2rWHR/95fvQW/rzQHybTAnNrk=;
+        b=UXdpOExk+DjqpI/3nuWER3Cht8DW7Do+r38+1fLADJv0vQ4hNM1f0Ag+4C9yGsB/VT
+         zKWib8P0kpXAnS/PC2MSlK2mTflHfsCAav/ICDSntt8nvfmkm7FcYbRvA4jN0dElY8Rx
+         vG2fIfbBtsHQwsEnulSya+KIj2MLK722ZMeDS0pumkvmQiozd6U/IBhEAiVNCbUinUVq
+         2y5t9eWzfu6Z0i8iXDZb9OHImA8FnVb56aPXeTRguPG4FpaQGKEK5i6MUb17I84bJ9pG
+         LPIw85fwBbdKx3g/sOEZDWFumMBxSOWOfJaqclkg4yt9Uj2UMNXnTap+8sb7nwmfSM86
+         8cxA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=cl61NZhY5d45/Lbiju2rWHR/95fvQW/rzQHybTAnNrk=;
+        b=BYjYeiss/6xEzmJGDhHmi/MTLfBqFIwfz1ItpaeQQ/VOCKVk2KhrpHyFc2HaS03DuQ
+         h+ccQD+7iw9TBsLxak/1AOCKeTF16faCHPPHQXLaKjIA2Yy9tAYwTWt47E3AQa0+E+UT
+         KB4EtOKeRO7WGawdtxfhAPHBg2vNr0q2ByHsmB1j8qtLzTP6kLpBZ+qmSwXjK1jiFTF2
+         YTFV/ZCsg3+JXWxN7//v7DSHDGScaJEq1Nss3mgu7FTNPL7PDe6r7sHyZwwGET2OEXl/
+         0wins711/DXPDr4Ii51Jahc3v0tEfZJDINtU3BvF1fHYsr3qIGLThYcEYQMBSiwOAebK
+         Yc9w==
+X-Gm-Message-State: APjAAAXyo4o3pJSSJUj0w8/AYX4l+b05V5llxE+nzUcxoE8gkWnQW/wC
+        UcH93/ppwsbgHIiVWYvg0ITAJg==
+X-Google-Smtp-Source: APXvYqzlBZJdgGNxd7XyFiEOJlwPzViCn8Ox6kTrAJFA7m0/z333Jav775/eeVAQrCP1PSa2KM2oZA==
+X-Received: by 2002:a62:e109:: with SMTP id q9mr9618993pfh.231.1570093854790;
+        Thu, 03 Oct 2019 02:10:54 -0700 (PDT)
+Received: from localhost.localdomain (111-241-164-136.dynamic-ip.hinet.net. [111.241.164.136])
+        by smtp.gmail.com with ESMTPSA id f128sm3445422pfg.143.2019.10.03.02.10.51
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 03 Oct 2019 02:10:54 -0700 (PDT)
+From:   Green Wan <green.wan@sifive.com>
+To:     linux-hackers@sifive.com
+Cc:     Green Wan <green.wan@sifive.com>, Vinod Koul <vkoul@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Palmer Dabbelt <palmer@sifive.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        "Paul E. McKenney" <paulmck@linux.ibm.com>,
+        Yash Shah <yash.shah@sifive.com>,
+        Bin Meng <bmeng.cn@gmail.com>,
+        Sagar Kadam <sagar.kadam@sifive.com>,
+        dmaengine@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v4 1/4] dt-bindings: dmaengine: sf-pdma: add bindins for SiFive PDMA
+Date:   Thu,  3 Oct 2019 17:09:01 +0800
+Message-Id: <20191003090945.29210-2-green.wan@sifive.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20191003090945.29210-1-green.wan@sifive.com>
+References: <20191003090945.29210-1-green.wan@sifive.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Sep 02, 2019 at 11:43:19AM +0800, Xiaowei Bao wrote:
-> Add support for the LS1028a PCIe controller.
-> 
-> Signed-off-by: Xiaowei Bao <xiaowei.bao@nxp.com>
-> Signed-off-by: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
-> ---
-> v2:
->  - No change.
-> v3:
->  - Reuse the ls2088 driver data structurt.
-> v4:
->  - No change.
-> v5:
->  - No change.
-> v6:
->  - No change.
-> 
->  drivers/pci/controller/dwc/pci-layerscape.c | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/drivers/pci/controller/dwc/pci-layerscape.c b/drivers/pci/controller/dwc/pci-layerscape.c
-> index 3a5fa26..f24f79a 100644
-> --- a/drivers/pci/controller/dwc/pci-layerscape.c
-> +++ b/drivers/pci/controller/dwc/pci-layerscape.c
-> @@ -263,6 +263,7 @@ static const struct ls_pcie_drvdata ls2088_drvdata = {
->  static const struct of_device_id ls_pcie_of_match[] = {
->  	{ .compatible = "fsl,ls1012a-pcie", .data = &ls1046_drvdata },
->  	{ .compatible = "fsl,ls1021a-pcie", .data = &ls1021_drvdata },
-> +	{ .compatible = "fsl,ls1028a-pcie", .data = &ls2088_drvdata },
+Add DT bindings document for Platform DMA(PDMA) driver of board,
+HiFive Unleashed Rev A00.
 
-I think you can save this driver change by using "fsl,ls2088a-pcie" as
-compatible fallback like below.
+Signed-off-by: Green Wan <green.wan@sifive.com>
+---
+ .../bindings/dma/sifive,fu540-c000-pdma.yaml  | 55 +++++++++++++++++++
+ 1 file changed, 55 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/dma/sifive,fu540-c000-pdma.yaml
 
-  compatible = "fsl,ls1028a-pcie", "fsl,ls2088a-pcie";
+diff --git a/Documentation/devicetree/bindings/dma/sifive,fu540-c000-pdma.yaml b/Documentation/devicetree/bindings/dma/sifive,fu540-c000-pdma.yaml
+new file mode 100644
+index 000000000000..2ca3ddbe1ff4
+--- /dev/null
++++ b/Documentation/devicetree/bindings/dma/sifive,fu540-c000-pdma.yaml
+@@ -0,0 +1,55 @@
++# SPDX-License-Identifier: GPL-2.0
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/dma/sifive,fu540-c000-pdma.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: SiFive Unleashed Rev C000 Platform DMA
++
++maintainers:
++  - Green Wan <green.wan@sifive.com>
++  - Palmer Debbelt <palmer@sifive.com>
++  - Paul Walmsley <paul.walmsley@sifive.com>
++
++description: |
++  Platform DMA is a DMA engine of SiFive Unleashed. It supports 4
++  channels. Each channel has 2 interrupts. One is for DMA done and
++  the other is for DME error.
++
++  In different SoC, DMA could be attached to different IRQ line.
++  DT file need to be changed to meet the difference. For technical
++  doc,
++
++  https://static.dev.sifive.com/FU540-C000-v1.0.pdf
++
++properties:
++  compatible:
++    items:
++      - const: sifive,fu540-c000-pdma
++
++  reg:
++    maxItems: 1
++
++  interrupts:
++    minItems: 1
++    maxItems: 8
++
++  '#dma-cells':
++    const: 1
++
++required:
++  - compatible
++  - reg
++  - interrupts
++  - '#dma-cells'
++
++examples:
++  - |
++    dma@3000000 {
++      compatible = "sifive,fu540-c000-pdma";
++      reg = <0x0 0x3000000 0x0 0x8000>;
++      interrupts = <23 24 25 26 27 28 29 30>;
++      #dma-cells = <1>;
++    };
++
++...
+-- 
+2.17.1
 
-Shawn
-
->  	{ .compatible = "fsl,ls1043a-pcie", .data = &ls1043_drvdata },
->  	{ .compatible = "fsl,ls1046a-pcie", .data = &ls1046_drvdata },
->  	{ .compatible = "fsl,ls2080a-pcie", .data = &ls2080_drvdata },
-> -- 
-> 2.9.5
-> 
