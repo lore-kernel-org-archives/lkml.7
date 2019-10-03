@@ -7,47 +7,54 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A284C10F14
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:12:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 657ACC32792
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:12:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4AEB8215EA
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:12:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 37A18215EA
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:12:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570119138;
-	bh=a+KhuUV2OOAQsa6Eu69UYdgnsSiU9l/+U5sClBKGbLE=;
+	s=default; t=1570119146;
+	bh=lw8qQB2XdoKBsbDUtcWe7KhHVToJ6iBMTQBYsvMtJCE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=oYewEgTXbSL6ro+MzbFQIFU712ANrHI9P1vcMH1rviFcIFuM58gY23iPuDys5yUm4
-	 bOvaPoorSdlq3sEyvKbodGRcfMbJgjR8XNTkcPokUdCipiUw1cFVz049qvBrGj5U++
-	 Gj4ghX+O8Tf49UMeJjXU71KlPRCysz7aGhEr51+w=
+	b=1K42njTwgVxOkv7DGzQAQtSWL+RFMkbKPlSL/325Zwao//gWxIhlYPXBJjWpPPX4z
+	 v7uP641mQ4SstNDgdcAs/mn04JFrLi6WgQk7uTWlAjt/y9qX4nQlFiZJV3rtx28kvm
+	 f82bR1WSb2w3lLx5J3N84nznlot+eba4zfu/c0LI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388004AbfJCQMR (ORCPT
+        id S2388037AbfJCQMZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 12:12:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34336 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 12:12:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34524 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387990AbfJCQMO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:12:14 -0400
+        id S2387990AbfJCQMW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:12:22 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 67C3B20700;
-        Thu,  3 Oct 2019 16:12:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 602FB20865;
+        Thu,  3 Oct 2019 16:12:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570119133;
-        bh=a+KhuUV2OOAQsa6Eu69UYdgnsSiU9l/+U5sClBKGbLE=;
+        s=default; t=1570119141;
+        bh=lw8qQB2XdoKBsbDUtcWe7KhHVToJ6iBMTQBYsvMtJCE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Dnmzro4gf/SLmsuFfZ4HVKDW0otVz92jAtborxuZo+hHCr7pzbfAtLNeyDoEE1n4s
-         u6MbLID+9kZDXpHYufnNYjPLBAo5DW+pZcd/6DCbeyMptgPJpt3GvdsdblMjdQLWBy
-         +mHxGJsSnLAXvXrYhT3R4oFcJzMWChLI05Hao3Uk=
+        b=JWI9A3sukhjhbGb/evMMhZ0LlMq23xIeGmrq/f3dBgytLH57eXMaWL+WJZT3fQEk2
+         ckxvls247w6NBx/MgGNngQ2YhuSqbX587FZ1jFpUETitFbDb42K7i7ELkAoy+fjklw
+         QuyjgyvBCQSt8D9lzN9ILIV0pzekKZmxHzCHbzEQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Stephen Rothwell <sfr@canb.auug.org.au>,
-        MyungJoo Ham <myungjoo.ham@samsung.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 139/185] PM / devfreq: passive: fix compiler warning
-Date:   Thu,  3 Oct 2019 17:53:37 +0200
-Message-Id: <20191003154508.965694616@linuxfoundation.org>
+        stable@vger.kernel.org, Masami Hiramatsu <mhiramat@kernel.org>,
+        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
+        "Naveen N. Rao" <naveen.n.rao@linux.vnet.ibm.com>,
+        Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        "Naveen N . Rao" <naveen.n.rao@linux.ibm.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 124/185] kprobes: Prohibit probing on BUG() and WARN() address
+Date:   Thu,  3 Oct 2019 17:53:22 +0200
+Message-Id: <20191003154505.846550065@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191003154437.541662648@linuxfoundation.org>
 References: <20191003154437.541662648@linuxfoundation.org>
@@ -60,33 +67,68 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: MyungJoo Ham <myungjoo.ham@samsung.com>
+From: Masami Hiramatsu <mhiramat@kernel.org>
 
-[ Upstream commit 0465814831a926ce2f83e8f606d067d86745234e ]
+[ Upstream commit e336b4027775cb458dc713745e526fa1a1996b2a ]
 
-The recent commit of
-PM / devfreq: passive: Use non-devm notifiers
-had incurred compiler warning, "unused variable 'dev'".
+Since BUG() and WARN() may use a trap (e.g. UD2 on x86) to
+get the address where the BUG() has occurred, kprobes can not
+do single-step out-of-line that instruction. So prohibit
+probing on such address.
 
-Reported-by: Stephen Rothwell <sfr@canb.auug.org.au>
-Signed-off-by: MyungJoo Ham <myungjoo.ham@samsung.com>
+Without this fix, if someone put a kprobe on WARN(), the
+kernel will crash with invalid opcode error instead of
+outputing warning message, because kernel can not find
+correct bug address.
+
+Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
+Acked-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+Acked-by: Naveen N. Rao <naveen.n.rao@linux.vnet.ibm.com>
+Cc: Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>
+Cc: David S . Miller <davem@davemloft.net>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Naveen N . Rao <naveen.n.rao@linux.ibm.com>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Steven Rostedt <rostedt@goodmis.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Link: https://lkml.kernel.org/r/156750890133.19112.3393666300746167111.stgit@devnote2
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/devfreq/governor_passive.c | 1 -
- 1 file changed, 1 deletion(-)
+ include/linux/bug.h | 5 +++++
+ kernel/kprobes.c    | 3 ++-
+ 2 files changed, 7 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/devfreq/governor_passive.c b/drivers/devfreq/governor_passive.c
-index 4222d3c1efb98..d2ebdb7fd7518 100644
---- a/drivers/devfreq/governor_passive.c
-+++ b/drivers/devfreq/governor_passive.c
-@@ -152,7 +152,6 @@ static int devfreq_passive_notifier_call(struct notifier_block *nb,
- static int devfreq_passive_event_handler(struct devfreq *devfreq,
- 				unsigned int event, void *data)
+diff --git a/include/linux/bug.h b/include/linux/bug.h
+index da4231c905c85..f485974177914 100644
+--- a/include/linux/bug.h
++++ b/include/linux/bug.h
+@@ -45,6 +45,11 @@ int is_valid_bugaddr(unsigned long addr);
+ 
+ #else	/* !CONFIG_GENERIC_BUG */
+ 
++static inline void *find_bug(unsigned long bugaddr)
++{
++	return NULL;
++}
++
+ static inline enum bug_trap_type report_bug(unsigned long bug_addr,
+ 					    struct pt_regs *regs)
  {
--	struct device *dev = devfreq->dev.parent;
- 	struct devfreq_passive_data *p_data
- 			= (struct devfreq_passive_data *)devfreq->data;
- 	struct devfreq *parent = (struct devfreq *)p_data->parent;
+diff --git a/kernel/kprobes.c b/kernel/kprobes.c
+index c43bc2bc5b2ca..f7a4602a76f98 100644
+--- a/kernel/kprobes.c
++++ b/kernel/kprobes.c
+@@ -1501,7 +1501,8 @@ static int check_kprobe_address_safe(struct kprobe *p,
+ 	/* Ensure it is not in reserved area nor out of text */
+ 	if (!kernel_text_address((unsigned long) p->addr) ||
+ 	    within_kprobe_blacklist((unsigned long) p->addr) ||
+-	    jump_label_text_reserved(p->addr, p->addr)) {
++	    jump_label_text_reserved(p->addr, p->addr) ||
++	    find_bug((unsigned long)p->addr)) {
+ 		ret = -EINVAL;
+ 		goto out;
+ 	}
 -- 
 2.20.1
 
