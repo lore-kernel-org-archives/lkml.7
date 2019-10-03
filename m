@@ -4,35 +4,35 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39DE7C10F14
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 12:32:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 15BD8C10F14
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 12:32:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1816320862
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 12:32:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E991A20842
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 12:32:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730196AbfJCMcy (ORCPT
+        id S1730211AbfJCMc6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 08:32:54 -0400
-Received: from mga09.intel.com ([134.134.136.24]:50457 "EHLO mga09.intel.com"
+        Thu, 3 Oct 2019 08:32:58 -0400
+Received: from mga17.intel.com ([192.55.52.151]:27959 "EHLO mga17.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729594AbfJCMc1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 08:32:27 -0400
+        id S1729080AbfJCMc5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 08:32:57 -0400
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 03 Oct 2019 05:32:26 -0700
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 03 Oct 2019 05:32:56 -0700
 X-IronPort-AV: E=Sophos;i="5.67,252,1566889200"; 
-   d="scan'208";a="343651727"
+   d="scan'208";a="185899703"
 Received: from paasikivi.fi.intel.com ([10.237.72.42])
-  by orsmga004-auth.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 03 Oct 2019 05:32:23 -0700
+  by orsmga008-auth.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 03 Oct 2019 05:32:53 -0700
 Received: from punajuuri.localdomain (punajuuri.localdomain [192.168.240.130])
-        by paasikivi.fi.intel.com (Postfix) with ESMTP id 382082103B;
+        by paasikivi.fi.intel.com (Postfix) with ESMTP id 4D2822136B;
         Thu,  3 Oct 2019 15:32:17 +0300 (EEST)
 Received: from sailus by punajuuri.localdomain with local (Exim 4.92)
         (envelope-from <sakari.ailus@linux.intel.com>)
-        id 1iG0HL-0002wZ-Tg; Thu, 03 Oct 2019 15:32:19 +0300
+        id 1iG0HM-0002wi-0Q; Thu, 03 Oct 2019 15:32:20 +0300
 From:   Sakari Ailus <sakari.ailus@linux.intel.com>
 To:     Petr Mladek <pmladek@suse.com>, linux-kernel@vger.kernel.org,
         rafael@kernel.org
@@ -41,9 +41,9 @@ Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
         Rob Herring <robh@kernel.org>,
         Heikki Krogerus <heikki.krogerus@linux.intel.com>,
         Joe Perches <joe@perches.com>
-Subject: [PATCH v9 09/12] lib/vsprintf: Make use of fwnode API to obtain node names and separators
-Date:   Thu,  3 Oct 2019 15:32:16 +0300
-Message-Id: <20191003123219.11237-10-sakari.ailus@linux.intel.com>
+Subject: [PATCH v9 12/12] lib/test_printf: Add tests for %pfw printk modifier
+Date:   Thu,  3 Oct 2019 15:32:19 +0300
+Message-Id: <20191003123219.11237-13-sakari.ailus@linux.intel.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191003123219.11237-1-sakari.ailus@linux.intel.com>
 References: <20191003123219.11237-1-sakari.ailus@linux.intel.com>
@@ -54,97 +54,72 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Instead of implementing our own means of discovering parent nodes, node
-names or counting how many parents a node has, use the newly added
-functions in the fwnode API to obtain that information.
+Add a test for the %pfw printk modifier using software nodes.
 
 Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
 Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 Reviewed-by: Petr Mladek <pmladek@suse.com>
 ---
- lib/vsprintf.c | 39 +++++++++++++++++----------------------
- 1 file changed, 17 insertions(+), 22 deletions(-)
+ lib/test_printf.c | 32 ++++++++++++++++++++++++++++++++
+ 1 file changed, 32 insertions(+)
 
-diff --git a/lib/vsprintf.c b/lib/vsprintf.c
-index cf48769fe330c..c2be0e5bc087d 100644
---- a/lib/vsprintf.c
-+++ b/lib/vsprintf.c
-@@ -38,6 +38,7 @@
- #include <net/addrconf.h>
- #include <linux/siphash.h>
- #include <linux/compiler.h>
+diff --git a/lib/test_printf.c b/lib/test_printf.c
+index 944eb50f38625..bb6a7d334084b 100644
+--- a/lib/test_printf.c
++++ b/lib/test_printf.c
+@@ -22,6 +22,8 @@
+ #include <linux/gfp.h>
+ #include <linux/mm.h>
+ 
 +#include <linux/property.h>
- #ifdef CONFIG_BLOCK
- #include <linux/blkdev.h>
- #endif
-@@ -1863,32 +1864,25 @@ char *flags_string(char *buf, char *end, void *flags_ptr,
- 	return format_flags(buf, end, flags, names);
++
+ #include "../tools/testing/selftests/kselftest_module.h"
+ 
+ #define BUF_SIZE 256
+@@ -588,6 +590,35 @@ flags(void)
+ 	kfree(cmp_buffer);
  }
  
--static const char *device_node_name_for_depth(const struct device_node *np, int depth)
--{
--	for ( ; np && depth; depth--)
--		np = np->parent;
--
--	return kbasename(np->full_name);
--}
--
- static noinline_for_stack
--char *device_node_gen_full_name(const struct device_node *np, char *buf, char *end)
-+char *fwnode_full_name_string(struct fwnode_handle *fwnode, char *buf,
-+			      char *end)
++static void __init fwnode_pointer(void)
++{
++	const struct software_node softnodes[] = {
++		{ .name = "first", },
++		{ .name = "second", .parent = &softnodes[0], },
++		{ .name = "third", .parent = &softnodes[1], },
++		{ NULL /* Guardian */ }
++	};
++	const char * const full_name = "first/second/third";
++	const char * const full_name_second = "first/second";
++	const char * const second_name = "second";
++	const char * const third_name = "third";
++	int rval;
++
++	rval = software_node_register_nodes(softnodes);
++	if (rval) {
++		pr_warn("cannot register softnodes; rval %d\n", rval);
++		return;
++	}
++
++	test(full_name_second, "%pfw", software_node_fwnode(&softnodes[1]));
++	test(full_name, "%pfw", software_node_fwnode(&softnodes[2]));
++	test(full_name, "%pfwf", software_node_fwnode(&softnodes[2]));
++	test(second_name, "%pfwP", software_node_fwnode(&softnodes[1]));
++	test(third_name, "%pfwP", software_node_fwnode(&softnodes[2]));
++
++	software_node_unregister_nodes(softnodes);
++}
++
+ static void __init
+ test_pointer(void)
  {
- 	int depth;
--	const struct device_node *parent = np->parent;
- 
--	/* special case for root node */
--	if (!parent)
--		return string_nocheck(buf, end, "/", default_str_spec);
-+	/* Loop starting from the root node to the current node. */
-+	for (depth = fwnode_count_parents(fwnode); depth >= 0; depth--) {
-+		struct fwnode_handle *__fwnode =
-+			fwnode_get_nth_parent(fwnode, depth);
- 
--	for (depth = 0; parent->parent; depth++)
--		parent = parent->parent;
--
--	for ( ; depth >= 0; depth--) {
--		buf = string_nocheck(buf, end, "/", default_str_spec);
--		buf = string(buf, end, device_node_name_for_depth(np, depth),
-+		buf = string(buf, end, fwnode_get_name_prefix(__fwnode),
-+			     default_str_spec);
-+		buf = string(buf, end, fwnode_get_name(__fwnode),
- 			     default_str_spec);
-+
-+		fwnode_handle_put(__fwnode);
- 	}
-+
- 	return buf;
+@@ -610,6 +641,7 @@ test_pointer(void)
+ 	bitmap();
+ 	netdev_features();
+ 	flags();
++	fwnode_pointer();
  }
  
-@@ -1933,10 +1927,11 @@ char *device_node_string(char *buf, char *end, struct device_node *dn,
- 
- 		switch (*fmt) {
- 		case 'f':	/* full_name */
--			buf = device_node_gen_full_name(dn, buf, end);
-+			buf = fwnode_full_name_string(of_fwnode_handle(dn), buf,
-+						      end);
- 			break;
- 		case 'n':	/* name */
--			p = kbasename(of_node_full_name(dn));
-+			p = fwnode_get_name(of_fwnode_handle(dn));
- 			precision = str_spec.precision;
- 			str_spec.precision = strchrnul(p, '@') - p;
- 			buf = string(buf, end, p, str_spec);
-@@ -1946,7 +1941,7 @@ char *device_node_string(char *buf, char *end, struct device_node *dn,
- 			buf = number(buf, end, (unsigned int)dn->phandle, num_spec);
- 			break;
- 		case 'P':	/* path-spec */
--			p = kbasename(of_node_full_name(dn));
-+			p = fwnode_get_name(of_fwnode_handle(dn));
- 			if (!p[1])
- 				p = "/";
- 			buf = string(buf, end, p, str_spec);
+ static void __init selftest(void)
 -- 
 2.20.1
 
