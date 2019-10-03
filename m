@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09F1DC4CED1
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:37:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 082AEC10F14
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:37:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D52A9222BE
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:37:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CE307222BE
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:37:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570120629;
-	bh=QgqhBMZOdxVZBFPauAUYX1wbmJG3AvrJIlgEmUkZGP4=;
+	s=default; t=1570120633;
+	bh=Bacu3uB7CVGhwq+WnDKi6I86W/w+8UaQZLRGorL0fmw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=O4n7D/d7blS1pipp0KOXYmObxPQxpbbuV8gF0nmL2LloDH16VTPdyKQfdx4wHh/E/
-	 OAamX4tKk9xzeK5MhOfPdTzcyA1VjKBj2oBxF3IdMTFA9btQmiZUNUCJJwqxIav3ug
-	 BSFs8sSPNr7zYpuoHOW9VCQDkB7S/h+vOxY9Re1c=
+	b=xiz0ykJ+XiMn0s1xHAdf/ZpnpnD3kDdCEUJ9W/dCkDjaAJUV6tsD7wWipSrsRX0aa
+	 HtUNi28MshrCbgqdeT/u3i/DhNoigxX8qTIyHYpGkS4dRGbW0CRXlFjNLUbMUQ4sgW
+	 Drgv2iqMqUrmrKlU0tEtfE8c2YtqE8mNrLTtY5fM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733146AbfJCQhJ (ORCPT
+        id S2404528AbfJCQhN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 12:37:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46418 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 12:37:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46444 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392250AbfJCQhE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:37:04 -0400
+        id S2404106AbfJCQhH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:37:07 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B216320830;
-        Thu,  3 Oct 2019 16:37:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5AEAA20830;
+        Thu,  3 Oct 2019 16:37:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570120624;
-        bh=QgqhBMZOdxVZBFPauAUYX1wbmJG3AvrJIlgEmUkZGP4=;
+        s=default; t=1570120626;
+        bh=Bacu3uB7CVGhwq+WnDKi6I86W/w+8UaQZLRGorL0fmw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=TYvrc87O1Hnu/VFLmIyNHqPrnl7aSkXPXSNoLMDtlNiiRdB8CzwH37psnkSMrzp8y
-         mHUjuTDylumBEi8NbOCEJmBaJmNUfkustKJ2i2xbLmaC/+n8iIj6/Mrs+btu/vj32C
-         KXo2duJV2V+3aLV82QHL2Oa/wbUiaz2FcXtA+Adc=
+        b=x9p7F2Kjfi64DJwexch6OUQvAZfJTGOcQEGn8l46lywmzd266Fxt/PwKty02Qp5gs
+         5ALsGRRXvaohG4OZqEf5yjF+zoucrVOaTxP9U42UbxYrKTkbNolBh4jxtXqQkrIYwv
+         SJTkG+fcbPVartc0j/rM085NJYQHsfd6VUbdi/6I=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Johannes Thumshirn <jthumshirn@suse.de>,
-        Nikolay Borisov <nborisov@suse.com>,
-        David Sterba <dsterba@suse.com>
-Subject: [PATCH 5.2 284/313] btrfs: Relinquish CPUs in btrfs_compare_trees
-Date:   Thu,  3 Oct 2019 17:54:22 +0200
-Message-Id: <20191003154601.050573539@linuxfoundation.org>
+        stable@vger.kernel.org, NeilBrown <neilb@suse.com>,
+        Song Liu <songliubraving@fb.com>
+Subject: [PATCH 5.2 293/313] md: dont report active array_state until after revalidate_disk() completes.
+Date:   Thu,  3 Oct 2019 17:54:31 +0200
+Message-Id: <20191003154602.008060778@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191003154533.590915454@linuxfoundation.org>
 References: <20191003154533.590915454@linuxfoundation.org>
@@ -60,69 +59,104 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nikolay Borisov <nborisov@suse.com>
+From: NeilBrown <neilb@suse.com>
 
-commit 6af112b11a4bc1b560f60a618ac9c1dcefe9836e upstream.
+commit 9d4b45d6af442237560d0bb5502a012baa5234b7 upstream.
 
-When doing any form of incremental send the parent and the child trees
-need to be compared via btrfs_compare_trees. This  can result in long
-loop chains without ever relinquishing the CPU. This causes softlockup
-detector to trigger when comparing trees with a lot of items. Example
-report:
+Until revalidate_disk() has completed, the size of a new md array will
+appear to be zero.
+So we shouldn't report, through array_state, that the array is active
+until that time.
+udev rules check array_state to see if the array is ready.  As soon as
+it appear to be zero, fsck can be run.  If it find the size to be
+zero, it will fail.
 
-watchdog: BUG: soft lockup - CPU#0 stuck for 24s! [snapperd:16153]
-CPU: 0 PID: 16153 Comm: snapperd Not tainted 5.2.9-1-default #1 openSUSE Tumbleweed (unreleased)
-Hardware name: QEMU KVM Virtual Machine, BIOS 0.0.0 02/06/2015
-pstate: 40000005 (nZcv daif -PAN -UAO)
-pc : __ll_sc_arch_atomic_sub_return+0x14/0x20
-lr : btrfs_release_extent_buffer_pages+0xe0/0x1e8 [btrfs]
-sp : ffff00001273b7e0
-Call trace:
- __ll_sc_arch_atomic_sub_return+0x14/0x20
- release_extent_buffer+0xdc/0x120 [btrfs]
- free_extent_buffer.part.0+0xb0/0x118 [btrfs]
- free_extent_buffer+0x24/0x30 [btrfs]
- btrfs_release_path+0x4c/0xa0 [btrfs]
- btrfs_free_path.part.0+0x20/0x40 [btrfs]
- btrfs_free_path+0x24/0x30 [btrfs]
- get_inode_info+0xa8/0xf8 [btrfs]
- finish_inode_if_needed+0xe0/0x6d8 [btrfs]
- changed_cb+0x9c/0x410 [btrfs]
- btrfs_compare_trees+0x284/0x648 [btrfs]
- send_subvol+0x33c/0x520 [btrfs]
- btrfs_ioctl_send+0x8a0/0xaf0 [btrfs]
- btrfs_ioctl+0x199c/0x2288 [btrfs]
- do_vfs_ioctl+0x4b0/0x820
- ksys_ioctl+0x84/0xb8
- __arm64_sys_ioctl+0x28/0x38
- el0_svc_common.constprop.0+0x7c/0x188
- el0_svc_handler+0x34/0x90
- el0_svc+0x8/0xc
+So add a new flag to provide an interlock between do_md_run() and
+array_state_show().  This flag is set while do_md_run() is active and
+it prevents array_state_show() from reporting that the array is
+active.
 
-Fix this by adding a call to cond_resched at the beginning of the main
-loop in btrfs_compare_trees.
+Before do_md_run() is called, ->pers will be NULL so array is
+definitely not active.
+After do_md_run() is called, revalidate_disk() will have run and the
+array will be completely ready.
 
-Fixes: 7069830a9e38 ("Btrfs: add btrfs_compare_trees function")
-CC: stable@vger.kernel.org # 4.4+
-Reviewed-by: Johannes Thumshirn <jthumshirn@suse.de>
-Signed-off-by: Nikolay Borisov <nborisov@suse.com>
-Reviewed-by: David Sterba <dsterba@suse.com>
-Signed-off-by: David Sterba <dsterba@suse.com>
+We also move various sysfs_notify*() calls out of md_run() into
+do_md_run() after MD_NOT_READY is cleared.  This ensure the
+information is ready before the notification is sent.
+
+Prior to v4.12, array_state_show() was called with the
+mddev->reconfig_mutex held, which provided exclusion with do_md_run().
+
+Note that MD_NOT_READY cleared twice.  This is deliberate to cover
+both success and error paths with minimal noise.
+
+Fixes: b7b17c9b67e5 ("md: remove mddev_lock() from md_attr_show()")
+Cc: stable@vger.kernel.org (v4.12++)
+Signed-off-by: NeilBrown <neilb@suse.com>
+Signed-off-by: Song Liu <songliubraving@fb.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/btrfs/ctree.c |    1 +
- 1 file changed, 1 insertion(+)
+ drivers/md/md.c |   11 +++++++----
+ drivers/md/md.h |    3 +++
+ 2 files changed, 10 insertions(+), 4 deletions(-)
 
---- a/fs/btrfs/ctree.c
-+++ b/fs/btrfs/ctree.c
-@@ -5477,6 +5477,7 @@ int btrfs_compare_trees(struct btrfs_roo
- 	advance_left = advance_right = 0;
+--- a/drivers/md/md.c
++++ b/drivers/md/md.c
+@@ -4105,7 +4105,7 @@ array_state_show(struct mddev *mddev, ch
+ {
+ 	enum array_state st = inactive;
  
- 	while (1) {
-+		cond_resched();
- 		if (advance_left && !left_end_reached) {
- 			ret = tree_advance(left_path, &left_level,
- 					left_root_level,
+-	if (mddev->pers)
++	if (mddev->pers && !test_bit(MD_NOT_READY, &mddev->flags))
+ 		switch(mddev->ro) {
+ 		case 1:
+ 			st = readonly;
+@@ -5660,9 +5660,6 @@ int md_run(struct mddev *mddev)
+ 		md_update_sb(mddev, 0);
+ 
+ 	md_new_event(mddev);
+-	sysfs_notify_dirent_safe(mddev->sysfs_state);
+-	sysfs_notify_dirent_safe(mddev->sysfs_action);
+-	sysfs_notify(&mddev->kobj, NULL, "degraded");
+ 	return 0;
+ 
+ abort:
+@@ -5676,6 +5673,7 @@ static int do_md_run(struct mddev *mddev
+ {
+ 	int err;
+ 
++	set_bit(MD_NOT_READY, &mddev->flags);
+ 	err = md_run(mddev);
+ 	if (err)
+ 		goto out;
+@@ -5696,9 +5694,14 @@ static int do_md_run(struct mddev *mddev
+ 
+ 	set_capacity(mddev->gendisk, mddev->array_sectors);
+ 	revalidate_disk(mddev->gendisk);
++	clear_bit(MD_NOT_READY, &mddev->flags);
+ 	mddev->changed = 1;
+ 	kobject_uevent(&disk_to_dev(mddev->gendisk)->kobj, KOBJ_CHANGE);
++	sysfs_notify_dirent_safe(mddev->sysfs_state);
++	sysfs_notify_dirent_safe(mddev->sysfs_action);
++	sysfs_notify(&mddev->kobj, NULL, "degraded");
+ out:
++	clear_bit(MD_NOT_READY, &mddev->flags);
+ 	return err;
+ }
+ 
+--- a/drivers/md/md.h
++++ b/drivers/md/md.h
+@@ -236,6 +236,9 @@ enum mddev_flags {
+ 	MD_UPDATING_SB,		/* md_check_recovery is updating the metadata
+ 				 * without explicitly holding reconfig_mutex.
+ 				 */
++	MD_NOT_READY,		/* do_md_run() is active, so 'array_state'
++				 * must not report that array is ready yet
++				 */
+ };
+ 
+ enum mddev_sb_flags {
 
 
