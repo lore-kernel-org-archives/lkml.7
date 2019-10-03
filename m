@@ -2,77 +2,84 @@ Return-Path: <SRS0=6dNS=X4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ADF07C10F14
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 18:03:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82D03C32792
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 18:05:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 866FB20862
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 18:03:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4B06321783
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 18:05:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732087AbfJCSDT (ORCPT
+        id S1733110AbfJCSFn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 14:03:19 -0400
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:36405 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731635AbfJCSDT (ORCPT
+        Thu, 3 Oct 2019 14:05:43 -0400
+Received: from cloudserver094114.home.pl ([79.96.170.134]:59760 "EHLO
+        cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730804AbfJCSFn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 14:03:19 -0400
-Received: from ptx.hi.pengutronix.de ([2001:67c:670:100:1d::c0])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <pza@pengutronix.de>)
-        id 1iG5Rb-000388-4I; Thu, 03 Oct 2019 20:03:15 +0200
-Received: from pza by ptx.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <pza@pengutronix.de>)
-        id 1iG5RX-0006fI-4j; Thu, 03 Oct 2019 20:03:11 +0200
-Date:   Thu, 3 Oct 2019 20:03:11 +0200
-From:   Philipp Zabel <pza@pengutronix.de>
-To:     Jerome Brunet <jbrunet@baylibre.com>
-Cc:     Kevin Hilman <khilman@baylibre.com>,
-        linux-amlogic@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 0/2] reset: meson-audio-arb: add sm1 support
-Message-ID: <20191003180311.hlv7s32twzcaxj3x@pengutronix.de>
-References: <20190905135040.6635-1-jbrunet@baylibre.com>
- <1567693618.3958.4.camel@pengutronix.de>
- <1jk19oregr.fsf@starbuckisacylon.baylibre.com>
+        Thu, 3 Oct 2019 14:05:43 -0400
+Received: from 79.184.253.225.ipv4.supernova.orange.pl (79.184.253.225) (HELO kreacher.localnet)
+ by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.292)
+ id 7611574cb3852698; Thu, 3 Oct 2019 20:05:40 +0200
+From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
+To:     Giovanni Gherdovich <ggherdovich@suse.cz>
+Cc:     Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Borislav Petkov <bp@suse.de>, Len Brown <lenb@kernel.org>,
+        x86@kernel.org, linux-pm@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Mel Gorman <mgorman@techsingularity.net>,
+        Matt Fleming <matt@codeblueprint.co.uk>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Paul Turner <pjt@google.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Quentin Perret <qperret@qperret.net>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Doug Smythies <dsmythies@telus.net>
+Subject: Re: [PATCH v2 2/2] cpufreq: intel_pstate: Conditional frequency invariant accounting
+Date:   Thu, 03 Oct 2019 20:05:40 +0200
+Message-ID: <13106850.QMtCbivBLn@kreacher>
+In-Reply-To: <20191002122926.385-3-ggherdovich@suse.cz>
+References: <20191002122926.385-1-ggherdovich@suse.cz> <20191002122926.385-3-ggherdovich@suse.cz>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1jk19oregr.fsf@starbuckisacylon.baylibre.com>
-X-Sent-From: Pengutronix Hildesheim
-X-URL:  http://www.pengutronix.de/
-X-IRC:  #ptxdist @freenode
-X-Accept-Language: de,en
-X-Accept-Content-Type: text/plain
-X-Uptime: 20:00:35 up 88 days, 10 min, 55 users,  load average: 0.43, 0.19,
- 0.15
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c0
-X-SA-Exim-Mail-From: pza@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Jerome,
+On Wednesday, October 2, 2019 2:29:26 PM CEST Giovanni Gherdovich wrote:
+> From: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+> 
+> intel_pstate has two operating modes: active and passive. In "active"
+> mode, the in-built scaling governor is used and in "passive" mode,
+> the driver can be used with any governor like "schedutil". In "active"
+> mode the utilization values from schedutil is not used and there is
+> a requirement from high performance computing use cases, not to read
+> any APERF/MPERF MSRs.
 
-On Tue, Oct 01, 2019 at 11:40:20AM +0200, Jerome Brunet wrote:
-[...]
-> Looks like this patchset missed v5.4-rc1.
-> Could you provide a tag with the bindings to Kevin so we can use the IDs
-> in DT until the next merge window ?
+Well, this isn't quite convincing.
 
-Does
+In particular, I don't see why the "don't read APERF/MPERF MSRs" argument
+applies *only* to intel_pstate in the "active" mode.  What about intel_pstate
+in the "passive" mode combined with the "performance" governor?  Or any other
+governor different from "schedutil" for that matter?
 
-  git://git.pengutronix.de/git/pza/linux.git reset/meson-sm1-bindings
+And what about acpi_cpufreq combined with any governor different from
+"schedutil"?
 
-work for you?
+Scale invariance is not really needed in all of those cases right now AFAICS,
+or is it?
 
-regards
-Philipp
+So is the real concern that intel_pstate in the "active" mode reads the MPERF
+and APERF MSRs by itself and that kind of duplicates what the scale invariance
+code does and is redundant etc?
+
+
+
