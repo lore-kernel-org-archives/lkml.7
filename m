@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B2F5C4360C
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 01:39:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06B40C4360C
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 01:39:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 51C88222BE
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 01:39:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CE217222BE
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 01:39:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570066768;
-	bh=CAee0HkekqhN4kNQWmaAnn8lhpve7s8cW9MrImWDFXc=;
+	s=default; t=1570066770;
+	bh=IbqrUn9h/v3hw2FzDoNPSS9hMwA0fdvI0wfndOTtDBk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=GveRt1LkkxWqY3TAXlb5rYSBAh64fgp/vVrH2yXBn8ieyMkov1fZ/xMyZbyeJQR9q
-	 NdsdyYRLxxaHNuAC+egc0hKaMMW9l0YQAHJ8LT44j7pTmJK0Yo83tYkDUi9puWjjaj
-	 SDFTiAaAVUT9l/JeqR3j2Z+2Z7dibawZZszWTezg=
+	b=tfIuks/wdcRN6m9GswbqV4+j/3d3jfX+IGLtpd3Gx5ER6oCht2V/TMiPduoYCsgmC
+	 3j853daRNxj9vuAdPmcqDEEiRzZP7GVEyv/YiBtwCJqgsIOy1N+f1Z0EciuO0P9M+S
+	 pXFc4BREUHQ9PfX5weuaEyVg1cdX32rG1GA0JeqU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727611AbfJCBj1 (ORCPT
+        id S1728723AbfJCBj3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Oct 2019 21:39:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44850 "EHLO mail.kernel.org"
+        Wed, 2 Oct 2019 21:39:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44786 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728486AbfJCBjJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1728476AbfJCBjJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 2 Oct 2019 21:39:09 -0400
 Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D2E4E222CF;
+        by mail.kernel.org (Postfix) with ESMTPSA id 8335C222C3;
         Thu,  3 Oct 2019 01:39:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570066749;
-        bh=CAee0HkekqhN4kNQWmaAnn8lhpve7s8cW9MrImWDFXc=;
+        s=default; t=1570066748;
+        bh=IbqrUn9h/v3hw2FzDoNPSS9hMwA0fdvI0wfndOTtDBk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=d1XzDlSatGM8IseECc92cX9E17OJKDP2FSFLI83KQCe0p5BCbqmcfl7CGcWQgNu4A
-         3qX5PAr9d2M4LmUMvD9bJpGLay65TNbhCl2ohHYKdXvvjgg50ox35IZwPG+RNDMx9i
-         yNbXdkoRSBra4EpYKR/oZ22bC1fTWwYCYLJ70O5w=
+        b=r7nMpioqqqCPwEd7Zfle0AsNTzk8UpsoW7EEkUiOJZ/I+3d7ic45fH4h6EtPpg1jh
+         G0GmbDvwOSgaTRideNqJhmtkhDVIz779gGwtCucmhnTA7QUXiJT7tZObIieYGmT/je
+         xVNzUNVsl/z/sA6oONsUMOhHZqpXL8fajj4+esHI=
 From:   paulmck@kernel.org
 To:     rcu@vger.kernel.org
 Cc:     linux-kernel@vger.kernel.org, mingo@kernel.org,
@@ -47,10 +47,10 @@ Cc:     linux-kernel@vger.kernel.org, mingo@kernel.org,
         josh@joshtriplett.org, tglx@linutronix.de, peterz@infradead.org,
         rostedt@goodmis.org, dhowells@redhat.com, edumazet@google.com,
         fweisbec@gmail.com, oleg@redhat.com, joel@joelfernandes.org,
-        "Paul E. McKenney" <paulmck@linux.ibm.com>
-Subject: [PATCH tip/core/rcu 11/12] rcu: Confine ->core_needs_qs accesses to the corresponding CPU
-Date:   Wed,  2 Oct 2019 18:39:02 -0700
-Message-Id: <20191003013903.13079-11-paulmck@kernel.org>
+        "Paul E . McKenney" <paulmck@kernel.org>
+Subject: [PATCH tip/core/rcu 10/12] rcu: Reset CPU hints when reporting a quiescent state
+Date:   Wed,  2 Oct 2019 18:39:01 -0700
+Message-Id: <20191003013903.13079-10-paulmck@kernel.org>
 X-Mailer: git-send-email 2.9.5
 In-Reply-To: <20191003013834.GA12927@paulmck-ThinkPad-P72>
 References: <20191003013834.GA12927@paulmck-ThinkPad-P72>
@@ -59,73 +59,94 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Paul E. McKenney" <paulmck@linux.ibm.com>
+From: "Joel Fernandes (Google)" <joel@joelfernandes.org>
 
-Commit 671a63517cf9 ("rcu: Avoid unnecessary softirq when system
-is idle") fixed a bug that could result in an indefinite number of
-unnecessary invocations of the RCU_SOFTIRQ handler at the trailing edge
-of a scheduler-clock interrupt.  However, the fix introduced off-CPU
-stores to ->core_needs_qs.  These writes did not conflict with the
-on-CPU stores because the CPU's leaf rcu_node structure's ->lock was
-held across all such stores.  However, the loads from ->core_needs_qs
-were not promoted to READ_ONCE() and, worse yet, the code loading from
-->core_needs_qs was written assuming that it was only ever updated by
-the corresponding CPU.  So operation has been robust, but only by luck.
-This situation is therefore an accident waiting to happen.
+In some cases, tracing shows that need_heavy_qs is still set even though
+urgent_qs was cleared upon reporting of a quiescent state.  One such
+case is when the softirq reports that a CPU has passed quiescent state.
 
-This commit therefore takes a different approach.  Instead of clearing
-->core_needs_qs from the grace-period kthread's force-quiescent-state
-processing, it modifies the rcu_pending() function to suppress the
-rcu_sched_clock_irq() function's call to invoke_rcu_core() if there is no
-grace period in progress.  This avoids the infinite needless RCU_SOFTIRQ
-handlers while still keeping all accesses to ->core_needs_qs local to
-the corresponding CPU.
+Commit 671a63517cf9 ("rcu: Avoid unnecessary softirq when system is
+idle") fixed a bug where core_needs_qs was not being cleared.  In order
+to avoid running into similar situations with the urgent-grace-period
+flags, this commit causes rcu_disable_urgency_upon_qs(), previously
+rcu_disable_tick_upon_qs(), to clear the urgency hints, ->rcu_urgent_qs
+and ->rcu_need_heavy_qs.  Note that it is possible for CPUs to go
+offline with these urgency hints still set.  This is handled because
+rcu_disable_urgency_upon_qs() is also invoked during the online process.
 
-Signed-off-by: Paul E. McKenney <paulmck@linux.ibm.com>
+Because these hints can be cleared both by the corresponding CPU and by
+the grace-period kthread, this commit also adds a number of READ_ONCE()
+and WRITE_ONCE() calls.
+
+Tested overnight with rcutorture running for 60 minutes on all
+configurations of RCU.
+
+Signed-off-by: "Joel Fernandes (Google)" <joel@joelfernandes.org>
+[ paulmck: Clear urgency flags in rcu_disable_urgency_upon_qs(). ]
+[ paulmck: Remove ->core_needs_qs from the set cleared at quiescent state. ]
+Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
 ---
- kernel/rcu/tree.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ kernel/rcu/tree.c | 17 ++++++++++-------
+ 1 file changed, 10 insertions(+), 7 deletions(-)
 
 diff --git a/kernel/rcu/tree.c b/kernel/rcu/tree.c
-index 59527b0..1b250d4 100644
+index 1601fa6..59527b0 100644
 --- a/kernel/rcu/tree.c
 +++ b/kernel/rcu/tree.c
-@@ -1988,7 +1988,6 @@ rcu_report_qs_rdp(int cpu, struct rcu_data *rdp)
- 		return;
+@@ -826,7 +826,7 @@ static __always_inline void rcu_nmi_enter_common(bool irq)
+ 		incby = 1;
+ 	} else if (tick_nohz_full_cpu(rdp->cpu) &&
+ 		   rdp->dynticks_nmi_nesting == DYNTICK_IRQ_NONIDLE &&
+-		   rdp->rcu_urgent_qs && !rdp->rcu_forced_tick) {
++		   READ_ONCE(rdp->rcu_urgent_qs) && !rdp->rcu_forced_tick) {
+ 		rdp->rcu_forced_tick = true;
+ 		tick_dep_set_cpu(rdp->cpu, TICK_DEP_BIT_RCU);
  	}
- 	mask = rdp->grpmask;
--	rdp->core_needs_qs = false;
- 	if ((rnp->qsmask & mask) == 0) {
- 		raw_spin_unlock_irqrestore_rcu_node(rnp, flags);
- 	} else {
-@@ -2822,6 +2821,7 @@ EXPORT_SYMBOL_GPL(cond_synchronize_rcu);
+@@ -891,11 +891,14 @@ void rcu_irq_enter_irqson(void)
+ }
+ 
+ /*
+- * If the scheduler-clock interrupt was enabled on a nohz_full CPU
+- * in order to get to a quiescent state, disable it.
++ * If any sort of urgency was applied to the current CPU (for example,
++ * the scheduler-clock interrupt was enabled on a nohz_full CPU) in order
++ * to get to a quiescent state, disable it.
   */
- static int rcu_pending(void)
+-void rcu_disable_tick_upon_qs(struct rcu_data *rdp)
++void rcu_disable_urgency_upon_qs(struct rcu_data *rdp)
  {
-+	bool gp_in_progress;
- 	struct rcu_data *rdp = this_cpu_ptr(&rcu_data);
- 	struct rcu_node *rnp = rdp->mynode;
++	WRITE_ONCE(rdp->rcu_urgent_qs, false);
++	WRITE_ONCE(rdp->rcu_need_heavy_qs, false);
+ 	if (tick_nohz_full_cpu(rdp->cpu) && rdp->rcu_forced_tick) {
+ 		tick_dep_clear_cpu(rdp->cpu, TICK_DEP_BIT_RCU);
+ 		rdp->rcu_forced_tick = false;
+@@ -1996,7 +1999,7 @@ rcu_report_qs_rdp(int cpu, struct rcu_data *rdp)
+ 		if (!offloaded)
+ 			needwake = rcu_accelerate_cbs(rnp, rdp);
  
-@@ -2837,7 +2837,8 @@ static int rcu_pending(void)
- 		return 0;
- 
- 	/* Is the RCU core waiting for a quiescent state from this CPU? */
--	if (rdp->core_needs_qs && !rdp->cpu_no_qs.b.norm)
-+	gp_in_progress = rcu_gp_in_progress();
-+	if (rdp->core_needs_qs && !rdp->cpu_no_qs.b.norm && gp_in_progress)
- 		return 1;
- 
- 	/* Does this CPU have callbacks ready to invoke? */
-@@ -2845,8 +2846,7 @@ static int rcu_pending(void)
- 		return 1;
- 
- 	/* Has RCU gone idle with this CPU needing another grace period? */
--	if (!rcu_gp_in_progress() &&
--	    rcu_segcblist_is_enabled(&rdp->cblist) &&
-+	if (!gp_in_progress && rcu_segcblist_is_enabled(&rdp->cblist) &&
- 	    (!IS_ENABLED(CONFIG_RCU_NOCB_CPU) ||
- 	     !rcu_segcblist_is_offloaded(&rdp->cblist)) &&
- 	    !rcu_segcblist_restempty(&rdp->cblist, RCU_NEXT_READY_TAIL))
+-		rcu_disable_tick_upon_qs(rdp);
++		rcu_disable_urgency_upon_qs(rdp);
+ 		rcu_report_qs_rnp(mask, rnp, rnp->gp_seq, flags);
+ 		/* ^^^ Released rnp->lock */
+ 		if (needwake)
+@@ -2314,7 +2317,7 @@ static void force_qs_rnp(int (*f)(struct rcu_data *rdp))
+ 				rdp = per_cpu_ptr(&rcu_data, cpu);
+ 				if (f(rdp)) {
+ 					mask |= bit;
+-					rcu_disable_tick_upon_qs(rdp);
++					rcu_disable_urgency_upon_qs(rdp);
+ 				}
+ 			}
+ 		}
+@@ -3189,7 +3192,7 @@ void rcu_cpu_starting(unsigned int cpu)
+ 	rdp->rcu_onl_gp_seq = READ_ONCE(rcu_state.gp_seq);
+ 	rdp->rcu_onl_gp_flags = READ_ONCE(rcu_state.gp_flags);
+ 	if (rnp->qsmask & mask) { /* RCU waiting on incoming CPU? */
+-		rcu_disable_tick_upon_qs(rdp);
++		rcu_disable_urgency_upon_qs(rdp);
+ 		/* Report QS -after- changing ->qsmaskinitnext! */
+ 		rcu_report_qs_rnp(mask, rnp, rnp->gp_seq, flags);
+ 	} else {
 -- 
 2.9.5
 
