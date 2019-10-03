@@ -2,320 +2,167 @@ Return-Path: <SRS0=6dNS=X4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no
-	version=3.4.0
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E0161C4CED1
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 09:38:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A7D1C10F14
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 09:42:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B0614222C4
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 09:38:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 60282218DE
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 09:42:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728988AbfJCJiw (ORCPT
+        id S1729087AbfJCJmt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 05:38:52 -0400
-Received: from mailgw02.mediatek.com ([210.61.82.184]:31811 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1728743AbfJCJiw (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 05:38:52 -0400
-X-UUID: 83d216c888f543e887d8043adfa60921-20191003
-X-UUID: 83d216c888f543e887d8043adfa60921-20191003
-Received: from mtkcas08.mediatek.inc [(172.21.101.126)] by mailgw02.mediatek.com
-        (envelope-from <walter-zh.wu@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 1843083875; Thu, 03 Oct 2019 17:38:46 +0800
-Received: from mtkcas07.mediatek.inc (172.21.101.84) by
- mtkmbs07n2.mediatek.inc (172.21.101.141) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Thu, 3 Oct 2019 17:38:43 +0800
-Received: from [172.21.84.99] (172.21.84.99) by mtkcas07.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Thu, 3 Oct 2019 17:38:44 +0800
-Message-ID: <1570095525.19702.59.camel@mtksdccf07>
-Subject: Re: [PATCH] kasan: fix the missing underflow in memmove and memcpy
- with CONFIG_KASAN_GENERIC=y
-From:   Walter Wu <walter-zh.wu@mediatek.com>
-To:     Dmitry Vyukov <dvyukov@google.com>
-CC:     Andrey Ryabinin <aryabinin@virtuozzo.com>,
-        Alexander Potapenko <glider@google.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        kasan-dev <kasan-dev@googlegroups.com>,
-        Linux-MM <linux-mm@kvack.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>,
-        wsd_upstream <wsd_upstream@mediatek.com>
-Date:   Thu, 3 Oct 2019 17:38:45 +0800
-In-Reply-To: <CACT4Y+ZwNv2-QBrvuR2JvemovmKPQ9Ggrr=ZkdTg6xy_Ki6UAg@mail.gmail.com>
-References: <20190927034338.15813-1-walter-zh.wu@mediatek.com>
-         <CACT4Y+Zxz+R=qQxSMoipXoLjRqyApD3O0eYpK0nyrfGHE4NNPw@mail.gmail.com>
-         <1569594142.9045.24.camel@mtksdccf07>
-         <CACT4Y+YuAxhKtL7ho7jpVAPkjG-JcGyczMXmw8qae2iaZjTh_w@mail.gmail.com>
-         <1569818173.17361.19.camel@mtksdccf07>
-         <1570018513.19702.36.camel@mtksdccf07>
-         <CACT4Y+bbZhvz9ZpHtgL8rCCsV=ybU5jA6zFnJBL7gY2cNXDLyQ@mail.gmail.com>
-         <1570069078.19702.57.camel@mtksdccf07>
-         <CACT4Y+ZwNv2-QBrvuR2JvemovmKPQ9Ggrr=ZkdTg6xy_Ki6UAg@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.2.3-0ubuntu6 
-Content-Transfer-Encoding: 8bit
+        Thu, 3 Oct 2019 05:42:49 -0400
+Received: from foss.arm.com ([217.140.110.172]:39668 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727995AbfJCJmt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 05:42:49 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 33B281000;
+        Thu,  3 Oct 2019 02:42:48 -0700 (PDT)
+Received: from [10.1.197.57] (e110467-lin.cambridge.arm.com [10.1.197.57])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 897A13F739;
+        Thu,  3 Oct 2019 02:42:46 -0700 (PDT)
+Subject: Re: [PATCH] dma-mapping: Lift address space checks out of debug code
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Christoph Hellwig <hch@lst.de>, Laura Abbott <labbott@redhat.com>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Jesper Dangaard Brouer <brouer@redhat.com>,
+        Allison Randal <allison@lohutok.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        Semmle Security Reports <security-reports@semmle.com>,
+        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org
+References: <201910021341.7819A660@keescook>
+ <7a5dc7aa-66ec-0249-e73f-285b8807cb73@arm.com>
+ <201910021643.75E856C@keescook>
+From:   Robin Murphy <robin.murphy@arm.com>
+Message-ID: <fc9fffc8-3cff-4a6f-d426-4a4cc895ebb1@arm.com>
+Date:   Thu, 3 Oct 2019 10:42:45 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-X-MTK:  N
+In-Reply-To: <201910021643.75E856C@keescook>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 2019-10-03 at 08:26 +0200, Dmitry Vyukov wrote:
-> On Thu, Oct 3, 2019 at 4:18 AM Walter Wu <walter-zh.wu@mediatek.com> wrote:
-> >
-> > On Wed, 2019-10-02 at 15:57 +0200, Dmitry Vyukov wrote:
-> > > On Wed, Oct 2, 2019 at 2:15 PM Walter Wu <walter-zh.wu@mediatek.com> wrote:
-> > > >
-> > > > On Mon, 2019-09-30 at 12:36 +0800, Walter Wu wrote:
-> > > > > On Fri, 2019-09-27 at 21:41 +0200, Dmitry Vyukov wrote:
-> > > > > > On Fri, Sep 27, 2019 at 4:22 PM Walter Wu <walter-zh.wu@mediatek.com> wrote:
-> > > > > > >
-> > > > > > > On Fri, 2019-09-27 at 15:07 +0200, Dmitry Vyukov wrote:
-> > > > > > > > On Fri, Sep 27, 2019 at 5:43 AM Walter Wu <walter-zh.wu@mediatek.com> wrote:
-> > > > > > > > >
-> > > > > > > > > memmove() and memcpy() have missing underflow issues.
-> > > > > > > > > When -7 <= size < 0, then KASAN will miss to catch the underflow issue.
-> > > > > > > > > It looks like shadow start address and shadow end address is the same,
-> > > > > > > > > so it does not actually check anything.
-> > > > > > > > >
-> > > > > > > > > The following test is indeed not caught by KASAN:
-> > > > > > > > >
-> > > > > > > > >         char *p = kmalloc(64, GFP_KERNEL);
-> > > > > > > > >         memset((char *)p, 0, 64);
-> > > > > > > > >         memmove((char *)p, (char *)p + 4, -2);
-> > > > > > > > >         kfree((char*)p);
-> > > > > > > > >
-> > > > > > > > > It should be checked here:
-> > > > > > > > >
-> > > > > > > > > void *memmove(void *dest, const void *src, size_t len)
-> > > > > > > > > {
-> > > > > > > > >         check_memory_region((unsigned long)src, len, false, _RET_IP_);
-> > > > > > > > >         check_memory_region((unsigned long)dest, len, true, _RET_IP_);
-> > > > > > > > >
-> > > > > > > > >         return __memmove(dest, src, len);
-> > > > > > > > > }
-> > > > > > > > >
-> > > > > > > > > We fix the shadow end address which is calculated, then generic KASAN
-> > > > > > > > > get the right shadow end address and detect this underflow issue.
-> > > > > > > > >
-> > > > > > > > > [1] https://bugzilla.kernel.org/show_bug.cgi?id=199341
-> > > > > > > > >
-> > > > > > > > > Signed-off-by: Walter Wu <walter-zh.wu@mediatek.com>
-> > > > > > > > > Reported-by: Dmitry Vyukov <dvyukov@google.com>
-> > > > > > > > > ---
-> > > > > > > > >  lib/test_kasan.c   | 36 ++++++++++++++++++++++++++++++++++++
-> > > > > > > > >  mm/kasan/generic.c |  8 ++++++--
-> > > > > > > > >  2 files changed, 42 insertions(+), 2 deletions(-)
-> > > > > > > > >
-> > > > > > > > > diff --git a/lib/test_kasan.c b/lib/test_kasan.c
-> > > > > > > > > index b63b367a94e8..8bd014852556 100644
-> > > > > > > > > --- a/lib/test_kasan.c
-> > > > > > > > > +++ b/lib/test_kasan.c
-> > > > > > > > > @@ -280,6 +280,40 @@ static noinline void __init kmalloc_oob_in_memset(void)
-> > > > > > > > >         kfree(ptr);
-> > > > > > > > >  }
-> > > > > > > > >
-> > > > > > > > > +static noinline void __init kmalloc_oob_in_memmove_underflow(void)
-> > > > > > > > > +{
-> > > > > > > > > +       char *ptr;
-> > > > > > > > > +       size_t size = 64;
-> > > > > > > > > +
-> > > > > > > > > +       pr_info("underflow out-of-bounds in memmove\n");
-> > > > > > > > > +       ptr = kmalloc(size, GFP_KERNEL);
-> > > > > > > > > +       if (!ptr) {
-> > > > > > > > > +               pr_err("Allocation failed\n");
-> > > > > > > > > +               return;
-> > > > > > > > > +       }
-> > > > > > > > > +
-> > > > > > > > > +       memset((char *)ptr, 0, 64);
-> > > > > > > > > +       memmove((char *)ptr, (char *)ptr + 4, -2);
-> > > > > > > > > +       kfree(ptr);
-> > > > > > > > > +}
-> > > > > > > > > +
-> > > > > > > > > +static noinline void __init kmalloc_oob_in_memmove_overflow(void)
-> > > > > > > > > +{
-> > > > > > > > > +       char *ptr;
-> > > > > > > > > +       size_t size = 64;
-> > > > > > > > > +
-> > > > > > > > > +       pr_info("overflow out-of-bounds in memmove\n");
-> > > > > > > > > +       ptr = kmalloc(size, GFP_KERNEL);
-> > > > > > > > > +       if (!ptr) {
-> > > > > > > > > +               pr_err("Allocation failed\n");
-> > > > > > > > > +               return;
-> > > > > > > > > +       }
-> > > > > > > > > +
-> > > > > > > > > +       memset((char *)ptr, 0, 64);
-> > > > > > > > > +       memmove((char *)ptr + size, (char *)ptr, 2);
-> > > > > > > > > +       kfree(ptr);
-> > > > > > > > > +}
-> > > > > > > > > +
-> > > > > > > > >  static noinline void __init kmalloc_uaf(void)
-> > > > > > > > >  {
-> > > > > > > > >         char *ptr;
-> > > > > > > > > @@ -734,6 +768,8 @@ static int __init kmalloc_tests_init(void)
-> > > > > > > > >         kmalloc_oob_memset_4();
-> > > > > > > > >         kmalloc_oob_memset_8();
-> > > > > > > > >         kmalloc_oob_memset_16();
-> > > > > > > > > +       kmalloc_oob_in_memmove_underflow();
-> > > > > > > > > +       kmalloc_oob_in_memmove_overflow();
-> > > > > > > > >         kmalloc_uaf();
-> > > > > > > > >         kmalloc_uaf_memset();
-> > > > > > > > >         kmalloc_uaf2();
-> > > > > > > > > diff --git a/mm/kasan/generic.c b/mm/kasan/generic.c
-> > > > > > > > > index 616f9dd82d12..34ca23d59e67 100644
-> > > > > > > > > --- a/mm/kasan/generic.c
-> > > > > > > > > +++ b/mm/kasan/generic.c
-> > > > > > > > > @@ -131,9 +131,13 @@ static __always_inline bool memory_is_poisoned_n(unsigned long addr,
-> > > > > > > > >                                                 size_t size)
-> > > > > > > > >  {
-> > > > > > > > >         unsigned long ret;
-> > > > > > > > > +       void *shadow_start = kasan_mem_to_shadow((void *)addr);
-> > > > > > > > > +       void *shadow_end = kasan_mem_to_shadow((void *)addr + size - 1) + 1;
-> > > > > > > > >
-> > > > > > > > > -       ret = memory_is_nonzero(kasan_mem_to_shadow((void *)addr),
-> > > > > > > > > -                       kasan_mem_to_shadow((void *)addr + size - 1) + 1);
-> > > > > > > > > +       if ((long)size < 0)
-> > > > > > > > > +               shadow_end = kasan_mem_to_shadow((void *)addr + size);
-> > > > > > > >
-> > > > > > > > Hi Walter,
-> > > > > > > >
-> > > > > > > > Thanks for working on this.
-> > > > > > > >
-> > > > > > > > If size<0, does it make sense to continue at all? We will still check
-> > > > > > > > 1PB of shadow memory? What happens when we pass such huge range to
-> > > > > > > > memory_is_nonzero?
-> > > > > > > > Perhaps it's better to produce an error and bail out immediately if size<0?
-> > > > > > >
-> > > > > > > I agree with what you said. when size<0, it is indeed an unreasonable
-> > > > > > > behavior, it should be blocked from continuing to do.
-> > > > > > >
-> > > > > > >
-> > > > > > > > Also, what's the failure mode of the tests? Didn't they badly corrupt
-> > > > > > > > memory? We tried to keep tests such that they produce the KASAN
-> > > > > > > > reports, but don't badly corrupt memory b/c/ we need to run all of
-> > > > > > > > them.
-> > > > > > >
-> > > > > > > Maybe we should first produce KASAN reports and then go to execute
-> > > > > > > memmove() or do nothing? It looks like it’s doing the following.or?
-> > > > > > >
-> > > > > > > void *memmove(void *dest, const void *src, size_t len)
-> > > > > > >  {
-> > > > > > > +       if (long(len) <= 0)
-> > > > > >
-> > > > > > /\/\/\/\/\/\
-> > > > > >
-> > > > > > This check needs to be inside of check_memory_region, otherwise we
-> > > > > > will have similar problems in all other places that use
-> > > > > > check_memory_region.
-> > > > > Thanks for your reminder.
-> > > > >
-> > > > >  bool check_memory_region(unsigned long addr, size_t size, bool write,
-> > > > >                                 unsigned long ret_ip)
-> > > > >  {
-> > > > > +       if (long(size) < 0) {
-> > > > > +               kasan_report_invalid_size(src, dest, len, _RET_IP_);
-> > > > > +               return false;
-> > > > > +       }
-> > > > > +
-> > > > >         return check_memory_region_inline(addr, size, write, ret_ip);
-> > > > >  }
-> > > > >
-> > > > > > But check_memory_region already returns a bool, so we could check that
-> > > > > > bool and return early.
-> > > > >
-> > > > > When size<0, we should only show one KASAN report, and should we only
-> > > > > limit to return when size<0 is true? If yse, then __memmove() will do
-> > > > > nothing.
-> > > > >
-> > > > >
-> > > > >  void *memmove(void *dest, const void *src, size_t len)
-> > > > >  {
-> > > > > -       check_memory_region((unsigned long)src, len, false, _RET_IP_);
-> > > > > +       if(!check_memory_region((unsigned long)src, len, false,
-> > > > > _RET_IP_)
-> > > > > +               && long(size) < 0)
-> > > > > +               return;
-> > > > > +
-> > > > >         check_memory_region((unsigned long)dest, len, true, _RET_IP_);
-> > > > >
-> > > > >         return __memmove(dest, src, len);
-> > > > >
-> > > > > >
-> > > > Hi Dmitry,
-> > > >
-> > > > What do you think the following code is better than the above one.
-> > > > In memmmove/memset/memcpy, they need to determine whether size < 0 is
-> > > > true. we directly determine whether size is negative in memmove and
-> > > > return early. it avoid to generate repeated KASAN report. Is it better?
-> > > >
-> > > > void *memmove(void *dest, const void *src, size_t len)
-> > > > {
-> > > > +       if (long(size) < 0) {
-> > > > +               kasan_report_invalid_size(src, dest, len, _RET_IP_);
-> > > > +               return;
-> > > > +       }
-> > > > +
-> > > >         check_memory_region((unsigned long)src, len, false, _RET_IP_);
-> > > >         check_memory_region((unsigned long)dest, len, true, _RET_IP_);
-> > > >
-> > > >
-> > > > check_memory_region() still has to check whether the size is negative.
-> > > > but memmove/memset/memcpy generate invalid size KASAN report will not be
-> > > > there.
-> > >
-> > >
-> > > If check_memory_region() will do the check, why do we need to
-> > > duplicate it inside of memmove and all other range functions?
-> > >
-> > Yes, I know it has duplication, but if we don't have to determine size<0
-> > in memmove, then all check_memory_region return false will do nothing,
+On 03/10/2019 00:58, Kees Cook wrote:
+> On Wed, Oct 02, 2019 at 10:15:43PM +0100, Robin Murphy wrote:
+>> Hi Kees,
+>>
+>> On 2019-10-02 9:46 pm, Kees Cook wrote:
+>>> As we've seen from USB and other areas, we need to always do runtime
+>>> checks for DMA operating on memory regions that might be remapped. This
+>>> consolidates the (existing!) checks and makes them on by default. A
+>>> warning will be triggered for any drivers still using DMA on the stack
+>>> (as has been seen in a few recent reports).
+>>>
+>>> Suggested-by: Laura Abbott <labbott@redhat.com>
+>>> Signed-off-by: Kees Cook <keescook@chromium.org>
+>>> ---
+>>>    include/linux/dma-debug.h   |  8 --------
+>>>    include/linux/dma-mapping.h |  8 +++++++-
+>>>    kernel/dma/debug.c          | 16 ----------------
+>>>    3 files changed, 7 insertions(+), 25 deletions(-)
+>>>
+>>> diff --git a/include/linux/dma-debug.h b/include/linux/dma-debug.h
+>>> index 4208f94d93f7..2af9765d9af7 100644
+>>> --- a/include/linux/dma-debug.h
+>>> +++ b/include/linux/dma-debug.h
+>>> @@ -18,9 +18,6 @@ struct bus_type;
+>>>    extern void dma_debug_add_bus(struct bus_type *bus);
+>>> -extern void debug_dma_map_single(struct device *dev, const void *addr,
+>>> -				 unsigned long len);
+>>> -
+>>>    extern void debug_dma_map_page(struct device *dev, struct page *page,
+>>>    			       size_t offset, size_t size,
+>>>    			       int direction, dma_addr_t dma_addr);
+>>> @@ -75,11 +72,6 @@ static inline void dma_debug_add_bus(struct bus_type *bus)
+>>>    {
+>>>    }
+>>> -static inline void debug_dma_map_single(struct device *dev, const void *addr,
+>>> -					unsigned long len)
+>>> -{
+>>> -}
+>>> -
+>>>    static inline void debug_dma_map_page(struct device *dev, struct page *page,
+>>>    				      size_t offset, size_t size,
+>>>    				      int direction, dma_addr_t dma_addr)
+>>> diff --git a/include/linux/dma-mapping.h b/include/linux/dma-mapping.h
+>>> index 4a1c4fca475a..2d6b8382eab1 100644
+>>> --- a/include/linux/dma-mapping.h
+>>> +++ b/include/linux/dma-mapping.h
+>>> @@ -583,7 +583,13 @@ static inline unsigned long dma_get_merge_boundary(struct device *dev)
+>>>    static inline dma_addr_t dma_map_single_attrs(struct device *dev, void *ptr,
+>>>    		size_t size, enum dma_data_direction dir, unsigned long attrs)
+>>>    {
+>>> -	debug_dma_map_single(dev, ptr, size);
+>>> +	/* DMA must never operate on stack or other remappable places. */
+>>> +	WARN_ONCE(is_vmalloc_addr(ptr) || !virt_addr_valid(ptr),
+>>
+>> This stands to absolutely cripple I/O performance on arm64, because every
+>> valid call will end up going off and scanning the memblock list, which is
+>> not something we want on a fastpath in non-debug configurations. We'd need a
+>> much better solution to the "pfn_valid() vs. EFI no-map" problem before this
+>> might be viable.
 > 
-> But they will produce a KASAN report, right? They are asked to check
-> if 18446744073709551614 bytes are good. 18446744073709551614 bytes
-> can't be good.
-> 
-> 
-> > it includes other memory corruption behaviors, this is my original
-> > concern.
-> >
-> > > I would do:
-> > >
-> > > void *memmove(void *dest, const void *src, size_t len)
-> > > {
-> > >         if (check_memory_region((unsigned long)src, len, false, _RET_IP_))
-> > >                 return;
-> > if check_memory_region return TRUE is to do nothing, but it is no memory
-> > corruption? Should it return early when check_memory_region return a
-> > FALSE?
-> 
-> Maybe. I just meant the overall idea: check_memory_region should
-> detect that 18446744073709551614 bytes are bad, print an error, return
-> an indication that bytes were bad, memmove should return early if the
-> range is bad.
-> 
-ok, i will send new patch.
-Thanks for your review.
+> Ah! Interesting. I didn't realize this was fast-path (I don't know the
+> DMA code at all). I thought it was more of a "one time setup" before
+> actual DMA activity started.
 
+That's strictly true, it's just that many workloads can involve tens of 
+thousands of "one time"s per second ;)
+
+Overhead on the dma_map_* paths has shown to have a direct impact on 
+throughput in such situations, hence various optimisation effort in IOVA 
+allocation for IOMMU-based DMA ops, and the recent work to remove 
+indirect calls entirely for the common dma-direct/SWIOTLB cases.
+
+> Regardless, is_vmalloc_addr() is extremely light (a bounds check), and is the
+> most important part of this as far as catching stack-based DMA attempts.
+> I thought virt_addr_valid() was cheap too, but I see it's much heavier on
+> arm64.
 > 
-> > > This avoids duplicating the check, adds minimal amount of code to
-> > > range functions and avoids adding kasan_report_invalid_size.
-> > Thanks for your suggestion.
-> > We originally want to show complete information(destination address,
-> > source address, and its length), but add minimal amount of code into
-> > kasan_report(), it should be good.
-> >
-> >
-> > --
-> > You received this message because you are subscribed to the Google Groups "kasan-dev" group.
-> > To unsubscribe from this group and stop receiving emails from it, send an email to kasan-dev+unsubscribe@googlegroups.com.
-> > To view this discussion on the web visit https://groups.google.com/d/msgid/kasan-dev/1570069078.19702.57.camel%40mtksdccf07.
+> I just went to compare what the existing USB check does, and it happens
+> immediately before its call to dma_map_single(). Both checks are simple
+> bounds checks, so it shouldn't be an issue:
+> 
+> 			if (is_vmalloc_addr(urb->setup_packet)) {
+> 				WARN_ONCE(1, "setup packet is not dma capable\n");
+> 				return -EAGAIN;
+> 			} else if (object_is_on_stack(urb->setup_packet)) {
+> 				WARN_ONCE(1, "setup packet is on stack\n");
+> 				return -EAGAIN;
+> 			}
+> 
+> 			urb->setup_dma = dma_map_single(
+> 					hcd->self.sysdev,
+> 					urb->setup_packet,
+> 					sizeof(struct usb_ctrlrequest),
+> 
+> 
+> In the USB case, it'll actually refuse to do the operation. Should
+> dma_map_single() similarly fail? I could push these checks down into
+> dma_map_single(), which would be a no-change on behavior for USB and
+> gain the checks on all other callers...
 
+I think it would be reasonable to pull the is_vmalloc_addr() check 
+inline, as that probably covers 90+% of badness (especially given 
+vmapped stacks), and as you say should be reliably cheap everywhere. 
+Callers are certainly expected to use dma_mapping_error() and handle 
+failure, so refusing to do a bogus mapping operation should be OK 
+API-wise - ultimately if a driver goes ahead and uses DMA_MAPPING_ERROR 
+as an address anyway, that's not likely to be any *more* catastrophic 
+than if it did the same with whatever nonsense virt_to_phys() of a 
+vmalloc address had returned.
 
+Robin.
