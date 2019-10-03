@@ -7,49 +7,51 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56B8AC4CED1
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:59:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E471EC32792
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:59:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2D1D920673
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:59:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BD33320673
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:59:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570121994;
-	bh=WytRyuAeD8r+lZci6Ro91yBin+ytXB3SZAzTOmA8unM=;
+	s=default; t=1570121997;
+	bh=nxhfcdcem27JgN1iEngjzJ+W+McMsJHgH8HRx+nl0Sc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Vt5E39Iq/KKly8mlIMF0Mr9q9sPutBVSj6ZlvZqz1fV3MVhQoJE1YmDXyuh/WqSoN
-	 Du8stjJEwMUBqwGAK8+KK64H4FUHpbvyPfgUxJ+uUyWNoO5kEdQqH72EAyWC6+KYx+
-	 znO+Bpm/iHcF3dwvwjF7gFRbMEvW6OYK3ZV+h+l8=
+	b=enOdMULXLqqcmy8QF0l0Y1ceZTXfgZhw/GUxkYDw0nT2DEwneuGLOMw7jlVdkdNIw
+	 etKExzArDPTXLBPknQPW2SKYestJRRikf/GU4pStKLub09mar2L1YTY8NJOxFikOZU
+	 9VgeiO5FWSiDfV2G3QQqnsW00cXNpiI2ZrCIgB28=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392919AbfJCQqe (ORCPT
+        id S2392910AbfJCQqa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 12:46:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59784 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390968AbfJCQqa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 3 Oct 2019 12:46:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59636 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2390845AbfJCQqY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:46:24 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DFFDE20867;
-        Thu,  3 Oct 2019 16:46:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 72F6020867;
+        Thu,  3 Oct 2019 16:46:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570121189;
-        bh=WytRyuAeD8r+lZci6Ro91yBin+ytXB3SZAzTOmA8unM=;
+        s=default; t=1570121183;
+        bh=nxhfcdcem27JgN1iEngjzJ+W+McMsJHgH8HRx+nl0Sc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=MgIqBvpBRM2a9z7524KBSwXdEXMOKdKM7zSpjkvsjN8WX2rkEaNGa6Nl3liZbbqam
-         f+VXGHwaHB7ZdVW79TOPiqxLWUroj/Yla+FacUY3qh8H5mKopVY72WcXSIxuhwiaMg
-         sS/yaxfivVTxK0W02TcCbAm3XR+zDkJbgxacaIFQ=
+        b=gR6kVI+Aq9LOGPRSZxTBUsIKZ96bfvlRCqmI/ImzPVsgbK5SKFsjusCKaMAt8rHyA
+         EW2OxN6lK/XOllcOUvFCkrtxYd0+hxbfnO0OCb5VWG3/wBXWDobZ/Y2fTqzUZHOckd
+         j9claqihAbZ/CFA+JX8Ka1/LkIDtucl9qEEQmqkM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Simon Horman <horms+renesas@verge.net.au>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
+        stable@vger.kernel.org, Yazen Ghannam <yazen.ghannam@amd.com>,
+        Borislav Petkov <bp@suse.de>,
+        "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
+        James Morse <james.morse@arm.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Tony Luck <tony.luck@intel.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.3 150/344] soc: renesas: rmobile-sysc: Set GENPD_FLAG_ALWAYS_ON for always-on domain
-Date:   Thu,  3 Oct 2019 17:51:55 +0200
-Message-Id: <20191003154555.056977978@linuxfoundation.org>
+Subject: [PATCH 5.3 148/344] EDAC/amd64: Decode syndrome before translating address
+Date:   Thu,  3 Oct 2019 17:51:53 +0200
+Message-Id: <20191003154554.861640260@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191003154540.062170222@linuxfoundation.org>
 References: <20191003154540.062170222@linuxfoundation.org>
@@ -62,98 +64,68 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Geert Uytterhoeven <geert+renesas@glider.be>
+From: Yazen Ghannam <yazen.ghannam@amd.com>
 
-[ Upstream commit af0bc634728c0bc6a3f66f911f227d5c6396db88 ]
+[ Upstream commit 8a2eaab7daf03b23ac902481218034ae2fae5e16 ]
 
-Currently the R-Mobile "always-on" PM Domain is implemented by returning
--EBUSY from the generic_pm_domain.power_off() callback, and doing
-nothing in the generic_pm_domain.power_on() callback.  However, this
-means the PM Domain core code is not aware of the semantics of this
-special domain, leading to boot warnings like the following on
-SH/R-Mobile SoCs:
+AMD Family 17h systems currently require address translation in order to
+report the system address of a DRAM ECC error. This is currently done
+before decoding the syndrome information. The syndrome information does
+not depend on the address translation, so the proper EDAC csrow/channel
+reporting can function without the address. However, the syndrome
+information will not be decoded if the address translation fails.
 
-    sh_cmt e6130000.timer: PM domain c5 will not be powered off
+Decode the syndrome information before doing the address translation.
+The syndrome information is architecturally defined in MCA_SYND and can
+be considered robust. The address translation is system-specific and may
+fail on newer systems without proper updates to the translation
+algorithm.
 
-Fix this by making the always-on nature of the domain explicit instead,
-by setting the GENPD_FLAG_ALWAYS_ON flag.  This removes the need for the
-domain to provide power control callbacks.
-
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
-Reviewed-by: Ulf Hansson <ulf.hansson@linaro.org>
+Fixes: 713ad54675fd ("EDAC, amd64: Define and register UMC error decode function")
+Signed-off-by: Yazen Ghannam <yazen.ghannam@amd.com>
+Signed-off-by: Borislav Petkov <bp@suse.de>
+Cc: "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>
+Cc: James Morse <james.morse@arm.com>
+Cc: Mauro Carvalho Chehab <mchehab@kernel.org>
+Cc: Tony Luck <tony.luck@intel.com>
+Link: https://lkml.kernel.org/r/20190821235938.118710-6-Yazen.Ghannam@amd.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/soc/renesas/rmobile-sysc.c | 31 +++++++++++++++---------------
- 1 file changed, 16 insertions(+), 15 deletions(-)
+ drivers/edac/amd64_edac.c | 14 +++++++-------
+ 1 file changed, 7 insertions(+), 7 deletions(-)
 
-diff --git a/drivers/soc/renesas/rmobile-sysc.c b/drivers/soc/renesas/rmobile-sysc.c
-index 421ae1c887d82..54b616ad4a62a 100644
---- a/drivers/soc/renesas/rmobile-sysc.c
-+++ b/drivers/soc/renesas/rmobile-sysc.c
-@@ -48,12 +48,8 @@ struct rmobile_pm_domain *to_rmobile_pd(struct generic_pm_domain *d)
- static int rmobile_pd_power_down(struct generic_pm_domain *genpd)
- {
- 	struct rmobile_pm_domain *rmobile_pd = to_rmobile_pd(genpd);
--	unsigned int mask;
-+	unsigned int mask = BIT(rmobile_pd->bit_shift);
+diff --git a/drivers/edac/amd64_edac.c b/drivers/edac/amd64_edac.c
+index ffe56a8fe39da..608fdab566b32 100644
+--- a/drivers/edac/amd64_edac.c
++++ b/drivers/edac/amd64_edac.c
+@@ -2550,13 +2550,6 @@ static void decode_umc_error(int node_id, struct mce *m)
  
--	if (rmobile_pd->bit_shift == ~0)
--		return -EBUSY;
+ 	err.channel = find_umc_channel(m);
+ 
+-	if (umc_normaddr_to_sysaddr(m->addr, pvt->mc_node_id, err.channel, &sys_addr)) {
+-		err.err_code = ERR_NORM_ADDR;
+-		goto log_error;
+-	}
 -
--	mask = BIT(rmobile_pd->bit_shift);
- 	if (rmobile_pd->suspend) {
- 		int ret = rmobile_pd->suspend();
- 
-@@ -80,14 +76,10 @@ static int rmobile_pd_power_down(struct generic_pm_domain *genpd)
- 
- static int __rmobile_pd_power_up(struct rmobile_pm_domain *rmobile_pd)
- {
--	unsigned int mask;
-+	unsigned int mask = BIT(rmobile_pd->bit_shift);
- 	unsigned int retry_count;
- 	int ret = 0;
- 
--	if (rmobile_pd->bit_shift == ~0)
--		return 0;
+-	error_address_to_page_and_offset(sys_addr, &err);
 -
--	mask = BIT(rmobile_pd->bit_shift);
- 	if (__raw_readl(rmobile_pd->base + PSTR) & mask)
- 		return ret;
+ 	if (!(m->status & MCI_STATUS_SYNDV)) {
+ 		err.err_code = ERR_SYND;
+ 		goto log_error;
+@@ -2573,6 +2566,13 @@ static void decode_umc_error(int node_id, struct mce *m)
  
-@@ -122,11 +114,15 @@ static void rmobile_init_pm_domain(struct rmobile_pm_domain *rmobile_pd)
- 	struct dev_power_governor *gov = rmobile_pd->gov;
+ 	err.csrow = m->synd & 0x7;
  
- 	genpd->flags |= GENPD_FLAG_PM_CLK | GENPD_FLAG_ACTIVE_WAKEUP;
--	genpd->power_off		= rmobile_pd_power_down;
--	genpd->power_on			= rmobile_pd_power_up;
--	genpd->attach_dev		= cpg_mstp_attach_dev;
--	genpd->detach_dev		= cpg_mstp_detach_dev;
--	__rmobile_pd_power_up(rmobile_pd);
-+	genpd->attach_dev = cpg_mstp_attach_dev;
-+	genpd->detach_dev = cpg_mstp_detach_dev;
-+
-+	if (!(genpd->flags & GENPD_FLAG_ALWAYS_ON)) {
-+		genpd->power_off = rmobile_pd_power_down;
-+		genpd->power_on = rmobile_pd_power_up;
-+		__rmobile_pd_power_up(rmobile_pd);
++	if (umc_normaddr_to_sysaddr(m->addr, pvt->mc_node_id, err.channel, &sys_addr)) {
++		err.err_code = ERR_NORM_ADDR;
++		goto log_error;
 +	}
 +
- 	pm_genpd_init(genpd, gov ? : &simple_qos_governor, false);
++	error_address_to_page_and_offset(sys_addr, &err);
++
+ log_error:
+ 	__log_ecc_error(mci, &err, ecc_type);
  }
- 
-@@ -270,6 +266,11 @@ static void __init rmobile_setup_pm_domain(struct device_node *np,
- 		break;
- 
- 	case PD_NORMAL:
-+		if (pd->bit_shift == ~0) {
-+			/* Top-level always-on domain */
-+			pr_debug("PM domain %s is always-on domain\n", name);
-+			pd->genpd.flags |= GENPD_FLAG_ALWAYS_ON;
-+		}
- 		break;
- 	}
- 
 -- 
 2.20.1
 
