@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FCD7C32792
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:52:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17730C10F14
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:52:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0369E215EA
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:52:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E324C2086A
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:52:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570121573;
-	bh=XdThSglTyTf2p/nzZ3yWXHPyxKufsiDO1o2/6UNXVzs=;
+	s=default; t=1570121576;
+	bh=LDrQjUzm+CCCan4kll+92asz0BfWA/cpY2uRQAkUv6A=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=fJjlgCGbEGRUbeAfEVt7SLKM8Kgix6lCp07PVNNJSHO+OaVhdjUTtWpGpRjiRUR/W
-	 qlCAZLbrTfBhMxPEMwrbAeVty8JgJ16kMq+4sbYAa4ba2QobuSdosMpA8k+NDPeSQl
-	 UROireftqWHmBZbQZzUOXGy3vDxL/Lnfbzty/uUQ=
+	b=x6ImhVgRXHRxY5KBYmogGkucv9Xv29KL6cbSOrqminONgalxuA7b2ceu7thJu4K8l
+	 ShCAJ5vFOrTab6r1phCQd1b9Q+qKfYa/B0pcEGX0VM1sWOZ9TIA5TJLE2A3GlHmeRV
+	 XdP7VMlwlIFS/2jYX8+QcVviJ9v5W3UKn41d/uYM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406255AbfJCQww (ORCPT
+        id S2406268AbfJCQwz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 12:52:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40522 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 12:52:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40630 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390216AbfJCQwo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:52:44 -0400
+        id S2406244AbfJCQwt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:52:49 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 98BCE2070B;
-        Thu,  3 Oct 2019 16:52:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 00DA520865;
+        Thu,  3 Oct 2019 16:52:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570121564;
-        bh=XdThSglTyTf2p/nzZ3yWXHPyxKufsiDO1o2/6UNXVzs=;
+        s=default; t=1570121569;
+        bh=LDrQjUzm+CCCan4kll+92asz0BfWA/cpY2uRQAkUv6A=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=i6ZHpPYPXOdBOu7OIpJml8uPkRzYvqdXQm6Za8g5JLxgQvoTLd+D2uIkYzzyc6W+Y
-         UqGob/xMbngO2Q6XkQxNgwOZxpl8jKGcLMKdHzx7mH8EuNkU5SnyQt2HvsDbVGO0Bt
-         OAhjUJqNrU00izCKeQRMX9My0IyxOSpO8aEKc09g=
+        b=d+tH43Je7jIkl9gyrmw4FQfl250PzpNh1v5IoaFARSAERZNKSqltr0yvPY3Gxm8M2
+         SGL7IqewdVJGfSmeoTCKmfOOWkyhuWLJLA6lMuueL5yjbAKQD3/gysNCeFbhj1Irbo
+         1wtA00QGqFP/9+xi4K9UG7JJp9NjwWcOHjiDFmvc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        "Darrick J. Wong" <darrick.wong@oracle.com>,
-        Jan Kara <jack@suse.cz>
-Subject: [PATCH 5.3 325/344] fs: Export generic_fadvise()
-Date:   Thu,  3 Oct 2019 17:54:50 +0200
-Message-Id: <20191003154610.980892908@linuxfoundation.org>
+        stable@vger.kernel.org, Amir Goldstein <amir73il@gmail.com>,
+        Jan Kara <jack@suse.cz>,
+        "Darrick J. Wong" <darrick.wong@oracle.com>
+Subject: [PATCH 5.3 327/344] xfs: Fix stale data exposure when readahead races with hole punch
+Date:   Thu,  3 Oct 2019 17:54:52 +0200
+Message-Id: <20191003154611.119132263@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191003154540.062170222@linuxfoundation.org>
 References: <20191003154540.062170222@linuxfoundation.org>
@@ -62,51 +62,82 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Jan Kara <jack@suse.cz>
 
-commit cf1ea0592dbf109e7e7935b7d5b1a47a1ba04174 upstream.
+commit 40144e49ff84c3bd6bd091b58115257670be8803 upstream.
 
-Filesystems will need to call this function from their fadvise handlers.
+Hole puching currently evicts pages from page cache and then goes on to
+remove blocks from the inode. This happens under both XFS_IOLOCK_EXCL
+and XFS_MMAPLOCK_EXCL which provides appropriate serialization with
+racing reads or page faults. However there is currently nothing that
+prevents readahead triggered by fadvise() or madvise() from racing with
+the hole punch and instantiating page cache page after hole punching has
+evicted page cache in xfs_flush_unmap_range() but before it has removed
+blocks from the inode. This page cache page will be mapping soon to be
+freed block and that can lead to returning stale data to userspace or
+even filesystem corruption.
+
+Fix the problem by protecting handling of readahead requests by
+XFS_IOLOCK_SHARED similarly as we protect reads.
 
 CC: stable@vger.kernel.org
-Reviewed-by: Darrick J. Wong <darrick.wong@oracle.com>
+Link: https://lore.kernel.org/linux-fsdevel/CAOQ4uxjQNmxqmtA_VbYW0Su9rKRk2zobJmahcyeaEVOFKVQ5dw@mail.gmail.com/
+Reported-by: Amir Goldstein <amir73il@gmail.com>
 Signed-off-by: Jan Kara <jack@suse.cz>
+Reviewed-by: Darrick J. Wong <darrick.wong@oracle.com>
 Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- include/linux/fs.h |    2 ++
- mm/fadvise.c       |    4 ++--
- 2 files changed, 4 insertions(+), 2 deletions(-)
+ fs/xfs/xfs_file.c |   26 ++++++++++++++++++++++++++
+ 1 file changed, 26 insertions(+)
 
---- a/include/linux/fs.h
-+++ b/include/linux/fs.h
-@@ -3531,6 +3531,8 @@ extern void inode_nohighmem(struct inode
- /* mm/fadvise.c */
- extern int vfs_fadvise(struct file *file, loff_t offset, loff_t len,
- 		       int advice);
-+extern int generic_fadvise(struct file *file, loff_t offset, loff_t len,
-+			   int advice);
+--- a/fs/xfs/xfs_file.c
++++ b/fs/xfs/xfs_file.c
+@@ -28,6 +28,7 @@
+ #include <linux/falloc.h>
+ #include <linux/backing-dev.h>
+ #include <linux/mman.h>
++#include <linux/fadvise.h>
  
- #if defined(CONFIG_IO_URING)
- extern struct sock *io_uring_get_socket(struct file *file);
---- a/mm/fadvise.c
-+++ b/mm/fadvise.c
-@@ -27,8 +27,7 @@
-  * deactivate the pages and clear PG_Referenced.
-  */
+ static const struct vm_operations_struct xfs_file_vm_ops;
  
--static int generic_fadvise(struct file *file, loff_t offset, loff_t len,
--			   int advice)
-+int generic_fadvise(struct file *file, loff_t offset, loff_t len, int advice)
- {
- 	struct inode *inode;
- 	struct address_space *mapping;
-@@ -178,6 +177,7 @@ static int generic_fadvise(struct file *
- 	}
- 	return 0;
+@@ -933,6 +934,30 @@ out_unlock:
+ 	return error;
  }
-+EXPORT_SYMBOL(generic_fadvise);
  
- int vfs_fadvise(struct file *file, loff_t offset, loff_t len, int advice)
- {
++STATIC int
++xfs_file_fadvise(
++	struct file	*file,
++	loff_t		start,
++	loff_t		end,
++	int		advice)
++{
++	struct xfs_inode *ip = XFS_I(file_inode(file));
++	int ret;
++	int lockflags = 0;
++
++	/*
++	 * Operations creating pages in page cache need protection from hole
++	 * punching and similar ops
++	 */
++	if (advice == POSIX_FADV_WILLNEED) {
++		lockflags = XFS_IOLOCK_SHARED;
++		xfs_ilock(ip, lockflags);
++	}
++	ret = generic_fadvise(file, start, end, advice);
++	if (lockflags)
++		xfs_iunlock(ip, lockflags);
++	return ret;
++}
+ 
+ STATIC loff_t
+ xfs_file_remap_range(
+@@ -1232,6 +1257,7 @@ const struct file_operations xfs_file_op
+ 	.fsync		= xfs_file_fsync,
+ 	.get_unmapped_area = thp_get_unmapped_area,
+ 	.fallocate	= xfs_file_fallocate,
++	.fadvise	= xfs_file_fadvise,
+ 	.remap_file_range = xfs_file_remap_range,
+ };
+ 
 
 
