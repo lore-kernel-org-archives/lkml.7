@@ -2,53 +2,54 @@ Return-Path: <SRS0=6dNS=X4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00E39C10F14
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:35:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F3886C4CED1
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:35:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CAFAE222C4
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:35:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B8519222C4
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:35:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570120515;
-	bh=8RTrsxUPtiQV8fJJjQUR1PBXXKK19v9iUcCIGPA+was=;
+	s=default; t=1570120519;
+	bh=gfjxtCDC8qvqtkS70sKSq48huJP48vRLnJ9jhAFOzAs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=HysZbPy/HyGGZ5IDqDMh7BQ6rAjQNSkuGqpMD+iLW1iszQJp0dHeO7XH6Nz2BtPfk
-	 Ouk0prraqUhnnARydKgQByxVeMJW/BQDnjAfZGV23InvP9NYhiMSZwL4kPvN2CeVEu
-	 fKvY+J4sVOjXyEL2k3zlP6p4GdjmEuBnd2Zwtxf4=
+	b=eON0FqqmmFgN03A/qtI8RKLH+H0DVs5s+0VkqtjFRHEYhRbTnfd0cMiVAlCg7+5dq
+	 jh0C3jUcJq5S0vX0+BydfxhJhQEVxMSQcPuxNcB1V3mOeSYNwD8vEQalgY8Qb8vqeb
+	 TB00jXo3jTkQW2HFSUwZiqCzvWT1wTTainUaRjjc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404039AbfJCQfO (ORCPT
+        id S2404078AbfJCQfS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 12:35:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44014 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 12:35:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44186 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404244AbfJCQfL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:35:11 -0400
+        id S2404058AbfJCQfR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:35:17 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8F3B12070B;
-        Thu,  3 Oct 2019 16:35:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D879B222C9;
+        Thu,  3 Oct 2019 16:35:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570120510;
-        bh=8RTrsxUPtiQV8fJJjQUR1PBXXKK19v9iUcCIGPA+was=;
+        s=default; t=1570120516;
+        bh=gfjxtCDC8qvqtkS70sKSq48huJP48vRLnJ9jhAFOzAs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=bp/35aTqRsprUIBmOPF/Ud6wurilA7CxqdnPTg5uGUDTez0v7jpJD7Utbn+AVg/6X
-         E475SStoSgLxlKAh/uQ4HeW6GowzoBOJCAE4cA5bME8T1h46Y1t4XvLpyaLEqvlyZz
-         M4czfOCn1hsUD1DvdjXTLL41wVAWwWcYsBrCkPgc=
+        b=denW1LXjqEaMznfWyGiLAmndqGn/cMczGjElxfuVYWRxp0c0YzgsIU0ClKKkSocgQ
+         Y1N7twCyDRstUN9481AiE6atjLWUic7xNBhRwJATeQPunUMyg1wLGYqMY3B04JKFdu
+         NibYB78hSIU5Nyxg34U4EukOAVtRlYzD/VsAQIlA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Evan Quan <evan.quan@amd.com>,
-        Ahzo <Ahzo@tutanota.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 200/313] drm/amd/powerplay/smu7: enforce minimal VBITimeout (v2)
-Date:   Thu,  3 Oct 2019 17:52:58 +0200
-Message-Id: <20191003154552.672604061@linuxfoundation.org>
+        stable@vger.kernel.org,
+        =?UTF-8?q?Amadeusz=20S=C5=82awi=C5=84ski?= 
+        <amadeuszx.slawinski@intel.com>,
+        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+        Mark Brown <broonie@kernel.org>
+Subject: [PATCH 5.2 252/313] ASoC: Intel: Skylake: Use correct function to access iomem space
+Date:   Thu,  3 Oct 2019 17:53:50 +0200
+Message-Id: <20191003154557.858082634@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191003154533.590915454@linuxfoundation.org>
 References: <20191003154533.590915454@linuxfoundation.org>
@@ -61,41 +62,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ahzo <Ahzo@tutanota.com>
+From: Amadeusz Sławiński <amadeuszx.slawinski@intel.com>
 
-[ Upstream commit f659bb6dae58c113805f92822e4c16ddd3156b79 ]
+commit 17d29ff98fd4b70e9ccdac5e95e18a087e2737ef upstream.
 
-This fixes screen corruption/flickering on 75 Hz displays.
+For copying from __iomem, we should use __ioread32_copy.
 
-v2: make print statement debug only (Alex)
+reported by sparse:
+sound/soc/intel/skylake/skl-debug.c:437:34: warning: incorrect type in argument 1 (different address spaces)
+sound/soc/intel/skylake/skl-debug.c:437:34:    expected void [noderef] <asn:2> *to
+sound/soc/intel/skylake/skl-debug.c:437:34:    got unsigned char *
+sound/soc/intel/skylake/skl-debug.c:437:51: warning: incorrect type in argument 2 (different address spaces)
+sound/soc/intel/skylake/skl-debug.c:437:51:    expected void const *from
+sound/soc/intel/skylake/skl-debug.c:437:51:    got void [noderef] <asn:2> *[assigned] fw_reg_addr
 
-Bugzilla: https://bugs.freedesktop.org/show_bug.cgi?id=102646
-Reviewed-by: Evan Quan <evan.quan@amd.com>
-Signed-off-by: Ahzo <Ahzo@tutanota.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Signed-off-by: Amadeusz Sławiński <amadeuszx.slawinski@intel.com>
+Link: https://lore.kernel.org/r/20190827141712.21015-2-amadeuszx.slawinski@linux.intel.com
+Reviewed-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Signed-off-by: Mark Brown <broonie@kernel.org>
+Cc: stable@vger.kernel.org
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- drivers/gpu/drm/amd/powerplay/hwmgr/smu7_hwmgr.c | 5 +++++
- 1 file changed, 5 insertions(+)
+ sound/soc/intel/skylake/skl-debug.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/amd/powerplay/hwmgr/smu7_hwmgr.c b/drivers/gpu/drm/amd/powerplay/hwmgr/smu7_hwmgr.c
-index 048757e8f4949..d1919d343cce4 100644
---- a/drivers/gpu/drm/amd/powerplay/hwmgr/smu7_hwmgr.c
-+++ b/drivers/gpu/drm/amd/powerplay/hwmgr/smu7_hwmgr.c
-@@ -4064,6 +4064,11 @@ static int smu7_program_display_gap(struct pp_hwmgr *hwmgr)
+--- a/sound/soc/intel/skylake/skl-debug.c
++++ b/sound/soc/intel/skylake/skl-debug.c
+@@ -188,7 +188,7 @@ static ssize_t fw_softreg_read(struct fi
+ 	memset(d->fw_read_buff, 0, FW_REG_BUF);
  
- 	data->frame_time_x2 = frame_time_in_us * 2 / 100;
+ 	if (w0_stat_sz > 0)
+-		__iowrite32_copy(d->fw_read_buff, fw_reg_addr, w0_stat_sz >> 2);
++		__ioread32_copy(d->fw_read_buff, fw_reg_addr, w0_stat_sz >> 2);
  
-+	if (data->frame_time_x2 < 280) {
-+		pr_debug("%s: enforce minimal VBITimeout: %d -> 280\n", __func__, data->frame_time_x2);
-+		data->frame_time_x2 = 280;
-+	}
-+
- 	display_gap2 = pre_vbi_time_in_us * (ref_clock / 100);
- 
- 	cgs_write_ind_register(hwmgr->device, CGS_IND_REG__SMC, ixCG_DISPLAY_GAP_CNTL2, display_gap2);
--- 
-2.20.1
-
+ 	for (offset = 0; offset < FW_REG_SIZE; offset += 16) {
+ 		ret += snprintf(tmp + ret, FW_REG_BUF - ret, "%#.4x: ", offset);
 
 
