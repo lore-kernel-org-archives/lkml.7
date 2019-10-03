@@ -2,128 +2,150 @@ Return-Path: <SRS0=6dNS=X4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB5F3C10F14
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 12:51:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C133C10F14
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 12:52:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9C03E20700
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 12:51:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7008820700
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 12:52:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="uhaA79/w"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730108AbfJCMvG (ORCPT
+        id S1730120AbfJCMwV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 08:51:06 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:42088 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726393AbfJCMvG (ORCPT
+        Thu, 3 Oct 2019 08:52:21 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:40019 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728219AbfJCMwV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 08:51:06 -0400
-Received: from pps.filterd (m0098413.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x93ClMeC019848
-        for <linux-kernel@vger.kernel.org>; Thu, 3 Oct 2019 08:51:05 -0400
-Received: from e06smtp04.uk.ibm.com (e06smtp04.uk.ibm.com [195.75.94.100])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2vdfe1c0f3-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Thu, 03 Oct 2019 08:51:04 -0400
-Received: from localhost
-        by e06smtp04.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <zohar@linux.ibm.com>;
-        Thu, 3 Oct 2019 13:51:03 +0100
-Received: from b06cxnps4075.portsmouth.uk.ibm.com (9.149.109.197)
-        by e06smtp04.uk.ibm.com (192.168.101.134) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Thu, 3 Oct 2019 13:50:58 +0100
-Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
-        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x93CovpO59375778
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 3 Oct 2019 12:50:57 GMT
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 70CC1AE04D;
-        Thu,  3 Oct 2019 12:50:57 +0000 (GMT)
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 82A59AE045;
-        Thu,  3 Oct 2019 12:50:55 +0000 (GMT)
-Received: from localhost.localdomain (unknown [9.85.158.158])
-        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Thu,  3 Oct 2019 12:50:55 +0000 (GMT)
-Subject: Re: [PATCH] tpm: Detach page allocation from tpm_buf
-From:   Mimi Zohar <zohar@linux.ibm.com>
-To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Cc:     James Bottomley <James.Bottomley@HansenPartnership.com>,
-        linux-integrity@vger.kernel.org,
-        Jerry Snitselaar <jsnitsel@redhat.com>,
-        Sumit Garg <sumit.garg@linaro.org>,
-        Stefan Berger <stefanb@linux.vnet.ibm.com>,
-        Peter Huewe <peterhuewe@gmx.de>,
-        Jason Gunthorpe <jgg@ziepe.ca>, Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        open list <linux-kernel@vger.kernel.org>
-Date:   Thu, 03 Oct 2019 08:50:54 -0400
-In-Reply-To: <20191003113506.GE8933@linux.intel.com>
-References: <20190925134842.19305-1-jarkko.sakkinen@linux.intel.com>
-         <1569420226.3642.24.camel@HansenPartnership.com>
-         <20190927130657.GA5556@linux.intel.com>
-         <1570020105.4999.106.camel@linux.ibm.com>
-         <20191003113506.GE8933@linux.intel.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-x-cbid: 19100312-0016-0000-0000-000002B3AE87
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19100312-0017-0000-0000-00003314B8A6
-Message-Id: <1570107054.4421.174.camel@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-10-03_05:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1908290000 definitions=main-1910030119
+        Thu, 3 Oct 2019 08:52:21 -0400
+Received: by mail-wr1-f66.google.com with SMTP id l3so2768059wru.7
+        for <linux-kernel@vger.kernel.org>; Thu, 03 Oct 2019 05:52:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=Eds4WlKNrSquM0FM6dtReZhXBU6tEApFNM4AAkDONtU=;
+        b=uhaA79/wTDQRJkGDfiqBzI5XyjkUmklCrjoS8TobGc4hXYPoRoNUAdn1DXDVjc9TcF
+         pldCe3JghlMjVZYFcmYZB0Dk/IlF1TbFoJSM0tiAiKd3SSK4CjnWL2dJ61epJ8tHVPk8
+         NnBBDCgK8eGDxi0h1JIGOXDkmh1W8IBedQbSclnfe32vu2C7qBbQ7JsA1GdT6HIgwcCT
+         x6lx/jlQhKyY9+7pj5iWXPCp31g13S5LS4Bs3dklE17QYVwg6BOwMrQihm8Tquz7avGl
+         qOgncHx1wgqO4ugywE+++VQhG3NeRcBOYdu6Wucq1HpsqCjv+gFcKolIvOAxGvs3IOUY
+         6+9A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=Eds4WlKNrSquM0FM6dtReZhXBU6tEApFNM4AAkDONtU=;
+        b=RTqdzQZ08uRUVMIsU0rGhAi5WiVvl5KgpjJJCu+7walwOwdIIjIRdAh0d2UXrot6VJ
+         JjJBVogggSbxpVsUTs5EyiTzW+Fx+ixJ8gsrDeeINq3gntr6tjoUMXAM1KZLUI44yCS/
+         Yzn4YYoRXffp6JO3VyfcCy4Dy2JG8XeeqYtyVM8TKhs9VU1gcSR2HDEYw4mZmh34ezCq
+         734J0392ZpHiTHMd+OU/wfbfzeAwZAgmiQsyCHScgz+B4ngVr23KqcMau9rn9LZXJak/
+         rXKQj4dlzCSFfSfSlYvxZ6C9EKk6hIQUDFhvJh2YkCMK1u+tbJjrVaY5BUe0vEMHhStL
+         ABWw==
+X-Gm-Message-State: APjAAAUmcAHyzicmOQGhvlxXofwppIXYmJqYZAlZMW8eBuAeyr9idpwM
+        cCkfpX7wEOzbW1DZlpPX4I4smQ==
+X-Google-Smtp-Source: APXvYqwEre7pf/Cd0XQRb8u08WuYNMTQh6T72bFTG6v17hgfbrAgZKqP8W8p/T/1gYowk6OonhX2Gw==
+X-Received: by 2002:adf:ea12:: with SMTP id q18mr7494629wrm.323.1570107139009;
+        Thu, 03 Oct 2019 05:52:19 -0700 (PDT)
+Received: from holly.lan (cpc141214-aztw34-2-0-cust773.18-1.cable.virginm.net. [86.9.19.6])
+        by smtp.gmail.com with ESMTPSA id z125sm4282266wme.37.2019.10.03.05.52.17
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 03 Oct 2019 05:52:18 -0700 (PDT)
+Date:   Thu, 3 Oct 2019 13:52:16 +0100
+From:   Daniel Thompson <daniel.thompson@linaro.org>
+To:     Suzuki K Poulose <suzuki.poulose@arm.com>
+Cc:     mathieu.poirier@linaro.org, saiprakash.ranjan@codeaurora.org,
+        jeffrey.l.hugo@gmail.com, mark.rutland@arm.com,
+        rnayak@codeaurora.org, alexander.shishkin@linux.intel.com,
+        linux-arm-msm@vger.kernel.org, marc.w.gonzalez@free.fr,
+        linux-kernel@vger.kernel.org, bjorn.andersson@linaro.org,
+        david.brown@linaro.org, agross@kernel.org, sibis@codeaurora.org,
+        leo.yan@linaro.org, linux-arm-kernel@lists.infradead.org,
+        linux-arm-msm-owner@vger.kernel.org
+Subject: Re: [PATCHv9 2/3] arm64: dts: qcom: msm8998: Add Coresight support
+Message-ID: <20191003125216.f5sjl6yhhb2t7uqq@holly.lan>
+References: <90114e06825e537c3aafd3de5c78743a9de6fadc.1564550873.git.saiprakash.ranjan@codeaurora.org>
+ <CAOCk7NrK+wY8jfHdS8781NOQtyLm2RRe1NW2Rm3_zeaot0Q99Q@mail.gmail.com>
+ <16212a577339204e901cf4eefa5e82f1@codeaurora.org>
+ <CAOCk7NohO67qeYCnrjy4P0KN9nLUiamphHRvj-bFP++K7khPOw@mail.gmail.com>
+ <fa5a35f0e993f2b604b60d5cead3cf28@codeaurora.org>
+ <CAOCk7NodWtC__W3=AQfXcjF-W9Az_NNUN0r8w5WmqJMziCcvig@mail.gmail.com>
+ <5b8835905a704fb813714694a792df54@codeaurora.org>
+ <CANLsYkxPOOorqcnPrbhZLzGV9Y7EGWUUyxvi-Cm5xxnzhx=Ecg@mail.gmail.com>
+ <20191003102023.qk6ik5vmatheaofs@holly.lan>
+ <57349bda-0e86-5fe0-3be0-55b12748c346@arm.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <57349bda-0e86-5fe0-3be0-55b12748c346@arm.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 2019-10-03 at 14:35 +0300, Jarkko Sakkinen wrote:
-> On Wed, Oct 02, 2019 at 08:41:45AM -0400, Mimi Zohar wrote:
-> > On Fri, 2019-09-27 at 16:06 +0300, Jarkko Sakkinen wrote:
-> > > On Wed, Sep 25, 2019 at 10:03:46AM -0400, James Bottomley wrote:
-> > > > On Wed, 2019-09-25 at 16:48 +0300, Jarkko Sakkinen wrote:
-> > > > [...]
-> > > > > +	data_page = alloc_page(GFP_HIGHUSER);
-> > > > > +	if (!data_page)
-> > > > > +		return -ENOMEM;
-> > > > > +
-> > > > > +	data_ptr = kmap(data_page);
+On Thu, Oct 03, 2019 at 11:52:36AM +0100, Suzuki K Poulose wrote:
+> On 10/03/2019 11:20 AM, Daniel Thompson wrote:
+> > On Wed, Oct 02, 2019 at 09:03:59AM -0600, Mathieu Poirier wrote:
+> > > On Tue, 1 Oct 2019 at 12:05, Sai Prakash Ranjan
+> > > <saiprakash.ranjan@codeaurora.org> wrote:
 > > > > 
-> > > > I don't think this is such a good idea.  On 64 bit it's no different
-> > > > from GFP_KERNEL and on 32 bit where we do have highmem, kmap space is
-> > > > at a premium, so doing a highmem allocation + kmap is more wasteful of
-> > > > resources than simply doing GFP_KERNEL.  In general, you should only do
-> > > > GFP_HIGHMEM if the page is going to be mostly used by userspace, which
-> > > > really isn't the case here.
+> > > > On 2019-10-01 11:01, Jeffrey Hugo wrote:
+> > > > > On Tue, Oct 1, 2019 at 11:52 AM Sai Prakash Ranjan
+> > > > > <saiprakash.ranjan@codeaurora.org> wrote:
+> > > > > > 
+> > > > > > 
+> > > > > > Haan then likely it's the firmware issue.
+> > > > > > We should probably disable coresight in soc dtsi and enable only for
+> > > > > > MTP. For now you can add a status=disabled for all coresight nodes in
+> > > > > > msm8998.dtsi and I will send the patch doing the same in a day or
+> > > > > > two(sorry I am travelling currently).
+> > > > > 
+> > > > > This sounds sane to me (and is what I did while bisecting the issue).
+> > > > > When you do create the patch, feel free to add the following tags as
+> > > > > you see fit.
+> > > > > 
+> > > > > Reported-by: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+> > > > > Tested-by: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+> > > > 
+> > > > Thanks Jeffrey, I will add them.
+> > > > Hope Mathieu and Suzuki are OK with this.
 > > > 
-> > > Changing that in this commit would be wrong even if you are right.
-> > > After this commit has been applied it is somewhat easier to make
-> > > best choices for allocation in each call site (probably most will
-> > > end up using stack).
+> > > The problem here is that a debug and production device are using the
+> > > same device tree, i.e msm8998.dtsi.  Disabling coresight devices in
+> > > the DTS file will allow the laptop to boot but completely disabled
+> > > coresight blocks on the MTP board.  Leaving things as is breaks the
+> > > laptop but allows coresight to be used on the MTP board.  One of three
+> > > things can happen:
+> > > 
+> > > 1) Nothing gets done and production board can't boot without DTS modifications.
+> > > 2) Disable tags are added to the DTS file and the debug board can't
+> > > use coresight without modifications.
+> > > 2) The handling of the debug power domain is done properly on the
+> > > MSM8998 rather than relying on the bootloader to enable it.
+> > > 3) The DTS file is split or reorganised to account for debug/production devices.
 > > 
-> > Agreed, but it could be a separate patch, prior to this one.  Why
-> > duplicate the problem all over only to change it later?
+> > msm8998.dtsi is a SoC include file. Can't whatever default it adopts be
+> > reversed in the board include files such as msm8998-mtp.dtsi or
+> > msm8998-clamshell.dtsi ?
 > 
-> What problem exactly it is duplicating? The existing allocation
-> scheme here works correctly.
+> Or like Mathieu said, all the Coresight specific nodes could be moved in
+> to say, msm8998-coresight.dtsi and could be included into the platforms
+> where it actually works.
 
-In the current code "alloc_page(GFP_HIGHUSER)" exists in a single
-function.  With this patch, "alloc_page(GFP_HIGHUSER)" is duplicated
-24 times.  If it is incorrect and we shouldn't be using GFP_HIGHUSER,
-as James said, then why duplicate it 24 times?  Fix it as a separate
-patch first, that could be backported if needed, and then make the
-change.
+Sure, that works too.
 
-Mimi
+Maybe it depends in you view the mtp as including the feature or as the
+laptops as taking it away ;-) .
 
+Treating it as a feature a board can disable also works nicely on systems
+where the board include file should be setting secure-status a board
+(although that's probably not the case for these boards since the
+firmware is proprietary).
+
+
+Daniel.
