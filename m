@@ -4,51 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DEC4BC10F14
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:14:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D1976C32792
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:14:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B0BB020830
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:14:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A309A20673
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:14:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570122860;
-	bh=iItdgteyx2Yyq6/oHJhvcXHvnUEhYPhCCQi5ReAoQIc=;
+	s=default; t=1570122866;
+	bh=HpKmxHp4GDXcQxEKeyF+XGpwmGby9vwAK27uwuFCULk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ZGRtowiNRdZY0m7XpaYGAxtxUtHq5cMSPn/grFJDW/QFWc4SKvBZVC7mVRiMi7aBj
-	 k+PRkpULectuqcOFWA3CV+NPIxuLauIAczig76xLkByEtpCgpMcfpJwsmW1j1kl93j
-	 fDkL4N6OE7qjkYM9tQ3hSLNhyv02lcIm1ULMAchY=
+	b=FvVn6eoslwdbWe85QeeVdtudmlfb/SiVMUFEL07ClgIFi10nV4sMIUjiVil3jd0FY
+	 jDLBrNj90EvK9VyejPfW5vIlItOS7G+2PKN1Bku7bUhyYfY2Q5xZMsVaJBGgBDg4bp
+	 MTM978XSSZUCYWfaHtQUiq6r42pNKlAn7diZ9ajQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391268AbfJCQ1c (ORCPT
+        id S2403761AbfJCROZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 12:27:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59414 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 13:14:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59484 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390619AbfJCQ12 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:27:28 -0400
+        id S2390631AbfJCQ1b (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:27:31 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D08A720867;
-        Thu,  3 Oct 2019 16:27:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7FBB4215EA;
+        Thu,  3 Oct 2019 16:27:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570120047;
-        bh=iItdgteyx2Yyq6/oHJhvcXHvnUEhYPhCCQi5ReAoQIc=;
+        s=default; t=1570120050;
+        bh=HpKmxHp4GDXcQxEKeyF+XGpwmGby9vwAK27uwuFCULk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=MGVNj4hHZGUDqWpsYzv1p5oNm1Oyqdl8XB2pkSXunUGr/kALrRrKZUKIw+kE3DWci
-         aokxFDwzASNYQdFmxKzSFwtuFfL0P/3q/o/ID8WBPN5ioge5J9qO5g4I8T8kNjJnxN
-         /j18ENMFdCtoL/3a6mTeylRhHtdST47QtwKWosQU=
+        b=FtbyRmffmFAP3mlfKv7EvRlWLTDuuH9pv0vWlSEzd3aqAAgdLR0B/1DQl2PtIEq4H
+         6ezfMpPi7ux95IrD/LndPu/lOpQ0e5wx5ahUqnbTDidg3/p+Ks2AEDp4itPJ6Rh6mL
+         BbWeZs5kpBjlzc78ZLJfWhJ2PftrBmyLBuVqII9k=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Guoqing Jiang <guoqing.jiang@cloud.ionos.com>,
-        Song Liu <songliubraving@fb.com>,
+        Oleksandr Suvorov <oleksandr.suvorov@toradex.com>,
+        Marcel Ziswiler <marcel.ziswiler@toradex.com>,
+        Igor Opaniuk <igor.opaniuk@toradex.com>,
+        Fabio Estevam <festevam@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 075/313] md: dont call spare_active in md_reap_sync_thread if all member devices cant work
-Date:   Thu,  3 Oct 2019 17:50:53 +0200
-Message-Id: <20191003154540.228351734@linuxfoundation.org>
+Subject: [PATCH 5.2 040/313] ASoC: sgtl5000: Fix charge pump source assignment
+Date:   Thu,  3 Oct 2019 17:50:18 +0200
+Message-Id: <20191003154537.162797657@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191003154533.590915454@linuxfoundation.org>
 References: <20191003154533.590915454@linuxfoundation.org>
@@ -61,43 +64,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Guoqing Jiang <jgq516@gmail.com>
+From: Oleksandr Suvorov <oleksandr.suvorov@toradex.com>
 
-[ Upstream commit 0d8ed0e9bf9643f27f4816dca61081784dedb38d ]
+[ Upstream commit b6319b061ba279577fd7030a9848fbd6a17151e3 ]
 
-When add one disk to array, the md_reap_sync_thread is responsible
-to activate the spare and set In_sync flag for the new member in
-spare_active().
+If VDDA != VDDIO and any of them is greater than 3.1V, charge pump
+source can be assigned automatically [1].
 
-But if raid1 has one member disk A, and disk B is added to the array.
-Then we offline A before all the datas are synchronized from A to B,
-obviously B doesn't have the latest data as A, but B is still marked
-with In_sync flag.
+[1] https://www.nxp.com/docs/en/data-sheet/SGTL5000.pdf
 
-So let's not call spare_active under the condition, otherwise B is
-still showed with 'U' state which is not correct.
-
-Signed-off-by: Guoqing Jiang <guoqing.jiang@cloud.ionos.com>
-Signed-off-by: Song Liu <songliubraving@fb.com>
+Signed-off-by: Oleksandr Suvorov <oleksandr.suvorov@toradex.com>
+Reviewed-by: Marcel Ziswiler <marcel.ziswiler@toradex.com>
+Reviewed-by: Igor Opaniuk <igor.opaniuk@toradex.com>
+Reviewed-by: Fabio Estevam <festevam@gmail.com>
+Link: https://lore.kernel.org/r/20190719100524.23300-7-oleksandr.suvorov@toradex.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/md/md.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ sound/soc/codecs/sgtl5000.c | 15 ++++++++++-----
+ 1 file changed, 10 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/md/md.c b/drivers/md/md.c
-index 9801d540fea1c..5e885b6c4240d 100644
---- a/drivers/md/md.c
-+++ b/drivers/md/md.c
-@@ -8944,7 +8944,8 @@ void md_reap_sync_thread(struct mddev *mddev)
- 	/* resync has finished, collect result */
- 	md_unregister_thread(&mddev->sync_thread);
- 	if (!test_bit(MD_RECOVERY_INTR, &mddev->recovery) &&
--	    !test_bit(MD_RECOVERY_REQUESTED, &mddev->recovery)) {
-+	    !test_bit(MD_RECOVERY_REQUESTED, &mddev->recovery) &&
-+	    mddev->degraded != mddev->raid_disks) {
- 		/* success...*/
- 		/* activate any spares */
- 		if (mddev->pers->spare_active(mddev)) {
+diff --git a/sound/soc/codecs/sgtl5000.c b/sound/soc/codecs/sgtl5000.c
+index aad9eca41587e..7cbaedffa1ef7 100644
+--- a/sound/soc/codecs/sgtl5000.c
++++ b/sound/soc/codecs/sgtl5000.c
+@@ -1173,12 +1173,17 @@ static int sgtl5000_set_power_regs(struct snd_soc_component *component)
+ 					SGTL5000_INT_OSC_EN);
+ 		/* Enable VDDC charge pump */
+ 		ana_pwr |= SGTL5000_VDDC_CHRGPMP_POWERUP;
+-	} else if (vddio >= 3100 && vdda >= 3100) {
++	} else {
+ 		ana_pwr &= ~SGTL5000_VDDC_CHRGPMP_POWERUP;
+-		/* VDDC use VDDIO rail */
+-		lreg_ctrl |= SGTL5000_VDDC_ASSN_OVRD;
+-		lreg_ctrl |= SGTL5000_VDDC_MAN_ASSN_VDDIO <<
+-			    SGTL5000_VDDC_MAN_ASSN_SHIFT;
++		/*
++		 * if vddio == vdda the source of charge pump should be
++		 * assigned manually to VDDIO
++		 */
++		if (vddio == vdda) {
++			lreg_ctrl |= SGTL5000_VDDC_ASSN_OVRD;
++			lreg_ctrl |= SGTL5000_VDDC_MAN_ASSN_VDDIO <<
++				    SGTL5000_VDDC_MAN_ASSN_SHIFT;
++		}
+ 	}
+ 
+ 	snd_soc_component_write(component, SGTL5000_CHIP_LINREG_CTRL, lreg_ctrl);
 -- 
 2.20.1
 
