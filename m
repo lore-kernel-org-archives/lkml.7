@@ -2,107 +2,185 @@ Return-Path: <SRS0=6dNS=X4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BCE1C4CED1
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 18:36:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5AC71C10F14
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 18:37:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1682120865
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 18:36:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2118020865
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 18:37:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="DhN5LdLl"
+	dkim=pass (2048-bit key) header.d=poorly.run header.i=@poorly.run header.b="VFo/UhVW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390028AbfJCSgx (ORCPT
+        id S2390070AbfJCShh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 14:36:53 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:40457 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728905AbfJCSgx (ORCPT
+        Thu, 3 Oct 2019 14:37:37 -0400
+Received: from mail-yb1-f193.google.com ([209.85.219.193]:40459 "EHLO
+        mail-yb1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730859AbfJCShh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 14:36:53 -0400
-Received: by mail-pf1-f196.google.com with SMTP id x127so2289117pfb.7
-        for <linux-kernel@vger.kernel.org>; Thu, 03 Oct 2019 11:36:52 -0700 (PDT)
+        Thu, 3 Oct 2019 14:37:37 -0400
+Received: by mail-yb1-f193.google.com with SMTP id g9so1258058ybi.7
+        for <linux-kernel@vger.kernel.org>; Thu, 03 Oct 2019 11:37:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-transfer-encoding:content-language;
-        bh=Re8qV2QdvbkLCeb2K8HW6hCEuJ7wbKTMp5YuNreyJxY=;
-        b=DhN5LdLlc5xvMIxx+vE4iDLvGqtc3RN6Ll9kD5TCP0XPOUl9jAD6ivWCq31Q9jG1Dc
-         xwLcQ3N40GFgAGHTDlvYM4TP9qXfOOW/CwEIZhxaAUqbwkhN16Ut+NgbbutBz9dX269C
-         7BIlIfjg+RsItpnL7PVKdDy/aM6ypmt2kbppw=
+        d=poorly.run; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=XRve0gQAap+NyS4R5cGqN5gZf1m0JfC50dL6OWcjlS8=;
+        b=VFo/UhVWMJ46I+cw8Cqf4FdNEV4cUHIYDpmGpjsQ26GGF2iKhzVRWx3+nkaiBylKwM
+         /5BiWDSWgpJcU4GvVXK9NdlhlVJEMUOb9A0RWAy6F8hbpo+eArV78k4Z1Ounrc7vXUGk
+         mckllj7uM9HsQdbUyP3dd6MTIs7PcCQHm3NVn3Odlrnxsk/n2Dan3pNWRFbJHT7CP0D9
+         bX8s+n4Nsh8bNCNJ9zmOAd5MweqxxTLYguBsfaSxInIYkBu4AyjcAhxNEj2aMkVDI/4B
+         lJkWAqrdqUWWItoCpFD6FwiGtxlW90tlSGeRHNBTrzbN5Mcoik8k3sdlkoYXgw5i0IW6
+         8iPA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-transfer-encoding
-         :content-language;
-        bh=Re8qV2QdvbkLCeb2K8HW6hCEuJ7wbKTMp5YuNreyJxY=;
-        b=EY2wEKDxat0zhEjptV41HGG+4+p67nScohNTj0Dbe+GPSEoq74KojEr/RoRwH2ABbA
-         U5NPxqFdvvW/zZ1zcAH3i4R2Oo6hX3WFB1aykpIIFpJ7xHYw+aVsYj7h6dAx+E9d5KkK
-         elhgW3bVTiJMEAX9SQaR9WlhkTs069bEBYes1Jp2nooA1wKKsbMzseNZzcBv5ulqOZQW
-         Ndm2lz18ABuzzTehwienaexjFDRoWzENPJYCEoM0IEMaV0CwA8R11i8h8U+fbt91W0SL
-         TOJy2SZGRt7C8Ofb2lPFFsYuplglokGqi59RxLvCJLxJhh3s8UkAjOzctMWg24symDqS
-         4W5g==
-X-Gm-Message-State: APjAAAXHXkpDMffmt+xAiTCXjZMiJRqQNfUUx39KmftNcaQGyduGmFZm
-        Ju9ZDsmLxzPM2yuj/tgzJO1gDBwVFiRi/rWnJg7peUKJh6atfGsqmvgmsC8P5OQJxIBhGcjCNLB
-        jDZrEnGDwO+h7L3TGwd3kc9V2W/pNDDujtlAfflHqGJXnS1IJwbvn2IwG4yF4kv2HMBe+nwrKAS
-        djpRf7xKDy
-X-Google-Smtp-Source: APXvYqwQam6eWnyNaRnvLC8IN79OfdtNQK6s5BG7GaJaxRKfpvaD0CESp4p/ah8VMpLvWn6AtodhCA==
-X-Received: by 2002:a17:90b:8d1:: with SMTP id ds17mr12110001pjb.47.1570127811972;
-        Thu, 03 Oct 2019 11:36:51 -0700 (PDT)
-Received: from [10.136.13.65] ([192.19.228.250])
-        by smtp.gmail.com with ESMTPSA id k8sm2795137pgm.14.2019.10.03.11.36.49
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 03 Oct 2019 11:36:51 -0700 (PDT)
-Subject: Re: [PATCH v2 2/2] pinctrl: iproc: use unique name for irq chip
-To:     Chris Packham <chris.packham@alliedtelesis.co.nz>,
-        linus.walleij@linaro.org, rjui@broadcom.com, sbranden@broadcom.com,
-        bcm-kernel-feedback-list@broadcom.com,
-        rayagonda.kokatanur@broadcom.com, li.jin@broadcom.com
-Cc:     linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-References: <20191003000310.17099-1-chris.packham@alliedtelesis.co.nz>
- <20191003000310.17099-3-chris.packham@alliedtelesis.co.nz>
-From:   Scott Branden <scott.branden@broadcom.com>
-Message-ID: <3c03506b-8ac3-4f17-3784-fd0292e3d3ee@broadcom.com>
-Date:   Thu, 3 Oct 2019 11:36:48 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=XRve0gQAap+NyS4R5cGqN5gZf1m0JfC50dL6OWcjlS8=;
+        b=DpheySVVxE4ENZ7wyUjvSwoYJYUX6zhNfLmplhrasNVNHgc4CamZ08nC1zNb5RDqIQ
+         bRatRhlqvvmnLgl8iA99QiNDK/foXGRhHmvLxJpdV4BgEO/6zjCq+7glsfrcUCrr1daK
+         B2lGuJRYD71te4p85h0ANnHDVMmzbbzlaWm7j9vEMz3BoiFg79MEAqDJswa86s/45KCa
+         xTnhQY245twiaQO1IlGt4J/9JQVmZa3/NvF54wrdT1337VCyjeCXcPCJCwdLRqJE+ek9
+         nMCGRWI3pnCQLl2BrTYe1YIg6bS/oRXyyY86Zwl5nmtAt2sST5XcJEIUiqSffdvumYEb
+         t4Ag==
+X-Gm-Message-State: APjAAAWFjFukVQKqst5nedgVXJOMNf33gc3gQMW3/XCd51tfi3rmDc3s
+        +/Ax53qUpHzWtAVkzWGYPUu8rVxISSLKYs/LV4dg9w==
+X-Google-Smtp-Source: APXvYqwarBwi4Z2CGTBW+OLutBFjri+qnC5uPYU8hnI80vZSHK7FDugxSGkwK64f3/0mTlnN+9FiUKkb+Jlw2NrF/ME=
+X-Received: by 2002:a25:2548:: with SMTP id l69mr6812439ybl.159.1570127855623;
+ Thu, 03 Oct 2019 11:37:35 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20191003000310.17099-3-chris.packham@alliedtelesis.co.nz>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+References: <20191003102003.1.Ib233b3e706cf6317858384264d5b0ed35657456e@changeid>
+In-Reply-To: <20191003102003.1.Ib233b3e706cf6317858384264d5b0ed35657456e@changeid>
+From:   Sean Paul <sean@poorly.run>
+Date:   Thu, 3 Oct 2019 14:36:58 -0400
+Message-ID: <CAMavQKKTdsJmVy1wz8K66qyZ_iONqStM8JXJwX=9XspVAKT28A@mail.gmail.com>
+Subject: Re: [PATCH] drm/rockchip: Round up _before_ giving to the clock framework
+To:     Douglas Anderson <dianders@chromium.org>
+Cc:     Heiko Stuebner <heiko@sntech.de>, David Airlie <airlied@linux.ie>,
+        LKML <linux-kernel@vger.kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
+        Matthias Kaehlcke <mka@chromium.org>,
+        Sean Paul <seanpaul@chromium.org>, ryandcase@chromium.org,
+        Tomasz Figa <tfiga@chromium.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-looks fine
-
-On 2019-10-02 5:03 p.m., Chris Packham wrote:
-> Use the dev_name(dev) for the irqc->name so that we get unique names
-> when we have multiple instances of this driver.
+On Thu, Oct 3, 2019 at 1:20 PM Douglas Anderson <dianders@chromium.org> wrote:
 >
-> Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
-Acked-by: Scott Branden <scott.branden@broadcom.com>
+> I'm embarassed to say that even though I've touched
+> vop_crtc_mode_fixup() twice and I swear I tested it, there's still a
+> stupid glaring bug in it.  Specifically, on veyron_minnie (with all
+> the latest display timings) we want to be setting our pixel clock to
+> 66,666,666.67 Hz and we tell userspace that's what we set, but we're
+> actually choosing 66,000,000 Hz.  This is confirmed by looking at the
+> clock tree.
+>
+> The problem is that in drm_display_mode_from_videomode() we convert
+> from Hz to kHz with:
+>
+>   dmode->clock = vm->pixelclock / 1000;
+>
+> ...so when the device tree specifies a clock of 66666667 for the panel
+> then DRM translates that to 66666000.  The clock framework will always
+> pick a clock that is _lower_ than the one requested, so it will refuse
+> to pick 66666667 and we'll end up at 66000000.
+>
+> While we could try to fix drm_display_mode_from_videomode() to round
+> to the nearest kHz and it would fix our problem,
+
+I got a bit confused reading this and Doug straightened me out in a
+sideband conversation.
+
+To summarize, the drm_display_mode_from_videomode() call referenced
+above is from panel-simple, and this downslotting is specific to
+rockchip's clock driver. So I've asked to clarify these 2 points so
+it's clear from the commit message that this patch is the best
+solution. With that addressed,
+
+Reviewed-by: Sean Paul <seanpaul@chromium.org>
+
+
+> it wouldn't help if
+> the clock we actually needed was 60,000,001 Hz.  We could
+> alternatively have DRM always round up, but maybe this would break
+> someone else who already baked in the assumption that DRM rounds down.
+>
+> Let's solve this by just adding 999 Hz before calling
+> clk_round_rate().  This should be safe and work everywhere.
+>
+> NOTE: if this is picked to stable, it's probably easiest to first pick
+> commit 527e4ca3b6d1 ("drm/rockchip: Base adjustments of the mode based
+> on prev adjustments") which shouldn't hurt in stable.
+>
+> Fixes: b59b8de31497 ("drm/rockchip: return a true clock rate to adjusted_mode")
+> Signed-off-by: Douglas Anderson <dianders@chromium.org>
 > ---
->   drivers/pinctrl/bcm/pinctrl-iproc-gpio.c | 2 +-
->   1 file changed, 1 insertion(+), 1 deletion(-)
 >
-> diff --git a/drivers/pinctrl/bcm/pinctrl-iproc-gpio.c b/drivers/pinctrl/bcm/pinctrl-iproc-gpio.c
-> index 8971fc54e974..c24d49d436ce 100644
-> --- a/drivers/pinctrl/bcm/pinctrl-iproc-gpio.c
-> +++ b/drivers/pinctrl/bcm/pinctrl-iproc-gpio.c
-> @@ -858,7 +858,7 @@ static int iproc_gpio_probe(struct platform_device *pdev)
->   		struct gpio_irq_chip *girq;
->   
->   		irqc = &chip->irqchip;
-> -		irqc->name = "bcm-iproc-gpio";
-> +		irqc->name = dev_name(dev);
->   		irqc->irq_ack = iproc_gpio_irq_ack;
->   		irqc->irq_mask = iproc_gpio_irq_mask;
->   		irqc->irq_unmask = iproc_gpio_irq_unmask;
-
+>  drivers/gpu/drm/rockchip/rockchip_drm_vop.c | 37 +++++++++++++++++++--
+>  1 file changed, 34 insertions(+), 3 deletions(-)
+>
+> diff --git a/drivers/gpu/drm/rockchip/rockchip_drm_vop.c b/drivers/gpu/drm/rockchip/rockchip_drm_vop.c
+> index 613404f86668..84e3decb17b1 100644
+> --- a/drivers/gpu/drm/rockchip/rockchip_drm_vop.c
+> +++ b/drivers/gpu/drm/rockchip/rockchip_drm_vop.c
+> @@ -1040,10 +1040,41 @@ static bool vop_crtc_mode_fixup(struct drm_crtc *crtc,
+>                                 struct drm_display_mode *adjusted_mode)
+>  {
+>         struct vop *vop = to_vop(crtc);
+> +       unsigned long rate;
+>
+> -       adjusted_mode->clock =
+> -               DIV_ROUND_UP(clk_round_rate(vop->dclk,
+> -                                           adjusted_mode->clock * 1000), 1000);
+> +       /*
+> +        * Clock craziness.
+> +        *
+> +        * Key points:
+> +        *
+> +        * - DRM works in in kHz.
+> +        * - Clock framework works in Hz.
+> +        * - Rockchip's clock driver picks the clock rate that is the
+> +        *   same _OR LOWER_ than the one requested.
+> +        *
+> +        * Action plan:
+> +        *
+> +        * 1. When DRM gives us a mode, we should add 999 Hz to it.  That way
+> +        *    if the clock we need is 60000001 Hz (~60 MHz) and DRM tells us to
+> +        *    make 60000 kHz then the clock framework will actually give us
+> +        *    the right clock.
+> +        *
+> +        *    NOTE: if the PLL (maybe through a divider) could actually make
+> +        *    a clock rate 999 Hz higher instead of the one we want then this
+> +        *    could be a problem.  Unfortunately there's not much we can do
+> +        *    since it's baked into DRM to use kHz.  It shouldn't matter in
+> +        *    practice since Rockchip PLLs are controlled by tables and
+> +        *    even if there is a divider in the middle I wouldn't expect PLL
+> +        *    rates in the table that are just a few kHz different.
+> +        *
+> +        * 2. Get the clock framework to round the rate for us to tell us
+> +        *    what it will actually make.
+> +        *
+> +        * 3. Store the rounded up rate so that we don't need to worry about
+> +        *    this in the actual clk_set_rate().
+> +        */
+> +       rate = clk_round_rate(vop->dclk, adjusted_mode->clock * 1000 + 999);
+> +       adjusted_mode->clock = DIV_ROUND_UP(rate, 1000);
+>
+>         return true;
+>  }
+> --
+> 2.23.0.444.g18eeb5a265-goog
+>
+> _______________________________________________
+> dri-devel mailing list
+> dri-devel@lists.freedesktop.org
+> https://lists.freedesktop.org/mailman/listinfo/dri-devel
