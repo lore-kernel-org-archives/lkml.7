@@ -2,53 +2,52 @@ Return-Path: <SRS0=6dNS=X4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 194C5C10F14
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:32:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9193DC10F14
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:32:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E07F120830
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:32:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5FAE120862
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:32:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570123947;
-	bh=M2kBgoQlS88+8nYbzPOfBARbv19HvebbOKQ1ikit4Wc=;
+	s=default; t=1570123968;
+	bh=YeAjsE6EFLoH/k4+lIuFyKsutqcnUMArJBUwkJaNMqo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=mRRTSS1g3Z0pa+kyd1dA2HzkaRE5JPwPl/1HzgdKp6ddYVlARfFHXXggRHWs0zboD
-	 AKphLl9c1m+I811aiiEhN1tq9eWuuMnBmwdo5cz5DlkO6c1bqzyKViJxWCFbf/vVi9
-	 9tAAcz/VIVqVScGzrQjjZCpTkIlY+Yc28XVytLB4=
+	b=B62tIdclf2qSDYJ48cPZRKUmM/QVlftC5KLf5LHeDjcyC6wIPInCodvc8DRxa+4My
+	 BwTpYgo+TG/mAKorrkW1k5K4a2RsdR0od6TPFohurPxNMfircBppFMmhZj42LyUla0
+	 qYGZu+U2qkv+KUSBbU7GEA9ZL1HMLlpe4ejRWtSU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387436AbfJCQJE (ORCPT
+        id S1733259AbfJCQIo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 12:09:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57494 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 12:08:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56958 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733309AbfJCQI7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:08:59 -0400
+        id S1733208AbfJCQIk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:08:40 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 53F35222C8;
-        Thu,  3 Oct 2019 16:08:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D6ACC215EA;
+        Thu,  3 Oct 2019 16:08:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570118937;
-        bh=M2kBgoQlS88+8nYbzPOfBARbv19HvebbOKQ1ikit4Wc=;
+        s=default; t=1570118919;
+        bh=YeAjsE6EFLoH/k4+lIuFyKsutqcnUMArJBUwkJaNMqo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=JMmcWPw90BEts/lCaMDhkwMXnuIMLoc1TPp0S39N8yqV/L2xV24svjznpFTTB6z/7
-         BhX1BqGmbcPv/jO3NyW9pm/sSvigEzrvx7I/YvSjlrA3PJy7yfbiFdcP+qPp5HiQ1i
-         P7yv3l+aJqG+rkB/a2um502riI7KvdRyheS/imYo=
+        b=TTiSNlkKmD7tvlziioHbyBoboEj2liWaFdS1iBh592ivI/oGFukFG2EEmW6aX0qut
+         /cqvxIIAoCKzt0rzvBasakWj83SxAL4BMEjLz2g4TwLTrbBULg3cAVwOuNzc+FIStB
+         kyFFtkE5bqHo4OzkXZxFxHyejNqM1aRnw2Y+rAvk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Grzegorz Halat <ghalat@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Don Zickus <dzickus@redhat.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 065/185] x86/reboot: Always use NMI fallback when shutdown via reboot vector IPI fails
-Date:   Thu,  3 Oct 2019 17:52:23 +0200
-Message-Id: <20191003154452.139153898@linuxfoundation.org>
+        stable@vger.kernel.org, Li RongQing <lirongqing@baidu.com>,
+        Pravin B Shelar <pshelar@ovn.org>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.14 041/185] openvswitch: change type of UPCALL_PID attribute to NLA_UNSPEC
+Date:   Thu,  3 Oct 2019 17:51:59 +0200
+Message-Id: <20191003154446.986914094@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191003154437.541662648@linuxfoundation.org>
 References: <20191003154437.541662648@linuxfoundation.org>
@@ -61,128 +60,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Grzegorz Halat <ghalat@redhat.com>
+From: Li RongQing <lirongqing@baidu.com>
 
-[ Upstream commit 747d5a1bf293dcb33af755a6d285d41b8c1ea010 ]
+[ Upstream commit ea8564c865299815095bebeb4b25bef474218e4c ]
 
-A reboot request sends an IPI via the reboot vector and waits for all other
-CPUs to stop. If one or more CPUs are in critical regions with interrupts
-disabled then the IPI is not handled on those CPUs and the shutdown hangs
-if native_stop_other_cpus() is called with the wait argument set.
+userspace openvswitch patch "(dpif-linux: Implement the API
+functions to allow multiple handler threads read upcall)"
+changes its type from U32 to UNSPEC, but leave the kernel
+unchanged
 
-Such a situation can happen when one CPU was stopped within a lock held
-section and another CPU is trying to acquire that lock with interrupts
-disabled. There are other scenarios which can cause such a lockup as well.
+and after kernel 6e237d099fac "(netlink: Relax attr validation
+for fixed length types)", this bug is exposed by the below
+warning
 
-In theory the shutdown should be attempted by an NMI IPI after the timeout
-period elapsed. Though the wait loop after sending the reboot vector IPI
-prevents this. It checks the wait request argument and the timeout. If wait
-is set, which is true for sys_reboot() then it won't fall through to the
-NMI shutdown method after the timeout period has finished.
+	[   57.215841] netlink: 'ovs-vswitchd': attribute type 5 has an invalid length.
 
-This was an oversight when the NMI shutdown mechanism was added to handle
-the 'reboot IPI is not working' situation. The mechanism was added to deal
-with stuck panic shutdowns, which do not have the wait request set, so the
-'wait request' case was probably not considered.
-
-Remove the wait check from the post reboot vector IPI wait loop and enforce
-that the wait loop in the NMI fallback path is invoked even if NMI IPIs are
-disabled or the registration of the NMI handler fails. That second wait
-loop will then hang if not all CPUs shutdown and the wait argument is set.
-
-[ tglx: Avoid the hard to parse line break in the NMI fallback path,
-  	add comments and massage the changelog ]
-
-Fixes: 7d007d21e539 ("x86/reboot: Use NMI to assist in shutting down if IRQ fails")
-Signed-off-by: Grzegorz Halat <ghalat@redhat.com>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Cc: Don Zickus <dzickus@redhat.com>
-Link: https://lkml.kernel.org/r/20190628122813.15500-1-ghalat@redhat.com
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Fixes: 5cd667b0a456 ("openvswitch: Allow each vport to have an array of 'port_id's")
+Signed-off-by: Li RongQing <lirongqing@baidu.com>
+Acked-by: Pravin B Shelar <pshelar@ovn.org>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- arch/x86/kernel/smp.c | 46 +++++++++++++++++++++++++------------------
- 1 file changed, 27 insertions(+), 19 deletions(-)
+ net/openvswitch/datapath.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/x86/kernel/smp.c b/arch/x86/kernel/smp.c
-index 04adc8d60aed8..b2b87b91f3361 100644
---- a/arch/x86/kernel/smp.c
-+++ b/arch/x86/kernel/smp.c
-@@ -181,6 +181,12 @@ asmlinkage __visible void smp_reboot_interrupt(void)
- 	irq_exit();
- }
+--- a/net/openvswitch/datapath.c
++++ b/net/openvswitch/datapath.c
+@@ -2240,7 +2240,7 @@ static const struct nla_policy vport_pol
+ 	[OVS_VPORT_ATTR_STATS] = { .len = sizeof(struct ovs_vport_stats) },
+ 	[OVS_VPORT_ATTR_PORT_NO] = { .type = NLA_U32 },
+ 	[OVS_VPORT_ATTR_TYPE] = { .type = NLA_U32 },
+-	[OVS_VPORT_ATTR_UPCALL_PID] = { .type = NLA_U32 },
++	[OVS_VPORT_ATTR_UPCALL_PID] = { .type = NLA_UNSPEC },
+ 	[OVS_VPORT_ATTR_OPTIONS] = { .type = NLA_NESTED },
+ };
  
-+static int register_stop_handler(void)
-+{
-+	return register_nmi_handler(NMI_LOCAL, smp_stop_nmi_callback,
-+				    NMI_FLAG_FIRST, "smp_stop");
-+}
-+
- static void native_stop_other_cpus(int wait)
- {
- 	unsigned long flags;
-@@ -214,39 +220,41 @@ static void native_stop_other_cpus(int wait)
- 		apic->send_IPI_allbutself(REBOOT_VECTOR);
- 
- 		/*
--		 * Don't wait longer than a second if the caller
--		 * didn't ask us to wait.
-+		 * Don't wait longer than a second for IPI completion. The
-+		 * wait request is not checked here because that would
-+		 * prevent an NMI shutdown attempt in case that not all
-+		 * CPUs reach shutdown state.
- 		 */
- 		timeout = USEC_PER_SEC;
--		while (num_online_cpus() > 1 && (wait || timeout--))
-+		while (num_online_cpus() > 1 && timeout--)
- 			udelay(1);
- 	}
--	
--	/* if the REBOOT_VECTOR didn't work, try with the NMI */
--	if ((num_online_cpus() > 1) && (!smp_no_nmi_ipi))  {
--		if (register_nmi_handler(NMI_LOCAL, smp_stop_nmi_callback,
--					 NMI_FLAG_FIRST, "smp_stop"))
--			/* Note: we ignore failures here */
--			/* Hope the REBOOT_IRQ is good enough */
--			goto finish;
--
--		/* sync above data before sending IRQ */
--		wmb();
- 
--		pr_emerg("Shutting down cpus with NMI\n");
-+	/* if the REBOOT_VECTOR didn't work, try with the NMI */
-+	if (num_online_cpus() > 1) {
-+		/*
-+		 * If NMI IPI is enabled, try to register the stop handler
-+		 * and send the IPI. In any case try to wait for the other
-+		 * CPUs to stop.
-+		 */
-+		if (!smp_no_nmi_ipi && !register_stop_handler()) {
-+			/* Sync above data before sending IRQ */
-+			wmb();
- 
--		apic->send_IPI_allbutself(NMI_VECTOR);
-+			pr_emerg("Shutting down cpus with NMI\n");
- 
-+			apic->send_IPI_allbutself(NMI_VECTOR);
-+		}
- 		/*
--		 * Don't wait longer than a 10 ms if the caller
--		 * didn't ask us to wait.
-+		 * Don't wait longer than 10 ms if the caller didn't
-+		 * reqeust it. If wait is true, the machine hangs here if
-+		 * one or more CPUs do not reach shutdown state.
- 		 */
- 		timeout = USEC_PER_MSEC * 10;
- 		while (num_online_cpus() > 1 && (wait || timeout--))
- 			udelay(1);
- 	}
- 
--finish:
- 	local_irq_save(flags);
- 	disable_local_APIC();
- 	mcheck_cpu_clear(this_cpu_ptr(&cpu_info));
--- 
-2.20.1
-
 
 
