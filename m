@@ -2,53 +2,59 @@ Return-Path: <SRS0=6dNS=X4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 085A4C10F14
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:42:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB5A8C10F14
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:42:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D3D2921A4C
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:42:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9256120830
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:42:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570124528;
-	bh=0RTc05l2gYj4ZmdMElNObqKBp2zeliCT/z+ZyWPo8yc=;
+	s=default; t=1570124532;
+	bh=kO0edMERiMK1zTYPPeg2W8nnKeWuXmPCqlnwYezt6do=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=fn831mGwJrkxPe7FleLWQ6Uwh4e8ZFutH/AOCp1xaZN3SJPy8Gh+Hr//a0ZeoE8fM
-	 kVYY0bprx0snZ+k4ORS1KIDks+8BQCjwb45Fl3U4Sx4uc0fRcA8GQMT9gkgPefc1ef
-	 dTuge4M+tjYN+EgKS+8rgd3ly4Y6A/Jemt2kVkB0=
+	b=lX+dzkZI2Rz5S+XVoTeCxGk4XmyqabkDjw31PqwRYOyXYAO0HWjWY1JCKBPEzhHaw
+	 E+oQI/8bjfk+6X2u+18t3B4P3slaydb7tryumHKRphrmUzXl7xpZ6y7eJ2TjbkVN+z
+	 XFYeFz3IHaBSVHnp8zDERyzedyjacn7LQ90p/9bE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729359AbfJCP5j (ORCPT
+        id S1730969AbfJCP5c (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 11:57:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40056 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 11:57:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39874 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730989AbfJCP5f (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 11:57:35 -0400
+        id S1729870AbfJCP51 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 11:57:27 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 465BA20830;
-        Thu,  3 Oct 2019 15:57:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 414B2222BE;
+        Thu,  3 Oct 2019 15:57:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570118254;
-        bh=0RTc05l2gYj4ZmdMElNObqKBp2zeliCT/z+ZyWPo8yc=;
+        s=default; t=1570118246;
+        bh=kO0edMERiMK1zTYPPeg2W8nnKeWuXmPCqlnwYezt6do=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=uWmTHRW23FgjPtnhTQTBmELizKD5j1ZQlupqGxwCSwo7odzzj9xtBmY+eOH2rpqfw
-         ES1Y7Mnjb6Zwz/Hca2jLm7SSOQ9HnDo6i/vEhAMUIsamuHcYkii+g1Ar4cIJDEJB2u
-         PY/D0jZvsLTC11cfBSarG2/C/IHNfURUWBZApoFw=
+        b=CE3SoDT8ONWV9+1oB7hjp0BE4cyQgjy7BTzfGlyET2+10V218BP3u81T3fi/O+lDu
+         C1UKgZpZ97+7P3/hUju5XrzzfOrEis7oJwnF7RXOLOlHXi6xm/6tGnkYB5GSGRBMPb
+         eJdZFerVkL+o+IBKdXvjQDMiTY1TMCyyvdKI8BuI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, kbuild test robot <lkp@intel.com>,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        Christophe Leroy <christophe.leroy@c-s.fr>,
-        Herbert Xu <herbert@gondor.apana.org.au>
-Subject: [PATCH 4.4 07/99] crypto: talitos - fix missing break in switch statement
-Date:   Thu,  3 Oct 2019 17:52:30 +0200
-Message-Id: <20191003154256.015612973@linuxfoundation.org>
+        stable@vger.kernel.org, Juri Lelli <juri.lelli@redhat.com>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        =?UTF-8?q?Michal=20Koutn=C3=BD?= <mkoutny@suse.com>,
+        Daniel Bristot de Oliveira <bristot@redhat.com>,
+        Tejun Heo <tj@kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>, lizefan@huawei.com,
+        longman@redhat.com, luca.abeni@santannapisa.it,
+        rostedt@goodmis.org, Ingo Molnar <mingo@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.4 40/99] sched/core: Fix CPU controller for !RT_GROUP_SCHED
+Date:   Thu,  3 Oct 2019 17:53:03 +0200
+Message-Id: <20191003154314.889222769@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191003154252.297991283@linuxfoundation.org>
 References: <20191003154252.297991283@linuxfoundation.org>
@@ -61,34 +67,81 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Gustavo A. R. Silva <gustavo@embeddedor.com>
+From: Juri Lelli <juri.lelli@redhat.com>
 
-commit 5fc194ea6d34dfad9833d3043ce41d6c52aff39a upstream.
+[ Upstream commit a07db5c0865799ebed1f88be0df50c581fb65029 ]
 
-Add missing break statement in order to prevent the code from falling
-through to case CRYPTO_ALG_TYPE_AHASH.
+On !CONFIG_RT_GROUP_SCHED configurations it is currently not possible to
+move RT tasks between cgroups to which CPU controller has been attached;
+but it is oddly possible to first move tasks around and then make them
+RT (setschedule to FIFO/RR).
 
-Fixes: aeb4c132f33d ("crypto: talitos - Convert to new AEAD interface")
-Cc: stable@vger.kernel.org
-Reported-by: kbuild test robot <lkp@intel.com>
-Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
-Reviewed-by: Christophe Leroy <christophe.leroy@c-s.fr>
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+E.g.:
 
+  # mkdir /sys/fs/cgroup/cpu,cpuacct/group1
+  # chrt -fp 10 $$
+  # echo $$ > /sys/fs/cgroup/cpu,cpuacct/group1/tasks
+  bash: echo: write error: Invalid argument
+  # chrt -op 0 $$
+  # echo $$ > /sys/fs/cgroup/cpu,cpuacct/group1/tasks
+  # chrt -fp 10 $$
+  # cat /sys/fs/cgroup/cpu,cpuacct/group1/tasks
+  2345
+  2598
+  # chrt -p 2345
+  pid 2345's current scheduling policy: SCHED_FIFO
+  pid 2345's current scheduling priority: 10
+
+Also, as Michal noted, it is currently not possible to enable CPU
+controller on unified hierarchy with !CONFIG_RT_GROUP_SCHED (if there
+are any kernel RT threads in root cgroup, they can't be migrated to the
+newly created CPU controller's root in cgroup_update_dfl_csses()).
+
+Existing code comes with a comment saying the "we don't support RT-tasks
+being in separate groups". Such comment is however stale and belongs to
+pre-RT_GROUP_SCHED times. Also, it doesn't make much sense for
+!RT_GROUP_ SCHED configurations, since checks related to RT bandwidth
+are not performed at all in these cases.
+
+Make moving RT tasks between CPU controller groups viable by removing
+special case check for RT (and DEADLINE) tasks.
+
+Signed-off-by: Juri Lelli <juri.lelli@redhat.com>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Reviewed-by: Michal Koutný <mkoutny@suse.com>
+Reviewed-by: Daniel Bristot de Oliveira <bristot@redhat.com>
+Acked-by: Tejun Heo <tj@kernel.org>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: lizefan@huawei.com
+Cc: longman@redhat.com
+Cc: luca.abeni@santannapisa.it
+Cc: rostedt@goodmis.org
+Link: https://lkml.kernel.org/r/20190719063455.27328-1-juri.lelli@redhat.com
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/crypto/talitos.c |    1 +
- 1 file changed, 1 insertion(+)
+ kernel/sched/core.c | 4 ----
+ 1 file changed, 4 deletions(-)
 
---- a/drivers/crypto/talitos.c
-+++ b/drivers/crypto/talitos.c
-@@ -2730,6 +2730,7 @@ static int talitos_remove(struct platfor
- 			break;
- 		case CRYPTO_ALG_TYPE_AEAD:
- 			crypto_unregister_aead(&t_alg->algt.alg.aead);
-+			break;
- 		case CRYPTO_ALG_TYPE_AHASH:
- 			crypto_unregister_ahash(&t_alg->algt.alg.hash);
- 			break;
+diff --git a/kernel/sched/core.c b/kernel/sched/core.c
+index 0e70bfeded7fd..d81bcc6362fff 100644
+--- a/kernel/sched/core.c
++++ b/kernel/sched/core.c
+@@ -8339,10 +8339,6 @@ static int cpu_cgroup_can_attach(struct cgroup_taskset *tset)
+ #ifdef CONFIG_RT_GROUP_SCHED
+ 		if (!sched_rt_can_attach(css_tg(css), task))
+ 			return -EINVAL;
+-#else
+-		/* We don't support RT-tasks being in separate groups */
+-		if (task->sched_class != &fair_sched_class)
+-			return -EINVAL;
+ #endif
+ 	}
+ 	return 0;
+-- 
+2.20.1
+
 
 
