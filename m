@@ -7,46 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47445C10F14
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 15:58:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 18737C10F14
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 15:58:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 16FB120830
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 15:58:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DDB2620830
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 15:58:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570118289;
-	bh=8EYDPjW/ny08MiufbNXd/ZBmvdgjqlh9PNGhulbyLos=;
+	s=default; t=1570118293;
+	bh=nw8lE8PLBPUWPA18dI7iK352YspUk1mBGfamqwxe2E4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Cr1hpkIHhgdqHOQahzCJ2QKFu4pa88qbRHF5W69T6CTkh9bFOaaZVv463rBF+p6Bx
-	 Hwo1jcJmM7MtxbyZ0OFxlo5/S1YvyxQ0QGVpMKZoIFbrKreh+QLteuktAbmnBhod4Q
-	 8+Js3frfs+Zyy/lFag/YpE44SM6b1wSjrVtGCWsc=
+	b=cIeCS1ArKbpdlyDZOh1RcMJJcbTta8ijbs28lD3enAqa7a4fXtNXXNpru2B/hOgQM
+	 UzH/PLF2RjDdNShUa1oVrDdYXVXnlppEFfmRixJpEty6OMd4ABnsdGx2sGdXP8VKJd
+	 wDvUaBAaK5rM5+Xa3Vx8Q+7YWMJcJJzmN1EAPrAg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731103AbfJCP6F (ORCPT
+        id S1731194AbfJCP6M (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 11:58:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40658 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 11:58:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40728 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728600AbfJCP6C (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 11:58:02 -0400
+        id S1731088AbfJCP6E (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 11:58:04 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 40CB721A4C;
-        Thu,  3 Oct 2019 15:58:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2036220700;
+        Thu,  3 Oct 2019 15:58:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570118280;
-        bh=8EYDPjW/ny08MiufbNXd/ZBmvdgjqlh9PNGhulbyLos=;
+        s=default; t=1570118283;
+        bh=nw8lE8PLBPUWPA18dI7iK352YspUk1mBGfamqwxe2E4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jQDZO34p6NE2+LY5cuKEu0y7kiHkLOrVT9MNefi68c4StqZ3XtUKPkLqYwev0h8Fj
-         oW6l+HsRfNIDuhvybcoepr6BpfgAoCv+ykRJ+FrijGCgZmAAKyQ0Lu6F9SeFHW1jTA
-         rdd7DYZXIh8HgKExO9X3uM0hnWuSSsKEq1nptSiE=
+        b=n5z+EiWV5dJqdM9YFFpSQeooL19P9wpyUiqKhVvq8I5ngPCAOi3AR3aYOogzww+gP
+         o/BaATRO/1w9CDH28UIuGP8edqQnQ0SjGen+wTffVsN7PZAzShpzs5Yj67ZWxsTgPS
+         bHiwnnF/nC7p9UHAGQLfa++Hq+xfdgNcaLO7iLpo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, kbuild test robot <lkp@intel.com>,
-        Arnd Bergmann <arnd@arndb.de>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 55/99] net: lpc-enet: fix printk format strings
-Date:   Thu,  3 Oct 2019 17:53:18 +0200
-Message-Id: <20191003154323.123213106@linuxfoundation.org>
+        stable@vger.kernel.org, Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Sasha Levin <sashal@kernel.org>,
+        syzbot+2d4fc2a0c45ad8da7e99@syzkaller.appspotmail.com
+Subject: [PATCH 4.4 56/99] media: radio/si470x: kill urb on error
+Date:   Thu,  3 Oct 2019 17:53:19 +0200
+Message-Id: <20191003154323.368128211@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191003154252.297991283@linuxfoundation.org>
 References: <20191003154252.297991283@linuxfoundation.org>
@@ -59,62 +61,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Arnd Bergmann <arnd@arndb.de>
+From: Hans Verkuil <hverkuil-cisco@xs4all.nl>
 
-[ Upstream commit de6f97b2bace0e2eb6c3a86e124d1e652a587b56 ]
+[ Upstream commit 0d616f2a3fdbf1304db44d451d9f07008556923b ]
 
-compile-testing this driver on other architectures showed
-multiple warnings:
+In the probe() function radio->int_in_urb was not killed if an
+error occurred in the probe sequence. It was also missing in
+the disconnect.
 
-  drivers/net/ethernet/nxp/lpc_eth.c: In function 'lpc_eth_drv_probe':
-  drivers/net/ethernet/nxp/lpc_eth.c:1337:19: warning: format '%d' expects argument of type 'int', but argument 4 has type 'resource_size_t {aka long long unsigned int}' [-Wformat=]
+This caused this syzbot issue:
 
-  drivers/net/ethernet/nxp/lpc_eth.c:1342:19: warning: format '%x' expects argument of type 'unsigned int', but argument 4 has type 'dma_addr_t {aka long long unsigned int}' [-Wformat=]
+https://syzkaller.appspot.com/bug?extid=2d4fc2a0c45ad8da7e99
 
-Use format strings that work on all architectures.
+Reported-and-tested-by: syzbot+2d4fc2a0c45ad8da7e99@syzkaller.appspotmail.com
 
-Link: https://lore.kernel.org/r/20190809144043.476786-10-arnd@arndb.de
-Reported-by: kbuild test robot <lkp@intel.com>
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/nxp/lpc_eth.c | 13 +++++++------
- 1 file changed, 7 insertions(+), 6 deletions(-)
+ drivers/media/radio/si470x/radio-si470x-usb.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/nxp/lpc_eth.c b/drivers/net/ethernet/nxp/lpc_eth.c
-index 057665180f13f..ba14bad81a21f 100644
---- a/drivers/net/ethernet/nxp/lpc_eth.c
-+++ b/drivers/net/ethernet/nxp/lpc_eth.c
-@@ -1417,13 +1417,14 @@ static int lpc_eth_drv_probe(struct platform_device *pdev)
- 	pldat->dma_buff_base_p = dma_handle;
+diff --git a/drivers/media/radio/si470x/radio-si470x-usb.c b/drivers/media/radio/si470x/radio-si470x-usb.c
+index 091d793f65836..c9347d5aac04f 100644
+--- a/drivers/media/radio/si470x/radio-si470x-usb.c
++++ b/drivers/media/radio/si470x/radio-si470x-usb.c
+@@ -743,7 +743,7 @@ static int si470x_usb_driver_probe(struct usb_interface *intf,
+ 	/* start radio */
+ 	retval = si470x_start_usb(radio);
+ 	if (retval < 0)
+-		goto err_all;
++		goto err_buf;
  
- 	netdev_dbg(ndev, "IO address space     :%pR\n", res);
--	netdev_dbg(ndev, "IO address size      :%d\n", resource_size(res));
-+	netdev_dbg(ndev, "IO address size      :%zd\n",
-+			(size_t)resource_size(res));
- 	netdev_dbg(ndev, "IO address (mapped)  :0x%p\n",
- 			pldat->net_base);
- 	netdev_dbg(ndev, "IRQ number           :%d\n", ndev->irq);
--	netdev_dbg(ndev, "DMA buffer size      :%d\n", pldat->dma_buff_size);
--	netdev_dbg(ndev, "DMA buffer P address :0x%08x\n",
--			pldat->dma_buff_base_p);
-+	netdev_dbg(ndev, "DMA buffer size      :%zd\n", pldat->dma_buff_size);
-+	netdev_dbg(ndev, "DMA buffer P address :%pad\n",
-+			&pldat->dma_buff_base_p);
- 	netdev_dbg(ndev, "DMA buffer V address :0x%p\n",
- 			pldat->dma_buff_base_v);
+ 	/* set initial frequency */
+ 	si470x_set_freq(radio, 87.5 * FREQ_MUL); /* available in all regions */
+@@ -758,6 +758,8 @@ static int si470x_usb_driver_probe(struct usb_interface *intf,
  
-@@ -1470,8 +1471,8 @@ static int lpc_eth_drv_probe(struct platform_device *pdev)
- 	if (ret)
- 		goto err_out_unregister_netdev;
- 
--	netdev_info(ndev, "LPC mac at 0x%08x irq %d\n",
--	       res->start, ndev->irq);
-+	netdev_info(ndev, "LPC mac at 0x%08lx irq %d\n",
-+	       (unsigned long)res->start, ndev->irq);
- 
- 	phydev = pldat->phy_dev;
- 
+ 	return 0;
+ err_all:
++	usb_kill_urb(radio->int_in_urb);
++err_buf:
+ 	kfree(radio->buffer);
+ err_ctrl:
+ 	v4l2_ctrl_handler_free(&radio->hdl);
+@@ -831,6 +833,7 @@ static void si470x_usb_driver_disconnect(struct usb_interface *intf)
+ 	mutex_lock(&radio->lock);
+ 	v4l2_device_disconnect(&radio->v4l2_dev);
+ 	video_unregister_device(&radio->videodev);
++	usb_kill_urb(radio->int_in_urb);
+ 	usb_set_intfdata(intf, NULL);
+ 	mutex_unlock(&radio->lock);
+ 	v4l2_device_put(&radio->v4l2_dev);
 -- 
 2.20.1
 
