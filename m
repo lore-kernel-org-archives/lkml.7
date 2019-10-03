@@ -2,164 +2,142 @@ Return-Path: <SRS0=6dNS=X4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A5B4C10F14
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:07:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 76B38C32792
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:07:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 65DCF222CD
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:07:03 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="V3NMv022"
+	by mail.kernel.org (Postfix) with ESMTP id 4AD33222C2
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:07:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1570118826;
+	bh=W/MQtJc3HNF8IPyUepQOWlDMkAdB3bVfVEgqHk2M5u0=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=f7gnppTJLy0j88Uopw7jEjR9srcRbO8WZn4YEPAVxa/q/kNtE30fNKn18FlM97RVp
+	 XB1/AUVH1CHJLNDSRiVKOZ+0Qs5CJM9mqjuKOkQm0QnDkdUoQKGRjaaPbzz7a7Q+C+
+	 EzntPQRcKGWSfAiIAn30QzkcI+cAlP9Fofy2DrVw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731934AbfJCQHC (ORCPT
+        id S1731720AbfJCQHF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 12:07:02 -0400
-Received: from mail-io1-f66.google.com ([209.85.166.66]:42540 "EHLO
-        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731347AbfJCQGz (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:07:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54420 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1732847AbfJCQGz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 3 Oct 2019 12:06:55 -0400
-Received: by mail-io1-f66.google.com with SMTP id n197so6759978iod.9;
-        Thu, 03 Oct 2019 09:06:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Mlk8A86Fq4GMU/KjC59awMny/l9qD3VrtRXq6Ecrchc=;
-        b=V3NMv022bIO4LOUDBGXngyMnjadYmEv5jEvTTZuP5q/wQS5Vm1+q6D3RcD6VZc4VjO
-         6H/Recodkm+uluNF6IuIBjp2G+wkmroJ/7VYdkIj9+4guGwcAOIL6AxPPA33VQCUFMtr
-         +NnezmU5s8g6cJqjvx1nTgi7f18SKpobHNbSEnoDD/NFdmfOKAbAhg6GgOv6V3YuGS8a
-         7uwt3HpW71eSJcOfJrnYrQmhoqrmBsyzNCT/7LFxPcD07Hecy/QEpgJsqfYm0UBByHrN
-         luK/55rb0RpO2vIWK446OJ1f86KwD8zL+2JZQxkuj2A+APwRRrPOSTSbfNMx3yq9299S
-         EMRw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Mlk8A86Fq4GMU/KjC59awMny/l9qD3VrtRXq6Ecrchc=;
-        b=OjjSfM8IKEfWKBuFJoA2RKFzDfIzwHUFwygzp+D7SH1FlUFXFBdmc5xF91cJyYiouO
-         zEyI+HsJE7WpZqPW0HowoCbB0A0C/ny+W5i2QcEJUcskVnBi3Mf7yEwJvEezlOOQUybq
-         sB6tee8US/DnCAcURjWjfV1vzzki4vkmXSBLLQIxDyLOZYAfYKObaM4OtDBbeZqZCC03
-         AizTeLH8hkrfapNQFXdnUNR5FebkgIkw/gGmpIGbcDYiHrprZYhQSxidi5i5HoR1C1hp
-         Zm/mY29h7Y6ly1HgwDDHJAo6krCu4etMkaoMH++ApZdQsyZHsTlUL9HKvfygS6l1iwAh
-         unVA==
-X-Gm-Message-State: APjAAAUP+LUozqgBUrBMVYBqdIHzN11GqJmNyL9HOXXDD9dyqNSjcSkt
-        8NuAb4msoCPtdGBB2vTzqck4EVJjoaUFhusjXZo=
-X-Google-Smtp-Source: APXvYqwKVFct2U1efQS8h4m+GJhx1lW98NQBdZGp7Re59o/Ywbh4H1PWNheYUDsMKUc0sleg/qKJqe+Z1d/Rp8qmIKg=
-X-Received: by 2002:a6b:a0d:: with SMTP id z13mr8337013ioi.5.1570118813951;
- Thu, 03 Oct 2019 09:06:53 -0700 (PDT)
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7F352215EA;
+        Thu,  3 Oct 2019 16:06:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1570118815;
+        bh=W/MQtJc3HNF8IPyUepQOWlDMkAdB3bVfVEgqHk2M5u0=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=uVxOKL3/Icl4kYvWeNhKD1ECXxYkWrflId52G1ZdVPMqiM4GtM1cGLaWFoYVA9/U2
+         CP9lwvqzNHnygqAXENu3+k6QDsgvmuNNwT/46I1AfDI0gWwpyUnbU1oAvFrXyFnmhs
+         AEuOc0sDgjRVkv4H1poUqIhuWeJB/XKEYriGCuEs=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Greg Kurz <groug@kaod.org>,
+        =?UTF-8?q?C=C3=A9dric=20Le=20Goater?= <clg@kaod.org>,
+        Michael Ellerman <mpe@ellerman.id.au>
+Subject: [PATCH 4.14 002/185] powerpc/xive: Fix bogus error code returned by OPAL
+Date:   Thu,  3 Oct 2019 17:51:20 +0200
+Message-Id: <20191003154437.856017779@linuxfoundation.org>
+X-Mailer: git-send-email 2.23.0
+In-Reply-To: <20191003154437.541662648@linuxfoundation.org>
+References: <20191003154437.541662648@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-References: <CAH2r5mv49T9gwwoJxKJfkgdi6xbf+hDALUiAJHghGikgUNParw@mail.gmail.com>
- <CAH2r5mtVW=3-2L+0QFJAqBG+uj2sYmF=dtzT_kqwK59cu94vGw@mail.gmail.com>
- <20191003104356.GA77584@google.com> <CAH2r5msF5DF2ac+-V0xRR-8RYeQdwpsS1iBLHM6iKTB+aEVc5Q@mail.gmail.com>
- <CAK7LNARrdQad9=U1LknT9yRYtRagNVS8T5r_Ovv5Sa91QO3TsA@mail.gmail.com>
-In-Reply-To: <CAK7LNARrdQad9=U1LknT9yRYtRagNVS8T5r_Ovv5Sa91QO3TsA@mail.gmail.com>
-From:   Steve French <smfrench@gmail.com>
-Date:   Thu, 3 Oct 2019 11:06:42 -0500
-Message-ID: <CAH2r5ms_GdhAG4q3kcadeU44EQPjnebzBG8=DUcsi9Gh5J8UXw@mail.gmail.com>
-Subject: Re: nsdeps not working on modules in 5.4-rc1
-To:     Masahiro Yamada <yamada.masahiro@socionext.com>
-Cc:     Matthias Maennich <maennich@google.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        CIFS <linux-cifs@vger.kernel.org>, Jessica Yu <jeyu@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Oct 3, 2019 at 10:24 AM Masahiro Yamada
-<yamada.masahiro@socionext.com> wrote:
->
-> Hi Steve,
->
-> On Fri, Oct 4, 2019 at 12:15 AM Steve French <smfrench@gmail.com> wrote:
-> >
-> > On Thu, Oct 3, 2019 at 5:43 AM Matthias Maennich <maennich@google.com> wrote:
-> > >
-> > > Hi Steve!
-> > >
-> > > On Wed, Oct 02, 2019 at 06:54:26PM -0500, Steve French wrote:
-> > > >And running the build differently, from the root of the git tree
-> > > >(5.4-rc1) rather than using the Ubuntu 5.4-rc1 headers also fails
-> > > >
-> > > >e.g. "make  M=fs/cifs modules nsdeps"
-> > > >
-> > > >...
-> > > >  LD [M]  fs/cifs/cifs.o
-> > > >  Building modules, stage 2.
-> > > >  MODPOST 1 modules
-> > > >WARNING: module cifs uses symbol sigprocmask from namespace
-> > > >_fs/cifs/cache.o), but does not import it.
-> > > >...
-> > > >WARNING: module cifs uses symbol posix_test_lock from namespace
-> > > >cifs/cache.o), but does not import it.
-> > > >  CC [M]  fs/cifs/cifs.mod.o
-> > > >  LD [M]  fs/cifs/cifs.ko
-> > > >  Building modules, stage 2.
-> > > >  MODPOST 1 modules
-> > > >./scripts/nsdeps: 34: local: ./fs/cifs/cifsfs.c: bad variable name
-> > > >make: *** [Makefile:1710: nsdeps] Error 2
-> > >
-> > > Thanks for reporting this. It appears to me you hit a bug that was
-> > > recently discovered: when building with `make M=some/subdirectory`,
-> > > modpost is misbehaving. Can you try whether this patch series solves
-> > > your problems:
-> > > https://lore.kernel.org/lkml/20191003075826.7478-1-yamada.masahiro@socionext.com/
-> > > In particular patch 2/6 out of the series.
-> > >
-> > > Cheers,
-> > > Matthias
-> >
-> >
-> > Applying just patch 2 and doing "make" from the root of the git tree
-> > (5.4-rc1), at the tail end of the build I got
-> >
-> > ...
-> > Kernel: arch/x86/boot/bzImage is ready  (#87)
-> >   Building modules, stage 2.
-> >   MODPOST 5340 modules
-> > free(): invalid pointer
-> > Aborted (core dumped)
->
->
-> Right.
->
-> Since 2/6 depends on 1/6,
-> applying only the second one does not work.
+From: Greg Kurz <groug@kaod.org>
 
-Applying both 1 and 2 I get the following error doing make (although
-it makes it a long way into the build)
+commit 6ccb4ac2bf8a35c694ead92f8ac5530a16e8f2c8 upstream.
 
-<snip>
-WARNING: drivers/usb/storage/usb-storage: 'USB_STORAGE' exported
-twice. Previous export was in drivers/usb/storage/usb-storage.ko
-ERROR: "usb_stor_set_xfer_buf" [drivers/usb/storage/ums-usbat.ko] undefined!
-ERROR: "usb_stor_access_xfer_buf" [drivers/usb/storage/ums-usbat.ko] undefined!
-ERROR: "usb_stor_post_reset" [drivers/usb/storage/ums-usbat.ko] undefined!
-ERROR: "usb_stor_disconnect" [drivers/usb/storage/ums-usbat.ko] undefined!
-<snip>
-ERROR: "usb_stor_adjust_quirks" [drivers/usb/storage/uas.ko] undefined!
-ERROR: "usb_stor_sense_invalidCDB" [drivers/usb/storage/uas.ko] undefined!
-WARNING: "USB_STORAGE" [drivers/usb/storage/usb-storage] is a static
-EXPORT_SYMBOL_GPL
-make[1]: *** [scripts/Makefile.modpost:94: __modpost] Error 1
-make: *** [Makefile:1303: modules] Error 2
+There's a bug in skiboot that causes the OPAL_XIVE_ALLOCATE_IRQ call
+to return the 32-bit value 0xffffffff when OPAL has run out of IRQs.
+Unfortunatelty, OPAL return values are signed 64-bit entities and
+errors are supposed to be negative. If that happens, the linux code
+confusingly treats 0xffffffff as a valid IRQ number and panics at some
+point.
 
-Running "make M=fs/cifs nsdeps" I still get the error
+A fix was recently merged in skiboot:
 
-  Building modules, stage 2.
-  MODPOST 1 modules
-./scripts/nsdeps: 34: local: ./fs/cifs/cifsfs.c: bad variable name
-make: *** [Makefile:1710: nsdeps] Error 2
+e97391ae2bb5 ("xive: fix return value of opal_xive_allocate_irq()")
+
+but we need a workaround anyway to support older skiboots already
+in the field.
+
+Internally convert 0xffffffff to OPAL_RESOURCE which is the usual error
+returned upon resource exhaustion.
+
+Cc: stable@vger.kernel.org # v4.12+
+Signed-off-by: Greg Kurz <groug@kaod.org>
+Reviewed-by: Cédric Le Goater <clg@kaod.org>
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Link: https://lore.kernel.org/r/156821713818.1985334.14123187368108582810.stgit@bahia.lan
+(groug: fix arch/powerpc/platforms/powernv/opal-wrappers.S instead of
+        non-existing arch/powerpc/platforms/powernv/opal-call.c)
+Signed-off-by: Greg Kurz <groug@kaod.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
+---
+ arch/powerpc/include/asm/opal.h                |    2 +-
+ arch/powerpc/platforms/powernv/opal-wrappers.S |    2 +-
+ arch/powerpc/sysdev/xive/native.c              |   11 +++++++++++
+ 3 files changed, 13 insertions(+), 2 deletions(-)
+
+--- a/arch/powerpc/include/asm/opal.h
++++ b/arch/powerpc/include/asm/opal.h
+@@ -266,7 +266,7 @@ int64_t opal_xive_get_vp_info(uint64_t v
+ int64_t opal_xive_set_vp_info(uint64_t vp,
+ 			      uint64_t flags,
+ 			      uint64_t report_cl_pair);
+-int64_t opal_xive_allocate_irq(uint32_t chip_id);
++int64_t opal_xive_allocate_irq_raw(uint32_t chip_id);
+ int64_t opal_xive_free_irq(uint32_t girq);
+ int64_t opal_xive_sync(uint32_t type, uint32_t id);
+ int64_t opal_xive_dump(uint32_t type, uint32_t id);
+--- a/arch/powerpc/platforms/powernv/opal-wrappers.S
++++ b/arch/powerpc/platforms/powernv/opal-wrappers.S
+@@ -301,7 +301,7 @@ OPAL_CALL(opal_xive_set_queue_info,		OPA
+ OPAL_CALL(opal_xive_donate_page,		OPAL_XIVE_DONATE_PAGE);
+ OPAL_CALL(opal_xive_alloc_vp_block,		OPAL_XIVE_ALLOCATE_VP_BLOCK);
+ OPAL_CALL(opal_xive_free_vp_block,		OPAL_XIVE_FREE_VP_BLOCK);
+-OPAL_CALL(opal_xive_allocate_irq,		OPAL_XIVE_ALLOCATE_IRQ);
++OPAL_CALL(opal_xive_allocate_irq_raw,		OPAL_XIVE_ALLOCATE_IRQ);
+ OPAL_CALL(opal_xive_free_irq,			OPAL_XIVE_FREE_IRQ);
+ OPAL_CALL(opal_xive_get_vp_info,		OPAL_XIVE_GET_VP_INFO);
+ OPAL_CALL(opal_xive_set_vp_info,		OPAL_XIVE_SET_VP_INFO);
+--- a/arch/powerpc/sysdev/xive/native.c
++++ b/arch/powerpc/sysdev/xive/native.c
+@@ -234,6 +234,17 @@ static bool xive_native_match(struct dev
+ 	return of_device_is_compatible(node, "ibm,opal-xive-vc");
+ }
+ 
++static s64 opal_xive_allocate_irq(u32 chip_id)
++{
++	s64 irq = opal_xive_allocate_irq_raw(chip_id);
++
++	/*
++	 * Old versions of skiboot can incorrectly return 0xffffffff to
++	 * indicate no space, fix it up here.
++	 */
++	return irq == 0xffffffff ? OPAL_RESOURCE : irq;
++}
++
+ #ifdef CONFIG_SMP
+ static int xive_native_get_ipi(unsigned int cpu, struct xive_cpu *xc)
+ {
 
 
-
--- 
-Thanks,
-
-Steve
