@@ -2,107 +2,104 @@ Return-Path: <SRS0=6dNS=X4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E676C10F14
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 01:43:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17583C10F14
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 01:47:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6AFAD222C2
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 01:43:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D27D9222C2
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 01:47:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570067029;
-	bh=vJactgM3M2ccX7Qs5sz0+VAKv+twysNQWUyUR3pB7oQ=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=OdhJaBiL4IBKI7zCuGQaFRFM6WVfRtxmZBVvURsGwS1gMEt5+LljzZETWLZdjMn+y
-	 LIBhos0VY3frBdo0SFGbINX4sMqkTMnt8rL4P8RMv27Kp6y0iXDYE6nnq94dOw744J
-	 nAQ/0Kur7NPD7ybVaRRqsGXG0l7fBcontOuTWVR8=
+	s=default; t=1570067233;
+	bh=mIbmoRtxDUoM/LgKixRqpYpNw9TMaZ1mcIB9zDzPIHY=;
+	h=Date:From:To:Cc:Subject:Reply-To:List-ID:From;
+	b=bfHepPzm4jyTXrWyCyouXmeet6eEEye7Ym1Crch5nW/3RKuHBOhL8ZaJfljl2+HFM
+	 B5dB5eao536Brv+h7CbtL9Do2RWMb9np9MM8omK1dIisF4g3yb/PaP1IxlSvrln0SM
+	 GskrpamS0uiyIg/qC8W1+/nY8p4mS7XH4fh9iPfg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728356AbfJCBns (ORCPT
+        id S1727325AbfJCBrN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Oct 2019 21:43:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46354 "EHLO mail.kernel.org"
+        Wed, 2 Oct 2019 21:47:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47526 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726364AbfJCBnM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Oct 2019 21:43:12 -0400
-Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S1726393AbfJCBrM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 2 Oct 2019 21:47:12 -0400
+Received: from paulmck-ThinkPad-P72 (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 16B52222C6;
-        Thu,  3 Oct 2019 01:43:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A1620222C0;
+        Thu,  3 Oct 2019 01:47:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570066992;
-        bh=vJactgM3M2ccX7Qs5sz0+VAKv+twysNQWUyUR3pB7oQ=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=HUiGVvKyZr1aow3e8Bar+GnMPXkDxlGJVKuQwD++B2faft524sFpkWCjhyGlatxNc
-         m+ApIIqFWfp3SXG55n9nOJjt383I5KBFYF8VbHSUl0dB6uIXiMT+K5YeIVUny//ZSE
-         Q2ux/Zo6uD2Q3EXPFgYdMJlcRPc69VPK5Sr6qWoU=
-From:   paulmck@kernel.org
+        s=default; t=1570067231;
+        bh=mIbmoRtxDUoM/LgKixRqpYpNw9TMaZ1mcIB9zDzPIHY=;
+        h=Date:From:To:Cc:Subject:Reply-To:From;
+        b=vwbqNYeftR/7D6sZz70InV7xHh10EavHYXJS/91X6gq7/PpU4avGAK8OhRJfaYzIa
+         7sFrcjClBr37SLaZ4/ZSHVpik6ovM9XewBfuFN+O5hHHPB3xRkQBozpqySz6qOrqt0
+         VZd0IgySRI90+h9rBTAQVQZhH0rZjclM8EdGgwwc=
+Date:   Wed, 2 Oct 2019 18:47:10 -0700
+From:   "Paul E. McKenney" <paulmck@kernel.org>
 To:     rcu@vger.kernel.org
 Cc:     linux-kernel@vger.kernel.org, mingo@kernel.org,
         jiangshanlai@gmail.com, dipankar@in.ibm.com,
         akpm@linux-foundation.org, mathieu.desnoyers@efficios.com,
         josh@joshtriplett.org, tglx@linutronix.de, peterz@infradead.org,
         rostedt@goodmis.org, dhowells@redhat.com, edumazet@google.com,
-        fweisbec@gmail.com, oleg@redhat.com, joel@joelfernandes.org,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        =?UTF-8?q?Radim=20Kr=C4=8Dm=C3=A1=C5=99?= <rkrcmar@redhat.com>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
-        kvm@vger.kernel.org
-Subject: [PATCH tip/core/rcu 2/9] x86/kvm/pmu: Replace rcu_swap_protected() with rcu_replace()
-Date:   Wed,  2 Oct 2019 18:43:03 -0700
-Message-Id: <20191003014310.13262-2-paulmck@kernel.org>
-X-Mailer: git-send-email 2.9.5
-In-Reply-To: <20191003014153.GA13156@paulmck-ThinkPad-P72>
-References: <20191003014153.GA13156@paulmck-ThinkPad-P72>
+        fweisbec@gmail.com, oleg@redhat.com, joel@joelfernandes.org
+Subject: [PATCH tip/core/rcu 0/9] Torture-test updates
+Message-ID: <20191003014710.GA13323@paulmck-ThinkPad-P72>
+Reply-To: paulmck@kernel.org
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Paul E. McKenney" <paulmck@kernel.org>
+Hello!
 
-This commit replaces the use of rcu_swap_protected() with the more
-intuitively appealing rcu_replace() as a step towards removing
-rcu_swap_protected().
+This series provides torture-test updates.
 
-Link: https://lore.kernel.org/lkml/CAHk-=wiAsJLw1egFEE=Z7-GGtM6wcvtyytXZA1+BHqta4gg6Hw@mail.gmail.com/
-Reported-by: Linus Torvalds <torvalds@linux-foundation.org>
-Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
-Cc: Paolo Bonzini <pbonzini@redhat.com>
-Cc: "Radim Krčmář" <rkrcmar@redhat.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: Borislav Petkov <bp@alien8.de>
-Cc: "H. Peter Anvin" <hpa@zytor.com>
-Cc: <x86@kernel.org>
-Cc: <kvm@vger.kernel.org>
----
- arch/x86/kvm/pmu.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+1.	Remove unused function rcutorture_record_progress(), courtesy
+	of Ethan Hansen.
 
-diff --git a/arch/x86/kvm/pmu.c b/arch/x86/kvm/pmu.c
-index 46875bb..4c37266 100644
---- a/arch/x86/kvm/pmu.c
-+++ b/arch/x86/kvm/pmu.c
-@@ -416,8 +416,8 @@ int kvm_vm_ioctl_set_pmu_event_filter(struct kvm *kvm, void __user *argp)
- 	*filter = tmp;
- 
- 	mutex_lock(&kvm->lock);
--	rcu_swap_protected(kvm->arch.pmu_event_filter, filter,
--			   mutex_is_locked(&kvm->lock));
-+	filter = rcu_replace(kvm->arch.pmu_event_filter, filter,
-+			     mutex_is_locked(&kvm->lock));
- 	mutex_unlock(&kvm->lock);
- 
- 	synchronize_srcu_expedited(&kvm->srcu);
--- 
-2.9.5
+2.	Replace strncmp() with str_has_prefix(), courtesy of Chuhong Yuan.
 
+3.	Remove CONFIG_HOTPLUG_CPU=n from scenarios.
+
+4.	Emulate dyntick aspect of userspace nohz_full sojourn.
+
+5.	Remove unused variable rcu_perf_writer_state, courtesy of
+	Ethan Hansen.
+
+6.	Separate warnings for each failure type.
+
+7.	Make in-kernel-loop testing more brutal.
+
+8.	locktorture: Do not include rwlock.h directly, courtesy of
+	Wolfgang M. Reimer.
+
+9.	Suppress levelspread uninitialized messages.
+
+							Thanx, Paul
+
+------------------------------------------------------------------------
+
+ include/linux/rcutiny.h                                     |    1 
+ kernel/locking/locktorture.c                                |    9 +--
+ kernel/rcu/rcu.h                                            |    4 -
+ kernel/rcu/rcuperf.c                                        |   16 ------
+ kernel/rcu/rcutorture.c                                     |   28 +++++++++---
+ kernel/rcu/tree.c                                           |    1 
+ tools/testing/selftests/rcutorture/configs/rcu/TASKS03      |    3 -
+ tools/testing/selftests/rcutorture/configs/rcu/TREE02       |    3 -
+ tools/testing/selftests/rcutorture/configs/rcu/TREE04       |    3 -
+ tools/testing/selftests/rcutorture/configs/rcu/TREE06       |    3 -
+ tools/testing/selftests/rcutorture/configs/rcu/TREE08       |    3 -
+ tools/testing/selftests/rcutorture/configs/rcu/TREE09       |    3 -
+ tools/testing/selftests/rcutorture/configs/rcu/TRIVIAL      |    3 -
+ tools/testing/selftests/rcutorture/doc/TREE_RCU-kconfig.txt |    1 
+ 14 files changed, 29 insertions(+), 52 deletions(-)
