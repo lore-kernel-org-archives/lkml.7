@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7232C10F14
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:11:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 29BE2C10F14
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:11:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 89AF520673
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:11:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F05E920673
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:11:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570122671;
-	bh=gVJ5XNv35Wj2YquIGuUHJ24XMfhRoDYe2lPrgEnThQ8=;
+	s=default; t=1570122676;
+	bh=UcXwOX4Q3s/OeMb0P6GUol/4vmnAyQo333LJD65XGZo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Wgc7+ApoNdstX8pVAwzhFDjfJcxn7fgl99qRx+1mw3CREKD5LOVB3rZTYzOUJc1jz
-	 NfliKoiLwTLDzUh682RsST0cSEZoWOUKBK1W37egOUy3lRjSJr4KRYSK8c9QUSgTcw
-	 saaOeTtvVo1NnhP/9KPPNSAwyYku2R1e6dr/cAGs=
+	b=LUpbhMESM87Dhzb6f002zc8kmwfuMs9gO9irg529mz05hniDddN7FfuRnLv3sbAvW
+	 2Ktd8jcyeu8kQg3XKeW2WT+5oiaWdjewf5H9Q76+9qXTZhe38WxlrkokOHePuBDbAi
+	 N+j6wN0VTwgIOfVgX1fDvdXC2Hg+FUgCBCAaglYU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404113AbfJCRLL (ORCPT
+        id S2393451AbfJCRLP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 13:11:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39506 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 13:11:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39420 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391389AbfJCQcG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:32:06 -0400
+        id S2403936AbfJCQcC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:32:02 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5DFBC215EA;
-        Thu,  3 Oct 2019 16:32:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B2F97215EA;
+        Thu,  3 Oct 2019 16:32:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570120324;
-        bh=gVJ5XNv35Wj2YquIGuUHJ24XMfhRoDYe2lPrgEnThQ8=;
+        s=default; t=1570120322;
+        bh=UcXwOX4Q3s/OeMb0P6GUol/4vmnAyQo333LJD65XGZo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ElJzDAkoiPrJwfDy2/+vzynQLeEtGE3J4hkWYxYvXxLxrQtHYy5ifMl2VaT/Dasop
-         TpY5z9QpaGK6I7IlClhvdk55PegsvUMt9SWJDVnGxqS45XNiVCBhVqlR5/ydkM2k21
-         onVJALbL117iQ/GRuO16RxNl0KZGr5fhOllXGpmg=
+        b=eU805n9zDFqUAmYvyA4VxROxSzc+7E0B9A/XwiAXbJV9Kk7BOOHL3lb00H0rAQFoj
+         jKrQ7TBjGrKieHc93G3AbwJHrTGOAFXh5moR/g+fwxBcx04LcqU+/cOR+aa1dfkGRU
+         HP3nJbfnVCvYmF4J8Hhsi83RQyNHf8v/2qhpxWLI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Harald Freudenberger <freude@linux.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
+        stable@vger.kernel.org, Christoph Hellwig <hch@lst.de>,
+        Marc Zyngier <maz@kernel.org>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 180/313] s390/crypto: xts-aes-s390 fix extra run-time crypto self tests finding
-Date:   Thu,  3 Oct 2019 17:52:38 +0200
-Message-Id: <20191003154550.735220295@linuxfoundation.org>
+Subject: [PATCH 5.2 179/313] irqchip/sifive-plic: set max threshold for ignored handlers
+Date:   Thu,  3 Oct 2019 17:52:37 +0200
+Message-Id: <20191003154550.638931413@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191003154533.590915454@linuxfoundation.org>
 References: <20191003154533.590915454@linuxfoundation.org>
@@ -61,53 +61,62 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Harald Freudenberger <freude@linux.ibm.com>
+From: Christoph Hellwig <hch@lst.de>
 
-[ Upstream commit 9e323d45ba94262620a073a3f9945ca927c07c71 ]
+[ Upstream commit 9ce06497c2722a0f9109e4cc3ce35b7a69617886 ]
 
-With 'extra run-time crypto self tests' enabled, the selftest
-for s390-xts fails with
+When running in M-mode, the S-mode plic handlers are still listed in the
+device tree.  Ignore them by setting the maximum threshold.
 
-  alg: skcipher: xts-aes-s390 encryption unexpectedly succeeded on
-  test vector "random: len=0 klen=64"; expected_error=-22,
-  cfg="random: inplace use_digest nosimd src_divs=[2.61%@+4006,
-  84.44%@+21, 1.55%@+13, 4.50%@+344, 4.26%@+21, 2.64%@+27]"
-
-This special case with nbytes=0 is not handled correctly and this
-fix now makes sure that -EINVAL is returned when there is en/decrypt
-called with 0 bytes to en/decrypt.
-
-Signed-off-by: Harald Freudenberger <freude@linux.ibm.com>
-Signed-off-by: Vasily Gorbik <gor@linux.ibm.com>
+Signed-off-by: Christoph Hellwig <hch@lst.de>
+Acked-by: Marc Zyngier <maz@kernel.org>
+Signed-off-by: Paul Walmsley <paul.walmsley@sifive.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/s390/crypto/aes_s390.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+ drivers/irqchip/irq-sifive-plic.c | 12 ++++++++++--
+ 1 file changed, 10 insertions(+), 2 deletions(-)
 
-diff --git a/arch/s390/crypto/aes_s390.c b/arch/s390/crypto/aes_s390.c
-index d00f84add5f4c..6d2dbb5089d5c 100644
---- a/arch/s390/crypto/aes_s390.c
-+++ b/arch/s390/crypto/aes_s390.c
-@@ -586,6 +586,9 @@ static int xts_aes_encrypt(struct blkcipher_desc *desc,
- 	struct s390_xts_ctx *xts_ctx = crypto_blkcipher_ctx(desc->tfm);
- 	struct blkcipher_walk walk;
+diff --git a/drivers/irqchip/irq-sifive-plic.c b/drivers/irqchip/irq-sifive-plic.c
+index cf755964f2f8b..c72c036aea768 100644
+--- a/drivers/irqchip/irq-sifive-plic.c
++++ b/drivers/irqchip/irq-sifive-plic.c
+@@ -244,6 +244,7 @@ static int __init plic_init(struct device_node *node,
+ 		struct plic_handler *handler;
+ 		irq_hw_number_t hwirq;
+ 		int cpu, hartid;
++		u32 threshold = 0;
  
-+	if (!nbytes)
-+		return -EINVAL;
-+
- 	if (unlikely(!xts_ctx->fc))
- 		return xts_fallback_encrypt(desc, dst, src, nbytes);
+ 		if (of_irq_parse_one(node, i, &parent)) {
+ 			pr_err("failed to parse parent for context %d.\n", i);
+@@ -266,10 +267,16 @@ static int __init plic_init(struct device_node *node,
+ 			continue;
+ 		}
  
-@@ -600,6 +603,9 @@ static int xts_aes_decrypt(struct blkcipher_desc *desc,
- 	struct s390_xts_ctx *xts_ctx = crypto_blkcipher_ctx(desc->tfm);
- 	struct blkcipher_walk walk;
++		/*
++		 * When running in M-mode we need to ignore the S-mode handler.
++		 * Here we assume it always comes later, but that might be a
++		 * little fragile.
++		 */
+ 		handler = per_cpu_ptr(&plic_handlers, cpu);
+ 		if (handler->present) {
+ 			pr_warn("handler already present for context %d.\n", i);
+-			continue;
++			threshold = 0xffffffff;
++			goto done;
+ 		}
  
-+	if (!nbytes)
-+		return -EINVAL;
-+
- 	if (unlikely(!xts_ctx->fc))
- 		return xts_fallback_decrypt(desc, dst, src, nbytes);
+ 		handler->present = true;
+@@ -279,8 +286,9 @@ static int __init plic_init(struct device_node *node,
+ 		handler->enable_base =
+ 			plic_regs + ENABLE_BASE + i * ENABLE_PER_HART;
  
++done:
+ 		/* priority must be > threshold to trigger an interrupt */
+-		writel(0, handler->hart_base + CONTEXT_THRESHOLD);
++		writel(threshold, handler->hart_base + CONTEXT_THRESHOLD);
+ 		for (hwirq = 1; hwirq <= nr_irqs; hwirq++)
+ 			plic_toggle(handler, hwirq, 0);
+ 		nr_handlers++;
 -- 
 2.20.1
 
