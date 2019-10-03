@@ -7,47 +7,49 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1DEDC32792
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:18:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D66CC4CED1
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:18:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 751D1215EA
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:18:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 51558215EA
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:18:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570119536;
-	bh=mn1239LQ4bPELmDLxiZL6N61urwswicdb7wLJtJNYuI=;
+	s=default; t=1570119539;
+	bh=BBNfDOkcg1k0JdkfBUbMlcSU5RE1PB/28Jm5RYZReUY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Xb8a/Eti9CXrKA3Q6J91RqpYbgM4o9cCONsKaXRH1cZBqsJh29ooDwh0q9mesy3ns
-	 Vk4SrJJpCnqDkZp9Y/dqxqcSQn6BTemsk1KxZF18JBblr0QYWRV4GUlk/+/3UqJ5RI
-	 pdjFQEoDWf2FqTEJGvYnH52F1Dt+JaS9krvhCKes=
+	b=Ccm5YkCbBWqm3jVzeLHAnfOFkpDeMNzCRFZ4yH8hCbDN5pisUpkd1ll+qHjlSz98X
+	 PUMWqScG8cem7zA6/MwCey6rOOA5KTInGO5ue6suLYt88EhXuuIsRvDJCClO3EPW+6
+	 tUdtSdJ3yoocC4r/if7kd+zP1mLKOOJFHRXWjuZs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389645AbfJCQSz (ORCPT
+        id S2389658AbfJCQS6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 12:18:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45578 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 12:18:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45510 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730838AbfJCQSv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:18:51 -0400
+        id S1731428AbfJCQSt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:18:49 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 88E6520865;
-        Thu,  3 Oct 2019 16:18:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E0B64215EA;
+        Thu,  3 Oct 2019 16:18:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570119531;
-        bh=mn1239LQ4bPELmDLxiZL6N61urwswicdb7wLJtJNYuI=;
+        s=default; t=1570119528;
+        bh=BBNfDOkcg1k0JdkfBUbMlcSU5RE1PB/28Jm5RYZReUY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=iFc3hKcBf8EpF2KTY5r58EXAX9HWqzUQEbalUVrWX22h9E9OpS+Qm1mXomuI736BT
-         Cxe782oq4N5d2vekZNujGBslrkWMk0UQ4lW0PhKBPRYzfeTledbCimrLKQg/3GjDax
-         1/xcCDTkbPn6q8BA9PIoD4uMd5xgf3P0vbGLbLGQ=
+        b=mAw+a3TOw/qgWhufNe9fZVVi88J+mxg8fd2HpG/nLPkuBMQKqMMxnt9nGperKFcjt
+         2syTBFch5eO8VmXWqhANzSV9g2IRlQ0TDqK9ebiEaYdtAx9rK2I0bfOGOWjrd0w/6W
+         xoIS+hGUiHmKzrFwvILwgI8Px4pF/1U1a4gFYaS0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        stable@vger.kernel.org,
+        Kamil Konieczny <k.konieczny@partner.samsung.com>,
+        Chanwoo Choi <cw00.choi@samsung.com>,
+        MyungJoo Ham <myungjoo.ham@samsung.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 099/211] media: cec-notifier: clear cec_adap in cec_notifier_unregister
-Date:   Thu,  3 Oct 2019 17:52:45 +0200
-Message-Id: <20191003154509.347822593@linuxfoundation.org>
+Subject: [PATCH 4.19 098/211] PM / devfreq: exynos-bus: Correct clock enable sequence
+Date:   Thu,  3 Oct 2019 17:52:44 +0200
+Message-Id: <20191003154509.118577246@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191003154447.010950442@linuxfoundation.org>
 References: <20191003154447.010950442@linuxfoundation.org>
@@ -60,44 +62,98 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+From: Kamil Konieczny <k.konieczny@partner.samsung.com>
 
-[ Upstream commit 14d5511691e5290103bc480998bc322e68f139d4 ]
+[ Upstream commit 2c2b20e0da89c76759ee28c6824413ab2fa3bfc6 ]
 
-If cec_notifier_cec_adap_unregister() is called before
-cec_unregister_adapter() then everything is OK (and this is the
-case today). But if it is the other way around, then
-cec_notifier_unregister() is called first, and that doesn't
-set n->cec_adap to NULL.
+Regulators should be enabled before clocks to avoid h/w hang. This
+require change in exynos_bus_probe() to move exynos_bus_parse_of()
+after exynos_bus_parent_parse_of() and change in error handling.
+Similar change is needed in exynos_bus_exit() where clock should be
+disabled before regulators.
 
-So if e.g. cec_notifier_set_phys_addr() is called after
-cec_notifier_unregister() but before cec_unregister_adapter()
-then n->cec_adap points to an unregistered and likely deleted
-cec adapter. So just set n->cec_adap->notifier and n->cec_adap
-to NULL for rubustness.
-
-Eventually cec_notifier_unregister will disappear and this will
-be simplified substantially.
-
-Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Signed-off-by: Kamil Konieczny <k.konieczny@partner.samsung.com>
+Acked-by: Chanwoo Choi <cw00.choi@samsung.com>
+Signed-off-by: MyungJoo Ham <myungjoo.ham@samsung.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/cec/cec-notifier.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/devfreq/exynos-bus.c | 31 +++++++++++++++++--------------
+ 1 file changed, 17 insertions(+), 14 deletions(-)
 
-diff --git a/drivers/media/cec/cec-notifier.c b/drivers/media/cec/cec-notifier.c
-index dd2078b27a419..2424680f71c3d 100644
---- a/drivers/media/cec/cec-notifier.c
-+++ b/drivers/media/cec/cec-notifier.c
-@@ -123,6 +123,8 @@ void cec_notifier_unregister(struct cec_notifier *n)
- {
- 	mutex_lock(&n->lock);
- 	n->callback = NULL;
-+	n->cec_adap->notifier = NULL;
-+	n->cec_adap = NULL;
- 	mutex_unlock(&n->lock);
- 	cec_notifier_put(n);
+diff --git a/drivers/devfreq/exynos-bus.c b/drivers/devfreq/exynos-bus.c
+index c25658b265988..24a9658348d78 100644
+--- a/drivers/devfreq/exynos-bus.c
++++ b/drivers/devfreq/exynos-bus.c
+@@ -194,11 +194,10 @@ static void exynos_bus_exit(struct device *dev)
+ 	if (ret < 0)
+ 		dev_warn(dev, "failed to disable the devfreq-event devices\n");
+ 
+-	if (bus->regulator)
+-		regulator_disable(bus->regulator);
+-
+ 	dev_pm_opp_of_remove_table(dev);
+ 	clk_disable_unprepare(bus->clk);
++	if (bus->regulator)
++		regulator_disable(bus->regulator);
+ }
+ 
+ /*
+@@ -386,6 +385,7 @@ static int exynos_bus_probe(struct platform_device *pdev)
+ 	struct exynos_bus *bus;
+ 	int ret, max_state;
+ 	unsigned long min_freq, max_freq;
++	bool passive = false;
+ 
+ 	if (!np) {
+ 		dev_err(dev, "failed to find devicetree node\n");
+@@ -399,27 +399,27 @@ static int exynos_bus_probe(struct platform_device *pdev)
+ 	bus->dev = &pdev->dev;
+ 	platform_set_drvdata(pdev, bus);
+ 
+-	/* Parse the device-tree to get the resource information */
+-	ret = exynos_bus_parse_of(np, bus);
+-	if (ret < 0)
+-		return ret;
+-
+ 	profile = devm_kzalloc(dev, sizeof(*profile), GFP_KERNEL);
+-	if (!profile) {
+-		ret = -ENOMEM;
+-		goto err;
+-	}
++	if (!profile)
++		return -ENOMEM;
+ 
+ 	node = of_parse_phandle(dev->of_node, "devfreq", 0);
+ 	if (node) {
+ 		of_node_put(node);
+-		goto passive;
++		passive = true;
+ 	} else {
+ 		ret = exynos_bus_parent_parse_of(np, bus);
++		if (ret < 0)
++			return ret;
+ 	}
+ 
++	/* Parse the device-tree to get the resource information */
++	ret = exynos_bus_parse_of(np, bus);
+ 	if (ret < 0)
+-		goto err;
++		goto err_reg;
++
++	if (passive)
++		goto passive;
+ 
+ 	/* Initialize the struct profile and governor data for parent device */
+ 	profile->polling_ms = 50;
+@@ -510,6 +510,9 @@ static int exynos_bus_probe(struct platform_device *pdev)
+ err:
+ 	dev_pm_opp_of_remove_table(dev);
+ 	clk_disable_unprepare(bus->clk);
++err_reg:
++	if (!passive)
++		regulator_disable(bus->regulator);
+ 
+ 	return ret;
  }
 -- 
 2.20.1
