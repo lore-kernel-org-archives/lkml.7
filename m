@@ -2,236 +2,327 @@ Return-Path: <SRS0=6dNS=X4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD271C4360C
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 01:56:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 99C84C10F14
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 02:01:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3E28120700
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 01:56:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6653121A4C
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 02:01:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="kqEE18js"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="Q6b6/5rE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727349AbfJCB4K (ORCPT
+        id S1727501AbfJCCBB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Oct 2019 21:56:10 -0400
-Received: from mail-qk1-f193.google.com ([209.85.222.193]:36637 "EHLO
-        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726376AbfJCB4K (ORCPT
+        Wed, 2 Oct 2019 22:01:01 -0400
+Received: from hqemgate14.nvidia.com ([216.228.121.143]:19600 "EHLO
+        hqemgate14.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727107AbfJCCBA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Oct 2019 21:56:10 -0400
-Received: by mail-qk1-f193.google.com with SMTP id y189so782283qkc.3
-        for <linux-kernel@vger.kernel.org>; Wed, 02 Oct 2019 18:56:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lca.pw; s=google;
-        h=content-transfer-encoding:from:mime-version:subject:date:message-id
-         :references:cc:in-reply-to:to;
-        bh=y2GjO+8c21wpS2L+fpFZZ/mTfKI97RccC2gS32Zsy/c=;
-        b=kqEE18js5/CzpSK/1AWRDcA0HGC2W4qEIAnFt74tE+bnKy0YmvBPBheRYEWCt1gUC4
-         xhjnJQakB3yu0iWcJpdACz8wJn0NjfWBdiGoOE8nK8niFPzzG1qmPCapJTdm6fuJ4LwY
-         2xocpZI0IJNuPbprAp4AItXIoAIAibfTKwqgWeDpNM3MXzm/6uxC+Qmt82nXBQsrw6ww
-         ns6uODJQrpMPptkS4uiwQW6oH1ST4AVKhDhLM9D1gCsfZtQAXZnx5mer60qqs21mRKF1
-         3XQ4+ljG3TGhgMchYm8+2wh2ODF0ogVjyCE+5348+yyyGsYvyE/R5WU8BlglBCxia+kb
-         pr6g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:content-transfer-encoding:from:mime-version
-         :subject:date:message-id:references:cc:in-reply-to:to;
-        bh=y2GjO+8c21wpS2L+fpFZZ/mTfKI97RccC2gS32Zsy/c=;
-        b=mzqTUfBnZHjSAaiPccHmU5uwQsSK+qC/LYxmZFTUtQEoF6PaTlpGVUa4kVrHRGLms2
-         qV4BLtrEGB2G61P4kXHLoovSCcYOIosiIIHo81+MWsw+hXfYW1BZIJpORTCAUc/ejfgA
-         MUfM3cqeVcVBD17RheBY0q5C/1tDT0uREiLwXvYJUvXm9IsJavPewbI5zax+OiKC0/dS
-         szrYDiyI1bP+oC74uDdBw3pWtaHu3Fw+WZz4zYeOS2OfYAQWhw1FouBh9lyZHVEKekNW
-         yvkrVi5EyGrcmmSw/9GiqR8LO+JZU96n22/lDvHI+sTEyS0+RGg1gu3B5PBzZOHc0oXF
-         QqdQ==
-X-Gm-Message-State: APjAAAWWk+dt/xDJkkGymTEIoTJyFES5cTXqkfhZPP79oGsC/gu3CWna
-        HvKGS7olyKygduSVkMh5poE/bw==
-X-Google-Smtp-Source: APXvYqzQfAMdFJl/bEzMhOHdqRTMv652DMnwuHLcfgozUp4lqmAbkhMXTQ7E833EG8XHUzU96IJk1g==
-X-Received: by 2002:a05:620a:49b:: with SMTP id 27mr1911544qkr.89.1570067768873;
-        Wed, 02 Oct 2019 18:56:08 -0700 (PDT)
-Received: from [192.168.1.183] (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
-        by smtp.gmail.com with ESMTPSA id r7sm650004qkf.124.2019.10.02.18.56.07
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 02 Oct 2019 18:56:08 -0700 (PDT)
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: quoted-printable
-From:   Qian Cai <cai@lca.pw>
-Mime-Version: 1.0 (1.0)
-Subject: Re: [PATCH] Make SPLIT_RSS_COUNTING configurable
-Date:   Wed, 2 Oct 2019 21:56:06 -0400
-Message-Id: <1C584B5C-E04E-4B04-A3B5-4DC8E5E67366@lca.pw>
-References: <CAKOZuesMoBj-APjCipJmWcAgSzkbD1mvyOp0UvHLnkwR-EU4Ww@mail.gmail.com>
-Cc:     Tim Murray <timmurray@google.com>,
-        Suren Baghdasaryan <surenb@google.com>,
-        linux-mm@vger.kernel.org,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-mm <linux-mm@kvack.org>
-In-Reply-To: <CAKOZuesMoBj-APjCipJmWcAgSzkbD1mvyOp0UvHLnkwR-EU4Ww@mail.gmail.com>
-To:     Daniel Colascione <dancol@google.com>
-X-Mailer: iPhone Mail (17A844)
+        Wed, 2 Oct 2019 22:01:00 -0400
+Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqemgate14.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5d95565c0001>; Wed, 02 Oct 2019 19:01:00 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate102.nvidia.com (PGP Universal service);
+  Wed, 02 Oct 2019 19:00:57 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate102.nvidia.com on Wed, 02 Oct 2019 19:00:57 -0700
+Received: from DRHQMAIL107.nvidia.com (10.27.9.16) by HQMAIL105.nvidia.com
+ (172.20.187.12) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 3 Oct
+ 2019 02:00:57 +0000
+Received: from [10.19.108.102] (172.20.13.39) by DRHQMAIL107.nvidia.com
+ (10.27.9.16) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 3 Oct 2019
+ 02:00:55 +0000
+Subject: Re: [PATCH 3/6] phy: tegra: xusb: Add Tegra194 support
+To:     Thierry Reding <thierry.reding@gmail.com>
+CC:     <gregkh@linuxfoundation.org>, <jonathanh@nvidia.com>,
+        <linux-tegra@vger.kernel.org>, <linux-usb@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <nkristam@nvidia.com>, <skomatineni@nvidia.com>
+References: <20191002080051.11142-1-jckuo@nvidia.com>
+ <20191002080051.11142-4-jckuo@nvidia.com> <20191002100204.GE3716706@ulmo>
+X-Nvconfidentiality: public
+From:   JC Kuo <jckuo@nvidia.com>
+Message-ID: <3220d9f4-0a01-65c8-84d8-f6e0e465c7d5@nvidia.com>
+Date:   Thu, 3 Oct 2019 10:00:53 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
+MIME-Version: 1.0
+In-Reply-To: <20191002100204.GE3716706@ulmo>
+X-Originating-IP: [172.20.13.39]
+X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
+ DRHQMAIL107.nvidia.com (10.27.9.16)
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1570068060; bh=EmiY1Z+RrUHsE3ATlAUj/XHjV7WwSGUCfV8Rsiq4dxI=;
+        h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
+         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
+         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=Q6b6/5rE8Z/ZmRWOhp7hnq9oBTQxxA5SRRGze9erw+eTUnWZ+9JyRovIuZnAf8ZUY
+         Thzt0TK5rl+DvBv0GEig5tpq9fshU37Wd2/wjU6jAjTj7VvM8T5BLOEvUFybeCYNhk
+         bwYnGZcI1Oq5FT1zg5v6nBLdVJMMfXP3Hl6fVAEg5tGT4CwZYKMLppOSnOSJ5fP/Ny
+         dqapkr08hdDUeSo23SJLHGM2LVUzugCL75R04uwrTaucjoc8EXAGStFdrGqt9b1CSi
+         Is3IS/60M3oUb2L0eFdMgcTRTEswPurorz401liM1oaVF/SUcpCwE4hRW4wJw34XL3
+         qQb8sHgT3dPcw==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-> On Oct 2, 2019, at 4:29 PM, Daniel Colascione <dancol@google.com> wrote:
->=20
-> Adding the correct linux-mm address.
->=20
->=20
->> On Wed, Oct 2, 2019 at 1:25 PM Daniel Colascione <dancol@google.com> wrot=
-e:
->>=20
->> Using the new config option, users can disable SPLIT_RSS_COUNTING to
->> get increased accuracy in user-visible mm counters.
->>=20
->> Signed-off-by: Daniel Colascione <dancol@google.com>
+On 10/2/19 6:02 PM, Thierry Reding wrote:
+> On Wed, Oct 02, 2019 at 04:00:48PM +0800, JC Kuo wrote:
+>> Add support for the XUSB pad controller found on Tegra194 SoCs. It is
+>> mostly similar to the same IP found on Tegra186, but the number of
+>> pads exposed differs, as do the programming sequences. Because most of
+>> the Tegra194 XUSB PADCTL registers definition and programming sequence
+>> are the same as Tegra186, Tegra194 XUSB PADCTL can share the same
+>> driver, xusb-tegra186.c, with Tegra186 XUSB PADCTL.
+>>
+>> Tegra194 XUSB PADCTL supports up to USB 3.1 Gen 2 speed, however, it
+>> is possible for some platforms have long signal trace that could not
+>> provide sufficient electrical environment for Gen 2 speed. This patch
+>> introduce a new device node property "nvidia,disable-gen2" that can
+>> be used to specifically disable Gen 2 speed for a particular USB 3.0
+>> port so that the port can be limited to Gen 1 speed and avoid the
+>> instability.
+>>
+>> Signed-off-by: JC Kuo <jckuo@nvidia.com>
 >> ---
->> include/linux/mm.h            |  4 ++--
->> include/linux/mm_types_task.h |  5 ++---
->> include/linux/sched.h         |  2 +-
->> kernel/fork.c                 |  2 +-
->> mm/Kconfig                    | 11 +++++++++++
->> mm/memory.c                   |  6 +++---
->> 6 files changed, 20 insertions(+), 10 deletions(-)
->>=20
->> diff --git a/include/linux/mm.h b/include/linux/mm.h
->> index cc292273e6ba..221395de3cb4 100644
->> --- a/include/linux/mm.h
->> +++ b/include/linux/mm.h
->> @@ -1637,7 +1637,7 @@ static inline unsigned long get_mm_counter(struct m=
-m_struct *mm, int member)
->> {
->>        long val =3D atomic_long_read(&mm->rss_stat.count[member]);
->>=20
->> -#ifdef SPLIT_RSS_COUNTING
->> +#ifdef CONFIG_SPLIT_RSS_COUNTING
->>        /*
->>         * counter is updated in asynchronous manner and may go to minus.
->>         * But it's never be expected number for users.
->> @@ -1723,7 +1723,7 @@ static inline void setmax_mm_hiwater_rss(unsigned l=
-ong *maxrss,
->>                *maxrss =3D hiwater_rss;
->> }
->>=20
->> -#if defined(SPLIT_RSS_COUNTING)
->> +#ifdef CONFIG_SPLIT_RSS_COUNTING
->> void sync_mm_rss(struct mm_struct *mm);
->> #else
->> static inline void sync_mm_rss(struct mm_struct *mm)
->> diff --git a/include/linux/mm_types_task.h b/include/linux/mm_types_task.=
-h
->> index c1bc6731125c..d2adc8057e65 100644
->> --- a/include/linux/mm_types_task.h
->> +++ b/include/linux/mm_types_task.h
->> @@ -48,14 +48,13 @@ enum {
->>        NR_MM_COUNTERS
->> };
->>=20
->> -#if USE_SPLIT_PTE_PTLOCKS && defined(CONFIG_MMU)
->> -#define SPLIT_RSS_COUNTING
->> +#ifdef CONFIG_SPLIT_RSS_COUNTING
->> /* per-thread cached information, */
->> struct task_rss_stat {
->>        int events;     /* for synchronization threshold */
->>        int count[NR_MM_COUNTERS];
->> };
->> -#endif /* USE_SPLIT_PTE_PTLOCKS */
->> +#endif /* CONFIG_SPLIT_RSS_COUNTING */
->>=20
->> struct mm_rss_stat {
->>        atomic_long_t count[NR_MM_COUNTERS];
->> diff --git a/include/linux/sched.h b/include/linux/sched.h
->> index 2c2e56bd8913..22f354774540 100644
->> --- a/include/linux/sched.h
->> +++ b/include/linux/sched.h
->> @@ -729,7 +729,7 @@ struct task_struct {
->>        /* Per-thread vma caching: */
->>        struct vmacache                 vmacache;
->>=20
->> -#ifdef SPLIT_RSS_COUNTING
->> +#ifdef CONFIG_SPLIT_RSS_COUNTING
->>        struct task_rss_stat            rss_stat;
->> #endif
->>        int                             exit_state;
->> diff --git a/kernel/fork.c b/kernel/fork.c
->> index f9572f416126..fc5e0889922b 100644
->> --- a/kernel/fork.c
->> +++ b/kernel/fork.c
->> @@ -1917,7 +1917,7 @@ static __latent_entropy struct task_struct *copy_pr=
-ocess(
->>        p->vtime.state =3D VTIME_INACTIVE;
->> #endif
->>=20
->> -#if defined(SPLIT_RSS_COUNTING)
->> +#ifdef CONFIG_SPLIT_RSS_COUNTING
->>        memset(&p->rss_stat, 0, sizeof(p->rss_stat));
->> #endif
->>=20
->> diff --git a/mm/Kconfig b/mm/Kconfig
->> index a5dae9a7eb51..372ef9449924 100644
->> --- a/mm/Kconfig
->> +++ b/mm/Kconfig
->> @@ -736,4 +736,15 @@ config ARCH_HAS_PTE_SPECIAL
->> config ARCH_HAS_HUGEPD
->>        bool
->>=20
->> +config SPLIT_RSS_COUNTING
->> +       bool "Per-thread mm counter caching"
->> +       depends on MMU
->> +       default y if NR_CPUS >=3D SPLIT_PTLOCK_CPUS
->> +       help
->> +         Cache mm counter updates in thread structures and
->> +         flush them to visible per-process statistics in batches.
->> +         Say Y here to slightly reduce cache contention in processes
->> +         with many threads at the expense of decreasing the accuracy
->> +         of memory statistics in /proc.
+>>  drivers/phy/tegra/Makefile        |  1 +
+>>  drivers/phy/tegra/xusb-tegra186.c | 77 +++++++++++++++++++++++++++++++
+>>  drivers/phy/tegra/xusb.c          | 13 ++++++
+>>  drivers/phy/tegra/xusb.h          |  4 ++
+>>  4 files changed, 95 insertions(+)
+>>
+>> diff --git a/drivers/phy/tegra/Makefile b/drivers/phy/tegra/Makefile
+>> index 320dd389f34d..89b84067cb4c 100644
+>> --- a/drivers/phy/tegra/Makefile
+>> +++ b/drivers/phy/tegra/Makefile
+>> @@ -6,4 +6,5 @@ phy-tegra-xusb-$(CONFIG_ARCH_TEGRA_124_SOC) += xusb-tegra124.o
+>>  phy-tegra-xusb-$(CONFIG_ARCH_TEGRA_132_SOC) += xusb-tegra124.o
+>>  phy-tegra-xusb-$(CONFIG_ARCH_TEGRA_210_SOC) += xusb-tegra210.o
+>>  phy-tegra-xusb-$(CONFIG_ARCH_TEGRA_186_SOC) += xusb-tegra186.o
+>> +phy-tegra-xusb-$(CONFIG_ARCH_TEGRA_194_SOC) += xusb-tegra186.o
+>>  obj-$(CONFIG_PHY_TEGRA194_P2U) += phy-tegra194-p2u.o
+>> diff --git a/drivers/phy/tegra/xusb-tegra186.c b/drivers/phy/tegra/xusb-tegra186.c
+>> index 6f3afaf9398f..4e27acf398b2 100644
+>> --- a/drivers/phy/tegra/xusb-tegra186.c
+>> +++ b/drivers/phy/tegra/xusb-tegra186.c
+>> @@ -64,6 +64,13 @@
+>>  #define  SSPX_ELPG_CLAMP_EN_EARLY(x)		BIT(1 + (x) * 3)
+>>  #define  SSPX_ELPG_VCORE_DOWN(x)		BIT(2 + (x) * 3)
+>>  
+>> +#if IS_ENABLED(CONFIG_ARCH_TEGRA_194_SOC)
+>> +#define XUSB_PADCTL_SS_PORT_CFG			0x2c
+>> +#define   PORTX_SPEED_SUPPORT_SHIFT(x)		((x) * 4)
+>> +#define   PORTX_SPEED_SUPPORT_MASK		(0x3)
+>> +#define     PORT_SPEED_SUPPORT_GEN1		(0x0)
+>> +#endif
+> 
+> I wouldn't bother protecting these with the #if/#endif.
+It will be removed in the next revision.
+> 
 >> +
->> endmenu
+>>  #define XUSB_PADCTL_USB2_OTG_PADX_CTL0(x)	(0x88 + (x) * 0x40)
+>>  #define  HS_CURR_LEVEL(x)			((x) & 0x3f)
+>>  #define  TERM_SEL				BIT(25)
+>> @@ -635,6 +642,17 @@ static int tegra186_usb3_phy_power_on(struct phy *phy)
+>>  
+>>  	padctl_writel(padctl, value, XUSB_PADCTL_SS_PORT_CAP);
+>>  
+>> +#if IS_ENABLED(CONFIG_ARCH_TEGRA_194_SOC)
+>> +	if (padctl->soc == &tegra194_xusb_padctl_soc && port->disable_gen2) {
+>> +		value = padctl_readl(padctl, XUSB_PADCTL_SS_PORT_CFG);
+>> +		value &= ~(PORTX_SPEED_SUPPORT_MASK <<
+>> +			PORTX_SPEED_SUPPORT_SHIFT(index));
+>> +		value |= (PORT_SPEED_SUPPORT_GEN1 <<
+>> +			PORTX_SPEED_SUPPORT_SHIFT(index));
+>> +		padctl_writel(padctl, value, XUSB_PADCTL_SS_PORT_CFG);
+>> +	}
+>> +#endif
+> 
+> Same here. Also, I think you can drop the extra check for padctl->soc
+> and only rely on port->disable_gen2. This is not a lot of code, so might
+> as well make our life simpler by building it unconditionally.
+> 
+> On another note: checking the padctl->soc pointer against a SoC-specific
+> structure is a neat way to check for this support. However, it's not
+> very flexible. Consider what happens when the next chip is released. I
+> think we can assume that it will also support gen 2 and may also require
+> some boards to disable gen 2 because of long signal traces. In order to
+> accomodate that, you'd have to extend this check with another comparison
+> to that new SoC structure.
+> 
+> A better alternative would be to add this as a "feature" flag to the SoC
+> structure:
+> 
+> 	struct tegra_xusb_pad_soc {
+> 		...
+> 		bool supports_gen2;
+> 	};
+> 
+> Presumably every SoC that supports gen 2 will also need support for
+> explicitly disabling gen 2 if the board doesn't support it, so you can
+> use that new feature flag to conditionalize this code.
+> 
+> This way, the next SoC generation can support can simply be added by
+> setting supports_gen2 = true, without requiring any actual code changes
+> (unless of course if it supports new features).
+> 
+> Multi-SoC support is also a good argument for dropping the #if/#endif
+> protection, because those would need to be extended for the next SoC
+> generation as well.
+> 
+Thanks Thierry. This implementation is better. I will take it in the next revision.
 
-All those vague words are going to make developers almost impossible to deci=
-de the right selection here. It sounds like we should kill SPLIT_RSS_COUNTIN=
-G at all to simplify the code as the benefit is so small vs the side-effect?=
-
-
->> diff --git a/mm/memory.c b/mm/memory.c
->> index b1ca51a079f2..bf557ed5ba23 100644
->> --- a/mm/memory.c
->> +++ b/mm/memory.c
->> @@ -141,7 +141,7 @@ static int __init init_zero_pfn(void)
->> core_initcall(init_zero_pfn);
->>=20
->>=20
->> -#if defined(SPLIT_RSS_COUNTING)
->> +#ifdef CONFIG_SPLIT_RSS_COUNTING
->>=20
->> void sync_mm_rss(struct mm_struct *mm)
->> {
->> @@ -177,7 +177,7 @@ static void check_sync_rss_stat(struct task_struct *t=
-ask)
->>        if (unlikely(task->rss_stat.events++ > TASK_RSS_EVENTS_THRESH))
->>                sync_mm_rss(task->mm);
->> }
->> -#else /* SPLIT_RSS_COUNTING */
->> +#else /* CONFIG_SPLIT_RSS_COUNTING */
->>=20
->> #define inc_mm_counter_fast(mm, member) inc_mm_counter(mm, member)
->> #define dec_mm_counter_fast(mm, member) dec_mm_counter(mm, member)
->> @@ -186,7 +186,7 @@ static void check_sync_rss_stat(struct task_struct *t=
-ask)
->> {
->> }
->>=20
->> -#endif /* SPLIT_RSS_COUNTING */
->> +#endif /* CONFIG_SPLIT_RSS_COUNTING */
->>=20
->> /*
->>  * Note: this doesn't free the actual pages themselves. That
->> --
->> 2.23.0.581.g78d2f28ef7-goog
->>=20
+>> +
+>>  	value = padctl_readl(padctl, XUSB_PADCTL_ELPG_PROGRAM_1);
+>>  	value &= ~SSPX_ELPG_VCORE_DOWN(index);
+>>  	padctl_writel(padctl, value, XUSB_PADCTL_ELPG_PROGRAM_1);
+>> @@ -894,6 +912,65 @@ const struct tegra_xusb_padctl_soc tegra186_xusb_padctl_soc = {
+>>  };
+>>  EXPORT_SYMBOL_GPL(tegra186_xusb_padctl_soc);
+>>  
+>> +#if IS_ENABLED(CONFIG_ARCH_TEGRA_194_SOC)
+> 
+> It doesn't look like we have this type of protection for Tegra186. It
+> might make sense to add a patch to this series (before this patch) to
+> slightly clean up the Tegra186 SoC data (reshuffle the data so that a
+> single #if/#endif block can be used, like you do for Tegra194).
+Okay, I will do it in the next revision.
+> 
+> But we can equally well do that in a follow-up.
+> 
+>> +static const char * const tegra194_xusb_padctl_supply_names[] = {
+>> +	"avdd-usb",
+>> +	"vclamp-usb",
+>> +};
+>> +
+>> +static const struct tegra_xusb_lane_soc tegra194_usb2_lanes[] = {
+>> +	TEGRA186_LANE("usb2-0", 0,  0, 0, usb2),
+>> +	TEGRA186_LANE("usb2-1", 0,  0, 0, usb2),
+>> +	TEGRA186_LANE("usb2-2", 0,  0, 0, usb2),
+>> +	TEGRA186_LANE("usb2-3", 0,  0, 0, usb2),
+>> +};
+>> +
+>> +static const struct tegra_xusb_pad_soc tegra194_usb2_pad = {
+>> +	.name = "usb2",
+>> +	.num_lanes = ARRAY_SIZE(tegra194_usb2_lanes),
+>> +	.lanes = tegra194_usb2_lanes,
+>> +	.ops = &tegra186_usb2_pad_ops,
+>> +};
+>> +
+>> +static const struct tegra_xusb_lane_soc tegra194_usb3_lanes[] = {
+>> +	TEGRA186_LANE("usb3-0", 0,  0, 0, usb3),
+>> +	TEGRA186_LANE("usb3-1", 0,  0, 0, usb3),
+>> +	TEGRA186_LANE("usb3-2", 0,  0, 0, usb3),
+>> +	TEGRA186_LANE("usb3-3", 0,  0, 0, usb3),
+>> +};
+>> +
+>> +static const struct tegra_xusb_pad_soc tegra194_usb3_pad = {
+>> +	.name = "usb3",
+>> +	.num_lanes = ARRAY_SIZE(tegra194_usb3_lanes),
+>> +	.lanes = tegra194_usb3_lanes,
+>> +	.ops = &tegra186_usb3_pad_ops,
+>> +};
+>> +
+>> +static const struct tegra_xusb_pad_soc * const tegra194_pads[] = {
+>> +	&tegra194_usb2_pad,
+>> +	&tegra194_usb3_pad,
+>> +};
+>> +
+>> +const struct tegra_xusb_padctl_soc tegra194_xusb_padctl_soc = {
+>> +	.num_pads = ARRAY_SIZE(tegra194_pads),
+>> +	.pads = tegra194_pads,
+>> +	.ports = {
+>> +		.usb2 = {
+>> +			.ops = &tegra186_usb2_port_ops,
+>> +			.count = 4,
+>> +		},
+>> +		.usb3 = {
+>> +			.ops = &tegra186_usb3_port_ops,
+>> +			.count = 4,
+>> +		},
+>> +	},
+>> +	.ops = &tegra186_xusb_padctl_ops,
+>> +	.supply_names = tegra194_xusb_padctl_supply_names,
+>> +	.num_supplies = ARRAY_SIZE(tegra194_xusb_padctl_supply_names),
+>> +};
+>> +EXPORT_SYMBOL_GPL(tegra194_xusb_padctl_soc);
+>> +#endif
+>> +
+>>  MODULE_AUTHOR("JC Kuo <jckuo@nvidia.com>");
+>>  MODULE_DESCRIPTION("NVIDIA Tegra186 XUSB Pad Controller driver");
+>>  MODULE_LICENSE("GPL v2");
+>> diff --git a/drivers/phy/tegra/xusb.c b/drivers/phy/tegra/xusb.c
+>> index 2ea8497af82a..266c08074b28 100644
+>> --- a/drivers/phy/tegra/xusb.c
+>> +++ b/drivers/phy/tegra/xusb.c
+>> @@ -65,6 +65,12 @@ static const struct of_device_id tegra_xusb_padctl_of_match[] = {
+>>  		.compatible = "nvidia,tegra186-xusb-padctl",
+>>  		.data = &tegra186_xusb_padctl_soc,
+>>  	},
+>> +#endif
+>> +#if defined(CONFIG_ARCH_TEGRA_194_SOC)
+>> +	{
+>> +		.compatible = "nvidia,tegra194-xusb-padctl",
+>> +		.data = &tegra194_xusb_padctl_soc,
+>> +	},
+>>  #endif
+>>  	{ }
+>>  };
+>> @@ -739,6 +745,13 @@ static int tegra_xusb_usb3_port_parse_dt(struct tegra_xusb_usb3_port *usb3)
+>>  
+>>  	usb3->internal = of_property_read_bool(np, "nvidia,internal");
+>>  
+>> +#if IS_ENABLED(CONFIG_ARCH_TEGRA_194_SOC)
+>> +	if (port->padctl->soc == &tegra194_xusb_padctl_soc) {
+>> +		usb3->disable_gen2 = of_property_read_bool(np,
+>> +							"nvidia,disable-gen2");
+>> +	}
+>> +#endif
+> 
+> Do we really need the #if/#endif here? Or the conditional for that
+> matter? nvidia,disable-gen2 is only defined for Tegra194, so any earlier
+> SoCs are not going to have one, in which case the above code would just
+> set usb3->disable_gen2 to false (the default).
+> 
+> Removing the conditional allows you to have the above on a single line.
+> 
+I will remove #if/#endif and the if() in the next revision. Thanks.
+> Thierry
+> 
+>> +
+>>  	usb3->supply = devm_regulator_get(&port->dev, "vbus");
+>>  	return PTR_ERR_OR_ZERO(usb3->supply);
+>>  }
+>> diff --git a/drivers/phy/tegra/xusb.h b/drivers/phy/tegra/xusb.h
+>> index 093076ca27fd..6b71978ba15d 100644
+>> --- a/drivers/phy/tegra/xusb.h
+>> +++ b/drivers/phy/tegra/xusb.h
+>> @@ -332,6 +332,7 @@ struct tegra_xusb_usb3_port {
+>>  	bool context_saved;
+>>  	unsigned int port;
+>>  	bool internal;
+>> +	bool disable_gen2;
+>>  
+>>  	u32 tap1;
+>>  	u32 amp;
+>> @@ -444,5 +445,8 @@ extern const struct tegra_xusb_padctl_soc tegra210_xusb_padctl_soc;
+>>  #if defined(CONFIG_ARCH_TEGRA_186_SOC)
+>>  extern const struct tegra_xusb_padctl_soc tegra186_xusb_padctl_soc;
+>>  #endif
+>> +#if defined(CONFIG_ARCH_TEGRA_194_SOC)
+>> +extern const struct tegra_xusb_padctl_soc tegra194_xusb_padctl_soc;
+>> +#endif
+>>  
+>>  #endif /* __PHY_TEGRA_XUSB_H */
+>> -- 
+>> 2.17.1
+>>
