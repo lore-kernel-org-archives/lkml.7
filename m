@@ -2,51 +2,53 @@ Return-Path: <SRS0=6dNS=X4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4465AC10F14
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:02:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F0218C32792
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:02:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0EC3C20700
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:02:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BC89C222BE
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:02:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570118528;
-	bh=CMItQCuPfjOEoWVCOM6n45vcSofO9My2ipRACkBZkzg=;
+	s=default; t=1570118531;
+	bh=aGsvxcF3MiDOMIrZQmref9om6M8hirxqvJMiDcxDmJQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=DvrLTe/xfEDS0Wo1GK8lxaDg2dfxVWG/mpHz5j76n4l2lBXYEi0Bqux7FGGg54Yfn
-	 FEBIyRfbQochF5OpAJeAfc/4PaeWP1aSG+GG5LvTo3SAh1LCYsj2NAa2N+/X21zmww
-	 tjoiqKvyO3pWpfSLxttoKJJtSqTIITM2vXUVuoxo=
+	b=WpV86lHnfERDiJWcN/9rKl7gkVv26qFw9VBZL22YmLt38SXPt3T5CyYqWUqG0gsHs
+	 qFgSAq2pWMRLZy+xMwDnc8BqaQpD8vhmnfj4TygjZLCMPcCOBeAt6+pkL01Q7PHx7P
+	 DwDRip70TGzKSzP3F5WIjhhpMGFEtN+8QsZ/cjHw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730673AbfJCQCH (ORCPT
+        id S1731952AbfJCQCL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 12:02:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46778 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 12:02:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46828 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731180AbfJCQCD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:02:03 -0400
+        id S1729850AbfJCQCG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:02:06 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5050B21A4C;
-        Thu,  3 Oct 2019 16:02:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0D63A20700;
+        Thu,  3 Oct 2019 16:02:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570118522;
-        bh=CMItQCuPfjOEoWVCOM6n45vcSofO9My2ipRACkBZkzg=;
+        s=default; t=1570118525;
+        bh=aGsvxcF3MiDOMIrZQmref9om6M8hirxqvJMiDcxDmJQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=cKEjFm8LpscIH6CpymWlV6cC0JljBkMsfA0p4cvTuEgOXau5nDeYB+cpHaKjOyari
-         zaO2BFXXXpxP9R9tbxwrZhXzMgWPbAZrgmaZcxx7wAxzAvA4IWNP9FvJCtluDIJJtv
-         1oo/KZs2f757t5C2vCsOP1/jXlVnbJJnAgjVHyEc=
+        b=1yNxxNJo16ijUH4j+qKFYIlUg6147TeeDaOwPRudaKTUrqpHe4yXwLFwo6T2Yr5xe
+         FU3ObNJw6Ou2hiHHwLtHZRY5B98xys2ZcccZoPOcVJTrZ5ZGTDEKh1gkTJyl1F4Fpw
+         U128erx0Q68jW0j3lb/kFF5cT4rgPd6Le4Z5JVbM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ori Nimron <orinimron123@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.9 034/129] mISDN: enforce CAP_NET_RAW for raw sockets
-Date:   Thu,  3 Oct 2019 17:52:37 +0200
-Message-Id: <20191003154334.200929057@linuxfoundation.org>
+        stable@vger.kernel.org, Nick Stoughton <nstoughton@logitech.com>,
+        Pavel Machek <pavel@ucw.cz>,
+        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.9 043/129] leds: leds-lp5562 allow firmware files up to the maximum length
+Date:   Thu,  3 Oct 2019 17:52:46 +0200
+Message-Id: <20191003154336.769210783@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191003154318.081116689@linuxfoundation.org>
 References: <20191003154318.081116689@linuxfoundation.org>
@@ -59,31 +61,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ori Nimron <orinimron123@gmail.com>
+From: Nick Stoughton <nstoughton@logitech.com>
 
-[ Upstream commit b91ee4aa2a2199ba4d4650706c272985a5a32d80 ]
+[ Upstream commit ed2abfebb041473092b41527903f93390d38afa7 ]
 
-When creating a raw AF_ISDN socket, CAP_NET_RAW needs to be checked
-first.
+Firmware files are in ASCII, using 2 hex characters per byte. The
+maximum length of a firmware string is therefore
 
-Signed-off-by: Ori Nimron <orinimron123@gmail.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+16 (commands) * 2 (bytes per command) * 2 (characters per byte) = 64
+
+Fixes: ff45262a85db ("leds: add new LP5562 LED driver")
+Signed-off-by: Nick Stoughton <nstoughton@logitech.com>
+Acked-by: Pavel Machek <pavel@ucw.cz>
+Signed-off-by: Jacek Anaszewski <jacek.anaszewski@gmail.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/isdn/mISDN/socket.c |    2 ++
- 1 file changed, 2 insertions(+)
+ drivers/leds/leds-lp5562.c | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
---- a/drivers/isdn/mISDN/socket.c
-+++ b/drivers/isdn/mISDN/socket.c
-@@ -766,6 +766,8 @@ base_sock_create(struct net *net, struct
+diff --git a/drivers/leds/leds-lp5562.c b/drivers/leds/leds-lp5562.c
+index b75333803a637..9f5e4d04efad5 100644
+--- a/drivers/leds/leds-lp5562.c
++++ b/drivers/leds/leds-lp5562.c
+@@ -263,7 +263,11 @@ static void lp5562_firmware_loaded(struct lp55xx_chip *chip)
+ {
+ 	const struct firmware *fw = chip->fw;
  
- 	if (sock->type != SOCK_RAW)
- 		return -ESOCKTNOSUPPORT;
-+	if (!capable(CAP_NET_RAW))
-+		return -EPERM;
- 
- 	sk = sk_alloc(net, PF_ISDN, GFP_KERNEL, &mISDN_proto, kern);
- 	if (!sk)
+-	if (fw->size > LP5562_PROGRAM_LENGTH) {
++	/*
++	 * the firmware is encoded in ascii hex character, with 2 chars
++	 * per byte
++	 */
++	if (fw->size > (LP5562_PROGRAM_LENGTH * 2)) {
+ 		dev_err(&chip->cl->dev, "firmware data size overflow: %zu\n",
+ 			fw->size);
+ 		return;
+-- 
+2.20.1
+
 
 
