@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 240C2C10F14
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:17:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8682C32792
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:17:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ECCB820700
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:17:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AC20520865
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:17:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570119430;
-	bh=i5xIGvAmJ611D+9rinA4VEpsJYMNIu3CSB0dALNOkD8=;
+	s=default; t=1570119432;
+	bh=2ZDyCA/W82QMIcVj4QKv0dW3+M4TLs0nbEMoSYY3yjc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=c0vdEP6uTgY7t6nOrl/qEti0Auj2xAXbg5aT0ofLUiNk5xMQEtH4Fxg+1VGQhLJGq
-	 Dg9thSzzfMfJoelk0288eonHOzIWh4FV7/xMLCYfNPKoKHvAVv2/g4+Y/M5/o3N5BY
-	 YEpaHxdvUCtYI6ZZqNwGPBRQKKDhANJEsUnrupXk=
+	b=mztWMoFFb3txsk5eVy+q9GTJP+sCIgX3N4KWZxXKqehTJ89J2p1FjCkt/G2qBdU+D
+	 eqr0LZLedIVJXUOmRmtJNTTISudfNsRjz3sMzKF9j6md8xVKQS+i14v86UqsaXHXts
+	 f0652D6kC++wifBQXaigfCSsfBQCSnglB61FZ9qs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389174AbfJCQRJ (ORCPT
+        id S2389186AbfJCQRL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 12:17:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42512 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 12:17:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42588 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730025AbfJCQRE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:17:04 -0400
+        id S2389143AbfJCQRG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:17:06 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C169720700;
-        Thu,  3 Oct 2019 16:17:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4F9E92133F;
+        Thu,  3 Oct 2019 16:17:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570119423;
-        bh=i5xIGvAmJ611D+9rinA4VEpsJYMNIu3CSB0dALNOkD8=;
+        s=default; t=1570119425;
+        bh=2ZDyCA/W82QMIcVj4QKv0dW3+M4TLs0nbEMoSYY3yjc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=WgB5l1iLP0HuF/FNGYCUrc5S7NMKATNUijs0vXfz0nazGGVOKe9dHpziS3pSPfMN8
-         fbQeuOGJObFCg9l1/x89ZV4ojOYlzxNSt4uk/EZ8B5IEEcjXLaf7hLqmqXzqzQfhn+
-         YrZcOMkOG2Boi3+m924Y+ciDL6krAQRBuGMN8nEA=
+        b=uoQU3yfyu5tFfWIJPo/W1V9yItdrZfPnzli2g2kuXZHs0DHy+i/5I9CoG2bZsYLZB
+         8bF+lk+p5ixUlQjN6ufR6Io9HylbfNv2QHv1m/49CDn0WaX3RWgYl5MjZZJjWtydKD
+         YHrFxpaJsh1kQzQsYAObVwmuNi412w+ABowF5FPM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Valdis Kletnieks <valdis.kletnieks@vt.edu>,
-        Borislav Petkov <bp@suse.de>, Tony Luck <tony.luck@intel.com>,
-        linux-edac@vger.kernel.org, x86@kernel.org,
+        stable@vger.kernel.org, Jiri Slaby <jslaby@suse.cz>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 058/211] RAS: Fix prototype warnings
-Date:   Thu,  3 Oct 2019 17:52:04 +0200
-Message-Id: <20191003154501.432687344@linuxfoundation.org>
+Subject: [PATCH 4.19 059/211] ACPI / processor: dont print errors for processorIDs == 0xff
+Date:   Thu,  3 Oct 2019 17:52:05 +0200
+Message-Id: <20191003154501.897612747@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191003154447.010950442@linuxfoundation.org>
 References: <20191003154447.010950442@linuxfoundation.org>
@@ -61,67 +60,65 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Valdis Klētnieks <valdis.kletnieks@vt.edu>
+From: Jiri Slaby <jslaby@suse.cz>
 
-[ Upstream commit 0a54b809a3a2c31e1055b45b03708eb730222be1 ]
+[ Upstream commit 2c2b005f549544c13ef4cfb0e4842949066889bc ]
 
-When building with C=2 and/or W=1, legitimate warnings are issued about
-missing prototypes:
+Some platforms define their processors in this manner:
+    Device (SCK0)
+    {
+	Name (_HID, "ACPI0004" /* Module Device */)  // _HID: Hardware ID
+	Name (_UID, "CPUSCK0")  // _UID: Unique ID
+	Processor (CP00, 0x00, 0x00000410, 0x06){}
+	Processor (CP01, 0x02, 0x00000410, 0x06){}
+	Processor (CP02, 0x04, 0x00000410, 0x06){}
+	Processor (CP03, 0x06, 0x00000410, 0x06){}
+	Processor (CP04, 0x01, 0x00000410, 0x06){}
+	Processor (CP05, 0x03, 0x00000410, 0x06){}
+	Processor (CP06, 0x05, 0x00000410, 0x06){}
+	Processor (CP07, 0x07, 0x00000410, 0x06){}
+	Processor (CP08, 0xFF, 0x00000410, 0x06){}
+	Processor (CP09, 0xFF, 0x00000410, 0x06){}
+	Processor (CP0A, 0xFF, 0x00000410, 0x06){}
+	Processor (CP0B, 0xFF, 0x00000410, 0x06){}
+...
 
-    CHECK   drivers/ras/debugfs.c
-  drivers/ras/debugfs.c:4:15: warning: symbol 'ras_debugfs_dir' was not declared. Should it be static?
-  drivers/ras/debugfs.c:8:5: warning: symbol 'ras_userspace_consumers' was not declared. Should it be static?
-  drivers/ras/debugfs.c:38:12: warning: symbol 'ras_add_daemon_trace' was not declared. Should it be static?
-  drivers/ras/debugfs.c:54:13: warning: symbol 'ras_debugfs_init' was not declared. Should it be static?
-    CC      drivers/ras/debugfs.o
-  drivers/ras/debugfs.c:8:5: warning: no previous prototype for 'ras_userspace_consumers' [-Wmissing-prototypes]
-      8 | int ras_userspace_consumers(void)
-        |     ^~~~~~~~~~~~~~~~~~~~~~~
-  drivers/ras/debugfs.c:38:12: warning: no previous prototype for 'ras_add_daemon_trace' [-Wmissing-prototypes]
-     38 | int __init ras_add_daemon_trace(void)
-        |            ^~~~~~~~~~~~~~~~~~~~
-  drivers/ras/debugfs.c:54:13: warning: no previous prototype for 'ras_debugfs_init' [-Wmissing-prototypes]
-     54 | void __init ras_debugfs_init(void)
-        |             ^~~~~~~~~~~~~~~~
+The processors marked as 0xff are invalid, there are only 8 of them in
+this case.
 
-Provide the proper includes.
+So do not print an error on ids == 0xff, just print an info message.
+Actually, we could return ENODEV even on the first CPU with ID 0xff, but
+ACPI spec does not forbid the 0xff value to be a processor ID. Given
+0xff could be a correct one, we would break working systems if we
+returned ENODEV.
 
- [ bp: Take care of the same warnings for cec.c too. ]
-
-Signed-off-by: Valdis Kletnieks <valdis.kletnieks@vt.edu>
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Cc: Tony Luck <tony.luck@intel.com>
-Cc: linux-edac@vger.kernel.org
-Cc: x86@kernel.org
-Link: http://lkml.kernel.org/r/7168.1565218769@turing-police
+Signed-off-by: Jiri Slaby <jslaby@suse.cz>
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/ras/cec.c     | 1 +
- drivers/ras/debugfs.c | 2 ++
- 2 files changed, 3 insertions(+)
+ drivers/acpi/acpi_processor.c | 10 +++++++---
+ 1 file changed, 7 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/ras/cec.c b/drivers/ras/cec.c
-index 5d2b2c02cbbec..0c719787876a5 100644
---- a/drivers/ras/cec.c
-+++ b/drivers/ras/cec.c
-@@ -1,6 +1,7 @@
- // SPDX-License-Identifier: GPL-2.0
- #include <linux/mm.h>
- #include <linux/gfp.h>
-+#include <linux/ras.h>
- #include <linux/kernel.h>
- #include <linux/workqueue.h>
+diff --git a/drivers/acpi/acpi_processor.c b/drivers/acpi/acpi_processor.c
+index fc447410ae4d1..a448cdf567188 100644
+--- a/drivers/acpi/acpi_processor.c
++++ b/drivers/acpi/acpi_processor.c
+@@ -282,9 +282,13 @@ static int acpi_processor_get_info(struct acpi_device *device)
+ 	}
  
-diff --git a/drivers/ras/debugfs.c b/drivers/ras/debugfs.c
-index 501603057dffe..12a161377f4f8 100644
---- a/drivers/ras/debugfs.c
-+++ b/drivers/ras/debugfs.c
-@@ -1,4 +1,6 @@
- #include <linux/debugfs.h>
-+#include <linux/ras.h>
-+#include "debugfs.h"
- 
- struct dentry *ras_debugfs_dir;
+ 	if (acpi_duplicate_processor_id(pr->acpi_id)) {
+-		dev_err(&device->dev,
+-			"Failed to get unique processor _UID (0x%x)\n",
+-			pr->acpi_id);
++		if (pr->acpi_id == 0xff)
++			dev_info_once(&device->dev,
++				"Entry not well-defined, consider updating BIOS\n");
++		else
++			dev_err(&device->dev,
++				"Failed to get unique processor _UID (0x%x)\n",
++				pr->acpi_id);
+ 		return -ENODEV;
+ 	}
  
 -- 
 2.20.1
