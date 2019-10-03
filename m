@@ -2,54 +2,52 @@ Return-Path: <SRS0=6dNS=X4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 943FDC32792
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:40:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E431EC10F14
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:40:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5C5E320830
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:40:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B089D2133F
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:40:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570120810;
-	bh=HlnVsCceNYZyYai/sxKuhEPWoP8UASBPHV6OlRRXLRg=;
+	s=default; t=1570120814;
+	bh=JU3UYg6sx8LyWlLxHpHoWHO0v347kA8UBDEFNFxli1c=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ySj7gID1RSIHnLRwO7X2d8gCi1SHMazmethEFJfmvoWqf9NxNp8c4qgAgPj6Q1b6Q
-	 dVic+jILHChlR/LaPX7I0Rajm3nhnBDFCSaDB3oaDsAbkQJSCVH5aGJm2iJUzpSPi2
-	 acWptxjIMWg0o8cUr/By+XIS5tirGVMYEyqXm0ok=
+	b=Ls24pUua77nqY6wbFSLnhsoR+jhC6kMEcXEBKFNw3XdMM4ySjXrcsluTRENaYLw48
+	 /nCWWTnPTuzs/Piu46CWTpe+JFmZJhT5c0+UTSDNg6a2a1WhG/iSl/NyPNcWhx+QWD
+	 hwiB9e3cGdiVXCLKNXNSULKORGo9YUfa1a0GVPxg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392445AbfJCQkI (ORCPT
+        id S2392454AbfJCQkO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 12:40:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50158 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 12:40:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50270 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392442AbfJCQkD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:40:03 -0400
+        id S2392443AbfJCQkH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:40:07 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 76F5D21848;
-        Thu,  3 Oct 2019 16:40:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F197020830;
+        Thu,  3 Oct 2019 16:40:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570120802;
-        bh=HlnVsCceNYZyYai/sxKuhEPWoP8UASBPHV6OlRRXLRg=;
+        s=default; t=1570120807;
+        bh=JU3UYg6sx8LyWlLxHpHoWHO0v347kA8UBDEFNFxli1c=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1W1clVQtmcwgIeqmKxiMY5EfQA95yTNV7QaF68izX3WXHY2jtG2oRfQSzPeGC3i2u
-         3pdY/NtRK7Y6esTljgy1+9OnbUrdU4002IEOoRNaUOsmkchJndf3m4gBzvO57K8rUW
-         4E7JLXpnDjNpZf1GQP0M4H4Ktfl3my7sm1z9hOD8=
+        b=xCfVy83XXK89wOTq4AZkFID75eqGAQl8g3M9vC1IxmyrcNl/1DBsXvjHFMilwPdIV
+         ozya3uVUlC2giNnSRadFtwry3r8QXFtQcNb7ilJXTdJhp4jD8mB+RCQNRPQFQlPrTp
+         JRz40xtHquOvewl0yZj2wtYG6XENHVZQ2Ao7rJq0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Phil Edworthy <phil.edworthy@renesas.com>,
-        Gareth Williams <gareth.williams.jx@renesas.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Mark Brown <broonie@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.3 044/344] spi: dw-mmio: Clock should be shut when error occurs
-Date:   Thu,  3 Oct 2019 17:50:09 +0200
-Message-Id: <20191003154544.428638528@linuxfoundation.org>
+        stable@vger.kernel.org, David Ahern <dsahern@gmail.com>,
+        Patrick Ruddy <pruddy@vyatta.att-mail.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 5.3 028/344] vrf: Do not attempt to create IPv6 mcast rule if IPv6 is disabled
+Date:   Thu,  3 Oct 2019 17:49:53 +0200
+Message-Id: <20191003154542.872347050@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191003154540.062170222@linuxfoundation.org>
 References: <20191003154540.062170222@linuxfoundation.org>
@@ -62,44 +60,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+From: David Ahern <dsahern@gmail.com>
 
-[ Upstream commit 3da9834d9381dd99273f2ad4e6d096c9187dc4f2 ]
+[ Upstream commit dac91170f8e9c73784af5fad6225e954b795601c ]
 
-When optional clock requesting fails, the main clock is still up and running,
-we should shut it down in such caee.
+A user reported that vrf create fails when IPv6 is disabled at boot using
+'ipv6.disable=1':
+   https://bugzilla.kernel.org/show_bug.cgi?id=204903
 
-Fixes: 560ee7e91009 ("spi: dw: Add support for an optional interface clock")
-Cc: Phil Edworthy <phil.edworthy@renesas.com>
-Cc: Gareth Williams <gareth.williams.jx@renesas.com>
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Reviewed-by: Gareth Williams <gareth.williams.jx@renesas.com>
-Link: https://lore.kernel.org/r/20190710114243.30101-1-andriy.shevchenko@linux.intel.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+The failure is adding fib rules at create time. Add RTNL_FAMILY_IP6MR to
+the check in vrf_fib_rule if ipv6_mod_enabled is disabled.
+
+Fixes: e4a38c0c4b27 ("ipv6: add vrf table handling code for ipv6 mcast")
+Signed-off-by: David Ahern <dsahern@gmail.com>
+Cc: Patrick Ruddy <pruddy@vyatta.att-mail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/spi/spi-dw-mmio.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ drivers/net/vrf.c |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/spi/spi-dw-mmio.c b/drivers/spi/spi-dw-mmio.c
-index 18c06568805e7..86789dbaf5771 100644
---- a/drivers/spi/spi-dw-mmio.c
-+++ b/drivers/spi/spi-dw-mmio.c
-@@ -172,8 +172,10 @@ static int dw_spi_mmio_probe(struct platform_device *pdev)
+--- a/drivers/net/vrf.c
++++ b/drivers/net/vrf.c
+@@ -1154,7 +1154,8 @@ static int vrf_fib_rule(const struct net
+ 	struct sk_buff *skb;
+ 	int err;
  
- 	/* Optional clock needed to access the registers */
- 	dwsmmio->pclk = devm_clk_get_optional(&pdev->dev, "pclk");
--	if (IS_ERR(dwsmmio->pclk))
--		return PTR_ERR(dwsmmio->pclk);
-+	if (IS_ERR(dwsmmio->pclk)) {
-+		ret = PTR_ERR(dwsmmio->pclk);
-+		goto out_clk;
-+	}
- 	ret = clk_prepare_enable(dwsmmio->pclk);
- 	if (ret)
- 		goto out_clk;
--- 
-2.20.1
-
+-	if (family == AF_INET6 && !ipv6_mod_enabled())
++	if ((family == AF_INET6 || family == RTNL_FAMILY_IP6MR) &&
++	    !ipv6_mod_enabled())
+ 		return 0;
+ 
+ 	skb = nlmsg_new(vrf_fib_rule_nl_size(), GFP_KERNEL);
 
 
