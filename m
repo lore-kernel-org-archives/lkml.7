@@ -7,47 +7,50 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 91BEBC32792
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:38:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FDE0C32792
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:38:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 668A82070B
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:38:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 229C5215EA
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:38:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570120729;
-	bh=LKRi6Olt+fkto41dkTtVD455lzef874REes/8JxvCMU=;
+	s=default; t=1570120732;
+	bh=QewyYujb4UdrSEcgi+mYAT8PK5n643YgE674FQS0/Gs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=k9OGuY4FYS75/KD9Pq0nDOS794mC56NoQAA6VR696eVISZeCbUNDAb9V4ah4R91Lc
-	 ZbrJJKF8BpMhpME4jx3saGv3dQkCLNsuvUjCBWcjdqY4oRSJtvPiNQ5NS+RjtnQ7MG
-	 kIBvvwws1cyTeKVgXMct2yD/yTy8i3goquVXg3Ak=
+	b=qYSCFIRxgbLnFbs4NDbwLcjIZb8vGS81NS9Yt6giK59dhVM+ZEkIcbGf5sL1HbxeM
+	 PWwMAMsHiTCwB0qVtUL/KUfLHL9tJZAvlgbOKcNCLeDjK/vzfeC1KAgea8Khv+c/Ei
+	 Obhk2dtGASopRCyXphwoiVYlTq1YZijK/FzO6r/g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392398AbfJCQis (ORCPT
+        id S2392409AbfJCQiv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 12:38:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48464 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 12:38:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48576 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729763AbfJCQim (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:38:42 -0400
+        id S1729763AbfJCQiu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:38:50 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B22732070B;
-        Thu,  3 Oct 2019 16:38:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B607E20830;
+        Thu,  3 Oct 2019 16:38:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570120721;
-        bh=LKRi6Olt+fkto41dkTtVD455lzef874REes/8JxvCMU=;
+        s=default; t=1570120729;
+        bh=QewyYujb4UdrSEcgi+mYAT8PK5n643YgE674FQS0/Gs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=dJxjHJo1nakzwH2cSzbNOZMy4LDtb53lhakVa8uO/4iT+YCNWWkUhBUt+68CyTPN3
-         /lYtkmiuxlolAhQK+kV2ZMgr2nTg63yg5AGM0qoRMJpRrwtTGyws+Y171OAugKvKEq
-         dbsDyi/cyBi7RR/46OhJJuxeOpIcdKFAxlb+uAMI=
+        b=Y4UXgk48AUCCwVo50F19OugBMKozRgNftvLA1rHnaXGDoL3egYDphKFwFAXsOa92p
+         r1s9LERPFv64yVXnlSktzMMDsdCF7hmHDWaddldwPMSFCqnkWRUTPVVZP2IyXQ7KG9
+         Q6SvTjxvmXFYgEC6GVtJyjx2wp14/ykVdYoT8LfI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
-        syzbot <syzkaller@googlegroups.com>,
-        Jakub Kicinski <jakub.kicinski@netronome.com>
-Subject: [PATCH 5.3 014/344] sch_netem: fix a divide by zero in tabledist()
-Date:   Thu,  3 Oct 2019 17:49:39 +0200
-Message-Id: <20191003154541.493253969@linuxfoundation.org>
+        stable@vger.kernel.org, "Kevin(Yudong) Yang" <yyd@google.com>,
+        Neal Cardwell <ncardwell@google.com>,
+        Yuchung Cheng <ycheng@google.com>,
+        Soheil Hassas Yeganeh <soheil@google.com>,
+        Priyaranjan Jha <priyarjha@google.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 5.3 017/344] tcp_bbr: fix quantization code to not raise cwnd if not probing bandwidth
+Date:   Thu,  3 Oct 2019 17:49:42 +0200
+Message-Id: <20191003154541.776910558@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191003154540.062170222@linuxfoundation.org>
 References: <20191003154540.062170222@linuxfoundation.org>
@@ -60,36 +63,69 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eric Dumazet <edumazet@google.com>
+From: "Kevin(Yudong) Yang" <yyd@google.com>
 
-[ Upstream commit b41d936b5ecfdb3a4abc525ce6402a6c49cffddc ]
+[ Upstream commit 6b3656a60f2067738d1a423328199720806f0c44 ]
 
-syzbot managed to crash the kernel in tabledist() loading
-an empty distribution table.
+There was a bug in the previous logic that attempted to ensure gain cycling
+gets inflight above BDP even for small BDPs. This code correctly raised and
+lowered target inflight values during the gain cycle. And this code
+correctly ensured that cwnd was raised when probing bandwidth. However, it
+did not correspondingly ensure that cwnd was *not* raised in this way when
+*not* probing for bandwidth. The result was that small-BDP flows that were
+always cwnd-bound could go for many cycles with a fixed cwnd, and not probe
+or yield bandwidth at all. This meant that multiple small-BDP flows could
+fail to converge in their bandwidth allocations.
 
-	t = dist->table[rnd % dist->size];
-
-Simply return an error when such load is attempted.
-
-Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
-Signed-off-by: Eric Dumazet <edumazet@google.com>
-Reported-by: syzbot <syzkaller@googlegroups.com>
-Signed-off-by: Jakub Kicinski <jakub.kicinski@netronome.com>
+Fixes: 3c346b233c68 ("tcp_bbr: fix bw probing to raise in-flight data for very small BDPs")
+Signed-off-by: Kevin(Yudong) Yang <yyd@google.com>
+Acked-by: Neal Cardwell <ncardwell@google.com>
+Acked-by: Yuchung Cheng <ycheng@google.com>
+Acked-by: Soheil Hassas Yeganeh <soheil@google.com>
+Acked-by: Priyaranjan Jha <priyarjha@google.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/sched/sch_netem.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ net/ipv4/tcp_bbr.c |    8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
---- a/net/sched/sch_netem.c
-+++ b/net/sched/sch_netem.c
-@@ -777,7 +777,7 @@ static int get_dist_table(struct Qdisc *
- 	struct disttable *d;
- 	int i;
+--- a/net/ipv4/tcp_bbr.c
++++ b/net/ipv4/tcp_bbr.c
+@@ -386,7 +386,7 @@ static u32 bbr_bdp(struct sock *sk, u32
+  * which allows 2 outstanding 2-packet sequences, to try to keep pipe
+  * full even with ACK-every-other-packet delayed ACKs.
+  */
+-static u32 bbr_quantization_budget(struct sock *sk, u32 cwnd, int gain)
++static u32 bbr_quantization_budget(struct sock *sk, u32 cwnd)
+ {
+ 	struct bbr *bbr = inet_csk_ca(sk);
  
--	if (n > NETEM_DIST_MAX)
-+	if (!n || n > NETEM_DIST_MAX)
- 		return -EINVAL;
+@@ -397,7 +397,7 @@ static u32 bbr_quantization_budget(struc
+ 	cwnd = (cwnd + 1) & ~1U;
  
- 	d = kvmalloc(sizeof(struct disttable) + n * sizeof(s16), GFP_KERNEL);
+ 	/* Ensure gain cycling gets inflight above BDP even for small BDPs. */
+-	if (bbr->mode == BBR_PROBE_BW && gain > BBR_UNIT)
++	if (bbr->mode == BBR_PROBE_BW && bbr->cycle_idx == 0)
+ 		cwnd += 2;
+ 
+ 	return cwnd;
+@@ -409,7 +409,7 @@ static u32 bbr_inflight(struct sock *sk,
+ 	u32 inflight;
+ 
+ 	inflight = bbr_bdp(sk, bw, gain);
+-	inflight = bbr_quantization_budget(sk, inflight, gain);
++	inflight = bbr_quantization_budget(sk, inflight);
+ 
+ 	return inflight;
+ }
+@@ -529,7 +529,7 @@ static void bbr_set_cwnd(struct sock *sk
+ 	 * due to aggregation (of data and/or ACKs) visible in the ACK stream.
+ 	 */
+ 	target_cwnd += bbr_ack_aggregation_cwnd(sk);
+-	target_cwnd = bbr_quantization_budget(sk, target_cwnd, gain);
++	target_cwnd = bbr_quantization_budget(sk, target_cwnd);
+ 
+ 	/* If we're below target cwnd, slow start cwnd toward target cwnd. */
+ 	if (bbr_full_bw_reached(sk))  /* only cut cwnd if we filled the pipe */
 
 
