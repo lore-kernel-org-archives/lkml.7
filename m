@@ -7,49 +7,49 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0E2EC32792
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:25:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A8823C10F14
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:25:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9DD7C20865
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:25:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7393620865
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:25:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570123545;
-	bh=xKTppu/GDfJLMQWpfzwwiblwXnUW9uwticGihbh1hF8=;
+	s=default; t=1570123548;
+	bh=A7bB2lRTeqg19DskxmH6x0oHCi3rj0FsE/t+ZNh3yVU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=C0lhNdY/tvBgEDWKQgNE2Jxe9lAejQZMX+QCNNr6BDMmhCcXEiMxDti8+HitMRHgC
-	 5q8GznSQHY8zf9kJMmb7h2vaSMfbsOtKp+iwTck9dm6KmlGf0xZpv+4Qwa0QQuZTju
-	 RZ1ajWg25KasZ0Gn7u1kWB02PtNsU4k9JQTTfygQ=
+	b=DM9+0ThyNMMpfexK2bYRu+YP4Byl0Lx/ZTBNpaJnMdFmNsCJvpHUJ6FooBU3pRftH
+	 jKuHwayADR75hxpEKNDan+NrCgXgG20QjKMR63cS0BFuIAhkkgfTrhcT4YyunmpCs6
+	 Xswc0CaCSjvS4yT3ksOozH4Eh/ka+8xynUqiMI+8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389035AbfJCQQh (ORCPT
+        id S2389023AbfJCQQf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 12:16:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41604 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 12:16:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41460 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389013AbfJCQQd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:16:33 -0400
+        id S2388994AbfJCQQ1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:16:27 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0937D2054F;
-        Thu,  3 Oct 2019 16:16:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A10D220865;
+        Thu,  3 Oct 2019 16:16:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570119392;
-        bh=xKTppu/GDfJLMQWpfzwwiblwXnUW9uwticGihbh1hF8=;
+        s=default; t=1570119387;
+        bh=A7bB2lRTeqg19DskxmH6x0oHCi3rj0FsE/t+ZNh3yVU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=pe4NTrjuXVzmX6QmPq3lfp8gNsJ5O6QLK1wUA7jRL23cQV4iYstawmgQ0msn1dL6F
-         kf7TT6Oz5/8GOCTJmbKKQdvxlFvQwneynazc2vfHiB2y7BUOvIRsm35Iibzz4AocMJ
-         6W4njwH1DdEp3j8yBL00x0rP8h3lYAp0DWaVqdtw=
+        b=rK94rNr2XlRZYWRTIEyywnJQiDe32gxmuqN/oVynTcHeP8Vtr6Esocx8NcKJvn5DQ
+         6/RZWCu+sxlxNw1sxKSEBjwXOpBDKy5Wv2DpU2znaoMeNOn6jmvXQvQpeXezIeeLpQ
+         fRTtds5E5C6PreQZSkI7peL3IZ9Yhbg9O2/vBg7c=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Vinod Koul <vkoul@kernel.org>,
-        Vaishali Thakkar <vaishali.thakkar@linaro.org>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        stable@vger.kernel.org,
+        syzbot+01a77b82edaa374068e1@syzkaller.appspotmail.com,
+        Oliver Neukum <oneukum@suse.com>, Sean Young <sean@mess.org>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 048/211] base: soc: Export soc_device_register/unregister APIs
-Date:   Thu,  3 Oct 2019 17:51:54 +0200
-Message-Id: <20191003154458.978461649@linuxfoundation.org>
+Subject: [PATCH 4.19 047/211] media: iguanair: add sanity checks
+Date:   Thu,  3 Oct 2019 17:51:53 +0200
+Message-Id: <20191003154458.734574947@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191003154447.010950442@linuxfoundation.org>
 References: <20191003154447.010950442@linuxfoundation.org>
@@ -62,45 +62,59 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vinod Koul <vkoul@kernel.org>
+From: Oliver Neukum <oneukum@suse.com>
 
-[ Upstream commit f7ccc7a397cf2ef64aebb2f726970b93203858d2 ]
+[ Upstream commit ab1cbdf159beba7395a13ab70bc71180929ca064 ]
 
-Qcom Socinfo driver can be built as a module, so
-export these two APIs.
+The driver needs to check the endpoint types, too, as opposed
+to the number of endpoints. This also requires moving the check earlier.
 
-Tested-by: Vinod Koul <vkoul@kernel.org>
-Signed-off-by: Vinod Koul <vkoul@kernel.org>
-Signed-off-by: Vaishali Thakkar <vaishali.thakkar@linaro.org>
-Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Reviewed-by: Stephen Boyd <swboyd@chromium.org>
-Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+Reported-by: syzbot+01a77b82edaa374068e1@syzkaller.appspotmail.com
+Signed-off-by: Oliver Neukum <oneukum@suse.com>
+Signed-off-by: Sean Young <sean@mess.org>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/base/soc.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/media/rc/iguanair.c | 15 +++++++--------
+ 1 file changed, 7 insertions(+), 8 deletions(-)
 
-diff --git a/drivers/base/soc.c b/drivers/base/soc.c
-index 10b280f30217b..7e91894a380b5 100644
---- a/drivers/base/soc.c
-+++ b/drivers/base/soc.c
-@@ -157,6 +157,7 @@ struct soc_device *soc_device_register(struct soc_device_attribute *soc_dev_attr
- out1:
- 	return ERR_PTR(ret);
- }
-+EXPORT_SYMBOL_GPL(soc_device_register);
+diff --git a/drivers/media/rc/iguanair.c b/drivers/media/rc/iguanair.c
+index 7daac8bab83b0..6f3030b2054d0 100644
+--- a/drivers/media/rc/iguanair.c
++++ b/drivers/media/rc/iguanair.c
+@@ -424,6 +424,10 @@ static int iguanair_probe(struct usb_interface *intf,
+ 	int ret, pipein, pipeout;
+ 	struct usb_host_interface *idesc;
  
- /* Ensure soc_dev->attr is freed prior to calling soc_device_unregister. */
- void soc_device_unregister(struct soc_device *soc_dev)
-@@ -166,6 +167,7 @@ void soc_device_unregister(struct soc_device *soc_dev)
- 	device_unregister(&soc_dev->dev);
- 	early_soc_dev_attr = NULL;
- }
-+EXPORT_SYMBOL_GPL(soc_device_unregister);
++	idesc = intf->altsetting;
++	if (idesc->desc.bNumEndpoints < 2)
++		return -ENODEV;
++
+ 	ir = kzalloc(sizeof(*ir), GFP_KERNEL);
+ 	rc = rc_allocate_device(RC_DRIVER_IR_RAW);
+ 	if (!ir || !rc) {
+@@ -438,18 +442,13 @@ static int iguanair_probe(struct usb_interface *intf,
+ 	ir->urb_in = usb_alloc_urb(0, GFP_KERNEL);
+ 	ir->urb_out = usb_alloc_urb(0, GFP_KERNEL);
  
- static int __init soc_bus_register(void)
- {
+-	if (!ir->buf_in || !ir->packet || !ir->urb_in || !ir->urb_out) {
++	if (!ir->buf_in || !ir->packet || !ir->urb_in || !ir->urb_out ||
++	    !usb_endpoint_is_int_in(&idesc->endpoint[0].desc) ||
++	    !usb_endpoint_is_int_out(&idesc->endpoint[1].desc)) {
+ 		ret = -ENOMEM;
+ 		goto out;
+ 	}
+ 
+-	idesc = intf->altsetting;
+-
+-	if (idesc->desc.bNumEndpoints < 2) {
+-		ret = -ENODEV;
+-		goto out;
+-	}
+-
+ 	ir->rc = rc;
+ 	ir->dev = &intf->dev;
+ 	ir->udev = udev;
 -- 
 2.20.1
 
