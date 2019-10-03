@@ -7,48 +7,49 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BF00C32792
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:45:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10C2DC10F14
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:45:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2CA2420865
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:45:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D9ADE20867
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:45:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570121115;
-	bh=NGBREgQg0xhG35aIKc6l9+XMVXAo93KnADau3xrhzVk=;
+	s=default; t=1570121116;
+	bh=chtcO14OL/zuTC21EJHhMgUnLxhNG3IVCpawKqkt8G4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=MsHlEFWRBBkyP9R/nHOY9a9YHCrWYxx2anvzI+7O5hgEOBqWxqDjPGdKjCA58jl/8
-	 Hrq9VUUG6dtOBHwo4g7k7mzANjZv/GeVUxTvfPnKIBS/EIfm3gfcU071Uho9/xgv4/
-	 Lvb8gQ2bb5xGVHKXfPButlff7y6/ZHZ4+9rEBLXQ=
+	b=EW24LXJ8rR8Fg7mO/C/ey7omTttoXyfR4jeANEBdm5pgSlM/T58z3Q+SWXhxgOICu
+	 W+Lm3jaVzsfW0qeXn52em4YYYEbcI1gV8R0x0VqOSbsQfGp9RqTiQogQJ2Csimj99y
+	 IHlta9JOIclAaJtlA7bU4kBuP2xYrnibO9XYWnyA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392749AbfJCQpO (ORCPT
+        id S2392762AbfJCQpQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 12:45:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57608 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 12:45:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57670 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2405498AbfJCQpJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:45:09 -0400
+        id S2405110AbfJCQpM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:45:12 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 78EB12070B;
-        Thu,  3 Oct 2019 16:45:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1F0FF20830;
+        Thu,  3 Oct 2019 16:45:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570121109;
-        bh=NGBREgQg0xhG35aIKc6l9+XMVXAo93KnADau3xrhzVk=;
+        s=default; t=1570121111;
+        bh=chtcO14OL/zuTC21EJHhMgUnLxhNG3IVCpawKqkt8G4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=QH5L8QnUkZSag3CPjJ5Aaw/GBigQAr6kttA7M+/eh94+kO/G13Xd9+6glFDFOgyY8
-         YPU1vDplRgrNw0lYEqDUDfpSMzl5Co6H/KS+9UkmQyCzzwPhJ+h5Rk5rOOaW5FxMtG
-         HB+xSgece58tx7EmO9YGZxmOaYoTco3v1pwNi96c=
+        b=jH5spV9FYOs62ats78vnGYgQXQDs08BnfVvJ8HPVH4J4IeAEeTCI3qII2TG1ECSuP
+         82szU7NOe2yuie4/UY9TslVr/50kcNkA2BOP+jA9c6+Ew5qZfjSzmo7jyEPji7Sqal
+         aQXQZ5ZM+oDN/8vf5JGnFF36sC1pIf/C9zqp2nJY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Wenwen Wang <wenwen@cs.uga.edu>,
+        stable@vger.kernel.org,
+        "Maciej S. Szmigiero" <mail@maciej.szmigiero.name>,
         Hans Verkuil <hverkuil-cisco@xs4all.nl>,
         Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.3 158/344] media: cpia2_usb: fix memory leaks
-Date:   Thu,  3 Oct 2019 17:52:03 +0200
-Message-Id: <20191003154555.806787552@linuxfoundation.org>
+Subject: [PATCH 5.3 159/344] media: saa7134: fix terminology around saa7134_i2c_eeprom_md7134_gate()
+Date:   Thu,  3 Oct 2019 17:52:04 +0200
+Message-Id: <20191003154555.902559990@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191003154540.062170222@linuxfoundation.org>
 References: <20191003154540.062170222@linuxfoundation.org>
@@ -61,36 +62,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wenwen Wang <wenwen@cs.uga.edu>
+From: Maciej S. Szmigiero <mail@maciej.szmigiero.name>
 
-[ Upstream commit 1c770f0f52dca1a2323c594f01f5ec6f1dddc97f ]
+[ Upstream commit 9d802222a3405599d6e1984d9324cddf592ea1f4 ]
 
-In submit_urbs(), 'cam->sbuf[i].data' is allocated through kmalloc_array().
-However, it is not deallocated if the following allocation for urbs fails.
-To fix this issue, free 'cam->sbuf[i].data' if usb_alloc_urb() fails.
+saa7134_i2c_eeprom_md7134_gate() function and the associated comment uses
+an inverted i2c gate open / closed terminology.
+Let's fix this.
 
-Signed-off-by: Wenwen Wang <wenwen@cs.uga.edu>
+Signed-off-by: Maciej S. Szmigiero <mail@maciej.szmigiero.name>
 Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+[hverkuil-cisco@xs4all.nl: fix alignment checkpatch warning]
 Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/usb/cpia2/cpia2_usb.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ drivers/media/pci/saa7134/saa7134-i2c.c | 12 ++++++++----
+ 1 file changed, 8 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/media/usb/cpia2/cpia2_usb.c b/drivers/media/usb/cpia2/cpia2_usb.c
-index 17468f7d78ed2..3ab80a7b44985 100644
---- a/drivers/media/usb/cpia2/cpia2_usb.c
-+++ b/drivers/media/usb/cpia2/cpia2_usb.c
-@@ -676,6 +676,10 @@ static int submit_urbs(struct camera_data *cam)
- 		if (!urb) {
- 			for (j = 0; j < i; j++)
- 				usb_free_urb(cam->sbuf[j].urb);
-+			for (j = 0; j < NUM_SBUF; j++) {
-+				kfree(cam->sbuf[j].data);
-+				cam->sbuf[j].data = NULL;
-+			}
- 			return -ENOMEM;
- 		}
+diff --git a/drivers/media/pci/saa7134/saa7134-i2c.c b/drivers/media/pci/saa7134/saa7134-i2c.c
+index 493b1858815fb..04e85765373ec 100644
+--- a/drivers/media/pci/saa7134/saa7134-i2c.c
++++ b/drivers/media/pci/saa7134/saa7134-i2c.c
+@@ -342,7 +342,11 @@ static const struct i2c_client saa7134_client_template = {
+ 
+ /* ----------------------------------------------------------- */
+ 
+-/* On Medion 7134 reading EEPROM needs DVB-T demod i2c gate open */
++/*
++ * On Medion 7134 reading the SAA7134 chip config EEPROM needs DVB-T
++ * demod i2c gate closed due to an address clash between this EEPROM
++ * and the demod one.
++ */
+ static void saa7134_i2c_eeprom_md7134_gate(struct saa7134_dev *dev)
+ {
+ 	u8 subaddr = 0x7, dmdregval;
+@@ -359,14 +363,14 @@ static void saa7134_i2c_eeprom_md7134_gate(struct saa7134_dev *dev)
+ 
+ 	ret = i2c_transfer(&dev->i2c_adap, i2cgatemsg_r, 2);
+ 	if ((ret == 2) && (dmdregval & 0x2)) {
+-		pr_debug("%s: DVB-T demod i2c gate was left closed\n",
++		pr_debug("%s: DVB-T demod i2c gate was left open\n",
+ 			 dev->name);
+ 
+ 		data[0] = subaddr;
+ 		data[1] = (dmdregval & ~0x2);
+ 		if (i2c_transfer(&dev->i2c_adap, i2cgatemsg_w, 1) != 1)
+-			pr_err("%s: EEPROM i2c gate open failure\n",
+-			  dev->name);
++			pr_err("%s: EEPROM i2c gate close failure\n",
++			       dev->name);
+ 	}
+ }
  
 -- 
 2.20.1
