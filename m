@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 544A6C32792
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:20:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 83F34C32792
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:20:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 29D8A21848
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:20:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4AF5820865
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:20:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570119627;
-	bh=fLXXfy+8DeSWD+W67ibSeRkxDybWu5Ovr0GanZ2/0q4=;
+	s=default; t=1570119631;
+	bh=0GFOoDInj2NDrOs7OhI/W94/e6GgCtYWf1x+GXG+MOA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=PQXAvwXq0sNbKqC8Y1cHKbA3ift8yDBEC4MCvndWMOSscCLAL5UFGu46BgEEHCk8t
-	 kygLH3nHXdnRrhfcDwJ/StIiS9D2L21s/UcY0ZVTVdfHZDNj8glpmQxzANxN/XUSg9
-	 HJjGL4pfpSVGd5NQE1CmNi4Gx10xknqXwM6hpNEg=
+	b=HyeFmndutSQpYLuEkKmXlTNVP9SM9KgSqbZgqsVIqgNgxl5/jyjBn4JGnTt+K51Fi
+	 2RLzLBCqB8fD+2N2zCB9ap5JDyV8XItDj6m/wSdS19Z5GVENETrOmqBjJnW+juWzLG
+	 wihaqhQBjLwriwIv39CINWNIVo3BhBfCLGNOwTe0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389892AbfJCQUW (ORCPT
+        id S2389915AbfJCQUa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 12:20:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47868 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 12:20:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48048 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388650AbfJCQUT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:20:19 -0400
+        id S2389026AbfJCQU0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:20:26 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 034A9215EA;
-        Thu,  3 Oct 2019 16:20:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 92A3D20865;
+        Thu,  3 Oct 2019 16:20:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570119618;
-        bh=fLXXfy+8DeSWD+W67ibSeRkxDybWu5Ovr0GanZ2/0q4=;
+        s=default; t=1570119624;
+        bh=0GFOoDInj2NDrOs7OhI/W94/e6GgCtYWf1x+GXG+MOA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=GdSdZcWr61nFHw6zbUi2lQIr/xgLALYVaisaww+k7aXo+MJsFydDBWYdY23+kCxrk
-         BufK8hS2LyN1pT5u7mF/U3RP1hA9ZmLp/osr0gZunmHj4v2AQfvzIZIn9Sh9gOGrk5
-         Jk8Q3BMX57rwbHQKlL66lH40iAuBJygIzTC0NFS8=
+        b=zYinNjf8H9+yLJvqGkwzZ89e8phSwqEYzQc2iesy4daTxQDtKIjPOIopoJsk6S/ss
+         4fH3iYxJc9L1cvfPlO7YPi9xL1dWiXeNYVgF/D8TXoIWgyYNjt23nsIRCJmD+nquAZ
+         nJ0gUyKp15z1STP19olMn0ZsV6XPpxMI0B4qYfeI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Peter Ujfalusi <peter.ujfalusi@ti.com>,
-        Arthur She <arthur.she@linaro.org>,
-        Mark Brown <broonie@kernel.org>,
+        stable@vger.kernel.org, Matthias Kaehlcke <mka@chromium.org>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Douglas Anderson <dianders@chromium.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 131/211] ASoC: dmaengine: Make the pcm->name equal to pcm->id if the name is not set
-Date:   Thu,  3 Oct 2019 17:53:17 +0200
-Message-Id: <20191003154516.761460881@linuxfoundation.org>
+Subject: [PATCH 4.19 133/211] mmc: core: Clarify sdio_irq_pending flag for MMC_CAP2_SDIO_IRQ_NOTHREAD
+Date:   Thu,  3 Oct 2019 17:53:19 +0200
+Message-Id: <20191003154517.209084508@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191003154447.010950442@linuxfoundation.org>
 References: <20191003154447.010950442@linuxfoundation.org>
@@ -61,44 +61,100 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Peter Ujfalusi <peter.ujfalusi@ti.com>
+From: Ulf Hansson <ulf.hansson@linaro.org>
 
-[ Upstream commit 2ec42f3147e1610716f184b02e65d7f493eed925 ]
+[ Upstream commit 36d57efb4af534dd6b442ea0b9a04aa6dfa37abe ]
 
-Some tools use the snd_pcm_info_get_name() to try to identify PCMs or for
-other purposes.
+The sdio_irq_pending flag is used to let host drivers indicate that it has
+signaled an IRQ. If that is the case and we only have a single SDIO func
+that have claimed an SDIO IRQ, our assumption is that we can avoid reading
+the SDIO_CCCR_INTx register and just call the SDIO func irq handler
+immediately. This makes sense, but the flag is set/cleared in a somewhat
+messy order, let's fix that up according to below.
 
-Currently it is left empty with the dmaengine-pcm, in this case copy the
-pcm->id string as pcm->name.
+First, the flag is currently set in sdio_run_irqs(), which is executed as a
+work that was scheduled from sdio_signal_irq(). To make it more implicit
+that the host have signaled an IRQ, let's instead immediately set the flag
+in sdio_signal_irq(). This also makes the behavior consistent with host
+drivers that uses the legacy, mmc_signal_sdio_irq() API. This have no
+functional impact, because we don't expect host drivers to call
+sdio_signal_irq() until after the work (sdio_run_irqs()) have been executed
+anyways.
 
-For example IGT is using this to find the HDMI PCM for testing audio on it.
+Second, currently we never clears the flag when using the sdio_run_irqs()
+work, but only when using the sdio_irq_thread(). Let make the behavior
+consistent, by moving the flag to be cleared inside the common
+process_sdio_pending_irqs() function. Additionally, tweak the behavior of
+the flag slightly, by avoiding to clear it unless we processed the SDIO
+IRQ. The purpose with this at this point, is to keep the information about
+whether there have been an SDIO IRQ signaled by the host, so at system
+resume we can decide to process it without reading the SDIO_CCCR_INTx
+register.
 
-Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
-Reported-by: Arthur She <arthur.she@linaro.org>
-Link: https://lore.kernel.org/r/20190906055524.7393-1-peter.ujfalusi@ti.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Tested-by: Matthias Kaehlcke <mka@chromium.org>
+Reviewed-by: Matthias Kaehlcke <mka@chromium.org>
+Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
+Reviewed-by: Douglas Anderson <dianders@chromium.org>
+Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/soc-generic-dmaengine-pcm.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+ drivers/mmc/core/sdio_irq.c | 9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
 
-diff --git a/sound/soc/soc-generic-dmaengine-pcm.c b/sound/soc/soc-generic-dmaengine-pcm.c
-index 30e791a533528..232df04ca5866 100644
---- a/sound/soc/soc-generic-dmaengine-pcm.c
-+++ b/sound/soc/soc-generic-dmaengine-pcm.c
-@@ -313,6 +313,12 @@ static int dmaengine_pcm_new(struct snd_soc_pcm_runtime *rtd)
+diff --git a/drivers/mmc/core/sdio_irq.c b/drivers/mmc/core/sdio_irq.c
+index b299a24d33f96..d206f2de80d23 100644
+--- a/drivers/mmc/core/sdio_irq.c
++++ b/drivers/mmc/core/sdio_irq.c
+@@ -35,6 +35,7 @@ static int process_sdio_pending_irqs(struct mmc_host *host)
+ {
+ 	struct mmc_card *card = host->card;
+ 	int i, ret, count;
++	bool sdio_irq_pending = host->sdio_irq_pending;
+ 	unsigned char pending;
+ 	struct sdio_func *func;
  
- 		if (!dmaengine_pcm_can_report_residue(dev, pcm->chan[i]))
- 			pcm->flags |= SND_DMAENGINE_PCM_FLAG_NO_RESIDUE;
+@@ -42,13 +43,16 @@ static int process_sdio_pending_irqs(struct mmc_host *host)
+ 	if (mmc_card_suspended(card))
+ 		return 0;
+ 
++	/* Clear the flag to indicate that we have processed the IRQ. */
++	host->sdio_irq_pending = false;
 +
-+		if (rtd->pcm->streams[i].pcm->name[0] == '\0') {
-+			strncpy(rtd->pcm->streams[i].pcm->name,
-+				rtd->pcm->streams[i].pcm->id,
-+				sizeof(rtd->pcm->streams[i].pcm->name));
-+		}
+ 	/*
+ 	 * Optimization, if there is only 1 function interrupt registered
+ 	 * and we know an IRQ was signaled then call irq handler directly.
+ 	 * Otherwise do the full probe.
+ 	 */
+ 	func = card->sdio_single_irq;
+-	if (func && host->sdio_irq_pending) {
++	if (func && sdio_irq_pending) {
+ 		func->irq_handler(func);
+ 		return 1;
  	}
+@@ -100,7 +104,6 @@ void sdio_run_irqs(struct mmc_host *host)
+ {
+ 	mmc_claim_host(host);
+ 	if (host->sdio_irqs) {
+-		host->sdio_irq_pending = true;
+ 		process_sdio_pending_irqs(host);
+ 		if (host->ops->ack_sdio_irq)
+ 			host->ops->ack_sdio_irq(host);
+@@ -119,6 +122,7 @@ void sdio_irq_work(struct work_struct *work)
  
- 	return 0;
+ void sdio_signal_irq(struct mmc_host *host)
+ {
++	host->sdio_irq_pending = true;
+ 	queue_delayed_work(system_wq, &host->sdio_irq_work, 0);
+ }
+ EXPORT_SYMBOL_GPL(sdio_signal_irq);
+@@ -164,7 +168,6 @@ static int sdio_irq_thread(void *_host)
+ 		if (ret)
+ 			break;
+ 		ret = process_sdio_pending_irqs(host);
+-		host->sdio_irq_pending = false;
+ 		mmc_release_host(host);
+ 
+ 		/*
 -- 
 2.20.1
 
