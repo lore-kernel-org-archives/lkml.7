@@ -7,52 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C281BC10F14
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:45:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FE5DC4CED1
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:45:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 96A8021783
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:45:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E80D5215EA
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:45:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570121125;
-	bh=LNmQa8JfNTTyUIRhReMvSm1L2bW74E9pXOUWqgGxBu4=;
+	s=default; t=1570121128;
+	bh=m1xU3MN9oZtjKPTUZFaPksrFuGLR44/SZKFcE/8zU+8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wyTO0Tck6+d3DrKIgPB8lW8KIbCG3rzXQeGv3focTlfcW86/BghorkILHiKB0Knmp
-	 EhUTI79ho8IYvCyerHKMd/D5uiLPJhyYLote9jGU3aRjWEEj2FZEZRxH8TDRsYe3WA
-	 OIgtY4u2/+Q7aIOdb83tBKFbkCVF2fJWNWeMQ31o=
+	b=GFAmXI/1vuyTwZ57JHvxvJi/i2QS2NsUyL9TcRH9Uv0LlvWvlmAb0UPhHfuSQgylA
+	 aWMjdruf/s9akH/3X8gg+1os2BEIS3/hDSVHkRe1hDOfTOGwnt671XdeNnAEHOE0/M
+	 2bFnBv3S2QoXIwUugVUDD1DKDmmtReqdbYdtfQYk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392799AbfJCQpY (ORCPT
+        id S2392791AbfJCQpX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 12:45:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57868 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 12:45:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57816 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392779AbfJCQpW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:45:22 -0400
+        id S2392776AbfJCQpU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:45:20 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BC8762070B;
-        Thu,  3 Oct 2019 16:45:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 13CAE2070B;
+        Thu,  3 Oct 2019 16:45:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570121122;
-        bh=LNmQa8JfNTTyUIRhReMvSm1L2bW74E9pXOUWqgGxBu4=;
+        s=default; t=1570121119;
+        bh=m1xU3MN9oZtjKPTUZFaPksrFuGLR44/SZKFcE/8zU+8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=IG7XmWtYGbAYBLh6/HsqsZBfyEmhnzhE0XoiESNyhyh89gZXJpe1AGHXKkmcyCR1Q
-         ilYpAR8/+lwbKOGbYjH83+gf9RSUC+60yyGp45ZdttoqdjHZtyprqBnHlRvH5feVgx
-         C1+Rahqm9eV/z1L5SIoC70KIICmUzOvXNm48eEdo=
+        b=UA6Z+ljscwMSYMz2zcM+Td53bmUEGq/qN1viLpnFA9YDacD7VOpIBDmcGWtGAK+5v
+         lu4zd70zH+w4/TiAKMsNgzpRNmpnAotpcoYn7M7oQ05D8VlZR9xwL3QxcjLPV6djiP
+         DDPlsXyauPJVQbuAwLfd8ZSAbNqfMmiuAaN7H5Z8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Andi Kleen <ak@linux.intel.com>, Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
+        stable@vger.kernel.org, Andi Kleen <ak@linux.intel.com>,
         Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.3 162/344] perf script: Fix memory leaks in list_scripts()
-Date:   Thu,  3 Oct 2019 17:52:07 +0200
-Message-Id: <20191003154556.200523688@linuxfoundation.org>
+        Jiri Olsa <jolsa@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.3 161/344] perf report: Fix --ns time sort key output
+Date:   Thu,  3 Oct 2019 17:52:06 +0200
+Message-Id: <20191003154556.092459836@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191003154540.062170222@linuxfoundation.org>
 References: <20191003154540.062170222@linuxfoundation.org>
@@ -65,46 +60,62 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Gustavo A. R. Silva <gustavo@embeddedor.com>
+From: Andi Kleen <ak@linux.intel.com>
 
-[ Upstream commit 3b4acbb92dbda4829e021e5c6d5410658849fa1c ]
+[ Upstream commit 3dab6ac080dcd7f71cb9ceb84ad7dafecd6f7c07 ]
 
-In case memory resources for *buf* and *paths* were allocated, jump to
-*out* and release them before return.
+If the user specified --ns, the column to print the sort time stamp
+wasn't wide enough to actually print the full nanoseconds.
 
-Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Andi Kleen <ak@linux.intel.com>
-Cc: Gustavo A. R. Silva <gustavo@embeddedor.com>
-Cc: Jiri Olsa <jolsa@redhat.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Addresses-Coverity-ID: 1444328 ("Resource leak")
-Fixes: 6f3da20e151f ("perf report: Support builtin perf script in scripts menu")
-Link: http://lkml.kernel.org/r/20190408162748.GA21008@embeddedor
+Widen the time key column width when --ns is specified.
+
+Before:
+
+  % perf record -a sleep 1
+  % perf report --sort time,overhead,symbol --stdio --ns
+  ...
+       2.39%  187851.10000  [k] smp_call_function_single   -      -
+       1.53%  187851.10000  [k] intel_idle                 -      -
+       0.59%  187851.10000  [.] __wcscmp_ifunc             -      -
+       0.33%  187851.10000  [.] 0000000000000000           -      -
+       0.28%  187851.10000  [k] cpuidle_enter_state        -      -
+
+After:
+
+  % perf report --sort time,overhead,symbol --stdio --ns
+  ...
+       2.39%  187851.100000000  [k] smp_call_function_single   -      -
+       1.53%  187851.100000000  [k] intel_idle                 -      -
+       0.59%  187851.100000000  [.] __wcscmp_ifunc             -      -
+       0.33%  187851.100000000  [.] 0000000000000000           -      -
+       0.28%  187851.100000000  [k] cpuidle_enter_state        -      -
+
+Signed-off-by: Andi Kleen <ak@linux.intel.com>
+Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: Jiri Olsa <jolsa@kernel.org>
+Link: http://lkml.kernel.org/r/20190823210338.12360-2-andi@firstfloor.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/perf/ui/browsers/scripts.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ tools/perf/util/hist.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/tools/perf/ui/browsers/scripts.c b/tools/perf/ui/browsers/scripts.c
-index 4d565cc14076c..0355d4aaf2eed 100644
---- a/tools/perf/ui/browsers/scripts.c
-+++ b/tools/perf/ui/browsers/scripts.c
-@@ -131,8 +131,10 @@ static int list_scripts(char *script_name, bool *custom,
- 		int key = ui_browser__input_window("perf script command",
- 				"Enter perf script command line (without perf script prefix)",
- 				script_args, "", 0);
--		if (key != K_ENTER)
--			return -1;
-+		if (key != K_ENTER) {
-+			ret = -1;
-+			goto out;
-+		}
- 		sprintf(script_name, "%s script %s", perf, script_args);
- 	} else if (choice < num + max_std) {
- 		strcpy(script_name, paths[choice]);
+diff --git a/tools/perf/util/hist.c b/tools/perf/util/hist.c
+index f24fd1954f6c9..6bd270a1e93e0 100644
+--- a/tools/perf/util/hist.c
++++ b/tools/perf/util/hist.c
+@@ -193,7 +193,10 @@ void hists__calc_col_len(struct hists *hists, struct hist_entry *h)
+ 	hists__new_col_len(hists, HISTC_MEM_LVL, 21 + 3);
+ 	hists__new_col_len(hists, HISTC_LOCAL_WEIGHT, 12);
+ 	hists__new_col_len(hists, HISTC_GLOBAL_WEIGHT, 12);
+-	hists__new_col_len(hists, HISTC_TIME, 12);
++	if (symbol_conf.nanosecs)
++		hists__new_col_len(hists, HISTC_TIME, 16);
++	else
++		hists__new_col_len(hists, HISTC_TIME, 12);
+ 
+ 	if (h->srcline) {
+ 		len = MAX(strlen(h->srcline), strlen(sort_srcline.se_header));
 -- 
 2.20.1
 
