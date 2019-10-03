@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C375C4360C
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 01:33:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 796F9C4360C
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 01:33:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 43F0C222C2
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 01:33:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4779F222C2
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 01:33:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570066390;
-	bh=0O6/KxBqWs9ZFW/AB5xNVcImW8d46jKwPeTl36k/sPQ=;
+	s=default; t=1570066392;
+	bh=Rr8e9ht2VrnIxX1RK/ddKcZ5ghHw5GNdkouYG8OsgKc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=enSPA9JZCpF/U1IsiRhG4wqLKvjY83EW2Wf9NjtVreRqsB/3wB2UKVic6f1oKZf5F
-	 5uviUskQBmiC4iqLzVUM+0GjVvxTU7NlrnLLN7M+7lBr0XZV86aehcQ6zqH/GxGwug
-	 UN7hfXJ0UkZitOmovPXiHw/6xRwxlSXsW/TGzXTw=
+	b=V3orTnGbIAo+Z81dYVUGfBpZg8UvctIg0GYMl0oQJ4iWwAi+gov7fuRSgAXhwm14H
+	 Qm+1gE4pwxy57cSFF1E7pAbDJ4TZkElKyvz8iMTTwQPkFuq/smra42168qElSKuFuo
+	 dC74e+4CDPFFRfXURFByPbun6THBs+wXFfxs/ICI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728151AbfJCBdI (ORCPT
+        id S1728230AbfJCBdL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Oct 2019 21:33:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42386 "EHLO mail.kernel.org"
+        Wed, 2 Oct 2019 21:33:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42442 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726354AbfJCBdI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Oct 2019 21:33:08 -0400
+        id S1725951AbfJCBdJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 2 Oct 2019 21:33:09 -0400
 Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8572D222C3;
-        Thu,  3 Oct 2019 01:33:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 32843222C7;
+        Thu,  3 Oct 2019 01:33:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570066387;
-        bh=0O6/KxBqWs9ZFW/AB5xNVcImW8d46jKwPeTl36k/sPQ=;
+        s=default; t=1570066388;
+        bh=Rr8e9ht2VrnIxX1RK/ddKcZ5ghHw5GNdkouYG8OsgKc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gNKRvF/EroRe3cuQmy2yWLeVaMSY+josLwMxAV183QsuV/aNuHcqj3nx1oa75RGds
-         wJDLRW226CIZqDE99oDuqQeltguJvL0bzbQfWl7DI0m0BqcMT2NbcEV1+K+WfBVnvO
-         xyxX/cYyPgnY71aPLCMbNRy4esPT8Ipwio1Y1cSs=
+        b=KdHM0x7WI8mx+uaXYKpspyU6KGbA1OQmO5VIqsXEFdCBg+Qr6ngZRiEoV55nI3sEo
+         qs6zQDBkzIkd9Xz5+zzViCRy4eE953HrVscrzBSMuXq/hBiAK+k/bUS89eSn+KXAz8
+         GIflB22LrpXeLCEiNbcYg4m0gEO4Z3oEicCHM60g=
 From:   paulmck@kernel.org
 To:     rcu@vger.kernel.org
 Cc:     linux-kernel@vger.kernel.org, mingo@kernel.org,
@@ -47,11 +47,10 @@ Cc:     linux-kernel@vger.kernel.org, mingo@kernel.org,
         josh@joshtriplett.org, tglx@linutronix.de, peterz@infradead.org,
         rostedt@goodmis.org, dhowells@redhat.com, edumazet@google.com,
         fweisbec@gmail.com, oleg@redhat.com, joel@joelfernandes.org,
-        kbuild test robot <lkp@intel.com>,
         "Paul E . McKenney" <paulmck@linux.ibm.com>
-Subject: [PATCH tip/core/rcu 2/8] rcu: Several rcu_segcblist functions can be static
-Date:   Wed,  2 Oct 2019 18:32:59 -0700
-Message-Id: <20191003013305.12854-2-paulmck@kernel.org>
+Subject: [PATCH tip/core/rcu 4/8] rcu: Ensure that ->rcu_urgent_qs is set before resched IPI
+Date:   Wed,  2 Oct 2019 18:33:01 -0700
+Message-Id: <20191003013305.12854-4-paulmck@kernel.org>
 X-Mailer: git-send-email 2.9.5
 In-Reply-To: <20191003013243.GA12705@paulmck-ThinkPad-P72>
 References: <20191003013243.GA12705@paulmck-ThinkPad-P72>
@@ -60,50 +59,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: kbuild test robot <lkp@intel.com>
+From: "Joel Fernandes (Google)" <joel@joelfernandes.org>
 
-None of rcu_segcblist_set_len(), rcu_segcblist_add_len(), or
-rcu_segcblist_xchg_len() are used outside of kernel/rcu/rcu_segcblist.c.
-This commit therefore makes them static.
+The RCU-specific resched_cpu() function sends a resched IPI to the
+specified CPU, which can be used to force the tick on for a given
+nohz_full CPU.  This is needed when this nohz_full CPU is looping in the
+kernel while blocking the current grace period.  However, for the tick
+to actually be forced on in all cases, that CPU's rcu_data structure's
+->rcu_urgent_qs flag must be set beforehand.  This commit therefore
+causes rcu_implicit_dynticks_qs() to set this flag prior to invoking
+resched_cpu() on a holdout nohz_full CPU.
 
-Fixes: ab2ef5c7b4d1 ("rcu/nocb: Atomic ->len field in rcu_segcblist structure")
-Signed-off-by: kbuild test robot <lkp@intel.com>
+Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
 Signed-off-by: Paul E. McKenney <paulmck@linux.ibm.com>
 ---
- kernel/rcu/rcu_segcblist.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ kernel/rcu/tree.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/kernel/rcu/rcu_segcblist.c b/kernel/rcu/rcu_segcblist.c
-index 495c58c..cbc87b8 100644
---- a/kernel/rcu/rcu_segcblist.c
-+++ b/kernel/rcu/rcu_segcblist.c
-@@ -88,7 +88,7 @@ struct rcu_head *rcu_cblist_dequeue(struct rcu_cblist *rclp)
- }
- 
- /* Set the length of an rcu_segcblist structure. */
--void rcu_segcblist_set_len(struct rcu_segcblist *rsclp, long v)
-+static void rcu_segcblist_set_len(struct rcu_segcblist *rsclp, long v)
- {
- #ifdef CONFIG_RCU_NOCB_CPU
- 	atomic_long_set(&rsclp->len, v);
-@@ -104,7 +104,7 @@ void rcu_segcblist_set_len(struct rcu_segcblist *rsclp, long v)
-  * This increase is fully ordered with respect to the callers accesses
-  * both before and after.
-  */
--void rcu_segcblist_add_len(struct rcu_segcblist *rsclp, long v)
-+static void rcu_segcblist_add_len(struct rcu_segcblist *rsclp, long v)
- {
- #ifdef CONFIG_RCU_NOCB_CPU
- 	smp_mb__before_atomic(); /* Up to the caller! */
-@@ -134,7 +134,7 @@ void rcu_segcblist_inc_len(struct rcu_segcblist *rsclp)
-  * with the actual number of callbacks on the structure.  This exchange is
-  * fully ordered with respect to the callers accesses both before and after.
-  */
--long rcu_segcblist_xchg_len(struct rcu_segcblist *rsclp, long v)
-+static long rcu_segcblist_xchg_len(struct rcu_segcblist *rsclp, long v)
- {
- #ifdef CONFIG_RCU_NOCB_CPU
- 	return atomic_long_xchg(&rsclp->len, v);
+diff --git a/kernel/rcu/tree.c b/kernel/rcu/tree.c
+index 8110514..0d83b19 100644
+--- a/kernel/rcu/tree.c
++++ b/kernel/rcu/tree.c
+@@ -1073,6 +1073,7 @@ static int rcu_implicit_dynticks_qs(struct rcu_data *rdp)
+ 	if (tick_nohz_full_cpu(rdp->cpu) &&
+ 		   time_after(jiffies,
+ 			      READ_ONCE(rdp->last_fqs_resched) + jtsq * 3)) {
++		WRITE_ONCE(*ruqp, true);
+ 		resched_cpu(rdp->cpu);
+ 		WRITE_ONCE(rdp->last_fqs_resched, jiffies);
+ 	}
 -- 
 2.9.5
 
