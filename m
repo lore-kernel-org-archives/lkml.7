@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2DB0C10F14
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:50:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 02149C32792
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:51:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7FD0620862
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:50:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C9059215EA
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:51:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570121458;
-	bh=ZsSQ/Q9nhpssLAIx6yD5sSkzGLXOhaVzTnt0SeF9+v0=;
+	s=default; t=1570121461;
+	bh=60vSsisF/vTpEUWXN2OtyUqye/8pSQ8hFzP0MuHfmlA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=mDVfM41WOp+JpELo2cD8b84GGzfNRzYmvS+7FipYAV6CoJdj3etnCSPw5KzRkMy5y
-	 NyTzwqKx6H9p+2S3RWjZtSwXlPCd3f3jktYnWIpq4zBFVNvbh0oQHnRmNGUixdVZUZ
-	 jXbKyu3qibglx3qZRJmHdgO+CHO3CQgU9ftX12rU=
+	b=m2/amPTD7lSPWuvK0wr1tIbBMJcwFB5KhnQhl0dNUZhALeqW5Yekcg4hzzYK+9WxI
+	 dI+WkhMh7QUjlR3ChZGwOI/mkYfIFdjeovJ0eOg8MhXdelNttqMtFwT4rdT1y94vcq
+	 /WoZeC2NhIxTOgP7T9kPL3Me+vGzbInfaG7qTqN4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393111AbfJCQu5 (ORCPT
+        id S2405977AbfJCQvA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 12:50:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38008 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 12:51:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38166 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2405956AbfJCQun (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:50:43 -0400
+        id S2404623AbfJCQut (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:50:49 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3483720867;
-        Thu,  3 Oct 2019 16:50:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B768721783;
+        Thu,  3 Oct 2019 16:50:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570121442;
-        bh=ZsSQ/Q9nhpssLAIx6yD5sSkzGLXOhaVzTnt0SeF9+v0=;
+        s=default; t=1570121448;
+        bh=60vSsisF/vTpEUWXN2OtyUqye/8pSQ8hFzP0MuHfmlA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=h0j3XCAse7WTAOkqAJB8E5BX/2C0khQ1Kn15bYMo9wokc50zX/5mij1XfLuQWiNpR
-         JCTPW5fReqiu9MJlYtO6LDMGPHXGrH9HF4voIie/CS2C1yWvsIsVrxL53XGEMYQIE0
-         Z1tLKcoUdFLPP8DWGaZN7c7Jg+G9eK4z64uDSi+E=
+        b=r7+9x9lX7Lq505w6XsY0Wx0O15kEmsksr3+X46veaAt4O+PCGGa2FZh27jMSnm223
+         DVZ/VXFtu887Xgh4+LM/M/ma28ioktyvtqm/UkYZgTT0lmOhnoYfUB64Ss7CpGaQe5
+         S78u+LM2G5Uy49XkGnIm3OhSm9xD1NGQZWGz3KkU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Lihua Yao <ylhuajnu@outlook.com>,
-        Krzysztof Kozlowski <krzk@kernel.org>
-Subject: [PATCH 5.3 280/344] ARM: samsung: Fix system restart on S3C6410
-Date:   Thu,  3 Oct 2019 17:54:05 +0200
-Message-Id: <20191003154607.625396811@linuxfoundation.org>
+        stable@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>,
+        Will Deacon <will@kernel.org>
+Subject: [PATCH 5.3 282/344] arm64: tlb: Ensure we execute an ISB following walk cache invalidation
+Date:   Thu,  3 Oct 2019 17:54:07 +0200
+Message-Id: <20191003154607.775075179@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191003154540.062170222@linuxfoundation.org>
 References: <20191003154540.062170222@linuxfoundation.org>
@@ -59,31 +59,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Lihua Yao <ylhuajnu@outlook.com>
+From: Will Deacon <will@kernel.org>
 
-commit 16986074035cc0205472882a00d404ed9d213313 upstream.
+commit 51696d346c49c6cf4f29e9b20d6e15832a2e3408 upstream.
 
-S3C6410 system restart is triggered by watchdog reset.
+05f2d2f83b5a ("arm64: tlbflush: Introduce __flush_tlb_kernel_pgtable")
+added a new TLB invalidation helper which is used when freeing
+intermediate levels of page table used for kernel mappings, but is
+missing the required ISB instruction after completion of the TLBI
+instruction.
+
+Add the missing barrier.
 
 Cc: <stable@vger.kernel.org>
-Fixes: 9f55342cc2de ("ARM: dts: s3c64xx: Fix infinite interrupt in soft mode")
-Signed-off-by: Lihua Yao <ylhuajnu@outlook.com>
-Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+Fixes: 05f2d2f83b5a ("arm64: tlbflush: Introduce __flush_tlb_kernel_pgtable")
+Reviewed-by: Mark Rutland <mark.rutland@arm.com>
+Signed-off-by: Will Deacon <will@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/arm/plat-samsung/watchdog-reset.c |    1 +
+ arch/arm64/include/asm/tlbflush.h |    1 +
  1 file changed, 1 insertion(+)
 
---- a/arch/arm/plat-samsung/watchdog-reset.c
-+++ b/arch/arm/plat-samsung/watchdog-reset.c
-@@ -62,6 +62,7 @@ void samsung_wdt_reset(void)
- #ifdef CONFIG_OF
- static const struct of_device_id s3c2410_wdt_match[] = {
- 	{ .compatible = "samsung,s3c2410-wdt" },
-+	{ .compatible = "samsung,s3c6410-wdt" },
- 	{},
- };
+--- a/arch/arm64/include/asm/tlbflush.h
++++ b/arch/arm64/include/asm/tlbflush.h
+@@ -251,6 +251,7 @@ static inline void __flush_tlb_kernel_pg
+ 	dsb(ishst);
+ 	__tlbi(vaae1is, addr);
+ 	dsb(ish);
++	isb();
+ }
+ #endif
  
 
 
