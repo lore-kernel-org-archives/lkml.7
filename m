@@ -4,54 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D354CC32792
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:19:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CB441C32792
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:20:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A9D4220830
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:19:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9E32C20830
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:20:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570123198;
-	bh=C6bM2lkrmxaRi+8ngCo47RBCDNww5tM1dx0eSaBFFeg=;
+	s=default; t=1570123202;
+	bh=lAXoCvK9UQCg0kKCfkhoaIjzPBFySSpdewTqTsr5tNk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=rIYQ1qEDAwWxpiFzAujP6mr9HUsrbnJ7MB+eTSaPXGpoJ6AK5oA+7E3T0WVNa1MJm
-	 aYQscBpaekzQsEhOpRQ8N1PiZcP+lKA0Lf8Cdwu3mnqjzF/PkR5Iuqz8pLeNL2tAIg
-	 HMslzt4c4BLmglJJwzFbsAeucjso6U4xrFZBt+BQ=
+	b=tSQxOomeHd99wZQv6Pz0o+jFKFgYuLOvNi+78eS8TxlNV8fr9s+YeomsvkJMPP6vw
+	 GIRefPFBXu1HcteVriI7ML179rx/SvP6viUlri2n2pNBvfMGHbDxdWUcgUHwoI/z1g
+	 srb7QEP9LE9tok0oDVzC4BMVtz/Vj6j0rXq+1Yek=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388235AbfJCQTI (ORCPT
+        id S2390785AbfJCRUB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 12:19:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45954 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 13:20:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46020 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388158AbfJCQTF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:19:05 -0400
+        id S2388239AbfJCQTH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:19:07 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D882E215EA;
-        Thu,  3 Oct 2019 16:19:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 838EE21A4C;
+        Thu,  3 Oct 2019 16:19:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570119544;
-        bh=C6bM2lkrmxaRi+8ngCo47RBCDNww5tM1dx0eSaBFFeg=;
+        s=default; t=1570119547;
+        bh=lAXoCvK9UQCg0kKCfkhoaIjzPBFySSpdewTqTsr5tNk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=YhEcVcmVOcI/tbmI7X1Tk9G0lStUysjAhdqddK4qnQgMlO9pdalaQW3SldidJcMUZ
-         ljLdvoQQQn694XCzUwrfvJNCSyUPdcHAE7KZuK0grfPqOt9kPqjommFjIUOK5/aLEO
-         /+H6nUgqpmrMs0bB46f/TRqwyEuibozGA/7zTRnE=
+        b=xVsQ5p3un3YSbiPrRw4it2OfkXzmOt5qrMslFD/9w2bpade0vVJpZ89B+pT147YHP
+         HE1kegcwIFZeOPmcY6C4JEN1Nm4Oms4KsoUlOPQzysOVDY4VrSIryQhmojgRtk4E5x
+         j3NNlnrp9blsj8FuY23jikErYWeY9Ag2B/plH1fA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Benjamin Peterson <benjamin@python.org>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
+        stable@vger.kernel.org,
+        Sylwester Nawrocki <s.nawrocki@samsung.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 103/211] perf trace beauty ioctl: Fix off-by-one error in cmd->string table
-Date:   Thu,  3 Oct 2019 17:52:49 +0200
-Message-Id: <20191003154510.188106056@linuxfoundation.org>
+Subject: [PATCH 4.19 104/211] media: ov9650: add a sanity check
+Date:   Thu,  3 Oct 2019 17:52:50 +0200
+Message-Id: <20191003154510.531808346@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191003154447.010950442@linuxfoundation.org>
 References: <20191003154447.010950442@linuxfoundation.org>
@@ -64,82 +61,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Benjamin Peterson <benjamin@python.org>
+From: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 
-[ Upstream commit b92675f4a9c02dd78052645597dac9e270679ddf ]
+[ Upstream commit 093347abc7a4e0490e3c962ecbde2dc272a8f708 ]
 
-While tracing a program that calls isatty(3), I noticed that strace
-reported TCGETS for the request argument of the underlying ioctl(2)
-syscall while perf trace reported TCSETS. strace is corrrect. The bug in
-perf was due to the tty ioctl beauty table starting at 0x5400 rather
-than 0x5401.
+As pointed by cppcheck:
 
-Committer testing:
+	[drivers/media/i2c/ov9650.c:706]: (error) Shifting by a negative value is undefined behaviour
+	[drivers/media/i2c/ov9650.c:707]: (error) Shifting by a negative value is undefined behaviour
+	[drivers/media/i2c/ov9650.c:721]: (error) Shifting by a negative value is undefined behaviour
 
-  Using augmented_raw_syscalls.o and settings to make 'perf trace'
-  use strace formatting, i.e. with this in ~/.perfconfig
+Prevent mangling with gains with invalid values.
 
-  # cat ~/.perfconfig
-  [trace]
-	add_events = /home/acme/git/linux/tools/perf/examples/bpf/augmented_raw_syscalls.c
-	show_zeros = yes
-	show_duration = no
-	no_inherit = yes
-	show_timestamp = no
-	show_arg_names = no
-	args_alignment = 40
-	show_prefix = yes
+As pointed by Sylvester, this should never happen in practice,
+as min value of V4L2_CID_GAIN control is 16 (gain is always >= 16
+and m is always >= 0), but it is too hard for a static analyzer
+to get this, as the logic with validates control min/max is
+elsewhere inside V4L2 core.
 
-  # strace -e ioctl stty > /dev/null
-  ioctl(0, TCGETS, {B38400 opost isig icanon echo ...}) = 0
-  ioctl(1, TIOCGWINSZ, 0x7fff8a9b0860)    = -1 ENOTTY (Inappropriate ioctl for device)
-  ioctl(1, TCGETS, 0x7fff8a9b0540)        = -1 ENOTTY (Inappropriate ioctl for device)
-  +++ exited with 0 +++
-  #
-
-Before:
-
-  # perf trace -e ioctl stty > /dev/null
-  ioctl(0, TCSETS, 0x7fff2cf79f20)        = 0
-  ioctl(1, TIOCSWINSZ, 0x7fff2cf79f40)    = -1 ENOTTY (Inappropriate ioctl for device)
-  ioctl(1, TCSETS, 0x7fff2cf79c20)        = -1 ENOTTY (Inappropriate ioctl for device)
-  #
-
-After:
-
-  # perf trace -e ioctl stty > /dev/null
-  ioctl(0, TCGETS, 0x7ffed0763920)        = 0
-  ioctl(1, TIOCGWINSZ, 0x7ffed0763940)    = -1 ENOTTY (Inappropriate ioctl for device)
-  ioctl(1, TCGETS, 0x7ffed0763620)        = -1 ENOTTY (Inappropriate ioctl for device)
-  #
-
-Signed-off-by: Benjamin Peterson <benjamin@python.org>
-Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Jiri Olsa <jolsa@redhat.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Fixes: 1cc47f2d46206d67285aea0ca7e8450af571da13 ("perf trace beauty ioctl: Improve 'cmd' beautifier")
-Link: http://lkml.kernel.org/r/20190823033625.18814-1-benjamin@python.org
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Reviewed-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/perf/trace/beauty/ioctl.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/media/i2c/ov9650.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/tools/perf/trace/beauty/ioctl.c b/tools/perf/trace/beauty/ioctl.c
-index 1be3b4cf08270..82346ca06f171 100644
---- a/tools/perf/trace/beauty/ioctl.c
-+++ b/tools/perf/trace/beauty/ioctl.c
-@@ -22,7 +22,7 @@
- static size_t ioctl__scnprintf_tty_cmd(int nr, int dir, char *bf, size_t size)
- {
- 	static const char *ioctl_tty_cmd[] = {
--	"TCGETS", "TCSETS", "TCSETSW", "TCSETSF", "TCGETA", "TCSETA", "TCSETAW",
-+	[_IOC_NR(TCGETS)] = "TCGETS", "TCSETS", "TCSETSW", "TCSETSF", "TCGETA", "TCSETA", "TCSETAW",
- 	"TCSETAF", "TCSBRK", "TCXONC", "TCFLSH", "TIOCEXCL", "TIOCNXCL", "TIOCSCTTY",
- 	"TIOCGPGRP", "TIOCSPGRP", "TIOCOUTQ", "TIOCSTI", "TIOCGWINSZ", "TIOCSWINSZ",
- 	"TIOCMGET", "TIOCMBIS", "TIOCMBIC", "TIOCMSET", "TIOCGSOFTCAR", "TIOCSSOFTCAR",
+diff --git a/drivers/media/i2c/ov9650.c b/drivers/media/i2c/ov9650.c
+index 5bea31cd41aa1..33a21d585dc9c 100644
+--- a/drivers/media/i2c/ov9650.c
++++ b/drivers/media/i2c/ov9650.c
+@@ -716,6 +716,11 @@ static int ov965x_set_gain(struct ov965x *ov965x, int auto_gain)
+ 		for (m = 6; m >= 0; m--)
+ 			if (gain >= (1 << m) * 16)
+ 				break;
++
++		/* Sanity check: don't adjust the gain with a negative value */
++		if (m < 0)
++			return -EINVAL;
++
+ 		rgain = (gain - ((1 << m) * 16)) / (1 << m);
+ 		rgain |= (((1 << m) - 1) << 4);
+ 
 -- 
 2.20.1
 
