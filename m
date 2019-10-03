@@ -2,243 +2,127 @@ Return-Path: <SRS0=6dNS=X4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42D77C10F14
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 09:02:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 85EE8C4CED1
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 09:05:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 189052070B
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 09:02:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6845721783
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 09:05:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729155AbfJCJCI (ORCPT
+        id S1728869AbfJCJFA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 05:02:08 -0400
-Received: from mx2.suse.de ([195.135.220.15]:50358 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729021AbfJCJCB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 05:02:01 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 75BA2B147;
-        Thu,  3 Oct 2019 09:01:58 +0000 (UTC)
-From:   Petr Mladek <pmladek@suse.com>
-To:     Jiri Kosina <jikos@kernel.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Miroslav Benes <mbenes@suse.cz>
-Cc:     Joe Lawrence <joe.lawrence@redhat.com>,
-        Kamalesh Babulal <kamalesh@linux.vnet.ibm.com>,
-        Nicolai Stange <nstange@suse.de>,
-        live-patching@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Petr Mladek <pmladek@suse.com>
-Subject: [PATCH v3 4/5] livepatch: Documentation of the new API for tracking system state changes
-Date:   Thu,  3 Oct 2019 11:01:36 +0200
-Message-Id: <20191003090137.6874-5-pmladek@suse.com>
-X-Mailer: git-send-email 2.16.4
-In-Reply-To: <20191003090137.6874-1-pmladek@suse.com>
-References: <20191003090137.6874-1-pmladek@suse.com>
+        Thu, 3 Oct 2019 05:05:00 -0400
+Received: from p-mail-ext.rd.orange.com ([161.106.1.9]:46922 "EHLO
+        p-mail-ext.rd.orange.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727357AbfJCJFA (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 05:05:00 -0400
+Received: from p-mail-ext.rd.orange.com (localhost [127.0.0.1])
+        by localhost (Postfix) with SMTP id 8A9315615AC;
+        Thu,  3 Oct 2019 12:42:01 +0200 (CEST)
+Received: from p-mail-int.rd.francetelecom.fr (p-mail-int.rd.francetelecom.fr [10.192.117.12])
+        by p-mail-ext.rd.orange.com (Postfix) with ESMTP id 8503A561596;
+        Thu,  3 Oct 2019 12:42:01 +0200 (CEST)
+Received: from p-mail-int.rd.francetelecom.fr (localhost.localdomain [127.0.0.1])
+        by localhost (Postfix) with SMTP id F084A1804EB;
+        Thu,  3 Oct 2019 11:04:45 +0200 (CEST)
+Received: from [10.193.71.64] (yd-CZC9059FTQ.rd.francetelecom.fr [10.193.71.64])
+        by p-mail-int.rd.francetelecom.fr (Postfix) with ESMTP id AFD081804B4;
+        Thu,  3 Oct 2019 11:04:45 +0200 (CEST)
+Subject: Re: [PATCH] PCI/IOV: update num_VFs earlier
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20191001234520.GA96866@google.com>
+From:   CREGUT Pierre IMT/OLN <pierre.cregut@orange.com>
+Message-ID: <49b0ad6d-7b6f-adbd-c4a3-5f9328a7ad9d@orange.com>
+Date:   Thu, 3 Oct 2019 11:04:45 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
+MIME-Version: 1.0
+In-Reply-To: <20191001234520.GA96866@google.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-PMX-Version: 6.4.7.2805085, Antispam-Engine: 2.7.2.2107409, Antispam-Data: 2019.10.3.85416, AntiVirus-Engine: 5.65.0, AntiVirus-Data: 2019.10.3.5650000
+X-PMX-Spam: Gauge=IIIIIIII, Probability=8%, Report='
+ MULTIPLE_RCPTS 0.1, HTML_00_01 0.05, HTML_00_10 0.05, BODY_SIZE_3000_3999 0, BODY_SIZE_5000_LESS 0, BODY_SIZE_7000_LESS 0, ECARD_WORD 0, FROM_NAME_PHRASE 0, IN_REP_TO 0, LEGITIMATE_SIGNS 0, MSG_THREAD 0, MULTIPLE_REAL_RCPTS 0, REFERENCES 0, SINGLE_URI_IN_BODY 0, URI_WITH_PATH_ONLY 0, __ANY_URI 0, __BODY_NO_MAILTO 0, __BOUNCE_CHALLENGE_SUBJ 0, __BOUNCE_NDR_SUBJ_EXEMPT 0, __CP_URI_IN_BODY 0, __CT 0, __CTE 0, __CT_TEXT_PLAIN 0, __DQ_NEG_HEUR 0, __DQ_NEG_IP 0, __FORWARDED_MSG 0, __HAS_CC_HDR 0, __HAS_FROM 0, __HAS_MSGID 0, __HAS_REFERENCES 0, __HTTPS_URI 0, __IN_REP_TO 0, __MIME_TEXT_ONLY 0, __MIME_TEXT_P 0, __MIME_TEXT_P1 0, __MIME_VERSION 0, __MOZILLA_USER_AGENT 0, __MULTIPLE_RCPTS_CC_X2 0, __NO_HTML_TAG_RAW 0, __PHISH_SPEAR_SUBJ_PREDICATE 0, __REFERENCES 0, __SANE_MSGID 0, __SINGLE_URI_TEXT 0, __SUBJ_ALPHA_END 0, __SUBJ_ALPHA_NEGATE 0, __SUBJ_REPLY 0, __TO_MALFORMED_2 0, __TO_NAME 0,
+ __TO_NAME_DIFF_FROM_ACC 0, __TO_REAL_NAMES 0, __URI_IN_BODY 0, __URI_NOT_IMG 0, __URI_NO_MAILTO 0, __URI_NO_WWW 0, __URI_NS , __URI_WITH_PATH 0, __USER_AGENT 0'
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Documentation explaining the motivation, capabilities, and usage
-of the new API for tracking system state changes.
+Le 02/10/2019 à 01:45, Bjorn Helgaas a écrit :
+> On Fri, Apr 26, 2019 at 10:11:54AM +0200, CREGUT Pierre IMT/OLN wrote:
+>> I also initially thought that kobject_uevent generated the netlink event
+>> but this is not the case. This is generated by the specific driver in use.
+>> For the Intel i40e driver, this is the call to i40e_do_reset_safe in
+>> i40e_pci_sriov_configure that sends the event.
+>> It is followed by i40e_pci_sriov_enable that calls i40e_alloc_vfs that
+>> finally calls the generic pci_enable_sriov function.
+> I don't know anything about netlink.  The script from the bugzilla
+> (https://bugzilla.kernel.org/show_bug.cgi?id=202991) looks like it
+> runs
+>
+>    ip monitor dev enp9s0f2
+>
+> What are the actual netlink events you see?  Are they related to a
+> device being removed?
 
-Signed-off-by: Petr Mladek <pmladek@suse.com>
-Acked-by: Miroslav Benes <mbenes@suse.cz>
----
- Documentation/livepatch/index.rst        |   1 +
- Documentation/livepatch/system-state.rst | 167 +++++++++++++++++++++++++++++++
- 2 files changed, 168 insertions(+)
- create mode 100644 Documentation/livepatch/system-state.rst
+We have netlink events both when num_vfs goes from 0 to N and from N to 0.
+Indeed you have to go to 0 before going to M with M != N.
+On an Intel card, when one goes from 0 to N, the netlink event is sent 
+"early". The
+value of num_vfs is still 0 and you get the impression that the number 
+of VFS has
+not changed. As the meaning of those events is overloaded, you have to 
+wait an
+arbitrary amount of time until it settles (there will be no other event).
+There is no such problem when it goes from N to 0 because of 
+implementation details
+but it may be different for another brand.
 
-diff --git a/Documentation/livepatch/index.rst b/Documentation/livepatch/index.rst
-index 17674a9e21b2..525944063be7 100644
---- a/Documentation/livepatch/index.rst
-+++ b/Documentation/livepatch/index.rst
-@@ -12,6 +12,7 @@ Kernel Livepatching
-     cumulative-patches
-     module-elf-format
-     shadow-vars
-+    system-state
- 
- .. only::  subproject and html
- 
-diff --git a/Documentation/livepatch/system-state.rst b/Documentation/livepatch/system-state.rst
-new file mode 100644
-index 000000000000..56a3f4d16e8b
---- /dev/null
-+++ b/Documentation/livepatch/system-state.rst
-@@ -0,0 +1,167 @@
-+====================
-+System State Changes
-+====================
-+
-+Some users are really reluctant to reboot a system. This brings the need
-+to provide more livepatches and maintain some compatibility between them.
-+
-+Maintaining more livepatches is much easier with cumulative livepatches.
-+Each new livepatch completely replaces any older one. It can keep,
-+add, and even remove fixes. And it is typically safe to replace any version
-+of the livepatch with any other one thanks to the atomic replace feature.
-+
-+The problems might come with shadow variables and callbacks. They might
-+change the system behavior or state so that it is no longer safe to
-+go back and use an older livepatch or the original kernel code. Also
-+any new livepatch must be able to detect what changes have already been
-+done by the already installed livepatches.
-+
-+This is where the livepatch system state tracking gets useful. It
-+allows to:
-+
-+  - store data needed to manipulate and restore the system state
-+
-+  - define compatibility between livepatches using a change id
-+    and version
-+
-+
-+1. Livepatch system state API
-+=============================
-+
-+The state of the system might get modified either by several livepatch callbacks
-+or by the newly used code. Also it must be possible to find changes done by
-+already installed livepatches.
-+
-+Each modified state is described by struct klp_state, see
-+include/linux/livepatch.h.
-+
-+Each livepatch defines an array of struct klp_states. They mention
-+all states that the livepatch modifies.
-+
-+The livepatch author must define the following two fields for each
-+struct klp_state:
-+
-+  - *id*
-+
-+    - Non-zero number used to identify the affected system state.
-+
-+  - *version*
-+
-+    - Number describing the variant of the system state change that
-+      is supported by the given livepatch.
-+
-+The state can be manipulated using two functions:
-+
-+  - *klp_get_state(patch, id)*
-+
-+    - Get struct klp_state associated with the given livepatch
-+      and state id.
-+
-+  - *klp_get_prev_state(id)*
-+
-+    - Get struct klp_state associated with the given feature id and
-+      already installed livepatches.
-+
-+2. Livepatch compatibility
-+==========================
-+
-+The system state version is used to prevent loading incompatible livepatches.
-+The check is done when the livepatch is enabled. The rules are:
-+
-+  - Any completely new system state modification is allowed.
-+
-+  - System state modifications with the same or higher version are allowed
-+    for already modified system states.
-+
-+  - Cumulative livepatches must handle all system state modifications from
-+    already installed livepatches.
-+
-+  - Non-cumulative livepatches are allowed to touch already modified
-+    system states.
-+
-+3. Supported scenarios
-+======================
-+
-+Livepatches have their life-cycle and the same is true for the system
-+state changes. Every compatible livepatch has to support the following
-+scenarios:
-+
-+  - Modify the system state when the livepatch gets enabled and the state
-+    has not been already modified by a livepatches that are being
-+    replaced.
-+
-+  - Take over or update the system state modification when is has already
-+    been done by a livepatch that is being replaced.
-+
-+  - Restore the original state when the livepatch is disabled.
-+
-+  - Restore the previous state when the transition is reverted.
-+    It might be the orignal system state or the state modification
-+    done by livepatches that were being replaced.
-+
-+  - Remove any already made changes when error occurs and the livepatch
-+    cannot get enabled.
-+
-+4. Expected usage
-+=================
-+
-+System states are usually modified by livepatch callbacks. The expected
-+role of each callback is as follows:
-+
-+*pre_patch()*
-+
-+  - Allocate *state->data* when necessary. The allocation might fail
-+    and *pre_patch()* is the only callback that could stop loading
-+    of the livepatch. The allocation is not needed when the data
-+    are already provided by previously installed livepatches.
-+
-+  - Do any other preparatory action that is needed by
-+    the new code even before the transition gets finished.
-+    For example, initialize *state->data*.
-+
-+    The system state itself is typically modified in *post_patch()*
-+    when the entire system is able to handle it.
-+
-+  - Clean up its own mess in case of error. It might be done by a custom
-+    code or by calling *post_unpatch()* explicitly.
-+
-+*post_patch()*
-+
-+  - Copy *state->data* from the previous livepatch when they are
-+    compatible.
-+
-+  - Do the actual system state modification. Eventually allow
-+    the new code to use it.
-+
-+  - Make sure that *state->data* has all necessary information.
-+
-+  - Free *state->data* from replaces livepatches when they are
-+    not longer needed.
-+
-+*pre_unpatch()*
-+
-+  - Prevent the code, added by the livepatch, relying on the system
-+    state change.
-+
-+  - Revert the system state modification..
-+
-+*post_unpatch()*
-+
-+  - Distinguish transition reverse and livepatch disabling by
-+    checking *klp_get_prev_state()*.
-+
-+  - In case of transition reverse, restore the previous system
-+    state. It might mean doing nothing.
-+
-+  - Remove any not longer needed setting or data.
-+
-+.. note::
-+
-+   *pre_unpatch()* typically does symmetric operations to *post_patch()*.
-+   Except that it is called only when the livepatch is being disabled.
-+   Therefore it does not need to care about any previously installed
-+   livepatch.
-+
-+   *post_unpatch()* typically does symmetric operations to *pre_patch()*.
-+   It might be called also during the transition reverse. Therefore it
-+   has to handle the state of the previously installed livepatches.
--- 
-2.16.4
+> When we change num_VFs, I think we have to disable any existing VFs
+> before enabling the new num_VFs, so if you trigger on a netlink
+> "remove" event, I wouldn't be surprised that reading sriov_numvfs
+> would give a zero until the new VFs are enabled.
+Yes but we are speaking of the event sent when num_vfs is changed from 0 
+to N
+> [...]
+> I thought this was a good idea, but
+>
+>    - It does break the device_lock() encapsulation a little bit:
+>      sriov_numvfs_store() uses device_lock(), which happens to be
+>      implemented as "mutex_lock(&dev->mutex)", but we really shouldn't
+>      rely on that implementation, and
+The use of device_lock was the cheapest solution. It is true that lock 
+and trylock are
+exposed by device.h but not is_locked. To respect the abstraction, we 
+would have to
+lock the device (at least use trylock but it means locking when we can 
+access the
+value, in that case we may just make reading num_vfs blocking ?).
 
+The other solution is to record the state of freshness of num_vfs but it 
+means a
+new Boolean in the pci_sriov data-structure.
+
+>    - The netlink events are being generated via the NIC driver, and I'm
+>      a little hesitant about changing the PCI core to deal with timing
+>      issues "over there".
+
+NIC drivers send netlink events when their state change, but it is the 
+core that changes
+the value of num_vfs. So I would think it is the core responsibility to 
+make sure the
+exposed value makes sense and it would be better to ignore the details 
+of the driver
+implementation.
+That is why the initial patch moving when the value was updated was 
+finally not
+such a good idea.
+
+[...]
