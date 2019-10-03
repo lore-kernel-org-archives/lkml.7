@@ -2,91 +2,209 @@ Return-Path: <SRS0=6dNS=X4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B5908C10F14
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 21:10:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A9ACC32792
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 21:11:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 87CC5215EA
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 21:10:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E21ED21848
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 21:11:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="ZpeSxI7m"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="dFQI5g+s";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="WyhoZ2nq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731572AbfJCVKk (ORCPT
+        id S1731658AbfJCVLF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 17:10:40 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:41327 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727789AbfJCVKk (ORCPT
+        Thu, 3 Oct 2019 17:11:05 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:56462 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727789AbfJCVLE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 17:10:40 -0400
-Received: by mail-pg1-f196.google.com with SMTP id s1so2469559pgv.8
-        for <linux-kernel@vger.kernel.org>; Thu, 03 Oct 2019 14:10:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=message-id:mime-version:content-transfer-encoding:in-reply-to
-         :references:from:to:cc:subject:user-agent:date;
-        bh=TZu2ZOfBt4zOQYcx7ts+ww1a8wZ3i5klQLAM70cz5EM=;
-        b=ZpeSxI7m/QWltN4KyEEzLW1mbR3sjyIll0DL6bBVA9iBnHBwBECbV4n7v/1zZXw1tq
-         zM4xBiDcxDDwTgVD5vECVOL8EhXs7sAMqJdY1jzUf3wDZ926Mxt9mV2hZcK1AXkxbODE
-         /bXkbGxRjqj5+s785Fagw4SbqIOefWgenyLqM=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:mime-version
-         :content-transfer-encoding:in-reply-to:references:from:to:cc:subject
-         :user-agent:date;
-        bh=TZu2ZOfBt4zOQYcx7ts+ww1a8wZ3i5klQLAM70cz5EM=;
-        b=nOXDwYnoPptdmPKHwfgLXEyi/38rhtmy38Z5Og/QJNg3UmtVnByHaZ8Dc0Rv+ygTXf
-         HlmgZJmdeTKBy0XyU2kBSEZf4igjeWsxOWazXenJs41lTNMaIVJr6842MbuUk4HXE1zr
-         +FLbNjzAsxInkMR5JxveGnEGeW5nhfMXrt7xgC6fyPAAtbljuNhnncdfDfqPuqdh1kb8
-         uJFSNAdlVN9GJWWokoRZ3na7SxYQa/cOdzIzfqPtS64FJbzGXySuaCHneYWKD4VzRTdx
-         jX/lSPWp+2tQ5EYzvb6eyviK2wJwTSZU5xx/lFlTtnplTIxm8pZbwzFntuslCAberqt+
-         NHZg==
-X-Gm-Message-State: APjAAAWqqQG7Eh4DQ/zyy6gQX9+D2ftp+Jarb7Zx7xS5FTU5f04IauUB
-        mpzXXLkGyQWePwg6q17dXAZY7w==
-X-Google-Smtp-Source: APXvYqxRNBvkg2TMNLnFboSrLgS+N0S0t6bmJh6XqO3SPIjYAzw3ZpxIyPcyB1kqZ4AiwJpxPFtwPQ==
-X-Received: by 2002:a63:1521:: with SMTP id v33mr11802366pgl.9.1570137039483;
-        Thu, 03 Oct 2019 14:10:39 -0700 (PDT)
-Received: from chromium.org ([2620:15c:202:1:fa53:7765:582b:82b9])
-        by smtp.gmail.com with ESMTPSA id g24sm4399113pfi.81.2019.10.03.14.10.38
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 03 Oct 2019 14:10:38 -0700 (PDT)
-Message-ID: <5d9663ce.1c69fb81.e941e.dccc@mx.google.com>
-Content-Type: text/plain; charset="utf-8"
+        Thu, 3 Oct 2019 17:11:04 -0400
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id 64B306155E; Thu,  3 Oct 2019 21:11:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1570137063;
+        bh=6Y7obBeUmhg7/SW9V/ajjOEqPTX+NgguganrNVb4VwI=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=dFQI5g+svq2BS+x87vr+N0qhKq7jPQfnR0UVViT3hxAmI8cX7AMgpDdWo4rMkUpjv
+         ooCP6mBjOHVuWAmUjz4xpx/Bqu6yZ1mf/d3VsLb8WIbTR8mJDbpvTYQQsGDcfsx7fX
+         nJqAVdhjpCQgkl6+Pg7C22rJ5L02hxp15glCLyL4=
+Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
+        by smtp.codeaurora.org (Postfix) with ESMTP id 71EE26034E;
+        Thu,  3 Oct 2019 21:11:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1570137062;
+        bh=6Y7obBeUmhg7/SW9V/ajjOEqPTX+NgguganrNVb4VwI=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=WyhoZ2nqBpVdaN1DlEfAP3JK+Jb6VszufCRKdeQt+e2H24sqAdihEW4iWu/me4lCk
+         tlm6mvOhhzkE5nnNaL9IrgI6RdzrZoc7VXBSCOFZf+oGWEu6rpWWGJdAdaDGC3XuDZ
+         2vn3qDxmtQrvhUl1nnLusFJ0JEEnUX4evB52kKuE=
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20190730212048.164657-1-swboyd@chromium.org>
-References: <20190730212048.164657-1-swboyd@chromium.org>
-From:   Stephen Boyd <swboyd@chromium.org>
-To:     Matthew Wilcox <willy@infradead.org>
-Cc:     linux-kernel@vger.kernel.org, Greg KH <gregkh@linuxfoundation.org>,
-        Tri Vo <trong@android.com>, Jonathan Corbet <corbet@lwn.net>,
-        linux-doc@vger.kernel.org
-Subject: Re: [PATCH v2 1/2] idr: Document calling context for IDA APIs mustn't use locks
-User-Agent: alot/0.8.1
-Date:   Thu, 03 Oct 2019 14:10:37 -0700
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Thu, 03 Oct 2019 14:11:02 -0700
+From:   mnalajal@codeaurora.org
+To:     Greg KH <gregkh@linuxfoundation.org>
+Cc:     rafael@kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, bjorn.andersson@linaro.org
+Subject: Re: [PATCH] base: soc: Handle custom soc information sysfs entries
+In-Reply-To: <20191003183357.GA3580296@kroah.com>
+References: <1570061174-4918-1-git-send-email-mnalajal@codeaurora.org>
+ <20191003070610.GC1814133@kroah.com>
+ <0d219d344cea82b5f6c1ab23341de25b@codeaurora.org>
+ <20191003183357.GA3580296@kroah.com>
+Message-ID: <6e7d5e14c231d2fe51c7ae78d5d0dee8@codeaurora.org>
+X-Sender: mnalajal@codeaurora.org
+User-Agent: Roundcube Webmail/1.2.5
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Stephen Boyd (2019-07-30 14:20:47)
-> The documentation for these functions indicates that callers don't need
-> to hold a lock while calling them, but that documentation is only in one
-> place under "IDA Usage". Let's state the same information on each IDA
-> function so that it's clear what the calling context requires.
-> Furthermore, let's document ida_simple_get() with the same information
-> so that callers know how this API works.
->=20
-> Cc: Greg KH <gregkh@linuxfoundation.org>
-> Cc: Tri Vo <trong@android.com>
-> Cc: Jonathan Corbet <corbet@lwn.net>
-> Cc: linux-doc@vger.kernel.org
-> Signed-off-by: Stephen Boyd <swboyd@chromium.org>
-> ---
+On 2019-10-03 11:33, Greg KH wrote:
+> On Thu, Oct 03, 2019 at 11:23:45AM -0700, mnalajal@codeaurora.org 
+> wrote:
+>> On 2019-10-03 00:06, Greg KH wrote:
+>> > On Wed, Oct 02, 2019 at 05:06:14PM -0700, Murali Nalajala wrote:
+>> > > Soc framework exposed sysfs entries are not sufficient for some
+>> > > of the h/w platforms. Currently there is no interface where soc
+>> > > drivers can expose further information about their SoCs via soc
+>> > > framework. This change address this limitation where clients can
+>> > > pass their custom entries as attribute group and soc framework
+>> > > would expose them as sysfs properties.
+>> > >
+>> > > Signed-off-by: Murali Nalajala <mnalajal@codeaurora.org>
+>> > > ---
+>> > >  drivers/base/soc.c      | 26 ++++++++++++++++++--------
+>> > >  include/linux/sys_soc.h |  1 +
+>> > >  2 files changed, 19 insertions(+), 8 deletions(-)
+>> > >
+>> > > diff --git a/drivers/base/soc.c b/drivers/base/soc.c
+>> > > index 7c0c5ca..ec70a58 100644
+>> > > --- a/drivers/base/soc.c
+>> > > +++ b/drivers/base/soc.c
+>> > > @@ -15,6 +15,8 @@
+>> > >  #include <linux/err.h>
+>> > >  #include <linux/glob.h>
+>> > >
+>> > > +#define NUM_ATTR_GROUPS 3
+>> > > +
+>> > >  static DEFINE_IDA(soc_ida);
+>> > >
+>> > >  static ssize_t soc_info_get(struct device *dev,
+>> > > @@ -104,11 +106,6 @@ static ssize_t soc_info_get(struct device *dev,
+>> > >  	.is_visible = soc_attribute_mode,
+>> > >  };
+>> > >
+>> > > -static const struct attribute_group *soc_attr_groups[] = {
+>> > > -	&soc_attr_group,
+>> > > -	NULL,
+>> > > -};
+>> > > -
+>> > >  static void soc_release(struct device *dev)
+>> > >  {
+>> > >  	struct soc_device *soc_dev = container_of(dev, struct soc_device,
+>> > > dev);
+>> > > @@ -121,6 +118,7 @@ static void soc_release(struct device *dev)
+>> > >  struct soc_device *soc_device_register(struct soc_device_attribute
+>> > > *soc_dev_attr)
+>> > >  {
+>> > >  	struct soc_device *soc_dev;
+>> > > +	const struct attribute_group **soc_attr_groups = NULL;
+>> > >  	int ret;
+>> > >
+>> > >  	if (!soc_bus_type.p) {
+>> > > @@ -136,10 +134,20 @@ struct soc_device *soc_device_register(struct
+>> > > soc_device_attribute *soc_dev_attr
+>> > >  		goto out1;
+>> > >  	}
+>> > >
+>> > > +	soc_attr_groups = kzalloc(sizeof(*soc_attr_groups) *
+>> > > +						NUM_ATTR_GROUPS, GFP_KERNEL);
+>> > > +	if (!soc_attr_groups) {
+>> > > +		ret = -ENOMEM;
+>> > > +		goto out2;
+>> > > +	}
+>> > > +	soc_attr_groups[0] = &soc_attr_group;
+>> > > +	soc_attr_groups[1] = soc_dev_attr->custom_attr_group;
+>> > > +	soc_attr_groups[2] = NULL;
+>> > > +
+>> > >  	/* Fetch a unique (reclaimable) SOC ID. */
+>> > >  	ret = ida_simple_get(&soc_ida, 0, 0, GFP_KERNEL);
+>> > >  	if (ret < 0)
+>> > > -		goto out2;
+>> > > +		goto out3;
+>> > >  	soc_dev->soc_dev_num = ret;
+>> > >
+>> > >  	soc_dev->attr = soc_dev_attr;
+>> > > @@ -151,14 +159,16 @@ struct soc_device *soc_device_register(struct
+>> > > soc_device_attribute *soc_dev_attr
+>> > >
+>> > >  	ret = device_register(&soc_dev->dev);
+>> > >  	if (ret)
+>> > > -		goto out3;
+>> > > +		goto out4;
+>> > >
+>> > >  	return soc_dev;
+>> > >
+>> > > -out3:
+>> > > +out4:
+>> > >  	ida_simple_remove(&soc_ida, soc_dev->soc_dev_num);
+>> > >  	put_device(&soc_dev->dev);
+>> > >  	soc_dev = NULL;
+>> > > +out3:
+>> > > +	kfree(soc_attr_groups);
+>> > >  out2:
+>> > >  	kfree(soc_dev);
+>> > >  out1:
+>> > > diff --git a/include/linux/sys_soc.h b/include/linux/sys_soc.h
+>> > > index 48ceea8..d9b3cf0 100644
+>> > > --- a/include/linux/sys_soc.h
+>> > > +++ b/include/linux/sys_soc.h
+>> > > @@ -15,6 +15,7 @@ struct soc_device_attribute {
+>> > >  	const char *serial_number;
+>> > >  	const char *soc_id;
+>> > >  	const void *data;
+>> > > +	const struct attribute_group *custom_attr_group;
+>> >
+>> > Shouldn't you make this:
+>> > 	const struct attribute_group **soc_groups;
+>> >
+>> > to match up with the rest of the way the driver core works?
+>> Assumption is, soc drivers send their custom attribute group and soc
+>> framework has already soc_attr_group" (basic info exposed).
+>> With my changes i am combining these two groups and passing to
+>> "device_register()".
+>> I do not think soc drivers have a requirement where they can pass 
+>> various
+>> groups rather one single group attribute.
+> 
+> Ok, I guess this is "good enough" such that no individual SOC driver
+> will want to create subdirs and lots of fun like that.  If they do, 
+> then
+> we can change the api at that point in time :)
+> 
+> thanks,
+> 
+> greg k-h
 
-Ping? Can this be picked up, maybe into the doc tree?
+I trying to fix an issue in the existing "soc_device_register()" code. 
+This looks to me a memory leak.
 
+	ret = device_register(&soc_dev->dev);
+	if (ret)
+		goto out3;
+	return soc_dev;
+out3:
+	ida_simple_remove(&soc_ida, soc_dev->soc_dev_num);
+	put_device(&soc_dev->dev);
+	soc_dev = NULL;
+out2:
+	kfree(soc_dev);
+
+Here we are assigning "soc_dev=NULL" before freeing. I see this 
+assignment is unnecessary here.
