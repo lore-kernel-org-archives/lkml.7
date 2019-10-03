@@ -2,122 +2,167 @@ Return-Path: <SRS0=6dNS=X4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 82ABCC4CED1
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:29:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B3DCC10F14
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:29:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5608020830
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:29:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7396620830
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:29:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570123786;
-	bh=QGeozehB18NxcCkyfYqnxXbStaIMKUEBAeYjYYNc+NM=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=1QndydU957/M9+v7Nde+8LIJ3zlX+yVRpmXK0J8vC6UL3+pg2vJmiin4rhko2DsUH
-	 Pp1ggZK98IRfzYBDcPdq/v+cNxeRJUQgl4Aa7h12UTh62O/orzDyYp1FWKDUl5+YhX
-	 +3zFGMDeLfp0XzGh3F3FNX4+lexUguiU4eGwVgXY=
+	s=default; t=1570123792;
+	bh=fik+i5HOycM4aEtSccDBSMO6kukqh4PeAR2iNgi49dk=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=Eq4ZdCpqZ83pUJJZhspLT4dAE5Hx3rmWrAh3J/p3CJCP25dx1tTEW1XMCztbkJFTI
+	 fG6xyYSuWvHzBC65NY8GC2N9haGf0+jWXraBQcW0eSO7RUjo9ct46g3NYJCfb6xYKp
+	 yi4YswoaqcdAtcmy8OLqC1cy3M20Uae6vZC/nkBI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730736AbfJCR3p (ORCPT
+        id S2388029AbfJCQMX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 13:29:45 -0400
-Received: from mail-lf1-f67.google.com ([209.85.167.67]:33842 "EHLO
-        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730558AbfJCR3n (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 13:29:43 -0400
-Received: by mail-lf1-f67.google.com with SMTP id r22so2488973lfm.1
-        for <linux-kernel@vger.kernel.org>; Thu, 03 Oct 2019 10:29:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=8ZVEazC37+BdYsUUwYDYhErEg09v7WhRGEkqCbHO0ks=;
-        b=RPXZgCaexY2Zm6d9kF62WZV2HjWT9s5h167SaV6Ngphi1rMoYR5sDMd7JP8nFxcvYF
-         Eh4EV5kyIIxb7dH3ZX7onDXYIrgX6swFRJoYDqwN7BI9I/QqzG6azoIIoIa4evdilqxu
-         0mEQ0+Fig1AOcYuhpzqpY17x0W0NtiJ8K/bx0=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=8ZVEazC37+BdYsUUwYDYhErEg09v7WhRGEkqCbHO0ks=;
-        b=bOysl/DHEiH1u1jePUyIlB3kasliDO8RxlRBbMc80Pxn7eISduLzZ1PUsgaOZb8e7Y
-         TznNMO7b1i+6hOFNvn2uED3QnZTRJjJwxxgveUUSn0dmEbBhzFRkL80uNkMDWZzH1ziK
-         7Ju5bqX3qmB7gMU9YL7k7sBFP8bPxGK7H2G3F0swsXdmX+aBCI9mioCo/LN5cCd7rTGr
-         UU9S0/lv8Nk1rDcBiV+LR0bKrQurzyCgvqGcLJ4hKN6U7ArFEI/zEXgShelpKduEbABb
-         mD7SSnw7AvJ2ZN0LB8oIYXj+M6uZjb2K5qolZVnpKfrDyz3vFrVexc6bBvcmEnlJpO5q
-         Nc/Q==
-X-Gm-Message-State: APjAAAWH2K8P3BaWZVq+pvF9UB6Czj268SXfER2E2md4IgMaxtr2QOaX
-        TJJ8agZVCqqZtmRWZSg1hNz5QBTFYis=
-X-Google-Smtp-Source: APXvYqySGpa9YqXEGaXK4qiQBELLkq3ar6hDwxIs/hBA07QUzW2/CE89VajNWRNkmbVt42641u/AQA==
-X-Received: by 2002:ac2:4a8f:: with SMTP id l15mr6501282lfp.21.1570123780236;
-        Thu, 03 Oct 2019 10:29:40 -0700 (PDT)
-Received: from mail-lj1-f176.google.com (mail-lj1-f176.google.com. [209.85.208.176])
-        by smtp.gmail.com with ESMTPSA id z20sm781495ljk.63.2019.10.03.10.29.38
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 03 Oct 2019 10:29:38 -0700 (PDT)
-Received: by mail-lj1-f176.google.com with SMTP id q64so3644617ljb.12
-        for <linux-kernel@vger.kernel.org>; Thu, 03 Oct 2019 10:29:38 -0700 (PDT)
-X-Received: by 2002:a2e:86d5:: with SMTP id n21mr6811909ljj.1.1570123777769;
- Thu, 03 Oct 2019 10:29:37 -0700 (PDT)
+        Thu, 3 Oct 2019 12:12:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34472 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2388014AbfJCQMU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:12:20 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id C66D120700;
+        Thu,  3 Oct 2019 16:12:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1570119139;
+        bh=fik+i5HOycM4aEtSccDBSMO6kukqh4PeAR2iNgi49dk=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=zp8PkfR/05S/vGoz8TUKN0IV67t/3U2XQ5zPTz847KgKJWm7KiU1cyTvk0Xa5pA6O
+         I7VKtjlxJuB5hiQKLV6LiBsuRgEFV+W6gpyPyYAIWu/jLP6s+CN2yH2e96kvqo5Z5r
+         PvJaNgnW4X8J5m0Cux2ypTYxT7IM+bE24jbYFCTw=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Takashi Sakamoto <o-takashi@sakamocchi.jp>,
+        Takashi Iwai <tiwai@suse.de>
+Subject: [PATCH 4.14 141/185] ALSA: firewire-tascam: check intermediate state of clock status and retry
+Date:   Thu,  3 Oct 2019 17:53:39 +0200
+Message-Id: <20191003154509.448533373@linuxfoundation.org>
+X-Mailer: git-send-email 2.23.0
+In-Reply-To: <20191003154437.541662648@linuxfoundation.org>
+References: <20191003154437.541662648@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-References: <20190930112636.vx2qxo4hdysvxibl@willie-the-truck>
- <CAK7LNASQZ82KSOrQW7+Wq1vFDCg2__maBEAPMLqUDqZMLuj1rA@mail.gmail.com>
- <20190930121803.n34i63scet2ec7ll@willie-the-truck> <CAKwvOdnqn=0LndrX+mUrtSAQqoT1JWRMOJCA5t3e=S=T7zkcCQ@mail.gmail.com>
- <20191001092823.z4zhlbwvtwnlotwc@willie-the-truck> <CAKwvOdk0h2A6=fb7Yepf+oKbZfq_tqwpGq8EBmHVu1j4mo-a-A@mail.gmail.com>
- <20191001170142.x66orounxuln7zs3@willie-the-truck> <CAKwvOdnFJqipp+G5xLDRBcOrQRcvMQmn+n8fufWyzyt2QL_QkA@mail.gmail.com>
- <20191001175512.GK25745@shell.armlinux.org.uk> <CAKwvOdmw_xmTGZLeK8-+Q4nUpjs-UypJjHWks-3jHA670Dxa1A@mail.gmail.com>
- <20191001181438.GL25745@shell.armlinux.org.uk> <CAKwvOdmBnBVU7F-a6DqPU6QM-BRc8LNn6YRmhTsuGLauCWKUOg@mail.gmail.com>
- <CAMuHMdWPhE1nNkmL1nj3vpQhB7fP3uDs2i_ZVi0Gf9qij4W2CA@mail.gmail.com>
- <CAHk-=wgFODvdFBHzgVf3JjoBz0z6LZhOm8xvMntsvOr66ASmZQ@mail.gmail.com>
- <CAK7LNARM2jVSdgCDJWDbvVxYLiUR_CFgTPg0nxzbCszSKcx+pg@mail.gmail.com>
- <CAHk-=wiMm3rN15WmiAqMHjC-pakL_b8qgWsPPri0+YLFORT-ZA@mail.gmail.com> <CAK7LNATSoOD0g=Aarui6Y26E_YB035NsaPpHxqtBNyw0K0UXVw@mail.gmail.com>
-In-Reply-To: <CAK7LNATSoOD0g=Aarui6Y26E_YB035NsaPpHxqtBNyw0K0UXVw@mail.gmail.com>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Thu, 3 Oct 2019 10:29:21 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wj9Dbom1x7qDfrXgNbjdFa_84bAUMdGigs4sELQQW28wg@mail.gmail.com>
-Message-ID: <CAHk-=wj9Dbom1x7qDfrXgNbjdFa_84bAUMdGigs4sELQQW28wg@mail.gmail.com>
-Subject: Re: [PATCH] compiler: enable CONFIG_OPTIMIZE_INLINING forcibly
-To:     Masahiro Yamada <yamada.masahiro@socionext.com>
-Cc:     Geert Uytterhoeven <geert@linux-m68k.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Russell King - ARM Linux admin <linux@armlinux.org.uk>,
-        Will Deacon <will@kernel.org>,
-        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Stefan Wahren <wahrenst@gmx.net>,
-        Kees Cook <keescook@google.com>, Arnd Bergmann <arnd@arndb.de>,
-        clang-built-linux <clang-built-linux@googlegroups.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Oct 3, 2019 at 10:24 AM Masahiro Yamada
-<yamada.masahiro@socionext.com> wrote:
->
-> I just want to annotate __always_inline for the case
-> "2. code that if not inlined is somehow not correct."
+From: Takashi Sakamoto <o-takashi@sakamocchi.jp>
 
-Oh, I support that entirely - if only for documentation.
+commit e1a00b5b253a4f97216b9a33199a863987075162 upstream.
 
-But I do *not* support the dismissal of the architecture maintainers
-concerns about "does it work?" and apparently known compiler bugs.
+2 bytes in MSB of register for clock status is zero during intermediate
+state after changing status of sampling clock in models of TASCAM FireWire
+series. The duration of this state differs depending on cases. During the
+state, it's better to retry reading the register for current status of
+the clock.
 
-> Again, not saying "use a macro".
+In current implementation, the intermediate state is checked only when
+getting current sampling transmission frequency, then retry reading.
+This care is required for the other operations to read the register.
 
-Other people did, though.
+This commit moves the codes of check and retry into helper function
+commonly used for operations to read the register.
 
-And there seemed to be little balancing of the pain vs the gain. The
-gain really isn't that obvious. If the code shrinks by a couple of kB,
-is that good or bad? Maybe it is smaller, but is it _better_?
+Fixes: e453df44f0d6 ("ALSA: firewire-tascam: add PCM functionality")
+Cc: <stable@vger.kernel.org> # v4.4+
+Signed-off-by: Takashi Sakamoto <o-takashi@sakamocchi.jp>
+Link: https://lore.kernel.org/r/20190910135152.29800-3-o-takashi@sakamocchi.jp
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-            Linus
+---
+ sound/firewire/tascam/tascam-stream.c |   42 ++++++++++++++++++++++------------
+ 1 file changed, 28 insertions(+), 14 deletions(-)
+
+--- a/sound/firewire/tascam/tascam-stream.c
++++ b/sound/firewire/tascam/tascam-stream.c
+@@ -9,20 +9,37 @@
+ #include <linux/delay.h>
+ #include "tascam.h"
+ 
++#define CLOCK_STATUS_MASK      0xffff0000
++#define CLOCK_CONFIG_MASK      0x0000ffff
++
+ #define CALLBACK_TIMEOUT 500
+ 
+ static int get_clock(struct snd_tscm *tscm, u32 *data)
+ {
++	int trial = 0;
+ 	__be32 reg;
+ 	int err;
+ 
+-	err = snd_fw_transaction(tscm->unit, TCODE_READ_QUADLET_REQUEST,
+-				 TSCM_ADDR_BASE + TSCM_OFFSET_CLOCK_STATUS,
+-				 &reg, sizeof(reg), 0);
+-	if (err >= 0)
++	while (trial++ < 5) {
++		err = snd_fw_transaction(tscm->unit, TCODE_READ_QUADLET_REQUEST,
++				TSCM_ADDR_BASE + TSCM_OFFSET_CLOCK_STATUS,
++				&reg, sizeof(reg), 0);
++		if (err < 0)
++			return err;
++
+ 		*data = be32_to_cpu(reg);
++		if (*data & CLOCK_STATUS_MASK)
++			break;
++
++		// In intermediate state after changing clock status.
++		msleep(50);
++	}
+ 
+-	return err;
++	// Still in the intermediate state.
++	if (trial >= 5)
++		return -EAGAIN;
++
++	return 0;
+ }
+ 
+ static int set_clock(struct snd_tscm *tscm, unsigned int rate,
+@@ -35,7 +52,7 @@ static int set_clock(struct snd_tscm *ts
+ 	err = get_clock(tscm, &data);
+ 	if (err < 0)
+ 		return err;
+-	data &= 0x0000ffff;
++	data &= CLOCK_CONFIG_MASK;
+ 
+ 	if (rate > 0) {
+ 		data &= 0x000000ff;
+@@ -80,17 +97,14 @@ static int set_clock(struct snd_tscm *ts
+ 
+ int snd_tscm_stream_get_rate(struct snd_tscm *tscm, unsigned int *rate)
+ {
+-	u32 data = 0x0;
+-	unsigned int trials = 0;
++	u32 data;
+ 	int err;
+ 
+-	while (data == 0x0 || trials++ < 5) {
+-		err = get_clock(tscm, &data);
+-		if (err < 0)
+-			return err;
++	err = get_clock(tscm, &data);
++	if (err < 0)
++		return err;
+ 
+-		data = (data & 0xff000000) >> 24;
+-	}
++	data = (data & 0xff000000) >> 24;
+ 
+ 	/* Check base rate. */
+ 	if ((data & 0x0f) == 0x01)
+
+
