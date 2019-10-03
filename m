@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 826D8C32792
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:23:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 33E15C10F14
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:23:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5677B222BE
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:23:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0AAE3222BE
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:23:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570119817;
-	bh=PBM67lVr9fxgDjwBm7PGqNRydI67/kFeiYDJNSAFoMo=;
+	s=default; t=1570119821;
+	bh=UGqMufujAPeYf8XfJuRbDlboz+r/vDuLTwr5F1tDuSA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=2Aq8lZi5hnHEQYxyeR5Gsp02IDlggPCv12e07A9gEdP5xKDfedLOVi57Y71gDByaZ
-	 m/5sMktUKBzfxR38YbrpO3HXUAibHOsqn3xvANJJIGpPyr1PpmEZIzJTwzfZDT33Fg
-	 zACUNwCZez+WlBHanSmz42AcF7iGHgf+jCE8FIvY=
+	b=oeyoQ0C8JZaHGa4xKvXUV9xYI7Ou8BuSNKrrt0wu3+iA3YFQxvyzY48wHHYpZJejz
+	 edvNZflQDFFOX2h/Od3Mx8N12WfWgl5zfklpcgjXsiAz4S2XaC7jD+lwPZkDaw5s8d
+	 FrHm2IGWxefiioqYBl2JPK/cQDiJihlRHDnLKino=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390600AbfJCQXf (ORCPT
+        id S2389780AbfJCQXj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 12:23:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52498 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 12:23:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52708 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388446AbfJCQXb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:23:31 -0400
+        id S2390601AbfJCQXg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:23:36 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 94CC02054F;
-        Thu,  3 Oct 2019 16:23:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0E3BF222C2;
+        Thu,  3 Oct 2019 16:23:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570119810;
-        bh=PBM67lVr9fxgDjwBm7PGqNRydI67/kFeiYDJNSAFoMo=;
+        s=default; t=1570119815;
+        bh=UGqMufujAPeYf8XfJuRbDlboz+r/vDuLTwr5F1tDuSA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=LyYc2ysNJv9ma754cfTFw8nnoZqcdX7Fy6noImiYRDwL6UvwWyzFbCWL+ZaTiP+tl
-         6ugWeHJQelXOG0K8XIBgvt5fhzWf8CEAV7ZD+b65yAk0kgq4Vg5V8VWBoqOY3g+oih
-         wdwea3doXc2xBI2jjTAMLXC/ui/aHTNdotBEfbEA=
+        b=qgQ4Npxb63wjbHJ4skBGSFFUPWei681ossqu0Xzhd9CSlkKU6BdixNo4YeFwNyBBJ
+         NgnqCNSImpglkEoeWRP4OAzEDp8lG7et+GIsDNBNBqGxPCcEJWZvNPxhCszXwk15XS
+         /3NBpj4pd33o5zRYiwLzAVHlHAijooYdOEqSRKm0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Qu Wenruo <wqu@suse.com>,
-        David Sterba <dsterba@suse.com>
-Subject: [PATCH 4.19 194/211] btrfs: qgroup: Fix reserved data space leak if we have multiple reserve calls
-Date:   Thu,  3 Oct 2019 17:54:20 +0200
-Message-Id: <20191003154528.977887508@linuxfoundation.org>
+        stable@vger.kernel.org, Laurent Vivier <lvivier@redhat.com>,
+        Theodore Tso <tytso@mit.edu>,
+        Herbert Xu <herbert@gondor.apana.org.au>
+Subject: [PATCH 4.19 204/211] hwrng: core - dont wait on add_early_randomness()
+Date:   Thu,  3 Oct 2019 17:54:30 +0200
+Message-Id: <20191003154530.110820891@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191003154447.010950442@linuxfoundation.org>
 References: <20191003154447.010950442@linuxfoundation.org>
@@ -59,92 +60,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Qu Wenruo <wqu@suse.com>
+From: Laurent Vivier <lvivier@redhat.com>
 
-commit d4e204948fe3e0dc8e1fbf3f8f3290c9c2823be3 upstream.
+commit 78887832e76541f77169a24ac238fccb51059b63 upstream.
 
-[BUG]
-The following script can cause btrfs qgroup data space leak:
+add_early_randomness() is called by hwrng_register() when the
+hardware is added. If this hardware and its module are present
+at boot, and if there is no data available the boot hangs until
+data are available and can't be interrupted.
 
-  mkfs.btrfs -f $dev
-  mount $dev -o nospace_cache $mnt
+For instance, in the case of virtio-rng, in some cases the host can be
+not able to provide enough entropy for all the guests.
 
-  btrfs subv create $mnt/subv
-  btrfs quota en $mnt
-  btrfs quota rescan -w $mnt
-  btrfs qgroup limit 128m $mnt/subv
+We can have two easy ways to reproduce the problem but they rely on
+misconfiguration of the hypervisor or the egd daemon:
 
-  for (( i = 0; i < 3; i++)); do
-          # Create 3 64M holes for latter fallocate to fail
-          truncate -s 192m $mnt/subv/file
-          xfs_io -c "pwrite 64m 4k" $mnt/subv/file > /dev/null
-          xfs_io -c "pwrite 128m 4k" $mnt/subv/file > /dev/null
-          sync
+- if virtio-rng device is configured to connect to the egd daemon of the
+host but when the virtio-rng driver asks for data the daemon is not
+connected,
 
-          # it's supposed to fail, and each failure will leak at least 64M
-          # data space
-          xfs_io -f -c "falloc 0 192m" $mnt/subv/file &> /dev/null
-          rm $mnt/subv/file
-          sync
-  done
+- if virtio-rng device is configured to connect to the egd daemon of the
+host but the egd daemon doesn't provide data.
 
-  # Shouldn't fail after we removed the file
-  xfs_io -f -c "falloc 0 64m" $mnt/subv/file
+The guest kernel will hang at boot until the virtio-rng driver provides
+enough data.
 
-[CAUSE]
-Btrfs qgroup data reserve code allow multiple reservations to happen on
-a single extent_changeset:
-E.g:
-	btrfs_qgroup_reserve_data(inode, &data_reserved, 0, SZ_1M);
-	btrfs_qgroup_reserve_data(inode, &data_reserved, SZ_1M, SZ_2M);
-	btrfs_qgroup_reserve_data(inode, &data_reserved, 0, SZ_4M);
+To avoid that, call rng_get_data() in non-blocking mode (wait=0)
+from add_early_randomness().
 
-Btrfs qgroup code has its internal tracking to make sure we don't
-double-reserve in above example.
-
-The only pattern utilizing this feature is in the main while loop of
-btrfs_fallocate() function.
-
-However btrfs_qgroup_reserve_data()'s error handling has a bug in that
-on error it clears all ranges in the io_tree with EXTENT_QGROUP_RESERVED
-flag but doesn't free previously reserved bytes.
-
-This bug has a two fold effect:
-- Clearing EXTENT_QGROUP_RESERVED ranges
-  This is the correct behavior, but it prevents
-  btrfs_qgroup_check_reserved_leak() to catch the leakage as the
-  detector is purely EXTENT_QGROUP_RESERVED flag based.
-
-- Leak the previously reserved data bytes.
-
-The bug manifests when N calls to btrfs_qgroup_reserve_data are made and
-the last one fails, leaking space reserved in the previous ones.
-
-[FIX]
-Also free previously reserved data bytes when btrfs_qgroup_reserve_data
-fails.
-
-Fixes: 524725537023 ("btrfs: qgroup: Introduce btrfs_qgroup_reserve_data function")
-CC: stable@vger.kernel.org # 4.4+
-Signed-off-by: Qu Wenruo <wqu@suse.com>
-Signed-off-by: David Sterba <dsterba@suse.com>
+Signed-off-by: Laurent Vivier <lvivier@redhat.com>
+Fixes: d9e797261933 ("hwrng: add randomness to system from rng...")
+Cc: <stable@vger.kernel.org>
+Reviewed-by: Theodore Ts'o <tytso@mit.edu>
+Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/btrfs/qgroup.c |    3 +++
- 1 file changed, 3 insertions(+)
+ drivers/char/hw_random/core.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/fs/btrfs/qgroup.c
-+++ b/fs/btrfs/qgroup.c
-@@ -3067,6 +3067,9 @@ cleanup:
- 	while ((unode = ulist_next(&reserved->range_changed, &uiter)))
- 		clear_extent_bit(&BTRFS_I(inode)->io_tree, unode->val,
- 				 unode->aux, EXTENT_QGROUP_RESERVED, 0, 0, NULL);
-+	/* Also free data bytes of already reserved one */
-+	btrfs_qgroup_free_refroot(root->fs_info, root->root_key.objectid,
-+				  orig_reserved, BTRFS_QGROUP_RSV_DATA);
- 	extent_changeset_release(reserved);
- 	return ret;
- }
+--- a/drivers/char/hw_random/core.c
++++ b/drivers/char/hw_random/core.c
+@@ -67,7 +67,7 @@ static void add_early_randomness(struct
+ 	size_t size = min_t(size_t, 16, rng_buffer_size());
+ 
+ 	mutex_lock(&reading_mutex);
+-	bytes_read = rng_get_data(rng, rng_buffer, size, 1);
++	bytes_read = rng_get_data(rng, rng_buffer, size, 0);
+ 	mutex_unlock(&reading_mutex);
+ 	if (bytes_read > 0)
+ 		add_device_randomness(rng_buffer, bytes_read);
 
 
