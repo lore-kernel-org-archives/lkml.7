@@ -2,198 +2,265 @@ Return-Path: <SRS0=6dNS=X4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 537ECC10F14
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 06:30:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34DAEC10F14
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 06:35:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2893F222BE
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 06:30:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1079421D81
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 06:35:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727611AbfJCGaH (ORCPT
+        id S1726148AbfJCGfI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 02:30:07 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:2262 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727452AbfJCGaG (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 02:30:06 -0400
-Received: from pps.filterd (m0098421.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x936LoOJ145572
-        for <linux-kernel@vger.kernel.org>; Thu, 3 Oct 2019 02:30:04 -0400
-Received: from e06smtp04.uk.ibm.com (e06smtp04.uk.ibm.com [195.75.94.100])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2vd9e6ka03-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Thu, 03 Oct 2019 02:30:04 -0400
-Received: from localhost
-        by e06smtp04.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <huntbag@linux.vnet.ibm.com>;
-        Thu, 3 Oct 2019 07:30:01 +0100
-Received: from b06avi18626390.portsmouth.uk.ibm.com (9.149.26.192)
-        by e06smtp04.uk.ibm.com (192.168.101.134) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Thu, 3 Oct 2019 07:29:57 +0100
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
-        by b06avi18626390.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x936TR3J34603396
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 3 Oct 2019 06:29:27 GMT
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id A2A4AA405B;
-        Thu,  3 Oct 2019 06:29:56 +0000 (GMT)
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 223FEA4066;
-        Thu,  3 Oct 2019 06:29:55 +0000 (GMT)
-Received: from boston16h.aus.stglabs.ibm.com (unknown [9.3.23.78])
-        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Thu,  3 Oct 2019 06:29:54 +0000 (GMT)
-From:   Abhishek Goel <huntbag@linux.vnet.ibm.com>
-To:     linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org
-Cc:     npiggin@gmail.com, rjw@rjwysocki.net, daniel.lezcano@linaro.org,
-        mpe@ellerman.id.au, ego@linux.vnet.ibm.com, dja@axtens.net,
-        Abhishek Goel <huntbag@linux.vnet.ibm.com>
-Subject: [RFC v5 3/3] cpuidle-powernv : Recompute the idle-state timeouts when state usage is enabled/disabled
-Date:   Thu,  3 Oct 2019 01:26:46 -0500
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20191003062646.54258-1-huntbag@linux.vnet.ibm.com>
-References: <20191003062646.54258-1-huntbag@linux.vnet.ibm.com>
-X-TM-AS-GCONF: 00
-x-cbid: 19100306-0016-0000-0000-000002B39034
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19100306-0017-0000-0000-00003314980D
-Message-Id: <20191003062646.54258-4-huntbag@linux.vnet.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-10-03_03:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1908290000 definitions=main-1910030061
+        Thu, 3 Oct 2019 02:35:08 -0400
+Received: from mga12.intel.com ([192.55.52.136]:24154 "EHLO mga12.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725770AbfJCGfI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 02:35:08 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 02 Oct 2019 23:35:06 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.67,251,1566889200"; 
+   d="scan'208";a="205546053"
+Received: from linux.intel.com ([10.54.29.200])
+  by fmsmga001.fm.intel.com with ESMTP; 02 Oct 2019 23:35:06 -0700
+Received: from [10.226.39.36] (unknown [10.226.39.36])
+        by linux.intel.com (Postfix) with ESMTP id 86F485803A5;
+        Wed,  2 Oct 2019 23:35:03 -0700 (PDT)
+Subject: Re: Fwd: Re: [PATCH v3 1/2] dt-bindings: PCI: intel: Add YAML schemas
+ for the PCIe RC controller
+To:     Rob Herring <robh@kernel.org>
+References: <bf5c8a24-e969-87d4-c62b-4032273e0824@linux.intel.com>
+ <b7e549bb-b46c-c393-50ac-9ef3b198fd49@linux.intel.com>
+Cc:     jingoohan1@gmail.com, gustavo.pimentel@synopsys.com,
+        lorenzo.pieralisi@arm.com, martin.blumenstingl@googlemail.com,
+        linux-pci@vger.kernel.org, hch@infradead.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        andriy.shevchenko@intel.com, cheol.yong.kim@intel.com,
+        chuanhua.lei@linux.intel.com, qi-ming.wu@intel.com
+From:   Dilip Kota <eswara.kota@linux.intel.com>
+Message-ID: <655892bd-6b62-ec2b-ff85-89ca1f86326e@linux.intel.com>
+Date:   Thu, 3 Oct 2019 14:35:02 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
+MIME-Version: 1.0
+In-Reply-To: <b7e549bb-b46c-c393-50ac-9ef3b198fd49@linux.intel.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The disable callback can be used to compute timeout for other states
-whenever a state is enabled or disabled. We store the computed timeout
-in "timeout" defined in cpuidle state strucure. So, we compute timeout
-only when some state is enabled or disabled and not every time in the
-fast idle path.
-We also use the computed timeout to get timeout for snooze, thus getting
-rid of get_snooze_timeout for snooze loop.
+Hi Rob,
 
-Signed-off-by: Abhishek Goel <huntbag@linux.vnet.ibm.com>
----
- drivers/cpuidle/cpuidle-powernv.c | 35 +++++++++++--------------------
- include/linux/cpuidle.h           |  1 +
- 2 files changed, 13 insertions(+), 23 deletions(-)
 
-diff --git a/drivers/cpuidle/cpuidle-powernv.c b/drivers/cpuidle/cpuidle-powernv.c
-index d7686ce6e..a75226f52 100644
---- a/drivers/cpuidle/cpuidle-powernv.c
-+++ b/drivers/cpuidle/cpuidle-powernv.c
-@@ -45,7 +45,6 @@ struct stop_psscr_table {
- static struct stop_psscr_table stop_psscr_table[CPUIDLE_STATE_MAX] __read_mostly;
- 
- static u64 default_snooze_timeout __read_mostly;
--static bool snooze_timeout_en __read_mostly;
- 
- static u64 forced_wakeup_timeout(struct cpuidle_device *dev,
- 				 struct cpuidle_driver *drv,
-@@ -67,26 +66,13 @@ static u64 forced_wakeup_timeout(struct cpuidle_device *dev,
- 	return 0;
- }
- 
--static u64 get_snooze_timeout(struct cpuidle_device *dev,
--			      struct cpuidle_driver *drv,
--			      int index)
-+static void pnv_disable_callback(struct cpuidle_device *dev,
-+				 struct cpuidle_driver *drv)
- {
- 	int i;
- 
--	if (unlikely(!snooze_timeout_en))
--		return default_snooze_timeout;
--
--	for (i = index + 1; i < drv->state_count; i++) {
--		struct cpuidle_state *s = &drv->states[i];
--		struct cpuidle_state_usage *su = &dev->states_usage[i];
--
--		if (s->disabled || su->disable)
--			continue;
--
--		return s->target_residency * tb_ticks_per_usec;
--	}
--
--	return default_snooze_timeout;
-+	for (i = 0; i < drv->state_count; i++)
-+		drv->states[i].timeout = forced_wakeup_timeout(dev, drv, i);
- }
- 
- static int snooze_loop(struct cpuidle_device *dev,
-@@ -94,16 +80,20 @@ static int snooze_loop(struct cpuidle_device *dev,
- 			int index)
- {
- 	u64 snooze_exit_time;
-+	u64 snooze_timeout = drv->states[index].timeout;
-+
-+	if (!snooze_timeout)
-+		snooze_timeout = default_snooze_timeout;
- 
- 	set_thread_flag(TIF_POLLING_NRFLAG);
- 
- 	local_irq_enable();
- 
--	snooze_exit_time = get_tb() + get_snooze_timeout(dev, drv, index);
-+	snooze_exit_time = get_tb() + snooze_timeout;
- 	ppc64_runlatch_off();
- 	HMT_very_low();
- 	while (!need_resched()) {
--		if (likely(snooze_timeout_en) && get_tb() > snooze_exit_time) {
-+		if (get_tb() > snooze_exit_time) {
- 			/*
- 			 * Task has not woken up but we are exiting the polling
- 			 * loop anyway. Require a barrier after polling is
-@@ -168,7 +158,7 @@ static int stop_loop(struct cpuidle_device *dev,
- 	u64 timeout_tb;
- 	bool forced_wakeup = false;
- 
--	timeout_tb = forced_wakeup_timeout(dev, drv, index);
-+	timeout_tb = drv->states[index].timeout;
- 
- 	if (timeout_tb) {
- 		/* Ensure that the timeout is at least one microsecond
-@@ -263,6 +253,7 @@ static int powernv_cpuidle_driver_init(void)
- 	 */
- 
- 	drv->cpumask = (struct cpumask *)cpu_present_mask;
-+	drv->disable_callback = pnv_disable_callback;
- 
- 	return 0;
- }
-@@ -422,8 +413,6 @@ static int powernv_idle_probe(void)
- 		/* Device tree can indicate more idle states */
- 		max_idle_state = powernv_add_idle_states();
- 		default_snooze_timeout = TICK_USEC * tb_ticks_per_usec;
--		if (max_idle_state > 1)
--			snooze_timeout_en = true;
-  	} else
-  		return -ENODEV;
- 
-diff --git a/include/linux/cpuidle.h b/include/linux/cpuidle.h
-index 1729a497b..64195861b 100644
---- a/include/linux/cpuidle.h
-+++ b/include/linux/cpuidle.h
-@@ -50,6 +50,7 @@ struct cpuidle_state {
- 	int		power_usage; /* in mW */
- 	unsigned int	target_residency; /* in US */
- 	bool		disabled; /* disabled on all CPUs */
-+	unsigned long long timeout; /* timeout for exiting out of a state */
- 
- 	int (*enter)	(struct cpuidle_device *dev,
- 			struct cpuidle_driver *drv,
--- 
-2.17.1
+On 18/9/2019 2:56 PM, Dilip Kota wrote:
+> On 9/18/2019 2:40 AM, Rob Herring wrote:
+>> On Wed, Sep 04, 2019 at 06:10:30PM +0800, Dilip Kota wrote:
+>>> The Intel PCIe RC controller is Synopsys Designware
+>>> based PCIe core. Add YAML schemas for PCIe in RC mode
+>>> present in Intel Universal Gateway soc.
+>>>
+>>> Signed-off-by: Dilip Kota <eswara.kota@linux.intel.com>
+>>> ---
+>>> changes on v3:
+>>> Add the appropriate License-Identifier
+>>> Rename intel,rst-interval to 'reset-assert-us'
+>>> Add additionalProperties: false
+>>> Rename phy-names to 'pciephy'
+>>> Remove the dtsi node split of SoC and board in the example
+>>> Add #interrupt-cells = <1>; or else interrupt parsing will fail
+>>> Name yaml file with compatible name
+>>>
+>>> .../devicetree/bindings/pci/intel,lgm-pcie.yaml | 137 
+>>> +++++++++++++++++++++
+>>> 1 file changed, 137 insertions(+)
+>>> create mode 100644 
+>>> Documentation/devicetree/bindings/pci/intel,lgm-pcie.yaml
+>>>
+>>> diff --git 
+>>> a/Documentation/devicetree/bindings/pci/intel,lgm-pcie.yaml 
+>>> b/Documentation/devicetree/bindings/pci/intel,lgm-pcie.yaml
+>>> new file mode 100644
+>>> index 000000000000..5e5cc7fd66cd
+>>> --- /dev/null
+>>> +++ b/Documentation/devicetree/bindings/pci/intel,lgm-pcie.yaml
+>>> @@ -0,0 +1,137 @@
+>>> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+>>> +%YAML 1.2
+>>> +---
+>>> +$id: http://devicetree.org/schemas/pci/intel-pcie.yaml#
+>>> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+>>> +
+>>> +title: Intel AXI bus based PCI express root complex
+>>> +
+>>> +maintainers:
+>>> + - Dilip Kota <eswara.kota@linux.intel.com>
+>>> +
+>>> +properties:
+>>> + compatible:
+>>> + const: intel,lgm-pcie
+>>> +
+>>> + device_type:
+>>> + const: pci
+>>> +
+>>> + "#address-cells":
+>>> + const: 3
+>>> +
+>>> + "#size-cells":
+>>> + const: 2
+>> These all belong in a common schema.
+>>
+>>> +
+>>> + reg:
+>>> + items:
+>>> + - description: Controller control and status registers.
+>>> + - description: PCIe configuration registers.
+>>> + - description: Controller application registers.
+>>> +
+>>> + reg-names:
+>>> + items:
+>>> + - const: dbi
+>>> + - const: config
+>>> + - const: app
+>>> +
+>>> + ranges:
+>>> + description: Ranges for the PCI memory and I/O regions.
+>> And this.
+>>
+>>> +
+>>> + resets:
+>>> + maxItems: 1
+>>> +
+>>> + clocks:
+>>> + description: PCIe registers interface clock.
+>>> +
+>>> + phys:
+>>> + maxItems: 1
+>>> +
+>>> + phy-names:
+>>> + const: pciephy
+>>> +
+>>> + reset-gpios:
+>>> + maxItems: 1
+>>> +
+>>> + num-lanes:
+>>> + description: Number of lanes to use for this port.
+>>> +
+>>> + linux,pci-domain:
+>>> + $ref: /schemas/types.yaml#/definitions/uint32
+>>> + description: PCI domain ID.
+>> These 2 also should be common.
+>>
+>>> +
+>>> + interrupts:
+>>> + description: PCIe core integrated miscellaneous interrupt.
+>> How many? No need for description if there's only 1.
+>>
+>>> +
+>>> + '#interrupt-cells':
+>>> + const: 1
+>>> +
+>>> + interrupt-map-mask:
+>>> + description: Standard PCI IRQ mapping properties.
+>>> +
+>>> + interrupt-map:
+>>> + description: Standard PCI IRQ mapping properties.
+>>> +
+>>> + max-link-speed:
+>>> + description: Specify PCI Gen for link capability.
+>>> +
+>>> + bus-range:
+>>> + description: Range of bus numbers associated with this controller.
+>> All common.
+> You mean to remove all the common schema entries description!.
+> In most of the Documention/devicetree/binding/pci documents all the 
+> common entries are described so I followed the same.
 
+If common schemas are removed, getting below warning during the 
+dt_binding_check.
+
+Documentation/devicetree/bindings/pci/intel,lgm-pcie.example.dt.yaml: 
+pcie@d0e00000: '#address-cells', '#interrupt-cells', '#size-cells', 
+'bus-range', 'device_type', 'interrupt-map', 'interrupt-map-mask', 
+'interrupt-parent', 'linux,pci-domain', 'ranges', 'reset-gpios' do not 
+match any of the regexes: 'pinctrl-[0-9]+'
+
+Regards,
+Dilip
+
+>>
+>>> +
+>>> + reset-assert-ms:
+>>> + description: |
+>>> + Device reset interval in ms.
+>>> + Some devices need an interval upto 500ms. By default it is 100ms.
+>> This is a property of a device, so it belongs in a device node. How
+>> would you deal with this without DT?
+> This property is for the PCIe RC to keep a delay before notifying the 
+> reset to the device.
+> If this entry is not present, PCIe driver will set a default value of 
+> 100ms.
+>>
+>>> +
+>>> +required:
+>>> + - compatible
+>>> + - device_type
+>>> + - reg
+>>> + - reg-names
+>>> + - ranges
+>>> + - resets
+>>> + - clocks
+>>> + - phys
+>>> + - phy-names
+>>> + - reset-gpios
+>>> + - num-lanes
+>>> + - linux,pci-domain
+>>> + - interrupts
+>>> + - interrupt-map
+>>> + - interrupt-map-mask
+>>> +
+>>> +additionalProperties: false
+>>> +
+>>> +examples:
+>>> + - |
+>>> + pcie10:pcie@d0e00000 {
+>>> + compatible = "intel,lgm-pcie";
+>>> + device_type = "pci";
+>>> + #address-cells = <3>;
+>>> + #size-cells = <2>;
+>>> + reg = <
+>>> + 0xd0e00000 0x1000
+>>> + 0xd2000000 0x800000
+>>> + 0xd0a41000 0x1000
+>>> + >;
+>>> + reg-names = "dbi", "config", "app";
+>>> + linux,pci-domain = <0>;
+>>> + max-link-speed = <4>;
+>>> + bus-range = <0x00 0x08>;
+>>> + interrupt-parent = <&ioapic1>;
+>>> + interrupts = <67 1>;
+>>> + #interrupt-cells = <1>;
+>>> + interrupt-map-mask = <0 0 0 0x7>;
+>>> + interrupt-map = <0 0 0 1 &ioapic1 27 1>,
+>>> + <0 0 0 2 &ioapic1 28 1>,
+>>> + <0 0 0 3 &ioapic1 29 1>,
+>>> + <0 0 0 4 &ioapic1 30 1>;
+>>> + ranges = <0x02000000 0 0xd4000000 0xd4000000 0 0x04000000>;
+>>> + resets = <&rcu0 0x50 0>;
+>>> + clocks = <&cgu0 LGM_GCLK_PCIE10>;
+>>> + phys = <&cb0phy0>;
+>>> + phy-names = "pciephy";
+>>> + status = "okay";
+>>> + reset-assert-ms = <500>;
+>>> + reset-gpios = <&gpio0 3 GPIO_ACTIVE_LOW>;
+>>> + num-lanes = <2>;
+>>> + };
+>>> -- 2.11.0
+>>>
