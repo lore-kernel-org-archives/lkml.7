@@ -2,104 +2,144 @@ Return-Path: <SRS0=6dNS=X4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B97BC10F14
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:28:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BEE52C10F14
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:28:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0B08720830
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:28:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570123693;
-	bh=TJDCL/OzCzUm1R6VioSOIvxqDHPnNF2nC0aYF3S27Po=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=tSF6LvyyiFNnG9NMgdzPeIASKnVCkeDls7lTpFV3EzcCcMsiEy5JN91NE3ENsHbK/
-	 lYwQdJNWHo/4R9up8HMgaJTFI4kjMm7SAYTCvY1vhW1aI5a0oqFoM01iSwD7LTmuW6
-	 h8vtQ24lGAXEZlF+nXlDGmu4Yz5+pK9bUqCZFvVE=
+	by mail.kernel.org (Postfix) with ESMTP id A0FB020865
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:28:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388493AbfJCQOA (ORCPT
+        id S1729940AbfJCR2U (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 12:14:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36942 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 13:28:20 -0400
+Received: from foss.arm.com ([217.140.110.172]:51898 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388477AbfJCQN4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:13:56 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 965872054F;
-        Thu,  3 Oct 2019 16:13:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570119236;
-        bh=TJDCL/OzCzUm1R6VioSOIvxqDHPnNF2nC0aYF3S27Po=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=r0/oGxGNcoMeq3sKuEkUz4+X5qKvlaJRH3q4jMuQ6xSioyqF0iGu2X1QZ+Qd9F+GD
-         tmsjVcTTMlHY4WNuRsBEowD7n4gsmb3pFh/JNAxYte5wvj9bOF2WFKWvo3STVqNbUb
-         +QVg7hyXVG+SPEFCo48SF/ylOhJPtCPNpkb4JEJw=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Chao Yu <yuchao0@huawei.com>,
-        Jan Kara <jack@suse.cz>
-Subject: [PATCH 4.14 177/185] quota: fix wrong condition in is_quota_modification()
-Date:   Thu,  3 Oct 2019 17:54:15 +0200
-Message-Id: <20191003154521.219218955@linuxfoundation.org>
-X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20191003154437.541662648@linuxfoundation.org>
-References: <20191003154437.541662648@linuxfoundation.org>
-User-Agent: quilt/0.66
+        id S1727254AbfJCR2Q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 13:28:16 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9425F1000;
+        Thu,  3 Oct 2019 10:21:59 -0700 (PDT)
+Received: from [10.1.196.105] (eglon.cambridge.arm.com [10.1.196.105])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 180473F739;
+        Thu,  3 Oct 2019 10:21:57 -0700 (PDT)
+Subject: Re: [PATCH RFC 0/4] ACPI: APEI: Add support to notify the vendor
+ specific HW errors
+To:     Shiju Jose <shiju.jose@huawei.com>
+Cc:     "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
+        "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "rjw@rjwysocki.net" <rjw@rjwysocki.net>,
+        "lenb@kernel.org" <lenb@kernel.org>,
+        "tony.luck@intel.com" <tony.luck@intel.com>,
+        "bp@alien8.de" <bp@alien8.de>,
+        "baicar@os.amperecomputing.com" <baicar@os.amperecomputing.com>,
+        Linuxarm <linuxarm@huawei.com>,
+        Jonathan Cameron <jonathan.cameron@huawei.com>,
+        tanxiaofei <tanxiaofei@huawei.com>
+References: <Shiju Jose> <20190812101149.26036-1-shiju.jose@huawei.com>
+ <72f44e4d-a20b-df1c-ddfe-55219e0ed429@arm.com>
+ <86258A5CC0A3704780874CF6004BA8A6584C6BA0@lhreml523-mbx.china.huawei.com>
+From:   James Morse <james.morse@arm.com>
+Message-ID: <baa9760b-248e-e90f-68ed-1f94e128ef29@arm.com>
+Date:   Thu, 3 Oct 2019 18:21:55 +0100
+User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <86258A5CC0A3704780874CF6004BA8A6584C6BA0@lhreml523-mbx.china.huawei.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chao Yu <yuchao0@huawei.com>
+Hi Shiju,
 
-commit 6565c182094f69e4ffdece337d395eb7ec760efc upstream.
+On 22/08/2019 17:56, Shiju Jose wrote:
+> James Morse wrote:
+>> On 12/08/2019 11:11, Shiju Jose wrote:
+>>> Presently kernel does not support reporting the vendor specific HW
+>>> errors, in the non-standard format, to the vendor drivers for the recovery.
+>>
+>> 'non standard' here is probably a little jarring to the casual reader. You're
+>> referring to the UEFI spec's "N.2.3 Non-standard Section Body", which refers to
+>> any section type published somewhere other than the UEFI spec.
 
-Quoted from
-commit 3da40c7b0898 ("ext4: only call ext4_truncate when size <= isize")
+>>> This patch set add this support and also move the existing handler
+>>> functions for the standard errors to the new callback method.
+>>
+>> Could you give an example of where this would be useful? You're adding an API
+>> with no caller to justify its existence.
 
-" At LSF we decided that if we truncate up from isize we shouldn't trim
-  fallocated blocks that were fallocated with KEEP_SIZE and are past the
- new i_size.  This patch fixes ext4 to do this. "
+> One such example is handling the local errors occurred in a device controller, such as PCIe.
 
-And generic/092 of fstest have covered this case for long time, however
-is_quota_modification() didn't adjust based on that rule, so that in
-below condition, we will lose to quota block change:
-- fallocate blocks beyond EOF
-- remount
-- truncate(file_path, file_size)
+Could we have the example in the form of patches? (sorry, I wasn't clear)
 
-Fix it.
+I don't think its realistic that a PCIe device driver would want to know about errors on
+other devices in the system. (SAS-HBA meet the GPU).
 
-Link: https://lore.kernel.org/r/20190911093650.35329-1-yuchao0@huawei.com
-Fixes: 3da40c7b0898 ("ext4: only call ext4_truncate when size <= isize")
-CC: stable@vger.kernel.org
-Signed-off-by: Chao Yu <yuchao0@huawei.com>
-Signed-off-by: Jan Kara <jack@suse.cz>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+PCIe's has AER for handling errors that (may have) occurred on a PCIe link, and this has
+its own CPER records.
 
----
- include/linux/quotaops.h |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/include/linux/quotaops.h
-+++ b/include/linux/quotaops.h
-@@ -22,7 +22,7 @@ static inline struct quota_info *sb_dqop
- /* i_mutex must being held */
- static inline bool is_quota_modification(struct inode *inode, struct iattr *ia)
- {
--	return (ia->ia_valid & ATTR_SIZE && ia->ia_size != inode->i_size) ||
-+	return (ia->ia_valid & ATTR_SIZE) ||
- 		(ia->ia_valid & ATTR_UID && !uid_eq(ia->ia_uid, inode->i_uid)) ||
- 		(ia->ia_valid & ATTR_GID && !gid_eq(ia->ia_gid, inode->i_gid));
- }
+>> GUIDs should only belong to one driver.
+
+> UEFI spec's N.2.3 Non-standard Section Body mentioned,  "The type (e.g. format) of a
+> non-standard section is identified by the GUID populated in the Section Descriptor's
+> Section Type field." 
+> There is a possibility to define common non-standard error section format
+
+I agree the GUID describes the format of the error record,
+
+
+> which will
+> be used for more than one driver if the error data to be reported is in the same format.
+> Then can the same GUID belong to multiple drivers?
+
+... but here we disagree.
+
+CPER has a component/block-diagram view of the system. It describes a Memory error or an
+error with a PCIe endpoint. An error record affects one component.
+
+If you wanted to describe an error caused by a failed transaction between a PCIe device
+and memory, you would need two of these records, and its guesswork as to what happened
+between them.
+
+But the PCIe device has no business poking around in the memory error. Even if it did APEI
+would be the wrong place to do this as its not the only caller of memory_failure().
+
+
+>>> Also the CCIX RAS patches could be move to the proposed callback method.
+>>
+>> Presumably for any vendor-specific stuff?
+
+> This information was related to the proposal to replace the  number of if(guid_equal(...)) else
+> if(guid_equal(...)) checks in the ghes_do_proc() for the existing UEFI spec defined error 
+> sections(such as PCIe,  Memory, ARM HW error)
+
+'the standard ones'
+
+> by registering the corresponding handler functions to the proposed notification method.
+
+I really don't like this. Registering a handler for 'memory corruption' would require
+walking a list of dynamically allocated pointers. Can there be more than one entry? Can
+random drivers block memory_failure() while they allocate more memory to send packets over
+USB? What if it loops?
+
+For the standard error sources the kernel needs to run 'the' handler as quickly as
+possible, with a minimum of code/memory-access in the meantime. It already takes too long.
+
+
+Thanks,
+
+James
+
+
+> The same apply to the CCIX error sections and any other
+> error sections defined by the UEFI spec in the future.  
 
 
