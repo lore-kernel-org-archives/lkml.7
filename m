@@ -2,72 +2,73 @@ Return-Path: <SRS0=6dNS=X4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3057DC4CED1
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 09:12:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE75FC32792
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 09:13:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0978621848
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 09:12:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570093960;
-	bh=hC5RRC0CVdI9lSSoHciGX50R/JTCn6x4GLQJVZUPWw8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=UxaHv9XqJtHlXjlc9HUPb9UhGTavtzXX8rFxklqGR4oebGueoR56umbOCAK9dulxW
-	 vpHr9UixfE4EbBuVxxzciiD+29qFtKnk8JIuwJNW7h5nIezOa4rLxUKQ2ovUMh9y11
-	 EmTOgiMMwzeSLqIwEw4IzZTHxpvd8YXCrdO79b9Y=
+	by mail.kernel.org (Postfix) with ESMTP id 8E8CB217D7
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 09:13:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729251AbfJCJMj (ORCPT
+        id S1729252AbfJCJNb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 05:12:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53106 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 05:13:31 -0400
+Received: from foss.arm.com ([217.140.110.172]:39098 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728839AbfJCJMj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 05:12:39 -0400
-Received: from X250 (li937-157.members.linode.com [45.56.119.157])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6F016217D7;
-        Thu,  3 Oct 2019 09:12:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570093958;
-        bh=hC5RRC0CVdI9lSSoHciGX50R/JTCn6x4GLQJVZUPWw8=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=TnJo2+0appSGZK4WOcQv7yGfWNzmU178Q94zKkpuaGpCJQJj5YwQfcuuhiLtGwY1l
-         hUPjuURF33zxUkoE9s2anHyO5DmyE7UZm/knv4PrLGLPA4CndBoYNLd2Bs3PMdqwXa
-         yOnxBixgpJYVknTrNzgrz+kXGTjUv1/l3eKrJIAU=
-Date:   Thu, 3 Oct 2019 17:12:19 +0800
-From:   Shawn Guo <shawnguo@kernel.org>
-To:     Anson Huang <Anson.Huang@nxp.com>
-Cc:     wim@linux-watchdog.org, linux@roeck-us.net, robh+dt@kernel.org,
-        mark.rutland@arm.com, s.hauer@pengutronix.de,
-        kernel@pengutronix.de, festevam@gmail.com, linux@armlinux.org.uk,
-        otavio@ossystems.com.br, leonard.crestez@nxp.com,
-        u.kleine-koenig@pengutronix.de, schnitzeltony@gmail.com,
-        jan.tuerk@emtrion.com, linux-watchdog@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, Linux-imx@nxp.com
-Subject: Re: [PATCH V5 3/4] ARM: imx_v6_v7_defconfig: Enable
- CONFIG_IMX7ULP_WDT by default
-Message-ID: <20191003091217.GC22491@X250>
-References: <1566999303-18795-1-git-send-email-Anson.Huang@nxp.com>
- <1566999303-18795-3-git-send-email-Anson.Huang@nxp.com>
+        id S1728767AbfJCJNb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 05:13:31 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 1753028;
+        Thu,  3 Oct 2019 02:13:31 -0700 (PDT)
+Received: from arrakis.emea.arm.com (unknown [10.1.196.49])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 501613F739;
+        Thu,  3 Oct 2019 02:13:30 -0700 (PDT)
+Date:   Thu, 3 Oct 2019 10:13:28 +0100
+From:   Catalin Marinas <catalin.marinas@arm.com>
+To:     Marc Dionne <marc.c.dionne@gmail.com>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-mm@kvack.org
+Subject: Re: Boot hang with 5.4-rc1, bisected to c5665868183f
+Message-ID: <20191003091327.GC21629@arrakis.emea.arm.com>
+References: <CAB9dFdtVzo2C_8h+Qe144mrhBRZp5TkdiudwXsfZo5fCAWWj_g@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1566999303-18795-3-git-send-email-Anson.Huang@nxp.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <CAB9dFdtVzo2C_8h+Qe144mrhBRZp5TkdiudwXsfZo5fCAWWj_g@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 28, 2019 at 09:35:02AM -0400, Anson Huang wrote:
-> Select CONFIG_IMX7ULP_WDT by default to support i.MX7ULP watchdog.
+On Wed, Oct 02, 2019 at 07:26:51PM -0300, Marc Dionne wrote:
+> 5.4-rc1 hangs early on boot for me; the stack trace that I could
+> manage to see on screen suggested something kmemleak related, and it
+> was fairly quick to bisect it down to commit c5665868183f ("mm:
+> kmemleak: use the memory pool for early allocations").
 > 
-> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+> Several call stacks periodically go by on screen, an interesting one
+> is (manually transcribed):
+> 
+> RIP: 0010:_raw_write_unlock_irqrestore+0x15/0x20
+>   find_and_remove_object+0x84/0x90
+>   delete_object_full+0x10/0x20
+>   __kmemleak_do_cleanup+0x2d/0x50
+>   kmemleak_do_cleanup+0x59/0x60
+>   process_one_work+0x1a4/0x3c0
+>   worker_thread+0x50/0x3c0
+> ...
+> 
+> Config is attached.
 
-Applied, thanks.
+Thanks for the report. This was also mentioned here:
+
+http://lkml.kernel.org/r/2ac37341-097e-17a2-fb6b-7912da9fa38e@ozlabs.ru
+
+I'll have a look. It seems to only happen on the kmemleak disabling
+path (I managed to reproduce it as well).
+
+-- 
+Catalin
