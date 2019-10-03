@@ -7,48 +7,46 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 54CA7C10F14
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:59:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CADF5C4CED1
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:59:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1FBB620673
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:59:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 96E192070B
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:59:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570121954;
-	bh=9SO459Tx95hQLcr6M3fZdhK5p3dMn/Dz2ldcdyi20Qc=;
+	s=default; t=1570121956;
+	bh=qzhzxhxwZtPw9WUK7gM1IqcV5+m1vRHorMTFT6SbNOo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vAMdn8+/DUhhGNkF1lyqAIVlbNkvpz0Bk7L4ueEF9F4G00mynpnXQ9XVY9rH8xhwa
-	 yb/UowvL1VyUrvFEMLCIYvjH/QSOAMUx5f7eB1lyrb8K73wVZC21QA/kSlyoDCuocw
-	 jKTjvpPx03mh6P59nd1Mf8v7NJycwfs/IeMhVuLM=
+	b=ncd3OZ97p8us2VQwKJwzkiwsfEvlF288BfS9Rk3lw3F9BUxdrHX9JyeJma5QWM0LT
+	 bXqVOUXeYCqIP/1Hxm9TdPsNC4oc9k/iRHA6rE82BM/7QJs1L7llu1eiOCTIcTRMKr
+	 Lv0ph0IVW2/yLQnmL+0xojgqRcx1E9ZJyihkyQ0s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391630AbfJCQrk (ORCPT
+        id S2405175AbfJCQr3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 12:47:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:32940 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 12:47:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60986 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2405202AbfJCQre (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:47:34 -0400
+        id S2405164AbfJCQr0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:47:26 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 856E12086A;
-        Thu,  3 Oct 2019 16:47:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6066420865;
+        Thu,  3 Oct 2019 16:47:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570121254;
-        bh=9SO459Tx95hQLcr6M3fZdhK5p3dMn/Dz2ldcdyi20Qc=;
+        s=default; t=1570121245;
+        bh=qzhzxhxwZtPw9WUK7gM1IqcV5+m1vRHorMTFT6SbNOo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=md9cV8CkeabwpBgC7nspO4ST69xmdZgBAydKC9Ns1hrZVuiFnca8A2oxhfdyKEECL
-         W9KHZafr2n6DGUv/wJudWRvDA5SkYWWIupJCRMZN2QZkHfofo+9BHF56FWBxekWshP
-         mNK7WHWOEDMkgWAsCEEDGNCQjDiaujLuu9MaEv+s=
+        b=IohfoyjEKZy/Sc97zUKiV0G1pBB9l8M58MAvTgy9fBcN3Y+u3nfR7fWWpZSYB7Tjf
+         3H8NMiyU3MpvcmPI8EbKH2h5sjc2J4CmuPnGsIVkjtW2l8OhfMsXZWnOFADWEUWvAS
+         IOyuv5Cgi1ltDLAcL+pCpKuMvVHZryyE8S9l3Ha0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
-        Jinyu Qi <jinyuqi@huawei.com>, Joerg Roedel <jroedel@suse.de>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.3 184/344] iommu/iova: Avoid false sharing on fq_timer_on
-Date:   Thu,  3 Oct 2019 17:52:29 +0200
-Message-Id: <20191003154558.358824001@linuxfoundation.org>
+        stable@vger.kernel.org, Jackie Liu <liuyun01@kylinos.cn>,
+        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.3 208/344] io_uring: fix wrong sequence setting logic
+Date:   Thu,  3 Oct 2019 17:52:53 +0200
+Message-Id: <20191003154600.783669292@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191003154540.062170222@linuxfoundation.org>
 References: <20191003154540.062170222@linuxfoundation.org>
@@ -61,49 +59,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eric Dumazet <edumazet@google.com>
+From: Jackie Liu <liuyun01@kylinos.cn>
 
-[ Upstream commit 0d87308cca2c124f9bce02383f1d9632c9be89c4 ]
+[ Upstream commit 8776f3fa15a5cd213c4dfab7ddaf557983374ea6 ]
 
-In commit 14bd9a607f90 ("iommu/iova: Separate atomic variables
-to improve performance") Jinyu Qi identified that the atomic_cmpxchg()
-in queue_iova() was causing a performance loss and moved critical fields
-so that the false sharing would not impact them.
+Sqo_thread will get sqring in batches, which will cause
+ctx->cached_sq_head to be added in batches. if one of these
+sqes is set with the DRAIN flag, then he will never get a
+chance to process, and finally sqo_thread will not exit.
 
-However, avoiding the false sharing in the first place seems easy.
-We should attempt the atomic_cmpxchg() no more than 100 times
-per second. Adding an atomic_read() will keep the cache
-line mostly shared.
-
-This false sharing came with commit 9a005a800ae8
-("iommu/iova: Add flush timer").
-
-Signed-off-by: Eric Dumazet <edumazet@google.com>
-Fixes: 9a005a800ae8 ('iommu/iova: Add flush timer')
-Cc: Jinyu Qi <jinyuqi@huawei.com>
-Cc: Joerg Roedel <jroedel@suse.de>
-Acked-by: Robin Murphy <robin.murphy@arm.com>
-Signed-off-by: Joerg Roedel <jroedel@suse.de>
+Fixes: de0617e4671 ("io_uring: add support for marking commands as draining")
+Signed-off-by: Jackie Liu <liuyun01@kylinos.cn>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/iommu/iova.c | 4 +++-
+ fs/io_uring.c | 4 +++-
  1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/iommu/iova.c b/drivers/iommu/iova.c
-index 3e1a8a6755723..41c605b0058f9 100644
---- a/drivers/iommu/iova.c
-+++ b/drivers/iommu/iova.c
-@@ -577,7 +577,9 @@ void queue_iova(struct iova_domain *iovad,
+diff --git a/fs/io_uring.c b/fs/io_uring.c
+index cfb48bd088e12..06d048341fa41 100644
+--- a/fs/io_uring.c
++++ b/fs/io_uring.c
+@@ -288,6 +288,7 @@ struct io_ring_ctx {
+ struct sqe_submit {
+ 	const struct io_uring_sqe	*sqe;
+ 	unsigned short			index;
++	u32				sequence;
+ 	bool				has_user;
+ 	bool				needs_lock;
+ 	bool				needs_fixed_file;
+@@ -2040,7 +2041,7 @@ static int io_req_set_file(struct io_ring_ctx *ctx, const struct sqe_submit *s,
  
- 	spin_unlock_irqrestore(&fq->lock, flags);
+ 	if (flags & IOSQE_IO_DRAIN) {
+ 		req->flags |= REQ_F_IO_DRAIN;
+-		req->sequence = ctx->cached_sq_head - 1;
++		req->sequence = s->sequence;
+ 	}
  
--	if (atomic_cmpxchg(&iovad->fq_timer_on, 0, 1) == 0)
-+	/* Avoid false sharing as much as possible. */
-+	if (!atomic_read(&iovad->fq_timer_on) &&
-+	    !atomic_cmpxchg(&iovad->fq_timer_on, 0, 1))
- 		mod_timer(&iovad->fq_timer,
- 			  jiffies + msecs_to_jiffies(IOVA_FQ_TIMEOUT));
- }
+ 	if (!io_op_needs_file(s->sqe))
+@@ -2247,6 +2248,7 @@ static bool io_get_sqring(struct io_ring_ctx *ctx, struct sqe_submit *s)
+ 	if (head < ctx->sq_entries) {
+ 		s->index = head;
+ 		s->sqe = &ctx->sq_sqes[head];
++		s->sequence = ctx->cached_sq_head;
+ 		ctx->cached_sq_head++;
+ 		return true;
+ 	}
 -- 
 2.20.1
 
