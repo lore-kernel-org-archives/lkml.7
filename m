@@ -4,49 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB540C10F14
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:34:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0615C32792
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:34:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AE0ED20830
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:34:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A4995215EA
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:34:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570120463;
-	bh=Q/NK56j/ghdmHEJTxu2BwpA78enXAjTw55znvF1Vb/A=;
+	s=default; t=1570120466;
+	bh=v/Ic3ofv+GsZpIa/wj9HXTqQicPNs+qy8hZelgJmPlE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Sy3E3l7QiMfCZVGFK2Ipbr7ORnXkES+D73SB4abgJ/I176xBV4TWOwJo4CpxeqlyC
-	 Iz1TW3FaPH+bTk1zJbTzOtq9NpFgghYNTYa4bDTvC/Z7YFKFsmCiw3H0D2ZuiaD385
-	 7IIbcTvawVOxkKqjdSuYhp6pE6S+yYScbe9LAWuA=
+	b=Dj+r3f24IiHnR2orNmWJNn7sp72neI3QRuzxKkX3JYKW8NS0ik7JBpMu4N5Ncq7eO
+	 fe26dp+pE5wPDxT8pefPdGMzZJp/YIkOkBJSD0l4ptjzqBf1y1y9XQSqidPx0bFsdE
+	 4khfDT4X4AV/Bz4AHcnbjOehPtis7wR9hzl1X1tE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404165AbfJCQeW (ORCPT
+        id S2404181AbfJCQeZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 12:34:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42872 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 12:34:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42918 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392122AbfJCQeU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:34:20 -0400
+        id S2404162AbfJCQeX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:34:23 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 198A92086A;
-        Thu,  3 Oct 2019 16:34:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CC1862086A;
+        Thu,  3 Oct 2019 16:34:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570120459;
-        bh=Q/NK56j/ghdmHEJTxu2BwpA78enXAjTw55znvF1Vb/A=;
+        s=default; t=1570120462;
+        bh=v/Ic3ofv+GsZpIa/wj9HXTqQicPNs+qy8hZelgJmPlE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=fgPaC9C8UFwMcRjQOZl2pmt7IdDlyAGk75p7p8oMNSpSldF5CwOd++t9LivlBBe/a
-         MlR/aF/juTLwugyJFpIztu/NlF11FyStVWQYxE5/n2bRFZmMVWOMwcXon8HEhZI0MI
-         LgDaimMAAowNb/piswkWtf2S/7bzXvUThwf5/B0k=
+        b=14fM5py0h0cOiCZcOkDKyRInlUsvj6kiujc6SzHeKiGbun+vFJfaZG+fKxvXS767K
+         s2puYuCVI0HivsgWo/Kuj6VjkcevRksRgKAEuXIb5qhEXxRD9vrkhsx8liKM5XiVk3
+         XMQjrkUxIBYcwLdMayKPzJglVrDmwdblNib7TL7o=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Takashi Iwai <tiwai@suse.de>,
+        stable@vger.kernel.org, "Ewan D. Milne" <emilne@redhat.com>,
+        Bart Van Assche <bvanassche@acm.org>,
+        Hannes Reinecke <hare@suse.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Mike Snitzer <snitzer@redhat.com>, dm-devel@redhat.com,
+        Ming Lei <ming.lei@redhat.com>, Jens Axboe <axboe@kernel.dk>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 203/313] ALSA: hda/realtek - Blacklist PC beep for Lenovo ThinkCentre M73/93
-Date:   Thu,  3 Oct 2019 17:53:01 +0200
-Message-Id: <20191003154552.986364854@linuxfoundation.org>
+Subject: [PATCH 5.2 230/313] scsi: implement .cleanup_rq callback
+Date:   Thu,  3 Oct 2019 17:53:28 +0200
+Message-Id: <20191003154555.645454270@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191003154533.590915454@linuxfoundation.org>
 References: <20191003154533.590915454@linuxfoundation.org>
@@ -59,35 +64,60 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Takashi Iwai <tiwai@suse.de>
+From: Ming Lei <ming.lei@redhat.com>
 
-[ Upstream commit 051c78af14fcd74a22b5af45548ad9d588247cc7 ]
+[ Upstream commit b7e9e1fb7a9227be34ad4a5e778022c3164494cf ]
 
-Lenovo ThinkCentre M73 and M93 don't seem to have a proper beep
-although the driver tries to probe and set up blindly.
-Blacklist these machines for suppressing the beep creation.
+Implement .cleanup_rq() callback for freeing driver private part
+of the request. Then we can avoid to leak this part if the request isn't
+completed by SCSI, and freed by blk-mq or upper layer(such as dm-rq) finally.
 
-BugLink: https://bugzilla.kernel.org/show_bug.cgi?id=204635
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Cc: Ewan D. Milne <emilne@redhat.com>
+Cc: Bart Van Assche <bvanassche@acm.org>
+Cc: Hannes Reinecke <hare@suse.com>
+Cc: Christoph Hellwig <hch@lst.de>
+Cc: Mike Snitzer <snitzer@redhat.com>
+Cc: dm-devel@redhat.com
+Cc: <stable@vger.kernel.org>
+Fixes: 396eaf21ee17 ("blk-mq: improve DM's blk-mq IO merging via blk_insert_cloned_request feedback")
+Signed-off-by: Ming Lei <ming.lei@redhat.com>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/pci/hda/patch_realtek.c | 3 +++
- 1 file changed, 3 insertions(+)
+ drivers/scsi/scsi_lib.c | 13 +++++++++++++
+ 1 file changed, 13 insertions(+)
 
-diff --git a/sound/pci/hda/patch_realtek.c b/sound/pci/hda/patch_realtek.c
-index 1bec62720374d..d223a79ac934f 100644
---- a/sound/pci/hda/patch_realtek.c
-+++ b/sound/pci/hda/patch_realtek.c
-@@ -1058,6 +1058,9 @@ static const struct snd_pci_quirk beep_white_list[] = {
- 	SND_PCI_QUIRK(0x1043, 0x834a, "EeePC", 1),
- 	SND_PCI_QUIRK(0x1458, 0xa002, "GA-MA790X", 1),
- 	SND_PCI_QUIRK(0x8086, 0xd613, "Intel", 1),
-+	/* blacklist -- no beep available */
-+	SND_PCI_QUIRK(0x17aa, 0x309e, "Lenovo ThinkCentre M73", 0),
-+	SND_PCI_QUIRK(0x17aa, 0x30a3, "Lenovo ThinkCentre M93", 0),
- 	{}
- };
+diff --git a/drivers/scsi/scsi_lib.c b/drivers/scsi/scsi_lib.c
+index 40f392569664b..506062081d8e2 100644
+--- a/drivers/scsi/scsi_lib.c
++++ b/drivers/scsi/scsi_lib.c
+@@ -1073,6 +1073,18 @@ static void scsi_initialize_rq(struct request *rq)
+ 	cmd->retries = 0;
+ }
  
++/*
++ * Only called when the request isn't completed by SCSI, and not freed by
++ * SCSI
++ */
++static void scsi_cleanup_rq(struct request *rq)
++{
++	if (rq->rq_flags & RQF_DONTPREP) {
++		scsi_mq_uninit_cmd(blk_mq_rq_to_pdu(rq));
++		rq->rq_flags &= ~RQF_DONTPREP;
++	}
++}
++
+ /* Add a command to the list used by the aacraid and dpt_i2o drivers */
+ void scsi_add_cmd_to_list(struct scsi_cmnd *cmd)
+ {
+@@ -1800,6 +1812,7 @@ static const struct blk_mq_ops scsi_mq_ops = {
+ 	.init_request	= scsi_mq_init_request,
+ 	.exit_request	= scsi_mq_exit_request,
+ 	.initialize_rq_fn = scsi_initialize_rq,
++	.cleanup_rq	= scsi_cleanup_rq,
+ 	.busy		= scsi_mq_lld_busy,
+ 	.map_queues	= scsi_map_queues,
+ };
 -- 
 2.20.1
 
