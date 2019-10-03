@@ -2,167 +2,97 @@ Return-Path: <SRS0=6dNS=X4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D293CC10F14
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 21:18:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 162C2C10F14
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 21:19:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 985C7207FF
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 21:18:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D8DE0207FF
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 21:19:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="sXUcgtQt"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="nCGIXYs/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733098AbfJCVSE (ORCPT
+        id S1733132AbfJCVTi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 17:18:04 -0400
-Received: from mail-eopbgr810089.outbound.protection.outlook.com ([40.107.81.89]:24420
-        "EHLO NAM01-BY2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1732586AbfJCVRv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 17:17:51 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=UUeabHilvObj5H1B2cn34+CqwuoW/c8Xmf90pI9Xx0UV2yJcBTP6OdBPg6/huqcFWiaKjXu0STsxhbN36gyNpleR5avozeHd/N93eXSNhCr+wT6IuwzoE/CTfyDBpzy842cVG/94bOf3huxcx2n0kMzHoUqnfMN44hqAdqVkk7ljE4WItKH01eIQ0YyQ394jt8GIuiCpB9zaAsXBU546MbV/wdzUcOqmxVs39D/i89qNGarvVrA4L2PVOtBwTh34kJx10WFAeWYwO8e9J5clkMyPxeDjOynS2e0iBCViqhr80PcGI77FqrRaroGV/SIrAwCzscI3fC+T4FBZIsdj1g==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=bKQ/yq6ZW8h+9ow7ZVEAoIjKY6GFVIc36Ic1VgCxzeI=;
- b=n91ie/v0zpit3kY5EmuP5tToldu0uvx292DXZGUDD9Cm54SL2wBuaUOEevpqkt+t8b3RcEJtW2suynD2V68mmopC2GhUkSrlleYTV828uMzkKpAGOS25lZKzjIdXu+4Uygzu5+rPUhoL52ZK7jvvFeqUh1vj7cPy90MQGlp8AmG4OFsNRc0NcM412hPf4NVPttZXd7jIz7L4C/h4n1BlsFB0suIkewKKVDPYKtgUUYzKsPke6fVmUfIYw3Vx3lb9QeD44yfgc3ceCTmSFyj2qzokCpeRxwK2O6S8C8Dz4T4eelJSjhRVMzA93Sa99hXtkN8I9tkFpo46NVrdLQ2tZw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=bKQ/yq6ZW8h+9ow7ZVEAoIjKY6GFVIc36Ic1VgCxzeI=;
- b=sXUcgtQtTS+FrLd2l+vvkK/amo3jdBHm3NvdyyKH8X/q3NnuJ2F0tRy8fcMj2GJpEPBCQsz4aa0FvhDCs03oR7pnevfSJB0FzMtAwce9w3uyv/pzDhJBlCle/yOTLoVE53lpWxggc97up8dxrdSy2vDuXFt0drLrOS2dStQnrvY=
-Received: from DM6PR12MB3163.namprd12.prod.outlook.com (20.179.104.150) by
- DM6PR12MB3115.namprd12.prod.outlook.com (20.178.31.21) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2305.20; Thu, 3 Oct 2019 21:17:47 +0000
-Received: from DM6PR12MB3163.namprd12.prod.outlook.com
- ([fe80::85b7:7456:1a67:78aa]) by DM6PR12MB3163.namprd12.prod.outlook.com
- ([fe80::85b7:7456:1a67:78aa%7]) with mapi id 15.20.2305.023; Thu, 3 Oct 2019
- 21:17:47 +0000
-From:   "Lendacky, Thomas" <Thomas.Lendacky@amd.com>
-To:     "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-CC:     Paolo Bonzini <pbonzini@redhat.com>,
-        =?iso-8859-2?Q?Radim_Kr=E8m=E1=F8?= <rkrcmar@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        "Singh, Brijesh" <brijesh.singh@amd.com>,
-        David Rientjes <rientjes@google.com>
-Subject: [PATCH 4/5] KVM: SVM: Convert DEACTIVATE mutex to read/write
- semaphore
-Thread-Topic: [PATCH 4/5] KVM: SVM: Convert DEACTIVATE mutex to read/write
- semaphore
-Thread-Index: AQHVejAB/rHeFE4CtEK2sFRC1yAFBA==
-Date:   Thu, 3 Oct 2019 21:17:47 +0000
-Message-ID: <d6c131bd5e43138cdb5c0be98005ffbc582ca833.1570137447.git.thomas.lendacky@amd.com>
-References: <cover.1570137447.git.thomas.lendacky@amd.com>
-In-Reply-To: <cover.1570137447.git.thomas.lendacky@amd.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-mailer: git-send-email 2.17.1
-x-clientproxiedby: SN6PR05CA0006.namprd05.prod.outlook.com
- (2603:10b6:805:de::19) To DM6PR12MB3163.namprd12.prod.outlook.com
- (2603:10b6:5:182::22)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=Thomas.Lendacky@amd.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [165.204.78.1]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 205510b0-9e32-4f6d-45f7-08d748472382
-x-ms-office365-filtering-ht: Tenant
-x-ms-traffictypediagnostic: DM6PR12MB3115:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <DM6PR12MB31152C2CABC13A6BA990850AEC9F0@DM6PR12MB3115.namprd12.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:3826;
-x-forefront-prvs: 01792087B6
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(39860400002)(366004)(396003)(376002)(346002)(136003)(189003)(199004)(26005)(256004)(14444005)(186003)(2906002)(102836004)(6512007)(99286004)(66946007)(476003)(14454004)(6436002)(446003)(8676002)(81166006)(8936002)(81156014)(478600001)(2501003)(11346002)(50226002)(71190400001)(71200400001)(36756003)(6116002)(76176011)(52116002)(86362001)(3846002)(486006)(386003)(6506007)(7736002)(316002)(25786009)(305945005)(5660300002)(7416002)(118296001)(66556008)(66446008)(64756008)(66476007)(4326008)(54906003)(110136005)(6486002)(66066001)(2616005);DIR:OUT;SFP:1101;SCL:1;SRVR:DM6PR12MB3115;H:DM6PR12MB3163.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: amd.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: xQ3AGL+LgF8pEjrNl7Wc6Rrv6v4Dt8MV4joi7VdRQU6/Nzqu+neO6Qatvd6cCZqEEQTry/MSfps22kpuvbo+cA06hwZ6UoSls2WcPf8zBliVjIm5AKHSYBchlbIqdfp2YamvvhLiZhRNcToolgqsrMDiwRd2J6cwtEVOVLn8RkkUAFwfhywPf41WnsnVXkgGx7ursQVA+Wl1iArviyP1rWGA3uAI29hg/5kYJB0Gr5Kd/OMvcSY/TdrfbiW2L/3u/jOP78Qh4bkogync+kuaM2HwgLX58xhRHod/Ehr5z+GsLBLuKmUBq9hTnAXYE3HU4lwQqHE+kntdXlzlVslhg9J/HxeWETQlKEEl4bnIQXXRRAHGJrm22CwjOWAVKxuUiaykTvlbofW7pL7lyz0D0L5tiEfux3mnoUXWvSpJyOo=
-Content-Type: text/plain; charset="iso-8859-2"
-Content-ID: <6D4B28A594D3E1478A7E242F0B73EBBA@namprd12.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
+        Thu, 3 Oct 2019 17:19:38 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:56020 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727789AbfJCVTi (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 17:19:38 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:To:
+        Subject:Sender:Reply-To:Cc:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=s1b1QGPWo7eGlMVA47KnxB99j3OasMbsofXzn7s2rTQ=; b=nCGIXYs/zPbQi81jAlWV8Cyrh
+        oGXU1BMSQ/V1yShigPjKIADfQv8WKVH74v1w2STKF49cDsdrdU7eovb2BFMS92xFEgMIR7P2IZu7h
+        Ep7e3MZIdA2BoPtENP9Aveo+cXefE/JKr5u0UdbjLY0+4xnmLdfEZEWtmmfIxKjkZqrNzCWXx5QWD
+        oOz7nllUqE0+TiZVf0SBfj6UsXcQ36tIvVeLcJIVG5vQssSv6fowXcjm7o/NefoqI5VuM4BxkjkW4
+        YjY/wiVpxvs/PMye/oVplA1w33nI0mOBF576aCA+wKCfD5ro+W2qwJ45UZsVmQLxeegWRcFJy9RMi
+        zh2qdqsqQ==;
+Received: from [2601:1c0:6280:3f0::9a1f]
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.2 #3 (Red Hat Linux))
+        id 1iG8Vd-0001Ce-TT; Thu, 03 Oct 2019 21:19:37 +0000
+Subject: Re: SCSI device probing non-deterministic in 5.3
+To:     Bradley LaBoon <blaboon@linode.com>, linux-kernel@vger.kernel.org,
+        linux-scsi <linux-scsi@vger.kernel.org>
+References: <d2ff27ce-67b0-735e-8652-0e925d5f756c@linode.com>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <f6d6622d-a9a0-d7de-b5af-b7a885ee1b61@infradead.org>
+Date:   Thu, 3 Oct 2019 14:19:37 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 205510b0-9e32-4f6d-45f7-08d748472382
-X-MS-Exchange-CrossTenant-originalarrivaltime: 03 Oct 2019 21:17:47.3701
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: nGY7ig+M1gp6mG7vhpIYngkOVrBv+b7egxoYKi0QB4BcnCZPHjtCAmUOfvunn8UUE8ED/zx9zS4mZ9XEszSxzQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR12MB3115
+In-Reply-To: <d2ff27ce-67b0-735e-8652-0e925d5f756c@linode.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tom Lendacky <thomas.lendacky@amd.com>
+[add linux-scsi mailing list]
 
-In preparation for an upcoming patch, convert the mutex that guards the
-DEACTIVATE/WBINVD/DF_FLUSH sequence into a read/write semaphore. The
-conversion will convert the mutex lock and unlock into down_write and
-up_write so that the mutex behavior is maintained.
+On 10/3/19 1:32 PM, Bradley LaBoon wrote:
+> Hello, LKML!
+> 
+> Beginning with kernel 5.3 the order in which SCSI devices are probed and
+> named has become non-deterministic. This is a result of a patch that was
+> submitted to add asynchronous device probing (specifically, commit
+> f049cf1a7b6737c75884247c3f6383ef104d255a). Previously, devices would
+> always be probed in the order in which they exist on the bus, resulting
+> in the first device being named 'sda', the second device 'sdb', and so on.
+> 
+> This is important in the case of mass VM deployments where many VMs are
+> created from a single base image. Partition UUIDs cannot be used in the
+> fstab of such an image because the UUIDs will be different for each VM
+> and are not known in advance. Normally you can't rely on device names
+> being consistent between boots, but with QEMU you can set the bus order
+> of each block device and thus we currently use that to control the
+> device order in the guest. With the introduction of the aforementioned
+> patch this is no longer possible and the device ordering is different on
+> every boot, resulting in the guest booting into an emergency shell
+> unless the devices randomly happen to be loaded in the expected order.
+> 
+> I have created a patch which reverts back to the previous behavior, but
+> I wanted to open this topic to discussion before posting it. I'm not
+> totally familiar with the low-level details of SCSI device probing, so I
+> don't know if the non-deterministic device order was the intended
+> behavior of the patch or just a side-effect. If that is the intended
+> behavior then is there perhaps some other way to ensure a consistent
+> device ordering for a guest VM?
+> 
+> I am not subscribed to the list, so please CC me on any replies.
+> 
+> Thank you!
+> Bradley LaBoon
+> 
 
-Tested-by: David Rientjes <rientjes@google.com>
-Signed-off-by: Tom Lendacky <thomas.lendacky@amd.com>
----
- arch/x86/kvm/svm.c | 7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
 
-diff --git a/arch/x86/kvm/svm.c b/arch/x86/kvm/svm.c
-index 389dfd7594eb..b995d7ac1516 100644
---- a/arch/x86/kvm/svm.c
-+++ b/arch/x86/kvm/svm.c
-@@ -38,6 +38,7 @@
- #include <linux/file.h>
- #include <linux/pagemap.h>
- #include <linux/swap.h>
-+#include <linux/rwsem.h>
-=20
- #include <asm/apic.h>
- #include <asm/perf_event.h>
-@@ -418,7 +419,7 @@ enum {
-=20
- #define VMCB_AVIC_APIC_BAR_MASK		0xFFFFFFFFFF000ULL
-=20
--static DEFINE_MUTEX(sev_deactivate_lock);
-+static DECLARE_RWSEM(sev_deactivate_lock);
- static DEFINE_MUTEX(sev_bitmap_lock);
- static unsigned int max_sev_asid;
- static unsigned int min_sev_asid;
-@@ -1762,14 +1763,14 @@ static void sev_unbind_asid(struct kvm *kvm, unsign=
-ed int handle)
- 	 * Guard against a parallel DEACTIVATE command before the DF_FLUSH
- 	 * command has completed.
- 	 */
--	mutex_lock(&sev_deactivate_lock);
-+	down_write(&sev_deactivate_lock);
-=20
- 	sev_guest_deactivate(data, NULL);
-=20
- 	wbinvd_on_all_cpus();
- 	sev_guest_df_flush(NULL);
-=20
--	mutex_unlock(&sev_deactivate_lock);
-+	up_write(&sev_deactivate_lock);
-=20
- 	kfree(data);
-=20
---=20
-2.17.1
-
+-- 
+~Randy
