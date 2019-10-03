@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BCA59C32792
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:13:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 83165C10F14
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:13:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 77A5420830
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:13:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5690820865
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:13:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570122787;
-	bh=hjmpnAIp7H1b+RS9Gb7JtQbLwf8dNp2GOvMS39yQNrM=;
+	s=default; t=1570122791;
+	bh=izJSz9zwaSm5xge40Tyl2gKrXmgr/JkniLuCjKggVes=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=tb5irdq8rOPEaGDjGGjKY77bjuaqbsBSJoaBrvcLgPAEPSxVtB8AzD2H7Nw3p7hLy
-	 NHAuDuQ9GICGR1SbC7XkPmMmvze9t/OAbY/AzHuQVjG6tk61H+O9b9j9s5LC5BKld0
-	 CGVTrN6Pqnw1hTyu14yzCNLu/C9c+Wqt6Mpe/0lE=
+	b=NF/Jr+uuPQDazEi2u1YNfUryxu08qfSM5B1Sr2RVNLPVEsaay2pcLyS8DrLHukscE
+	 +Tp/q8IxKab/HSxKrJZdyJF+86GfqyuoWgRWIFyQxfCt5yTwj76af2gj5xqQ2CaITI
+	 WRiJgIe2GFmwqefJ5Ae/Ji10hL2m1yhs1x0PlGm0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390172AbfJCQ3O (ORCPT
+        id S2392178AbfJCRNK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 12:29:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34290 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 13:13:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34388 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733078AbfJCQ3J (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:29:09 -0400
+        id S2390021AbfJCQ3N (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:29:13 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 337092133F;
-        Thu,  3 Oct 2019 16:29:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A7B1B2054F;
+        Thu,  3 Oct 2019 16:29:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570120149;
-        bh=hjmpnAIp7H1b+RS9Gb7JtQbLwf8dNp2GOvMS39yQNrM=;
+        s=default; t=1570120152;
+        bh=izJSz9zwaSm5xge40Tyl2gKrXmgr/JkniLuCjKggVes=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=POPI0bsm6ZtL36s0JY2RkRQ3aExaPBmWm77BBp31auoAAykLTXqo4+ByDNi6gB00m
-         aaEzfbqqKsLG7eNMGInjZBwp0wLeB4GCmreR5LAznhhF1cRIK6702B/y9EtTVFBNaA
-         ZyXlq5kjelGEFABVYrfi8rdbOZL9W1nhiXTvDtAI=
+        b=aHW5YTuctuMvOAfWQga/eCXMRIMfjHYxmH6Y4/luSXjCTs+9dDgtfiYnuQe5Hc+Dh
+         AW+tqbe7R6mMYGuQ80l82nihBGDIKhgkYpCN2DnWAedgILy7eqqkxCoeTq1SdRjAtK
+         4XSrJIm+9d47t0dmwmOiWkhoRtVLC40LnPhbVH4w=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Sasha Levin <sashal@kernel.org>,
-        syzbot+79d18aac4bf1770dd050@syzkaller.appspotmail.com
-Subject: [PATCH 5.2 114/313] media: hdpvr: add terminating 0 at end of string
-Date:   Thu,  3 Oct 2019 17:51:32 +0200
-Message-Id: <20191003154544.094603985@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Kunihiko Hayashi <hayashi.kunihiko@socionext.com>,
+        Mark Brown <broonie@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.2 115/313] ASoC: uniphier: Fix double reset assersion when transitioning to suspend state
+Date:   Thu,  3 Oct 2019 17:51:33 +0200
+Message-Id: <20191003154544.199923491@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191003154533.590915454@linuxfoundation.org>
 References: <20191003154533.590915454@linuxfoundation.org>
@@ -61,37 +61,120 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+From: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
 
-[ Upstream commit 8b8900b729e4f31f12ac1127bde137c775c327e6 ]
+[ Upstream commit c372a35550c8d60f673b20210eea58a06d6d38cb ]
 
-dev->usbc_buf was passed as argument for %s, but it was not safeguarded
-by a terminating 0.
+When transitioning to supend state, uniphier_aio_dai_suspend() is called
+and asserts reset lines and disables clocks.
 
-This caused this syzbot issue:
+However, if there are two or more DAIs, uniphier_aio_dai_suspend() are
+called multiple times, and double reset assersion will cause.
 
-https://syzkaller.appspot.com/bug?extid=79d18aac4bf1770dd050
+This patch defines the counter that has the number of DAIs at first, and
+whenever uniphier_aio_dai_suspend() are called, it decrements the
+counter. And only if the counter is zero, it asserts reset lines and
+disables clocks.
 
-Reported-and-tested-by: syzbot+79d18aac4bf1770dd050@syzkaller.appspotmail.com
+In the same way, uniphier_aio_dai_resume() are called, it increments the
+counter after deasserting reset lines and enabling clocks.
 
-Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Fixes: 139a34200233 ("ASoC: uniphier: add support for UniPhier AIO CPU DAI driver")
+Signed-off-by: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+Link: https://lore.kernel.org/r/1566281764-14059-1-git-send-email-hayashi.kunihiko@socionext.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/usb/hdpvr/hdpvr-core.c | 1 +
- 1 file changed, 1 insertion(+)
+ sound/soc/uniphier/aio-cpu.c | 31 +++++++++++++++++++++----------
+ sound/soc/uniphier/aio.h     |  1 +
+ 2 files changed, 22 insertions(+), 10 deletions(-)
 
-diff --git a/drivers/media/usb/hdpvr/hdpvr-core.c b/drivers/media/usb/hdpvr/hdpvr-core.c
-index a0905c81d2cb2..b75c18a012a73 100644
---- a/drivers/media/usb/hdpvr/hdpvr-core.c
-+++ b/drivers/media/usb/hdpvr/hdpvr-core.c
-@@ -137,6 +137,7 @@ static int device_authorization(struct hdpvr_device *dev)
+diff --git a/sound/soc/uniphier/aio-cpu.c b/sound/soc/uniphier/aio-cpu.c
+index ee90e6c3937ce..2ae582a99b636 100644
+--- a/sound/soc/uniphier/aio-cpu.c
++++ b/sound/soc/uniphier/aio-cpu.c
+@@ -424,8 +424,11 @@ int uniphier_aio_dai_suspend(struct snd_soc_dai *dai)
+ {
+ 	struct uniphier_aio *aio = uniphier_priv(dai);
  
- 	dev->fw_ver = dev->usbc_buf[1];
+-	reset_control_assert(aio->chip->rst);
+-	clk_disable_unprepare(aio->chip->clk);
++	aio->chip->num_wup_aios--;
++	if (!aio->chip->num_wup_aios) {
++		reset_control_assert(aio->chip->rst);
++		clk_disable_unprepare(aio->chip->clk);
++	}
  
-+	dev->usbc_buf[46] = '\0';
- 	v4l2_info(&dev->v4l2_dev, "firmware version 0x%x dated %s\n",
- 			  dev->fw_ver, &dev->usbc_buf[2]);
+ 	return 0;
+ }
+@@ -439,13 +442,15 @@ int uniphier_aio_dai_resume(struct snd_soc_dai *dai)
+ 	if (!aio->chip->active)
+ 		return 0;
+ 
+-	ret = clk_prepare_enable(aio->chip->clk);
+-	if (ret)
+-		return ret;
++	if (!aio->chip->num_wup_aios) {
++		ret = clk_prepare_enable(aio->chip->clk);
++		if (ret)
++			return ret;
+ 
+-	ret = reset_control_deassert(aio->chip->rst);
+-	if (ret)
+-		goto err_out_clock;
++		ret = reset_control_deassert(aio->chip->rst);
++		if (ret)
++			goto err_out_clock;
++	}
+ 
+ 	aio_iecout_set_enable(aio->chip, true);
+ 	aio_chip_init(aio->chip);
+@@ -458,7 +463,7 @@ int uniphier_aio_dai_resume(struct snd_soc_dai *dai)
+ 
+ 		ret = aio_init(sub);
+ 		if (ret)
+-			goto err_out_clock;
++			goto err_out_reset;
+ 
+ 		if (!sub->setting)
+ 			continue;
+@@ -466,11 +471,16 @@ int uniphier_aio_dai_resume(struct snd_soc_dai *dai)
+ 		aio_port_reset(sub);
+ 		aio_src_reset(sub);
+ 	}
++	aio->chip->num_wup_aios++;
+ 
+ 	return 0;
+ 
++err_out_reset:
++	if (!aio->chip->num_wup_aios)
++		reset_control_assert(aio->chip->rst);
+ err_out_clock:
+-	clk_disable_unprepare(aio->chip->clk);
++	if (!aio->chip->num_wup_aios)
++		clk_disable_unprepare(aio->chip->clk);
+ 
+ 	return ret;
+ }
+@@ -619,6 +629,7 @@ int uniphier_aio_probe(struct platform_device *pdev)
+ 		return PTR_ERR(chip->rst);
+ 
+ 	chip->num_aios = chip->chip_spec->num_dais;
++	chip->num_wup_aios = chip->num_aios;
+ 	chip->aios = devm_kcalloc(dev,
+ 				  chip->num_aios, sizeof(struct uniphier_aio),
+ 				  GFP_KERNEL);
+diff --git a/sound/soc/uniphier/aio.h b/sound/soc/uniphier/aio.h
+index ca6ccbae0ee8c..a7ff7e556429b 100644
+--- a/sound/soc/uniphier/aio.h
++++ b/sound/soc/uniphier/aio.h
+@@ -285,6 +285,7 @@ struct uniphier_aio_chip {
+ 
+ 	struct uniphier_aio *aios;
+ 	int num_aios;
++	int num_wup_aios;
+ 	struct uniphier_aio_pll *plls;
+ 	int num_plls;
  
 -- 
 2.20.1
