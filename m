@@ -2,142 +2,183 @@ Return-Path: <SRS0=6dNS=X4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A52BC32792
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 18:35:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0080DC10F14
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 18:35:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E29232086A
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 18:35:15 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="bgnatwRW"
+	by mail.kernel.org (Postfix) with ESMTP id D5BD120865
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 18:35:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389599AbfJCSfP (ORCPT
+        id S2389772AbfJCSfo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 14:35:15 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:47713 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1729993AbfJCSfO (ORCPT
+        Thu, 3 Oct 2019 14:35:44 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:44710 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388309AbfJCSfo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 14:35:14 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1570127713;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=RTMENbih6iijQ9dlDl/6i1xREO8UhrKYbrBbztUnU2o=;
-        b=bgnatwRW7/mo+60RilcyF97tjfrDdWMNAdqDCvDHKU5ZPeqsqkOuRiTo/v7A3QalAR9jZf
-        NM2RBed9S0PWO5ykySNkkWMDkmfhOppee757TQzNkR6R+dZQdNzFtUzU18O9N7G1l9Kzqz
-        69SF3ooh0iSZBN9vNVoemPSOvUYN1CI=
-Received: from mail-qk1-f200.google.com (mail-qk1-f200.google.com
- [209.85.222.200]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-355-jVyJ-q_nNJeVFKZoosCI5w-1; Thu, 03 Oct 2019 14:35:11 -0400
-Received: by mail-qk1-f200.google.com with SMTP id r17so3601950qkm.16
-        for <linux-kernel@vger.kernel.org>; Thu, 03 Oct 2019 11:35:11 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=EyEBFcoclk0k8j6w3rMJI9yX9wb88qrPD3qqvau6GSE=;
-        b=tnK71ucQA7TgLzDi39FVEY7aRFFUws00TqXM2RFcLfDy17dnHFy0oeYT5+z9L3xeph
-         aOfHYeGaDifyOedOaXJegG0QNu+J7Rm0PHQMolSUqgmfjBPE2crC9IiTG6IaGPLbUpyY
-         7Bd/zSBEiZNPZPNcrkUA5nCMyosfyXxt7brn9Bx/j2yh0DjC14UZfymeIQEcA3JFx1yS
-         3/5tRfiz990T4cPmgHoNNcNUTQ+JeTFvLHnVKqiILIWtIFyHaSD591sONqSxQuDe634J
-         TRwXczozrlXnoiEch2buYlvCYuuJB0IDefXFJOdoR+uo8Ma1cMSHu7d8ZP45axGYyG/0
-         AKzA==
-X-Gm-Message-State: APjAAAV4dyW4kHXYNkz5HYQQk9aodvMoxiXzUt5CEuRPlb1iqVi+9RQI
-        fMPnAlMfXE9/LMTGQDW7kC0XqJ+kkFfEHRCHTES8tWaNkgyUYh2n9V9AOSImx6kRAUi0GTq4jT1
-        K9BD+Qeb8SacRs9GM69x+thEbNcwK8J0vbh4Pd526
-X-Received: by 2002:a37:5887:: with SMTP id m129mr5700271qkb.27.1570127710763;
-        Thu, 03 Oct 2019 11:35:10 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqzPabDzehR5qiqX01GyYVQ9AZvGW8yw2/ObOo/CM+TKkKRwFdBL9hhoAIlkf7yckrDXv+Uo+KS8XS17NN2bfFY=
-X-Received: by 2002:a37:5887:: with SMTP id m129mr5700250qkb.27.1570127710450;
- Thu, 03 Oct 2019 11:35:10 -0700 (PDT)
+        Thu, 3 Oct 2019 14:35:44 -0400
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: bbrezillon)
+        with ESMTPSA id DD9C028ECEA
+Date:   Thu, 3 Oct 2019 20:35:36 +0200
+From:   Boris Brezillon <boris.brezillon@collabora.com>
+To:     Vitor Soares <Vitor.Soares@synopsys.com>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-i3c@lists.infradead.org" <linux-i3c@lists.infradead.org>,
+        "bbrezillon@kernel.org" <bbrezillon@kernel.org>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "pgaj@cadence.com" <pgaj@cadence.com>,
+        "Joao.Pinto@synopsys.com" <Joao.Pinto@synopsys.com>,
+        "stable@vger.kernel.org" <stable@vger.kernel.org>
+Subject: Re: [PATCH v3 2/5] i3c: master: make sure ->boardinfo is
+ initialized in add_i3c_dev_locked()
+Message-ID: <20191003203536.218a3cd8@collabora.com>
+In-Reply-To: <CH2PR12MB42162C4459E31D85FD60FB79AE9F0@CH2PR12MB4216.namprd12.prod.outlook.com>
+References: <cover.1567608245.git.vitor.soares@synopsys.com>
+        <ed18fd927b5759a6a1edb351113ceca615283189.1567608245.git.vitor.soares@synopsys.com>
+        <20191003162943.4a0d0274@collabora.com>
+        <CH2PR12MB42162C4459E31D85FD60FB79AE9F0@CH2PR12MB4216.namprd12.prod.outlook.com>
+Organization: Collabora
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-References: <20191002215812.GA135681@dtor-ws>
-In-Reply-To: <20191002215812.GA135681@dtor-ws>
-From:   Benjamin Tissoires <benjamin.tissoires@redhat.com>
-Date:   Thu, 3 Oct 2019 14:34:59 -0400
-Message-ID: <CAO-hwJ+v1jJJ=APP__84SPrFdR+Te8nAxR6DirD8a9US_Bm4wQ@mail.gmail.com>
-Subject: Re: [PATCH] Input: add input_get_poll_interval()
-To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc:     "open list:HID CORE LAYER" <linux-input@vger.kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>
-X-MC-Unique: jVyJ-q_nNJeVFKZoosCI5w-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Dmitry,
+On Thu, 3 Oct 2019 17:37:40 +0000
+Vitor Soares <Vitor.Soares@synopsys.com> wrote:
 
-On Wed, Oct 2, 2019 at 5:58 PM Dmitry Torokhov
-<dmitry.torokhov@gmail.com> wrote:
->
-> Some drivers need to be able to know the current polling interval for
-> devices working in polling mode, let's allow them fetching it.
->
-> Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+> Hi Boris,
+> 
+> From: Boris Brezillon <boris.brezillon@collabora.com>
+> Date: Thu, Oct 03, 2019 at 15:29:43
+> 
+> > On Thu,  5 Sep 2019 12:00:35 +0200
+> > Vitor Soares <Vitor.Soares@synopsys.com> wrote:
+> >   
+> > > The newdev->boardinfo assignment was missing in
+> > > i3c_master_add_i3c_dev_locked() and hence the ->of_node info isn't
+> > > propagated to i3c_dev_desc.
+> > > 
+> > > Fix this by trying to initialize device i3c_dev_boardinfo if available.
+> > > 
+> > > Cc: <stable@vger.kernel.org>
+> > > Fixes: 3a379bbcea0a ("i3c: Add core I3C infrastructure")
+> > > Signed-off-by: Vitor Soares <vitor.soares@synopsys.com>
+> > > ---
+> > > Change in v3:
+> > >   - None
+> > > 
+> > > Changes in v2:
+> > >   - Change commit message
+> > >   - Change i3c_master_search_i3c_boardinfo(newdev) to
+> > >   i3c_master_init_i3c_dev_boardinfo(newdev)
+> > >   - Add fixes, stable tags
+> > > 
+> > >  /**
+> > >   * i3c_master_add_i3c_dev_locked() - add an I3C slave to the bus
+> > >   * @master: master used to send frames on the bus
+> > > @@ -1818,8 +1834,9 @@ int i3c_master_add_i3c_dev_locked(struct i3c_master_controller *master,
+> > >  				  u8 addr)
+> > >  {
+> > >  	struct i3c_device_info info = { .dyn_addr = addr };
+> > > -	struct i3c_dev_desc *newdev, *olddev;
+> > >  	u8 old_dyn_addr = addr, expected_dyn_addr;
+> > > +	enum i3c_addr_slot_status addrstatus;
+> > > +	struct i3c_dev_desc *newdev, *olddev;
+> > >  	struct i3c_ibi_setup ibireq = { };
+> > >  	bool enable_ibi = false;
+> > >  	int ret;
+> > > @@ -1878,6 +1895,8 @@ int i3c_master_add_i3c_dev_locked(struct i3c_master_controller *master,
+> > >  	if (ret)
+> > >  		goto err_detach_dev;
+> > >  
+> > > +	i3c_master_init_i3c_dev_boardinfo(newdev);
+> > > +
+> > >  	/*
+> > >  	 * Depending on our previous state, the expected dynamic address might
+> > >  	 * differ:
+> > > @@ -1895,7 +1914,11 @@ int i3c_master_add_i3c_dev_locked(struct i3c_master_controller *master,
+> > >  	else
+> > >  		expected_dyn_addr = newdev->info.dyn_addr;
+> > >  
+> > > -	if (newdev->info.dyn_addr != expected_dyn_addr) {
+> > > +	addrstatus = i3c_bus_get_addr_slot_status(&master->bus,
+> > > +						  expected_dyn_addr);
+> > > +
+> > > +	if (newdev->info.dyn_addr != expected_dyn_addr &&
+> > > +	    addrstatus == I3C_ADDR_SLOT_FREE) {  
+> > 
+> > First, this change shouldn't be part of this patch, since the commit
+> > message only mentions the boardinfo init stuff,  
+> 
+> This is not an issue, I can create a patch just for boardinfo init fix.
+> 
+> > not the extra 'is slot
+> > free check'.  
+> 
+> Even ignoring patch 1, it is necessary to check if the slot is free 
+> because if SETDASA fails the boardinfo->init_dyn_addr can be assigned to 
+> another device. That's why we need to check if expected_dyn_addr is free.
 
-Not sure if you really need my input on this one, but, sure, looks good to =
-me:
-Acked-By: Benjamin Tissoires <benjamin.tissoires@redhat.com>
+Correct. I thought we were already pre-reserving the init_addr (as
+described here [1]), but it looks like the code is buggy. That's
+probably something we should fix  (we should reserve ->init_i3c_addr
+here [2], not ->dyn_addr).
 
-Cheers,
-Benjamin
+> 
+> > Plus, I want the fix to be backported so we should avoid
+> > any unneeded deps.
+> > 
+> > But even with those 2 things addressed, I'm still convinced the
+> > 'free desc when device is not reachable' change you do in patch 1 is
+> > not that great,   
+> 
+> If I'm doing wrong I really appreciate you tell me the reason.
 
-> ---
->  drivers/input/input-poller.c | 9 +++++++++
->  include/linux/input.h        | 1 +
->  2 files changed, 10 insertions(+)
->
-> diff --git a/drivers/input/input-poller.c b/drivers/input/input-poller.c
-> index 1b3d28964bb2..7d6b4e8879f1 100644
-> --- a/drivers/input/input-poller.c
-> +++ b/drivers/input/input-poller.c
-> @@ -123,6 +123,15 @@ void input_set_max_poll_interval(struct input_dev *d=
-ev, unsigned int interval)
->  }
->  EXPORT_SYMBOL(input_set_max_poll_interval);
->
-> +int input_get_poll_interval(struct input_dev *dev)
-> +{
-> +       if (!dev->poller)
-> +               return -EINVAL;
-> +
-> +       return dev->poller->poll_interval;
-> +}
-> +EXPORT_SYMBOL(input_get_poll_interval);
-> +
->  /* SYSFS interface */
->
->  static ssize_t input_dev_get_poll_interval(struct device *dev,
-> diff --git a/include/linux/input.h b/include/linux/input.h
-> index 31da4feaa1d8..a420324b7882 100644
-> --- a/include/linux/input.h
-> +++ b/include/linux/input.h
-> @@ -387,6 +387,7 @@ int input_setup_polling(struct input_dev *dev,
->  void input_set_poll_interval(struct input_dev *dev, unsigned int interva=
-l);
->  void input_set_min_poll_interval(struct input_dev *dev, unsigned int int=
-erval);
->  void input_set_max_poll_interval(struct input_dev *dev, unsigned int int=
-erval);
-> +int input_get_poll_interval(struct input_dev *dev);
->
->  int __must_check input_register_handler(struct input_handler *);
->  void input_unregister_handler(struct input_handler *);
-> --
-> 2.23.0.444.g18eeb5a265-goog
->
->
-> --
-> Dmitry
+I just think it's easier to keep track of things (like reserved
+addresses) if the descriptor stays around even if the device is not yet
+accessible.
 
+> 
+> > and the fact that you can't pre-reserve the address to
+> > make sure no one uses it until the device had a chance to show up tends
+> > to prove me right.  
+> 
+> This is a different corner case and I though we agreed that the framework 
+> doesn't provide guarantees to assign boardinfo->init_dyn_addr [1].
+
+Well, it doesn't, but we should try hard to not use addresses that
+have been requested by a device.
+
+> 
+> Yet, I don't disagree with the idea of pre-reserve the 
+> boardinfo->init_dyn_addr.
+> I can do this but we need to align how it should be done.
+
+Keep the device around even if SETDASA fails and make sure the
+->init_dyn_addr is reserved. It's how it was supposed to work, there's
+just a bug in the logic.
+
+> 
+> > 
+> > Can we please do what I suggest and solve the "not enough dev slots"
+> > problem later on (if we really have to).  
+> 
+> I have this use case where the HC has only 4 slot for 4 devices. 
+> Sometimes the one or more devices can be sleeping and when they trigger 
+> HJ there is no space in HC.
+
+Let's address that separately please. I want to solve one problem at a
+time.
+
+[1]https://elixir.bootlin.com/linux/latest/source/drivers/i3c/master.c#L1330
+[2]https://elixir.bootlin.com/linux/latest/source/drivers/i3c/master.c#L1307
