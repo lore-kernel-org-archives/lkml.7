@@ -7,52 +7,48 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 392EBC4CED1
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:01:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 99A69C4CED1
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:01:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0E230222CC
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:01:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 63E77222C2
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:01:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570118515;
-	bh=5u2zAl7BkqOE1FqzDrXTn5nzPaiQIpAI/eo9TlZSobQ=;
+	s=default; t=1570118517;
+	bh=MIecuNNRxGS+on9SL/GewOgrOrgNIMHtj3KVEuhl5CI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=GVbYLfNTPJtbkhvOn3sIrAPpg17dEVojfasFG9WV/IyV7rN92xVWYN7f9wq1J2OZQ
-	 6YOgFvf7znqkkrEyOPtJTiaiGOSKMC3f+ff2lJ2RSzI2jte8vz5biTdezgGpk/apAW
-	 jKR1CfUVaslw+po3CyYyCCYPK6O/bxyX6IFHHFcM=
+	b=CU0awdTYwIq2oVWbmDQnc62EsvU/aZ8UeiQ1y2s2t8r6TH0nMzmtYFrpAxFI+cyDE
+	 /5rCyyzRs4AtuBTo0IZDwEU8mT2/eHy7Va20BN3vfuUWvazvHQ4y5lfyCQz2dGoZx4
+	 MF4sSeGp3WXcHjt56BjybExbeeBe0+DayzmUQayE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731926AbfJCQBy (ORCPT
+        id S1731936AbfJCQB4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 12:01:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46370 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 12:01:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46416 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730314AbfJCQBu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:01:50 -0400
+        id S1731048AbfJCQBx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:01:53 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C36A6207FF;
-        Thu,  3 Oct 2019 16:01:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9E52320700;
+        Thu,  3 Oct 2019 16:01:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570118509;
-        bh=5u2zAl7BkqOE1FqzDrXTn5nzPaiQIpAI/eo9TlZSobQ=;
+        s=default; t=1570118512;
+        bh=MIecuNNRxGS+on9SL/GewOgrOrgNIMHtj3KVEuhl5CI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=kFg9TRgfC7s9jRlK4FhhmHCKqSZ430+FMUV+hUUl+rxZDx9z3yFFfHMaE/1ufC59P
-         dxm91S12jidhUo/TP99sMBTtAdeIM3YjE/hmz/qEqZt7I9C1GJcXKVtZXnH6UVH4jk
-         KS2zD0VRXqEfzOYOtwHiNytekRFukKnGORcC/FG4=
+        b=OBJ5/o4MgSnTjTwq0zHwd/JvAdGZskCAklobknWSwHVmCOHP+SAoE+ct2RlZHQQd0
+         8Zav4DLKbB5CGNsU62IBsdGtF+5ZYp83DtNO6ArDwZfC6nUcZaggeOAH/eOpXG3liy
+         69OsfHgppsQwG1D6pdMZm2EqqWN1zzgzchFTlq2A=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Chris Packham <chris.packham@alliedtelesis.co.nz>,
-        Joakim Tjernlund <Joakim.Tjernlund@infinera.com>,
-        linux-mtd@lists.infradead.org, Fabio Bettoni <fbettoni@gmail.com>,
-        Felix Fietkau <nbd@nbd.name>,
-        Hauke Mehrtens <hauke@hauke-m.de>,
-        Tokunori Ikegami <ikegami.t@gmail.com>,
-        Vignesh Raghavendra <vigneshr@ti.com>
-Subject: [PATCH 4.9 006/129] mtd: cfi_cmdset_0002: Use chip_good() to retry in do_write_oneword()
-Date:   Thu,  3 Oct 2019 17:52:09 +0200
-Message-Id: <20191003154322.117166351@linuxfoundation.org>
+        stable@vger.kernel.org, kbuild test robot <lkp@intel.com>,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        Christophe Leroy <christophe.leroy@c-s.fr>,
+        Herbert Xu <herbert@gondor.apana.org.au>
+Subject: [PATCH 4.9 007/129] crypto: talitos - fix missing break in switch statement
+Date:   Thu,  3 Oct 2019 17:52:10 +0200
+Message-Id: <20191003154322.503362886@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191003154318.081116689@linuxfoundation.org>
 References: <20191003154318.081116689@linuxfoundation.org>
@@ -65,86 +61,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tokunori Ikegami <ikegami.t@gmail.com>
+From: Gustavo A. R. Silva <gustavo@embeddedor.com>
 
-commit 37c673ade35c707d50583b5b25091ff8ebdeafd7 upstream.
+commit 5fc194ea6d34dfad9833d3043ce41d6c52aff39a upstream.
 
-As reported by the OpenWRT team, write requests sometimes fail on some
-platforms.
-Currently to check the state chip_ready() is used correctly as described by
-the flash memory S29GL256P11TFI01 datasheet.
-Also chip_good() is used to check if the write is succeeded and it was
-implemented by the commit fb4a90bfcd6d8 ("[MTD] CFI-0002 - Improve error
-checking").
-But actually the write failure is caused on some platforms and also it can
-be fixed by using chip_good() to check the state and retry instead.
-Also it seems that it is caused after repeated about 1,000 times to retry
-the write one word with the reset command.
-By using chip_good() to check the state to be done it can be reduced the
-retry with reset.
-It is depended on the actual flash chip behavior so the root cause is
-unknown.
+Add missing break statement in order to prevent the code from falling
+through to case CRYPTO_ALG_TYPE_AHASH.
 
-Cc: Chris Packham <chris.packham@alliedtelesis.co.nz>
-Cc: Joakim Tjernlund <Joakim.Tjernlund@infinera.com>
-Cc: linux-mtd@lists.infradead.org
+Fixes: aeb4c132f33d ("crypto: talitos - Convert to new AEAD interface")
 Cc: stable@vger.kernel.org
-Reported-by: Fabio Bettoni <fbettoni@gmail.com>
-Signed-off-by: Felix Fietkau <nbd@nbd.name>
-Signed-off-by: Hauke Mehrtens <hauke@hauke-m.de>
-Signed-off-by: Tokunori Ikegami <ikegami.t@gmail.com>
-[vigneshr@ti.com: Fix a checkpatch warning]
-Signed-off-by: Vignesh Raghavendra <vigneshr@ti.com>
+Reported-by: kbuild test robot <lkp@intel.com>
+Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+Reviewed-by: Christophe Leroy <christophe.leroy@c-s.fr>
+Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-
 ---
- drivers/mtd/chips/cfi_cmdset_0002.c |   18 ++++++++++++------
- 1 file changed, 12 insertions(+), 6 deletions(-)
+ drivers/crypto/talitos.c |    1 +
+ 1 file changed, 1 insertion(+)
 
---- a/drivers/mtd/chips/cfi_cmdset_0002.c
-+++ b/drivers/mtd/chips/cfi_cmdset_0002.c
-@@ -1624,29 +1624,35 @@ static int __xipram do_write_oneword(str
- 			continue;
- 		}
- 
--		if (time_after(jiffies, timeo) && !chip_ready(map, adr)){
-+		/*
-+		 * We check "time_after" and "!chip_good" before checking
-+		 * "chip_good" to avoid the failure due to scheduling.
-+		 */
-+		if (time_after(jiffies, timeo) && !chip_good(map, adr, datum)) {
- 			xip_enable(map, chip, adr);
- 			printk(KERN_WARNING "MTD %s(): software timeout\n", __func__);
- 			xip_disable(map, chip, adr);
-+			ret = -EIO;
+--- a/drivers/crypto/talitos.c
++++ b/drivers/crypto/talitos.c
+@@ -3043,6 +3043,7 @@ static int talitos_remove(struct platfor
  			break;
- 		}
- 
--		if (chip_ready(map, adr))
-+		if (chip_good(map, adr, datum))
+ 		case CRYPTO_ALG_TYPE_AEAD:
+ 			crypto_unregister_aead(&t_alg->algt.alg.aead);
++			break;
+ 		case CRYPTO_ALG_TYPE_AHASH:
+ 			crypto_unregister_ahash(&t_alg->algt.alg.hash);
  			break;
- 
- 		/* Latency issues. Drop the lock, wait a while and retry */
- 		UDELAY(map, chip, adr, 1);
- 	}
-+
- 	/* Did we succeed? */
--	if (!chip_good(map, adr, datum)) {
-+	if (ret) {
- 		/* reset on all failures. */
- 		map_write( map, CMD(0xF0), chip->start );
- 		/* FIXME - should have reset delay before continuing */
- 
--		if (++retry_cnt <= MAX_RETRIES)
-+		if (++retry_cnt <= MAX_RETRIES) {
-+			ret = 0;
- 			goto retry;
--
--		ret = -EIO;
-+		}
- 	}
- 	xip_enable(map, chip, adr);
-  op_done:
 
 
