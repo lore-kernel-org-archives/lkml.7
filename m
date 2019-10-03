@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B734C10F14
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:17:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 84756C4CED1
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:17:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 50A02215EA
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:17:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4E595215EA
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:17:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570119421;
-	bh=skgGzswSz24HtRMDnCp6Kk1bFMF4TPrE0bKwgDLKF0A=;
+	s=default; t=1570119422;
+	bh=DM6CKKGHX4IgKpzSLPPrNa7vM4k4yCQtzVToryn8A5Q=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=rHE40ZB9MvTQppebWZoSrl4qsUDI6RIsqpBauNUWWNuttbd9b1dNlib4QCvP9B1/Y
-	 9rU/avZkjxf1brZkHlHA5tdYUvzFsPuNf5cUocI4Tg57DPpqX+IqOO0XAUa6X4lcQB
-	 /LBhB/h+3wDfTq9mdUzu3RqghOH3PE5j5g4mlmfc=
+	b=QUmvFaoLZb0YT28A2iEXI7/2ZjVYdlLLRXTX2l1Kc49hA5PfX2xASDNcNDBeMleqX
+	 wuVaP15X7f8vuWvxFWJx1aXjxWgSvjOJe0aG/gAz+BghhiLaLMKzbiQfI3Fvzz7t/+
+	 KGkty8mfhGZSlufVMc8pufk0SSn0MLYYFXSwwZuU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389140AbfJCQQ7 (ORCPT
+        id S2389147AbfJCQRB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 12:16:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42290 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 12:17:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42356 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389119AbfJCQQ4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:16:56 -0400
+        id S2387779AbfJCQQ6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:16:58 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E0B7F20865;
-        Thu,  3 Oct 2019 16:16:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5EC1B20865;
+        Thu,  3 Oct 2019 16:16:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570119415;
-        bh=skgGzswSz24HtRMDnCp6Kk1bFMF4TPrE0bKwgDLKF0A=;
+        s=default; t=1570119417;
+        bh=DM6CKKGHX4IgKpzSLPPrNa7vM4k4yCQtzVToryn8A5Q=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=p90NDy6UhYbv9SzPdInUjWZvOJd4ZXvBgW805jfF9IQ17DDRsIG0VvaIgJjx6n6Je
-         FLTJCEpq1c8+goB3MQJe7neuDE4W94ZWcopjBehwBMeS1Sjn3POxoYM747ML3VvxGf
-         M+aMKUWDAjxCvXWmwX7bc/uF3fD7SUrFqTjv521k=
+        b=IptwCjO6Qcst30Pq22wK9R6Fhk81zY2yTOgULJ7RdR+qlzqMCVWuIbhkBO49BTAEk
+         3QGukHvt6gotAGR01sNoQ3djBBlApLPuSr2fxUJIn8KBQYU8TP/ccLVeAv3+ehuerJ
+         r7h1d4FyZPR/TzJV9OOicJdnUBfkL71alOWD0ncw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Guoqing Jiang <guoqing.jiang@cloud.ionos.com>,
-        Song Liu <songliubraving@fb.com>,
+        stable@vger.kernel.org, Randy Dunlap <rdunlap@infradead.org>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 056/211] md: dont set In_sync if array is frozen
-Date:   Thu,  3 Oct 2019 17:52:02 +0200
-Message-Id: <20191003154501.093901208@linuxfoundation.org>
+Subject: [PATCH 4.19 057/211] media: media/platform: fsl-viu.c: fix build for MICROBLAZE
+Date:   Thu,  3 Oct 2019 17:52:03 +0200
+Message-Id: <20191003154501.340506559@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191003154447.010950442@linuxfoundation.org>
 References: <20191003154447.010950442@linuxfoundation.org>
@@ -61,53 +61,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Guoqing Jiang <jgq516@gmail.com>
+From: Randy Dunlap <rdunlap@infradead.org>
 
-[ Upstream commit 062f5b2ae12a153644c765e7ba3b0f825427be1d ]
+[ Upstream commit 6898dd580a045341f844862ceb775144156ec1af ]
 
-When a disk is added to array, the following path is called in mdadm.
+arch/microblaze/ defines out_be32() and in_be32(), so don't do that
+again in the driver source.
 
-Manage_subdevs -> sysfs_freeze_array
-               -> Manage_add
-               -> sysfs_set_str(&info, NULL, "sync_action","idle")
+Fixes these build warnings:
 
-Then from kernel side, Manage_add invokes the path (add_new_disk ->
-validate_super = super_1_validate) to set In_sync flag.
+../drivers/media/platform/fsl-viu.c:36: warning: "out_be32" redefined
+../arch/microblaze/include/asm/io.h:50: note: this is the location of the previous definition
+../drivers/media/platform/fsl-viu.c:37: warning: "in_be32" redefined
+../arch/microblaze/include/asm/io.h:53: note: this is the location of the previous definition
 
-Since In_sync means "device is in_sync with rest of array", and the new
-added disk need to resync thread to help the synchronization of data.
-And md_reap_sync_thread would call spare_active to set In_sync for the
-new added disk finally. So don't set In_sync if array is in frozen.
-
-Signed-off-by: Guoqing Jiang <guoqing.jiang@cloud.ionos.com>
-Signed-off-by: Song Liu <songliubraving@fb.com>
+Fixes: 29d750686331 ("media: fsl-viu: allow building it with COMPILE_TEST")
+Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
+Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/md/md.c | 11 +++++++++--
- 1 file changed, 9 insertions(+), 2 deletions(-)
+ drivers/media/platform/fsl-viu.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/md/md.c b/drivers/md/md.c
-index 73758b3679a11..277025784d6c0 100644
---- a/drivers/md/md.c
-+++ b/drivers/md/md.c
-@@ -1770,8 +1770,15 @@ static int super_1_validate(struct mddev *mddev, struct md_rdev *rdev)
- 				if (!(le32_to_cpu(sb->feature_map) &
- 				      MD_FEATURE_RECOVERY_BITMAP))
- 					rdev->saved_raid_disk = -1;
--			} else
--				set_bit(In_sync, &rdev->flags);
-+			} else {
-+				/*
-+				 * If the array is FROZEN, then the device can't
-+				 * be in_sync with rest of array.
-+				 */
-+				if (!test_bit(MD_RECOVERY_FROZEN,
-+					      &mddev->recovery))
-+					set_bit(In_sync, &rdev->flags);
-+			}
- 			rdev->raid_disk = role;
- 			break;
- 		}
+diff --git a/drivers/media/platform/fsl-viu.c b/drivers/media/platform/fsl-viu.c
+index 0273302aa7412..83086eea14500 100644
+--- a/drivers/media/platform/fsl-viu.c
++++ b/drivers/media/platform/fsl-viu.c
+@@ -37,7 +37,7 @@
+ #define VIU_VERSION		"0.5.1"
+ 
+ /* Allow building this driver with COMPILE_TEST */
+-#ifndef CONFIG_PPC
++#if !defined(CONFIG_PPC) && !defined(CONFIG_MICROBLAZE)
+ #define out_be32(v, a)	iowrite32be(a, (void __iomem *)v)
+ #define in_be32(a)	ioread32be((void __iomem *)a)
+ #endif
 -- 
 2.20.1
 
