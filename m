@@ -2,101 +2,113 @@ Return-Path: <SRS0=6dNS=X4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A58BEC32792
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 18:57:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F070C32792
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 18:57:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7E6522133F
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 18:57:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 34B0220862
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 18:57:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BpE9oIq1"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="O7PPsQ4z"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730695AbfJCS5l (ORCPT
+        id S1731879AbfJCS5n (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 14:57:41 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:41534 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729334AbfJCS5l (ORCPT
+        Thu, 3 Oct 2019 14:57:43 -0400
+Received: from mail-io1-f68.google.com ([209.85.166.68]:35608 "EHLO
+        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729355AbfJCS5m (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 14:57:41 -0400
-Received: by mail-pf1-f193.google.com with SMTP id q7so2314787pfh.8;
+        Thu, 3 Oct 2019 14:57:42 -0400
+Received: by mail-io1-f68.google.com with SMTP id q10so8101962iop.2;
         Thu, 03 Oct 2019 11:57:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=77ylIXsEbYhUXexead1rm79X/JZoqHaSnH4twYhYCoQ=;
-        b=BpE9oIq1CkyRCJfS8Nn2AnbjENHyzwH5NgPOeVNQUQBPh7UjnSVpGKz0ge3saGm/iF
-         u9Fcz0pmEzvbRqy3zYSji48bwSSbZ06d/3D6t1WFFaKVZPnunteU5BMuhPqymZOfX0QW
-         6v0XzWb0j2/xVW4cbs51ECFH6q7gKyAVdAusUUoJ1yAv32vdJBCaKymC5+gQHjDbJd3k
-         uWJ9HYp5euk8lArRNufDVBNvGX7sOaUbA0HHWuSEfo2Vav2Si8JQKwhffYLV+I8Mbnij
-         zCleNJAe1IcxrIZfgnHk4/NRq0KShU4326UeI0hIJcFy1rCQzaZ86yMDgYwbnVTo2BXF
-         ALFA==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=aa6r931Rjp1NE7cgnIGCkHLvHKb0A2CYSfJ4m7AK8VA=;
+        b=O7PPsQ4zo2sfTl6NOOpE5XsVzE5RNltNIJ3BWIjoP92YjkqCBcz4qI/eBObiEFXHxG
+         KRCWmXU5E6KeddHOB8UC3E5e2kPXWnfMhDspqFWqDTx4jTXTKFnfflDpMxlSj8QQ1ljS
+         fmuw1vNpa3Srq0SIWXs3Yi8+CZ2o1gSYFOzL3TWpH9CYIiygn++HYMB4hX9sctCfrbeo
+         ATuEaJcaYLvYIjB/e6/PErOcfUZWKWlgQTRbvjxOQIFhwAhCJj5WwHA7nqs0A2i372Ra
+         1nwpkJ3rEVH8ssU/VgHToN77qu95pjftoLb/trkIUAcWvXG3cECeieEVc2QRbCNL+uR/
+         qKgQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=77ylIXsEbYhUXexead1rm79X/JZoqHaSnH4twYhYCoQ=;
-        b=uW8+aTW4kUm2Y7BoaSxyeG13VYEZ5RhLAcZsLrXj7ZYjLS8ug04Jvh37/irrX4b2bQ
-         hgkPjsS0EqSclUnfrrNlShdZaFrtbI2jmAGkKfa7saBYaBPLgXsXYxXPAKALeJA4sTrs
-         pUWsIJ0q5eOkABK1E9wWK6hgpRYE+DyDQKPJmGf53a8QXGJi0CIbzrYZXcQ2aiqBMmBu
-         2lc84sFEUh8HIq2tIRNVO3MZlfkYOo3TTPFjU4OeY22Uc1u7tV1xnzM9E6MJVKI/w3MA
-         +OxwXNun7pDVgojCPMpVzGcpF9lX0I2NM2EGknmSv4+2oT1UVWeEWFo/63tAS4y7Bahx
-         bs4w==
-X-Gm-Message-State: APjAAAV02hg8wGvN9vwE45jjJbPiFVpw5JiESrVSKYSOrNy+ld7N9ORi
-        bmrDgO7K7EHxmB0Kevwnvl0=
-X-Google-Smtp-Source: APXvYqwoNe2DbK34Yvqq3TzuS+OFDaVRV5Awc4BhXJrMiJoZqeLJNE7zu/wy+ZIvsGb0ufzTgTz3zA==
-X-Received: by 2002:a63:6b49:: with SMTP id g70mr10705775pgc.92.1570129060362;
-        Thu, 03 Oct 2019 11:57:40 -0700 (PDT)
-Received: from dtor-ws ([2620:15c:202:201:3adc:b08c:7acc:b325])
-        by smtp.gmail.com with ESMTPSA id j22sm5381780pgg.16.2019.10.03.11.57.39
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 03 Oct 2019 11:57:39 -0700 (PDT)
-Date:   Thu, 3 Oct 2019 11:57:37 -0700
-From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
-To:     Benjamin Tissoires <benjamin.tissoires@redhat.com>
-Cc:     "open list:HID CORE LAYER" <linux-input@vger.kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] Input: add input_get_poll_interval()
-Message-ID: <20191003185737.GC22365@dtor-ws>
-References: <20191002215812.GA135681@dtor-ws>
- <CAO-hwJ+v1jJJ=APP__84SPrFdR+Te8nAxR6DirD8a9US_Bm4wQ@mail.gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=aa6r931Rjp1NE7cgnIGCkHLvHKb0A2CYSfJ4m7AK8VA=;
+        b=JNBm0G4oj6/+NQ4FoSknnwoZYj3/trQ5BoY91o6CSf22ajjNNv7KN7jRSG+Cj0tVwW
+         A8C4IXl/QAtkMHfLXjAFpbGRw/GgWzpsCr515jsZ0cJ2Sul8KuX6YclYfr7YUy9u9Ln0
+         V3Wwjm2EnNgQN2damUB8Z5I+rMLUM7Rho9CHpqqhRvco8wg9zfrwjcQrlxGweLKTXLcF
+         4bJ0v/00rlBb+JcsqUXYH54hpyu0ggmpNJJusxksSSLxWBp2JvKbIQ//jhmdi0JnZ4WS
+         fnD9S0d3SfvTNQk/5INLOw+sF7QH1djJaGBUUEoT+93lhApQEUe1OYG0qPoLUnDORzA0
+         NYTQ==
+X-Gm-Message-State: APjAAAXZp2PF22JgOfnvlpct3c3eo1Dsm0Qpweq+x6oOg/g6eeSpBbS5
+        RC1tU7mVs2dtwHqbFnN38cquOoQWtTkvQtFomzI=
+X-Google-Smtp-Source: APXvYqw5LZFI0OlAdzJ3Zi5QgTBf3yzfeslOKU0JWKwjHyMto7VKmPhcOSlsE1S3BTxGJi0w5yQ/WHCyiK/fEHdewQE=
+X-Received: by 2002:a92:1657:: with SMTP id r84mr10980876ill.5.1570129060851;
+ Thu, 03 Oct 2019 11:57:40 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAO-hwJ+v1jJJ=APP__84SPrFdR+Te8nAxR6DirD8a9US_Bm4wQ@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20191001073413.GA51148@LGEARND20B15>
+In-Reply-To: <20191001073413.GA51148@LGEARND20B15>
+From:   Steve French <smfrench@gmail.com>
+Date:   Thu, 3 Oct 2019 13:57:29 -0500
+Message-ID: <CAH2r5mtx3OWKv4ZDM=Nob9nRi7ahRW-DK2nY9LP28urQ6NBvFw@mail.gmail.com>
+Subject: Re: [PATCH] fs: cifs: mute -Wunused-const-variable message
+To:     Austin Kim <austindh.kim@gmail.com>
+Cc:     Steve French <sfrench@samba.org>,
+        CIFS <linux-cifs@vger.kernel.org>,
+        samba-technical <samba-technical@lists.samba.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Benjamin,
+merged into cifs-2.6.git for-next
 
-On Thu, Oct 03, 2019 at 02:34:59PM -0400, Benjamin Tissoires wrote:
-> Hi Dmitry,
-> 
-> On Wed, Oct 2, 2019 at 5:58 PM Dmitry Torokhov
-> <dmitry.torokhov@gmail.com> wrote:
-> >
-> > Some drivers need to be able to know the current polling interval for
-> > devices working in polling mode, let's allow them fetching it.
-> >
-> > Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-> 
-> Not sure if you really need my input on this one, but, sure, looks good to me:
-> Acked-By: Benjamin Tissoires <benjamin.tissoires@redhat.com>
+On Tue, Oct 1, 2019 at 2:34 AM Austin Kim <austindh.kim@gmail.com> wrote:
+>
+> After 'Initial git repository build' commit,
+> 'mapping_table_ERRHRD' variable has not been used.
+>
+> So 'mapping_table_ERRHRD' const variable could be removed
+> to mute below warning message:
+>
+>    fs/cifs/netmisc.c:120:40: warning: unused variable 'mapping_table_ERRHRD' [-Wunused-const-variable]
+>    static const struct smb_to_posix_error mapping_table_ERRHRD[] = {
+>                                            ^
+> Signed-off-by: Austin Kim <austindh.kim@gmail.com>
+> ---
+>  fs/cifs/netmisc.c | 4 ----
+>  1 file changed, 4 deletions(-)
+>
+> diff --git a/fs/cifs/netmisc.c b/fs/cifs/netmisc.c
+> index 49c17ee1..9b41436 100644
+> --- a/fs/cifs/netmisc.c
+> +++ b/fs/cifs/netmisc.c
+> @@ -117,10 +117,6 @@ static const struct smb_to_posix_error mapping_table_ERRSRV[] = {
+>         {0, 0}
+>  };
+>
+> -static const struct smb_to_posix_error mapping_table_ERRHRD[] = {
+> -       {0, 0}
+> -};
+> -
+>  /*
+>   * Convert a string containing text IPv4 or IPv6 address to binary form.
+>   *
+> --
+> 2.6.2
+>
 
-Thanks!
-
-I like for someone to have taken look at the stuff I write before I
-commit it to the tree, and you are one of the most active developers in
-linux-input, so I tend to copy you on random bits and pieces and I
-really appreciate that you take time to check them out.
 
 -- 
-Dmitry
+Thanks,
+
+Steve
