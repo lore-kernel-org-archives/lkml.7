@@ -2,137 +2,148 @@ Return-Path: <SRS0=6dNS=X4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C8BACC10F14
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 08:30:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 29EE3C32792
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 08:34:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9F6F82070B
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 08:30:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570091400;
-	bh=Q+ALnmiIQm4I+dBjWKqJOW6YOe9VQb6alWxAIjH2W2w=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=Smi3ktcL75VXE4cvUh7tnitMajvRdlQY+8DqfsE9rRD8ykhgJ+UJ7zDpPTvLX70Jv
-	 c0bzRCZR4slTGMffQIbNwRWErqytaXusM9WCb5omFJHHA/OEsfAZSBs0TblRcX4tMs
-	 hJu2EakkqfuljWwRlF29of1csR8nEyQZjz/H6h2o=
+	by mail.kernel.org (Postfix) with ESMTP id F2709222CD
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 08:34:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="zTchbkJb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728671AbfJCIaA (ORCPT
+        id S1727995AbfJCIeZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 04:30:00 -0400
-Received: from inca-roads.misterjones.org ([213.251.177.50]:44786 "EHLO
-        inca-roads.misterjones.org" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727357AbfJCI37 (ORCPT
+        Thu, 3 Oct 2019 04:34:25 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:51932 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727357AbfJCIeY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 04:29:59 -0400
-Received: from 78.163-31-62.static.virginmediabusiness.co.uk ([62.31.163.78] helo=why)
-        by cheepnis.misterjones.org with esmtpsa (TLSv1.2:AES256-GCM-SHA384:256)
-        (Exim 4.80)
-        (envelope-from <maz@kernel.org>)
-        id 1iFwUh-0004Iy-Pa; Thu, 03 Oct 2019 10:29:51 +0200
-Date:   Thu, 3 Oct 2019 09:29:50 +0100
-From:   Marc Zyngier <maz@kernel.org>
-To:     Florian Fainelli <f.fainelli@gmail.com>
-Cc:     linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Ray Jui <rjui@broadcom.com>,
-        Scott Branden <sbranden@broadcom.com>,
-        "maintainer:BROADCOM BCM281XX/BCM11XXX/BCM216XX ARM ARCHITE..." 
-        <bcm-kernel-feedback-list@broadcom.com>,
-        Eric Anholt <eric@anholt.net>,
-        Stefan Wahren <wahrenst@gmx.net>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        "moderated list:BROADCOM BCM2835 ARM ARCHITECTURE" 
-        <linux-rpi-kernel@lists.infradead.org>,
-        "moderated list:BROADCOM BCM2835 ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>
-Subject: Re: [PATCH 5/7] irqchip/irq-bcm2836: Add support for the 7211
- interrupt controller
-Message-ID: <20191003092950.04440d74@why>
-In-Reply-To: <72f07d2e-b070-301a-6a5d-8e89d32adcd7@gmail.com>
-References: <20191001224842.9382-1-f.fainelli@gmail.com>
-        <20191001224842.9382-6-f.fainelli@gmail.com>
-        <20191002134041.5a181d96@why>
-        <72f07d2e-b070-301a-6a5d-8e89d32adcd7@gmail.com>
-Organization: Approximate
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Thu, 3 Oct 2019 04:34:24 -0400
+Received: by mail-wm1-f66.google.com with SMTP id 7so1549206wme.1
+        for <linux-kernel@vger.kernel.org>; Thu, 03 Oct 2019 01:34:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:references:cc:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-transfer-encoding;
+        bh=pI9C6ahl+nbQHPAC35dp9wq8rqxSsDDWofoWIyRDkLM=;
+        b=zTchbkJbgDTpNLzYwpdrWTE/gd+vuOPqap7nsSbbZ7+8Ec77H1VBaUDGtFpxoA8Wsy
+         rO2dvutBNGUKTXyH+TJSnv6zLMGC8UBJjbZ/DzCH3ko9E+3EEUAZNvxBnKTjImTxKGHg
+         dFid8JAY3zOjgb0NKCgxcHpbwJXFBuGJR2nOeNlybSaS3hFq9eIa1e8Diqpp1nosCmjz
+         GNr1KuzN7K3FCz0nMCInp5KFNv0xH8+1uC1g3VYS9Qm449WqeUoPFBSFasSQLUn/U4eM
+         tBhXWmFRC05WZo/hqCw1XiR8CdQT8uhC6ekLnd1hwADf8pIesbTUpa81F+D60JXHYCOC
+         xmzg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:references:cc:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-transfer-encoding;
+        bh=pI9C6ahl+nbQHPAC35dp9wq8rqxSsDDWofoWIyRDkLM=;
+        b=f3Ds7R5jXpEGkiCEGVNCfpz6U8umvLOlIbYnZOfAPinEnbzlnFeuV1f0EdBmZG7iCw
+         80WV3ji4AjttzHwzyKY0sR/0Rd/ZyzL8r4ROAKEWqrND0SsnhdCD2lqqxL3LSPfTu25y
+         BCSFNClzJ5ksXb39voqKDQnPJ61dWKbLEwstCrk5hOoze4lpTuqvhs1Q/dtpQT+86kBe
+         gZ+0KAaI5PRm5lMWrtnIblRsDHBeDAuEkfm5n8ziOVZ4zRwBDr3wnb1GybQJg3TaFawn
+         oAQYEf2/WKBUXlICu62J9JwWbOdDQFr82Uq20Idk0iDh0ydGUUbVVx+6nevx3kny8733
+         MprQ==
+X-Gm-Message-State: APjAAAVlfb0pWu0KHCTpX1MdbYwyf0gSG9cRdzLG9vS0i7gKK4Itt8Np
+        s1+kzHdSV0vIBBX3UkonoSyzBg==
+X-Google-Smtp-Source: APXvYqw4bv6iyI1N5Z9utskDI3+DaWWDjbAcHP6jbcMIYZDH9RbG+kUfYFbm+NrAdKLO8R+/Yht+8Q==
+X-Received: by 2002:a7b:cb91:: with SMTP id m17mr6042506wmi.151.1570091661782;
+        Thu, 03 Oct 2019 01:34:21 -0700 (PDT)
+Received: from [192.168.1.77] (176-150-251-154.abo.bbox.fr. [176.150.251.154])
+        by smtp.gmail.com with ESMTPSA id x129sm2591475wmg.8.2019.10.03.01.34.20
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 03 Oct 2019 01:34:20 -0700 (PDT)
+Subject: Re: drm_sched with panfrost crash on T820
+To:     "Grodzovsky, Andrey" <Andrey.Grodzovsky@amd.com>,
+        Hillf Danton <hdanton@sina.com>
+References: <e450fbe6-dec7-2704-59c2-db7e869d67f5@baylibre.com>
+ <f0ab487e-8d49-987b-12b8-7a115a6543e1@amd.com>
+ <20190930145228.14000-1-hdanton@sina.com>
+ <d2888614-8644-7d04-b73b-3ab7c6623e9a@amd.com>
+Cc:     "daniel@ffwll.ch" <daniel@ffwll.ch>,
+        "airlied@linux.ie" <airlied@linux.ie>,
+        "Koenig, Christian" <Christian.Koenig@amd.com>,
+        Erico Nunes <nunes.erico@gmail.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "steven.price@arm.com" <steven.price@arm.com>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        Rob Herring <robh@kernel.org>,
+        Tomeu Vizoso <tomeu.vizoso@collabora.com>,
+        "open list:ARM/Amlogic Meson..." <linux-amlogic@lists.infradead.org>
+From:   Neil Armstrong <narmstrong@baylibre.com>
+Message-ID: <7339b7a1-2d1c-4379-89a0-daf8b28d81c8@baylibre.com>
+Date:   Thu, 3 Oct 2019 10:34:19 +0200
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.13; rv:45.0)
+ Gecko/20100101 Thunderbird/45.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-SA-Exim-Connect-IP: 62.31.163.78
-X-SA-Exim-Rcpt-To: f.fainelli@gmail.com, linux-kernel@vger.kernel.org, tglx@linutronix.de, jason@lakedaemon.net, robh+dt@kernel.org, mark.rutland@arm.com, rjui@broadcom.com, sbranden@broadcom.com, bcm-kernel-feedback-list@broadcom.com, eric@anholt.net, wahrenst@gmx.net, devicetree@vger.kernel.org, linux-rpi-kernel@lists.infradead.org, linux-arm-kernel@lists.infradead.org
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on cheepnis.misterjones.org); SAEximRunCond expanded to false
+In-Reply-To: <d2888614-8644-7d04-b73b-3ab7c6623e9a@amd.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 2 Oct 2019 10:06:31 -0700
-Florian Fainelli <f.fainelli@gmail.com> wrote:
+Hi Andrey,
 
-> On 10/2/19 5:40 AM, Marc Zyngier wrote:
-> > On Tue,  1 Oct 2019 15:48:40 -0700
-> > Florian Fainelli <f.fainelli@gmail.com> wrote:
-> >   
-> >> The root interrupt controller on 7211 is about identical to the one
-> >> existing on BCM2836, except that the SMP cross call are done through the
-> >> standard ARM GIC-400 interrupt controller. This interrupt controller is
-> >> used for side band wake-up signals though.  
-> > 
-> > I don't fully grasp how this thing works.
-> > 
-> > If the 7211 interrupt controller is root and the GIC is used for SGIs,
-> > this means that the GIC outputs (IRQ/FIQ/VIRQ/VFIQ, times eight) are
-> > connected to individual inputs to the 7211 controller. Seems totally
-> > braindead, and unexpectedly so.
-> > 
-> > If the GIC is root and the 7211 outputs into the GIC all of its
-> > interrupts as a secondary irqchip, it would at least match an existing
-> > (and pretty bad) pattern.
-> > 
-> > So which one of the two is it?  
+Le 02/10/2019 à 16:40, Grodzovsky, Andrey a écrit :
 > 
-> The nominal configuration on 7211 is to have all interrupts go through
-> the ARM GIC. It is possible however, to fallback to the legacy 2836 mode
-> whereby the root interrupt controller for peripheral interrupts is this
-> ARMCTL IC. There is a mux that the firmware can control which will
-> dictate which root interrupt controller is used for peripherals.
+> On 9/30/19 10:52 AM, Hillf Danton wrote:
+>> On Mon, 30 Sep 2019 11:17:45 +0200 Neil Armstrong wrote:
+>>> Did a new run from 5.3:
+>>>
+>>> [   35.971972] Call trace:
+>>> [   35.974391]  drm_sched_increase_karma+0x5c/0xf0
+>>> 			ffff000010667f38	FFFF000010667F94
+>>> 			drivers/gpu/drm/scheduler/sched_main.c:335
+>>>
+>>> The crashing line is :
+>>>                                  if (bad->s_fence->scheduled.context ==
+>>>                                      entity->fence_context) {
+>>>
+>>> Doesn't seem related to guilty job.
+>> Bail out if s_fence is no longer fresh.
+>>
+>> --- a/drivers/gpu/drm/scheduler/sched_main.c
+>> +++ b/drivers/gpu/drm/scheduler/sched_main.c
+>> @@ -333,6 +333,10 @@ void drm_sched_increase_karma(struct drm
+>>   
+>>   			spin_lock(&rq->lock);
+>>   			list_for_each_entry_safe(entity, tmp, &rq->entities, list) {
+>> +				if (!smp_load_acquire(&bad->s_fence)) {
+>> +					spin_unlock(&rq->lock);
+>> +					return;
+>> +				}
+>>   				if (bad->s_fence->scheduled.context ==
+>>   				    entity->fence_context) {
+>>   					if (atomic_read(&bad->karma) >
+>> @@ -543,7 +547,7 @@ EXPORT_SYMBOL(drm_sched_job_init);
+>>   void drm_sched_job_cleanup(struct drm_sched_job *job)
+>>   {
+>>   	dma_fence_put(&job->s_fence->finished);
+>> -	job->s_fence = NULL;
+>> +	smp_store_release(&job->s_fence, 0);
+>>   }
+>>   EXPORT_SYMBOL(drm_sched_job_cleanup);
 > 
-> I have used this mostly for silicon verification and since those are
-> fairly harmless patches, just decided to send them out to avoid
-> maintaining them out of tree.
 
-This doesn't really answer my question. What I understand is that your
-system is laid out like this:
+This fixed the problem on the 10 CI runs.
 
-     DEVICES -> ARMCTL -> CPUs
-                  ^
-                 GIC
+Neil
 
-How are the various GIC outputs mapped into the ARMCTL? It has 4 of
-them per CPU (IRQ/FIQ + vIRQ/vFIQ), which the ARMCTL must somehow map
-to its own interrupts, specially if you want to signal IPIs using the
-GIC's SGIs (to which you hint in the commit log).
-
-There is a link I'm missing here.
-
-> We have a plan to use those as an "alternate" interrupt domain for low
-> power modes and use the fact that peripheral interrupts could be active
-> in both domains (GIC and ARMCTRL IC) to help support configuring and
-> identifying wake-up sources fro m within Linux.
-
-That's usually done with a hierarchy, where the ARMCTL IC would be a
-child of the GIC and see all interrupt configuration calls before they
-reach the GIC driver. We have plenty of examples in the tree already.
-
-Thanks,
-
-	M.
--- 
-Without deviation from the norm, progress is not possible.
+> 
+> Does this change help the problem ? Note that drm_sched_job_cleanup is 
+> called from scheduler thread which is stopped at all times when work_tdr 
+> thread is running and anyway the 'bad' job is still in the 
+> ring_mirror_list while it's being accessed from  
+> drm_sched_increase_karma so I don't think drm_sched_job_cleanup can be 
+> called for it BEFORE or while drm_sched_increase_karma is executed.
+> 
+> Andrey
+> 
+> 
+>>   
+>> --
+>>
