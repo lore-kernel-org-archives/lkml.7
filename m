@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1358FC4360C
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 00:28:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F3E6C4360C
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 00:28:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CF971222C0
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 00:28:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D9297222C2
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 00:28:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570062498;
-	bh=3COi3ACaHi/X1GZlNUbueqcDgCW40QtUH5jG3OFgu7E=;
+	s=default; t=1570062502;
+	bh=tY6P3wznUQC0vautg0ZoN2NAjmQ+5qv+4Wdjn4HApaw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=PO+/YV6Uee90Wlv0G6poaBGG/PxFk/9idUgDXnjyaGUtCMzDn04dr+SXcc9IeW5Fo
-	 +Gq6286FExmcq/Pm7oi6mRJDngOHVgJJ9A9uBuLmgcqqBt3BBBt2nAidEIJSjnuGaJ
-	 AE2mgDr6E/JbLPxQ1n+CSrGFgXnbvDa4VRoNNvuM=
+	b=lgSQ+LGjJQMHqN1yQIbeU+zF1NKkiJDD9pt21B4wVy8SMgqRzY8TzY4isvc+D9apu
+	 m60v562wjsAmTKCNWglMqjwE4mlD3cnSSA0gU1773ZtqBJS1096dY296PsWq0Gv4Wv
+	 hlrnrolSJLFBw3BJ21DTtBEADZOHprXPdiH3CKcs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729968AbfJCA2L (ORCPT
+        id S1728257AbfJCA2W (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Oct 2019 20:28:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56184 "EHLO mail.kernel.org"
+        Wed, 2 Oct 2019 20:28:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56246 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729666AbfJCA06 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Oct 2019 20:26:58 -0400
+        id S1729638AbfJCA05 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 2 Oct 2019 20:26:57 -0400
 Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EF31D222D3;
-        Thu,  3 Oct 2019 00:26:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3869A222D1;
+        Thu,  3 Oct 2019 00:26:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570062418;
-        bh=3COi3ACaHi/X1GZlNUbueqcDgCW40QtUH5jG3OFgu7E=;
+        s=default; t=1570062416;
+        bh=tY6P3wznUQC0vautg0ZoN2NAjmQ+5qv+4Wdjn4HApaw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ukZJWnN4O0bB9TpPxRBgfgeFvr8PFgkJmzxe9jAHXAAgZsdqBWLlmVYzqvMn+HjGq
-         DTrJTmEQzmh+h43UWLQIXt3k1SQ7CwD0lSu+CThUUKX0DfhQjd6Zt3c/lWNTRDM7O/
-         +qvP0NUXpsFZBuJhes2qsiFBJ5duKqjoQUdzjTMc=
+        b=Mh/Ud0bnWNW26T5epWgZuqdM5GV0r9QzPzH2AozNelcOXMeYMuzQmCZtM1f9QgYsk
+         GRLT8Vwpsg8pegEL0GqGaywO4Tpz/7i/xXMWvqhOykSev+2/LAEwFWOV8lbzgf4J7N
+         +AAPjsHpyLX2ADfLC/OAfjdR50a1Y2W7TlrccTAM=
 From:   paulmck@kernel.org
 To:     linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
         mingo@kernel.org
@@ -46,9 +46,9 @@ Cc:     stern@rowland.harvard.edu, parri.andrea@gmail.com, will@kernel.org,
         peterz@infradead.org, boqun.feng@gmail.com, npiggin@gmail.com,
         dhowells@redhat.com, j.alglave@ucl.ac.uk, luc.maranget@inria.fr,
         akiyks@gmail.com, "Paul E. McKenney" <paulmck@linux.ibm.com>
-Subject: [PATCH tip/core/rcu 20/32] tools/memory-model: Allow herd to deduce CPU type
-Date:   Wed,  2 Oct 2019 17:26:38 -0700
-Message-Id: <20191003002650.11249-20-paulmck@kernel.org>
+Subject: [PATCH tip/core/rcu 14/32] tools/memory-model: Hardware checking for check{,all}litmus.sh
+Date:   Wed,  2 Oct 2019 17:26:32 -0700
+Message-Id: <20191003002650.11249-14-paulmck@kernel.org>
 X-Mailer: git-send-email 2.9.5
 In-Reply-To: <20191003001039.GA8027@paulmck-ThinkPad-P72>
 References: <20191003001039.GA8027@paulmck-ThinkPad-P72>
@@ -59,41 +59,135 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: "Paul E. McKenney" <paulmck@linux.ibm.com>
 
-Currently, the scripts specify the CPU's .cat file to herd.  But this is
-pointless because herd will select a good and sufficient .cat file from
-the assembly-language litmus test itself.  This commit therefore removes
-the -model argument to herd, allowing herd to figure the CPU family out
-itself.
+This commit makes checklitmus.sh and checkalllitmus.sh check to see
+if a hardware verification was specified (via the --hw command-line
+argument, which sets the LKMM_HW_MAP_FILE environment variable).
+If so, the C-language litmus test is converted to the specified type
+of assembly-language litmus test and herd is run on it.  Hardware is
+permitted to be stronger than LKMM requires, so "Always" and "Never"
+verifications of "Sometimes" C-language litmus tests are forgiven.
 
-Note that the user can override herd's choice using the "--herdopts"
-argument to the scripts.
-
-Suggested-by: Luc Maranget <luc.maranget@inria.fr>
 Signed-off-by: Paul E. McKenney <paulmck@linux.ibm.com>
 ---
- tools/memory-model/scripts/runlitmus.sh | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ tools/memory-model/scripts/checkalllitmus.sh | 23 ++++++++-------
+ tools/memory-model/scripts/checklitmus.sh    | 42 +++++++++++++++++++++++++---
+ 2 files changed, 49 insertions(+), 16 deletions(-)
 
-diff --git a/tools/memory-model/scripts/runlitmus.sh b/tools/memory-model/scripts/runlitmus.sh
-index 62b47c7..afb196d 100755
---- a/tools/memory-model/scripts/runlitmus.sh
-+++ b/tools/memory-model/scripts/runlitmus.sh
-@@ -53,7 +53,6 @@ trap 'rm -rf $T' 0 2
- mkdir $T
+diff --git a/tools/memory-model/scripts/checkalllitmus.sh b/tools/memory-model/scripts/checkalllitmus.sh
+index 54d8da8..2d3ee85 100755
+--- a/tools/memory-model/scripts/checkalllitmus.sh
++++ b/tools/memory-model/scripts/checkalllitmus.sh
+@@ -1,4 +1,4 @@
+-#!/bin/sh
++#!/bin/bash
+ # SPDX-License-Identifier: GPL-2.0+
+ #
+ # Run herd7 tests on all .litmus files in the litmus-tests directory
+@@ -8,6 +8,11 @@
+ # "^^^".  It also outputs verification results to a file whose name is
+ # that of the specified litmus test, but with ".out" appended.
+ #
++# If the --hw argument is specified, this script translates the .litmus
++# C-language file to the specified type of assembly and verifies that.
++# But in this case, litmus tests using complex synchronization (such as
++# locking, RCU, and SRCU) are cheerfully ignored.
++#
+ # Usage:
+ #	checkalllitmus.sh
+ #
+@@ -38,21 +43,15 @@ then
+ 	( cd "$LKMM_DESTDIR"; sed -e 's/^/mkdir -p /' | sh )
+ fi
  
- # Generate filenames
--catfile="`echo $LKMM_HW_MAP_FILE | tr '[A-Z]' '[a-z]'`.cat"
- mapfile="Linux2${LKMM_HW_MAP_FILE}.map"
- themefile="$T/${LKMM_HW_MAP_FILE}.theme"
- herdoptions="-model $LKMM_HW_CAT_FILE"
-@@ -70,6 +69,6 @@ fi
- # Generate the assembly code and run herd7 on it.
- gen_theme7 -n 10 -map $mapfile -call Linux.call > $themefile
- jingle7 -theme $themefile $litmus > $LKMM_DESTDIR/$hwlitmus 2> $T/$hwlitmusfile.jingle7.out
--/usr/bin/time $LKMM_TIMEOUT_CMD herd7 -model $catfile $LKMM_DESTDIR/$hwlitmus > $LKMM_DESTDIR/$hwlitmus.out 2>&1
-+/usr/bin/time $LKMM_TIMEOUT_CMD herd7 $LKMM_DESTDIR/$hwlitmus > $LKMM_DESTDIR/$hwlitmus.out 2>&1
+-# Find the checklitmus script.  If it is not where we expect it, then
+-# assume that the caller has the PATH environment variable set
+-# appropriately.
+-if test -x scripts/checklitmus.sh
+-then
+-	clscript=scripts/checklitmus.sh
+-else
+-	clscript=checklitmus.sh
+-fi
+-
+ # Run the script on all the litmus tests in the specified directory
+ ret=0
+ for i in $litmusdir/*.litmus
+ do
+-	if ! $clscript $i
++	if test -n "$LKMM_HW_MAP_FILE" && ! scripts/simpletest.sh $i
++	then
++		continue
++	fi
++	if ! scripts/checklitmus.sh $i
+ 	then
+ 		ret=1
+ 	fi
+diff --git a/tools/memory-model/scripts/checklitmus.sh b/tools/memory-model/scripts/checklitmus.sh
+index 638b8c6..42ff118 100755
+--- a/tools/memory-model/scripts/checklitmus.sh
++++ b/tools/memory-model/scripts/checklitmus.sh
+@@ -6,6 +6,11 @@
+ # results to a file whose name is that of the specified litmus test, but
+ # with ".out" appended.
+ #
++# If the --hw argument is specified, this script translates the .litmus
++# C-language file to the specified type of assembly and verifies that.
++# But in this case, litmus tests using complex synchronization (such as
++# locking, RCU, and SRCU) are cheerfully ignored.
++#
+ # Usage:
+ #	checklitmus.sh file.litmus
+ #
+@@ -18,8 +23,6 @@
+ # Author: Paul E. McKenney <paulmck@linux.ibm.com>
  
- exit $?
+ litmus=$1
+-herdoptions=${LKMM_HERD_OPTIONS--conf linux-kernel.cfg}
+-
+ if test -f "$litmus" -a -r "$litmus"
+ then
+ 	:
+@@ -28,7 +31,38 @@ else
+ 	exit 255
+ fi
+ 
+-echo Herd options: $herdoptions > $LKMM_DESTDIR/$litmus.out
+-/usr/bin/time $LKMM_TIMEOUT_CMD herd7 $herdoptions $litmus >> $LKMM_DESTDIR/$litmus.out 2>&1
++if test -z "$LKMM_HW_MAP_FILE"
++then
++	# LKMM run
++	herdoptions=${LKMM_HERD_OPTIONS--conf linux-kernel.cfg}
++	echo Herd options: $herdoptions > $LKMM_DESTDIR/$litmus.out
++	/usr/bin/time $LKMM_TIMEOUT_CMD herd7 $herdoptions $litmus >> $LKMM_DESTDIR/$litmus.out 2>&1
++else
++	# Hardware run
++
++	T=/tmp/checklitmushw.sh.$$
++	trap 'rm -rf $T' 0 2
++	mkdir $T
++
++	# Generate filenames
++	catfile="`echo $LKMM_HW_MAP_FILE | tr '[A-Z]' '[a-z]'`.cat"
++	mapfile="Linux2${LKMM_HW_MAP_FILE}.map"
++	themefile="$T/${LKMM_HW_MAP_FILE}.theme"
++	herdoptions="-model $LKMM_HW_CAT_FILE"
++	hwlitmus=`echo $litmus | sed -e 's/\.litmus$/.'${LKMM_HW_MAP_FILE}'.litmus/'`
++	hwlitmusfile=`echo $hwlitmus | sed -e 's,^.*/,,'`
++
++	# Don't run on litmus tests with complex synchronization
++	if ! scripts/simpletest.sh $litmus
++	then
++		echo ' --- ' error: \"$litmus\" contains locking, RCU, or SRCU
++		exit 254
++	fi
++
++	# Generate the assembly code and run herd7 on it.
++	gen_theme7 -n 10 -map $mapfile -call Linux.call > $themefile
++	jingle7 -theme $themefile $litmus > $T/$hwlitmusfile 2> $T/$hwlitmusfile.jingle7.out
++	/usr/bin/time $LKMM_TIMEOUT_CMD herd7 -model $catfile $T/$hwlitmusfile > $LKMM_DESTDIR/$hwlitmus.out 2>&1
++fi
+ 
+ scripts/judgelitmus.sh $litmus
 -- 
 2.9.5
 
