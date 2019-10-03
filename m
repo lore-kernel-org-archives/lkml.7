@@ -2,89 +2,132 @@ Return-Path: <SRS0=6dNS=X4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.9 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1,USER_IN_DEF_DKIM_WL
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 19CD9C32792
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 19:41:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BBEB0C32792
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 19:41:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D79F220873
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 19:41:28 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="oeBaiWZu"
+	by mail.kernel.org (Postfix) with ESMTP id 92E6420862
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 19:41:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1570131709;
+	bh=Tdr/fKiXm8fNAtB4KPRMHCnPp+x0mbF+eM/ZCEOKktI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=gNzpnnBVJ9+TwDp1BJFvlpNryyPK2Zwxd05+7JgH9+WgLYQ8mKnSWY1qApgn60DdV
+	 MtQHCPpT3QsDcBZW+wrtKIjAi1GNbQNZvVvolKptUbYCZ2nbsUsI3ngrKsEXxJHhz3
+	 GMmBrVl/SPqLUdlfAGNaX9FE3PSBOFxJAsKhOU/k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387744AbfJCTl2 (ORCPT
+        id S2387837AbfJCTlt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 15:41:28 -0400
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:35502 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730042AbfJCTl1 (ORCPT
+        Thu, 3 Oct 2019 15:41:49 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:43494 "EHLO
+        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729616AbfJCTls (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 15:41:27 -0400
-Received: by mail-pg1-f194.google.com with SMTP id p30so278424pgl.2
-        for <linux-kernel@vger.kernel.org>; Thu, 03 Oct 2019 12:41:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:from:to:cc:subject:in-reply-to:message-id:references
-         :user-agent:mime-version;
-        bh=WqnDNpxNJ9d9Ouc08nAl1wk/JWgZ2JMo7PTKSIvFr54=;
-        b=oeBaiWZuuazODZGGgj9OjBe+kOivMqRldWHKZZ72DgA86q5Bmn7toKuhzK3oD07KbP
-         nzWOirJi1qZF/+kx6/KkffOjv6Ef0K/OKsykCGkH5PtDcXuWnuQK9BO42XotJH36GMiO
-         0A8CTywz2Y15ZATut2Oq9ebVXsxwxp39DxLd6aaGSM6JvkqmByg1pg9UVY0zgfcmReVW
-         wFoMrh0wgR5++q7FJisXKPfc6ExSVHJveQ49rEaSlo9kjbC0nkVjmcB9zhOPZ6Ex8s4E
-         DvVlONXg7N+fAShn3FMLr18JXSP1tS/CQNQYCHi1KFv+IDIlkObdEVJ6V9ypCO1nfZdL
-         /TDg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:in-reply-to:message-id
-         :references:user-agent:mime-version;
-        bh=WqnDNpxNJ9d9Ouc08nAl1wk/JWgZ2JMo7PTKSIvFr54=;
-        b=fzOWLB2PT74k2Aqzvh7dAEUVUQql/wZgT3lyybr+VFYs7uDu0O0z+tmdum+n5Q4/rg
-         AjNL1u62X4v+SUeANa22l9/brfk9WJyWpxXP4olbQKT/MjGid3bkEPronrRNM8yeGwZI
-         fUmIhQxCVDKi152vUgK+NlMrbysJY/Png41aU5dfjmtbdZ5WN2t/sBcLqwyiBw85R7xj
-         pi9v8NQanWuQQ+SuYXqZqwXtT1KqjswH3JWjR6Y3+Kj8wMHIVALfpcoirMiBS8MItH7c
-         SxtB/7w/HZF8UrhVuzQKZ4ILCOu/xfQbcH9Z+lZA+oqE43m4XX67Lo1KmA8LMfdPpCuF
-         LSVQ==
-X-Gm-Message-State: APjAAAXcDcw8GYa/8I+1KY2/V4twE/siBSH2cNFUgmo1MumU8PEqt0M7
-        nj8w9ZMxm2l7tud6H0/Id1yDwg==
-X-Google-Smtp-Source: APXvYqznYGmNd28LWoxGottlOF0mXioQrzWcto6GOK5OyHZzDF3NyaSndKmbLNindJw8P0iLQdukhg==
-X-Received: by 2002:a63:1101:: with SMTP id g1mr11311953pgl.320.1570131685547;
-        Thu, 03 Oct 2019 12:41:25 -0700 (PDT)
-Received: from [2620:15c:17:3:3a5:23a7:5e32:4598] ([2620:15c:17:3:3a5:23a7:5e32:4598])
-        by smtp.gmail.com with ESMTPSA id w134sm4632474pfd.4.2019.10.03.12.41.24
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 03 Oct 2019 12:41:24 -0700 (PDT)
-Date:   Thu, 3 Oct 2019 12:41:24 -0700 (PDT)
-From:   David Rientjes <rientjes@google.com>
-X-X-Sender: rientjes@chino.kir.corp.google.com
-To:     Yang Shi <yang.shi@linux.alibaba.com>
-cc:     mgorman@techsingularity.net, hannes@cmpxchg.org, mhocko@suse.com,
-        akpm@linux-foundation.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] mm: vmscan: remove unused scan_control parameter from
- pageout()
-In-Reply-To: <1570124498-19300-1-git-send-email-yang.shi@linux.alibaba.com>
-Message-ID: <alpine.DEB.2.21.1910031241141.88296@chino.kir.corp.google.com>
-References: <1570124498-19300-1-git-send-email-yang.shi@linux.alibaba.com>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        Thu, 3 Oct 2019 15:41:48 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=wolzDgDMk9sKmqcxXojGudZpWkj6Nd/XyboZ8g6aoLU=; b=oqZQ9iDTqA7nBBFIsZYY2eeSy
+        ao5SiVDrx3xEQnnjGRGGGocTNZ2+mQZPM10gIsbI+nEWxKEXexTbz/5O7rVHh69Uv8ZM0zcs9vEbB
+        nBcCTbbChcuSNDIwQk5hMraR+s1AH1yzLRS2/JE80ByH5Xzba4Haxhv8gNZX7Mh7EW4dU=;
+Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=ypsilon.sirena.org.uk)
+        by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <broonie@sirena.co.uk>)
+        id 1iG6yr-0006mn-I8; Thu, 03 Oct 2019 19:41:41 +0000
+Received: by ypsilon.sirena.org.uk (Postfix, from userid 1000)
+        id 9365D2740210; Thu,  3 Oct 2019 20:41:40 +0100 (BST)
+Date:   Thu, 3 Oct 2019 20:41:40 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Jacek Anaszewski <jacek.anaszewski@gmail.com>
+Cc:     Jean-Jacques Hiblot <jjhiblot@ti.com>,
+        Sebastian Reichel <sebastian.reichel@collabora.com>,
+        pavel@ucw.cz, robh+dt@kernel.org, mark.rutland@arm.com,
+        lee.jones@linaro.org, daniel.thompson@linaro.org,
+        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        tomi.valkeinen@ti.com, dmurphy@ti.com, linux-leds@vger.kernel.org,
+        Liam Girdwood <lgirdwood@gmail.com>
+Subject: Re: [PATCH v8 2/5] leds: Add of_led_get() and led_put()
+Message-ID: <20191003194140.GE6090@sirena.co.uk>
+References: <20191003082812.28491-1-jjhiblot@ti.com>
+ <20191003082812.28491-3-jjhiblot@ti.com>
+ <20191003104228.c5nho6eimwzqwxpt@earth.universe>
+ <acd11fe1-1d51-eda5-f807-c16319514c3a@ti.com>
+ <62591735-9082-1fd7-d791-07929ddaa223@gmail.com>
+ <20191003183554.GA37096@sirena.co.uk>
+ <25b9614f-d6be-9da5-0fe5-eb58c8c93850@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="J4XPiPrVK1ev6Sgr"
+Content-Disposition: inline
+In-Reply-To: <25b9614f-d6be-9da5-0fe5-eb58c8c93850@gmail.com>
+X-Cookie: Reactor error - core dumped!
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 4 Oct 2019, Yang Shi wrote:
 
-> Since lumpy reclaim was removed in v3.5 scan_control is not used by
-> may_write_to_{queue|inode} and pageout() anymore, remove the unused
-> parameter.
-> 
-> Cc: Mel Gorman <mgorman@techsingularity.net>
-> Cc: Johannes Weiner <hannes@cmpxchg.org>
-> Cc: Michal Hocko <mhocko@suse.com>
-> Signed-off-by: Yang Shi <yang.shi@linux.alibaba.com>
+--J4XPiPrVK1ev6Sgr
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Acked-by: David Rientjes <rientjes@google.com>
+On Thu, Oct 03, 2019 at 09:21:06PM +0200, Jacek Anaszewski wrote:
+> On 10/3/19 8:35 PM, Mark Brown wrote:
+> > On Thu, Oct 03, 2019 at 07:43:17PM +0200, Jacek Anaszewski wrote:
+> >> On 10/3/19 2:47 PM, Jean-Jacques Hiblot wrote:
+> >>> On 03/10/2019 12:42, Sebastian Reichel wrote:
+> >>>> On Thu, Oct 03, 2019 at 10:28:09AM +0200, Jean-Jacques Hiblot wrote:
+
+> > This mail has nothing relevant in the subject line and pages of quotes
+> > before the question for me, it's kind of lucky I noticed it....
+
+> Isn't it all about creating proper filters?
+
+My point there is that there's nothing obvious in the mail that suggests
+it should get past filters - just being CCed on a mail isn't super
+reliable, people often get pulled in due to things like checkpatch or
+someone copying a CC list from an earlier patch series where there were
+things were relevant.
+
+> >> I wonder if it wouldn't make sense to add support for fwnode
+> >> parsing to regulator core. Or maybe it is either somehow supported
+> >> or not supported on purpose?
+
+> > Anything attempting to use the regulator DT bindings in ACPI has very
+> > serious problems, ACPI has its own power model which isn't compatible
+> > with that used in DT.
+
+> We have a means for checking if fwnode refers to of_node:
+
+> is_of_node(const struct fwnode_handle *fwnode)
+
+> Couldn't it be employed for OF case?
+
+Why would we want to do that?  We'd continue to support only DT systems,
+just with code that's less obviously DT only and would need to put
+checks in.  I'm not seeing an upside here.
+
+--J4XPiPrVK1ev6Sgr
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl2WTvMACgkQJNaLcl1U
+h9Auugf+M/zn9qkTET9ib5D1e+yMi2/IZ7fTAai9T2B+PpfoT99g1OPogSJsmjH6
+HFm1fxQ2S4yyqCMx65spqqfXAj4vYAaIJ16BrkPv0ykL+QFaH7SyMZyvdMgYDsME
+HmmjAAFt0Ljk6UMHcD6Vrcb9eqjkgioH3z/veVZaDY8M/fPzVTyIOEKCwnIB+3vo
+mXiO62YHBVozTQTPVGfqkny8R4gz21SCuCdEs5n7WEyrNz5Sea/EDJ0cqYElJbLP
+qPOeooxCrYZcTQXKiS4FnTZH4iAPT9Ly7zrmlxKT2V0PDhRof+X93bNuQ2p6iLQg
+hZP2riCEv2AXWMZUQy8Mv4/5N2O+Mw==
+=+gP7
+-----END PGP SIGNATURE-----
+
+--J4XPiPrVK1ev6Sgr--
