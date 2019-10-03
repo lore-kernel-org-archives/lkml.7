@@ -2,125 +2,185 @@ Return-Path: <SRS0=6dNS=X4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0668C10F14
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 18:53:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 73068C10F14
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 18:54:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B31F720862
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 18:53:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 50911222C4
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 18:54:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730820AbfJCSx6 (ORCPT
+        id S1731060AbfJCSyC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 14:53:58 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:43302 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1730471AbfJCSx5 (ORCPT
+        Thu, 3 Oct 2019 14:54:02 -0400
+Received: from mxwww.masterlogin.de ([95.129.51.220]:53234 "EHLO
+        mxwww.masterlogin.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730471AbfJCSyA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 14:53:57 -0400
-Received: from pps.filterd (m0098416.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x93IqNkr003862
-        for <linux-kernel@vger.kernel.org>; Thu, 3 Oct 2019 14:53:55 -0400
-Received: from e06smtp03.uk.ibm.com (e06smtp03.uk.ibm.com [195.75.94.99])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2vdnyx1hq6-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Thu, 03 Oct 2019 14:53:55 -0400
-Received: from localhost
-        by e06smtp03.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <zohar@linux.ibm.com>;
-        Thu, 3 Oct 2019 19:53:53 +0100
-Received: from b06avi18626390.portsmouth.uk.ibm.com (9.149.26.192)
-        by e06smtp03.uk.ibm.com (192.168.101.133) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Thu, 3 Oct 2019 19:53:50 +0100
-Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
-        by b06avi18626390.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x93IrKAv36569444
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 3 Oct 2019 18:53:20 GMT
-Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 2D3075204E;
-        Thu,  3 Oct 2019 18:53:49 +0000 (GMT)
-Received: from dhcp-9-31-103-196.watson.ibm.com (unknown [9.31.103.196])
-        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTP id 1EDED52050;
-        Thu,  3 Oct 2019 18:53:48 +0000 (GMT)
-Subject: Re: [PATCH] KEYS: asym_tpm: Switch to get_random_bytes()
-From:   Mimi Zohar <zohar@linux.ibm.com>
-To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        David Safford <david.safford@ge.com>
-Cc:     linux-integrity@vger.kernel.org, stable@vger.kernel.org,
-        David Howells <dhowells@redhat.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        "David S. Miller" <davem@davemloft.net>,
-        "open list:ASYMMETRIC KEYS" <keyrings@vger.kernel.org>,
-        "open list:CRYPTO API" <linux-crypto@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-Date:   Thu, 03 Oct 2019 14:53:47 -0400
-In-Reply-To: <20191003175854.GB19679@linux.intel.com>
-References: <20190926171601.30404-1-jarkko.sakkinen@linux.intel.com>
-         <1570024819.4999.119.camel@linux.ibm.com>
-         <20191003114119.GF8933@linux.intel.com>
-         <1570107752.4421.183.camel@linux.ibm.com>
-         <20191003175854.GB19679@linux.intel.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-x-cbid: 19100318-0012-0000-0000-00000353C61D
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19100318-0013-0000-0000-0000218ECE5B
-Message-Id: <1570128827.5046.19.camel@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-10-03_07:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=3 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=812 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1908290000 definitions=main-1910030155
+        Thu, 3 Oct 2019 14:54:00 -0400
+Received: from mxout2.routing.net (unknown [192.168.10.82])
+        by new.mxwww.masterlogin.de (Postfix) with ESMTPS id A5FE596C8B;
+        Thu,  3 Oct 2019 18:53:53 +0000 (UTC)
+Received: from mxbox4.masterlogin.de (unknown [192.168.10.79])
+        by mxout2.routing.net (Postfix) with ESMTP id 127BF648FA;
+        Thu,  3 Oct 2019 18:53:54 +0000 (UTC)
+Received: from localhost.localdomain (fttx-pool-217.61.155.74.bambit.de [217.61.155.74])
+        by mxbox4.masterlogin.de (Postfix) with ESMTPSA id 71F278089F;
+        Thu,  3 Oct 2019 18:53:53 +0000 (UTC)
+From:   Frank Wunderlich <frank-w@public-files.de>
+To:     Lee Jones <lee.jones@linaro.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Hsin-Hsiung Wang <hsin-hsiung.wang@mediatek.com>
+Cc:     Frank Wunderlich <frank-w@public-files.de>
+Subject: [PATCH] mfd: mt6397: fix probe after changing mt6397-core
+Date:   Thu,  3 Oct 2019 20:53:23 +0200
+Message-Id: <20191003185323.24646-1-frank-w@public-files.de>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[Cc'ing David Safford]
+Part 3 from this series [1] was not merged due to wrong splitting
+and breaks mt6323 pmic on bananapi-r2
 
-On Thu, 2019-10-03 at 20:58 +0300, Jarkko Sakkinen wrote:
-> On Thu, Oct 03, 2019 at 09:02:32AM -0400, Mimi Zohar wrote:
-> > On Thu, 2019-10-03 at 14:41 +0300, Jarkko Sakkinen wrote:
-> > > On Wed, Oct 02, 2019 at 10:00:19AM -0400, Mimi Zohar wrote:
-> > > > On Thu, 2019-09-26 at 20:16 +0300, Jarkko Sakkinen wrote:
-> > > > > Only the kernel random pool should be used for generating random numbers.
-> > > > > TPM contributes to that pool among the other sources of entropy. In here it
-> > > > > is not, agreed, absolutely critical because TPM is what is trusted anyway
-> > > > > but in order to remove tpm_get_random() we need to first remove all the
-> > > > > call sites.
-> > > > 
-> > > > At what point during boot is the kernel random pool available?  Does
-> > > > this imply that you're planning on changing trusted keys as well?
-> > > 
-> > > Well trusted keys *must* be changed to use it. It is not a choice
-> > > because using a proprietary random number generator instead of defacto
-> > > one in the kernel can be categorized as a *regression*.
-> > 
-> > I really don't see how using the TPM random number for TPM trusted
-> > keys would be considered a regression.  That by definition is a
-> > trusted key.  If anything, changing what is currently being done would
-> > be the regression. 
-> 
-> It is really not a TPM trusted key. It trusted key that gets sealed with
-> the TPM. The key itself is used in clear by kernel. The random number
-> generator exists in the kernel to for a reason.
-> 
-> It is without doubt a regression.
+dmesg prints this line and at least switch is not initialized on bananapi-r2
 
-You're misusing the term "regression" here.  A regression is something
-that previously worked and has stopped working.  In this case, trusted
-keys has always been based on the TPM random number generator.  Before
-changing this, there needs to be some guarantees that the kernel
-random number generator has a pool of random numbers early, on all
-systems including embedded devices, not just servers.
+mt6397 1000d000.pwrap:mt6323: unsupported chip: 0x0
 
-Mimi
+this patch contains only the probe-changes and chip_data structs
+from original part 3 by Hsin-Hsiung Wang
+
+Fixes: a4872e80ce7d2a1844328176dbf279d0a2b89bdb mfd: mt6397: Extract IRQ related code from core driver
+
+[1] https://patchwork.kernel.org/project/linux-mediatek/list/?series=164155
+
+Signed-off-by: Frank Wunderlich <frank-w@public-files.de>
+---
+ drivers/mfd/mt6397-core.c | 64 ++++++++++++++++++++++++---------------
+ 1 file changed, 40 insertions(+), 24 deletions(-)
+
+diff --git a/drivers/mfd/mt6397-core.c b/drivers/mfd/mt6397-core.c
+index 310dae26ddff..b2c325ead1c8 100644
+--- a/drivers/mfd/mt6397-core.c
++++ b/drivers/mfd/mt6397-core.c
+@@ -129,11 +129,27 @@ static int mt6397_irq_resume(struct device *dev)
+ static SIMPLE_DEV_PM_OPS(mt6397_pm_ops, mt6397_irq_suspend,
+ 			mt6397_irq_resume);
+ 
++struct chip_data {
++	u32 cid_addr;
++	u32 cid_shift;
++};
++
++static const struct chip_data mt6323_core = {
++	.cid_addr = MT6323_CID,
++	.cid_shift = 0,
++};
++
++static const struct chip_data mt6397_core = {
++	.cid_addr = MT6397_CID,
++	.cid_shift = 0,
++};
++
+ static int mt6397_probe(struct platform_device *pdev)
+ {
+ 	int ret;
+ 	unsigned int id;
+ 	struct mt6397_chip *pmic;
++	const struct chip_data *pmic_core;
+ 
+ 	pmic = devm_kzalloc(&pdev->dev, sizeof(*pmic), GFP_KERNEL);
+ 	if (!pmic)
+@@ -149,28 +165,30 @@ static int mt6397_probe(struct platform_device *pdev)
+ 	if (!pmic->regmap)
+ 		return -ENODEV;
+ 
+-	platform_set_drvdata(pdev, pmic);
++	pmic_core = of_device_get_match_data(&pdev->dev);
++	if (!pmic_core)
++		return -ENODEV;
+ 
+-	ret = regmap_read(pmic->regmap, MT6397_CID, &id);
++	ret = regmap_read(pmic->regmap, pmic_core->cid_addr, &id);
+ 	if (ret) {
+-		dev_err(pmic->dev, "Failed to read chip id: %d\n", ret);
++		dev_err(&pdev->dev, "Failed to read chip id: %d\n", ret);
+ 		return ret;
+ 	}
+ 
++	pmic->chip_id = (id >> pmic_core->cid_shift) & 0xff;
++
++	platform_set_drvdata(pdev, pmic);
++
+ 	pmic->irq = platform_get_irq(pdev, 0);
+ 	if (pmic->irq <= 0)
+ 		return pmic->irq;
+ 
+-	switch (id & 0xff) {
+-	case MT6323_CHIP_ID:
+-		pmic->int_con[0] = MT6323_INT_CON0;
+-		pmic->int_con[1] = MT6323_INT_CON1;
+-		pmic->int_status[0] = MT6323_INT_STATUS0;
+-		pmic->int_status[1] = MT6323_INT_STATUS1;
+-		ret = mt6397_irq_init(pmic);
+-		if (ret)
+-			return ret;
++	ret = mt6397_irq_init(pmic);
++	if (ret)
++		return ret;
+ 
++	switch (pmic->chip_id) {
++	case MT6323_CHIP_ID:
+ 		ret = devm_mfd_add_devices(&pdev->dev, -1, mt6323_devs,
+ 					   ARRAY_SIZE(mt6323_devs), NULL,
+ 					   0, pmic->irq_domain);
+@@ -178,21 +196,13 @@ static int mt6397_probe(struct platform_device *pdev)
+ 
+ 	case MT6391_CHIP_ID:
+ 	case MT6397_CHIP_ID:
+-		pmic->int_con[0] = MT6397_INT_CON0;
+-		pmic->int_con[1] = MT6397_INT_CON1;
+-		pmic->int_status[0] = MT6397_INT_STATUS0;
+-		pmic->int_status[1] = MT6397_INT_STATUS1;
+-		ret = mt6397_irq_init(pmic);
+-		if (ret)
+-			return ret;
+-
+ 		ret = devm_mfd_add_devices(&pdev->dev, -1, mt6397_devs,
+ 					   ARRAY_SIZE(mt6397_devs), NULL,
+ 					   0, pmic->irq_domain);
+ 		break;
+ 
+ 	default:
+-		dev_err(&pdev->dev, "unsupported chip: %d\n", id);
++		dev_err(&pdev->dev, "unsupported chip: %d\n", pmic->chip_id);
+ 		return -ENODEV;
+ 	}
+ 
+@@ -205,9 +215,15 @@ static int mt6397_probe(struct platform_device *pdev)
+ }
+ 
+ static const struct of_device_id mt6397_of_match[] = {
+-	{ .compatible = "mediatek,mt6397" },
+-	{ .compatible = "mediatek,mt6323" },
+-	{ }
++	{
++		.compatible = "mediatek,mt6323",
++		.data = &mt6323_core,
++	}, {
++		.compatible = "mediatek,mt6397",
++		.data = &mt6397_core,
++	}, {
++		/* sentinel */
++	}
+ };
+ MODULE_DEVICE_TABLE(of, mt6397_of_match);
+ 
+-- 
+2.17.1
 
