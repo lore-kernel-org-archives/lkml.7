@@ -2,51 +2,54 @@ Return-Path: <SRS0=6dNS=X4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 06777C32792
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:49:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 469BBC10F14
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:49:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C5296215EA
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:49:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1DF59215EA
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:49:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570121360;
-	bh=Wb/Buv17l28cIMxrABBRC99pWTC6SdHgYan1rcQ+RPk=;
+	s=default; t=1570121364;
+	bh=Hjp88NY3REpZW3H/VUC90t+cZ1UN3x+Ulcpaz+PzxuY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=inL5EhB5XvGD5wUQuG7sWq8JM8D03y8UKyVSsKJqzuZ3/g2qlFPqcurvAw4w1OouU
-	 FnNAgR0NMYKViKzPXQMH3YNfQ8FbV3hwA7sw7DaHl7sgjQXZUS27tE3W3Genqd/GLs
-	 hNFZDipR7jPOAf6Y3cq9shqlq1aI1VVgkTTN9dmY=
+	b=MeZi66tEbPh0v2100lcPggOkC6DX5C6pezZHwC253aJd/r9pu0Pl5u+BX7aTSUN3W
+	 ifuPwVaDU8RDxrJV/Bae/IC3srdtxq13Pg3elnutn93TyjMDrID3m4ehmsj3kWTqzZ
+	 jE5upJI1a9cuwgsBA1MYFLtdnUUg6BoVV/AjRvhk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393062AbfJCQtU (ORCPT
+        id S2393071AbfJCQtX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 12:49:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35670 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 12:49:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35748 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392781AbfJCQtR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:49:17 -0400
+        id S2388508AbfJCQtT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:49:19 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3864C2070B;
-        Thu,  3 Oct 2019 16:49:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DF3502070B;
+        Thu,  3 Oct 2019 16:49:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570121356;
-        bh=Wb/Buv17l28cIMxrABBRC99pWTC6SdHgYan1rcQ+RPk=;
+        s=default; t=1570121359;
+        bh=Hjp88NY3REpZW3H/VUC90t+cZ1UN3x+Ulcpaz+PzxuY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=k5GkjxWFaRVZCT5xsNoJAXD68POS9mY4eYUF6nfva/eCHcRpBD4/vyEHjKBgjQsrJ
-         paoBuP6kKiU6bwYeqrWR9vXKq1n7WT6JEM60SOuWt+b/Y+sExf891YYRT+G+9WgrXb
-         TVEkUSMTYa7zROGmq2r8UnZDdb19V77g8moTabQE=
+        b=x/OKlToBF/p0GpzU2VLYsLUwcnRmp4j1NfzeLMl7lClWwcQ+dPTFrFvbd3OUIRfDX
+         XBvJF+zAqSf17Nze/bUTq2596K0xh5Em3RYEr5D+7cKJvZLdnp1l0D25OiQKvL2GxG
+         L05Hoyjb7X7N54DenQ68jdmctxld//rfBpmX74hI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Adam Ford <aford173@gmail.com>,
-        Tony Lindgren <tony@atomide.com>
-Subject: [PATCH 5.3 248/344] ARM: dts: am3517-evm: Fix missing video
-Date:   Thu,  3 Oct 2019 17:53:33 +0200
-Message-Id: <20191003154604.927013033@linuxfoundation.org>
+        stable@vger.kernel.org,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        "Paul E. McKenney" <paulmck@linux.ibm.com>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.3 249/344] rcu/tree: Fix SCHED_FIFO params
+Date:   Thu,  3 Oct 2019 17:53:34 +0200
+Message-Id: <20191003154605.026537823@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191003154540.062170222@linuxfoundation.org>
 References: <20191003154540.062170222@linuxfoundation.org>
@@ -59,65 +62,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Adam Ford <aford173@gmail.com>
+From: Peter Zijlstra <peterz@infradead.org>
 
-commit 24cf23276a54dd2825d3e3965c1b1b453e2a113d upstream.
+[ Upstream commit 130d9c331bc59a8733b47c58ef197a2b1fa3ed43 ]
 
-A previous commit removed the panel-dpi driver, which made the
-video on the AM3517-evm stop working because it relied on the dpi
-driver for setting video timings.  Now that the simple-panel driver
-is available in omap2plus, this patch migrates the am3517-evm
-to use a similar panel and remove the manual timing requirements.
+A rather embarrasing mistake had us call sched_setscheduler() before
+initializing the parameters passed to it.
 
-Fixes: 8bf4b1621178 ("drm/omap: Remove panel-dpi driver")
-
-Signed-off-by: Adam Ford <aford173@gmail.com>
-Signed-off-by: Tony Lindgren <tony@atomide.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Fixes: 1a763fd7c633 ("rcu/tree: Call setschedule() gp ktread to SCHED_FIFO outside of atomic region")
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Reviewed-by: Paul E. McKenney <paulmck@linux.ibm.com>
+Cc: Juri Lelli <juri.lelli@redhat.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/am3517-evm.dts |   23 ++++-------------------
- 1 file changed, 4 insertions(+), 19 deletions(-)
+ kernel/rcu/tree.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
---- a/arch/arm/boot/dts/am3517-evm.dts
-+++ b/arch/arm/boot/dts/am3517-evm.dts
-@@ -124,10 +124,11 @@
- 	};
- 
- 	lcd0: display@0 {
--		compatible = "panel-dpi";
-+		/* This isn't the exact LCD, but the timings meet spec */
-+		/* To make it work, set CONFIG_OMAP2_DSS_MIN_FCK_PER_PCK=4 */
-+		compatible = "newhaven,nhd-4.3-480272ef-atxl";
- 		label = "15";
--		status = "okay";
--		pinctrl-names = "default";
-+		backlight = <&bl>;
- 		enable-gpios = <&gpio6 16 GPIO_ACTIVE_HIGH>;	/* gpio176, lcd INI */
- 		vcc-supply = <&vdd_io_reg>;
- 
-@@ -136,22 +137,6 @@
- 				remote-endpoint = <&dpi_out>;
- 			};
- 		};
--
--		panel-timing {
--			clock-frequency = <9000000>;
--			hactive = <480>;
--			vactive = <272>;
--			hfront-porch = <3>;
--			hback-porch = <2>;
--			hsync-len = <42>;
--			vback-porch = <3>;
--			vfront-porch = <4>;
--			vsync-len = <11>;
--			hsync-active = <0>;
--			vsync-active = <0>;
--			de-active = <1>;
--			pixelclk-active = <1>;
--		};
- 	};
- 
- 	bl: backlight {
+diff --git a/kernel/rcu/tree.c b/kernel/rcu/tree.c
+index eb764c24bc4d4..5efdce756fdf0 100644
+--- a/kernel/rcu/tree.c
++++ b/kernel/rcu/tree.c
+@@ -3234,13 +3234,13 @@ static int __init rcu_spawn_gp_kthread(void)
+ 	t = kthread_create(rcu_gp_kthread, NULL, "%s", rcu_state.name);
+ 	if (WARN_ONCE(IS_ERR(t), "%s: Could not start grace-period kthread, OOM is now expected behavior\n", __func__))
+ 		return 0;
+-	if (kthread_prio)
++	if (kthread_prio) {
++		sp.sched_priority = kthread_prio;
+ 		sched_setscheduler_nocheck(t, SCHED_FIFO, &sp);
++	}
+ 	rnp = rcu_get_root();
+ 	raw_spin_lock_irqsave_rcu_node(rnp, flags);
+ 	rcu_state.gp_kthread = t;
+-	if (kthread_prio)
+-		sp.sched_priority = kthread_prio;
+ 	raw_spin_unlock_irqrestore_rcu_node(rnp, flags);
+ 	wake_up_process(t);
+ 	rcu_spawn_nocb_kthreads();
+-- 
+2.20.1
+
 
 
