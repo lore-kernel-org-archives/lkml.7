@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 992EAC32792
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:53:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9ED30C10F14
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:53:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6619F20862
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:53:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 70D982086A
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:53:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570121615;
-	bh=+DVWTkRncnAFYcTVWYorCgHrV49Hd2VG5eUzOOfe5Qo=;
+	s=default; t=1570121618;
+	bh=2r6Gcn4ynoi7nHE5VY0dGQ3H1kKpKuws4yoTIyKcVZA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vJF0HQyLKRFLTY7zb+L9XA5hR/545OGxMLG6NvN4YkVt8kW4z12wwsc3RvBPTAEGZ
-	 kk7DnZiLu5Y/OBuaR9+NadK5MRBmkMjOqMDfTtS4pGs9obJjZvCr4z0Eecfrlqod+C
-	 p3MuuPaaQi7dNfM8ZYjNk/WObmPdvEfTqS6su0e8=
+	b=mLK5+ThX8v0GtF/+0X2evOtdOYNhm07z+PYKNsi9RG9sg7zSRJmUz+1ez3XNZs2S3
+	 9als8e1wlhuIkT+3jo0HP3RhaiQ59U+d+7F6OQ8aRSZYCF6ZlpX+68EQ5GtFwVhYO5
+	 V8WIJdPPnl8L3kmEMB2P9xd5cRMzz2k3nd+9eJ+M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732185AbfJCQxe (ORCPT
+        id S2392407AbfJCQxd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 12:53:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41618 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2406434AbfJCQxd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 3 Oct 2019 12:53:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41472 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2405232AbfJCQx2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:53:28 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9B34820867;
-        Thu,  3 Oct 2019 16:53:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4B23B20862;
+        Thu,  3 Oct 2019 16:53:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570121612;
-        bh=+DVWTkRncnAFYcTVWYorCgHrV49Hd2VG5eUzOOfe5Qo=;
+        s=default; t=1570121606;
+        bh=2r6Gcn4ynoi7nHE5VY0dGQ3H1kKpKuws4yoTIyKcVZA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=LRuKX5QLjpJ1V58e6GJwe6S/GjWfbL+8g8JIIcNDfw74ARYdsVOVXGZtUEV7ng7nk
-         GAwRPBv4nYYeqSzUqZphP3uJnxgfwDaFbyHD1/yn52m1U9afjYrinu9JXfmlTeZi86
-         rJcu+X8MYQN72LNmWGinr7VtW2RlQvaKkY2wJZDg=
+        b=jeKvKGf0DCzPSbRL1VlbLNeoXjHJGQwt8s6binPMFbMqVRLQxmscu3rXCxoYf7t9v
+         ajJKEbRB77z9d6JJ+hkN0sWao35jvMTsHdqxR/bgeUvCmjyC1555kU2K/Le2bh0wwG
+         PcfG0AneC+Tokso+QHlIfoPIMy3mysRv7Rua05lg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Steve French <stfrench@microsoft.com>,
-        Pavel Shilovsky <pshilov@microsoft.com>
-Subject: [PATCH 5.3 306/344] smb3: fix leak in "open on server" perf counter
-Date:   Thu,  3 Oct 2019 17:54:31 +0200
-Message-Id: <20191003154609.500567688@linuxfoundation.org>
+        stable@vger.kernel.org, Pavel Shilovsky <pshilov@microsoft.com>,
+        Steve French <stfrench@microsoft.com>,
+        Ronnie Sahlberg <lsahlber@redhat.com>
+Subject: [PATCH 5.3 304/344] smb3: allow disabling requesting leases
+Date:   Thu,  3 Oct 2019 17:54:29 +0200
+Message-Id: <20191003154609.355782187@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191003154540.062170222@linuxfoundation.org>
 References: <20191003154540.062170222@linuxfoundation.org>
@@ -61,59 +62,116 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Steve French <stfrench@microsoft.com>
 
-commit d2f15428d6a0ebfc0edc364094d7c4a2de7037ed upstream.
+commit 3e7a02d47872081f4b6234a9f72500f1d10f060c upstream.
 
-We were not bumping up the "open on server" (num_remote_opens)
-counter (in some cases) on opens of the share root so
-could end up showing as a negative value.
+In some cases to work around server bugs or performance
+problems it can be helpful to be able to disable requesting
+SMB2.1/SMB3 leases on a particular mount (not to all servers
+and all shares we are mounted to). Add new mount parm
+"nolease" which turns off requesting leases on directory
+or file opens.  Currently the only way to disable leases is
+globally through a module load parameter. This is more
+granular.
 
-CC: Stable <stable@vger.kernel.org>
+Suggested-by: Pavel Shilovsky <pshilov@microsoft.com>
 Signed-off-by: Steve French <stfrench@microsoft.com>
+Reviewed-by: Ronnie Sahlberg <lsahlber@redhat.com>
 Reviewed-by: Pavel Shilovsky <pshilov@microsoft.com>
+CC: Stable <stable@vger.kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/cifs/smb2ops.c |    5 +++++
- fs/cifs/smb2pdu.c |    1 +
- 2 files changed, 6 insertions(+)
+ fs/cifs/cifsfs.c   |    2 ++
+ fs/cifs/cifsglob.h |    2 ++
+ fs/cifs/connect.c  |    9 ++++++++-
+ fs/cifs/smb2pdu.c  |    2 +-
+ 4 files changed, 13 insertions(+), 2 deletions(-)
 
---- a/fs/cifs/smb2ops.c
-+++ b/fs/cifs/smb2ops.c
-@@ -743,6 +743,8 @@ int open_shroot(unsigned int xid, struct
- 	if (rc)
- 		goto oshr_exit;
+--- a/fs/cifs/cifsfs.c
++++ b/fs/cifs/cifsfs.c
+@@ -433,6 +433,8 @@ cifs_show_options(struct seq_file *s, st
+ 	cifs_show_security(s, tcon->ses);
+ 	cifs_show_cache_flavor(s, cifs_sb);
  
-+	atomic_inc(&tcon->num_remote_opens);
-+
- 	o_rsp = (struct smb2_create_rsp *)rsp_iov[0].iov_base;
- 	oparms.fid->persistent_fid = o_rsp->PersistentFileId;
- 	oparms.fid->volatile_fid = o_rsp->VolatileFileId;
-@@ -1168,6 +1170,7 @@ smb2_set_ea(const unsigned int xid, stru
++	if (tcon->no_lease)
++		seq_puts(s, ",nolease");
+ 	if (cifs_sb->mnt_cifs_flags & CIFS_MOUNT_MULTIUSER)
+ 		seq_puts(s, ",multiuser");
+ 	else if (tcon->ses->user_name)
+--- a/fs/cifs/cifsglob.h
++++ b/fs/cifs/cifsglob.h
+@@ -576,6 +576,7 @@ struct smb_vol {
+ 	bool noblocksnd:1;
+ 	bool noautotune:1;
+ 	bool nostrictsync:1; /* do not force expensive SMBflush on every sync */
++	bool no_lease:1;     /* disable requesting leases */
+ 	bool fsc:1;	/* enable fscache */
+ 	bool mfsymlinks:1; /* use Minshall+French Symlinks */
+ 	bool multiuser:1;
+@@ -1082,6 +1083,7 @@ struct cifs_tcon {
+ 	bool need_reopen_files:1; /* need to reopen tcon file handles */
+ 	bool use_resilient:1; /* use resilient instead of durable handles */
+ 	bool use_persistent:1; /* use persistent instead of durable handles */
++	bool no_lease:1;    /* Do not request leases on files or directories */
+ 	__le32 capabilities;
+ 	__u32 share_flags;
+ 	__u32 maximal_access;
+--- a/fs/cifs/connect.c
++++ b/fs/cifs/connect.c
+@@ -74,7 +74,7 @@ enum {
+ 	Opt_user_xattr, Opt_nouser_xattr,
+ 	Opt_forceuid, Opt_noforceuid,
+ 	Opt_forcegid, Opt_noforcegid,
+-	Opt_noblocksend, Opt_noautotune,
++	Opt_noblocksend, Opt_noautotune, Opt_nolease,
+ 	Opt_hard, Opt_soft, Opt_perm, Opt_noperm,
+ 	Opt_mapposix, Opt_nomapposix,
+ 	Opt_mapchars, Opt_nomapchars, Opt_sfu,
+@@ -134,6 +134,7 @@ static const match_table_t cifs_mount_op
+ 	{ Opt_noforcegid, "noforcegid" },
+ 	{ Opt_noblocksend, "noblocksend" },
+ 	{ Opt_noautotune, "noautotune" },
++	{ Opt_nolease, "nolease" },
+ 	{ Opt_hard, "hard" },
+ 	{ Opt_soft, "soft" },
+ 	{ Opt_perm, "perm" },
+@@ -1713,6 +1714,9 @@ cifs_parse_mount_options(const char *mou
+ 		case Opt_noautotune:
+ 			vol->noautotune = 1;
+ 			break;
++		case Opt_nolease:
++			vol->no_lease = 1;
++			break;
+ 		case Opt_hard:
+ 			vol->retry = 1;
+ 			break;
+@@ -3250,6 +3254,8 @@ static int match_tcon(struct cifs_tcon *
+ 		return 0;
+ 	if (tcon->handle_timeout != volume_info->handle_timeout)
+ 		return 0;
++	if (tcon->no_lease != volume_info->no_lease)
++		return 0;
+ 	return 1;
+ }
  
- 	rc = compound_send_recv(xid, ses, flags, 3, rqst,
- 				resp_buftype, rsp_iov);
-+	/* no need to bump num_remote_opens because handle immediately closed */
+@@ -3464,6 +3470,7 @@ cifs_get_tcon(struct cifs_ses *ses, stru
+ 	tcon->nocase = volume_info->nocase;
+ 	tcon->nohandlecache = volume_info->nohandlecache;
+ 	tcon->local_lease = volume_info->local_lease;
++	tcon->no_lease = volume_info->no_lease;
+ 	INIT_LIST_HEAD(&tcon->pending_opens);
  
-  sea_exit:
- 	kfree(ea);
-@@ -1489,6 +1492,8 @@ smb2_ioctl_query_info(const unsigned int
- 				resp_buftype, rsp_iov);
- 	if (rc)
- 		goto iqinf_exit;
-+
-+	/* No need to bump num_remote_opens since handle immediately closed */
- 	if (qi.flags & PASSTHRU_FSCTL) {
- 		pqi = (struct smb_query_info __user *)arg;
- 		io_rsp = (struct smb2_ioctl_rsp *)rsp_iov[1].iov_base;
+ 	spin_lock(&cifs_tcp_ses_lock);
 --- a/fs/cifs/smb2pdu.c
 +++ b/fs/cifs/smb2pdu.c
-@@ -2351,6 +2351,7 @@ int smb311_posix_mkdir(const unsigned in
- 	rqst.rq_iov = iov;
- 	rqst.rq_nvec = n_iov;
+@@ -2458,7 +2458,7 @@ SMB2_open_init(struct cifs_tcon *tcon, s
+ 	iov[1].iov_len = uni_path_len;
+ 	iov[1].iov_base = path;
  
-+	/* no need to inc num_remote_opens because we close it just below */
- 	trace_smb3_posix_mkdir_enter(xid, tcon->tid, ses->Suid, CREATE_NOT_FILE,
- 				    FILE_WRITE_ATTRIBUTES);
- 	/* resource #4: response buffer */
+-	if (!server->oplocks)
++	if ((!server->oplocks) || (tcon->no_lease))
+ 		*oplock = SMB2_OPLOCK_LEVEL_NONE;
+ 
+ 	if (!(server->capabilities & SMB2_GLOBAL_CAP_LEASING) ||
 
 
