@@ -7,52 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0435C32792
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:12:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DB0AC4CED1
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:12:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C60F420830
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:12:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6285020673
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:12:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570122736;
-	bh=SDlAYI9BhqBHRdwdkMZlPxl5JV58fBNfvFUMaH7kJuQ=;
+	s=default; t=1570122743;
+	bh=6Ktj9zXXi9b3bAjU5OSe3uz1uAckroEcPDIgl37r6dk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wGskla0HYd8QZDt1ZKGKo+FIoxfsWFPVd5qjVczcAcpq+qSJrmmBuIwit00FSZq7i
-	 9J8ItIpKQT6/lKYBScmzsi1yLkSkiLRWal2zfpSb+NvM8DnXUKippMSool8qfT11+r
-	 X/2HanlVEP3PYXpKoObeFWxF/uyrQg0VAuaZrgCo=
+	b=gF19ulWREGL7oSlfLApDczzY55v4fvt+gfIKyrmkl9Z3D66oV2f9PpMQu1NjZpH9p
+	 gfrdJaav+ctumDnQt6rAB0QnnL2YA/h0vp4Z8g+kOY1+OFOC7vpzD0lzzf7W+Hs7Pk
+	 HShDLzhGQzV3ltfgcZO3kTerXVMF5UmTRbSW4a/Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404427AbfJCRMQ (ORCPT
+        id S2390811AbfJCQa0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 13:12:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36894 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 12:30:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36396 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390445AbfJCQaj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:30:39 -0400
+        id S2391692AbfJCQaX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:30:23 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0844620700;
-        Thu,  3 Oct 2019 16:30:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0583920700;
+        Thu,  3 Oct 2019 16:30:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570120238;
-        bh=SDlAYI9BhqBHRdwdkMZlPxl5JV58fBNfvFUMaH7kJuQ=;
+        s=default; t=1570120222;
+        bh=6Ktj9zXXi9b3bAjU5OSe3uz1uAckroEcPDIgl37r6dk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Zeccw3kcw059DsjUHAneiuyltUE2eFhm3/NoE7WJvAFVpLINZmn4Jh4Bvb//1zd7D
-         0NH/65XgDGWFSsqR4PhO7UaS9KeWGKHIMugfk8n7UIF6nONJEeHZjYdKd5UAUDGaGi
-         djZApuC86NNTSonTMcx/sXUXufqhvL3REBqt9nkQ=
+        b=znROllMjPP0DATgp6S1kLsSQIXL3sUtI3ng9oKJIB1b2t7DXg7b8LW9hojUYc/ZK2
+         s5C3ZfHwAD9/xBa6fkM5OlocJgBSpTAvD4mXF2TTulN+uMA0JlSISuLgDsxzsNDYWm
+         cveFM6VxADH9icq2jMjQ9DJf/nIKF+yCDPpdSQlo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Andi Kleen <ak@linux.intel.com>, Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        stable@vger.kernel.org, Wenwen Wang <wenwen@cs.uga.edu>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 147/313] perf script: Fix memory leaks in list_scripts()
-Date:   Thu,  3 Oct 2019 17:52:05 +0200
-Message-Id: <20191003154547.411558084@linuxfoundation.org>
+Subject: [PATCH 5.2 142/313] media: saa7146: add cleanup in hexium_attach()
+Date:   Thu,  3 Oct 2019 17:52:00 +0200
+Message-Id: <20191003154546.886411315@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191003154533.590915454@linuxfoundation.org>
 References: <20191003154533.590915454@linuxfoundation.org>
@@ -65,46 +61,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Gustavo A. R. Silva <gustavo@embeddedor.com>
+From: Wenwen Wang <wenwen@cs.uga.edu>
 
-[ Upstream commit 3b4acbb92dbda4829e021e5c6d5410658849fa1c ]
+[ Upstream commit 42e64117d3b4a759013f77bbcf25ab6700e55de7 ]
 
-In case memory resources for *buf* and *paths* were allocated, jump to
-*out* and release them before return.
+If saa7146_register_device() fails, no cleanup is executed, leading to
+memory/resource leaks. To fix this issue, perform necessary cleanup work
+before returning the error.
 
-Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Andi Kleen <ak@linux.intel.com>
-Cc: Gustavo A. R. Silva <gustavo@embeddedor.com>
-Cc: Jiri Olsa <jolsa@redhat.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Addresses-Coverity-ID: 1444328 ("Resource leak")
-Fixes: 6f3da20e151f ("perf report: Support builtin perf script in scripts menu")
-Link: http://lkml.kernel.org/r/20190408162748.GA21008@embeddedor
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Signed-off-by: Wenwen Wang <wenwen@cs.uga.edu>
+Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/perf/ui/browsers/scripts.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ drivers/media/pci/saa7146/hexium_gemini.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/tools/perf/ui/browsers/scripts.c b/tools/perf/ui/browsers/scripts.c
-index 27cf3ab88d13f..f4edb18f67ec9 100644
---- a/tools/perf/ui/browsers/scripts.c
-+++ b/tools/perf/ui/browsers/scripts.c
-@@ -131,8 +131,10 @@ static int list_scripts(char *script_name, bool *custom,
- 		int key = ui_browser__input_window("perf script command",
- 				"Enter perf script command line (without perf script prefix)",
- 				script_args, "", 0);
--		if (key != K_ENTER)
--			return -1;
-+		if (key != K_ENTER) {
-+			ret = -1;
-+			goto out;
-+		}
- 		sprintf(script_name, "%s script %s", perf, script_args);
- 	} else if (choice < num + max_std) {
- 		strcpy(script_name, paths[choice]);
+diff --git a/drivers/media/pci/saa7146/hexium_gemini.c b/drivers/media/pci/saa7146/hexium_gemini.c
+index dca20a3d98e25..f962269306707 100644
+--- a/drivers/media/pci/saa7146/hexium_gemini.c
++++ b/drivers/media/pci/saa7146/hexium_gemini.c
+@@ -292,6 +292,9 @@ static int hexium_attach(struct saa7146_dev *dev, struct saa7146_pci_extension_d
+ 	ret = saa7146_register_device(&hexium->video_dev, dev, "hexium gemini", VFL_TYPE_GRABBER);
+ 	if (ret < 0) {
+ 		pr_err("cannot register capture v4l2 device. skipping.\n");
++		saa7146_vv_release(dev);
++		i2c_del_adapter(&hexium->i2c_adapter);
++		kfree(hexium);
+ 		return ret;
+ 	}
+ 
 -- 
 2.20.1
 
