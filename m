@@ -7,46 +7,53 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB546C10F14
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:41:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E1A52C10F14
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:41:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B7B77215EA
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:41:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B5C6D2086A
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:41:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570120913;
-	bh=Efrs07DtXo6dlB5edLomXEd/SCJQyQCva1c9N4iPxMY=;
+	s=default; t=1570120916;
+	bh=P73YqyByfJFfD7IeMva3s/Jr+ys9xdTCvSZ1/zaZIYE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=GtaVs4gu70+0bQ8N4HDFqAQF8soE+06uVbMV0doqaTQ8ywIO/Cofa9Nu7Jdx7em5r
-	 xsCLMwb9SiYAEvIUnSM+pgNZ52pFguh918thQCr2hMmTvmLqSAckOzOcck/UbJxJHT
-	 nrVO8mI7TycdXQC6Zx/brlPlUzU4oU/n26PAJZCM=
+	b=OfbTTEANaEXm8avLSIt6rSt+S8jlQ0fTL5dyNTt7UZojYYmWldO97AN0XlsKRdTD6
+	 vmDL2LeBXTP48SonvRaRPMYs3VgQPOBFCdpi77grSvA+6hnD6WBQEeEJWpI1zWlIc7
+	 iIC1+DQvHsHcfeqXHxwE+mZ796bCzY76RpBSJuOY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391818AbfJCQlx (ORCPT
+        id S2392528AbfJCQl4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 12:41:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52244 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 12:41:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52364 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404660AbfJCQln (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:41:43 -0400
+        id S2391437AbfJCQls (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:41:48 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 077522054F;
-        Thu,  3 Oct 2019 16:41:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3C59520865;
+        Thu,  3 Oct 2019 16:41:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570120902;
-        bh=Efrs07DtXo6dlB5edLomXEd/SCJQyQCva1c9N4iPxMY=;
+        s=default; t=1570120907;
+        bh=P73YqyByfJFfD7IeMva3s/Jr+ys9xdTCvSZ1/zaZIYE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Jcn+AXWpETztasE22oApNPadyrizxm8ngl/rte3xwvj9oAHcVHTcEqKnDeKoa4a2t
-         g6sXtBrqFytLFUmMPf5oBBA9YGq/r+pVl79wy8HQzw+gvnr+pQJbTmhiNZ/5TIaKDo
-         tZBAbVgWUfoR1jK/8Nbhl6CBHo6QeG5nly2P2x2E=
+        b=GFWVBrBPo+KfSeptxcMmjXbZMzs651QHDvQnFOjkzYtRlV+LLH+cQeVWMOMC6aPWV
+         tcimskPA/pa5cU6phBpnNF3IobbzqKYWwyRENM4PGane07jcLilZjMZIBydVOunefM
+         bT3EDYiKKatBqM4wqw/3n9TuFPMhbHTWNPw0olLA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ard van Breemen <ard@kwaak.net>,
-        Takashi Iwai <tiwai@suse.de>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.3 081/344] ALSA: usb-audio: Skip bSynchAddress endpoint check if it is invalid
-Date:   Thu,  3 Oct 2019 17:50:46 +0200
-Message-Id: <20191003154548.132056513@linuxfoundation.org>
+        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
+        Borislav Petkov <bp@suse.de>,
+        Thor Thayer <thor.thayer@linux.intel.com>,
+        James Morse <james.morse@arm.com>,
+        kernel-janitors@vger.kernel.org,
+        linux-edac <linux-edac@vger.kernel.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Tony Luck <tony.luck@intel.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.3 083/344] EDAC/altera: Use the proper type for the IRQ status bits
+Date:   Thu,  3 Oct 2019 17:50:48 +0200
+Message-Id: <20191003154548.364674925@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191003154540.062170222@linuxfoundation.org>
 References: <20191003154540.062170222@linuxfoundation.org>
@@ -59,37 +66,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ard van Breemen <ard@kwaak.net>
+From: Dan Carpenter <dan.carpenter@oracle.com>
 
-[ Upstream commit 1b34121d9f26d272b0b2334209af6b6fc82d4bf1 ]
+[ Upstream commit 8faa1cf6ed82f33009f63986c3776cc48af1b7b2 ]
 
-The Linux kernel assumes that get_endpoint(alts,0) and
-get_endpoint(alts,1) are eachothers feedback endpoints.
-To reassure that validity it will test bsynchaddress to comply with that
-assumption. But if the bsyncaddress is 0 (invalid), it will flag that as
-a wrong assumption and return an error.
-Fix: Skip the test if bSynchAddress is 0.
-Note: those with a valid bSynchAddress should have a code quirck added.
+Smatch complains about the cast of a u32 pointer to unsigned long:
 
-Signed-off-by: Ard van Breemen <ard@kwaak.net>
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+  drivers/edac/altera_edac.c:1878 altr_edac_a10_irq_handler()
+  warn: passing casted pointer '&irq_status' to 'find_first_bit()'
+
+This code wouldn't work on a 64 bit big endian system because it would
+read past the end of &irq_status.
+
+ [ bp: massage. ]
+
+Fixes: 13ab8448d2c9 ("EDAC, altera: Add ECC Manager IRQ controller support")
+Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+Signed-off-by: Borislav Petkov <bp@suse.de>
+Reviewed-by: Thor Thayer <thor.thayer@linux.intel.com>
+Cc: James Morse <james.morse@arm.com>
+Cc: kernel-janitors@vger.kernel.org
+Cc: linux-edac <linux-edac@vger.kernel.org>
+Cc: Mauro Carvalho Chehab <mchehab@kernel.org>
+Cc: Tony Luck <tony.luck@intel.com>
+Link: https://lkml.kernel.org/r/20190624134717.GA1754@mwanda
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/usb/pcm.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/edac/altera_edac.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/sound/usb/pcm.c b/sound/usb/pcm.c
-index e4bbf79de956e..33cd26763c0ee 100644
---- a/sound/usb/pcm.c
-+++ b/sound/usb/pcm.c
-@@ -457,6 +457,7 @@ static int set_sync_endpoint(struct snd_usb_substream *subs,
- 	}
- 	ep = get_endpoint(alts, 1)->bEndpointAddress;
- 	if (get_endpoint(alts, 0)->bLength >= USB_DT_ENDPOINT_AUDIO_SIZE &&
-+	    get_endpoint(alts, 0)->bSynchAddress != 0 &&
- 	    ((is_playback && ep != (unsigned int)(get_endpoint(alts, 0)->bSynchAddress | USB_DIR_IN)) ||
- 	     (!is_playback && ep != (unsigned int)(get_endpoint(alts, 0)->bSynchAddress & ~USB_DIR_IN)))) {
- 		dev_err(&dev->dev,
+diff --git a/drivers/edac/altera_edac.c b/drivers/edac/altera_edac.c
+index c2e693e34d434..bf024ec0116c7 100644
+--- a/drivers/edac/altera_edac.c
++++ b/drivers/edac/altera_edac.c
+@@ -1866,6 +1866,7 @@ static void altr_edac_a10_irq_handler(struct irq_desc *desc)
+ 	struct altr_arria10_edac *edac = irq_desc_get_handler_data(desc);
+ 	struct irq_chip *chip = irq_desc_get_chip(desc);
+ 	int irq = irq_desc_get_irq(desc);
++	unsigned long bits;
+ 
+ 	dberr = (irq == edac->db_irq) ? 1 : 0;
+ 	sm_offset = dberr ? A10_SYSMGR_ECC_INTSTAT_DERR_OFST :
+@@ -1875,7 +1876,8 @@ static void altr_edac_a10_irq_handler(struct irq_desc *desc)
+ 
+ 	regmap_read(edac->ecc_mgr_map, sm_offset, &irq_status);
+ 
+-	for_each_set_bit(bit, (unsigned long *)&irq_status, 32) {
++	bits = irq_status;
++	for_each_set_bit(bit, &bits, 32) {
+ 		irq = irq_linear_revmap(edac->domain, dberr * 32 + bit);
+ 		if (irq)
+ 			generic_handle_irq(irq);
 -- 
 2.20.1
 
