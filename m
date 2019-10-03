@@ -2,51 +2,52 @@ Return-Path: <SRS0=6dNS=X4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 46C18C10F14
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:25:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AA630C32792
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:25:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1D3CE20867
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:25:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7EE56215EA
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:25:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570119935;
-	bh=1j11VmW5gY0DOTzMF6+kz8dNYDnCFzTGe7YNn0PEHVw=;
+	s=default; t=1570119939;
+	bh=JgBrlH+Itu1vKsvB8lGZbiO4ta09eCPbLm2aSAuszJc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ANLbx6msgUnptMF9jqO0PG2gGvXhVdHbZBhGsS2/CEvmndWFPu17Z0NlocFq+WkVV
-	 6AIXAyXKXV6/oXKR8J4tTAau8gd984N1VhNGRv3+EyEYJZQnXwsEW/8lmlOOGyOsm8
-	 CWuX80HIOG251bSn8hlui4gBnH9KcrnDFyuHXrM4=
+	b=x9r4IbGzvsRJpKNQ8g+BICmD3vbQ3bQyH0Y5Q9X7JAG+pxvJOsOD4VI91OccG4RWW
+	 +Q67CV+CGmGke1yf5FCp1rGpD3G1ixQAh6kP1i13+q0C+PWAF5r8OEBfCR2c5BysNr
+	 fuTkG1cKFmQB1XgdecY64PKvNAGsAPxPx971dv2c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390932AbfJCQZe (ORCPT
+        id S2390940AbfJCQZi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 12:25:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55744 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 12:25:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55930 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390912AbfJCQZc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:25:32 -0400
+        id S2389808AbfJCQZh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:25:37 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C4D9820867;
-        Thu,  3 Oct 2019 16:25:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4720920867;
+        Thu,  3 Oct 2019 16:25:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570119931;
-        bh=1j11VmW5gY0DOTzMF6+kz8dNYDnCFzTGe7YNn0PEHVw=;
+        s=default; t=1570119936;
+        bh=JgBrlH+Itu1vKsvB8lGZbiO4ta09eCPbLm2aSAuszJc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=kljrNzvkTAG2kWAlzDApYi5eW5Nop6r5gWxYlJsfvbDSiH1pN7/sQu4t4r978yEmR
-         eXzXKi2iPmaq3/gxYfWTDAKL3OHYMVWNYvLO1Kp/vqHANnFgGKJ3aYjFtDTpTqPH4r
-         CoD0g3RKx/W0Ae9Kqigt9orBshi7UyEwLRhSY6Vc=
+        b=ExYtBp4omp623fL1YUS6mkN6jC4KgbJN8yYhevysHN6U+os3TYFX72ZqnvlZH7KpA
+         3i5FncIVJEPlbsy76oDTj9hu0qXW7TPRFF+cB+v/B5ENEMSMbMp/3/FtCxutrfNRtv
+         LkI/085wTuo+7Bvx2HgZvKqnPg15MF3AvxX2ZWWg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Chris Wilson <chris@chris-wilson.co.uk>,
-        Takashi Iwai <tiwai@suse.de>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 033/313] ALSA: hda: Flush interrupts on disabling
-Date:   Thu,  3 Oct 2019 17:50:11 +0200
-Message-Id: <20191003154536.550431239@linuxfoundation.org>
+        stable@vger.kernel.org, Xiumei Mu <xmu@redhat.com>,
+        Fei Liu <feliu@redhat.com>, Xin Long <lucien.xin@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 5.2 004/313] macsec: drop skb sk before calling gro_cells_receive
+Date:   Thu,  3 Oct 2019 17:49:42 +0200
+Message-Id: <20191003154533.961390674@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191003154533.590915454@linuxfoundation.org>
 References: <20191003154533.590915454@linuxfoundation.org>
@@ -59,77 +60,61 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chris Wilson <chris@chris-wilson.co.uk>
+From: Xin Long <lucien.xin@gmail.com>
 
-[ Upstream commit caa8422d01e983782548648e125fd617cadcec3f ]
+[ Upstream commit ba56d8ce38c8252fff5b745db3899cf092578ede ]
 
-I was looking at
+Fei Liu reported a crash when doing netperf on a topo of macsec
+dev over veth:
 
-<4> [241.835158] general protection fault: 0000 [#1] PREEMPT SMP PTI
-<4> [241.835181] CPU: 1 PID: 214 Comm: kworker/1:3 Tainted: G     U            5.2.0-CI-CI_DRM_6509+ #1
-<4> [241.835199] Hardware name: Dell Inc.                 OptiPlex 745                 /0GW726, BIOS 2.3.1  05/21/2007
-<4> [241.835234] Workqueue: events snd_hdac_bus_process_unsol_events [snd_hda_core]
-<4> [241.835256] RIP: 0010:input_handle_event+0x16d/0x5e0
-<4> [241.835270] Code: 48 8b 93 58 01 00 00 8b 52 08 89 50 04 8b 83 f8 06 00 00 48 8b 93 00 07 00 00 8d 70 01 48 8d 04 c2 83 e1 08 89 b3 f8 06 00 00 <66> 89 28 66 44 89 60 02 44 89 68 04 8b 93 f8 06 00 00 0f 84 fd fe
-<4> [241.835304] RSP: 0018:ffffc9000019fda0 EFLAGS: 00010046
-<4> [241.835317] RAX: 6b6b6b6ec6c6c6c3 RBX: ffff8880290fefc8 RCX: 0000000000000000
-<4> [241.835332] RDX: 000000006b6b6b6b RSI: 000000006b6b6b6c RDI: 0000000000000046
-<4> [241.835347] RBP: 0000000000000005 R08: 0000000000000000 R09: 0000000000000001
-<4> [241.835362] R10: ffffc9000019faa0 R11: 0000000000000000 R12: 0000000000000004
-<4> [241.835377] R13: 0000000000000000 R14: ffff8880290ff1d0 R15: 0000000000000293
-<4> [241.835392] FS:  0000000000000000(0000) GS:ffff88803de80000(0000) knlGS:0000000000000000
-<4> [241.835409] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-<4> [241.835422] CR2: 00007ffe9a99e9b7 CR3: 000000002f588000 CR4: 00000000000006e0
-<4> [241.835436] Call Trace:
-<4> [241.835449]  input_event+0x45/0x70
-<4> [241.835464]  snd_jack_report+0xdc/0x100
-<4> [241.835490]  snd_hda_jack_report_sync+0x83/0xc0 [snd_hda_codec]
-<4> [241.835512]  snd_hdac_bus_process_unsol_events+0x5a/0x70 [snd_hda_core]
-<4> [241.835530]  process_one_work+0x245/0x610
+  [  448.919128] refcount_t: underflow; use-after-free.
+  [  449.090460] Call trace:
+  [  449.092895]  refcount_sub_and_test+0xb4/0xc0
+  [  449.097155]  tcp_wfree+0x2c/0x150
+  [  449.100460]  ip_rcv+0x1d4/0x3a8
+  [  449.103591]  __netif_receive_skb_core+0x554/0xae0
+  [  449.108282]  __netif_receive_skb+0x28/0x78
+  [  449.112366]  netif_receive_skb_internal+0x54/0x100
+  [  449.117144]  napi_gro_complete+0x70/0xc0
+  [  449.121054]  napi_gro_flush+0x6c/0x90
+  [  449.124703]  napi_complete_done+0x50/0x130
+  [  449.128788]  gro_cell_poll+0x8c/0xa8
+  [  449.132351]  net_rx_action+0x16c/0x3f8
+  [  449.136088]  __do_softirq+0x128/0x320
 
-which has the hallmarks of a worker queued from interrupt after it was
-supposedly cancelled (note the POISON_FREE), and I could not see where
-the interrupt would be flushed on shutdown so added the likely suspects.
+The issue was caused by skb's true_size changed without its sk's
+sk_wmem_alloc increased in tcp/skb_gro_receive(). Later when the
+skb is being freed and the skb's truesize is subtracted from its
+sk's sk_wmem_alloc in tcp_wfree(), underflow occurs.
 
-Bugzilla: https://bugs.freedesktop.org/show_bug.cgi?id=111174
-Signed-off-by: Chris Wilson <chris@chris-wilson.co.uk>
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+macsec is calling gro_cells_receive() to receive a packet, which
+actually requires skb->sk to be NULL. However when macsec dev is
+over veth, it's possible the skb->sk is still set if the skb was
+not unshared or expanded from the peer veth.
+
+ip_rcv() is calling skb_orphan() to drop the skb's sk for tproxy,
+but it is too late for macsec's calling gro_cells_receive(). So
+fix it by dropping the skb's sk earlier on rx path of macsec.
+
+Fixes: 5491e7c6b1a9 ("macsec: enable GRO and RPS on macsec devices")
+Reported-by: Xiumei Mu <xmu@redhat.com>
+Reported-by: Fei Liu <feliu@redhat.com>
+Signed-off-by: Xin Long <lucien.xin@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- sound/hda/hdac_controller.c | 2 ++
- sound/pci/hda/hda_intel.c   | 2 +-
- 2 files changed, 3 insertions(+), 1 deletion(-)
+ drivers/net/macsec.c |    1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/sound/hda/hdac_controller.c b/sound/hda/hdac_controller.c
-index 812dc144fb5b2..2258804c58575 100644
---- a/sound/hda/hdac_controller.c
-+++ b/sound/hda/hdac_controller.c
-@@ -445,6 +445,8 @@ static void azx_int_disable(struct hdac_bus *bus)
- 	list_for_each_entry(azx_dev, &bus->stream_list, list)
- 		snd_hdac_stream_updateb(azx_dev, SD_CTL, SD_INT_MASK, 0);
+--- a/drivers/net/macsec.c
++++ b/drivers/net/macsec.c
+@@ -1235,6 +1235,7 @@ deliver:
+ 		macsec_rxsa_put(rx_sa);
+ 	macsec_rxsc_put(rx_sc);
  
-+	synchronize_irq(bus->irq);
-+
- 	/* disable SIE for all streams */
- 	snd_hdac_chip_writeb(bus, INTCTL, 0);
- 
-diff --git a/sound/pci/hda/hda_intel.c b/sound/pci/hda/hda_intel.c
-index e7da1a59884a6..03dd532967bd4 100644
---- a/sound/pci/hda/hda_intel.c
-+++ b/sound/pci/hda/hda_intel.c
-@@ -1349,9 +1349,9 @@ static int azx_free(struct azx *chip)
- 	}
- 
- 	if (bus->chip_init) {
-+		azx_stop_chip(chip);
- 		azx_clear_irq_pending(chip);
- 		azx_stop_all_streams(chip);
--		azx_stop_chip(chip);
- 	}
- 
- 	if (bus->irq >= 0)
--- 
-2.20.1
-
++	skb_orphan(skb);
+ 	ret = gro_cells_receive(&macsec->gro_cells, skb);
+ 	if (ret == NET_RX_SUCCESS)
+ 		count_rx(dev, skb->len);
 
 
