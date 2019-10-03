@@ -2,204 +2,157 @@ Return-Path: <SRS0=6dNS=X4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DATE_IN_PAST_06_12,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 81CE1C32792
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 13:29:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A38FC32792
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 13:30:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 49138207FF
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 13:29:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 49A17207FF
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 13:30:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=sruffell-net.20150623.gappssmtp.com header.i=@sruffell-net.20150623.gappssmtp.com header.b="N3zEfPy0"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="g44SEnrz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730414AbfJCN33 (ORCPT
+        id S1730427AbfJCNaB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 09:29:29 -0400
-Received: from mail-yw1-f67.google.com ([209.85.161.67]:39477 "EHLO
-        mail-yw1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730394AbfJCN33 (ORCPT
+        Thu, 3 Oct 2019 09:30:01 -0400
+Received: from mail-io1-f65.google.com ([209.85.166.65]:32923 "EHLO
+        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730415AbfJCNaB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 09:29:29 -0400
-Received: by mail-yw1-f67.google.com with SMTP id n11so1000660ywn.6
-        for <linux-kernel@vger.kernel.org>; Thu, 03 Oct 2019 06:29:28 -0700 (PDT)
+        Thu, 3 Oct 2019 09:30:01 -0400
+Received: by mail-io1-f65.google.com with SMTP id z19so5576747ior.0
+        for <linux-kernel@vger.kernel.org>; Thu, 03 Oct 2019 06:30:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sruffell-net.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=kOoernM9b/xRCotCwpMbUEaYeTQlIdok4in8RGonI+A=;
-        b=N3zEfPy0XhC1NQEJu8b4xQu51mQsobpPwaNt3+VJYUszWsJTebDXCUX28x0Sl7vK4k
-         hOgHg28teJQF6QEWFzspF7GU9bzrWQF9ovI1agDeXtydyw5XXexmqrMofdJCvkzPgcwG
-         pNU3bD4MBPeDnwvjZk2tltT2I5OyLWiZG3dvbvcMnbZWidap560Le9mai54eEXeF+Y57
-         5sC4X+0OIq0ZCWJe7sAhYbyrxxQi5Gtd0ScXQS2ZakWOsFnawTkmfDtGl79YC1qc/48v
-         BLZMJaGhVL47S8OjWaPb+0BHsvfNpBmd7NVYbA4TwGLnMEyKO3vuNj5grgkwE5VhQLOu
-         pU5w==
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=9HKr4/cJ7iq9izM911rBXPiwq2ApQcWOC8a/94M//WE=;
+        b=g44SEnrzA2qar8s97gk4B/ztcRe7nTTl5c5ZcAd2Fs/CLz8539Me0WXGCkws3eYC44
+         nYJ856R6/Ctbz9ZanNHCEx5MgYTxSy8BWyormOEux3XHMKOt+15xHMfbJ1h7MTk5yTDg
+         7o2TeE6YzevPbPGeqmrVXTUwiqZVEZZUtsDb2ZmpuFkFongRBKYVHWAdfpGS+zcYv+qV
+         7yvEPlPL6GlBY/P1+kKaPrJip7yCaf8zsQpUiNm+BwBO5NVhLopDZ8H7xCjsXcVCPkyJ
+         RBf4dLgTtliQZzlKAZ0S2mhxym+ilnXZSfYPXNrat0TpShqSk0/h7lOGAjzqikTXqCHH
+         Q5aQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=kOoernM9b/xRCotCwpMbUEaYeTQlIdok4in8RGonI+A=;
-        b=F0YiGDPuXhdxuPzIztsF7hWCu9TQSdeDzA66GKeuKvBgafh5XJs/GrH3eAD/SnEwjf
-         zBvt0bMVhIJzYt9rmfva6562KQvlEE0DP1UaWqgp/TRW77r3ltygk0HubNOkw7xO0zX8
-         lBZD49pUCIHyt5KSjCjk6xgFUlgg2x6YuAClskisCu6JFG0lBbmChvNb6Qg6Ux04KGdP
-         7gJ6JjIp99F70IN+G9/x2URxGXHpKiiZmrgaDLQWv0GQuUyxc3VPYrn4QFgx4bFHPQ1z
-         LE1aRqZAj9KiQj8mpWtaY++YQ6RFpSByxDbs6epKwepSkA/slT9xNWK7UjchUEPBwgvX
-         PpzA==
-X-Gm-Message-State: APjAAAVjzR0uJ/FtLWw/jauzyq3R6DoLdSD6zSCokpXabCfXXsIPM8Ew
-        0RA7Dl8oTRaMED69pbGfzL8L
-X-Google-Smtp-Source: APXvYqxS96TphH8ymk7qkNH/6K+V1iyKTNpUK0LQfI04rDzlYEBFnSm1cwEwHTKojnLpwUDQqnnk8A==
-X-Received: by 2002:a81:4c95:: with SMTP id z143mr6550351ywa.417.1570109367570;
-        Thu, 03 Oct 2019 06:29:27 -0700 (PDT)
-Received: from sruffell.net ([136.53.91.217])
-        by smtp.gmail.com with ESMTPSA id l11sm635876ywh.34.2019.10.03.06.29.26
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 03 Oct 2019 06:29:26 -0700 (PDT)
-Date:   Thu, 3 Oct 2019 01:29:27 -0500
-From:   Shaun Ruffell <sruffell@sruffell.net>
-To:     Masahiro Yamada <yamada.masahiro@socionext.com>
-Cc:     Jessica Yu <jeyu@kernel.org>,
-        Matthias Maennich <maennich@google.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kbuild@vger.kernel.org,
-        Michal Marek <michal.lkml@markovi.net>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 2/6] modpost: fix broken sym->namespace for external
- module builds
-Message-ID: <20191003062927.4pusu3sfjyfayigy@sruffell.net>
-References: <20191003075826.7478-1-yamada.masahiro@socionext.com>
- <20191003075826.7478-3-yamada.masahiro@socionext.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=9HKr4/cJ7iq9izM911rBXPiwq2ApQcWOC8a/94M//WE=;
+        b=SuM2V+Fl6A/UvNJBk+Q6oUfD3hlwGGWCbxgxtLmLTUOKlzkRrmyKZy7OlZ7Oou9C00
+         Yg73rcHtmMBMaHLqZK2K99JGNOYhWsRy7hOuyK6UwEfEDpbAgsWSHwpP3zwLeKva23AB
+         b7xkir8839meaLbJBMBGX2aH9h73jcg8eUy04E1EVawYYs6iAVZawdKPQmy0WAuoR59t
+         aFbWWmXsGcdXLuKkCoCDDEHjAnk+8/BdhxmzfkAYP9DKkFC6c7sHk4OJE00OYKq/o2GR
+         RpC1W3k+oYJGf/VCXpe4U2keAGXeYioBZGjv/wIW4Hbi8PIo2Ebb47hSHE+cyDW74xo5
+         iJQQ==
+X-Gm-Message-State: APjAAAUyRwBObSCMxd6SG5OZquuDoG+mo9iLST5kuBsFzBHn3higowQ9
+        yTNWGQ9b6qru4AjuhHLfXB/2q+NBQKIFkK/RhCrfdKDj
+X-Google-Smtp-Source: APXvYqxreQxx29k2JK11Fj0++YZu+xr0zRqfLfbEWCnbZtmcqopH8qTn+g4tqQ0Hc8UkcTQPywevs2q4vO1zSd9l1Aw=
+X-Received: by 2002:a92:aa87:: with SMTP id p7mr9947589ill.7.1570109400135;
+ Thu, 03 Oct 2019 06:30:00 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191003075826.7478-3-yamada.masahiro@socionext.com>
+References: <20190930164425.20282-1-ayan.halder@arm.com>
+In-Reply-To: <20190930164425.20282-1-ayan.halder@arm.com>
+From:   Qiang Yu <yuq825@gmail.com>
+Date:   Thu, 3 Oct 2019 21:29:48 +0800
+Message-ID: <CAKGbVbuM9riESVq+ZZgEho3R9dymVvYaZXBUD9_-0LQmxsMZpg@mail.gmail.com>
+Subject: Re: [PATCH v2] drm/fourcc: Add Arm 16x16 block modifier
+To:     Ayan Halder <Ayan.Halder@arm.com>
+Cc:     Liviu Dudau <Liviu.Dudau@arm.com>,
+        Brian Starkey <Brian.Starkey@arm.com>,
+        "malidp@foss.arm.com" <malidp@foss.arm.com>,
+        "airlied@linux.ie" <airlied@linux.ie>,
+        "maarten.lankhorst@linux.intel.com" 
+        <maarten.lankhorst@linux.intel.com>,
+        "maxime.ripard@bootlin.com" <maxime.ripard@bootlin.com>,
+        "sean@poorly.run" <sean@poorly.run>,
+        "daniel@ffwll.ch" <daniel@ffwll.ch>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        nd <nd@arm.com>, Raymond Smith <Raymond.Smith@arm.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Oct 03, 2019 at 04:58:22PM +0900, Masahiro Yamada wrote:
-> Currently, external module builds produce tons of false-positives:
-> 
->   WARNING: module <mod> uses symbol <sym> from namespace <ns>, but does not import it.
-> 
-> Here, the <ns> part shows a random string.
-> 
-> When you build external modules, the symbol info of vmlinux and
-> in-kernel modules are read from $(objtree)/Module.symvers, but
-> read_dump() is buggy in multiple ways:
-> 
-> [1] When the modpost is run for vmlinux and in-kernel modules,
-> sym_extract_namespace() allocates memory for the namespace. On the
-> other hand, read_dump() does not, then sym->namespace will point to
-> somewhere in the line buffer of get_next_line(). The data in the
-> buffer will be replaced soon, and sym->namespace will end up with
-> pointing to unrelated data. As a result, check_exports() will show
-> random strings in the warning messages.
-> 
-> [2] When there is no namespace, sym_extract_namespace() returns NULL.
-> On the other hand, read_dump() sets namespace to an empty string "".
-> (but, it will be later replaced with unrelated data due to bug [1].)
-> The check_exports() shows a warning unless exp->namespace is NULL,
-> so every symbol read from read_dump() emits the warning, which is
-> mostly false positive.
-> 
-> To address [1], sym_add_exported() calls strdup() for s->namespace.
-> The namespace from sym_extract_namespace() must be freed to avoid
-> memory leak.
-> 
-> For [2], I changed the if-conditional in check_exports().
-> 
-> This commit also fixes sym_add_exported() to set s->namespace correctly
-> when the symbol is preloaded.
-> 
-> Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
-> Reviewed-by: Matthias Maennich <maennich@google.com>
+Hi Ayan,
+
+Thanks for the patch. I'm OK with either the static reserved type way or
+the previous dynamic way. So this patch is:
+Reviewed-by: Qiang Yu <yuq825@gmail.com>
+
+PS. for anyone would like to know the usage of this modifier, lima mesa
+driver need this modifier to denote some tiled texture format and shared
+between client and display server.
+
+Regards,
+Qiang
+
+On Tue, Oct 1, 2019 at 12:45 AM Ayan Halder <Ayan.Halder@arm.com> wrote:
+>
+> Add the DRM_FORMAT_MOD_ARM_16X16_BLOCK_U_INTERLEAVED modifier to
+> denote the 16x16 block u-interleaved format used in Arm Utgard and
+> Midgard GPUs.
+>
+> Changes from v1:-
+> 1. Reserved the upper four bits (out of the 56 bits assigned to each vendor)
+> to denote the category of Arm specific modifiers. Currently, we have two
+> categories ie AFBC and MISC.
+>
+> Signed-off-by: Raymond Smith <raymond.smith@arm.com>
+> Signed-off-by: Ayan kumar halder <ayan.halder@arm.com>
 > ---
-> 
-> Changes in v2:
->   - Change the approach to deal with ->preloaded
-> 
->  scripts/mod/modpost.c | 13 ++++++++-----
->  1 file changed, 8 insertions(+), 5 deletions(-)
-> 
-> diff --git a/scripts/mod/modpost.c b/scripts/mod/modpost.c
-> index 2c644086c412..936d3ad23c83 100644
-> --- a/scripts/mod/modpost.c
-> +++ b/scripts/mod/modpost.c
-> @@ -166,7 +166,7 @@ struct symbol {
->  	struct module *module;
->  	unsigned int crc;
->  	int crc_valid;
-> -	const char *namespace;
-> +	char *namespace;
->  	unsigned int weak:1;
->  	unsigned int vmlinux:1;    /* 1 if symbol is defined in vmlinux */
->  	unsigned int kernel:1;     /* 1 if symbol is from kernel
-> @@ -348,7 +348,7 @@ static enum export export_from_sec(struct elf_info *elf, unsigned int sec)
->  		return export_unknown;
->  }
->  
-> -static const char *sym_extract_namespace(const char **symname)
-> +static char *sym_extract_namespace(const char **symname)
->  {
->  	char *namespace = NULL;
->  	char *ns_separator;
-> @@ -373,7 +373,6 @@ static struct symbol *sym_add_exported(const char *name, const char *namespace,
->  
->  	if (!s) {
->  		s = new_symbol(name, mod, export);
-> -		s->namespace = namespace;
->  	} else {
->  		if (!s->preloaded) {
->  			warn("%s: '%s' exported twice. Previous export was in %s%s\n",
-> @@ -384,6 +383,8 @@ static struct symbol *sym_add_exported(const char *name, const char *namespace,
->  			s->module = mod;
->  		}
->  	}
-> +	free(s->namespace);
-> +	s->namespace = namespace ? strdup(namespace) : NULL;
->  	s->preloaded = 0;
->  	s->vmlinux   = is_vmlinux(mod->name);
->  	s->kernel    = 0;
-> @@ -670,7 +671,8 @@ static void handle_modversions(struct module *mod, struct elf_info *info,
->  	unsigned int crc;
->  	enum export export;
->  	bool is_crc = false;
-> -	const char *name, *namespace;
-> +	const char *name;
-> +	char *namespace;
->  
->  	if ((!is_vmlinux(mod->name) || mod->is_dot_o) &&
->  	    strstarts(symname, "__ksymtab"))
-> @@ -745,6 +747,7 @@ static void handle_modversions(struct module *mod, struct elf_info *info,
->  			name = symname + strlen("__ksymtab_");
->  			namespace = sym_extract_namespace(&name);
->  			sym_add_exported(name, namespace, mod, export);
-> +			free(namespace);
->  		}
->  		if (strcmp(symname, "init_module") == 0)
->  			mod->has_init = 1;
-> @@ -2193,7 +2196,7 @@ static int check_exports(struct module *mod)
->  		else
->  			basename = mod->name;
->  
-> -		if (exp->namespace) {
-> +		if (exp->namespace && exp->namespace[0]) {
->  			add_namespace(&mod->required_namespaces,
->  				      exp->namespace);
->  
-
-This looks good to me and is better than what I had originally proposed.
-I confirmed that I can still build an external module without any
-warnings. (But I did have to convince myself that it was OK to store
-empty namespace strings in the symbol structure and that check_exports()
-would cover it sufficiently)
-
-If you would like, feel free to add my
-
-Reviewed-by: Shaun Ruffell <sruffell@sruffell.net>
-  or
-Tested-by: Shaun Ruffell <sruffell@sruffell.net>
-
+>  include/uapi/drm/drm_fourcc.h | 27 ++++++++++++++++++++++++++-
+>  1 file changed, 26 insertions(+), 1 deletion(-)
+>
+> diff --git a/include/uapi/drm/drm_fourcc.h b/include/uapi/drm/drm_fourcc.h
+> index 3feeaa3f987a..b1d3de961109 100644
+> --- a/include/uapi/drm/drm_fourcc.h
+> +++ b/include/uapi/drm/drm_fourcc.h
+> @@ -648,7 +648,21 @@ extern "C" {
+>   * Further information on the use of AFBC modifiers can be found in
+>   * Documentation/gpu/afbc.rst
+>   */
+> -#define DRM_FORMAT_MOD_ARM_AFBC(__afbc_mode)   fourcc_mod_code(ARM, __afbc_mode)
+> +
+> +/*
+> + * The top 4 bits (out of the 56 bits alloted for specifying vendor specific
+> + * modifiers) denote the category for modifiers. Currently we have only two
+> + * categories of modifiers ie AFBC and MISC. We can have a maximum of sixteen
+> + * different categories.
+> + */
+> +#define DRM_FORMAT_MOD_ARM_CODE(type, val) \
+> +       fourcc_mod_code(ARM, ((__u64)type << 52) | ((val) & 0x000fffffffffffffULL))
+> +
+> +#define DRM_FORMAT_MOD_ARM_TYPE_AFBC 0x00
+> +#define DRM_FORMAT_MOD_ARM_TYPE_MISC 0x01
+> +
+> +#define DRM_FORMAT_MOD_ARM_AFBC(__afbc_mode) \
+> +       DRM_FORMAT_MOD_ARM_CODE(DRM_FORMAT_MOD_ARM_TYPE_AFBC, __afbc_mode)
+>
+>  /*
+>   * AFBC superblock size
+> @@ -742,6 +756,17 @@ extern "C" {
+>   */
+>  #define AFBC_FORMAT_MOD_BCH     (1ULL << 11)
+>
+> +/*
+> + * Arm 16x16 Block U-Interleaved modifier
+> + *
+> + * This is used by Arm Mali Utgard and Midgard GPUs. It divides the image
+> + * into 16x16 pixel blocks. Blocks are stored linearly in order, but pixels
+> + * in the block are reordered.
+> + */
+> +#define DRM_FORMAT_MOD_ARM_16X16_BLOCK_U_INTERLEAVED \
+> +       DRM_FORMAT_MOD_ARM_CODE(DRM_FORMAT_MOD_ARM_TYPE_MISC, 1ULL)
+> +
+> +
+>  /*
+>   * Allwinner tiled modifier
+>   *
+> --
+> 2.23.0
+>
