@@ -4,52 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B462C10F14
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:26:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 470DAC10F14
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:26:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6251D20867
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:26:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1E04A20867
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:26:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570119973;
-	bh=dFcVQl6E0c+wU1d5wfNevRmUe9k+SvO0hOvFIQK6V7I=;
+	s=default; t=1570119975;
+	bh=hur19vWkAiOq3yd3smTM1bKIGxosmEdosTs5oL2XyEc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=aH9/iZDmNH9GwrFiiVPneSB2MHBHWOYS3cAHRoM5L6Hrsa/1IZ7dQfKNNEwM+mHiS
-	 zl+GG7HzuU56ZMk5o7aXffpPKlFAY8ZrpqZSp72ZTvNKN7taAMcmcsL7ipzUuG65Q5
-	 VCLihT9fkDBQyQ8PMpBDnhHaotQOX00uzHMzvU3w=
+	b=gUbUv+wA0sAN6jy6P/AadwdBDjIwux+FH9+pyBaTC6A/wbK6rv2tz6jNOnhsFfoHo
+	 MNi3Rk3jqDvultGIjJxxZV4V+U6fi/O7mlJW5ioW9OLGCyitq5W9puGOG2AfEM7625
+	 RxsQUi0agSbUo3JqawdTRcr/OHOjWTY6Stoez/fU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391035AbfJCQ0M (ORCPT
+        id S2391044AbfJCQ0O (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 12:26:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56728 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 12:26:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56836 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391000AbfJCQ0B (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:26:01 -0400
+        id S2391006AbfJCQ0E (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:26:04 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8A933222CD;
-        Thu,  3 Oct 2019 16:26:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2A48D20867;
+        Thu,  3 Oct 2019 16:26:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570119961;
-        bh=dFcVQl6E0c+wU1d5wfNevRmUe9k+SvO0hOvFIQK6V7I=;
+        s=default; t=1570119963;
+        bh=hur19vWkAiOq3yd3smTM1bKIGxosmEdosTs5oL2XyEc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=BuFBqs+pLET0XO1N1HJhhHJXdG9ZeMPMYGzRtrJoCA98ogxrPiJO8fiLXMBeizpm6
-         RKNpaRj7B8zwTg8oxL4lFsm77HI+uTjbonnlnl+dDJc51iwdNEK4n5gxUcD5/Tf7Gt
-         kUobC/e2cCHGOy+9EmHr477cqr1SN4xBjrtkfGeY=
+        b=s+wf+UKf0WOY88XF11KwAyxpCV8tEuxD9qv3vEvG0inSCHDh9ctFyjOGm7WeO8nVT
+         aoxo93L0W9vbZDV4Qhwawv/1viuXOc9cvnNFiAz2u1MVVaQQmZJe1cJd4IZ1cEIINT
+         qrfX9SNy2ofkX123qiYVhHozjok8GZoFn6rXVCIY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Pan Xiuli <xiuli.pan@linux.intel.com>,
-        Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
-        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-        Mark Brown <broonie@kernel.org>,
+        stable@vger.kernel.org, Wen Yang <wen.yang99@zte.com.cn>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 046/313] ASoC: SOF: pci: mark last_busy value at runtime PM init
-Date:   Thu,  3 Oct 2019 17:50:24 +0200
-Message-Id: <20191003154537.681403696@linuxfoundation.org>
+Subject: [PATCH 5.2 047/313] media: exynos4-is: fix leaked of_node references
+Date:   Thu,  3 Oct 2019 17:50:25 +0200
+Message-Id: <20191003154537.772007236@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191003154533.590915454@linuxfoundation.org>
 References: <20191003154533.590915454@linuxfoundation.org>
@@ -62,38 +61,63 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Pan Xiuli <xiuli.pan@linux.intel.com>
+From: Wen Yang <wen.yang99@zte.com.cn>
 
-[ Upstream commit f1b1b9b136827915624136624ff54aba5890a15b ]
+[ Upstream commit da79bf41a4d170ca93cc8f3881a70d734a071c37 ]
 
-If last_busy value is not set at runtime PM enable, the device will be
-suspend immediately after usage counter is 0. Set the last_busy value to
-make sure delay is working at first boot up.
+The call to of_get_child_by_name returns a node pointer with refcount
+incremented thus it must be explicitly decremented after the last
+usage.
 
-Signed-off-by: Pan Xiuli <xiuli.pan@linux.intel.com>
-Signed-off-by: Ranjani Sridharan <ranjani.sridharan@linux.intel.com>
-Signed-off-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Link: https://lore.kernel.org/r/20190722141402.7194-2-pierre-louis.bossart@linux.intel.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Detected by coccinelle with the following warnings:
+drivers/media/platform/exynos4-is/fimc-is.c:813:2-8: ERROR: missing of_node_put; acquired a node pointer with refcount incremented on line 807, but without a corresponding object release within this function.
+drivers/media/platform/exynos4-is/fimc-is.c:870:1-7: ERROR: missing of_node_put; acquired a node pointer with refcount incremented on line 807, but without a corresponding object release within this function.
+drivers/media/platform/exynos4-is/fimc-is.c:885:1-7: ERROR: missing of_node_put; acquired a node pointer with refcount incremented on line 807, but without a corresponding object release within this function.
+drivers/media/platform/exynos4-is/media-dev.c:545:1-7: ERROR: missing of_node_put; acquired a node pointer with refcount incremented on line 541, but without a corresponding object release within this function.
+drivers/media/platform/exynos4-is/media-dev.c:528:1-7: ERROR: missing of_node_put; acquired a node pointer with refcount incremented on line 499, but without a corresponding object release within this function.
+drivers/media/platform/exynos4-is/media-dev.c:534:1-7: ERROR: missing of_node_put; acquired a node pointer with refcount incremented on line 499, but without a corresponding object release within this function.
+
+Signed-off-by: Wen Yang <wen.yang99@zte.com.cn>
+Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/sof/sof-pci-dev.c | 3 +++
- 1 file changed, 3 insertions(+)
+ drivers/media/platform/exynos4-is/fimc-is.c   | 1 +
+ drivers/media/platform/exynos4-is/media-dev.c | 2 ++
+ 2 files changed, 3 insertions(+)
 
-diff --git a/sound/soc/sof/sof-pci-dev.c b/sound/soc/sof/sof-pci-dev.c
-index b778dffb2d25c..49daf1390dac0 100644
---- a/sound/soc/sof/sof-pci-dev.c
-+++ b/sound/soc/sof/sof-pci-dev.c
-@@ -203,6 +203,9 @@ static void sof_pci_probe_complete(struct device *dev)
- 	 */
- 	pm_runtime_allow(dev);
+diff --git a/drivers/media/platform/exynos4-is/fimc-is.c b/drivers/media/platform/exynos4-is/fimc-is.c
+index e043d55133a31..b7cc8e651e327 100644
+--- a/drivers/media/platform/exynos4-is/fimc-is.c
++++ b/drivers/media/platform/exynos4-is/fimc-is.c
+@@ -806,6 +806,7 @@ static int fimc_is_probe(struct platform_device *pdev)
+ 		return -ENODEV;
  
-+	/* mark last_busy for pm_runtime to make sure not suspend immediately */
-+	pm_runtime_mark_last_busy(dev);
-+
- 	/* follow recommendation in pci-driver.c to decrement usage counter */
- 	pm_runtime_put_noidle(dev);
+ 	is->pmu_regs = of_iomap(node, 0);
++	of_node_put(node);
+ 	if (!is->pmu_regs)
+ 		return -ENOMEM;
+ 
+diff --git a/drivers/media/platform/exynos4-is/media-dev.c b/drivers/media/platform/exynos4-is/media-dev.c
+index 1b83a6ec745fb..3cece7cd73e28 100644
+--- a/drivers/media/platform/exynos4-is/media-dev.c
++++ b/drivers/media/platform/exynos4-is/media-dev.c
+@@ -499,6 +499,7 @@ static int fimc_md_register_sensor_entities(struct fimc_md *fmd)
+ 			continue;
+ 
+ 		ret = fimc_md_parse_port_node(fmd, port, index);
++		of_node_put(port);
+ 		if (ret < 0) {
+ 			of_node_put(node);
+ 			goto cleanup;
+@@ -538,6 +539,7 @@ static int __of_get_csis_id(struct device_node *np)
+ 	if (!np)
+ 		return -EINVAL;
+ 	of_property_read_u32(np, "reg", &reg);
++	of_node_put(np);
+ 	return reg - FIMC_INPUT_MIPI_CSI2_0;
  }
+ 
 -- 
 2.20.1
 
