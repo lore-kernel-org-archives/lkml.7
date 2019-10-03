@@ -2,162 +2,89 @@ Return-Path: <SRS0=6dNS=X4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92A31C10F14
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 20:00:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 92FC9C4CED1
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 20:01:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 61015207FF
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 20:00:20 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JmRIHokB"
+	by mail.kernel.org (Postfix) with ESMTP id 683C42086A
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 20:01:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388237AbfJCUAT (ORCPT
+        id S2388250AbfJCUBa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 16:00:19 -0400
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:41544 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732997AbfJCUAT (ORCPT
+        Thu, 3 Oct 2019 16:01:30 -0400
+Received: from relay5-d.mail.gandi.net ([217.70.183.197]:48859 "EHLO
+        relay5-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731089AbfJCUBa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 16:00:19 -0400
-Received: by mail-lf1-f68.google.com with SMTP id r2so2768172lfn.8;
-        Thu, 03 Oct 2019 13:00:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=NapHy1rPTgTDallxX4g8iFDr+uCGnEf2RFpdBhDGZzo=;
-        b=JmRIHokBIvo1DJcwBA6wVxzr2NF0vCRfmTDgbNOtuWwY7FsnwL9b5R6EbX0V7Q21B7
-         MPDWmgF7fyKUPOnKM0ugpIbFYdyuU7tbvcv5WIAaOPFU1eNmGE3azhoc69xYm+ZdaWfe
-         NDBK86Mm35USGQIJ7NGsaXptiRcvSwKIbHX2pkXYK1o/pEbzVR9R6kC2/9nq7TmwQiyB
-         9kOPa4+fySrly3ceHFupVzH1W63eXj+Bp01gXi+MuqeDTail+9pERNxDIPNgiMi2ima0
-         YRrTL07sG/Ub7umt16iMAYUA/mJtiT4MSETdZ1W7fOVBFoi94IgoUiZ7juedBezxZDV7
-         D53A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=NapHy1rPTgTDallxX4g8iFDr+uCGnEf2RFpdBhDGZzo=;
-        b=WYF/ZYdZo2kdWEmE4cdiX3YtpL6ay4kghptdB1dotYOt4TKIvpPgf4sHw28Nwim7d+
-         d+IInQ3I3OQIZszyx1m6dhys5/xZdHjcCyXxYMI/XggDBze1zazBpUJapyl1FnmYsk/c
-         303xGwWe/I3elS54jcNjk5N/ZvDchxhSDq4jpWe76ZSCVnR1J/7/Ur1DIZmdrZlBQxqz
-         z8HD9vfLNBfGGnXE/8NSiNcQbnhcvQq1qCVBI1Hom+KSO5mM+Y9G+6/bW2zovg6ipxI3
-         dKa552II8lG0f7Fn/j7JhTnwDu2uX7Hiip+SZaHUBGo7beXAms0ka989cTvZ2qFSnr/x
-         ny9g==
-X-Gm-Message-State: APjAAAWpZWPqRcpCJfQFez3yvjA07Xg6asdfMT/xwD2c/B/PPMAblpjX
-        MngQNqJbVyfdrqXmNkiGMGjIUIzw2uHR0PkWprA=
-X-Google-Smtp-Source: APXvYqxjyz+yXTHomDPcF221F5tJRzDJfLVexFr9a1wXp4hC6/B2cWUGfY2w1dyM4Exu3RTEzKbrGoZc/Rw2fbAQkcw=
-X-Received: by 2002:a19:f247:: with SMTP id d7mr6543695lfk.191.1570132816333;
- Thu, 03 Oct 2019 13:00:16 -0700 (PDT)
+        Thu, 3 Oct 2019 16:01:30 -0400
+X-Originating-IP: 86.202.229.42
+Received: from localhost (lfbn-lyo-1-146-42.w86-202.abo.wanadoo.fr [86.202.229.42])
+        (Authenticated sender: alexandre.belloni@bootlin.com)
+        by relay5-d.mail.gandi.net (Postfix) with ESMTPSA id BD3311C0006;
+        Thu,  3 Oct 2019 20:01:27 +0000 (UTC)
+Date:   Thu, 3 Oct 2019 22:01:27 +0200
+From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
+To:     Jinke Fan <fanjinke@hygon.cn>
+Cc:     a.zummo@towertech.it, puwen@hygon.cn, thomas.lendacky@amd.com,
+        kim.phillips@amd.com, linux-rtc@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [RESEND PATCH RFC] rtc: Fix the AltCentury value on AMD/Hygon
+ platform
+Message-ID: <20191003200127.GM575@piout.net>
+References: <20190924024108.51286-1-fanjinke@hygon.cn>
 MIME-Version: 1.0
-References: <20191003144624.17899-1-daniel@qtec.com>
-In-Reply-To: <20191003144624.17899-1-daniel@qtec.com>
-From:   Ricardo Ribalda Delgado <ricardo.ribalda@gmail.com>
-Date:   Thu, 3 Oct 2019 21:59:59 +0200
-Message-ID: <CAPybu_29m_PvzfA8TQGNANgQ_QFEQbhT-=ydQkE8RPJ_G_-1uQ@mail.gmail.com>
-Subject: Re: [PATCH] media: imx214: Fix stop streaming
-To:     Daniel Gomez <daniel@qtec.com>
-Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
-        linux-media <linux-media@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190924024108.51286-1-fanjinke@hygon.cn>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Ups.... sorry about that. Hopefully it works fine also without the
-patch, but it needs to be fixed.
-
-On Thu, Oct 3, 2019 at 4:46 PM Daniel Gomez <daniel@qtec.com> wrote:
->
-> Stop video streaming when requested.
->
-> When s_stream is called to stop the video streaming, if/else condition calls
-> start_streaming function instead of the one for stopping it.
->
-> Fixes: 436190596241 ("media: imx214: Add imx214 camera sensor driver")
-> Signed-off-by: Daniel Gomez <daniel@qtec.com>
-
-Signed-off-by: Ricardo Ribalda <ribalda@kernel.org>
+On 24/09/2019 10:41:08+0800, Jinke Fan wrote:
+> When using following operations:
+> date -s "21190910 19:20:00"
+> hwclock -w
+> to change date from 2019 to 2119 for test, it will fail on Hygon
+> Dhyana and AMD Zen CPUs, while the same operations run ok on Intel i7
+> platform.
+> 
+> MC146818 driver use function mc146818_set_time() to set register
+> RTC_FREQ_SELECT(RTC_REG_A)'s bit4-bit6 field which means divider stage
+> reset value on Intel platform to 0x7.
+> 
+> While AMD/Hygon RTC_REG_A(0Ah)'s bit4 is defined as DV0 [Reference]:
+> DV0 = 0 selects Bank 0, DV0 = 1 selects Bank 1. Bit5-bit6 is defined
+> as reserved.
+> 
+> DV0 is set to 1, it will select Bank 1, which will disable AltCentury
+> register(0x32) access. As UEFI pass acpi_gbl_FADT.century 0x32
+> (AltCentury), the CMOS write will be failed on code:
+> CMOS_WRITE(century, acpi_gbl_FADT.century).
+> 
+> Correct RTC_REG_A bank select bit(DV0) to 0 on AMD/Hygon CPUs, it will
+> enable AltCentury(0x32) register writing and finally setup century as
+> expected.
+> 
+> Test results on AMD/Hygon machine show that it works as expected.
+> 
+> Reference:
+> https://www.amd.com/system/files/TechDocs/51192_Bolton_FCH_RRG.pdf
+> section: 3.13 Real Time Clock (RTC)
+> 
+> Signed-off-by: Jinke Fan <fanjinke@hygon.cn>
 > ---
->
-> You can find some logs before/after running in the hardware. Notice 0x100
-> register is for starting/stopping the video streaming from the imx214 sensor.
->
-> * Before patch:
->
-> # media-ctl -d /dev/media0 -l '"msm_csiphy0":1->"msm_csid0":0[1],"msm_csid0":1->"msm_ispif0":0[1],"msm_ispif0":1->"msm_vfe0_rdi0":0[1]'
-> # media-ctl -d /dev/media0 -V '"imx214 3-001a":0[fmt:SRGGB10/1920x1080],"msm_csiphy0":0[fmt:SRGGB10/1920x1080],"msm_csid0":0[fmt:SRGGB10/1920x1080],"msm_ispif0":0[fmt:SRGGB10/1920x1080],"msm_vfe0_rdi0":0[fmt:SRGGB10/1920x1080]'
-> # yavta -f SRGGB10P -s 1920x1080 -n 1 --capture=5 /dev/v4l/by-path/platform-a34000.camss-video-index0
-> Device /dev/v4l/by-path/platform-a34000.camss-video-index0 opened.
-> Device `Qualcomm Camera Subsystem' on `platform:a34000.camss' (driver 'qcom-camss') supports video, capture, with mplanes.
-> Video format set: SRGGB10P (41415270) 1920x1080 field none, 1 planes:
->  * Stride 2400, buffer size 2592000
-> Video format: SRGGB10P (41415270) 1920x1080 field none, 1 planes:
->  * Stride 2400, buffer size 2592000
-> 1 buffers requested.
-> length: 1 offset: 4093609832 timestamp type/source: mono/EoF
-> Buffer 0/0 mapped at address 0xffff84b6b000.
-> 0 (0) [-] none 0 2592000 B 30.682759 30.705111 4.697 fps ts mono/EoF
-> 1 (0) [-] none 1 2592000 B 30.749391 30.771609 15.008 fps ts mono/EoF
-> 2 (0) [-] none 2 2592000 B 30.816042 30.838225 15.004 fps ts mono/EoF
-> 3 (0) [-] none 3 2592000 B 30.882690 30.904992 15.004 fps ts mono/EoF
-> 4 (0) [-] none 4 2592000 B 30.949333 30.971543 15.005 fps ts mono/EoF
-> Captured 5 frames in 0.501681 seconds (9.966480 fps, 0.000000 B/s).
-> 1 buffers released.
-> # v4l2-dbg -d /dev/v4l-subdev19 -g 0x100
-> ioctl: VIDIOC_DBG_G_REGISTER
-> Register 0x00000100 = 1h (1d  00000001b)
->
-> * After patch:
->
-> # media-ctl -d /dev/media0 -l '"msm_csiphy0":1->"msm_csid0":0[1],"msm_csid0":1->"msm_ispif0":0[1],"msm_ispif0":1->"msm_vfe0_rdi0":0[1]'
-> # media-ctl -d /dev/media0 -V '"imx214 3-001a":0[fmt:SRGGB10/1920x1080],"msm_csiphy0":0[fmt:SRGGB10/1920x1080],"msm_csid0":0[fmt:SRGGB10/1920x1080],"msm_ispif0":0[fmt:SRGGB10/1920x1080],"msm_vfe0_rdi0":0[fmt:SRGGB10/1920x1080]'
-> # yavta -f SRGGB10P -s 1920x1080 -n 1 --capture=5 /dev/v4l/by-path/platform-a34000.camss-video-index0
-> Device /dev/v4l/by-path/platform-a34000.camss-video-index0 opened.
-> Device `Qualcomm Camera Subsystem' on `platform:a34000.camss' (driver 'qcom-camss') supports video, capture, with mplanes.
-> Video format set: SRGGB10P (41415270) 1920x1080 field none, 1 planes:
->  * Stride 2400, buffer size 2592000
-> Video format: SRGGB10P (41415270) 1920x1080 field none, 1 planes:
->  * Stride 2400, buffer size 2592000
-> 1 buffers requested.
-> length: 1 offset: 3764913896 timestamp type/source: mono/EoF
-> Buffer 0/0 mapped at address 0xffffb62f7000.
-> 0 (0) [-] none 0 2592000 B 31.283473 31.306390 4.697 fps ts mono/EoF
-> 1 (0) [-] none 1 2592000 B 31.350115 31.372475 15.006 fps ts mono/EoF
-> 2 (0) [-] none 2 2592000 B 31.416765 31.439728 15.004 fps ts mono/EoF
-> 3 (0) [-] none 3 2592000 B 31.483410 31.505791 15.005 fps ts mono/EoF
-> 4 (0) [-] none 4 2592000 B 31.550058 31.573025 15.004 fps ts mono/EoF
-> Captured 5 frames in 0.502440 seconds (9.951430 fps, 0.000000 B/s).
-> 1 buffers released.
-> # v4l2-dbg -d /dev/v4l-subdev19 -g 0x100
-> ioctl: VIDIOC_DBG_G_REGISTER
-> Register 0x00000100 = 0h (0d  00000000b)
->
->  drivers/media/i2c/imx214.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/drivers/media/i2c/imx214.c b/drivers/media/i2c/imx214.c
-> index 159a3a604f0e..24659cb0d083 100644
-> --- a/drivers/media/i2c/imx214.c
-> +++ b/drivers/media/i2c/imx214.c
-> @@ -785,7 +785,7 @@ static int imx214_s_stream(struct v4l2_subdev *subdev, int enable)
->                 if (ret < 0)
->                         goto err_rpm_put;
->         } else {
-> -               ret = imx214_start_streaming(imx214);
-> +               ret = imx214_stop_streaming(imx214);
->                 if (ret < 0)
->                         goto err_rpm_put;
->                 pm_runtime_put(imx214->dev);
-> --
-> 2.20.1
->
-
+>  drivers/rtc/rtc-mc146818-lib.c | 9 +++++++--
+>  include/linux/mc146818rtc.h    | 2 ++
+>  2 files changed, 9 insertions(+), 2 deletions(-)
+> 
+Applied, thanks.
 
 -- 
-Ricardo Ribalda
+Alexandre Belloni, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
