@@ -7,56 +7,51 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 34A09C10F14
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:43:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3338DC10F14
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:43:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0C2E220867
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:43:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 021B82086A
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:43:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570120998;
-	bh=6wQX0xJ/q3Ed4fG+/mE1pswdwSLXVm2+9rffNMTgyZM=;
+	s=default; t=1570121004;
+	bh=jKwoBq+Gu6aMJLrH40ZDGEDu3NwN+bC42hFxiIttA+0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=yrJ4DiEhyzZY+ny2amDPxWcUrAXSCeJxVyBnR8kBiPDpFr9TxP8HAfgn6ZfxYw3ke
-	 Izii8LzpK/e775oNX9gFw9Vr/3RCnnWOQNtFqcBH+l7H9/rXYXdTD7kfdvLxdvAkvO
-	 NM7mPk719Trr9tpl8GqX+bPwD62n0RcCMAooS6jA=
+	b=Rxq0mI7heiRZ/lPd3Hdb+ks74sSwrwK4MJpACOocpltd69R1QmzxQ7u7qrP6d5R3q
+	 MlGIphNLnsxIiBmCsirCM/QPVzVFWV7fYKVxAP1L3WpwHTwA4qitUgapJi1258NF48
+	 HYc86luFM3IqRNYT1wCo91VoXaO/D/GkVHRe9AQc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405168AbfJCQnR (ORCPT
+        id S2405229AbfJCQnX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 12:43:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54582 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 12:43:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54732 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2405140AbfJCQnN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:43:13 -0400
+        id S2404861AbfJCQnT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:43:19 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4D7692070B;
-        Thu,  3 Oct 2019 16:43:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B4D1820865;
+        Thu,  3 Oct 2019 16:43:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570120992;
-        bh=6wQX0xJ/q3Ed4fG+/mE1pswdwSLXVm2+9rffNMTgyZM=;
+        s=default; t=1570120998;
+        bh=jKwoBq+Gu6aMJLrH40ZDGEDu3NwN+bC42hFxiIttA+0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=n7KejlMLMT3DxqKyeAjZr/z5HpDbRQZtJDMsUvLOnU9aIJjQcGWThdTUcxGHydLhf
-         8EXl2q5aVT0uh0wFX2nE2tZQSpC6Tof1NMVs8Qsjc81FE+DMd9/H2Jt78w9ic3Nkb0
-         3OAYDlxZ1Wy5e2Zk27z/uOnz48eyCzsaTEr7rW6k=
+        b=Ap+lU1ztgYA0z/b7j1KOMIKA9YqBL34yBFl7NFRPG5MwwOvmmR/VA5nJsWuNnlyOB
+         m3kgMmPvY3Zrtsn6QmFdhMKJKmolMVelzjTqjVv3/dHK5BUr2yPY8YgyU7IoxFFkXm
+         d7VpNLKYt9BuU11/bkpfYo6zE29cc2E2T3w+NjUQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Tan Xiaojun <tanxiaojun@huawei.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Alexey Budankov <alexey.budankov@linux.intel.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Song Liu <songliubraving@fb.com>,
-        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
-        "Tzvetomir Stoyanov (VMware)" <tz.stoyanov@gmail.com>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        stable@vger.kernel.org, Fabio Estevam <festevam@gmail.com>,
+        Ezequiel Garcia <ezequiel@collabora.com>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Jacopo Mondi <jacopo@jmondi.org>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.3 115/344] perf record: Support aarch64 random socket_id assignment
-Date:   Thu,  3 Oct 2019 17:51:20 +0200
-Message-Id: <20191003154551.554233113@linuxfoundation.org>
+Subject: [PATCH 5.3 117/344] media: i2c: ov5645: Fix power sequence
+Date:   Thu,  3 Oct 2019 17:51:22 +0200
+Message-Id: <20191003154551.749112881@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191003154540.062170222@linuxfoundation.org>
 References: <20191003154540.062170222@linuxfoundation.org>
@@ -69,78 +64,120 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tan Xiaojun <tanxiaojun@huawei.com>
+From: Ezequiel Garcia <ezequiel@collabora.com>
 
-[ Upstream commit 0a4d8fb229dd78f9e0752817339e19e903b37a60 ]
+[ Upstream commit 092e8eb90a7dc7dd210cd4e2ea36075d0a7f96af ]
 
-Same as in the commit 01766229533f ("perf record: Support s390 random
-socket_id assignment"), aarch64 also have this problem.
+This is mostly a port of Jacopo's fix:
 
-Without this fix:
+  commit aa4bb8b8838ffcc776a79f49a4d7476b82405349
+  Author: Jacopo Mondi <jacopo@jmondi.org>
+  Date:   Fri Jul 6 05:51:52 2018 -0400
 
-  [root@localhost perf]# ./perf report --header -I -v
-  ...
-  socket_id number is too big.You may need to upgrade the perf tool.
+  media: ov5640: Re-work MIPI startup sequence
 
-  # ========
-  # captured on    : Thu Aug  1 22:58:38 2019
-  # header version : 1
-  ...
-  # Core ID and Socket ID information is not available
-  ...
+In the OV5645 case, the changes are:
 
-With this fix:
-  [root@localhost perf]# ./perf report --header -I -v
-  ...
-  cpumask list: 0-31
-  cpumask list: 32-63
-  cpumask list: 64-95
-  cpumask list: 96-127
+- At set_power(1) time power up MIPI Tx/Rx and set data and clock lanes in
+  LP11 during 'sleep' and 'idle' with MIPI clock in non-continuous mode.
+- At set_power(0) time power down MIPI Tx/Rx (in addition to the current
+  power down of regulators and clock gating).
+- At s_stream time enable/disable the MIPI interface output.
 
-  # ========
-  # captured on    : Thu Aug  1 22:58:38 2019
-  # header version : 1
-  ...
-  # CPU 0: Core ID 0, Socket ID 36
-  # CPU 1: Core ID 1, Socket ID 36
-  ...
-  # CPU 126: Core ID 126, Socket ID 8442
-  # CPU 127: Core ID 127, Socket ID 8442
-  ...
+With this commit the sensor is able to enter LP-11 mode during power up,
+as expected by some CSI-2 controllers.
 
-Signed-off-by: Tan Xiaojun <tanxiaojun@huawei.com>
-Acked-by: Jiri Olsa <jolsa@kernel.org>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Alexey Budankov <alexey.budankov@linux.intel.com>
-Cc: Kan Liang <kan.liang@linux.intel.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Song Liu <songliubraving@fb.com>
-Cc: Steven Rostedt (VMware) <rostedt@goodmis.org>
-Cc: Tzvetomir Stoyanov (VMware) <tz.stoyanov@gmail.com>
-Link: http://lkml.kernel.org/r/1564717737-21602-1-git-send-email-tanxiaojun@huawei.com
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Many thanks to Fabio Estevam for his help debugging this issue.
+
+Tested-by: Fabio Estevam <festevam@gmail.com>
+Signed-off-by: Ezequiel Garcia <ezequiel@collabora.com>
+Reviewed-by: Philipp Zabel <p.zabel@pengutronix.de>
+Reviewed-by: Jacopo Mondi <jacopo@jmondi.org>
+Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/perf/util/header.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/media/i2c/ov5645.c | 26 ++++++++++++++++++--------
+ 1 file changed, 18 insertions(+), 8 deletions(-)
 
-diff --git a/tools/perf/util/header.c b/tools/perf/util/header.c
-index 1903d7ec97976..bf7cf12495539 100644
---- a/tools/perf/util/header.c
-+++ b/tools/perf/util/header.c
-@@ -2251,8 +2251,10 @@ static int process_cpu_topology(struct feat_fd *ff, void *data __maybe_unused)
- 	/* On s390 the socket_id number is not related to the numbers of cpus.
- 	 * The socket_id number might be higher than the numbers of cpus.
- 	 * This depends on the configuration.
-+	 * AArch64 is the same.
- 	 */
--	if (ph->env.arch && !strncmp(ph->env.arch, "s390", 4))
-+	if (ph->env.arch && (!strncmp(ph->env.arch, "s390", 4)
-+			  || !strncmp(ph->env.arch, "aarch64", 7)))
- 		do_core_id_test = false;
+diff --git a/drivers/media/i2c/ov5645.c b/drivers/media/i2c/ov5645.c
+index 124c8df046337..58972c884705c 100644
+--- a/drivers/media/i2c/ov5645.c
++++ b/drivers/media/i2c/ov5645.c
+@@ -45,6 +45,8 @@
+ #define		OV5645_CHIP_ID_HIGH_BYTE	0x56
+ #define OV5645_CHIP_ID_LOW		0x300b
+ #define		OV5645_CHIP_ID_LOW_BYTE		0x45
++#define OV5645_IO_MIPI_CTRL00		0x300e
++#define OV5645_PAD_OUTPUT00		0x3019
+ #define OV5645_AWB_MANUAL_CONTROL	0x3406
+ #define		OV5645_AWB_MANUAL_ENABLE	BIT(0)
+ #define OV5645_AEC_PK_MANUAL		0x3503
+@@ -55,6 +57,7 @@
+ #define		OV5645_ISP_VFLIP		BIT(2)
+ #define OV5645_TIMING_TC_REG21		0x3821
+ #define		OV5645_SENSOR_MIRROR		BIT(1)
++#define OV5645_MIPI_CTRL00		0x4800
+ #define OV5645_PRE_ISP_TEST_SETTING_1	0x503d
+ #define		OV5645_TEST_PATTERN_MASK	0x3
+ #define		OV5645_SET_TEST_PATTERN(x)	((x) & OV5645_TEST_PATTERN_MASK)
+@@ -121,7 +124,6 @@ static const struct reg_value ov5645_global_init_setting[] = {
+ 	{ 0x3503, 0x07 },
+ 	{ 0x3002, 0x1c },
+ 	{ 0x3006, 0xc3 },
+-	{ 0x300e, 0x45 },
+ 	{ 0x3017, 0x00 },
+ 	{ 0x3018, 0x00 },
+ 	{ 0x302e, 0x0b },
+@@ -350,7 +352,10 @@ static const struct reg_value ov5645_global_init_setting[] = {
+ 	{ 0x3a1f, 0x14 },
+ 	{ 0x0601, 0x02 },
+ 	{ 0x3008, 0x42 },
+-	{ 0x3008, 0x02 }
++	{ 0x3008, 0x02 },
++	{ OV5645_IO_MIPI_CTRL00, 0x40 },
++	{ OV5645_MIPI_CTRL00, 0x24 },
++	{ OV5645_PAD_OUTPUT00, 0x70 }
+ };
  
- 	for (i = 0; i < (u32)cpu_nr; i++) {
+ static const struct reg_value ov5645_setting_sxga[] = {
+@@ -737,13 +742,9 @@ static int ov5645_s_power(struct v4l2_subdev *sd, int on)
+ 				goto exit;
+ 			}
+ 
+-			ret = ov5645_write_reg(ov5645, OV5645_SYSTEM_CTRL0,
+-					       OV5645_SYSTEM_CTRL0_STOP);
+-			if (ret < 0) {
+-				ov5645_set_power_off(ov5645);
+-				goto exit;
+-			}
++			usleep_range(500, 1000);
+ 		} else {
++			ov5645_write_reg(ov5645, OV5645_IO_MIPI_CTRL00, 0x58);
+ 			ov5645_set_power_off(ov5645);
+ 		}
+ 	}
+@@ -1049,11 +1050,20 @@ static int ov5645_s_stream(struct v4l2_subdev *subdev, int enable)
+ 			dev_err(ov5645->dev, "could not sync v4l2 controls\n");
+ 			return ret;
+ 		}
++
++		ret = ov5645_write_reg(ov5645, OV5645_IO_MIPI_CTRL00, 0x45);
++		if (ret < 0)
++			return ret;
++
+ 		ret = ov5645_write_reg(ov5645, OV5645_SYSTEM_CTRL0,
+ 				       OV5645_SYSTEM_CTRL0_START);
+ 		if (ret < 0)
+ 			return ret;
+ 	} else {
++		ret = ov5645_write_reg(ov5645, OV5645_IO_MIPI_CTRL00, 0x40);
++		if (ret < 0)
++			return ret;
++
+ 		ret = ov5645_write_reg(ov5645, OV5645_SYSTEM_CTRL0,
+ 				       OV5645_SYSTEM_CTRL0_STOP);
+ 		if (ret < 0)
 -- 
 2.20.1
 
