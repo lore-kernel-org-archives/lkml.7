@@ -2,75 +2,99 @@ Return-Path: <SRS0=6dNS=X4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DDCF0C32792
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:49:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FFE4C10F14
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:49:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BD8C42086A
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:49:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E9E0A20865
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:49:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ouvjwduU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390046AbfJCRtE (ORCPT
+        id S2388779AbfJCRtm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 13:49:04 -0400
-Received: from foss.arm.com ([217.140.110.172]:52814 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387744AbfJCRsy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 13:48:54 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8071015AB;
-        Thu,  3 Oct 2019 10:48:54 -0700 (PDT)
-Received: from e119884-lin.cambridge.arm.com (e119884-lin.cambridge.arm.com [10.1.196.72])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 47FDF3F739;
-        Thu,  3 Oct 2019 10:48:53 -0700 (PDT)
-From:   Vincenzo Frascino <vincenzo.frascino@arm.com>
-To:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc:     vincenzo.frascino@arm.com, ard.biesheuvel@linaro.org,
-        ndesaulniers@google.com, catalin.marinas@arm.com, will@kernel.org,
-        tglx@linutronix.de, luto@kernel.org
-Subject: [PATCH v5 4/6] arm64: vdso32: Remove jump label config option in Makefile
-Date:   Thu,  3 Oct 2019 18:48:36 +0100
-Message-Id: <20191003174838.8872-5-vincenzo.frascino@arm.com>
-X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20191003174838.8872-1-vincenzo.frascino@arm.com>
-References: <20191003174838.8872-1-vincenzo.frascino@arm.com>
+        Thu, 3 Oct 2019 13:49:42 -0400
+Received: from mail-qk1-f196.google.com ([209.85.222.196]:35719 "EHLO
+        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729648AbfJCRtk (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 13:49:40 -0400
+Received: by mail-qk1-f196.google.com with SMTP id w2so3251024qkf.2;
+        Thu, 03 Oct 2019 10:49:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=TVggYDhALwVGtWY+/imz5nwmODBWiXEBIc32MPx5JWw=;
+        b=ouvjwduU/4eBL2XjQouGsDZ17RyPqH06/8D2WRGQWH3420dGQfpWbOsJaE62g5NEn7
+         o3KgrWUN54ADvQo0diN/YDSJ2RWybnXLl7zkwbpqLUIxoxTqGfXnkmamunU0uOFOHKxA
+         73imSDN3acIiTEcC8bvLPwmP3mLkZzb23uctW0XHigaEVqb4NZRRbFMKLfQRhGyOcQXS
+         vPvtlkLFFwl4getJ2xCneSH19sU4gDn+4xSPT0uw1CiIQf+HURy60RWzmtPMUXKZ5rBX
+         uKTuLtNE51iQ4BGFlU8BF3RsLaw4/SGe/u/0Umh+Fxhk/0q6KB/A/ccG72DLv5e/Win2
+         l2Ig==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=TVggYDhALwVGtWY+/imz5nwmODBWiXEBIc32MPx5JWw=;
+        b=bolzwaerNe5hoIFxoS7z00XkxsW1t2btyWcO4sBNi4ejNWcGchUhZf5o23SIb+lbxM
+         53GnfrSBKs0x1QVx6ACoGnr+EhAbtB7zoJvMbgEW6sYrPnM9r6J7DtgxigijoXGjof+R
+         vPVkF/WKYr/mbzWsF8sU+i10kOkItvqkvuRje1Onn12Wq5Q1rbKPhtJpzHQSp1BHDAB7
+         rRTGOFetz30DHAxaXkIpDcgONgdKC53iO4FAoJm/TDrM55NRpclTx7G0qKUPHxnC8tJt
+         jRD41l8vRNJuQY8CQDKNy6r2hBXLFf+y8jnYT9rqLP0h1MBJSI5krDE1M2BQ8M4OO+q6
+         xh0A==
+X-Gm-Message-State: APjAAAXDCCmLaPG2UperL1Tt/wIi1FbjKaP3lwAvWWcUA5cG8L5rI3xh
+        DnafhfDiSuYrLbYPAWOADsDJU4BHyU6MxDwN9p4=
+X-Google-Smtp-Source: APXvYqzG5LnN7W8Lp3zGEOUfxneKRHGxX+W0+HMbfcIPC4QGZKpo0jkCAcbYIY8vsIdcJGw9ZcVBsIGuYEBpY7Rdtwc=
+X-Received: by 2002:a37:488d:: with SMTP id v135mr5286029qka.284.1570124977886;
+ Thu, 03 Oct 2019 10:49:37 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20191002150650.GA4227@gofer.mess.org> <CANL0fFRoL6NxOCbNC=XjQ6LDkeeqAayaLUbm9xARWX9ttqfPFg@mail.gmail.com>
+ <29ab2e43-4374-a3ea-6ae1-a4267867eaa4@jpvw.nl> <20191002154922.7f1cfc76@coco.lan>
+ <CANL0fFRJZBfEDWK_c2w1TomvB5-i4g09LopyJUbO5NtOwKdDTg@mail.gmail.com>
+ <20191003080539.2b13c03b@coco.lan> <CANL0fFSmvEEJhnA=qjTuEPr4N8q8eWLeYC5du+OoTMxe1Gnh5Q@mail.gmail.com>
+ <20191003120238.75811da6@coco.lan> <20191003160336.GA5125@Limone>
+ <20191003130909.01d29b77@coco.lan> <20191003162326.GA2727@Limone> <20191003144225.0137bf6c@coco.lan>
+In-Reply-To: <20191003144225.0137bf6c@coco.lan>
+From:   Gonsolo <gonsolo@gmail.com>
+Date:   Thu, 3 Oct 2019 19:49:26 +0200
+Message-ID: <CANL0fFTSxV8catdjwVLNBRtp2MrNUsSimz1WMdNPYAb_VVns9g@mail.gmail.com>
+Subject: Re: [PATCH] si2157: Add support for Logilink VG0022A.
+To:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Cc:     JP <jp@jpvw.nl>, crope@iki.fi, Sean Young <sean@mess.org>,
+        linux-media@vger.kernel.org,
+        Linux Kernel <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The jump labels are not used in vdso32 since it is not possible to run
-runtime patching on them.
+> Weird... it sounds that, after si2168 has its firmware updated, it
+> starts interfering at si2157. Perhaps there's a bug at si2168 I2C
+> gate mux logic. Are you using a new Kernel like 5.2?
 
-Remove the configuration option from the Makefile.
+Everything is based on git://linuxtv.org/media_tree.git which is at
+5.4-rc1 right now.
 
-Cc: Will Deacon <will@kernel.org>
-Cc: Catalin Marinas <catalin.marinas@arm.com>
-Signed-off-by: Vincenzo Frascino <vincenzo.frascino@arm.com>
-Acked-by: Catalin Marinas <catalin.marinas@arm.com>
-Tested-by: Catalin Marinas <catalin.marinas@arm.com>
----
- arch/arm64/kernel/vdso32/Makefile | 3 ---
- 1 file changed, 3 deletions(-)
+> I guess the best is to enable the debug logs in order to see what's
+> happening on both cases.
+>
+> You can enable all debug messages (after loading the modules) with:
+>
+>         # for i in $(cat /sys/kernel/debug/dynamic_debug/control |grep -E '(si21|af9035)' |cut -d' ' -f 1); do echo "file $i +p" >>/sys/kernel/debug/dynamic_debug/control; done
 
-diff --git a/arch/arm64/kernel/vdso32/Makefile b/arch/arm64/kernel/vdso32/Makefile
-index 77aa61340374..038357a1e835 100644
---- a/arch/arm64/kernel/vdso32/Makefile
-+++ b/arch/arm64/kernel/vdso32/Makefile
-@@ -38,9 +38,6 @@ VDSO_CAFLAGS += $(call cc32-option,-fno-PIE)
- ifdef CONFIG_DEBUG_INFO
- VDSO_CAFLAGS += -g
- endif
--ifeq ($(shell $(CONFIG_SHELL) $(srctree)/scripts/gcc-goto.sh $(COMPATCC)), y)
--VDSO_CAFLAGS += -DCC_HAVE_ASM_GOTO
--endif
- 
- # From arm Makefile
- VDSO_CAFLAGS += $(call cc32-option,-fno-dwarf2-cfi-asm)
+I'll give that a try.
+
+> You could also try to disable the firmware upload at si2168 and see
+> if the si2157 reads will succeed.
+
+That too. Thanks for the advice.
+
+
 -- 
-2.23.0
-
+g
