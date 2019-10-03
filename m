@@ -2,52 +2,56 @@ Return-Path: <SRS0=6dNS=X4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E431EC10F14
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:40:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E2410C32792
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:40:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B089D2133F
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:40:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BACED21A4C
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:40:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570120814;
-	bh=JU3UYg6sx8LyWlLxHpHoWHO0v347kA8UBDEFNFxli1c=;
+	s=default; t=1570120819;
+	bh=HpKmxHp4GDXcQxEKeyF+XGpwmGby9vwAK27uwuFCULk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Ls24pUua77nqY6wbFSLnhsoR+jhC6kMEcXEBKFNw3XdMM4ySjXrcsluTRENaYLw48
-	 /nCWWTnPTuzs/Piu46CWTpe+JFmZJhT5c0+UTSDNg6a2a1WhG/iSl/NyPNcWhx+QWD
-	 hwiB9e3cGdiVXCLKNXNSULKORGo9YUfa1a0GVPxg=
+	b=oKXp0/Qg45RyH1HXBUxddRtaN+5DhXrcsc3DzpQf41fHKu4KuEY5FZLBeiR7hDTsc
+	 fsaNDgz8Q2Yw/g5eec9tFmQv1krECAuDZO08yLqhDEMPjrAqRhNyZrwoODJd29XbFN
+	 AH53E7EaLghhuhWSdMZfUdX5j4oNMHXgAISiw0yo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392454AbfJCQkO (ORCPT
+        id S2392458AbfJCQkS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 12:40:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50270 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 12:40:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50358 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392443AbfJCQkH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:40:07 -0400
+        id S2392451AbfJCQkN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:40:13 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F197020830;
-        Thu,  3 Oct 2019 16:40:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4299520830;
+        Thu,  3 Oct 2019 16:40:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570120807;
-        bh=JU3UYg6sx8LyWlLxHpHoWHO0v347kA8UBDEFNFxli1c=;
+        s=default; t=1570120812;
+        bh=HpKmxHp4GDXcQxEKeyF+XGpwmGby9vwAK27uwuFCULk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xCfVy83XXK89wOTq4AZkFID75eqGAQl8g3M9vC1IxmyrcNl/1DBsXvjHFMilwPdIV
-         ozya3uVUlC2giNnSRadFtwry3r8QXFtQcNb7ilJXTdJhp4jD8mB+RCQNRPQFQlPrTp
-         JRz40xtHquOvewl0yZj2wtYG6XENHVZQ2Ao7rJq0=
+        b=kUDSaLeTYzRGuMfM200/4vO69FZspyy3UQYw2VIBi2FESegAwh13OsdolsavL6wSd
+         s8cZ/YNmm6WZnQRp7F5kQGflHSgz6ghaz5f0aDYSKaLlwzCfHoTHUfVGU3n5ms+gAj
+         EPj+ZhXyoYdrsbfuyiXQwGDToUvTblluA0NuAmmE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, David Ahern <dsahern@gmail.com>,
-        Patrick Ruddy <pruddy@vyatta.att-mail.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.3 028/344] vrf: Do not attempt to create IPv6 mcast rule if IPv6 is disabled
-Date:   Thu,  3 Oct 2019 17:49:53 +0200
-Message-Id: <20191003154542.872347050@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Oleksandr Suvorov <oleksandr.suvorov@toradex.com>,
+        Marcel Ziswiler <marcel.ziswiler@toradex.com>,
+        Igor Opaniuk <igor.opaniuk@toradex.com>,
+        Fabio Estevam <festevam@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.3 047/344] ASoC: sgtl5000: Fix charge pump source assignment
+Date:   Thu,  3 Oct 2019 17:50:12 +0200
+Message-Id: <20191003154544.798734151@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191003154540.062170222@linuxfoundation.org>
 References: <20191003154540.062170222@linuxfoundation.org>
@@ -60,37 +64,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: David Ahern <dsahern@gmail.com>
+From: Oleksandr Suvorov <oleksandr.suvorov@toradex.com>
 
-[ Upstream commit dac91170f8e9c73784af5fad6225e954b795601c ]
+[ Upstream commit b6319b061ba279577fd7030a9848fbd6a17151e3 ]
 
-A user reported that vrf create fails when IPv6 is disabled at boot using
-'ipv6.disable=1':
-   https://bugzilla.kernel.org/show_bug.cgi?id=204903
+If VDDA != VDDIO and any of them is greater than 3.1V, charge pump
+source can be assigned automatically [1].
 
-The failure is adding fib rules at create time. Add RTNL_FAMILY_IP6MR to
-the check in vrf_fib_rule if ipv6_mod_enabled is disabled.
+[1] https://www.nxp.com/docs/en/data-sheet/SGTL5000.pdf
 
-Fixes: e4a38c0c4b27 ("ipv6: add vrf table handling code for ipv6 mcast")
-Signed-off-by: David Ahern <dsahern@gmail.com>
-Cc: Patrick Ruddy <pruddy@vyatta.att-mail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Oleksandr Suvorov <oleksandr.suvorov@toradex.com>
+Reviewed-by: Marcel Ziswiler <marcel.ziswiler@toradex.com>
+Reviewed-by: Igor Opaniuk <igor.opaniuk@toradex.com>
+Reviewed-by: Fabio Estevam <festevam@gmail.com>
+Link: https://lore.kernel.org/r/20190719100524.23300-7-oleksandr.suvorov@toradex.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/vrf.c |    3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ sound/soc/codecs/sgtl5000.c | 15 ++++++++++-----
+ 1 file changed, 10 insertions(+), 5 deletions(-)
 
---- a/drivers/net/vrf.c
-+++ b/drivers/net/vrf.c
-@@ -1154,7 +1154,8 @@ static int vrf_fib_rule(const struct net
- 	struct sk_buff *skb;
- 	int err;
+diff --git a/sound/soc/codecs/sgtl5000.c b/sound/soc/codecs/sgtl5000.c
+index aad9eca41587e..7cbaedffa1ef7 100644
+--- a/sound/soc/codecs/sgtl5000.c
++++ b/sound/soc/codecs/sgtl5000.c
+@@ -1173,12 +1173,17 @@ static int sgtl5000_set_power_regs(struct snd_soc_component *component)
+ 					SGTL5000_INT_OSC_EN);
+ 		/* Enable VDDC charge pump */
+ 		ana_pwr |= SGTL5000_VDDC_CHRGPMP_POWERUP;
+-	} else if (vddio >= 3100 && vdda >= 3100) {
++	} else {
+ 		ana_pwr &= ~SGTL5000_VDDC_CHRGPMP_POWERUP;
+-		/* VDDC use VDDIO rail */
+-		lreg_ctrl |= SGTL5000_VDDC_ASSN_OVRD;
+-		lreg_ctrl |= SGTL5000_VDDC_MAN_ASSN_VDDIO <<
+-			    SGTL5000_VDDC_MAN_ASSN_SHIFT;
++		/*
++		 * if vddio == vdda the source of charge pump should be
++		 * assigned manually to VDDIO
++		 */
++		if (vddio == vdda) {
++			lreg_ctrl |= SGTL5000_VDDC_ASSN_OVRD;
++			lreg_ctrl |= SGTL5000_VDDC_MAN_ASSN_VDDIO <<
++				    SGTL5000_VDDC_MAN_ASSN_SHIFT;
++		}
+ 	}
  
--	if (family == AF_INET6 && !ipv6_mod_enabled())
-+	if ((family == AF_INET6 || family == RTNL_FAMILY_IP6MR) &&
-+	    !ipv6_mod_enabled())
- 		return 0;
- 
- 	skb = nlmsg_new(vrf_fib_rule_nl_size(), GFP_KERNEL);
+ 	snd_soc_component_write(component, SGTL5000_CHIP_LINREG_CTRL, lreg_ctrl);
+-- 
+2.20.1
+
 
 
