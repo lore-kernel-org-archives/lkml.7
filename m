@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 082AEC10F14
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:37:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B4F6C32792
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:37:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CE307222BE
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:37:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3E5A0222BE
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:37:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570120633;
-	bh=Bacu3uB7CVGhwq+WnDKi6I86W/w+8UaQZLRGorL0fmw=;
+	s=default; t=1570120641;
+	bh=5QeObw2/gq4684mJBXyyeD79JqRSly6RL4wqS+C9Z38=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xiz0ykJ+XiMn0s1xHAdf/ZpnpnD3kDdCEUJ9W/dCkDjaAJUV6tsD7wWipSrsRX0aa
-	 HtUNi28MshrCbgqdeT/u3i/DhNoigxX8qTIyHYpGkS4dRGbW0CRXlFjNLUbMUQ4sgW
-	 Drgv2iqMqUrmrKlU0tEtfE8c2YtqE8mNrLTtY5fM=
+	b=cdb9zibchqMF0u4RCAO4JWDrnjJeoJyGkx/8/lFPl/3A9uI+Kz439tvu6oyy8k/yk
+	 J3oFhmi3pwUJS4ijxmcWAEQFClX8dTGP1739PlDNnvGxCx8RELVT8Im0Iq0EkJVA/u
+	 tvNy0/jW7loX3hH6m+0NM1BSJdj3+J98tLopZFcQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404528AbfJCQhN (ORCPT
+        id S2404548AbfJCQhU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 12:37:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46444 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 12:37:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46512 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404106AbfJCQhH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:37:07 -0400
+        id S2404518AbfJCQhK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:37:10 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5AEAA20830;
-        Thu,  3 Oct 2019 16:37:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1A5FD215EA;
+        Thu,  3 Oct 2019 16:37:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570120626;
-        bh=Bacu3uB7CVGhwq+WnDKi6I86W/w+8UaQZLRGorL0fmw=;
+        s=default; t=1570120629;
+        bh=5QeObw2/gq4684mJBXyyeD79JqRSly6RL4wqS+C9Z38=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=x9p7F2Kjfi64DJwexch6OUQvAZfJTGOcQEGn8l46lywmzd266Fxt/PwKty02Qp5gs
-         5ALsGRRXvaohG4OZqEf5yjF+zoucrVOaTxP9U42UbxYrKTkbNolBh4jxtXqQkrIYwv
-         SJTkG+fcbPVartc0j/rM085NJYQHsfd6VUbdi/6I=
+        b=hMIUSvWfFrmTOyL92BqJMXkf7ObBHlm2QzN2dpLh3vJ0YKt3GaYGyFs3dnkvjyT0c
+         QUhp06fwhTcrFa72gQjNL48hP/AtFqbhg5uffBC5Bc0S1kdL0IlxcLHCEMJqNEmPKn
+         jiY0dkqrPfHst+omVL3p2eWElto+cVIEOqfye0A0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, NeilBrown <neilb@suse.com>,
-        Song Liu <songliubraving@fb.com>
-Subject: [PATCH 5.2 293/313] md: dont report active array_state until after revalidate_disk() completes.
-Date:   Thu,  3 Oct 2019 17:54:31 +0200
-Message-Id: <20191003154602.008060778@linuxfoundation.org>
+        Song Liu <songliubraving@fb.com>,
+        Jack Wang <jinpu.wang@cloud.ionos.com>
+Subject: [PATCH 5.2 294/313] md: only call set_in_sync() when it is expected to succeed.
+Date:   Thu,  3 Oct 2019 17:54:32 +0200
+Message-Id: <20191003154602.119302446@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191003154533.590915454@linuxfoundation.org>
 References: <20191003154533.590915454@linuxfoundation.org>
@@ -61,102 +62,57 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: NeilBrown <neilb@suse.com>
 
-commit 9d4b45d6af442237560d0bb5502a012baa5234b7 upstream.
+commit 480523feae581ab714ba6610388a3b4619a2f695 upstream.
 
-Until revalidate_disk() has completed, the size of a new md array will
-appear to be zero.
-So we shouldn't report, through array_state, that the array is active
-until that time.
-udev rules check array_state to see if the array is ready.  As soon as
-it appear to be zero, fsck can be run.  If it find the size to be
-zero, it will fail.
+Since commit 4ad23a976413 ("MD: use per-cpu counter for
+writes_pending"), set_in_sync() is substantially more expensive: it
+can wait for a full RCU grace period which can be 10s of milliseconds.
 
-So add a new flag to provide an interlock between do_md_run() and
-array_state_show().  This flag is set while do_md_run() is active and
-it prevents array_state_show() from reporting that the array is
-active.
+So we should only call it when the cost is justified.
 
-Before do_md_run() is called, ->pers will be NULL so array is
-definitely not active.
-After do_md_run() is called, revalidate_disk() will have run and the
-array will be completely ready.
+md_check_recovery() currently calls set_in_sync() every time it finds
+anything to do (on non-external active arrays).  For an array
+performing resync or recovery, this will be quite often.
+Each call will introduce a delay to the md thread, which can noticeable
+affect IO submission latency.
 
-We also move various sysfs_notify*() calls out of md_run() into
-do_md_run() after MD_NOT_READY is cleared.  This ensure the
-information is ready before the notification is sent.
+In md_check_recovery() we only need to call set_in_sync() if
+'safemode' was non-zero at entry, meaning that there has been not
+recent IO.  So we save this "safemode was nonzero" state, and only
+call set_in_sync() if it was non-zero.
 
-Prior to v4.12, array_state_show() was called with the
-mddev->reconfig_mutex held, which provided exclusion with do_md_run().
+This measurably reduces mean and maximum IO submission latency during
+resync/recovery.
 
-Note that MD_NOT_READY cleared twice.  This is deliberate to cover
-both success and error paths with minimal noise.
-
-Fixes: b7b17c9b67e5 ("md: remove mddev_lock() from md_attr_show()")
-Cc: stable@vger.kernel.org (v4.12++)
+Reported-and-tested-by: Jack Wang <jinpu.wang@cloud.ionos.com>
+Fixes: 4ad23a976413 ("MD: use per-cpu counter for writes_pending")
+Cc: stable@vger.kernel.org (v4.12+)
 Signed-off-by: NeilBrown <neilb@suse.com>
 Signed-off-by: Song Liu <songliubraving@fb.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/md/md.c |   11 +++++++----
- drivers/md/md.h |    3 +++
- 2 files changed, 10 insertions(+), 4 deletions(-)
+ drivers/md/md.c |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
 --- a/drivers/md/md.c
 +++ b/drivers/md/md.c
-@@ -4105,7 +4105,7 @@ array_state_show(struct mddev *mddev, ch
- {
- 	enum array_state st = inactive;
+@@ -8811,6 +8811,7 @@ void md_check_recovery(struct mddev *mdd
  
--	if (mddev->pers)
-+	if (mddev->pers && !test_bit(MD_NOT_READY, &mddev->flags))
- 		switch(mddev->ro) {
- 		case 1:
- 			st = readonly;
-@@ -5660,9 +5660,6 @@ int md_run(struct mddev *mddev)
- 		md_update_sb(mddev, 0);
+ 	if (mddev_trylock(mddev)) {
+ 		int spares = 0;
++		bool try_set_sync = mddev->safemode != 0;
  
- 	md_new_event(mddev);
--	sysfs_notify_dirent_safe(mddev->sysfs_state);
--	sysfs_notify_dirent_safe(mddev->sysfs_action);
--	sysfs_notify(&mddev->kobj, NULL, "degraded");
- 	return 0;
+ 		if (!mddev->external && mddev->safemode == 1)
+ 			mddev->safemode = 0;
+@@ -8856,7 +8857,7 @@ void md_check_recovery(struct mddev *mdd
+ 			}
+ 		}
  
- abort:
-@@ -5676,6 +5673,7 @@ static int do_md_run(struct mddev *mddev
- {
- 	int err;
- 
-+	set_bit(MD_NOT_READY, &mddev->flags);
- 	err = md_run(mddev);
- 	if (err)
- 		goto out;
-@@ -5696,9 +5694,14 @@ static int do_md_run(struct mddev *mddev
- 
- 	set_capacity(mddev->gendisk, mddev->array_sectors);
- 	revalidate_disk(mddev->gendisk);
-+	clear_bit(MD_NOT_READY, &mddev->flags);
- 	mddev->changed = 1;
- 	kobject_uevent(&disk_to_dev(mddev->gendisk)->kobj, KOBJ_CHANGE);
-+	sysfs_notify_dirent_safe(mddev->sysfs_state);
-+	sysfs_notify_dirent_safe(mddev->sysfs_action);
-+	sysfs_notify(&mddev->kobj, NULL, "degraded");
- out:
-+	clear_bit(MD_NOT_READY, &mddev->flags);
- 	return err;
- }
- 
---- a/drivers/md/md.h
-+++ b/drivers/md/md.h
-@@ -236,6 +236,9 @@ enum mddev_flags {
- 	MD_UPDATING_SB,		/* md_check_recovery is updating the metadata
- 				 * without explicitly holding reconfig_mutex.
- 				 */
-+	MD_NOT_READY,		/* do_md_run() is active, so 'array_state'
-+				 * must not report that array is ready yet
-+				 */
- };
- 
- enum mddev_sb_flags {
+-		if (!mddev->external && !mddev->in_sync) {
++		if (try_set_sync && !mddev->external && !mddev->in_sync) {
+ 			spin_lock(&mddev->lock);
+ 			set_in_sync(mddev);
+ 			spin_unlock(&mddev->lock);
 
 
