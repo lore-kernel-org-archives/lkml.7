@@ -2,190 +2,126 @@ Return-Path: <SRS0=6dNS=X4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 608EBC47404
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 02:08:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C3F97C4360C
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 02:11:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 33431222C2
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 02:08:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9464121A4C
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 02:11:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Ovk93Uox"
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="U9Oi20ce"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727647AbfJCCIz (ORCPT
+        id S1727864AbfJCCLH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Oct 2019 22:08:55 -0400
-Received: from mail-vs1-f68.google.com ([209.85.217.68]:37966 "EHLO
-        mail-vs1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726070AbfJCCIy (ORCPT
+        Wed, 2 Oct 2019 22:11:07 -0400
+Received: from conssluserg-04.nifty.com ([210.131.2.83]:48087 "EHLO
+        conssluserg-04.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726267AbfJCCLG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Oct 2019 22:08:54 -0400
-Received: by mail-vs1-f68.google.com with SMTP id b123so621956vsb.5
-        for <linux-kernel@vger.kernel.org>; Wed, 02 Oct 2019 19:08:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=bCQGlGZ8Y+oVDG1Ma6bLrg91foqSNXoF97NZ5ZFwA/Q=;
-        b=Ovk93Uox7JXnsQtTFYgx2Nsi6AhN0kIgTPhfn9/Ibu3FWsaIoNsskyitFtm9f8MS/Y
-         GsUw61dgeePnDZEMKu/fDvcsVbMQDn8Dnyx6kv6k10smk4yKuXecq2x/iX2gopVCgOWn
-         2akggopW8lb7P4ztlteq7SpOJpSzawaocQkuCzcuL15bSzdqQlHTGySJ/kQWq66thRXy
-         ypkvq/Ulvidr3YtZ2tfEG4s5txrnFE73oWSBNuCM1CYgop4kGmWa3JuJx1TcOXnSz3td
-         o4/ppDp2yLaGKiLXp3hZZxwzd6WIeiQ9eckn7yI7KEsiEoB6YbNV7lovQJ5huOGVXNS1
-         /RGg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=bCQGlGZ8Y+oVDG1Ma6bLrg91foqSNXoF97NZ5ZFwA/Q=;
-        b=tJ9pqcGHEvykwrNt9Q+tAkazU9QozcApDT9E3nbS40bQc7+uXxj/7CdmFFsEclndXz
-         DQTebhQbIJWZ8JUwyOC+kiGg5vHpHUfiiXAYpTnpihy7Gi0QLeIy4DN5XTLDF/ElYgBn
-         hNPW2A1DK2XOa2X88NRbBPSRVV3B9H19P742ihjdr7LwApTTPWn1C1Tpev7HYh0jBuoq
-         UklToxuNrISRL5eMQ00LjbFdA0whwz2aaWDcVtNc6C6jEy1j7h3Cys4jyTaUPGry83ZY
-         9AGITyRJEMc+WICRFKeQQfNtBF8YoVNCTDIUYICrxG/rA4A7POnrF9Xoa7PsSdvPqIl4
-         Y0YQ==
-X-Gm-Message-State: APjAAAXqLPeWO8JYFDCo2vkRuAxX41lZhdrhIro0CEcPBBRA6Rpgs74r
-        NaruP3/1elKXw4wpTtPt1QNdTzgaV7OV2VEqzZlfNg==
-X-Google-Smtp-Source: APXvYqyi0m2Ede72KrDlWODF8m+LzvY0aTakQKoIvxaf/PDUucc/aAOF/PTV+/ueCyA8VW2bLR96Ab0ft94lN+2AmtQ=
-X-Received: by 2002:a67:f0cd:: with SMTP id j13mr3958561vsl.183.1570068532914;
- Wed, 02 Oct 2019 19:08:52 -0700 (PDT)
+        Wed, 2 Oct 2019 22:11:06 -0400
+Received: from mail-vs1-f47.google.com (mail-vs1-f47.google.com [209.85.217.47]) (authenticated)
+        by conssluserg-04.nifty.com with ESMTP id x932AlhR006363;
+        Thu, 3 Oct 2019 11:10:48 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-04.nifty.com x932AlhR006363
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1570068648;
+        bh=nkhw/a1oO0nPQOF4FHctSBWATyaUekhzHUNLh8TfmdI=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=U9Oi20ce/mJfbr+vphEd72H8PgoTVD9Fw38AS044QGcxorUEKgusj76nWtoQN+Mvx
+         Q0WkDIpdbuBWBK/ofkFggvSOl9/z8zsZyqN2cWF0ArHgOqDepSuR7KpRi/2bqOUUjW
+         m1OrML5IM/r54+hYlTxg7+wJqtEZA+4V3mlz2yZyUYymVk1gG1cbtXFIMb5CegbnsJ
+         3bNqNTR1J9egjTheAiaxfWOYjyj/MW/bZaGvSdjvehH47uM2uoRhgpMOY3ow/U/l/a
+         SmcJxKVvbTMLs/AHgKxQ2d7070t8r51T8z3aTbBbi9IunZDYvxdDB7yVVe1zkU3XcL
+         DXxNi39SNJYRg==
+X-Nifty-SrcIP: [209.85.217.47]
+Received: by mail-vs1-f47.google.com with SMTP id m22so603854vsl.9;
+        Wed, 02 Oct 2019 19:10:48 -0700 (PDT)
+X-Gm-Message-State: APjAAAVTGHHYlBvtoIfIN3n4WamG7PI4pmYPIECnEr/XwhgPSaSe40g4
+        hSlXWlPyt2uPKi2AtxVjn8rkxOrieHr+MDH2mJE=
+X-Google-Smtp-Source: APXvYqwhStUT9XoBxKv1GG3lSyu6FtZbM6kKxm6u1LXlJXJeaStZRhpChAJ3SpGfaP4xJZUvm3NWPnHGp4CHsjr+4Xc=
+X-Received: by 2002:a67:1e87:: with SMTP id e129mr3884016vse.179.1570068647121;
+ Wed, 02 Oct 2019 19:10:47 -0700 (PDT)
 MIME-Version: 1.0
-References: <CAKOZuesMoBj-APjCipJmWcAgSzkbD1mvyOp0UvHLnkwR-EU4Ww@mail.gmail.com>
- <1C584B5C-E04E-4B04-A3B5-4DC8E5E67366@lca.pw>
-In-Reply-To: <1C584B5C-E04E-4B04-A3B5-4DC8E5E67366@lca.pw>
-From:   Daniel Colascione <dancol@google.com>
-Date:   Wed, 2 Oct 2019 19:08:16 -0700
-Message-ID: <CAKOZuesKY_=qkSXfmDO_1ALaqQtU0kz5Z+fBh05c8BR7oCDxKw@mail.gmail.com>
-Subject: Re: [PATCH] Make SPLIT_RSS_COUNTING configurable
-To:     Qian Cai <cai@lca.pw>
-Cc:     Tim Murray <timmurray@google.com>,
-        Suren Baghdasaryan <surenb@google.com>,
-        linux-mm@vger.kernel.org,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-mm <linux-mm@kvack.org>
+References: <20190930112636.vx2qxo4hdysvxibl@willie-the-truck>
+ <CAK7LNASQZ82KSOrQW7+Wq1vFDCg2__maBEAPMLqUDqZMLuj1rA@mail.gmail.com>
+ <20190930121803.n34i63scet2ec7ll@willie-the-truck> <CAKwvOdnqn=0LndrX+mUrtSAQqoT1JWRMOJCA5t3e=S=T7zkcCQ@mail.gmail.com>
+ <20191001092823.z4zhlbwvtwnlotwc@willie-the-truck> <CAKwvOdk0h2A6=fb7Yepf+oKbZfq_tqwpGq8EBmHVu1j4mo-a-A@mail.gmail.com>
+ <20191001170142.x66orounxuln7zs3@willie-the-truck> <CAKwvOdnFJqipp+G5xLDRBcOrQRcvMQmn+n8fufWyzyt2QL_QkA@mail.gmail.com>
+ <20191001175512.GK25745@shell.armlinux.org.uk> <CAKwvOdmw_xmTGZLeK8-+Q4nUpjs-UypJjHWks-3jHA670Dxa1A@mail.gmail.com>
+ <20191001181438.GL25745@shell.armlinux.org.uk> <CAKwvOdmBnBVU7F-a6DqPU6QM-BRc8LNn6YRmhTsuGLauCWKUOg@mail.gmail.com>
+ <CAMuHMdWPhE1nNkmL1nj3vpQhB7fP3uDs2i_ZVi0Gf9qij4W2CA@mail.gmail.com> <CAHk-=wgFODvdFBHzgVf3JjoBz0z6LZhOm8xvMntsvOr66ASmZQ@mail.gmail.com>
+In-Reply-To: <CAHk-=wgFODvdFBHzgVf3JjoBz0z6LZhOm8xvMntsvOr66ASmZQ@mail.gmail.com>
+From:   Masahiro Yamada <yamada.masahiro@socionext.com>
+Date:   Thu, 3 Oct 2019 11:10:11 +0900
+X-Gmail-Original-Message-ID: <CAK7LNARM2jVSdgCDJWDbvVxYLiUR_CFgTPg0nxzbCszSKcx+pg@mail.gmail.com>
+Message-ID: <CAK7LNARM2jVSdgCDJWDbvVxYLiUR_CFgTPg0nxzbCszSKcx+pg@mail.gmail.com>
+Subject: Re: [PATCH] compiler: enable CONFIG_OPTIMIZE_INLINING forcibly
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Geert Uytterhoeven <geert@linux-m68k.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Russell King - ARM Linux admin <linux@armlinux.org.uk>,
+        Will Deacon <will@kernel.org>,
+        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Stefan Wahren <wahrenst@gmx.net>,
+        Kees Cook <keescook@google.com>, Arnd Bergmann <arnd@arndb.de>,
+        clang-built-linux <clang-built-linux@googlegroups.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Oct 2, 2019 at 6:56 PM Qian Cai <cai@lca.pw> wrote:
-> > On Oct 2, 2019, at 4:29 PM, Daniel Colascione <dancol@google.com> wrote:
-> >
-> > Adding the correct linux-mm address.
-> >
-> >
-> >> On Wed, Oct 2, 2019 at 1:25 PM Daniel Colascione <dancol@google.com> wrote:
-> >>
-> >> Using the new config option, users can disable SPLIT_RSS_COUNTING to
-> >> get increased accuracy in user-visible mm counters.
-> >>
-> >> Signed-off-by: Daniel Colascione <dancol@google.com>
-> >> ---
-> >> include/linux/mm.h            |  4 ++--
-> >> include/linux/mm_types_task.h |  5 ++---
-> >> include/linux/sched.h         |  2 +-
-> >> kernel/fork.c                 |  2 +-
-> >> mm/Kconfig                    | 11 +++++++++++
-> >> mm/memory.c                   |  6 +++---
-> >> 6 files changed, 20 insertions(+), 10 deletions(-)
-> >>
-> >> diff --git a/include/linux/mm.h b/include/linux/mm.h
-> >> index cc292273e6ba..221395de3cb4 100644
-> >> --- a/include/linux/mm.h
-> >> +++ b/include/linux/mm.h
-> >> @@ -1637,7 +1637,7 @@ static inline unsigned long get_mm_counter(struct mm_struct *mm, int member)
-> >> {
-> >>        long val = atomic_long_read(&mm->rss_stat.count[member]);
-> >>
-> >> -#ifdef SPLIT_RSS_COUNTING
-> >> +#ifdef CONFIG_SPLIT_RSS_COUNTING
-> >>        /*
-> >>         * counter is updated in asynchronous manner and may go to minus.
-> >>         * But it's never be expected number for users.
-> >> @@ -1723,7 +1723,7 @@ static inline void setmax_mm_hiwater_rss(unsigned long *maxrss,
-> >>                *maxrss = hiwater_rss;
-> >> }
-> >>
-> >> -#if defined(SPLIT_RSS_COUNTING)
-> >> +#ifdef CONFIG_SPLIT_RSS_COUNTING
-> >> void sync_mm_rss(struct mm_struct *mm);
-> >> #else
-> >> static inline void sync_mm_rss(struct mm_struct *mm)
-> >> diff --git a/include/linux/mm_types_task.h b/include/linux/mm_types_task.h
-> >> index c1bc6731125c..d2adc8057e65 100644
-> >> --- a/include/linux/mm_types_task.h
-> >> +++ b/include/linux/mm_types_task.h
-> >> @@ -48,14 +48,13 @@ enum {
-> >>        NR_MM_COUNTERS
-> >> };
-> >>
-> >> -#if USE_SPLIT_PTE_PTLOCKS && defined(CONFIG_MMU)
-> >> -#define SPLIT_RSS_COUNTING
-> >> +#ifdef CONFIG_SPLIT_RSS_COUNTING
-> >> /* per-thread cached information, */
-> >> struct task_rss_stat {
-> >>        int events;     /* for synchronization threshold */
-> >>        int count[NR_MM_COUNTERS];
-> >> };
-> >> -#endif /* USE_SPLIT_PTE_PTLOCKS */
-> >> +#endif /* CONFIG_SPLIT_RSS_COUNTING */
-> >>
-> >> struct mm_rss_stat {
-> >>        atomic_long_t count[NR_MM_COUNTERS];
-> >> diff --git a/include/linux/sched.h b/include/linux/sched.h
-> >> index 2c2e56bd8913..22f354774540 100644
-> >> --- a/include/linux/sched.h
-> >> +++ b/include/linux/sched.h
-> >> @@ -729,7 +729,7 @@ struct task_struct {
-> >>        /* Per-thread vma caching: */
-> >>        struct vmacache                 vmacache;
-> >>
-> >> -#ifdef SPLIT_RSS_COUNTING
-> >> +#ifdef CONFIG_SPLIT_RSS_COUNTING
-> >>        struct task_rss_stat            rss_stat;
-> >> #endif
-> >>        int                             exit_state;
-> >> diff --git a/kernel/fork.c b/kernel/fork.c
-> >> index f9572f416126..fc5e0889922b 100644
-> >> --- a/kernel/fork.c
-> >> +++ b/kernel/fork.c
-> >> @@ -1917,7 +1917,7 @@ static __latent_entropy struct task_struct *copy_process(
-> >>        p->vtime.state = VTIME_INACTIVE;
-> >> #endif
-> >>
-> >> -#if defined(SPLIT_RSS_COUNTING)
-> >> +#ifdef CONFIG_SPLIT_RSS_COUNTING
-> >>        memset(&p->rss_stat, 0, sizeof(p->rss_stat));
-> >> #endif
-> >>
-> >> diff --git a/mm/Kconfig b/mm/Kconfig
-> >> index a5dae9a7eb51..372ef9449924 100644
-> >> --- a/mm/Kconfig
-> >> +++ b/mm/Kconfig
-> >> @@ -736,4 +736,15 @@ config ARCH_HAS_PTE_SPECIAL
-> >> config ARCH_HAS_HUGEPD
-> >>        bool
-> >>
-> >> +config SPLIT_RSS_COUNTING
-> >> +       bool "Per-thread mm counter caching"
-> >> +       depends on MMU
-> >> +       default y if NR_CPUS >= SPLIT_PTLOCK_CPUS
-> >> +       help
-> >> +         Cache mm counter updates in thread structures and
-> >> +         flush them to visible per-process statistics in batches.
-> >> +         Say Y here to slightly reduce cache contention in processes
-> >> +         with many threads at the expense of decreasing the accuracy
-> >> +         of memory statistics in /proc.
-> >> +
-> >> endmenu
+On Thu, Oct 3, 2019 at 5:46 AM Linus Torvalds
+<torvalds@linux-foundation.org> wrote:
 >
-> All those vague words are going to make developers almost impossible to decide the right selection here. It sounds like we should kill SPLIT_RSS_COUNTING at all to simplify the code as the benefit is so small vs the side-effect?
+> On Wed, Oct 2, 2019 at 5:56 AM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
+> >
+> > >
+> > > Then use the C preprocessor to force the inlining.  I'm sorry it's not
+> > > as pretty as static inline functions.
+> >
+> > Which makes us lose the baby^H^H^H^Htype checking performed
+> > on function parameters, requiring to add more ugly checks.
+>
+> I'm 100% agreed on this.
+>
+> If the inline change is being pushed by people who say "you should
+> have used macros instead if you wanted inlining", then I will just
+> revert that stupid commit that is causing problems.
+>
+> No, the preprocessor is not the answer.
+>
+> That said, code that relies on inlining for _correctness_ should use
+> "__always_inline" and possibly even have a comment about why.
+>
+> But I am considering just undoing commit 9012d011660e ("compiler:
+> allow all arches to enable CONFIG_OPTIMIZE_INLINING") entirely.
 
-Killing SPLIT_RSS_COUNTING would be my first choice; IME, on mobile
-and a basic desktop, it doesn't make a difference. I figured making it
-a knob would help allay concerns about the performance impact in more
-extreme configurations.
+No, please do not.
+
+Macrofying the 'inline' is a horrid mistake that makes incorrect code work.
+It would eternally prevent people from writing portable, correct code.
+Please do not encourage to hide problems.
+
+
+> The
+> advantages are questionable, and when the advantages are balanced
+> against actual regressions and the arguments are "use macros", that
+> just shows how badly thought out this was.
+>
+>                 Linus
+
+
+
+-- 
+Best Regards
+Masahiro Yamada
