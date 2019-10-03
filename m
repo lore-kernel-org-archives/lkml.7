@@ -7,45 +7,48 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DEFFCC10F14
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:13:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BD59C32792
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:14:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AB67920700
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:13:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 694E720865
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:14:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570119237;
-	bh=Eof/LCjyy1Lk1IY5ADIWNRxDzi1JWLWfiMWrE7Ujgks=;
+	s=default; t=1570119245;
+	bh=nv5tyfbfrOt8/5M/vZRl8GRVLkrUHUar+IwteF0cp3Y=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=2jAG0PsvcqRv9IDsHgeRWU8RvUX41BMOXdbLj2sUIAUpmVtVAgAL+Kypk2Y3JQKrm
-	 2xHepSf/zwnt6FqnkjY/CwHrs0bikrwUajBJSw6htEW8szUOYqdCqC//iizMirulbI
-	 t5Y6CgCII7qUN+0V+sWrBPI005m2OB0xtY6UaKlo=
+	b=NTgxQB8XuOxsZO2diq3fE/svCHloEXOY5rNDr/JqBsjKAyTn2k7WQcWcJoOeUA7rZ
+	 EY3k8sd1Hnw40/4GrWmvQznSv1/ZeU0mWf1g/YUDtDdBHkZQ36dUv+CmU3XydkjEhh
+	 FrTPlTBuBxCBru9P27WiZ4KkXUYHTHH683zuPqdo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731605AbfJCQN4 (ORCPT
+        id S2388518AbfJCQOE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 12:13:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36848 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 12:14:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37078 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388468AbfJCQNy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:13:54 -0400
+        id S2388504AbfJCQOC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:14:02 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1FF2920865;
-        Thu,  3 Oct 2019 16:13:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 07A8A20700;
+        Thu,  3 Oct 2019 16:14:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570119233;
-        bh=Eof/LCjyy1Lk1IY5ADIWNRxDzi1JWLWfiMWrE7Ujgks=;
+        s=default; t=1570119241;
+        bh=nv5tyfbfrOt8/5M/vZRl8GRVLkrUHUar+IwteF0cp3Y=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=R3tf4n4JziXlnF0vbGlgyJ/OMw3rclUwfoNiPyOal72dCgh7lH5Xdq1vmJr1OTG/a
-         lxn0VuhicLRA4les4Qi+tVxKf2nPq3yBsvV1LVY4/QWrPv93YNnqUITCtm4fdDrOjd
-         Zbdfd8UgwQuhIZI/VnmO/7JZfKhvBBQLuZMnXTuM=
+        b=VEJuvm4ZwJkIXNsNdkE7ncE5lydUyDunX2A7g1WyqNb8Xp8X6whl+V1SeZ/amBs1o
+         waAUaJGEc5dHhgwrRHgQBCN/ixQD3t0H7h9v8yB+niSnPqBHBBQgS86PgrvxGutpXz
+         7LSkeB39oIJnerqfNmOqiBa/Ie69lvFNTAgww4ck=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Theodore Tso <tytso@mit.edu>
-Subject: [PATCH 4.14 176/185] ext4: fix punch hole for inline_data file systems
-Date:   Thu,  3 Oct 2019 17:54:14 +0200
-Message-Id: <20191003154520.885600546@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Chien Nguyen <chien.nguyen.eb@rvc.renesas.com>,
+        Chris Brandt <chris.brandt@renesas.com>,
+        Wolfram Sang <wsa@the-dreams.de>
+Subject: [PATCH 4.14 179/185] i2c: riic: Clear NACK in tend isr
+Date:   Thu,  3 Oct 2019 17:54:17 +0200
+Message-Id: <20191003154521.694500080@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191003154437.541662648@linuxfoundation.org>
 References: <20191003154437.541662648@linuxfoundation.org>
@@ -58,49 +61,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Theodore Ts'o <tytso@mit.edu>
+From: Chris Brandt <chris.brandt@renesas.com>
 
-commit c1e8220bd316d8ae8e524df39534b8a412a45d5e upstream.
+commit a71e2ac1f32097fbb2beab098687a7a95c84543e upstream.
 
-If a program attempts to punch a hole on an inline data file, we need
-to convert it to a normal file first.
+The NACKF flag should be cleared in INTRIICNAKI interrupt processing as
+description in HW manual.
 
-This was detected using ext4/032 using the adv configuration.  Simple
-reproducer:
+This issue shows up quickly when PREEMPT_RT is applied and a device is
+probed that is not plugged in (like a touchscreen controller). The result
+is endless interrupts that halt system boot.
 
-mke2fs -Fq -t ext4 -O inline_data /dev/vdc
-mount /vdc
-echo "" > /vdc/testfile
-xfs_io -c 'truncate 33554432' /vdc/testfile
-xfs_io -c 'fpunch 0 1048576' /vdc/testfile
-umount /vdc
-e2fsck -fy /dev/vdc
-
+Fixes: 310c18a41450 ("i2c: riic: add driver")
 Cc: stable@vger.kernel.org
-Signed-off-by: Theodore Ts'o <tytso@mit.edu>
+Reported-by: Chien Nguyen <chien.nguyen.eb@rvc.renesas.com>
+Signed-off-by: Chris Brandt <chris.brandt@renesas.com>
+Signed-off-by: Wolfram Sang <wsa@the-dreams.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/ext4/inode.c |    9 +++++++++
- 1 file changed, 9 insertions(+)
+ drivers/i2c/busses/i2c-riic.c |    1 +
+ 1 file changed, 1 insertion(+)
 
---- a/fs/ext4/inode.c
-+++ b/fs/ext4/inode.c
-@@ -4177,6 +4177,15 @@ int ext4_punch_hole(struct inode *inode,
- 
- 	trace_ext4_punch_hole(inode, offset, length, 0);
- 
-+	ext4_clear_inode_state(inode, EXT4_STATE_MAY_INLINE_DATA);
-+	if (ext4_has_inline_data(inode)) {
-+		down_write(&EXT4_I(inode)->i_mmap_sem);
-+		ret = ext4_convert_inline_data(inode);
-+		up_write(&EXT4_I(inode)->i_mmap_sem);
-+		if (ret)
-+			return ret;
-+	}
-+
- 	/*
- 	 * Write out all dirty pages to avoid race conditions
- 	 * Then release them.
+--- a/drivers/i2c/busses/i2c-riic.c
++++ b/drivers/i2c/busses/i2c-riic.c
+@@ -212,6 +212,7 @@ static irqreturn_t riic_tend_isr(int irq
+ 	if (readb(riic->base + RIIC_ICSR2) & ICSR2_NACKF) {
+ 		/* We got a NACKIE */
+ 		readb(riic->base + RIIC_ICDRR);	/* dummy read */
++		riic_clear_set_bit(riic, ICSR2_NACKF, 0, RIIC_ICSR2);
+ 		riic->err = -ENXIO;
+ 	} else if (riic->bytes_left) {
+ 		return IRQ_NONE;
 
 
