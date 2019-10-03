@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 683AAC32792
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:35:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A8318C10F14
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:35:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 359F2222D0
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:35:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7C9CE2070B
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:35:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570120504;
-	bh=U+jKrTN27ES9qTRrcQwXEjbb0tNmYlzxjvDnmiQrrjM=;
+	s=default; t=1570120506;
+	bh=BfTwByiLBOEtLAiKrDFm0+a1C2cPRfgHJQH9uMU+AJg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=IcUYcZhddQ0+ONcibYghU7RI1KwuLb3T+0sfTalLaCIN2ZZtohQ+uPXbxXoWWbnQD
-	 INBa5O/2CjRUVHc7XI8McsX0MmHGpoM9ZY3fXqE7cR6lU4nftReDsnOLhVuqHkP/m5
-	 KEY+wklQqOb2ZN3ez57PR4HlbcUNnSck8UUexD7I=
+	b=2lB8764oe5IP3JPT7O2i3Wg45IFvKF7/DJLOH5UmfAJsvjsETMsB9LitBgKtjfxok
+	 xPtTgqz2+o0xQ86GjTov0w2s9060x9ioHr6l59Br4cuNFdi55RTU9TG+i72FPNdx4u
+	 PpPoRnQ0lcRdTtP37fbO3agW0UDZ5/WSEWbCoD0o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404028AbfJCQdF (ORCPT
+        id S2404240AbfJCQfF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 12:33:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40904 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 12:35:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43742 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404011AbfJCQdC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:33:02 -0400
+        id S2392182AbfJCQfB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:35:01 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 16C3F20830;
-        Thu,  3 Oct 2019 16:33:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BADFF215EA;
+        Thu,  3 Oct 2019 16:34:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570120381;
-        bh=U+jKrTN27ES9qTRrcQwXEjbb0tNmYlzxjvDnmiQrrjM=;
+        s=default; t=1570120500;
+        bh=BfTwByiLBOEtLAiKrDFm0+a1C2cPRfgHJQH9uMU+AJg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=FjQcCmvwwa5DUQEcfbQJofK5jY8VmYkZDjU+3DzHkTF8reBrhuXP4CgbZsB1aKtY9
-         FydB8cpqA7CuVrqMBXtA3cRJT6LmEptZFUMnnt3f8orKBPKJHB2een58NVymC2tCQO
-         4wZAVooIy8Vfi/Y0aR/ocqwMHwoObaYiC8wOOmPI=
+        b=pgjrIsC850x8vGQIQydt8JWvnQLLCzFrcoZwtlTWQKdztQu+Ol7pz8vzROXM287p0
+         LDIhcmendBiDlgjU2QTHDdvaOf2w10vztqG8iBXZN632SficUYvpVskj2JAeaDQLcL
+         nAwQUXvd3CROzoi1BMUmQh4Oo8V9ndTyjMOwVB9E=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Takashi Iwai <tiwai@suse.de>,
+        stable@vger.kernel.org, Qu Wenruo <wqu@suse.com>,
+        David Sterba <dsterba@suse.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 199/313] ALSA: hda - Drop unsol event handler for Intel HDMI codecs
-Date:   Thu,  3 Oct 2019 17:52:57 +0200
-Message-Id: <20191003154552.575304487@linuxfoundation.org>
+Subject: [PATCH 5.2 206/313] btrfs: delayed-inode: Kill the BUG_ON() in btrfs_delete_delayed_dir_index()
+Date:   Thu,  3 Oct 2019 17:53:04 +0200
+Message-Id: <20191003154553.282845831@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191003154533.590915454@linuxfoundation.org>
 References: <20191003154533.590915454@linuxfoundation.org>
@@ -59,49 +60,79 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Takashi Iwai <tiwai@suse.de>
+From: Qu Wenruo <wqu@suse.com>
 
-[ Upstream commit f2dbe87c5ac1f88e6007ba1f1374f4bd8a197fb6 ]
+[ Upstream commit 933c22a7512c5c09b1fdc46b557384efe8d03233 ]
 
-We don't need to deal with the unsol events for Intel chips that are
-tied with the graphics via audio component notifier.  Although the
-presence of the audio component is checked at the beginning of
-hdmi_unsol_event(), better to short cut by dropping unsol_event ops.
+There is one report of fuzzed image which leads to BUG_ON() in
+btrfs_delete_delayed_dir_index().
 
-BugLink: https://bugzilla.kernel.org/show_bug.cgi?id=204565
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Although that fuzzed image can already be addressed by enhanced
+extent-tree error handler, it's still better to hunt down more BUG_ON().
+
+This patch will hunt down two BUG_ON()s in
+btrfs_delete_delayed_dir_index():
+- One for error from btrfs_delayed_item_reserve_metadata()
+  Instead of BUG_ON(), we output an error message and free the item.
+  And return the error.
+  All callers of this function handles the error by aborting current
+  trasaction.
+
+- One for possible EEXIST from __btrfs_add_delayed_deletion_item()
+  That function can return -EEXIST.
+  We already have a good enough error message for that, only need to
+  clean up the reserved metadata space and allocated item.
+
+To help above cleanup, also modifiy __btrfs_remove_delayed_item() called
+in btrfs_release_delayed_item(), to skip unassociated item.
+
+Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=203253
+Signed-off-by: Qu Wenruo <wqu@suse.com>
+Reviewed-by: David Sterba <dsterba@suse.com>
+Signed-off-by: David Sterba <dsterba@suse.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/pci/hda/patch_hdmi.c | 9 ++++++++-
- 1 file changed, 8 insertions(+), 1 deletion(-)
+ fs/btrfs/delayed-inode.c | 13 +++++++++++--
+ 1 file changed, 11 insertions(+), 2 deletions(-)
 
-diff --git a/sound/pci/hda/patch_hdmi.c b/sound/pci/hda/patch_hdmi.c
-index e49c1c00f5ce1..ca0404edd939e 100644
---- a/sound/pci/hda/patch_hdmi.c
-+++ b/sound/pci/hda/patch_hdmi.c
-@@ -2611,6 +2611,8 @@ static void i915_pin_cvt_fixup(struct hda_codec *codec,
- /* precondition and allocation for Intel codecs */
- static int alloc_intel_hdmi(struct hda_codec *codec)
- {
-+	int err;
-+
- 	/* requires i915 binding */
- 	if (!codec->bus->core.audio_component) {
- 		codec_info(codec, "No i915 binding for Intel HDMI/DP codec\n");
-@@ -2619,7 +2621,12 @@ static int alloc_intel_hdmi(struct hda_codec *codec)
- 		return -ENODEV;
+diff --git a/fs/btrfs/delayed-inode.c b/fs/btrfs/delayed-inode.c
+index 43fdb2992956a..6858a05606dd3 100644
+--- a/fs/btrfs/delayed-inode.c
++++ b/fs/btrfs/delayed-inode.c
+@@ -474,6 +474,9 @@ static void __btrfs_remove_delayed_item(struct btrfs_delayed_item *delayed_item)
+ 	struct rb_root_cached *root;
+ 	struct btrfs_delayed_root *delayed_root;
+ 
++	/* Not associated with any delayed_node */
++	if (!delayed_item->delayed_node)
++		return;
+ 	delayed_root = delayed_item->delayed_node->root->fs_info->delayed_root;
+ 
+ 	BUG_ON(!delayed_root);
+@@ -1525,7 +1528,12 @@ int btrfs_delete_delayed_dir_index(struct btrfs_trans_handle *trans,
+ 	 * we have reserved enough space when we start a new transaction,
+ 	 * so reserving metadata failure is impossible.
+ 	 */
+-	BUG_ON(ret);
++	if (ret < 0) {
++		btrfs_err(trans->fs_info,
++"metadata reservation failed for delayed dir item deltiona, should have been reserved");
++		btrfs_release_delayed_item(item);
++		goto end;
++	}
+ 
+ 	mutex_lock(&node->mutex);
+ 	ret = __btrfs_add_delayed_deletion_item(node, item);
+@@ -1534,7 +1542,8 @@ int btrfs_delete_delayed_dir_index(struct btrfs_trans_handle *trans,
+ 			  "err add delayed dir index item(index: %llu) into the deletion tree of the delayed node(root id: %llu, inode id: %llu, errno: %d)",
+ 			  index, node->root->root_key.objectid,
+ 			  node->inode_id, ret);
+-		BUG();
++		btrfs_delayed_item_release_metadata(dir->root, item);
++		btrfs_release_delayed_item(item);
  	}
- 
--	return alloc_generic_hdmi(codec);
-+	err = alloc_generic_hdmi(codec);
-+	if (err < 0)
-+		return err;
-+	/* no need to handle unsol events */
-+	codec->patch_ops.unsol_event = NULL;
-+	return 0;
- }
- 
- /* parse and post-process for Intel codecs */
+ 	mutex_unlock(&node->mutex);
+ end:
 -- 
 2.20.1
 
