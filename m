@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B06EC10F14
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:14:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2A3AC10F14
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:14:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3BC0E20830
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:14:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 69BEC20673
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:14:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570122876;
-	bh=9YTmjz6JzHxwcmKGl0VJUGsFdEfzvM/9GRS2tB2FdWA=;
+	s=default; t=1570122882;
+	bh=csEuR0I3jvQUqVfdCrUe0yTO9jh+m3SBF9finvCv31s=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vTmP3b32kTDQwwA18baorhute1WPDjAO1okHW4K0ql01U7f+AehuCY2u0fdzRts4K
-	 /Brh/6f7dUDiU+Kzkt7SB9DhlhQsoHOsuiNUQVX4ILfs1hKXrtVwHiM2thu4Te/b5p
-	 FtxOaXcJBrViqIIqZX6xZirNBBeBD3QmNO2ekyq0=
+	b=MKZNWhRfuRFWHPfulABd1enJ4SCeYujHtTL4hcanOcgnrkULcGIjnAWuf2iFX/OO2
+	 cNq2e13IL6YkTitiKQMFSE61zHjOHF8wBJO7DLY8jShXu3mARwCz6VhpHt8BqutHYU
+	 SKrtZ6Jr0cQSxJvpsfzwKWFU0jyQPKPgh16irG94=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391994AbfJCROf (ORCPT
+        id S2391172AbfJCQ07 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 13:14:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58660 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 12:26:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58418 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391188AbfJCQ1D (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:27:03 -0400
+        id S2391162AbfJCQ0z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:26:55 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6BEE020700;
-        Thu,  3 Oct 2019 16:27:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 549F32133F;
+        Thu,  3 Oct 2019 16:26:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570120022;
-        bh=9YTmjz6JzHxwcmKGl0VJUGsFdEfzvM/9GRS2tB2FdWA=;
+        s=default; t=1570120014;
+        bh=csEuR0I3jvQUqVfdCrUe0yTO9jh+m3SBF9finvCv31s=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=dm7Yn7Nwhv+ymdYXTkVnDFoCXa67540drrtpr4kNzOmCPCkGTT6Bl985NbQA7jMdY
-         zCtDCe9Tk7jGCXf7Vp7VGnS3JxX3MG1ZKnMzMptDGYKR9zB5t4EfGa0f68RKemSlWx
-         tY97vwGj4bI+bhabOsyOLwGRQUcMMxmqR7TpfZ+A=
+        b=HmYrFFXUuLhsIv1PRX0H4EGnUQk/8CR4KeBLc/mFECXEqEn6YYDtab/W2Iiiki5hW
+         22Egt40nM85ePItcY/MjyA+J35kyNbFLrAOiKlcwFbO3mhLdpruvDRel1FlOyEd6hn
+         NvZQ82J0GCsuoIILYbmV3WaWakpGHi9nvhnH76Is=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Kevin Hilman <khilman@baylibre.com>,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        Neil Armstrong <narmstrong@baylibre.com>,
+        stable@vger.kernel.org, Lucas Stach <l.stach@pengutronix.de>,
+        "Andrew F. Davis" <afd@ti.com>, Mark Brown <broonie@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 067/313] soc: amlogic: meson-clk-measure: protect measure with a mutex
-Date:   Thu,  3 Oct 2019 17:50:45 +0200
-Message-Id: <20191003154539.513177799@linuxfoundation.org>
+Subject: [PATCH 5.2 038/313] ASoC: tlv320aic31xx: suppress error message for EPROBE_DEFER
+Date:   Thu,  3 Oct 2019 17:50:16 +0200
+Message-Id: <20191003154536.990503538@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191003154533.590915454@linuxfoundation.org>
 References: <20191003154533.590915454@linuxfoundation.org>
@@ -61,66 +60,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Neil Armstrong <narmstrong@baylibre.com>
+From: Lucas Stach <l.stach@pengutronix.de>
 
-[ Upstream commit 3a760d986568b67d1f8411dab64608075817b90d ]
+[ Upstream commit b7e814deae33eb30f8f8c6528e8e69b107978d88 ]
 
-In order to protect clock measuring when multiple process asks for
-a measure, protect the main measure function with mutexes.
+Both the supplies and reset GPIO might need a probe deferral for the
+resource to be available. Don't print a error message in that case, as
+it is a normal operating condition.
 
-Reviewed-by: Kevin Hilman <khilman@baylibre.com>
-Reviewed-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
-Signed-off-by: Kevin Hilman <khilman@baylibre.com>
+Signed-off-by: Lucas Stach <l.stach@pengutronix.de>
+Acked-by: Andrew F. Davis <afd@ti.com>
+Link: https://lore.kernel.org/r/20190719143637.2018-1-l.stach@pengutronix.de
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/soc/amlogic/meson-clk-measure.c | 12 +++++++++++-
- 1 file changed, 11 insertions(+), 1 deletion(-)
+ sound/soc/codecs/tlv320aic31xx.c | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/soc/amlogic/meson-clk-measure.c b/drivers/soc/amlogic/meson-clk-measure.c
-index 19d4cbc93a17a..c470e24f1dfa6 100644
---- a/drivers/soc/amlogic/meson-clk-measure.c
-+++ b/drivers/soc/amlogic/meson-clk-measure.c
-@@ -11,6 +11,8 @@
- #include <linux/debugfs.h>
- #include <linux/regmap.h>
+diff --git a/sound/soc/codecs/tlv320aic31xx.c b/sound/soc/codecs/tlv320aic31xx.c
+index 9b37e98da0db1..26a4f6cd32883 100644
+--- a/sound/soc/codecs/tlv320aic31xx.c
++++ b/sound/soc/codecs/tlv320aic31xx.c
+@@ -1553,7 +1553,8 @@ static int aic31xx_i2c_probe(struct i2c_client *i2c,
+ 	aic31xx->gpio_reset = devm_gpiod_get_optional(aic31xx->dev, "reset",
+ 						      GPIOD_OUT_LOW);
+ 	if (IS_ERR(aic31xx->gpio_reset)) {
+-		dev_err(aic31xx->dev, "not able to acquire gpio\n");
++		if (PTR_ERR(aic31xx->gpio_reset) != -EPROBE_DEFER)
++			dev_err(aic31xx->dev, "not able to acquire gpio\n");
+ 		return PTR_ERR(aic31xx->gpio_reset);
+ 	}
  
-+static DEFINE_MUTEX(measure_lock);
-+
- #define MSR_CLK_DUTY		0x0
- #define MSR_CLK_REG0		0x4
- #define MSR_CLK_REG1		0x8
-@@ -360,6 +362,10 @@ static int meson_measure_id(struct meson_msr_id *clk_msr_id,
- 	unsigned int val;
- 	int ret;
- 
-+	ret = mutex_lock_interruptible(&measure_lock);
-+	if (ret)
-+		return ret;
-+
- 	regmap_write(priv->regmap, MSR_CLK_REG0, 0);
- 
- 	/* Set measurement duration */
-@@ -377,8 +383,10 @@ static int meson_measure_id(struct meson_msr_id *clk_msr_id,
- 
- 	ret = regmap_read_poll_timeout(priv->regmap, MSR_CLK_REG0,
- 				       val, !(val & MSR_BUSY), 10, 10000);
--	if (ret)
-+	if (ret) {
-+		mutex_unlock(&measure_lock);
+@@ -1564,7 +1565,9 @@ static int aic31xx_i2c_probe(struct i2c_client *i2c,
+ 				      ARRAY_SIZE(aic31xx->supplies),
+ 				      aic31xx->supplies);
+ 	if (ret) {
+-		dev_err(aic31xx->dev, "Failed to request supplies: %d\n", ret);
++		if (ret != -EPROBE_DEFER)
++			dev_err(aic31xx->dev,
++				"Failed to request supplies: %d\n", ret);
  		return ret;
-+	}
- 
- 	/* Disable */
- 	regmap_update_bits(priv->regmap, MSR_CLK_REG0, MSR_ENABLE, 0);
-@@ -386,6 +394,8 @@ static int meson_measure_id(struct meson_msr_id *clk_msr_id,
- 	/* Get the value in multiple of gate time counts */
- 	regmap_read(priv->regmap, MSR_CLK_REG2, &val);
- 
-+	mutex_unlock(&measure_lock);
-+
- 	if (val >= MSR_VAL_MASK)
- 		return -EINVAL;
+ 	}
  
 -- 
 2.20.1
