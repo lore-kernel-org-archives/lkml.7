@@ -2,55 +2,54 @@ Return-Path: <SRS0=6dNS=X4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 922A5C10F14
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:39:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 575AAC10F14
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:39:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 667602070B
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:39:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 259F92070B
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:39:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570120748;
-	bh=L0SmYGtaGcxI3+BLpfscRZ+R1XBFygt6MAgF3wzw8/g=;
+	s=default; t=1570120751;
+	bh=1b0mp+G7Vz0aBxcLs6/5p2l/G0/P9kTbNCvwoB5x1ns=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=G7l2ohel9yDsmNtYa6nc4i8XKqKklGcdJ8bF+yJJ06ckHHt4zsXTALnDjYB/38hJ2
-	 OXXa41Vz1y7eMxbJp8u7gKxvMwDujX2+tBZdrZ1b9948Zq9v2mjTTQN/lHoLWHitnN
-	 kLwgSdJuR05lH82R+OA1pEen73PDSaXOTnXYXygM=
+	b=qa9hVG687JHT+jdCuOvwqN0xWWEURimWHSa+4VNrtogMvPH5vFU+CTVidJyBblswa
+	 zZ2mifuOs0oyUosc6ehP8bQ5CiRdunVCYKBwb9lhQuE+0630QMjbJICI5UwRpnr2Vk
+	 ijqdVHyIaEUX+fMsJhWNmGM3M0ajiATA33y0+Itg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404789AbfJCQjH (ORCPT
+        id S2404812AbfJCQjK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 12:39:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47728 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 12:39:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48988 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404700AbfJCQiH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:38:07 -0400
+        id S2404700AbfJCQjI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:39:08 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A50B821783;
-        Thu,  3 Oct 2019 16:38:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A370B20830;
+        Thu,  3 Oct 2019 16:39:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570120686;
-        bh=L0SmYGtaGcxI3+BLpfscRZ+R1XBFygt6MAgF3wzw8/g=;
+        s=default; t=1570120748;
+        bh=1b0mp+G7Vz0aBxcLs6/5p2l/G0/P9kTbNCvwoB5x1ns=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Z+1Ta1xKwhsl7y+aFZQnoEMzuLwm2HhuUMa5UWrDXdHLzYoRg6nRq3qcwKL8RCiwd
-         65vXIHyXP65a2rVQaQpdUGEU2f9Hm/cuap9q/jpTuedS4XhUxfvdSJDOl3IVYxxakY
-         B+bFg8fnSdIwN3OVA4dCpEceKjXq5+mIwB7Im1As=
+        b=vsmAfqo05PCTVtE+6L4qpFmI+Suf3hxcb89KlNLLS+kRxl/gOWSpHN/a6xNFXPtkW
+         vExdSZUKJ1AMmGge0Eq7rw/ueUpZhoQ5VakSOPktS378cpNgVB4Y2gU35cAL5U5oNW
+         4jWXCp8zRoR8ihjdy8bcpJgDc9wwkT9Elc3Q/vkI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Pi-Hsun Shih <pihsun@chromium.org>,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 313/313] platform/chrome: cros_ec_rpmsg: Fix race with host command when probe failed
-Date:   Thu,  3 Oct 2019 17:54:51 +0200
-Message-Id: <20191003154604.030111391@linuxfoundation.org>
+        stable@vger.kernel.org, David Ahern <dsahern@gmail.com>,
+        Jakub Kicinski <jakub.kicinski@netronome.com>
+Subject: [PATCH 5.3 023/344] selftests: Update fib_nexthop_multiprefix to handle missing ping6
+Date:   Thu,  3 Oct 2019 17:49:48 +0200
+Message-Id: <20191003154542.365911270@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20191003154533.590915454@linuxfoundation.org>
-References: <20191003154533.590915454@linuxfoundation.org>
+In-Reply-To: <20191003154540.062170222@linuxfoundation.org>
+References: <20191003154540.062170222@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -60,125 +59,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Pi-Hsun Shih <pihsun@chromium.org>
+From: David Ahern <dsahern@gmail.com>
 
-[ Upstream commit 71cddb7097e2b0feb855d7fd7d59afd12cbee4bb ]
+[ Upstream commit e84622ce24482f6e9c1bf29d3bdd556eb587ff41 ]
 
-Since the rpmsg_endpoint is created before probe is called, it's
-possible that a host event is received during cros_ec_register, and
-there would be some pending work in the host_event_work workqueue while
-cros_ec_register is called.
+Some distributions (e.g., debian buster) do not install ping6. Re-use
+the hook in pmtu.sh to detect this and fallback to ping.
 
-If cros_ec_register fails, when the leftover work in host_event_work
-run, the ec_dev from the drvdata of the rpdev could be already set to
-NULL, causing kernel crash when trying to run cros_ec_get_next_event.
-
-Fix this by creating the rpmsg_endpoint by ourself, and when
-cros_ec_register fails (or on remove), destroy the endpoint first (to
-make sure there's no more new calls to cros_ec_rpmsg_callback), and then
-cancel all works in the host_event_work workqueue.
-
-Cc: stable@vger.kernel.org
-Fixes: 2de89fd98958 ("platform/chrome: cros_ec: Add EC host command support using rpmsg")
-Signed-off-by: Pi-Hsun Shih <pihsun@chromium.org>
-Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Fixes: 735ab2f65dce ("selftests: Add test with multiple prefixes using single nexthop")
+Signed-off-by: David Ahern <dsahern@gmail.com>
+Signed-off-by: Jakub Kicinski <jakub.kicinski@netronome.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/platform/chrome/cros_ec_rpmsg.c | 32 +++++++++++++++++++++----
- 1 file changed, 28 insertions(+), 4 deletions(-)
+ tools/testing/selftests/net/fib_nexthop_multiprefix.sh |    6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/platform/chrome/cros_ec_rpmsg.c b/drivers/platform/chrome/cros_ec_rpmsg.c
-index 5d3fb2abad1d6..bec19d4814aba 100644
---- a/drivers/platform/chrome/cros_ec_rpmsg.c
-+++ b/drivers/platform/chrome/cros_ec_rpmsg.c
-@@ -41,6 +41,7 @@ struct cros_ec_rpmsg {
- 	struct rpmsg_device *rpdev;
- 	struct completion xfer_ack;
- 	struct work_struct host_event_work;
-+	struct rpmsg_endpoint *ept;
- };
+--- a/tools/testing/selftests/net/fib_nexthop_multiprefix.sh
++++ b/tools/testing/selftests/net/fib_nexthop_multiprefix.sh
+@@ -15,6 +15,8 @@
+ PAUSE_ON_FAIL=no
+ VERBOSE=0
  
- /**
-@@ -72,7 +73,6 @@ static int cros_ec_pkt_xfer_rpmsg(struct cros_ec_device *ec_dev,
- 				  struct cros_ec_command *ec_msg)
- {
- 	struct cros_ec_rpmsg *ec_rpmsg = ec_dev->priv;
--	struct rpmsg_device *rpdev = ec_rpmsg->rpdev;
- 	struct ec_host_response *response;
- 	unsigned long timeout;
- 	int len;
-@@ -85,7 +85,7 @@ static int cros_ec_pkt_xfer_rpmsg(struct cros_ec_device *ec_dev,
- 	dev_dbg(ec_dev->dev, "prepared, len=%d\n", len);
- 
- 	reinit_completion(&ec_rpmsg->xfer_ack);
--	ret = rpmsg_send(rpdev->ept, ec_dev->dout, len);
-+	ret = rpmsg_send(ec_rpmsg->ept, ec_dev->dout, len);
- 	if (ret) {
- 		dev_err(ec_dev->dev, "rpmsg send failed\n");
- 		return ret;
-@@ -196,11 +196,24 @@ static int cros_ec_rpmsg_callback(struct rpmsg_device *rpdev, void *data,
- 	return 0;
- }
- 
-+static struct rpmsg_endpoint *
-+cros_ec_rpmsg_create_ept(struct rpmsg_device *rpdev)
-+{
-+	struct rpmsg_channel_info chinfo = {};
++which ping6 > /dev/null 2>&1 && ping6=$(which ping6) || ping6=$(which ping)
 +
-+	strscpy(chinfo.name, rpdev->id.name, RPMSG_NAME_SIZE);
-+	chinfo.src = rpdev->src;
-+	chinfo.dst = RPMSG_ADDR_ANY;
-+
-+	return rpmsg_create_ept(rpdev, cros_ec_rpmsg_callback, NULL, chinfo);
-+}
-+
- static int cros_ec_rpmsg_probe(struct rpmsg_device *rpdev)
- {
- 	struct device *dev = &rpdev->dev;
- 	struct cros_ec_rpmsg *ec_rpmsg;
- 	struct cros_ec_device *ec_dev;
-+	int ret;
+ ################################################################################
+ # helpers
  
- 	ec_dev = devm_kzalloc(dev, sizeof(*ec_dev), GFP_KERNEL);
- 	if (!ec_dev)
-@@ -225,7 +238,18 @@ static int cros_ec_rpmsg_probe(struct rpmsg_device *rpdev)
- 	INIT_WORK(&ec_rpmsg->host_event_work,
- 		  cros_ec_rpmsg_host_event_function);
+@@ -200,7 +202,7 @@ validate_v6_exception()
+ 	local rc
  
--	return cros_ec_register(ec_dev);
-+	ec_rpmsg->ept = cros_ec_rpmsg_create_ept(rpdev);
-+	if (!ec_rpmsg->ept)
-+		return -ENOMEM;
-+
-+	ret = cros_ec_register(ec_dev);
-+	if (ret < 0) {
-+		rpmsg_destroy_ept(ec_rpmsg->ept);
-+		cancel_work_sync(&ec_rpmsg->host_event_work);
-+		return ret;
-+	}
-+
-+	return 0;
- }
+ 	if [ ${ping_sz} != "0" ]; then
+-		run_cmd ip netns exec h0 ping6 -s ${ping_sz} -c5 -w5 ${dst}
++		run_cmd ip netns exec h0 ${ping6} -s ${ping_sz} -c5 -w5 ${dst}
+ 	fi
  
- static void cros_ec_rpmsg_remove(struct rpmsg_device *rpdev)
-@@ -233,6 +257,7 @@ static void cros_ec_rpmsg_remove(struct rpmsg_device *rpdev)
- 	struct cros_ec_device *ec_dev = dev_get_drvdata(&rpdev->dev);
- 	struct cros_ec_rpmsg *ec_rpmsg = ec_dev->priv;
+ 	if [ "$VERBOSE" = "1" ]; then
+@@ -243,7 +245,7 @@ do
+ 		run_cmd taskset -c ${c} ip netns exec h0 ping -c1 -w1 172.16.10${i}.1
+ 		[ $? -ne 0 ] && printf "\nERROR: ping to h${i} failed\n" && ret=1
  
-+	rpmsg_destroy_ept(ec_rpmsg->ept);
- 	cancel_work_sync(&ec_rpmsg->host_event_work);
- }
+-		run_cmd taskset -c ${c} ip netns exec h0 ping6 -c1 -w1 2001:db8:10${i}::1
++		run_cmd taskset -c ${c} ip netns exec h0 ${ping6} -c1 -w1 2001:db8:10${i}::1
+ 		[ $? -ne 0 ] && printf "\nERROR: ping6 to h${i} failed\n" && ret=1
  
-@@ -249,7 +274,6 @@ static struct rpmsg_driver cros_ec_driver_rpmsg = {
- 	},
- 	.probe		= cros_ec_rpmsg_probe,
- 	.remove		= cros_ec_rpmsg_remove,
--	.callback	= cros_ec_rpmsg_callback,
- };
- 
- module_rpmsg_driver(cros_ec_driver_rpmsg);
--- 
-2.20.1
-
+ 		[ $ret -ne 0 ] && break
 
 
