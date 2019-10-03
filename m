@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 414A4C10F14
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:25:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D4B55C32792
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:25:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 157E2215EA
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:25:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A73EB20700
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:25:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570119949;
-	bh=yJTABhNQ8E3OsyhkcoBAnjIx9rthdXM5DCfNC8roBKs=;
+	s=default; t=1570119954;
+	bh=mg/lXnaKl1n2LEuLDz3EK4eUsnnzZrYumsSwGKfrScA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0CvVDED1QEZDSSaAZRix1h8BYp8mVbhnqemI2rrcjJVfQlY0VHEUQqvDPfG/KM/Gv
-	 zk1M5WWTpdeqIc+4YX5D71Y0YupS1Z4MZIqYm4c480zzfEJUjc/WTklw4WRbMJorfe
-	 x8vIiVLjMLIL/LfwzTYG26LQm2UuLAZ/oFn6q7TA=
+	b=HpS7uscXmaTEFY9XZpuXC0zpN1tV3fK40YgUzjFuOJOQrZ5EoYwPkfv76cXVO8O+B
+	 zICDuHwMT6seF+jG+84TJuS70dI9SRr4Kq27me77oAPji0zEpFEckKOzlq5Wf3NoHr
+	 V80sTkEVvwerljvdB4Fr14bylL6KBFsinG6wPZPQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389857AbfJCQZs (ORCPT
+        id S2390995AbfJCQZy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 12:25:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56220 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 12:25:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56396 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390964AbfJCQZp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:25:45 -0400
+        id S2390979AbfJCQZv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:25:51 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5247B20867;
-        Thu,  3 Oct 2019 16:25:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A76FE215EA;
+        Thu,  3 Oct 2019 16:25:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570119944;
-        bh=yJTABhNQ8E3OsyhkcoBAnjIx9rthdXM5DCfNC8roBKs=;
+        s=default; t=1570119950;
+        bh=mg/lXnaKl1n2LEuLDz3EK4eUsnnzZrYumsSwGKfrScA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=i0a7ghmN585BokggbzwapzHcQ3U3CC73Bo2D58zSTejMv7opMISgZezcj/eAQ9dT7
-         MROm9ohRIiGX/WKMkPAXKaiJ3HQ1JCw4YbSMCNmyEPHquRHsCGtE848X9a9WioWh7S
-         49bBpPmD+/qS2Z1iP+2IDspkom8uInv7l+oFHPaY=
+        b=HrphvmK83wyOWx1IeAPUC77AD1w+HM5EToJquMZzfHBbtYt7MI8U8kA+3JgPFBofh
+         IReSJqol4NIgAmoS/YoZ6PNb2w35WIlEKjDZl6rJFDCpY0JHXIdeHX5i4fb15V7+fE
+         wzLDVSwIbbAJV66t4yyWJWj0VAIHJ2hiOcFPjuNo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Davide Caratti <dcaratti@redhat.com>,
-        Yotam Gigi <yotam.gi@gmail.com>,
-        Jakub Kicinski <jakub.kicinski@netronome.com>
-Subject: [PATCH 5.2 007/313] net/sched: act_sample: dont push mac header on ip6gre ingress
-Date:   Thu,  3 Oct 2019 17:49:45 +0200
-Message-Id: <20191003154534.232449776@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Navid Emamdoost <navid.emamdoost@gmail.com>,
+        Jakub Kicinski <jakub.kicinski@netronome.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 5.2 009/313] nfp: flower: fix memory leak in nfp_flower_spawn_vnic_reprs
+Date:   Thu,  3 Oct 2019 17:49:47 +0200
+Message-Id: <20191003154534.402023886@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191003154533.590915454@linuxfoundation.org>
 References: <20191003154533.590915454@linuxfoundation.org>
@@ -60,40 +61,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Davide Caratti <dcaratti@redhat.com>
+From: Navid Emamdoost <navid.emamdoost@gmail.com>
 
-[ Upstream commit 92974a1d006ad8b30d53047c70974c9e065eb7df ]
+[ Upstream commit 8ce39eb5a67aee25d9f05b40b673c95b23502e3e ]
 
-current 'sample' action doesn't push the mac header of ingress packets if
-they are received by a layer 3 tunnel (like gre or sit); but it forgot to
-check for gre over ipv6, so the following script:
+In nfp_flower_spawn_vnic_reprs in the loop if initialization or the
+allocations fail memory is leaked. Appropriate releases are added.
 
- # tc q a dev $d clsact
- # tc f a dev $d ingress protocol ip flower ip_proto icmp action sample \
- > group 100 rate 1
- # psample -v -g 100
-
-dumps everything, including outer header and mac, when $d is a gre tunnel
-over ipv6. Fix this adding a missing label for ARPHRD_IP6GRE devices.
-
-Fixes: 5c5670fae430 ("net/sched: Introduce sample tc action")
-Signed-off-by: Davide Caratti <dcaratti@redhat.com>
-Reviewed-by: Yotam Gigi <yotam.gi@gmail.com>
-Signed-off-by: Jakub Kicinski <jakub.kicinski@netronome.com>
+Fixes: b94524529741 ("nfp: flower: add per repr private data for LAG offload")
+Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
+Acked-by: Jakub Kicinski <jakub.kicinski@netronome.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/sched/act_sample.c |    1 +
- 1 file changed, 1 insertion(+)
+ drivers/net/ethernet/netronome/nfp/flower/main.c |    3 +++
+ 1 file changed, 3 insertions(+)
 
---- a/net/sched/act_sample.c
-+++ b/net/sched/act_sample.c
-@@ -146,6 +146,7 @@ static bool tcf_sample_dev_ok_push(struc
- 	case ARPHRD_TUNNEL6:
- 	case ARPHRD_SIT:
- 	case ARPHRD_IPGRE:
-+	case ARPHRD_IP6GRE:
- 	case ARPHRD_VOID:
- 	case ARPHRD_NONE:
- 		return false;
+--- a/drivers/net/ethernet/netronome/nfp/flower/main.c
++++ b/drivers/net/ethernet/netronome/nfp/flower/main.c
+@@ -400,6 +400,7 @@ nfp_flower_spawn_vnic_reprs(struct nfp_a
+ 		repr_priv = kzalloc(sizeof(*repr_priv), GFP_KERNEL);
+ 		if (!repr_priv) {
+ 			err = -ENOMEM;
++			nfp_repr_free(repr);
+ 			goto err_reprs_clean;
+ 		}
+ 
+@@ -413,6 +414,7 @@ nfp_flower_spawn_vnic_reprs(struct nfp_a
+ 		port = nfp_port_alloc(app, port_type, repr);
+ 		if (IS_ERR(port)) {
+ 			err = PTR_ERR(port);
++			kfree(repr_priv);
+ 			nfp_repr_free(repr);
+ 			goto err_reprs_clean;
+ 		}
+@@ -433,6 +435,7 @@ nfp_flower_spawn_vnic_reprs(struct nfp_a
+ 		err = nfp_repr_init(app, repr,
+ 				    port_id, port, priv->nn->dp.netdev);
+ 		if (err) {
++			kfree(repr_priv);
+ 			nfp_port_free(port);
+ 			nfp_repr_free(repr);
+ 			goto err_reprs_clean;
 
 
