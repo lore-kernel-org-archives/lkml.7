@@ -4,56 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 743ECC4CED1
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:33:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38658C32792
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:33:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4464E2086A
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:33:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 100B72086A
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:33:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570120398;
-	bh=gDoMJ/kb/DKmiZLAj1iPf+wvICmVlOUmxNJiEv9/iT8=;
+	s=default; t=1570120400;
+	bh=3iuTUPH38z8GhXhGf0ZoFLJizgr0/Dx+jX0EiSbp/nM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ChHQ319Bblpte9/oRE+tsN5mS27eR1q0dzOnHiNsO0E8xpvk61VeEz5SF9brxmzKI
-	 gGmyh5FBrKwQ7FsiCIEE1D3BvprzWf5E4eWLisSD2pVfnjE1xkl7RM5JR5Gf9K3Ok3
-	 OAtV04Jv5DVsddjVTWvCpe6XWzikeke8CNzB30Dg=
+	b=FX/Kk4E93P7pQdq11hbUk6M8uwH2Jy9lIGW2dx3DrnQdp8zxBInQ54K4i5RfcBHx8
+	 KmH9X+5d/ezE/o+yVPnyWzPDuaMM9SFrh4YYIZYFq4odZLGvtxhS9TF7AqrTFFuGPr
+	 hfHx01w9X+PJjV/jzTcnPfmWiM04/BNpX16Nj7DQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391991AbfJCQdR (ORCPT
+        id S2404029AbfJCQdS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 12:33:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41106 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 12:33:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41178 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391965AbfJCQdN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:33:13 -0400
+        id S2391274AbfJCQdP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:33:15 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AE5A82070B;
-        Thu,  3 Oct 2019 16:33:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 68A2A2086A;
+        Thu,  3 Oct 2019 16:33:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570120392;
-        bh=gDoMJ/kb/DKmiZLAj1iPf+wvICmVlOUmxNJiEv9/iT8=;
+        s=default; t=1570120394;
+        bh=3iuTUPH38z8GhXhGf0ZoFLJizgr0/Dx+jX0EiSbp/nM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=neNk76OvEx8VyHydzwhKBjR0i+e09MFZkw0hCYPgJgCfo5MN3/8Y30yFHgrHeDM+N
-         +Zzd912en8h1io/pWinTNqKDmXWxAir6UzLq75sIpo8GLOXtEA6aVV7uQCtX95paOV
-         oaMmfvkat3GHdvmC7GOsVJqrGmF1HxeA7KPiTmEc=
+        b=xj2RCNOx8xUR0JmPnUsIem2LeZ39ftM+2PufEbBvSa2+NepWEWp5no33EPaGdbjSq
+         kZmW0vrRlV/bKSXv3uJMJx+2MixOVm1TUtGI9hznE7a1gSkctQfwcxR51gnVhQSTq+
+         8ijgMJSuN0ytrNbxhUeQaeu7dq6ey1lbmWbcthds=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Patrick McLean <chutzpah@gentoo.org>,
-        Tzvetomir Stoyanov <tstoyanov@vmware.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        linux-trace-devel@vger.kernel.org,
-        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        stable@vger.kernel.org,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 167/313] libtraceevent: Change users plugin directory
-Date:   Thu,  3 Oct 2019 17:52:25 +0200
-Message-Id: <20191003154549.424121554@linuxfoundation.org>
+Subject: [PATCH 5.2 168/313] ARM: dts: exynos: Mark LDO10 as always-on on Peach Pit/Pi Chromebooks
+Date:   Thu,  3 Oct 2019 17:52:26 +0200
+Message-Id: <20191003154549.512120380@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191003154533.590915454@linuxfoundation.org>
 References: <20191003154533.590915454@linuxfoundation.org>
@@ -66,68 +61,58 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tzvetomir Stoyanov <tstoyanov@vmware.com>
+From: Marek Szyprowski <m.szyprowski@samsung.com>
 
-[ Upstream commit e97fd1383cd77c467d2aed7fa4e596789df83977 ]
+[ Upstream commit 5b0eeeaa37615df37a9a30929b73e9defe61ca84 ]
 
-To be compliant with XDG user directory layout, the user's plugin
-directory is changed from ~/.traceevent/plugins to
-~/.local/lib/traceevent/plugins/
+Commit aff138bf8e37 ("ARM: dts: exynos: Add TMU nodes regulator supply
+for Peach boards") assigned LDO10 to Exynos Thermal Measurement Unit,
+but it turned out that it supplies also some other critical parts and
+board freezes/crashes when it is turned off.
 
-Suggested-by: Patrick McLean <chutzpah@gentoo.org>
-Signed-off-by: Tzvetomir Stoyanov <tstoyanov@vmware.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Jiri Olsa <jolsa@redhat.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Patrick McLean <chutzpah@gentoo.org>
-Cc: linux-trace-devel@vger.kernel.org
-Link: https://lore.kernel.org/linux-trace-devel/20190313144206.41e75cf8@patrickm/
-Link: http://lore.kernel.org/linux-trace-devel/20190801074959.22023-4-tz.stoyanov@gmail.com
-Link: http://lore.kernel.org/lkml/20190805204355.344622683@goodmis.org
-Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+The mentioned commit made Exynos TMU a consumer of that regulator and in
+typical case Exynos TMU driver keeps it enabled from early boot. However
+there are such configurations (example is multi_v7_defconfig), in which
+some of the regulators are compiled as modules and are not available
+from early boot. In such case it may happen that LDO10 is turned off by
+regulator core, because it has no consumers yet (in this case consumer
+drivers cannot get it, because the supply regulators for it are not yet
+available). This in turn causes the board to crash. This patch restores
+'always-on' property for the LDO10 regulator.
+
+Fixes: aff138bf8e37 ("ARM: dts: exynos: Add TMU nodes regulator supply for Peach boards")
+Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
+Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/lib/traceevent/Makefile       | 6 +++---
- tools/lib/traceevent/event-plugin.c | 2 +-
- 2 files changed, 4 insertions(+), 4 deletions(-)
+ arch/arm/boot/dts/exynos5420-peach-pit.dts | 1 +
+ arch/arm/boot/dts/exynos5800-peach-pi.dts  | 1 +
+ 2 files changed, 2 insertions(+)
 
-diff --git a/tools/lib/traceevent/Makefile b/tools/lib/traceevent/Makefile
-index 3292c290654f6..86ce17a1f7fb6 100644
---- a/tools/lib/traceevent/Makefile
-+++ b/tools/lib/traceevent/Makefile
-@@ -62,15 +62,15 @@ set_plugin_dir := 1
- 
- # Set plugin_dir to preffered global plugin location
- # If we install under $HOME directory we go under
--# $(HOME)/.traceevent/plugins
-+# $(HOME)/.local/lib/traceevent/plugins
- #
- # We dont set PLUGIN_DIR in case we install under $HOME
- # directory, because by default the code looks under:
--# $(HOME)/.traceevent/plugins by default.
-+# $(HOME)/.local/lib/traceevent/plugins by default.
- #
- ifeq ($(plugin_dir),)
- ifeq ($(prefix),$(HOME))
--override plugin_dir = $(HOME)/.traceevent/plugins
-+override plugin_dir = $(HOME)/.local/lib/traceevent/plugins
- set_plugin_dir := 0
- else
- override plugin_dir = $(libdir)/traceevent/plugins
-diff --git a/tools/lib/traceevent/event-plugin.c b/tools/lib/traceevent/event-plugin.c
-index 8ca28de9337a5..e1f7ddd5a6cf0 100644
---- a/tools/lib/traceevent/event-plugin.c
-+++ b/tools/lib/traceevent/event-plugin.c
-@@ -18,7 +18,7 @@
- #include "event-utils.h"
- #include "trace-seq.h"
- 
--#define LOCAL_PLUGIN_DIR ".traceevent/plugins"
-+#define LOCAL_PLUGIN_DIR ".local/lib/traceevent/plugins/"
- 
- static struct registered_plugin_options {
- 	struct registered_plugin_options	*next;
+diff --git a/arch/arm/boot/dts/exynos5420-peach-pit.dts b/arch/arm/boot/dts/exynos5420-peach-pit.dts
+index f78db6809cca4..9eb48cabcca45 100644
+--- a/arch/arm/boot/dts/exynos5420-peach-pit.dts
++++ b/arch/arm/boot/dts/exynos5420-peach-pit.dts
+@@ -440,6 +440,7 @@
+ 				regulator-name = "vdd_ldo10";
+ 				regulator-min-microvolt = <1800000>;
+ 				regulator-max-microvolt = <1800000>;
++				regulator-always-on;
+ 				regulator-state-mem {
+ 					regulator-off-in-suspend;
+ 				};
+diff --git a/arch/arm/boot/dts/exynos5800-peach-pi.dts b/arch/arm/boot/dts/exynos5800-peach-pi.dts
+index e0f470fe54c81..4398f2d1fe881 100644
+--- a/arch/arm/boot/dts/exynos5800-peach-pi.dts
++++ b/arch/arm/boot/dts/exynos5800-peach-pi.dts
+@@ -440,6 +440,7 @@
+ 				regulator-name = "vdd_ldo10";
+ 				regulator-min-microvolt = <1800000>;
+ 				regulator-max-microvolt = <1800000>;
++				regulator-always-on;
+ 				regulator-state-mem {
+ 					regulator-off-in-suspend;
+ 				};
 -- 
 2.20.1
 
