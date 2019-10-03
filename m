@@ -2,95 +2,147 @@ Return-Path: <SRS0=6dNS=X4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2289C10F14
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 12:20:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B327C4CED1
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 12:22:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 869D620830
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 12:20:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VnhzNJxY"
+	by mail.kernel.org (Postfix) with ESMTP id 6BEE120862
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 12:22:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729670AbfJCMUe (ORCPT
+        id S1729133AbfJCMWB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 08:20:34 -0400
-Received: from mail-ed1-f68.google.com ([209.85.208.68]:35374 "EHLO
-        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725827AbfJCMUe (ORCPT
+        Thu, 3 Oct 2019 08:22:01 -0400
+Received: from mail-out.m-online.net ([212.18.0.9]:39686 "EHLO
+        mail-out.m-online.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726523AbfJCMWB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 08:20:34 -0400
-Received: by mail-ed1-f68.google.com with SMTP id v8so2281063eds.2;
-        Thu, 03 Oct 2019 05:20:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=VMN71rteRHeDLeFUmyCrt4iewlOqhW55q/Q1E8ZLlqo=;
-        b=VnhzNJxYGqNYeExwF/BHd7Z6SMdftYmvL+5hDLELvXDXdaK+uhTGtjVfFR72XR8GLV
-         lhiikc/CuyyWjd3titMS82mqFA1PPgyhH0UHzbuWV7HGR0NlDLFLgWeXpYR7GHNCWSsR
-         Wsy5oSX/3z0MZBAN2/TdWnd6rnwwEOaFvesqpa/9kWbmbnoihwdtWzbQhHPRhV0uMxtD
-         Z7Mv+UvuaocoVsRCixweKQCGe6eRiOlfbPAeyjhzXiK5chhDxIKESTCdeI1WaBeLclyp
-         exF5hykucGi/zkinhoaNPE9ZnE7a2KJSidvftNAbx4nhJUlYb7Brc1lkq9Zo4WnzHhN3
-         UJvQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=VMN71rteRHeDLeFUmyCrt4iewlOqhW55q/Q1E8ZLlqo=;
-        b=jRuPJ9bbhYJLEWK4wjz9p0XrRZMcGl3TQGElWgJDNhyl+6tOStPNAZs+YPEHwEO6pz
-         s/t9toBgJ2eIzMvVOFLESZAqMeFKA7OOPfeSpOdPO/tJyzkslwYn/xl+/9xMl1HpaMW4
-         z/d4WWB/Oo3ekM6nDngxneRKL5sKq0VV/1I/hpZOMCrEMAkINZyA1iU8nJuxVxqkfAX7
-         3Gkaj6j8XhmLrcGAdZdy2jCQZdkPFqUuOayNKVxSZjuz8QiA0wTcgajrs4qXdHKbPAfL
-         vfLN5/kG9yKWKOrDNVYVXO1QD1RF49sk0qf4AuqJaJ5lKUsoxzW65jYnDroHxbqpcp6G
-         idCA==
-X-Gm-Message-State: APjAAAUg13CYsMrIDUgA6YHU+GuVEcssVFXQ0GdwgVZEScq63/G8RT86
-        mlSkmY1Bs9K4Fj+QDLNcxNTF84hUuyQ=
-X-Google-Smtp-Source: APXvYqx01yQwECD9Bae9bZM2VyQVjTCu+aqosCV/g/OygzNEAhYEV7aZSizLcbEQWwYZdUozLtYuOw==
-X-Received: by 2002:aa7:d48f:: with SMTP id b15mr9164825edr.159.1570105232491;
-        Thu, 03 Oct 2019 05:20:32 -0700 (PDT)
-Received: from Limone ([46.114.33.168])
-        by smtp.gmail.com with ESMTPSA id p4sm439372edc.38.2019.10.03.05.20.30
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 03 Oct 2019 05:20:31 -0700 (PDT)
-Date:   Thu, 3 Oct 2019 14:20:27 +0200
-From:   Gon Solo <gonsolo@gmail.com>
-To:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-Cc:     JP <jp@jpvw.nl>, crope@iki.fi, Sean Young <sean@mess.org>,
-        linux-media@vger.kernel.org,
-        Linux Kernel <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] si2157: Add support for Logilink VG0022A.
-Message-ID: <20191003122027.GA2674@Limone>
-References: <CANL0fFS9TGKJH2rfkXzak78BaLazTNO7GoZhSb4vLBsDrmz3FQ@mail.gmail.com>
- <20191002150650.GA4227@gofer.mess.org>
- <CANL0fFRoL6NxOCbNC=XjQ6LDkeeqAayaLUbm9xARWX9ttqfPFg@mail.gmail.com>
- <29ab2e43-4374-a3ea-6ae1-a4267867eaa4@jpvw.nl>
- <20191002154922.7f1cfc76@coco.lan>
- <CANL0fFRJZBfEDWK_c2w1TomvB5-i4g09LopyJUbO5NtOwKdDTg@mail.gmail.com>
- <CANL0fFTwJ4yRO+5q6WkL0+DtwdrRti6r_WY1intisYJhs5En8w@mail.gmail.com>
- <20191003081742.0933264b@coco.lan>
- <20191003120143.GA2995@Limone>
- <20191003091201.7e94c617@coco.lan>
+        Thu, 3 Oct 2019 08:22:01 -0400
+Received: from frontend01.mail.m-online.net (unknown [192.168.8.182])
+        by mail-out.m-online.net (Postfix) with ESMTP id 46kXF130gpz1rK4l;
+        Thu,  3 Oct 2019 14:21:57 +0200 (CEST)
+Received: from localhost (dynscan1.mnet-online.de [192.168.6.70])
+        by mail.m-online.net (Postfix) with ESMTP id 46kXF12d6Jz1qqkK;
+        Thu,  3 Oct 2019 14:21:57 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at mnet-online.de
+Received: from mail.mnet-online.de ([192.168.8.182])
+        by localhost (dynscan1.mail.m-online.net [192.168.6.70]) (amavisd-new, port 10024)
+        with ESMTP id 7DM6tlF8VvmA; Thu,  3 Oct 2019 14:21:56 +0200 (CEST)
+X-Auth-Info: HGpuP1xgAmL/Lm4vKngmy905fxc/nisakm+icAlyK7k=
+Received: from jawa (85-222-111-42.dynamic.chello.pl [85.222.111.42])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.mnet-online.de (Postfix) with ESMTPSA;
+        Thu,  3 Oct 2019 14:21:56 +0200 (CEST)
+Date:   Thu, 3 Oct 2019 14:21:50 +0200
+From:   Lukasz Majewski <lukma@denx.de>
+To:     Alexandre Belloni <alexandre.belloni@bootlin.com>
+Cc:     Alessandro Zummo <a.zummo@towertech.it>, linux-rtc@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] rtc: Add support for century bits to m41t62 (rv4162)
+ RTC devices
+Message-ID: <20191003142150.3d73a9d7@jawa>
+In-Reply-To: <20191003114831.GR4106@piout.net>
+References: <20190911154803.15969-1-lukma@denx.de>
+        <20191003114831.GR4106@piout.net>
+Organization: denx.de
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191003091201.7e94c617@coco.lan>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: multipart/signed; micalg=pgp-sha512;
+ boundary="Sig_/SCWWP/Fd_4I9Z/zxduTGEc="; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> well, you could try to increase the timeout - although 100 ms seems a lot
-> of time to me.
+--Sig_/SCWWP/Fd_4I9Z/zxduTGEc=
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-I tried 5s, still no change.
+Hi Alexandre,
 
-Would it be possible to include my patch, possibly with a warning like
-"bogus chip version, trying with no firmware"?
+> Hello,
+>=20
+> On 11/09/2019 17:48:03+0200, Lukasz Majewski wrote:
+> > This change adds support for 'century bits' on 4162 family of RTC
+> > devices (from ST or microcrystal), which allow storing time beyond
+> > year 2099.
+> >=20
+> > For rv4162 century bits - CB1[7]:CB0[6] are stored in reg6 - 0x6
+> > (MONTH): CB1  CB0
+> >  0    0      (year 2000 - 2099)
+> >  0    1      (year 2100 - 2199)
+> >  1    0      (year 2200 - 2299)
+> >  1    1      (year 2300 - 2399)
+> >=20
+> > The driver has been also adjusted to allow setting time up to year
+> > 2399 if the M41T80_FEATURE_CB is set in its DTS/I2C data.
+> >=20
+> > There shall be no functional changes for devices not supporting this
+> > feature. However, other devices - like m41t80 - have different
+> > approaches to handle century information.
+> >  =20
+>=20
+> This does not work because the RTC doesn't handle leap years on
+> century properly. This means that if you do that, then there is no
+> guarantee the date will be the correct after 2099. As far as the
+> m41t62 and rv4162 are concerned, there is no way to make the century
+> bits useful.
 
-g
+The code as is now doesn't allow to setup dates after year 2100.
+In my application - I do some tests which depend on setting this time.
 
+>=20
+> See the datasheet:
+>=20
+> "During any year which is a multiple of 4, the RV-4162 RTC will
+> automatically insert leap day, February 29.  Therefore, the
+> application software must correct for this during the exception years
+> (2100, 2200, etc.) as noted above."
+
+I'm wondering what the phrase "application software" means here?
+
+If it is the userland SW, then we shall at least be able to set 2099 in
+this device and then count on software correction.
+
+If the "application software" is the kernel driver - the date
+correction shall be done there (maybe some lookup table?).
+
+Personally, I do prefer the first option - this means that with this
+patch we can set the time to e.g. 2234 year and then rely on userland
+software (or libc) to do the correction.
+
+>=20
+
+
+
+
+Best regards,
+
+Lukasz Majewski
+
+--
+
+DENX Software Engineering GmbH,      Managing Director: Wolfgang Denk
+HRB 165235 Munich, Office: Kirchenstr.5, D-82194 Groebenzell, Germany
+Phone: (+49)-8142-66989-59 Fax: (+49)-8142-66989-80 Email: lukma@denx.de
+
+--Sig_/SCWWP/Fd_4I9Z/zxduTGEc=
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCgAdFiEEgAyFJ+N6uu6+XupJAR8vZIA0zr0FAl2V594ACgkQAR8vZIA0
+zr1pEAgAtNQUCZfjSRXaSLaq36lC3+P/p7WdbzPleZvqS/MKYh5wWzVkuSrotfCm
+t71fXe4rWxmfkAOaeIPcd/+yZnFNR/H+BguUtqwA3R+BlFmDZdml+UDmYZOYrzkS
+Dkm9VjubD/UhJktOjMQJg2wmxakfaRR9oQyBN2UkYAu77yJrYzHa/7CFOfn8LQbB
+rQefkl8BJXty4BeLInXJD7IWkjI/vQjfcw74ZVDkutT7jRvuYpl9R2UHdHjSyHAx
+w65EInLwD7dlNwqNG1Oa/+239XSXOX6lrMwRj7cSG1jSwzR1oslZkSNwHASuYh9j
+0FBX/hKZiFVnSYMCh4QQkPQHXqOAZQ==
+=NlrC
+-----END PGP SIGNATURE-----
+
+--Sig_/SCWWP/Fd_4I9Z/zxduTGEc=--
