@@ -2,58 +2,56 @@ Return-Path: <SRS0=6dNS=X4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A691C32792
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 15:55:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50E5CC32792
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 15:55:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E136F20830
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 15:55:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 11F5020830
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 15:55:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570118153;
-	bh=/mUCgtJyGz4DPng07kBY1gGf11ZttIpDb6KMtMyH+zk=;
+	s=default; t=1570118157;
+	bh=WFPSs1XY6ltViKwCO9RVIRh0ygbXm+W+QOBH+Hvw6PI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=eR3IiP/9ZQIsRFZMybkKHCSEsLLwR8p0S1Au2NsjncWxEUizyEHy/FW+JMzRr5Uaa
-	 WN1Yldh9cd0RykzObLbNv+PoEPqyqZVjf3Iy1J4DtuV7IJyNaqOOWnudEiHim7N9bm
-	 E0TOXGN3SuM/ORl5W8TqHlaxSubyMjFOOHxwQ9zQ=
+	b=ntNNoprS+6quxfgddAEifRJHVcEFSpu1aVkhZ45HwQUFIRLg7pMJ79neW7FiPV9YQ
+	 F1wXKuM5QFm/Q+JJ8LWqmWoM3idr1kdqz8SSjh7NdUH1Z3W3novprn9psJehMxUvhH
+	 KfH8yiEdcJnFYHr6o/mkeKZuAEXZ+xqr+an/Dqr4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730357AbfJCPzw (ORCPT
+        id S1730394AbfJCPz4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 11:55:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37456 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 11:55:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37524 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727024AbfJCPzw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 11:55:52 -0400
+        id S1727024AbfJCPzz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 11:55:55 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 870EE20700;
-        Thu,  3 Oct 2019 15:55:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4D0F221783;
+        Thu,  3 Oct 2019 15:55:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570118151;
-        bh=/mUCgtJyGz4DPng07kBY1gGf11ZttIpDb6KMtMyH+zk=;
+        s=default; t=1570118153;
+        bh=WFPSs1XY6ltViKwCO9RVIRh0ygbXm+W+QOBH+Hvw6PI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=AfJbS2MSwzZeH5r7qGnu7HoSVqSTHONS7pRRSiUT0tMpPy8Wh0Fol7ALHtZMVvy9W
-         OvHxoLKQYyJxLoDa102NSQdCzQCg1b8zt873A3I1ifvS8Gj8HEgLLyffUiSgQOTvrb
-         PqS4tU5KG0+pWWUXx9JlTWyBN/F/lwNOCQV5dwW8=
+        b=IAdjekYdhG5aBk6GuV0W4yGfzy6BTqvgqapgMWBI0RhTSqctqA4QNCndoJqqf9hp0
+         uXrIxRhP6HhgGiwj5/8nizODzEHPCtsuE2tWYD1CAw9AAMZF/Ofxn26zA2EDLE9jgh
+         OYK3RARnEjJDE9TI/7cMGMKvK4AMceDNZE33LP14=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Marcel Holtmann <marcel@holtmann.org>,
-        Johan Hedberg <johan.hedberg@intel.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 01/99] Revert "Bluetooth: validate BLE connection interval updates"
-Date:   Thu,  3 Oct 2019 17:52:24 +0200
-Message-Id: <20191003154253.184041960@linuxfoundation.org>
+        stable@vger.kernel.org,
+        "Shih-Yuan Lee (FourDollars)" <fourdollars@debian.org>,
+        Takashi Iwai <tiwai@suse.de>
+Subject: [PATCH 4.4 10/99] ALSA: hda - Add laptop imic fixup for ASUS M9V laptop
+Date:   Thu,  3 Oct 2019 17:52:33 +0200
+Message-Id: <20191003154257.959228889@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191003154252.297991283@linuxfoundation.org>
 References: <20191003154252.297991283@linuxfoundation.org>
 User-Agent: quilt/0.66
-X-stable: review
-X-Patchwork-Hint: ignore
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -62,62 +60,32 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Marcel Holtmann <marcel@holtmann.org>
+From: Shih-Yuan Lee (FourDollars) <fourdollars@debian.org>
 
-[ Upstream commit 68d19d7d995759b96169da5aac313363f92a9075 ]
+commit 7b485d175631be676424aedb8cd2f66d0c93da78 upstream.
 
-This reverts commit c49a8682fc5d298d44e8d911f4fa14690ea9485e.
+The same fixup to enable laptop imic is needed for ASUS M9V with AD1986A
+codec like another HP machine.
 
-There are devices which require low connection intervals for usable operation
-including keyboards and mice. Forcing a static connection interval for
-these types of devices has an impact in latency and causes a regression.
+Signed-off-by: Shih-Yuan Lee (FourDollars) <fourdollars@debian.org>
+Cc: <stable@vger.kernel.org>
+Link: https://lore.kernel.org/r/20190920134052.GA8035@localhost
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-Signed-off-by: Marcel Holtmann <marcel@holtmann.org>
-Signed-off-by: Johan Hedberg <johan.hedberg@intel.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/bluetooth/hci_event.c  | 5 -----
- net/bluetooth/l2cap_core.c | 9 +--------
- 2 files changed, 1 insertion(+), 13 deletions(-)
+ sound/pci/hda/patch_analog.c |    1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/net/bluetooth/hci_event.c b/net/bluetooth/hci_event.c
-index c4e94f34d0480..37fe2b158c2a7 100644
---- a/net/bluetooth/hci_event.c
-+++ b/net/bluetooth/hci_event.c
-@@ -5062,11 +5062,6 @@ static void hci_le_remote_conn_param_req_evt(struct hci_dev *hdev,
- 		return send_conn_param_neg_reply(hdev, handle,
- 						 HCI_ERROR_UNKNOWN_CONN_ID);
+--- a/sound/pci/hda/patch_analog.c
++++ b/sound/pci/hda/patch_analog.c
+@@ -370,6 +370,7 @@ static const struct hda_fixup ad1986a_fi
  
--	if (min < hcon->le_conn_min_interval ||
--	    max > hcon->le_conn_max_interval)
--		return send_conn_param_neg_reply(hdev, handle,
--						 HCI_ERROR_INVALID_LL_PARAMS);
--
- 	if (hci_check_conn_params(min, max, latency, timeout))
- 		return send_conn_param_neg_reply(hdev, handle,
- 						 HCI_ERROR_INVALID_LL_PARAMS);
-diff --git a/net/bluetooth/l2cap_core.c b/net/bluetooth/l2cap_core.c
-index 8cfba78d26f61..c25f1e4846cde 100644
---- a/net/bluetooth/l2cap_core.c
-+++ b/net/bluetooth/l2cap_core.c
-@@ -5266,14 +5266,7 @@ static inline int l2cap_conn_param_update_req(struct l2cap_conn *conn,
- 
- 	memset(&rsp, 0, sizeof(rsp));
- 
--	if (min < hcon->le_conn_min_interval ||
--	    max > hcon->le_conn_max_interval) {
--		BT_DBG("requested connection interval exceeds current bounds.");
--		err = -EINVAL;
--	} else {
--		err = hci_check_conn_params(min, max, latency, to_multiplier);
--	}
--
-+	err = hci_check_conn_params(min, max, latency, to_multiplier);
- 	if (err)
- 		rsp.result = cpu_to_le16(L2CAP_CONN_PARAM_REJECTED);
- 	else
--- 
-2.20.1
-
+ static const struct snd_pci_quirk ad1986a_fixup_tbl[] = {
+ 	SND_PCI_QUIRK(0x103c, 0x30af, "HP B2800", AD1986A_FIXUP_LAPTOP_IMIC),
++	SND_PCI_QUIRK(0x1043, 0x1153, "ASUS M9V", AD1986A_FIXUP_LAPTOP_IMIC),
+ 	SND_PCI_QUIRK(0x1043, 0x1443, "ASUS Z99He", AD1986A_FIXUP_EAPD),
+ 	SND_PCI_QUIRK(0x1043, 0x1447, "ASUS A8JN", AD1986A_FIXUP_EAPD),
+ 	SND_PCI_QUIRK_MASK(0x1043, 0xff00, 0x8100, "ASUS P5", AD1986A_FIXUP_3STACK),
 
 
