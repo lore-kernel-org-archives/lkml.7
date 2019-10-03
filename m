@@ -4,52 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 67164C32792
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:32:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D84CFC32792
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:33:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3AAB22133F
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:32:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A0AB020830
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:33:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570120379;
-	bh=ojZaI59rGscmaBaQB30rUvc3ZhjI8pWc/WzGjg+wLPk=;
+	s=default; t=1570120383;
+	bh=+hscBSSiceQUDY9+VOYTuW47bvxKdbmKQzrUpDh6YtQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=NyUA9mU8lTfTJH9LVnLNhDQO3Cy+TGjCrCaHJ9sdwug2ZwppaSsacLunNCzHD+VSC
-	 RC6IIdeYJQVAVu2/iOLt/sb1m5HwCoLClY2cGeHGSYORpbGfxMG6Kyza8NeBU1pcn8
-	 OAMmeBBkg55Imgx4GT/yrDfrdzGXUoyljKT+yH0U=
+	b=Dvg77ExNjR/uOULrD+7PNXdDj05Deyad8/6FXZXfTp0WDG3Mjlv52l53Q/r9oer1V
+	 rT5LG3458ZPPhLiQzYTh380xAihEkXNi9z9xDmwFIVh6HsxvGzmy1XrbnAcOzvZLne
+	 gIME8uj6yQfn1ik4a5+/C74ecr5x3v6O9QByKbDU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404005AbfJCQc6 (ORCPT
+        id S2391959AbfJCQdC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 12:32:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40716 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 12:33:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40762 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389887AbfJCQcx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:32:53 -0400
+        id S2403999AbfJCQc6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:32:58 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E2960215EA;
-        Thu,  3 Oct 2019 16:32:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A8A632133F;
+        Thu,  3 Oct 2019 16:32:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570120373;
-        bh=ojZaI59rGscmaBaQB30rUvc3ZhjI8pWc/WzGjg+wLPk=;
+        s=default; t=1570120376;
+        bh=+hscBSSiceQUDY9+VOYTuW47bvxKdbmKQzrUpDh6YtQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=yuCtfWzEIskg4MIbPrhljHPBVXmGeKjxeZe2Wc1sSuUUzmgSymQAVzhCSNK4O26oI
-         V/E17/NxuEcIQVRIGFpbAuNM94a+fGH+4STKR6u3n/2lnMlhUHnxB9QiXxDbTX2WhR
-         uC8V0+RrjmcjC+qmjt4RVMQZ6bE92jrb60EfiDz0=
+        b=ciKRCxEkCVpselaCWq08EGGM4JkLDhlzpXbh+XV/fbOd8d3pW8SfaJQI9jPVWMlV7
+         4AuR7cIG8nYnVFOvlTWnQca4pvsytGYvg7J+tEGslTrWFkPXHF9hZn2Gb1ngDhpJpy
+         zaOYJdf66oadWH130g58lxebg2sc7wvglDyzbw+Q=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Kai-Heng Feng <kai.heng.feng@canonical.com>,
-        Aaron Brown <aaron.f.brown@intel.com>,
-        Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 197/313] e1000e: add workaround for possible stalled packet
-Date:   Thu,  3 Oct 2019 17:52:55 +0200
-Message-Id: <20191003154552.378202999@linuxfoundation.org>
+        stable@vger.kernel.org, Tomas Espeleta <tomas.espeleta@gmail.com>,
+        Takashi Iwai <tiwai@suse.de>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.2 198/313] ALSA: hda - Add a quirk model for fixing Huawei Matebook X right speaker
+Date:   Thu,  3 Oct 2019 17:52:56 +0200
+Message-Id: <20191003154552.482978712@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191003154533.590915454@linuxfoundation.org>
 References: <20191003154533.590915454@linuxfoundation.org>
@@ -62,59 +59,168 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kai-Heng Feng <kai.heng.feng@canonical.com>
+From: Tomas Espeleta <tomas.espeleta@gmail.com>
 
-[ Upstream commit e5e9a2ecfe780975820e157b922edee715710b66 ]
+[ Upstream commit a2ef03fe617a8365fb7794531b11ba587509a9b9 ]
 
-This works around a possible stalled packet issue, which may occur due to
-clock recovery from the PCH being too slow, when the LAN is transitioning
-from K1 at 1G link speed.
+[ This is rather a revival of the patch Tomas sent in months ago, but
+  applying only with the quirk model option -- tiwai ]
 
-Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=204057
+Hard coded coefficients to make Huawuei Matebook X right speaker
+work. The Matebook X has a ALC298, please refer to bug 197801 on
+how these numbers were reverse engineered from the Windows driver
 
-Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
-Tested-by: Aaron Brown <aaron.f.brown@intel.com>
-Signed-off-by: Jeff Kirsher <jeffrey.t.kirsher@intel.com>
+The reversed engineered sequence represents a repeating pattern
+of verbs, and the only values that are changing periodically are
+written on indexes 0x23 and 0x25:
+
+0x500, 0x23
+0x400, VALUE1
+0x500, 0x25
+0x400, VALUE2
+
+* skipped reading sequences (0x500 - 0xc00 sequences are ignored)
+* static values from reverse engineering are used
+
+NOTE: since a significant risk is still considered, this is provided
+as an experimental fix that isn't applied as default for now.  For
+enabling the fix, you'll have to choose huawei-mbx-stereo via model
+option of snd-hda-intel module.
+
+If we get feedback from users that this works stably, we may apply it
+per default.
+
+[ Some coding style fixes and replacement with AC_VERB_* by tiwai ]
+
+BugLink: https://bugzilla.kernel.org/show_bug.cgi?id=197801
+Signed-off-by: Tomas Espeleta <tomas.espeleta@gmail.com>
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/intel/e1000e/ich8lan.c | 10 ++++++++++
- drivers/net/ethernet/intel/e1000e/ich8lan.h |  2 +-
- 2 files changed, 11 insertions(+), 1 deletion(-)
+ Documentation/sound/hd-audio/models.rst |  3 +
+ sound/pci/hda/patch_realtek.c           | 74 +++++++++++++++++++++++++
+ 2 files changed, 77 insertions(+)
 
-diff --git a/drivers/net/ethernet/intel/e1000e/ich8lan.c b/drivers/net/ethernet/intel/e1000e/ich8lan.c
-index cdae0efde8e64..7998a73b6a0fa 100644
---- a/drivers/net/ethernet/intel/e1000e/ich8lan.c
-+++ b/drivers/net/ethernet/intel/e1000e/ich8lan.c
-@@ -1429,6 +1429,16 @@ static s32 e1000_check_for_copper_link_ich8lan(struct e1000_hw *hw)
- 			else
- 				phy_reg |= 0xFA;
- 			e1e_wphy_locked(hw, I217_PLL_CLOCK_GATE_REG, phy_reg);
-+
-+			if (speed == SPEED_1000) {
-+				hw->phy.ops.read_reg_locked(hw, HV_PM_CTRL,
-+							    &phy_reg);
-+
-+				phy_reg |= HV_PM_CTRL_K1_CLK_REQ;
-+
-+				hw->phy.ops.write_reg_locked(hw, HV_PM_CTRL,
-+							     phy_reg);
-+			}
- 		}
- 		hw->phy.ops.release(hw);
+diff --git a/Documentation/sound/hd-audio/models.rst b/Documentation/sound/hd-audio/models.rst
+index 7d7c191102a73..11298f0ce44db 100644
+--- a/Documentation/sound/hd-audio/models.rst
++++ b/Documentation/sound/hd-audio/models.rst
+@@ -260,6 +260,9 @@ alc295-hp-x360
+     HP Spectre X360 fixups
+ alc-sense-combo
+     Headset button support for Chrome platform
++huawei-mbx-stereo
++    Enable initialization verbs for Huawei MBX stereo speakers;
++    might be risky, try this at your own risk
  
-diff --git a/drivers/net/ethernet/intel/e1000e/ich8lan.h b/drivers/net/ethernet/intel/e1000e/ich8lan.h
-index eb09c755fa172..1502895eb45dd 100644
---- a/drivers/net/ethernet/intel/e1000e/ich8lan.h
-+++ b/drivers/net/ethernet/intel/e1000e/ich8lan.h
-@@ -210,7 +210,7 @@
+ ALC66x/67x/892
+ ==============
+diff --git a/sound/pci/hda/patch_realtek.c b/sound/pci/hda/patch_realtek.c
+index c1ddfd2fac522..1bec62720374d 100644
+--- a/sound/pci/hda/patch_realtek.c
++++ b/sound/pci/hda/patch_realtek.c
+@@ -3755,6 +3755,72 @@ static void alc269_x101_hp_automute_hook(struct hda_codec *codec,
+ 			    vref);
+ }
  
- /* PHY Power Management Control */
- #define HV_PM_CTRL		PHY_REG(770, 17)
--#define HV_PM_CTRL_PLL_STOP_IN_K1_GIGA	0x100
-+#define HV_PM_CTRL_K1_CLK_REQ		0x200
- #define HV_PM_CTRL_K1_ENABLE		0x4000
- 
- #define I217_PLL_CLOCK_GATE_REG	PHY_REG(772, 28)
++/*
++ * Magic sequence to make Huawei Matebook X right speaker working (bko#197801)
++ */
++struct hda_alc298_mbxinit {
++	unsigned char value_0x23;
++	unsigned char value_0x25;
++};
++
++static void alc298_huawei_mbx_stereo_seq(struct hda_codec *codec,
++					 const struct hda_alc298_mbxinit *initval,
++					 bool first)
++{
++	snd_hda_codec_write(codec, 0x06, 0, AC_VERB_SET_DIGI_CONVERT_3, 0x0);
++	alc_write_coef_idx(codec, 0x26, 0xb000);
++
++	if (first)
++		snd_hda_codec_write(codec, 0x21, 0, AC_VERB_GET_PIN_SENSE, 0x0);
++
++	snd_hda_codec_write(codec, 0x6, 0, AC_VERB_SET_DIGI_CONVERT_3, 0x80);
++	alc_write_coef_idx(codec, 0x26, 0xf000);
++	alc_write_coef_idx(codec, 0x23, initval->value_0x23);
++
++	if (initval->value_0x23 != 0x1e)
++		alc_write_coef_idx(codec, 0x25, initval->value_0x25);
++
++	snd_hda_codec_write(codec, 0x20, 0, AC_VERB_SET_COEF_INDEX, 0x26);
++	snd_hda_codec_write(codec, 0x20, 0, AC_VERB_SET_PROC_COEF, 0xb010);
++}
++
++static void alc298_fixup_huawei_mbx_stereo(struct hda_codec *codec,
++					   const struct hda_fixup *fix,
++					   int action)
++{
++	/* Initialization magic */
++	static const struct hda_alc298_mbxinit dac_init[] = {
++		{0x0c, 0x00}, {0x0d, 0x00}, {0x0e, 0x00}, {0x0f, 0x00},
++		{0x10, 0x00}, {0x1a, 0x40}, {0x1b, 0x82}, {0x1c, 0x00},
++		{0x1d, 0x00}, {0x1e, 0x00}, {0x1f, 0x00},
++		{0x20, 0xc2}, {0x21, 0xc8}, {0x22, 0x26}, {0x23, 0x24},
++		{0x27, 0xff}, {0x28, 0xff}, {0x29, 0xff}, {0x2a, 0x8f},
++		{0x2b, 0x02}, {0x2c, 0x48}, {0x2d, 0x34}, {0x2e, 0x00},
++		{0x2f, 0x00},
++		{0x30, 0x00}, {0x31, 0x00}, {0x32, 0x00}, {0x33, 0x00},
++		{0x34, 0x00}, {0x35, 0x01}, {0x36, 0x93}, {0x37, 0x0c},
++		{0x38, 0x00}, {0x39, 0x00}, {0x3a, 0xf8}, {0x38, 0x80},
++		{}
++	};
++	const struct hda_alc298_mbxinit *seq;
++
++	if (action != HDA_FIXUP_ACT_INIT)
++		return;
++
++	/* Start */
++	snd_hda_codec_write(codec, 0x06, 0, AC_VERB_SET_DIGI_CONVERT_3, 0x00);
++	snd_hda_codec_write(codec, 0x06, 0, AC_VERB_SET_DIGI_CONVERT_3, 0x80);
++	alc_write_coef_idx(codec, 0x26, 0xf000);
++	alc_write_coef_idx(codec, 0x22, 0x31);
++	alc_write_coef_idx(codec, 0x23, 0x0b);
++	alc_write_coef_idx(codec, 0x25, 0x00);
++	snd_hda_codec_write(codec, 0x20, 0, AC_VERB_SET_COEF_INDEX, 0x26);
++	snd_hda_codec_write(codec, 0x20, 0, AC_VERB_SET_PROC_COEF, 0xb010);
++
++	for (seq = dac_init; seq->value_0x23; seq++)
++		alc298_huawei_mbx_stereo_seq(codec, seq, seq == dac_init);
++}
++
+ static void alc269_fixup_x101_headset_mic(struct hda_codec *codec,
+ 				     const struct hda_fixup *fix, int action)
+ {
+@@ -5780,6 +5846,7 @@ enum {
+ 	ALC255_FIXUP_DUMMY_LINEOUT_VERB,
+ 	ALC255_FIXUP_DELL_HEADSET_MIC,
+ 	ALC256_FIXUP_HUAWEI_MACH_WX9_PINS,
++	ALC298_FIXUP_HUAWEI_MBX_STEREO,
+ 	ALC295_FIXUP_HP_X360,
+ 	ALC221_FIXUP_HP_HEADSET_MIC,
+ 	ALC285_FIXUP_LENOVO_HEADPHONE_NOISE,
+@@ -6089,6 +6156,12 @@ static const struct hda_fixup alc269_fixups[] = {
+ 		.chained = true,
+ 		.chain_id = ALC255_FIXUP_MIC_MUTE_LED
+ 	},
++	[ALC298_FIXUP_HUAWEI_MBX_STEREO] = {
++		.type = HDA_FIXUP_FUNC,
++		.v.func = alc298_fixup_huawei_mbx_stereo,
++		.chained = true,
++		.chain_id = ALC255_FIXUP_MIC_MUTE_LED
++	},
+ 	[ALC269_FIXUP_ASUS_X101_FUNC] = {
+ 		.type = HDA_FIXUP_FUNC,
+ 		.v.func = alc269_fixup_x101_headset_mic,
+@@ -7280,6 +7353,7 @@ static const struct hda_model_fixup alc269_fixup_models[] = {
+ 	{.id = ALC225_FIXUP_HEADSET_JACK, .name = "alc-headset-jack"},
+ 	{.id = ALC295_FIXUP_CHROME_BOOK, .name = "alc-chrome-book"},
+ 	{.id = ALC299_FIXUP_PREDATOR_SPK, .name = "predator-spk"},
++	{.id = ALC298_FIXUP_HUAWEI_MBX_STEREO, .name = "huawei-mbx-stereo"},
+ 	{}
+ };
+ #define ALC225_STANDARD_PINS \
 -- 
 2.20.1
 
