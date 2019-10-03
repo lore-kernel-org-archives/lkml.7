@@ -6,89 +6,106 @@ X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F3CDC10F14
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 10:47:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7911BC10F14
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 10:49:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4EE0F2086A
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 10:47:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5B3FE21A4C
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 10:49:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729597AbfJCKrp (ORCPT
+        id S1729642AbfJCKtJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 06:47:45 -0400
-Received: from mx2.suse.de ([195.135.220.15]:52780 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727756AbfJCKrp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 06:47:45 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 75C4DAE8A;
-        Thu,  3 Oct 2019 10:47:43 +0000 (UTC)
-Date:   Thu, 3 Oct 2019 12:47:41 +0200
-From:   Michal =?iso-8859-1?Q?Koutn=FD?= <mkoutny@suse.com>
-To:     Suleiman Souhlal <suleiman@google.com>
-Cc:     Roman Gushchin <guro@fb.com>, Johannes Weiner <hannes@cmpxchg.org>,
-        Kernel Team <Kernel-team@fb.com>,
-        Vladimir Davydov <vdavydov.dev@gmail.com>,
-        Shakeel Butt <shakeelb@google.com>,
-        Michal Hocko <mhocko@kernel.org>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        Waiman Long <longman@redhat.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH RFC 00/14] The new slab memory controller
-Message-ID: <20191003104741.GB6678@blackbody.suse.cz>
-References: <20190905214553.1643060-1-guro@fb.com>
- <20191001151202.GA6678@blackbody.suse.cz>
- <20191002020906.GB6436@castle.dhcp.thefacebook.com>
- <CABCjUKBZxJJrUzpgXafqtXOYXZbYXEh0ku8fZLpPHXWnrTw1hg@mail.gmail.com>
+        Thu, 3 Oct 2019 06:49:09 -0400
+Received: from foss.arm.com ([217.140.110.172]:41264 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727756AbfJCKtJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 06:49:09 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 428721000;
+        Thu,  3 Oct 2019 03:49:08 -0700 (PDT)
+Received: from [10.37.12.210] (unknown [10.37.12.210])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A282B3F706;
+        Thu,  3 Oct 2019 03:49:04 -0700 (PDT)
+Subject: Re: [PATCHv9 2/3] arm64: dts: qcom: msm8998: Add Coresight support
+To:     daniel.thompson@linaro.org, mathieu.poirier@linaro.org
+Cc:     saiprakash.ranjan@codeaurora.org, jeffrey.l.hugo@gmail.com,
+        mark.rutland@arm.com, rnayak@codeaurora.org,
+        alexander.shishkin@linux.intel.com, linux-arm-msm@vger.kernel.org,
+        marc.w.gonzalez@free.fr, linux-kernel@vger.kernel.org,
+        bjorn.andersson@linaro.org, david.brown@linaro.org,
+        agross@kernel.org, sibis@codeaurora.org, leo.yan@linaro.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-arm-msm-owner@vger.kernel.org
+References: <cover.1564550873.git.saiprakash.ranjan@codeaurora.org>
+ <90114e06825e537c3aafd3de5c78743a9de6fadc.1564550873.git.saiprakash.ranjan@codeaurora.org>
+ <CAOCk7NrK+wY8jfHdS8781NOQtyLm2RRe1NW2Rm3_zeaot0Q99Q@mail.gmail.com>
+ <16212a577339204e901cf4eefa5e82f1@codeaurora.org>
+ <CAOCk7NohO67qeYCnrjy4P0KN9nLUiamphHRvj-bFP++K7khPOw@mail.gmail.com>
+ <fa5a35f0e993f2b604b60d5cead3cf28@codeaurora.org>
+ <CAOCk7NodWtC__W3=AQfXcjF-W9Az_NNUN0r8w5WmqJMziCcvig@mail.gmail.com>
+ <5b8835905a704fb813714694a792df54@codeaurora.org>
+ <CANLsYkxPOOorqcnPrbhZLzGV9Y7EGWUUyxvi-Cm5xxnzhx=Ecg@mail.gmail.com>
+ <20191003102023.qk6ik5vmatheaofs@holly.lan>
+From:   Suzuki K Poulose <suzuki.poulose@arm.com>
+Message-ID: <57349bda-0e86-5fe0-3be0-55b12748c346@arm.com>
+Date:   Thu, 3 Oct 2019 11:52:36 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.7.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="5I6of5zJg18YgZEa"
-Content-Disposition: inline
-In-Reply-To: <CABCjUKBZxJJrUzpgXafqtXOYXZbYXEh0ku8fZLpPHXWnrTw1hg@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20191003102023.qk6ik5vmatheaofs@holly.lan>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 10/03/2019 11:20 AM, Daniel Thompson wrote:
+> On Wed, Oct 02, 2019 at 09:03:59AM -0600, Mathieu Poirier wrote:
+>> On Tue, 1 Oct 2019 at 12:05, Sai Prakash Ranjan
+>> <saiprakash.ranjan@codeaurora.org> wrote:
+>>>
+>>> On 2019-10-01 11:01, Jeffrey Hugo wrote:
+>>>> On Tue, Oct 1, 2019 at 11:52 AM Sai Prakash Ranjan
+>>>> <saiprakash.ranjan@codeaurora.org> wrote:
+>>>>>
+>>>>>
+>>>>> Haan then likely it's the firmware issue.
+>>>>> We should probably disable coresight in soc dtsi and enable only for
+>>>>> MTP. For now you can add a status=disabled for all coresight nodes in
+>>>>> msm8998.dtsi and I will send the patch doing the same in a day or
+>>>>> two(sorry I am travelling currently).
+>>>>
+>>>> This sounds sane to me (and is what I did while bisecting the issue).
+>>>> When you do create the patch, feel free to add the following tags as
+>>>> you see fit.
+>>>>
+>>>> Reported-by: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+>>>> Tested-by: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+>>>
+>>> Thanks Jeffrey, I will add them.
+>>> Hope Mathieu and Suzuki are OK with this.
+>>
+>> The problem here is that a debug and production device are using the
+>> same device tree, i.e msm8998.dtsi.  Disabling coresight devices in
+>> the DTS file will allow the laptop to boot but completely disabled
+>> coresight blocks on the MTP board.  Leaving things as is breaks the
+>> laptop but allows coresight to be used on the MTP board.  One of three
+>> things can happen:
+>>
+>> 1) Nothing gets done and production board can't boot without DTS modifications.
+>> 2) Disable tags are added to the DTS file and the debug board can't
+>> use coresight without modifications.
+>> 2) The handling of the debug power domain is done properly on the
+>> MSM8998 rather than relying on the bootloader to enable it.
+>> 3) The DTS file is split or reorganised to account for debug/production devices.
+> 
+> msm8998.dtsi is a SoC include file. Can't whatever default it adopts be
+> reversed in the board include files such as msm8998-mtp.dtsi or
+> msm8998-clamshell.dtsi ?
 
---5I6of5zJg18YgZEa
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Or like Mathieu said, all the Coresight specific nodes could be moved in
+to say, msm8998-coresight.dtsi and could be included into the platforms
+where it actually works.
 
-On Wed, Oct 02, 2019 at 10:00:07PM +0900, Suleiman Souhlal <suleiman@google.com> wrote:
-> kmem.slabinfo has been absolutely invaluable for debugging, in my experience.
-> I am however not aware of any automation based on it.
-My experience is the same. However, the point is that this has been
-exposed since ages, so the safe assumption is that there may be users.
-
-> Maybe it might be worth adding it to cgroup v2 and have a CONFIG
-> option to enable it?
-I don't think v2 file is necessary given the cost of obtaining the
-information. But I concur the idea of making the per-object tracking
-switchable at boot time or at least CONFIGurable.
-
-Michal
-
---5I6of5zJg18YgZEa
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCAAdFiEEEoQaUCWq8F2Id1tNia1+riC5qSgFAl2V0cgACgkQia1+riC5
-qSiS8Q/+PD9xLl7wTtZ2Szhh4I3R+ekhSzu8UljRTQaRhGkZ02x+WghUg+lQw4BF
-lNojzw0iZ23XvbU4ag9wjzTP/95dLi6Yx16XaKA4OflVodG8+t/LVVJM8Wg7Pb1R
-bXo6PBIMShBJyW6BhMQww9w+URa32Xlj1QDAghV+98NhOFj+kZeEDHcHmYlpIIVT
-JACiBiohAAUrkbzubKek30TYV1e6Bo8Z8woUEMrLeVTvzvkg6N/sdiO15B8UJ91b
-6vIt4DFW/YqE3gT6bFUa9gyqaOwsoDYsqHKfoyRQ9NxGvu7gkE3yjg+D9bxeNt5j
-GJK7n/qsVuy0r63BihF6FcAcVhlT7ooZ/eUd2ee7y0dguLq9u8KlMjL7Viq0BDeM
-Ok33fjF0FSWXKiT1VCIJDOuhyU72DLF9/rPkEWjmMIq093IdOF88nlVcqE0SQRbU
-HQkHK/7rg1LeLB6E+TPwNdZRUU7d0ZcGRXzhKq6X8Lbz0waDXmKwcS4Dk8025cfF
-2XCFJTxdLqla8RUQDpKdO2Og74J8r+iDZMV5XNE5nKFo7GkjEYcQTqZK2ObsTvjt
-0pd+lAXQ5izEXIn0dk4/4bs7n/E9OrFO4U0gp/XchniVgO1G5i8UAcQ+vxIx6Ji6
-0f8OISou7eCBJNG+BxxIYEo6HoHO0pik5BRFoa2Yu0F1oWz/LyE=
-=eCqp
------END PGP SIGNATURE-----
-
---5I6of5zJg18YgZEa--
+Suzuki
