@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 668E7C10F14
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:10:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 87C4DC32792
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:10:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3BFA320673
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:10:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5BAB120673
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:10:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570122650;
-	bh=XhKIrUahQlqk4SXDAope8+7LBJRm3FUya3fBd/Mo1FA=;
+	s=default; t=1570122655;
+	bh=PO6/JpMM8870A6I/uwuOSfPrmhKU+aElITomc83RwyQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=kpl4eNZLS5ZGNC7uA7X6PpfkA52FB3bd6LEfo4Sj2+1lt9k8Sx4ep38FuL74JYsGj
-	 S14cHOONDtjMRA3VQQvf5tBe2ZBQjNMr+te0M0RgtuAtX3OwrIn0wXmpLh2smPcaCC
-	 8xYld9awVvK9zweK4+cWojWQtpFXvfR3s4JNfISc=
+	b=z+LConKM89l4uow/g9U94PKoQyOpwCL6KZ9TpDfIZjX3U8RNzyDbUG9uxUM0aWiQ5
+	 3aXO9OLpOd6/SJ+qhEffaJJvy1pexNNWvpBrR9tkWXF68DByimUk6bVGFNTkK2szmP
+	 R3sdJPyKiOqltegELrXDiWDONk/8HfZCzoJRHg48=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391945AbfJCQcd (ORCPT
+        id S2391096AbfJCQcZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 12:32:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40074 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 12:32:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39872 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391930AbfJCQca (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:32:30 -0400
+        id S2391903AbfJCQcV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:32:21 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B3B9F215EA;
-        Thu,  3 Oct 2019 16:32:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8F4FB215EA;
+        Thu,  3 Oct 2019 16:32:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570120349;
-        bh=XhKIrUahQlqk4SXDAope8+7LBJRm3FUya3fBd/Mo1FA=;
+        s=default; t=1570120341;
+        bh=PO6/JpMM8870A6I/uwuOSfPrmhKU+aElITomc83RwyQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=LsR/IUhTfpJ/E58ECpIjgHDyFXY5qXvsHTq2CroXrYJUVr0/76jyXCyvEmkY9t7fe
-         omvT8xC6fs4Ei/EpGrKs8OtmXM+Lg0wElie5IQdCWES4S5IHyxbt7StahB2Kp6AecN
-         A+Z/AK3JAPujthpvhDXic9eM9f8KFKcgkFSexJFw=
+        b=V7ChofLcCuyIvEvAIuuRtfox4T4gIsTnOqgsvM2VhYp3aKPHeKqitKA+qZkmMmh41
+         r2xtismJgGAGB9PmYYTW2fAbfiA2X7TRFyEZvv1VwUDRSEyxzKbO3YOYQ3UHeMCdUy
+         +1O47idurCYf9y8pd0vmy0HtN7xlz9SglQLb+40I=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Takashi Sakamoto <o-takashi@sakamocchi.jp>,
-        Takashi Iwai <tiwai@suse.de>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 162/313] ALSA: firewire-motu: add support for MOTU 4pre
-Date:   Thu,  3 Oct 2019 17:52:20 +0200
-Message-Id: <20191003154548.898994506@linuxfoundation.org>
+        stable@vger.kernel.org, Jackie Liu <liuyun01@kylinos.cn>,
+        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.2 186/313] io_uring: fix wrong sequence setting logic
+Date:   Thu,  3 Oct 2019 17:52:44 +0200
+Message-Id: <20191003154551.305735543@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191003154533.590915454@linuxfoundation.org>
 References: <20191003154533.590915454@linuxfoundation.org>
@@ -59,91 +59,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Takashi Sakamoto <o-takashi@sakamocchi.jp>
+From: Jackie Liu <liuyun01@kylinos.cn>
 
-[ Upstream commit 6af86bdb8ad41f4cf1292d3b10857dc322758328 ]
+[ Upstream commit 8776f3fa15a5cd213c4dfab7ddaf557983374ea6 ]
 
-MOTU 4pre was launched in 2012 by MOTU, Inc. This commit allows userspace
-applications can transmit and receive PCM frames and MIDI messages for
-this model via ALSA PCM interface and RawMidi/Sequencer interfaces.
+Sqo_thread will get sqring in batches, which will cause
+ctx->cached_sq_head to be added in batches. if one of these
+sqes is set with the DRAIN flag, then he will never get a
+chance to process, and finally sqo_thread will not exit.
 
-The device supports MOTU protocol version 3. Unlike the other devices, the
-device is simply designed. The size of data block is fixed to 10 quadlets
-during available sampling rates (44.1 - 96.0 kHz). Each data block
-includes 1 source packet header, 2 data chunks for messages, 8 data chunks
-for PCM samples and 2 data chunks for padding to quadlet alignment. The
-device has no MIDI, optical, BNC and AES/EBU interfaces.
-
-Like support for the other MOTU devices, the quality of playback sound
-is not enough good with periodical noise yet.
-
-$ python2 crpp < ~/git/am-config-rom/motu/motu-4pre.img
-               ROM header and bus information block
-               -----------------------------------------------------------------
-400  041078cc  bus_info_length 4, crc_length 16, crc 30924
-404  31333934  bus_name "1394"
-408  20ff7000  irmc 0, cmc 0, isc 1, bmc 0, cyc_clk_acc 255, max_rec 7 (256)
-40c  0001f200  company_id 0001f2     |
-410  000a41c5  device_id 00000a41c5  | EUI-64 0001f200000a41c5
-
-               root directory
-               -----------------------------------------------------------------
-414  0004ef04  directory_length 4, crc 61188
-418  030001f2  vendor
-41c  0c0083c0  node capabilities per IEEE 1394
-420  d1000002  --> unit directory at 428
-424  8d000005  --> eui-64 leaf at 438
-
-               unit directory at 428
-               -----------------------------------------------------------------
-428  0003ceda  directory_length 3, crc 52954
-42c  120001f2  specifier id
-430  13000045  version
-434  17103800  model
-
-               eui-64 leaf at 438
-               -----------------------------------------------------------------
-438  0002d248  leaf_length 2, crc 53832
-43c  0001f200  company_id 0001f2     |
-440  000a41c5  device_id 00000a41c5  | EUI-64 0001f200000a41c5
-
-Signed-off-by: Takashi Sakamoto <o-takashi@sakamocchi.jp>
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Fixes: de0617e4671 ("io_uring: add support for marking commands as draining")
+Signed-off-by: Jackie Liu <liuyun01@kylinos.cn>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/firewire/motu/motu.c | 12 ++++++++++++
- 1 file changed, 12 insertions(+)
+ fs/io_uring.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/sound/firewire/motu/motu.c b/sound/firewire/motu/motu.c
-index 03cda2166ea3d..72908b4de77c0 100644
---- a/sound/firewire/motu/motu.c
-+++ b/sound/firewire/motu/motu.c
-@@ -247,6 +247,17 @@ static const struct snd_motu_spec motu_audio_express = {
- 	.analog_out_ports = 4,
- };
+diff --git a/fs/io_uring.c b/fs/io_uring.c
+index 03cd8f5bba850..701936f2bde39 100644
+--- a/fs/io_uring.c
++++ b/fs/io_uring.c
+@@ -288,6 +288,7 @@ struct io_ring_ctx {
+ struct sqe_submit {
+ 	const struct io_uring_sqe	*sqe;
+ 	unsigned short			index;
++	u32				sequence;
+ 	bool				has_user;
+ 	bool				needs_lock;
+ 	bool				needs_fixed_file;
+@@ -1894,7 +1895,7 @@ static int io_req_set_file(struct io_ring_ctx *ctx, const struct sqe_submit *s,
  
-+static const struct snd_motu_spec motu_4pre = {
-+	.name = "4pre",
-+	.protocol = &snd_motu_protocol_v3,
-+	.flags = SND_MOTU_SPEC_SUPPORT_CLOCK_X2 |
-+		 SND_MOTU_SPEC_TX_MICINST_CHUNK |
-+		 SND_MOTU_SPEC_TX_RETURN_CHUNK |
-+		 SND_MOTU_SPEC_RX_SEPARETED_MAIN,
-+	.analog_in_ports = 2,
-+	.analog_out_ports = 2,
-+};
-+
- #define SND_MOTU_DEV_ENTRY(model, data)			\
- {							\
- 	.match_flags	= IEEE1394_MATCH_VENDOR_ID |	\
-@@ -265,6 +276,7 @@ static const struct ieee1394_device_id motu_id_table[] = {
- 	SND_MOTU_DEV_ENTRY(0x000015, &motu_828mk3),	/* FireWire only. */
- 	SND_MOTU_DEV_ENTRY(0x000035, &motu_828mk3),	/* Hybrid. */
- 	SND_MOTU_DEV_ENTRY(0x000033, &motu_audio_express),
-+	SND_MOTU_DEV_ENTRY(0x000045, &motu_4pre),
- 	{ }
- };
- MODULE_DEVICE_TABLE(ieee1394, motu_id_table);
+ 	if (flags & IOSQE_IO_DRAIN) {
+ 		req->flags |= REQ_F_IO_DRAIN;
+-		req->sequence = ctx->cached_sq_head - 1;
++		req->sequence = s->sequence;
+ 	}
+ 
+ 	if (!io_op_needs_file(s->sqe))
+@@ -2050,6 +2051,7 @@ static bool io_get_sqring(struct io_ring_ctx *ctx, struct sqe_submit *s)
+ 	if (head < ctx->sq_entries) {
+ 		s->index = head;
+ 		s->sqe = &ctx->sq_sqes[head];
++		s->sequence = ctx->cached_sq_head;
+ 		ctx->cached_sq_head++;
+ 		return true;
+ 	}
 -- 
 2.20.1
 
