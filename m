@@ -2,534 +2,113 @@ Return-Path: <SRS0=6dNS=X4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 04862C10F14
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 20:43:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 25A21C10F14
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 20:43:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C2B48207FF
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 20:43:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EBECC207FF
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 20:43:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="itpAuLG8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389018AbfJCUnh (ORCPT
+        id S2389592AbfJCUnx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 16:43:37 -0400
-Received: from 68-189-91-139.static.snlo.ca.charter.com ([68.189.91.139]:57258
-        "EHLO rjones.pdc.gateworks.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726669AbfJCUng (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 16:43:36 -0400
-Received: by rjones.pdc.gateworks.com (Postfix, from userid 1002)
-        id CA4871A4415E; Thu,  3 Oct 2019 13:43:35 -0700 (PDT)
-From:   Robert Jones <rjones@gateworks.com>
-To:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>
-Cc:     Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        Robert Jones <rjones@gateworks.com>,
-        Tim Harvey <tharvey@gateworks.com>
-Subject: [PATCH] ARM: dts: imx: Add GW5907
-Date:   Thu,  3 Oct 2019 13:43:34 -0700
-Message-Id: <20191003204334.4554-1-rjones@gateworks.com>
-X-Mailer: git-send-email 2.9.2
+        Thu, 3 Oct 2019 16:43:53 -0400
+Received: from mout.gmx.net ([212.227.17.20]:52565 "EHLO mout.gmx.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726669AbfJCUnw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 16:43:52 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
+        s=badeba3b8450; t=1570135423;
+        bh=l2CbPv9jk4BcyrfIzeSPwwhOsl4Gd994nCXq0Vmbh28=;
+        h=X-UI-Sender-Class:From:To:Cc:Subject:Date;
+        b=itpAuLG84a5TUKCzS4QroJhxcXIOyGIK/3l0uC3RRKfoPQmpDO7JLQIvbookLTHts
+         5qzFd/FfR01jdjjd6UgWr1vwXo6doCEnrZoe7VP2Ho6JUDGwTGU6SwYp+h00/0jAL9
+         NZmXkkdtm8x73zM6BjEfa98fe1NlgLSkLQ8k/FPk=
+X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
+Received: from longitude ([89.0.25.131]) by mail.gmx.com (mrgmx105
+ [212.227.17.168]) with ESMTPSA (Nemesis) id 1N8GQy-1i30vu3TRA-014Gha; Thu, 03
+ Oct 2019 22:43:42 +0200
+From:   =?UTF-8?q?Jonathan=20Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>
+To:     linux-doc@vger.kernel.org
+Cc:     =?UTF-8?q?Jonathan=20Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jonathan Corbet <corbet@lwn.net>, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] docs: networking: phy: Improve phrasing
+Date:   Thu,  3 Oct 2019 22:43:22 +0200
+Message-Id: <20191003204322.32349-1-j.neuschaefer@gmx.net>
+X-Mailer: git-send-email 2.20.1
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:XJsOsYtApZH0rV1lXp8DalL+58oNvmqsYzOrgY1nQM537zaV0ba
+ ZYqC9w+If/nsL+aYKTkGs5WUHTh8PUsl4tu+ktuXKF334p4voyzC8wB+i7abuL8W5XVomVN
+ +IxsM5+75B3cfxmQQPhc1xMDPkY30Xgbh0BcXRIbXla+94DHHu0z6djVOt4Q4sQ3L4UuA/v
+ eH//bM8/btqpZ0Y8uyckg==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:yH8n8hS1C+o=:PeQ8fC747eH8ki7EEwTzEO
+ ncS3Zp4nIDKNYBs4EyIyjkeIGO1yhVPyvv/0EP/KSNcH4zF/Y8QZArL2HmTuYQJkrbOdbWkag
+ CFQwrlvZyQPYmzfFPCSluR94hpIpzk+OjUT2AIXHBMsjolfKRFcGKuPD2BAUVkJmbUSk+i0H2
+ g/2fmZbaVoE/8aYgOVUNgEtKPWsL6Jq1AQ2Me26ITtA2tDSqDKVc/wcOpbP818j1l6XVv+gWn
+ l+qD+LSkFlP3vBb2s6avIYCzstS5it+IDYzdkLAo1ScuGcM0bzJYOhq1NlduVi9Ddir7nbEmi
+ w3iYRJ4tO8v6hfZ0Ha1p2oRRF+e7LxEspnSehQs0zeVLUG34JM19+wvv+NFxk+mdPpahVDT9G
+ fUAORsHlsNx0yqaBHB1NYBRc1Y6mXiZxtrVo5fgkklM4RKPkWbXDJCtCEZaCc+XAYBnVOakEx
+ e08MlaE/pzgIXZBc0fi9pQTOz/lIk0f8ZCS3E/zQXkdKIqKoVRPOoH+12XzJ6ek9NMnVKPRRU
+ JiagGotCF8tEEDf7lxC8l7Y84/koh/IPe7hkAs2FuTaqhVwJKZFoCcSIw3TMf3RFDCB/OLCx5
+ C2+S9ZvlFEACFFyzR6bAOYsY5t/PmlCLOkz4oBS+KOc28Y5CqR3psFuurVF0emO2TcG+yQxbu
+ QJaxxXojsyKLoi/mztSo1YoGxP0Cxi+51hPle3s0xiQy/Z46h/RGMiB01CCZi8ywBF0nL5BxQ
+ P6KpcdZnTudijwWg3+DifpDUKq05OzUxXElnDC0EavWLF72hpVa3ICglD+yor5D/yxSf9LW4n
+ f3E8UXba79OYiOLe0FZujqtsfuZKuCfN5QwRpoXb3eUZpvVeUgf5Zzp9zJ1vnt7iSdwOtjQuY
+ /+ESeDcIDCylrMCJzPr/7InF+oEI5Ey7d0/XEI29rfBZ6PZ5CCyo31FwpbvtPS5nqgG4AMZ3l
+ 8x9o3jJQ/62YZ4SbsmKUVpSFTYzUWT0aeFiKbz/4J66+b0EdF/bO5s8sXUHoLqCwGDNfRsjx6
+ suVeLmOYnYZm4knRgUVXv9SGLddPou9+3rUwTwamqmxkVbG4jtLpRjjTc9LniqqcORCpWs10O
+ YO0zNoKYZXXzIP4UrJkDwxFqz7NoFTrdU73iwOeXfs9uVUosl7drKOlxE+CkkHDpTR3GQh9mM
+ Umafhbn3yjr+6gEQOEakDOCbi2LvbB9SEBx4htN0Op0wUBTxLbOeyZjhpUo69r9W2t//RyX6N
+ Sv/ZDuAx3yGIEa4rHZDAN6+6wzak/nrTblfPJmeLpYdwkchxzyuZoqq938+c=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The Gateworks GW5907 is an IMX6 SoC based single board computer with:
- - IMX6Q or IMX6DL
- - 32bit DDR3 DRAM
- - FEC GbE Phy
- - bi-color front-panel LED
- - 256MB NAND boot device
- - Gateworks System Controller (hwmon, pushbutton controller, EEPROM)
- - Digital IO expander (pca9555)
- - Joystick 12bit adc (ads1015)
+It's not about times (multiple occurences of an event) but about the
+duration of a time interval.
 
-Signed-off-by: Tim Harvey <tharvey@gateworks.com>
-Signed-off-by: Robert Jones <rjones@gateworks.com>
----
- arch/arm/boot/dts/Makefile            |   2 +
- arch/arm/boot/dts/imx6dl-gw5907.dts   |  14 ++
- arch/arm/boot/dts/imx6q-gw5907.dts    |  14 ++
- arch/arm/boot/dts/imx6qdl-gw5907.dtsi | 399 ++++++++++++++++++++++++++++++++++
- 4 files changed, 429 insertions(+)
- create mode 100644 arch/arm/boot/dts/imx6dl-gw5907.dts
- create mode 100644 arch/arm/boot/dts/imx6q-gw5907.dts
- create mode 100644 arch/arm/boot/dts/imx6qdl-gw5907.dtsi
+Signed-off-by: Jonathan Neusch=C3=A4fer <j.neuschaefer@gmx.net>
+=2D--
+ Documentation/networking/phy.rst | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index 76920fc..34f8166 100644
---- a/arch/arm/boot/dts/Makefile
-+++ b/arch/arm/boot/dts/Makefile
-@@ -417,6 +417,7 @@ dtb-$(CONFIG_SOC_IMX6Q) += \
- 	imx6dl-gw560x.dtb \
- 	imx6dl-gw5903.dtb \
- 	imx6dl-gw5904.dtb \
-+	imx6dl-gw5907.dtb \
- 	imx6dl-gw5910.dtb \
- 	imx6dl-gw5912.dtb \
- 	imx6dl-gw5913.dtb \
-@@ -491,6 +492,7 @@ dtb-$(CONFIG_SOC_IMX6Q) += \
- 	imx6q-gw560x.dtb \
- 	imx6q-gw5903.dtb \
- 	imx6q-gw5904.dtb \
-+	imx6q-gw5907.dtb \
- 	imx6q-gw5910.dtb \
- 	imx6q-gw5912.dtb \
- 	imx6q-gw5913.dtb \
-diff --git a/arch/arm/boot/dts/imx6dl-gw5907.dts b/arch/arm/boot/dts/imx6dl-gw5907.dts
-new file mode 100644
-index 0000000..3fa2822
---- /dev/null
-+++ b/arch/arm/boot/dts/imx6dl-gw5907.dts
-@@ -0,0 +1,14 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Copyright 2019 Gateworks Corporation
-+ */
-+
-+/dts-v1/;
-+
-+#include "imx6dl.dtsi"
-+#include "imx6qdl-gw5907.dtsi"
-+
-+/ {
-+	model = "Gateworks Ventana i.MX6 DualLite/Solo GW5907";
-+	compatible = "gw,imx6dl-gw5907", "gw,ventana", "fsl,imx6dl";
-+};
-diff --git a/arch/arm/boot/dts/imx6q-gw5907.dts b/arch/arm/boot/dts/imx6q-gw5907.dts
-new file mode 100644
-index 0000000..e5e9c41
---- /dev/null
-+++ b/arch/arm/boot/dts/imx6q-gw5907.dts
-@@ -0,0 +1,14 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Copyright 2019 Gateworks Corporation
-+ */
-+
-+/dts-v1/;
-+
-+#include "imx6q.dtsi"
-+#include "imx6qdl-gw5907.dtsi"
-+
-+/ {
-+	model = "Gateworks Ventana i.MX6 Dual/Quad GW5907";
-+	compatible = "gw,imx6q-gw51xx", "gw,ventana", "fsl,imx6q";
-+};
-diff --git a/arch/arm/boot/dts/imx6qdl-gw5907.dtsi b/arch/arm/boot/dts/imx6qdl-gw5907.dtsi
-new file mode 100644
-index 0000000..ed44288
---- /dev/null
-+++ b/arch/arm/boot/dts/imx6qdl-gw5907.dtsi
-@@ -0,0 +1,399 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Copyright 2019 Gateworks Corporation
-+ */
-+
-+#include <dt-bindings/gpio/gpio.h>
-+
-+/ {
-+	/* these are used by bootloader for disabling nodes */
-+	aliases {
-+		led0 = &led0;
-+		led1 = &led1;
-+		nand = &gpmi;
-+		usb0 = &usbh1;
-+		usb1 = &usbotg;
-+	};
-+
-+	chosen {
-+		stdout-path = &uart2;
-+	};
-+
-+	leds {
-+		compatible = "gpio-leds";
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&pinctrl_gpio_leds>;
-+
-+		led0: user1 {
-+			label = "user1";
-+			gpios = <&gpio4 6 GPIO_ACTIVE_HIGH>; /* MX6_PANLEDG */
-+			default-state = "on";
-+			linux,default-trigger = "heartbeat";
-+		};
-+
-+		led1: user2 {
-+			label = "user2";
-+			gpios = <&gpio4 7 GPIO_ACTIVE_HIGH>; /* MX6_PANLEDR */
-+			default-state = "off";
-+		};
-+	};
-+
-+	memory@10000000 {
-+		device_type = "memory";
-+		reg = <0x10000000 0x20000000>;
-+	};
-+
-+	pps {
-+		compatible = "pps-gpio";
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&pinctrl_pps>;
-+		gpios = <&gpio1 26 GPIO_ACTIVE_HIGH>;
-+		status = "okay";
-+	};
-+
-+	reg_3p3v: regulator-3p3v {
-+		compatible = "regulator-fixed";
-+		regulator-name = "3P3V";
-+		regulator-min-microvolt = <3300000>;
-+		regulator-max-microvolt = <3300000>;
-+		regulator-always-on;
-+	};
-+
-+	reg_5p0v: regulator-5p0v {
-+		compatible = "regulator-fixed";
-+		regulator-name = "5P0V";
-+		regulator-min-microvolt = <5000000>;
-+		regulator-max-microvolt = <5000000>;
-+		regulator-always-on;
-+	};
-+
-+	reg_usb_otg_vbus: regulator-usb-otg-vbus {
-+		compatible = "regulator-fixed";
-+		regulator-name = "usb_otg_vbus";
-+		regulator-min-microvolt = <5000000>;
-+		regulator-max-microvolt = <5000000>;
-+		gpio = <&gpio3 22 GPIO_ACTIVE_HIGH>;
-+		enable-active-high;
-+	};
-+};
-+
-+&fec {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_enet>;
-+	phy-mode = "rgmii-id";
-+	phy-reset-gpios = <&gpio1 30 GPIO_ACTIVE_LOW>;
-+	status = "okay";
-+};
-+
-+&gpmi {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_gpmi_nand>;
-+	status = "okay";
-+};
-+
-+&hdmi {
-+	ddc-i2c-bus = <&i2c3>;
-+	status = "okay";
-+};
-+
-+&i2c1 {
-+	clock-frequency = <100000>;
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_i2c1>;
-+	status = "okay";
-+
-+	pca9555: gpio@23 {
-+		compatible = "nxp,pca9555";
-+		reg = <0x23>;
-+		gpio-controller;
-+		#gpio-cells = <2>;
-+	};
-+
-+	eeprom1: eeprom@50 {
-+		compatible = "atmel,24c02";
-+		reg = <0x50>;
-+		pagesize = <16>;
-+	};
-+
-+	eeprom2: eeprom@51 {
-+		compatible = "atmel,24c02";
-+		reg = <0x51>;
-+		pagesize = <16>;
-+	};
-+
-+	eeprom3: eeprom@52 {
-+		compatible = "atmel,24c02";
-+		reg = <0x52>;
-+		pagesize = <16>;
-+	};
-+
-+	eeprom4: eeprom@53 {
-+		compatible = "atmel,24c02";
-+		reg = <0x53>;
-+		pagesize = <16>;
-+	};
-+
-+	dts1672: rtc@68 {
-+		compatible = "dallas,ds1672";
-+		reg = <0x68>;
-+	};
-+};
-+
-+&i2c2 {
-+	clock-frequency = <100000>;
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_i2c2>;
-+	status = "okay";
-+};
-+
-+&i2c3 {
-+	clock-frequency = <100000>;
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_i2c3>;
-+	status = "okay";
-+
-+	pca9555@20 {
-+		compatible = "nxp,pca9555";
-+		reg = <0x20>;
-+		gpio-controller;
-+		#gpio-cells = <2>;
-+	};
-+
-+	ads1015@48 {
-+		compatible = "ti,ads1015";
-+		reg = <0x48>;
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		channel@4 {
-+			reg = <4>;
-+			ti,gain = <0>;
-+			ti,datarate = <5>;
-+		};
-+
-+		channel@5 {
-+			reg = <5>;
-+			ti,gain = <0>;
-+			ti,datarate = <5>;
-+		};
-+
-+		channel@6 {
-+			reg = <6>;
-+			ti,gain = <0>;
-+			ti,datarate = <5>;
-+		};
-+	};
-+};
-+
-+&pcie {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_pcie>;
-+	reset-gpio = <&gpio1 0 GPIO_ACTIVE_LOW>;
-+	status = "okay";
-+};
-+
-+&pwm2 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_pwm2>; /* MX6_DIO1 */
-+	status = "disabled";
-+};
-+
-+&pwm3 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_pwm3>; /* MX6_DIO2 */
-+	status = "disabled";
-+};
-+
-+&pwm4 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_pwm4>; /* MX6_DIO3 */
-+	status = "disabled";
-+};
-+
-+&uart1 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_uart1>;
-+	status = "okay";
-+};
-+
-+&uart2 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_uart2>;
-+	status = "okay";
-+};
-+
-+&uart3 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_uart3>;
-+	status = "okay";
-+};
-+
-+&uart5 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_uart5>;
-+	status = "okay";
-+};
-+
-+&usbotg {
-+	vbus-supply = <&reg_usb_otg_vbus>;
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_usbotg>;
-+	disable-over-current;
-+	status = "okay";
-+};
-+
-+&usbh1 {
-+	status = "okay";
-+};
-+
-+&wdog1 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_wdog>;
-+	fsl,ext-reset-output;
-+};
-+
-+&iomuxc {
-+	pinctrl_enet: enetgrp {
-+		fsl,pins = <
-+			MX6QDL_PAD_RGMII_RXC__RGMII_RXC		0x1b0b0
-+			MX6QDL_PAD_RGMII_RD0__RGMII_RD0		0x1b0b0
-+			MX6QDL_PAD_RGMII_RD1__RGMII_RD1		0x1b0b0
-+			MX6QDL_PAD_RGMII_RD2__RGMII_RD2		0x1b0b0
-+			MX6QDL_PAD_RGMII_RD3__RGMII_RD3		0x1b0b0
-+			MX6QDL_PAD_RGMII_RX_CTL__RGMII_RX_CTL	0x1b0b0
-+			MX6QDL_PAD_RGMII_TXC__RGMII_TXC		0x1b0b0
-+			MX6QDL_PAD_RGMII_TD0__RGMII_TD0		0x1b0b0
-+			MX6QDL_PAD_RGMII_TD1__RGMII_TD1		0x1b0b0
-+			MX6QDL_PAD_RGMII_TD2__RGMII_TD2		0x1b0b0
-+			MX6QDL_PAD_RGMII_TD3__RGMII_TD3		0x1b0b0
-+			MX6QDL_PAD_RGMII_TX_CTL__RGMII_TX_CTL	0x1b0b0
-+			MX6QDL_PAD_ENET_REF_CLK__ENET_TX_CLK	0x1b0b0
-+			MX6QDL_PAD_ENET_MDIO__ENET_MDIO		0x1b0b0
-+			MX6QDL_PAD_ENET_MDC__ENET_MDC		0x1b0b0
-+			MX6QDL_PAD_GPIO_16__ENET_REF_CLK	0x4001b0a8
-+			MX6QDL_PAD_ENET_TXD0__GPIO1_IO30	0x1b0b0
-+		>;
-+	};
-+
-+	pinctrl_gpio_leds: gpioledsgrp {
-+		fsl,pins = <
-+			MX6QDL_PAD_KEY_COL0__GPIO4_IO06		0x1b0b0
-+			MX6QDL_PAD_KEY_ROW0__GPIO4_IO07		0x1b0b0
-+		>;
-+	};
-+
-+	pinctrl_gpmi_nand: gpminandgrp {
-+		fsl,pins = <
-+			MX6QDL_PAD_NANDF_CLE__NAND_CLE		0xb0b1
-+			MX6QDL_PAD_NANDF_ALE__NAND_ALE		0xb0b1
-+			MX6QDL_PAD_NANDF_WP_B__NAND_WP_B	0xb0b1
-+			MX6QDL_PAD_NANDF_RB0__NAND_READY_B	0xb000
-+			MX6QDL_PAD_NANDF_CS0__NAND_CE0_B	0xb0b1
-+			MX6QDL_PAD_SD4_CMD__NAND_RE_B		0xb0b1
-+			MX6QDL_PAD_SD4_CLK__NAND_WE_B		0xb0b1
-+			MX6QDL_PAD_NANDF_D0__NAND_DATA00	0xb0b1
-+			MX6QDL_PAD_NANDF_D1__NAND_DATA01	0xb0b1
-+			MX6QDL_PAD_NANDF_D2__NAND_DATA02	0xb0b1
-+			MX6QDL_PAD_NANDF_D3__NAND_DATA03	0xb0b1
-+			MX6QDL_PAD_NANDF_D4__NAND_DATA04	0xb0b1
-+			MX6QDL_PAD_NANDF_D5__NAND_DATA05	0xb0b1
-+			MX6QDL_PAD_NANDF_D6__NAND_DATA06	0xb0b1
-+			MX6QDL_PAD_NANDF_D7__NAND_DATA07	0xb0b1
-+		>;
-+	};
-+
-+	pinctrl_i2c1: i2c1grp {
-+		fsl,pins = <
-+			MX6QDL_PAD_EIM_D21__I2C1_SCL		0x4001b8b1
-+			MX6QDL_PAD_EIM_D28__I2C1_SDA		0x4001b8b1
-+			MX6QDL_PAD_GPIO_4__GPIO1_IO04		0x0001b0b0
-+		>;
-+	};
-+
-+	pinctrl_i2c2: i2c2grp {
-+		fsl,pins = <
-+			MX6QDL_PAD_KEY_COL3__I2C2_SCL		0x4001b8b1
-+			MX6QDL_PAD_KEY_ROW3__I2C2_SDA		0x4001b8b1
-+		>;
-+	};
-+
-+	pinctrl_i2c3: i2c3grp {
-+		fsl,pins = <
-+			MX6QDL_PAD_GPIO_3__I2C3_SCL		0x4001b8b1
-+			MX6QDL_PAD_GPIO_6__I2C3_SDA		0x4001b8b1
-+			MX6QDL_PAD_GPIO_2__GPIO1_IO02		0x1b0b0
-+			MX6QDL_PAD_GPIO_19__GPIO4_IO05		0x1b0b0
-+		>;
-+	};
-+
-+	pinctrl_pcie: pciegrp {
-+		fsl,pins = <
-+			MX6QDL_PAD_GPIO_0__GPIO1_IO00		0x1b0b0
-+		>;
-+	};
-+
-+	pinctrl_pps: ppsgrp {
-+		fsl,pins = <
-+			MX6QDL_PAD_ENET_RXD1__GPIO1_IO26	0x1b0b1
-+		>;
-+	};
-+
-+	pinctrl_pwm2: pwm2grp {
-+		fsl,pins = <
-+			MX6QDL_PAD_SD1_DAT2__PWM2_OUT		0x1b0b1
-+		>;
-+	};
-+
-+	pinctrl_pwm3: pwm3grp {
-+		fsl,pins = <
-+			MX6QDL_PAD_SD1_DAT1__PWM3_OUT		0x1b0b1
-+		>;
-+	};
-+
-+	pinctrl_pwm4: pwm4grp {
-+		fsl,pins = <
-+			MX6QDL_PAD_SD1_CMD__PWM4_OUT		0x1b0b1
-+		>;
-+	};
-+
-+	pinctrl_uart1: uart1grp {
-+		fsl,pins = <
-+			MX6QDL_PAD_SD3_DAT7__UART1_TX_DATA	0x1b0b1
-+			MX6QDL_PAD_SD3_DAT6__UART1_RX_DATA	0x1b0b1
-+		>;
-+	};
-+
-+	pinctrl_uart2: uart2grp {
-+		fsl,pins = <
-+			MX6QDL_PAD_SD4_DAT7__UART2_TX_DATA	0x1b0b1
-+			MX6QDL_PAD_SD4_DAT4__UART2_RX_DATA	0x1b0b1
-+		>;
-+	};
-+
-+	pinctrl_uart3: uart3grp {
-+		fsl,pins = <
-+			MX6QDL_PAD_EIM_D24__UART3_TX_DATA	0x1b0b1
-+			MX6QDL_PAD_EIM_D25__UART3_RX_DATA	0x1b0b1
-+		>;
-+	};
-+
-+	pinctrl_uart5: uart5grp {
-+		fsl,pins = <
-+			MX6QDL_PAD_KEY_COL1__UART5_TX_DATA	0x1b0b1
-+			MX6QDL_PAD_KEY_ROW1__UART5_RX_DATA	0x1b0b1
-+		>;
-+	};
-+
-+	pinctrl_usbotg: usbotggrp {
-+		fsl,pins = <
-+			MX6QDL_PAD_GPIO_1__USB_OTG_ID		0x17059
-+			MX6QDL_PAD_EIM_D22__GPIO3_IO22		0x1b0b0
-+		>;
-+	};
-+
-+	pinctrl_wdog: wdoggrp {
-+		fsl,pins = <
-+			MX6QDL_PAD_DISP0_DAT8__WDOG1_B		0x1b0b0
-+		>;
-+	};
-+};
--- 
-2.9.2
+diff --git a/Documentation/networking/phy.rst b/Documentation/networking/p=
+hy.rst
+index a689966bc4be..3f5bd83034df 100644
+=2D-- a/Documentation/networking/phy.rst
++++ b/Documentation/networking/phy.rst
+@@ -73,7 +73,7 @@ The Reduced Gigabit Medium Independent Interface (RGMII)=
+ is a 12-pin
+ electrical signal interface using a synchronous 125Mhz clock signal and s=
+everal
+ data lines. Due to this design decision, a 1.5ns to 2ns delay must be add=
+ed
+ between the clock line (RXC or TXC) and the data lines to let the PHY (cl=
+ock
+-sink) have enough setup and hold times to sample the data lines correctly=
+. The
++sink) have a large enough setup and hold time to sample the data lines co=
+rrectly. The
+ PHY library offers different types of PHY_INTERFACE_MODE_RGMII* values to=
+ let
+ the PHY driver and optionally the MAC driver, implement the required dela=
+y. The
+ values of phy_interface_t must be understood from the perspective of the =
+PHY
+=2D-
+2.20.1
 
