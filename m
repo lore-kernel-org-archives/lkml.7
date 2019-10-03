@@ -2,53 +2,51 @@ Return-Path: <SRS0=6dNS=X4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ACB3DC32792
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 15:59:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CC00C32792
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 15:59:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 84695222CE
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 15:59:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0A25921848
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 15:59:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570118382;
-	bh=/KhXoajcaFdtR7vR0vC+wUAKUGLFw6dl2D8gkPyfZZc=;
+	s=default; t=1570118391;
+	bh=kEUcyf9ce6ZSDzVBodKAh4owIQCPHcgVn4yCbQNmwCo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1MvihKTvJ7pJOmMTt8IiyxiZRA8GuSXFAJSL96o+OreSo7ALq7OvQmA2y2AuTCKX5
-	 +dR3KMHAeDjZQMkzwq3ALmjUyM9EKnXzHRBnJK08oVsRxvqUG2Arlft7aMGOPT5S76
-	 epjvrPhSWQuHawR6YFnELlB4TMcvMxgjuEdWX4nM=
+	b=Owp9xHQKmR1JyTm4cKEtnIC0AbKP6/WC5e38pp/0Ks0IwhULsVOtTbAepXHGr3NAM
+	 w1VS78wXmTCsyDVhjwPd2Zzxn3u5+R+ndG5R+B+boDsP69KEc5jdvrmg7ov6pQhV3a
+	 gDU2CyRPh0JBa3YJSWmOjTbwvw8FC0E4oKllxv6o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731387AbfJCP7l (ORCPT
+        id S1731428AbfJCP7u (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 11:59:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42766 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 11:59:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43096 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731364AbfJCP7j (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 11:59:39 -0400
+        id S1731389AbfJCP7o (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 11:59:44 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 939AF21783;
-        Thu,  3 Oct 2019 15:59:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3154E21D81;
+        Thu,  3 Oct 2019 15:59:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570118378;
-        bh=/KhXoajcaFdtR7vR0vC+wUAKUGLFw6dl2D8gkPyfZZc=;
+        s=default; t=1570118383;
+        bh=kEUcyf9ce6ZSDzVBodKAh4owIQCPHcgVn4yCbQNmwCo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=OTLS8nEc8MKEysQ3SKXwcNkguTIVpV2D+CbXdPb8TAIpyfbPooFc7AZpRQVrnsOEH
-         OcnHojNZicvfDlDGOB19zAnPk7igUcF68iH7CUeWr//x/Q14Ir7wN6o4aoKI070pVD
-         7tPzt60T1VIyGsbD9m3LW4YlMQKk4UrG3ZpLg1xo=
+        b=AmTbd0zdeQo/pi6HHIujZBYBYiAORavXNpyde+CPqlZpJdiWoj9Sa/nGqfcX0vHmL
+         5ZlDRmnTIgkqp2nKzBMwQGj6qrab0377UXjl5Y2SOCZ7XgrWL9ZSDybcgseJsoJ/QE
+         FVIJ+X/SADfIrR53J3r/2QNJVMCiMYSKHyDc9Lp8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Grzegorz Halat <ghalat@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Don Zickus <dzickus@redhat.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 41/99] x86/reboot: Always use NMI fallback when shutdown via reboot vector IPI fails
-Date:   Thu,  3 Oct 2019 17:53:04 +0200
-Message-Id: <20191003154315.752475207@linuxfoundation.org>
+        stable@vger.kernel.org, Chao Yu <yuchao0@huawei.com>,
+        Jan Kara <jack@suse.cz>
+Subject: [PATCH 4.4 92/99] quota: fix wrong condition in is_quota_modification()
+Date:   Thu,  3 Oct 2019 17:53:55 +0200
+Message-Id: <20191003154340.152105218@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191003154252.297991283@linuxfoundation.org>
 References: <20191003154252.297991283@linuxfoundation.org>
@@ -61,128 +59,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Grzegorz Halat <ghalat@redhat.com>
+From: Chao Yu <yuchao0@huawei.com>
 
-[ Upstream commit 747d5a1bf293dcb33af755a6d285d41b8c1ea010 ]
+commit 6565c182094f69e4ffdece337d395eb7ec760efc upstream.
 
-A reboot request sends an IPI via the reboot vector and waits for all other
-CPUs to stop. If one or more CPUs are in critical regions with interrupts
-disabled then the IPI is not handled on those CPUs and the shutdown hangs
-if native_stop_other_cpus() is called with the wait argument set.
+Quoted from
+commit 3da40c7b0898 ("ext4: only call ext4_truncate when size <= isize")
 
-Such a situation can happen when one CPU was stopped within a lock held
-section and another CPU is trying to acquire that lock with interrupts
-disabled. There are other scenarios which can cause such a lockup as well.
+" At LSF we decided that if we truncate up from isize we shouldn't trim
+  fallocated blocks that were fallocated with KEEP_SIZE and are past the
+ new i_size.  This patch fixes ext4 to do this. "
 
-In theory the shutdown should be attempted by an NMI IPI after the timeout
-period elapsed. Though the wait loop after sending the reboot vector IPI
-prevents this. It checks the wait request argument and the timeout. If wait
-is set, which is true for sys_reboot() then it won't fall through to the
-NMI shutdown method after the timeout period has finished.
+And generic/092 of fstest have covered this case for long time, however
+is_quota_modification() didn't adjust based on that rule, so that in
+below condition, we will lose to quota block change:
+- fallocate blocks beyond EOF
+- remount
+- truncate(file_path, file_size)
 
-This was an oversight when the NMI shutdown mechanism was added to handle
-the 'reboot IPI is not working' situation. The mechanism was added to deal
-with stuck panic shutdowns, which do not have the wait request set, so the
-'wait request' case was probably not considered.
+Fix it.
 
-Remove the wait check from the post reboot vector IPI wait loop and enforce
-that the wait loop in the NMI fallback path is invoked even if NMI IPIs are
-disabled or the registration of the NMI handler fails. That second wait
-loop will then hang if not all CPUs shutdown and the wait argument is set.
+Link: https://lore.kernel.org/r/20190911093650.35329-1-yuchao0@huawei.com
+Fixes: 3da40c7b0898 ("ext4: only call ext4_truncate when size <= isize")
+CC: stable@vger.kernel.org
+Signed-off-by: Chao Yu <yuchao0@huawei.com>
+Signed-off-by: Jan Kara <jack@suse.cz>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-[ tglx: Avoid the hard to parse line break in the NMI fallback path,
-  	add comments and massage the changelog ]
-
-Fixes: 7d007d21e539 ("x86/reboot: Use NMI to assist in shutting down if IRQ fails")
-Signed-off-by: Grzegorz Halat <ghalat@redhat.com>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Cc: Don Zickus <dzickus@redhat.com>
-Link: https://lkml.kernel.org/r/20190628122813.15500-1-ghalat@redhat.com
-Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/kernel/smp.c | 46 +++++++++++++++++++++++++------------------
- 1 file changed, 27 insertions(+), 19 deletions(-)
+ include/linux/quotaops.h |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/x86/kernel/smp.c b/arch/x86/kernel/smp.c
-index 12c8286206ce2..6a0ba9d09b0ed 100644
---- a/arch/x86/kernel/smp.c
-+++ b/arch/x86/kernel/smp.c
-@@ -176,6 +176,12 @@ asmlinkage __visible void smp_reboot_interrupt(void)
- 	irq_exit();
- }
- 
-+static int register_stop_handler(void)
-+{
-+	return register_nmi_handler(NMI_LOCAL, smp_stop_nmi_callback,
-+				    NMI_FLAG_FIRST, "smp_stop");
-+}
-+
- static void native_stop_other_cpus(int wait)
+--- a/include/linux/quotaops.h
++++ b/include/linux/quotaops.h
+@@ -21,7 +21,7 @@ static inline struct quota_info *sb_dqop
+ /* i_mutex must being held */
+ static inline bool is_quota_modification(struct inode *inode, struct iattr *ia)
  {
- 	unsigned long flags;
-@@ -209,39 +215,41 @@ static void native_stop_other_cpus(int wait)
- 		apic->send_IPI_allbutself(REBOOT_VECTOR);
- 
- 		/*
--		 * Don't wait longer than a second if the caller
--		 * didn't ask us to wait.
-+		 * Don't wait longer than a second for IPI completion. The
-+		 * wait request is not checked here because that would
-+		 * prevent an NMI shutdown attempt in case that not all
-+		 * CPUs reach shutdown state.
- 		 */
- 		timeout = USEC_PER_SEC;
--		while (num_online_cpus() > 1 && (wait || timeout--))
-+		while (num_online_cpus() > 1 && timeout--)
- 			udelay(1);
- 	}
--	
--	/* if the REBOOT_VECTOR didn't work, try with the NMI */
--	if ((num_online_cpus() > 1) && (!smp_no_nmi_ipi))  {
--		if (register_nmi_handler(NMI_LOCAL, smp_stop_nmi_callback,
--					 NMI_FLAG_FIRST, "smp_stop"))
--			/* Note: we ignore failures here */
--			/* Hope the REBOOT_IRQ is good enough */
--			goto finish;
--
--		/* sync above data before sending IRQ */
--		wmb();
- 
--		pr_emerg("Shutting down cpus with NMI\n");
-+	/* if the REBOOT_VECTOR didn't work, try with the NMI */
-+	if (num_online_cpus() > 1) {
-+		/*
-+		 * If NMI IPI is enabled, try to register the stop handler
-+		 * and send the IPI. In any case try to wait for the other
-+		 * CPUs to stop.
-+		 */
-+		if (!smp_no_nmi_ipi && !register_stop_handler()) {
-+			/* Sync above data before sending IRQ */
-+			wmb();
- 
--		apic->send_IPI_allbutself(NMI_VECTOR);
-+			pr_emerg("Shutting down cpus with NMI\n");
- 
-+			apic->send_IPI_allbutself(NMI_VECTOR);
-+		}
- 		/*
--		 * Don't wait longer than a 10 ms if the caller
--		 * didn't ask us to wait.
-+		 * Don't wait longer than 10 ms if the caller didn't
-+		 * reqeust it. If wait is true, the machine hangs here if
-+		 * one or more CPUs do not reach shutdown state.
- 		 */
- 		timeout = USEC_PER_MSEC * 10;
- 		while (num_online_cpus() > 1 && (wait || timeout--))
- 			udelay(1);
- 	}
- 
--finish:
- 	local_irq_save(flags);
- 	disable_local_APIC();
- 	mcheck_cpu_clear(this_cpu_ptr(&cpu_info));
--- 
-2.20.1
-
+-	return (ia->ia_valid & ATTR_SIZE && ia->ia_size != inode->i_size) ||
++	return (ia->ia_valid & ATTR_SIZE) ||
+ 		(ia->ia_valid & ATTR_UID && !uid_eq(ia->ia_uid, inode->i_uid)) ||
+ 		(ia->ia_valid & ATTR_GID && !gid_eq(ia->ia_gid, inode->i_gid));
+ }
 
 
