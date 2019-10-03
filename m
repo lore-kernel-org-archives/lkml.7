@@ -2,144 +2,114 @@ Return-Path: <SRS0=6dNS=X4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E4424C32792
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 05:27:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3AEA4C4CED1
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 05:30:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BBBE9222C3
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 05:27:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570080426;
-	bh=Jtt+0lrz55+dN399bd83jgSlLUIt3UNbmJDKZQBo8vE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=0KvzwLOEglrQy8A5jqe8SAa8LnuTyXEcamKf5a3zREju52WbpLrynRxdZNbcqdzOD
-	 49UMhYJHinSbaSJmc/eiysRHS5bXoYMQDH5uOXKlzQBat9DHzULrh+Ww+H/laimzWK
-	 gYmVy0RYDrRuY4/OSURuFTnECbrVhiEqSYnhEgA0=
+	by mail.kernel.org (Postfix) with ESMTP id 11CAE20700
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 05:30:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=brainfault-org.20150623.gappssmtp.com header.i=@brainfault-org.20150623.gappssmtp.com header.b="DXp0N9M7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727385AbfJCF1E (ORCPT
+        id S1727481AbfJCFaV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 01:27:04 -0400
-Received: from mx2.suse.de ([195.135.220.15]:37426 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725290AbfJCF1E (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 01:27:04 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id E6C2BB009;
-        Thu,  3 Oct 2019 05:27:01 +0000 (UTC)
-Date:   Thu, 3 Oct 2019 07:27:00 +0200
-From:   Michal Hocko <mhocko@kernel.org>
-To:     David Rientjes <rientjes@google.com>
-Cc:     Mike Kravetz <mike.kravetz@oracle.com>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Mel Gorman <mgorman@suse.de>,
-        "Kirill A. Shutemov" <kirill@shutemov.name>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux-MM <linux-mm@kvack.org>
-Subject: Re: [rfc] mm, hugetlb: allow hugepage allocations to excessively
- reclaim
-Message-ID: <20191003052700.GB24174@dhcp22.suse.cz>
-References: <alpine.DEB.2.21.1910021556270.187014@chino.kir.corp.google.com>
+        Thu, 3 Oct 2019 01:30:21 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:33112 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725290AbfJCFaU (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 01:30:20 -0400
+Received: by mail-wr1-f68.google.com with SMTP id b9so1451282wrs.0
+        for <linux-kernel@vger.kernel.org>; Wed, 02 Oct 2019 22:30:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=brainfault-org.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=NKOOmFJoWYoEPN+uqtmhf6aauubkx5IFocgXqh0aQII=;
+        b=DXp0N9M7YUJCq9IoMUwGmDeleNVsb98z4MSfodW+tVsnEydckKyJ1XMHTsB0rbtdNU
+         sP/qSwdvfNgwx9qtCNSaU2CNk6CQgNuJ+a0xYGD9F+ZgzkBZgVULfUCN6nlKnHyMEqiq
+         LlChvZ+diAcyvscPqIMfNJX/mYJfiVB56j1kUHWiXk0L34LWrOdxqjuz3zfewRRnLt9Z
+         Ci7Fl2OHWikQrTFBx2qnwebIA+UoRSwoKdS1AVRSmDfG8cp/nYoHHiMMiQ5Y0+rooK7N
+         4/Fnj/zul2VDdZfUblpZ+zGa19KM1dmWsZVZnMA/YTORlIuq0SQvAamA92VPAkIBHTv/
+         HXjw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=NKOOmFJoWYoEPN+uqtmhf6aauubkx5IFocgXqh0aQII=;
+        b=CUPn5lq/rxQi0Fzx0HKBRHjcqJ45O+gjwP5oI9OCxEMNYkwClFO1X/dtdq8tdslBM+
+         AcMw+T65zWDdCX9C59rMS7n6SCijy+mCvC6m/GBa+rWhbHQdzXY0RxcxnFTrue+TVmvw
+         VaE6IwyY3b4hOmSVZ3RELERJk58YwtbKymrrG2Gdp3pq9vQu3WK9crUor/9JViTt+p8t
+         2dALN3/iGCf3JBG2W4rzjW2PBxbKHMU+ZPLaTGbWKbT6wMFn8Y7n7TK0sqfo0pBY+qL6
+         gDSyHybQ7YOl3JF3a7yoDI2ItA9ZV2Gr0Sv6o0JwBvcVfeUyizv3dv7mqkx51NfgPj2N
+         VkTQ==
+X-Gm-Message-State: APjAAAVfdpt59MCa0XVjRCWruXtFopnkMpqmiPYuune8RQo2b0T50lvd
+        W09ZFTcUqoX4KP4DFox5U/xZBSw82tQGXcmV7xCGfw==
+X-Google-Smtp-Source: APXvYqyYtSNsSITbR86n+CKf4F746HTQXw8m95TdwzKZpdisLevGSmmfp17GxGe1VP6NycjkRGhyI8T3BFH/Gmk9qzc=
+X-Received: by 2002:adf:ef12:: with SMTP id e18mr1611901wro.65.1570080616914;
+ Wed, 02 Oct 2019 22:30:16 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <alpine.DEB.2.21.1910021556270.187014@chino.kir.corp.google.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20190927000915.31781-1-atish.patra@wdc.com> <20190927000915.31781-4-atish.patra@wdc.com>
+ <20190927222107.GC4700@infradead.org>
+In-Reply-To: <20190927222107.GC4700@infradead.org>
+From:   Anup Patel <anup@brainfault.org>
+Date:   Thu, 3 Oct 2019 11:00:05 +0530
+Message-ID: <CAAhSdy2kAze4bt17kVA3tB4H6qXPMSUroi5ybPcTvFB_=p48oQ@mail.gmail.com>
+Subject: Re: [PATCH v2 3/3] RISC-V: Move SBI related macros under uapi.
+To:     Christoph Hellwig <hch@infradead.org>
+Cc:     Atish Patra <atish.patra@wdc.com>,
+        "linux-kernel@vger.kernel.org List" <linux-kernel@vger.kernel.org>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        Alan Kao <alankao@andestech.com>,
+        Palmer Dabbelt <palmer@sifive.com>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Gary Guo <gary@garyguo.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-riscv <linux-riscv@lists.infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Allison Randal <allison@lohutok.net>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed 02-10-19 16:03:03, David Rientjes wrote:
-> Hugetlb allocations use __GFP_RETRY_MAYFAIL to aggressively attempt to get 
-> hugepages that the user needs.  Commit b39d0ee2632d ("mm, page_alloc: 
-> avoid expensive reclaim when compaction may not succeed") intends to 
-> improve allocator behind for thp allocations to prevent excessive amounts 
-> of reclaim especially when constrained to a single node.
-> 
-> Since hugetlb allocations have explicitly preferred to loop and do reclaim 
-> and compaction, exempt them from this new behavior at least for the time 
-> being.  It is not shown that hugetlb allocation success rate has been 
-> impacted by commit b39d0ee2632d but hugetlb allocations are admittedly 
-> beyond the scope of what the patch is intended to address (thp 
-> allocations).
+On Sat, Sep 28, 2019 at 3:51 AM Christoph Hellwig <hch@infradead.org> wrote:
+>
+> On Thu, Sep 26, 2019 at 05:09:15PM -0700, Atish Patra wrote:
+> > All SBI related macros can be reused by KVM RISC-V and userspace tools
+> > such as kvmtool, qemu-kvm. SBI calls can also be emulated by userspace
+> > if required. Any future vendor extensions can leverage this to emulate
+> > the specific extension in userspace instead of kernel.
+>
+> Just because userspace can use them that doesn't mean they are a
+> userspace API.  Please don't do this as this limits how we can ever
+> remove previously existing symbols.  Just copy over the current
+> version of the file into the other project of your choice instead
+> of creating and API we need to maintain.
 
-It has become pretty clear that b39d0ee2632d has regressed hugetlb
-allocation success rate for any non-trivial case (complately free
-memory) http://lkml.kernel.org/r/20191001054343.GA15624@dhcp22.suse.cz.
-And this really is not just about hugetlb requests, really. They are
-likely the most obvious example but __GFP_RETRY_MAYFAIL in general is
-supposed to try as hard as feasible to success the allocation. The
-decision to bail out is done at a different spot and b39d0ee2632d is
-effectively bypassing that logic.
+These defines are indeed part of KVM userspace API because we will
+be forwarding SBI calls not handled by KVM RISC-V kernel module to
+KVM userspace (QEMU/KVMTOOL). The forwarded SBI call details
+are passed to userspace via "struct kvm_run" of KVM_RUN ioctl.
 
-Now to the patch itself. I didn't get to test it on my testing
-workload but hey steps are clearly documented and easily to set up and
-reproduce. I am at a training for today and unlikely to get to test by
-the end of the week infortunatelly. Anyway the patch should be fixing
-the problem because it explicitly opts out for __GFP_RETRY_MAYFAIL.
+Please refer PATCH17 and PATCH18 of KVM RISC-V v8 series.
 
-I am pretty sure we will need more follow ups because the bail out logic
-is simply behaving quite randomly as my measurements show (I would really
-appreciate a feedback there). We need a more systematic solution because
-the current logic has been rushed through without a proper analysis and
-without any actual workloads to verify the effect.
+Currently, we implement SBI v0.1 for KVM Guest hence we end-up
+forwarding CONSOLE_GETCHAR and CONSOLE_PUTCHART to
+KVM userspace.
 
-> Cc: Mike Kravetz <mike.kravetz@oracle.com>
-Fixes: b39d0ee2632d ("mm, page_alloc: avoid expensive reclaim when compaction may not succeed")
+In future we will implement SBI v0.2 for KVM Guest where we will be
+forwarding the SBI v0.2 experimental and vendor extension calls
+to KVM userspace.
 
-> Signed-off-by: David Rientjes <rientjes@google.com>
+Eventually, we will stop emulating SBI v0.1 for Guest once we have
+all required calls in SBI v0.2. At that time, all SBI v0.1 calls will be
+always forwarded to KVM userspace.
 
-I am willing to give my ack by considering that this is a clear
-regression and this is probably the simplest fix but the changelog
-should be explicit about the effect (feel free to borrow my numbers and
-explanation in this thread).
-
-> ---
->  Mike, you eluded that you may want to opt hugetlbfs out of this for the
->  time being in https://marc.info/?l=linux-kernel&m=156771690024533 --
->  not sure if you want to allow this excessive amount of reclaim for 
->  hugetlb allocations or not given the swap storms Andrea has shown is
->  possible (and nr_hugepages_mempolicy does exist), but hugetlbfs was not
->  part of the problem we are trying to address here so no objection to
->  opting it out.  
-> 
->  You might want to consider how expensive hugetlb allocations can become
->  and disruptive to the system if it does not yield additional hugepages,
->  but that can be done at any time later as a general improvement rather
->  than part of a series aimed at thp.
-> 
->  mm/page_alloc.c | 6 ++++--
->  1 file changed, 4 insertions(+), 2 deletions(-)
-> 
-> diff --git a/mm/page_alloc.c b/mm/page_alloc.c
-> --- a/mm/page_alloc.c
-> +++ b/mm/page_alloc.c
-> @@ -4467,12 +4467,14 @@ __alloc_pages_slowpath(gfp_t gfp_mask, unsigned int order,
->  		if (page)
->  			goto got_pg;
->  
-> -		 if (order >= pageblock_order && (gfp_mask & __GFP_IO)) {
-> +		 if (order >= pageblock_order && (gfp_mask & __GFP_IO) &&
-> +		     !(gfp_mask & __GFP_RETRY_MAYFAIL)) {
->  			/*
->  			 * If allocating entire pageblock(s) and compaction
->  			 * failed because all zones are below low watermarks
->  			 * or is prohibited because it recently failed at this
-> -			 * order, fail immediately.
-> +			 * order, fail immediately unless the allocator has
-> +			 * requested compaction and reclaim retry.
->  			 *
->  			 * Reclaim is
->  			 *  - potentially very expensive because zones are far
-
--- 
-Michal Hocko
-SUSE Labs
+Regards,
+Anup
