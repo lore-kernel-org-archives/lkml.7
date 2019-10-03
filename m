@@ -4,50 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AABB6C10F14
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:47:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 439D1C10F14
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:47:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 81BCC20867
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:47:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1BA5220865
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:47:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570121238;
-	bh=UAqf7zew8LOkdI77XKlrpMRDlwQstc8vJo/rqe1QRCk=;
+	s=default; t=1570121244;
+	bh=A5X2Og1r81lOw6mPlGwfMS/sB3j/vqTSU+w3envdz6k=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=cUiq1zxcwyYrLt9a41W7wmHitgGwVm1CvQr4vfPhWJXtRFA9HypVQJvQmncDW5D9H
-	 Ej9lr1F9et0Uj5illLUL2sdnPbWH1TpEVZIY3Eh0XRuS0RWoKagrQ2HG8xmo3QWbbo
-	 Z3cwX+a04RdgvSXE1y3KpGXLZzecS69PYwqPYbjE=
+	b=SfcVw5xuxyS01RgWv+vyu+ISZlXrJRLoqYa8FgP4PCN8L1uZvfIhbkIcdx9MlmG3k
+	 odhKQBAY7O2hX+BaSC1uWcMO7VH2pf+cC1ut4fJ3ASHvw5y2m/XEOwpT7iEhNLZvMe
+	 DaaUeJ2f+mFuRJSrdmcJ5npqaY0j4UE2LjObr+yg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393021AbfJCQrR (ORCPT
+        id S2405155AbfJCQrX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 12:47:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60762 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 12:47:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60884 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391908AbfJCQrP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:47:15 -0400
+        id S2393024AbfJCQrV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:47:21 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B210520865;
-        Thu,  3 Oct 2019 16:47:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 08D5C2070B;
+        Thu,  3 Oct 2019 16:47:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570121235;
-        bh=UAqf7zew8LOkdI77XKlrpMRDlwQstc8vJo/rqe1QRCk=;
+        s=default; t=1570121240;
+        bh=A5X2Og1r81lOw6mPlGwfMS/sB3j/vqTSU+w3envdz6k=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=fEQ/9M5y8UkkRaT5/8AuJd1i8qEwUnq0Fqyk8w1kq3r+zRgErfQ2eHkE2PSXd1eJO
-         Q0st0MqGKxz3xkJh0VvcMuHGdl38ByiqpXZIKoLJaKA9gi3ROXF4gQ01a8oeFPDD8B
-         W2PskVJqtMPhKSvtOKjrIHiqejF8vUiKXxijaJwA=
+        b=R/8jWroqudHt+Qa/k8aKWk20ygmAkoK6YKMu2Zersc4apHyyl/bRc86t0YqAlxw92
+         CBR8NLNt3fURBbk4dMG4QzOKHYJf9cmkt3yNq1WQDiuxD3Zevi5JUt3/OE5+wsreGd
+         VGxc1txdERVAVDYwiGBFV4Z28HnqE5CwFgIu10uE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Katsuhiro Suzuki <katsuhiro@katsuster.net>,
-        Mark Brown <broonie@kernel.org>,
+        stable@vger.kernel.org, Prarit Bhargava <prarit@redhat.com>,
+        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+        David Arcari <darcari@redhat.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.3 204/344] SoC: simple-card-utils: set 0Hz to sysclk when shutdown
-Date:   Thu,  3 Oct 2019 17:52:49 +0200
-Message-Id: <20191003154600.389003319@linuxfoundation.org>
+Subject: [PATCH 5.3 206/344] tools/power/x86/intel-speed-select: Fix memory leak
+Date:   Thu,  3 Oct 2019 17:52:51 +0200
+Message-Id: <20191003154600.609328069@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191003154540.062170222@linuxfoundation.org>
 References: <20191003154540.062170222@linuxfoundation.org>
@@ -60,68 +62,69 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Katsuhiro Suzuki <katsuhiro@katsuster.net>
+From: Prarit Bhargava <prarit@redhat.com>
 
-[ Upstream commit 2458adb8f92ad4d07ef7ab27c5bafa1d3f4678d6 ]
+[ Upstream commit 3bc3d30ca324bfc3045a1a7fe1f5fe5ad5d92fd9 ]
 
-This patch set 0Hz to sysclk when shutdown the card.
+cpumasks are allocated by calling the alloc_cpu_mask() function and are
+never free'd.  They should be free'd after the commands have run.
 
-Some codecs set rate constraints that derives from sysclk. This
-mechanism works correctly if machine drivers give fixed frequency.
+Fix the memory leaks by calling free_cpu_set().
 
-But simple-audio and audio-graph card set variable clock rate if
-'mclk-fs' property exists. In this case, rate constraints will go
-bad scenario. For example a codec accepts three limited rates
-(mclk / 256, mclk / 384, mclk / 512).
-
-Bad scenario as follows (mclk-fs = 256):
-   - Initialize sysclk by correct value (Ex. 12.288MHz)
-     - Codec set constraints of PCM rate by sysclk
-       48kHz (1/256), 32kHz (1/384), 24kHz (1/512)
-   - Play 48kHz sound, it's acceptable
-   - Sysclk is not changed
-
-   - Play 32kHz sound, it's acceptable
-   - Set sysclk to 8.192MHz (= fs * mclk-fs = 32k * 256)
-     - Codec set constraints of PCM rate by sysclk
-       32kHz (1/256), 21.33kHz (1/384), 16kHz (1/512)
-
-   - Play 48kHz again, but it's NOT acceptable because constraints
-     do not allow 48kHz
-
-So codecs treat 0Hz sysclk as signal of applying no constraints to
-avoid this problem.
-
-Signed-off-by: Katsuhiro Suzuki <katsuhiro@katsuster.net>
-Link: https://lore.kernel.org/r/20190907174501.19833-1-katsuhiro@katsuster.net
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Signed-off-by: Prarit Bhargava <prarit@redhat.com>
+Acked-by: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+Cc: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+Cc: David Arcari <darcari@redhat.com>
+Cc: linux-kernel@vger.kernel.org
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/generic/simple-card-utils.c | 7 +++++++
- 1 file changed, 7 insertions(+)
+ tools/power/x86/intel-speed-select/isst-config.c | 16 +++++++++++-----
+ 1 file changed, 11 insertions(+), 5 deletions(-)
 
-diff --git a/sound/soc/generic/simple-card-utils.c b/sound/soc/generic/simple-card-utils.c
-index 556b1a789629d..9b794775df537 100644
---- a/sound/soc/generic/simple-card-utils.c
-+++ b/sound/soc/generic/simple-card-utils.c
-@@ -213,10 +213,17 @@ EXPORT_SYMBOL_GPL(asoc_simple_startup);
- void asoc_simple_shutdown(struct snd_pcm_substream *substream)
- {
- 	struct snd_soc_pcm_runtime *rtd = substream->private_data;
-+	struct snd_soc_dai *codec_dai = rtd->codec_dai;
-+	struct snd_soc_dai *cpu_dai = rtd->cpu_dai;
- 	struct asoc_simple_priv *priv = snd_soc_card_get_drvdata(rtd->card);
- 	struct simple_dai_props *dai_props =
- 		simple_priv_to_props(priv, rtd->num);
+diff --git a/tools/power/x86/intel-speed-select/isst-config.c b/tools/power/x86/intel-speed-select/isst-config.c
+index 91c5ad1685a15..6a10dea01eefc 100644
+--- a/tools/power/x86/intel-speed-select/isst-config.c
++++ b/tools/power/x86/intel-speed-select/isst-config.c
+@@ -603,6 +603,10 @@ static int isst_fill_platform_info(void)
  
-+	if (dai_props->mclk_fs) {
-+		snd_soc_dai_set_sysclk(codec_dai, 0, 0, SND_SOC_CLOCK_IN);
-+		snd_soc_dai_set_sysclk(cpu_dai, 0, 0, SND_SOC_CLOCK_OUT);
+ 	close(fd);
+ 
++	if (isst_platform_info.api_version > supported_api_ver) {
++		printf("Incompatible API versions; Upgrade of tool is required\n");
++		return -1;
 +	}
-+
- 	asoc_simple_clk_disable(dai_props->cpu_dai);
+ 	return 0;
+ }
  
- 	asoc_simple_clk_disable(dai_props->codec_dai);
+@@ -1529,6 +1533,7 @@ static void cmdline(int argc, char **argv)
+ {
+ 	int opt;
+ 	int option_index = 0;
++	int ret;
+ 
+ 	static struct option long_options[] = {
+ 		{ "cpu", required_argument, 0, 'c' },
+@@ -1590,13 +1595,14 @@ static void cmdline(int argc, char **argv)
+ 	set_max_cpu_num();
+ 	set_cpu_present_cpu_mask();
+ 	set_cpu_target_cpu_mask();
+-	isst_fill_platform_info();
+-	if (isst_platform_info.api_version > supported_api_ver) {
+-		printf("Incompatible API versions; Upgrade of tool is required\n");
+-		exit(0);
+-	}
++	ret = isst_fill_platform_info();
++	if (ret)
++		goto out;
+ 
+ 	process_command(argc, argv);
++out:
++	free_cpu_set(present_cpumask);
++	free_cpu_set(target_cpumask);
+ }
+ 
+ int main(int argc, char **argv)
 -- 
 2.20.1
 
