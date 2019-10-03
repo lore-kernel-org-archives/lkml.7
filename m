@@ -2,127 +2,120 @@ Return-Path: <SRS0=6dNS=X4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.3 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 380DEC32792
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 20:41:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DF998C32792
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 20:42:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 08759207FF
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 20:41:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="Xdetv9K9"
+	by mail.kernel.org (Postfix) with ESMTP id BCB88207FF
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 20:42:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389364AbfJCUlc (ORCPT
+        id S2389441AbfJCUm1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 16:41:32 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:37961 "EHLO ozlabs.org"
+        Thu, 3 Oct 2019 16:42:27 -0400
+Received: from foss.arm.com ([217.140.110.172]:56256 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726669AbfJCUlb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 16:41:31 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 46klKN03hHz9sCJ;
-        Fri,  4 Oct 2019 06:41:27 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1570135288;
-        bh=6h50s+8T6FadF0QKkVxMnA2Sp2h21Or+M2VbdN2pvlM=;
-        h=Date:From:To:Cc:Subject:From;
-        b=Xdetv9K9brxjEmde6/bxg5czoNm67NzeP2BkxTBLPgII9vdWF3DaqdA7phfr+dETD
-         v4Y5eAmQg1I8jCMMPiuX5hgu+4DLofzDZHCAyrN9ANI5zhzW38prm/fM2xQLb1iL1n
-         oGDXO6Js1BZwaVIIX7OsDXNQYJeG1AAxCWDka80djxwQnEkwpDwJU/RlmJ1ZHiqZXe
-         NIAttjd+8hz9UzC6kkXjCNEYk0s2hwSm6Okjr+tQBOw2MH5AerqT9cpCiNs80gXk7N
-         Nt9DDkiJijW3Iu64sZhwEeMv3plP2mj5pvDg+X92hkZbGDSdAg/7H3WF3z9gsHjCDo
-         3JkIiEM2Q2EpQ==
-Date:   Fri, 4 Oct 2019 06:41:20 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Kevin Hilman <khilman@baylibre.com>,
-        Carlo Caione <carlo@caione.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Christian Hewitt <christianshewitt@gmail.com>
-Subject: linux-next: Fixes tags need some work in the amlogic tree
-Message-ID: <20191004064120.6262d85a@canb.auug.org.au>
+        id S1726669AbfJCUm0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 16:42:26 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id CF79F337;
+        Thu,  3 Oct 2019 13:42:25 -0700 (PDT)
+Received: from [192.168.1.124] (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E00273F739;
+        Thu,  3 Oct 2019 13:42:23 -0700 (PDT)
+Subject: Re: [PATCH v2] iommu/arm-smmu: Break insecure users by disabling
+ bypass by default
+To:     Tim Harvey <tharvey@gateworks.com>,
+        Douglas Anderson <dianders@chromium.org>,
+        Tirumalesh Chalamarla <tchalamarla@caviumnetworks.com>
+Cc:     Joerg Roedel <joro@8bytes.org>, Will Deacon <will.deacon@arm.com>,
+        linux-arm-msm@vger.kernel.org, evgreen@chromium.org,
+        tfiga@chromium.org, Rob Clark <robdclark@gmail.com>,
+        iommu@lists.linux-foundation.org,
+        linux-arm-kernel@lists.infradead.org,
+        Vivek Gautam <vivek.gautam@codeaurora.org>,
+        open list <linux-kernel@vger.kernel.org>
+References: <20190301192017.39770-1-dianders@chromium.org>
+ <CAJ+vNU0Ma5nG9_ThLO4cdO+=ivf7rmXiHZonF0HY0xx6X3R6Hw@mail.gmail.com>
+From:   Robin Murphy <robin.murphy@arm.com>
+Message-ID: <5dce2964-8761-e7d0-8963-f0f5cb2feb02@arm.com>
+Date:   Thu, 3 Oct 2019 21:42:20 +0100
+User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.1
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/0m_My+wqo=2AS7Rd+XOThTc";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+In-Reply-To: <CAJ+vNU0Ma5nG9_ThLO4cdO+=ivf7rmXiHZonF0HY0xx6X3R6Hw@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/0m_My+wqo=2AS7Rd+XOThTc
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+Hi Tim,
 
-Hi all,
+On 2019-10-03 7:27 pm, Tim Harvey wrote:
+> On Fri, Mar 1, 2019 at 11:21 AM Douglas Anderson <dianders@chromium.org> wrote:
+>>
+>> If you're bisecting why your peripherals stopped working, it's
+>> probably this CL.  Specifically if you see this in your dmesg:
+>>    Unexpected global fault, this could be serious
+>> ...then it's almost certainly this CL.
+>>
+>> Running your IOMMU-enabled peripherals with the IOMMU in bypass mode
+>> is insecure and effectively disables the protection they provide.
+>> There are few reasons to allow unmatched stream bypass, and even fewer
+>> good ones.
+>>
+>> This patch starts the transition over to make it much harder to run
+>> your system insecurely.  Expected steps:
+>>
+>> 1. By default disable bypass (so anyone insecure will notice) but make
+>>     it easy for someone to re-enable bypass with just a KConfig change.
+>>     That's this patch.
+>>
+>> 2. After people have had a little time to come to grips with the fact
+>>     that they need to set their IOMMUs properly and have had time to
+>>     dig into how to do this, the KConfig will be eliminated and bypass
+>>     will simply be disabled.  Folks who are truly upset and still
+>>     haven't fixed their system can either figure out how to add
+>>     'arm-smmu.disable_bypass=n' to their command line or revert the
+>>     patch in their own private kernel.  Of course these folks will be
+>>     less secure.
+>>
+>> Suggested-by: Robin Murphy <robin.murphy@arm.com>
+>> Signed-off-by: Douglas Anderson <dianders@chromium.org>
+>> ---
+> 
+> Hi Doug / Robin,
+> 
+> I ran into this breaking things on OcteonTx boards based on CN80XX
+> CPU. The IOMMU configuration is a bit beyond me and I'm hoping you can
+> offer some advice. The IOMMU here is cavium,smmu-v2 as defined in
+> https://github.com/Gateworks/dts-newport/blob/master/cn81xx-linux.dtsi
+> 
+> Booting with 'arm-smmu.disable_bypass=n' does indeed work around the
+> breakage as the commit suggests.
+> 
+> Any suggestions for a proper fix?
 
-In commit
+Ah, you're using the old "mmu-masters" binding (and in a way which isn't 
+well-defined - it's never been specified what the stream ID argument(s) 
+would mean for a PCI host bridge, and Linux just ignores them). The 
+ideal thing would be to update the DT to generic "iommu-map" properties 
+- it's been a long time since I last played with a ThunderX, but I 
+believe the SMMU stream IDs should just be the same as the ITS device 
+IDs (which is how the "mmu-masters" mapping would have played out anyway).
 
-  cb8411a2b051 ("arm64: dts: meson-gxm-khadas-vim2: fix uart_A bluetooth no=
-de")
+The arm-smmu driver support for the old binding has always relied on 
+implicit bypass - there are technical reasons why we can't realistically 
+support the full functionality offered to the generic bindings, but it 
+would be possible to add some degree of workaround to prevent it 
+interacting quite so poorly with disable_bypass, if necessary. Do you 
+have deployed systems with DTs that can't be updated, but still might 
+need to run new kernels?
 
-Fixes tag
-
-  Fixes: 33344e2111a ("arm64: dts: meson-gxm-khadas-vim2: fix Bluetooth sup=
-port")
-
-has these problem(s):
-
-  - SHA1 should be at least 12 digits long
-
-In commit
-
-  495637be0e28 ("arm64: dts: meson-gxl-s905x-khadas-vim: fix uart_A bluetoo=
-th node")
-
-Fixes tag
-
-  Fixes: dd5297cc8b8 ("arm64: dts: meson-gxl-s905x-khadas-vim enable Blueto=
-oth")
-
-has these problem(s):
-
-  - SHA1 should be at least 12 digits long
-
-In commit
-
-  880913b3ccaa ("arm64: dts: meson-gxl-s905x-khadas-vim: fix gpio-keys-poll=
-ed node")
-
-Fixes tag
-
-  Fixes: e15d2774b8c ("ARM64: dts: meson-gxl: add support for the Khadas VI=
-M board")
-
-has these problem(s):
-
-  - SHA1 should be at least 12 digits long
-
-These can be fixed by setting core.abbrev to 12 (or more) or (for git
-v2.11 or later) just making sure it is not set (or set to "auto").
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/0m_My+wqo=2AS7Rd+XOThTc
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl2WXPEACgkQAVBC80lX
-0GzaQggAoYYG67DCMn/Ggi7EVRRwGKNMlHTJp1P5vDw2TyFeSpIUjnGtZ9ESKESn
-YhZnVZdOFSyTVBtdc4RXDe7Psf7ZJ4p3w0wsBzvro41sxQvioqn19LaFDu0ik+Jh
-9+cvvgIF2srLZQrwyDDPJR8nAeUluR/N6evMsKjPa6RWoh7IDdJQM0xyXQiwlvgi
-wA4GJGI/z4ydmvD2SxxRwzy22132rTZnLRJm4K5ZnRYLDJQejyANdLgzTWTMg2aj
-gHYkU+WdBnNE/Y6c5Shm0jsD82R8QKUVvW/npngY1YW5vyvmAs4sgWco+hreMIJd
-mAo6T8+ukFEiACURRiB3AhDxg8rPNg==
-=1ofM
------END PGP SIGNATURE-----
-
---Sig_/0m_My+wqo=2AS7Rd+XOThTc--
+Robin.
