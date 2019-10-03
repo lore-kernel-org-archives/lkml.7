@@ -3,82 +3,88 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 457FAC10F14
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 12:23:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27545C32792
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 12:23:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 203C520862
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 12:23:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 087F620830
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 12:23:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729247AbfJCMXB (ORCPT
+        id S1729435AbfJCMXM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 08:23:01 -0400
-Received: from mail2-relais-roc.national.inria.fr ([192.134.164.83]:35884 "EHLO
-        mail2-relais-roc.national.inria.fr" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725827AbfJCMXA (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 08:23:00 -0400
-X-IronPort-AV: E=Sophos;i="5.67,252,1566856800"; 
-   d="scan'208";a="404566184"
-Received: from portablejulia.rsr.lip6.fr ([132.227.76.63])
-  by mail2-relais-roc.national.inria.fr with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 03 Oct 2019 14:22:58 +0200
-Date:   Thu, 3 Oct 2019 14:22:58 +0200 (CEST)
-From:   Julia Lawall <julia.lawall@lip6.fr>
-X-X-Sender: julia@hadrien
-To:     Masahiro Yamada <yamada.masahiro@socionext.com>
-cc:     Yuehaibing <yuehaibing@huawei.com>,
-        Gilles Muller <Gilles.Muller@lip6.fr>,
-        Nicolas Palix <nicolas.palix@imag.fr>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Matthias Maennich <maennich@google.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Coccinelle <cocci@systeme.lip6.fr>
-Subject: Re: [RFC PATCH] scripts: Fix coccicheck failed
-In-Reply-To: <CAK7LNATAqM9QHRqotFQsmh64rww_AxNm4gdV2t5TuYxHA++zSg@mail.gmail.com>
-Message-ID: <alpine.DEB.2.21.1910031422240.2406@hadrien>
-References: <20190928094245.45696-1-yuehaibing@huawei.com> <alpine.DEB.2.21.1909280542490.2168@hadrien> <2c109d6b-45ad-b3ca-1951-bde4dac91d2a@huawei.com> <alpine.DEB.2.21.1909291810300.3346@hadrien> <ac79cb42-1713-8801-37e4-edde540f101c@huawei.com>
- <alpine.DEB.2.21.1910011500470.13162@hadrien> <CAK7LNATAqM9QHRqotFQsmh64rww_AxNm4gdV2t5TuYxHA++zSg@mail.gmail.com>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        Thu, 3 Oct 2019 08:23:12 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:59222 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725827AbfJCMXM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 08:23:12 -0400
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 8A5DE10DCC8F;
+        Thu,  3 Oct 2019 12:23:11 +0000 (UTC)
+Received: from kamzik.brq.redhat.com (unknown [10.43.2.160])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 7E5C65C3F8;
+        Thu,  3 Oct 2019 12:23:05 +0000 (UTC)
+Date:   Thu, 3 Oct 2019 14:23:02 +0200
+From:   Andrew Jones <drjones@redhat.com>
+To:     Steven Price <steven.price@arm.com>
+Cc:     Marc Zyngier <maz@kernel.org>, Will Deacon <will@kernel.org>,
+        linux-arm-kernel@lists.infradead.org, kvmarm@lists.cs.columbia.edu,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>,
+        Russell King <linux@armlinux.org.uk>,
+        James Morse <james.morse@arm.com>,
+        Julien Thierry <julien.thierry.kdev@gmail.com>,
+        Suzuki K Pouloze <suzuki.poulose@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>, kvm@vger.kernel.org,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Christoffer Dall <christoffer.dall@arm.com>
+Subject: Re: [PATCH v5 02/10] KVM: arm/arm64: Factor out hypercall handling
+ from PSCI code
+Message-ID: <20191003122302.emrmpzntkgzqlc3m@kamzik.brq.redhat.com>
+References: <20191002145037.51630-1-steven.price@arm.com>
+ <20191002145037.51630-3-steven.price@arm.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191002145037.51630-3-steven.price@arm.com>
+User-Agent: NeoMutt/20180716
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.64]); Thu, 03 Oct 2019 12:23:11 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On Thu, 3 Oct 2019, Masahiro Yamada wrote:
-
-> On Tue, Oct 1, 2019 at 10:01 PM Julia Lawall <julia.lawall@lip6.fr> wrote:
-> > > diff --git a/scripts/coccinelle/misc/add_namespace.cocci b/scripts/coccinelle/misc/add_namespace.cocci
-> > > index c832bb6445a8..99e93a6c2e24 100644
-> > > --- a/scripts/coccinelle/misc/add_namespace.cocci
-> > > +++ b/scripts/coccinelle/misc/add_namespace.cocci
-> > > @@ -6,6 +6,8 @@
-> > >  /// add a missing namespace tag to a module source file.
-> > >  ///
-> > >
-> > > +virtual report
-> > > +
-> > >  @has_ns_import@
-> > >  declarer name MODULE_IMPORT_NS;
-> > >  identifier virtual.ns;
-> > >
-> > >
-> > >
-> > > Adding virtual report make the coccicheck go ahead smoothly.
-> >
-> > Acked-by: Julia Lawall <julia.lawall@lip6.fr>
-> >
+On Wed, Oct 02, 2019 at 03:50:29PM +0100, Steven Price wrote:
+> From: Christoffer Dall <christoffer.dall@arm.com>
+> 
+> We currently intertwine the KVM PSCI implementation with the general
+> dispatch of hypercall handling, which makes perfect sense because PSCI
+> is the only category of hypercalls we support.
+> 
+> However, as we are about to support additional hypercalls, factor out
+> this functionality into a separate hypercall handler file.
+> 
+> Signed-off-by: Christoffer Dall <christoffer.dall@arm.com>
+> [steven.price@arm.com: rebased]
+> Signed-off-by: Steven Price <steven.price@arm.com>
+> ---
+>  arch/arm/kvm/Makefile        |  2 +-
+>  arch/arm/kvm/handle_exit.c   |  2 +-
+>  arch/arm64/kvm/Makefile      |  1 +
+>  arch/arm64/kvm/handle_exit.c |  4 +-
+>  include/Kbuild               |  2 +
+>  include/kvm/arm_hypercalls.h | 43 ++++++++++++++++++
+>  include/kvm/arm_psci.h       |  2 +-
+>  virt/kvm/arm/hypercalls.c    | 59 +++++++++++++++++++++++++
+>  virt/kvm/arm/psci.c          | 84 +-----------------------------------
+>  9 files changed, 112 insertions(+), 87 deletions(-)
+>  create mode 100644 include/kvm/arm_hypercalls.h
+>  create mode 100644 virt/kvm/arm/hypercalls.c
 >
->
-> Was this patch posted somewhere?
 
-It was probably waiting for moderation in the cocci mailing list.  Do you
-have it now (or in a few minutes)?
-
-julia
+Reviewed-by: Andrew Jones <drjones@redhat.com>
