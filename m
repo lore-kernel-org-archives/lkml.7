@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DFBB8C10F14
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:48:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 05852C32792
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:48:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A694D2070B
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:48:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CBAAE20867
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:48:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570121301;
-	bh=1qcIqWVNgDnORZDuw7aMihN8tv/7ZLu/i1Km/FS0zBg=;
+	s=default; t=1570121303;
+	bh=dzieCr/axxqMz92jBnTQ1G764nndP0Xbet2Pe5781Xs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=HdxudRqJvrQINlH9FFnAt8JWDZSK8YLulKwU88TmpzmEnLxb7wnUgmshv8yLOxYo0
-	 mSkW8Hk+/dTJWqpTVIbLT5/44nSNFDzhh5o6DncwJ8TW0yf11Z+MXvvEk7isDwy+cu
-	 pMiSblwAyoU+OCLJySK+Pj4oJrnKNO8h1ZnGb1dw=
+	b=aJqVWXxI7MX2O9qSZctwzVVc1anTJFwjtplkVkFIx+EnqKezobGiCRypFfE+pxb6b
+	 nquW9W2TSW5h/UVevl9FkJ0XVWXQGb/QUe2D2qBSlOXtTJBcx5GexiiN35dTfa0ps3
+	 Yaoah5Jwc7X7VekbwPDw9R2qI8veapEbCy2dXryM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405633AbfJCQsU (ORCPT
+        id S2405640AbfJCQsX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 12:48:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33920 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 12:48:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33966 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2405551AbfJCQsP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:48:15 -0400
+        id S2405612AbfJCQsS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:48:18 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D745C2086A;
-        Thu,  3 Oct 2019 16:48:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A1220215EA;
+        Thu,  3 Oct 2019 16:48:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570121294;
-        bh=1qcIqWVNgDnORZDuw7aMihN8tv/7ZLu/i1Km/FS0zBg=;
+        s=default; t=1570121297;
+        bh=dzieCr/axxqMz92jBnTQ1G764nndP0Xbet2Pe5781Xs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=u2JbokcaIfRYoHaFbPfm2TxB/zaYfQRxgouWnu2dOQLyyuB0R4N142m++NgKMwFZf
-         txQw0bHePuEORpVKlEPhzNyNk8dJvIZV2zsRLkIoSgwfsoGj/Wy70j57qyj9/p00qT
-         f0NVNrzWmOiglxdSAY1bhLom1WQLnYakIf2TRlmk=
+        b=awmHudFA0VyCNO4YNMtUZVgUg9nWT5/6bkblBRJNm5oHWpGhnHIEdcXpjjvrFc8SD
+         Mv8sPQSGbG8N/dRrX0Yqb7fCBjtgkS20WQaiuX9x6PciQa/1+Sfq2qO31QUkePQacG
+         wBk0fMRFmnlwY3y5/k9RC7GGF01CbP644nfNvtyc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Wenwen Wang <wenwen@cs.uga.edu>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.3 190/344] ACPI / PCI: fix acpi_pci_irq_enable() memory leak
-Date:   Thu,  3 Oct 2019 17:52:35 +0200
-Message-Id: <20191003154558.928753761@linuxfoundation.org>
+        stable@vger.kernel.org, Qian Cai <cai@lca.pw>,
+        Joerg Roedel <jroedel@suse.de>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.3 181/344] iommu/amd: Silence warnings under memory pressure
+Date:   Thu,  3 Oct 2019 17:52:26 +0200
+Message-Id: <20191003154558.066593822@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191003154540.062170222@linuxfoundation.org>
 References: <20191003154540.062170222@linuxfoundation.org>
@@ -60,39 +59,62 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wenwen Wang <wenwen@cs.uga.edu>
+From: Qian Cai <cai@lca.pw>
 
-[ Upstream commit 29b49958cf73b439b17fa29e9a25210809a6c01c ]
+[ Upstream commit 3d708895325b78506e8daf00ef31549476e8586a ]
 
-In acpi_pci_irq_enable(), 'entry' is allocated by kzalloc() in
-acpi_pci_irq_check_entry() (invoked from acpi_pci_irq_lookup()). However,
-it is not deallocated if acpi_pci_irq_valid() returns false, leading to a
-memory leak. To fix this issue, free 'entry' before returning 0.
+When running heavy memory pressure workloads, the system is throwing
+endless warnings,
 
-Fixes: e237a5518425 ("x86/ACPI/PCI: Recognize that Interrupt Line 255 means "not connected"")
-Signed-off-by: Wenwen Wang <wenwen@cs.uga.edu>
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+smartpqi 0000:23:00.0: AMD-Vi: IOMMU mapping error in map_sg (io-pages:
+5 reason: -12)
+Hardware name: HPE ProLiant DL385 Gen10/ProLiant DL385 Gen10, BIOS A40
+07/10/2019
+swapper/10: page allocation failure: order:0, mode:0xa20(GFP_ATOMIC),
+nodemask=(null),cpuset=/,mems_allowed=0,4
+Call Trace:
+ <IRQ>
+ dump_stack+0x62/0x9a
+ warn_alloc.cold.43+0x8a/0x148
+ __alloc_pages_nodemask+0x1a5c/0x1bb0
+ get_zeroed_page+0x16/0x20
+ iommu_map_page+0x477/0x540
+ map_sg+0x1ce/0x2f0
+ scsi_dma_map+0xc6/0x160
+ pqi_raid_submit_scsi_cmd_with_io_request+0x1c3/0x470 [smartpqi]
+ do_IRQ+0x81/0x170
+ common_interrupt+0xf/0xf
+ </IRQ>
+
+because the allocation could fail from iommu_map_page(), and the volume
+of this call could be huge which may generate a lot of serial console
+output and cosumes all CPUs.
+
+Fix it by silencing the warning in this call site, and there is still a
+dev_err() later to notify the failure.
+
+Signed-off-by: Qian Cai <cai@lca.pw>
+Signed-off-by: Joerg Roedel <jroedel@suse.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/acpi/pci_irq.c | 4 +++-
+ drivers/iommu/amd_iommu.c | 4 +++-
  1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/acpi/pci_irq.c b/drivers/acpi/pci_irq.c
-index d2549ae65e1b6..dea8a60e18a4c 100644
---- a/drivers/acpi/pci_irq.c
-+++ b/drivers/acpi/pci_irq.c
-@@ -449,8 +449,10 @@ int acpi_pci_irq_enable(struct pci_dev *dev)
- 		 * No IRQ known to the ACPI subsystem - maybe the BIOS /
- 		 * driver reported one, then use it. Exit in any case.
- 		 */
--		if (!acpi_pci_irq_valid(dev, pin))
-+		if (!acpi_pci_irq_valid(dev, pin)) {
-+			kfree(entry);
- 			return 0;
-+		}
+diff --git a/drivers/iommu/amd_iommu.c b/drivers/iommu/amd_iommu.c
+index 61de81965c44e..e1259429ded2f 100644
+--- a/drivers/iommu/amd_iommu.c
++++ b/drivers/iommu/amd_iommu.c
+@@ -2577,7 +2577,9 @@ static int map_sg(struct device *dev, struct scatterlist *sglist,
  
- 		if (acpi_isa_register_gsi(dev))
- 			dev_warn(&dev->dev, "PCI INT %c: no GSI\n",
+ 			bus_addr  = address + s->dma_address + (j << PAGE_SHIFT);
+ 			phys_addr = (sg_phys(s) & PAGE_MASK) + (j << PAGE_SHIFT);
+-			ret = iommu_map_page(domain, bus_addr, phys_addr, PAGE_SIZE, prot, GFP_ATOMIC);
++			ret = iommu_map_page(domain, bus_addr, phys_addr,
++					     PAGE_SIZE, prot,
++					     GFP_ATOMIC | __GFP_NOWARN);
+ 			if (ret)
+ 				goto out_unmap;
+ 
 -- 
 2.20.1
 
