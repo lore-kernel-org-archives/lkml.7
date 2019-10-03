@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E775BC4360C
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 01:39:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B375EC4360C
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 01:39:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B14D2222D1
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 01:39:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 88E81222CE
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 01:39:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570066758;
-	bh=R4+8y7N9zQgrqWaJoUYn/0mob3suNOYTLqxQSBYW3A0=;
+	s=default; t=1570066761;
+	bh=t8dOztihM4jRTxXHKG16m4sv8yQked4/7cFoEOKxFzQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=iGDWkmLGN0z464BpBdTeyQqJ5cy98LqagEeIBPLufIl1jeccqNW73hypLsrHsq+BQ
-	 jSCQ2Vea3Q/gFyKBUROYEQWksSW+HwCydmCidTDjy2MRKfEvZhlthBajbHZyxDz4TO
-	 0mK4Okd6LUivakU1cAubRqbhftfyCgJqt2ndtmgY=
+	b=wsHYvfZNwCoZ0a4FE1O6gKn4mRXxOwkq/+huvI8ck8vbsb9SpyRw8CHYwdZuEOJcw
+	 dF1s7CLnga42f80tZF1Nj3DcgIf5bQ+kcygGJs8cGGpD25AkmUJ4CSZnNiZos7ERKg
+	 OTpwWgTxtIjxRw4YjF0nKHMQmkx0NIDv/kiQ5Gic=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728575AbfJCBjL (ORCPT
+        id S1728534AbfJCBjK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Oct 2019 21:39:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44818 "EHLO mail.kernel.org"
+        Wed, 2 Oct 2019 21:39:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44786 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727866AbfJCBjH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1727750AbfJCBjH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 2 Oct 2019 21:39:07 -0400
 Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D3104222C9;
+        by mail.kernel.org (Postfix) with ESMTPSA id 830AD222C8;
         Thu,  3 Oct 2019 01:39:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570066747;
-        bh=R4+8y7N9zQgrqWaJoUYn/0mob3suNOYTLqxQSBYW3A0=;
+        s=default; t=1570066746;
+        bh=t8dOztihM4jRTxXHKG16m4sv8yQked4/7cFoEOKxFzQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=HW070pkccYDNcKw7OKYXUyV9GyonGVRezBxdDSvc9hW1pZS+BRJqfoRlsp/2QhxKn
-         YGE0AABiUG0JEjPmybbAI1kBgQpe8LBfvy4xDXMUIzvwGenr1G0AFxs/P6xsOELgdi
-         YqNcIt37xwO35dY87x9BnN+CutmGKyJd8Yr5h5DU=
+        b=w0WtQSFYpwdisb5S1Z0tiAVYf3MopmUCLNBYy3aOy7W73PlaNrI7SHGEohxhJnUAu
+         CqSSNibye3X/VdcYI5yy5qhzj737j4e4F3wdrMAU2PkQ6DMnlzig79OiMMCIKeG8AA
+         nCwYTYr3qQlht8JWZKMudCKZbzL+Obl1ABAWHI2k=
 From:   paulmck@kernel.org
 To:     rcu@vger.kernel.org
 Cc:     linux-kernel@vger.kernel.org, mingo@kernel.org,
@@ -48,9 +48,9 @@ Cc:     linux-kernel@vger.kernel.org, mingo@kernel.org,
         rostedt@goodmis.org, dhowells@redhat.com, edumazet@google.com,
         fweisbec@gmail.com, oleg@redhat.com, joel@joelfernandes.org,
         "Paul E. McKenney" <paulmck@linux.ibm.com>
-Subject: [PATCH tip/core/rcu 05/12] stop_machine: EXP Provide RCU quiescent state in multi_cpu_stop()
-Date:   Wed,  2 Oct 2019 18:38:56 -0700
-Message-Id: <20191003013903.13079-5-paulmck@kernel.org>
+Subject: [PATCH tip/core/rcu 04/12] rcutorture: Force on tick for readers and callback flooders
+Date:   Wed,  2 Oct 2019 18:38:55 -0700
+Message-Id: <20191003013903.13079-4-paulmck@kernel.org>
 X-Mailer: git-send-email 2.9.5
 In-Reply-To: <20191003013834.GA12927@paulmck-ThinkPad-P72>
 References: <20191003013834.GA12927@paulmck-ThinkPad-P72>
@@ -61,56 +61,95 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: "Paul E. McKenney" <paulmck@linux.ibm.com>
 
-When multi_cpu_stop() loops waiting for other tasks, it can trigger an RCU
-CPU stall warning.  This can be misleading because what is instead needed
-is information on whatever task is blocking multi_cpu_stop().  This commit
-therefore inserts an RCU quiescent state into the multi_cpu_stop()
-function's waitloop.
+Readers and callback flooders in the rcutorture stress-test suite run for
+extended time periods by design.  They do take pains to relinquish the
+CPU from time to time, but in some cases this relies on the scheduler
+being active, which in turn relies on the scheduler-clock interrupt
+firing from time to time.
 
+This commit therefore forces scheduling-clock interrupts within
+these loops.  While in the area, this commit also prevents
+rcu_torture_reader()'s occasional timed sleeps from delaying shutdown.
+
+[ paulmck: Apply Joel Fernandes TICK_DEP_MASK_RCU->TICK_DEP_BIT_RCU fix. ]
 Signed-off-by: Paul E. McKenney <paulmck@linux.ibm.com>
 ---
- include/linux/rcutree.h | 1 +
- kernel/rcu/tree.c       | 2 +-
- kernel/stop_machine.c   | 1 +
- 3 files changed, 3 insertions(+), 1 deletion(-)
+ kernel/rcu/rcutorture.c | 20 ++++++++++++++------
+ 1 file changed, 14 insertions(+), 6 deletions(-)
 
-diff --git a/include/linux/rcutree.h b/include/linux/rcutree.h
-index 18b1ed9..c5147de 100644
---- a/include/linux/rcutree.h
-+++ b/include/linux/rcutree.h
-@@ -37,6 +37,7 @@ void kfree_call_rcu(struct rcu_head *head, rcu_callback_t func);
+diff --git a/kernel/rcu/rcutorture.c b/kernel/rcu/rcutorture.c
+index 3c9feca..1ce6a7e 100644
+--- a/kernel/rcu/rcutorture.c
++++ b/kernel/rcu/rcutorture.c
+@@ -44,6 +44,7 @@
+ #include <linux/sched/debug.h>
+ #include <linux/sched/sysctl.h>
+ #include <linux/oom.h>
++#include <linux/tick.h>
  
- void rcu_barrier(void);
- bool rcu_eqs_special_set(int cpu);
-+void rcu_momentary_dyntick_idle(void);
- unsigned long get_state_synchronize_rcu(void);
- void cond_synchronize_rcu(unsigned long oldstate);
+ #include "rcu.h"
  
-diff --git a/kernel/rcu/tree.c b/kernel/rcu/tree.c
-index db673ae..f708d54 100644
---- a/kernel/rcu/tree.c
-+++ b/kernel/rcu/tree.c
-@@ -364,7 +364,7 @@ bool rcu_eqs_special_set(int cpu)
-  *
-  * The caller must have disabled interrupts and must not be idle.
-  */
--static void __maybe_unused rcu_momentary_dyntick_idle(void)
-+void rcu_momentary_dyntick_idle(void)
- {
- 	int special;
- 
-diff --git a/kernel/stop_machine.c b/kernel/stop_machine.c
-index c7031a2..34c4f11 100644
---- a/kernel/stop_machine.c
-+++ b/kernel/stop_machine.c
-@@ -233,6 +233,7 @@ static int multi_cpu_stop(void *data)
- 			 */
- 			touch_nmi_watchdog();
+@@ -1363,15 +1364,16 @@ rcu_torture_reader(void *arg)
+ 	set_user_nice(current, MAX_NICE);
+ 	if (irqreader && cur_ops->irq_capable)
+ 		timer_setup_on_stack(&t, rcu_torture_timer, 0);
+-
++	if (IS_ENABLED(CONFIG_NO_HZ_FULL))
++		tick_dep_set_task(current, TICK_DEP_BIT_RCU);
+ 	do {
+ 		if (irqreader && cur_ops->irq_capable) {
+ 			if (!timer_pending(&t))
+ 				mod_timer(&t, jiffies + 1);
  		}
-+		rcu_momentary_dyntick_idle();
- 	} while (curstate != MULTI_STOP_EXIT);
+-		if (!rcu_torture_one_read(&rand))
++		if (!rcu_torture_one_read(&rand) && !torture_must_stop())
+ 			schedule_timeout_interruptible(HZ);
+-		if (time_after(jiffies, lastsleep)) {
++		if (time_after(jiffies, lastsleep) && !torture_must_stop()) {
+ 			schedule_timeout_interruptible(1);
+ 			lastsleep = jiffies + 10;
+ 		}
+@@ -1383,6 +1385,8 @@ rcu_torture_reader(void *arg)
+ 		del_timer_sync(&t);
+ 		destroy_timer_on_stack(&t);
+ 	}
++	if (IS_ENABLED(CONFIG_NO_HZ_FULL))
++		tick_dep_clear_task(current, TICK_DEP_BIT_RCU);
+ 	torture_kthread_stopping("rcu_torture_reader");
+ 	return 0;
+ }
+@@ -1729,10 +1733,10 @@ static void rcu_torture_fwd_prog_cond_resched(unsigned long iter)
+ 		// Real call_rcu() floods hit userspace, so emulate that.
+ 		if (need_resched() || (iter & 0xfff))
+ 			schedule();
+-	} else {
+-		// No userspace emulation: CB invocation throttles call_rcu()
+-		cond_resched();
++		return;
+ 	}
++	// No userspace emulation: CB invocation throttles call_rcu()
++	cond_resched();
+ }
  
- 	local_irq_restore(flags);
+ /*
+@@ -1865,6 +1869,8 @@ static void rcu_torture_fwd_prog_cr(void)
+ 	cver = READ_ONCE(rcu_torture_current_version);
+ 	gps = cur_ops->get_gp_seq();
+ 	rcu_launder_gp_seq_start = gps;
++	if (IS_ENABLED(CONFIG_NO_HZ_FULL))
++		tick_dep_set_task(current, TICK_DEP_BIT_RCU);
+ 	while (time_before(jiffies, stopat) &&
+ 	       !shutdown_time_arrived() &&
+ 	       !READ_ONCE(rcu_fwd_emergency_stop) && !torture_must_stop()) {
+@@ -1911,6 +1917,8 @@ static void rcu_torture_fwd_prog_cr(void)
+ 		rcu_torture_fwd_cb_hist();
+ 	}
+ 	schedule_timeout_uninterruptible(HZ); /* Let CBs drain. */
++	if (IS_ENABLED(CONFIG_NO_HZ_FULL))
++		tick_dep_clear_task(current, TICK_DEP_BIT_RCU);
+ 	WRITE_ONCE(rcu_fwd_cb_nodelay, false);
+ }
+ 
 -- 
 2.9.5
 
