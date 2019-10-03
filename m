@@ -4,54 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 24F3BC10F14
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:26:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B472C10F14
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:26:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F1EEA20865
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:26:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4D56F20830
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:26:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570123575;
-	bh=REPlmJ3AG9u8ggMbAE/uWkhiDbswCFmGAr0G8TJ0BKE=;
+	s=default; t=1570123583;
+	bh=U4nLDZyW+12AR45NjmA0NOq24LJ8YnQZNzJGzVI+V4I=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=S+kYvWCv1NrHhf8vhpDSD32DdcOk9E0pdo8xq0lELX0bl5Mh9E4Pxg7Dy0k5AqKDL
-	 f32V36uUID4J7sm6O+7Hao96LD29Yx5kLr9mWcLgi2VbFm4mKYdgLCSS+WgUg9z0C1
-	 kiUUFlLx13xVs1/yMZdj+orLsYIofESUHwc1G/dE=
+	b=EH/6bvQKp/y4HI6W1RDzU15KIYf9KhsAlNPT20fzQSMrOWiht70Gexz2vI7xq0DbG
+	 S23NeVV3a2HCXVXs7myPkXtM/nU036ST1R+VAsb1ALMkXux+eK1i2jcvCbXppeFrL0
+	 4PyazTDBsOX7OZSzD9FMaXxQKOpBDjpArM02zyAk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732939AbfJCR0O (ORCPT
+        id S2388914AbfJCQQG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 13:26:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41352 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 12:16:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40708 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388969AbfJCQQZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:16:25 -0400
+        id S1729580AbfJCQQD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:16:03 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E423D20700;
-        Thu,  3 Oct 2019 16:16:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A624721848;
+        Thu,  3 Oct 2019 16:16:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570119384;
-        bh=REPlmJ3AG9u8ggMbAE/uWkhiDbswCFmGAr0G8TJ0BKE=;
+        s=default; t=1570119363;
+        bh=U4nLDZyW+12AR45NjmA0NOq24LJ8YnQZNzJGzVI+V4I=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Tgkw+Mjl2Z/PxXOCD1b2BUHiP//FQf+0EaS1C0SUQPXg+GvOtP4c2CwVMv5T4iusU
-         DkRi00GC/P8gMNSX+sQsQe+S4R83YuG6SiIiS9Ormkq2FMhf7M0n+dpLi1ksG6IC1j
-         S0hWnZKHZ00+i5AKbqG5PsPzpkwJWUO5ceKxzgMM=
+        b=zZkIU0fyxo3hUgEbLuKPtEkoomA8+Vp/NesV8rE7f4RgcK38zyrTtKVrWiXnnU+Wz
+         3HnyJ6BqfLz5Zv2HeLAm7OcbAZ1lAG3N7Denv4HwOcLcAkHlrNTQqxdIF8zLvyEtAd
+         JtxT7CoYcZ3fKiCim4++78J1xSRvCRSYEWaAbHis=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Robert Richter <rrichter@marvell.com>,
-        Borislav Petkov <bp@suse.de>,
-        "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
-        James Morse <james.morse@arm.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Tony Luck <tony.luck@intel.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 046/211] EDAC/mc: Fix grain_bits calculation
-Date:   Thu,  3 Oct 2019 17:51:52 +0200
-Message-Id: <20191003154458.628881944@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 038/211] sched/fair: Fix imbalance due to CPU affinity
+Date:   Thu,  3 Oct 2019 17:51:44 +0200
+Message-Id: <20191003154456.085032239@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191003154447.010950442@linuxfoundation.org>
 References: <20191003154447.010950442@linuxfoundation.org>
@@ -64,78 +63,64 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Robert Richter <rrichter@marvell.com>
+From: Vincent Guittot <vincent.guittot@linaro.org>
 
-[ Upstream commit 3724ace582d9f675134985727fd5e9811f23c059 ]
+[ Upstream commit f6cad8df6b30a5d2bbbd2e698f74b4cafb9fb82b ]
 
-The grain in EDAC is defined as "minimum granularity for an error
-report, in bytes". The following calculation of the grain_bits in
-edac_mc is wrong:
+The load_balance() has a dedicated mecanism to detect when an imbalance
+is due to CPU affinity and must be handled at parent level. In this case,
+the imbalance field of the parent's sched_group is set.
 
-	grain_bits = fls_long(e->grain) + 1;
+The description of sg_imbalanced() gives a typical example of two groups
+of 4 CPUs each and 4 tasks each with a cpumask covering 1 CPU of the first
+group and 3 CPUs of the second group. Something like:
 
-Where grain_bits is defined as:
+	{ 0 1 2 3 } { 4 5 6 7 }
+	        *     * * *
 
-	grain = 1 << grain_bits
+But the load_balance fails to fix this UC on my octo cores system
+made of 2 clusters of quad cores.
 
-Example:
+Whereas the load_balance is able to detect that the imbalanced is due to
+CPU affinity, it fails to fix it because the imbalance field is cleared
+before letting parent level a chance to run. In fact, when the imbalance is
+detected, the load_balance reruns without the CPU with pinned tasks. But
+there is no other running tasks in the situation described above and
+everything looks balanced this time so the imbalance field is immediately
+cleared.
 
-	grain = 8	# 64 bit (8 bytes)
-	grain_bits = fls_long(8) + 1
-	grain_bits = 4 + 1 = 5
+The imbalance field should not be cleared if there is no other task to move
+when the imbalance is detected.
 
-	grain = 1 << grain_bits
-	grain = 1 << 5 = 32
-
-Replace it with the correct calculation:
-
-	grain_bits = fls_long(e->grain - 1);
-
-The example gives now:
-
-	grain_bits = fls_long(8 - 1)
-	grain_bits = fls_long(7)
-	grain_bits = 3
-
-	grain = 1 << 3 = 8
-
-Also, check if the hardware reports a reasonable grain != 0 and fallback
-with a warning to 1 byte granularity otherwise.
-
- [ bp: massage a bit. ]
-
-Signed-off-by: Robert Richter <rrichter@marvell.com>
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Cc: "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>
-Cc: James Morse <james.morse@arm.com>
-Cc: Mauro Carvalho Chehab <mchehab@kernel.org>
-Cc: Tony Luck <tony.luck@intel.com>
-Link: https://lkml.kernel.org/r/20190624150758.6695-2-rrichter@marvell.com
+Signed-off-by: Vincent Guittot <vincent.guittot@linaro.org>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Link: https://lkml.kernel.org/r/1561996022-28829-1-git-send-email-vincent.guittot@linaro.org
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/edac/edac_mc.c | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+ kernel/sched/fair.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/edac/edac_mc.c b/drivers/edac/edac_mc.c
-index 7d3edd7139328..f59511bd99261 100644
---- a/drivers/edac/edac_mc.c
-+++ b/drivers/edac/edac_mc.c
-@@ -1246,9 +1246,13 @@ void edac_mc_handle_error(const enum hw_event_mc_err_type type,
- 	if (p > e->location)
- 		*(p - 1) = '\0';
+diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+index 49ed38914669b..ad78a15bd5677 100644
+--- a/kernel/sched/fair.c
++++ b/kernel/sched/fair.c
+@@ -8863,9 +8863,10 @@ static int load_balance(int this_cpu, struct rq *this_rq,
+ out_balanced:
+ 	/*
+ 	 * We reach balance although we may have faced some affinity
+-	 * constraints. Clear the imbalance flag if it was set.
++	 * constraints. Clear the imbalance flag only if other tasks got
++	 * a chance to move and fix the imbalance.
+ 	 */
+-	if (sd_parent) {
++	if (sd_parent && !(env.flags & LBF_ALL_PINNED)) {
+ 		int *group_imbalance = &sd_parent->groups->sgc->imbalance;
  
--	/* Report the error via the trace interface */
--	grain_bits = fls_long(e->grain) + 1;
-+	/* Sanity-check driver-supplied grain value. */
-+	if (WARN_ON_ONCE(!e->grain))
-+		e->grain = 1;
-+
-+	grain_bits = fls_long(e->grain - 1);
- 
-+	/* Report the error via the trace interface */
- 	if (IS_ENABLED(CONFIG_RAS))
- 		trace_mc_event(type, e->msg, e->label, e->error_count,
- 			       mci->mc_idx, e->top_layer, e->mid_layer,
+ 		if (*group_imbalance)
 -- 
 2.20.1
 
