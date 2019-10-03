@@ -2,118 +2,133 @@ Return-Path: <SRS0=6dNS=X4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 537AFC4CED1
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 18:11:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA941C10F14
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 18:12:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2F0192133F
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 18:11:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9564F2133F
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 18:12:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570126264;
-	bh=aArKOWxO0UzBJPgQiYgtFIO0VS3NLn3FEgzr04GaghE=;
-	h=In-Reply-To:References:From:To:Cc:Subject:Date:List-ID:From;
-	b=JiAXAy2TJPS8JGOSiE6c9gNpSW5Fe0/rVwnZU4o318qPm+mcUYQ4lt8gNG0U1HomU
-	 cV8WqylLiiVMbXC5p/Kxk/DUfSOJU+MGPWDWuSa+1yn7qYC5uEt1evTRkhp6t8RdT1
-	 OalbOaGo9Da5m5Wg9Go2uQkYyP7SNdINBFePsejU=
+	s=default; t=1570126337;
+	bh=819/wUZTlZOA89Rc6IuzC1Fd1lR2f6e7+dvyj4ZkwRI=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=BY+x+v5ZWzLKD92KkVzHR3Xp6tca1cxSXKiQEOFBkmanf6sxMw7ZhjdMEmJzLGrkW
+	 LsrLUjeIXO0RlUw0qLCBhbqvMAnlbsBmCNQUIe6j/TATiwWC+xlF3HKIhqfiU+q5me
+	 t7ZvDRXCAcOn538u4eDVIZuTM/C0bLAldaEuctU8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387440AbfJCSLD (ORCPT
+        id S2387500AbfJCSMQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 14:11:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33842 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731010AbfJCSLD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 14:11:03 -0400
-Received: from kernel.org (unknown [104.132.0.74])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 803B120862;
-        Thu,  3 Oct 2019 18:11:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570126262;
-        bh=aArKOWxO0UzBJPgQiYgtFIO0VS3NLn3FEgzr04GaghE=;
-        h=In-Reply-To:References:From:To:Cc:Subject:Date:From;
-        b=sTG8BoNGODYMJh9K8VdkTLOSAFtZXJXm0caFHt36ztIL/MBfhYfFtDzI1Oi6LU0sL
-         O1j9gxbPlg8iCQnVT8pMZIipOVO2X+bRYi5fdMJLaH1XMsr/Tl3y6rf1l0WaJpLBh+
-         p2KCBMaJK91l7C6g24fwfoT8haHVbqLr8Dx8CycM=
-Content-Type: text/plain; charset="utf-8"
+        Thu, 3 Oct 2019 14:12:16 -0400
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:37339 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731502AbfJCSMQ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 14:12:16 -0400
+Received: by mail-lj1-f195.google.com with SMTP id l21so3825753lje.4
+        for <linux-kernel@vger.kernel.org>; Thu, 03 Oct 2019 11:12:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=9CLff0xdjhwTwseNBTStiFNCovDaCPWc7aVjBBxw1vY=;
+        b=dMFb3uM/UyVtVEpIyGLjZQ5D18cmbwEsrABzaJQGR8dc/u0V7qHCKXlrcEidk/cRrn
+         wYj/a7r+sxttXokd27j5hVkylFooq/4ywDgSdJj8Ry/bZU6+gYBaMVdp6VvVAc+mHPVP
+         Xx6A534Uq6kdvFHYq1JLHYRTJlsG39xebJzh8=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=9CLff0xdjhwTwseNBTStiFNCovDaCPWc7aVjBBxw1vY=;
+        b=Frb2UentRCWiWzQjpsHIYjcVr7Oxm9QG1ayg2B/zI4Qq2FIuvBoReewrfMwcbhLFWr
+         xwVLX6X1snyXbF7OzyllX77DBlyuPFpAg8ngAMyCy03ahxTtM/QolxjxVq2ZCmEJ2ARs
+         8as4yR9EnsAiY6rlSbw/LTLfkZ8tCVjHgbsx0z5viBlYQw3f3g6j+vNvlgF2XOLbygh6
+         K0yoCbiZTtsPsUQ3KDELPUYzELeLN1b+PeswBwtWYwRGPlMMNgCQoC3A6LsQ005VlZod
+         p6Bk0patgzWRPkgr9ISt+aINyw0POA84MbBUdcXbvQcelMG3qZxxB4JN/MwWTYNNzNpm
+         WOFA==
+X-Gm-Message-State: APjAAAVr7qvw/MNhTarNkeJJD18but+Rwcvd5fYe+4tRnDNuPW19qjaS
+        a8Nu6v8JygWHTfAOPU9QpZrYVvK7op8=
+X-Google-Smtp-Source: APXvYqyJod6qf7Idkars4G/Cy1As2PJ00DjKwG/t5yV7WEbMU/n5quhrSPoAVQhDO8ap8WJsR5XJ+w==
+X-Received: by 2002:a2e:4e12:: with SMTP id c18mr6752550ljb.47.1570126332872;
+        Thu, 03 Oct 2019 11:12:12 -0700 (PDT)
+Received: from mail-lj1-f181.google.com (mail-lj1-f181.google.com. [209.85.208.181])
+        by smtp.gmail.com with ESMTPSA id o13sm672112ljh.35.2019.10.03.11.12.09
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 03 Oct 2019 11:12:10 -0700 (PDT)
+Received: by mail-lj1-f181.google.com with SMTP id m13so3772745ljj.11
+        for <linux-kernel@vger.kernel.org>; Thu, 03 Oct 2019 11:12:09 -0700 (PDT)
+X-Received: by 2002:a2e:9241:: with SMTP id v1mr7032210ljg.148.1570126329445;
+ Thu, 03 Oct 2019 11:12:09 -0700 (PDT)
 MIME-Version: 1.0
+References: <20191002134730.40985-1-thomas_os@shipmail.org>
+ <20191002134730.40985-4-thomas_os@shipmail.org> <CAHk-=wic5vXCxpH-+UTtmH_t-EDBKrKnDhxQk=t_N20aiWnqUg@mail.gmail.com>
+ <516814a5-a616-b15e-ac87-26ede681da85@shipmail.org> <CAHk-=wgH=T5mcDxTaC6QbBN=iJD3d_amzcb2+GxbcV7XuEYL2A@mail.gmail.com>
+ <MN2PR05MB61412DB4F703A5EE4F961593A19F0@MN2PR05MB6141.namprd05.prod.outlook.com>
+ <CAHk-=wj5NiFPouYd6zUgY4K7VovOAxQT-xhDRjD6j5hifBWi_g@mail.gmail.com> <a3aebf74-be74-bf15-f016-da9734ba435a@shipmail.org>
+In-Reply-To: <a3aebf74-be74-bf15-f016-da9734ba435a@shipmail.org>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Thu, 3 Oct 2019 11:11:53 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wiK1Tj6qhtohzfwJV-T9qZYG6ULs=NyFfbWPH90U_j4+A@mail.gmail.com>
+Message-ID: <CAHk-=wiK1Tj6qhtohzfwJV-T9qZYG6ULs=NyFfbWPH90U_j4+A@mail.gmail.com>
+Subject: Re: [PATCH v3 3/7] mm: Add write-protect and clean utilities for
+ address space ranges
+To:     =?UTF-8?Q?Thomas_Hellstr=C3=B6m_=28VMware=29?= 
+        <thomas_os@shipmail.org>
+Cc:     Thomas Hellstrom <thellstrom@vmware.com>,
+        Linux-MM <linux-mm@kvack.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Matthew Wilcox <willy@infradead.org>,
+        Will Deacon <will.deacon@arm.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Rik van Riel <riel@surriel.com>,
+        Minchan Kim <minchan@kernel.org>,
+        Michal Hocko <mhocko@suse.com>,
+        Huang Ying <ying.huang@intel.com>,
+        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
+        "Kirill A . Shutemov" <kirill@shutemov.name>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <1569553244-3165-3-git-send-email-zhangqing@rock-chips.com>
-References: <1569553244-3165-1-git-send-email-zhangqing@rock-chips.com> <1569553244-3165-3-git-send-email-zhangqing@rock-chips.com>
-From:   Stephen Boyd <sboyd@kernel.org>
-To:     Elaine Zhang <zhangqing@rock-chips.com>, heiko@sntech.de
-Cc:     mturquette@baylibre.com, linux-clk@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
-        xxx@rock-chips.com, xf@rock-chips.com, huangtao@rock-chips.com,
-        Elaine Zhang <zhangqing@rock-chips.com>
-Subject: Re: [PATCH v3 2/5] clk: rockchip: fix up the frac clk get rate error
-User-Agent: alot/0.8.1
-Date:   Thu, 03 Oct 2019 11:11:01 -0700
-Message-Id: <20191003181102.803B120862@mail.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Elaine Zhang (2019-09-26 20:00:41)
-> support fractional divider with only one level parent clock
+On Thu, Oct 3, 2019 at 11:03 AM Thomas Hellstr=C3=B6m (VMware)
+<thomas_os@shipmail.org> wrote:
+>
+> >
+> > So I think this is the right direction to move into, but I do want
+> > people to think about this, and think about that next phase of doing
+> > the pmd_trans_huge_lock too.
+>
+> I think if we take the ptl lock outside the callback, we'd need to allow
+> the callback to unlock to do non-atomic things or to avoid recursive
+> locking if it decides to split in the callback.
 
-Please put a lot more description in here. A single sentence doesn't
-help anyone understand the motivation for the change.
+Note that I think that the particular pmd locking case we should leave
+for later, simply because it's a separate issue, and it comes with
+more worries.
 
->=20
-> Signed-off-by: Elaine Zhang <zhangqing@rock-chips.com>
-> ---
->  drivers/clk/rockchip/clk.c | 19 ++++++++++++-------
->  1 file changed, 12 insertions(+), 7 deletions(-)
->=20
-> diff --git a/drivers/clk/rockchip/clk.c b/drivers/clk/rockchip/clk.c
-> index fac5a4a3f5c3..8f77c3f9fab7 100644
-> --- a/drivers/clk/rockchip/clk.c
-> +++ b/drivers/clk/rockchip/clk.c
-> @@ -190,16 +190,21 @@ static void rockchip_fractional_approximation(struc=
-t clk_hw *hw,
->         if (((rate * 20 > p_rate) && (p_rate % rate !=3D 0)) ||
->             (fd->max_prate && fd->max_prate < p_rate)) {
->                 p_parent =3D clk_hw_get_parent(clk_hw_get_parent(hw));
-> -               p_parent_rate =3D clk_hw_get_rate(p_parent);
-> -               *parent_rate =3D p_parent_rate;
-> -               if (fd->max_prate && p_parent_rate > fd->max_prate) {
-> -                       div =3D DIV_ROUND_UP(p_parent_rate, fd->max_prate=
-);
-> -                       *parent_rate =3D p_parent_rate / div;
-> +               if (!p_parent) {
-> +                       *parent_rate =3D p_rate;
-> +               } else {
-> +                       p_parent_rate =3D clk_hw_get_rate(p_parent);
-> +                       *parent_rate =3D p_parent_rate;
-> +                       if (fd->max_prate && p_parent_rate > fd->max_prat=
-e) {
-> +                               div =3D DIV_ROUND_UP(p_parent_rate,
-> +                                                  fd->max_prate);
-> +                               *parent_rate =3D p_parent_rate / div;
-> +                       }
->                 }
-> =20
->                 if (*parent_rate < rate * 20) {
-> -                       pr_err("%s parent_rate(%ld) is low than rate(%ld)=
-*20, fractional div is not allowed\n",
-> -                              clk_hw_get_name(hw), *parent_rate, rate);
-> +                       pr_warn("%s p_rate(%ld) is low than rate(%ld)*20,=
- use integer or half-div\n",
-> +                               clk_hw_get_name(hw), *parent_rate, rate);
+So I just wanted to mention it to see what people thought and keep it
+in mind for later, but I don't think it should be part of this series.
+Your use case doesn't need it (at least yet), and existing users
+already do their own locking.
 
-Hm.. now it's changed to a warning?
+The "change pte_entry" to do the proper locking I think is safe.
+Probably exactly *because* pte_entry is so broken, we literally have
+only five users of it in the whole kernel, and they are fairly simple
+and certainly don't block.
 
->                         *m =3D 0;
->                         *n =3D 1;
->                         return;
-> --=20
-> 1.9.1
->=20
->=20
->=20
+(Ok, the s390 has some funky hw locking, so maybe "simple" is the
+wrong word to use, but it doesn't seem to have any interaction with
+the locking).
+
+End result: I absolutely agree that changing the pmd locking to be
+done by the walker would be a much bigger change. I don't think we
+need to do that part yet. It's not the current pain-point.
+
+             Linus
