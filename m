@@ -2,104 +2,125 @@ Return-Path: <SRS0=6dNS=X4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F7E5C10F14
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:25:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 62156C32792
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:25:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6C11720865
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:25:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570123526;
-	bh=g5n/f2orquoWGH33QaUBF3fe0GsS1SbY/85pMcYcF4E=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=a5WR2xbOmUWwCw6ey7V9Pa516L9D1//0AmlfYNzuiCGiHi/DtLLpF2zhm37ImeswL
-	 0SWTbflfJJBBL6dtMfYZWyBIvR9BcWiNQsvGwldUF18PMqNhyDUezccwA0yGk0oqE2
-	 /YVUx0jleCak8ZBzZsRdbkY9cUDawXlJjwX9xeUs=
+	by mail.kernel.org (Postfix) with ESMTP id 3868720830
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:25:43 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="face39Zi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387405AbfJCQQ5 (ORCPT
+        id S1730394AbfJCRZk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 12:16:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42214 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389106AbfJCQQw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:16:52 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 33CF020865;
-        Thu,  3 Oct 2019 16:16:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570119411;
-        bh=g5n/f2orquoWGH33QaUBF3fe0GsS1SbY/85pMcYcF4E=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=pwM6At4Dn4bvuI5Hs8tr1ymbD/ICVXNiyr8XgmYJUpCBga7hiDWZWXqOYg0hh2Zgy
-         vt52O0fh6gatthz+cCtUr+QbK4TQ2ThIR8QnFEp2IWLXtqi+JKY2Eh7qw2mjDouQbd
-         sfLNqtQlH028kDr0RG9kU87lq7Lb1Q+PXhP560k8=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Guoqing Jiang <guoqing.jiang@cloud.ionos.com>,
-        Song Liu <songliubraving@fb.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 055/211] md: dont call spare_active in md_reap_sync_thread if all member devices cant work
-Date:   Thu,  3 Oct 2019 17:52:01 +0200
-Message-Id: <20191003154500.825598265@linuxfoundation.org>
-X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20191003154447.010950442@linuxfoundation.org>
-References: <20191003154447.010950442@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Thu, 3 Oct 2019 13:25:40 -0400
+Received: from mail-qt1-f195.google.com ([209.85.160.195]:36635 "EHLO
+        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390881AbfJCRVu (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 13:21:50 -0400
+Received: by mail-qt1-f195.google.com with SMTP id o12so4699988qtf.3;
+        Thu, 03 Oct 2019 10:21:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=h5Rim9i4R2dtqePdDLpMCbY7rNwA6OH+nyEYI7LKahs=;
+        b=face39Zit5ry5Kv5MEk6wx4lT9nUPV/Qw7+B489XY4veUQ8Vg1354MpUcaarHInvO1
+         aEzb6pTQwv9J9IvU8iaZzbfOuYaNy9AWHG5qsRqVP2rR54qVMbGeueL2E/3PgqTc4MXR
+         ERYhWFZjcnZZ/O7s7ZxeaayQozjcO04gBOE/16ykGd3/zHrsTlW8iQme/sniIEngN3iJ
+         03xPKJsMjHyvHH9hSqX25xoaOz2boH7cgLVicayHXn2As2h41G5rhsna0OLOKET9aJLB
+         qSvFRZlxtr6FK0tcZQp0sH5NOthVXZtUhKxno5yWREXFDOzZpgs27BgDPFKAdTCJ1bIO
+         jpSg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=h5Rim9i4R2dtqePdDLpMCbY7rNwA6OH+nyEYI7LKahs=;
+        b=I4EpVSL9YNC+Lu7aJw9cSEOw36qC7eK7ZkKES5NcoXXjnXeyNKqUUKml1dtLwsHEtK
+         IYYEBqMZGMSx4y9IR9jrhT8sxzj12ZtxaYxIzfldrJczoAKB4izga/LishtIiW2tlMp2
+         2w3RmI/LnFv/eV5bDd1Qh+lbc6tTQam6XIp5y4Ews41WAAQJ4lwaEYVVwL99hH3ayB21
+         ANrxuO6FNHy3NHY8lFM75YUz3HPLiANPtBGDMQX/7wMOCn6PyVIeEFwZMv7ooffcXPmp
+         8rOwY5kjEfIJRFVvzWeVsk4qMZhiLR+aQ3Wtle2s0h5ubX6jhbihycF87+chumURS/QJ
+         kZKA==
+X-Gm-Message-State: APjAAAXg17UfeBrmBIhZAm6pUQIM1AcQ85PC45jWAlbAKCSukqrZB0nt
+        ZSC0pmgDCd1UXZs8RBB/eTZfASEXc/nnj3jOjKFODxGSUbE=
+X-Google-Smtp-Source: APXvYqz4TrdMivyXDTK0GQ13yFmR3JItdHh5McZQkymTQsopcQ3vLgBQWOsNamCBOfIzbAPoIMHO57B910EUdBEE4mk=
+X-Received: by 2002:aed:2726:: with SMTP id n35mr10864628qtd.171.1570123309206;
+ Thu, 03 Oct 2019 10:21:49 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <20191003014153.GA13156@paulmck-ThinkPad-P72> <20191003014310.13262-6-paulmck@kernel.org>
+In-Reply-To: <20191003014310.13262-6-paulmck@kernel.org>
+From:   Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Date:   Thu, 3 Oct 2019 10:21:38 -0700
+Message-ID: <CAEf4BzaBuktutCZr2ZUC6b-XK_JJ7prWZmO-5Yew2tVp5DxbBA@mail.gmail.com>
+Subject: Re: [PATCH tip/core/rcu 6/9] bpf/cgroup: Replace rcu_swap_protected()
+ with rcu_replace()
+To:     paulmck@kernel.org
+Cc:     rcu@vger.kernel.org, open list <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@kernel.org>, jiangshanlai@gmail.com,
+        dipankar@in.ibm.com, Andrew Morton <akpm@linux-foundation.org>,
+        mathieu.desnoyers@efficios.com, josh@joshtriplett.org,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Peter Ziljstra <peterz@infradead.org>,
+        Steven Rostedt <rostedt@goodmis.org>, dhowells@redhat.com,
+        Eric Dumazet <edumazet@google.com>, fweisbec@gmail.com,
+        oleg@redhat.com, Joel Fernandes <joel@joelfernandes.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        Networking <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Guoqing Jiang <jgq516@gmail.com>
+On Wed, Oct 2, 2019 at 6:45 PM <paulmck@kernel.org> wrote:
+>
+> From: "Paul E. McKenney" <paulmck@kernel.org>
+>
+> This commit replaces the use of rcu_swap_protected() with the more
+> intuitively appealing rcu_replace() as a step towards removing
+> rcu_swap_protected().
+>
+> Link: https://lore.kernel.org/lkml/CAHk-=wiAsJLw1egFEE=Z7-GGtM6wcvtyytXZA1+BHqta4gg6Hw@mail.gmail.com/
+> Reported-by: Linus Torvalds <torvalds@linux-foundation.org>
+> Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
+> Cc: Alexei Starovoitov <ast@kernel.org>
+> Cc: Daniel Borkmann <daniel@iogearbox.net>
+> Cc: Martin KaFai Lau <kafai@fb.com>
+> Cc: Song Liu <songliubraving@fb.com>
+> Cc: Yonghong Song <yhs@fb.com>
+> Cc: <netdev@vger.kernel.org>
+> Cc: <bpf@vger.kernel.org>
+> ---
 
-[ Upstream commit 0d8ed0e9bf9643f27f4816dca61081784dedb38d ]
+Acked-by: Andrii Nakryiko <andriin@fb.com>
 
-When add one disk to array, the md_reap_sync_thread is responsible
-to activate the spare and set In_sync flag for the new member in
-spare_active().
-
-But if raid1 has one member disk A, and disk B is added to the array.
-Then we offline A before all the datas are synchronized from A to B,
-obviously B doesn't have the latest data as A, but B is still marked
-with In_sync flag.
-
-So let's not call spare_active under the condition, otherwise B is
-still showed with 'U' state which is not correct.
-
-Signed-off-by: Guoqing Jiang <guoqing.jiang@cloud.ionos.com>
-Signed-off-by: Song Liu <songliubraving@fb.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/md/md.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/md/md.c b/drivers/md/md.c
-index fb5d702e43b5b..73758b3679a11 100644
---- a/drivers/md/md.c
-+++ b/drivers/md/md.c
-@@ -8948,7 +8948,8 @@ void md_reap_sync_thread(struct mddev *mddev)
- 	/* resync has finished, collect result */
- 	md_unregister_thread(&mddev->sync_thread);
- 	if (!test_bit(MD_RECOVERY_INTR, &mddev->recovery) &&
--	    !test_bit(MD_RECOVERY_REQUESTED, &mddev->recovery)) {
-+	    !test_bit(MD_RECOVERY_REQUESTED, &mddev->recovery) &&
-+	    mddev->degraded != mddev->raid_disks) {
- 		/* success...*/
- 		/* activate any spares */
- 		if (mddev->pers->spare_active(mddev)) {
--- 
-2.20.1
-
-
-
+>  kernel/bpf/cgroup.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+>
+> diff --git a/kernel/bpf/cgroup.c b/kernel/bpf/cgroup.c
+> index ddd8add..06a0657 100644
+> --- a/kernel/bpf/cgroup.c
+> +++ b/kernel/bpf/cgroup.c
+> @@ -180,8 +180,8 @@ static void activate_effective_progs(struct cgroup *cgrp,
+>                                      enum bpf_attach_type type,
+>                                      struct bpf_prog_array *old_array)
+>  {
+> -       rcu_swap_protected(cgrp->bpf.effective[type], old_array,
+> -                          lockdep_is_held(&cgroup_mutex));
+> +       old_array = rcu_replace(cgrp->bpf.effective[type], old_array,
+> +                               lockdep_is_held(&cgroup_mutex));
+>         /* free prog array after grace period, since __cgroup_bpf_run_*()
+>          * might be still walking the array
+>          */
+> --
+> 2.9.5
+>
