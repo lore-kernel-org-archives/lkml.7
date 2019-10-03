@@ -4,54 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E966C4CED1
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:17:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 23E6EC10F14
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:17:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2510F2133F
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:17:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EEB8C20865
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:17:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570123025;
-	bh=QvtTFry1qIsP6+TuBN+Z8h7wwAlSQ6vclB0+CEJJ6wE=;
+	s=default; t=1570123029;
+	bh=WmrOGuY5GMN6eKGQLwtMcAe+ftTx4I0a4povACCJ4Uc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=K+99EJufDQC8wNKaseSSHx5+4MTcjKYweRcOQLtpX2pKEogUC6JuCfwFMU+7wEixV
-	 SldqmpQD3Kc+f87gbvTilGMUrHrpSpggDPPJswjarPY9rM7xaQ05IQDOQNkyJnQgeb
-	 oVSRPJWGXwq0idmZf3tuR+Mkunnq0ZSi83vrJfwA=
+	b=bQTCkJvrXfp2ffd4ZCTKyUi7Ne7Euyf505Gwvs3WUXN5pQdFYgfpjFbpmQmEqu3BH
+	 oflRziALertK/61UJKCTc/L/5zDPYfSoDUr+DHl4/PmcbnOPXB2Iw6VbxiyeMEKoal
+	 fYzrrWpHAq/6BqCUFKW3iDsmsOAOljmT+0RBVkGA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390567AbfJCQX0 (ORCPT
+        id S2390486AbfJCQXS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 12:23:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52278 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 12:23:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52128 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390535AbfJCQXW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:23:22 -0400
+        id S2389206AbfJCQXO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:23:14 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3FF9C21783;
-        Thu,  3 Oct 2019 16:23:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8D346215EA;
+        Thu,  3 Oct 2019 16:23:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570119801;
-        bh=QvtTFry1qIsP6+TuBN+Z8h7wwAlSQ6vclB0+CEJJ6wE=;
+        s=default; t=1570119794;
+        bh=WmrOGuY5GMN6eKGQLwtMcAe+ftTx4I0a4povACCJ4Uc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=dsPaipRFTn2RSqv2MOLLYA97NhZuRwCYqUySEMhTbSBhLbVupR2uvy3gU/ho9TCIT
-         jaSDxCNaMITFoTJogCgXgAMHqZ5AjjRu/QDNjAvPng+w+eSf0oznGEQaTfZexDRtCa
-         2XkFX9JcKEJWBXfE98P8H8qnjn32HvU2PKrpZJaE=
+        b=uCR4FtDGbiCWYljZ5o5PC/CLYHMwIU0GlclKSFLxl+fBbPjQ9Jtrg19Uu2VzywMRn
+         D07tIBUafwS0IMiu9+kaIURU71Zu4hfjMlMJdqqSfPS1wsFBq4MCs81pKgjNPDD8CO
+         5n+aX6F13hVYwcVJL66k8GK1u3hPAiNCoLiA4DfE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, "Ewan D. Milne" <emilne@redhat.com>,
-        Bart Van Assche <bvanassche@acm.org>,
-        Hannes Reinecke <hare@suse.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Mike Snitzer <snitzer@redhat.com>, dm-devel@redhat.com,
-        Ming Lei <ming.lei@redhat.com>, Jens Axboe <axboe@kernel.dk>,
+        stable@vger.kernel.org, "Yan, Zheng" <zyan@redhat.com>,
+        Jeff Layton <jlayton@redhat.com>,
+        Ilya Dryomov <idryomov@gmail.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 161/211] scsi: implement .cleanup_rq callback
-Date:   Thu,  3 Oct 2019 17:53:47 +0200
-Message-Id: <20191003154524.771140869@linuxfoundation.org>
+Subject: [PATCH 4.19 158/211] ceph: use ceph_evict_inode to cleanup inodes resource
+Date:   Thu,  3 Oct 2019 17:53:44 +0200
+Message-Id: <20191003154524.124604407@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191003154447.010950442@linuxfoundation.org>
 References: <20191003154447.010950442@linuxfoundation.org>
@@ -64,59 +61,87 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ming Lei <ming.lei@redhat.com>
+From: Yan, Zheng <zyan@redhat.com>
 
-[ Upstream commit b7e9e1fb7a9227be34ad4a5e778022c3164494cf ]
+[ Upstream commit 87bc5b895d94a0f40fe170d4cf5771c8e8f85d15 ]
 
-Implement .cleanup_rq() callback for freeing driver private part
-of the request. Then we can avoid to leak this part if the request isn't
-completed by SCSI, and freed by blk-mq or upper layer(such as dm-rq) finally.
+remove_session_caps() relies on __wait_on_freeing_inode(), to wait for
+freeing inode to remove its caps. But VFS wakes freeing inode waiters
+before calling destroy_inode().
 
-Cc: Ewan D. Milne <emilne@redhat.com>
-Cc: Bart Van Assche <bvanassche@acm.org>
-Cc: Hannes Reinecke <hare@suse.com>
-Cc: Christoph Hellwig <hch@lst.de>
-Cc: Mike Snitzer <snitzer@redhat.com>
-Cc: dm-devel@redhat.com
-Cc: <stable@vger.kernel.org>
-Fixes: 396eaf21ee17 ("blk-mq: improve DM's blk-mq IO merging via blk_insert_cloned_request feedback")
-Signed-off-by: Ming Lei <ming.lei@redhat.com>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+[ jlayton: mainline moved to ->free_inode before the original patch was
+	   merged. This backport reinstates ceph_destroy_inode and just
+	   has it do the call_rcu call. ]
+
+Cc: stable@vger.kernel.org
+Link: https://tracker.ceph.com/issues/40102
+Signed-off-by: "Yan, Zheng" <zyan@redhat.com>
+Reviewed-by: Jeff Layton <jlayton@redhat.com>
+Signed-off-by: Ilya Dryomov <idryomov@gmail.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/scsi_lib.c | 13 +++++++++++++
- 1 file changed, 13 insertions(+)
+ fs/ceph/inode.c | 10 ++++++++--
+ fs/ceph/super.c |  1 +
+ fs/ceph/super.h |  1 +
+ 3 files changed, 10 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/scsi/scsi_lib.c b/drivers/scsi/scsi_lib.c
-index 75b926e700766..abfcc2f924ce8 100644
---- a/drivers/scsi/scsi_lib.c
-+++ b/drivers/scsi/scsi_lib.c
-@@ -1252,6 +1252,18 @@ static void scsi_initialize_rq(struct request *rq)
- 	cmd->retries = 0;
+diff --git a/fs/ceph/inode.c b/fs/ceph/inode.c
+index 11f19432a74c4..c06845237cbaa 100644
+--- a/fs/ceph/inode.c
++++ b/fs/ceph/inode.c
+@@ -528,13 +528,16 @@ static void ceph_i_callback(struct rcu_head *head)
+ 	kmem_cache_free(ceph_inode_cachep, ci);
  }
  
-+/*
-+ * Only called when the request isn't completed by SCSI, and not freed by
-+ * SCSI
-+ */
-+static void scsi_cleanup_rq(struct request *rq)
-+{
-+	if (rq->rq_flags & RQF_DONTPREP) {
-+		scsi_mq_uninit_cmd(blk_mq_rq_to_pdu(rq));
-+		rq->rq_flags &= ~RQF_DONTPREP;
-+	}
-+}
-+
- /* Add a command to the list used by the aacraid and dpt_i2o drivers */
- void scsi_add_cmd_to_list(struct scsi_cmnd *cmd)
+-void ceph_destroy_inode(struct inode *inode)
++void ceph_evict_inode(struct inode *inode)
  {
-@@ -2339,6 +2351,7 @@ static const struct blk_mq_ops scsi_mq_ops = {
- 	.init_request	= scsi_mq_init_request,
- 	.exit_request	= scsi_mq_exit_request,
- 	.initialize_rq_fn = scsi_initialize_rq,
-+	.cleanup_rq	= scsi_cleanup_rq,
- 	.map_queues	= scsi_map_queues,
- };
+ 	struct ceph_inode_info *ci = ceph_inode(inode);
+ 	struct ceph_inode_frag *frag;
+ 	struct rb_node *n;
+ 
+-	dout("destroy_inode %p ino %llx.%llx\n", inode, ceph_vinop(inode));
++	dout("evict_inode %p ino %llx.%llx\n", inode, ceph_vinop(inode));
++
++	truncate_inode_pages_final(&inode->i_data);
++	clear_inode(inode);
+ 
+ 	ceph_fscache_unregister_inode_cookie(ci);
+ 
+@@ -576,7 +579,10 @@ void ceph_destroy_inode(struct inode *inode)
+ 		ceph_buffer_put(ci->i_xattrs.prealloc_blob);
+ 
+ 	ceph_put_string(rcu_dereference_raw(ci->i_layout.pool_ns));
++}
+ 
++void ceph_destroy_inode(struct inode *inode)
++{
+ 	call_rcu(&inode->i_rcu, ceph_i_callback);
+ }
+ 
+diff --git a/fs/ceph/super.c b/fs/ceph/super.c
+index c5cf46e43f2e7..ccab249a37f6a 100644
+--- a/fs/ceph/super.c
++++ b/fs/ceph/super.c
+@@ -830,6 +830,7 @@ static const struct super_operations ceph_super_ops = {
+ 	.destroy_inode	= ceph_destroy_inode,
+ 	.write_inode    = ceph_write_inode,
+ 	.drop_inode	= ceph_drop_inode,
++	.evict_inode	= ceph_evict_inode,
+ 	.sync_fs        = ceph_sync_fs,
+ 	.put_super	= ceph_put_super,
+ 	.remount_fs	= ceph_remount,
+diff --git a/fs/ceph/super.h b/fs/ceph/super.h
+index 0180193097905..8d3eabf06d66a 100644
+--- a/fs/ceph/super.h
++++ b/fs/ceph/super.h
+@@ -854,6 +854,7 @@ static inline bool __ceph_have_pending_cap_snap(struct ceph_inode_info *ci)
+ extern const struct inode_operations ceph_file_iops;
+ 
+ extern struct inode *ceph_alloc_inode(struct super_block *sb);
++extern void ceph_evict_inode(struct inode *inode);
+ extern void ceph_destroy_inode(struct inode *inode);
+ extern int ceph_drop_inode(struct inode *inode);
  
 -- 
 2.20.1
