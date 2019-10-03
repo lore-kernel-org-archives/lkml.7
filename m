@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F207C10F14
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:27:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D88EDC32792
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:27:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 21F3620830
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:27:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A5F6E20830
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:27:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570123669;
-	bh=seIW6zQr5VIwuv4QDaxjF+PSW10jr5UYnwycKFfT2GQ=;
+	s=default; t=1570123676;
+	bh=NqjaflZa+4i1b02BgIZ5yPMmo/h3wsvAqapPDnfW1Lg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=pYg2l1QlPxVLVQqyAEXkm53rIXWi8QxLEgfiNt5eh+nyGhpcSGyXAx7zqUmgfchvn
-	 n76HCwjhxji07YBqe+HdWK4Ovy2N9/YwPCXR5yp9wiICCTPWKFj1NwAe1EYtmfTz72
-	 ea/8OIq7ejXWXz4nYeZsfwOCT/Pp16L675xfMd40=
+	b=VjSlYrzsoRzP4+aJ58ODn6kC7i8rgnN16bje/jLG0ErHv1WW4byQ6e7Uiv4URUAf2
+	 q71B3cwGtbkNrDF0kGBYtAxvcH3lUaNSt0yM9sgyD9wBqLKeDlbMGJpgJXxDYx1sA9
+	 UlgS3VTopsjyHhv8ZvSawxWdAa1F7jWDKUVRqXkI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388613AbfJCQO2 (ORCPT
+        id S1729589AbfJCR14 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 12:14:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37644 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 13:27:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37598 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388590AbfJCQOZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:14:25 -0400
+        id S2388574AbfJCQOW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:14:22 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9940521783;
-        Thu,  3 Oct 2019 16:14:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EF99021A4C;
+        Thu,  3 Oct 2019 16:14:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570119263;
-        bh=seIW6zQr5VIwuv4QDaxjF+PSW10jr5UYnwycKFfT2GQ=;
+        s=default; t=1570119260;
+        bh=NqjaflZa+4i1b02BgIZ5yPMmo/h3wsvAqapPDnfW1Lg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=DUV1kGniHa5FLfAOVCrH/b/C2Au0VzwHQtx7xgg5X0bxuVWt+ovUgQ2MBcn1+uj9Y
-         EjW2isEIs2GMIxKE6+jpcrJRGQnPlaa26jhk97/iiuaD/2gfvlCYjqJ9dUt8cfl2Ng
-         CAGv10qFqeLhxx5M4l7R+D7LQPkv8Q/z9KNQgK0I=
+        b=rfVmMYCYWOloizkfGunXNhqZL8YbRVYwFgA2U0Z1cPttJKSTkViSWbEEWefghR0OY
+         Wm1CpgPMdpb4MCILIEehGYDShZJdPtf2GiKdy/cf3ISPHPTJcW6N6guk2VtJMXuOo8
+         iw7dQJVyVaVTEN+RyOKAp5XmoI6ZeDOAeb/v5ZEo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Nikolay Borisov <nborisov@suse.com>,
-        Anand Jain <anand.jain@oracle.com>,
+        stable@vger.kernel.org, Josef Bacik <josef@toxicpanda.com>,
         Filipe Manana <fdmanana@suse.com>,
-        David Sterba <dsterba@suse.com>
-Subject: [PATCH 4.14 167/185] Btrfs: fix use-after-free when using the tree modification log
-Date:   Thu,  3 Oct 2019 17:54:05 +0200
-Message-Id: <20191003154517.248539300@linuxfoundation.org>
+        David Sterba <dsterba@suse.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 185/185] Btrfs: fix race setting up and completing qgroup rescan workers
+Date:   Thu,  3 Oct 2019 17:54:23 +0200
+Message-Id: <20191003154522.680688344@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191003154437.541662648@linuxfoundation.org>
 References: <20191003154437.541662648@linuxfoundation.org>
@@ -63,97 +63,199 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Filipe Manana <fdmanana@suse.com>
 
-commit efad8a853ad2057f96664328a0d327a05ce39c76 upstream.
+[ Upstream commit 13fc1d271a2e3ab8a02071e711add01fab9271f6 ]
 
-At ctree.c:get_old_root(), we are accessing a root's header owner field
-after we have freed the respective extent buffer. This results in an
-use-after-free that can lead to crashes, and when CONFIG_DEBUG_PAGEALLOC
-is set, results in a stack trace like the following:
+There is a race between setting up a qgroup rescan worker and completing
+a qgroup rescan worker that can lead to callers of the qgroup rescan wait
+ioctl to either not wait for the rescan worker to complete or to hang
+forever due to missing wake ups. The following diagram shows a sequence
+of steps that illustrates the race.
 
-  [ 3876.799331] stack segment: 0000 [#1] SMP DEBUG_PAGEALLOC PTI
-  [ 3876.799363] CPU: 0 PID: 15436 Comm: pool Not tainted 5.3.0-rc3-btrfs-next-54 #1
-  [ 3876.799385] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS rel-1.12.0-0-ga698c8995f-prebuilt.qemu.org 04/01/2014
-  [ 3876.799433] RIP: 0010:btrfs_search_old_slot+0x652/0xd80 [btrfs]
-  (...)
-  [ 3876.799502] RSP: 0018:ffff9f08c1a2f9f0 EFLAGS: 00010286
-  [ 3876.799518] RAX: ffff8dd300000000 RBX: ffff8dd85a7a9348 RCX: 000000038da26000
-  [ 3876.799538] RDX: 0000000000000000 RSI: ffffe522ce368980 RDI: 0000000000000246
-  [ 3876.799559] RBP: dae1922adadad000 R08: 0000000008020000 R09: ffffe522c0000000
-  [ 3876.799579] R10: ffff8dd57fd788c8 R11: 000000007511b030 R12: ffff8dd781ddc000
-  [ 3876.799599] R13: ffff8dd9e6240578 R14: ffff8dd6896f7a88 R15: ffff8dd688cf90b8
-  [ 3876.799620] FS:  00007f23ddd97700(0000) GS:ffff8dda20200000(0000) knlGS:0000000000000000
-  [ 3876.799643] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-  [ 3876.799660] CR2: 00007f23d4024000 CR3: 0000000710bb0005 CR4: 00000000003606f0
-  [ 3876.799682] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-  [ 3876.799703] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-  [ 3876.799723] Call Trace:
-  [ 3876.799735]  ? do_raw_spin_unlock+0x49/0xc0
-  [ 3876.799749]  ? _raw_spin_unlock+0x24/0x30
-  [ 3876.799779]  resolve_indirect_refs+0x1eb/0xc80 [btrfs]
-  [ 3876.799810]  find_parent_nodes+0x38d/0x1180 [btrfs]
-  [ 3876.799841]  btrfs_check_shared+0x11a/0x1d0 [btrfs]
-  [ 3876.799870]  ? extent_fiemap+0x598/0x6e0 [btrfs]
-  [ 3876.799895]  extent_fiemap+0x598/0x6e0 [btrfs]
-  [ 3876.799913]  do_vfs_ioctl+0x45a/0x700
-  [ 3876.799926]  ksys_ioctl+0x70/0x80
-  [ 3876.799938]  ? trace_hardirqs_off_thunk+0x1a/0x20
-  [ 3876.799953]  __x64_sys_ioctl+0x16/0x20
-  [ 3876.799965]  do_syscall_64+0x62/0x220
-  [ 3876.799977]  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-  [ 3876.799993] RIP: 0033:0x7f23e0013dd7
-  (...)
-  [ 3876.800056] RSP: 002b:00007f23ddd96ca8 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
-  [ 3876.800078] RAX: ffffffffffffffda RBX: 00007f23d80210f8 RCX: 00007f23e0013dd7
-  [ 3876.800099] RDX: 00007f23d80210f8 RSI: 00000000c020660b RDI: 0000000000000003
-  [ 3876.800626] RBP: 000055fa2a2a2440 R08: 0000000000000000 R09: 00007f23ddd96d7c
-  [ 3876.801143] R10: 00007f23d8022000 R11: 0000000000000246 R12: 00007f23ddd96d80
-  [ 3876.801662] R13: 00007f23ddd96d78 R14: 00007f23d80210f0 R15: 00007f23ddd96d80
-  (...)
-  [ 3876.805107] ---[ end trace e53161e179ef04f9 ]---
+        CPU 1                                                         CPU 2                                  CPU 3
 
-Fix that by saving the root's header owner field into a local variable
-before freeing the root's extent buffer, and then use that local variable
-when needed.
+ btrfs_ioctl_quota_rescan()
+  btrfs_qgroup_rescan()
+   qgroup_rescan_init()
+    mutex_lock(&fs_info->qgroup_rescan_lock)
+    spin_lock(&fs_info->qgroup_lock)
 
-Fixes: 30b0463a9394d9 ("Btrfs: fix accessing the root pointer in tree mod log functions")
-CC: stable@vger.kernel.org # 3.10+
-Reviewed-by: Nikolay Borisov <nborisov@suse.com>
-Reviewed-by: Anand Jain <anand.jain@oracle.com>
+    fs_info->qgroup_flags |=
+      BTRFS_QGROUP_STATUS_FLAG_RESCAN
+
+    init_completion(
+      &fs_info->qgroup_rescan_completion)
+
+    fs_info->qgroup_rescan_running = true
+
+    mutex_unlock(&fs_info->qgroup_rescan_lock)
+    spin_unlock(&fs_info->qgroup_lock)
+
+    btrfs_init_work()
+     --> starts the worker
+
+                                                        btrfs_qgroup_rescan_worker()
+                                                         mutex_lock(&fs_info->qgroup_rescan_lock)
+
+                                                         fs_info->qgroup_flags &=
+                                                           ~BTRFS_QGROUP_STATUS_FLAG_RESCAN
+
+                                                         mutex_unlock(&fs_info->qgroup_rescan_lock)
+
+                                                         starts transaction, updates qgroup status
+                                                         item, etc
+
+                                                                                                           btrfs_ioctl_quota_rescan()
+                                                                                                            btrfs_qgroup_rescan()
+                                                                                                             qgroup_rescan_init()
+                                                                                                              mutex_lock(&fs_info->qgroup_rescan_lock)
+                                                                                                              spin_lock(&fs_info->qgroup_lock)
+
+                                                                                                              fs_info->qgroup_flags |=
+                                                                                                                BTRFS_QGROUP_STATUS_FLAG_RESCAN
+
+                                                                                                              init_completion(
+                                                                                                                &fs_info->qgroup_rescan_completion)
+
+                                                                                                              fs_info->qgroup_rescan_running = true
+
+                                                                                                              mutex_unlock(&fs_info->qgroup_rescan_lock)
+                                                                                                              spin_unlock(&fs_info->qgroup_lock)
+
+                                                                                                              btrfs_init_work()
+                                                                                                               --> starts another worker
+
+                                                         mutex_lock(&fs_info->qgroup_rescan_lock)
+
+                                                         fs_info->qgroup_rescan_running = false
+
+                                                         mutex_unlock(&fs_info->qgroup_rescan_lock)
+
+							 complete_all(&fs_info->qgroup_rescan_completion)
+
+Before the rescan worker started by the task at CPU 3 completes, if
+another task calls btrfs_ioctl_quota_rescan(), it will get -EINPROGRESS
+because the flag BTRFS_QGROUP_STATUS_FLAG_RESCAN is set at
+fs_info->qgroup_flags, which is expected and correct behaviour.
+
+However if other task calls btrfs_ioctl_quota_rescan_wait() before the
+rescan worker started by the task at CPU 3 completes, it will return
+immediately without waiting for the new rescan worker to complete,
+because fs_info->qgroup_rescan_running is set to false by CPU 2.
+
+This race is making test case btrfs/171 (from fstests) to fail often:
+
+  btrfs/171 9s ... - output mismatch (see /home/fdmanana/git/hub/xfstests/results//btrfs/171.out.bad)
+#      --- tests/btrfs/171.out     2018-09-16 21:30:48.505104287 +0100
+#      +++ /home/fdmanana/git/hub/xfstests/results//btrfs/171.out.bad      2019-09-19 02:01:36.938486039 +0100
+#      @@ -1,2 +1,3 @@
+#       QA output created by 171
+#      +ERROR: quota rescan failed: Operation now in progress
+#       Silence is golden
+#      ...
+#      (Run 'diff -u /home/fdmanana/git/hub/xfstests/tests/btrfs/171.out /home/fdmanana/git/hub/xfstests/results//btrfs/171.out.bad'  to see the entire diff)
+
+That is because the test calls the btrfs-progs commands "qgroup quota
+rescan -w", "qgroup assign" and "qgroup remove" in a sequence that makes
+calls to the rescan start ioctl fail with -EINPROGRESS (note the "btrfs"
+commands 'qgroup assign' and 'qgroup remove' often call the rescan start
+ioctl after calling the qgroup assign ioctl,
+btrfs_ioctl_qgroup_assign()), since previous waits didn't actually wait
+for a rescan worker to complete.
+
+Another problem the race can cause is missing wake ups for waiters,
+since the call to complete_all() happens outside a critical section and
+after clearing the flag BTRFS_QGROUP_STATUS_FLAG_RESCAN. In the sequence
+diagram above, if we have a waiter for the first rescan task (executed
+by CPU 2), then fs_info->qgroup_rescan_completion.wait is not empty, and
+if after the rescan worker clears BTRFS_QGROUP_STATUS_FLAG_RESCAN and
+before it calls complete_all() against
+fs_info->qgroup_rescan_completion, the task at CPU 3 calls
+init_completion() against fs_info->qgroup_rescan_completion which
+re-initilizes its wait queue to an empty queue, therefore causing the
+rescan worker at CPU 2 to call complete_all() against an empty queue,
+never waking up the task waiting for that rescan worker.
+
+Fix this by clearing BTRFS_QGROUP_STATUS_FLAG_RESCAN and setting
+fs_info->qgroup_rescan_running to false in the same critical section,
+delimited by the mutex fs_info->qgroup_rescan_lock, as well as doing the
+call to complete_all() in that same critical section. This gives the
+protection needed to avoid rescan wait ioctl callers not waiting for a
+running rescan worker and the lost wake ups problem, since setting that
+rescan flag and boolean as well as initializing the wait queue is done
+already in a critical section delimited by that mutex (at
+qgroup_rescan_init()).
+
+Fixes: 57254b6ebce4ce ("Btrfs: add ioctl to wait for qgroup rescan completion")
+Fixes: d2c609b834d62f ("btrfs: properly track when rescan worker is running")
+CC: stable@vger.kernel.org # 4.4+
+Reviewed-by: Josef Bacik <josef@toxicpanda.com>
 Signed-off-by: Filipe Manana <fdmanana@suse.com>
-Reviewed-by: David Sterba <dsterba@suse.com>
 Signed-off-by: David Sterba <dsterba@suse.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/btrfs/ctree.c |    4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ fs/btrfs/qgroup.c |   33 +++++++++++++++++++--------------
+ 1 file changed, 19 insertions(+), 14 deletions(-)
 
---- a/fs/btrfs/ctree.c
-+++ b/fs/btrfs/ctree.c
-@@ -1414,6 +1414,7 @@ get_old_root(struct btrfs_root *root, u6
- 	struct tree_mod_elem *tm;
- 	struct extent_buffer *eb = NULL;
- 	struct extent_buffer *eb_root;
-+	u64 eb_root_owner = 0;
- 	struct extent_buffer *old;
- 	struct tree_mod_root *old_root = NULL;
- 	u64 old_generation = 0;
-@@ -1448,6 +1449,7 @@ get_old_root(struct btrfs_root *root, u6
- 			free_extent_buffer(old);
- 		}
- 	} else if (old_root) {
-+		eb_root_owner = btrfs_header_owner(eb_root);
- 		btrfs_tree_read_unlock(eb_root);
- 		free_extent_buffer(eb_root);
- 		eb = alloc_dummy_extent_buffer(fs_info, logical);
-@@ -1465,7 +1467,7 @@ get_old_root(struct btrfs_root *root, u6
- 	if (old_root) {
- 		btrfs_set_header_bytenr(eb, eb->start);
- 		btrfs_set_header_backref_rev(eb, BTRFS_MIXED_BACKREF_REV);
--		btrfs_set_header_owner(eb, btrfs_header_owner(eb_root));
-+		btrfs_set_header_owner(eb, eb_root_owner);
- 		btrfs_set_header_level(eb, old_root->level);
- 		btrfs_set_header_generation(eb, old_generation);
+--- a/fs/btrfs/qgroup.c
++++ b/fs/btrfs/qgroup.c
+@@ -2645,9 +2645,6 @@ out:
+ 	btrfs_free_path(path);
+ 
+ 	mutex_lock(&fs_info->qgroup_rescan_lock);
+-	if (!btrfs_fs_closing(fs_info))
+-		fs_info->qgroup_flags &= ~BTRFS_QGROUP_STATUS_FLAG_RESCAN;
+-
+ 	if (err > 0 &&
+ 	    fs_info->qgroup_flags & BTRFS_QGROUP_STATUS_FLAG_INCONSISTENT) {
+ 		fs_info->qgroup_flags &= ~BTRFS_QGROUP_STATUS_FLAG_INCONSISTENT;
+@@ -2663,16 +2660,30 @@ out:
+ 	trans = btrfs_start_transaction(fs_info->quota_root, 1);
+ 	if (IS_ERR(trans)) {
+ 		err = PTR_ERR(trans);
++		trans = NULL;
+ 		btrfs_err(fs_info,
+ 			  "fail to start transaction for status update: %d",
+ 			  err);
+-		goto done;
  	}
+-	ret = update_qgroup_status_item(trans);
+-	if (ret < 0) {
+-		err = ret;
+-		btrfs_err(fs_info, "fail to update qgroup status: %d", err);
++
++	mutex_lock(&fs_info->qgroup_rescan_lock);
++	if (!btrfs_fs_closing(fs_info))
++		fs_info->qgroup_flags &= ~BTRFS_QGROUP_STATUS_FLAG_RESCAN;
++	if (trans) {
++		ret = update_qgroup_status_item(trans);
++		if (ret < 0) {
++			err = ret;
++			btrfs_err(fs_info, "fail to update qgroup status: %d",
++				  err);
++		}
+ 	}
++	fs_info->qgroup_rescan_running = false;
++	complete_all(&fs_info->qgroup_rescan_completion);
++	mutex_unlock(&fs_info->qgroup_rescan_lock);
++
++	if (!trans)
++		return;
++
+ 	btrfs_end_transaction(trans);
+ 
+ 	if (btrfs_fs_closing(fs_info)) {
+@@ -2683,12 +2694,6 @@ out:
+ 	} else {
+ 		btrfs_err(fs_info, "qgroup scan failed with %d", err);
+ 	}
+-
+-done:
+-	mutex_lock(&fs_info->qgroup_rescan_lock);
+-	fs_info->qgroup_rescan_running = false;
+-	mutex_unlock(&fs_info->qgroup_rescan_lock);
+-	complete_all(&fs_info->qgroup_rescan_completion);
+ }
+ 
+ /*
 
 
