@@ -2,113 +2,108 @@ Return-Path: <SRS0=6dNS=X4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF1C4C10F14
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 08:04:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D25E5C10F14
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 08:06:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 92768222C2
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 08:04:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A8D3F21A4C
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 08:06:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=szeredi.hu header.i=@szeredi.hu header.b="T+inIGth"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ysy44O1q"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728869AbfJCIEe (ORCPT
+        id S1728061AbfJCIGp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 04:04:34 -0400
-Received: from mail-io1-f68.google.com ([209.85.166.68]:42585 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728766AbfJCIEe (ORCPT
+        Thu, 3 Oct 2019 04:06:45 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:38427 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726811AbfJCIGo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 04:04:34 -0400
-Received: by mail-io1-f68.google.com with SMTP id n197so3368578iod.9
-        for <linux-kernel@vger.kernel.org>; Thu, 03 Oct 2019 01:04:33 -0700 (PDT)
+        Thu, 3 Oct 2019 04:06:44 -0400
+Received: by mail-wm1-f68.google.com with SMTP id 3so1489382wmi.3;
+        Thu, 03 Oct 2019 01:06:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=szeredi.hu; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=RFLlzP5Js98BS8nkgSfEvrEZLCP/SMDrxOQITXNt3eI=;
-        b=T+inIGthBvE2//4VZmd63eyRSLLLrR2dZV3XC6Gze72yu+iWc2TuhC9KAwqW1fcGZq
-         V4qnPy9VgsX44Sy3xvd4Qo2blktM9gmPmA0CVDmErzDIOibLMHDVtUXsl8nOoesSbJ0/
-         artzBJciGJ5N7rJi9zsfVOYKuofa7muPcE6pU=
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=DXigJG4LELNTM8UABCUgm8WM261Rfjsw8vh5tHj3WaA=;
+        b=Ysy44O1qp+WXVMnZyQI5aJrdJjOeMmcQX3mJNELqGlWvXZpvkc9igv6a+fw2mDC8vZ
+         lM4DAesdBzROCbg+wkeLs76jXwXqXyFQakHHWqRqnXZcsEpViE6Sj0jlg2jyqjmPCeK8
+         ZITK6Em1dDK9/FNJbD/PMkijscRNHE5KdbSXgJf7mQNxO1rjpLOREvGuf4wx+ILTvfQE
+         iOG6KDHOTHqoukz+HUykckcVXjagTXQkjAB8DeMEJhvq+RBH6qXPkdX5/2wgP/gLW88N
+         9X+BGmTRO9dwqOrm9/qNAzXEeC6kHQYR1temTsXTd37ZEwFGRt+2jquJKe8Ksv5+p1Vc
+         UbMg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=RFLlzP5Js98BS8nkgSfEvrEZLCP/SMDrxOQITXNt3eI=;
-        b=I+TUqqVtjxl1fOWkE/jPS3VtZ//y3qb+clhMEYb7uLJnWBYRFtcC4Cxz4M3KVv4Lzz
-         tmGk1gD7+w4TmjlLDIs6BjjifTpV+3lJ8uc5jQ10kbQhg9eW6XdkUARzUfMjAwxdDRtE
-         OUPWAWMXeiO4UkXhgefWHWUoMHULnJPe59y55YVnfqtaO9my0/9gSf4K9W2lRJgNrPQy
-         WwfQoSrN+msBU4MhTdmfDQ1cik8bpB0D/hq+4alLGnaHVUzzmPAstuPVYzcV8nCAuBys
-         qAxFRzkFJ5tw/dlvxfVWCmdBIyX+n0xk7JTUMbTYBtrea1Vsu0LJoacfBI011U16N8iP
-         gWCw==
-X-Gm-Message-State: APjAAAXZpFL8Ioee7qvufioY/AXhrrlcH7v+wHEZmROr4kmIQJgEVKxG
-        uwEJyJIlwnBhyeUEuT1hwGMHC5zi3mulVq81oBI4fg==
-X-Google-Smtp-Source: APXvYqyTGtMe8CACMxLAYuzPIkQ43lyohUju5qo0yntIo1HDn9G2UOfThJbdazHDgBUxaisYEda00vQaldPsOCX9KfA=
-X-Received: by 2002:a05:6e02:4d2:: with SMTP id f18mr8908437ils.174.1570089873408;
- Thu, 03 Oct 2019 01:04:33 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=DXigJG4LELNTM8UABCUgm8WM261Rfjsw8vh5tHj3WaA=;
+        b=DAvDrTxwT/u8IVSMMV0HIdX6KizS4A/tjJFflcyxOP7jWme2eE9iS9Byo6VZjtOYfG
+         7KjHK9/Ulo/8b6Gcm6pySRiPCUj7KnFrd65tBctnuthPz33BXBDTPB6gW6jS/kSXHMp5
+         3vFM/NC4GPNyOcQJyfNS9eEg5Hvnh3b7/KhOS2ucR4sbhwmOkRbceUXLGf5w5R0wln1G
+         FQNNKOlGWQ3/wKc2dWjJ+CYaaCKo+qp0EZKi1/fbtsHLMg6U8KuuTyeyhzgzGeabEBiS
+         hFMWsoVidwlJMnjRF0XqQiaUYKabyRQi+iQku2nnuT0Zf4EQCLwhlHCOxqBabqWbEBL+
+         DSSw==
+X-Gm-Message-State: APjAAAVzDUprjWyKZnDdOtqVfkx1x+dZsMN0CR/QLh+hOf3RpSI0xBIV
+        YN50ALlkFDOMQBCXeGoj4lo=
+X-Google-Smtp-Source: APXvYqxtvwqU7mXTzVD/3O6NSQDItjUtF/OaCiPoG+cV6rklLANEJZFc481it73Lfp7mzWlsPNm6pA==
+X-Received: by 2002:a7b:c8c3:: with SMTP id f3mr5722385wml.157.1570090002729;
+        Thu, 03 Oct 2019 01:06:42 -0700 (PDT)
+Received: from localhost.localdomain ([46.114.33.168])
+        by smtp.googlemail.com with ESMTPSA id w7sm2355064wmd.22.2019.10.03.01.06.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 03 Oct 2019 01:06:41 -0700 (PDT)
+From:   Gon Solo <gonsolo@gmail.com>
+To:     mchehab+samsung@kernel.org
+Cc:     sean@mess.org, crope@iki.fi, linux-media@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Gon Solo <gonsolo@gmail.com>
+Subject: [PATCH 0/1] Testing timing patch for Logilink VG0022A
+Date:   Thu,  3 Oct 2019 10:06:19 +0200
+Message-Id: <20191003080620.3885-1-gonsolo@gmail.com>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20191002154922.7f1cfc76@coco.lan>
+References: <20191002154922.7f1cfc76@coco.lan>
 MIME-Version: 1.0
-References: <CAJfpegv-EQhvJUB0AUhJ=Xx8moHHQvkDGe-yUXHENyWvboBU3A@mail.gmail.com>
- <1b09a159-bcec-63c9-df42-47d99f44d445@virtuozzo.com>
-In-Reply-To: <1b09a159-bcec-63c9-df42-47d99f44d445@virtuozzo.com>
-From:   Miklos Szeredi <miklos@szeredi.hu>
-Date:   Thu, 3 Oct 2019 10:04:22 +0200
-Message-ID: <CAJfpegvcef_rJ5VHdE91LAU2_=XrorsTZu_7JCPsJFo0aGwZmw@mail.gmail.com>
-Subject: Re: [PATCH] fuse: BUG_ON correction in fuse_dev_splice_write()
-To:     Vasily Averin <vvs@virtuozzo.com>
-Cc:     linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        Andrey Ryabinin <aryabinin@virtuozzo.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 19, 2019 at 8:53 AM Vasily Averin <vvs@virtuozzo.com> wrote:
->
-> commit 963545357202 ("fuse: reduce allocation size for splice_write")
-> changed size of bufs array, so BUG_ON which checks the index of the array
-> shold also be fixed.
->
-> Fixes: 963545357202 ("fuse: reduce allocation size for splice_write")
-> Signed-off-by: Vasily Averin <vvs@virtuozzo.com>
-> ---
->  fs/fuse/dev.c | 7 ++++---
->  1 file changed, 4 insertions(+), 3 deletions(-)
->
-> diff --git a/fs/fuse/dev.c b/fs/fuse/dev.c
-> index ea8237513dfa..f4ef6e01642c 100644
-> --- a/fs/fuse/dev.c
-> +++ b/fs/fuse/dev.c
-> @@ -2029,7 +2029,7 @@ static ssize_t fuse_dev_splice_write(struct pipe_inode_info *pipe,
->                                      struct file *out, loff_t *ppos,
->                                      size_t len, unsigned int flags)
->  {
-> -       unsigned nbuf;
-> +       unsigned nbuf, bsize;
->         unsigned idx;
->         struct pipe_buffer *bufs;
->         struct fuse_copy_state cs;
-> @@ -2043,7 +2043,8 @@ static ssize_t fuse_dev_splice_write(struct pipe_inode_info *pipe,
->
->         pipe_lock(pipe);
->
-> -       bufs = kvmalloc_array(pipe->nrbufs, sizeof(struct pipe_buffer),
-> +       bsize = pipe->nrbufs;
-> +       bufs = kvmalloc_array(bsize, sizeof(struct pipe_buffer),
->                               GFP_KERNEL);
->         if (!bufs) {
->                 pipe_unlock(pipe);
-> @@ -2064,7 +2065,7 @@ static ssize_t fuse_dev_splice_write(struct pipe_inode_info *pipe,
->                 struct pipe_buffer *ibuf;
->                 struct pipe_buffer *obuf;
->
-> -               BUG_ON(nbuf >= pipe->buffers);
-> +               BUG_ON(nbuf >= bsize);
->                 BUG_ON(!pipe->nrbufs);
+Hi!
 
-Better turn these into WARN_ON's..  Fixed and applied.
+I tested the following patch on a Ubuntu Disco Dingo kernel.
+Unfortunately it fails with the following error message:
 
-Thanks,
-Miklos
+[    3.715233] dvb_usb_af9035 2-1:1.0: prechip_version=83 chip_version=01 chip_type=9306
+[    3.718385] usb 2-1: dvb_usb_v2: found a 'Logilink VG0022A' in warm state
+[    3.718479] usb 2-1: dvb_usb_v2: will pass the complete MPEG2 transport stream to the software demuxer
+[    3.718544] dvbdev: DVB: registering new adapter (Logilink VG0022A)
+[    3.720006] usbcore: registered new interface driver usbserial_generic
+[    3.720018] usbserial: USB Serial support registered for generic
+[    3.729819] si2168 1-0067: probe failed = -5
+[    3.729826] si2168: probe of 1-0067 failed with error -5
+[    3.731138] usbcore: registered new interface driver dvb_usb_af9035
+[    3.732728] usbcore: registered new interface driver btusb
+[    3.742576] media: Linux media interface: v0.10
+
+Did I forget something or is it just not working?
+
+Anyway, thanks for your effort. Can we try something else?
+
+g
+
+
+Gon Solo (1):
+  Test Mauros timing patch.
+
+ drivers/media/tuners/si2157.c         | 32 ++++++++++++++++-----------
+ drivers/media/usb/dvb-usb-v2/af9035.c | 14 ++++++++----
+ 2 files changed, 29 insertions(+), 17 deletions(-)
+
+-- 
+2.20.1
+
