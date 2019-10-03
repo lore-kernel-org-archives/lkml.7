@@ -2,56 +2,54 @@ Return-Path: <SRS0=6dNS=X4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-14.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 35C5DC10F14
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:31:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E1B4C32792
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:31:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0AAD421848
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:31:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EE4B621848
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:31:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570120298;
-	bh=w5vMaPj8DTvAVZi2VQY7kI0VApxM++qJDgNLshmiiWA=;
+	s=default; t=1570120300;
+	bh=J857V+s2eCUvaCpjWd7tdKg18VSQm5KUn4SWhVl283w=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=e5nY45TsTf7PrZBnjNECU3QIjOI1EDmSGmbRo6PgNYso0URNrg0n/Bq+Af+93UMge
-	 1SFmDQ16lspRgB8YpGKHIWjTKS9srSXeLdkrkR6vPX3+bozFYpBXBa/+X8Ao5ReuNV
-	 u2lFmdeC5kqYEPkWBDdZkxO42KoiZ1uj6/8B/zUs=
+	b=FNQUjvLFA7K4zKAdeYShsWMKmaJCMXOyoqeS38DZPDjQ0d5i/RDYwJcPev8Tf2/M2
+	 y8zpBWj0kO1ecbonvi+f0NoryL0/QTuaCmeixHiVi3Dt3hNrSrVsIEsRCu6PIXT0B/
+	 w3AOOTpa74wiFpJ4/C/YAEe8m6fDuAgQZmbxiTfg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731914AbfJCQbh (ORCPT
+        id S2403867AbfJCQbe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 12:31:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38458 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 12:31:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38362 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2403843AbfJCQba (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:31:30 -0400
+        id S2391842AbfJCQb2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:31:28 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5845B2054F;
-        Thu,  3 Oct 2019 16:31:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AE60D2054F;
+        Thu,  3 Oct 2019 16:31:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570120289;
-        bh=w5vMaPj8DTvAVZi2VQY7kI0VApxM++qJDgNLshmiiWA=;
+        s=default; t=1570120287;
+        bh=J857V+s2eCUvaCpjWd7tdKg18VSQm5KUn4SWhVl283w=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=rBHdH+IywRZ4LKEI9COO5JeyUY48Q8Q+HJVgve2ZxjMThZmMV1ZZUln1cfG9rmiPw
-         mGBx9JgFSqfkFVbPBMG4vNshw9r+vli+mV6qvi/0appj8Wg63K/GKtGBgwS0AVl9Et
-         vYYimjVI9JfPm9eb0P9whyWIleZgIV/1JoaHS46g=
+        b=jNalYUp0ib3OCnZNJUzYx/66iWmaq5KcAIuvyvyzXB/e/F1eJn3scr3DB5JB7TbWT
+         IduebLkJ1nvMV8dYZ4XEFSCVsaunHSb0ycyTlPVW2fejnAK00BITZhrHAAOe02ecGn
+         Sk8T56bCQQZJmS9BK1rQsYZMC+AGfa/+mvRJAoLo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Tom Wu <tomwu@mellanox.com>,
-        Israel Rukshin <israelr@mellanox.com>,
-        Max Gurtovoy <maxg@mellanox.com>,
-        Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Sagi Grimberg <sagi@grimberg.me>,
+        stable@vger.kernel.org, Adrian Hunter <adrian.hunter@intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 160/313] nvmet: fix data units read and written counters in SMART log
-Date:   Thu,  3 Oct 2019 17:52:18 +0200
-Message-Id: <20191003154548.702275273@linuxfoundation.org>
+Subject: [PATCH 5.2 117/313] tools headers: Fixup bitsperlong per arch includes
+Date:   Thu,  3 Oct 2019 17:51:35 +0200
+Message-Id: <20191003154544.387002003@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191003154533.590915454@linuxfoundation.org>
 References: <20191003154533.590915454@linuxfoundation.org>
@@ -64,63 +62,110 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tom Wu <tomwu@mellanox.com>
+From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-[ Upstream commit 3bec2e3754becebd4c452999adb49bc62c575ea4 ]
+[ Upstream commit 42fc2e9ef9603a7948aaa4ffd8dfb94b30294ad8 ]
 
-In nvme spec 1.3 there is a definition for data write/read counters
-from SMART log, (See section 5.14.1.2):
-	This value is reported in thousands (i.e., a value of 1
-	corresponds to 1000 units of 512 bytes read) and is rounded up.
+We were getting the file by luck, from one of the paths in -I, fix it to
+get it from the proper place:
 
-However, in nvme target where value is reported with actual units,
-but not thousands of units as the spec requires.
+  $ cd tools/include/uapi/asm/
+  [acme@quaco asm]$ grep include bitsperlong.h
+  #include "../../arch/x86/include/uapi/asm/bitsperlong.h"
+  #include "../../arch/arm64/include/uapi/asm/bitsperlong.h"
+  #include "../../arch/powerpc/include/uapi/asm/bitsperlong.h"
+  #include "../../arch/s390/include/uapi/asm/bitsperlong.h"
+  #include "../../arch/sparc/include/uapi/asm/bitsperlong.h"
+  #include "../../arch/mips/include/uapi/asm/bitsperlong.h"
+  #include "../../arch/ia64/include/uapi/asm/bitsperlong.h"
+  #include "../../arch/riscv/include/uapi/asm/bitsperlong.h"
+  #include "../../arch/alpha/include/uapi/asm/bitsperlong.h"
+  #include <asm-generic/bitsperlong.h>
+  $ ls -la ../../arch/x86/include/uapi/asm/bitsperlong.h
+  ls: cannot access '../../arch/x86/include/uapi/asm/bitsperlong.h': No such file or directory
+  $ ls -la ../../../arch/*/include/uapi/asm/bitsperlong.h
+  -rw-rw-r--. 1 237 ../../../arch/alpha/include/uapi/asm/bitsperlong.h
+  -rw-rw-r--. 1 841 ../../../arch/arm64/include/uapi/asm/bitsperlong.h
+  -rw-rw-r--. 1 966 ../../../arch/hexagon/include/uapi/asm/bitsperlong.h
+  -rw-rw-r--. 1 234 ../../../arch/ia64/include/uapi/asm/bitsperlong.h
+  -rw-rw-r--. 1 100 ../../../arch/microblaze/include/uapi/asm/bitsperlong.h
+  -rw-rw-r--. 1 244 ../../../arch/mips/include/uapi/asm/bitsperlong.h
+  -rw-rw-r--. 1 352 ../../../arch/parisc/include/uapi/asm/bitsperlong.h
+  -rw-rw-r--. 1 312 ../../../arch/powerpc/include/uapi/asm/bitsperlong.h
+  -rw-rw-r--. 1 353 ../../../arch/riscv/include/uapi/asm/bitsperlong.h
+  -rw-rw-r--. 1 292 ../../../arch/s390/include/uapi/asm/bitsperlong.h
+  -rw-rw-r--. 1 323 ../../../arch/sparc/include/uapi/asm/bitsperlong.h
+  -rw-rw-r--. 1 320 ../../../arch/x86/include/uapi/asm/bitsperlong.h
+  $
 
-Signed-off-by: Tom Wu <tomwu@mellanox.com>
-Reviewed-by: Israel Rukshin <israelr@mellanox.com>
-Reviewed-by: Max Gurtovoy <maxg@mellanox.com>
-Reviewed-by: Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>
-Reviewed-by: Christoph Hellwig <hch@lst.de>
-Signed-off-by: Sagi Grimberg <sagi@grimberg.me>
+Found while fixing some other problem, before it was escaping the
+tools/ chroot and using stuff in the kernel sources:
+
+    CC       /tmp/build/perf/util/find_bit.o
+In file included from /git/linux/tools/include/../../arch/x86/include/uapi/asm/bitsperlong.h:11,
+                 from /git/linux/tools/include/uapi/asm/bitsperlong.h:3,
+                 from /git/linux/tools/include/linux/bits.h:6,
+                 from /git/linux/tools/include/linux/bitops.h:13,
+                 from ../lib/find_bit.c:17:
+
+  # cd /git/linux/tools/include/../../arch/x86/include/uapi/asm/
+  # pwd
+  /git/linux/arch/x86/include/uapi/asm
+  #
+
+Now it is getting the one we want it to, i.e. the one inside tools/:
+
+    CC       /tmp/build/perf/util/find_bit.o
+  In file included from /git/linux/tools/arch/x86/include/uapi/asm/bitsperlong.h:11,
+                   from /git/linux/tools/include/linux/bits.h:6,
+                   from /git/linux/tools/include/linux/bitops.h:13,
+
+Cc: Adrian Hunter <adrian.hunter@intel.com>
+Cc: Jiri Olsa <jolsa@kernel.org>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Link: https://lkml.kernel.org/n/tip-8f8cfqywmf6jk8a3ucr0ixhu@git.kernel.org
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/nvme/target/admin-cmd.c | 14 ++++++++------
- 1 file changed, 8 insertions(+), 6 deletions(-)
+ tools/include/uapi/asm/bitsperlong.h | 18 +++++++++---------
+ 1 file changed, 9 insertions(+), 9 deletions(-)
 
-diff --git a/drivers/nvme/target/admin-cmd.c b/drivers/nvme/target/admin-cmd.c
-index 9f72d515fc4b3..4099093a17343 100644
---- a/drivers/nvme/target/admin-cmd.c
-+++ b/drivers/nvme/target/admin-cmd.c
-@@ -81,9 +81,11 @@ static u16 nvmet_get_smart_log_nsid(struct nvmet_req *req,
- 		goto out;
- 
- 	host_reads = part_stat_read(ns->bdev->bd_part, ios[READ]);
--	data_units_read = part_stat_read(ns->bdev->bd_part, sectors[READ]);
-+	data_units_read = DIV_ROUND_UP(part_stat_read(ns->bdev->bd_part,
-+		sectors[READ]), 1000);
- 	host_writes = part_stat_read(ns->bdev->bd_part, ios[WRITE]);
--	data_units_written = part_stat_read(ns->bdev->bd_part, sectors[WRITE]);
-+	data_units_written = DIV_ROUND_UP(part_stat_read(ns->bdev->bd_part,
-+		sectors[WRITE]), 1000);
- 
- 	put_unaligned_le64(host_reads, &slog->host_reads[0]);
- 	put_unaligned_le64(data_units_read, &slog->data_units_read[0]);
-@@ -111,11 +113,11 @@ static u16 nvmet_get_smart_log_all(struct nvmet_req *req,
- 		if (!ns->bdev)
- 			continue;
- 		host_reads += part_stat_read(ns->bdev->bd_part, ios[READ]);
--		data_units_read +=
--			part_stat_read(ns->bdev->bd_part, sectors[READ]);
-+		data_units_read += DIV_ROUND_UP(
-+			part_stat_read(ns->bdev->bd_part, sectors[READ]), 1000);
- 		host_writes += part_stat_read(ns->bdev->bd_part, ios[WRITE]);
--		data_units_written +=
--			part_stat_read(ns->bdev->bd_part, sectors[WRITE]);
-+		data_units_written += DIV_ROUND_UP(
-+			part_stat_read(ns->bdev->bd_part, sectors[WRITE]), 1000);
- 
- 	}
- 	rcu_read_unlock();
+diff --git a/tools/include/uapi/asm/bitsperlong.h b/tools/include/uapi/asm/bitsperlong.h
+index 57aaeaf8e1920..edba4d93e9e6a 100644
+--- a/tools/include/uapi/asm/bitsperlong.h
++++ b/tools/include/uapi/asm/bitsperlong.h
+@@ -1,22 +1,22 @@
+ /* SPDX-License-Identifier: GPL-2.0 */
+ #if defined(__i386__) || defined(__x86_64__)
+-#include "../../arch/x86/include/uapi/asm/bitsperlong.h"
++#include "../../../arch/x86/include/uapi/asm/bitsperlong.h"
+ #elif defined(__aarch64__)
+-#include "../../arch/arm64/include/uapi/asm/bitsperlong.h"
++#include "../../../arch/arm64/include/uapi/asm/bitsperlong.h"
+ #elif defined(__powerpc__)
+-#include "../../arch/powerpc/include/uapi/asm/bitsperlong.h"
++#include "../../../arch/powerpc/include/uapi/asm/bitsperlong.h"
+ #elif defined(__s390__)
+-#include "../../arch/s390/include/uapi/asm/bitsperlong.h"
++#include "../../../arch/s390/include/uapi/asm/bitsperlong.h"
+ #elif defined(__sparc__)
+-#include "../../arch/sparc/include/uapi/asm/bitsperlong.h"
++#include "../../../arch/sparc/include/uapi/asm/bitsperlong.h"
+ #elif defined(__mips__)
+-#include "../../arch/mips/include/uapi/asm/bitsperlong.h"
++#include "../../../arch/mips/include/uapi/asm/bitsperlong.h"
+ #elif defined(__ia64__)
+-#include "../../arch/ia64/include/uapi/asm/bitsperlong.h"
++#include "../../../arch/ia64/include/uapi/asm/bitsperlong.h"
+ #elif defined(__riscv)
+-#include "../../arch/riscv/include/uapi/asm/bitsperlong.h"
++#include "../../../arch/riscv/include/uapi/asm/bitsperlong.h"
+ #elif defined(__alpha__)
+-#include "../../arch/alpha/include/uapi/asm/bitsperlong.h"
++#include "../../../arch/alpha/include/uapi/asm/bitsperlong.h"
+ #else
+ #include <asm-generic/bitsperlong.h>
+ #endif
 -- 
 2.20.1
 
