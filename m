@@ -4,52 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D429DC10F14
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:08:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B69B9C10F14
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:08:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A84A620673
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:08:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8D31F20673
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:08:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570122500;
-	bh=ajBjYAZiKmXhY3kJWE4D+XSVieiVoPua4IlPs8TFonc=;
+	s=default; t=1570122503;
+	bh=gHBXCwehdpgM+xbkDasC+q/jnyRk+Cs4NobCvALNRa0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wEV7aYexAiqprhp97122RwYTK09t/xJuGnsBAT/2AIUsFWGY3ziYm7O7T/SKhEwo7
-	 HQp8FMYBhg17Lxtb60faJK2wOyI7Z+cqWRMtaOV0S7hdOeXHHQFQxlr7AWD9+um9IT
-	 OeCaIpuMdkkxJqkiKIRdR2BreDGC0VCbByqonQKc=
+	b=Fo6cY+IBJ9YUkYk9krKOo+MXp7y3gN90KGmFQ+2MQO6E01ur1A81cM9LHZLH+9e+i
+	 7q86iIncjsLoLJFDSZ75im5A8L7YGVFH1rFButwk8QhZiBlP0uPqnfnmSAztMnop37
+	 MinWoLHOBrNi4CBPIsx1B65L4VQGpqHDD9o5fzAg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404087AbfJCQfZ (ORCPT
+        id S2393414AbfJCRIW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 12:35:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44234 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 13:08:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44328 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404058AbfJCQfT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:35:19 -0400
+        id S2404085AbfJCQfZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:35:25 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8C55D2070B;
-        Thu,  3 Oct 2019 16:35:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DF15A2070B;
+        Thu,  3 Oct 2019 16:35:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570120519;
-        bh=ajBjYAZiKmXhY3kJWE4D+XSVieiVoPua4IlPs8TFonc=;
+        s=default; t=1570120524;
+        bh=gHBXCwehdpgM+xbkDasC+q/jnyRk+Cs4NobCvALNRa0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=rq2O06wPa/qdPB8F5f8ZYIjb7PxlRYQRafUXaMvZ2B6JRNKrcUeZgG17oYkKNj4WC
-         4nyY3xJCplqkc+Zs4l4XCubdHf8PU1FyvMaHgbBsuiN3D+ha9MTpZJTGf4loxx2byo
-         xKvnXHa8fBHXGx5zyI9znTg1LKNaGs27Pkf27DEE=
+        b=zBcRh7brZj9TDv1oKvPfxA4WZL3I7vC8C3rVVqtvzWwCDEEd6il3XTqte8i4mFPYs
+         vkXNqOpsNt+E5lKFxWzK+lwwB+ra6ayq0znBw/DrAocjlPR9n7GCUulQaiDAZjod+T
+         HoTXoXtg5h0KP8maSJyY9R9OmA+QzZMD1ekZioCo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        =?UTF-8?q?Amadeusz=20S=C5=82awi=C5=84ski?= 
-        <amadeuszx.slawinski@intel.com>,
-        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-        Mark Brown <broonie@kernel.org>
-Subject: [PATCH 5.2 253/313] ASoC: Intel: Fix use of potentially uninitialized variable
-Date:   Thu,  3 Oct 2019 17:53:51 +0200
-Message-Id: <20191003154557.950873648@linuxfoundation.org>
+        stable@vger.kernel.org, Luis Araneda <luaraneda@gmail.com>,
+        Michal Simek <michal.simek@xilinx.com>
+Subject: [PATCH 5.2 255/313] ARM: zynq: Use memcpy_toio instead of memcpy on smp bring-up
+Date:   Thu,  3 Oct 2019 17:53:53 +0200
+Message-Id: <20191003154558.155501339@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191003154533.590915454@linuxfoundation.org>
 References: <20191003154533.590915454@linuxfoundation.org>
@@ -62,37 +59,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Amadeusz Sławiński <amadeuszx.slawinski@intel.com>
+From: Luis Araneda <luaraneda@gmail.com>
 
-commit 810f3b860850148788fc1ed8a6f5f807199fed65 upstream.
+commit b7005d4ef4f3aa2dc24019ffba03a322557ac43d upstream.
 
-If ipc->ops.reply_msg_match is NULL, we may end up using uninitialized
-mask value.
+This fixes a kernel panic on memcpy when
+FORTIFY_SOURCE is enabled.
 
-reported by smatch:
-sound/soc/intel/common/sst-ipc.c:266 sst_ipc_reply_find_msg() error: uninitialized symbol 'mask'.
+The initial smp implementation on commit aa7eb2bb4e4a
+("arm: zynq: Add smp support")
+used memcpy, which worked fine until commit ee333554fed5
+("ARM: 8749/1: Kconfig: Add ARCH_HAS_FORTIFY_SOURCE")
+enabled overflow checks at runtime, producing a read
+overflow panic.
 
-Signed-off-by: Amadeusz Sławiński <amadeuszx.slawinski@intel.com>
-Link: https://lore.kernel.org/r/20190827141712.21015-3-amadeuszx.slawinski@linux.intel.com
-Reviewed-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Signed-off-by: Mark Brown <broonie@kernel.org>
+The computed size of memcpy args are:
+- p_size (dst): 4294967295 = (size_t) -1
+- q_size (src): 1
+- size (len): 8
+
+Additionally, the memory is marked as __iomem, so one of
+the memcpy_* functions should be used for read/write.
+
+Fixes: aa7eb2bb4e4a ("arm: zynq: Add smp support")
+Signed-off-by: Luis Araneda <luaraneda@gmail.com>
 Cc: stable@vger.kernel.org
+Signed-off-by: Michal Simek <michal.simek@xilinx.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- sound/soc/intel/common/sst-ipc.c |    2 ++
- 1 file changed, 2 insertions(+)
+ arch/arm/mach-zynq/platsmp.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/sound/soc/intel/common/sst-ipc.c
-+++ b/sound/soc/intel/common/sst-ipc.c
-@@ -222,6 +222,8 @@ struct ipc_message *sst_ipc_reply_find_m
+--- a/arch/arm/mach-zynq/platsmp.c
++++ b/arch/arm/mach-zynq/platsmp.c
+@@ -57,7 +57,7 @@ int zynq_cpun_start(u32 address, int cpu
+ 			* 0x4: Jump by mov instruction
+ 			* 0x8: Jumping address
+ 			*/
+-			memcpy((__force void *)zero, &zynq_secondary_trampoline,
++			memcpy_toio(zero, &zynq_secondary_trampoline,
+ 							trampoline_size);
+ 			writel(address, zero + trampoline_size);
  
- 	if (ipc->ops.reply_msg_match != NULL)
- 		header = ipc->ops.reply_msg_match(header, &mask);
-+	else
-+		mask = (u64)-1;
- 
- 	if (list_empty(&ipc->rx_list)) {
- 		dev_err(ipc->dev, "error: rx list empty but received 0x%llx\n",
 
 
