@@ -2,87 +2,85 @@ Return-Path: <SRS0=6dNS=X4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.3 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 07766C10F14
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 11:43:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27D48C10F14
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 11:43:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D880D21A4C
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 11:43:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F344220830
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 11:43:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730263AbfJCLnk (ORCPT
+        id S1730276AbfJCLnt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 07:43:40 -0400
-Received: from mail2-relais-roc.national.inria.fr ([192.134.164.83]:30723 "EHLO
-        mail2-relais-roc.national.inria.fr" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729823AbfJCLnj (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 07:43:39 -0400
-X-IronPort-AV: E=Sophos;i="5.67,252,1566856800"; 
-   d="scan'208";a="404557181"
-Received: from portablejulia.rsr.lip6.fr ([132.227.76.63])
-  by mail2-relais-roc.national.inria.fr with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 03 Oct 2019 13:43:37 +0200
-Date:   Thu, 3 Oct 2019 13:43:37 +0200 (CEST)
-From:   Julia Lawall <julia.lawall@lip6.fr>
-X-X-Sender: julia@hadrien
-To:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-cc:     mchehab@kernel.org, robh+dt@kernel.org, sakari.ailus@iki.fi,
-        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        c.barrett@framos.com, a.brela@framos.com,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        kbuild-all@01.org
-Subject: [PATCH] media: i2c: fix returnvar.cocci warnings
-Message-ID: <alpine.DEB.2.21.1910031342250.2406@hadrien>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        Thu, 3 Oct 2019 07:43:49 -0400
+Received: from mga12.intel.com ([192.55.52.136]:45043 "EHLO mga12.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729823AbfJCLnt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 07:43:49 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 03 Oct 2019 04:43:48 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.67,252,1566889200"; 
+   d="scan'208";a="393178220"
+Received: from jsakkine-mobl1.tm.intel.com (HELO localhost) ([10.237.50.161])
+  by fmsmga006.fm.intel.com with ESMTP; 03 Oct 2019 04:43:45 -0700
+Date:   Thu, 3 Oct 2019 14:43:44 +0300
+From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+To:     Mimi Zohar <zohar@linux.ibm.com>
+Cc:     linux-integrity@vger.kernel.org, stable@vger.kernel.org,
+        David Howells <dhowells@redhat.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        "David S. Miller" <davem@davemloft.net>,
+        "open list:ASYMMETRIC KEYS" <keyrings@vger.kernel.org>,
+        "open list:CRYPTO API" <linux-crypto@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] KEYS: asym_tpm: Switch to get_random_bytes()
+Message-ID: <20191003114344.GG8933@linux.intel.com>
+References: <20190926171601.30404-1-jarkko.sakkinen@linux.intel.com>
+ <1570024819.4999.119.camel@linux.ibm.com>
+ <20191003114119.GF8933@linux.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20191003114119.GF8933@linux.intel.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: kbuild test robot <lkp@intel.com>
+On Thu, Oct 03, 2019 at 02:41:19PM +0300, Jarkko Sakkinen wrote:
+> On Wed, Oct 02, 2019 at 10:00:19AM -0400, Mimi Zohar wrote:
+> > On Thu, 2019-09-26 at 20:16 +0300, Jarkko Sakkinen wrote:
+> > > Only the kernel random pool should be used for generating random numbers.
+> > > TPM contributes to that pool among the other sources of entropy. In here it
+> > > is not, agreed, absolutely critical because TPM is what is trusted anyway
+> > > but in order to remove tpm_get_random() we need to first remove all the
+> > > call sites.
+> > 
+> > At what point during boot is the kernel random pool available?  Does
+> > this imply that you're planning on changing trusted keys as well?
+> 
+> Well trusted keys *must* be changed to use it. It is not a choice
+> because using a proprietary random number generator instead of defacto
+> one in the kernel can be categorized as a *regression*.
+> 
+> Also, TEE trusted keys cannot use the TPM option.
+> 
+> If it was not initialized early enough we would need fix that too.
+> 
+> I don't think there should be a problem anyway since encrypted keys is
+> already using get_random_bytes().
 
-Remove unneeded variable used to store return value.
+Looking at asym_tpm.c the implementation copies all the anti-patterns
+from trusted keys, which is really unfortunate. I don't know how that
+has passed through all the filters.
 
-Generated by: scripts/coccinelle/misc/returnvar.cocci
-
-Fixes: a80daf4057d7 ("media: i2c: Add IMX290 CMOS image sensor driver")
-CC: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Signed-off-by: kbuild test robot <lkp@intel.com>
-Signed-off-by: Julia Lawall <julia.lawall@lip6.fr>
----
-
-url:    https://github.com/0day-ci/linux/commits/Manivannan-Sadhasivam/dt-bindings-media-i2c-Add-IMX290-CMOS-sensor-binding/20191003-175652
-base:   git://linuxtv.org/media_tree.git master
-:::::: branch date: 2 hours ago
-:::::: commit date: 2 hours ago
-
-Please take the patch only if it's a positive warning. Thanks!
-
- imx290.c |    3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
-
---- a/drivers/media/i2c/imx290.c
-+++ b/drivers/media/i2c/imx290.c
-@@ -447,7 +447,6 @@ static int imx290_set_fmt(struct v4l2_su
- 	const struct imx290_mode *mode;
- 	struct v4l2_mbus_framefmt *format;
- 	unsigned int i;
--	int ret = 0;
-
- 	mutex_lock(&imx290->lock);
-
-@@ -483,7 +482,7 @@ static int imx290_set_fmt(struct v4l2_su
-
- 	mutex_unlock(&imx290->lock);
-
--	return ret;
-+	return 0;
- }
-
- static int imx290_entity_init_cfg(struct v4l2_subdev *subdev,
+/Jarkko
