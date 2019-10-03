@@ -4,49 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B69B9C10F14
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:08:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 02BFAC4CED1
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:08:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8D31F20673
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:08:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CCBFD2086A
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:08:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570122503;
-	bh=gHBXCwehdpgM+xbkDasC+q/jnyRk+Cs4NobCvALNRa0=;
+	s=default; t=1570122510;
+	bh=ZgCkLt2JG903zWS9Ruydm29M6HwhLE/8rg89Q6YLjK0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Fo6cY+IBJ9YUkYk9krKOo+MXp7y3gN90KGmFQ+2MQO6E01ur1A81cM9LHZLH+9e+i
-	 7q86iIncjsLoLJFDSZ75im5A8L7YGVFH1rFButwk8QhZiBlP0uPqnfnmSAztMnop37
-	 MinWoLHOBrNi4CBPIsx1B65L4VQGpqHDD9o5fzAg=
+	b=JK+RFnABK4YAVlP4THxVneSCLALuxznoCooxirGQPHhL3OAgvP0zHCXNl7V72J2Wx
+	 kQHtq3cslX8SK4RUoEsjobOzGPi+IWwzaSEfQYoxFWAQCycG/zBn7BtBY+Bo6coqPj
+	 jAP+WuF9da6bOHCnPxiZSqqE3WUpOw8hYySqUS7M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393414AbfJCRIW (ORCPT
+        id S2403889AbfJCQfR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 13:08:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44328 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 12:35:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44086 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404085AbfJCQfZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:35:25 -0400
+        id S2404256AbfJCQfO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:35:14 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DF15A2070B;
-        Thu,  3 Oct 2019 16:35:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 104B82086A;
+        Thu,  3 Oct 2019 16:35:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570120524;
-        bh=gHBXCwehdpgM+xbkDasC+q/jnyRk+Cs4NobCvALNRa0=;
+        s=default; t=1570120513;
+        bh=ZgCkLt2JG903zWS9Ruydm29M6HwhLE/8rg89Q6YLjK0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=zBcRh7brZj9TDv1oKvPfxA4WZL3I7vC8C3rVVqtvzWwCDEEd6il3XTqte8i4mFPYs
-         vkXNqOpsNt+E5lKFxWzK+lwwB+ra6ayq0znBw/DrAocjlPR9n7GCUulQaiDAZjod+T
-         HoTXoXtg5h0KP8maSJyY9R9OmA+QzZMD1ekZioCo=
+        b=qK1lO6g5K30xjNxupeKQ8FJaZCblwn7XVIcfPIN0Gks1kzLMK4x00AKprcpj3LPIK
+         6mF4cbUb+9nFFol9oHlvNe5wGk6GlSLRNCpIz6ruZWo2QEfr1cmTuSkT0G8Y0rJDdo
+         2GkftVkkoI4/+kFDV+oY1ppPPTpCfQXb0vnyi31U=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Luis Araneda <luaraneda@gmail.com>,
-        Michal Simek <michal.simek@xilinx.com>
-Subject: [PATCH 5.2 255/313] ARM: zynq: Use memcpy_toio instead of memcpy on smp bring-up
-Date:   Thu,  3 Oct 2019 17:53:53 +0200
-Message-Id: <20191003154558.155501339@linuxfoundation.org>
+        stable@vger.kernel.org, Alexander Graf <graf@amazon.com>,
+        Liran Alon <liran.alon@oracle.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Paolo Bonzini <pbonzini@redhat.com>
+Subject: [PATCH 5.2 243/313] KVM: x86: Disable posted interrupts for non-standard IRQs delivery modes
+Date:   Thu,  3 Oct 2019 17:53:41 +0200
+Message-Id: <20191003154556.956790264@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191003154533.590915454@linuxfoundation.org>
 References: <20191003154533.590915454@linuxfoundation.org>
@@ -59,48 +62,92 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Luis Araneda <luaraneda@gmail.com>
+From: Alexander Graf <graf@amazon.com>
 
-commit b7005d4ef4f3aa2dc24019ffba03a322557ac43d upstream.
+commit fdcf756213756c23b533ca4974d1f48c6a4d4281 upstream.
 
-This fixes a kernel panic on memcpy when
-FORTIFY_SOURCE is enabled.
+We can easily route hardware interrupts directly into VM context when
+they target the "Fixed" or "LowPriority" delivery modes.
 
-The initial smp implementation on commit aa7eb2bb4e4a
-("arm: zynq: Add smp support")
-used memcpy, which worked fine until commit ee333554fed5
-("ARM: 8749/1: Kconfig: Add ARCH_HAS_FORTIFY_SOURCE")
-enabled overflow checks at runtime, producing a read
-overflow panic.
+However, on modes such as "SMI" or "Init", we need to go via KVM code
+to actually put the vCPU into a different mode of operation, so we can
+not post the interrupt
 
-The computed size of memcpy args are:
-- p_size (dst): 4294967295 = (size_t) -1
-- q_size (src): 1
-- size (len): 8
+Add code in the VMX and SVM PI logic to explicitly refuse to establish
+posted mappings for advanced IRQ deliver modes. This reflects the logic
+in __apic_accept_irq() which also only ever passes Fixed and LowPriority
+interrupts as posted interrupts into the guest.
 
-Additionally, the memory is marked as __iomem, so one of
-the memcpy_* functions should be used for read/write.
+This fixes a bug I have with code which configures real hardware to
+inject virtual SMIs into my guest.
 
-Fixes: aa7eb2bb4e4a ("arm: zynq: Add smp support")
-Signed-off-by: Luis Araneda <luaraneda@gmail.com>
+Signed-off-by: Alexander Graf <graf@amazon.com>
+Reviewed-by: Liran Alon <liran.alon@oracle.com>
+Reviewed-by: Sean Christopherson <sean.j.christopherson@intel.com>
+Reviewed-by: Wanpeng Li <wanpengli@tencent.com>
 Cc: stable@vger.kernel.org
-Signed-off-by: Michal Simek <michal.simek@xilinx.com>
+Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/arm/mach-zynq/platsmp.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/x86/include/asm/kvm_host.h |    7 +++++++
+ arch/x86/kvm/svm.c              |    4 +++-
+ arch/x86/kvm/vmx/vmx.c          |    6 +++++-
+ 3 files changed, 15 insertions(+), 2 deletions(-)
 
---- a/arch/arm/mach-zynq/platsmp.c
-+++ b/arch/arm/mach-zynq/platsmp.c
-@@ -57,7 +57,7 @@ int zynq_cpun_start(u32 address, int cpu
- 			* 0x4: Jump by mov instruction
- 			* 0x8: Jumping address
- 			*/
--			memcpy((__force void *)zero, &zynq_secondary_trampoline,
-+			memcpy_toio(zero, &zynq_secondary_trampoline,
- 							trampoline_size);
- 			writel(address, zero + trampoline_size);
+--- a/arch/x86/include/asm/kvm_host.h
++++ b/arch/x86/include/asm/kvm_host.h
+@@ -1576,6 +1576,13 @@ bool kvm_intr_is_single_vcpu(struct kvm
+ void kvm_set_msi_irq(struct kvm *kvm, struct kvm_kernel_irq_routing_entry *e,
+ 		     struct kvm_lapic_irq *irq);
  
++static inline bool kvm_irq_is_postable(struct kvm_lapic_irq *irq)
++{
++	/* We can only post Fixed and LowPrio IRQs */
++	return (irq->delivery_mode == dest_Fixed ||
++		irq->delivery_mode == dest_LowestPrio);
++}
++
+ static inline void kvm_arch_vcpu_blocking(struct kvm_vcpu *vcpu)
+ {
+ 	if (kvm_x86_ops->vcpu_blocking)
+--- a/arch/x86/kvm/svm.c
++++ b/arch/x86/kvm/svm.c
+@@ -5252,7 +5252,8 @@ get_pi_vcpu_info(struct kvm *kvm, struct
+ 
+ 	kvm_set_msi_irq(kvm, e, &irq);
+ 
+-	if (!kvm_intr_is_single_vcpu(kvm, &irq, &vcpu)) {
++	if (!kvm_intr_is_single_vcpu(kvm, &irq, &vcpu) ||
++	    !kvm_irq_is_postable(&irq)) {
+ 		pr_debug("SVM: %s: use legacy intr remap mode for irq %u\n",
+ 			 __func__, irq.vector);
+ 		return -1;
+@@ -5306,6 +5307,7 @@ static int svm_update_pi_irte(struct kvm
+ 		 * 1. When cannot target interrupt to a specific vcpu.
+ 		 * 2. Unsetting posted interrupt.
+ 		 * 3. APIC virtialization is disabled for the vcpu.
++		 * 4. IRQ has incompatible delivery mode (SMI, INIT, etc)
+ 		 */
+ 		if (!get_pi_vcpu_info(kvm, e, &vcpu_info, &svm) && set &&
+ 		    kvm_vcpu_apicv_active(&svm->vcpu)) {
+--- a/arch/x86/kvm/vmx/vmx.c
++++ b/arch/x86/kvm/vmx/vmx.c
+@@ -7325,10 +7325,14 @@ static int vmx_update_pi_irte(struct kvm
+ 		 * irqbalance to make the interrupts single-CPU.
+ 		 *
+ 		 * We will support full lowest-priority interrupt later.
++		 *
++		 * In addition, we can only inject generic interrupts using
++		 * the PI mechanism, refuse to route others through it.
+ 		 */
+ 
+ 		kvm_set_msi_irq(kvm, e, &irq);
+-		if (!kvm_intr_is_single_vcpu(kvm, &irq, &vcpu)) {
++		if (!kvm_intr_is_single_vcpu(kvm, &irq, &vcpu) ||
++		    !kvm_irq_is_postable(&irq)) {
+ 			/*
+ 			 * Make sure the IRTE is in remapped mode if
+ 			 * we don't handle it in posted mode.
 
 
