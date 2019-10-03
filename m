@@ -4,50 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 949E2C32792
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:45:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AFFEBC10F14
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:45:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6833420865
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:45:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7C1FF215EA
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:45:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570121140;
-	bh=9zoyOyktiRtH8YkllJBaaJyXkixplE8SKeCBP01NexQ=;
+	s=default; t=1570121143;
+	bh=zRRSafVxTQ5grYDlfaRz+gppOToyxtG9qdrTKTUUJ/U=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Rjkl2ErsPMNxivrPZ8vIBdtbqWMu4BVPW/qW1YjfHocgl17rBoEdOLK2btkKrU8Ao
-	 6AJuS54eyQdphgWsuPwR0oG6C4Aw4YsFSMMyXExxk9lVPOVE+f8PY22PCqEiTMW16n
-	 zZPE97uXQJWpa1K9VvfCfdr+K5v6/+TtOtILvkX0=
+	b=yzvEqS/Qgyerq/TDcpMI1HkZ3XkmSq+YIxEb5cUckVKfYg1Fm1cnBclIlhquukCk/
+	 4ztlPA4Rp1B59rlvLdFRpHxcDAeZbu50WjHqJnAAiiSjmFiI/bwAloqytSlTjuI/87
+	 fgzxccd6IkSt0ewdaOFAPmxXWY2Ds7I7ndmWmugE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392831AbfJCQpj (ORCPT
+        id S2392016AbfJCQpm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 12:45:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58172 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 12:45:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58248 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392823AbfJCQpg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:45:36 -0400
+        id S2392828AbfJCQpj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:45:39 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 20B6A2070B;
-        Thu,  3 Oct 2019 16:45:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BCC4620867;
+        Thu,  3 Oct 2019 16:45:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570121135;
-        bh=9zoyOyktiRtH8YkllJBaaJyXkixplE8SKeCBP01NexQ=;
+        s=default; t=1570121138;
+        bh=zRRSafVxTQ5grYDlfaRz+gppOToyxtG9qdrTKTUUJ/U=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=edgHW7v258FrZAD2kfTv7SoQqd94aQ+GlMbCymuS09GfyAuiaKeGO6FIF1Ts8ypUU
-         VxmfQJv4Nftj50ZOIVYoQC27PJDmMC5FtNV2z/9o5odeFiM0kRtrTmxpGq4ndQTqS0
-         Y6Hs1whC5dvuywk8Gzv923ElsuJNdlnLU72O9bkw=
+        b=Se45bL6DzE/RL9nciGL3bryurRp3mrAo29UmSDNdCa6zUcx/gzrOFIJhI+7Tn9nHG
+         dquU/Xe0UZJQOdGdPHWcMzxNBoj70Ai/4TKDImgLEfEzhXQy0cgEYmi7tri3liONQo
+         yzoIOwofw3gzHCRpa1zW6XQbEDrEG2pKvT48HNz4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Al Stone <ahs3@redhat.com>,
+        stable@vger.kernel.org,
+        Douglas RAILLARD <douglas.raillard@arm.com>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
         "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.3 167/344] ACPI / CPPC: do not require the _PSD method
-Date:   Thu,  3 Oct 2019 17:52:12 +0200
-Message-Id: <20191003154556.715106796@linuxfoundation.org>
+Subject: [PATCH 5.3 168/344] sched/cpufreq: Align trace event behavior of fast switching
+Date:   Thu,  3 Oct 2019 17:52:13 +0200
+Message-Id: <20191003154556.822084625@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191003154540.062170222@linuxfoundation.org>
 References: <20191003154540.062170222@linuxfoundation.org>
@@ -60,53 +62,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Al Stone <ahs3@redhat.com>
+From: Douglas RAILLARD <douglas.raillard@arm.com>
 
-[ Upstream commit 4c4cdc4c63853fee48c02e25c8605fb65a6c9924 ]
+[ Upstream commit 77c84dd1881d0f0176cb678d770bfbda26c54390 ]
 
-According to the ACPI 6.3 specification, the _PSD method is optional
-when using CPPC.  The underlying assumption is that each CPU can change
-frequency independently from all other CPUs; _PSD is provided to tell
-the OS that some processors can NOT do that.
+Fast switching path only emits an event for the CPU of interest, whereas the
+regular path emits an event for all the CPUs that had their frequency changed,
+i.e. all the CPUs sharing the same policy.
 
-However, the acpi_get_psd() function returns ENODEV if there is no _PSD
-method present, or an ACPI error status if an error occurs when evaluating
-_PSD, if present.  This makes _PSD mandatory when using CPPC, in violation
-of the specification, and only on Linux.
+With the current behavior, looking at cpu_frequency event for a given CPU that
+is using the fast switching path will not give the correct frequency signal.
 
-This has forced some firmware writers to provide a dummy _PSD, even though
-it is irrelevant, but only because Linux requires it; other OSPMs follow
-the spec.  We really do not want to have OS specific ACPI tables, though.
-
-So, correct acpi_get_psd() so that it does not return an error if there
-is no _PSD method present, but does return a failure when the method can
-not be executed properly.  This allows _PSD to be optional as it should
-be.
-
-Signed-off-by: Al Stone <ahs3@redhat.com>
+Signed-off-by: Douglas RAILLARD <douglas.raillard@arm.com>
+Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
 Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/acpi/cppc_acpi.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ kernel/sched/cpufreq_schedutil.c | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/acpi/cppc_acpi.c b/drivers/acpi/cppc_acpi.c
-index 15f103d7532b0..3b2525908dd8c 100644
---- a/drivers/acpi/cppc_acpi.c
-+++ b/drivers/acpi/cppc_acpi.c
-@@ -365,8 +365,10 @@ static int acpi_get_psd(struct cpc_desc *cpc_ptr, acpi_handle handle)
- 	union acpi_object  *psd = NULL;
- 	struct acpi_psd_package *pdomain;
+diff --git a/kernel/sched/cpufreq_schedutil.c b/kernel/sched/cpufreq_schedutil.c
+index 867b4bb6d4beb..b03ca2f73713d 100644
+--- a/kernel/sched/cpufreq_schedutil.c
++++ b/kernel/sched/cpufreq_schedutil.c
+@@ -117,6 +117,7 @@ static void sugov_fast_switch(struct sugov_policy *sg_policy, u64 time,
+ 			      unsigned int next_freq)
+ {
+ 	struct cpufreq_policy *policy = sg_policy->policy;
++	int cpu;
  
--	status = acpi_evaluate_object_typed(handle, "_PSD", NULL, &buffer,
--			ACPI_TYPE_PACKAGE);
-+	status = acpi_evaluate_object_typed(handle, "_PSD", NULL,
-+					    &buffer, ACPI_TYPE_PACKAGE);
-+	if (status == AE_NOT_FOUND)	/* _PSD is optional */
-+		return 0;
- 	if (ACPI_FAILURE(status))
- 		return -ENODEV;
+ 	if (!sugov_update_next_freq(sg_policy, time, next_freq))
+ 		return;
+@@ -126,7 +127,11 @@ static void sugov_fast_switch(struct sugov_policy *sg_policy, u64 time,
+ 		return;
  
+ 	policy->cur = next_freq;
+-	trace_cpu_frequency(next_freq, smp_processor_id());
++
++	if (trace_cpu_frequency_enabled()) {
++		for_each_cpu(cpu, policy->cpus)
++			trace_cpu_frequency(next_freq, cpu);
++	}
+ }
+ 
+ static void sugov_deferred_update(struct sugov_policy *sg_policy, u64 time,
 -- 
 2.20.1
 
