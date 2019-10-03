@@ -4,50 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51AB9C10F14
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:59:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 254CAC32792
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:59:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 28F8C2070B
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:59:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E254A20830
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:59:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570121969;
-	bh=284s9J8GB6AczDfW5clFHx94KyPZCImw8LyR3mWFV40=;
+	s=default; t=1570121977;
+	bh=u0T2dyeWQ2iXGTmKLsR8pupBhDmMNegGZokKL2UQOkQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=mug4k+NDmxnRP8jtHXty4buAp769YkDeIFOpvuz6xBwCvNMs53/vDrO4atnIfyCSH
-	 ZgJ+D0Nb5RYX/2GlZ4l6S12cDF36gFpRQ7U1tOAQ8Hq0bi4MH+oI+JfvrRt2hZEDOS
-	 opc1kDSjRas6b3kWU/hT5fTjhribc2JkjizUNscU=
+	b=cH8xXSrAAK37IimqTeNJmBZyiT8Yctn6KpJCVxAR1XF1GDC8JzQKp1Ac/fpp9Lfgt
+	 4/rCAtuKJAw6tGbfPlcEUx83bkgoVGuBpaSob2so/ayf7r9+nIppc8getjPZClR+o3
+	 9vT6sg3puvLDFMddaIN49aJESTT05Dvt36cvqQKs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406175AbfJCQ72 (ORCPT
+        id S2392979AbfJCQq6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 12:59:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60654 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 12:46:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60326 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404876AbfJCQrK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:47:10 -0400
+        id S2392962AbfJCQqy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:46:54 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 598D921848;
-        Thu,  3 Oct 2019 16:47:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2FF9D215EA;
+        Thu,  3 Oct 2019 16:46:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570121229;
-        bh=284s9J8GB6AczDfW5clFHx94KyPZCImw8LyR3mWFV40=;
+        s=default; t=1570121213;
+        bh=u0T2dyeWQ2iXGTmKLsR8pupBhDmMNegGZokKL2UQOkQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=yjzh+9XLslcnb+aG8r3qsYoTcGyeHAnv+++Z798+YXUQXGqR9uZQ2UzYNNc+OSJ/j
-         2Zmwp5u46lY2eCk8ympG7ZAQGdho0+Wckf932ZULAEcu13PAmaSz7W2rozcQrvueWs
-         3A26YT+T87oDPr1oDcX51PBTKk2ip5sMNfUVoTrk=
+        b=Uc6tZ3d3uVEPFH9QQz5qf82NcHY+8tTSYiXKTS7u4J2o4yKoNSWvfWgAmnqTXxboT
+         umAdxnV4j6xP839yoGQoeZzpYl4QXb4PpzOabyZX/UQIVORQS+eVFsAkQUbApCL7D1
+         KcGYVh8SHqEXyH/BwI+QF/oBPBCml34EZOJ9WQls=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, "M. Vefa Bicakci" <m.v.b@runbox.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.3 202/344] platform/x86: intel_pmc_core: Do not ioremap RAM
-Date:   Thu,  3 Oct 2019 17:52:47 +0200
-Message-Id: <20191003154600.180915290@linuxfoundation.org>
+        stable@vger.kernel.org,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Borislav Petkov <bp@alien8.de>,
+        Yunsheng Lin <linyunsheng@huawei.com>,
+        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.3 197/344] x86/mm: Fix cpumask_of_node() error condition
+Date:   Thu,  3 Oct 2019 17:52:42 +0200
+Message-Id: <20191003154559.643594255@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191003154540.062170222@linuxfoundation.org>
 References: <20191003154540.062170222@linuxfoundation.org>
@@ -60,61 +63,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: M. Vefa Bicakci <m.v.b@runbox.com>
+From: Peter Zijlstra <peterz@infradead.org>
 
-[ Upstream commit 7d505758b1e556cdf65a5e451744fe0ae8063d17 ]
+[ Upstream commit bc04a049f058a472695aa22905d57e2b1f4c77d9 ]
 
-On a Xen-based PVH virtual machine with more than 4 GiB of RAM,
-intel_pmc_core fails initialization with the following warning message
-from the kernel, indicating that the driver is attempting to ioremap
-RAM:
+When CONFIG_DEBUG_PER_CPU_MAPS=y we validate that the @node argument of
+cpumask_of_node() is a valid node_id. It however forgets to check for
+negative numbers. Fix this by explicitly casting to unsigned int.
 
-  ioremap on RAM at 0x00000000fe000000 - 0x00000000fe001fff
-  WARNING: CPU: 1 PID: 434 at arch/x86/mm/ioremap.c:186 __ioremap_caller.constprop.0+0x2aa/0x2c0
-...
-  Call Trace:
-   ? pmc_core_probe+0x87/0x2d0 [intel_pmc_core]
-   pmc_core_probe+0x87/0x2d0 [intel_pmc_core]
+  (unsigned)node >= nr_node_ids
 
-This issue appears to manifest itself because of the following fallback
-mechanism in the driver:
+verifies: 0 <= node < nr_node_ids
 
-	if (lpit_read_residency_count_address(&slp_s0_addr))
-		pmcdev->base_addr = PMC_BASE_ADDR_DEFAULT;
+Also ammend the error message to match the condition.
 
-The validity of address PMC_BASE_ADDR_DEFAULT (i.e., 0xFE000000) is not
-verified by the driver, which is what this patch introduces. With this
-patch, if address PMC_BASE_ADDR_DEFAULT is in RAM, then the driver will
-not attempt to ioremap the aforementioned address.
-
-Signed-off-by: M. Vefa Bicakci <m.v.b@runbox.com>
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Borislav Petkov <bp@alien8.de>
+Cc: Yunsheng Lin <linyunsheng@huawei.com>
+Link: https://lkml.kernel.org/r/20190903075352.GY2369@hirez.programming.kicks-ass.net
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/platform/x86/intel_pmc_core.c | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+ arch/x86/mm/numa.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/platform/x86/intel_pmc_core.c b/drivers/platform/x86/intel_pmc_core.c
-index c510d0d724759..3b6b8dcc47678 100644
---- a/drivers/platform/x86/intel_pmc_core.c
-+++ b/drivers/platform/x86/intel_pmc_core.c
-@@ -878,10 +878,14 @@ static int pmc_core_probe(struct platform_device *pdev)
- 	if (pmcdev->map == &spt_reg_map && !pci_dev_present(pmc_pci_ids))
- 		pmcdev->map = &cnp_reg_map;
- 
--	if (lpit_read_residency_count_address(&slp_s0_addr))
-+	if (lpit_read_residency_count_address(&slp_s0_addr)) {
- 		pmcdev->base_addr = PMC_BASE_ADDR_DEFAULT;
--	else
-+
-+		if (page_is_ram(PHYS_PFN(pmcdev->base_addr)))
-+			return -ENODEV;
-+	} else {
- 		pmcdev->base_addr = slp_s0_addr - pmcdev->map->slp_s0_offset;
-+	}
- 
- 	pmcdev->regbase = ioremap(pmcdev->base_addr,
- 				  pmcdev->map->regmap_length);
+diff --git a/arch/x86/mm/numa.c b/arch/x86/mm/numa.c
+index e6dad600614c2..4123100e0eafe 100644
+--- a/arch/x86/mm/numa.c
++++ b/arch/x86/mm/numa.c
+@@ -861,9 +861,9 @@ void numa_remove_cpu(int cpu)
+  */
+ const struct cpumask *cpumask_of_node(int node)
+ {
+-	if (node >= nr_node_ids) {
++	if ((unsigned)node >= nr_node_ids) {
+ 		printk(KERN_WARNING
+-			"cpumask_of_node(%d): node > nr_node_ids(%u)\n",
++			"cpumask_of_node(%d): (unsigned)node >= nr_node_ids(%u)\n",
+ 			node, nr_node_ids);
+ 		dump_stack();
+ 		return cpu_none_mask;
 -- 
 2.20.1
 
