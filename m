@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 911BAC32792
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:47:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AABB6C10F14
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:47:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 655B12070B
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:47:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 81BCC20867
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:47:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570121236;
-	bh=Qr/VRfoHX7sntmUIqwqsVChvtHI6zIMCrPB6fm/zYdM=;
+	s=default; t=1570121238;
+	bh=UAqf7zew8LOkdI77XKlrpMRDlwQstc8vJo/rqe1QRCk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=om8YOIRqMvHgatKEaKOsvXI0t8FguNlH9aEN1e9q0xcvFGH0cEOJQyYR6dyu5dTOw
-	 pO2hf9DarwYXOKPLyDEvWX6pfRxgN2Gz82LkIsEM0xSJV2Jk0kmx6seV5tIIN+RSBj
-	 n9YxbVl/8fg15IoiWKMLPhAaFrneAKmkb1WNgjI4=
+	b=cUiq1zxcwyYrLt9a41W7wmHitgGwVm1CvQr4vfPhWJXtRFA9HypVQJvQmncDW5D9H
+	 Ej9lr1F9et0Uj5illLUL2sdnPbWH1TpEVZIY3Eh0XRuS0RWoKagrQ2HG8xmo3QWbbo
+	 Z3cwX+a04RdgvSXE1y3KpGXLZzecS69PYwqPYbjE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393007AbfJCQrP (ORCPT
+        id S2393021AbfJCQrR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 12:47:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60710 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 12:47:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60762 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391908AbfJCQrN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:47:13 -0400
+        id S2391908AbfJCQrP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:47:15 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 036EC2070B;
-        Thu,  3 Oct 2019 16:47:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B210520865;
+        Thu,  3 Oct 2019 16:47:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570121232;
-        bh=Qr/VRfoHX7sntmUIqwqsVChvtHI6zIMCrPB6fm/zYdM=;
+        s=default; t=1570121235;
+        bh=UAqf7zew8LOkdI77XKlrpMRDlwQstc8vJo/rqe1QRCk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=LzVRgAtT6D0Djkr0kN/ydtSEgr2WMe72apBfFPNG9F5kbG1xDDZUBdoT3rHPfehMx
-         kKofiM+HxlspJlaD1e0niAmVWufzJwot7PWATwWgy6PTs7djpelMg+95EJMEmBEXCU
-         WzNUyct9LPTf126QLyNmYWUhFPtvDyJcr32jCJuA=
+        b=fEQ/9M5y8UkkRaT5/8AuJd1i8qEwUnq0Fqyk8w1kq3r+zRgErfQ2eHkE2PSXd1eJO
+         Q0st0MqGKxz3xkJh0VvcMuHGdl38ByiqpXZIKoLJaKA9gi3ROXF4gQ01a8oeFPDD8B
+         W2PskVJqtMPhKSvtOKjrIHiqejF8vUiKXxijaJwA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, "M. Vefa Bicakci" <m.v.b@runbox.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        stable@vger.kernel.org, Katsuhiro Suzuki <katsuhiro@katsuster.net>,
+        Mark Brown <broonie@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.3 203/344] platform/x86: intel_pmc_core_pltdrv: Module removal warning fix
-Date:   Thu,  3 Oct 2019 17:52:48 +0200
-Message-Id: <20191003154600.286807055@linuxfoundation.org>
+Subject: [PATCH 5.3 204/344] SoC: simple-card-utils: set 0Hz to sysclk when shutdown
+Date:   Thu,  3 Oct 2019 17:52:49 +0200
+Message-Id: <20191003154600.389003319@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191003154540.062170222@linuxfoundation.org>
 References: <20191003154540.062170222@linuxfoundation.org>
@@ -60,46 +60,68 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: M. Vefa Bicakci <m.v.b@runbox.com>
+From: Katsuhiro Suzuki <katsuhiro@katsuster.net>
 
-[ Upstream commit 0b43e41e93815ecd9616759cf5d64d3a7be8e6fb ]
+[ Upstream commit 2458adb8f92ad4d07ef7ab27c5bafa1d3f4678d6 ]
 
-Prior to this commit, removing the intel_pmc_core_pltdrv module
-would cause the following warning:
+This patch set 0Hz to sysclk when shutdown the card.
 
-  Device 'intel_pmc_core.0' does not have a release() function, it is broken and must be fixed. See Documentation/kobject.txt.
-  WARNING: CPU: 0 PID: 2202 at drivers/base/core.c:1238 device_release+0x6f/0x80
+Some codecs set rate constraints that derives from sysclk. This
+mechanism works correctly if machine drivers give fixed frequency.
 
-This commit hence adds an empty release function for the driver.
+But simple-audio and audio-graph card set variable clock rate if
+'mclk-fs' property exists. In this case, rate constraints will go
+bad scenario. For example a codec accepts three limited rates
+(mclk / 256, mclk / 384, mclk / 512).
 
-Signed-off-by: M. Vefa Bicakci <m.v.b@runbox.com>
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Bad scenario as follows (mclk-fs = 256):
+   - Initialize sysclk by correct value (Ex. 12.288MHz)
+     - Codec set constraints of PCM rate by sysclk
+       48kHz (1/256), 32kHz (1/384), 24kHz (1/512)
+   - Play 48kHz sound, it's acceptable
+   - Sysclk is not changed
+
+   - Play 32kHz sound, it's acceptable
+   - Set sysclk to 8.192MHz (= fs * mclk-fs = 32k * 256)
+     - Codec set constraints of PCM rate by sysclk
+       32kHz (1/256), 21.33kHz (1/384), 16kHz (1/512)
+
+   - Play 48kHz again, but it's NOT acceptable because constraints
+     do not allow 48kHz
+
+So codecs treat 0Hz sysclk as signal of applying no constraints to
+avoid this problem.
+
+Signed-off-by: Katsuhiro Suzuki <katsuhiro@katsuster.net>
+Link: https://lore.kernel.org/r/20190907174501.19833-1-katsuhiro@katsuster.net
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/platform/x86/intel_pmc_core_pltdrv.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
+ sound/soc/generic/simple-card-utils.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-diff --git a/drivers/platform/x86/intel_pmc_core_pltdrv.c b/drivers/platform/x86/intel_pmc_core_pltdrv.c
-index a8754a6db1b8b..186540014c480 100644
---- a/drivers/platform/x86/intel_pmc_core_pltdrv.c
-+++ b/drivers/platform/x86/intel_pmc_core_pltdrv.c
-@@ -18,8 +18,16 @@
- #include <asm/cpu_device_id.h>
- #include <asm/intel-family.h>
+diff --git a/sound/soc/generic/simple-card-utils.c b/sound/soc/generic/simple-card-utils.c
+index 556b1a789629d..9b794775df537 100644
+--- a/sound/soc/generic/simple-card-utils.c
++++ b/sound/soc/generic/simple-card-utils.c
+@@ -213,10 +213,17 @@ EXPORT_SYMBOL_GPL(asoc_simple_startup);
+ void asoc_simple_shutdown(struct snd_pcm_substream *substream)
+ {
+ 	struct snd_soc_pcm_runtime *rtd = substream->private_data;
++	struct snd_soc_dai *codec_dai = rtd->codec_dai;
++	struct snd_soc_dai *cpu_dai = rtd->cpu_dai;
+ 	struct asoc_simple_priv *priv = snd_soc_card_get_drvdata(rtd->card);
+ 	struct simple_dai_props *dai_props =
+ 		simple_priv_to_props(priv, rtd->num);
  
-+static void intel_pmc_core_release(struct device *dev)
-+{
-+	/* Nothing to do. */
-+}
++	if (dai_props->mclk_fs) {
++		snd_soc_dai_set_sysclk(codec_dai, 0, 0, SND_SOC_CLOCK_IN);
++		snd_soc_dai_set_sysclk(cpu_dai, 0, 0, SND_SOC_CLOCK_OUT);
++	}
 +
- static struct platform_device pmc_core_device = {
- 	.name = "intel_pmc_core",
-+	.dev  = {
-+		.release = intel_pmc_core_release,
-+	},
- };
+ 	asoc_simple_clk_disable(dai_props->cpu_dai);
  
- /*
+ 	asoc_simple_clk_disable(dai_props->codec_dai);
 -- 
 2.20.1
 
