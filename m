@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A98DC32792
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:52:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FCD7C32792
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:52:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7183F2070B
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:52:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0369E215EA
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:52:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570121570;
-	bh=lxArp3kU4HFZxrzSHItw74m76dcaz61ksoyl0nVuO+Y=;
+	s=default; t=1570121573;
+	bh=XdThSglTyTf2p/nzZ3yWXHPyxKufsiDO1o2/6UNXVzs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=WQ+HgMN1RStIdp/2MiWpCHIYhqJNk/dhR2TyCo8ZLDQFI8JqfDugxrzr6aWaAwdU6
-	 T8zAomCNV2sQfs+YSIlW+QD2iR7CFbXrNCl5JO4FMPlN9xnUriNS4WAPatyT/NZFWL
-	 hqlsR4aAhptdl9bn44Ds98OXB5Y9o51x+scPxoEk=
+	b=fJjlgCGbEGRUbeAfEVt7SLKM8Kgix6lCp07PVNNJSHO+OaVhdjUTtWpGpRjiRUR/W
+	 qlCAZLbrTfBhMxPEMwrbAeVty8JgJ16kMq+4sbYAa4ba2QobuSdosMpA8k+NDPeSQl
+	 UROireftqWHmBZbQZzUOXGy3vDxL/Lnfbzty/uUQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406243AbfJCQwt (ORCPT
+        id S2406255AbfJCQww (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 12:52:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40572 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 12:52:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40522 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2393171AbfJCQwr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:52:47 -0400
+        id S2390216AbfJCQwo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:52:44 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4F2CE2070B;
-        Thu,  3 Oct 2019 16:52:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 98BCE2070B;
+        Thu,  3 Oct 2019 16:52:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570121566;
-        bh=lxArp3kU4HFZxrzSHItw74m76dcaz61ksoyl0nVuO+Y=;
+        s=default; t=1570121564;
+        bh=XdThSglTyTf2p/nzZ3yWXHPyxKufsiDO1o2/6UNXVzs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=hKpv6+rxJwqgH/argdZvYyxf2ualZjqyAay5/+vzuDL9MUtneVqpA39vbxk1n0Uf2
-         xDdmiHrjsSTEdFUAXoYGnVjxW30J4iTxWDJMDTmBsbVtTWfQZ59cCwNm7mdj16c7IB
-         3Hj4LOwLRSq1rdkwGdJn5MrF2rQI1fHQ4YIpJw+0=
+        b=i6ZHpPYPXOdBOu7OIpJml8uPkRzYvqdXQm6Za8g5JLxgQvoTLd+D2uIkYzzyc6W+Y
+         UqGob/xMbngO2Q6XkQxNgwOZxpl8jKGcLMKdHzx7mH8EuNkU5SnyQt2HvsDbVGO0Bt
+         OAhjUJqNrU00izCKeQRMX9My0IyxOSpO8aEKc09g=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Amir Goldstein <amir73il@gmail.com>,
-        Boaz Harrosh <boazh@netapp.com>, Jan Kara <jack@suse.cz>,
-        "Darrick J. Wong" <darrick.wong@oracle.com>
-Subject: [PATCH 5.3 326/344] mm: Handle MADV_WILLNEED through vfs_fadvise()
-Date:   Thu,  3 Oct 2019 17:54:51 +0200
-Message-Id: <20191003154611.049777847@linuxfoundation.org>
+        stable@vger.kernel.org,
+        "Darrick J. Wong" <darrick.wong@oracle.com>,
+        Jan Kara <jack@suse.cz>
+Subject: [PATCH 5.3 325/344] fs: Export generic_fadvise()
+Date:   Thu,  3 Oct 2019 17:54:50 +0200
+Message-Id: <20191003154610.980892908@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191003154540.062170222@linuxfoundation.org>
 References: <20191003154540.062170222@linuxfoundation.org>
@@ -62,69 +62,51 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Jan Kara <jack@suse.cz>
 
-commit 692fe62433d4ca47605b39f7c416efd6679ba694 upstream.
+commit cf1ea0592dbf109e7e7935b7d5b1a47a1ba04174 upstream.
 
-Currently handling of MADV_WILLNEED hint calls directly into readahead
-code. Handle it by calling vfs_fadvise() instead so that filesystem can
-use its ->fadvise() callback to acquire necessary locks or otherwise
-prepare for the request.
+Filesystems will need to call this function from their fadvise handlers.
 
-Suggested-by: Amir Goldstein <amir73il@gmail.com>
-Reviewed-by: Boaz Harrosh <boazh@netapp.com>
 CC: stable@vger.kernel.org
-Signed-off-by: Jan Kara <jack@suse.cz>
 Reviewed-by: Darrick J. Wong <darrick.wong@oracle.com>
+Signed-off-by: Jan Kara <jack@suse.cz>
 Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- mm/madvise.c |   22 ++++++++++++++++------
- 1 file changed, 16 insertions(+), 6 deletions(-)
+ include/linux/fs.h |    2 ++
+ mm/fadvise.c       |    4 ++--
+ 2 files changed, 4 insertions(+), 2 deletions(-)
 
---- a/mm/madvise.c
-+++ b/mm/madvise.c
-@@ -14,6 +14,7 @@
- #include <linux/userfaultfd_k.h>
- #include <linux/hugetlb.h>
- #include <linux/falloc.h>
-+#include <linux/fadvise.h>
- #include <linux/sched.h>
- #include <linux/ksm.h>
- #include <linux/fs.h>
-@@ -275,6 +276,7 @@ static long madvise_willneed(struct vm_a
- 			     unsigned long start, unsigned long end)
+--- a/include/linux/fs.h
++++ b/include/linux/fs.h
+@@ -3531,6 +3531,8 @@ extern void inode_nohighmem(struct inode
+ /* mm/fadvise.c */
+ extern int vfs_fadvise(struct file *file, loff_t offset, loff_t len,
+ 		       int advice);
++extern int generic_fadvise(struct file *file, loff_t offset, loff_t len,
++			   int advice);
+ 
+ #if defined(CONFIG_IO_URING)
+ extern struct sock *io_uring_get_socket(struct file *file);
+--- a/mm/fadvise.c
++++ b/mm/fadvise.c
+@@ -27,8 +27,7 @@
+  * deactivate the pages and clear PG_Referenced.
+  */
+ 
+-static int generic_fadvise(struct file *file, loff_t offset, loff_t len,
+-			   int advice)
++int generic_fadvise(struct file *file, loff_t offset, loff_t len, int advice)
  {
- 	struct file *file = vma->vm_file;
-+	loff_t offset;
- 
- 	*prev = vma;
- #ifdef CONFIG_SWAP
-@@ -298,12 +300,20 @@ static long madvise_willneed(struct vm_a
- 		return 0;
+ 	struct inode *inode;
+ 	struct address_space *mapping;
+@@ -178,6 +177,7 @@ static int generic_fadvise(struct file *
  	}
- 
--	start = ((start - vma->vm_start) >> PAGE_SHIFT) + vma->vm_pgoff;
--	if (end > vma->vm_end)
--		end = vma->vm_end;
--	end = ((end - vma->vm_start) >> PAGE_SHIFT) + vma->vm_pgoff;
--
--	force_page_cache_readahead(file->f_mapping, file, start, end - start);
-+	/*
-+	 * Filesystem's fadvise may need to take various locks.  We need to
-+	 * explicitly grab a reference because the vma (and hence the
-+	 * vma's reference to the file) can go away as soon as we drop
-+	 * mmap_sem.
-+	 */
-+	*prev = NULL;	/* tell sys_madvise we drop mmap_sem */
-+	get_file(file);
-+	up_read(&current->mm->mmap_sem);
-+	offset = (loff_t)(start - vma->vm_start)
-+			+ ((loff_t)vma->vm_pgoff << PAGE_SHIFT);
-+	vfs_fadvise(file, offset, end - start, POSIX_FADV_WILLNEED);
-+	fput(file);
-+	down_read(&current->mm->mmap_sem);
  	return 0;
  }
++EXPORT_SYMBOL(generic_fadvise);
  
+ int vfs_fadvise(struct file *file, loff_t offset, loff_t len, int advice)
+ {
 
 
