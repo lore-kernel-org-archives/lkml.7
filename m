@@ -2,97 +2,124 @@ Return-Path: <SRS0=6dNS=X4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43504C32792
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 21:05:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DB90BC32792
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 21:05:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0B93421D71
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 21:05:29 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="h15edSAO"
+	by mail.kernel.org (Postfix) with ESMTP id B63702133F
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 21:05:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730138AbfJCVF2 (ORCPT
+        id S1730813AbfJCVF6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 17:05:28 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:42532 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727326AbfJCVF2 (ORCPT
+        Thu, 3 Oct 2019 17:05:58 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:58274 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730162AbfJCVF6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 17:05:28 -0400
-Received: by mail-pf1-f194.google.com with SMTP id q12so2499627pff.9
-        for <linux-kernel@vger.kernel.org>; Thu, 03 Oct 2019 14:05:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=EiltBEq6njqGNMiV0WVZrSDJVepz/r4bkWK6+Mlhtls=;
-        b=h15edSAOeAVO6+isDrz0W6jcs1RlAD347T43CXwfP6aj516mFy9O19/PPmYCkrcFAy
-         8ZZDObjG8qPgpYcPLivDmXHq0y38Rv2EarhS2mGFXA16kD4oew1n/UDzu96ifq0sZWd0
-         QwgfPrCQlt2u9uAiDHKRaued1dnb7vheuPGGc=
+        Thu, 3 Oct 2019 17:05:58 -0400
+Received: from mail-pl1-f197.google.com ([209.85.214.197])
+        by youngberry.canonical.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <connor.kuehl@canonical.com>)
+        id 1iG8IN-0001ua-S7
+        for linux-kernel@vger.kernel.org; Thu, 03 Oct 2019 21:05:56 +0000
+Received: by mail-pl1-f197.google.com with SMTP id f10so2508587plr.7
+        for <linux-kernel@vger.kernel.org>; Thu, 03 Oct 2019 14:05:55 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=EiltBEq6njqGNMiV0WVZrSDJVepz/r4bkWK6+Mlhtls=;
-        b=sGefiKYbPL6xr7tRO6CWXD4gkOn3mEojoubIjkLdzkdnj0Dxwk1alVTAhgpMlsMQSg
-         /BU5qWtqs46YnXiXYpPQ+jdndpdiSAo91JfLY/gAs9OKgnaqTI26rjeLBpvYwTViWcwS
-         FEZEITkCQ1AjsHcLOMsG05yJy3qcgHLY0toOvUHILS/jIsxRbbHAWDiKj6J4SVc8Nd+3
-         0UgeEoDbQe8glQRvzT7MZaWl7Qa+ISbQo1/JIeGnKZzfOckxCE3yyDRf+D+Dm6kUANtM
-         Rfst+2jMRgh4MNJ68Xn3VGGqpId1JqOpwLk41OTzqC6CD38xZXnBqa99WudWtzvlt4Qd
-         MVRA==
-X-Gm-Message-State: APjAAAXhZPLKx68RWuzGL2cF7n8ZhlKtvA1lmcry76RiRI5eB5iE3Boy
-        zzQP5qLoqU/WzgR/w2c6bHF7mA==
-X-Google-Smtp-Source: APXvYqwjSuvsL3+nr1PLtA1rKl85DoBCn/uehIlb3OTXV0Cx3UdB9yBzNVCmiNsnR3ZDRn3AOqIfXg==
-X-Received: by 2002:a62:3585:: with SMTP id c127mr13074356pfa.18.1570136726099;
-        Thu, 03 Oct 2019 14:05:26 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id y17sm5554361pfo.171.2019.10.03.14.05.24
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 03 Oct 2019 14:05:25 -0700 (PDT)
-Date:   Thu, 3 Oct 2019 14:05:24 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     "Eric W. Biederman" <ebiederm@xmission.com>
-Cc:     Florian Weimer <fw@deneb.enyo.de>, linux-kernel@vger.kernel.org,
-        linux-arch@vger.kernel.org, linux-api@vger.kernel.org,
-        Jann Horn <jannh@google.com>, Arnd Bergmann <arnd@arndb.de>,
-        Helge Deller <deller@gmx.de>
-Subject: Re: [REPOST][RFC][PATCH] sysctl: Remove the sysctl system call
-Message-ID: <201910031404.C30A0F16@keescook>
-References: <8736gcjosv.fsf@x220.int.ebiederm.org>
- <201910011140.EA0181F13@keescook>
- <87y2y271ws.fsf@mid.deneb.enyo.de>
- <87tv8pftjj.fsf_-_@x220.int.ebiederm.org>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=pPlZt26qb0wHIw5ND/7Lf7nkXVZUbxI2YbcdOEBwCa4=;
+        b=SSjJOA/oTFuh7oHWhc5oQVs5H6eCJ3SHKfBU9eRm7zum8nn+svzI1vrodoFMptINl7
+         GERx/TXIFRrFBALr/uHgIpvbSqzEv56bCMirqGJXzv4V9y7qhwju7YCsocfy4CN6dfSN
+         /u7GTCfNo2w4dW4CACJ9OrhoPY4Dcs4oZqFPvXWRoy5CzZwDEu5OmKGmx4cbUncF05vJ
+         hxM+YTBkLRMAujZMH5AJ2aOBCWjRpQFwVTy/2ny4RnnbSFAQK3Us+LbrgCDYG05CFVPs
+         eNBupRKbrTRJEKKf7yf5jqJRGzcArjQAnz4kXuZRK7eITP4QCynXOdMb1aTtnarkZIU5
+         hefQ==
+X-Gm-Message-State: APjAAAU+nImw1NVKRfg9I9K507VjZdkpH6fNd3uj12zITh7XUl+/3HC1
+        TXP/2PVgI4vl5GZ1sY56se4ASujMuh4PqP/xeX9cqzsY/HehguH9RB9q10+ESKiV0O3hjDnPdsk
+        csboprVJcvgR2lqBK9EZXLUZcfkYqj2ZBZTBV1fWwcw==
+X-Received: by 2002:a63:161b:: with SMTP id w27mr11299787pgl.38.1570136753865;
+        Thu, 03 Oct 2019 14:05:53 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqz1vA2sZlC3AuL9ZEpvvNi1p+Y6bOBTKrE3e5foppaeS60K7VOI7xCsNMrU/KlIn8K2gJr2UQ==
+X-Received: by 2002:a63:161b:: with SMTP id w27mr11299756pgl.38.1570136753514;
+        Thu, 03 Oct 2019 14:05:53 -0700 (PDT)
+Received: from [192.168.0.179] (c-71-63-171-240.hsd1.or.comcast.net. [71.63.171.240])
+        by smtp.gmail.com with ESMTPSA id s1sm3781165pjs.31.2019.10.03.14.05.52
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 03 Oct 2019 14:05:52 -0700 (PDT)
+Subject: Re: [PATCH] staging: rtl8188eu: fix null dereference when kzalloc
+ fails
+To:     Dan Carpenter <dan.carpenter@oracle.com>
+Cc:     Larry.Finger@lwfinger.net, gregkh@linuxfoundation.org,
+        devel@driverdev.osuosl.org, kernel-janitors@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20190927214415.899-1-connor.kuehl@canonical.com>
+ <20191001131122.GC22609@kadam>
+From:   Connor Kuehl <connor.kuehl@canonical.com>
+Message-ID: <ac882530-4197-7813-ca24-49738eebb0c8@canonical.com>
+Date:   Thu, 3 Oct 2019 14:05:51 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <87tv8pftjj.fsf_-_@x220.int.ebiederm.org>
+In-Reply-To: <20191001131122.GC22609@kadam>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Oct 03, 2019 at 03:44:32PM -0500, Eric W. Biederman wrote:
+On 10/1/19 6:11 AM, Dan Carpenter wrote:
 > 
-> This system call has been deprecated almost since it was introduced, and none
-> of the common distributions enable it.  The only indication that I can find that
-> anyone might care is that a few of the defconfigs in the kernel enable it.  However
-> that is a small fractions of the defconfigs so I suspect it just a lack of care
-> rather than a reflection of software using the the sysctl system call.
+> There is another one earlier in the function as well.
 > 
-> As there appear to be no users of the sysctl system call, remove the
-> code so that the proc filesystem can be simplified.
+> drivers/staging/rtl8188eu/os_dep/usb_intf.c
+>     336
+>     337          pnetdev = rtw_init_netdev(padapter);
+>     338          if (!pnetdev)
+>     339                  goto free_adapter;
+>     340          SET_NETDEV_DEV(pnetdev, dvobj_to_dev(dvobj));
+>     341          padapter = rtw_netdev_priv(pnetdev);
+>     342
+>     343          if (padapter->registrypriv.monitor_enable) {
+>     344                  pmondev = rtl88eu_mon_init();
+>     345                  if (!pmondev)
+>     346                          netdev_warn(pnetdev, "Failed to initialize monitor interface");
+> 
+> goto free_adapter.
+> 
+>     347                  padapter->pmondev = pmondev;
+>     348          }
+>     349
+>     350          padapter->HalData = kzalloc(sizeof(struct hal_data_8188e), GFP_KERNEL);
+>     351          if (!padapter->HalData)
+>     352                  DBG_88E("cant not alloc memory for HAL DATA\n");
+>     353
+> 
+>>   	padapter->HalData = kzalloc(sizeof(struct hal_data_8188e), GFP_KERNEL);
+>> -	if (!padapter->HalData)
+>> -		DBG_88E("cant not alloc memory for HAL DATA\n");
+>> +	if (!padapter->HalData) {
+>> +		DBG_88E("Failed to allocate memory for HAL data\n");
+> 
+> Remove this debug printk.
+> 
+>> +		goto free_adapter;
+>> +	}
 
-nitpick: line lengths near 80 characters
+Hi Dan,
 
-> Signed-off-by: "Eric W. Biederman" <ebiederm@xmission.com>
+Sorry for such a late response! By the time I saw the e-mail with your 
+feedback I also saw another e-mail saying this patch was accepted into a 
+staging-linus tree. I'll address your comments in a separate patch.
 
-But, yes, I would love to see this gone. :)
+Thank you,
 
-Reviewed-by: Kees Cook <keescook@chromium.org>
+Connor
 
--- 
-Kees Cook
