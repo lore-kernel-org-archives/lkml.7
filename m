@@ -2,126 +2,104 @@ Return-Path: <SRS0=6dNS=X4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70177C10F14
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 19:42:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DD22C10F14
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 19:44:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 514CF20873
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 19:42:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2A6D62133F
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 19:44:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1570131875;
+	bh=OHJeMLo5b+TBZwbAD5hxXCmuklamoIAi2rO3AzhydIM=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=vajcEtPTChH+jWcPBPmN7Gi5VzqC0zWeghEwialQRCNhVE7EOW2eXwfFH3yQECkx5
+	 oxb/hYcEU3wqj9wubJAhrgBphSGp6eNbNXjRF7DBpW69em/zrvJp375m/PklzsaL3A
+	 L6bZ7gkrFvj9p29gJpmlKBYKr0nLe8zyHSzGaxQw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387903AbfJCTmH (ORCPT
+        id S1731695AbfJCToe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 15:42:07 -0400
-Received: from relay7-d.mail.gandi.net ([217.70.183.200]:49973 "EHLO
-        relay7-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731191AbfJCTmH (ORCPT
+        Thu, 3 Oct 2019 15:44:34 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:42986 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729580AbfJCToe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 15:42:07 -0400
-X-Originating-IP: 86.202.229.42
-Received: from localhost (lfbn-lyo-1-146-42.w86-202.abo.wanadoo.fr [86.202.229.42])
-        (Authenticated sender: alexandre.belloni@bootlin.com)
-        by relay7-d.mail.gandi.net (Postfix) with ESMTPSA id B8B852010D;
-        Thu,  3 Oct 2019 19:42:03 +0000 (UTC)
-Date:   Thu, 3 Oct 2019 21:42:03 +0200
-From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
-To:     Eugen.Hristev@microchip.com
-Cc:     linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-mmc@vger.kernel.org,
-        adrian.hunter@intel.com, Nicolas.Ferre@microchip.com,
-        ulf.hansson@linaro.org
-Subject: Re: [PATCH 2/2] ARM: dts: at91: sama5d27_som1_ek: add mmc
- capabilities for SDMMC0
-Message-ID: <20191003194203.GI575@piout.net>
-References: <1565252928-28994-1-git-send-email-eugen.hristev@microchip.com>
- <1565252928-28994-2-git-send-email-eugen.hristev@microchip.com>
- <20190808124217.wrmcxohw5i6ju2qe@M43218.corp.atmel.com>
- <04fd74c3-a828-1064-b77b-f3de07a26190@intel.com>
- <20190809062322.syuieymdqjs4e7lh@M43218.corp.atmel.com>
- <fa0debbb-b84c-1f74-f8b8-8fdd7812aaee@microchip.com>
- <20190813065306.tqz57hqeiofofbnz@M43218.corp.atmel.com>
- <c2c355cd-b798-02de-0606-0f6442f6fdca@microchip.com>
+        Thu, 3 Oct 2019 15:44:34 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Subject:Cc:To:
+        From:Date:Sender:Reply-To:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=ttWMlw4HnFeQ+0ShXax9UG8yhmd1VJraa+/bhHxK4KI=; b=FIolBXXTFgNpfPbK4whbS7l8z
+        0vVHAg0AafJK41BpVscAA9e/1dgfzZn9JUELGEZXL70FHVjcnQbvFU9q0vxCwW9j+ySzanvqr+W37
+        0iEXMb0SpHh4kwVJFGC7GpPMmoxh2A2+zSzjB3NTnpngqQnNCF7OrjZuA1XlOzOcjdDlNx58u5e7m
+        nhjw97vdYErY8BpepEV9tOb2WDyNYGDB0riToNauVhrpr9O+snGKEney6opb3lrUAJ2kFJv1g7WLS
+        6/YCasftOLlzooM92LgLhgyhJ4cp2GaPkoOC56OKSELlvpNUDIkSApVDcilMiF4cEtUrebefV+TAd
+        DrR/dMiVg==;
+Received: from 177.133.68.49.dynamic.adsl.gvt.net.br ([177.133.68.49] helo=coco.lan)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.2 #3 (Red Hat Linux))
+        id 1iG71a-0003lj-K2; Thu, 03 Oct 2019 19:44:31 +0000
+Date:   Thu, 3 Oct 2019 16:44:26 -0300
+From:   Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+To:     Gonsolo <gonsolo@gmail.com>
+Cc:     JP <jp@jpvw.nl>, crope@iki.fi, Sean Young <sean@mess.org>,
+        linux-media@vger.kernel.org,
+        Linux Kernel <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] si2157: Add support for Logilink VG0022A.
+Message-ID: <20191003164426.6da8538f@coco.lan>
+In-Reply-To: <20191003163914.7c384d36@coco.lan>
+References: <29ab2e43-4374-a3ea-6ae1-a4267867eaa4@jpvw.nl>
+        <20191002154922.7f1cfc76@coco.lan>
+        <CANL0fFRJZBfEDWK_c2w1TomvB5-i4g09LopyJUbO5NtOwKdDTg@mail.gmail.com>
+        <20191003080539.2b13c03b@coco.lan>
+        <CANL0fFSmvEEJhnA=qjTuEPr4N8q8eWLeYC5du+OoTMxe1Gnh5Q@mail.gmail.com>
+        <20191003120238.75811da6@coco.lan>
+        <20191003160336.GA5125@Limone>
+        <20191003130909.01d29b77@coco.lan>
+        <20191003162326.GA2727@Limone>
+        <20191003144225.0137bf6c@coco.lan>
+        <20191003183200.GA2631@Limone>
+        <e468b867-1b45-8220-a5d2-ac40fdb4e0e6@jpvw.nl>
+        <CANL0fFQms9oyec_1UevbJ7aLp+KNJ3h6UhGEbqrnCNO286rbGg@mail.gmail.com>
+        <20191003163914.7c384d36@coco.lan>
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <c2c355cd-b798-02de-0606-0f6442f6fdca@microchip.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 03/10/2019 10:24:52+0000, Eugen.Hristev@microchip.com wrote:
-> 
-> 
-> On 13.08.2019 09:53, Ludovic Desroches wrote:
-> > On Mon, Aug 12, 2019 at 03:38:34PM +0000, Eugen.Hristev@microchip.com wrote:
-> >> On 09.08.2019 09:23, Ludovic Desroches wrote:
-> >>> On Thu, Aug 08, 2019 at 03:57:30PM +0300, Adrian Hunter wrote:
-> >>>> On 8/08/19 3:42 PM, Ludovic Desroches wrote:
-> >>>>> On Thu, Aug 08, 2019 at 10:35:43AM +0200, Eugen Hristev - M18282 wrote:
-> >>>>>> From: Eugen Hristev <eugen.hristev@microchip.com>
-> >>>>>>
-> >>>>>> Add mmc capabilities for SDMMC0 for this board.
-> >>>>>> With this enabled, eMMC connected card is detected as:
-> >>>>>>
-> >>>>>> mmc0: new DDR MMC card at address 0001
-> >>>>>>
-> >>>>>> Signed-off-by: Eugen Hristev <eugen.hristev@microchip.com>
-> >>>>> Acked-by: Ludovic Desroches <ludovic.desroches@microchip.com>
-> >>>>>
-> >>>>> I am interested to have the some insights about the use of sd-uhs-*
-> >>>>> properties.
-> >>>>>
-> >>>>> Our IP can't deal with 1V8 by itself. It has a 1V8SEL signal which can
-> >>>>> be used as the logic control input of a mux. So even if the IP claims
-> >>>>> to support UHS modes, it depends on the board.
-> >>>>>
-> >>>>> Are the sd-uhs-* properties a way to deal with this? I tend to think no
-> >>>>> as sdhci_setup_host() will set the caps depending on the content of the
-> >>>>> capabilities register. Do we have to use the SDHCI_QUIRK_MISSING_CAPS
-> >>>>> quirk or sdhci-caps/sdhci-caps-mask?
-> >>>>
-> >>>> There is "no-1-8-v" which it looks like sdhci-of-at91.c already supports:
-> >>>>
-> >>>>     sdhci_at91_probe() -> sdhci_get_of_property() -> sdhci_get_property()
-> >>>>
-> >>>>       	if (device_property_present(dev, "no-1-8-v"))
-> >>>> 		host->quirks2 |= SDHCI_QUIRK2_NO_1_8_V;
-> >>>>
-> >>>
-> >>> Right, I forgot this property. Thanks.
-> >>>
-> >>> Eugen, do you see cases we can't cover with this property?
-> >>
-> >> Hi,
-> >>
-> >> For current requirements and driver support, this should be enough.
-> >>
-> >> I noticed one thing regarding SD-Cards, if I add property sd-uhs-sdr104
-> >> the class 10 uhs1 cards are detected as SDR104 . Without this property
-> >> they are detected as DDR50. Any idea why the difference ? The controller
-> >> does not claim to have SDR104 support ?  We should add it ?
-> > 
-> > With the mainline, our tree or both? In our tree, SDR104 is removed from
-> > the capabilities.
-> > 
-> > Ludovic
-> > 
-> 
-> 
-> Hello Alexandre,
-> 
-> Anything more needed regarding this patch ?
-> 
+Em Thu, 3 Oct 2019 16:39:14 -0300
+Mauro Carvalho Chehab <mchehab+samsung@kernel.org> escreveu:
 
-I was not sure it was applicable, seeing the discussion. I'll apply it
-now.
+> Em Thu, 3 Oct 2019 21:19:16 +0200
+> Gonsolo <gonsolo@gmail.com> escreveu:
+> 
+> > > try other firmware?
+> > > http://palosaari.fi/linux/v4l-dvb/firmware/Si2168/    
+> > 
+> > I tried all of them. No difference.  
+> 
+> Maybe the vendor of this device wrote a different firmware. That happens.
 
+Two additional comments:
 
--- 
-Alexandre Belloni, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+1) The firmware file is likely at the Windows driver for this device
+(probably using a different format). It should be possible to get
+it from there. 
+
+2) Another possibility would be to add a way to tell the si2168 driver
+to not try to load a firmware, using the original one. That would
+require adding a field at si2168_config to allow signalizing to it
+that it should not try to load a firmware file, and add a quirk at
+the af9035 that would set such flag for Logilink VG0022A.
+
+Option (1) is the best one.
+
+Thanks,
+Mauro
