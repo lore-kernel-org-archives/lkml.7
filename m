@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42A09C32792
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:07:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7708DC32792
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:08:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0B569207FF
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:07:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 351CE207FF
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:08:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570118875;
-	bh=Qd6Fx4HR0MEy1fkhsPPqO3Z/s2WW9q4MQSyVMAfTlqw=;
+	s=default; t=1570118884;
+	bh=PzDVJIaJusdMjmT/cggQNTFeh15nn52NkL+YCM8KRfM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xkB30W1dAIFT7OFlJPaM282JTkBSV5dULo9waJS7axF2cGGLo+qlk1ehXa1tsLU/H
-	 vP5ZwhOKcXnMSfN1rUXpvwl5nFAqlJCgBs9z/7A+/wlBcBD0JTBunn3e+SYNzY98//
-	 d1DlQ+1bi4I9i+B8ukF3VPcVb5A+ESBkNp+s12rw=
+	b=DymBG6exrVQ5wHfmjV0X3E60+NHIqw2t1grw+nKFe3Byo3N8oLTillSElNRzk62pE
+	 DT29aVF99f0GFkNtdcrEHWb1sl9C+bzBXp9zeN1AjUtSrp0U9pc3qCgsEaGv/KSeHX
+	 DbAYIvQ6f4czB5EHRYrA51hVUiYpETS0KlzGz9YI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731046AbfJCQHx (ORCPT
+        id S1732205AbfJCQH5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 12:07:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55758 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 12:07:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55678 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733002AbfJCQHt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:07:49 -0400
+        id S1732998AbfJCQHq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:07:46 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2817920865;
-        Thu,  3 Oct 2019 16:07:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 79C49215EA;
+        Thu,  3 Oct 2019 16:07:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570118868;
-        bh=Qd6Fx4HR0MEy1fkhsPPqO3Z/s2WW9q4MQSyVMAfTlqw=;
+        s=default; t=1570118866;
+        bh=PzDVJIaJusdMjmT/cggQNTFeh15nn52NkL+YCM8KRfM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=QMy3egQSz0hb5GzBmjvJ9nqbjgeAwwGB6CclapMLVKlLQvuaZRG7+hvx1/3U6e8j8
-         AaskTuUxIA6knT/n5oj15eyJ9pSq0t84c2hlb6J+qjqctdiIsZ2y6Z1gvyxKn/iopa
-         aVvSwc+Y7GoxOg/m6j2Qrs1sNFb7a5u970PmSqcc=
+        b=nvgkRNZckQ/8FJe9eVAeQKqCzrBWY/ydGT/OcaKR24MyduA/+j4csIzDDLjC4VbLX
+         CN5K9eDSC/86205LAQQuhIK7niKH+IcfuxR4Z57EHnyrFZSqUeYLoaE/EA6qUAYoTg
+         sORjiQmCkn7a75YDiVn6PMdaSNk/yq799kO1XENI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        stable@vger.kernel.org, Peter Mamonov <pmamonov@gmail.com>,
+        Andrew Lunn <andrew@lunn.ch>,
         Jakub Kicinski <jakub.kicinski@netronome.com>
-Subject: [PATCH 4.14 038/185] net: qrtr: Stop rx_worker before freeing node
-Date:   Thu,  3 Oct 2019 17:51:56 +0200
-Message-Id: <20191003154446.167148984@linuxfoundation.org>
+Subject: [PATCH 4.14 037/185] net/phy: fix DP83865 10 Mbps HDX loopback disable function
+Date:   Thu,  3 Oct 2019 17:51:55 +0200
+Message-Id: <20191003154446.048932258@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191003154437.541662648@linuxfoundation.org>
 References: <20191003154437.541662648@linuxfoundation.org>
@@ -60,33 +60,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bjorn Andersson <bjorn.andersson@linaro.org>
+From: Peter Mamonov <pmamonov@gmail.com>
 
-[ Upstream commit 73f0c11d11329a0d6d205d4312b6e5d2512af7c5 ]
+[ Upstream commit e47488b2df7f9cb405789c7f5d4c27909fc597ae ]
 
-As the endpoint is unregistered there might still be work pending to
-handle incoming messages, which will result in a use after free
-scenario. The plan is to remove the rx_worker, but until then (and for
-stable@) ensure that the work is stopped before the node is freed.
+According to the DP83865 datasheet "the 10 Mbps HDX loopback can be
+disabled in the expanded memory register 0x1C0.1". The driver erroneously
+used bit 0 instead of bit 1.
 
-Fixes: bdabad3e363d ("net: Add Qualcomm IPC router")
-Cc: stable@vger.kernel.org
-Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+Fixes: 4621bf129856 ("phy: Add file missed in previous commit.")
+Signed-off-by: Peter Mamonov <pmamonov@gmail.com>
+Reviewed-by: Andrew Lunn <andrew@lunn.ch>
 Signed-off-by: Jakub Kicinski <jakub.kicinski@netronome.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/qrtr/qrtr.c |    1 +
- 1 file changed, 1 insertion(+)
+ drivers/net/phy/national.c |    9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
 
---- a/net/qrtr/qrtr.c
-+++ b/net/qrtr/qrtr.c
-@@ -129,6 +129,7 @@ static void __qrtr_node_release(struct k
- 	list_del(&node->item);
- 	mutex_unlock(&qrtr_node_lock);
+--- a/drivers/net/phy/national.c
++++ b/drivers/net/phy/national.c
+@@ -110,14 +110,17 @@ static void ns_giga_speed_fallback(struc
  
-+	cancel_work_sync(&node->work);
- 	skb_queue_purge(&node->rx_queue);
- 	kfree(node);
+ static void ns_10_base_t_hdx_loopack(struct phy_device *phydev, int disable)
+ {
++	u16 lb_dis = BIT(1);
++
+ 	if (disable)
+-		ns_exp_write(phydev, 0x1c0, ns_exp_read(phydev, 0x1c0) | 1);
++		ns_exp_write(phydev, 0x1c0,
++			     ns_exp_read(phydev, 0x1c0) | lb_dis);
+ 	else
+ 		ns_exp_write(phydev, 0x1c0,
+-			     ns_exp_read(phydev, 0x1c0) & 0xfffe);
++			     ns_exp_read(phydev, 0x1c0) & ~lb_dis);
+ 
+ 	pr_debug("10BASE-T HDX loopback %s\n",
+-		 (ns_exp_read(phydev, 0x1c0) & 0x0001) ? "off" : "on");
++		 (ns_exp_read(phydev, 0x1c0) & lb_dis) ? "off" : "on");
  }
+ 
+ static int ns_config_init(struct phy_device *phydev)
 
 
