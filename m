@@ -2,102 +2,194 @@ Return-Path: <SRS0=6dNS=X4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F5B6C32792
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:39:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4185AC10F14
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:39:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CCC1D20830
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:39:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570120775;
-	bh=AW86f9tuNuQ3Cckl92NcJjBerWskZPFWFXKAJraaCrA=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0rSVmKApvGAKFCfMFG63YeQ+b0IGsz9ZIUva70aMcVbRKGuWQGPHfPZ8tI1gvFve7
-	 I1h8S4xHy6mSViVJyKdMxgJ5twb2uPm84OwWE8hUa9xuAINu4piopwkAAno1QId1ga
-	 Cj3e+fPetzrNbCVQYYcgCVmE1+TV8ZA7sNF9dzRM=
+	by mail.kernel.org (Postfix) with ESMTP id 1940520830
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:39:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404855AbfJCQjf (ORCPT
+        id S2404867AbfJCQjh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 12:39:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49492 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 12:39:37 -0400
+Received: from ms.lwn.net ([45.79.88.28]:33084 "EHLO ms.lwn.net"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404349AbfJCQjc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:39:32 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        id S2404841AbfJCQjd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:39:33 -0400
+Received: from lwn.net (localhost [127.0.0.1])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D71802070B;
-        Thu,  3 Oct 2019 16:39:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570120772;
-        bh=AW86f9tuNuQ3Cckl92NcJjBerWskZPFWFXKAJraaCrA=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=uU/Xa3pnYXjO/ILDncDNt5Ga3xngk6VsUczTQgVg7pFYV593Bcja7bOkKxhmIBkG9
-         zC+1jUxKFDi3ADBfLD3aojD1ByZNGcgMvuRwi3gyktEZvpVY/wyFVmbptlp97UUOl+
-         jks4JKyZoNOVvXzmVdh/NY3nUfACwMiNEWOEvgdQ=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Thierry Reding <treding@nvidia.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.3 009/344] net: stmmac: Fix page pool size
-Date:   Thu,  3 Oct 2019 17:49:34 +0200
-Message-Id: <20191003154541.001833168@linuxfoundation.org>
-X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20191003154540.062170222@linuxfoundation.org>
-References: <20191003154540.062170222@linuxfoundation.org>
-User-Agent: quilt/0.66
+        by ms.lwn.net (Postfix) with ESMTPSA id BBCE65A0;
+        Thu,  3 Oct 2019 16:39:32 +0000 (UTC)
+Date:   Thu, 3 Oct 2019 10:39:31 -0600
+From:   Jonathan Corbet <corbet@lwn.net>
+To:     Christian Brauner <christian.brauner@ubuntu.com>
+Cc:     linux-kernel@vger.kernel.org, libc-alpha@sourceware.org,
+        Christian Brauner <christian@brauner.io>,
+        Federico Vaga <federico.vaga@vaga.pv.it>,
+        Alessia Mantegazza <amantegazza@vaga.pv.it>,
+        Guillaume Dore <corwin@poussif.eu>, linux-doc@vger.kernel.org,
+        Aleksa Sarai <cyphar@cyphar.com>, linux-abi@vger.kernel.org,
+        Michael Kerrisk <mtk.manpages@gmail.com>
+Subject: Re: [PATCH] Documentation: update about adding syscalls
+Message-ID: <20191003103931.52683cb6@lwn.net>
+In-Reply-To: <20191002151437.5367-1-christian.brauner@ubuntu.com>
+References: <20191002151437.5367-1-christian.brauner@ubuntu.com>
+Organization: LWN.net
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Thierry Reding <treding@nvidia.com>
+[Expanding CC a bit; this is the sort of change I'm reluctant to take
+without being sure it reflects what the community thinks.]
 
-[ Upstream commit 4f28bd956e081fc018fe9b41ffa31573f17bfb61 ]
+On Wed,  2 Oct 2019 17:14:37 +0200
+Christian Brauner <christian.brauner@ubuntu.com> wrote:
 
-The size of individual pages in the page pool in given by an order. The
-order is the binary logarithm of the number of pages that make up one of
-the pages in the pool. However, the driver currently passes the number
-of pages rather than the order, so it ends up wasting quite a bit of
-memory.
+> Add additional information on how to ensure that syscalls with structure
+> arguments are extensible and add a section about naming conventions to
+> follow when adding revised versions of already existing syscalls.
+> 
+> Co-Developed-by: Aleksa Sarai <cyphar@cyphar.com>
+> Signed-off-by: Aleksa Sarai <cyphar@cyphar.com>
+> Signed-off-by: Christian Brauner <christian.brauner@ubuntu.com>
+> ---
+>  Documentation/process/adding-syscalls.rst | 82 +++++++++++++++++++----
+>  1 file changed, 70 insertions(+), 12 deletions(-)
+> 
+> diff --git a/Documentation/process/adding-syscalls.rst b/Documentation/process/adding-syscalls.rst
+> index 1c3a840d06b9..93e0221fbb9a 100644
+> --- a/Documentation/process/adding-syscalls.rst
+> +++ b/Documentation/process/adding-syscalls.rst
+> @@ -79,7 +79,7 @@ flags, and reject the system call (with ``EINVAL``) if it does::
+>  For more sophisticated system calls that involve a larger number of arguments,
+>  it's preferred to encapsulate the majority of the arguments into a structure
+>  that is passed in by pointer.  Such a structure can cope with future extension
+> -by including a size argument in the structure::
+> +by either including a size argument in the structure::
+>  
+>      struct xyzzy_params {
+>          u32 size; /* userspace sets p->size = sizeof(struct xyzzy_params) */
+> @@ -87,20 +87,56 @@ by including a size argument in the structure::
+>          u64 param_2;
+>          u64 param_3;
+>      };
+> +    int sys_xyzzy(struct xyzzy_params __user *uarg);
+> +    /* in case of -E2BIG, p->size is set to the in-kernel size and thus all
+> +       extensions after that offset are unsupported. */
 
-Fix this by taking the binary logarithm and passing that in the order
-field.
+That comment kind of threw me for a loop - this is the first mention of
+E2BIG and readers may not just know what's being talked about.  Especially
+since the comment suggests *not* actually returning an error.
 
-Fixes: 2af6106ae949 ("net: stmmac: Introducing support for Page Pool")
-Signed-off-by: Thierry Reding <treding@nvidia.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- drivers/net/ethernet/stmicro/stmmac/stmmac_main.c |    4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+> -As long as any subsequently added field, say ``param_4``, is designed so that a
+> -zero value gives the previous behaviour, then this allows both directions of
+> -version mismatch:
+> +or by including a separate argument that specifies the size::
+>  
+> - - To cope with a later userspace program calling an older kernel, the kernel
+> -   code should check that any memory beyond the size of the structure that it
+> -   expects is zero (effectively checking that ``param_4 == 0``).
+> - - To cope with an older userspace program calling a newer kernel, the kernel
+> -   code can zero-extend a smaller instance of the structure (effectively
+> -   setting ``param_4 = 0``).
+> +    struct xyzzy_params {
+> +        u32 param_1;
+> +        u64 param_2;
+> +        u64 param_3;
+> +    };
+> +    /* userspace sets @usize = sizeof(struct xyzzy_params) */
+> +    int sys_xyzzy(struct xyzzy_params __user *uarg, size_t usize);
+> +    /* in case of -E2BIG, userspace has to attempt smaller @usize values
+> +       to figure out which extensions are unsupported. */
 
---- a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
-@@ -1532,13 +1532,15 @@ static int alloc_dma_rx_desc_resources(s
- 	for (queue = 0; queue < rx_count; queue++) {
- 		struct stmmac_rx_queue *rx_q = &priv->rx_queue[queue];
- 		struct page_pool_params pp_params = { 0 };
-+		unsigned int num_pages;
- 
- 		rx_q->queue_index = queue;
- 		rx_q->priv_data = priv;
- 
- 		pp_params.flags = PP_FLAG_DMA_MAP;
- 		pp_params.pool_size = DMA_RX_SIZE;
--		pp_params.order = DIV_ROUND_UP(priv->dma_buf_sz, PAGE_SIZE);
-+		num_pages = DIV_ROUND_UP(priv->dma_buf_sz, PAGE_SIZE);
-+		pp_params.order = ilog2(num_pages);
- 		pp_params.nid = dev_to_node(priv->device);
- 		pp_params.dev = priv->device;
- 		pp_params.dma_dir = DMA_FROM_DEVICE;
+Here too.  But what I'm really wondering about now is: you're describing
+different behavior for what are essentially two cases of the same thing.
+Why should the kernel simply accept the smaller size if the size is
+embedded in the structure itself, but return an error and force user space
+to retry if it's a separate argument?
 
+I guess maybe because in the latter case the kernel can't easily return
+the size it's actually using?  I think that should be explicit if so.
 
+Thanks,
+
+jon
+
+[Rest left untrimmed for context]
+
+> +Which model you choose to use is down to personal taste. However, please only
+> +pick one (for a counter-example, see :manpage:`sched_getattr(2)`).
+> +
+> +Then, any extensions can be implemented by appending fields to the structure.
+> +However, all new fields must be designed such that their zero value results in
+> +identical behaviour to the pre-extension syscall. This allows for compatibility
+> +between different-vintage kernels and userspace, no matter which is newer:
+> +
+> + - If the userspace is newer, then the older kernel can check whether the
+> +   fields it doesn't understand are zero-valued. If they are, then it can
+> +   safely ignore them (since any future extensions will be backwards-compatible
+> +   as described above). If they aren't, then the kernel doesn't support the
+> +   feature and can give an error (``-E2BIG`` is traditional).
+> +
+> + - If the userspace is older, then the kernel can treat all extensions that
+> +   userspace is unaware of as having their zero-value (and effectively
+> +   zero-extend the userspace structure when copying it for in-kernel usage).
+>  
+> -See :manpage:`perf_event_open(2)` and the ``perf_copy_attr()`` function (in
+> -``kernel/events/core.c``) for an example of this approach.
+> + - If they're the same version, just use the structure as-is.
+> +
+> +As with the simpler flag-only syscalls, you must always check that any unknown
+> +values for flag-like parameters in the passed structure are zeroed.
+> +
+> +It is also critical to ensure your syscall handles larger-sized arguments from
+> +the outset, otherwise userspace will have to do additional (fairly pointless)
+> +fallbacks for some old kernels. An example where this mistake was made is
+> +:manpage:`rt_sigprocmask(2)` (where any unknown-sized arguments are
+> +unconditionally rejected).
+> +
+> +To help implement this correctly, there is a helper function
+> +``copy_struct_from_user()`` which handles the compatibility requirements for
+> +you. For examples using this helper, see :manpage:`perf_event_open(2)` (which
+> +uses the embedded-size model) and :manpage:`clone3(2)` (which uses the
+> +separate-argument model).
+>  
+>  
+>  Designing the API: Other Considerations
+> @@ -173,6 +209,28 @@ registers.  (This concern does not apply if the arguments are part of a
+>  structure that's passed in by pointer.)
+>  
+>  
+> +Designing the API: Revisions of syscalls
+> +-----------------------------------------------
+> +
+> +Syscalls that were not designed to be extensible or syscalls that use a flag
+> +argument for extensions running out of bits (e.g. :manpage:`clone(2)`)
+> +sometimes need to be replaced.
+> +
+> +If the revised syscall provides a superset (or a reasonably large subset, such
+> +as when a feature that turned out to be a design mistake is dropped) of the
+> +features of the old syscall it is common practice to give it the same name with
+> +a number appended. Examples for this include ``dup2``/``dup3``,
+> +``epoll_create``/``epoll_create1`` and others.
+> +
+> +For some syscalls the appended number indicates the number of arguments
+> +(``accept``/``accept4``) for others the number of the revision
+> +(``clone``/``clone3``, ``epoll_create``/``epoll_create1``). Recent discussions
+> +around new syscalls (such as ``clone3``) have pointed to a consensus around
+> +naming syscalls revisions by appending the number of the revision to the
+> +syscall name. That means, if you were to post a revised version of the
+> +``openat`` syscall it should be named ``openat2``.
+> +
+> +
+>  Proposing the API
+>  -----------------
+>  
