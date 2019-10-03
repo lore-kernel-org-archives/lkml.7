@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A365EC10F14
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:39:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 02D05C32792
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:39:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6AB07222BE
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:39:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CA68C20830
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:39:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570120756;
-	bh=8+lmPgBjYpQcwYx55SQ8PdxzuWuMMuuKkoFHrZUWAIA=;
+	s=default; t=1570120759;
+	bh=LAc87+6+D18o5QYyIggT21SCRMDuq8+tv+1iJvp/tug=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=CsAcoNeHULtYz4Hi3K90EzFLeZp0p+gsDKOtERpGvZBqjIFPuwB5J9p+yn8F8ufdc
-	 j7zI+crxOa0UG8gkco5xKodx/JfTkUbeaIA5576EJ8F4HadEiQDvWQ2Re9ZZy941in
-	 TQH2LvtztttRAyE9NgPdnR8I3hYwraWkDnTyIjPw=
+	b=Ju681nxXZ14j0iKFHAI5s8BHr7yNvCqwFuwpJNkRG6jeaUQiWI7/GT+j97w9LVrjN
+	 Q5+ivTGUOnV8vIPC7ak97KMF365T4Dsx2q2keZvCkkV4ECAD46sLD414NiFywqOq++
+	 QZhHGoRlJYDERyokd4F9aOIpHhbgjvllrXEjrQJo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404725AbfJCQjP (ORCPT
+        id S2404732AbfJCQjT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 12:39:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49106 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 12:39:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49164 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404041AbfJCQjP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:39:15 -0400
+        id S2404041AbfJCQjR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:39:17 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 165082070B;
-        Thu,  3 Oct 2019 16:39:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AC72E20830;
+        Thu,  3 Oct 2019 16:39:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570120753;
-        bh=8+lmPgBjYpQcwYx55SQ8PdxzuWuMMuuKkoFHrZUWAIA=;
+        s=default; t=1570120756;
+        bh=LAc87+6+D18o5QYyIggT21SCRMDuq8+tv+1iJvp/tug=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ek+jnfEsZ4y4Jg4UvXSq43W+J/twd5q36tPYiQfrzsDl8RLQKdBL+e5sGLUFe7Ejt
-         sZT52XywEKWyjfs1ZOz2ns0uc+EhFXAhLzMQ/bA8ZnCwKJhE5Tod3MaBYalDldCWZA
-         JuVajcA6girwcjCUiLrzF49RqFBt7Zm/3+9S6MCQ=
+        b=jyKWV5yx4fbKIx4F/qLXM4q/xUirKOup1RpwXIjZZ/k3Qq10l/b0r4q3N16EYFX79
+         4KQ+lpC1RVZ5ZwOl5V/Zzn++PKibzSMoWH7d92Qty7pcOMbBhvgsOyDVQtilMkT+s0
+         0WO3QKJUIrPNWeovzGVoJfNHCHzlaf+oTtOY/pnI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Vinicius Costa Gomes <vinicius.gomes@intel.com>,
-        Cong Wang <xiyou.wangcong@gmail.com>,
+        stable@vger.kernel.org, "Jason A. Donenfeld" <Jason@zx2c4.com>,
+        Wei Wang <weiwan@google.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.3 025/344] net/sched: cbs: Fix not adding cbs instance to list
-Date:   Thu,  3 Oct 2019 17:49:50 +0200
-Message-Id: <20191003154542.570762257@linuxfoundation.org>
+Subject: [PATCH 5.3 003/344] ipv6: do not free rt if FIB_LOOKUP_NOREF is set on suppress rule
+Date:   Thu,  3 Oct 2019 17:49:28 +0200
+Message-Id: <20191003154540.394699981@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191003154540.062170222@linuxfoundation.org>
 References: <20191003154540.062170222@linuxfoundation.org>
@@ -61,169 +60,79 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vinicius Costa Gomes <vinicius.gomes@intel.com>
+From: "Jason A. Donenfeld" <Jason@zx2c4.com>
 
-[ Upstream commit 3e8b9bfa110896f95d602d8c98d5f9d67e41d78c ]
+[ Upstream commit ca7a03c4175366a92cee0ccc4fec0038c3266e26 ]
 
-When removing a cbs instance when offloading is enabled, the crash
-below can be observed.
+Commit 7d9e5f422150 removed references from certain dsts, but accounting
+for this never translated down into the fib6 suppression code. This bug
+was triggered by WireGuard users who use wg-quick(8), which uses the
+"suppress-prefix" directive to ip-rule(8) for routing all of their
+internet traffic without routing loops. The test case added here
+causes the reference underflow by causing packets to evaluate a suppress
+rule.
 
-The problem happens because that when offloading is enabled, the cbs
-instance is not added to the list.
-
-Also, the current code doesn't handle correctly the case when offload
-is disabled without removing the qdisc: if the link speed changes the
-credit calculations will be wrong. When we create the cbs instance
-with offloading enabled, it's not added to the notification list, when
-later we disable offloading, it's not in the list, so link speed
-changes will not affect it.
-
-The solution for both issues is the same, add the cbs instance being
-created unconditionally to the global list, even if the link state
-notification isn't useful "right now".
-
-Crash log:
-
-[518758.189866] BUG: kernel NULL pointer dereference, address: 0000000000000000
-[518758.189870] #PF: supervisor read access in kernel mode
-[518758.189871] #PF: error_code(0x0000) - not-present page
-[518758.189872] PGD 0 P4D 0
-[518758.189874] Oops: 0000 [#1] SMP PTI
-[518758.189876] CPU: 3 PID: 4825 Comm: tc Not tainted 5.2.9 #1
-[518758.189877] Hardware name: Gigabyte Technology Co., Ltd. Z390 AORUS ULTRA/Z390 AORUS ULTRA-CF, BIOS F7 03/14/2019
-[518758.189881] RIP: 0010:__list_del_entry_valid+0x29/0xa0
-[518758.189883] Code: 90 48 b8 00 01 00 00 00 00 ad de 55 48 8b 17 4c 8b 47 08 48 89 e5 48 39 c2 74 27 48 b8 00 02 00 00 00 00 ad de 49 39 c0 74 2d <49> 8b 30 48 39 fe 75 3d 48 8b 52 08 48 39 f2 75 4c b8 01 00 00 00
-[518758.189885] RSP: 0018:ffffa27e43903990 EFLAGS: 00010207
-[518758.189887] RAX: dead000000000200 RBX: ffff8bce69f0f000 RCX: 0000000000000000
-[518758.189888] RDX: 0000000000000000 RSI: ffff8bce69f0f064 RDI: ffff8bce69f0f1e0
-[518758.189890] RBP: ffffa27e43903990 R08: 0000000000000000 R09: ffff8bce69e788c0
-[518758.189891] R10: ffff8bce62acd400 R11: 00000000000003cb R12: ffff8bce69e78000
-[518758.189892] R13: ffff8bce69f0f140 R14: 0000000000000000 R15: 0000000000000000
-[518758.189894] FS:  00007fa1572c8f80(0000) GS:ffff8bce6e0c0000(0000) knlGS:0000000000000000
-[518758.189895] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-[518758.189896] CR2: 0000000000000000 CR3: 000000040a398006 CR4: 00000000003606e0
-[518758.189898] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-[518758.189899] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-[518758.189900] Call Trace:
-[518758.189904]  cbs_destroy+0x32/0xa0 [sch_cbs]
-[518758.189906]  qdisc_destroy+0x45/0x120
-[518758.189907]  qdisc_put+0x25/0x30
-[518758.189908]  qdisc_graft+0x2c1/0x450
-[518758.189910]  tc_get_qdisc+0x1c8/0x310
-[518758.189912]  ? get_page_from_freelist+0x91a/0xcb0
-[518758.189914]  rtnetlink_rcv_msg+0x293/0x360
-[518758.189916]  ? kmem_cache_alloc_node_trace+0x178/0x260
-[518758.189918]  ? __kmalloc_node_track_caller+0x38/0x50
-[518758.189920]  ? rtnl_calcit.isra.0+0xf0/0xf0
-[518758.189922]  netlink_rcv_skb+0x48/0x110
-[518758.189923]  rtnetlink_rcv+0x10/0x20
-[518758.189925]  netlink_unicast+0x15b/0x1d0
-[518758.189926]  netlink_sendmsg+0x1ea/0x380
-[518758.189929]  sock_sendmsg+0x2f/0x40
-[518758.189930]  ___sys_sendmsg+0x295/0x2f0
-[518758.189932]  ? ___sys_recvmsg+0x151/0x1e0
-[518758.189933]  ? do_wp_page+0x7e/0x450
-[518758.189935]  __sys_sendmsg+0x48/0x80
-[518758.189937]  __x64_sys_sendmsg+0x1a/0x20
-[518758.189939]  do_syscall_64+0x53/0x1f0
-[518758.189941]  entry_SYSCALL_64_after_hwframe+0x44/0xa9
-[518758.189942] RIP: 0033:0x7fa15755169a
-[518758.189944] Code: 48 c7 c0 ff ff ff ff eb be 0f 1f 80 00 00 00 00 f3 0f 1e fa 64 8b 04 25 18 00 00 00 85 c0 75 18 b8 2e 00 00 00 c5 fc 77 0f 05 <48> 3d 00 f0 ff ff 77 5e c3 0f 1f 44 00 00 48 83 ec 28 89 54 24 1c
-[518758.189946] RSP: 002b:00007ffda58b60b8 EFLAGS: 00000246 ORIG_RAX: 000000000000002e
-[518758.189948] RAX: ffffffffffffffda RBX: 000055e4b836d9a0 RCX: 00007fa15755169a
-[518758.189949] RDX: 0000000000000000 RSI: 00007ffda58b6128 RDI: 0000000000000003
-[518758.189951] RBP: 00007ffda58b6190 R08: 0000000000000001 R09: 000055e4b9d848a0
-[518758.189952] R10: 0000000000000000 R11: 0000000000000246 R12: 000000005d654b49
-[518758.189953] R13: 0000000000000000 R14: 00007ffda58b6230 R15: 00007ffda58b6210
-[518758.189955] Modules linked in: sch_cbs sch_etf sch_mqprio netlink_diag unix_diag e1000e igb intel_pch_thermal thermal video backlight pcc_cpufreq
-[518758.189960] CR2: 0000000000000000
-[518758.189961] ---[ end trace 6a13f7aaf5376019 ]---
-[518758.189963] RIP: 0010:__list_del_entry_valid+0x29/0xa0
-[518758.189964] Code: 90 48 b8 00 01 00 00 00 00 ad de 55 48 8b 17 4c 8b 47 08 48 89 e5 48 39 c2 74 27 48 b8 00 02 00 00 00 00 ad de 49 39 c0 74 2d <49> 8b 30 48 39 fe 75 3d 48 8b 52 08 48 39 f2 75 4c b8 01 00 00 00
-[518758.189967] RSP: 0018:ffffa27e43903990 EFLAGS: 00010207
-[518758.189968] RAX: dead000000000200 RBX: ffff8bce69f0f000 RCX: 0000000000000000
-[518758.189969] RDX: 0000000000000000 RSI: ffff8bce69f0f064 RDI: ffff8bce69f0f1e0
-[518758.189971] RBP: ffffa27e43903990 R08: 0000000000000000 R09: ffff8bce69e788c0
-[518758.189972] R10: ffff8bce62acd400 R11: 00000000000003cb R12: ffff8bce69e78000
-[518758.189973] R13: ffff8bce69f0f140 R14: 0000000000000000 R15: 0000000000000000
-[518758.189975] FS:  00007fa1572c8f80(0000) GS:ffff8bce6e0c0000(0000) knlGS:0000000000000000
-[518758.189976] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-[518758.189977] CR2: 0000000000000000 CR3: 000000040a398006 CR4: 00000000003606e0
-[518758.189979] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-[518758.189980] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-
-Fixes: e0a7683d30e9 ("net/sched: cbs: fix port_rate miscalculation")
-Signed-off-by: Vinicius Costa Gomes <vinicius.gomes@intel.com>
-Acked-by: Cong Wang <xiyou.wangcong@gmail.com>
+Fixes: 7d9e5f422150 ("ipv6: convert major tx path to use RT6_LOOKUP_F_DST_NOREF")
+Signed-off-by: Jason A. Donenfeld <Jason@zx2c4.com>
+Acked-by: Wei Wang <weiwan@google.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/sched/sch_cbs.c |   30 +++++++++++++-----------------
- 1 file changed, 13 insertions(+), 17 deletions(-)
+ net/ipv6/fib6_rules.c                    |    3 ++-
+ tools/testing/selftests/net/fib_tests.sh |   17 ++++++++++++++++-
+ 2 files changed, 18 insertions(+), 2 deletions(-)
 
---- a/net/sched/sch_cbs.c
-+++ b/net/sched/sch_cbs.c
-@@ -392,7 +392,6 @@ static int cbs_init(struct Qdisc *sch, s
- {
- 	struct cbs_sched_data *q = qdisc_priv(sch);
- 	struct net_device *dev = qdisc_dev(sch);
--	int err;
+--- a/net/ipv6/fib6_rules.c
++++ b/net/ipv6/fib6_rules.c
+@@ -287,7 +287,8 @@ static bool fib6_rule_suppress(struct fi
+ 	return false;
  
- 	if (!opt) {
- 		NL_SET_ERR_MSG(extack, "Missing CBS qdisc options  which are mandatory");
-@@ -404,6 +403,10 @@ static int cbs_init(struct Qdisc *sch, s
- 	if (!q->qdisc)
- 		return -ENOMEM;
- 
-+	spin_lock(&cbs_list_lock);
-+	list_add(&q->cbs_list, &cbs_list);
-+	spin_unlock(&cbs_list_lock);
-+
- 	qdisc_hash_add(q->qdisc, false);
- 
- 	q->queue = sch->dev_queue - netdev_get_tx_queue(dev, 0);
-@@ -413,17 +416,7 @@ static int cbs_init(struct Qdisc *sch, s
- 
- 	qdisc_watchdog_init(&q->watchdog, sch);
- 
--	err = cbs_change(sch, opt, extack);
--	if (err)
--		return err;
--
--	if (!q->offload) {
--		spin_lock(&cbs_list_lock);
--		list_add(&q->cbs_list, &cbs_list);
--		spin_unlock(&cbs_list_lock);
--	}
--
--	return 0;
-+	return cbs_change(sch, opt, extack);
+ suppress_route:
+-	ip6_rt_put(rt);
++	if (!(arg->flags & FIB_LOOKUP_NOREF))
++		ip6_rt_put(rt);
+ 	return true;
  }
  
- static void cbs_destroy(struct Qdisc *sch)
-@@ -431,15 +424,18 @@ static void cbs_destroy(struct Qdisc *sc
- 	struct cbs_sched_data *q = qdisc_priv(sch);
- 	struct net_device *dev = qdisc_dev(sch);
+--- a/tools/testing/selftests/net/fib_tests.sh
++++ b/tools/testing/selftests/net/fib_tests.sh
+@@ -9,7 +9,7 @@ ret=0
+ ksft_skip=4
  
--	spin_lock(&cbs_list_lock);
--	list_del(&q->cbs_list);
--	spin_unlock(&cbs_list_lock);
-+	/* Nothing to do if we couldn't create the underlying qdisc */
-+	if (!q->qdisc)
-+		return;
+ # all tests in this script. Can be overridden with -t option
+-TESTS="unregister down carrier nexthop ipv6_rt ipv4_rt ipv6_addr_metric ipv4_addr_metric ipv6_route_metrics ipv4_route_metrics ipv4_route_v6_gw rp_filter"
++TESTS="unregister down carrier nexthop suppress ipv6_rt ipv4_rt ipv6_addr_metric ipv4_addr_metric ipv6_route_metrics ipv4_route_metrics ipv4_route_v6_gw rp_filter"
  
- 	qdisc_watchdog_cancel(&q->watchdog);
- 	cbs_disable_offload(dev, q);
- 
--	if (q->qdisc)
--		qdisc_put(q->qdisc);
-+	spin_lock(&cbs_list_lock);
-+	list_del(&q->cbs_list);
-+	spin_unlock(&cbs_list_lock);
-+
-+	qdisc_put(q->qdisc);
+ VERBOSE=0
+ PAUSE_ON_FAIL=no
+@@ -614,6 +614,20 @@ fib_nexthop_test()
+ 	cleanup
  }
  
- static int cbs_dump(struct Qdisc *sch, struct sk_buff *skb)
++fib_suppress_test()
++{
++	$IP link add dummy1 type dummy
++	$IP link set dummy1 up
++	$IP -6 route add default dev dummy1
++	$IP -6 rule add table main suppress_prefixlength 0
++	ping -f -c 1000 -W 1 1234::1 || true
++	$IP -6 rule del table main suppress_prefixlength 0
++	$IP link del dummy1
++
++	# If we got here without crashing, we're good.
++	return 0
++}
++
+ ################################################################################
+ # Tests on route add and replace
+ 
+@@ -1591,6 +1605,7 @@ do
+ 	fib_carrier_test|carrier)	fib_carrier_test;;
+ 	fib_rp_filter_test|rp_filter)	fib_rp_filter_test;;
+ 	fib_nexthop_test|nexthop)	fib_nexthop_test;;
++	fib_suppress_test|suppress)	fib_suppress_test;;
+ 	ipv6_route_test|ipv6_rt)	ipv6_route_test;;
+ 	ipv4_route_test|ipv4_rt)	ipv4_route_test;;
+ 	ipv6_addr_metric)		ipv6_addr_metric_test;;
 
 
