@@ -2,150 +2,163 @@ Return-Path: <SRS0=6dNS=X4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C133C10F14
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 12:52:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0B15C32792
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 12:52:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7008820700
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 12:52:22 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="uhaA79/w"
+	by mail.kernel.org (Postfix) with ESMTP id 6A42E20700
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 12:52:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1570107165;
+	bh=PJml4vff5wF2UZlWeIBa0nq1+jGytQ5txk96ijotbCo=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=fVdZuuVI4vT68Fdi0xpwFvaG/NDfrvif9seJ4ECpV1RLsrGnU10szmYaI0DaMuKBD
+	 +2Q4iYIcQBDh9xk+wTSZQUXuI2FjE1WkzEqepTEPXhwC16b8vIyrejqxyEhhGpxMc3
+	 ZO1GfU15nxi72EXkOmz799BMb3QbfoUWo2yxDoCU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730120AbfJCMwV (ORCPT
+        id S1730152AbfJCMwo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 08:52:21 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:40019 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728219AbfJCMwV (ORCPT
+        Thu, 3 Oct 2019 08:52:44 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:38174 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729086AbfJCMwo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 08:52:21 -0400
-Received: by mail-wr1-f66.google.com with SMTP id l3so2768059wru.7
-        for <linux-kernel@vger.kernel.org>; Thu, 03 Oct 2019 05:52:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=Eds4WlKNrSquM0FM6dtReZhXBU6tEApFNM4AAkDONtU=;
-        b=uhaA79/wTDQRJkGDfiqBzI5XyjkUmklCrjoS8TobGc4hXYPoRoNUAdn1DXDVjc9TcF
-         pldCe3JghlMjVZYFcmYZB0Dk/IlF1TbFoJSM0tiAiKd3SSK4CjnWL2dJ61epJ8tHVPk8
-         NnBBDCgK8eGDxi0h1JIGOXDkmh1W8IBedQbSclnfe32vu2C7qBbQ7JsA1GdT6HIgwcCT
-         x6lx/jlQhKyY9+7pj5iWXPCp31g13S5LS4Bs3dklE17QYVwg6BOwMrQihm8Tquz7avGl
-         qOgncHx1wgqO4ugywE+++VQhG3NeRcBOYdu6Wucq1HpsqCjv+gFcKolIvOAxGvs3IOUY
-         6+9A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=Eds4WlKNrSquM0FM6dtReZhXBU6tEApFNM4AAkDONtU=;
-        b=RTqdzQZ08uRUVMIsU0rGhAi5WiVvl5KgpjJJCu+7walwOwdIIjIRdAh0d2UXrot6VJ
-         JjJBVogggSbxpVsUTs5EyiTzW+Fx+ixJ8gsrDeeINq3gntr6tjoUMXAM1KZLUI44yCS/
-         Yzn4YYoRXffp6JO3VyfcCy4Dy2JG8XeeqYtyVM8TKhs9VU1gcSR2HDEYw4mZmh34ezCq
-         734J0392ZpHiTHMd+OU/wfbfzeAwZAgmiQsyCHScgz+B4ngVr23KqcMau9rn9LZXJak/
-         rXKQj4dlzCSFfSfSlYvxZ6C9EKk6hIQUDFhvJh2YkCMK1u+tbJjrVaY5BUe0vEMHhStL
-         ABWw==
-X-Gm-Message-State: APjAAAUmcAHyzicmOQGhvlxXofwppIXYmJqYZAlZMW8eBuAeyr9idpwM
-        cCkfpX7wEOzbW1DZlpPX4I4smQ==
-X-Google-Smtp-Source: APXvYqwEre7pf/Cd0XQRb8u08WuYNMTQh6T72bFTG6v17hgfbrAgZKqP8W8p/T/1gYowk6OonhX2Gw==
-X-Received: by 2002:adf:ea12:: with SMTP id q18mr7494629wrm.323.1570107139009;
-        Thu, 03 Oct 2019 05:52:19 -0700 (PDT)
-Received: from holly.lan (cpc141214-aztw34-2-0-cust773.18-1.cable.virginm.net. [86.9.19.6])
-        by smtp.gmail.com with ESMTPSA id z125sm4282266wme.37.2019.10.03.05.52.17
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 03 Oct 2019 05:52:18 -0700 (PDT)
-Date:   Thu, 3 Oct 2019 13:52:16 +0100
-From:   Daniel Thompson <daniel.thompson@linaro.org>
-To:     Suzuki K Poulose <suzuki.poulose@arm.com>
-Cc:     mathieu.poirier@linaro.org, saiprakash.ranjan@codeaurora.org,
-        jeffrey.l.hugo@gmail.com, mark.rutland@arm.com,
-        rnayak@codeaurora.org, alexander.shishkin@linux.intel.com,
-        linux-arm-msm@vger.kernel.org, marc.w.gonzalez@free.fr,
-        linux-kernel@vger.kernel.org, bjorn.andersson@linaro.org,
-        david.brown@linaro.org, agross@kernel.org, sibis@codeaurora.org,
-        leo.yan@linaro.org, linux-arm-kernel@lists.infradead.org,
-        linux-arm-msm-owner@vger.kernel.org
-Subject: Re: [PATCHv9 2/3] arm64: dts: qcom: msm8998: Add Coresight support
-Message-ID: <20191003125216.f5sjl6yhhb2t7uqq@holly.lan>
-References: <90114e06825e537c3aafd3de5c78743a9de6fadc.1564550873.git.saiprakash.ranjan@codeaurora.org>
- <CAOCk7NrK+wY8jfHdS8781NOQtyLm2RRe1NW2Rm3_zeaot0Q99Q@mail.gmail.com>
- <16212a577339204e901cf4eefa5e82f1@codeaurora.org>
- <CAOCk7NohO67qeYCnrjy4P0KN9nLUiamphHRvj-bFP++K7khPOw@mail.gmail.com>
- <fa5a35f0e993f2b604b60d5cead3cf28@codeaurora.org>
- <CAOCk7NodWtC__W3=AQfXcjF-W9Az_NNUN0r8w5WmqJMziCcvig@mail.gmail.com>
- <5b8835905a704fb813714694a792df54@codeaurora.org>
- <CANLsYkxPOOorqcnPrbhZLzGV9Y7EGWUUyxvi-Cm5xxnzhx=Ecg@mail.gmail.com>
- <20191003102023.qk6ik5vmatheaofs@holly.lan>
- <57349bda-0e86-5fe0-3be0-55b12748c346@arm.com>
+        Thu, 3 Oct 2019 08:52:44 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Subject:Cc:To:
+        From:Date:Sender:Reply-To:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=hSjVhr+TxHikgyvVbjZ6N9WzrVnc0qlIQP9JM8TUOps=; b=Z4Erw6duU0bxU9l15Y+cHI0xm
+        iUBtS1mYOo8p7c97FykF8iobjrrFUOmWWHOg09tmzXGhjTwojC5dz8isxflrdmyV3PK/tE0eSrTxY
+        wPzBjFL8hHNVA5EScf15Ic47XhawwTfd7E97CvaHfXYJWG9XyKHf1c35tHIiw7/kKbLYs8q4aZy+Y
+        GJC2HySTMuik/BMed6Q9eIBbw3sUE9iaviFrDKgTfZvoyO7wXiS4NLQxchwuA4Rh5AdzW31UqDxrM
+        vTAFbXO12vW7GULUQ7Fs1VvXoBbaHnFssdm4enfPW59lQLQxGoeNcXhd4VcIA7BbEU/9g1it1W8dd
+        P7jcOLbYA==;
+Received: from 177.133.68.49.dynamic.adsl.gvt.net.br ([177.133.68.49] helo=coco.lan)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.2 #3 (Red Hat Linux))
+        id 1iG0b3-00055F-H8; Thu, 03 Oct 2019 12:52:41 +0000
+Date:   Thu, 3 Oct 2019 09:52:37 -0300
+From:   Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+To:     Gonsolo <gonsolo@gmail.com>
+Cc:     JP <jp@jpvw.nl>, crope@iki.fi, Sean Young <sean@mess.org>,
+        linux-media@vger.kernel.org,
+        Linux Kernel <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] si2157: Add support for Logilink VG0022A.
+Message-ID: <20191003095237.2efa0e7f@coco.lan>
+In-Reply-To: <20191003094904.3aa5fdc7@coco.lan>
+References: <20191001205203.4b1a5fb6@coco.lan>
+        <20191002141359.30166-1-gonsolo@gmail.com>
+        <20191002141359.30166-2-gonsolo@gmail.com>
+        <20191002142744.GA3475@gofer.mess.org>
+        <CANL0fFS9TGKJH2rfkXzak78BaLazTNO7GoZhSb4vLBsDrmz3FQ@mail.gmail.com>
+        <20191002150650.GA4227@gofer.mess.org>
+        <CANL0fFRoL6NxOCbNC=XjQ6LDkeeqAayaLUbm9xARWX9ttqfPFg@mail.gmail.com>
+        <29ab2e43-4374-a3ea-6ae1-a4267867eaa4@jpvw.nl>
+        <20191002154922.7f1cfc76@coco.lan>
+        <CANL0fFRJZBfEDWK_c2w1TomvB5-i4g09LopyJUbO5NtOwKdDTg@mail.gmail.com>
+        <CANL0fFTwJ4yRO+5q6WkL0+DtwdrRti6r_WY1intisYJhs5En8w@mail.gmail.com>
+        <20191003081742.0933264b@coco.lan>
+        <CANL0fFTtHn4ocL4BD4cVKhVzjLhnQ0a45yq5x4MxWAVu-tD8sw@mail.gmail.com>
+        <20191003094904.3aa5fdc7@coco.lan>
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <57349bda-0e86-5fe0-3be0-55b12748c346@arm.com>
-User-Agent: NeoMutt/20180716
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Oct 03, 2019 at 11:52:36AM +0100, Suzuki K Poulose wrote:
-> On 10/03/2019 11:20 AM, Daniel Thompson wrote:
-> > On Wed, Oct 02, 2019 at 09:03:59AM -0600, Mathieu Poirier wrote:
-> > > On Tue, 1 Oct 2019 at 12:05, Sai Prakash Ranjan
-> > > <saiprakash.ranjan@codeaurora.org> wrote:
-> > > > 
-> > > > On 2019-10-01 11:01, Jeffrey Hugo wrote:
-> > > > > On Tue, Oct 1, 2019 at 11:52 AM Sai Prakash Ranjan
-> > > > > <saiprakash.ranjan@codeaurora.org> wrote:
-> > > > > > 
-> > > > > > 
-> > > > > > Haan then likely it's the firmware issue.
-> > > > > > We should probably disable coresight in soc dtsi and enable only for
-> > > > > > MTP. For now you can add a status=disabled for all coresight nodes in
-> > > > > > msm8998.dtsi and I will send the patch doing the same in a day or
-> > > > > > two(sorry I am travelling currently).
-> > > > > 
-> > > > > This sounds sane to me (and is what I did while bisecting the issue).
-> > > > > When you do create the patch, feel free to add the following tags as
-> > > > > you see fit.
-> > > > > 
-> > > > > Reported-by: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
-> > > > > Tested-by: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
-> > > > 
-> > > > Thanks Jeffrey, I will add them.
-> > > > Hope Mathieu and Suzuki are OK with this.
-> > > 
-> > > The problem here is that a debug and production device are using the
-> > > same device tree, i.e msm8998.dtsi.  Disabling coresight devices in
-> > > the DTS file will allow the laptop to boot but completely disabled
-> > > coresight blocks on the MTP board.  Leaving things as is breaks the
-> > > laptop but allows coresight to be used on the MTP board.  One of three
-> > > things can happen:
-> > > 
-> > > 1) Nothing gets done and production board can't boot without DTS modifications.
-> > > 2) Disable tags are added to the DTS file and the debug board can't
-> > > use coresight without modifications.
-> > > 2) The handling of the debug power domain is done properly on the
-> > > MSM8998 rather than relying on the bootloader to enable it.
-> > > 3) The DTS file is split or reorganised to account for debug/production devices.
-> > 
-> > msm8998.dtsi is a SoC include file. Can't whatever default it adopts be
-> > reversed in the board include files such as msm8998-mtp.dtsi or
-> > msm8998-clamshell.dtsi ?
+Em Thu, 3 Oct 2019 09:49:04 -0300
+Mauro Carvalho Chehab <mchehab+samsung@kernel.org> escreveu:
+
+> Em Thu, 3 Oct 2019 13:41:23 +0200
+> Gonsolo <gonsolo@gmail.com> escreveu:
 > 
-> Or like Mathieu said, all the Coresight specific nodes could be moved in
-> to say, msm8998-coresight.dtsi and could be included into the platforms
-> where it actually works.
+> > Hi!
+> >   
+> > > It means that there's a firmware stored at the device's eeprom
+> > > (version 4.0.2). When the driver starts, it downloads a newer firmware
+> > > from the file dvb-demod-si2168-b40-01.fw.    
+> > 
+> > Thanks for the explanation.
+> >   
+> > > Btw, could you please try the enclosed hack and post the results?    
+> > 
+> > Will do in a second.
+> > 
+> > FWIW, this hack worked:
+> > 
+> > diff --git a/drivers/media/tuners/si2157.c b/drivers/media/tuners/si2157.c
+> > index e87040d6eca7..28a3a4f1640e 100644
+> > --- a/drivers/media/tuners/si2157.c
+> > +++ b/drivers/media/tuners/si2157.c
+> > @@ -136,6 +136,7 @@ static int si2157_init(struct dvb_frontend *fe)
+> >         #define SI2147_A30 ('A' << 24 | 47 << 16 | '3' << 8 | '0' << 0)
+> >         #define SI2146_A10 ('A' << 24 | 46 << 16 | '1' << 8 | '0' << 0)
+> >         #define SI2141_A10 ('A' << 24 | 41 << 16 | '1' << 8 | '0' << 0)
+> > +       #define GONZO     (255 << 24 | 255 << 16 | 255 << 8 | 255 << 0)
+> > 
+> >         switch (chip_id) {
+> >         case SI2158_A20:
+> > @@ -148,6 +149,10 @@ static int si2157_init(struct dvb_frontend *fe)
+> >         case SI2177_A30:
+> >                 fw_name = SI2157_A30_FIRMWARE;
+> >                 break;
+> > +       case GONZO:
+> > +               dev_info(&client->dev, "trying null\n");
+> > +               fw_name = NULL;
+> > +               break;
+> >         case SI2157_A30:
+> >         case SI2147_A30:
+> >         case SI2146_A10:  
+> 
+> What does it print with this hack?
+> 
+> Also, could you get the SI version after the reset code at
+> skip_fw_download, just after retrieving si2157 firmware version?
 
-Sure, that works too.
+Maybe something like this would make it work?
 
-Maybe it depends in you view the mtp as including the feature or as the
-laptops as taking it away ;-) .
+diff --git a/drivers/media/tuners/si2157.c b/drivers/media/tuners/si2157.c
+index e87040d6eca7..86d945fd50b9 100644
+--- a/drivers/media/tuners/si2157.c
++++ b/drivers/media/tuners/si2157.c
+@@ -129,6 +129,28 @@ static int si2157_init(struct dvb_frontend *fe)
+ 	chip_id = cmd.args[1] << 24 | cmd.args[2] << 16 | cmd.args[3] << 8 |
+ 			cmd.args[4] << 0;
+ 
++	if (chip_id == 0xffffffff) {
++		/* reboot the tuner  */
++		memcpy(cmd.args, "\x01\x01", 2);
++		cmd.wlen = 2;
++		cmd.rlen = 1;
++		ret = si2157_cmd_execute(client, &cmd);
++		if (ret)
++			goto err;
++
++		/* query chip revision */
++		memcpy(cmd.args, "\x02", 1);
++		cmd.wlen = 1;
++		cmd.rlen = 13;
++		ret = si2157_cmd_execute(client, &cmd);
++		if (ret)
++			goto err;
++
++		chip_id = cmd.args[1] << 24 | cmd.args[2] << 16 | cmd.args[3] << 8 |
++				cmd.args[4] << 0;
++
++	}
++
+ 	#define SI2177_A30 ('A' << 24 | 77 << 16 | '3' << 8 | '0' << 0)
+ 	#define SI2158_A20 ('A' << 24 | 58 << 16 | '2' << 8 | '0' << 0)
+ 	#define SI2148_A20 ('A' << 24 | 48 << 16 | '2' << 8 | '0' << 0)
 
-Treating it as a feature a board can disable also works nicely on systems
-where the board include file should be setting secure-status a board
-(although that's probably not the case for these boards since the
-firmware is proprietary).
 
-
-Daniel.
+Thanks,
+Mauro
