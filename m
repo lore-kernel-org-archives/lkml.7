@@ -2,142 +2,138 @@ Return-Path: <SRS0=6dNS=X4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 664B5C4CED1
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 10:34:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 897D7C10F14
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 10:34:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3FB6E217D7
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 10:34:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 625D9217D7
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 10:34:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="mMT1BSH6"
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="UuKcnYOL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729426AbfJCKd7 (ORCPT
+        id S1729549AbfJCKef (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 06:33:59 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:35660 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725827AbfJCKd7 (ORCPT
+        Thu, 3 Oct 2019 06:34:35 -0400
+Received: from mx08-00178001.pphosted.com ([91.207.212.93]:13158 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1729466AbfJCKee (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 06:33:59 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x93ATUCo083155;
-        Thu, 3 Oct 2019 10:32:14 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=corp-2019-08-05;
- bh=cZCgxtrTVQUR9UXEkShpmcGIZDAsL44okcToKuK+8qM=;
- b=mMT1BSH67l81mw8APcVvmvqvzBn4HaIUb8AwVq53W1eYXnWcYz7dP7BHkD5i2NhP0x6R
- e9in79ditV4+ijYCEPH/Sb5Zh8vKHLklp5h/9I29y7E7oxtpx/5K/Djtjx5Z22hwiXsk
- VI6BdfbL4I+iZpSsDf9mD7EPG1ZyiEPceNcBEnE2jEahYOJ29wAy+b7bvF5yg3Z8blfs
- qQIvdVBHgmSJrtF0xVs+iwrupa4y7qQwFrm9AoyWuEB8N9Zbpoz0nybas2tVU2TV+kZu
- sIhPhywcxLe6Sygjf0wFMj3jo5U9Emxy/gy/NboH/9oQwsDp9VrqxJEJ/HbIrRhTeJbx 1Q== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by userp2130.oracle.com with ESMTP id 2v9xxv2ypf-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 03 Oct 2019 10:32:14 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x93ATMpA101354;
-        Thu, 3 Oct 2019 10:32:13 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by aserp3020.oracle.com with ESMTP id 2vckyqj1gh-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 03 Oct 2019 10:32:13 +0000
-Received: from abhmp0001.oracle.com (abhmp0001.oracle.com [141.146.116.7])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x93AWCCa030925;
-        Thu, 3 Oct 2019 10:32:12 GMT
-Received: from [10.191.0.240] (/10.191.0.240)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Thu, 03 Oct 2019 03:32:12 -0700
-Subject: Re: [PATCH v3 2/4] x86/kvm: Change print code to use pr_*() format
-To:     Sean Christopherson <sean.j.christopherson@intel.com>
-Cc:     linux-kernel@vger.kernel.org, vkuznets@redhat.com,
-        linux-hyperv@vger.kernel.org, kvm@vger.kernel.org,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Radim Krcmar <rkrcmar@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>
-References: <1569847479-13201-1-git-send-email-zhenzhong.duan@oracle.com>
- <1569847479-13201-3-git-send-email-zhenzhong.duan@oracle.com>
- <20191002171551.GC9615@linux.intel.com>
-From:   Zhenzhong Duan <zhenzhong.duan@oracle.com>
-Organization: Oracle Corporation
-Message-ID: <a7d2623a-c6a6-cd68-5b8e-ed37a0cc9178@oracle.com>
-Date:   Thu, 3 Oct 2019 18:32:08 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Thu, 3 Oct 2019 06:34:34 -0400
+Received: from pps.filterd (m0046660.ppops.net [127.0.0.1])
+        by mx08-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id x93AVScS009886;
+        Thu, 3 Oct 2019 12:34:23 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=subject : to : references
+ : from : message-id : date : mime-version : in-reply-to : content-type :
+ content-transfer-encoding; s=STMicroelectronics;
+ bh=lzOYBhAfnBcaEOuQ4FsCPxcaUazDlQqNyGCAqbms35c=;
+ b=UuKcnYOLaOGuL0Jnl42Nuj/vTBvssVeWY0GmhV75H7g3Z264h+YwXcqzvw2iXzK8vJo8
+ XgXG/HO97QayKRMm8RvzDS2M3KSGkpxwU3kJq/sed2nnwa2BV1c+w+IvUtxb7THmrPat
+ /oGOPZibvOgKNii7sPgUnY3tCLsHWvQihDsWF/iD9KOgx1awwEZN8Lj9u/KQsChjcncY
+ g7l3ba3b9jOg57BvDktTDWfHaXlIWa+5I4wWwFqcVylfYo5zmezCc433OG9az9X3q5Tg
+ Dcoa4OPHaWrdMo4XZWCrtqquH367Gu6izJYbARSR9MWtQPgVtUHw5L3uL6I5j8uLwTSq hw== 
+Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
+        by mx08-00178001.pphosted.com with ESMTP id 2v9vnam43h-1
+        (version=TLSv1 cipher=ECDHE-RSA-AES256-SHA bits=256 verify=NOT);
+        Thu, 03 Oct 2019 12:34:23 +0200
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id A1C3B4C;
+        Thu,  3 Oct 2019 10:34:19 +0000 (GMT)
+Received: from Webmail-eu.st.com (sfhdag3node2.st.com [10.75.127.8])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 9DD1F2B9881;
+        Thu,  3 Oct 2019 12:34:18 +0200 (CEST)
+Received: from lmecxl0912.lme.st.com (10.75.127.50) by SFHDAG3NODE2.st.com
+ (10.75.127.8) with Microsoft SMTP Server (TLS) id 15.0.1347.2; Thu, 3 Oct
+ 2019 12:34:18 +0200
+Subject: Re: [PATCH] ARM: dts: stm32: add focaltech touchscreen on
+ stm32mp157c-dk2 board
+To:     =?UTF-8?Q?Yannick_Fertr=c3=a9?= <yannick.fertre@st.com>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        Benjamin Gaignard <benjamin.gaignard@st.com>,
+        Philippe Cornu <philippe.cornu@st.com>,
+        Fabrice Gasnier <fabrice.gasnier@st.com>
+References: <1569854751-22337-1-git-send-email-yannick.fertre@st.com>
+From:   Alexandre Torgue <alexandre.torgue@st.com>
+Message-ID: <09ad1310-ebc5-7a41-7af6-cdef79f20802@st.com>
+Date:   Thu, 3 Oct 2019 12:34:17 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-In-Reply-To: <20191002171551.GC9615@linux.intel.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <1569854751-22337-1-git-send-email-yannick.fertre@st.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
 Content-Language: en-US
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9398 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1908290000 definitions=main-1910030096
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9398 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1908290000
- definitions=main-1910030096
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.75.127.50]
+X-ClientProxiedBy: SFHDAG6NODE1.st.com (10.75.127.16) To SFHDAG3NODE2.st.com
+ (10.75.127.8)
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,1.0.8
+ definitions=2019-10-03_04:2019-10-03,2019-10-03 signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019/10/3 1:15, Sean Christopherson wrote:
+Hi Yannick
 
-> On Mon, Sep 30, 2019 at 08:44:37PM +0800, Zhenzhong Duan wrote:
->> pr_*() is preferred than printk(KERN_* ...), after change all the print
->> in arch/x86/kernel/kvm.c will have "KVM: xxx" style.
->>
->> No functional change.
->>
->> Suggested-by: Vitaly Kuznetsov<vkuznets@redhat.com>
-> This wasn't really suggested by Vitaly, he just requested it be done in a
-> separate patch.
+On 9/30/19 4:45 PM, Yannick Fertré wrote:
+> Enable focaltech ft6236 touchscreen on STM32MP157C-DK2 board.
+> This device supports 2 different addresses (0x2a and 0x38)
+> depending on the display  board version (MB1407).
+> 
+> Signed-off-by: Yannick Fertré <yannick.fertre@st.com>
+> ---
+>   arch/arm/boot/dts/stm32mp157c-dk2.dts | 23 +++++++++++++++++++++++
+>   1 file changed, 23 insertions(+)
+> 
+> diff --git a/arch/arm/boot/dts/stm32mp157c-dk2.dts b/arch/arm/boot/dts/stm32mp157c-dk2.dts
+> index 20ea601..527bb75 100644
+> --- a/arch/arm/boot/dts/stm32mp157c-dk2.dts
+> +++ b/arch/arm/boot/dts/stm32mp157c-dk2.dts
+> @@ -61,6 +61,29 @@
+>   	};
+>   };
+>   
+> +&i2c1 {
+> +	touchscreen@2a {
+> +		compatible = "focaltech,ft6236";
+> +		reg = <0x2a>;
+> +		interrupts = <2 2>;
+> +		interrupt-parent = <&gpiof>;
+> +		interrupt-controller;
+> +		touchscreen-size-x = <480>;
+> +		touchscreen-size-y = <800>;
+> +		status = "okay";
+> +	};
+> +	touchscreen@38 {
+> +		compatible = "focaltech,ft6236";
+> +		reg = <0x38>;
+> +		interrupts = <2 2>;
+> +		interrupt-parent = <&gpiof>;
+> +		interrupt-controller;
+> +		touchscreen-size-x = <480>;
+> +		touchscreen-size-y = <800>;
+> +		status = "okay";
+> +	};
+> +};
 
-Will fix.
+I'm not confident by this duplication. We should only support the latest 
+revision of the MB1407. I understand the need but my fear is to 
+duplicate this node each time we have a new revision (and imagine if we 
+do that for all i2c devices).
 
->
->> Signed-off-by: Zhenzhong Duan<zhenzhong.duan@oracle.com>
->> Cc: Paolo Bonzini<pbonzini@redhat.com>
->> Cc: Radim Krcmar<rkrcmar@redhat.com>
->> Cc: Sean Christopherson<sean.j.christopherson@intel.com>
->> Cc: Vitaly Kuznetsov<vkuznets@redhat.com>
->> Cc: Wanpeng Li<wanpengli@tencent.com>
->> Cc: Jim Mattson<jmattson@google.com>
->> Cc: Joerg Roedel<joro@8bytes.org>
->> Cc: Thomas Gleixner<tglx@linutronix.de>
->> Cc: Ingo Molnar<mingo@redhat.com>
->> Cc: Borislav Petkov<bp@alien8.de>
->> Cc: "H. Peter Anvin"<hpa@zytor.com>
->> ---
->>   arch/x86/kernel/kvm.c | 24 ++++++++++++------------
->>   1 file changed, 12 insertions(+), 12 deletions(-)
->>
->> diff --git a/arch/x86/kernel/kvm.c b/arch/x86/kernel/kvm.c
->> index a4f108d..ce4f578 100644
->> --- a/arch/x86/kernel/kvm.c
->> +++ b/arch/x86/kernel/kvm.c
->> @@ -7,6 +7,8 @@
->>    *   Authors: Anthony Liguori<aliguori@us.ibm.com>
->>    */
->>   
->> +#define pr_fmt(fmt) "KVM: " fmt
-> Not a fan of "KVM" as the prefix as it's easily confused with KVM the
-> hypervisor.  Maybe "kvm_guest"?
+regards
+alex
 
-Yeah, looks better, will change to"kvm_guest". Thanks
 
-Zhenzhong
-
+>   &ltdc {
+>   	status = "okay";
+>   
+> 
