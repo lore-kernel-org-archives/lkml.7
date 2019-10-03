@@ -2,120 +2,102 @@ Return-Path: <SRS0=6dNS=X4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA86AC4360C
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 00:19:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CEC02C4360C
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 00:19:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 80840222C2
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 00:19:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A0D67222C0
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 00:19:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="QVW9Ca6u"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="UyRUiqxp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729529AbfJCATR (ORCPT
+        id S1729553AbfJCATz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Oct 2019 20:19:17 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:36143 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729403AbfJCATR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Oct 2019 20:19:17 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 46kDC61mRlz9sP7;
-        Thu,  3 Oct 2019 10:19:14 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1570061954;
-        bh=j0/8PDAz9u0mCIgmnUYn4sa6fAVrE3H3mjWMLrHDgmQ=;
-        h=Date:From:To:Cc:Subject:From;
-        b=QVW9Ca6u4i8N5H17DSouB++CdBy03SF22BZhYF2Ze8/YZnYZ7jDmL/dz4Zy0+kbjy
-         dDaMvbhJAm33hZZ4MNXx69Va20HT/DpLTIKjtWEwUHkvv1sP0o1833XwlUYAjYxqCY
-         rQMjPTBb+eSxOm2xeAxnEAOl/0SeF+O16i+U8KJvZb7ti+MAxGvl/hTp+lzyJzMUee
-         R3ptB0AXRd/Bmr14ohZkoboWBPmlLl7qYKVWcrq6x6Y8VRi063ZWkIAxhwIWY8K/U0
-         WjkHEhKIfOF6C5d0a6tkBLJojvoAadlG2Hhn01VGMtCZhv8iXqWrp4ydVjffWSNa5k
-         U5JRiVTR+AxqA==
-Date:   Thu, 3 Oct 2019 10:19:01 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Alex Deucher <alexdeucher@gmail.com>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Jason Gunthorpe <jgg@mellanox.com>,
-        Yong Zhao <Yong.Zhao@amd.com>
-Subject: linux-next: manual merge of the amdgpu tree with Linus' tree
-Message-ID: <20191003101901.67efa929@canb.auug.org.au>
+        Wed, 2 Oct 2019 20:19:55 -0400
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:35027 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726898AbfJCATz (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 2 Oct 2019 20:19:55 -0400
+Received: by mail-wm1-f67.google.com with SMTP id y21so644959wmi.0
+        for <linux-kernel@vger.kernel.org>; Wed, 02 Oct 2019 17:19:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=otXrdRXRXX4CQWq3GYXb5YP6U6iBo7U72/9DY4vWCe8=;
+        b=UyRUiqxpxePfHhLvHWalEtfH7bXcfip6Jpuw1CuN4CME/z2VjKvnYoiACUL8njpxWx
+         NrFj3wRuC+4G387TGIaHSpAOPY+RzGZ4sS0j/azLBk/U985whs44i6Y3Q8GidUtPoAtr
+         gPg9sFSMc6bNH86zfYj2HsjOVmJbhRxv5A2Dc=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=otXrdRXRXX4CQWq3GYXb5YP6U6iBo7U72/9DY4vWCe8=;
+        b=s+3iz4pE7yYnKUE/FPO0+VMqC9Ytn+MPQfC218B20eek9gJ7nYOZuEFbDGTEiQpmYh
+         DZYJiD59uWCNj3lhRPWltNlj1hmS8ntPnf1J5lXSpIG0D29k7e/nK2jQmV5MrcJDUFvn
+         TPey2Vxzr9CRYgfm5aO5KTnsE+PDgwiY+Ozu8s5s5DxBlccD2xt7ROGwaERz2AzrvRKu
+         1Cvt9TOVWo98ckQcFt4DFpXXcjgYIMtiW9B5fGkvrlNucyXWIYFN9+nZ3sb2hlNIdt0L
+         RO4CBo6K3QeNvp00HkKfV9i8kU7MDwj273+vOxGou+gb4o0/dmfLlqV/b+80nb2QPAQ0
+         P67g==
+X-Gm-Message-State: APjAAAV75jxE8+0wi50vHng3QYu1xjILe+KNA1xkdi+RqlSNIcmeLOhk
+        N2irOxaks4E5/6q5G+roBwaqnil/hwf+1VeKXJpy1Q==
+X-Google-Smtp-Source: APXvYqxalUowEr9ft2/u7jrMhV84UjQI79UjdzbXbSZaI9zycwf1BjEeLazp7AlXXo82ElFFmqdBxB6sMQbjZwxUAj0=
+X-Received: by 2002:a05:600c:24cf:: with SMTP id 15mr4781220wmu.139.1570061993266;
+ Wed, 02 Oct 2019 17:19:53 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/Z4xOnbbIMfNja5oGok1Aohh";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+References: <20191001113307.27796-1-bjorn.topel@gmail.com> <20191001113307.27796-3-bjorn.topel@gmail.com>
+ <CAPhsuW627h-Sf8uCpaE4eyu+wpkOPK+6eXkOhwMBnvFVVDQdKQ@mail.gmail.com>
+In-Reply-To: <CAPhsuW627h-Sf8uCpaE4eyu+wpkOPK+6eXkOhwMBnvFVVDQdKQ@mail.gmail.com>
+From:   KP Singh <kpsingh@chromium.org>
+Date:   Thu, 3 Oct 2019 02:19:42 +0200
+Message-ID: <CACYkzJ6R4bY2B61fC-EYGn0f-osPOVrZEJsatWyJRFn9_1JN2A@mail.gmail.com>
+Subject: Re: [PATCH 2/2] samples/bpf: fix build by setting HAVE_ATTR_TEST to zero
+To:     Song Liu <liu.song.a23@gmail.com>
+Cc:     =?UTF-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn.topel@gmail.com>,
+        open list <linux-kernel@vger.kernel.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        =?UTF-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn.topel@intel.com>,
+        Networking <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        adrian.hunter@intel.com, Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/Z4xOnbbIMfNja5oGok1Aohh
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+Tested-by: KP Singh <kpsingh@google.com>
 
-Hi all,
+I can confirm that samples/bpf are building for me now (x86_64,
+clang-8) after applying this series and:
 
-Today's linux-next merge of the amdgpu tree got a conflict in:
+ * https://lore.kernel.org/bpf/CAPhsuW5c9v0OnU4g+eYkPjBCuNMjC_69pFhzr=3DnTf=
+DMAy4bK6w@mail.gmail.com
+ * https://lore.kernel.org/bpf/20191002191652.11432-1-kpsingh@chromium.org/
 
-  drivers/gpu/drm/amd/amdkfd/kfd_priv.h
+on the current bpf-next/master.
 
-between commit:
 
-  471f39020569 ("drm/amdkfd: use mmu_notifier_put")
+- KP
 
-from Linus' tree and commit:
-
-  4b3cece1863c ("drm/amdkfd: Use hex print format for pasid")
-
-from the amdgpu tree.
-
-I fixed it up (see below) and can carry the fix as necessary. This
-is now fixed as far as linux-next is concerned, but any non trivial
-conflicts should be mentioned to your upstream maintainer when your tree
-is submitted for merging.  You may also want to consider cooperating
-with the maintainer of the conflicting tree to minimise any particularly
-complex conflicts.
-
---=20
-Cheers,
-Stephen Rothwell
-
-diff --cc drivers/gpu/drm/amd/amdkfd/kfd_priv.h
-index c89326125d71,fc8b81208368..000000000000
---- a/drivers/gpu/drm/amd/amdkfd/kfd_priv.h
-+++ b/drivers/gpu/drm/amd/amdkfd/kfd_priv.h
-@@@ -687,7 -688,10 +688,7 @@@ struct kfd_process=20
-  	/* We want to receive a notification when the mm_struct is destroyed */
-  	struct mmu_notifier mmu_notifier;
- =20
-- 	unsigned int pasid;
- -	/* Use for delayed freeing of kfd_process structure */
- -	struct rcu_head	rcu;
- -
-+ 	uint16_t pasid;
-  	unsigned int doorbell_index;
- =20
-  	/*
-
---Sig_/Z4xOnbbIMfNja5oGok1Aohh
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl2VPnUACgkQAVBC80lX
-0Gw1mwf/WjgCerrGOo0JXIahm9n+nUZ7Zwa8DHPNvuc3pK8XsGVADLei9vi7lyqy
-r4U0S1RwUr6QoNq0rsW23JrxmSIcQTr1Mmf4SNdKj0Bqag8eGs3WEHJ33JdYWN9v
-phmiCoMmd/kqwficHL6e8dA9IrH9LV2bCbb+3EkOuSYOCzpqCa1MlkDkNjT1mkQg
-hVeduENK6dKXNz671rUnTZKkbBhKoDd9t9Bq+oxcrYhkXLDq3s/Ijg/iEtOarBxR
-7Qr8I5tp8Bt4aysqbE4/4dl2iZL1BxT6zPbQ5FDU9U/IXd6n/6INbM6ncZLSpWwE
-utxDJAJvL14ZWyQdn63LRp/qQPaqwg==
-=ii+d
------END PGP SIGNATURE-----
-
---Sig_/Z4xOnbbIMfNja5oGok1Aohh--
+On Wed, Oct 2, 2019 at 11:00 PM Song Liu <liu.song.a23@gmail.com> wrote:
+>
+> On Tue, Oct 1, 2019 at 4:36 AM Bj=C3=B6rn T=C3=B6pel <bjorn.topel@gmail.c=
+om> wrote:
+> >
+> > From: Bj=C3=B6rn T=C3=B6pel <bjorn.topel@intel.com>
+> >
+> > To remove that test_attr__{enabled/open} are used by perf-sys.h, we
+> > set HAVE_ATTR_TEST to zero.
+> >
+> > Signed-off-by: Bj=C3=B6rn T=C3=B6pel <bjorn.topel@intel.com>
+>
+> Acked-by: Song Liu <songliubraving@fb.com>
