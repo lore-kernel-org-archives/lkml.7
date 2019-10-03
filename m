@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83A15C10F14
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:36:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2539C10F14
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:36:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5A0242133F
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:36:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6AF6A20830
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:36:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570120593;
-	bh=cbbUuwtBYjhOyA1uyjDaX4FUa7H3n8tt7l1MRUduojs=;
+	s=default; t=1570120602;
+	bh=aOmStEXpth9Ho7NutSuDgtWs7bvLiWs/8qUkr+s1Yvg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Kugbn71bYnxVsrino3v6OsiSvt8dn4dRVVrAtlG+5F+A7DtofXDgD8nwEk5KwCQBA
-	 wZBd17JWog/v0zzXaXXfrRa4rrQ00zJoWL/5IJAN7pB4+pPFXd10vzn+OYyyR+r4d6
-	 x4ZHgu1iF+He4FRK+E2QHtEIhOWuIR6qZEcVw84I=
+	b=sJ9u/u60TW/QlI4ERBBQIt+p6fxAa6ZT+IkELS6EGrGF736gIcsOSLFqWIVHm8gPh
+	 fd9hHOyuDc4OhlR8pbxyszVNwhWbT4ThR33Dv/mrfWU1HPWGtBLN+bqGhapa2sbFlf
+	 WPuyYn1UDF5rJ2ISq0ENbzOJbnwUtikuTVdWvaX0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403978AbfJCQgc (ORCPT
+        id S2404421AbfJCQgl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 12:36:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45586 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 12:36:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45868 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392233AbfJCQgY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:36:24 -0400
+        id S2404434AbfJCQgf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:36:35 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 60B6E2070B;
-        Thu,  3 Oct 2019 16:36:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id ED6E22086A;
+        Thu,  3 Oct 2019 16:36:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570120583;
-        bh=cbbUuwtBYjhOyA1uyjDaX4FUa7H3n8tt7l1MRUduojs=;
+        s=default; t=1570120594;
+        bh=aOmStEXpth9Ho7NutSuDgtWs7bvLiWs/8qUkr+s1Yvg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=njBHleoPPfTXjFNlNEgPVKHf56o/RJkXDitVtIcn+u8HRiMVEBWZzXeF+VEs4j367
-         4lgz14j+b/gnx1N7EMkv1zSpUlqkm2PK8jumtwWT2ZzEe3/S+nLmA8B82naYEzhHYn
-         rlmNFadW2TD9SJJvcYYOsOSnZoJhrb3czz+LCCQQ=
+        b=kyrlwBxpwMxKufYPe4mkpB78XlScWdwVymkRGRjEhHPAMFYk52ysXUCQwysVup6Zm
+         yg36SdF7thoglDhvm1KBwtleUN5tT3niRwNoBQbI9DsbbkK9zWff+7qgucA/ZbztgG
+         XHrMeWCvk15Si9jyMukKiNwT03nvxWKkOYzlcM2A=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Stefan Assmann <sassmann@kpanic.de>,
-        Andrew Bowers <andrewx.bowers@intel.com>,
-        Jeff Kirsher <jeffrey.t.kirsher@intel.com>
-Subject: [PATCH 5.2 275/313] i40e: check __I40E_VF_DISABLE bit in i40e_sync_filters_subtask
-Date:   Thu,  3 Oct 2019 17:54:13 +0200
-Message-Id: <20191003154600.124184166@linuxfoundation.org>
+        stable@vger.kernel.org, Steve French <stfrench@microsoft.com>,
+        Pavel Shilovsky <pshilov@microsoft.com>
+Subject: [PATCH 5.2 279/313] smb3: fix leak in "open on server" perf counter
+Date:   Thu,  3 Oct 2019 17:54:17 +0200
+Message-Id: <20191003154600.540731635@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191003154533.590915454@linuxfoundation.org>
 References: <20191003154533.590915454@linuxfoundation.org>
@@ -60,74 +59,61 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Stefan Assmann <sassmann@kpanic.de>
+From: Steve French <stfrench@microsoft.com>
 
-commit a7542b87607560d0b89e7ff81d870bd6ff8835cb upstream.
+commit d2f15428d6a0ebfc0edc364094d7c4a2de7037ed upstream.
 
-While testing VF spawn/destroy the following panic occurred.
+We were not bumping up the "open on server" (num_remote_opens)
+counter (in some cases) on opens of the share root so
+could end up showing as a negative value.
 
-BUG: unable to handle kernel NULL pointer dereference at 0000000000000029
-[...]
-Workqueue: i40e i40e_service_task [i40e]
-RIP: 0010:i40e_sync_vsi_filters+0x6fd/0xc60 [i40e]
-[...]
-Call Trace:
- ? __switch_to_asm+0x35/0x70
- ? __switch_to_asm+0x41/0x70
- ? __switch_to_asm+0x35/0x70
- ? _cond_resched+0x15/0x30
- i40e_sync_filters_subtask+0x56/0x70 [i40e]
- i40e_service_task+0x382/0x11b0 [i40e]
- ? __switch_to_asm+0x41/0x70
- ? __switch_to_asm+0x41/0x70
- process_one_work+0x1a7/0x3b0
- worker_thread+0x30/0x390
- ? create_worker+0x1a0/0x1a0
- kthread+0x112/0x130
- ? kthread_bind+0x30/0x30
- ret_from_fork+0x35/0x40
-
-Investigation revealed a race where pf->vf[vsi->vf_id].trusted may get
-accessed by the watchdog via i40e_sync_filters_subtask() although
-i40e_free_vfs() already free'd pf->vf.
-To avoid this the call to i40e_sync_vsi_filters() in
-i40e_sync_filters_subtask() needs to be guarded by __I40E_VF_DISABLE,
-which is also used by i40e_free_vfs().
-
-Note: put the __I40E_VF_DISABLE check after the
-__I40E_MACVLAN_SYNC_PENDING check as the latter is more likely to
-trigger.
-
-CC: stable@vger.kernel.org
-Signed-off-by: Stefan Assmann <sassmann@kpanic.de>
-Tested-by: Andrew Bowers <andrewx.bowers@intel.com>
-Signed-off-by: Jeff Kirsher <jeffrey.t.kirsher@intel.com>
+CC: Stable <stable@vger.kernel.org>
+Signed-off-by: Steve French <stfrench@microsoft.com>
+Reviewed-by: Pavel Shilovsky <pshilov@microsoft.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/net/ethernet/intel/i40e/i40e_main.c |    5 +++++
- 1 file changed, 5 insertions(+)
+ fs/cifs/smb2ops.c |    5 +++++
+ fs/cifs/smb2pdu.c |    1 +
+ 2 files changed, 6 insertions(+)
 
---- a/drivers/net/ethernet/intel/i40e/i40e_main.c
-+++ b/drivers/net/ethernet/intel/i40e/i40e_main.c
-@@ -2586,6 +2586,10 @@ static void i40e_sync_filters_subtask(st
- 		return;
- 	if (!test_and_clear_bit(__I40E_MACVLAN_SYNC_PENDING, pf->state))
- 		return;
-+	if (test_and_set_bit(__I40E_VF_DISABLE, pf->state)) {
-+		set_bit(__I40E_MACVLAN_SYNC_PENDING, pf->state);
-+		return;
-+	}
+--- a/fs/cifs/smb2ops.c
++++ b/fs/cifs/smb2ops.c
+@@ -743,6 +743,8 @@ int open_shroot(unsigned int xid, struct
+ 	if (rc)
+ 		goto oshr_exit;
  
- 	for (v = 0; v < pf->num_alloc_vsi; v++) {
- 		if (pf->vsi[v] &&
-@@ -2600,6 +2604,7 @@ static void i40e_sync_filters_subtask(st
- 			}
- 		}
- 	}
-+	clear_bit(__I40E_VF_DISABLE, pf->state);
- }
++	atomic_inc(&tcon->num_remote_opens);
++
+ 	o_rsp = (struct smb2_create_rsp *)rsp_iov[0].iov_base;
+ 	oparms.fid->persistent_fid = o_rsp->PersistentFileId;
+ 	oparms.fid->volatile_fid = o_rsp->VolatileFileId;
+@@ -1167,6 +1169,7 @@ smb2_set_ea(const unsigned int xid, stru
  
- /**
+ 	rc = compound_send_recv(xid, ses, flags, 3, rqst,
+ 				resp_buftype, rsp_iov);
++	/* no need to bump num_remote_opens because handle immediately closed */
+ 
+  sea_exit:
+ 	kfree(ea);
+@@ -1488,6 +1491,8 @@ smb2_ioctl_query_info(const unsigned int
+ 				resp_buftype, rsp_iov);
+ 	if (rc)
+ 		goto iqinf_exit;
++
++	/* No need to bump num_remote_opens since handle immediately closed */
+ 	if (qi.flags & PASSTHRU_FSCTL) {
+ 		pqi = (struct smb_query_info __user *)arg;
+ 		io_rsp = (struct smb2_ioctl_rsp *)rsp_iov[1].iov_base;
+--- a/fs/cifs/smb2pdu.c
++++ b/fs/cifs/smb2pdu.c
+@@ -2263,6 +2263,7 @@ int smb311_posix_mkdir(const unsigned in
+ 	rqst.rq_iov = iov;
+ 	rqst.rq_nvec = n_iov;
+ 
++	/* no need to inc num_remote_opens because we close it just below */
+ 	trace_smb3_posix_mkdir_enter(xid, tcon->tid, ses->Suid, CREATE_NOT_FILE,
+ 				    FILE_WRITE_ATTRIBUTES);
+ 	/* resource #4: response buffer */
 
 
