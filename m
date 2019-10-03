@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 11B6CC10F14
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:19:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A63BEC10F14
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:19:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C81C0215EA
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:19:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7576C215EA
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:19:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570119567;
-	bh=URUZzsuEtvmqgS69CvYyDYYGVRNJ0Jzif+eoUQ1PBvo=;
+	s=default; t=1570119569;
+	bh=T+aCyAiEDOzNUK91tdmqUu+c6rJ8cwy/8kf1dw1hA2g=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=t3G0E7NcNKc5uBwPn0QGB/sEPpAi/cm5J6Zm7bl3yFvcFbcDcQhK6viAg3fXbxxO0
-	 mhDB6blr/6R0vdzSGppbmRhsxEW4J03OG2mckIDOc1KstzyyZG+kz2phOBB1YRTdsU
-	 KurEQP47rbreRIReOTfitWe4U0MWwHNmsYPFvbPQ=
+	b=grXx0043v/PKa8lRZ34hq043dIa8EHIfC5+J/zkX5BE/6Z2wHHIibwWG0JA/WYbSo
+	 dFPPFAgEcrQRClUhJT7dRIPzUDS6JDenEjPAwwUt4mC/QPJiXHMPkYo2TcPK0tD50E
+	 BXFyGCyHmHTWRRFbBrG1EL/c7Mr1AmwPxmDqj6dI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389530AbfJCQT1 (ORCPT
+        id S2389543AbfJCQT2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 12:19:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46324 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 12:19:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46282 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387497AbfJCQTV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:19:21 -0400
+        id S2389491AbfJCQTS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:19:18 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BD0EB2054F;
-        Thu,  3 Oct 2019 16:19:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 371BD21783;
+        Thu,  3 Oct 2019 16:19:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570119561;
-        bh=URUZzsuEtvmqgS69CvYyDYYGVRNJ0Jzif+eoUQ1PBvo=;
+        s=default; t=1570119558;
+        bh=T+aCyAiEDOzNUK91tdmqUu+c6rJ8cwy/8kf1dw1hA2g=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=LjMnI3+nj6LVEp5O7KAsMdqFeFfecUu2MUy9oz5tTd2KfdJpPdlhYcUxub48IE8xd
-         fopLl8IQxUo7FGoZfshKM6OfDVYIMcqw0YX7lLMJhGomsS7OOofjhRAOJZsOpNv8Ji
-         WIM2V0wfe7wvpcsG4il79QXb8Oizf/bzXsLmNKd4=
+        b=CuTbhTTuoxiVBR3sgm05gDzZt6wEzpVKty55HqEZ9b1jAVfd5wCKxY5S5Yc65ikxi
+         y9RT4O7+E7/eFMaxTdZeNzyI0Zmh5nP/HiWi2ALqWMH5Weqgr88fGQ5KYK8+VlAEeT
+         CTjPcBeUz+1kM2lOSdatde9t9NI/ftUQlcaZbsVI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        James Morse <james.morse@arm.com>,
-        Will Deacon <will@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 109/211] arm64: kpti: ensure patched kernel text is fetched from PoU
-Date:   Thu,  3 Oct 2019 17:52:55 +0200
-Message-Id: <20191003154512.244293884@linuxfoundation.org>
+        stable@vger.kernel.org, djuran@redhat.com,
+        Neil Horman <nhorman@tuxdriver.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 108/211] x86/apic/vector: Warn when vector space exhaustion breaks affinity
+Date:   Thu,  3 Oct 2019 17:52:54 +0200
+Message-Id: <20191003154511.950306304@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191003154447.010950442@linuxfoundation.org>
 References: <20191003154447.010950442@linuxfoundation.org>
@@ -61,59 +61,62 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mark Rutland <mark.rutland@arm.com>
+From: Neil Horman <nhorman@tuxdriver.com>
 
-[ Upstream commit f32c7a8e45105bd0af76872bf6eef0438ff12fb2 ]
+[ Upstream commit 743dac494d61d991967ebcfab92e4f80dc7583b3 ]
 
-While the MMUs is disabled, I-cache speculation can result in
-instructions being fetched from the PoC. During boot we may patch
-instructions (e.g. for alternatives and jump labels), and these may be
-dirty at the PoU (and stale at the PoC).
+On x86, CPUs are limited in the number of interrupts they can have affined
+to them as they only support 256 interrupt vectors per CPU. 32 vectors are
+reserved for the CPU and the kernel reserves another 22 for internal
+purposes. That leaves 202 vectors for assignement to devices.
 
-Thus, while the MMU is disabled in the KPTI pagetable fixup code we may
-load stale instructions into the I-cache, potentially leading to
-subsequent crashes when executing regions of code which have been
-modified at runtime.
+When an interrupt is set up or the affinity is changed by the kernel or the
+administrator, the vector assignment code attempts to honor the requested
+affinity mask. If the vector space on the CPUs in that affinity mask is
+exhausted the code falls back to a wider set of CPUs and assigns a vector
+on a CPU outside of the requested affinity mask silently.
 
-Similarly to commit:
+While the effective affinity is reflected in the corresponding
+/proc/irq/$N/effective_affinity* files the silent breakage of the requested
+affinity can lead to unexpected behaviour for administrators.
 
-  8ec41987436d566f ("arm64: mm: ensure patched kernel text is fetched from PoU")
+Add a pr_warn() when this happens so that adminstrators get at least
+informed about it in the syslog.
 
-... we can invalidate the I-cache after enabling the MMU to prevent such
-issues.
+[ tglx: Massaged changelog and made the pr_warn() more informative ]
 
-The KPTI pagetable fixup code itself should be clean to the PoC per the
-boot protocol, so no maintenance is required for this code.
-
-Signed-off-by: Mark Rutland <mark.rutland@arm.com>
-Cc: Catalin Marinas <catalin.marinas@arm.com>
-Reviewed-by: James Morse <james.morse@arm.com>
-Signed-off-by: Will Deacon <will@kernel.org>
+Reported-by: djuran@redhat.com
+Signed-off-by: Neil Horman <nhorman@tuxdriver.com>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Tested-by: djuran@redhat.com
+Link: https://lkml.kernel.org/r/20190822143421.9535-1-nhorman@tuxdriver.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/mm/proc.S | 9 +++++++++
- 1 file changed, 9 insertions(+)
+ arch/x86/kernel/apic/vector.c | 11 +++++++++++
+ 1 file changed, 11 insertions(+)
 
-diff --git a/arch/arm64/mm/proc.S b/arch/arm64/mm/proc.S
-index 8cce091b6c21e..ec6aa18633162 100644
---- a/arch/arm64/mm/proc.S
-+++ b/arch/arm64/mm/proc.S
-@@ -294,6 +294,15 @@ skip_pgd:
- 	msr	sctlr_el1, x18
- 	isb
- 
-+	/*
-+	 * Invalidate the local I-cache so that any instructions fetched
-+	 * speculatively from the PoC are discarded, since they may have
-+	 * been dynamically patched at the PoU.
-+	 */
-+	ic	iallu
-+	dsb	nsh
-+	isb
+diff --git a/arch/x86/kernel/apic/vector.c b/arch/x86/kernel/apic/vector.c
+index 10e1d17aa0608..c352ca2e1456f 100644
+--- a/arch/x86/kernel/apic/vector.c
++++ b/arch/x86/kernel/apic/vector.c
+@@ -400,6 +400,17 @@ static int activate_reserved(struct irq_data *irqd)
+ 		if (!irqd_can_reserve(irqd))
+ 			apicd->can_reserve = false;
+ 	}
 +
- 	/* Set the flag to zero to indicate that we're all done */
- 	str	wzr, [flag_ptr]
- 	ret
++	/*
++	 * Check to ensure that the effective affinity mask is a subset
++	 * the user supplied affinity mask, and warn the user if it is not
++	 */
++	if (!cpumask_subset(irq_data_get_effective_affinity_mask(irqd),
++			    irq_data_get_affinity_mask(irqd))) {
++		pr_warn("irq %u: Affinity broken due to vector space exhaustion.\n",
++			irqd->irq);
++	}
++
+ 	return ret;
+ }
+ 
 -- 
 2.20.1
 
