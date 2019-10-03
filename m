@@ -2,136 +2,88 @@ Return-Path: <SRS0=6dNS=X4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 33B28C10F14
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 14:57:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF460C4CED1
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 15:00:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0CF4521783
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 14:57:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BAF6021A4C
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 15:00:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bI03SsN7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730158AbfJCO5k convert rfc822-to-8bit (ORCPT
+        id S1729159AbfJCPAW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 10:57:40 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:50271 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726364AbfJCO5k (ORCPT
+        Thu, 3 Oct 2019 11:00:22 -0400
+Received: from mail-lf1-f53.google.com ([209.85.167.53]:42834 "EHLO
+        mail-lf1-f53.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726393AbfJCPAV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 10:57:40 -0400
-Received: from mail-pg1-f200.google.com ([209.85.215.200])
-        by youngberry.canonical.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <kai.heng.feng@canonical.com>)
-        id 1iG2Xy-00004q-J6
-        for linux-kernel@vger.kernel.org; Thu, 03 Oct 2019 14:57:38 +0000
-Received: by mail-pg1-f200.google.com with SMTP id z7so2139504pgk.11
-        for <linux-kernel@vger.kernel.org>; Thu, 03 Oct 2019 07:57:38 -0700 (PDT)
+        Thu, 3 Oct 2019 11:00:21 -0400
+Received: by mail-lf1-f53.google.com with SMTP id c195so2088641lfg.9;
+        Thu, 03 Oct 2019 08:00:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=yB5LF7A305R8PQxrkpeVFlJLp/mPklNVDD54WJQ3Ii0=;
+        b=bI03SsN7PbRsIdC5K5W66wuY8OExs4aeA+s+J7CaHtb6wph3WYeZK1EJScZTY4gIME
+         X0ZUyq7PJBAI92QmtAidpMjwrvBisIRKPgpxjUCiMeiyoSoHmPYEAjnMAKpdbpVK3nxS
+         FLM7oQH7EMslWVCJVLpfZ+pwsWdvOa3mcw6DWgaTex5NtbeI+5HvgpH6jVHG6V95nIT1
+         o4XBQr3/q9x/nDv2XoNk0kABZZ5CdzkKOShuFjX52apaDR0T71qCkJygTm4PCSWoGxno
+         YzdURWV+htIoar7PqkPAa3xa/m2VzdZWe0e0AcpiXYotRBLXEMGjkCrNqwTWAYDhgLol
+         f6jQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=W0SWomT5SY0yDSTtHUSDJc9LHcZaOyfwcQXgQs9p9z4=;
-        b=pYkH9fwwoSXBo7fT5FfxZ9Ngk58OkMv54PMua7PqE6inJdbj31q3WooILFQy3wHnsW
-         wG9Mj9zcYr069Tiro50jiStNjZcSzUb4Pui93QeoC5DPhmwmNWxD2MdpGXYA7kWDI2IW
-         FQ4C/0oGw6HZ5waD3/HtlWn2JtWVJjaUYVCUVAI+qkU85R7fnBO75HzguncHN2vGrNAm
-         v3xk9P/0oUUYoOO5SYSTs68nIeqmFVzreNZpkjlJ1ID5ADWeTd/IHJN2LoT9AneF1/A8
-         FOuFRY5aARBryI8J2C7ej+s4//fgTJCBC1SvFx/DoRx93ZSNPksg/A9ZLXBjHTu02YFx
-         cb5w==
-X-Gm-Message-State: APjAAAWqgR2NySx3vG7F8NQeqqyka8aisZt4/9ESMU4ASvSeQFTIzh+P
-        1cZM2E0votcc+wVDsrOGf+LL4mqCYUTFz8HOIl8aPLnY+KYqm/3cbmKPbzdXyo1yl9DeuDuk0TS
-        YDsvY/RLOUr2ocQxTksVnMga+MU/y9974Gg/72Gfvxg==
-X-Received: by 2002:a62:2b4d:: with SMTP id r74mr11513014pfr.30.1570114657200;
-        Thu, 03 Oct 2019 07:57:37 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqygWXjUMR1GW5JvI0IYOkgqCblsfxeBPVrb6mAoWUgub2AC/J9+rFS9punoE4zVZDk2PoplcA==
-X-Received: by 2002:a62:2b4d:: with SMTP id r74mr11512986pfr.30.1570114656861;
-        Thu, 03 Oct 2019 07:57:36 -0700 (PDT)
-Received: from 2001-b011-380f-3c42-0c4b-be14-8894-cacf.dynamic-ip6.hinet.net (2001-b011-380f-3c42-0c4b-be14-8894-cacf.dynamic-ip6.hinet.net. [2001:b011:380f:3c42:c4b:be14:8894:cacf])
-        by smtp.gmail.com with ESMTPSA id p66sm3205097pfg.127.2019.10.03.07.57.35
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 03 Oct 2019 07:57:36 -0700 (PDT)
-Content-Type: text/plain;
-        charset=us-ascii
-Mime-Version: 1.0 (Mac OS X Mail 13.0 \(3594.4.18\))
-Subject: Re: [PATCH] Revert "usb: Avoid unnecessary LPM enabling and disabling
- during suspend and resume"
-From:   Kai-Heng Feng <kai.heng.feng@canonical.com>
-In-Reply-To: <Pine.LNX.4.44L0.1910031024410.1797-100000@iolanthe.rowland.org>
-Date:   Thu, 3 Oct 2019 22:57:33 +0800
-Cc:     mathias.nyman@intel.com, gregkh@linuxfoundation.org,
-        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Transfer-Encoding: 8BIT
-Message-Id: <E833DEE2-ADE1-436C-A342-427EA460F276@canonical.com>
-References: <Pine.LNX.4.44L0.1910031024410.1797-100000@iolanthe.rowland.org>
-To:     Alan Stern <stern@rowland.harvard.edu>
-X-Mailer: Apple Mail (2.3594.4.18)
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=yB5LF7A305R8PQxrkpeVFlJLp/mPklNVDD54WJQ3Ii0=;
+        b=r/x7IvSl4VIz+oLA10tiUa1/Q7TD+nTgJT8TU0OWnpM+WDaW2QV0QYLUgsqdAfaIv6
+         FxAOs9eSK6gE693EcpYXccxZCB387ItuTwK6Nw8qtzSVP0+Yi6VZFyCJzn6P0hq/TNo6
+         309E9YVc19bv5hZFJsAYb5lGAzs0YZNAl11XGD1SNhB2EuuE8mKXdLOhWPKRFR+1SUwH
+         NJaqpbX1+YauQ2cC7QTQB14y/FqLLjZlNZKsmeSEa5qZeYnXJOecEGHmR1Ne+Jbg59zJ
+         6dTGzY0Ma4v40sCjoB+zs0RW7KerLjsx6DfxYfyf7/zmseJqNaZ2gimZfhFUVHnzls6O
+         v01A==
+X-Gm-Message-State: APjAAAWFZiKBZ7MY8EXHfI4140igQPxMOSVGc3+G2g5sIC7cTMVG5POB
+        PPY43GutOvLxNtKqfByF0HGHNTtruhU5kaiZlSzXaNlsvCk=
+X-Google-Smtp-Source: APXvYqx5FRbSXns4apVBZQ+nkUILPeLrJUJeCZ+6rysm8ehC/28YFz+PSJywZXySb63DzBQT057IH95zcLV6PBS/ErE=
+X-Received: by 2002:a19:431e:: with SMTP id q30mr5984033lfa.171.1570114819456;
+ Thu, 03 Oct 2019 08:00:19 -0700 (PDT)
+MIME-Version: 1.0
+References: <20191001205203.4b1a5fb6@coco.lan> <20191002141359.30166-1-gonsolo@gmail.com>
+ <20191002141359.30166-2-gonsolo@gmail.com> <20191002142744.GA3475@gofer.mess.org>
+ <CANL0fFS9TGKJH2rfkXzak78BaLazTNO7GoZhSb4vLBsDrmz3FQ@mail.gmail.com>
+ <20191002150650.GA4227@gofer.mess.org> <CANL0fFRoL6NxOCbNC=XjQ6LDkeeqAayaLUbm9xARWX9ttqfPFg@mail.gmail.com>
+ <29ab2e43-4374-a3ea-6ae1-a4267867eaa4@jpvw.nl> <20191002154922.7f1cfc76@coco.lan>
+ <CANL0fFRJZBfEDWK_c2w1TomvB5-i4g09LopyJUbO5NtOwKdDTg@mail.gmail.com> <20191003080539.2b13c03b@coco.lan>
+In-Reply-To: <20191003080539.2b13c03b@coco.lan>
+From:   Gonsolo <gonsolo@gmail.com>
+Date:   Thu, 3 Oct 2019 17:00:08 +0200
+Message-ID: <CANL0fFSmvEEJhnA=qjTuEPr4N8q8eWLeYC5du+OoTMxe1Gnh5Q@mail.gmail.com>
+Subject: Re: [PATCH] si2157: Add support for Logilink VG0022A.
+To:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Cc:     JP <jp@jpvw.nl>, crope@iki.fi, Sean Young <sean@mess.org>,
+        linux-media@vger.kernel.org,
+        Linux Kernel <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+> So, I would add a msleep() somewhere after the firmware update.
 
+I tried that to no avail:
 
-> On Oct 3, 2019, at 22:26, Alan Stern <stern@rowland.harvard.edu> wrote:
-> 
-> On Thu, 3 Oct 2019, Kai-Heng Feng wrote:
-> 
->>> On Oct 2, 2019, at 23:47, Alan Stern <stern@rowland.harvard.edu> wrote:
->>> 
->>> On Wed, 2 Oct 2019, Kai-Heng Feng wrote:
->>> 
->>>> This reverts commit d590c23111505635e1beb01006612971e5ede8aa.
->>>> 
->>>> Dell WD15 dock has a topology like this:
->>>> /:  Bus 04.Port 1: Dev 1, Class=root_hub, Driver=xhci_hcd/2p, 10000M
->>>>   |__ Port 1: Dev 2, If 0, Class=Hub, Driver=hub/7p, 5000M
->>>>           |__ Port 2: Dev 3, If 0, Class=Vendor Specific Class, Driver=r8152, 5000M
->>>> 
->>>> Their IDs:
->>>> Bus 004 Device 001: ID 1d6b:0003 Linux Foundation 3.0 root hub
->>>> Bus 004 Device 002: ID 0424:5537 Standard Microsystems Corp.
->>>> Bus 004 Device 004: ID 0bda:8153 Realtek Semiconductor Corp.
->>>> 
->>>> Ethernet cannot be detected after plugging ethernet cable to the dock,
->>>> the hub and roothub get runtime resumed and runtime suspended
->>>> immediately:
->>>> ...
->>> 
->>>> After some trial and errors, the issue goes away if LPM on the SMSC hub
->>>> is disabled. Digging further, enabling and disabling LPM during runtime
->>>> resume and runtime suspend respectively can solve the issue.
->>>> 
->>>> So bring back the old LPM behavior, which the SMSC hub inside Dell WD15
->>>> depends on.
->>>> 
->>>> Fixes: d590c2311150 ("usb: Avoid unnecessary LPM enabling and disabling during suspend and resume")
->>>> Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
->>> 
->>> Maybe it would be better to have a VID/PID-specific quirk for this?
->> 
->> Re-reading the spec, I think we need some clarification:
->> "If the value is 3, then host software wants to selectively suspend the
->> device connected to this port. The hub shall transition the link to U3
->> from any of the other U states using allowed link state transitions.
->> If the port is not already in the U0 state, then it shall transition the
->> port to the U0 state and then initiate the transition to U3."
->> 
->> The phrase "then it shall transition the port to the U0 state" what does "it" here refer to?
->> Is it the hub or the software?
->> If it's the former then it's indeed a buggy hub, but if it's the latter I think reverting the commit is the right thing to do.
-> 
-> In my opinion, "it" here refers to the hub.  This is because of the 
-> parallel construction with the preceding sentence ("... shall 
-> transition the link/port"), which indicates that the subjects should be 
-> the same.
+        release_firmware(fw);
++       msleep(1000);
 
-Hmm, okay, this is ambiguous to a non-native speaker like me.
-I'll use a quirk instead.
+[  107.903918] si2157 2-0063: firmware version: \xff.\xff.255
+[  107.903920] si2157 2-0063: querying chip revision...
+[  107.906970] si2157 2-0063: chip revision: 255.255.255.255
 
-Kai-Heng
-
-> 
-> Alan Stern
-> 
-
+-- 
+g
