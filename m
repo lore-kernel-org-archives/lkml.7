@@ -6,53 +6,54 @@ X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 381A1C32792
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 08:00:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F4BEC10F14
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 08:01:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 12F7E21D81
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 08:00:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2860C21A4C
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 08:01:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728842AbfJCIAe (ORCPT
+        id S1728504AbfJCIBy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 04:00:34 -0400
-Received: from mga02.intel.com ([134.134.136.20]:61559 "EHLO mga02.intel.com"
+        Thu, 3 Oct 2019 04:01:54 -0400
+Received: from mga09.intel.com ([134.134.136.24]:19445 "EHLO mga09.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727368AbfJCIAd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 04:00:33 -0400
+        id S1727368AbfJCIBy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 04:01:54 -0400
 X-Amp-Result: UNKNOWN
 X-Amp-Original-Verdict: FILE UNKNOWN
 X-Amp-File-Uploaded: False
 Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 03 Oct 2019 01:00:33 -0700
+  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 03 Oct 2019 01:01:53 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.67,251,1566889200"; 
-   d="scan'208";a="205560839"
+   d="scan'208";a="205561070"
 Received: from lahna.fi.intel.com (HELO lahna) ([10.237.72.157])
-  by fmsmga001.fm.intel.com with SMTP; 03 Oct 2019 01:00:29 -0700
-Received: by lahna (sSMTP sendmail emulation); Thu, 03 Oct 2019 11:00:28 +0300
-Date:   Thu, 3 Oct 2019 11:00:28 +0300
+  by fmsmga001.fm.intel.com with SMTP; 03 Oct 2019 01:01:49 -0700
+Received: by lahna (sSMTP sendmail emulation); Thu, 03 Oct 2019 11:01:48 +0300
+Date:   Thu, 3 Oct 2019 11:01:48 +0300
 From:   Mika Westerberg <mika.westerberg@linux.intel.com>
-To:     Mario.Limonciello@dell.com
-Cc:     yehezkelshb@gmail.com, linux-usb@vger.kernel.org,
-        andreas.noever@gmail.com, michael.jamet@intel.com,
-        rajmohan.mani@intel.com,
-        nicholas.johnson-opensource@outlook.com.au, lukas@wunner.de,
-        gregkh@linuxfoundation.org, stern@rowland.harvard.edu,
-        anthony.wong@canonical.com, linux-kernel@vger.kernel.org
-Subject: Re: [RFC PATCH 17/22] thunderbolt: Add initial support for USB4
-Message-ID: <20191003080028.GK2819@lahna.fi.intel.com>
+To:     "Mani, Rajmohan" <rajmohan.mani@intel.com>
+Cc:     "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
+        Andreas Noever <andreas.noever@gmail.com>,
+        "Jamet, Michael" <michael.jamet@intel.com>,
+        Yehezkel Bernat <YehezkelShB@gmail.com>,
+        Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>,
+        Lukas Wunner <lukas@wunner.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Alan Stern <stern@rowland.harvard.edu>,
+        "Mario.Limonciello@dell.com" <Mario.Limonciello@dell.com>,
+        Anthony Wong <anthony.wong@canonical.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [RFC PATCH 19/22] thunderbolt: Add support for Time Management
+ Unit
+Message-ID: <20191003080148.GL2819@lahna.fi.intel.com>
 References: <20191001113830.13028-1-mika.westerberg@linux.intel.com>
- <20191001113830.13028-18-mika.westerberg@linux.intel.com>
- <184c95fc476146939b240557e54ee2c9@AUSX13MPC105.AMER.DELL.COM>
- <5357cb96013445d79f5c2016df8a194e@AUSX13MPC105.AMER.DELL.COM>
- <20191002083913.GG2714@lahna.fi.intel.com>
- <767f2f97059e4e9f861080672aaa18d3@AUSX13MPC105.AMER.DELL.COM>
- <CA+CmpXs4YsTA3QnD77SaXq3mRYX6oFwx+pm-3wEErwkF-02M+A@mail.gmail.com>
- <bb84da73d1df468da1707a2af09eb2de@AUSX13MPC105.AMER.DELL.COM>
+ <20191001113830.13028-20-mika.westerberg@linux.intel.com>
+ <6F87890CF0F5204F892DEA1EF0D77A599B3F3DEC@fmsmsx122.amr.corp.intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <bb84da73d1df468da1707a2af09eb2de@AUSX13MPC105.AMER.DELL.COM>
+In-Reply-To: <6F87890CF0F5204F892DEA1EF0D77A599B3F3DEC@fmsmsx122.amr.corp.intel.com>
 Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
@@ -60,27 +61,11 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Oct 02, 2019 at 04:00:55PM +0000, Mario.Limonciello@dell.com wrote:
-> > It's not even "same location - another meaning", the vendor ID comes from the
-> > DROM section, so it takes a few internal jumps inside the NVM to find the
-> > location. One of the "pointers" or section headers will be broken for sure.
-> > 
-> > And after this, we need to find the NVM in LVFS and it has to pass validation in
-> > a few other locations. The chances are so low that I'd think it isn't worth
-> > worrying about it.
+On Wed, Oct 02, 2019 at 04:52:06PM +0000, Mani, Rajmohan wrote:
+> > +	/* Enable TMU if it is off */
+> > +	if (!tb_switch_tmu_is_enabled(tb->root_switch))
 > 
-> And now I remember why the back of my mind was having this thought of wanting
-> sysfs attribute in the first place.  The multiple jumps means that a lot more of the
-> NVM has to be dumped to get that data, which slows down fwupd startup significantly.
+> To be consistent with the implementation of tb_switch_tmu_disable(), should we
+> move the above check inside tb_switch_tmu_enable()?
 
-IIRC currently fwupd does two reads of total 128 bytes from the active
-NVM. Is that really slowing down fwupd startup significantly?
-
-> However the kernel has this information handy already from thunderbolt init and can
-> easily export an attribute which can then come from udev with no startup penalty.
-
-Indeed kernel has this information but I'm bit hesitant to add new
-attributes if that same information is already available to the
-userspace rather easily. IMHO we can always add this to the driver later
-as we learn new NVM formats that require more parsing from fwupd side
-slowing it down considerably.
+Yes, I think it makes sense.
