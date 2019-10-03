@@ -7,46 +7,48 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2424AC32792
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:09:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E52F6C4CED1
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:09:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E333220673
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:09:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B0B2820830
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:09:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570122574;
-	bh=yHF9RoZHB6Qm3RCjepEVe+GJFwIebmGSDxiefTu0FjM=;
+	s=default; t=1570122580;
+	bh=WfxDNclaPwQMRAUKsE1cmWMDs3Yv+dnYyxNB+8LnBpk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=AxbMIzGe1jgMpqDafbaGKwPfY2SBUM3IqMykJp3gI5TE1jid+NcKMZh49kXkl/Ypx
-	 47vss/7OBe59eNIjzC6p0VydPyyYGQBY5VEkJZIT3QDDX+uvXjnbJMi2odwj5Tvjs1
-	 H+pzu3q8GSJSIe+ZIa9vM/MT6h7XPOqGOF3eHPJM=
+	b=pCfjq4WYjUvrxPfXGhNfLa+vWBeM2fxaTTPsyXl25RmeLP/82krFnXVnID/QjSvPt
+	 O7Rt/C1WOo8YVUMbJ4wmGmP7t9s5pw0K3NjBOq2q/+wItR7M1pexeh9wgIxYGs68np
+	 Dy52joUG/c3SgnT0HTvU0RiNdv9X86+2lEt0jRos=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393418AbfJCRJd (ORCPT
+        id S2392383AbfJCRJj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 13:09:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42410 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 13:09:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42316 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404120AbfJCQeG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:34:06 -0400
+        id S1731952AbfJCQeE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:34:04 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BD143222CD;
-        Thu,  3 Oct 2019 16:34:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 12F2C2133F;
+        Thu,  3 Oct 2019 16:34:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570120446;
-        bh=yHF9RoZHB6Qm3RCjepEVe+GJFwIebmGSDxiefTu0FjM=;
+        s=default; t=1570120443;
+        bh=WfxDNclaPwQMRAUKsE1cmWMDs3Yv+dnYyxNB+8LnBpk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0wAxpSxgVR3USm/qzWJwWhz5EEk/MF0Y1MKFLkNR5d4IPcr65VRxuDZrTzGI5iNGD
-         j7eR1u/HgdDJQdhsZC0U5g+ZgolrYzBDIS90oxU4lbjjjBBxiEeqtCpQU1XD97Mmkq
-         dtlOSOzRbnAKLOPA5lB7Tx9/e5mffrarHm2gaR0o=
+        b=JNFTW0ZbNzTVdaXx9IC30sUcfTqhrAy4QqOG4NNf3zL7DVUUY+QmcXjP0acKtfZUm
+         HH8QPXYtwUmsXFA/ey7nZDYm4DKDbHg/Wh6yy/xbtfUq4zPVHW2tPxmXM8Zb/GX+oU
+         ALfGzejVIhEGWRr4tnz47c2ov5A6X8wjFUtyDpgk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Joonwon Kang <kjw1627@gmail.com>,
-        Kees Cook <keescook@chromium.org>
-Subject: [PATCH 5.2 225/313] randstruct: Check member structs in is_pure_ops_struct()
-Date:   Thu,  3 Oct 2019 17:53:23 +0200
-Message-Id: <20191003154555.184833719@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Jack Morgenstein <jackm@dev.mellanox.co.il>,
+        Leon Romanovsky <leonro@mellanox.com>,
+        Jason Gunthorpe <jgg@mellanox.com>
+Subject: [PATCH 5.2 224/313] RDMA: Fix double-free in srq creation error flow
+Date:   Thu,  3 Oct 2019 17:53:22 +0200
+Message-Id: <20191003154555.095265867@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191003154533.590915454@linuxfoundation.org>
 References: <20191003154533.590915454@linuxfoundation.org>
@@ -59,45 +61,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Joonwon Kang <kjw1627@gmail.com>
+From: Jack Morgenstein <jackm@dev.mellanox.co.il>
 
-commit 60f2c82ed20bde57c362e66f796cf9e0e38a6dbb upstream.
+commit 3eca7fc2d8d1275d9cf0c709f0937becbfcf6d96 upstream.
 
-While no uses in the kernel triggered this case, it was possible to have
-a false negative where a struct contains other structs which contain only
-function pointers because of unreachable code in is_pure_ops_struct().
+The cited commit introduced a double-free of the srq buffer in the error
+flow of procedure __uverbs_create_xsrq().
 
-Signed-off-by: Joonwon Kang <kjw1627@gmail.com>
-Link: https://lore.kernel.org/r/20190727155841.GA13586@host
-Fixes: 313dd1b62921 ("gcc-plugins: Add the randstruct plugin")
-Cc: stable@vger.kernel.org
-Signed-off-by: Kees Cook <keescook@chromium.org>
+The problem is that ib_destroy_srq_user() called in the error flow also
+frees the srq buffer.
+
+Thus, if uverbs_response() fails in __uverbs_create_srq(), the srq buffer
+will be freed twice.
+
+Cc: <stable@vger.kernel.org>
+Fixes: 68e326dea1db ("RDMA: Handle SRQ allocations by IB/core")
+Link: https://lore.kernel.org/r/20190916071154.20383-5-leon@kernel.org
+Signed-off-by: Jack Morgenstein <jackm@dev.mellanox.co.il>
+Signed-off-by: Leon Romanovsky <leonro@mellanox.com>
+Reviewed-by: Jason Gunthorpe <jgg@mellanox.com>
+Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- scripts/gcc-plugins/randomize_layout_plugin.c |   10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
+ drivers/infiniband/core/uverbs_cmd.c |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
---- a/scripts/gcc-plugins/randomize_layout_plugin.c
-+++ b/scripts/gcc-plugins/randomize_layout_plugin.c
-@@ -443,13 +443,13 @@ static int is_pure_ops_struct(const_tree
- 		if (node == fieldtype)
- 			continue;
+--- a/drivers/infiniband/core/uverbs_cmd.c
++++ b/drivers/infiniband/core/uverbs_cmd.c
+@@ -3477,7 +3477,8 @@ static int __uverbs_create_xsrq(struct u
  
--		if (!is_fptr(fieldtype))
--			return 0;
+ err_copy:
+ 	ib_destroy_srq_user(srq, uverbs_get_cleared_udata(attrs));
 -
--		if (code != RECORD_TYPE && code != UNION_TYPE)
-+		if (code == RECORD_TYPE || code == UNION_TYPE) {
-+			if (!is_pure_ops_struct(fieldtype))
-+				return 0;
- 			continue;
-+		}
- 
--		if (!is_pure_ops_struct(fieldtype))
-+		if (!is_fptr(fieldtype))
- 			return 0;
- 	}
- 
++	/* It was released in ib_destroy_srq_user */
++	srq = NULL;
+ err_free:
+ 	kfree(srq);
+ err_put:
 
 
