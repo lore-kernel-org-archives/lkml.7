@@ -7,46 +7,49 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C531C10F14
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:13:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 875F4C32792
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:13:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 427D020673
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:13:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 58E0B20673
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:13:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570122815;
-	bh=R84mSIxpEX1AcPIuhZJU0uwLWQyn3K4b+Mpvg9kxH0k=;
+	s=default; t=1570122828;
+	bh=fKDOifOsBYF0DMQPzAQ/DZmDI8+D34sivsnDb+H7i50=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=aPk+bkywAZvILJCK3MA6dsisO7hXxU8anSE+aLbhGeLG7ZkFM49N8wvtzm3nQH2Yn
-	 3VBnOwtsH0WAacHXYVCeaKV+WnEWcdMwZof73fDaUmhPiOm8y5pk3UQzQ0qDKd8etX
-	 ImT3MMTBXQYz975or2BfIqqVJzyKgVKUjDgpVijo=
+	b=m0QRPUnNTciFd20sLd1vm2YtjUvgpnvHi2T3gLS7HbW3TAnjUPmkgpE8BaSE0QXGg
+	 TpiHezwrVbM+CZevFS3nJ2lfk4tcW3Cnk/2tnA7aFgmKphhY8LxaPfaFkkysq5Bm8e
+	 /kWVYskKva6oyCMl6K41fJODH0bmqAqjpLlsk+5g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391505AbfJCQ2g (ORCPT
+        id S2391492AbfJCQ2O (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 12:28:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33026 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 12:28:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60570 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389346AbfJCQ2d (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:28:33 -0400
+        id S2390643AbfJCQ2L (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:28:11 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 67B822133F;
-        Thu,  3 Oct 2019 16:28:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0CEF32054F;
+        Thu,  3 Oct 2019 16:28:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570120111;
-        bh=R84mSIxpEX1AcPIuhZJU0uwLWQyn3K4b+Mpvg9kxH0k=;
+        s=default; t=1570120090;
+        bh=fKDOifOsBYF0DMQPzAQ/DZmDI8+D34sivsnDb+H7i50=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=NT6i6wtNm8SCLOgQduDjP8S0Uk7yLmvHyr1eGkSE1y8Kt0L3vdS3rq8b7ctiHE4ZC
-         xLfysMGmm7oz9+A4NPFEIu/Ymkr+z01KIHme+jqYa7iUdSDpHYVfLbSRs64EqKimWk
-         OLrV/h9DYSt6a5ApRxWtzSaUTm1+10AbZF+dBa/8=
+        b=Gi0Ygc5A84wazC8e8ZYGl7tzoqFn5HQTtJtmozCp3OumGN6tD7JJHpbfPOfgfJdTR
+         L185h27jU8ZkB2+OrXrUcMXPO2GTYMWhXx9X8TNCD/JzBoiCYk8xW7BOrgmZJhFjuG
+         xItNJLtzGKIVPrjJwleIIWkFAWCFa3N1vZN44hgs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
+        stable@vger.kernel.org,
+        Wolfram Sang <wsa+renesas@sang-engineering.com>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 101/313] ARM: xscale: fix multi-cpu compilation
-Date:   Thu,  3 Oct 2019 17:51:19 +0200
-Message-Id: <20191003154542.856795646@linuxfoundation.org>
+Subject: [PATCH 5.2 094/313] media: i2c: tda1997x: prevent potential NULL pointer access
+Date:   Thu,  3 Oct 2019 17:51:12 +0200
+Message-Id: <20191003154542.122641384@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191003154533.590915454@linuxfoundation.org>
 References: <20191003154533.590915454@linuxfoundation.org>
@@ -59,56 +62,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Arnd Bergmann <arnd@arndb.de>
+From: Wolfram Sang <wsa+renesas@sang-engineering.com>
 
-[ Upstream commit c7b68049943079550d4e6af0f10aa3aabd64131a ]
+[ Upstream commit 2f822f1da08ac5c93e351e79d22920f08fa51baf ]
 
-Building a combined ARMv4+XScale kernel produces these
-and other build failures:
+i2c_new_dummy() can fail returning a NULL pointer. This is not checked
+and the returned pointer is blindly used. Convert to
+devm_i2c_new_dummy_client() which returns an ERR_PTR and also add a
+validity check. Using devm_* here also fixes a leak because the dummy
+client was not released in the probe error path.
 
-/tmp/copypage-xscale-3aa821.s: Assembler messages:
-/tmp/copypage-xscale-3aa821.s:167: Error: selected processor does not support `pld [r7,#0]' in ARM mode
-/tmp/copypage-xscale-3aa821.s:168: Error: selected processor does not support `pld [r7,#32]' in ARM mode
-/tmp/copypage-xscale-3aa821.s:169: Error: selected processor does not support `pld [r1,#0]' in ARM mode
-/tmp/copypage-xscale-3aa821.s:170: Error: selected processor does not support `pld [r1,#32]' in ARM mode
-/tmp/copypage-xscale-3aa821.s:171: Error: selected processor does not support `pld [r7,#64]' in ARM mode
-/tmp/copypage-xscale-3aa821.s:176: Error: selected processor does not support `ldrd r4,r5,[r7],#8' in ARM mode
-/tmp/copypage-xscale-3aa821.s:180: Error: selected processor does not support `strd r4,r5,[r1],#8' in ARM mode
-
-Add an explict .arch armv5 in the inline assembly to allow the ARMv5
-specific instructions regardless of the compiler -march= target.
-
-Link: https://lore.kernel.org/r/20190809163334.489360-5-arnd@arndb.de
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
+Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/mm/copypage-xscale.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ drivers/media/i2c/tda1997x.c | 9 +++++++--
+ 1 file changed, 7 insertions(+), 2 deletions(-)
 
-diff --git a/arch/arm/mm/copypage-xscale.c b/arch/arm/mm/copypage-xscale.c
-index 61d834157bc05..382e1c2855e85 100644
---- a/arch/arm/mm/copypage-xscale.c
-+++ b/arch/arm/mm/copypage-xscale.c
-@@ -42,6 +42,7 @@ static void mc_copy_user_page(void *from, void *to)
- 	 * when prefetching destination as well.  (NP)
- 	 */
- 	asm volatile ("\
-+.arch xscale					\n\
- 	pld	[%0, #0]			\n\
- 	pld	[%0, #32]			\n\
- 	pld	[%1, #0]			\n\
-@@ -106,8 +107,9 @@ void
- xscale_mc_clear_user_highpage(struct page *page, unsigned long vaddr)
- {
- 	void *ptr, *kaddr = kmap_atomic(page);
--	asm volatile(
--	"mov	r1, %2				\n\
-+	asm volatile("\
-+.arch xscale					\n\
-+	mov	r1, %2				\n\
- 	mov	r2, #0				\n\
- 	mov	r3, #0				\n\
- 1:	mov	ip, %0				\n\
+diff --git a/drivers/media/i2c/tda1997x.c b/drivers/media/i2c/tda1997x.c
+index a62ede0966361..5e68182001ecc 100644
+--- a/drivers/media/i2c/tda1997x.c
++++ b/drivers/media/i2c/tda1997x.c
+@@ -2691,7 +2691,13 @@ static int tda1997x_probe(struct i2c_client *client,
+ 	}
+ 
+ 	ret = 0x34 + ((io_read(sd, REG_SLAVE_ADDR)>>4) & 0x03);
+-	state->client_cec = i2c_new_dummy(client->adapter, ret);
++	state->client_cec = devm_i2c_new_dummy_device(&client->dev,
++						      client->adapter, ret);
++	if (IS_ERR(state->client_cec)) {
++		ret = PTR_ERR(state->client_cec);
++		goto err_free_mutex;
++	}
++
+ 	v4l_info(client, "CEC slave address 0x%02x\n", ret);
+ 
+ 	ret = tda1997x_core_init(sd);
+@@ -2798,7 +2804,6 @@ static int tda1997x_remove(struct i2c_client *client)
+ 	media_entity_cleanup(&sd->entity);
+ 	v4l2_ctrl_handler_free(&state->hdl);
+ 	regulator_bulk_disable(TDA1997X_NUM_SUPPLIES, state->supplies);
+-	i2c_unregister_device(state->client_cec);
+ 	cancel_delayed_work(&state->delayed_work_enable_hpd);
+ 	mutex_destroy(&state->page_lock);
+ 	mutex_destroy(&state->lock);
 -- 
 2.20.1
 
