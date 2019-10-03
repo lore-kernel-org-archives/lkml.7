@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 63E12C32792
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:18:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A077C10F14
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:18:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2D85120865
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:18:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C45FB21783
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:18:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570119499;
-	bh=n46A0WxBsaP3OlEwVOYLlKlMlSHCyjYYFsBf+0xaCu4=;
+	s=default; t=1570119503;
+	bh=CQ1VJV5SGEcxU1DDwi4WGZ9oGRxifBDjq7NGuSu/3LU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=HLRkkT8rsNZKQe5J9smpgvBecJUNH9bliumJV4e0UP41HyE9oTNNbdTLez4ZUeefC
-	 TdaqjH3E7wzINnUh7Il5tqrJFlu1PHGmFNYkIhFO4aZXrDUEITLHR0iIAaUV1qZlpo
-	 90eQI00tr5oGGDa6SgtJvTnVKAesV9yvYcsi3ojk=
+	b=QwMpbOk6kmCj/D4ZqGwrtTLMYKJ1Jeh84MFuXgk9tieeCaSfmkdFlNkmSnnyY+cUi
+	 FuGYe+eApUGnIJOpKWfllV6d9zR/cs8Qp9EbAn4e3cgwhuecu8PoLWu0NMFmSV9Vv4
+	 daHltgwsRmQuJwfzDhGyGK09rryOusp3Vne2cmiM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732152AbfJCQSS (ORCPT
+        id S2388124AbfJCQSX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 12:18:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44580 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 12:18:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44856 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733160AbfJCQSI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:18:08 -0400
+        id S2387876AbfJCQST (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:18:19 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CF076222BE;
-        Thu,  3 Oct 2019 16:18:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 56E1D21783;
+        Thu,  3 Oct 2019 16:18:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570119488;
-        bh=n46A0WxBsaP3OlEwVOYLlKlMlSHCyjYYFsBf+0xaCu4=;
+        s=default; t=1570119498;
+        bh=CQ1VJV5SGEcxU1DDwi4WGZ9oGRxifBDjq7NGuSu/3LU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ceCVFHzjtiyIm1ymkgxUu3F0sy2FIGaNZC/BuwqfCrIuh03k07FlzLcLU/XMa2K+I
-         Bj2gjuXrULlb95p4tRX+vS3UsmsvxZQNsDU4NHNMUKyIOOqCxtMeZ1tQBvlIRRU8yA
-         dGMnNCmJk+iDBaLOwxoRUqg0sqaq0yfSprRVQiHY=
+        b=R+V91hcpsQiZ7i747xodx/V83ABWmb5EvtUE22r05RcH6RgvuuAzZkrGo0UpJebdP
+         b+zVVwbEqegZ4pYGreZU5Een9sPJrr6w0tnGWgz+ivvqM8U9bUqjTRUAwJpkP9Tzxj
+         7VSmm6ptq1RzTd3y0tuAhLrjuR1Lr/JTKTQZ4kEI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Sasha Levin <sashal@kernel.org>,
-        syzbot+79d18aac4bf1770dd050@syzkaller.appspotmail.com
-Subject: [PATCH 4.19 084/211] media: hdpvr: add terminating 0 at end of string
-Date:   Thu,  3 Oct 2019 17:52:30 +0200
-Message-Id: <20191003154506.337068277@linuxfoundation.org>
+        stable@vger.kernel.org, Wenwen Wang <wenwen@cs.uga.edu>,
+        Pavel Machek <pavel@ucw.cz>,
+        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 088/211] led: triggers: Fix a memory leak bug
+Date:   Thu,  3 Oct 2019 17:52:34 +0200
+Message-Id: <20191003154507.088788611@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191003154447.010950442@linuxfoundation.org>
 References: <20191003154447.010950442@linuxfoundation.org>
@@ -61,38 +61,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+From: Wenwen Wang <wenwen@cs.uga.edu>
 
-[ Upstream commit 8b8900b729e4f31f12ac1127bde137c775c327e6 ]
+[ Upstream commit 60e2dde1e91ae0addb21ac380cc36ebee7534e49 ]
 
-dev->usbc_buf was passed as argument for %s, but it was not safeguarded
-by a terminating 0.
+In led_trigger_set(), 'event' is allocated in kasprintf(). However, it is
+not deallocated in the following execution if the label 'err_activate' or
+'err_add_groups' is entered, leading to memory leaks. To fix this issue,
+free 'event' before returning the error.
 
-This caused this syzbot issue:
-
-https://syzkaller.appspot.com/bug?extid=79d18aac4bf1770dd050
-
-Reported-and-tested-by: syzbot+79d18aac4bf1770dd050@syzkaller.appspotmail.com
-
-Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Fixes: 52c47742f79d ("leds: triggers: send uevent when changing triggers")
+Signed-off-by: Wenwen Wang <wenwen@cs.uga.edu>
+Acked-by: Pavel Machek <pavel@ucw.cz>
+Signed-off-by: Jacek Anaszewski <jacek.anaszewski@gmail.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/usb/hdpvr/hdpvr-core.c | 1 +
+ drivers/leds/led-triggers.c | 1 +
  1 file changed, 1 insertion(+)
 
-diff --git a/drivers/media/usb/hdpvr/hdpvr-core.c b/drivers/media/usb/hdpvr/hdpvr-core.c
-index 46adee95f89d5..3316a17c141be 100644
---- a/drivers/media/usb/hdpvr/hdpvr-core.c
-+++ b/drivers/media/usb/hdpvr/hdpvr-core.c
-@@ -141,6 +141,7 @@ static int device_authorization(struct hdpvr_device *dev)
+diff --git a/drivers/leds/led-triggers.c b/drivers/leds/led-triggers.c
+index 17d73db1456eb..e4cb3811e82a3 100644
+--- a/drivers/leds/led-triggers.c
++++ b/drivers/leds/led-triggers.c
+@@ -177,6 +177,7 @@ int led_trigger_set(struct led_classdev *led_cdev, struct led_trigger *trig)
+ 	list_del(&led_cdev->trig_list);
+ 	write_unlock_irqrestore(&led_cdev->trigger->leddev_list_lock, flags);
+ 	led_set_brightness(led_cdev, LED_OFF);
++	kfree(event);
  
- 	dev->fw_ver = dev->usbc_buf[1];
- 
-+	dev->usbc_buf[46] = '\0';
- 	v4l2_info(&dev->v4l2_dev, "firmware version 0x%x dated %s\n",
- 			  dev->fw_ver, &dev->usbc_buf[2]);
- 
+ 	return ret;
+ }
 -- 
 2.20.1
 
