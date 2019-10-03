@@ -2,120 +2,134 @@ Return-Path: <SRS0=6dNS=X4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D457C32792
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 10:06:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C41EC4CED1
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 10:07:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E69C02086A
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 10:06:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="fnDbHZBC"
+	by mail.kernel.org (Postfix) with ESMTP id 4EA1E2086A
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 10:07:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728172AbfJCKGF (ORCPT
+        id S1728308AbfJCKHe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 06:06:05 -0400
-Received: from mx07-00178001.pphosted.com ([62.209.51.94]:13488 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725892AbfJCKGE (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 06:06:04 -0400
-Received: from pps.filterd (m0046668.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id x93A1X0C005362;
-        Thu, 3 Oct 2019 12:05:51 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
- : date : message-id : references : in-reply-to : content-type :
- content-transfer-encoding : mime-version; s=STMicroelectronics;
- bh=/wp1iPbxskdZoxALyqazsiyERNct5sj1Muer0F1tD74=;
- b=fnDbHZBC7gucaOq1OwiWvpk9mi5otnSna/X8G/DRKg97jhqQR+ap1O2bayscHekH9JBM
- z0qOfV6rZfg7gci5/bRttu8mkYRScTYbXp09AJid7ej1V8bXYpIaxxBaH5dwE5GtW59h
- Rhqztw09BN6gGMpoJirZh0XhjZpM9oN+Al2N46HtdrO5zA21+68yPBIQBww2wgmOiKMt
- o1f+9hgtzWQOai55THnJxEHM6yt9N/xEPLYxZXyeTaYDcNVN+ECzv3xp2ztZRwgODHQh
- MlcquGFHPBEpEUkdcqDZ+TqY/thYM37QSxZAiX2PMfbzYEmvupvHrNlsFBv2svFyRT/5 +g== 
-Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
-        by mx07-00178001.pphosted.com with ESMTP id 2vcem38t31-1
-        (version=TLSv1 cipher=ECDHE-RSA-AES256-SHA bits=256 verify=NOT);
-        Thu, 03 Oct 2019 12:05:51 +0200
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id 931DA4D;
-        Thu,  3 Oct 2019 10:05:47 +0000 (GMT)
-Received: from Webmail-eu.st.com (sfhdag3node1.st.com [10.75.127.7])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 4AF6C2B5CAA;
-        Thu,  3 Oct 2019 12:05:47 +0200 (CEST)
-Received: from SFHDAG5NODE1.st.com (10.75.127.13) by SFHDAG3NODE1.st.com
- (10.75.127.7) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 3 Oct
- 2019 12:05:46 +0200
-Received: from SFHDAG5NODE1.st.com ([fe80::cc53:528c:36c8:95f6]) by
- SFHDAG5NODE1.st.com ([fe80::cc53:528c:36c8:95f6%20]) with mapi id
- 15.00.1473.003; Thu, 3 Oct 2019 12:05:47 +0200
-From:   Gerald BAEZA <gerald.baeza@st.com>
-To:     Alexandre TORGUE <alexandre.torgue@st.com>,
-        Jonathan Corbet <corbet@lwn.net>
-CC:     "mcoquelin.stm32@gmail.com" <mcoquelin.stm32@gmail.com>,
-        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
-        "linux-stm32@st-md-mailman.stormreply.com" 
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH] Documentation: add link to stm32mp157 docs
-Thread-Topic: [PATCH] Documentation: add link to stm32mp157 docs
-Thread-Index: AQHVXNGu+WgWi0gJwE+sfJwWkTflzacPHSFxgDnL12A=
-Date:   Thu, 3 Oct 2019 10:05:46 +0000
-Message-ID: <8d097a0486e94257952600bf6d20975d@SFHDAG5NODE1.st.com>
-References: <1566908347-92201-1-git-send-email-gerald.baeza@st.com>
- <20190827074825.64a28e88@lwn.net>
- <5257eff7-418b-8e94-1ced-30718dd3f5dc@st.com>
-In-Reply-To: <5257eff7-418b-8e94-1ced-30718dd3f5dc@st.com>
-Accept-Language: fr-FR, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.75.127.44]
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Thu, 3 Oct 2019 06:07:34 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:36340 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726148AbfJCKHe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 06:07:34 -0400
+Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com [209.85.128.72])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 7BA23356C9
+        for <linux-kernel@vger.kernel.org>; Thu,  3 Oct 2019 10:07:33 +0000 (UTC)
+Received: by mail-wm1-f72.google.com with SMTP id z205so918266wmb.7
+        for <linux-kernel@vger.kernel.org>; Thu, 03 Oct 2019 03:07:33 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=5d9O4LoTQ3VNanjYlvKG9HY1oRDE8Vmjt7UY1ZS+X20=;
+        b=BZpZ4RT0jJ+MRZN8zeUgHvHK6qbYARwu/Kokh2BmLZvpT4ZaqPOY1GzPE3ptdA1T/B
+         FudV4XCHuqr5fxwRWNbFLDBcYV88u5S6DA2/EdI8t8ZYdJ8TWi2WdkcEVpCvIOd8pLop
+         nFfBG4UoRlE1FhuDWvREf/XBthpvMs0pXh/SkJRRXuCQYWlcaxZSMjRbl3mU+2bJoGI2
+         xZT01ZMC5B/MbMN/b5bv0wE1KwuO+mIBXJcX1APTMsmhC89S7YLjo8M50RLY97lPGVek
+         +2jQzY3uiq9ozkgokT+sYLyx7RcHryC1MfD6QNblbzYU3nAPd60Osalt7DLReW3419YW
+         qQvw==
+X-Gm-Message-State: APjAAAVS/ydOAszaTY+WD6DOQJpe0PcNk/4mIp+bj8dNfXwQDi+ounpV
+        IIe6w33KNv9bYptAbRs6TV32CgK93X+z5Xq1vrXovO1O+Ybtc/IFzP1GjwYyq1bjC517jAMvbmv
+        aJb9A9DpMYLgKWis2r3GvjkXN
+X-Received: by 2002:adf:f1c3:: with SMTP id z3mr6434314wro.147.1570097251812;
+        Thu, 03 Oct 2019 03:07:31 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqy46FajQ6RH+bkNlP2jtpMp+fUyzseehfvtwI3P6jr8sZxYZ9HXjJGs4NIMnX+0k/TvD9gVwQ==
+X-Received: by 2002:adf:f1c3:: with SMTP id z3mr6434286wro.147.1570097251554;
+        Thu, 03 Oct 2019 03:07:31 -0700 (PDT)
+Received: from minerva.redhat.com ([90.168.169.92])
+        by smtp.gmail.com with ESMTPSA id v7sm2435254wrr.4.2019.10.03.03.07.29
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 03 Oct 2019 03:07:30 -0700 (PDT)
+From:   Javier Martinez Canillas <javierm@redhat.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     Javier Martinez Canillas <javierm@redhat.com>,
+        Ivan Hu <ivan.hu@canonical.com>,
+        Laszlo Ersek <lersek@redhat.com>, linux-efi@vger.kernel.org,
+        Laura Abbott <labbott@redhat.com>,
+        Josh Boyer <jwboyer@redhat.com>,
+        Peter Jones <pjones@redhat.com>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Subject: [PATCH] efi/efi_test: require CAP_SYS_ADMIN to open the chardev
+Date:   Thu,  3 Oct 2019 12:07:12 +0200
+Message-Id: <20191003100712.31045-1-javierm@redhat.com>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,1.0.8
- definitions=2019-10-03_04:2019-10-01,2019-10-03 signatures=0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGkgSm9uYXRoYW4NCg0KPiBGcm9tOiBBbGV4YW5kcmUgVE9SR1VFIDxhbGV4YW5kcmUudG9yZ3Vl
-QHN0LmNvbT4NCj4gSGkgSm9uYXRoYW4sDQo+IA0KPiBPbiA4LzI3LzE5IDM6NDggUE0sIEpvbmF0
-aGFuIENvcmJldCB3cm90ZToNCj4gPiBPbiBUdWUsIDI3IEF1ZyAyMDE5IDEyOjE5OjMyICswMDAw
-DQo+ID4gR2VyYWxkIEJBRVpBIDxnZXJhbGQuYmFlemFAc3QuY29tPiB3cm90ZToNCj4gPg0KPiA+
-PiBMaW5rIHRvIHRoZSBvbmxpbmUgc3RtMzJtcDE1NyBkb2N1bWVudGF0aW9uIGFkZGVkIGluIHRo
-ZSBvdmVydmlldy4NCj4gPj4NCj4gPj4gU2lnbmVkLW9mZi1ieTogR2VyYWxkIEJhZXphIDxnZXJh
-bGQuYmFlemFAc3QuY29tPg0KPiA+PiAtLS0NCj4gPj4gICBEb2N1bWVudGF0aW9uL2FybS9zdG0z
-Mi9zdG0zMm1wMTU3LW92ZXJ2aWV3LnJzdCB8IDYgKysrKysrDQo+ID4+ICAgMSBmaWxlIGNoYW5n
-ZWQsIDYgaW5zZXJ0aW9ucygrKQ0KPiA+Pg0KPiA+PiBkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlv
-bi9hcm0vc3RtMzIvc3RtMzJtcDE1Ny1vdmVydmlldy5yc3QNCj4gPj4gYi9Eb2N1bWVudGF0aW9u
-L2FybS9zdG0zMi9zdG0zMm1wMTU3LW92ZXJ2aWV3LnJzdA0KPiA+PiBpbmRleCBmNjJmZGM4Li44
-ZDVhNDc2IDEwMDY0NA0KPiA+PiAtLS0gYS9Eb2N1bWVudGF0aW9uL2FybS9zdG0zMi9zdG0zMm1w
-MTU3LW92ZXJ2aWV3LnJzdA0KPiA+PiArKysgYi9Eb2N1bWVudGF0aW9uL2FybS9zdG0zMi9zdG0z
-Mm1wMTU3LW92ZXJ2aWV3LnJzdA0KPiA+PiBAQCAtMTQsNiArMTQsMTIgQEAgSXQgZmVhdHVyZXM6
-DQo+ID4+ICAgLSBTdGFuZGFyZCBjb25uZWN0aXZpdHksIHdpZGVseSBpbmhlcml0ZWQgZnJvbSB0
-aGUgU1RNMzIgTUNVIGZhbWlseQ0KPiA+PiAgIC0gQ29tcHJlaGVuc2l2ZSBzZWN1cml0eSBzdXBw
-b3J0DQo+ID4+DQo+ID4+ICtSZXNvdXJjZXMNCj4gPj4gKy0tLS0tLS0tLQ0KPiA+PiArDQo+ID4+
-ICtEYXRhc2hlZXQgYW5kIHJlZmVyZW5jZSBtYW51YWwgYXJlIHB1YmxpY2x5IGF2YWlsYWJsZSBv
-biBTVCB3ZWJzaXRlOg0KPiA+PiArLi4gX1NUTTMyTVAxNTc6DQo+ID4+ICtodHRwczovL3d3dy5z
-dC5jb20vZW4vbWljcm9jb250cm9sbGVycy0NCj4gbWljcm9wcm9jZXNzb3JzL3N0bTMybXAxNTcu
-aHQNCj4gPj4gK21sDQo+ID4+ICsNCj4gPg0KPiA+IEFkZGluZyB0aGUgVVJMIGlzIGEgZmluZSBp
-ZGVhLiAgQnV0IHlvdSBkb24ndCBuZWVkIHRoZSBleHRyYSBzeW50YXggdG8NCj4gPiBjcmVhdGUg
-YSBsaW5rIGlmIHlvdSdyZSBub3QgZ29pbmcgdG8gYWN0dWFsbHkgbWFrZSBhIGxpbmsgb3V0IG9m
-IGl0Lg0KPiA+IFNvIEknZCB0YWtlIHRoZSAiLi4gX1NUTTMyTVAxNTc6IiBwYXJ0IG91dCBhbmQg
-bGlmZSB3aWxsIGJlIGdvb2QuDQo+ID4NCj4gDQo+IFdlIGFsc28gZGlkIGl0IGZvciBvbGRlciBz
-dG0zMiBwcm9kdWN0LiBJZGVhIHdhcyB0byBub3QgaGF2ZSB0aGUgImZ1bGwiDQo+IGFkZHJlc3Mg
-YnV0IGp1c3QgYSBzaG9ydGN1dCBvZiB0aGUgbGluayB3aGVuIGh0bWwgZmlsZSBpcyByZWFkLiBJ
-dCBtYXliZSBtYWtlcw0KPiBubyBzZW5zID8gKGlmIHllcyB3ZSB3aWxsIGhhdmUgdG8gdXBkYXRl
-IG9sZGVyIHN0bTMyIG92ZXJ2aWV3IDopKQ0KDQpFeGFtcGxlIGluIGh0dHBzOi8vd3d3Lmtlcm5l
-bC5vcmcvZG9jL2h0bWwvbGF0ZXN0L2FybS9zdG0zMi9zdG0zMmg3NDMtb3ZlcnZpZXcuaHRtbA0K
-DQpEbyB5b3UgYWdyZWUgdG8gY29udGludWUgbGlrZSB0aGlzID8NCg0KQmVzdCByZWdhcmRzLA0K
-DQpHw6lyYWxkDQoNCj4gdGhhbmtzDQo+IEFsZXgNCj4gDQo+IA0KPiA+IFRoYW5rcywNCj4gPg0K
-PiA+IGpvbg0KPiA+DQo=
+The driver exposes EFI runtime services to user-space through an IOCTL
+interface, calling the EFI services function pointers directly without
+using the efivar API.
+
+Among other things the driver allows to read and write EFI variables and
+doesn't require CAP_SYS_ADMIN as is the case for the efivar sysfs driver.
+
+To make sure that unprivileged users won't be able to access the exposed
+EFI runtime services require CAP_SYS_ADMIN to open the character device,
+instead of just relying on the chardev file mode bits to prevent this.
+
+The main user of this driver is the fwts [0] tool, that already checks if
+the effective user ID is 0 and fails otherwise. So adding the requirement
+won't cause any regression to this tool.
+
+[0]: https://wiki.ubuntu.com/FirmwareTestSuite/Reference/uefivarinfo
+
+Signed-off-by: Javier Martinez Canillas <javierm@redhat.com>
+
+
+---
+
+Hello,
+
+We want to enable this driver in the Fedora kernel for testing purposes.
+
+Currently the GetVariable() UEFI runtime service is used (through the
+efivar sysfs interface) to test that OVMF is able to enter into SMM.
+
+But there's a proposal to add a UEFI variable cache outside of SMM, to
+speedup GetVariable() calls. So the plan is to call QueryVariableInfo()
+instead that's also read-only and sufficiently infrequently called that
+is not planned to be cached anytime soon.
+
+Building the efi_test module will allow us to call this EFI service by
+using the fwts uefivarinfo test. But we are worried that enabling this
+driver could open a new attack vector and lead to unprivileged users
+accessing the exposed EFI services.
+
+This is also consistent with the efivar driver since it also requires
+the CAP_SYS_ADMIN capability.
+
+Best regards,
+Javier
+
+ drivers/firmware/efi/test/efi_test.c | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/drivers/firmware/efi/test/efi_test.c b/drivers/firmware/efi/test/efi_test.c
+index 877745c3aaf..81de7374c42 100644
+--- a/drivers/firmware/efi/test/efi_test.c
++++ b/drivers/firmware/efi/test/efi_test.c
+@@ -717,6 +717,8 @@ static long efi_test_ioctl(struct file *file, unsigned int cmd,
+ 
+ static int efi_test_open(struct inode *inode, struct file *file)
+ {
++	if (!capable(CAP_SYS_ADMIN))
++		return -EACCES;
+ 	/*
+ 	 * nothing special to do here
+ 	 * We do accept multiple open files at the same time as we
+-- 
+2.21.0
+
