@@ -4,48 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EED82C10F14
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:56:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 84508C10F14
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:56:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B8C4120673
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:56:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4ED1C2070B
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:56:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570121768;
-	bh=224I4fzK4RB0xc3LTsfu0YpM9q/+ijxfotS1WpbM0Cs=;
+	s=default; t=1570121775;
+	bh=CHkZLjem3nkE1m3RRY4Ods+xDIlfZDJEQ8AWlDXFenE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=aVseGtQo++kSr+h4PaAboNjIlov6u2GKi29QlEMOFh3WhZqGfVMzjW4Bn8nvwkc/v
-	 a5k1/zpGXWQ0mbtvtXtuViSzqjhsn3nobio/XoyaLiNckjTAxyZ4o0NvvDP2CjGval
-	 Q+bZSGVLdzC6nyuML59tm0IX+EM97q8o6H9CfyLM=
+	b=ZuASN6xLJ96U0DnelZUaaxi6VevRWVl64obBC5cwGrXs1VyZvbdFme3yNNR6v4ofS
+	 fZAsxWa4Yd3mOXFrvPUVSJw02GbZenvtRkP8YytcwVylabyWzYQYkER4OUbTxYht1J
+	 Hrldl+ZbVaa1i3H7fUQg9Whz3b5EC39W7jMIne9c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406036AbfJCQvc (ORCPT
+        id S2393273AbfJCQ4O (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 12:51:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38908 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 12:56:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38852 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2405563AbfJCQv3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:51:29 -0400
+        id S2393150AbfJCQv0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:51:26 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D0255215EA;
-        Thu,  3 Oct 2019 16:51:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 37129222C2;
+        Thu,  3 Oct 2019 16:51:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570121488;
-        bh=224I4fzK4RB0xc3LTsfu0YpM9q/+ijxfotS1WpbM0Cs=;
+        s=default; t=1570121485;
+        bh=CHkZLjem3nkE1m3RRY4Ods+xDIlfZDJEQ8AWlDXFenE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jfRUUy/Lq6zPfSiZq/ZtwYYpANq/nr7vBz/rsJu5oORoEyvgIWKSQdKpUo2OgU+s8
-         c/BSF7wHzsl76RugShXq8X7I8ppugZor2DGnrfRmKaYXVlCzRQ01oUwbq5i7FcI3qW
-         fJlphKN1uvlD1qDEslI+BH2V1PD+NM+3N3obBHls=
+        b=0O3+SPqmlkdgM1q76S4VPNBNwFb+lgJ5MTIpqys+k2jOJzsATkcltaoOrhNIkO2Kq
+         o+8WKN6K4G57jfefjGqQC40MdQQH+qlu4DVFGDKTBvTslV6CwXJw/auuy8ofMcgwjp
+         FFJvP7AXfyiD4lf3X6XqZVw5WWRy0AaqWreOOZCI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Felix Fietkau <nbd@nbd.name>
-Subject: [PATCH 5.3 296/344] mt76: round up length on mt76_wr_copy
-Date:   Thu,  3 Oct 2019 17:54:21 +0200
-Message-Id: <20191003154608.802365355@linuxfoundation.org>
+        stable@vger.kernel.org, Dave Rodgman <dave.rodgman@arm.com>,
+        "Markus F.X.J. Oberhumer" <markus@oberhumer.com>,
+        Minchan Kim <minchan@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [PATCH 5.3 295/344] lib/lzo/lzo1x_compress.c: fix alignment bug in lzo-rle
+Date:   Thu,  3 Oct 2019 17:54:20 +0200
+Message-Id: <20191003154608.731764678@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191003154540.062170222@linuxfoundation.org>
 References: <20191003154540.062170222@linuxfoundation.org>
@@ -58,46 +62,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Felix Fietkau <nbd@nbd.name>
+From: Dave Rodgman <dave.rodgman@arm.com>
 
-commit 850e8f6fbd5d0003b0f1119d19a01c6fef1644e2 upstream.
+commit 09b35b4192f6682dff96a093ab1930998cdb73b4 upstream.
 
-When beacon length is not a multiple of 4, the beacon could be sent with
-the last 1-3 bytes corrupted. The skb data is guaranteed to have enough
-room for reading beyond the end, because it is always followed by
-skb_shared_info, so rounding up is safe.
-All other callers of mt76_wr_copy have multiple-of-4 length already.
+Fix an unaligned access which breaks on platforms where this is not
+permitted (e.g., Sparc).
 
-Cc: stable@vger.kernel.org
-Signed-off-by: Felix Fietkau <nbd@nbd.name>
+Link: http://lkml.kernel.org/r/20190912145502.35229-1-dave.rodgman@arm.com
+Signed-off-by: Dave Rodgman <dave.rodgman@arm.com>
+Cc: Dave Rodgman <dave.rodgman@arm.com>
+Cc: Markus F.X.J. Oberhumer <markus@oberhumer.com>
+Cc: Minchan Kim <minchan@kernel.org>
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/net/wireless/mediatek/mt76/mmio.c |    2 +-
- drivers/net/wireless/mediatek/mt76/usb.c  |    2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+ lib/lzo/lzo1x_compress.c |   14 ++++++++------
+ 1 file changed, 8 insertions(+), 6 deletions(-)
 
---- a/drivers/net/wireless/mediatek/mt76/mmio.c
-+++ b/drivers/net/wireless/mediatek/mt76/mmio.c
-@@ -43,7 +43,7 @@ static u32 mt76_mmio_rmw(struct mt76_dev
- static void mt76_mmio_copy(struct mt76_dev *dev, u32 offset, const void *data,
- 			   int len)
- {
--	__iowrite32_copy(dev->mmio.regs + offset, data, len >> 2);
-+	__iowrite32_copy(dev->mmio.regs + offset, data, DIV_ROUND_UP(len, 4));
- }
- 
- static int mt76_mmio_wr_rp(struct mt76_dev *dev, u32 base,
---- a/drivers/net/wireless/mediatek/mt76/usb.c
-+++ b/drivers/net/wireless/mediatek/mt76/usb.c
-@@ -164,7 +164,7 @@ static void mt76u_copy(struct mt76_dev *
- 	int i, ret;
- 
- 	mutex_lock(&usb->usb_ctrl_mtx);
--	for (i = 0; i < (len / 4); i++) {
-+	for (i = 0; i < DIV_ROUND_UP(len, 4); i++) {
- 		put_unaligned_le32(val[i], usb->data);
- 		ret = __mt76u_vendor_request(dev, MT_VEND_MULTI_WRITE,
- 					     USB_DIR_OUT | USB_TYPE_VENDOR,
+--- a/lib/lzo/lzo1x_compress.c
++++ b/lib/lzo/lzo1x_compress.c
+@@ -83,17 +83,19 @@ next:
+ 					ALIGN((uintptr_t)ir, 4)) &&
+ 					(ir < limit) && (*ir == 0))
+ 				ir++;
+-			for (; (ir + 4) <= limit; ir += 4) {
+-				dv = *((u32 *)ir);
+-				if (dv) {
++			if (IS_ALIGNED((uintptr_t)ir, 4)) {
++				for (; (ir + 4) <= limit; ir += 4) {
++					dv = *((u32 *)ir);
++					if (dv) {
+ #  if defined(__LITTLE_ENDIAN)
+-					ir += __builtin_ctz(dv) >> 3;
++						ir += __builtin_ctz(dv) >> 3;
+ #  elif defined(__BIG_ENDIAN)
+-					ir += __builtin_clz(dv) >> 3;
++						ir += __builtin_clz(dv) >> 3;
+ #  else
+ #    error "missing endian definition"
+ #  endif
+-					break;
++						break;
++					}
+ 				}
+ 			}
+ #endif
 
 
