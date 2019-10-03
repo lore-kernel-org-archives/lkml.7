@@ -4,49 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B51E9C32792
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:18:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E6D8C10F14
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:18:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8186E20865
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:18:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 505FD20865
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:18:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570123112;
-	bh=CK06L5cSOztvXd/gxaSwC22yL8w2qLJzd1mzjbUfCIQ=;
+	s=default; t=1570123117;
+	bh=TEG5FMLOPxC2m3iJa7OAlqaOJOc/fweVtH3XyEcLuQE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=2NZ1xo5JwhUEnV461+CArrKePmz4mNEVLX1JkQPtiWJMKjuqEhacYVBssSPXsIxaq
-	 ZixrPo9a/wwsDPi9mv2myOdl1I942QTntHTFauje45SpUzljovJazxvXVx4onQ6WEG
-	 deOSX/42UuGUIhMYRcPq9qvt72rfekJuYXSk0sE0=
+	b=ngpcHGds8RdS0Vh3MdWHxVgngNm3tYW2neXq30hHhFTDe+JC1doLEpad/m7rd5hsP
+	 ADFiWaz8qubov3Fby+kqoBxcbdCPYgBIunJarDMaPWx06cs5puklmQSPYZ/pEA3dd7
+	 FF2ydAZv253NJFe/nlEr1EIfrWWmWr+bywGvp2PA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388809AbfJCQVB (ORCPT
+        id S2390015AbfJCQUw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 12:21:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48986 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 12:20:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48714 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389149AbfJCQU4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:20:56 -0400
+        id S2389992AbfJCQUs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:20:48 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 057442054F;
-        Thu,  3 Oct 2019 16:20:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 162422054F;
+        Thu,  3 Oct 2019 16:20:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570119655;
-        bh=CK06L5cSOztvXd/gxaSwC22yL8w2qLJzd1mzjbUfCIQ=;
+        s=default; t=1570119647;
+        bh=TEG5FMLOPxC2m3iJa7OAlqaOJOc/fweVtH3XyEcLuQE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qV+Y/CLzD3I4MOzkavF7pnOgGuw31W5lqJWkSd0kuzDtQDaM6JOjh+QpfQwHrsHqM
-         Z2e3bsWSQn/0Fwge2T2IB1J/ovcr9qBL8TBO7dPpYN2HCtHkIOlf5weZs1mZ1qT3gC
-         vgblltwGM1eOyI6gC9SlbOj23kQYuBWqmkGYmXIw=
+        b=HxH6VGXmPlVQexKQE1GVNdLrGH45Mq3Cjg6MySjyUg4G4SFV2elStCN5VjK5BA1SS
+         8tqlgEaz+jzIw8KWjkQS1eo2oWX0EzXSmUWZzN1rKIYGwpTJ+/jBaLckG/N0wtENhj
+         8yShK90ACDbmfppIYtfcjoJcTNo1ZE7gmc2KqWA0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Takashi Iwai <tiwai@suse.de>,
+        stable@vger.kernel.org, Anton Eidelman <anton@lightbitslabs.com>,
+        James Smart <james.smart@broadcom.com>,
+        Hannes Reinecke <hare@suse.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Sagi Grimberg <sagi@grimberg.me>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 143/211] ALSA: hda/realtek - Blacklist PC beep for Lenovo ThinkCentre M73/93
-Date:   Thu,  3 Oct 2019 17:53:29 +0200
-Message-Id: <20191003154520.002944581@linuxfoundation.org>
+Subject: [PATCH 4.19 114/211] nvme-multipath: fix ana log nsid lookup when nsid is not found
+Date:   Thu,  3 Oct 2019 17:53:00 +0200
+Message-Id: <20191003154513.499252504@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191003154447.010950442@linuxfoundation.org>
 References: <20191003154447.010950442@linuxfoundation.org>
@@ -59,34 +63,79 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Takashi Iwai <tiwai@suse.de>
+From: Anton Eidelman <anton@lightbitslabs.com>
 
-[ Upstream commit 051c78af14fcd74a22b5af45548ad9d588247cc7 ]
+[ Upstream commit e01f91dff91c7b16a6e3faf2565017d497a73f83 ]
 
-Lenovo ThinkCentre M73 and M93 don't seem to have a proper beep
-although the driver tries to probe and set up blindly.
-Blacklist these machines for suppressing the beep creation.
+ANA log parsing invokes nvme_update_ana_state() per ANA group desc.
+This updates the state of namespaces with nsids in desc->nsids[].
 
-BugLink: https://bugzilla.kernel.org/show_bug.cgi?id=204635
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Both ctrl->namespaces list and desc->nsids[] array are sorted by nsid.
+Hence nvme_update_ana_state() performs a single walk over ctrl->namespaces:
+- if current namespace matches the current desc->nsids[n],
+  this namespace is updated, and n is incremented.
+- the process stops when it encounters the end of either
+  ctrl->namespaces end or desc->nsids[]
+
+In case desc->nsids[n] does not match any of ctrl->namespaces,
+the remaining nsids following desc->nsids[n] will not be updated.
+Such situation was considered abnormal and generated WARN_ON_ONCE.
+
+However ANA log MAY contain nsids not (yet) found in ctrl->namespaces.
+For example, lets consider the following scenario:
+- nvme0 exposes namespaces with nsids = [2, 3] to the host
+- a new namespace nsid = 1 is added dynamically
+- also, a ANA topology change is triggered
+- NS_CHANGED aen is generated and triggers scan_work
+- before scan_work discovers nsid=1 and creates a namespace, a NOTICE_ANA
+  aen was issues and ana_work receives ANA log with nsids=[1, 2, 3]
+
+Result: ana_work fails to update ANA state on existing namespaces [2, 3]
+
+Solution:
+Change the way nvme_update_ana_state() namespace list walk
+checks the current namespace against desc->nsids[n] as follows:
+a) ns->head->ns_id < desc->nsids[n]: keep walking ctrl->namespaces.
+b) ns->head->ns_id == desc->nsids[n]: match, update the namespace
+c) ns->head->ns_id >= desc->nsids[n]: skip to desc->nsids[n+1]
+
+This enables correct operation in the scenario described above.
+This also allows ANA log to contain nsids currently invisible
+to the host, i.e. inactive nsids.
+
+Signed-off-by: Anton Eidelman <anton@lightbitslabs.com>
+Reviewed-by:   James Smart <james.smart@broadcom.com>
+Reviewed-by: Hannes Reinecke <hare@suse.com>
+Reviewed-by: Christoph Hellwig <hch@lst.de>
+Signed-off-by: Sagi Grimberg <sagi@grimberg.me>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/pci/hda/patch_realtek.c | 3 +++
- 1 file changed, 3 insertions(+)
+ drivers/nvme/host/multipath.c | 8 +++++---
+ 1 file changed, 5 insertions(+), 3 deletions(-)
 
-diff --git a/sound/pci/hda/patch_realtek.c b/sound/pci/hda/patch_realtek.c
-index 7f74ebee8c2d1..e791379439be0 100644
---- a/sound/pci/hda/patch_realtek.c
-+++ b/sound/pci/hda/patch_realtek.c
-@@ -1057,6 +1057,9 @@ static const struct snd_pci_quirk beep_white_list[] = {
- 	SND_PCI_QUIRK(0x1043, 0x834a, "EeePC", 1),
- 	SND_PCI_QUIRK(0x1458, 0xa002, "GA-MA790X", 1),
- 	SND_PCI_QUIRK(0x8086, 0xd613, "Intel", 1),
-+	/* blacklist -- no beep available */
-+	SND_PCI_QUIRK(0x17aa, 0x309e, "Lenovo ThinkCentre M73", 0),
-+	SND_PCI_QUIRK(0x17aa, 0x30a3, "Lenovo ThinkCentre M93", 0),
- 	{}
- };
+diff --git a/drivers/nvme/host/multipath.c b/drivers/nvme/host/multipath.c
+index f57feb8fdea45..892ef52122329 100644
+--- a/drivers/nvme/host/multipath.c
++++ b/drivers/nvme/host/multipath.c
+@@ -404,14 +404,16 @@ static int nvme_update_ana_state(struct nvme_ctrl *ctrl,
+ 
+ 	down_write(&ctrl->namespaces_rwsem);
+ 	list_for_each_entry(ns, &ctrl->namespaces, list) {
+-		if (ns->head->ns_id != le32_to_cpu(desc->nsids[n]))
++		unsigned nsid = le32_to_cpu(desc->nsids[n]);
++
++		if (ns->head->ns_id < nsid)
+ 			continue;
+-		nvme_update_ns_ana_state(desc, ns);
++		if (ns->head->ns_id == nsid)
++			nvme_update_ns_ana_state(desc, ns);
+ 		if (++n == nr_nsids)
+ 			break;
+ 	}
+ 	up_write(&ctrl->namespaces_rwsem);
+-	WARN_ON_ONCE(n < nr_nsids);
+ 	return 0;
+ }
  
 -- 
 2.20.1
