@@ -2,200 +2,211 @@ Return-Path: <SRS0=6dNS=X4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.3 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D9927C32792
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 10:54:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9C54C32792
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 10:57:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BB04E2086A
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 10:54:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A86582086A
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 10:57:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729642AbfJCKyJ (ORCPT
+        id S1729655AbfJCK5V (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 06:54:09 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:45674 "EHLO mx1.redhat.com"
+        Thu, 3 Oct 2019 06:57:21 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:51538 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729241AbfJCKyI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 06:54:08 -0400
-Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com [209.85.128.69])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S1729392AbfJCK5U (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 06:57:20 -0400
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 6E1A587638
-        for <linux-kernel@vger.kernel.org>; Thu,  3 Oct 2019 10:54:07 +0000 (UTC)
-Received: by mail-wm1-f69.google.com with SMTP id n3so976506wmf.3
-        for <linux-kernel@vger.kernel.org>; Thu, 03 Oct 2019 03:54:07 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
-         :message-id:mime-version;
-        bh=GffyjIVlPnvsrRSrHxajUWEZWrzULU9iPsHRwjh280A=;
-        b=K49/nF1+FqGJ0B0VgBaCZH73m9vv+XvOMqdhUyBTGUcsuRmi6QY4G5bV/AMIbxjFLT
-         jexUqmTu9uIQjg4gjQaLV+mvfq4mfLV+bHk85rNXmCZM5M3mWhWfaeoxmScQXtonqB48
-         r1kR3niizYjJa70gxXpUEnSxwpUgTfWzJcm8ETOM+UqrCYunrAUBjX+DXLTM9Lf8NAyK
-         h+oBBlVA9BfyLtU0kPCfXHZjJjQQ381F2Jbpb/CgRDBxOMrK3iOKx/4HZ8YTmIzGEtZT
-         Q1NDOBQaiIWlrzC6/xWoO6c38OU63G8sEHHbNhggVMl9Ux+QDi/3CkWBPmBDNWb9j+h2
-         G65g==
-X-Gm-Message-State: APjAAAVoDlqSwo6Q8dMDH009+5Ntw4O8c8m1selUKqGcFNI0ymkCyWMB
-        qhMRcvlL1aneaf0Ed4224WLTHkAvlU7RqP6NH1uIN+DW1aVHtmsdVGcpDf5nRnUqZ989AK6zEk0
-        62urof7NB/j4n190/lxu9y8eE
-X-Received: by 2002:a5d:4ed0:: with SMTP id s16mr6708222wrv.248.1570100045802;
-        Thu, 03 Oct 2019 03:54:05 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqyv3Z0Cd9/KSakZBKWO86WJgzxHATqe7HQh3z6HK3wpvt0UzrjZziBeGUCN3si1Uj2bHlWO1w==
-X-Received: by 2002:a5d:4ed0:: with SMTP id s16mr6708199wrv.248.1570100045516;
-        Thu, 03 Oct 2019 03:54:05 -0700 (PDT)
-Received: from vitty.brq.redhat.com (nat-pool-brq-t.redhat.com. [213.175.37.10])
-        by smtp.gmail.com with ESMTPSA id z5sm3892422wrs.54.2019.10.03.03.54.04
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 03 Oct 2019 03:54:04 -0700 (PDT)
-From:   Vitaly Kuznetsov <vkuznets@redhat.com>
-To:     Roman Kagan <rkagan@virtuozzo.com>
-Cc:     "kvm\@vger.kernel.org" <kvm@vger.kernel.org>,
-        Michael Kelley <mikelley@microsoft.com>,
-        Lan Tianyu <Tianyu.Lan@microsoft.com>,
-        Joerg Roedel <jroedel@suse.de>,
-        "K. Y. Srinivasan" <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Sasha Levin <sashal@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        "x86\@kernel.org" <x86@kernel.org>,
-        "linux-hyperv\@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "linux-kernel\@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2] x86/hyperv: make vapic support x2apic mode
-In-Reply-To: <20191002101923.4981-1-rkagan@virtuozzo.com>
-References: <20191002101923.4981-1-rkagan@virtuozzo.com>
-Date:   Thu, 03 Oct 2019 12:54:03 +0200
-Message-ID: <87muei14ms.fsf@vitty.brq.redhat.com>
+        by mx1.redhat.com (Postfix) with ESMTPS id A7D9B3090FEA;
+        Thu,  3 Oct 2019 10:57:19 +0000 (UTC)
+Received: from krava (unknown [10.43.17.55])
+        by smtp.corp.redhat.com (Postfix) with SMTP id AACCD60BF3;
+        Thu,  3 Oct 2019 10:57:17 +0000 (UTC)
+Date:   Thu, 3 Oct 2019 12:57:16 +0200
+From:   Jiri Olsa <jolsa@redhat.com>
+To:     Steve MacLean <steve.maclean@linux.microsoft.com>
+Cc:     Steve MacLean <Steve.MacLean@microsoft.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Stephane Eranian <eranian@google.com>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 3/4] perf inject --jit: Remove //anon mmap events
+Message-ID: <20191003105716.GB23291@krava>
+References: <1570049901-115628-1-git-send-email-steve.maclean@linux.microsoft.com>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1570049901-115628-1-git-send-email-steve.maclean@linux.microsoft.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.43]); Thu, 03 Oct 2019 10:57:19 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Roman Kagan <rkagan@virtuozzo.com> writes:
+On Wed, Oct 02, 2019 at 01:58:21PM -0700, Steve MacLean wrote:
+> From: Steve MacLean <Steve.MacLean@Microsoft.com>
+> 
+> While a JIT is jitting code it will eventually need to commit more pages and
+> change these pages to executable permissions.
+> 
+> Typically the JIT will want these colocated to minimize branch displacements.
+> 
+> The kernel will coalesce these anonymous mapping with identical permissions
+> before sending an MMAP event for the new pages. This means the mmap event for
+> the new pages will include the older pages.
+> 
+> These anonymous mmap events will obscure the jitdump injected pseudo events.
+> This means that the jitdump generated symbols, machine code, debugging info,
+> and unwind info will no longer be used.
+> 
+> Observations:
+> 
+> When a process emits a jit dump marker and a jitdump file, the perf-xxx.map
+> file represents inferior information which has been superseded by the
+> jitdump jit-xxx.dump file.
+> 
+> Further the '//anon*' mmap events are only required for the legacy
+> perf-xxx.map mapping.
 
-> Now that there's Hyper-V IOMMU driver, Linux can switch to x2apic mode
-> when supported by the vcpus.
->
-> However, the apic access functions for Hyper-V enlightened apic assume
-> xapic mode only.
->
-> As a result, Linux fails to bring up secondary cpus when run as a guest
-> in QEMU/KVM with both hv_apic and x2apic enabled.
->
-> I didn't manage to make my instance of Hyper-V expose x2apic to the
-> guest; nor does Hyper-V spec document the expected behavior.  However,
-> a Windows guest running in QEMU/KVM with hv_apic and x2apic and a big
-> number of vcpus (so that it turns on x2apic mode) does use enlightened
-> apic MSRs passing unshifted 32bit destination id and falls back to the
-> regular x2apic MSRs for less frequently used apic fields.
->
-> So implement the same behavior, by replacing enlightened apic access
-> functions (only those where it makes a difference) with their
-> x2apic-aware versions when x2apic is in use.
->
-> Fixes: 29217a474683 ("iommu/hyper-v: Add Hyper-V stub IOMMU driver")
-> Fixes: 6b48cb5f8347 ("X86/Hyper-V: Enlighten APIC access")
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Roman Kagan <rkagan@virtuozzo.com>
+it's been some time I saw the code, Stephane?
+
+I added some comments below
+
+> 
+> Summary:
+> 
+> Add rbtree to track which pids have successfully injected a jitdump file.
+> 
+> During "perf inject --jit", discard "//anon*" mmap events for any pid which
+> has successfully processed a jitdump file.
+> 
+> Committer testing:
+> 
+> // jitdump case
+> perf record <app with jitdump>
+> perf inject --jit --input perf.data --output perfjit.data
+> 
+> // verify mmap "//anon" events present initially
+> perf script --input perf.data --show-mmap-events | grep '//anon'
+> // verify mmap "//anon" events removed
+> perf script --input perfjit.data --show-mmap-events | grep '//anon'
+> 
+> // no jitdump case
+> perf record <app without jitdump>
+> perf inject --jit --input perf.data --output perfjit.data
+> 
+> // verify mmap "//anon" events present initially
+> perf script --input perf.data --show-mmap-events | grep '//anon'
+> // verify mmap "//anon" events not removed
+> perf script --input perfjit.data --show-mmap-events | grep '//anon'
+> 
+> Repro:
+> 
+> This issue was discovered while testing the initial CoreCLR jitdump
+> implementation. https://github.com/dotnet/coreclr/pull/26897.
+> 
+> Cc: Peter Zijlstra <peterz@infradead.org>
+> Cc: Ingo Molnar <mingo@redhat.com>
+> Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
+> Cc: Mark Rutland <mark.rutland@arm.com>
+> Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+> Cc: Jiri Olsa <jolsa@redhat.com>
+> Cc: Namhyung Kim <namhyung@kernel.org>
+> Cc: Stephane Eranian <eranian@google.com>
+> Cc: linux-kernel@vger.kernel.org
+> Signed-off-by: Steve MacLean <Steve.MacLean@Microsoft.com>
 > ---
-> v1 -> v2:
-> - add ifdefs to handle !CONFIG_X86_X2APIC
->
->  arch/x86/hyperv/hv_apic.c | 54 ++++++++++++++++++++++++++++++++++++---
->  1 file changed, 51 insertions(+), 3 deletions(-)
->
-> diff --git a/arch/x86/hyperv/hv_apic.c b/arch/x86/hyperv/hv_apic.c
-> index 5c056b8aebef..eb1434ae9e46 100644
-> --- a/arch/x86/hyperv/hv_apic.c
-> +++ b/arch/x86/hyperv/hv_apic.c
-> @@ -84,6 +84,44 @@ static void hv_apic_write(u32 reg, u32 val)
->  	}
+>  tools/perf/builtin-inject.c |  4 +--
+>  tools/perf/util/jitdump.c   | 63 +++++++++++++++++++++++++++++++++++++++++++++
+>  2 files changed, 65 insertions(+), 2 deletions(-)
+> 
+> diff --git a/tools/perf/builtin-inject.c b/tools/perf/builtin-inject.c
+> index c14f40b8..4c921e0 100644
+> --- a/tools/perf/builtin-inject.c
+> +++ b/tools/perf/builtin-inject.c
+> @@ -261,7 +261,7 @@ static int perf_event__jit_repipe_mmap(struct perf_tool *tool,
+>  	 * if jit marker, then inject jit mmaps and generate ELF images
+>  	 */
+>  	ret = jit_process(inject->session, &inject->output, machine,
+> -			  event->mmap.filename, sample->pid, &n);
+> +			  event->mmap.filename, event->mmap.pid, &n);
+>  	if (ret < 0)
+>  		return ret;
+>  	if (ret) {
+> @@ -299,7 +299,7 @@ static int perf_event__jit_repipe_mmap2(struct perf_tool *tool,
+>  	 * if jit marker, then inject jit mmaps and generate ELF images
+>  	 */
+>  	ret = jit_process(inject->session, &inject->output, machine,
+> -			  event->mmap2.filename, sample->pid, &n);
+> +			  event->mmap2.filename, event->mmap2.pid, &n);
+>  	if (ret < 0)
+>  		return ret;
+>  	if (ret) {
+> diff --git a/tools/perf/util/jitdump.c b/tools/perf/util/jitdump.c
+> index 22d09c4..6a1563f 100644
+> --- a/tools/perf/util/jitdump.c
+> +++ b/tools/perf/util/jitdump.c
+> @@ -751,6 +751,59 @@ static int jit_repipe_debug_info(struct jit_buf_desc *jd, union jr_entry *jr)
+>  	return 0;
 >  }
 >  
-> +#ifdef CONFIG_X86_X2APIC
-> +static void hv_x2apic_icr_write(u32 low, u32 id)
+> +struct pid_rbtree
 > +{
-> +	wrmsr(HV_X64_MSR_ICR, low, id);
-> +}
-
-AFAIU you're trying to mirror native_x2apic_icr_write() here but this is
-different from what hv_apic_icr_write() does
-(SET_APIC_DEST_FIELD(id)). Is it actually correct? (I think you've
-tested this and it is but) Michael, could you please shed some light
-here?
-
+> +	struct rb_node node;
+> +	pid_t pid;
+> +};
 > +
-> +static u32 hv_x2apic_read(u32 reg)
+> +static void jit_add_pid(struct rb_root *root, pid_t pid)
 > +{
-> +	u32 reg_val, hi;
+> +	struct rb_node **new = &(root->rb_node), *parent = NULL;
+
+we don't use the parenthesis like that
+
+> +	struct pid_rbtree* data = NULL;
 > +
-> +	switch (reg) {
-> +	case APIC_EOI:
-> +		rdmsr(HV_X64_MSR_EOI, reg_val, hi);
-> +		return reg_val;
-> +	case APIC_TASKPRI:
-> +		rdmsr(HV_X64_MSR_TPR, reg_val, hi);
-> +		return reg_val;
+> +	/* Figure out where to put new node */
+> +	while (*new) {
+> +		struct pid_rbtree *this = container_of(*new, struct pid_rbtree, node);
+
+there's rb_entry macro for this
+
+> +		pid_t nodePid = this->pid;
 > +
-> +	default:
-> +		return native_apic_msr_read(reg);
+> +		parent = *new;
+> +		if (pid < nodePid)
+> +			new = &((*new)->rb_left);
+> +		else if (pid > nodePid)
+> +			new = &((*new)->rb_right);
+> +		else
+> +			return;
 > +	}
-> +}
 > +
-> +static void hv_x2apic_write(u32 reg, u32 val)
-> +{
-> +	switch (reg) {
-> +	case APIC_EOI:
-> +		wrmsr(HV_X64_MSR_EOI, val, 0);
-> +		break;
-> +	case APIC_TASKPRI:
-> +		wrmsr(HV_X64_MSR_TPR, val, 0);
-> +		break;
-> +	default:
-> +		native_apic_msr_write(reg, val);
-> +	}
-> +}
-> +#endif /* CONFIG_X86_X2APIC */
-> +
->  static void hv_apic_eoi_write(u32 reg, u32 val)
->  {
->  	struct hv_vp_assist_page *hvp = hv_vp_assist_page[smp_processor_id()];
-> @@ -262,9 +300,19 @@ void __init hv_apic_init(void)
->  	if (ms_hyperv.hints & HV_X64_APIC_ACCESS_RECOMMENDED) {
->  		pr_info("Hyper-V: Using MSR based APIC access\n");
->  		apic_set_eoi_write(hv_apic_eoi_write);
-> -		apic->read      = hv_apic_read;
-> -		apic->write     = hv_apic_write;
-> -		apic->icr_write = hv_apic_icr_write;
-> +#ifdef CONFIG_X86_X2APIC
-> +		if (x2apic_enabled()) {
-> +			apic->read      = hv_x2apic_read;
-> +			apic->write     = hv_x2apic_write;
-> +			apic->icr_write = hv_x2apic_icr_write;
-> +		} else {
-> +#endif
-> +			apic->read      = hv_apic_read;
-> +			apic->write     = hv_apic_write;
-> +			apic->icr_write = hv_apic_icr_write;
+> +	data = malloc(sizeof(struct pid_rbtree));
 
-(just wondering): Is it always safe to assume that we cannot switch
-between apic_flat/x2apic in runtime? Moreover, the only difference
-between hv_apic_read/hv_apic_write and hv_x2apic_read/hv_x2apic_write is
-native_apic_mem_{read,write} -> native_apic_msr_{read,write}. Would it
-make sense to move if (x2apic_enabled()) and merge these functions?
+plz check every allocation
 
-> +#ifdef CONFIG_X86_X2APIC
-> +		}
-> +#endif
->  		apic->icr_read  = hv_apic_icr_read;
->  	}
->  }
+anyway, I wonder if you could just use thread::priv flag for that, like:
 
--- 
-Vitaly
+  thread = machine__findnew_thread(machine, pid, pid);
+  if (!thread)
+    bad
+
+  (int) thread->priv = 1;
+
+and check on thread->priv when ruling the pid out, should be faster
+then maintain rb tree
+
+thanks,
+jirka
