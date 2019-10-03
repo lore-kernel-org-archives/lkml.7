@@ -2,52 +2,53 @@ Return-Path: <SRS0=6dNS=X4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BDC87C10F14
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:06:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BCE8C32792
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:06:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 94C4E20673
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:06:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 42CD420673
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:06:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570122388;
-	bh=tD7IAs/rUecrJB9NGa8Try+goo14BMYdLlRlOp0L1Xk=;
+	s=default; t=1570122394;
+	bh=bJcao7SPBQMuapxEuG3Dz/UmDhKG/EGCDtv2S5A7S9s=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=C5Av6Ln7T77wpFrsNZa947bEANHSyI13kthRZLUhAcdTUyWfHZAdb33IIE8mg4OQ1
-	 +JCGXihspKu7ULmu1+HGjV0QfR+uNkfx/CFUYKxXKAQJQ00k23z2DXtUcwULY8oawc
-	 x1Itr3eKo2EUWsFknDkdFTIHM5mm4JHNAHHbVeiM=
+	b=fglPrA7fC1yf51URnKnPXPLfhLN/83WzqUHRJ4IkZYQ80oRCHVjxrcFezEj2g1vjm
+	 Fc7BPAoav1BIY4DWLOdlxJijXt2BKgjBP/zLKaJJPafaYmBxrtjDNaUBjMpy7dHP1O
+	 04K/UoToqzPA+o9sI7SIyaCfYdfBz8ZidxSj/PlQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393126AbfJCRG2 (ORCPT
+        id S2404652AbfJCQiA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 13:06:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47892 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 12:38:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47396 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392301AbfJCQiP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:38:15 -0400
+        id S2392281AbfJCQh4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:37:56 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CA54320830;
-        Thu,  3 Oct 2019 16:38:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CFB5321783;
+        Thu,  3 Oct 2019 16:37:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570120694;
-        bh=tD7IAs/rUecrJB9NGa8Try+goo14BMYdLlRlOp0L1Xk=;
+        s=default; t=1570120675;
+        bh=bJcao7SPBQMuapxEuG3Dz/UmDhKG/EGCDtv2S5A7S9s=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=S9PbQIJIxd3op7fhtpW4SdD+XmoCluMOk9sXZrCvuuAsYtZZuh7OqnKYHyMwHHTv0
-         Emg+7h7AZ9ZfD0yvk2kfK5ifBdmq+zMKBIDAl2KAsNhmidP31eowV0ggT3FU8e9/g4
-         xXMU1pVogP9/zF12jF33q7H2vYAPyGd9QXTRuQH8=
+        b=nnPjpilhh+lgrgozkawVBHgHmR9BeEkfbvioNpLfmYASomKZpz6UXL83Fo5LvdRJg
+         xrPH9pJB3zOSBnUWtq0Jb6oNmqX1hIf1ooQGmopwxEdZmCxDnMORXkadFlzDqrnnDY
+         3RFTvjZr0HifYCzckYlwnoUJy09kB58Vz4rZxNsE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Trond Myklebust <trond.myklebust@hammerspace.com>,
-        Anna Schumaker <Anna.Schumaker@Netapp.com>
-Subject: [PATCH 5.2 289/313] SUNRPC: Dequeue the request from the receive queue while were re-encoding
-Date:   Thu,  3 Oct 2019 17:54:27 +0200
-Message-Id: <20191003154601.565296834@linuxfoundation.org>
+        Guoqing Jiang <guoqing.jiang@cloud.ionos.com>,
+        NeilBrown <neilb@suse.de>, Song Liu <songliubraving@fb.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.2 310/313] md/raid0: avoid RAID0 data corruption due to layout confusion.
+Date:   Thu,  3 Oct 2019 17:54:48 +0200
+Message-Id: <20191003154603.729871177@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191003154533.590915454@linuxfoundation.org>
 References: <20191003154533.590915454@linuxfoundation.org>
@@ -60,141 +61,140 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Trond Myklebust <trondmy@gmail.com>
+From: NeilBrown <neilb@suse.de>
 
-commit cc204d01262a69218b2d0db5cdea371de85871d9 upstream.
+[ Upstream commit c84a1372df929033cb1a0441fb57bd3932f39ac9 ]
 
-Ensure that we dequeue the request from the transport receive queue
-while we're re-encoding to prevent issues like use-after-free when
-we release the bvec.
+If the drives in a RAID0 are not all the same size, the array is
+divided into zones.
+The first zone covers all drives, to the size of the smallest.
+The second zone covers all drives larger than the smallest, up to
+the size of the second smallest - etc.
 
-Fixes: 7536908982047 ("SUNRPC: Ensure the bvecs are reset when we re-encode...")
-Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
-Cc: stable@vger.kernel.org # v4.20+
-Signed-off-by: Anna Schumaker <Anna.Schumaker@Netapp.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+A change in Linux 3.14 unintentionally changed the layout for the
+second and subsequent zones.  All the correct data is still stored, but
+each chunk may be assigned to a different device than in pre-3.14 kernels.
+This can lead to data corruption.
 
+It is not possible to determine what layout to use - it depends which
+kernel the data was written by.
+So we add a module parameter to allow the old (0) or new (1) layout to be
+specified, and refused to assemble an affected array if that parameter is
+not set.
+
+Fixes: 20d0189b1012 ("block: Introduce new bio_split()")
+cc: stable@vger.kernel.org (3.14+)
+Acked-by: Guoqing Jiang <guoqing.jiang@cloud.ionos.com>
+Signed-off-by: NeilBrown <neilb@suse.de>
+Signed-off-by: Song Liu <songliubraving@fb.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/linux/sunrpc/xprt.h |    1 
- net/sunrpc/clnt.c           |    6 ++--
- net/sunrpc/xprt.c           |   54 +++++++++++++++++++++++++-------------------
- 3 files changed, 35 insertions(+), 26 deletions(-)
+ drivers/md/raid0.c | 33 ++++++++++++++++++++++++++++++++-
+ drivers/md/raid0.h | 14 ++++++++++++++
+ 2 files changed, 46 insertions(+), 1 deletion(-)
 
---- a/include/linux/sunrpc/xprt.h
-+++ b/include/linux/sunrpc/xprt.h
-@@ -346,6 +346,7 @@ bool			xprt_prepare_transmit(struct rpc_
- void			xprt_request_enqueue_transmit(struct rpc_task *task);
- void			xprt_request_enqueue_receive(struct rpc_task *task);
- void			xprt_request_wait_receive(struct rpc_task *task);
-+void			xprt_request_dequeue_xprt(struct rpc_task *task);
- bool			xprt_request_need_retransmit(struct rpc_task *task);
- void			xprt_transmit(struct rpc_task *task);
- void			xprt_end_transmit(struct rpc_task *task);
---- a/net/sunrpc/clnt.c
-+++ b/net/sunrpc/clnt.c
-@@ -1785,6 +1785,7 @@ rpc_xdr_encode(struct rpc_task *task)
- 		     req->rq_rbuffer,
- 		     req->rq_rcvsize);
+diff --git a/drivers/md/raid0.c b/drivers/md/raid0.c
+index bf5cf184a260b..297bbc0f41f05 100644
+--- a/drivers/md/raid0.c
++++ b/drivers/md/raid0.c
+@@ -19,6 +19,9 @@
+ #include "raid0.h"
+ #include "raid5.h"
  
-+	req->rq_reply_bytes_recvd = 0;
- 	req->rq_snd_buf.head[0].iov_len = 0;
- 	xdr_init_encode(&xdr, &req->rq_snd_buf,
- 			req->rq_snd_buf.head[0].iov_base, req);
-@@ -1804,6 +1805,8 @@ call_encode(struct rpc_task *task)
- 	if (!rpc_task_need_encode(task))
- 		goto out;
- 	dprint_status(task);
-+	/* Dequeue task from the receive queue while we're encoding */
-+	xprt_request_dequeue_xprt(task);
- 	/* Encode here so that rpcsec_gss can use correct sequence number. */
- 	rpc_xdr_encode(task);
- 	/* Did the encode result in an error condition? */
-@@ -2437,9 +2440,6 @@ call_decode(struct rpc_task *task)
- 		return;
- 	case -EAGAIN:
- 		task->tk_status = 0;
--		xdr_free_bvec(&req->rq_rcv_buf);
--		req->rq_reply_bytes_recvd = 0;
--		req->rq_rcv_buf.len = 0;
- 		if (task->tk_client->cl_discrtry)
- 			xprt_conditional_disconnect(req->rq_xprt,
- 						    req->rq_connect_cookie);
---- a/net/sunrpc/xprt.c
-+++ b/net/sunrpc/xprt.c
-@@ -1296,6 +1296,36 @@ xprt_request_dequeue_transmit(struct rpc
- }
- 
- /**
-+ * xprt_request_dequeue_xprt - remove a task from the transmit+receive queue
-+ * @task: pointer to rpc_task
-+ *
-+ * Remove a task from the transmit and receive queues, and ensure that
-+ * it is not pinned by the receive work item.
-+ */
-+void
-+xprt_request_dequeue_xprt(struct rpc_task *task)
-+{
-+	struct rpc_rqst	*req = task->tk_rqstp;
-+	struct rpc_xprt *xprt = req->rq_xprt;
++static int default_layout = 0;
++module_param(default_layout, int, 0644);
 +
-+	if (test_bit(RPC_TASK_NEED_XMIT, &task->tk_runstate) ||
-+	    test_bit(RPC_TASK_NEED_RECV, &task->tk_runstate) ||
-+	    xprt_is_pinned_rqst(req)) {
-+		spin_lock(&xprt->queue_lock);
-+		xprt_request_dequeue_transmit_locked(task);
-+		xprt_request_dequeue_receive_locked(task);
-+		while (xprt_is_pinned_rqst(req)) {
-+			set_bit(RPC_TASK_MSG_PIN_WAIT, &task->tk_runstate);
-+			spin_unlock(&xprt->queue_lock);
-+			xprt_wait_on_pinned_rqst(req);
-+			spin_lock(&xprt->queue_lock);
-+			clear_bit(RPC_TASK_MSG_PIN_WAIT, &task->tk_runstate);
-+		}
-+		spin_unlock(&xprt->queue_lock);
+ #define UNSUPPORTED_MDDEV_FLAGS		\
+ 	((1L << MD_HAS_JOURNAL) |	\
+ 	 (1L << MD_JOURNAL_CLEAN) |	\
+@@ -139,6 +142,19 @@ static int create_strip_zones(struct mddev *mddev, struct r0conf **private_conf)
+ 	}
+ 	pr_debug("md/raid0:%s: FINAL %d zones\n",
+ 		 mdname(mddev), conf->nr_strip_zones);
++
++	if (conf->nr_strip_zones == 1) {
++		conf->layout = RAID0_ORIG_LAYOUT;
++	} else if (default_layout == RAID0_ORIG_LAYOUT ||
++		   default_layout == RAID0_ALT_MULTIZONE_LAYOUT) {
++		conf->layout = default_layout;
++	} else {
++		pr_err("md/raid0:%s: cannot assemble multi-zone RAID0 with default_layout setting\n",
++		       mdname(mddev));
++		pr_err("md/raid0: please set raid.default_layout to 1 or 2\n");
++		err = -ENOTSUPP;
++		goto abort;
 +	}
-+}
-+
-+/**
-  * xprt_request_prepare - prepare an encoded request for transport
-  * @req: pointer to rpc_rqst
-  *
-@@ -1719,28 +1749,6 @@ void xprt_retry_reserve(struct rpc_task
- 	xprt_do_reserve(xprt, task);
- }
+ 	/*
+ 	 * now since we have the hard sector sizes, we can make sure
+ 	 * chunk size is a multiple of that sector size
+@@ -547,10 +563,12 @@ static void raid0_handle_discard(struct mddev *mddev, struct bio *bio)
  
--static void
--xprt_request_dequeue_all(struct rpc_task *task, struct rpc_rqst *req)
--{
--	struct rpc_xprt *xprt = req->rq_xprt;
--
--	if (test_bit(RPC_TASK_NEED_XMIT, &task->tk_runstate) ||
--	    test_bit(RPC_TASK_NEED_RECV, &task->tk_runstate) ||
--	    xprt_is_pinned_rqst(req)) {
--		spin_lock(&xprt->queue_lock);
--		xprt_request_dequeue_transmit_locked(task);
--		xprt_request_dequeue_receive_locked(task);
--		while (xprt_is_pinned_rqst(req)) {
--			set_bit(RPC_TASK_MSG_PIN_WAIT, &task->tk_runstate);
--			spin_unlock(&xprt->queue_lock);
--			xprt_wait_on_pinned_rqst(req);
--			spin_lock(&xprt->queue_lock);
--			clear_bit(RPC_TASK_MSG_PIN_WAIT, &task->tk_runstate);
--		}
--		spin_unlock(&xprt->queue_lock);
--	}
--}
--
- /**
-  * xprt_release - release an RPC request slot
-  * @task: task which is finished with the slot
-@@ -1764,7 +1772,7 @@ void xprt_release(struct rpc_task *task)
- 		task->tk_ops->rpc_count_stats(task, task->tk_calldata);
- 	else if (task->tk_client)
- 		rpc_count_iostats(task, task->tk_client->cl_metrics);
--	xprt_request_dequeue_all(task, req);
-+	xprt_request_dequeue_xprt(task);
- 	spin_lock_bh(&xprt->transport_lock);
- 	xprt->ops->release_xprt(xprt, task);
- 	if (xprt->ops->release_request)
+ static bool raid0_make_request(struct mddev *mddev, struct bio *bio)
+ {
++	struct r0conf *conf = mddev->private;
+ 	struct strip_zone *zone;
+ 	struct md_rdev *tmp_dev;
+ 	sector_t bio_sector;
+ 	sector_t sector;
++	sector_t orig_sector;
+ 	unsigned chunk_sects;
+ 	unsigned sectors;
+ 
+@@ -584,8 +602,21 @@ static bool raid0_make_request(struct mddev *mddev, struct bio *bio)
+ 		bio = split;
+ 	}
+ 
++	orig_sector = sector;
+ 	zone = find_zone(mddev->private, &sector);
+-	tmp_dev = map_sector(mddev, zone, sector, &sector);
++	switch (conf->layout) {
++	case RAID0_ORIG_LAYOUT:
++		tmp_dev = map_sector(mddev, zone, orig_sector, &sector);
++		break;
++	case RAID0_ALT_MULTIZONE_LAYOUT:
++		tmp_dev = map_sector(mddev, zone, sector, &sector);
++		break;
++	default:
++		WARN("md/raid0:%s: Invalid layout\n", mdname(mddev));
++		bio_io_error(bio);
++		return true;
++	}
++
+ 	bio_set_dev(bio, tmp_dev->bdev);
+ 	bio->bi_iter.bi_sector = sector + zone->dev_start +
+ 		tmp_dev->data_offset;
+diff --git a/drivers/md/raid0.h b/drivers/md/raid0.h
+index 540e65d92642d..3816e5477db1e 100644
+--- a/drivers/md/raid0.h
++++ b/drivers/md/raid0.h
+@@ -8,11 +8,25 @@ struct strip_zone {
+ 	int	 nb_dev;	/* # of devices attached to the zone */
+ };
+ 
++/* Linux 3.14 (20d0189b101) made an unintended change to
++ * the RAID0 layout for multi-zone arrays (where devices aren't all
++ * the same size.
++ * RAID0_ORIG_LAYOUT restores the original layout
++ * RAID0_ALT_MULTIZONE_LAYOUT uses the altered layout
++ * The layouts are identical when there is only one zone (all
++ * devices the same size).
++ */
++
++enum r0layout {
++	RAID0_ORIG_LAYOUT = 1,
++	RAID0_ALT_MULTIZONE_LAYOUT = 2,
++};
+ struct r0conf {
+ 	struct strip_zone	*strip_zone;
+ 	struct md_rdev		**devlist; /* lists of rdevs, pointed to
+ 					    * by strip_zone->dev */
+ 	int			nr_strip_zones;
++	enum r0layout		layout;
+ };
+ 
+ #endif
+-- 
+2.20.1
+
 
 
