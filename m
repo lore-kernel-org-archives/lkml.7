@@ -2,82 +2,92 @@ Return-Path: <SRS0=6dNS=X4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F3B2CC4CED1
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 11:48:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8EA52C10F14
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 11:49:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CBA562086A
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 11:48:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 615872070B
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 11:49:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="LZgmVx8K"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729671AbfJCLse (ORCPT
+        id S1730096AbfJCLtI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 07:48:34 -0400
-Received: from relay1-d.mail.gandi.net ([217.70.183.193]:35605 "EHLO
-        relay1-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726523AbfJCLsd (ORCPT
+        Thu, 3 Oct 2019 07:49:08 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:58086 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726523AbfJCLtI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 07:48:33 -0400
-X-Originating-IP: 86.207.98.53
-Received: from localhost (aclermont-ferrand-651-1-259-53.w86-207.abo.wanadoo.fr [86.207.98.53])
-        (Authenticated sender: alexandre.belloni@bootlin.com)
-        by relay1-d.mail.gandi.net (Postfix) with ESMTPSA id F131824000C;
-        Thu,  3 Oct 2019 11:48:31 +0000 (UTC)
-Date:   Thu, 3 Oct 2019 13:48:31 +0200
-From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
-To:     Lukasz Majewski <lukma@denx.de>
-Cc:     Alessandro Zummo <a.zummo@towertech.it>, linux-rtc@vger.kernel.org,
+        Thu, 3 Oct 2019 07:49:08 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x93Bmwdw145482;
+        Thu, 3 Oct 2019 11:49:04 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2019-08-05;
+ bh=Tv6Whr37flpQTMvhxJZIqkHc+lxYrgsVpf1GQKff1Sw=;
+ b=LZgmVx8KaQGtkpBJF9UrrqOYKnhh9kcTdp/dWzAb7kk/Ley2JoPIG4FRas2yYWL0m7oU
+ VoRTNQUdYq5XGPpp9TsJXoc0K/Z48Erxq3WVgRsStH6P3FywjY5B0t/o1M/dVSjzGbl3
+ /3h5Qfz6bh7jVm3gYVx2VH0LrLUUuMHJ1yi8XV8ETgPfRAMD89ZcP6iRFC2OVTGTlepj
+ TdYOwUeW4uTzE7tBbfAMAag8CT+7ywjB1vDSXpMUNV3Q99fHxRBDktfSZgj0caFgb+Mi
+ xfMHdgWiT2E2RMAyjoDG1Jw7k8y53Y+4CYdSd5TtoaRMyur97dOW8aOP1v4G675/7Exo mQ== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by userp2130.oracle.com with ESMTP id 2v9xxv3ec6-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 03 Oct 2019 11:49:04 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x93BmiKJ174495;
+        Thu, 3 Oct 2019 11:49:03 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by aserp3030.oracle.com with ESMTP id 2vcx72b91s-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 03 Oct 2019 11:49:03 +0000
+Received: from abhmp0011.oracle.com (abhmp0011.oracle.com [141.146.116.17])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x93Bn1JR026187;
+        Thu, 3 Oct 2019 11:49:01 GMT
+Received: from kadam (/41.57.98.10)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Thu, 03 Oct 2019 04:49:01 -0700
+Date:   Thu, 3 Oct 2019 14:48:52 +0300
+From:   Dan Carpenter <dan.carpenter@oracle.com>
+To:     Valdis =?utf-8?Q?Kl=C4=93tnieks?= <valdis.kletnieks@vt.edu>
+Cc:     Saiyam Doshi <saiyamdoshi.in@gmail.com>,
+        devel@driverdev.osuosl.org, gregkh@linuxfoundation.org,
         linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] rtc: Add support for century bits to m41t62 (rv4162) RTC
- devices
-Message-ID: <20191003114831.GR4106@piout.net>
-References: <20190911154803.15969-1-lukma@denx.de>
+Subject: Re: [PATCH] staging: exfat: use bdev_sync function directly where
+ needed
+Message-ID: <20191003114852.GR29696@kadam>
+References: <20191002151703.GA6594@SD>
+ <9938.1570043055@turing-police>
+ <20191003114654.GT22609@kadam>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190911154803.15969-1-lukma@denx.de>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <20191003114654.GT22609@kadam>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9398 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=710
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1908290000 definitions=main-1910030111
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9398 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=792 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1908290000
+ definitions=main-1910030111
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+Or we could apply your other patch which trumps both this patch and the
+patch to the TODO.
 
-On 11/09/2019 17:48:03+0200, Lukasz Majewski wrote:
-> This change adds support for 'century bits' on 4162 family of RTC devices
-> (from ST or microcrystal), which allow storing time beyond year 2099.
-> 
-> For rv4162 century bits - CB1[7]:CB0[6] are stored in reg6 - 0x6 (MONTH):
-> CB1  CB0
->  0    0      (year 2000 - 2099)
->  0    1      (year 2100 - 2199)
->  1    0      (year 2200 - 2299)
->  1    1      (year 2300 - 2399)
-> 
-> The driver has been also adjusted to allow setting time up to year 2399
-> if the M41T80_FEATURE_CB is set in its DTS/I2C data.
-> 
-> There shall be no functional changes for devices not supporting this
-> feature. However, other devices - like m41t80 - have different approaches
-> to handle century information.
-> 
+regards,
+dan carpenter
 
-This does not work because the RTC doesn't handle leap years on century
-properly. This means that if you do that, then there is no guarantee the
-date will be the correct after 2099. As far as the m41t62 and rv4162
-are concerned, there is no way to make the century bits useful.
-
-See the datasheet:
-
-"During any year which is a multiple of 4, the RV-4162 RTC will
-automatically insert leap day, February 29.  Therefore, the application
-software must correct for this during the exception years (2100, 2200,
-etc.) as noted above."
-
--- 
-Alexandre Belloni, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
