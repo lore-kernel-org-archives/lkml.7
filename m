@@ -7,49 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D8E0C10F14
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:50:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CF18C10F14
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:50:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E474520867
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:50:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CD0732086A
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:50:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570121428;
-	bh=8tx1cmlgn/5Ir9ZkuLOgpbwC/C5FkNxh9n5gZLs1odc=;
+	s=default; t=1570121431;
+	bh=VaJEsh5UkLakPlc6ctisliyWBlDu3TrANxzQLBFR4vY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=goquH3WUaGin83uB1MW2Q5uZgXGvly6n9nhBqJQ0bqWwA7wHKV5Y432VbwZ77ToHy
-	 CCL7rTDtY6ZrRRrj3pfvmEafoh3hEWbwhfLNEFkiLbCz+ZRkqM68WJmdgN5EM9Ne8a
-	 9itRrSk7Hjp6THMw1eYDyjj7rBPadCYMloPZwbsg=
+	b=nGpSfbVh0/4p5IcqtCwo8Z+pN65M9E7/Z5+wn/NEoCBe7LKcrRejQ8MrDw9wFxz8i
+	 u/NDQ1LvjBDQVx+vlZm1P59jrHmHJQT4yAgDa8YQREKRykLmjjmvkdfJ/Crwj5dmwT
+	 nIx8mi493m/Y009cdTVYyypFJhRx3GB5AanArtpQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392532AbfJCQu0 (ORCPT
+        id S2405924AbfJCQub (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 12:50:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37440 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 12:50:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37518 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2405919AbfJCQuW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:50:22 -0400
+        id S2392223AbfJCQuY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:50:24 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9FBE720867;
-        Thu,  3 Oct 2019 16:50:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 583CF2070B;
+        Thu,  3 Oct 2019 16:50:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570121421;
-        bh=8tx1cmlgn/5Ir9ZkuLOgpbwC/C5FkNxh9n5gZLs1odc=;
+        s=default; t=1570121423;
+        bh=VaJEsh5UkLakPlc6ctisliyWBlDu3TrANxzQLBFR4vY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=S4eAnyTcBPY75PMJ9ckb3nJPf5boRHkWP81u9qlSTdjDU/5HnyPk8GLGYS+dmHkP5
-         wCUMA4JYH6eleN7SqUi2WDLeVuigkI4j/SVzjJg3/xkWntbeEZ/h5h4K1qbf8eWFPA
-         ps3IxZII8lrrBY8pC+Qc0Saz+Tj/8BKchJ6jAUH0=
+        b=iVQkkdKxYieE5+kvW86IyVoh2m20c63Xo8OdxNO4gfE9dVZOSTxteaXikHZuRHZuJ
+         d/zkIDRzgW3GQIWKaONqq4Kdo/hZvLzuCZ5DW34OZ9uKnygrHkN0ehxdCHeqPgOUIa
+         /0ikgeCAkKiT9qafinEP6Eg6lMx5lt1zVC8J/HbI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Alexander Sverdlin <alexander.sverdlin@gmail.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Lukasz Majewski <lukma@denx.de>,
+        stable@vger.kernel.org, Vladimir Oltean <olteanv@gmail.com>,
         Mark Brown <broonie@kernel.org>
-Subject: [PATCH 5.3 273/344] spi: ep93xx: Repair SPI CS lookup tables
-Date:   Thu,  3 Oct 2019 17:53:58 +0200
-Message-Id: <20191003154607.130398059@linuxfoundation.org>
+Subject: [PATCH 5.3 274/344] spi: spi-fsl-dspi: Exit the ISR with IRQ_NONE when its not ours
+Date:   Thu,  3 Oct 2019 17:53:59 +0200
+Message-Id: <20191003154607.205922020@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191003154540.062170222@linuxfoundation.org>
 References: <20191003154540.062170222@linuxfoundation.org>
@@ -62,85 +59,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alexander Sverdlin <alexander.sverdlin@gmail.com>
+From: Vladimir Oltean <olteanv@gmail.com>
 
-commit 4fbc485324d2975c54201091dfad0a7dd4902324 upstream.
+commit d41f36a6464a85c06ad920703d878e4491d2c023 upstream.
 
-The actual device name of the SPI controller being registered on EP93xx is
-"spi0" (as seen by gpiod_find_lookup_table()). This patch fixes all
-relevant lookup tables and the following failure (seen on EDB9302):
+The DSPI interrupt can be shared between two controllers at least on the
+LX2160A. In that case, the driver for one controller might misbehave and
+consume the other's interrupt. Fix this by actually checking if any of
+the bits in the status register have been asserted.
 
-ep93xx-spi ep93xx-spi.0: failed to register SPI master
-ep93xx-spi: probe of ep93xx-spi.0 failed with error -22
-
-Fixes: 1dfbf334f1236 ("spi: ep93xx: Convert to use CS GPIO descriptors")
-Cc: stable@vger.kernel.org
-Signed-off-by: Alexander Sverdlin <alexander.sverdlin@gmail.com>
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
-Reviewed-by: Lukasz Majewski <lukma@denx.de>
-Link: https://lore.kernel.org/r/20190831180402.10008-1-alexander.sverdlin@gmail.com
+Fixes: 13aed2392741 ("spi: spi-fsl-dspi: use IRQF_SHARED mode to request IRQ")
+Signed-off-by: Vladimir Oltean <olteanv@gmail.com>
+Link: https://lore.kernel.org/r/20190822212450.21420-2-olteanv@gmail.com
 Signed-off-by: Mark Brown <broonie@kernel.org>
+Cc: stable@vger.kernel.org
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/arm/mach-ep93xx/edb93xx.c       |    2 +-
- arch/arm/mach-ep93xx/simone.c        |    2 +-
- arch/arm/mach-ep93xx/ts72xx.c        |    4 ++--
- arch/arm/mach-ep93xx/vision_ep9307.c |    2 +-
- 4 files changed, 5 insertions(+), 5 deletions(-)
+ drivers/spi/spi-fsl-dspi.c |    4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
---- a/arch/arm/mach-ep93xx/edb93xx.c
-+++ b/arch/arm/mach-ep93xx/edb93xx.c
-@@ -103,7 +103,7 @@ static struct spi_board_info edb93xx_spi
- };
+--- a/drivers/spi/spi-fsl-dspi.c
++++ b/drivers/spi/spi-fsl-dspi.c
+@@ -886,9 +886,11 @@ static irqreturn_t dspi_interrupt(int ir
+ 					trans_mode);
+ 			}
+ 		}
++
++		return IRQ_HANDLED;
+ 	}
  
- static struct gpiod_lookup_table edb93xx_spi_cs_gpio_table = {
--	.dev_id = "ep93xx-spi.0",
-+	.dev_id = "spi0",
- 	.table = {
- 		GPIO_LOOKUP("A", 6, "cs", GPIO_ACTIVE_LOW),
- 		{ },
---- a/arch/arm/mach-ep93xx/simone.c
-+++ b/arch/arm/mach-ep93xx/simone.c
-@@ -73,7 +73,7 @@ static struct spi_board_info simone_spi_
-  * v1.3 parts will still work, since the signal on SFRMOUT is automatic.
-  */
- static struct gpiod_lookup_table simone_spi_cs_gpio_table = {
--	.dev_id = "ep93xx-spi.0",
-+	.dev_id = "spi0",
- 	.table = {
- 		GPIO_LOOKUP("A", 1, "cs", GPIO_ACTIVE_LOW),
- 		{ },
---- a/arch/arm/mach-ep93xx/ts72xx.c
-+++ b/arch/arm/mach-ep93xx/ts72xx.c
-@@ -267,7 +267,7 @@ static struct spi_board_info bk3_spi_boa
-  * goes through CPLD
-  */
- static struct gpiod_lookup_table bk3_spi_cs_gpio_table = {
--	.dev_id = "ep93xx-spi.0",
-+	.dev_id = "spi0",
- 	.table = {
- 		GPIO_LOOKUP("F", 3, "cs", GPIO_ACTIVE_LOW),
- 		{ },
-@@ -316,7 +316,7 @@ static struct spi_board_info ts72xx_spi_
- };
+-	return IRQ_HANDLED;
++	return IRQ_NONE;
+ }
  
- static struct gpiod_lookup_table ts72xx_spi_cs_gpio_table = {
--	.dev_id = "ep93xx-spi.0",
-+	.dev_id = "spi0",
- 	.table = {
- 		/* DIO_17 */
- 		GPIO_LOOKUP("F", 2, "cs", GPIO_ACTIVE_LOW),
---- a/arch/arm/mach-ep93xx/vision_ep9307.c
-+++ b/arch/arm/mach-ep93xx/vision_ep9307.c
-@@ -242,7 +242,7 @@ static struct spi_board_info vision_spi_
- };
- 
- static struct gpiod_lookup_table vision_spi_cs_gpio_table = {
--	.dev_id = "ep93xx-spi.0",
-+	.dev_id = "spi0",
- 	.table = {
- 		GPIO_LOOKUP_IDX("A", 6, "cs", 0, GPIO_ACTIVE_LOW),
- 		GPIO_LOOKUP_IDX("A", 7, "cs", 1, GPIO_ACTIVE_LOW),
+ static const struct of_device_id fsl_dspi_dt_ids[] = {
 
 
