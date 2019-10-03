@@ -2,54 +2,51 @@ Return-Path: <SRS0=6dNS=X4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A845C10F14
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:08:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A7D3C32792
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:09:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 345AC20865
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:08:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D873920673
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:08:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570122535;
-	bh=GSS11zVS5sAZCAm/t7b3x4fHnf3ZmTKbpHI1jMi/XZQ=;
+	s=default; t=1570122540;
+	bh=l+Sn/vT20V4n9NS+jpT09f33J7KQnZFya5wMuhRIGZ4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=SEsphKqsJuSscVL4AEcPotMrb9ZwMokm0jTTA2ftVPATZzGJqL6Gq2VRGhWSpppsk
-	 yvWOQ1aqQTPC/O1Li1eYdjtwDu4i7kqxCeQS9e3AROF+uDkTUUYy1VtuhT01OOwfBW
-	 Al5e1OphbW5qhSrYqvGd1oPOGwrodPvz4V7RBleg=
+	b=DJJxoswyKpvy7JG7mIdi4SieSzA6Aqpfirj0ZemYAd/ZxdQCfn+T6Q2p46U5EQUkQ
+	 RMz1BRF1tGiXRoFoe3wBCBqFkc0jsPD8LJXQxx+XBMwYLFx4ydt7qpWUhXvABRI1xS
+	 7G2yebxvbJvelnPP/53TApa/+nXnwt8z7+Jkjt8g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392184AbfJCQfB (ORCPT
+        id S2404220AbfJCQev (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 12:35:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43702 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 12:34:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43480 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392178AbfJCQe6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:34:58 -0400
+        id S2392166AbfJCQer (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:34:47 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0895B2086A;
-        Thu,  3 Oct 2019 16:34:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3481820830;
+        Thu,  3 Oct 2019 16:34:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570120497;
-        bh=GSS11zVS5sAZCAm/t7b3x4fHnf3ZmTKbpHI1jMi/XZQ=;
+        s=default; t=1570120486;
+        bh=l+Sn/vT20V4n9NS+jpT09f33J7KQnZFya5wMuhRIGZ4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=RpZmFtF62WRrTcScrj4G0/c/5TlMuF2AsaX858q/MI3PPkSwoIaPCetgGNbZCx+1M
-         n6iKKVVAwjzINwU6BVJZXp2cCURLWJPX2PoHVKD5TikWOthuBPEUdb0jKVX9QLQrrq
-         rtDcoRoLW3iDey4/R7Vr4mKV9K+Ti483BdcQh7mQ=
+        b=txh1pYvEnZBjltGX4hGNNhVsC61L96gzv5pByxv+fgKWVRmV/8hs7ks2ygUNi7TL6
+         vudKGdgpUOjNuybIrFGBUNxzgl5AkKmN0usBR2WAuBxE988HCmDTdGMQLipy3J1pNx
+         la6wj/BAFhDXUNxFDhPGlR7t0OWqyOk5i1dh/+sY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        syzbot+74c65761783d66a9c97c@syzkaller.appspotmail.com,
-        Oliver Neukum <oneukum@suse.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 205/313] zd1211rw: remove false assertion from zd_mac_clear()
-Date:   Thu,  3 Oct 2019 17:53:03 +0200
-Message-Id: <20191003154553.189396359@linuxfoundation.org>
+        stable@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: [PATCH 5.2 239/313] platform/x86: intel_int0002_vgpio: Fix wakeups not working on Cherry Trail
+Date:   Thu,  3 Oct 2019 17:53:37 +0200
+Message-Id: <20191003154556.585063804@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191003154533.590915454@linuxfoundation.org>
 References: <20191003154533.590915454@linuxfoundation.org>
@@ -62,35 +59,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Oliver Neukum <oneukum@suse.com>
+From: Hans de Goede <hdegoede@redhat.com>
 
-[ Upstream commit 7a2eb7367fdea72e448d1a847aa857f6caf8ea2f ]
+commit 1bd43d0077b9a32a8b8059036471f3fc82dae342 upstream.
 
-The function is called before the lock which is asserted was ever used.
-Just remove it.
+Commit 871f1f2bcb01 ("platform/x86: intel_int0002_vgpio: Only implement
+irq_set_wake on Bay Trail") removed the irq_set_wake method from the
+struct irq_chip used on Cherry Trail, but it did not set
+IRQCHIP_SKIP_SET_WAKE causing  kernel/irq/manage.c: set_irq_wake_real()
+to return -ENXIO.
 
-Reported-by: syzbot+74c65761783d66a9c97c@syzkaller.appspotmail.com
-Signed-off-by: Oliver Neukum <oneukum@suse.com>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+This causes the kernel to no longer see PME events reported through the
+INT0002 device as wakeup events. Which e.g. breaks wakeup by the (USB)
+keyboard on many Cherry Trail 2-in-1 devices.
+
+Cc: stable@vger.kernel.org
+Fixes: 871f1f2bcb01 ("platform/x86: intel_int0002_vgpio: Only implement irq_set_wake on Bay Trail")
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- drivers/net/wireless/zydas/zd1211rw/zd_mac.c | 1 -
- 1 file changed, 1 deletion(-)
+ drivers/platform/x86/intel_int0002_vgpio.c |    1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/net/wireless/zydas/zd1211rw/zd_mac.c b/drivers/net/wireless/zydas/zd1211rw/zd_mac.c
-index da7e63fca9f57..a9999d10ae81f 100644
---- a/drivers/net/wireless/zydas/zd1211rw/zd_mac.c
-+++ b/drivers/net/wireless/zydas/zd1211rw/zd_mac.c
-@@ -223,7 +223,6 @@ void zd_mac_clear(struct zd_mac *mac)
- {
- 	flush_workqueue(zd_workqueue);
- 	zd_chip_clear(&mac->chip);
--	lockdep_assert_held(&mac->lock);
- 	ZD_MEMCLEAR(mac, sizeof(struct zd_mac));
- }
+--- a/drivers/platform/x86/intel_int0002_vgpio.c
++++ b/drivers/platform/x86/intel_int0002_vgpio.c
+@@ -155,6 +155,7 @@ static struct irq_chip int0002_cht_irqch
+ 	 * No set_wake, on CHT the IRQ is typically shared with the ACPI SCI
+ 	 * and we don't want to mess with the ACPI SCI irq settings.
+ 	 */
++	.flags			= IRQCHIP_SKIP_SET_WAKE,
+ };
  
--- 
-2.20.1
-
+ static int int0002_probe(struct platform_device *pdev)
 
 
