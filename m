@@ -2,115 +2,159 @@ Return-Path: <SRS0=6dNS=X4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 55487C4CED1
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 14:01:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E0F1C32792
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 14:05:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2AD60207FF
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 14:01:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 32966215EA
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 14:05:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="nrtSGimh"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="YOXOx+Tp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729694AbfJCOB0 (ORCPT
+        id S1730104AbfJCOFe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 10:01:26 -0400
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:42743 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727488AbfJCOB0 (ORCPT
+        Thu, 3 Oct 2019 10:05:34 -0400
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:45617 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729535AbfJCOFe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 10:01:26 -0400
-Received: by mail-pl1-f194.google.com with SMTP id e5so1568920pls.9
-        for <linux-kernel@vger.kernel.org>; Thu, 03 Oct 2019 07:01:25 -0700 (PDT)
+        Thu, 3 Oct 2019 10:05:34 -0400
+Received: by mail-ot1-f66.google.com with SMTP id 41so2345768oti.12
+        for <linux-kernel@vger.kernel.org>; Thu, 03 Oct 2019 07:05:33 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=joelfernandes.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=876AH/g0tuUTbiBA2yyLEOyqGbxYhU6MzL7z+qZy1Es=;
-        b=nrtSGimhbEUSrLHC4xuRBlfgA4KKx/6UC4RgNn/m7LZZT8speP1gcA/3X9nnBoFx+t
-         ILiFjuK+sySg4HdoEME4M8j2CiFYepfSP97WoHkzhZuYedUu6wMu5q2ZNN7I6tpW6Vik
-         zs706DZXTgG2BYmpwnIvEWl663XXqp/Mhe7SM=
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=CjkcCbQk4BfKYjIfcsA27jNMdWtxDDNMFITjeJ5N6Yo=;
+        b=YOXOx+TpchFlAH//++YWGEZLm1lokUcPLph2RU/Nu9ijloryGxTZofWrIGe7Ku03q1
+         Tzs93SvjWVnXX4Ix9pEmfQIydneey+OnWoUywuxD3xJQPit7fR4RUkv3aCY0Kc+nZUxm
+         74IRyYDFNglOCzz0yKXO9ne/egBQUOI6ITzGRMC12TIdQSjjilUgUphdDgCgCpck92wN
+         r2cHZIFAaEc1uAzwLfz4edoSRcU/EkpLCUMNfxMbwb1NTL3TEaklMlhG+jHSbZ0c5eHH
+         9NjN3q0urk1H//CSeEOj3BexelnRhpkPQ8G+WhdF02b5vB5+lmVLGU4A1NMUd2nN6D4Q
+         Q0cw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=876AH/g0tuUTbiBA2yyLEOyqGbxYhU6MzL7z+qZy1Es=;
-        b=sRDEp8uln3EiVjGo5ZDQIwCIMzZ2o5UPfP+USrpHmP6F+cLbOi7UpccBhAt4G02EhY
-         bSvS2STErOEepFl1xBgO9mgJtOQl3xPtNwYBcEW/7cr3SxHZx+2B8Ik+eFEpShvrrtMk
-         fCc8hHErhLMwK72JapD3h/OvBsdT+bfh0+R0xPZZI+syFoDA4lyT/pXl+04K3YSSOWXt
-         Ca3gg+HFZ0LLFiAtIwpU9KFySF8fkxXNlghrl7fMCNR3JnDX3uchoZVZJiYxsnTleEcY
-         iBx80mDV+ewSN39XBIqYxLi2LcMX9ouTXp5Tggg8qtKsgtif1NJSe7JCjTiOENSTKXKG
-         4mOw==
-X-Gm-Message-State: APjAAAViHa7C9RcSgPr7sPJcxf1vNXsjY1qjtQ2m6RyrC+/9Q8QYjaw5
-        M3UWwI+7bl0TpL2q5HPQyZuF6w==
-X-Google-Smtp-Source: APXvYqzf9cL9E0f1QDGQe+yuGP4T7h33qq0SFtLKgdd8IOYJ+LvDQJKKpSJCD8IlPVdcr18GHUu2gw==
-X-Received: by 2002:a17:902:968e:: with SMTP id n14mr3320374plp.339.1570111285323;
-        Thu, 03 Oct 2019 07:01:25 -0700 (PDT)
-Received: from localhost ([2620:15c:6:12:9c46:e0da:efbf:69cc])
-        by smtp.gmail.com with ESMTPSA id o185sm5038868pfg.136.2019.10.03.07.01.24
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 03 Oct 2019 07:01:24 -0700 (PDT)
-Date:   Thu, 3 Oct 2019 10:01:23 -0400
-From:   Joel Fernandes <joel@joelfernandes.org>
-To:     "Paul E. McKenney" <paulmck@kernel.org>
-Cc:     Steven Rostedt <rostedt@goodmis.org>,
-        David Howells <dhowells@redhat.com>, rcu@vger.kernel.org,
-        linux-kernel@vger.kernel.org, mingo@kernel.org,
-        jiangshanlai@gmail.com, dipankar@in.ibm.com,
-        akpm@linux-foundation.org, mathieu.desnoyers@efficios.com,
-        josh@joshtriplett.org, tglx@linutronix.de, peterz@infradead.org,
-        edumazet@google.com, fweisbec@gmail.com, oleg@redhat.com,
-        Bart Van Assche <bart.vanassche@wdc.com>,
-        Christoph Hellwig <hch@lst.de>, Hannes Reinecke <hare@suse.de>,
-        Johannes Thumshirn <jthumshirn@suse.de>,
-        Shane M Seymour <shane.seymour@hpe.com>,
-        "Martin K . Petersen" <martin.petersen@oracle.com>
-Subject: Re: [PATCH tip/core/rcu 1/9] rcu: Upgrade rcu_swap_protected() to
- rcu_replace()
-Message-ID: <20191003140123.GF254942@google.com>
-References: <20191003014310.13262-1-paulmck@kernel.org>
- <20191003014153.GA13156@paulmck-ThinkPad-P72>
- <25408.1570091957@warthog.procyon.org.uk>
- <20191003090850.1e2561b3@gandalf.local.home>
- <20191003133315.GN2689@paulmck-ThinkPad-P72>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=CjkcCbQk4BfKYjIfcsA27jNMdWtxDDNMFITjeJ5N6Yo=;
+        b=s8XgFyP+R/2Lev1tp0uV2wtyH3xWV9yqgy78oNG1pAzPcG14JT+gM9KHaB+Ghj4c0r
+         BeFxa8V5rg2nO10dk1gg0YQWng9OIOH2MC/Vbvl7aQ1eyD+pp3YDlqa3ooygcIewbML+
+         VqlhJZD9qZKmp4yFNWKspPcBd/jOCTBMYc2hqSlaGYc0breSTfmPmXq2WztcgLydibks
+         78Y6vd49bH8obSq3P+Sd1zm7oR7ME7En2sSEvB47AYkoFY1C2kKVPOG3+zV2rERI4Dww
+         POoaBsyprq/aBzwW0QJP2gFxxaAd7d0WqF4/jTWWGYr1Bk1PP2HnPf5V8rb1E5PuLODo
+         /oDA==
+X-Gm-Message-State: APjAAAWcc1Xy4wM+RtSQkpjLaUHu0pF/834eHAOt9HWBDN5htBG+I9mo
+        On14ddMBjDnnNNzuWpO9POe88Z7vXZfsxkPKrpVteA==
+X-Google-Smtp-Source: APXvYqzJLEJexAn72R2rPNacy6O7n9DNnITIY6sTbrSg2g0w3x+cqeu7psGfMmvb0/+z5UR1x9WrNfk4Bm8i08YwGxo=
+X-Received: by 2002:a05:6830:609:: with SMTP id w9mr6937958oti.292.1570111533275;
+ Thu, 03 Oct 2019 07:05:33 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191003133315.GN2689@paulmck-ThinkPad-P72>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20190927100407.1863293-1-paul.kocialkowski@bootlin.com>
+ <20190927100407.1863293-4-paul.kocialkowski@bootlin.com> <CAMpxmJUHPuGPPPFSctyhtfj0oAk6oJ+=mvgN4=7jmLxAfHs45Q@mail.gmail.com>
+ <20191003112610.GA28856@aptenodytes>
+In-Reply-To: <20191003112610.GA28856@aptenodytes>
+From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Date:   Thu, 3 Oct 2019 16:05:22 +0200
+Message-ID: <CAMpxmJVfgDTNcwk6qmCwfwQkp_tw+8CVbO1mSeHQkBzJgoWLXg@mail.gmail.com>
+Subject: Re: [PATCH v3 3/5] gpio: syscon: Add support for a custom get operation
+To:     Paul Kocialkowski <paul.kocialkowski@bootlin.com>
+Cc:     linux-gpio <linux-gpio@vger.kernel.org>,
+        linux-devicetree <devicetree@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Oct 03, 2019 at 06:33:15AM -0700, Paul E. McKenney wrote:
-> On Thu, Oct 03, 2019 at 09:08:50AM -0400, Steven Rostedt wrote:
-> > On Thu, 03 Oct 2019 09:39:17 +0100
-> > David Howells <dhowells@redhat.com> wrote:
-> > 
-> > > paulmck@kernel.org wrote:
-> > > 
-> > > > +#define rcu_replace(rcu_ptr, ptr, c)					\
-> > > > +({									\
-> > > > +	typeof(ptr) __tmp = rcu_dereference_protected((rcu_ptr), (c));	\
-> > > > +	rcu_assign_pointer((rcu_ptr), (ptr));				\
-> > > > +	__tmp;								\
-> > > > +})  
-> > > 
-> > > Does it make sense to actually use xchg() if that's supported by the arch?
-> 
-> Historically, xchg() has been quite a bit slower than a pair of assignment
-> statements, in part due to the strong memory ordering guaranteed by
-> xchg().  Has that changed?  If so, then, agreed, it might make sense to
-> use xchg().
+czw., 3 pa=C5=BA 2019 o 13:26 Paul Kocialkowski
+<paul.kocialkowski@bootlin.com> napisa=C5=82(a):
+>
+> Hi,
+>
+> On Thu 03 Oct 19, 10:24, Bartosz Golaszewski wrote:
+> > pt., 27 wrz 2019 o 12:04 Paul Kocialkowski
+> > <paul.kocialkowski@bootlin.com> napisa=C5=82(a):
+> > >
+> > > Some drivers might need a custom get operation to match custom
+> > > behavior implemented in the set operation.
+> > >
+> > > Add plumbing for supporting that.
+> > >
+> > > Signed-off-by: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
+> > > ---
+> > >  drivers/gpio/gpio-syscon.c | 7 ++++---
+> > >  1 file changed, 4 insertions(+), 3 deletions(-)
+> > >
+> > > diff --git a/drivers/gpio/gpio-syscon.c b/drivers/gpio/gpio-syscon.c
+> > > index 31f332074d7d..05c537ed73f1 100644
+> > > --- a/drivers/gpio/gpio-syscon.c
+> > > +++ b/drivers/gpio/gpio-syscon.c
+> > > @@ -43,8 +43,9 @@ struct syscon_gpio_data {
+> > >         unsigned int    bit_count;
+> > >         unsigned int    dat_bit_offset;
+> > >         unsigned int    dir_bit_offset;
+> > > -       void            (*set)(struct gpio_chip *chip,
+> > > -                              unsigned offset, int value);
+> > > +       int             (*get)(struct gpio_chip *chip, unsigned offse=
+t);
+> > > +       void            (*set)(struct gpio_chip *chip, unsigned offse=
+t,
+> > > +                              int value);
+> >
+> > Why did you change this line? Doesn't seem necessary and pollutes the h=
+istory.
+>
+> This is for consistency since both the "chip" and "offset" arguments can =
+fit
+> in a single line. Since I want the "get" addition to fit in a single line=
+,
+> bringing back "offset" on the previous line of "set" makes things consist=
+ent.
+> There's probably no particular reason for the split in the first place.
+>
+> Do you think it needs a separate cosmetic commit only for that?
+> I'd rather add a note in the commit message and keep the change as-is.
+>
 
-For the kfree_rcu() performance testing I was working on recently, replacing
-xchg() with a pair of assignment statements in the code being tested provided
-a great performance increase (on x86).
+The line is still broken - just in a different place. I'd prefer to
+leave it as it is frankly, there's nothing wrong with it.
 
-thanks,
+Bart
 
- - Joel
-
+> Cheers,
+>
+> Paul
+>
+> > Bart
+> >
+> > >  };
+> > >
+> > >  struct syscon_gpio_priv {
+> > > @@ -252,7 +253,7 @@ static int syscon_gpio_probe(struct platform_devi=
+ce *pdev)
+> > >         priv->chip.label =3D dev_name(dev);
+> > >         priv->chip.base =3D -1;
+> > >         priv->chip.ngpio =3D priv->data->bit_count;
+> > > -       priv->chip.get =3D syscon_gpio_get;
+> > > +       priv->chip.get =3D priv->data->get ? : syscon_gpio_get;
+> > >         if (priv->data->flags & GPIO_SYSCON_FEAT_IN)
+> > >                 priv->chip.direction_input =3D syscon_gpio_dir_in;
+> > >         if (priv->data->flags & GPIO_SYSCON_FEAT_OUT) {
+> > > --
+> > > 2.23.0
+> > >
+>
+> --
+> Paul Kocialkowski, Bootlin
+> Embedded Linux and kernel engineering
+> https://bootlin.com
