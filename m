@@ -7,49 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA5DDC10F14
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:04:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 91846C32792
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:04:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9D38220673
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:04:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5BB5220673
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:04:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570122289;
-	bh=8w1s5lfnGLvSVJ9z1WInK5LJrmxiaBT1G9gYmEMrPtw=;
+	s=default; t=1570122295;
+	bh=34W1jjTazjZpi9L33eWvheVRmOMYkavJ5q66RdOX93w=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=v4K+QtbzZutBsR375QNkQNLUlZOHa/O4hSWDa6b3aZw0rjEl8PumOoMqG+/xMQyCI
-	 WNQJD7Tas3EF0XkO02C3PH392THshzZzo0JeefHRuDn8AD2unAHt9vF2W1H6eFQ8I3
-	 TU76onjI+GuU+SOu7vc74MHG6NhXmixfvrtTghXs=
+	b=RXqpWlj5StXzgUHcguOLEO1yZwBrD2KvZG/W51Ybm6+8YZglAJoWS8TdD3Z1GcixS
+	 r9CvjA44PWc16xcfKJOgXbCCWRvIpIEYkkpnpLTmsj06ZEDGh5sWJ9HCn7cc9zh5CL
+	 SRnMqPAUmLfMB3jQQKbYi9mXjZHeM+x0PiVDA1z0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393331AbfJCREs (ORCPT
+        id S2393338AbfJCREy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 13:04:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50782 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 13:04:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50562 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404919AbfJCQkd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:40:33 -0400
+        id S2392480AbfJCQkW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:40:22 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2420F215EA;
-        Thu,  3 Oct 2019 16:40:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6FDB820830;
+        Thu,  3 Oct 2019 16:40:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570120832;
-        bh=8w1s5lfnGLvSVJ9z1WInK5LJrmxiaBT1G9gYmEMrPtw=;
+        s=default; t=1570120821;
+        bh=34W1jjTazjZpi9L33eWvheVRmOMYkavJ5q66RdOX93w=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Q3eHQbjJ2OGLM+CFGtWrjSum6jQHcxgK26184bDKeIPMejaH0Pws9A+vko7v8pB1Y
-         JJoQr+orn300sRm2F0tveK5+GEDvGz9cHPEsWYhZnqFTvAwtE0CifgaCYo6G7C7QJh
-         Xb3IY7WNAd9LK93yeZ6AEZDNmSRbaCCDo5iaPGJs=
+        b=gBJpk0Cg/dpxI+ve1Alw6sDeHBD+zmL97V9D081y6vLSXPOIEflcgLHEgrrj7dEa6
+         VMvCCy9M2+8KrNBqipLPH4riHxH+F5ZvmA2TLr/5LvMPSF/Dw+nlbMJCR6K2NqJDcy
+         qindwLiLSGufLdzjmb2GBZYjHvMvxrktvIywp4s4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Pan Xiuli <xiuli.pan@linux.intel.com>,
-        Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
-        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-        Mark Brown <broonie@kernel.org>,
+        stable@vger.kernel.org, Nick Stoughton <nstoughton@logitech.com>,
+        Pavel Machek <pavel@ucw.cz>,
+        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.3 054/344] ASoC: SOF: pci: mark last_busy value at runtime PM init
-Date:   Thu,  3 Oct 2019 17:50:19 +0200
-Message-Id: <20191003154545.474856846@linuxfoundation.org>
+Subject: [PATCH 5.3 050/344] leds: leds-lp5562 allow firmware files up to the maximum length
+Date:   Thu,  3 Oct 2019 17:50:15 +0200
+Message-Id: <20191003154545.091378812@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191003154540.062170222@linuxfoundation.org>
 References: <20191003154540.062170222@linuxfoundation.org>
@@ -62,38 +61,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Pan Xiuli <xiuli.pan@linux.intel.com>
+From: Nick Stoughton <nstoughton@logitech.com>
 
-[ Upstream commit f1b1b9b136827915624136624ff54aba5890a15b ]
+[ Upstream commit ed2abfebb041473092b41527903f93390d38afa7 ]
 
-If last_busy value is not set at runtime PM enable, the device will be
-suspend immediately after usage counter is 0. Set the last_busy value to
-make sure delay is working at first boot up.
+Firmware files are in ASCII, using 2 hex characters per byte. The
+maximum length of a firmware string is therefore
 
-Signed-off-by: Pan Xiuli <xiuli.pan@linux.intel.com>
-Signed-off-by: Ranjani Sridharan <ranjani.sridharan@linux.intel.com>
-Signed-off-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Link: https://lore.kernel.org/r/20190722141402.7194-2-pierre-louis.bossart@linux.intel.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
+16 (commands) * 2 (bytes per command) * 2 (characters per byte) = 64
+
+Fixes: ff45262a85db ("leds: add new LP5562 LED driver")
+Signed-off-by: Nick Stoughton <nstoughton@logitech.com>
+Acked-by: Pavel Machek <pavel@ucw.cz>
+Signed-off-by: Jacek Anaszewski <jacek.anaszewski@gmail.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/sof/sof-pci-dev.c | 3 +++
- 1 file changed, 3 insertions(+)
+ drivers/leds/leds-lp5562.c | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
-diff --git a/sound/soc/sof/sof-pci-dev.c b/sound/soc/sof/sof-pci-dev.c
-index 65d1bac4c6b8b..6fd3df7c57a3a 100644
---- a/sound/soc/sof/sof-pci-dev.c
-+++ b/sound/soc/sof/sof-pci-dev.c
-@@ -223,6 +223,9 @@ static void sof_pci_probe_complete(struct device *dev)
- 	 */
- 	pm_runtime_allow(dev);
+diff --git a/drivers/leds/leds-lp5562.c b/drivers/leds/leds-lp5562.c
+index 37632fc637414..edb57c42e8b1d 100644
+--- a/drivers/leds/leds-lp5562.c
++++ b/drivers/leds/leds-lp5562.c
+@@ -260,7 +260,11 @@ static void lp5562_firmware_loaded(struct lp55xx_chip *chip)
+ {
+ 	const struct firmware *fw = chip->fw;
  
-+	/* mark last_busy for pm_runtime to make sure not suspend immediately */
-+	pm_runtime_mark_last_busy(dev);
-+
- 	/* follow recommendation in pci-driver.c to decrement usage counter */
- 	pm_runtime_put_noidle(dev);
- }
+-	if (fw->size > LP5562_PROGRAM_LENGTH) {
++	/*
++	 * the firmware is encoded in ascii hex character, with 2 chars
++	 * per byte
++	 */
++	if (fw->size > (LP5562_PROGRAM_LENGTH * 2)) {
+ 		dev_err(&chip->cl->dev, "firmware data size overflow: %zu\n",
+ 			fw->size);
+ 		return;
 -- 
 2.20.1
 
