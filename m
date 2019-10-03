@@ -2,157 +2,130 @@ Return-Path: <SRS0=6dNS=X4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 24DEDC32792
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 15:10:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D156C10F14
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 15:12:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E838820700
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 15:10:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 45F3C20679
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 15:12:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=akamai.com header.i=@akamai.com header.b="cftZd01d"
+	dkim=pass (1024-bit key) header.d=renesasgroup.onmicrosoft.com header.i=@renesasgroup.onmicrosoft.com header.b="TSMsih4A"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728786AbfJCPK1 (ORCPT
+        id S1729408AbfJCPM3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 11:10:27 -0400
-Received: from mx0b-00190b01.pphosted.com ([67.231.157.127]:19070 "EHLO
-        mx0b-00190b01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725932AbfJCPK0 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 11:10:26 -0400
-Received: from pps.filterd (m0122330.ppops.net [127.0.0.1])
-        by mx0b-00190b01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id x93F9ql2007306;
-        Thu, 3 Oct 2019 16:10:22 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=akamai.com; h=from : to : cc :
- subject : date : message-id : references : in-reply-to : content-type :
- content-transfer-encoding : mime-version; s=jan2016.eng;
- bh=aiiwgq017sgikgeS8nK7Pvr05rJOP3xAjs885pxUnCY=;
- b=cftZd01dUaoyIoUMQlgPZyMIev4b2LftOiJlf+D0frzLAsRB+kIRmvtDo25DioNtjLi2
- /heMKOPbEnETw3CfzSwszbZGXJ9kq3WL02j++S4S4bmiAnj77w+YPNGOx/uSDq1TcR72
- B7XLNgfsdxhmYtyuc8M6hIYiMookcht5zHihMoCvlz/h7WpITjA2iQHIhxf+RsNKfTqw
- nPLfsfdhH1HawLMuNOuhqJ4Vyx87zUTCp+yQFYRNoOgRLvAkUromz49BOeIeeM0KxIJv
- RDaQRpPmjvTj9z8x9/GSEb02nTrHyBciTe+qoTQgAvy0fWbVq4mox/lhs66oieZOZreT Jg== 
-Received: from prod-mail-ppoint7 (prod-mail-ppoint7.akamai.com [96.6.114.121] (may be forged))
-        by mx0b-00190b01.pphosted.com with ESMTP id 2vceft0bws-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 03 Oct 2019 16:10:22 +0100
-Received: from pps.filterd (prod-mail-ppoint7.akamai.com [127.0.0.1])
-        by prod-mail-ppoint7.akamai.com (8.16.0.27/8.16.0.27) with SMTP id x93F77k0021988;
-        Thu, 3 Oct 2019 11:10:21 -0400
-Received: from email.msg.corp.akamai.com ([172.27.123.31])
-        by prod-mail-ppoint7.akamai.com with ESMTP id 2va2v172m4-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
-        Thu, 03 Oct 2019 11:10:18 -0400
-Received: from usma1ex-dag1mb6.msg.corp.akamai.com (172.27.123.65) by
- usma1ex-dag1mb6.msg.corp.akamai.com (172.27.123.65) with Microsoft SMTP
- Server (TLS) id 15.0.1473.3; Thu, 3 Oct 2019 11:10:02 -0400
-Received: from usma1ex-dag1mb6.msg.corp.akamai.com ([172.27.123.65]) by
- usma1ex-dag1mb6.msg.corp.akamai.com ([172.27.123.65]) with mapi id
- 15.00.1473.005; Thu, 3 Oct 2019 11:10:02 -0400
-From:   "Lubashev, Igor" <ilubashe@akamai.com>
-To:     Greg KH <greg@kroah.com>,
+        Thu, 3 Oct 2019 11:12:29 -0400
+Received: from mail-eopbgr1400092.outbound.protection.outlook.com ([40.107.140.92]:44032
+        "EHLO JPN01-TY1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726364AbfJCPM3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 11:12:29 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=SeWp63NJL4odvR3EecDLyOvCGXhYVtBtZRiwjtKiSyCCcBGHXV8KtbQtf4ti1//r/RAMtAM5GgZmlEtSWqyDYLLESlSJ2fl8drriymGfoJ3W8i2QpMYihLjRTYWY/otDqQ9Qb92Hrdv2C3aE2yahvbIu3FSeGuSpxk8MqLwxT3eKN6BbjxB84af43/JJV5i0IEfbNE5bVqlSgI2BeBfGh27i9v6tOfDbn/mCZUNeI0e0Pizt6o3EQkIlUsgVjwvTZh0evZaO1/X0/twPZzF1KfSrvUnLiLrsp4I5TJIuIFtuyfc+en+M5+fL5FOBHLSVdixrIWbyui5Mk3m/6eSxQA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=jMP90xpm/oH2VOa0gugfuxfjypFjWSjoxGrA3o2IXuE=;
+ b=c/V5xpPIEb7gZqWXgMxFDiySSEkIdHBdRl8g7hhlexvm1YJlT/hF8c1A+xI9s7zyGstkQt6NpoS1M2AjQ0HKD5vaZh28CokxuLbtWYp/dsJ1xKB8XvYopg/P5JOU8UB1rv4KPIDd3xasSuGVB3HYneTIK6MmMwswUp9dBSz0r9PAMhafpbLSuKCMTdL8BlTWf4SmGZN+O7j2nX3Wn9ta62SkGyjDXDySxvPq3aiOxghji9kyjJkzyLc/iY6pCFsmogwtb/ujyW5q8L3p6fqm6sKWhJqwbtQ6xZyCx9tBBuUlEBCHo9TpjBmg1mDbG8pWppb7oj8C4Gjg2QMEpYGiKQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=renesas.com; dmarc=pass action=none header.from=renesas.com;
+ dkim=pass header.d=renesas.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=renesasgroup.onmicrosoft.com; s=selector2-renesasgroup-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=jMP90xpm/oH2VOa0gugfuxfjypFjWSjoxGrA3o2IXuE=;
+ b=TSMsih4Ad7xs9HCK5XrD2ci2wl6rkJspuD/ArGbDBQgWshySP91yma+VS80/mNngeuikSyck1pCUnvu6upp/MFLLDrFz0NN/oFhFE++02Vqb0xwdxq8+H3kH/5zybRda39lmM/ARpFV5OtSbrKfFE2PdDSmw8GvUgK6xjEGvvpQ=
+Received: from OSAPR01MB3025.jpnprd01.prod.outlook.com (52.134.248.22) by
+ OSAPR01MB5042.jpnprd01.prod.outlook.com (20.179.177.75) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2305.20; Thu, 3 Oct 2019 15:12:25 +0000
+Received: from OSAPR01MB3025.jpnprd01.prod.outlook.com
+ ([fe80::f193:eee6:cb3b:a3b5]) by OSAPR01MB3025.jpnprd01.prod.outlook.com
+ ([fe80::f193:eee6:cb3b:a3b5%3]) with mapi id 15.20.2305.023; Thu, 3 Oct 2019
+ 15:12:25 +0000
+From:   Vincent Cheng <vincent.cheng.xh@renesas.com>
+To:     Rob Herring <robh@kernel.org>
+CC:     "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "richardcochran@gmail.com" <richardcochran@gmail.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-CC:     "stable-commits@vger.kernel.org" <stable-commits@vger.kernel.org>
-Subject: RE: Patch "perf ftrace: Use CAP_SYS_ADMIN instead of euid==0" has
- been added to the 5.3-stable tree
-Thread-Topic: Patch "perf ftrace: Use CAP_SYS_ADMIN instead of euid==0" has
- been added to the 5.3-stable tree
-Thread-Index: AQHVeHvlnnYd4NteX0ObrI+M1hArMKdI0G4AgAAyjIA=
-Date:   Thu, 3 Oct 2019 15:10:02 +0000
-Message-ID: <795ba9fa06cf40048aecc60fff35e21c@usma1ex-dag1mb6.msg.corp.akamai.com>
-References: <20191001171555.9CBC6205C9@mail.kernel.org>
- <20191003075006.GA1830608@kroah.com>
-In-Reply-To: <20191003075006.GA1830608@kroah.com>
+Subject: Re: [PATCH 1/2] dt-bindings: ptp: Add binding doc for IDT ClockMatrix
+ based PTP clock
+Thread-Topic: [PATCH 1/2] dt-bindings: ptp: Add binding doc for IDT
+ ClockMatrix based PTP clock
+Thread-Index: AQHVbly6xWB76P+IOkSrUCgqrhtfFqdGbPUAgAKwMIA=
+Date:   Thu, 3 Oct 2019 15:12:24 +0000
+Message-ID: <20191003145546.GA19695@renesas.com>
+References: <1568837198-27211-1-git-send-email-vincent.cheng.xh@renesas.com>
+ <5d93ce84.1c69fb81.8e964.4dc1@mx.google.com>
+In-Reply-To: <5d93ce84.1c69fb81.8e964.4dc1@mx.google.com>
 Accept-Language: en-US
 Content-Language: en-US
 X-MS-Has-Attach: 
 X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [172.19.35.174]
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+x-originating-ip: [173.195.53.163]
+x-clientproxiedby: BYAPR11CA0087.namprd11.prod.outlook.com
+ (2603:10b6:a03:f4::28) To OSAPR01MB3025.jpnprd01.prod.outlook.com
+ (2603:1096:604:2::22)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=vincent.cheng.xh@renesas.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 87415c58-eac8-46ef-7ecb-08d7481418bd
+x-ms-office365-filtering-ht: Tenant
+x-ms-traffictypediagnostic: OSAPR01MB5042:
+x-microsoft-antispam-prvs: <OSAPR01MB5042BA66C4EBB3DABE6F43E1D29F0@OSAPR01MB5042.jpnprd01.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:9508;
+x-forefront-prvs: 01792087B6
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(366004)(346002)(376002)(136003)(39860400002)(396003)(189003)(199004)(1076003)(6436002)(229853002)(446003)(11346002)(6486002)(256004)(2906002)(71200400001)(71190400001)(36756003)(7736002)(5660300002)(305945005)(4326008)(99286004)(486006)(2616005)(476003)(6512007)(186003)(52116002)(76176011)(102836004)(386003)(6506007)(6246003)(26005)(54906003)(66066001)(86362001)(6916009)(33656002)(25786009)(8936002)(3846002)(6116002)(66946007)(66446008)(64756008)(66556008)(66476007)(81166006)(81156014)(8676002)(14454004)(478600001)(316002);DIR:OUT;SFP:1102;SCL:1;SRVR:OSAPR01MB5042;H:OSAPR01MB3025.jpnprd01.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: renesas.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: jDFYV/+jK7bJXxGfylBCv7vZEU02Z1FGPsKgp/97H80SyPxQBgNbekPayRD1FWtKPFIN4NcgbXVZjZVuBz9TPpc/coJpLbjK4D3l1v1fU0v68zJX5YnazE212Y5dJC6ZxVACVOCosZoYHmHKw6N/nfT6wfsyAJj2UZaXzU68JW6izscBLDnj5DJXZIvEr3io4Md4moX8wnuG3GcecC7vy+/CgMfHs1TOSi2qDSw8cOegpiS0uPxFiq92wfgr+ppweBqwfyaNCJcbwbjshKtCZwfrBqZQEP/ebYEjpQlS4E9qXYgSucenmC66p9Wn2Am/rJzwMnjjr2jnAOQrJzu0sMhM1qM29CdX475wXqGFp81kLq04MVhxWWQkYjf4pJQAFtdbJRKaUz3TPoxmSDhsbS04STIw0rMcnfttAAX7ufo=
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <440A9CE6CF761845BBB59B4D03E3A6CC@jpnprd01.prod.outlook.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-10-03_05:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1908290000 definitions=main-1910030141
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,1.0.8
- definitions=2019-10-03_06:2019-10-03,2019-10-03 signatures=0
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 impostorscore=0
- lowpriorityscore=0 suspectscore=0 clxscore=1011 bulkscore=0 spamscore=0
- mlxscore=0 mlxlogscore=999 malwarescore=0 adultscore=0 priorityscore=1501
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-1908290000
- definitions=main-1910030141
+X-OriginatorOrg: renesas.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 87415c58-eac8-46ef-7ecb-08d7481418bd
+X-MS-Exchange-CrossTenant-originalarrivaltime: 03 Oct 2019 15:12:25.0030
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 53d82571-da19-47e4-9cb4-625a166a4a2a
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: 7z4CmbHWJpyFDWcYHElyFcKh56ffolmLFhTacZSQG5fDgUTGEHXmbkju6OdsF0aRqvbDRxMJFf7E05sG37k2OJwuSInM1CQ9JrIlZcDnNnU=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: OSAPR01MB5042
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> On Thu, Oct 3, 2019 at 3:50 AM Greg KH <greg@kroah.com> wrote:
-> Sent: Thursday, October 3, 2019 3:50 AM
->=20
-> On Tue, Oct 01, 2019 at 01:15:54PM -0400, Sasha Levin wrote:
-> > This is a note to let you know that I've just added the patch titled
-> >
-> >     perf ftrace: Use CAP_SYS_ADMIN instead of euid=3D=3D0
-> >
-> > to the 5.3-stable tree which can be found at:
-> >
-> > http://www.kernel.org/git/?p=3Dlinux/kernel/git/stable/stable-queue.git=
-;
-> > a=3Dsummary
-> >
-> > The filename of the patch is:
-> >      perf-ftrace-use-cap_sys_admin-instead-of-euid-0.patch
-> > and it can be found in the queue-5.3 subdirectory.
-> >
-> > If you, or anyone else, feels it should not be added to the stable
-> > tree, please let <stable@vger.kernel.org> know about it.
-> >
-> >
-> >
-> > commit 54a277c389061fc501624f51a13426d7b797f5f7
-> > Author: Igor Lubashev <ilubashe@akamai.com>
-> > Date:   Wed Aug 7 10:44:17 2019 -0400
-> >
-> >     perf ftrace: Use CAP_SYS_ADMIN instead of euid=3D=3D0
-> >
-> >     [ Upstream commit c766f3df635de14295e410c6dd5410bc416c24a0 ]
->=20
->=20
-> Sasha, this patch is breaking the build of perf in the stable branches.
-> Can you fix it up, or drop it?
-
-This patch is fixing what's been broken forever in perf, so it is improving=
- perf tool.  But it is not fixing a vuln in the kernel itself.
-
-In any case, this patch is a part of a series.  You would need the followin=
-g to make that patch compile:
-97993bd6eb89 perf tools: Add NO_LIBCAP=3D1 to the minimal build test
-c22e150e3afa perf tools: Add helpers to use capabilities if present
-
-Also, if you believe this update to perf tool warrants inclusion in a stabl=
-e update, I'd rather point you at the entire series:
-
-d06e5fad8c46 perf tools: Warn that perf_event_paranoid can restrict kernel =
-symbols
-8859aedefefe perf symbols: Use CAP_SYSLOG with kptr_restrict checks
-aa97293ff129 perf evsel: Kernel profiling is disallowed only when perf_even=
-t_paranoid > 1
-dda1bf8ea78a perf tools: Use CAP_SYS_ADMIN with perf_event_paranoid checks
-e9a6882f267a perf event: Check ref_reloc_sym before using it
-73e5de70dca0 perf ftrace: Improve error message about capability to use ftr=
-ace
-c766f3df635d perf ftrace: Use CAP_SYS_ADMIN instead of euid=3D=3D0
-083c1359b0e0 perf tools: Add CAP_SYSLOG define for older systems
-97993bd6eb89 perf tools: Add NO_LIBCAP=3D1 to the minimal build test
-c22e150e3afa perf tools: Add helpers to use capabilities if present
-74d5f3d06f70 tools build: Add capability-related feature detection
-
-Best,
-
-- Igor
+T24gVHVlLCBPY3QgMDEsIDIwMTkgYXQgMDY6MDk6MDZQTSBFRFQsIFJvYiBIZXJyaW5nIHdyb3Rl
+Og0KPk9uIFdlZCwgU2VwIDE4LCAyMDE5IGF0IDA0OjA2OjM3UE0gLTA0MDAsIHZpbmNlbnQuY2hl
+bmcueGhAcmVuZXNhcy5jb20gd3JvdGU6DQo+PiBGcm9tOiBWaW5jZW50IENoZW5nIDx2aW5jZW50
+LmNoZW5nLnhoQHJlbmVzYXMuY29tPg0KDQpIaSBSb2IsDQoNCldlbGNvbWUgYmFjay4gIFRoYW5r
+LXlvdSBmb3IgcHJvdmlkaW5nIGZlZWRiYWNrLg0KDQo+PiANCj4+IEFkZCBkZXZpY2UgdHJlZSBi
+aW5kaW5nIGRvYyBmb3IgdGhlIElEVCBDbG9ja01hdHJpeCBQVFAgY2xvY2sgZHJpdmVyLg0KPg0K
+PkJpbmRpbmdzIGFyZSBmb3IgaC93LCBub3QgZHJpdmVycy4uLg0KDQpZZXMsIHdpbGwgcmVtb3Zl
+ICdkcml2ZXInLg0KDQo+PiAgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3B0cC9w
+dHAtaWR0Y20udHh0IHwgMTUgKysrKysrKysrKysrKysrDQo+PiAgMSBmaWxlIGNoYW5nZWQsIDE1
+IGluc2VydGlvbnMoKykNCj4+ICBjcmVhdGUgbW9kZSAxMDA2NDQgRG9jdW1lbnRhdGlvbi9kZXZp
+Y2V0cmVlL2JpbmRpbmdzL3B0cC9wdHAtaWR0Y20udHh0DQo+DQo+UGxlYXNlIG1ha2UgdGhpcyBh
+IERUIHNjaGVtYS4NCg0KU3VyZSwgd2lsbCBnaXZlIGl0IGEgdHJ5Lg0KDQo+PiArICAtIGNvbXBh
+dGlibGUgIFNob3VsZCBiZSAiaWR0LDhhMzQwMHgtcHRwIiBmb3IgU3lzdGVtIFN5bmNocm9uaXpl
+cg0KPj4gKyAgICAgICAgICAgICAgICBTaG91bGQgYmUgImlkdCw4YTM0MDF4LXB0cCIgZm9yIFBv
+cnQgU3luY2hyb25pemVyDQo+PiArICAgICAgICAgICAgICAgIFNob3VsZCBiZSAiaWR0LDhhMzQw
+NHgtcHRwIiBmb3IgVW5pdmVyc2FsIEZyZXF1ZW5jeSBUcmFuc2xhdG9yIChVRlQpDQo+DQo+SWYg
+UFRQIGlzIHRoZSBvbmx5IGZ1bmN0aW9uIG9mIHRoZSBjaGlwLCB5b3UgZG9uJ3QgbmVlZCB0byBh
+cHBlbmQgDQo+Jy1wdHAnLg0KDQpPa2F5LCB3aWxsIHJlbW92ZSAnLXB0cCcuICBUaGFua3MuDQoN
+Cg0KPldoYXQncyB0aGUgJ3gnIGZvcj8gV2UgZ2VuZXJhbGx5IGRvbid0IHVzZSB3aWxkY2FyZHMg
+aW4gY29tcGF0aWJsZSANCj5zdHJpbmdzLg0KDQpXZSB3ZXJlIGhvcGluZyB0byB1c2UgJ3gnIHRv
+IHJlcHJlc2VudCBhIHNpbmdsZSBkcml2ZXIgdG8gbWF0Y2ggdGhlIHZhcmlvdXMNCnBhcnQgbnVt
+YmVycyA4QTM0MDAxLCA4QTM0MDAyLCA4QTM0MDAzLCA4QTM0MDA0LCA4QTM0MDExLCA4QTM0MDEy
+LCBldGMuDQoNCldoYXQgc2hvdWxkIGJlIHVzZWQgaW5zdGVhZCBvZiAneCc/DQoNClRoYW5rcywN
+ClZpbmNlbnQNCg==
