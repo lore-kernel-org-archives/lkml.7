@@ -2,165 +2,87 @@ Return-Path: <SRS0=6dNS=X4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FEC9C32792
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 23:52:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2E75C32792
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 23:52:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4F844215EA
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 23:52:01 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="msWdkhI/";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="naeK+hER"
+	by mail.kernel.org (Postfix) with ESMTP id 6F5E52133F
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 23:52:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1570146770;
+	bh=uCAjBRwiCK60Z09GABJdnPpCY7W8YguPv1Swv7BrD2g=;
+	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
+	b=ZaOmHKZ+X7NXTjA2BnpZ85qKuizC48ERv/5y3nkb0p2CdvIsx2TZITtA/WOLniZ4h
+	 W6HVdgkPg5WBUVO4l/wKcGLknKY/p3m9H+uoiw0bdXmTU/QlTxSTMfqCm3pAExW55U
+	 E5r+bfmIWryOu8n68GPihKIs2bNnsJrC0GNEyHjU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731157AbfJCXwA (ORCPT
+        id S1731285AbfJCXwt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 19:52:00 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:47762 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729621AbfJCXwA (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 19:52:00 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id A755461A10; Thu,  3 Oct 2019 23:51:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1570146719;
-        bh=cl9xkH0w0FKN0pmP7VZ3Xg2ZjgZ9N+oQO1yY5EuTDzo=;
-        h=From:To:Cc:Subject:Date:From;
-        b=msWdkhI/jetL7+Kj8XYJ+0maP3hhNUc4AszUpcFr25s/ZTIIrUpWDRsggUS5VYggM
-         5cByx2LIHfJRD75knkUpTI2Iz8SpU/KbLmH8iS+TWViz8qBuUgNk1C5nrYl4VcSVe4
-         Lhs7AKD7DdkhZP8jVXIh8bk901xrjKmlTfz8iiaQ=
-Received: from codeaurora.org (i-global254.qualcomm.com [199.106.103.254])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        Thu, 3 Oct 2019 19:52:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57364 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729439AbfJCXwt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 19:52:49 -0400
+Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net [24.9.64.241])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        (Authenticated sender: mnalajal@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 68D2260ADE;
-        Thu,  3 Oct 2019 23:51:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1570146718;
-        bh=cl9xkH0w0FKN0pmP7VZ3Xg2ZjgZ9N+oQO1yY5EuTDzo=;
-        h=From:To:Cc:Subject:Date:From;
-        b=naeK+hERzuGyFFxxQsyXTsDbhNKcUFW94mZPxiIHZQBuZVd52bZ5/HQ/RMAZsH7OD
-         LlIQQJ6B5nNX9j7FGA1r03aXOqzxPT6C/+L4bJQg5nUQ1edlEbwGuz/HnFtUSvzECo
-         BasLfXqVappHfAZiTA6icSIhZjOKwq7bcXGg7OuA=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 68D2260ADE
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=mnalajal@codeaurora.org
-From:   Murali Nalajala <mnalajal@codeaurora.org>
-To:     gregkh@linuxfoundation.org, rafael@kernel.org, swboyd@chromium.org
-Cc:     mnalajal@codeaurora.org, linux-arm-msm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, bjorn.andersson@linaro.org
-Subject: [PATCH v1] base: soc: Handle custom soc information sysfs entries
-Date:   Thu,  3 Oct 2019 16:51:50 -0700
-Message-Id: <1570146710-13503-1-git-send-email-mnalajal@codeaurora.org>
-X-Mailer: git-send-email 1.9.1
+        by mail.kernel.org (Postfix) with ESMTPSA id 2CEE220842;
+        Thu,  3 Oct 2019 23:52:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1570146768;
+        bh=uCAjBRwiCK60Z09GABJdnPpCY7W8YguPv1Swv7BrD2g=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=CpMK9q3M8vEO5uSKL4ho+ScBDSBGtA0GOCczcWO5kiqgKrTQ47H605PJX9F5lEqd7
+         HSAMq4VsddK9Rq8glZ0A97VLPMoLNIMJw7picEi3u70aRN2VbpYJQX0sMFqvCi93Ox
+         I7aSRiQv66pBVE8tvXa7D642jZAb1MaMBv1+sAFg=
+Subject: Re: [PATCH 4.19 000/211] 4.19.77-stable review
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org
+Cc:     torvalds@linux-foundation.org, akpm@linux-foundation.org,
+        linux@roeck-us.net, patches@kernelci.org,
+        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
+        stable@vger.kernel.org, shuah <shuah@kernel.org>
+References: <20191003154447.010950442@linuxfoundation.org>
+From:   shuah <shuah@kernel.org>
+Message-ID: <95d28510-2b6c-ff5e-1232-dfab74eb6a7e@kernel.org>
+Date:   Thu, 3 Oct 2019 17:52:47 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
+MIME-Version: 1.0
+In-Reply-To: <20191003154447.010950442@linuxfoundation.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Soc framework exposed sysfs entries are not sufficient for some
-of the h/w platforms. Currently there is no interface where soc
-drivers can expose further information about their SoCs via soc
-framework. This change address this limitation where clients can
-pass their custom entries as attribute group and soc framework
-would expose them as sysfs properties.
+On 10/3/19 9:51 AM, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 4.19.77 release.
+> There are 211 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+> 
+> Responses should be made by Sat 05 Oct 2019 03:37:47 PM UTC.
+> Anything received after that time might be too late.
+> 
+> The whole patch series can be found in one patch at:
+> 	https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.19.77-rc1.gz
+> or in the git tree and branch at:
+> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-4.19.y
+> and the diffstat can be found below.
+> 
+> thanks,
+> 
+> greg k-h
+> 
 
-Signed-off-by: Murali Nalajala <mnalajal@codeaurora.org>
----
-Changes in v1:
-- Remove NULL initialization of "soc_attr_groups"
-- Taken care of freeing "soc_attr_groups" in soc_release()
-- Addressed Stephen Boyd comments on usage of "kalloc"
+Compiled and booted on my test system. No dmesg regressions.
 
- drivers/base/soc.c      | 23 +++++++++++++++--------
- include/linux/sys_soc.h |  1 +
- 2 files changed, 16 insertions(+), 8 deletions(-)
-
-diff --git a/drivers/base/soc.c b/drivers/base/soc.c
-index 7c0c5ca..ad30d58 100644
---- a/drivers/base/soc.c
-+++ b/drivers/base/soc.c
-@@ -104,15 +104,11 @@ static ssize_t soc_info_get(struct device *dev,
- 	.is_visible = soc_attribute_mode,
- };
- 
--static const struct attribute_group *soc_attr_groups[] = {
--	&soc_attr_group,
--	NULL,
--};
--
- static void soc_release(struct device *dev)
- {
- 	struct soc_device *soc_dev = container_of(dev, struct soc_device, dev);
- 
-+	kfree(soc_dev->dev.groups);
- 	kfree(soc_dev);
- }
- 
-@@ -121,6 +117,7 @@ static void soc_release(struct device *dev)
- struct soc_device *soc_device_register(struct soc_device_attribute *soc_dev_attr)
- {
- 	struct soc_device *soc_dev;
-+	const struct attribute_group **soc_attr_groups;
- 	int ret;
- 
- 	if (!soc_bus_type.p) {
-@@ -136,10 +133,18 @@ struct soc_device *soc_device_register(struct soc_device_attribute *soc_dev_attr
- 		goto out1;
- 	}
- 
-+	soc_attr_groups = kcalloc(3, sizeof(*soc_attr_groups), GFP_KERNEL);
-+	if (!soc_attr_groups) {
-+		ret = -ENOMEM;
-+		goto out2;
-+	}
-+	soc_attr_groups[0] = &soc_attr_group;
-+	soc_attr_groups[1] = soc_dev_attr->custom_attr_group;
-+
- 	/* Fetch a unique (reclaimable) SOC ID. */
- 	ret = ida_simple_get(&soc_ida, 0, 0, GFP_KERNEL);
- 	if (ret < 0)
--		goto out2;
-+		goto out3;
- 	soc_dev->soc_dev_num = ret;
- 
- 	soc_dev->attr = soc_dev_attr;
-@@ -151,14 +156,16 @@ struct soc_device *soc_device_register(struct soc_device_attribute *soc_dev_attr
- 
- 	ret = device_register(&soc_dev->dev);
- 	if (ret)
--		goto out3;
-+		goto out4;
- 
- 	return soc_dev;
- 
--out3:
-+out4:
- 	ida_simple_remove(&soc_ida, soc_dev->soc_dev_num);
- 	put_device(&soc_dev->dev);
- 	soc_dev = NULL;
-+out3:
-+	kfree(soc_attr_groups);
- out2:
- 	kfree(soc_dev);
- out1:
-diff --git a/include/linux/sys_soc.h b/include/linux/sys_soc.h
-index 48ceea8..d9b3cf0 100644
---- a/include/linux/sys_soc.h
-+++ b/include/linux/sys_soc.h
-@@ -15,6 +15,7 @@ struct soc_device_attribute {
- 	const char *serial_number;
- 	const char *soc_id;
- 	const void *data;
-+	const struct attribute_group *custom_attr_group;
- };
- 
- /**
--- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
-
+thanks,
+-- Shuah
