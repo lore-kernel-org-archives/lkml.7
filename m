@@ -4,54 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1976C32792
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:14:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B06EC10F14
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:14:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A309A20673
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:14:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3BC0E20830
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:14:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570122866;
-	bh=HpKmxHp4GDXcQxEKeyF+XGpwmGby9vwAK27uwuFCULk=;
+	s=default; t=1570122876;
+	bh=9YTmjz6JzHxwcmKGl0VJUGsFdEfzvM/9GRS2tB2FdWA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=FvVn6eoslwdbWe85QeeVdtudmlfb/SiVMUFEL07ClgIFi10nV4sMIUjiVil3jd0FY
-	 jDLBrNj90EvK9VyejPfW5vIlItOS7G+2PKN1Bku7bUhyYfY2Q5xZMsVaJBGgBDg4bp
-	 MTM978XSSZUCYWfaHtQUiq6r42pNKlAn7diZ9ajQ=
+	b=vTmP3b32kTDQwwA18baorhute1WPDjAO1okHW4K0ql01U7f+AehuCY2u0fdzRts4K
+	 /Brh/6f7dUDiU+Kzkt7SB9DhlhQsoHOsuiNUQVX4ILfs1hKXrtVwHiM2thu4Te/b5p
+	 FtxOaXcJBrViqIIqZX6xZirNBBeBD3QmNO2ekyq0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403761AbfJCROZ (ORCPT
+        id S2391994AbfJCROf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 13:14:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59484 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 13:14:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58660 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390631AbfJCQ1b (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:27:31 -0400
+        id S2391188AbfJCQ1D (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:27:03 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7FBB4215EA;
-        Thu,  3 Oct 2019 16:27:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6BEE020700;
+        Thu,  3 Oct 2019 16:27:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570120050;
-        bh=HpKmxHp4GDXcQxEKeyF+XGpwmGby9vwAK27uwuFCULk=;
+        s=default; t=1570120022;
+        bh=9YTmjz6JzHxwcmKGl0VJUGsFdEfzvM/9GRS2tB2FdWA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=FtbyRmffmFAP3mlfKv7EvRlWLTDuuH9pv0vWlSEzd3aqAAgdLR0B/1DQl2PtIEq4H
-         6ezfMpPi7ux95IrD/LndPu/lOpQ0e5wx5ahUqnbTDidg3/p+Ks2AEDp4itPJ6Rh6mL
-         BbWeZs5kpBjlzc78ZLJfWhJ2PftrBmyLBuVqII9k=
+        b=dm7Yn7Nwhv+ymdYXTkVnDFoCXa67540drrtpr4kNzOmCPCkGTT6Bl985NbQA7jMdY
+         zCtDCe9Tk7jGCXf7Vp7VGnS3JxX3MG1ZKnMzMptDGYKR9zB5t4EfGa0f68RKemSlWx
+         tY97vwGj4bI+bhabOsyOLwGRQUcMMxmqR7TpfZ+A=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Oleksandr Suvorov <oleksandr.suvorov@toradex.com>,
-        Marcel Ziswiler <marcel.ziswiler@toradex.com>,
-        Igor Opaniuk <igor.opaniuk@toradex.com>,
-        Fabio Estevam <festevam@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
+        stable@vger.kernel.org, Kevin Hilman <khilman@baylibre.com>,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        Neil Armstrong <narmstrong@baylibre.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 040/313] ASoC: sgtl5000: Fix charge pump source assignment
-Date:   Thu,  3 Oct 2019 17:50:18 +0200
-Message-Id: <20191003154537.162797657@linuxfoundation.org>
+Subject: [PATCH 5.2 067/313] soc: amlogic: meson-clk-measure: protect measure with a mutex
+Date:   Thu,  3 Oct 2019 17:50:45 +0200
+Message-Id: <20191003154539.513177799@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191003154533.590915454@linuxfoundation.org>
 References: <20191003154533.590915454@linuxfoundation.org>
@@ -64,53 +61,67 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Oleksandr Suvorov <oleksandr.suvorov@toradex.com>
+From: Neil Armstrong <narmstrong@baylibre.com>
 
-[ Upstream commit b6319b061ba279577fd7030a9848fbd6a17151e3 ]
+[ Upstream commit 3a760d986568b67d1f8411dab64608075817b90d ]
 
-If VDDA != VDDIO and any of them is greater than 3.1V, charge pump
-source can be assigned automatically [1].
+In order to protect clock measuring when multiple process asks for
+a measure, protect the main measure function with mutexes.
 
-[1] https://www.nxp.com/docs/en/data-sheet/SGTL5000.pdf
-
-Signed-off-by: Oleksandr Suvorov <oleksandr.suvorov@toradex.com>
-Reviewed-by: Marcel Ziswiler <marcel.ziswiler@toradex.com>
-Reviewed-by: Igor Opaniuk <igor.opaniuk@toradex.com>
-Reviewed-by: Fabio Estevam <festevam@gmail.com>
-Link: https://lore.kernel.org/r/20190719100524.23300-7-oleksandr.suvorov@toradex.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Reviewed-by: Kevin Hilman <khilman@baylibre.com>
+Reviewed-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+Signed-off-by: Kevin Hilman <khilman@baylibre.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/codecs/sgtl5000.c | 15 ++++++++++-----
- 1 file changed, 10 insertions(+), 5 deletions(-)
+ drivers/soc/amlogic/meson-clk-measure.c | 12 +++++++++++-
+ 1 file changed, 11 insertions(+), 1 deletion(-)
 
-diff --git a/sound/soc/codecs/sgtl5000.c b/sound/soc/codecs/sgtl5000.c
-index aad9eca41587e..7cbaedffa1ef7 100644
---- a/sound/soc/codecs/sgtl5000.c
-+++ b/sound/soc/codecs/sgtl5000.c
-@@ -1173,12 +1173,17 @@ static int sgtl5000_set_power_regs(struct snd_soc_component *component)
- 					SGTL5000_INT_OSC_EN);
- 		/* Enable VDDC charge pump */
- 		ana_pwr |= SGTL5000_VDDC_CHRGPMP_POWERUP;
--	} else if (vddio >= 3100 && vdda >= 3100) {
-+	} else {
- 		ana_pwr &= ~SGTL5000_VDDC_CHRGPMP_POWERUP;
--		/* VDDC use VDDIO rail */
--		lreg_ctrl |= SGTL5000_VDDC_ASSN_OVRD;
--		lreg_ctrl |= SGTL5000_VDDC_MAN_ASSN_VDDIO <<
--			    SGTL5000_VDDC_MAN_ASSN_SHIFT;
-+		/*
-+		 * if vddio == vdda the source of charge pump should be
-+		 * assigned manually to VDDIO
-+		 */
-+		if (vddio == vdda) {
-+			lreg_ctrl |= SGTL5000_VDDC_ASSN_OVRD;
-+			lreg_ctrl |= SGTL5000_VDDC_MAN_ASSN_VDDIO <<
-+				    SGTL5000_VDDC_MAN_ASSN_SHIFT;
-+		}
- 	}
+diff --git a/drivers/soc/amlogic/meson-clk-measure.c b/drivers/soc/amlogic/meson-clk-measure.c
+index 19d4cbc93a17a..c470e24f1dfa6 100644
+--- a/drivers/soc/amlogic/meson-clk-measure.c
++++ b/drivers/soc/amlogic/meson-clk-measure.c
+@@ -11,6 +11,8 @@
+ #include <linux/debugfs.h>
+ #include <linux/regmap.h>
  
- 	snd_soc_component_write(component, SGTL5000_CHIP_LINREG_CTRL, lreg_ctrl);
++static DEFINE_MUTEX(measure_lock);
++
+ #define MSR_CLK_DUTY		0x0
+ #define MSR_CLK_REG0		0x4
+ #define MSR_CLK_REG1		0x8
+@@ -360,6 +362,10 @@ static int meson_measure_id(struct meson_msr_id *clk_msr_id,
+ 	unsigned int val;
+ 	int ret;
+ 
++	ret = mutex_lock_interruptible(&measure_lock);
++	if (ret)
++		return ret;
++
+ 	regmap_write(priv->regmap, MSR_CLK_REG0, 0);
+ 
+ 	/* Set measurement duration */
+@@ -377,8 +383,10 @@ static int meson_measure_id(struct meson_msr_id *clk_msr_id,
+ 
+ 	ret = regmap_read_poll_timeout(priv->regmap, MSR_CLK_REG0,
+ 				       val, !(val & MSR_BUSY), 10, 10000);
+-	if (ret)
++	if (ret) {
++		mutex_unlock(&measure_lock);
+ 		return ret;
++	}
+ 
+ 	/* Disable */
+ 	regmap_update_bits(priv->regmap, MSR_CLK_REG0, MSR_ENABLE, 0);
+@@ -386,6 +394,8 @@ static int meson_measure_id(struct meson_msr_id *clk_msr_id,
+ 	/* Get the value in multiple of gate time counts */
+ 	regmap_read(priv->regmap, MSR_CLK_REG2, &val);
+ 
++	mutex_unlock(&measure_lock);
++
+ 	if (val >= MSR_VAL_MASK)
+ 		return -EINVAL;
+ 
 -- 
 2.20.1
 
