@@ -2,272 +2,125 @@ Return-Path: <SRS0=6dNS=X4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.3 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B58FC10F14
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 21:32:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BABB2C32792
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 21:33:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5CF092086A
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 21:32:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8CB512086A
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 21:33:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="SU3vbsQ6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733137AbfJCVcY (ORCPT
+        id S1733161AbfJCVdy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 17:32:24 -0400
-Received: from relay3-d.mail.gandi.net ([217.70.183.195]:40873 "EHLO
-        relay3-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728763AbfJCVcY (ORCPT
+        Thu, 3 Oct 2019 17:33:54 -0400
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:39727 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731694AbfJCVdy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 17:32:24 -0400
-X-Originating-IP: 132.205.230.8
-Received: from aptenodytes (unknown [132.205.230.8])
-        (Authenticated sender: paul.kocialkowski@bootlin.com)
-        by relay3-d.mail.gandi.net (Postfix) with ESMTPSA id 3AAE260004;
-        Thu,  3 Oct 2019 21:32:20 +0000 (UTC)
-Date:   Thu, 3 Oct 2019 17:32:18 -0400
-From:   Paul Kocialkowski <paul.kocialkowski@bootlin.com>
-To:     Jernej =?utf-8?Q?=C5=A0krabec?= <jernej.skrabec@siol.net>
-Cc:     mripard@kernel.org, mchehab@kernel.org, hverkuil-cisco@xs4all.nl,
-        gregkh@linuxfoundation.org, wens@csie.org,
-        linux-media@vger.kernel.org, devel@driverdev.osuosl.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 2/3] media: cedrus: Fix H264 default reference index
- count
-Message-ID: <20191003213218.GE3927@aptenodytes>
-References: <20191002193553.1633467-1-jernej.skrabec@siol.net>
- <3413755.LxPTGpI9pz@jernej-laptop>
- <20191003205857.GA3927@aptenodytes>
- <1700094.IKIOnZr010@jernej-laptop>
+        Thu, 3 Oct 2019 17:33:54 -0400
+Received: by mail-wm1-f67.google.com with SMTP id v17so3598270wml.4
+        for <linux-kernel@vger.kernel.org>; Thu, 03 Oct 2019 14:33:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=WqLu0wakUs3wLW/I7o/nZ1HroZMOcAjOwf4CjhO+KeY=;
+        b=SU3vbsQ6OHP3PG8vkkVhBcWke1RWVX76BBLoh371ZnNseL8IPXWuUGs8Aawlr7RpB1
+         OhrN3ieOxkzztglV/yzpowrX4psibNxJXJlYePix7tD7J1IqNmVEkFQHpaImI+SJw+fL
+         Qi+eFZDQbJZsRWvepgaLrxHz5iKcyph7k+468NLpj1+Xkc2829Qd76LtjKfibN9nNXLq
+         SNFXX3G5dtcqpf/41ELgEut0HkWdZfSqF65GOSbmfjS+BlIId4xiH8HRfQclYS1FE5ay
+         F0Vu/yPgPWokiZrw2+UdoNnU6d8v867EKDBCXwHsRUn0yTCFaPoNK5g1zBK6A1siE2rm
+         3y8g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=WqLu0wakUs3wLW/I7o/nZ1HroZMOcAjOwf4CjhO+KeY=;
+        b=uRkL+FfD/EwyTsfy/mnD6lpF4P7yYxwLL+ONWPs12+gYwOR/hi+XevnWtle8r5T99b
+         CCiTLegZEojombC33IDBiz7+NEuymLxKDyz+DIWMiJjGOQaBziUjQq4mo9EBmXXHihIx
+         3Y6tVCg1bA8oUJKe7Cbd5hKiZVgAi4lOQww5XJqzvrVY4iQy4o7LRz+BTQBf6uMP2kvl
+         MsvvbCrpewoNYPlldrguCeetYv0o/08QLnDfdeQISiomvagJKRHiDSo2gwLwMkPRx3LO
+         6G4mJFb0kK54StC4eKTag5R7k39ieuqZz3UZV1WUH+gVIFI5A8Tl4bL2OYFPk06MEzjI
+         DPKQ==
+X-Gm-Message-State: APjAAAUYqwzdy1b3dFSAJ9TdJCY6AHQhxqJAaWxwBcUrMV50CNtCf9g/
+        svdLHSf0ZY5TFV771QpaJXnhnixNHEL7peM7eQiLcw==
+X-Google-Smtp-Source: APXvYqy0aDLcBSZThcU2euPdqUC7jbpYAO1vXBYibNhLeJuIpnrowDBFsgcoWmV4/OIiW/ottBpZY0dyuBAWgcYMMGw=
+X-Received: by 2002:a05:600c:48b:: with SMTP id d11mr3500415wme.153.1570138431210;
+ Thu, 03 Oct 2019 14:33:51 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="PGNNI9BzQDUtgA2J"
-Content-Disposition: inline
-In-Reply-To: <1700094.IKIOnZr010@jernej-laptop>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+References: <20191002231617.3670-1-john.stultz@linaro.org> <20191002231617.3670-3-john.stultz@linaro.org>
+ <20191003112618.GA2420393@kroah.com> <CALAqxLWm_u3KsXHn4a6PdBCOKM1vs5k0xS3G5jY+M-=HBqUJag@mail.gmail.com>
+ <9cfccb6a-fba1-61a3-3eb6-3009c2f5e747@redhat.com>
+In-Reply-To: <9cfccb6a-fba1-61a3-3eb6-3009c2f5e747@redhat.com>
+From:   John Stultz <john.stultz@linaro.org>
+Date:   Thu, 3 Oct 2019 14:33:38 -0700
+Message-ID: <CALAqxLX3uSJKvRwzcQznaF4WK52BcM5Bh+PNXHmfDe1aTSUL8Q@mail.gmail.com>
+Subject: Re: [RFC][PATCH 2/3] usb: roles: Add usb role switch notifier.
+To:     Hans de Goede <hdegoede@redhat.com>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        Yu Chen <chenyu56@huawei.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Chunfeng Yun <chunfeng.yun@mediatek.com>,
+        Felipe Balbi <balbi@kernel.org>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Jun Li <lijun.kernel@gmail.com>,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        Linux USB List <linux-usb@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, Oct 3, 2019 at 1:56 PM Hans de Goede <hdegoede@redhat.com> wrote:
+> On 03-10-2019 22:45, John Stultz wrote:
+> > The HiKey960 has only one USB controller, but in order to support both
+> > USB-C gadget/OTG and USB-A (host only) ports. When the USB-C
+> > connection is attached, it powers down and disconnects the hub. When
+> > the USB-C connection is detached, it powers the hub on and connects
+> > the controller to the hub.
+>
+> When you say one controller, do you mean 1 host and 1 gadget controller,
+> or is this one of these lovely devices where a gadget controller gets
+> abused as / confused with a proper host controller?
 
---PGNNI9BzQDUtgA2J
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+I'm not totally sure myself, but I believe it's the latter, as the
+host ports have to be disabled in order for the gadet/otg port to
+function.
 
-On Thu 03 Oct 19, 23:19, Jernej =C5=A0krabec wrote:
-> Dne =C4=8Detrtek, 03. oktober 2019 ob 22:58:57 CEST je Paul Kocialkowski=
-=20
-> napisal(a):
-> > Hi,
-> >=20
-> > On Thu 03 Oct 19, 22:44, Jernej =C5=A0krabec wrote:
-> > > Dne =C4=8Detrtek, 03. oktober 2019 ob 22:28:46 CEST je Paul Kocialkow=
-ski
-> > >=20
-> > > napisal(a):
-> > > > Hi,
-> > > >=20
-> > > > On Thu 03 Oct 19, 07:16, Jernej =C5=A0krabec wrote:
-> > > > > Dne =C4=8Detrtek, 03. oktober 2019 ob 00:06:50 CEST je Paul Kocia=
-lkowski
-> > > > >=20
-> > > > > napisal(a):
-> > > > > > Hi,
-> > > > > >=20
-> > > > > > On Wed 02 Oct 19, 21:35, Jernej Skrabec wrote:
-> > > > > > > Reference index count in VE_H264_PPS should come from PPS con=
-trol.
-> > > > > > > However, this is not really important, because reference index
-> > > > > > > count
-> > > > > > > is
-> > > > > > > in our case always overridden by that from slice header.
-> > > > > >=20
-> > > > > > Thanks for the fixup!
-> > > > > >=20
-> > > > > > Our libva userspace and v4l2-request testing tool currently don=
-'t
-> > > > > > provide
-> > > > > > this, but I have a pending merge request adding it for the hant=
-ro so
-> > > > > > it's
-> > > > > > good to go.
-> > > > >=20
-> > > > > Actually, I think this is just cosmetic and it would work even if=
- it
-> > > > > would
-> > > > > be always 0. We always override this number in SHS2 register with
-> > > > > VE_H264_SHS2_NUM_REF_IDX_ACTIVE_OVRD flag and recently there was a
-> > > > > patch
-> > > > > merged to clarify that value in slice parameters should be the one
-> > > > > that's
-> > > > > set on default value if override flag is not set in bitstream:
-> > > > > https://git.linuxtv.org/media_tree.git/commit/?
-> > > > > id=3D187ef7c5c78153acdce8c8714e5918b1018c710b
-> > > > >=20
-> > > > > Well, we could always compare default and value in slice paramete=
-rs,
-> > > > > but I
-> > > > > really don't see the benefit of doing that extra work.
-> > > >=20
-> > > > Thanks for the detailed explanation! So I just realized that for HE=
-VC, I
-> > > > didn't even include the default value in PPS and only went for the
-> > > > per-slice value. The HEVC hardware block apparently only needs the
-> > > > fields
-> > > > once at slice level, and by looking at the spec, only one of the tw=
-o set
-> > > > of
-> > > > fields will be used.
-> > > >=20
-> > > > So perhaps we could do the same for H.264 and only have the set of
-> > > > fields
-> > > > once in the slice params, so that both codecs are consistent. Users=
-pace
-> > > > can
-> > > > just check the flag to know whether it should put the PPS default or
-> > > > slice-specific value in the slice-specific control.
-> > > >=20
-> > > > What do you think?
-> > >=20
-> > > I think that there would be less confusion if only value in slice par=
-ams
-> > > would exists. But since Philipp rather made clarification in
-> > > documentation, maybe he sees benefit having both values?
-> >=20
-> > Actually I just caught up with the discussion from thread:
-> > media: uapi: h264: Add num_ref_idx_active_override_flag
-> >=20
-> > which explains that we need to pass the default fields for hardware that
-> > parses the slice header itself and we need the non-default fields and f=
-lag
-> > for other cases.
-> >=20
-> > To cover the case of hardware that does slice header parsing, I guess it
-> > would also work to use the slice-specific values in place of the pps
-> > default values in the hardware register for that. But it feels quite
-> > confusing and a lot less straightforward than having all the fields and=
- the
-> > override flag exposed.
->=20
-> I wasn't aware of that patch and related discussion. Ok, so it make sense=
- to=20
-> have both values. However, does it make sense to use default values in Ce=
-drus?
+There was a similar situation w/ the original HiKey board (dwc2
+controller) as well, though the switching was done fully in hardware
+and we only needed some minor tweaks to the driver to keep the state
+transitions straight.
 
-Well, since the hardware exposes fields for both and the flag for H264, let=
-'s do
-the straightforward thing and just pass the values through, even though we =
-can
-easily predict which will get used in the end.
+> And since you are doing a usb-role-switch driver, I guess that the
+> role-switch is integrated inside the SoC, so you only get one pair
+> of USB datalines to the outside ?
 
-For HEVC, we'll just have to check for the flag and put the right set of va=
-lues
-in the slice-specific register.
+I believe so, but again, I don't have a ton of knowledge about the SoC
+details, Chen Yu would probably be the right person to answer, but I
+don't know if he's doing upstreaming anymore.
 
-> > So I think I should fix HEVC support accordingly, just in case the same
-> > situation arises for HEVC.
->=20
-> Seems reasonable. Does that mean there will be another revision of HEVC=
-=20
-> patches?  If so, I think slice_segment_addr should also be included in sl=
-ice=20
-> params, so multi-slice frames can be supported at later time.
+> This does seem rather special, it might help if you can provide a diagram
+> with both the relevant bits inside the SoC as well as what lives outside
+> the Soc. even if it is in ASCII art...
 
-I would be in favor of fixing this as a follow-up patch instead, so that we
-don't delay getting the series in. As you said, more work will be needed an=
-yway
-for multi-slice support, so I don't see the point of holding the series for=
- this
-particular improvment.
+There is a schematic pdf here:
+https://github.com/96boards/documentation/raw/master/consumer/hikey/hikey960/hardware-docs/HiKey960_Schematics.pdf
 
-Cheers,
+The larger block diagram on page 3 might be helpful, but you can find
+more details on the usb hub bits on page 17 and 18.
 
-Paul
-
-> Best regards,
-> Jernej=20
->=20
-> >=20
-> > Cheers,
-> >=20
-> > Paul
-> >=20
-> > > Best regards,
-> > > Jernej
-> > >=20
-> > > > Cheers,
-> > > >=20
-> > > > Paul
-> > > >=20
-> > > > > Best regards,
-> > > > > Jernej
-> > > > >=20
-> > > > > > Acked-by: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
-> > > > > >=20
-> > > > > > Cheers,
-> > > > > >=20
-> > > > > > Paul
-> > > > > >=20
-> > > > > > > Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
-> > > > > > > ---
-> > > > > > >=20
-> > > > > > >  drivers/staging/media/sunxi/cedrus/cedrus_h264.c | 8 ++------
-> > > > > > >  1 file changed, 2 insertions(+), 6 deletions(-)
-> > > > > > >=20
-> > > > > > > diff --git a/drivers/staging/media/sunxi/cedrus/cedrus_h264.c
-> > > > > > > b/drivers/staging/media/sunxi/cedrus/cedrus_h264.c index
-> > > > > > > bd848146eada..4a0e69855c7f 100644
-> > > > > > > --- a/drivers/staging/media/sunxi/cedrus/cedrus_h264.c
-> > > > > > > +++ b/drivers/staging/media/sunxi/cedrus/cedrus_h264.c
-> > > > > > > @@ -364,12 +364,8 @@ static void cedrus_set_params(struct
-> > > > > > > cedrus_ctx
-> > > > > > > *ctx,
-> > > > > > >=20
-> > > > > > >  	// picture parameters
-> > > > > > >  	reg =3D 0;
-> > > > > > >=20
-> > > > > > > -	/*
-> > > > > > > -	 * FIXME: the kernel headers are allowing the default value=
- to
-> > > > > > > -	 * be passed, but the libva doesn't give us that.
-> > > > > > > -	 */
-> > > > > > > -	reg |=3D (slice->num_ref_idx_l0_active_minus1 & 0x1f) << 10;
-> > > > > > > -	reg |=3D (slice->num_ref_idx_l1_active_minus1 & 0x1f) << 5;
-> > > > > > > +	reg |=3D (pps->num_ref_idx_l0_default_active_minus1 & 0x1f)=
- << 10;
-> > > > > > > +	reg |=3D (pps->num_ref_idx_l1_default_active_minus1 & 0x1f)=
- << 5;
-> > > > > > >=20
-> > > > > > >  	reg |=3D (pps->weighted_bipred_idc & 0x3) << 2;
-> > > > > > >  	if (pps->flags & V4L2_H264_PPS_FLAG_ENTROPY_CODING_MODE)
-> > > > > > >  =09
-> > > > > > >  		reg |=3D VE_H264_PPS_ENTROPY_CODING_MODE;
->=20
->=20
->=20
->=20
-
---=20
-Paul Kocialkowski, Bootlin
-Embedded Linux and kernel engineering
-https://bootlin.com
-
---PGNNI9BzQDUtgA2J
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEEJZpWjZeIetVBefti3cLmz3+fv9EFAl2WaOIACgkQ3cLmz3+f
-v9EA+wf/ekHmBtBvJhAORdriiY5xvorCVVe+x97wAdmtuicrv64I/52a//PGeOiX
-DB3hlBjSls/SdNhoIFYMTbBay5hGl8ZFxsdHgyFfZ5QztP14XWJJMzTwIXDbCFCc
-kWpU8tJopeAyrcW/o81oWyXaI+1DcyF/2mXjv7gjSZ4cbe1w+5jnE36/rsG7wr+L
-V0zlBxjFfDnRLIpLH3NqNCJXHyrcsL6wc9coGPdBd5olAzXk0Y9cCW7zoJ+V8aFi
-agpE8vHT4/FPinNdKGQ1vtfHiJ6pR8cHQ+skBoEmjvESCbOaIHGKiHmVnOW5AINR
-Z7R/MDMbE3GjMMiYfltNPKDgU+aOgA==
-=Uw7X
------END PGP SIGNATURE-----
-
---PGNNI9BzQDUtgA2J--
+thanks
+-john
