@@ -2,100 +2,101 @@ Return-Path: <SRS0=6dNS=X4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7463C32792
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 13:42:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27D63C10F14
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 13:42:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8DCA521A4C
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 13:42:04 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="qUV1crH7"
+	by mail.kernel.org (Postfix) with ESMTP id F21FC20830
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 13:42:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1570110126;
+	bh=WCUEssIU9+0G8g1dfJGIxcEKX0xGTgolp0w5mbPkFoU=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=m+R7UVJfSeIjQ1U4xycZOlOgBCqsHr1zmpZbNQ8CQwaZX3Ji/b+YCzSiPxv2i2JGf
+	 SvnOCb8a9vITxs+h9zi55u/MzLJEyjei8jlHWteHZoiRiOLOVR4uumpAt/IaSSNPx4
+	 wsoy5h3X4Dhfk+qFbN/RXVN+qwANVUynLIbGZhWs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730506AbfJCNmD (ORCPT
+        id S1730537AbfJCNmF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 09:42:03 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:34126 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729655AbfJCNmD (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 09:42:03 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=Z4Fbmkp6VSKxSOTmoTLoE7iXbtqotSgieIcrdQiNoGU=; b=qUV1crH7ygkqKhnHi2IVWd+st
-        lXJ7A/lJUBFz85JZLlVJDEsvt/Do5pDrSI/v/MZGzctjy/o+iO6mh7kPrEchwnC7N7ozweNvafw1K
-        8Cah++IsdSrEEb4s0fueywltkwTz5WYtLFdGqLPdGIaqx5CvYiStBUK7T2K+BDwdBKHSjvxEkK0yo
-        mVDv871kS9PrS7lOxVgzS6MFxvd/F2fsII/Z1vT0yPIND0VJG0f3DlOr3hMkrh279beQQjmNhcneR
-        hSpthD0Hz0HZzmpDKsbuU8ZVsBDtPPFhw7TpklhppdFTcIwaM9v0uCw2ED99k57cdCrgjJXqGuKf+
-        FmsVIEkpg==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.2 #3 (Red Hat Linux))
-        id 1iG1MN-0000Ba-AD; Thu, 03 Oct 2019 13:41:35 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        Thu, 3 Oct 2019 09:42:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53342 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730508AbfJCNmE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 09:42:04 -0400
+Received: from jupiter.universe (dyndsl-037-138-174-173.ewe-ip-backbone.de [37.138.174.173])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id D981D304B4C;
-        Thu,  3 Oct 2019 15:40:42 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 0B8B5201EFE03; Thu,  3 Oct 2019 15:41:32 +0200 (CEST)
-Date:   Thu, 3 Oct 2019 15:41:31 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     "Paul E. McKenney" <paulmck@kernel.org>
-Cc:     Steven Rostedt <rostedt@goodmis.org>,
-        David Howells <dhowells@redhat.com>, rcu@vger.kernel.org,
-        linux-kernel@vger.kernel.org, mingo@kernel.org,
-        jiangshanlai@gmail.com, dipankar@in.ibm.com,
-        akpm@linux-foundation.org, mathieu.desnoyers@efficios.com,
-        josh@joshtriplett.org, tglx@linutronix.de, edumazet@google.com,
-        fweisbec@gmail.com, oleg@redhat.com, joel@joelfernandes.org,
-        Bart Van Assche <bart.vanassche@wdc.com>,
-        Christoph Hellwig <hch@lst.de>, Hannes Reinecke <hare@suse.de>,
-        Johannes Thumshirn <jthumshirn@suse.de>,
-        Shane M Seymour <shane.seymour@hpe.com>,
-        "Martin K . Petersen" <martin.petersen@oracle.com>
-Subject: Re: [PATCH tip/core/rcu 1/9] rcu: Upgrade rcu_swap_protected() to
- rcu_replace()
-Message-ID: <20191003134131.GS4536@hirez.programming.kicks-ass.net>
-References: <20191003014310.13262-1-paulmck@kernel.org>
- <20191003014153.GA13156@paulmck-ThinkPad-P72>
- <25408.1570091957@warthog.procyon.org.uk>
- <20191003090850.1e2561b3@gandalf.local.home>
- <20191003133315.GN2689@paulmck-ThinkPad-P72>
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9DD3721783;
+        Thu,  3 Oct 2019 13:42:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1570110123;
+        bh=WCUEssIU9+0G8g1dfJGIxcEKX0xGTgolp0w5mbPkFoU=;
+        h=From:To:Cc:Subject:Date:From;
+        b=bi9wqLQcIhlqDcoclEDoiLIEYVPEre9nISGzXfUjkF4Eg5vRrvup3aBt46GaOXXYR
+         QGSnAY0mldFrgJ6x2vtbgDPjJxhJx1OkS29zzKxGU8oXWee2zrBodbnHfbQKp7aZgA
+         GvVlY/X2Rc5WMHc10orq73fR8aL9VKjMWRLIiF3c=
+Received: by jupiter.universe (Postfix, from userid 1000)
+        id 8B07D4800C0; Thu,  3 Oct 2019 15:42:01 +0200 (CEST)
+From:   Sebastian Reichel <sre@kernel.org>
+To:     Sebastian Reichel <sre@kernel.org>,
+        Marcel Holtmann <marcel@holtmann.org>,
+        Tony Lindgren <tony@atomide.com>
+Cc:     Adam Ford <aford173@gmail.com>,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        linux-bluetooth@vger.kernel.org, linux-omap@vger.kernel.org,
+        linux-kernel@vger.kernel.org, kernel@collabora.com
+Subject: [PATCHv2 0/4] Convert all btwilink users to hci_ll and drop btwilink
+Date:   Thu,  3 Oct 2019 15:41:43 +0200
+Message-Id: <20191003134147.9458-1-sre@kernel.org>
+X-Mailer: git-send-email 2.23.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191003133315.GN2689@paulmck-ThinkPad-P72>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Oct 03, 2019 at 06:33:15AM -0700, Paul E. McKenney wrote:
-> On Thu, Oct 03, 2019 at 09:08:50AM -0400, Steven Rostedt wrote:
-> > On Thu, 03 Oct 2019 09:39:17 +0100
-> > David Howells <dhowells@redhat.com> wrote:
-> > 
-> > > paulmck@kernel.org wrote:
-> > > 
-> > > > +#define rcu_replace(rcu_ptr, ptr, c)					\
-> > > > +({									\
-> > > > +	typeof(ptr) __tmp = rcu_dereference_protected((rcu_ptr), (c));	\
-> > > > +	rcu_assign_pointer((rcu_ptr), (ptr));				\
-> > > > +	__tmp;								\
-> > > > +})  
-> > > 
-> > > Does it make sense to actually use xchg() if that's supported by the arch?
-> 
-> Historically, xchg() has been quite a bit slower than a pair of assignment
-> statements, in part due to the strong memory ordering guaranteed by
-> xchg().  Has that changed?  If so, then, agreed, it might make sense to
-> use xchg().
+Hi,
 
-Nope, still the case. xchg() is an atomic op with full ordering.
+This moves the remaining users of btwilink to the "new" serdev based hci_ll
+driver and drops the btwilink driver afterwards. The patches were only compile
+tested by me, but Enric tested the IGEP platform and Adam will test the LogicPD
+platform.
+
+I kept the TI_ST driver for now, since I plan to send a second patchset for the
+FM radio driver. Once the FM driver has been converted to also use hci_ll, we
+can remove TI_ST completly.
+
+My suggestion is for the patch handling is, that everything simply goes through
+Tony's tree.
+
+Changes since PATCHv1 [0]
+ * rebase to 5.4-rc1
+ * move FM radio patches into separate patchset
+
+[0] https://lore.kernel.org/lkml/20181221011752.25627-1-sre@kernel.org/
+
+-- Sebastian
+
+Sebastian Reichel (4):
+  ARM: dts: LogicPD Torpedo: Add WiLink UART node
+  ARM: dts: IGEP: Add WiLink UART node
+  ARM: OMAP2+: pdata-quirks: drop TI_ST/KIM support
+  Bluetooth: btwilink: drop superseded driver
+
+ .../boot/dts/logicpd-torpedo-37xx-devkit.dts  |   8 +
+ arch/arm/boot/dts/omap3-igep0020-rev-f.dts    |   8 +
+ arch/arm/boot/dts/omap3-igep0030-rev-g.dts    |   8 +
+ arch/arm/mach-omap2/pdata-quirks.c            |  52 ---
+ drivers/bluetooth/Kconfig                     |  11 -
+ drivers/bluetooth/Makefile                    |   1 -
+ drivers/bluetooth/btwilink.c                  | 337 ------------------
+ 7 files changed, 24 insertions(+), 401 deletions(-)
+ delete mode 100644 drivers/bluetooth/btwilink.c
+
+-- 
+2.23.0
+
