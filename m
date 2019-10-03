@@ -2,83 +2,92 @@ Return-Path: <SRS0=6dNS=X4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE002C4360C
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 00:39:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 70585C4360C
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 00:45:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9E18621A4C
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 00:39:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 40E3C21A4C
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 00:45:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726669AbfJCAjD (ORCPT
+        id S1726384AbfJCApK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Oct 2019 20:39:03 -0400
-Received: from mail-io1-f72.google.com ([209.85.166.72]:53608 "EHLO
-        mail-io1-f72.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725928AbfJCAjD (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Oct 2019 20:39:03 -0400
-Received: by mail-io1-f72.google.com with SMTP id w8so2178294iol.20
-        for <linux-kernel@vger.kernel.org>; Wed, 02 Oct 2019 17:39:01 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
-         :from:to;
-        bh=hAyRxHbLq7PsOy9LqQwegUEDVde8994wxe1XrflzGUM=;
-        b=alHFQrZJa+X6uudn+7eTsCSUSXOZuf/NyNs4vMuBJ2Ee+z4Yh0dqYnj1zhdz8bDFte
-         osxOARg1IIDHLcI8t60XKMeF9jku+LXyc3vw2m+faaXJL+ThDOKEfPXVbmfo2POkyb9d
-         IGfRpFQj0Kl+BGZhcbcHHNdviK6kqgLoow/v8GpMz3MRardYwy5b6k4jcHv73dmzirNo
-         6xkWNXihPfUdmRfPZTwQgsoewJQzH9TVI5S2Q1zLQbhKxHermNrxKM/a7oS1JhEBkYjC
-         KFlFwS3AUtUPWE3v0tdMFmeQ4LGdj2qqeNasBeIN7semD9QhqT1+UrsVc5u2pgucgsZc
-         KZOg==
-X-Gm-Message-State: APjAAAUsTHRHDlZEUWVdPaZQu7AZgBEV627pZMlkKG1svaPybInjFtsO
-        xw7oInrJf075vrHmKkb9EXVo7SyXYuwyVlbkN6DNR58QNXw6
-X-Google-Smtp-Source: APXvYqxLjRUmgh2d6EecgdKK5+UBkQJlDH3RJylgogoZWNEXOfN2dd+nu0IV57qzRQ40+amE9KW3w1+hdoL4brm4t/WLU7XYn/av
+        Wed, 2 Oct 2019 20:45:10 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:35720 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725789AbfJCApJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 2 Oct 2019 20:45:09 -0400
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 304318980FB;
+        Thu,  3 Oct 2019 00:45:09 +0000 (UTC)
+Received: from mail (ovpn-120-134.rdu2.redhat.com [10.10.120.134])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 30AF060BE0;
+        Thu,  3 Oct 2019 00:45:06 +0000 (UTC)
+Date:   Wed, 2 Oct 2019 20:45:05 -0400
+From:   Andrea Arcangeli <aarcange@redhat.com>
+To:     Wei Yang <richardw.yang@linux.intel.com>
+Cc:     linux-kernel@vger.kernel.org, viro@zeniv.linux.org.uk,
+        linux-fsdevel@vger.kernel.org, Peter Xu <peterx@redhat.com>
+Subject: Re: [PATCH] fs/userfaultfd.c: simplify the calculation of new_flags
+Message-ID: <20191003004505.GE13922@redhat.com>
+References: <20190806053859.2374-1-richardw.yang@linux.intel.com>
 MIME-Version: 1.0
-X-Received: by 2002:a92:9915:: with SMTP id p21mr7204717ili.74.1570063141284;
- Wed, 02 Oct 2019 17:39:01 -0700 (PDT)
-Date:   Wed, 02 Oct 2019 17:39:01 -0700
-In-Reply-To: <0000000000001530e00593f47496@google.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000cfb2cb0593f6cfad@google.com>
-Subject: Re: general protection fault in sit_exit_batch_net
-From:   syzbot <syzbot+1695af5ca559927e2db8@syzkaller.appspotmail.com>
-To:     davem@davemloft.net, edumazet@google.com, f.fainelli@gmail.com,
-        gbastien@versatic.net, idosch@mellanox.com, jiri@mellanox.com,
-        kuznet@ms2.inr.ac.ru, linux-kernel@vger.kernel.org,
-        netdev@vger.kernel.org, pabeni@redhat.com, petrm@mellanox.com,
-        sd@queasysnail.net, stephen@networkplumber.org,
-        syzkaller-bugs@googlegroups.com, willemb@google.com,
-        yoshfuji@linux-ipv6.org
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190806053859.2374-1-richardw.yang@linux.intel.com>
+User-Agent: Mutt/1.12.2 (2019-09-21)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.67]); Thu, 03 Oct 2019 00:45:09 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-syzbot has bisected this bug to:
+Hello,
 
-commit ff92741270bf8b6e78aa885f166b68c7a67ab13a
-Author: Jiri Pirko <jiri@mellanox.com>
-Date:   Mon Sep 30 09:48:15 2019 +0000
+On Tue, Aug 06, 2019 at 01:38:59PM +0800, Wei Yang wrote:
+> Finally new_flags equals old vm_flags *OR* vm_flags.
+> 
+> It is not necessary to mask them first.
+> 
+> Signed-off-by: Wei Yang <richardw.yang@linux.intel.com>
+> ---
+>  fs/userfaultfd.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/fs/userfaultfd.c b/fs/userfaultfd.c
+> index ccbdbd62f0d8..653d8f7c453c 100644
+> --- a/fs/userfaultfd.c
+> +++ b/fs/userfaultfd.c
+> @@ -1457,7 +1457,7 @@ static int userfaultfd_register(struct userfaultfd_ctx *ctx,
+>  			start = vma->vm_start;
+>  		vma_end = min(end, vma->vm_end);
+>  
+> -		new_flags = (vma->vm_flags & ~vm_flags) | vm_flags;
+> +		new_flags = vma->vm_flags | vm_flags;
+>  		prev = vma_merge(mm, prev, start, vma_end, new_flags,
+>  				 vma->anon_vma, vma->vm_file, vma->vm_pgoff,
+>  				 vma_policy(vma),
 
-     net: introduce name_node struct to be used in hashlist
+And then how do you clear the flags after the above?
 
-bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=13719e33600000
-start commit:   c01ebd6c r8152: Use guard clause and fix comment typos
-git tree:       net-next
-final crash:    https://syzkaller.appspot.com/x/report.txt?x=10f19e33600000
-console output: https://syzkaller.appspot.com/x/log.txt?x=17719e33600000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=6ffbfa7e4a36190f
-dashboard link: https://syzkaller.appspot.com/bug?extid=1695af5ca559927e2db8
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1156242b600000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=17253b19600000
+It must be possible to clear the flags (from
+UFFDIO_REGISTER_MODE_MISSING|UFFDIO_REGISTER_MODE_WP to only one set
+or invert).
 
-Reported-by: syzbot+1695af5ca559927e2db8@syzkaller.appspotmail.com
-Fixes: ff92741270bf ("net: introduce name_node struct to be used in  
-hashlist")
+We have no WP support upstream yet, so maybe that's why it looks
+superfluous in practice, but in theory it isn't because it would then
+need to be reversed by Peter's (CC'ed) -wp patchset.
 
-For information about bisection process see: https://goo.gl/tpsmEJ#bisection
+The register code has already the right placeholder to support -wp and
+so it's better not to break them.
+
+I would recommend reviewing the uffd-wp support and working on testing
+the uffd-wp code instead of changing the above.
+
+Thanks,
+Andrea
