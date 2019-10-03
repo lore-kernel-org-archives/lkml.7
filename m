@@ -2,70 +2,86 @@ Return-Path: <SRS0=6dNS=X4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F4BEC10F14
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 08:01:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 021CEC32792
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 08:02:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2860C21A4C
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 08:01:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CA23821A4C
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 08:02:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1570089733;
+	bh=/FByIc2bVbyB9VJkoXnU41B0AmUP+XZ6UCyB+elJJrs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=DgzXR0cEKDa37gvKP9UDyCOXv9C06bAWkKJenFSzD5qHgjk6c8pwEWSiUdUGYutZd
+	 1AtankPEKZxu7wV3/S8wKa0sQLmGFvzWiNbY984Syor4YbI9SKtbIatRaW0iSwKnc4
+	 ZO7+TXKNyqMJe9axZYNWm/ML1LpfIsoo5PdQPCUY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728504AbfJCIBy (ORCPT
+        id S1728855AbfJCICN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 04:01:54 -0400
-Received: from mga09.intel.com ([134.134.136.24]:19445 "EHLO mga09.intel.com"
+        Thu, 3 Oct 2019 04:02:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52026 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727368AbfJCIBy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 04:01:54 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 03 Oct 2019 01:01:53 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.67,251,1566889200"; 
-   d="scan'208";a="205561070"
-Received: from lahna.fi.intel.com (HELO lahna) ([10.237.72.157])
-  by fmsmga001.fm.intel.com with SMTP; 03 Oct 2019 01:01:49 -0700
-Received: by lahna (sSMTP sendmail emulation); Thu, 03 Oct 2019 11:01:48 +0300
-Date:   Thu, 3 Oct 2019 11:01:48 +0300
-From:   Mika Westerberg <mika.westerberg@linux.intel.com>
-To:     "Mani, Rajmohan" <rajmohan.mani@intel.com>
-Cc:     "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
-        Andreas Noever <andreas.noever@gmail.com>,
-        "Jamet, Michael" <michael.jamet@intel.com>,
-        Yehezkel Bernat <YehezkelShB@gmail.com>,
-        Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>,
-        Lukas Wunner <lukas@wunner.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Alan Stern <stern@rowland.harvard.edu>,
-        "Mario.Limonciello@dell.com" <Mario.Limonciello@dell.com>,
-        Anthony Wong <anthony.wong@canonical.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [RFC PATCH 19/22] thunderbolt: Add support for Time Management
- Unit
-Message-ID: <20191003080148.GL2819@lahna.fi.intel.com>
-References: <20191001113830.13028-1-mika.westerberg@linux.intel.com>
- <20191001113830.13028-20-mika.westerberg@linux.intel.com>
- <6F87890CF0F5204F892DEA1EF0D77A599B3F3DEC@fmsmsx122.amr.corp.intel.com>
+        id S1727943AbfJCICM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 04:02:12 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id C738921A4C;
+        Thu,  3 Oct 2019 08:02:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1570089731;
+        bh=/FByIc2bVbyB9VJkoXnU41B0AmUP+XZ6UCyB+elJJrs=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=zlJz8ZATalEhL76gNCEqZjF+TM/e5TDOAj7X1MQn0EkoQys2G/wd7XqWSFle3nFxK
+         V5g/lBDrWhrZDp0xbluVHFbSlBjOce6Bs0CHqVhiif9kD/jx59W3u/p0/kZ+74mL7g
+         sfEIWVoHUB8g6JGx0CPjbkjL4KFCF4aR4NRaZ3tY=
+Date:   Thu, 3 Oct 2019 10:02:08 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Sedat Dilek <sedat.dilek@gmail.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [Linux-5.3.y] Versions in stable.git and stable-rc.git
+Message-ID: <20191003080208.GA1884816@kroah.com>
+References: <CA+icZUW9wrOAtEEXUNjHetq238D86c9c_Cf0iKQGiD+CH5bJrg@mail.gmail.com>
+ <20191003074119.GA1815771@kroah.com>
+ <CA+icZUWPkK8vsR_Wm6v=+davoFAaOsEay_siVj2BZjmnVioCjw@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <6F87890CF0F5204F892DEA1EF0D77A599B3F3DEC@fmsmsx122.amr.corp.intel.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <CA+icZUWPkK8vsR_Wm6v=+davoFAaOsEay_siVj2BZjmnVioCjw@mail.gmail.com>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Oct 02, 2019 at 04:52:06PM +0000, Mani, Rajmohan wrote:
-> > +	/* Enable TMU if it is off */
-> > +	if (!tb_switch_tmu_is_enabled(tb->root_switch))
+On Thu, Oct 03, 2019 at 09:49:27AM +0200, Sedat Dilek wrote:
+> On Thu, Oct 3, 2019 at 9:41 AM Greg Kroah-Hartman
+> <gregkh@linuxfoundation.org> wrote:
+> >
+> > On Thu, Oct 03, 2019 at 09:38:27AM +0200, Sedat Dilek wrote:
+> > > Hi Greg,
+> > >
+> > > I see two commits with "Linux 5.3.2" - in [1] it is tagged but there
+> > > is a second one in [2] - both in stable.git.
+> > >
+> > > In stable-rc.git I see a commit "Linux 5.3.4-rc1" and there was no
+> > > v5.3.3 released before.
+> > >
+> > > Can you look at this?
+> >
+> > Known issue, please see the announcement I made where I messed this all
+> > up:
+> >         https://lore.kernel.org/lkml/20191001070738.GC2893807@kroah.com/
+> >
+> > thanks,
+> >
 > 
-> To be consistent with the implementation of tb_switch_tmu_disable(), should we
-> move the above check inside tb_switch_tmu_enable()?
+> I have re-read this announcement but did not get it.
+> Will there be a v5.3.3 or do you jump directly from v5.3.2 to v5.3.4?
 
-Yes, I think it makes sense.
+I will jump to 5.3.4, there is no v5.3.3, sorry.
+
+greg k
