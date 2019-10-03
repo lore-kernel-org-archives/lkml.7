@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CB92DC4CED1
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:17:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B7EAC32792
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:17:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 975E72086A
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:17:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6F02F2086A
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:17:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570123046;
-	bh=AMxdu2iAMkSh3XMhlH/qsHZK8WG69YqnxAMbGUcPvu4=;
+	s=default; t=1570123051;
+	bh=OSDbZ+qnZK1aTfBoQCDkx4FU7CwedCYXzK82/thGqPc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=2sUyoXRYw/nxW6iCALs1DNWolnoZYNJcVTbhAwFOxgus+XiOQxCU2vA1G4F5k/sdn
-	 5aW2votDhU2HMPcSWXISQXAz3QoLkJqnFr17ymi94H1Rp0p5JLJokXU1IPkAjDbGq1
-	 LwnZo5nrGtXWF3Iehmw0OZ5M6m72yolpyb2RIOGk=
+	b=NihTRu8WovoFOS1tLL4Lj+FeQBhxgvjLjpN2SsClOa/xYgA05kRCmnmf7FRq2Tfu1
+	 uK4Bd1PNTZSPQlDqmViLKBl7lB9LiENCec1cUcHDC2TrbQ29sMDYZA7yE3HcmPm3AN
+	 xqLYWEz2X6wB2FSflrZ0zAVYJ2rxBH4x4evUfKf0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389440AbfJCQWi (ORCPT
+        id S2391578AbfJCRRa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 12:22:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51182 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 13:17:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51326 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390311AbfJCQWb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:22:31 -0400
+        id S2390340AbfJCQWg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:22:36 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5B54B21783;
-        Thu,  3 Oct 2019 16:22:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9C55C20659;
+        Thu,  3 Oct 2019 16:22:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570119750;
-        bh=AMxdu2iAMkSh3XMhlH/qsHZK8WG69YqnxAMbGUcPvu4=;
+        s=default; t=1570119756;
+        bh=OSDbZ+qnZK1aTfBoQCDkx4FU7CwedCYXzK82/thGqPc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=LH4ZfRsDyPjkprbglfwG/qSqmbyNvI9+B/8XhFdatr+YTiK06dSEHqBp92bZyactY
-         LcU6hWXV5DPaHtewPR1w5FaBy0l24xlp4t3R7vfm2YIBDPpviLw5hjBxxeUFnU36/a
-         aWfaHSnaAasSx7P1ApVTE+Q5ycj0fEXo/hFGlMX4=
+        b=TzXbGme0g1mLg+Clcwpwt4WEMTrlccZ6P614o5aUO5xHfEN0wHXly+B8PBiT1PCgv
+         8Hrr+0AGaPJR/g1WvNxEz7dJCSxTH97Bp0pm2shxUb4kxYBPrpqOIIhW7TdHH02K1r
+         TtPvVFUp7icKue+nIwcvC8EUdZ1oeBHTV8iuDHwQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Thadeu Lima de Souza Cascardo <cascardo@canonical.com>,
-        Thomas Gleixner <tglx@linutronix.de>
-Subject: [PATCH 4.19 179/211] alarmtimer: Use EOPNOTSUPP instead of ENOTSUPP
-Date:   Thu,  3 Oct 2019 17:54:05 +0200
-Message-Id: <20191003154527.198767687@linuxfoundation.org>
+        stable@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Peter Jones <pjones@redhat.com>
+Subject: [PATCH 4.19 181/211] efifb: BGRT: Improve efifb_bgrt_sanity_check
+Date:   Thu,  3 Oct 2019 17:54:07 +0200
+Message-Id: <20191003154527.420265838@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191003154447.010950442@linuxfoundation.org>
 References: <20191003154447.010950442@linuxfoundation.org>
@@ -60,49 +60,71 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Thadeu Lima de Souza Cascardo <cascardo@canonical.com>
+From: Hans de Goede <hdegoede@redhat.com>
 
-commit f18ddc13af981ce3c7b7f26925f099e7c6929aba upstream.
+commit 51677dfcc17f88ed754143df670ff064eae67f84 upstream.
 
-ENOTSUPP is not supposed to be returned to userspace. This was found on an
-OpenPower machine, where the RTC does not support set_alarm.
+For various reasons, at least with x86 EFI firmwares, the xoffset and
+yoffset in the BGRT info are not always reliable.
 
-On that system, a clock_nanosleep(CLOCK_REALTIME_ALARM, ...) results in
-"524 Unknown error 524"
+Extensive testing has shown that when the info is correct, the
+BGRT image is always exactly centered horizontally (the yoffset variable
+is more variable and not always predictable).
 
-Replace it with EOPNOTSUPP which results in the expected "95 Operation not
-supported" error.
+This commit simplifies / improves the bgrt_sanity_check to simply
+check that the BGRT image is exactly centered horizontally and skips
+(re)drawing it when it is not.
 
-Fixes: 1c6b39ad3f01 (alarmtimers: Return -ENOTSUPP if no RTC device is present)
-Signed-off-by: Thadeu Lima de Souza Cascardo <cascardo@canonical.com>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+This fixes the BGRT image sometimes being drawn in the wrong place.
+
 Cc: stable@vger.kernel.org
-Link: https://lkml.kernel.org/r/20190903171802.28314-1-cascardo@canonical.com
+Fixes: 88fe4ceb2447 ("efifb: BGRT: Do not copy the boot graphics for non native resolutions")
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+Cc: Peter Jones <pjones@redhat.com>,
+Signed-off-by: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Link: https://patchwork.freedesktop.org/patch/msgid/20190721131918.10115-1-hdegoede@redhat.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- kernel/time/alarmtimer.c |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/video/fbdev/efifb.c |   27 ++++++---------------------
+ 1 file changed, 6 insertions(+), 21 deletions(-)
 
---- a/kernel/time/alarmtimer.c
-+++ b/kernel/time/alarmtimer.c
-@@ -676,7 +676,7 @@ static int alarm_timer_create(struct k_i
- 	enum  alarmtimer_type type;
+--- a/drivers/video/fbdev/efifb.c
++++ b/drivers/video/fbdev/efifb.c
+@@ -122,28 +122,13 @@ static void efifb_copy_bmp(u8 *src, u32
+  */
+ static bool efifb_bgrt_sanity_check(struct screen_info *si, u32 bmp_width)
+ {
+-	static const int default_resolutions[][2] = {
+-		{  800,  600 },
+-		{ 1024,  768 },
+-		{ 1280, 1024 },
+-	};
+-	u32 i, right_margin;
++	/*
++	 * All x86 firmwares horizontally center the image (the yoffset
++	 * calculations differ between boards, but xoffset is predictable).
++	 */
++	u32 expected_xoffset = (si->lfb_width - bmp_width) / 2;
  
- 	if (!alarmtimer_get_rtcdev())
--		return -ENOTSUPP;
-+		return -EOPNOTSUPP;
- 
- 	if (!capable(CAP_WAKE_ALARM))
- 		return -EPERM;
-@@ -794,7 +794,7 @@ static int alarm_timer_nsleep(const cloc
- 	int ret = 0;
- 
- 	if (!alarmtimer_get_rtcdev())
--		return -ENOTSUPP;
-+		return -EOPNOTSUPP;
- 
- 	if (flags & ~TIMER_ABSTIME)
- 		return -EINVAL;
+-	for (i = 0; i < ARRAY_SIZE(default_resolutions); i++) {
+-		if (default_resolutions[i][0] == si->lfb_width &&
+-		    default_resolutions[i][1] == si->lfb_height)
+-			break;
+-	}
+-	/* If not a default resolution used for textmode, this should be fine */
+-	if (i >= ARRAY_SIZE(default_resolutions))
+-		return true;
+-
+-	/* If the right margin is 5 times smaller then the left one, reject */
+-	right_margin = si->lfb_width - (bgrt_tab.image_offset_x + bmp_width);
+-	if (right_margin < (bgrt_tab.image_offset_x / 5))
+-		return false;
+-
+-	return true;
++	return bgrt_tab.image_offset_x == expected_xoffset;
+ }
+ #else
+ static bool efifb_bgrt_sanity_check(struct screen_info *si, u32 bmp_width)
 
 
