@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B56BC32792
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:07:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3173FC32792
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:07:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 52A43222BE
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:07:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EA4F9222BE
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:07:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570118844;
-	bh=x4+W6bHjTUJYagozGShM5+2PnGm2+3w1B4z1RcOCLWg=;
+	s=default; t=1570118847;
+	bh=LoLT/BNnw/82HhhkcwYdCMddbzY+ZbKn7J/2db9xysE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=OkTXefhc+qQd6XNfP5y7LnBLuuRL7PF8l6rJl5kTSVdNNF/cjhOsAX2uCbgk+6dk3
-	 tDt+pSeAwyQWe+T0GofPdpCz9Eru2h26ZNiKEcjQ86qWEE+3yIy0ww0oW8XIUW4IU/
-	 vrcSrVj2jZ5lDPGmdda2hlxPh+PuUVHFsoAhUhdM=
+	b=UIYVcSZa2+N91ZU9IhP8TBjrEohFGDxlrqyQb5XspuCq+Ow8pHeMl/sSfNw/E/4B7
+	 VktpO93VKbCX1Vefe2wT8NhJrJt+5TWOKUxD2B6NqJJDOFL6V2z5v91etPEBfsOMK3
+	 HNMCVQCXLbBx9xPiH5ApbEMn/SaJ1HhW/jjKBznU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732932AbfJCQHX (ORCPT
+        id S1731594AbfJCQH0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 12:07:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54978 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 12:07:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55114 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732921AbfJCQHR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:07:17 -0400
+        id S1732093AbfJCQHW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:07:22 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0EDAF20865;
-        Thu,  3 Oct 2019 16:07:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7A328215EA;
+        Thu,  3 Oct 2019 16:07:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570118836;
-        bh=x4+W6bHjTUJYagozGShM5+2PnGm2+3w1B4z1RcOCLWg=;
+        s=default; t=1570118841;
+        bh=LoLT/BNnw/82HhhkcwYdCMddbzY+ZbKn7J/2db9xysE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=hyHWBULI+QEMHsUPHC33AkIGytHuNQqKDy1cz/u+jW66+/CkjwfoJmtTjjJrKSHlT
-         M7Vok4f30PNh6gY39X62v40MSHfcbvHBoBC6dZIFeSrVd+SOAPyS17jKmygw63G8Js
-         NQ0eVKIPdkQJsnnMWTwP1T0YgQeHP1S523kV2jVI=
+        b=kjcq/zl3dbTO5El9WQGN2Y4B1GYmPnQpSuushlseDf4RWfGMBHrRmUkU7W6734oJZ
+         t69T6MRfOe3hOIDFaBqG16qN4CKZ12ib4t6WKviFK6DQMevFPcC48eRAvAZXrYKjsK
+         UGYJRNrUs7N884+ZcrlhmMugpD/gvM/0C79RfZOA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Chao Yu <yuchao0@huawei.com>,
-        Jaegeuk Kim <jaegeuk@kernel.org>,
+        stable@vger.kernel.org,
+        Stephen Hemminger <stephen@networkplumber.org>,
+        "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 027/185] f2fs: fix to do sanity check on segment bitmap of LFS curseg
-Date:   Thu,  3 Oct 2019 17:51:45 +0200
-Message-Id: <20191003154443.767401442@linuxfoundation.org>
+Subject: [PATCH 4.14 029/185] net: dont warn in inet diag when IPV6 is disabled
+Date:   Thu,  3 Oct 2019 17:51:47 +0200
+Message-Id: <20191003154444.335235900@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191003154437.541662648@linuxfoundation.org>
 References: <20191003154437.541662648@linuxfoundation.org>
@@ -60,107 +61,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chao Yu <yuchao0@huawei.com>
+From: Stephen Hemminger <stephen@networkplumber.org>
 
-[ Upstream commit c854f4d681365498f53ba07843a16423625aa7e9 ]
+[ Upstream commit 1e64d7cbfdce4887008314d5b367209582223f27 ]
 
-As Jungyeon Reported in bugzilla:
+If IPV6 was disabled, then ss command would cause a kernel warning
+because the command was attempting to dump IPV6 socket information.
+The fix is to just remove the warning.
 
-https://bugzilla.kernel.org/show_bug.cgi?id=203233
-
-- Reproduces
-gcc poc_13.c
-./run.sh f2fs
-
-- Kernel messages
- F2FS-fs (sdb): Bitmap was wrongly set, blk:4608
- kernel BUG at fs/f2fs/segment.c:2133!
- RIP: 0010:update_sit_entry+0x35d/0x3e0
- Call Trace:
-  f2fs_allocate_data_block+0x16c/0x5a0
-  do_write_page+0x57/0x100
-  f2fs_do_write_node_page+0x33/0xa0
-  __write_node_page+0x270/0x4e0
-  f2fs_sync_node_pages+0x5df/0x670
-  f2fs_write_checkpoint+0x364/0x13a0
-  f2fs_sync_fs+0xa3/0x130
-  f2fs_do_sync_file+0x1a6/0x810
-  do_fsync+0x33/0x60
-  __x64_sys_fsync+0xb/0x10
-  do_syscall_64+0x43/0x110
-  entry_SYSCALL_64_after_hwframe+0x44/0xa9
-
-The testcase fails because that, in fuzzed image, current segment was
-allocated with LFS type, its .next_blkoff should point to an unused
-block address, but actually, its bitmap shows it's not. So during
-allocation, f2fs crash when setting bitmap.
-
-Introducing sanity_check_curseg() to check such inconsistence of
-current in-used segment.
-
-Signed-off-by: Chao Yu <yuchao0@huawei.com>
-Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
+Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=202249
+Fixes: 432490f9d455 ("net: ip, diag -- Add diag interface for raw sockets")
+Signed-off-by: Stephen Hemminger <stephen@networkplumber.org>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/f2fs/segment.c | 39 +++++++++++++++++++++++++++++++++++++++
- 1 file changed, 39 insertions(+)
+ net/ipv4/raw_diag.c | 3 ---
+ 1 file changed, 3 deletions(-)
 
-diff --git a/fs/f2fs/segment.c b/fs/f2fs/segment.c
-index 70bd15cadb44e..294fdb1b22137 100644
---- a/fs/f2fs/segment.c
-+++ b/fs/f2fs/segment.c
-@@ -3439,6 +3439,41 @@ static int build_dirty_segmap(struct f2fs_sb_info *sbi)
- 	return init_victim_secmap(sbi);
- }
- 
-+static int sanity_check_curseg(struct f2fs_sb_info *sbi)
-+{
-+	int i;
-+
-+	/*
-+	 * In LFS/SSR curseg, .next_blkoff should point to an unused blkaddr;
-+	 * In LFS curseg, all blkaddr after .next_blkoff should be unused.
-+	 */
-+	for (i = 0; i < NO_CHECK_TYPE; i++) {
-+		struct curseg_info *curseg = CURSEG_I(sbi, i);
-+		struct seg_entry *se = get_seg_entry(sbi, curseg->segno);
-+		unsigned int blkofs = curseg->next_blkoff;
-+
-+		if (f2fs_test_bit(blkofs, se->cur_valid_map))
-+			goto out;
-+
-+		if (curseg->alloc_type == SSR)
-+			continue;
-+
-+		for (blkofs += 1; blkofs < sbi->blocks_per_seg; blkofs++) {
-+			if (!f2fs_test_bit(blkofs, se->cur_valid_map))
-+				continue;
-+out:
-+			f2fs_msg(sbi->sb, KERN_ERR,
-+				"Current segment's next free block offset is "
-+				"inconsistent with bitmap, logtype:%u, "
-+				"segno:%u, type:%u, next_blkoff:%u, blkofs:%u",
-+				i, curseg->segno, curseg->alloc_type,
-+				curseg->next_blkoff, blkofs);
-+			return -EINVAL;
-+		}
-+	}
-+	return 0;
-+}
-+
- /*
-  * Update min, max modified time for cost-benefit GC algorithm
-  */
-@@ -3532,6 +3567,10 @@ int build_segment_manager(struct f2fs_sb_info *sbi)
- 	if (err)
- 		return err;
- 
-+	err = sanity_check_curseg(sbi);
-+	if (err)
-+		return err;
-+
- 	init_min_max_mtime(sbi);
- 	return 0;
+diff --git a/net/ipv4/raw_diag.c b/net/ipv4/raw_diag.c
+index c200065ef9a5e..6367ecdf76c42 100644
+--- a/net/ipv4/raw_diag.c
++++ b/net/ipv4/raw_diag.c
+@@ -23,9 +23,6 @@ raw_get_hashinfo(const struct inet_diag_req_v2 *r)
+ 		return &raw_v6_hashinfo;
+ #endif
+ 	} else {
+-		pr_warn_once("Unexpected inet family %d\n",
+-			     r->sdiag_family);
+-		WARN_ON_ONCE(1);
+ 		return ERR_PTR(-EINVAL);
+ 	}
  }
 -- 
 2.20.1
