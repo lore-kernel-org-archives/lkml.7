@@ -2,53 +2,52 @@ Return-Path: <SRS0=6dNS=X4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D2812C32792
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:15:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53159C32792
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:15:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9FC5120700
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:15:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1E27E21848
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:15:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570119331;
-	bh=oC1urmdw4QoCX5MWmgFlKQJ7lWgAiWRCofIv0yEI+vk=;
+	s=default; t=1570119334;
+	bh=LBxEdC86jqvCyJyf6tEuS0mbCPOX+3ZovXYKemhrgeo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=M7WjNXtGyPiGpziv9MtkKZ+qNQ8PEKI1fVotNT12QHSsaUh3OOWOuIlnyJhpzBnFW
-	 vSjg104CkKai/hPBMZTRNXf+JnucpXcnMZmSY/mQhp9G/I5c6priq9BOq9RUIrLlRI
-	 pU+4rudM1ndQ2NTZYq7uiQ/K5+R/Xl1ylGO1Yh70=
+	b=vrwlxJGwp240wTxTiM3IWb6nu6OgrLDc6z6iix5xAGyW57jYrUewv8SOUSiV4i2u9
+	 Q1eQFvReFlVAU5VEgtkVqi3JXFn1oeVQJIRCAjXFiDLPktp0Q85oV4XUnvQ01YziC2
+	 Pl3Mid4aX0Ffgd9ePZKuIwq38Tusu3/dlAR5Ecw8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727302AbfJCQPa (ORCPT
+        id S2388284AbfJCQPd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 12:15:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39554 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 12:15:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39686 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388246AbfJCQPZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:15:25 -0400
+        id S1733132AbfJCQPb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:15:31 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A5E7B20865;
-        Thu,  3 Oct 2019 16:15:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2208620700;
+        Thu,  3 Oct 2019 16:15:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570119325;
-        bh=oC1urmdw4QoCX5MWmgFlKQJ7lWgAiWRCofIv0yEI+vk=;
+        s=default; t=1570119330;
+        bh=LBxEdC86jqvCyJyf6tEuS0mbCPOX+3ZovXYKemhrgeo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=msPW4/27RYCidrIqn9aavqu/4gUIjPcXGcTMLcrhvZGCvVeJqfaWjw6PWe1yi/KPp
-         ene9h+0DitmtvTS+YNmj4Quv2HLlGvA9AaYW1tLNNIpXo18mKPtRvWSJDhLw8kEIFt
-         BDl5553OvWmyavAXyCznb20M5TS451bTqsNEvyIU=
+        b=vfDvt9f5frwN/TCvZZSLcpCHq4LdOCjVtq2EmH6p2BDo2FIsxdnA06GE7CWClMFC3
+         +eJ1HB0xezMue2VeZYQqhlibJ2vKoCBOth1D/uJTobyTFjISdPiRhPL23izmiQDD1U
+         ccXPJunDBKfkilYXUJztQeHkvFl0E6gF7gvtxGa4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Navid Emamdoost <navid.emamdoost@gmail.com>,
-        Jakub Kicinski <jakub.kicinski@netronome.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.19 023/211] nfp: flower: prevent memory leak in nfp_flower_spawn_phy_reprs
-Date:   Thu,  3 Oct 2019 17:51:29 +0200
-Message-Id: <20191003154452.365145518@linuxfoundation.org>
+        stable@vger.kernel.org, Axel Lin <axel.lin@ingics.com>,
+        Mark Brown <broonie@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 025/211] regulator: lm363x: Fix off-by-one n_voltages for lm3632 ldo_vpos/ldo_vneg
+Date:   Thu,  3 Oct 2019 17:51:31 +0200
+Message-Id: <20191003154452.858066258@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191003154447.010950442@linuxfoundation.org>
 References: <20191003154447.010950442@linuxfoundation.org>
@@ -61,48 +60,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Navid Emamdoost <navid.emamdoost@gmail.com>
+From: Axel Lin <axel.lin@ingics.com>
 
-[ Upstream commit 8572cea1461a006bce1d06c0c4b0575869125fa4 ]
+[ Upstream commit 1e2cc8c5e0745b545d4974788dc606d678b6e564 ]
 
-In nfp_flower_spawn_phy_reprs, in the for loop over eth_tbl if any of
-intermediate allocations or initializations fail memory is leaked.
-requiered releases are added.
+According to the datasheet https://www.ti.com/lit/ds/symlink/lm3632a.pdf
+Table 20. VPOS Bias Register Field Descriptions VPOS[5:0]
+Sets the Positive Display Bias (LDO) Voltage (50 mV per step)
+000000: 4 V
+000001: 4.05 V
+000010: 4.1 V
+....................
+011101: 5.45 V
+011110: 5.5 V (Default)
+011111: 5.55 V
+....................
+100111: 5.95 V
+101000: 6 V
+Note: Codes 101001 to 111111 map to 6 V
 
-Fixes: b94524529741 ("nfp: flower: add per repr private data for LAG offload")
-Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
-Acked-by: Jakub Kicinski <jakub.kicinski@netronome.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+The LM3632_LDO_VSEL_MAX should be 0b101000 (0x28), so the maximum voltage
+can match the datasheet.
+
+Fixes: 3a8d1a73a037 ("regulator: add LM363X driver")
+Signed-off-by: Axel Lin <axel.lin@ingics.com>
+Link: https://lore.kernel.org/r/20190626132632.32629-1-axel.lin@ingics.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/netronome/nfp/flower/main.c |    3 +++
- 1 file changed, 3 insertions(+)
+ drivers/regulator/lm363x-regulator.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/net/ethernet/netronome/nfp/flower/main.c
-+++ b/drivers/net/ethernet/netronome/nfp/flower/main.c
-@@ -259,6 +259,7 @@ nfp_flower_spawn_vnic_reprs(struct nfp_a
- 		repr_priv = kzalloc(sizeof(*repr_priv), GFP_KERNEL);
- 		if (!repr_priv) {
- 			err = -ENOMEM;
-+			nfp_repr_free(repr);
- 			goto err_reprs_clean;
- 		}
+diff --git a/drivers/regulator/lm363x-regulator.c b/drivers/regulator/lm363x-regulator.c
+index b615a413ca9f6..27c0a67cfd0e2 100644
+--- a/drivers/regulator/lm363x-regulator.c
++++ b/drivers/regulator/lm363x-regulator.c
+@@ -33,7 +33,7 @@
  
-@@ -291,6 +292,7 @@ nfp_flower_spawn_vnic_reprs(struct nfp_a
- 		err = nfp_repr_init(app, repr,
- 				    port_id, port, priv->nn->dp.netdev);
- 		if (err) {
-+			kfree(repr_priv);
- 			nfp_port_free(port);
- 			nfp_repr_free(repr);
- 			goto err_reprs_clean;
-@@ -389,6 +391,7 @@ nfp_flower_spawn_phy_reprs(struct nfp_ap
- 		}
- 		err = nfp_port_init_phy_port(app->pf, app, port, i);
- 		if (err) {
-+			kfree(repr_priv);
- 			nfp_port_free(port);
- 			nfp_repr_free(repr);
- 			goto err_reprs_clean;
+ /* LM3632 */
+ #define LM3632_BOOST_VSEL_MAX		0x26
+-#define LM3632_LDO_VSEL_MAX		0x29
++#define LM3632_LDO_VSEL_MAX		0x28
+ #define LM3632_VBOOST_MIN		4500000
+ #define LM3632_VLDO_MIN			4000000
+ 
+-- 
+2.20.1
+
 
 
