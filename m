@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BD9A8C4360C
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 00:27:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9847CC10F14
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 00:27:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 886F1222C0
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 00:27:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 60B97222C2
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 00:27:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570062455;
-	bh=rHGM/QeLCDI7rkRRUfmjmKDuvYnanGLHZxSqrr9JnTg=;
+	s=default; t=1570062463;
+	bh=3elrFw8mG2RF8GFE6+qw0fOSV8Z6Vl7d7zJd50Ul4e8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=C7gH6PwiOhCewhmLy52tXEF2YYrrxiOwQunujCVwnuJgvl5eiB5iQqRaQHsIZFUxU
-	 W+7NOSItCyMsqLxWlu+6O4UqNnzGGY/XEKDDU7WH2PZF3Y/4PZGZapaSzHZ/Y0bSiQ
-	 5nLqDyl+5LFB/CLCqJkXl/vfpjJfQ2Lokg+Om4J4=
+	b=hIYcBEgljdUS7oToG2PSp0BHd5Ey6OK5pG0wtFixi8aunR4Et2aR1icRVxbBB7BCK
+	 lA2eWI8+hNVIYoj84E00yDOldrIhEdPCJDMEFl+QhIZVL5ow6i+vd69Xhp7sypcRGw
+	 20/QlC7i5c6fO05j7mp8ENZJVKAO1ALaw+m8XhaU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729896AbfJCA1e (ORCPT
+        id S1729889AbfJCA1m (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Oct 2019 20:27:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56118 "EHLO mail.kernel.org"
+        Wed, 2 Oct 2019 20:27:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56100 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729709AbfJCA1B (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Oct 2019 20:27:01 -0400
+        id S1729601AbfJCA1A (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 2 Oct 2019 20:27:00 -0400
 Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DB6DB22475;
+        by mail.kernel.org (Postfix) with ESMTPSA id 4A904222C0;
         Thu,  3 Oct 2019 00:27:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570062421;
-        bh=rHGM/QeLCDI7rkRRUfmjmKDuvYnanGLHZxSqrr9JnTg=;
+        s=default; t=1570062420;
+        bh=3elrFw8mG2RF8GFE6+qw0fOSV8Z6Vl7d7zJd50Ul4e8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=i+FHaQ+ZDRaFIioD/4q2euZme3rELgDr1Q2QoAp0Myc0/yleomK+rNw8WIhfKwIja
-         ib8+EQNsCUuKiSFmhi8xESE1t5E8WVI5hgX+gGOkkUy7aHXdSDf3j7weVtOsQrqBUO
-         v3S7tQexLYz+iFsxVQaCOJ/jQZKrKoJMhzlzp80o=
+        b=PbjIFKsvtWTbf/CZeUG8jazdXjv4Gfadc8I9x0Fud8RH3aGHGD6o6zPAtnd4DO6qo
+         jmflttIwnNh4dIl+NVkxbcrujXu4n6m4obCMvu4O0wfnytwTA6LQQAbxWePs1FwZXB
+         PyBdY9x3pRV+odNV2Hpq007thNNPgHhdgLa1+NGw=
 From:   paulmck@kernel.org
 To:     linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
         mingo@kernel.org
@@ -46,9 +46,9 @@ Cc:     stern@rowland.harvard.edu, parri.andrea@gmail.com, will@kernel.org,
         peterz@infradead.org, boqun.feng@gmail.com, npiggin@gmail.com,
         dhowells@redhat.com, j.alglave@ucl.ac.uk, luc.maranget@inria.fr,
         akiyks@gmail.com, "Paul E. McKenney" <paulmck@linux.ibm.com>
-Subject: [PATCH tip/core/rcu 30/32] tools/memory-model: Add data-race capabilities to judgelitmus.sh
-Date:   Wed,  2 Oct 2019 17:26:48 -0700
-Message-Id: <20191003002650.11249-30-paulmck@kernel.org>
+Subject: [PATCH tip/core/rcu 28/32] tools/memory-model: Repair parseargs.sh header comment
+Date:   Wed,  2 Oct 2019 17:26:46 -0700
+Message-Id: <20191003002650.11249-28-paulmck@kernel.org>
 X-Mailer: git-send-email 2.9.5
 In-Reply-To: <20191003001039.GA8027@paulmck-ThinkPad-P72>
 References: <20191003001039.GA8027@paulmck-ThinkPad-P72>
@@ -59,92 +59,24 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: "Paul E. McKenney" <paulmck@linux.ibm.com>
 
-This commit adds functionality to judgelitmus.sh to allow it to handle
-both the "DATARACE" markers in the "Result:" comments in litmus tests
-and the "Flag data-race" markers in LKMM output.  For C-language tests,
-if either marker is present, the other must also be as well, at least for
-litmus tests having a "Result:" comment.  If the LKMM output indicates
-a data race, then failures of the Always/Sometimes/Never portion of the
-"Result:" prediction are forgiven.
-
-The reason for forgiving "Result:" mispredictions is that data races can
-result in "interesting" compiler optimizations, so that all bets are off
-in the data-race case.
-
-[ paulmck: Apply Akira Yokosawa feedback. ]
 Signed-off-by: Paul E. McKenney <paulmck@linux.ibm.com>
 ---
- tools/memory-model/scripts/judgelitmus.sh | 40 ++++++++++++++++++++++++-------
- 1 file changed, 32 insertions(+), 8 deletions(-)
+ tools/memory-model/scripts/parseargs.sh | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/tools/memory-model/scripts/judgelitmus.sh b/tools/memory-model/scripts/judgelitmus.sh
-index 9abda72..2700481 100755
---- a/tools/memory-model/scripts/judgelitmus.sh
-+++ b/tools/memory-model/scripts/judgelitmus.sh
-@@ -4,13 +4,19 @@
- # Given a .litmus test and the corresponding litmus output file, check
- # the .litmus.out file against the "Result:" comment to judge whether the
- # test ran correctly.  If the --hw argument is omitted, check against the
--# LKMM output, which is assumed to be in file.litmus.out.  If this argument
--# is provided, this is assumed to be a hardware test, and the output is
--# assumed to be in file.litmus.HW.out, where "HW" is the --hw argument.
--# In addition, non-Sometimes verification results will be noted, but
--# forgiven.  Furthermore, if there is no "Result:" comment but there is
--# an LKMM .litmus.out file, the observation in that file will be used
--# to judge the assembly-language verification.
-+# LKMM output, which is assumed to be in file.litmus.out. If either a
-+# "DATARACE" marker in the "Result:" comment or a "Flag data-race" marker
-+# in the LKMM output is present, the other must also be as well, at least
-+# for litmus tests having a "Result:" comment. In this case, a failure of
-+# the Always/Sometimes/Never portion of the "Result:" prediction will be
-+# noted, but forgiven.
-+#
-+# If the --hw argument is provided, this is assumed to be a hardware
-+# test, and the output is assumed to be in file.litmus.HW.out, where
-+# "HW" is the --hw argument. In addition, non-Sometimes verification
-+# results will be noted, but forgiven.  Furthermore, if there is no
-+# "Result:" comment but there is an LKMM .litmus.out file, the observation
-+# in that file will be used to judge the assembly-language verification.
+diff --git a/tools/memory-model/scripts/parseargs.sh b/tools/memory-model/scripts/parseargs.sh
+index 7aa5875..08ded59 100755
+--- a/tools/memory-model/scripts/parseargs.sh
++++ b/tools/memory-model/scripts/parseargs.sh
+@@ -1,7 +1,7 @@
+ #!/bin/sh
+ # SPDX-License-Identifier: GPL-2.0+
  #
- # Usage:
- #	judgelitmus.sh file.litmus
-@@ -47,9 +53,27 @@ else
- 	echo ' --- ' error: \"$LKMM_DESTDIR/$litmusout is not a readable file
- 	exit 255
- fi
-+if grep -q '^Flag data-race$' "$LKMM_DESTDIR/$litmusout"
-+then
-+	datarace_modeled=1
-+fi
- if grep -q '^ \* Result: ' $litmus
- then
- 	outcome=`grep -m 1 '^ \* Result: ' $litmus | awk '{ print $3 }'`
-+	if grep -m1 '^ \* Result: .* DATARACE' $litmus
-+	then
-+		datarace_predicted=1
-+	fi
-+	if test -n "$datarace_predicted" -a -z "$datarace_modeled" -a -z "$LKMM_HW_MAP_FILE"
-+	then
-+		echo '!!! Predicted data race not modeled' $litmus
-+		exit 252
-+	elif test -z "$datarace_predicted" -a -n "$datarace_modeled"
-+	then
-+		# Note that hardware models currently don't model data races
-+		echo '!!! Unexpected data race modeled' $litmus
-+		exit 253
-+	fi
- elif test -n "$LKMM_HW_MAP_FILE" && grep -q '^Observation' $LKMM_DESTDIR/$lkmmout > /dev/null 2>&1
- then
- 	outcome=`grep -m 1 '^Observation ' $LKMM_DESTDIR/$lkmmout | awk '{ print $3 }'`
-@@ -114,7 +138,7 @@ elif grep '^Observation' $LKMM_DESTDIR/$litmusout | grep -q $outcome || test "$o
- then
- 	ret=0
- else
--	if test -n "$LKMM_HW_MAP_FILE" -a "$outcome" = Sometimes
-+	if test \( -n "$LKMM_HW_MAP_FILE" -a "$outcome" = Sometimes \) -o -n "$datarace_modeled"
- 	then
- 		flag="--- Forgiven"
- 		ret=0
+-# the corresponding .litmus.out file, and does not judge the result.
++# Parse arguments common to the various scripts.
+ #
+ # . scripts/parseargs.sh
+ #
 -- 
 2.9.5
 
