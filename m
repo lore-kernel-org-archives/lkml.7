@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DDB3C10F14
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:47:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E2EEC32792
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:47:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7031421783
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:47:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4031520865
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:47:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570121252;
-	bh=SSaj6SjOpAnKNqQCHy7fYhMvKgjaL7iwdNhua4vxOJw=;
+	s=default; t=1570121256;
+	bh=vNmoFFEBAwmRbkNPotkq14fYmjwQEJC6ATGtg3SyS7o=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=KNy65wmK/0cZpyYC0CWfAPtmmfeKC+61P0BpXxMdXwq1Jef+Y82xvEEwF1nmwDLn2
-	 A5eLinbALYXqowWKbRF/fEcYtdbIwaHYPD+bOzyKOANbS74RwNElvCKazlZU14p2ua
-	 ColODgUb21pHNM78aiDws7ximRQRiw//wOgSzd0g=
+	b=GOwwEqEdDwB3HAWP5YCGLdWxCru5gaNrx1aTJOP5Asd7X8T88MD4JCtBiZR/e8WRb
+	 5ylOvWYgmgPEhcRJQwj5FkLt5F4YbQnKz6ttoPHzOHRtpogBiJv0sb2QDK19RZtZZJ
+	 kqGut7hBPEIeMZ64DmVqSgkB7I9/t+ebnA6gNeyE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405200AbfJCQrb (ORCPT
+        id S2405281AbfJCQrf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 12:47:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:32814 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 12:47:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:32870 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2405180AbfJCQr3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:47:29 -0400
+        id S2405194AbfJCQrc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:47:32 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 28A6220867;
-        Thu,  3 Oct 2019 16:47:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C06592086A;
+        Thu,  3 Oct 2019 16:47:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570121248;
-        bh=SSaj6SjOpAnKNqQCHy7fYhMvKgjaL7iwdNhua4vxOJw=;
+        s=default; t=1570121251;
+        bh=vNmoFFEBAwmRbkNPotkq14fYmjwQEJC6ATGtg3SyS7o=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=MshQKUxkK5iFU9pa+r+O66z/c8pOnE0Z7U4icDEAC8zXVsKRBIuUgxxIDjSy5GkIU
-         TqE+wXxND0lnw/MnlYphk04Iu2dF6tzHxEHBTmsB4KPb4wy2JX64sQZQHjP8CgBwgp
-         WoEDfKYSjQgbNW9clbRJ8qJZi0kSe65EdavyLOqA=
+        b=bh+AWL6oVOBx5S/xsF3ltWV4pJWla4yL6FQIP6TwYjfUEynUvr70rGUHPrt2v/FTk
+         dMIbipsQ3EuK//f0GBqvn8a5Qrw/fUvns6ZZ6ocrsJAby7S5wKbK2R5aNaK26lMMZO
+         e+kP5NbxerbIQo2VuLHqPMaloNbpa3pJ8Fio0ows=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Pavel Begunkov <asml.silence@gmail.com>,
-        Hou Tao <houtao1@huawei.com>, Jens Axboe <axboe@kernel.dk>,
+        stable@vger.kernel.org,
+        Guoqing Jiang <guoqing.jiang@cloud.ionos.com>,
+        Song Liu <songliubraving@fb.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.3 209/344] block: make rq sector size accessible for block stats
-Date:   Thu,  3 Oct 2019 17:52:54 +0200
-Message-Id: <20191003154600.901705699@linuxfoundation.org>
+Subject: [PATCH 5.3 210/344] raid5: dont set STRIPE_HANDLE to stripe which is in batch list
+Date:   Thu,  3 Oct 2019 17:52:55 +0200
+Message-Id: <20191003154601.005425530@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191003154540.062170222@linuxfoundation.org>
 References: <20191003154540.062170222@linuxfoundation.org>
@@ -60,125 +61,73 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hou Tao <houtao1@huawei.com>
+From: Guoqing Jiang <guoqing.jiang@cloud.ionos.com>
 
-[ Upstream commit 3d24430694077313c75c6b89f618db09943621e4 ]
+[ Upstream commit 6ce220dd2f8ea71d6afc29b9a7524c12e39f374a ]
 
-Currently rq->data_len will be decreased by partial completion or
-zeroed by completion, so when blk_stat_add() is invoked, data_len
-will be zero and there will never be samples in poll_cb because
-blk_mq_poll_stats_bkt() will return -1 if data_len is zero.
+If stripe in batch list is set with STRIPE_HANDLE flag, then the stripe
+could be set with STRIPE_ACTIVE by the handle_stripe function. And if
+error happens to the batch_head at the same time, break_stripe_batch_list
+is called, then below warning could happen (the same report in [1]), it
+means a member of batch list was set with STRIPE_ACTIVE.
 
-We could move blk_stat_add() back to __blk_mq_complete_request(),
-but that would make the effort of trying to call ktime_get_ns()
-once in vain. Instead we can reuse throtl_size field, and use
-it for both block stats and block throttle, and adjust the
-logic in blk_mq_poll_stats_bkt() accordingly.
+[7028915.431770] stripe state: 2001
+[7028915.431815] ------------[ cut here ]------------
+[7028915.431828] WARNING: CPU: 18 PID: 29089 at drivers/md/raid5.c:4614 break_stripe_batch_list+0x203/0x240 [raid456]
+[...]
+[7028915.431879] CPU: 18 PID: 29089 Comm: kworker/u82:5 Tainted: G           O    4.14.86-1-storage #4.14.86-1.2~deb9
+[7028915.431881] Hardware name: Supermicro SSG-2028R-ACR24L/X10DRH-iT, BIOS 3.1 06/18/2018
+[7028915.431888] Workqueue: raid5wq raid5_do_work [raid456]
+[7028915.431890] task: ffff9ab0ef36d7c0 task.stack: ffffb72926f84000
+[7028915.431896] RIP: 0010:break_stripe_batch_list+0x203/0x240 [raid456]
+[7028915.431898] RSP: 0018:ffffb72926f87ba8 EFLAGS: 00010286
+[7028915.431900] RAX: 0000000000000012 RBX: ffff9aaa84a98000 RCX: 0000000000000000
+[7028915.431901] RDX: 0000000000000000 RSI: ffff9ab2bfa15458 RDI: ffff9ab2bfa15458
+[7028915.431902] RBP: ffff9aaa8fb4e900 R08: 0000000000000001 R09: 0000000000002eb4
+[7028915.431903] R10: 00000000ffffffff R11: 0000000000000000 R12: ffff9ab1736f1b00
+[7028915.431904] R13: 0000000000000000 R14: ffff9aaa8fb4e900 R15: 0000000000000001
+[7028915.431906] FS:  0000000000000000(0000) GS:ffff9ab2bfa00000(0000) knlGS:0000000000000000
+[7028915.431907] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[7028915.431908] CR2: 00007ff953b9f5d8 CR3: 0000000bf4009002 CR4: 00000000003606e0
+[7028915.431909] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+[7028915.431910] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+[7028915.431910] Call Trace:
+[7028915.431923]  handle_stripe+0x8e7/0x2020 [raid456]
+[7028915.431930]  ? __wake_up_common_lock+0x89/0xc0
+[7028915.431935]  handle_active_stripes.isra.58+0x35f/0x560 [raid456]
+[7028915.431939]  raid5_do_work+0xc6/0x1f0 [raid456]
 
-Fixes: 4bc6339a583c ("block: move blk_stat_add() to __blk_mq_end_request()")
-Tested-by: Pavel Begunkov <asml.silence@gmail.com>
-Signed-off-by: Hou Tao <houtao1@huawei.com>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Also commit 59fc630b8b5f9f ("RAID5: batch adjacent full stripe write")
+said "If a stripe is added to batch list, then only the first stripe
+of the list should be put to handle_list and run handle_stripe."
+
+So don't set STRIPE_HANDLE to stripe which is already in batch list,
+otherwise the stripe could be put to handle_list and run handle_stripe,
+then the above warning could be triggered.
+
+[1]. https://www.spinics.net/lists/raid/msg62552.html
+
+Signed-off-by: Guoqing Jiang <guoqing.jiang@cloud.ionos.com>
+Signed-off-by: Song Liu <songliubraving@fb.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- block/blk-mq.c         | 11 +++++------
- block/blk-throttle.c   |  3 ++-
- include/linux/blkdev.h | 15 ++++++++++++---
- 3 files changed, 19 insertions(+), 10 deletions(-)
+ drivers/md/raid5.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/block/blk-mq.c b/block/blk-mq.c
-index a38ebb2a380c2..9b56428cad0e7 100644
---- a/block/blk-mq.c
-+++ b/block/blk-mq.c
-@@ -44,12 +44,12 @@ static void blk_mq_poll_stats_fn(struct blk_stat_callback *cb);
+diff --git a/drivers/md/raid5.c b/drivers/md/raid5.c
+index 3de4e13bde984..21514edb2bea3 100644
+--- a/drivers/md/raid5.c
++++ b/drivers/md/raid5.c
+@@ -5718,7 +5718,8 @@ static bool raid5_make_request(struct mddev *mddev, struct bio * bi)
+ 				do_flush = false;
+ 			}
  
- static int blk_mq_poll_stats_bkt(const struct request *rq)
- {
--	int ddir, bytes, bucket;
-+	int ddir, sectors, bucket;
- 
- 	ddir = rq_data_dir(rq);
--	bytes = blk_rq_bytes(rq);
-+	sectors = blk_rq_stats_sectors(rq);
- 
--	bucket = ddir + 2*(ilog2(bytes) - 9);
-+	bucket = ddir + 2 * ilog2(sectors);
- 
- 	if (bucket < 0)
- 		return -1;
-@@ -330,6 +330,7 @@ static struct request *blk_mq_rq_ctx_init(struct blk_mq_alloc_data *data,
- 	else
- 		rq->start_time_ns = 0;
- 	rq->io_start_time_ns = 0;
-+	rq->stats_sectors = 0;
- 	rq->nr_phys_segments = 0;
- #if defined(CONFIG_BLK_DEV_INTEGRITY)
- 	rq->nr_integrity_segments = 0;
-@@ -673,9 +674,7 @@ void blk_mq_start_request(struct request *rq)
- 
- 	if (test_bit(QUEUE_FLAG_STATS, &q->queue_flags)) {
- 		rq->io_start_time_ns = ktime_get_ns();
--#ifdef CONFIG_BLK_DEV_THROTTLING_LOW
--		rq->throtl_size = blk_rq_sectors(rq);
--#endif
-+		rq->stats_sectors = blk_rq_sectors(rq);
- 		rq->rq_flags |= RQF_STATS;
- 		rq_qos_issue(q, rq);
- 	}
-diff --git a/block/blk-throttle.c b/block/blk-throttle.c
-index 8ab6c81532236..ee74bffe3504d 100644
---- a/block/blk-throttle.c
-+++ b/block/blk-throttle.c
-@@ -2246,7 +2246,8 @@ void blk_throtl_stat_add(struct request *rq, u64 time_ns)
- 	struct request_queue *q = rq->q;
- 	struct throtl_data *td = q->td;
- 
--	throtl_track_latency(td, rq->throtl_size, req_op(rq), time_ns >> 10);
-+	throtl_track_latency(td, blk_rq_stats_sectors(rq), req_op(rq),
-+			     time_ns >> 10);
- }
- 
- void blk_throtl_bio_endio(struct bio *bio)
-diff --git a/include/linux/blkdev.h b/include/linux/blkdev.h
-index 1ef375dafb1c1..ae51050c50949 100644
---- a/include/linux/blkdev.h
-+++ b/include/linux/blkdev.h
-@@ -202,9 +202,12 @@ struct request {
- #ifdef CONFIG_BLK_WBT
- 	unsigned short wbt_flags;
- #endif
--#ifdef CONFIG_BLK_DEV_THROTTLING_LOW
--	unsigned short throtl_size;
--#endif
-+	/*
-+	 * rq sectors used for blk stats. It has the same value
-+	 * with blk_rq_sectors(rq), except that it never be zeroed
-+	 * by completion.
-+	 */
-+	unsigned short stats_sectors;
- 
- 	/*
- 	 * Number of scatter-gather DMA addr+len pairs after
-@@ -903,6 +906,7 @@ static inline struct request_queue *bdev_get_queue(struct block_device *bdev)
-  * blk_rq_err_bytes()		: bytes left till the next error boundary
-  * blk_rq_sectors()		: sectors left in the entire request
-  * blk_rq_cur_sectors()		: sectors left in the current segment
-+ * blk_rq_stats_sectors()	: sectors of the entire request used for stats
-  */
- static inline sector_t blk_rq_pos(const struct request *rq)
- {
-@@ -931,6 +935,11 @@ static inline unsigned int blk_rq_cur_sectors(const struct request *rq)
- 	return blk_rq_cur_bytes(rq) >> SECTOR_SHIFT;
- }
- 
-+static inline unsigned int blk_rq_stats_sectors(const struct request *rq)
-+{
-+	return rq->stats_sectors;
-+}
-+
- #ifdef CONFIG_BLK_DEV_ZONED
- static inline unsigned int blk_rq_zone_no(struct request *rq)
- {
+-			set_bit(STRIPE_HANDLE, &sh->state);
++			if (!sh->batch_head)
++				set_bit(STRIPE_HANDLE, &sh->state);
+ 			clear_bit(STRIPE_DELAYED, &sh->state);
+ 			if ((!sh->batch_head || sh == sh->batch_head) &&
+ 			    (bi->bi_opf & REQ_SYNC) &&
 -- 
 2.20.1
 
