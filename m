@@ -2,152 +2,161 @@ Return-Path: <SRS0=6dNS=X4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-11.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EE04C32792
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 10:04:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 180ABC32792
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 10:05:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 26BCA2133F
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 10:04:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E660E21D81
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 10:05:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="azgvbQZ8"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="qMXgfIBE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727409AbfJCKEZ (ORCPT
+        id S1727935AbfJCKFH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 06:04:25 -0400
-Received: from mailout2.w1.samsung.com ([210.118.77.12]:34043 "EHLO
-        mailout2.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726199AbfJCKEY (ORCPT
+        Thu, 3 Oct 2019 06:05:07 -0400
+Received: from mail-qk1-f196.google.com ([209.85.222.196]:36136 "EHLO
+        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726811AbfJCKFH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 06:04:24 -0400
-Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
-        by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20191003100422euoutp02612171002dc812d46b7d2f9c571b354e~KGvW9pWrd2515725157euoutp02X
-        for <linux-kernel@vger.kernel.org>; Thu,  3 Oct 2019 10:04:22 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20191003100422euoutp02612171002dc812d46b7d2f9c571b354e~KGvW9pWrd2515725157euoutp02X
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1570097062;
-        bh=9FfdxOF7vnF6vNWvFg7wwQjhh86Fz5rU4uACN+T5VYU=;
-        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
-        b=azgvbQZ8ajCNhEE0OIvLIMJ50wu9ygGQeXtOPc+aCSi7ei2ka1kuJD2KDkaAyJZEO
-         OnCo5sgGSNsK/pNJeURn7aa6LiSf0THE/6WJ6fv+lcujTssFOoQrEXJx440tvsTIii
-         svO56HjjRHw8xYlCYrrEE+SRMWL0mahXUtMGlYZQ=
-Received: from eusmges1new.samsung.com (unknown [203.254.199.242]) by
-        eucas1p2.samsung.com (KnoxPortal) with ESMTP id
-        20191003100422eucas1p2f825c8fea78ab0ff971999959437a932~KGvWbRRY31631516315eucas1p2a;
-        Thu,  3 Oct 2019 10:04:22 +0000 (GMT)
-Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
-        eusmges1new.samsung.com (EUCPMTA) with SMTP id AD.3D.04469.6A7C59D5; Thu,  3
-        Oct 2019 11:04:22 +0100 (BST)
-Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
-        eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
-        20191003100421eucas1p2785448de3ed8c90e93a61510403a9202~KGvWFBLEV1622016220eucas1p2k;
-        Thu,  3 Oct 2019 10:04:21 +0000 (GMT)
-Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
-        eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
-        20191003100421eusmtrp1e1539dc74c42577aa5b01c2c0fcfcda9~KGvWEKQE61454314543eusmtrp1b;
-        Thu,  3 Oct 2019 10:04:21 +0000 (GMT)
-X-AuditID: cbfec7f2-569ff70000001175-de-5d95c7a6699f
-Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
-        eusmgms1.samsung.com (EUCPMTA) with SMTP id 95.F1.04166.5A7C59D5; Thu,  3
-        Oct 2019 11:04:21 +0100 (BST)
-Received: from [106.120.51.15] (unknown [106.120.51.15]) by
-        eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
-        20191003100421eusmtip1e188990cf25c7ee043a9c6827e1dde4e~KGvVT2Uzu0342403424eusmtip1b;
-        Thu,  3 Oct 2019 10:04:21 +0000 (GMT)
-Subject: Re: [RESEND PATCH v5 3/4] ARM: dts: exynos: add initial data for
- coupled regulators for Exynos5422/5800
-To:     Krzysztof Kozlowski <krzk@kernel.org>,
-        Kamil Konieczny <k.konieczny@partner.samsung.com>
-Cc:     Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        Chanwoo Choi <cw00.choi@samsung.com>,
-        Kukjin Kim <kgene@kernel.org>,
-        Kyungmin Park <kyungmin.park@samsung.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        MyungJoo Ham <myungjoo.ham@samsung.com>,
-        Nishanth Menon <nm@ti.com>, Rob Herring <robh+dt@kernel.org>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Viresh Kumar <vireshk@kernel.org>, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-pm@vger.kernel.org, linux-samsung-soc@vger.kernel.org
-From:   Marek Szyprowski <m.szyprowski@samsung.com>
-Message-ID: <2fbc9880-3dfe-145c-e036-16276c314353@samsung.com>
-Date:   Thu, 3 Oct 2019 12:04:20 +0200
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
-        Thunderbird/60.9.0
+        Thu, 3 Oct 2019 06:05:07 -0400
+Received: by mail-qk1-f196.google.com with SMTP id y189so1747852qkc.3
+        for <linux-kernel@vger.kernel.org>; Thu, 03 Oct 2019 03:05:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=XWiMJwqzT8oQE1dGfRwDaY6r1DsXYglQOBVzUqA8/w8=;
+        b=qMXgfIBEws2sS0qW6uaGhnWNDmBMgaDsfvPMwN8oxSu0kIAtRjDxUnvV5qE6IaQK/z
+         WS/Sq2y8+wYpblBZUA12mNHTZbfnUadl5aMsNSXkbWuOWJsqafeOwVM6PVOvD8vqbjNh
+         WHWqzYBzZ8cvoIG1e+pOuO+3EXEMoInOYdQrb366GC230SXMJBU5cx58zo8Z5fuMcdhr
+         MVTnJNWNFkOX+ePgVviLb0wZwPq49NyX+5JmBvwzYr9vpPIrsZ1bTSk9arBdYUWs+9g2
+         g9ynU96h3K7dh6M95/fjczcKjC1EUQKwhfELqSkIzNNz0xNl+kDyZ1cZjbJrLmXaieBI
+         Z0iA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=XWiMJwqzT8oQE1dGfRwDaY6r1DsXYglQOBVzUqA8/w8=;
+        b=Npvu14+5l2tLRH1H4237rFvaxKT2/mlxVHwFs9SRXOGpYyegk4FBd+DeyXv1IYQe87
+         tDX+51cbYhaDDqpFeU7rNVCxiw88P9kLKd3tFYjypbwH7zawOft2iWreow/Tm1tYdIqN
+         j61eGyGG9yVaz+lRyxCJT8tIu3LzJ70gFXVJfo2UFK5yZwIxrm8AcErTXf9T5qTXeIiQ
+         VjB7IoyN/Ox80Q5ARof735xAdk8iFL3FXjWIvRFVq56yglXcmzkZMGbrJZs+tE9GHFJC
+         p6VEUxV5GanavfL9Iydh8OSkyLvdM3LyGlQPIc4f4n+vMv3eLD5q7uv1FpferK/hoOHu
+         vgiA==
+X-Gm-Message-State: APjAAAWNzQNsGMX1f5eH5UHHTqOaiW6K53I6R5s5/CDf7b/cKJtks7bq
+        SPb7fVk1VIVs8YNF/TmIbJVUljPz5t7T+RMnbFxCDcjh
+X-Google-Smtp-Source: APXvYqzLN9WhEfYla8VI/XUEc/9tqZZw6y4Qk84UuA4On4Aoz/4gv8XTirE38rgkp0EobKHsJ0n3nOWwvfvN9tBxIUQ=
+X-Received: by 2002:a05:620a:7ca:: with SMTP id 10mr3512606qkb.410.1570097105389;
+ Thu, 03 Oct 2019 03:05:05 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20191002142704.GA15827@pi3>
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-Brightmail-Tracker: H4sIAAAAAAAAA02SWUwTQRzGme52d2ksWQqEf8Qj1iMesUKiZoxGMdGkj5roiwaxyAaItJAu
-        oOiDCqFAg0jAA2sFFERCEKQcIlGUWmmU0AIiIB6VVGJVqpFDUBRsux68fd9/fjPffJNhCNmI
-        eCGToEnhtBpVopySkM0d323rK60XosIrG6W4vrhOjAcm3otxqcUmxvltcwifc34isN1+m8Zd
-        GaM0Njn7xfhZq5HC42ctCBfb20T4xkCPCL88U0Xh0ekuEc66b6HxbH89iRvedlCRgcqakhqk
-        NFXnUsqGilPK9s/3RMr8xmqktA7eESnHTUv20Ack22K5xIQ0Trth+2FJ/NfhITo5mz7e/KGJ
-        OI1GxHrEMMBuBOOTdD2SMDK2CkFjjp0WzASCM0UPSD3y95hxBFnnjni1d0O100YK0E0Ev2pL
-        /hg3AtfMjMhLBbFaeD49TXh1MHsIvkxlEF6IYMtJqJsbRt4Fio0AvVtPebWU3Q5XM7N8mmRX
-        wKg52xcdwkbBm2krITCB8OTyO9/cn10DtpGnPp5gl8Idt5EQdCgMvSsVecOAzWXg7N0eSii6
-        C+pdMUKFIPhobaQFvQg6i/JIgc9EMGy7RQsmD8GzjGIkUFvhkbXH92KEJ7mudYMw3gk/v3aS
-        wvkBMOgOFO4QAIXNlwhhLIUcnUygV4HBWvsvtr27lyhAcsO8ZoZ5bQzz2hj+55YhshqFcqm8
-        Oo7jIzTcMQWvUvOpmjjFkSS1CXk+X+esdawFTfbGmBHLIPkCafGb81EysSqNT1ebETCEPFja
-        W+cZSWNV6Sc4bVK0NjWR480ojCHlodKTfm8Pytg4VQp3lOOSOe3fVRHjv/A0illp5CdjIyMV
-        rnWvMgoy01vmunXfol2Xy6b61FXLw3XqZSEw5vDrC/x+reP65lO79yUHS3U7ZrsDSvePXBkr
-        m3D+MkiopQN+kxVJyZu3KGo1910nFvzIaypMuPjQsZd9UbJ+04Txx6BjcPHq8D2PLdpgR8Xr
-        JgU3UzS2ppzQ7QyTk3y8KmItoeVVvwEll2pteAMAAA==
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFvrJIsWRmVeSWpSXmKPExsVy+t/xu7pLj0+NNdj5Wt9i44z1rBbXvzxn
-        tZh/5ByrRd++/4wW/Y9fM1ucP7+B3eJs0xt2i02Pr7FaXN41h83ic+8RRosZ5/cxWSy9fpHJ
-        4nbjCjaLNz/OMlm07j3CbvHv2kYWi80PjrE5CHqsmbeG0WPTqk42j81L6j0OvtvD5NG3ZRWj
-        x/Eb25k8Pm+SC2CP0rMpyi8tSVXIyC8usVWKNrQw0jO0tNAzMrHUMzQ2j7UyMlXSt7NJSc3J
-        LEst0rdL0Mv4+PAWe0E7e8W2l1uZGxifsnYxcnJICJhIrHp8jqWLkYtDSGApo8Tf40uZIRIy
-        EienNUAVCUv8udbFBlH0mlHicddbsCJhgSKJqz9+gNkiAnES3xvXsYIUMQssZZF4uGIlK0TH
-        J0aJnps/warYBAwlut6CjOLk4BWwk5jb3ApmswioSLw51A50BweHqECsxKa9ZhAlghInZz5h
-        AbE5BTQlzj09BVbOLGAmMW/zQ2YIW15i+9s5ULa4xK0n85kmMArNQtI+C0nLLCQts5C0LGBk
-        WcUoklpanJueW2yoV5yYW1yal66XnJ+7iREY7duO/dy8g/HSxuBDjAIcjEo8vDPuTYkVYk0s
-        K67MPcQowcGsJMJ7aT1QiDclsbIqtSg/vqg0J7X4EKMp0G8TmaVEk/OBiSivJN7Q1NDcwtLQ
-        3Njc2MxCSZy3Q+BgjJBAemJJanZqakFqEUwfEwenVANj8IXDekrX984pXFmzxrG/NuJOgZ6t
-        PXtuxYn6n5OE9sZfi1q7bkKYmtBXTq3PP7jZ3Vl2Sa3aU7O72eqmk7PAspyQWaV6az4tS/G1
-        tPvErWORsTLZQWu1gvh1meBN/06ayB69+3a/YHlx7Kwv+l2qD76fbpg9M/X/s1LTC6kBC7+f
-        mulidd9DiaU4I9FQi7moOBEA0H6JoQwDAAA=
-X-CMS-MailID: 20191003100421eucas1p2785448de3ed8c90e93a61510403a9202
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20190808090252eucas1p2afec3e288965bb7e7aa6f96f67686273
-X-EPHeader: CA
-CMS-TYPE: 201P
-X-CMS-RootMailID: 20190808090252eucas1p2afec3e288965bb7e7aa6f96f67686273
-References: <20190808090234.12577-1-k.konieczny@partner.samsung.com>
-        <CGME20190808090252eucas1p2afec3e288965bb7e7aa6f96f67686273@eucas1p2.samsung.com>
-        <20190808090234.12577-4-k.konieczny@partner.samsung.com>
-        <20191002142704.GA15827@pi3>
+References: <20190920032437.242187-1-kyletso@google.com> <bd03390e-35fb-2885-d026-b8df58f02283@redhat.com>
+In-Reply-To: <bd03390e-35fb-2885-d026-b8df58f02283@redhat.com>
+From:   Kyle Tso <kyletso@google.com>
+Date:   Thu, 3 Oct 2019 18:04:48 +0800
+Message-ID: <CAGZ6i=1mid0Cq2EtWTJHwRzPxXZJnLtTWwYL2QS0vZHNR9mJqQ@mail.gmail.com>
+Subject: Re: [PATCH v3 0/2] tcpm: AMS and Collision Avoidance
+To:     Hans de Goede <hdegoede@redhat.com>
+Cc:     Guenter Roeck <linux@roeck-us.net>,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        Badhri Jagan Sridharan <badhri@google.com>,
+        Adam Thomson <Adam.Thomson.Opensource@diasemi.com>,
+        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Krzysztof,
+Hi Hans
 
-On 02.10.2019 16:27, Krzysztof Kozlowski wrote:
-> On Thu, Aug 08, 2019 at 11:02:33AM +0200, Kamil Konieczny wrote:
->> From: Marek Szyprowski <m.szyprowski@samsung.com>
->>
->> Declare Exynos5422/5800 voltage ranges for opp points for big cpu core and
->> bus wcore and couple their voltage supllies as vdd_arm and vdd_int should
->> be in 300mV range.
->>
->> Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
->> [k.konieczny: add missing patch description]
->> Signed-off-by: Kamil Konieczny <k.konieczny@partner.samsung.com>
->> Reviewed-by: Chanwoo Choi <cw00.choi@samsung.com>
-> The bindings were acked. Can I pick it up?
+Could you append the TCPM log?
 
-All needed fixes have been merged to v5.4-rc1, so it is okay to merge 
-this patch. However I've checked and it doesn't apply now, so I will 
-send a rebased version.
-
-Best regards
--- 
-Marek Szyprowski, PhD
-Samsung R&D Institute Poland
-
+On Thu, Oct 3, 2019 at 5:47 PM Hans de Goede <hdegoede@redhat.com> wrote:
+>
+> Hi Kyle,
+>
+> On 20-09-2019 05:24, Kyle Tso wrote:
+> > *** BLURB HERE ***
+> >
+> > Kyle Tso (2):
+> >    usb: typec: tcpm: AMS and Collision Avoidance
+> >    usb: typec: tcpm: AMS for PD2.0
+>
+> I've finally gotten a chance to test this on one of my own devices
+> which uses the tcpm framework for its Type-c port.
+>
+> I am afraid that this series breaks DP altmode support,
+> specifically, the dp_altmode_configure() function no longer
+> seems to get called, leading to no pin-assignment being
+> selected by default and DP thus not working.
+>
+> So sorry, but I have to NACK this series since it causes
+> regressions.
+>
+> It might be easiest if you can get yourself some hardware
+> which supports DP altmode and uses the fusb302 Type-C
+> controller (which unlike your controller is actually
+> supported by the mainline kernel).
+>
+> 2 devices which have this are the original (version 1)
+> of the GPD win and the GPD pocket. Since the version
+> is not always clearly marked, make sure you get one which
+> has a X7-Z8750 CPU, those are the version 1 models, you
+> can still get these e.g. here:
+>
+> https://www.geekbuying.com/item/GPD-Pocket-7-Inch-Tablet-PC-Intel-Atom-X7-Z8750-8GB-128GB-375711.html
+> https://www.geekbuying.com/item/GPD-Win-Intel-Z8750-Windows-10-4GB-64GB-Gamepad-Tablet-PC---Black-378018.html
+>
+> These 2 devices still need 2 minor patches to hookup the DP
+> support, I have just finished these 2 patches up and I'm
+> submitting them upstream today, I will Cc you on these.
+>
+> If you combine these with one of the many DP-charging pass-through
+> + USB-3 out + HDMI out dongles, e.g.:
+> https://www.aliexpress.com/item/32953320909.html
+>
+> And then after plugging in do:
+>
+> cat /sys/class/typec/port0-partner/port0-partner.0/displayport/pin_assignment
+>
+> This should print:
+>
+> C [D]
+>
+> But when I add your patches into the mix it prints just:
+>
+> C D
+>
+> And these debug pr_err calls never happen:
+>
+> diff --git a/drivers/usb/typec/altmodes/displayport.c b/drivers/usb/typec/altmodes/displayport.c
+> index 7845df030b72..d14f94078dd9 100644
+> --- a/drivers/usb/typec/altmodes/displayport.c
+> +++ b/drivers/usb/typec/altmodes/displayport.c
+> @@ -106,6 +106,7 @@ static int dp_altmode_configure(struct dp_altmode *dp, u8 con)
+>                 break;
+>         }
+>
+> +       pr_err("dp_altmode_configure pin_assign %08x conf %08x\n", pin_assign, DP_CONF_GET_PIN_ASSIGN(dp->data.conf));
+>         /* Determining the initial pin assignment. */
+>         if (!DP_CONF_GET_PIN_ASSIGN(dp->data.conf)) {
+>                 /* Is USB together with DP preferred */
+> @@ -115,6 +116,8 @@ static int dp_altmode_configure(struct dp_altmode *dp, u8 con)
+>                 else if (pin_assign & DP_PIN_ASSIGN_DP_ONLY_MASK)
+>                         pin_assign &= DP_PIN_ASSIGN_DP_ONLY_MASK;
+>
+> +               pr_err("dp_altmode_configure masked pin_assign %08x\n", pin_assign);
+> +
+>                 if (!pin_assign)
+>                         return -EINVAL;
+>
+>
+> Regards,
+>
+> Hans
+>
