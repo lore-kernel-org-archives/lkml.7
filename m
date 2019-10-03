@@ -2,261 +2,184 @@ Return-Path: <SRS0=6dNS=X4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42CC4C32792
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 06:13:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9FCBC32792
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 06:18:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0BA9A218DE
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 06:13:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ozlabs-ru.20150623.gappssmtp.com header.i=@ozlabs-ru.20150623.gappssmtp.com header.b="hofJGP1d"
+	by mail.kernel.org (Postfix) with ESMTP id 9A3B2222C4
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 06:18:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728185AbfJCGNQ (ORCPT
+        id S1726811AbfJCGSI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 02:13:16 -0400
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:42165 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726393AbfJCGNP (ORCPT
+        Thu, 3 Oct 2019 02:18:08 -0400
+Received: from mail-io1-f72.google.com ([209.85.166.72]:40313 "EHLO
+        mail-io1-f72.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725879AbfJCGSI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 02:13:15 -0400
-Received: by mail-pg1-f193.google.com with SMTP id z12so1059588pgp.9
-        for <linux-kernel@vger.kernel.org>; Wed, 02 Oct 2019 23:13:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ozlabs-ru.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:autocrypt:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=9fRETY9RhiSOxgTnFBCjm3tx4YRlm+tuITEEPXz0fHs=;
-        b=hofJGP1dDwI/zMraZPgIDB7r+urEJr38V9lTkIlvnQ4Qwc379JIATzV445w46l5Klr
-         v4Idt4E3INifQhykaiI9ED8gy6lyhKGoWl9d7ZXBFT2Og3bn7jOXWTtgl7OowyR3VkNm
-         OKqgH/0hDWA2XK9qdexD8/0M7CUam4MiVCtLbQ9ebjf26H6IPhvPjO/v8r8VakwvdBB2
-         I6lmirdfDNzUpR8zrbHa82HbGeyduCnx0sIuMc2L5yQFymT8yq9cV3Fmb3tR5RBVl5lA
-         hLNLXfl2p3Ce/pLp2VZbf6Sr/8u+F0BlfqGzFW1/g16vic2hpGFfkMCY2U8HT+Qh/Hxh
-         +WtQ==
+        Thu, 3 Oct 2019 02:18:08 -0400
+Received: by mail-io1-f72.google.com with SMTP id r20so3559837ioh.7
+        for <linux-kernel@vger.kernel.org>; Wed, 02 Oct 2019 23:18:07 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=9fRETY9RhiSOxgTnFBCjm3tx4YRlm+tuITEEPXz0fHs=;
-        b=g+fZSu8ohApGZw3rhH+maS6rc2I+BcJ4SNrh9Ei5zxc90zUEIx4rHX3WCVOKmCPY35
-         JskdgrGF6yF6mZInZLXGI1dLolukH9Y8ZvPawEFFhEiwxALRSZ19Ppc9i7DBxtD/tw4U
-         skGQ4VbtQUzZsPOZq7YqBt9ZeWG2MV7jIf+76C2STlmT952GkZfEB/Zy1bu9q4L8OiLq
-         f4EN+tTyh7+1rdrWO7Bm+1vpTDny8P8ge6YxUEJWrujrVIdTnddwAl2xne/driH2rE2r
-         pPcr6WbkKufx3dFuA8jcMtmRP8RshApz4rJkgbZ/RW04pa1qXFaG5/SpB/QL68B2hV4Q
-         2EqA==
-X-Gm-Message-State: APjAAAVDFjd8FK2QWfrpDsXggxmVKranuzVicd/xIUlVy6GxEG9Xogpc
-        4GZCZyUbHWTbfUUgzUiUuJkrUw==
-X-Google-Smtp-Source: APXvYqyrKIzQ0rLqFPmScv1MHIRJPSmEIABPoYhl9vPaeMBHXV879E7ePh3E0xebyadyfzuySRjBhA==
-X-Received: by 2002:a17:90a:8b8c:: with SMTP id z12mr8926915pjn.100.1570083193215;
-        Wed, 02 Oct 2019 23:13:13 -0700 (PDT)
-Received: from [10.61.2.175] ([122.99.82.10])
-        by smtp.gmail.com with ESMTPSA id 19sm1004217pjd.23.2019.10.02.23.13.10
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 02 Oct 2019 23:13:12 -0700 (PDT)
-Subject: Re: [PATCH v3 1/3] mm: kmemleak: Make the tool tolerant to struct
- scan_area allocation failures
-To:     Catalin Marinas <catalin.marinas@arm.com>, linux-mm@kvack.org
-Cc:     linux-kernel@vger.kernel.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Michal Hocko <mhocko@kernel.org>,
-        Matthew Wilcox <willy@infradead.org>, Qian Cai <cai@lca.pw>
-References: <20190812160642.52134-1-catalin.marinas@arm.com>
- <20190812160642.52134-2-catalin.marinas@arm.com>
-From:   Alexey Kardashevskiy <aik@ozlabs.ru>
-Autocrypt: addr=aik@ozlabs.ru; keydata=
- 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
-Message-ID: <2ac37341-097e-17a2-fb6b-7912da9fa38e@ozlabs.ru>
-Date:   Thu, 3 Oct 2019 16:13:07 +1000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.1
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=gBSQkU41ZLVR6bUYLDQYs/WhgJL7Xhhm/K97Y0QyX7E=;
+        b=CnDNALkwFz4ULU4YX/YGBog9hPrN6JaQweywWtaDfQxMHAVw56hohELEAwLnlmNXYu
+         o5CokrNaivJXej4/ABsxHQx7LVHFtuYvpgT9MtrbFEhIcuRW2h4XStLyPI+2WoywxXYu
+         ZOu2o22V1uqjOn2LRi+FwZtbZbbhdJ10gcPnIAqqsSlkhzveQrauXEhklbOF6skFuAdy
+         0B84/FyNATMctf2lhdL3q8toY8C3aldJhoo3jN26CCDOfLrlskddWJlS5eX5aiY9k8ym
+         eMy+/TQT4NZPclNOcIQlw/ZX8UgTNwYuPSjPkR5kulOM8mxXK3SpvOFKsQW+C1IUKsb3
+         RKqA==
+X-Gm-Message-State: APjAAAUxGq+wFHlHFPD6XZ4ePmkX8QC7v7v1F95rrJ6Nfwr7vGFuGUcg
+        y4K4/F9QFNj+2s4ZOwpB64bZhNsHkDBJYr81naL6fy6HqAVK
+X-Google-Smtp-Source: APXvYqyPWsGmsYzObJIZ/MF2L7Heo9bZifiycB3TxiMa7aWNjl+XOaK6BJwyXu6fx7wFW6GAnxH7ZgGG9qebcGQrUaRJ34hGrI0T
 MIME-Version: 1.0
-In-Reply-To: <20190812160642.52134-2-catalin.marinas@arm.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-Received: by 2002:a02:1cc5:: with SMTP id c188mr8051949jac.26.1570083487128;
+ Wed, 02 Oct 2019 23:18:07 -0700 (PDT)
+Date:   Wed, 02 Oct 2019 23:18:07 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <00000000000084a5a10593fb8c3f@google.com>
+Subject: KASAN: use-after-free Read in rds_inc_put
+From:   syzbot <syzbot+322126673a98080e677f@syzkaller.appspotmail.com>
+To:     davem@davemloft.net, linux-kernel@vger.kernel.org,
+        linux-rdma@vger.kernel.org, netdev@vger.kernel.org,
+        rds-devel@oss.oracle.com, santosh.shilimkar@oracle.com,
+        syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hello,
+
+syzbot found the following crash on:
+
+HEAD commit:    a32db7e1 Add linux-next specific files for 20191002
+git tree:       linux-next
+console output: https://syzkaller.appspot.com/x/log.txt?x=10ff857b600000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=599cf05035799eef
+dashboard link: https://syzkaller.appspot.com/bug?extid=322126673a98080e677f
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+
+Unfortunately, I don't have any reproducer for this crash yet.
+
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+322126673a98080e677f@syzkaller.appspotmail.com
+
+==================================================================
+BUG: KASAN: use-after-free in rds_inc_put+0x141/0x150 net/rds/recv.c:82
+Read of size 8 at addr ffff88806f5371b0 by task syz-executor.0/18418
+
+CPU: 1 PID: 18418 Comm: syz-executor.0 Not tainted 5.4.0-rc1-next-20191002  
+#0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
+Google 01/01/2011
+Call Trace:
+  __dump_stack lib/dump_stack.c:77 [inline]
+  dump_stack+0x172/0x1f0 lib/dump_stack.c:113
+  print_address_description.constprop.0.cold+0xd4/0x30b mm/kasan/report.c:374
+  __kasan_report.cold+0x1b/0x41 mm/kasan/report.c:506
+  kasan_report+0x12/0x20 mm/kasan/common.c:634
+  __asan_report_load8_noabort+0x14/0x20 mm/kasan/generic_report.c:132
+  rds_inc_put+0x141/0x150 net/rds/recv.c:82
+  rds_clear_recv_queue+0x157/0x380 net/rds/recv.c:770
+  rds_release+0x117/0x3d0 net/rds/af_rds.c:73
+  __sock_release+0xce/0x280 net/socket.c:591
+  sock_close+0x1e/0x30 net/socket.c:1269
+  __fput+0x2ff/0x890 fs/file_table.c:280
+  ____fput+0x16/0x20 fs/file_table.c:313
+  task_work_run+0x145/0x1c0 kernel/task_work.c:113
+  exit_task_work include/linux/task_work.h:22 [inline]
+  do_exit+0x904/0x2e60 kernel/exit.c:817
+  do_group_exit+0x135/0x360 kernel/exit.c:921
+  get_signal+0x47c/0x2500 kernel/signal.c:2734
+  do_signal+0x87/0x1700 arch/x86/kernel/signal.c:815
+  exit_to_usermode_loop+0x286/0x380 arch/x86/entry/common.c:159
+  prepare_exit_to_usermode arch/x86/entry/common.c:194 [inline]
+  syscall_return_slowpath arch/x86/entry/common.c:274 [inline]
+  do_syscall_64+0x65f/0x760 arch/x86/entry/common.c:300
+  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+RIP: 0033:0x459a29
+Code: fd b7 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89 f7  
+48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff  
+ff 0f 83 cb b7 fb ff c3 66 2e 0f 1f 84 00 00 00 00
+RSP: 002b:00007f4088663cf8 EFLAGS: 00000246 ORIG_RAX: 00000000000000ca
+RAX: fffffffffffffe00 RBX: 000000000075bf28 RCX: 0000000000459a29
+RDX: 0000000000000000 RSI: 0000000000000080 RDI: 000000000075bf28
+RBP: 000000000075bf20 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 000000000075bf2c
+R13: 00007ffe10e1ad8f R14: 00007f40886649c0 R15: 000000000075bf2c
+
+Allocated by task 12004:
+  save_stack+0x23/0x90 mm/kasan/common.c:69
+  set_track mm/kasan/common.c:77 [inline]
+  __kasan_kmalloc mm/kasan/common.c:510 [inline]
+  __kasan_kmalloc.constprop.0+0xcf/0xe0 mm/kasan/common.c:483
+  kasan_slab_alloc+0xf/0x20 mm/kasan/common.c:518
+  slab_post_alloc_hook mm/slab.h:584 [inline]
+  slab_alloc mm/slab.c:3319 [inline]
+  kmem_cache_alloc+0x121/0x710 mm/slab.c:3483
+  kmem_cache_zalloc include/linux/slab.h:680 [inline]
+  __rds_conn_create+0x63f/0x20b0 net/rds/connection.c:193
+  rds_conn_create_outgoing+0x4b/0x60 net/rds/connection.c:351
+  rds_sendmsg+0x19a4/0x35b0 net/rds/send.c:1294
+  sock_sendmsg_nosec net/socket.c:638 [inline]
+  sock_sendmsg+0xd7/0x130 net/socket.c:658
+  __sys_sendto+0x262/0x380 net/socket.c:1953
+  __do_sys_sendto net/socket.c:1965 [inline]
+  __se_sys_sendto net/socket.c:1961 [inline]
+  __x64_sys_sendto+0xe1/0x1a0 net/socket.c:1961
+  do_syscall_64+0xfa/0x760 arch/x86/entry/common.c:290
+  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+
+Freed by task 9330:
+  save_stack+0x23/0x90 mm/kasan/common.c:69
+  set_track mm/kasan/common.c:77 [inline]
+  kasan_set_free_info mm/kasan/common.c:332 [inline]
+  __kasan_slab_free+0x102/0x150 mm/kasan/common.c:471
+  kasan_slab_free+0xe/0x10 mm/kasan/common.c:480
+  __cache_free mm/slab.c:3425 [inline]
+  kmem_cache_free+0x86/0x320 mm/slab.c:3693
+  rds_conn_destroy+0x61f/0x880 net/rds/connection.c:501
+  rds_loop_kill_conns net/rds/loop.c:213 [inline]
+  rds_loop_exit_net+0x2fc/0x4a0 net/rds/loop.c:219
+  ops_exit_list.isra.0+0xaa/0x150 net/core/net_namespace.c:172
+  cleanup_net+0x4e2/0xa60 net/core/net_namespace.c:594
+  process_one_work+0x9af/0x1740 kernel/workqueue.c:2269
+  worker_thread+0x98/0xe40 kernel/workqueue.c:2415
+  kthread+0x361/0x430 kernel/kthread.c:255
+  ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
+
+The buggy address belongs to the object at ffff88806f537168
+  which belongs to the cache rds_connection of size 232
+The buggy address is located 72 bytes inside of
+  232-byte region [ffff88806f537168, ffff88806f537250)
+The buggy address belongs to the page:
+page:ffffea0001bd4dc0 refcount:1 mapcount:0 mapping:ffff88809bcbd1c0  
+index:0xffff88806f537608
+flags: 0x1fffc0000000200(slab)
+raw: 01fffc0000000200 ffff88809bcfb338 ffffea00026b0248 ffff88809bcbd1c0
+raw: ffff88806f537608 ffff88806f537040 0000000100000005 0000000000000000
+page dumped because: kasan: bad access detected
+
+Memory state around the buggy address:
+  ffff88806f537080: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  ffff88806f537100: 00 00 00 00 00 fc fc fc fc fc fc fc fc fb fb fb
+> ffff88806f537180: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+                                      ^
+  ffff88806f537200: fb fb fb fb fb fb fb fb fb fb fc fc fc fc fc fc
+  ffff88806f537280: fc fc fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+==================================================================
 
 
-On 13/08/2019 02:06, Catalin Marinas wrote:
-> Object scan areas are an optimisation aimed to decrease the false
-> positives and slightly improve the scanning time of large objects known
-> to only have a few specific pointers. If a struct scan_area fails to
-> allocate, kmemleak can still function normally by scanning the full
-> object.
-> 
-> Introduce an OBJECT_FULL_SCAN flag and mark objects as such when
-> scan_area allocation fails.
+---
+This bug is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
-
-I came across this one while bisecting sudden drop in throughput of a 100Gbit Mellanox CX4 ethernet card in a PPC POWER9
-system, the speed dropped from 100Gbit to about 40Gbit. Bisect pointed at dba82d943177, this are the relevant config
-options:
-
-[fstn1-p1 kernel]$ grep KMEMLEAK ~/pbuild/kernel-le-4g/.config
-CONFIG_HAVE_DEBUG_KMEMLEAK=y
-CONFIG_DEBUG_KMEMLEAK=y
-CONFIG_DEBUG_KMEMLEAK_EARLY_LOG_SIZE=16000
-# CONFIG_DEBUG_KMEMLEAK_TEST is not set
-# CONFIG_DEBUG_KMEMLEAK_DEFAULT_OFF is not set
-CONFIG_DEBUG_KMEMLEAK_AUTO_SCAN=y
-
-Setting CONFIG_DEBUG_KMEMLEAK_MEM_POOL_SIZE=400 or even 4000 (this is what KMEMLEAK_EARLY_LOG_SIZE is now in the master)
-produces soft lockups on the recent upstream (sha1 a3c0e7b1fe1f):
-
-[c000001fde64fb60] [c000000000c24ed4] _raw_write_unlock_irqrestore+0x54/0x70
-[c000001fde64fb90] [c0000000004117e4] find_and_remove_object+0xa4/0xd0
-[c000001fde64fbe0] [c000000000411c74] delete_object_full+0x24/0x50
-[c000001fde64fc00] [c000000000411d28] __kmemleak_do_cleanup+0x88/0xd0
-[c000001fde64fc40] [c00000000012a1a4] process_one_work+0x374/0x6a0
-[c000001fde64fd20] [c00000000012a548] worker_thread+0x78/0x5a0
-[c000001fde64fdb0] [c000000000135508] kthread+0x198/0x1a0
-[c000001fde64fe20] [c00000000000b980] ret_from_kernel_thread+0x5c/0x7c
-
-KMEMLEAK_EARLY_LOG_SIZE=8000 works but slow.
-
-Interestingly KMEMLEAK_EARLY_LOG_SIZE=400 on dba82d943177 still worked and I saw my 100Gbit. Disabling KMEMLEAK also
-fixes the speed (apparently).
-
-Is that something expected? Thanks,
-
-
-
-> 
-> Signed-off-by: Catalin Marinas <catalin.marinas@arm.com>
-> ---
->  mm/kmemleak.c | 16 ++++++++++------
->  1 file changed, 10 insertions(+), 6 deletions(-)
-> 
-> diff --git a/mm/kmemleak.c b/mm/kmemleak.c
-> index f6e602918dac..5ba7fad00fda 100644
-> --- a/mm/kmemleak.c
-> +++ b/mm/kmemleak.c
-> @@ -168,6 +168,8 @@ struct kmemleak_object {
->  #define OBJECT_REPORTED		(1 << 1)
->  /* flag set to not scan the object */
->  #define OBJECT_NO_SCAN		(1 << 2)
-> +/* flag set to fully scan the object when scan_area allocation failed */
-> +#define OBJECT_FULL_SCAN	(1 << 3)
->  
->  #define HEX_PREFIX		"    "
->  /* number of bytes to print per line; must be 16 or 32 */
-> @@ -773,12 +775,14 @@ static void add_scan_area(unsigned long ptr, size_t size, gfp_t gfp)
->  	}
->  
->  	area = kmem_cache_alloc(scan_area_cache, gfp_kmemleak_mask(gfp));
-> -	if (!area) {
-> -		pr_warn("Cannot allocate a scan area\n");
-> -		goto out;
-> -	}
->  
->  	spin_lock_irqsave(&object->lock, flags);
-> +	if (!area) {
-> +		pr_warn_once("Cannot allocate a scan area, scanning the full object\n");
-> +		/* mark the object for full scan to avoid false positives */
-> +		object->flags |= OBJECT_FULL_SCAN;
-> +		goto out_unlock;
-> +	}
->  	if (size == SIZE_MAX) {
->  		size = object->pointer + object->size - ptr;
->  	} else if (ptr + size > object->pointer + object->size) {
-> @@ -795,7 +799,6 @@ static void add_scan_area(unsigned long ptr, size_t size, gfp_t gfp)
->  	hlist_add_head(&area->node, &object->area_list);
->  out_unlock:
->  	spin_unlock_irqrestore(&object->lock, flags);
-> -out:
->  	put_object(object);
->  }
->  
-> @@ -1408,7 +1411,8 @@ static void scan_object(struct kmemleak_object *object)
->  	if (!(object->flags & OBJECT_ALLOCATED))
->  		/* already freed object */
->  		goto out;
-> -	if (hlist_empty(&object->area_list)) {
-> +	if (hlist_empty(&object->area_list) ||
-> +	    object->flags & OBJECT_FULL_SCAN) {
->  		void *start = (void *)object->pointer;
->  		void *end = (void *)(object->pointer + object->size);
->  		void *next;
-> 
-
--- 
-Alexey
+syzbot will keep track of this bug report. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
