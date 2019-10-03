@@ -4,49 +4,56 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A0C2C32792
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:35:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 91140C10F14
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:35:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E13D92086A
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:35:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5F7B620830
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:35:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570120554;
-	bh=wacoWmoaqhJ4gxuQ3wZXfgOE/GMA7IuQ3de0W36+LKw=;
+	s=default; t=1570120557;
+	bh=Q2csLGPfbPef3CuRi72M6y/BVZlrVtVLVt5CDkrmq8Q=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=EIQ+9RrbYK5ZI2HFLDedGNEQNgBsiP/zZfvM+Pkpbr53WwxrBE6PytB+sojdPDNz8
-	 R1xS/vZ7F7sNlXjjeonsSJIwVS+LdN22cKom2xlH2PzG5NceaKBif1Hcq/KwoDn3Hw
-	 i57/QukKZBnf52e2EOM0XSYMuS7+2egzoPPrDJ58=
+	b=CtmiI+jjGY4fdGvyV/eN1QPNU81VabBUx1SMbIGo83oIzH3faQVx5gKlm53Sawc+f
+	 XoM0mF/nj10Ki8apzxMVwY4LI6hHiVOnDjWv6/wf06iw2CG2BfTwBcmcxQ1GOh7g0Q
+	 fMKV/dNPJvgjKEO8IsvjwYzVpEupyPi4RcjVdEjw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391306AbfJCQfx (ORCPT
+        id S2391611AbfJCQf4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 12:35:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44846 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 12:35:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44914 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404335AbfJCQft (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:35:49 -0400
+        id S2389429AbfJCQfx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:35:53 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4813520830;
-        Thu,  3 Oct 2019 16:35:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C8FD72070B;
+        Thu,  3 Oct 2019 16:35:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570120548;
-        bh=wacoWmoaqhJ4gxuQ3wZXfgOE/GMA7IuQ3de0W36+LKw=;
+        s=default; t=1570120551;
+        bh=Q2csLGPfbPef3CuRi72M6y/BVZlrVtVLVt5CDkrmq8Q=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ayCRoYtSCKmbfmRVXrfcPlPzZYvkWehMViahfeIJz3+zMAEYJ2leHZD74mJDWhC9q
-         KK5o+LcutR244vHVoEDU1POsRiQkk9eVBe4Ei6Af3J3HBromn8zZsJ1k8UGM500xmJ
-         u1FsdWXAkoNkDaGXNJqdZLFk07IWSsVpbIT1zwlQ=
+        b=eqFm0teokzezRZnr2XECQVrE+PXWQD7kjpmvOHxxx5nlnJDcON6pQizFeNKR95zDQ
+         BNU908FL137RkErMiI9YH50KcrVl3IR3DUHmnNwIpz/lEBlL52fM0Jihth981wLdph
+         7ovCq8qlSxZqR5cAqWZeXye03i0BQ0zKNV9xcj1U=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Bob Peterson <rpeterso@redhat.com>,
-        Andreas Gruenbacher <agruenba@redhat.com>
-Subject: [PATCH 5.2 263/313] gfs2: clear buf_in_tr when ending a transaction in sweep_bh_for_rgrps
-Date:   Thu,  3 Oct 2019 17:54:01 +0200
-Message-Id: <20191003154558.940882423@linuxfoundation.org>
+        stable@vger.kernel.org, Vitaly Wool <vitalywool@gmail.com>,
+        Markus Linnala <markus.linnala@gmail.com>,
+        Chris Murphy <bugzilla@colorremedies.com>,
+        Agustin DallAlba <agustin@dallalba.com.ar>,
+        "Maciej S. Szmigiero" <mail@maciej.szmigiero.name>,
+        Shakeel Butt <shakeelb@google.com>,
+        Henry Burns <henrywolfeburns@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [PATCH 5.2 264/313] z3fold: fix retry mechanism in page reclaim
+Date:   Thu,  3 Oct 2019 17:54:02 +0200
+Message-Id: <20191003154559.044870572@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191003154533.590915454@linuxfoundation.org>
 References: <20191003154533.590915454@linuxfoundation.org>
@@ -59,39 +66,176 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bob Peterson <rpeterso@redhat.com>
+From: Vitaly Wool <vitalywool@gmail.com>
 
-commit f0b444b349e33ae0d3dd93e25ca365482a5d17d4 upstream.
+commit 3f9d2b5766aea06042630ac60b7316fd0cebf06f upstream.
 
-In function sweep_bh_for_rgrps, which is a helper for punch_hole,
-it uses variable buf_in_tr to keep track of when it needs to commit
-pending block frees on a partial delete that overflows the
-transaction created for the delete. The problem is that the
-variable was initialized at the start of function sweep_bh_for_rgrps
-but it was never cleared, even when starting a new transaction.
+z3fold_page_reclaim()'s retry mechanism is broken: on a second iteration
+it will have zhdr from the first one so that zhdr is no longer in line
+with struct page.  That leads to crashes when the system is stressed.
 
-This patch reinitializes the variable when the transaction is
-ended, so the next transaction starts out with it cleared.
+Fix that by moving zhdr assignment up.
 
-Fixes: d552a2b9b33e ("GFS2: Non-recursive delete")
-Cc: stable@vger.kernel.org # v4.12+
-Signed-off-by: Bob Peterson <rpeterso@redhat.com>
-Signed-off-by: Andreas Gruenbacher <agruenba@redhat.com>
+While at it, protect against using already freed handles by using own
+local slots structure in z3fold_page_reclaim().
+
+Link: http://lkml.kernel.org/r/20190908162919.830388dc7404d1e2c80f4095@gmail.com
+Signed-off-by: Vitaly Wool <vitalywool@gmail.com>
+Reported-by: Markus Linnala <markus.linnala@gmail.com>
+Reported-by: Chris Murphy <bugzilla@colorremedies.com>
+Reported-by: Agustin Dall'Alba <agustin@dallalba.com.ar>
+Cc: "Maciej S. Szmigiero" <mail@maciej.szmigiero.name>
+Cc: Shakeel Butt <shakeelb@google.com>
+Cc: Henry Burns <henrywolfeburns@gmail.com>
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/gfs2/bmap.c |    1 +
- 1 file changed, 1 insertion(+)
+ mm/z3fold.c |   49 ++++++++++++++++++++++++++++++++++---------------
+ 1 file changed, 34 insertions(+), 15 deletions(-)
 
---- a/fs/gfs2/bmap.c
-+++ b/fs/gfs2/bmap.c
-@@ -1670,6 +1670,7 @@ out_unlock:
- 			brelse(dibh);
- 			up_write(&ip->i_rw_mutex);
- 			gfs2_trans_end(sdp);
-+			buf_in_tr = false;
+--- a/mm/z3fold.c
++++ b/mm/z3fold.c
+@@ -368,9 +368,10 @@ static inline int __idx(struct z3fold_he
+  * Encodes the handle of a particular buddy within a z3fold page
+  * Pool lock should be held as this function accesses first_num
+  */
+-static unsigned long encode_handle(struct z3fold_header *zhdr, enum buddy bud)
++static unsigned long __encode_handle(struct z3fold_header *zhdr,
++				struct z3fold_buddy_slots *slots,
++				enum buddy bud)
+ {
+-	struct z3fold_buddy_slots *slots;
+ 	unsigned long h = (unsigned long)zhdr;
+ 	int idx = 0;
+ 
+@@ -387,11 +388,15 @@ static unsigned long encode_handle(struc
+ 	if (bud == LAST)
+ 		h |= (zhdr->last_chunks << BUDDY_SHIFT);
+ 
+-	slots = zhdr->slots;
+ 	slots->slot[idx] = h;
+ 	return (unsigned long)&slots->slot[idx];
+ }
+ 
++static unsigned long encode_handle(struct z3fold_header *zhdr, enum buddy bud)
++{
++	return __encode_handle(zhdr, zhdr->slots, bud);
++}
++
+ /* Returns the z3fold page where a given handle is stored */
+ static inline struct z3fold_header *handle_to_z3fold_header(unsigned long h)
+ {
+@@ -626,6 +631,7 @@ static void do_compact_page(struct z3fol
+ 	}
+ 
+ 	if (unlikely(PageIsolated(page) ||
++		     test_bit(PAGE_CLAIMED, &page->private) ||
+ 		     test_bit(PAGE_STALE, &page->private))) {
+ 		z3fold_page_unlock(zhdr);
+ 		return;
+@@ -1102,6 +1108,7 @@ static int z3fold_reclaim_page(struct z3
+ 	struct z3fold_header *zhdr = NULL;
+ 	struct page *page = NULL;
+ 	struct list_head *pos;
++	struct z3fold_buddy_slots slots;
+ 	unsigned long first_handle = 0, middle_handle = 0, last_handle = 0;
+ 
+ 	spin_lock(&pool->lock);
+@@ -1120,16 +1127,22 @@ static int z3fold_reclaim_page(struct z3
+ 			/* this bit could have been set by free, in which case
+ 			 * we pass over to the next page in the pool.
+ 			 */
+-			if (test_and_set_bit(PAGE_CLAIMED, &page->private))
++			if (test_and_set_bit(PAGE_CLAIMED, &page->private)) {
++				page = NULL;
+ 				continue;
++			}
+ 
+-			if (unlikely(PageIsolated(page)))
++			if (unlikely(PageIsolated(page))) {
++				clear_bit(PAGE_CLAIMED, &page->private);
++				page = NULL;
+ 				continue;
++			}
++			zhdr = page_address(page);
+ 			if (test_bit(PAGE_HEADLESS, &page->private))
+ 				break;
+ 
+-			zhdr = page_address(page);
+ 			if (!z3fold_page_trylock(zhdr)) {
++				clear_bit(PAGE_CLAIMED, &page->private);
+ 				zhdr = NULL;
+ 				continue; /* can't evict at this point */
+ 			}
+@@ -1147,26 +1160,30 @@ static int z3fold_reclaim_page(struct z3
+ 
+ 		if (!test_bit(PAGE_HEADLESS, &page->private)) {
+ 			/*
+-			 * We need encode the handles before unlocking, since
+-			 * we can race with free that will set
+-			 * (first|last)_chunks to 0
++			 * We need encode the handles before unlocking, and
++			 * use our local slots structure because z3fold_free
++			 * can zero out zhdr->slots and we can't do much
++			 * about that
+ 			 */
+ 			first_handle = 0;
+ 			last_handle = 0;
+ 			middle_handle = 0;
+ 			if (zhdr->first_chunks)
+-				first_handle = encode_handle(zhdr, FIRST);
++				first_handle = __encode_handle(zhdr, &slots,
++								FIRST);
+ 			if (zhdr->middle_chunks)
+-				middle_handle = encode_handle(zhdr, MIDDLE);
++				middle_handle = __encode_handle(zhdr, &slots,
++								MIDDLE);
+ 			if (zhdr->last_chunks)
+-				last_handle = encode_handle(zhdr, LAST);
++				last_handle = __encode_handle(zhdr, &slots,
++								LAST);
+ 			/*
+ 			 * it's safe to unlock here because we hold a
+ 			 * reference to this page
+ 			 */
+ 			z3fold_page_unlock(zhdr);
+ 		} else {
+-			first_handle = encode_handle(zhdr, HEADLESS);
++			first_handle = __encode_handle(zhdr, &slots, HEADLESS);
+ 			last_handle = middle_handle = 0;
  		}
- 		gfs2_glock_dq_uninit(rd_gh);
- 		cond_resched();
+ 
+@@ -1196,9 +1213,9 @@ next:
+ 			spin_lock(&pool->lock);
+ 			list_add(&page->lru, &pool->lru);
+ 			spin_unlock(&pool->lock);
++			clear_bit(PAGE_CLAIMED, &page->private);
+ 		} else {
+ 			z3fold_page_lock(zhdr);
+-			clear_bit(PAGE_CLAIMED, &page->private);
+ 			if (kref_put(&zhdr->refcount,
+ 					release_z3fold_page_locked)) {
+ 				atomic64_dec(&pool->pages_nr);
+@@ -1213,6 +1230,7 @@ next:
+ 			list_add(&page->lru, &pool->lru);
+ 			spin_unlock(&pool->lock);
+ 			z3fold_page_unlock(zhdr);
++			clear_bit(PAGE_CLAIMED, &page->private);
+ 		}
+ 
+ 		/* We started off locked to we need to lock the pool back */
+@@ -1317,7 +1335,8 @@ static bool z3fold_page_isolate(struct p
+ 	VM_BUG_ON_PAGE(!PageMovable(page), page);
+ 	VM_BUG_ON_PAGE(PageIsolated(page), page);
+ 
+-	if (test_bit(PAGE_HEADLESS, &page->private))
++	if (test_bit(PAGE_HEADLESS, &page->private) ||
++	    test_bit(PAGE_CLAIMED, &page->private))
+ 		return false;
+ 
+ 	zhdr = page_address(page);
 
 
