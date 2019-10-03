@@ -7,53 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B59FC32792
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:56:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7B6EC4CED1
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:56:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E97AE20673
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:56:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 80CA820673
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:56:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570121791;
-	bh=2eMJ2l8qWQ1/4zuJ/PsQJVBDWOTLvCvCePq5IOn9/hQ=;
+	s=default; t=1570121797;
+	bh=+UCKaZfYue33VfG5BDJ5CZdVt/o9tLhbPDHE2Ou/7zY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zoTUaJoToVCWhpmfyI+vwB3rREJJF7QLtyHZpMb+SsqvqgeXgohsIlXO5e7x084gC
-	 ZNeQu14gsCq8ayLOsJWNi1dXAaemR2LmkIR3MWPWozezLUNfHQOLiWWwoSYYd9BEDZ
-	 BfFcpCYMLsnixlVEszrtj/HAKKSRFaTUoIPBFlKw=
+	b=o4sv63SLTKECvMIjbhg2mh0acAyfx9dlsfl5jX+mUXB7GVXONcckYn654G/a0bqVt
+	 Rghyf+KBhlDDCGahntbNfmgHcjt8UK+OSwkzjpsfjnSppKyQLb1FJl0iewLk6Wn115
+	 4ELuu/5x033HgSFXHoCPxcp6fNu9hFRWi3aUfKoo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405925AbfJCQ4a (ORCPT
+        id S2405181AbfJCQvG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 12:56:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38590 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 12:51:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38286 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2406002AbfJCQvN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:51:13 -0400
+        id S2393110AbfJCQu5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:50:57 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E1B902054F;
-        Thu,  3 Oct 2019 16:51:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DC8C32054F;
+        Thu,  3 Oct 2019 16:50:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570121472;
-        bh=2eMJ2l8qWQ1/4zuJ/PsQJVBDWOTLvCvCePq5IOn9/hQ=;
+        s=default; t=1570121456;
+        bh=+UCKaZfYue33VfG5BDJ5CZdVt/o9tLhbPDHE2Ou/7zY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0yK0W6DhACqBme5paXYqmJrpAAS2TniCEhaNINT4FMIj44+DSYp2WeBRtCJYD3m9d
-         xJhX/B3cYmvAPj9e08gbDxL0WSNxgJaiMCAiE4nvPgzMlz+HZWajOh5keM59/YEMbD
-         cjaf2OIg5Dv9nlpfDBT2FPwZo6GNd3InSlvfnzmA=
+        b=UXsLDNFx+MckIkNBFCAiXA12fjEbocE+49Uilh1pb/vgreG/KhuQPYLK8REsjbSbh
+         Im7jXhiMFd0mYvDb70DYtsPeohvuwX9ISYyjk3phGgEwIBruY4shEUVg3nfTlSHjap
+         2URVW6vght6ryV+XZf2XLvY692BgCnovawXeb9Dk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Vitaly Wool <vitalywool@gmail.com>,
-        Markus Linnala <markus.linnala@gmail.com>,
-        Chris Murphy <bugzilla@colorremedies.com>,
-        Agustin DallAlba <agustin@dallalba.com.ar>,
-        "Maciej S. Szmigiero" <mail@maciej.szmigiero.name>,
-        Shakeel Butt <shakeelb@google.com>,
-        Henry Burns <henrywolfeburns@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 5.3 290/344] z3fold: fix retry mechanism in page reclaim
-Date:   Thu,  3 Oct 2019 17:54:15 +0200
-Message-Id: <20191003154608.368109669@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Thadeu Lima de Souza Cascardo <cascardo@canonical.com>,
+        Thomas Gleixner <tglx@linutronix.de>
+Subject: [PATCH 5.3 285/344] alarmtimer: Use EOPNOTSUPP instead of ENOTSUPP
+Date:   Thu,  3 Oct 2019 17:54:10 +0200
+Message-Id: <20191003154607.979058870@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191003154540.062170222@linuxfoundation.org>
 References: <20191003154540.062170222@linuxfoundation.org>
@@ -66,176 +60,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vitaly Wool <vitalywool@gmail.com>
+From: Thadeu Lima de Souza Cascardo <cascardo@canonical.com>
 
-commit 3f9d2b5766aea06042630ac60b7316fd0cebf06f upstream.
+commit f18ddc13af981ce3c7b7f26925f099e7c6929aba upstream.
 
-z3fold_page_reclaim()'s retry mechanism is broken: on a second iteration
-it will have zhdr from the first one so that zhdr is no longer in line
-with struct page.  That leads to crashes when the system is stressed.
+ENOTSUPP is not supposed to be returned to userspace. This was found on an
+OpenPower machine, where the RTC does not support set_alarm.
 
-Fix that by moving zhdr assignment up.
+On that system, a clock_nanosleep(CLOCK_REALTIME_ALARM, ...) results in
+"524 Unknown error 524"
 
-While at it, protect against using already freed handles by using own
-local slots structure in z3fold_page_reclaim().
+Replace it with EOPNOTSUPP which results in the expected "95 Operation not
+supported" error.
 
-Link: http://lkml.kernel.org/r/20190908162919.830388dc7404d1e2c80f4095@gmail.com
-Signed-off-by: Vitaly Wool <vitalywool@gmail.com>
-Reported-by: Markus Linnala <markus.linnala@gmail.com>
-Reported-by: Chris Murphy <bugzilla@colorremedies.com>
-Reported-by: Agustin Dall'Alba <agustin@dallalba.com.ar>
-Cc: "Maciej S. Szmigiero" <mail@maciej.szmigiero.name>
-Cc: Shakeel Butt <shakeelb@google.com>
-Cc: Henry Burns <henrywolfeburns@gmail.com>
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Fixes: 1c6b39ad3f01 (alarmtimers: Return -ENOTSUPP if no RTC device is present)
+Signed-off-by: Thadeu Lima de Souza Cascardo <cascardo@canonical.com>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Cc: stable@vger.kernel.org
+Link: https://lkml.kernel.org/r/20190903171802.28314-1-cascardo@canonical.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- mm/z3fold.c |   49 ++++++++++++++++++++++++++++++++++---------------
- 1 file changed, 34 insertions(+), 15 deletions(-)
+ kernel/time/alarmtimer.c |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
---- a/mm/z3fold.c
-+++ b/mm/z3fold.c
-@@ -366,9 +366,10 @@ static inline int __idx(struct z3fold_he
-  * Encodes the handle of a particular buddy within a z3fold page
-  * Pool lock should be held as this function accesses first_num
-  */
--static unsigned long encode_handle(struct z3fold_header *zhdr, enum buddy bud)
-+static unsigned long __encode_handle(struct z3fold_header *zhdr,
-+				struct z3fold_buddy_slots *slots,
-+				enum buddy bud)
- {
--	struct z3fold_buddy_slots *slots;
- 	unsigned long h = (unsigned long)zhdr;
- 	int idx = 0;
+--- a/kernel/time/alarmtimer.c
++++ b/kernel/time/alarmtimer.c
+@@ -672,7 +672,7 @@ static int alarm_timer_create(struct k_i
+ 	enum  alarmtimer_type type;
  
-@@ -385,11 +386,15 @@ static unsigned long encode_handle(struc
- 	if (bud == LAST)
- 		h |= (zhdr->last_chunks << BUDDY_SHIFT);
+ 	if (!alarmtimer_get_rtcdev())
+-		return -ENOTSUPP;
++		return -EOPNOTSUPP;
  
--	slots = zhdr->slots;
- 	slots->slot[idx] = h;
- 	return (unsigned long)&slots->slot[idx];
- }
+ 	if (!capable(CAP_WAKE_ALARM))
+ 		return -EPERM;
+@@ -790,7 +790,7 @@ static int alarm_timer_nsleep(const cloc
+ 	int ret = 0;
  
-+static unsigned long encode_handle(struct z3fold_header *zhdr, enum buddy bud)
-+{
-+	return __encode_handle(zhdr, zhdr->slots, bud);
-+}
-+
- /* Returns the z3fold page where a given handle is stored */
- static inline struct z3fold_header *handle_to_z3fold_header(unsigned long h)
- {
-@@ -624,6 +629,7 @@ static void do_compact_page(struct z3fol
- 	}
+ 	if (!alarmtimer_get_rtcdev())
+-		return -ENOTSUPP;
++		return -EOPNOTSUPP;
  
- 	if (unlikely(PageIsolated(page) ||
-+		     test_bit(PAGE_CLAIMED, &page->private) ||
- 		     test_bit(PAGE_STALE, &page->private))) {
- 		z3fold_page_unlock(zhdr);
- 		return;
-@@ -1100,6 +1106,7 @@ static int z3fold_reclaim_page(struct z3
- 	struct z3fold_header *zhdr = NULL;
- 	struct page *page = NULL;
- 	struct list_head *pos;
-+	struct z3fold_buddy_slots slots;
- 	unsigned long first_handle = 0, middle_handle = 0, last_handle = 0;
- 
- 	spin_lock(&pool->lock);
-@@ -1118,16 +1125,22 @@ static int z3fold_reclaim_page(struct z3
- 			/* this bit could have been set by free, in which case
- 			 * we pass over to the next page in the pool.
- 			 */
--			if (test_and_set_bit(PAGE_CLAIMED, &page->private))
-+			if (test_and_set_bit(PAGE_CLAIMED, &page->private)) {
-+				page = NULL;
- 				continue;
-+			}
- 
--			if (unlikely(PageIsolated(page)))
-+			if (unlikely(PageIsolated(page))) {
-+				clear_bit(PAGE_CLAIMED, &page->private);
-+				page = NULL;
- 				continue;
-+			}
-+			zhdr = page_address(page);
- 			if (test_bit(PAGE_HEADLESS, &page->private))
- 				break;
- 
--			zhdr = page_address(page);
- 			if (!z3fold_page_trylock(zhdr)) {
-+				clear_bit(PAGE_CLAIMED, &page->private);
- 				zhdr = NULL;
- 				continue; /* can't evict at this point */
- 			}
-@@ -1145,26 +1158,30 @@ static int z3fold_reclaim_page(struct z3
- 
- 		if (!test_bit(PAGE_HEADLESS, &page->private)) {
- 			/*
--			 * We need encode the handles before unlocking, since
--			 * we can race with free that will set
--			 * (first|last)_chunks to 0
-+			 * We need encode the handles before unlocking, and
-+			 * use our local slots structure because z3fold_free
-+			 * can zero out zhdr->slots and we can't do much
-+			 * about that
- 			 */
- 			first_handle = 0;
- 			last_handle = 0;
- 			middle_handle = 0;
- 			if (zhdr->first_chunks)
--				first_handle = encode_handle(zhdr, FIRST);
-+				first_handle = __encode_handle(zhdr, &slots,
-+								FIRST);
- 			if (zhdr->middle_chunks)
--				middle_handle = encode_handle(zhdr, MIDDLE);
-+				middle_handle = __encode_handle(zhdr, &slots,
-+								MIDDLE);
- 			if (zhdr->last_chunks)
--				last_handle = encode_handle(zhdr, LAST);
-+				last_handle = __encode_handle(zhdr, &slots,
-+								LAST);
- 			/*
- 			 * it's safe to unlock here because we hold a
- 			 * reference to this page
- 			 */
- 			z3fold_page_unlock(zhdr);
- 		} else {
--			first_handle = encode_handle(zhdr, HEADLESS);
-+			first_handle = __encode_handle(zhdr, &slots, HEADLESS);
- 			last_handle = middle_handle = 0;
- 		}
- 
-@@ -1194,9 +1211,9 @@ next:
- 			spin_lock(&pool->lock);
- 			list_add(&page->lru, &pool->lru);
- 			spin_unlock(&pool->lock);
-+			clear_bit(PAGE_CLAIMED, &page->private);
- 		} else {
- 			z3fold_page_lock(zhdr);
--			clear_bit(PAGE_CLAIMED, &page->private);
- 			if (kref_put(&zhdr->refcount,
- 					release_z3fold_page_locked)) {
- 				atomic64_dec(&pool->pages_nr);
-@@ -1211,6 +1228,7 @@ next:
- 			list_add(&page->lru, &pool->lru);
- 			spin_unlock(&pool->lock);
- 			z3fold_page_unlock(zhdr);
-+			clear_bit(PAGE_CLAIMED, &page->private);
- 		}
- 
- 		/* We started off locked to we need to lock the pool back */
-@@ -1315,7 +1333,8 @@ static bool z3fold_page_isolate(struct p
- 	VM_BUG_ON_PAGE(!PageMovable(page), page);
- 	VM_BUG_ON_PAGE(PageIsolated(page), page);
- 
--	if (test_bit(PAGE_HEADLESS, &page->private))
-+	if (test_bit(PAGE_HEADLESS, &page->private) ||
-+	    test_bit(PAGE_CLAIMED, &page->private))
- 		return false;
- 
- 	zhdr = page_address(page);
+ 	if (flags & ~TIMER_ABSTIME)
+ 		return -EINVAL;
 
 
