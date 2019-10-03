@@ -2,185 +2,80 @@ Return-Path: <SRS0=6dNS=X4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 73068C10F14
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 18:54:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B79A5C10F14
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 18:54:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 50911222C4
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 18:54:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 84D0521848
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 18:54:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="U/gGVbwN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731060AbfJCSyC (ORCPT
+        id S1731749AbfJCSyH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 14:54:02 -0400
-Received: from mxwww.masterlogin.de ([95.129.51.220]:53234 "EHLO
-        mxwww.masterlogin.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730471AbfJCSyA (ORCPT
+        Thu, 3 Oct 2019 14:54:07 -0400
+Received: from mail-lf1-f54.google.com ([209.85.167.54]:35509 "EHLO
+        mail-lf1-f54.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731156AbfJCSyG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 14:54:00 -0400
-Received: from mxout2.routing.net (unknown [192.168.10.82])
-        by new.mxwww.masterlogin.de (Postfix) with ESMTPS id A5FE596C8B;
-        Thu,  3 Oct 2019 18:53:53 +0000 (UTC)
-Received: from mxbox4.masterlogin.de (unknown [192.168.10.79])
-        by mxout2.routing.net (Postfix) with ESMTP id 127BF648FA;
-        Thu,  3 Oct 2019 18:53:54 +0000 (UTC)
-Received: from localhost.localdomain (fttx-pool-217.61.155.74.bambit.de [217.61.155.74])
-        by mxbox4.masterlogin.de (Postfix) with ESMTPSA id 71F278089F;
-        Thu,  3 Oct 2019 18:53:53 +0000 (UTC)
-From:   Frank Wunderlich <frank-w@public-files.de>
-To:     Lee Jones <lee.jones@linaro.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Hsin-Hsiung Wang <hsin-hsiung.wang@mediatek.com>
-Cc:     Frank Wunderlich <frank-w@public-files.de>
-Subject: [PATCH] mfd: mt6397: fix probe after changing mt6397-core
-Date:   Thu,  3 Oct 2019 20:53:23 +0200
-Message-Id: <20191003185323.24646-1-frank-w@public-files.de>
-X-Mailer: git-send-email 2.17.1
+        Thu, 3 Oct 2019 14:54:06 -0400
+Received: by mail-lf1-f54.google.com with SMTP id w6so2665321lfl.2;
+        Thu, 03 Oct 2019 11:54:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=ez0vzBljWTiUPJRxq3ritD9VFDP65l68//xJ/PQjSxI=;
+        b=U/gGVbwNV43oHYk7RIPPBJCgz+p2rrcsYzuJpOwD+Mk06lXD9aN2/i11uAWciGMYSB
+         OJfRfDG7TdG3Khr+oyKys2GbFWJyvcVlXsiBOLbavdAmF9EPQ/oEoUefOpU+yBP7rNaN
+         DKBKWRugLhYD7ZvnSfnO+qcALKFuGr9JWfvqSlSvFhpAO7YQwtJNIRV9LFd1NONWC7Lu
+         e7lFW0YlAtb3lBDLrnoltkXB9NOvme0b2pTMRV/M4/UqR8i6hQx8h/kGfv9C4Ps3kfCB
+         Q+5phyABewioDuyHdTMq/EmQWLUm+5AsYgASDR/o/+XcejJiXux35wpJdlUAtw2NUn2e
+         FDpg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=ez0vzBljWTiUPJRxq3ritD9VFDP65l68//xJ/PQjSxI=;
+        b=HSymdIMux+4shIYsRlypZv9IeHSgVc878PZncSxT56A1LIQK5PGGgX/2tYZMpAoAQG
+         QrZVy18sQh8c0cAuYxcZEFoo0kWDtrnm3aGxh9Mk8cke2hwp7ncDSit7X7FQg32Bky1F
+         Chu/QD+uAZS5oTz+ttLonwcq8XQGNXZ4eenRW7dmoJKjwzqOMo55uhtcVB+fAYiT/vET
+         zoCxZUEHgKsVhe2E0+tiA3kMarYLvmt7JddO5Dmxv0Rb1ZBiiWv/yIR35zphv6WZbSqG
+         HvacQg4wjSBNhB4g5U08O0jO6M1mLJN6NaYTCKAJISw0HVNOaLifMErDg2HD8+fcKtVN
+         RoDw==
+X-Gm-Message-State: APjAAAXNmmTeivI2a5gv3az7h+s6F1kUL61Mwv+e7mHfgYkcTkva62SX
+        7vMi8QBF1oOatujX41QOQPVZoA/0n+aAqqyGR2Q=
+X-Google-Smtp-Source: APXvYqzLSIL88hKc/1DZsmk78o7/GSxZOq5xQ5KEQ4s3VjpkYMsiUxNM8gN26fBeAgPFTpmmgq0K6d8T/9Aee9tCnuU=
+X-Received: by 2002:ac2:50cb:: with SMTP id h11mr6600212lfm.170.1570128843620;
+ Thu, 03 Oct 2019 11:54:03 -0700 (PDT)
+MIME-Version: 1.0
+References: <29ab2e43-4374-a3ea-6ae1-a4267867eaa4@jpvw.nl> <20191002154922.7f1cfc76@coco.lan>
+ <CANL0fFRJZBfEDWK_c2w1TomvB5-i4g09LopyJUbO5NtOwKdDTg@mail.gmail.com>
+ <20191003080539.2b13c03b@coco.lan> <CANL0fFSmvEEJhnA=qjTuEPr4N8q8eWLeYC5du+OoTMxe1Gnh5Q@mail.gmail.com>
+ <20191003120238.75811da6@coco.lan> <20191003160336.GA5125@Limone>
+ <20191003130909.01d29b77@coco.lan> <20191003162326.GA2727@Limone>
+ <20191003144225.0137bf6c@coco.lan> <20191003183200.GA2631@Limone>
+ <e468b867-1b45-8220-a5d2-ac40fdb4e0e6@jpvw.nl> <CANL0fFS7OEzpgCaHqXdYQYitKzrcfBd0B00K0_KASTDSHV=VBw@mail.gmail.com>
+In-Reply-To: <CANL0fFS7OEzpgCaHqXdYQYitKzrcfBd0B00K0_KASTDSHV=VBw@mail.gmail.com>
+From:   Gonsolo <gonsolo@gmail.com>
+Date:   Thu, 3 Oct 2019 20:53:49 +0200
+Message-ID: <CANL0fFT4hYdp6+XV4q_ZagMB4RWc1sru2JXm6T=XczCNdBfXJw@mail.gmail.com>
+Subject: Re: [PATCH] si2157: Add support for Logilink VG0022A.
+To:     JP <jp@jpvw.nl>
+Cc:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>, crope@iki.fi,
+        Sean Young <sean@mess.org>, linux-media@vger.kernel.org,
+        Linux Kernel <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Part 3 from this series [1] was not merged due to wrong splitting
-and breaks mt6323 pmic on bananapi-r2
+I also tried to add a msleep(1000) after the si2168 firmware upload;
+no difference.
 
-dmesg prints this line and at least switch is not initialized on bananapi-r2
-
-mt6397 1000d000.pwrap:mt6323: unsupported chip: 0x0
-
-this patch contains only the probe-changes and chip_data structs
-from original part 3 by Hsin-Hsiung Wang
-
-Fixes: a4872e80ce7d2a1844328176dbf279d0a2b89bdb mfd: mt6397: Extract IRQ related code from core driver
-
-[1] https://patchwork.kernel.org/project/linux-mediatek/list/?series=164155
-
-Signed-off-by: Frank Wunderlich <frank-w@public-files.de>
----
- drivers/mfd/mt6397-core.c | 64 ++++++++++++++++++++++++---------------
- 1 file changed, 40 insertions(+), 24 deletions(-)
-
-diff --git a/drivers/mfd/mt6397-core.c b/drivers/mfd/mt6397-core.c
-index 310dae26ddff..b2c325ead1c8 100644
---- a/drivers/mfd/mt6397-core.c
-+++ b/drivers/mfd/mt6397-core.c
-@@ -129,11 +129,27 @@ static int mt6397_irq_resume(struct device *dev)
- static SIMPLE_DEV_PM_OPS(mt6397_pm_ops, mt6397_irq_suspend,
- 			mt6397_irq_resume);
- 
-+struct chip_data {
-+	u32 cid_addr;
-+	u32 cid_shift;
-+};
-+
-+static const struct chip_data mt6323_core = {
-+	.cid_addr = MT6323_CID,
-+	.cid_shift = 0,
-+};
-+
-+static const struct chip_data mt6397_core = {
-+	.cid_addr = MT6397_CID,
-+	.cid_shift = 0,
-+};
-+
- static int mt6397_probe(struct platform_device *pdev)
- {
- 	int ret;
- 	unsigned int id;
- 	struct mt6397_chip *pmic;
-+	const struct chip_data *pmic_core;
- 
- 	pmic = devm_kzalloc(&pdev->dev, sizeof(*pmic), GFP_KERNEL);
- 	if (!pmic)
-@@ -149,28 +165,30 @@ static int mt6397_probe(struct platform_device *pdev)
- 	if (!pmic->regmap)
- 		return -ENODEV;
- 
--	platform_set_drvdata(pdev, pmic);
-+	pmic_core = of_device_get_match_data(&pdev->dev);
-+	if (!pmic_core)
-+		return -ENODEV;
- 
--	ret = regmap_read(pmic->regmap, MT6397_CID, &id);
-+	ret = regmap_read(pmic->regmap, pmic_core->cid_addr, &id);
- 	if (ret) {
--		dev_err(pmic->dev, "Failed to read chip id: %d\n", ret);
-+		dev_err(&pdev->dev, "Failed to read chip id: %d\n", ret);
- 		return ret;
- 	}
- 
-+	pmic->chip_id = (id >> pmic_core->cid_shift) & 0xff;
-+
-+	platform_set_drvdata(pdev, pmic);
-+
- 	pmic->irq = platform_get_irq(pdev, 0);
- 	if (pmic->irq <= 0)
- 		return pmic->irq;
- 
--	switch (id & 0xff) {
--	case MT6323_CHIP_ID:
--		pmic->int_con[0] = MT6323_INT_CON0;
--		pmic->int_con[1] = MT6323_INT_CON1;
--		pmic->int_status[0] = MT6323_INT_STATUS0;
--		pmic->int_status[1] = MT6323_INT_STATUS1;
--		ret = mt6397_irq_init(pmic);
--		if (ret)
--			return ret;
-+	ret = mt6397_irq_init(pmic);
-+	if (ret)
-+		return ret;
- 
-+	switch (pmic->chip_id) {
-+	case MT6323_CHIP_ID:
- 		ret = devm_mfd_add_devices(&pdev->dev, -1, mt6323_devs,
- 					   ARRAY_SIZE(mt6323_devs), NULL,
- 					   0, pmic->irq_domain);
-@@ -178,21 +196,13 @@ static int mt6397_probe(struct platform_device *pdev)
- 
- 	case MT6391_CHIP_ID:
- 	case MT6397_CHIP_ID:
--		pmic->int_con[0] = MT6397_INT_CON0;
--		pmic->int_con[1] = MT6397_INT_CON1;
--		pmic->int_status[0] = MT6397_INT_STATUS0;
--		pmic->int_status[1] = MT6397_INT_STATUS1;
--		ret = mt6397_irq_init(pmic);
--		if (ret)
--			return ret;
--
- 		ret = devm_mfd_add_devices(&pdev->dev, -1, mt6397_devs,
- 					   ARRAY_SIZE(mt6397_devs), NULL,
- 					   0, pmic->irq_domain);
- 		break;
- 
- 	default:
--		dev_err(&pdev->dev, "unsupported chip: %d\n", id);
-+		dev_err(&pdev->dev, "unsupported chip: %d\n", pmic->chip_id);
- 		return -ENODEV;
- 	}
- 
-@@ -205,9 +215,15 @@ static int mt6397_probe(struct platform_device *pdev)
- }
- 
- static const struct of_device_id mt6397_of_match[] = {
--	{ .compatible = "mediatek,mt6397" },
--	{ .compatible = "mediatek,mt6323" },
--	{ }
-+	{
-+		.compatible = "mediatek,mt6323",
-+		.data = &mt6323_core,
-+	}, {
-+		.compatible = "mediatek,mt6397",
-+		.data = &mt6397_core,
-+	}, {
-+		/* sentinel */
-+	}
- };
- MODULE_DEVICE_TABLE(of, mt6397_of_match);
- 
--- 
-2.17.1
-
+g
