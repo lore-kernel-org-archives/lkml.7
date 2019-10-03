@@ -2,156 +2,149 @@ Return-Path: <SRS0=6dNS=X4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D3D7C10F14
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 12:32:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 39DE7C10F14
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 12:32:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D2AC420862
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 12:32:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Xs0UHHdS"
+	by mail.kernel.org (Postfix) with ESMTP id 1816320862
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 12:32:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730164AbfJCMcw (ORCPT
+        id S1730196AbfJCMcy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 08:32:52 -0400
-Received: from merlin.infradead.org ([205.233.59.134]:51172 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730027AbfJCMcs (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 08:32:48 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=7fYz0vJ661x367z1HdxIQ8T0lQiWOwZl1Be5LTqF4ZE=; b=Xs0UHHdSC+UJC+tSmcoYeljSA
-        PnOky73ndEHrdXF4iMRu+TJd3ak2L74zMgu1wGVPUKyLQZ0aUtdGaQ2+eNYmqRdzZ8dR/6yG/bySz
-        tAPJpjkMKftuB3cOiuMqxIgSSGgyGnL8zim5cirp8Ak6G7E0BKpP1HOYmTG13Z6GfZJatvWzke4Sq
-        MSk5aMwF0dI+fDSXUCDNqwk/R31sFNR310ydIYjSfOex6vrg3AsL4IgB1YSPKFK09P96SGiWtRLDo
-        evcWPTw964PlMxqi27LEQhmdgZUAaBr3UkptRqL4O9y04m1OXejYfNLE8NLkaJd3kCalqOh94bYQq
-        hxuDNjrAg==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92.2 #3 (Red Hat Linux))
-        id 1iG0Ha-0006sG-CU; Thu, 03 Oct 2019 12:32:34 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 41A2C3060F2;
-        Thu,  3 Oct 2019 14:31:42 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 7DA7C201DF21A; Thu,  3 Oct 2019 14:32:31 +0200 (CEST)
-Date:   Thu, 3 Oct 2019 14:32:31 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Masami Hiramatsu <mhiramat@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, x86@kernel.org,
-        Nadav Amit <nadav.amit@gmail.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Song Liu <songliubraving@fb.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Daniel Bristot de Oliveira <bristot@redhat.com>
-Subject: Re: [PATCH 1/3] x86/alternatives: Teach text_poke_bp() to emulate
- instructions
-Message-ID: <20191003123231.GK4581@hirez.programming.kicks-ass.net>
-References: <20190827180622.159326993@infradead.org>
- <20190827181147.053490768@infradead.org>
- <20191003140050.1d4cf59d3de8b5396d36c269@kernel.org>
- <20191003082751.GQ4536@hirez.programming.kicks-ass.net>
- <20191003110106.GI4581@hirez.programming.kicks-ass.net>
+        Thu, 3 Oct 2019 08:32:54 -0400
+Received: from mga09.intel.com ([134.134.136.24]:50457 "EHLO mga09.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729594AbfJCMc1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 08:32:27 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 03 Oct 2019 05:32:26 -0700
+X-IronPort-AV: E=Sophos;i="5.67,252,1566889200"; 
+   d="scan'208";a="343651727"
+Received: from paasikivi.fi.intel.com ([10.237.72.42])
+  by orsmga004-auth.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 03 Oct 2019 05:32:23 -0700
+Received: from punajuuri.localdomain (punajuuri.localdomain [192.168.240.130])
+        by paasikivi.fi.intel.com (Postfix) with ESMTP id 382082103B;
+        Thu,  3 Oct 2019 15:32:17 +0300 (EEST)
+Received: from sailus by punajuuri.localdomain with local (Exim 4.92)
+        (envelope-from <sakari.ailus@linux.intel.com>)
+        id 1iG0HL-0002wZ-Tg; Thu, 03 Oct 2019 15:32:19 +0300
+From:   Sakari Ailus <sakari.ailus@linux.intel.com>
+To:     Petr Mladek <pmladek@suse.com>, linux-kernel@vger.kernel.org,
+        rafael@kernel.org
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        linux-acpi@vger.kernel.org, devicetree@vger.kernel.org,
+        Rob Herring <robh@kernel.org>,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+        Joe Perches <joe@perches.com>
+Subject: [PATCH v9 09/12] lib/vsprintf: Make use of fwnode API to obtain node names and separators
+Date:   Thu,  3 Oct 2019 15:32:16 +0300
+Message-Id: <20191003123219.11237-10-sakari.ailus@linux.intel.com>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20191003123219.11237-1-sakari.ailus@linux.intel.com>
+References: <20191003123219.11237-1-sakari.ailus@linux.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191003110106.GI4581@hirez.programming.kicks-ass.net>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Oct 03, 2019 at 01:01:06PM +0200, Peter Zijlstra wrote:
-> Also, I think text_poke_bp(INT3) is broken, although I don't think
-> anybody actually does that. Still, let me fix that.
+Instead of implementing our own means of discovering parent nodes, node
+names or counting how many parents a node has, use the newly added
+functions in the fwnode API to obtain that information.
 
-Something like so should allow text_poke_bp(INT3) to work as expected.
-
+Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Reviewed-by: Petr Mladek <pmladek@suse.com>
 ---
---- a/arch/x86/kernel/alternative.c
-+++ b/arch/x86/kernel/alternative.c
-@@ -999,6 +999,13 @@ int poke_int3_handler(struct pt_regs *re
- 	ip += tp->len;
+ lib/vsprintf.c | 39 +++++++++++++++++----------------------
+ 1 file changed, 17 insertions(+), 22 deletions(-)
+
+diff --git a/lib/vsprintf.c b/lib/vsprintf.c
+index cf48769fe330c..c2be0e5bc087d 100644
+--- a/lib/vsprintf.c
++++ b/lib/vsprintf.c
+@@ -38,6 +38,7 @@
+ #include <net/addrconf.h>
+ #include <linux/siphash.h>
+ #include <linux/compiler.h>
++#include <linux/property.h>
+ #ifdef CONFIG_BLOCK
+ #include <linux/blkdev.h>
+ #endif
+@@ -1863,32 +1864,25 @@ char *flags_string(char *buf, char *end, void *flags_ptr,
+ 	return format_flags(buf, end, flags, names);
+ }
  
- 	switch (tp->opcode) {
-+	case INT3_INSN_OPCODE:
-+		/*
-+		 * Someone poked an explicit INT3, they'll want to handle it,
-+		 * do not consume.
-+		 */
-+		return 0;
-+
- 	case CALL_INSN_OPCODE:
- 		int3_emulate_call(regs, (long)ip + tp->rel32);
- 		break;
-@@ -1040,8 +1047,8 @@ NOKPROBE_SYMBOL(poke_int3_handler);
- void text_poke_bp_batch(struct text_poke_loc *tp, unsigned int nr_entries)
+-static const char *device_node_name_for_depth(const struct device_node *np, int depth)
+-{
+-	for ( ; np && depth; depth--)
+-		np = np->parent;
+-
+-	return kbasename(np->full_name);
+-}
+-
+ static noinline_for_stack
+-char *device_node_gen_full_name(const struct device_node *np, char *buf, char *end)
++char *fwnode_full_name_string(struct fwnode_handle *fwnode, char *buf,
++			      char *end)
  {
- 	unsigned char int3 = INT3_INSN_OPCODE;
--	int patched_all_but_first = 0;
- 	unsigned int i;
-+	int do_sync;
+ 	int depth;
+-	const struct device_node *parent = np->parent;
  
- 	lockdep_assert_held(&text_mutex);
+-	/* special case for root node */
+-	if (!parent)
+-		return string_nocheck(buf, end, "/", default_str_spec);
++	/* Loop starting from the root node to the current node. */
++	for (depth = fwnode_count_parents(fwnode); depth >= 0; depth--) {
++		struct fwnode_handle *__fwnode =
++			fwnode_get_nth_parent(fwnode, depth);
  
-@@ -1065,16 +1072,16 @@ void text_poke_bp_batch(struct text_poke
- 	/*
- 	 * Second step: update all but the first byte of the patched range.
- 	 */
--	for (i = 0; i < nr_entries; i++) {
-+	for (do_sync = 0, i = 0; i < nr_entries; i++) {
- 		if (tp[i].len - sizeof(int3) > 0) {
- 			text_poke((char *)tp[i].addr + sizeof(int3),
- 				  (const char *)tp[i].text + sizeof(int3),
- 				  tp[i].len - sizeof(int3));
--			patched_all_but_first++;
-+			do_sync++;
- 		}
+-	for (depth = 0; parent->parent; depth++)
+-		parent = parent->parent;
+-
+-	for ( ; depth >= 0; depth--) {
+-		buf = string_nocheck(buf, end, "/", default_str_spec);
+-		buf = string(buf, end, device_node_name_for_depth(np, depth),
++		buf = string(buf, end, fwnode_get_name_prefix(__fwnode),
++			     default_str_spec);
++		buf = string(buf, end, fwnode_get_name(__fwnode),
+ 			     default_str_spec);
++
++		fwnode_handle_put(__fwnode);
  	}
- 
--	if (patched_all_but_first) {
-+	if (do_sync) {
- 		/*
- 		 * According to Intel, this core syncing is very likely
- 		 * not necessary and we'd be safe even without it. But
-@@ -1087,10 +1094,17 @@ void text_poke_bp_batch(struct text_poke
- 	 * Third step: replace the first byte (int3) by the first byte of
- 	 * replacing opcode.
- 	 */
--	for (i = 0; i < nr_entries; i++)
-+	for (do_sync = 0, i = 0; i < nr_entries; i++) {
-+		if (tp[i].text[0] == INT3_INSN_OPCODE)
-+			continue;
 +
- 		text_poke(tp[i].addr, tp[i].text, sizeof(int3));
-+		do_sync++;
-+	}
-+
-+	if (do_sync)
-+		on_each_cpu(do_sync_core, NULL, 1);
+ 	return buf;
+ }
  
--	on_each_cpu(do_sync_core, NULL, 1);
- 	/*
- 	 * sync_core() implies an smp_mb() and orders this store against
- 	 * the writing of the new instruction.
-@@ -1123,6 +1137,9 @@ void text_poke_loc_init(struct text_poke
- 	tp->opcode = insn.opcode.bytes[0];
+@@ -1933,10 +1927,11 @@ char *device_node_string(char *buf, char *end, struct device_node *dn,
  
- 	switch (tp->opcode) {
-+	case INT3_INSN_OPCPDE:
-+		break;
-+
- 	case CALL_INSN_OPCODE:
- 	case JMP32_INSN_OPCODE:
- 	case JMP8_INSN_OPCODE:
+ 		switch (*fmt) {
+ 		case 'f':	/* full_name */
+-			buf = device_node_gen_full_name(dn, buf, end);
++			buf = fwnode_full_name_string(of_fwnode_handle(dn), buf,
++						      end);
+ 			break;
+ 		case 'n':	/* name */
+-			p = kbasename(of_node_full_name(dn));
++			p = fwnode_get_name(of_fwnode_handle(dn));
+ 			precision = str_spec.precision;
+ 			str_spec.precision = strchrnul(p, '@') - p;
+ 			buf = string(buf, end, p, str_spec);
+@@ -1946,7 +1941,7 @@ char *device_node_string(char *buf, char *end, struct device_node *dn,
+ 			buf = number(buf, end, (unsigned int)dn->phandle, num_spec);
+ 			break;
+ 		case 'P':	/* path-spec */
+-			p = kbasename(of_node_full_name(dn));
++			p = fwnode_get_name(of_fwnode_handle(dn));
+ 			if (!p[1])
+ 				p = "/";
+ 			buf = string(buf, end, p, str_spec);
+-- 
+2.20.1
+
