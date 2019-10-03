@@ -2,113 +2,90 @@ Return-Path: <SRS0=6dNS=X4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 08BB1C32792
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 11:41:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 406BFC10F14
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 11:42:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CD92E218DE
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 11:41:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0EFF820830
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 11:42:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NGWKYS9Q"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="uVfssUzl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730185AbfJCLli (ORCPT
+        id S1730193AbfJCLmP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 07:41:38 -0400
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:45680 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729820AbfJCLlh (ORCPT
+        Thu, 3 Oct 2019 07:42:15 -0400
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:33536 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725827AbfJCLmP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 07:41:37 -0400
-Received: by mail-lj1-f196.google.com with SMTP id q64so2310251ljb.12;
-        Thu, 03 Oct 2019 04:41:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=d2hb3oZ6qBYZenVNAUBLjwu+KkhMaugCRDxlPNc+K5A=;
-        b=NGWKYS9QHRqVrfvkO1Dh1XqZFGKQSGJ2snuNrVQ6ruUsg6QO3E6KMTxpF/MLHe2Z8F
-         iVFLCvrfxfsYTTzhPOPc1jrdzY0eNeRkmhsA0hVSx737SLxh6Zv21pK9Ep8bcDn8/unl
-         AcgI5gzRaDZuTZhIa/t7Nh+IYxIoz0ll7Fz3cq0O+jeYX1nHByF7MMgtvCUuL8UYuc2M
-         SHgACtnpO3nQqx7k3RR6Gkfed57TojRCejjFp98g5tqsQmZ+1oxX4sEfvMIPNjAMpTDg
-         VqAU0Txb7s0SJfU7gyJ9qlZYYWP+KgrwUcD1/+NgccwX72gS+wU3I5JW6mq7BgthjPcw
-         Gv8w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=d2hb3oZ6qBYZenVNAUBLjwu+KkhMaugCRDxlPNc+K5A=;
-        b=Ke3fR1QdRc4E2CrdBLUlJr5uLLbksgIVYafAnl4ntm0aCdB/ff8R2m0CSvJ3CaWWIk
-         IB8rsUBvySTAm/HG2XjPxyb/kUsIjpuMI2/PMycEc7x6WuCRH5OIxWpITT/QXcx0mEQQ
-         vo9brLI+6o6e87O7HkmAmxiGm8c/LI4FpbzOBCUJxMIofozfUdvgaAFTe4szE/ZvzRf2
-         OG45BkWWgH/bR/k1jG2n4UUJx+2esDuQeCfEIYMyLF5kP5gHzptyCVvbfZ8hCgXp68Tp
-         XwJHGXwF9WpN4ApjaK+8lq4BJsWX2ffo1zf0FSv4iElv1DFauKkWASrEOYRWLTTG2Cpc
-         M4Mg==
-X-Gm-Message-State: APjAAAVHD9npUnR093gsPG6cUQfbde66b0nYFE1vlosQtrwDgDdFzHu7
-        TC+Xkp4nzg15rVmk8spm866Z6+BLW7Cl0f9aqAxh7ad6hh4=
-X-Google-Smtp-Source: APXvYqwR0DZpcGJUGfzc5BGGQqG7il/jl2O3LPEb8ta0vebeYBrwyQnzV4d23hbqFKZj1a9pLdCBBOkUoR3u3VdbsJ0=
-X-Received: by 2002:a2e:5418:: with SMTP id i24mr5547908ljb.126.1570102895089;
- Thu, 03 Oct 2019 04:41:35 -0700 (PDT)
+        Thu, 3 Oct 2019 07:42:15 -0400
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id x93Bg5o1078189;
+        Thu, 3 Oct 2019 06:42:05 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1570102925;
+        bh=oz/bIvQ4rqWyufq6vJCniBBXFBd9FPenYQM05c8kSkc=;
+        h=From:To:CC:Subject:Date;
+        b=uVfssUzlirsigRojwClcbNOiE9BqrhxcG9kE+myhSDPnPIxTdGD0faqq9z6fIpsOb
+         Iqx9J4XdEeyJ1C2OpWIUPU37ftkiNRvzBYgKN34wKOshh2l5VkmzU/Em8TgkYhlzMO
+         0GRhAmmcCfis8iC6bN9meplhWkBvu1bUZrB014Mk=
+Received: from DFLE114.ent.ti.com (dfle114.ent.ti.com [10.64.6.35])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x93Bg5x8108385
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Thu, 3 Oct 2019 06:42:05 -0500
+Received: from DFLE104.ent.ti.com (10.64.6.25) by DFLE114.ent.ti.com
+ (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Thu, 3 Oct
+ 2019 06:42:04 -0500
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE104.ent.ti.com
+ (10.64.6.25) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Thu, 3 Oct 2019 06:42:04 -0500
+Received: from a0230074-OptiPlex-7010.india.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id x93Bg1G9053789;
+        Thu, 3 Oct 2019 06:42:02 -0500
+From:   Faiz Abbas <faiz_abbas@ti.com>
+To:     <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>
+CC:     <mark.rutland@arm.com>, <robh+dt@kernel.org>, <nm@ti.com>,
+        <t-kristo@ti.com>, <faiz_abbas@ti.com>
+Subject: [PATCH] arm64: dts: ti: k3-am654-base-board: Add disable-wp for mmc0
+Date:   Thu, 3 Oct 2019 17:12:51 +0530
+Message-ID: <20191003114251.20533-1-faiz_abbas@ti.com>
+X-Mailer: git-send-email 2.19.2
 MIME-Version: 1.0
-References: <20191001205203.4b1a5fb6@coco.lan> <20191002141359.30166-1-gonsolo@gmail.com>
- <20191002141359.30166-2-gonsolo@gmail.com> <20191002142744.GA3475@gofer.mess.org>
- <CANL0fFS9TGKJH2rfkXzak78BaLazTNO7GoZhSb4vLBsDrmz3FQ@mail.gmail.com>
- <20191002150650.GA4227@gofer.mess.org> <CANL0fFRoL6NxOCbNC=XjQ6LDkeeqAayaLUbm9xARWX9ttqfPFg@mail.gmail.com>
- <29ab2e43-4374-a3ea-6ae1-a4267867eaa4@jpvw.nl> <20191002154922.7f1cfc76@coco.lan>
- <CANL0fFRJZBfEDWK_c2w1TomvB5-i4g09LopyJUbO5NtOwKdDTg@mail.gmail.com>
- <CANL0fFTwJ4yRO+5q6WkL0+DtwdrRti6r_WY1intisYJhs5En8w@mail.gmail.com> <20191003081742.0933264b@coco.lan>
-In-Reply-To: <20191003081742.0933264b@coco.lan>
-From:   Gonsolo <gonsolo@gmail.com>
-Date:   Thu, 3 Oct 2019 13:41:23 +0200
-Message-ID: <CANL0fFTtHn4ocL4BD4cVKhVzjLhnQ0a45yq5x4MxWAVu-tD8sw@mail.gmail.com>
-Subject: Re: [PATCH] si2157: Add support for Logilink VG0022A.
-To:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-Cc:     JP <jp@jpvw.nl>, crope@iki.fi, Sean Young <sean@mess.org>,
-        linux-media@vger.kernel.org,
-        Linux Kernel <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi!
+MMC0_SDWP is not connected to the card. Indicate this by adding a
+disable-wp flag.
 
-> It means that there's a firmware stored at the device's eeprom
-> (version 4.0.2). When the driver starts, it downloads a newer firmware
-> from the file dvb-demod-si2168-b40-01.fw.
+Signed-off-by: Faiz Abbas <faiz_abbas@ti.com>
+---
+ arch/arm64/boot/dts/ti/k3-am654-base-board.dts | 1 +
+ 1 file changed, 1 insertion(+)
 
-Thanks for the explanation.
+diff --git a/arch/arm64/boot/dts/ti/k3-am654-base-board.dts b/arch/arm64/boot/dts/ti/k3-am654-base-board.dts
+index 1102b84f853d..143474119328 100644
+--- a/arch/arm64/boot/dts/ti/k3-am654-base-board.dts
++++ b/arch/arm64/boot/dts/ti/k3-am654-base-board.dts
+@@ -221,6 +221,7 @@
+ 	bus-width = <8>;
+ 	non-removable;
+ 	ti,driver-strength-ohm = <50>;
++	disable-wp;
+ };
+ 
+ &dwc3_1 {
+-- 
+2.19.2
 
-> Btw, could you please try the enclosed hack and post the results?
-
-Will do in a second.
-
-FWIW, this hack worked:
-
-diff --git a/drivers/media/tuners/si2157.c b/drivers/media/tuners/si2157.c
-index e87040d6eca7..28a3a4f1640e 100644
---- a/drivers/media/tuners/si2157.c
-+++ b/drivers/media/tuners/si2157.c
-@@ -136,6 +136,7 @@ static int si2157_init(struct dvb_frontend *fe)
-        #define SI2147_A30 ('A' << 24 | 47 << 16 | '3' << 8 | '0' << 0)
-        #define SI2146_A10 ('A' << 24 | 46 << 16 | '1' << 8 | '0' << 0)
-        #define SI2141_A10 ('A' << 24 | 41 << 16 | '1' << 8 | '0' << 0)
-+       #define GONZO     (255 << 24 | 255 << 16 | 255 << 8 | 255 << 0)
-
-        switch (chip_id) {
-        case SI2158_A20:
-@@ -148,6 +149,10 @@ static int si2157_init(struct dvb_frontend *fe)
-        case SI2177_A30:
-                fw_name = SI2157_A30_FIRMWARE;
-                break;
-+       case GONZO:
-+               dev_info(&client->dev, "trying null\n");
-+               fw_name = NULL;
-+               break;
-        case SI2157_A30:
-        case SI2147_A30:
-        case SI2146_A10:
