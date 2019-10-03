@@ -2,111 +2,146 @@ Return-Path: <SRS0=6dNS=X4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78ADAC32792
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 11:25:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0375DC32792
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 11:26:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5A79E2133F
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 11:25:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DAD0A20830
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 11:26:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730079AbfJCLZo (ORCPT
+        id S1730093AbfJCL0Q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 07:25:44 -0400
-Received: from mga03.intel.com ([134.134.136.65]:51919 "EHLO mga03.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725827AbfJCLZn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 07:25:43 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 03 Oct 2019 04:25:42 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.67,251,1566889200"; 
-   d="scan'208";a="198503176"
-Received: from jsakkine-mobl1.tm.intel.com (HELO localhost) ([10.237.50.161])
-  by FMSMGA003.fm.intel.com with ESMTP; 03 Oct 2019 04:25:39 -0700
-Date:   Thu, 3 Oct 2019 14:25:39 +0300
-From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-To:     Sasha Levin <sashal@kernel.org>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        linux-stabley@vger.kernel.org,
-        Vadim Sukhomlinov <sukhomlinov@google.com>,
-        stable@vger.kernel.org, Douglas Anderson <dianders@chromium.org>,
-        Peter Huewe <peterhuewe@gmx.de>,
-        Jason Gunthorpe <jgunthorpe@obsidianresearch.com>,
-        "open list:TPM DEVICE DRIVER" <linux-integrity@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 3/3] tpm: Fix TPM 1.2 Shutdown sequence to prevent future
- TPM operations
-Message-ID: <20191003112539.GB8933@linux.intel.com>
-References: <20191002131445.7793-1-jarkko.sakkinen@linux.intel.com>
- <20191002131445.7793-4-jarkko.sakkinen@linux.intel.com>
- <20191002135758.GA1738718@kroah.com>
- <20191002151751.GP17454@sasha-vm>
- <20191002153123.wcguist4okoxckis@cantor>
- <20191002154204.me4lzgx2l4r6zkpy@cantor>
- <20191003112442.GA8933@linux.intel.com>
+        Thu, 3 Oct 2019 07:26:16 -0400
+Received: from relay3-d.mail.gandi.net ([217.70.183.195]:38653 "EHLO
+        relay3-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725827AbfJCL0Q (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 07:26:16 -0400
+X-Originating-IP: 162.222.80.169
+Received: from aptenodytes (unknown [162.222.80.169])
+        (Authenticated sender: paul.kocialkowski@bootlin.com)
+        by relay3-d.mail.gandi.net (Postfix) with ESMTPSA id 855C860008;
+        Thu,  3 Oct 2019 11:26:11 +0000 (UTC)
+Date:   Thu, 3 Oct 2019 07:26:10 -0400
+From:   Paul Kocialkowski <paul.kocialkowski@bootlin.com>
+To:     Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Cc:     linux-gpio <linux-gpio@vger.kernel.org>,
+        linux-devicetree <devicetree@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+Subject: Re: [PATCH v3 3/5] gpio: syscon: Add support for a custom get
+ operation
+Message-ID: <20191003112610.GA28856@aptenodytes>
+References: <20190927100407.1863293-1-paul.kocialkowski@bootlin.com>
+ <20190927100407.1863293-4-paul.kocialkowski@bootlin.com>
+ <CAMpxmJUHPuGPPPFSctyhtfj0oAk6oJ+=mvgN4=7jmLxAfHs45Q@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="KsGdsel6WgEHnImy"
 Content-Disposition: inline
-In-Reply-To: <20191003112442.GA8933@linux.intel.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <CAMpxmJUHPuGPPPFSctyhtfj0oAk6oJ+=mvgN4=7jmLxAfHs45Q@mail.gmail.com>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Oct 03, 2019 at 02:24:42PM +0300, Jarkko Sakkinen wrote:
-> On Wed, Oct 02, 2019 at 08:42:04AM -0700, Jerry Snitselaar wrote:
-> > On Wed Oct 02 19, Jerry Snitselaar wrote:
-> > > On Wed Oct 02 19, Sasha Levin wrote:
-> > > > On Wed, Oct 02, 2019 at 03:57:58PM +0200, Greg KH wrote:
-> > > > > On Wed, Oct 02, 2019 at 04:14:44PM +0300, Jarkko Sakkinen wrote:
-> > > > > > From: Vadim Sukhomlinov <sukhomlinov@google.com>
-> > > > > > 
-> > > > > > commit db4d8cb9c9f2af71c4d087817160d866ed572cc9 upstream
-> > > > > > 
-> > > > > > TPM 2.0 Shutdown involve sending TPM2_Shutdown to TPM chip and disabling
-> > > > > > future TPM operations. TPM 1.2 behavior was different, future TPM
-> > > > > > operations weren't disabled, causing rare issues. This patch ensures
-> > > > > > that future TPM operations are disabled.
-> > > > > > 
-> > > > > > Fixes: d1bd4a792d39 ("tpm: Issue a TPM2_Shutdown for TPM2 devices.")
-> > > > > > Cc: stable@vger.kernel.org
-> > > > > > Signed-off-by: Vadim Sukhomlinov <sukhomlinov@google.com>
-> > > > > > [dianders: resolved merge conflicts with mainline]
-> > > > > > Signed-off-by: Douglas Anderson <dianders@chromium.org>
-> > > > > > Reviewed-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-> > > > > > Signed-off-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-> > > > > > ---
-> > > > > > drivers/char/tpm/tpm-chip.c | 5 +++--
-> > > > > > 1 file changed, 3 insertions(+), 2 deletions(-)
-> > > > > 
-> > > > > What kernel version(s) is this for?
-> > > > 
-> > > > It would go to 4.19, we've recently reverted an incorrect backport of
-> > > > this patch.
-> > > > 
-> > > > Jarkko, why is this patch 3/3? We haven't seen the first two on the
-> > > > mailing list, do we need anything besides this patch?
-> > > > 
-> > > > --
-> > > > Thanks,
-> > > > Sasha
-> > > 
-> > > It looks like there was a problem mailing the earlier patchset, and patches 1 and 2
-> > > weren't cc'd to stable, but patch 3 was.
-> > 
-> > Is linux-stabley@vger.kernel.org a valid address?
-> > 
-> 
-> No, did a resend :-(
 
-New version sent to stableish@vger.kernel.org.
+--KsGdsel6WgEHnImy
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-/Jarkko
+Hi,
+
+On Thu 03 Oct 19, 10:24, Bartosz Golaszewski wrote:
+> pt., 27 wrz 2019 o 12:04 Paul Kocialkowski
+> <paul.kocialkowski@bootlin.com> napisa=C5=82(a):
+> >
+> > Some drivers might need a custom get operation to match custom
+> > behavior implemented in the set operation.
+> >
+> > Add plumbing for supporting that.
+> >
+> > Signed-off-by: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
+> > ---
+> >  drivers/gpio/gpio-syscon.c | 7 ++++---
+> >  1 file changed, 4 insertions(+), 3 deletions(-)
+> >
+> > diff --git a/drivers/gpio/gpio-syscon.c b/drivers/gpio/gpio-syscon.c
+> > index 31f332074d7d..05c537ed73f1 100644
+> > --- a/drivers/gpio/gpio-syscon.c
+> > +++ b/drivers/gpio/gpio-syscon.c
+> > @@ -43,8 +43,9 @@ struct syscon_gpio_data {
+> >         unsigned int    bit_count;
+> >         unsigned int    dat_bit_offset;
+> >         unsigned int    dir_bit_offset;
+> > -       void            (*set)(struct gpio_chip *chip,
+> > -                              unsigned offset, int value);
+> > +       int             (*get)(struct gpio_chip *chip, unsigned offset);
+> > +       void            (*set)(struct gpio_chip *chip, unsigned offset,
+> > +                              int value);
+>=20
+> Why did you change this line? Doesn't seem necessary and pollutes the his=
+tory.
+
+This is for consistency since both the "chip" and "offset" arguments can fit
+in a single line. Since I want the "get" addition to fit in a single line,
+bringing back "offset" on the previous line of "set" makes things consisten=
+t.
+There's probably no particular reason for the split in the first place.
+
+Do you think it needs a separate cosmetic commit only for that?
+I'd rather add a note in the commit message and keep the change as-is.
+
+Cheers,
+
+Paul
+
+> Bart
+>=20
+> >  };
+> >
+> >  struct syscon_gpio_priv {
+> > @@ -252,7 +253,7 @@ static int syscon_gpio_probe(struct platform_device=
+ *pdev)
+> >         priv->chip.label =3D dev_name(dev);
+> >         priv->chip.base =3D -1;
+> >         priv->chip.ngpio =3D priv->data->bit_count;
+> > -       priv->chip.get =3D syscon_gpio_get;
+> > +       priv->chip.get =3D priv->data->get ? : syscon_gpio_get;
+> >         if (priv->data->flags & GPIO_SYSCON_FEAT_IN)
+> >                 priv->chip.direction_input =3D syscon_gpio_dir_in;
+> >         if (priv->data->flags & GPIO_SYSCON_FEAT_OUT) {
+> > --
+> > 2.23.0
+> >
+
+--=20
+Paul Kocialkowski, Bootlin
+Embedded Linux and kernel engineering
+https://bootlin.com
+
+--KsGdsel6WgEHnImy
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEEJZpWjZeIetVBefti3cLmz3+fv9EFAl2V2tIACgkQ3cLmz3+f
+v9GFGwf+IxprRkzBRr6IH3r+Ju8Sd+z8fEo/prPvemGLA9fboSrQhRno5RP3V6dX
+h6NYZY+XEegXl+DrVqbJkNz0fpudKjY2XdJLhNR/9tKHQddj0UD2/ZgfavO30sZi
+DL7f2PCUYC1kVr8j8bgJz4Vr/4EnEHs4Vkjfm9jKV8giap/DUYOX3QL1OwhBFEJW
+53Cr+bJOuNC/+3G6oMeJ8GPzcikdYu+dRHV6Ka1mjxEeB3REj2g5jSEjZ+dwfczT
+WLp3usydgx1AC+ag8EObLYXTb3ysu7Ugz0k+3HACQ1OTXijo5YMDzTtCYwlVrn4A
+J+G/dstigrIs86FBd4MmZaOtafb+Xw==
+=vWKK
+-----END PGP SIGNATURE-----
+
+--KsGdsel6WgEHnImy--
