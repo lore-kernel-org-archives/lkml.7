@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BCBFCC10F14
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:05:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DFA23C4CED1
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:06:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7F59520865
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:05:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A2A63215EA
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:06:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570118759;
-	bh=Ylw5Xnb5JAPsVmjU+fw+TYuGKV/NrCNuO2yKINxYmx8=;
+	s=default; t=1570118766;
+	bh=/hNYO7OwP1ns9IydcyK7+oKU9B/j5I0pC2OP9X9GgJE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=buTIhqMmkS35RpC7F01GcDXSr9sDq7HP+sIFnrRTqXzt4+iifo09IePo2sccUeb4m
-	 ebzDWyoX7Kv6ZZ3Eqe9rDnqy95eniCm9zrJ/QEpNEMi3coTSDhbW7797m6ngYsLO31
-	 kP3EaE8c2CFR5EkdUX70e669tJlHZPxWj6OcAqSQ=
+	b=zGAe+LblUMo+eyVQ8D09+FB8ffrK7X4ln1msEDbvAVykI+6AynbUg2Np7TThbcv8b
+	 gqoYMgJfcFYEPQO/o9GrP5GMnO6eqVC5XpbbmNMYOjY8Ocr1Kv+MIwwEsyu7zZ/09E
+	 Y9lCYxN8+BPAe2/5l8/agHRXKeK9/b2SmpW9h+NM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731838AbfJCQF6 (ORCPT
+        id S1732682AbfJCQGF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 12:05:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52844 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 12:06:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53048 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730923AbfJCQFx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:05:53 -0400
+        id S1732666AbfJCQGC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:06:02 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9E0E4215EA;
-        Thu,  3 Oct 2019 16:05:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D00FD20865;
+        Thu,  3 Oct 2019 16:06:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570118753;
-        bh=Ylw5Xnb5JAPsVmjU+fw+TYuGKV/NrCNuO2yKINxYmx8=;
+        s=default; t=1570118761;
+        bh=/hNYO7OwP1ns9IydcyK7+oKU9B/j5I0pC2OP9X9GgJE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=YR/yq92lDGa4kqek0a5k3YOQlzTe1tdqLq9hDhCX/2SQjrx9BIClsJs8LA/UpGUcT
-         nnNzYNKMRwbBYiLF1qPrr2yg13/RHH1tB25igPMocqr19Fxe7pyiI+Y20erBFz4Dl/
-         uFG+Ba9K0NXui09V4F9cRoMZsD/nlGiDh9MV5jgU=
+        b=zfaol7yfvJl1fZjCZvKlgijC+nDNwcIZz/akxxmPsVqbb0pPqZJh012V50Pb/7/ta
+         xf3rrMYhgPpsRv7PIRxjbmBqnfx9DMnVYbOwXxDcP6VZr8Yaqk/Iv8SBmxIgOwyh3c
+         ezquYVr+L3WNVsg/8Q0t8gh+ohB5sFEs8Q8ia+vQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Pavel Shilovsky <pshilov@microsoft.com>,
-        Steve French <stfrench@microsoft.com>,
-        Ronnie Sahlberg <lsahlber@redhat.com>
-Subject: [PATCH 4.9 127/129] CIFS: Fix oplock handling for SMB 2.1+ protocols
-Date:   Thu,  3 Oct 2019 17:54:10 +0200
-Message-Id: <20191003154417.046746814@linuxfoundation.org>
+        stable@vger.kernel.org, Mark Salyzyn <salyzyn@android.com>,
+        linux-security-module@vger.kernel.org, kernel-team@android.com,
+        Miklos Szeredi <mszeredi@redhat.com>
+Subject: [PATCH 4.9 115/129] ovl: filter of trusted xattr results in audit
+Date:   Thu,  3 Oct 2019 17:53:58 +0200
+Message-Id: <20191003154411.608470733@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191003154318.081116689@linuxfoundation.org>
 References: <20191003154318.081116689@linuxfoundation.org>
@@ -60,48 +60,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Pavel Shilovsky <pshilov@microsoft.com>
+From: Mark Salyzyn <salyzyn@android.com>
 
-commit a016e2794fc3a245a91946038dd8f34d65e53cc3 upstream.
+commit 5c2e9f346b815841f9bed6029ebcb06415caf640 upstream.
 
-There may be situations when a server negotiates SMB 2.1
-protocol version or higher but responds to a CREATE request
-with an oplock rather than a lease.
+When filtering xattr list for reading, presence of trusted xattr
+results in a security audit log.  However, if there is other content
+no errno will be set, and if there isn't, the errno will be -ENODATA
+and not -EPERM as is usually associated with a lack of capability.
+The check does not block the request to list the xattrs present.
 
-Currently the client doesn't handle such a case correctly:
-when another CREATE comes in the server sends an oplock
-break to the initial CREATE and the client doesn't send
-an ack back due to a wrong caching level being set (READ
-instead of RWH). Missing an oplock break ack makes the
-server wait until the break times out which dramatically
-increases the latency of the second CREATE.
+Switch to ns_capable_noaudit to reflect a more appropriate check.
 
-Fix this by properly detecting oplocks when using SMB 2.1
-protocol version and higher.
-
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Pavel Shilovsky <pshilov@microsoft.com>
-Signed-off-by: Steve French <stfrench@microsoft.com>
-Reviewed-by: Ronnie Sahlberg <lsahlber@redhat.com>
+Signed-off-by: Mark Salyzyn <salyzyn@android.com>
+Cc: linux-security-module@vger.kernel.org
+Cc: kernel-team@android.com
+Cc: stable@vger.kernel.org # v3.18+
+Fixes: a082c6f680da ("ovl: filter trusted xattr for non-admin")
+Signed-off-by: Miklos Szeredi <mszeredi@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/cifs/smb2ops.c |    5 +++++
- 1 file changed, 5 insertions(+)
+ fs/overlayfs/inode.c |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
---- a/fs/cifs/smb2ops.c
-+++ b/fs/cifs/smb2ops.c
-@@ -1419,6 +1419,11 @@ smb21_set_oplock_level(struct cifsInodeI
- 	if (oplock == SMB2_OPLOCK_LEVEL_NOCHANGE)
- 		return;
+--- a/fs/overlayfs/inode.c
++++ b/fs/overlayfs/inode.c
+@@ -234,7 +234,8 @@ static bool ovl_can_list(const char *s)
+ 		return true;
  
-+	/* Check if the server granted an oplock rather than a lease */
-+	if (oplock & SMB2_OPLOCK_LEVEL_EXCLUSIVE)
-+		return smb2_set_oplock_level(cinode, oplock, epoch,
-+					     purge_cache);
-+
- 	if (oplock & SMB2_LEASE_READ_CACHING_HE) {
- 		new_oplock |= CIFS_CACHE_READ_FLG;
- 		strcat(message, "R");
+ 	/* Never list trusted.overlay, list other trusted for superuser only */
+-	return !ovl_is_private_xattr(s) && capable(CAP_SYS_ADMIN);
++	return !ovl_is_private_xattr(s) &&
++	       ns_capable_noaudit(&init_user_ns, CAP_SYS_ADMIN);
+ }
+ 
+ ssize_t ovl_listxattr(struct dentry *dentry, char *list, size_t size)
 
 
