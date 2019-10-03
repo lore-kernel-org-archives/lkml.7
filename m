@@ -7,46 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89C45C10F14
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 15:58:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E7A0C32792
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 15:58:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4860320830
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 15:58:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 24BEF21D81
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 15:58:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570118333;
-	bh=qOgqvqjCkUD8COe5UC9OHjXjf/iIdtSx/nJitqT3eqk=;
+	s=default; t=1570118336;
+	bh=uJycNw4DL+U+YCISpHKsr1iB52emBHrVSbHwAuMW0VY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=jlPMjoTErguKi2XjnpLzHIRqcd0jnV0iEVD3adRXT6bVqFipry/8ImQMMH7x4FjK1
-	 cUw7ojAxq8jpZJgvx9P5hnVgajlavAP24ioTACIXm6JPqGy8qqQ7zgDmieB85FpVac
-	 MUyfyjHnGqamxB5UaEeA1sOEdnGUXfLHPYRfSEaw=
+	b=eil9BtEJR5K7Gi8AE6iQvKtlyg/kOB3DpS3d7XkszQfkPbiEQ+vmoi0XJ0ziFlQVJ
+	 13zhuFohT3Ns/wsW4qwg0WdZGTI/GPCfOQz45aj8HP9hs3MQ+Q2rp5xWEj1LDAFxkv
+	 jiTPHSG9TC9hNKXs5ZGjrQENigvZc+RlFawro9Xs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730070AbfJCP6w (ORCPT
+        id S1730059AbfJCP6z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 11:58:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41662 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 11:58:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41724 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729062AbfJCP6s (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 11:58:48 -0400
+        id S1728773AbfJCP6v (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 11:58:51 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7DC2A20700;
-        Thu,  3 Oct 2019 15:58:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 118E3207FF;
+        Thu,  3 Oct 2019 15:58:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570118327;
-        bh=qOgqvqjCkUD8COe5UC9OHjXjf/iIdtSx/nJitqT3eqk=;
+        s=default; t=1570118330;
+        bh=uJycNw4DL+U+YCISpHKsr1iB52emBHrVSbHwAuMW0VY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=kQueA1yz2fHGAm8NyGVp4K/tJmWvdnpNKHrBk/DzdrSMGQLjSJeHlyOc9xLpeKCt0
-         Ip/Y+34YwKxpW6gvknaPCMCHZb355qWOE0TrbmkB1yZkH9BLMmxyQ8lvmQtiSX2H5E
-         HV+XBgHxSEaCUcuVDsQIm6T3iqMNVuOxyuZVl7Jk=
+        b=Lp4lHbiLVDStTXKmA8jEarTnlxGJEDsbR8KR2W1jYwqXSDLmc1SGV9fYGOjW/YwGy
+         If3+oTnLURSjGNLtsDQkCFWcVh/tcNjzm98zHwOuL3Na9Mh3Mz8iB4+opVtT/Up2vO
+         nrHxgozRLRh5GE2VX7UNd+/DGaTTCBUrsHbbfRWY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jia-Ju Bai <baijiaju1990@gmail.com>,
-        Takashi Iwai <tiwai@suse.de>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 44/99] ALSA: i2c: ak4xxx-adda: Fix a possible null pointer dereference in build_adc_controls()
-Date:   Thu,  3 Oct 2019 17:53:07 +0200
-Message-Id: <20191003154316.732713960@linuxfoundation.org>
+        stable@vger.kernel.org, Kevin Easton <kevin@guarana.org>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        Sasha Levin <sashal@kernel.org>,
+        syzbot+98156c174c5a2cad9f8f@syzkaller.appspotmail.com
+Subject: [PATCH 4.4 71/99] libertas: Add missing sentinel at end of if_usb.c fw_table
+Date:   Thu,  3 Oct 2019 17:53:34 +0200
+Message-Id: <20191003154331.703444750@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191003154252.297991283@linuxfoundation.org>
 References: <20191003154252.297991283@linuxfoundation.org>
@@ -59,52 +61,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jia-Ju Bai <baijiaju1990@gmail.com>
+From: Kevin Easton <kevin@guarana.org>
 
-[ Upstream commit 2127c01b7f63b06a21559f56a8c81a3c6535bd1a ]
+[ Upstream commit 764f3f1ecffc434096e0a2b02f1a6cc964a89df6 ]
 
-In build_adc_controls(), there is an if statement on line 773 to check
-whether ak->adc_info is NULL:
-    if (! ak->adc_info ||
-        ! ak->adc_info[mixer_ch].switch_name)
+This sentinel tells the firmware loading process when to stop.
 
-When ak->adc_info is NULL, it is used on line 792:
-    knew.name = ak->adc_info[mixer_ch].selector_name;
-
-Thus, a possible null-pointer dereference may occur.
-
-To fix this bug, referring to lines 773 and 774, ak->adc_info
-and ak->adc_info[mixer_ch].selector_name are checked before being used.
-
-This bug is found by a static analysis tool STCheck written by us.
-
-Signed-off-by: Jia-Ju Bai <baijiaju1990@gmail.com>
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Reported-and-tested-by: syzbot+98156c174c5a2cad9f8f@syzkaller.appspotmail.com
+Signed-off-by: Kevin Easton <kevin@guarana.org>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/i2c/other/ak4xxx-adda.c | 7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
+ drivers/net/wireless/libertas/if_usb.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/sound/i2c/other/ak4xxx-adda.c b/sound/i2c/other/ak4xxx-adda.c
-index bf377dc192aa7..d33e02c317129 100644
---- a/sound/i2c/other/ak4xxx-adda.c
-+++ b/sound/i2c/other/ak4xxx-adda.c
-@@ -789,11 +789,12 @@ static int build_adc_controls(struct snd_akm4xxx *ak)
- 				return err;
+diff --git a/drivers/net/wireless/libertas/if_usb.c b/drivers/net/wireless/libertas/if_usb.c
+index dff08a2896a38..d271eaf1f9499 100644
+--- a/drivers/net/wireless/libertas/if_usb.c
++++ b/drivers/net/wireless/libertas/if_usb.c
+@@ -49,7 +49,8 @@ static const struct lbs_fw_table fw_table[] = {
+ 	{ MODEL_8388, "libertas/usb8388_v5.bin", NULL },
+ 	{ MODEL_8388, "libertas/usb8388.bin", NULL },
+ 	{ MODEL_8388, "usb8388.bin", NULL },
+-	{ MODEL_8682, "libertas/usb8682.bin", NULL }
++	{ MODEL_8682, "libertas/usb8682.bin", NULL },
++	{ 0, NULL, NULL }
+ };
  
- 			memset(&knew, 0, sizeof(knew));
--			knew.name = ak->adc_info[mixer_ch].selector_name;
--			if (!knew.name) {
-+			if (!ak->adc_info ||
-+				!ak->adc_info[mixer_ch].selector_name) {
- 				knew.name = "Capture Channel";
- 				knew.index = mixer_ch + ak->idx_offset * 2;
--			}
-+			} else
-+				knew.name = ak->adc_info[mixer_ch].selector_name;
- 
- 			knew.iface = SNDRV_CTL_ELEM_IFACE_MIXER;
- 			knew.info = ak4xxx_capture_source_info;
+ static struct usb_device_id if_usb_table[] = {
 -- 
 2.20.1
 
