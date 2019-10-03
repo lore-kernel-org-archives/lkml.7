@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F19BC10F14
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:39:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FC92C32792
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:40:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D72812133F
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:39:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 670902133F
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:40:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570120798;
-	bh=K/Ynl8ZURJU4AyzZONs+0nrqygS1OaSrdmCK3xxot6I=;
+	s=default; t=1570120801;
+	bh=ZihwkYOnNJ9JxszfbKfu7q+rwSsHWWoRwLsZjpHbgvE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=FGGWrU5AwTHXSjiT0byUZ39S9Unj3rsaYWDHFJfhsg5oRMjig5OzWN8pzHKItGQq+
-	 DZrwQqLY2Cr1gEFrwGpfQDQijLDcDcM5UcT7EQxzeTHB1LOfyOqqRFBie8Pijucdk0
-	 m6Vq/tTttB3fTHy9lbU/Eoox72HWPlLSzPtKm7bQ=
+	b=K/mQy2Fd2po0G739Y4QhcwSprRU9nf8qji11I8maBvdAce5NUhHbViJLqGYO9YXFv
+	 SV/XMUQFaNi0f0iWWQACwGORcP7YejDsFUuoQYg/GBZcie9sbSwlgxehlGe5kHgccb
+	 pexokto9NSutv+/CQTl9iuMwfb7WMXX8uSmD5LFM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392426AbfJCQj5 (ORCPT
+        id S2392434AbfJCQkA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 12:39:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49980 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 12:40:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50044 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392415AbfJCQjz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:39:55 -0400
+        id S2391711AbfJCQj5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:39:57 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6362C222CF;
-        Thu,  3 Oct 2019 16:39:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2145320830;
+        Thu,  3 Oct 2019 16:39:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570120793;
-        bh=K/Ynl8ZURJU4AyzZONs+0nrqygS1OaSrdmCK3xxot6I=;
+        s=default; t=1570120796;
+        bh=ZihwkYOnNJ9JxszfbKfu7q+rwSsHWWoRwLsZjpHbgvE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=dn5P4JID9LJiOHazHdHJ9T8NIsX1pSlYwAu25Mn0WI3/sMhjem3wzsJ9m1C+xKmlV
-         SqV1n37tC7EBIzA5n+rD6VKL86cI3V4mZXeNSeedHdE+a5QpbUDLd+3RmQkqnNMJR1
-         wAAsrZrjOpYuoxMx4RK3afCvlRWY695rjK9yO03I=
+        b=I0wyGSesA/I+fQCEWBVVAHqC67B0N4xEDpFy4mN+5eO7aNC3Y4P8462h1iCUOOIhk
+         pxXvuLZCoblBxI84h93fI5oet0A/76bLcRVjOaXDTv7NykJoOc1ZyDtrT6fq+GshHh
+         uB8dS/2WLIkyHBvw3lkNNJB1gQ7X8juXGyvqOlmU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Kai Vehmanen <kai.vehmanen@linux.intel.com>,
-        Takashi Iwai <tiwai@suse.de>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.3 041/344] ALSA: hda/hdmi - Dont report spurious jack state changes
-Date:   Thu,  3 Oct 2019 17:50:06 +0200
-Message-Id: <20191003154544.160924676@linuxfoundation.org>
+        stable@vger.kernel.org, Axel Lin <axel.lin@ingics.com>,
+        Mark Brown <broonie@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.3 042/344] regulator: lm363x: Fix off-by-one n_voltages for lm3632 ldo_vpos/ldo_vneg
+Date:   Thu,  3 Oct 2019 17:50:07 +0200
+Message-Id: <20191003154544.246409476@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191003154540.062170222@linuxfoundation.org>
 References: <20191003154540.062170222@linuxfoundation.org>
@@ -60,104 +60,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Takashi Iwai <tiwai@suse.de>
+From: Axel Lin <axel.lin@ingics.com>
 
-[ Upstream commit 551626ec0ad28dc43cae3094c35be7088cc625ab ]
+[ Upstream commit 1e2cc8c5e0745b545d4974788dc606d678b6e564 ]
 
-The HDMI jack handling reports the state change always via
-snd_jack_report() whenever hdmi_present_sense() is called, even if the
-state itself doesn't change from the previous time.  This is mostly
-harmless but still a bit confusing to user-space.
+According to the datasheet https://www.ti.com/lit/ds/symlink/lm3632a.pdf
+Table 20. VPOS Bias Register Field Descriptions VPOS[5:0]
+Sets the Positive Display Bias (LDO) Voltage (50 mV per step)
+000000: 4 V
+000001: 4.05 V
+000010: 4.1 V
+....................
+011101: 5.45 V
+011110: 5.5 V (Default)
+011111: 5.55 V
+....................
+100111: 5.95 V
+101000: 6 V
+Note: Codes 101001 to 111111 map to 6 V
 
-This patch reduces such spurious jack state changes and reports only
-when the state really changed.  Also, as a minor optimization, avoid
-overwriting the pin ELD data when the state is identical.
+The LM3632_LDO_VSEL_MAX should be 0b101000 (0x28), so the maximum voltage
+can match the datasheet.
 
-Reviewed-by: Kai Vehmanen <kai.vehmanen@linux.intel.com>
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Fixes: 3a8d1a73a037 ("regulator: add LM363X driver")
+Signed-off-by: Axel Lin <axel.lin@ingics.com>
+Link: https://lore.kernel.org/r/20190626132632.32629-1-axel.lin@ingics.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/pci/hda/patch_hdmi.c | 32 ++++++++++++++++++--------------
- 1 file changed, 18 insertions(+), 14 deletions(-)
+ drivers/regulator/lm363x-regulator.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/sound/pci/hda/patch_hdmi.c b/sound/pci/hda/patch_hdmi.c
-index bea7b09610809..c380596b2e84c 100644
---- a/sound/pci/hda/patch_hdmi.c
-+++ b/sound/pci/hda/patch_hdmi.c
-@@ -1421,7 +1421,7 @@ static void hdmi_pcm_reset_pin(struct hdmi_spec *spec,
- /* update per_pin ELD from the given new ELD;
-  * setup info frame and notification accordingly
-  */
--static void update_eld(struct hda_codec *codec,
-+static bool update_eld(struct hda_codec *codec,
- 		       struct hdmi_spec_per_pin *per_pin,
- 		       struct hdmi_eld *eld)
- {
-@@ -1452,18 +1452,22 @@ static void update_eld(struct hda_codec *codec,
- 		snd_hdmi_show_eld(codec, &eld->info);
+diff --git a/drivers/regulator/lm363x-regulator.c b/drivers/regulator/lm363x-regulator.c
+index 5647e2f97ff8d..e4a27d63bf901 100644
+--- a/drivers/regulator/lm363x-regulator.c
++++ b/drivers/regulator/lm363x-regulator.c
+@@ -30,7 +30,7 @@
  
- 	eld_changed = (pin_eld->eld_valid != eld->eld_valid);
--	if (eld->eld_valid && pin_eld->eld_valid)
-+	eld_changed |= (pin_eld->monitor_present != eld->monitor_present);
-+	if (!eld_changed && eld->eld_valid && pin_eld->eld_valid)
- 		if (pin_eld->eld_size != eld->eld_size ||
- 		    memcmp(pin_eld->eld_buffer, eld->eld_buffer,
- 			   eld->eld_size) != 0)
- 			eld_changed = true;
- 
--	pin_eld->monitor_present = eld->monitor_present;
--	pin_eld->eld_valid = eld->eld_valid;
--	pin_eld->eld_size = eld->eld_size;
--	if (eld->eld_valid)
--		memcpy(pin_eld->eld_buffer, eld->eld_buffer, eld->eld_size);
--	pin_eld->info = eld->info;
-+	if (eld_changed) {
-+		pin_eld->monitor_present = eld->monitor_present;
-+		pin_eld->eld_valid = eld->eld_valid;
-+		pin_eld->eld_size = eld->eld_size;
-+		if (eld->eld_valid)
-+			memcpy(pin_eld->eld_buffer, eld->eld_buffer,
-+			       eld->eld_size);
-+		pin_eld->info = eld->info;
-+	}
- 
- 	/*
- 	 * Re-setup pin and infoframe. This is needed e.g. when
-@@ -1481,6 +1485,7 @@ static void update_eld(struct hda_codec *codec,
- 			       SNDRV_CTL_EVENT_MASK_VALUE |
- 			       SNDRV_CTL_EVENT_MASK_INFO,
- 			       &get_hdmi_pcm(spec, pcm_idx)->eld_ctl->id);
-+	return eld_changed;
- }
- 
- /* update ELD and jack state via HD-audio verbs */
-@@ -1582,6 +1587,7 @@ static void sync_eld_via_acomp(struct hda_codec *codec,
- 	struct hdmi_spec *spec = codec->spec;
- 	struct hdmi_eld *eld = &spec->temp_eld;
- 	struct snd_jack *jack = NULL;
-+	bool changed;
- 	int size;
- 
- 	mutex_lock(&per_pin->lock);
-@@ -1608,15 +1614,13 @@ static void sync_eld_via_acomp(struct hda_codec *codec,
- 	 * disconnected event. Jack must be fetched before update_eld()
- 	 */
- 	jack = pin_idx_to_jack(codec, per_pin);
--	update_eld(codec, per_pin, eld);
-+	changed = update_eld(codec, per_pin, eld);
- 	if (jack == NULL)
- 		jack = pin_idx_to_jack(codec, per_pin);
--	if (jack == NULL)
--		goto unlock;
--	snd_jack_report(jack,
--			(eld->monitor_present && eld->eld_valid) ?
-+	if (changed && jack)
-+		snd_jack_report(jack,
-+				(eld->monitor_present && eld->eld_valid) ?
- 				SND_JACK_AVOUT : 0);
-- unlock:
- 	mutex_unlock(&per_pin->lock);
- }
+ /* LM3632 */
+ #define LM3632_BOOST_VSEL_MAX		0x26
+-#define LM3632_LDO_VSEL_MAX		0x29
++#define LM3632_LDO_VSEL_MAX		0x28
+ #define LM3632_VBOOST_MIN		4500000
+ #define LM3632_VLDO_MIN			4000000
  
 -- 
 2.20.1
