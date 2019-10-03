@@ -4,56 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09C12C4CED1
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:31:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 555D0C10F14
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:31:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D482920862
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:31:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2A91220830
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:31:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570123866;
-	bh=B05maExQbhzmRz3QtW0v5BieCGz5HdQQOqgZortZCcA=;
+	s=default; t=1570123870;
+	bh=ZD0XjW10YGaxOGClqFSscyyezkVzBpPiqFTkIEhmeN4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=dwdzGkjzhyyAdUzdwJmhvVczsHzyD/ep8UDyCDrCZvOGkfTsio9bUPcgXEpr/V9Lq
-	 j7dKg205/PVV30tbFJfCQZv/xquAfH059iNN4qAko1EndPmqHt6QJS/Te2IdxprGBD
-	 UdmlcQCcl/vX0QTYdcdAD9fy8/bS70doe4T+ZNgo=
+	b=GE6DXBPCkl+sAGOuJiZxoSTUKqg7tJ11AbENBn5ddgLmfVi0T/JvB0hpoERN+Qeij
+	 RVbDidBKyEGj5P3MZk3Ewm7+Be4YJZ1lE0nyA6iWp4KJGbvcp3nR04CrTHSnO5O9OC
+	 kSNx5M+w5NflGTLZBZRYZOAhsI7oztV0XSLnQqNo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387661AbfJCQKf (ORCPT
+        id S1731091AbfJCRbJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 12:10:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59916 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 13:31:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60068 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387652AbfJCQK3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:10:29 -0400
+        id S2387659AbfJCQKf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:10:35 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 546B2207FF;
-        Thu,  3 Oct 2019 16:10:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AA9BF222C8;
+        Thu,  3 Oct 2019 16:10:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570119028;
-        bh=B05maExQbhzmRz3QtW0v5BieCGz5HdQQOqgZortZCcA=;
+        s=default; t=1570119034;
+        bh=ZD0XjW10YGaxOGClqFSscyyezkVzBpPiqFTkIEhmeN4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=eMFwPoqF+O+1eHR88DdwCJ6wmD7d2e1VxaZmcnsS5tuRr8DKPzfOtONcMWoiA+xOw
-         MhheLhBhmy+7QE04mPvTAt7FOVA9fg9dHnj/PtOiPPdQHWMeoc5E31eh/hZLHMFRU3
-         VwnkEA2ppiLu3r4i9lOfjNEUrntpJfGwUMSw/pKs=
+        b=Ptk+HZBAw8ftR+i+LjntPX8lIDVvA1u2ZSEfhR9CUNiqQw7xwdYCO8WLDHtpAHE2/
+         dD/bToK2NuL/OY8dPY02S6M6SUfAbi0OSSNVXo4hfG+4gTKVT/JcNuTyFWgDPoljMh
+         ilCVJv83zPljIO3qEleJMmBxJbgWBTlKpdOtqCog=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Gerald Baeza <gerald.baeza@st.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        Andi Kleen <ak@linux.intel.com>, Jiri Olsa <jolsa@redhat.com>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        stable@vger.kernel.org, Yazen Ghannam <yazen.ghannam@amd.com>,
+        Borislav Petkov <bp@suse.de>,
+        "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
+        James Morse <james.morse@arm.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Tony Luck <tony.luck@intel.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 100/185] libperf: Fix alignment trap with xyarray contents in perf stat
-Date:   Thu,  3 Oct 2019 17:52:58 +0200
-Message-Id: <20191003154501.345118791@linuxfoundation.org>
+Subject: [PATCH 4.14 101/185] EDAC/amd64: Recognize DRAM device type ECC capability
+Date:   Thu,  3 Oct 2019 17:52:59 +0200
+Message-Id: <20191003154501.450070671@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191003154437.541662648@linuxfoundation.org>
 References: <20191003154437.541662648@linuxfoundation.org>
@@ -66,56 +64,70 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Gerald BAEZA <gerald.baeza@st.com>
+From: Yazen Ghannam <yazen.ghannam@amd.com>
 
-[ Upstream commit d9c5c083416500e95da098c01be092b937def7fa ]
+[ Upstream commit f8be8e5680225ac9caf07d4545f8529b7395327f ]
 
-Following the patch 'perf stat: Fix --no-scale', an alignment trap
-happens in process_counter_values() on ARMv7 platforms due to the
-attempt to copy non 64 bits aligned double words (pointed by 'count')
-via a NEON vectored instruction ('vld1' with 64 bits alignment
-constraint).
+AMD Family 17h systems support x4 and x16 DRAM devices. However, the
+device type is not checked when setting mci.edac_ctl_cap.
 
-This patch sets a 64 bits alignment constraint on 'contents[]' field in
-'struct xyarray' since the 'count' pointer used above points to such a
-structure.
+Set the appropriate capability flag based on the device type.
 
-Signed-off-by: Gerald Baeza <gerald.baeza@st.com>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Alexandre Torgue <alexandre.torgue@st.com>
-Cc: Andi Kleen <ak@linux.intel.com>
-Cc: Jiri Olsa <jolsa@redhat.com>
-Cc: Mathieu Poirier <mathieu.poirier@linaro.org>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Link: http://lkml.kernel.org/r/1566464769-16374-1-git-send-email-gerald.baeza@st.com
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Default to x8 DRAM device when neither the x4 or x16 bits are set.
+
+ [ bp: reverse cpk_en check to save an indentation level. ]
+
+Fixes: 2d09d8f301f5 ("EDAC, amd64: Determine EDAC MC capabilities on Fam17h")
+Signed-off-by: Yazen Ghannam <yazen.ghannam@amd.com>
+Signed-off-by: Borislav Petkov <bp@suse.de>
+Cc: "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>
+Cc: James Morse <james.morse@arm.com>
+Cc: Mauro Carvalho Chehab <mchehab@kernel.org>
+Cc: Tony Luck <tony.luck@intel.com>
+Link: https://lkml.kernel.org/r/20190821235938.118710-3-Yazen.Ghannam@amd.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/perf/util/xyarray.h | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/edac/amd64_edac.c | 14 ++++++++++++--
+ 1 file changed, 12 insertions(+), 2 deletions(-)
 
-diff --git a/tools/perf/util/xyarray.h b/tools/perf/util/xyarray.h
-index 7ffe562e7ae7f..2627b038b6f2a 100644
---- a/tools/perf/util/xyarray.h
-+++ b/tools/perf/util/xyarray.h
-@@ -2,6 +2,7 @@
- #ifndef _PERF_XYARRAY_H_
- #define _PERF_XYARRAY_H_ 1
+diff --git a/drivers/edac/amd64_edac.c b/drivers/edac/amd64_edac.c
+index 667f5ba0403c0..35b847b51bfa9 100644
+--- a/drivers/edac/amd64_edac.c
++++ b/drivers/edac/amd64_edac.c
+@@ -3101,12 +3101,15 @@ static bool ecc_enabled(struct pci_dev *F3, u16 nid)
+ static inline void
+ f17h_determine_edac_ctl_cap(struct mem_ctl_info *mci, struct amd64_pvt *pvt)
+ {
+-	u8 i, ecc_en = 1, cpk_en = 1;
++	u8 i, ecc_en = 1, cpk_en = 1, dev_x4 = 1, dev_x16 = 1;
  
-+#include <linux/compiler.h>
- #include <sys/types.h>
+ 	for (i = 0; i < NUM_UMCS; i++) {
+ 		if (pvt->umc[i].sdp_ctrl & UMC_SDP_INIT) {
+ 			ecc_en &= !!(pvt->umc[i].umc_cap_hi & UMC_ECC_ENABLED);
+ 			cpk_en &= !!(pvt->umc[i].umc_cap_hi & UMC_ECC_CHIPKILL_CAP);
++
++			dev_x4  &= !!(pvt->umc[i].dimm_cfg & BIT(6));
++			dev_x16 &= !!(pvt->umc[i].dimm_cfg & BIT(7));
+ 		}
+ 	}
  
- struct xyarray {
-@@ -10,7 +11,7 @@ struct xyarray {
- 	size_t entries;
- 	size_t max_x;
- 	size_t max_y;
--	char contents[];
-+	char contents[] __aligned(8);
- };
+@@ -3114,8 +3117,15 @@ f17h_determine_edac_ctl_cap(struct mem_ctl_info *mci, struct amd64_pvt *pvt)
+ 	if (ecc_en) {
+ 		mci->edac_ctl_cap |= EDAC_FLAG_SECDED;
  
- struct xyarray *xyarray__new(int xlen, int ylen, size_t entry_size);
+-		if (cpk_en)
++		if (!cpk_en)
++			return;
++
++		if (dev_x4)
+ 			mci->edac_ctl_cap |= EDAC_FLAG_S4ECD4ED;
++		else if (dev_x16)
++			mci->edac_ctl_cap |= EDAC_FLAG_S16ECD16ED;
++		else
++			mci->edac_ctl_cap |= EDAC_FLAG_S8ECD8ED;
+ 	}
+ }
+ 
 -- 
 2.20.1
 
