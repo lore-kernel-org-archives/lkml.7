@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D48C4C10F14
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:36:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 639BCC32792
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:36:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 98FC120830
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:36:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 300C52133F
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:36:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570120607;
-	bh=ppvgryPXoAV87FTYKqBMl7LfUlYuP5FSY5V3yCvro1c=;
+	s=default; t=1570120610;
+	bh=6Ey5Ks5d2d75Wxpk9etln48qhPSw/IV2zsWaUxU+wzI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=tdzT9bbqObs8hI61W1Kmqg/nic5p0UMbJ9h3FlpZblGxV8czjzQb4g7EpBtckSpg1
-	 Fudkc2W4pCEoCKzEonxD5jDyZQK+NISrWiIjh5kNdyiZf4ouUDQMxTdKgqkizc8Bk4
-	 qmHIhZugsDFB0H3nqOentlxIQaAsT6CCxOrMtn8k=
+	b=ntvzJeGZ039WdQ2Qrv3wF9p64ZYmheF2cx7yHBTn8THB8IUfNzKlFcLIrsKQGbkp0
+	 PQkG4uE08jMW1QOdHranTSNz8y7Zseh03W482gt7d8CJX58oLzxInidqwWgZXBIMFg
+	 F72JIXOl2OZfGAFfmDMdeGYmfo+ZZVEwHHDLpUdo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404012AbfJCQgq (ORCPT
+        id S2404477AbfJCQgt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 12:36:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45922 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 12:36:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45964 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391750AbfJCQgk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:36:40 -0400
+        id S2404459AbfJCQgo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:36:44 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 66A4E2070B;
-        Thu,  3 Oct 2019 16:36:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 24CE82070B;
+        Thu,  3 Oct 2019 16:36:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570120599;
-        bh=ppvgryPXoAV87FTYKqBMl7LfUlYuP5FSY5V3yCvro1c=;
+        s=default; t=1570120602;
+        bh=6Ey5Ks5d2d75Wxpk9etln48qhPSw/IV2zsWaUxU+wzI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ALKHEYHhbk999a26bF7YJAQYy8VsG8mJUUub/Omgx8eS/IJKw0FCzVbVPkamX54NC
-         p5L7ope6lF09al7OUAO5S69kAl8EzT0UScdjjccnGFXG2P4xMMCoBSpu+iRGmbSWGy
-         NCQ+ZqCB/yUw0Hm0wIBqv4y4tgDp7gou7zWZdrdg=
+        b=oXT+xHX1wRfVpqD2+RweChDHpUurcoIcBUg97Y9zHNLkXuLO4Le9x27zxYOva0HVn
+         GT8gb43noiGFzDAjM3nIP0Zcg3Fbf4iIiZ8An6RwhPb3GvMnyZE8Wl0wXuMqQZpV7r
+         oeD2tjGN7nnLdItRwkOPDligmJvkbEBIpQrxf9rg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Mark Salyzyn <salyzyn@android.com>,
-        linux-security-module@vger.kernel.org, kernel-team@android.com,
-        Miklos Szeredi <mszeredi@redhat.com>
-Subject: [PATCH 5.2 281/313] ovl: filter of trusted xattr results in audit
-Date:   Thu,  3 Oct 2019 17:54:19 +0200
-Message-Id: <20191003154600.730861390@linuxfoundation.org>
+        stable@vger.kernel.org, Rui Salvaterra <rsalvaterra@gmail.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Subject: [PATCH 5.2 246/313] media: sn9c20x: Add MSI MS-1039 laptop to flip_dmi_table
+Date:   Thu,  3 Oct 2019 17:53:44 +0200
+Message-Id: <20191003154557.264036600@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191003154533.590915454@linuxfoundation.org>
 References: <20191003154533.590915454@linuxfoundation.org>
@@ -60,41 +61,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mark Salyzyn <salyzyn@android.com>
+From: Hans de Goede <hdegoede@redhat.com>
 
-commit 5c2e9f346b815841f9bed6029ebcb06415caf640 upstream.
+commit 7e0bb5828311f811309bed5749528ca04992af2f upstream.
 
-When filtering xattr list for reading, presence of trusted xattr
-results in a security audit log.  However, if there is other content
-no errno will be set, and if there isn't, the errno will be -ENODATA
-and not -EPERM as is usually associated with a lack of capability.
-The check does not block the request to list the xattrs present.
+Like a bunch of other MSI laptops the MS-1039 uses a 0c45:627b
+SN9C201 + OV7660 webcam which is mounted upside down.
 
-Switch to ns_capable_noaudit to reflect a more appropriate check.
+Add it to the sn9c20x flip_dmi_table to deal with this.
 
-Signed-off-by: Mark Salyzyn <salyzyn@android.com>
-Cc: linux-security-module@vger.kernel.org
-Cc: kernel-team@android.com
-Cc: stable@vger.kernel.org # v3.18+
-Fixes: a082c6f680da ("ovl: filter trusted xattr for non-admin")
-Signed-off-by: Miklos Szeredi <mszeredi@redhat.com>
+Cc: stable@vger.kernel.org
+Reported-by: Rui Salvaterra <rsalvaterra@gmail.com>
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/overlayfs/inode.c |    3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/media/usb/gspca/sn9c20x.c |    7 +++++++
+ 1 file changed, 7 insertions(+)
 
---- a/fs/overlayfs/inode.c
-+++ b/fs/overlayfs/inode.c
-@@ -383,7 +383,8 @@ static bool ovl_can_list(const char *s)
- 		return true;
- 
- 	/* Never list trusted.overlay, list other trusted for superuser only */
--	return !ovl_is_private_xattr(s) && capable(CAP_SYS_ADMIN);
-+	return !ovl_is_private_xattr(s) &&
-+	       ns_capable_noaudit(&init_user_ns, CAP_SYS_ADMIN);
- }
- 
- ssize_t ovl_listxattr(struct dentry *dentry, char *list, size_t size)
+--- a/drivers/media/usb/gspca/sn9c20x.c
++++ b/drivers/media/usb/gspca/sn9c20x.c
+@@ -124,6 +124,13 @@ static const struct dmi_system_id flip_d
+ 		}
+ 	},
+ 	{
++		.ident = "MSI MS-1039",
++		.matches = {
++			DMI_MATCH(DMI_SYS_VENDOR, "MICRO-STAR INT'L CO.,LTD."),
++			DMI_MATCH(DMI_PRODUCT_NAME, "MS-1039"),
++		}
++	},
++	{
+ 		.ident = "MSI MS-1632",
+ 		.matches = {
+ 			DMI_MATCH(DMI_BOARD_VENDOR, "MSI"),
 
 
