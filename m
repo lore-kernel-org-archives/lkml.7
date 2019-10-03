@@ -4,53 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CE4EC10F14
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:17:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DBBFCC4CED1
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:17:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 26F1A2245B
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:17:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A439020865
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:17:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570119450;
-	bh=vpb3RdfOJRrO7WE5fuKy6/hyWAMQx4pHWPaGXtcDL2M=;
+	s=default; t=1570119451;
+	bh=y3oK5sd44kw9hUTqZ2mEExDtnP5Ij6BKs401hcRk3Uc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=BOrykIju+7P2Qvr0irUl+8r5p8s94MfcbsLF5e1Vl9G7mWqzf9MmA4cMAkDRza7ON
-	 HPCDGcaPbgBcoHQUgOCwVJ+RJ/CzStMiSv1nzHbepARMm5pC80Zt7wxySLv+Hlt2tO
-	 Ojaw/lO3E0yIKghlab/TFJn741R7Td0CAiTGm4xk=
+	b=LJl4p6uuYUsUX3az/ZJ3FLnrDk+DZVHItUTtTGEGJK5/8cwQ6IDNvxKJo9TrYMDeu
+	 SL7cFuCc2i0HGHQi4lcMy/GKt1vEzfDCvPbsRt8JJp/ZE22kg+C+8BGv9Kq2JC/gDV
+	 FjW1rtCWYT/e/RV0bNIt8nvCnTsUkqnXETCCzHxU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387859AbfJCQR3 (ORCPT
+        id S2389263AbfJCQRb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 12:17:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43078 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 12:17:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43184 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388394AbfJCQRX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:17:23 -0400
+        id S2388397AbfJCQR0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:17:26 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 869B020865;
-        Thu,  3 Oct 2019 16:17:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 116FC215EA;
+        Thu,  3 Oct 2019 16:17:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570119441;
-        bh=vpb3RdfOJRrO7WE5fuKy6/hyWAMQx4pHWPaGXtcDL2M=;
+        s=default; t=1570119444;
+        bh=y3oK5sd44kw9hUTqZ2mEExDtnP5Ij6BKs401hcRk3Uc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=N4qex38C1WM2eT8VwKRiodA1lKHWiOR0VVQp/l+0MPPkMpLLzKUE1nHxkXnp8k37p
-         ka8ITGv7SXtyU7OIk3mTTNUpkQI9dJOVpEszYPHfi6b1rHN7vtCUnPy4khpcJwM4Ii
-         c0bdafYUwmiY0iKUybzeQqG3FysgEG9P4mHUrXwQ=
+        b=Kaf7EZDIxJWUquJPSWTBoIjUKPtP0XZcdKX2gbNQo7YXQJBPobK5frNro2F7m8RZb
+         lUVHuvRabIkFhAipbDQKvdWLs8KBJhHso3tUCeWSBStEJY8Qd6a7rSuvkXoP8gSoo0
+         R9ov35BkcQ0DhhTCjSWKP+ZTfQFZPKoNkcRI7Gpo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Peter Zijlstra <peterz@infradead.org>,
-        Frederic Weisbecker <fweisbec@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@kernel.org>,
-        "Paul E. McKenney" <paulmck@linux.ibm.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 065/211] idle: Prevent late-arriving interrupts from disrupting offline
-Date:   Thu,  3 Oct 2019 17:52:11 +0200
-Message-Id: <20191003154503.434608576@linuxfoundation.org>
+        stable@vger.kernel.org, Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Sasha Levin <sashal@kernel.org>,
+        syzbot+1a35278dd0ebfb3a038a@syzkaller.appspotmail.com,
+        syzbot+397fd082ce5143e2f67d@syzkaller.appspotmail.com,
+        syzbot+06ddf1788cfd048c5e82@syzkaller.appspotmail.com
+Subject: [PATCH 4.19 066/211] media: gspca: zero usb_buf on error
+Date:   Thu,  3 Oct 2019 17:52:12 +0200
+Message-Id: <20191003154503.628090419@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191003154447.010950442@linuxfoundation.org>
 References: <20191003154447.010950442@linuxfoundation.org>
@@ -63,109 +63,277 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Peter Zijlstra <peterz@infradead.org>
+From: Hans Verkuil <hverkuil-cisco@xs4all.nl>
 
-[ Upstream commit e78a7614f3876ac649b3df608789cb6ef74d0480 ]
+[ Upstream commit 4843a543fad3bf8221cf14e5d5f32d15cee89e84 ]
 
-Scheduling-clock interrupts can arrive late in the CPU-offline process,
-after idle entry and the subsequent call to cpuhp_report_idle_dead().
-Once execution passes the call to rcu_report_dead(), RCU is ignoring
-the CPU, which results in lockdep complaints when the interrupt handler
-uses RCU:
+If reg_r() fails, then gspca_dev->usb_buf was left uninitialized,
+and some drivers used the contents of that buffer in logic.
 
-------------------------------------------------------------------------
+This caused several syzbot errors:
 
-=============================
-WARNING: suspicious RCU usage
-5.2.0-rc1+ #681 Not tainted
------------------------------
-kernel/sched/fair.c:9542 suspicious rcu_dereference_check() usage!
+https://syzkaller.appspot.com/bug?extid=397fd082ce5143e2f67d
+https://syzkaller.appspot.com/bug?extid=1a35278dd0ebfb3a038a
+https://syzkaller.appspot.com/bug?extid=06ddf1788cfd048c5e82
 
-other info that might help us debug this:
+I analyzed the gspca drivers and zeroed the buffer where needed.
 
-RCU used illegally from offline CPU!
-rcu_scheduler_active = 2, debug_locks = 1
-no locks held by swapper/5/0.
+Reported-and-tested-by: syzbot+1a35278dd0ebfb3a038a@syzkaller.appspotmail.com
+Reported-and-tested-by: syzbot+397fd082ce5143e2f67d@syzkaller.appspotmail.com
+Reported-and-tested-by: syzbot+06ddf1788cfd048c5e82@syzkaller.appspotmail.com
 
-stack backtrace:
-CPU: 5 PID: 0 Comm: swapper/5 Not tainted 5.2.0-rc1+ #681
-Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS Bochs 01/01/2011
-Call Trace:
- <IRQ>
- dump_stack+0x5e/0x8b
- trigger_load_balance+0xa8/0x390
- ? tick_sched_do_timer+0x60/0x60
- update_process_times+0x3b/0x50
- tick_sched_handle+0x2f/0x40
- tick_sched_timer+0x32/0x70
- __hrtimer_run_queues+0xd3/0x3b0
- hrtimer_interrupt+0x11d/0x270
- ? sched_clock_local+0xc/0x74
- smp_apic_timer_interrupt+0x79/0x200
- apic_timer_interrupt+0xf/0x20
- </IRQ>
-RIP: 0010:delay_tsc+0x22/0x50
-Code: ff 0f 1f 80 00 00 00 00 65 44 8b 05 18 a7 11 48 0f ae e8 0f 31 48 89 d6 48 c1 e6 20 48 09 c6 eb 0e f3 90 65 8b 05 fe a6 11 48 <41> 39 c0 75 18 0f ae e8 0f 31 48 c1 e2 20 48 09 c2 48 89 d0 48 29
-RSP: 0000:ffff8f92c0157ed0 EFLAGS: 00000212 ORIG_RAX: ffffffffffffff13
-RAX: 0000000000000005 RBX: ffff8c861f356400 RCX: ffff8f92c0157e64
-RDX: 000000321214c8cc RSI: 00000032120daa7f RDI: 0000000000260f15
-RBP: 0000000000000005 R08: 0000000000000005 R09: 0000000000000000
-R10: 0000000000000001 R11: 0000000000000001 R12: 0000000000000000
-R13: 0000000000000000 R14: ffff8c861ee18000 R15: ffff8c861ee18000
- cpuhp_report_idle_dead+0x31/0x60
- do_idle+0x1d5/0x200
- ? _raw_spin_unlock_irqrestore+0x2d/0x40
- cpu_startup_entry+0x14/0x20
- start_secondary+0x151/0x170
- secondary_startup_64+0xa4/0xb0
-
-------------------------------------------------------------------------
-
-This happens rarely, but can be forced by happen more often by
-placing delays in cpuhp_report_idle_dead() following the call to
-rcu_report_dead().  With this in place, the following rcutorture
-scenario reproduces the problem within a few minutes:
-
-tools/testing/selftests/rcutorture/bin/kvm.sh --cpus 8 --duration 5 --kconfig "CONFIG_DEBUG_LOCK_ALLOC=y CONFIG_PROVE_LOCKING=y" --configs "TREE04"
-
-This commit uses the crude but effective expedient of moving the disabling
-of interrupts within the idle loop to precede the cpu_is_offline()
-check.  It also invokes tick_nohz_idle_stop_tick() instead of
-tick_nohz_idle_stop_tick_protected() to shut off the scheduling-clock
-interrupt.
-
-Signed-off-by: Peter Zijlstra <peterz@infradead.org>
-Cc: Frederic Weisbecker <fweisbec@gmail.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Ingo Molnar <mingo@kernel.org>
-[ paulmck: Revert tick_nohz_idle_stop_tick_protected() removal, new callers. ]
-Signed-off-by: Paul E. McKenney <paulmck@linux.ibm.com>
+Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/sched/idle.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ drivers/media/usb/gspca/konica.c   |  5 +++++
+ drivers/media/usb/gspca/nw80x.c    |  5 +++++
+ drivers/media/usb/gspca/ov519.c    | 10 ++++++++++
+ drivers/media/usb/gspca/ov534.c    |  5 +++++
+ drivers/media/usb/gspca/ov534_9.c  |  1 +
+ drivers/media/usb/gspca/se401.c    |  5 +++++
+ drivers/media/usb/gspca/sn9c20x.c  |  5 +++++
+ drivers/media/usb/gspca/sonixb.c   |  5 +++++
+ drivers/media/usb/gspca/sonixj.c   |  5 +++++
+ drivers/media/usb/gspca/spca1528.c |  5 +++++
+ drivers/media/usb/gspca/sq930x.c   |  5 +++++
+ drivers/media/usb/gspca/sunplus.c  |  5 +++++
+ drivers/media/usb/gspca/vc032x.c   |  5 +++++
+ drivers/media/usb/gspca/w996Xcf.c  |  5 +++++
+ 14 files changed, 71 insertions(+)
 
-diff --git a/kernel/sched/idle.c b/kernel/sched/idle.c
-index 16f84142f2f49..44a17366c8ec2 100644
---- a/kernel/sched/idle.c
-+++ b/kernel/sched/idle.c
-@@ -240,13 +240,14 @@ static void do_idle(void)
- 		check_pgt_cache();
- 		rmb();
+diff --git a/drivers/media/usb/gspca/konica.c b/drivers/media/usb/gspca/konica.c
+index 989ae997f66de..89b9293b31bef 100644
+--- a/drivers/media/usb/gspca/konica.c
++++ b/drivers/media/usb/gspca/konica.c
+@@ -123,6 +123,11 @@ static void reg_r(struct gspca_dev *gspca_dev, u16 value, u16 index)
+ 	if (ret < 0) {
+ 		pr_err("reg_r err %d\n", ret);
+ 		gspca_dev->usb_err = ret;
++		/*
++		 * Make sure the buffer is zeroed to avoid uninitialized
++		 * values.
++		 */
++		memset(gspca_dev->usb_buf, 0, 2);
+ 	}
+ }
  
-+		local_irq_disable();
-+
- 		if (cpu_is_offline(cpu)) {
--			tick_nohz_idle_stop_tick_protected();
-+			tick_nohz_idle_stop_tick();
- 			cpuhp_report_idle_dead();
- 			arch_cpu_idle_dead();
- 		}
+diff --git a/drivers/media/usb/gspca/nw80x.c b/drivers/media/usb/gspca/nw80x.c
+index bedc04a72e97e..bde4441f935e7 100644
+--- a/drivers/media/usb/gspca/nw80x.c
++++ b/drivers/media/usb/gspca/nw80x.c
+@@ -1581,6 +1581,11 @@ static void reg_r(struct gspca_dev *gspca_dev,
+ 	if (ret < 0) {
+ 		pr_err("reg_r err %d\n", ret);
+ 		gspca_dev->usb_err = ret;
++		/*
++		 * Make sure the buffer is zeroed to avoid uninitialized
++		 * values.
++		 */
++		memset(gspca_dev->usb_buf, 0, USB_BUF_SZ);
+ 		return;
+ 	}
+ 	if (len == 1)
+diff --git a/drivers/media/usb/gspca/ov519.c b/drivers/media/usb/gspca/ov519.c
+index 10fcbe9e8614b..cb41e61d50dd3 100644
+--- a/drivers/media/usb/gspca/ov519.c
++++ b/drivers/media/usb/gspca/ov519.c
+@@ -2083,6 +2083,11 @@ static int reg_r(struct sd *sd, u16 index)
+ 	} else {
+ 		gspca_err(gspca_dev, "reg_r %02x failed %d\n", index, ret);
+ 		sd->gspca_dev.usb_err = ret;
++		/*
++		 * Make sure the result is zeroed to avoid uninitialized
++		 * values.
++		 */
++		gspca_dev->usb_buf[0] = 0;
+ 	}
  
--		local_irq_disable();
- 		arch_cpu_idle_enter();
+ 	return ret;
+@@ -2111,6 +2116,11 @@ static int reg_r8(struct sd *sd,
+ 	} else {
+ 		gspca_err(gspca_dev, "reg_r8 %02x failed %d\n", index, ret);
+ 		sd->gspca_dev.usb_err = ret;
++		/*
++		 * Make sure the buffer is zeroed to avoid uninitialized
++		 * values.
++		 */
++		memset(gspca_dev->usb_buf, 0, 8);
+ 	}
  
- 		/*
+ 	return ret;
+diff --git a/drivers/media/usb/gspca/ov534.c b/drivers/media/usb/gspca/ov534.c
+index d06dc0755b9a5..9e3326b66c792 100644
+--- a/drivers/media/usb/gspca/ov534.c
++++ b/drivers/media/usb/gspca/ov534.c
+@@ -642,6 +642,11 @@ static u8 ov534_reg_read(struct gspca_dev *gspca_dev, u16 reg)
+ 	if (ret < 0) {
+ 		pr_err("read failed %d\n", ret);
+ 		gspca_dev->usb_err = ret;
++		/*
++		 * Make sure the result is zeroed to avoid uninitialized
++		 * values.
++		 */
++		gspca_dev->usb_buf[0] = 0;
+ 	}
+ 	return gspca_dev->usb_buf[0];
+ }
+diff --git a/drivers/media/usb/gspca/ov534_9.c b/drivers/media/usb/gspca/ov534_9.c
+index 3d1364d2f83e6..4d4ae22e96406 100644
+--- a/drivers/media/usb/gspca/ov534_9.c
++++ b/drivers/media/usb/gspca/ov534_9.c
+@@ -1154,6 +1154,7 @@ static u8 reg_r(struct gspca_dev *gspca_dev, u16 reg)
+ 	if (ret < 0) {
+ 		pr_err("reg_r err %d\n", ret);
+ 		gspca_dev->usb_err = ret;
++		return 0;
+ 	}
+ 	return gspca_dev->usb_buf[0];
+ }
+diff --git a/drivers/media/usb/gspca/se401.c b/drivers/media/usb/gspca/se401.c
+index 477da0664b7da..40b87717bb5c5 100644
+--- a/drivers/media/usb/gspca/se401.c
++++ b/drivers/media/usb/gspca/se401.c
+@@ -111,6 +111,11 @@ static void se401_read_req(struct gspca_dev *gspca_dev, u16 req, int silent)
+ 			pr_err("read req failed req %#04x error %d\n",
+ 			       req, err);
+ 		gspca_dev->usb_err = err;
++		/*
++		 * Make sure the buffer is zeroed to avoid uninitialized
++		 * values.
++		 */
++		memset(gspca_dev->usb_buf, 0, READ_REQ_SIZE);
+ 	}
+ }
+ 
+diff --git a/drivers/media/usb/gspca/sn9c20x.c b/drivers/media/usb/gspca/sn9c20x.c
+index cfa2a04d9f3f6..a4ae029818586 100644
+--- a/drivers/media/usb/gspca/sn9c20x.c
++++ b/drivers/media/usb/gspca/sn9c20x.c
+@@ -918,6 +918,11 @@ static void reg_r(struct gspca_dev *gspca_dev, u16 reg, u16 length)
+ 	if (unlikely(result < 0 || result != length)) {
+ 		pr_err("Read register %02x failed %d\n", reg, result);
+ 		gspca_dev->usb_err = result;
++		/*
++		 * Make sure the buffer is zeroed to avoid uninitialized
++		 * values.
++		 */
++		memset(gspca_dev->usb_buf, 0, USB_BUF_SZ);
+ 	}
+ }
+ 
+diff --git a/drivers/media/usb/gspca/sonixb.c b/drivers/media/usb/gspca/sonixb.c
+index 5f3f2979540a6..22de65d840dd3 100644
+--- a/drivers/media/usb/gspca/sonixb.c
++++ b/drivers/media/usb/gspca/sonixb.c
+@@ -462,6 +462,11 @@ static void reg_r(struct gspca_dev *gspca_dev,
+ 		dev_err(gspca_dev->v4l2_dev.dev,
+ 			"Error reading register %02x: %d\n", value, res);
+ 		gspca_dev->usb_err = res;
++		/*
++		 * Make sure the result is zeroed to avoid uninitialized
++		 * values.
++		 */
++		gspca_dev->usb_buf[0] = 0;
+ 	}
+ }
+ 
+diff --git a/drivers/media/usb/gspca/sonixj.c b/drivers/media/usb/gspca/sonixj.c
+index df8d8482b7959..fa108ce000ad6 100644
+--- a/drivers/media/usb/gspca/sonixj.c
++++ b/drivers/media/usb/gspca/sonixj.c
+@@ -1171,6 +1171,11 @@ static void reg_r(struct gspca_dev *gspca_dev,
+ 	if (ret < 0) {
+ 		pr_err("reg_r err %d\n", ret);
+ 		gspca_dev->usb_err = ret;
++		/*
++		 * Make sure the buffer is zeroed to avoid uninitialized
++		 * values.
++		 */
++		memset(gspca_dev->usb_buf, 0, USB_BUF_SZ);
+ 	}
+ }
+ 
+diff --git a/drivers/media/usb/gspca/spca1528.c b/drivers/media/usb/gspca/spca1528.c
+index d25924e430f37..a20eb8580db2e 100644
+--- a/drivers/media/usb/gspca/spca1528.c
++++ b/drivers/media/usb/gspca/spca1528.c
+@@ -80,6 +80,11 @@ static void reg_r(struct gspca_dev *gspca_dev,
+ 	if (ret < 0) {
+ 		pr_err("reg_r err %d\n", ret);
+ 		gspca_dev->usb_err = ret;
++		/*
++		 * Make sure the buffer is zeroed to avoid uninitialized
++		 * values.
++		 */
++		memset(gspca_dev->usb_buf, 0, USB_BUF_SZ);
+ 	}
+ }
+ 
+diff --git a/drivers/media/usb/gspca/sq930x.c b/drivers/media/usb/gspca/sq930x.c
+index d7cbcf2b39479..3521f5ff428e9 100644
+--- a/drivers/media/usb/gspca/sq930x.c
++++ b/drivers/media/usb/gspca/sq930x.c
+@@ -434,6 +434,11 @@ static void reg_r(struct gspca_dev *gspca_dev,
+ 	if (ret < 0) {
+ 		pr_err("reg_r %04x failed %d\n", value, ret);
+ 		gspca_dev->usb_err = ret;
++		/*
++		 * Make sure the buffer is zeroed to avoid uninitialized
++		 * values.
++		 */
++		memset(gspca_dev->usb_buf, 0, USB_BUF_SZ);
+ 	}
+ }
+ 
+diff --git a/drivers/media/usb/gspca/sunplus.c b/drivers/media/usb/gspca/sunplus.c
+index 437a3367ab974..26eae69a2562f 100644
+--- a/drivers/media/usb/gspca/sunplus.c
++++ b/drivers/media/usb/gspca/sunplus.c
+@@ -264,6 +264,11 @@ static void reg_r(struct gspca_dev *gspca_dev,
+ 	if (ret < 0) {
+ 		pr_err("reg_r err %d\n", ret);
+ 		gspca_dev->usb_err = ret;
++		/*
++		 * Make sure the buffer is zeroed to avoid uninitialized
++		 * values.
++		 */
++		memset(gspca_dev->usb_buf, 0, USB_BUF_SZ);
+ 	}
+ }
+ 
+diff --git a/drivers/media/usb/gspca/vc032x.c b/drivers/media/usb/gspca/vc032x.c
+index 52d0716596343..6e32264d3825a 100644
+--- a/drivers/media/usb/gspca/vc032x.c
++++ b/drivers/media/usb/gspca/vc032x.c
+@@ -2915,6 +2915,11 @@ static void reg_r_i(struct gspca_dev *gspca_dev,
+ 	if (ret < 0) {
+ 		pr_err("reg_r err %d\n", ret);
+ 		gspca_dev->usb_err = ret;
++		/*
++		 * Make sure the buffer is zeroed to avoid uninitialized
++		 * values.
++		 */
++		memset(gspca_dev->usb_buf, 0, USB_BUF_SZ);
+ 	}
+ }
+ static void reg_r(struct gspca_dev *gspca_dev,
+diff --git a/drivers/media/usb/gspca/w996Xcf.c b/drivers/media/usb/gspca/w996Xcf.c
+index abfab3de18662..ef0a839f9b8ae 100644
+--- a/drivers/media/usb/gspca/w996Xcf.c
++++ b/drivers/media/usb/gspca/w996Xcf.c
+@@ -143,6 +143,11 @@ static int w9968cf_read_sb(struct sd *sd)
+ 	} else {
+ 		pr_err("Read SB reg [01] failed\n");
+ 		sd->gspca_dev.usb_err = ret;
++		/*
++		 * Make sure the buffer is zeroed to avoid uninitialized
++		 * values.
++		 */
++		memset(sd->gspca_dev.usb_buf, 0, 2);
+ 	}
+ 
+ 	udelay(W9968CF_I2C_BUS_DELAY);
 -- 
 2.20.1
 
