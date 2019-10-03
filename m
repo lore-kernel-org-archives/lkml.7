@@ -7,50 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00F3BC10F14
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:08:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EABFC10F14
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:08:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CD57121A4C
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:08:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2C5AB21783
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:08:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570118932;
-	bh=DLYsDOF+mnPpL6nk885EagTqgeXo0CbFTowjIouox3g=;
+	s=default; t=1570118934;
+	bh=VBJNM2vTUgCaLDng6wOKnNX5G5DEU3d89JMapHsEbvQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=hXUs/tPiZ0/r2IXBImAKhmy+duyikDgybANmGj0GZjxCUqLy27mJNy6hOaPCt421J
-	 fn91ait3QWyEmrSFDhdtrOSBfWCENBRuuOb+1XSfMM2jBrtn+l5ND7DR4h2iOPiGjn
-	 hvzFlEtpt/wS6kYgIB/MBNBB2ufOCyPCcT0V7s4I=
+	b=WS0NcEZla7ttYe7aFBNbhTBwbwfhBsN3g2OjG/nLrdiLnzhxmGa9yHASyOntlk7+M
+	 dKl0SEYyqIJLPfdxWH70n6N4n7BAOwxyoJ4gxztN39T+FNg5A0XMq7VfUA/8q8DFEB
+	 vgaUXJfJmVxAJCV3t6EVLNsP9Sin7R9kiojOC0oU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733283AbfJCQIw (ORCPT
+        id S1731393AbfJCQIx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 12:08:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57174 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 12:08:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57220 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732254AbfJCQIs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:08:48 -0400
+        id S1731439AbfJCQIu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:08:50 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D0120222BE;
-        Thu,  3 Oct 2019 16:08:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7CFFE20865;
+        Thu,  3 Oct 2019 16:08:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570118927;
-        bh=DLYsDOF+mnPpL6nk885EagTqgeXo0CbFTowjIouox3g=;
+        s=default; t=1570118930;
+        bh=VBJNM2vTUgCaLDng6wOKnNX5G5DEU3d89JMapHsEbvQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=nhve3niEAXCIP96AAYkAYZT3qCspTREykON4mA7GHp0bpLGU+zjtwRk2aZM7TMQMW
-         MrsqcN2OkzhV0VUAsSvmojz0U4eoeZK0NygvjzH/0+56HwqBB5v8AtMRhgPrZAqW8v
-         ni5cPG7geC1s2d8KeLdjzvaWKNzBaSTxRstmAWko=
+        b=UXsq78dWxITJ3sQVCeqXvoOu63a3NfM6WTCrWqT11T38grg53gfwF4IaO34Psqt5Y
+         +JNezUAA+Gw98dy2Hd3dfDLw/GkHdn/Ja9T3NRiuI8qRLr7GDi+fNX4CPsFgk4RxPc
+         A2HsB8+IwLQ2xV7aaRuszWW8qb1Lziz9ylvRZ5Jg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Luke Nowakowski-Krijger <lnowakow@eng.ucsd.edu>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        stable@vger.kernel.org, Fabio Estevam <festevam@gmail.com>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
         Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Sasha Levin <sashal@kernel.org>,
-        syzbot+aac8d0d7205f112045d2@syzkaller.appspotmail.com
-Subject: [PATCH 4.14 061/185] media: hdpvr: Add device num check and handling
-Date:   Thu,  3 Oct 2019 17:52:19 +0200
-Message-Id: <20191003154451.112529227@linuxfoundation.org>
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 062/185] media: i2c: ov5640: Check for devm_gpiod_get_optional() error
+Date:   Thu,  3 Oct 2019 17:52:20 +0200
+Message-Id: <20191003154451.282144792@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191003154437.541662648@linuxfoundation.org>
 References: <20191003154437.541662648@linuxfoundation.org>
@@ -63,57 +61,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Luke Nowakowski-Krijger <lnowakow@eng.ucsd.edu>
+From: Fabio Estevam <festevam@gmail.com>
 
-[ Upstream commit d4a6a9537bc32811486282206ecfb7c53754b74d ]
+[ Upstream commit 8791a102ce579346cea9d2f911afef1c1985213c ]
 
-Add hdpvr device num check and error handling
+The power down and reset GPIO are optional, but the return value
+from devm_gpiod_get_optional() needs to be checked and propagated
+in the case of error, so that probe deferral can work.
 
-We need to increment the device count atomically before we checkout a
-device to make sure that we do not reach the max count, otherwise we get
-out-of-bounds errors as reported by syzbot.
-
-Reported-and-tested-by: syzbot+aac8d0d7205f112045d2@syzkaller.appspotmail.com
-
-Signed-off-by: Luke Nowakowski-Krijger <lnowakow@eng.ucsd.edu>
-Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Signed-off-by: Fabio Estevam <festevam@gmail.com>
+Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
 Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/usb/hdpvr/hdpvr-core.c | 12 +++++++++++-
- 1 file changed, 11 insertions(+), 1 deletion(-)
+ drivers/media/i2c/ov5640.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/drivers/media/usb/hdpvr/hdpvr-core.c b/drivers/media/usb/hdpvr/hdpvr-core.c
-index 1e8cbaf368961..416092c47ef40 100644
---- a/drivers/media/usb/hdpvr/hdpvr-core.c
-+++ b/drivers/media/usb/hdpvr/hdpvr-core.c
-@@ -275,6 +275,7 @@ static int hdpvr_probe(struct usb_interface *interface,
- #endif
- 	size_t buffer_size;
- 	int i;
-+	int dev_num;
- 	int retval = -ENOMEM;
- 
- 	/* allocate memory for our device state and initialize it */
-@@ -379,8 +380,17 @@ static int hdpvr_probe(struct usb_interface *interface,
- 	}
- #endif
- 
-+	dev_num = atomic_inc_return(&dev_nr);
-+	if (dev_num >= HDPVR_MAX) {
-+		v4l2_err(&dev->v4l2_dev,
-+			 "max device number reached, device register failed\n");
-+		atomic_dec(&dev_nr);
-+		retval = -ENODEV;
-+		goto reg_fail;
-+	}
+diff --git a/drivers/media/i2c/ov5640.c b/drivers/media/i2c/ov5640.c
+index acf5c8a55bbd2..69f564b0837a7 100644
+--- a/drivers/media/i2c/ov5640.c
++++ b/drivers/media/i2c/ov5640.c
+@@ -2261,9 +2261,14 @@ static int ov5640_probe(struct i2c_client *client,
+ 	/* request optional power down pin */
+ 	sensor->pwdn_gpio = devm_gpiod_get_optional(dev, "powerdown",
+ 						    GPIOD_OUT_HIGH);
++	if (IS_ERR(sensor->pwdn_gpio))
++		return PTR_ERR(sensor->pwdn_gpio);
 +
- 	retval = hdpvr_register_videodev(dev, &interface->dev,
--				    video_nr[atomic_inc_return(&dev_nr)]);
-+				    video_nr[dev_num]);
- 	if (retval < 0) {
- 		v4l2_err(&dev->v4l2_dev, "registering videodev failed\n");
- 		goto reg_fail;
+ 	/* request optional reset pin */
+ 	sensor->reset_gpio = devm_gpiod_get_optional(dev, "reset",
+ 						     GPIOD_OUT_HIGH);
++	if (IS_ERR(sensor->reset_gpio))
++		return PTR_ERR(sensor->reset_gpio);
+ 
+ 	v4l2_i2c_subdev_init(&sensor->sd, client, &ov5640_subdev_ops);
+ 
 -- 
 2.20.1
 
