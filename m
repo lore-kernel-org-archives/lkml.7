@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8EF52C10F14
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:35:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 183F2C4CED1
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:35:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6296821783
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:35:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DA65720830
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:35:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570120535;
-	bh=yrvj6QEZn4hh+hdM5DHS2jBMNmNJqEh3Pa38HQ+S6AA=;
+	s=default; t=1570120539;
+	bh=GXTzmmEwG7pUp4GxtgmM28+KU55hpLHTYgwOKghYUXg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=s1uiCysbiLhXM5/3TWl/tLfCFO/yHnFcqfPygS7rWqpM+q9THvZNaQZMHaI6MCoKZ
-	 AHoyLYGieupG7VVQUw8Puh5m2FOzrGmyST4nI9mZn5hr1wDrVqvlSLh282L8rtYpyJ
-	 224BI2vrzUnEVCndiz2mcoaML0+yT6aAuZcCMFAU=
+	b=LrIZgv6551lhAMkpCRAWQZGZ/L39y3tTSHDH7wg8jZOULILMtbbtWo8m/6UQWRR+P
+	 t6EXDRWLgVscFR43rMVA8rrkenxpYZvOZoVCro6bkKQ+EY7IHiRlx8i5qLM951ODx0
+	 ZsCMeSHtwajgwVSdqQ77F9WOooCkyzQHWtLJV/9A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404276AbfJCQfe (ORCPT
+        id S2404277AbfJCQfi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 12:35:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44414 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 12:35:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44528 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404264AbfJCQfa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:35:30 -0400
+        id S2404264AbfJCQfg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:35:36 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 410F52070B;
-        Thu,  3 Oct 2019 16:35:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AB9032086A;
+        Thu,  3 Oct 2019 16:35:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570120529;
-        bh=yrvj6QEZn4hh+hdM5DHS2jBMNmNJqEh3Pa38HQ+S6AA=;
+        s=default; t=1570120535;
+        bh=GXTzmmEwG7pUp4GxtgmM28+KU55hpLHTYgwOKghYUXg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=rhbFgalGOSoQJgrzaOG+CgZv7fMV56/Em5k1XI9tIZpK2B0T6+vFNlkMHz5Q9OK3n
-         W2jcZLt2Haqm8GIR9fViuZN4N/mXb3/pYOHc+ayQWIu4JCXXm6nX/VaslQBS0Hnfsn
-         RRk0Vr0Ya/hDB9XRtW3yz59FPUIy+gdCobpaYg8Y=
+        b=dVh8NWfov0CymVIX4EC3pmSdL+o5N3jKJtD3Ay7eCJx4bf2AQeT+tFRDRISVqNejG
+         tlKIAN9pqllIwie9PIhR2AWsl9VkSFi0E8eQ1a+S2LqojTDPiIIsa9u6Rrl9T9uTue
+         +0xQESQWn5VImGXjeLztdOG+DPe/34gTiG47nw6k=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Robin Murphy <robin.murphy@arm.com>,
-        Liang Chen <cl@rock-chips.com>,
-        Shawn Lin <shawn.lin@rock-chips.com>,
-        Heiko Stuebner <heiko@sntech.de>
-Subject: [PATCH 5.2 257/313] arm64: dts: rockchip: limit clock rate of MMC controllers for RK3328
-Date:   Thu,  3 Oct 2019 17:53:55 +0200
-Message-Id: <20191003154558.340959381@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Thadeu Lima de Souza Cascardo <cascardo@canonical.com>,
+        Thomas Gleixner <tglx@linutronix.de>
+Subject: [PATCH 5.2 259/313] alarmtimer: Use EOPNOTSUPP instead of ENOTSUPP
+Date:   Thu,  3 Oct 2019 17:53:57 +0200
+Message-Id: <20191003154558.542692115@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191003154533.590915454@linuxfoundation.org>
 References: <20191003154533.590915454@linuxfoundation.org>
@@ -61,53 +60,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Shawn Lin <shawn.lin@rock-chips.com>
+From: Thadeu Lima de Souza Cascardo <cascardo@canonical.com>
 
-commit 03e61929c0d227ed3e1c322fc3804216ea298b7e upstream.
+commit f18ddc13af981ce3c7b7f26925f099e7c6929aba upstream.
 
-150MHz is a fundamental limitation of RK3328 Soc, w/o this limitation,
-eMMC, for instance, will run into 200MHz clock rate in HS200 mode, which
-makes the RK3328 boards not always boot properly. By adding it in
-rk3328.dtsi would also obviate the worry of missing it when adding new
-boards.
+ENOTSUPP is not supposed to be returned to userspace. This was found on an
+OpenPower machine, where the RTC does not support set_alarm.
 
-Fixes: 52e02d377a72 ("arm64: dts: rockchip: add core dtsi file for RK3328 SoCs")
+On that system, a clock_nanosleep(CLOCK_REALTIME_ALARM, ...) results in
+"524 Unknown error 524"
+
+Replace it with EOPNOTSUPP which results in the expected "95 Operation not
+supported" error.
+
+Fixes: 1c6b39ad3f01 (alarmtimers: Return -ENOTSUPP if no RTC device is present)
+Signed-off-by: Thadeu Lima de Souza Cascardo <cascardo@canonical.com>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
 Cc: stable@vger.kernel.org
-Cc: Robin Murphy <robin.murphy@arm.com>
-Cc: Liang Chen <cl@rock-chips.com>
-Signed-off-by: Shawn Lin <shawn.lin@rock-chips.com>
-Signed-off-by: Heiko Stuebner <heiko@sntech.de>
+Link: https://lkml.kernel.org/r/20190903171802.28314-1-cascardo@canonical.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/arm64/boot/dts/rockchip/rk3328.dtsi |    3 +++
- 1 file changed, 3 insertions(+)
+ kernel/time/alarmtimer.c |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
---- a/arch/arm64/boot/dts/rockchip/rk3328.dtsi
-+++ b/arch/arm64/boot/dts/rockchip/rk3328.dtsi
-@@ -800,6 +800,7 @@
- 			 <&cru SCLK_SDMMC_DRV>, <&cru SCLK_SDMMC_SAMPLE>;
- 		clock-names = "biu", "ciu", "ciu-drive", "ciu-sample";
- 		fifo-depth = <0x100>;
-+		max-frequency = <150000000>;
- 		status = "disabled";
- 	};
+--- a/kernel/time/alarmtimer.c
++++ b/kernel/time/alarmtimer.c
+@@ -673,7 +673,7 @@ static int alarm_timer_create(struct k_i
+ 	enum  alarmtimer_type type;
  
-@@ -811,6 +812,7 @@
- 			 <&cru SCLK_SDIO_DRV>, <&cru SCLK_SDIO_SAMPLE>;
- 		clock-names = "biu", "ciu", "ciu-drive", "ciu-sample";
- 		fifo-depth = <0x100>;
-+		max-frequency = <150000000>;
- 		status = "disabled";
- 	};
+ 	if (!alarmtimer_get_rtcdev())
+-		return -ENOTSUPP;
++		return -EOPNOTSUPP;
  
-@@ -822,6 +824,7 @@
- 			 <&cru SCLK_EMMC_DRV>, <&cru SCLK_EMMC_SAMPLE>;
- 		clock-names = "biu", "ciu", "ciu-drive", "ciu-sample";
- 		fifo-depth = <0x100>;
-+		max-frequency = <150000000>;
- 		status = "disabled";
- 	};
+ 	if (!capable(CAP_WAKE_ALARM))
+ 		return -EPERM;
+@@ -791,7 +791,7 @@ static int alarm_timer_nsleep(const cloc
+ 	int ret = 0;
  
+ 	if (!alarmtimer_get_rtcdev())
+-		return -ENOTSUPP;
++		return -EOPNOTSUPP;
+ 
+ 	if (flags & ~TIMER_ABSTIME)
+ 		return -EINVAL;
 
 
