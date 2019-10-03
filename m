@@ -4,54 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 555D0C10F14
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:31:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CDDAC10F14
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:31:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2A91220830
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:31:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7560B20830
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:31:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570123870;
-	bh=ZD0XjW10YGaxOGClqFSscyyezkVzBpPiqFTkIEhmeN4=;
+	s=default; t=1570123872;
+	bh=cn6NzZ9VbJI2M0TVHdR5+d1pVaa64iCqsLuPxdNrJMI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=GE6DXBPCkl+sAGOuJiZxoSTUKqg7tJ11AbENBn5ddgLmfVi0T/JvB0hpoERN+Qeij
-	 RVbDidBKyEGj5P3MZk3Ewm7+Be4YJZ1lE0nyA6iWp4KJGbvcp3nR04CrTHSnO5O9OC
-	 kSNx5M+w5NflGTLZBZRYZOAhsI7oztV0XSLnQqNo=
+	b=LdTs1mAoLw4P8QfuKFQgexggC/3p2hLIFMt8ubR4ITCgx8FK67lJcMj6HsnUkjouQ
+	 vUdcP5IyoveVWTqSBlkkmjylYflQtws9b2JgHnHeMt62j4K5+B6x+BCzm8CUzxVf8s
+	 mMtRq5iSpy+Mc7H5ZOhAouNKECLVV3dglvLuBtmk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731091AbfJCRbJ (ORCPT
+        id S1732775AbfJCQLr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 13:31:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60068 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 12:11:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33554 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387659AbfJCQKf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:10:35 -0400
+        id S2387877AbfJCQLm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:11:42 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AA9BF222C8;
-        Thu,  3 Oct 2019 16:10:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 14531207FF;
+        Thu,  3 Oct 2019 16:11:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570119034;
-        bh=ZD0XjW10YGaxOGClqFSscyyezkVzBpPiqFTkIEhmeN4=;
+        s=default; t=1570119101;
+        bh=cn6NzZ9VbJI2M0TVHdR5+d1pVaa64iCqsLuPxdNrJMI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Ptk+HZBAw8ftR+i+LjntPX8lIDVvA1u2ZSEfhR9CUNiqQw7xwdYCO8WLDHtpAHE2/
-         dD/bToK2NuL/OY8dPY02S6M6SUfAbi0OSSNVXo4hfG+4gTKVT/JcNuTyFWgDPoljMh
-         ilCVJv83zPljIO3qEleJMmBxJbgWBTlKpdOtqCog=
+        b=2Qix8PXnhhaOTDkiBEVxvXVaSZ7Wlbv9JQ2UgYVTYMHYbPTUVzotM12TO/IECDZq1
+         V/Bw4WhZW3VcXPul2C8MwG74EB4GnickfYVQ6n/rmr9F4IStSqC2sh7JuevfIvgX/r
+         wOyV7KaMaeqZqJNnf/dWAMBR+soxpNr/Bl/kVlOE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Yazen Ghannam <yazen.ghannam@amd.com>,
-        Borislav Petkov <bp@suse.de>,
-        "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
-        James Morse <james.morse@arm.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Tony Luck <tony.luck@intel.com>,
+        stable@vger.kernel.org, Darius Rad <alpha@area49.net>,
+        Sean Young <sean@mess.org>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 101/185] EDAC/amd64: Recognize DRAM device type ECC capability
-Date:   Thu,  3 Oct 2019 17:52:59 +0200
-Message-Id: <20191003154501.450070671@linuxfoundation.org>
+Subject: [PATCH 4.14 088/185] media: rc: imon: Allow iMON RC protocol for ffdc 7e device
+Date:   Thu,  3 Oct 2019 17:52:46 +0200
+Message-Id: <20191003154458.180129634@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191003154437.541662648@linuxfoundation.org>
 References: <20191003154437.541662648@linuxfoundation.org>
@@ -64,70 +61,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yazen Ghannam <yazen.ghannam@amd.com>
+From: Darius Rad <alpha@area49.net>
 
-[ Upstream commit f8be8e5680225ac9caf07d4545f8529b7395327f ]
+[ Upstream commit b20a6e298bcb8cb8ae18de26baaf462a6418515b ]
 
-AMD Family 17h systems support x4 and x16 DRAM devices. However, the
-device type is not checked when setting mci.edac_ctl_cap.
+Allow selecting the IR protocol, MCE or iMON, for a device that
+identifies as follows (with config id 0x7e):
 
-Set the appropriate capability flag based on the device type.
+15c2:ffdc SoundGraph Inc. iMON PAD Remote Controller
 
-Default to x8 DRAM device when neither the x4 or x16 bits are set.
+As the driver is structured to default to iMON when both RC
+protocols are supported, existing users of this device (using MCE
+protocol) will need to manually switch to MCE (RC-6) protocol from
+userspace (with ir-keytable, sysfs).
 
- [ bp: reverse cpk_en check to save an indentation level. ]
-
-Fixes: 2d09d8f301f5 ("EDAC, amd64: Determine EDAC MC capabilities on Fam17h")
-Signed-off-by: Yazen Ghannam <yazen.ghannam@amd.com>
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Cc: "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>
-Cc: James Morse <james.morse@arm.com>
-Cc: Mauro Carvalho Chehab <mchehab@kernel.org>
-Cc: Tony Luck <tony.luck@intel.com>
-Link: https://lkml.kernel.org/r/20190821235938.118710-3-Yazen.Ghannam@amd.com
+Signed-off-by: Darius Rad <alpha@area49.net>
+Signed-off-by: Sean Young <sean@mess.org>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/edac/amd64_edac.c | 14 ++++++++++++--
- 1 file changed, 12 insertions(+), 2 deletions(-)
+ drivers/media/rc/imon.c | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/edac/amd64_edac.c b/drivers/edac/amd64_edac.c
-index 667f5ba0403c0..35b847b51bfa9 100644
---- a/drivers/edac/amd64_edac.c
-+++ b/drivers/edac/amd64_edac.c
-@@ -3101,12 +3101,15 @@ static bool ecc_enabled(struct pci_dev *F3, u16 nid)
- static inline void
- f17h_determine_edac_ctl_cap(struct mem_ctl_info *mci, struct amd64_pvt *pvt)
- {
--	u8 i, ecc_en = 1, cpk_en = 1;
-+	u8 i, ecc_en = 1, cpk_en = 1, dev_x4 = 1, dev_x16 = 1;
- 
- 	for (i = 0; i < NUM_UMCS; i++) {
- 		if (pvt->umc[i].sdp_ctrl & UMC_SDP_INIT) {
- 			ecc_en &= !!(pvt->umc[i].umc_cap_hi & UMC_ECC_ENABLED);
- 			cpk_en &= !!(pvt->umc[i].umc_cap_hi & UMC_ECC_CHIPKILL_CAP);
-+
-+			dev_x4  &= !!(pvt->umc[i].dimm_cfg & BIT(6));
-+			dev_x16 &= !!(pvt->umc[i].dimm_cfg & BIT(7));
- 		}
- 	}
- 
-@@ -3114,8 +3117,15 @@ f17h_determine_edac_ctl_cap(struct mem_ctl_info *mci, struct amd64_pvt *pvt)
- 	if (ecc_en) {
- 		mci->edac_ctl_cap |= EDAC_FLAG_SECDED;
- 
--		if (cpk_en)
-+		if (!cpk_en)
-+			return;
-+
-+		if (dev_x4)
- 			mci->edac_ctl_cap |= EDAC_FLAG_S4ECD4ED;
-+		else if (dev_x16)
-+			mci->edac_ctl_cap |= EDAC_FLAG_S16ECD16ED;
-+		else
-+			mci->edac_ctl_cap |= EDAC_FLAG_S8ECD8ED;
- 	}
- }
- 
+diff --git a/drivers/media/rc/imon.c b/drivers/media/rc/imon.c
+index 0c46155a8e9da..a7547c88e4c36 100644
+--- a/drivers/media/rc/imon.c
++++ b/drivers/media/rc/imon.c
+@@ -1963,12 +1963,17 @@ static void imon_get_ffdc_type(struct imon_context *ictx)
+ 		break;
+ 	/* iMON VFD, MCE IR */
+ 	case 0x46:
+-	case 0x7e:
+ 	case 0x9e:
+ 		dev_info(ictx->dev, "0xffdc iMON VFD, MCE IR");
+ 		detected_display_type = IMON_DISPLAY_TYPE_VFD;
+ 		allowed_protos = RC_PROTO_BIT_RC6_MCE;
+ 		break;
++	/* iMON VFD, iMON or MCE IR */
++	case 0x7e:
++		dev_info(ictx->dev, "0xffdc iMON VFD, iMON or MCE IR");
++		detected_display_type = IMON_DISPLAY_TYPE_VFD;
++		allowed_protos |= RC_PROTO_BIT_RC6_MCE;
++		break;
+ 	/* iMON LCD, MCE IR */
+ 	case 0x9f:
+ 		dev_info(ictx->dev, "0xffdc iMON LCD, MCE IR");
 -- 
 2.20.1
 
