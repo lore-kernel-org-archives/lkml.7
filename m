@@ -2,113 +2,134 @@ Return-Path: <SRS0=6dNS=X4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 03753C4360C
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 00:59:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13A26C47404
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 01:17:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C125A222C2
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 00:59:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DE5AD222C3
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 01:17:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Sqr/+PBJ"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IVAGDgYf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726811AbfJCA7M (ORCPT
+        id S1726808AbfJCBRq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Oct 2019 20:59:12 -0400
-Received: from mail-qk1-f195.google.com ([209.85.222.195]:42079 "EHLO
-        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725799AbfJCA7M (ORCPT
+        Wed, 2 Oct 2019 21:17:46 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:46065 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725928AbfJCBRp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Oct 2019 20:59:12 -0400
-Received: by mail-qk1-f195.google.com with SMTP id f16so641128qkl.9
-        for <linux-kernel@vger.kernel.org>; Wed, 02 Oct 2019 17:59:12 -0700 (PDT)
+        Wed, 2 Oct 2019 21:17:45 -0400
+Received: by mail-pg1-f194.google.com with SMTP id q7so657625pgi.12;
+        Wed, 02 Oct 2019 18:17:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=55RbO+WJOZQM19PtQHPKSMAcog+78GCdZAbUU16u3QY=;
-        b=Sqr/+PBJ5fEYkxrO1ypoC2tYCBLiV47GV9vCT/nTGcrpbllCs/FDKV880+zZt9x0Gj
-         5iTgP7DGuJJrNOGCHiFtLtKi5jn2nY9rNJfhEWYFzdN0OaP8kecSwpHFuU2IVDaPoWxq
-         bMerE5fK9wIhPN40VUcqlDb6C3sYp3feqhxSY=
+        d=gmail.com; s=20161025;
+        h=sender:subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=tSZmlKH2BrNCoI7JYxGwdsP9mWHj0/GO7SJu9GifiBw=;
+        b=IVAGDgYfR67IlFKtxR5jzwaTBrgZcj4TrbfjF3+hY6QxVbuXrnwaNCyTI8f7n3MX+J
+         FAKjW2MNbaCVXm+ItAGpRLoNTnHqsqyEBkr+RIcOBCr/oVlejxRYgj6SaqV5euxDXBey
+         6IbBvanUtoL/IsMO/86JS3FnRM0JkYY6U4wD886S0wYvWsI+lVDrrFR2FJJeVMTtyT8P
+         9uHrYzeZELX2tU3f0ZoGYl6RixvFAlUCXqhcdb+oM4EJfUm0IZexQL882APGqWMuZRk/
+         NzwGPhIKGeVQEtDB2D7MrGanh+442dOLHmMNKLqS/iEPCMgPzpmILB7INbBOzhEK6vJi
+         0K8w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=55RbO+WJOZQM19PtQHPKSMAcog+78GCdZAbUU16u3QY=;
-        b=fyXnqJaqKYca2IFRajQfj87XB6Xoea/FmiBzcpBT3pcnyrvTMiKxY+VgQMC5333NsO
-         /x/ebN3tI0SCima7qdLfnhT6iCC6I4/tsE8HnF1I9eqG8Q5BKqVHJ295mFVWuL6J3Dcr
-         /FawGPrzgNnhbxYSXvXeLoldoP9JXjETM9Gr6RIaAxSWc9IRMcb22AXmqiHVegXxHPdQ
-         +fmBGwG364VD8mgV64P2m6fpDfc1vZEhoQWCnl3P67oSmi0CA/p3mFPgrTcfW/Lrhhgs
-         9O1wQLnjT5AbJ6zlJOeArbJMjsDNXXcicSSx+nMCMD/yuF8u1K8Yu57kwnxvXM8/h8hk
-         UOTA==
-X-Gm-Message-State: APjAAAXeniT/vP7SejLDimfT6Ty0noPXooDUj5ipHHpp8/kPKxKdWwo0
-        oau0wMlKwAeyQfvJHGXiq9cIX6b9c34=
-X-Google-Smtp-Source: APXvYqygE4Mp/XeLNGjBukaqgPriWmpfVuFrIA7LNNqCCMWC1g959s+xH9QhUc/Qd5GkoGfHQ4B8yg==
-X-Received: by 2002:a37:aa02:: with SMTP id t2mr1844244qke.154.1570064350786;
-        Wed, 02 Oct 2019 17:59:10 -0700 (PDT)
-Received: from mail-qt1-f178.google.com (mail-qt1-f178.google.com. [209.85.160.178])
-        by smtp.gmail.com with ESMTPSA id t17sm1075932qtt.57.2019.10.02.17.59.08
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 02 Oct 2019 17:59:09 -0700 (PDT)
-Received: by mail-qt1-f178.google.com with SMTP id u22so1202880qtq.13
-        for <linux-kernel@vger.kernel.org>; Wed, 02 Oct 2019 17:59:08 -0700 (PDT)
-X-Received: by 2002:ac8:6047:: with SMTP id k7mr7395287qtm.238.1570064347909;
- Wed, 02 Oct 2019 17:59:07 -0700 (PDT)
+        h=x-gm-message-state:sender:subject:to:cc:references:from:message-id
+         :date:user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=tSZmlKH2BrNCoI7JYxGwdsP9mWHj0/GO7SJu9GifiBw=;
+        b=aQBOm8Co/ts91BGv1pqdcuW/AKKN3x8E/Fsa1fPmHOj3jmPgBt6j197d4Xoh13V/y5
+         CIymbkttxdziN/C2nKujaLVn3Nma8GLvUlnGzPKOoRa8BJxdrWQyOqbFemFvMF3seoIZ
+         Sv7xZ0gz9EQMf7U4FoNI16bNZyvkFuuJddYYPiHIAzNwWwIkBy7kdlmJxnh19ry/q1cb
+         rg8ecMphaclVCgZfQQTdAZHxj3eXq5T3xTxKxHXHPtUIpxMr+uOsF/YxtuAhddhhlYKF
+         c5TAtm0UV2CExWm54SNwcXAAVDGydfmr5o4L6ikgfeio1WXTg7m75HxFI2PGVKMFaaO6
+         BNpA==
+X-Gm-Message-State: APjAAAWjtbRndKDSvfhY+Cy0gAtD02drN+JX4Ye2aTmpx0/Q9bLrqcin
+        iIGsCMWAD6RjKbRbFa/W7BqrT020
+X-Google-Smtp-Source: APXvYqwV9iAFUu0o3YMQ4v6zYNZassQaGttK3V+fHWMVMXXgoJ4dBGVmBgmZFv+B4H96JTtHtM/TXw==
+X-Received: by 2002:a17:90a:1502:: with SMTP id l2mr7565357pja.140.1570065464619;
+        Wed, 02 Oct 2019 18:17:44 -0700 (PDT)
+Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id d20sm709584pfq.88.2019.10.02.18.17.41
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 02 Oct 2019 18:17:42 -0700 (PDT)
+Subject: Re: [PATCH v2] hwmon: (applesmc) fix UB and udelay overflow
+To:     Nick Desaulniers <ndesaulniers@google.com>
+Cc:     clang-built-linux <clang-built-linux@googlegroups.com>,
+        jdelvare@suse.com,
+        =?UTF-8?Q?Tomasz_Pawe=c5=82_Gajc?= <tpgxyz@gmail.com>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Henrik Rydberg <rydberg@bitmath.org>,
+        linux-hwmon@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
+References: <CAKwvOd=GVdHhsdHOMpuhEKkWMssW37keqX5c59+6fiEgLs+Q1g@mail.gmail.com>
+ <20190924174728.201464-1-ndesaulniers@google.com>
+ <a2e08779-e0ba-2711-9e0d-444d812c0182@roeck-us.net>
+ <CAKwvOdnG6tTHHx5aL8oA3ta_mW24aZ37JX+=HQ9YphearL4DOg@mail.gmail.com>
+From:   Guenter Roeck <linux@roeck-us.net>
+Message-ID: <bde955d5-bfd4-3e0c-ac45-b999ad1cc96b@roeck-us.net>
+Date:   Wed, 2 Oct 2019 18:17:40 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-References: <1534402113-14337-1-git-send-email-wgong@codeaurora.org>
- <20181114225910.GA220599@google.com> <CA+ASDXMh7vdfkA5jtJqWEU-g-4Ta5Xvy046zujyASZcESCGhAQ@mail.gmail.com>
- <87woe5aehr.fsf@kamboji.qca.qualcomm.com> <40854e84bd4b4a9699b60530b1c373ad@aptaiexm02f.ap.qualcomm.com>
- <87pnjvctjh.fsf@codeaurora.org>
-In-Reply-To: <87pnjvctjh.fsf@codeaurora.org>
-From:   Brian Norris <briannorris@chromium.org>
-Date:   Wed, 2 Oct 2019 17:58:56 -0700
-X-Gmail-Original-Message-ID: <CA+ASDXNXZrBS8dZW4jmXkg7c8-sK=pcYtQtj5KPxCDCEc8XqYA@mail.gmail.com>
-Message-ID: <CA+ASDXNXZrBS8dZW4jmXkg7c8-sK=pcYtQtj5KPxCDCEc8XqYA@mail.gmail.com>
-Subject: Re: [PATCH v3] ath10k: support NET_DETECT WoWLAN feature
-To:     Kalle Valo <kvalo@codeaurora.org>
-Cc:     Wen Gong <wgong@qti.qualcomm.com>,
-        linux-wireless <linux-wireless@vger.kernel.org>,
-        Linux Kernel <linux-kernel@vger.kernel.org>,
-        "ath10k@lists.infradead.org" <ath10k@lists.infradead.org>,
-        Wen Gong <wgong@codeaurora.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <CAKwvOdnG6tTHHx5aL8oA3ta_mW24aZ37JX+=HQ9YphearL4DOg@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Kalle,
+On 10/2/19 2:43 PM, Nick Desaulniers wrote:
+> On Mon, Sep 30, 2019 at 5:01 PM Guenter Roeck <linux@roeck-us.net> wrote:
+>>
+>> Again, I fail to understand why waiting for a multiple of 20 seconds
+>> under any circumstances would make any sense. Maybe the idea was
+>> to divide us by 1000 before entering the second loop ?
+> 
+> Yes, that's very clearly a mistake of mine.
+> 
+>>
+>> Looking into the code, there is no need to use udelay() in the first
+>> place. It should be possible to replace the longer waits with
+>> usleep_range(). Something like
+>>
+>>                  if (us < some_low_value)        // eg. 0x80
+>>                          delay(us)
+> 
+> Did you mean udelay here?
+> 
+Yes
 
-Sorry, I failed to follow up on some of this.
+>>                  else
+>>                          usleep_range(us, us * 2);
+>>
+>> should do, and at the same time prevent the system from turning
+>> into a space heater.
+> 
+> The issue would persist with the above if udelay remains in a loop
+> that gets fully unrolled.  That's while I "peel" the loop into two
+> loops over different ranges with different bodies.
+> 
 
-On Fri, Sep 20, 2019 at 12:32 AM Kalle Valo <kvalo@codeaurora.org> wrote:
-> But I mixed up the flags. I meant that can we enable
-> NL80211_FEATURE_SCAN_RANDOM_MAC_ADDR in ath10k? Does the firmware
-> releases which have WMI_SERVICE_NLO support
-> NL80211_FEATURE_SCAN_RANDOM_MAC_ADDR as well?
+Sorry, you lost me. If calls to udelay() with even small delay
+parameters for some compiler-related reason no longer work, trying
+to fix the problem with some odd driver code is most definitely not
+a real solution.
 
-I'm looking at firmware which supports WMI_SERVICE_NLO and
-WMI_SERVICE_SPOOF_MAC_SUPPORT. This leads to support for
-NL80211_FEATURE_SCAN_RANDOM_MAC_ADDR and
-NL80211_WOWLAN_TRIG_NET_DETECT (good!), but it also leads to
-NL80211_CMD_START_SCHED_SCAN support and *not*
-NL80211_FEATURE_SCHED_SCAN_RANDOM_MAC_ADDR, which is inconsistent
-(bad!).
+> I think I should iterate in the first loop until the number of `us` is
+> greater than 1000 (us per ms)(which is less of a magical constant and
+> doesn't expose internal implementation details of udelay), then start
+> the second loop (dividing us by 1000).  What do you think, Guenter?
+> 
 
-(I think a few times in here you noted the FEATURE_SCAN variant, when
-you probably meant FEATURE_SCHED_SCAN.)
+We should have no second loop, period.
 
-If I understand Wen correctly, he is working on dropping
-NL80211_CMD_START_SCHED_SCAN, which would fix the inconsistency.
+Again, a hot delay loop of 128 ms (actually, more like 245 ms,
+adding all delays together) is clearly wrong. Those udelay() calls
+in the driver should really be replaced with usleep_range().
 
-But I also noticed that ath10k does not support
-NL80211_FEATURE_ND_RANDOM_MAC_ADDR, which is again an inconsistency:
-we're going to lose randomization when in WoWLAN + NET_DETECT mode. I
-don't suspect we (Chrome OS) would ever enable this feature in that
-state.
-
-Regards,
-Brian
+Guenter
