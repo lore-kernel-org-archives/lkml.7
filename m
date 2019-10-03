@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8242BC10F14
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:17:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20E8EC4CED1
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:17:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5662420830
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:17:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DDDFA20865
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:17:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570123074;
-	bh=zgSTrqbkUadHQjGjspxkvJJQ1y0zPVUECS01n+/9POc=;
+	s=default; t=1570123078;
+	bh=OgZwk1+fomveGMksFmW77iGKMMg1GbLiIdE44M4+TrQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=dsOF+oqXqHSyPVX/kto/Ae0AlF+ZYO0Gi+wUtQIemOtGLBkrdDGoYBIiIACLC14An
-	 6E9/DCcy6G/33ra9u6fiVmlcrlupVluwkpmDuwdVk9qa4YJrR5FYwdlnJoXjNV5dN4
-	 N+MB3TmrtW+IlDux87630XXjl6uYUmVl2+wlfD5A=
+	b=YbzEaiD167OzGr+ZJOGtc413sUcvp3Fsn5sFyL9Att5+jPMRIKd0wmAQWn1u/laIg
+	 VbBHidh7r6Z7s5XzoIO08qrQ4eP5DX/tl5N5mX+12e0qt3R9lKryBh6IhRVCNsZAsd
+	 JVV1Cob7CZ123rEPsnL7zkakGraEzN1bMPjJHgJo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390197AbfJCQVs (ORCPT
+        id S2389571AbfJCRR5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 12:21:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50106 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 13:17:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50020 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387709AbfJCQVo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:21:44 -0400
+        id S2389337AbfJCQVl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:21:41 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2A758222C4;
-        Thu,  3 Oct 2019 16:21:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7B2F321A4C;
+        Thu,  3 Oct 2019 16:21:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570119703;
-        bh=zgSTrqbkUadHQjGjspxkvJJQ1y0zPVUECS01n+/9POc=;
+        s=default; t=1570119701;
+        bh=OgZwk1+fomveGMksFmW77iGKMMg1GbLiIdE44M4+TrQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=R5qAR8SlCeKqI1eVCM/dn2ZrYvEEvTI9drliySJm5doukb0IGMiWasfQKnjb2skFS
-         OAxUu1djbUH6v/8nTNzOmYq/nwkXTziW/2ldtkB/nNjO+7iDShZ7OHNMOXJKYhutw0
-         bEzg4BQP3lDrTXY/6xTdY4hkq+3/ggu018o9iei4=
+        b=kKUKlmaTLQxkzw5n3NRg821krwgGw2wIGYftYUXc7CZ/vXeUwNW8IEegze30dEYQE
+         3XZKnHJJtg6lGnh1olXqEXFXEy8kIHkLX/wlNis3x00yOxT6VY52fPaiEMF0DpQS14
+         3o8BZsoM7s6qs5GjZzHYI8f2fk1hluSs73xn/gdA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Vasily Averin <vvs@virtuozzo.com>,
-        Miklos Szeredi <mszeredi@redhat.com>
-Subject: [PATCH 4.19 163/211] fuse: fix missing unlock_page in fuse_writepage()
-Date:   Thu,  3 Oct 2019 17:53:49 +0200
-Message-Id: <20191003154525.043527749@linuxfoundation.org>
+        stable@vger.kernel.org, Danit Goldberg <danitg@mellanox.com>,
+        Jason Gunthorpe <jgg@mellanox.com>
+Subject: [PATCH 4.19 154/211] IB/mlx5: Free mpi in mp_slave mode
+Date:   Thu,  3 Oct 2019 17:53:40 +0200
+Message-Id: <20191003154523.179692859@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191003154447.010950442@linuxfoundation.org>
 References: <20191003154447.010950442@linuxfoundation.org>
@@ -59,31 +59,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vasily Averin <vvs@virtuozzo.com>
+From: Danit Goldberg <danitg@mellanox.com>
 
-commit d5880c7a8620290a6c90ced7a0e8bd0ad9419601 upstream.
+commit 5d44adebbb7e785939df3db36ac360f5e8b73e44 upstream.
 
-unlock_page() was missing in case of an already in-flight write against the
-same page.
+ib_add_slave_port() allocates a multiport struct but never frees it.
+Don't leak memory, free the allocated mpi struct during driver unload.
 
-Signed-off-by: Vasily Averin <vvs@virtuozzo.com>
-Fixes: ff17be086477 ("fuse: writepage: skip already in flight")
-Cc: <stable@vger.kernel.org> # v3.13
-Signed-off-by: Miklos Szeredi <mszeredi@redhat.com>
+Cc: <stable@vger.kernel.org>
+Fixes: 32f69e4be269 ("{net, IB}/mlx5: Manage port association for multiport RoCE")
+Link: https://lore.kernel.org/r/20190916064818.19823-3-leon@kernel.org
+Signed-off-by: Danit Goldberg <danitg@mellanox.com>
+Reviewed-by: Jason Gunthorpe <jgg@mellanox.com>
+Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/fuse/file.c |    1 +
+ drivers/infiniband/hw/mlx5/main.c |    1 +
  1 file changed, 1 insertion(+)
 
---- a/fs/fuse/file.c
-+++ b/fs/fuse/file.c
-@@ -1700,6 +1700,7 @@ static int fuse_writepage(struct page *p
- 		WARN_ON(wbc->sync_mode == WB_SYNC_ALL);
- 
- 		redirty_page_for_writepage(wbc, page);
-+		unlock_page(page);
- 		return 0;
+--- a/drivers/infiniband/hw/mlx5/main.c
++++ b/drivers/infiniband/hw/mlx5/main.c
+@@ -6370,6 +6370,7 @@ static void mlx5_ib_remove(struct mlx5_c
+ 			mlx5_ib_unbind_slave_port(mpi->ibdev, mpi);
+ 		list_del(&mpi->list);
+ 		mutex_unlock(&mlx5_ib_multiport_mutex);
++		kfree(mpi);
+ 		return;
  	}
  
 
