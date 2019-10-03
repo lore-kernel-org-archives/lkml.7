@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AB0A2C32792
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:04:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F23AC10F14
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:04:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6EFC6207FF
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:04:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 39CE021A4C
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:04:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570118643;
-	bh=QJorBsuu7/I+O7IoyuxkA/c3Do8nJw9lZYvwg/ZsupQ=;
+	s=default; t=1570118646;
+	bh=JCa/BC/0Z0jvGevwM8437KXjIIr8XTy5Qbm6AGkSZS8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=c7BpdJqZ73Abx+NK8kF6goo1j+Uj6HIG8TpBrJyumXmxuSaBAEzd00dqsYnSlcyv7
-	 ysrmLioBaDl07H7OCqejgJpCZd3l9h85/ib83/OBc0asQs/JR9hep0W/zizkIhdhiK
-	 GGDHuPa1jYuD30mhgu86vdEwITC2osRQu81Bh+nE=
+	b=HrIIgt04lfX6m5B2WU/snXPPDw6kEjgP9eAGdU6eamrAMCkxACejvJ3xSfzl425uT
+	 1xwc+4+8bF6ITOBeodVhHRZyu9/RraFn7QKN5C6CJ2sviE8hw6th9/e3bfOjFddO/Q
+	 Ong6JbJ53igCNJRgxDR8aqq1dnzPH43dTGDMrnD8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732325AbfJCQEC (ORCPT
+        id S1732337AbfJCQEE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 12:04:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49430 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 12:04:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49570 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732291AbfJCQDv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:03:51 -0400
+        id S1730173AbfJCQD5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:03:57 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9D7A321848;
-        Thu,  3 Oct 2019 16:03:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C992D215EA;
+        Thu,  3 Oct 2019 16:03:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570118631;
-        bh=QJorBsuu7/I+O7IoyuxkA/c3Do8nJw9lZYvwg/ZsupQ=;
+        s=default; t=1570118636;
+        bh=JCa/BC/0Z0jvGevwM8437KXjIIr8XTy5Qbm6AGkSZS8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ypRoFdYtiMy2+78+p75kGejX1tXZBJiuaDasgufg3NfZy59KB2fXwcyUPdR4Q+2iG
-         SPnksz03nKz7fulZfBC48KgoG7j/oxWB0jJWx9sdtJ92/7xUrxT5VQl4k+8zUmycb8
-         e2aOdmOH/pw3oxw91TfrrfTOIM1xqaXf2YZZ0ftY=
+        b=bg/EGgPL2+XxAf98zWPMN5XQlAy2/iE/F4eDJjhvzBh1Gafe2O/r6zIDxG776B6Wn
+         hchqeEXqIf41M+P1+CP4LeEgizwQy8UFLZesfxQ9CX1Jp6yuG92AdqIlVsFN8NsRbO
+         0VoE4uigFlni+9pnzOr0K7CdnVm/ZM8FrhftdaWU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Wenwen Wang <wenwen@cs.uga.edu>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        stable@vger.kernel.org, NeilBrown <neilb@suse.de>,
+        Yufen Yu <yuyufen@huawei.com>,
+        Song Liu <songliubraving@fb.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 082/129] ACPI / PCI: fix acpi_pci_irq_enable() memory leak
-Date:   Thu,  3 Oct 2019 17:53:25 +0200
-Message-Id: <20191003154356.184531301@linuxfoundation.org>
+Subject: [PATCH 4.9 084/129] md/raid1: fail run raid1 array when active disk less than one
+Date:   Thu,  3 Oct 2019 17:53:27 +0200
+Message-Id: <20191003154356.849655930@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191003154318.081116689@linuxfoundation.org>
 References: <20191003154318.081116689@linuxfoundation.org>
@@ -60,39 +61,76 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wenwen Wang <wenwen@cs.uga.edu>
+From: Yufen Yu <yuyufen@huawei.com>
 
-[ Upstream commit 29b49958cf73b439b17fa29e9a25210809a6c01c ]
+[ Upstream commit 07f1a6850c5d5a65c917c3165692b5179ac4cb6b ]
 
-In acpi_pci_irq_enable(), 'entry' is allocated by kzalloc() in
-acpi_pci_irq_check_entry() (invoked from acpi_pci_irq_lookup()). However,
-it is not deallocated if acpi_pci_irq_valid() returns false, leading to a
-memory leak. To fix this issue, free 'entry' before returning 0.
+When run test case:
+  mdadm -CR /dev/md1 -l 1 -n 4 /dev/sd[a-d] --assume-clean --bitmap=internal
+  mdadm -S /dev/md1
+  mdadm -A /dev/md1 /dev/sd[b-c] --run --force
 
-Fixes: e237a5518425 ("x86/ACPI/PCI: Recognize that Interrupt Line 255 means "not connected"")
-Signed-off-by: Wenwen Wang <wenwen@cs.uga.edu>
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+  mdadm --zero /dev/sda
+  mdadm /dev/md1 -a /dev/sda
+
+  echo offline > /sys/block/sdc/device/state
+  echo offline > /sys/block/sdb/device/state
+  sleep 5
+  mdadm -S /dev/md1
+
+  echo running > /sys/block/sdb/device/state
+  echo running > /sys/block/sdc/device/state
+  mdadm -A /dev/md1 /dev/sd[a-c] --run --force
+
+mdadm run fail with kernel message as follow:
+[  172.986064] md: kicking non-fresh sdb from array!
+[  173.004210] md: kicking non-fresh sdc from array!
+[  173.022383] md/raid1:md1: active with 0 out of 4 mirrors
+[  173.022406] md1: failed to create bitmap (-5)
+
+In fact, when active disk in raid1 array less than one, we
+need to return fail in raid1_run().
+
+Reviewed-by: NeilBrown <neilb@suse.de>
+Signed-off-by: Yufen Yu <yuyufen@huawei.com>
+Signed-off-by: Song Liu <songliubraving@fb.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/acpi/pci_irq.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/md/raid1.c | 13 ++++++++++++-
+ 1 file changed, 12 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/acpi/pci_irq.c b/drivers/acpi/pci_irq.c
-index c576a6fe4ebb3..94ded9513c73b 100644
---- a/drivers/acpi/pci_irq.c
-+++ b/drivers/acpi/pci_irq.c
-@@ -462,8 +462,10 @@ int acpi_pci_irq_enable(struct pci_dev *dev)
- 		 * No IRQ known to the ACPI subsystem - maybe the BIOS /
- 		 * driver reported one, then use it. Exit in any case.
- 		 */
--		if (!acpi_pci_irq_valid(dev, pin))
-+		if (!acpi_pci_irq_valid(dev, pin)) {
-+			kfree(entry);
- 			return 0;
-+		}
+diff --git a/drivers/md/raid1.c b/drivers/md/raid1.c
+index 53048bf0b2b81..9892c41de4419 100644
+--- a/drivers/md/raid1.c
++++ b/drivers/md/raid1.c
+@@ -2960,6 +2960,13 @@ static int raid1_run(struct mddev *mddev)
+ 		    !test_bit(In_sync, &conf->mirrors[i].rdev->flags) ||
+ 		    test_bit(Faulty, &conf->mirrors[i].rdev->flags))
+ 			mddev->degraded++;
++	/*
++	 * RAID1 needs at least one disk in active
++	 */
++	if (conf->raid_disks - mddev->degraded < 1) {
++		ret = -EINVAL;
++		goto abort;
++	}
  
- 		if (acpi_isa_register_gsi(dev))
- 			dev_warn(&dev->dev, "PCI INT %c: no GSI\n",
+ 	if (conf->raid_disks - mddev->degraded == 1)
+ 		mddev->recovery_cp = MaxSector;
+@@ -2994,8 +3001,12 @@ static int raid1_run(struct mddev *mddev)
+ 	ret =  md_integrity_register(mddev);
+ 	if (ret) {
+ 		md_unregister_thread(&mddev->thread);
+-		raid1_free(mddev, conf);
++		goto abort;
+ 	}
++	return 0;
++
++abort:
++	raid1_free(mddev, conf);
+ 	return ret;
+ }
+ 
 -- 
 2.20.1
 
