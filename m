@@ -4,50 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FBD4C32792
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:38:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 041E7C4CED1
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:38:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E011A20865
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:38:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C989D2086A
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:38:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570124303;
-	bh=CkpWK4p5Fu9ZSIpocU+cai4I/VsWfIBkOmaRArptx4U=;
+	s=default; t=1570124305;
+	bh=UlCki8zg9JHsMFVYDz5UUcbj6ctigQ8WdJABiuxnRAs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=c9QoDlTZaRjDclA4AB0i1ZKW7R2GrjOGT6kr0V7NhppRrfIkQexav/gtWUOT/Otxu
-	 AtsC0nP0EAunb8BS6nO1rrM2GIc3jaBkyYQXgzSvYNZTaS3pUl+ET6gVTYTezk0OYb
-	 jWF1CzFsDJTY9V7GWCceSloG9hYhARGeHzXnvdZY=
+	b=ma8bwSrmWfdyPaa1WhwlVibQAGYvUWb5+HrZP5HYwOJEr7hFuOXJRYgPDRjtXpobf
+	 G7Nq0qt3DNjCUto9JfA1J/rYOFVzHIjqvEy6NcTl3Ja4mEDIcxm95dFhEOrUSvncNw
+	 7lVSZuRBe9Oxz5eJoup4dN+cqDDMBI1hVul0ePeg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389506AbfJCRiW (ORCPT
+        id S1732049AbfJCQCo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 13:38:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47760 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 12:02:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47562 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732047AbfJCQCp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:02:45 -0400
+        id S1730678AbfJCQCg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:02:36 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9D27E21848;
-        Thu,  3 Oct 2019 16:02:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6EB7820700;
+        Thu,  3 Oct 2019 16:02:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570118564;
-        bh=CkpWK4p5Fu9ZSIpocU+cai4I/VsWfIBkOmaRArptx4U=;
+        s=default; t=1570118555;
+        bh=UlCki8zg9JHsMFVYDz5UUcbj6ctigQ8WdJABiuxnRAs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wUKCnaRrwQ+C+Y+8tpOSg8MkvuW9/XNlS3egaTtYbjXFAJ/WCkrwaBJue/fjjXUCp
-         VmQDw1y611Zz4sFhfKTdK4JJ4ckpZ7x+8KzyLO7OvZdn1k5EI8axn80cmrdRSEkeA7
-         p5NpA5AvJvbRo+m13nkITauTgeMf6va7Gil+v9n8=
+        b=lptlYNPAY/zFvkS22Nxgz5xDva8KvYU8Z/D0hfYthmxl0JSMoLZ6uQTqYWt14h25e
+         9zOYCVIkexo/ElVxk4E3PFYQJXwaxI2wtfxQxBW7AFYO/X3BSSk9msuSOQVqjBQQDG
+         llzTwhl73CeqIiBAMl9thXy5y+SHY30faD07qvW4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, chenzefeng <chenzefeng2@huawei.com>,
-        Tony Luck <tony.luck@intel.com>,
+        stable@vger.kernel.org,
+        syzbot+01a77b82edaa374068e1@syzkaller.appspotmail.com,
+        Oliver Neukum <oneukum@suse.com>, Sean Young <sean@mess.org>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 056/129] ia64:unwind: fix double free for mod->arch.init_unw_table
-Date:   Thu,  3 Oct 2019 17:52:59 +0200
-Message-Id: <20191003154343.675214453@linuxfoundation.org>
+Subject: [PATCH 4.9 053/129] media: iguanair: add sanity checks
+Date:   Thu,  3 Oct 2019 17:52:56 +0200
+Message-Id: <20191003154341.718370638@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191003154318.081116689@linuxfoundation.org>
 References: <20191003154318.081116689@linuxfoundation.org>
@@ -60,52 +62,59 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: chenzefeng <chenzefeng2@huawei.com>
+From: Oliver Neukum <oneukum@suse.com>
 
-[ Upstream commit c5e5c48c16422521d363c33cfb0dcf58f88c119b ]
+[ Upstream commit ab1cbdf159beba7395a13ab70bc71180929ca064 ]
 
-The function free_module in file kernel/module.c as follow:
+The driver needs to check the endpoint types, too, as opposed
+to the number of endpoints. This also requires moving the check earlier.
 
-void free_module(struct module *mod) {
-	......
-	module_arch_cleanup(mod);
-	......
-	module_arch_freeing_init(mod);
-	......
-}
-
-Both module_arch_cleanup and module_arch_freeing_init function
-would free the mod->arch.init_unw_table, which cause double free.
-
-Here, set mod->arch.init_unw_table = NULL after remove the unwind
-table to avoid double free.
-
-Signed-off-by: chenzefeng <chenzefeng2@huawei.com>
-Signed-off-by: Tony Luck <tony.luck@intel.com>
+Reported-by: syzbot+01a77b82edaa374068e1@syzkaller.appspotmail.com
+Signed-off-by: Oliver Neukum <oneukum@suse.com>
+Signed-off-by: Sean Young <sean@mess.org>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/ia64/kernel/module.c | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+ drivers/media/rc/iguanair.c | 15 +++++++--------
+ 1 file changed, 7 insertions(+), 8 deletions(-)
 
-diff --git a/arch/ia64/kernel/module.c b/arch/ia64/kernel/module.c
-index d1d945c6bd05f..9fe114620b9d6 100644
---- a/arch/ia64/kernel/module.c
-+++ b/arch/ia64/kernel/module.c
-@@ -912,8 +912,12 @@ module_finalize (const Elf_Ehdr *hdr, const Elf_Shdr *sechdrs, struct module *mo
- void
- module_arch_cleanup (struct module *mod)
- {
--	if (mod->arch.init_unw_table)
-+	if (mod->arch.init_unw_table) {
- 		unw_remove_unwind_table(mod->arch.init_unw_table);
--	if (mod->arch.core_unw_table)
-+		mod->arch.init_unw_table = NULL;
-+	}
-+	if (mod->arch.core_unw_table) {
- 		unw_remove_unwind_table(mod->arch.core_unw_table);
-+		mod->arch.core_unw_table = NULL;
-+	}
- }
+diff --git a/drivers/media/rc/iguanair.c b/drivers/media/rc/iguanair.c
+index 5f634545ddd81..25470395c43f1 100644
+--- a/drivers/media/rc/iguanair.c
++++ b/drivers/media/rc/iguanair.c
+@@ -430,6 +430,10 @@ static int iguanair_probe(struct usb_interface *intf,
+ 	int ret, pipein, pipeout;
+ 	struct usb_host_interface *idesc;
+ 
++	idesc = intf->altsetting;
++	if (idesc->desc.bNumEndpoints < 2)
++		return -ENODEV;
++
+ 	ir = kzalloc(sizeof(*ir), GFP_KERNEL);
+ 	rc = rc_allocate_device();
+ 	if (!ir || !rc) {
+@@ -444,18 +448,13 @@ static int iguanair_probe(struct usb_interface *intf,
+ 	ir->urb_in = usb_alloc_urb(0, GFP_KERNEL);
+ 	ir->urb_out = usb_alloc_urb(0, GFP_KERNEL);
+ 
+-	if (!ir->buf_in || !ir->packet || !ir->urb_in || !ir->urb_out) {
++	if (!ir->buf_in || !ir->packet || !ir->urb_in || !ir->urb_out ||
++	    !usb_endpoint_is_int_in(&idesc->endpoint[0].desc) ||
++	    !usb_endpoint_is_int_out(&idesc->endpoint[1].desc)) {
+ 		ret = -ENOMEM;
+ 		goto out;
+ 	}
+ 
+-	idesc = intf->altsetting;
+-
+-	if (idesc->desc.bNumEndpoints < 2) {
+-		ret = -ENODEV;
+-		goto out;
+-	}
+-
+ 	ir->rc = rc;
+ 	ir->dev = &intf->dev;
+ 	ir->udev = udev;
 -- 
 2.20.1
 
