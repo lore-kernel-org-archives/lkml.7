@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8850C4CED1
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 15:56:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C617AC10F14
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 15:56:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BB365207FF
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 15:56:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8CBE321A4C
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 15:56:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570118197;
-	bh=1OUUghvMNit7ATWMhWdyUNvrax21oyc5yD7XumTD/D4=;
+	s=default; t=1570118198;
+	bh=GlG6YVR+WVVS/QczyKCvj70xObEFrfnsuA3DId/ZobM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=nMlSx1YxPu5ib9rSER88OiiyVOZEyy37+opWB2HNebnKYdC2NFg0S45mV4iOoCu+H
-	 xYATnhSK4giKW1uR9M3CUMoui97y+AUcYGfD8tBMw4gGbD6lONVFZmH8XZjoVQgOJu
-	 bZg7VLZgUXlCa+pnWxVrUeq38qJGKjTzmsHCiErA=
+	b=zyqW07CZwp8k/ogT+wP4mmrW6yC3M/zsl4fdfDE3Fx1YUHGJzK2xnCn+Zk9Zg7M+s
+	 T0OfQS86DGK+K9TqKjKfsA7tQT5KubmInu+3fb9xx3DjdqDyOI6tdLVTvhUwP53+ra
+	 xQKZ6MJN27eU0s0q5YSvW9/czu4CVeVxJLG3/vzQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730686AbfJCP4h (ORCPT
+        id S1730699AbfJCP4i (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 11:56:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38202 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 11:56:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38342 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730580AbfJCP4X (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 11:56:23 -0400
+        id S1730606AbfJCP4a (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 11:56:30 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C257621A4C;
-        Thu,  3 Oct 2019 15:56:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3519D21848;
+        Thu,  3 Oct 2019 15:56:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570118182;
-        bh=1OUUghvMNit7ATWMhWdyUNvrax21oyc5yD7XumTD/D4=;
+        s=default; t=1570118188;
+        bh=GlG6YVR+WVVS/QczyKCvj70xObEFrfnsuA3DId/ZobM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=i4I8+pAaDJ813rbnqAq1/oIdfOKnUKf/MFoQ/pnf7WWXLeqKS/IjPIiVULP5tD1g3
-         ZnlxsKIjnFg/8R79qPURmBXTEhizQSLNbrwuKkQs97H9wNhhF30UtKQJVBg+3DRQQY
-         87YWjBwDOWVhT+WfvgwtKE4+HrqPqMoWHIQxDk3E=
+        b=gf/U7xccfSyzg31sY44jczP2TbzlkOh4IOv5JRMV4zrIV1mANhWMSpCQvGptj08kh
+         E4m9ywI5VLkt7FR4gLqeBw3nhjS75g9a+Y2ht+pGaiT8qSmAABFCvXmdsClORL355s
+         Kh5tGMQPlUtkP2CEAlHrbdhFjXAbg8QqVPkrr9cc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Alan Stern <stern@rowland.harvard.edu>,
-        Jiri Kosina <jkosina@suse.cz>,
-        syzbot+1088533649dafa1c9004@syzkaller.appspotmail.com
-Subject: [PATCH 4.4 02/99] HID: prodikeys: Fix general protection fault during probe
-Date:   Thu,  3 Oct 2019 17:52:25 +0200
-Message-Id: <20191003154253.491273763@linuxfoundation.org>
+        stable@vger.kernel.org,
+        syzbot+ce366e2b8296e25d84f5@syzkaller.appspotmail.com,
+        =?UTF-8?q?Bj=C3=B8rn=20Mork?= <bjorn@mork.no>,
+        Jakub Kicinski <jakub.kicinski@netronome.com>
+Subject: [PATCH 4.4 21/99] cdc_ncm: fix divide-by-zero caused by invalid wMaxPacketSize
+Date:   Thu,  3 Oct 2019 17:52:44 +0200
+Message-Id: <20191003154304.368107309@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191003154252.297991283@linuxfoundation.org>
 References: <20191003154252.297991283@linuxfoundation.org>
@@ -60,76 +61,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alan Stern <stern@rowland.harvard.edu>
+From: Bjørn Mork <bjorn@mork.no>
 
-commit 98375b86c79137416e9fd354177b85e768c16e56 upstream.
+[ Upstream commit 3fe4b3351301660653a2bc73f2226da0ebd2b95e ]
 
-The syzbot fuzzer provoked a general protection fault in the
-hid-prodikeys driver:
+Endpoints with zero wMaxPacketSize are not usable for transferring
+data. Ignore such endpoints when looking for valid in, out and
+status pipes, to make the driver more robust against invalid and
+meaningless descriptors.
 
-kasan: CONFIG_KASAN_INLINE enabled
-kasan: GPF could be caused by NULL-ptr deref or user memory access
-general protection fault: 0000 [#1] SMP KASAN
-CPU: 0 PID: 12 Comm: kworker/0:1 Not tainted 5.3.0-rc5+ #28
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS
-Google 01/01/2011
-Workqueue: usb_hub_wq hub_event
-RIP: 0010:pcmidi_submit_output_report drivers/hid/hid-prodikeys.c:300  [inline]
-RIP: 0010:pcmidi_set_operational drivers/hid/hid-prodikeys.c:558 [inline]
-RIP: 0010:pcmidi_snd_initialise drivers/hid/hid-prodikeys.c:686 [inline]
-RIP: 0010:pk_probe+0xb51/0xfd0 drivers/hid/hid-prodikeys.c:836
-Code: 0f 85 50 04 00 00 48 8b 04 24 4c 89 7d 10 48 8b 58 08 e8 b2 53 e4 fc
-48 8b 54 24 20 48 b8 00 00 00 00 00 fc ff df 48 c1 ea 03 <80> 3c 02 00 0f
-85 13 04 00 00 48 ba 00 00 00 00 00 fc ff df 49 8b
+The wMaxPacketSize of the out pipe is used as divisor. So this change
+fixes a divide-by-zero bug.
 
-The problem is caused by the fact that pcmidi_get_output_report() will
-return an error if the HID device doesn't provide the right sort of
-output report, but pcmidi_set_operational() doesn't bother to check
-the return code and assumes the function call always succeeds.
-
-This patch adds the missing check and aborts the probe operation if
-necessary.
-
-Reported-and-tested-by: syzbot+1088533649dafa1c9004@syzkaller.appspotmail.com
-Signed-off-by: Alan Stern <stern@rowland.harvard.edu>
-CC: <stable@vger.kernel.org>
-Signed-off-by: Jiri Kosina <jkosina@suse.cz>
+Reported-by: syzbot+ce366e2b8296e25d84f5@syzkaller.appspotmail.com
+Signed-off-by: Bjørn Mork <bjorn@mork.no>
+Signed-off-by: Jakub Kicinski <jakub.kicinski@netronome.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- drivers/hid/hid-prodikeys.c |   12 ++++++++++--
- 1 file changed, 10 insertions(+), 2 deletions(-)
+ drivers/net/usb/cdc_ncm.c |    6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
---- a/drivers/hid/hid-prodikeys.c
-+++ b/drivers/hid/hid-prodikeys.c
-@@ -556,10 +556,14 @@ static void pcmidi_setup_extra_keys(
+--- a/drivers/net/usb/cdc_ncm.c
++++ b/drivers/net/usb/cdc_ncm.c
+@@ -636,8 +636,12 @@ cdc_ncm_find_endpoints(struct usbnet *de
+ 	u8 ep;
  
- static int pcmidi_set_operational(struct pcmidi_snd *pm)
- {
-+	int rc;
+ 	for (ep = 0; ep < intf->cur_altsetting->desc.bNumEndpoints; ep++) {
+-
+ 		e = intf->cur_altsetting->endpoint + ep;
 +
- 	if (pm->ifnum != 1)
- 		return 0; /* only set up ONCE for interace 1 */
- 
--	pcmidi_get_output_report(pm);
-+	rc = pcmidi_get_output_report(pm);
-+	if (rc < 0)
-+		return rc;
- 	pcmidi_submit_output_report(pm, 0xc1);
- 	return 0;
- }
-@@ -688,7 +692,11 @@ static int pcmidi_snd_initialise(struct
- 	spin_lock_init(&pm->rawmidi_in_lock);
- 
- 	init_sustain_timers(pm);
--	pcmidi_set_operational(pm);
-+	err = pcmidi_set_operational(pm);
-+	if (err < 0) {
-+		pk_error("failed to find output report\n");
-+		goto fail_register;
-+	}
- 
- 	/* register it */
- 	err = snd_card_register(card);
++		/* ignore endpoints which cannot transfer data */
++		if (!usb_endpoint_maxp(&e->desc))
++			continue;
++
+ 		switch (e->desc.bmAttributes & USB_ENDPOINT_XFERTYPE_MASK) {
+ 		case USB_ENDPOINT_XFER_INT:
+ 			if (usb_endpoint_dir_in(&e->desc)) {
 
 
