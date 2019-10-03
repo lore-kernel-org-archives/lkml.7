@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B7EAC32792
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:17:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B774DC10F14
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:17:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6F02F2086A
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:17:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8CE9820865
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:17:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570123051;
-	bh=OSDbZ+qnZK1aTfBoQCDkx4FU7CwedCYXzK82/thGqPc=;
+	s=default; t=1570123053;
+	bh=L4iHwNNQ+VpVyye05jVg5B/av2eLHE7sYt/XPCWYMvY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=NihTRu8WovoFOS1tLL4Lj+FeQBhxgvjLjpN2SsClOa/xYgA05kRCmnmf7FRq2Tfu1
-	 uK4Bd1PNTZSPQlDqmViLKBl7lB9LiENCec1cUcHDC2TrbQ29sMDYZA7yE3HcmPm3AN
-	 xqLYWEz2X6wB2FSflrZ0zAVYJ2rxBH4x4evUfKf0=
+	b=1TGaIV+yRPanb63Kau66cLBKBhX6So5nIYWSU1mZaP+jOcMJVvTtr5eUtb9Ur7njU
+	 0YrIXLfwoQnmg+RE6g7cdVi0JCYQ0aR9d/QQCk87RxbxfKPkX2g33eZ7Z35grLYu8g
+	 lUTrF8QAN5L+vDioyU3u7bVdS57HlmbSh9I8NuNs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391578AbfJCRRa (ORCPT
+        id S2388168AbfJCQWc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 13:17:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51326 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 12:22:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51098 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390340AbfJCQWg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:22:36 -0400
+        id S2389604AbfJCQW3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:22:29 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9C55C20659;
-        Thu,  3 Oct 2019 16:22:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 94B3020659;
+        Thu,  3 Oct 2019 16:22:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570119756;
-        bh=OSDbZ+qnZK1aTfBoQCDkx4FU7CwedCYXzK82/thGqPc=;
+        s=default; t=1570119748;
+        bh=L4iHwNNQ+VpVyye05jVg5B/av2eLHE7sYt/XPCWYMvY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=TzXbGme0g1mLg+Clcwpwt4WEMTrlccZ6P614o5aUO5xHfEN0wHXly+B8PBiT1PCgv
-         8Hrr+0AGaPJR/g1WvNxEz7dJCSxTH97Bp0pm2shxUb4kxYBPrpqOIIhW7TdHH02K1r
-         TtPvVFUp7icKue+nIwcvC8EUdZ1oeBHTV8iuDHwQ=
+        b=2BOeS51UkuTjPBrAnwFwxh6S33SLxaYDFhapLbenQJOzvJRODZVjY/oB7Rrn/pnkl
+         YXr/zQBkKGLhwZOyJ07PEsS/iVFRJgIOrYaQUSayQNhG4LefpclI3HezK4CQ6SeM0e
+         3wVnKoPeyyVo5xFFi+2Rf7MPNf+1+rjhpsx0v0Mc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        Peter Jones <pjones@redhat.com>
-Subject: [PATCH 4.19 181/211] efifb: BGRT: Improve efifb_bgrt_sanity_check
-Date:   Thu,  3 Oct 2019 17:54:07 +0200
-Message-Id: <20191003154527.420265838@linuxfoundation.org>
+        stable@vger.kernel.org, Robin Murphy <robin.murphy@arm.com>,
+        Liang Chen <cl@rock-chips.com>,
+        Shawn Lin <shawn.lin@rock-chips.com>,
+        Heiko Stuebner <heiko@sntech.de>
+Subject: [PATCH 4.19 178/211] arm64: dts: rockchip: limit clock rate of MMC controllers for RK3328
+Date:   Thu,  3 Oct 2019 17:54:04 +0200
+Message-Id: <20191003154527.079940059@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191003154447.010950442@linuxfoundation.org>
 References: <20191003154447.010950442@linuxfoundation.org>
@@ -60,71 +61,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hans de Goede <hdegoede@redhat.com>
+From: Shawn Lin <shawn.lin@rock-chips.com>
 
-commit 51677dfcc17f88ed754143df670ff064eae67f84 upstream.
+commit 03e61929c0d227ed3e1c322fc3804216ea298b7e upstream.
 
-For various reasons, at least with x86 EFI firmwares, the xoffset and
-yoffset in the BGRT info are not always reliable.
+150MHz is a fundamental limitation of RK3328 Soc, w/o this limitation,
+eMMC, for instance, will run into 200MHz clock rate in HS200 mode, which
+makes the RK3328 boards not always boot properly. By adding it in
+rk3328.dtsi would also obviate the worry of missing it when adding new
+boards.
 
-Extensive testing has shown that when the info is correct, the
-BGRT image is always exactly centered horizontally (the yoffset variable
-is more variable and not always predictable).
-
-This commit simplifies / improves the bgrt_sanity_check to simply
-check that the BGRT image is exactly centered horizontally and skips
-(re)drawing it when it is not.
-
-This fixes the BGRT image sometimes being drawn in the wrong place.
-
+Fixes: 52e02d377a72 ("arm64: dts: rockchip: add core dtsi file for RK3328 SoCs")
 Cc: stable@vger.kernel.org
-Fixes: 88fe4ceb2447 ("efifb: BGRT: Do not copy the boot graphics for non native resolutions")
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
-Cc: Peter Jones <pjones@redhat.com>,
-Signed-off-by: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-Link: https://patchwork.freedesktop.org/patch/msgid/20190721131918.10115-1-hdegoede@redhat.com
+Cc: Robin Murphy <robin.murphy@arm.com>
+Cc: Liang Chen <cl@rock-chips.com>
+Signed-off-by: Shawn Lin <shawn.lin@rock-chips.com>
+Signed-off-by: Heiko Stuebner <heiko@sntech.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/video/fbdev/efifb.c |   27 ++++++---------------------
- 1 file changed, 6 insertions(+), 21 deletions(-)
+ arch/arm64/boot/dts/rockchip/rk3328.dtsi |    3 +++
+ 1 file changed, 3 insertions(+)
 
---- a/drivers/video/fbdev/efifb.c
-+++ b/drivers/video/fbdev/efifb.c
-@@ -122,28 +122,13 @@ static void efifb_copy_bmp(u8 *src, u32
-  */
- static bool efifb_bgrt_sanity_check(struct screen_info *si, u32 bmp_width)
- {
--	static const int default_resolutions[][2] = {
--		{  800,  600 },
--		{ 1024,  768 },
--		{ 1280, 1024 },
--	};
--	u32 i, right_margin;
-+	/*
-+	 * All x86 firmwares horizontally center the image (the yoffset
-+	 * calculations differ between boards, but xoffset is predictable).
-+	 */
-+	u32 expected_xoffset = (si->lfb_width - bmp_width) / 2;
+--- a/arch/arm64/boot/dts/rockchip/rk3328.dtsi
++++ b/arch/arm64/boot/dts/rockchip/rk3328.dtsi
+@@ -708,6 +708,7 @@
+ 			 <&cru SCLK_SDMMC_DRV>, <&cru SCLK_SDMMC_SAMPLE>;
+ 		clock-names = "biu", "ciu", "ciu-drive", "ciu-sample";
+ 		fifo-depth = <0x100>;
++		max-frequency = <150000000>;
+ 		status = "disabled";
+ 	};
  
--	for (i = 0; i < ARRAY_SIZE(default_resolutions); i++) {
--		if (default_resolutions[i][0] == si->lfb_width &&
--		    default_resolutions[i][1] == si->lfb_height)
--			break;
--	}
--	/* If not a default resolution used for textmode, this should be fine */
--	if (i >= ARRAY_SIZE(default_resolutions))
--		return true;
--
--	/* If the right margin is 5 times smaller then the left one, reject */
--	right_margin = si->lfb_width - (bgrt_tab.image_offset_x + bmp_width);
--	if (right_margin < (bgrt_tab.image_offset_x / 5))
--		return false;
--
--	return true;
-+	return bgrt_tab.image_offset_x == expected_xoffset;
- }
- #else
- static bool efifb_bgrt_sanity_check(struct screen_info *si, u32 bmp_width)
+@@ -719,6 +720,7 @@
+ 			 <&cru SCLK_SDIO_DRV>, <&cru SCLK_SDIO_SAMPLE>;
+ 		clock-names = "biu", "ciu", "ciu-drive", "ciu-sample";
+ 		fifo-depth = <0x100>;
++		max-frequency = <150000000>;
+ 		status = "disabled";
+ 	};
+ 
+@@ -730,6 +732,7 @@
+ 			 <&cru SCLK_EMMC_DRV>, <&cru SCLK_EMMC_SAMPLE>;
+ 		clock-names = "biu", "ciu", "ciu-drive", "ciu-sample";
+ 		fifo-depth = <0x100>;
++		max-frequency = <150000000>;
+ 		status = "disabled";
+ 	};
+ 
 
 
