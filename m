@@ -2,52 +2,55 @@ Return-Path: <SRS0=6dNS=X4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F3FE8C10F14
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:01:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 089AFC32792
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:01:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BF27A20673
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:01:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C9BF520673
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:01:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570122092;
-	bh=dPMBz+h3etmnxoqEa7dwetX9+Br6b4R4IuSCrpEqtQg=;
+	s=default; t=1570122095;
+	bh=mcVwwUpCnN9fmn7EJZ59olz60UlNsWZ2hUma8Ewct/8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=m+L2WBeE6GErOhoUDQNvyMm8hlEmFofMVtxGbhYJ/Mgm7i9wMOwRKg9xZQV/6Cx3x
-	 3bcFd56ZA78k9/wEPA2RsW5ekqFunBXLedKnRlHTW80Jm/Xg70ylayEq8LbZi5DO0+
-	 tjrHriRhzB11QNSR9PQZXYLYHjHedj1DVvzQ7tRc=
+	b=Ts7AvwzDb7rLX5C8NAb3bF7JFUm5Nrx5XbAxd4NQQmzQXD2flhbmxFkezXeNoXe3Z
+	 ENmaLsY4ioGxXU7chbU1mX+KUgaZXFMY3J9WTDC9xok4Dd6kdn4Iihj0e7+oxnKUol
+	 5n1QLe7Mn8vzYK/WNpA3ixr+WdCQu2DfUkzOH4Rs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405418AbfJCQoq (ORCPT
+        id S2406130AbfJCRBe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 12:44:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56808 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 13:01:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57014 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2405377AbfJCQoi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:44:38 -0400
+        id S2405419AbfJCQoq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:44:46 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8A2752054F;
-        Thu,  3 Oct 2019 16:44:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 84E82206BB;
+        Thu,  3 Oct 2019 16:44:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570121077;
-        bh=dPMBz+h3etmnxoqEa7dwetX9+Br6b4R4IuSCrpEqtQg=;
+        s=default; t=1570121085;
+        bh=mcVwwUpCnN9fmn7EJZ59olz60UlNsWZ2hUma8Ewct/8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=JTdvZ7Wm//9tOfHjkAf3U/oFseIZCKiVCA5o/+vC/iD7FzNHyT6QChW4X4adrk+Dg
-         IHL992J5AvDMvttQRUHhEOBq/jbN2hldomNwUUvbyNBfaddFGwEtmUfRJK0wbSRp9v
-         WDx6TUujtn/d3pkFdkVdNBLPP9vh9mDWXy38XHic=
+        b=kJNMUORu6QMsuLYCwSzb68ySVVA3zgS8Jo+YpOiWlLngvP5sl0dTrHTgFJM5x5dIQ
+         Yz5LoQxqkC6eIMUh0PkYgJCqcY9tCchGNJUxNTNY66quVt14RTCp7w/JaA0bfW94b7
+         2uVxzCXCHhj7Kx8T0T1ReYR+AsZJ191knSkIC6qI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Kees Cook <keescook@chromium.org>,
-        Will Deacon <will@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.3 110/344] arm64/efi: Move variable assignments after SECTIONS
-Date:   Thu,  3 Oct 2019 17:51:15 +0200
-Message-Id: <20191003154551.066055944@linuxfoundation.org>
+        stable@vger.kernel.org, Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Sasha Levin <sashal@kernel.org>,
+        syzbot+1a35278dd0ebfb3a038a@syzkaller.appspotmail.com,
+        syzbot+397fd082ce5143e2f67d@syzkaller.appspotmail.com,
+        syzbot+06ddf1788cfd048c5e82@syzkaller.appspotmail.com
+Subject: [PATCH 5.3 103/344] media: gspca: zero usb_buf on error
+Date:   Thu,  3 Oct 2019 17:51:08 +0200
+Message-Id: <20191003154550.368877642@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191003154540.062170222@linuxfoundation.org>
 References: <20191003154540.062170222@linuxfoundation.org>
@@ -60,173 +63,277 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kees Cook <keescook@chromium.org>
+From: Hans Verkuil <hverkuil-cisco@xs4all.nl>
 
-[ Upstream commit 90776dd1c427cbb4d381aa4b13338f1fb1d20f5e ]
+[ Upstream commit 4843a543fad3bf8221cf14e5d5f32d15cee89e84 ]
 
-It seems that LLVM's linker does not correctly handle variable assignments
-involving section positions that are updated during the SECTIONS
-parsing. Commit aa69fb62bea1 ("arm64/efi: Mark __efistub_stext_offset as
-an absolute symbol explicitly") ran into this too, but found a different
-workaround.
+If reg_r() fails, then gspca_dev->usb_buf was left uninitialized,
+and some drivers used the contents of that buffer in logic.
 
-However, this was not enough, as other variables were also miscalculated
-which manifested as boot failures under UEFI where __efistub__end was
-not taking the correct _end value (they should be the same):
+This caused several syzbot errors:
 
-$ ld.lld -EL -maarch64elf --no-undefined -X -shared \
-	-Bsymbolic -z notext -z norelro --no-apply-dynamic-relocs \
-	-o vmlinux.lld -T poc.lds --whole-archive vmlinux.o && \
-  readelf -Ws vmlinux.lld | egrep '\b(__efistub_|)_end\b'
-368272: ffff000002218000     0 NOTYPE  LOCAL  HIDDEN    38 __efistub__end
-368322: ffff000012318000     0 NOTYPE  GLOBAL DEFAULT   38 _end
+https://syzkaller.appspot.com/bug?extid=397fd082ce5143e2f67d
+https://syzkaller.appspot.com/bug?extid=1a35278dd0ebfb3a038a
+https://syzkaller.appspot.com/bug?extid=06ddf1788cfd048c5e82
 
-$ aarch64-linux-gnu-ld.bfd -EL -maarch64elf --no-undefined -X -shared \
-	-Bsymbolic -z notext -z norelro --no-apply-dynamic-relocs \
-	-o vmlinux.bfd -T poc.lds --whole-archive vmlinux.o && \
-  readelf -Ws vmlinux.bfd | egrep '\b(__efistub_|)_end\b'
-338124: ffff000012318000     0 NOTYPE  LOCAL  DEFAULT  ABS __efistub__end
-383812: ffff000012318000     0 NOTYPE  GLOBAL DEFAULT 15325 _end
+I analyzed the gspca drivers and zeroed the buffer where needed.
 
-To work around this, all of the __efistub_-prefixed variable assignments
-need to be moved after the linker script's SECTIONS entry. As it turns
-out, this also solves the problem fixed in commit aa69fb62bea1, so those
-changes are reverted here.
+Reported-and-tested-by: syzbot+1a35278dd0ebfb3a038a@syzkaller.appspotmail.com
+Reported-and-tested-by: syzbot+397fd082ce5143e2f67d@syzkaller.appspotmail.com
+Reported-and-tested-by: syzbot+06ddf1788cfd048c5e82@syzkaller.appspotmail.com
 
-Link: https://github.com/ClangBuiltLinux/linux/issues/634
-Link: https://bugs.llvm.org/show_bug.cgi?id=42990
-Acked-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Signed-off-by: Kees Cook <keescook@chromium.org>
-Signed-off-by: Will Deacon <will@kernel.org>
+Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/kernel/image-vars.h  | 51 +++++++++++++++++++++++++++++++++
- arch/arm64/kernel/image.h       | 42 ---------------------------
- arch/arm64/kernel/vmlinux.lds.S |  2 ++
- 3 files changed, 53 insertions(+), 42 deletions(-)
- create mode 100644 arch/arm64/kernel/image-vars.h
+ drivers/media/usb/gspca/konica.c   |  5 +++++
+ drivers/media/usb/gspca/nw80x.c    |  5 +++++
+ drivers/media/usb/gspca/ov519.c    | 10 ++++++++++
+ drivers/media/usb/gspca/ov534.c    |  5 +++++
+ drivers/media/usb/gspca/ov534_9.c  |  1 +
+ drivers/media/usb/gspca/se401.c    |  5 +++++
+ drivers/media/usb/gspca/sn9c20x.c  |  5 +++++
+ drivers/media/usb/gspca/sonixb.c   |  5 +++++
+ drivers/media/usb/gspca/sonixj.c   |  5 +++++
+ drivers/media/usb/gspca/spca1528.c |  5 +++++
+ drivers/media/usb/gspca/sq930x.c   |  5 +++++
+ drivers/media/usb/gspca/sunplus.c  |  5 +++++
+ drivers/media/usb/gspca/vc032x.c   |  5 +++++
+ drivers/media/usb/gspca/w996Xcf.c  |  5 +++++
+ 14 files changed, 71 insertions(+)
 
-diff --git a/arch/arm64/kernel/image-vars.h b/arch/arm64/kernel/image-vars.h
-new file mode 100644
-index 0000000000000..25a2a9b479c2f
---- /dev/null
-+++ b/arch/arm64/kernel/image-vars.h
-@@ -0,0 +1,51 @@
-+/* SPDX-License-Identifier: GPL-2.0-only */
-+/*
-+ * Linker script variables to be set after section resolution, as
-+ * ld.lld does not like variables assigned before SECTIONS is processed.
-+ */
-+#ifndef __ARM64_KERNEL_IMAGE_VARS_H
-+#define __ARM64_KERNEL_IMAGE_VARS_H
-+
-+#ifndef LINKER_SCRIPT
-+#error This file should only be included in vmlinux.lds.S
-+#endif
-+
-+#ifdef CONFIG_EFI
-+
-+__efistub_stext_offset = stext - _text;
-+
-+/*
-+ * The EFI stub has its own symbol namespace prefixed by __efistub_, to
-+ * isolate it from the kernel proper. The following symbols are legally
-+ * accessed by the stub, so provide some aliases to make them accessible.
-+ * Only include data symbols here, or text symbols of functions that are
-+ * guaranteed to be safe when executed at another offset than they were
-+ * linked at. The routines below are all implemented in assembler in a
-+ * position independent manner
-+ */
-+__efistub_memcmp		= __pi_memcmp;
-+__efistub_memchr		= __pi_memchr;
-+__efistub_memcpy		= __pi_memcpy;
-+__efistub_memmove		= __pi_memmove;
-+__efistub_memset		= __pi_memset;
-+__efistub_strlen		= __pi_strlen;
-+__efistub_strnlen		= __pi_strnlen;
-+__efistub_strcmp		= __pi_strcmp;
-+__efistub_strncmp		= __pi_strncmp;
-+__efistub_strrchr		= __pi_strrchr;
-+__efistub___flush_dcache_area	= __pi___flush_dcache_area;
-+
-+#ifdef CONFIG_KASAN
-+__efistub___memcpy		= __pi_memcpy;
-+__efistub___memmove		= __pi_memmove;
-+__efistub___memset		= __pi_memset;
-+#endif
-+
-+__efistub__text			= _text;
-+__efistub__end			= _end;
-+__efistub__edata		= _edata;
-+__efistub_screen_info		= screen_info;
-+
-+#endif
-+
-+#endif /* __ARM64_KERNEL_IMAGE_VARS_H */
-diff --git a/arch/arm64/kernel/image.h b/arch/arm64/kernel/image.h
-index 2b85c0d6fa3d1..c7d38c660372c 100644
---- a/arch/arm64/kernel/image.h
-+++ b/arch/arm64/kernel/image.h
-@@ -65,46 +65,4 @@
- 	DEFINE_IMAGE_LE64(_kernel_offset_le, TEXT_OFFSET);	\
- 	DEFINE_IMAGE_LE64(_kernel_flags_le, __HEAD_FLAGS);
- 
--#ifdef CONFIG_EFI
--
--/*
-- * Use ABSOLUTE() to avoid ld.lld treating this as a relative symbol:
-- * https://github.com/ClangBuiltLinux/linux/issues/561
-- */
--__efistub_stext_offset = ABSOLUTE(stext - _text);
--
--/*
-- * The EFI stub has its own symbol namespace prefixed by __efistub_, to
-- * isolate it from the kernel proper. The following symbols are legally
-- * accessed by the stub, so provide some aliases to make them accessible.
-- * Only include data symbols here, or text symbols of functions that are
-- * guaranteed to be safe when executed at another offset than they were
-- * linked at. The routines below are all implemented in assembler in a
-- * position independent manner
-- */
--__efistub_memcmp		= __pi_memcmp;
--__efistub_memchr		= __pi_memchr;
--__efistub_memcpy		= __pi_memcpy;
--__efistub_memmove		= __pi_memmove;
--__efistub_memset		= __pi_memset;
--__efistub_strlen		= __pi_strlen;
--__efistub_strnlen		= __pi_strnlen;
--__efistub_strcmp		= __pi_strcmp;
--__efistub_strncmp		= __pi_strncmp;
--__efistub_strrchr		= __pi_strrchr;
--__efistub___flush_dcache_area	= __pi___flush_dcache_area;
--
--#ifdef CONFIG_KASAN
--__efistub___memcpy		= __pi_memcpy;
--__efistub___memmove		= __pi_memmove;
--__efistub___memset		= __pi_memset;
--#endif
--
--__efistub__text			= _text;
--__efistub__end			= _end;
--__efistub__edata		= _edata;
--__efistub_screen_info		= screen_info;
--
--#endif
--
- #endif /* __ARM64_KERNEL_IMAGE_H */
-diff --git a/arch/arm64/kernel/vmlinux.lds.S b/arch/arm64/kernel/vmlinux.lds.S
-index 7fa0083749078..803b24d2464ae 100644
---- a/arch/arm64/kernel/vmlinux.lds.S
-+++ b/arch/arm64/kernel/vmlinux.lds.S
-@@ -245,6 +245,8 @@ SECTIONS
- 	HEAD_SYMBOLS
+diff --git a/drivers/media/usb/gspca/konica.c b/drivers/media/usb/gspca/konica.c
+index d8e40137a2043..53db9a2895ea5 100644
+--- a/drivers/media/usb/gspca/konica.c
++++ b/drivers/media/usb/gspca/konica.c
+@@ -114,6 +114,11 @@ static void reg_r(struct gspca_dev *gspca_dev, u16 value, u16 index)
+ 	if (ret < 0) {
+ 		pr_err("reg_r err %d\n", ret);
+ 		gspca_dev->usb_err = ret;
++		/*
++		 * Make sure the buffer is zeroed to avoid uninitialized
++		 * values.
++		 */
++		memset(gspca_dev->usb_buf, 0, 2);
+ 	}
  }
  
-+#include "image-vars.h"
-+
- /*
-  * The HYP init code and ID map text can't be longer than a page each,
-  * and should not cross a page boundary.
+diff --git a/drivers/media/usb/gspca/nw80x.c b/drivers/media/usb/gspca/nw80x.c
+index 59649704beba1..880f569bda30f 100644
+--- a/drivers/media/usb/gspca/nw80x.c
++++ b/drivers/media/usb/gspca/nw80x.c
+@@ -1572,6 +1572,11 @@ static void reg_r(struct gspca_dev *gspca_dev,
+ 	if (ret < 0) {
+ 		pr_err("reg_r err %d\n", ret);
+ 		gspca_dev->usb_err = ret;
++		/*
++		 * Make sure the buffer is zeroed to avoid uninitialized
++		 * values.
++		 */
++		memset(gspca_dev->usb_buf, 0, USB_BUF_SZ);
+ 		return;
+ 	}
+ 	if (len == 1)
+diff --git a/drivers/media/usb/gspca/ov519.c b/drivers/media/usb/gspca/ov519.c
+index cfb1f53bc17e7..f417dfc0b8729 100644
+--- a/drivers/media/usb/gspca/ov519.c
++++ b/drivers/media/usb/gspca/ov519.c
+@@ -2073,6 +2073,11 @@ static int reg_r(struct sd *sd, u16 index)
+ 	} else {
+ 		gspca_err(gspca_dev, "reg_r %02x failed %d\n", index, ret);
+ 		sd->gspca_dev.usb_err = ret;
++		/*
++		 * Make sure the result is zeroed to avoid uninitialized
++		 * values.
++		 */
++		gspca_dev->usb_buf[0] = 0;
+ 	}
+ 
+ 	return ret;
+@@ -2101,6 +2106,11 @@ static int reg_r8(struct sd *sd,
+ 	} else {
+ 		gspca_err(gspca_dev, "reg_r8 %02x failed %d\n", index, ret);
+ 		sd->gspca_dev.usb_err = ret;
++		/*
++		 * Make sure the buffer is zeroed to avoid uninitialized
++		 * values.
++		 */
++		memset(gspca_dev->usb_buf, 0, 8);
+ 	}
+ 
+ 	return ret;
+diff --git a/drivers/media/usb/gspca/ov534.c b/drivers/media/usb/gspca/ov534.c
+index 56521c991db45..185c1f10fb30b 100644
+--- a/drivers/media/usb/gspca/ov534.c
++++ b/drivers/media/usb/gspca/ov534.c
+@@ -693,6 +693,11 @@ static u8 ov534_reg_read(struct gspca_dev *gspca_dev, u16 reg)
+ 	if (ret < 0) {
+ 		pr_err("read failed %d\n", ret);
+ 		gspca_dev->usb_err = ret;
++		/*
++		 * Make sure the result is zeroed to avoid uninitialized
++		 * values.
++		 */
++		gspca_dev->usb_buf[0] = 0;
+ 	}
+ 	return gspca_dev->usb_buf[0];
+ }
+diff --git a/drivers/media/usb/gspca/ov534_9.c b/drivers/media/usb/gspca/ov534_9.c
+index 867f860a96500..91efc650cf769 100644
+--- a/drivers/media/usb/gspca/ov534_9.c
++++ b/drivers/media/usb/gspca/ov534_9.c
+@@ -1145,6 +1145,7 @@ static u8 reg_r(struct gspca_dev *gspca_dev, u16 reg)
+ 	if (ret < 0) {
+ 		pr_err("reg_r err %d\n", ret);
+ 		gspca_dev->usb_err = ret;
++		return 0;
+ 	}
+ 	return gspca_dev->usb_buf[0];
+ }
+diff --git a/drivers/media/usb/gspca/se401.c b/drivers/media/usb/gspca/se401.c
+index 061deee138c31..e087cfb5980b0 100644
+--- a/drivers/media/usb/gspca/se401.c
++++ b/drivers/media/usb/gspca/se401.c
+@@ -101,6 +101,11 @@ static void se401_read_req(struct gspca_dev *gspca_dev, u16 req, int silent)
+ 			pr_err("read req failed req %#04x error %d\n",
+ 			       req, err);
+ 		gspca_dev->usb_err = err;
++		/*
++		 * Make sure the buffer is zeroed to avoid uninitialized
++		 * values.
++		 */
++		memset(gspca_dev->usb_buf, 0, READ_REQ_SIZE);
+ 	}
+ }
+ 
+diff --git a/drivers/media/usb/gspca/sn9c20x.c b/drivers/media/usb/gspca/sn9c20x.c
+index b43f89fee6c1d..12a2395a36ac6 100644
+--- a/drivers/media/usb/gspca/sn9c20x.c
++++ b/drivers/media/usb/gspca/sn9c20x.c
+@@ -909,6 +909,11 @@ static void reg_r(struct gspca_dev *gspca_dev, u16 reg, u16 length)
+ 	if (unlikely(result < 0 || result != length)) {
+ 		pr_err("Read register %02x failed %d\n", reg, result);
+ 		gspca_dev->usb_err = result;
++		/*
++		 * Make sure the buffer is zeroed to avoid uninitialized
++		 * values.
++		 */
++		memset(gspca_dev->usb_buf, 0, USB_BUF_SZ);
+ 	}
+ }
+ 
+diff --git a/drivers/media/usb/gspca/sonixb.c b/drivers/media/usb/gspca/sonixb.c
+index 046fc2c2a1350..4d655e2da9cba 100644
+--- a/drivers/media/usb/gspca/sonixb.c
++++ b/drivers/media/usb/gspca/sonixb.c
+@@ -453,6 +453,11 @@ static void reg_r(struct gspca_dev *gspca_dev,
+ 		dev_err(gspca_dev->v4l2_dev.dev,
+ 			"Error reading register %02x: %d\n", value, res);
+ 		gspca_dev->usb_err = res;
++		/*
++		 * Make sure the result is zeroed to avoid uninitialized
++		 * values.
++		 */
++		gspca_dev->usb_buf[0] = 0;
+ 	}
+ }
+ 
+diff --git a/drivers/media/usb/gspca/sonixj.c b/drivers/media/usb/gspca/sonixj.c
+index 50a6c8425827f..2e1bd2df8304a 100644
+--- a/drivers/media/usb/gspca/sonixj.c
++++ b/drivers/media/usb/gspca/sonixj.c
+@@ -1162,6 +1162,11 @@ static void reg_r(struct gspca_dev *gspca_dev,
+ 	if (ret < 0) {
+ 		pr_err("reg_r err %d\n", ret);
+ 		gspca_dev->usb_err = ret;
++		/*
++		 * Make sure the buffer is zeroed to avoid uninitialized
++		 * values.
++		 */
++		memset(gspca_dev->usb_buf, 0, USB_BUF_SZ);
+ 	}
+ }
+ 
+diff --git a/drivers/media/usb/gspca/spca1528.c b/drivers/media/usb/gspca/spca1528.c
+index 2ae03b60163ff..ccc477944ef82 100644
+--- a/drivers/media/usb/gspca/spca1528.c
++++ b/drivers/media/usb/gspca/spca1528.c
+@@ -71,6 +71,11 @@ static void reg_r(struct gspca_dev *gspca_dev,
+ 	if (ret < 0) {
+ 		pr_err("reg_r err %d\n", ret);
+ 		gspca_dev->usb_err = ret;
++		/*
++		 * Make sure the buffer is zeroed to avoid uninitialized
++		 * values.
++		 */
++		memset(gspca_dev->usb_buf, 0, USB_BUF_SZ);
+ 	}
+ }
+ 
+diff --git a/drivers/media/usb/gspca/sq930x.c b/drivers/media/usb/gspca/sq930x.c
+index d1ba0888d7989..c3610247a90e0 100644
+--- a/drivers/media/usb/gspca/sq930x.c
++++ b/drivers/media/usb/gspca/sq930x.c
+@@ -425,6 +425,11 @@ static void reg_r(struct gspca_dev *gspca_dev,
+ 	if (ret < 0) {
+ 		pr_err("reg_r %04x failed %d\n", value, ret);
+ 		gspca_dev->usb_err = ret;
++		/*
++		 * Make sure the buffer is zeroed to avoid uninitialized
++		 * values.
++		 */
++		memset(gspca_dev->usb_buf, 0, USB_BUF_SZ);
+ 	}
+ }
+ 
+diff --git a/drivers/media/usb/gspca/sunplus.c b/drivers/media/usb/gspca/sunplus.c
+index d0ddfa957ca9f..f4a4222f0d2e4 100644
+--- a/drivers/media/usb/gspca/sunplus.c
++++ b/drivers/media/usb/gspca/sunplus.c
+@@ -255,6 +255,11 @@ static void reg_r(struct gspca_dev *gspca_dev,
+ 	if (ret < 0) {
+ 		pr_err("reg_r err %d\n", ret);
+ 		gspca_dev->usb_err = ret;
++		/*
++		 * Make sure the buffer is zeroed to avoid uninitialized
++		 * values.
++		 */
++		memset(gspca_dev->usb_buf, 0, USB_BUF_SZ);
+ 	}
+ }
+ 
+diff --git a/drivers/media/usb/gspca/vc032x.c b/drivers/media/usb/gspca/vc032x.c
+index 588a847ea4834..4cb7c92ea1328 100644
+--- a/drivers/media/usb/gspca/vc032x.c
++++ b/drivers/media/usb/gspca/vc032x.c
+@@ -2906,6 +2906,11 @@ static void reg_r_i(struct gspca_dev *gspca_dev,
+ 	if (ret < 0) {
+ 		pr_err("reg_r err %d\n", ret);
+ 		gspca_dev->usb_err = ret;
++		/*
++		 * Make sure the buffer is zeroed to avoid uninitialized
++		 * values.
++		 */
++		memset(gspca_dev->usb_buf, 0, USB_BUF_SZ);
+ 	}
+ }
+ static void reg_r(struct gspca_dev *gspca_dev,
+diff --git a/drivers/media/usb/gspca/w996Xcf.c b/drivers/media/usb/gspca/w996Xcf.c
+index 16b679c2de21f..a8350ee9712fb 100644
+--- a/drivers/media/usb/gspca/w996Xcf.c
++++ b/drivers/media/usb/gspca/w996Xcf.c
+@@ -133,6 +133,11 @@ static int w9968cf_read_sb(struct sd *sd)
+ 	} else {
+ 		pr_err("Read SB reg [01] failed\n");
+ 		sd->gspca_dev.usb_err = ret;
++		/*
++		 * Make sure the buffer is zeroed to avoid uninitialized
++		 * values.
++		 */
++		memset(sd->gspca_dev.usb_buf, 0, 2);
+ 	}
+ 
+ 	udelay(W9968CF_I2C_BUS_DELAY);
 -- 
 2.20.1
 
