@@ -2,112 +2,102 @@ Return-Path: <SRS0=6dNS=X4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-15.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B13CC10F14
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 15:56:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BAE1C10F14
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 15:56:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 04DB921D71
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 15:56:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570118174;
-	bh=ShkHZbdkeYGi6+KaL0/7gVGfrQBtWi52h4/mpWlR4+Y=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=c0Ai9kZu4IeEGDRyDw9aV6M7Wz2vKHdgBaL2PhfmGRFY2wX4yOsNtuQLcEY57NLZ0
-	 ixNetz29IWVMu4L3TN1hWtrcPXzSMpsYDkNdDDmbThuUpGJuE+hvz+inpHfbL2jIMM
-	 0e/l4ElDa+k4gFvDQcCYPgjm5kRk1s7ZdfwDlQjk=
+	by mail.kernel.org (Postfix) with ESMTP id 65B4C21D71
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 15:56:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="aNaQZuIW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730533AbfJCP4N (ORCPT
+        id S1730563AbfJCP4U (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 11:56:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37844 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730433AbfJCP4I (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 11:56:08 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 618E421A4C;
-        Thu,  3 Oct 2019 15:56:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570118165;
-        bh=ShkHZbdkeYGi6+KaL0/7gVGfrQBtWi52h4/mpWlR4+Y=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ziYjTsLj0RJdrE4wd/VD4UaXwc0fqZWTNR3bfybZtCCfCN4uXbFbEdSOe7IhCtQXu
-         NrDhNpxdWGTFloz14/mw/m+6Lz4lEJFVJHy3JeUiV2I5p/sJ5ezhUfuOzua3rK21Pr
-         /O3plwJuWrO0QRszQgjaG+e9Kf1uycGr7YvduyAk=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jiaxing Luo <luojiaxing@huawei.com>,
-        John Garry <john.garry@huawei.com>,
-        Marc Zyngier <maz@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 14/99] irqchip/gic-v3-its: Fix LPI release for Multi-MSI devices
-Date:   Thu,  3 Oct 2019 17:52:37 +0200
-Message-Id: <20191003154300.400522277@linuxfoundation.org>
-X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20191003154252.297991283@linuxfoundation.org>
-References: <20191003154252.297991283@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Thu, 3 Oct 2019 11:56:20 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:40109 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730504AbfJCP4M (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 11:56:12 -0400
+Received: by mail-wr1-f67.google.com with SMTP id l3so3334000wru.7
+        for <linux-kernel@vger.kernel.org>; Thu, 03 Oct 2019 08:56:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
+         :user-agent;
+        bh=NKFrC0B8XfOBdcYy4waFnHZo34mHGp46OVgivkV/nsg=;
+        b=aNaQZuIW2iG4+SCv7VDtSMgRNVP7FlZdetl6sUWXBtp7oeSQxR665x5njpcYyKI2xk
+         Uvv8X3BSDSZUsLW1oGFuQlamFhdFIrNfwlOq1B3hFoMi0A+obcRQOOxbwyvUAS2evrAJ
+         c8NcY1rr6yYJPvcSdXbwU2qpl3HfG5D+VizDd0pNvxHe4qBoWnyL11CaCqma1vmkILLv
+         2qq/s4v66IZRtqsJTlOAIledIGofXIi242nk8K6kWHqNHeewn0+boxqT+7rO9Kv7jSca
+         MaaoBvL9LQtm9cjZuqmMY+DRN8fD8+JXAqasrQ7apCP0SX9BNrV6EG/wnPQmxzf2wZkt
+         wiHQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=NKFrC0B8XfOBdcYy4waFnHZo34mHGp46OVgivkV/nsg=;
+        b=Yd0pzhMJAlkJ0DurZ1jARXdhryzKGgMP00eAMXYk358euMQrI50hTSTwx/3BZnEuva
+         H53JCRqCQDW2AT1OCr+Xn5NSvce01A9bfUuiDAjA2xB1U7yd0MjCRaWSH0yfVGx5Ga6J
+         eKXpJN0NiXk5CSu0OfHYTrU6vzHhnjuFcHnwRjX0WDRoz193YSMIAweUgRd86H7cxH0w
+         6hkyzITQZ2IzDekXheFTb9GM/AHTJ6TQRzVkFYtLb+LZ25OpeFczby0hwA7vBTfFSK9G
+         2p9gJxGCi2E2wprAVHWBp4ahFQvUrZ0p4fphDiTtswHzet9bIUf7Ef9pj5BZH3+SmCx8
+         g5Bg==
+X-Gm-Message-State: APjAAAUzX7Vt22kmZLBdE40IdjG/EjA6W+j6QdFu0HjJHHhHZY3qJY/2
+        h5KZ5zE4dmhbVE3MA5RrkFtFWQ==
+X-Google-Smtp-Source: APXvYqyeWhVDnASI2XK685gTnJ8+XSIi9Og7/oNl3GooJ5VN2khjLyPsF8m05wz1FN+mrQonzf/z+Q==
+X-Received: by 2002:a5d:45c6:: with SMTP id b6mr6827149wrs.4.1570118168901;
+        Thu, 03 Oct 2019 08:56:08 -0700 (PDT)
+Received: from holly.lan (cpc141214-aztw34-2-0-cust773.18-1.cable.virginm.net. [86.9.19.6])
+        by smtp.gmail.com with ESMTPSA id 79sm5324176wmb.7.2019.10.03.08.56.08
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 03 Oct 2019 08:56:08 -0700 (PDT)
+Date:   Thu, 3 Oct 2019 16:56:06 +0100
+From:   Daniel Thompson <daniel.thompson@linaro.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Jason Wessel <jason.wessel@windriver.com>,
+        linux-kernel@vger.kernel.org,
+        Douglas Anderson <dianders@chromium.org>
+Subject: [GIT PULL] kgdb changes v5.4-rc2
+Message-ID: <20191003155606.o5y5vmnszyzotbvw@holly.lan>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Marc Zyngier <maz@kernel.org>
+The following changes since commit 54ecb8f7028c5eb3d740bb82b0f1d90f2df63c5c:
 
-[ Upstream commit c9c96e30ecaa0aafa225aa1a5392cb7db17c7a82 ]
+  Linux 5.4-rc1 (2019-09-30 10:35:40 -0700)
 
-When allocating a range of LPIs for a Multi-MSI capable device,
-this allocation extended to the closest power of 2.
+are available in the Git repository at:
 
-But on the release path, the interrupts are released one by
-one. This results in not releasing the "extra" range, leaking
-the its_device. Trying to reprobe the device will then fail.
+  git://git.kernel.org/pub/scm/linux/kernel/git/danielt/linux.git/ tags/kgdb-5.4-rc2
 
-Fix it by releasing the LPIs the same way we allocate them.
+for you to fetch changes up to 086bf301f541eb4acfb5dadae7b1b207ad1b95a3:
 
-Fixes: 8208d1708b88 ("irqchip/gic-v3-its: Align PCI Multi-MSI allocation on their size")
-Reported-by: Jiaxing Luo <luojiaxing@huawei.com>
-Tested-by: John Garry <john.garry@huawei.com>
-Signed-off-by: Marc Zyngier <maz@kernel.org>
-Link: https://lore.kernel.org/r/f5e948aa-e32f-3f74-ae30-31fee06c2a74@huawei.com
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/irqchip/irq-gic-v3-its.c | 9 ++++-----
- 1 file changed, 4 insertions(+), 5 deletions(-)
+  MAINTAINERS: kgdb: Add myself as a reviewer for kgdb/kdb (2019-10-03 16:42:10 +0100)
 
-diff --git a/drivers/irqchip/irq-gic-v3-its.c b/drivers/irqchip/irq-gic-v3-its.c
-index 114d5883d4978..cf11d43ce2416 100644
---- a/drivers/irqchip/irq-gic-v3-its.c
-+++ b/drivers/irqchip/irq-gic-v3-its.c
-@@ -1372,14 +1372,13 @@ static void its_irq_domain_free(struct irq_domain *domain, unsigned int virq,
- 	struct its_device *its_dev = irq_data_get_irq_chip_data(d);
- 	int i;
- 
-+	bitmap_release_region(its_dev->event_map.lpi_map,
-+			      its_get_event_id(irq_domain_get_irq_data(domain, virq)),
-+			      get_count_order(nr_irqs));
-+
- 	for (i = 0; i < nr_irqs; i++) {
- 		struct irq_data *data = irq_domain_get_irq_data(domain,
- 								virq + i);
--		u32 event = its_get_event_id(data);
--
--		/* Mark interrupt index as unused */
--		clear_bit(event, its_dev->event_map.lpi_map);
--
- 		/* Nuke the entry in the domain */
- 		irq_domain_reset_irq_data(data);
- 	}
--- 
-2.20.1
+----------------------------------------------------------------
+kgdb patches for 5.4-rc2
 
+This is just a single patch adding a new reviewer for kgdb. New reviewers
+will be a big help so I decided to consider this to be a fix!
 
+I'm looking forward to working more closely with Doug.
 
+Signed-off-by: Daniel Thompson <daniel.thompson@linaro.org>
+
+----------------------------------------------------------------
+Douglas Anderson (1):
+      MAINTAINERS: kgdb: Add myself as a reviewer for kgdb/kdb
+
+ MAINTAINERS | 1 +
+ 1 file changed, 1 insertion(+)
