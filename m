@@ -4,49 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A5B2C10F14
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:02:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E436C10F14
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:02:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 41D902070B
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:02:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 017AD2070B
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:02:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570122159;
-	bh=PXGyuAPnXiAbwagSHmuY/DyLAwPdHDjmxWdSWUh6/3c=;
+	s=default; t=1570122164;
+	bh=QfMwwp7k4LX8qa7VmAQXWyOp4djjbtF2k0Y/KYrJ/lo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=pdgJjpVYJjPuJUhuKkYT/MwYGyoHyxrOsGgAfsLLwdxkHH6oy1xg/xiAOP+APkPuL
-	 ti0pYJyYUxNdooT3/i2B8O1Uw2/ToWjGB2bv18vtgVo91lLqq12Z6Hut/fGulIxO3X
-	 FvktkVJ2yDGmZm+6+FKvRiCmYpcJpxkJgCPj2Fws=
+	b=xMqxyiiYc+sPGQ56oO3xo5hldiDJR9XVFBG2+565ON92UzUQ+mzmRE45mULUMyd1w
+	 ZEhQaABhZ/vrNdxD4UGKeTmckw/y4gYJTZR3g/zupvjdfx7/XLzSRnSpAcFwix8G4z
+	 XyPDHlkgh5N0cVmfepi9PlCy4MpJ9V9eSJVR0/UY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405797AbfJCRCi (ORCPT
+        id S2404788AbfJCQmi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 13:02:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53894 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 12:42:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53642 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2405084AbfJCQmo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:42:44 -0400
+        id S2392676AbfJCQme (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:42:34 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 02773206BB;
-        Thu,  3 Oct 2019 16:42:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4A43420830;
+        Thu,  3 Oct 2019 16:42:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570120963;
-        bh=PXGyuAPnXiAbwagSHmuY/DyLAwPdHDjmxWdSWUh6/3c=;
+        s=default; t=1570120952;
+        bh=QfMwwp7k4LX8qa7VmAQXWyOp4djjbtF2k0Y/KYrJ/lo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=b6OwT2cn7ugn1w/TJNks+G+mzZ+/cp75FBOJrzvTJ1sv+tJybO+mytow1G5LfUcXV
-         273TEMf0o8StaUDe+bVIwidQ3QdDhv51P6cPj4xbImM8VM5+vVNnyQgPKOhgpsytau
-         L64Y42excqif5S1NjZYiiVfi/tV6T9ve0+KXCdOo=
+        b=IItVVB3jMKOEz+/zRDjWbhANCn7+7I1CD5N6H38lxQdfZ8RF5dPZtLEZomlEQv9Ce
+         bae3MmO4/Wx+ELR/L3apWybcQ9pmt4DdYZiKld90hHwWchVTrY2JEzOAquoId7OrkI
+         0OyAr3oGHbhN998m9XY0IlwwdzsOset5j3XfqpoY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, zhengbin <zhengbin13@huawei.com>,
-        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.3 102/344] blk-mq: Fix memory leak in blk_mq_init_allocated_queue error handling
-Date:   Thu,  3 Oct 2019 17:51:07 +0200
-Message-Id: <20191003154550.266019544@linuxfoundation.org>
+        stable@vger.kernel.org, Xiaofei Tan <tanxiaofei@huawei.com>,
+        James Morse <james.morse@arm.com>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.3 098/344] efi: cper: print AER info of PCIe fatal error
+Date:   Thu,  3 Oct 2019 17:51:03 +0200
+Message-Id: <20191003154549.878002199@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191003154540.062170222@linuxfoundation.org>
 References: <20191003154540.062170222@linuxfoundation.org>
@@ -59,56 +61,87 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: zhengbin <zhengbin13@huawei.com>
+From: Xiaofei Tan <tanxiaofei@huawei.com>
 
-[ Upstream commit 73d9c8d4c0017e21e1ff519474ceb1450484dc9a ]
+[ Upstream commit b194a77fcc4001dc40aecdd15d249648e8a436d1 ]
 
-If blk_mq_init_allocated_queue->elevator_init_mq fails, need to release
-the previously requested resources.
+AER info of PCIe fatal error is not printed in the current driver.
+Because APEI driver will panic directly for fatal error, and can't
+run to the place of printing AER info.
 
-Fixes: d34849913819 ("blk-mq-sched: allow setting of default IO scheduler")
-Signed-off-by: zhengbin <zhengbin13@huawei.com>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+An example log is as following:
+{763}[Hardware Error]: Hardware error from APEI Generic Hardware Error Source: 11
+{763}[Hardware Error]: event severity: fatal
+{763}[Hardware Error]:  Error 0, type: fatal
+{763}[Hardware Error]:   section_type: PCIe error
+{763}[Hardware Error]:   port_type: 0, PCIe end point
+{763}[Hardware Error]:   version: 4.0
+{763}[Hardware Error]:   command: 0x0000, status: 0x0010
+{763}[Hardware Error]:   device_id: 0000:82:00.0
+{763}[Hardware Error]:   slot: 0
+{763}[Hardware Error]:   secondary_bus: 0x00
+{763}[Hardware Error]:   vendor_id: 0x8086, device_id: 0x10fb
+{763}[Hardware Error]:   class_code: 000002
+Kernel panic - not syncing: Fatal hardware error!
+
+This issue was imported by the patch, '37448adfc7ce ("aerdrv: Move
+cper_print_aer() call out of interrupt context")'. To fix this issue,
+this patch adds print of AER info in cper_print_pcie() for fatal error.
+
+Here is the example log after this patch applied:
+{24}[Hardware Error]: Hardware error from APEI Generic Hardware Error Source: 10
+{24}[Hardware Error]: event severity: fatal
+{24}[Hardware Error]:  Error 0, type: fatal
+{24}[Hardware Error]:   section_type: PCIe error
+{24}[Hardware Error]:   port_type: 0, PCIe end point
+{24}[Hardware Error]:   version: 4.0
+{24}[Hardware Error]:   command: 0x0546, status: 0x4010
+{24}[Hardware Error]:   device_id: 0000:01:00.0
+{24}[Hardware Error]:   slot: 0
+{24}[Hardware Error]:   secondary_bus: 0x00
+{24}[Hardware Error]:   vendor_id: 0x15b3, device_id: 0x1019
+{24}[Hardware Error]:   class_code: 000002
+{24}[Hardware Error]:   aer_uncor_status: 0x00040000, aer_uncor_mask: 0x00000000
+{24}[Hardware Error]:   aer_uncor_severity: 0x00062010
+{24}[Hardware Error]:   TLP Header: 000000c0 01010000 00000001 00000000
+Kernel panic - not syncing: Fatal hardware error!
+
+Fixes: 37448adfc7ce ("aerdrv: Move cper_print_aer() call out of interrupt context")
+Signed-off-by: Xiaofei Tan <tanxiaofei@huawei.com>
+Reviewed-by: James Morse <james.morse@arm.com>
+[ardb: put parens around terms of && operator]
+Signed-off-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- block/blk-mq.c | 9 ++++++---
- 1 file changed, 6 insertions(+), 3 deletions(-)
+ drivers/firmware/efi/cper.c | 15 +++++++++++++++
+ 1 file changed, 15 insertions(+)
 
-diff --git a/block/blk-mq.c b/block/blk-mq.c
-index 0835f4d8d42e7..a38ebb2a380c2 100644
---- a/block/blk-mq.c
-+++ b/block/blk-mq.c
-@@ -2841,6 +2841,8 @@ static unsigned int nr_hw_queues(struct blk_mq_tag_set *set)
- struct request_queue *blk_mq_init_allocated_queue(struct blk_mq_tag_set *set,
- 						  struct request_queue *q)
- {
-+	int ret = -ENOMEM;
+diff --git a/drivers/firmware/efi/cper.c b/drivers/firmware/efi/cper.c
+index 8fa977c7861f9..addf0749dd8b6 100644
+--- a/drivers/firmware/efi/cper.c
++++ b/drivers/firmware/efi/cper.c
+@@ -390,6 +390,21 @@ static void cper_print_pcie(const char *pfx, const struct cper_sec_pcie *pcie,
+ 		printk(
+ 	"%s""bridge: secondary_status: 0x%04x, control: 0x%04x\n",
+ 	pfx, pcie->bridge.secondary_status, pcie->bridge.control);
 +
- 	/* mark the queue as mq asap */
- 	q->mq_ops = set->ops;
++	/* Fatal errors call __ghes_panic() before AER handler prints this */
++	if ((pcie->validation_bits & CPER_PCIE_VALID_AER_INFO) &&
++	    (gdata->error_severity & CPER_SEV_FATAL)) {
++		struct aer_capability_regs *aer;
++
++		aer = (struct aer_capability_regs *)pcie->aer_info;
++		printk("%saer_uncor_status: 0x%08x, aer_uncor_mask: 0x%08x\n",
++		       pfx, aer->uncor_status, aer->uncor_mask);
++		printk("%saer_uncor_severity: 0x%08x\n",
++		       pfx, aer->uncor_severity);
++		printk("%sTLP Header: %08x %08x %08x %08x\n", pfx,
++		       aer->header_log.dw0, aer->header_log.dw1,
++		       aer->header_log.dw2, aer->header_log.dw3);
++	}
+ }
  
-@@ -2902,17 +2904,18 @@ struct request_queue *blk_mq_init_allocated_queue(struct blk_mq_tag_set *set,
- 	blk_mq_map_swqueue(q);
- 
- 	if (!(set->flags & BLK_MQ_F_NO_SCHED)) {
--		int ret;
--
- 		ret = elevator_init_mq(q);
- 		if (ret)
--			return ERR_PTR(ret);
-+			goto err_tag_set;
- 	}
- 
- 	return q;
- 
-+err_tag_set:
-+	blk_mq_del_queue_tag_set(q);
- err_hctxs:
- 	kfree(q->queue_hw_ctx);
-+	q->nr_hw_queues = 0;
- err_sys_init:
- 	blk_mq_sysfs_deinit(q);
- err_poll:
+ static void cper_print_tstamp(const char *pfx,
 -- 
 2.20.1
 
