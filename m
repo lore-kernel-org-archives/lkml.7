@@ -4,52 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 77928C32792
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:36:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20B88C32792
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:37:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4DC2421783
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:36:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DE5E920830
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:37:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570120618;
-	bh=8tx1cmlgn/5Ir9ZkuLOgpbwC/C5FkNxh9n5gZLs1odc=;
+	s=default; t=1570120621;
+	bh=CmtXy0D0yuXcEhN0X7903mDS0j4POCGAx1nqzYqdUeI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=WzV3wChHvoyNu13Mui9VaEBIrMy+AmJSa5zbuuUmQk0bbhNmHc/jAQbkz0rU6Dt1N
-	 RqhgRIatdSQZc7cB01axBtyZSTm1qp20rUWL/+OKpAU0kVkAzxImSi1Vx/tku0dmGD
-	 b2D9YywGBssCukMCHR16stZOGsxClRI50p+RzeQY=
+	b=YWzMDm0xN4QWOa6DpG/3TGm5+PIwaWIaNK4zJrRf6V6n04Gh5+tXwdxwcppPzvQZL
+	 fBJcNkBoKW9eduYb7KKJzI70cskQV0E8z8YqGJ4FXlNBDGG7azStT+utillYMQ1Hij
+	 iW07fYJufLgSpI7Wu3I9mXCN7JrjreTNhdXI62ko=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404504AbfJCQg4 (ORCPT
+        id S2391380AbfJCQg7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 12:36:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46136 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 12:36:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46256 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404481AbfJCQgv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:36:51 -0400
+        id S2404501AbfJCQg4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:36:56 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 24DEA2086A;
-        Thu,  3 Oct 2019 16:36:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7CA3720830;
+        Thu,  3 Oct 2019 16:36:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570120610;
-        bh=8tx1cmlgn/5Ir9ZkuLOgpbwC/C5FkNxh9n5gZLs1odc=;
+        s=default; t=1570120616;
+        bh=CmtXy0D0yuXcEhN0X7903mDS0j4POCGAx1nqzYqdUeI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Z953ry2Op3et4EQ8mwckUs5yI67o43hxiJJqyCyDB4pkHBue6raxZIY1/wkeEULDW
-         z4bflxTJCZ1fT1SjZNi2N+QrumGBGUnWhp73WGx8AU1TUbYyllE/b1AH77Dco/ONGY
-         99DfTl4/Q0SuFLjhNEoRtCPtI9vq87xzG4ava4dA=
+        b=S7Krhuim0Zi41s2CLz9+cy2fC9XvW3IsvC4cofChvTLgXiJ1CUu4gn2twKaywlJlC
+         NbOBK2P+k596Ey25ga8LbRiKtsfMAr7ybkmfU2xocFSklqwvv2EE9ZPUUVBXsG5e/f
+         Gov4PfIPpNt09hP3XZusldF4mzhzihz0aLCeH5zY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Alexander Sverdlin <alexander.sverdlin@gmail.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Lukasz Majewski <lukma@denx.de>,
-        Mark Brown <broonie@kernel.org>
-Subject: [PATCH 5.2 248/313] spi: ep93xx: Repair SPI CS lookup tables
-Date:   Thu,  3 Oct 2019 17:53:46 +0200
-Message-Id: <20191003154557.473861482@linuxfoundation.org>
+        stable@vger.kernel.org, Kees Cook <keescook@chromium.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Richard Kojedzinszky <richard@kojedz.in>
+Subject: [PATCH 5.2 250/313] binfmt_elf: Do not move brk for INTERP-less ET_EXEC
+Date:   Thu,  3 Oct 2019 17:53:48 +0200
+Message-Id: <20191003154557.675459805@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191003154533.590915454@linuxfoundation.org>
 References: <20191003154533.590915454@linuxfoundation.org>
@@ -62,85 +60,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alexander Sverdlin <alexander.sverdlin@gmail.com>
+From: Kees Cook <keescook@chromium.org>
 
-commit 4fbc485324d2975c54201091dfad0a7dd4902324 upstream.
+commit 7be3cb019db1cbd5fd5ffe6d64a23fefa4b6f229 upstream.
 
-The actual device name of the SPI controller being registered on EP93xx is
-"spi0" (as seen by gpiod_find_lookup_table()). This patch fixes all
-relevant lookup tables and the following failure (seen on EDB9302):
+When brk was moved for binaries without an interpreter, it should have
+been limited to ET_DYN only. In other words, the special case was an
+ET_DYN that lacks an INTERP, not just an executable that lacks INTERP.
+The bug manifested for giant static executables, where the brk would end
+up in the middle of the text area on 32-bit architectures.
 
-ep93xx-spi ep93xx-spi.0: failed to register SPI master
-ep93xx-spi: probe of ep93xx-spi.0 failed with error -22
-
-Fixes: 1dfbf334f1236 ("spi: ep93xx: Convert to use CS GPIO descriptors")
+Reported-and-tested-by: Richard Kojedzinszky <richard@kojedz.in>
+Fixes: bbdc6076d2e5 ("binfmt_elf: move brk out of mmap when doing direct loader exec")
 Cc: stable@vger.kernel.org
-Signed-off-by: Alexander Sverdlin <alexander.sverdlin@gmail.com>
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
-Reviewed-by: Lukasz Majewski <lukma@denx.de>
-Link: https://lore.kernel.org/r/20190831180402.10008-1-alexander.sverdlin@gmail.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Signed-off-by: Kees Cook <keescook@chromium.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/arm/mach-ep93xx/edb93xx.c       |    2 +-
- arch/arm/mach-ep93xx/simone.c        |    2 +-
- arch/arm/mach-ep93xx/ts72xx.c        |    4 ++--
- arch/arm/mach-ep93xx/vision_ep9307.c |    2 +-
- 4 files changed, 5 insertions(+), 5 deletions(-)
+ fs/binfmt_elf.c |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
---- a/arch/arm/mach-ep93xx/edb93xx.c
-+++ b/arch/arm/mach-ep93xx/edb93xx.c
-@@ -103,7 +103,7 @@ static struct spi_board_info edb93xx_spi
- };
+--- a/fs/binfmt_elf.c
++++ b/fs/binfmt_elf.c
+@@ -1142,7 +1142,8 @@ out_free_interp:
+ 		 * (since it grows up, and may collide early with the stack
+ 		 * growing down), and into the unused ELF_ET_DYN_BASE region.
+ 		 */
+-		if (IS_ENABLED(CONFIG_ARCH_HAS_ELF_RANDOMIZE) && !interpreter)
++		if (IS_ENABLED(CONFIG_ARCH_HAS_ELF_RANDOMIZE) &&
++		    loc->elf_ex.e_type == ET_DYN && !interpreter)
+ 			current->mm->brk = current->mm->start_brk =
+ 				ELF_ET_DYN_BASE;
  
- static struct gpiod_lookup_table edb93xx_spi_cs_gpio_table = {
--	.dev_id = "ep93xx-spi.0",
-+	.dev_id = "spi0",
- 	.table = {
- 		GPIO_LOOKUP("A", 6, "cs", GPIO_ACTIVE_LOW),
- 		{ },
---- a/arch/arm/mach-ep93xx/simone.c
-+++ b/arch/arm/mach-ep93xx/simone.c
-@@ -73,7 +73,7 @@ static struct spi_board_info simone_spi_
-  * v1.3 parts will still work, since the signal on SFRMOUT is automatic.
-  */
- static struct gpiod_lookup_table simone_spi_cs_gpio_table = {
--	.dev_id = "ep93xx-spi.0",
-+	.dev_id = "spi0",
- 	.table = {
- 		GPIO_LOOKUP("A", 1, "cs", GPIO_ACTIVE_LOW),
- 		{ },
---- a/arch/arm/mach-ep93xx/ts72xx.c
-+++ b/arch/arm/mach-ep93xx/ts72xx.c
-@@ -267,7 +267,7 @@ static struct spi_board_info bk3_spi_boa
-  * goes through CPLD
-  */
- static struct gpiod_lookup_table bk3_spi_cs_gpio_table = {
--	.dev_id = "ep93xx-spi.0",
-+	.dev_id = "spi0",
- 	.table = {
- 		GPIO_LOOKUP("F", 3, "cs", GPIO_ACTIVE_LOW),
- 		{ },
-@@ -316,7 +316,7 @@ static struct spi_board_info ts72xx_spi_
- };
- 
- static struct gpiod_lookup_table ts72xx_spi_cs_gpio_table = {
--	.dev_id = "ep93xx-spi.0",
-+	.dev_id = "spi0",
- 	.table = {
- 		/* DIO_17 */
- 		GPIO_LOOKUP("F", 2, "cs", GPIO_ACTIVE_LOW),
---- a/arch/arm/mach-ep93xx/vision_ep9307.c
-+++ b/arch/arm/mach-ep93xx/vision_ep9307.c
-@@ -242,7 +242,7 @@ static struct spi_board_info vision_spi_
- };
- 
- static struct gpiod_lookup_table vision_spi_cs_gpio_table = {
--	.dev_id = "ep93xx-spi.0",
-+	.dev_id = "spi0",
- 	.table = {
- 		GPIO_LOOKUP_IDX("A", 6, "cs", 0, GPIO_ACTIVE_LOW),
- 		GPIO_LOOKUP_IDX("A", 7, "cs", 1, GPIO_ACTIVE_LOW),
 
 
