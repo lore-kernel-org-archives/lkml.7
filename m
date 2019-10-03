@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 902E2C32792
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:20:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 119C2C10F14
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:20:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 48AB621783
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:20:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C881521783
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:20:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570119637;
-	bh=DWNzfLJ61MFerPbmG0E1WG/O8uncf6ZwntcksS8TIQI=;
+	s=default; t=1570119640;
+	bh=K+q3mHnwRmnhbB9RNRwxP3slO8LmOvrVsRKDXNrA6zk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=TwN4rmLaFsNetFvmA4Tu/w6UtwAxvjYeEPIY0xOe1kGRU4S13tSYfurf630v/3+Bd
-	 mRLrthiko0QTrUOoYJgRa/2XJz78Bp/wg+pIIGzUHrNtaSZuYWV0My4HEpxFzJv6MD
-	 6dzFqjo9OHbdAGZYkoPIlgAJ7zCjJEha0MP7Vqv0=
+	b=IWiblGdQXcaYFu/uFlP1J0nDev+oLNqQDAbg3c2ap5u/w3mv0X3sxolvM0B16nPE8
+	 kmALRxBQ1bxcO1EH6gaG0thHCwKurPe6cX0lEVQlFrIBfsDj59wMZdoDocY+ezPfJD
+	 7uU/mOo4SCHX9wH+6XZb495dzcqmwPUfOQUmvqCg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389949AbfJCQUg (ORCPT
+        id S2389959AbfJCQUj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 12:20:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48228 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 12:20:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48386 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732597AbfJCQUb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:20:31 -0400
+        id S2389940AbfJCQUg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:20:36 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C9E6720865;
-        Thu,  3 Oct 2019 16:20:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 474B420865;
+        Thu,  3 Oct 2019 16:20:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570119630;
-        bh=DWNzfLJ61MFerPbmG0E1WG/O8uncf6ZwntcksS8TIQI=;
+        s=default; t=1570119635;
+        bh=K+q3mHnwRmnhbB9RNRwxP3slO8LmOvrVsRKDXNrA6zk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=VRMzGFRN5mYsANSMvD3kQr2jiOK/uNlSlrT9HrsjDYLM4kdvnQm9XpXSEk9QhX1bP
-         8/qceJmtVZqm+tdYyJUUeBUJYA8zDbXtLy9CvW9RkZylY7eZAXShNdT0zi4R3rXWex
-         Hk7Q9kE/2jFlOcYmH7E6OZfqUBCs2NHwNkBEy2Vw=
+        b=rl1FRkX2ZlMyYuJLh9+MX2X1SFU8t2CXsufUj/tY4YBvPcEfENiWnzG6jGhZlhS8u
+         xxt3QU7l2a2FpGTpVibfMfSWEwY4GVWEK3jI5LI5JjqQgnvRdY1olIVCEpONjh8F6O
+         vdD/SDykhHhZiJo4IcSDopAUkYJGi9rTOtyfha18=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Matthias Kaehlcke <mka@chromium.org>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Douglas Anderson <dianders@chromium.org>,
+        stable@vger.kernel.org, Nigel Croxon <ncroxon@redhat.com>,
+        Song Liu <songliubraving@fb.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 135/211] mmc: core: Add helper function to indicate if SDIO IRQs is enabled
-Date:   Thu,  3 Oct 2019 17:53:21 +0200
-Message-Id: <20191003154517.961917276@linuxfoundation.org>
+Subject: [PATCH 4.19 137/211] raid5: dont increment read_errors on EILSEQ return
+Date:   Thu,  3 Oct 2019 17:53:23 +0200
+Message-Id: <20191003154518.443511325@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191003154447.010950442@linuxfoundation.org>
 References: <20191003154447.010950442@linuxfoundation.org>
@@ -61,48 +60,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ulf Hansson <ulf.hansson@linaro.org>
+From: Nigel Croxon <ncroxon@redhat.com>
 
-[ Upstream commit bd880b00697befb73eff7220ee20bdae4fdd487b ]
+[ Upstream commit b76b4715eba0d0ed574f58918b29c1b2f0fa37a8 ]
 
-To avoid each host driver supporting SDIO IRQs, from keeping track
-internally about if SDIO IRQs has been claimed, let's introduce a common
-helper function, sdio_irq_claimed().
+While MD continues to count read errors returned by the lower layer.
+If those errors are -EILSEQ, instead of -EIO, it should NOT increase
+the read_errors count.
 
-The function returns true if SDIO IRQs are claimed, via using the
-information about the number of claimed irqs. This is safe, even without
-any locks, as long as the helper function is called only from
-runtime/system suspend callbacks of the host driver.
+When RAID6 is set up on dm-integrity target that detects massive
+corruption, the leg will be ejected from the array.  Even if the
+issue is correctable with a sector re-write and the array has
+necessary redundancy to correct it.
 
-Tested-by: Matthias Kaehlcke <mka@chromium.org>
-Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
-Reviewed-by: Douglas Anderson <dianders@chromium.org>
-Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
+The leg is ejected because it runs up the rdev->read_errors beyond
+conf->max_nr_stripes.  The return status in dm-drypt when there is
+a data integrity error is -EILSEQ (BLK_STS_PROTECTION).
+
+Signed-off-by: Nigel Croxon <ncroxon@redhat.com>
+Signed-off-by: Song Liu <songliubraving@fb.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/linux/mmc/host.h | 9 +++++++++
- 1 file changed, 9 insertions(+)
+ drivers/md/raid5.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/include/linux/mmc/host.h b/include/linux/mmc/host.h
-index 2ff52de1c2b89..840462ed1ec7e 100644
---- a/include/linux/mmc/host.h
-+++ b/include/linux/mmc/host.h
-@@ -488,6 +488,15 @@ void mmc_command_done(struct mmc_host *host, struct mmc_request *mrq);
+diff --git a/drivers/md/raid5.c b/drivers/md/raid5.c
+index d26e5e9bea427..dbc4655a95768 100644
+--- a/drivers/md/raid5.c
++++ b/drivers/md/raid5.c
+@@ -2540,7 +2540,8 @@ static void raid5_end_read_request(struct bio * bi)
+ 		int set_bad = 0;
  
- void mmc_cqe_request_done(struct mmc_host *host, struct mmc_request *mrq);
- 
-+/*
-+ * May be called from host driver's system/runtime suspend/resume callbacks,
-+ * to know if SDIO IRQs has been claimed.
-+ */
-+static inline bool sdio_irq_claimed(struct mmc_host *host)
-+{
-+	return host->sdio_irqs > 0;
-+}
-+
- static inline void mmc_signal_sdio_irq(struct mmc_host *host)
- {
- 	host->ops->enable_sdio_irq(host, 0);
+ 		clear_bit(R5_UPTODATE, &sh->dev[i].flags);
+-		atomic_inc(&rdev->read_errors);
++		if (!(bi->bi_status == BLK_STS_PROTECTION))
++			atomic_inc(&rdev->read_errors);
+ 		if (test_bit(R5_ReadRepl, &sh->dev[i].flags))
+ 			pr_warn_ratelimited(
+ 				"md/raid:%s: read error on replacement device (sector %llu on %s).\n",
 -- 
 2.20.1
 
