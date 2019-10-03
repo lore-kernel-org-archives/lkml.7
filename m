@@ -4,52 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 594C7C10F14
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:07:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D45D4C4CED1
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:07:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2C84320673
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:07:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AB4CC20673
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:07:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570122455;
-	bh=uz0yh/ZK6cChfUY3IqA6SxiaK6OQKPgqLLWkm4NAiSA=;
+	s=default; t=1570122460;
+	bh=S4+I5ESyQyS/UgATDeHyzIwu+16lRIeDNWwtMrdWlCc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=NamzYzX8fgnSyKizy0TE+W5QXhXo3apQpg9B74lO0+NHuhjfa2N+3xrZ+7XZdWyIZ
-	 6E93kxUmlK2q1uYreweHos7ovm87rXWWUrV3jpWt/e1eK54erSupqBfpF4sDuUsLih
-	 09VvTifmc/yNXDZClq8od7g6KwOP8S0ji0e8jZCc=
+	b=Y4Z1MxdQecwt90u/LWE0XVhyQV5BgepuVV/fsEdCh5qRgBcmwoGuODNLGdyQDex5D
+	 SbrMPN/DWxm5XCHMyJJd9ljw20U1LBl9nZgW+YH5EiiPI1xPUgu5muHETLywtrf6sX
+	 /5XhFFcfTArJM38xt+/lR+ug7EkBpVc1l5upLmbA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404436AbfJCQgf (ORCPT
+        id S2392221AbfJCQgT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 12:36:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45670 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 12:36:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45486 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404384AbfJCQg1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:36:27 -0400
+        id S2404395AbfJCQgR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:36:17 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0DE9420830;
-        Thu,  3 Oct 2019 16:36:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 38FE121783;
+        Thu,  3 Oct 2019 16:36:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570120586;
-        bh=uz0yh/ZK6cChfUY3IqA6SxiaK6OQKPgqLLWkm4NAiSA=;
+        s=default; t=1570120575;
+        bh=S4+I5ESyQyS/UgATDeHyzIwu+16lRIeDNWwtMrdWlCc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=AQMfZNJ5Cus48FVw6//qKktYY4kvK663U0wmgS6A06ZSa8eEjE2cJOO0DQvnEjOAN
-         HLRrDFu5FEJXXkkuja/lpdiWPDKeC6onkNN2YfukZdORLvkZMUi1irH/ii9rhfdHlV
-         0q3Yl0e6WIAvPB8qEZqm2L3juFVMMyf2duN844L8=
+        b=g3VJ6mZ5k15PBYYDIYuwlb/QWODd7VAsR8xi7T/NZGfIMwd7VbTfq3GfJhjnYDyMr
+         4rkS/G61YtReEzgmfzVQG9QuVik1YWRpmxhGdX07/sojM+G2jg2k+LatSbJeDjvql3
+         XJMmtIF+hMi5INaI2M2l40EX/WJf7nIvr1Us2Rrs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hans Holmberg <Hans.Holmberg@wdc.com>,
-        Hans Holmberg <hans.holmberg@wdc.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Damien Le Moal <damien.lemoal@wdc.com>,
-        Jens Axboe <axboe@kernel.dk>
-Subject: [PATCH 5.2 276/313] block: mq-deadline: Fix queue restart handling
-Date:   Thu,  3 Oct 2019 17:54:14 +0200
-Message-Id: <20191003154600.232127235@linuxfoundation.org>
+        stable@vger.kernel.org, Jian-Hong Pan <jian-hong@endlessm.com>,
+        Kalle Valo <kvalo@codeaurora.org>
+Subject: [PATCH 5.2 272/313] rtw88: pci: Rearrange the memory usage for skb in RX ISR
+Date:   Thu,  3 Oct 2019 17:54:10 +0200
+Message-Id: <20191003154559.844199542@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191003154533.590915454@linuxfoundation.org>
 References: <20191003154533.590915454@linuxfoundation.org>
@@ -62,107 +59,124 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Damien Le Moal <damien.lemoal@wdc.com>
+From: Jian-Hong Pan <jian-hong@endlessm.com>
 
-commit cb8acabbe33b110157955a7425ee876fb81e6bbc upstream.
+commit ee6db78f5db9bfe426c57a1ec9713827ebccd2d4 upstream.
 
-Commit 7211aef86f79 ("block: mq-deadline: Fix write completion
-handling") added a call to blk_mq_sched_mark_restart_hctx() in
-dd_dispatch_request() to make sure that write request dispatching does
-not stall when all target zones are locked. This fix left a subtle race
-when a write completion happens during a dispatch execution on another
-CPU:
+Testing with RTL8822BE hardware, when available memory is low, we
+frequently see a kernel panic and system freeze.
 
-CPU 0: Dispatch			CPU1: write completion
+First, rtw_pci_rx_isr encounters a memory allocation failure (trimmed):
 
-dd_dispatch_request()
-    lock(&dd->lock);
-    ...
-    lock(&dd->zone_lock);	dd_finish_request()
-    rq = find request		lock(&dd->zone_lock);
-    unlock(&dd->zone_lock);
-    				zone write unlock
-				unlock(&dd->zone_lock);
-				...
-				__blk_mq_free_request
-                                      check restart flag (not set)
-				      -> queue not run
-    ...
-    if (!rq && have writes)
-        blk_mq_sched_mark_restart_hctx()
-    unlock(&dd->lock)
+rx routine starvation
+WARNING: CPU: 7 PID: 9871 at drivers/net/wireless/realtek/rtw88/pci.c:822 rtw_pci_rx_isr.constprop.25+0x35a/0x370 [rtwpci]
+[ 2356.580313] RIP: 0010:rtw_pci_rx_isr.constprop.25+0x35a/0x370 [rtwpci]
 
-Since the dispatch context finishes after the write request completion
-handling, marking the queue as needing a restart is not seen from
-__blk_mq_free_request() and blk_mq_sched_restart() not executed leading
-to the dispatch stall under 100% write workloads.
+Then we see a variety of different error conditions and kernel panics,
+such as this one (trimmed):
 
-Fix this by moving the call to blk_mq_sched_mark_restart_hctx() from
-dd_dispatch_request() into dd_finish_request() under the zone lock to
-ensure full mutual exclusion between write request dispatch selection
-and zone unlock on write request completion.
+rtw_pci 0000:02:00.0: pci bus timeout, check dma status
+skbuff: skb_over_panic: text:00000000091b6e66 len:415 put:415 head:00000000d2880c6f data:000000007a02b1ea tail:0x1df end:0xc0 dev:<NULL>
+------------[ cut here ]------------
+kernel BUG at net/core/skbuff.c:105!
+invalid opcode: 0000 [#1] SMP NOPTI
+RIP: 0010:skb_panic+0x43/0x45
 
-Fixes: 7211aef86f79 ("block: mq-deadline: Fix write completion handling")
-Cc: stable@vger.kernel.org
-Reported-by: Hans Holmberg <Hans.Holmberg@wdc.com>
-Reviewed-by: Hans Holmberg <hans.holmberg@wdc.com>
-Reviewed-by: Christoph Hellwig <hch@lst.de>
-Signed-off-by: Damien Le Moal <damien.lemoal@wdc.com>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+When skb allocation fails and the "rx routine starvation" is hit, the
+function returns immediately without updating the RX ring. At this
+point, the RX ring may continue referencing an old skb which was already
+handed off to ieee80211_rx_irqsafe(). When it comes to be used again,
+bad things happen.
+
+This patch allocates a new, data-sized skb first in RX ISR. After
+copying the data in, we pass it to the upper layers. However, if skb
+allocation fails, we effectively drop the frame. In both cases, the
+original, full size ring skb is reused.
+
+In addition, to fixing the kernel crash, the RX routine should now
+generally behave better under low memory conditions.
+
+Buglink: https://bugzilla.kernel.org/show_bug.cgi?id=204053
+Signed-off-by: Jian-Hong Pan <jian-hong@endlessm.com>
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- block/mq-deadline.c |   19 +++++++++----------
- 1 file changed, 9 insertions(+), 10 deletions(-)
+ drivers/net/wireless/realtek/rtw88/pci.c |   49 +++++++++++++------------------
+ 1 file changed, 22 insertions(+), 27 deletions(-)
 
---- a/block/mq-deadline.c
-+++ b/block/mq-deadline.c
-@@ -377,13 +377,6 @@ done:
-  * hardware queue, but we may return a request that is for a
-  * different hardware queue. This is because mq-deadline has shared
-  * state for all hardware queues, in terms of sorting, FIFOs, etc.
-- *
-- * For a zoned block device, __dd_dispatch_request() may return NULL
-- * if all the queued write requests are directed at zones that are already
-- * locked due to on-going write requests. In this case, make sure to mark
-- * the queue as needing a restart to ensure that the queue is run again
-- * and the pending writes dispatched once the target zones for the ongoing
-- * write requests are unlocked in dd_finish_request().
-  */
- static struct request *dd_dispatch_request(struct blk_mq_hw_ctx *hctx)
- {
-@@ -392,9 +385,6 @@ static struct request *dd_dispatch_reque
+--- a/drivers/net/wireless/realtek/rtw88/pci.c
++++ b/drivers/net/wireless/realtek/rtw88/pci.c
+@@ -763,6 +763,7 @@ static void rtw_pci_rx_isr(struct rtw_de
+ 	u32 pkt_offset;
+ 	u32 pkt_desc_sz = chip->rx_pkt_desc_sz;
+ 	u32 buf_desc_sz = chip->rx_buf_desc_sz;
++	u32 new_len;
+ 	u8 *rx_desc;
+ 	dma_addr_t dma;
  
- 	spin_lock(&dd->lock);
- 	rq = __dd_dispatch_request(dd);
--	if (!rq && blk_queue_is_zoned(hctx->queue) &&
--	    !list_empty(&dd->fifo_list[WRITE]))
--		blk_mq_sched_mark_restart_hctx(hctx);
- 	spin_unlock(&dd->lock);
+@@ -790,40 +791,34 @@ static void rtw_pci_rx_isr(struct rtw_de
+ 		pkt_offset = pkt_desc_sz + pkt_stat.drv_info_sz +
+ 			     pkt_stat.shift;
  
- 	return rq;
-@@ -560,6 +550,13 @@ static void dd_prepare_request(struct re
-  * spinlock so that the zone is never unlocked while deadline_fifo_request()
-  * or deadline_next_request() are executing. This function is called for
-  * all requests, whether or not these requests complete successfully.
-+ *
-+ * For a zoned block device, __dd_dispatch_request() may have stopped
-+ * dispatching requests if all the queued requests are write requests directed
-+ * at zones that are already locked due to on-going write requests. To ensure
-+ * write request dispatch progress in this case, mark the queue as needing a
-+ * restart to ensure that the queue is run again after completion of the
-+ * request and zones being unlocked.
-  */
- static void dd_finish_request(struct request *rq)
- {
-@@ -571,6 +568,8 @@ static void dd_finish_request(struct req
+-		if (pkt_stat.is_c2h) {
+-			/* keep rx_desc, halmac needs it */
+-			skb_put(skb, pkt_stat.pkt_len + pkt_offset);
++		/* allocate a new skb for this frame,
++		 * discard the frame if none available
++		 */
++		new_len = pkt_stat.pkt_len + pkt_offset;
++		new = dev_alloc_skb(new_len);
++		if (WARN_ONCE(!new, "rx routine starvation\n"))
++			goto next_rp;
++
++		/* put the DMA data including rx_desc from phy to new skb */
++		skb_put_data(new, skb->data, new_len);
  
- 		spin_lock_irqsave(&dd->zone_lock, flags);
- 		blk_req_zone_write_unlock(rq);
-+		if (!list_empty(&dd->fifo_list[WRITE]))
-+			blk_mq_sched_mark_restart_hctx(rq->mq_hctx);
- 		spin_unlock_irqrestore(&dd->zone_lock, flags);
- 	}
- }
+-			/* pass offset for further operation */
+-			*((u32 *)skb->cb) = pkt_offset;
+-			skb_queue_tail(&rtwdev->c2h_queue, skb);
++		if (pkt_stat.is_c2h) {
++			 /* pass rx_desc & offset for further operation */
++			*((u32 *)new->cb) = pkt_offset;
++			skb_queue_tail(&rtwdev->c2h_queue, new);
+ 			ieee80211_queue_work(rtwdev->hw, &rtwdev->c2h_work);
+ 		} else {
+-			/* remove rx_desc, maybe use skb_pull? */
+-			skb_put(skb, pkt_stat.pkt_len);
+-			skb_reserve(skb, pkt_offset);
+-
+-			/* alloc a smaller skb to mac80211 */
+-			new = dev_alloc_skb(pkt_stat.pkt_len);
+-			if (!new) {
+-				new = skb;
+-			} else {
+-				skb_put_data(new, skb->data, skb->len);
+-				dev_kfree_skb_any(skb);
+-			}
+-			/* TODO: merge into rx.c */
+-			rtw_rx_stats(rtwdev, pkt_stat.vif, skb);
++			/* remove rx_desc */
++			skb_pull(new, pkt_offset);
++
++			rtw_rx_stats(rtwdev, pkt_stat.vif, new);
+ 			memcpy(new->cb, &rx_status, sizeof(rx_status));
+ 			ieee80211_rx_irqsafe(rtwdev->hw, new);
+ 		}
+ 
+-		/* skb delivered to mac80211, alloc a new one in rx ring */
+-		new = dev_alloc_skb(RTK_PCI_RX_BUF_SIZE);
+-		if (WARN(!new, "rx routine starvation\n"))
+-			return;
+-
+-		ring->buf[cur_rp] = new;
+-		rtw_pci_reset_rx_desc(rtwdev, new, ring, cur_rp, buf_desc_sz);
++next_rp:
++		/* new skb delivered to mac80211, re-enable original skb DMA */
++		rtw_pci_reset_rx_desc(rtwdev, skb, ring, cur_rp, buf_desc_sz);
+ 
+ 		/* host read next element in ring */
+ 		if (++cur_rp >= ring->r.len)
 
 
