@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D5ACC10F14
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:03:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A29D5C32792
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:03:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 306FC21A4C
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:03:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 679E0215EA
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:03:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570118608;
-	bh=p68INXkclvLGmBIJXQaku3HvUMATg5Q2YwTxVLJ28T8=;
+	s=default; t=1570118611;
+	bh=fDOgN/V7NzxO0VMh+Nd6y7W61naiUhNP+roMN4RfvuA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=kzO6CdTqJ+wmyAn6/cwBBemtTNumasAdGVP/npZdAdqEKBFdVXZgvSVkiMApwEczT
-	 /wyCeqdpaTj3eFJMKRx8h7FMZnqcMkVUkhAJWW6uVAQ8NqGP7PNeF0LTtp+QQHqerN
-	 PMxPtNSORG097ZB39CD6hvSp+azpdExWiLj46wBU=
+	b=i3/hSg8qYnQ5m0x/ScBMj5CtmjTSKtaBoQcxf/zMZo+lu2oLroiwPw5lmEegH+J9F
+	 D9VGXMkaolBXwiG3+4paFGo+Px9c4cQhedLVWIC8WoCktP41wO4WA4Dd/WJSUgNkQT
+	 C1TRdu6g1syPYQjH7NK26QckdusTjnCYpV2fehXk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732199AbfJCQD0 (ORCPT
+        id S1732244AbfJCQDa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 12:03:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48640 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 12:03:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48784 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732164AbfJCQDW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:03:22 -0400
+        id S1732190AbfJCQD1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:03:27 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D5078222BE;
-        Thu,  3 Oct 2019 16:03:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3C583215EA;
+        Thu,  3 Oct 2019 16:03:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570118601;
-        bh=p68INXkclvLGmBIJXQaku3HvUMATg5Q2YwTxVLJ28T8=;
+        s=default; t=1570118606;
+        bh=fDOgN/V7NzxO0VMh+Nd6y7W61naiUhNP+roMN4RfvuA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=nlGxjOB77iNkgTKM9isPHq2O58UDmrqezpTek5DodmhfVvXyUI0mY8qL/YDa1XhW5
-         UdaoaO3cCwydpEkRPWQo3aDXt1cYo5TPjLqRffnj29GeY8CdKT3Ki18A5fngzZIVJC
-         eGZoX5VjLVZ1xqqe0LG0g+9uTCYOKc4VWLeYjYUo=
+        b=b0mCrnj6qhrEB2w4VqfRPItgmgCfUDz4ebblNWul7YUbsEvmfuwyorr5Kci3Y63eG
+         F2LZAqj3SMhJAttZ9LHkMw1UM8GWd/e4jF5tl8tfkZPPwdz07eT+Us4ha6tS9Xr6Mx
+         3wEdbtwfjYsfDFxb3rEoY0w6Dv0ocjeO8vjgtma4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Leonard Crestez <leonard.crestez@nxp.com>,
-        Chanwoo Choi <cw00.choi@samsung.com>,
-        MyungJoo Ham <myungjoo.ham@samsung.com>,
+        stable@vger.kernel.org, Wenwen Wang <wenwen@cs.uga.edu>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 069/129] PM / devfreq: passive: Use non-devm notifiers
-Date:   Thu,  3 Oct 2019 17:53:12 +0200
-Message-Id: <20191003154349.733521610@linuxfoundation.org>
+Subject: [PATCH 4.9 071/129] media: saa7146: add cleanup in hexium_attach()
+Date:   Thu,  3 Oct 2019 17:53:14 +0200
+Message-Id: <20191003154350.457538097@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191003154318.081116689@linuxfoundation.org>
 References: <20191003154318.081116689@linuxfoundation.org>
@@ -61,67 +61,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Leonard Crestez <leonard.crestez@nxp.com>
+From: Wenwen Wang <wenwen@cs.uga.edu>
 
-[ Upstream commit 0ef7c7cce43f6ecc2b96d447e69b2900a9655f7c ]
+[ Upstream commit 42e64117d3b4a759013f77bbcf25ab6700e55de7 ]
 
-The devfreq passive governor registers and unregisters devfreq
-transition notifiers on DEVFREQ_GOV_START/GOV_STOP using devm wrappers.
+If saa7146_register_device() fails, no cleanup is executed, leading to
+memory/resource leaks. To fix this issue, perform necessary cleanup work
+before returning the error.
 
-If devfreq itself is registered with devm then a warning is triggered on
-rmmod from devm_devfreq_unregister_notifier. Call stack looks like this:
-
-	devm_devfreq_unregister_notifier+0x30/0x40
-	devfreq_passive_event_handler+0x4c/0x88
-	devfreq_remove_device.part.8+0x6c/0x9c
-	devm_devfreq_dev_release+0x18/0x20
-	release_nodes+0x1b0/0x220
-	devres_release_all+0x78/0x84
-	device_release_driver_internal+0x100/0x1c0
-	driver_detach+0x4c/0x90
-	bus_remove_driver+0x7c/0xd0
-	driver_unregister+0x2c/0x58
-	platform_driver_unregister+0x10/0x18
-	imx_devfreq_platdrv_exit+0x14/0xd40 [imx_devfreq]
-
-This happens because devres_release_all will first remove all the nodes
-into a separate todo list so the nested devres_release from
-devm_devfreq_unregister_notifier won't find anything.
-
-Fix the warning by calling the non-devm APIS for frequency notification.
-Using devm wrappers is not actually useful for a governor anyway: it
-relies on the devfreq core to correctly match the GOV_START/GOV_STOP
-notifications.
-
-Fixes: 996133119f57 ("PM / devfreq: Add new passive governor")
-Signed-off-by: Leonard Crestez <leonard.crestez@nxp.com>
-Acked-by: Chanwoo Choi <cw00.choi@samsung.com>
-Signed-off-by: MyungJoo Ham <myungjoo.ham@samsung.com>
+Signed-off-by: Wenwen Wang <wenwen@cs.uga.edu>
+Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/devfreq/governor_passive.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ drivers/media/pci/saa7146/hexium_gemini.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/drivers/devfreq/governor_passive.c b/drivers/devfreq/governor_passive.c
-index 5be96b2249e72..8e889fd805b58 100644
---- a/drivers/devfreq/governor_passive.c
-+++ b/drivers/devfreq/governor_passive.c
-@@ -168,12 +168,12 @@ static int devfreq_passive_event_handler(struct devfreq *devfreq,
- 			p_data->this = devfreq;
+diff --git a/drivers/media/pci/saa7146/hexium_gemini.c b/drivers/media/pci/saa7146/hexium_gemini.c
+index f5fc8bcbd14b1..be85a2c4318e7 100644
+--- a/drivers/media/pci/saa7146/hexium_gemini.c
++++ b/drivers/media/pci/saa7146/hexium_gemini.c
+@@ -304,6 +304,9 @@ static int hexium_attach(struct saa7146_dev *dev, struct saa7146_pci_extension_d
+ 	ret = saa7146_register_device(&hexium->video_dev, dev, "hexium gemini", VFL_TYPE_GRABBER);
+ 	if (ret < 0) {
+ 		pr_err("cannot register capture v4l2 device. skipping.\n");
++		saa7146_vv_release(dev);
++		i2c_del_adapter(&hexium->i2c_adapter);
++		kfree(hexium);
+ 		return ret;
+ 	}
  
- 		nb->notifier_call = devfreq_passive_notifier_call;
--		ret = devm_devfreq_register_notifier(dev, parent, nb,
-+		ret = devfreq_register_notifier(parent, nb,
- 					DEVFREQ_TRANSITION_NOTIFIER);
- 		break;
- 	case DEVFREQ_GOV_STOP:
--		devm_devfreq_unregister_notifier(dev, parent, nb,
--					DEVFREQ_TRANSITION_NOTIFIER);
-+		WARN_ON(devfreq_unregister_notifier(parent, nb,
-+					DEVFREQ_TRANSITION_NOTIFIER));
- 		break;
- 	default:
- 		break;
 -- 
 2.20.1
 
