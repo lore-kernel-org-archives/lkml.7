@@ -2,110 +2,129 @@ Return-Path: <SRS0=6dNS=X4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00FEAC10F14
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:26:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C4BBC4CED1
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:26:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BF9BF222CD
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:26:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570119967;
-	bh=DTKvO66v163p+va+SeGgFiOwP3tsFY04aRiTV0shENc=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=tjzms0H20XxerLOR91i1AAj53Q5B6r2QdWwnXXcc0Zrn+lre2Fa74Ue8D1pCo+9LK
-	 iOevTfHAjdzerVttFG8mL/Qr5y9Oxe+OedpzuxLr4WjRVcrmPTIL48LLmjPYg+CI/a
-	 8jI/KBFfV9BQ+esKbNUBsspNfQ/d/XQFhhh1B9Jk=
+	by mail.kernel.org (Postfix) with ESMTP id EE3DB222CE
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:26:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391019AbfJCQ0H (ORCPT
+        id S2391027AbfJCQ0J (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 12:26:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56650 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 12:26:09 -0400
+Received: from foss.arm.com ([217.140.110.172]:48920 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732677AbfJCQZ7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:25:59 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E0C0620867;
-        Thu,  3 Oct 2019 16:25:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570119958;
-        bh=DTKvO66v163p+va+SeGgFiOwP3tsFY04aRiTV0shENc=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=096gFiUE4vYb260sj54TyM6i1EIfnwtvZXg+FFviZ+aF6Z2gM9hvj974lMOKVA0v8
-         LG/QPS3FC6mVtOmVkyjaC/47HGtzc27rqwEJkNKmOFCwXOCMsw+HgLJQPOgom9a/vM
-         wgIRLgErCtYryPhpo/M5gItomqQsinKiYnjFi74w=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Sean Young <sean@mess.org>,
-        Sean Wang <sean.wang@kernel.org>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 045/313] media: mtk-cir: lower de-glitch counter for rc-mm protocol
-Date:   Thu,  3 Oct 2019 17:50:23 +0200
-Message-Id: <20191003154537.601406539@linuxfoundation.org>
-X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20191003154533.590915454@linuxfoundation.org>
-References: <20191003154533.590915454@linuxfoundation.org>
-User-Agent: quilt/0.66
+        id S2390979AbfJCQZy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:25:54 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0722D1000;
+        Thu,  3 Oct 2019 09:25:54 -0700 (PDT)
+Received: from [192.168.0.9] (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id B2C883F739;
+        Thu,  3 Oct 2019 09:25:52 -0700 (PDT)
+Subject: Re: [PATCH 1/1] sched/rt: avoid contend with CFS task
+To:     Jing-Ting Wu <jing-ting.wu@mediatek.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>
+Cc:     wsd_upstream@mediatek.com, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org,
+        Steven Rostedt <rostedt@goodmis.org>
+References: <1567048502-6064-1-git-send-email-jing-ting.wu@mediatek.com>
+From:   Dietmar Eggemann <dietmar.eggemann@arm.com>
+Message-ID: <7bd9506b-9930-0bf8-a024-8c7d7d8bf86e@arm.com>
+Date:   Thu, 3 Oct 2019 18:25:30 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <1567048502-6064-1-git-send-email-jing-ting.wu@mediatek.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sean Young <sean@mess.org>
+[+ Steven Rostedt <rostedt@goodmis.org>]
 
-[ Upstream commit 5dd4b89dc098bf22cd13e82a308f42a02c102b2b ]
+On 29/08/2019 05:15, Jing-Ting Wu wrote:
+> At original linux design, RT & CFS scheduler are independent.
+> Current RT task placement policy will select the first cpu in
+> lowest_mask, even if the first CPU is running a CFS task.
+> This may put RT task to a running cpu and let CFS task runnable.
+> 
+> So we select idle cpu in lowest_mask first to avoid preempting
+> CFS task.
+> 
+> Signed-off-by: Jing-Ting Wu <jing-ting.wu@mediatek.com>
+> ---
+>  kernel/sched/rt.c |   42 +++++++++++++++++-------------------------
+>  1 file changed, 17 insertions(+), 25 deletions(-)
+> 
+> diff --git a/kernel/sched/rt.c b/kernel/sched/rt.c
+> index a532558..626ca27 100644
+> --- a/kernel/sched/rt.c
+> +++ b/kernel/sched/rt.c
+> @@ -1388,7 +1388,6 @@ static void yield_task_rt(struct rq *rq)
+>  static int
+>  select_task_rq_rt(struct task_struct *p, int cpu, int sd_flag, int flags)
+>  {
+> -	struct task_struct *curr;
+>  	struct rq *rq;
+>  
+>  	/* For anything but wake ups, just return the task_cpu */
+> @@ -1398,33 +1397,15 @@ static void yield_task_rt(struct rq *rq)
+>  	rq = cpu_rq(cpu);
+>  
+>  	rcu_read_lock();
+> -	curr = READ_ONCE(rq->curr); /* unlocked access */
+>  
+>  	/*
+> -	 * If the current task on @p's runqueue is an RT task, then
+> -	 * try to see if we can wake this RT task up on another
+> -	 * runqueue. Otherwise simply start this RT task
+> -	 * on its current runqueue.
+> -	 *
+> -	 * We want to avoid overloading runqueues. If the woken
+> -	 * task is a higher priority, then it will stay on this CPU
+> -	 * and the lower prio task should be moved to another CPU.
+> -	 * Even though this will probably make the lower prio task
+> -	 * lose its cache, we do not want to bounce a higher task
+> -	 * around just because it gave up its CPU, perhaps for a
+> -	 * lock?
+> -	 *
+> -	 * For equal prio tasks, we just let the scheduler sort it out.
+> -	 *
+> -	 * Otherwise, just let it ride on the affined RQ and the
+> -	 * post-schedule router will push the preempted task away
+> -	 *
+> -	 * This test is optimistic, if we get it wrong the load-balancer
+> -	 * will have to sort it out.
+> +	 * If the task p is allowed to put more than one CPU or
+> +	 * it is not allowed to put on this CPU.
+> +	 * Let p use find_lowest_rq to choose other idle CPU first,
+> +	 * instead of choose this cpu and preempt curr cfs task.
+>  	 */
+> -	if (curr && unlikely(rt_task(curr)) &&
+> -	    (curr->nr_cpus_allowed < 2 ||
+> -	     curr->prio <= p->prio)) {
+> +	if ((p->nr_cpus_allowed > 1) ||
+> +	    (!cpumask_test_cpu(cpu, p->cpus_ptr))) {
+>  		int target = find_lowest_rq(p);
 
-The rc-mm protocol can't be decoded by the mtk-cir since the de-glitch
-filter removes pulses/spaces shorter than 294 microseconds.
+I'm sure RT folks don't like the idea to change this condition.
 
-Tested on a BananaPi R2.
+I remember a similar approach and Steven Rostedt NAKed the idea back:
 
-Signed-off-by: Sean Young <sean@mess.org>
-Acked-by: Sean Wang <sean.wang@kernel.org>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/media/rc/mtk-cir.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
+https://lore.kernel.org/r/1415099585-31174-2-git-send-email-pang.xunlei@linaro.org
 
-diff --git a/drivers/media/rc/mtk-cir.c b/drivers/media/rc/mtk-cir.c
-index 46101efe017be..da457bf851303 100644
---- a/drivers/media/rc/mtk-cir.c
-+++ b/drivers/media/rc/mtk-cir.c
-@@ -35,6 +35,11 @@
- /* Fields containing pulse width data */
- #define MTK_WIDTH_MASK		  (GENMASK(7, 0))
- 
-+/* IR threshold */
-+#define MTK_IRTHD		 0x14
-+#define MTK_DG_CNT_MASK		 (GENMASK(12, 8))
-+#define MTK_DG_CNT(x)		 ((x) << 8)
-+
- /* Bit to enable interrupt */
- #define MTK_IRINT_EN		  BIT(0)
- 
-@@ -400,6 +405,9 @@ static int mtk_ir_probe(struct platform_device *pdev)
- 	mtk_w32_mask(ir, val, ir->data->fields[MTK_HW_PERIOD].mask,
- 		     ir->data->fields[MTK_HW_PERIOD].reg);
- 
-+	/* Set de-glitch counter */
-+	mtk_w32_mask(ir, MTK_DG_CNT(1), MTK_DG_CNT_MASK, MTK_IRTHD);
-+
- 	/* Enable IR and PWM */
- 	val = mtk_r32(ir, MTK_CONFIG_HIGH_REG);
- 	val |= MTK_OK_COUNT(ir->data->ok_count) |  MTK_PWM_EN | MTK_IR_EN;
--- 
-2.20.1
+Back then, Xunlei Pang even tried to create a lower mask of idle CPUs,
+for find_lower_mask() to return:
 
+https://lore.kernel.org/r/1415099585-31174-1-git-send-email-pang.xunlei@linaro.org
 
-
+[...]
