@@ -7,48 +7,51 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88EFFC32792
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:10:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93D9BC10F14
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:10:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4FBF321848
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:10:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6761E215EA
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:10:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570119006;
-	bh=CdKsb+0RI3iUs2816+NlYyidIgr7wQBF4+TCgmP++QE=;
+	s=default; t=1570119010;
+	bh=j67NKNp1md3REwfcpHfBf9dbvu5Cj75dKsr8XcqXwBo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1PCzu0mM6Eq7RaNUCzO8nthbfZ25+aL0nTbWD//qki7vZKuck5DfClxQUnz0sFvEA
-	 9XxMyb4OjPWeAJLk5LFOcSQvvkKhTvrsZz5bVZJfGKZVmyubqevgfaeH+vT35hWr0+
-	 aLWYAWCZ3NstJi0lAPQIXC+ug+IqCRR3R573JbBg=
+	b=oryJ1un2eHEzsb0YrND3C6k0mK1oBu8qj6tC39urfGWhw9LdAUtTmIYA0GIVIqRgh
+	 Bp0zu54rvmZz7VaUA8cU5ASXK+ut0DBHmiFLSrzY2tc8aUMy8e47s38AZeiv019R+2
+	 768lw2b7U+7A5ZG9qXYr3tGCvTy9cQQXupz7C+A0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387558AbfJCQKF (ORCPT
+        id S2387566AbfJCQKJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 12:10:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59144 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 12:10:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59220 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387545AbfJCQKD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:10:03 -0400
+        id S2387552AbfJCQKG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:10:06 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B31CE207FF;
-        Thu,  3 Oct 2019 16:10:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6212D21783;
+        Thu,  3 Oct 2019 16:10:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570119002;
-        bh=CdKsb+0RI3iUs2816+NlYyidIgr7wQBF4+TCgmP++QE=;
+        s=default; t=1570119004;
+        bh=j67NKNp1md3REwfcpHfBf9dbvu5Cj75dKsr8XcqXwBo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=D6/8UFM55yXdl+UYxBhXyP7v6/GRr+znJ1pQ21v5ck1fxkNoasR3q0Ujeh0CWYcgm
-         JlbHMURGM9s50mWwgMOMbWodOB4LNE4dG4pSSZYnBb3K65dxx5SBjaSIpKvFfiDEYo
-         QkBSIGUtrF7gKMZyPZ7f1DWfHpjoj9pPpQAkoEYc=
+        b=K77vLWfztfW16ds3GLVz00VwGud4csFaSl9e8jX+RYWeesd+pwRvjcOxIlLveaO4w
+         OaW19isi51091EZIII7od/pOqBKt6dUIYBQ75RttShyYiFEmOGSSnR79UG7TinBOAN
+         7LcqHrtONrhCyyOfKBk9+Zi6JZru80zNKyLtDLG0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Xiaofei Tan <tanxiaofei@huawei.com>,
-        James Morse <james.morse@arm.com>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        stable@vger.kernel.org, Fabio Estevam <festevam@gmail.com>,
+        Ezequiel Garcia <ezequiel@collabora.com>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Jacopo Mondi <jacopo@jmondi.org>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 082/185] efi: cper: print AER info of PCIe fatal error
-Date:   Thu,  3 Oct 2019 17:52:40 +0200
-Message-Id: <20191003154456.044591111@linuxfoundation.org>
+Subject: [PATCH 4.14 091/185] media: i2c: ov5645: Fix power sequence
+Date:   Thu,  3 Oct 2019 17:52:49 +0200
+Message-Id: <20191003154458.980232033@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191003154437.541662648@linuxfoundation.org>
 References: <20191003154437.541662648@linuxfoundation.org>
@@ -61,87 +64,120 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Xiaofei Tan <tanxiaofei@huawei.com>
+From: Ezequiel Garcia <ezequiel@collabora.com>
 
-[ Upstream commit b194a77fcc4001dc40aecdd15d249648e8a436d1 ]
+[ Upstream commit 092e8eb90a7dc7dd210cd4e2ea36075d0a7f96af ]
 
-AER info of PCIe fatal error is not printed in the current driver.
-Because APEI driver will panic directly for fatal error, and can't
-run to the place of printing AER info.
+This is mostly a port of Jacopo's fix:
 
-An example log is as following:
-{763}[Hardware Error]: Hardware error from APEI Generic Hardware Error Source: 11
-{763}[Hardware Error]: event severity: fatal
-{763}[Hardware Error]:  Error 0, type: fatal
-{763}[Hardware Error]:   section_type: PCIe error
-{763}[Hardware Error]:   port_type: 0, PCIe end point
-{763}[Hardware Error]:   version: 4.0
-{763}[Hardware Error]:   command: 0x0000, status: 0x0010
-{763}[Hardware Error]:   device_id: 0000:82:00.0
-{763}[Hardware Error]:   slot: 0
-{763}[Hardware Error]:   secondary_bus: 0x00
-{763}[Hardware Error]:   vendor_id: 0x8086, device_id: 0x10fb
-{763}[Hardware Error]:   class_code: 000002
-Kernel panic - not syncing: Fatal hardware error!
+  commit aa4bb8b8838ffcc776a79f49a4d7476b82405349
+  Author: Jacopo Mondi <jacopo@jmondi.org>
+  Date:   Fri Jul 6 05:51:52 2018 -0400
 
-This issue was imported by the patch, '37448adfc7ce ("aerdrv: Move
-cper_print_aer() call out of interrupt context")'. To fix this issue,
-this patch adds print of AER info in cper_print_pcie() for fatal error.
+  media: ov5640: Re-work MIPI startup sequence
 
-Here is the example log after this patch applied:
-{24}[Hardware Error]: Hardware error from APEI Generic Hardware Error Source: 10
-{24}[Hardware Error]: event severity: fatal
-{24}[Hardware Error]:  Error 0, type: fatal
-{24}[Hardware Error]:   section_type: PCIe error
-{24}[Hardware Error]:   port_type: 0, PCIe end point
-{24}[Hardware Error]:   version: 4.0
-{24}[Hardware Error]:   command: 0x0546, status: 0x4010
-{24}[Hardware Error]:   device_id: 0000:01:00.0
-{24}[Hardware Error]:   slot: 0
-{24}[Hardware Error]:   secondary_bus: 0x00
-{24}[Hardware Error]:   vendor_id: 0x15b3, device_id: 0x1019
-{24}[Hardware Error]:   class_code: 000002
-{24}[Hardware Error]:   aer_uncor_status: 0x00040000, aer_uncor_mask: 0x00000000
-{24}[Hardware Error]:   aer_uncor_severity: 0x00062010
-{24}[Hardware Error]:   TLP Header: 000000c0 01010000 00000001 00000000
-Kernel panic - not syncing: Fatal hardware error!
+In the OV5645 case, the changes are:
 
-Fixes: 37448adfc7ce ("aerdrv: Move cper_print_aer() call out of interrupt context")
-Signed-off-by: Xiaofei Tan <tanxiaofei@huawei.com>
-Reviewed-by: James Morse <james.morse@arm.com>
-[ardb: put parens around terms of && operator]
-Signed-off-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+- At set_power(1) time power up MIPI Tx/Rx and set data and clock lanes in
+  LP11 during 'sleep' and 'idle' with MIPI clock in non-continuous mode.
+- At set_power(0) time power down MIPI Tx/Rx (in addition to the current
+  power down of regulators and clock gating).
+- At s_stream time enable/disable the MIPI interface output.
+
+With this commit the sensor is able to enter LP-11 mode during power up,
+as expected by some CSI-2 controllers.
+
+Many thanks to Fabio Estevam for his help debugging this issue.
+
+Tested-by: Fabio Estevam <festevam@gmail.com>
+Signed-off-by: Ezequiel Garcia <ezequiel@collabora.com>
+Reviewed-by: Philipp Zabel <p.zabel@pengutronix.de>
+Reviewed-by: Jacopo Mondi <jacopo@jmondi.org>
+Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/firmware/efi/cper.c | 15 +++++++++++++++
- 1 file changed, 15 insertions(+)
+ drivers/media/i2c/ov5645.c | 26 ++++++++++++++++++--------
+ 1 file changed, 18 insertions(+), 8 deletions(-)
 
-diff --git a/drivers/firmware/efi/cper.c b/drivers/firmware/efi/cper.c
-index ce23d5402bd66..db404aab82b2a 100644
---- a/drivers/firmware/efi/cper.c
-+++ b/drivers/firmware/efi/cper.c
-@@ -507,6 +507,21 @@ static void cper_print_pcie(const char *pfx, const struct cper_sec_pcie *pcie,
- 		printk(
- 	"%s""bridge: secondary_status: 0x%04x, control: 0x%04x\n",
- 	pfx, pcie->bridge.secondary_status, pcie->bridge.control);
-+
-+	/* Fatal errors call __ghes_panic() before AER handler prints this */
-+	if ((pcie->validation_bits & CPER_PCIE_VALID_AER_INFO) &&
-+	    (gdata->error_severity & CPER_SEV_FATAL)) {
-+		struct aer_capability_regs *aer;
-+
-+		aer = (struct aer_capability_regs *)pcie->aer_info;
-+		printk("%saer_uncor_status: 0x%08x, aer_uncor_mask: 0x%08x\n",
-+		       pfx, aer->uncor_status, aer->uncor_mask);
-+		printk("%saer_uncor_severity: 0x%08x\n",
-+		       pfx, aer->uncor_severity);
-+		printk("%sTLP Header: %08x %08x %08x %08x\n", pfx,
-+		       aer->header_log.dw0, aer->header_log.dw1,
-+		       aer->header_log.dw2, aer->header_log.dw3);
-+	}
- }
+diff --git a/drivers/media/i2c/ov5645.c b/drivers/media/i2c/ov5645.c
+index 2d96c18497593..de15a13443e47 100644
+--- a/drivers/media/i2c/ov5645.c
++++ b/drivers/media/i2c/ov5645.c
+@@ -53,6 +53,8 @@
+ #define		OV5645_CHIP_ID_HIGH_BYTE	0x56
+ #define OV5645_CHIP_ID_LOW		0x300b
+ #define		OV5645_CHIP_ID_LOW_BYTE		0x45
++#define OV5645_IO_MIPI_CTRL00		0x300e
++#define OV5645_PAD_OUTPUT00		0x3019
+ #define OV5645_AWB_MANUAL_CONTROL	0x3406
+ #define		OV5645_AWB_MANUAL_ENABLE	BIT(0)
+ #define OV5645_AEC_PK_MANUAL		0x3503
+@@ -63,6 +65,7 @@
+ #define		OV5645_ISP_VFLIP		BIT(2)
+ #define OV5645_TIMING_TC_REG21		0x3821
+ #define		OV5645_SENSOR_MIRROR		BIT(1)
++#define OV5645_MIPI_CTRL00		0x4800
+ #define OV5645_PRE_ISP_TEST_SETTING_1	0x503d
+ #define		OV5645_TEST_PATTERN_MASK	0x3
+ #define		OV5645_SET_TEST_PATTERN(x)	((x) & OV5645_TEST_PATTERN_MASK)
+@@ -129,7 +132,6 @@ static const struct reg_value ov5645_global_init_setting[] = {
+ 	{ 0x3503, 0x07 },
+ 	{ 0x3002, 0x1c },
+ 	{ 0x3006, 0xc3 },
+-	{ 0x300e, 0x45 },
+ 	{ 0x3017, 0x00 },
+ 	{ 0x3018, 0x00 },
+ 	{ 0x302e, 0x0b },
+@@ -358,7 +360,10 @@ static const struct reg_value ov5645_global_init_setting[] = {
+ 	{ 0x3a1f, 0x14 },
+ 	{ 0x0601, 0x02 },
+ 	{ 0x3008, 0x42 },
+-	{ 0x3008, 0x02 }
++	{ 0x3008, 0x02 },
++	{ OV5645_IO_MIPI_CTRL00, 0x40 },
++	{ OV5645_MIPI_CTRL00, 0x24 },
++	{ OV5645_PAD_OUTPUT00, 0x70 }
+ };
  
- static void cper_print_tstamp(const char *pfx,
+ static const struct reg_value ov5645_setting_sxga[] = {
+@@ -743,13 +748,9 @@ static int ov5645_s_power(struct v4l2_subdev *sd, int on)
+ 				goto exit;
+ 			}
+ 
+-			ret = ov5645_write_reg(ov5645, OV5645_SYSTEM_CTRL0,
+-					       OV5645_SYSTEM_CTRL0_STOP);
+-			if (ret < 0) {
+-				ov5645_set_power_off(ov5645);
+-				goto exit;
+-			}
++			usleep_range(500, 1000);
+ 		} else {
++			ov5645_write_reg(ov5645, OV5645_IO_MIPI_CTRL00, 0x58);
+ 			ov5645_set_power_off(ov5645);
+ 		}
+ 	}
+@@ -1069,11 +1070,20 @@ static int ov5645_s_stream(struct v4l2_subdev *subdev, int enable)
+ 			dev_err(ov5645->dev, "could not sync v4l2 controls\n");
+ 			return ret;
+ 		}
++
++		ret = ov5645_write_reg(ov5645, OV5645_IO_MIPI_CTRL00, 0x45);
++		if (ret < 0)
++			return ret;
++
+ 		ret = ov5645_write_reg(ov5645, OV5645_SYSTEM_CTRL0,
+ 				       OV5645_SYSTEM_CTRL0_START);
+ 		if (ret < 0)
+ 			return ret;
+ 	} else {
++		ret = ov5645_write_reg(ov5645, OV5645_IO_MIPI_CTRL00, 0x40);
++		if (ret < 0)
++			return ret;
++
+ 		ret = ov5645_write_reg(ov5645, OV5645_SYSTEM_CTRL0,
+ 				       OV5645_SYSTEM_CTRL0_STOP);
+ 		if (ret < 0)
 -- 
 2.20.1
 
