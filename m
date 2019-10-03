@@ -7,49 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C5BEC10F14
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:29:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F395C32792
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:29:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0F54120865
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:29:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5C78820830
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:29:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570123768;
-	bh=FB4XVy2jvCqmDjccoNIb7z5U4Sf68+Zu8TPjSSL5quA=;
+	s=default; t=1570123775;
+	bh=OEJuyGRuQV/TMV5fm8GvzzZkATmPIugznv+/fAGZ58I=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=lxSCw1XArftR48IU7icq1nGXQWdkQ6wYk8gLuWrjPpCAf41LMM1AzalloS6ZsRKDo
-	 d4Rj2fLQ8pjDrliYU4rZ7Lkh3VcOQ9XQfVs4qICPuzvep/lOEp6QkWTSJNVTDbryEI
-	 4TTBhWxX8isGfCx6dni7IKM2LXM0WmbGPr/zcrS4=
+	b=gj3BIGies8+2AQElUfwELa6Dv7kE98isYldupaAwarUyBZlkxvIvNulra9qCf6FjJ
+	 3DAf+mRdmd4xnjP6BXSxskovwGvFuYxdrPjcRuqB0CWj6kN/Yt0IE/5PqANkXn5Abs
+	 V4sMgsf8NhNWlC1OLKDMniMQJSojnMpUHVhYUayA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730505AbfJCR31 (ORCPT
+        id S1730554AbfJCR3e (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 13:29:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35132 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 13:29:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34968 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388100AbfJCQMo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:12:44 -0400
+        id S2388079AbfJCQMi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:12:38 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 597E520865;
-        Thu,  3 Oct 2019 16:12:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AE26120865;
+        Thu,  3 Oct 2019 16:12:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570119163;
-        bh=FB4XVy2jvCqmDjccoNIb7z5U4Sf68+Zu8TPjSSL5quA=;
+        s=default; t=1570119158;
+        bh=OEJuyGRuQV/TMV5fm8GvzzZkATmPIugznv+/fAGZ58I=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1ljPvCoHqJ/m+25ckhFZYrkAL6I5jyFPoCQEkn4jQtHdH/hiw6NwKsNTCdt6+aTqL
-         JaazPO0Jmhhx5/fO6nJlRdOp3+F5yiBQLVq/gx6iBZuzfWxShH4Ir0Q7MzzTlecRa6
-         oAZiIQEx0M/PMXdc5V/P5bbo0Ug6iQEB/tvneoLs=
+        b=A7vhQAbFtXUnMaUubQPD4W4rUggOadhw88ROfAiQX1tTGIt0tZ3GSKl6EOflMHZ7F
+         VyY9kr8e6JMCvR6K9cvAONiu27wBUdxf/QVV61CXytuIIeRl6qgUjWaED+9U47iISg
+         70XGd9Eoqh0EDFBJOMlt596mOryszaeU09B9zl3k=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        "stable@vger.kernel.org, x86@kernel.org,
-        clang-built-linux@googlegroups.com, Nathan Chancellor" 
-        <natechancellor@gmail.com>,
-        Nathan Chancellor <natechancellor@gmail.com>
-Subject: [PATCH 4.14 149/185] x86/retpolines: Fix up backport of a9d57ef15cbe
-Date:   Thu,  3 Oct 2019 17:53:47 +0200
-Message-Id: <20191003154512.704851856@linuxfoundation.org>
+        stable@vger.kernel.org, Vasily Averin <vvs@virtuozzo.com>,
+        Miklos Szeredi <mszeredi@redhat.com>
+Subject: [PATCH 4.14 147/185] fuse: fix missing unlock_page in fuse_writepage()
+Date:   Thu,  3 Oct 2019 17:53:45 +0200
+Message-Id: <20191003154511.943701174@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191003154437.541662648@linuxfoundation.org>
 References: <20191003154437.541662648@linuxfoundation.org>
@@ -62,39 +59,32 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nathan Chancellor <natechancellor@gmail.com>
+From: Vasily Averin <vvs@virtuozzo.com>
 
-Commit a9d57ef15cbe ("x86/retpolines: Disable switch jump tables when
-retpolines are enabled") added -fno-jump-tables to workaround a GCC issue
-while deliberately avoiding adding this flag when CONFIG_CC_IS_CLANG is
-set, which is defined by the kconfig system when CC=clang is provided.
+commit d5880c7a8620290a6c90ced7a0e8bd0ad9419601 upstream.
 
-However, this symbol was added in 4.18 in commit 469cb7376c06 ("kconfig:
-add CC_IS_CLANG and CLANG_VERSION") so it is always undefined in 4.14,
-meaning -fno-jump-tables gets added when using Clang.
+unlock_page() was missing in case of an already in-flight write against the
+same page.
 
-Fix this up by using the equivalent $(cc-name) comparison, which matches
-what upstream did until commit 076f421da5d4 ("kbuild: replace cc-name
-test with CONFIG_CC_IS_CLANG").
-
-Fixes: e28951100515 ("x86/retpolines: Disable switch jump tables when retpolines are enabled")
-Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+Signed-off-by: Vasily Averin <vvs@virtuozzo.com>
+Fixes: ff17be086477 ("fuse: writepage: skip already in flight")
+Cc: <stable@vger.kernel.org> # v3.13
+Signed-off-by: Miklos Szeredi <mszeredi@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/x86/Makefile |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ fs/fuse/file.c |    1 +
+ 1 file changed, 1 insertion(+)
 
---- a/arch/x86/Makefile
-+++ b/arch/x86/Makefile
-@@ -249,7 +249,7 @@ ifdef CONFIG_RETPOLINE
-   # retpoline builds, however, gcc does not for x86. This has
-   # only been fixed starting from gcc stable version 8.4.0 and
-   # onwards, but not for older ones. See gcc bug #86952.
--  ifndef CONFIG_CC_IS_CLANG
-+  ifneq ($(cc-name), clang)
-     KBUILD_CFLAGS += $(call cc-option,-fno-jump-tables)
-   endif
- endif
+--- a/fs/fuse/file.c
++++ b/fs/fuse/file.c
+@@ -1699,6 +1699,7 @@ static int fuse_writepage(struct page *p
+ 		WARN_ON(wbc->sync_mode == WB_SYNC_ALL);
+ 
+ 		redirty_page_for_writepage(wbc, page);
++		unlock_page(page);
+ 		return 0;
+ 	}
+ 
 
 
