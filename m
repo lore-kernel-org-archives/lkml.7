@@ -2,78 +2,94 @@ Return-Path: <SRS0=6dNS=X4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B09DC10F14
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 14:23:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A592AC10F14
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 14:26:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 21ED820830
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 14:23:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7BB5520830
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 14:26:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730578AbfJCOXo (ORCPT
+        id S1730588AbfJCO0U (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 10:23:44 -0400
-Received: from relay10.mail.gandi.net ([217.70.178.230]:47973 "EHLO
-        relay10.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725957AbfJCOXo (ORCPT
+        Thu, 3 Oct 2019 10:26:20 -0400
+Received: from iolanthe.rowland.org ([192.131.102.54]:44202 "HELO
+        iolanthe.rowland.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with SMTP id S1726393AbfJCO0U (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 10:23:44 -0400
-Received: from localhost (aclermont-ferrand-651-1-259-53.w86-207.abo.wanadoo.fr [86.207.98.53])
-        (Authenticated sender: alexandre.belloni@bootlin.com)
-        by relay10.mail.gandi.net (Postfix) with ESMTPSA id 1DB0A240022;
-        Thu,  3 Oct 2019 14:23:41 +0000 (UTC)
-Date:   Thu, 3 Oct 2019 16:23:41 +0200
-From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
-To:     Lukasz Majewski <lukma@denx.de>
-Cc:     Alessandro Zummo <a.zummo@towertech.it>, linux-rtc@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] rtc: Add support for century bits to m41t62 (rv4162) RTC
- devices
-Message-ID: <20191003142341.GD575@piout.net>
-References: <20190911154803.15969-1-lukma@denx.de>
- <20191003114831.GR4106@piout.net>
- <20191003142150.3d73a9d7@jawa>
- <20191003123538.GS4106@piout.net>
- <20191003151434.49762715@jawa>
- <20191003134329.GB575@piout.net>
- <20191003161054.1eeae401@jawa>
+        Thu, 3 Oct 2019 10:26:20 -0400
+Received: (qmail 3509 invoked by uid 2102); 3 Oct 2019 10:26:19 -0400
+Received: from localhost (sendmail-bs@127.0.0.1)
+  by localhost with SMTP; 3 Oct 2019 10:26:19 -0400
+Date:   Thu, 3 Oct 2019 10:26:19 -0400 (EDT)
+From:   Alan Stern <stern@rowland.harvard.edu>
+X-X-Sender: stern@iolanthe.rowland.org
+To:     Kai-Heng Feng <kai.heng.feng@canonical.com>
+cc:     mathias.nyman@intel.com, <gregkh@linuxfoundation.org>,
+        <linux-usb@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] Revert "usb: Avoid unnecessary LPM enabling and disabling
+ during suspend and resume"
+In-Reply-To: <123BCB7F-5ABA-4DDD-9599-46D3240903F6@canonical.com>
+Message-ID: <Pine.LNX.4.44L0.1910031024410.1797-100000@iolanthe.rowland.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191003161054.1eeae401@jawa>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+Content-Type: TEXT/PLAIN; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 03/10/2019 16:10:53+0200, Lukasz Majewski wrote:
-> Sorry, but I do see some inconsistency here.
-> 
-> The application note [1] says that the correction shall be done in
-> application SW.
-> 
-> The rtc-range.c program [2] sets and reads the time via ioctl (e.g.
-> RTC_SET_TIME, RTC_RD_TIME).
-> 
-> To pass your tests one needs to do the correction in linux kernel
-> driver for drivers/rtc/rtc-m41t80.c. 
-> 
-> Please correct me if I'm wrong, but IMHO it shall be enough to adjust
-> 2100, 2200, 2300, years in this driver (the submitted patch shall be
-> adjusted to support it - I can prepare proper v2).
-> 
+On Thu, 3 Oct 2019, Kai-Heng Feng wrote:
 
-There is no way you will be able to know when to adjust the date because
-Linux may or may not be running when the boundary is crossed.
+> > On Oct 2, 2019, at 23:47, Alan Stern <stern@rowland.harvard.edu> wrote:
+> > 
+> > On Wed, 2 Oct 2019, Kai-Heng Feng wrote:
+> > 
+> >> This reverts commit d590c23111505635e1beb01006612971e5ede8aa.
+> >> 
+> >> Dell WD15 dock has a topology like this:
+> >> /:  Bus 04.Port 1: Dev 1, Class=root_hub, Driver=xhci_hcd/2p, 10000M
+> >>    |__ Port 1: Dev 2, If 0, Class=Hub, Driver=hub/7p, 5000M
+> >>            |__ Port 2: Dev 3, If 0, Class=Vendor Specific Class, Driver=r8152, 5000M
+> >> 
+> >> Their IDs:
+> >> Bus 004 Device 001: ID 1d6b:0003 Linux Foundation 3.0 root hub
+> >> Bus 004 Device 002: ID 0424:5537 Standard Microsystems Corp.
+> >> Bus 004 Device 004: ID 0bda:8153 Realtek Semiconductor Corp.
+> >> 
+> >> Ethernet cannot be detected after plugging ethernet cable to the dock,
+> >> the hub and roothub get runtime resumed and runtime suspended
+> >> immediately:
+> >> ...
+> > 
+> >> After some trial and errors, the issue goes away if LPM on the SMSC hub
+> >> is disabled. Digging further, enabling and disabling LPM during runtime
+> >> resume and runtime suspend respectively can solve the issue.
+> >> 
+> >> So bring back the old LPM behavior, which the SMSC hub inside Dell WD15
+> >> depends on.
+> >> 
+> >> Fixes: d590c2311150 ("usb: Avoid unnecessary LPM enabling and disabling during suspend and resume")
+> >> Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+> > 
+> > Maybe it would be better to have a VID/PID-specific quirk for this?
+> 
+> Re-reading the spec, I think we need some clarification:
+> "If the value is 3, then host software wants to selectively suspend the
+> device connected to this port. The hub shall transition the link to U3
+> from any of the other U states using allowed link state transitions.
+> If the port is not already in the U0 state, then it shall transition the
+> port to the U0 state and then initiate the transition to U3."
+> 
+> The phrase "then it shall transition the port to the U0 state" what does "it" here refer to?
+> Is it the hub or the software?
+> If it's the former then it's indeed a buggy hub, but if it's the latter I think reverting the commit is the right thing to do.
 
-The only useful range for an RTC is its fully contiguous range. If it
-needs software to run to support an extended range, it can't be used in
-the context of Linux.
+In my opinion, "it" here refers to the hub.  This is because of the 
+parallel construction with the preceding sentence ("... shall 
+transition the link/port"), which indicates that the subjects should be 
+the same.
 
--- 
-Alexandre Belloni, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+Alan Stern
+
