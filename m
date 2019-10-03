@@ -7,48 +7,49 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E758C32792
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:41:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 72C48C10F14
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:41:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 03D5320830
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:41:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4C5EB20830
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:41:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570124493;
-	bh=gJXf0m846H7nSaBfT45ol9cDA4hQTRNe/xed/jgri1w=;
+	s=default; t=1570124501;
+	bh=PxACxHN+Wapd9jJ/V6Zh5ngVH6SMYCN/Emx7Em/Hp0I=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ElYa7lwht3uaiBRY3LFRzFi5jiX1tRcIlRfc2v1HPpKyT9rolcN1a5udOsZYYHAwn
-	 givxscCjo5pFWFPEfUp043SNUNK6w4zgx8MGmgj16Dto79zs/W95nnO1MxUWEcJ0fw
-	 z/xZvYXSE9+9dyCf7Kqe2Xujeu55eFRZ5XE22CIA=
+	b=GBLRnhThK2FSzJR8Q+PX93TrFyP2edVyO8egMOkUV1lx6c8tMyRDofXCYg9EfOO7d
+	 mm69+rPoroZElrd9a/vAi0xQvuXjqJU04h9Vf6Csio6Bkl+Mypc7Nl2CMrKQJSIBMH
+	 /38UEYEHxi+DxBP4GgZBguJ/77pZ0lQLJxredTw8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389961AbfJCRlc (ORCPT
+        id S2390036AbfJCRlk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 13:41:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41340 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 13:41:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40940 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729351AbfJCP6e (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 11:58:34 -0400
+        id S1731205AbfJCP6P (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 11:58:15 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8A61720830;
-        Thu,  3 Oct 2019 15:58:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5732120700;
+        Thu,  3 Oct 2019 15:58:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570118314;
-        bh=gJXf0m846H7nSaBfT45ol9cDA4hQTRNe/xed/jgri1w=;
+        s=default; t=1570118294;
+        bh=PxACxHN+Wapd9jJ/V6Zh5ngVH6SMYCN/Emx7Em/Hp0I=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=m/5NW6G6DT3w+rwv5uvPmLCMJ9YrXffHPsTXn9RLuc29pmAOHf+mRQzX2pkWTTrK+
-         mVzvqSJFFHQJbqqLAXhbhCC71HIDQ0o1M95yZZtK+PwNbHq+GdYe/npQEWq/IuEVyY
-         vRXysYHdTuxPWKucrR2qHCFi63qD0asA/vtigzNM=
+        b=ZT4VlFJhxkXk/QH5WQhAw+fgxzWoHQBmksg8xlJiXEvEc0xJ+nno+dY4IVnymX8wW
+         TgHHzZaP0W2GdrhagzN+NSs/ULjxQOVVBXic2t5RMDyHIiRSwu59GQKPmmflLrr8h/
+         ci1SNaE0POTiwzMpzQk0pVFYduy8f78tx73+vCNQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, NeilBrown <neilb@suse.de>,
-        Yufen Yu <yuyufen@huawei.com>,
-        Song Liu <songliubraving@fb.com>,
+        stable@vger.kernel.org,
+        "Maciej S. Szmigiero" <mail@maciej.szmigiero.name>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 66/99] md/raid1: fail run raid1 array when active disk less than one
-Date:   Thu,  3 Oct 2019 17:53:29 +0200
-Message-Id: <20191003154329.075098862@linuxfoundation.org>
+Subject: [PATCH 4.4 60/99] media: saa7134: fix terminology around saa7134_i2c_eeprom_md7134_gate()
+Date:   Thu,  3 Oct 2019 17:53:23 +0200
+Message-Id: <20191003154325.658404987@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191003154252.297991283@linuxfoundation.org>
 References: <20191003154252.297991283@linuxfoundation.org>
@@ -61,74 +62,56 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yufen Yu <yuyufen@huawei.com>
+From: Maciej S. Szmigiero <mail@maciej.szmigiero.name>
 
-[ Upstream commit 07f1a6850c5d5a65c917c3165692b5179ac4cb6b ]
+[ Upstream commit 9d802222a3405599d6e1984d9324cddf592ea1f4 ]
 
-When run test case:
-  mdadm -CR /dev/md1 -l 1 -n 4 /dev/sd[a-d] --assume-clean --bitmap=internal
-  mdadm -S /dev/md1
-  mdadm -A /dev/md1 /dev/sd[b-c] --run --force
+saa7134_i2c_eeprom_md7134_gate() function and the associated comment uses
+an inverted i2c gate open / closed terminology.
+Let's fix this.
 
-  mdadm --zero /dev/sda
-  mdadm /dev/md1 -a /dev/sda
-
-  echo offline > /sys/block/sdc/device/state
-  echo offline > /sys/block/sdb/device/state
-  sleep 5
-  mdadm -S /dev/md1
-
-  echo running > /sys/block/sdb/device/state
-  echo running > /sys/block/sdc/device/state
-  mdadm -A /dev/md1 /dev/sd[a-c] --run --force
-
-mdadm run fail with kernel message as follow:
-[  172.986064] md: kicking non-fresh sdb from array!
-[  173.004210] md: kicking non-fresh sdc from array!
-[  173.022383] md/raid1:md1: active with 0 out of 4 mirrors
-[  173.022406] md1: failed to create bitmap (-5)
-
-In fact, when active disk in raid1 array less than one, we
-need to return fail in raid1_run().
-
-Reviewed-by: NeilBrown <neilb@suse.de>
-Signed-off-by: Yufen Yu <yuyufen@huawei.com>
-Signed-off-by: Song Liu <songliubraving@fb.com>
+Signed-off-by: Maciej S. Szmigiero <mail@maciej.szmigiero.name>
+Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+[hverkuil-cisco@xs4all.nl: fix alignment checkpatch warning]
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/md/raid1.c | 13 ++++++++++++-
- 1 file changed, 12 insertions(+), 1 deletion(-)
+ drivers/media/pci/saa7134/saa7134-i2c.c | 12 ++++++++----
+ 1 file changed, 8 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/md/raid1.c b/drivers/md/raid1.c
-index 82e284d2b202b..abb99515068b1 100644
---- a/drivers/md/raid1.c
-+++ b/drivers/md/raid1.c
-@@ -2958,6 +2958,13 @@ static int run(struct mddev *mddev)
- 		    !test_bit(In_sync, &conf->mirrors[i].rdev->flags) ||
- 		    test_bit(Faulty, &conf->mirrors[i].rdev->flags))
- 			mddev->degraded++;
-+	/*
-+	 * RAID1 needs at least one disk in active
-+	 */
-+	if (conf->raid_disks - mddev->degraded < 1) {
-+		ret = -EINVAL;
-+		goto abort;
-+	}
+diff --git a/drivers/media/pci/saa7134/saa7134-i2c.c b/drivers/media/pci/saa7134/saa7134-i2c.c
+index bc957528f69ff..e636fca36e3da 100644
+--- a/drivers/media/pci/saa7134/saa7134-i2c.c
++++ b/drivers/media/pci/saa7134/saa7134-i2c.c
+@@ -355,7 +355,11 @@ static struct i2c_client saa7134_client_template = {
  
- 	if (conf->raid_disks - mddev->degraded == 1)
- 		mddev->recovery_cp = MaxSector;
-@@ -2992,8 +2999,12 @@ static int run(struct mddev *mddev)
- 	ret =  md_integrity_register(mddev);
- 	if (ret) {
- 		md_unregister_thread(&mddev->thread);
--		raid1_free(mddev, conf);
-+		goto abort;
+ /* ----------------------------------------------------------- */
+ 
+-/* On Medion 7134 reading EEPROM needs DVB-T demod i2c gate open */
++/*
++ * On Medion 7134 reading the SAA7134 chip config EEPROM needs DVB-T
++ * demod i2c gate closed due to an address clash between this EEPROM
++ * and the demod one.
++ */
+ static void saa7134_i2c_eeprom_md7134_gate(struct saa7134_dev *dev)
+ {
+ 	u8 subaddr = 0x7, dmdregval;
+@@ -372,14 +376,14 @@ static void saa7134_i2c_eeprom_md7134_gate(struct saa7134_dev *dev)
+ 
+ 	ret = i2c_transfer(&dev->i2c_adap, i2cgatemsg_r, 2);
+ 	if ((ret == 2) && (dmdregval & 0x2)) {
+-		pr_debug("%s: DVB-T demod i2c gate was left closed\n",
++		pr_debug("%s: DVB-T demod i2c gate was left open\n",
+ 			 dev->name);
+ 
+ 		data[0] = subaddr;
+ 		data[1] = (dmdregval & ~0x2);
+ 		if (i2c_transfer(&dev->i2c_adap, i2cgatemsg_w, 1) != 1)
+-			pr_err("%s: EEPROM i2c gate open failure\n",
+-			  dev->name);
++			pr_err("%s: EEPROM i2c gate close failure\n",
++			       dev->name);
  	}
-+	return 0;
-+
-+abort:
-+	raid1_free(mddev, conf);
- 	return ret;
  }
  
 -- 
