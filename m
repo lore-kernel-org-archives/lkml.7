@@ -2,182 +2,113 @@ Return-Path: <SRS0=6dNS=X4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E4CE5C4CED1
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 18:34:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB8C4C32792
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 18:34:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C03942086A
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 18:34:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 94AFF2086A
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 18:34:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570127641;
-	bh=2UCdJign97YF4IL+ZKIvS2RsD/fiynf2EXRn2WAn1Tc=;
+	s=default; t=1570127654;
+	bh=l7lg82rRQaQDVfeOcm7Rfr/SwqkkoNP3HHRQDP2RzwA=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=yNeQ/4yOkAXFeB5DxBSDkRFQbUyokH4wslKKrUiw9JOQg6BvQw8J1sQihTflknMkS
-	 N1zmRZaxkC6MVZhzLQkHu7mqZzfK9bRP0GYLv/r5yL0NT4c373k8mx9LwzyEXRDeS0
-	 huNCBkx9pkDT1rNNxoWHnR8OfCDLKjCvSsq7/kbc=
+	b=rQT6Yb1HPfjmi9+EDsX+L6/kgNueIQPdwVGSSqiXSrFFJR1CknbKpoc6VF+yjyRyG
+	 pINegbJLUY1+qiZ8FMjns0m8ZqzG9s1CMXu7LaKceqdkRLVz9R+v0JKOORcsRFt3g7
+	 bhFwxxxEAKgeg6D2MjBmPRPGuwMmh3FJ3gZv7Cd8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389384AbfJCSeB (ORCPT
+        id S2389476AbfJCSeO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 14:34:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45404 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729993AbfJCSeA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 14:34:00 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 475E320865;
-        Thu,  3 Oct 2019 18:33:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570127639;
-        bh=2UCdJign97YF4IL+ZKIvS2RsD/fiynf2EXRn2WAn1Tc=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=pPhDg94CBzRjcrynQGR547eqXKamvDgr/Zox/aoTQANLgJGRa+URmyElU/09TFKAB
-         I4pUmmKoE7kwSTfSVPqVE68tqOXftoz6DZDEpv8h5urg065EfHhideGfVOKY813ov5
-         3mCtU6qHtfha7pVAFlfkkR8jvtju0WBLeBkF3APk=
-Date:   Thu, 3 Oct 2019 20:33:57 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     mnalajal@codeaurora.org
-Cc:     rafael@kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, bjorn.andersson@linaro.org
-Subject: Re: [PATCH] base: soc: Handle custom soc information sysfs entries
-Message-ID: <20191003183357.GA3580296@kroah.com>
-References: <1570061174-4918-1-git-send-email-mnalajal@codeaurora.org>
- <20191003070610.GC1814133@kroah.com>
- <0d219d344cea82b5f6c1ab23341de25b@codeaurora.org>
+        Thu, 3 Oct 2019 14:34:14 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:42758 "EHLO
+        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729993AbfJCSeN (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 14:34:13 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=l7lg82rRQaQDVfeOcm7Rfr/SwqkkoNP3HHRQDP2RzwA=; b=rdHcT+kn7cFovw6rm0OfSTKCS
+        KDwDt+68dvvvK0nEwAp1CE5O0vibScB+1y5mauwSu7U9vyyN0snsFE6rnXamMw81w5ovB2KRSgE1F
+        Ms9pOKjNeCi75rnVVNfYuXCApsQcZ0F4DkAxfVK3RuJSKOwVLgQTEFG+c1Uk7zZpCSy8A=;
+Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=ypsilon.sirena.org.uk)
+        by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <broonie@sirena.co.uk>)
+        id 1iG5vQ-0006CL-C9; Thu, 03 Oct 2019 18:34:04 +0000
+Received: by ypsilon.sirena.org.uk (Postfix, from userid 1000)
+        id 837CD2740210; Thu,  3 Oct 2019 19:34:03 +0100 (BST)
+Date:   Thu, 3 Oct 2019 19:34:03 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        Libin Yang <libin.yang@intel.com>,
+        Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
+        Takashi Iwai <tiwai@suse.de>, Sasha Levin <sashal@kernel.org>
+Subject: Re: [PATCH 5.3 039/344] ASoC: SOF: Intel: hda: Make hdac_device
+ device-managed
+Message-ID: <20191003183403.GD6090@sirena.co.uk>
+References: <20191003154540.062170222@linuxfoundation.org>
+ <20191003154543.920067214@linuxfoundation.org>
+ <20191003172617.GA6090@sirena.co.uk>
+ <20191003181937.GC3457141@kroah.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="6Nae48J/T25AfBN4"
 Content-Disposition: inline
-In-Reply-To: <0d219d344cea82b5f6c1ab23341de25b@codeaurora.org>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+In-Reply-To: <20191003181937.GC3457141@kroah.com>
+X-Cookie: Reactor error - core dumped!
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Oct 03, 2019 at 11:23:45AM -0700, mnalajal@codeaurora.org wrote:
-> On 2019-10-03 00:06, Greg KH wrote:
-> > On Wed, Oct 02, 2019 at 05:06:14PM -0700, Murali Nalajala wrote:
-> > > Soc framework exposed sysfs entries are not sufficient for some
-> > > of the h/w platforms. Currently there is no interface where soc
-> > > drivers can expose further information about their SoCs via soc
-> > > framework. This change address this limitation where clients can
-> > > pass their custom entries as attribute group and soc framework
-> > > would expose them as sysfs properties.
-> > > 
-> > > Signed-off-by: Murali Nalajala <mnalajal@codeaurora.org>
+
+--6Nae48J/T25AfBN4
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+
+On Thu, Oct 03, 2019 at 08:19:37PM +0200, Greg Kroah-Hartman wrote:
+> On Thu, Oct 03, 2019 at 06:26:17PM +0100, Mark Brown wrote:
+> > On Thu, Oct 03, 2019 at 05:50:04PM +0200, Greg Kroah-Hartman wrote:
+
+> > > Signed-off-by: Libin Yang <libin.yang@intel.com>
+> > > Signed-off-by: Ranjani Sridharan <ranjani.sridharan@linux.intel.com>
+> > > Reviewed-by: Takashi Iwai <tiwai@suse.de>
+> > > Link: https://lore.kernel.org/r/20190626070450.7229-1-ranjani.sridharan@linux.intel.com
+> > > Signed-off-by: Mark Brown <broonie@kernel.org>
+> > > Signed-off-by: Sasha Levin <sashal@kernel.org>
 > > > ---
-> > >  drivers/base/soc.c      | 26 ++++++++++++++++++--------
-> > >  include/linux/sys_soc.h |  1 +
-> > >  2 files changed, 19 insertions(+), 8 deletions(-)
-> > > 
-> > > diff --git a/drivers/base/soc.c b/drivers/base/soc.c
-> > > index 7c0c5ca..ec70a58 100644
-> > > --- a/drivers/base/soc.c
-> > > +++ b/drivers/base/soc.c
-> > > @@ -15,6 +15,8 @@
-> > >  #include <linux/err.h>
-> > >  #include <linux/glob.h>
-> > > 
-> > > +#define NUM_ATTR_GROUPS 3
-> > > +
-> > >  static DEFINE_IDA(soc_ida);
-> > > 
-> > >  static ssize_t soc_info_get(struct device *dev,
-> > > @@ -104,11 +106,6 @@ static ssize_t soc_info_get(struct device *dev,
-> > >  	.is_visible = soc_attribute_mode,
-> > >  };
-> > > 
-> > > -static const struct attribute_group *soc_attr_groups[] = {
-> > > -	&soc_attr_group,
-> > > -	NULL,
-> > > -};
-> > > -
-> > >  static void soc_release(struct device *dev)
-> > >  {
-> > >  	struct soc_device *soc_dev = container_of(dev, struct soc_device,
-> > > dev);
-> > > @@ -121,6 +118,7 @@ static void soc_release(struct device *dev)
-> > >  struct soc_device *soc_device_register(struct soc_device_attribute
-> > > *soc_dev_attr)
-> > >  {
-> > >  	struct soc_device *soc_dev;
-> > > +	const struct attribute_group **soc_attr_groups = NULL;
-> > >  	int ret;
-> > > 
-> > >  	if (!soc_bus_type.p) {
-> > > @@ -136,10 +134,20 @@ struct soc_device *soc_device_register(struct
-> > > soc_device_attribute *soc_dev_attr
-> > >  		goto out1;
-> > >  	}
-> > > 
-> > > +	soc_attr_groups = kzalloc(sizeof(*soc_attr_groups) *
-> > > +						NUM_ATTR_GROUPS, GFP_KERNEL);
-> > > +	if (!soc_attr_groups) {
-> > > +		ret = -ENOMEM;
-> > > +		goto out2;
-> > > +	}
-> > > +	soc_attr_groups[0] = &soc_attr_group;
-> > > +	soc_attr_groups[1] = soc_dev_attr->custom_attr_group;
-> > > +	soc_attr_groups[2] = NULL;
-> > > +
-> > >  	/* Fetch a unique (reclaimable) SOC ID. */
-> > >  	ret = ida_simple_get(&soc_ida, 0, 0, GFP_KERNEL);
-> > >  	if (ret < 0)
-> > > -		goto out2;
-> > > +		goto out3;
-> > >  	soc_dev->soc_dev_num = ret;
-> > > 
-> > >  	soc_dev->attr = soc_dev_attr;
-> > > @@ -151,14 +159,16 @@ struct soc_device *soc_device_register(struct
-> > > soc_device_attribute *soc_dev_attr
-> > > 
-> > >  	ret = device_register(&soc_dev->dev);
-> > >  	if (ret)
-> > > -		goto out3;
-> > > +		goto out4;
-> > > 
-> > >  	return soc_dev;
-> > > 
-> > > -out3:
-> > > +out4:
-> > >  	ida_simple_remove(&soc_ida, soc_dev->soc_dev_num);
-> > >  	put_device(&soc_dev->dev);
-> > >  	soc_dev = NULL;
-> > > +out3:
-> > > +	kfree(soc_attr_groups);
-> > >  out2:
-> > >  	kfree(soc_dev);
-> > >  out1:
-> > > diff --git a/include/linux/sys_soc.h b/include/linux/sys_soc.h
-> > > index 48ceea8..d9b3cf0 100644
-> > > --- a/include/linux/sys_soc.h
-> > > +++ b/include/linux/sys_soc.h
-> > > @@ -15,6 +15,7 @@ struct soc_device_attribute {
-> > >  	const char *serial_number;
-> > >  	const char *soc_id;
-> > >  	const void *data;
-> > > +	const struct attribute_group *custom_attr_group;
-> > 
-> > Shouldn't you make this:
-> > 	const struct attribute_group **soc_groups;
-> > 
-> > to match up with the rest of the way the driver core works?
-> Assumption is, soc drivers send their custom attribute group and soc
-> framework has already soc_attr_group" (basic info exposed).
-> With my changes i am combining these two groups and passing to
-> "device_register()".
-> I do not think soc drivers have a requirement where they can pass various
-> groups rather one single group attribute.
 
-Ok, I guess this is "good enough" such that no individual SOC driver
-will want to create subdirs and lots of fun like that.  If they do, then
-we can change the api at that point in time :)
+> > Looks like you're missing your own signoff on this (and quite a few of
+> > the others)?
 
-thanks,
+> Sasha signs off on these, I didn't, as he is the one that queues them
+> up.
 
-greg k-h
+It seems off when they go out as e-mail with you as the sender - it'll
+be OK in git if he's the committer of course but it's weird here.
+
+--6Nae48J/T25AfBN4
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl2WPxoACgkQJNaLcl1U
+h9AxNwf+I1RACj7QAv9TLm9jlzO6uYlsr+zdnMrG+0ZOunWrliY1KLheoRB6M0xi
+mDqEJNimfEyhB4TddvIehWrbEA64IBq78XefzDknQnbyI/m/v6Lsd8F9ZWf9tbSQ
+sxwN4eh66bPap7YmACtltDh7TV0QVdo8u+y1zzVczQ/UBYUFDN+sfCfxBDL1GtAo
+w+AG6SBVAwl4pYBLwzB5DMpnk6s2MJOi1x9icmoBf/6jv4uGlUjDJN0DxGI8WMcE
+5K97j3661Y1IPLp9sBnXr4dJxd0u88b2qYTyoIuohv6ZCAjCh5ZXLh6mF0zOztW6
+PociXsKyM44Ze2Bp3P1docJMulodZA==
+=k2RV
+-----END PGP SIGNATURE-----
+
+--6Nae48J/T25AfBN4--
