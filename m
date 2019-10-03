@@ -2,92 +2,151 @@ Return-Path: <SRS0=6dNS=X4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3000CC10F14
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 10:58:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FE53C10F14
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 11:01:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 00D132086A
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 10:58:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 43BED218DE
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 11:01:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="i4PLQMVb"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="hiPLFdlz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729699AbfJCK6E (ORCPT
+        id S1729662AbfJCLBZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 06:58:04 -0400
-Received: from mail-lf1-f67.google.com ([209.85.167.67]:39478 "EHLO
-        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729304AbfJCK6D (ORCPT
+        Thu, 3 Oct 2019 07:01:25 -0400
+Received: from merlin.infradead.org ([205.233.59.134]:50316 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729241AbfJCLBZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 06:58:03 -0400
-Received: by mail-lf1-f67.google.com with SMTP id 72so1467042lfh.6;
-        Thu, 03 Oct 2019 03:58:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=7oPdUNcmvU+NPNMTAZ//wtLR3acLcZSMhzABQJWIh5A=;
-        b=i4PLQMVbi4z4VMAkyfWSmxiCzNQX8spgJqdQeZ2tzQlfgXLsDDtGyB7Pb/0EopLytP
-         2FC6n/d7TzHdYDirMtkC3ea6ydm8grkWhWAJ7cuiWp/pqrifk594ipOUO+1zwueFfo/Z
-         VqSR6vNHI561HvhPNrvlB9WdBTlsWtoTpUQJaqNeOIsBdw1L/kvi39m+qY5gmqJDuBH2
-         PDlW2f0DVpX5ZxJ9q/GABgTGMCznH0mGnJ2vawX2Pf6Bcv8j9OzKZj/42bBAIzCVYEDk
-         7eILKT3v1DC7Lo2wLOQ2IrCulU69HE7WDJno1O1ggh+trm5MhY6RdLtL01qhfOsuEhvC
-         dM4w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=7oPdUNcmvU+NPNMTAZ//wtLR3acLcZSMhzABQJWIh5A=;
-        b=FY6Oq/ckkpgKuedk5jTzfqsfPSxe8DYUpEFTcrmM3U2Q5tnUFyilw/g+cMHlNu8vc+
-         eG2eOY+XY9r97yLaXeUUvnrrKBk64PBFXrcsD2Cm/CcLElLVj9jftkToPus5PLn7HxAB
-         lyWbN1nOPHFLa1LxjxV/t4nUhvFlWGuPaOEl11/JzIcVQAsZyUvmE4JhOUyUXLTn+p8k
-         0TAEjnXnc5mvVe0KGXXRPzhHwzRrE8DpRXOaEHzNLk1L83mOS/hY9R0KJSmSDWC1ERxn
-         yBUa9y84xXyjRsPPC0LfB+1RASjPOaUwqDYt9dLUIrXuFJ9NKpOyA/u6yUFWCvwY4bBZ
-         3dZw==
-X-Gm-Message-State: APjAAAUQ2XYhE37rahpsZWOiIPrfct79ZWeBwnAs9+etKSplEoYIk39/
-        qNrIN5I0CDr/9dO0dQBtDPcUlxPz/MO79RIOD9Y=
-X-Google-Smtp-Source: APXvYqxXNqqc2LSe0qjYORQ0K9+P72RLAub21kXk5U0yA6A6jEx3eISUZmOdiMakxVfEBFz997IJ7+3Dl/NWD+cZNWo=
-X-Received: by 2002:ac2:50cb:: with SMTP id h11mr5397870lfm.170.1570100281472;
- Thu, 03 Oct 2019 03:58:01 -0700 (PDT)
+        Thu, 3 Oct 2019 07:01:25 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=mIDyYRFzI6ytRUgMFKgNN0EZHGbTeOEsH8ft0Bg8Fzk=; b=hiPLFdlzn6nxKMq6GsJk68awK
+        tQ/DYlxJNlYM07uYBf1GU8zg3nazk+OnTT7FIgMhETSgZSeqQJeqoocWAnyWRGQjfDnFEJa+nWWVH
+        if/+PFHS4m/de0OXimcf6qIJ1ESKu51LfPOBHeXnCzT3+49xg3cjMnf9W4/1m+Et3QRNn74rphz2G
+        Zf3xU0cFELdJDz8mjQrmR8baQqepgEg1GEXyL6UgnxajZzS6degYAkr8lcn+Qyp+YoK4OazdgXs8Q
+        TpQEL8LUjg/7qgqPxYRBnDaX5SfPxE8Qkq9yacYzzMy+sEFRwRhAK6Fwbx60NlXsJdCSMPbdE199L
+        XHGgpoAeA==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.2 #3 (Red Hat Linux))
+        id 1iFyr8-0005pY-No; Thu, 03 Oct 2019 11:01:11 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 64802301A79;
+        Thu,  3 Oct 2019 13:00:17 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 8B067201DF203; Thu,  3 Oct 2019 13:01:06 +0200 (CEST)
+Date:   Thu, 3 Oct 2019 13:01:06 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Masami Hiramatsu <mhiramat@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, x86@kernel.org,
+        Nadav Amit <nadav.amit@gmail.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Song Liu <songliubraving@fb.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Daniel Bristot de Oliveira <bristot@redhat.com>
+Subject: Re: [PATCH 1/3] x86/alternatives: Teach text_poke_bp() to emulate
+ instructions
+Message-ID: <20191003110106.GI4581@hirez.programming.kicks-ass.net>
+References: <20190827180622.159326993@infradead.org>
+ <20190827181147.053490768@infradead.org>
+ <20191003140050.1d4cf59d3de8b5396d36c269@kernel.org>
+ <20191003082751.GQ4536@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
-References: <20191001205203.4b1a5fb6@coco.lan> <20191002141359.30166-1-gonsolo@gmail.com>
- <20191002141359.30166-2-gonsolo@gmail.com> <20191002142744.GA3475@gofer.mess.org>
- <CANL0fFS9TGKJH2rfkXzak78BaLazTNO7GoZhSb4vLBsDrmz3FQ@mail.gmail.com>
- <20191002150650.GA4227@gofer.mess.org> <CANL0fFRoL6NxOCbNC=XjQ6LDkeeqAayaLUbm9xARWX9ttqfPFg@mail.gmail.com>
- <29ab2e43-4374-a3ea-6ae1-a4267867eaa4@jpvw.nl> <20191002154922.7f1cfc76@coco.lan>
- <CANL0fFRJZBfEDWK_c2w1TomvB5-i4g09LopyJUbO5NtOwKdDTg@mail.gmail.com>
-In-Reply-To: <CANL0fFRJZBfEDWK_c2w1TomvB5-i4g09LopyJUbO5NtOwKdDTg@mail.gmail.com>
-From:   Gonsolo <gonsolo@gmail.com>
-Date:   Thu, 3 Oct 2019 12:57:50 +0200
-Message-ID: <CANL0fFTwJ4yRO+5q6WkL0+DtwdrRti6r_WY1intisYJhs5En8w@mail.gmail.com>
-Subject: Re: [PATCH] si2157: Add support for Logilink VG0022A.
-To:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-Cc:     JP <jp@jpvw.nl>, crope@iki.fi, Sean Young <sean@mess.org>,
-        linux-media@vger.kernel.org,
-        Linux Kernel <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191003082751.GQ4536@hirez.programming.kicks-ass.net>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi!
+On Thu, Oct 03, 2019 at 10:27:51AM +0200, Peter Zijlstra wrote:
+> On Thu, Oct 03, 2019 at 02:00:50PM +0900, Masami Hiramatsu wrote:
+> 
+> > > This fits almost all text_poke_bp() users, except
+> > > arch_unoptimize_kprobe() which restores random text, and for that site
+> > > we have to build an explicit emulate instruction.
+> > 
+> > OK, and in this case, I would like to change RELATIVEJUMP_OPCODE
+> > to JMP32_INSN_OPCODE for readability. (or at least
+> > making RELATIVEJUMP_OPCODE as an alias of JMP32_INSN_OPCODE)
+> 
+> > > @@ -448,12 +447,18 @@ void arch_optimize_kprobes(struct list_h
+> > >  void arch_unoptimize_kprobe(struct optimized_kprobe *op)
+> > >  {
+> > >  	u8 insn_buff[RELATIVEJUMP_SIZE];
+> > > +	u8 emulate_buff[RELATIVEJUMP_SIZE];
+> > >  
+> > >  	/* Set int3 to first byte for kprobes */
+> > >  	insn_buff[0] = BREAKPOINT_INSTRUCTION;
+> > >  	memcpy(insn_buff + 1, op->optinsn.copied_insn, RELATIVE_ADDR_SIZE);
+> > > +
+> > > +	emulate_buff[0] = RELATIVEJUMP_OPCODE;
+> > > +	*(s32 *)(&emulate_buff[1]) = (s32)((long)op->optinsn.insn -
+> > > +			((long)op->kp.addr + RELATIVEJUMP_SIZE));
+> 
+> I'm halfway through a patch introducing:
+> 
+>   union text_poke_insn {
+> 	u8 code[POKE_MAX_OPCODE_SUZE];
+> 	struct {
+> 		u8 opcode;
+> 		s32 disp;
+> 	} __attribute__((packed));
+>   };
+> 
+> to text-patching.h to unify all such custom unions we have all over the
+> place. I'll mob up the above in that.
+> 
+> > > +
+> > >  	text_poke_bp(op->kp.addr, insn_buff, RELATIVEJUMP_SIZE,
+> > > -		     op->optinsn.insn);
+> > > +		     emulate_buff);
+> > >  }
+> 
+> As argued in a previous thread, text_poke_bp() is broken when it changes
+> more than a single instruction at a time.
+> 
+> Now, ISTR optimized kprobes does something like:
+> 
+> 	poke INT3
 
-Boot time:
+Hmm, it does this using text_poke(), but lacks a
+on_each_cpu(do_sync_core, NULL, 1), which I suppose is OK-ish IFF you do
+that synchronize_rcu_tasks() after it, but less so if you don't.
 
-> [    5.380991] si2168 1-0067: firmware version: B 4.0.2
+That is, without either, you can't really tell if the kprobe is in
+effect or not.
 
-When starting VLC:
+Also, I think text_poke_bp(INT3) is broken, although I don't think
+anybody actually does that. Still, let me fix that.
 
-> [  457.677363] si2168 1-0067: downloading firmware from file
-> 'dvb-demod-si2168-b40-01.fw'
-> [  458.631034] si2168 1-0067: firmware version: B 4.0.11
-> [  458.650309] si2157 2-0063: unknown chip version Si21255-\xff\xff\xff
-
-There are two different firmware versions, 4.0.2 and 4.0.11. Is that expected?
-
--- 
-g
+> 	synchronize_rcu_tasks() /* waits for all tasks to schedule
+> 				   guarantees instructions after INT3
+> 				   are unused */
+> 	install optimized probe /* overwrites multiple instrctions with
+> 				   JMP.d32 */
+> 
+> And the above then undoes that by:
+> 
+> 	poke INT3 on top of the optimzed probe
+> 
+> 	poke tail instructions back /* guaranteed safe because the
+> 				       above INT3 poke ensures the
+> 				       JMP.d32 instruction is unused */
+> 
+> 	poke head byte back
+> 
+> Is this correct? If so, we should probably put a comment in there
+> explaining how all this is unusual but safe.
