@@ -2,386 +2,314 @@ Return-Path: <SRS0=6dNS=X4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA555C10F14
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 05:00:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00BF6C10F14
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 05:06:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7BD3A2133F
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 05:00:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570078857;
-	bh=njtu0OkOzNBPk2ukjq+D+AXlJWPLLwB5dM0rxH8u1JI=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=ZPzUCz23rrUi7kBtmMdc+wFmsRLqodXSgJsqDSGMQio5PJr6hqMfXczbFUkh2tvb0
-	 H7ZJYs27acas/OrhMjGBaeFJASV0baU8OsuxlOkah+1+KG3mmAsVzjFL/Fazu+c5yI
-	 Q898Vg67rRkeLtmMMDI4a1895cB2FSLYiX6oqvrI=
+	by mail.kernel.org (Postfix) with ESMTP id 9AE6E21D81
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 05:06:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="RjIN4Gtw";
+	dkim=pass (1024-bit key) header.d=sharedspace.onmicrosoft.com header.i=@sharedspace.onmicrosoft.com header.b="PTarw0x7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727410AbfJCFA4 (ORCPT
+        id S1727483AbfJCFGo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 01:00:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59048 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725799AbfJCFA4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 01:00:56 -0400
-Received: from devnote2 (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5548921D81;
-        Thu,  3 Oct 2019 05:00:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570078854;
-        bh=njtu0OkOzNBPk2ukjq+D+AXlJWPLLwB5dM0rxH8u1JI=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=tA4R2S4OTMzp5gKbi8UnwWz4QMp7vaStoYKcpCHG0WtRxfaazDu1XwWlqkrQ8AaNu
-         As2VJ0tOWz83dWfyODuixhV02/RDBU3N2SSIroITz6oROkwDyBh771T2sM4f6FX44b
-         oI3rSxoodGjaePY1YpxPkzSYuWK9eMWAm9FsaNCw=
-Date:   Thu, 3 Oct 2019 14:00:50 +0900
-From:   Masami Hiramatsu <mhiramat@kernel.org>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     linux-kernel@vger.kernel.org, x86@kernel.org,
-        Nadav Amit <nadav.amit@gmail.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Song Liu <songliubraving@fb.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Daniel Bristot de Oliveira <bristot@redhat.com>
-Subject: Re: [PATCH 1/3] x86/alternatives: Teach text_poke_bp() to emulate
- instructions
-Message-Id: <20191003140050.1d4cf59d3de8b5396d36c269@kernel.org>
-In-Reply-To: <20190827181147.053490768@infradead.org>
-References: <20190827180622.159326993@infradead.org>
-        <20190827181147.053490768@infradead.org>
-X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        Thu, 3 Oct 2019 01:06:44 -0400
+Received: from esa5.hgst.iphmx.com ([216.71.153.144]:3936 "EHLO
+        esa5.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725497AbfJCFGo (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 01:06:44 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
+  t=1570079204; x=1601615204;
+  h=from:to:cc:subject:date:message-id:
+   content-transfer-encoding:mime-version;
+  bh=PIEuOeu7U/Kt1Kj4de+aysu6dAD4lAg836SUqf4HZKs=;
+  b=RjIN4GtwadXaLr9MWRlWtfTUFxlyR8A+0cGrqbknMSLy9HFeg5PSiof5
+   UcofB5+rWLBzLtSO3EHH+qgv5P8sUvCsAoA/JpuO/vAt27y/IhZjdwxKq
+   A8s4VxTqHduqEqcItmnED1ehV+VwlIAzH+N3tDzwSaL3pV/bTdYfCPTfX
+   zAwgwnOgnwd8vxWOxUpzcsY5Nx9Ua06uxVPeyp19LyjTOwAezhuIzbSA+
+   M4yLyP7yfquL4j9X56MRDIcxqX+H93Y1juJOX4rbQnlqHJIg6wF6IgBs3
+   /f29qWZd9kR/2tDZwmHyvKICMfVSnF7LY2OfIdax/l54qr+KDWswD0dNI
+   w==;
+IronPort-SDR: 8aEVDO10LywIJEQMq5nLkL7QFpozJGUFmaHDME19WPd91FuyT50z3k2tdNmdG6qHTMK3cqswNb
+ SiYhgU9t7BSSOoXr6fQTimjvH9JfwFbvRcYDc6nR6FBc6QTnI9fzIgVILuHnQHcDh+pv41jT4K
+ Mg/Ucu/yflX4PDWS5TSHijmCtbNjhVoSsspSSvSONkp1UugPrrUVLU4ju6RnmX0x3uTdnajfPz
+ AnVQGsChDPTAQSd0gZc8ILrJUsk/fhGbYW5FM9BZ3nO0jOyeEWrURHF8q2tLxOKx63+0p2fIo1
+ sGw=
+X-IronPort-AV: E=Sophos;i="5.67,251,1566835200"; 
+   d="scan'208";a="120461277"
+Received: from mail-co1nam03lp2057.outbound.protection.outlook.com (HELO NAM03-CO1-obe.outbound.protection.outlook.com) ([104.47.40.57])
+  by ob1.hgst.iphmx.com with ESMTP; 03 Oct 2019 13:06:30 +0800
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=K8HEn7mgBAoLM6o3LrLdPSm3hic0XqCLKc7y2wwiBSSjJJ7ROmTGx2ncrbQ1SkmhqoIgTQaaETpEo4jX1BH0ATN2th/z0NB4zkWYWldPak8hWM3vsTCLZm9Pb/ZR74ecVNUMyCMHjMgKoUVo93aWNl9qdX98nWMNO7chsZS6i6Libi78VLJ7ilngi6bu9jF0LFqDnNmzKUBBeH45VH2RUZO+wN7C/iA9AA2sjevzHOQs167AKGFgrRQSg883zNGei8OgpbKwiZRp07cCx5Sa2IVt8mYYKqThUlUw4WdDUTdniC/yC+29C2GHuEsCGYgdydwWKOADkUXcQz4GDyz4Tg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=ooYuGa/Sijxs9VtSmp1l7kG4pwbuyGv+5FMmGy7ct+4=;
+ b=WpoU0selQwM2ByYzOEqrJpOfSAetdPdV03CWT7auXudEeexAIW4jF1dKNBY5eCgez38fw2VSuyKYGToBrM+vqGF/kxEji4czwLJAGY16X+J9ECrBaZuE9Q1G6estKhEeofmRZY6PCfUM2Y8VLzcZ2Keq3ezlKc3DRBPLRaJI0YqVFgj8ZPQuhb/swTmWiqLqhxEI6in5M6xKoxIPkuAY0hoYpVXKADkLMREr213ZfynNYN08KFaOSzVJMF2g78NVL7GqlfBYjnYyxTzNQQ4qLANNumVm+hoDMSib5s9PIA5gP+Sn20Br4cnQlLFTotw8WFT7SEg/i4tTmvwmII/76A==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=wdc.com; dmarc=pass action=none header.from=wdc.com; dkim=pass
+ header.d=wdc.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=sharedspace.onmicrosoft.com; s=selector2-sharedspace-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=ooYuGa/Sijxs9VtSmp1l7kG4pwbuyGv+5FMmGy7ct+4=;
+ b=PTarw0x7u61/QYtDiHg++rfYAI6PCg0rWsDttzA7E3dI77Olqb+2g+myz8+qcrlfQNZVfzedEFtIeOqTgC2tp4y0CtoFI4G4NoiWHeeSnZHPniiSAbPWkW3JdcJkT1CwjYkfug1HQEm7N58LeUuob0l2WjHCjCtB1pqDeHDTc/Q=
+Received: from MN2PR04MB6061.namprd04.prod.outlook.com (20.178.246.15) by
+ MN2PR04MB6991.namprd04.prod.outlook.com (10.186.144.209) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2305.18; Thu, 3 Oct 2019 05:06:29 +0000
+Received: from MN2PR04MB6061.namprd04.prod.outlook.com
+ ([fe80::1454:87a:13b0:d3a]) by MN2PR04MB6061.namprd04.prod.outlook.com
+ ([fe80::1454:87a:13b0:d3a%7]) with mapi id 15.20.2305.023; Thu, 3 Oct 2019
+ 05:06:29 +0000
+From:   Anup Patel <Anup.Patel@wdc.com>
+To:     Palmer Dabbelt <palmer@sifive.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Radim K <rkrcmar@redhat.com>
+CC:     Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Alexander Graf <graf@amazon.com>,
+        Atish Patra <Atish.Patra@wdc.com>,
+        Alistair Francis <Alistair.Francis@wdc.com>,
+        Damien Le Moal <Damien.LeMoal@wdc.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Anup Patel <anup@brainfault.org>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Anup Patel <Anup.Patel@wdc.com>
+Subject: [PATCH v8 00/19] KVM RISC-V Support
+Thread-Topic: [PATCH v8 00/19] KVM RISC-V Support
+Thread-Index: AQHVeahQgwihNAIJEEKPI5RCfSwzzA==
+Date:   Thu, 3 Oct 2019 05:06:29 +0000
+Message-ID: <20191003050558.9031-1-anup.patel@wdc.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: BMXPR01CA0030.INDPRD01.PROD.OUTLOOK.COM
+ (2603:1096:b00:c::16) To MN2PR04MB6061.namprd04.prod.outlook.com
+ (2603:10b6:208:d8::15)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=Anup.Patel@wdc.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-mailer: git-send-email 2.17.1
+x-originating-ip: [111.235.74.37]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 225bdbcf-ebe5-4764-54bd-08d747bf730c
+x-ms-office365-filtering-ht: Tenant
+x-ms-traffictypediagnostic: MN2PR04MB6991:
+x-ms-exchange-purlcount: 3
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <MN2PR04MB6991B602B0D5F5EE0AFFB6FC8D9F0@MN2PR04MB6991.namprd04.prod.outlook.com>
+wdcipoutbound: EOP-TRUE
+x-ms-oob-tlc-oobclassifiers: OLM:277;
+x-forefront-prvs: 01792087B6
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(366004)(346002)(39860400002)(136003)(376002)(396003)(189003)(199004)(7416002)(52116002)(25786009)(102836004)(54906003)(6506007)(1076003)(386003)(7736002)(44832011)(6436002)(486006)(66066001)(71190400001)(71200400001)(6116002)(3846002)(476003)(2616005)(26005)(305945005)(6512007)(36756003)(186003)(6306002)(14454004)(110136005)(5660300002)(6486002)(66446008)(66476007)(8936002)(966005)(66556008)(256004)(64756008)(14444005)(66946007)(86362001)(8676002)(81156014)(81166006)(99286004)(316002)(4326008)(2906002)(478600001)(50226002);DIR:OUT;SFP:1102;SCL:1;SRVR:MN2PR04MB6991;H:MN2PR04MB6061.namprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: gR9ZDyA/0BYzGeddDD6gVBxFOmNKgNkuOPexW4H4MRGnyF5jgB+VqcSsCkldSsVJPkIcfVEaPuwTIk/UDollFAk/KAdY+VkwkyTXxWtmWU7MB/Kt1kXmklenNbbZoK+B2tNI8pc+WMNuitZURsA5rexHbr/IbysQvnDbr29CE2u6UM81bjT+e5EyuuEzv/Hm2UK5ot1nXoRivV1c0OuDhVzVoOVxvtuhxzZYNO4xVRG58ipuDqQ0UBpLjJ3BKgasgQ0uSL4t57rwPtm+JT4swDswZo0wsWwZ9JU3RGovYLDTJPKkmeARveOvZ9MJkNUyudfvFZ7Li4iF7PrhHdW1YhcYHSq+ZkJElgoY9vprRwTyV9dlcE92vSj48mHiKfKlcVZm0DU/Yunj1cdJrMrH37idvub0wK1NwHXnZFrGv/3Bck7e/3SyTm1fh9TcWH672c3coce56dshwOqhW9h8hw==
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: wdc.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 225bdbcf-ebe5-4764-54bd-08d747bf730c
+X-MS-Exchange-CrossTenant-originalarrivaltime: 03 Oct 2019 05:06:29.4166
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: b61c8803-16f3-4c35-9b17-6f65f441df86
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: Q+JLqBmwd1EpAM8r+6NbMAiGhUC2Neyen8V4KxwRmYHwAvRaW/QB3KPf7sInWsFgYzhvtWj8nvfVfj4KfUoxfg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR04MB6991
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Peter,
+This series adds initial KVM RISC-V support. Currently, we are able to boot
+RISC-V 64bit Linux Guests with multiple VCPUs.
 
-On Tue, 27 Aug 2019 20:06:23 +0200
-Peter Zijlstra <peterz@infradead.org> wrote:
+Few key aspects of KVM RISC-V added by this series are:
+1. Minimal possible KVM world-switch which touches only GPRs and few CSRs.
+2. Full Guest/VM switch is done via vcpu_get/vcpu_put infrastructure.
+3. KVM ONE_REG interface for VCPU register access from user-space.
+4. PLIC emulation is done in user-space.
+5. Timer and IPI emuation is done in-kernel.
+6. MMU notifiers supported.
+7. FP lazy save/restore supported.
+8. SBI v0.1 emulation for KVM Guest available.
+9. Forward unhandled SBI calls to KVM userspace.
 
-> In preparation for static_call and variable size jump_label support,
-> teach text_poke_bp() to emulate instructions, namely:
-> 
->   JMP32, JMP8, CALL, NOP2, NOP_ATOMIC5
-> 
-> The current text_poke_bp() takes a @handler argument which is used as
-> a jump target when the temporary INT3 is hit by a different CPU.
-> 
-> When patching CALL instructions, this doesn't work because we'd miss
-> the PUSH of the return address. Instead, teach poke_int3_handler() to
-> emulate an instruction, typically the instruction we're patching in.
-> 
-> This fits almost all text_poke_bp() users, except
-> arch_unoptimize_kprobe() which restores random text, and for that site
-> we have to build an explicit emulate instruction.
+Here's a brief TODO list which we will work upon after this series:
+1. Implement recursive stage2 page table programing
+2. SBI v0.2 emulation in-kernel
+3. SBI v0.2 hart hotplug emulation in-kernel
+4. In-kernel PLIC emulation
+5. ..... and more .....
 
-OK, and in this case, I would like to change RELATIVEJUMP_OPCODE
-to JMP32_INSN_OPCODE for readability. (or at least
-making RELATIVEJUMP_OPCODE as an alias of JMP32_INSN_OPCODE)
+This series can be found in riscv_kvm_v8 branch at:
+https//github.com/avpatel/linux.git
 
-Except for that, this looks good to me.
+Our work-in-progress KVMTOOL RISC-V port can be found in riscv_v1 branch at=
+:
+https//github.com/avpatel/kvmtool.git
 
-Reviewed-by: Masami Hiramatsu <mhiramat@kernel.org>
+The QEMU RISC-V hypervisor emulation is done by Alistair and is available
+in riscv-hyp-work.next branch at:
+https://github.com/alistair23/qemu.git
 
-Thank you,
+To play around with KVM RISC-V, refer KVM RISC-V wiki at:
+https://github.com/kvm-riscv/howto/wiki
+https://github.com/kvm-riscv/howto/wiki/KVM-RISCV64-on-QEMU
 
-> 
-> Cc: Masami Hiramatsu <mhiramat@kernel.org>
-> Cc: Steven Rostedt <rostedt@goodmis.org>
-> Cc: Daniel Bristot de Oliveira <bristot@redhat.com>
-> Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-> ---
->  arch/x86/include/asm/text-patching.h |   24 ++++++--
->  arch/x86/kernel/alternative.c        |   98 ++++++++++++++++++++++++++---------
->  arch/x86/kernel/jump_label.c         |    9 +--
->  arch/x86/kernel/kprobes/opt.c        |   11 ++-
->  4 files changed, 103 insertions(+), 39 deletions(-)
-> 
-> --- a/arch/x86/include/asm/text-patching.h
-> +++ b/arch/x86/include/asm/text-patching.h
-> @@ -26,10 +26,11 @@ static inline void apply_paravirt(struct
->  #define POKE_MAX_OPCODE_SIZE	5
->  
->  struct text_poke_loc {
-> -	void *detour;
->  	void *addr;
-> -	size_t len;
-> -	const char opcode[POKE_MAX_OPCODE_SIZE];
-> +	int len;
-> +	s32 rel32;
-> +	u8 opcode;
-> +	const char text[POKE_MAX_OPCODE_SIZE];
->  };
->  
->  extern void text_poke_early(void *addr, const void *opcode, size_t len);
-> @@ -51,8 +52,10 @@ extern void text_poke_early(void *addr,
->  extern void *text_poke(void *addr, const void *opcode, size_t len);
->  extern void *text_poke_kgdb(void *addr, const void *opcode, size_t len);
->  extern int poke_int3_handler(struct pt_regs *regs);
-> -extern void text_poke_bp(void *addr, const void *opcode, size_t len, void *handler);
-> +extern void text_poke_bp(void *addr, const void *opcode, size_t len, const void *emulate);
->  extern void text_poke_bp_batch(struct text_poke_loc *tp, unsigned int nr_entries);
-> +extern void text_poke_loc_init(struct text_poke_loc *tp, void *addr,
-> +			       const void *opcode, size_t len, const void *emulate);
->  extern int after_bootmem;
->  extern __ro_after_init struct mm_struct *poking_mm;
->  extern __ro_after_init unsigned long poking_addr;
-> @@ -63,8 +66,17 @@ static inline void int3_emulate_jmp(stru
->  	regs->ip = ip;
->  }
->  
-> -#define INT3_INSN_SIZE 1
-> -#define CALL_INSN_SIZE 5
-> +#define INT3_INSN_SIZE		1
-> +#define INT3_INSN_OPCODE	0xCC
-> +
-> +#define CALL_INSN_SIZE		5
-> +#define CALL_INSN_OPCODE	0xE8
-> +
-> +#define JMP32_INSN_SIZE		5
-> +#define JMP32_INSN_OPCODE	0xE9
-> +
-> +#define JMP8_INSN_SIZE		2
-> +#define JMP8_INSN_OPCODE	0xEB
->  
->  static inline void int3_emulate_push(struct pt_regs *regs, unsigned long val)
->  {
-> --- a/arch/x86/kernel/alternative.c
-> +++ b/arch/x86/kernel/alternative.c
-> @@ -956,16 +956,15 @@ NOKPROBE_SYMBOL(patch_cmp);
->  int poke_int3_handler(struct pt_regs *regs)
->  {
->  	struct text_poke_loc *tp;
-> -	unsigned char int3 = 0xcc;
->  	void *ip;
->  
->  	/*
->  	 * Having observed our INT3 instruction, we now must observe
->  	 * bp_patching.nr_entries.
->  	 *
-> -	 * 	nr_entries != 0			INT3
-> -	 * 	WMB				RMB
-> -	 * 	write INT3			if (nr_entries)
-> +	 *	nr_entries != 0			INT3
-> +	 *	WMB				RMB
-> +	 *	write INT3			if (nr_entries)
->  	 *
->  	 * Idem for other elements in bp_patching.
->  	 */
-> @@ -978,9 +977,9 @@ int poke_int3_handler(struct pt_regs *re
->  		return 0;
->  
->  	/*
-> -	 * Discount the sizeof(int3). See text_poke_bp_batch().
-> +	 * Discount the INT3. See text_poke_bp_batch().
->  	 */
-> -	ip = (void *) regs->ip - sizeof(int3);
-> +	ip = (void *) regs->ip - INT3_INSN_SIZE;
->  
->  	/*
->  	 * Skip the binary search if there is a single member in the vector.
-> @@ -997,8 +996,22 @@ int poke_int3_handler(struct pt_regs *re
->  			return 0;
->  	}
->  
-> -	/* set up the specified breakpoint detour */
-> -	regs->ip = (unsigned long) tp->detour;
-> +	ip += tp->len;
-> +
-> +	switch (tp->opcode) {
-> +	case CALL_INSN_OPCODE:
-> +		int3_emulate_call(regs, (long)ip + tp->rel32);
-> +		break;
-> +
-> +	case JMP32_INSN_OPCODE:
-> +	case JMP8_INSN_OPCODE:
-> +		int3_emulate_jmp(regs, (long)ip + tp->rel32);
-> +		break;
-> +
-> +	default: /* nop */
-> +		int3_emulate_jmp(regs, (long)ip);
-> +		break;
-> +	}
->  
->  	return 1;
->  }
-> @@ -1027,8 +1040,8 @@ NOKPROBE_SYMBOL(poke_int3_handler);
->   */
->  void text_poke_bp_batch(struct text_poke_loc *tp, unsigned int nr_entries)
->  {
-> +	unsigned char int3 = INT3_INSN_OPCODE;
->  	int patched_all_but_first = 0;
-> -	unsigned char int3 = 0xcc;
->  	unsigned int i;
->  
->  	lockdep_assert_held(&text_mutex);
-> @@ -1056,7 +1069,7 @@ void text_poke_bp_batch(struct text_poke
->  	for (i = 0; i < nr_entries; i++) {
->  		if (tp[i].len - sizeof(int3) > 0) {
->  			text_poke((char *)tp[i].addr + sizeof(int3),
-> -				  (const char *)tp[i].opcode + sizeof(int3),
-> +				  (const char *)tp[i].text + sizeof(int3),
->  				  tp[i].len - sizeof(int3));
->  			patched_all_but_first++;
->  		}
-> @@ -1076,7 +1089,7 @@ void text_poke_bp_batch(struct text_poke
->  	 * replacing opcode.
->  	 */
->  	for (i = 0; i < nr_entries; i++)
-> -		text_poke(tp[i].addr, tp[i].opcode, sizeof(int3));
-> +		text_poke(tp[i].addr, tp[i].text, sizeof(int3));
->  
->  	on_each_cpu(do_sync_core, NULL, 1);
->  	/*
-> @@ -1087,6 +1100,53 @@ void text_poke_bp_batch(struct text_poke
->  	bp_patching.nr_entries = 0;
->  }
->  
-> +void text_poke_loc_init(struct text_poke_loc *tp, void *addr,
-> +			const void *opcode, size_t len, const void *emulate)
-> +{
-> +	struct insn insn;
-> +
-> +	if (!opcode)
-> +		opcode = (void *)tp->text;
-> +	else
-> +		memcpy((void *)tp->text, opcode, len);
-> +
-> +	if (!emulate)
-> +		emulate = opcode;
-> +
-> +	kernel_insn_init(&insn, emulate, MAX_INSN_SIZE);
-> +	insn_get_length(&insn);
-> +
-> +	BUG_ON(!insn_complete(&insn));
-> +	BUG_ON(len != insn.length);
-> +
-> +	tp->addr = addr;
-> +	tp->len = len;
-> +	tp->opcode = insn.opcode.bytes[0];
-> +
-> +	switch (tp->opcode) {
-> +	case CALL_INSN_OPCODE:
-> +	case JMP32_INSN_OPCODE:
-> +	case JMP8_INSN_OPCODE:
-> +		tp->rel32 = insn.immediate.value;
-> +		break;
-> +
-> +	default: /* assume NOP */
-> +		switch (len) {
-> +		case 2:
-> +			BUG_ON(memcmp(emulate, ideal_nops[len], len));
-> +			break;
-> +
-> +		case 5:
-> +			BUG_ON(memcmp(emulate, ideal_nops[NOP_ATOMIC5], len));
-> +			break;
-> +
-> +		default:
-> +			BUG();
-> +		}
-> +		break;
-> +	}
-> +}
-> +
->  /**
->   * text_poke_bp() -- update instructions on live kernel on SMP
->   * @addr:	address to patch
-> @@ -1098,20 +1158,10 @@ void text_poke_bp_batch(struct text_poke
->   * dynamically allocated memory. This function should be used when it is
->   * not possible to allocate memory.
->   */
-> -void text_poke_bp(void *addr, const void *opcode, size_t len, void *handler)
-> +void text_poke_bp(void *addr, const void *opcode, size_t len, const void *emulate)
->  {
-> -	struct text_poke_loc tp = {
-> -		.detour = handler,
-> -		.addr = addr,
-> -		.len = len,
-> -	};
-> -
-> -	if (len > POKE_MAX_OPCODE_SIZE) {
-> -		WARN_ONCE(1, "len is larger than %d\n", POKE_MAX_OPCODE_SIZE);
-> -		return;
-> -	}
-> -
-> -	memcpy((void *)tp.opcode, opcode, len);
-> +	struct text_poke_loc tp;
->  
-> +	text_poke_loc_init(&tp, addr, opcode, len, emulate);
->  	text_poke_bp_batch(&tp, 1);
->  }
-> --- a/arch/x86/kernel/jump_label.c
-> +++ b/arch/x86/kernel/jump_label.c
-> @@ -89,8 +89,7 @@ static void __ref __jump_label_transform
->  		return;
->  	}
->  
-> -	text_poke_bp((void *)jump_entry_code(entry), &code, JUMP_LABEL_NOP_SIZE,
-> -		     (void *)jump_entry_code(entry) + JUMP_LABEL_NOP_SIZE);
-> +	text_poke_bp((void *)jump_entry_code(entry), &code, JUMP_LABEL_NOP_SIZE, NULL);
->  }
->  
->  void arch_jump_label_transform(struct jump_entry *entry,
-> @@ -147,11 +146,9 @@ bool arch_jump_label_transform_queue(str
->  	}
->  
->  	__jump_label_set_jump_code(entry, type,
-> -				   (union jump_code_union *) &tp->opcode, 0);
-> +				   (union jump_code_union *)&tp->text, 0);
->  
-> -	tp->addr = entry_code;
-> -	tp->detour = entry_code + JUMP_LABEL_NOP_SIZE;
-> -	tp->len = JUMP_LABEL_NOP_SIZE;
-> +	text_poke_loc_init(tp, entry_code, NULL, JUMP_LABEL_NOP_SIZE, NULL);
->  
->  	tp_vec_nr++;
->  
-> --- a/arch/x86/kernel/kprobes/opt.c
-> +++ b/arch/x86/kernel/kprobes/opt.c
-> @@ -437,8 +437,7 @@ void arch_optimize_kprobes(struct list_h
->  		insn_buff[0] = RELATIVEJUMP_OPCODE;
->  		*(s32 *)(&insn_buff[1]) = rel;
->  
-> -		text_poke_bp(op->kp.addr, insn_buff, RELATIVEJUMP_SIZE,
-> -			     op->optinsn.insn);
-> +		text_poke_bp(op->kp.addr, insn_buff, RELATIVEJUMP_SIZE, NULL);
->  
->  		list_del_init(&op->list);
->  	}
-> @@ -448,12 +447,18 @@ void arch_optimize_kprobes(struct list_h
->  void arch_unoptimize_kprobe(struct optimized_kprobe *op)
->  {
->  	u8 insn_buff[RELATIVEJUMP_SIZE];
-> +	u8 emulate_buff[RELATIVEJUMP_SIZE];
->  
->  	/* Set int3 to first byte for kprobes */
->  	insn_buff[0] = BREAKPOINT_INSTRUCTION;
->  	memcpy(insn_buff + 1, op->optinsn.copied_insn, RELATIVE_ADDR_SIZE);
-> +
-> +	emulate_buff[0] = RELATIVEJUMP_OPCODE;
-> +	*(s32 *)(&emulate_buff[1]) = (s32)((long)op->optinsn.insn -
-> +			((long)op->kp.addr + RELATIVEJUMP_SIZE));
-> +
->  	text_poke_bp(op->kp.addr, insn_buff, RELATIVEJUMP_SIZE,
-> -		     op->optinsn.insn);
-> +		     emulate_buff);
->  }
->  
->  /*
-> 
-> 
+Changes since v7:
+- Rebased series on Linux-5.4-rc1 and Atish's SBI v0.2 patches
+- Removed PATCH1, PATCH3, and PATCH20 because these already merged
+- Use kernel doc style comments for ISA bitmap functions
+- Don't parse X, Y, and Z extension in riscv_fill_hwcap() because it will
+  be added in-future
+- Mark KVM RISC-V kconfig option as EXPERIMENTAL
+- Typo fix in commit description of PATCH6 of v7 series
+- Use separate structs for CORE and CSR registers of ONE_REG interface
+- Explicitly include asm/sbi.h in kvm/vcpu_sbi.c
+- Removed implicit switch-case fall-through in kvm_riscv_vcpu_exit()
+- No need to set VSSTATUS.MXR bit in kvm_riscv_vcpu_unpriv_read()
+- Removed register for instruction length in kvm_riscv_vcpu_unpriv_read()
+- Added defines for checking/decoding instruction length
+- Added separate patch to forward unhandled SBI calls to userspace tool
 
+Changes since v6:
+- Rebased patches on Linux-5.3-rc7
+- Added "return_handled" in struct kvm_mmio_decode to ensure that
+  kvm_riscv_vcpu_mmio_return() updates SEPC only once
+- Removed trap_stval parameter from kvm_riscv_vcpu_unpriv_read()
+- Updated git repo URL in MAINTAINERS entry
 
--- 
-Masami Hiramatsu <mhiramat@kernel.org>
+Changes since v5:
+- Renamed KVM_REG_RISCV_CONFIG_TIMEBASE register to
+  KVM_REG_RISCV_CONFIG_TBFREQ register in ONE_REG interface
+- Update SPEC in kvm_riscv_vcpu_mmio_return() for MMIO exits
+- Use switch case instead of illegal instruction opcode table for simplicit=
+y
+- Improve comments in stage2_remote_tlb_flush() for a potential remote TLB
+  flush optimization
+- Handle all unsupported SBI calls in default case of
+  kvm_riscv_vcpu_sbi_ecall() function
+- Fixed kvm_riscv_vcpu_sync_interrupts() for software interrupts
+- Improved unprivilege reads to handle traps due to Guest stage1 page table
+- Added separate patch to document RISC-V specific things in
+  Documentation/virt/kvm/api.txt
+
+Changes since v4:
+- Rebased patches on Linux-5.3-rc5
+- Added Paolo's Acked-by and Reviewed-by
+- Updated mailing list in MAINTAINERS entry
+
+Changes since v3:
+- Moved patch for ISA bitmap from KVM prep series to this series
+- Make vsip_shadow as run-time percpu variable instead of compile-time
+- Flush Guest TLBs on all Host CPUs whenever we run-out of VMIDs
+
+Changes since v2:
+- Removed references of KVM_REQ_IRQ_PENDING from all patches
+- Use kvm->srcu within in-kernel KVM run loop
+- Added percpu vsip_shadow to track last value programmed in VSIP CSR
+- Added comments about irqs_pending and irqs_pending_mask
+- Used kvm_arch_vcpu_runnable() in-place-of kvm_riscv_vcpu_has_interrupt()
+  in system_opcode_insn()
+- Removed unwanted smp_wmb() in kvm_riscv_stage2_vmid_update()
+- Use kvm_flush_remote_tlbs() in kvm_riscv_stage2_vmid_update()
+- Use READ_ONCE() in kvm_riscv_stage2_update_hgatp() for vmid
+
+Changes since v1:
+- Fixed compile errors in building KVM RISC-V as module
+- Removed unused kvm_riscv_halt_guest() and kvm_riscv_resume_guest()
+- Set KVM_CAP_SYNC_MMU capability only after MMU notifiers are implemented
+- Made vmid_version as unsigned long instead of atomic
+- Renamed KVM_REQ_UPDATE_PGTBL to KVM_REQ_UPDATE_HGATP
+- Renamed kvm_riscv_stage2_update_pgtbl() to kvm_riscv_stage2_update_hgatp(=
+)
+- Configure HIDELEG and HEDELEG in kvm_arch_hardware_enable()
+- Updated ONE_REG interface for CSR access to user-space
+- Removed irqs_pending_lock and use atomic bitops instead
+- Added separate patch for FP ONE_REG interface
+- Added separate patch for updating MAINTAINERS file
+
+Anup Patel (15):
+  RISC-V: Add bitmap reprensenting ISA features common across CPUs
+  RISC-V: Add hypervisor extension related CSR defines
+  RISC-V: Add initial skeletal KVM support
+  RISC-V: KVM: Implement VCPU create, init and destroy functions
+  RISC-V: KVM: Implement VCPU interrupts and requests handling
+  RISC-V: KVM: Implement KVM_GET_ONE_REG/KVM_SET_ONE_REG ioctls
+  RISC-V: KVM: Implement VCPU world-switch
+  RISC-V: KVM: Handle MMIO exits for VCPU
+  RISC-V: KVM: Handle WFI exits for VCPU
+  RISC-V: KVM: Implement VMID allocator
+  RISC-V: KVM: Implement stage2 page table programming
+  RISC-V: KVM: Implement MMU notifiers
+  RISC-V: KVM: Forward unhandled SBI calls to userspace
+  RISC-V: KVM: Document RISC-V specific parts of KVM API.
+  RISC-V: KVM: Add MAINTAINERS entry
+
+Atish Patra (4):
+  RISC-V: KVM: Add timer functionality
+  RISC-V: KVM: FP lazy save/restore
+  RISC-V: KVM: Implement ONE REG interface for FP registers
+  RISC-V: KVM: Add SBI v0.1 support
+
+ Documentation/virt/kvm/api.txt          |  158 +++-
+ MAINTAINERS                             |   10 +
+ arch/riscv/Kconfig                      |    2 +
+ arch/riscv/Makefile                     |    2 +
+ arch/riscv/include/asm/csr.h            |   58 ++
+ arch/riscv/include/asm/hwcap.h          |   22 +
+ arch/riscv/include/asm/kvm_host.h       |  263 ++++++
+ arch/riscv/include/asm/kvm_vcpu_timer.h |   30 +
+ arch/riscv/include/asm/pgtable-bits.h   |    1 +
+ arch/riscv/include/uapi/asm/kvm.h       |  111 +++
+ arch/riscv/kernel/asm-offsets.c         |  148 ++++
+ arch/riscv/kernel/cpufeature.c          |   83 +-
+ arch/riscv/kvm/Kconfig                  |   34 +
+ arch/riscv/kvm/Makefile                 |   14 +
+ arch/riscv/kvm/main.c                   |   92 +++
+ arch/riscv/kvm/mmu.c                    |  911 ++++++++++++++++++++
+ arch/riscv/kvm/tlb.S                    |   43 +
+ arch/riscv/kvm/vcpu.c                   | 1011 +++++++++++++++++++++++
+ arch/riscv/kvm/vcpu_exit.c              |  610 ++++++++++++++
+ arch/riscv/kvm/vcpu_sbi.c               |  149 ++++
+ arch/riscv/kvm/vcpu_switch.S            |  382 +++++++++
+ arch/riscv/kvm/vcpu_timer.c             |  113 +++
+ arch/riscv/kvm/vm.c                     |   86 ++
+ arch/riscv/kvm/vmid.c                   |  123 +++
+ drivers/clocksource/timer-riscv.c       |    8 +
+ include/clocksource/timer-riscv.h       |   16 +
+ include/uapi/linux/kvm.h                |    8 +
+ 27 files changed, 4478 insertions(+), 10 deletions(-)
+ create mode 100644 arch/riscv/include/asm/kvm_host.h
+ create mode 100644 arch/riscv/include/asm/kvm_vcpu_timer.h
+ create mode 100644 arch/riscv/include/uapi/asm/kvm.h
+ create mode 100644 arch/riscv/kvm/Kconfig
+ create mode 100644 arch/riscv/kvm/Makefile
+ create mode 100644 arch/riscv/kvm/main.c
+ create mode 100644 arch/riscv/kvm/mmu.c
+ create mode 100644 arch/riscv/kvm/tlb.S
+ create mode 100644 arch/riscv/kvm/vcpu.c
+ create mode 100644 arch/riscv/kvm/vcpu_exit.c
+ create mode 100644 arch/riscv/kvm/vcpu_sbi.c
+ create mode 100644 arch/riscv/kvm/vcpu_switch.S
+ create mode 100644 arch/riscv/kvm/vcpu_timer.c
+ create mode 100644 arch/riscv/kvm/vm.c
+ create mode 100644 arch/riscv/kvm/vmid.c
+ create mode 100644 include/clocksource/timer-riscv.h
+
+--
+2.17.1
