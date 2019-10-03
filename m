@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5494CC32792
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:29:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9BDFC32792
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:29:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 21FB020700
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:29:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 906B020700
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:29:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570120162;
-	bh=eMPlCWxTQpyconOk0Sr//jZgoyEkKBpyv80QPkFVPI4=;
+	s=default; t=1570120165;
+	bh=1yjOP+y2VDBuHbUnkJ0x7XMZLigsvLv6f6vVBFKWGfQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=UnjrealuOLqx097SRWYofe6e/7ovLFfWu6uOJhofmwM9NyzRRf7iC9hFP9pYRfmG1
-	 nCDDjY6EG7tr1O66Ki8hAnrWWDpXCn4wxe5ze9xFfJ0qGRVTPzhw1Dr8ddHhJMwpYI
-	 zaEy8BMveuptMj5B0aXm9wfNvAc1fy6FqdtjG14s=
+	b=YvQOk+ZQ7gn+FGrZn90DQyihPOq9sXkqUNo2d+YodQv7UEDRBv/L2YLXREsEywbN2
+	 PdmE7Z/UB00MhXej1wTrp49r0T58wvrjcfoj6pbOebAvV7yiB/+qoE5jTtG3iDxk6+
+	 zBnLb2MxFkUZNLkXPV75PQwrPrnvYsa78kta03Ck=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391429AbfJCQ3U (ORCPT
+        id S2390240AbfJCQ3Z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 12:29:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34646 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 12:29:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34730 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391374AbfJCQ3S (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:29:18 -0400
+        id S2389331AbfJCQ3V (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:29:21 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2C4842054F;
-        Thu,  3 Oct 2019 16:29:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E458B222BE;
+        Thu,  3 Oct 2019 16:29:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570120157;
-        bh=eMPlCWxTQpyconOk0Sr//jZgoyEkKBpyv80QPkFVPI4=;
+        s=default; t=1570120160;
+        bh=1yjOP+y2VDBuHbUnkJ0x7XMZLigsvLv6f6vVBFKWGfQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=eyrrpRpZ0mKF2JGcHSGdoBPWIPmv8KSFlQJyQDcBFA1My8q2dj6nznTVlU7ofyWmu
-         p+gJnjHZZzu10O2SJKv3Rj98LdI7YdGpswO1L5hEf/Kjn4oDzsQ4lH7s46CJ/2BQzV
-         Vxfrvz1Xwm1uJ9rrMQ/g+IpEMj5Do7bEkbhBrnbM=
+        b=uhn1CrOuPHqeZFkZcOUahy9d033BHc8moGZG/LrrJ8CQfMqjGEhmc+w5kZw+pxLEP
+         GU+UYQaF5y1rRYTysRqnaRFxTg7HKmec8Igy2l6TNAZhf8nSIerc4SNzVvsqXSO6HU
+         62QmyI0W7m9tDPnDzKcPxPUEH1NB6N64DwmNzRRE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Michael Ellerman <mpe@ellerman.id.au>,
-        Will Deacon <will@kernel.org>, Sasha Levin <sashal@kernel.org>,
-        Peter Collingbourne <pcc@google.com>
-Subject: [PATCH 5.2 116/313] powerpc/Makefile: Always pass --synthetic to nm if supported
-Date:   Thu,  3 Oct 2019 17:51:34 +0200
-Message-Id: <20191003154544.299239130@linuxfoundation.org>
+        stable@vger.kernel.org, Jiri Slaby <jslaby@suse.cz>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.2 081/313] ACPI / processor: dont print errors for processorIDs == 0xff
+Date:   Thu,  3 Oct 2019 17:50:59 +0200
+Message-Id: <20191003154540.827797213@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191003154533.590915454@linuxfoundation.org>
 References: <20191003154533.590915454@linuxfoundation.org>
@@ -60,63 +60,66 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Michael Ellerman <mpe@ellerman.id.au>
+From: Jiri Slaby <jslaby@suse.cz>
 
-[ Upstream commit 117acf5c29dd89e4c86761c365b9724dba0d9763 ]
+[ Upstream commit 2c2b005f549544c13ef4cfb0e4842949066889bc ]
 
-Back in 2004 we added logic to arch/ppc64/Makefile to pass
-the --synthetic option to nm, if it was supported by nm.
+Some platforms define their processors in this manner:
+    Device (SCK0)
+    {
+	Name (_HID, "ACPI0004" /* Module Device */)  // _HID: Hardware ID
+	Name (_UID, "CPUSCK0")  // _UID: Unique ID
+	Processor (CP00, 0x00, 0x00000410, 0x06){}
+	Processor (CP01, 0x02, 0x00000410, 0x06){}
+	Processor (CP02, 0x04, 0x00000410, 0x06){}
+	Processor (CP03, 0x06, 0x00000410, 0x06){}
+	Processor (CP04, 0x01, 0x00000410, 0x06){}
+	Processor (CP05, 0x03, 0x00000410, 0x06){}
+	Processor (CP06, 0x05, 0x00000410, 0x06){}
+	Processor (CP07, 0x07, 0x00000410, 0x06){}
+	Processor (CP08, 0xFF, 0x00000410, 0x06){}
+	Processor (CP09, 0xFF, 0x00000410, 0x06){}
+	Processor (CP0A, 0xFF, 0x00000410, 0x06){}
+	Processor (CP0B, 0xFF, 0x00000410, 0x06){}
+...
 
-Then in 2005 when arch/ppc64 and arch/ppc were merged, the logic to
-add --synthetic was moved inside an #ifdef CONFIG_PPC64 block within
-arch/powerpc/Makefile, and has remained there since.
+The processors marked as 0xff are invalid, there are only 8 of them in
+this case.
 
-That was fine, though crufty, until recently when a change to
-init/Kconfig added a config time check that uses $(NM). On powerpc
-that leads to an infinite loop because Kconfig uses $(NM) to calculate
-some values, then the powerpc Makefile changes $(NM), which Kconfig
-notices and restarts.
+So do not print an error on ids == 0xff, just print an info message.
+Actually, we could return ENODEV even on the first CPU with ID 0xff, but
+ACPI spec does not forbid the 0xff value to be a processor ID. Given
+0xff could be a correct one, we would break working systems if we
+returned ENODEV.
 
-The original commit that added --synthetic simply said:
-  On new toolchains we need to use nm --synthetic or we miss code
-  symbols.
-
-And the nm man page says that the --synthetic option causes nm to:
-  Include synthetic symbols in the output. These are special symbols
-  created by the linker for various purposes.
-
-So it seems safe to always pass --synthetic if nm supports it, ie. on
-32-bit and 64-bit, it just means 32-bit kernels might have more
-symbols reported (and in practice I see no extra symbols). Making it
-unconditional avoids the #ifdef CONFIG_PPC64, which in turn avoids the
-infinite loop.
-
-Debugged-by: Peter Collingbourne <pcc@google.com>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-Signed-off-by: Will Deacon <will@kernel.org>
+Signed-off-by: Jiri Slaby <jslaby@suse.cz>
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/powerpc/Makefile | 2 --
- 1 file changed, 2 deletions(-)
+ drivers/acpi/acpi_processor.c | 10 +++++++---
+ 1 file changed, 7 insertions(+), 3 deletions(-)
 
-diff --git a/arch/powerpc/Makefile b/arch/powerpc/Makefile
-index c345b79414a96..403f7e193833a 100644
---- a/arch/powerpc/Makefile
-+++ b/arch/powerpc/Makefile
-@@ -39,13 +39,11 @@ endif
- uname := $(shell uname -m)
- KBUILD_DEFCONFIG := $(if $(filter ppc%,$(uname)),$(uname),ppc64)_defconfig
+diff --git a/drivers/acpi/acpi_processor.c b/drivers/acpi/acpi_processor.c
+index 24f065114d424..2c4dda0787e84 100644
+--- a/drivers/acpi/acpi_processor.c
++++ b/drivers/acpi/acpi_processor.c
+@@ -279,9 +279,13 @@ static int acpi_processor_get_info(struct acpi_device *device)
+ 	}
  
--ifdef CONFIG_PPC64
- new_nm := $(shell if $(NM) --help 2>&1 | grep -- '--synthetic' > /dev/null; then echo y; else echo n; fi)
+ 	if (acpi_duplicate_processor_id(pr->acpi_id)) {
+-		dev_err(&device->dev,
+-			"Failed to get unique processor _UID (0x%x)\n",
+-			pr->acpi_id);
++		if (pr->acpi_id == 0xff)
++			dev_info_once(&device->dev,
++				"Entry not well-defined, consider updating BIOS\n");
++		else
++			dev_err(&device->dev,
++				"Failed to get unique processor _UID (0x%x)\n",
++				pr->acpi_id);
+ 		return -ENODEV;
+ 	}
  
- ifeq ($(new_nm),y)
- NM		:= $(NM) --synthetic
- endif
--endif
- 
- # BITS is used as extension for files which are available in a 32 bit
- # and a 64 bit version to simplify shared Makefiles.
 -- 
 2.20.1
 
