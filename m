@@ -2,171 +2,123 @@ Return-Path: <SRS0=6dNS=X4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A442AC10F14
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 18:55:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 01509C10F14
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 18:56:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 695CA20862
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 18:55:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D0A7720862
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 18:56:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gMPHmcPd"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="RTH7eMPN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732045AbfJCSzq (ORCPT
+        id S1732205AbfJCS4H (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 14:55:46 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:42428 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730110AbfJCSzq (ORCPT
+        Thu, 3 Oct 2019 14:56:07 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:34072 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730110AbfJCS4G (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 14:55:46 -0400
-Received: by mail-pf1-f196.google.com with SMTP id q12so2310406pff.9;
-        Thu, 03 Oct 2019 11:55:45 -0700 (PDT)
+        Thu, 3 Oct 2019 14:56:06 -0400
+Received: by mail-pf1-f193.google.com with SMTP id b128so2353548pfa.1
+        for <linux-kernel@vger.kernel.org>; Thu, 03 Oct 2019 11:56:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:openpgp:autocrypt:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=niJFTX5w2oyERI0e/I8dOvgdEptoO2AeWbZ2JEqdtoE=;
-        b=gMPHmcPdow2EB9Ztm02uBEs9P4ariTp2YGaHkuAYvATWve0u6Pe9sLCZaxPN0lVYHL
-         IlW7fCJBPkOyOywVmma2L2I84PUSQTQH5l7WQoI5gWWseLYSuIxJQZ8PIvQscjrav3RF
-         5tksLEs9kTVHD+CSFvQJ3yTkZCH9/reh94N8zIgN9z8XBvwNiO1KMrddI2VXs+Ku0Nwd
-         vNgl05rW9MnOUIyeBFLmTEWWd2Os7ndfbBG12KCEpbu3qNWyjcxosbzRxJjlMqKbnqsL
-         R9GJmvs4hvuTk72ePPucl08Svh0mvb99kzVjHaiZHEC76PtLZ65Ri+cvF/G4JvoKBHdV
-         AFbQ==
+        d=chromium.org; s=google;
+        h=message-id:mime-version:content-transfer-encoding:in-reply-to
+         :references:from:to:cc:subject:user-agent:date;
+        bh=m3hPkICQE69+a0xauYT0Amw2XtL4GDAq+zoSEfirsuU=;
+        b=RTH7eMPNg4REcj7uJxBnWgOGXzLh25RAdH0XvU6vUYGvMXEuc4SQe9Mopl1HUy9qTV
+         NwlkefUwbR5ZusY6euOhVnCNMd9HBRlowLYcDJ+/tismHYMOUtJdHE3jmXC+xB5H1rFG
+         MUmS1wlEq19k/B0rutrOSHgMx0/zeNEFj52Eo=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=niJFTX5w2oyERI0e/I8dOvgdEptoO2AeWbZ2JEqdtoE=;
-        b=CfDReCJdIWgMa4PCTYnPY/3J47UslLuioyKgZuJ1PMXOFnRTFakcY/0ghA8TEMZYXN
-         SrzE69zLe096zG3eU6A6JL1w+Yv6RlVqCH1tpr828IIe3/4lINc8eeuykT3PkGMRJzTa
-         eFOVta+EGvHMoOQJ2CalmlGMEV4z7pf3gLiwuMGcxCiJDIOoqJpt6Cr8Y87Q4Q0qSxdE
-         ATV474lqBbYyVdZsqUbss89Pzpuk+rt8yHarxi+JZhcch1wOsTotPaYU8U+4oDyCkmA8
-         mBruqx0VUgFodfkKk8DL7mrd8PBuyuIFFveVLakiYEJx2gvegy0ZmM2VvTluozRViOxF
-         tYig==
-X-Gm-Message-State: APjAAAU6nao8NLpBxUxv85LbiRhVZW+7o6sBQFBHHqGJsfcrCL+j583K
-        BSjDzu8yccBUorJpYSgl65RJqqEZ
-X-Google-Smtp-Source: APXvYqxgiw8Xkpz7DYQnl7SvAL4EgHJmIuWlDihtI5PZ8JpsgKMpbio04M2iofeiYJbCfWy8988R/w==
-X-Received: by 2002:a17:90a:36ae:: with SMTP id t43mr12198694pjb.7.1570128944519;
-        Thu, 03 Oct 2019 11:55:44 -0700 (PDT)
-Received: from [10.67.50.53] ([192.19.223.252])
-        by smtp.googlemail.com with ESMTPSA id u31sm3959750pgn.93.2019.10.03.11.55.41
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 03 Oct 2019 11:55:42 -0700 (PDT)
-Subject: Re: [PATCH 0/2] net: phy: broadcom: RGMII delays fixes
-To:     Andrew Lunn <andrew@lunn.ch>,
-        Florian Fainelli <f.fainelli@gmail.com>
-Cc:     netdev@vger.kernel.org, "David S. Miller" <davem@davemloft.net>,
-        open list <linux-kernel@vger.kernel.org>, hkallweit1@gmail.com,
-        bcm-kernel-feedback-list@broadcom.com,
-        manasa.mudireddy@broadcom.com, ray.jui@broadcom.com,
-        olteanv@gmail.com, rafal@milecki.pl
-References: <20191003184352.24356-1-f.fainelli@gmail.com>
- <20191003185116.GA21875@lunn.ch>
-From:   Florian Fainelli <f.fainelli@gmail.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=f.fainelli@gmail.com; prefer-encrypt=mutual; keydata=
- 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
- M5kY0ACeNhCZJvZ5g4C2Lc9fcTHu8jxmEkI=
-Message-ID: <0d5e4195-c407-2915-de96-3c4b3713ada0@gmail.com>
-Date:   Thu, 3 Oct 2019 11:55:40 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        h=x-gm-message-state:message-id:mime-version
+         :content-transfer-encoding:in-reply-to:references:from:to:cc:subject
+         :user-agent:date;
+        bh=m3hPkICQE69+a0xauYT0Amw2XtL4GDAq+zoSEfirsuU=;
+        b=pUI/RIi+RTHIktYlxn7xSTYq0hg7Z57wx9HJR9+msPHLfORXmc2wVflVBScJDewbSR
+         Yv+1ZOXBVH+Dz2K5J35nOHBTc2AhehUx6LCxCiz7oNd8r0hGoVjJLBpTGoV7XW6oAjHF
+         5UsFW3tRiomsxdXx6tsgyhVowGOcqd8zNB61jRvJaB9xh4dNbvOl1JPmJgAQtRSZmh09
+         cdGKKDAohZHjH1sPPOxml1s7N8FyreYJ8yxK5FI+86z5aR8BSTHyvZWPc70TEQ5Y/9bp
+         PYQ0M5Hw/gbkrebTtpzrRj1uvf4o04pzzaWnIWsYQceGmjMUUpoKfojMDrohzML0ZmOT
+         fy7A==
+X-Gm-Message-State: APjAAAUCchkt6wNGZp4vosQqnn6EELJU1WGrFBzxWv2JLeff7HKHSkHd
+        jMVrpwVNZntMK0W5zhk9HO5omg==
+X-Google-Smtp-Source: APXvYqwDCBHsPX8dh6oRQ9FHBVLRypmHbpAWhqLjb3zrDPeKQKRHPbU3F7fMBBGRfrbzqBb/RLO09A==
+X-Received: by 2002:a17:90a:fa3:: with SMTP id 32mr12426687pjz.35.1570128965072;
+        Thu, 03 Oct 2019 11:56:05 -0700 (PDT)
+Received: from chromium.org ([2620:15c:202:1:fa53:7765:582b:82b9])
+        by smtp.gmail.com with ESMTPSA id v68sm4379189pfv.47.2019.10.03.11.56.04
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 03 Oct 2019 11:56:04 -0700 (PDT)
+Message-ID: <5d964444.1c69fb81.121ce.d43b@mx.google.com>
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-In-Reply-To: <20191003185116.GA21875@lunn.ch>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <CAE=gft6YdNszcJV67CwcY2gOgPHrJ1+SnKMLr63f2bix2aZXXA@mail.gmail.com>
+References: <20190910160903.65694-1-swboyd@chromium.org> <20190910160903.65694-4-swboyd@chromium.org> <CAE=gft6YdNszcJV67CwcY2gOgPHrJ1+SnKMLr63f2bix2aZXXA@mail.gmail.com>
+From:   Stephen Boyd <swboyd@chromium.org>
+To:     Evan Green <evgreen@chromium.org>
+Cc:     Dan Williams <dan.j.williams@intel.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Andy Gross <agross@kernel.org>,
+        Will Deacon <will.deacon@arm.com>,
+        Catalin Marinas <catalin.marinas@arm.com>
+Subject: Re: [PATCH v3 3/5] memremap: Add support for read-only memory mappings
+User-Agent: alot/0.8.1
+Date:   Thu, 03 Oct 2019 11:56:03 -0700
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Andrew,
+Quoting Evan Green (2019-09-18 12:37:34)
+> On Tue, Sep 10, 2019 at 9:09 AM Stephen Boyd <swboyd@chromium.org> wrote:
+> >
+> > @@ -53,6 +60,9 @@ static void *try_ram_remap(resource_size_t offset, si=
+ze_t size,
+> >   * mapping types will be attempted in the order listed below until one=
+ of
+> >   * them succeeds.
+> >   *
+> > + * MEMREMAP_RO - establish a mapping whereby writes are ignored/reject=
+ed.
+> > + * Attempts to map System RAM with this mapping type will fail.
+>=20
+> Why should attempts to map RAM with this flag fail? MEMREMAP_WB will
+> allow RAM and quietly give you back the direct mapping, so it seems
+> like at least some values in this function allow RAM.
+>=20
+> Oh, I see a comment below about "Enforce that this mapping is not
+> aliasing System RAM". I guess this is worried about cache coloring?
+> But is that a problem with RO mappings? I guess the RO mappings could
+> get partially stale, so if the memory were being updated out from
+> under you, you might see some updates but not others. Was that the
+> rationale?
 
-On 10/3/19 11:51 AM, Andrew Lunn wrote:
-> On Thu, Oct 03, 2019 at 11:43:50AM -0700, Florian Fainelli wrote:
->> Hi all,
->>
->> This patch series fixes the BCM54210E RGMII delay configuration which
->> could only have worked in a PHY_INTERFACE_MODE_RGMII configuration.
-> 
-> Hi Florian
-> 
-> So any DT blob which incorrectly uses one of the other RGMII modes is
-> now going to break, where as before it was ignored.
+Will Deacon, Dan Williams, and I talked about this RO flag at LPC and I
+believe we decided to mostly get rid of the flags argument to this
+function. The vast majority of callers pass MEMREMAP_WB, so I'll just
+make that be the implementation default and support the flags for
+encrpytion (MEMREMAP_ENC and MEMREMAP_DEC). There are a few callers that
+pass MEMREMAP_WC or MEMREMAP_WT (and one that passes all of them), but I
+believe those can be changed to MEMREMAP_WB and not care. There's also
+the efi framebuffer code that matches the memory attributes in the EFI
+memory map. I'm not sure what to do with that one to be quite honest.
+Maybe EFI shouldn't care and just use whatever is already there in the
+mapping?
 
-Potentially yes. There is a precedent with the at803x PHY driver, and
-both changes here aim for correcting that mistake. The PHY driver not
-looking at phy_interface_t is a bug though. I will have a separate
-conversation about solving those problems in a more generic way with you
-and Heiner.
+Either way, I'll introduce a memremap_ro() API that maps memory as read
+only if possible and return a const void pointer as well. I'm debating
+making that API fallback to memremap() if RO isn't supported for some
+reason or can't work because we're remapping system memory but that
+seems a little too nice when the caller could just as well decide to
+fail if memory can't be mapped as read only.
 
-Rafal, do you have the platform DTS for which you added BCM54210E
-support available somewhere so we can see whether this is going to break?
-
-> 
-> Maybe we should let this sit in net-next for a while, before back
-> porting, so we get an idea of how many platforms we might be about to
-> break?
-
-Fine with me. It solves Ray's and Manasa's customer problem immediately
-and they already back ported the first change in the their tree AFAICT.
--- 
-Florian
