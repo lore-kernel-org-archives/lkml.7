@@ -7,49 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 62931C32792
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:36:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 678BCC10F14
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:36:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 36F2F215EA
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:36:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 34AB92086A
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:36:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570124205;
-	bh=fSQZjZgYqoFtPoY4OPB1K9rZwJJQaHChdCkYzfiW75o=;
+	s=default; t=1570124213;
+	bh=yboTTV9U5Hi5WqFc52skmFm/H4w+dx7z0bgyguhUBWo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ANXvmBkCjjFJNrJZwFIPT3wJPrwmTz8YlEG89pVIgLUQ4b5jQ7im/3X/fx9V7/2eb
-	 kngG/uPdb5mI4LPj/vVbL4Obg0rLbbtEKYbuKM58v1T036Gq5oRSqzsJJGGXt1X/Bp
-	 G64GgIVwU5LPjoE4HAXGKQhGe0upw5mNGdwhln7Y=
+	b=r+raS9z5/HUlyRyY4Ps/jFtZTtkC5V94B3D/Z4Uj1Ac7hrvBf7S7cWnL5bMOOZGrf
+	 UaEqnrhlJ7JuwLmu3BCwyIGRx5f+XET3zK8yQYwlEDfxZZNCYIP96xmrIwKrphgI4m
+	 pO8+PnHAe34NuGfsKfjdkoEuAg6QwJ7HoywY6QvE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732375AbfJCRgo (ORCPT
+        id S2388773AbfJCRgw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 13:36:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50178 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 13:36:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49910 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731056AbfJCQEQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:04:16 -0400
+        id S1732345AbfJCQEI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:04:08 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3DE3121D81;
-        Thu,  3 Oct 2019 16:04:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5D1C421A4C;
+        Thu,  3 Oct 2019 16:04:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570118655;
-        bh=fSQZjZgYqoFtPoY4OPB1K9rZwJJQaHChdCkYzfiW75o=;
+        s=default; t=1570118647;
+        bh=yboTTV9U5Hi5WqFc52skmFm/H4w+dx7z0bgyguhUBWo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=fRk35zzT5IoM+BMUH2OvVbf5Mfx3HbCBMWrTmBpZG4TGqPgA7C7IBX0OQxbndYn+Y
-         LPaSFJS0ne+/JrslQwji6Q89z9e5QBHkC3+BLGk/tTV5lsEGQP3AykBhpebfiD4iOj
-         KNqw9M7SsgI9CSpHDFDcmMwqwRzG+rjcuV2JGMJ8=
+        b=bAE5haD1mVVI02dqS7srlHuiJcOGNx3SCA+X1dLQcI9oftP1NzNPtLqOUKvlIxRuQ
+         eZHCMxtpgFXmExvxC1W3iINcqxIUtBEQ2mTH4Yb9EKerFnppbW7uAaWlCQhWpwM7Yb
+         opPlaEWCCawTW8Hih9fzowscdAP6dwaVZzFQRduk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Kai-Heng Feng <kai.heng.feng@canonical.com>,
-        Aaron Brown <aaron.f.brown@intel.com>,
-        Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
+        stable@vger.kernel.org, Peter Ujfalusi <peter.ujfalusi@ti.com>,
+        Arthur She <arthur.she@linaro.org>,
+        Mark Brown <broonie@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 091/129] e1000e: add workaround for possible stalled packet
-Date:   Thu,  3 Oct 2019 17:53:34 +0200
-Message-Id: <20191003154400.720507260@linuxfoundation.org>
+Subject: [PATCH 4.9 088/129] ASoC: dmaengine: Make the pcm->name equal to pcm->id if the name is not set
+Date:   Thu,  3 Oct 2019 17:53:31 +0200
+Message-Id: <20191003154359.394134963@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191003154318.081116689@linuxfoundation.org>
 References: <20191003154318.081116689@linuxfoundation.org>
@@ -62,59 +61,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kai-Heng Feng <kai.heng.feng@canonical.com>
+From: Peter Ujfalusi <peter.ujfalusi@ti.com>
 
-[ Upstream commit e5e9a2ecfe780975820e157b922edee715710b66 ]
+[ Upstream commit 2ec42f3147e1610716f184b02e65d7f493eed925 ]
 
-This works around a possible stalled packet issue, which may occur due to
-clock recovery from the PCH being too slow, when the LAN is transitioning
-from K1 at 1G link speed.
+Some tools use the snd_pcm_info_get_name() to try to identify PCMs or for
+other purposes.
 
-Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=204057
+Currently it is left empty with the dmaengine-pcm, in this case copy the
+pcm->id string as pcm->name.
 
-Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
-Tested-by: Aaron Brown <aaron.f.brown@intel.com>
-Signed-off-by: Jeff Kirsher <jeffrey.t.kirsher@intel.com>
+For example IGT is using this to find the HDMI PCM for testing audio on it.
+
+Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
+Reported-by: Arthur She <arthur.she@linaro.org>
+Link: https://lore.kernel.org/r/20190906055524.7393-1-peter.ujfalusi@ti.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/intel/e1000e/ich8lan.c | 10 ++++++++++
- drivers/net/ethernet/intel/e1000e/ich8lan.h |  2 +-
- 2 files changed, 11 insertions(+), 1 deletion(-)
+ sound/soc/soc-generic-dmaengine-pcm.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/drivers/net/ethernet/intel/e1000e/ich8lan.c b/drivers/net/ethernet/intel/e1000e/ich8lan.c
-index dc7d671b903c5..625008e8cb0df 100644
---- a/drivers/net/ethernet/intel/e1000e/ich8lan.c
-+++ b/drivers/net/ethernet/intel/e1000e/ich8lan.c
-@@ -1447,6 +1447,16 @@ static s32 e1000_check_for_copper_link_ich8lan(struct e1000_hw *hw)
- 			else
- 				phy_reg |= 0xFA;
- 			e1e_wphy_locked(hw, I217_PLL_CLOCK_GATE_REG, phy_reg);
-+
-+			if (speed == SPEED_1000) {
-+				hw->phy.ops.read_reg_locked(hw, HV_PM_CTRL,
-+							    &phy_reg);
-+
-+				phy_reg |= HV_PM_CTRL_K1_CLK_REQ;
-+
-+				hw->phy.ops.write_reg_locked(hw, HV_PM_CTRL,
-+							     phy_reg);
-+			}
- 		}
- 		hw->phy.ops.release(hw);
+diff --git a/sound/soc/soc-generic-dmaengine-pcm.c b/sound/soc/soc-generic-dmaengine-pcm.c
+index 6cef3977507ae..67d22b4baeb05 100644
+--- a/sound/soc/soc-generic-dmaengine-pcm.c
++++ b/sound/soc/soc-generic-dmaengine-pcm.c
+@@ -312,6 +312,12 @@ static int dmaengine_pcm_new(struct snd_soc_pcm_runtime *rtd)
  
-diff --git a/drivers/net/ethernet/intel/e1000e/ich8lan.h b/drivers/net/ethernet/intel/e1000e/ich8lan.h
-index 67163ca898ba2..6374c8fc76a8d 100644
---- a/drivers/net/ethernet/intel/e1000e/ich8lan.h
-+++ b/drivers/net/ethernet/intel/e1000e/ich8lan.h
-@@ -227,7 +227,7 @@
+ 		if (!dmaengine_pcm_can_report_residue(dev, pcm->chan[i]))
+ 			pcm->flags |= SND_DMAENGINE_PCM_FLAG_NO_RESIDUE;
++
++		if (rtd->pcm->streams[i].pcm->name[0] == '\0') {
++			strncpy(rtd->pcm->streams[i].pcm->name,
++				rtd->pcm->streams[i].pcm->id,
++				sizeof(rtd->pcm->streams[i].pcm->name));
++		}
+ 	}
  
- /* PHY Power Management Control */
- #define HV_PM_CTRL		PHY_REG(770, 17)
--#define HV_PM_CTRL_PLL_STOP_IN_K1_GIGA	0x100
-+#define HV_PM_CTRL_K1_CLK_REQ		0x200
- #define HV_PM_CTRL_K1_ENABLE		0x4000
- 
- #define I217_PLL_CLOCK_GATE_REG	PHY_REG(772, 28)
+ 	return 0;
 -- 
 2.20.1
 
