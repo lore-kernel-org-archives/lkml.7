@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CC00C32792
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 15:59:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7C62C10F14
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 15:59:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0A25921848
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 15:59:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8432021848
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 15:59:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570118391;
-	bh=kEUcyf9ce6ZSDzVBodKAh4owIQCPHcgVn4yCbQNmwCo=;
+	s=default; t=1570118398;
+	bh=M5k0BU5EeWicDdY1kbiDXTopE3+Q1rOXUHpx4wMdFFg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Owp9xHQKmR1JyTm4cKEtnIC0AbKP6/WC5e38pp/0Ks0IwhULsVOtTbAepXHGr3NAM
-	 w1VS78wXmTCsyDVhjwPd2Zzxn3u5+R+ndG5R+B+boDsP69KEc5jdvrmg7ov6pQhV3a
-	 gDU2CyRPh0JBa3YJSWmOjTbwvw8FC0E4oKllxv6o=
+	b=IifXwiz9LKZsm94WWTAskxhKIoJNRGVauyvPtOwCZEZfBVZ33l279L82dNBroqKvP
+	 5cCd4z3CHvV1sP7M91jVJTdvS0oLI5xxb2RcTzij7CCkMclZoNRdga+CprQWJuvCY7
+	 sgwahOzMl7CsZVeXw9LUQQwWv5ilk2xmlxUkxZkU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731428AbfJCP7u (ORCPT
+        id S1731468AbfJCP75 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 11:59:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43096 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 11:59:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43380 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731389AbfJCP7o (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 11:59:44 -0400
+        id S1731447AbfJCP7z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 11:59:55 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3154E21D81;
-        Thu,  3 Oct 2019 15:59:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C441720700;
+        Thu,  3 Oct 2019 15:59:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570118383;
-        bh=kEUcyf9ce6ZSDzVBodKAh4owIQCPHcgVn4yCbQNmwCo=;
+        s=default; t=1570118394;
+        bh=M5k0BU5EeWicDdY1kbiDXTopE3+Q1rOXUHpx4wMdFFg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=AmTbd0zdeQo/pi6HHIujZBYBYiAORavXNpyde+CPqlZpJdiWoj9Sa/nGqfcX0vHmL
-         5ZlDRmnTIgkqp2nKzBMwQGj6qrab0377UXjl5Y2SOCZ7XgrWL9ZSDybcgseJsoJ/QE
-         FVIJ+X/SADfIrR53J3r/2QNJVMCiMYSKHyDc9Lp8=
+        b=CqJOsLlA57YvIQtyiNmMxH/ILJQ4lmXO9FdsziGMEew/X07/dBE8NNPqn3BMJWPLD
+         LHvrCaSdAU4u4xvTq9PsDH+wTbUwP0E2CA5SEngclPPv643JGqpS/8HD4w0LzpvPVL
+         0MiAFVI0timWAPl6CWfNlmWhya+GUhutdYi0JK/I=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Chao Yu <yuchao0@huawei.com>,
-        Jan Kara <jack@suse.cz>
-Subject: [PATCH 4.4 92/99] quota: fix wrong condition in is_quota_modification()
-Date:   Thu,  3 Oct 2019 17:53:55 +0200
-Message-Id: <20191003154340.152105218@linuxfoundation.org>
+        stable@vger.kernel.org, Mark Salyzyn <salyzyn@android.com>,
+        linux-security-module@vger.kernel.org, kernel-team@android.com,
+        Miklos Szeredi <mszeredi@redhat.com>
+Subject: [PATCH 4.4 96/99] ovl: filter of trusted xattr results in audit
+Date:   Thu,  3 Oct 2019 17:53:59 +0200
+Message-Id: <20191003154342.358048872@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191003154252.297991283@linuxfoundation.org>
 References: <20191003154252.297991283@linuxfoundation.org>
@@ -59,47 +60,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chao Yu <yuchao0@huawei.com>
+From: Mark Salyzyn <salyzyn@android.com>
 
-commit 6565c182094f69e4ffdece337d395eb7ec760efc upstream.
+commit 5c2e9f346b815841f9bed6029ebcb06415caf640 upstream.
 
-Quoted from
-commit 3da40c7b0898 ("ext4: only call ext4_truncate when size <= isize")
+When filtering xattr list for reading, presence of trusted xattr
+results in a security audit log.  However, if there is other content
+no errno will be set, and if there isn't, the errno will be -ENODATA
+and not -EPERM as is usually associated with a lack of capability.
+The check does not block the request to list the xattrs present.
 
-" At LSF we decided that if we truncate up from isize we shouldn't trim
-  fallocated blocks that were fallocated with KEEP_SIZE and are past the
- new i_size.  This patch fixes ext4 to do this. "
+Switch to ns_capable_noaudit to reflect a more appropriate check.
 
-And generic/092 of fstest have covered this case for long time, however
-is_quota_modification() didn't adjust based on that rule, so that in
-below condition, we will lose to quota block change:
-- fallocate blocks beyond EOF
-- remount
-- truncate(file_path, file_size)
-
-Fix it.
-
-Link: https://lore.kernel.org/r/20190911093650.35329-1-yuchao0@huawei.com
-Fixes: 3da40c7b0898 ("ext4: only call ext4_truncate when size <= isize")
-CC: stable@vger.kernel.org
-Signed-off-by: Chao Yu <yuchao0@huawei.com>
-Signed-off-by: Jan Kara <jack@suse.cz>
+Signed-off-by: Mark Salyzyn <salyzyn@android.com>
+Cc: linux-security-module@vger.kernel.org
+Cc: kernel-team@android.com
+Cc: stable@vger.kernel.org # v3.18+
+Fixes: a082c6f680da ("ovl: filter trusted xattr for non-admin")
+Signed-off-by: Miklos Szeredi <mszeredi@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- include/linux/quotaops.h |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ fs/overlayfs/inode.c |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
---- a/include/linux/quotaops.h
-+++ b/include/linux/quotaops.h
-@@ -21,7 +21,7 @@ static inline struct quota_info *sb_dqop
- /* i_mutex must being held */
- static inline bool is_quota_modification(struct inode *inode, struct iattr *ia)
- {
--	return (ia->ia_valid & ATTR_SIZE && ia->ia_size != inode->i_size) ||
-+	return (ia->ia_valid & ATTR_SIZE) ||
- 		(ia->ia_valid & ATTR_UID && !uid_eq(ia->ia_uid, inode->i_uid)) ||
- 		(ia->ia_valid & ATTR_GID && !gid_eq(ia->ia_gid, inode->i_gid));
+--- a/fs/overlayfs/inode.c
++++ b/fs/overlayfs/inode.c
+@@ -292,7 +292,8 @@ static bool ovl_can_list(const char *s)
+ 		return true;
+ 
+ 	/* Never list trusted.overlay, list other trusted for superuser only */
+-	return !ovl_is_private_xattr(s) && capable(CAP_SYS_ADMIN);
++	return !ovl_is_private_xattr(s) &&
++	       ns_capable_noaudit(&init_user_ns, CAP_SYS_ADMIN);
  }
+ 
+ ssize_t ovl_listxattr(struct dentry *dentry, char *list, size_t size)
 
 
