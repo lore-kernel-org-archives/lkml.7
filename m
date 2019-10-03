@@ -2,134 +2,91 @@ Return-Path: <SRS0=6dNS=X4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 49E13C10F14
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 20:21:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50A8BC4CED1
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 20:22:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1C25E20862
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 20:21:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 15B6621A4C
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 20:22:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mF4FYXDK"
+	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="vS7NvV9D"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389388AbfJCUVY (ORCPT
+        id S2389391AbfJCUWE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 16:21:24 -0400
-Received: from mail-lf1-f67.google.com ([209.85.167.67]:35442 "EHLO
-        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732848AbfJCUVY (ORCPT
+        Thu, 3 Oct 2019 16:22:04 -0400
+Received: from mail-io1-f67.google.com ([209.85.166.67]:40854 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730768AbfJCUWE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 16:21:24 -0400
-Received: by mail-lf1-f67.google.com with SMTP id w6so2834277lfl.2;
-        Thu, 03 Oct 2019 13:21:23 -0700 (PDT)
+        Thu, 3 Oct 2019 16:22:04 -0400
+Received: by mail-io1-f67.google.com with SMTP id h144so8558633iof.7
+        for <linux-kernel@vger.kernel.org>; Thu, 03 Oct 2019 13:22:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=jDZRfMkXuS+gCx9+RspTMOpPYXHsN1Tk1N0L1DUZ7HM=;
-        b=mF4FYXDKIuGkHD4EoUdMIdXsBYgzvi2LuBwfqYqMCEBS8q9qeEukZ0LiJd751oxxUH
-         HTmLWqSXP2j3DeCXIv0ZS0XYhO30p9xd1DYm3jlV1dl/RYbs4TI88eFtycOHMnyXHnG6
-         kevCuCh9EplsKm4v8y9I+MyQncF7mzXrUqvhjbohSHLi0n66QMb38MS+UPLnpK8nmZoj
-         bRm0A4UNPdl5uOh2HvjST/7KnIAea15FnLsEz1bKL82OvSlXXBkmcZjcidxvtrjZ3aoq
-         cQIMppO8edkchgIj7SREuHwHCk4lSXEvWxRaBwHNxKEuRXSgZS7c26zKK1AyD38jIqgB
-         F1tw==
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=7WiJ4f6SzOGtMzESiBYziKahNzjtC5eHf7/cW0u7vRo=;
+        b=vS7NvV9D9OYLkuvCt7II7enEg4sGb3wAj+I3sIp5o4kFmqlWNbVU70/ysfI8h8cY3J
+         qrP4SdB4ZsiAQ0xQM6mv6VyA3lq7MOyYuX5Fv0Qxr4SdpiDZTJktQXnhfYRv+03o+JV7
+         7b0bTMqPO1nnWWnr+laA4xpyZ2Dk9vkuHyR69SzmtHEQes5UYEdLCl5P/Y6no9rwCQzY
+         7pg/9qjUdF3ZDhshcTtbiCSK/VFKGU/drrT2Tg5vZPg3N/yd+K8JpasxHUT5rZSWwnwm
+         /aqDOpNfheEA07AIBX8j3pcQtqyzEKJBymD0OPfV2W9ICaY5xSspm+G2CFyzDzK4IFap
+         55qA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=jDZRfMkXuS+gCx9+RspTMOpPYXHsN1Tk1N0L1DUZ7HM=;
-        b=tWi4xcqaE16qCix2eViA9H72MyNw7+TtYDga0N9pnSRLB9aUmAD4m+yYmxiSU2bXw1
-         vIyv0hfWjLdx5G2i1hO2yWLKE2fbUTJYeiVTZAagp2p8UAV5AhED9zP7ajuwyPezbfL6
-         ffnvCex0T/ibePhBFtOV2qwjXNhffsS4ni/Skcq/bhhYIm/cPLVbyRyy82MWonHP7CdV
-         +2R3vE4vlrXlwxNsrIlHfx3X4Ois1vPo+Rz9bD6iUeGLw4SOfqk0XjPtnNED3pSYbm8E
-         p+X3ePDepMg6nPwOPdhZfeN/V4ssdP3MowcXEHV6KzdH1sHIm4RMYCY5mvZ8L6oht7+S
-         912g==
-X-Gm-Message-State: APjAAAVSz1EbeWPU8P0faH0mtUf86IiINMqmTVVHOeSxjvzZNR12MXdM
-        nYTkEZFeEcCrKyrjJIh6DqQx1cKCwcr3HMo5qok=
-X-Google-Smtp-Source: APXvYqyNegkv+HSmVHfz0BwhU4UXNB52/xSWUkcsYNrJeoznMED8UbPpBvVjyJ3HmrK+Tu+rmVeziGXFuojVagVqKo0=
-X-Received: by 2002:a19:3805:: with SMTP id f5mr3768257lfa.173.1570134082446;
- Thu, 03 Oct 2019 13:21:22 -0700 (PDT)
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=7WiJ4f6SzOGtMzESiBYziKahNzjtC5eHf7/cW0u7vRo=;
+        b=inKdxKnbRLMZ9D9nhbE3R7LEp9tVpuGgs4vEw47nZAk584qfSIU+z3WLeFUdskzTX5
+         QnPoaJ8x4u//5whHvAzM4IMXI0AEwoJbF2LU6KtHJ2UEureK/8aPcAya7vAYuoc92yLu
+         rdnLsiKIMXTH1G6DAm84IXkmPMx/kk5qFyjc/98mAtgGSvEb2gw7XJHwCRi06pPqYVgF
+         +Y3Ge8R/p7/FxHN0uhqO8NQRb1JCK+SW4CEx+IsW68Pxxviprgxrf/VsDGjcyOEWX9T0
+         cI5SaceLCftGGgeBRCWKRS/8d/RdKBJmjp2pcqUcOCdxH8YrruPse0TPELTHthhdJKMK
+         KUaw==
+X-Gm-Message-State: APjAAAWjCf7lrbsoUOdGSTKPbWlfVUhKLdUka72UJeXxL0h0iy1O/4LX
+        hcXO0Tq/XQ0iq9Zjb17WGagezg==
+X-Google-Smtp-Source: APXvYqyuZfaiEVvhudwj8fPSSMbzWnn8JOvkbO8LVY3q31G+3mNsQRcG6YIyPsQm1Vd3oK9PFrpp6w==
+X-Received: by 2002:a02:cd05:: with SMTP id g5mr11297113jaq.52.1570134123075;
+        Thu, 03 Oct 2019 13:22:03 -0700 (PDT)
+Received: from ?IPv6:2620:10d:c081:1133::1057? ([2620:10d:c090:180::832a])
+        by smtp.gmail.com with ESMTPSA id f1sm1683227ile.77.2019.10.03.13.22.01
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 03 Oct 2019 13:22:02 -0700 (PDT)
+Subject: Re: [PATCH 1/2] block: sed-opal: fix sparse warning: obsolete array
+ init.
+To:     Randy Dunlap <rdunlap@infradead.org>,
+        "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Cc:     Jonas Rabenstein <jonas.rabenstein@studium.uni-erlangen.de>,
+        David Kozub <zub@linux.fjfi.cvut.cz>
+References: <807d7b7f-623b-75f0-baab-13b1b0c02e9d@infradead.org>
+From:   Jens Axboe <axboe@kernel.dk>
+Message-ID: <f8b4652c-4169-793c-b626-6e52e1cc0693@kernel.dk>
+Date:   Thu, 3 Oct 2019 14:22:00 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-References: <20190930112636.vx2qxo4hdysvxibl@willie-the-truck>
- <CAK7LNASQZ82KSOrQW7+Wq1vFDCg2__maBEAPMLqUDqZMLuj1rA@mail.gmail.com>
- <20190930121803.n34i63scet2ec7ll@willie-the-truck> <CAKwvOdnqn=0LndrX+mUrtSAQqoT1JWRMOJCA5t3e=S=T7zkcCQ@mail.gmail.com>
- <20191001092823.z4zhlbwvtwnlotwc@willie-the-truck> <CAKwvOdk0h2A6=fb7Yepf+oKbZfq_tqwpGq8EBmHVu1j4mo-a-A@mail.gmail.com>
- <20191001170142.x66orounxuln7zs3@willie-the-truck> <CAKwvOdnFJqipp+G5xLDRBcOrQRcvMQmn+n8fufWyzyt2QL_QkA@mail.gmail.com>
- <20191001175512.GK25745@shell.armlinux.org.uk> <CAKwvOdmw_xmTGZLeK8-+Q4nUpjs-UypJjHWks-3jHA670Dxa1A@mail.gmail.com>
- <20191001181438.GL25745@shell.armlinux.org.uk> <CAKwvOdmBnBVU7F-a6DqPU6QM-BRc8LNn6YRmhTsuGLauCWKUOg@mail.gmail.com>
- <CAMuHMdWPhE1nNkmL1nj3vpQhB7fP3uDs2i_ZVi0Gf9qij4W2CA@mail.gmail.com>
- <CAHk-=wgFODvdFBHzgVf3JjoBz0z6LZhOm8xvMntsvOr66ASmZQ@mail.gmail.com>
- <CAK7LNARM2jVSdgCDJWDbvVxYLiUR_CFgTPg0nxzbCszSKcx+pg@mail.gmail.com>
- <CAHk-=wiMm3rN15WmiAqMHjC-pakL_b8qgWsPPri0+YLFORT-ZA@mail.gmail.com>
- <CAK7LNATSoOD0g=Aarui6Y26E_YB035NsaPpHxqtBNyw0K0UXVw@mail.gmail.com> <CAHk-=wj9Dbom1x7qDfrXgNbjdFa_84bAUMdGigs4sELQQW28wg@mail.gmail.com>
-In-Reply-To: <CAHk-=wj9Dbom1x7qDfrXgNbjdFa_84bAUMdGigs4sELQQW28wg@mail.gmail.com>
-From:   Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Date:   Thu, 3 Oct 2019 22:21:11 +0200
-Message-ID: <CANiq72k39jKJVDkQVk=OP8zdYEAiLMadnSxDYLFY1gwpKmuo_Q@mail.gmail.com>
-Subject: Re: [PATCH] compiler: enable CONFIG_OPTIMIZE_INLINING forcibly
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Russell King - ARM Linux admin <linux@armlinux.org.uk>,
-        Will Deacon <will@kernel.org>,
-        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Stefan Wahren <wahrenst@gmx.net>,
-        Kees Cook <keescook@google.com>, Arnd Bergmann <arnd@arndb.de>,
-        clang-built-linux <clang-built-linux@googlegroups.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <807d7b7f-623b-75f0-baab-13b1b0c02e9d@infradead.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Oct 3, 2019 at 7:29 PM Linus Torvalds
-<torvalds@linux-foundation.org> wrote:
->
-> On Thu, Oct 3, 2019 at 10:24 AM Masahiro Yamada
-> <yamada.masahiro@socionext.com> wrote:
-> >
-> > I just want to annotate __always_inline for the case
-> > "2. code that if not inlined is somehow not correct."
->
-> Oh, I support that entirely - if only for documentation.
->
-> But I do *not* support the dismissal of the architecture maintainers
-> concerns about "does it work?" and apparently known compiler bugs.
->
-> > Again, not saying "use a macro".
->
-> Other people did, though.
->
-> And there seemed to be little balancing of the pain vs the gain. The
-> gain really isn't that obvious. If the code shrinks by a couple of kB,
-> is that good or bad? Maybe it is smaller, but is it _better_?
+On 10/2/19 8:23 PM, Randy Dunlap wrote:
+> From: Randy Dunlap <rdunlap@infradead.org>
+> 
+> Fix sparse warning: (missing '=')
+> ../block/sed-opal.c:133:17: warning: obsolete array initializer, use C99 syntax
 
-I think both positions that people have shown are important to take
-into account.
+Applied this (and 2/2, no cover letter...), thanks Randy.
 
-We should minimize our usage of macros wherever possible and certainly
-not write new ones when another solution is available. But we should
-*also* minimize our dependence on code that "must-be-inlined" to work
-as much as possible.
+-- 
+Jens Axboe
 
-In particular, I think we should allow to use __always_inline only if
-it doesn't work otherwise, as an alternative before trying the next
-worst solution (macros). And avoid using only "inline" when we
-actually require inlining, of course.
-
-And the reasoning for each usage of __always_inline should have a
-comment (be it "bad codegen", "performance tanks without it",
-"compiler X <= 4.2 refuses to compile"...). Which is also useful for
-compiler folks to grep for cases to improve/fix in their compiler!
-
-Cheers,
-Miguel
