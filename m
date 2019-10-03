@@ -2,99 +2,92 @@ Return-Path: <SRS0=6dNS=X4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B36B3C10F14
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 12:01:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC282C10F14
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 12:02:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8B270222C2
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 12:01:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BE43B222C2
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 12:02:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="S2rZqgAl"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="lcp1eFKe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728683AbfJCMBu (ORCPT
+        id S1729073AbfJCMCs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 08:01:50 -0400
-Received: from mail-ed1-f65.google.com ([209.85.208.65]:41441 "EHLO
-        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725827AbfJCMBt (ORCPT
+        Thu, 3 Oct 2019 08:02:48 -0400
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:36843 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725907AbfJCMCr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 08:01:49 -0400
-Received: by mail-ed1-f65.google.com with SMTP id f20so2187627edv.8;
-        Thu, 03 Oct 2019 05:01:47 -0700 (PDT)
+        Thu, 3 Oct 2019 08:02:47 -0400
+Received: by mail-lj1-f196.google.com with SMTP id v24so2439657ljj.3
+        for <linux-kernel@vger.kernel.org>; Thu, 03 Oct 2019 05:02:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=AXifsrp2gpoG24MuC50GddBRUKeSGJwt91RWIwBKCAs=;
-        b=S2rZqgAlPzpAw+pzAANtluXROoLHIWkIEJhmpfUbdHnhjW13ZLNDkvA+EzATygwmbs
-         Z+1x5NcfmHnU5iISNhfCDsJaTv5b44UDQqNBse6I47urkOeIguWzTBOUVR5Lpw4CXG01
-         FV0lzkdJjL3TKf93417tb/8H03zKndwoRfxrwx+qZEt4F4nPeas5/WGcQGeMli2w1fzh
-         4UD7gCqM3Eo/Fe5DtiOtCxZAMu7e3qZIM4P0VLX2rl7AoCfFcEgW9ISDg+JBkhAQRhzJ
-         ywE+wjpWDh3nGC1zDhkBOGtGXO1XdvbOn5/DZUaHyKKFZp812bbsiQySlnwFPBNO5amM
-         VkWw==
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=cTYlnAsOJ2TKlVRx7ETxjCGwXU7Jrh//3eORQWciV1I=;
+        b=lcp1eFKeXAZyScuFc5xoJJSTTqPHQ8Do+3WrNy+47tu+ROcdW6yllR8HE/6xyxFI1C
+         RIQ5vZJOjQSZuylhK/qu0sZ6QXr9SnHoXAHVl6r06m7jOM/BKGeXI4ZxGBKLdruYqNic
+         U9qkExsWct/2LLNZFIbyHSfx+z5fEsvWd6jqyog+uXlaCXMjWHtYPVBFkumuVrAJwIN5
+         MfbnIneby+9xiN7KIdGVjHFKO1LuanOdth7xQvHvCg2fdmk7Xs5lTNa5I/o+3FZZ7VyG
+         ndi/b58SQIf3hMSo5Yw9QKJ3bwdLKcEIKcODFEkcliHkc9jkbPzsp3euz1Vz0kBvzkxe
+         UIDw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=AXifsrp2gpoG24MuC50GddBRUKeSGJwt91RWIwBKCAs=;
-        b=aoKfoZZx8Znfy3cWkKaSrBcH3AJmqiaR+v1DuVp4+olCQLxecFVVFr/MFIT6/V8POb
-         LDiHm57UT1HhmR16CVC42sypL/uTCuyYlr2TJfn6lXs7Jk97Y9genwfgZLVYrjeZGcns
-         hS5FdCqBgQIRSllxKuR2oUL+3LWYgBmH6cOoL9Udh90XB7KxrAoOBvnKfcezznmFBPcS
-         SopjZtmNvZBKJYTsQqkwJIoMLn8Tmw+ONkW3GZx9Yddz4dr5293qqpITegIc+q3dDkBh
-         ppOC5ei6r6AQS8aMlHRR0GXTifATtAfADOM/fLjO0ECnIkiRuTPW3vN9vzI5ANln0bTf
-         VAvw==
-X-Gm-Message-State: APjAAAV8pao4rIQJ1i05t0A+OglKFOjPiYLohhMj8Arzqw9nILtuHzIS
-        hrQh4D0tC1oT3L2CkNZAxak=
-X-Google-Smtp-Source: APXvYqxB15IXq8E380WB93OPH5x1mtdrbzb6M5RNxSckdywkUjuAb+9QHOrwXSJgPtSKWX8KcqEQ7A==
-X-Received: by 2002:a05:6402:74c:: with SMTP id p12mr8943251edy.135.1570104107247;
-        Thu, 03 Oct 2019 05:01:47 -0700 (PDT)
-Received: from Limone ([46.114.33.168])
-        by smtp.gmail.com with ESMTPSA id r18sm435087edl.6.2019.10.03.05.01.45
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 03 Oct 2019 05:01:46 -0700 (PDT)
-Date:   Thu, 3 Oct 2019 14:01:43 +0200
-From:   Gon Solo <gonsolo@gmail.com>
-To:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-Cc:     JP <jp@jpvw.nl>, crope@iki.fi, Sean Young <sean@mess.org>,
-        linux-media@vger.kernel.org,
-        Linux Kernel <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] si2157: Add support for Logilink VG0022A.
-Message-ID: <20191003120143.GA2995@Limone>
-References: <20191002141359.30166-2-gonsolo@gmail.com>
- <20191002142744.GA3475@gofer.mess.org>
- <CANL0fFS9TGKJH2rfkXzak78BaLazTNO7GoZhSb4vLBsDrmz3FQ@mail.gmail.com>
- <20191002150650.GA4227@gofer.mess.org>
- <CANL0fFRoL6NxOCbNC=XjQ6LDkeeqAayaLUbm9xARWX9ttqfPFg@mail.gmail.com>
- <29ab2e43-4374-a3ea-6ae1-a4267867eaa4@jpvw.nl>
- <20191002154922.7f1cfc76@coco.lan>
- <CANL0fFRJZBfEDWK_c2w1TomvB5-i4g09LopyJUbO5NtOwKdDTg@mail.gmail.com>
- <CANL0fFTwJ4yRO+5q6WkL0+DtwdrRti6r_WY1intisYJhs5En8w@mail.gmail.com>
- <20191003081742.0933264b@coco.lan>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=cTYlnAsOJ2TKlVRx7ETxjCGwXU7Jrh//3eORQWciV1I=;
+        b=N38OS+Vf0/u8gRd7o/1ahSMGmM+6IAhcbYHDby1Y9i1Y8RqnxvcaEkaeM8uc2ZBONk
+         vAsMrkrpShOQPRMbuBjHwvsKmw2qogAIO2o3N+hd729Jwq0lYe/IwKwUmeJt40DpBBYK
+         bX9511bpid/qp6bsa0ZdYw8MXBVObSu8Pt7L3Z6RvCj4EhSt5Dz3BFwvjd2Tvcf7Ur2Q
+         E+7+j2qp9Qzf0vPqVpT1QO4o1WExuVZ8qqmvBVStNLZ1tSGYJG5PUxc2dXeqPHQ5qbod
+         5S6+VIVbGDFGDYRTMNlD25Rc2PXBKhmBHk3bkrHKbMz68vmkWAFh9e/MIfVCcsMcwPiN
+         WHkQ==
+X-Gm-Message-State: APjAAAXa81uA/RFNSCUL8BRCTNhImfLH8Vx1pYh6tVVTeqBJKwSbQOK8
+        QzDoxXDDYDzkQcSxkDTe6ZB3VBY7bQu87//lEzejIg==
+X-Google-Smtp-Source: APXvYqxkigIHVqqJYtKMd8GkRG6qLd8hE5Cemc8HsFF9oQhJc0+1b5nvoxtB7OvKQsMw9/i59oJz1UG7zrLmwnmixDU=
+X-Received: by 2002:a2e:894b:: with SMTP id b11mr5832443ljk.152.1570104165568;
+ Thu, 03 Oct 2019 05:02:45 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191003081742.0933264b@coco.lan>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <1568411962-1022-1-git-send-email-ilina@codeaurora.org> <1568411962-1022-6-git-send-email-ilina@codeaurora.org>
+In-Reply-To: <1568411962-1022-6-git-send-email-ilina@codeaurora.org>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Thu, 3 Oct 2019 14:02:33 +0200
+Message-ID: <CACRpkdYO3ioakyrmv_2mTUuWCeBZ5goW28qr+y_M8qFv64FD4Q@mail.gmail.com>
+Subject: Re: [PATCH RFC v2 05/14] of: irq: document properties for wakeup
+ interrupt parent
+To:     Lina Iyer <ilina@codeaurora.org>
+Cc:     Stephen Boyd <swboyd@chromium.org>,
+        Evan Green <evgreen@chromium.org>,
+        Marc Zyngier <maz@kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        MSM <linux-arm-msm@vger.kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        mkshah@codeaurora.org,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi!
+On Fri, Sep 13, 2019 at 11:59 PM Lina Iyer <ilina@codeaurora.org> wrote:
 
- 
-> Btw, could you please try the enclosed hack and post the results?
- 
-[  210.178948] si2168 1-0067: downloading firmware from file 'dvb-demod-si2168-b40-01.fw'
-[  212.404011] si2168 1-0067: firmware version: B 4.0.25
-[  212.656467] si2157 2-0063: Needed to wait 100 ms to get chip version
-[  212.656470] si2157 2-0063: Unable to retrieve chip version
+> Some interrupt controllers in a SoC, are always powered on and have a
+> select interrupts routed to them, so that they can wakeup the SoC from
+> suspend. Add wakeup-parent DT property to refer to these interrupt
+> controllers.
+>
+> Cc: devicetree@vger.kernel.org
+> Signed-off-by: Lina Iyer <ilina@codeaurora.org>
+> Reviewed-by: Rob Herring <robh@kernel.org>
 
-:(
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
 
-g
-
+Yours,
+Linus Walleij
