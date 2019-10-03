@@ -2,53 +2,53 @@ Return-Path: <SRS0=6dNS=X4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B09AEC10F14
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:48:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E884BC4CED1
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:48:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 826AA20867
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:48:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B57FC2070B
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:48:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570121337;
-	bh=A83DuCku9nE5Md5Uj9SRV/Gm/KsY/1rFO/G9q1my2l8=;
+	s=default; t=1570121338;
+	bh=o9aX2bau2Ui2FjhVZKIimH8ZL1iyt0Febi4Bh0UHciM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=PWpXDZN8Xs5dUJlScnVf7D2Az5hyxsqymk9y7spzAiD2mAqTUZPHK6+tppsl7J69m
-	 F5aNwJ901An3XGJAGPfXjuDP5if7OqQ7L0ZoKnPClVrpY/Eii/88T6fJmBTEGU8kvf
-	 hHiXbjVt7UZy/FuqhBygBLCS4k2JIL5hHFxEqP+g=
+	b=HV6f93Qc/EFXo0F/E3qgq9n0rB/5eCW1E25tGef0V25DKTZtpTat6xBnGRSNAKrPX
+	 PlVCgPjawGAzJmY0MRat4emPsUi4HEGa1w+VGfDumfW1aQZyl0OUMjCj/HWXg9W+lp
+	 yXZUDv8njWPw6o4CsFaP90J9Snwu9IUmpdtdrtfA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405589AbfJCQr7 (ORCPT
+        id S2405785AbfJCQs5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 12:47:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33478 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 12:48:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35060 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2393038AbfJCQr4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:47:56 -0400
+        id S2405098AbfJCQsz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:48:55 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 247F22070B;
-        Thu,  3 Oct 2019 16:47:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DA6FE2070B;
+        Thu,  3 Oct 2019 16:48:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570121275;
-        bh=A83DuCku9nE5Md5Uj9SRV/Gm/KsY/1rFO/G9q1my2l8=;
+        s=default; t=1570121334;
+        bh=o9aX2bau2Ui2FjhVZKIimH8ZL1iyt0Febi4Bh0UHciM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Xptx9jCZrh3Ztj8wob/GYCDpolnw+FHAokmScGnQbW3FA/xoyE0f3Rsga+OBc39SY
-         E41vSU4lO5fxz106JCy3MPU4gw2McDuQ7DxNaQfD04KGGQFmWTobxL/+0U4bQ6iY+S
-         mnLa/SBfsE5op65mde1KJUmFGxhN4dAhFYom5ZyA=
+        b=vmr9WnZ8nu2NoUPKWHn56L5Fynht0bf5+c9dl16qIUrI0/RfiFnv2yPLfMRaEPKAf
+         frVVb7FnWjCm2v5pnHTstq8I0Z2KQvJrX5jZxmL/BoXQ4q/2Qhr4azxGSzvuhZDqx5
+         JevnYokYJUqBlAhQTgmgVQA59rV6f551EiYEu6Fs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Kevin Easton <kevin@guarana.org>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        Sasha Levin <sashal@kernel.org>,
-        syzbot+98156c174c5a2cad9f8f@syzkaller.appspotmail.com
-Subject: [PATCH 5.3 218/344] libertas: Add missing sentinel at end of if_usb.c fw_table
-Date:   Thu,  3 Oct 2019 17:53:03 +0200
-Message-Id: <20191003154601.836884177@linuxfoundation.org>
+        stable@vger.kernel.org, Martin Wilck <mwilck@suse.com>,
+        Ales Novak <alnovak@suse.cz>,
+        Shane Seymour <shane.seymour@hpe.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>
+Subject: [PATCH 5.3 240/344] scsi: scsi_dh_rdac: zero cdb in send_mode_select()
+Date:   Thu,  3 Oct 2019 17:53:25 +0200
+Message-Id: <20191003154604.068940589@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191003154540.062170222@linuxfoundation.org>
 References: <20191003154540.062170222@linuxfoundation.org>
@@ -61,36 +61,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kevin Easton <kevin@guarana.org>
+From: Martin Wilck <Martin.Wilck@suse.com>
 
-[ Upstream commit 764f3f1ecffc434096e0a2b02f1a6cc964a89df6 ]
+commit 57adf5d4cfd3198aa480e7c94a101fc8c4e6109d upstream.
 
-This sentinel tells the firmware loading process when to stop.
+cdb in send_mode_select() is not zeroed and is only partially filled in
+rdac_failover_get(), which leads to some random data getting to the
+device. Users have reported storage responding to such commands with
+INVALID FIELD IN CDB. Code before commit 327825574132 was not affected, as
+it called blk_rq_set_block_pc().
 
-Reported-and-tested-by: syzbot+98156c174c5a2cad9f8f@syzkaller.appspotmail.com
-Signed-off-by: Kevin Easton <kevin@guarana.org>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Fix this by zeroing out the cdb first.
+
+Identified & fix proposed by HPE.
+
+Fixes: 327825574132 ("scsi_dh_rdac: switch to scsi_execute_req_flags()")
+Cc: stable@vger.kernel.org
+Link: https://lore.kernel.org/r/20190904155205.1666-1-martin.wilck@suse.com
+Signed-off-by: Martin Wilck <mwilck@suse.com>
+Acked-by: Ales Novak <alnovak@suse.cz>
+Reviewed-by: Shane Seymour <shane.seymour@hpe.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- drivers/net/wireless/marvell/libertas/if_usb.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/scsi/device_handler/scsi_dh_rdac.c |    2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/net/wireless/marvell/libertas/if_usb.c b/drivers/net/wireless/marvell/libertas/if_usb.c
-index afac2481909b6..20436a289d5cd 100644
---- a/drivers/net/wireless/marvell/libertas/if_usb.c
-+++ b/drivers/net/wireless/marvell/libertas/if_usb.c
-@@ -50,7 +50,8 @@ static const struct lbs_fw_table fw_table[] = {
- 	{ MODEL_8388, "libertas/usb8388_v5.bin", NULL },
- 	{ MODEL_8388, "libertas/usb8388.bin", NULL },
- 	{ MODEL_8388, "usb8388.bin", NULL },
--	{ MODEL_8682, "libertas/usb8682.bin", NULL }
-+	{ MODEL_8682, "libertas/usb8682.bin", NULL },
-+	{ 0, NULL, NULL }
- };
+--- a/drivers/scsi/device_handler/scsi_dh_rdac.c
++++ b/drivers/scsi/device_handler/scsi_dh_rdac.c
+@@ -546,6 +546,8 @@ static void send_mode_select(struct work
+ 	spin_unlock(&ctlr->ms_lock);
  
- static const struct usb_device_id if_usb_table[] = {
--- 
-2.20.1
-
+  retry:
++	memset(cdb, 0, sizeof(cdb));
++
+ 	data_size = rdac_failover_get(ctlr, &list, cdb);
+ 
+ 	RDAC_LOG(RDAC_LOG_FAILOVER, sdev, "array %s, ctlr %d, "
 
 
