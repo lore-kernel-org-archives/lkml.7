@@ -2,55 +2,54 @@ Return-Path: <SRS0=6dNS=X4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A417CC10F14
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:49:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A157AC32792
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:49:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6D6AA20865
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:49:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6EAF82086A
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:49:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570121392;
-	bh=VS8LeK5tgXZVV+R6iRzbTdYXkZcnNzVvuRInIv8yveM=;
+	s=default; t=1570121396;
+	bh=rPaLg1m9winrfrc8LJ+1bVDOdUBp4c8jxgZhSx0iDT4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=AVIcfFuCSlhyO1+Mgm/wWx3AxB0/JSb1JKB3RQaaxiRXvLlz8VqZGQFM4/NW2FIue
-	 ZiNdxO5CzDBZSlXILxZ0aEihyoPrYYKghIEftw7jR8CrltPxLsTSa0DEeHgfyhKvyE
-	 ZCtYI941M+/EEacbDbvBhuSkW+IhvFA98M4KN3Vc=
+	b=ftJT5Ojk98Nc3cl7OzobXx1s+2lMiiEw8rFvkpIfZLR+x1YciQ1ADMDWoB2F5Mitc
+	 KNCYTWTfMZjomgWnda4aTqwPr7JKxuvF73h835xocoYE8fwyvAVuEnVkZJlTT8wtnV
+	 BPSOdCS2gaUWg3/hQE0TCmseTmNFCiF5WCBOeNhw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405865AbfJCQtv (ORCPT
+        id S2404889AbfJCQtz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 12:49:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36420 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 12:49:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36490 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2405840AbfJCQtp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:49:45 -0400
+        id S2405845AbfJCQtq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:49:46 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E632A2086A;
-        Thu,  3 Oct 2019 16:49:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6FF2E215EA;
+        Thu,  3 Oct 2019 16:49:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570121383;
-        bh=VS8LeK5tgXZVV+R6iRzbTdYXkZcnNzVvuRInIv8yveM=;
+        s=default; t=1570121385;
+        bh=rPaLg1m9winrfrc8LJ+1bVDOdUBp4c8jxgZhSx0iDT4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=O4fAVwcYDMaUxv5ynJgU0hWiz3Xg3PvfqWf0W4oY/QF6yiVjPRUcBwTWNefI1nr0v
-         wenAqYpSKGKqa1/dzBsE2h61JrrnU/0MmFTlc8CyWtoaZUwDtDN/1Vxf0j2GTC/fyY
-         ypCly8y0v1UZCanXLDzXTTSiVUHQk8wddsjgiNFE=
+        b=jrVSar5w1c/KoSHvfVnLSD+KChOQ7MBKJl61vEhZwYO/O+h/lT5x9kQF3cnMlHZXG
+         HO9urewbudjKym6qidn2oOeBAx7WOCMk2MBRiJJSOVTGBuDB6fqmHnVtmCSeQqF/3N
+         6hSPpw1J4LYe6KJJsYzpfNNZXU4Adm5+TX4mxYNY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        syzbot+af05535bb79520f95431@syzkaller.appspotmail.com,
-        syzbot+d86c4426a01f60feddc7@syzkaller.appspotmail.com,
-        Christoph Hellwig <hch@lst.de>,
-        Eric Biggers <ebiggers@google.com>,
-        Miklos Szeredi <mszeredi@redhat.com>
-Subject: [PATCH 5.3 257/344] fuse: fix deadlock with aio poll and fuse_iqueue::waitq.lock
-Date:   Thu,  3 Oct 2019 17:53:42 +0200
-Message-Id: <20191003154605.845369774@linuxfoundation.org>
+        =?UTF-8?q?G=C3=B6ran=20Uddeborg?= <goeran@uddeborg.se>,
+        Daniel Vetter <daniel.vetter@ffwll.ch>,
+        Jani Nikula <jani.nikula@intel.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.3 224/344] drm: fix module name in edid_firmware log message
+Date:   Thu,  3 Oct 2019 17:53:09 +0200
+Message-Id: <20191003154602.468470724@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191003154540.062170222@linuxfoundation.org>
 References: <20191003154540.062170222@linuxfoundation.org>
@@ -63,403 +62,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eric Biggers <ebiggers@google.com>
+From: Jani Nikula <jani.nikula@intel.com>
 
-commit 76e43c8ccaa35c30d5df853013561145a0f750a5 upstream.
+[ Upstream commit ade925995b172f1d7410d1c665b2f47c5e99bef0 ]
 
-When IOCB_CMD_POLL is used on the FUSE device, aio_poll() disables IRQs
-and takes kioctx::ctx_lock, then fuse_iqueue::waitq.lock.
+The module is drm_kms_helper, not drm_kms_firmware.
 
-This may have to wait for fuse_iqueue::waitq.lock to be released by one
-of many places that take it with IRQs enabled.  Since the IRQ handler
-may take kioctx::ctx_lock, lockdep reports that a deadlock is possible.
-
-Fix it by protecting the state of struct fuse_iqueue with a separate
-spinlock, and only accessing fuse_iqueue::waitq using the versions of
-the waitqueue functions which do IRQ-safe locking internally.
-
-Reproducer:
-
-	#include <fcntl.h>
-	#include <stdio.h>
-	#include <sys/mount.h>
-	#include <sys/stat.h>
-	#include <sys/syscall.h>
-	#include <unistd.h>
-	#include <linux/aio_abi.h>
-
-	int main()
-	{
-		char opts[128];
-		int fd = open("/dev/fuse", O_RDWR);
-		aio_context_t ctx = 0;
-		struct iocb cb = { .aio_lio_opcode = IOCB_CMD_POLL, .aio_fildes = fd };
-		struct iocb *cbp = &cb;
-
-		sprintf(opts, "fd=%d,rootmode=040000,user_id=0,group_id=0", fd);
-		mkdir("mnt", 0700);
-		mount("foo",  "mnt", "fuse", 0, opts);
-		syscall(__NR_io_setup, 1, &ctx);
-		syscall(__NR_io_submit, ctx, 1, &cbp);
-	}
-
-Beginning of lockdep output:
-
-	=====================================================
-	WARNING: SOFTIRQ-safe -> SOFTIRQ-unsafe lock order detected
-	5.3.0-rc5 #9 Not tainted
-	-----------------------------------------------------
-	syz_fuse/135 [HC0[0]:SC0[0]:HE0:SE1] is trying to acquire:
-	000000003590ceda (&fiq->waitq){+.+.}, at: spin_lock include/linux/spinlock.h:338 [inline]
-	000000003590ceda (&fiq->waitq){+.+.}, at: aio_poll fs/aio.c:1751 [inline]
-	000000003590ceda (&fiq->waitq){+.+.}, at: __io_submit_one.constprop.0+0x203/0x5b0 fs/aio.c:1825
-
-	and this task is already holding:
-	0000000075037284 (&(&ctx->ctx_lock)->rlock){..-.}, at: spin_lock_irq include/linux/spinlock.h:363 [inline]
-	0000000075037284 (&(&ctx->ctx_lock)->rlock){..-.}, at: aio_poll fs/aio.c:1749 [inline]
-	0000000075037284 (&(&ctx->ctx_lock)->rlock){..-.}, at: __io_submit_one.constprop.0+0x1f4/0x5b0 fs/aio.c:1825
-	which would create a new lock dependency:
-	 (&(&ctx->ctx_lock)->rlock){..-.} -> (&fiq->waitq){+.+.}
-
-	but this new dependency connects a SOFTIRQ-irq-safe lock:
-	 (&(&ctx->ctx_lock)->rlock){..-.}
-
-	[...]
-
-Reported-by: syzbot+af05535bb79520f95431@syzkaller.appspotmail.com
-Reported-by: syzbot+d86c4426a01f60feddc7@syzkaller.appspotmail.com
-Fixes: bfe4037e722e ("aio: implement IOCB_CMD_POLL")
-Cc: <stable@vger.kernel.org> # v4.19+
-Cc: Christoph Hellwig <hch@lst.de>
-Signed-off-by: Eric Biggers <ebiggers@google.com>
-Signed-off-by: Miklos Szeredi <mszeredi@redhat.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=204549
+Reported-by: Göran Uddeborg <goeran@uddeborg.se>
+Fixes: ac6c35a4d8c7 ("drm: add backwards compatibility support for drm_kms_helper.edid_firmware")
+Reviewed-by: Daniel Vetter <daniel.vetter@ffwll.ch>
+Signed-off-by: Jani Nikula <jani.nikula@intel.com>
+Link: https://patchwork.freedesktop.org/patch/msgid/20190821094312.5514-1-jani.nikula@intel.com
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/fuse/dev.c    |   93 ++++++++++++++++++++++++++++---------------------------
- fs/fuse/fuse_i.h |    3 +
- fs/fuse/inode.c  |    1 
- 3 files changed, 52 insertions(+), 45 deletions(-)
+ drivers/gpu/drm/drm_kms_helper_common.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/fs/fuse/dev.c
-+++ b/fs/fuse/dev.c
-@@ -377,7 +377,7 @@ static void queue_request(struct fuse_iq
- 	req->in.h.len = sizeof(struct fuse_in_header) +
- 		len_args(req->in.numargs, (struct fuse_arg *) req->in.args);
- 	list_add_tail(&req->list, &fiq->pending);
--	wake_up_locked(&fiq->waitq);
-+	wake_up(&fiq->waitq);
- 	kill_fasync(&fiq->fasync, SIGIO, POLL_IN);
- }
- 
-@@ -389,16 +389,16 @@ void fuse_queue_forget(struct fuse_conn
- 	forget->forget_one.nodeid = nodeid;
- 	forget->forget_one.nlookup = nlookup;
- 
--	spin_lock(&fiq->waitq.lock);
-+	spin_lock(&fiq->lock);
- 	if (fiq->connected) {
- 		fiq->forget_list_tail->next = forget;
- 		fiq->forget_list_tail = forget;
--		wake_up_locked(&fiq->waitq);
-+		wake_up(&fiq->waitq);
- 		kill_fasync(&fiq->fasync, SIGIO, POLL_IN);
- 	} else {
- 		kfree(forget);
- 	}
--	spin_unlock(&fiq->waitq.lock);
-+	spin_unlock(&fiq->lock);
- }
- 
- static void flush_bg_queue(struct fuse_conn *fc)
-@@ -412,10 +412,10 @@ static void flush_bg_queue(struct fuse_c
- 		req = list_first_entry(&fc->bg_queue, struct fuse_req, list);
- 		list_del(&req->list);
- 		fc->active_background++;
--		spin_lock(&fiq->waitq.lock);
-+		spin_lock(&fiq->lock);
- 		req->in.h.unique = fuse_get_unique(fiq);
- 		queue_request(fiq, req);
--		spin_unlock(&fiq->waitq.lock);
-+		spin_unlock(&fiq->lock);
- 	}
- }
- 
-@@ -439,9 +439,9 @@ static void request_end(struct fuse_conn
- 	 * smp_mb() from queue_interrupt().
- 	 */
- 	if (!list_empty(&req->intr_entry)) {
--		spin_lock(&fiq->waitq.lock);
-+		spin_lock(&fiq->lock);
- 		list_del_init(&req->intr_entry);
--		spin_unlock(&fiq->waitq.lock);
-+		spin_unlock(&fiq->lock);
- 	}
- 	WARN_ON(test_bit(FR_PENDING, &req->flags));
- 	WARN_ON(test_bit(FR_SENT, &req->flags));
-@@ -483,10 +483,10 @@ put_request:
- 
- static int queue_interrupt(struct fuse_iqueue *fiq, struct fuse_req *req)
+diff --git a/drivers/gpu/drm/drm_kms_helper_common.c b/drivers/gpu/drm/drm_kms_helper_common.c
+index d9a5ac81949e2..221a8528c9937 100644
+--- a/drivers/gpu/drm/drm_kms_helper_common.c
++++ b/drivers/gpu/drm/drm_kms_helper_common.c
+@@ -40,7 +40,7 @@ MODULE_LICENSE("GPL and additional rights");
+ /* Backward compatibility for drm_kms_helper.edid_firmware */
+ static int edid_firmware_set(const char *val, const struct kernel_param *kp)
  {
--	spin_lock(&fiq->waitq.lock);
-+	spin_lock(&fiq->lock);
- 	/* Check for we've sent request to interrupt this req */
- 	if (unlikely(!test_bit(FR_INTERRUPTED, &req->flags))) {
--		spin_unlock(&fiq->waitq.lock);
-+		spin_unlock(&fiq->lock);
- 		return -EINVAL;
- 	}
+-	DRM_NOTE("drm_kms_firmware.edid_firmware is deprecated, please use drm.edid_firmware instead.\n");
++	DRM_NOTE("drm_kms_helper.edid_firmware is deprecated, please use drm.edid_firmware instead.\n");
  
-@@ -499,13 +499,13 @@ static int queue_interrupt(struct fuse_i
- 		smp_mb();
- 		if (test_bit(FR_FINISHED, &req->flags)) {
- 			list_del_init(&req->intr_entry);
--			spin_unlock(&fiq->waitq.lock);
-+			spin_unlock(&fiq->lock);
- 			return 0;
- 		}
--		wake_up_locked(&fiq->waitq);
-+		wake_up(&fiq->waitq);
- 		kill_fasync(&fiq->fasync, SIGIO, POLL_IN);
- 	}
--	spin_unlock(&fiq->waitq.lock);
-+	spin_unlock(&fiq->lock);
- 	return 0;
+ 	return __drm_set_edid_firmware_path(val);
  }
- 
-@@ -535,16 +535,16 @@ static void request_wait_answer(struct f
- 		if (!err)
- 			return;
- 
--		spin_lock(&fiq->waitq.lock);
-+		spin_lock(&fiq->lock);
- 		/* Request is not yet in userspace, bail out */
- 		if (test_bit(FR_PENDING, &req->flags)) {
- 			list_del(&req->list);
--			spin_unlock(&fiq->waitq.lock);
-+			spin_unlock(&fiq->lock);
- 			__fuse_put_request(req);
- 			req->out.h.error = -EINTR;
- 			return;
- 		}
--		spin_unlock(&fiq->waitq.lock);
-+		spin_unlock(&fiq->lock);
- 	}
- 
- 	/*
-@@ -559,9 +559,9 @@ static void __fuse_request_send(struct f
- 	struct fuse_iqueue *fiq = &fc->iq;
- 
- 	BUG_ON(test_bit(FR_BACKGROUND, &req->flags));
--	spin_lock(&fiq->waitq.lock);
-+	spin_lock(&fiq->lock);
- 	if (!fiq->connected) {
--		spin_unlock(&fiq->waitq.lock);
-+		spin_unlock(&fiq->lock);
- 		req->out.h.error = -ENOTCONN;
- 	} else {
- 		req->in.h.unique = fuse_get_unique(fiq);
-@@ -569,7 +569,7 @@ static void __fuse_request_send(struct f
- 		/* acquire extra reference, since request is still needed
- 		   after request_end() */
- 		__fuse_get_request(req);
--		spin_unlock(&fiq->waitq.lock);
-+		spin_unlock(&fiq->lock);
- 
- 		request_wait_answer(fc, req);
- 		/* Pairs with smp_wmb() in request_end() */
-@@ -700,12 +700,12 @@ static int fuse_request_send_notify_repl
- 
- 	__clear_bit(FR_ISREPLY, &req->flags);
- 	req->in.h.unique = unique;
--	spin_lock(&fiq->waitq.lock);
-+	spin_lock(&fiq->lock);
- 	if (fiq->connected) {
- 		queue_request(fiq, req);
- 		err = 0;
- 	}
--	spin_unlock(&fiq->waitq.lock);
-+	spin_unlock(&fiq->lock);
- 
- 	return err;
- }
-@@ -1149,12 +1149,12 @@ static int request_pending(struct fuse_i
-  * Unlike other requests this is assembled on demand, without a need
-  * to allocate a separate fuse_req structure.
-  *
-- * Called with fiq->waitq.lock held, releases it
-+ * Called with fiq->lock held, releases it
-  */
- static int fuse_read_interrupt(struct fuse_iqueue *fiq,
- 			       struct fuse_copy_state *cs,
- 			       size_t nbytes, struct fuse_req *req)
--__releases(fiq->waitq.lock)
-+__releases(fiq->lock)
- {
- 	struct fuse_in_header ih;
- 	struct fuse_interrupt_in arg;
-@@ -1169,7 +1169,7 @@ __releases(fiq->waitq.lock)
- 	ih.unique = (req->in.h.unique | FUSE_INT_REQ_BIT);
- 	arg.unique = req->in.h.unique;
- 
--	spin_unlock(&fiq->waitq.lock);
-+	spin_unlock(&fiq->lock);
- 	if (nbytes < reqsize)
- 		return -EINVAL;
- 
-@@ -1206,7 +1206,7 @@ static struct fuse_forget_link *dequeue_
- static int fuse_read_single_forget(struct fuse_iqueue *fiq,
- 				   struct fuse_copy_state *cs,
- 				   size_t nbytes)
--__releases(fiq->waitq.lock)
-+__releases(fiq->lock)
- {
- 	int err;
- 	struct fuse_forget_link *forget = dequeue_forget(fiq, 1, NULL);
-@@ -1220,7 +1220,7 @@ __releases(fiq->waitq.lock)
- 		.len = sizeof(ih) + sizeof(arg),
- 	};
- 
--	spin_unlock(&fiq->waitq.lock);
-+	spin_unlock(&fiq->lock);
- 	kfree(forget);
- 	if (nbytes < ih.len)
- 		return -EINVAL;
-@@ -1238,7 +1238,7 @@ __releases(fiq->waitq.lock)
- 
- static int fuse_read_batch_forget(struct fuse_iqueue *fiq,
- 				   struct fuse_copy_state *cs, size_t nbytes)
--__releases(fiq->waitq.lock)
-+__releases(fiq->lock)
- {
- 	int err;
- 	unsigned max_forgets;
-@@ -1252,13 +1252,13 @@ __releases(fiq->waitq.lock)
- 	};
- 
- 	if (nbytes < ih.len) {
--		spin_unlock(&fiq->waitq.lock);
-+		spin_unlock(&fiq->lock);
- 		return -EINVAL;
- 	}
- 
- 	max_forgets = (nbytes - ih.len) / sizeof(struct fuse_forget_one);
- 	head = dequeue_forget(fiq, max_forgets, &count);
--	spin_unlock(&fiq->waitq.lock);
-+	spin_unlock(&fiq->lock);
- 
- 	arg.count = count;
- 	ih.len += count * sizeof(struct fuse_forget_one);
-@@ -1288,7 +1288,7 @@ __releases(fiq->waitq.lock)
- static int fuse_read_forget(struct fuse_conn *fc, struct fuse_iqueue *fiq,
- 			    struct fuse_copy_state *cs,
- 			    size_t nbytes)
--__releases(fiq->waitq.lock)
-+__releases(fiq->lock)
- {
- 	if (fc->minor < 16 || fiq->forget_list_head.next->next == NULL)
- 		return fuse_read_single_forget(fiq, cs, nbytes);
-@@ -1318,16 +1318,19 @@ static ssize_t fuse_dev_do_read(struct f
- 	unsigned int hash;
- 
-  restart:
--	spin_lock(&fiq->waitq.lock);
--	err = -EAGAIN;
--	if ((file->f_flags & O_NONBLOCK) && fiq->connected &&
--	    !request_pending(fiq))
--		goto err_unlock;
-+	for (;;) {
-+		spin_lock(&fiq->lock);
-+		if (!fiq->connected || request_pending(fiq))
-+			break;
-+		spin_unlock(&fiq->lock);
- 
--	err = wait_event_interruptible_exclusive_locked(fiq->waitq,
-+		if (file->f_flags & O_NONBLOCK)
-+			return -EAGAIN;
-+		err = wait_event_interruptible_exclusive(fiq->waitq,
- 				!fiq->connected || request_pending(fiq));
--	if (err)
--		goto err_unlock;
-+		if (err)
-+			return err;
-+	}
- 
- 	if (!fiq->connected) {
- 		err = fc->aborted ? -ECONNABORTED : -ENODEV;
-@@ -1351,7 +1354,7 @@ static ssize_t fuse_dev_do_read(struct f
- 	req = list_entry(fiq->pending.next, struct fuse_req, list);
- 	clear_bit(FR_PENDING, &req->flags);
- 	list_del_init(&req->list);
--	spin_unlock(&fiq->waitq.lock);
-+	spin_unlock(&fiq->lock);
- 
- 	in = &req->in;
- 	reqsize = in->h.len;
-@@ -1409,7 +1412,7 @@ out_end:
- 	return err;
- 
-  err_unlock:
--	spin_unlock(&fiq->waitq.lock);
-+	spin_unlock(&fiq->lock);
- 	return err;
- }
- 
-@@ -2121,12 +2124,12 @@ static __poll_t fuse_dev_poll(struct fil
- 	fiq = &fud->fc->iq;
- 	poll_wait(file, &fiq->waitq, wait);
- 
--	spin_lock(&fiq->waitq.lock);
-+	spin_lock(&fiq->lock);
- 	if (!fiq->connected)
- 		mask = EPOLLERR;
- 	else if (request_pending(fiq))
- 		mask |= EPOLLIN | EPOLLRDNORM;
--	spin_unlock(&fiq->waitq.lock);
-+	spin_unlock(&fiq->lock);
- 
- 	return mask;
- }
-@@ -2221,15 +2224,15 @@ void fuse_abort_conn(struct fuse_conn *f
- 		flush_bg_queue(fc);
- 		spin_unlock(&fc->bg_lock);
- 
--		spin_lock(&fiq->waitq.lock);
-+		spin_lock(&fiq->lock);
- 		fiq->connected = 0;
- 		list_for_each_entry(req, &fiq->pending, list)
- 			clear_bit(FR_PENDING, &req->flags);
- 		list_splice_tail_init(&fiq->pending, &to_end);
- 		while (forget_pending(fiq))
- 			kfree(dequeue_forget(fiq, 1, NULL));
--		wake_up_all_locked(&fiq->waitq);
--		spin_unlock(&fiq->waitq.lock);
-+		wake_up_all(&fiq->waitq);
-+		spin_unlock(&fiq->lock);
- 		kill_fasync(&fiq->fasync, SIGIO, POLL_IN);
- 		end_polls(fc);
- 		wake_up_all(&fc->blocked_waitq);
---- a/fs/fuse/fuse_i.h
-+++ b/fs/fuse/fuse_i.h
-@@ -450,6 +450,9 @@ struct fuse_iqueue {
- 	/** Connection established */
- 	unsigned connected;
- 
-+	/** Lock protecting accesses to members of this structure */
-+	spinlock_t lock;
-+
- 	/** Readers of the connection are waiting on this */
- 	wait_queue_head_t waitq;
- 
---- a/fs/fuse/inode.c
-+++ b/fs/fuse/inode.c
-@@ -582,6 +582,7 @@ static int fuse_show_options(struct seq_
- static void fuse_iqueue_init(struct fuse_iqueue *fiq)
- {
- 	memset(fiq, 0, sizeof(struct fuse_iqueue));
-+	spin_lock_init(&fiq->lock);
- 	init_waitqueue_head(&fiq->waitq);
- 	INIT_LIST_HEAD(&fiq->pending);
- 	INIT_LIST_HEAD(&fiq->interrupts);
+-- 
+2.20.1
+
 
 
