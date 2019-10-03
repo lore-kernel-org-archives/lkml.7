@@ -7,46 +7,45 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CA20C10F14
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:00:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8DE7C10F14
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:00:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EE047207FF
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:00:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A92EC20700
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:00:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570118425;
-	bh=fsyH0ce6J7i4xp0YrIBg7PCkiz/4+XeUMbByYMJ7klc=;
+	s=default; t=1570118429;
+	bh=v5z7osx8ZrhN/0iHMnVEgaI9K9aFHg+JY9Ifsi+bC+c=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zBUL62HCECE+K7O0AACqW5DgtxcS5DEzshmIMiHV64EqpnshPMBHNTpRnfsw/p1av
-	 sdvpcWns3zMrv0V8N01xdebIRwa84sowSiQ8KAE5D1E9oZ9iYSMLvHODnLn0fYwKXz
-	 nD69Wv6FIu5pRuf2GjTTxA+JUVoUiePXNowcsYy4=
+	b=RJ8VM6ZiFKHHfeFSZtpilDLXAHynz4ytQH9gSYa0zpBcLSgRJ8zXI/kGKEOqkKanR
+	 ZK5hkMG9oS3hcfE+VpjFsWoySJvjcWg3Kxj//7pH91fsmxvUX9iWt8Wk6t1HzW8VQ6
+	 iD/pZLMJfq/AF4glmp453tU8p0oZZW9gasZ4nP70=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731562AbfJCQAY (ORCPT
+        id S1728955AbfJCQA2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 12:00:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43996 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 12:00:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44086 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731545AbfJCQAT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:00:19 -0400
+        id S1731563AbfJCQAY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:00:24 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 54640207FF;
-        Thu,  3 Oct 2019 16:00:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A9B6F20700;
+        Thu,  3 Oct 2019 16:00:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570118418;
-        bh=fsyH0ce6J7i4xp0YrIBg7PCkiz/4+XeUMbByYMJ7klc=;
+        s=default; t=1570118424;
+        bh=v5z7osx8ZrhN/0iHMnVEgaI9K9aFHg+JY9Ifsi+bC+c=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=c1MkSEzD5hGqUFV5uulsxpVtk8ku84rWJ7qoz3zOd6X9RvnPZgGmhLaY5vPnkUX2W
-         LtNYKrzEP7B9Fcf0mFyKtpeH3aYZwhlTx0R0EdhsgLz1nVm9HxzF9GcZuFIksFA1nu
-         oEYkDyxcqbCVDHY/yzWpanqA4gqMR9ZxQfas1B8Y=
+        b=WmgscjCcuOwgP07YJm4DvttoqWUIHRMV64y8+7h6+7AfZd6gRz67L3fI5RVFd8n1w
+         AWcERSBA8NXsmdKvaCmsNdwv2sMdURo6zMfcW9r7oLFoJDjIhSZzzMG0abCPJp9eY7
+         nLNnLRQMkIrw0jW4pEH1ZiQGqsz2PvGveTxTAPKM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Denis Kenzior <denkenz@gmail.com>,
-        Johannes Berg <johannes.berg@intel.com>
-Subject: [PATCH 4.4 89/99] cfg80211: Purge frame registrations on iftype change
-Date:   Thu,  3 Oct 2019 17:53:52 +0200
-Message-Id: <20191003154339.189378717@linuxfoundation.org>
+        stable@vger.kernel.org, Theodore Tso <tytso@mit.edu>
+Subject: [PATCH 4.4 91/99] ext4: fix punch hole for inline_data file systems
+Date:   Thu,  3 Oct 2019 17:53:54 +0200
+Message-Id: <20191003154339.624879548@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191003154252.297991283@linuxfoundation.org>
 References: <20191003154252.297991283@linuxfoundation.org>
@@ -59,41 +58,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Denis Kenzior <denkenz@gmail.com>
+From: Theodore Ts'o <tytso@mit.edu>
 
-commit c1d3ad84eae35414b6b334790048406bd6301b12 upstream.
+commit c1e8220bd316d8ae8e524df39534b8a412a45d5e upstream.
 
-Currently frame registrations are not purged, even when changing the
-interface type.  This can lead to potentially weird situations where
-frames possibly not allowed on a given interface type remain registered
-due to the type switching happening after registration.
+If a program attempts to punch a hole on an inline data file, we need
+to convert it to a normal file first.
 
-The kernel currently relies on userspace apps to actually purge the
-registrations themselves, this is not something that the kernel should
-rely on.
+This was detected using ext4/032 using the adv configuration.  Simple
+reproducer:
 
-Add a call to cfg80211_mlme_purge_registrations() to forcefully remove
-any registrations left over prior to switching the iftype.
+mke2fs -Fq -t ext4 -O inline_data /dev/vdc
+mount /vdc
+echo "" > /vdc/testfile
+xfs_io -c 'truncate 33554432' /vdc/testfile
+xfs_io -c 'fpunch 0 1048576' /vdc/testfile
+umount /vdc
+e2fsck -fy /dev/vdc
 
 Cc: stable@vger.kernel.org
-Signed-off-by: Denis Kenzior <denkenz@gmail.com>
-Link: https://lore.kernel.org/r/20190828211110.15005-1-denkenz@gmail.com
-Signed-off-by: Johannes Berg <johannes.berg@intel.com>
+Signed-off-by: Theodore Ts'o <tytso@mit.edu>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- net/wireless/util.c |    1 +
- 1 file changed, 1 insertion(+)
+ fs/ext4/inode.c |    9 +++++++++
+ 1 file changed, 9 insertions(+)
 
---- a/net/wireless/util.c
-+++ b/net/wireless/util.c
-@@ -974,6 +974,7 @@ int cfg80211_change_iface(struct cfg8021
- 		}
+--- a/fs/ext4/inode.c
++++ b/fs/ext4/inode.c
+@@ -3705,6 +3705,15 @@ int ext4_punch_hole(struct inode *inode,
  
- 		cfg80211_process_rdev_events(rdev);
-+		cfg80211_mlme_purge_registrations(dev->ieee80211_ptr);
- 	}
+ 	trace_ext4_punch_hole(inode, offset, length, 0);
  
- 	err = rdev_change_virtual_intf(rdev, dev, ntype, flags, params);
++	ext4_clear_inode_state(inode, EXT4_STATE_MAY_INLINE_DATA);
++	if (ext4_has_inline_data(inode)) {
++		down_write(&EXT4_I(inode)->i_mmap_sem);
++		ret = ext4_convert_inline_data(inode);
++		up_write(&EXT4_I(inode)->i_mmap_sem);
++		if (ret)
++			return ret;
++	}
++
+ 	/*
+ 	 * Write out all dirty pages to avoid race conditions
+ 	 * Then release them.
 
 
