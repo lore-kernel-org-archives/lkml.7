@@ -2,157 +2,87 @@ Return-Path: <SRS0=6dNS=X4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 112D7C32792
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:59:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 29777C32792
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:59:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E039520865
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:59:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ragnatech-se.20150623.gappssmtp.com header.i=@ragnatech-se.20150623.gappssmtp.com header.b="Bc59P60s"
+	by mail.kernel.org (Postfix) with ESMTP id 049812086A
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:59:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731920AbfJCR7C (ORCPT
+        id S1732866AbfJCR7G (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 13:59:02 -0400
-Received: from mail-lf1-f65.google.com ([209.85.167.65]:42298 "EHLO
-        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731234AbfJCR7C (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 13:59:02 -0400
-Received: by mail-lf1-f65.google.com with SMTP id c195so2521123lfg.9
-        for <linux-kernel@vger.kernel.org>; Thu, 03 Oct 2019 10:58:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ragnatech-se.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=7n4NvKPpvqFXigh24b8twI7kqYMuMZj67/WZMAs3RxU=;
-        b=Bc59P60swsi5ASH0o5bE7smNybp94litM+wgTLMSxSgPd5K15x8U0/hr2VKJ878+XV
-         MilBKq3+odr5y0VWyRb/XBMSYwoWETfuVy++Sb96L0dcUzajIqLC5+SXyKPItpcVOtXU
-         V7waP48q3moqUtP7yay9xfqnifEMYp3y20JQb1IuXZaL4WUJKFKTLytYE3YeoH89QWxP
-         5KQJHxLrUgz4EX/l2eWDswh0AMuDLckAI8e9h3Jncr7VY+HuitMt7/ovb5Ur4zSXniny
-         YVJD7JbJVeqvTGutlM4TDZS/9trFAQwaAFZkGcd4lRdH041X6MblRVccYT7deFr+PZtS
-         zkbA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=7n4NvKPpvqFXigh24b8twI7kqYMuMZj67/WZMAs3RxU=;
-        b=LS3STdgjswilGNP+n5hM/9cnM2QS6ridpV+QujDr577pciYRIY98ltPh5PT8ZqP8se
-         pPxQmO+kA2epdY+Xku1AsGMIPgsvqfvWBL2t+H6pm4Ws1L6GIWg1oePJXz6G0pKueV7q
-         w+3dIFgVgFZNnnEYmqZdlyi1okxhFdDbSW9ylohOCdP9VednlMwGqlNiCAjBc8TjxSZ6
-         mrRW9p/dzqr4pAhb2xSap2835YovT+wLICfiIMyLilL0Ws3my/LpikV5yx2D8e0Xd2A0
-         RaKv688yc8/D9OHiPl0EJS0PkXpieQmrlCLfvgoRhwA81ZUiXNXSgYL+kohCrQA1/7+4
-         A3Uw==
-X-Gm-Message-State: APjAAAUxQ2eCDEgo+Q0Pa4bEnM6/CdjC/O8pUnHvm1UQCHUl3qgy9oaQ
-        rqavgz1yuoHIz7BsQXGEqzSdtw==
-X-Google-Smtp-Source: APXvYqyH+AcaXNZ6JODwQr/ES+A9IWCabDZeg8LQhr5NHAvWxm1esJUv+eY/UinGqTGd7ZU/FVL5uQ==
-X-Received: by 2002:ac2:48ba:: with SMTP id u26mr6538208lfg.164.1570125537473;
-        Thu, 03 Oct 2019 10:58:57 -0700 (PDT)
-Received: from localhost (h-93-159.A463.priv.bahnhof.se. [46.59.93.159])
-        by smtp.gmail.com with ESMTPSA id t22sm588754lfg.91.2019.10.03.10.58.56
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 03 Oct 2019 10:58:56 -0700 (PDT)
-Date:   Thu, 3 Oct 2019 19:58:55 +0200
-From:   Niklas =?iso-8859-1?Q?S=F6derlund?= 
-        <niklas.soderlund@ragnatech.se>
-To:     Geert Uytterhoeven <geert+renesas@glider.be>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-renesas-soc@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] pinctrl: sh-pfc: Do not use platform_get_irq() to count
- interrupts
-Message-ID: <20191003175855.GB1322@bigcity.dyn.berto.se>
-References: <20191001180547.734-1-geert+renesas@glider.be>
+        Thu, 3 Oct 2019 13:59:06 -0400
+Received: from mga07.intel.com ([134.134.136.100]:44326 "EHLO mga07.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731174AbfJCR7G (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 13:59:06 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 03 Oct 2019 10:59:05 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.67,253,1566889200"; 
+   d="scan'208";a="343737720"
+Received: from okiselev-mobl1.ccr.corp.intel.com (HELO localhost) ([10.251.93.117])
+  by orsmga004.jf.intel.com with ESMTP; 03 Oct 2019 10:59:00 -0700
+Date:   Thu, 3 Oct 2019 20:58:54 +0300
+From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+To:     Mimi Zohar <zohar@linux.ibm.com>
+Cc:     linux-integrity@vger.kernel.org, stable@vger.kernel.org,
+        David Howells <dhowells@redhat.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        "David S. Miller" <davem@davemloft.net>,
+        "open list:ASYMMETRIC KEYS" <keyrings@vger.kernel.org>,
+        "open list:CRYPTO API" <linux-crypto@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] KEYS: asym_tpm: Switch to get_random_bytes()
+Message-ID: <20191003175854.GB19679@linux.intel.com>
+References: <20190926171601.30404-1-jarkko.sakkinen@linux.intel.com>
+ <1570024819.4999.119.camel@linux.ibm.com>
+ <20191003114119.GF8933@linux.intel.com>
+ <1570107752.4421.183.camel@linux.ibm.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20191001180547.734-1-geert+renesas@glider.be>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <1570107752.4421.183.camel@linux.ibm.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Geert,
-
-Thanks for your work.
-
-On 2019-10-01 20:05:47 +0200, Geert Uytterhoeven wrote:
-> As platform_get_irq() now prints an error when the interrupt does not
-> exist, counting interrupts by looping until failure causes the printing
-> of scary messages like:
+On Thu, Oct 03, 2019 at 09:02:32AM -0400, Mimi Zohar wrote:
+> On Thu, 2019-10-03 at 14:41 +0300, Jarkko Sakkinen wrote:
+> > On Wed, Oct 02, 2019 at 10:00:19AM -0400, Mimi Zohar wrote:
+> > > On Thu, 2019-09-26 at 20:16 +0300, Jarkko Sakkinen wrote:
+> > > > Only the kernel random pool should be used for generating random numbers.
+> > > > TPM contributes to that pool among the other sources of entropy. In here it
+> > > > is not, agreed, absolutely critical because TPM is what is trusted anyway
+> > > > but in order to remove tpm_get_random() we need to first remove all the
+> > > > call sites.
+> > > 
+> > > At what point during boot is the kernel random pool available?  Does
+> > > this imply that you're planning on changing trusted keys as well?
+> > 
+> > Well trusted keys *must* be changed to use it. It is not a choice
+> > because using a proprietary random number generator instead of defacto
+> > one in the kernel can be categorized as a *regression*.
 > 
->     sh-pfc e6060000.pin-controller: IRQ index 0 not found
-> 
-> Fix this by using the platform_irq_count() helper instead.
-> 
-> Fixes: 7723f4c5ecdb8d83 ("driver core: platform: Add an error message to platform_get_irq*()")
-> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> I really don't see how using the TPM random number for TPM trusted
+> keys would be considered a regression.  That by definition is a
+> trusted key.  If anything, changing what is currently being done would
+> be the regression. 
 
-Nice change.
+It is really not a TPM trusted key. It trusted key that gets sealed with
+the TPM. The key itself is used in clear by kernel. The random number
+generator exists in the kernel to for a reason.
 
-Reviewed-by: Niklas Söderlund <niklas.soderlund+renesas@ragnatech.se>
+It is without doubt a regression.
 
-> ---
-> This is a fix for v5.4-rc1.
-> ---
->  drivers/pinctrl/sh-pfc/core.c | 16 ++++++----------
->  1 file changed, 6 insertions(+), 10 deletions(-)
-> 
-> diff --git a/drivers/pinctrl/sh-pfc/core.c b/drivers/pinctrl/sh-pfc/core.c
-> index b8640ad41bef26be..ce983247c9e28bfe 100644
-> --- a/drivers/pinctrl/sh-pfc/core.c
-> +++ b/drivers/pinctrl/sh-pfc/core.c
-> @@ -29,12 +29,12 @@
->  static int sh_pfc_map_resources(struct sh_pfc *pfc,
->  				struct platform_device *pdev)
->  {
-> -	unsigned int num_windows, num_irqs;
->  	struct sh_pfc_window *windows;
->  	unsigned int *irqs = NULL;
-> +	unsigned int num_windows;
->  	struct resource *res;
->  	unsigned int i;
-> -	int irq;
-> +	int num_irqs;
->  
->  	/* Count the MEM and IRQ resources. */
->  	for (num_windows = 0;; num_windows++) {
-> @@ -42,17 +42,13 @@ static int sh_pfc_map_resources(struct sh_pfc *pfc,
->  		if (!res)
->  			break;
->  	}
-> -	for (num_irqs = 0;; num_irqs++) {
-> -		irq = platform_get_irq(pdev, num_irqs);
-> -		if (irq == -EPROBE_DEFER)
-> -			return irq;
-> -		if (irq < 0)
-> -			break;
-> -	}
-> -
->  	if (num_windows == 0)
->  		return -EINVAL;
->  
-> +	num_irqs = platform_irq_count(pdev);
-> +	if (num_irqs < 0)
-> +		return num_irqs;
-> +
->  	/* Allocate memory windows and IRQs arrays. */
->  	windows = devm_kcalloc(pfc->dev, num_windows, sizeof(*windows),
->  			       GFP_KERNEL);
-> -- 
-> 2.17.1
-> 
-
--- 
-Regards,
-Niklas Söderlund
+/Jarkko
