@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C621C4CED1
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:12:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C86FDECE58B
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:12:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D608720673
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:12:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9EE452086A
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:12:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570122747;
-	bh=AR8xkLta58mWfwbBEqsTYV291X1xSKFmHu7uqW2tgpM=;
+	s=default; t=1570122754;
+	bh=9fwelzb4gaRs6F+woif6HxRJvfWAzWKdIXQYj+jKX5Q=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=I1sRRNhvOQ+qWCu7onpMA2kWKb0msED4BLSuDZwtnuhDMea4lme63XM9xX/balpQW
-	 jCjLDQG8MlfJ/K4m4GjOghyGKShKD6kAe2WrkXwI/k7nuSt48fT0RZvZ0hT03QfP4P
-	 QWqO7wQgmVEOzDaGey4xgTCYId0IwCpQi8Fz7CEY=
+	b=fd3y41ynYTBI7HJ2UQRqaeij85AsTT9SsGFx4e2H7EENOiuuzqO4GRSP3oEegB1bb
+	 T1eYld3uVXBnNn7k/jzqViAgCKXBlIFITJmtqAWZ5mjfpgEMgUAEsmDcWwli6hpAFy
+	 jQCW3azQeBSZxnsUHhwQH16JSzYB1Fx6teEZ05WE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391708AbfJCQaT (ORCPT
+        id S2390775AbfJCQaE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 12:30:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36118 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 12:30:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35688 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391689AbfJCQaP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:30:15 -0400
+        id S2391639AbfJCQ37 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:29:59 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E51822054F;
-        Thu,  3 Oct 2019 16:30:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9BB282133F;
+        Thu,  3 Oct 2019 16:29:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570120214;
-        bh=AR8xkLta58mWfwbBEqsTYV291X1xSKFmHu7uqW2tgpM=;
+        s=default; t=1570120198;
+        bh=9fwelzb4gaRs6F+woif6HxRJvfWAzWKdIXQYj+jKX5Q=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wmEw4kUGE+4oV665ariadkmQ8KjoQnl21LEEactzvjk4+d50cRdcDj9FxLd2FgOmu
-         KLTkvnssC1Pmtgsv6KAwpL0N3NEFJVhWrXs+z5zKNdwYbDCEtEtmJDxGk8pmmNWwD9
-         rbew6CJzwN5R0BvPZOech/ntuJs+PF4YHqq/Rd/s=
+        b=SSDIbc5R11Ao02XVbyw8iJLfRijVhrzS4yrjUBQLehBlzV9hDcfcggbrKBG9QDFt4
+         oR7c9j3WKWPY1aX5bD30E+qZWa5L2+xfcsxOgap96QIYppbHQEN5It/q5RtOoEAhCd
+         OA8wDQOLDtWZB+SdluSY4H23vVrkeluYpV9Pg6O4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Leonard Crestez <leonard.crestez@nxp.com>,
-        Chanwoo Choi <cw00.choi@samsung.com>,
-        MyungJoo Ham <myungjoo.ham@samsung.com>,
+        stable@vger.kernel.org,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 139/313] PM / devfreq: passive: Use non-devm notifiers
-Date:   Thu,  3 Oct 2019 17:51:57 +0200
-Message-Id: <20191003154546.570911185@linuxfoundation.org>
+Subject: [PATCH 5.2 134/313] ARM: at91: move platform-specific asm-offset.h to arch/arm/mach-at91
+Date:   Thu,  3 Oct 2019 17:51:52 +0200
+Message-Id: <20191003154546.094722616@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191003154533.590915454@linuxfoundation.org>
 References: <20191003154533.590915454@linuxfoundation.org>
@@ -61,67 +61,90 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Leonard Crestez <leonard.crestez@nxp.com>
+From: Masahiro Yamada <yamada.masahiro@socionext.com>
 
-[ Upstream commit 0ef7c7cce43f6ecc2b96d447e69b2900a9655f7c ]
+[ Upstream commit 9fac85a6db8999922f2cd92dfe2e83e063b31a94 ]
 
-The devfreq passive governor registers and unregisters devfreq
-transition notifiers on DEVFREQ_GOV_START/GOV_STOP using devm wrappers.
+<generated/at91_pm_data-offsets.h> is only generated and included by
+arch/arm/mach-at91/, so it does not need to reside in the globally
+visible include/generated/.
 
-If devfreq itself is registered with devm then a warning is triggered on
-rmmod from devm_devfreq_unregister_notifier. Call stack looks like this:
+I renamed it to arch/arm/mach-at91/pm_data-offsets.h since the prefix
+'at91_' is just redundant in mach-at91/.
 
-	devm_devfreq_unregister_notifier+0x30/0x40
-	devfreq_passive_event_handler+0x4c/0x88
-	devfreq_remove_device.part.8+0x6c/0x9c
-	devm_devfreq_dev_release+0x18/0x20
-	release_nodes+0x1b0/0x220
-	devres_release_all+0x78/0x84
-	device_release_driver_internal+0x100/0x1c0
-	driver_detach+0x4c/0x90
-	bus_remove_driver+0x7c/0xd0
-	driver_unregister+0x2c/0x58
-	platform_driver_unregister+0x10/0x18
-	imx_devfreq_platdrv_exit+0x14/0xd40 [imx_devfreq]
+My main motivation of this change is to avoid the race condition for
+the parallel build (-j) when CONFIG_IKHEADERS is enabled.
 
-This happens because devres_release_all will first remove all the nodes
-into a separate todo list so the nested devres_release from
-devm_devfreq_unregister_notifier won't find anything.
+When it is enabled, all the headers under include/ are archived into
+kernel/kheaders_data.tar.xz and exposed in the sysfs.
 
-Fix the warning by calling the non-devm APIS for frequency notification.
-Using devm wrappers is not actually useful for a governor anyway: it
-relies on the devfreq core to correctly match the GOV_START/GOV_STOP
-notifications.
+In the parallel build, we have no idea in which order files are built.
 
-Fixes: 996133119f57 ("PM / devfreq: Add new passive governor")
-Signed-off-by: Leonard Crestez <leonard.crestez@nxp.com>
-Acked-by: Chanwoo Choi <cw00.choi@samsung.com>
-Signed-off-by: MyungJoo Ham <myungjoo.ham@samsung.com>
+ - If at91_pm_data-offsets.h is built before kheaders_data.tar.xz,
+   the header will be included in the archive. Probably nobody will
+   use it, but it is harmless except that it will increase the archive
+   size needlessly.
+
+ - If kheaders_data.tar.xz is built before at91_pm_data-offsets.h,
+   the header will not be included in the archive. However, in the next
+   build, the archive will be re-generated to include the newly-found
+   at91_pm_data-offsets.h. This is not nice from the build system point
+   of view.
+
+ - If at91_pm_data-offsets.h and kheaders_data.tar.xz are built at the
+   same time, the corrupted header might be included in the archive,
+   which does not look nice either.
+
+This commit fixes the race.
+
+Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+Link: https://lore.kernel.org/r/20190823024346.591-1-yamada.masahiro@socionext.com
+Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/devfreq/governor_passive.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ arch/arm/mach-at91/.gitignore   | 1 +
+ arch/arm/mach-at91/Makefile     | 5 +++--
+ arch/arm/mach-at91/pm_suspend.S | 2 +-
+ 3 files changed, 5 insertions(+), 3 deletions(-)
+ create mode 100644 arch/arm/mach-at91/.gitignore
 
-diff --git a/drivers/devfreq/governor_passive.c b/drivers/devfreq/governor_passive.c
-index 58308948b8637..da485477065c5 100644
---- a/drivers/devfreq/governor_passive.c
-+++ b/drivers/devfreq/governor_passive.c
-@@ -165,12 +165,12 @@ static int devfreq_passive_event_handler(struct devfreq *devfreq,
- 			p_data->this = devfreq;
+diff --git a/arch/arm/mach-at91/.gitignore b/arch/arm/mach-at91/.gitignore
+new file mode 100644
+index 0000000000000..2ecd6f51c8a95
+--- /dev/null
++++ b/arch/arm/mach-at91/.gitignore
+@@ -0,0 +1 @@
++pm_data-offsets.h
+diff --git a/arch/arm/mach-at91/Makefile b/arch/arm/mach-at91/Makefile
+index 31b61f0e1c077..de64301dcff25 100644
+--- a/arch/arm/mach-at91/Makefile
++++ b/arch/arm/mach-at91/Makefile
+@@ -19,9 +19,10 @@ ifeq ($(CONFIG_PM_DEBUG),y)
+ CFLAGS_pm.o += -DDEBUG
+ endif
  
- 		nb->notifier_call = devfreq_passive_notifier_call;
--		ret = devm_devfreq_register_notifier(dev, parent, nb,
-+		ret = devfreq_register_notifier(parent, nb,
- 					DEVFREQ_TRANSITION_NOTIFIER);
- 		break;
- 	case DEVFREQ_GOV_STOP:
--		devm_devfreq_unregister_notifier(dev, parent, nb,
--					DEVFREQ_TRANSITION_NOTIFIER);
-+		WARN_ON(devfreq_unregister_notifier(parent, nb,
-+					DEVFREQ_TRANSITION_NOTIFIER));
- 		break;
- 	default:
- 		break;
+-include/generated/at91_pm_data-offsets.h: arch/arm/mach-at91/pm_data-offsets.s FORCE
++$(obj)/pm_data-offsets.h: $(obj)/pm_data-offsets.s FORCE
+ 	$(call filechk,offsets,__PM_DATA_OFFSETS_H__)
+ 
+-arch/arm/mach-at91/pm_suspend.o: include/generated/at91_pm_data-offsets.h
++$(obj)/pm_suspend.o: $(obj)/pm_data-offsets.h
+ 
+ targets += pm_data-offsets.s
++clean-files += pm_data-offsets.h
+diff --git a/arch/arm/mach-at91/pm_suspend.S b/arch/arm/mach-at91/pm_suspend.S
+index c751f047b1166..ed57c879d4e17 100644
+--- a/arch/arm/mach-at91/pm_suspend.S
++++ b/arch/arm/mach-at91/pm_suspend.S
+@@ -10,7 +10,7 @@
+ #include <linux/linkage.h>
+ #include <linux/clk/at91_pmc.h>
+ #include "pm.h"
+-#include "generated/at91_pm_data-offsets.h"
++#include "pm_data-offsets.h"
+ 
+ #define	SRAMC_SELF_FRESH_ACTIVE		0x01
+ #define	SRAMC_SELF_FRESH_EXIT		0x00
 -- 
 2.20.1
 
