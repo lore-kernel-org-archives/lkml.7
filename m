@@ -2,112 +2,106 @@ Return-Path: <SRS0=6dNS=X4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF0F6C32792
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:28:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 509C3C10F14
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:28:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8C43220865
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:28:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570123726;
-	bh=9nGv8GP1WGb+HJj7APrzz5eL3Z92PFIFl4Q0ahUFkgc=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Ctwm3r1UkjoDV6eEiswLIgZZk3cfMGxT9YAl+lPyx+Vv5oKYKtVWWissjYjEdIksO
-	 pbdMAWn/9LUqqysSLpj4lux2XPVLWWSwpJojb7EXAXCY9kC3zL+TWnURi6PYqkzZ54
-	 uSX7dkV7Rx5xrdfo+uA+3cHMlBQQEJO1zBhHfR3s=
+	by mail.kernel.org (Postfix) with ESMTP id 2850C20830
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:28:54 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="CJYOeogB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388222AbfJCQNT (ORCPT
+        id S1730367AbfJCR2x (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 12:13:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35890 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 13:28:53 -0400
+Received: from mout.gmx.net ([212.227.15.15]:59037 "EHLO mout.gmx.net"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388179AbfJCQNQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:13:16 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6B06F2054F;
-        Thu,  3 Oct 2019 16:13:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570119195;
-        bh=9nGv8GP1WGb+HJj7APrzz5eL3Z92PFIFl4Q0ahUFkgc=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xDfSeIby40kjXUKc/xPruqURUGaYHtkaqtO8JwCiRGJ0oLfLjZmAoIqtkPEF3RENk
-         TYVAW20pUybxlnOXgVfkqSx6OtaWedfAbmFRhxHEWLnG4ueRvkynx+5IL1dYEUEpcM
-         VzUbHCNKBVNnxQjNuxHkiy5YQLuBF+4LIbbsuu5Q=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Robin Murphy <robin.murphy@arm.com>,
-        Liang Chen <cl@rock-chips.com>,
-        Shawn Lin <shawn.lin@rock-chips.com>,
-        Heiko Stuebner <heiko@sntech.de>
-Subject: [PATCH 4.14 160/185] arm64: dts: rockchip: limit clock rate of MMC controllers for RK3328
-Date:   Thu,  3 Oct 2019 17:53:58 +0200
-Message-Id: <20191003154515.349272868@linuxfoundation.org>
-X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20191003154437.541662648@linuxfoundation.org>
-References: <20191003154437.541662648@linuxfoundation.org>
-User-Agent: quilt/0.66
+        id S1729919AbfJCR2q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 13:28:46 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
+        s=badeba3b8450; t=1570123715;
+        bh=1/9ytc+GiSYLmzLUQTHXod+HPAelk3SiwurUk+Qr1yw=;
+        h=X-UI-Sender-Class:Subject:To:Cc:References:From:Date:In-Reply-To;
+        b=CJYOeogBGQo0GZboKNzoPTNFGJP7gyTe8ysUI62iHOFyQnMY/RnxxLPJXFY3m6aVU
+         LoTHWUKCu1EBTOKHcImQvCF7pGjJ1bhUlh7jiJmQe4t+EjMIAidDjTbuVrYLfx7vYC
+         w/NihBJnoa8wfRFhVXlCTAk5cLTu2mniycEzcyRo=
+X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
+Received: from [192.168.1.162] ([37.4.249.116]) by mail.gmx.com (mrgmx005
+ [212.227.17.190]) with ESMTPSA (Nemesis) id 1Mt75H-1i19Lu1F6X-00tPuP; Thu, 03
+ Oct 2019 19:28:35 +0200
+Subject: Re: [PATCH] ARM: dt: check MPIDR on MP devices built without SMP
+To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        linux-kernel@vger.kernel.org
+Cc:     "kernelci.org bot" <bot@kernelci.org>,
+        Russell King <linux@armlinux.org.uk>,
+        linux-arm-kernel@lists.infradead.org
+References: <20191002114508.1089-1-nsaenzjulienne@suse.de>
+From:   Stefan Wahren <wahrenst@gmx.net>
+Message-ID: <e2487ea8-67d0-b850-af63-683dff498275@gmx.net>
+Date:   Thu, 3 Oct 2019 19:28:33 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20191002114508.1089-1-nsaenzjulienne@suse.de>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-Provags-ID: V03:K1:sY96XPCdbmODy3ENQlqjYJoCke2gtAyeaRHQ/ewzjOXNOxvx0/A
+ qbuh9Z8YocIKS/wvcaobPGkEZeoW4UtoD0zFjrSOTvzB2S3MjUxsBhQ0ELhAx8mZNPUS83w
+ sJU+6SLWL1qvXoaSnaGzdmjFYgEz2yAcUD6v3dnb7VNTV1KVvYl8aChNgpanuSYxw6Ooejb
+ lzhdZTT81abj3HPqjb7Ig==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:F8KbZNVHwWY=:JS9pNupe6kR583TYXbT6TH
+ UaYtQkAAEYgrXx7mWwajxIETZwCTKTyfva4pSeSaX7cazQDSxqwSsPJhjS7cdcmmy9sQaI/Kl
+ ZPUIbAvFllW1gJeQclovYN+ID6gkzaMlTkpntqQdFOiqMwdB9kWBRlwLWd/Os2Lt/HtjqTsH7
+ clN650pzstI/5hsZgQv0a3EQ/DxCvRpY/8uGnREMtW9ZPBI/0OIMfqsbPugdM7C64PqPlmL4U
+ Be7tTEsnYYjwkbnyujZv9BQzfhgJlk8P0pvNoPca8hexkDfh+wJktFtScnPyBk8jQpKNNqJ1U
+ qEWDDfTPEKAGox6UXUphWMe4YYSZAnQ279D2rkSiX7r6tRGUjVaXnBoQ5DyK/zdz7U5hwKrdx
+ H9pJq1WTRnxyWfLEd2SjStCS21pTbrVjmUkhfSH2t3XlTUX7Pogzel3vB4Oi9m1CEcRzqc0+J
+ PD1410f+rGm3bogyd74o8CoeLRjexA1BH3Jkh8mK2HnNMq2RxvV27KZuAyU3wXPxSuNTG6tYQ
+ G74aUtPwn99fsFNLvFfSDjnlJLePz0oOWkHkkFe3xckF09Y/CXopTtHqVC/mQa2GnxfTF71qK
+ WWMtgGBAEjPsVZBr/T6V0GVhdRt9+36/OGfBX+d9NVoZIK0om+hY6X17Ia8eH6syUhSH1xtn3
+ +HuqlQRJhrAaz8/6JqAtJIlG6VLlVj1gaYk+CHTIF3EheK4TtFZN0lGe+i7zEKvHbplLAqFca
+ NwZEgiXI+KrRZMEtRTUcET8luQRjYcvMMDySRsAgs8oF4vHpgh1APRkDI5MDHZ1ElOHVH+y4d
+ a7krHpVFk1jDG4Ys5MIz9qqNQBmrI7BQP2dXnTKRqzqUQ4hU4SAqe5KOOEVF/t3A+xu8G2Rhh
+ MNenCWNqmHz2whisbbp691OBNxgoyfmkjuN6HNUrDuYIJduP470F2eEl+FMt6/YYR81rao86a
+ llJwZcWjVcfqdRXISg1Zts5SYFaX1p9dR2/QP0oQIx6cuME3WurlroEaZbCDvxRFRceKYYHLv
+ d0qxN6w6yhr40yA/z6uYWDXed1uC7op1mBAAcdY2VmScyOTYhrcAh1905754n7hkHSui+54WF
+ kFgiSrnuft9aeSd957wKJM77N8Sy9yK9folc2RmpjN1vWWGyIbiUGmfJPLyw/kpv/JMCPLuNM
+ 8WG0zHrZlsx+0mC7feEPs/WQizIYfHZ2EpuImNcxT5R9IiSVGlEH4BXuHzAvyY88i65WfOyEy
+ rJH4oBbAkzVsVbea10jG63+VJPQC75sq9fo33wFraGHKOPztjKmjBqLRpleQ=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Shawn Lin <shawn.lin@rock-chips.com>
+Am 02.10.19 um 13:45 schrieb Nicolas Saenz Julienne:
+> Currently, in arm_dt_init_cpu_maps(), the hwid of the boot CPU is read
+> from MPIDR on SMP devices and set to 0 for non SMP. This value is then
+> matched with the DT cpu nodes' reg property in order to find the boot
+> CPU in DT.
+>
+> On MP devices build without SMP the cpu DT node contains the expected
+> MPIDR yet the hwid is set to 0. With this the function fails to match
+> the cpus and uses the default CPU logical map. Making it impossible to
+> get the CPU's DT node further down the line. This causes issues with
+> cpufreq-dt, as it triggers warnings when not finding a suitable DT node
+> on CPU0.
+>
+> Change the way we choose whether to get MPIDR or not. Instead of
+> depending on SMP check the number of CPUs defined in DT. Anything > 1
+> means MPIDR will be available.
+>
+> This was seen on a Raspberry Pi 2 build with bcm2835_defconfig.
+>
+> Reported-by: "kernelci.org bot" <bot@kernelci.org>
+> Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+> ---
 
-commit 03e61929c0d227ed3e1c322fc3804216ea298b7e upstream.
+Tested-by: Stefan Wahren <wahrenst@gmx.net>
 
-150MHz is a fundamental limitation of RK3328 Soc, w/o this limitation,
-eMMC, for instance, will run into 200MHz clock rate in HS200 mode, which
-makes the RK3328 boards not always boot properly. By adding it in
-rk3328.dtsi would also obviate the worry of missing it when adding new
-boards.
-
-Fixes: 52e02d377a72 ("arm64: dts: rockchip: add core dtsi file for RK3328 SoCs")
-Cc: stable@vger.kernel.org
-Cc: Robin Murphy <robin.murphy@arm.com>
-Cc: Liang Chen <cl@rock-chips.com>
-Signed-off-by: Shawn Lin <shawn.lin@rock-chips.com>
-Signed-off-by: Heiko Stuebner <heiko@sntech.de>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
----
- arch/arm64/boot/dts/rockchip/rk3328.dtsi |    3 +++
- 1 file changed, 3 insertions(+)
-
---- a/arch/arm64/boot/dts/rockchip/rk3328.dtsi
-+++ b/arch/arm64/boot/dts/rockchip/rk3328.dtsi
-@@ -685,6 +685,7 @@
- 			 <&cru SCLK_SDMMC_DRV>, <&cru SCLK_SDMMC_SAMPLE>;
- 		clock-names = "biu", "ciu", "ciu-drive", "ciu-sample";
- 		fifo-depth = <0x100>;
-+		max-frequency = <150000000>;
- 		status = "disabled";
- 	};
- 
-@@ -696,6 +697,7 @@
- 			 <&cru SCLK_SDIO_DRV>, <&cru SCLK_SDIO_SAMPLE>;
- 		clock-names = "biu", "ciu", "ciu-drive", "ciu-sample";
- 		fifo-depth = <0x100>;
-+		max-frequency = <150000000>;
- 		status = "disabled";
- 	};
- 
-@@ -707,6 +709,7 @@
- 			 <&cru SCLK_EMMC_DRV>, <&cru SCLK_EMMC_SAMPLE>;
- 		clock-names = "biu", "ciu", "ciu-drive", "ciu-sample";
- 		fifo-depth = <0x100>;
-+		max-frequency = <150000000>;
- 		status = "disabled";
- 	};
- 
-
+Thanks
 
