@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 35AC6C4CED1
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:37:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 191ACC32792
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:37:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0B8512133F
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:37:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DEE1F2070B
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:37:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570120643;
-	bh=uAVntkjPLgHA5UmSzzCWhj6ohpZsu17PsT4M5wIMo7M=;
+	s=default; t=1570120647;
+	bh=lxArp3kU4HFZxrzSHItw74m76dcaz61ksoyl0nVuO+Y=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Qn7SQtFgzS8VQgjlbWdcUI4UXDHX/RYM2ubOFg9arLUkgyXCn1Sgzv6ynnC2FBbLD
-	 YcNqx44LtfI3UU3rDpd/J2s/KoSO6yNkMNM7GfUCLvCpu3tRGN9kDT0RTYCTQn1rzC
-	 YyNVuPPigRWQzfiQO6xJzYsIj/CJK6EAn2fMVOtU=
+	b=o9BQ7HzMJWEZRcLWX+JGIcsZog+8LQB7eNV3y4CVb5NwOW9UEZU9Yu3XCfQdnXM/+
+	 VKAWYvqqe1UuXU3RyCKr/wiQTyEiGI9WQt2dQNo06i88umZm9vHzo4NKery732aqoy
+	 mIFpEhCZuGB+b5Lx7BgM/i5nAjF2ejYhhHnkiax0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404557AbfJCQhW (ORCPT
+        id S2404579AbfJCQh1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 12:37:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46618 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 12:37:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46690 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404537AbfJCQhP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:37:15 -0400
+        id S2404549AbfJCQhU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:37:20 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8E1A6215EA;
-        Thu,  3 Oct 2019 16:37:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D6A34215EA;
+        Thu,  3 Oct 2019 16:37:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570120634;
-        bh=uAVntkjPLgHA5UmSzzCWhj6ohpZsu17PsT4M5wIMo7M=;
+        s=default; t=1570120640;
+        bh=lxArp3kU4HFZxrzSHItw74m76dcaz61ksoyl0nVuO+Y=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=CpZxkbpSo+0LF3G1cbP7OPIujnP3KNJyURjyoFVC40IyCN2n2efLXmqL6dftT9Iwl
-         b/GCiXK/qavPAPxGN6/6bywX6DMy5Q9ALE/b9mHsw/UJClplWFn385972iP960K5Lj
-         KGoeTc0K7B42jzE3v0OGMJHsmy5thAA4AMFbu1A4=
+        b=ZZdjzL/jtDlmWacfTtqVnY75xbOLvuLvZ+7/8IUz/E+9RRUVLIkXtsGtVh1UW0r8d
+         s8uX5ynw1SAMidi7iCkokdKq0yO76Hy1p5Zmpc7vvJb/ev7V5sTsglG+JE3RiFMH8d
+         JeTscCmncwV+0ELLTrAPgrwhfoNeg2CnOafGKqZc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>,
-        syzbot <syzbot+8ab2d0f39fb79fe6ca40@syzkaller.appspotmail.com>
-Subject: [PATCH 5.2 296/313] /dev/mem: Bail out upon SIGKILL.
-Date:   Thu,  3 Oct 2019 17:54:34 +0200
-Message-Id: <20191003154602.334688993@linuxfoundation.org>
+        stable@vger.kernel.org, Amir Goldstein <amir73il@gmail.com>,
+        Boaz Harrosh <boazh@netapp.com>, Jan Kara <jack@suse.cz>,
+        "Darrick J. Wong" <darrick.wong@oracle.com>
+Subject: [PATCH 5.2 298/313] mm: Handle MADV_WILLNEED through vfs_fadvise()
+Date:   Thu,  3 Oct 2019 17:54:36 +0200
+Message-Id: <20191003154602.510522173@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191003154533.590915454@linuxfoundation.org>
 References: <20191003154533.590915454@linuxfoundation.org>
@@ -60,112 +60,71 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
+From: Jan Kara <jack@suse.cz>
 
-commit 8619e5bdeee8b2c685d686281f2d2a6017c4bc15 upstream.
+commit 692fe62433d4ca47605b39f7c416efd6679ba694 upstream.
 
-syzbot found that a thread can stall for minutes inside read_mem() or
-write_mem() after that thread was killed by SIGKILL [1]. Reading from
-iomem areas of /dev/mem can be slow, depending on the hardware.
-While reading 2GB at one read() is legal, delaying termination of killed
-thread for minutes is bad. Thus, allow reading/writing /dev/mem and
-/dev/kmem to be preemptible and killable.
+Currently handling of MADV_WILLNEED hint calls directly into readahead
+code. Handle it by calling vfs_fadvise() instead so that filesystem can
+use its ->fadvise() callback to acquire necessary locks or otherwise
+prepare for the request.
 
-  [ 1335.912419][T20577] read_mem: sz=4096 count=2134565632
-  [ 1335.943194][T20577] read_mem: sz=4096 count=2134561536
-  [ 1335.978280][T20577] read_mem: sz=4096 count=2134557440
-  [ 1336.011147][T20577] read_mem: sz=4096 count=2134553344
-  [ 1336.041897][T20577] read_mem: sz=4096 count=2134549248
-
-Theoretically, reading/writing /dev/mem and /dev/kmem can become
-"interruptible". But this patch chose "killable". Future patch will make
-them "interruptible" so that we can revert to "killable" if some program
-regressed.
-
-[1] https://syzkaller.appspot.com/bug?id=a0e3436829698d5824231251fad9d8e998f94f5e
-
-Signed-off-by: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
-Cc: stable <stable@vger.kernel.org>
-Reported-by: syzbot <syzbot+8ab2d0f39fb79fe6ca40@syzkaller.appspotmail.com>
-Link: https://lore.kernel.org/r/1566825205-10703-1-git-send-email-penguin-kernel@I-love.SAKURA.ne.jp
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Suggested-by: Amir Goldstein <amir73il@gmail.com>
+Reviewed-by: Boaz Harrosh <boazh@netapp.com>
+CC: stable@vger.kernel.org
+Signed-off-by: Jan Kara <jack@suse.cz>
+Reviewed-by: Darrick J. Wong <darrick.wong@oracle.com>
+Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/char/mem.c |   21 +++++++++++++++++++++
- 1 file changed, 21 insertions(+)
+ mm/madvise.c |   22 ++++++++++++++++------
+ 1 file changed, 16 insertions(+), 6 deletions(-)
 
---- a/drivers/char/mem.c
-+++ b/drivers/char/mem.c
-@@ -97,6 +97,13 @@ void __weak unxlate_dev_mem_ptr(phys_add
+--- a/mm/madvise.c
++++ b/mm/madvise.c
+@@ -14,6 +14,7 @@
+ #include <linux/userfaultfd_k.h>
+ #include <linux/hugetlb.h>
+ #include <linux/falloc.h>
++#include <linux/fadvise.h>
+ #include <linux/sched.h>
+ #include <linux/ksm.h>
+ #include <linux/fs.h>
+@@ -275,6 +276,7 @@ static long madvise_willneed(struct vm_a
+ 			     unsigned long start, unsigned long end)
+ {
+ 	struct file *file = vma->vm_file;
++	loff_t offset;
+ 
+ 	*prev = vma;
+ #ifdef CONFIG_SWAP
+@@ -298,12 +300,20 @@ static long madvise_willneed(struct vm_a
+ 		return 0;
+ 	}
+ 
+-	start = ((start - vma->vm_start) >> PAGE_SHIFT) + vma->vm_pgoff;
+-	if (end > vma->vm_end)
+-		end = vma->vm_end;
+-	end = ((end - vma->vm_start) >> PAGE_SHIFT) + vma->vm_pgoff;
+-
+-	force_page_cache_readahead(file->f_mapping, file, start, end - start);
++	/*
++	 * Filesystem's fadvise may need to take various locks.  We need to
++	 * explicitly grab a reference because the vma (and hence the
++	 * vma's reference to the file) can go away as soon as we drop
++	 * mmap_sem.
++	 */
++	*prev = NULL;	/* tell sys_madvise we drop mmap_sem */
++	get_file(file);
++	up_read(&current->mm->mmap_sem);
++	offset = (loff_t)(start - vma->vm_start)
++			+ ((loff_t)vma->vm_pgoff << PAGE_SHIFT);
++	vfs_fadvise(file, offset, end - start, POSIX_FADV_WILLNEED);
++	fput(file);
++	down_read(&current->mm->mmap_sem);
+ 	return 0;
  }
- #endif
  
-+static inline bool should_stop_iteration(void)
-+{
-+	if (need_resched())
-+		cond_resched();
-+	return fatal_signal_pending(current);
-+}
-+
- /*
-  * This funcion reads the *physical* memory. The f_pos points directly to the
-  * memory location.
-@@ -175,6 +182,8 @@ static ssize_t read_mem(struct file *fil
- 		p += sz;
- 		count -= sz;
- 		read += sz;
-+		if (should_stop_iteration())
-+			break;
- 	}
- 	kfree(bounce);
- 
-@@ -251,6 +260,8 @@ static ssize_t write_mem(struct file *fi
- 		p += sz;
- 		count -= sz;
- 		written += sz;
-+		if (should_stop_iteration())
-+			break;
- 	}
- 
- 	*ppos += written;
-@@ -468,6 +479,10 @@ static ssize_t read_kmem(struct file *fi
- 			read += sz;
- 			low_count -= sz;
- 			count -= sz;
-+			if (should_stop_iteration()) {
-+				count = 0;
-+				break;
-+			}
- 		}
- 	}
- 
-@@ -492,6 +507,8 @@ static ssize_t read_kmem(struct file *fi
- 			buf += sz;
- 			read += sz;
- 			p += sz;
-+			if (should_stop_iteration())
-+				break;
- 		}
- 		free_page((unsigned long)kbuf);
- 	}
-@@ -544,6 +561,8 @@ static ssize_t do_write_kmem(unsigned lo
- 		p += sz;
- 		count -= sz;
- 		written += sz;
-+		if (should_stop_iteration())
-+			break;
- 	}
- 
- 	*ppos += written;
-@@ -595,6 +614,8 @@ static ssize_t write_kmem(struct file *f
- 			buf += sz;
- 			virtr += sz;
- 			p += sz;
-+			if (should_stop_iteration())
-+				break;
- 		}
- 		free_page((unsigned long)kbuf);
- 	}
 
 
