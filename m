@@ -2,52 +2,57 @@ Return-Path: <SRS0=6dNS=X4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_SBL,URIBL_SBL_A,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42F41C10F14
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:56:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B2A9C10F14
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:56:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 096D520673
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:56:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0268C2070B
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:56:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570121781;
-	bh=OSDbZ+qnZK1aTfBoQCDkx4FU7CwedCYXzK82/thGqPc=;
+	s=default; t=1570121784;
+	bh=3x8lhPuPZvG+6bqgi6iV13EmQ31ZxAZxBhE99d0ERrQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=lzhoSOMNwHPFA9sHb4ytCxYuBwtG+kWLrNH7AsCu1217q+WU0DZ43eLG6tO9G7Skx
-	 pljykh9NaXlp/h3ldoerVYnz6W/a3ZbQfHcKA/iPK7HVtagjj992yoVyjCC2ThUehF
-	 tfUmu03c4iLPphHAJVupmrYyUqK3AMZGK1tYANQg=
+	b=WVTHFKZfDHeR64EaE1BgDDz02zdmRuyFTTb3hImePuVGAR2WCc5KB3ld7wKZ8F1iL
+	 TMkQ/N6kpc0LZSKsWUJvS+GZYtWKVDtkzHokdwYhEEKV7AxNEke/RsUDlLJHA/zgNw
+	 cDdTWchS/n+YaUOcVFyZJ39YTrvyU8MEpUn41Dj4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392916AbfJCQvS (ORCPT
+        id S2405635AbfJCQ4W (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 12:51:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38510 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 12:56:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38690 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2405182AbfJCQvH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:51:07 -0400
+        id S2392812AbfJCQvS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:51:18 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AC8EA2054F;
-        Thu,  3 Oct 2019 16:51:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4BA5A215EA;
+        Thu,  3 Oct 2019 16:51:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570121467;
-        bh=OSDbZ+qnZK1aTfBoQCDkx4FU7CwedCYXzK82/thGqPc=;
+        s=default; t=1570121477;
+        bh=3x8lhPuPZvG+6bqgi6iV13EmQ31ZxAZxBhE99d0ERrQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=SVxXFvyWKEaOU7dapxkbpx4qcEGHKl5bEFRD0yTtl9wf5Ux58GN7G28PirqEo34be
-         16dncNx5AxqQGdwf+bFAlAIAOYggKbDBl28A1NuVpEe5E5tXOE9MZX05GCtD1QqTFP
-         SaXEQgVCT5F4EER91qPPItAp2Zmdd0RsS8lOYeWQ=
+        b=sT6EJOavRFxP6mr0gj9r0uBs4V9z7FKqqdI4JaRYTUuv5CP1XN3LTxqiGCv3Z/1Hu
+         Ty2Ef0mI74E6y1YBfaoSnPy3jYZ7a1+PsmGPx20HtOMa/V3nv0RQYG9GPuyoyKsbQz
+         VBWvFeU5By/cwUDP/oLrYT0vRRhgC4+gE1JRjvhM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        Peter Jones <pjones@redhat.com>
-Subject: [PATCH 5.3 288/344] efifb: BGRT: Improve efifb_bgrt_sanity_check
-Date:   Thu,  3 Oct 2019 17:54:13 +0200
-Message-Id: <20191003154608.221655861@linuxfoundation.org>
+        stable@vger.kernel.org, Yafang Shao <laoar.shao@gmail.com>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        David Rientjes <rientjes@google.com>,
+        Yafang Shao <shaoyafang@didiglobal.com>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        Michal Hocko <mhocko@suse.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [PATCH 5.3 292/344] mm/compaction.c: clear total_{migrate,free}_scanned before scanning a new zone
+Date:   Thu,  3 Oct 2019 17:54:17 +0200
+Message-Id: <20191003154608.514515157@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191003154540.062170222@linuxfoundation.org>
 References: <20191003154540.062170222@linuxfoundation.org>
@@ -60,71 +65,127 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hans de Goede <hdegoede@redhat.com>
+From: Yafang Shao <laoar.shao@gmail.com>
 
-commit 51677dfcc17f88ed754143df670ff064eae67f84 upstream.
+commit a94b525241c0fff3598809131d7cfcfe1d572d8c upstream.
 
-For various reasons, at least with x86 EFI firmwares, the xoffset and
-yoffset in the BGRT info are not always reliable.
+total_{migrate,free}_scanned will be added to COMPACTMIGRATE_SCANNED and
+COMPACTFREE_SCANNED in compact_zone().  We should clear them before
+scanning a new zone.  In the proc triggered compaction, we forgot clearing
+them.
 
-Extensive testing has shown that when the info is correct, the
-BGRT image is always exactly centered horizontally (the yoffset variable
-is more variable and not always predictable).
-
-This commit simplifies / improves the bgrt_sanity_check to simply
-check that the BGRT image is exactly centered horizontally and skips
-(re)drawing it when it is not.
-
-This fixes the BGRT image sometimes being drawn in the wrong place.
-
-Cc: stable@vger.kernel.org
-Fixes: 88fe4ceb2447 ("efifb: BGRT: Do not copy the boot graphics for non native resolutions")
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
-Cc: Peter Jones <pjones@redhat.com>,
-Signed-off-by: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-Link: https://patchwork.freedesktop.org/patch/msgid/20190721131918.10115-1-hdegoede@redhat.com
+[laoar.shao@gmail.com: introduce a helper compact_zone_counters_init()]
+  Link: http://lkml.kernel.org/r/1563869295-25748-1-git-send-email-laoar.shao@gmail.com
+[akpm@linux-foundation.org: expand compact_zone_counters_init() into its single callsite, per mhocko]
+[vbabka@suse.cz: squash compact_zone() list_head init as well]
+  Link: http://lkml.kernel.org/r/1fb6f7da-f776-9e42-22f8-bbb79b030b98@suse.cz
+[akpm@linux-foundation.org: kcompactd_do_work(): avoid unnecessary initialization of cc.zone]
+Link: http://lkml.kernel.org/r/1563789275-9639-1-git-send-email-laoar.shao@gmail.com
+Fixes: 7f354a548d1c ("mm, compaction: add vmstats for kcompactd work")
+Signed-off-by: Yafang Shao <laoar.shao@gmail.com>
+Signed-off-by: Vlastimil Babka <vbabka@suse.cz>
+Reviewed-by: Vlastimil Babka <vbabka@suse.cz>
+Cc: David Rientjes <rientjes@google.com>
+Cc: Yafang Shao <shaoyafang@didiglobal.com>
+Cc: Mel Gorman <mgorman@techsingularity.net>
+Cc: Michal Hocko <mhocko@suse.com>
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/video/fbdev/efifb.c |   27 ++++++---------------------
- 1 file changed, 6 insertions(+), 21 deletions(-)
+ mm/compaction.c |   35 +++++++++++++----------------------
+ 1 file changed, 13 insertions(+), 22 deletions(-)
 
---- a/drivers/video/fbdev/efifb.c
-+++ b/drivers/video/fbdev/efifb.c
-@@ -122,28 +122,13 @@ static void efifb_copy_bmp(u8 *src, u32
-  */
- static bool efifb_bgrt_sanity_check(struct screen_info *si, u32 bmp_width)
- {
--	static const int default_resolutions[][2] = {
--		{  800,  600 },
--		{ 1024,  768 },
--		{ 1280, 1024 },
--	};
--	u32 i, right_margin;
-+	/*
-+	 * All x86 firmwares horizontally center the image (the yoffset
-+	 * calculations differ between boards, but xoffset is predictable).
-+	 */
-+	u32 expected_xoffset = (si->lfb_width - bmp_width) / 2;
+--- a/mm/compaction.c
++++ b/mm/compaction.c
+@@ -2078,6 +2078,17 @@ compact_zone(struct compact_control *cc,
+ 	const bool sync = cc->mode != MIGRATE_ASYNC;
+ 	bool update_cached;
  
--	for (i = 0; i < ARRAY_SIZE(default_resolutions); i++) {
--		if (default_resolutions[i][0] == si->lfb_width &&
--		    default_resolutions[i][1] == si->lfb_height)
--			break;
--	}
--	/* If not a default resolution used for textmode, this should be fine */
--	if (i >= ARRAY_SIZE(default_resolutions))
--		return true;
++	/*
++	 * These counters track activities during zone compaction.  Initialize
++	 * them before compacting a new zone.
++	 */
++	cc->total_migrate_scanned = 0;
++	cc->total_free_scanned = 0;
++	cc->nr_migratepages = 0;
++	cc->nr_freepages = 0;
++	INIT_LIST_HEAD(&cc->freepages);
++	INIT_LIST_HEAD(&cc->migratepages);
++
+ 	cc->migratetype = gfpflags_to_migratetype(cc->gfp_mask);
+ 	ret = compaction_suitable(cc->zone, cc->order, cc->alloc_flags,
+ 							cc->classzone_idx);
+@@ -2281,10 +2292,6 @@ static enum compact_result compact_zone_
+ {
+ 	enum compact_result ret;
+ 	struct compact_control cc = {
+-		.nr_freepages = 0,
+-		.nr_migratepages = 0,
+-		.total_migrate_scanned = 0,
+-		.total_free_scanned = 0,
+ 		.order = order,
+ 		.search_order = order,
+ 		.gfp_mask = gfp_mask,
+@@ -2305,8 +2312,6 @@ static enum compact_result compact_zone_
+ 
+ 	if (capture)
+ 		current->capture_control = &capc;
+-	INIT_LIST_HEAD(&cc.freepages);
+-	INIT_LIST_HEAD(&cc.migratepages);
+ 
+ 	ret = compact_zone(&cc, &capc);
+ 
+@@ -2408,8 +2413,6 @@ static void compact_node(int nid)
+ 	struct zone *zone;
+ 	struct compact_control cc = {
+ 		.order = -1,
+-		.total_migrate_scanned = 0,
+-		.total_free_scanned = 0,
+ 		.mode = MIGRATE_SYNC,
+ 		.ignore_skip_hint = true,
+ 		.whole_zone = true,
+@@ -2423,11 +2426,7 @@ static void compact_node(int nid)
+ 		if (!populated_zone(zone))
+ 			continue;
+ 
+-		cc.nr_freepages = 0;
+-		cc.nr_migratepages = 0;
+ 		cc.zone = zone;
+-		INIT_LIST_HEAD(&cc.freepages);
+-		INIT_LIST_HEAD(&cc.migratepages);
+ 
+ 		compact_zone(&cc, NULL);
+ 
+@@ -2529,8 +2528,6 @@ static void kcompactd_do_work(pg_data_t
+ 	struct compact_control cc = {
+ 		.order = pgdat->kcompactd_max_order,
+ 		.search_order = pgdat->kcompactd_max_order,
+-		.total_migrate_scanned = 0,
+-		.total_free_scanned = 0,
+ 		.classzone_idx = pgdat->kcompactd_classzone_idx,
+ 		.mode = MIGRATE_SYNC_LIGHT,
+ 		.ignore_skip_hint = false,
+@@ -2554,16 +2551,10 @@ static void kcompactd_do_work(pg_data_t
+ 							COMPACT_CONTINUE)
+ 			continue;
+ 
+-		cc.nr_freepages = 0;
+-		cc.nr_migratepages = 0;
+-		cc.total_migrate_scanned = 0;
+-		cc.total_free_scanned = 0;
+-		cc.zone = zone;
+-		INIT_LIST_HEAD(&cc.freepages);
+-		INIT_LIST_HEAD(&cc.migratepages);
 -
--	/* If the right margin is 5 times smaller then the left one, reject */
--	right_margin = si->lfb_width - (bgrt_tab.image_offset_x + bmp_width);
--	if (right_margin < (bgrt_tab.image_offset_x / 5))
--		return false;
--
--	return true;
-+	return bgrt_tab.image_offset_x == expected_xoffset;
- }
- #else
- static bool efifb_bgrt_sanity_check(struct screen_info *si, u32 bmp_width)
+ 		if (kthread_should_stop())
+ 			return;
++
++		cc.zone = zone;
+ 		status = compact_zone(&cc, NULL);
+ 
+ 		if (status == COMPACT_SUCCESS) {
 
 
