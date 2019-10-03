@@ -2,52 +2,56 @@ Return-Path: <SRS0=6dNS=X4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-14.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 34E89C10F14
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:11:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EBC36C32792
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:11:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F2EE3207FF
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:11:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BEA0D2054F
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:11:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570119093;
-	bh=QJorBsuu7/I+O7IoyuxkA/c3Do8nJw9lZYvwg/ZsupQ=;
+	s=default; t=1570119096;
+	bh=YguYYRHa7pxbgWOAPbbpBNA7eGUgBYUkdSRQ4YqKIUY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=AdIa5ftjuCw4G5UF7Z0ephinGb4llYXjRrTvMLDGBiwUqI82QuBKmgmtV9wA59Ryu
-	 472II/TvoK8L6cD08VTesA8d0FmGR+Q8+H7b2fs+6ptzdKrpcHsWud4ySLKOVJl4I1
-	 ypOzg1hkCIeMjvfyoeoteV6KcRr2ScY+xNRL8kqQ=
+	b=VD/7q/Lx8OVHAuOcCCblxdCPjcqH3HjSnsz1JkoUnEVzSbvNONw8+7eh2wUEG8zby
+	 /sC2xZkU6nkpVdo1ln7rqBBj32aLEXyvb23H9HZtAAoP75n+2stLCU8TMnUs9BJPKK
+	 pEo7TD+OdC66XqcMq3Vy/mrjk6Yt+o8TexSXRtc4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732754AbfJCQLc (ORCPT
+        id S2387869AbfJCQLf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 12:11:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33208 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 12:11:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33280 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387848AbfJCQL2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:11:28 -0400
+        id S1729616AbfJCQLb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:11:31 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B3764207FF;
-        Thu,  3 Oct 2019 16:11:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 416FB2054F;
+        Thu,  3 Oct 2019 16:11:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570119088;
-        bh=QJorBsuu7/I+O7IoyuxkA/c3Do8nJw9lZYvwg/ZsupQ=;
+        s=default; t=1570119090;
+        bh=YguYYRHa7pxbgWOAPbbpBNA7eGUgBYUkdSRQ4YqKIUY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=VvIsFKyEFodebJwxReNE8d2HtfoOd5vB0uRBUZEpHSLM9mNc+iPyrJSj1CBVN0y6o
-         D+JSS2AtXhNWo96SC7Ra2/n3t452Y/c6DO0JKyceEr/cEHsDrQHeBQLNSmiSEpjsWD
-         8bMIgSisUej71uJJmKl1f6Eua5J/G2eJGFGBL/ZA=
+        b=qPaz00VoHnLR1nEPQB+cSmnUpKEkHRSgUKFRSj9H+4E7SSvmv+aOwvTBjsP+RwAJD
+         2WPr5ra145ajLU0vSu8NhIp6cKFLiCSYzFKQdz4bm+ZrRtzoMf/yF6tbuibFhvqJuU
+         9bWZPHNw5dRjVRhkR78YWQ5FAppwD0BSO6n06gM4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Wenwen Wang <wenwen@cs.uga.edu>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        stable@vger.kernel.org, Adrian Hunter <adrian.hunter@intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        =?UTF-8?q?Luis=20Cl=C3=A1udio=20Gon=C3=A7alves?= 
+        <lclaudio@redhat.com>, Namhyung Kim <namhyung@kernel.org>,
+        Taeung Song <treeze.taeung@gmail.com>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 120/185] ACPI / PCI: fix acpi_pci_irq_enable() memory leak
-Date:   Thu,  3 Oct 2019 17:53:18 +0200
-Message-Id: <20191003154505.159043587@linuxfoundation.org>
+Subject: [PATCH 4.14 085/185] perf test vfs_getname: Disable ~/.perfconfig to get default output
+Date:   Thu,  3 Oct 2019 17:52:43 +0200
+Message-Id: <20191003154457.247847023@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191003154437.541662648@linuxfoundation.org>
 References: <20191003154437.541662648@linuxfoundation.org>
@@ -60,39 +64,74 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wenwen Wang <wenwen@cs.uga.edu>
+From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-[ Upstream commit 29b49958cf73b439b17fa29e9a25210809a6c01c ]
+[ Upstream commit 4fe94ce1c6ba678b5f12b94bb9996eea4fc99e85 ]
 
-In acpi_pci_irq_enable(), 'entry' is allocated by kzalloc() in
-acpi_pci_irq_check_entry() (invoked from acpi_pci_irq_lookup()). However,
-it is not deallocated if acpi_pci_irq_valid() returns false, leading to a
-memory leak. To fix this issue, free 'entry' before returning 0.
+To get the expected output we have to ignore whatever changes the user
+has in its ~/.perfconfig file, so set PERF_CONFIG to /dev/null to
+achieve that.
 
-Fixes: e237a5518425 ("x86/ACPI/PCI: Recognize that Interrupt Line 255 means "not connected"")
-Signed-off-by: Wenwen Wang <wenwen@cs.uga.edu>
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Before:
+
+  # egrep 'trace|show_' ~/.perfconfig
+  [trace]
+  	show_zeros = yes
+  	show_duration = no
+  	show_timestamp = no
+  	show_arg_names = no
+  	show_prefix = yes
+  # echo $PERF_CONFIG
+
+  # perf test "trace + vfs_getname"
+  70: Check open filename arg using perf trace + vfs_getname: FAILED!
+  # export PERF_CONFIG=/dev/null
+  # perf test "trace + vfs_getname"
+  70: Check open filename arg using perf trace + vfs_getname: Ok
+  #
+
+After:
+
+  # egrep 'trace|show_' ~/.perfconfig
+  [trace]
+  	show_zeros = yes
+  	show_duration = no
+  	show_timestamp = no
+  	show_arg_names = no
+  	show_prefix = yes
+  # echo $PERF_CONFIG
+
+  # perf test "trace + vfs_getname"
+  70: Check open filename arg using perf trace + vfs_getname: Ok
+  #
+
+Cc: Adrian Hunter <adrian.hunter@intel.com>
+Cc: Jiri Olsa <jolsa@kernel.org>
+Cc: Luis Cláudio Gonçalves <lclaudio@redhat.com>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Taeung Song <treeze.taeung@gmail.com>
+Link: https://lkml.kernel.org/n/tip-3up27pexg5i3exuzqrvt4m8u@git.kernel.org
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/acpi/pci_irq.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ tools/perf/tests/shell/trace+probe_vfs_getname.sh | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/drivers/acpi/pci_irq.c b/drivers/acpi/pci_irq.c
-index c576a6fe4ebb3..94ded9513c73b 100644
---- a/drivers/acpi/pci_irq.c
-+++ b/drivers/acpi/pci_irq.c
-@@ -462,8 +462,10 @@ int acpi_pci_irq_enable(struct pci_dev *dev)
- 		 * No IRQ known to the ACPI subsystem - maybe the BIOS /
- 		 * driver reported one, then use it. Exit in any case.
- 		 */
--		if (!acpi_pci_irq_valid(dev, pin))
-+		if (!acpi_pci_irq_valid(dev, pin)) {
-+			kfree(entry);
- 			return 0;
-+		}
+diff --git a/tools/perf/tests/shell/trace+probe_vfs_getname.sh b/tools/perf/tests/shell/trace+probe_vfs_getname.sh
+index 2a9ef080efd02..a8a516dec4ed2 100755
+--- a/tools/perf/tests/shell/trace+probe_vfs_getname.sh
++++ b/tools/perf/tests/shell/trace+probe_vfs_getname.sh
+@@ -30,6 +30,10 @@ if [ $err -ne 0 ] ; then
+ 	exit $err
+ fi
  
- 		if (acpi_isa_register_gsi(dev))
- 			dev_warn(&dev->dev, "PCI INT %c: no GSI\n",
++# Do not use whatever ~/.perfconfig file, it may change the output
++# via trace.{show_timestamp,show_prefix,etc}
++export PERF_CONFIG=/dev/null
++
+ trace_open_vfs_getname
+ err=$?
+ rm -f ${file}
 -- 
 2.20.1
 
