@@ -7,49 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E999C32792
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:07:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 52698C4CED1
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:07:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 72D2020673
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:07:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1AE8E20673
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:07:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570122448;
-	bh=7O4GyeaIeGFExRzrSwzaWAeA3pgTN+zw+yySvrhX3+s=;
+	s=default; t=1570122450;
+	bh=1/khuy4O3zZHpw9LAei40BNaPZ3LL9+GHfckPbkNiRo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ii7zuhLfeXPpfNHmXuc98e3WK0nomt1zO2dLC7OIouAJwmqNSpiWvUnR0KnX00ZGD
-	 YRJpOHT1ET/1JvcVZ4lzS1bse1m9bi64dapGHnKBdZN1gm3QvtvPRsexnhqS79gh7Y
-	 AxYeMgrb3thaloKi3mKGKaHZlbu5+4u088hXgMFA=
+	b=nevKPl60VKxFd09C/yoX/VN2SQWv15Oc5E/hslCKthwqHTXnkS68Qj0KpYpgvoyct
+	 woKQ6QLm+VEq8l+SR+/H0BaY/nxePASCeyxHxeyO7qVukXeGtbKQFvkNlfGpM8LruF
+	 Vh9XdM8t8eGZyQqt9E+XeJsUCNuOl4ip0s5ki7rI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404447AbfJCQgh (ORCPT
+        id S2393406AbfJCRH3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 12:36:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45758 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 13:07:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45900 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2403786AbfJCQga (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:36:30 -0400
+        id S2404445AbfJCQgh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:36:37 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7DF282070B;
-        Thu,  3 Oct 2019 16:36:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C41D92133F;
+        Thu,  3 Oct 2019 16:36:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570120589;
-        bh=7O4GyeaIeGFExRzrSwzaWAeA3pgTN+zw+yySvrhX3+s=;
+        s=default; t=1570120597;
+        bh=1/khuy4O3zZHpw9LAei40BNaPZ3LL9+GHfckPbkNiRo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=SnGBzfM340qYwbpCrBwL/pNJ2GbVcTbg0fvUQ9s5+TUG4z3fjkoW8r3EQwinBLr4y
-         rCHpx7iL9b9g85f433769G+go1Y5FqCR/eX0Cd2Y2U1A8F4eDw42yfEu6l4hwzZ6ug
-         zPKellf4PFU8QSMgNik3pOwUrdruH0CKbthCxNWA=
+        b=0Gc/bclxCzp/rOOf6On8di02KCoUAxT6Yk9055nXaUhNIoTc9IyZQtE9VL8nBB3K2
+         UvqKUL4CJjXJSFMAeuDI95UvwBzqrgOKQFDyw5VfH/hHFDP3OJKh5oyFSzsdQPBNoL
+         EaVoizOgVI6jQ7Iqvxr5QsB1YHOZFD65LUa9QmVs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Christoph Hellwig <hch@infradead.org>,
-        Keith Busch <keith.busch@intel.com>,
-        Bart Van Assche <bvanassche@acm.org>,
-        Ming Lei <ming.lei@redhat.com>, Bob Liu <bob.liu@oracle.com>,
-        Yufen Yu <yuyufen@huawei.com>, Jens Axboe <axboe@kernel.dk>
-Subject: [PATCH 5.2 277/313] block: fix null pointer dereference in blk_mq_rq_timed_out()
-Date:   Thu,  3 Oct 2019 17:54:15 +0200
-Message-Id: <20191003154600.332260425@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Ding Xiang <dingxiang@cmss.chinamobile.com>,
+        Miklos Szeredi <mszeredi@redhat.com>
+Subject: [PATCH 5.2 280/313] ovl: Fix dereferencing possible ERR_PTR()
+Date:   Thu,  3 Oct 2019 17:54:18 +0200
+Message-Id: <20191003154600.644755235@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191003154533.590915454@linuxfoundation.org>
 References: <20191003154533.590915454@linuxfoundation.org>
@@ -62,137 +60,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yufen Yu <yuyufen@huawei.com>
+From: Ding Xiang <dingxiang@cmss.chinamobile.com>
 
-commit 8d6996630c03d7ceeabe2611378fea5ca1c3f1b3 upstream.
+commit 97f024b9171e74c4443bbe8a8dce31b917f97ac5 upstream.
 
-We got a null pointer deference BUG_ON in blk_mq_rq_timed_out()
-as following:
+if ovl_encode_real_fh() fails, no memory was allocated
+and the error in the error-valued pointer should be returned.
 
-[  108.825472] BUG: kernel NULL pointer dereference, address: 0000000000000040
-[  108.827059] PGD 0 P4D 0
-[  108.827313] Oops: 0000 [#1] SMP PTI
-[  108.827657] CPU: 6 PID: 198 Comm: kworker/6:1H Not tainted 5.3.0-rc8+ #431
-[  108.829503] Workqueue: kblockd blk_mq_timeout_work
-[  108.829913] RIP: 0010:blk_mq_check_expired+0x258/0x330
-[  108.838191] Call Trace:
-[  108.838406]  bt_iter+0x74/0x80
-[  108.838665]  blk_mq_queue_tag_busy_iter+0x204/0x450
-[  108.839074]  ? __switch_to_asm+0x34/0x70
-[  108.839405]  ? blk_mq_stop_hw_queue+0x40/0x40
-[  108.839823]  ? blk_mq_stop_hw_queue+0x40/0x40
-[  108.840273]  ? syscall_return_via_sysret+0xf/0x7f
-[  108.840732]  blk_mq_timeout_work+0x74/0x200
-[  108.841151]  process_one_work+0x297/0x680
-[  108.841550]  worker_thread+0x29c/0x6f0
-[  108.841926]  ? rescuer_thread+0x580/0x580
-[  108.842344]  kthread+0x16a/0x1a0
-[  108.842666]  ? kthread_flush_work+0x170/0x170
-[  108.843100]  ret_from_fork+0x35/0x40
-
-The bug is caused by the race between timeout handle and completion for
-flush request.
-
-When timeout handle function blk_mq_rq_timed_out() try to read
-'req->q->mq_ops', the 'req' have completed and reinitiated by next
-flush request, which would call blk_rq_init() to clear 'req' as 0.
-
-After commit 12f5b93145 ("blk-mq: Remove generation seqeunce"),
-normal requests lifetime are protected by refcount. Until 'rq->ref'
-drop to zero, the request can really be free. Thus, these requests
-cannot been reused before timeout handle finish.
-
-However, flush request has defined .end_io and rq->end_io() is still
-called even if 'rq->ref' doesn't drop to zero. After that, the 'flush_rq'
-can be reused by the next flush request handle, resulting in null
-pointer deference BUG ON.
-
-We fix this problem by covering flush request with 'rq->ref'.
-If the refcount is not zero, flush_end_io() return and wait the
-last holder recall it. To record the request status, we add a new
-entry 'rq_status', which will be used in flush_end_io().
-
-Cc: Christoph Hellwig <hch@infradead.org>
-Cc: Keith Busch <keith.busch@intel.com>
-Cc: Bart Van Assche <bvanassche@acm.org>
-Cc: stable@vger.kernel.org # v4.18+
-Reviewed-by: Ming Lei <ming.lei@redhat.com>
-Reviewed-by: Bob Liu <bob.liu@oracle.com>
-Signed-off-by: Yufen Yu <yuyufen@huawei.com>
+Fixes: 9b6faee07470 ("ovl: check ERR_PTR() return value from ovl_encode_fh()")
+Signed-off-by: Ding Xiang <dingxiang@cmss.chinamobile.com>
+Cc: <stable@vger.kernel.org> # v4.16+
+Signed-off-by: Miklos Szeredi <mszeredi@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
--------
-v2:
- - move rq_status from struct request to struct blk_flush_queue
-v3:
- - remove unnecessary '{}' pair.
-v4:
- - let spinlock to protect 'fq->rq_status'
-v5:
- - move rq_status after flush_running_idx member of struct blk_flush_queue
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
-
 ---
- block/blk-flush.c |   10 ++++++++++
- block/blk-mq.c    |    5 ++++-
- block/blk.h       |    7 +++++++
- 3 files changed, 21 insertions(+), 1 deletion(-)
+ fs/overlayfs/export.c |    3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
---- a/block/blk-flush.c
-+++ b/block/blk-flush.c
-@@ -214,6 +214,16 @@ static void flush_end_io(struct request
+--- a/fs/overlayfs/export.c
++++ b/fs/overlayfs/export.c
+@@ -227,9 +227,8 @@ static int ovl_d_to_fh(struct dentry *de
+ 	/* Encode an upper or lower file handle */
+ 	fh = ovl_encode_real_fh(enc_lower ? ovl_dentry_lower(dentry) :
+ 				ovl_dentry_upper(dentry), !enc_lower);
+-	err = PTR_ERR(fh);
+ 	if (IS_ERR(fh))
+-		goto fail;
++		return PTR_ERR(fh);
  
- 	/* release the tag's ownership to the req cloned from */
- 	spin_lock_irqsave(&fq->mq_flush_lock, flags);
-+
-+	if (!refcount_dec_and_test(&flush_rq->ref)) {
-+		fq->rq_status = error;
-+		spin_unlock_irqrestore(&fq->mq_flush_lock, flags);
-+		return;
-+	}
-+
-+	if (fq->rq_status != BLK_STS_OK)
-+		error = fq->rq_status;
-+
- 	hctx = flush_rq->mq_hctx;
- 	if (!q->elevator) {
- 		blk_mq_tag_set_rq(hctx, flush_rq->tag, fq->orig_rq);
---- a/block/blk-mq.c
-+++ b/block/blk-mq.c
-@@ -910,7 +910,10 @@ static bool blk_mq_check_expired(struct
- 	 */
- 	if (blk_mq_req_expired(rq, next))
- 		blk_mq_rq_timed_out(rq, reserved);
--	if (refcount_dec_and_test(&rq->ref))
-+
-+	if (is_flush_rq(rq, hctx))
-+		rq->end_io(rq, 0);
-+	else if (refcount_dec_and_test(&rq->ref))
- 		__blk_mq_free_request(rq);
- 
- 	return true;
---- a/block/blk.h
-+++ b/block/blk.h
-@@ -19,6 +19,7 @@ struct blk_flush_queue {
- 	unsigned int		flush_queue_delayed:1;
- 	unsigned int		flush_pending_idx:1;
- 	unsigned int		flush_running_idx:1;
-+	blk_status_t 		rq_status;
- 	unsigned long		flush_pending_since;
- 	struct list_head	flush_queue[2];
- 	struct list_head	flush_data_in_flight;
-@@ -47,6 +48,12 @@ static inline void __blk_get_queue(struc
- 	kobject_get(&q->kobj);
- }
- 
-+static inline bool
-+is_flush_rq(struct request *req, struct blk_mq_hw_ctx *hctx)
-+{
-+	return hctx->fq->flush_rq == req;
-+}
-+
- struct blk_flush_queue *blk_alloc_flush_queue(struct request_queue *q,
- 		int node, int cmd_size, gfp_t flags);
- void blk_free_flush_queue(struct blk_flush_queue *q);
+ 	err = -EOVERFLOW;
+ 	if (fh->len > buflen)
 
 
