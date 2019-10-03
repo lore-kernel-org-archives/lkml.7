@@ -7,48 +7,49 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3173FC32792
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:07:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77722C10F14
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:07:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EA4F9222BE
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:07:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4B46E21A4C
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:07:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570118847;
-	bh=LoLT/BNnw/82HhhkcwYdCMddbzY+ZbKn7J/2db9xysE=;
+	s=default; t=1570118851;
+	bh=r0NyGKfVp7kWPQ7tIqsR5FE0KOaG9y5lxXoDbToXw3E=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=UIYVcSZa2+N91ZU9IhP8TBjrEohFGDxlrqyQb5XspuCq+Ow8pHeMl/sSfNw/E/4B7
-	 VktpO93VKbCX1Vefe2wT8NhJrJt+5TWOKUxD2B6NqJJDOFL6V2z5v91etPEBfsOMK3
-	 HNMCVQCXLbBx9xPiH5ApbEMn/SaJ1HhW/jjKBznU=
+	b=GJ6udlJXLHupfPLpz/oth/mjWqrXsoTOCsvOY18nRl81F+uLqzKzjRBYfwH+J2dlF
+	 D4rowcFPLBK4zDPnpDrgz4kSjK8CDl35byOCpTYeEEubGfkd8QkStTGL+qUO+MoxmQ
+	 mZwUDvSKDkhURWoVC5p1mfMJxSrELQBIWf7COqrU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731594AbfJCQH0 (ORCPT
+        id S1732962AbfJCQHa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 12:07:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55114 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 12:07:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55260 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732093AbfJCQHW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:07:22 -0400
+        id S1732953AbfJCQH2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:07:28 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7A328215EA;
-        Thu,  3 Oct 2019 16:07:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CF36721783;
+        Thu,  3 Oct 2019 16:07:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570118841;
-        bh=LoLT/BNnw/82HhhkcwYdCMddbzY+ZbKn7J/2db9xysE=;
+        s=default; t=1570118847;
+        bh=r0NyGKfVp7kWPQ7tIqsR5FE0KOaG9y5lxXoDbToXw3E=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=kjcq/zl3dbTO5El9WQGN2Y4B1GYmPnQpSuushlseDf4RWfGMBHrRmUkU7W6734oJZ
-         t69T6MRfOe3hOIDFaBqG16qN4CKZ12ib4t6WKviFK6DQMevFPcC48eRAvAZXrYKjsK
-         UGYJRNrUs7N884+ZcrlhmMugpD/gvM/0C79RfZOA=
+        b=hAEoFtJWHBFXNHL38o//vJD87U/AaBhIonW5ETelc9KObl0CTlgzanteHhU13HNX1
+         p4sRfUc2vO6M7JJuaenpiogJGLITz6DLqntnPSe2WolTBntMWTHn9O0pO2xgZ7gcok
+         IPrJj/VKdqJezv+7Nw+hUHKPXkt96CyrL2gNPEuA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Stephen Hemminger <stephen@networkplumber.org>,
-        "David S. Miller" <davem@davemloft.net>,
+        =?UTF-8?q?Kacper=20Piwi=C5=84ski?= <cosiekvfj@o2.pl>,
+        Hans de Goede <hdegoede@redhat.com>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 029/185] net: dont warn in inet diag when IPV6 is disabled
-Date:   Thu,  3 Oct 2019 17:51:47 +0200
-Message-Id: <20191003154444.335235900@linuxfoundation.org>
+Subject: [PATCH 4.14 030/185] ACPI: video: Add new hw_changes_brightness quirk, set it on PB Easynote MZ35
+Date:   Thu,  3 Oct 2019 17:51:48 +0200
+Message-Id: <20191003154444.571196923@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191003154437.541662648@linuxfoundation.org>
 References: <20191003154437.541662648@linuxfoundation.org>
@@ -61,37 +62,100 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Stephen Hemminger <stephen@networkplumber.org>
+From: Hans de Goede <hdegoede@redhat.com>
 
-[ Upstream commit 1e64d7cbfdce4887008314d5b367209582223f27 ]
+[ Upstream commit 4f7f96453b462b3de0fa18d18fe983960bb5ee7f ]
 
-If IPV6 was disabled, then ss command would cause a kernel warning
-because the command was attempting to dump IPV6 socket information.
-The fix is to just remove the warning.
+Some machines change the brightness themselves when a brightness hotkey
+gets pressed, despite us telling them not to. This causes the brightness to
+go two steps up / down when the hotkey is pressed. This is esp. a problem
+on older machines with only a few brightness levels.
 
-Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=202249
-Fixes: 432490f9d455 ("net: ip, diag -- Add diag interface for raw sockets")
-Signed-off-by: Stephen Hemminger <stephen@networkplumber.org>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+This commit adds a new hw_changes_brightness quirk which makes
+acpi_video_device_notify() only call backlight_force_update(...,
+BACKLIGHT_UPDATE_HOTKEY) and not do anything else, notifying userspace
+that the brightness was changed and leaving it at that fixing the dual
+step problem.
+
+BugLink: https://bugzilla.kernel.org/show_bug.cgi?id=204077
+Reported-by: Kacper Piwiński <cosiekvfj@o2.pl>
+Tested-by: Kacper Piwiński <cosiekvfj@o2.pl>
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/ipv4/raw_diag.c | 3 ---
- 1 file changed, 3 deletions(-)
+ drivers/acpi/acpi_video.c | 37 +++++++++++++++++++++++++++++++++++++
+ 1 file changed, 37 insertions(+)
 
-diff --git a/net/ipv4/raw_diag.c b/net/ipv4/raw_diag.c
-index c200065ef9a5e..6367ecdf76c42 100644
---- a/net/ipv4/raw_diag.c
-+++ b/net/ipv4/raw_diag.c
-@@ -23,9 +23,6 @@ raw_get_hashinfo(const struct inet_diag_req_v2 *r)
- 		return &raw_v6_hashinfo;
- #endif
- 	} else {
--		pr_warn_once("Unexpected inet family %d\n",
--			     r->sdiag_family);
--		WARN_ON_ONCE(1);
- 		return ERR_PTR(-EINVAL);
- 	}
+diff --git a/drivers/acpi/acpi_video.c b/drivers/acpi/acpi_video.c
+index e39a1489cc729..7df7abde1fcb7 100644
+--- a/drivers/acpi/acpi_video.c
++++ b/drivers/acpi/acpi_video.c
+@@ -73,6 +73,12 @@ module_param(report_key_events, int, 0644);
+ MODULE_PARM_DESC(report_key_events,
+ 	"0: none, 1: output changes, 2: brightness changes, 3: all");
+ 
++static int hw_changes_brightness = -1;
++module_param(hw_changes_brightness, int, 0644);
++MODULE_PARM_DESC(hw_changes_brightness,
++	"Set this to 1 on buggy hw which changes the brightness itself when "
++	"a hotkey is pressed: -1: auto, 0: normal 1: hw-changes-brightness");
++
+ /*
+  * Whether the struct acpi_video_device_attrib::device_id_scheme bit should be
+  * assumed even if not actually set.
+@@ -418,6 +424,14 @@ static int video_set_report_key_events(const struct dmi_system_id *id)
+ 	return 0;
  }
+ 
++static int video_hw_changes_brightness(
++	const struct dmi_system_id *d)
++{
++	if (hw_changes_brightness == -1)
++		hw_changes_brightness = 1;
++	return 0;
++}
++
+ static const struct dmi_system_id video_dmi_table[] = {
+ 	/*
+ 	 * Broken _BQC workaround http://bugzilla.kernel.org/show_bug.cgi?id=13121
+@@ -542,6 +556,21 @@ static const struct dmi_system_id video_dmi_table[] = {
+ 		DMI_MATCH(DMI_PRODUCT_NAME, "Vostro V131"),
+ 		},
+ 	},
++	/*
++	 * Some machines change the brightness themselves when a brightness
++	 * hotkey gets pressed, despite us telling them not to. In this case
++	 * acpi_video_device_notify() should only call backlight_force_update(
++	 * BACKLIGHT_UPDATE_HOTKEY) and not do anything else.
++	 */
++	{
++	 /* https://bugzilla.kernel.org/show_bug.cgi?id=204077 */
++	 .callback = video_hw_changes_brightness,
++	 .ident = "Packard Bell EasyNote MZ35",
++	 .matches = {
++		DMI_MATCH(DMI_SYS_VENDOR, "Packard Bell"),
++		DMI_MATCH(DMI_PRODUCT_NAME, "EasyNote MZ35"),
++		},
++	},
+ 	{}
+ };
+ 
+@@ -1624,6 +1653,14 @@ static void acpi_video_device_notify(acpi_handle handle, u32 event, void *data)
+ 	bus = video_device->video;
+ 	input = bus->input;
+ 
++	if (hw_changes_brightness > 0) {
++		if (video_device->backlight)
++			backlight_force_update(video_device->backlight,
++					       BACKLIGHT_UPDATE_HOTKEY);
++		acpi_notifier_call_chain(device, event, 0);
++		return;
++	}
++
+ 	switch (event) {
+ 	case ACPI_VIDEO_NOTIFY_CYCLE_BRIGHTNESS:	/* Cycle brightness */
+ 		brightness_switch_event(video_device, event);
 -- 
 2.20.1
 
