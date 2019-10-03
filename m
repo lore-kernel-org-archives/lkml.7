@@ -6,133 +6,181 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE874C32792
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 12:11:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8852BC32792
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 12:11:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 996B520700
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 12:11:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 686C120842
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 12:11:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729526AbfJCML0 (ORCPT
+        id S1729594AbfJCML2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 08:11:26 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:55444 "EHLO mx1.redhat.com"
+        Thu, 3 Oct 2019 08:11:28 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:51876 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729191AbfJCMLX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 08:11:23 -0400
+        id S1729462AbfJCML0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 08:11:26 -0400
 Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 873E33084025;
-        Thu,  3 Oct 2019 12:11:23 +0000 (UTC)
+        by mx1.redhat.com (Postfix) with ESMTPS id 2D95818C7780;
+        Thu,  3 Oct 2019 12:11:26 +0000 (UTC)
 Received: from prarit.bos.redhat.com (prarit-guest.khw1.lab.eng.bos.redhat.com [10.16.200.63])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 0A3AB5C226;
-        Thu,  3 Oct 2019 12:11:22 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTP id A30355C226;
+        Thu,  3 Oct 2019 12:11:25 +0000 (UTC)
 From:   Prarit Bhargava <prarit@redhat.com>
 To:     platform-driver-x86@vger.kernel.org
 Cc:     linux-kernel@vger.kernel.org, srinivas.pandruvada@linux.intel.com,
         Prarit Bhargava <prarit@redhat.com>
-Subject: [PATCH v2 3/7] intel-speed-select: Add check for CascadeLake-N models
-Date:   Thu,  3 Oct 2019 08:11:08 -0400
-Message-Id: <20191003121112.25870-4-prarit@redhat.com>
+Subject: [PATCH v2 7/7] intel-speed-select: Implement base-freq commands on CascadeLake-N
+Date:   Thu,  3 Oct 2019 08:11:12 -0400
+Message-Id: <20191003121112.25870-8-prarit@redhat.com>
 In-Reply-To: <20191003121112.25870-1-prarit@redhat.com>
 References: <20191003121112.25870-1-prarit@redhat.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.40]); Thu, 03 Oct 2019 12:11:23 +0000 (UTC)
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.70]); Thu, 03 Oct 2019 12:11:26 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Three CascadeLake-N models (6252N, 6230N, and 5218N) have SST-PBF support.
+Add functionality for base-freq info|enable|disable info on CascadeLake-N.
 
-Return an error if the CascadeLake processor is not one of these specific
-models.
-
-v2: Add is_clx_n_platform()
+The enable command always returns success, and the disable command always
+returns failed because SST-BF cannot be enabled or disabled from the OS on
+CascadeLake-N.
 
 Signed-off-by: Prarit Bhargava <prarit@redhat.com>
 ---
- .../x86/intel-speed-select/isst-config.c      | 44 ++++++++++++++++++-
- 1 file changed, 42 insertions(+), 2 deletions(-)
+ .../x86/intel-speed-select/isst-config.c      | 68 +++++++++++++------
+ 1 file changed, 48 insertions(+), 20 deletions(-)
 
 diff --git a/tools/power/x86/intel-speed-select/isst-config.c b/tools/power/x86/intel-speed-select/isst-config.c
-index f4a23678416e..734a7960458c 100644
+index d9b580139a07..7c7f0551eda1 100644
 --- a/tools/power/x86/intel-speed-select/isst-config.c
 +++ b/tools/power/x86/intel-speed-select/isst-config.c
-@@ -23,6 +23,7 @@ static int debug_flag;
- static FILE *outf;
- 
- static int cpu_model;
-+static int cpu_stepping;
- 
- #define MAX_CPUS_IN_ONE_REQ 64
- static short max_target_cpus;
-@@ -72,7 +73,16 @@ void debug_printf(const char *format, ...)
- 	va_end(args);
+@@ -836,7 +836,7 @@ static void clx_n_config(void)
+ 	ctdp_level->fact_enabled = 0;
  }
  
--static void update_cpu_model(void)
-+
-+int is_clx_n_platform(void)
+-static void dump_cn_config_for_cpu(int cpu, void *arg1, void *arg2,
++static void dump_clx_n_config_for_cpu(int cpu, void *arg1, void *arg2,
+ 				   void *arg3, void *arg4)
+ {
+ 	isst_ctdp_display_information(cpu, outf, tdp_level, &clx_n_pkg_dev);
+@@ -876,7 +876,7 @@ static void dump_isst_config(int arg)
+ 	if (!is_clx_n_platform())
+ 		fn = dump_isst_config_for_cpu;
+ 	else
+-		fn = dump_cn_config_for_cpu;
++		fn = dump_clx_n_config_for_cpu;
+ 
+ 	isst_ctdp_display_information_start(outf);
+ 
+@@ -951,6 +951,18 @@ static void set_tdp_level(int arg)
+ 	isst_ctdp_display_information_end(outf);
+ }
+ 
++static void clx_n_dump_pbf_config_for_cpu(int cpu, void *arg1, void *arg2,
++				       void *arg3, void *arg4)
 +{
-+	if (cpu_model == 0x55)
-+		if (cpu_stepping == 0x6 || cpu_stepping == 0x7)
-+			return 1;
-+	return 0;
++	struct isst_pbf_info *pbf_info;
++	struct isst_pkg_ctdp_level_info *ctdp_level;
++
++	ctdp_level = &clx_n_pkg_dev.ctdp_level[0];
++	pbf_info = &ctdp_level->pbf_info;
++
++	isst_pbf_display_information(cpu, outf, tdp_level, pbf_info);
 +}
 +
-+static int update_cpu_model(void)
+ static void dump_pbf_config_for_cpu(int cpu, void *arg1, void *arg2, void *arg3,
+ 				    void *arg4)
  {
- 	unsigned int ebx, ecx, edx;
- 	unsigned int fms, family;
-@@ -82,6 +92,34 @@ static void update_cpu_model(void)
- 	cpu_model = (fms >> 4) & 0xf;
- 	if (family == 6 || family == 0xf)
- 		cpu_model += ((fms >> 16) & 0xf) << 4;
+@@ -968,6 +980,8 @@ static void dump_pbf_config_for_cpu(int cpu, void *arg1, void *arg2, void *arg3,
+ 
+ static void dump_pbf_config(int arg)
+ {
++	void *fn;
 +
-+	cpu_stepping = fms & 0xf;
+ 	if (cmd_help) {
+ 		fprintf(stderr,
+ 			"Print Intel(R) Speed Select Technology base frequency configuration for a TDP level\n");
+@@ -981,13 +995,18 @@ static void dump_pbf_config(int arg)
+ 		exit(1);
+ 	}
+ 
++	if (!is_clx_n_platform())
++		fn = dump_pbf_config_for_cpu;
++	else
++		fn = clx_n_dump_pbf_config_for_cpu;
 +
-+	/* only three CascadeLake-N models are supported */
-+	if (is_clx_n_platform()) {
-+		FILE *fp;
-+		size_t n;
-+		char *line;
-+		int ret = 1;
+ 	isst_ctdp_display_information_start(outf);
 +
-+		fp = fopen("/proc/cpuinfo", "r");
-+		if (!fp)
-+			err(-1, "cannot open /proc/cpuinfo\n");
+ 	if (max_target_cpus)
+-		for_each_online_target_cpu_in_set(dump_pbf_config_for_cpu, NULL,
+-						  NULL, NULL, NULL);
++		for_each_online_target_cpu_in_set(fn, NULL, NULL, NULL, NULL);
+ 	else
+-		for_each_online_package_in_set(dump_pbf_config_for_cpu, NULL,
+-					       NULL, NULL, NULL);
++		for_each_online_package_in_set(fn, NULL, NULL, NULL, NULL);
 +
-+		while (getline(&line, &n, fp) > 0) {
-+			if (strstr(line, "model name")) {
-+				if (strstr(line, "6252N") ||
-+				    strstr(line, "6230N") ||
-+				    strstr(line, "5218N"))
-+					ret = 0;
-+				break;
-+			}
-+		}
-+		free(line);
-+		fclose(fp);
-+		return ret;
-+	}
-+	return 0;
+ 	isst_ctdp_display_information_end(outf);
  }
  
- /* Open a file, and exit on failure */
-@@ -1889,7 +1927,9 @@ static void cmdline(int argc, char **argv)
- 		fprintf(stderr, "Feature name and|or command not specified\n");
- 		exit(0);
+@@ -1165,21 +1184,27 @@ static void set_pbf_for_cpu(int cpu, void *arg1, void *arg2, void *arg3,
+ 	int ret;
+ 	int status = *(int *)arg4;
+ 
+-	ret = isst_set_pbf_fact_status(cpu, 1, status);
+-	if (ret) {
+-		perror("isst_set_pbf");
+-	} else {
+-		if (status) {
+-			if (auto_mode)
+-				ret = set_pbf_core_power(cpu);
+-			isst_display_result(cpu, outf, "base-freq", "enable",
+-					    ret);
+-		} else {
+-			if (auto_mode)
+-				isst_pm_qos_config(cpu, 0, 0);
+-			isst_display_result(cpu, outf, "base-freq", "disable",
+-					    ret);
++	if (!is_clx_n_platform()) {
++		ret = isst_set_pbf_fact_status(cpu, 1, status);
++		if (ret) {
++			perror("isst_set_pbf");
++			return;
+ 		}
++	} else {
++		if (status == 0)
++			ret = -1;
++		else
++			ret = 0;
++	}
++
++	if (status) {
++		if (auto_mode)
++			ret = set_pbf_core_power(cpu);
++		isst_display_result(cpu, outf, "base-freq", "enable", ret);
++	} else {
++		if (auto_mode)
++			isst_pm_qos_config(cpu, 0, 0);
++		isst_display_result(cpu, outf, "base-freq", "disable", ret);
  	}
--	update_cpu_model();
-+	ret = update_cpu_model();
-+	if (ret)
-+		err(-1, "Invalid CPU model (%d)\n", cpu_model);
- 	printf("Intel(R) Speed Select Technology\n");
- 	printf("Executing on CPU model:%d[0x%x]\n", cpu_model, cpu_model);
- 	set_max_cpu_num();
+ }
+ 
+@@ -1645,6 +1670,9 @@ static void get_clos_assoc(int arg)
+ 
+ static struct process_cmd_struct clx_n_cmds[] = {
+ 	{ "perf-profile", "info", dump_isst_config, 0 },
++	{ "base-freq", "info", dump_pbf_config, 0 },
++	{ "base-freq", "enable", set_pbf_enable, 1 },
++	{ "base-freq", "disable", set_pbf_enable, 0 },
+ 	{ NULL, NULL, NULL, 0 }
+ };
+ 
 -- 
 2.18.1
 
