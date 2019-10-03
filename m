@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CDDBC10F14
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:44:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C985C10F14
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:44:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 15A5620867
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:44:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1F77B20867
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:44:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570121089;
-	bh=/gOo4WZ1NVLy14zDedgsXiyLcv0A5qENps5nn1jtGQg=;
+	s=default; t=1570121095;
+	bh=BMdLIydfr0XqiBTIBaO/y9dLc3t97LMQFjAyQ1K7uX0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0hmmWSBzL0D0JK1Ys+mnqHOouTTB9MoLk8yImoCO7TFrbduNV+sIJmOkSUSPDBXij
-	 LmFUYdDnAheDjYZOeOCW2idkIQoh2LZsGVdO80jBupUzkZo4BkCiQXV5zqYNJKK3bl
-	 +9+wS3EwZXsTk0ly+24r7G3DhZapv7UB7kBO0rQg=
+	b=NhRWx3xG49B+hXVc3gaXA2F31SRRCwDDaU29EQmq9nzA7oYZDt6ygBaLgu2q5h/4I
+	 AzpAzjeIhHMLGna2IpjghtPdLvL/MKlGvKbEMMyUA5vxWhK+Smy4LdJPCEQQ/zVuoD
+	 1IjdOwVYYYxSMxjLB3JsDpxd9r3rNb4DlzjKPp2o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405433AbfJCQor (ORCPT
+        id S2405451AbfJCQow (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 12:44:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56940 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 12:44:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57046 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2405413AbfJCQon (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:44:43 -0400
+        id S2405434AbfJCQos (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:44:48 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DEB7D206BB;
-        Thu,  3 Oct 2019 16:44:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3A9CF2054F;
+        Thu,  3 Oct 2019 16:44:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570121082;
-        bh=/gOo4WZ1NVLy14zDedgsXiyLcv0A5qENps5nn1jtGQg=;
+        s=default; t=1570121087;
+        bh=BMdLIydfr0XqiBTIBaO/y9dLc3t97LMQFjAyQ1K7uX0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=slWp20gXpJmYmeYeQSXBURiA49bVw+JiHingO+h/XrvCc9FfXBCfjnIyMhrKNqzym
-         u40EsqQ8XS4uZSYJyNhsyb+bKxqrj/2f3mUzaeH615VfyOrQJuc6uSh5pLut0Swb3g
-         4Jou39lDsAGy+0c7OvN4sLyp+VwUL/BbWVLaBn6o=
+        b=rNUjrdQnKui0wmavQE33Q6nVC6YwdgKzlFlgLx7Np6tIESNEVwPINGc6qvNW/N4x7
+         9TyuKxzKDrLNGUWgiEiXtBeWPqVQqC6Sns4q8k2Gf6O/Yinhq46yeGBt5vq7CARO98
+         wzPATZmUlhCZuD00NoSsn34xsd2mWdnAZF0rypO8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Darius Rad <alpha@area49.net>,
-        Sean Young <sean@mess.org>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        stable@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
+        Frederic Weisbecker <frederic@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.3 112/344] media: rc: imon: Allow iMON RC protocol for ffdc 7e device
-Date:   Thu,  3 Oct 2019 17:51:17 +0200
-Message-Id: <20191003154551.264983892@linuxfoundation.org>
+Subject: [PATCH 5.3 142/344] posix-cpu-timers: Sanitize bogus WARNONS
+Date:   Thu,  3 Oct 2019 17:51:47 +0200
+Message-Id: <20191003154554.261951641@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191003154540.062170222@linuxfoundation.org>
 References: <20191003154540.062170222@linuxfoundation.org>
@@ -61,51 +60,95 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Darius Rad <alpha@area49.net>
+From: Thomas Gleixner <tglx@linutronix.de>
 
-[ Upstream commit b20a6e298bcb8cb8ae18de26baaf462a6418515b ]
+[ Upstream commit 692117c1f7a6770ed41dd8f277cd9fed1dfb16f1 ]
 
-Allow selecting the IR protocol, MCE or iMON, for a device that
-identifies as follows (with config id 0x7e):
+Warning when p == NULL and then proceeding and dereferencing p does not
+make any sense as the kernel will crash with a NULL pointer dereference
+right away.
 
-15c2:ffdc SoundGraph Inc. iMON PAD Remote Controller
+Bailing out when p == NULL and returning an error code does not cure the
+underlying problem which caused p to be NULL. Though it might allow to
+do proper debugging.
 
-As the driver is structured to default to iMON when both RC
-protocols are supported, existing users of this device (using MCE
-protocol) will need to manually switch to MCE (RC-6) protocol from
-userspace (with ir-keytable, sysfs).
+Same applies to the clock id check in set_process_cpu_timer().
 
-Signed-off-by: Darius Rad <alpha@area49.net>
-Signed-off-by: Sean Young <sean@mess.org>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Clean them up and make them return without trying to do further damage.
+
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Reviewed-by: Frederic Weisbecker <frederic@kernel.org>
+Link: https://lkml.kernel.org/r/20190819143801.846497772@linutronix.de
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/rc/imon.c | 7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
+ kernel/time/posix-cpu-timers.c | 20 +++++++++++++-------
+ 1 file changed, 13 insertions(+), 7 deletions(-)
 
-diff --git a/drivers/media/rc/imon.c b/drivers/media/rc/imon.c
-index 7bee72108b0ee..37a850421fbb1 100644
---- a/drivers/media/rc/imon.c
-+++ b/drivers/media/rc/imon.c
-@@ -1826,12 +1826,17 @@ static void imon_get_ffdc_type(struct imon_context *ictx)
- 		break;
- 	/* iMON VFD, MCE IR */
- 	case 0x46:
--	case 0x7e:
- 	case 0x9e:
- 		dev_info(ictx->dev, "0xffdc iMON VFD, MCE IR");
- 		detected_display_type = IMON_DISPLAY_TYPE_VFD;
- 		allowed_protos = RC_PROTO_BIT_RC6_MCE;
- 		break;
-+	/* iMON VFD, iMON or MCE IR */
-+	case 0x7e:
-+		dev_info(ictx->dev, "0xffdc iMON VFD, iMON or MCE IR");
-+		detected_display_type = IMON_DISPLAY_TYPE_VFD;
-+		allowed_protos |= RC_PROTO_BIT_RC6_MCE;
-+		break;
- 	/* iMON LCD, MCE IR */
- 	case 0x9f:
- 		dev_info(ictx->dev, "0xffdc iMON LCD, MCE IR");
+diff --git a/kernel/time/posix-cpu-timers.c b/kernel/time/posix-cpu-timers.c
+index 0a426f4e31251..5bbad147a90cf 100644
+--- a/kernel/time/posix-cpu-timers.c
++++ b/kernel/time/posix-cpu-timers.c
+@@ -375,7 +375,8 @@ static int posix_cpu_timer_del(struct k_itimer *timer)
+ 	struct sighand_struct *sighand;
+ 	struct task_struct *p = timer->it.cpu.task;
+ 
+-	WARN_ON_ONCE(p == NULL);
++	if (WARN_ON_ONCE(!p))
++		return -EINVAL;
+ 
+ 	/*
+ 	 * Protect against sighand release/switch in exit/exec and process/
+@@ -580,7 +581,8 @@ static int posix_cpu_timer_set(struct k_itimer *timer, int timer_flags,
+ 	u64 old_expires, new_expires, old_incr, val;
+ 	int ret;
+ 
+-	WARN_ON_ONCE(p == NULL);
++	if (WARN_ON_ONCE(!p))
++		return -EINVAL;
+ 
+ 	/*
+ 	 * Use the to_ktime conversion because that clamps the maximum
+@@ -715,10 +717,11 @@ static int posix_cpu_timer_set(struct k_itimer *timer, int timer_flags,
+ 
+ static void posix_cpu_timer_get(struct k_itimer *timer, struct itimerspec64 *itp)
+ {
+-	u64 now;
+ 	struct task_struct *p = timer->it.cpu.task;
++	u64 now;
+ 
+-	WARN_ON_ONCE(p == NULL);
++	if (WARN_ON_ONCE(!p))
++		return;
+ 
+ 	/*
+ 	 * Easy part: convert the reload time.
+@@ -1000,12 +1003,13 @@ static void check_process_timers(struct task_struct *tsk,
+  */
+ static void posix_cpu_timer_rearm(struct k_itimer *timer)
+ {
++	struct task_struct *p = timer->it.cpu.task;
+ 	struct sighand_struct *sighand;
+ 	unsigned long flags;
+-	struct task_struct *p = timer->it.cpu.task;
+ 	u64 now;
+ 
+-	WARN_ON_ONCE(p == NULL);
++	if (WARN_ON_ONCE(!p))
++		return;
+ 
+ 	/*
+ 	 * Fetch the current sample and update the timer's expiry time.
+@@ -1202,7 +1206,9 @@ void set_process_cpu_timer(struct task_struct *tsk, unsigned int clock_idx,
+ 	u64 now;
+ 	int ret;
+ 
+-	WARN_ON_ONCE(clock_idx == CPUCLOCK_SCHED);
++	if (WARN_ON_ONCE(clock_idx >= CPUCLOCK_SCHED))
++		return;
++
+ 	ret = cpu_timer_sample_group(clock_idx, tsk, &now);
+ 
+ 	if (oldval && ret != -EINVAL) {
 -- 
 2.20.1
 
