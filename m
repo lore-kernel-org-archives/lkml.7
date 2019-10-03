@@ -2,250 +2,169 @@ Return-Path: <SRS0=6dNS=X4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E0FAC32792
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 12:16:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B263C32792
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 12:17:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E447320862
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 12:16:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 052C920830
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 12:17:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="gujkHolU"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="CUcO6Isc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729462AbfJCMQC (ORCPT
+        id S1729252AbfJCMRx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 08:16:02 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:60754 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728773AbfJCMQB (ORCPT
+        Thu, 3 Oct 2019 08:17:53 -0400
+Received: from mail-lf1-f67.google.com ([209.85.167.67]:43742 "EHLO
+        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725827AbfJCMRw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 08:16:01 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=KMUClkTO6UWSCzmxIhjPetiD9IE/Gkdvn1kLBeQuxRE=; b=gujkHolU2Wm9Os7tK7ZVubjef
-        gsTC8lV8nD83Z8tvk/iaWR1pT/zljFBk/Fwbe+D41CUwc8WZ2H0s2zn9N9H4o9HpWAG2Uxp+wI480
-        p5qQO12bw2Ogb/az7kxN/rw03iCFGdkRaYJ8kLbibMnWbBY35DaQEjCYS3DOjlvT2Tpy3hFsMZmFh
-        +arwDhukoxSN32C30xaIsJ9StzFiF4fj7G0790HD1ms70cTX8CqSpD3uxRdOX8n9wu0h3/NmRcHQ3
-        6KisWoddR/aAvBjUv50WiBDcEl0/BEVi0If5pzOk/UrH1QeKGAjHuw1svhMxmG/06Ahtq12swgBJI
-        +AMSG1omw==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.2 #3 (Red Hat Linux))
-        id 1iG01E-00013R-Sw; Thu, 03 Oct 2019 12:15:41 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 59F51301B59;
-        Thu,  3 Oct 2019 14:14:48 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 82763201DF20D; Thu,  3 Oct 2019 14:15:37 +0200 (CEST)
-Date:   Thu, 3 Oct 2019 14:15:37 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Cc:     Giovanni Gherdovich <ggherdovich@suse.cz>,
-        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@suse.de>,
-        Len Brown <lenb@kernel.org>, x86@kernel.org,
-        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Mel Gorman <mgorman@techsingularity.net>,
-        Matt Fleming <matt@codeblueprint.co.uk>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Paul Turner <pjt@google.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Quentin Perret <qperret@qperret.net>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Doug Smythies <dsmythies@telus.net>
-Subject: Re: [PATCH v2 1/2] x86,sched: Add support for frequency invariance
-Message-ID: <20191003121537.GR4536@hirez.programming.kicks-ass.net>
-References: <20191002122926.385-1-ggherdovich@suse.cz>
- <20191002122926.385-2-ggherdovich@suse.cz>
- <1906426.HDqaVa71mF@kreacher>
+        Thu, 3 Oct 2019 08:17:52 -0400
+Received: by mail-lf1-f67.google.com with SMTP id u3so1635635lfl.10
+        for <linux-kernel@vger.kernel.org>; Thu, 03 Oct 2019 05:17:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=d+qFJxfK/o+AUCkajflBNym7EUXhIlRQ/i280OxUzCc=;
+        b=CUcO6IscTDo8mvm9qzgA3Zn8Zsn+LcZQRIH8ztPINFQqpOx8vpK4w9p35AH1jCVpSs
+         9TNKjI+Vxf60N956ZTBNrmSx3+lVjwPLaYypCzrI3sjO72XDyyE7z72cizulMp0wNLlR
+         j+WC38KpS8tf80f7hnrfhi/82b0jDtkk5hJ2RJoCOCoYtNjmZpOJp29MSnkdeJKJQ/Wk
+         yO38vsFc+mdsC1NHGOUw46TLfA1Eh1Vfq4sMdzO7qtzXMIMgchtXAITjF6KKLq+wlyuP
+         IRTmDcR67lfFcZsJKuIt3C+Vd9sihbU01+Ftbo/a5fv8b4VywpTjAt8vYudhaOrBWw3U
+         ffXg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=d+qFJxfK/o+AUCkajflBNym7EUXhIlRQ/i280OxUzCc=;
+        b=EYu7OZgMhg9gR3OSHGKQGaO1dfsbJN4hfLhkk3czvaX7Ako+j2QPBZHUr1U5/YoObg
+         dyQhcAK/SItL3JL9cNiah9RFAdW2D8ELdKNdNDIimJqsar9QGJ5aiKeXGsjAGsxn4Yl7
+         M8zCAroiQTlTjRahauFRfhCFUxssXn4UJjygFifv2Abk/lrSWnznPaOXxLqpy+UAC6lw
+         mIyTktWUN0i8bpDFj9pdi8f50Xk/o3mRMYLzjfRrURDP33j6Ej7amQqrYv4L/1G7/UUK
+         ZMO5TN+bfqgXjT7aCOZTxsyhulN29yLUT6Aa9DJIpS3TZkzc7YFWzKLLVg0QyDGnKo15
+         BYIQ==
+X-Gm-Message-State: APjAAAXKLXwUosNCx/E3/nQV8AoajNtpogXaL3uYRR0TwD2lhXKiv51z
+        +3uNzICgGkCdxq6/A5xYrSW/PQx3nnGW2BTB1BZNcQ==
+X-Google-Smtp-Source: APXvYqwCxVfpUKYXkD9EXOOAiK4MScexSxj0b6juR5gZ5noEs2VxeVKYBDkbVEtGagMUTAQcdhZfMoK7nvhLyQWGUf4=
+X-Received: by 2002:ac2:46ee:: with SMTP id q14mr5220819lfo.152.1570105070638;
+ Thu, 03 Oct 2019 05:17:50 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1906426.HDqaVa71mF@kreacher>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <1568411962-1022-1-git-send-email-ilina@codeaurora.org> <1568411962-1022-11-git-send-email-ilina@codeaurora.org>
+In-Reply-To: <1568411962-1022-11-git-send-email-ilina@codeaurora.org>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Thu, 3 Oct 2019 14:17:39 +0200
+Message-ID: <CACRpkdav_BFubQ4-RWAN+uxBoExi7qfgdFhDVKfgtbXEOB5uvA@mail.gmail.com>
+Subject: Re: [PATCH RFC v2 10/14] drivers: pinctrl: msm: setup GPIO chip in hierarchy
+To:     Lina Iyer <ilina@codeaurora.org>
+Cc:     Stephen Boyd <swboyd@chromium.org>,
+        Evan Green <evgreen@chromium.org>,
+        Marc Zyngier <maz@kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        MSM <linux-arm-msm@vger.kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        mkshah@codeaurora.org,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Oct 03, 2019 at 12:27:52PM +0200, Rafael J. Wysocki wrote:
-> On Wednesday, October 2, 2019 2:29:25 PM CEST Giovanni Gherdovich wrote:
-> > +static bool turbo_disabled(void)
-> > +{
-> > +	u64 misc_en;
-> > +	int err;
-> > +
-> > +	err = rdmsrl_safe(MSR_IA32_MISC_ENABLE, &misc_en);
-> > +	if (err)
-> > +		return false;
-> > +
-> > +	return (misc_en & MSR_IA32_MISC_ENABLE_TURBO_DISABLE);
-> > +}
-> 
-> This setting may be updated by the platform firmware (BIOS) in some cases
-> (see kernel.org BZ 200759, for example), so in general checking it once
-> at the init time is not enough.
+On Fri, Sep 13, 2019 at 11:59 PM Lina Iyer <ilina@codeaurora.org> wrote:
 
-Is there anything sane we can do if the BIOS frobs stuff like that under
-our feet? Other than yell bloody murder, that is?
+> Some GPIOs are marked as wakeup capable and are routed to another
+> interrupt controller that is an always-domain and can detect interrupts
+> even most of the SoC is powered off. The wakeup interrupt controller
+> wakes up the GIC and replays the interrupt at the GIC.
+>
+> Setup the TLMM irqchip in hierarchy with the wakeup interrupt controller
+> and ensure the wakeup GPIOs are handled correctly.
+>
+> Signed-off-by: Maulik Shah <mkshah@codeaurora.org>
+> Signed-off-by: Lina Iyer <ilina@codeaurora.org>
+> ----
+> Changes in RFC v2:
+>         - Define irq_domain_qcom_handle_wakeup()
+>         - Rebase on top of GPIO hierarchy support in linux-next
+>         - Set the chained irq handler for summary line
 
-> > +
-> > +#include <asm/cpu_device_id.h>
-> > +#include <asm/intel-family.h>
-> > +
-> > +#define ICPU(model) \
-> > +	{ X86_VENDOR_INTEL, 6, model, X86_FEATURE_APERFMPERF, 0}
-> > +
-> > +static const struct x86_cpu_id has_knl_turbo_ratio_limits[] = {
-> > +	ICPU(INTEL_FAM6_XEON_PHI_KNL),
-> > +	ICPU(INTEL_FAM6_XEON_PHI_KNM),
-> > +	{}
-> > +};
-> > +
-> > +static const struct x86_cpu_id has_turbo_ratio_group_limits[] = {
-> > +	ICPU(INTEL_FAM6_ATOM_GOLDMONT),
-> > +	ICPU(INTEL_FAM6_ATOM_GOLDMONT_D),
-> > +	ICPU(INTEL_FAM6_ATOM_GOLDMONT_PLUS),
-> > +	ICPU(INTEL_FAM6_SKYLAKE_X),
-> > +	{}
-> > +};
-> > +
-> > +static void core_set_cpu_max_freq(void)
-> > +{
-> > +	u64 ratio, turbo_ratio;
-> > +	int err;
-> > +
-> > +	if (smp_processor_id() != 0)
-> > +		return;
-> > +
-> > +	if (turbo_disabled() ||
-> > +		x86_match_cpu(has_knl_turbo_ratio_limits) ||
-> > +		x86_match_cpu(has_turbo_ratio_group_limits))
-> > +		return;
-> > +
-> 
-> I would move the checks above directly to intel_set_cpu_max_freq().
+This is looking better every time I look at it, it's really complex
+but alas the problem is hard to solve so it requires complex solutions.
 
-The reason it is here, is that..
+> @@ -1006,6 +1091,7 @@ static int msm_gpio_init(struct msm_pinctrl *pctrl)
+>         struct gpio_irq_chip *girq;
+>         int ret;
+>         unsigned ngpio = pctrl->soc->ngpios;
+> +       struct device_node *dn;
 
-> > +	err = rdmsrl_safe(MSR_PLATFORM_INFO, &ratio);
-> > +	if (err)
-> > +		return;
-> > +
-> > +	err = rdmsrl_safe(MSR_TURBO_RATIO_LIMIT, &turbo_ratio);
-> > +	if (err)
-> > +		return;
-> > +
-> > +	ratio = (ratio >> 8) & 0xFF;                /* max P state ratio */
-> > +	turbo_ratio = (turbo_ratio >> 24) & 0xFF;   /* 4C turbo ratio */
-> > +
-> > +	arch_max_freq = div_u64(turbo_ratio * SCHED_CAPACITY_SCALE, ratio);
-> > +
-> > +	static_branch_enable(&arch_scale_freq_key);
-> > +}
-> > +
-> > +static void intel_set_cpu_max_freq(void)
-> > +{
-> > +	/*
-> > +	 * TODO: add support for:
-> > +	 *
-> > +	 * - Xeon Phi (KNM, KNL)
-> > +	 * - Xeon Gold/Platinum, Atom Goldmont/Goldmont Plus
-> > +	 * - Atom Silvermont
-> > +	 *
-> > +	 * which all now get by default arch_max_freq = SCHED_CAPACITY_SCALE
-> > +	 */
-> > +	core_set_cpu_max_freq();
+I usually call the variable "np"
 
-This used to read something like:
+> @@ -1021,17 +1107,40 @@ static int msm_gpio_init(struct msm_pinctrl *pctrl)
+>
+>         pctrl->irq_chip.name = "msmgpio";
+>         pctrl->irq_chip.irq_enable = msm_gpio_irq_enable;
+> +       pctrl->irq_chip.irq_disable = msm_gpio_irq_disable;
+>         pctrl->irq_chip.irq_mask = msm_gpio_irq_mask;
+>         pctrl->irq_chip.irq_unmask = msm_gpio_irq_unmask;
+>         pctrl->irq_chip.irq_ack = msm_gpio_irq_ack;
+> +       pctrl->irq_chip.irq_eoi = irq_chip_eoi_parent;
 
-	if (core_set_cpu_max_freq())
-		return;
+This part and the functions called seem fine!
 
-	if (atom_set_cpu_max_freq())
-		return;
+> +       dn = of_parse_phandle(pctrl->dev->of_node, "wakeup-parent", 0);
+> +       if (dn) {
+> +               int i;
+> +               bool skip;
+> +               unsigned int gpio;
+> +
+> +               chip->irq.parent_domain = irq_find_matching_host(dn,
+> +                                                DOMAIN_BUS_WAKEUP);
+> +               of_node_put(dn);
+> +               if (!chip->irq.parent_domain)
+> +                       return -EPROBE_DEFER;
+> +               chip->irq.child_to_parent_hwirq = msm_gpio_wakeirq;
+> +
+> +               skip = irq_domain_qcom_handle_wakeup(chip->irq.parent_domain);
+> +               for (i = 0; skip && i < pctrl->soc->nwakeirq_map; i++) {
+> +                       gpio = pctrl->soc->wakeirq_map[i].gpio;
+> +                       set_bit(gpio, pctrl->skip_wake_irqs);
+> +               }
+> +       }
 
-	...
+OK I guess this is how we should do it, maybe add a comment to clarify
+that we are checking the parent irqdomain of the chained IRQ to see
+if we need to avoid disabling the irq as it is used for wakeup. (IIUC
+what the code does!)
 
-and then those checks make sense, because we're failing the 'core' way,
-but another way might work.
+> +       /*
+> +        * Since we are chained to the GIC using the TLMM summary line
+> +        * and in hierarchy with the wakeup parent interrupt controller,
+> +        * explicitly set the chained summary line. We need to do this because
+> +        * the summary line is not routed to the wakeup parent but directly
+> +        * to the GIC.
+> +        */
+> +       gpiochip_set_chained_irqchip(chip, &pctrl->irq_chip, pctrl->irq,
+> +                                    msm_gpio_irq_handler);
 
-But in this version the atom version has gone missing -- I've suggested
-it be put back as an additional patch.
+I don't think this part is needed, we already have:
 
-Also, the SKX way still needs to be written..
+girq->parent_handler = msm_gpio_irq_handler;
+girq->num_parents = 1;
+girq->parents = devm_kcalloc(pctrl->dev, 1, sizeof(*girq->parents),
+     GFP_KERNEL);
+if (!girq->parents)
+     return -ENOMEM;
+girq->default_type = IRQ_TYPE_NONE;
+girq->handler = handle_bad_irq;
+girq->parents[0] = pctrl->irq;
 
-> > +}
-> > +
-> > +static void init_scale_freq(void *arg)
-> > +{
-> > +	u64 aperf, mperf;
-> > +
-> > +	rdmsrl(MSR_IA32_APERF, aperf);
-> > +	rdmsrl(MSR_IA32_MPERF, mperf);
-> > +
-> > +	this_cpu_write(arch_prev_aperf, aperf);
-> > +	this_cpu_write(arch_prev_mperf, mperf);
-> > +}
-> > +
-> > +static void set_cpu_max_freq(void)
-> > +{
-> > +	if (!boot_cpu_has(X86_FEATURE_APERFMPERF))
-> > +		return;
-> > +
-> > +	switch (boot_cpu_data.x86_vendor) {
-> > +	case X86_VENDOR_INTEL:
-> > +		intel_set_cpu_max_freq();
-> > +		break;
-> > +	default:
-> > +		break;
-> > +	}
-> 
-> Why is the switch () needed?
-> 
-> It seems that
-> 
-> 	if (boot_cpu_data.x86_vendor == X86_VENDOR_INTEL)
-> 		intel_set_cpu_max_freq();
-> 
-> would do the trick.
+This will make the irq chain when calling gpiochip_add_data(), so
+just delete this and see if everything works as before.
 
-I was hoping to grow X86_VENDOR_AMD bits..
+Other than that it looks fine!
 
-> > +
-> > +	init_scale_freq(NULL);
-> > +}
-> > +
-> > +DEFINE_PER_CPU(unsigned long, arch_cpu_freq);
-> > +
-> > +static bool tick_disable;
-> > +
-> > +void arch_scale_freq_tick(void)
-> > +{
-> > +	u64 freq;
-> > +	u64 aperf, mperf;
-> > +	u64 acnt, mcnt;
-> > +
-> > +	if (!arch_scale_freq_invariant() || tick_disable)
-> > +		return;
-> > +
-> 
-> This may be a silly question, but can using tick_disable be avoided?
-> 
-> I guess it is there, because disabling the static branch from
-> x86_arch_scale_freq_tick_disable() would be unsafe, but I'm not
-> sure why that would be the case?
-
-There's not enough state -- we can of course fix that.
-
-That is, if you disable it, we don't know if we should enable it again
-later or if it was disabled because we failed to initialize it earlier.
+Yours,
+Linus Walleij
