@@ -6,112 +6,108 @@ X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E4429C4360C
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 01:19:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D3B5C4360C
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 01:27:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B510B21A4C
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 01:19:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2D948222C2
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 01:27:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=endlessm-com.20150623.gappssmtp.com header.i=@endlessm-com.20150623.gappssmtp.com header.b="TtbR+j7b"
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="kUSSaEsD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727107AbfJCBTa (ORCPT
+        id S1727273AbfJCB1L (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Oct 2019 21:19:30 -0400
-Received: from mail-qk1-f195.google.com ([209.85.222.195]:33291 "EHLO
-        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726887AbfJCBT3 (ORCPT
+        Wed, 2 Oct 2019 21:27:11 -0400
+Received: from conssluserg-01.nifty.com ([210.131.2.80]:49234 "EHLO
+        conssluserg-01.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726948AbfJCB1K (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Oct 2019 21:19:29 -0400
-Received: by mail-qk1-f195.google.com with SMTP id x134so738026qkb.0
-        for <linux-kernel@vger.kernel.org>; Wed, 02 Oct 2019 18:19:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=endlessm-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=ZWwUSoBB6gPOq9lnD1cBoM5LQLFJ2M8ddN6o2uZdkWw=;
-        b=TtbR+j7bCceltYjMDybfhgl9NBDRpqKI3x9SzVu/Ck1CYDrWFvuQccT0+GXkXC/d3d
-         s3pS8/a52lZ8olBRj5vpC7LeStougDvvJUaSvC5JtY2ceNHlQPCSEWme0wVvVSFbTLhb
-         1oNkIhnkAb/w46tA+MCBLJXnsRQ5uqRBUzqEe9gmIHcq0yWjZKJTwJgnvpXK5CBUICiC
-         84Ayn8J42A8zg63ElSrwspKODJTWwu4/4I4xAuyI+aPJcanmFvcUqKdHkj3zYw2t4EyC
-         NNIp2CCXK4jszQ4YYKsAIcNdV43r6aMefhLFxIySOsGm8U1YaVPUmt/cGBGMee0/iwTP
-         0kdQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ZWwUSoBB6gPOq9lnD1cBoM5LQLFJ2M8ddN6o2uZdkWw=;
-        b=OM74i2wBODIAb7PMPx8KCtbMbb5uwOQHSKEiYnjJuFOErP8VWouNRGLlqF+yT7XnCX
-         MVobQhzI9oTIxnOpVzmX9TyicCEq/UjTnaekIh0XwWUNexTov8LBvGR6qeV6AbrBjaVk
-         rtarF07HZTNWqVsnfHFoEJQpMjawIDiSrnhNGlAEvy2ZCTj9ID4UM4cBfFreBxLIfNY4
-         RmxlBN+9/JACdSCCSfpIH6TTccIHS/5nozD3saeS+Op6rfMWAVW3m5GH05FTHF/Yl61O
-         +RqwLJga1r5ua5l8npGezVYOS+yl/dWzX+EjyGL45pMRmlaa+NzEg6Qtyxv13RwRk6PA
-         PQdw==
-X-Gm-Message-State: APjAAAXvi0q/M7MVRqhS7nrogqHgpudSOA5QC4ckIxTm0+ldemJZ2A7B
-        KhbvQBm/bQQw0tmWH+zx5jyP/GEYwtQQbZ771QSlOw==
-X-Google-Smtp-Source: APXvYqz22sL8lrOMniBjvPKW06rVYdNY/jhvEGd6Z/Ys5kj0SD18SNJe3n7BydCu6WyxGhKRdzXC/7sePQYUNSSVqoU=
-X-Received: by 2002:a05:620a:5ad:: with SMTP id q13mr1877015qkq.297.1570065566949;
- Wed, 02 Oct 2019 18:19:26 -0700 (PDT)
+        Wed, 2 Oct 2019 21:27:10 -0400
+Received: from mail-ua1-f43.google.com (mail-ua1-f43.google.com [209.85.222.43]) (authenticated)
+        by conssluserg-01.nifty.com with ESMTP id x931Qkxq032090;
+        Thu, 3 Oct 2019 10:26:46 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-01.nifty.com x931Qkxq032090
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1570066007;
+        bh=x6/8l8kVsC1NbNuoqq4xa9uPDopH488YlyQtX+qP+3U=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=kUSSaEsDmZz8ALmJHVOaLQGYfBrsuUIYZCgjVjDx6ZEgkw0Ei0TaP05NDwD3aQBnx
+         JXuM+slUKDoOBTu7+hzWsF7LNWO5ogCaacgz6BW1MMhfCy2nZMwiyVXIU1suq/QNjs
+         WmrsfRc8HHAXCOvASsIFh2Nt986I9B6UGR60htgeWpRPG1ZxEV6yLI9mJsyHrp6N/H
+         BjXA//0rtpdzUTiRkYlFTZrapg1xSizFGsGlPZFGvXLzmsjn68Mf1l2lB3Lg5kLFQg
+         fgoE2jrolyP8hbawBJYtTTJFUoskrwrciZbP7td06xhv/Lh6WIZwTrx2nz5x0Aliug
+         B8EJPrwoiTYGA==
+X-Nifty-SrcIP: [209.85.222.43]
+Received: by mail-ua1-f43.google.com with SMTP id u31so380833uah.0;
+        Wed, 02 Oct 2019 18:26:46 -0700 (PDT)
+X-Gm-Message-State: APjAAAU+OkGKMvn2f936XI8xH9FIz/NdjbRTyx8USMtNa8R5FLqJKdZz
+        uf5Vt1YNXAYNKbNXhM06LEhoAL7rAHDd6uP/mlg=
+X-Google-Smtp-Source: APXvYqzd0f8HET8II/UsIBzv70d/UG4czUDbi94oH82Ta/IsxIWI235KX/if2tQktrEkYTlgpyqXUkKUig5vpKEcNxw=
+X-Received: by 2002:ab0:20b4:: with SMTP id y20mr3537503ual.121.1570066005679;
+ Wed, 02 Oct 2019 18:26:45 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190911025045.20918-1-chiu@endlessm.com> <0c049f46-fb15-693e-affe-a84ea759b5d7@gmail.com>
-In-Reply-To: <0c049f46-fb15-693e-affe-a84ea759b5d7@gmail.com>
-From:   Chris Chiu <chiu@endlessm.com>
-Date:   Thu, 3 Oct 2019 09:19:15 +0800
-Message-ID: <CAB4CAweXfhLc8ATWg87ydadCKVqj3SnG37O5Hyz8uP8EkPrg9w@mail.gmail.com>
-Subject: Re: [PATCH v2] rtl8xxxu: add bluetooth co-existence support for
- single antenna
-To:     Jes Sorensen <jes.sorensen@gmail.com>
-Cc:     Kalle Valo <kvalo@codeaurora.org>,
-        David Miller <davem@davemloft.net>,
-        linux-wireless <linux-wireless@vger.kernel.org>,
-        netdev <netdev@vger.kernel.org>,
-        Linux Kernel <linux-kernel@vger.kernel.org>,
-        Linux Upstreaming Team <linux@endlessm.com>
+References: <20190927093603.9140-1-yamada.masahiro@socionext.com>
+ <20190927134108.GC187147@google.com> <20191002185701.GA29041@linux-8ccs>
+In-Reply-To: <20191002185701.GA29041@linux-8ccs>
+From:   Masahiro Yamada <yamada.masahiro@socionext.com>
+Date:   Thu, 3 Oct 2019 10:26:09 +0900
+X-Gmail-Original-Message-ID: <CAK7LNATbKVEf8Q82k5374UOQVxFJX1U7eU4ywW-LdGvHOq+tPw@mail.gmail.com>
+Message-ID: <CAK7LNATbKVEf8Q82k5374UOQVxFJX1U7eU4ywW-LdGvHOq+tPw@mail.gmail.com>
+Subject: Re: [PATCH 0/7] module: various bug-fixes and clean-ups for module namespace
+To:     Jessica Yu <jeyu@kernel.org>
+Cc:     Matthias Maennich <maennich@google.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Martijn Coenen <maco@android.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Michal Marek <michal.lkml@markovi.net>,
+        Will Deacon <will@kernel.org>,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Oct 2, 2019 at 11:04 PM Jes Sorensen <jes.sorensen@gmail.com> wrote:
->
->
-> In general I think it looks good! One nit below:
->
-> Sorry I have been traveling for the last three weeks, so just catching up.
->
->
-> > +void rtl8723bu_set_coex_with_type(struct rtl8xxxu_priv *priv, u8 type)
-> > +{
-> > +     switch (type) {
-> > +     case 0:
-> > +             rtl8xxxu_write32(priv, REG_BT_COEX_TABLE1, 0x55555555);
-> > +             rtl8xxxu_write32(priv, REG_BT_COEX_TABLE2, 0x55555555);
-> > +             rtl8xxxu_write32(priv, REG_BT_COEX_TABLE3, 0x00ffffff);
-> > +             rtl8xxxu_write8(priv, REG_BT_COEX_TABLE4, 0x03);
-> > +             break;
-> > +     case 1:
-> > +     case 3:
->
-> The one item here, I would prefer introducing some defined types to
-> avoid the hard coded type numbers. It's much easier to read and debug
-> when named.
->
-Honestly, I also thought of that but there's no meaningful description for these
-numbers in the vendor driver. Even based on where they're invoked, I can merely
-give a rough definition on 0. So I left it as it is for the covenience
-if I have to do
-cross-comparison with vendor driver in the future for some possible
-unknown bugs.
+H Jessica,
 
-> If you shortened the name of the function to rtl8723bu_set_coex() you
-> won't have problems with line lengths at the calling point.
+On Thu, Oct 3, 2019 at 3:57 AM Jessica Yu <jeyu@kernel.org> wrote:
 >
-I think the rtl8723bu_set_ps_tdma() function would cause the line length problem
-more than rtl8723bu_set_coex_with_type() at the calling point. But as the same
-debug reason as mentioned, I may like to keep it because I don't know how to
-categorize the 5 magic parameters. I also reference the latest rtw88
-driver code,
-it seems no better solution so far. I'll keep watching if there's any
-better idea.
+> +++ Matthias Maennich [27/09/19 14:41 +0100]:
+> >On Fri, Sep 27, 2019 at 06:35:56PM +0900, Masahiro Yamada wrote:
+> >>
+> >>I was hit by some problems caused by the module namespace feature
+> >>that was merged recently. At least, the breakage of
+> >>external module builds is a fatal one. I just took a look at the code
+> >>closer, and I noticed some more issues and improvements.
+> >>
+> >>I hope these patches are mostly OK.
+> >>The 4th patch might have room for argument since it is a trade-off
+> >>of "cleaner implermentation" vs "code size".
+> >>
+> >Thanks Masahiro for taking the time to improve the implementation of the
+> >symbol namespaces. These are all good points that you addressed!
+>
+> Agreed, thanks Masahiro for fixing up all the rough edges! Your series
+> of fixes look good to me, I will queue this up on modules-next this
+> week
 
-Chris
+Since these are bug fixes,
+please send them before v5.4.
+
+Thanks.
+
+
+
+> with the exception of patch 4 - Matthias, you are planning to
+> submit a patch that would supercede patch 04/07, right?
+>
+> Thanks!
+>
+> Jessica
+
+
+
+-- 
+Best Regards
+Masahiro Yamada
