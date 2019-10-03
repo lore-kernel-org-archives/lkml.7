@@ -2,112 +2,134 @@ Return-Path: <SRS0=6dNS=X4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AFFEBC10F14
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:45:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1F8DC10F14
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:45:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7C1FF215EA
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:45:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570121143;
-	bh=zRRSafVxTQ5grYDlfaRz+gppOToyxtG9qdrTKTUUJ/U=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=yzvEqS/Qgyerq/TDcpMI1HkZ3XkmSq+YIxEb5cUckVKfYg1Fm1cnBclIlhquukCk/
-	 4ztlPA4Rp1B59rlvLdFRpHxcDAeZbu50WjHqJnAAiiSjmFiI/bwAloqytSlTjuI/87
-	 fgzxccd6IkSt0ewdaOFAPmxXWY2Ds7I7ndmWmugE=
+	by mail.kernel.org (Postfix) with ESMTP id 740A2215EA
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:45:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="XWyVnN3H"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392016AbfJCQpm (ORCPT
+        id S2392845AbfJCQpq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 12:45:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58248 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 12:45:46 -0400
+Received: from mail.skyhub.de ([5.9.137.197]:55350 "EHLO mail.skyhub.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392828AbfJCQpj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:45:39 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        id S2390402AbfJCQpm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:45:42 -0400
+Received: from zn.tnic (p200300EC2F0F5D00F0B6154A9AF851AA.dip0.t-ipconnect.de [IPv6:2003:ec:2f0f:5d00:f0b6:154a:9af8:51aa])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BCC4620867;
-        Thu,  3 Oct 2019 16:45:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570121138;
-        bh=zRRSafVxTQ5grYDlfaRz+gppOToyxtG9qdrTKTUUJ/U=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Se45bL6DzE/RL9nciGL3bryurRp3mrAo29UmSDNdCa6zUcx/gzrOFIJhI+7Tn9nHG
-         dquU/Xe0UZJQOdGdPHWcMzxNBoj70Ai/4TKDImgLEfEzhXQy0cgEYmi7tri3liONQo
-         yzoIOwofw3gzHCRpa1zW6XQbEDrEG2pKvT48HNz4=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Douglas RAILLARD <douglas.raillard@arm.com>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 0EBC61EC0503;
+        Thu,  3 Oct 2019 18:45:36 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1570121136;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=eIkPCeTvcN78j8vweFeN2Nr3nk3iKgIhVmOywuUW9/M=;
+        b=XWyVnN3Hnw3ZyTL4XgOzMreKMhkPulfwnXD1mttsER3/l8E7tfOwYc+ObMHMUdYfH1glId
+        O7tKS29RD2qU8cboLOfagoGjGU1QORTSGArxvzRZhOQPs9Dyrh65tnk+E5cokgz+Aymvus
+        hvfoU6NbYJIvWKB5LRGu7anv5uYgt9c=
+Date:   Thu, 3 Oct 2019 18:45:27 +0200
+From:   Borislav Petkov <bp@alien8.de>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        Valdis Kletnieks <valdis.kletnieks@vt.edu>,
+        Borislav Petkov <bp@suse.de>, Tony Luck <tony.luck@intel.com>,
+        linux-edac@vger.kernel.org, x86@kernel.org,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.3 168/344] sched/cpufreq: Align trace event behavior of fast switching
-Date:   Thu,  3 Oct 2019 17:52:13 +0200
-Message-Id: <20191003154556.822084625@linuxfoundation.org>
-X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20191003154540.062170222@linuxfoundation.org>
-References: <20191003154540.062170222@linuxfoundation.org>
-User-Agent: quilt/0.66
+Subject: Re: [PATCH 5.2 078/313] RAS: Fix prototype warnings
+Message-ID: <20191003164527.GB11675@zn.tnic>
+References: <20191003154533.590915454@linuxfoundation.org>
+ <20191003154540.526612763@linuxfoundation.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <20191003154540.526612763@linuxfoundation.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Douglas RAILLARD <douglas.raillard@arm.com>
+On Thu, Oct 03, 2019 at 05:50:56PM +0200, Greg Kroah-Hartman wrote:
+> From: Valdis Klētnieks <valdis.kletnieks@vt.edu>
+> 
+> [ Upstream commit 0a54b809a3a2c31e1055b45b03708eb730222be1 ]
+> 
+> When building with C=2 and/or W=1, legitimate warnings are issued about
+> missing prototypes:
+> 
+>     CHECK   drivers/ras/debugfs.c
+>   drivers/ras/debugfs.c:4:15: warning: symbol 'ras_debugfs_dir' was not declared. Should it be static?
+>   drivers/ras/debugfs.c:8:5: warning: symbol 'ras_userspace_consumers' was not declared. Should it be static?
+>   drivers/ras/debugfs.c:38:12: warning: symbol 'ras_add_daemon_trace' was not declared. Should it be static?
+>   drivers/ras/debugfs.c:54:13: warning: symbol 'ras_debugfs_init' was not declared. Should it be static?
+>     CC      drivers/ras/debugfs.o
+>   drivers/ras/debugfs.c:8:5: warning: no previous prototype for 'ras_userspace_consumers' [-Wmissing-prototypes]
+>       8 | int ras_userspace_consumers(void)
+>         |     ^~~~~~~~~~~~~~~~~~~~~~~
+>   drivers/ras/debugfs.c:38:12: warning: no previous prototype for 'ras_add_daemon_trace' [-Wmissing-prototypes]
+>      38 | int __init ras_add_daemon_trace(void)
+>         |            ^~~~~~~~~~~~~~~~~~~~
+>   drivers/ras/debugfs.c:54:13: warning: no previous prototype for 'ras_debugfs_init' [-Wmissing-prototypes]
+>      54 | void __init ras_debugfs_init(void)
+>         |             ^~~~~~~~~~~~~~~~
+> 
+> Provide the proper includes.
+> 
+>  [ bp: Take care of the same warnings for cec.c too. ]
+> 
+> Signed-off-by: Valdis Kletnieks <valdis.kletnieks@vt.edu>
+> Signed-off-by: Borislav Petkov <bp@suse.de>
+> Cc: Tony Luck <tony.luck@intel.com>
+> Cc: linux-edac@vger.kernel.org
+> Cc: x86@kernel.org
+> Link: http://lkml.kernel.org/r/7168.1565218769@turing-police
+> Signed-off-by: Sasha Levin <sashal@kernel.org>
+> ---
+>  drivers/ras/cec.c     | 1 +
+>  drivers/ras/debugfs.c | 2 ++
+>  2 files changed, 3 insertions(+)
+> 
+> diff --git a/drivers/ras/cec.c b/drivers/ras/cec.c
+> index f5795adc5a6e1..8037c490f3ba7 100644
+> --- a/drivers/ras/cec.c
+> +++ b/drivers/ras/cec.c
+> @@ -1,6 +1,7 @@
+>  // SPDX-License-Identifier: GPL-2.0
+>  #include <linux/mm.h>
+>  #include <linux/gfp.h>
+> +#include <linux/ras.h>
+>  #include <linux/kernel.h>
+>  #include <linux/workqueue.h>
+>  
+> diff --git a/drivers/ras/debugfs.c b/drivers/ras/debugfs.c
+> index 9c1b717efad86..0d4f985afbf37 100644
+> --- a/drivers/ras/debugfs.c
+> +++ b/drivers/ras/debugfs.c
+> @@ -1,5 +1,7 @@
+>  // SPDX-License-Identifier: GPL-2.0-only
+>  #include <linux/debugfs.h>
+> +#include <linux/ras.h>
+> +#include "debugfs.h"
+>  
+>  struct dentry *ras_debugfs_dir;
+>  
+> -- 
 
-[ Upstream commit 77c84dd1881d0f0176cb678d770bfbda26c54390 ]
+Definitely not stable material.
 
-Fast switching path only emits an event for the CPU of interest, whereas the
-regular path emits an event for all the CPUs that had their frequency changed,
-i.e. all the CPUs sharing the same policy.
-
-With the current behavior, looking at cpu_frequency event for a given CPU that
-is using the fast switching path will not give the correct frequency signal.
-
-Signed-off-by: Douglas RAILLARD <douglas.raillard@arm.com>
-Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- kernel/sched/cpufreq_schedutil.c | 7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
-
-diff --git a/kernel/sched/cpufreq_schedutil.c b/kernel/sched/cpufreq_schedutil.c
-index 867b4bb6d4beb..b03ca2f73713d 100644
---- a/kernel/sched/cpufreq_schedutil.c
-+++ b/kernel/sched/cpufreq_schedutil.c
-@@ -117,6 +117,7 @@ static void sugov_fast_switch(struct sugov_policy *sg_policy, u64 time,
- 			      unsigned int next_freq)
- {
- 	struct cpufreq_policy *policy = sg_policy->policy;
-+	int cpu;
- 
- 	if (!sugov_update_next_freq(sg_policy, time, next_freq))
- 		return;
-@@ -126,7 +127,11 @@ static void sugov_fast_switch(struct sugov_policy *sg_policy, u64 time,
- 		return;
- 
- 	policy->cur = next_freq;
--	trace_cpu_frequency(next_freq, smp_processor_id());
-+
-+	if (trace_cpu_frequency_enabled()) {
-+		for_each_cpu(cpu, policy->cpus)
-+			trace_cpu_frequency(next_freq, cpu);
-+	}
- }
- 
- static void sugov_deferred_update(struct sugov_policy *sg_policy, u64 time,
 -- 
-2.20.1
+Regards/Gruss,
+    Boris.
 
-
-
+https://people.kernel.org/tglx/notes-about-netiquette
