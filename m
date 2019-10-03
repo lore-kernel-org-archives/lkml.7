@@ -2,108 +2,113 @@ Return-Path: <SRS0=6dNS=X4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 01F83C32792
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 08:04:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF1C4C10F14
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 08:04:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CA007222C2
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 08:04:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 92768222C2
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 08:04:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="F1L8/y7Q"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=szeredi.hu header.i=@szeredi.hu header.b="T+inIGth"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728750AbfJCIEA (ORCPT
+        id S1728869AbfJCIEe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 04:04:00 -0400
-Received: from conssluserg-04.nifty.com ([210.131.2.83]:63836 "EHLO
-        conssluserg-04.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727953AbfJCID7 (ORCPT
+        Thu, 3 Oct 2019 04:04:34 -0400
+Received: from mail-io1-f68.google.com ([209.85.166.68]:42585 "EHLO
+        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728766AbfJCIEe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 04:03:59 -0400
-Received: from mail-vk1-f180.google.com (mail-vk1-f180.google.com [209.85.221.180]) (authenticated)
-        by conssluserg-04.nifty.com with ESMTP id x9383tqX012642;
-        Thu, 3 Oct 2019 17:03:56 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-04.nifty.com x9383tqX012642
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1570089836;
-        bh=ywElMDcopw8TFE1ECGxXNxiLFEr+8ZD48GBXZOvm644=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=F1L8/y7QLw72synjYb9Nrgh27DtQuVR5PhMLQLq5Qa/mjbpkyEHZ5HfeuW8QlhyJg
-         5JHOoTYaBJBl3hE3HCQcpzm/elTzpF3sf/n+fN2uHdODHqPEpG76ghqMkvhGvW+/mS
-         dIxOb+GltXbkeG/LIOViWxJS3SXlWE/nSRPONckFrHog16dSzJzjpkwANkxXyBGPij
-         m0CKF2dnG151t8vUNDmCi3T9JV1yxMUABBw6soltSpDbemy0lwB842wXuGJ5joMzKD
-         +vKIIose2H318QJC9hmI3bLypBIqcpcHNmxjWJfvEOmLdc+4yrNTmGLCeEDSF3oXnx
-         YkkJ6RV85DBDQ==
-X-Nifty-SrcIP: [209.85.221.180]
-Received: by mail-vk1-f180.google.com with SMTP id q186so426896vkb.0;
-        Thu, 03 Oct 2019 01:03:55 -0700 (PDT)
-X-Gm-Message-State: APjAAAWCSlpm0fmg8IBBEcLqSgryxHlXrT/Rf56Z+SSVH7U0ueQcTLPO
-        XJ3yP4IZBDKH6+kyL7RqOwI1sYWL8YVMI+HWJHU=
-X-Google-Smtp-Source: APXvYqy5LNXAWTwk0S2UpLneDJtLdgCWOioEoR/q3SaJwmOCjBXrCwISUJUUU8/ZICI0x8tLSLnJXGXo3OPutoSdrdI=
-X-Received: by 2002:a1f:2343:: with SMTP id j64mr4251399vkj.84.1570089834846;
- Thu, 03 Oct 2019 01:03:54 -0700 (PDT)
+        Thu, 3 Oct 2019 04:04:34 -0400
+Received: by mail-io1-f68.google.com with SMTP id n197so3368578iod.9
+        for <linux-kernel@vger.kernel.org>; Thu, 03 Oct 2019 01:04:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=szeredi.hu; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=RFLlzP5Js98BS8nkgSfEvrEZLCP/SMDrxOQITXNt3eI=;
+        b=T+inIGthBvE2//4VZmd63eyRSLLLrR2dZV3XC6Gze72yu+iWc2TuhC9KAwqW1fcGZq
+         V4qnPy9VgsX44Sy3xvd4Qo2blktM9gmPmA0CVDmErzDIOibLMHDVtUXsl8nOoesSbJ0/
+         artzBJciGJ5N7rJi9zsfVOYKuofa7muPcE6pU=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=RFLlzP5Js98BS8nkgSfEvrEZLCP/SMDrxOQITXNt3eI=;
+        b=I+TUqqVtjxl1fOWkE/jPS3VtZ//y3qb+clhMEYb7uLJnWBYRFtcC4Cxz4M3KVv4Lzz
+         tmGk1gD7+w4TmjlLDIs6BjjifTpV+3lJ8uc5jQ10kbQhg9eW6XdkUARzUfMjAwxdDRtE
+         OUPWAWMXeiO4UkXhgefWHWUoMHULnJPe59y55YVnfqtaO9my0/9gSf4K9W2lRJgNrPQy
+         WwfQoSrN+msBU4MhTdmfDQ1cik8bpB0D/hq+4alLGnaHVUzzmPAstuPVYzcV8nCAuBys
+         qAxFRzkFJ5tw/dlvxfVWCmdBIyX+n0xk7JTUMbTYBtrea1Vsu0LJoacfBI011U16N8iP
+         gWCw==
+X-Gm-Message-State: APjAAAXZpFL8Ioee7qvufioY/AXhrrlcH7v+wHEZmROr4kmIQJgEVKxG
+        uwEJyJIlwnBhyeUEuT1hwGMHC5zi3mulVq81oBI4fg==
+X-Google-Smtp-Source: APXvYqyTGtMe8CACMxLAYuzPIkQ43lyohUju5qo0yntIo1HDn9G2UOfThJbdazHDgBUxaisYEda00vQaldPsOCX9KfA=
+X-Received: by 2002:a05:6e02:4d2:: with SMTP id f18mr8908437ils.174.1570089873408;
+ Thu, 03 Oct 2019 01:04:33 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190927093603.9140-1-yamada.masahiro@socionext.com>
- <20190927134108.GC187147@google.com> <20191002185701.GA29041@linux-8ccs>
-In-Reply-To: <20191002185701.GA29041@linux-8ccs>
-From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-Date:   Thu, 3 Oct 2019 17:03:18 +0900
-X-Gmail-Original-Message-ID: <CAK7LNAQy7FjBeXTA=R=-0Tm+6m0ENVin7SPFQWcvF8zJ2etvvg@mail.gmail.com>
-Message-ID: <CAK7LNAQy7FjBeXTA=R=-0Tm+6m0ENVin7SPFQWcvF8zJ2etvvg@mail.gmail.com>
-Subject: Re: [PATCH 0/7] module: various bug-fixes and clean-ups for module namespace
-To:     Jessica Yu <jeyu@kernel.org>
-Cc:     Matthias Maennich <maennich@google.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Martijn Coenen <maco@android.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Will Deacon <will@kernel.org>,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+References: <CAJfpegv-EQhvJUB0AUhJ=Xx8moHHQvkDGe-yUXHENyWvboBU3A@mail.gmail.com>
+ <1b09a159-bcec-63c9-df42-47d99f44d445@virtuozzo.com>
+In-Reply-To: <1b09a159-bcec-63c9-df42-47d99f44d445@virtuozzo.com>
+From:   Miklos Szeredi <miklos@szeredi.hu>
+Date:   Thu, 3 Oct 2019 10:04:22 +0200
+Message-ID: <CAJfpegvcef_rJ5VHdE91LAU2_=XrorsTZu_7JCPsJFo0aGwZmw@mail.gmail.com>
+Subject: Re: [PATCH] fuse: BUG_ON correction in fuse_dev_splice_write()
+To:     Vasily Averin <vvs@virtuozzo.com>
+Cc:     linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        Andrey Ryabinin <aryabinin@virtuozzo.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Jessica,
-
-On Thu, Oct 3, 2019 at 3:57 AM Jessica Yu <jeyu@kernel.org> wrote:
+On Mon, Aug 19, 2019 at 8:53 AM Vasily Averin <vvs@virtuozzo.com> wrote:
 >
-> +++ Matthias Maennich [27/09/19 14:41 +0100]:
-> >On Fri, Sep 27, 2019 at 06:35:56PM +0900, Masahiro Yamada wrote:
-> >>
-> >>I was hit by some problems caused by the module namespace feature
-> >>that was merged recently. At least, the breakage of
-> >>external module builds is a fatal one. I just took a look at the code
-> >>closer, and I noticed some more issues and improvements.
-> >>
-> >>I hope these patches are mostly OK.
-> >>The 4th patch might have room for argument since it is a trade-off
-> >>of "cleaner implermentation" vs "code size".
-> >>
-> >Thanks Masahiro for taking the time to improve the implementation of the
-> >symbol namespaces. These are all good points that you addressed!
+> commit 963545357202 ("fuse: reduce allocation size for splice_write")
+> changed size of bufs array, so BUG_ON which checks the index of the array
+> shold also be fixed.
 >
-> Agreed, thanks Masahiro for fixing up all the rough edges! Your series
-> of fixes look good to me, I will queue this up on modules-next this
-> week with the exception of patch 4 - Matthias, you are planning to
-> submit a patch that would supercede patch 04/07, right?
+> Fixes: 963545357202 ("fuse: reduce allocation size for splice_write")
+> Signed-off-by: Vasily Averin <vvs@virtuozzo.com>
+> ---
+>  fs/fuse/dev.c | 7 ++++---
+>  1 file changed, 4 insertions(+), 3 deletions(-)
 >
-> Thanks!
+> diff --git a/fs/fuse/dev.c b/fs/fuse/dev.c
+> index ea8237513dfa..f4ef6e01642c 100644
+> --- a/fs/fuse/dev.c
+> +++ b/fs/fuse/dev.c
+> @@ -2029,7 +2029,7 @@ static ssize_t fuse_dev_splice_write(struct pipe_inode_info *pipe,
+>                                      struct file *out, loff_t *ppos,
+>                                      size_t len, unsigned int flags)
+>  {
+> -       unsigned nbuf;
+> +       unsigned nbuf, bsize;
+>         unsigned idx;
+>         struct pipe_buffer *bufs;
+>         struct fuse_copy_state cs;
+> @@ -2043,7 +2043,8 @@ static ssize_t fuse_dev_splice_write(struct pipe_inode_info *pipe,
+>
+>         pipe_lock(pipe);
+>
+> -       bufs = kvmalloc_array(pipe->nrbufs, sizeof(struct pipe_buffer),
+> +       bsize = pipe->nrbufs;
+> +       bufs = kvmalloc_array(bsize, sizeof(struct pipe_buffer),
+>                               GFP_KERNEL);
+>         if (!bufs) {
+>                 pipe_unlock(pipe);
+> @@ -2064,7 +2065,7 @@ static ssize_t fuse_dev_splice_write(struct pipe_inode_info *pipe,
+>                 struct pipe_buffer *ibuf;
+>                 struct pipe_buffer *obuf;
+>
+> -               BUG_ON(nbuf >= pipe->buffers);
+> +               BUG_ON(nbuf >= bsize);
+>                 BUG_ON(!pipe->nrbufs);
 
+Better turn these into WARN_ON's..  Fixed and applied.
 
-I missed to fix one issue in v1.
-sym_add_exported() misses to set s->namespace
-if the struct symbol is already created by
-read_dump() or sym_update_crc().
-
-
-So, I just sent v2.
-
--- 
-Best Regards
-Masahiro Yamada
+Thanks,
+Miklos
