@@ -2,80 +2,112 @@ Return-Path: <SRS0=6dNS=X4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13AC7C32792
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:46:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D7ABCC10F14
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:46:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DC93120867
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:46:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AC87C22459
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:46:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1570121164;
+	bh=n0YP2zWRVCxk4rF17AJs7NMY8AhDufGUs2cq5yP0HdI=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=hkJ7GApoENbMsxc1Mki+mEiO7VLothLV7CnY1rCvdG8R2lHdQSW/ci6+CsGrkmwDv
+	 wFfwPC6ywKNwmTkWmKueoCA20NRji5ziXvoAiBTFqlcusBNR8jYMm/t8Zzdod/UiOU
+	 eNWyy6m07Squm6KEUj/qiffUdGo44RE3Ud8+DOqA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392880AbfJCQqC (ORCPT
+        id S2392886AbfJCQqE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 12:46:02 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:48602 "EHLO mx1.redhat.com"
+        Thu, 3 Oct 2019 12:46:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58838 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731237AbfJCQp6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1732423AbfJCQp6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 3 Oct 2019 12:45:58 -0400
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id C648065998;
-        Thu,  3 Oct 2019 16:45:58 +0000 (UTC)
-Received: from warthog.procyon.org.uk (ovpn-125-72.rdu2.redhat.com [10.10.125.72])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id DD3CE46;
-        Thu,  3 Oct 2019 16:45:57 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
- Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
- Kingdom.
- Registered in England and Wales under Company Registration No. 3798903
-Subject: [PATCH net-next] rxrpc: Add missing "new peer" trace
-From:   David Howells <dhowells@redhat.com>
-To:     netdev@vger.kernel.org
-Cc:     dhowells@redhat.com, linux-afs@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Date:   Thu, 03 Oct 2019 17:45:57 +0100
-Message-ID: <157012115701.21124.13973726693523106899.stgit@warthog.procyon.org.uk>
-User-Agent: StGit/unknown-version
+        by mail.kernel.org (Postfix) with ESMTPSA id 8DB95215EA;
+        Thu,  3 Oct 2019 16:45:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1570121157;
+        bh=n0YP2zWRVCxk4rF17AJs7NMY8AhDufGUs2cq5yP0HdI=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=lcdk7BHy4fGonZlYvD0OkiRxadkExY7FNI4I8fJDuV+oRdLc0puWQUaNCkMPZMdnd
+         ddAfjClY21bMfeMkdw+t3Xy1jL+bIz1h8c3EoIAskEsyOTd162mZdqhALRhKSGwHu2
+         0YR1EVo00a+CvkVIM+E/biL7pH60lhLV6JI7S36c=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Andrew Murray <andrew.murray@arm.com>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Will Deacon <will@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.3 174/344] jump_label: Dont warn on __exit jump entries
+Date:   Thu,  3 Oct 2019 17:52:19 +0200
+Message-Id: <20191003154557.391502578@linuxfoundation.org>
+X-Mailer: git-send-email 2.23.0
+In-Reply-To: <20191003154540.062170222@linuxfoundation.org>
+References: <20191003154540.062170222@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.38]); Thu, 03 Oct 2019 16:45:58 +0000 (UTC)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There was supposed to be a trace indicating that a new peer had been
-created.  Add it.
+From: Andrew Murray <andrew.murray@arm.com>
 
-Signed-off-by: David Howells <dhowells@redhat.com>
+[ Upstream commit 8f35eaa5f2de020073a48ad51112237c5932cfcc ]
+
+On architectures that discard .exit.* sections at runtime, a
+warning is printed for each jump label that is used within an
+in-kernel __exit annotated function:
+
+can't patch jump_label at ehci_hcd_cleanup+0x8/0x3c
+WARNING: CPU: 0 PID: 1 at kernel/jump_label.c:410 __jump_label_update+0x12c/0x138
+
+As these functions will never get executed (they are free'd along
+with the rest of initmem) - we do not need to patch them and should
+not display any warnings.
+
+The warning is displayed because the test required to satisfy
+jump_entry_is_init is based on init_section_contains (__init_begin to
+__init_end) whereas the test in __jump_label_update is based on
+init_kernel_text (_sinittext to _einittext) via kernel_text_address).
+
+Fixes: 19483677684b ("jump_label: Annotate entries that operate on __init code earlier")
+Signed-off-by: Andrew Murray <andrew.murray@arm.com>
+Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Acked-by: Mark Rutland <mark.rutland@arm.com>
+Signed-off-by: Will Deacon <will@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
+ kernel/jump_label.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
- net/rxrpc/peer_object.c |    2 ++
- 1 file changed, 2 insertions(+)
-
-diff --git a/net/rxrpc/peer_object.c b/net/rxrpc/peer_object.c
-index 9c3ac96f71cb..bf4dd6cf79a0 100644
---- a/net/rxrpc/peer_object.c
-+++ b/net/rxrpc/peer_object.c
-@@ -209,6 +209,7 @@ static void rxrpc_assess_MTU_size(struct rxrpc_sock *rx,
-  */
- struct rxrpc_peer *rxrpc_alloc_peer(struct rxrpc_local *local, gfp_t gfp)
- {
-+	const void *here = __builtin_return_address(0);
- 	struct rxrpc_peer *peer;
+diff --git a/kernel/jump_label.c b/kernel/jump_label.c
+index df3008419a1d0..cdb3ffab128b6 100644
+--- a/kernel/jump_label.c
++++ b/kernel/jump_label.c
+@@ -407,7 +407,9 @@ static bool jump_label_can_update(struct jump_entry *entry, bool init)
+ 		return false;
  
- 	_enter("");
-@@ -230,6 +231,7 @@ struct rxrpc_peer *rxrpc_alloc_peer(struct rxrpc_local *local, gfp_t gfp)
- 			peer->cong_cwnd = 3;
- 		else
- 			peer->cong_cwnd = 4;
-+		trace_rxrpc_peer(peer, rxrpc_peer_new, 1, here);
+ 	if (!kernel_text_address(jump_entry_code(entry))) {
+-		WARN_ONCE(1, "can't patch jump_label at %pS", (void *)jump_entry_code(entry));
++		WARN_ONCE(!jump_entry_is_init(entry),
++			  "can't patch jump_label at %pS",
++			  (void *)jump_entry_code(entry));
+ 		return false;
  	}
  
- 	_leave(" = %p", peer);
+-- 
+2.20.1
+
+
 
