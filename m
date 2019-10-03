@@ -2,54 +2,56 @@ Return-Path: <SRS0=6dNS=X4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-14.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 82FFCC32792
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:02:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED5F9C10F14
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:02:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 56B4621783
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:02:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B8E8D2070B
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:02:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570122143;
-	bh=vXDkuYne+Hy4F82vAvYwB/USPCaWPvacv5O9Bg8gQqY=;
+	s=default; t=1570122149;
+	bh=M1vlaAi5suffo46HsoG0DnNlWRvEJ7Gma9/swqx3m3w=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=F4bN6iSLWtgBWKFbdMGuRnP4zvzqdIxfsud3Ez4wTn4m1+6xiOaTnLzoSZ9hRzfP5
-	 k58jP/N+6TTJMlv4SwZfQuYVilz7oTfAdFWm48gQ/gGhLyEPpIW8bh/ZU9Hxts1+Ro
-	 sNBoVRrsRoXankRuqnYWIRqratd+hLOnB/FSdtkI=
+	b=JK8jrAvypJaRJ/e0FJUaUg2oL6V2KvFGia4gg80NjW+H3e589tJA4wj6C5JfEDeM/
+	 pGABLdMXw2EvqKBsdlPSs+jlOERW171yIbi+ILI5KERziNoU8NjgkB714P22eadpSh
+	 SQqEDiZMtqBXA/Tx+/cFBx0q/IBopOBtKDo9IkBk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732543AbfJCQnV (ORCPT
+        id S2393278AbfJCRC2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 12:43:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54646 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 13:02:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54388 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404849AbfJCQnQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:43:16 -0400
+        id S1732358AbfJCQnF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:43:05 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3584321783;
-        Thu,  3 Oct 2019 16:43:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6E2032070B;
+        Thu,  3 Oct 2019 16:43:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570120995;
-        bh=vXDkuYne+Hy4F82vAvYwB/USPCaWPvacv5O9Bg8gQqY=;
+        s=default; t=1570120985;
+        bh=M1vlaAi5suffo46HsoG0DnNlWRvEJ7Gma9/swqx3m3w=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Tpl5xkjqI0E1hQAUe1jR/1S1pHEq1dOTHhWI6xjrnhWHO8Z/NSLFNlUuRPb4gOZWe
-         BvwNcSgb4gLFKj7E/pX+X8ygHsQPzKc4Uh/7ppXPHG9XBMj2zW8N6CbRqi+3V9JIbI
-         Y4t7rp1KMLWjaX3Y3blnNUXGgjV+RbImTk8klA3o=
+        b=1Xyt/2rG7KgJ5y/MtOdm/J1drHP8C/05xc5cDMaqSnmyMa0e2fzg+TJSaySdUzFKD
+         KdDGtA9H2lNTUhhEjRzg97xvOIfYFjWPPk6ZqT9Ew8MufFPaUvrfPrkuZSl4q6/zOO
+         yMN+QXkfNyCFfXZJXhuZZoujXe15OvZwgueJzAgg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Colin Ian King <colin.king@canonical.com>,
-        Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
-        Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        stable@vger.kernel.org, Adrian Hunter <adrian.hunter@intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        =?UTF-8?q?Luis=20Cl=C3=A1udio=20Gon=C3=A7alves?= 
+        <lclaudio@redhat.com>, Namhyung Kim <namhyung@kernel.org>,
+        Taeung Song <treeze.taeung@gmail.com>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.3 116/344] media: vsp1: fix memory leak of dl on error return path
-Date:   Thu,  3 Oct 2019 17:51:21 +0200
-Message-Id: <20191003154551.648830907@linuxfoundation.org>
+Subject: [PATCH 5.3 104/344] perf config: Honour $PERF_CONFIG env var to specify alternate .perfconfig
+Date:   Thu,  3 Oct 2019 17:51:09 +0200
+Message-Id: <20191003154550.468326116@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191003154540.062170222@linuxfoundation.org>
 References: <20191003154540.062170222@linuxfoundation.org>
@@ -62,42 +64,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Colin Ian King <colin.king@canonical.com>
+From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-[ Upstream commit 70c55c1ad1a76e804ee5330e134674f5d2741cb7 ]
+[ Upstream commit 61a461fcbd62d42c29a1ea6a9cc3838ad9f49401 ]
 
-Currently when the call vsp1_dl_body_get fails and returns null the
-error return path leaks the allocation of dl. Fix this by kfree'ing
-dl before returning.
+We had this comment in Documentation/perf_counter/config.c, i.e. since
+when we got this from the git sources, but never really did that
+getenv("PERF_CONFIG"), do it now as I need to disable whatever
+~/.perfconfig root has so that tests parsing tool output are done for
+the expected default output or that we specify an alternate config file
+that when read will make the tools produce expected output.
 
-Addresses-Coverity: ("Resource leak")
-
-Fixes: 5d7936b8e27d ("media: vsp1: Convert display lists to use new body pool")
-Signed-off-by: Colin Ian King <colin.king@canonical.com>
-Reviewed-by: Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
-Signed-off-by: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Cc: Adrian Hunter <adrian.hunter@intel.com>
+Cc: Jiri Olsa <jolsa@kernel.org>
+Cc: Luis Cláudio Gonçalves <lclaudio@redhat.com>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Taeung Song <treeze.taeung@gmail.com>
+Fixes: 078006012401 ("perf_counter tools: add in basic glue from Git")
+Link: https://lkml.kernel.org/n/tip-jo209zac9rut0dz1rqvbdlgm@git.kernel.org
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/platform/vsp1/vsp1_dl.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ tools/perf/perf.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/drivers/media/platform/vsp1/vsp1_dl.c b/drivers/media/platform/vsp1/vsp1_dl.c
-index 104b6f5145364..d7b43037e500a 100644
---- a/drivers/media/platform/vsp1/vsp1_dl.c
-+++ b/drivers/media/platform/vsp1/vsp1_dl.c
-@@ -557,8 +557,10 @@ static struct vsp1_dl_list *vsp1_dl_list_alloc(struct vsp1_dl_manager *dlm)
+diff --git a/tools/perf/perf.c b/tools/perf/perf.c
+index 97e2628ea5dd1..d4e4d53e8b44b 100644
+--- a/tools/perf/perf.c
++++ b/tools/perf/perf.c
+@@ -441,6 +441,9 @@ int main(int argc, const char **argv)
  
- 	/* Get a default body for our list. */
- 	dl->body0 = vsp1_dl_body_get(dlm->pool);
--	if (!dl->body0)
-+	if (!dl->body0) {
-+		kfree(dl);
- 		return NULL;
-+	}
+ 	srandom(time(NULL));
  
- 	header_offset = dl->body0->max_entries * sizeof(*dl->body0->entries);
- 
++	/* Setting $PERF_CONFIG makes perf read _only_ the given config file. */
++	config_exclusive_filename = getenv("PERF_CONFIG");
++
+ 	err = perf_config(perf_default_config, NULL);
+ 	if (err)
+ 		return err;
 -- 
 2.20.1
 
