@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2539C10F14
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:36:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D48C4C10F14
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:36:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6AF6A20830
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:36:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 98FC120830
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:36:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570120602;
-	bh=aOmStEXpth9Ho7NutSuDgtWs7bvLiWs/8qUkr+s1Yvg=;
+	s=default; t=1570120607;
+	bh=ppvgryPXoAV87FTYKqBMl7LfUlYuP5FSY5V3yCvro1c=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=sJ9u/u60TW/QlI4ERBBQIt+p6fxAa6ZT+IkELS6EGrGF736gIcsOSLFqWIVHm8gPh
-	 fd9hHOyuDc4OhlR8pbxyszVNwhWbT4ThR33Dv/mrfWU1HPWGtBLN+bqGhapa2sbFlf
-	 WPuyYn1UDF5rJ2ISq0ENbzOJbnwUtikuTVdWvaX0=
+	b=tdzT9bbqObs8hI61W1Kmqg/nic5p0UMbJ9h3FlpZblGxV8czjzQb4g7EpBtckSpg1
+	 Fudkc2W4pCEoCKzEonxD5jDyZQK+NISrWiIjh5kNdyiZf4ouUDQMxTdKgqkizc8Bk4
+	 qmHIhZugsDFB0H3nqOentlxIQaAsT6CCxOrMtn8k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404421AbfJCQgl (ORCPT
+        id S2404012AbfJCQgq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 12:36:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45868 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 12:36:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45922 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404434AbfJCQgf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:36:35 -0400
+        id S2391750AbfJCQgk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:36:40 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id ED6E22086A;
-        Thu,  3 Oct 2019 16:36:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 66A4E2070B;
+        Thu,  3 Oct 2019 16:36:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570120594;
-        bh=aOmStEXpth9Ho7NutSuDgtWs7bvLiWs/8qUkr+s1Yvg=;
+        s=default; t=1570120599;
+        bh=ppvgryPXoAV87FTYKqBMl7LfUlYuP5FSY5V3yCvro1c=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=kyrlwBxpwMxKufYPe4mkpB78XlScWdwVymkRGRjEhHPAMFYk52ysXUCQwysVup6Zm
-         yg36SdF7thoglDhvm1KBwtleUN5tT3niRwNoBQbI9DsbbkK9zWff+7qgucA/ZbztgG
-         XHrMeWCvk15Si9jyMukKiNwT03nvxWKkOYzlcM2A=
+        b=ALKHEYHhbk999a26bF7YJAQYy8VsG8mJUUub/Omgx8eS/IJKw0FCzVbVPkamX54NC
+         p5L7ope6lF09al7OUAO5S69kAl8EzT0UScdjjccnGFXG2P4xMMCoBSpu+iRGmbSWGy
+         NCQ+ZqCB/yUw0Hm0wIBqv4y4tgDp7gou7zWZdrdg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Steve French <stfrench@microsoft.com>,
-        Pavel Shilovsky <pshilov@microsoft.com>
-Subject: [PATCH 5.2 279/313] smb3: fix leak in "open on server" perf counter
-Date:   Thu,  3 Oct 2019 17:54:17 +0200
-Message-Id: <20191003154600.540731635@linuxfoundation.org>
+        stable@vger.kernel.org, Mark Salyzyn <salyzyn@android.com>,
+        linux-security-module@vger.kernel.org, kernel-team@android.com,
+        Miklos Szeredi <mszeredi@redhat.com>
+Subject: [PATCH 5.2 281/313] ovl: filter of trusted xattr results in audit
+Date:   Thu,  3 Oct 2019 17:54:19 +0200
+Message-Id: <20191003154600.730861390@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191003154533.590915454@linuxfoundation.org>
 References: <20191003154533.590915454@linuxfoundation.org>
@@ -59,61 +60,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Steve French <stfrench@microsoft.com>
+From: Mark Salyzyn <salyzyn@android.com>
 
-commit d2f15428d6a0ebfc0edc364094d7c4a2de7037ed upstream.
+commit 5c2e9f346b815841f9bed6029ebcb06415caf640 upstream.
 
-We were not bumping up the "open on server" (num_remote_opens)
-counter (in some cases) on opens of the share root so
-could end up showing as a negative value.
+When filtering xattr list for reading, presence of trusted xattr
+results in a security audit log.  However, if there is other content
+no errno will be set, and if there isn't, the errno will be -ENODATA
+and not -EPERM as is usually associated with a lack of capability.
+The check does not block the request to list the xattrs present.
 
-CC: Stable <stable@vger.kernel.org>
-Signed-off-by: Steve French <stfrench@microsoft.com>
-Reviewed-by: Pavel Shilovsky <pshilov@microsoft.com>
+Switch to ns_capable_noaudit to reflect a more appropriate check.
+
+Signed-off-by: Mark Salyzyn <salyzyn@android.com>
+Cc: linux-security-module@vger.kernel.org
+Cc: kernel-team@android.com
+Cc: stable@vger.kernel.org # v3.18+
+Fixes: a082c6f680da ("ovl: filter trusted xattr for non-admin")
+Signed-off-by: Miklos Szeredi <mszeredi@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/cifs/smb2ops.c |    5 +++++
- fs/cifs/smb2pdu.c |    1 +
- 2 files changed, 6 insertions(+)
+ fs/overlayfs/inode.c |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
---- a/fs/cifs/smb2ops.c
-+++ b/fs/cifs/smb2ops.c
-@@ -743,6 +743,8 @@ int open_shroot(unsigned int xid, struct
- 	if (rc)
- 		goto oshr_exit;
+--- a/fs/overlayfs/inode.c
++++ b/fs/overlayfs/inode.c
+@@ -383,7 +383,8 @@ static bool ovl_can_list(const char *s)
+ 		return true;
  
-+	atomic_inc(&tcon->num_remote_opens);
-+
- 	o_rsp = (struct smb2_create_rsp *)rsp_iov[0].iov_base;
- 	oparms.fid->persistent_fid = o_rsp->PersistentFileId;
- 	oparms.fid->volatile_fid = o_rsp->VolatileFileId;
-@@ -1167,6 +1169,7 @@ smb2_set_ea(const unsigned int xid, stru
+ 	/* Never list trusted.overlay, list other trusted for superuser only */
+-	return !ovl_is_private_xattr(s) && capable(CAP_SYS_ADMIN);
++	return !ovl_is_private_xattr(s) &&
++	       ns_capable_noaudit(&init_user_ns, CAP_SYS_ADMIN);
+ }
  
- 	rc = compound_send_recv(xid, ses, flags, 3, rqst,
- 				resp_buftype, rsp_iov);
-+	/* no need to bump num_remote_opens because handle immediately closed */
- 
-  sea_exit:
- 	kfree(ea);
-@@ -1488,6 +1491,8 @@ smb2_ioctl_query_info(const unsigned int
- 				resp_buftype, rsp_iov);
- 	if (rc)
- 		goto iqinf_exit;
-+
-+	/* No need to bump num_remote_opens since handle immediately closed */
- 	if (qi.flags & PASSTHRU_FSCTL) {
- 		pqi = (struct smb_query_info __user *)arg;
- 		io_rsp = (struct smb2_ioctl_rsp *)rsp_iov[1].iov_base;
---- a/fs/cifs/smb2pdu.c
-+++ b/fs/cifs/smb2pdu.c
-@@ -2263,6 +2263,7 @@ int smb311_posix_mkdir(const unsigned in
- 	rqst.rq_iov = iov;
- 	rqst.rq_nvec = n_iov;
- 
-+	/* no need to inc num_remote_opens because we close it just below */
- 	trace_smb3_posix_mkdir_enter(xid, tcon->tid, ses->Suid, CREATE_NOT_FILE,
- 				    FILE_WRITE_ATTRIBUTES);
- 	/* resource #4: response buffer */
+ ssize_t ovl_listxattr(struct dentry *dentry, char *list, size_t size)
 
 
