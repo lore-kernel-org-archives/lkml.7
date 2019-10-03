@@ -2,160 +2,182 @@ Return-Path: <SRS0=6dNS=X4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 027EFC10F14
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:29:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD247C4CED1
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:29:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CE75320830
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:29:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 99F9920830
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:29:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="Ss2ZUDjL"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=ucr.edu header.i=@ucr.edu header.b="AHQhjqzN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730272AbfJCR2v (ORCPT
+        id S1730454AbfJCR3K (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 13:28:51 -0400
-Received: from mout.gmx.net ([212.227.17.21]:48675 "EHLO mout.gmx.net"
+        Thu, 3 Oct 2019 13:29:10 -0400
+Received: from mx4.ucr.edu ([138.23.248.66]:38989 "EHLO mx4.ucr.edu"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730170AbfJCR2q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 13:28:46 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-        s=badeba3b8450; t=1570123712;
-        bh=GQhmM6Q8Z1o5q9YHR4jherpt7IjBuXvMOjoid+hpyz0=;
-        h=X-UI-Sender-Class:From:To:Cc:Subject:Date;
-        b=Ss2ZUDjLmYXfujIZAHNHXSnEnADyrhXH1A8zurENP8iS0hQDzNH4vtQNxgOUDWicn
-         PPHPxdxGbwPrsreyYCMmOGvdpdQSO7UoWKAiBk9k/qW6Q1/gmJJPrPxI36P/mH0wIp
-         Xi0sRqyvodWv2ex4mG9ANf738gGZz2J4vby8gBNc=
-X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
-Received: from longitude ([89.0.25.131]) by mail.gmx.com (mrgmx105
- [212.227.17.168]) with ESMTPSA (Nemesis) id 1MzQkK-1huInQ1N68-00vQpU; Thu, 03
- Oct 2019 19:28:32 +0200
-From:   =?UTF-8?q?Jonathan=20Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>
-To:     intel-gfx@lists.freedesktop.org
-Cc:     =?UTF-8?q?Jonathan=20Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>,
-        Jani Nikula <jani.nikula@linux.intel.com>,
-        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-        Rodrigo Vivi <rodrigo.vivi@intel.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] drm/i915: Add Sphinx-compatible references to struct fields
-Date:   Thu,  3 Oct 2019 19:28:23 +0200
-Message-Id: <20191003172823.8955-1-j.neuschaefer@gmx.net>
-X-Mailer: git-send-email 2.20.1
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:uEoSon0QRk9LuiMg1o+ki0nsyjkCeAFzM81xtrmxJ8dlMknVTq0
- Y7bZxxpVEhVsRDG1BPwTD+x+JkptaSH1xtFfUymzW53FZtWhyXRyB94q0VqZXhE1ofO4nVU
- XvKsdg2Sao9ZlIgj5Ej8t+17h2Hlje/aQJZVtR0A6eS1r9QkCxthutGL7eSEgywv1C9me99
- io1GpODFaAVtlRD8x71zA==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:T9/OC7Ym66A=:NJ7P4FyBlwwnExsIKdfFOG
- rmD8UrUihtyOkpnEjFPD/7dhaFwACu4W3mL8Mu7xzW+mA4b/Z+y3JOf2wRNDJcdgj7RlAfmcW
- bTHovVmob3WcPdC0BNlp9hW9n8/5cXP5vOhu26MaWjA1DOz0NRoQtGLx+4lpCVsJg8hdv0Tln
- g8e3xztNkVRA74dnvFdYwycDkT+5INYJAE2ccoKs6qi1XkwPlACMdpAwb3D/1xR+DEH95uUJV
- RvAxbhXqC4VG+HhbLgbV4czSiqxIb2ZyJ7Qgs2caGWHSGrq/Sjjl8Y8VHpzve2snJxTWY1+xE
- AHVy8fGc9keOwr0qUtAgGdyiAPGF5FI++DyfgI1H2cJNE3ylV1YxH816+rcmaKzLEmy+XtT4d
- CSO4cfkMXBx4alz27KRmNMPkz6FyNN7u/XfOqoSS1Jf5Mp8goDdjVcdVqOrNasoKvf/dn7w5o
- 6PXZWIQZK8+C0RehCiLDkyOyI71vhmtSNiy8m2uXpRDCShVUAJFSMkX2ShgQMcdIi4ENKu2My
- GFgQz16LvJUSzEMEV3eJX+m+SHmNHYlhsAbt8IO7VW0ik+HZlMYCTbanEj6qH9vIx5kCxtxhp
- Id334+tQKz8aP+qL5Mzb+OPXWKb+tBZtYZo/JY+AvGL7S/Cw7WFpbnZ8Vh8wZkSeqR6f0qpRF
- EeloIX6C6Pbfxa8+WlrFYHAy9W5+Gf+8aipGvnskz4strnsR4hqACcpC6TQBhaCKWeT2nzYWt
- fs1verZmRKu8OR3cpLnSyU0G1P44gM9FhBvbFoFRzvfFrzQwvH2zg0T7CvJlHCQbBFuv+sfcO
- aHL5tyBicAy+FiEJWJVAs8F9LNle0IWzWtNeAWgQe2Tf1lESTVX7iq1Ajhu7VkFBdx7weOhsU
- lhpc4eQhp7vRsnfnAP5tK6Wr/lVPiFCUpbW9TeWIBvKizce5+BUZmGnq06Kq0lUkQ9D1DCav3
- 6XOGhG/fdJhpN9u4dW14GBlpr+oMyA8PDBolN/Q7LVkimla+bo/Q7lcYG4hYtmwt9p/CrLBTV
- FVRep2nXvXCYHu29JAcDWDMbZoYs18kCqMjUgQvXY9Gy2LwpgCNO4Q2/KsHOT9fzjKnRFxewe
- ykM7eypah980HnVRYNmYiFYmcSEWSc+uI9CSHxcLQG8kwOfnI0XnzwoyIUcijTKtVj2oleg3d
- BzEJFSavvANvBsTyT7FMANpTj+4iCcznjIuDpz42i7CouBKPL556eZlifWzNyqx1dP+DbMN5a
- sNb8oQDXSb+WB3kawU1oCMO/acQFCI9Oey6p/UXH67MIv36Lr2iq1/beI2og=
+        id S1729235AbfJCR3H (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 13:29:07 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=ucr.edu; i=@ucr.edu; q=dns/txt; s=selector3;
+  t=1570123745; x=1601659745;
+  h=from:to:cc:subject:date:message-id;
+  bh=Mr/HQci3u3rRGYq/s4Glr5VxHGEGmVqkkQJmECKmcB4=;
+  b=AHQhjqzNc2UfyZ+3qMvQ+o4JhiYWCMHZ22bWMQAPB/yT4qS/kRwkPBkz
+   Iaaxy9AguSgNBP3cNOTsIiD8KRETMC3PFqjh9TgjWJCc+O4f1yr+sE0UL
+   E722nB85rpdORrt3Fztv0xtV+UV7aKSkbv66wNgfGEMzW1RVMuglCnbAo
+   hy3wwv+2WT6XrRIjMdIotHRJ25T55sSRXTK5sFZSi0Lr5CAsssDgS3lYj
+   9ymHRC0A24Xdl8ioklwkxcCnYmpPooTYLOFYn91AeXR5MyivdOgKk6QUw
+   TiJ1vk39YgjizqwgapC72VVVm++UY4ObXeuWBCh3db3ENUN0h0fbB+01D
+   w==;
+IronPort-SDR: 0TfxothWkXzANr6f2vHDrfGnbPgE4y1jRaRyZ2uAKevfgSXPjjytDHA/xCL5p41caUNURz2GaP
+ DeyhtGkXrP2Z0u+JqZXCBSXlKleZYiVixQbPrWoFVDkDNg1OwIJeIftbeYQ0RvuaU3dIpLExCW
+ KvQLHP8DC3tooBBsZ3MTjk+omWXmGqknMLXEFemOH2aiqXwC2Q27yx1KxNCypo9VYv5gsCySwd
+ iz8HYl0/GzN7swpAoZO1mVYDx++jB2735GekhUheVjJhlpT8VjuVPY27f/8UMSGV9Q2OCMWRBq
+ unk=
+IronPort-PHdr: =?us-ascii?q?9a23=3ARk4yEBQf7v5kir4P4dqbeiUtO9psv+yvbD5Q0Y?=
+ =?us-ascii?q?Iujvd0So/mwa69bRCN2/xhgRfzUJnB7Loc0qyK6vumBTxLuM/Y+Fk5M7V0Hy?=
+ =?us-ascii?q?cfjssXmwFySOWkMmbcaMDQUiohAc5ZX0Vk9XzoeWJcGcL5ekGA6ibqtW1aFR?=
+ =?us-ascii?q?rwLxd6KfroEYDOkcu3y/qy+5rOaAlUmTaxe7x/IAi4oAnLucQbgoRuJrssxh?=
+ =?us-ascii?q?fUv3BFZ/lYyWR0KFyJgh3y/N2w/Jlt8yRRv/Iu6ctNWrjkcqo7ULJVEi0oP3?=
+ =?us-ascii?q?g668P3uxbDSxCP5mYHXWUNjhVIGQnF4wrkUZr3ryD3q/By2CiePc3xULA0RT?=
+ =?us-ascii?q?Gv5LplRRP0lCsKMSMy/XrJgcJskq1UvBOhpwR+w4HKZoGVKOF+db7Zcd8DWG?=
+ =?us-ascii?q?ZNQtpdWylHD4O5bosPFPEBPeder4nyulAAswKwDhSiBOPu1DBIgmL51rA+3+?=
+ =?us-ascii?q?kvDQ3K2QotFM8MvnvJttX4LKccX/6owqfGzjvNaOhb1Svh5IXSbhwsu+2AUa?=
+ =?us-ascii?q?52fMHMyUcvDQTFjlCIpIPnPjOU1+QNs3Wc7+F9Uu+ui28mqwFrrTiu2ssglo?=
+ =?us-ascii?q?fEi5kIyl/Y7yV12pg6KsClSENiZ9OvDZhetzmCOodoXs8vR3tktSU6x7Ecp5?=
+ =?us-ascii?q?K3YScHxI45yxLDd/CLa5WE7xPnWeqLPzt1inJodKihixuz60StyOLxW8+p21?=
+ =?us-ascii?q?hQtCVFiMPDtnUV2hzW7ciIV+Vy81+62TaKywDT8uZEIV0olabDK54u3Lowlp?=
+ =?us-ascii?q?0LvETGBCD2mUH2gLaOdkUg5+Sk8urnbqv6qpOALYN0hQb+MqMhmsy7H+s0KB?=
+ =?us-ascii?q?QBX2+e+eik1b3j+1P2QKlSg/EojqXUtIrWKMcbq6KjHQNZz4ku5wyhAzu6zN?=
+ =?us-ascii?q?gUhXwHI0hEeBKDgYjpIVbOIPXgAPa/glWskC1kx/HaMrH9DJjANWXDn6v7fb?=
+ =?us-ascii?q?pn9UFT1RczwchF551IErEBPO7zWkjpudzcDx85NRG0wun+BNV+yIweQ2SPDb?=
+ =?us-ascii?q?GdMK7Jr1+I6fwgI/OWaI8Wpjn9Mf4l6ODqjXMjnl8dZ6apjtM5cne9S8VnMU?=
+ =?us-ascii?q?WEZjK4k8UBGGZS5lEWUefwzlCOTGgAND6JQ6sg62RjW8qdBoDZS9Xo3+SM?=
+X-IronPort-Anti-Spam-Filtered: true
+X-IronPort-Anti-Spam-Result: =?us-ascii?q?A2HdCgAaL5Zdh8jWVdFlHgEGEoFcCwK?=
+ =?us-ascii?q?DXEwQjSSGLAEBBosmgQmFeoMLhSiBewEIAQEBDAEBLQIBAYRAgkgjNQgOAgM?=
+ =?us-ascii?q?JAQEFAQEBAQEFBAEBAhABAQEIDQkIKYVAQgEMAYFqKYM1CxYVUoEVAQUBNSI?=
+ =?us-ascii?q?5gkcBgXYUBaIkgQM8jCUziGYBCQ2BSAkBCIEiAYc0hFmBEIEHhGGEKIM9gkQ?=
+ =?us-ascii?q?EgTcBAQGLPQeJZ3CVYgEGAoIRFIF4kxQnhDyJP4tEAS2MEpsdAgoHBg8jgTA?=
+ =?us-ascii?q?BghBNJYFsCoFEUBAUgVsOCRWOLiEzgQiCc41iAQ?=
+X-IPAS-Result: =?us-ascii?q?A2HdCgAaL5Zdh8jWVdFlHgEGEoFcCwKDXEwQjSSGLAEBB?=
+ =?us-ascii?q?osmgQmFeoMLhSiBewEIAQEBDAEBLQIBAYRAgkgjNQgOAgMJAQEFAQEBAQEFB?=
+ =?us-ascii?q?AEBAhABAQEIDQkIKYVAQgEMAYFqKYM1CxYVUoEVAQUBNSI5gkcBgXYUBaIkg?=
+ =?us-ascii?q?QM8jCUziGYBCQ2BSAkBCIEiAYc0hFmBEIEHhGGEKIM9gkQEgTcBAQGLPQeJZ?=
+ =?us-ascii?q?3CVYgEGAoIRFIF4kxQnhDyJP4tEAS2MEpsdAgoHBg8jgTABghBNJYFsCoFEU?=
+ =?us-ascii?q?BAUgVsOCRWOLiEzgQiCc41iAQ?=
+X-IronPort-AV: E=Sophos;i="5.67,253,1566889200"; 
+   d="scan'208";a="80465613"
+Received: from mail-pl1-f200.google.com ([209.85.214.200])
+  by smtpmx4.ucr.edu with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 03 Oct 2019 10:29:03 -0700
+Received: by mail-pl1-f200.google.com with SMTP id f8so2169228plj.10
+        for <linux-kernel@vger.kernel.org>; Thu, 03 Oct 2019 10:29:04 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=7xuYVaL6kMkVdyoXuZH4xe6VghxajLsnhwu8EUF2ekg=;
+        b=g3fXJ7mHA78bTmyoi4z/IIoTj4FmcHL2235+LeWeNz9oySobqrZCKoDytP+3z+IVsy
+         TMaAA86Dw1F1zirzTSZ7c7Ta8fMrhsEQoUeJGNWF8LyjxoQhHenbjxP1BjYwYiDyOOBm
+         7bVMSjscO7R1QQhwVb+eFq4BkKu1yMqG/fh2sjM1k81J1Nidq9TY5RVX/V0dmwTgsYTy
+         tZxBwLsmdU605HGgv2RhOygpcraM1QsG0H3u0MSSHTvNqO01zgWBO5H3FZiE/RwEjjKD
+         FEs7341kGNVCSUqP78fjNsLpMvUPmROAf/QrXpkAXCVRWU3pyG/rBSuaI2YZs7/IA5NU
+         L/Dw==
+X-Gm-Message-State: APjAAAVSau8Q9GuL+TeRRSYMW841Wiqmtzxw5Ath7bhutHPM0zUUtNM+
+        7P0jaHuxIGlMJ8EyhPqmm3AqCYaE75HuZaSzhI9eSLxUE7k9Hv1pykP73FlKOAdnz+SmWL3PlfK
+        qczJZFmnkfH3ubnJPzGkGmB1u+w==
+X-Received: by 2002:a17:902:82cb:: with SMTP id u11mr10426926plz.313.1570123743271;
+        Thu, 03 Oct 2019 10:29:03 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqwSfAqTaew0JD5ZU0+Z9NkYE4T9Dt3wJBWjJZFhmQ0ZxSZ4KisCFXx7oPCag5yPjJxnTPRSIA==
+X-Received: by 2002:a17:902:82cb:: with SMTP id u11mr10426899plz.313.1570123742854;
+        Thu, 03 Oct 2019 10:29:02 -0700 (PDT)
+Received: from Yizhuo.cs.ucr.edu (yizhuo.cs.ucr.edu. [169.235.26.74])
+        by smtp.googlemail.com with ESMTPSA id c62sm4638873pfa.92.2019.10.03.10.29.01
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 03 Oct 2019 10:29:01 -0700 (PDT)
+From:   Yizhuo <yzhai003@ucr.edu>
+Cc:     csong@cs.ucr.edu, zhiyunq@cs.ucr.edu, Yizhuo <yzhai003@ucr.edu>,
+        Sebastian Reichel <sre@kernel.org>, linux-pm@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] power: supply: max17042_battery: fix some usage of uninitialized variables
+Date:   Thu,  3 Oct 2019 10:29:48 -0700
+Message-Id: <20191003172948.15834-1-yzhai003@ucr.edu>
+X-Mailer: git-send-email 2.17.1
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This fixes the following kernel-doc warnings and makes the corrsponding fi=
-elds
-show up in the generated HTML:
+Several functions in this file are trying to use regmap_read() to
+initialize the specific variable, however, if regmap_read() fails,
+the variable could be uninitialized but used directly, which is
+potentially unsafe. The return value of regmap_read() should be
+checked and handled. The same case also happens in function
+max17042_thread_handler() but it needs more effort to patch.
 
-./drivers/gpu/drm/i915/i915_drv.h:1143: warning: Incorrect use of kernel-d=
-oc format:          * State of the OA buffer.
-./drivers/gpu/drm/i915/i915_drv.h:1154: warning: Incorrect use of kernel-d=
-oc format:                  * Locks reads and writes to all head/tail stat=
-e
-./drivers/gpu/drm/i915/i915_drv.h:1176: warning: Incorrect use of kernel-d=
-oc format:                  * One 'aging' tail pointer and one 'aged' tail=
- pointer ready to
-./drivers/gpu/drm/i915/i915_drv.h:1188: warning: Incorrect use of kernel-d=
-oc format:                  * Index for the aged tail ready to read() data=
- up to.
-./drivers/gpu/drm/i915/i915_drv.h:1193: warning: Incorrect use of kernel-d=
-oc format:                  * A monotonic timestamp for when the current a=
-ging tail pointer
-./drivers/gpu/drm/i915/i915_drv.h:1199: warning: Incorrect use of kernel-d=
-oc format:                  * Although we can always read back the head po=
-inter register,
+Signed-off-by: Yizhuo <yzhai003@ucr.edu>
+---
+ drivers/power/supply/max17042_battery.c | 23 +++++++++++++++++++----
+ 1 file changed, 19 insertions(+), 4 deletions(-)
 
-Signed-off-by: Jonathan Neusch=C3=A4fer <j.neuschaefer@gmx.net>
-=2D--
- drivers/gpu/drm/i915/i915_drv.h | 7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/gpu/drm/i915/i915_drv.h b/drivers/gpu/drm/i915/i915_d=
-rv.h
-index 772154e4073e..55782e78f026 100644
-=2D-- a/drivers/gpu/drm/i915/i915_drv.h
-+++ b/drivers/gpu/drm/i915/i915_drv.h
-@@ -1140,7 +1140,7 @@ struct i915_perf_stream {
- 	int period_exponent;
-
- 	/**
--	 * State of the OA buffer.
-+	 * @oa_buffer: State of the OA buffer.
- 	 */
- 	struct {
- 		struct i915_vma *vma;
-@@ -1151,6 +1151,7 @@ struct i915_perf_stream {
- 		int size_exponent;
-
- 		/**
-+		 * @oa_buffer.ptr_lock:
- 		 * Locks reads and writes to all head/tail state
- 		 *
- 		 * Consider: the head and tail pointer state needs to be read
-@@ -1173,6 +1174,7 @@ struct i915_perf_stream {
- 		spinlock_t ptr_lock;
-
- 		/**
-+		 * @oa_buffer.tails:
- 		 * One 'aging' tail pointer and one 'aged' tail pointer ready to
- 		 * used for reading.
- 		 *
-@@ -1185,17 +1187,20 @@ struct i915_perf_stream {
- 		} tails[2];
-
- 		/**
-+		 * @oa_buffer.aged_tail_idx:
- 		 * Index for the aged tail ready to read() data up to.
- 		 */
- 		unsigned int aged_tail_idx;
-
- 		/**
-+		 * @oa_buffer.aging_timestamp:
- 		 * A monotonic timestamp for when the current aging tail pointer
- 		 * was read; used to determine when it is old enough to trust.
- 		 */
- 		u64 aging_timestamp;
-
- 		/**
-+		 * @oa_buffer.head:
- 		 * Although we can always read back the head pointer register,
- 		 * we prefer to avoid trusting the HW state, just to avoid any
- 		 * risk that some hardware condition could * somehow bump the
-=2D-
-2.20.1
+diff --git a/drivers/power/supply/max17042_battery.c b/drivers/power/supply/max17042_battery.c
+index e6a2dacaa730..b897776a2749 100644
+--- a/drivers/power/supply/max17042_battery.c
++++ b/drivers/power/supply/max17042_battery.c
+@@ -675,8 +675,12 @@ static void max17042_reset_vfsoc0_reg(struct max17042_chip *chip)
+ {
+ 	unsigned int vfSoc;
+ 	struct regmap *map = chip->regmap;
++	int ret;
++
++	ret = regmap_read(map, MAX17042_VFSOC, &vfSoc);
++	if (ret)
++		return;
+ 
+-	regmap_read(map, MAX17042_VFSOC, &vfSoc);
+ 	regmap_write(map, MAX17042_VFSOC0Enable, VFSOC0_UNLOCK);
+ 	max17042_write_verify_reg(map, MAX17042_VFSOC0, vfSoc);
+ 	regmap_write(map, MAX17042_VFSOC0Enable, VFSOC0_LOCK);
+@@ -686,12 +690,18 @@ static void max17042_load_new_capacity_params(struct max17042_chip *chip)
+ {
+ 	u32 full_cap0, rep_cap, dq_acc, vfSoc;
+ 	u32 rem_cap;
++	int ret;
+ 
+ 	struct max17042_config_data *config = chip->pdata->config_data;
+ 	struct regmap *map = chip->regmap;
+ 
+-	regmap_read(map, MAX17042_FullCAP0, &full_cap0);
+-	regmap_read(map, MAX17042_VFSOC, &vfSoc);
++	ret = regmap_read(map, MAX17042_FullCAP0, &full_cap0);
++	if (ret)
++		return;
++
++	ret = regmap_read(map, MAX17042_VFSOC, &vfSoc);
++	if (ret)
++		return;
+ 
+ 	/* fg_vfSoc needs to shifted by 8 bits to get the
+ 	 * perc in 1% accuracy, to get the right rem_cap multiply
+@@ -1108,7 +1118,12 @@ static int max17042_probe(struct i2c_client *client,
+ 	if (!client->irq)
+ 		regmap_write(chip->regmap, MAX17042_SALRT_Th, 0xff00);
+ 
+-	regmap_read(chip->regmap, MAX17042_STATUS, &val);
++	ret = regmap_read(chip->regmap, MAX17042_STATUS, &val);
++	if (ret) {
++		dev_err(&client->dev, "Failed to get MAX17042_STATUS.\n");
++		return ret;
++	}
++
+ 	if (val & STATUS_POR_BIT) {
+ 		INIT_WORK(&chip->work, max17042_init_worker);
+ 		ret = devm_add_action(&client->dev, max17042_stop_work, chip);
+-- 
+2.17.1
 
