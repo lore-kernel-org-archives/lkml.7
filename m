@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CD9D6C32792
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:49:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B1A6C10F14
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:49:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 99E1921783
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:49:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4278021783
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:49:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570121383;
-	bh=4RZYoUsuUQLZ4s568q0GUzU5T/LBcXRptdcGVSEtYSw=;
+	s=default; t=1570121387;
+	bh=A/fluV88cdCtFiDoTo2oHXuBD3ua79iA+SvIybnQ9+4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=dd0i3Sn2GzpTA/WMbDymO7hlwO/oUVSFXsEtHIE4cL/2sDuIfDeUTcVnH2akr3k2K
-	 hNtjbbIT8bgFptdgZQx6OpOVHuO4mt0QwXTP07CQUFQAnGkiypA02+b8SwA6GvpcBE
-	 x3L5zEOl7450578Kyst4Eu+oPFGCXKDJghP2JSrE=
+	b=rmzQfH4Or+k1vrmRC6W3D4DmZagqFCWz3ED2EQQ6PQmjUQ7MTl0bOMEmClTMGFkKD
+	 UCbfSwvVCQDPSVVqZWJjT1uNMLC0qevIoy07NmWnTY/vZ56pPfkwcHUp0w2fSPzega
+	 Zw7vsY0s+iXSZmfQKJscLp6iNpOkdUZr5YUEuof8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404773AbfJCQtn (ORCPT
+        id S2405844AbfJCQtq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 12:49:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36264 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 12:49:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36214 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2393086AbfJCQti (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:49:38 -0400
+        id S2405291AbfJCQtf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:49:35 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 754892070B;
-        Thu,  3 Oct 2019 16:49:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AC852215EA;
+        Thu,  3 Oct 2019 16:49:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570121378;
-        bh=4RZYoUsuUQLZ4s568q0GUzU5T/LBcXRptdcGVSEtYSw=;
+        s=default; t=1570121375;
+        bh=A/fluV88cdCtFiDoTo2oHXuBD3ua79iA+SvIybnQ9+4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Sk2xv3Ux/7o26KLdb+sCj17HkxGJNPqMh+JgURb+strcHxH8SaB5aJKJeRb5c5wyP
-         jnhrCIOjUDLbzR0c5DsCK2cLnhQbjJSC/AiBof6UpdH37eBwH5idBKUp58nd1kY3Dg
-         t9mCLAF92XSMxXdXc93i/t09rustW1Wx2zw5tx6o=
+        b=azPH2OGNRDCa+VnjxGO/3Sf5BEmaiRmYN+lrSjldRErIgcgtG/QpVWFBrFlU6W54O
+         Mlt4EkmM3Z0DhxmhMfeGysd0Jh7oYwcQJt5uSabMcqxaCyl9c0kZJQlA1kkOsDnubw
+         wJd9zs355+5KN5AZldgG9iouE7bc41CPozOtvJB0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, linux-stable@vger.kernel.org,
         Stefan Berger <stefanb@linux.ibm.com>,
         Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Subject: [PATCH 5.3 255/344] tpm_tis_core: Set TPM_CHIP_FLAG_IRQ before probing for interrupts
-Date:   Thu,  3 Oct 2019 17:53:40 +0200
-Message-Id: <20191003154605.647615518@linuxfoundation.org>
+Subject: [PATCH 5.3 254/344] tpm_tis_core: Turn on the TPM before probing IRQs
+Date:   Thu,  3 Oct 2019 17:53:39 +0200
+Message-Id: <20191003154605.551941556@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191003154540.062170222@linuxfoundation.org>
 References: <20191003154540.062170222@linuxfoundation.org>
@@ -62,31 +62,40 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Stefan Berger <stefanb@linux.ibm.com>
 
-commit 1ea32c83c699df32689d329b2415796b7bfc2f6e upstream.
+commit 5b359c7c43727e624eac3efc7ad21bd2defea161 upstream.
 
-The tpm_tis_core has to set the TPM_CHIP_FLAG_IRQ before probing for
-interrupts since there is no other place in the code that would set
-it.
+The interrupt probing sequence in tpm_tis_core cannot obviously run with
+the TPM power gated. Power on the TPM with tpm_chip_start() before
+probing IRQ's. Turn it off once the probing is complete.
 
 Cc: linux-stable@vger.kernel.org
-Fixes: 570a36097f30 ("tpm: drop 'irq' from struct tpm_vendor_specific")
+Fixes: a3fbfae82b4c ("tpm: take TPM chip power gating out of tpm_transmit()")
 Signed-off-by: Stefan Berger <stefanb@linux.ibm.com>
+Reviewed-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
 Signed-off-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/char/tpm/tpm_tis_core.c |    1 +
- 1 file changed, 1 insertion(+)
+ drivers/char/tpm/tpm_tis_core.c |    2 ++
+ 1 file changed, 2 insertions(+)
 
 --- a/drivers/char/tpm/tpm_tis_core.c
 +++ b/drivers/char/tpm/tpm_tis_core.c
-@@ -981,6 +981,7 @@ int tpm_tis_core_init(struct device *dev
+@@ -980,6 +980,7 @@ int tpm_tis_core_init(struct device *dev
+ 			goto out_err;
  		}
  
- 		tpm_chip_start(chip);
-+		chip->flags |= TPM_CHIP_FLAG_IRQ;
++		tpm_chip_start(chip);
  		if (irq) {
  			tpm_tis_probe_irq_single(chip, intmask, IRQF_SHARED,
  						 irq);
+@@ -989,6 +990,7 @@ int tpm_tis_core_init(struct device *dev
+ 		} else {
+ 			tpm_tis_probe_irq(chip, intmask);
+ 		}
++		tpm_chip_stop(chip);
+ 	}
+ 
+ 	rc = tpm_chip_register(chip);
 
 
