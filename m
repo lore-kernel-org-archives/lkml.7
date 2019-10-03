@@ -4,52 +4,57 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 655A9C32792
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:26:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC0C5C10F14
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:26:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2DED2215EA
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:26:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B15F021783
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:26:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570119990;
-	bh=HlnVsCceNYZyYai/sxKuhEPWoP8UASBPHV6OlRRXLRg=;
+	s=default; t=1570119994;
+	bh=B3jORLsZU6SGFcivwU1E9QJ9P/q6jWck3+hwfy6zCA0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=13hWg8ir3UuTyDiCB2mppGeNuJn5EHPWgZP1aKXd80KVBmI8PaQkAf2h32HnszKSM
-	 X5WmM75ntmz6lZC3dbD9H6OiyQtfgr7rVcFtRokDRCefw94ypYO9MDLErGfHNRZyJi
-	 c8WpnLBx6naqWdpzLOhDgq+Z6G4dWPH2cwHwxeTc=
+	b=F4gYB2D03xnEn8RssZxKv+UiMN+jTpfyAC5gK2afecj/3o9WIVPritW7jDwOpaBOI
+	 yoV12xfnDprtJB3R9pAw44JxilTIffOG8WttImxIJwGLIc99Qh7f+QfcWN5AuGenQz
+	 jDqVP6XbsZ9icHjZ7LKNhmR8W+lmNGB/BY7F+5ZM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391080AbfJCQ03 (ORCPT
+        id S2391093AbfJCQ0e (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 12:26:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57538 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 12:26:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57600 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730584AbfJCQ00 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:26:26 -0400
+        id S2389945AbfJCQ02 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:26:28 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BE5CB2133F;
-        Thu,  3 Oct 2019 16:26:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3E7252133F;
+        Thu,  3 Oct 2019 16:26:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570119985;
-        bh=HlnVsCceNYZyYai/sxKuhEPWoP8UASBPHV6OlRRXLRg=;
+        s=default; t=1570119987;
+        bh=B3jORLsZU6SGFcivwU1E9QJ9P/q6jWck3+hwfy6zCA0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=h3/zcTSAVgON5Hs0nK4DITuRkNeM7gh1BJJYPIPv9MFgysknvfivn7oNlgwC32o0C
-         TrwBy+t/GhJf9wyH5RUfjBT062AebSY6zurlzBrN+s4it32PPcYNhMLsEQ2BmLIxeF
-         NJiQnXyhPHJefesIBH3VGBaGz7VTTp6NpmryOmng=
+        b=EKm1JO2QxRpTXq8PLELXkFb2DAQc5HTkZfMVZiSbuJBci3DbFuS23juT3/e5m5VSV
+         6N7Xi6tcPEk5xQb5gloGj24d551fpAOO5bkU1ahScKRZlUw+EY9ut5K3+bm3+nhDIY
+         jnvAJIeDQvXrumKvuPhwZ1V8FHJLLDISru8ACnV4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Phil Edworthy <phil.edworthy@renesas.com>,
-        Gareth Williams <gareth.williams.jx@renesas.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Mark Brown <broonie@kernel.org>,
+        stable@vger.kernel.org, Juri Lelli <juri.lelli@redhat.com>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        =?UTF-8?q?Michal=20Koutn=C3=BD?= <mkoutny@suse.com>,
+        Daniel Bristot de Oliveira <bristot@redhat.com>,
+        Tejun Heo <tj@kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>, lizefan@huawei.com,
+        longman@redhat.com, luca.abeni@santannapisa.it,
+        rostedt@goodmis.org, Ingo Molnar <mingo@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 037/313] spi: dw-mmio: Clock should be shut when error occurs
-Date:   Thu,  3 Oct 2019 17:50:15 +0200
-Message-Id: <20191003154536.898881972@linuxfoundation.org>
+Subject: [PATCH 5.2 055/313] sched/core: Fix CPU controller for !RT_GROUP_SCHED
+Date:   Thu,  3 Oct 2019 17:50:33 +0200
+Message-Id: <20191003154538.487851087@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191003154533.590915454@linuxfoundation.org>
 References: <20191003154533.590915454@linuxfoundation.org>
@@ -62,42 +67,79 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+From: Juri Lelli <juri.lelli@redhat.com>
 
-[ Upstream commit 3da9834d9381dd99273f2ad4e6d096c9187dc4f2 ]
+[ Upstream commit a07db5c0865799ebed1f88be0df50c581fb65029 ]
 
-When optional clock requesting fails, the main clock is still up and running,
-we should shut it down in such caee.
+On !CONFIG_RT_GROUP_SCHED configurations it is currently not possible to
+move RT tasks between cgroups to which CPU controller has been attached;
+but it is oddly possible to first move tasks around and then make them
+RT (setschedule to FIFO/RR).
 
-Fixes: 560ee7e91009 ("spi: dw: Add support for an optional interface clock")
-Cc: Phil Edworthy <phil.edworthy@renesas.com>
-Cc: Gareth Williams <gareth.williams.jx@renesas.com>
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Reviewed-by: Gareth Williams <gareth.williams.jx@renesas.com>
-Link: https://lore.kernel.org/r/20190710114243.30101-1-andriy.shevchenko@linux.intel.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
+E.g.:
+
+  # mkdir /sys/fs/cgroup/cpu,cpuacct/group1
+  # chrt -fp 10 $$
+  # echo $$ > /sys/fs/cgroup/cpu,cpuacct/group1/tasks
+  bash: echo: write error: Invalid argument
+  # chrt -op 0 $$
+  # echo $$ > /sys/fs/cgroup/cpu,cpuacct/group1/tasks
+  # chrt -fp 10 $$
+  # cat /sys/fs/cgroup/cpu,cpuacct/group1/tasks
+  2345
+  2598
+  # chrt -p 2345
+  pid 2345's current scheduling policy: SCHED_FIFO
+  pid 2345's current scheduling priority: 10
+
+Also, as Michal noted, it is currently not possible to enable CPU
+controller on unified hierarchy with !CONFIG_RT_GROUP_SCHED (if there
+are any kernel RT threads in root cgroup, they can't be migrated to the
+newly created CPU controller's root in cgroup_update_dfl_csses()).
+
+Existing code comes with a comment saying the "we don't support RT-tasks
+being in separate groups". Such comment is however stale and belongs to
+pre-RT_GROUP_SCHED times. Also, it doesn't make much sense for
+!RT_GROUP_ SCHED configurations, since checks related to RT bandwidth
+are not performed at all in these cases.
+
+Make moving RT tasks between CPU controller groups viable by removing
+special case check for RT (and DEADLINE) tasks.
+
+Signed-off-by: Juri Lelli <juri.lelli@redhat.com>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Reviewed-by: Michal Koutný <mkoutny@suse.com>
+Reviewed-by: Daniel Bristot de Oliveira <bristot@redhat.com>
+Acked-by: Tejun Heo <tj@kernel.org>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: lizefan@huawei.com
+Cc: longman@redhat.com
+Cc: luca.abeni@santannapisa.it
+Cc: rostedt@goodmis.org
+Link: https://lkml.kernel.org/r/20190719063455.27328-1-juri.lelli@redhat.com
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/spi/spi-dw-mmio.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ kernel/sched/core.c | 4 ----
+ 1 file changed, 4 deletions(-)
 
-diff --git a/drivers/spi/spi-dw-mmio.c b/drivers/spi/spi-dw-mmio.c
-index 18c06568805e7..86789dbaf5771 100644
---- a/drivers/spi/spi-dw-mmio.c
-+++ b/drivers/spi/spi-dw-mmio.c
-@@ -172,8 +172,10 @@ static int dw_spi_mmio_probe(struct platform_device *pdev)
- 
- 	/* Optional clock needed to access the registers */
- 	dwsmmio->pclk = devm_clk_get_optional(&pdev->dev, "pclk");
--	if (IS_ERR(dwsmmio->pclk))
--		return PTR_ERR(dwsmmio->pclk);
-+	if (IS_ERR(dwsmmio->pclk)) {
-+		ret = PTR_ERR(dwsmmio->pclk);
-+		goto out_clk;
-+	}
- 	ret = clk_prepare_enable(dwsmmio->pclk);
- 	if (ret)
- 		goto out_clk;
+diff --git a/kernel/sched/core.c b/kernel/sched/core.c
+index 275f470812440..b78986ce1f6b0 100644
+--- a/kernel/sched/core.c
++++ b/kernel/sched/core.c
+@@ -6513,10 +6513,6 @@ static int cpu_cgroup_can_attach(struct cgroup_taskset *tset)
+ #ifdef CONFIG_RT_GROUP_SCHED
+ 		if (!sched_rt_can_attach(css_tg(css), task))
+ 			return -EINVAL;
+-#else
+-		/* We don't support RT-tasks being in separate groups */
+-		if (task->sched_class != &fair_sched_class)
+-			return -EINVAL;
+ #endif
+ 		/*
+ 		 * Serialize against wake_up_new_task() such that if its
 -- 
 2.20.1
 
