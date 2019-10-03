@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A0434C4CED1
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:08:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DBFFC10F14
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:08:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7624A215EA
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:08:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 551B720865
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:08:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570118909;
-	bh=A555abNMGKAMSAA9vFOnsYgjp6wzl2sHZDVCuaaJFxo=;
+	s=default; t=1570118913;
+	bh=7dFsxG1YLl3GjuYFLgokzQIzvV40LA4esZrNSpI38To=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=F8dN9nucUkwW4RR9d1XhIwwNZaWBnmM1fW0Zwx1roQYcJA+mBvcdIZ9Wagc08U/EA
-	 NK4+SQ564xpEnBn4/q4uTV7ZMjAp7HNil7sR8iQgHV7U5zRiBJcBDe9//S62qLlq7l
-	 6E8YIc3mXfEgdAm24vok/epH74OGwH6duybrpHDY=
+	b=kvye3GZhTV8ZBpy3F6wFB2gRcMLGCyvhkNWBYuzXZioOTNnTGYYN9g8O1sWupO7lW
+	 s92gH6/EM2y0IyoAYYczSeTQSHrbEmdiAVnT55vftkzdhV0ZeLz24QzOVLjTfNRdt4
+	 Cpkp80VjBpCfAwJ8gxEZvPs61FnSVY7WglRe3X40=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733156AbfJCQI3 (ORCPT
+        id S1730993AbfJCQIb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 12:08:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56626 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 12:08:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56688 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731054AbfJCQIZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:08:25 -0400
+        id S1731886AbfJCQI0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:08:26 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E64EF20865;
-        Thu,  3 Oct 2019 16:08:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8940B215EA;
+        Thu,  3 Oct 2019 16:08:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570118903;
-        bh=A555abNMGKAMSAA9vFOnsYgjp6wzl2sHZDVCuaaJFxo=;
+        s=default; t=1570118906;
+        bh=7dFsxG1YLl3GjuYFLgokzQIzvV40LA4esZrNSpI38To=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ijgosLDJJYybiQgPhTsPWyo7iJUnyi6LpfczHGtB6BbYFHxd1C/t/Gb4T1xoNRYaj
-         oQlg+Xel7rGvwsMkdD1hvCmhAdLa49/2cTSwNkzbch5TYXwOogLjdz0ec/5vGaB1Ax
-         5NfDQ31k3RfWRcj9qujxoulqRCDH9IoZr9md5fPM=
+        b=Ut0Bp6+3nrN7n8VPOO9gyAuEvnMPaIOFGitn5ysBOED33Nf1DFoGitGIv+GCUrOZN
+         68hpQm6YV+If3G36grGB84nasmccQuyhDnG52LmzSzjQGot7DwyeEGfblo2D+K/Tdy
+         kcX1Kwe8emax3sJCQdjBWnz79J3shqEAn6deVjzo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Chris Wilson <chris@chris-wilson.co.uk>,
-        Takashi Iwai <tiwai@suse.de>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 053/185] ALSA: hda: Flush interrupts on disabling
-Date:   Thu,  3 Oct 2019 17:52:11 +0200
-Message-Id: <20191003154449.679469915@linuxfoundation.org>
+        stable@vger.kernel.org, Axel Lin <axel.lin@ingics.com>,
+        Mark Brown <broonie@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 054/185] regulator: lm363x: Fix off-by-one n_voltages for lm3632 ldo_vpos/ldo_vneg
+Date:   Thu,  3 Oct 2019 17:52:12 +0200
+Message-Id: <20191003154449.808487786@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191003154437.541662648@linuxfoundation.org>
 References: <20191003154437.541662648@linuxfoundation.org>
@@ -59,75 +60,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chris Wilson <chris@chris-wilson.co.uk>
+From: Axel Lin <axel.lin@ingics.com>
 
-[ Upstream commit caa8422d01e983782548648e125fd617cadcec3f ]
+[ Upstream commit 1e2cc8c5e0745b545d4974788dc606d678b6e564 ]
 
-I was looking at
+According to the datasheet https://www.ti.com/lit/ds/symlink/lm3632a.pdf
+Table 20. VPOS Bias Register Field Descriptions VPOS[5:0]
+Sets the Positive Display Bias (LDO) Voltage (50 mV per step)
+000000: 4 V
+000001: 4.05 V
+000010: 4.1 V
+....................
+011101: 5.45 V
+011110: 5.5 V (Default)
+011111: 5.55 V
+....................
+100111: 5.95 V
+101000: 6 V
+Note: Codes 101001 to 111111 map to 6 V
 
-<4> [241.835158] general protection fault: 0000 [#1] PREEMPT SMP PTI
-<4> [241.835181] CPU: 1 PID: 214 Comm: kworker/1:3 Tainted: G     U            5.2.0-CI-CI_DRM_6509+ #1
-<4> [241.835199] Hardware name: Dell Inc.                 OptiPlex 745                 /0GW726, BIOS 2.3.1  05/21/2007
-<4> [241.835234] Workqueue: events snd_hdac_bus_process_unsol_events [snd_hda_core]
-<4> [241.835256] RIP: 0010:input_handle_event+0x16d/0x5e0
-<4> [241.835270] Code: 48 8b 93 58 01 00 00 8b 52 08 89 50 04 8b 83 f8 06 00 00 48 8b 93 00 07 00 00 8d 70 01 48 8d 04 c2 83 e1 08 89 b3 f8 06 00 00 <66> 89 28 66 44 89 60 02 44 89 68 04 8b 93 f8 06 00 00 0f 84 fd fe
-<4> [241.835304] RSP: 0018:ffffc9000019fda0 EFLAGS: 00010046
-<4> [241.835317] RAX: 6b6b6b6ec6c6c6c3 RBX: ffff8880290fefc8 RCX: 0000000000000000
-<4> [241.835332] RDX: 000000006b6b6b6b RSI: 000000006b6b6b6c RDI: 0000000000000046
-<4> [241.835347] RBP: 0000000000000005 R08: 0000000000000000 R09: 0000000000000001
-<4> [241.835362] R10: ffffc9000019faa0 R11: 0000000000000000 R12: 0000000000000004
-<4> [241.835377] R13: 0000000000000000 R14: ffff8880290ff1d0 R15: 0000000000000293
-<4> [241.835392] FS:  0000000000000000(0000) GS:ffff88803de80000(0000) knlGS:0000000000000000
-<4> [241.835409] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-<4> [241.835422] CR2: 00007ffe9a99e9b7 CR3: 000000002f588000 CR4: 00000000000006e0
-<4> [241.835436] Call Trace:
-<4> [241.835449]  input_event+0x45/0x70
-<4> [241.835464]  snd_jack_report+0xdc/0x100
-<4> [241.835490]  snd_hda_jack_report_sync+0x83/0xc0 [snd_hda_codec]
-<4> [241.835512]  snd_hdac_bus_process_unsol_events+0x5a/0x70 [snd_hda_core]
-<4> [241.835530]  process_one_work+0x245/0x610
+The LM3632_LDO_VSEL_MAX should be 0b101000 (0x28), so the maximum voltage
+can match the datasheet.
 
-which has the hallmarks of a worker queued from interrupt after it was
-supposedly cancelled (note the POISON_FREE), and I could not see where
-the interrupt would be flushed on shutdown so added the likely suspects.
-
-Bugzilla: https://bugs.freedesktop.org/show_bug.cgi?id=111174
-Signed-off-by: Chris Wilson <chris@chris-wilson.co.uk>
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Fixes: 3a8d1a73a037 ("regulator: add LM363X driver")
+Signed-off-by: Axel Lin <axel.lin@ingics.com>
+Link: https://lore.kernel.org/r/20190626132632.32629-1-axel.lin@ingics.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/hda/hdac_controller.c | 2 ++
- sound/pci/hda/hda_intel.c   | 2 +-
- 2 files changed, 3 insertions(+), 1 deletion(-)
+ drivers/regulator/lm363x-regulator.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/sound/hda/hdac_controller.c b/sound/hda/hdac_controller.c
-index 778b42ba90b80..3377f0bc28280 100644
---- a/sound/hda/hdac_controller.c
-+++ b/sound/hda/hdac_controller.c
-@@ -442,6 +442,8 @@ static void azx_int_disable(struct hdac_bus *bus)
- 	list_for_each_entry(azx_dev, &bus->stream_list, list)
- 		snd_hdac_stream_updateb(azx_dev, SD_CTL, SD_INT_MASK, 0);
+diff --git a/drivers/regulator/lm363x-regulator.c b/drivers/regulator/lm363x-regulator.c
+index ce5f7d9ad475f..30f576a5daf18 100644
+--- a/drivers/regulator/lm363x-regulator.c
++++ b/drivers/regulator/lm363x-regulator.c
+@@ -33,7 +33,7 @@
  
-+	synchronize_irq(bus->irq);
-+
- 	/* disable SIE for all streams */
- 	snd_hdac_chip_writeb(bus, INTCTL, 0);
+ /* LM3632 */
+ #define LM3632_BOOST_VSEL_MAX		0x26
+-#define LM3632_LDO_VSEL_MAX		0x29
++#define LM3632_LDO_VSEL_MAX		0x28
+ #define LM3632_VBOOST_MIN		4500000
+ #define LM3632_VLDO_MIN			4000000
  
-diff --git a/sound/pci/hda/hda_intel.c b/sound/pci/hda/hda_intel.c
-index 96e9b3944b925..b42ab80ee6078 100644
---- a/sound/pci/hda/hda_intel.c
-+++ b/sound/pci/hda/hda_intel.c
-@@ -1413,9 +1413,9 @@ static int azx_free(struct azx *chip)
- 	}
- 
- 	if (bus->chip_init) {
-+		azx_stop_chip(chip);
- 		azx_clear_irq_pending(chip);
- 		azx_stop_all_streams(chip);
--		azx_stop_chip(chip);
- 	}
- 
- 	if (bus->irq >= 0)
 -- 
 2.20.1
 
