@@ -2,104 +2,108 @@ Return-Path: <SRS0=6dNS=X4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 028E4C32792
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:16:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E076C32792
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:16:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C80FC20830
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:16:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570123016;
-	bh=TJDCL/OzCzUm1R6VioSOIvxqDHPnNF2nC0aYF3S27Po=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=l90KwPOBCSiRj/jd4t5Xqr+huVuc4dSX/U5t5zaTCn4bH3Tu4fNSIfuZYXHNMcccH
-	 8GxrPUCafFMdaQv0I/2nViYhclmiwudoUioppMW6JfXIv7SbEboO2KSlvHnxhQ4x4a
-	 v/wt/skqwoQZSQ9GrYUrUKCjnLMOtcwBH3s8SuLs=
+	by mail.kernel.org (Postfix) with ESMTP id 4276420830
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:16:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fpxiUa56"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391917AbfJCRQ4 (ORCPT
+        id S2391768AbfJCRQz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 13:16:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52564 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390588AbfJCQXd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 13:16:55 -0400
+Received: from mail-ed1-f68.google.com ([209.85.208.68]:39905 "EHLO
+        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390569AbfJCQXd (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 3 Oct 2019 12:23:33 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4BB0C2054F;
-        Thu,  3 Oct 2019 16:23:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570119812;
-        bh=TJDCL/OzCzUm1R6VioSOIvxqDHPnNF2nC0aYF3S27Po=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Kk0keye6z0j0yOCYSAF4LPHasJMrr7kpKAUVkgc+a4YeQ2+8QI6BFxfaVe54glYcw
-         z6j5CZfVE3XGHC6AGU6VIMRPy8crp4kN5ipz8v7+ZCaa5iOse6cBUoPEr1rYir6vwT
-         xF5zcQkIqmKZHb0U3h0VpH21yxyAPKfEuGUZkSH8=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Chao Yu <yuchao0@huawei.com>,
-        Jan Kara <jack@suse.cz>
-Subject: [PATCH 4.19 203/211] quota: fix wrong condition in is_quota_modification()
-Date:   Thu,  3 Oct 2019 17:54:29 +0200
-Message-Id: <20191003154530.006484306@linuxfoundation.org>
-X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20191003154447.010950442@linuxfoundation.org>
-References: <20191003154447.010950442@linuxfoundation.org>
-User-Agent: quilt/0.66
+Received: by mail-ed1-f68.google.com with SMTP id a15so3077634edt.6;
+        Thu, 03 Oct 2019 09:23:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=ziG5nQu3xPwJ88X/LZnL5pMrIpk4xw9VvyMbz8MQsEI=;
+        b=fpxiUa563sqwJxlPjEOcPMPQdDUdznpeUznfXE/xQIhBee3RpywOZqk9RAeDW9Ajfh
+         8uVC4M7k/c838eY5QG17PMfwiK4f+s3+IthwdsafIluDZkNiXhni+Zm8nUInhripCcMm
+         hV8qFZTLQePOm4nOE8+Xu05x0RcIwaP530Dmr5t0hRzxtL+F3DD8ZFb/TVv/9GfVKkAK
+         xeZTs69UNOYpzikIClqyjf9NK5YzH23jpf0y/Xi1q8icvzYBPUVL4kZihjhjn6o7G4IV
+         kf1ud8T5z1cCXIKUFr+LHzjIZg0rYBHq5AJiJoLyipV4ASm4vJXaC2YysqxuA6IuTi/D
+         gN3Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=ziG5nQu3xPwJ88X/LZnL5pMrIpk4xw9VvyMbz8MQsEI=;
+        b=GzgHSLq7r4gl2fu897Nvzsed4zZrkX0jYWf5QXePNApCh6pFYIPgxYuZmnTtT7Id9o
+         aZtI4XnG03CAZ2BWFmYhMMS+L05UYOiNiZw3hMDDqsk2kW6s+ikMJyn0yB9Yw3cZD068
+         rHDIBIcV1gU9EeA0+Tap/mkzN6BNymX86mhutp2sQrBasiI/jzdGniWb60x3/c2OXx0J
+         7arMHtvh/nWmkv9v0mxSJADbOJrd7K+TqBUghpkLMYhTOJTvT1B2Yq1O20M5FlRhvYom
+         9a8NbCeKLEdbCj06DzXRPEQKP5xfh0afq8ddnekiwGY0bXkhsRlBmXB44zJiwVner6b4
+         I/Mw==
+X-Gm-Message-State: APjAAAVcaDHCD45L9ajJbOZX9ZnbfEhJE/fYzm4eVa1d8ycpvDJrjKKS
+        7nsZCxKeguQ2iYR7C4BoRbI=
+X-Google-Smtp-Source: APXvYqykHTQaML6sqsg8BxBtjQGr8gUpDoprCG7qt8I1pR9ipgNcQLUR4cUehkL63L5ZZelA3Nb1KQ==
+X-Received: by 2002:a17:906:255b:: with SMTP id j27mr8481324ejb.96.1570119810698;
+        Thu, 03 Oct 2019 09:23:30 -0700 (PDT)
+Received: from Limone ([46.114.33.103])
+        by smtp.gmail.com with ESMTPSA id c1sm549687edd.21.2019.10.03.09.23.28
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 03 Oct 2019 09:23:29 -0700 (PDT)
+Date:   Thu, 3 Oct 2019 18:23:26 +0200
+From:   Gon Solo <gonsolo@gmail.com>
+To:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Cc:     JP <jp@jpvw.nl>, crope@iki.fi, Sean Young <sean@mess.org>,
+        linux-media@vger.kernel.org,
+        Linux Kernel <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] si2157: Add support for Logilink VG0022A.
+Message-ID: <20191003162326.GA2727@Limone>
+References: <20191002150650.GA4227@gofer.mess.org>
+ <CANL0fFRoL6NxOCbNC=XjQ6LDkeeqAayaLUbm9xARWX9ttqfPFg@mail.gmail.com>
+ <29ab2e43-4374-a3ea-6ae1-a4267867eaa4@jpvw.nl>
+ <20191002154922.7f1cfc76@coco.lan>
+ <CANL0fFRJZBfEDWK_c2w1TomvB5-i4g09LopyJUbO5NtOwKdDTg@mail.gmail.com>
+ <20191003080539.2b13c03b@coco.lan>
+ <CANL0fFSmvEEJhnA=qjTuEPr4N8q8eWLeYC5du+OoTMxe1Gnh5Q@mail.gmail.com>
+ <20191003120238.75811da6@coco.lan>
+ <20191003160336.GA5125@Limone>
+ <20191003130909.01d29b77@coco.lan>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191003130909.01d29b77@coco.lan>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chao Yu <yuchao0@huawei.com>
+> No, I mean with the first patch you sent to the ML, with the powerup
+> hack.
 
-commit 6565c182094f69e4ffdece337d395eb7ec760efc upstream.
+Boot time:
 
-Quoted from
-commit 3da40c7b0898 ("ext4: only call ext4_truncate when size <= isize")
+[    4.653257] si2168 1-0067: Silicon Labs Si2168-B40 successfully identified
+[    4.653259] si2168 1-0067: firmware version: B 4.0.2
+[    4.653279] usb 2-1: DVB: registering adapter 0 frontend 0 (Silicon Labs Si2168)...
+[    4.653284] dvbdev: dvb_create_media_entity: media entity 'Silicon Labs Si2168' registered.
+...
+[    4.694785] si2157 2-0063: found a 'Silicon Labs Si2147-A30'
+[    4.694787] si2157 2-0063: Silicon Labs Si2147/2148/2157/2158 successfully attached
+[    4.717814] usb 2-1: dvb_usb_v2: 'Logilink VG0022A' successfully initialized and connected
+[    4.717880] usbcore: registered new interface driver dvb_usb_af9035
 
-" At LSF we decided that if we truncate up from isize we shouldn't trim
-  fallocated blocks that were fallocated with KEEP_SIZE and are past the
- new i_size.  This patch fixes ext4 to do this. "
+VLC time:
 
-And generic/092 of fstest have covered this case for long time, however
-is_quota_modification() didn't adjust based on that rule, so that in
-below condition, we will lose to quota block change:
-- fallocate blocks beyond EOF
-- remount
-- truncate(file_path, file_size)
+[  175.490609] si2168 1-0067: downloading firmware from file 'dvb-demod-si2168-b40-01.fw'
+[  176.746585] si2168 1-0067: firmware version: B 4.0.25
+[  176.781570] si2157 2-0063: firmware version: \xff.\xff.255
 
-Fix it.
-
-Link: https://lore.kernel.org/r/20190911093650.35329-1-yuchao0@huawei.com
-Fixes: 3da40c7b0898 ("ext4: only call ext4_truncate when size <= isize")
-CC: stable@vger.kernel.org
-Signed-off-by: Chao Yu <yuchao0@huawei.com>
-Signed-off-by: Jan Kara <jack@suse.cz>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
----
- include/linux/quotaops.h |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
---- a/include/linux/quotaops.h
-+++ b/include/linux/quotaops.h
-@@ -22,7 +22,7 @@ static inline struct quota_info *sb_dqop
- /* i_mutex must being held */
- static inline bool is_quota_modification(struct inode *inode, struct iattr *ia)
- {
--	return (ia->ia_valid & ATTR_SIZE && ia->ia_size != inode->i_size) ||
-+	return (ia->ia_valid & ATTR_SIZE) ||
- 		(ia->ia_valid & ATTR_UID && !uid_eq(ia->ia_uid, inode->i_uid)) ||
- 		(ia->ia_valid & ATTR_GID && !gid_eq(ia->ia_gid, inode->i_gid));
- }
-
+g
 
