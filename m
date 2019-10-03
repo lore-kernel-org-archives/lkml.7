@@ -4,53 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 19620C32792
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:28:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC37AC10F14
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:28:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E1EBC21783
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:28:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AE33D21783
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:28:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570120098;
-	bh=IXyyax35NLJ6YWTbr1HB6lNWXUjGA3if8XZRop/f770=;
+	s=default; t=1570120100;
+	bh=ifZ3V7ZCH5w23cboU3vYYYsrlUpjnatzjxURontzwQI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=BMOAqUI7qbdTiJG5x7+jqWmWqpgtTpPf2UVl88K7sULNgKRbtY2CLAqyRFjBThtVO
-	 t9y/5khT/K7PHMSahXmD/2KgwA3SBWc2Z7OxQp9Vv6InenJhsurKEyBxTeMQ0uSwVj
-	 GYZvkPHsohjKfHaOnoVHCuzmiiXIgDHb5pK9InCU=
+	b=xAmjJDlnWznFVSUglXfy+rhk3eJp5+SPsoV1dwz2iipgnDFoWPeGCmOpgKPHplmpL
+	 1c34XoWACWgVQa0SHnUunAJZc0wYZNXUvIP9fl0+gAPutVcN0sRNT7+fxvpRnPyy9s
+	 rkTHgAL+QTrbQSWXE+QQim7eI8ZtTjrBiHdVLTBM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391398AbfJCQ2Q (ORCPT
+        id S2391391AbfJCQ2T (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 12:28:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60674 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 12:28:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60730 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391482AbfJCQ2N (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:28:13 -0400
+        id S2391399AbfJCQ2Q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:28:16 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8C92221783;
-        Thu,  3 Oct 2019 16:28:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 50DE82054F;
+        Thu,  3 Oct 2019 16:28:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570120092;
-        bh=IXyyax35NLJ6YWTbr1HB6lNWXUjGA3if8XZRop/f770=;
+        s=default; t=1570120095;
+        bh=ifZ3V7ZCH5w23cboU3vYYYsrlUpjnatzjxURontzwQI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Dda2HUq/IwrseVj0cbjoppS+mZjRVsnNQuI2f4r52xQQsDw0tBFV3PkINb3+x9l2h
-         kiHMuKQKCMsvU4gCiSEzopJ23quo4+p2eRDDEsnjDJuxkrwldrnJ/GVSTM3pLJHYO1
-         ryGdSKO8zENSn7B2B5fhXS0rEeK4k2BLElLlIhBo=
+        b=ShcKZ7A69GVCUkXzNEnaGjggn7d3fhRPmDtkfg7luYE+Z7miFQM+Or9DsFhsrj6MA
+         tGVlC7tDr5JjODKCHb0H07qIh9zYWsBV3dfe540zrp+unbO+vHhGIKEnaWdsYleLWj
+         gjBNKPEAvcsj5qu6N/+8ofe0VMg98SSONFaTrhNg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        stable@vger.kernel.org, Valdis Kletnieks <valdis.kletnieks@vt.edu>,
+        Borislav Petkov <bp@suse.de>, Tony Luck <tony.luck@intel.com>,
+        linux-edac@vger.kernel.org, x86@kernel.org,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 095/313] media: fdp1: Reduce FCP not found message level to debug
-Date:   Thu,  3 Oct 2019 17:51:13 +0200
-Message-Id: <20191003154542.235103460@linuxfoundation.org>
+Subject: [PATCH 5.2 078/313] RAS: Fix prototype warnings
+Date:   Thu,  3 Oct 2019 17:50:56 +0200
+Message-Id: <20191003154540.526612763@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191003154533.590915454@linuxfoundation.org>
 References: <20191003154533.590915454@linuxfoundation.org>
@@ -63,43 +61,69 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Geert Uytterhoeven <geert+renesas@glider.be>
+From: Valdis Klētnieks <valdis.kletnieks@vt.edu>
 
-[ Upstream commit 4fd22938569c14f6092c05880ca387409d78355f ]
+[ Upstream commit 0a54b809a3a2c31e1055b45b03708eb730222be1 ]
 
-When support for the IPMMU is not enabled, the FDP driver may be
-probe-deferred multiple times, causing several messages to be printed
-like:
+When building with C=2 and/or W=1, legitimate warnings are issued about
+missing prototypes:
 
-    rcar_fdp1 fe940000.fdp1: FCP not found (-517)
-    rcar_fdp1 fe944000.fdp1: FCP not found (-517)
+    CHECK   drivers/ras/debugfs.c
+  drivers/ras/debugfs.c:4:15: warning: symbol 'ras_debugfs_dir' was not declared. Should it be static?
+  drivers/ras/debugfs.c:8:5: warning: symbol 'ras_userspace_consumers' was not declared. Should it be static?
+  drivers/ras/debugfs.c:38:12: warning: symbol 'ras_add_daemon_trace' was not declared. Should it be static?
+  drivers/ras/debugfs.c:54:13: warning: symbol 'ras_debugfs_init' was not declared. Should it be static?
+    CC      drivers/ras/debugfs.o
+  drivers/ras/debugfs.c:8:5: warning: no previous prototype for 'ras_userspace_consumers' [-Wmissing-prototypes]
+      8 | int ras_userspace_consumers(void)
+        |     ^~~~~~~~~~~~~~~~~~~~~~~
+  drivers/ras/debugfs.c:38:12: warning: no previous prototype for 'ras_add_daemon_trace' [-Wmissing-prototypes]
+     38 | int __init ras_add_daemon_trace(void)
+        |            ^~~~~~~~~~~~~~~~~~~~
+  drivers/ras/debugfs.c:54:13: warning: no previous prototype for 'ras_debugfs_init' [-Wmissing-prototypes]
+     54 | void __init ras_debugfs_init(void)
+        |             ^~~~~~~~~~~~~~~~
 
-Fix this by reducing the message level to debug level, as is done in the
-VSP1 driver.
+Provide the proper includes.
 
-Fixes: 4710b752e029f3f8 ("[media] v4l: Add Renesas R-Car FDP1 Driver")
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Reviewed-by: Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
-Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+ [ bp: Take care of the same warnings for cec.c too. ]
+
+Signed-off-by: Valdis Kletnieks <valdis.kletnieks@vt.edu>
+Signed-off-by: Borislav Petkov <bp@suse.de>
+Cc: Tony Luck <tony.luck@intel.com>
+Cc: linux-edac@vger.kernel.org
+Cc: x86@kernel.org
+Link: http://lkml.kernel.org/r/7168.1565218769@turing-police
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/platform/rcar_fdp1.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/ras/cec.c     | 1 +
+ drivers/ras/debugfs.c | 2 ++
+ 2 files changed, 3 insertions(+)
 
-diff --git a/drivers/media/platform/rcar_fdp1.c b/drivers/media/platform/rcar_fdp1.c
-index b8615a288e2b7..6ca2cb15291f1 100644
---- a/drivers/media/platform/rcar_fdp1.c
-+++ b/drivers/media/platform/rcar_fdp1.c
-@@ -2306,7 +2306,7 @@ static int fdp1_probe(struct platform_device *pdev)
- 		fdp1->fcp = rcar_fcp_get(fcp_node);
- 		of_node_put(fcp_node);
- 		if (IS_ERR(fdp1->fcp)) {
--			dev_err(&pdev->dev, "FCP not found (%ld)\n",
-+			dev_dbg(&pdev->dev, "FCP not found (%ld)\n",
- 				PTR_ERR(fdp1->fcp));
- 			return PTR_ERR(fdp1->fcp);
- 		}
+diff --git a/drivers/ras/cec.c b/drivers/ras/cec.c
+index f5795adc5a6e1..8037c490f3ba7 100644
+--- a/drivers/ras/cec.c
++++ b/drivers/ras/cec.c
+@@ -1,6 +1,7 @@
+ // SPDX-License-Identifier: GPL-2.0
+ #include <linux/mm.h>
+ #include <linux/gfp.h>
++#include <linux/ras.h>
+ #include <linux/kernel.h>
+ #include <linux/workqueue.h>
+ 
+diff --git a/drivers/ras/debugfs.c b/drivers/ras/debugfs.c
+index 9c1b717efad86..0d4f985afbf37 100644
+--- a/drivers/ras/debugfs.c
++++ b/drivers/ras/debugfs.c
+@@ -1,5 +1,7 @@
+ // SPDX-License-Identifier: GPL-2.0-only
+ #include <linux/debugfs.h>
++#include <linux/ras.h>
++#include "debugfs.h"
+ 
+ struct dentry *ras_debugfs_dir;
+ 
 -- 
 2.20.1
 
