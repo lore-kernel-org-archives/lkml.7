@@ -2,52 +2,53 @@ Return-Path: <SRS0=6dNS=X4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B935C10F14
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:07:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3885BC32792
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:07:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 00F97215EA
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:07:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0627F20865
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:07:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570118864;
-	bh=hamLF/be2yWDbkm1xolk1kZ1ArBeiYf1ziKgbV1oYKQ=;
+	s=default; t=1570118867;
+	bh=2NQHd2QxdKNhEULOQ3m6pk/Bq8wN86OiE8oTa6a2Tsg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qmFBX+JNOfo2pgMG0bt8pgY5wHhSKXXSDfVqSA5e8zXwUiHTtVr/pbw7EWLO/jfeA
-	 22P4GDNdMUlWKkPf4z7hNNHC+hM9X1l0lIeJtw5wxCmOgHYyRq/qNOHXMgfDvSrCXh
-	 LL2uGYUz9F2NOqa3Aeu2g9fR1n56u2gZcNkXNk5o=
+	b=ww+nCQOW8XH/3BCtx4yCrG1XS7V8bZ92Awzd2xmKdwoAvgZ4hHaFlddDByVefk5aW
+	 gg1ihLqX2EftwQ9vZHxRZYx1IkHkeYTq6GHIV9yU1kfGNy9KfEq/BpWWC5P/WzqDX8
+	 iw9B08aEM3GE4tETlyBCf/TKUUYofy5ImWp5HvO8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731618AbfJCQHn (ORCPT
+        id S1732997AbfJCQHq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 12:07:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55456 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 12:07:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55580 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732972AbfJCQHg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:07:36 -0400
+        id S1732985AbfJCQHm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:07:42 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DA4FA2245C;
-        Thu,  3 Oct 2019 16:07:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2CFAF207FF;
+        Thu,  3 Oct 2019 16:07:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570118855;
-        bh=hamLF/be2yWDbkm1xolk1kZ1ArBeiYf1ziKgbV1oYKQ=;
+        s=default; t=1570118860;
+        bh=2NQHd2QxdKNhEULOQ3m6pk/Bq8wN86OiE8oTa6a2Tsg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=sn4x17g3smBNQsSwgFLT+CyhzucDlxEVB5KxVjCuGseHTqBCPxzx14VNJ04WksPR7
-         sSET9q3KnXvBrGkQjZr86JsVkx/7EOZdBWAbS9Vksu2kH3r9Rpj6PqF7nT3aZ/6yp4
-         18xt9WusifnAjd4aCP34j5OvRF/l/WDVnpCNSH/k=
+        b=a2U1I/xsaomeD9cC6yZfcvO2wY4LB6gce6NaXiHvtr+pbatyUZJyw7cgVD9URrHJ8
+         et8I89cz5aXSFjxEtprZrOUjoxq/y+AUiM58jcSWbKpuAoyqbemOToNsZ/Tonkpqnp
+         cGV2HgJ+c+luUqX6lup0e594VL6dVVntHY/ixJe0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Pavel Machek <pavel@ucw.cz>,
-        Chao Yu <yuchao0@huawei.com>, Jaegeuk Kim <jaegeuk@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 033/185] f2fs: use generic EFSBADCRC/EFSCORRUPTED
-Date:   Thu,  3 Oct 2019 17:51:51 +0200
-Message-Id: <20191003154445.140135573@linuxfoundation.org>
+        stable@vger.kernel.org,
+        syzbot+ce366e2b8296e25d84f5@syzkaller.appspotmail.com,
+        =?UTF-8?q?Bj=C3=B8rn=20Mork?= <bjorn@mork.no>,
+        Jakub Kicinski <jakub.kicinski@netronome.com>
+Subject: [PATCH 4.14 035/185] cdc_ncm: fix divide-by-zero caused by invalid wMaxPacketSize
+Date:   Thu,  3 Oct 2019 17:51:53 +0200
+Message-Id: <20191003154445.452899999@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191003154437.541662648@linuxfoundation.org>
 References: <20191003154437.541662648@linuxfoundation.org>
@@ -60,286 +61,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chao Yu <yuchao0@huawei.com>
+From: Bjørn Mork <bjorn@mork.no>
 
-[ Upstream commit 10f966bbf521bb9b2e497bbca496a5141f4071d0 ]
+[ Upstream commit 3fe4b3351301660653a2bc73f2226da0ebd2b95e ]
 
-f2fs uses EFAULT as error number to indicate filesystem is corrupted
-all the time, but generic filesystems use EUCLEAN for such condition,
-we need to change to follow others.
+Endpoints with zero wMaxPacketSize are not usable for transferring
+data. Ignore such endpoints when looking for valid in, out and
+status pipes, to make the driver more robust against invalid and
+meaningless descriptors.
 
-This patch adds two new macros as below to wrap more generic error
-code macros, and spread them in code.
+The wMaxPacketSize of the out pipe is used as divisor. So this change
+fixes a divide-by-zero bug.
 
-EFSBADCRC	EBADMSG		/* Bad CRC detected */
-EFSCORRUPTED	EUCLEAN		/* Filesystem is corrupted */
-
-Reported-by: Pavel Machek <pavel@ucw.cz>
-Signed-off-by: Chao Yu <yuchao0@huawei.com>
-Acked-by: Pavel Machek <pavel@ucw.cz>
-Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Reported-by: syzbot+ce366e2b8296e25d84f5@syzkaller.appspotmail.com
+Signed-off-by: Bjørn Mork <bjorn@mork.no>
+Signed-off-by: Jakub Kicinski <jakub.kicinski@netronome.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- fs/f2fs/checkpoint.c | 8 ++++++--
- fs/f2fs/data.c       | 8 ++++----
- fs/f2fs/f2fs.h       | 4 ++++
- fs/f2fs/inline.c     | 4 ++--
- fs/f2fs/inode.c      | 4 ++--
- fs/f2fs/node.c       | 4 ++--
- fs/f2fs/recovery.c   | 2 +-
- fs/f2fs/segment.c    | 7 ++++---
- fs/f2fs/segment.h    | 4 ++--
- fs/f2fs/super.c      | 2 +-
- 10 files changed, 28 insertions(+), 19 deletions(-)
+ drivers/net/usb/cdc_ncm.c |    6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
-diff --git a/fs/f2fs/checkpoint.c b/fs/f2fs/checkpoint.c
-index 624817eeb25e3..170423ff27210 100644
---- a/fs/f2fs/checkpoint.c
-+++ b/fs/f2fs/checkpoint.c
-@@ -793,6 +793,7 @@ int get_valid_checkpoint(struct f2fs_sb_info *sbi)
- 	unsigned int cp_blks = 1 + __cp_payload(sbi);
- 	block_t cp_blk_no;
- 	int i;
-+	int err;
+--- a/drivers/net/usb/cdc_ncm.c
++++ b/drivers/net/usb/cdc_ncm.c
+@@ -681,8 +681,12 @@ cdc_ncm_find_endpoints(struct usbnet *de
+ 	u8 ep;
  
- 	sbi->ckpt = kzalloc(cp_blks * blk_size, GFP_KERNEL);
- 	if (!sbi->ckpt)
-@@ -819,6 +820,7 @@ int get_valid_checkpoint(struct f2fs_sb_info *sbi)
- 	} else if (cp2) {
- 		cur_page = cp2;
- 	} else {
-+		err = -EFSCORRUPTED;
- 		goto fail_no_cp;
- 	}
- 
-@@ -831,8 +833,10 @@ int get_valid_checkpoint(struct f2fs_sb_info *sbi)
- 		sbi->cur_cp_pack = 2;
- 
- 	/* Sanity checking of checkpoint */
--	if (sanity_check_ckpt(sbi))
-+	if (sanity_check_ckpt(sbi)) {
-+		err = -EFSCORRUPTED;
- 		goto free_fail_no_cp;
-+	}
- 
- 	if (cp_blks <= 1)
- 		goto done;
-@@ -860,7 +864,7 @@ int get_valid_checkpoint(struct f2fs_sb_info *sbi)
- 	f2fs_put_page(cp2, 1);
- fail_no_cp:
- 	kfree(sbi->ckpt);
--	return -EINVAL;
-+	return err;
- }
- 
- static void __add_dirty_inode(struct inode *inode, enum inode_type type)
-diff --git a/fs/f2fs/data.c b/fs/f2fs/data.c
-index 113d1cd551192..cc57294451940 100644
---- a/fs/f2fs/data.c
-+++ b/fs/f2fs/data.c
-@@ -376,7 +376,7 @@ int f2fs_submit_page_bio(struct f2fs_io_info *fio)
- 
- 	if (!f2fs_is_valid_blkaddr(fio->sbi, fio->new_blkaddr,
- 			__is_meta_io(fio) ? META_GENERIC : DATA_GENERIC))
--		return -EFAULT;
-+		return -EFSCORRUPTED;
- 
- 	trace_f2fs_submit_page_bio(page, fio);
- 	f2fs_trace_ios(fio, 0);
-@@ -959,7 +959,7 @@ int f2fs_map_blocks(struct inode *inode, struct f2fs_map_blocks *map,
- 
- 	if (__is_valid_data_blkaddr(blkaddr) &&
- 		!f2fs_is_valid_blkaddr(sbi, blkaddr, DATA_GENERIC)) {
--		err = -EFAULT;
-+		err = -EFSCORRUPTED;
- 		goto sync_out;
- 	}
- 
-@@ -1425,7 +1425,7 @@ int do_write_data_page(struct f2fs_io_info *fio)
- 
- 		if (!f2fs_is_valid_blkaddr(fio->sbi, fio->old_blkaddr,
- 							DATA_GENERIC))
--			return -EFAULT;
-+			return -EFSCORRUPTED;
- 
- 		ipu_force = true;
- 		fio->need_lock = LOCK_DONE;
-@@ -1451,7 +1451,7 @@ int do_write_data_page(struct f2fs_io_info *fio)
- 	if (__is_valid_data_blkaddr(fio->old_blkaddr) &&
- 		!f2fs_is_valid_blkaddr(fio->sbi, fio->old_blkaddr,
- 							DATA_GENERIC)) {
--		err = -EFAULT;
-+		err = -EFSCORRUPTED;
- 		goto out_writepage;
- 	}
- 	/*
-diff --git a/fs/f2fs/f2fs.h b/fs/f2fs/f2fs.h
-index 6caae471c1a45..268409cee1c34 100644
---- a/fs/f2fs/f2fs.h
-+++ b/fs/f2fs/f2fs.h
-@@ -3089,3 +3089,7 @@ static inline bool f2fs_may_encrypt(struct inode *inode)
- }
- 
- #endif
+ 	for (ep = 0; ep < intf->cur_altsetting->desc.bNumEndpoints; ep++) {
+-
+ 		e = intf->cur_altsetting->endpoint + ep;
 +
-+#define EFSBADCRC	EBADMSG		/* Bad CRC detected */
-+#define EFSCORRUPTED	EUCLEAN		/* Filesystem is corrupted */
++		/* ignore endpoints which cannot transfer data */
++		if (!usb_endpoint_maxp(&e->desc))
++			continue;
 +
-diff --git a/fs/f2fs/inline.c b/fs/f2fs/inline.c
-index 506e365cf903e..8906f6381b1a4 100644
---- a/fs/f2fs/inline.c
-+++ b/fs/f2fs/inline.c
-@@ -135,7 +135,7 @@ int f2fs_convert_inline_page(struct dnode_of_data *dn, struct page *page)
- 			"%s: corrupted inline inode ino=%lx, i_addr[0]:0x%x, "
- 			"run fsck to fix.",
- 			__func__, dn->inode->i_ino, dn->data_blkaddr);
--		return -EINVAL;
-+		return -EFSCORRUPTED;
- 	}
- 
- 	f2fs_bug_on(F2FS_P_SB(page), PageWriteback(page));
-@@ -382,7 +382,7 @@ static int f2fs_move_inline_dirents(struct inode *dir, struct page *ipage,
- 			"%s: corrupted inline inode ino=%lx, i_addr[0]:0x%x, "
- 			"run fsck to fix.",
- 			__func__, dir->i_ino, dn.data_blkaddr);
--		err = -EINVAL;
-+		err = -EFSCORRUPTED;
- 		goto out;
- 	}
- 
-diff --git a/fs/f2fs/inode.c b/fs/f2fs/inode.c
-index e02ed16bc35cd..c6d0687f00fee 100644
---- a/fs/f2fs/inode.c
-+++ b/fs/f2fs/inode.c
-@@ -70,7 +70,7 @@ static int __written_first_block(struct f2fs_sb_info *sbi,
- 	if (!__is_valid_data_blkaddr(addr))
- 		return 1;
- 	if (!f2fs_is_valid_blkaddr(sbi, addr, DATA_GENERIC))
--		return -EFAULT;
-+		return -EFSCORRUPTED;
- 	return 0;
- }
- 
-@@ -300,7 +300,7 @@ static int do_read_inode(struct inode *inode)
- 
- 	if (!sanity_check_inode(inode, node_page)) {
- 		f2fs_put_page(node_page, 1);
--		return -EINVAL;
-+		return -EFSCORRUPTED;
- 	}
- 
- 	/* check data exist */
-diff --git a/fs/f2fs/node.c b/fs/f2fs/node.c
-index 12060fbfbb05e..e7b8e2b35e226 100644
---- a/fs/f2fs/node.c
-+++ b/fs/f2fs/node.c
-@@ -39,7 +39,7 @@ int check_nid_range(struct f2fs_sb_info *sbi, nid_t nid)
- 		f2fs_msg(sbi->sb, KERN_WARNING,
- 				"%s: out-of-range nid=%x, run fsck to fix.",
- 				__func__, nid);
--		return -EINVAL;
-+		return -EFSCORRUPTED;
- 	}
- 	return 0;
- }
-@@ -1195,7 +1195,7 @@ static struct page *__get_node_page(struct f2fs_sb_info *sbi, pgoff_t nid,
- 	}
- 
- 	if (!f2fs_inode_chksum_verify(sbi, page)) {
--		err = -EBADMSG;
-+		err = -EFSBADCRC;
- 		goto out_err;
- 	}
- page_hit:
-diff --git a/fs/f2fs/recovery.c b/fs/f2fs/recovery.c
-index 65a82c5bafcbe..db357e9ad5990 100644
---- a/fs/f2fs/recovery.c
-+++ b/fs/f2fs/recovery.c
-@@ -451,7 +451,7 @@ static int do_recover_data(struct f2fs_sb_info *sbi, struct inode *inode,
- 			"Inconsistent ofs_of_node, ino:%lu, ofs:%u, %u",
- 			inode->i_ino, ofs_of_node(dn.node_page),
- 			ofs_of_node(page));
--		err = -EFAULT;
-+		err = -EFSCORRUPTED;
- 		goto err;
- 	}
- 
-diff --git a/fs/f2fs/segment.c b/fs/f2fs/segment.c
-index 294fdb1b22137..9e5fca35e47d0 100644
---- a/fs/f2fs/segment.c
-+++ b/fs/f2fs/segment.c
-@@ -2216,6 +2216,7 @@ int f2fs_trim_fs(struct f2fs_sb_info *sbi, struct fstrim_range *range)
- 	if (is_sbi_flag_set(sbi, SBI_NEED_FSCK)) {
- 		f2fs_msg(sbi->sb, KERN_WARNING,
- 			"Found FS corruption, run fsck to fix.");
-+		err = -EFSCORRUPTED;
- 		goto out;
- 	}
- 
-@@ -3309,7 +3310,7 @@ static int build_sit_entries(struct f2fs_sb_info *sbi)
- 					"Wrong journal entry on segno %u",
- 					start);
- 			set_sbi_flag(sbi, SBI_NEED_FSCK);
--			err = -EINVAL;
-+			err = -EFSCORRUPTED;
- 			break;
- 		}
- 
-@@ -3350,7 +3351,7 @@ static int build_sit_entries(struct f2fs_sb_info *sbi)
- 			"SIT is corrupted node# %u vs %u",
- 			total_node_blocks, valid_node_count(sbi));
- 		set_sbi_flag(sbi, SBI_NEED_FSCK);
--		err = -EINVAL;
-+		err = -EFSCORRUPTED;
- 	}
- 
- 	return err;
-@@ -3468,7 +3469,7 @@ static int sanity_check_curseg(struct f2fs_sb_info *sbi)
- 				"segno:%u, type:%u, next_blkoff:%u, blkofs:%u",
- 				i, curseg->segno, curseg->alloc_type,
- 				curseg->next_blkoff, blkofs);
--			return -EINVAL;
-+			return -EFSCORRUPTED;
- 		}
- 	}
- 	return 0;
-diff --git a/fs/f2fs/segment.h b/fs/f2fs/segment.h
-index e3d8826c5113d..0d46e936d54ed 100644
---- a/fs/f2fs/segment.h
-+++ b/fs/f2fs/segment.h
-@@ -665,7 +665,7 @@ static inline int check_block_count(struct f2fs_sb_info *sbi,
- 				"Mismatch valid blocks %d vs. %d",
- 					GET_SIT_VBLOCKS(raw_sit), valid_blocks);
- 		set_sbi_flag(sbi, SBI_NEED_FSCK);
--		return -EINVAL;
-+		return -EFSCORRUPTED;
- 	}
- 
- 	/* check segment usage, and check boundary of a given segment number */
-@@ -675,7 +675,7 @@ static inline int check_block_count(struct f2fs_sb_info *sbi,
- 				"Wrong valid blocks %d or segno %u",
- 					GET_SIT_VBLOCKS(raw_sit), segno);
- 		set_sbi_flag(sbi, SBI_NEED_FSCK);
--		return -EINVAL;
-+		return -EFSCORRUPTED;
- 	}
- 	return 0;
- }
-diff --git a/fs/f2fs/super.c b/fs/f2fs/super.c
-index ad839a7996e9b..344aa861774bd 100644
---- a/fs/f2fs/super.c
-+++ b/fs/f2fs/super.c
-@@ -2220,7 +2220,7 @@ static int read_raw_super_block(struct f2fs_sb_info *sbi,
- 			f2fs_msg(sb, KERN_ERR,
- 				"Can't find valid F2FS filesystem in %dth superblock",
- 				block + 1);
--			err = -EINVAL;
-+			err = -EFSCORRUPTED;
- 			brelse(bh);
- 			continue;
- 		}
--- 
-2.20.1
-
+ 		switch (e->desc.bmAttributes & USB_ENDPOINT_XFERTYPE_MASK) {
+ 		case USB_ENDPOINT_XFER_INT:
+ 			if (usb_endpoint_dir_in(&e->desc)) {
 
 
