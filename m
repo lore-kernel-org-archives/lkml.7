@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26CF8C4CED1
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:48:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CA41C10F14
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:48:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E889820867
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:48:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6DC8D20867
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:48:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570121306;
-	bh=BO2CMp99KgEKir43vyYmY/h5UcVrkGaXXS/emvzKtOY=;
+	s=default; t=1570121308;
+	bh=tnJUdGvdGG0/Hb6exXH5DQf1GWv+G6e1JVUW/HKVA+Y=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=b2Z5Q2pP4kK/ctlr1JBt9h1mVRTT4uB59TvPy8XKl3u4oI7ZEubVdA/P/EijXwFf5
-	 j1mPJZ2r6c0ZrQeDmK0chSnf1/H+SijADvpQ4XaxLVqNgfYnxZlzerVhkKKgyCOoDp
-	 SDskuKLhfly6kLyGo4RGbQrnD/Lp8T3TCEPoiiKE=
+	b=ZfcgXVgI9zVr9cpan2RfJjiSkE+hrQrfkjAOCYHxg+xfHfLj+euI5l0Ku1D6KFmRf
+	 P+FThMM4M500hcPAQvHxW30verOSDlDwxQvN+D3yiRVVZ50+Jq/EaEPgUQn53owtyY
+	 +06rbc9AJ/Q5sNBSTURaoi65KIhOdkNdf0n8d9Os=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393054AbfJCQsZ (ORCPT
+        id S2405445AbfJCQs1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 12:48:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34050 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 12:48:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34134 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388403AbfJCQsU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:48:20 -0400
+        id S2405636AbfJCQsX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:48:23 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4B1F22070B;
-        Thu,  3 Oct 2019 16:48:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2560C2070B;
+        Thu,  3 Oct 2019 16:48:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570121299;
-        bh=BO2CMp99KgEKir43vyYmY/h5UcVrkGaXXS/emvzKtOY=;
+        s=default; t=1570121302;
+        bh=tnJUdGvdGG0/Hb6exXH5DQf1GWv+G6e1JVUW/HKVA+Y=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xomkuQvfJMo9Da05703w+F/wnfjWcQcyQyCgdRKiR6U0G80QTLhmt2YpUrWf9Amul
-         SB+MHP6PsRt5DB9X69aLqiKR48BCE1KkNX3I6ydtUA1RXb2wl/GIdnWTcrsQjG8JS1
-         neGH9Ziro+bAalI0Pz35e8w1cqX+OyYPENxCiV8g=
+        b=NQBYfLtMnERfeE5Z2J1qbAk61fM4j6p9LBmiQ6/NTOJLF6w0A7lcaea2NvVedoncD
+         XIgsql8ERm6EpaEFaZgcubNjLi6l+vXZcY4bJY+jarGucA9adAZbHH6dxqPaGaP3QH
+         wfJ6ebau5nRKqzVHkzvmyeSBQCN7oaJMaF5Sk/OQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Takashi Iwai <tiwai@suse.de>,
+        stable@vger.kernel.org, Jungyeon Yoon <jungyeon.yoon@gmail.com>,
+        Qu Wenruo <wqu@suse.com>, David Sterba <dsterba@suse.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.3 221/344] ALSA: hda - Drop unsol event handler for Intel HDMI codecs
-Date:   Thu,  3 Oct 2019 17:53:06 +0200
-Message-Id: <20191003154602.162843134@linuxfoundation.org>
+Subject: [PATCH 5.3 230/344] btrfs: tree-checker: Add ROOT_ITEM check
+Date:   Thu,  3 Oct 2019 17:53:15 +0200
+Message-Id: <20191003154603.074358809@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191003154540.062170222@linuxfoundation.org>
 References: <20191003154540.062170222@linuxfoundation.org>
@@ -59,49 +60,146 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Takashi Iwai <tiwai@suse.de>
+From: Qu Wenruo <wqu@suse.com>
 
-[ Upstream commit f2dbe87c5ac1f88e6007ba1f1374f4bd8a197fb6 ]
+[ Upstream commit 259ee7754b6793af8bdd77f9ca818bc41cfe9541 ]
 
-We don't need to deal with the unsol events for Intel chips that are
-tied with the graphics via audio component notifier.  Although the
-presence of the audio component is checked at the beginning of
-hdmi_unsol_event(), better to short cut by dropping unsol_event ops.
+This patch will introduce ROOT_ITEM check, which includes:
+- Key->objectid and key->offset check
+  Currently only some easy check, e.g. 0 as rootid is invalid.
 
-BugLink: https://bugzilla.kernel.org/show_bug.cgi?id=204565
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+- Item size check
+  Root item size is fixed.
+
+- Generation checks
+  Generation, generation_v2 and last_snapshot should not be greater than
+  super generation + 1
+
+- Level and alignment check
+  Level should be in [0, 7], and bytenr must be aligned to sector size.
+
+- Flags check
+
+Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=203261
+Reported-by: Jungyeon Yoon <jungyeon.yoon@gmail.com>
+Signed-off-by: Qu Wenruo <wqu@suse.com>
+Reviewed-by: David Sterba <dsterba@suse.com>
+Signed-off-by: David Sterba <dsterba@suse.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/pci/hda/patch_hdmi.c | 9 ++++++++-
- 1 file changed, 8 insertions(+), 1 deletion(-)
+ fs/btrfs/tree-checker.c | 92 +++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 92 insertions(+)
 
-diff --git a/sound/pci/hda/patch_hdmi.c b/sound/pci/hda/patch_hdmi.c
-index c380596b2e84c..36240def9bf58 100644
---- a/sound/pci/hda/patch_hdmi.c
-+++ b/sound/pci/hda/patch_hdmi.c
-@@ -2616,6 +2616,8 @@ static void i915_pin_cvt_fixup(struct hda_codec *codec,
- /* precondition and allocation for Intel codecs */
- static int alloc_intel_hdmi(struct hda_codec *codec)
- {
-+	int err;
-+
- 	/* requires i915 binding */
- 	if (!codec->bus->core.audio_component) {
- 		codec_info(codec, "No i915 binding for Intel HDMI/DP codec\n");
-@@ -2624,7 +2626,12 @@ static int alloc_intel_hdmi(struct hda_codec *codec)
- 		return -ENODEV;
- 	}
- 
--	return alloc_generic_hdmi(codec);
-+	err = alloc_generic_hdmi(codec);
-+	if (err < 0)
-+		return err;
-+	/* no need to handle unsol events */
-+	codec->patch_ops.unsol_event = NULL;
-+	return 0;
+diff --git a/fs/btrfs/tree-checker.c b/fs/btrfs/tree-checker.c
+index ccd5706199d76..d83adda6c090a 100644
+--- a/fs/btrfs/tree-checker.c
++++ b/fs/btrfs/tree-checker.c
+@@ -821,6 +821,95 @@ static int check_inode_item(struct extent_buffer *leaf,
+ 	return 0;
  }
  
- /* parse and post-process for Intel codecs */
++static int check_root_item(struct extent_buffer *leaf, struct btrfs_key *key,
++			   int slot)
++{
++	struct btrfs_fs_info *fs_info = leaf->fs_info;
++	struct btrfs_root_item ri;
++	const u64 valid_root_flags = BTRFS_ROOT_SUBVOL_RDONLY |
++				     BTRFS_ROOT_SUBVOL_DEAD;
++
++	/* No such tree id */
++	if (key->objectid == 0) {
++		generic_err(leaf, slot, "invalid root id 0");
++		return -EUCLEAN;
++	}
++
++	/*
++	 * Some older kernel may create ROOT_ITEM with non-zero offset, so here
++	 * we only check offset for reloc tree whose key->offset must be a
++	 * valid tree.
++	 */
++	if (key->objectid == BTRFS_TREE_RELOC_OBJECTID && key->offset == 0) {
++		generic_err(leaf, slot, "invalid root id 0 for reloc tree");
++		return -EUCLEAN;
++	}
++
++	if (btrfs_item_size_nr(leaf, slot) != sizeof(ri)) {
++		generic_err(leaf, slot,
++			    "invalid root item size, have %u expect %zu",
++			    btrfs_item_size_nr(leaf, slot), sizeof(ri));
++	}
++
++	read_extent_buffer(leaf, &ri, btrfs_item_ptr_offset(leaf, slot),
++			   sizeof(ri));
++
++	/* Generation related */
++	if (btrfs_root_generation(&ri) >
++	    btrfs_super_generation(fs_info->super_copy) + 1) {
++		generic_err(leaf, slot,
++			"invalid root generation, have %llu expect (0, %llu]",
++			    btrfs_root_generation(&ri),
++			    btrfs_super_generation(fs_info->super_copy) + 1);
++		return -EUCLEAN;
++	}
++	if (btrfs_root_generation_v2(&ri) >
++	    btrfs_super_generation(fs_info->super_copy) + 1) {
++		generic_err(leaf, slot,
++		"invalid root v2 generation, have %llu expect (0, %llu]",
++			    btrfs_root_generation_v2(&ri),
++			    btrfs_super_generation(fs_info->super_copy) + 1);
++		return -EUCLEAN;
++	}
++	if (btrfs_root_last_snapshot(&ri) >
++	    btrfs_super_generation(fs_info->super_copy) + 1) {
++		generic_err(leaf, slot,
++		"invalid root last_snapshot, have %llu expect (0, %llu]",
++			    btrfs_root_last_snapshot(&ri),
++			    btrfs_super_generation(fs_info->super_copy) + 1);
++		return -EUCLEAN;
++	}
++
++	/* Alignment and level check */
++	if (!IS_ALIGNED(btrfs_root_bytenr(&ri), fs_info->sectorsize)) {
++		generic_err(leaf, slot,
++		"invalid root bytenr, have %llu expect to be aligned to %u",
++			    btrfs_root_bytenr(&ri), fs_info->sectorsize);
++		return -EUCLEAN;
++	}
++	if (btrfs_root_level(&ri) >= BTRFS_MAX_LEVEL) {
++		generic_err(leaf, slot,
++			    "invalid root level, have %u expect [0, %u]",
++			    btrfs_root_level(&ri), BTRFS_MAX_LEVEL - 1);
++		return -EUCLEAN;
++	}
++	if (ri.drop_level >= BTRFS_MAX_LEVEL) {
++		generic_err(leaf, slot,
++			    "invalid root level, have %u expect [0, %u]",
++			    ri.drop_level, BTRFS_MAX_LEVEL - 1);
++		return -EUCLEAN;
++	}
++
++	/* Flags check */
++	if (btrfs_root_flags(&ri) & ~valid_root_flags) {
++		generic_err(leaf, slot,
++			    "invalid root flags, have 0x%llx expect mask 0x%llx",
++			    btrfs_root_flags(&ri), valid_root_flags);
++		return -EUCLEAN;
++	}
++	return 0;
++}
++
+ /*
+  * Common point to switch the item-specific validation.
+  */
+@@ -856,6 +945,9 @@ static int check_leaf_item(struct extent_buffer *leaf,
+ 	case BTRFS_INODE_ITEM_KEY:
+ 		ret = check_inode_item(leaf, key, slot);
+ 		break;
++	case BTRFS_ROOT_ITEM_KEY:
++		ret = check_root_item(leaf, key, slot);
++		break;
+ 	}
+ 	return ret;
+ }
 -- 
 2.20.1
 
