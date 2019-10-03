@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 389AFC10F14
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:01:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 11B9AC10F14
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:01:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 03389222C8
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:01:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D6D4221848
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:01:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570118481;
-	bh=hcfejRqgJw0E5uY7PyDrh38sjgIodIs3+rjUHtxGkrQ=;
+	s=default; t=1570118483;
+	bh=n7VZmOmiAaJuzqtEgcUqvu4Su2EMXV+PJoK997lsM9k=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=PlpA1jjV0aC3QpsJ5FQBe4+lhsH5xYz5V3YL/OFTIrfY5VatYZA7hn/iisz1FZgM1
-	 YZbtVHv4y7wlLl9LlQoso2o9ZI0PLuQyn2VDM72gPcf3DfUSWRfJ5YrTyNm/wI8rtP
-	 f6toAVaWupo7/YI3yr+nzUSZRqW4a/NuOveosU9U=
+	b=Vwlh7p0smmL6fA/wCGLvkkFJQymBGYMWS88Pzhz77WIqHxe7ThYmdeaJl1moYhdSe
+	 prj6AMliepTp431+haxd8jiZiaoSJyUB4nalzRpnY/mTyYXn1VH2P5Elt8yopY4vGF
+	 CVc6r4CWyTH4yX4L29xSM+tg19pOH2YBrY9ItG1c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731766AbfJCQBT (ORCPT
+        id S1731779AbfJCQBW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 12:01:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45476 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 12:01:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45544 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727024AbfJCQBR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:01:17 -0400
+        id S1731765AbfJCQBU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:01:20 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2D77E207FF;
-        Thu,  3 Oct 2019 16:01:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F2EC721A4C;
+        Thu,  3 Oct 2019 16:01:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570118476;
-        bh=hcfejRqgJw0E5uY7PyDrh38sjgIodIs3+rjUHtxGkrQ=;
+        s=default; t=1570118479;
+        bh=n7VZmOmiAaJuzqtEgcUqvu4Su2EMXV+PJoK997lsM9k=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=LYy2LvuZ+IDyQ+zj5YQtCJKjE7I7F2Z6f1lafnTSfn7bQAyWlz/thGwfSf0E0Jo1N
-         9FLpKry8m6upgso1dPYOD0kJHCo7PcceyajndyZb31624xk1YKPnfwg66m5NP8+f5+
-         nsXJ9/vu16i04Siphi/zlsnIneBKk2lNcF8BxJaw=
+        b=xAF3rB/TrRJB32x5gA6Duntb57ngOBBXuQPMAsKtptVVD8eWQdxVgLn6pfR/0zjsB
+         mkWLHnL4KXiX2CAGvCme3j8L8pM/uJM8+eQmD1ke8yMOOAUy/Y5ak2QlDvChAz1MOA
+         7eWGPkl9kY/cqWIWt1lxb9nooH+ube1TXBPwv+PE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        syzbot+ce366e2b8296e25d84f5@syzkaller.appspotmail.com,
-        =?UTF-8?q?Bj=C3=B8rn=20Mork?= <bjorn@mork.no>,
-        Jakub Kicinski <jakub.kicinski@netronome.com>
-Subject: [PATCH 4.9 024/129] cdc_ncm: fix divide-by-zero caused by invalid wMaxPacketSize
-Date:   Thu,  3 Oct 2019 17:52:27 +0200
-Message-Id: <20191003154330.064190039@linuxfoundation.org>
+        stable@vger.kernel.org, Xiumei Mu <xmu@redhat.com>,
+        Fei Liu <feliu@redhat.com>, Xin Long <lucien.xin@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.9 025/129] macsec: drop skb sk before calling gro_cells_receive
+Date:   Thu,  3 Oct 2019 17:52:28 +0200
+Message-Id: <20191003154330.743447692@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191003154318.081116689@linuxfoundation.org>
 References: <20191003154318.081116689@linuxfoundation.org>
@@ -61,41 +60,61 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bjørn Mork <bjorn@mork.no>
+From: Xin Long <lucien.xin@gmail.com>
 
-[ Upstream commit 3fe4b3351301660653a2bc73f2226da0ebd2b95e ]
+[ Upstream commit ba56d8ce38c8252fff5b745db3899cf092578ede ]
 
-Endpoints with zero wMaxPacketSize are not usable for transferring
-data. Ignore such endpoints when looking for valid in, out and
-status pipes, to make the driver more robust against invalid and
-meaningless descriptors.
+Fei Liu reported a crash when doing netperf on a topo of macsec
+dev over veth:
 
-The wMaxPacketSize of the out pipe is used as divisor. So this change
-fixes a divide-by-zero bug.
+  [  448.919128] refcount_t: underflow; use-after-free.
+  [  449.090460] Call trace:
+  [  449.092895]  refcount_sub_and_test+0xb4/0xc0
+  [  449.097155]  tcp_wfree+0x2c/0x150
+  [  449.100460]  ip_rcv+0x1d4/0x3a8
+  [  449.103591]  __netif_receive_skb_core+0x554/0xae0
+  [  449.108282]  __netif_receive_skb+0x28/0x78
+  [  449.112366]  netif_receive_skb_internal+0x54/0x100
+  [  449.117144]  napi_gro_complete+0x70/0xc0
+  [  449.121054]  napi_gro_flush+0x6c/0x90
+  [  449.124703]  napi_complete_done+0x50/0x130
+  [  449.128788]  gro_cell_poll+0x8c/0xa8
+  [  449.132351]  net_rx_action+0x16c/0x3f8
+  [  449.136088]  __do_softirq+0x128/0x320
 
-Reported-by: syzbot+ce366e2b8296e25d84f5@syzkaller.appspotmail.com
-Signed-off-by: Bjørn Mork <bjorn@mork.no>
-Signed-off-by: Jakub Kicinski <jakub.kicinski@netronome.com>
+The issue was caused by skb's true_size changed without its sk's
+sk_wmem_alloc increased in tcp/skb_gro_receive(). Later when the
+skb is being freed and the skb's truesize is subtracted from its
+sk's sk_wmem_alloc in tcp_wfree(), underflow occurs.
+
+macsec is calling gro_cells_receive() to receive a packet, which
+actually requires skb->sk to be NULL. However when macsec dev is
+over veth, it's possible the skb->sk is still set if the skb was
+not unshared or expanded from the peer veth.
+
+ip_rcv() is calling skb_orphan() to drop the skb's sk for tproxy,
+but it is too late for macsec's calling gro_cells_receive(). So
+fix it by dropping the skb's sk earlier on rx path of macsec.
+
+Fixes: 5491e7c6b1a9 ("macsec: enable GRO and RPS on macsec devices")
+Reported-by: Xiumei Mu <xmu@redhat.com>
+Reported-by: Fei Liu <feliu@redhat.com>
+Signed-off-by: Xin Long <lucien.xin@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/usb/cdc_ncm.c |    6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+ drivers/net/macsec.c |    1 +
+ 1 file changed, 1 insertion(+)
 
---- a/drivers/net/usb/cdc_ncm.c
-+++ b/drivers/net/usb/cdc_ncm.c
-@@ -679,8 +679,12 @@ cdc_ncm_find_endpoints(struct usbnet *de
- 	u8 ep;
+--- a/drivers/net/macsec.c
++++ b/drivers/net/macsec.c
+@@ -1240,6 +1240,7 @@ deliver:
+ 		macsec_rxsa_put(rx_sa);
+ 	macsec_rxsc_put(rx_sc);
  
- 	for (ep = 0; ep < intf->cur_altsetting->desc.bNumEndpoints; ep++) {
--
- 		e = intf->cur_altsetting->endpoint + ep;
-+
-+		/* ignore endpoints which cannot transfer data */
-+		if (!usb_endpoint_maxp(&e->desc))
-+			continue;
-+
- 		switch (e->desc.bmAttributes & USB_ENDPOINT_XFERTYPE_MASK) {
- 		case USB_ENDPOINT_XFER_INT:
- 			if (usb_endpoint_dir_in(&e->desc)) {
++	skb_orphan(skb);
+ 	ret = gro_cells_receive(&macsec->gro_cells, skb);
+ 	if (ret == NET_RX_SUCCESS)
+ 		count_rx(dev, skb->len);
 
 
