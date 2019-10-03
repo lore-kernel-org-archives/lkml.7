@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A54BFC32792
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:31:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 01A35C10F14
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:32:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7AB4A20830
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:31:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C4DA420830
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:32:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570123916;
-	bh=F5UZtW5wJQuWwJm1UKn0QprMlUWyCj5JSSwknCe4+0k=;
+	s=default; t=1570123923;
+	bh=/mKR2Aj0YnNxM7Y42TKtxzacGVHLJvIRIb7cpYpcFKM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=eDMOBqkf96lkHcCSQpMWRW6dSTOsMuvdQ7QNlXqhg7iOO6WboSh2Pl2Us/8nKmAry
-	 QcRkQVTZ6m8V2y895qJZ8vICkmN6GZ9g+8Ed43llXpqXQofiSvoxzFcL6WDC9uAgvb
-	 j315LQC/v1zghhTpzV6sO2E7BAPKctOHgSFT/L3I=
+	b=Ew++5JJhgw0taU84tR8Hb/cx6sJGH/teMF7gurwIyB2B7AOuWC6uaEUlG4LzhkFja
+	 IpZDkzCfaTdw9XJL9rATL7kagsm1qmJNE1mKoN6kV4bY/yrt16J+4vsvBvCHY3Sz/3
+	 +NsyB1x8I+L65Qzzrep48AQiuZS7b1dT7ovs1kcw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733207AbfJCQJg (ORCPT
+        id S1731699AbfJCRcC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 12:09:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58432 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 13:32:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58352 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732594AbfJCQJd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:09:33 -0400
+        id S1732267AbfJCQJa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:09:30 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EE839215EA;
-        Thu,  3 Oct 2019 16:09:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4ECEC21A4C;
+        Thu,  3 Oct 2019 16:09:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570118972;
-        bh=F5UZtW5wJQuWwJm1UKn0QprMlUWyCj5JSSwknCe4+0k=;
+        s=default; t=1570118969;
+        bh=/mKR2Aj0YnNxM7Y42TKtxzacGVHLJvIRIb7cpYpcFKM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=CFfPr9ZvocHnU6udJ8MdEYpnmDy8jX+lpn2ZSCU0eHsAUKL/KsnaFl5f/KWVDTwDN
-         ihJnwWmk/8/BEpAUHWz5PLDjO7lnQO6bzFOAIeeq6cxWjjvNHX1RFJMVB18H+z7cjN
-         n/FLGuq2WM4SqUnjGQppoVRIxfkzEd4blvUhOUwE=
+        b=VwQyGrh3xvu/eWzkEocJU1pFkRr+bGw61JqXWlm/vOHF+wlWG7R2GcuOoxvAYGR1O
+         3SRFTy9jFOPTh1LkIaWBnMlEBaxt+M6CpS9flkwPYo7N+71Mdkl7imUTh59VJHkvnC
+         K88GowJDx+GrgdtMfD9iLwuOeYH1CdTp0sGBq4zs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Guoqing Jiang <guoqing.jiang@cloud.ionos.com>,
+        stable@vger.kernel.org, Yufen Yu <yuyufen@huawei.com>,
         Song Liu <songliubraving@fb.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 077/185] md: dont call spare_active in md_reap_sync_thread if all member devices cant work
-Date:   Thu,  3 Oct 2019 17:52:35 +0200
-Message-Id: <20191003154454.807042835@linuxfoundation.org>
+Subject: [PATCH 4.14 076/185] md/raid1: end bio when the device faulty
+Date:   Thu,  3 Oct 2019 17:52:34 +0200
+Message-Id: <20191003154454.599749140@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191003154437.541662648@linuxfoundation.org>
 References: <20191003154437.541662648@linuxfoundation.org>
@@ -61,43 +60,73 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Guoqing Jiang <jgq516@gmail.com>
+From: Yufen Yu <yuyufen@huawei.com>
 
-[ Upstream commit 0d8ed0e9bf9643f27f4816dca61081784dedb38d ]
+[ Upstream commit eeba6809d8d58908b5ed1b5ceb5fcb09a98a7cad ]
 
-When add one disk to array, the md_reap_sync_thread is responsible
-to activate the spare and set In_sync flag for the new member in
-spare_active().
+When write bio return error, it would be added to conf->retry_list
+and wait for raid1d thread to retry write and acknowledge badblocks.
 
-But if raid1 has one member disk A, and disk B is added to the array.
-Then we offline A before all the datas are synchronized from A to B,
-obviously B doesn't have the latest data as A, but B is still marked
-with In_sync flag.
+In narrow_write_error(), the error bio will be split in the unit of
+badblock shift (such as one sector) and raid1d thread issues them
+one by one. Until all of the splited bio has finished, raid1d thread
+can go on processing other things, which is time consuming.
 
-So let's not call spare_active under the condition, otherwise B is
-still showed with 'U' state which is not correct.
+But, there is a scene for error handling that is not necessary.
+When the device has been set faulty, flush_bio_list() may end
+bios in pending_bio_list with error status. Since these bios
+has not been issued to the device actually, error handlding to
+retry write and acknowledge badblocks make no sense.
 
-Signed-off-by: Guoqing Jiang <guoqing.jiang@cloud.ionos.com>
+Even without that scene, when the device is faulty, badblocks info
+can not be written out to the device. Thus, we also no need to
+handle the error IO.
+
+Signed-off-by: Yufen Yu <yuyufen@huawei.com>
 Signed-off-by: Song Liu <songliubraving@fb.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/md/md.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/md/raid1.c | 26 ++++++++++++++------------
+ 1 file changed, 14 insertions(+), 12 deletions(-)
 
-diff --git a/drivers/md/md.c b/drivers/md/md.c
-index 764ed9c466294..d185725e100c0 100644
---- a/drivers/md/md.c
-+++ b/drivers/md/md.c
-@@ -8906,7 +8906,8 @@ void md_reap_sync_thread(struct mddev *mddev)
- 	/* resync has finished, collect result */
- 	md_unregister_thread(&mddev->sync_thread);
- 	if (!test_bit(MD_RECOVERY_INTR, &mddev->recovery) &&
--	    !test_bit(MD_RECOVERY_REQUESTED, &mddev->recovery)) {
-+	    !test_bit(MD_RECOVERY_REQUESTED, &mddev->recovery) &&
-+	    mddev->degraded != mddev->raid_disks) {
- 		/* success...*/
- 		/* activate any spares */
- 		if (mddev->pers->spare_active(mddev)) {
+diff --git a/drivers/md/raid1.c b/drivers/md/raid1.c
+index 31c4391f6a62b..762d21c84774a 100644
+--- a/drivers/md/raid1.c
++++ b/drivers/md/raid1.c
+@@ -435,19 +435,21 @@ static void raid1_end_write_request(struct bio *bio)
+ 		    /* We never try FailFast to WriteMostly devices */
+ 		    !test_bit(WriteMostly, &rdev->flags)) {
+ 			md_error(r1_bio->mddev, rdev);
+-			if (!test_bit(Faulty, &rdev->flags))
+-				/* This is the only remaining device,
+-				 * We need to retry the write without
+-				 * FailFast
+-				 */
+-				set_bit(R1BIO_WriteError, &r1_bio->state);
+-			else {
+-				/* Finished with this branch */
+-				r1_bio->bios[mirror] = NULL;
+-				to_put = bio;
+-			}
+-		} else
++		}
++
++		/*
++		 * When the device is faulty, it is not necessary to
++		 * handle write error.
++		 * For failfast, this is the only remaining device,
++		 * We need to retry the write without FailFast.
++		 */
++		if (!test_bit(Faulty, &rdev->flags))
+ 			set_bit(R1BIO_WriteError, &r1_bio->state);
++		else {
++			/* Finished with this branch */
++			r1_bio->bios[mirror] = NULL;
++			to_put = bio;
++		}
+ 	} else {
+ 		/*
+ 		 * Set R1BIO_Uptodate in our master bio, so that we
 -- 
 2.20.1
 
