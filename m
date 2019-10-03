@@ -2,129 +2,212 @@ Return-Path: <SRS0=6dNS=X4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17C09C4360C
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 03:39:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 94238C4360C
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 03:39:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DB67321D81
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 03:39:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 676DD21D81
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 03:39:36 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cA5J+YJx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728534AbfJCDjI (ORCPT
+        id S1728633AbfJCDja (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Oct 2019 23:39:08 -0400
-Received: from mail-io1-f69.google.com ([209.85.166.69]:57064 "EHLO
-        mail-io1-f69.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727664AbfJCDjI (ORCPT
+        Wed, 2 Oct 2019 23:39:30 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:43670 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728540AbfJCDj3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Oct 2019 23:39:08 -0400
-Received: by mail-io1-f69.google.com with SMTP id a22so2865366ioq.23
-        for <linux-kernel@vger.kernel.org>; Wed, 02 Oct 2019 20:39:07 -0700 (PDT)
+        Wed, 2 Oct 2019 23:39:29 -0400
+Received: by mail-pg1-f195.google.com with SMTP id v27so844663pgk.10;
+        Wed, 02 Oct 2019 20:39:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=E74AgWlIWK4quOmyTjQa6z3KmOpT3mcnqQYrU2yNDoM=;
+        b=cA5J+YJxCc5P1Qwx8TAT0OMpJZ1QI7l916cMcwZ3bpY5tsB0TqgNvhqH6QB3v36E7q
+         F7gcp/tCyEHN0yjzafN5RBmsCPebwS9Udgas1Q9R++AXTg4tae854+YreVaB3aPBtg9M
+         BYxuc8h++Ee+jkOpd0LzNAH5XvjQ/vHFaStt3T/YBaFT8axOmbhp+fGgPomIH2ZWUUCV
+         JffVnDhgO4GIJJdkE0ESzf7/XjLQDmIGLfVm7VSpDQ5SpRgW45lvacGbzSWHu7tEMKn8
+         A70CEAJrX8JjXGoQN79SJJOr9/WiGL+VohsVRXSFTgvsWLcDoo11zw7/cTAhLKEXrwE3
+         FqyA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=mvJOaHk+FTZL9FNb7UAf3Jmr8rKxImWpF0+2sR45UOw=;
-        b=CeTioO8HN//EQzh1cjV1kfv0iZ2q223oYO8//95ekL1liMpZqPzF2tsWi27K5ZbJoM
-         RwrineuXIVHjOZUrhUphUOxdTsJzJjRkcbVojtAIMG96MpDaK9Qkqrsijrucp4GZrexG
-         /tQiwo5cL6m4hQ/XakiBMrjioohlnhA0EOe9cS/H4aQyoh98/DmCAgJdklkFl0KXXuh3
-         0ddLKecfJNEI+/urDsyd99U14ZrkkmIGS3t53ZcbY6Jlv17b3LAPid6ye1+xCHEQuWLz
-         O490hJJE4GL8fTNxoVOWMhksdknaPFWWeLWWmmpIgLZOuvhGy0b89gf7uJyDV5AiGWr8
-         wvHw==
-X-Gm-Message-State: APjAAAXb1kpDj9jmXoBo8qYLEfw7vksAcZDMHwGGZ5JAgm1f7uUxusRY
-        7uXRnD0XiyrTiszevEB4gQ3wpQnNSGfwG6HUt/fflLmvKX0f
-X-Google-Smtp-Source: APXvYqyVfwzpbA6LMRrTu2ruIncppD+gfoB8uXriSv6YxjGTpOn6O9m0rZxAdq57PC7sPCzETPZKKSadSKsz/qGlMoKjB4wXdv4h
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=E74AgWlIWK4quOmyTjQa6z3KmOpT3mcnqQYrU2yNDoM=;
+        b=VyWRiyUYh/FYEz+9nwfjItw8OuXKeUYEGtYyA/dc37DVlsWmW+8ILqHxPrKFeBXVaR
+         2W0YiU2F/uPjsCpq/EC9VJjUbbgqVPVsRV61ATmfZvCT+Z5Qd50xw5uyFedyMsKnF4zb
+         TN+li+/7MD3WEkh3Yg43duETNzxh/WhR6EfVXmN3qytk7/dpCRz6rOTA8XXUn6ojmpWL
+         bt8EdA/MYGW/FRl1Gp46Ey4s6ouanplsaqpcnc9/4A0nNQQTTlb/3xD0CDl4+qCoOuBF
+         BOy2vfYUpXuA/5FcDYyeJSJbScYUapf8BHycpafFzNDlwUxUAxXks/UDNja8uFwvEzMV
+         XcqQ==
+X-Gm-Message-State: APjAAAVjrcD5/Ko3iXm61US5IoO1S0Z1r4YO80QIirHtopMAhcW3XK8X
+        an1/fIsx29cqNZe1wVoViek=
+X-Google-Smtp-Source: APXvYqx3eGIVOiVRaXeGXTDBXfPTQoXIba8mM9xJUrE+Ncp6eYYLqxwRTC3DcqMo85oRTGHOgSCEOQ==
+X-Received: by 2002:a62:14c2:: with SMTP id 185mr8371105pfu.47.1570073968536;
+        Wed, 02 Oct 2019 20:39:28 -0700 (PDT)
+Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id w6sm936399pfj.17.2019.10.02.20.39.26
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 02 Oct 2019 20:39:27 -0700 (PDT)
+Date:   Wed, 2 Oct 2019 20:39:26 -0700
+From:   Guenter Roeck <linux@roeck-us.net>
+To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc:     Jean Delvare <jdelvare@suse.com>,
+        Nicolas Boichat <nicolas@boichat.ch>,
+        Nicolas Boichat <drinkcat@chromium.org>,
+        linux-hwmon@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] hwmon: applesmc: switch to using input device polling
+ mode
+Message-ID: <20191003033926.GA1301@roeck-us.net>
+References: <20191002214345.GA108728@dtor-ws>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:683:: with SMTP id o3mr7342118ils.58.1570073947326;
- Wed, 02 Oct 2019 20:39:07 -0700 (PDT)
-Date:   Wed, 02 Oct 2019 20:39:07 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000e6d0f70593f953dd@google.com>
-Subject: KMSAN: uninit-value in cxusb_rc_query
-From:   syzbot <syzbot+98730b985cad4931a552@syzkaller.appspotmail.com>
-To:     glider@google.com, linux-kernel@vger.kernel.org,
-        linux-media@vger.kernel.org, mchehab@kernel.org,
-        mkrufky@linuxtv.org, syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191002214345.GA108728@dtor-ws>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+On Wed, Oct 02, 2019 at 02:43:45PM -0700, Dmitry Torokhov wrote:
+> Now that instances of input_dev support polling mode natively,
+> we no longer need to create input_polled_dev instance.
+> 
+> Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
 
-syzbot found the following crash on:
+Applied to hwmon-next.
 
-HEAD commit:    cebbfdbc kmsan: merge set_no_shadow_page() and set_no_orig..
-git tree:       https://github.com/google/kmsan.git master
-console output: https://syzkaller.appspot.com/x/log.txt?x=1277527e600000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=f03c659d0830ab8d
-dashboard link: https://syzkaller.appspot.com/bug?extid=98730b985cad4931a552
-compiler:       clang version 9.0.0 (/home/glider/llvm/clang  
-80fee25776c2fb61e74c1ecb1a523375c2500b69)
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=10a648e5600000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=156af545600000
+I don't know what 0-day is complaining about; the code builds
+fine for me with the supposedly failing configuration. We'll
+see if we get into trouble when the patch shows up in -next.
 
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+98730b985cad4931a552@syzkaller.appspotmail.com
+Guenter
 
-dvb-usb: bulk message failed: -22 (1/-30591)
-==================================================================
-BUG: KMSAN: uninit-value in cxusb_rc_query+0x2f7/0x360  
-drivers/media/usb/dvb-usb/cxusb.c:547
-CPU: 0 PID: 761 Comm: kworker/0:2 Not tainted 5.3.0-rc7+ #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
-Google 01/01/2011
-Workqueue: events dvb_usb_read_remote_control
-Call Trace:
-  __dump_stack lib/dump_stack.c:77 [inline]
-  dump_stack+0x191/0x1f0 lib/dump_stack.c:113
-  kmsan_report+0x162/0x2d0 mm/kmsan/kmsan_report.c:109
-  __msan_warning+0x75/0xe0 mm/kmsan/kmsan_instr.c:294
-  cxusb_rc_query+0x2f7/0x360 drivers/media/usb/dvb-usb/cxusb.c:547
-  dvb_usb_read_remote_control+0xf9/0x290  
-drivers/media/usb/dvb-usb/dvb-usb-remote.c:261
-  process_one_work+0x1572/0x1ef0 kernel/workqueue.c:2269
-  worker_thread+0x111b/0x2460 kernel/workqueue.c:2415
-  kthread+0x4b5/0x4f0 kernel/kthread.c:256
-  ret_from_fork+0x35/0x40 arch/x86/entry/entry_64.S:355
-
-Local variable description: ----ircode@cxusb_rc_query
-Variable was created at:
-  cxusb_rc_query+0x4d/0x360 drivers/media/usb/dvb-usb/cxusb.c:543
-  dvb_usb_read_remote_control+0xf9/0x290  
-drivers/media/usb/dvb-usb/dvb-usb-remote.c:261
-==================================================================
-Kernel panic - not syncing: panic_on_warn set ...
-CPU: 0 PID: 761 Comm: kworker/0:2 Tainted: G    B             5.3.0-rc7+ #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
-Google 01/01/2011
-Workqueue: events dvb_usb_read_remote_control
-Call Trace:
-  __dump_stack lib/dump_stack.c:77 [inline]
-  dump_stack+0x191/0x1f0 lib/dump_stack.c:113
-  panic+0x3c9/0xc1e kernel/panic.c:219
-  kmsan_report+0x2ca/0x2d0 mm/kmsan/kmsan_report.c:129
-  __msan_warning+0x75/0xe0 mm/kmsan/kmsan_instr.c:294
-  cxusb_rc_query+0x2f7/0x360 drivers/media/usb/dvb-usb/cxusb.c:547
-  dvb_usb_read_remote_control+0xf9/0x290  
-drivers/media/usb/dvb-usb/dvb-usb-remote.c:261
-  process_one_work+0x1572/0x1ef0 kernel/workqueue.c:2269
-  worker_thread+0x111b/0x2460 kernel/workqueue.c:2415
-  kthread+0x4b5/0x4f0 kernel/kthread.c:256
-  ret_from_fork+0x35/0x40 arch/x86/entry/entry_64.S:355
-Kernel Offset: disabled
-Rebooting in 86400 seconds..
-
-
----
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-syzbot can test patches for this bug, for details see:
-https://goo.gl/tpsmEJ#testing-patches
+> ---
+>  drivers/hwmon/Kconfig    |  1 -
+>  drivers/hwmon/applesmc.c | 38 ++++++++++++++++++--------------------
+>  2 files changed, 18 insertions(+), 21 deletions(-)
+> 
+> diff --git a/drivers/hwmon/Kconfig b/drivers/hwmon/Kconfig
+> index 650dd71f9724..c5adca9cd465 100644
+> --- a/drivers/hwmon/Kconfig
+> +++ b/drivers/hwmon/Kconfig
+> @@ -299,7 +299,6 @@ config SENSORS_APPLESMC
+>  	depends on INPUT && X86
+>  	select NEW_LEDS
+>  	select LEDS_CLASS
+> -	select INPUT_POLLDEV
+>  	help
+>  	  This driver provides support for the Apple System Management
+>  	  Controller, which provides an accelerometer (Apple Sudden Motion
+> diff --git a/drivers/hwmon/applesmc.c b/drivers/hwmon/applesmc.c
+> index 183ff3d25129..ec93b8d673f5 100644
+> --- a/drivers/hwmon/applesmc.c
+> +++ b/drivers/hwmon/applesmc.c
+> @@ -19,7 +19,7 @@
+>  
+>  #include <linux/delay.h>
+>  #include <linux/platform_device.h>
+> -#include <linux/input-polldev.h>
+> +#include <linux/input.h>
+>  #include <linux/kernel.h>
+>  #include <linux/slab.h>
+>  #include <linux/module.h>
+> @@ -140,7 +140,7 @@ static s16 rest_y;
+>  static u8 backlight_state[2];
+>  
+>  static struct device *hwmon_dev;
+> -static struct input_polled_dev *applesmc_idev;
+> +static struct input_dev *applesmc_idev;
+>  
+>  /*
+>   * Last index written to key_at_index sysfs file, and value to use for all other
+> @@ -681,9 +681,8 @@ static void applesmc_calibrate(void)
+>  	rest_x = -rest_x;
+>  }
+>  
+> -static void applesmc_idev_poll(struct input_polled_dev *dev)
+> +static void applesmc_idev_poll(struct input_dev *idev)
+>  {
+> -	struct input_dev *idev = dev->input;
+>  	s16 x, y;
+>  
+>  	if (applesmc_read_s16(MOTION_SENSOR_X_KEY, &x))
+> @@ -1134,7 +1133,6 @@ static int applesmc_create_nodes(struct applesmc_node_group *groups, int num)
+>  /* Create accelerometer resources */
+>  static int applesmc_create_accelerometer(void)
+>  {
+> -	struct input_dev *idev;
+>  	int ret;
+>  
+>  	if (!smcreg.has_accelerometer)
+> @@ -1144,37 +1142,38 @@ static int applesmc_create_accelerometer(void)
+>  	if (ret)
+>  		goto out;
+>  
+> -	applesmc_idev = input_allocate_polled_device();
+> +	applesmc_idev = input_allocate_device();
+>  	if (!applesmc_idev) {
+>  		ret = -ENOMEM;
+>  		goto out_sysfs;
+>  	}
+>  
+> -	applesmc_idev->poll = applesmc_idev_poll;
+> -	applesmc_idev->poll_interval = APPLESMC_POLL_INTERVAL;
+> -
+>  	/* initial calibrate for the input device */
+>  	applesmc_calibrate();
+>  
+>  	/* initialize the input device */
+> -	idev = applesmc_idev->input;
+> -	idev->name = "applesmc";
+> -	idev->id.bustype = BUS_HOST;
+> -	idev->dev.parent = &pdev->dev;
+> -	idev->evbit[0] = BIT_MASK(EV_ABS);
+> -	input_set_abs_params(idev, ABS_X,
+> +	applesmc_idev->name = "applesmc";
+> +	applesmc_idev->id.bustype = BUS_HOST;
+> +	applesmc_idev->dev.parent = &pdev->dev;
+> +	input_set_abs_params(applesmc_idev, ABS_X,
+>  			-256, 256, APPLESMC_INPUT_FUZZ, APPLESMC_INPUT_FLAT);
+> -	input_set_abs_params(idev, ABS_Y,
+> +	input_set_abs_params(applesmc_idev, ABS_Y,
+>  			-256, 256, APPLESMC_INPUT_FUZZ, APPLESMC_INPUT_FLAT);
+>  
+> -	ret = input_register_polled_device(applesmc_idev);
+> +	ret = input_setup_polling(applesmc_idev, applesmc_idev_poll);
+> +	if (ret)
+> +		goto out_idev;
+> +
+> +	input_set_poll_interval(applesmc_idev, APPLESMC_POLL_INTERVAL);
+> +
+> +	ret = input_register_device(applesmc_idev);
+>  	if (ret)
+>  		goto out_idev;
+>  
+>  	return 0;
+>  
+>  out_idev:
+> -	input_free_polled_device(applesmc_idev);
+> +	input_free_device(applesmc_idev);
+>  
+>  out_sysfs:
+>  	applesmc_destroy_nodes(accelerometer_group);
+> @@ -1189,8 +1188,7 @@ static void applesmc_release_accelerometer(void)
+>  {
+>  	if (!smcreg.has_accelerometer)
+>  		return;
+> -	input_unregister_polled_device(applesmc_idev);
+> -	input_free_polled_device(applesmc_idev);
+> +	input_unregister_device(applesmc_idev);
+>  	applesmc_destroy_nodes(accelerometer_group);
+>  }
+>  
