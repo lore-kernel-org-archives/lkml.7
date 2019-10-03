@@ -2,51 +2,53 @@ Return-Path: <SRS0=6dNS=X4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F1F7C10F14
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:10:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88EFFC32792
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:10:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5F518215EA
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:10:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4FBF321848
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:10:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570119004;
-	bh=vl5OSf5PcUwtpHqom2X88k2JI5OtM9u9ufc3BWxJAGE=;
+	s=default; t=1570119006;
+	bh=CdKsb+0RI3iUs2816+NlYyidIgr7wQBF4+TCgmP++QE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=TED1E4UkufJzyn3I6sUV9NvMBNN6NwQv7zlpWPlYgTfcOBAxK+LPhFpVMBTvrDnR8
-	 DgRt40ewPv0LIqTXMs+ZbJTm3U+jYW34a+YiJ/w56ddWp2tYhdiU1tITR8aEKMpV3p
-	 K//u2nfH0SylmkAhGmIkuw7BXN5nGCJTU1j6OVhM=
+	b=1PCzu0mM6Eq7RaNUCzO8nthbfZ25+aL0nTbWD//qki7vZKuck5DfClxQUnz0sFvEA
+	 9XxMyb4OjPWeAJLk5LFOcSQvvkKhTvrsZz5bVZJfGKZVmyubqevgfaeH+vT35hWr0+
+	 aLWYAWCZ3NstJi0lAPQIXC+ug+IqCRR3R573JbBg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732715AbfJCQKD (ORCPT
+        id S2387558AbfJCQKF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 12:10:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58954 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 12:10:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59144 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387519AbfJCQJy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:09:54 -0400
+        id S2387545AbfJCQKD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:10:03 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D203221783;
-        Thu,  3 Oct 2019 16:09:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B31CE207FF;
+        Thu,  3 Oct 2019 16:10:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570118994;
-        bh=vl5OSf5PcUwtpHqom2X88k2JI5OtM9u9ufc3BWxJAGE=;
+        s=default; t=1570119002;
+        bh=CdKsb+0RI3iUs2816+NlYyidIgr7wQBF4+TCgmP++QE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0m3Eqh05HIVLoqEjp7It8AVJZ2bZXCdLA9Uze5SdNDEko0IXLI30UVJQdW35uV7OP
-         GDs6yBwKc/l3u4QHU6vcmSQSBrF7DzxA3GphOXtlKIyhuxz8g68W75pdwkIlRzXaKI
-         QTF4fIUThz11E7o/O/ro90cyFsL10d2yhO82+hDc=
+        b=D6/8UFM55yXdl+UYxBhXyP7v6/GRr+znJ1pQ21v5ck1fxkNoasR3q0Ujeh0CWYcgm
+         JlbHMURGM9s50mWwgMOMbWodOB4LNE4dG4pSSZYnBb3K65dxx5SBjaSIpKvFfiDEYo
+         QkBSIGUtrF7gKMZyPZ7f1DWfHpjoj9pPpQAkoEYc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Bodong Wang <bodong@mellanox.com>,
-        Saeed Mahameed <saeedm@mellanox.com>
-Subject: [PATCH 4.14 047/185] net/mlx5: Add device ID of upcoming BlueField-2
-Date:   Thu,  3 Oct 2019 17:52:05 +0200
-Message-Id: <20191003154448.481107260@linuxfoundation.org>
+        stable@vger.kernel.org, Xiaofei Tan <tanxiaofei@huawei.com>,
+        James Morse <james.morse@arm.com>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 082/185] efi: cper: print AER info of PCIe fatal error
+Date:   Thu,  3 Oct 2019 17:52:40 +0200
+Message-Id: <20191003154456.044591111@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191003154437.541662648@linuxfoundation.org>
 References: <20191003154437.541662648@linuxfoundation.org>
@@ -59,31 +61,89 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bodong Wang <bodong@mellanox.com>
+From: Xiaofei Tan <tanxiaofei@huawei.com>
 
-[ Upstream commit d19a79ee38c8fda6d297e4227e80db8bf51c71a6 ]
+[ Upstream commit b194a77fcc4001dc40aecdd15d249648e8a436d1 ]
 
-Add the device ID of upcoming BlueField-2 integrated ConnectX-6 Dx
-network controller. Its VFs will be using the generic VF device ID:
-0x101e "ConnectX Family mlx5Gen Virtual Function".
+AER info of PCIe fatal error is not printed in the current driver.
+Because APEI driver will panic directly for fatal error, and can't
+run to the place of printing AER info.
 
-Fixes: 2e9d3e83ab82 ("net/mlx5: Update the list of the PCI supported devices")
-Signed-off-by: Bodong Wang <bodong@mellanox.com>
-Signed-off-by: Saeed Mahameed <saeedm@mellanox.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+An example log is as following:
+{763}[Hardware Error]: Hardware error from APEI Generic Hardware Error Source: 11
+{763}[Hardware Error]: event severity: fatal
+{763}[Hardware Error]:  Error 0, type: fatal
+{763}[Hardware Error]:   section_type: PCIe error
+{763}[Hardware Error]:   port_type: 0, PCIe end point
+{763}[Hardware Error]:   version: 4.0
+{763}[Hardware Error]:   command: 0x0000, status: 0x0010
+{763}[Hardware Error]:   device_id: 0000:82:00.0
+{763}[Hardware Error]:   slot: 0
+{763}[Hardware Error]:   secondary_bus: 0x00
+{763}[Hardware Error]:   vendor_id: 0x8086, device_id: 0x10fb
+{763}[Hardware Error]:   class_code: 000002
+Kernel panic - not syncing: Fatal hardware error!
+
+This issue was imported by the patch, '37448adfc7ce ("aerdrv: Move
+cper_print_aer() call out of interrupt context")'. To fix this issue,
+this patch adds print of AER info in cper_print_pcie() for fatal error.
+
+Here is the example log after this patch applied:
+{24}[Hardware Error]: Hardware error from APEI Generic Hardware Error Source: 10
+{24}[Hardware Error]: event severity: fatal
+{24}[Hardware Error]:  Error 0, type: fatal
+{24}[Hardware Error]:   section_type: PCIe error
+{24}[Hardware Error]:   port_type: 0, PCIe end point
+{24}[Hardware Error]:   version: 4.0
+{24}[Hardware Error]:   command: 0x0546, status: 0x4010
+{24}[Hardware Error]:   device_id: 0000:01:00.0
+{24}[Hardware Error]:   slot: 0
+{24}[Hardware Error]:   secondary_bus: 0x00
+{24}[Hardware Error]:   vendor_id: 0x15b3, device_id: 0x1019
+{24}[Hardware Error]:   class_code: 000002
+{24}[Hardware Error]:   aer_uncor_status: 0x00040000, aer_uncor_mask: 0x00000000
+{24}[Hardware Error]:   aer_uncor_severity: 0x00062010
+{24}[Hardware Error]:   TLP Header: 000000c0 01010000 00000001 00000000
+Kernel panic - not syncing: Fatal hardware error!
+
+Fixes: 37448adfc7ce ("aerdrv: Move cper_print_aer() call out of interrupt context")
+Signed-off-by: Xiaofei Tan <tanxiaofei@huawei.com>
+Reviewed-by: James Morse <james.morse@arm.com>
+[ardb: put parens around terms of && operator]
+Signed-off-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/mellanox/mlx5/core/main.c |    1 +
- 1 file changed, 1 insertion(+)
+ drivers/firmware/efi/cper.c | 15 +++++++++++++++
+ 1 file changed, 15 insertions(+)
 
---- a/drivers/net/ethernet/mellanox/mlx5/core/main.c
-+++ b/drivers/net/ethernet/mellanox/mlx5/core/main.c
-@@ -1574,6 +1574,7 @@ static const struct pci_device_id mlx5_c
- 	{ PCI_VDEVICE(MELLANOX, 0x101c), MLX5_PCI_DEV_IS_VF},	/* ConnectX-6 VF */
- 	{ PCI_VDEVICE(MELLANOX, 0xa2d2) },			/* BlueField integrated ConnectX-5 network controller */
- 	{ PCI_VDEVICE(MELLANOX, 0xa2d3), MLX5_PCI_DEV_IS_VF},	/* BlueField integrated ConnectX-5 network controller VF */
-+	{ PCI_VDEVICE(MELLANOX, 0xa2d6) },			/* BlueField-2 integrated ConnectX-6 Dx network controller */
- 	{ 0, }
- };
+diff --git a/drivers/firmware/efi/cper.c b/drivers/firmware/efi/cper.c
+index ce23d5402bd66..db404aab82b2a 100644
+--- a/drivers/firmware/efi/cper.c
++++ b/drivers/firmware/efi/cper.c
+@@ -507,6 +507,21 @@ static void cper_print_pcie(const char *pfx, const struct cper_sec_pcie *pcie,
+ 		printk(
+ 	"%s""bridge: secondary_status: 0x%04x, control: 0x%04x\n",
+ 	pfx, pcie->bridge.secondary_status, pcie->bridge.control);
++
++	/* Fatal errors call __ghes_panic() before AER handler prints this */
++	if ((pcie->validation_bits & CPER_PCIE_VALID_AER_INFO) &&
++	    (gdata->error_severity & CPER_SEV_FATAL)) {
++		struct aer_capability_regs *aer;
++
++		aer = (struct aer_capability_regs *)pcie->aer_info;
++		printk("%saer_uncor_status: 0x%08x, aer_uncor_mask: 0x%08x\n",
++		       pfx, aer->uncor_status, aer->uncor_mask);
++		printk("%saer_uncor_severity: 0x%08x\n",
++		       pfx, aer->uncor_severity);
++		printk("%sTLP Header: %08x %08x %08x %08x\n", pfx,
++		       aer->header_log.dw0, aer->header_log.dw1,
++		       aer->header_log.dw2, aer->header_log.dw3);
++	}
+ }
  
+ static void cper_print_tstamp(const char *pfx,
+-- 
+2.20.1
+
 
 
