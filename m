@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C69DC32792
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:00:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5950FC10F14
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:00:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 04AF021848
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:00:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1D7AB222CA
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:00:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570118448;
-	bh=s0VKegK65BOo4RZtUtGMJWSPHCFObkHhF0ExV3MMKUE=;
+	s=default; t=1570118453;
+	bh=6OBD0aBevgYHmrpLYBQqh87qftSvBxuBak2GXZSsGdA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=oIOYEp7mqe25Tp8kMkQRZPhxrbDvJrGjjeWUVZaBYrjhqmHmfljF8ERNvBOtCYSSy
-	 YKq76OU/XhLvjHy8OKmnIorwtjiehqqcFbOU8zIneiXVLeHmifniyE7/lFhWu5KUVv
-	 3ZhGOM5X50LGoiaR/cwnQ4xJLvdYcWdjfpZpd2L8=
+	b=W9WSR/FX0kfRG7k/peIivVJSZ8W9TeDgk7xjQLCSyt/C2xjrKvWjdVmD8/PpUYf8v
+	 ++Dbet+PLk6k/WxzG5CTjgB6HUlaRnU+NB6L09t6OaYXNeWiddlUTuPI0Sjng3f36E
+	 vZ6BFBpnHrc/xXe/I3gjbkutpLg4NUdzE7/JvMLY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729688AbfJCQAq (ORCPT
+        id S1731653AbfJCQAw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 12:00:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44606 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 12:00:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44772 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730115AbfJCQAo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:00:44 -0400
+        id S1730237AbfJCQAu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:00:50 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5D6AD20700;
-        Thu,  3 Oct 2019 16:00:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E5BE9215EA;
+        Thu,  3 Oct 2019 16:00:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570118443;
-        bh=s0VKegK65BOo4RZtUtGMJWSPHCFObkHhF0ExV3MMKUE=;
+        s=default; t=1570118449;
+        bh=6OBD0aBevgYHmrpLYBQqh87qftSvBxuBak2GXZSsGdA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Z8BntorKKjuD3T3OQlevLHc2QkQiOOt7HjcHZKESsBzXOaBGiSMpEuG4bmLKHQRNv
-         SnS37s8+nk6ol6arIoGazsR3M5qXNv1rxGVFOx0UlxeN34/477Hc8kv0DqhRKuEP47
-         u8XzgKxE00x0owdndAhO9aUL0n1yv2G44Z1D0/ng=
+        b=MW6D0TlG70YY66eCwOOS/n2DUUgczkYVlP1j14dYWA+WVS2vLn6e95D9ZtqLEriae
+         khMeZxSVUe0wKBIOsUkDVfZY6iE+DZZG+aDIAPpdhxSEvxOsm4lc8hAtpTWBtl+hig
+         Xr8vdqSL2k8j31QQFXM3KqUqS+njgBJErljm28IY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, David Lechner <david@lechnology.com>,
-        Sebastian Reichel <sebastian.reichel@collabora.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 014/129] power: supply: sysfs: ratelimit property read error message
-Date:   Thu,  3 Oct 2019 17:52:17 +0200
-Message-Id: <20191003154325.595664911@linuxfoundation.org>
+        stable@vger.kernel.org, Jiaxing Luo <luojiaxing@huawei.com>,
+        John Garry <john.garry@huawei.com>,
+        Marc Zyngier <maz@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.9 016/129] irqchip/gic-v3-its: Fix LPI release for Multi-MSI devices
+Date:   Thu,  3 Oct 2019 17:52:19 +0200
+Message-Id: <20191003154325.823376892@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191003154318.081116689@linuxfoundation.org>
 References: <20191003154318.081116689@linuxfoundation.org>
@@ -60,36 +60,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: David Lechner <david@lechnology.com>
+From: Marc Zyngier <maz@kernel.org>
 
-[ Upstream commit 87a2b65fc855e6be50f791c2ebbb492541896827 ]
+[ Upstream commit c9c96e30ecaa0aafa225aa1a5392cb7db17c7a82 ]
 
-This adds rate limiting to the message that is printed when reading a
-power supply property via sysfs returns an error. This will prevent
-userspace applications from unintentionally dDOSing the system by
-continuously reading a property that returns an error.
+When allocating a range of LPIs for a Multi-MSI capable device,
+this allocation extended to the closest power of 2.
 
-Signed-off-by: David Lechner <david@lechnology.com>
-Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.com>
+But on the release path, the interrupts are released one by
+one. This results in not releasing the "extra" range, leaking
+the its_device. Trying to reprobe the device will then fail.
+
+Fix it by releasing the LPIs the same way we allocate them.
+
+Fixes: 8208d1708b88 ("irqchip/gic-v3-its: Align PCI Multi-MSI allocation on their size")
+Reported-by: Jiaxing Luo <luojiaxing@huawei.com>
+Tested-by: John Garry <john.garry@huawei.com>
+Signed-off-by: Marc Zyngier <maz@kernel.org>
+Link: https://lore.kernel.org/r/f5e948aa-e32f-3f74-ae30-31fee06c2a74@huawei.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/power/supply/power_supply_sysfs.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/irqchip/irq-gic-v3-its.c | 9 ++++-----
+ 1 file changed, 4 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/power/supply/power_supply_sysfs.c b/drivers/power/supply/power_supply_sysfs.c
-index c0fc98e03c912..85cb5b9c1b6f0 100644
---- a/drivers/power/supply/power_supply_sysfs.c
-+++ b/drivers/power/supply/power_supply_sysfs.c
-@@ -84,7 +84,8 @@ static ssize_t power_supply_show_property(struct device *dev,
- 				dev_dbg(dev, "driver has no data for `%s' property\n",
- 					attr->attr.name);
- 			else if (ret != -ENODEV && ret != -EAGAIN)
--				dev_err(dev, "driver failed to report `%s' property: %zd\n",
-+				dev_err_ratelimited(dev,
-+					"driver failed to report `%s' property: %zd\n",
- 					attr->attr.name, ret);
- 			return ret;
- 		}
+diff --git a/drivers/irqchip/irq-gic-v3-its.c b/drivers/irqchip/irq-gic-v3-its.c
+index 83ca754250fb7..0c0cd2768d6e9 100644
+--- a/drivers/irqchip/irq-gic-v3-its.c
++++ b/drivers/irqchip/irq-gic-v3-its.c
+@@ -1519,14 +1519,13 @@ static void its_irq_domain_free(struct irq_domain *domain, unsigned int virq,
+ 	struct its_device *its_dev = irq_data_get_irq_chip_data(d);
+ 	int i;
+ 
++	bitmap_release_region(its_dev->event_map.lpi_map,
++			      its_get_event_id(irq_domain_get_irq_data(domain, virq)),
++			      get_count_order(nr_irqs));
++
+ 	for (i = 0; i < nr_irqs; i++) {
+ 		struct irq_data *data = irq_domain_get_irq_data(domain,
+ 								virq + i);
+-		u32 event = its_get_event_id(data);
+-
+-		/* Mark interrupt index as unused */
+-		clear_bit(event, its_dev->event_map.lpi_map);
+-
+ 		/* Nuke the entry in the domain */
+ 		irq_domain_reset_irq_data(data);
+ 	}
 -- 
 2.20.1
 
