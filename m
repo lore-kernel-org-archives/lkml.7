@@ -2,113 +2,116 @@ Return-Path: <SRS0=6dNS=X4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB8C4C32792
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 18:34:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8731CC10F14
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 18:35:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 94AFF2086A
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 18:34:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570127654;
-	bh=l7lg82rRQaQDVfeOcm7Rfr/SwqkkoNP3HHRQDP2RzwA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=rQT6Yb1HPfjmi9+EDsX+L6/kgNueIQPdwVGSSqiXSrFFJR1CknbKpoc6VF+yjyRyG
-	 pINegbJLUY1+qiZ8FMjns0m8ZqzG9s1CMXu7LaKceqdkRLVz9R+v0JKOORcsRFt3g7
-	 bhFwxxxEAKgeg6D2MjBmPRPGuwMmh3FJ3gZv7Cd8=
+	by mail.kernel.org (Postfix) with ESMTP id 6B52D20865
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 18:35:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389476AbfJCSeO (ORCPT
+        id S2389495AbfJCSfI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 14:34:14 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:42758 "EHLO
-        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729993AbfJCSeN (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 14:34:13 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=l7lg82rRQaQDVfeOcm7Rfr/SwqkkoNP3HHRQDP2RzwA=; b=rdHcT+kn7cFovw6rm0OfSTKCS
-        KDwDt+68dvvvK0nEwAp1CE5O0vibScB+1y5mauwSu7U9vyyN0snsFE6rnXamMw81w5ovB2KRSgE1F
-        Ms9pOKjNeCi75rnVVNfYuXCApsQcZ0F4DkAxfVK3RuJSKOwVLgQTEFG+c1Uk7zZpCSy8A=;
-Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=ypsilon.sirena.org.uk)
-        by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <broonie@sirena.co.uk>)
-        id 1iG5vQ-0006CL-C9; Thu, 03 Oct 2019 18:34:04 +0000
-Received: by ypsilon.sirena.org.uk (Postfix, from userid 1000)
-        id 837CD2740210; Thu,  3 Oct 2019 19:34:03 +0100 (BST)
-Date:   Thu, 3 Oct 2019 19:34:03 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        Libin Yang <libin.yang@intel.com>,
-        Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
-        Takashi Iwai <tiwai@suse.de>, Sasha Levin <sashal@kernel.org>
-Subject: Re: [PATCH 5.3 039/344] ASoC: SOF: Intel: hda: Make hdac_device
- device-managed
-Message-ID: <20191003183403.GD6090@sirena.co.uk>
-References: <20191003154540.062170222@linuxfoundation.org>
- <20191003154543.920067214@linuxfoundation.org>
- <20191003172617.GA6090@sirena.co.uk>
- <20191003181937.GC3457141@kroah.com>
+        Thu, 3 Oct 2019 14:35:08 -0400
+Received: from mga11.intel.com ([192.55.52.93]:18241 "EHLO mga11.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729993AbfJCSfI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 14:35:08 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 03 Oct 2019 11:35:07 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.67,253,1566889200"; 
+   d="scan'208";a="196429376"
+Received: from okiselev-mobl1.ccr.corp.intel.com (HELO localhost) ([10.251.93.117])
+  by orsmga006.jf.intel.com with ESMTP; 03 Oct 2019 11:35:04 -0700
+Date:   Thu, 3 Oct 2019 21:35:03 +0300
+From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+To:     linux-integrity@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Alexey Klimov <aklimov@redhat.com>,
+        Peter Huewe <peterhuewe@gmx.de>, Jason Gunthorpe <jgg@ziepe.ca>
+Subject: Re: [PATCH v4 0/4] tpm: add update_durations class op to allow
+ override of chip supplied values
+Message-ID: <20191003183503.GD20683@linux.intel.com>
+References: <20190902142735.6280-1-jsnitsel@redhat.com>
+ <20191002203533.GA17766@linux.intel.com>
+ <20191003165551.whfzgmhpm5r6ejpw@cantor>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="6Nae48J/T25AfBN4"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191003181937.GC3457141@kroah.com>
-X-Cookie: Reactor error - core dumped!
+In-Reply-To: <20191003165551.whfzgmhpm5r6ejpw@cantor>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, Oct 03, 2019 at 09:55:51AM -0700, Jerry Snitselaar wrote:
+> On Wed Oct 02 19, Jarkko Sakkinen wrote:
+> > On Mon, Sep 02, 2019 at 07:27:32AM -0700, Jerry Snitselaar wrote:
+> > > We've run into a case where a customer has an STM TPM 1.2 chip
+> > > (version 1.2.8.28), that is getting into an inconsistent state and
+> > > they end up getting tpm transmit errors.  In really old tpm code this
+> > > wasn't seen because the code that grabbed the duration values from the
+> > > chip could fail silently, and would proceed to just use default values
+> > > and move forward. More recent code though successfully gets the
+> > > duration values from the chip, and using those values this particular
+> > > chip version gets into the state seen by the customer.
+> > > 
+> > > The idea with this patchset is to provide a facility like the
+> > > update_timeouts operation to allow the override of chip supplied
+> > > values.
+> > > 
+> > > changes from v3:
+> > >     * Assign value to version when tpm1_getcap is successful for TPM 1.1 device
+> > >       not when it fails.
+> > > 
+> > > changes from v2:
+> > >     * Added patch 1/3
+> > >     * Rework tpm_tis_update_durations to make use of new version structs
+> > >       and pull tpm1_getcap calls out of loop.
+> > > 
+> > > changes from v1:
+> > >     * Remove unneeded newline
+> > >     * Formatting cleanups
+> > >     * Change tpm_tis_update_durations to be a void function, and
+> > >       use chip->duration_adjusted to track whether adjustment was
+> > >       made.
+> > > 
+> > > Jarkko Sakkinen (1):
+> > >       tpm: Remove duplicate code from caps_show() in tpm-sysfs.c
+> > > 
+> > > Jerry Snitselaar (2):
+> > >       tpm: provide a way to override the chip returned durations
+> > >       tpm_tis: override durations for STM tpm with firmware 1.2.8.28
+> > > 
+> > > 
+> > 
+> > I applied to my master branch.
+> > 
+> > Probably hard to get wide testing given the "niche" case when the
+> > issue happens. Should be sufficient that the commonc case still
+> > works.
+> > 
+> > /Jarkko
+> 
+> Yeah, it is a pain. The people with the problem systems tested an
+> earlier version of Alexey's patches. I have a system with a different
+> rev STM device, so I did some testing with a modified patch that keyed
+> off that revision, but it will be hard to get it wide exposure.
 
---6Nae48J/T25AfBN4
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+I think this is sufficient for me as it
 
-On Thu, Oct 03, 2019 at 08:19:37PM +0200, Greg Kroah-Hartman wrote:
-> On Thu, Oct 03, 2019 at 06:26:17PM +0100, Mark Brown wrote:
-> > On Thu, Oct 03, 2019 at 05:50:04PM +0200, Greg Kroah-Hartman wrote:
+1. Fixes the issue.
+2. I've verified that it doesn't break systems that don't have the
+   issue
 
-> > > Signed-off-by: Libin Yang <libin.yang@intel.com>
-> > > Signed-off-by: Ranjani Sridharan <ranjani.sridharan@linux.intel.com>
-> > > Reviewed-by: Takashi Iwai <tiwai@suse.de>
-> > > Link: https://lore.kernel.org/r/20190626070450.7229-1-ranjani.sridharan@linux.intel.com
-> > > Signed-off-by: Mark Brown <broonie@kernel.org>
-> > > Signed-off-by: Sasha Levin <sashal@kernel.org>
-> > > ---
+The worst case scenario is that you break something that is broken
+already...
 
-> > Looks like you're missing your own signoff on this (and quite a few of
-> > the others)?
-
-> Sasha signs off on these, I didn't, as he is the one that queues them
-> up.
-
-It seems off when they go out as e-mail with you as the sender - it'll
-be OK in git if he's the committer of course but it's weird here.
-
---6Nae48J/T25AfBN4
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl2WPxoACgkQJNaLcl1U
-h9AxNwf+I1RACj7QAv9TLm9jlzO6uYlsr+zdnMrG+0ZOunWrliY1KLheoRB6M0xi
-mDqEJNimfEyhB4TddvIehWrbEA64IBq78XefzDknQnbyI/m/v6Lsd8F9ZWf9tbSQ
-sxwN4eh66bPap7YmACtltDh7TV0QVdo8u+y1zzVczQ/UBYUFDN+sfCfxBDL1GtAo
-w+AG6SBVAwl4pYBLwzB5DMpnk6s2MJOi1x9icmoBf/6jv4uGlUjDJN0DxGI8WMcE
-5K97j3661Y1IPLp9sBnXr4dJxd0u88b2qYTyoIuohv6ZCAjCh5ZXLh6mF0zOztW6
-PociXsKyM44Ze2Bp3P1docJMulodZA==
-=k2RV
------END PGP SIGNATURE-----
-
---6Nae48J/T25AfBN4--
+/Jarkko
