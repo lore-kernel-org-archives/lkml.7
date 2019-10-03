@@ -2,143 +2,142 @@ Return-Path: <SRS0=6dNS=X4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C767C32792
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 06:43:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DBD7C4CED1
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 06:44:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 638C0222BE
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 06:43:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 33810222C5
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 06:44:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="dLBEBmZ6"
+	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="hxlT2Gi+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726354AbfJCGn1 (ORCPT
+        id S1727024AbfJCGoy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 02:43:27 -0400
-Received: from mx0b-00082601.pphosted.com ([67.231.153.30]:14116 "EHLO
-        mx0b-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725770AbfJCGn1 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 02:43:27 -0400
-Received: from pps.filterd (m0109331.ppops.net [127.0.0.1])
-        by mx0a-00082601.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id x936hOZB028094
-        for <linux-kernel@vger.kernel.org>; Wed, 2 Oct 2019 23:43:25 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
- : date : message-id : mime-version : content-type; s=facebook;
- bh=6DXtwSfVTxTQsg7OTAhIZXgsLk6C+uUhHjPiAO5wwjY=;
- b=dLBEBmZ62kTmrmp57awYr6nJ79lFsBRMUGbKHuv6g7qkTYpUn2+OIx9UosJRybSBzX7b
- MTZHwBn8ltvYqJBAN5U2Jey7kn15pQmka6VP3JrJWJ2DpojP5rdE/ljWa0Tj5DJ8jEPI
- j0tsFdJ7j2xsQF0xp8e/rV404/9XOrTr2m8= 
-Received: from mail.thefacebook.com (mailout.thefacebook.com [199.201.64.23])
-        by mx0a-00082601.pphosted.com with ESMTP id 2vc9fw8v2u-2
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Wed, 02 Oct 2019 23:43:25 -0700
-Received: from mx-out.facebook.com (2620:10d:c081:10::13) by
- mail.thefacebook.com (2620:10d:c081:35::125) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA) id 15.1.1713.5;
- Wed, 2 Oct 2019 23:43:22 -0700
-Received: by devbig006.ftw2.facebook.com (Postfix, from userid 4523)
-        id 8EA6762E311C; Wed,  2 Oct 2019 23:43:20 -0700 (PDT)
-Smtp-Origin-Hostprefix: devbig
-From:   Song Liu <songliubraving@fb.com>
-Smtp-Origin-Hostname: devbig006.ftw2.facebook.com
-To:     <linux-kernel@vger.kernel.org>
-CC:     <kernel-team@fb.com>, Song Liu <songliubraving@fb.com>,
-        <stable@vger.kernel.org>, Peter Zijlstra <peterz@infradead.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>
-Smtp-Origin-Cluster: ftw2c04
-Subject: [PATCH] perf/core: fix corner case in perf_rotate_context()
-Date:   Wed, 2 Oct 2019 23:43:17 -0700
-Message-ID: <20191003064317.3961135-1-songliubraving@fb.com>
-X-Mailer: git-send-email 2.17.1
-X-FB-Internal: Safe
+        Thu, 3 Oct 2019 02:44:54 -0400
+Received: from mail-eopbgr1300117.outbound.protection.outlook.com ([40.107.130.117]:59744
+        "EHLO APC01-HK2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725497AbfJCGoy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 02:44:54 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=UallpPXBEEqVcDOOhxMxkaLov4yuIaDLuizWfNpxwm/4XfcINUQdqAmtCjldcNyPWkAFsJTkWBOMWIBLbEBy+JhSX3Bj6tknyHKvcje+b3n2ywKep21304pD/Dpggo/e8aFhtteBRjXONUlzzMXbtyXAbOyhx0+ZKB9W0Pz2bGWYdvRtcr+VZ3lnG17cgJzzHwZlkOVXFWq1RH+UGGp4unKXt42CYevt1LVxO72j40BaSNKtupcBsT0Gmv1KCGYfC8NfajiiCjOQS0g3DDOfTHeffvjnsFg9po+3XU3sDuVyoljWrojelODsAjCfWs2pb2+wLOxh86iQwo4/6sHb4w==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=XzTi/bd79kdo4uu5/8krTJiB7nb/MdXsYmOR5LLVuZc=;
+ b=b50ZM90GrWg/FqfEgpJ7DsGYUONmKu+IKZ0YvCaQrDlWOLklPPgRX1UFxznM80mUPE0UeowOjj7iCOpfpfk4XNV6dwIpjf1GxxuRtvF6x8B4KGttc+ovnXEj3f5tmCcLDTVn+MYAqnoZ+a2aXAvQYTIGNPXcwCcqcDIv6SwiVup24rBAcXn/LmdTkPwnewiKO4nHqxs21cLGcQATL+aoJRfKZ3IXcbHMIQnuvvpx7Ln8QjC07K2nER+1LtgxX4CAgdcXBN4rwhq80b6pN6CNCSwCqE4To4IaX2woFyw8mqgR8SPKV35MpCRptreqBDNI9vS397TRTI3zzBvxGZ1liQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=microsoft.com; dmarc=pass action=none
+ header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=XzTi/bd79kdo4uu5/8krTJiB7nb/MdXsYmOR5LLVuZc=;
+ b=hxlT2Gi+dj1690Hk6JM6AZF/fext1NsKYsXB8D4EmPk+7F+a9i14ua0SMupYXjcyuS9SltN/W4JgjqdeP6VNatYb+hYSTJso59XlwatCLtTwtHGtS40pVGtdVJwVBpAMXPRq7zUSplIXwRkg3stWogzE7Z9X9SPLUmwkxU/1G4c=
+Received: from PU1P153MB0169.APCP153.PROD.OUTLOOK.COM (10.170.189.13) by
+ PU1P153MB0187.APCP153.PROD.OUTLOOK.COM (10.170.188.151) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2327.3; Thu, 3 Oct 2019 06:44:05 +0000
+Received: from PU1P153MB0169.APCP153.PROD.OUTLOOK.COM
+ ([fe80::fc44:a784:73e6:c1c2]) by PU1P153MB0169.APCP153.PROD.OUTLOOK.COM
+ ([fe80::fc44:a784:73e6:c1c2%7]) with mapi id 15.20.2327.021; Thu, 3 Oct 2019
+ 06:44:05 +0000
+From:   Dexuan Cui <decui@microsoft.com>
+To:     "dmitry.torokhov@gmail.com" <dmitry.torokhov@gmail.com>
+CC:     KY Srinivasan <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        "sashal@kernel.org" <sashal@kernel.org>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Michael Kelley <mikelley@microsoft.com>
+Subject: RE: [PATCH] Input: hyperv-keyboard: Add the support of hibernation
+Thread-Topic: [PATCH] Input: hyperv-keyboard: Add the support of hibernation
+Thread-Index: AQHVbwXQRPtGDntMcU+sv4R8q5dPMac1q4VggAqesgCABFerkIAAR5AAgAAEvxCAA52PEA==
+Date:   Thu, 3 Oct 2019 06:44:04 +0000
+Message-ID: <PU1P153MB0169CC57749BF297F2581B02BF9F0@PU1P153MB0169.APCP153.PROD.OUTLOOK.COM>
+References: <1568244975-66795-1-git-send-email-decui@microsoft.com>
+ <20190919161752.GS237523@dtor-ws>
+ <PU1P153MB016914A7C827CA35D7FEB66ABF8B0@PU1P153MB0169.APCP153.PROD.OUTLOOK.COM>
+ <20190928003156.GU237523@dtor-ws>
+ <PU1P153MB0169C315F7F9EBEBED4C7A7DBF820@PU1P153MB0169.APCP153.PROD.OUTLOOK.COM>
+ <20190930230652.GW237523@dtor-ws>
+ <PU1P153MB01696258D9983DF59D68E748BF9F0@PU1P153MB0169.APCP153.PROD.OUTLOOK.COM>
+In-Reply-To: <PU1P153MB01696258D9983DF59D68E748BF9F0@PU1P153MB0169.APCP153.PROD.OUTLOOK.COM>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=True;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Owner=decui@microsoft.com;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2019-10-03T05:35:12.9166695Z;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=General;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Application=Microsoft Azure
+ Information Protection;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=b8fbbc20-ec57-44eb-b763-8c5867f66517;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Extended_MSFT_Method=Automatic
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=decui@microsoft.com; 
+x-originating-ip: [2601:600:a280:7f70:24b0:cdff:a7c5:c70f]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 3e54bb8f-0ace-4921-9d5b-08d747cd15b5
+x-ms-office365-filtering-ht: Tenant
+x-ms-traffictypediagnostic: PU1P153MB0187:|PU1P153MB0187:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <PU1P153MB01875BDB1344A08938A40952BF9F0@PU1P153MB0187.APCP153.PROD.OUTLOOK.COM>
+x-ms-oob-tlc-oobclassifiers: OLM:9508;
+x-forefront-prvs: 01792087B6
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(346002)(136003)(376002)(396003)(366004)(39860400002)(199004)(189003)(74316002)(2940100002)(229853002)(52536014)(66946007)(64756008)(66446008)(66476007)(66556008)(14454004)(102836004)(2906002)(6116002)(5660300002)(76116006)(8990500004)(99286004)(316002)(76176011)(6916009)(6506007)(22452003)(71200400001)(186003)(7696005)(71190400001)(54906003)(305945005)(446003)(8936002)(11346002)(2351001)(81166006)(33656002)(86362001)(486006)(10090500001)(8676002)(81156014)(2501003)(25786009)(478600001)(6436002)(55016002)(5640700003)(256004)(14444005)(107886003)(4326008)(6246003)(9686003)(476003)(46003)(10290500003)(1361003)(7736002);DIR:OUT;SFP:1102;SCL:1;SRVR:PU1P153MB0187;H:PU1P153MB0169.APCP153.PROD.OUTLOOK.COM;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: microsoft.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: FY2sOINe7ZVumXp3E7adJUjFpwDN9N55EiJpblczxJax9vUaZbHSXC1vI0+J4RjT4W1XCoFkgNvO1n1pVmqAgTih2IRMYBGrvjr2F+27IXvQ3d3VkRz/InieoNk/RaOnVywfVpaAxt4cYIRF1ncRWeb+piDRGFiKpr799MrlsIp3NZm4AmYIpxxGZBlupSMwuN/7N2XfadpI/zCqz2P3ALNMel6lmMGNktaOUvCupZxgwATfhix36EkMDpBYPAi4/YLEE+PYqLTYSllmbfzdxV2VVlmwyg7s/zgpivr7V5rXT6FRAivQyDRqqngFMELzR/nzcS1R3rfVZBdJ5dNsoqC4DVFns3LH+jP6zaK1WZNmoz8hMM8wdOhpd87PsjXyPhA22N26wdETK2jvoKzUHokxfQr+NtarNTs9JtGRl4Q=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,1.0.8
- definitions=2019-10-03_03:2019-10-01,2019-10-03 signatures=0
-X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 mlxscore=0
- lowpriorityscore=0 impostorscore=0 bulkscore=0 mlxlogscore=999
- malwarescore=0 clxscore=1015 adultscore=0 phishscore=0 suspectscore=1
- priorityscore=1501 spamscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-1908290000 definitions=main-1910030064
-X-FB-Internal: deliver
+X-OriginatorOrg: microsoft.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 3e54bb8f-0ace-4921-9d5b-08d747cd15b5
+X-MS-Exchange-CrossTenant-originalarrivaltime: 03 Oct 2019 06:44:04.9798
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: UmwmdAPkB+pFQuMQ8du4BoZT+YXDzxUqfIm4DPr0ZcVJ7LuZQw080L/haVh8fxE1gCsJz1yv+9ITQBfdml8cIQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PU1P153MB0187
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is a rare corner case, but it does happen:
-
-In perf_rotate_context(), when the first cpu flexible event fail to
-schedule, cpu_rotate is 1, while cpu_event is NULL. Since cpu_event is
-NULL, perf_rotate_context will _NOT_ call cpu_ctx_sched_out(), thus
-cpuctx->ctx.is_active will have EVENT_FLEXIBLE set. Then, the next
-perf_event_sched_in() will skip all cpu flexible events because of the
-EVENT_FLEXIBLE bit.
-
-In the next call of perf_rotate_context(), cpu_rotate stays 1, and
-cpu_event stays NULL, so this process repeats. The end result is, flexible
-events on this cpu will not be scheduled (until another event being added
-to the cpuctx).
-
-Similar issue may happen with the task_ctx. But it is usually not a
-problem because the task_ctx moves around different CPU.
-
-Fix this corner case by using cpu_rotate and task_rotate to gate calls for
-(cpu_)ctx_sched_out and rotate_ctx. Also enable rotate_ctx() to handle
-event == NULL case.
-
-Fixes: 8d5bce0c37fa ("perf/core: Optimize perf_rotate_context() event scheduling")
-Cc: stable@vger.kernel.org # v4.17+
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Signed-off-by: Song Liu <songliubraving@fb.com>
----
- kernel/events/core.c | 15 +++++++++++----
- 1 file changed, 11 insertions(+), 4 deletions(-)
-
-diff --git a/kernel/events/core.c b/kernel/events/core.c
-index 4655adbbae10..50021735f367 100644
---- a/kernel/events/core.c
-+++ b/kernel/events/core.c
-@@ -3775,6 +3775,13 @@ static void rotate_ctx(struct perf_event_context *ctx, struct perf_event *event)
- 	if (ctx->rotate_disable)
- 		return;
- 
-+	/* if no event specified, try to rotate the first event */
-+	if (!event)
-+		event = rb_entry_safe(rb_first(&ctx->flexible_groups.tree),
-+				      typeof(*event), group_node);
-+	if (!event)
-+		return;
-+
- 	perf_event_groups_delete(&ctx->flexible_groups, event);
- 	perf_event_groups_insert(&ctx->flexible_groups, event);
- }
-@@ -3816,14 +3823,14 @@ static bool perf_rotate_context(struct perf_cpu_context *cpuctx)
- 	 * As per the order given at ctx_resched() first 'pop' task flexible
- 	 * and then, if needed CPU flexible.
- 	 */
--	if (task_event || (task_ctx && cpu_event))
-+	if (task_rotate || (task_ctx && cpu_rotate))
- 		ctx_sched_out(task_ctx, cpuctx, EVENT_FLEXIBLE);
--	if (cpu_event)
-+	if (cpu_rotate)
- 		cpu_ctx_sched_out(cpuctx, EVENT_FLEXIBLE);
- 
--	if (task_event)
-+	if (task_rotate)
- 		rotate_ctx(task_ctx, task_event);
--	if (cpu_event)
-+	if (cpu_rotate)
- 		rotate_ctx(&cpuctx->ctx, cpu_event);
- 
- 	perf_event_sched_in(cpuctx, task_ctx, current);
--- 
-2.17.1
-
+PiBGcm9tOiBEZXh1YW4gQ3VpDQo+IFNlbnQ6IFdlZG5lc2RheSwgT2N0b2JlciAyLCAyMDE5IDEw
+OjM1IFBNDQo+ID4gLi4uIA0KPiA+DQo+ID4gwq9cXyjjg4QpXy/CryBJZiB5b3UgZG8gbm90IHdh
+bnQgdG8gaW1wbGVtZW50IGhpYmVybmF0aW9uIHByb3Blcmx5IGluIHZtYnVzDQo+ID4gY29kZSB0
+aGF0IGlzIHRvdGFsbHkgdXAgdG8geW91IChoYXZlIHlvdSByZWFkIGluIHBtLmggaG93IGZyZWV6
+ZSgpIGlzDQo+ID4gZGlmZmVyZW50IGZyb20gc3VzcGVuZCgpPykuDQo+ID4gRG1pdHJ5DQo+IA0K
+PiBJIHVuZGVyc3RhbmQgZnJlZXplKCkgaXMgZGlmZmVyZW50IGZyb20gc3VzcGVuZCgpLiBIZXJl
+IEkgdHJlYXQgc3VzcGVuZCgpIGFzIGENCj4gaGVhdnl3ZWlnaHQgZnJlZXplKCkgZm9yIHNpbXBs
+aWNpdHkgYW5kIElNSE8gdGhlIGV4dHJhIGNvc3Qgb2YgdGltZSBpcw0KPiBuZWdsZWN0YWJsZSBj
+b25zaWRlcmluZyB0aGUgbG9uZyBoaWJlcm5hdGlvbiBwcm9jZXNzLCB3aGljaCBjYW4gdGFrZQ0K
+PiA1fjEwKyBzZWNvbmRzLg0KPiANCj4gRXZlbiBpZiBJIGltcGxlbWVudCBhbGwgdGhlIHBtIG9w
+cywgSU1PIHRoZSBpc3N1ZSB3ZSdyZSB0YWxraW5nIGFib3V0DQo+IChpLmUuIHRoZSBoaWJlcm5h
+dGlvbiBwcm9jZXNzIGNhbiBiZSBhYm9ydGVkIGJ5IHVzZXIncyBrZXlib2FyZC9tb3VzZQ0KPiBh
+Y3Rpdml0aWVzKSBzdGlsbCBleGlzdHMuIEFjdHVhbGx5IEkgdGhpbmsgYSBwaHlzaWNhbCBMaW51
+eCBtYWNoaW5lIHNob3VsZCBoYXZlDQo+IHRoZSBzYW1lIGlzc3VlLg0KPiANCj4gSW4gcHJhY3Rp
+Y2UsIElNTyB0aGUgaXNzdWUgaXMgbm90IGEgYmlnIGNvbmNlcm4sIGFzIHRoZSBWTSB1c3VhbGx5
+IHJ1bnMgaW4NCj4gYSByZW1vdGUgZGF0YSBjZW50ZXIsIGFuZCB0aGUgdXNlciBoYXMgbm8gYWNj
+ZXNzIHRvIHRoZSBWTSdzDQo+IGtleWJvYXJkL21vdXNlLiA6LSkNCj4gDQo+IEkgaG9wZSBJIHVu
+ZGVyc3Rvb2QgeW91ciBjb21tZW50cy4gSSdsbCBwb3N0IGEgdjIgd2l0aG91dCB0aGUgbm90aWZp
+ZXIuDQo+IFBsZWFzZSBBY2sgdGhlIHYyIGlmIGl0IGxvb2tzIGdvb2QgdG8geW91Lg0KPiANCj4g
+LS0gRGV4dWFuDQoNCkkgdGhpbmsgSSB1bmRlcnN0b29kIG5vdzogaXQgbG9va3MgdGhlIHZtYnVz
+IGRyaXZlciBzaG91bGQgaW1wbGVtZW50DQphIHByZXBhcmUoKSBvciBmcmVlemUoKSwgd2hpY2gg
+Y2FsbHMgdGhlIGh5cGVydl9rZXlib2FyZCBkcml2ZXIncw0KcHJlcGFyZSgpIG9yIGZyZWV6ZSgp
+LCB3aGljaCBjYW4gc2V0IHRoZSBmbGFnIG9yIGRpc2FibGUgdGhlIGtleWJvYXJkDQpldmVudCBo
+YW5kbGluZy4gVGhpcyB3YXkgd2UgZG9uJ3QgbmVlZCB0aGUgbm90aWZpZXIuDQoNClBsZWFzZSBs
+ZXQgbWUga25vdyBpZiBJIHN0aWxsIGRvbid0IGdldCBpdCByaWdodC4NCg0KVGhhbmtzLA0KLS0g
+RGV4dWFuDQo=
