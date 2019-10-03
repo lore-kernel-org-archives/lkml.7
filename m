@@ -2,96 +2,105 @@ Return-Path: <SRS0=6dNS=X4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BEAAC10F14
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 20:37:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C132EC32792
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 20:37:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7544821D81
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 20:37:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 94ACA207FF
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 20:37:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ziI1PEzA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732992AbfJCUhD (ORCPT
+        id S2388919AbfJCUhU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 16:37:03 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:47366 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726669AbfJCUhD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 16:37:03 -0400
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 0BA5D10CC1EE;
-        Thu,  3 Oct 2019 20:37:03 +0000 (UTC)
-Received: from llong.remote.csb (ovpn-122-104.rdu2.redhat.com [10.10.122.104])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 2BB485D6A9;
-        Thu,  3 Oct 2019 20:37:02 +0000 (UTC)
-Subject: Re: [PATCH] lib/smp_processor_id: Don't use cpumask_equal()
-To:     Ingo Molnar <mingo@kernel.org>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>
-Cc:     linux-kernel@vger.kernel.org,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Juri Lelli <jlelli@redhat.com>
-References: <20191003201835.19903-1-longman@redhat.com>
-From:   Waiman Long <longman@redhat.com>
-Organization: Red Hat
-Message-ID: <72d6418b-5f37-c527-1b0a-be5e0cc88f5a@redhat.com>
-Date:   Thu, 3 Oct 2019 16:37:03 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        Thu, 3 Oct 2019 16:37:20 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:51401 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387407AbfJCUhT (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 16:37:19 -0400
+Received: by mail-wm1-f65.google.com with SMTP id 7so3364666wme.1
+        for <linux-kernel@vger.kernel.org>; Thu, 03 Oct 2019 13:37:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=63ds3t73ZrLj3HbV7qUiVgBUuKHqGbWcEjyWgIzskeE=;
+        b=ziI1PEzAwuBD/3nwpmQYYXYslTYque2zlEKkMbUyCSw6dlHNV7kB9VAwWgpRurXKN7
+         mcDYAmcUhP4bsEqTOLOp0AbA///bwWtKdAP/Z4MthfJQ7kRwHGtBp/lb5UwXguNCgPoQ
+         XmUHs1ODk2abTw3MeluecZg+IkWrkJz2mOg6Bqe57LEJevWeEp5tbIi/eMMHn8HSabf2
+         YW0j13DLGMF/JF9q0OleDgrOgI+RugOdwOC8B6IAI1lj+J99cQtrssH0cvuTSLNOtufV
+         TygGCxlOyWqws2dM4Ux9YWbSh8RVGOp0uKQ7MXo2dt9pqR5oK7lRKvzZmCkPE4o9i2d/
+         uo8Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=63ds3t73ZrLj3HbV7qUiVgBUuKHqGbWcEjyWgIzskeE=;
+        b=pqBhxzulcfu0n4kjhSJ5+bEsN9DL5Hp++k5VIZMHs08AVwK/J761BYeIQHgVIJG7Y/
+         6T93MtFtITkZBozsXNCWALH2vLl7P+NxSyJ3kgxIh79jCayI56nMOzmMp/ka2ynwig2M
+         IBNPu9K/1uGdsOMFt9lJ4g2ITgy1O47kghG79zVWFLiHGPl6CvzvwywMBs500HrYMKzK
+         O1+l+jHGDVunPRyBcVBnndn1ExDqWwqmeLBkdHA3FGCtntVUxd8qGyBYbY+dEZNCrjj4
+         ozIcjbMAurXOHidSfYyZ+OZLB2ACjczW2GMvu8SmXqQ9Fzo8L5qfu9vZRlHPhybjA9LW
+         AVpw==
+X-Gm-Message-State: APjAAAUXSS+xrlEzIGt31+/pD3BK4jiGdl93xe1cejE6kKjAN0x8Hgfx
+        8sFqyY1qEbV22RtvYTw6OXVmc9WRmJTbd8XxagzMtg==
+X-Google-Smtp-Source: APXvYqzVrVcXrzwTGscDiiPv6l+aU2YRfAhMTVv5NfavOPgIBNOF2oVCTqQSyYHsCIQ6dv7jqQDIQMnq8Lmtfdlg0qI=
+X-Received: by 2002:a1c:9988:: with SMTP id b130mr8527379wme.164.1570135036923;
+ Thu, 03 Oct 2019 13:37:16 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20191003201835.19903-1-longman@redhat.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.65]); Thu, 03 Oct 2019 20:37:03 +0000 (UTC)
+References: <20191002231617.3670-1-john.stultz@linaro.org> <20191002231617.3670-3-john.stultz@linaro.org>
+ <2e369349-41f6-bd15-2829-fa886f209b39@redhat.com>
+In-Reply-To: <2e369349-41f6-bd15-2829-fa886f209b39@redhat.com>
+From:   John Stultz <john.stultz@linaro.org>
+Date:   Thu, 3 Oct 2019 13:37:04 -0700
+Message-ID: <CALAqxLVcQ7yZuJCUEqGmvqcz5u0Gd=xJzqLbmiXKR+LJrOhvMQ@mail.gmail.com>
+Subject: Re: [RFC][PATCH 2/3] usb: roles: Add usb role switch notifier.
+To:     Hans de Goede <hdegoede@redhat.com>
+Cc:     lkml <linux-kernel@vger.kernel.org>, Yu Chen <chenyu56@huawei.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Chunfeng Yun <chunfeng.yun@mediatek.com>,
+        Felipe Balbi <balbi@kernel.org>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Jun Li <lijun.kernel@gmail.com>,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        Linux USB List <linux-usb@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 10/3/19 4:18 PM, Waiman Long wrote:
-> The check_preemption_disabled() function uses cpumask_equal() to see
-> if the task is bounded to the current CPU only. cpumask_equal() calls
-> memcmp() to do the comparison. As x86 doesn't have __HAVE_ARCH_MEMCMP,
-> the slow memcmp() function in lib/string.c is used.
+On Thu, Oct 3, 2019 at 2:25 AM Hans de Goede <hdegoede@redhat.com> wrote:
+> On 03-10-2019 01:16, John Stultz wrote:
+> > From: Yu Chen <chenyu56@huawei.com>
+> >
+> > This patch adds notifier for drivers want to be informed of the usb role
+> > switch.
 >
-> On a RT kernel that call check_preemption_disabled() very frequently,
-> below is the perf-record output of a certain microbenchmark:
+> I do not see any patches in this series actually using this new
+> notifier.
 >
->   42.75%  2.45%  testpmd [kernel.kallsyms] [k] check_preemption_disabled
->   40.01% 39.97%  testpmd [kernel.kallsyms] [k] memcmp
->
-> We should avoid calling memcmp() in performance critical path. So the
-> cpumask_equal() call is now replaced with an equivalent check that
-> makes no external function call.
->
-> Signed-off-by: Waiman Long <longman@redhat.com>
-> ---
->  lib/smp_processor_id.c | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
->
-> diff --git a/lib/smp_processor_id.c b/lib/smp_processor_id.c
-> index 60ba93fc42ce..3fee05ac92f8 100644
-> --- a/lib/smp_processor_id.c
-> +++ b/lib/smp_processor_id.c
-> @@ -23,7 +23,8 @@ unsigned int check_preemption_disabled(const char *what1, const char *what2)
->  	 * Kernel threads bound to a single CPU can safely use
->  	 * smp_processor_id():
->  	 */
-> -	if (cpumask_equal(current->cpus_ptr, cpumask_of(this_cpu)))
-> +	if ((current->nr_cpus_allowed == 1) &&
-> +	    cpumask_test_cpu(this_cpu, current->cpus_ptr))
->  		goto out;
->  
->  	/*
+> Maybe it is best to drop this patch until we actually have in-kernel
+> users of this new API show up ?
 
-My bad. The second check isn't really necessary.
+Fair point. I'm sort of taking a larger patchset and trying to break
+it up into more easily reviewable chunks, but I guess here I mis-cut.
 
-Cheers,
-Longman
+The user is the hikey960 gpio hub driver here:
+  https://git.linaro.org/people/john.stultz/android-dev.git/commit/?id=b06158a2d3eb00c914f12c76c93695e92d9af00f
 
+I'll resubmit again later with that patch included.
+
+thanks
+-john
