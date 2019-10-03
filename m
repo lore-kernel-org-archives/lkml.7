@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9AFD9ECE58B
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:33:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 383E0C10F14
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:34:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6A28520830
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:33:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0EAE220862
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:34:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570124037;
-	bh=vVO98uKnCrWzvCx0/1+0fFpO60BbjWNePNjbmaUcMxM=;
+	s=default; t=1570124043;
+	bh=i2eh7RCgOf8VMp1y2DrKW4hUkdVLQC+cbbYV1EkpAKo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=cOInA7Ek6sZySitqcwIbR1l7aCAl8NjAj55GQI1h0eXwUYTynm2G8XNaSGpAwFYQK
-	 DNVYaSATwnFzVXz+7/2EFFf3tCyS0DWofLWSoFxhNkgml4quNTgNG5t4K+4wicmOx+
-	 9Vju5buIa9UKdziLdk1Z5P9KuAk8n+Ddo/5eGBYQ=
+	b=jR46v5r4jCWTr9l0kRmwnskEWxIKpMJwMGuZKJ5KPZItcHUa8DDRj3fxUhX/SMcxk
+	 Q9xIGizlSJyoDgJ0vjdalRnStVP7nvQX/txYkx283Vg98FCBGtk6vXFcOi4lLQ+0Qh
+	 T5fiPs2XFGv51kwdXopSMy9pG6YkdK9p4/K2SzYo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732897AbfJCQHL (ORCPT
+        id S1733046AbfJCReB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 12:07:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54588 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 13:34:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54918 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731841AbfJCQHB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:07:01 -0400
+        id S1732907AbfJCQHO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:07:14 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id ACC7020865;
-        Thu,  3 Oct 2019 16:06:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 61D5721783;
+        Thu,  3 Oct 2019 16:07:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570118820;
-        bh=vVO98uKnCrWzvCx0/1+0fFpO60BbjWNePNjbmaUcMxM=;
+        s=default; t=1570118833;
+        bh=i2eh7RCgOf8VMp1y2DrKW4hUkdVLQC+cbbYV1EkpAKo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=O8l/u1svfPn4bX2Wc4P2DPRdElOH0ZVrmPGOpP2pYCEDfCkls+sIJ7FSEePl2UEz6
-         T/8ylUr4m5094RZeRntvhTSkCJ4atWcTplS79XdODF2usJEv/qfDdtklyp51KCZ1ab
-         UPbum9YmkmzLJ8ReHEjam+E0K4CULEALdmLw3iHg=
+        b=gn5RzD3TstdAsUwZz48vrHE9OazRkrnBFvd9a23kRkHLuU3JFTFRe8OWj4hl38noc
+         Q+VzGXFC0jmPcpSGMyHraDD+49u/NRfCh1dKR239FscvDjgpi+OUlnKEpVntW/OTXL
+         /TanHau1P51rPbzzpELroBJMG6JpNv+lpdtnvWFg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jiaxing Luo <luojiaxing@huawei.com>,
-        John Garry <john.garry@huawei.com>,
-        Marc Zyngier <maz@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 021/185] irqchip/gic-v3-its: Fix LPI release for Multi-MSI devices
-Date:   Thu,  3 Oct 2019 17:51:39 +0200
-Message-Id: <20191003154442.497231363@linuxfoundation.org>
+        stable@vger.kernel.org, Mikulas Patocka <mpatocka@redhat.com>,
+        Damien Le Moal <damien.lemoal@wdc.com>,
+        Mike Snitzer <snitzer@redhat.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 026/185] dm zoned: fix invalid memory access
+Date:   Thu,  3 Oct 2019 17:51:44 +0200
+Message-Id: <20191003154443.487401217@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191003154437.541662648@linuxfoundation.org>
 References: <20191003154437.541662648@linuxfoundation.org>
@@ -60,52 +61,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Marc Zyngier <maz@kernel.org>
+From: Mikulas Patocka <mpatocka@redhat.com>
 
-[ Upstream commit c9c96e30ecaa0aafa225aa1a5392cb7db17c7a82 ]
+[ Upstream commit 0c8e9c2d668278652af028c3cc068c65f66342f4 ]
 
-When allocating a range of LPIs for a Multi-MSI capable device,
-this allocation extended to the closest power of 2.
+Commit 75d66ffb48efb30f2dd42f041ba8b39c5b2bd115 ("dm zoned: properly
+handle backing device failure") triggers a coverity warning:
 
-But on the release path, the interrupts are released one by
-one. This results in not releasing the "extra" range, leaking
-the its_device. Trying to reprobe the device will then fail.
+*** CID 1452808:  Memory - illegal accesses  (USE_AFTER_FREE)
+/drivers/md/dm-zoned-target.c: 137 in dmz_submit_bio()
+131             clone->bi_private = bioctx;
+132
+133             bio_advance(bio, clone->bi_iter.bi_size);
+134
+135             refcount_inc(&bioctx->ref);
+136             generic_make_request(clone);
+>>>     CID 1452808:  Memory - illegal accesses  (USE_AFTER_FREE)
+>>>     Dereferencing freed pointer "clone".
+137             if (clone->bi_status == BLK_STS_IOERR)
+138                     return -EIO;
+139
+140             if (bio_op(bio) == REQ_OP_WRITE && dmz_is_seq(zone))
+141                     zone->wp_block += nr_blocks;
+142
 
-Fix it by releasing the LPIs the same way we allocate them.
+The "clone" bio may be processed and freed before the check
+"clone->bi_status == BLK_STS_IOERR" - so this check can access invalid
+memory.
 
-Fixes: 8208d1708b88 ("irqchip/gic-v3-its: Align PCI Multi-MSI allocation on their size")
-Reported-by: Jiaxing Luo <luojiaxing@huawei.com>
-Tested-by: John Garry <john.garry@huawei.com>
-Signed-off-by: Marc Zyngier <maz@kernel.org>
-Link: https://lore.kernel.org/r/f5e948aa-e32f-3f74-ae30-31fee06c2a74@huawei.com
+Fixes: 75d66ffb48efb3 ("dm zoned: properly handle backing device failure")
+Cc: stable@vger.kernel.org
+Signed-off-by: Mikulas Patocka <mpatocka@redhat.com>
+Reviewed-by: Damien Le Moal <damien.lemoal@wdc.com>
+Signed-off-by: Mike Snitzer <snitzer@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/irqchip/irq-gic-v3-its.c | 9 ++++-----
- 1 file changed, 4 insertions(+), 5 deletions(-)
+ drivers/md/dm-zoned-target.c | 2 --
+ 1 file changed, 2 deletions(-)
 
-diff --git a/drivers/irqchip/irq-gic-v3-its.c b/drivers/irqchip/irq-gic-v3-its.c
-index f80666acb9efd..52238e6bed392 100644
---- a/drivers/irqchip/irq-gic-v3-its.c
-+++ b/drivers/irqchip/irq-gic-v3-its.c
-@@ -2269,14 +2269,13 @@ static void its_irq_domain_free(struct irq_domain *domain, unsigned int virq,
- 	struct its_node *its = its_dev->its;
- 	int i;
+diff --git a/drivers/md/dm-zoned-target.c b/drivers/md/dm-zoned-target.c
+index 1e004d975e786..4694763f9d404 100644
+--- a/drivers/md/dm-zoned-target.c
++++ b/drivers/md/dm-zoned-target.c
+@@ -133,8 +133,6 @@ static int dmz_submit_bio(struct dmz_target *dmz, struct dm_zone *zone,
  
-+	bitmap_release_region(its_dev->event_map.lpi_map,
-+			      its_get_event_id(irq_domain_get_irq_data(domain, virq)),
-+			      get_count_order(nr_irqs));
-+
- 	for (i = 0; i < nr_irqs; i++) {
- 		struct irq_data *data = irq_domain_get_irq_data(domain,
- 								virq + i);
--		u32 event = its_get_event_id(data);
--
--		/* Mark interrupt index as unused */
--		clear_bit(event, its_dev->event_map.lpi_map);
--
- 		/* Nuke the entry in the domain */
- 		irq_domain_reset_irq_data(data);
- 	}
+ 	atomic_inc(&bioctx->ref);
+ 	generic_make_request(clone);
+-	if (clone->bi_status == BLK_STS_IOERR)
+-		return -EIO;
+ 
+ 	if (bio_op(bio) == REQ_OP_WRITE && dmz_is_seq(zone))
+ 		zone->wp_block += nr_blocks;
 -- 
 2.20.1
 
