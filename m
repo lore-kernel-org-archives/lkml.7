@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80DECC4CED1
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:14:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BAA5CC10F14
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:14:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 51ADF21783
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:14:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 91065215EA
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:14:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570119275;
-	bh=XDx6arB34nXUENA1/0wZCm4PtDs0ly4Hms29IBe8XP8=;
+	s=default; t=1570119278;
+	bh=qSoD4Dr2RjZowgx8ZZu5jSOjFqaGeT1Ty0JeaABwuEo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xGJK15wQEyT9fSiKYe4XSIP+ONo9sNIiGZ5Netwukq1cPWNxidqLW91QLLjZ7ef46
-	 Wagu5qsqYF+7j9SDF7A099/fJ3xaeTpNCs1TTybRyZdZ6TVBYUOGr4JdaRPXjyXAHS
-	 LO1pXFUY3tfQGXcBiFSRybhk5GkUov4/+qqy7dMY=
+	b=j8cewnWFAIXTk8cT+EWBun7tx+8oZxeuo5zlH4g3Sem25qDZb7xnew6mV0wKXs2t4
+	 IjY/gIBJTCn7Jkv8dWf2vJVOcqtz2/PyGCvDv0tWzYrBdu/iulg2AuirzHGtArq6Dm
+	 /D43bpZqQ0rD+em/zatQHOnJJ5ZQibKUTi/Nu7AQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731309AbfJCQOe (ORCPT
+        id S1732841AbfJCQOh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 12:14:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37870 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 12:14:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37952 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733212AbfJCQOb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:14:31 -0400
+        id S2388644AbfJCQOf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:14:35 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C47D92054F;
-        Thu,  3 Oct 2019 16:14:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7BBDD215EA;
+        Thu,  3 Oct 2019 16:14:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570119271;
-        bh=XDx6arB34nXUENA1/0wZCm4PtDs0ly4Hms29IBe8XP8=;
+        s=default; t=1570119274;
+        bh=qSoD4Dr2RjZowgx8ZZu5jSOjFqaGeT1Ty0JeaABwuEo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qgLbb3iXtJr0/z44R9RCR7ZQAFtxLRFrwGXhOWSn5PThaZy8PlruGxuYrdHtObpGT
-         MUi+va4itIb5KX+KMqAviRH8eq5kJk6y8Xhus7ErEWE7npUrqK3zGta/cIgTH78X94
-         lusv7qcNPfebPx+Q5aLBnUMP5i7TRnmaqyft9zSA=
+        b=jK7Z2fQ7wWFMLUr2R1W7HlKMY5WIrf3Dtg+/8kapg+5CHNz10g8yCBrah8GiFaNe8
+         tkL7SLYUvlstVyw/XlpfLtaYCQ6H/Iw/nHgXhksApptcgEBKk12pwXjGoFzh72wBcR
+         lblgdqwuHdaM1G20mr84VLWvXI7dzMO1kEuto5oo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Xiao Ni <xni@redhat.com>,
+        stable@vger.kernel.org, NeilBrown <neilb@suse.com>,
         Song Liu <songliubraving@fb.com>
-Subject: [PATCH 4.14 170/185] md/raid6: Set R5_ReadError when there is read failure on parity disk
-Date:   Thu,  3 Oct 2019 17:54:08 +0200
-Message-Id: <20191003154518.932468675@linuxfoundation.org>
+Subject: [PATCH 4.14 171/185] md: dont report active array_state until after revalidate_disk() completes.
+Date:   Thu,  3 Oct 2019 17:54:09 +0200
+Message-Id: <20191003154519.491247208@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191003154437.541662648@linuxfoundation.org>
 References: <20191003154437.541662648@linuxfoundation.org>
@@ -59,46 +59,104 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Xiao Ni <xni@redhat.com>
+From: NeilBrown <neilb@suse.com>
 
-commit 143f6e733b73051cd22dcb80951c6c929da413ce upstream.
+commit 9d4b45d6af442237560d0bb5502a012baa5234b7 upstream.
 
-7471fb77ce4d ("md/raid6: Fix anomily when recovering a single device in
-RAID6.") avoids rereading P when it can be computed from other members.
-However, this misses the chance to re-write the right data to P. This
-patch sets R5_ReadError if the re-read fails.
+Until revalidate_disk() has completed, the size of a new md array will
+appear to be zero.
+So we shouldn't report, through array_state, that the array is active
+until that time.
+udev rules check array_state to see if the array is ready.  As soon as
+it appear to be zero, fsck can be run.  If it find the size to be
+zero, it will fail.
 
-Also, when re-read is skipped, we also missed the chance to reset
-rdev->read_errors to 0. It can fail the disk when there are many read
-errors on P member disk (other disks don't have read error)
+So add a new flag to provide an interlock between do_md_run() and
+array_state_show().  This flag is set while do_md_run() is active and
+it prevents array_state_show() from reporting that the array is
+active.
 
-V2: upper layer read request don't read parity/Q data. So there is no
-need to consider such situation.
+Before do_md_run() is called, ->pers will be NULL so array is
+definitely not active.
+After do_md_run() is called, revalidate_disk() will have run and the
+array will be completely ready.
 
-This is Reported-by: kbuild test robot <lkp@intel.com>
+We also move various sysfs_notify*() calls out of md_run() into
+do_md_run() after MD_NOT_READY is cleared.  This ensure the
+information is ready before the notification is sent.
 
-Fixes: 7471fb77ce4d ("md/raid6: Fix anomily when recovering a single device in RAID6.")
-Cc: <stable@vger.kernel.org> #4.4+
-Signed-off-by: Xiao Ni <xni@redhat.com>
+Prior to v4.12, array_state_show() was called with the
+mddev->reconfig_mutex held, which provided exclusion with do_md_run().
+
+Note that MD_NOT_READY cleared twice.  This is deliberate to cover
+both success and error paths with minimal noise.
+
+Fixes: b7b17c9b67e5 ("md: remove mddev_lock() from md_attr_show()")
+Cc: stable@vger.kernel.org (v4.12++)
+Signed-off-by: NeilBrown <neilb@suse.com>
 Signed-off-by: Song Liu <songliubraving@fb.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/md/raid5.c |    4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/md/md.c |   11 +++++++----
+ drivers/md/md.h |    3 +++
+ 2 files changed, 10 insertions(+), 4 deletions(-)
 
---- a/drivers/md/raid5.c
-+++ b/drivers/md/raid5.c
-@@ -2571,7 +2571,9 @@ static void raid5_end_read_request(struc
- 		    && !test_bit(R5_ReadNoMerge, &sh->dev[i].flags))
- 			retry = 1;
- 		if (retry)
--			if (test_bit(R5_ReadNoMerge, &sh->dev[i].flags)) {
-+			if (sh->qd_idx >= 0 && sh->pd_idx == i)
-+				set_bit(R5_ReadError, &sh->dev[i].flags);
-+			else if (test_bit(R5_ReadNoMerge, &sh->dev[i].flags)) {
- 				set_bit(R5_ReadError, &sh->dev[i].flags);
- 				clear_bit(R5_ReadNoMerge, &sh->dev[i].flags);
- 			} else
+--- a/drivers/md/md.c
++++ b/drivers/md/md.c
+@@ -4108,7 +4108,7 @@ array_state_show(struct mddev *mddev, ch
+ {
+ 	enum array_state st = inactive;
+ 
+-	if (mddev->pers)
++	if (mddev->pers && !test_bit(MD_NOT_READY, &mddev->flags))
+ 		switch(mddev->ro) {
+ 		case 1:
+ 			st = readonly;
+@@ -5669,9 +5669,6 @@ int md_run(struct mddev *mddev)
+ 		md_update_sb(mddev, 0);
+ 
+ 	md_new_event(mddev);
+-	sysfs_notify_dirent_safe(mddev->sysfs_state);
+-	sysfs_notify_dirent_safe(mddev->sysfs_action);
+-	sysfs_notify(&mddev->kobj, NULL, "degraded");
+ 	return 0;
+ 
+ abort:
+@@ -5692,6 +5689,7 @@ static int do_md_run(struct mddev *mddev
+ {
+ 	int err;
+ 
++	set_bit(MD_NOT_READY, &mddev->flags);
+ 	err = md_run(mddev);
+ 	if (err)
+ 		goto out;
+@@ -5709,9 +5707,14 @@ static int do_md_run(struct mddev *mddev
+ 
+ 	set_capacity(mddev->gendisk, mddev->array_sectors);
+ 	revalidate_disk(mddev->gendisk);
++	clear_bit(MD_NOT_READY, &mddev->flags);
+ 	mddev->changed = 1;
+ 	kobject_uevent(&disk_to_dev(mddev->gendisk)->kobj, KOBJ_CHANGE);
++	sysfs_notify_dirent_safe(mddev->sysfs_state);
++	sysfs_notify_dirent_safe(mddev->sysfs_action);
++	sysfs_notify(&mddev->kobj, NULL, "degraded");
+ out:
++	clear_bit(MD_NOT_READY, &mddev->flags);
+ 	return err;
+ }
+ 
+--- a/drivers/md/md.h
++++ b/drivers/md/md.h
+@@ -243,6 +243,9 @@ enum mddev_flags {
+ 	MD_UPDATING_SB,		/* md_check_recovery is updating the metadata
+ 				 * without explicitly holding reconfig_mutex.
+ 				 */
++	MD_NOT_READY,		/* do_md_run() is active, so 'array_state'
++				 * must not report that array is ready yet
++				 */
+ };
+ 
+ enum mddev_sb_flags {
 
 
