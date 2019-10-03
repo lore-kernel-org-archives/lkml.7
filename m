@@ -2,81 +2,78 @@ Return-Path: <SRS0=6dNS=X4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 28D13C10F14
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:01:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55B15C10F14
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:01:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E85B5207FF
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:01:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570118496;
-	bh=ttiPKL2jzgASsca2BGk27wEdRl5hmkMpvPvhdH5dU9o=;
-	h=In-Reply-To:References:From:To:Cc:Subject:Date:List-ID:From;
-	b=vnIEnfmfvHI/xwI+1MTh3Yah5R74Xkyh2Q3KOVlIILuHQEIxE4sGPq8D6WsUhnUXQ
-	 JLyZifMhbN2+xQ4sMGPLmQtcVdaO5tIjSzP/fikM68WTEsexgter2i0w17tX9d7kbI
-	 WsfE9S8rBC7kvKU0vJ0LoTApjPjiLt8dlj+Aha/Q=
+	by mail.kernel.org (Postfix) with ESMTP id 2663D207FF
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:01:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731843AbfJCQBe (ORCPT
+        id S1731865AbfJCQBj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 12:01:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45864 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 12:01:39 -0400
+Received: from mga05.intel.com ([192.55.52.43]:32377 "EHLO mga05.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731812AbfJCQBb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:01:31 -0400
-Received: from kernel.org (unknown [104.132.0.74])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5A19B222D0;
-        Thu,  3 Oct 2019 16:01:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570118490;
-        bh=ttiPKL2jzgASsca2BGk27wEdRl5hmkMpvPvhdH5dU9o=;
-        h=In-Reply-To:References:From:To:Cc:Subject:Date:From;
-        b=PR8idfJjm1O7W4H7sSBvf60VNidTUzimxOuz/YuQxqeTR9ZLI8hhm1xAxkHqKYzBE
-         0G1fEJ36nFEaqWXzC3bt6NufrBH2MfEFd7DxV3tE//Vt9O6a/R0BzQzj8bgifWaiby
-         VFLCRE6KfsZchQdSn6X9Wz5mmkvAPOi7kjrRhCLE=
-Content-Type: text/plain; charset="utf-8"
+        id S1730311AbfJCQBg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:01:36 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 03 Oct 2019 09:01:19 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.67,253,1566889200"; 
+   d="scan'208";a="196387830"
+Received: from unknown (HELO [10.232.112.172]) ([10.232.112.172])
+  by orsmga006.jf.intel.com with ESMTP; 03 Oct 2019 09:01:18 -0700
+Subject: Re: [PATCH 1/2] block: sed-opal: fix sparse warning: obsolete array
+ init.
+To:     Scott Bauer <sbauer@plzdonthack.me>,
+        Randy Dunlap <rdunlap@infradead.org>
+Cc:     "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>, axboe <axboe@kernel.dk>,
+        jonathan.derrick@intel.com
+References: <807d7b7f-623b-75f0-baab-13b1b0c02e9d@infradead.org>
+ <20191003154227.GB2450@hacktheplanet>
+From:   "Rajashekar, Revanth" <revanth.rajashekar@intel.com>
+Message-ID: <dd7ddcb5-1037-6b77-5376-9db417299566@intel.com>
+Date:   Thu, 3 Oct 2019 10:01:18 -0600
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <7ac5f6bf-33c5-580e-bd40-e82f3052d460@codeaurora.org>
-References: <20190918095018.17979-1-tdas@codeaurora.org> <20190918095018.17979-4-tdas@codeaurora.org> <20190918213946.DC03521924@mail.kernel.org> <a3cd82c9-8bfa-f4a3-ab1f-2e397fbd9d16@codeaurora.org> <20190924231223.9012C207FD@mail.kernel.org> <347780b9-c66b-01c4-b547-b03de2cf3078@codeaurora.org> <20190925130346.42E0820640@mail.kernel.org> <35f8b699-6ff7-9104-5e3d-ef4ee8635832@codeaurora.org> <20191001143825.CD3212054F@mail.kernel.org> <7ac5f6bf-33c5-580e-bd40-e82f3052d460@codeaurora.org>
-From:   Stephen Boyd <sboyd@kernel.org>
-To:     Michael Turquette <mturquette@baylibre.com>,
-        Taniya Das <tdas@codeaurora.org>, robh+dt@kernel.org
-Cc:     David Brown <david.brown@linaro.org>,
-        Rajendra Nayak <rnayak@codeaurora.org>,
-        linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org,
-        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org
-Subject: Re: [PATCH v3 3/3] clk: qcom: Add Global Clock controller (GCC) driver for SC7180
-User-Agent: alot/0.8.1
-Date:   Thu, 03 Oct 2019 09:01:29 -0700
-Message-Id: <20191003160130.5A19B222D0@mail.kernel.org>
+In-Reply-To: <20191003154227.GB2450@hacktheplanet>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Taniya Das (2019-10-03 03:31:15)
-> Hi Stephen,
->=20
-> On 10/1/2019 8:08 PM, Stephen Boyd wrote:
-> >=20
-> > Why do you want to keep them critical and registered? I'm suggesting
-> > that any clk that is marked critical and doesn't have a parent should
-> > instead become a register write in probe to turn the clk on.
-> >=20
-> Sure, let me do a one-time enable from probe for the clocks which=20
-> doesn't have a parent.
-> But I would now have to educate the clients of these clocks to remove=20
-> using them.
->=20
 
-If anyone is using these clks we can return NULL from the provider for
-the specifier so that we indicate there isn't support for them in the
-kernel. At least I hope that code path still works given all the recent
-changes to clk_get().
+On 10/3/2019 9:42 AM, Scott Bauer wrote:
+> On Wed, Oct 02, 2019 at 07:23:05PM -0700, Randy Dunlap wrote:
+>> From: Randy Dunlap <rdunlap@infradead.org>
+>>
+>> Fix sparse warning: (missing '=')
+>> ../block/sed-opal.c:133:17: warning: obsolete array initializer, use C99 syntax
+>>
+>> Fixes: ff91064ea37c ("block: sed-opal: check size of shadow mbr")
+>> Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
+>> Cc: Jens Axboe <axboe@kernel.dk>
+>> Cc: linux-block@vger.kernel.org
+>> Cc: Jonas Rabenstein <jonas.rabenstein@studium.uni-erlangen.de>
+>> Cc: David Kozub <zub@linux.fjfi.cvut.cz>
+>> ---
+> Un cc'd David and Jonas, +CC'd Jon and Revanth.
+>
+> This looks fine to me too.
+>
+> Reviewed-by: Scott Bauer <sbauer@plzdonthack.me>
+
+the patch set looks fine for me
+
+Reviewed-by:  Revanth Rajashekar <revanth.rajashekar@intel.com>
 
