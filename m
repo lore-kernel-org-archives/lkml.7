@@ -7,48 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8FCEC32792
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:58:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC512C10F14
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:58:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B51342070B
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:58:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8373B20673
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:58:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570121893;
-	bh=BZapDg6ZGXM9Rg5kPcRilfrz2LUQyzrkxIwwMOM1Xy0=;
+	s=default; t=1570121900;
+	bh=3YhhXEEe2toVRq5SPEqgcS/lFo7RJs5UUsp7KCQVhZQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=M/DMqp2N33MknY6ULXxxeBiGc/opeZfP3uSWIdFwnxF7VMWnvUEoqy6OPC2aP68iD
-	 9rQtBj9HPeXDzHYQYh7M/agV0yYdLtHU/utv3Lpzr3MUv4cOgOcZh3MhW8pV/qk8sv
-	 PM1qld5Je35NFk197ek0iZyuu2uDukkXDH6v8hPI=
+	b=jpr9UcN2rWlXDj3XJYIpNlKOYlEN2TqWj0p5JrQ1lmdvRoRFR4a/f0FP5FNGSmOgI
+	 S9cEuIaxfR8rIQHQ/pSJDEqePk0XUz7vQG7b3pOJGDzvXj2FuHYCRX1pwDLZGOkdSH
+	 pX1TuEjOz98lAtr/7yWjB1nu50nLPsAmbmAQZh1k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404638AbfJCQtE (ORCPT
+        id S2405124AbfJCQst (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 12:49:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35274 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 12:48:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34766 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2405791AbfJCQtB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:49:01 -0400
+        id S2405723AbfJCQsm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:48:42 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F2C1220865;
-        Thu,  3 Oct 2019 16:48:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A38F920865;
+        Thu,  3 Oct 2019 16:48:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570121340;
-        bh=BZapDg6ZGXM9Rg5kPcRilfrz2LUQyzrkxIwwMOM1Xy0=;
+        s=default; t=1570121322;
+        bh=3YhhXEEe2toVRq5SPEqgcS/lFo7RJs5UUsp7KCQVhZQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=q7qm/0phn53sYjcPyW1RMHga51bVgCwWoz33em4Bksg2TLE59+d4Eh/4sDEazx9DU
-         yHYa+B+PvZQIGvbYQmxRR8l+PLtgwzXsrm/TShuwGghQ9o7v4OQex2X/GWMsZpkVmI
-         3SuKfljokjEkuPz+AdmIE5zgfFwcLZhUVtWOg8T8=
+        b=TSooKlcaFmdxe6oFUu8Q8NHRaQhYcRPrkfJgFzpdv7IvJuR0pRFGd70ecajywrwn9
+         24lvRlmWT7MVUfVqX38EsKIAaInYFgVV0CH8GwTjB6IcKBGqdq0Ov64B5rLo3B8AdN
+         QUObuF0VrpZhDLNeMKRgTREPHYARM5paqwS8zU/8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org, rostedt@goodmis.org
+To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Vincent Whitchurch <vincent.whitchurch@axis.com>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Petr Mladek <pmladek@suse.com>
-Subject: [PATCH 5.3 242/344] printk: Do not lose last line in kmsg buffer dump
-Date:   Thu,  3 Oct 2019 17:53:27 +0200
-Message-Id: <20191003154604.278696964@linuxfoundation.org>
+        stable@vger.kernel.org, Luca Coelho <luciano.coelho@intel.com>,
+        Kalle Valo <kvalo@codeaurora.org>
+Subject: [PATCH 5.3 237/344] iwlwifi: fw: dont send GEO_TX_POWER_LIMIT command to FW version 36
+Date:   Thu,  3 Oct 2019 17:53:22 +0200
+Message-Id: <20191003154603.764053328@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191003154540.062170222@linuxfoundation.org>
 References: <20191003154540.062170222@linuxfoundation.org>
@@ -61,70 +59,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vincent Whitchurch <vincent.whitchurch@axis.com>
+From: Luca Coelho <luciano.coelho@intel.com>
 
-commit c9dccacfccc72c32692eedff4a27a4b0833a2afd upstream.
+commit fddbfeece9c7882cc47754c7da460fe427e3e85b upstream.
 
-kmsg_dump_get_buffer() is supposed to select all the youngest log
-messages which fit into the provided buffer.  It determines the correct
-start index by using msg_print_text() with a NULL buffer to calculate
-the size of each entry.  However, when performing the actual writes,
-msg_print_text() only writes the entry to the buffer if the written len
-is lesser than the size of the buffer.  So if the lengths of the
-selected youngest log messages happen to precisely fill up the provided
-buffer, the last log message is not included.
+The intention was to have the GEO_TX_POWER_LIMIT command in FW version
+36 as well, but not all 8000 family got this feature enabled.  The
+8000 family is the only one using version 36, so skip this version
+entirely.  If we try to send this command to the firmwares that do not
+support it, we get a BAD_COMMAND response from the firmware.
 
-We don't want to modify msg_print_text() to fill up the buffer and start
-returning a length which is equal to the size of the buffer, since
-callers of its other users, such as kmsg_dump_get_line(), depend upon
-the current behaviour.
+This fixes https://bugzilla.kernel.org/show_bug.cgi?id=204151.
 
-Instead, fix kmsg_dump_get_buffer() to compensate for this.
-
-For example, with the following two final prints:
-
-[    6.427502] AAAAAAAAAAAAA
-[    6.427769] BBBBBBBB12345
-
-A dump of a 64-byte buffer filled by kmsg_dump_get_buffer(), before this
-patch:
-
- 00000000: 3c 30 3e 5b 20 20 20 20 36 2e 35 32 32 31 39 37  <0>[    6.522197
- 00000010: 5d 20 41 41 41 41 41 41 41 41 41 41 41 41 41 0a  ] AAAAAAAAAAAAA.
- 00000020: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
- 00000030: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
-
-After this patch:
-
- 00000000: 3c 30 3e 5b 20 20 20 20 36 2e 34 35 36 36 37 38  <0>[    6.456678
- 00000010: 5d 20 42 42 42 42 42 42 42 42 31 32 33 34 35 0a  ] BBBBBBBB12345.
- 00000020: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
- 00000030: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
-
-Link: http://lkml.kernel.org/r/20190711142937.4083-1-vincent.whitchurch@axis.com
-Fixes: e2ae715d66bf4bec ("kmsg - kmsg_dump() use iterator to receive log buffer content")
-To: rostedt@goodmis.org
-Cc: linux-kernel@vger.kernel.org
-Cc: <stable@vger.kernel.org> # v3.5+
-Signed-off-by: Vincent Whitchurch <vincent.whitchurch@axis.com>
-Reviewed-by: Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
-Signed-off-by: Petr Mladek <pmladek@suse.com>
+Cc: stable@vger.kernel.org # 4.19+
+Signed-off-by: Luca Coelho <luciano.coelho@intel.com>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- kernel/printk/printk.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/wireless/intel/iwlwifi/mvm/fw.c |    8 +++++---
+ 1 file changed, 5 insertions(+), 3 deletions(-)
 
---- a/kernel/printk/printk.c
-+++ b/kernel/printk/printk.c
-@@ -3274,7 +3274,7 @@ bool kmsg_dump_get_buffer(struct kmsg_du
- 	/* move first record forward until length fits into the buffer */
- 	seq = dumper->cur_seq;
- 	idx = dumper->cur_idx;
--	while (l > size && seq < dumper->next_seq) {
-+	while (l >= size && seq < dumper->next_seq) {
- 		struct printk_log *msg = log_from_idx(idx);
- 
- 		l -= msg_print_text(msg, true, time, NULL, 0);
+--- a/drivers/net/wireless/intel/iwlwifi/mvm/fw.c
++++ b/drivers/net/wireless/intel/iwlwifi/mvm/fw.c
+@@ -887,11 +887,13 @@ static bool iwl_mvm_sar_geo_support(stru
+ 	 * firmware versions.  Unfortunately, we don't have a TLV API
+ 	 * flag to rely on, so rely on the major version which is in
+ 	 * the first byte of ucode_ver.  This was implemented
+-	 * initially on version 38 and then backported to 36, 29 and
+-	 * 17.
++	 * initially on version 38 and then backported to29 and 17.
++	 * The intention was to have it in 36 as well, but not all
++	 * 8000 family got this feature enabled.  The 8000 family is
++	 * the only one using version 36, so skip this version
++	 * entirely.
+ 	 */
+ 	return IWL_UCODE_SERIAL(mvm->fw->ucode_ver) >= 38 ||
+-	       IWL_UCODE_SERIAL(mvm->fw->ucode_ver) == 36 ||
+ 	       IWL_UCODE_SERIAL(mvm->fw->ucode_ver) == 29 ||
+ 	       IWL_UCODE_SERIAL(mvm->fw->ucode_ver) == 17;
+ }
 
 
