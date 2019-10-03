@@ -2,141 +2,113 @@ Return-Path: <SRS0=6dNS=X4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3978EECE589
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 10:20:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5969AC10F14
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 10:23:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1323F218DE
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 10:20:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2CB44218DE
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 10:23:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="liP+tQrb"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="PzAJzkrw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729153AbfJCKU3 (ORCPT
+        id S1728665AbfJCKW7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 06:20:29 -0400
-Received: from mail-wm1-f49.google.com ([209.85.128.49]:39666 "EHLO
-        mail-wm1-f49.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726978AbfJCKU2 (ORCPT
+        Thu, 3 Oct 2019 06:22:59 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:34545 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725892AbfJCKW7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 06:20:28 -0400
-Received: by mail-wm1-f49.google.com with SMTP id v17so1838232wml.4
-        for <linux-kernel@vger.kernel.org>; Thu, 03 Oct 2019 03:20:27 -0700 (PDT)
+        Thu, 3 Oct 2019 06:22:59 -0400
+Received: by mail-wr1-f67.google.com with SMTP id a11so2366048wrx.1
+        for <linux-kernel@vger.kernel.org>; Thu, 03 Oct 2019 03:22:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to:user-agent;
-        bh=RgYfjLnuHCVaLlaLQE6xBvCVpBRhiKlsW8AM1IaRwoc=;
-        b=liP+tQrbcQ/PhyPV3IF4Q4ag8vLwWVnhHzZ1wWzHuXbSQMFyZgGMd44HgAxDKUVy/N
-         imtKR55T4uy0tMLy4sN8UDHsfIWZ9/hQEBG+0UEUsK+Kehwjk0R5d3JP5sALQDr3YEuG
-         QMZQfTH2SRzyU+YmN3kCaoe9wwBqRsQv6suN8EZWUrwSyoWOWnp8c0WuswIGQvtzyg7/
-         0980nAGHmjcNBOj7kWVo/ASWlTP5ejFboQ6W6HAfMvTtp2ZX1+Y8eEhWubQij3R0zeeS
-         y9zAm3OZu3kqMPWwOrpxMb1wXPWn+VdiiDt/FgOVGnTW1+yBYyxPDD66tvTnHJLDIHki
-         bZjA==
+        bh=1jR6Vlrhk5n8xdNCiK+AfK7Qyv9fHZ3u4P5zPUviBBA=;
+        b=PzAJzkrwyJdxr7vpeDPwT6M7e45aC+OHAA+kuLA4A0Vzohz/oWf1Ujiym2yaZdRo7C
+         MI/wP8eM9cQJP36FyFTYeZes55Sh0K9j6SyLAiMXCzd0+mIXlecFqVpBu1KediWDR8O7
+         ty6GSsTwOgwfULvypBuhnYFcfLrLZ2O7dBP9uF9KW1WO2hjQrfpcsiKPeEC32mQjEZMm
+         6oxffSXFSCT7anOV7AjhAX+cpqJbK2LVjwB2ZCCsohc9+5AOqrmxubhevbMm9p6qOYv2
+         5YR23WtUCknr8nE3RDSAR332Gv8Jw1oC1Veo2IcSTZg8jr7ZYen/y5kV3YXTDrpr4fVL
+         ERcw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=RgYfjLnuHCVaLlaLQE6xBvCVpBRhiKlsW8AM1IaRwoc=;
-        b=MJtiTs2iv9vhjwkBQJMbS+mHpwUsR50JlptH91s8o3GK1700b+v4CYBrF7IKOlSVw9
-         79/cs3jPjmQrTqQD9RZvUPRlMuV5MwUnv6OM7N/isrFSLRbwt4EMXelh7ghHrdzGBI8P
-         q/4vT+OKi7sPdvNRReVNURqahrBt8af5UHMfHuYCDXuyfl1mD29bZ7yv0/SzdkKQ6Ebs
-         lvX5p9SeaD6qvP6xwDnhbj57/XNI2rZm6RyYlqGEGnAdy/D3kYKhDdxOx71Uvmu8hsWi
-         QUSCZk8bIG21pswp9aJiJzzlxikQe7gHcxgQhnx3O4OcUyCCvNPmhXFVhTp/rLoSiSUX
-         ddtA==
-X-Gm-Message-State: APjAAAXvkJC604HS0NK3j7vrnABvrLkxR+5yaZBfLurSxd1OpaVVFmPL
-        Zsx029QEJsGOD3KGu+sqhKnAIw==
-X-Google-Smtp-Source: APXvYqz9uAbe9izQ7OolQ95hH+VT7Ttpkz4AlYdVQ8HuQZZ4ro9WQ+Cs3l/7PY9Qt6+VrATHsnpcYQ==
-X-Received: by 2002:a1c:80ca:: with SMTP id b193mr5852137wmd.171.1570098026639;
-        Thu, 03 Oct 2019 03:20:26 -0700 (PDT)
+        bh=1jR6Vlrhk5n8xdNCiK+AfK7Qyv9fHZ3u4P5zPUviBBA=;
+        b=c8XB05v5WyjaafSsgvHob0ZnfXoI6Uv7knTccl13XJiNf3+8+BXnnzX1RzMPxmdyCn
+         Njj1WmhIFvKZRGR2K+4Ah8/wt28M/oNW16DItA28FVV5h38sMADRDjAdvRquZ/fdXsoP
+         lAJZb6rEOaz9j4FDloqmW3PWmzE6qUAUhf8LXsKBB/HHS5Fp0sCIHsmddUZbJJAr7Za1
+         LVULSDF8NVC66rgU7jNm5JdJs1IP2cAPXuARbVjbCDLKcZ4jx2754iMKpW59Pi9j1CsF
+         nSMWSZMF5ILCrPMMGB6lUbBBK7qaC4va/22rhD7Jf8nyftsCI2XB5EMEASMVtl2fRzFu
+         FktQ==
+X-Gm-Message-State: APjAAAXgTHWGuX0/dZyIe1uAJJTZ2bEn9wuex/I23MKyx2qVB0vA267h
+        Pwf4NiQUUj40N4U9CVyCEIJE+w==
+X-Google-Smtp-Source: APXvYqzGJWrEvT2IWWZZL9JYJSB1703dS2++pm8TSNDU1dHt3ZiFaN4rX/fBHhbqLudcii3fH7HH6w==
+X-Received: by 2002:adf:e64e:: with SMTP id b14mr6952182wrn.16.1570098176821;
+        Thu, 03 Oct 2019 03:22:56 -0700 (PDT)
 Received: from holly.lan (cpc141214-aztw34-2-0-cust773.18-1.cable.virginm.net. [86.9.19.6])
-        by smtp.gmail.com with ESMTPSA id n17sm2102552wrp.37.2019.10.03.03.20.25
+        by smtp.gmail.com with ESMTPSA id d193sm2240931wmd.0.2019.10.03.03.22.55
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 03 Oct 2019 03:20:25 -0700 (PDT)
-Date:   Thu, 3 Oct 2019 11:20:23 +0100
+        Thu, 03 Oct 2019 03:22:56 -0700 (PDT)
+Date:   Thu, 3 Oct 2019 11:22:54 +0100
 From:   Daniel Thompson <daniel.thompson@linaro.org>
-To:     Mathieu Poirier <mathieu.poirier@linaro.org>
-Cc:     Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>,
-        Jeffrey Hugo <jeffrey.l.hugo@gmail.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Rajendra Nayak <rnayak@codeaurora.org>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        MSM <linux-arm-msm@vger.kernel.org>,
-        Marc Gonzalez <marc.w.gonzalez@free.fr>,
-        lkml <linux-kernel@vger.kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        David Brown <david.brown@linaro.org>,
-        Andy Gross <agross@kernel.org>,
-        Sibi Sankar <sibis@codeaurora.org>,
-        Leo Yan <leo.yan@linaro.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        linux-arm-msm-owner@vger.kernel.org
-Subject: Re: [PATCHv9 2/3] arm64: dts: qcom: msm8998: Add Coresight support
-Message-ID: <20191003102023.qk6ik5vmatheaofs@holly.lan>
-References: <cover.1564550873.git.saiprakash.ranjan@codeaurora.org>
- <90114e06825e537c3aafd3de5c78743a9de6fadc.1564550873.git.saiprakash.ranjan@codeaurora.org>
- <CAOCk7NrK+wY8jfHdS8781NOQtyLm2RRe1NW2Rm3_zeaot0Q99Q@mail.gmail.com>
- <16212a577339204e901cf4eefa5e82f1@codeaurora.org>
- <CAOCk7NohO67qeYCnrjy4P0KN9nLUiamphHRvj-bFP++K7khPOw@mail.gmail.com>
- <fa5a35f0e993f2b604b60d5cead3cf28@codeaurora.org>
- <CAOCk7NodWtC__W3=AQfXcjF-W9Az_NNUN0r8w5WmqJMziCcvig@mail.gmail.com>
- <5b8835905a704fb813714694a792df54@codeaurora.org>
- <CANLsYkxPOOorqcnPrbhZLzGV9Y7EGWUUyxvi-Cm5xxnzhx=Ecg@mail.gmail.com>
+To:     Jani Nikula <jani.nikula@linux.intel.com>
+Cc:     Jonathan Corbet <corbet@lwn.net>, Mat King <mathewk@google.com>,
+        rafael@kernel.org, gregkh@linuxfoundation.org,
+        Ross Zwisler <zwisler@google.com>,
+        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Rajat Jain <rajatja@google.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        Alexander Schremmer <alex@alexanderweb.de>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: Re: New sysfs interface for privacy screens
+Message-ID: <20191003102254.dmwl6qimdca3dbrv@holly.lan>
+References: <CAL_quvRknSSVvXN3q_Se0hrziw2oTNS3ENNoeHYhvciCRq9Yww@mail.gmail.com>
+ <20191002094650.3fc06a85@lwn.net>
+ <87muei9r7i.fsf@intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CANLsYkxPOOorqcnPrbhZLzGV9Y7EGWUUyxvi-Cm5xxnzhx=Ecg@mail.gmail.com>
+In-Reply-To: <87muei9r7i.fsf@intel.com>
 User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Oct 02, 2019 at 09:03:59AM -0600, Mathieu Poirier wrote:
-> On Tue, 1 Oct 2019 at 12:05, Sai Prakash Ranjan
-> <saiprakash.ranjan@codeaurora.org> wrote:
+On Thu, Oct 03, 2019 at 11:19:13AM +0300, Jani Nikula wrote:
+> On Wed, 02 Oct 2019, Jonathan Corbet <corbet@lwn.net> wrote:
+> > On Tue, 1 Oct 2019 10:09:46 -0600
+> > Mat King <mathewk@google.com> wrote:
 > >
-> > On 2019-10-01 11:01, Jeffrey Hugo wrote:
-> > > On Tue, Oct 1, 2019 at 11:52 AM Sai Prakash Ranjan
-> > > <saiprakash.ranjan@codeaurora.org> wrote:
-> > >>
-> > >>
-> > >> Haan then likely it's the firmware issue.
-> > >> We should probably disable coresight in soc dtsi and enable only for
-> > >> MTP. For now you can add a status=disabled for all coresight nodes in
-> > >> msm8998.dtsi and I will send the patch doing the same in a day or
-> > >> two(sorry I am travelling currently).
-> > >
-> > > This sounds sane to me (and is what I did while bisecting the issue).
-> > > When you do create the patch, feel free to add the following tags as
-> > > you see fit.
-> > >
-> > > Reported-by: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
-> > > Tested-by: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+> >> I have been looking into adding Linux support for electronic privacy
+> >> screens which is a feature on some new laptops which is built into the
+> >> display and allows users to turn it on instead of needing to use a
+> >> physical privacy filter. In discussions with my colleagues the idea of
+> >> using either /sys/class/backlight or /sys/class/leds but this new
+> >> feature does not seem to quite fit into either of those classes.
 > >
-> > Thanks Jeffrey, I will add them.
-> > Hope Mathieu and Suzuki are OK with this.
+> > FWIW, it seems that you're not alone in this; 5.4 got some support for
+> > such screens if I understand things correctly:
+> >
+> >   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=110ea1d833ad
 > 
-> The problem here is that a debug and production device are using the
-> same device tree, i.e msm8998.dtsi.  Disabling coresight devices in
-> the DTS file will allow the laptop to boot but completely disabled
-> coresight blocks on the MTP board.  Leaving things as is breaks the
-> laptop but allows coresight to be used on the MTP board.  One of three
-> things can happen:
+> Oh, I didn't realize it got merged already, I thought this was
+> related...
 > 
-> 1) Nothing gets done and production board can't boot without DTS modifications.
-> 2) Disable tags are added to the DTS file and the debug board can't
-> use coresight without modifications.
-> 2) The handling of the debug power domain is done properly on the
-> MSM8998 rather than relying on the bootloader to enable it.
-> 3) The DTS file is split or reorganised to account for debug/production devices.
+> So we've already replicated the backlight sysfs interface problem for
+> privacy screens. :(
 
-msm8998.dtsi is a SoC include file. Can't whatever default it adopts be
-reversed in the board include files such as msm8998-mtp.dtsi or
-msm8998-clamshell.dtsi ?
+I guess... although the Thinkpad code hasn't added any standard
+interfaces (no other laptop should be placing controls for a privacy
+screen in /proc/acpi/ibm/... ). Maybe its not too late.
 
 
 Daniel.
