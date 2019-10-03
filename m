@@ -4,51 +4,57 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A978CC10F14
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:26:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0561DC10F14
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:26:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 756CC222BE
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:26:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CF685222C8
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:26:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570119999;
-	bh=zzHl6fU5aKHK7l+a6UXgVYGiaDCb6jFYvh4Lo9V7hgg=;
+	s=default; t=1570120003;
+	bh=R6nvQTWWdY2hSuO8CYz1sdOi8H89MTYKjyyPSd3VUKY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=gaGHjuyh3mJjByDQf1NKo7gNLrXkgaM8eScCTmZVl6UoMgts10+ind8sj8isIjrzH
-	 ZuWaUlHgOgp2v+hsVZStEtc/LlMOoyE4oIKW3n9g0WruZ+gT6lTCVK4KPw+mk71XvG
-	 6RQhUYfE1CMlbiv+3vbQkY01xm6Hi8e50t1a/Xw0=
+	b=VGv/jjQG6AFDeQgsHolk3OGHgcx2p0fKIduwbNsPcctRzT1D1ltg+9WPVWvRk4pib
+	 VNlphCefdwUrMGaY5JPiyOhzAL3VXqbgn75VIsdmrl7Aky/1PhfziaewazKBqmNue/
+	 NQlcjKmUWC9MLq5y88lOumkKSmuFAFJuvryw5e2A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391115AbfJCQ0j (ORCPT
+        id S2391121AbfJCQ0n (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 12:26:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57888 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 12:26:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57942 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391100AbfJCQ0h (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:26:37 -0400
+        id S2391100AbfJCQ0j (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:26:39 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4EF7221783;
-        Thu,  3 Oct 2019 16:26:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F2BF720867;
+        Thu,  3 Oct 2019 16:26:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570119995;
-        bh=zzHl6fU5aKHK7l+a6UXgVYGiaDCb6jFYvh4Lo9V7hgg=;
+        s=default; t=1570119998;
+        bh=R6nvQTWWdY2hSuO8CYz1sdOi8H89MTYKjyyPSd3VUKY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Sf4OhGvr1fsGg+dvvx46z/lnihA5vNTHLDjc7U5QwohVoU7m1ndqVXPjhgv3MGoqg
-         U3avko+Y8gHNzDQg+HP5lA3yYjh0wXYJANzNzTpgC+sx8EgoMGV54QFBO3ib/0KzK0
-         ubNAf00aZlx7bZCBcrDLQACx38SL0lbrcZRtNkOk=
+        b=WMIckvtJTvoR39oLsgJfRz/m18daZBrACFkN3C69ZAL8CDPo6hWErgKwWUdXfzenq
+         l/D5dAges3CS0tcqXnUm5jCSj+77Sdk5plim2SSB5beDqv3k85JvViVZGBjfeZUpLe
+         KYNgBQXArmF56cx5q0OC5xMC0yFBw0VcFKxDfh9k=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Grzegorz Halat <ghalat@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Don Zickus <dzickus@redhat.com>,
+        stable@vger.kernel.org, Peter Zijlstra <peterz@infradead.org>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>, bristot@redhat.com,
+        claudio@evidence.eu.com, lizefan@huawei.com, longman@redhat.com,
+        luca.abeni@santannapisa.it, mathieu.poirier@linaro.org,
+        rostedt@goodmis.org, tj@kernel.org,
+        tommaso.cucinotta@santannapisa.it, Ingo Molnar <mingo@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 058/313] x86/reboot: Always use NMI fallback when shutdown via reboot vector IPI fails
-Date:   Thu,  3 Oct 2019 17:50:36 +0200
-Message-Id: <20191003154538.746152034@linuxfoundation.org>
+Subject: [PATCH 5.2 059/313] rcu/tree: Call setschedule() gp ktread to SCHED_FIFO outside of atomic region
+Date:   Thu,  3 Oct 2019 17:50:37 +0200
+Message-Id: <20191003154538.830790877@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191003154533.590915454@linuxfoundation.org>
 References: <20191003154533.590915454@linuxfoundation.org>
@@ -61,126 +67,60 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Grzegorz Halat <ghalat@redhat.com>
+From: Juri Lelli <juri.lelli@redhat.com>
 
-[ Upstream commit 747d5a1bf293dcb33af755a6d285d41b8c1ea010 ]
+[ Upstream commit 1a763fd7c6335e3122c1cc09576ef6c99ada4267 ]
 
-A reboot request sends an IPI via the reboot vector and waits for all other
-CPUs to stop. If one or more CPUs are in critical regions with interrupts
-disabled then the IPI is not handled on those CPUs and the shutdown hangs
-if native_stop_other_cpus() is called with the wait argument set.
+sched_setscheduler() needs to acquire cpuset_rwsem, but it is currently
+called from an invalid (atomic) context by rcu_spawn_gp_kthread().
 
-Such a situation can happen when one CPU was stopped within a lock held
-section and another CPU is trying to acquire that lock with interrupts
-disabled. There are other scenarios which can cause such a lockup as well.
+Fix that by simply moving sched_setscheduler_nocheck() call outside of
+the atomic region, as it doesn't actually require to be guarded by
+rcu_node lock.
 
-In theory the shutdown should be attempted by an NMI IPI after the timeout
-period elapsed. Though the wait loop after sending the reboot vector IPI
-prevents this. It checks the wait request argument and the timeout. If wait
-is set, which is true for sys_reboot() then it won't fall through to the
-NMI shutdown method after the timeout period has finished.
-
-This was an oversight when the NMI shutdown mechanism was added to handle
-the 'reboot IPI is not working' situation. The mechanism was added to deal
-with stuck panic shutdowns, which do not have the wait request set, so the
-'wait request' case was probably not considered.
-
-Remove the wait check from the post reboot vector IPI wait loop and enforce
-that the wait loop in the NMI fallback path is invoked even if NMI IPIs are
-disabled or the registration of the NMI handler fails. That second wait
-loop will then hang if not all CPUs shutdown and the wait argument is set.
-
-[ tglx: Avoid the hard to parse line break in the NMI fallback path,
-  	add comments and massage the changelog ]
-
-Fixes: 7d007d21e539 ("x86/reboot: Use NMI to assist in shutting down if IRQ fails")
-Signed-off-by: Grzegorz Halat <ghalat@redhat.com>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Cc: Don Zickus <dzickus@redhat.com>
-Link: https://lkml.kernel.org/r/20190628122813.15500-1-ghalat@redhat.com
+Suggested-by: Peter Zijlstra <peterz@infradead.org>
+Tested-by: Dietmar Eggemann <dietmar.eggemann@arm.com>
+Signed-off-by: Juri Lelli <juri.lelli@redhat.com>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: bristot@redhat.com
+Cc: claudio@evidence.eu.com
+Cc: lizefan@huawei.com
+Cc: longman@redhat.com
+Cc: luca.abeni@santannapisa.it
+Cc: mathieu.poirier@linaro.org
+Cc: rostedt@goodmis.org
+Cc: tj@kernel.org
+Cc: tommaso.cucinotta@santannapisa.it
+Link: https://lkml.kernel.org/r/20190719140000.31694-8-juri.lelli@redhat.com
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/kernel/smp.c | 46 +++++++++++++++++++++++++------------------
- 1 file changed, 27 insertions(+), 19 deletions(-)
+ kernel/rcu/tree.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/arch/x86/kernel/smp.c b/arch/x86/kernel/smp.c
-index 4693e2f3a03ec..f2a749586252e 100644
---- a/arch/x86/kernel/smp.c
-+++ b/arch/x86/kernel/smp.c
-@@ -179,6 +179,12 @@ asmlinkage __visible void smp_reboot_interrupt(void)
- 	irq_exit();
- }
- 
-+static int register_stop_handler(void)
-+{
-+	return register_nmi_handler(NMI_LOCAL, smp_stop_nmi_callback,
-+				    NMI_FLAG_FIRST, "smp_stop");
-+}
-+
- static void native_stop_other_cpus(int wait)
- {
- 	unsigned long flags;
-@@ -212,39 +218,41 @@ static void native_stop_other_cpus(int wait)
- 		apic->send_IPI_allbutself(REBOOT_VECTOR);
- 
- 		/*
--		 * Don't wait longer than a second if the caller
--		 * didn't ask us to wait.
-+		 * Don't wait longer than a second for IPI completion. The
-+		 * wait request is not checked here because that would
-+		 * prevent an NMI shutdown attempt in case that not all
-+		 * CPUs reach shutdown state.
- 		 */
- 		timeout = USEC_PER_SEC;
--		while (num_online_cpus() > 1 && (wait || timeout--))
-+		while (num_online_cpus() > 1 && timeout--)
- 			udelay(1);
- 	}
--	
--	/* if the REBOOT_VECTOR didn't work, try with the NMI */
--	if ((num_online_cpus() > 1) && (!smp_no_nmi_ipi))  {
--		if (register_nmi_handler(NMI_LOCAL, smp_stop_nmi_callback,
--					 NMI_FLAG_FIRST, "smp_stop"))
--			/* Note: we ignore failures here */
--			/* Hope the REBOOT_IRQ is good enough */
--			goto finish;
--
--		/* sync above data before sending IRQ */
--		wmb();
- 
--		pr_emerg("Shutting down cpus with NMI\n");
-+	/* if the REBOOT_VECTOR didn't work, try with the NMI */
-+	if (num_online_cpus() > 1) {
-+		/*
-+		 * If NMI IPI is enabled, try to register the stop handler
-+		 * and send the IPI. In any case try to wait for the other
-+		 * CPUs to stop.
-+		 */
-+		if (!smp_no_nmi_ipi && !register_stop_handler()) {
-+			/* Sync above data before sending IRQ */
-+			wmb();
- 
--		apic->send_IPI_allbutself(NMI_VECTOR);
-+			pr_emerg("Shutting down cpus with NMI\n");
- 
-+			apic->send_IPI_allbutself(NMI_VECTOR);
-+		}
- 		/*
--		 * Don't wait longer than a 10 ms if the caller
--		 * didn't ask us to wait.
-+		 * Don't wait longer than 10 ms if the caller didn't
-+		 * reqeust it. If wait is true, the machine hangs here if
-+		 * one or more CPUs do not reach shutdown state.
- 		 */
- 		timeout = USEC_PER_MSEC * 10;
- 		while (num_online_cpus() > 1 && (wait || timeout--))
- 			udelay(1);
- 	}
- 
--finish:
- 	local_irq_save(flags);
- 	disable_local_APIC();
- 	mcheck_cpu_clear(this_cpu_ptr(&cpu_info));
+diff --git a/kernel/rcu/tree.c b/kernel/rcu/tree.c
+index 980ca3ca643fb..32ea75acba144 100644
+--- a/kernel/rcu/tree.c
++++ b/kernel/rcu/tree.c
+@@ -3123,13 +3123,13 @@ static int __init rcu_spawn_gp_kthread(void)
+ 	t = kthread_create(rcu_gp_kthread, NULL, "%s", rcu_state.name);
+ 	if (WARN_ONCE(IS_ERR(t), "%s: Could not start grace-period kthread, OOM is now expected behavior\n", __func__))
+ 		return 0;
++	if (kthread_prio)
++		sched_setscheduler_nocheck(t, SCHED_FIFO, &sp);
+ 	rnp = rcu_get_root();
+ 	raw_spin_lock_irqsave_rcu_node(rnp, flags);
+ 	rcu_state.gp_kthread = t;
+-	if (kthread_prio) {
++	if (kthread_prio)
+ 		sp.sched_priority = kthread_prio;
+-		sched_setscheduler_nocheck(t, SCHED_FIFO, &sp);
+-	}
+ 	raw_spin_unlock_irqrestore_rcu_node(rnp, flags);
+ 	wake_up_process(t);
+ 	rcu_spawn_nocb_kthreads();
 -- 
 2.20.1
 
