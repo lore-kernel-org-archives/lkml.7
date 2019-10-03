@@ -2,197 +2,201 @@ Return-Path: <SRS0=6dNS=X4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 19540C32792
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 10:42:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 674CBECE589
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 10:43:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EFD5721848
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 10:42:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3E54A222C2
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 10:43:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=microchiptechnology.onmicrosoft.com header.i=@microchiptechnology.onmicrosoft.com header.b="vb8BKKii"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729337AbfJCKmd (ORCPT
+        id S1729466AbfJCKnl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 06:42:33 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:39332 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727756AbfJCKmd (ORCPT
+        Thu, 3 Oct 2019 06:43:41 -0400
+Received: from esa6.microchip.iphmx.com ([216.71.154.253]:10963 "EHLO
+        esa6.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727756AbfJCKnk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 06:42:33 -0400
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: sre)
-        with ESMTPSA id A801228FA88
-Received: by earth.universe (Postfix, from userid 1000)
-        id DD71E3C0CA1; Thu,  3 Oct 2019 12:42:28 +0200 (CEST)
-Date:   Thu, 3 Oct 2019 12:42:28 +0200
-From:   Sebastian Reichel <sebastian.reichel@collabora.com>
-To:     Jean-Jacques Hiblot <jjhiblot@ti.com>
-Cc:     jacek.anaszewski@gmail.com, pavel@ucw.cz, robh+dt@kernel.org,
-        mark.rutland@arm.com, lee.jones@linaro.org,
-        daniel.thompson@linaro.org, linux-kernel@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, tomi.valkeinen@ti.com,
-        dmurphy@ti.com, linux-leds@vger.kernel.org
-Subject: Re: [PATCH v8 2/5] leds: Add of_led_get() and led_put()
-Message-ID: <20191003104228.c5nho6eimwzqwxpt@earth.universe>
-References: <20191003082812.28491-1-jjhiblot@ti.com>
- <20191003082812.28491-3-jjhiblot@ti.com>
+        Thu, 3 Oct 2019 06:43:40 -0400
+Received-SPF: Pass (esa6.microchip.iphmx.com: domain of
+  Claudiu.Beznea@microchip.com designates 198.175.253.82 as
+  permitted sender) identity=mailfrom;
+  client-ip=198.175.253.82; receiver=esa6.microchip.iphmx.com;
+  envelope-from="Claudiu.Beznea@microchip.com";
+  x-sender="Claudiu.Beznea@microchip.com";
+  x-conformance=spf_only; x-record-type="v=spf1";
+  x-record-text="v=spf1 mx a:ushub1.microchip.com
+  a:smtpout.microchip.com a:mx1.microchip.iphmx.com
+  a:mx2.microchip.iphmx.com include:servers.mcsv.net
+  include:mktomail.com include:spf.protection.outlook.com ~all"
+Received-SPF: None (esa6.microchip.iphmx.com: no sender
+  authenticity information available from domain of
+  postmaster@email.microchip.com) identity=helo;
+  client-ip=198.175.253.82; receiver=esa6.microchip.iphmx.com;
+  envelope-from="Claudiu.Beznea@microchip.com";
+  x-sender="postmaster@email.microchip.com";
+  x-conformance=spf_only
+Authentication-Results: esa6.microchip.iphmx.com; spf=Pass smtp.mailfrom=Claudiu.Beznea@microchip.com; spf=None smtp.helo=postmaster@email.microchip.com; dkim=pass (signature verified) header.i=@microchiptechnology.onmicrosoft.com; dmarc=pass (p=none dis=none) d=microchip.com
+IronPort-SDR: Kh5AeDeYqy3qrgTU4+YVPpMhCxxzB7hpqC16ge+KzRXkC0j0Bj0ul837NXkdfC9hUDJ+UtcRl8
+ u2vAeewPQELKMvISXpy4NhV2u7Xs7hN1SoV+PTkr37nCXJXftE4BPNsB0L6c+Orb7h0QucDCU0
+ JyWt1moq/7d0mX5owx65ZKAt5x9AdpaHEzgutpiQCcGZ0O2kgx4WcbVUhQXwIhGNBdn8YBONy3
+ /+12fXqBd/METlGevr8NNE977B7mvwDVsfEBtH93LKfQ0zluSwMB0yFpNPRLp/zRdpPXd7gzdR
+ CFk=
+X-IronPort-AV: E=Sophos;i="5.67,251,1566889200"; 
+   d="scan'208";a="48625222"
+Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
+  by esa6.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 03 Oct 2019 03:43:35 -0700
+Received: from chn-vm-ex04.mchp-main.com (10.10.85.152) by
+ chn-vm-ex02.mchp-main.com (10.10.85.144) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Thu, 3 Oct 2019 03:43:17 -0700
+Received: from NAM02-CY1-obe.outbound.protection.outlook.com (10.10.215.89) by
+ email.microchip.com (10.10.87.151) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.1.1713.5
+ via Frontend Transport; Thu, 3 Oct 2019 03:43:17 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=NmBcVLKEhij8qewyyT7i4CpKzD9t0NZqIkyY9+eOFAOrZhGpQdacVveONQFcG171NiLlVnKm1yn/5+pYyXUHcfHXlHiiRkSXPtUi4VErkQ0tJDomfxu+q1iGmtV7XVjn8lYAAhsSR+Vx+DyNLk/UUOd2HpDctIgdSB/v81zPbZ3HFb9sRI4vG1H9dnZpTNm+snKSkou5sfFjmJJ54qg+bDmBs7VFh1D7VmZ5OdO2jhASG71wbeIPkoiCpQXDP1VNQocH8+fjgDBrM99xT5W9yA0exuyS+lLiCrSu4v0H79S8o+kxr5aLd9IuDR9EbYKlv6iWFvRDpwtFikVhTka/dg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=4z6O/TIUCmreGOqJOF86HxnnUsT7MBXi3SZECPGHZWY=;
+ b=ipEsxUSmODC7eAYRu8BHncOy46qmydHd2ekcvaia5/ff2ievfAKKuDn3+FTABuch0QB5CkeH9eontv16kfrLH7XCITNaUfJFE+Zb151+W1pr+/KfhSWcZsCVYS7xtrFr3566KftZNmVJlXpWLEMRoVyuN1oNfgyS9mr67+H3L4DZKNZ17RKb9lhugoXH07hBU9P6wamrOhL3CQWhZnmWJrro8HEjZfLkzUjQENbyCNmFHck9bsOE1pcCveRD9kdqqTIgnPLSVFdUYPCmf83QXEPugTUFy2sb6vct4kCYeN7jUH3+pFSUv3ty8sCXJwHIj9oAszaOzvmIcNAHXMYSsA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=microchip.com; dmarc=pass action=none
+ header.from=microchip.com; dkim=pass header.d=microchip.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=microchiptechnology.onmicrosoft.com;
+ s=selector2-microchiptechnology-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=4z6O/TIUCmreGOqJOF86HxnnUsT7MBXi3SZECPGHZWY=;
+ b=vb8BKKiiVyYfgsS4n8v6vqtYiJ+6Oa1ExfDLHe3pDxZxpwct6FkuKFhgqilSaiPxqAhQZ8Fo4At0x52LPpW9tEVk77CvPh5yc29/NYI8LLCFeBNQGcTRPrcP4GFM2iQGXO286nGyl+0hgmpiL77yjs/j/fHY/wiCEON97aYpRu0=
+Received: from DM6PR11MB3225.namprd11.prod.outlook.com (20.176.120.85) by
+ DM6PR11MB3321.namprd11.prod.outlook.com (20.176.122.26) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2305.17; Thu, 3 Oct 2019 10:43:14 +0000
+Received: from DM6PR11MB3225.namprd11.prod.outlook.com
+ ([fe80::3874:9f3c:5325:d22]) by DM6PR11MB3225.namprd11.prod.outlook.com
+ ([fe80::3874:9f3c:5325:d22%6]) with mapi id 15.20.2305.023; Thu, 3 Oct 2019
+ 10:43:14 +0000
+From:   <Claudiu.Beznea@microchip.com>
+To:     <daniel.lezcano@linaro.org>, <robh+dt@kernel.org>,
+        <mark.rutland@arm.com>, <linux@armlinux.org.uk>, <nsekhar@ti.com>,
+        <bgolaszewski@baylibre.com>, <monstr@monstr.eu>,
+        <john@phrozen.org>, <ralf@linux-mips.org>, <paul.burton@mips.com>,
+        <jhogan@kernel.org>, <lftan@altera.com>, <tglx@linutronix.de>,
+        <vgupta@synopsys.com>, <marc.zyngier@arm.com>,
+        <patrice.chotard@st.com>, <mcoquelin.stm32@gmail.com>,
+        <alexandre.torgue@st.com>, <eric@anholt.net>, <wahrenst@gmx.net>,
+        <f.fainelli@gmail.com>, <rjui@broadcom.com>,
+        <sbranden@broadcom.com>, <bcm-kernel-feedback-list@broadcom.com>,
+        <linus.walleij@linaro.org>, <shc_work@mail.ru>, <kgene@kernel.org>,
+        <krzk@kernel.org>, <ysato@users.sourceforge.jp>,
+        <liviu.dudau@arm.com>, <sudeep.holla@arm.com>,
+        <lorenzo.pieralisi@arm.com>, <shawnguo@kernel.org>,
+        <s.hauer@pengutronix.de>, <kernel@pengutronix.de>,
+        <festevam@gmail.com>, <linux-imx@nxp.com>, <baohua@kernel.org>,
+        <Nicolas.Ferre@microchip.com>, <alexandre.belloni@bootlin.com>,
+        <Ludovic.Desroches@microchip.com>, <baruch@tkos.co.il>,
+        <u.kleine-koenig@pengutronix.de>, <guoren@kernel.org>,
+        <kaloz@openwrt.org>, <khalasa@piap.pl>, <ssantosh@kernel.org>,
+        <vz@mleia.com>, <slemieux.tyco@gmail.com>, <khilman@baylibre.com>,
+        <avifishman70@gmail.com>, <tmaimon77@gmail.com>,
+        <tali.perry1@gmail.com>, <venture@google.com>, <yuenn@google.com>,
+        <benjaminfair@google.com>, <afaerber@suse.de>,
+        <manivannan.sadhasivam@linaro.org>, <narmstrong@baylibre.com>,
+        <agross@kernel.org>, <palmer@sifive.com>, <aou@eecs.berkeley.edu>,
+        <heiko@sntech.de>, <orsonzhai@gmail.com>, <baolin.wang@linaro.org>,
+        <zhang.lyra@gmail.com>, <maxime.ripard@bootlin.com>,
+        <wens@csie.org>, <thierry.reding@gmail.com>,
+        <jonathanh@nvidia.com>, <linux@prisktech.co.nz>,
+        <john.stultz@linaro.org>, <sboyd@kernel.org>,
+        <matthias.bgg@gmail.com>
+CC:     <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mips@vger.kernel.org>, <nios2-dev@lists.rocketboards.org>,
+        <linux-snps-arc@lists.infradead.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-rpi-kernel@lists.infradead.org>,
+        <linux-samsung-soc@vger.kernel.org>,
+        <uclinux-h8-devel@lists.sourceforge.jp>,
+        <linux-amlogic@lists.infradead.org>, <openbmc@lists.ozlabs.org>,
+        <linux-oxnas@groups.io>, <linux-arm-msm@vger.kernel.org>,
+        <linux-unisoc@lists.infradead.org>,
+        <linux-riscv@lists.infradead.org>,
+        <linux-rockchip@lists.infradead.org>,
+        <linux-tegra@vger.kernel.org>, <linux-mediatek@lists.infradead.org>
+Subject: Re: [PATCH 0/7] add support for clocksource/clockevent DT selection
+Thread-Topic: [PATCH 0/7] add support for clocksource/clockevent DT selection
+Thread-Index: AQHVc8VbrLXkUp4vH02J/Sk0g3X+4Kc9pRwAgAm/1ICAAWIegA==
+Date:   Thu, 3 Oct 2019 10:43:14 +0000
+Message-ID: <187d7020-fbe9-7984-2358-8a70faef019f@microchip.com>
+References: <1568123236-767-1-git-send-email-claudiu.beznea@microchip.com>
+ <c3a68a08-d134-cd28-c8af-f757628e07f1@linaro.org>
+ <72edc5fd-df05-cba5-5aa7-39da1709415b@microchip.com>
+ <620a19d5-73b8-709d-9eec-49274ac23e51@microchip.com>
+In-Reply-To: <620a19d5-73b8-709d-9eec-49274ac23e51@microchip.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: VI1PR07CA0173.eurprd07.prod.outlook.com
+ (2603:10a6:802:3e::21) To DM6PR11MB3225.namprd11.prod.outlook.com
+ (2603:10b6:5:59::21)
+x-ms-exchange-messagesentrepresentingtype: 1
+x-tagtoolbar-keys: D20191003134249853
+x-originating-ip: [94.177.32.156]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: a69bb484-2581-4090-3e6f-08d747ee7e34
+x-ms-traffictypediagnostic: DM6PR11MB3321:
+x-ms-exchange-purlcount: 1
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <DM6PR11MB33210DD9F544189800B49B2D879F0@DM6PR11MB3321.namprd11.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:10000;
+x-forefront-prvs: 01792087B6
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(346002)(396003)(366004)(39860400002)(376002)(136003)(51914003)(189003)(199004)(6436002)(6116002)(76176011)(25786009)(2501003)(5660300002)(316002)(53546011)(3846002)(386003)(6506007)(110136005)(8936002)(476003)(486006)(71200400001)(81166006)(966005)(81156014)(102836004)(2171002)(71190400001)(99286004)(1191002)(52116002)(2616005)(6246003)(7336002)(14444005)(186003)(2906002)(7366002)(256004)(6306002)(6512007)(561944003)(229853002)(2201001)(26005)(14454004)(7416002)(31696002)(86362001)(6486002)(4326008)(54906003)(7736002)(64756008)(66446008)(66476007)(66556008)(66946007)(305945005)(8676002)(478600001)(446003)(36756003)(66066001)(11346002)(7406005)(31686004)(921003)(1121003);DIR:OUT;SFP:1101;SCL:1;SRVR:DM6PR11MB3321;H:DM6PR11MB3225.namprd11.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: microchip.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: 5PBf28dhTyEM+9xzweuKzLQ5Hf71K1eZ/d6kOgcgTpKsRjJCItVUlQZAeGuknztE3Q/o6x8QM65SOoyfcCo8Z2+Beih+T5rCxCW2HvbE7GOQac8vkdo2sRP5SnHjNFCE3RNBLdIOsAl+hl/uaQVOSpCxsA8d0TSoWnoeqJQ8la5s8Xs5NdRtMztgqsVs+xl8l+R7Nd9/5n39dKx1FOMScLpbkQaBdomNYHIPxsvmO8cUEr/MRSYT8P5CyK6kX1TJOpdw1aacriChcEaFgodmtYjZU9PsaD52Pj3neWGWBfuPne4hASiO+Aw5OeWtoJ1KaaB3DrO3hPscVSs+mV7DWPkS8rrSmdRVlE2O0yRDGTejpczZOi/L6URBqmvHMEWDZuue5C7tmYXewfnUJX+WFRtcafraXBkrRM5wmqXQL/8XAlMCaYuv4/p8Bdpa0HMahD3ms2znwq1mwEIlvVOCVw==
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <51816439DDB2EA498830860703402E31@namprd11.prod.outlook.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="j3dwpceevmlujtme"
-Content-Disposition: inline
-In-Reply-To: <20191003082812.28491-3-jjhiblot@ti.com>
-User-Agent: NeoMutt/20180716
+X-MS-Exchange-CrossTenant-Network-Message-Id: a69bb484-2581-4090-3e6f-08d747ee7e34
+X-MS-Exchange-CrossTenant-originalarrivaltime: 03 Oct 2019 10:43:14.7902
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 3f4057f3-b418-4d4e-ba84-d55b4e897d88
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: 0CMnEwf05eZLlk9enoiVzUG4uHDU/anYqc9xKhCaWxWNmd36ZMXcfz6M1182SPjNMZEmzvgm531qYuHGQL4T1UyEkDN54kgtrooQKtkZGhA=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR11MB3321
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
---j3dwpceevmlujtme
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-Hi,
-
-On Thu, Oct 03, 2019 at 10:28:09AM +0200, Jean-Jacques Hiblot wrote:
-> From: Tomi Valkeinen <tomi.valkeinen@ti.com>
->=20
-> This patch adds basic support for a kernel driver to get a LED device.
-> This will be used by the led-backlight driver.
->=20
-> Only OF version is implemented for now, and the behavior is similar to
-> PWM's of_pwm_get() and pwm_put().
->=20
-> Signed-off-by: Tomi Valkeinen <tomi.valkeinen@ti.com>
-> Signed-off-by: Jean-Jacques Hiblot <jjhiblot@ti.com>
-> Acked-by: Pavel Machek <pavel@ucw.cz>
-> ---
->  drivers/leds/led-class.c | 44 ++++++++++++++++++++++++++++++++++++++++
->  include/linux/leds.h     |  4 ++++
->  2 files changed, 48 insertions(+)
->=20
-> diff --git a/drivers/leds/led-class.c b/drivers/leds/led-class.c
-> index c2167b66b61f..455545f5d663 100644
-> --- a/drivers/leds/led-class.c
-> +++ b/drivers/leds/led-class.c
-> @@ -19,6 +19,7 @@
->  #include <linux/spinlock.h>
->  #include <linux/timer.h>
->  #include <uapi/linux/uleds.h>
-> +#include <linux/of.h>
->  #include "leds.h"
-> =20
->  static struct class *leds_class;
-> @@ -214,6 +215,49 @@ static int led_resume(struct device *dev)
-> =20
->  static SIMPLE_DEV_PM_OPS(leds_class_dev_pm_ops, led_suspend, led_resume);
-> =20
-> +/**
-> + * of_led_get() - request a LED device via the LED framework
-> + * @np: device node to get the LED device from
-> + * @index: the index of the LED
-> + *
-> + * Returns the LED device parsed from the phandle specified in the "leds"
-> + * property of a device tree node or a negative error-code on failure.
-> + */
-> +struct led_classdev *of_led_get(struct device_node *np, int index)
-> +{
-> +	struct device *led_dev;
-> +	struct led_classdev *led_cdev;
-> +	struct device_node *led_node;
-> +
-> +	led_node =3D of_parse_phandle(np, "leds", index);
-> +	if (!led_node)
-> +		return ERR_PTR(-ENOENT);
-> +
-> +	led_dev =3D class_find_device_by_of_node(leds_class, led_node);
-
-If you convert led_node into a fwnode, you can use
-class_find_device_by_fwnode() instead. That way the
-first patch can just be dropped.
-
--- Sebastian
-
-> +	of_node_put(led_node);
-> +
-> +	if (!led_dev)
-> +		return ERR_PTR(-EPROBE_DEFER);
-> +
-> +	led_cdev =3D dev_get_drvdata(led_dev);
-> +
-> +	if (!try_module_get(led_cdev->dev->parent->driver->owner))
-> +		return ERR_PTR(-ENODEV);
-> +
-> +	return led_cdev;
-> +}
-> +EXPORT_SYMBOL_GPL(of_led_get);
-> +
-> +/**
-> + * led_put() - release a LED device
-> + * @led_cdev: LED device
-> + */
-> +void led_put(struct led_classdev *led_cdev)
-> +{
-> +	module_put(led_cdev->dev->parent->driver->owner);
-> +}
-> +EXPORT_SYMBOL_GPL(led_put);
-> +
->  static int led_classdev_next_name(const char *init_name, char *name,
->  				  size_t len)
->  {
-> diff --git a/include/linux/leds.h b/include/linux/leds.h
-> index b8df71193329..6f7371bc7757 100644
-> --- a/include/linux/leds.h
-> +++ b/include/linux/leds.h
-> @@ -20,6 +20,7 @@
-> =20
->  struct device;
->  struct led_pattern;
-> +struct device_node;
->  /*
->   * LED Core
->   */
-> @@ -196,6 +197,9 @@ extern void devm_led_classdev_unregister(struct devic=
-e *parent,
->  extern void led_classdev_suspend(struct led_classdev *led_cdev);
->  extern void led_classdev_resume(struct led_classdev *led_cdev);
-> =20
-> +extern struct led_classdev *of_led_get(struct device_node *np, int index=
-);
-> +extern void led_put(struct led_classdev *led_cdev);
-> +
->  /**
->   * led_blink_set - set blinking with software fallback
->   * @led_cdev: the LED to start blinking
-> --=20
-> 2.17.1
->=20
-> _______________________________________________
-> dri-devel mailing list
-> dri-devel@lists.freedesktop.org
-> https://lists.freedesktop.org/mailman/listinfo/dri-devel
-
---j3dwpceevmlujtme
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAl2V0GcACgkQ2O7X88g7
-+prmzg/9E0CAs3oiLnssD5zcaRUXA/TReOyQrGD1nboLusSjJFrB/8qx4spJtmBt
-qewY2Ra2ekk/xSk6RAxIhuDmUubU2pCqBgSzbB3rrqEVHLO/cp4oSZP8sDb/Jzbr
-GA2Uy/0p+sa/mAaSBUofsX0n7A0yeYlUHObix8dt+Jhdw9oW7zOj2EBGgd/zjZpb
-GG24jamgRTIDgXgwzUJ/xDQOkRbSZAXcbt1L/kptrz6h23bOoF3pka6SUOKm9FNq
-yRqBFEyEZENyNgS33z4nXVH4Iy/IR+C2dve9Q6JMzpvCNumygszhN3g5vbf7iJU3
-sJdZVhOTvhMja9WiU179X8zQbYyy7TD/f0HoDI5gJZN1Z4LkHK35pwr8ymr1sQtK
-vw8tE8Ij7c6x01YhugFrWkdYCa1W/FbVc6xtmkH9Udl1bjcTv0uZk6Ol586JMbbS
-1OKQJ8BhWQsvw5kq7IPXQ/wvrtUMSIUpneBzgApdtD5eFRQgRm9J/Pl3PXhAA0Bh
-+HA9sf7JHoqLhx/tmCS2/X+cvhjJPagSG054/NjYKdibl5wlbsMRqkGnYHx8nM1B
-4Lsk4+SmrQOd36w06KQtQ1zPqTytk/UbykCp6VdPTaxIFH+0zJCt3ApAkXUBYmNr
-pUzKvFILC12lHMAn5obK54+Kh4oYWppTbbL84ZjEMsPdFh2zsw8=
-=HisU
------END PGP SIGNATURE-----
-
---j3dwpceevmlujtme--
+DQoNCk9uIDAyLjEwLjIwMTkgMTY6MzUsIENsYXVkaXUgQmV6bmVhIHdyb3RlOg0KPiBIaSBEYW5p
+ZWwsDQo+IA0KPiBUYWtpbmcgaW50byBhY2NvdW50IHRoYXQgUm9iIGRvZXNuJ3QgYWdyZWUgd2l0
+aCB0aGUgc29sdXRpb24gcHJvcG9zZWQgaW4NCj4gdGhpcyBzZXJpZXMgZG8geW91IHRoaW5rIHRo
+ZXJlIGlzIGEgY2hhbmNlIHRvIG1lcmdlIHRoaXMgZHJpdmVyIGFzIGlzPw0KDQpTb3JyeSwgSSB3
+YXMgdGFsa2luZyBoZXJlIGFib3V0IHRoZSBkcml2ZXIgYXQgWzFdLg0KDQpbMV0gaHR0cHM6Ly9s
+b3JlLmtlcm5lbC5vcmcvbGttbC8xNTUyNTgwNzcyLTg0OTktMS1naXQtc2VuZC1lbWFpbC1jbGF1
+ZGl1LmJlem5lYUBtaWNyb2NoaXAuY29tLw0KDQo+IA0KPiBJZiB5b3UgaGF2ZSBvdGhlciBzdWdn
+ZXN0aW9uIEkgYW0gb3BlbiB0byB0cnkgaXQuDQo+IA0KPiBUaGFuayB5b3UsDQo+IENsYXVkaXUg
+QmV6bmVhDQo+IA0KPiBPbiAyNi4wOS4yMDE5IDExOjQyLCBDbGF1ZGl1IEJlem5lYSB3cm90ZToN
+Cj4+DQo+Pg0KPj4gT24gMjUuMDkuMjAxOSAyMDoxOSwgRGFuaWVsIExlemNhbm8gd3JvdGU6DQo+
+Pj4gRXh0ZXJuYWwgRS1NYWlsDQo+Pj4NCj4+Pg0KPj4+IEhpIENsYXVkaXUsDQo+Pj4NCj4+PiBP
+biAxMC8wOS8yMDE5IDE1OjQ3LCBDbGF1ZGl1IEJlem5lYSB3cm90ZToNCj4+Pj4gSGksDQo+Pj4+
+DQo+Pj4+IFRoaXMgc2VyaWVzIGFkZHMgc3VwcG9ydCB0byBwZXJtaXQgdGhlIHNlbGVjdGlvbiBv
+ZiBjbG9ja3NvdXJjZS9jbG9ja2V2ZW50DQo+Pj4+IHZpYSBEVC4NCj4+Pg0KPj4+IFRoYW5rcyBm
+b3IgdGhlIHByb3Bvc2FsIGFuZCB0YWtpbmcgY2FyZSBvZiBtYWtpbmcgc29tZSBwcm9ncmVzcyBv
+biB0aGlzLg0KPj4+DQo+Pj4gSSBqdXN0IHdhbnRlZCB0byBsZXQgeW91IGtub3cgSSd2ZSBiZWVu
+IHRyYXZlbGluZyBidXQgdGhlIHNlcmllcyBpcyBpbg0KPj4+IG15IHBpcGUgYW5kIEkgZGlkIG5v
+dCBmb3JnZXQgaXQuIEknbGwgY29tbWVudCBpdCBuZXh0IHdlZWsuDQo+Pg0KPj4gSGkgRGFuaWVs
+LA0KPj4NCj4+IE5vIHByb2JsZW0uIFRoYW5rIHlvdSBmb3IgbGV0dGluZyBtZSBrbm93Lg0KPj4N
+Cj4+IENsYXVkaXUNCj4+DQo+Pj4NCj4+PiAgLS0gRGFuaWVsDQo+Pj4NCj4+Pg0K
