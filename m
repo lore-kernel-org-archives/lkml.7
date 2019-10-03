@@ -4,52 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 22C8BC10F14
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:44:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5EA1C10F14
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:44:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EB11221A4C
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:44:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7B9AC206BB
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:44:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570121048;
-	bh=LYIbF59LRkqGRsnLtIcvlgJlu1D6vqFSlyn1nFHtP2M=;
+	s=default; t=1570121053;
+	bh=rpLu/oS3jQttqG3AiJBi6ubdqtvP3hbrdcN6X/C/dR4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=S0LC+ahXBcPvlMtklHsuASpfFs8crxKaGnz86ytVFj8e/KN1TDAvCdsbtyzayJ3JK
-	 HY0JykbAh4uMEibpF2wPSfxCno8+pA2BwqoeQwne7KbijJK4CmS092HOkjtUW/x/uZ
-	 g3MlmVjD014U/8ZqjsmIf/js14GJEYWpNgLaXfzc=
+	b=xtd+54DHSG27qjNDFvh0OyjT30Nsy6q420ywG8bvBv76ZCwEMXLHvdVeBPAbyo9JQ
+	 RhcRPuQzjx2EV8bVzfpp5vPg+/DDoZl2N1m5UHmC2GVfcP9CBa8I6xhRluU9rVVwWp
+	 ng3TScZDF1YBb2ZA0eYTpfI8Osjj0s+7DrpX9HQo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392410AbfJCQoH (ORCPT
+        id S2405333AbfJCQoM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 12:44:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55966 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 12:44:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56136 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404781AbfJCQoF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:44:05 -0400
+        id S2392731AbfJCQoK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:44:10 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 99BDE2054F;
-        Thu,  3 Oct 2019 16:44:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C7B5320865;
+        Thu,  3 Oct 2019 16:44:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570121044;
-        bh=LYIbF59LRkqGRsnLtIcvlgJlu1D6vqFSlyn1nFHtP2M=;
+        s=default; t=1570121050;
+        bh=rpLu/oS3jQttqG3AiJBi6ubdqtvP3hbrdcN6X/C/dR4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=tLZ1pGcBmhoF9yLNsC45NxxENr3vXP+xCeui17DEWIAIGJ4g+/H0xFF4srspBuz5N
-         R1UMg7Ij4rA3WMhUTRLdH4H4oF0qdTVVKbaGZwNlGMGf4QtZzxFs/UwOZRg8f2+Q+N
-         w34e0/vx0wYbkGkeS/z5S5lmQHVyv0ztvPSRYfss=
+        b=bkfIZVu4WZrrJnCg1gf/8V1b4XNApFID0z/0Mrl36judAgkYnMmseZ7u1pzf678RZ
+         sKrXGM9uNruhjbwCuP4q33zJf6eH+M42Hv6rU6tBPnSLl9Xn4NuZ8CIgZ8vGIid9TJ
+         lJQ8vJjO7Ix6YZ+o3YB8g3EbuxG2YebYYZ3c3UVQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Matthias Brugger <matthias.bgg@gmail.com>,
-        Houlong Wei <houlong.wei@mediatek.com>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        stable@vger.kernel.org, Wenwen Wang <wenwen@cs.uga.edu>,
+        Pavel Machek <pavel@ucw.cz>,
+        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.3 106/344] media: mtk-mdp: fix reference count on old device tree
-Date:   Thu,  3 Oct 2019 17:51:11 +0200
-Message-Id: <20191003154550.692726688@linuxfoundation.org>
+Subject: [PATCH 5.3 134/344] led: triggers: Fix a memory leak bug
+Date:   Thu,  3 Oct 2019 17:51:39 +0200
+Message-Id: <20191003154553.447981175@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191003154540.062170222@linuxfoundation.org>
 References: <20191003154540.062170222@linuxfoundation.org>
@@ -62,40 +61,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Matthias Brugger <matthias.bgg@gmail.com>
+From: Wenwen Wang <wenwen@cs.uga.edu>
 
-[ Upstream commit 864919ea0380e62adb2503b89825fe358acb8216 ]
+[ Upstream commit 60e2dde1e91ae0addb21ac380cc36ebee7534e49 ]
 
-of_get_next_child() increments the reference count of the returning
-device_node. Decrement it in the check if we are using the old or the
-new DTB.
+In led_trigger_set(), 'event' is allocated in kasprintf(). However, it is
+not deallocated in the following execution if the label 'err_activate' or
+'err_add_groups' is entered, leading to memory leaks. To fix this issue,
+free 'event' before returning the error.
 
-Fixes: ba1f1f70c2c0 ("[media] media: mtk-mdp: Fix mdp device tree")
-Signed-off-by: Matthias Brugger <matthias.bgg@gmail.com>
-Acked-by: Houlong Wei <houlong.wei@mediatek.com>
-[hverkuil-cisco@xs4all.nl: use node instead of parent as temp variable]
-Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Fixes: 52c47742f79d ("leds: triggers: send uevent when changing triggers")
+Signed-off-by: Wenwen Wang <wenwen@cs.uga.edu>
+Acked-by: Pavel Machek <pavel@ucw.cz>
+Signed-off-by: Jacek Anaszewski <jacek.anaszewski@gmail.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/platform/mtk-mdp/mtk_mdp_core.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/leds/led-triggers.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/media/platform/mtk-mdp/mtk_mdp_core.c b/drivers/media/platform/mtk-mdp/mtk_mdp_core.c
-index fc9faec85edb6..5d44f2e92dd50 100644
---- a/drivers/media/platform/mtk-mdp/mtk_mdp_core.c
-+++ b/drivers/media/platform/mtk-mdp/mtk_mdp_core.c
-@@ -110,7 +110,9 @@ static int mtk_mdp_probe(struct platform_device *pdev)
- 	mutex_init(&mdp->vpulock);
+diff --git a/drivers/leds/led-triggers.c b/drivers/leds/led-triggers.c
+index 8d11a5e232271..eff1bda8b5200 100644
+--- a/drivers/leds/led-triggers.c
++++ b/drivers/leds/led-triggers.c
+@@ -173,6 +173,7 @@ int led_trigger_set(struct led_classdev *led_cdev, struct led_trigger *trig)
+ 	list_del(&led_cdev->trig_list);
+ 	write_unlock_irqrestore(&led_cdev->trigger->leddev_list_lock, flags);
+ 	led_set_brightness(led_cdev, LED_OFF);
++	kfree(event);
  
- 	/* Old dts had the components as child nodes */
--	if (of_get_next_child(dev->of_node, NULL)) {
-+	node = of_get_next_child(dev->of_node, NULL);
-+	if (node) {
-+		of_node_put(node);
- 		parent = dev->of_node;
- 		dev_warn(dev, "device tree is out of date\n");
- 	} else {
+ 	return ret;
+ }
 -- 
 2.20.1
 
