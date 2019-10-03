@@ -2,97 +2,115 @@ Return-Path: <SRS0=6dNS=X4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C4ACC10F14
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 11:47:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FF0AC10F14
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 11:47:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7036E2070B
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 11:47:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="bYfQodRE"
+	by mail.kernel.org (Postfix) with ESMTP id 575F5222C4
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 11:47:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1570103257;
+	bh=4nbskvtMte6G8Dn16qGwpWvD7usNNHZVowY6nzQ2Cx8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=AT3iWCZuwmjl15UFUAmxCAkrr3dkE7SiF5zpw9nkIhum+NWv4NdNP5ofDrtYyuLCg
+	 6CdVUeqcPyc4LRHPLuaVWoIiAHwIQq2BUMfnVPLV80O5yya9z+rM81LtVIXqjCeTQ+
+	 T9SuSbH0yA4l04+g1q0QUK7XG48CUgAjbMTIQ1wI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730204AbfJCLrS (ORCPT
+        id S1730255AbfJCLrg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 07:47:18 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:56074 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725827AbfJCLrS (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 07:47:18 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x93BiNmT141829;
-        Thu, 3 Oct 2019 11:47:14 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2019-08-05;
- bh=VkrIv0UgUYabJ9VoBKBsjxs38jDxDS91sqJRxmziBN0=;
- b=bYfQodREFQ2hKwNSHsOKxqCPlSGvrESt4bnu6kAFrquq6uMPA2FVtsTbIhC/KHtK6W2T
- Y/3EMLP8xsXBVP+u9tdbXIMKz2m4zduUhSODUqerWgaC4OatL4iNSFgxro0vRceDXxx6
- T/jye2y5I/EKaqr1UUH1hD0jLot8NpM31uAacOnPrXGRhiC3xyrHXKrT0PuIUsEUO5Ic
- ooeKum2JddPgFuxECytL0toqz33thsLAc+zII+ajzT/xackFNYP3M1CHepzlzYv1EUxp
- MnaFQayfyrItvu22nzfWnWX5k6vgsVNj5PTT7y+ZqpK3KEYiUIysFPtbdsBTX8R2yDfG MA== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by userp2130.oracle.com with ESMTP id 2v9xxv3e23-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 03 Oct 2019 11:47:14 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x93BhvWL033585;
-        Thu, 3 Oct 2019 11:47:14 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by userp3030.oracle.com with ESMTP id 2vcg63fc06-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 03 Oct 2019 11:47:13 +0000
-Received: from abhmp0010.oracle.com (abhmp0010.oracle.com [141.146.116.16])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x93BlAFs008475;
-        Thu, 3 Oct 2019 11:47:10 GMT
-Received: from kadam (/41.57.98.10)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Thu, 03 Oct 2019 04:47:09 -0700
-Date:   Thu, 3 Oct 2019 14:46:54 +0300
-From:   Dan Carpenter <dan.carpenter@oracle.com>
-To:     Valdis =?utf-8?Q?Kl=C4=93tnieks?= <valdis.kletnieks@vt.edu>
-Cc:     Saiyam Doshi <saiyamdoshi.in@gmail.com>,
-        devel@driverdev.osuosl.org, gregkh@linuxfoundation.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] staging: exfat: use bdev_sync function directly where
- needed
-Message-ID: <20191003114654.GT22609@kadam>
-References: <20191002151703.GA6594@SD>
- <9938.1570043055@turing-police>
+        Thu, 3 Oct 2019 07:47:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34892 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725827AbfJCLrg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 07:47:36 -0400
+Received: from localhost (lfbn-1-10718-76.w90-89.abo.wanadoo.fr [90.89.68.76])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 15A932070B;
+        Thu,  3 Oct 2019 11:47:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1570103255;
+        bh=4nbskvtMte6G8Dn16qGwpWvD7usNNHZVowY6nzQ2Cx8=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=O20g3VXN3/cg4aktrTVEe1GoW8i3ThoeeCN1k/JWU6mjTRj16XPoBKKQyzKDaXwN2
+         4lZpEHI+x/6TtmfN5YS8Gy5rtabyI3lmUdMvHUjqCRr2kyrMwRtkphLHWmIzPJAv5u
+         qo1v5dHZgQ3uBbnCCPnNR81iVgTFACMX8U0wxo0I=
+Date:   Thu, 3 Oct 2019 13:47:33 +0200
+From:   Maxime Ripard <mripard@kernel.org>
+To:     Jagan Teki <jagan@amarulasolutions.com>
+Cc:     Chen-Yu Tsai <wens@csie.org>, David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>, michael@amarulasolutions.com,
+        Icenowy Zheng <icenowy@aosc.io>,
+        linux-sunxi <linux-sunxi@googlegroups.com>,
+        dri-devel@lists.freedesktop.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org
+Subject: Re: [PATCH v11 4/7] dt-bindings: sun6i-dsi: Add VCC-DSI supply
+ property
+Message-ID: <20191003114733.56mlar666l76uoyb@gilmour>
+References: <20191003064527.15128-1-jagan@amarulasolutions.com>
+ <20191003064527.15128-5-jagan@amarulasolutions.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="abhaj7rlytqkllsn"
 Content-Disposition: inline
-In-Reply-To: <9938.1570043055@turing-police>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9398 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=829
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1908290000 definitions=main-1910030110
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9398 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=927 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1908290000
- definitions=main-1910030110
+In-Reply-To: <20191003064527.15128-5-jagan@amarulasolutions.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-I replied to your other thread and I added Saiyam Doshi to the CC list
-there.  Just to be clear this patch is a good cleanup and doesn't affect
-runtime at all.
 
-In the other thread, I suggested that we leave fs_sync() as a marker
-even though it's dead code.  But looking at it now, I think that it's
-not really useful.  Future auditors should look for places which call
-fs_set_vol_flags(sb, VOL_CLEAN); instead.  That's exactly the places
-which call fs_sync().
+--abhaj7rlytqkllsn
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-regards,
-dan carpenter
+On Thu, Oct 03, 2019 at 12:15:24PM +0530, Jagan Teki wrote:
+> Allwinner MIPI DSI controllers are supplied with SoC DSI
+> power rails via VCC-DSI pin.
+>
+> Some board still work without supplying this but give more
+> faith on datasheet and hardware schematics and document this
+> supply property in required property list.
+>
+> Reviewed-by: Rob Herring <robh@kernel.org>
+> Tested-by: Merlijn Wajer <merlijn@wizzup.org>
+> Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
+> ---
+>  .../bindings/display/allwinner,sun6i-a31-mipi-dsi.yaml         | 3 +++
+>  1 file changed, 3 insertions(+)
+>
+> diff --git a/Documentation/devicetree/bindings/display/allwinner,sun6i-a31-mipi-dsi.yaml b/Documentation/devicetree/bindings/display/allwinner,sun6i-a31-mipi-dsi.yaml
+> index 47950fced28d..9d4c25b104f6 100644
+> --- a/Documentation/devicetree/bindings/display/allwinner,sun6i-a31-mipi-dsi.yaml
+> +++ b/Documentation/devicetree/bindings/display/allwinner,sun6i-a31-mipi-dsi.yaml
+> @@ -36,6 +36,9 @@ properties:
+>    resets:
+>      maxItems: 1
+>
+> +  vcc-dsi-supply:
+> +    description: VCC-DSI power supply of the DSI encoder
+> +
+
+The driver treats it as mandatory, so I've added it to the binding, as
+suggested by the commit log.
+
+Maxime
+
+--abhaj7rlytqkllsn
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXZXf1QAKCRDj7w1vZxhR
+xQpxAP98mYp2+COHS85N0R4A/9rdJqX3YHaZ0XyYCj2Ihb0iVQD/QWC0ZaUcuku4
+nKva2ZQhgqqxhRK3v8jH9MrfregJmAE=
+=CYoo
+-----END PGP SIGNATURE-----
+
+--abhaj7rlytqkllsn--
