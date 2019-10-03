@@ -2,41 +2,40 @@ Return-Path: <SRS0=6dNS=X4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CB68C32792
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 07:59:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4795C10F14
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 07:59:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D7F4D21D81
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 07:59:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9AF1D21D81
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 07:59:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="JkW9JFD3"
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="QTOhXzxR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728496AbfJCH7S (ORCPT
+        id S1728431AbfJCH7R (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 03:59:18 -0400
-Received: from conuserg-11.nifty.com ([210.131.2.78]:59222 "EHLO
+        Thu, 3 Oct 2019 03:59:17 -0400
+Received: from conuserg-11.nifty.com ([210.131.2.78]:59233 "EHLO
         conuserg-11.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728178AbfJCH7R (ORCPT
+        with ESMTP id S1728180AbfJCH7R (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 3 Oct 2019 03:59:17 -0400
 Received: from localhost.localdomain (p14092-ipngnfx01kyoto.kyoto.ocn.ne.jp [153.142.97.92]) (authenticated)
-        by conuserg-11.nifty.com with ESMTP id x937wTkY007720;
-        Thu, 3 Oct 2019 16:58:34 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-11.nifty.com x937wTkY007720
+        by conuserg-11.nifty.com with ESMTP id x937wTkS007720;
+        Thu, 3 Oct 2019 16:58:29 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-11.nifty.com x937wTkS007720
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1570089514;
-        bh=59eE/rGcp2OFwwXp+ofMwhXaVSnXW6C8LJ8vAqEhBT8=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=JkW9JFD3WiK28/HG0qiHqAjyVx6xAYXVsr8kJZ1Brp9fIgb20YDB1nxm4XHsG7CzU
-         H9I9whiVaS6vOFtE3y28YTYHxAPWBiyGtdvm6wjPNRr0ZwdZr5tWSsFRZMjZpSXNq9
-         UJWoUtH+w0F8ip47kjVGCQHmeVk5mn85mbal0ToUwgv8fuwUhF/OldGknyTOC3IH+p
-         91LewO4WtqsNVD+w7P5Ps6qkXtnofeJ1q7QSJKU2SmhpdL6/7tJwN1Cg9TUX2ovVRH
-         +i5SZARSaLDGDXJo+PoTcI5eJJMUl3r7bP3+EXpCUXnXLUW3PLfByk0gmEt/5jxFtf
-         /n5BF/hn6X18g==
+        s=dec2015msa; t=1570089510;
+        bh=TZoLwyjxs1rXiGeMqo09vs0+qyomHTfJ9kkNpI3atWE=;
+        h=From:To:Cc:Subject:Date:From;
+        b=QTOhXzxRFqojlugFQQXkgfK4eY6knGqfGmtO+3jaw+JSuwQDEa2SKu21G8D3y0BIH
+         1MIfmAu3r31cxSB2CZ+D/O+6hxCr6km6uWH+pZRyWdpZcDJlpuTSLjhJIJSZC+2pab
+         tM0cLk5fkB57hHNG7OmMqrHVPlhiEBsOnxC80vLEEElwzX+CMs/3K/6+aEi+eT9H3h
+         WiqSmw9j1bGYjXZB6hHgjwQPZ6qfbccFOeT/WejV6VIL9+ZRuCzG9tIwkM9DBCIGtn
+         aK6BVO2MOQHM56OtL6krvb31yCSJSKvk7/Cf8HV2j0lm/vcId9zmc2kh+pzKWQlnV6
+         P5F0MA4MZ9VdA==
 X-Nifty-SrcIP: [153.142.97.92]
 From:   Masahiro Yamada <yamada.masahiro@socionext.com>
 To:     Jessica Yu <jeyu@kernel.org>
@@ -45,68 +44,48 @@ Cc:     Matthias Maennich <maennich@google.com>,
         Shaun Ruffell <sruffell@sruffell.net>,
         linux-kbuild@vger.kernel.org,
         Masahiro Yamada <yamada.masahiro@socionext.com>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v2 6/6] nsdeps: make generated patches independent of locale
-Date:   Thu,  3 Oct 2019 16:58:26 +0900
-Message-Id: <20191003075826.7478-7-yamada.masahiro@socionext.com>
+        Martijn Coenen <maco@android.com>,
+        Michal Marek <michal.lkml@markovi.net>,
+        Will Deacon <will@kernel.org>, linux-kernel@vger.kernel.org
+Subject: [PATCH v2 0/6] module: various bug-fixes and clean-ups for module namespace
+Date:   Thu,  3 Oct 2019 16:58:20 +0900
+Message-Id: <20191003075826.7478-1-yamada.masahiro@socionext.com>
 X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20191003075826.7478-1-yamada.masahiro@socionext.com>
-References: <20191003075826.7478-1-yamada.masahiro@socionext.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-scripts/nsdeps automatically generates a patch to add MODULE_IMPORT_NS
-tags, and what is nicer, it sorts the lines alphabetically with the
-'sort' command. However, the output from the 'sort' command depends on
-locale.
 
-For example, I got this:
+I was hit by some problems caused by the module namespace feature
+that was merged recently. At least, the breakage of
+external module builds is a fatal one. I just took a look at the code
+closer, and I noticed some more issues (some are nit-picking).
 
-$ { echo usbstorage; echo usb_storage; } | LANG=en_US.UTF-8 sort
-usbstorage
-usb_storage
-$ { echo usbstorage; echo usb_storage; } | LANG=C sort
-usb_storage
-usbstorage
+V2:
+ - I dropped "module: avoid code duplication in include/linux/export.h"
+   because Matthias offered to refactor the code by himself.
 
-So, this means people might potentially send different patches.
+ - V1 missed the problem when a symbol is preloaded before
+  sym_add_exported() is called.  I fixed it too.
 
-This kind of issue was reported in the past, for example,
-commit f55f2328bb28 ("kbuild: make sorting initramfs contents
-independent of locale").
 
-Adding 'LANG=C' is a conventional way of fixing when a deterministic
-result is desirable.
 
-I added 'LANG=C' very close to the 'sort' command since changing
-locale affects the language of error messages etc. We should respect
-users' choice as much as possible.
+Masahiro Yamada (6):
+  module: swap the order of symbol.namespace
+  modpost: fix broken sym->namespace for external module builds
+  module: rename __kstrtab_ns_* to __kstrtabns_* to avoid symbol
+    conflict
+  kbuild: fix build error of 'make nsdeps' in clean tree
+  nsdeps: fix hashbang of scripts/nsdeps
+  nsdeps: make generated patches independent of locale
 
-Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
-Reviewed-by: Matthias Maennich <maennich@google.com>
----
+ Makefile               |  2 +-
+ include/linux/export.h | 10 +++++-----
+ scripts/mod/modpost.c  | 29 +++++++++++++++--------------
+ scripts/nsdeps         |  4 ++--
+ 4 files changed, 23 insertions(+), 22 deletions(-)
 
-Changes in v2:
-  - Add more commit log about the locale impact
-
- scripts/nsdeps | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/scripts/nsdeps b/scripts/nsdeps
-index 964b7fb8c546..3754dac13b31 100644
---- a/scripts/nsdeps
-+++ b/scripts/nsdeps
-@@ -41,7 +41,7 @@ generate_deps() {
- 		for source_file in $mod_source_files; do
- 			sed '/MODULE_IMPORT_NS/Q' $source_file > ${source_file}.tmp
- 			offset=$(wc -l ${source_file}.tmp | awk '{print $1;}')
--			cat $source_file | grep MODULE_IMPORT_NS | sort -u >> ${source_file}.tmp
-+			cat $source_file | grep MODULE_IMPORT_NS | LANG=C sort -u >> ${source_file}.tmp
- 			tail -n +$((offset +1)) ${source_file} | grep -v MODULE_IMPORT_NS >> ${source_file}.tmp
- 			if ! diff -q ${source_file} ${source_file}.tmp; then
- 				mv ${source_file}.tmp ${source_file}
 -- 
 2.17.1
 
