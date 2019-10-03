@@ -2,316 +2,112 @@ Return-Path: <SRS0=6dNS=X4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE8BFC4CED1
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 11:39:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2E71C10F14
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 11:40:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 873A220830
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 11:39:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7AE1420830
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 11:40:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="DQCaQg6Z"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="M4k7ZEaO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730105AbfJCLjY (ORCPT
+        id S1730123AbfJCLkf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 07:39:24 -0400
-Received: from smtp-fw-33001.amazon.com ([207.171.190.10]:28948 "EHLO
-        smtp-fw-33001.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725827AbfJCLjY (ORCPT
+        Thu, 3 Oct 2019 07:40:35 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:35780 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729820AbfJCLkf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 07:39:24 -0400
+        Thu, 3 Oct 2019 07:40:35 -0400
+Received: by mail-wm1-f66.google.com with SMTP id y21so2048720wmi.0
+        for <linux-kernel@vger.kernel.org>; Thu, 03 Oct 2019 04:40:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1570102763; x=1601638763;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version;
-  bh=lNy+49eeyXBhJGnpGbg3XqqDDEcH9hvqU5PgTKfdaDw=;
-  b=DQCaQg6Zp44x4RH+rYuq2LBO8BrQIvq+9ypaJzOWmv5gX1lVg/IOjsYQ
-   3qiuuQNPwBaCJTH1zxO5JRTEBlVgQAAz/HsZw9WKE6PpEINbId8cesD0o
-   OA2kdYR0Bnz4hNK7e57CSc9PpnFXke7MrLxlzIt/u3TMm/JUPF2tRux0A
-   s=;
-X-IronPort-AV: E=Sophos;i="5.67,251,1566864000"; 
-   d="scan'208";a="838966168"
-Received: from sea3-co-svc-lb6-vlan2.sea.amazon.com (HELO email-inbound-relay-2a-538b0bfb.us-west-2.amazon.com) ([10.47.22.34])
-  by smtp-border-fw-out-33001.sea14.amazon.com with ESMTP; 03 Oct 2019 11:34:00 +0000
-Received: from EX13MTAUEA001.ant.amazon.com (pdx4-ws-svc-p6-lb7-vlan3.pdx.amazon.com [10.170.41.166])
-        by email-inbound-relay-2a-538b0bfb.us-west-2.amazon.com (Postfix) with ESMTPS id 8C3CFA1EEA;
-        Thu,  3 Oct 2019 11:33:37 +0000 (UTC)
-Received: from EX13D01EUB001.ant.amazon.com (10.43.166.194) by
- EX13MTAUEA001.ant.amazon.com (10.43.61.82) with Microsoft SMTP Server (TLS)
- id 15.0.1367.3; Thu, 3 Oct 2019 11:33:37 +0000
-Received: from udc4a3e82dbc15a031435.hfa15.amazon.com (10.43.161.7) by
- EX13D01EUB001.ant.amazon.com (10.43.166.194) with Microsoft SMTP Server (TLS)
- id 15.0.1367.3; Thu, 3 Oct 2019 11:33:27 +0000
-From:   Talel Shenhar <talel@amazon.com>
-To:     <robh+dt@kernel.org>, <maz@kernel.org>, <mark.rutland@arm.com>,
-        <arnd@arndb.de>, <bp@alien8.de>, <mchehab@kernel.org>,
-        <james.morse@arm.com>, <davem@davemloft.net>,
-        <gregkh@linuxfoundation.org>, <paulmck@linux.ibm.com>,
-        <talel@amazon.com>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-edac@vger.kernel.org>
-CC:     <dwmw@amazon.co.uk>, <benh@kernel.crashing.org>,
-        <hhhawa@amazon.com>, <ronenk@amazon.com>, <jonnyc@amazon.com>,
-        <hanochu@amazon.com>, <amirkl@amazon.com>, <barakw@amazon.com>
-Subject: [PATCH v4 2/2] soc: amazon: al-pos-edac: Introduce Amazon's Annapurna Labs POS EDAC driver
-Date:   Thu, 3 Oct 2019 14:32:41 +0300
-Message-ID: <1570102361-11696-3-git-send-email-talel@amazon.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1570102361-11696-1-git-send-email-talel@amazon.com>
-References: <1570102361-11696-1-git-send-email-talel@amazon.com>
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=gjHdxQE7PtU5YVyM+ycu+GpQGZRZGPXn8KLYV2GOEKk=;
+        b=M4k7ZEaOrA5MBGW706POYnYF+p7UCzDpRDmB6KUX786TBU7kDYHUX5qgxshhoqyUQ8
+         2h+yx+Wrx3YZkGDqFvQM2n76bQMi7hxDFFVRmqdFwDtmKDBHC0C1V4WbKZFFpmSKiNtk
+         2dDq1dnYh8JFNYqnHUtvtgqPNTQxV5Pv+CQn+T2oHQ16zT6sk/3UJx4EkxEqfx6KIdLx
+         JZwOvG9EH0TosRqhoWm+SWsNlwtJ0dPhJgNY7whXqUyetzZhUJ0nuNyMddCsl/BYp3T0
+         IvpjkPZwd5ju/73exB5nEx++DHrubLvNaxZaAJuxkCLT7fv/3wBFAohiAaM+yy6nNT2g
+         0oNg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=gjHdxQE7PtU5YVyM+ycu+GpQGZRZGPXn8KLYV2GOEKk=;
+        b=QzPDT5IZ//ghXSdtwEKFlcM7+Ewq9ngBxHOWPT6aVzqB98REyTQlTbavM9hHy4wuCU
+         1r4rxW0t9KUWp151Kx33ix+L5SOgZrBa7Zlh907XInz8UZXieTvQvPEl5IeY1f0Mzd4p
+         epkar2gbNWtvruDRc+Z06eUw6DvmpIi5WtuLh9Sd0wxBl7dVN4kJYW1KakZBgwHhjeLg
+         697Xl/oYMKtjAa9Ftb8h8IqnPFJAzMBlqQlMpHnfVspVbsyky0/tAPL4ItrUUvJVj9J5
+         CMRyI6fWWQA1OZkvAMHYZ3Ulks6rFm2ayBIB3oYm6GqBalLd9OZgOZoIHsvzqqVOpjQf
+         VQRQ==
+X-Gm-Message-State: APjAAAVU97mfKMkl0QKMl8A+YCUXLWNcF3lbx55poF15co0f8yK7LVry
+        OO1BhA7wj48OXE5lqYyBu2OZuA==
+X-Google-Smtp-Source: APXvYqzkSbKbEO08kV+O5J56dhn/FaSKA4qIomPodHv4axxtI0btIULXGYjMIdOtEj1HzR/N8fo89Q==
+X-Received: by 2002:a7b:c932:: with SMTP id h18mr6111876wml.86.1570102832057;
+        Thu, 03 Oct 2019 04:40:32 -0700 (PDT)
+Received: from dell ([2.27.167.122])
+        by smtp.gmail.com with ESMTPSA id q10sm5931600wrd.39.2019.10.03.04.40.30
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 03 Oct 2019 04:40:31 -0700 (PDT)
+Date:   Thu, 3 Oct 2019 12:40:28 +0100
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Jean-Jacques Hiblot <jjhiblot@ti.com>
+Cc:     jacek.anaszewski@gmail.com, pavel@ucw.cz, robh+dt@kernel.org,
+        mark.rutland@arm.com, daniel.thompson@linaro.org, dmurphy@ti.com,
+        linux-leds@vger.kernel.org, linux-kernel@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, tomi.valkeinen@ti.com
+Subject: Re: [PATCH v8 0/5] Add a generic driver for LED-based backlight
+Message-ID: <20191003114028.GC21172@dell>
+References: <20191003082812.28491-1-jjhiblot@ti.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.43.161.7]
-X-ClientProxiedBy: EX13D06UWA004.ant.amazon.com (10.43.160.164) To
- EX13D01EUB001.ant.amazon.com (10.43.166.194)
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20191003082812.28491-1-jjhiblot@ti.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The Amazon's Annapurna Labs SoCs includes Point Of Serialization error
-logging unit that reports an error in case write error (e.g . Attempt to
-write to a read only register).
-This error shall be reported to EDAC subsystem as uncorrectable-error.
+On Thu, 03 Oct 2019, Jean-Jacques Hiblot wrote:
 
-Signed-off-by: Talel Shenhar <talel@amazon.com>
----
- MAINTAINERS                |   7 ++
- drivers/edac/Kconfig       |   6 ++
- drivers/edac/Makefile      |   1 +
- drivers/edac/al_pos_edac.c | 173 +++++++++++++++++++++++++++++++++++++++++++++
- 4 files changed, 187 insertions(+)
- create mode 100644 drivers/edac/al_pos_edac.c
+> This series aims to add a led-backlight driver, similar to pwm-backlight,
+> but using a LED class device underneath.
+> 
+> A few years ago (2015), Tomi Valkeinen posted a series implementing a
+> backlight driver on top of a LED device:
+> https://patchwork.kernel.org/patch/7293991/
+> https://patchwork.kernel.org/patch/7294001/
+> https://patchwork.kernel.org/patch/7293981/
+> 
+> The discussion stopped because Tomi lacked the time to work on it.
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index e7a47b5..f5ce446 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -751,6 +751,13 @@ F:	drivers/tty/serial/altera_jtaguart.c
- F:	include/linux/altera_uart.h
- F:	include/linux/altera_jtaguart.h
- 
-+AMAZON ANNAPURNA LABS POS EDAC DRIVER
-+M:	Talel Shenhar <talel@amazon.com>
-+M:	Talel Shenhar <talelshenhar@gmail.com>
-+S:	Maintained
-+F:	Documentation/devicetree/bindings/edac/amazon,al-pos-edac.yaml
-+F:	drivers/edac/al-pos-edac.c
-+
- AMAZON ANNAPURNA LABS THERMAL MMIO DRIVER
- M:	Talel Shenhar <talel@amazon.com>
- S:	Maintained
-diff --git a/drivers/edac/Kconfig b/drivers/edac/Kconfig
-index 200c04c..bb5805f 100644
---- a/drivers/edac/Kconfig
-+++ b/drivers/edac/Kconfig
-@@ -100,6 +100,12 @@ config EDAC_AMD64_ERROR_INJECTION
- 	  In addition, there are two control files, inject_read and inject_write,
- 	  which trigger the DRAM ECC Read and Write respectively.
- 
-+config EDAC_AL_POS
-+	tristate "Amazon's Annapurna Labs POS EDAC driver"
-+	depends on (ARCH_ALPINE || COMPILE_TEST)
-+	help
-+	  Include support for the SoC POS EDAC error capability.
-+
- config EDAC_AMD76X
- 	tristate "AMD 76x (760, 762, 768)"
- 	depends on PCI && X86_32
-diff --git a/drivers/edac/Makefile b/drivers/edac/Makefile
-index 165ca65e..3571936 100644
---- a/drivers/edac/Makefile
-+++ b/drivers/edac/Makefile
-@@ -22,6 +22,7 @@ obj-$(CONFIG_EDAC_GHES)			+= ghes_edac.o
- edac_mce_amd-y				:= mce_amd.o
- obj-$(CONFIG_EDAC_DECODE_MCE)		+= edac_mce_amd.o
- 
-+obj-$(CONFIG_EDAC_AL_POS)		+= al_pos_edac.o
- obj-$(CONFIG_EDAC_AMD76X)		+= amd76x_edac.o
- obj-$(CONFIG_EDAC_CPC925)		+= cpc925_edac.o
- obj-$(CONFIG_EDAC_I5000)		+= i5000_edac.o
-diff --git a/drivers/edac/al_pos_edac.c b/drivers/edac/al_pos_edac.c
-new file mode 100644
-index 00000000..bd6cd87
---- /dev/null
-+++ b/drivers/edac/al_pos_edac.c
-@@ -0,0 +1,173 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Copyright 2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
-+ */
-+#include <linux/bitfield.h>
-+#include <linux/edac.h>
-+#include <linux/of_irq.h>
-+#include "edac_module.h"
-+
-+#define DRV_NAME "al_pos_edac"
-+#define AL_POS_EDAC_MSG_MAX 256
-+
-+/* Registers Offset */
-+#define AL_POS_ERROR_LOG_1	0x0
-+#define AL_POS_ERROR_LOG_0	0x4
-+
-+/* Registers Fields */
-+#define AL_POS_ERROR_LOG_1_VALID	BIT(31)
-+#define AL_POS_ERROR_LOG_1_BRESP	GENMASK(18, 17)
-+#define AL_POS_ERROR_LOG_1_REQUEST_ID	GENMASK(16, 8)
-+#define AL_POS_ERROR_LOG_1_ADDR_HIGH	GENMASK(7, 0)
-+
-+#define AL_POS_ERROR_LOG_0_ADDR_LOW	GENMASK(31, 0)
-+
-+struct al_pos_edac {
-+	struct edac_device_ctl_info *edac_dev;
-+	void __iomem *mmio_base;
-+	int irq;
-+};
-+
-+static int al_pos_handle(struct al_pos_edac *al_pos)
-+{
-+	u32 log0, log1;
-+	u64 addr;
-+	u16 request_id;
-+	u8 bresp;
-+	char msg[AL_POS_EDAC_MSG_MAX];
-+
-+	log1 = readl(al_pos->mmio_base + AL_POS_ERROR_LOG_1);
-+	if (!FIELD_GET(AL_POS_ERROR_LOG_1_VALID, log1))
-+		return 0;
-+
-+	log0 = readl(al_pos->mmio_base + AL_POS_ERROR_LOG_0);
-+	writel(0, al_pos->mmio_base + AL_POS_ERROR_LOG_1);
-+
-+	addr = FIELD_GET(AL_POS_ERROR_LOG_0_ADDR_LOW, log0);
-+	addr |= (((u64)FIELD_GET(AL_POS_ERROR_LOG_1_ADDR_HIGH, log1)) << 32);
-+	request_id = FIELD_GET(AL_POS_ERROR_LOG_1_REQUEST_ID, log1);
-+	bresp = FIELD_GET(AL_POS_ERROR_LOG_1_BRESP, log1);
-+
-+	snprintf(msg, sizeof(msg),
-+		 "addr=0x%llx request_id=0x%x bresp=0x%x\n",
-+		 addr, request_id, bresp);
-+
-+	edac_device_handle_ue(al_pos->edac_dev, 0, 0, msg);
-+
-+	return 1;
-+}
-+
-+static void al_pos_edac_check(struct edac_device_ctl_info *edac_dev)
-+{
-+	struct al_pos_edac *al_pos = edac_dev->pvt_info;
-+
-+	al_pos_handle(al_pos);
-+}
-+
-+static irqreturn_t al_pos_irq_handler(int irq, void *info)
-+{
-+	struct platform_device *pdev = info;
-+	struct al_pos_edac *al_pos = platform_get_drvdata(pdev);
-+
-+	if (al_pos_handle(al_pos))
-+		return IRQ_HANDLED;
-+	return IRQ_NONE;
-+}
-+
-+static int al_pos_probe(struct platform_device *pdev)
-+{
-+	struct edac_device_ctl_info *edac_dev;
-+	struct al_pos_edac *al_pos;
-+	int ret;
-+
-+	edac_dev = edac_device_alloc_ctl_info(sizeof(*al_pos), DRV_NAME, 1,
-+					      DRV_NAME, 1, 0, NULL, 0,
-+					      edac_device_alloc_index());
-+	if (!edac_dev)
-+		return -ENOMEM;
-+
-+	al_pos = edac_dev->pvt_info;
-+	al_pos->edac_dev = edac_dev;
-+	platform_set_drvdata(pdev, al_pos);
-+
-+	al_pos->mmio_base = devm_platform_ioremap_resource(pdev, 0);
-+	if (IS_ERR(al_pos->mmio_base)) {
-+		dev_err(&pdev->dev, "failed to ioremap memory (%ld)\n",
-+			PTR_ERR(al_pos->mmio_base));
-+		return PTR_ERR(al_pos->mmio_base);
-+	}
-+
-+	al_pos->irq = platform_get_irq(pdev, 0);
-+	if (al_pos->irq <= 0)
-+		edac_dev->edac_check = al_pos_edac_check;
-+
-+	edac_dev->dev = &pdev->dev;
-+	edac_dev->mod_name = DRV_NAME;
-+	edac_dev->dev_name = dev_name(&pdev->dev);
-+	edac_dev->ctl_name = "POS";
-+
-+	ret = edac_device_add_device(edac_dev);
-+	if (ret) {
-+		dev_err(&pdev->dev, "Failed to add edac device\n");
-+		goto err_free_edac;
-+	}
-+
-+	if (al_pos->irq > 0) {
-+		ret = devm_request_irq(&pdev->dev,
-+				       al_pos->irq,
-+				       al_pos_irq_handler,
-+				       0,
-+				       pdev->name,
-+				       pdev);
-+		if (ret != 0) {
-+			dev_err(&pdev->dev,
-+				"failed to register to irq %d (%d)\n",
-+				al_pos->irq, ret);
-+			goto err_remove_edac;
-+		}
-+	}
-+
-+	return 0;
-+
-+err_remove_edac:
-+	edac_device_del_device(edac_dev->dev);
-+err_free_edac:
-+	edac_device_free_ctl_info(edac_dev);
-+
-+	return ret;
-+}
-+
-+static int al_pos_remove(struct platform_device *pdev)
-+{
-+	struct al_pos_edac *al_pos = platform_get_drvdata(pdev);
-+
-+	if (al_pos->irq > 0)
-+		devm_free_irq(&pdev->dev, al_pos->irq, pdev);
-+
-+	edac_device_del_device(al_pos->edac_dev->dev);
-+	edac_device_free_ctl_info(al_pos->edac_dev);
-+
-+	return 0;
-+}
-+
-+static const struct of_device_id al_pos_of_match[] = {
-+	{ .compatible = "amazon,al-pos-edac", },
-+	{},
-+};
-+
-+MODULE_DEVICE_TABLE(of, al_pos_of_match);
-+
-+static struct platform_driver al_pos_driver = {
-+	.probe = al_pos_probe,
-+	.remove = al_pos_remove,
-+	.driver = {
-+		.name = DRV_NAME,
-+		.of_match_table = al_pos_of_match,
-+	},
-+};
-+
-+module_platform_driver(al_pos_driver);
-+
-+MODULE_LICENSE("GPL v2");
-+MODULE_AUTHOR("Talel Shenhar");
-+MODULE_DESCRIPTION("Amazon's Annapurna Labs POS driver");
+[...]
+
+>  .../bindings/leds/backlight/led-backlight.txt |  28 ++
+>  drivers/leds/led-class.c                      |  98 ++++++-
+>  drivers/video/backlight/Kconfig               |   7 +
+>  drivers/video/backlight/Makefile              |   1 +
+>  drivers/video/backlight/led_bl.c              | 260 ++++++++++++++++++
+>  include/linux/leds.h                          |   6 +
+>  6 files changed, 399 insertions(+), 1 deletion(-)
+>  create mode 100644 Documentation/devicetree/bindings/leds/backlight/led-backlight.txt
+>  create mode 100644 drivers/video/backlight/led_bl.c
+
+How should this set be processed?  I'm happy to take it through
+Backlight via an immutable branch and PR to be consumed by LED.
+
 -- 
-2.7.4
-
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
