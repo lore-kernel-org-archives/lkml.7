@@ -7,47 +7,45 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 69A74C32792
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:16:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 705ACC32792
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:16:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3E9CB2086A
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:16:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3A9BD2133F
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:16:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570122985;
-	bh=68NxIA56E8TqefE0dqfPd3/WVVwwRUsYnUYxrw8mY1o=;
+	s=default; t=1570122989;
+	bh=AlqdGvjphg9QU6fP6GDlnpCK51kTfGnfIkvABbczF4g=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=XOxTEjZE60rtzQcN1v5DuRn7zVrRrw7Xc7drw2t+r//SMfwahmVEwAfbRKcPC23tC
-	 cqqkSn9G+1TumB3hkeYOZwHg7Dy7LInvBPWr0OEqgTTenn6C+7xY3EDntBACKbiKeS
-	 Fp+aTFZlEeHbAvVo8iKLjrCFpPtlM9YNsmB67VnQ=
+	b=RPefId+HKkd8nuIx2Zlw26c8EXHwfj1yhXyWvXmC7rDIiYAT7a3eGQPoXYeIh+uT9
+	 0jz11tAyhd7nuFaFXVIkG60Jgrf1inDmhzlzaSg3ahEG05JdYIVa15GEzblS3CkWc6
+	 EHuqMtzy44g7iBLDulrTJxx35FHCrq/tSBVHO5U0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390730AbfJCQYX (ORCPT
+        id S2390711AbfJCQYT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 12:24:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53890 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390710AbfJCQYT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 3 Oct 2019 12:24:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53830 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2389000AbfJCQYQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:24:16 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 15BF4215EA;
-        Thu,  3 Oct 2019 16:24:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 59F0820867;
+        Thu,  3 Oct 2019 16:24:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570119858;
-        bh=68NxIA56E8TqefE0dqfPd3/WVVwwRUsYnUYxrw8mY1o=;
+        s=default; t=1570119855;
+        bh=AlqdGvjphg9QU6fP6GDlnpCK51kTfGnfIkvABbczF4g=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=GHqzqrYrURO7QmscjF7dEamc6ELLf2vv5YME1I1b8ZpSfcWjg33kpWvnBVwOfdTFq
-         2y+HuY3dwYYUgPkYPZzScakcREh5DQPDpwiJiVp6Df+evS7OkyCWyGaOj7qrRALgdQ
-         AGo4ifrWHMV9cnG7BbyM1TvcQqN7jiZfIesX/G5g=
+        b=sJOz6kC6R6sG/R5Ly9Z7LnTiGraZUmi6a3OHCWLUxtJUy2dTZvx8qkef+5q8UPoCz
+         z3oUcOk2Jbzu48Ym0ae8FdrmZGAgUw2zImD85zZzycpPCfJBzsYMFe2dJw+qEyu859
+         HRKmaTov0CNyat07rOxoYPpR1FUz/Ka+rzyyJn/U=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Josef Bacik <josef@toxicpanda.com>,
-        Nikolay Borisov <nborisov@suse.com>, Qu Wenruo <wqu@suse.com>,
-        David Sterba <dsterba@suse.com>
-Subject: [PATCH 4.19 193/211] btrfs: qgroup: Fix the wrong target io_tree when freeing reserved data space
-Date:   Thu,  3 Oct 2019 17:54:19 +0200
-Message-Id: <20191003154528.856046734@linuxfoundation.org>
+        stable@vger.kernel.org, Theodore Tso <tytso@mit.edu>
+Subject: [PATCH 4.19 202/211] ext4: fix punch hole for inline_data file systems
+Date:   Thu,  3 Oct 2019 17:54:28 +0200
+Message-Id: <20191003154529.895188720@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191003154447.010950442@linuxfoundation.org>
 References: <20191003154447.010950442@linuxfoundation.org>
@@ -60,81 +58,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Qu Wenruo <wqu@suse.com>
+From: Theodore Ts'o <tytso@mit.edu>
 
-commit bab32fc069ce8829c416e8737c119f62a57970f9 upstream.
+commit c1e8220bd316d8ae8e524df39534b8a412a45d5e upstream.
 
-[BUG]
-Under the following case with qgroup enabled, if some error happened
-after we have reserved delalloc space, then in error handling path, we
-could cause qgroup data space leakage:
+If a program attempts to punch a hole on an inline data file, we need
+to convert it to a normal file first.
 
->From btrfs_truncate_block() in inode.c:
+This was detected using ext4/032 using the adv configuration.  Simple
+reproducer:
 
-	ret = btrfs_delalloc_reserve_space(inode, &data_reserved,
-					   block_start, blocksize);
-	if (ret)
-		goto out;
+mke2fs -Fq -t ext4 -O inline_data /dev/vdc
+mount /vdc
+echo "" > /vdc/testfile
+xfs_io -c 'truncate 33554432' /vdc/testfile
+xfs_io -c 'fpunch 0 1048576' /vdc/testfile
+umount /vdc
+e2fsck -fy /dev/vdc
 
- again:
-	page = find_or_create_page(mapping, index, mask);
-	if (!page) {
-		btrfs_delalloc_release_space(inode, data_reserved,
-					     block_start, blocksize, true);
-		btrfs_delalloc_release_extents(BTRFS_I(inode), blocksize, true);
-		ret = -ENOMEM;
-		goto out;
-	}
-
-[CAUSE]
-In the above case, btrfs_delalloc_reserve_space() will call
-btrfs_qgroup_reserve_data() and mark the io_tree range with
-EXTENT_QGROUP_RESERVED flag.
-
-In the error handling path, we have the following call stack:
-btrfs_delalloc_release_space()
-|- btrfs_free_reserved_data_space()
-   |- btrsf_qgroup_free_data()
-      |- __btrfs_qgroup_release_data(reserved=@reserved, free=1)
-         |- qgroup_free_reserved_data(reserved=@reserved)
-            |- clear_record_extent_bits();
-            |- freed += changeset.bytes_changed;
-
-However due to a completion bug, qgroup_free_reserved_data() will clear
-EXTENT_QGROUP_RESERVED flag in BTRFS_I(inode)->io_failure_tree, other
-than the correct BTRFS_I(inode)->io_tree.
-Since io_failure_tree is never marked with that flag,
-btrfs_qgroup_free_data() will not free any data reserved space at all,
-causing a leakage.
-
-This type of error handling can only be triggered by errors outside of
-qgroup code. So EDQUOT error from qgroup can't trigger it.
-
-[FIX]
-Fix the wrong target io_tree.
-
-Reported-by: Josef Bacik <josef@toxicpanda.com>
-Fixes: bc42bda22345 ("btrfs: qgroup: Fix qgroup reserved space underflow by only freeing reserved ranges")
-CC: stable@vger.kernel.org # 4.14+
-Reviewed-by: Nikolay Borisov <nborisov@suse.com>
-Signed-off-by: Qu Wenruo <wqu@suse.com>
-Signed-off-by: David Sterba <dsterba@suse.com>
+Cc: stable@vger.kernel.org
+Signed-off-by: Theodore Ts'o <tytso@mit.edu>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/btrfs/qgroup.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ fs/ext4/inode.c |    9 +++++++++
+ 1 file changed, 9 insertions(+)
 
---- a/fs/btrfs/qgroup.c
-+++ b/fs/btrfs/qgroup.c
-@@ -3111,7 +3111,7 @@ static int qgroup_free_reserved_data(str
- 		 * EXTENT_QGROUP_RESERVED, we won't double free.
- 		 * So not need to rush.
- 		 */
--		ret = clear_record_extent_bits(&BTRFS_I(inode)->io_failure_tree,
-+		ret = clear_record_extent_bits(&BTRFS_I(inode)->io_tree,
- 				free_start, free_start + free_len - 1,
- 				EXTENT_QGROUP_RESERVED, &changeset);
- 		if (ret < 0)
+--- a/fs/ext4/inode.c
++++ b/fs/ext4/inode.c
+@@ -4265,6 +4265,15 @@ int ext4_punch_hole(struct inode *inode,
+ 
+ 	trace_ext4_punch_hole(inode, offset, length, 0);
+ 
++	ext4_clear_inode_state(inode, EXT4_STATE_MAY_INLINE_DATA);
++	if (ext4_has_inline_data(inode)) {
++		down_write(&EXT4_I(inode)->i_mmap_sem);
++		ret = ext4_convert_inline_data(inode);
++		up_write(&EXT4_I(inode)->i_mmap_sem);
++		if (ret)
++			return ret;
++	}
++
+ 	/*
+ 	 * Write out all dirty pages to avoid race conditions
+ 	 * Then release them.
 
 
