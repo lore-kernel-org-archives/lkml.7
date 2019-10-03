@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 455C6C10F14
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 00:27:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8AEE1C10F14
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 00:27:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1441322476
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 00:27:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5E8C7222C4
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 00:27:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570062421;
-	bh=HccQ4DIYUgb1plsPfNrOQag7uH4n0m8IxX1611iUTUI=;
+	s=default; t=1570062426;
+	bh=Qd2ml3CoqZtshTW8tOukodivuBKJJtYywgVP9BIkBGs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=WgbR3KY0Y/I3wqgX8fEXt/99EY45IWIz7YNI56Qq/rCRlPW8Es7juQ8gVB7tZAFe5
-	 H8jPUyXsgde+wMyn4lh3ZPcfEHKjmIve/DtNK1IKxNqCLpfjJqWD1wP3zPCJvgqzgv
-	 /To9/WilS8GJMI0F4eTuVA4JMS4nL6UKmrAEWBqk=
+	b=pif8XBo1lsg0eQ1HF9eP0p5pDhPVZLUsnNZ7yNIA6UkH4zGUizWaDaVUUHn4c1gj3
+	 hLuCGirfToOFlDa6qHSwRvAdntVJWKRbuU/kWdIvXjAaY+Bc4iiZL8F88p5DjvAm1b
+	 pwteydX4P7Y8HTw7vY2BP5tFXunYvNt4+isnN/6M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729696AbfJCA1A (ORCPT
+        id S1729752AbfJCA1F (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Oct 2019 20:27:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56184 "EHLO mail.kernel.org"
+        Wed, 2 Oct 2019 20:27:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56166 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729601AbfJCA04 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Oct 2019 20:26:56 -0400
+        id S1729648AbfJCA05 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 2 Oct 2019 20:26:57 -0400
 Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BA5A3222C7;
-        Thu,  3 Oct 2019 00:26:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C76452245C;
+        Thu,  3 Oct 2019 00:26:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570062414;
-        bh=HccQ4DIYUgb1plsPfNrOQag7uH4n0m8IxX1611iUTUI=;
+        s=default; t=1570062417;
+        bh=Qd2ml3CoqZtshTW8tOukodivuBKJJtYywgVP9BIkBGs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=HcBmVjXvdKomYJrf1/HEAGwgsvje+vbocgAWRp6h2d4q6BnkkvCNswvLFuZgTNtNw
-         3AokAZF7OOttO30wg4q3IrJJnHGO3uCkxXecRLMW9ruW4PRhMe83VuN0IgGy4SOF/S
-         N5oClGfyxF4ctZH6TGxxQ0Rn2wixVFwD5r5T0Zy0=
+        b=LXcJjmlT0c27UFIMVVdzi0Z196kqI3H+WyKQWMHfS6NREdW+sKPH1Fu9jd06X1Pm5
+         Ki6yaMHzemyligTt5dEcAaaqiI4zvRGKPzCNSLcOtStp9RbH0JB50qPpNwze8GWt4N
+         eY1AxY++Fe+A6KEAbDGP8b/UjNjdDPezp66/hCkU=
 From:   paulmck@kernel.org
 To:     linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
         mingo@kernel.org
@@ -46,9 +46,9 @@ Cc:     stern@rowland.harvard.edu, parri.andrea@gmail.com, will@kernel.org,
         peterz@infradead.org, boqun.feng@gmail.com, npiggin@gmail.com,
         dhowells@redhat.com, j.alglave@ucl.ac.uk, luc.maranget@inria.fr,
         akiyks@gmail.com, "Paul E. McKenney" <paulmck@linux.ibm.com>
-Subject: [PATCH tip/core/rcu 09/32] tools/memory-model: Fix paulmck email address on pre-existing scripts
-Date:   Wed,  2 Oct 2019 17:26:27 -0700
-Message-Id: <20191003002650.11249-9-paulmck@kernel.org>
+Subject: [PATCH tip/core/rcu 16/32] tools/memory-model: Split runlitmus.sh out of checklitmus.sh
+Date:   Wed,  2 Oct 2019 17:26:34 -0700
+Message-Id: <20191003002650.11249-16-paulmck@kernel.org>
 X-Mailer: git-send-email 2.9.5
 In-Reply-To: <20191003001039.GA8027@paulmck-ThinkPad-P72>
 References: <20191003001039.GA8027@paulmck-ThinkPad-P72>
@@ -59,108 +59,164 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: "Paul E. McKenney" <paulmck@linux.ibm.com>
 
+This commit prepares for adding --hw capability to github litmus-test
+scripts by splitting runlitmus.sh (which simply runs the verification)
+out of checklitmus.sh (which also judges the results).
+
 Signed-off-by: Paul E. McKenney <paulmck@linux.ibm.com>
 ---
- tools/memory-model/scripts/checkalllitmus.sh  | 2 +-
- tools/memory-model/scripts/checklitmus.sh     | 2 +-
- tools/memory-model/scripts/checklitmushist.sh | 2 +-
- tools/memory-model/scripts/judgelitmus.sh     | 2 +-
- tools/memory-model/scripts/newlitmushist.sh   | 2 +-
- tools/memory-model/scripts/parseargs.sh       | 2 +-
- tools/memory-model/scripts/runlitmushist.sh   | 2 +-
- 7 files changed, 7 insertions(+), 7 deletions(-)
+ tools/memory-model/scripts/checklitmus.sh | 57 ++-----------------------
+ tools/memory-model/scripts/runlitmus.sh   | 69 +++++++++++++++++++++++++++++++
+ 2 files changed, 73 insertions(+), 53 deletions(-)
+ create mode 100755 tools/memory-model/scripts/runlitmus.sh
 
-diff --git a/tools/memory-model/scripts/checkalllitmus.sh b/tools/memory-model/scripts/checkalllitmus.sh
-index 3c0c7fb..10e14d9 100755
---- a/tools/memory-model/scripts/checkalllitmus.sh
-+++ b/tools/memory-model/scripts/checkalllitmus.sh
-@@ -17,7 +17,7 @@
- #
- # Copyright IBM Corporation, 2018
- #
--# Author: Paul E. McKenney <paulmck@linux.vnet.ibm.com>
-+# Author: Paul E. McKenney <paulmck@linux.ibm.com>
- 
- . scripts/parseargs.sh
- 
 diff --git a/tools/memory-model/scripts/checklitmus.sh b/tools/memory-model/scripts/checklitmus.sh
-index 11461ed..638b8c6 100755
+index 42ff118..4c1d0cf 100755
 --- a/tools/memory-model/scripts/checklitmus.sh
 +++ b/tools/memory-model/scripts/checklitmus.sh
-@@ -15,7 +15,7 @@
+@@ -1,15 +1,8 @@
+ #!/bin/sh
+ # SPDX-License-Identifier: GPL-2.0+
  #
- # Copyright IBM Corporation, 2018
+-# Run a herd7 test and invokes judgelitmus.sh to check the result against
+-# a "Result:" comment within the litmus test.  It also outputs verification
+-# results to a file whose name is that of the specified litmus test, but
+-# with ".out" appended.
+-#
+-# If the --hw argument is specified, this script translates the .litmus
+-# C-language file to the specified type of assembly and verifies that.
+-# But in this case, litmus tests using complex synchronization (such as
+-# locking, RCU, and SRCU) are cheerfully ignored.
++# Invokes runlitmus.sh and judgelitmus.sh on its arguments to run the
++# specified litmus test and pass judgment on the results.
  #
--# Author: Paul E. McKenney <paulmck@linux.vnet.ibm.com>
+ # Usage:
+ #	checklitmus.sh file.litmus
+@@ -22,47 +15,5 @@
+ #
+ # Author: Paul E. McKenney <paulmck@linux.ibm.com>
+ 
+-litmus=$1
+-if test -f "$litmus" -a -r "$litmus"
+-then
+-	:
+-else
+-	echo ' --- ' error: \"$litmus\" is not a readable file
+-	exit 255
+-fi
+-
+-if test -z "$LKMM_HW_MAP_FILE"
+-then
+-	# LKMM run
+-	herdoptions=${LKMM_HERD_OPTIONS--conf linux-kernel.cfg}
+-	echo Herd options: $herdoptions > $LKMM_DESTDIR/$litmus.out
+-	/usr/bin/time $LKMM_TIMEOUT_CMD herd7 $herdoptions $litmus >> $LKMM_DESTDIR/$litmus.out 2>&1
+-else
+-	# Hardware run
+-
+-	T=/tmp/checklitmushw.sh.$$
+-	trap 'rm -rf $T' 0 2
+-	mkdir $T
+-
+-	# Generate filenames
+-	catfile="`echo $LKMM_HW_MAP_FILE | tr '[A-Z]' '[a-z]'`.cat"
+-	mapfile="Linux2${LKMM_HW_MAP_FILE}.map"
+-	themefile="$T/${LKMM_HW_MAP_FILE}.theme"
+-	herdoptions="-model $LKMM_HW_CAT_FILE"
+-	hwlitmus=`echo $litmus | sed -e 's/\.litmus$/.'${LKMM_HW_MAP_FILE}'.litmus/'`
+-	hwlitmusfile=`echo $hwlitmus | sed -e 's,^.*/,,'`
+-
+-	# Don't run on litmus tests with complex synchronization
+-	if ! scripts/simpletest.sh $litmus
+-	then
+-		echo ' --- ' error: \"$litmus\" contains locking, RCU, or SRCU
+-		exit 254
+-	fi
+-
+-	# Generate the assembly code and run herd7 on it.
+-	gen_theme7 -n 10 -map $mapfile -call Linux.call > $themefile
+-	jingle7 -theme $themefile $litmus > $T/$hwlitmusfile 2> $T/$hwlitmusfile.jingle7.out
+-	/usr/bin/time $LKMM_TIMEOUT_CMD herd7 -model $catfile $T/$hwlitmusfile > $LKMM_DESTDIR/$hwlitmus.out 2>&1
+-fi
+-
+-scripts/judgelitmus.sh $litmus
++scripts/runlitmus.sh $1
++scripts/judgelitmus.sh $1
+diff --git a/tools/memory-model/scripts/runlitmus.sh b/tools/memory-model/scripts/runlitmus.sh
+new file mode 100755
+index 0000000..91af859
+--- /dev/null
++++ b/tools/memory-model/scripts/runlitmus.sh
+@@ -0,0 +1,69 @@
++#!/bin/sh
++# SPDX-License-Identifier: GPL-2.0+
++#
++# Without the -hw argument, runs a herd7 test and outputs verification
++# results to a file whose name is that of the specified litmus test,
++# but with ".out" appended.
++#
++# If the --hw argument is specified, this script translates the .litmus
++# C-language file to the specified type of assembly and verifies that.
++# But in this case, litmus tests using complex synchronization (such as
++# locking, RCU, and SRCU) are cheerfully ignored.
++#
++# Either way, return the status of the herd7 command.
++#
++# Usage:
++#	runlitmus.sh file.litmus
++#
++# Run this in the directory containing the memory model, specifying the
++# pathname of the litmus test to check.  The caller is expected to have
++# properly set up the LKMM environment variables.
++#
++# Copyright IBM Corporation, 2019
++#
 +# Author: Paul E. McKenney <paulmck@linux.ibm.com>
- 
- litmus=$1
- herdoptions=${LKMM_HERD_OPTIONS--conf linux-kernel.cfg}
-diff --git a/tools/memory-model/scripts/checklitmushist.sh b/tools/memory-model/scripts/checklitmushist.sh
-index 1d210ff..406ecfc 100755
---- a/tools/memory-model/scripts/checklitmushist.sh
-+++ b/tools/memory-model/scripts/checklitmushist.sh
-@@ -12,7 +12,7 @@
- #
- # Copyright IBM Corporation, 2018
- #
--# Author: Paul E. McKenney <paulmck@linux.vnet.ibm.com>
-+# Author: Paul E. McKenney <paulmck@linux.ibm.com>
- 
- . scripts/parseargs.sh
- 
-diff --git a/tools/memory-model/scripts/judgelitmus.sh b/tools/memory-model/scripts/judgelitmus.sh
-index 84c62ee..d82133e 100755
---- a/tools/memory-model/scripts/judgelitmus.sh
-+++ b/tools/memory-model/scripts/judgelitmus.sh
-@@ -13,7 +13,7 @@
- #
- # Copyright IBM Corporation, 2018
- #
--# Author: Paul E. McKenney <paulmck@linux.vnet.ibm.com>
-+# Author: Paul E. McKenney <paulmck@linux.ibm.com>
- 
- litmus=$1
- 
-diff --git a/tools/memory-model/scripts/newlitmushist.sh b/tools/memory-model/scripts/newlitmushist.sh
-index 991f8f8..3f4b06e2 100755
---- a/tools/memory-model/scripts/newlitmushist.sh
-+++ b/tools/memory-model/scripts/newlitmushist.sh
-@@ -12,7 +12,7 @@
- #
- # Copyright IBM Corporation, 2018
- #
--# Author: Paul E. McKenney <paulmck@linux.vnet.ibm.com>
-+# Author: Paul E. McKenney <paulmck@linux.ibm.com>
- 
- . scripts/parseargs.sh
- 
-diff --git a/tools/memory-model/scripts/parseargs.sh b/tools/memory-model/scripts/parseargs.sh
-index 40f5208..afe7bd2 100755
---- a/tools/memory-model/scripts/parseargs.sh
-+++ b/tools/memory-model/scripts/parseargs.sh
-@@ -9,7 +9,7 @@
- #
- # Copyright IBM Corporation, 2018
- #
--# Author: Paul E. McKenney <paulmck@linux.vnet.ibm.com>
-+# Author: Paul E. McKenney <paulmck@linux.ibm.com>
- 
- T=/tmp/parseargs.sh.$$
- mkdir $T
-diff --git a/tools/memory-model/scripts/runlitmushist.sh b/tools/memory-model/scripts/runlitmushist.sh
-index 6ed376f..852786f 100755
---- a/tools/memory-model/scripts/runlitmushist.sh
-+++ b/tools/memory-model/scripts/runlitmushist.sh
-@@ -13,7 +13,7 @@
- #
- # Copyright IBM Corporation, 2018
- #
--# Author: Paul E. McKenney <paulmck@linux.vnet.ibm.com>
-+# Author: Paul E. McKenney <paulmck@linux.ibm.com>
- 
- T=/tmp/runlitmushist.sh.$$
- trap 'rm -rf $T' 0
++
++litmus=$1
++if test -f "$litmus" -a -r "$litmus"
++then
++	:
++else
++	echo ' --- ' error: \"$litmus\" is not a readable file
++	exit 255
++fi
++
++if test -z "$LKMM_HW_MAP_FILE"
++then
++	# LKMM run
++	herdoptions=${LKMM_HERD_OPTIONS--conf linux-kernel.cfg}
++	echo Herd options: $herdoptions > $LKMM_DESTDIR/$litmus.out
++	/usr/bin/time $LKMM_TIMEOUT_CMD herd7 $herdoptions $litmus >> $LKMM_DESTDIR/$litmus.out 2>&1
++else
++	# Hardware run
++
++	T=/tmp/checklitmushw.sh.$$
++	trap 'rm -rf $T' 0 2
++	mkdir $T
++
++	# Generate filenames
++	catfile="`echo $LKMM_HW_MAP_FILE | tr '[A-Z]' '[a-z]'`.cat"
++	mapfile="Linux2${LKMM_HW_MAP_FILE}.map"
++	themefile="$T/${LKMM_HW_MAP_FILE}.theme"
++	herdoptions="-model $LKMM_HW_CAT_FILE"
++	hwlitmus=`echo $litmus | sed -e 's/\.litmus$/.'${LKMM_HW_MAP_FILE}'.litmus/'`
++	hwlitmusfile=`echo $hwlitmus | sed -e 's,^.*/,,'`
++
++	# Don't run on litmus tests with complex synchronization
++	if ! scripts/simpletest.sh $litmus
++	then
++		echo ' --- ' error: \"$litmus\" contains locking, RCU, or SRCU
++		exit 254
++	fi
++
++	# Generate the assembly code and run herd on it.
++	gen_theme7 -n 10 -map $mapfile -call Linux.call > $themefile
++	jingle7 -theme $themefile $litmus > $T/$hwlitmusfile 2> $T/$hwlitmusfile.jingle7.out
++	/usr/bin/time $LKMM_TIMEOUT_CMD herd7 -model $catfile $T/$hwlitmusfile > $LKMM_DESTDIR/$hwlitmus.out 2>&1
++fi
++
++exit $?
 -- 
 2.9.5
 
