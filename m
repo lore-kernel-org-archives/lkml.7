@@ -7,47 +7,49 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7593C32792
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:51:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9ABF3C32792
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:51:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7AFE920862
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:51:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6E9AF2070B
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:51:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570121495;
-	bh=5c5TRDo84sJDQ13UTbdqdWaHh1lRiJyZiHqi4clyXMM=;
+	s=default; t=1570121498;
+	bh=HkSEERbdu0ptmKFS8yZrxNwEEt/j0Egt1cU9AB/mPiM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=kNrXwrjbIYWovERRM6+N2GK8H7e1hVOHB9wOR1wwUzZkRuqVdZibqjPSh8aYwqHvx
-	 vw6E8OakBjyqj6L5i640+zBZbadxL5tGkZ2QCBX1IE2VpjOlQAor7GqdyL3c0fGpK+
-	 uH4zI7v5REb26AbrdVfjH/okroDaDvz/aipCaSbI=
+	b=FTADZpm711jKCI8bqNQh4/t3EHY2X9BKhmJTblx3dsyOBWCSFR+RfUehGCdQUvb9Z
+	 48RK6e7DJpQyVkpOoFAbYswChWLJbn2NyhZ+4vahdPZuHLfjD0a5+Hc79L2NcDg7Mp
+	 sFR1V1bExgBE47HcBrikdNr0MvHlFWKUGEGigBUM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406048AbfJCQve (ORCPT
+        id S2406058AbfJCQvh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 12:51:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38960 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 12:51:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39000 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2406030AbfJCQvc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:51:32 -0400
+        id S2406046AbfJCQve (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:51:34 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9C7CE20865;
-        Thu,  3 Oct 2019 16:51:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 462B92070B;
+        Thu,  3 Oct 2019 16:51:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570121491;
-        bh=5c5TRDo84sJDQ13UTbdqdWaHh1lRiJyZiHqi4clyXMM=;
+        s=default; t=1570121493;
+        bh=HkSEERbdu0ptmKFS8yZrxNwEEt/j0Egt1cU9AB/mPiM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=hvWWmf/ZONUp9MNGhA6g4d9EypyMwP+kZiCPmeZTCR0BFtRVdIqcllCN8gOQtYWC2
-         jdJRR55xhMCM1J+OVQc++b++Y2Xxn6o84C1qahoFyT22mGE/esAdP86usNf9XWcEAA
-         ioeS0sdj/TaDq/JHV4OOtk7cHUPHTZzkDE0SRRcw=
+        b=LbvvILldClxxGGCRXyhw8vZQuHPHDKgvFUsFhrKHNYAIYgQ7sP87VhIQ/mnrtByA6
+         sbpaz89JqhRiLLfDyNZuPmWlwWa7CwJRpB3tZ1iUPvdmWE+gKs6Okn25SJbBoIIsM+
+         2qxZdkJkV8cATof1o06rFwXGBh/tIAYpWlEtEtU0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Roberto Sassu <roberto.sassu@huawei.com>,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        Jerry Snitselaar <jsnitsel@redhat.com>
-Subject: [PATCH 5.3 297/344] KEYS: trusted: correctly initialize digests and fix locking issue
-Date:   Thu,  3 Oct 2019 17:54:22 +0200
-Message-Id: <20191003154608.871521453@linuxfoundation.org>
+        stable@vger.kernel.org, Denis Lunev <den@virtuozzo.com>,
+        Roman Kagan <rkagan@virtuozzo.com>,
+        Denis Plotnikov <dplotnikov@virtuozzo.com>,
+        Jan Dakinevich <jan.dakinevich@virtuozzo.com>,
+        Paolo Bonzini <pbonzini@redhat.com>
+Subject: [PATCH 5.3 262/344] KVM: x86: always stop emulation on page fault
+Date:   Thu,  3 Oct 2019 17:53:47 +0200
+Message-Id: <20191003154606.313278078@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191003154540.062170222@linuxfoundation.org>
 References: <20191003154540.062170222@linuxfoundation.org>
@@ -60,83 +62,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Roberto Sassu <roberto.sassu@huawei.com>
+From: Jan Dakinevich <jan.dakinevich@virtuozzo.com>
 
-commit 9f75c82246313d4c2a6bc77e947b45655b3b5ad5 upstream.
+commit 8530a79c5a9f4e29e6ffb35ec1a79d81f4968ec8 upstream.
 
-Commit 0b6cf6b97b7e ("tpm: pass an array of tpm_extend_digest structures to
-tpm_pcr_extend()") modifies tpm_pcr_extend() to accept a digest for each
-PCR bank. After modification, tpm_pcr_extend() expects that digests are
-passed in the same order as the algorithms set in chip->allocated_banks.
+inject_emulated_exception() returns true if and only if nested page
+fault happens. However, page fault can come from guest page tables
+walk, either nested or not nested. In both cases we should stop an
+attempt to read under RIP and give guest to step over its own page
+fault handler.
 
-This patch fixes two issues introduced in the last iterations of the patch
-set: missing initialization of the TPM algorithm ID in the tpm_digest
-structures passed to tpm_pcr_extend() by the trusted key module, and
-unreleased locks in the TPM driver due to returning from tpm_pcr_extend()
-without calling tpm_put_ops().
+This is also visible when an emulated instruction causes a #GP fault
+and the VMware backdoor is enabled.  To handle the VMware backdoor,
+KVM intercepts #GP faults; with only the next patch applied,
+x86_emulate_instruction() injects a #GP but returns EMULATE_FAIL
+instead of EMULATE_DONE.   EMULATE_FAIL causes handle_exception_nmi()
+(or gp_interception() for SVM) to re-inject the original #GP because it
+thinks emulation failed due to a non-VMware opcode.  This patch prevents
+the issue as x86_emulate_instruction() will return EMULATE_DONE after
+injecting the #GP.
 
+Fixes: 6ea6e84309ca ("KVM: x86: inject exceptions produced by x86_decode_insn")
 Cc: stable@vger.kernel.org
-Fixes: 0b6cf6b97b7e ("tpm: pass an array of tpm_extend_digest structures to tpm_pcr_extend()")
-Signed-off-by: Roberto Sassu <roberto.sassu@huawei.com>
-Suggested-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Reviewed-by: Jerry Snitselaar <jsnitsel@redhat.com>
-Reviewed-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Signed-off-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+Cc: Denis Lunev <den@virtuozzo.com>
+Cc: Roman Kagan <rkagan@virtuozzo.com>
+Cc: Denis Plotnikov <dplotnikov@virtuozzo.com>
+Signed-off-by: Jan Dakinevich <jan.dakinevich@virtuozzo.com>
+Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/char/tpm/tpm-interface.c |   14 +++++++++-----
- security/keys/trusted.c          |    5 +++++
- 2 files changed, 14 insertions(+), 5 deletions(-)
+ arch/x86/kvm/x86.c |    4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
---- a/drivers/char/tpm/tpm-interface.c
-+++ b/drivers/char/tpm/tpm-interface.c
-@@ -320,18 +320,22 @@ int tpm_pcr_extend(struct tpm_chip *chip
- 	if (!chip)
- 		return -ENODEV;
- 
--	for (i = 0; i < chip->nr_allocated_banks; i++)
--		if (digests[i].alg_id != chip->allocated_banks[i].alg_id)
--			return -EINVAL;
-+	for (i = 0; i < chip->nr_allocated_banks; i++) {
-+		if (digests[i].alg_id != chip->allocated_banks[i].alg_id) {
-+			rc = EINVAL;
-+			goto out;
-+		}
-+	}
- 
- 	if (chip->flags & TPM_CHIP_FLAG_TPM2) {
- 		rc = tpm2_pcr_extend(chip, pcr_idx, digests);
--		tpm_put_ops(chip);
--		return rc;
-+		goto out;
- 	}
- 
- 	rc = tpm1_pcr_extend(chip, pcr_idx, digests[0].digest,
- 			     "attempting extend a PCR value");
-+
-+out:
- 	tpm_put_ops(chip);
- 	return rc;
- }
---- a/security/keys/trusted.c
-+++ b/security/keys/trusted.c
-@@ -1228,11 +1228,16 @@ hashalg_fail:
- 
- static int __init init_digests(void)
- {
-+	int i;
-+
- 	digests = kcalloc(chip->nr_allocated_banks, sizeof(*digests),
- 			  GFP_KERNEL);
- 	if (!digests)
- 		return -ENOMEM;
- 
-+	for (i = 0; i < chip->nr_allocated_banks; i++)
-+		digests[i].alg_id = chip->allocated_banks[i].alg_id;
-+
- 	return 0;
- }
- 
+--- a/arch/x86/kvm/x86.c
++++ b/arch/x86/kvm/x86.c
+@@ -6528,8 +6528,10 @@ int x86_emulate_instruction(struct kvm_v
+ 			if (reexecute_instruction(vcpu, cr2, write_fault_to_spt,
+ 						emulation_type))
+ 				return EMULATE_DONE;
+-			if (ctxt->have_exception && inject_emulated_exception(vcpu))
++			if (ctxt->have_exception) {
++				inject_emulated_exception(vcpu);
+ 				return EMULATE_DONE;
++			}
+ 			if (emulation_type & EMULTYPE_SKIP)
+ 				return EMULATE_FAIL;
+ 			return handle_emulation_failure(vcpu, emulation_type);
 
 
