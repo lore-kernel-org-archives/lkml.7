@@ -2,51 +2,51 @@ Return-Path: <SRS0=6dNS=X4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E08BC10F14
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:34:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C81A9C32792
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:34:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CAFA020830
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:34:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9DDEE2086A
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:34:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570120453;
-	bh=Wb/Buv17l28cIMxrABBRC99pWTC6SdHgYan1rcQ+RPk=;
+	s=default; t=1570120458;
+	bh=hg7cnCXjeGWahhxiH2BWq0tRZool+GN4nN36HueKydU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=RToW6zjn8KvjzamEXhwjezMrCE49/9arCk+hxUpiYKHMQGPpe2TQd1MtmYc1FYJoV
-	 ZMuXA4vaihYqf7hVo9BQPgkOek8uSe8YOHIWtT4TWnAEniyHMdb7G0PwCN7zbMaoKl
-	 wchP3oQtOueocQoXvPll3BM0+xvrc9NJnqrWofew=
+	b=x8HADHzr1Z5sEX/5J0/+VormYdUEshY22de6EjrGK7JHlf/3OG05CCjLYDT0+LHZ3
+	 rKT1Z8HUxYwEz3uKqAHveTDnNZujs1fYUhtvxtt+t/ZUJiOgl6GqYcosZaM2CbVyBx
+	 cZ7j0Xa6VhRCd/3DOfSidxsYL9bl/ho0I6zPOB18=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392108AbfJCQeN (ORCPT
+        id S2392119AbfJCQeS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 12:34:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42512 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 12:34:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42722 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404148AbfJCQeJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:34:09 -0400
+        id S2404152AbfJCQeP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:34:15 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6F3DE222BE;
-        Thu,  3 Oct 2019 16:34:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D859F215EA;
+        Thu,  3 Oct 2019 16:34:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570120448;
-        bh=Wb/Buv17l28cIMxrABBRC99pWTC6SdHgYan1rcQ+RPk=;
+        s=default; t=1570120454;
+        bh=hg7cnCXjeGWahhxiH2BWq0tRZool+GN4nN36HueKydU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ymUGuRwpovVASmhEuchxpbIggIR4nkiuN98DTwivkZ5NFIlqBwC7w3ShiSx/NUVED
-         Xvqp/GWDnYeK90eiUnrsVPkB1Yjucn/NGeQ4QZG4ngxLzfhWpgHAkSydB7MiHR0hY5
-         UEfwhGhW2HLluXhrBL5b58q0Ov41KFAIUteDFZ/Q=
+        b=H8NK+EuFQF+BoD6qhy2DkkjrSwjOm2CtB20KUbMdijL10gVQVemFxrbB/0jeMbVo3
+         lkD6x6zafOzaPPpJUmpO2Je08lKvFFa8mZkKuownVWkFUA7AKFz/M4h02qUsrJDsvq
+         QquXyWy8V9m8wa0d9WHqS7Mp+uHCwsm17ceOxQvs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Adam Ford <aford173@gmail.com>,
-        Tony Lindgren <tony@atomide.com>
-Subject: [PATCH 5.2 226/313] ARM: dts: am3517-evm: Fix missing video
-Date:   Thu,  3 Oct 2019 17:53:24 +0200
-Message-Id: <20191003154555.278275805@linuxfoundation.org>
+        stable@vger.kernel.org, Jan-Marek Glogowski <glogow@fbihome.de>,
+        Takashi Iwai <tiwai@suse.de>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.2 228/313] ALSA: hda/realtek - PCI quirk for Medion E4254
+Date:   Thu,  3 Oct 2019 17:53:26 +0200
+Message-Id: <20191003154555.468959729@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191003154533.590915454@linuxfoundation.org>
 References: <20191003154533.590915454@linuxfoundation.org>
@@ -59,65 +59,84 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Adam Ford <aford173@gmail.com>
+From: Jan-Marek Glogowski <glogow@fbihome.de>
 
-commit 24cf23276a54dd2825d3e3965c1b1b453e2a113d upstream.
+[ Upstream commit bd9c10bc663dd2eaac8fe39dad0f18cd21527446 ]
 
-A previous commit removed the panel-dpi driver, which made the
-video on the AM3517-evm stop working because it relied on the dpi
-driver for setting video timings.  Now that the simple-panel driver
-is available in omap2plus, this patch migrates the am3517-evm
-to use a similar panel and remove the manual timing requirements.
+The laptop has a combined jack to attach headsets on the right.
+The BIOS encodes them as two different colored jacks at the front,
+but otherwise it seems to be configured ok. But any adaption of
+the pins config on its own doesn't fix the jack detection to work
+in Linux. Still Windows works correct.
 
-Fixes: 8bf4b1621178 ("drm/omap: Remove panel-dpi driver")
+This is somehow fixed by chaining ALC256_FIXUP_ASUS_HEADSET_MODE,
+which seems to register the microphone jack as a headset part and
+also results in fixing jack sensing, visible in dmesg as:
 
-Signed-off-by: Adam Ford <aford173@gmail.com>
-Signed-off-by: Tony Lindgren <tony@atomide.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+-snd_hda_codec_realtek hdaudioC0D0:      Mic=0x19
++snd_hda_codec_realtek hdaudioC0D0:      Headset Mic=0x19
 
+[ Actually the essential change is the location of the jack; the
+  driver created "Front Mic Jack" without the matching volume / mute
+  control element due to its jack location, which confused PA.
+  -- tiwai ]
+
+Signed-off-by: Jan-Marek Glogowski <glogow@fbihome.de>
+Cc: <stable@vger.kernel.org>
+Link: https://lore.kernel.org/r/8f4f9b20-0aeb-f8f1-c02f-fd53c09679f1@fbihome.de
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/am3517-evm.dts |   23 ++++-------------------
- 1 file changed, 4 insertions(+), 19 deletions(-)
+ sound/pci/hda/patch_realtek.c | 13 +++++++++++++
+ 1 file changed, 13 insertions(+)
 
---- a/arch/arm/boot/dts/am3517-evm.dts
-+++ b/arch/arm/boot/dts/am3517-evm.dts
-@@ -124,10 +124,11 @@
- 	};
+diff --git a/sound/pci/hda/patch_realtek.c b/sound/pci/hda/patch_realtek.c
+index d223a79ac934f..36aee8ad20547 100644
+--- a/sound/pci/hda/patch_realtek.c
++++ b/sound/pci/hda/patch_realtek.c
+@@ -5870,6 +5870,7 @@ enum {
+ 	ALC256_FIXUP_ASUS_MIC_NO_PRESENCE,
+ 	ALC299_FIXUP_PREDATOR_SPK,
+ 	ALC294_FIXUP_ASUS_INTSPK_HEADSET_MIC,
++	ALC256_FIXUP_MEDION_HEADSET_NO_PRESENCE,
+ };
  
- 	lcd0: display@0 {
--		compatible = "panel-dpi";
-+		/* This isn't the exact LCD, but the timings meet spec */
-+		/* To make it work, set CONFIG_OMAP2_DSS_MIN_FCK_PER_PCK=4 */
-+		compatible = "newhaven,nhd-4.3-480272ef-atxl";
- 		label = "15";
--		status = "okay";
--		pinctrl-names = "default";
-+		backlight = <&bl>;
- 		enable-gpios = <&gpio6 16 GPIO_ACTIVE_HIGH>;	/* gpio176, lcd INI */
- 		vcc-supply = <&vdd_io_reg>;
+ static const struct hda_fixup alc269_fixups[] = {
+@@ -6926,6 +6927,16 @@ static const struct hda_fixup alc269_fixups[] = {
+ 		.chained = true,
+ 		.chain_id = ALC269_FIXUP_HEADSET_MODE_NO_HP_MIC
+ 	},
++	[ALC256_FIXUP_MEDION_HEADSET_NO_PRESENCE] = {
++		.type = HDA_FIXUP_PINS,
++		.v.pins = (const struct hda_pintbl[]) {
++			{ 0x19, 0x04a11040 },
++			{ 0x21, 0x04211020 },
++			{ }
++		},
++		.chained = true,
++		.chain_id = ALC256_FIXUP_ASUS_HEADSET_MODE
++	},
+ };
  
-@@ -136,22 +137,6 @@
- 				remote-endpoint = <&dpi_out>;
- 			};
- 		};
--
--		panel-timing {
--			clock-frequency = <9000000>;
--			hactive = <480>;
--			vactive = <272>;
--			hfront-porch = <3>;
--			hback-porch = <2>;
--			hsync-len = <42>;
--			vback-porch = <3>;
--			vfront-porch = <4>;
--			vsync-len = <11>;
--			hsync-active = <0>;
--			vsync-active = <0>;
--			de-active = <1>;
--			pixelclk-active = <1>;
--		};
- 	};
+ static const struct snd_pci_quirk alc269_fixup_tbl[] = {
+@@ -7189,6 +7200,7 @@ static const struct snd_pci_quirk alc269_fixup_tbl[] = {
+ 	SND_PCI_QUIRK(0x17aa, 0x9e54, "LENOVO NB", ALC269_FIXUP_LENOVO_EAPD),
+ 	SND_PCI_QUIRK(0x19e5, 0x3204, "Huawei MACH-WX9", ALC256_FIXUP_HUAWEI_MACH_WX9_PINS),
+ 	SND_PCI_QUIRK(0x1b7d, 0xa831, "Ordissimo EVE2 ", ALC269VB_FIXUP_ORDISSIMO_EVE2), /* Also known as Malata PC-B1303 */
++	SND_PCI_QUIRK(0x10ec, 0x118c, "Medion EE4254 MD62100", ALC256_FIXUP_MEDION_HEADSET_NO_PRESENCE),
  
- 	bl: backlight {
+ #if 0
+ 	/* Below is a quirk table taken from the old code.
+@@ -7357,6 +7369,7 @@ static const struct hda_model_fixup alc269_fixup_models[] = {
+ 	{.id = ALC295_FIXUP_CHROME_BOOK, .name = "alc-chrome-book"},
+ 	{.id = ALC299_FIXUP_PREDATOR_SPK, .name = "predator-spk"},
+ 	{.id = ALC298_FIXUP_HUAWEI_MBX_STEREO, .name = "huawei-mbx-stereo"},
++	{.id = ALC256_FIXUP_MEDION_HEADSET_NO_PRESENCE, .name = "alc256-medion-headset"},
+ 	{}
+ };
+ #define ALC225_STANDARD_PINS \
+-- 
+2.20.1
+
 
 
