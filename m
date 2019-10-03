@@ -4,49 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BCF7C10F14
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:20:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7C0DC32792
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:20:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E31422054F
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:20:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7EEB921A4C
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:20:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570119610;
-	bh=LHr0zQNTuWMvB8KfJDg2lp4+b/SuKXqID+v+rc6sg8g=;
+	s=default; t=1570119613;
+	bh=s7x370y95jXHCMWBXfaRjHHLe9MY1QprAjrHw4KTmss=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=hgYixDvn24xYs/xOSaKsnobZ+X7i/nF2EEhD9tnR1xniBy2cbDbxZogxk7KZYk5u6
-	 k0yfc95xjLHonKzpbICkb3O638lBLBlTAY/89SB5kOnJvGh+8KqkLHU8iTRv421IZS
-	 575/JT/ZO8VP3hB0K+xqtwldpjW+c2/GIWXR+LQ4=
+	b=OHBrs+Wd6gZ2pAPzAr/quoQ5jmB7zelBL24qu+NCHnlnRP00ySfhIDzK1x2oxggqA
+	 mKQkzxLLK+QdYqtQwwsLiZKMMEkzLldIxmur4GxwzTMCC1fO08dSj/FA6PSAxk/iSR
+	 3gUI1IRMj2WJJJfxwCIsqTPOjb7KKmMaMZiokLOk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389825AbfJCQUF (ORCPT
+        id S2389848AbfJCQUN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 12:20:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47342 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 12:20:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47520 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389813AbfJCQUC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:20:02 -0400
+        id S2389835AbfJCQUH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:20:07 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F0F1B21848;
-        Thu,  3 Oct 2019 16:20:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3746A222CB;
+        Thu,  3 Oct 2019 16:20:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570119601;
-        bh=LHr0zQNTuWMvB8KfJDg2lp4+b/SuKXqID+v+rc6sg8g=;
+        s=default; t=1570119606;
+        bh=s7x370y95jXHCMWBXfaRjHHLe9MY1QprAjrHw4KTmss=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=SbhfTtUVr45RA8YEBSx9mJosWvAtDbmAxlobTW/xdXFILQ5c26dchFp8zRIYvbqru
-         z6gBPp5T5rVH61Gssx4Wg78CN8XKIrqD63PUw+Vi/sM9XD7imWTO+gJQ1hw2OCQJwC
-         VFVr+wTM+POdRqmlzJl5hGOaumwV0N3PfyBr793M=
+        b=l6DpmpDo2P2J1H08zhYTF9pb5nB9ZSRh76T6FRMKQo1bthEXSXQKxefXXl7akS25G
+         yenkYfeaU4Bpon02CHqY1AYcZOxGvYZ5Gfp1cTMsHBwKVUHNchBb855rD53exEKTl6
+         Wesn1Rm8La0tulYe2uI9W5Wr0FzJsGY4CAA09Eto=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Peter Ujfalusi <peter.ujfalusi@ti.com>,
-        Vinod Koul <vkoul@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 126/211] dmaengine: ti: edma: Do not reset reserved paRAM slots
-Date:   Thu,  3 Oct 2019 17:53:12 +0200
-Message-Id: <20191003154515.588298715@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Harald Freudenberger <freude@linux.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 128/211] s390/crypto: xts-aes-s390 fix extra run-time crypto self tests finding
+Date:   Thu,  3 Oct 2019 17:53:14 +0200
+Message-Id: <20191003154515.944746287@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191003154447.010950442@linuxfoundation.org>
 References: <20191003154447.010950442@linuxfoundation.org>
@@ -59,48 +61,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Peter Ujfalusi <peter.ujfalusi@ti.com>
+From: Harald Freudenberger <freude@linux.ibm.com>
 
-[ Upstream commit c5dbe60664b3660f5ac5854e21273ea2e7ff698f ]
+[ Upstream commit 9e323d45ba94262620a073a3f9945ca927c07c71 ]
 
-Skip resetting paRAM slots marked as reserved as they might be used by
-other cores.
+With 'extra run-time crypto self tests' enabled, the selftest
+for s390-xts fails with
 
-Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
-Link: https://lore.kernel.org/r/20190823125618.8133-2-peter.ujfalusi@ti.com
-Signed-off-by: Vinod Koul <vkoul@kernel.org>
+  alg: skcipher: xts-aes-s390 encryption unexpectedly succeeded on
+  test vector "random: len=0 klen=64"; expected_error=-22,
+  cfg="random: inplace use_digest nosimd src_divs=[2.61%@+4006,
+  84.44%@+21, 1.55%@+13, 4.50%@+344, 4.26%@+21, 2.64%@+27]"
+
+This special case with nbytes=0 is not handled correctly and this
+fix now makes sure that -EINVAL is returned when there is en/decrypt
+called with 0 bytes to en/decrypt.
+
+Signed-off-by: Harald Freudenberger <freude@linux.ibm.com>
+Signed-off-by: Vasily Gorbik <gor@linux.ibm.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/dma/ti/edma.c | 9 ++++++---
- 1 file changed, 6 insertions(+), 3 deletions(-)
+ arch/s390/crypto/aes_s390.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/drivers/dma/ti/edma.c b/drivers/dma/ti/edma.c
-index ceabdea40ae0f..982631d4e1f8a 100644
---- a/drivers/dma/ti/edma.c
-+++ b/drivers/dma/ti/edma.c
-@@ -2273,9 +2273,6 @@ static int edma_probe(struct platform_device *pdev)
+diff --git a/arch/s390/crypto/aes_s390.c b/arch/s390/crypto/aes_s390.c
+index 8ff7cb3da1cba..2bc189187ed40 100644
+--- a/arch/s390/crypto/aes_s390.c
++++ b/arch/s390/crypto/aes_s390.c
+@@ -585,6 +585,9 @@ static int xts_aes_encrypt(struct blkcipher_desc *desc,
+ 	struct s390_xts_ctx *xts_ctx = crypto_blkcipher_ctx(desc->tfm);
+ 	struct blkcipher_walk walk;
  
- 	ecc->default_queue = info->default_queue;
- 
--	for (i = 0; i < ecc->num_slots; i++)
--		edma_write_slot(ecc, i, &dummy_paramset);
--
- 	if (info->rsv) {
- 		/* Set the reserved slots in inuse list */
- 		rsv_slots = info->rsv->rsv_slots;
-@@ -2288,6 +2285,12 @@ static int edma_probe(struct platform_device *pdev)
- 		}
- 	}
- 
-+	for (i = 0; i < ecc->num_slots; i++) {
-+		/* Reset only unused - not reserved - paRAM slots */
-+		if (!test_bit(i, ecc->slot_inuse))
-+			edma_write_slot(ecc, i, &dummy_paramset);
-+	}
++	if (!nbytes)
++		return -EINVAL;
 +
- 	/* Clear the xbar mapped channels in unused list */
- 	xbar_chans = info->xbar_chans;
- 	if (xbar_chans) {
+ 	if (unlikely(!xts_ctx->fc))
+ 		return xts_fallback_encrypt(desc, dst, src, nbytes);
+ 
+@@ -599,6 +602,9 @@ static int xts_aes_decrypt(struct blkcipher_desc *desc,
+ 	struct s390_xts_ctx *xts_ctx = crypto_blkcipher_ctx(desc->tfm);
+ 	struct blkcipher_walk walk;
+ 
++	if (!nbytes)
++		return -EINVAL;
++
+ 	if (unlikely(!xts_ctx->fc))
+ 		return xts_fallback_decrypt(desc, dst, src, nbytes);
+ 
 -- 
 2.20.1
 
