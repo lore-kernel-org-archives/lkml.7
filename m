@@ -2,102 +2,168 @@ Return-Path: <SRS0=6dNS=X4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BAE1C10F14
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 15:56:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A922DC10F14
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 15:56:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 65B4C21D71
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 15:56:22 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="aNaQZuIW"
+	by mail.kernel.org (Postfix) with ESMTP id 7EE4221D81
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 15:56:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1570118187;
+	bh=xVnqa8oy56HQ1o0nv3jNb85HbXSpjVFmjg9sZlCBZws=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=H6VwiBRLNG9DGoEr1XeFQyR94sPP+erbhgpCnfRvVpakEZlgQBPqE8w63JZAwviVA
+	 Rqjf+SLtAkLdPud1Q0+VCFSR0G8VjhTqdrqyojPWMtYz8WYBHspF4C5T1dpH8rMip8
+	 uCvgfakARjY144ow1vRrb+Mv04iPqpIvB8OOb++0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730563AbfJCP4U (ORCPT
+        id S1730592AbfJCP4Y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 11:56:20 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:40109 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730504AbfJCP4M (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 11:56:12 -0400
-Received: by mail-wr1-f67.google.com with SMTP id l3so3334000wru.7
-        for <linux-kernel@vger.kernel.org>; Thu, 03 Oct 2019 08:56:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
-         :user-agent;
-        bh=NKFrC0B8XfOBdcYy4waFnHZo34mHGp46OVgivkV/nsg=;
-        b=aNaQZuIW2iG4+SCv7VDtSMgRNVP7FlZdetl6sUWXBtp7oeSQxR665x5njpcYyKI2xk
-         Uvv8X3BSDSZUsLW1oGFuQlamFhdFIrNfwlOq1B3hFoMi0A+obcRQOOxbwyvUAS2evrAJ
-         c8NcY1rr6yYJPvcSdXbwU2qpl3HfG5D+VizDd0pNvxHe4qBoWnyL11CaCqma1vmkILLv
-         2qq/s4v66IZRtqsJTlOAIledIGofXIi242nk8K6kWHqNHeewn0+boxqT+7rO9Kv7jSca
-         MaaoBvL9LQtm9cjZuqmMY+DRN8fD8+JXAqasrQ7apCP0SX9BNrV6EG/wnPQmxzf2wZkt
-         wiHQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=NKFrC0B8XfOBdcYy4waFnHZo34mHGp46OVgivkV/nsg=;
-        b=Yd0pzhMJAlkJ0DurZ1jARXdhryzKGgMP00eAMXYk358euMQrI50hTSTwx/3BZnEuva
-         H53JCRqCQDW2AT1OCr+Xn5NSvce01A9bfUuiDAjA2xB1U7yd0MjCRaWSH0yfVGx5Ga6J
-         eKXpJN0NiXk5CSu0OfHYTrU6vzHhnjuFcHnwRjX0WDRoz193YSMIAweUgRd86H7cxH0w
-         6hkyzITQZ2IzDekXheFTb9GM/AHTJ6TQRzVkFYtLb+LZ25OpeFczby0hwA7vBTfFSK9G
-         2p9gJxGCi2E2wprAVHWBp4ahFQvUrZ0p4fphDiTtswHzet9bIUf7Ef9pj5BZH3+SmCx8
-         g5Bg==
-X-Gm-Message-State: APjAAAUzX7Vt22kmZLBdE40IdjG/EjA6W+j6QdFu0HjJHHhHZY3qJY/2
-        h5KZ5zE4dmhbVE3MA5RrkFtFWQ==
-X-Google-Smtp-Source: APXvYqyeWhVDnASI2XK685gTnJ8+XSIi9Og7/oNl3GooJ5VN2khjLyPsF8m05wz1FN+mrQonzf/z+Q==
-X-Received: by 2002:a5d:45c6:: with SMTP id b6mr6827149wrs.4.1570118168901;
-        Thu, 03 Oct 2019 08:56:08 -0700 (PDT)
-Received: from holly.lan (cpc141214-aztw34-2-0-cust773.18-1.cable.virginm.net. [86.9.19.6])
-        by smtp.gmail.com with ESMTPSA id 79sm5324176wmb.7.2019.10.03.08.56.08
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 03 Oct 2019 08:56:08 -0700 (PDT)
-Date:   Thu, 3 Oct 2019 16:56:06 +0100
-From:   Daniel Thompson <daniel.thompson@linaro.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Jason Wessel <jason.wessel@windriver.com>,
-        linux-kernel@vger.kernel.org,
-        Douglas Anderson <dianders@chromium.org>
-Subject: [GIT PULL] kgdb changes v5.4-rc2
-Message-ID: <20191003155606.o5y5vmnszyzotbvw@holly.lan>
+        Thu, 3 Oct 2019 11:56:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38042 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730541AbfJCP4Q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 11:56:16 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8906921848;
+        Thu,  3 Oct 2019 15:56:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1570118174;
+        bh=xVnqa8oy56HQ1o0nv3jNb85HbXSpjVFmjg9sZlCBZws=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=TE32caY8yc1e89Jtp9ulhy3fZ/Iu1sSTQpxfkvh0ejyouw9zt8iB4ygakChQCsIVa
+         wBVH/w81DjlJXHgeUVA3DC1COylMJqwVgnE94fzuutTIMXDQOtZw0371SGN02ey4rs
+         D7v1LahmRrhHSLGhu8Eoo2/EjSHZWzqlG/c0jdDo=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Chao Yu <yuchao0@huawei.com>,
+        Jaegeuk Kim <jaegeuk@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.4 17/99] f2fs: fix to do sanity check on segment bitmap of LFS curseg
+Date:   Thu,  3 Oct 2019 17:52:40 +0200
+Message-Id: <20191003154302.103100907@linuxfoundation.org>
+X-Mailer: git-send-email 2.23.0
+In-Reply-To: <20191003154252.297991283@linuxfoundation.org>
+References: <20191003154252.297991283@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: NeoMutt/20180716
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following changes since commit 54ecb8f7028c5eb3d740bb82b0f1d90f2df63c5c:
+From: Chao Yu <yuchao0@huawei.com>
 
-  Linux 5.4-rc1 (2019-09-30 10:35:40 -0700)
+[ Upstream commit c854f4d681365498f53ba07843a16423625aa7e9 ]
 
-are available in the Git repository at:
+As Jungyeon Reported in bugzilla:
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/danielt/linux.git/ tags/kgdb-5.4-rc2
+https://bugzilla.kernel.org/show_bug.cgi?id=203233
 
-for you to fetch changes up to 086bf301f541eb4acfb5dadae7b1b207ad1b95a3:
+- Reproduces
+gcc poc_13.c
+./run.sh f2fs
 
-  MAINTAINERS: kgdb: Add myself as a reviewer for kgdb/kdb (2019-10-03 16:42:10 +0100)
+- Kernel messages
+ F2FS-fs (sdb): Bitmap was wrongly set, blk:4608
+ kernel BUG at fs/f2fs/segment.c:2133!
+ RIP: 0010:update_sit_entry+0x35d/0x3e0
+ Call Trace:
+  f2fs_allocate_data_block+0x16c/0x5a0
+  do_write_page+0x57/0x100
+  f2fs_do_write_node_page+0x33/0xa0
+  __write_node_page+0x270/0x4e0
+  f2fs_sync_node_pages+0x5df/0x670
+  f2fs_write_checkpoint+0x364/0x13a0
+  f2fs_sync_fs+0xa3/0x130
+  f2fs_do_sync_file+0x1a6/0x810
+  do_fsync+0x33/0x60
+  __x64_sys_fsync+0xb/0x10
+  do_syscall_64+0x43/0x110
+  entry_SYSCALL_64_after_hwframe+0x44/0xa9
 
-----------------------------------------------------------------
-kgdb patches for 5.4-rc2
+The testcase fails because that, in fuzzed image, current segment was
+allocated with LFS type, its .next_blkoff should point to an unused
+block address, but actually, its bitmap shows it's not. So during
+allocation, f2fs crash when setting bitmap.
 
-This is just a single patch adding a new reviewer for kgdb. New reviewers
-will be a big help so I decided to consider this to be a fix!
+Introducing sanity_check_curseg() to check such inconsistence of
+current in-used segment.
 
-I'm looking forward to working more closely with Doug.
+Signed-off-by: Chao Yu <yuchao0@huawei.com>
+Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ fs/f2fs/segment.c | 39 +++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 39 insertions(+)
 
-Signed-off-by: Daniel Thompson <daniel.thompson@linaro.org>
+diff --git a/fs/f2fs/segment.c b/fs/f2fs/segment.c
+index 6802cd754eda0..e482cca005a61 100644
+--- a/fs/f2fs/segment.c
++++ b/fs/f2fs/segment.c
+@@ -2262,6 +2262,41 @@ static int build_dirty_segmap(struct f2fs_sb_info *sbi)
+ 	return init_victim_secmap(sbi);
+ }
+ 
++static int sanity_check_curseg(struct f2fs_sb_info *sbi)
++{
++	int i;
++
++	/*
++	 * In LFS/SSR curseg, .next_blkoff should point to an unused blkaddr;
++	 * In LFS curseg, all blkaddr after .next_blkoff should be unused.
++	 */
++	for (i = 0; i < NO_CHECK_TYPE; i++) {
++		struct curseg_info *curseg = CURSEG_I(sbi, i);
++		struct seg_entry *se = get_seg_entry(sbi, curseg->segno);
++		unsigned int blkofs = curseg->next_blkoff;
++
++		if (f2fs_test_bit(blkofs, se->cur_valid_map))
++			goto out;
++
++		if (curseg->alloc_type == SSR)
++			continue;
++
++		for (blkofs += 1; blkofs < sbi->blocks_per_seg; blkofs++) {
++			if (!f2fs_test_bit(blkofs, se->cur_valid_map))
++				continue;
++out:
++			f2fs_msg(sbi->sb, KERN_ERR,
++				"Current segment's next free block offset is "
++				"inconsistent with bitmap, logtype:%u, "
++				"segno:%u, type:%u, next_blkoff:%u, blkofs:%u",
++				i, curseg->segno, curseg->alloc_type,
++				curseg->next_blkoff, blkofs);
++			return -EINVAL;
++		}
++	}
++	return 0;
++}
++
+ /*
+  * Update min, max modified time for cost-benefit GC algorithm
+  */
+@@ -2350,6 +2385,10 @@ int build_segment_manager(struct f2fs_sb_info *sbi)
+ 	if (err)
+ 		return err;
+ 
++	err = sanity_check_curseg(sbi);
++	if (err)
++		return err;
++
+ 	init_min_max_mtime(sbi);
+ 	return 0;
+ }
+-- 
+2.20.1
 
-----------------------------------------------------------------
-Douglas Anderson (1):
-      MAINTAINERS: kgdb: Add myself as a reviewer for kgdb/kdb
 
- MAINTAINERS | 1 +
- 1 file changed, 1 insertion(+)
+
