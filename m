@@ -2,145 +2,197 @@ Return-Path: <SRS0=6dNS=X4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1,
-	USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F8BBC10F14
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 10:44:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A473CC4CED1
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 10:47:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3595E21D71
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 10:44:01 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="js4G6PHP"
+	by mail.kernel.org (Postfix) with ESMTP id 78B1B222CB
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 10:47:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1570099637;
+	bh=4/jqkcYsyVl7PVz1U0O5BHXPwf5v1eSpGmRa7CAYYNY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=TaLy3V40XQ4xVc54tY2/txVfdaRbubDu+DnZw2tJkOllvBneqQStA7mDjnqp7Kwic
+	 h19z23oKwC+vlQTxkNDHc4jMqcP5oRbW3hI1F0Y7IQSfEJ50TT7ILk5TacCzYxIpHM
+	 x08dNAV+pbJqM94+JImisKZD6K69flllKwkRwt0M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729549AbfJCKoA (ORCPT
+        id S1729504AbfJCKrQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 06:44:00 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:36296 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725892AbfJCKn7 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 06:43:59 -0400
-Received: by mail-wm1-f68.google.com with SMTP id m18so1910164wmc.1
-        for <linux-kernel@vger.kernel.org>; Thu, 03 Oct 2019 03:43:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=L443QrtbGJzjXrb9cPjFogwzDzBLOTWJckxbc5KAm6g=;
-        b=js4G6PHPUfqE3C3hPfDJj5EMKbSMjV2HW5gUiSmhp4QNJJUh1ocSa1TC82oVye7dyH
-         UseO8Ue5uw+H/XTq4HFjjhrqJ9UUj0otn2bkG5z5efO/MOxe+3N91GlqnH21RRjfunCD
-         /4H1rzwJN/fMDXz9O941Qnwm+2qJz6Jf4G8axscUMda3aTyBqlVVbQ7Glg0LRqBMKFVP
-         3YnkU0+W4oSnIitGGe7VUZDXtNYukVGBMZyfAe5tBtUU8Jau5m2NHYI/WtrkP+LXVonS
-         gCp31gnixomWEcvGbzv+vpQJWq5GafYgvy79qZHLM7R/eb8CN+xMePXVM5ZyQvzX7MiW
-         g/+Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=L443QrtbGJzjXrb9cPjFogwzDzBLOTWJckxbc5KAm6g=;
-        b=mWfHsrvDJ0Eq+D8SWF+6AGM3mqDNPy8ULj+oXSpLx8wX7dRFqkQu8fpoNWendDgudo
-         cLMixyduPc5gvRX5bU9qY9da5pic4m49XJn2Q394pzSKcM6vf4KCex6nGGfDsfEdOmm+
-         0HN1slaJ9/2wLQArArNLVk9M3krwZaUL4HmeS5HMN/47WF1uxvBU3mtTT5TkojLLvfzb
-         OgVXufGBEOLqsTOUCfHVfizQeI2B/zocpp25zEKBEqcPSx8QGnb8lVMzOca8kyV9HAw6
-         bcgPWVIZSc+2nLLrS1l97slxNWqxEwkMPWv7r0lJYQBuUxgwxtVPnMw7MCKunPTW1Ynn
-         fJWw==
-X-Gm-Message-State: APjAAAVGJKg4l8ys6Wa3C8uV4DkL4gS2u36XEPHA1qW+DBFZRzVHzA/n
-        tlPF+4fJ7XwhcKhrDGuu/6T1tibiWF0j+A==
-X-Google-Smtp-Source: APXvYqz/48XqqPRRCh0PtBQsux17HBetTtAD6J08zwekAjJaS/BCoUn3boG9FzEciCT87JI+2nNiRg==
-X-Received: by 2002:a1c:2388:: with SMTP id j130mr6150051wmj.107.1570099437593;
-        Thu, 03 Oct 2019 03:43:57 -0700 (PDT)
-Received: from google.com ([2a00:79e0:d:210:e8f7:125b:61e9:733d])
-        by smtp.gmail.com with ESMTPSA id f8sm1746117wmb.37.2019.10.03.03.43.56
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 03 Oct 2019 03:43:56 -0700 (PDT)
-Date:   Thu, 3 Oct 2019 11:43:56 +0100
-From:   Matthias Maennich <maennich@google.com>
-To:     Steve French <smfrench@gmail.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        CIFS <linux-cifs@vger.kernel.org>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Jessica Yu <jeyu@kernel.org>
-Subject: Re: nsdeps not working on modules in 5.4-rc1
-Message-ID: <20191003104356.GA77584@google.com>
-References: <CAH2r5mv49T9gwwoJxKJfkgdi6xbf+hDALUiAJHghGikgUNParw@mail.gmail.com>
- <CAH2r5mtVW=3-2L+0QFJAqBG+uj2sYmF=dtzT_kqwK59cu94vGw@mail.gmail.com>
+        Thu, 3 Oct 2019 06:47:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41212 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725827AbfJCKrQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 06:47:16 -0400
+Received: from earth.universe (dyndsl-037-138-174-173.ewe-ip-backbone.de [37.138.174.173])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id A68022086A;
+        Thu,  3 Oct 2019 10:47:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1570099634;
+        bh=4/jqkcYsyVl7PVz1U0O5BHXPwf5v1eSpGmRa7CAYYNY=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=U9iw0PUcu5hRY1AjfLRiTUkjIPliuDqf5dvsnkDevgkletJ3VzrmeV1XusuSqvu/k
+         eQ8l2JYb2Rv3aHCkNb+dG4HLwL9IdXMbPLErtxoJ1nxI2+U0TPxtA9Or2LmcKKUvqy
+         0AwMveLHdFM8Ceha9K8BVVcfKfyTWeZ97REClaz8=
+Received: by earth.universe (Postfix, from userid 1000)
+        id E6A053C0CA1; Thu,  3 Oct 2019 12:47:11 +0200 (CEST)
+Date:   Thu, 3 Oct 2019 12:47:11 +0200
+From:   Sebastian Reichel <sre@kernel.org>
+To:     Jean-Jacques Hiblot <jjhiblot@ti.com>
+Cc:     jacek.anaszewski@gmail.com, pavel@ucw.cz, robh+dt@kernel.org,
+        mark.rutland@arm.com, lee.jones@linaro.org,
+        daniel.thompson@linaro.org, linux-kernel@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, tomi.valkeinen@ti.com,
+        dmurphy@ti.com, linux-leds@vger.kernel.org
+Subject: Re: [PATCH v8 3/5] leds: Add managed API to get a LED from a device
+ driver
+Message-ID: <20191003104711.4if2jiu2utd4bvux@earth.universe>
+References: <20191003082812.28491-1-jjhiblot@ti.com>
+ <20191003082812.28491-4-jjhiblot@ti.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="5j2vkzm4gjo4nlb3"
 Content-Disposition: inline
-In-Reply-To: <CAH2r5mtVW=3-2L+0QFJAqBG+uj2sYmF=dtzT_kqwK59cu94vGw@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20191003082812.28491-4-jjhiblot@ti.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Steve!
 
-On Wed, Oct 02, 2019 at 06:54:26PM -0500, Steve French wrote:
->And running the build differently, from the root of the git tree
->(5.4-rc1) rather than using the Ubuntu 5.4-rc1 headers also fails
->
->e.g. "make  M=fs/cifs modules nsdeps"
->
->...
->  LD [M]  fs/cifs/cifs.o
->  Building modules, stage 2.
->  MODPOST 1 modules
->WARNING: module cifs uses symbol sigprocmask from namespace
->_fs/cifs/cache.o), but does not import it.
->...
->WARNING: module cifs uses symbol posix_test_lock from namespace
->cifs/cache.o), but does not import it.
->  CC [M]  fs/cifs/cifs.mod.o
->  LD [M]  fs/cifs/cifs.ko
->  Building modules, stage 2.
->  MODPOST 1 modules
->./scripts/nsdeps: 34: local: ./fs/cifs/cifsfs.c: bad variable name
->make: *** [Makefile:1710: nsdeps] Error 2
+--5j2vkzm4gjo4nlb3
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Thanks for reporting this. It appears to me you hit a bug that was
-recently discovered: when building with `make M=some/subdirectory`,
-modpost is misbehaving. Can you try whether this patch series solves
-your problems:
-https://lore.kernel.org/lkml/20191003075826.7478-1-yamada.masahiro@socionext.com/
-In particular patch 2/6 out of the series.
+Hi,
 
-Cheers,
-Matthias
+On Thu, Oct 03, 2019 at 10:28:10AM +0200, Jean-Jacques Hiblot wrote:
+> If the LED is acquired by a consumer device with devm_led_get(), it is
+> automatically released when the device is detached.
+>=20
+> Signed-off-by: Jean-Jacques Hiblot <jjhiblot@ti.com>
+> Acked-by: Pavel Machek <pavel@ucw.cz>
+> ---
+>  drivers/leds/led-class.c | 49 ++++++++++++++++++++++++++++++++++++++++
+>  include/linux/leds.h     |  2 ++
+>  2 files changed, 51 insertions(+)
+>=20
+> diff --git a/drivers/leds/led-class.c b/drivers/leds/led-class.c
+> index 455545f5d663..80c96dd96afc 100644
+> --- a/drivers/leds/led-class.c
+> +++ b/drivers/leds/led-class.c
+> @@ -258,6 +258,55 @@ void led_put(struct led_classdev *led_cdev)
+>  }
+>  EXPORT_SYMBOL_GPL(led_put);
+> =20
+> +static void devm_led_release(struct device *dev, void *res)
+> +{
+> +	struct led_classdev **p =3D res;
+> +
+> +	led_put(*p);
+> +}
+> +
+> +/**
+> + * devm_of_led_get - Resource-managed request of a LED device
+> + * @dev:	LED consumer
+> + * @index:	index of the LED to obtain in the consumer
+> + *
+> + * The device node of the device is parse to find the request LED device.
+> + * The LED device returned from this function is automatically released
+> + * on driver detach.
+> + *
+> + * @return a pointer to a LED device or ERR_PTR(errno) on failure.
+> + */
+> +struct led_classdev *__must_check devm_of_led_get(struct device *dev,
+> +						  int index)
+> +{
+> +	struct led_classdev *led;
+> +	struct led_classdev **dr;
+> +
+> +	if (!dev)
+> +		return ERR_PTR(-EINVAL);
+> +
+> +	/* Not using device tree? */
+> +	if (!IS_ENABLED(CONFIG_OF) || !dev->of_node)
+> +		return ERR_PTR(-ENOTSUPP);
 
->On Wed, Oct 2, 2019 at 6:45 PM Steve French <smfrench@gmail.com> wrote:
->>
->> Following the instructions in Documentation/namespaces to autogenerate
->> the namespace changes to avoid the multiple build warnings in 5.4-rc1
->> for my module ... I am not able to get nsdeps to work.   For example
->> in my module directory (fs/cifs) trying to build with nsdeps:
->>
->>       make -C /usr/src/linux-headers-`uname -r` M=`pwd` modules nsdeps
->>
->> gets the error "cat: ./modules.order: No such file or directory"
->>
->> This is on Ubuntu 18, running current 5.4-rc1 kernel.  It looks like
->> it is looking for modules.order in the wrong directory (it is present
->> in fs/cifs - but it looks like it is looking for it in /usr/src where
->> of course it won't be found)
->>
->> I am trying to remove the hundreds of new warnings introduced by
->> namespaces in 5.4-rc1 when building my module e.g.
->>
->> WARNING: module cifs uses symbol __fscache_acquire_cookie from
->> namespace .o: $(deps_/home/sfrench/cifs-2.6/fs/cifs/cache.o), but does
->> not import it.
->> --
->> Thanks,
->>
->> Steve
->
->
->
->-- 
->Thanks,
->
->Steve
+I suggested to move the CONFIG_OF check and the NULL check for
+of_node into of_led_get(). Otherwise
+
+Reviewed-by: Sebastian Reichel <sebastian.reichel@collabora.com>
+
+-- Sebastian
+
+> +
+> +	led =3D of_led_get(dev->of_node, index);
+> +	if (IS_ERR(led))
+> +		return led;
+> +
+> +	dr =3D devres_alloc(devm_led_release, sizeof(struct led_classdev *),
+> +			  GFP_KERNEL);
+> +	if (!dr) {
+> +		led_put(led);
+> +		return ERR_PTR(-ENOMEM);
+> +	}
+> +
+> +	*dr =3D led;
+> +	devres_add(dev, dr);
+> +
+> +	return led;
+> +}
+> +EXPORT_SYMBOL_GPL(devm_of_led_get);
+> +
+>  static int led_classdev_next_name(const char *init_name, char *name,
+>  				  size_t len)
+>  {
+> diff --git a/include/linux/leds.h b/include/linux/leds.h
+> index 6f7371bc7757..9b94cf752012 100644
+> --- a/include/linux/leds.h
+> +++ b/include/linux/leds.h
+> @@ -199,6 +199,8 @@ extern void led_classdev_resume(struct led_classdev *=
+led_cdev);
+> =20
+>  extern struct led_classdev *of_led_get(struct device_node *np, int index=
+);
+>  extern void led_put(struct led_classdev *led_cdev);
+> +struct led_classdev *__must_check devm_of_led_get(struct device *dev,
+> +						  int index);
+> =20
+>  /**
+>   * led_blink_set - set blinking with software fallback
+> --=20
+> 2.17.1
+>=20
+> _______________________________________________
+> dri-devel mailing list
+> dri-devel@lists.freedesktop.org
+> https://lists.freedesktop.org/mailman/listinfo/dri-devel
+
+--5j2vkzm4gjo4nlb3
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAl2V0a8ACgkQ2O7X88g7
++pqLfQ//bLoy6PAfhHkVMlYpocMT1HWz0GOnUexrCDeuGLfjg7/phLgDuzndzOe7
+wsnZPol30W8vTBcJg0drFzMDORv3UJ8POZZMLuPlonYN9e5sGOH+GBb8PVS1Rq61
+KKqNV7yXcm8Lo6DwMWei5GN1wO2L3yJ7lWmBPEhR8FWgmVqbpifC41h0ISpoIys6
+NKJL2r/rwLH/b5uSm8LqgT+aCVztpha83NkT8JuQN/UbbvMYitz0CL8eoG9Hunuj
+0nMHDsVKu/ZLnmJN30c/CjDyX+7PZZYhLIhWD11VTCHxM8NC+fjS07XS/J55R8QZ
+u+DQO29nXREPGfP1rYk6FJe8BYdejYMxkMaCPyhdk4xNSjmx+u1lBh96jM8DoX4s
+T1PSbhQYMOo6II75Xs+2eGrVNZKMCtipddPHMTtiXduqPIsXa8YnCIKWvBueWkKx
+SwVXbZEBtmnEsYhXQm19vjCpuuqnElYosWd3N7KHrHw8JqX1L5UZi5nXofZLdg1Z
+rde+cXdQJeBmtOY46EbyVVJ1iL0iV61i6+LYbC/vUO6XLPib2aZ8Pdsh/vLZUBnB
+wyXptqaPY51dFNo71sU9Q7movxvD3LC8drxCOT0YqBzWs7CGjmMnlozIuKdsZNgF
+HGrZD2xp0kUAogM49CcPqd8FH804TfPwv+rllfxOrmy4kPUiaTg=
+=PbO3
+-----END PGP SIGNATURE-----
+
+--5j2vkzm4gjo4nlb3--
