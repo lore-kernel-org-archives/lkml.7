@@ -7,50 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FDE0C32792
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:38:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 140A3C10F14
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:38:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 229C5215EA
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:38:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DA8DB2086A
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:38:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570120732;
-	bh=QewyYujb4UdrSEcgi+mYAT8PK5n643YgE674FQS0/Gs=;
+	s=default; t=1570120735;
+	bh=DrvnDd38D+DGa70iX5cHchy71qkt3OaxrJ1beFpUMik=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qYSCFIRxgbLnFbs4NDbwLcjIZb8vGS81NS9Yt6giK59dhVM+ZEkIcbGf5sL1HbxeM
-	 PWwMAMsHiTCwB0qVtUL/KUfLHL9tJZAvlgbOKcNCLeDjK/vzfeC1KAgea8Khv+c/Ei
-	 Obhk2dtGASopRCyXphwoiVYlTq1YZijK/FzO6r/g=
+	b=r7cuknAf151s2/8qzdWPLrNRztd/jAktu6o+lKOo5orfEeOCOzZqEoNqW+OW74lqf
+	 fbex6S7WqjN4UYDoQvIEiRjfDntzvuOkIBifmikzJr5MFEyt8Oqk578JeBF0Hx1x5k
+	 4mkAFY4vYmFli+/si0u6aQzA0IfmBEYQn1C38YX0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392409AbfJCQiv (ORCPT
+        id S2404000AbfJCQiz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 12:38:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48576 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 12:38:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48638 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729763AbfJCQiu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:38:50 -0400
+        id S2392151AbfJCQiw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:38:52 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B607E20830;
-        Thu,  3 Oct 2019 16:38:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 689372070B;
+        Thu,  3 Oct 2019 16:38:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570120729;
-        bh=QewyYujb4UdrSEcgi+mYAT8PK5n643YgE674FQS0/Gs=;
+        s=default; t=1570120731;
+        bh=DrvnDd38D+DGa70iX5cHchy71qkt3OaxrJ1beFpUMik=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Y4UXgk48AUCCwVo50F19OugBMKozRgNftvLA1rHnaXGDoL3egYDphKFwFAXsOa92p
-         r1s9LERPFv64yVXnlSktzMMDsdCF7hmHDWaddldwPMSFCqnkWRUTPVVZP2IyXQ7KG9
-         Q6SvTjxvmXFYgEC6GVtJyjx2wp14/ykVdYoT8LfI=
+        b=2uz87WULQDkwf1w77ErgcmgycyAEwyJHE252cyr2m4IW5opX/yU/kHemmx5VdJk6W
+         rmnSYVvwHGf9WzE0YHyDROovHsYaWtrFWqsnve58e7XQnFRd1zPqASZgBJ3uQxvnS1
+         XiIYJMg/XezzQKtp6iGrmf8og+p6zcs2bVbQb918=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, "Kevin(Yudong) Yang" <yyd@google.com>,
-        Neal Cardwell <ncardwell@google.com>,
-        Yuchung Cheng <ycheng@google.com>,
-        Soheil Hassas Yeganeh <soheil@google.com>,
-        Priyaranjan Jha <priyarjha@google.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.3 017/344] tcp_bbr: fix quantization code to not raise cwnd if not probing bandwidth
-Date:   Thu,  3 Oct 2019 17:49:42 +0200
-Message-Id: <20191003154541.776910558@linuxfoundation.org>
+        stable@vger.kernel.org,
+        =?UTF-8?q?Bj=C3=B8rn=20Mork?= <bjorn@mork.no>,
+        Jakub Kicinski <jakub.kicinski@netronome.com>
+Subject: [PATCH 5.3 018/344] usbnet: ignore endpoints with invalid wMaxPacketSize
+Date:   Thu,  3 Oct 2019 17:49:43 +0200
+Message-Id: <20191003154541.861719752@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191003154540.062170222@linuxfoundation.org>
 References: <20191003154540.062170222@linuxfoundation.org>
@@ -63,69 +60,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Kevin(Yudong) Yang" <yyd@google.com>
+From: Bjørn Mork <bjorn@mork.no>
 
-[ Upstream commit 6b3656a60f2067738d1a423328199720806f0c44 ]
+[ Upstream commit 8d3d7c2029c1b360f1a6b0a2fca470b57eb575c0 ]
 
-There was a bug in the previous logic that attempted to ensure gain cycling
-gets inflight above BDP even for small BDPs. This code correctly raised and
-lowered target inflight values during the gain cycle. And this code
-correctly ensured that cwnd was raised when probing bandwidth. However, it
-did not correspondingly ensure that cwnd was *not* raised in this way when
-*not* probing for bandwidth. The result was that small-BDP flows that were
-always cwnd-bound could go for many cycles with a fixed cwnd, and not probe
-or yield bandwidth at all. This meant that multiple small-BDP flows could
-fail to converge in their bandwidth allocations.
+Endpoints with zero wMaxPacketSize are not usable for transferring
+data. Ignore such endpoints when looking for valid in, out and
+status pipes, to make the drivers more robust against invalid and
+meaningless descriptors.
 
-Fixes: 3c346b233c68 ("tcp_bbr: fix bw probing to raise in-flight data for very small BDPs")
-Signed-off-by: Kevin(Yudong) Yang <yyd@google.com>
-Acked-by: Neal Cardwell <ncardwell@google.com>
-Acked-by: Yuchung Cheng <ycheng@google.com>
-Acked-by: Soheil Hassas Yeganeh <soheil@google.com>
-Acked-by: Priyaranjan Jha <priyarjha@google.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+The wMaxPacketSize of these endpoints are used for memory allocations
+and as divisors in many usbnet minidrivers. Avoiding zero is therefore
+critical.
+
+Signed-off-by: Bjørn Mork <bjorn@mork.no>
+Signed-off-by: Jakub Kicinski <jakub.kicinski@netronome.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/ipv4/tcp_bbr.c |    8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ drivers/net/usb/usbnet.c |    5 +++++
+ 1 file changed, 5 insertions(+)
 
---- a/net/ipv4/tcp_bbr.c
-+++ b/net/ipv4/tcp_bbr.c
-@@ -386,7 +386,7 @@ static u32 bbr_bdp(struct sock *sk, u32
-  * which allows 2 outstanding 2-packet sequences, to try to keep pipe
-  * full even with ACK-every-other-packet delayed ACKs.
-  */
--static u32 bbr_quantization_budget(struct sock *sk, u32 cwnd, int gain)
-+static u32 bbr_quantization_budget(struct sock *sk, u32 cwnd)
- {
- 	struct bbr *bbr = inet_csk_ca(sk);
+--- a/drivers/net/usb/usbnet.c
++++ b/drivers/net/usb/usbnet.c
+@@ -100,6 +100,11 @@ int usbnet_get_endpoints(struct usbnet *
+ 			int				intr = 0;
  
-@@ -397,7 +397,7 @@ static u32 bbr_quantization_budget(struc
- 	cwnd = (cwnd + 1) & ~1U;
- 
- 	/* Ensure gain cycling gets inflight above BDP even for small BDPs. */
--	if (bbr->mode == BBR_PROBE_BW && gain > BBR_UNIT)
-+	if (bbr->mode == BBR_PROBE_BW && bbr->cycle_idx == 0)
- 		cwnd += 2;
- 
- 	return cwnd;
-@@ -409,7 +409,7 @@ static u32 bbr_inflight(struct sock *sk,
- 	u32 inflight;
- 
- 	inflight = bbr_bdp(sk, bw, gain);
--	inflight = bbr_quantization_budget(sk, inflight, gain);
-+	inflight = bbr_quantization_budget(sk, inflight);
- 
- 	return inflight;
- }
-@@ -529,7 +529,7 @@ static void bbr_set_cwnd(struct sock *sk
- 	 * due to aggregation (of data and/or ACKs) visible in the ACK stream.
- 	 */
- 	target_cwnd += bbr_ack_aggregation_cwnd(sk);
--	target_cwnd = bbr_quantization_budget(sk, target_cwnd, gain);
-+	target_cwnd = bbr_quantization_budget(sk, target_cwnd);
- 
- 	/* If we're below target cwnd, slow start cwnd toward target cwnd. */
- 	if (bbr_full_bw_reached(sk))  /* only cut cwnd if we filled the pipe */
+ 			e = alt->endpoint + ep;
++
++			/* ignore endpoints which cannot transfer data */
++			if (!usb_endpoint_maxp(&e->desc))
++				continue;
++
+ 			switch (e->desc.bmAttributes) {
+ 			case USB_ENDPOINT_XFER_INT:
+ 				if (!usb_endpoint_dir_in(&e->desc))
 
 
