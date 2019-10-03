@@ -2,52 +2,53 @@ Return-Path: <SRS0=6dNS=X4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA630C32792
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:25:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 02608C10F14
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:25:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7EE56215EA
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:25:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CD672215EA
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:25:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570119939;
-	bh=JgBrlH+Itu1vKsvB8lGZbiO4ta09eCPbLm2aSAuszJc=;
+	s=default; t=1570119940;
+	bh=Yx32O/FASWryut3zSopKobWDl/d+oEGu/42QV5SLQBg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=x9r4IbGzvsRJpKNQ8g+BICmD3vbQ3bQyH0Y5Q9X7JAG+pxvJOsOD4VI91OccG4RWW
-	 +Q67CV+CGmGke1yf5FCp1rGpD3G1ixQAh6kP1i13+q0C+PWAF5r8OEBfCR2c5BysNr
-	 fuTkG1cKFmQB1XgdecY64PKvNAGsAPxPx971dv2c=
+	b=aZsXzwsQWucV/LntjblnDjV4owC0L7N53ndQt56B5BorCnTC7/aiSA7h2i1NYg2eH
+	 KaVav2F8GdDY/fMub5PSimPy6j94A0Dono8y2ZDpHtuNw0rQJo4M7sfuLodfAXi1tw
+	 QEa0l7NP3x9PTHcrTygz9amKRB9eWvy/9WW4KsK4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390940AbfJCQZi (ORCPT
+        id S2390949AbfJCQZj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 12:25:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55930 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 12:25:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55842 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389808AbfJCQZh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:25:37 -0400
+        id S2390912AbfJCQZf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:25:35 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4720920867;
-        Thu,  3 Oct 2019 16:25:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8E98A215EA;
+        Thu,  3 Oct 2019 16:25:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570119936;
-        bh=JgBrlH+Itu1vKsvB8lGZbiO4ta09eCPbLm2aSAuszJc=;
+        s=default; t=1570119934;
+        bh=Yx32O/FASWryut3zSopKobWDl/d+oEGu/42QV5SLQBg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ExYtBp4omp623fL1YUS6mkN6jC4KgbJN8yYhevysHN6U+os3TYFX72ZqnvlZH7KpA
-         3i5FncIVJEPlbsy76oDTj9hu0qXW7TPRFF+cB+v/B5ENEMSMbMp/3/FtCxutrfNRtv
-         LkI/085wTuo+7Bvx2HgZvKqnPg15MF3AvxX2ZWWg=
+        b=RoJCTKslc/UmqRNsxTstBZI94tKZuIoXsoF4wFm7VdzadK+c+eIN4iASv2YpqbURX
+         Sw139VYP9jPB3c4/0XfpyIKr57DI51yKeI+qMqrq3IxM/UFzbMBFdeVQxOenxM95jj
+         VejtbrmS+DOmN4yvGdMYjqCBLUFwWVJGENeJIlyQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Xiumei Mu <xmu@redhat.com>,
-        Fei Liu <feliu@redhat.com>, Xin Long <lucien.xin@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.2 004/313] macsec: drop skb sk before calling gro_cells_receive
-Date:   Thu,  3 Oct 2019 17:49:42 +0200
-Message-Id: <20191003154533.961390674@linuxfoundation.org>
+        stable@vger.kernel.org, Libin Yang <libin.yang@intel.com>,
+        Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
+        Takashi Iwai <tiwai@suse.de>, Mark Brown <broonie@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.2 034/313] ASoC: SOF: Intel: hda: Make hdac_device device-managed
+Date:   Thu,  3 Oct 2019 17:50:12 +0200
+Message-Id: <20191003154536.639181298@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191003154533.590915454@linuxfoundation.org>
 References: <20191003154533.590915454@linuxfoundation.org>
@@ -60,61 +61,79 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Xin Long <lucien.xin@gmail.com>
+From: Ranjani Sridharan <ranjani.sridharan@linux.intel.com>
 
-[ Upstream commit ba56d8ce38c8252fff5b745db3899cf092578ede ]
+[ Upstream commit ef9bec27485fefb6b93168fea73fda0dc9638046 ]
 
-Fei Liu reported a crash when doing netperf on a topo of macsec
-dev over veth:
+snd_hdac_ext_bus_device_exit() has been recently modified
+to no longer free the hdac device. SOF allocates memory for
+hdac_device and hda_hda_priv with kzalloc. Make them
+device-managed instead so that they will be freed when the
+SOF driver is unloaded.
 
-  [  448.919128] refcount_t: underflow; use-after-free.
-  [  449.090460] Call trace:
-  [  449.092895]  refcount_sub_and_test+0xb4/0xc0
-  [  449.097155]  tcp_wfree+0x2c/0x150
-  [  449.100460]  ip_rcv+0x1d4/0x3a8
-  [  449.103591]  __netif_receive_skb_core+0x554/0xae0
-  [  449.108282]  __netif_receive_skb+0x28/0x78
-  [  449.112366]  netif_receive_skb_internal+0x54/0x100
-  [  449.117144]  napi_gro_complete+0x70/0xc0
-  [  449.121054]  napi_gro_flush+0x6c/0x90
-  [  449.124703]  napi_complete_done+0x50/0x130
-  [  449.128788]  gro_cell_poll+0x8c/0xa8
-  [  449.132351]  net_rx_action+0x16c/0x3f8
-  [  449.136088]  __do_softirq+0x128/0x320
+Because of the above change, hda_codec is device-managed and
+it will be freed when the ASoC device is removed. Freeing
+the codec in snd_hda_codec_dev_release() leads to kernel
+panic while unloading and reloading the ASoC driver. So,
+avoid freeing the hda_codec for ASoC driver. This is done in
+the same patch to avoid bisect failure.
 
-The issue was caused by skb's true_size changed without its sk's
-sk_wmem_alloc increased in tcp/skb_gro_receive(). Later when the
-skb is being freed and the skb's truesize is subtracted from its
-sk's sk_wmem_alloc in tcp_wfree(), underflow occurs.
-
-macsec is calling gro_cells_receive() to receive a packet, which
-actually requires skb->sk to be NULL. However when macsec dev is
-over veth, it's possible the skb->sk is still set if the skb was
-not unshared or expanded from the peer veth.
-
-ip_rcv() is calling skb_orphan() to drop the skb's sk for tproxy,
-but it is too late for macsec's calling gro_cells_receive(). So
-fix it by dropping the skb's sk earlier on rx path of macsec.
-
-Fixes: 5491e7c6b1a9 ("macsec: enable GRO and RPS on macsec devices")
-Reported-by: Xiumei Mu <xmu@redhat.com>
-Reported-by: Fei Liu <feliu@redhat.com>
-Signed-off-by: Xin Long <lucien.xin@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Libin Yang <libin.yang@intel.com>
+Signed-off-by: Ranjani Sridharan <ranjani.sridharan@linux.intel.com>
+Reviewed-by: Takashi Iwai <tiwai@suse.de>
+Link: https://lore.kernel.org/r/20190626070450.7229-1-ranjani.sridharan@linux.intel.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/macsec.c |    1 +
- 1 file changed, 1 insertion(+)
+ sound/pci/hda/hda_codec.c       | 8 +++++++-
+ sound/soc/sof/intel/hda-codec.c | 6 ++----
+ 2 files changed, 9 insertions(+), 5 deletions(-)
 
---- a/drivers/net/macsec.c
-+++ b/drivers/net/macsec.c
-@@ -1235,6 +1235,7 @@ deliver:
- 		macsec_rxsa_put(rx_sa);
- 	macsec_rxsc_put(rx_sc);
+diff --git a/sound/pci/hda/hda_codec.c b/sound/pci/hda/hda_codec.c
+index 106328584998f..c2a6554c98776 100644
+--- a/sound/pci/hda/hda_codec.c
++++ b/sound/pci/hda/hda_codec.c
+@@ -846,7 +846,13 @@ static void snd_hda_codec_dev_release(struct device *dev)
+ 	snd_hda_sysfs_clear(codec);
+ 	kfree(codec->modelname);
+ 	kfree(codec->wcaps);
+-	kfree(codec);
++
++	/*
++	 * In the case of ASoC HD-audio, hda_codec is device managed.
++	 * It will be freed when the ASoC device is removed.
++	 */
++	if (codec->core.type == HDA_DEV_LEGACY)
++		kfree(codec);
+ }
  
-+	skb_orphan(skb);
- 	ret = gro_cells_receive(&macsec->gro_cells, skb);
- 	if (ret == NET_RX_SUCCESS)
- 		count_rx(dev, skb->len);
+ #define DEV_NAME_LEN 31
+diff --git a/sound/soc/sof/intel/hda-codec.c b/sound/soc/sof/intel/hda-codec.c
+index b8b37f0823094..0d8437b080bfa 100644
+--- a/sound/soc/sof/intel/hda-codec.c
++++ b/sound/soc/sof/intel/hda-codec.c
+@@ -62,8 +62,7 @@ static int hda_codec_probe(struct snd_sof_dev *sdev, int address)
+ 		address, resp);
+ 
+ #if IS_ENABLED(CONFIG_SND_SOC_SOF_HDA_AUDIO_CODEC)
+-	/* snd_hdac_ext_bus_device_exit will use kfree to free hdev */
+-	hda_priv = kzalloc(sizeof(*hda_priv), GFP_KERNEL);
++	hda_priv = devm_kzalloc(sdev->dev, sizeof(*hda_priv), GFP_KERNEL);
+ 	if (!hda_priv)
+ 		return -ENOMEM;
+ 
+@@ -82,8 +81,7 @@ static int hda_codec_probe(struct snd_sof_dev *sdev, int address)
+ 
+ 	return 0;
+ #else
+-	/* snd_hdac_ext_bus_device_exit will use kfree to free hdev */
+-	hdev = kzalloc(sizeof(*hdev), GFP_KERNEL);
++	hdev = devm_kzalloc(sdev->dev, sizeof(*hdev), GFP_KERNEL);
+ 	if (!hdev)
+ 		return -ENOMEM;
+ 
+-- 
+2.20.1
+
 
 
