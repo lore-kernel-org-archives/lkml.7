@@ -2,79 +2,113 @@ Return-Path: <SRS0=6dNS=X4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92354C10F14
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 11:41:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08BB1C32792
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 11:41:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 632A220830
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 11:41:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CD92E218DE
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 11:41:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NGWKYS9Q"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730153AbfJCLlX (ORCPT
+        id S1730185AbfJCLli (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 07:41:23 -0400
-Received: from mga03.intel.com ([134.134.136.65]:53112 "EHLO mga03.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729820AbfJCLlX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 07:41:23 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 03 Oct 2019 04:41:22 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.67,252,1566889200"; 
-   d="scan'208";a="391916973"
-Received: from jsakkine-mobl1.tm.intel.com (HELO localhost) ([10.237.50.161])
-  by fmsmga005.fm.intel.com with ESMTP; 03 Oct 2019 04:41:19 -0700
-Date:   Thu, 3 Oct 2019 14:41:19 +0300
-From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-To:     Mimi Zohar <zohar@linux.ibm.com>
-Cc:     linux-integrity@vger.kernel.org, stable@vger.kernel.org,
-        David Howells <dhowells@redhat.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        "David S. Miller" <davem@davemloft.net>,
-        "open list:ASYMMETRIC KEYS" <keyrings@vger.kernel.org>,
-        "open list:CRYPTO API" <linux-crypto@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] KEYS: asym_tpm: Switch to get_random_bytes()
-Message-ID: <20191003114119.GF8933@linux.intel.com>
-References: <20190926171601.30404-1-jarkko.sakkinen@linux.intel.com>
- <1570024819.4999.119.camel@linux.ibm.com>
+        Thu, 3 Oct 2019 07:41:38 -0400
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:45680 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729820AbfJCLlh (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 07:41:37 -0400
+Received: by mail-lj1-f196.google.com with SMTP id q64so2310251ljb.12;
+        Thu, 03 Oct 2019 04:41:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=d2hb3oZ6qBYZenVNAUBLjwu+KkhMaugCRDxlPNc+K5A=;
+        b=NGWKYS9QHRqVrfvkO1Dh1XqZFGKQSGJ2snuNrVQ6ruUsg6QO3E6KMTxpF/MLHe2Z8F
+         iVFLCvrfxfsYTTzhPOPc1jrdzY0eNeRkmhsA0hVSx737SLxh6Zv21pK9Ep8bcDn8/unl
+         AcgI5gzRaDZuTZhIa/t7Nh+IYxIoz0ll7Fz3cq0O+jeYX1nHByF7MMgtvCUuL8UYuc2M
+         SHgACtnpO3nQqx7k3RR6Gkfed57TojRCejjFp98g5tqsQmZ+1oxX4sEfvMIPNjAMpTDg
+         VqAU0Txb7s0SJfU7gyJ9qlZYYWP+KgrwUcD1/+NgccwX72gS+wU3I5JW6mq7BgthjPcw
+         Gv8w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=d2hb3oZ6qBYZenVNAUBLjwu+KkhMaugCRDxlPNc+K5A=;
+        b=Ke3fR1QdRc4E2CrdBLUlJr5uLLbksgIVYafAnl4ntm0aCdB/ff8R2m0CSvJ3CaWWIk
+         IB8rsUBvySTAm/HG2XjPxyb/kUsIjpuMI2/PMycEc7x6WuCRH5OIxWpITT/QXcx0mEQQ
+         vo9brLI+6o6e87O7HkmAmxiGm8c/LI4FpbzOBCUJxMIofozfUdvgaAFTe4szE/ZvzRf2
+         OG45BkWWgH/bR/k1jG2n4UUJx+2esDuQeCfEIYMyLF5kP5gHzptyCVvbfZ8hCgXp68Tp
+         XwJHGXwF9WpN4ApjaK+8lq4BJsWX2ffo1zf0FSv4iElv1DFauKkWASrEOYRWLTTG2Cpc
+         M4Mg==
+X-Gm-Message-State: APjAAAVHD9npUnR093gsPG6cUQfbde66b0nYFE1vlosQtrwDgDdFzHu7
+        TC+Xkp4nzg15rVmk8spm866Z6+BLW7Cl0f9aqAxh7ad6hh4=
+X-Google-Smtp-Source: APXvYqwR0DZpcGJUGfzc5BGGQqG7il/jl2O3LPEb8ta0vebeYBrwyQnzV4d23hbqFKZj1a9pLdCBBOkUoR3u3VdbsJ0=
+X-Received: by 2002:a2e:5418:: with SMTP id i24mr5547908ljb.126.1570102895089;
+ Thu, 03 Oct 2019 04:41:35 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <1570024819.4999.119.camel@linux.ibm.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20191001205203.4b1a5fb6@coco.lan> <20191002141359.30166-1-gonsolo@gmail.com>
+ <20191002141359.30166-2-gonsolo@gmail.com> <20191002142744.GA3475@gofer.mess.org>
+ <CANL0fFS9TGKJH2rfkXzak78BaLazTNO7GoZhSb4vLBsDrmz3FQ@mail.gmail.com>
+ <20191002150650.GA4227@gofer.mess.org> <CANL0fFRoL6NxOCbNC=XjQ6LDkeeqAayaLUbm9xARWX9ttqfPFg@mail.gmail.com>
+ <29ab2e43-4374-a3ea-6ae1-a4267867eaa4@jpvw.nl> <20191002154922.7f1cfc76@coco.lan>
+ <CANL0fFRJZBfEDWK_c2w1TomvB5-i4g09LopyJUbO5NtOwKdDTg@mail.gmail.com>
+ <CANL0fFTwJ4yRO+5q6WkL0+DtwdrRti6r_WY1intisYJhs5En8w@mail.gmail.com> <20191003081742.0933264b@coco.lan>
+In-Reply-To: <20191003081742.0933264b@coco.lan>
+From:   Gonsolo <gonsolo@gmail.com>
+Date:   Thu, 3 Oct 2019 13:41:23 +0200
+Message-ID: <CANL0fFTtHn4ocL4BD4cVKhVzjLhnQ0a45yq5x4MxWAVu-tD8sw@mail.gmail.com>
+Subject: Re: [PATCH] si2157: Add support for Logilink VG0022A.
+To:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Cc:     JP <jp@jpvw.nl>, crope@iki.fi, Sean Young <sean@mess.org>,
+        linux-media@vger.kernel.org,
+        Linux Kernel <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Oct 02, 2019 at 10:00:19AM -0400, Mimi Zohar wrote:
-> On Thu, 2019-09-26 at 20:16 +0300, Jarkko Sakkinen wrote:
-> > Only the kernel random pool should be used for generating random numbers.
-> > TPM contributes to that pool among the other sources of entropy. In here it
-> > is not, agreed, absolutely critical because TPM is what is trusted anyway
-> > but in order to remove tpm_get_random() we need to first remove all the
-> > call sites.
-> 
-> At what point during boot is the kernel random pool available?  Does
-> this imply that you're planning on changing trusted keys as well?
+Hi!
 
-Well trusted keys *must* be changed to use it. It is not a choice
-because using a proprietary random number generator instead of defacto
-one in the kernel can be categorized as a *regression*.
+> It means that there's a firmware stored at the device's eeprom
+> (version 4.0.2). When the driver starts, it downloads a newer firmware
+> from the file dvb-demod-si2168-b40-01.fw.
 
-Also, TEE trusted keys cannot use the TPM option.
+Thanks for the explanation.
 
-If it was not initialized early enough we would need fix that too.
+> Btw, could you please try the enclosed hack and post the results?
 
-I don't think there should be a problem anyway since encrypted keys is
-already using get_random_bytes().
+Will do in a second.
 
-/Jarkko
+FWIW, this hack worked:
+
+diff --git a/drivers/media/tuners/si2157.c b/drivers/media/tuners/si2157.c
+index e87040d6eca7..28a3a4f1640e 100644
+--- a/drivers/media/tuners/si2157.c
++++ b/drivers/media/tuners/si2157.c
+@@ -136,6 +136,7 @@ static int si2157_init(struct dvb_frontend *fe)
+        #define SI2147_A30 ('A' << 24 | 47 << 16 | '3' << 8 | '0' << 0)
+        #define SI2146_A10 ('A' << 24 | 46 << 16 | '1' << 8 | '0' << 0)
+        #define SI2141_A10 ('A' << 24 | 41 << 16 | '1' << 8 | '0' << 0)
++       #define GONZO     (255 << 24 | 255 << 16 | 255 << 8 | 255 << 0)
+
+        switch (chip_id) {
+        case SI2158_A20:
+@@ -148,6 +149,10 @@ static int si2157_init(struct dvb_frontend *fe)
+        case SI2177_A30:
+                fw_name = SI2157_A30_FIRMWARE;
+                break;
++       case GONZO:
++               dev_info(&client->dev, "trying null\n");
++               fw_name = NULL;
++               break;
+        case SI2157_A30:
+        case SI2147_A30:
+        case SI2146_A10:
