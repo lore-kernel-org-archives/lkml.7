@@ -2,118 +2,150 @@ Return-Path: <SRS0=6dNS=X4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A3F6C10F14
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 22:06:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F5C7C10F14
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 22:08:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 758DC20867
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 22:06:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6A0BD20867
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 22:08:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388277AbfJCWGM (ORCPT
+        id S1729414AbfJCWIH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 18:06:12 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:46876 "EHLO
-        shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726002AbfJCWGL (ORCPT
+        Thu, 3 Oct 2019 18:08:07 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:59158 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728356AbfJCWIH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 18:06:11 -0400
-Received: from [192.168.4.242] (helo=deadeye)
-        by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <ben@decadent.org.uk>)
-        id 1iG9Ef-0005Eg-F1; Thu, 03 Oct 2019 23:06:09 +0100
-Received: from ben by deadeye with local (Exim 4.92.1)
-        (envelope-from <ben@decadent.org.uk>)
-        id 1iG9Ef-0006YM-7d; Thu, 03 Oct 2019 23:06:09 +0100
-Message-ID: <8b056b3df2460d6830a0de97b9cbf3e41d434bbc.camel@decadent.org.uk>
-Subject: Re: [PATCH 3.16 29/87] staging: iio: cdc: Don't put an else right
- after a return
-From:   Ben Hutchings <ben@decadent.org.uk>
-To:     Joe Perches <joe@perches.com>, linux-kernel@vger.kernel.org,
-        stable@vger.kernel.org
-Cc:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        Catalina Mocanu <catalina.mocanu@gmail.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Date:   Thu, 03 Oct 2019 23:06:03 +0100
-In-Reply-To: <de5e7cd39ce661f8441fb4f5bdf21ee37ada1366.camel@perches.com>
-References: <lsq.1570043211.136218297@decadent.org.uk>
-         <6436567dd141e5528a5363dd3aaad21815a1c111.camel@perches.com>
-         <3fe1cd65a7860464d3780b57c734d12880df4b92.camel@decadent.org.uk>
-         <de5e7cd39ce661f8441fb4f5bdf21ee37ada1366.camel@perches.com>
-Content-Type: multipart/signed; micalg="pgp-sha512";
-        protocol="application/pgp-signature"; boundary="=-K7+kU2VDaIgLJJPm0KQZ"
-User-Agent: Evolution 3.30.5-1.1 
+        Thu, 3 Oct 2019 18:08:07 -0400
+Received: from 1.general.cking.uk.vpn ([10.172.193.212])
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <colin.king@canonical.com>)
+        id 1iG9GW-0003Oj-5O; Thu, 03 Oct 2019 22:08:04 +0000
+To:     Harry Wentland <harry.wentland@amd.com>,
+        Leo Li <sunpeng.li@amd.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        =?UTF-8?Q?Christian_K=c3=b6nig?= <christian.koenig@amd.com>,
+        "David (ChunMing) Zhou" <David1.Zhou@amd.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        amd-gfx mailing list <amd-gfx@lists.freedesktop.org>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        Bhawanpreet Lakha <Bhawanpreet.Lakha@amd.com>
+From:   Colin Ian King <colin.king@canonical.com>
+Autocrypt: addr=colin.king@canonical.com; prefer-encrypt=mutual; keydata=
+ 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
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: re: drm/amd/display: Add HDCP module - static analysis bug report
+Message-ID: <951eb7dc-bebe-5049-4998-f199e18b0bf3@canonical.com>
+Date:   Thu, 3 Oct 2019 23:08:03 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.1
 MIME-Version: 1.0
-X-SA-Exim-Connect-IP: 192.168.4.242
-X-SA-Exim-Mail-From: ben@decadent.org.uk
-X-SA-Exim-Scanned: No (on shadbolt.decadent.org.uk); SAEximRunCond expanded to false
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi,
 
---=-K7+kU2VDaIgLJJPm0KQZ
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Static analysis with Coverity has detected a potential issue with
+function validate_bksv in
+drivers/gpu/drm/amd/display/modules/hdcp/hdcp1_execution.c with recent
+commit:
 
-On Thu, 2019-10-03 at 08:09 -0700, Joe Perches wrote:
-> On Thu, 2019-10-03 at 15:47 +0100, Ben Hutchings wrote:
-> > On Wed, 2019-10-02 at 14:36 -0700, Joe Perches wrote:
-> > > On Wed, 2019-10-02 at 20:06 +0100, Ben Hutchings wrote:
-> > > > 3.16.75-rc1 review patch.  If anyone has any objections, please let=
- me know.
-> > >=20
-> > > This doesn't look necessary.
-> >=20
-> > It allows the next patch to apply cleanly.
->=20
-> Perhaps when you pick patches that are unnecessary
-> for any other reason but to allow easier picking of
-> actual fixes, the nominal unnecessary patches could
-> be marked as necessary for follow-on patches.
+commit ed9d8e2bcb003ec94658cafe9b1bb3960e2139ec
+Author: Bhawanpreet Lakha <Bhawanpreet.Lakha@amd.com>
+Date:   Tue Aug 6 17:52:01 2019 -0400
 
-I have been doing that lately, but just forgot to do so for this patch.
-
-> Also, when you send these patch series, please use
-> an email delay of at least 1 second between each
-> entry in the series as the threading is otherwise
-> poor in various email clients when sorting by time.
-
-The dates are actually generated before I send them, but I can probably
-arrange to override them.  Thanks for the suggestion.
-
-Ben.
-
---=20
-Ben Hutchings
-Unix is many things to many people,
-but it's never been everything to anybody.
+    drm/amd/display: Add HDCP module
 
 
+The analysis is as follows:
 
---=-K7+kU2VDaIgLJJPm0KQZ
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
+ 28 static inline enum mod_hdcp_status validate_bksv(struct mod_hdcp *hdcp)
+ 29 {
 
------BEGIN PGP SIGNATURE-----
+CID 89852 (#1 of 1): Out-of-bounds read (OVERRUN)
 
-iQIzBAABCgAdFiEErCspvTSmr92z9o8157/I7JWGEQkFAl2WcMwACgkQ57/I7JWG
-EQlNEBAAq72EtDC5xDcFYTXWF+om8rjKWt8yWTy9bJeDUZUnxvi1KgQpp9rOiWoN
-0t3U/2vey22gHD5KSwKfwiGdxJWLgbL0aK70/K2s7UmMrFUHiu+TA9ixIR5di+YQ
-i+BcEARttmq4dsuNwBme/aGtn2rvLH3MevWjJvtjJJdpusxsKUCBlDINSkRMeeTs
-Cgm9IIJAgfWwCuNjmWyUBPBpgmXsPZUYiaCbhgG26Fv0DT2ofc9V52x4E9QMG60b
-HIWp23SobHYtXXq/KBwky9CQG/Dop17HqsticqEl7yhv1G8q/QBOrj7Wxgll3OaT
-8FLzaWGcorBDbUx3Rq60ODUsX9+tp5sfEjxZXgDIcNFKGFvPGcK6Jl/B1+d0OgWd
-u0tPqvhywK9XsEny5TSATk0slqMDGuX1Zck6Vk9Lk2KtL514neGNEG7liBYAj9jd
-uEt3Q+RzfXlJGGpHkZTJGjyLaHMlFKG3th9CAkHB2Mqh4H7tY5dHFQZ8exTK9qvI
-9HiMcjkzBRugULF0A0NoGl3fdvemEjvreRzrpy7ISeDG9ldeabVij6VMf+P1OE+g
-FEiphWPmP/8o/o3wQBXkQ3FXIvD3fQgtAx/Ml9I76ZMYTBn7pe9Q2OKW3bOSn+xQ
-v6+VpAwbkqycR7vOWtG2/BJGbIfyNCkcifnY7151pCL+1WkX/Ls=
-=jIA7
------END PGP SIGNATURE-----
+1. overrun-local:
+Overrunning array of 5 bytes at byte offset 7 by dereferencing pointer
+(uint64_t *)hdcp->auth.msg.hdcp1.bksv.
 
---=-K7+kU2VDaIgLJJPm0KQZ--
+ 30        uint64_t n = *(uint64_t *)hdcp->auth.msg.hdcp1.bksv;
+ 31        uint8_t count = 0;
+ 32
+ 33        while (n) {
+ 34                count++;
+ 35                n &= (n - 1);
+ 36        }
+
+hdcp->auth.msg.hdcp1.bksv is an array of 5 uint8_t as defined in
+drivers/gpu/drm/amd/display/modules/hdcp/hdcp.h as follows:
+
+struct mod_hdcp_message_hdcp1 {
+        uint8_t         an[8];
+        uint8_t         aksv[5];
+        uint8_t         ainfo;
+        uint8_t         bksv[5];
+        uint16_t        r0p;
+        uint8_t         bcaps;
+        uint16_t        bstatus;
+        uint8_t         ksvlist[635];
+        uint16_t        ksvlist_size;
+        uint8_t         vp[20];
+
+        uint16_t        binfo_dp;
+};
+
+variable n is going to contain the contains of r0p and bcaps. I'm not
+sure if that is intentional. If not, then the count is going to be
+incorrect if these are non-zero.
+
+Colin
