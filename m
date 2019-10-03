@@ -2,101 +2,80 @@ Return-Path: <SRS0=6dNS=X4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DD72C32792
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:02:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EEE52C32792
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:02:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 675D6215EA
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:02:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570118557;
-	bh=XVOD64NLFfzI9rE1FouGmQQ3XmG0h12oUjaJb84NWGI=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zfN3tqsJ1TRJauBWC9Qg9X/s1+V4Oum0B2vwVqITZTsjpmn7f5Odsg/eP3kdfqE2b
-	 pgoeX29b9bsI44uoGt++jg3q8LjLRS3rGLW1Cy/FJWjqFBgUh2sQwGNfIIEykBGkb2
-	 /4U/J+pB49O+BHKFTFmEeYAU7qsoXvsszl0YgO+o=
+	by mail.kernel.org (Postfix) with ESMTP id C5B69215EA
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:02:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730618AbfJCQCg (ORCPT
+        id S1732035AbfJCQCl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 12:02:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47370 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731994AbfJCQC2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:02:28 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 32B2A21848;
-        Thu,  3 Oct 2019 16:02:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570118547;
-        bh=XVOD64NLFfzI9rE1FouGmQQ3XmG0h12oUjaJb84NWGI=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=tN44vM7HiJihMVjh4FR+lV6v75wJRb1pctHTLY5D9ffLHJCtVf+WZE4b6JeQ4k0bn
-         a7pb6seXPWwIUjJQiGxS1R2B0vH1+NJYyLdZdMTDkzXQrrmMXkhcIpYt7N8q02ujPZ
-         LVNOJkgBTF2Hx17hGVWKszhsw3CoWK0aYif2GnC0=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Takashi Iwai <tiwai@suse.de>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 051/129] ALSA: hda - Show the fatal CORB/RIRB error more clearly
-Date:   Thu,  3 Oct 2019 17:52:54 +0200
-Message-Id: <20191003154339.930826620@linuxfoundation.org>
-X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20191003154318.081116689@linuxfoundation.org>
-References: <20191003154318.081116689@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Thu, 3 Oct 2019 12:02:41 -0400
+Received: from bout01.mta.xmission.com ([166.70.11.15]:49701 "EHLO
+        bout01.mta.xmission.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732006AbfJCQCc (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:02:32 -0400
+X-Greylist: delayed 1285 seconds by postgrey-1.27 at vger.kernel.org; Thu, 03 Oct 2019 12:02:31 EDT
+Received: from mx04.mta.xmission.com ([166.70.13.214])
+        by bout01.mta.xmission.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.87)
+        (envelope-from <sbauer@plzdonthack.me>)
+        id 1iG3Ff-00086p-9O; Thu, 03 Oct 2019 09:42:47 -0600
+Received: from plesk14-shared.xmission.com ([166.70.198.161] helo=plesk14.xmission.com)
+        by mx04.mta.xmission.com with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.87)
+        (envelope-from <sbauer@plzdonthack.me>)
+        id 1iG3FP-0007KK-Lf; Thu, 03 Oct 2019 09:42:47 -0600
+Received: from hacktheplanet (c-68-50-34-150.hsd1.in.comcast.net [68.50.34.150])
+        by plesk14.xmission.com (Postfix) with ESMTPSA id A270F126779;
+        Thu,  3 Oct 2019 15:42:28 +0000 (UTC)
+Date:   Thu, 3 Oct 2019 11:42:27 -0400
+From:   Scott Bauer <sbauer@plzdonthack.me>
+To:     Randy Dunlap <rdunlap@infradead.org>
+Cc:     "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>, axboe <axboe@kernel.dk>,
+        Scott Bauer <sbauer@plzdonthack.me>,
+        jonathan.derrick@intel.com, revanth.rajashekar@intel.com
+Message-ID: <20191003154227.GB2450@hacktheplanet>
+References: <807d7b7f-623b-75f0-baab-13b1b0c02e9d@infradead.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <807d7b7f-623b-75f0-baab-13b1b0c02e9d@infradead.org>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-XM-SPF: eid=1iG3FP-0007KK-Lf;;;mid=<20191003154227.GB2450@hacktheplanet>;;;hst=mx04.mta.xmission.com;;;ip=166.70.198.161;;;frm=sbauer@plzdonthack.me;;;spf=none
+X-SA-Exim-Connect-IP: 166.70.198.161
+X-SA-Exim-Mail-From: sbauer@plzdonthack.me
+Subject: Re: [PATCH 1/2] block: sed-opal: fix sparse warning: obsolete array
+ init.
+X-SA-Exim-Version: 4.2.1 (built Thu, 05 May 2016 13:38:54 -0600)
+X-SA-Exim-Scanned: Yes (on mx04.mta.xmission.com)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Takashi Iwai <tiwai@suse.de>
+On Wed, Oct 02, 2019 at 07:23:05PM -0700, Randy Dunlap wrote:
+> From: Randy Dunlap <rdunlap@infradead.org>
+> 
+> Fix sparse warning: (missing '=')
+> ../block/sed-opal.c:133:17: warning: obsolete array initializer, use C99 syntax
+> 
+> Fixes: ff91064ea37c ("block: sed-opal: check size of shadow mbr")
+> Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
+> Cc: Jens Axboe <axboe@kernel.dk>
+> Cc: linux-block@vger.kernel.org
+> Cc: Jonas Rabenstein <jonas.rabenstein@studium.uni-erlangen.de>
+> Cc: David Kozub <zub@linux.fjfi.cvut.cz>
+> ---
 
-[ Upstream commit dd65f7e19c6961ba6a69f7c925021b7a270cb950 ]
+Un cc'd David and Jonas, +CC'd Jon and Revanth.
 
-The last fallback of CORB/RIRB communication error recovery is to turn
-on the single command mode, and this last resort usually means that
-something is really screwed up.  Instead of a normal dev_err(), show
-the error more clearly with dev_WARN() with the caller stack trace.
+This looks fine to me too.
 
-Also, show the bus-reset fallback also as an error, too.
-
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- sound/pci/hda/hda_controller.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
-
-diff --git a/sound/pci/hda/hda_controller.c b/sound/pci/hda/hda_controller.c
-index 85dbe2420248d..c5e82329348b3 100644
---- a/sound/pci/hda/hda_controller.c
-+++ b/sound/pci/hda/hda_controller.c
-@@ -866,10 +866,13 @@ static int azx_rirb_get_response(struct hdac_bus *bus, unsigned int addr,
- 	 */
- 	if (hbus->allow_bus_reset && !hbus->response_reset && !hbus->in_reset) {
- 		hbus->response_reset = 1;
-+		dev_err(chip->card->dev,
-+			"No response from codec, resetting bus: last cmd=0x%08x\n",
-+			bus->last_cmd[addr]);
- 		return -EAGAIN; /* give a chance to retry */
- 	}
- 
--	dev_err(chip->card->dev,
-+	dev_WARN(chip->card->dev,
- 		"azx_get_response timeout, switching to single_cmd mode: last cmd=0x%08x\n",
- 		bus->last_cmd[addr]);
- 	chip->single_cmd = 1;
--- 
-2.20.1
-
-
-
+Reviewed-by: Scott Bauer <sbauer@plzdonthack.me>
