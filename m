@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B4F6C32792
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:37:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 35AC6C4CED1
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:37:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3E5A0222BE
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:37:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0B8512133F
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:37:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570120641;
-	bh=5QeObw2/gq4684mJBXyyeD79JqRSly6RL4wqS+C9Z38=;
+	s=default; t=1570120643;
+	bh=uAVntkjPLgHA5UmSzzCWhj6ohpZsu17PsT4M5wIMo7M=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=cdb9zibchqMF0u4RCAO4JWDrnjJeoJyGkx/8/lFPl/3A9uI+Kz439tvu6oyy8k/yk
-	 J3oFhmi3pwUJS4ijxmcWAEQFClX8dTGP1739PlDNnvGxCx8RELVT8Im0Iq0EkJVA/u
-	 tvNy0/jW7loX3hH6m+0NM1BSJdj3+J98tLopZFcQ=
+	b=Qn7SQtFgzS8VQgjlbWdcUI4UXDHX/RYM2ubOFg9arLUkgyXCn1Sgzv6ynnC2FBbLD
+	 YcNqx44LtfI3UU3rDpd/J2s/KoSO6yNkMNM7GfUCLvCpu3tRGN9kDT0RTYCTQn1rzC
+	 YyNVuPPigRWQzfiQO6xJzYsIj/CJK6EAn2fMVOtU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404548AbfJCQhU (ORCPT
+        id S2404557AbfJCQhW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 12:37:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46512 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 12:37:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46618 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404518AbfJCQhK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:37:10 -0400
+        id S2404537AbfJCQhP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:37:15 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1A5FD215EA;
-        Thu,  3 Oct 2019 16:37:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8E1A6215EA;
+        Thu,  3 Oct 2019 16:37:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570120629;
-        bh=5QeObw2/gq4684mJBXyyeD79JqRSly6RL4wqS+C9Z38=;
+        s=default; t=1570120634;
+        bh=uAVntkjPLgHA5UmSzzCWhj6ohpZsu17PsT4M5wIMo7M=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=hMIUSvWfFrmTOyL92BqJMXkf7ObBHlm2QzN2dpLh3vJ0YKt3GaYGyFs3dnkvjyT0c
-         QUhp06fwhTcrFa72gQjNL48hP/AtFqbhg5uffBC5Bc0S1kdL0IlxcLHCEMJqNEmPKn
-         jiY0dkqrPfHst+omVL3p2eWElto+cVIEOqfye0A0=
+        b=CpZxkbpSo+0LF3G1cbP7OPIujnP3KNJyURjyoFVC40IyCN2n2efLXmqL6dftT9Iwl
+         b/GCiXK/qavPAPxGN6/6bywX6DMy5Q9ALE/b9mHsw/UJClplWFn385972iP960K5Lj
+         KGoeTc0K7B42jzE3v0OGMJHsmy5thAA4AMFbu1A4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, NeilBrown <neilb@suse.com>,
-        Song Liu <songliubraving@fb.com>,
-        Jack Wang <jinpu.wang@cloud.ionos.com>
-Subject: [PATCH 5.2 294/313] md: only call set_in_sync() when it is expected to succeed.
-Date:   Thu,  3 Oct 2019 17:54:32 +0200
-Message-Id: <20191003154602.119302446@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>,
+        syzbot <syzbot+8ab2d0f39fb79fe6ca40@syzkaller.appspotmail.com>
+Subject: [PATCH 5.2 296/313] /dev/mem: Bail out upon SIGKILL.
+Date:   Thu,  3 Oct 2019 17:54:34 +0200
+Message-Id: <20191003154602.334688993@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191003154533.590915454@linuxfoundation.org>
 References: <20191003154533.590915454@linuxfoundation.org>
@@ -60,59 +60,112 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: NeilBrown <neilb@suse.com>
+From: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
 
-commit 480523feae581ab714ba6610388a3b4619a2f695 upstream.
+commit 8619e5bdeee8b2c685d686281f2d2a6017c4bc15 upstream.
 
-Since commit 4ad23a976413 ("MD: use per-cpu counter for
-writes_pending"), set_in_sync() is substantially more expensive: it
-can wait for a full RCU grace period which can be 10s of milliseconds.
+syzbot found that a thread can stall for minutes inside read_mem() or
+write_mem() after that thread was killed by SIGKILL [1]. Reading from
+iomem areas of /dev/mem can be slow, depending on the hardware.
+While reading 2GB at one read() is legal, delaying termination of killed
+thread for minutes is bad. Thus, allow reading/writing /dev/mem and
+/dev/kmem to be preemptible and killable.
 
-So we should only call it when the cost is justified.
+  [ 1335.912419][T20577] read_mem: sz=4096 count=2134565632
+  [ 1335.943194][T20577] read_mem: sz=4096 count=2134561536
+  [ 1335.978280][T20577] read_mem: sz=4096 count=2134557440
+  [ 1336.011147][T20577] read_mem: sz=4096 count=2134553344
+  [ 1336.041897][T20577] read_mem: sz=4096 count=2134549248
 
-md_check_recovery() currently calls set_in_sync() every time it finds
-anything to do (on non-external active arrays).  For an array
-performing resync or recovery, this will be quite often.
-Each call will introduce a delay to the md thread, which can noticeable
-affect IO submission latency.
+Theoretically, reading/writing /dev/mem and /dev/kmem can become
+"interruptible". But this patch chose "killable". Future patch will make
+them "interruptible" so that we can revert to "killable" if some program
+regressed.
 
-In md_check_recovery() we only need to call set_in_sync() if
-'safemode' was non-zero at entry, meaning that there has been not
-recent IO.  So we save this "safemode was nonzero" state, and only
-call set_in_sync() if it was non-zero.
+[1] https://syzkaller.appspot.com/bug?id=a0e3436829698d5824231251fad9d8e998f94f5e
 
-This measurably reduces mean and maximum IO submission latency during
-resync/recovery.
-
-Reported-and-tested-by: Jack Wang <jinpu.wang@cloud.ionos.com>
-Fixes: 4ad23a976413 ("MD: use per-cpu counter for writes_pending")
-Cc: stable@vger.kernel.org (v4.12+)
-Signed-off-by: NeilBrown <neilb@suse.com>
-Signed-off-by: Song Liu <songliubraving@fb.com>
+Signed-off-by: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
+Cc: stable <stable@vger.kernel.org>
+Reported-by: syzbot <syzbot+8ab2d0f39fb79fe6ca40@syzkaller.appspotmail.com>
+Link: https://lore.kernel.org/r/1566825205-10703-1-git-send-email-penguin-kernel@I-love.SAKURA.ne.jp
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/md/md.c |    3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/char/mem.c |   21 +++++++++++++++++++++
+ 1 file changed, 21 insertions(+)
 
---- a/drivers/md/md.c
-+++ b/drivers/md/md.c
-@@ -8811,6 +8811,7 @@ void md_check_recovery(struct mddev *mdd
+--- a/drivers/char/mem.c
++++ b/drivers/char/mem.c
+@@ -97,6 +97,13 @@ void __weak unxlate_dev_mem_ptr(phys_add
+ }
+ #endif
  
- 	if (mddev_trylock(mddev)) {
- 		int spares = 0;
-+		bool try_set_sync = mddev->safemode != 0;
++static inline bool should_stop_iteration(void)
++{
++	if (need_resched())
++		cond_resched();
++	return fatal_signal_pending(current);
++}
++
+ /*
+  * This funcion reads the *physical* memory. The f_pos points directly to the
+  * memory location.
+@@ -175,6 +182,8 @@ static ssize_t read_mem(struct file *fil
+ 		p += sz;
+ 		count -= sz;
+ 		read += sz;
++		if (should_stop_iteration())
++			break;
+ 	}
+ 	kfree(bounce);
  
- 		if (!mddev->external && mddev->safemode == 1)
- 			mddev->safemode = 0;
-@@ -8856,7 +8857,7 @@ void md_check_recovery(struct mddev *mdd
- 			}
+@@ -251,6 +260,8 @@ static ssize_t write_mem(struct file *fi
+ 		p += sz;
+ 		count -= sz;
+ 		written += sz;
++		if (should_stop_iteration())
++			break;
+ 	}
+ 
+ 	*ppos += written;
+@@ -468,6 +479,10 @@ static ssize_t read_kmem(struct file *fi
+ 			read += sz;
+ 			low_count -= sz;
+ 			count -= sz;
++			if (should_stop_iteration()) {
++				count = 0;
++				break;
++			}
  		}
+ 	}
  
--		if (!mddev->external && !mddev->in_sync) {
-+		if (try_set_sync && !mddev->external && !mddev->in_sync) {
- 			spin_lock(&mddev->lock);
- 			set_in_sync(mddev);
- 			spin_unlock(&mddev->lock);
+@@ -492,6 +507,8 @@ static ssize_t read_kmem(struct file *fi
+ 			buf += sz;
+ 			read += sz;
+ 			p += sz;
++			if (should_stop_iteration())
++				break;
+ 		}
+ 		free_page((unsigned long)kbuf);
+ 	}
+@@ -544,6 +561,8 @@ static ssize_t do_write_kmem(unsigned lo
+ 		p += sz;
+ 		count -= sz;
+ 		written += sz;
++		if (should_stop_iteration())
++			break;
+ 	}
+ 
+ 	*ppos += written;
+@@ -595,6 +614,8 @@ static ssize_t write_kmem(struct file *f
+ 			buf += sz;
+ 			virtr += sz;
+ 			p += sz;
++			if (should_stop_iteration())
++				break;
+ 		}
+ 		free_page((unsigned long)kbuf);
+ 	}
 
 
