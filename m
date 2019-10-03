@@ -2,80 +2,157 @@ Return-Path: <SRS0=6dNS=X4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E27F7C10F14
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 20:49:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F147EC32792
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 20:51:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A0CD5222BE
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 20:49:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570135791;
-	bh=T7GyCKf+5lR0UHhpOwx4h8MhXmzyZ24igcrrwR+1Grc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=tZ74HMkQiHPdWyNA1vLBytBvB2MMnxrZqwEkl0/CGXK7CwpCv5dXpc1z/I4kKNAM9
-	 rXHIoT5BQbYRpMfoo59H73a+tRasHuaItF7thFxYcET2BZympQElLkRPh/+KQ/nstO
-	 O+M/aSuy7kRM0z/TS4OL26/fzqA8Zh/SyT77GVeY=
+	by mail.kernel.org (Postfix) with ESMTP id C5C6B2133F
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 20:51:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gateworks-com.20150623.gappssmtp.com header.i=@gateworks-com.20150623.gappssmtp.com header.b="xMip7plz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731635AbfJCUtu (ORCPT
+        id S1732149AbfJCUvR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 16:49:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41762 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727326AbfJCUtu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 16:49:50 -0400
-Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 836AC2086A;
-        Thu,  3 Oct 2019 20:49:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570135790;
-        bh=T7GyCKf+5lR0UHhpOwx4h8MhXmzyZ24igcrrwR+1Grc=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=YlsegnXXNUnybEBXEiNuPIaAn6MGu0PBLmoyYyZOGQMBQhz2leOs4foXuyQddIs05
-         FmGYYmMaGqfBjbUqRHuh53SzDP0dq/PhR7W6DOYBcJsEShxWm/6npfRvJdkMBuYZ/I
-         D1T6Z3ytd0PlY3qs1BaBqxjwb0QWj1dLUCwZfts4=
-Date:   Thu, 3 Oct 2019 21:49:45 +0100
-From:   Will Deacon <will@kernel.org>
-To:     Nick Desaulniers <ndesaulniers@google.com>
-Cc:     Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Andy Lutomirski <luto@kernel.org>
-Subject: Re: [PATCH v5 2/6] arm64: vdso32: Detect binutils support for dmb
- ishld
-Message-ID: <20191003204944.6wuzflqkjdpawzvp@willie-the-truck>
-References: <20191003174838.8872-1-vincenzo.frascino@arm.com>
- <20191003174838.8872-3-vincenzo.frascino@arm.com>
- <CAKwvOdmhyVHREHvyB0wL2GfMsE8GcJ1Ouj_8ifrR4hU8kBYukQ@mail.gmail.com>
+        Thu, 3 Oct 2019 16:51:17 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:41462 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729732AbfJCUvR (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 16:51:17 -0400
+Received: by mail-wr1-f67.google.com with SMTP id q9so4261762wrm.8
+        for <linux-kernel@vger.kernel.org>; Thu, 03 Oct 2019 13:51:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gateworks-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=oT5munY2A09zpSHzYJ6m6wmIRb/RVjgLvFvW+U+KSoY=;
+        b=xMip7plzqBtaMG8e7QIgtdrUd2y6V5SX/WOrz/GyKIxy13ehe0olzrNXZCKbJc13d9
+         QwKm2GmW1840zwcHGUXOwYOVSuL/asmBZ1MmpK1l0JICCd9iqE1VeaY+n7liUlqi2vqZ
+         dJ9rY47/oWc9gslxYiT1uKiS1yBOGY+Ex56+2xpEP9Dfr/IB0fUkiriCZGIqAfaxNU3G
+         a3dkCvWXxXNecnV0MGX0M+cUsf6uVqVZIOa1M/HJzW2Gdndaf7RxSYyY26ilNeTaQ+bt
+         +ewWpw++s6oJEj4OEHQ6hnQ/ohA5Ac4dAVk2cQX9O1beDM2QFJxUGeqEE1197IHvnOzq
+         +XBQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=oT5munY2A09zpSHzYJ6m6wmIRb/RVjgLvFvW+U+KSoY=;
+        b=GuspkiIM6cIXEyjTxwB5rFY3ludE87petU0PPJAg6J72tZQYOX4HkqS/dwV5LjJY3D
+         BaTu3+XZx0lpUN4PlrRuNGJ5ghe9ClUhZhKVN3envwOxmAdBjJJNVzj0UNOwpkncSBuS
+         g5nfLUn6ni7G3Umqadw02IDUNjCiMcWIDWfSU5RfBHmcMvh56WDl2o7aMtEepgKf/I+5
+         VetDrqeTOwbrQOnjVtTpluWvOwjcpN+xGwNP8je2/akSanVtPI1JFDHHkFrhONCeX4ds
+         46+jBFQp4k1hac6/2/+3MdT6ck5ZCo3uDg/2nCU6u/sp8NmNK7q6idzdwbJ+UY5u5U4Y
+         QaGQ==
+X-Gm-Message-State: APjAAAWuKUYBTtal9zQUI0mi5Ebvl2L3y2kREOTHAJnNq99moKkrwc1l
+        gOoPcPhXnlWUfacA2Ib+n7R++0S+LvKZ/MGMIgahwQ==
+X-Google-Smtp-Source: APXvYqxDT5OzCqjJantqJggK7nMHfDLOl2hcFlODbx4Jh6VSUctsOvtmO4GgjrDD3AHzRLRHwJWsAxNNMAXWqdPcxrM=
+X-Received: by 2002:a05:6000:45:: with SMTP id k5mr7782985wrx.259.1570135874531;
+ Thu, 03 Oct 2019 13:51:14 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAKwvOdmhyVHREHvyB0wL2GfMsE8GcJ1Ouj_8ifrR4hU8kBYukQ@mail.gmail.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
+References: <20190301192017.39770-1-dianders@chromium.org> <CAJ+vNU0Ma5nG9_ThLO4cdO+=ivf7rmXiHZonF0HY0xx6X3R6Hw@mail.gmail.com>
+ <5dce2964-8761-e7d0-8963-f0f5cb2feb02@arm.com>
+In-Reply-To: <5dce2964-8761-e7d0-8963-f0f5cb2feb02@arm.com>
+From:   Tim Harvey <tharvey@gateworks.com>
+Date:   Thu, 3 Oct 2019 13:51:03 -0700
+Message-ID: <CAJ+vNU0Q1-d7YDbAAEMqEcWnniqo6jLdKBbcUTar5=hJ+AC8vQ@mail.gmail.com>
+Subject: Re: [PATCH v2] iommu/arm-smmu: Break insecure users by disabling
+ bypass by default
+To:     Robin Murphy <robin.murphy@arm.com>
+Cc:     Douglas Anderson <dianders@chromium.org>,
+        Tirumalesh Chalamarla <tchalamarla@caviumnetworks.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Will Deacon <will.deacon@arm.com>,
+        linux-arm-msm@vger.kernel.org, evgreen@chromium.org,
+        tfiga@chromium.org, Rob Clark <robdclark@gmail.com>,
+        iommu@lists.linux-foundation.org,
+        linux-arm-kernel@lists.infradead.org,
+        Vivek Gautam <vivek.gautam@codeaurora.org>,
+        open list <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Oct 03, 2019 at 01:18:16PM -0700, Nick Desaulniers wrote:
-> On Thu, Oct 3, 2019 at 10:48 AM Vincenzo Frascino
-> <vincenzo.frascino@arm.com> wrote:
+On Thu, Oct 3, 2019 at 1:42 PM Robin Murphy <robin.murphy@arm.com> wrote:
+>
+> Hi Tim,
+>
+> On 2019-10-03 7:27 pm, Tim Harvey wrote:
+> > On Fri, Mar 1, 2019 at 11:21 AM Douglas Anderson <dianders@chromium.org> wrote:
+> >>
+> >> If you're bisecting why your peripherals stopped working, it's
+> >> probably this CL.  Specifically if you see this in your dmesg:
+> >>    Unexpected global fault, this could be serious
+> >> ...then it's almost certainly this CL.
+> >>
+> >> Running your IOMMU-enabled peripherals with the IOMMU in bypass mode
+> >> is insecure and effectively disables the protection they provide.
+> >> There are few reasons to allow unmatched stream bypass, and even fewer
+> >> good ones.
+> >>
+> >> This patch starts the transition over to make it much harder to run
+> >> your system insecurely.  Expected steps:
+> >>
+> >> 1. By default disable bypass (so anyone insecure will notice) but make
+> >>     it easy for someone to re-enable bypass with just a KConfig change.
+> >>     That's this patch.
+> >>
+> >> 2. After people have had a little time to come to grips with the fact
+> >>     that they need to set their IOMMUs properly and have had time to
+> >>     dig into how to do this, the KConfig will be eliminated and bypass
+> >>     will simply be disabled.  Folks who are truly upset and still
+> >>     haven't fixed their system can either figure out how to add
+> >>     'arm-smmu.disable_bypass=n' to their command line or revert the
+> >>     patch in their own private kernel.  Of course these folks will be
+> >>     less secure.
+> >>
+> >> Suggested-by: Robin Murphy <robin.murphy@arm.com>
+> >> Signed-off-by: Douglas Anderson <dianders@chromium.org>
+> >> ---
 > >
-> > Older versions of binutils that do not support certain types of memory
-> > barriers can cause build failure of the vdso32 library.
-> 
-> Do you know specific version numbers of binutils that are affected?
-> May be helpful to have in the commit message just for future
-> travelers.
+> > Hi Doug / Robin,
+> >
+> > I ran into this breaking things on OcteonTx boards based on CN80XX
+> > CPU. The IOMMU configuration is a bit beyond me and I'm hoping you can
+> > offer some advice. The IOMMU here is cavium,smmu-v2 as defined in
+> > https://github.com/Gateworks/dts-newport/blob/master/cn81xx-linux.dtsi
+> >
+> > Booting with 'arm-smmu.disable_bypass=n' does indeed work around the
+> > breakage as the commit suggests.
+> >
+> > Any suggestions for a proper fix?
+>
+> Ah, you're using the old "mmu-masters" binding (and in a way which isn't
+> well-defined - it's never been specified what the stream ID argument(s)
+> would mean for a PCI host bridge, and Linux just ignores them). The
+> ideal thing would be to update the DT to generic "iommu-map" properties
+> - it's been a long time since I last played with a ThunderX, but I
+> believe the SMMU stream IDs should just be the same as the ITS device
+> IDs (which is how the "mmu-masters" mapping would have played out anyway).
+>
+> The arm-smmu driver support for the old binding has always relied on
+> implicit bypass - there are technical reasons why we can't realistically
+> support the full functionality offered to the generic bindings, but it
+> would be possible to add some degree of workaround to prevent it
+> interacting quite so poorly with disable_bypass, if necessary. Do you
+> have deployed systems with DTs that can't be updated, but still might
+> need to run new kernels?
+>
 
-A quick bit of archaeology suggests e797f7e0b2be added this back in 2012,
-which seems to correlate with the 2.24 release.
+Robin,
 
-Will
+Thanks for the response. I don't care too much about supporting new
+kernels with the current DT - I'm good with fixing this with a DT
+change. Would you be able to give me an example? I would love to see
+Cavium mainline an cn81xx dts/dtsi in arch/arm64/boot/dts to be used
+as a base as the only thing we have to go off of currently is the
+Cavium SDK which has fairly old kernel support.
+
+Thanks,
+
+Tim
