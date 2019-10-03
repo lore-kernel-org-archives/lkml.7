@@ -7,46 +7,48 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 102A4C10F14
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:56:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8515BC10F14
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:56:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D28BE20673
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:56:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4F46F2070B
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:56:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570121802;
-	bh=u0uuZNqbC5y4WeD1oLHRxcr3SNy3Eqtmb8PtIZipKPc=;
+	s=default; t=1570121806;
+	bh=9EFonouCoFEeCUp1NQ3vU4XAw2uFQ6WjoYtragBIyuc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ylef5wdma+c4hGvnjIvMhUoH32hSXU9/4Z9VN+6o/9lAojFBiCYyoEKxEhWMqBRzo
-	 5J9Rb15jVt7KlKv1SXp6mnw3XNtUuCf99/61ItnnP4zdkmAcHb7LtnD0kJdBX3bywk
-	 UZggJ4v4AGDDsu8p8cEDM7RIg1GJrLJj2mP0RrWQ=
+	b=BKl1iTjgV6ZkWC72UMutraksXLYApLznM9DsugiPm09rAdHMd7JR+J4WW4m2HTgE4
+	 /BNhkxOIPc1n2nWiuP50raMTWdmoqK2UjF1CYFPIZqfUuoL9ct+CJ84GtXe7zApTRL
+	 cRbN/s/HCPCGm+THLMMgY6krGFyr2T4MpYJqMGQg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393098AbfJCQux (ORCPT
+        id S1732599AbfJCQ4p (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 12:50:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37942 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 12:56:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38200 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2405948AbfJCQuk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:50:40 -0400
+        id S2392953AbfJCQuv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:50:51 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7B17620865;
-        Thu,  3 Oct 2019 16:50:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6A89920867;
+        Thu,  3 Oct 2019 16:50:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570121440;
-        bh=u0uuZNqbC5y4WeD1oLHRxcr3SNy3Eqtmb8PtIZipKPc=;
+        s=default; t=1570121450;
+        bh=9EFonouCoFEeCUp1NQ3vU4XAw2uFQ6WjoYtragBIyuc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=rWycyvCJH1S4/bTviqedA8axPD9uWS4VF2XW0ZIcq6Dilza8mfqB+qgC2c+ZHOZzc
-         BDQBqCIJwrBiHZxvheKAXtrfM/3UDGsSCHXphijEmd0BgA2H26ShDuNUYPFl3VUcRM
-         0yHNm143ofM2bGUXO6cY3Jb90197gZM7whq0P95Q=
+        b=PMOvCpS6NR7ORXS0aAdE5RVmPVely2Oqlk7kq3Vi8aeDmo62qKNtRVmowDs4Ij8tc
+         67ioBshxX38MyZPJO4NmtVq+/lxX7MBqw+IyUvjZv+HcMJMXcRhOt5DLGab170Tivq
+         U3K+xCUiHu83K7V+uK59s/lCfEHWYhWtpvQXlWyA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Gao Xiang <gaoxiang25@huawei.com>,
-        Chao Yu <yuchao0@huawei.com>
-Subject: [PATCH 5.3 279/344] staging: erofs: cannot set EROFS_V_Z_INITED_BIT if fill_inode_lazy fails
-Date:   Thu,  3 Oct 2019 17:54:04 +0200
-Message-Id: <20191003154607.555887592@linuxfoundation.org>
+        stable@vger.kernel.org, Robin Murphy <robin.murphy@arm.com>,
+        Liang Chen <cl@rock-chips.com>,
+        Shawn Lin <shawn.lin@rock-chips.com>,
+        Heiko Stuebner <heiko@sntech.de>
+Subject: [PATCH 5.3 283/344] arm64: dts: rockchip: limit clock rate of MMC controllers for RK3328
+Date:   Thu,  3 Oct 2019 17:54:08 +0200
+Message-Id: <20191003154607.843614713@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191003154540.062170222@linuxfoundation.org>
 References: <20191003154540.062170222@linuxfoundation.org>
@@ -59,41 +61,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Gao Xiang <gaoxiang25@huawei.com>
+From: Shawn Lin <shawn.lin@rock-chips.com>
 
-commit 3407a4198faf01c9d7596c45b8606834b8dfc2b7 upstream.
+commit 03e61929c0d227ed3e1c322fc3804216ea298b7e upstream.
 
-As reported by erofs-utils fuzzer, unsupported compressed
-clustersize will make fill_inode_lazy fail, for such case
-we cannot set EROFS_V_Z_INITED_BIT since we need return
-failure for each z_erofs_map_blocks_iter().
+150MHz is a fundamental limitation of RK3328 Soc, w/o this limitation,
+eMMC, for instance, will run into 200MHz clock rate in HS200 mode, which
+makes the RK3328 boards not always boot properly. By adding it in
+rk3328.dtsi would also obviate the worry of missing it when adding new
+boards.
 
-Fixes: 152a333a5895 ("staging: erofs: add compacted compression indexes support")
-Cc: <stable@vger.kernel.org> # 5.3+
-Signed-off-by: Gao Xiang <gaoxiang25@huawei.com>
-Reviewed-by: Chao Yu <yuchao0@huawei.com>
-Link: https://lore.kernel.org/r/20190819103426.87579-3-gaoxiang25@huawei.com
+Fixes: 52e02d377a72 ("arm64: dts: rockchip: add core dtsi file for RK3328 SoCs")
+Cc: stable@vger.kernel.org
+Cc: Robin Murphy <robin.murphy@arm.com>
+Cc: Liang Chen <cl@rock-chips.com>
+Signed-off-by: Shawn Lin <shawn.lin@rock-chips.com>
+Signed-off-by: Heiko Stuebner <heiko@sntech.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/staging/erofs/zmap.c |    3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ arch/arm64/boot/dts/rockchip/rk3328.dtsi |    3 +++
+ 1 file changed, 3 insertions(+)
 
---- a/drivers/staging/erofs/zmap.c
-+++ b/drivers/staging/erofs/zmap.c
-@@ -86,12 +86,11 @@ static int fill_inode_lazy(struct inode
+--- a/arch/arm64/boot/dts/rockchip/rk3328.dtsi
++++ b/arch/arm64/boot/dts/rockchip/rk3328.dtsi
+@@ -801,6 +801,7 @@
+ 			 <&cru SCLK_SDMMC_DRV>, <&cru SCLK_SDMMC_SAMPLE>;
+ 		clock-names = "biu", "ciu", "ciu-drive", "ciu-sample";
+ 		fifo-depth = <0x100>;
++		max-frequency = <150000000>;
+ 		status = "disabled";
+ 	};
  
- 	vi->z_physical_clusterbits[1] = vi->z_logical_clusterbits +
- 					((h->h_clusterbits >> 5) & 7);
-+	set_bit(EROFS_V_Z_INITED_BIT, &vi->flags);
- unmap_done:
- 	kunmap_atomic(kaddr);
- 	unlock_page(page);
- 	put_page(page);
--
--	set_bit(EROFS_V_Z_INITED_BIT, &vi->flags);
- out_unlock:
- 	clear_and_wake_up_bit(EROFS_V_BL_Z_BIT, &vi->flags);
- 	return err;
+@@ -812,6 +813,7 @@
+ 			 <&cru SCLK_SDIO_DRV>, <&cru SCLK_SDIO_SAMPLE>;
+ 		clock-names = "biu", "ciu", "ciu-drive", "ciu-sample";
+ 		fifo-depth = <0x100>;
++		max-frequency = <150000000>;
+ 		status = "disabled";
+ 	};
+ 
+@@ -823,6 +825,7 @@
+ 			 <&cru SCLK_EMMC_DRV>, <&cru SCLK_EMMC_SAMPLE>;
+ 		clock-names = "biu", "ciu", "ciu-drive", "ciu-sample";
+ 		fifo-depth = <0x100>;
++		max-frequency = <150000000>;
+ 		status = "disabled";
+ 	};
+ 
 
 
