@@ -4,53 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA974C4CED1
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:11:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DD1E9C10F14
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:11:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9669620830
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:11:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B1C7020830
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:11:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570122708;
-	bh=2et6kh5u9FLYVe88GeLbMKtsoeoF/CZr/Ah6IeVbid4=;
+	s=default; t=1570122715;
+	bh=gzyP2iDTSZJkcDxjXtyZpYtn6CrWpPanXtKAD1JQ+j4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=13WwAlKy6d5VMHI9fyVp8aaWNYnUPGSLmWnE8ugKrWqsbGaWfNP1kp1Bge7D2n5Bg
-	 YrwHfHRWnq4t64EAClV+z7W++Yzc2werDCYFMwVCQYw9m0+gonkHreLVEJO0IJCkVT
-	 481B16AFcEhoxEucRGRC6PB5iNFJdvsIz0S6A77s=
+	b=xMmd0XfD/QgquSiDWf1sCifKVbza2/tB/f8wqkudJwR37KEKMpMu/5m0YAPDpXasE
+	 ravFTu7AbdL0wKzX2+iXxSHnlHHFIUKrI7KJ25/glfn5KITJNdXx7AV0sB/umo8WNf
+	 ZCqk7KUMd8OrViPbGh355GoX1xJVrsokgcw/ExgI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391824AbfJCRLr (ORCPT
+        id S2404093AbfJCRLy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 13:11:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37808 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 13:11:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37730 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2403803AbfJCQbI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:31:08 -0400
+        id S2403822AbfJCQbG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:31:06 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C588120865;
-        Thu,  3 Oct 2019 16:31:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E56022054F;
+        Thu,  3 Oct 2019 16:31:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570120268;
-        bh=2et6kh5u9FLYVe88GeLbMKtsoeoF/CZr/Ah6IeVbid4=;
+        s=default; t=1570120265;
+        bh=gzyP2iDTSZJkcDxjXtyZpYtn6CrWpPanXtKAD1JQ+j4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0OwFmk8nMoSBRRZMu6bJfnUxbir7MjHKAFtzbX5hCPx9IU0STzq1poqPD4e74Clsv
-         jDen2+aWi4d7IMogItKV2f6kyL97fqI87alzNdJjQeNqqVHUD47bYHYsg4Z5mceRTV
-         zszV/ck5DGwbmniF/dfBJUQylyV7ltqKZGNGogMo=
+        b=tKuQNaNSlfqr5UjgaI2kqToDDzpEstyCDcGosNql9M4sQdqNTWwxi+9V4ILg+3Uf+
+         b3Rm1+q0AamMfq92DZ3rAk0GLbYjcWMFpkEGMcrqOuQbWdmP9cwjQAm/OPzxDIzC51
+         fu93qSxpRDQtYrplDA9TRq+WyEOSZahYn7dB46DU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Ingo Molnar <mingo@kernel.org>,
-        Song Liu <songliubraving@fb.com>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        stable@vger.kernel.org,
+        Codrin Ciubotariu <codrin.ciubotariu@microchip.com>,
+        Mark Brown <broonie@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 157/313] x86/mm/pti: Do not invoke PTI functions when PTI is disabled
-Date:   Thu,  3 Oct 2019 17:52:15 +0200
-Message-Id: <20191003154548.392993969@linuxfoundation.org>
+Subject: [PATCH 5.2 121/313] ASoC: mchp-i2s-mcc: Fix unprepare of GCLK
+Date:   Thu,  3 Oct 2019 17:51:39 +0200
+Message-Id: <20191003154544.888696317@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191003154533.590915454@linuxfoundation.org>
 References: <20191003154533.590915454@linuxfoundation.org>
@@ -63,52 +61,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Thomas Gleixner <tglx@linutronix.de>
+From: Codrin Ciubotariu <codrin.ciubotariu@microchip.com>
 
-[ Upstream commit 990784b57731192b7d90c8d4049e6318d81e887d ]
+[ Upstream commit 988b59467b2b14523a266957affbe9eca3e99fc9 ]
 
-When PTI is disabled at boot time either because the CPU is not affected or
-PTI has been disabled on the command line, the boot code still calls into
-pti_finalize() which then unconditionally invokes:
+If hw_free() gets called after hw_params(), GCLK remains prepared,
+preventing further use of it. This patch fixes this by unpreparing the
+clock in hw_free() or if hw_params() gets an error.
 
-     pti_clone_entry_text()
-     pti_clone_kernel_text()
-
-pti_clone_kernel_text() was called unconditionally before the 32bit support
-was added and 32bit added the call to pti_clone_entry_text().
-
-The call has no side effects as cloning the page tables into the available
-second one, which was allocated for PTI does not create damage. But it does
-not make sense either and in case that this functionality would be extended
-later this might actually lead to hard to diagnose issues.
-
-Neither function should be called when PTI is runtime disabled. Make the
-invocation conditional.
-
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Reviewed-by: Dave Hansen <dave.hansen@linux.intel.com>
-Acked-by: Ingo Molnar <mingo@kernel.org>
-Acked-by: Song Liu <songliubraving@fb.com>
-Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Link: https://lkml.kernel.org/r/20190828143124.063353972@linutronix.de
+Fixes: 7e0cdf545a55 ("ASoC: mchp-i2s-mcc: add driver for I2SC Multi-Channel Controller")
+Signed-off-by: Codrin Ciubotariu <codrin.ciubotariu@microchip.com>
+Link: https://lore.kernel.org/r/20190820162411.24836-2-codrin.ciubotariu@microchip.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/mm/pti.c | 2 ++
- 1 file changed, 2 insertions(+)
+ sound/soc/atmel/mchp-i2s-mcc.c | 13 +++++++++++--
+ 1 file changed, 11 insertions(+), 2 deletions(-)
 
-diff --git a/arch/x86/mm/pti.c b/arch/x86/mm/pti.c
-index b196524759ec5..ba22b50f4eca2 100644
---- a/arch/x86/mm/pti.c
-+++ b/arch/x86/mm/pti.c
-@@ -666,6 +666,8 @@ void __init pti_init(void)
-  */
- void pti_finalize(void)
- {
-+	if (!boot_cpu_has(X86_FEATURE_PTI))
-+		return;
- 	/*
- 	 * We need to clone everything (again) that maps parts of the
- 	 * kernel image.
+diff --git a/sound/soc/atmel/mchp-i2s-mcc.c b/sound/soc/atmel/mchp-i2s-mcc.c
+index 8272915fa09b9..ab7d5f98e759e 100644
+--- a/sound/soc/atmel/mchp-i2s-mcc.c
++++ b/sound/soc/atmel/mchp-i2s-mcc.c
+@@ -670,8 +670,13 @@ static int mchp_i2s_mcc_hw_params(struct snd_pcm_substream *substream,
+ 	}
+ 
+ 	ret = regmap_write(dev->regmap, MCHP_I2SMCC_MRA, mra);
+-	if (ret < 0)
++	if (ret < 0) {
++		if (dev->gclk_use) {
++			clk_unprepare(dev->gclk);
++			dev->gclk_use = 0;
++		}
+ 		return ret;
++	}
+ 	return regmap_write(dev->regmap, MCHP_I2SMCC_MRB, mrb);
+ }
+ 
+@@ -710,9 +715,13 @@ static int mchp_i2s_mcc_hw_free(struct snd_pcm_substream *substream,
+ 		regmap_write(dev->regmap, MCHP_I2SMCC_CR, MCHP_I2SMCC_CR_CKDIS);
+ 
+ 		if (dev->gclk_running) {
+-			clk_disable_unprepare(dev->gclk);
++			clk_disable(dev->gclk);
+ 			dev->gclk_running = 0;
+ 		}
++		if (dev->gclk_use) {
++			clk_unprepare(dev->gclk);
++			dev->gclk_use = 0;
++		}
+ 	}
+ 
+ 	return 0;
 -- 
 2.20.1
 
