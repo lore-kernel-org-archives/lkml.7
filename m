@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0AE6C4CED1
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:52:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04AFCC32792
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:52:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BC5E320867
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:52:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C469A2086A
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:52:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570121532;
-	bh=YeCFigP0qPUGddwULD/CreVJ/+qrEsHVvja3e2+ZdGI=;
+	s=default; t=1570121535;
+	bh=OZi46/LEW9kyWJKIzQu9CrXEOyEZid01NguqZCh4Q1M=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=hlYwfAF8DeAleMjfraxjzl/qIzRdGd2HvxGSDM41v39C9u1Fy/vsqCIko1JT08kGh
-	 z2qq74afre86m9j85dEWxFW1PpCYMfiRjAlWTnTO/p5xZt4wbMQsdKou9H/XZ+x/1i
-	 o1Nay9BbjLCcQzlReyCsMsnZyV6EUvYjrSqfA+bI=
+	b=vuGnPyMO/wtSGNUx9kxxGNlYkaMlrFD27LpmyMUB7UYLoWl+BRTTX32x5hjD0zGoj
+	 bO43Ms20+IRR4YIw85je7ZmAHkhsUIaeCxxhLYqM13U/yyzx4JZozElMWpDPDislyN
+	 6bbJnFB2AT76FSmUXwR8iy1CARDSfxM0abCOTcwk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393180AbfJCQwL (ORCPT
+        id S2393193AbfJCQwO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 12:52:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39652 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 12:52:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39740 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2393158AbfJCQwH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:52:07 -0400
+        id S1732564AbfJCQwM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:52:12 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9B4E320865;
-        Thu,  3 Oct 2019 16:52:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EF02420865;
+        Thu,  3 Oct 2019 16:52:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570121526;
-        bh=YeCFigP0qPUGddwULD/CreVJ/+qrEsHVvja3e2+ZdGI=;
+        s=default; t=1570121531;
+        bh=OZi46/LEW9kyWJKIzQu9CrXEOyEZid01NguqZCh4Q1M=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=15OpnNIRi3WYmvQg4rqc256eloEj7d7k5n38V4PDyF48EOaibWfGaXebS50vHs08Z
-         xy2VZ0a4F3nKweHGYU8259zipO8+iTNB1WaOtBxUvqUHvEonwMZp9P388u3Gm60oDT
-         z1+8+r4IVwVvG7PHwZ0Hx836Sd814Wc6ZYh31tUI=
+        b=0ak7N7ycqmnDm6hAvIsEMrkumrRqeGW45A57yGAvnwmXBBhZchr3hK953ez/FXenG
+         nJjg+U4X7DqHZLj2Vgwnxn7RPqcZcgxKgKZoMqnCvC/vnaSgbu/3EafmEurgxKrLbQ
+         Fuzci0uadfzgPzN6zbWY0ELwOM/qJR/Qr3qJI99M=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Filipe Manana <fdmanana@kernel.org>,
-        Dennis Zhou <dennis@kernel.org>,
+        stable@vger.kernel.org, Qu Wenruo <wqu@suse.com>,
         David Sterba <dsterba@suse.com>
-Subject: [PATCH 5.3 312/344] btrfs: adjust dirty_metadata_bytes after writeback failure of extent buffer
-Date:   Thu,  3 Oct 2019 17:54:37 +0200
-Message-Id: <20191003154609.942983053@linuxfoundation.org>
+Subject: [PATCH 5.3 314/344] btrfs: qgroup: Fix reserved data space leak if we have multiple reserve calls
+Date:   Thu,  3 Oct 2019 17:54:39 +0200
+Message-Id: <20191003154610.104056625@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191003154540.062170222@linuxfoundation.org>
 References: <20191003154540.062170222@linuxfoundation.org>
@@ -60,50 +59,92 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dennis Zhou <dennis@kernel.org>
+From: Qu Wenruo <wqu@suse.com>
 
-commit eb5b64f142504a597d67e2109d603055ff765e52 upstream.
+commit d4e204948fe3e0dc8e1fbf3f8f3290c9c2823be3 upstream.
 
-Before, if a eb failed to write out, we would end up triggering a
-BUG_ON(). As of f4340622e0226 ("btrfs: extent_io: Move the BUG_ON() in
-flush_write_bio() one level up"), we no longer BUG_ON(), so we should
-make life consistent and add back the unwritten bytes to
-dirty_metadata_bytes.
+[BUG]
+The following script can cause btrfs qgroup data space leak:
 
-Fixes: f4340622e022 ("btrfs: extent_io: Move the BUG_ON() in flush_write_bio() one level up")
-CC: stable@vger.kernel.org # 5.2+
-Reviewed-by: Filipe Manana <fdmanana@kernel.org>
-Signed-off-by: Dennis Zhou <dennis@kernel.org>
+  mkfs.btrfs -f $dev
+  mount $dev -o nospace_cache $mnt
+
+  btrfs subv create $mnt/subv
+  btrfs quota en $mnt
+  btrfs quota rescan -w $mnt
+  btrfs qgroup limit 128m $mnt/subv
+
+  for (( i = 0; i < 3; i++)); do
+          # Create 3 64M holes for latter fallocate to fail
+          truncate -s 192m $mnt/subv/file
+          xfs_io -c "pwrite 64m 4k" $mnt/subv/file > /dev/null
+          xfs_io -c "pwrite 128m 4k" $mnt/subv/file > /dev/null
+          sync
+
+          # it's supposed to fail, and each failure will leak at least 64M
+          # data space
+          xfs_io -f -c "falloc 0 192m" $mnt/subv/file &> /dev/null
+          rm $mnt/subv/file
+          sync
+  done
+
+  # Shouldn't fail after we removed the file
+  xfs_io -f -c "falloc 0 64m" $mnt/subv/file
+
+[CAUSE]
+Btrfs qgroup data reserve code allow multiple reservations to happen on
+a single extent_changeset:
+E.g:
+	btrfs_qgroup_reserve_data(inode, &data_reserved, 0, SZ_1M);
+	btrfs_qgroup_reserve_data(inode, &data_reserved, SZ_1M, SZ_2M);
+	btrfs_qgroup_reserve_data(inode, &data_reserved, 0, SZ_4M);
+
+Btrfs qgroup code has its internal tracking to make sure we don't
+double-reserve in above example.
+
+The only pattern utilizing this feature is in the main while loop of
+btrfs_fallocate() function.
+
+However btrfs_qgroup_reserve_data()'s error handling has a bug in that
+on error it clears all ranges in the io_tree with EXTENT_QGROUP_RESERVED
+flag but doesn't free previously reserved bytes.
+
+This bug has a two fold effect:
+- Clearing EXTENT_QGROUP_RESERVED ranges
+  This is the correct behavior, but it prevents
+  btrfs_qgroup_check_reserved_leak() to catch the leakage as the
+  detector is purely EXTENT_QGROUP_RESERVED flag based.
+
+- Leak the previously reserved data bytes.
+
+The bug manifests when N calls to btrfs_qgroup_reserve_data are made and
+the last one fails, leaking space reserved in the previous ones.
+
+[FIX]
+Also free previously reserved data bytes when btrfs_qgroup_reserve_data
+fails.
+
+Fixes: 524725537023 ("btrfs: qgroup: Introduce btrfs_qgroup_reserve_data function")
+CC: stable@vger.kernel.org # 4.4+
+Signed-off-by: Qu Wenruo <wqu@suse.com>
 Signed-off-by: David Sterba <dsterba@suse.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/btrfs/extent_io.c |    9 +++++++++
- 1 file changed, 9 insertions(+)
+ fs/btrfs/qgroup.c |    3 +++
+ 1 file changed, 3 insertions(+)
 
---- a/fs/btrfs/extent_io.c
-+++ b/fs/btrfs/extent_io.c
-@@ -3745,12 +3745,21 @@ err_unlock:
- static void set_btree_ioerr(struct page *page)
- {
- 	struct extent_buffer *eb = (struct extent_buffer *)page->private;
-+	struct btrfs_fs_info *fs_info;
- 
- 	SetPageError(page);
- 	if (test_and_set_bit(EXTENT_BUFFER_WRITE_ERR, &eb->bflags))
- 		return;
- 
- 	/*
-+	 * If we error out, we should add back the dirty_metadata_bytes
-+	 * to make it consistent.
-+	 */
-+	fs_info = eb->fs_info;
-+	percpu_counter_add_batch(&fs_info->dirty_metadata_bytes,
-+				 eb->len, fs_info->dirty_metadata_batch);
-+
-+	/*
- 	 * If writeback for a btree extent that doesn't belong to a log tree
- 	 * failed, increment the counter transaction->eb_write_errors.
- 	 * We do this because while the transaction is running and before it's
+--- a/fs/btrfs/qgroup.c
++++ b/fs/btrfs/qgroup.c
+@@ -3425,6 +3425,9 @@ cleanup:
+ 	while ((unode = ulist_next(&reserved->range_changed, &uiter)))
+ 		clear_extent_bit(&BTRFS_I(inode)->io_tree, unode->val,
+ 				 unode->aux, EXTENT_QGROUP_RESERVED, 0, 0, NULL);
++	/* Also free data bytes of already reserved one */
++	btrfs_qgroup_free_refroot(root->fs_info, root->root_key.objectid,
++				  orig_reserved, BTRFS_QGROUP_RSV_DATA);
+ 	extent_changeset_release(reserved);
+ 	return ret;
+ }
 
 
