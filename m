@@ -4,56 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4957C10F14
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:05:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86DF2C32792
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:05:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ACF7F222BE
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:05:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5370A222CA
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:05:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570118734;
-	bh=7RMS4YktEnGBSooX125/Dw0SiOsFPkU0E3b2XtdJMjs=;
+	s=default; t=1570118739;
+	bh=pR+ClgwAa37N/fDxFJEZeh8L9HIoIcDQe8dndEsAvIE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=2WlbnhODfuNhLaAahWPJ74JuL20V55DjmvVar3Zccvu0uLWMCrN82V4vCOWNkax8T
-	 G7JIIgSU/kewqHUOqMoFM/AHDiHkSdE9uAUe0vq5tnooXY1HrrIvJRb41HyCPj+hSY
-	 xrAdQOTvCpXeBgiHryB0EVnKpR7FSuVcLZctVwpc=
+	b=Cr7BY/eTt+t6zFhAVoHLJlygtK2V54M7OsJZ6qUPZ0yim/euKcmFHYpO3sjsoPZ77
+	 AIiYxe6XmO+jnsmt9TV1GVC8TbPEOLZvbTnxRpelmtghanFI4Tpwy1H+OpdGm0NdkJ
+	 zjVsRSYDKl43aAP/weDj7dKf2tHEntTJONqZrSAo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732564AbfJCQFd (ORCPT
+        id S1732588AbfJCQFi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 12:05:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52200 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 12:05:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52348 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732550AbfJCQFa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:05:30 -0400
+        id S1732566AbfJCQFf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:05:35 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B94A1207FF;
-        Thu,  3 Oct 2019 16:05:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0C7D521A4C;
+        Thu,  3 Oct 2019 16:05:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570118729;
-        bh=7RMS4YktEnGBSooX125/Dw0SiOsFPkU0E3b2XtdJMjs=;
+        s=default; t=1570118734;
+        bh=pR+ClgwAa37N/fDxFJEZeh8L9HIoIcDQe8dndEsAvIE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=p0Ai2GNhSmP67CbXW5M3HzuwHilm7221Q102XPZ9v2GIke3WkH2vTnWl4kT0c0BGc
-         VaZPBtV0JwkIlVde5IlK90kAcuetYt+1as2lVnJtEWfkeaK6drX2INzNF3GGtCKHtx
-         nP5bywSRZOjokRnZP3Q3gYVUmA5ArVJpPvujMMgE=
+        b=uBIqKdP1T3NHqSCXrLle10W6uhY7NOnU93IwS2w+CKja0KjR9P/90Wup33BFOJd1s
+         kKSb1uzw/+4+S0GLttFzkK2w2pe9p9GB2ZQmnGbt13g9+kV15IzT1HSvxHOPncKDZ+
+         GeRqQ+XXihGgjoZnZ13zfR3lLDQ+yffarXRbqZyI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Patrick McLean <chutzpah@gentoo.org>,
-        Tzvetomir Stoyanov <tstoyanov@vmware.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        linux-trace-devel@vger.kernel.org,
-        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        stable@vger.kernel.org, Wenwen Wang <wenwen@cs.uga.edu>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 079/129] libtraceevent: Change users plugin directory
-Date:   Thu,  3 Oct 2019 17:53:22 +0200
-Message-Id: <20191003154355.281204555@linuxfoundation.org>
+Subject: [PATCH 4.9 081/129] ACPI: custom_method: fix memory leaks
+Date:   Thu,  3 Oct 2019 17:53:24 +0200
+Message-Id: <20191003154355.818647772@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191003154318.081116689@linuxfoundation.org>
 References: <20191003154318.081116689@linuxfoundation.org>
@@ -66,68 +60,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tzvetomir Stoyanov <tstoyanov@vmware.com>
+From: Wenwen Wang <wenwen@cs.uga.edu>
 
-[ Upstream commit e97fd1383cd77c467d2aed7fa4e596789df83977 ]
+[ Upstream commit 03d1571d9513369c17e6848476763ebbd10ec2cb ]
 
-To be compliant with XDG user directory layout, the user's plugin
-directory is changed from ~/.traceevent/plugins to
-~/.local/lib/traceevent/plugins/
+In cm_write(), 'buf' is allocated through kzalloc(). In the following
+execution, if an error occurs, 'buf' is not deallocated, leading to memory
+leaks. To fix this issue, free 'buf' before returning the error.
 
-Suggested-by: Patrick McLean <chutzpah@gentoo.org>
-Signed-off-by: Tzvetomir Stoyanov <tstoyanov@vmware.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Jiri Olsa <jolsa@redhat.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Patrick McLean <chutzpah@gentoo.org>
-Cc: linux-trace-devel@vger.kernel.org
-Link: https://lore.kernel.org/linux-trace-devel/20190313144206.41e75cf8@patrickm/
-Link: http://lore.kernel.org/linux-trace-devel/20190801074959.22023-4-tz.stoyanov@gmail.com
-Link: http://lore.kernel.org/lkml/20190805204355.344622683@goodmis.org
-Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Fixes: 526b4af47f44 ("ACPI: Split out custom_method functionality into an own driver")
+Signed-off-by: Wenwen Wang <wenwen@cs.uga.edu>
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/lib/traceevent/Makefile       | 6 +++---
- tools/lib/traceevent/event-plugin.c | 2 +-
- 2 files changed, 4 insertions(+), 4 deletions(-)
+ drivers/acpi/custom_method.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/tools/lib/traceevent/Makefile b/tools/lib/traceevent/Makefile
-index 7851df1490e0a..cc3315da6dc39 100644
---- a/tools/lib/traceevent/Makefile
-+++ b/tools/lib/traceevent/Makefile
-@@ -54,15 +54,15 @@ set_plugin_dir := 1
+diff --git a/drivers/acpi/custom_method.c b/drivers/acpi/custom_method.c
+index c68e72414a67a..435bd0ffc8c02 100644
+--- a/drivers/acpi/custom_method.c
++++ b/drivers/acpi/custom_method.c
+@@ -48,8 +48,10 @@ static ssize_t cm_write(struct file *file, const char __user * user_buf,
+ 	if ((*ppos > max_size) ||
+ 	    (*ppos + count > max_size) ||
+ 	    (*ppos + count < count) ||
+-	    (count > uncopied_bytes))
++	    (count > uncopied_bytes)) {
++		kfree(buf);
+ 		return -EINVAL;
++	}
  
- # Set plugin_dir to preffered global plugin location
- # If we install under $HOME directory we go under
--# $(HOME)/.traceevent/plugins
-+# $(HOME)/.local/lib/traceevent/plugins
- #
- # We dont set PLUGIN_DIR in case we install under $HOME
- # directory, because by default the code looks under:
--# $(HOME)/.traceevent/plugins by default.
-+# $(HOME)/.local/lib/traceevent/plugins by default.
- #
- ifeq ($(plugin_dir),)
- ifeq ($(prefix),$(HOME))
--override plugin_dir = $(HOME)/.traceevent/plugins
-+override plugin_dir = $(HOME)/.local/lib/traceevent/plugins
- set_plugin_dir := 0
- else
- override plugin_dir = $(libdir)/traceevent/plugins
-diff --git a/tools/lib/traceevent/event-plugin.c b/tools/lib/traceevent/event-plugin.c
-index a16756ae35267..5fe7889606a23 100644
---- a/tools/lib/traceevent/event-plugin.c
-+++ b/tools/lib/traceevent/event-plugin.c
-@@ -30,7 +30,7 @@
- #include "event-parse.h"
- #include "event-utils.h"
+ 	if (copy_from_user(buf + (*ppos), user_buf, count)) {
+ 		kfree(buf);
+@@ -69,6 +71,7 @@ static ssize_t cm_write(struct file *file, const char __user * user_buf,
+ 		add_taint(TAINT_OVERRIDDEN_ACPI_TABLE, LOCKDEP_NOW_UNRELIABLE);
+ 	}
  
--#define LOCAL_PLUGIN_DIR ".traceevent/plugins"
-+#define LOCAL_PLUGIN_DIR ".local/lib/traceevent/plugins/"
++	kfree(buf);
+ 	return count;
+ }
  
- static struct registered_plugin_options {
- 	struct registered_plugin_options	*next;
 -- 
 2.20.1
 
