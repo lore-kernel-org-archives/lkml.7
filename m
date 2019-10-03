@@ -2,54 +2,51 @@ Return-Path: <SRS0=6dNS=X4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 203C9C10F14
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:37:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 582E3C10F14
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:37:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EC30920865
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:37:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2EF3920865
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:37:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570124232;
-	bh=DYPUHkFwE2OHjgLP4ISyNE+opxvpsDK+gYTZDZ7jGSY=;
+	s=default; t=1570124237;
+	bh=9BntkJM+X8b2XhLAQ3602/FseqHcZoM+K3XqsjBTRlA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=neUVRL4/JCoNHE0E/Z2eVKB2HrF+zJwdMq2wEKtAjWpn5r4HuzaVKRiSG4JZh7zI0
-	 CUL7rKuPZfo1y06UPkBL8IoLoqEOsUM18/5iD41eEw3txXVxzpeIq3nsi2beM3Ssbd
-	 pfhb1AcarYtLdDDOkMvKl4pKaFX7EzxSF9umMayw=
+	b=ZPKiJBmB8pd/jdSDyQAuDR5WWPnKgmRwPe/CX0Z7ic7+A2/leSAMf2D+0jiqdA+g+
+	 Ur9B3UE+yDOjjZj/I8xffJQxGEReuedN+ZDiA/ZrLKHiYI20hTJ8oZNiDnYFx7hOAS
+	 VfQ/r/TXUZc1nR7JGLQpDjzXAZHm4hSXtSqrC6cg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732497AbfJCRhK (ORCPT
+        id S2388952AbfJCRhQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 13:37:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49348 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 13:37:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49208 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729865AbfJCQDt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:03:49 -0400
+        id S1732276AbfJCQDn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:03:43 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E3B35215EA;
-        Thu,  3 Oct 2019 16:03:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 77DCA222C4;
+        Thu,  3 Oct 2019 16:03:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570118628;
-        bh=DYPUHkFwE2OHjgLP4ISyNE+opxvpsDK+gYTZDZ7jGSY=;
+        s=default; t=1570118623;
+        bh=9BntkJM+X8b2XhLAQ3602/FseqHcZoM+K3XqsjBTRlA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=djj8Cw8Ohy/IMmFWf8JlAVSmQoqAZ+rgiLKWZ1LyChD+Trv/fc++LY1RmexQmf6GD
-         x1qZpllOju9hoQig4RDhX54mUmt/34KI+1WiZS0AcYmzUTPwA3knut8V/wop1P5yZ5
-         psvgciXvz4knPl1gOXKIWNYNRWhtpAhjBnAAEn48=
+        b=R8PEPKNdGevq4qJITczhq5Rwbo92UyMELC8zQNqtwVkf476OsfS+hBz4fAlpaGKoO
+         dwp5H+7X/JbdDoTpgen5EdfywpMjoS93X9OLi/ShH4rXNh9+lAMEwnouThSAw5lsuK
+         mea3jBKNgvRIeRjE0v/GOXzy9RvQciKTAyAFpBGs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        "Maciej S. Szmigiero" <mail@maciej.szmigiero.name>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 073/129] media: saa7134: fix terminology around saa7134_i2c_eeprom_md7134_gate()
-Date:   Thu,  3 Oct 2019 17:53:16 +0200
-Message-Id: <20191003154351.585730076@linuxfoundation.org>
+        stable@vger.kernel.org, Stefan Wahren <wahrenst@gmx.net>,
+        Vinod Koul <vkoul@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.9 042/129] dmaengine: bcm2835: Print error in case setting DMA mask fails
+Date:   Thu,  3 Oct 2019 17:52:45 +0200
+Message-Id: <20191003154336.468459051@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191003154318.081116689@linuxfoundation.org>
 References: <20191003154318.081116689@linuxfoundation.org>
@@ -62,58 +59,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Maciej S. Szmigiero <mail@maciej.szmigiero.name>
+From: Stefan Wahren <wahrenst@gmx.net>
 
-[ Upstream commit 9d802222a3405599d6e1984d9324cddf592ea1f4 ]
+[ Upstream commit 72503b25ee363827aafffc3e8d872e6a92a7e422 ]
 
-saa7134_i2c_eeprom_md7134_gate() function and the associated comment uses
-an inverted i2c gate open / closed terminology.
-Let's fix this.
+During enabling of the RPi 4, we found out that the driver doesn't provide
+a helpful error message in case setting DMA mask fails. So add one.
 
-Signed-off-by: Maciej S. Szmigiero <mail@maciej.szmigiero.name>
-Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
-[hverkuil-cisco@xs4all.nl: fix alignment checkpatch warning]
-Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Signed-off-by: Stefan Wahren <wahrenst@gmx.net>
+Link: https://lore.kernel.org/r/1563297318-4900-1-git-send-email-wahrenst@gmx.net
+Signed-off-by: Vinod Koul <vkoul@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/pci/saa7134/saa7134-i2c.c | 12 ++++++++----
- 1 file changed, 8 insertions(+), 4 deletions(-)
+ drivers/dma/bcm2835-dma.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/media/pci/saa7134/saa7134-i2c.c b/drivers/media/pci/saa7134/saa7134-i2c.c
-index dca0592c5f471..6f93568f56204 100644
---- a/drivers/media/pci/saa7134/saa7134-i2c.c
-+++ b/drivers/media/pci/saa7134/saa7134-i2c.c
-@@ -355,7 +355,11 @@ static struct i2c_client saa7134_client_template = {
+diff --git a/drivers/dma/bcm2835-dma.c b/drivers/dma/bcm2835-dma.c
+index 6ba53bbd0e161..b984d00bc0558 100644
+--- a/drivers/dma/bcm2835-dma.c
++++ b/drivers/dma/bcm2835-dma.c
+@@ -891,8 +891,10 @@ static int bcm2835_dma_probe(struct platform_device *pdev)
+ 		pdev->dev.dma_mask = &pdev->dev.coherent_dma_mask;
  
- /* ----------------------------------------------------------- */
+ 	rc = dma_set_mask_and_coherent(&pdev->dev, DMA_BIT_MASK(32));
+-	if (rc)
++	if (rc) {
++		dev_err(&pdev->dev, "Unable to set DMA mask\n");
+ 		return rc;
++	}
  
--/* On Medion 7134 reading EEPROM needs DVB-T demod i2c gate open */
-+/*
-+ * On Medion 7134 reading the SAA7134 chip config EEPROM needs DVB-T
-+ * demod i2c gate closed due to an address clash between this EEPROM
-+ * and the demod one.
-+ */
- static void saa7134_i2c_eeprom_md7134_gate(struct saa7134_dev *dev)
- {
- 	u8 subaddr = 0x7, dmdregval;
-@@ -372,14 +376,14 @@ static void saa7134_i2c_eeprom_md7134_gate(struct saa7134_dev *dev)
- 
- 	ret = i2c_transfer(&dev->i2c_adap, i2cgatemsg_r, 2);
- 	if ((ret == 2) && (dmdregval & 0x2)) {
--		pr_debug("%s: DVB-T demod i2c gate was left closed\n",
-+		pr_debug("%s: DVB-T demod i2c gate was left open\n",
- 			 dev->name);
- 
- 		data[0] = subaddr;
- 		data[1] = (dmdregval & ~0x2);
- 		if (i2c_transfer(&dev->i2c_adap, i2cgatemsg_w, 1) != 1)
--			pr_err("%s: EEPROM i2c gate open failure\n",
--			  dev->name);
-+			pr_err("%s: EEPROM i2c gate close failure\n",
-+			       dev->name);
- 	}
- }
- 
+ 	od = devm_kzalloc(&pdev->dev, sizeof(*od), GFP_KERNEL);
+ 	if (!od)
 -- 
 2.20.1
 
