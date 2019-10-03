@@ -2,56 +2,53 @@ Return-Path: <SRS0=6dNS=X4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D3400C10F14
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:43:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 76298C4CED1
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:43:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A72A020830
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:43:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4E9AC20830
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:43:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570121019;
-	bh=PTRFg5H0sd1NZhrgVLIr+LKoLtrbbh9JgfEOdGjhTC4=;
+	s=default; t=1570121023;
+	bh=uYufKrDpTA1A5HijS+YC1Ff7fl9umsInfHim8PACkIQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=d2l+G97ocqHjVdA1CPpV8RizOV3iEBvT86V+vzawOe5uDOSTufuSy4jIW/VsBciOp
-	 ea6qrCoO4xOfIBLex6ZnrkFXmllisocjAQPlr0TXxi2Ki8B63nKfyomfhdDPa+XYdt
-	 C5D6gdKbKJffugw/Pt39nqV4Z2pbIA7cxIc2VWYQ=
+	b=TDEVXRKSYaPk+RGXlFcJm/41I/JTfQFW8aOAb7ZvYIpe/l8H+6AwV3u77aGHCXYcW
+	 vgw/ps+98Dx5PFiRPbj9O2W/V1JYKZsRIAenRmgYkruONyjxfuB1Dt2xmgIdGykTLs
+	 gm0xU7DEMehArwcbo0zkUFgOBT4076Uvawpb7xko=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405242AbfJCQni (ORCPT
+        id S2405244AbfJCQnm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 12:43:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55036 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 12:43:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54996 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388237AbfJCQnf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:43:35 -0400
+        id S2392708AbfJCQnd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:43:33 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1008D2070B;
-        Thu,  3 Oct 2019 16:43:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 612A620830;
+        Thu,  3 Oct 2019 16:43:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570121014;
-        bh=PTRFg5H0sd1NZhrgVLIr+LKoLtrbbh9JgfEOdGjhTC4=;
+        s=default; t=1570121011;
+        bh=uYufKrDpTA1A5HijS+YC1Ff7fl9umsInfHim8PACkIQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=nu5quJeOXotzKdW+nInZCJHvtERvK8rVMcdh4fTQLHuQEEFMuSmQRvKfU0HIfILId
-         xyRJYNa53SL9z6cO3uGa3t9vT9vpHzCOFGNjGhDoE+K5beiH/5js+xFcn7CKtC72tH
-         pRElxTAEzlUEClSakadu/X+h/Jugy3vlq5QYnIAQ=
+        b=eSX43I2RRaQaDZeGTMy5FIcqh0bxXWKI5gnv8JCZCo2U3J8bpPjZdM5mkhdsLfbJZ
+         dcWc6Fq0N1P9yTM2ifOBqFFdYGBWZLdg6Rqt5kqp/5W/joKMHKIkBl2liKsdS51H5h
+         w5QFYDO9TnbCxXLX9NjvENfS8YNyfMN6UryQ0qWE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Adrian Hunter <adrian.hunter@intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        =?UTF-8?q?Luis=20Cl=C3=A1udio=20Gon=C3=A7alves?= 
-        <lclaudio@redhat.com>, Namhyung Kim <namhyung@kernel.org>,
-        Taeung Song <treeze.taeung@gmail.com>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        stable@vger.kernel.org, Finn Thain <fthain@telegraphics.com.au>,
+        Greg Ungerer <gerg@linux-m68k.org>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.3 105/344] perf test vfs_getname: Disable ~/.perfconfig to get default output
-Date:   Thu,  3 Oct 2019 17:51:10 +0200
-Message-Id: <20191003154550.583401971@linuxfoundation.org>
+Subject: [PATCH 5.3 122/344] m68k: Prevent some compiler warnings in Coldfire builds
+Date:   Thu,  3 Oct 2019 17:51:27 +0200
+Message-Id: <20191003154552.239201470@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191003154540.062170222@linuxfoundation.org>
 References: <20191003154540.062170222@linuxfoundation.org>
@@ -64,74 +61,112 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Arnaldo Carvalho de Melo <acme@redhat.com>
+From: Finn Thain <fthain@telegraphics.com.au>
 
-[ Upstream commit 4fe94ce1c6ba678b5f12b94bb9996eea4fc99e85 ]
+[ Upstream commit 94c04390225bcd8283103fd0c04be20cc30cc979 ]
 
-To get the expected output we have to ignore whatever changes the user
-has in its ~/.perfconfig file, so set PERF_CONFIG to /dev/null to
-achieve that.
+Since commit d3b41b6bb49e ("m68k: Dispatch nvram_ops calls to Atari or
+Mac functions"), Coldfire builds generate compiler warnings due to the
+unconditional inclusion of asm/atarihw.h and asm/macintosh.h.
 
-Before:
+The inclusion of asm/atarihw.h causes warnings like this:
 
-  # egrep 'trace|show_' ~/.perfconfig
-  [trace]
-  	show_zeros = yes
-  	show_duration = no
-  	show_timestamp = no
-  	show_arg_names = no
-  	show_prefix = yes
-  # echo $PERF_CONFIG
+In file included from ./arch/m68k/include/asm/atarihw.h:25:0,
+                 from arch/m68k/kernel/setup_mm.c:41,
+                 from arch/m68k/kernel/setup.c:3:
+./arch/m68k/include/asm/raw_io.h:39:0: warning: "__raw_readb" redefined
+ #define __raw_readb in_8
 
-  # perf test "trace + vfs_getname"
-  70: Check open filename arg using perf trace + vfs_getname: FAILED!
-  # export PERF_CONFIG=/dev/null
-  # perf test "trace + vfs_getname"
-  70: Check open filename arg using perf trace + vfs_getname: Ok
-  #
+In file included from ./arch/m68k/include/asm/io.h:6:0,
+                 from arch/m68k/kernel/setup_mm.c:36,
+                 from arch/m68k/kernel/setup.c:3:
+./arch/m68k/include/asm/io_no.h:16:0: note: this is the location of the previous definition
+ #define __raw_readb(addr) \
+...
 
-After:
+This issue is resolved by dropping the asm/raw_io.h include. It turns out
+that asm/io_mm.h already includes that header file.
 
-  # egrep 'trace|show_' ~/.perfconfig
-  [trace]
-  	show_zeros = yes
-  	show_duration = no
-  	show_timestamp = no
-  	show_arg_names = no
-  	show_prefix = yes
-  # echo $PERF_CONFIG
+Moving the relevant macro definitions helps to clarify this dependency
+and make it safe to include asm/atarihw.h.
 
-  # perf test "trace + vfs_getname"
-  70: Check open filename arg using perf trace + vfs_getname: Ok
-  #
+The other warnings look like this:
 
-Cc: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Jiri Olsa <jolsa@kernel.org>
-Cc: Luis Cláudio Gonçalves <lclaudio@redhat.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Taeung Song <treeze.taeung@gmail.com>
-Link: https://lkml.kernel.org/n/tip-3up27pexg5i3exuzqrvt4m8u@git.kernel.org
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+In file included from arch/m68k/kernel/setup_mm.c:48:0,
+                 from arch/m68k/kernel/setup.c:3:
+./arch/m68k/include/asm/macintosh.h:19:35: warning: 'struct irq_data' declared inside parameter list will not be visible outside of this definition or declaration
+ extern void mac_irq_enable(struct irq_data *data);
+                                   ^~~~~~~~
+...
+
+This issue is resolved by adding the missing linux/irq.h include.
+
+Signed-off-by: Finn Thain <fthain@telegraphics.com.au>
+Acked-by: Greg Ungerer <gerg@linux-m68k.org>
+Signed-off-by: Geert Uytterhoeven <geert@linux-m68k.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/perf/tests/shell/trace+probe_vfs_getname.sh | 4 ++++
- 1 file changed, 4 insertions(+)
+ arch/m68k/include/asm/atarihw.h   | 9 ---------
+ arch/m68k/include/asm/io_mm.h     | 6 +++++-
+ arch/m68k/include/asm/macintosh.h | 1 +
+ 3 files changed, 6 insertions(+), 10 deletions(-)
 
-diff --git a/tools/perf/tests/shell/trace+probe_vfs_getname.sh b/tools/perf/tests/shell/trace+probe_vfs_getname.sh
-index 45d269b0157eb..11cc2af13f2bb 100755
---- a/tools/perf/tests/shell/trace+probe_vfs_getname.sh
-+++ b/tools/perf/tests/shell/trace+probe_vfs_getname.sh
-@@ -32,6 +32,10 @@ if [ $err -ne 0 ] ; then
- 	exit $err
- fi
+diff --git a/arch/m68k/include/asm/atarihw.h b/arch/m68k/include/asm/atarihw.h
+index 533008262b691..5e5601c382b80 100644
+--- a/arch/m68k/include/asm/atarihw.h
++++ b/arch/m68k/include/asm/atarihw.h
+@@ -22,7 +22,6 @@
  
-+# Do not use whatever ~/.perfconfig file, it may change the output
-+# via trace.{show_timestamp,show_prefix,etc}
-+export PERF_CONFIG=/dev/null
+ #include <linux/types.h>
+ #include <asm/bootinfo-atari.h>
+-#include <asm/raw_io.h>
+ #include <asm/kmap.h>
+ 
+ extern u_long atari_mch_cookie;
+@@ -132,14 +131,6 @@ extern struct atari_hw_present atari_hw_present;
+  */
+ 
+ 
+-#define atari_readb   raw_inb
+-#define atari_writeb  raw_outb
+-
+-#define atari_inb_p   raw_inb
+-#define atari_outb_p  raw_outb
+-
+-
+-
+ #include <linux/mm.h>
+ #include <asm/cacheflush.h>
+ 
+diff --git a/arch/m68k/include/asm/io_mm.h b/arch/m68k/include/asm/io_mm.h
+index 6c03ca5bc4365..819f611dccf28 100644
+--- a/arch/m68k/include/asm/io_mm.h
++++ b/arch/m68k/include/asm/io_mm.h
+@@ -29,7 +29,11 @@
+ #include <asm-generic/iomap.h>
+ 
+ #ifdef CONFIG_ATARI
+-#include <asm/atarihw.h>
++#define atari_readb   raw_inb
++#define atari_writeb  raw_outb
 +
- trace_open_vfs_getname
- err=$?
- rm -f ${file}
++#define atari_inb_p   raw_inb
++#define atari_outb_p  raw_outb
+ #endif
+ 
+ 
+diff --git a/arch/m68k/include/asm/macintosh.h b/arch/m68k/include/asm/macintosh.h
+index d9a08bed4b128..f653b60f2afcf 100644
+--- a/arch/m68k/include/asm/macintosh.h
++++ b/arch/m68k/include/asm/macintosh.h
+@@ -4,6 +4,7 @@
+ 
+ #include <linux/seq_file.h>
+ #include <linux/interrupt.h>
++#include <linux/irq.h>
+ 
+ #include <asm/bootinfo-mac.h>
+ 
 -- 
 2.20.1
 
