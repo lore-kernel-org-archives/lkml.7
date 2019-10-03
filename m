@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A077C10F14
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:18:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09EE3C10F14
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:18:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C45FB21783
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:18:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C0F1F21783
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:18:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570119503;
-	bh=CQ1VJV5SGEcxU1DDwi4WGZ9oGRxifBDjq7NGuSu/3LU=;
+	s=default; t=1570119509;
+	bh=AsUcjl7bU3ZIWQ/tixJ4jOBHiqJuChzvSZje7Wuze/8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=QwMpbOk6kmCj/D4ZqGwrtTLMYKJ1Jeh84MFuXgk9tieeCaSfmkdFlNkmSnnyY+cUi
-	 FuGYe+eApUGnIJOpKWfllV6d9zR/cs8Qp9EbAn4e3cgwhuecu8PoLWu0NMFmSV9Vv4
-	 daHltgwsRmQuJwfzDhGyGK09rryOusp3Vne2cmiM=
+	b=Rou19EI93jZxNMjnjtQLVZFTQgFGrXyosKi54d/Dp3wLB2vUxacgHMf/eeLxl5dC1
+	 vYwAWGnDLeLi0EKmMba4XOJoBdKrEIMKLhEJzwSBfXMq8kqQMHg2ehY1ulhpxqXmqH
+	 m66Fc97+3tyQgg82hssMY3m0gg1N6iPl7oT0hBqk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388124AbfJCQSX (ORCPT
+        id S2389479AbfJCQS3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 12:18:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44856 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 12:18:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45002 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387876AbfJCQST (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:18:19 -0400
+        id S2387876AbfJCQSZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:18:25 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 56E1D21783;
-        Thu,  3 Oct 2019 16:18:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C34DB20700;
+        Thu,  3 Oct 2019 16:18:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570119498;
-        bh=CQ1VJV5SGEcxU1DDwi4WGZ9oGRxifBDjq7NGuSu/3LU=;
+        s=default; t=1570119504;
+        bh=AsUcjl7bU3ZIWQ/tixJ4jOBHiqJuChzvSZje7Wuze/8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=R+V91hcpsQiZ7i747xodx/V83ABWmb5EvtUE22r05RcH6RgvuuAzZkrGo0UpJebdP
-         b+zVVwbEqegZ4pYGreZU5Een9sPJrr6w0tnGWgz+ivvqM8U9bUqjTRUAwJpkP9Tzxj
-         7VSmm6ptq1RzTd3y0tuAhLrjuR1Lr/JTKTQZ4kEI=
+        b=RotCV0B/UUKF3M0sedkADIOuWhUQ+6tg9tDswZq8yTR1miYyt8/e4eG2BbvV5ee0s
+         q2eJy3UvfVYvV5mkyGnDUobVrl1TM/EvxKzN+o7G1M4iAHaj/t5kIP5gH/rG9APYb1
+         SyZ29+Zb4hcdRepRy2gQ+YdthQqBFx4jRO/JW40g=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Wenwen Wang <wenwen@cs.uga.edu>,
-        Pavel Machek <pavel@ucw.cz>,
-        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        stable@vger.kernel.org, Darius Rad <alpha@area49.net>,
+        Sean Young <sean@mess.org>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 088/211] led: triggers: Fix a memory leak bug
-Date:   Thu,  3 Oct 2019 17:52:34 +0200
-Message-Id: <20191003154507.088788611@linuxfoundation.org>
+Subject: [PATCH 4.19 072/211] media: rc: imon: Allow iMON RC protocol for ffdc 7e device
+Date:   Thu,  3 Oct 2019 17:52:18 +0200
+Message-Id: <20191003154504.474769815@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191003154447.010950442@linuxfoundation.org>
 References: <20191003154447.010950442@linuxfoundation.org>
@@ -61,36 +61,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wenwen Wang <wenwen@cs.uga.edu>
+From: Darius Rad <alpha@area49.net>
 
-[ Upstream commit 60e2dde1e91ae0addb21ac380cc36ebee7534e49 ]
+[ Upstream commit b20a6e298bcb8cb8ae18de26baaf462a6418515b ]
 
-In led_trigger_set(), 'event' is allocated in kasprintf(). However, it is
-not deallocated in the following execution if the label 'err_activate' or
-'err_add_groups' is entered, leading to memory leaks. To fix this issue,
-free 'event' before returning the error.
+Allow selecting the IR protocol, MCE or iMON, for a device that
+identifies as follows (with config id 0x7e):
 
-Fixes: 52c47742f79d ("leds: triggers: send uevent when changing triggers")
-Signed-off-by: Wenwen Wang <wenwen@cs.uga.edu>
-Acked-by: Pavel Machek <pavel@ucw.cz>
-Signed-off-by: Jacek Anaszewski <jacek.anaszewski@gmail.com>
+15c2:ffdc SoundGraph Inc. iMON PAD Remote Controller
+
+As the driver is structured to default to iMON when both RC
+protocols are supported, existing users of this device (using MCE
+protocol) will need to manually switch to MCE (RC-6) protocol from
+userspace (with ir-keytable, sysfs).
+
+Signed-off-by: Darius Rad <alpha@area49.net>
+Signed-off-by: Sean Young <sean@mess.org>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/leds/led-triggers.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/media/rc/imon.c | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/leds/led-triggers.c b/drivers/leds/led-triggers.c
-index 17d73db1456eb..e4cb3811e82a3 100644
---- a/drivers/leds/led-triggers.c
-+++ b/drivers/leds/led-triggers.c
-@@ -177,6 +177,7 @@ int led_trigger_set(struct led_classdev *led_cdev, struct led_trigger *trig)
- 	list_del(&led_cdev->trig_list);
- 	write_unlock_irqrestore(&led_cdev->trigger->leddev_list_lock, flags);
- 	led_set_brightness(led_cdev, LED_OFF);
-+	kfree(event);
- 
- 	return ret;
- }
+diff --git a/drivers/media/rc/imon.c b/drivers/media/rc/imon.c
+index 1041c056854d5..f23a220352f7f 100644
+--- a/drivers/media/rc/imon.c
++++ b/drivers/media/rc/imon.c
+@@ -1835,12 +1835,17 @@ static void imon_get_ffdc_type(struct imon_context *ictx)
+ 		break;
+ 	/* iMON VFD, MCE IR */
+ 	case 0x46:
+-	case 0x7e:
+ 	case 0x9e:
+ 		dev_info(ictx->dev, "0xffdc iMON VFD, MCE IR");
+ 		detected_display_type = IMON_DISPLAY_TYPE_VFD;
+ 		allowed_protos = RC_PROTO_BIT_RC6_MCE;
+ 		break;
++	/* iMON VFD, iMON or MCE IR */
++	case 0x7e:
++		dev_info(ictx->dev, "0xffdc iMON VFD, iMON or MCE IR");
++		detected_display_type = IMON_DISPLAY_TYPE_VFD;
++		allowed_protos |= RC_PROTO_BIT_RC6_MCE;
++		break;
+ 	/* iMON LCD, MCE IR */
+ 	case 0x9f:
+ 		dev_info(ictx->dev, "0xffdc iMON LCD, MCE IR");
 -- 
 2.20.1
 
