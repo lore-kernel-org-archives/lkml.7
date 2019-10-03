@@ -2,118 +2,169 @@ Return-Path: <SRS0=6dNS=X4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 08DD8C4CED1
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 14:10:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E3E6C32792
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 14:11:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D23042133F
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 14:10:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570111856;
-	bh=yj+v/xnwfsImbwvHnodO8koA4ah7y80gAuvuQteNkjs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=CVQaHNijOdPfiP+gKEcSXcg4SkxdwqHvGhb4xvcIP4SBjIEEtPFQgmz6jQ7N/jT94
-	 dQPuFvVamS0LIQo3oJlOJ2iPDb7ApOlvdSTL2c6BEj+KWDW6AjMWtKLsfcq8AcwjQN
-	 yjya5Y3wHSsFC7lsgSlDoSn/QsrWBW9g/K049sPE=
+	by mail.kernel.org (Postfix) with ESMTP id E3F2A215EA
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 14:11:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729638AbfJCOK4 (ORCPT
+        id S1730054AbfJCOLG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 10:10:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35912 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728604AbfJCOK4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 10:10:56 -0400
-Received: from localhost (lfbn-ncy-1-150-155.w83-194.abo.wanadoo.fr [83.194.232.155])
+        Thu, 3 Oct 2019 10:11:06 -0400
+Received: from mail-out.m-online.net ([212.18.0.9]:54451 "EHLO
+        mail-out.m-online.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728405AbfJCOLF (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 10:11:05 -0400
+Received: from frontend01.mail.m-online.net (unknown [192.168.8.182])
+        by mail-out.m-online.net (Postfix) with ESMTP id 46kZft3hGJz1rLFn;
+        Thu,  3 Oct 2019 16:11:02 +0200 (CEST)
+Received: from localhost (dynscan1.mnet-online.de [192.168.6.70])
+        by mail.m-online.net (Postfix) with ESMTP id 46kZft3G0yz1qqkM;
+        Thu,  3 Oct 2019 16:11:02 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at mnet-online.de
+Received: from mail.mnet-online.de ([192.168.8.182])
+        by localhost (dynscan1.mail.m-online.net [192.168.6.70]) (amavisd-new, port 10024)
+        with ESMTP id 8_DMiCrKeOt7; Thu,  3 Oct 2019 16:11:01 +0200 (CEST)
+X-Auth-Info: DWv8BxMh/iTf0m4AnKrtt6dC4KfTKDUDo8wYmzBiBN4=
+Received: from jawa (85-222-111-42.dynamic.chello.pl [85.222.111.42])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C55A7207FF;
-        Thu,  3 Oct 2019 14:10:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570111855;
-        bh=yj+v/xnwfsImbwvHnodO8koA4ah7y80gAuvuQteNkjs=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=0aVIO1KF622Q3Gvoh7K7/M7qwrcwXZ/JUtIqSP89eL4Rj2h2ZWcgF6+zuOke2CQSb
-         vHgo2WvC67JYiuTXpUgrbh5YLJDUbaneOrMD7MBUUK/uha6RlJq74NFX22ofFooy2x
-         e6axzfFX1vDVtoGbRKiBhafVQwhOYYZ2CcIKGbP8=
-Date:   Thu, 3 Oct 2019 16:10:52 +0200
-From:   Frederic Weisbecker <frederic@kernel.org>
-To:     paulmck@kernel.org
-Cc:     rcu@vger.kernel.org, linux-kernel@vger.kernel.org,
-        mingo@kernel.org, jiangshanlai@gmail.com, dipankar@in.ibm.com,
-        akpm@linux-foundation.org, mathieu.desnoyers@efficios.com,
-        josh@joshtriplett.org, tglx@linutronix.de, peterz@infradead.org,
-        rostedt@goodmis.org, dhowells@redhat.com, edumazet@google.com,
-        fweisbec@gmail.com, oleg@redhat.com, joel@joelfernandes.org,
-        "Paul E. McKenney" <paulmck@linux.ibm.com>
-Subject: Re: [PATCH tip/core/rcu 03/12] rcu: Force on tick when invoking lots
- of callbacks
-Message-ID: <20191003140955.GA27003@lenoir>
-References: <20191003013834.GA12927@paulmck-ThinkPad-P72>
- <20191003013903.13079-3-paulmck@kernel.org>
+        by mail.mnet-online.de (Postfix) with ESMTPSA;
+        Thu,  3 Oct 2019 16:11:01 +0200 (CEST)
+Date:   Thu, 3 Oct 2019 16:10:53 +0200
+From:   Lukasz Majewski <lukma@denx.de>
+To:     Alexandre Belloni <alexandre.belloni@bootlin.com>
+Cc:     Alessandro Zummo <a.zummo@towertech.it>, linux-rtc@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] rtc: Add support for century bits to m41t62 (rv4162)
+ RTC devices
+Message-ID: <20191003161054.1eeae401@jawa>
+In-Reply-To: <20191003134329.GB575@piout.net>
+References: <20190911154803.15969-1-lukma@denx.de>
+        <20191003114831.GR4106@piout.net>
+        <20191003142150.3d73a9d7@jawa>
+        <20191003123538.GS4106@piout.net>
+        <20191003151434.49762715@jawa>
+        <20191003134329.GB575@piout.net>
+Organization: denx.de
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191003013903.13079-3-paulmck@kernel.org>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Type: multipart/signed; micalg=pgp-sha512;
+ boundary="Sig_/hLnbrGCehw8PWPNow57OW+W"; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Oct 02, 2019 at 06:38:54PM -0700, paulmck@kernel.org wrote:
-> From: "Paul E. McKenney" <paulmck@linux.ibm.com>
-> 
-> Callback invocation can run for a significant time period, and within
-> CONFIG_NO_HZ_FULL=y kernels, this period will be devoid of scheduler-clock
-> interrupts.  In-kernel execution without such interrupts can cause all
-> manner of malfunction, with RCU CPU stall warnings being but one result.
-> 
-> This commit therefore forces scheduling-clock interrupts on whenever more
-> than a few RCU callbacks are invoked.  Because offloaded callback invocation
-> can be preempted, this forcing is withdrawn on each context switch.  This
-> in turn requires that the loop invoking RCU callbacks reiterate the forcing
-> periodically.
-> 
-> [ paulmck: Apply Joel Fernandes TICK_DEP_MASK_RCU->TICK_DEP_BIT_RCU fix. ]
-> Signed-off-by: Paul E. McKenney <paulmck@linux.ibm.com>
-> ---
->  kernel/rcu/tree.c | 4 ++++
->  1 file changed, 4 insertions(+)
-> 
-> diff --git a/kernel/rcu/tree.c b/kernel/rcu/tree.c
-> index 8110514..db673ae 100644
-> --- a/kernel/rcu/tree.c
-> +++ b/kernel/rcu/tree.c
-> @@ -2151,6 +2151,8 @@ static void rcu_do_batch(struct rcu_data *rdp)
->  	rcu_nocb_unlock_irqrestore(rdp, flags);
->  
->  	/* Invoke callbacks. */
-> +	if (IS_ENABLED(CONFIG_NO_HZ_FULL))
+--Sig_/hLnbrGCehw8PWPNow57OW+W
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-No need for the IS_ENABLED(), the API takes care of that.
+Hi Alexandre,
 
-> +		tick_dep_set_task(current, TICK_DEP_BIT_RCU);
->  	rhp = rcu_cblist_dequeue(&rcl);
->  	for (; rhp; rhp = rcu_cblist_dequeue(&rcl)) {
->  		debug_rcu_head_unqueue(rhp);
-> @@ -2217,6 +2219,8 @@ static void rcu_do_batch(struct rcu_data *rdp)
->  	/* Re-invoke RCU core processing if there are callbacks remaining. */
->  	if (!offloaded && rcu_segcblist_ready_cbs(&rdp->cblist))
->  		invoke_rcu_core();
-> +	if (IS_ENABLED(CONFIG_NO_HZ_FULL))
+> On 03/10/2019 15:14:34+0200, Lukasz Majewski wrote:
+> > Hi Alexandre,
+> >  =20
+> > > On 03/10/2019 14:21:50+0200, Lukasz Majewski wrote: =20
+> > > > >=20
+> > > > > See the datasheet:
+> > > > >=20
+> > > > > "During any year which is a multiple of 4, the RV-4162 RTC
+> > > > > will automatically insert leap day, February 29.  Therefore,
+> > > > > the application software must correct for this during the
+> > > > > exception years (2100, 2200, etc.) as noted above."   =20
+> > > >=20
+> > > > I'm wondering what the phrase "application software" means here?
+> > > >=20
+> > > > If it is the userland SW, then we shall at least be able to set
+> > > > 2099 in this device and then count on software correction.
+> > > >=20
+> > > > If the "application software" is the kernel driver - the date
+> > > > correction shall be done there (maybe some lookup table?).
+> > > >=20
+> > > > Personally, I do prefer the first option - this means that with
+> > > > this patch we can set the time to e.g. 2234 year and then rely
+> > > > on userland software (or libc) to do the correction.
+> > > >    =20
+> > >=20
+> > > It is not possible to ensure this correction is properly done in
+> > > software, there is no point in letting the user set those bits.
 
-Same here.
+Sorry, but I do see some inconsistency here.
 
-Thanks.
+The application note [1] says that the correction shall be done in
+application SW.
 
-> +		tick_dep_clear_task(current, TICK_DEP_BIT_RCU);
->  }
->  
->  /*
-> -- 
-> 2.9.5
-> 
+The rtc-range.c program [2] sets and reads the time via ioctl (e.g.
+RTC_SET_TIME, RTC_RD_TIME).
+
+To pass your tests one needs to do the correction in linux kernel
+driver for drivers/rtc/rtc-m41t80.c.=20
+
+Please correct me if I'm wrong, but IMHO it shall be enough to adjust
+2100, 2200, 2300, years in this driver (the submitted patch shall be
+adjusted to support it - I can prepare proper v2).
+
+> > >=20
+> > >  =20
+> >=20
+> > I see your point.
+> >=20
+> > However, could you share your idea on testing setting RTC time to
+> > year 2100 on this particular IC (by using hctosys and friends)?
+> >  =20
+>=20
+> You can use rtc from
+> https://git.kernel.org/pub/scm/linux/kernel/git/abelloni/rtc-tools.git/
+>=20
+> You can also use rtc-range with your patch to observe that it fails in
+> 2100.
+
+Thanks for sharing useful links.
+
+>=20
+
+
+Note:
+
+[1] -
+https://www.microcrystal.com/fileadmin/Media/Products/RTC/App.Manual/RV-416=
+2-C7_App-Manual.pdf
+(point 4.5 and 4.6).
+
+[2] -
+https://git.kernel.org/pub/scm/linux/kernel/git/abelloni/rtc-tools.git/tree=
+/rtc-range.c
+
+Best regards,
+
+Lukasz Majewski
+
+--
+
+DENX Software Engineering GmbH,      Managing Director: Wolfgang Denk
+HRB 165235 Munich, Office: Kirchenstr.5, D-82194 Groebenzell, Germany
+Phone: (+49)-8142-66989-59 Fax: (+49)-8142-66989-80 Email: lukma@denx.de
+
+--Sig_/hLnbrGCehw8PWPNow57OW+W
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCgAdFiEEgAyFJ+N6uu6+XupJAR8vZIA0zr0FAl2WAW4ACgkQAR8vZIA0
+zr08Kwf/YpzxMFrU14J1/zeQIdS2HX0KnJxnEjRfICLoEhuetfa4cjxXlSww7O3x
+6ErhNA2wvBwZKwABeufpN8aSUdAsRiwCTQojyzd2RBvuCokZz38SbEP3KgKc8XhU
+Z1sU/ASmBUd1KpSkH/A6FysimfnU7qxJN+HdxXJyX/SDEsQFAKq0WAcV72Oylr9q
+b+SgFhoy1QxKspTZcblhw4th1hiDSiYvz358l+HuDu66mTyxEEDASID3Gmyd9TV4
+8HYNwpvyaJPgyRiDwqqYbrZ7LVqSt8wBnPHoNaLEZXqVWXJBDRgVmMvlTZjYqOWS
+bm2oxVT/vNcORJc0DF9T4Ds4BTKy9w==
+=HmuE
+-----END PGP SIGNATURE-----
+
+--Sig_/hLnbrGCehw8PWPNow57OW+W--
