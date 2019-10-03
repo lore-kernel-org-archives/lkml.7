@@ -4,49 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 575AAC10F14
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:39:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 983BBC10F14
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:39:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 259F92070B
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:39:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6999A21783
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:39:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570120751;
-	bh=1b0mp+G7Vz0aBxcLs6/5p2l/G0/P9kTbNCvwoB5x1ns=;
+	s=default; t=1570120754;
+	bh=CULuGB7gsyM3Y59RrSUZU5hpkj8xaPh1ImJ1WEo61dA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qa9hVG687JHT+jdCuOvwqN0xWWEURimWHSa+4VNrtogMvPH5vFU+CTVidJyBblswa
-	 zZ2mifuOs0oyUosc6ehP8bQ5CiRdunVCYKBwb9lhQuE+0630QMjbJICI5UwRpnr2Vk
-	 ijqdVHyIaEUX+fMsJhWNmGM3M0ajiATA33y0+Itg=
+	b=lGbXyela7QOzp92lKnGnKtqQRJbfVex5qS4fJw1IR1lYWBAzmCM19xDlUJweqQx1c
+	 dP8UdV6OXa+bxwADgGoTrUQa/Dpq8Ab+OO6brRxMUlILWIhC7TvTLNbu6u6Won2Bng
+	 +dxOF5yiNk2V25GmgWaOfp9WSH/ijbyklEKZhWqI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404812AbfJCQjK (ORCPT
+        id S2404693AbfJCQjN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 12:39:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48988 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 12:39:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49058 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404700AbfJCQjI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:39:08 -0400
+        id S2404041AbfJCQjL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:39:11 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A370B20830;
-        Thu,  3 Oct 2019 16:39:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6040B2086A;
+        Thu,  3 Oct 2019 16:39:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570120748;
-        bh=1b0mp+G7Vz0aBxcLs6/5p2l/G0/P9kTbNCvwoB5x1ns=;
+        s=default; t=1570120750;
+        bh=CULuGB7gsyM3Y59RrSUZU5hpkj8xaPh1ImJ1WEo61dA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=vsmAfqo05PCTVtE+6L4qpFmI+Suf3hxcb89KlNLLS+kRxl/gOWSpHN/a6xNFXPtkW
-         vExdSZUKJ1AMmGge0Eq7rw/ueUpZhoQ5VakSOPktS378cpNgVB4Y2gU35cAL5U5oNW
-         4jWXCp8zRoR8ihjdy8bcpJgDc9wwkT9Elc3Q/vkI=
+        b=tt8uMcj6zdzpuPRvFeudFNOL42gl1am6h9FK2LYzUmnFIFwHKyDP3QrchpMbleI0o
+         pqOcOXp8BV9dnxPMwah+SE5guGfa30OvHsCmynasr+tqybI867UIUxGzxU7i/JHGun
+         iyOyB0F6r8uDeKYzOrU3UyYGo/yJ2d8+X6YheVh8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, David Ahern <dsahern@gmail.com>,
-        Jakub Kicinski <jakub.kicinski@netronome.com>
-Subject: [PATCH 5.3 023/344] selftests: Update fib_nexthop_multiprefix to handle missing ping6
-Date:   Thu,  3 Oct 2019 17:49:48 +0200
-Message-Id: <20191003154542.365911270@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Hans Andersson <hans.andersson@cellavision.se>,
+        Andrew Lunn <andrew@lunn.ch>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 5.3 024/344] net: phy: micrel: add Asym Pause workaround for KSZ9021
+Date:   Thu,  3 Oct 2019 17:49:49 +0200
+Message-Id: <20191003154542.471018655@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191003154540.062170222@linuxfoundation.org>
 References: <20191003154540.062170222@linuxfoundation.org>
@@ -59,49 +61,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: David Ahern <dsahern@gmail.com>
+From: Hans Andersson <hans.andersson@cellavision.se>
 
-[ Upstream commit e84622ce24482f6e9c1bf29d3bdd556eb587ff41 ]
+[ Upstream commit 407d8098cb1ab338199f4753162799a488d87d23 ]
 
-Some distributions (e.g., debian buster) do not install ping6. Re-use
-the hook in pmtu.sh to detect this and fallback to ping.
+The Micrel KSZ9031 PHY may fail to establish a link when the Asymmetric
+Pause capability is set. This issue is described in a Silicon Errata
+(DS80000691D or DS80000692D), which advises to always disable the
+capability.
 
-Fixes: 735ab2f65dce ("selftests: Add test with multiple prefixes using single nexthop")
-Signed-off-by: David Ahern <dsahern@gmail.com>
-Signed-off-by: Jakub Kicinski <jakub.kicinski@netronome.com>
+Micrel KSZ9021 has no errata, but has the same issue with Asymmetric Pause.
+This patch apply the same workaround as the one for KSZ9031.
+
+Fixes: 3aed3e2a143c ("net: phy: micrel: add Asym Pause workaround")
+Signed-off-by: Hans Andersson <hans.andersson@cellavision.se>
+Reviewed-by: Andrew Lunn <andrew@lunn.ch>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- tools/testing/selftests/net/fib_nexthop_multiprefix.sh |    6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ drivers/net/phy/micrel.c |    3 +++
+ 1 file changed, 3 insertions(+)
 
---- a/tools/testing/selftests/net/fib_nexthop_multiprefix.sh
-+++ b/tools/testing/selftests/net/fib_nexthop_multiprefix.sh
-@@ -15,6 +15,8 @@
- PAUSE_ON_FAIL=no
- VERBOSE=0
- 
-+which ping6 > /dev/null 2>&1 && ping6=$(which ping6) || ping6=$(which ping)
-+
- ################################################################################
- # helpers
- 
-@@ -200,7 +202,7 @@ validate_v6_exception()
- 	local rc
- 
- 	if [ ${ping_sz} != "0" ]; then
--		run_cmd ip netns exec h0 ping6 -s ${ping_sz} -c5 -w5 ${dst}
-+		run_cmd ip netns exec h0 ${ping6} -s ${ping_sz} -c5 -w5 ${dst}
- 	fi
- 
- 	if [ "$VERBOSE" = "1" ]; then
-@@ -243,7 +245,7 @@ do
- 		run_cmd taskset -c ${c} ip netns exec h0 ping -c1 -w1 172.16.10${i}.1
- 		[ $? -ne 0 ] && printf "\nERROR: ping to h${i} failed\n" && ret=1
- 
--		run_cmd taskset -c ${c} ip netns exec h0 ping6 -c1 -w1 2001:db8:10${i}::1
-+		run_cmd taskset -c ${c} ip netns exec h0 ${ping6} -c1 -w1 2001:db8:10${i}::1
- 		[ $? -ne 0 ] && printf "\nERROR: ping6 to h${i} failed\n" && ret=1
- 
- 		[ $ret -ne 0 ] && break
+--- a/drivers/net/phy/micrel.c
++++ b/drivers/net/phy/micrel.c
+@@ -763,6 +763,8 @@ static int ksz9031_get_features(struct p
+ 	 * Whenever the device's Asymmetric Pause capability is set to 1,
+ 	 * link-up may fail after a link-up to link-down transition.
+ 	 *
++	 * The Errata Sheet is for ksz9031, but ksz9021 has the same issue
++	 *
+ 	 * Workaround:
+ 	 * Do not enable the Asymmetric Pause capability bit.
+ 	 */
+@@ -1076,6 +1078,7 @@ static struct phy_driver ksphy_driver[]
+ 	/* PHY_GBIT_FEATURES */
+ 	.driver_data	= &ksz9021_type,
+ 	.probe		= kszphy_probe,
++	.get_features	= ksz9031_get_features,
+ 	.config_init	= ksz9021_config_init,
+ 	.ack_interrupt	= kszphy_ack_interrupt,
+ 	.config_intr	= kszphy_config_intr,
 
 
