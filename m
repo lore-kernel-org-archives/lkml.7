@@ -2,123 +2,123 @@ Return-Path: <SRS0=6dNS=X4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DE59C10F14
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:11:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE819C10F14
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:11:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D137920830
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:11:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570122697;
-	bh=FhMqtDm73GhvjtyVWDtKRVY17JuvvD8eg/8rpvN6FjU=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=gadiiYvdr2R4HyNM5+WnF+/E5VNwLpMNEj3Dn+ev9TrlfZ9ejTKAYXComYscsNNBK
-	 kDWVJxBLEqDFmqO90fW32Vozc9wKjFlKtDg3NnvkvxBlEH4rjxADZ7PldFkMo474tV
-	 E+a4eED+ys05WxWFqoFI/tbObMJ0AW0haJ91UXGo=
+	by mail.kernel.org (Postfix) with ESMTP id 81DE520830
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:11:44 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QOYnNsDv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393487AbfJCRLh (ORCPT
+        id S2393496AbfJCRLn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 13:11:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38200 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391824AbfJCQbW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:31:22 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 22473207FF;
-        Thu,  3 Oct 2019 16:31:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570120281;
-        bh=FhMqtDm73GhvjtyVWDtKRVY17JuvvD8eg/8rpvN6FjU=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=t5qX/lYLYvhtV071V6TIESL8fj/zH8zaqEFmocuhF+lu7omz3VuEUyCfBBcLbl0Xy
-         c/knxl9czEiKTK+ngvjU4UYVuiOtitztPQHPISuROwQY80YJWXW9AuvOkKjSL2MtgE
-         Z+Ki+hFPmY538/eTlsxeQeyWcwqOMJ11X2puQNBw=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ilya Leoshkevich <iii@linux.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 125/313] s390/kasan: provide uninstrumented __strlen
-Date:   Thu,  3 Oct 2019 17:51:43 +0200
-Message-Id: <20191003154545.235854416@linuxfoundation.org>
+        Thu, 3 Oct 2019 13:11:43 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:55608 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2391824AbfJCRLl (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 13:11:41 -0400
+Received: by mail-wm1-f66.google.com with SMTP id a6so2807158wma.5
+        for <linux-kernel@vger.kernel.org>; Thu, 03 Oct 2019 10:11:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=hR9NNmOdT5rcLSqoSR1KORhykwTT8D7K6IAvdiYy3eY=;
+        b=QOYnNsDv1gwHX85of27SNOuKONUoPfvQQVqfYJXpU7xrtANp1JXm7xGADM1k3Rj39Y
+         wuEN2+2O2C9I9LdjX2F7mBAyEVCIGHm6Al93ev4WyxORN1ftWok0/BHnDXFQHll7PeQW
+         57RmpTRhynLJQ9lNlZqwsMBzCsQL7Dso5s0kzp+ULgpB/k/lAjcIpucQqATRQsIMfQ1c
+         WHEhHVw1Dovos6057W/7VftABpYCbqQ50TSG+rOZX/hcpDK9MxdR7TnnNkpx0YCi9R8e
+         Ck6HmcUhdjcqQ95uUvLZ+QT3T130Wdr9O4GRiGvKgxzTWZI1fQMlVMsjwipZV4n1BE2Z
+         1Zwg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=hR9NNmOdT5rcLSqoSR1KORhykwTT8D7K6IAvdiYy3eY=;
+        b=hbeu3EXutnBy8QFLZc64kTw6FAkDkRTdp0b+NocAKy5TyuT/VsrA1T1dfTNoTIeJOg
+         81oiZJdKiXtqoLMkwOQlV1Q9M+qeBfBCSk/1E5ZZXJViMsI24vS16iwV2R8clfksCEHp
+         3Kba+8br7FdgjRrFt+Ay5s04vPlyWlzUG+Uxk6i61wLJ0YfWB2UwinjAIwnbax84KJbx
+         q1f0F385KuP1qVkqPZLlh3ekz0GfhulkIo9wgCMffINuR4Hkp48yOeMSfuFNO7xgyVGO
+         mrJKQcwV3WOJS5WIc2T/elhTVVDoH/itIRLtaRu7gdwl7gvAl3t7v39ADmt2q6bhDrLz
+         4jQA==
+X-Gm-Message-State: APjAAAVvER+esBZcLZv/MEHqzdFpNXRPmkyoqDqFa5ENyg7+/5n44b5D
+        iZPECYOVCeAJ00UKBZEkCz4=
+X-Google-Smtp-Source: APXvYqwzNl97/31p82hYFMmIP42XrnTxQ54nVpHrRq2BnlaXiNtiYe932Md3/2GqXlh2M/GZAlW6BQ==
+X-Received: by 2002:a05:600c:2057:: with SMTP id p23mr7495542wmg.17.1570122699103;
+        Thu, 03 Oct 2019 10:11:39 -0700 (PDT)
+Received: from localhost.localdomain ([2a01:4f8:222:2f1b::2])
+        by smtp.gmail.com with ESMTPSA id j1sm7067386wrg.24.2019.10.03.10.11.38
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 03 Oct 2019 10:11:38 -0700 (PDT)
+From:   Nathan Chancellor <natechancellor@gmail.com>
+To:     Christian Brauner <christian.brauner@ubuntu.com>,
+        Aleksa Sarai <cyphar@cyphar.com>
+Cc:     Kees Cook <keescook@chromium.org>, linux-kernel@vger.kernel.org,
+        clang-built-linux@googlegroups.com,
+        Nathan Chancellor <natechancellor@gmail.com>
+Subject: [PATCH] usercopy: Add parentheses around assignment in test_copy_struct_from_user
+Date:   Thu,  3 Oct 2019 10:11:21 -0700
+Message-Id: <20191003171121.2723619-1-natechancellor@gmail.com>
 X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20191003154533.590915454@linuxfoundation.org>
-References: <20191003154533.590915454@linuxfoundation.org>
-User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+X-Patchwork-Bot: notify
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vasily Gorbik <gor@linux.ibm.com>
+Clang warns:
 
-[ Upstream commit f45f7b5bdaa4828ce871cf03f7c01599a0de57a5 ]
+lib/test_user_copy.c:96:10: warning: using the result of an assignment
+as a condition without parentheses [-Wparentheses]
+        if (ret |= test(umem_src == NULL, "kmalloc failed"))
+            ~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+lib/test_user_copy.c:96:10: note: place parentheses around the
+assignment to silence this warning
+        if (ret |= test(umem_src == NULL, "kmalloc failed"))
+                ^
+            (                                              )
+lib/test_user_copy.c:96:10: note: use '!=' to turn this compound
+assignment into an inequality comparison
+        if (ret |= test(umem_src == NULL, "kmalloc failed"))
+                ^~
+                !=
 
-s390 kasan code uses sclp_early_printk to report initialization
-failures. The code doing that should not be instrumented, because kasan
-shadow memory has not been set up yet. Even though sclp_early_core.c is
-compiled with instrumentation disabled it uses strlen function, which
-is instrumented and would produce shadow memory access if used. To
-avoid that, introduce uninstrumented __strlen function to be used
-instead.
+Add the parentheses as it suggests because this is intentional.
 
-Before commit 7e0d92f00246 ("s390/kasan: improve string/memory functions
-checks") few string functions (including strlen) were escaping kasan
-instrumentation due to usage of platform specific versions which are
-implemented in inline assembly.
-
-Fixes: 7e0d92f00246 ("s390/kasan: improve string/memory functions checks")
-Acked-by: Ilya Leoshkevich <iii@linux.ibm.com>
-Signed-off-by: Vasily Gorbik <gor@linux.ibm.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Fixes: f5a1a536fa14 ("lib: introduce copy_struct_from_user() helper")
+Link: https://github.com/ClangBuiltLinux/linux/issues/731
+Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
 ---
- arch/s390/include/asm/string.h | 9 +++++++--
- 1 file changed, 7 insertions(+), 2 deletions(-)
+ lib/test_user_copy.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/arch/s390/include/asm/string.h b/arch/s390/include/asm/string.h
-index 70d87db54e627..4c0690fc5167e 100644
---- a/arch/s390/include/asm/string.h
-+++ b/arch/s390/include/asm/string.h
-@@ -71,11 +71,16 @@ extern void *__memmove(void *dest, const void *src, size_t n);
- #define memcpy(dst, src, len) __memcpy(dst, src, len)
- #define memmove(dst, src, len) __memmove(dst, src, len)
- #define memset(s, c, n) __memset(s, c, n)
-+#define strlen(s) __strlen(s)
-+
-+#define __no_sanitize_prefix_strfunc(x) __##x
+diff --git a/lib/test_user_copy.c b/lib/test_user_copy.c
+index 950ee88cd6ac..e365ace06538 100644
+--- a/lib/test_user_copy.c
++++ b/lib/test_user_copy.c
+@@ -93,11 +93,11 @@ static int test_copy_struct_from_user(char *kmem, char __user *umem,
+ 	size_t ksize, usize;
  
- #ifndef __NO_FORTIFY
- #define __NO_FORTIFY /* FORTIFY_SOURCE uses __builtin_memcpy, etc. */
- #endif
+ 	umem_src = kmalloc(size, GFP_KERNEL);
+-	if (ret |= test(umem_src == NULL, "kmalloc failed"))
++	if ((ret |= test(umem_src == NULL, "kmalloc failed")))
+ 		goto out_free;
  
-+#else
-+#define __no_sanitize_prefix_strfunc(x) x
- #endif /* defined(CONFIG_KASAN) && !defined(__SANITIZE_ADDRESS__) */
+ 	expected = kmalloc(size, GFP_KERNEL);
+-	if (ret |= test(expected == NULL, "kmalloc failed"))
++	if ((ret |= test(expected == NULL, "kmalloc failed")))
+ 		goto out_free;
  
- void *__memset16(uint16_t *s, uint16_t v, size_t count);
-@@ -163,8 +168,8 @@ static inline char *strcpy(char *dst, const char *src)
- }
- #endif
- 
--#ifdef __HAVE_ARCH_STRLEN
--static inline size_t strlen(const char *s)
-+#if defined(__HAVE_ARCH_STRLEN) || (defined(CONFIG_KASAN) && !defined(__SANITIZE_ADDRESS__))
-+static inline size_t __no_sanitize_prefix_strfunc(strlen)(const char *s)
- {
- 	register unsigned long r0 asm("0") = 0;
- 	const char *tmp = s;
+ 	/* Fill umem with a fixed byte pattern. */
 -- 
-2.20.1
-
-
+2.23.0
 
