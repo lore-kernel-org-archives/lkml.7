@@ -2,175 +2,97 @@ Return-Path: <SRS0=6dNS=X4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C135C32792
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:30:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44889C10F14
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:30:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 348F220830
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:30:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="Ata+h7vn"
+	by mail.kernel.org (Postfix) with ESMTP id 19EAF20830
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:30:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1570123858;
+	bh=wNr6pegQhACiQ4qzoUw117XMXI00XuVxmvoZN5YDoVM=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=l4TY5hbetY0PATqstIQ91WJLPc6AgJIWfGo/4Wnf7gJD9M+MJsqad+mtlRgck0/S5
+	 gzfJBuKre1Q6KRUbjwwwx/RqN1V+sEtZZz3E3rxjOPbIcZ4lWhf9NC2XRkUXesLn6a
+	 MFtRU5k5Uof5nlzUmOVbnKOnV5RIAxi17wV8fPc0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731260AbfJCRav (ORCPT
+        id S1731515AbfJCRa4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 13:30:51 -0400
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:36674 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730028AbfJCRaq (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 13:30:46 -0400
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id x93HNef8050113;
-        Thu, 3 Oct 2019 12:23:40 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1570123420;
-        bh=iWtSBJKe76nynGhnxiOJ2Lg3nCj737L2QbGyJus8OHE=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=Ata+h7vnlts4aIRPksMFgleVPIt3OELkhLgzkSJT8AwEhjMkDFV3VLBW5frWbZhz8
-         9lLeYzkW7QmilsFkhY2SrY9ih7FUzt6UJwlSPQwIuu5o2od2B5BS6t6GR5Xpu8irGT
-         65j/0TSJeoEC6x49nwjVjNyMTvWFbp0UCFhaznEM=
-Received: from DFLE114.ent.ti.com (dfle114.ent.ti.com [10.64.6.35])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x93HNdRh005634
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 3 Oct 2019 12:23:39 -0500
-Received: from DFLE109.ent.ti.com (10.64.6.30) by DFLE114.ent.ti.com
- (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Thu, 3 Oct
- 2019 12:23:39 -0500
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE109.ent.ti.com
- (10.64.6.30) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Thu, 3 Oct 2019 12:23:28 -0500
-Received: from [10.250.99.146] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id x93HNbUm045560;
-        Thu, 3 Oct 2019 12:23:37 -0500
-Subject: Re: [PATCH v8 5/5] backlight: add led-backlight driver
-To:     Sebastian Reichel <sre@kernel.org>
-CC:     <jacek.anaszewski@gmail.com>, <pavel@ucw.cz>, <robh+dt@kernel.org>,
-        <mark.rutland@arm.com>, <lee.jones@linaro.org>,
-        <daniel.thompson@linaro.org>, <linux-kernel@vger.kernel.org>,
-        <dri-devel@lists.freedesktop.org>, <tomi.valkeinen@ti.com>,
-        <dmurphy@ti.com>, <linux-leds@vger.kernel.org>
-References: <20191003082812.28491-1-jjhiblot@ti.com>
- <20191003082812.28491-6-jjhiblot@ti.com>
- <20191003114735.byayntpe35qqrjeu@earth.universe>
-From:   Jean-Jacques Hiblot <jjhiblot@ti.com>
-Message-ID: <074963ce-d28f-413a-f35c-d503589a4604@ti.com>
-Date:   Thu, 3 Oct 2019 19:23:36 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Thu, 3 Oct 2019 13:30:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60372 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730776AbfJCQKs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:10:48 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 290E020865;
+        Thu,  3 Oct 2019 16:10:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1570119047;
+        bh=wNr6pegQhACiQ4qzoUw117XMXI00XuVxmvoZN5YDoVM=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=N85YpfA7kJz17bmDrXS2pALRrN8V57Hio7xYDffJLDmi/98v4D+4Vzvp3OiYr3rfy
+         ykJ9JDZk7O4Ij6zbfJsUBz931mjvpLtMGOyS6XP92iXUcy0vZMguTBFp46M1zZigW4
+         WPW6Wo4wzKUlU7JgKVy4poqDB34CPrwqYMyiH80g=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Wenwen Wang <wenwen@cs.uga.edu>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 106/185] media: saa7146: add cleanup in hexium_attach()
+Date:   Thu,  3 Oct 2019 17:53:04 +0200
+Message-Id: <20191003154502.905323119@linuxfoundation.org>
+X-Mailer: git-send-email 2.23.0
+In-Reply-To: <20191003154437.541662648@linuxfoundation.org>
+References: <20191003154437.541662648@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-In-Reply-To: <20191003114735.byayntpe35qqrjeu@earth.universe>
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Sebastian,
+From: Wenwen Wang <wenwen@cs.uga.edu>
 
-On 03/10/2019 13:47, Sebastian Reichel wrote:
-> Hi,
->
-> On Thu, Oct 03, 2019 at 10:28:12AM +0200, Jean-Jacques Hiblot wrote:
->> From: Tomi Valkeinen <tomi.valkeinen@ti.com>
->>
->> This patch adds a led-backlight driver (led_bl), which is similar to
->> pwm_bl except the driver uses a LED class driver to adjust the
->> brightness in the HW. Multiple LEDs can be used for a single backlight.
->>
->> Signed-off-by: Tomi Valkeinen <tomi.valkeinen@ti.com>
->> Signed-off-by: Jean-Jacques Hiblot <jjhiblot@ti.com>
->> Acked-by: Pavel Machek <pavel@ucw.cz>
->> Reviewed-by: Daniel Thompson <daniel.thompson@linaro.org>
->> ---
-> Reviewed-by: Sebastian Reichel <sebastian.reichel@collabora.com>
->
-> (with some suggestions below)
+[ Upstream commit 42e64117d3b4a759013f77bbcf25ab6700e55de7 ]
 
-[...]
+If saa7146_register_device() fails, no cleanup is executed, leading to
+memory/resource leaks. To fix this issue, perform necessary cleanup work
+before returning the error.
+
+Signed-off-by: Wenwen Wang <wenwen@cs.uga.edu>
+Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/media/pci/saa7146/hexium_gemini.c | 3 +++
+ 1 file changed, 3 insertions(+)
+
+diff --git a/drivers/media/pci/saa7146/hexium_gemini.c b/drivers/media/pci/saa7146/hexium_gemini.c
+index 934332f1fd8e6..a527d86b93a77 100644
+--- a/drivers/media/pci/saa7146/hexium_gemini.c
++++ b/drivers/media/pci/saa7146/hexium_gemini.c
+@@ -304,6 +304,9 @@ static int hexium_attach(struct saa7146_dev *dev, struct saa7146_pci_extension_d
+ 	ret = saa7146_register_device(&hexium->video_dev, dev, "hexium gemini", VFL_TYPE_GRABBER);
+ 	if (ret < 0) {
+ 		pr_err("cannot register capture v4l2 device. skipping.\n");
++		saa7146_vv_release(dev);
++		i2c_del_adapter(&hexium->i2c_adapter);
++		kfree(hexium);
+ 		return ret;
+ 	}
+ 
+-- 
+2.20.1
 
 
-> I suggest to restructure:
->
-> 1. call led_sysfs_disable
->
-> 2. use devm_add_action_or_reset() to register the
->     led_sysfs_enable loop
->
-> 3. use devm_backlight_device_register() to register BL
->
-> 4. drop the remove function
->
->> +
->> +	backlight_update_status(priv->bl_dev);
->> +
->> +	return 0;
->> +}
->> +
->> +static int led_bl_remove(struct platform_device *pdev)
->> +{
->> +	struct led_bl_data *priv = platform_get_drvdata(pdev);
->> +	struct backlight_device *bl = priv->bl_dev;
->> +	int i;
->> +
->> +	backlight_device_unregister(bl);
->> +
->> +	led_bl_power_off(priv);
->> +	for (i = 0; i < priv->nb_leds; i++)
->> +		led_sysfs_enable(priv->leds[i]);
->> +
->> +	return 0;
->> +}
->> +
->> +static const struct of_device_id led_bl_of_match[] = {
->> +	{ .compatible = "led-backlight" },
->> +	{ }
->> +};
->> +
->> +MODULE_DEVICE_TABLE(of, led_bl_of_match);
->> +
->> +static struct platform_driver led_bl_driver = {
->> +	.driver		= {
->> +		.name		= "led-backlight",
->> +		.of_match_table	= of_match_ptr(led_bl_of_match),
-> You should drop of_match_ptr(). Since the driver depends on OF,
-> it will always simply return led_bl_of_match.
->
-> (Also after removing the OF dependency from the driver it would
-> either require led_bl_of_match to be marked __maybe_unused or
-> moving it into a #if CONFIG_OF area to avoid warnings.)
 
-Thanks for the suggestions. I think I'll work on them as a separate 
-thing and post them after this is merged if there are no others changes 
-required.
-
-JJ
-
->
-> -- Sebastian
->
->> +	},
->> +	.probe		= led_bl_probe,
->> +	.remove		= led_bl_remove,
->> +};
->> +
->> +module_platform_driver(led_bl_driver);
->> +
->> +MODULE_DESCRIPTION("LED based Backlight Driver");
->> +MODULE_LICENSE("GPL");
->> +MODULE_ALIAS("platform:led-backlight");
->> -- 
->> 2.17.1
->>
->> _______________________________________________
->> dri-devel mailing list
->> dri-devel@lists.freedesktop.org
->> https://lists.freedesktop.org/mailman/listinfo/dri-devel
