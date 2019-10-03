@@ -2,124 +2,81 @@ Return-Path: <SRS0=6dNS=X4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7AE7EC32792
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 21:40:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD916C10F14
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 21:40:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 49FF82133F
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 21:40:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="choTNLqb"
+	by mail.kernel.org (Postfix) with ESMTP id 8DA5620679
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 21:40:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389482AbfJCVkj (ORCPT
+        id S2389556AbfJCVk4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 17:40:39 -0400
-Received: from mail-io1-f67.google.com ([209.85.166.67]:44933 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387660AbfJCVkj (ORCPT
+        Thu, 3 Oct 2019 17:40:56 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:58807 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389497AbfJCVkz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 17:40:39 -0400
-Received: by mail-io1-f67.google.com with SMTP id w12so8973496iol.11;
-        Thu, 03 Oct 2019 14:40:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=iD1EF6O5uYyPHk2lyyhowDbuFGVloB10aGSek27Khvs=;
-        b=choTNLqb+I3qLscd/IawY0fhTpWqLowAeelSwP4Rv1g6S/K/M5xobirmLd7GvBs63i
-         iuqRncniILwSTQojjX9CyA6LOQyYUl1dAU4LAqvxGrUsld5REzhsNdql4vyPlOALtUkD
-         5cTRIc/HXPi0n3ZJdlmVqTN3NVmEGY1sbhqRR8FurekpH87nqhzH4JUzIb/K3JXVQi6c
-         hR436JlA1x0Yuf/aiHxohOouxN0EXg7k60q9Y5v1WG35lU/wpM1i+ESp3XH3VeBolSFB
-         XIR8wqjpBufBc5gkCWexSFlKJgeUB6FtT3HP3w+6L27rtBUrqwU1Qkr0jaTlUVm+pH5P
-         jhNA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=iD1EF6O5uYyPHk2lyyhowDbuFGVloB10aGSek27Khvs=;
-        b=VGr2dPRx7Uy4E4qarngwbwMcohtYFSfxL/lkB+1xloGr+gDMqYNqqrrr6L3UJGRQy1
-         RmEYIWzQOF7+3Gw7lSvAU3B+MHcEf6drB16fC0O2wQNzbxYQNSX9uGkjkgX5engU0Ce1
-         6afQ+L09cEOykz2wmFbGU9wijMu76C9sBhs+auIIAfYe50YuhjMh3H2nVUrt8X0Lc656
-         2D/pTArVZO1ugPMo6lxiO9FhBoUMK0ZSXP/qGbxsCl/TYQXloJyuI7NN1lwVKdePBUVo
-         htFbouwYe8CaWEhE4sOn2CERHaYUsWaY35mEGBXxTYJOVOMA+F+E6jZBiRZaIlYWjuiX
-         ZjCQ==
-X-Gm-Message-State: APjAAAUIDKXer286MhQGDsE3K1NwaKzbdMNHuVr93T2Z+yLQArG9yn0O
-        5KkryHVKapeKw3I5lgTv+PACETuH2WbI3r/GRtg=
-X-Google-Smtp-Source: APXvYqz/ulXmgBkkmsry2kLhehSjSGtf79MsHLivqOKLdZrTZeZSQy7E58b3R05cg6bkk+txtvjVB/CD70GbVGE+bok=
-X-Received: by 2002:a92:d84d:: with SMTP id h13mr12392064ilq.205.1570138837800;
- Thu, 03 Oct 2019 14:40:37 -0700 (PDT)
+        Thu, 3 Oct 2019 17:40:55 -0400
+Received: from 1.general.cking.uk.vpn ([10.172.193.212] helo=localhost)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <colin.king@canonical.com>)
+        id 1iG8qA-00071M-5a; Thu, 03 Oct 2019 21:40:50 +0000
+From:   Colin King <colin.king@canonical.com>
+To:     Alex Deucher <alexander.deucher@amd.com>,
+        =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
+        David Zhou <David1.Zhou@amd.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>, amd-gfx@lists.freedesktop.org,
+        dri-devel@lists.freedesktop.org
+Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH][next] drm/amdgpu: remove redundant variable r and redundant return statement
+Date:   Thu,  3 Oct 2019 22:40:49 +0100
+Message-Id: <20191003214049.23067-1-colin.king@canonical.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-References: <20191003134147.9458-1-sre@kernel.org> <20191003134147.9458-2-sre@kernel.org>
-In-Reply-To: <20191003134147.9458-2-sre@kernel.org>
-From:   Adam Ford <aford173@gmail.com>
-Date:   Thu, 3 Oct 2019 16:40:26 -0500
-Message-ID: <CAHCN7xLtHcU6q8_dorZOySPaQATce9qbvzcK1Tn0MoEF+tURHA@mail.gmail.com>
-Subject: Re: [PATCHv2 1/4] ARM: dts: LogicPD Torpedo: Add WiLink UART node
-To:     Sebastian Reichel <sre@kernel.org>
-Cc:     Marcel Holtmann <marcel@holtmann.org>,
-        Tony Lindgren <tony@atomide.com>,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        "open list:BLUETOOTH DRIVERS" <linux-bluetooth@vger.kernel.org>,
-        Linux-OMAP <linux-omap@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        kernel@collabora.com,
-        Sebastian Reichel <sebastian.reichel@collabora.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Oct 3, 2019 at 8:42 AM Sebastian Reichel <sre@kernel.org> wrote:
->
-> From: Sebastian Reichel <sebastian.reichel@collabora.com>
->
-> Add a node for the UART part of WiLink chip.
-Thank you.
+From: Colin Ian King <colin.king@canonical.com>
 
-hci0:   Type: Primary  Bus: UART
-        BD Address: 00:18:30:49:7D:63  ACL MTU: 1021:4  SCO MTU: 180:4
-        UP RUNNING
-        RX bytes:6185 acl:0 sco:0 events:581 errors:0
-        TX bytes:91006 acl:0 sco:0 commands:578 errors:0
+There is a return statement that is not reachable and a variable that
+is not used.  Remove them.
 
->
-> This is compile tested only!
->
-I am not sure which is more appropriate,
+Addresses-Coverity: ("Structurally dead code")
+Fixes: de7b45babd9b ("drm/amdgpu: cleanup creating BOs at fixed location (v2)")
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
+---
+ drivers/gpu/drm/amd/amdgpu/amdgpu_ttm.c | 2 --
+ 1 file changed, 2 deletions(-)
 
-Acked-by: Adam Ford <aford173@gmail.com>
-Tested-by: Adam Ford <aford173@gmail.com>
+diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_ttm.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_ttm.c
+index 481e4c381083..814159f15633 100644
+--- a/drivers/gpu/drm/amd/amdgpu/amdgpu_ttm.c
++++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_ttm.c
+@@ -1636,7 +1636,6 @@ static void amdgpu_ttm_fw_reserve_vram_fini(struct amdgpu_device *adev)
+ static int amdgpu_ttm_fw_reserve_vram_init(struct amdgpu_device *adev)
+ {
+ 	uint64_t vram_size = adev->gmc.visible_vram_size;
+-	int r;
+ 
+ 	adev->fw_vram_usage.va = NULL;
+ 	adev->fw_vram_usage.reserved_bo = NULL;
+@@ -1651,7 +1650,6 @@ static int amdgpu_ttm_fw_reserve_vram_init(struct amdgpu_device *adev)
+ 					  AMDGPU_GEM_DOMAIN_VRAM,
+ 					  &adev->fw_vram_usage.reserved_bo,
+ 					  &adev->fw_vram_usage.va);
+-	return r;
+ }
+ 
+ /**
+-- 
+2.20.1
 
-> Cc: Adam Ford <aford173@gmail.com>
-> Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.com>
-> ---
->  arch/arm/boot/dts/logicpd-torpedo-37xx-devkit.dts | 8 ++++++++
->  1 file changed, 8 insertions(+)
->
-> diff --git a/arch/arm/boot/dts/logicpd-torpedo-37xx-devkit.dts b/arch/arm/boot/dts/logicpd-torpedo-37xx-devkit.dts
-> index 18c27e85051f..c34ba0ef8b4d 100644
-> --- a/arch/arm/boot/dts/logicpd-torpedo-37xx-devkit.dts
-> +++ b/arch/arm/boot/dts/logicpd-torpedo-37xx-devkit.dts
-> @@ -50,6 +50,14 @@
->         };
->  };
->
-> +&uart2 {
-> +       bluetooth {
-> +               compatible = "ti,wl1283-st";
-> +               enable-gpios = <&gpio6 2 GPIO_ACTIVE_HIGH>; /* gpio 162 */
-> +               max-speed = <3000000>;
-> +       };
-> +};
-> +
->  &omap3_pmx_core {
->         mmc3_pins: pinmux_mm3_pins {
->                 pinctrl-single,pins = <
-> --
-> 2.23.0
->
