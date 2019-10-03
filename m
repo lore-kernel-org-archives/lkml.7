@@ -2,53 +2,51 @@ Return-Path: <SRS0=6dNS=X4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F01A4C10F14
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:40:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CE86C10F14
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:40:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B653E20830
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:40:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 561D62070B
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:40:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570120840;
-	bh=lZGEvVKT7P6VlhMVE3btjG8+YRwhHKeruH72i+PVMm4=;
+	s=default; t=1570120845;
+	bh=wf7xGimtbwbcr9/12xVRlNjFQE+Cb8YhVNAh45RSF8E=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ID5ond1kXX5iQ6k7wb24RM/S3Sv3NyqIkP18+BBoYqMbVVBFbCvA/DLL6JxtXiu54
-	 LZ4QG0Y7cyJ6gNvawgMzf4JEl0JsC1B2p+Ly9wFrqPIv5hXeKZ3OM9MZRqB2LDPg1T
-	 S6w2mCLO2ppNeDUWLwdouXlW4yeT/BuFBtS3JGbU=
+	b=tpgzYjjfBR5mDqBc4heJKlY+FFRYw05LO3NvM6P5cbMKzfQc/FR5CCiuwVuC0kTUV
+	 zvOldGNtW9EelqBZfktazGHIXHRWv5YXjhzqIA1RzOT1blD7A6Hc+cIO1TsxP2BJ4O
+	 17eimeQfjker+nHHJHvUDm/KT5v6Cw6hvPTDq0CM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732283AbfJCQkj (ORCPT
+        id S2404942AbfJCQko (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 12:40:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50710 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 12:40:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50870 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404451AbfJCQka (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:40:30 -0400
+        id S2403785AbfJCQki (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:40:38 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 612F620830;
-        Thu,  3 Oct 2019 16:40:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 82DE120830;
+        Thu,  3 Oct 2019 16:40:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570120829;
-        bh=lZGEvVKT7P6VlhMVE3btjG8+YRwhHKeruH72i+PVMm4=;
+        s=default; t=1570120838;
+        bh=wf7xGimtbwbcr9/12xVRlNjFQE+Cb8YhVNAh45RSF8E=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=I5A6E3qrYMSHEfF7sRDuM/NkN1ODKLTtvDYxOgFi6t5D0g25IXqN1uQGB+wAiZjnS
-         4iHJkzJ7b/8hU2kNGZqbR0/7+ubDI+aIgvUI/lsLLhtts/fjIhrMMc3UiJh9RcyM5f
-         x6nBNE1S++BGCyh4ZlFAEsZ+zYrF8LYKbQ4F27j8=
+        b=Pk429ugKos9D8FzTrymGtoDeMaW/ThxODZ0V9LT6Gh8DsHLhmmPK/HFmnxVNvo1MF
+         5XrTstGB/BXINuJbbVyyYa0IZzLEySBt+GBKuZYAD5hX9U6vzY8EOhTYDaCCJl9I1b
+         54HeZUY6PalWMU5mIZN7v8oga5+IEiXk2k97qCLA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Sean Young <sean@mess.org>,
-        Sean Wang <sean.wang@kernel.org>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.3 053/344] media: mtk-cir: lower de-glitch counter for rc-mm protocol
-Date:   Thu,  3 Oct 2019 17:50:18 +0200
-Message-Id: <20191003154545.363336419@linuxfoundation.org>
+        stable@vger.kernel.org, Saeed Mahameed <saeedm@mellanox.com>,
+        Maor Gottlieb <maorg@mellanox.com>
+Subject: [PATCH 5.3 029/344] net/mlx5e: Fix traffic duplication in ethtool steering
+Date:   Thu,  3 Oct 2019 17:49:54 +0200
+Message-Id: <20191003154542.962362676@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191003154540.062170222@linuxfoundation.org>
 References: <20191003154540.062170222@linuxfoundation.org>
@@ -61,51 +59,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sean Young <sean@mess.org>
+From: Saeed Mahameed <saeedm@mellanox.com>
 
-[ Upstream commit 5dd4b89dc098bf22cd13e82a308f42a02c102b2b ]
+[ Upstream commit d22fcc806b84b9818de08b32e494f3c05dd236c7 ]
 
-The rc-mm protocol can't be decoded by the mtk-cir since the de-glitch
-filter removes pulses/spaces shorter than 294 microseconds.
+Before this patch, when adding multiple ethtool steering rules with
+identical classification, the driver used to append the new destination
+to the already existing hw rule, which caused the hw to forward the
+traffic to all destinations (rx queues).
 
-Tested on a BananaPi R2.
+Here we avoid this by setting the "no append" mlx5 fs core flag when
+adding a new ethtool rule.
 
-Signed-off-by: Sean Young <sean@mess.org>
-Acked-by: Sean Wang <sean.wang@kernel.org>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Fixes: 6dc6071cfcde ("net/mlx5e: Add ethtool flow steering support")
+Signed-off-by: Saeed Mahameed <saeedm@mellanox.com>
+Reviewed-by: Maor Gottlieb <maorg@mellanox.com>
+Signed-off-by: Saeed Mahameed <saeedm@mellanox.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/media/rc/mtk-cir.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
+ drivers/net/ethernet/mellanox/mlx5/core/en_fs_ethtool.c |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/media/rc/mtk-cir.c b/drivers/media/rc/mtk-cir.c
-index 50fb0aebb8d40..f2259082e3d82 100644
---- a/drivers/media/rc/mtk-cir.c
-+++ b/drivers/media/rc/mtk-cir.c
-@@ -35,6 +35,11 @@
- /* Fields containing pulse width data */
- #define MTK_WIDTH_MASK		  (GENMASK(7, 0))
+--- a/drivers/net/ethernet/mellanox/mlx5/core/en_fs_ethtool.c
++++ b/drivers/net/ethernet/mellanox/mlx5/core/en_fs_ethtool.c
+@@ -399,10 +399,10 @@ add_ethtool_flow_rule(struct mlx5e_priv
+ 		      struct mlx5_flow_table *ft,
+ 		      struct ethtool_rx_flow_spec *fs)
+ {
++	struct mlx5_flow_act flow_act = { .flags = FLOW_ACT_NO_APPEND };
+ 	struct mlx5_flow_destination *dst = NULL;
+-	struct mlx5_flow_act flow_act = {0};
+-	struct mlx5_flow_spec *spec;
+ 	struct mlx5_flow_handle *rule;
++	struct mlx5_flow_spec *spec;
+ 	int err = 0;
  
-+/* IR threshold */
-+#define MTK_IRTHD		 0x14
-+#define MTK_DG_CNT_MASK		 (GENMASK(12, 8))
-+#define MTK_DG_CNT(x)		 ((x) << 8)
-+
- /* Bit to enable interrupt */
- #define MTK_IRINT_EN		  BIT(0)
- 
-@@ -398,6 +403,9 @@ static int mtk_ir_probe(struct platform_device *pdev)
- 	mtk_w32_mask(ir, val, ir->data->fields[MTK_HW_PERIOD].mask,
- 		     ir->data->fields[MTK_HW_PERIOD].reg);
- 
-+	/* Set de-glitch counter */
-+	mtk_w32_mask(ir, MTK_DG_CNT(1), MTK_DG_CNT_MASK, MTK_IRTHD);
-+
- 	/* Enable IR and PWM */
- 	val = mtk_r32(ir, MTK_CONFIG_HIGH_REG);
- 	val |= MTK_OK_COUNT(ir->data->ok_count) |  MTK_PWM_EN | MTK_IR_EN;
--- 
-2.20.1
-
+ 	spec = kvzalloc(sizeof(*spec), GFP_KERNEL);
 
 
