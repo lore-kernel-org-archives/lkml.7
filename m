@@ -7,48 +7,46 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37131C10F14
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:19:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 36C6EC10F14
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:19:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 00B7E20865
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:19:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 08D5920830
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:19:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570123160;
-	bh=Iz/rm/WQRpcIwAOXL0oPExQ24VLEz8gHHqZ2wCq1jig=;
+	s=default; t=1570123166;
+	bh=++ww0M8FldhONH/sKfUkcOspcDTMgTrhuVQH5MzsDWA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=DBBrl6Kw779nIKfsFD7zH+OfSf+E4erR9avUi1f4Q23Z9BpOCZR6dcsei800CDMH8
-	 UeTmGGPZw53xsc6/y9pj4D3N+Ac+ikxK7EXjmNHqObJc6sf5Lhdn9FRcNbgdhvl1rc
-	 PSdCDojD/WiyuhIEcoInWUGtywmfGAfS1XsBWagU=
+	b=oCZ6LRRVrhZuRCg7GTGQ7fnhY5/WvVdWAcnouozAObFsHzOo4cW3L4sIbePdp1O8U
+	 kuZQ4RNyPcyJdZtVQ/TS6t9ADKbjztk+DD+UEnQv7d7oLJLjrEkw5qqEjnuUqYR/Ac
+	 fFzx9sKvEfuBz7di8ilH33+Zatld6+ZE0IAtjLoE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388915AbfJCQT5 (ORCPT
+        id S2389760AbfJCQTt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 12:19:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47154 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 12:19:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46830 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388597AbfJCQTy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:19:54 -0400
+        id S2388864AbfJCQTk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:19:40 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 030EF215EA;
-        Thu,  3 Oct 2019 16:19:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4C4DA215EA;
+        Thu,  3 Oct 2019 16:19:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570119593;
-        bh=Iz/rm/WQRpcIwAOXL0oPExQ24VLEz8gHHqZ2wCq1jig=;
+        s=default; t=1570119579;
+        bh=++ww0M8FldhONH/sKfUkcOspcDTMgTrhuVQH5MzsDWA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=GT+kXmouK28GwBhXxQJVlO8agg2JRadozt4J48Eu1/AUpc2Q4czDGXEni9aYrZoJ7
-         4/x0hmRkDXVlLsA/MS1KkwpyHxzVfORdTx1bxfCjcK6LqzogozdhcK9mwZzzQi0p5M
-         KXURU0zKMJ2yt6rmxrOJdepSGLLp/pEhs2IcIOC8=
+        b=OSmchad4Um6hy+Pr83Aklb0rBHJYqLcxWNmXN4Yw5BVezrWTUnEma2MJhalXpAJs7
+         +5n1n7eTsa7ukAcshdaBis/zJ7vGB0t53nyGeMhGdZpFFYu0goOfaZZhwaH+0YLcv1
+         w5djtKWRPffgTGOz5jRlI/9ewqICjwyYD8hj+CBg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Kent Overstreet <kent.overstreet@gmail.com>,
-        Coly Li <colyli@suse.de>, Jens Axboe <axboe@kernel.dk>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 123/211] closures: fix a race on wakeup from closure_sync
-Date:   Thu,  3 Oct 2019 17:53:09 +0200
-Message-Id: <20191003154515.136772999@linuxfoundation.org>
+        stable@vger.kernel.org, kbuild test robot <lkp@intel.com>,
+        Arnd Bergmann <arnd@arndb.de>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 079/211] net: lpc-enet: fix printk format strings
+Date:   Thu,  3 Oct 2019 17:52:25 +0200
+Message-Id: <20191003154505.453039402@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191003154447.010950442@linuxfoundation.org>
 References: <20191003154447.010950442@linuxfoundation.org>
@@ -61,48 +59,62 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kent Overstreet <kent.overstreet@gmail.com>
+From: Arnd Bergmann <arnd@arndb.de>
 
-[ Upstream commit a22a9602b88fabf10847f238ff81fde5f906fef7 ]
+[ Upstream commit de6f97b2bace0e2eb6c3a86e124d1e652a587b56 ]
 
-The race was when a thread using closure_sync() notices cl->s->done == 1
-before the thread calling closure_put() calls wake_up_process(). Then,
-it's possible for that thread to return and exit just before
-wake_up_process() is called - so we're trying to wake up a process that
-no longer exists.
+compile-testing this driver on other architectures showed
+multiple warnings:
 
-rcu_read_lock() is sufficient to protect against this, as there's an rcu
-barrier somewhere in the process teardown path.
+  drivers/net/ethernet/nxp/lpc_eth.c: In function 'lpc_eth_drv_probe':
+  drivers/net/ethernet/nxp/lpc_eth.c:1337:19: warning: format '%d' expects argument of type 'int', but argument 4 has type 'resource_size_t {aka long long unsigned int}' [-Wformat=]
 
-Signed-off-by: Kent Overstreet <kent.overstreet@gmail.com>
-Acked-by: Coly Li <colyli@suse.de>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+  drivers/net/ethernet/nxp/lpc_eth.c:1342:19: warning: format '%x' expects argument of type 'unsigned int', but argument 4 has type 'dma_addr_t {aka long long unsigned int}' [-Wformat=]
+
+Use format strings that work on all architectures.
+
+Link: https://lore.kernel.org/r/20190809144043.476786-10-arnd@arndb.de
+Reported-by: kbuild test robot <lkp@intel.com>
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/md/bcache/closure.c | 10 ++++++++--
- 1 file changed, 8 insertions(+), 2 deletions(-)
+ drivers/net/ethernet/nxp/lpc_eth.c | 13 +++++++------
+ 1 file changed, 7 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/md/bcache/closure.c b/drivers/md/bcache/closure.c
-index 73f5319295bc9..c12cd809ab193 100644
---- a/drivers/md/bcache/closure.c
-+++ b/drivers/md/bcache/closure.c
-@@ -105,8 +105,14 @@ struct closure_syncer {
+diff --git a/drivers/net/ethernet/nxp/lpc_eth.c b/drivers/net/ethernet/nxp/lpc_eth.c
+index 08381ef8bdb48..41d30f55c946b 100644
+--- a/drivers/net/ethernet/nxp/lpc_eth.c
++++ b/drivers/net/ethernet/nxp/lpc_eth.c
+@@ -1371,13 +1371,14 @@ static int lpc_eth_drv_probe(struct platform_device *pdev)
+ 	pldat->dma_buff_base_p = dma_handle;
  
- static void closure_sync_fn(struct closure *cl)
- {
--	cl->s->done = 1;
--	wake_up_process(cl->s->task);
-+	struct closure_syncer *s = cl->s;
-+	struct task_struct *p;
-+
-+	rcu_read_lock();
-+	p = READ_ONCE(s->task);
-+	s->done = 1;
-+	wake_up_process(p);
-+	rcu_read_unlock();
- }
+ 	netdev_dbg(ndev, "IO address space     :%pR\n", res);
+-	netdev_dbg(ndev, "IO address size      :%d\n", resource_size(res));
++	netdev_dbg(ndev, "IO address size      :%zd\n",
++			(size_t)resource_size(res));
+ 	netdev_dbg(ndev, "IO address (mapped)  :0x%p\n",
+ 			pldat->net_base);
+ 	netdev_dbg(ndev, "IRQ number           :%d\n", ndev->irq);
+-	netdev_dbg(ndev, "DMA buffer size      :%d\n", pldat->dma_buff_size);
+-	netdev_dbg(ndev, "DMA buffer P address :0x%08x\n",
+-			pldat->dma_buff_base_p);
++	netdev_dbg(ndev, "DMA buffer size      :%zd\n", pldat->dma_buff_size);
++	netdev_dbg(ndev, "DMA buffer P address :%pad\n",
++			&pldat->dma_buff_base_p);
+ 	netdev_dbg(ndev, "DMA buffer V address :0x%p\n",
+ 			pldat->dma_buff_base_v);
  
- void __sched __closure_sync(struct closure *cl)
+@@ -1424,8 +1425,8 @@ static int lpc_eth_drv_probe(struct platform_device *pdev)
+ 	if (ret)
+ 		goto err_out_unregister_netdev;
+ 
+-	netdev_info(ndev, "LPC mac at 0x%08x irq %d\n",
+-	       res->start, ndev->irq);
++	netdev_info(ndev, "LPC mac at 0x%08lx irq %d\n",
++	       (unsigned long)res->start, ndev->irq);
+ 
+ 	phydev = ndev->phydev;
+ 
 -- 
 2.20.1
 
