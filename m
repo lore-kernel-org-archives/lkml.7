@@ -4,53 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B52A3C32792
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:14:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DEC4BC10F14
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:14:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8AB8720830
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:14:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B0BB020830
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:14:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570122856;
-	bh=Va9nDflhvZE8l4fVYvtxdcbe6XHlni19RRugg5yBB5I=;
+	s=default; t=1570122860;
+	bh=iItdgteyx2Yyq6/oHJhvcXHvnUEhYPhCCQi5ReAoQIc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=mRWn/dK6ce6FIdzHOr0QaZY6UGl5z7Qnvc2ZIFoLlckb8TMpabudnN0w5+WSC5ddm
-	 lPZGvVAOP8Q8UlAYUP7J0KFmwebUFJZtokYLaS/b9TOIgQQDa596149VWsF7miCFfG
-	 hnMKTDrVFMUdrqFZWcG7St88Y97x7i+OQVBUEpOg=
+	b=ZGRtowiNRdZY0m7XpaYGAxtxUtHq5cMSPn/grFJDW/QFWc4SKvBZVC7mVRiMi7aBj
+	 k+PRkpULectuqcOFWA3CV+NPIxuLauIAczig76xLkByEtpCgpMcfpJwsmW1j1kl93j
+	 fDkL4N6OE7qjkYM9tQ3hSLNhyv02lcIm1ULMAchY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391993AbfJCROP (ORCPT
+        id S2391268AbfJCQ1c (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 13:14:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59530 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 12:27:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59414 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391270AbfJCQ1e (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:27:34 -0400
+        id S2390619AbfJCQ12 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:27:28 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3944520867;
-        Thu,  3 Oct 2019 16:27:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D08A720867;
+        Thu,  3 Oct 2019 16:27:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570120052;
-        bh=Va9nDflhvZE8l4fVYvtxdcbe6XHlni19RRugg5yBB5I=;
+        s=default; t=1570120047;
+        bh=iItdgteyx2Yyq6/oHJhvcXHvnUEhYPhCCQi5ReAoQIc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xVl0KY6RenQLemDd7c9YwIhEkIvVKGEHt4k09TdOa6HeoctUdGi+57KJVRsvkO5Xx
-         f9Gl2hn+M1ZIjo0q7AR6bMyw/q2zdOQFsblJGzXtwdk2Pmg+XWh4+0G1MYrugnOel/
-         mYXYyMaZ+SjPJOUeVBsdPFIpN6YFjgGl8BeVMhbE=
+        b=MGVNj4hHZGUDqWpsYzv1p5oNm1Oyqdl8XB2pkSXunUGr/kALrRrKZUKIw+kE3DWci
+         aokxFDwzASNYQdFmxKzSFwtuFfL0P/3q/o/ID8WBPN5ioge5J9qO5g4I8T8kNjJnxN
+         /j18ENMFdCtoL/3a6mTeylRhHtdST47QtwKWosQU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ian Jackson <ian.jackson@citrix.com>,
-        Julien Grall <julien.grall@arm.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Avaneesh Kumar Dwivedi <akdwived@codeaurora.org>,
-        Stephen Boyd <swboyd@chromium.org>,
+        stable@vger.kernel.org,
+        Guoqing Jiang <guoqing.jiang@cloud.ionos.com>,
+        Song Liu <songliubraving@fb.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 041/313] firmware: qcom_scm: Use proper types for dma mappings
-Date:   Thu,  3 Oct 2019 17:50:19 +0200
-Message-Id: <20191003154537.261502495@linuxfoundation.org>
+Subject: [PATCH 5.2 075/313] md: dont call spare_active in md_reap_sync_thread if all member devices cant work
+Date:   Thu,  3 Oct 2019 17:50:53 +0200
+Message-Id: <20191003154540.228351734@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191003154533.590915454@linuxfoundation.org>
 References: <20191003154533.590915454@linuxfoundation.org>
@@ -63,78 +61,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Stephen Boyd <swboyd@chromium.org>
+From: Guoqing Jiang <jgq516@gmail.com>
 
-[ Upstream commit 6e37ccf78a53296c6c7bf426065762c27829eb84 ]
+[ Upstream commit 0d8ed0e9bf9643f27f4816dca61081784dedb38d ]
 
-We need to use the proper types and convert between physical addresses
-and dma addresses here to avoid mismatch warnings. This is especially
-important on systems with a different size for dma addresses and
-physical addresses. Otherwise, we get the following warning:
+When add one disk to array, the md_reap_sync_thread is responsible
+to activate the spare and set In_sync flag for the new member in
+spare_active().
 
-  drivers/firmware/qcom_scm.c: In function "qcom_scm_assign_mem":
-  drivers/firmware/qcom_scm.c:469:47: error: passing argument 3 of "dma_alloc_coherent" from incompatible pointer type [-Werror=incompatible-pointer-types]
+But if raid1 has one member disk A, and disk B is added to the array.
+Then we offline A before all the datas are synchronized from A to B,
+obviously B doesn't have the latest data as A, but B is still marked
+with In_sync flag.
 
-We also fix the size argument to dma_free_coherent() because that size
-doesn't need to be aligned after it's already aligned on the allocation
-size. In fact, dma debugging expects the same arguments to be passed to
-both the allocation and freeing sides of the functions so changing the
-size is incorrect regardless.
+So let's not call spare_active under the condition, otherwise B is
+still showed with 'U' state which is not correct.
 
-Reported-by: Ian Jackson <ian.jackson@citrix.com>
-Cc: Ian Jackson <ian.jackson@citrix.com>
-Cc: Julien Grall <julien.grall@arm.com>
-Cc: Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc: Avaneesh Kumar Dwivedi <akdwived@codeaurora.org>
-Tested-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-Signed-off-by: Stephen Boyd <swboyd@chromium.org>
-Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+Signed-off-by: Guoqing Jiang <guoqing.jiang@cloud.ionos.com>
+Signed-off-by: Song Liu <songliubraving@fb.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/firmware/qcom_scm.c | 7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
+ drivers/md/md.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/firmware/qcom_scm.c b/drivers/firmware/qcom_scm.c
-index 2ddc118dba1b4..74b84244a0db8 100644
---- a/drivers/firmware/qcom_scm.c
-+++ b/drivers/firmware/qcom_scm.c
-@@ -9,6 +9,7 @@
- #include <linux/init.h>
- #include <linux/cpumask.h>
- #include <linux/export.h>
-+#include <linux/dma-direct.h>
- #include <linux/dma-mapping.h>
- #include <linux/module.h>
- #include <linux/types.h>
-@@ -440,6 +441,7 @@ int qcom_scm_assign_mem(phys_addr_t mem_addr, size_t mem_sz,
- 	phys_addr_t mem_to_map_phys;
- 	phys_addr_t dest_phys;
- 	phys_addr_t ptr_phys;
-+	dma_addr_t ptr_dma;
- 	size_t mem_to_map_sz;
- 	size_t dest_sz;
- 	size_t src_sz;
-@@ -457,9 +459,10 @@ int qcom_scm_assign_mem(phys_addr_t mem_addr, size_t mem_sz,
- 	ptr_sz = ALIGN(src_sz, SZ_64) + ALIGN(mem_to_map_sz, SZ_64) +
- 			ALIGN(dest_sz, SZ_64);
- 
--	ptr = dma_alloc_coherent(__scm->dev, ptr_sz, &ptr_phys, GFP_KERNEL);
-+	ptr = dma_alloc_coherent(__scm->dev, ptr_sz, &ptr_dma, GFP_KERNEL);
- 	if (!ptr)
- 		return -ENOMEM;
-+	ptr_phys = dma_to_phys(__scm->dev, ptr_dma);
- 
- 	/* Fill source vmid detail */
- 	src = ptr;
-@@ -489,7 +492,7 @@ int qcom_scm_assign_mem(phys_addr_t mem_addr, size_t mem_sz,
- 
- 	ret = __qcom_scm_assign_mem(__scm->dev, mem_to_map_phys, mem_to_map_sz,
- 				    ptr_phys, src_sz, dest_phys, dest_sz);
--	dma_free_coherent(__scm->dev, ALIGN(ptr_sz, SZ_64), ptr, ptr_phys);
-+	dma_free_coherent(__scm->dev, ptr_sz, ptr, ptr_dma);
- 	if (ret) {
- 		dev_err(__scm->dev,
- 			"Assign memory protection call failed %d.\n", ret);
+diff --git a/drivers/md/md.c b/drivers/md/md.c
+index 9801d540fea1c..5e885b6c4240d 100644
+--- a/drivers/md/md.c
++++ b/drivers/md/md.c
+@@ -8944,7 +8944,8 @@ void md_reap_sync_thread(struct mddev *mddev)
+ 	/* resync has finished, collect result */
+ 	md_unregister_thread(&mddev->sync_thread);
+ 	if (!test_bit(MD_RECOVERY_INTR, &mddev->recovery) &&
+-	    !test_bit(MD_RECOVERY_REQUESTED, &mddev->recovery)) {
++	    !test_bit(MD_RECOVERY_REQUESTED, &mddev->recovery) &&
++	    mddev->degraded != mddev->raid_disks) {
+ 		/* success...*/
+ 		/* activate any spares */
+ 		if (mddev->pers->spare_active(mddev)) {
 -- 
 2.20.1
 
