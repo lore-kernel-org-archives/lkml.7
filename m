@@ -7,49 +7,49 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 469BBC10F14
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:49:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F686C4CED1
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:49:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1DF59215EA
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:49:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1D61A2086A
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:49:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570121364;
-	bh=Hjp88NY3REpZW3H/VUC90t+cZ1UN3x+Ulcpaz+PzxuY=;
+	s=default; t=1570121368;
+	bh=3vz0jGokF/tADKiAtasvrTU/In2SROOiBNXQon2ojrc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=MeZi66tEbPh0v2100lcPggOkC6DX5C6pezZHwC253aJd/r9pu0Pl5u+BX7aTSUN3W
-	 ifuPwVaDU8RDxrJV/Bae/IC3srdtxq13Pg3elnutn93TyjMDrID3m4ehmsj3kWTqzZ
-	 jE5upJI1a9cuwgsBA1MYFLtdnUUg6BoVV/AjRvhk=
+	b=epMJVgaTEaSFZYNc+D67noKsakZaKgJh1kBwEO954jVhRPdByE/+huXGnzEigrpe0
+	 xTMk7YC5RC6EbzBFybPxYPIDgkt6Yi52iqW2dfCkoNaBCsJx5BFEVHHm/SiX/wIxu4
+	 mGn7UWWivvEGUsUZOgNLrMQ4dKZtSBc2Nz1SOWr0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393071AbfJCQtX (ORCPT
+        id S2405601AbfJCQt1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 12:49:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35748 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 12:49:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35814 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388508AbfJCQtT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:49:19 -0400
+        id S2393067AbfJCQtW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:49:22 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DF3502070B;
-        Thu,  3 Oct 2019 16:49:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 96D82215EA;
+        Thu,  3 Oct 2019 16:49:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570121359;
-        bh=Hjp88NY3REpZW3H/VUC90t+cZ1UN3x+Ulcpaz+PzxuY=;
+        s=default; t=1570121362;
+        bh=3vz0jGokF/tADKiAtasvrTU/In2SROOiBNXQon2ojrc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=x/OKlToBF/p0GpzU2VLYsLUwcnRmp4j1NfzeLMl7lClWwcQ+dPTFrFvbd3OUIRfDX
-         XBvJF+zAqSf17Nze/bUTq2596K0xh5Em3RYEr5D+7cKJvZLdnp1l0D25OiQKvL2GxG
-         L05Hoyjb7X7N54DenQ68jdmctxld//rfBpmX74hI=
+        b=AMb5BCRvTYsh1W9nVqjRh2s3qAHns1MPv3eFnedgF93NXNYoiLeStfExXe5kEITR3
+         MNMC8gpXfdlWgTWUFiZ3Ub+0iEJknLKnrotDNzYYCR5EgowRqzKI8SvhW89VzyzqDN
+         sOuEQc1hfOZXlPPc7uTM6GTjDg5YjG8SahtIuZ+M=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        "Paul E. McKenney" <paulmck@linux.ibm.com>,
-        Juri Lelli <juri.lelli@redhat.com>,
+        stable@vger.kernel.org, Tomas Bortoli <tomasbortoli@gmail.com>,
+        syzbot+0522702e9d67142379f1@syzkaller.appspotmail.com,
+        Sean Young <sean@mess.org>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.3 249/344] rcu/tree: Fix SCHED_FIFO params
-Date:   Thu,  3 Oct 2019 17:53:34 +0200
-Message-Id: <20191003154605.026537823@linuxfoundation.org>
+Subject: [PATCH 5.3 223/344] media: ttusb-dec: Fix info-leak in ttusb_dec_send_command()
+Date:   Thu,  3 Oct 2019 17:53:08 +0200
+Message-Id: <20191003154602.379734889@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191003154540.062170222@linuxfoundation.org>
 References: <20191003154540.062170222@linuxfoundation.org>
@@ -62,43 +62,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Peter Zijlstra <peterz@infradead.org>
+From: Tomas Bortoli <tomasbortoli@gmail.com>
 
-[ Upstream commit 130d9c331bc59a8733b47c58ef197a2b1fa3ed43 ]
+[ Upstream commit a10feaf8c464c3f9cfdd3a8a7ce17e1c0d498da1 ]
 
-A rather embarrasing mistake had us call sched_setscheduler() before
-initializing the parameters passed to it.
+The function at issue does not always initialize each byte allocated
+for 'b' and can therefore leak uninitialized memory to a USB device in
+the call to usb_bulk_msg()
 
-Fixes: 1a763fd7c633 ("rcu/tree: Call setschedule() gp ktread to SCHED_FIFO outside of atomic region")
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Reviewed-by: Paul E. McKenney <paulmck@linux.ibm.com>
-Cc: Juri Lelli <juri.lelli@redhat.com>
+Use kzalloc() instead of kmalloc()
+
+Signed-off-by: Tomas Bortoli <tomasbortoli@gmail.com>
+Reported-by: syzbot+0522702e9d67142379f1@syzkaller.appspotmail.com
+Signed-off-by: Sean Young <sean@mess.org>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/rcu/tree.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ drivers/media/usb/ttusb-dec/ttusb_dec.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/kernel/rcu/tree.c b/kernel/rcu/tree.c
-index eb764c24bc4d4..5efdce756fdf0 100644
---- a/kernel/rcu/tree.c
-+++ b/kernel/rcu/tree.c
-@@ -3234,13 +3234,13 @@ static int __init rcu_spawn_gp_kthread(void)
- 	t = kthread_create(rcu_gp_kthread, NULL, "%s", rcu_state.name);
- 	if (WARN_ONCE(IS_ERR(t), "%s: Could not start grace-period kthread, OOM is now expected behavior\n", __func__))
- 		return 0;
--	if (kthread_prio)
-+	if (kthread_prio) {
-+		sp.sched_priority = kthread_prio;
- 		sched_setscheduler_nocheck(t, SCHED_FIFO, &sp);
-+	}
- 	rnp = rcu_get_root();
- 	raw_spin_lock_irqsave_rcu_node(rnp, flags);
- 	rcu_state.gp_kthread = t;
--	if (kthread_prio)
--		sp.sched_priority = kthread_prio;
- 	raw_spin_unlock_irqrestore_rcu_node(rnp, flags);
- 	wake_up_process(t);
- 	rcu_spawn_nocb_kthreads();
+diff --git a/drivers/media/usb/ttusb-dec/ttusb_dec.c b/drivers/media/usb/ttusb-dec/ttusb_dec.c
+index 1d0afa340f47c..3198f9624b7c0 100644
+--- a/drivers/media/usb/ttusb-dec/ttusb_dec.c
++++ b/drivers/media/usb/ttusb-dec/ttusb_dec.c
+@@ -319,7 +319,7 @@ static int ttusb_dec_send_command(struct ttusb_dec *dec, const u8 command,
+ 
+ 	dprintk("%s\n", __func__);
+ 
+-	b = kmalloc(COMMAND_PACKET_SIZE + 4, GFP_KERNEL);
++	b = kzalloc(COMMAND_PACKET_SIZE + 4, GFP_KERNEL);
+ 	if (!b)
+ 		return -ENOMEM;
+ 
 -- 
 2.20.1
 
