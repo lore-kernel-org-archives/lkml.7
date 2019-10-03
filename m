@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D50C3C10F14
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:07:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B56BC32792
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:07:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A3E36215EA
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:07:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 52A43222BE
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:07:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570118840;
-	bh=mHXwAPPYFfViVZ1f2smTpzXkHdCN1X+YpOEyrOCoclY=;
+	s=default; t=1570118844;
+	bh=x4+W6bHjTUJYagozGShM5+2PnGm2+3w1B4z1RcOCLWg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=oLL7oGKrwO/MJhu07TjWw0GRM6xz1rWisVaQFCr/ORwOgtwGxPXnfTOq8fq4FdMKn
-	 gsoIT3rMmuLETmnBAmc4bqEFYdmXsu72Z1NJIKGSlkJmL4NSFC0aUfZx+4eccVCleW
-	 P9bkEjDkAEvGcKMk6iSsA+mcNoM4TU+kMi8JmE84=
+	b=OkTXefhc+qQd6XNfP5y7LnBLuuRL7PF8l6rJl5kTSVdNNF/cjhOsAX2uCbgk+6dk3
+	 tDt+pSeAwyQWe+T0GofPdpCz9Eru2h26ZNiKEcjQ86qWEE+3yIy0ww0oW8XIUW4IU/
+	 vrcSrVj2jZ5lDPGmdda2hlxPh+PuUVHFsoAhUhdM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732925AbfJCQHT (ORCPT
+        id S1732932AbfJCQHX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 12:07:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54880 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 12:07:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54978 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732896AbfJCQHL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:07:11 -0400
+        id S1732921AbfJCQHR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:07:17 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9B9A3215EA;
-        Thu,  3 Oct 2019 16:07:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0EDAF20865;
+        Thu,  3 Oct 2019 16:07:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570118831;
-        bh=mHXwAPPYFfViVZ1f2smTpzXkHdCN1X+YpOEyrOCoclY=;
+        s=default; t=1570118836;
+        bh=x4+W6bHjTUJYagozGShM5+2PnGm2+3w1B4z1RcOCLWg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=e9+oHrm6+MCXbVMlrmJ4XQG4rkon6JDyOAVSz09g88ItGqabxW9m0WCLcgrd4wG4i
-         xHWLQpXwRHpsl1EASYU6LFbrolgfhV3MUw6PeOtDrhKHJKHxpqX6PP0alwgaLOdRgU
-         EmHU++Wg3i9YiAe1C6EhkrHEfjNWKtk+OgT0x57E=
+        b=hyHWBULI+QEMHsUPHC33AkIGytHuNQqKDy1cz/u+jW66+/CkjwfoJmtTjjJrKSHlT
+         M7Vok4f30PNh6gY39X62v40MSHfcbvHBoBC6dZIFeSrVd+SOAPyS17jKmygw63G8Js
+         NQ0eVKIPdkQJsnnMWTwP1T0YgQeHP1S523kV2jVI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Chao Yu <yuchao0@huawei.com>,
         Jaegeuk Kim <jaegeuk@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 025/185] Revert "f2fs: avoid out-of-range memory access"
-Date:   Thu,  3 Oct 2019 17:51:43 +0200
-Message-Id: <20191003154443.366504907@linuxfoundation.org>
+Subject: [PATCH 4.14 027/185] f2fs: fix to do sanity check on segment bitmap of LFS curseg
+Date:   Thu,  3 Oct 2019 17:51:45 +0200
+Message-Id: <20191003154443.767401442@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191003154437.541662648@linuxfoundation.org>
 References: <20191003154437.541662648@linuxfoundation.org>
@@ -62,57 +62,106 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Chao Yu <yuchao0@huawei.com>
 
-[ Upstream commit a37d0862d17411edb67677a580a6f505ec2225f6 ]
+[ Upstream commit c854f4d681365498f53ba07843a16423625aa7e9 ]
 
-As Pavel Machek reported:
+As Jungyeon Reported in bugzilla:
 
-"We normally use -EUCLEAN to signal filesystem corruption. Plus, it is
-good idea to report it to the syslog and mark filesystem as "needing
-fsck" if filesystem can do that."
+https://bugzilla.kernel.org/show_bug.cgi?id=203233
 
-Still we need improve the original patch with:
-- use unlikely keyword
-- add message print
-- return EUCLEAN
+- Reproduces
+gcc poc_13.c
+./run.sh f2fs
 
-However, after rethink this patch, I don't think we should add such
-condition check here as below reasons:
-- We have already checked the field in f2fs_sanity_check_ckpt(),
-- If there is fs corrupt or security vulnerability, there is nothing
-to guarantee the field is integrated after the check, unless we do
-the check before each of its use, however no filesystem does that.
-- We only have similar check for bitmap, which was added due to there
-is bitmap corruption happened on f2fs' runtime in product.
-- There are so many key fields in SB/CP/NAT did have such check
-after f2fs_sanity_check_{sb,cp,..}.
+- Kernel messages
+ F2FS-fs (sdb): Bitmap was wrongly set, blk:4608
+ kernel BUG at fs/f2fs/segment.c:2133!
+ RIP: 0010:update_sit_entry+0x35d/0x3e0
+ Call Trace:
+  f2fs_allocate_data_block+0x16c/0x5a0
+  do_write_page+0x57/0x100
+  f2fs_do_write_node_page+0x33/0xa0
+  __write_node_page+0x270/0x4e0
+  f2fs_sync_node_pages+0x5df/0x670
+  f2fs_write_checkpoint+0x364/0x13a0
+  f2fs_sync_fs+0xa3/0x130
+  f2fs_do_sync_file+0x1a6/0x810
+  do_fsync+0x33/0x60
+  __x64_sys_fsync+0xb/0x10
+  do_syscall_64+0x43/0x110
+  entry_SYSCALL_64_after_hwframe+0x44/0xa9
 
-So I propose to revert this unneeded check.
+The testcase fails because that, in fuzzed image, current segment was
+allocated with LFS type, its .next_blkoff should point to an unused
+block address, but actually, its bitmap shows it's not. So during
+allocation, f2fs crash when setting bitmap.
 
-This reverts commit 56f3ce675103e3fb9e631cfb4131fc768bc23e9a.
+Introducing sanity_check_curseg() to check such inconsistence of
+current in-used segment.
 
 Signed-off-by: Chao Yu <yuchao0@huawei.com>
 Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/f2fs/segment.c | 5 -----
- 1 file changed, 5 deletions(-)
+ fs/f2fs/segment.c | 39 +++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 39 insertions(+)
 
 diff --git a/fs/f2fs/segment.c b/fs/f2fs/segment.c
-index 18d51c36a5e32..70bd15cadb44e 100644
+index 70bd15cadb44e..294fdb1b22137 100644
 --- a/fs/f2fs/segment.c
 +++ b/fs/f2fs/segment.c
-@@ -2612,11 +2612,6 @@ static int read_compacted_summaries(struct f2fs_sb_info *sbi)
- 		seg_i = CURSEG_I(sbi, i);
- 		segno = le32_to_cpu(ckpt->cur_data_segno[i]);
- 		blk_off = le16_to_cpu(ckpt->cur_data_blkoff[i]);
--		if (blk_off > ENTRIES_IN_SUM) {
--			f2fs_bug_on(sbi, 1);
--			f2fs_put_page(page, 1);
--			return -EFAULT;
--		}
- 		seg_i->next_segno = segno;
- 		reset_curseg(sbi, i, 0);
- 		seg_i->alloc_type = ckpt->alloc_type[i];
+@@ -3439,6 +3439,41 @@ static int build_dirty_segmap(struct f2fs_sb_info *sbi)
+ 	return init_victim_secmap(sbi);
+ }
+ 
++static int sanity_check_curseg(struct f2fs_sb_info *sbi)
++{
++	int i;
++
++	/*
++	 * In LFS/SSR curseg, .next_blkoff should point to an unused blkaddr;
++	 * In LFS curseg, all blkaddr after .next_blkoff should be unused.
++	 */
++	for (i = 0; i < NO_CHECK_TYPE; i++) {
++		struct curseg_info *curseg = CURSEG_I(sbi, i);
++		struct seg_entry *se = get_seg_entry(sbi, curseg->segno);
++		unsigned int blkofs = curseg->next_blkoff;
++
++		if (f2fs_test_bit(blkofs, se->cur_valid_map))
++			goto out;
++
++		if (curseg->alloc_type == SSR)
++			continue;
++
++		for (blkofs += 1; blkofs < sbi->blocks_per_seg; blkofs++) {
++			if (!f2fs_test_bit(blkofs, se->cur_valid_map))
++				continue;
++out:
++			f2fs_msg(sbi->sb, KERN_ERR,
++				"Current segment's next free block offset is "
++				"inconsistent with bitmap, logtype:%u, "
++				"segno:%u, type:%u, next_blkoff:%u, blkofs:%u",
++				i, curseg->segno, curseg->alloc_type,
++				curseg->next_blkoff, blkofs);
++			return -EINVAL;
++		}
++	}
++	return 0;
++}
++
+ /*
+  * Update min, max modified time for cost-benefit GC algorithm
+  */
+@@ -3532,6 +3567,10 @@ int build_segment_manager(struct f2fs_sb_info *sbi)
+ 	if (err)
+ 		return err;
+ 
++	err = sanity_check_curseg(sbi);
++	if (err)
++		return err;
++
+ 	init_min_max_mtime(sbi);
+ 	return 0;
+ }
 -- 
 2.20.1
 
