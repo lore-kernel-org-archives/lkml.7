@@ -2,168 +2,84 @@ Return-Path: <SRS0=6dNS=X4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 81DA2C4CED1
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 18:23:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5944DC10F14
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 18:23:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5C92720830
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 18:23:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 273132086A
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 18:23:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="g5GX7ssQ"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="c1OGLMY4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388038AbfJCSXC (ORCPT
+        id S2388940AbfJCSXe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 14:23:02 -0400
-Received: from mail-io1-f68.google.com ([209.85.166.68]:35364 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731438AbfJCSXC (ORCPT
+        Thu, 3 Oct 2019 14:23:34 -0400
+Received: from mail-io1-f65.google.com ([209.85.166.65]:38463 "EHLO
+        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728446AbfJCSXe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 14:23:02 -0400
-Received: by mail-io1-f68.google.com with SMTP id q10so7867818iop.2;
-        Thu, 03 Oct 2019 11:23:01 -0700 (PDT)
+        Thu, 3 Oct 2019 14:23:34 -0400
+Received: by mail-io1-f65.google.com with SMTP id u8so7825545iom.5
+        for <linux-kernel@vger.kernel.org>; Thu, 03 Oct 2019 11:23:33 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=4hW9F/rndnpcOOaucgLoBVdnGt4rBKKWToBojv2TwQ8=;
-        b=g5GX7ssQedVGoeidnbB19TwJyrGbYyrQ56f71dNBu0A8OcrSjhuRxGSKqZYDyobJQQ
-         ms4T4MldIgPmuEPzJKrKYjWMAOiTqSF/UesGGUKHF7chB0LdxZitzssq8zg/VwkNVSs9
-         jdVAbPe4Usvfz1W6Hke24nOMgUtcQvY7W9bFxeO/9fjSrnn7uiqh0fbgYRf5fTWXnptX
-         CGs79TDP7nO7iIiic/jjfJQ91iIhOczg1XCWRxxI6YxVbcYkRqi0bK4HLJTix/CL/8bV
-         CAbtoVMreqkOnYA6ArvTDm+jIJPcZMt/WgLbb3LYTlwldTwkxqd/kyVZP/JocvV65kzI
-         f42g==
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=275AfUnj6aHBgYIbA3ON9mS0LQosy+5qsD0pGkCb32s=;
+        b=c1OGLMY44+4ckwsAl/G+KpSfgRdufeD7+g8abBklf/iVHaeStNDSGUTsrYn7KivMXy
+         gd7lalJgK9VamFzr9yNcORUcBx5LO1pQ2sKh6g5SI6nEq/O5eeoVknEsekuOaFOVig0P
+         zYYjsvfJfiVajqgUraogcoDmK5vSur/OJYeUyg678zQ8L9Ldoj0d7EV7q0dV+FC5SQgL
+         v7fWJu2DAffTqUxpZTW21k6xCZus+kt1iDjg4sFWAViYV57/B0bGZCATnzZyABpuHWln
+         h1mch2xYQlBObkXEVqmbDW9F1eJ7AryfZvM1PEe18JDRWm5Xki/wDJ5ZhgQKCOf6Cvfk
+         HexQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=4hW9F/rndnpcOOaucgLoBVdnGt4rBKKWToBojv2TwQ8=;
-        b=BzXe2K/TVcu66yvADNmRDvHVR92mkgciDlM68OxpI3Gs/AoCYoz7SmYb6nPBoUHJBf
-         acD0Pezw6+JHOV6bEchwqWli1BviUx9wbUO6o3N/anXVzRkhLag29SlwyS22tzFelHhf
-         1ZR/jDdu+b8bF+neq2ec0bhhzEuVnYlclOWGKBfhzFQ+Tw6MxW0mvXr3SA6CpUnV9+3X
-         +8Ot9mzyfjuu1nO2BPm+dvN4sBY2pDWxhHIQpmknNE9QkWoGUUE2HbWerJSQpq4XyMaR
-         K9+1pVpYkqj+l3demndogze/1IT5ntRtdfETss7ymRPrx0cSaCFiWwNw00IX6vHypQsF
-         jgHQ==
-X-Gm-Message-State: APjAAAU1mYbfxLlI979h+VZHtz/bKuxds7P4fYGePr6ZdDZpgiStrDoR
-        J2gL1FnGeEFMyAxMSxkfeA==
-X-Google-Smtp-Source: APXvYqxEQ16JuFvRHP8l8h43Cr24aZkiqnUek1B6jbdlUSI62W5tom2z7Ji3+QqgSP/Su/9ZFAUIjQ==
-X-Received: by 2002:a6b:b88a:: with SMTP id i132mr8947932iof.215.1570126981182;
-        Thu, 03 Oct 2019 11:23:01 -0700 (PDT)
-Received: from Test-Virtual-Machine (d24-141-106-246.home.cgocable.net. [24.141.106.246])
-        by smtp.gmail.com with ESMTPSA id u124sm1287165ioe.63.2019.10.03.11.22.58
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 03 Oct 2019 11:22:59 -0700 (PDT)
-Date:   Thu, 3 Oct 2019 14:22:56 -0400
-From:   Branden Bonaby <brandonbonaby94@gmail.com>
-To:     Michael Kelley <mikelley@microsoft.com>
-Cc:     KY Srinivasan <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        "sashal@kernel.org" <sashal@kernel.org>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v5 1/2] drivers: hv: vmbus: Introduce latency testing
-Message-ID: <20191003182256.GA8951@Test-Virtual-Machine>
-References: <cover.1568320416.git.brandonbonaby94@gmail.com>
- <83b5fc34e8f25c882f2502931f766ef547c6c950.1568320416.git.brandonbonaby94@gmail.com>
- <DM5PR21MB01373C2DB4DE6A4B6079C2BAD7890@DM5PR21MB0137.namprd21.prod.outlook.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=275AfUnj6aHBgYIbA3ON9mS0LQosy+5qsD0pGkCb32s=;
+        b=biYGacmv34l1oJR5PsVJmrYCJBAgHVgMGXHCW6ESrA2ZWrNAPx1swZhkzcK6tuCXSf
+         40RzS2zSk0qqFv6e9FU1ZAyIekJnbJJx9RNu9croSlehtlPBQQ99GNE2Sb5xI411AKmR
+         7FgEKmfj/cUxhZU7v1aAnx1EAwUQsyCGos7SP91ba8HkDqnSQjPxFmDIFRVFGUDBSgpY
+         1rZ6lxPc0ht5To64pqNCP+rfnmY4+mZx0EeWwMdF4mvj32P2/nyF9sKSyrD3fdcuOnk1
+         I1uz+MWkrv79nawFyveOVDSvBHdq9nu/COmWqeJUc7SK/SAP4Eox3+roYtboiCkXTLVp
+         PPYw==
+X-Gm-Message-State: APjAAAWMU5l55Jtx1Cn5evYpF/WHZ3AHEuC6U4EIGJ7055G/XAEOfmmD
+        RS4XowtHyy/ie24quY6eT/jHdpfC7Amfxa+jglVC2w==
+X-Google-Smtp-Source: APXvYqz+qHo6hpknvwi0t3HRw6jBKEJsjcAIwLnUH/pYAlcuWzLA/cEliwwkK5mVPejYp8PluQHLQUxCAf9UTnBfCOA=
+X-Received: by 2002:a92:5a10:: with SMTP id o16mr11756152ilb.296.1570127012953;
+ Thu, 03 Oct 2019 11:23:32 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <DM5PR21MB01373C2DB4DE6A4B6079C2BAD7890@DM5PR21MB0137.namprd21.prod.outlook.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+References: <1570097418-42233-1-git-send-email-pbonzini@redhat.com>
+ <CALMp9eRFUeSB035VEC61CzAg6PY=aApjyiQoSnRydH788COL4w@mail.gmail.com> <f8e169a5-4cf6-8df7-86bb-f70a480c33ad@redhat.com>
+In-Reply-To: <f8e169a5-4cf6-8df7-86bb-f70a480c33ad@redhat.com>
+From:   Jim Mattson <jmattson@google.com>
+Date:   Thu, 3 Oct 2019 11:23:21 -0700
+Message-ID: <CALMp9eSCB-wyLm-QYS-7gTcSeuWWCvgYL3iDEP0y6BM4cWMFag@mail.gmail.com>
+Subject: Re: [PATCH v2] KVM: x86: omit absent pmu MSRs from MSR list
+To:     Paolo Bonzini <pbonzini@redhat.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        kvm list <kvm@vger.kernel.org>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Sep 19, 2019 at 10:52:41PM +0000, Michael Kelley wrote:
-> From: Branden Bonaby <brandonbonaby94@gmail.com> Sent: Thursday, September 12, 2019 7:32 PM
-> > 
-> > +
-> > +static int hv_debugfs_delay_set(void *data, u64 val)
-> > +{
-> > +	int ret = 0;
-> > +
-> > +	if (val >= 0 && val <= 1000)
-> > +		*(u32 *)data = val;
-> > +	else
-> > +		ret = -EINVAL;
-> > +
-> > +	return ret;
-> > +}
-> 
-> I should probably quit picking at your code, but I'm going to
-> do it one more time. :-)
-> 
-> The above test for val >=0 is redundant as 'val' is declared
-> as 'u64'.  As an unsigned value, it will always be >= 0.  More
-> broadly, the above function could be written as follows
-> with no loss of clarity.  This accomplishes the same thing in
-> only 4 lines of code instead of 6, and the main execution path
-> is in the sequential execution flow, not in an 'if' statement.
-> 
-> {
-> 	if (val > 1000)
-> 		return -EINVAL;
-> 	*(u32 *)data = val;
-> 	return 0;
-> }
-> 
-> Your code is correct as written, so this is arguably more a
-> matter of style, but Linux generally likes to do things clearly
-> and compactly with no extra motion.
-> 
+On Thu, Oct 3, 2019 at 10:38 AM Paolo Bonzini <pbonzini@redhat.com> wrote:
+>
+> On 03/10/19 19:20, Jim Mattson wrote:
+> > You've truncated the list I originally provided, so I think this need
+> > only go to MSR_ARCH_PERFMON_PERFCTR0 + 17. Otherwise, we could lose
+> > some valuable MSRs.
+>
+> This is v2, so it was meant to replace the patch that truncates the
+> list.  But I can include the other one too, perhaps even ask the x86
+> maintainers about decreasing INTEL_PMC_MAX_GENERIC to 18.
 
-Yea the less than 0 comparison isnt needed, so I'll update that
-
-> +/* Delay buffer/message reads on a vmbus channel */
-> > +void hv_debug_delay_test(struct vmbus_channel *channel, enum delay delay_type)
-> > +{
-> > +	struct vmbus_channel *test_channel =    channel->primary_channel ?
-> > +						channel->primary_channel :
-> > +						channel;
-> > +	bool state = test_channel->fuzz_testing_state;
-> > +
-> > +	if (state) {
-> > +		if (delay_type == 0)
-> > +			udelay(test_channel->fuzz_testing_interrupt_delay);
-> > +		else
-> > +			udelay(test_channel->fuzz_testing_message_delay);
-> 
-> This 'if/else' statement got me thinking.  You have an enum declared below
-> that lists the two options -- INTERRUPT_DELAY or MESSAGE_DELAY.  The
-> implication is that we might add more options in the future.  But the
-> above 'if/else' statement isn't really set up to easily add more options, and
-> the individual fields for fuzz_testing_interrupt_delay and
-> fuzz_testing_message_delay mean adding more branches to the 'if/else'
-> statement whenever a new DELAY type is added to the enum.   And the
-> same is true when adding the entries into debugfs.  A more general
-> solution might use arrays and loops, and treat the enum value as an
-> index into an array of delay values.  Extending to add another delay type
-> could be as easy as adding another entry to the enum declaration.
-> 
-> The current code is for the case where n=2 (i.e., two different delay
-> types), and as such probably doesn't warrant the full index/looping
-> treatment.  But in the future, if we add additional delay types, we'll
-> probably revise the code to do the index/looping approach.
-> 
-> So to be clear, at this point I'm not asking you to change the existing
-> code.  My comments are more of an observation and something to
-> think about in the future.
-> 
-
-I do see your point, thanks for the input. I think since its just two
-it might be better to leave it but it definitely makes sense.
-
-> > 
-> > +enum delay {
-> > +	INTERRUPT_DELAY = 0,
-> > +	MESSAGE_DELAY   = 1,
-> > +};
-> > +
-> 
-> Michael
+The list should definitely be truncated, since
+MSR_ARCH_PERFMON_EVENTSEL0 + 18 is IA32_PERF_STATUS.
