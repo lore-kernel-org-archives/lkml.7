@@ -7,47 +7,49 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 360DAC10F14
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:16:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13E95C32792
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:16:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 094B920830
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:16:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DB94A20830
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:16:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570122963;
-	bh=SGCl/7o3pIUVUon5GSr1I0zVFIJ8Ua8QgL4bkQYqCIs=;
+	s=default; t=1570122965;
+	bh=wzy+qn7G4vChhr+Igs0f97LpsFy/FGBogC3S8Dgnf0M=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=HAi7or9RAb05qQnhs3BowKzaw/q/VejsiaExxQ3ceZEYJS97lRJFpO+Du31SJd+sq
-	 L+Q2v11PsykTGCkUcgprW4ZxM7CFu+JljNH8kC3giLD/TipFbmSmcMhsRs7lQeQm1k
-	 5C5KGwgCLHqTg6NEdpfUTwez3hIHHEn7PMYJbJjY=
+	b=AutVUWrCTyXppYyr0WpAtR4FeeC2ngftIlYdzvmgDGcgBp/sKFn5IKkuq0ZnLU2LR
+	 q52nBrVsMTxzqTPsfNENe7IZlQtoDUZVaAAuM5wxeizRDJyzatslvPrbqugts+uYOr
+	 8GBIUaxo6SMusKvrDVMggHdmax+hoP2pgr281llU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391188AbfJCRQC (ORCPT
+        id S2390855AbfJCQZB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 13:16:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55014 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 12:25:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54912 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729193AbfJCQZC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:25:02 -0400
+        id S1729193AbfJCQY7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:24:59 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 264552054F;
-        Thu,  3 Oct 2019 16:25:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4C5B020867;
+        Thu,  3 Oct 2019 16:24:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570119901;
-        bh=SGCl/7o3pIUVUon5GSr1I0zVFIJ8Ua8QgL4bkQYqCIs=;
+        s=default; t=1570119898;
+        bh=wzy+qn7G4vChhr+Igs0f97LpsFy/FGBogC3S8Dgnf0M=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=HXoHQk+vP1RMK0LMKKJ5gpcS2ZFbtsgSBtxbp7HJyjFVEcLKRUs6qkCLA/AaQP5lq
-         qJGdOhM41RNSgDeJOaKJ9zlzbzrL9v+3keRZmY2jDu6dGrT9konNA9lgh35c9zWvKT
-         unSN1jXQrs5QOk5xQYFPxu8DgNkpQdW8iOZFS678=
+        b=i/fGyxrRXfSdgvo8BXLL2PWMBaoi6k2O+K9TQvw30rsp3aC8gFWC+Z2piwIKYRDq1
+         IDyTBWMPAnCtFQxGhhw3QwG+JqypIHKSy+YwG0CVnCCjbAG12kElSLNFKHOWpSwH7x
+         MbphbdXg2R/tC8j69Mja/1/p58pOEF7IXB4EekR8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, David Ahern <dsahern@gmail.com>,
-        Patrick Ruddy <pruddy@vyatta.att-mail.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.2 023/313] vrf: Do not attempt to create IPv6 mcast rule if IPv6 is disabled
-Date:   Thu,  3 Oct 2019 17:50:01 +0200
-Message-Id: <20191003154535.650544593@linuxfoundation.org>
+        Jamal Hadi Salim <jhs@mojatatu.com>,
+        Cong Wang <xiyou.wangcong@gmail.com>,
+        Jiri Pirko <jiri@mellanox.com>,
+        Jakub Kicinski <jakub.kicinski@netronome.com>
+Subject: [PATCH 5.2 022/313] net_sched: add policy validation for action attributes
+Date:   Thu,  3 Oct 2019 17:50:00 +0200
+Message-Id: <20191003154535.559326756@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191003154533.590915454@linuxfoundation.org>
 References: <20191003154533.590915454@linuxfoundation.org>
@@ -60,37 +62,102 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: David Ahern <dsahern@gmail.com>
+From: Cong Wang <xiyou.wangcong@gmail.com>
 
-[ Upstream commit dac91170f8e9c73784af5fad6225e954b795601c ]
+[ Upstream commit 199ce850ce112315cfc68d42b694bcaa27b097b7 ]
 
-A user reported that vrf create fails when IPv6 is disabled at boot using
-'ipv6.disable=1':
-   https://bugzilla.kernel.org/show_bug.cgi?id=204903
+Similar to commit 8b4c3cdd9dd8
+("net: sched: Add policy validation for tc attributes"), we need
+to add proper policy validation for TC action attributes too.
 
-The failure is adding fib rules at create time. Add RTNL_FAMILY_IP6MR to
-the check in vrf_fib_rule if ipv6_mod_enabled is disabled.
-
-Fixes: e4a38c0c4b27 ("ipv6: add vrf table handling code for ipv6 mcast")
-Signed-off-by: David Ahern <dsahern@gmail.com>
-Cc: Patrick Ruddy <pruddy@vyatta.att-mail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Cc: David Ahern <dsahern@gmail.com>
+Cc: Jamal Hadi Salim <jhs@mojatatu.com>
+Signed-off-by: Cong Wang <xiyou.wangcong@gmail.com>
+Acked-by: Jiri Pirko <jiri@mellanox.com>
+Signed-off-by: Jakub Kicinski <jakub.kicinski@netronome.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/vrf.c |    3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ net/sched/act_api.c |   34 ++++++++++++++++++----------------
+ 1 file changed, 18 insertions(+), 16 deletions(-)
 
---- a/drivers/net/vrf.c
-+++ b/drivers/net/vrf.c
-@@ -1153,7 +1153,8 @@ static int vrf_fib_rule(const struct net
- 	struct sk_buff *skb;
+--- a/net/sched/act_api.c
++++ b/net/sched/act_api.c
+@@ -828,6 +828,15 @@ static struct tc_cookie *nla_memdup_cook
+ 	return c;
+ }
+ 
++static const struct nla_policy tcf_action_policy[TCA_ACT_MAX + 1] = {
++	[TCA_ACT_KIND]		= { .type = NLA_NUL_STRING,
++				    .len = IFNAMSIZ - 1 },
++	[TCA_ACT_INDEX]		= { .type = NLA_U32 },
++	[TCA_ACT_COOKIE]	= { .type = NLA_BINARY,
++				    .len = TC_COOKIE_MAX_SIZE },
++	[TCA_ACT_OPTIONS]	= { .type = NLA_NESTED },
++};
++
+ struct tc_action *tcf_action_init_1(struct net *net, struct tcf_proto *tp,
+ 				    struct nlattr *nla, struct nlattr *est,
+ 				    char *name, int ovr, int bind,
+@@ -843,8 +852,8 @@ struct tc_action *tcf_action_init_1(stru
  	int err;
  
--	if (family == AF_INET6 && !ipv6_mod_enabled())
-+	if ((family == AF_INET6 || family == RTNL_FAMILY_IP6MR) &&
-+	    !ipv6_mod_enabled())
- 		return 0;
+ 	if (name == NULL) {
+-		err = nla_parse_nested_deprecated(tb, TCA_ACT_MAX, nla, NULL,
+-						  extack);
++		err = nla_parse_nested_deprecated(tb, TCA_ACT_MAX, nla,
++						  tcf_action_policy, extack);
+ 		if (err < 0)
+ 			goto err_out;
+ 		err = -EINVAL;
+@@ -853,18 +862,9 @@ struct tc_action *tcf_action_init_1(stru
+ 			NL_SET_ERR_MSG(extack, "TC action kind must be specified");
+ 			goto err_out;
+ 		}
+-		if (nla_strlcpy(act_name, kind, IFNAMSIZ) >= IFNAMSIZ) {
+-			NL_SET_ERR_MSG(extack, "TC action name too long");
+-			goto err_out;
+-		}
+-		if (tb[TCA_ACT_COOKIE]) {
+-			int cklen = nla_len(tb[TCA_ACT_COOKIE]);
+-
+-			if (cklen > TC_COOKIE_MAX_SIZE) {
+-				NL_SET_ERR_MSG(extack, "TC cookie size above the maximum");
+-				goto err_out;
+-			}
++		nla_strlcpy(act_name, kind, IFNAMSIZ);
  
- 	skb = nlmsg_new(vrf_fib_rule_nl_size(), GFP_KERNEL);
++		if (tb[TCA_ACT_COOKIE]) {
+ 			cookie = nla_memdup_cookie(tb);
+ 			if (!cookie) {
+ 				NL_SET_ERR_MSG(extack, "No memory to generate TC cookie");
+@@ -1095,7 +1095,8 @@ static struct tc_action *tcf_action_get_
+ 	int index;
+ 	int err;
+ 
+-	err = nla_parse_nested_deprecated(tb, TCA_ACT_MAX, nla, NULL, extack);
++	err = nla_parse_nested_deprecated(tb, TCA_ACT_MAX, nla,
++					  tcf_action_policy, extack);
+ 	if (err < 0)
+ 		goto err_out;
+ 
+@@ -1149,7 +1150,8 @@ static int tca_action_flush(struct net *
+ 
+ 	b = skb_tail_pointer(skb);
+ 
+-	err = nla_parse_nested_deprecated(tb, TCA_ACT_MAX, nla, NULL, extack);
++	err = nla_parse_nested_deprecated(tb, TCA_ACT_MAX, nla,
++					  tcf_action_policy, extack);
+ 	if (err < 0)
+ 		goto err_out;
+ 
+@@ -1437,7 +1439,7 @@ static struct nlattr *find_dump_kind(str
+ 
+ 	if (tb[1] == NULL)
+ 		return NULL;
+-	if (nla_parse_nested_deprecated(tb2, TCA_ACT_MAX, tb[1], NULL, NULL) < 0)
++	if (nla_parse_nested_deprecated(tb2, TCA_ACT_MAX, tb[1], tcf_action_policy, NULL) < 0)
+ 		return NULL;
+ 	kind = tb2[TCA_ACT_KIND];
+ 
 
 
