@@ -2,107 +2,128 @@ Return-Path: <SRS0=6dNS=X4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 81AC8C10F14
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 04:37:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F1A68C10F14
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 04:39:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4BD13222BE
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 04:37:28 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b="N2K/o9vi"
+	by mail.kernel.org (Postfix) with ESMTP id C7F52222BE
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 04:39:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726508AbfJCEh1 (ORCPT
+        id S1726978AbfJCEjd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 00:37:27 -0400
-Received: from mail-io1-f68.google.com ([209.85.166.68]:39220 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725613AbfJCEh0 (ORCPT
+        Thu, 3 Oct 2019 00:39:33 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:34992 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725613AbfJCEjc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 00:37:26 -0400
-Received: by mail-io1-f68.google.com with SMTP id a1so2481002ioc.6
-        for <linux-kernel@vger.kernel.org>; Wed, 02 Oct 2019 21:37:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=amarulasolutions.com; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=MlekqaDeWFJgEd5A1fBRjx/7k1tl63XnhZuTSyHIz4o=;
-        b=N2K/o9viZlp1wU82nZeoxpgVml0anhGjTES+V5f7ZmBrN6KXsn0+yIR9qkonlHBcoT
-         QTHH63dWxWdeC69Z26P8Len8fBpb+sf26Th2APGZEmm/zT4fcBOA9pShLkEbLizr1o/a
-         j6JdKtQ/qw8Yu2WVUJFzygEFLvK0EOs3C2ihQ=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=MlekqaDeWFJgEd5A1fBRjx/7k1tl63XnhZuTSyHIz4o=;
-        b=rSvDpYD0tvveLZpI/CsdepyciBDMouheoU+1cnR8PFf42W44w6R5af5BGvlLsOjTF4
-         Y3VLfolwLWWwCn1vxGTY2tgSBk98SPOeMF95IEcNeTkXbhVipcQUwiuCc8hEmaQ4rpCu
-         H4XKVVR1ijIOnYsznZe6ZNNU1k7UhYjPP5Nv/VemHMwLV/1hJ28/ehX6RPkTLroeAtGw
-         cecTpgG+atnxVKYKyvVxXC/RH976k19eT0fhFk4MXIZHbBoy26xWyyQAcDOkuoR1Jl08
-         bHNGKFT/sZvRyoCxbXM8r8DvJJa5cFCneQrMrNR9inGj+Ybgbcjb7tEczXjx0Pkv8sRm
-         chxg==
-X-Gm-Message-State: APjAAAWEY171ADSGjp0QQWUi+2oTXYUae9mENxSDRN/zD8VseCG1UFh7
-        lhNG0KWoWVpeYQWYQuB9vRgZOJoTAHIvi585DP3oPg==
-X-Google-Smtp-Source: APXvYqwIWNbnxgMtuGs8BYHnctnPvSODa9WWOtei664E5I8ipwXWBsAKeY9LVmjih5hknlLYsQ8lj89ZirBa1m/Sfzg=
-X-Received: by 2002:a92:c74d:: with SMTP id y13mr8131989ilp.77.1570077444611;
- Wed, 02 Oct 2019 21:37:24 -0700 (PDT)
-MIME-Version: 1.0
-References: <20191001080253.6135-1-icenowy@aosc.io> <20191001080253.6135-3-icenowy@aosc.io>
-In-Reply-To: <20191001080253.6135-3-icenowy@aosc.io>
-From:   Jagan Teki <jagan@amarulasolutions.com>
-Date:   Thu, 3 Oct 2019 10:07:13 +0530
-Message-ID: <CAMty3ZC-5czGhOwtk7pE+JGbMRKxo7GrpUgnX3dpY8Jt5j_Afg@mail.gmail.com>
-Subject: Re: [linux-sunxi] [PATCH 2/3] drm/sun4i: dsi: fix DRQ calculation
-To:     Icenowy Zheng <icenowy@aosc.io>
-Cc:     Maxime Ripard <mripard@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-sunxi <linux-sunxi@googlegroups.com>
-Content-Type: text/plain; charset="UTF-8"
+        Thu, 3 Oct 2019 00:39:32 -0400
+Received: from 61-220-137-37.hinet-ip.hinet.net ([61.220.137.37] helo=localhost)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <kai.heng.feng@canonical.com>)
+        id 1iFstf-0000FZ-Ft; Thu, 03 Oct 2019 04:39:24 +0000
+From:   Kai-Heng Feng <kai.heng.feng@canonical.com>
+To:     tiwai@suse.com
+Cc:     kailang@realtek.com, alsa-devel@alsa-project.org,
+        linux-kernel@vger.kernel.org,
+        Kai-Heng Feng <kai.heng.feng@canonical.com>
+Subject: [PATCH] ALSA: hda/realtek: Reduce the Headphone static noise on XPS 9350/9360
+Date:   Thu,  3 Oct 2019 12:39:19 +0800
+Message-Id: <20191003043919.10960-1-kai.heng.feng@canonical.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+Headphone on XPS 9350/9360 produces a background white noise. The The
+noise level somehow correlates with "Headphone Mic Boost", when it sets
+to 1 the noise disappears. However, doing this has a side effect, which
+also decreases the overall headphone volume so I didn't send the patch
+upstream.
 
-On Tue, Oct 1, 2019 at 1:34 PM Icenowy Zheng <icenowy@aosc.io> wrote:
->
-> According to the BSP source code, when calculating the magic DRQ value
-> outside burst mode, a formula of "lcd_ht - lcd_x - lcd_hbp", which is
-> interpreted as right margin (HFP value). However, currently the
-> sun6i_mipi_dsi driver code calculates it wrongly as HFP + sync length,
-> which lead to timing error.
->
-> Fix the DRQ calculation by change it to use HFP.
->
-> Signed-off-by: Icenowy Zheng <icenowy@aosc.io>
-> ---
->  drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
->
-> diff --git a/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c b/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c
-> index c86e11631ebc..2d3e822a7739 100644
-> --- a/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c
-> +++ b/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c
-> @@ -436,9 +436,9 @@ static void sun6i_dsi_setup_burst(struct sun6i_dsi *dsi,
->                              SUN6I_DSI_BURST_LINE_SYNC_POINT(SUN6I_DSI_SYNC_POINT));
->
->                 val = SUN6I_DSI_TCON_DRQ_ENABLE_MODE;
-> -       } else if ((mode->hsync_end - mode->hdisplay) > 20) {
-> +       } else if ((mode->hsync_start - mode->hdisplay) > 20) {
->                 /* Maaaaaagic */
-> -               u16 drq = (mode->hsync_end - mode->hdisplay) - 20;
-> +               u16 drq = (mode->hsync_start - mode->hdisplay) - 20;
+The noise was bearable back then, but after commit 717f43d81afc ("ALSA:
+hda/realtek - Update headset mode for ALC256") the noise exacerbates to
+a point it starts hurting ears.
 
-I have similar patch in the ML, which required commit details
-commented by Chen-Yu [1]. So, I'm trying to send it accordingly, let
-me know if you have issues.
+So let's use the workaround to set "Headphone Mic Boost" to 1 and lock
+it so it's not touchable by userspace.
 
-[1] https://patchwork.freedesktop.org/patch/305920/
+Fixes: 717f43d81afc ("ALSA: hda/realtek - Update headset mode for ALC256")
+BugLink: https://bugs.launchpad.net/bugs/1654448
+BugLink: https://bugs.launchpad.net/bugs/1845810
+Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+---
+ sound/pci/hda/patch_realtek.c | 24 +++++++++++++++++++++---
+ 1 file changed, 21 insertions(+), 3 deletions(-)
+
+diff --git a/sound/pci/hda/patch_realtek.c b/sound/pci/hda/patch_realtek.c
+index b000b36ac3c6..b5c225a56b98 100644
+--- a/sound/pci/hda/patch_realtek.c
++++ b/sound/pci/hda/patch_realtek.c
+@@ -5358,6 +5358,17 @@ static void alc271_hp_gate_mic_jack(struct hda_codec *codec,
+ 	}
+ }
+ 
++static void alc256_fixup_dell_xps_13_headphone_noise2(struct hda_codec *codec,
++						      const struct hda_fixup *fix,
++						      int action)
++{
++	if (action != HDA_FIXUP_ACT_PRE_PROBE)
++		return;
++
++	snd_hda_codec_amp_stereo(codec, 0x1a, HDA_INPUT, 0, HDA_AMP_VOLMASK, 1);
++	snd_hda_override_wcaps(codec, 0x1a, get_wcaps(codec, 0x1a) & ~AC_WCAP_IN_AMP);
++}
++
+ static void alc269_fixup_limit_int_mic_boost(struct hda_codec *codec,
+ 					     const struct hda_fixup *fix,
+ 					     int action)
+@@ -5822,6 +5833,7 @@ enum {
+ 	ALC298_FIXUP_DELL_AIO_MIC_NO_PRESENCE,
+ 	ALC275_FIXUP_DELL_XPS,
+ 	ALC256_FIXUP_DELL_XPS_13_HEADPHONE_NOISE,
++	ALC256_FIXUP_DELL_XPS_13_HEADPHONE_NOISE2,
+ 	ALC293_FIXUP_LENOVO_SPK_NOISE,
+ 	ALC233_FIXUP_LENOVO_LINE2_MIC_HOTKEY,
+ 	ALC255_FIXUP_DELL_SPK_NOISE,
+@@ -6558,6 +6570,12 @@ static const struct hda_fixup alc269_fixups[] = {
+ 		.chained = true,
+ 		.chain_id = ALC255_FIXUP_DELL1_MIC_NO_PRESENCE
+ 	},
++	[ALC256_FIXUP_DELL_XPS_13_HEADPHONE_NOISE2] = {
++		.type = HDA_FIXUP_FUNC,
++		.v.func = alc256_fixup_dell_xps_13_headphone_noise2,
++		.chained = true,
++		.chain_id = ALC256_FIXUP_DELL_XPS_13_HEADPHONE_NOISE
++	},
+ 	[ALC293_FIXUP_LENOVO_SPK_NOISE] = {
+ 		.type = HDA_FIXUP_FUNC,
+ 		.v.func = alc_fixup_disable_aamix,
+@@ -7001,17 +7019,17 @@ static const struct snd_pci_quirk alc269_fixup_tbl[] = {
+ 	SND_PCI_QUIRK(0x1028, 0x06de, "Dell", ALC293_FIXUP_DISABLE_AAMIX_MULTIJACK),
+ 	SND_PCI_QUIRK(0x1028, 0x06df, "Dell", ALC293_FIXUP_DISABLE_AAMIX_MULTIJACK),
+ 	SND_PCI_QUIRK(0x1028, 0x06e0, "Dell", ALC293_FIXUP_DISABLE_AAMIX_MULTIJACK),
+-	SND_PCI_QUIRK(0x1028, 0x0704, "Dell XPS 13 9350", ALC256_FIXUP_DELL_XPS_13_HEADPHONE_NOISE),
++	SND_PCI_QUIRK(0x1028, 0x0704, "Dell XPS 13 9350", ALC256_FIXUP_DELL_XPS_13_HEADPHONE_NOISE2),
+ 	SND_PCI_QUIRK(0x1028, 0x0706, "Dell Inspiron 7559", ALC256_FIXUP_DELL_INSPIRON_7559_SUBWOOFER),
+ 	SND_PCI_QUIRK(0x1028, 0x0725, "Dell Inspiron 3162", ALC255_FIXUP_DELL_SPK_NOISE),
+ 	SND_PCI_QUIRK(0x1028, 0x0738, "Dell Precision 5820", ALC269_FIXUP_NO_SHUTUP),
+-	SND_PCI_QUIRK(0x1028, 0x075b, "Dell XPS 13 9360", ALC256_FIXUP_DELL_XPS_13_HEADPHONE_NOISE),
++	SND_PCI_QUIRK(0x1028, 0x075b, "Dell XPS 13 9360", ALC256_FIXUP_DELL_XPS_13_HEADPHONE_NOISE2),
+ 	SND_PCI_QUIRK(0x1028, 0x075c, "Dell XPS 27 7760", ALC298_FIXUP_SPK_VOLUME),
+ 	SND_PCI_QUIRK(0x1028, 0x075d, "Dell AIO", ALC298_FIXUP_SPK_VOLUME),
+ 	SND_PCI_QUIRK(0x1028, 0x07b0, "Dell Precision 7520", ALC295_FIXUP_DISABLE_DAC3),
+ 	SND_PCI_QUIRK(0x1028, 0x0798, "Dell Inspiron 17 7000 Gaming", ALC256_FIXUP_DELL_INSPIRON_7559_SUBWOOFER),
+ 	SND_PCI_QUIRK(0x1028, 0x080c, "Dell WYSE", ALC225_FIXUP_DELL_WYSE_MIC_NO_PRESENCE),
+-	SND_PCI_QUIRK(0x1028, 0x082a, "Dell XPS 13 9360", ALC256_FIXUP_DELL_XPS_13_HEADPHONE_NOISE),
++	SND_PCI_QUIRK(0x1028, 0x082a, "Dell XPS 13 9360", ALC256_FIXUP_DELL_XPS_13_HEADPHONE_NOISE2),
+ 	SND_PCI_QUIRK(0x1028, 0x084b, "Dell", ALC274_FIXUP_DELL_AIO_LINEOUT_VERB),
+ 	SND_PCI_QUIRK(0x1028, 0x084e, "Dell", ALC274_FIXUP_DELL_AIO_LINEOUT_VERB),
+ 	SND_PCI_QUIRK(0x1028, 0x0871, "Dell Precision 3630", ALC255_FIXUP_DELL_HEADSET_MIC),
+-- 
+2.17.1
+
