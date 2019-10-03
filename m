@@ -2,260 +2,329 @@ Return-Path: <SRS0=6dNS=X4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 03D64C32792
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:55:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6700FC32792
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:55:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B9FA22054F
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:55:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2A2FB2054F
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:55:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570121730;
-	bh=uhbaKLWlkBR1MGVt+PBtDFsl8Khc+T7Mn7gXEEVFRhE=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=b2glA/CQycImgWWoa12J6VT/xb3LnB7YyRLdRdWDwYLJdW15W96HfHzbquHhk+mwO
-	 xeRa5hwhj7sKKpy3IU07NHjmzRkzfTkQdqMspimc8i6zIecWuQGwX7g1fqmYcDnt7T
-	 6jKp8DULFnjoW8YNI58Kjhz+i5B3hHbA2K1KliOg=
+	s=default; t=1570121741;
+	bh=ljeLKOSfshAmD2JJkObm5RrE/BqXkmV9xjJUCMLWlcA=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=tlMPF17q0s5y/ViYOdVfRpjN2DPxFkAChhHNluweqFxDfAUNjXaYSgCUXcwkqXGIg
+	 SkOg+dOHSJ7OhIc7mdBemJcXf/4lUxenF0TT4Ea7L03/IEjW5fSStW/QYkb8+7gegS
+	 V5rw3mZ6Oow5PKIGYzsJGuRdbEJZgRudVNR9tmg0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406131AbfJCQza (ORCPT
+        id S2393241AbfJCQzk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 12:55:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39794 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2393194AbfJCQwP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:52:15 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AA3B22054F;
-        Thu,  3 Oct 2019 16:52:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570121534;
-        bh=uhbaKLWlkBR1MGVt+PBtDFsl8Khc+T7Mn7gXEEVFRhE=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=VUugjxYgv1zk0+NXEE5oy0LCME5lcV6LGE9ypgBuh596nzpFZanLBH55wCDzManQE
-         EE3R982KFinpzGeMjkrhhvZO08ZX09auBzUTGo1ZTu9i2AIthSIHqUQqNFpKK4XeVV
-         2gITta4JtxBDf5fAp3XO+7dRP1+KUlrvjqyOvTSI=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Josef Bacik <josef@toxicpanda.com>,
-        Filipe Manana <fdmanana@suse.com>,
-        David Sterba <dsterba@suse.com>
-Subject: [PATCH 5.3 315/344] Btrfs: fix race setting up and completing qgroup rescan workers
-Date:   Thu,  3 Oct 2019 17:54:40 +0200
-Message-Id: <20191003154610.198983509@linuxfoundation.org>
-X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20191003154540.062170222@linuxfoundation.org>
-References: <20191003154540.062170222@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Thu, 3 Oct 2019 12:55:40 -0400
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:36549 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2391665AbfJCQzi (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:55:38 -0400
+Received: by mail-lj1-f195.google.com with SMTP id v24so3578142ljj.3
+        for <linux-kernel@vger.kernel.org>; Thu, 03 Oct 2019 09:55:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=0fCPYvMiyrHbhtjPVCqhOP9e/Y2hvO3REb3XJchre7k=;
+        b=Y9GR64nrbeaiaZcBLMQtFKUReDn0GpFCXOUX8CTGwDjwQAQLsBMrq29nU78RLTf9GA
+         mey/GNYOY2uM9Nw357QjHb3Z9c5AeZtZm8sIYaxM5nYLSWVi/DYQG8GLbnVLwGMKE8tn
+         FcenIAYbAYguUBzZNbX4KkwtWTnWMGs0VHx9k=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=0fCPYvMiyrHbhtjPVCqhOP9e/Y2hvO3REb3XJchre7k=;
+        b=RHm4EUBcsiuBjiOHreVh9aRl++KwVkRN4mEQUM+MINwrCZcKCayCQefP8sY6TaA/Az
+         ZzQEohpVLuHOkszQaHsVlbp3cZbRNmqzH1ehzfIyXdeJfG7qLIBUKedsssfqH6U1WZM2
+         XpnlyQihZAeuxDDiy4+4vrj5n1n6W9ztyBX7KFhW5Z9zVE+V5xF6Nmpcodxj58YpIMKy
+         5h9vWVd4TXW8qU9EMterl5xVkv4D+/teT0+QugDPyBsBIElFbtLWimY9s92BUmRlyCUx
+         YejaYWiiizNLsHBqWgKnVLDgb5kLB4qPqm5paLb1yYcWHoWguHn5fNj3R7mKl10DEMa+
+         sdgA==
+X-Gm-Message-State: APjAAAW9yyBu+p+reFAYNTPwwU9kkrEmnW+eSdOD/3c/UVu8A779FDxo
+        1XnQYnZzVVJiEen886RdK0xFnjukYXQ=
+X-Google-Smtp-Source: APXvYqxKuQCf1DbZj8kkj06Uj72Uqujh+wCIquOTD3+ntFjJL4caItKOrIftTKkNkYfJC9rW+ticxA==
+X-Received: by 2002:a2e:9a0c:: with SMTP id o12mr6771314lji.204.1570121735246;
+        Thu, 03 Oct 2019 09:55:35 -0700 (PDT)
+Received: from mail-lj1-f174.google.com (mail-lj1-f174.google.com. [209.85.208.174])
+        by smtp.gmail.com with ESMTPSA id x15sm722414lff.54.2019.10.03.09.55.33
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 03 Oct 2019 09:55:34 -0700 (PDT)
+Received: by mail-lj1-f174.google.com with SMTP id j19so3592886lja.1
+        for <linux-kernel@vger.kernel.org>; Thu, 03 Oct 2019 09:55:33 -0700 (PDT)
+X-Received: by 2002:a2e:7611:: with SMTP id r17mr1979719ljc.133.1570121733316;
+ Thu, 03 Oct 2019 09:55:33 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <20191002134730.40985-1-thomas_os@shipmail.org>
+ <20191002134730.40985-4-thomas_os@shipmail.org> <CAHk-=wic5vXCxpH-+UTtmH_t-EDBKrKnDhxQk=t_N20aiWnqUg@mail.gmail.com>
+ <516814a5-a616-b15e-ac87-26ede681da85@shipmail.org> <CAHk-=wgH=T5mcDxTaC6QbBN=iJD3d_amzcb2+GxbcV7XuEYL2A@mail.gmail.com>
+ <MN2PR05MB61412DB4F703A5EE4F961593A19F0@MN2PR05MB6141.namprd05.prod.outlook.com>
+In-Reply-To: <MN2PR05MB61412DB4F703A5EE4F961593A19F0@MN2PR05MB6141.namprd05.prod.outlook.com>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Thu, 3 Oct 2019 09:55:16 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wj5NiFPouYd6zUgY4K7VovOAxQT-xhDRjD6j5hifBWi_g@mail.gmail.com>
+Message-ID: <CAHk-=wj5NiFPouYd6zUgY4K7VovOAxQT-xhDRjD6j5hifBWi_g@mail.gmail.com>
+Subject: Re: [PATCH v3 3/7] mm: Add write-protect and clean utilities for
+ address space ranges
+To:     Thomas Hellstrom <thellstrom@vmware.com>
+Cc:     =?UTF-8?Q?Thomas_Hellstr=C3=B6m_=28VMware=29?= 
+        <thomas_os@shipmail.org>, Linux-MM <linux-mm@kvack.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Matthew Wilcox <willy@infradead.org>,
+        Will Deacon <will.deacon@arm.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Rik van Riel <riel@surriel.com>,
+        Minchan Kim <minchan@kernel.org>,
+        Michal Hocko <mhocko@suse.com>,
+        Huang Ying <ying.huang@intel.com>,
+        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
+        "Kirill A . Shutemov" <kirill@shutemov.name>
+Content-Type: multipart/mixed; boundary="0000000000002b4d560594047424"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Filipe Manana <fdmanana@suse.com>
+--0000000000002b4d560594047424
+Content-Type: text/plain; charset="UTF-8"
 
-commit 13fc1d271a2e3ab8a02071e711add01fab9271f6 upstream.
+On Thu, Oct 3, 2019 at 12:56 AM Thomas Hellstrom <thellstrom@vmware.com> wrote:
+>
+> Both the cleaning operation and the wp operation operate on shared
+> writable mappings, and since they are also both restricted to entries
+> that may take part in dirty-tracking (they're ignoring pmds and puds),
+> so perhaps a "dirty" may make sense anyway, and to point out the similarity:
+>
+> clean_mapping_dirty_range() and wp_mapping_dirty_range()"?
 
-There is a race between setting up a qgroup rescan worker and completing
-a qgroup rescan worker that can lead to callers of the qgroup rescan wait
-ioctl to either not wait for the rescan worker to complete or to hang
-forever due to missing wake ups. The following diagram shows a sequence
-of steps that illustrates the race.
+Hmm. Yeah, either that, or "shared", as in "clean_shared_mapping_range()"?
 
-        CPU 1                                                         CPU 2                                  CPU 3
+I don't know. Maybe this isn't a huge deal, and the "don't care about
+private dirty/write" is kind of implied by the fact that it's about
+the backing mapping rather than the vma.
 
- btrfs_ioctl_quota_rescan()
-  btrfs_qgroup_rescan()
-   qgroup_rescan_init()
-    mutex_lock(&fs_info->qgroup_rescan_lock)
-    spin_lock(&fs_info->qgroup_lock)
+But on the other hand we do have things like "unmap_mapping_range()"
+which will unmap all the private mappings too, so maybe it's a good
+idea to clarify that this is about shared mappings.
 
-    fs_info->qgroup_flags |=
-      BTRFS_QGROUP_STATUS_FLAG_RESCAN
+I suspect it's a bit of a bike shed, and I could go either way.
 
-    init_completion(
-      &fs_info->qgroup_rescan_completion)
+> >  And I'd rather see
+> > separate 'struct mm_walk_ops' than shared ones that then have a flag
+> > in a differfent structure to change behavior.
+> >
+> > Yes, yes, some of the levels share the same logic, but that just means
+> > that you can use the same function pointer for that level in the
+> > different "clean" vs "wp" mm_walk_op.
+>
+> I think that this comment and this last one:
+>
+> > Also, why do you loop inside the pmd_entry function, instead of just
+> > having a pte_entry function?"
+>
+> are tied together. The pagewalk code is kind of awkward since if you
+> provide a pte_entry function, then huge pmds are unconditionally split,
 
-    fs_info->qgroup_rescan_running = true
+So I think that we could handle differently.
 
-    mutex_unlock(&fs_info->qgroup_rescan_lock)
-    spin_unlock(&fs_info->qgroup_lock)
+But even if you don't want to do the pte_entry function, the "use two
+different set of walker op structures" stands. Instead of havign a
+test for "am I walking for wp or not", just make it implicit.
 
-    btrfs_init_work()
-     --> starts the worker
+Also, I do think that you're seeing what is a weakness in the pte
+walkers wrt splitting. I do think we shouldn't split unconditionally.
 
-                                                        btrfs_qgroup_rescan_worker()
-                                                         mutex_lock(&fs_info->qgroup_rescan_lock)
+I suspect we should instead change the logic to split only if we
+didn't have a pmd_entry. Because looking at the existing cases, if you
+have a pmd_entry, you currently never have a pte_entry, so it wouldn't
+change semantics for current cases.
 
-                                                         fs_info->qgroup_flags &=
-                                                           ~BTRFS_QGROUP_STATUS_FLAG_RESCAN
+> even if handled in pmd_entry,
+> forcing pmd-aware users to handle also ptes in pmd_entry(). I'm not
+> entirely sure why, but it looks like it's to avoid a race where huge
+> pmds could otherwise be unintentionally split if appearing *after* the
+> pmd_entry() call.
 
-                                                         mutex_unlock(&fs_info->qgroup_rescan_lock)
+See above: we never have both pmd_entry and pte_entry walkers as it is
+right now. So you can't have that race.
 
-                                                         starts transaction, updates qgroup status
-                                                         item, etc
+> Other pagewalk users do the same here,  see for
+> example clear_refs_pte_range();
+>
+> https://elixir.bootlin.com/linux/latest/source/fs/proc/task_mmu.c#L1040
+>
+> Also the pagewalk walk_pte_range() for some reason doesn't take the page
+> table lock, which means that a pte may well be cleared under us while we
+> have it cached for modification.
 
-                                                                                                           btrfs_ioctl_quota_rescan()
-                                                                                                            btrfs_qgroup_rescan()
-                                                                                                             qgroup_rescan_init()
-                                                                                                              mutex_lock(&fs_info->qgroup_rescan_lock)
-                                                                                                              spin_lock(&fs_info->qgroup_lock)
+Ho humm. That looks really sketchy to me. We actually have very few
+pte_entry cases, perhaps exactly because it's all kinds of broken.
 
-                                                                                                              fs_info->qgroup_flags |=
-                                                                                                                BTRFS_QGROUP_STATUS_FLAG_RESCAN
+There's a couple of odd architectures, and then there is
+prot_none_walk_ops. And that one purely looks at the pte's, and does a
+special "can we do this" phase before doing the real modification.
+It's limited to special PFNMAP/MIXEDMAP things.
 
-                                                                                                              init_completion(
-                                                                                                                &fs_info->qgroup_rescan_completion)
+So it does look like the pte walking code is accidentally (or
+intentionally) ok in that case, but looking at the architecture users
+(s390, at least), I do get the feeling that the lack of locking is an
+actual and real bug.
 
-                                                                                                              fs_info->qgroup_rescan_running = true
+It's probably impossible to hit in practice because it's limited to
+special ops and you'd have to race with swapout anbd even then it
+might not much matter. But it looks _wrong_.
 
-                                                                                                              mutex_unlock(&fs_info->qgroup_rescan_lock)
-                                                                                                              spin_unlock(&fs_info->qgroup_lock)
+And honestly, it looks like the clear_refs_pte_range() example you
+point at comes from this for _exactly_ the same reason your code does
+this: the pte walker is buggy, and the pmd case doesn't want to split.
 
-                                                                                                              btrfs_init_work()
-                                                                                                               --> starts another worker
+The pte walker code in question has been there since 2008. This is not
+a new thing. The clear_refs_pte_range() code partly goes all the way
+back to that, although it's been changed some since. But the actual
+pte_offset_map_lock() call in there predates the generic walker, so
+what I think happened is that the generic walker was done only
+partially, and intentionally didn't go all the way to the pte level
+exactly because the walker was made to split things up unconditionally
+if you did the pte case.
 
-                                                         mutex_lock(&fs_info->qgroup_rescan_lock)
+> For these reasons we can't use the pte_entry, even internally and this
+> means we have three choices:
+>
+> a) Selecting the pte function using a bool. Saves code and avoids extra
+> indirect function call.
+> b) Duplicating the pmd_entry with a different pte function, also
+> duplicating the ops. Avoids extra indirect function call but some extra
+> code.
+> c) Instead of the bool, use another function pointer in yet another ops
+> pointed to by the private structure. Saves some code.
 
-                                                         fs_info->qgroup_rescan_running = false
+So considering that
 
-                                                         mutex_unlock(&fs_info->qgroup_rescan_lock)
+ - there is one current user of the pte code that doesn't care about
+the proper pte lock, because what it does is a racy pre-check anyway
 
-							 complete_all(&fs_info->qgroup_rescan_completion)
+ - that one user is also documented to not care too much about
+performance (it's a crazy special case)
 
-Before the rescan worker started by the task at CPU 3 completes, if
-another task calls btrfs_ioctl_quota_rescan(), it will get -EINPROGRESS
-because the flag BTRFS_QGROUP_STATUS_FLAG_RESCAN is set at
-fs_info->qgroup_flags, which is expected and correct behaviour.
+ - the other users _do_ look like they are currently buggy and want a
+stable pte with proper locking
 
-However if other task calls btrfs_ioctl_quota_rescan_wait() before the
-rescan worker started by the task at CPU 3 completes, it will return
-immediately without waiting for the new rescan worker to complete,
-because fs_info->qgroup_rescan_running is set to false by CPU 2.
+ - there are currently no cases of "I have a pmd walker _and_ a pte
+walker" because that case was always broken due to splitting
 
-This race is making test case btrfs/171 (from fstests) to fail often:
+I would say that the current walker code is simply buggy in this
+respect, and people have worked around it for over a decade.
 
-  btrfs/171 9s ... - output mismatch (see /home/fdmanana/git/hub/xfstests/results//btrfs/171.out.bad)
-#      --- tests/btrfs/171.out     2018-09-16 21:30:48.505104287 +0100
-#      +++ /home/fdmanana/git/hub/xfstests/results//btrfs/171.out.bad      2019-09-19 02:01:36.938486039 +0100
-#      @@ -1,2 +1,3 @@
-#       QA output created by 171
-#      +ERROR: quota rescan failed: Operation now in progress
-#       Silence is golden
-#      ...
-#      (Run 'diff -u /home/fdmanana/git/hub/xfstests/tests/btrfs/171.out /home/fdmanana/git/hub/xfstests/results//btrfs/171.out.bad'  to see the entire diff)
+End result: since you have an actual test-case that wants this, I'd
+like to at least try
 
-That is because the test calls the btrfs-progs commands "qgroup quota
-rescan -w", "qgroup assign" and "qgroup remove" in a sequence that makes
-calls to the rescan start ioctl fail with -EINPROGRESS (note the "btrfs"
-commands 'qgroup assign' and 'qgroup remove' often call the rescan start
-ioctl after calling the qgroup assign ioctl,
-btrfs_ioctl_qgroup_assign()), since previous waits didn't actually wait
-for a rescan worker to complete.
+ d) Fix the pte walker to do the right thing, then just use separate
+pte walkers in your code
 
-Another problem the race can cause is missing wake ups for waiters,
-since the call to complete_all() happens outside a critical section and
-after clearing the flag BTRFS_QGROUP_STATUS_FLAG_RESCAN. In the sequence
-diagram above, if we have a waiter for the first rescan task (executed
-by CPU 2), then fs_info->qgroup_rescan_completion.wait is not empty, and
-if after the rescan worker clears BTRFS_QGROUP_STATUS_FLAG_RESCAN and
-before it calls complete_all() against
-fs_info->qgroup_rescan_completion, the task at CPU 3 calls
-init_completion() against fs_info->qgroup_rescan_completion which
-re-initilizes its wait queue to an empty queue, therefore causing the
-rescan worker at CPU 2 to call complete_all() against an empty queue,
-never waking up the task waiting for that rescan worker.
+The fix would be those two conceptual changes:
 
-Fix this by clearing BTRFS_QGROUP_STATUS_FLAG_RESCAN and setting
-fs_info->qgroup_rescan_running to false in the same critical section,
-delimited by the mutex fs_info->qgroup_rescan_lock, as well as doing the
-call to complete_all() in that same critical section. This gives the
-protection needed to avoid rescan wait ioctl callers not waiting for a
-running rescan worker and the lost wake ups problem, since setting that
-rescan flag and boolean as well as initializing the wait queue is done
-already in a critical section delimited by that mutex (at
-qgroup_rescan_init()).
+ 1) don't split if the walker asks for a pmd_entry (the walker itself
+can then decide to split, of course, but right now no walkers want it
+since there are no pmd _and_ pte walkers, because people who want that
+do the pte walk themselves)
 
-Fixes: 57254b6ebce4ce ("Btrfs: add ioctl to wait for qgroup rescan completion")
-Fixes: d2c609b834d62f ("btrfs: properly track when rescan worker is running")
-CC: stable@vger.kernel.org # 4.4+
-Reviewed-by: Josef Bacik <josef@toxicpanda.com>
-Signed-off-by: Filipe Manana <fdmanana@suse.com>
-Signed-off-by: David Sterba <dsterba@suse.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+ 2) get the proper page table lock if you do walk the pte, since
+otherwise it's racy
 
----
- fs/btrfs/qgroup.c |   33 +++++++++++++++++++--------------
- 1 file changed, 19 insertions(+), 14 deletions(-)
+Then there won't be any code duplication, because all the duplication
+you now have at the pmd level is literally just workarounds for the
+fact that our current walker has this bug.
 
---- a/fs/btrfs/qgroup.c
-+++ b/fs/btrfs/qgroup.c
-@@ -3154,9 +3154,6 @@ out:
- 	btrfs_free_path(path);
- 
- 	mutex_lock(&fs_info->qgroup_rescan_lock);
--	if (!btrfs_fs_closing(fs_info))
--		fs_info->qgroup_flags &= ~BTRFS_QGROUP_STATUS_FLAG_RESCAN;
--
- 	if (err > 0 &&
- 	    fs_info->qgroup_flags & BTRFS_QGROUP_STATUS_FLAG_INCONSISTENT) {
- 		fs_info->qgroup_flags &= ~BTRFS_QGROUP_STATUS_FLAG_INCONSISTENT;
-@@ -3172,16 +3169,30 @@ out:
- 	trans = btrfs_start_transaction(fs_info->quota_root, 1);
- 	if (IS_ERR(trans)) {
- 		err = PTR_ERR(trans);
-+		trans = NULL;
- 		btrfs_err(fs_info,
- 			  "fail to start transaction for status update: %d",
- 			  err);
--		goto done;
- 	}
--	ret = update_qgroup_status_item(trans);
--	if (ret < 0) {
--		err = ret;
--		btrfs_err(fs_info, "fail to update qgroup status: %d", err);
-+
-+	mutex_lock(&fs_info->qgroup_rescan_lock);
-+	if (!btrfs_fs_closing(fs_info))
-+		fs_info->qgroup_flags &= ~BTRFS_QGROUP_STATUS_FLAG_RESCAN;
-+	if (trans) {
-+		ret = update_qgroup_status_item(trans);
-+		if (ret < 0) {
-+			err = ret;
-+			btrfs_err(fs_info, "fail to update qgroup status: %d",
-+				  err);
-+		}
- 	}
-+	fs_info->qgroup_rescan_running = false;
-+	complete_all(&fs_info->qgroup_rescan_completion);
-+	mutex_unlock(&fs_info->qgroup_rescan_lock);
-+
-+	if (!trans)
-+		return;
-+
- 	btrfs_end_transaction(trans);
- 
- 	if (btrfs_fs_closing(fs_info)) {
-@@ -3192,12 +3203,6 @@ out:
- 	} else {
- 		btrfs_err(fs_info, "qgroup scan failed with %d", err);
- 	}
--
--done:
--	mutex_lock(&fs_info->qgroup_rescan_lock);
--	fs_info->qgroup_rescan_running = false;
--	mutex_unlock(&fs_info->qgroup_rescan_lock);
--	complete_all(&fs_info->qgroup_rescan_completion);
- }
- 
- /*
+That "fix the pte walker" would be one preliminary patch that would
+look something like the attached TOTALLY UNTESTED garbage.
 
+I call it "garbage" because I really hope people take it just as what
+it is: "something like this". It compiles for me, and I did try to
+think it through, but I might have missed some big piece of the
+picture when writing that patch.
 
+And yes, this is a much bigger conceptual change for the VM layer, but
+I really think our pagewalk code is actively buggy right now, and is
+forcing users to do bad things because they work around the existing
+limitations.
+
+Hmm? Could some of the core mm people look over that patch?
+
+And yes, I was tempted to move the proper pmd locking into the walker
+too, and do
+
+        ptl = pmd_trans_huge_lock(pmd, vma);
+        if (ptl) {
+                err = ops->pmd_entry(pmd, addr, next, walk);
+                spin_unlock(ptl);
+                ...
+
+but while I think that's the correct thing to do in the long run, that
+would have to be done together with changing all the existing
+pmd_entry users. It would make the pmd_entry _solely_ handle the
+hugepage case, and then you'd have to remove the locking in the
+pmd_entry, and have to make the pte walking be a walker entry. But
+that would _really_ clean things up, and would make things like
+smaps_pte_range() much easier to read, and much more obvious (it would
+be split into a smaps_pmd_range and smaps_pte_range, and the callbacks
+wouldn't need to know about the complex locking).
+
+So I think this is the right direction to move into, but I do want
+people to think about this, and think about that next phase of doing
+the pmd_trans_huge_lock too.
+
+Comments?
+
+                Linus
+
+--0000000000002b4d560594047424
+Content-Type: text/x-patch; charset="US-ASCII"; name="patch.diff"
+Content-Disposition: attachment; filename="patch.diff"
+Content-Transfer-Encoding: base64
+Content-ID: <f_k1axocej0>
+X-Attachment-Id: f_k1axocej0
+
+IG1tL3BhZ2V3YWxrLmMgfCAzNyArKysrKysrKysrKysrKysrKysrKystLS0tLS0tLS0tLS0tLS0t
+CiAxIGZpbGUgY2hhbmdlZCwgMjEgaW5zZXJ0aW9ucygrKSwgMTYgZGVsZXRpb25zKC0pCgpkaWZm
+IC0tZ2l0IGEvbW0vcGFnZXdhbGsuYyBiL21tL3BhZ2V3YWxrLmMKaW5kZXggZDQ4YzJhOTg2ZWEz
+Li42YWU5NTkzMmU3OTkgMTAwNjQ0Ci0tLSBhL21tL3BhZ2V3YWxrLmMKKysrIGIvbW0vcGFnZXdh
+bGsuYwpAQCAtNywxMSArNywxMyBAQAogc3RhdGljIGludCB3YWxrX3B0ZV9yYW5nZShwbWRfdCAq
+cG1kLCB1bnNpZ25lZCBsb25nIGFkZHIsIHVuc2lnbmVkIGxvbmcgZW5kLAogCQkJICBzdHJ1Y3Qg
+bW1fd2FsayAqd2FsaykKIHsKLQlwdGVfdCAqcHRlOworCXB0ZV90ICpwdGUsICpzdGFydF9wdGU7
+CiAJaW50IGVyciA9IDA7CiAJY29uc3Qgc3RydWN0IG1tX3dhbGtfb3BzICpvcHMgPSB3YWxrLT5v
+cHM7CisJc3BpbmxvY2tfdCAqcHRsOwogCi0JcHRlID0gcHRlX29mZnNldF9tYXAocG1kLCBhZGRy
+KTsKKwlwdGUgPSBwdGVfb2Zmc2V0X21hcF9sb2NrKHdhbGstPm1tLCBwbWQsIGFkZHIsICZwdGwp
+OworCXN0YXJ0X3B0ZSA9IHB0ZTsKIAlmb3IgKDs7KSB7CiAJCWVyciA9IG9wcy0+cHRlX2VudHJ5
+KHB0ZSwgYWRkciwgYWRkciArIFBBR0VfU0laRSwgd2Fsayk7CiAJCWlmIChlcnIpCkBAIC0yMiw3
+ICsyNCw3IEBAIHN0YXRpYyBpbnQgd2Fsa19wdGVfcmFuZ2UocG1kX3QgKnBtZCwgdW5zaWduZWQg
+bG9uZyBhZGRyLCB1bnNpZ25lZCBsb25nIGVuZCwKIAkJcHRlKys7CiAJfQogCi0JcHRlX3VubWFw
+KHB0ZSk7CisJcHRlX3VubWFwX3VubG9jayhzdGFydF9wdGUsIHB0bCk7CiAJcmV0dXJuIGVycjsK
+IH0KIApAQCAtNDksMjEgKzUxLDI0IEBAIHN0YXRpYyBpbnQgd2Fsa19wbWRfcmFuZ2UocHVkX3Qg
+KnB1ZCwgdW5zaWduZWQgbG9uZyBhZGRyLCB1bnNpZ25lZCBsb25nIGVuZCwKIAkJICogVGhpcyBp
+bXBsaWVzIHRoYXQgZWFjaCAtPnBtZF9lbnRyeSgpIGhhbmRsZXIKIAkJICogbmVlZHMgdG8ga25v
+dyBhYm91dCBwbWRfdHJhbnNfaHVnZSgpIHBtZHMKIAkJICovCi0JCWlmIChvcHMtPnBtZF9lbnRy
+eSkKKwkJaWYgKG9wcy0+cG1kX2VudHJ5KSB7CiAJCQllcnIgPSBvcHMtPnBtZF9lbnRyeShwbWQs
+IGFkZHIsIG5leHQsIHdhbGspOwotCQlpZiAoZXJyKQotCQkJYnJlYWs7Ci0KLQkJLyoKLQkJICog
+Q2hlY2sgdGhpcyBoZXJlIHNvIHdlIG9ubHkgYnJlYWsgZG93biB0cmFuc19odWdlCi0JCSAqIHBh
+Z2VzIHdoZW4gd2UgX25lZWRfIHRvCi0JCSAqLwotCQlpZiAoIW9wcy0+cHRlX2VudHJ5KQotCQkJ
+Y29udGludWU7CisJCQlpZiAoZXJyKQorCQkJCWJyZWFrOworCQkJLyogTm8gcHRlIGxldmVsIHdh
+bGtpbmc/ICovCisJCQlpZiAoIW9wcy0+cHRlX2VudHJ5KQorCQkJCWNvbnRpbnVlOworCQkJLyog
+Tm8gcHRlIGxldmVsIGF0IGFsbD8gKi8KKwkJCWlmIChpc19zd2FwX3BtZCgqcG1kKSB8fCBwbWRf
+dHJhbnNfaHVnZSgqcG1kKSB8fCBwbWRfZGV2bWFwKCpwbWQpKQorCQkJCWNvbnRpbnVlOworCQl9
+IGVsc2UgeworCQkJaWYgKCFvcHMtPnB0ZV9lbnRyeSkKKwkJCQljb250aW51ZTsKIAotCQlzcGxp
+dF9odWdlX3BtZCh3YWxrLT52bWEsIHBtZCwgYWRkcik7Ci0JCWlmIChwbWRfdHJhbnNfdW5zdGFi
+bGUocG1kKSkKLQkJCWdvdG8gYWdhaW47CisJCQlzcGxpdF9odWdlX3BtZCh3YWxrLT52bWEsIHBt
+ZCwgYWRkcik7CisJCQlpZiAocG1kX3RyYW5zX3Vuc3RhYmxlKHBtZCkpCisJCQkJZ290byBhZ2Fp
+bjsKKwkJfQogCQllcnIgPSB3YWxrX3B0ZV9yYW5nZShwbWQsIGFkZHIsIG5leHQsIHdhbGspOwog
+CQlpZiAoZXJyKQogCQkJYnJlYWs7Cg==
+--0000000000002b4d560594047424--
