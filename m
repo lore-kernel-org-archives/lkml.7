@@ -2,53 +2,52 @@ Return-Path: <SRS0=6dNS=X4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A643EC10F14
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:09:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 437E7C32792
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:09:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 77FAD21848
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:09:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 044C521848
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:09:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570118987;
-	bh=KpdvbdqjFZl7t9TvgQ75IP6VOKP7crKkEw9fyKZUXiI=;
+	s=default; t=1570118992;
+	bh=EYAALUMmZ9KHd4VSRCBYO6TuloHm/s5iluJ+FeyOCvc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=nOVxATkpnTrsbWdcDTrlxh//nbkQ9S+wwM8xHn4IC4hle93lYKsWwzVQEl+RY0Qwz
-	 M0l9Z88nYze7KiwoS1ZEHF4ITSSrLZ/svz88ZbG8XpOtApDyNS78Q/+QZLOmyjceoZ
-	 ZdnCE1Bc9Fj55i5taCnI3fuQ6EYoRevl8RDKhl/Q=
+	b=PeruwRgUtERPRP7ujCnocdXcHpS7eqOTN73KipQDWK2xpXd5eUnjiZWXZNuiRN292
+	 IbhZqZpK3dfV8dof9u/gl0+fGhshcvVXpRb8g0LCG7z+2w7/kYg6oL59STutOOKf+1
+	 eLauHMwRUsQtHXbJg5S2/YlAtOQrk8oOKT5jcWwc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731098AbfJCQJq (ORCPT
+        id S1732433AbfJCQJu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 12:09:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58624 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 12:09:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58766 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733205AbfJCQJk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:09:40 -0400
+        id S1731109AbfJCQJq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:09:46 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E6AA921A4C;
-        Thu,  3 Oct 2019 16:09:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D5CA121783;
+        Thu,  3 Oct 2019 16:09:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570118980;
-        bh=KpdvbdqjFZl7t9TvgQ75IP6VOKP7crKkEw9fyKZUXiI=;
+        s=default; t=1570118986;
+        bh=EYAALUMmZ9KHd4VSRCBYO6TuloHm/s5iluJ+FeyOCvc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=YBe0xgqA/En7jOLAPSkYrpZFB5DYrKT2/QPiQ1n7PoNVFrJafWe5NBG4IUa4mNMx+
-         2ggoar/3chQEOXNY7tVFtSmci2lfJ8tbdYeZprz+fFXPRUWBMI7YG3bo0jUdyBsXRA
-         yo1Bx/xHdB/y0dZvmXy+c6ZRCDYHkCuwwkV/iusM=
+        b=B6hq5fKAH6uo6kPOCe3NLX/wVfQcktTaeY2LldTcSFA9xgH6JkOibTzG4UuCdU6Ua
+         Di6vZTWAAVShl+8WIqY42Srm4WRO92LXJvCPwGHv7qod7iCO5ZqAeuugkhNWXekKEx
+         5ZUGZ6nHbRnjEBkL2KAg/SFu+HL5oO6hmOXvmsXc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Valdis Kletnieks <valdis.kletnieks@vt.edu>,
-        Borislav Petkov <bp@suse.de>, Tony Luck <tony.luck@intel.com>,
-        linux-edac@vger.kernel.org, x86@kernel.org,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 079/185] RAS: Fix prototype warnings
-Date:   Thu,  3 Oct 2019 17:52:37 +0200
-Message-Id: <20191003154455.190884236@linuxfoundation.org>
+        stable@vger.kernel.org, Benoit <benoit.sansoni@gmail.com>,
+        Stephen Hemminger <stephen@networkplumber.org>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.14 044/185] skge: fix checksum byte order
+Date:   Thu,  3 Oct 2019 17:52:02 +0200
+Message-Id: <20191003154447.872483939@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191003154437.541662648@linuxfoundation.org>
 References: <20191003154437.541662648@linuxfoundation.org>
@@ -61,70 +60,32 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Valdis Klētnieks <valdis.kletnieks@vt.edu>
+From: Stephen Hemminger <stephen@networkplumber.org>
 
-[ Upstream commit 0a54b809a3a2c31e1055b45b03708eb730222be1 ]
+[ Upstream commit 5aafeb74b5bb65b34cc87c7623f9fa163a34fa3b ]
 
-When building with C=2 and/or W=1, legitimate warnings are issued about
-missing prototypes:
+Running old skge driver on PowerPC causes checksum errors
+because hardware reported 1's complement checksum is in little-endian
+byte order.
 
-    CHECK   drivers/ras/debugfs.c
-  drivers/ras/debugfs.c:4:15: warning: symbol 'ras_debugfs_dir' was not declared. Should it be static?
-  drivers/ras/debugfs.c:8:5: warning: symbol 'ras_userspace_consumers' was not declared. Should it be static?
-  drivers/ras/debugfs.c:38:12: warning: symbol 'ras_add_daemon_trace' was not declared. Should it be static?
-  drivers/ras/debugfs.c:54:13: warning: symbol 'ras_debugfs_init' was not declared. Should it be static?
-    CC      drivers/ras/debugfs.o
-  drivers/ras/debugfs.c:8:5: warning: no previous prototype for 'ras_userspace_consumers' [-Wmissing-prototypes]
-      8 | int ras_userspace_consumers(void)
-        |     ^~~~~~~~~~~~~~~~~~~~~~~
-  drivers/ras/debugfs.c:38:12: warning: no previous prototype for 'ras_add_daemon_trace' [-Wmissing-prototypes]
-     38 | int __init ras_add_daemon_trace(void)
-        |            ^~~~~~~~~~~~~~~~~~~~
-  drivers/ras/debugfs.c:54:13: warning: no previous prototype for 'ras_debugfs_init' [-Wmissing-prototypes]
-     54 | void __init ras_debugfs_init(void)
-        |             ^~~~~~~~~~~~~~~~
-
-Provide the proper includes.
-
- [ bp: Take care of the same warnings for cec.c too. ]
-
-Signed-off-by: Valdis Kletnieks <valdis.kletnieks@vt.edu>
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Cc: Tony Luck <tony.luck@intel.com>
-Cc: linux-edac@vger.kernel.org
-Cc: x86@kernel.org
-Link: http://lkml.kernel.org/r/7168.1565218769@turing-police
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Reported-by: Benoit <benoit.sansoni@gmail.com>
+Signed-off-by: Stephen Hemminger <stephen@networkplumber.org>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/ras/cec.c     | 1 +
- drivers/ras/debugfs.c | 2 ++
- 2 files changed, 3 insertions(+)
+ drivers/net/ethernet/marvell/skge.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/ras/cec.c b/drivers/ras/cec.c
-index 97cf40a522be3..02e65bdbadcae 100644
---- a/drivers/ras/cec.c
-+++ b/drivers/ras/cec.c
-@@ -1,6 +1,7 @@
- // SPDX-License-Identifier: GPL-2.0
- #include <linux/mm.h>
- #include <linux/gfp.h>
-+#include <linux/ras.h>
- #include <linux/kernel.h>
+--- a/drivers/net/ethernet/marvell/skge.c
++++ b/drivers/net/ethernet/marvell/skge.c
+@@ -3122,7 +3122,7 @@ static struct sk_buff *skge_rx_get(struc
+ 	skb_put(skb, len);
  
- #include <asm/mce.h>
-diff --git a/drivers/ras/debugfs.c b/drivers/ras/debugfs.c
-index 501603057dffe..12a161377f4f8 100644
---- a/drivers/ras/debugfs.c
-+++ b/drivers/ras/debugfs.c
-@@ -1,4 +1,6 @@
- #include <linux/debugfs.h>
-+#include <linux/ras.h>
-+#include "debugfs.h"
+ 	if (dev->features & NETIF_F_RXCSUM) {
+-		skb->csum = csum;
++		skb->csum = le16_to_cpu(csum);
+ 		skb->ip_summed = CHECKSUM_COMPLETE;
+ 	}
  
- struct dentry *ras_debugfs_dir;
- 
--- 
-2.20.1
-
 
 
