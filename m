@@ -2,351 +2,284 @@ Return-Path: <SRS0=6dNS=X4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 11F25C10F14
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 05:33:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93265C32792
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 05:35:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C938A222BE
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 05:33:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="bmMoh6/P"
+	by mail.kernel.org (Postfix) with ESMTP id 62514222C4
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 05:35:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727587AbfJCFdu (ORCPT
+        id S1727695AbfJCFfE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 01:33:50 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:44539 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725290AbfJCFdu (ORCPT
+        Thu, 3 Oct 2019 01:35:04 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:13706 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727611AbfJCFfE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 01:33:50 -0400
-Received: by mail-pf1-f195.google.com with SMTP id q21so936790pfn.11
-        for <linux-kernel@vger.kernel.org>; Wed, 02 Oct 2019 22:33:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=mgJjfG29bu62DBy6egYwuZ8IKV00MWcm085XTBxpWxY=;
-        b=bmMoh6/PE37dKynK/xJy3yEsHCuHahofA6lSTUYH02NIlJBq+HSGvZMCyqWva5R8hq
-         xuf4UYQkR1EZ22FvoBasL/LmzkZ1FyBHOqF/sfcAV3pNfrZEfGOORJg0RSP1k+LhppQD
-         4lRotTnsf9NAgptCaNtI3UpSyLZh+hmkv6SsA/xHJuW5AjyLW7qhn72QrEyIkYTXd3Jh
-         2v18kgqBK8HBHJtv2zGTVzB0vxHOSaXhjlrfpRvVHAktouM74rY49a9sD/QOxzhrnwOA
-         2GLHzC5pdgl63tcAAl5XSaz6a/HfreR2hSYiTuck4HYEWPWPtizOwUkk94eZemQK1YYa
-         2ZJQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=mgJjfG29bu62DBy6egYwuZ8IKV00MWcm085XTBxpWxY=;
-        b=P6gFmqwhI85zYGOofdQxn4Fpn1KZ5oWPHljNpuWybA6cg31K0naFQVksK73eqxvQIR
-         EJ4aQ1AVGcmyIS4BAU/oi1PnpyZe0JOQFJjNvZfOHruyhGc1ey5PVGBJniiPDHTU7dWX
-         5hGMxisnbKvwrFmIQ7/3I9TqVAlnjHinHz/Lx0lyGkmyYFZkO1zu/A4hoeB/K9E5+xd5
-         GWjYoM+mFC45WOmFb2IPdbB3IZwCo2Z3ZklUW5wF8tOh8aTzHScH8LnxjP1KIAPNehN7
-         vTOlR28XsP7KHiRpLQHwEVNGcaaHHr+AMOQgEfJMjKCIHmUdH3ymyx9lMgyYsoU6Lxoz
-         4mnA==
-X-Gm-Message-State: APjAAAXbSqkWHOmMC/jYPO68MmRfIGd/FY90o/B77KgeoVGzPG7ERiYW
-        a+PEQEYV/r67H2lg7dx0ep3c
-X-Google-Smtp-Source: APXvYqwoLr7A0gAhdnWnzgyqBtosFaXIBRkIy1quThBVImv2yuQeO9mgu3fsWeSntPcww5/ayUYZ8Q==
-X-Received: by 2002:a62:4d45:: with SMTP id a66mr9131169pfb.24.1570080827680;
-        Wed, 02 Oct 2019 22:33:47 -0700 (PDT)
-Received: from Mani-XPS-13-9360 ([2409:4072:801:ac5d:fca3:6f38:70fb:67fc])
-        by smtp.gmail.com with ESMTPSA id u5sm1558851pfl.25.2019.10.02.22.33.41
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 02 Oct 2019 22:33:46 -0700 (PDT)
-Date:   Thu, 3 Oct 2019 11:03:38 +0530
-From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To:     Sakari Ailus <sakari.ailus@iki.fi>
-Cc:     mchehab@kernel.org, robh+dt@kernel.org,
-        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        c.barrett@framos.com, a.brela@framos.com
-Subject: Re: [PATCH v3 2/3] media: i2c: Add IMX290 CMOS image sensor driver
-Message-ID: <20191003053338.GA7868@Mani-XPS-13-9360>
-References: <20190830091943.22646-1-manivannan.sadhasivam@linaro.org>
- <20190830091943.22646-3-manivannan.sadhasivam@linaro.org>
- <20190923092209.GL5525@valkosipuli.retiisi.org.uk>
- <20191001184200.GA7739@Mani-XPS-13-9360>
- <20191002103715.GR896@valkosipuli.retiisi.org.uk>
+        Thu, 3 Oct 2019 01:35:04 -0400
+Received: from pps.filterd (m0098421.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x935VmKq042199
+        for <linux-kernel@vger.kernel.org>; Thu, 3 Oct 2019 01:35:02 -0400
+Received: from e06smtp04.uk.ibm.com (e06smtp04.uk.ibm.com [195.75.94.100])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2vd9e6j3dg-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Thu, 03 Oct 2019 01:35:01 -0400
+Received: from localhost
+        by e06smtp04.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <rppt@linux.ibm.com>;
+        Thu, 3 Oct 2019 06:35:00 +0100
+Received: from b06avi18626390.portsmouth.uk.ibm.com (9.149.26.192)
+        by e06smtp04.uk.ibm.com (192.168.101.134) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Thu, 3 Oct 2019 06:34:55 +0100
+Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
+        by b06avi18626390.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x935YPRR34603498
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 3 Oct 2019 05:34:26 GMT
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id AA6CD11C04A;
+        Thu,  3 Oct 2019 05:34:54 +0000 (GMT)
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id B844211C050;
+        Thu,  3 Oct 2019 05:34:53 +0000 (GMT)
+Received: from linux.ibm.com (unknown [9.148.8.153])
+        by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
+        Thu,  3 Oct 2019 05:34:53 +0000 (GMT)
+Date:   Thu, 3 Oct 2019 08:34:52 +0300
+From:   Mike Rapoport <rppt@linux.ibm.com>
+To:     Adam Ford <aford173@gmail.com>
+Cc:     Fabio Estevam <festevam@gmail.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Christoph Hellwig <hch@lst.de>,
+        Russell King <linux@armlinux.org.uk>,
+        The etnaviv authors <etnaviv@lists.freedesktop.org>,
+        arm-soc <linux-arm-kernel@lists.infradead.org>,
+        Linux Memory Management List <linux-mm@kvack.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Lucas Stach <l.stach@pengutronix.de>
+Subject: Re: [PATCH v2 00/21] Refine memblock API
+References: <CAHCN7xJdzEppn8-74SvzACsA25bUHGdV7v=CfS08xzSi59Z2uw@mail.gmail.com>
+ <CAOMZO5D2uzR6Sz1QnX3G-Ce_juxU-0PO_vBZX+nR1mpQB8s8-w@mail.gmail.com>
+ <CAHCN7xJ32BYZu-DVTVLSzv222U50JDb8F0A_tLDERbb8kPdRxg@mail.gmail.com>
+ <20190926160433.GD32311@linux.ibm.com>
+ <CAHCN7xL1sFXDhKUpj04d3eDZNgLA1yGAOqwEeCxedy1Qm-JOfQ@mail.gmail.com>
+ <20190928073331.GA5269@linux.ibm.com>
+ <CAHCN7xJEvS2Si=M+BYtz+kY0M4NxmqDjiX9Nwq6_3GGBh3yg=w@mail.gmail.com>
+ <CAHCN7xKLhWw4P9-sZKXQcfSfh2r3J_+rLxuxACW0UVgimCzyVw@mail.gmail.com>
+ <20191002073605.GA30433@linux.ibm.com>
+ <CAHCN7xL1MkJh44N3W_1+08DHmX__SqnfH6dqUzYzr2Wpg0kQyQ@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191002103715.GR896@valkosipuli.retiisi.org.uk>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <CAHCN7xL1MkJh44N3W_1+08DHmX__SqnfH6dqUzYzr2Wpg0kQyQ@mail.gmail.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-TM-AS-GCONF: 00
+x-cbid: 19100305-0016-0000-0000-000002B38CC0
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19100305-0017-0000-0000-00003314947D
+Message-Id: <20191003053451.GA23397@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-10-03_02:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1908290000 definitions=main-1910030053
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Sakari,
+(trimmed the CC)
 
-On Wed, Oct 02, 2019 at 01:37:15PM +0300, Sakari Ailus wrote:
-> Hi Manivannan,
+On Wed, Oct 02, 2019 at 06:14:11AM -0500, Adam Ford wrote:
+> On Wed, Oct 2, 2019 at 2:36 AM Mike Rapoport <rppt@linux.ibm.com> wrote:
+> >
 > 
-> On Wed, Oct 02, 2019 at 12:12:00AM +0530, Manivannan Sadhasivam wrote:
-> > Hi Sakari,
-> > 
-> > On Mon, Sep 23, 2019 at 12:22:09PM +0300, Sakari Ailus wrote:
-> > > Hi Manivannan,
-> > > 
-> > > On Fri, Aug 30, 2019 at 02:49:42PM +0530, Manivannan Sadhasivam wrote:
-> > > > Add driver for Sony IMX290 CMOS image sensor driver. The driver only
-> > > > supports I2C interface for programming and MIPI CSI-2 for sensor output.
-> > > > 
-> > > > Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> > > > ---
-> > > >  drivers/media/i2c/Kconfig  |  11 +
-> > > >  drivers/media/i2c/Makefile |   1 +
-> > > >  drivers/media/i2c/imx290.c | 881 +++++++++++++++++++++++++++++++++++++
-> > > >  3 files changed, 893 insertions(+)
-> > > >  create mode 100644 drivers/media/i2c/imx290.c
-> > > > 
-> > > > diff --git a/drivers/media/i2c/Kconfig b/drivers/media/i2c/Kconfig
-> > > > index 79ce9ec6fc1b..4ebb80b18748 100644
-> > > > --- a/drivers/media/i2c/Kconfig
-> > > > +++ b/drivers/media/i2c/Kconfig
-> > > > @@ -595,6 +595,17 @@ config VIDEO_IMX274
-> > > >  	  This is a V4L2 sensor driver for the Sony IMX274
-> > > >  	  CMOS image sensor.
-> > > >  
-> > > > +config VIDEO_IMX290
-> > > > +	tristate "Sony IMX290 sensor support"
-> > > > +	depends on I2C && VIDEO_V4L2 && VIDEO_V4L2_SUBDEV_API
-> > > > +	depends on MEDIA_CAMERA_SUPPORT
-> > > 
-> > > Please drop this line. It will be redundant very soon.
-> > > 
-> > 
-> > okay.
-> > 
-> > > > +	help
-> > > > +	  This is a Video4Linux2 sensor driver for the Sony
-> > > > +	  IMX290 camera sensor.
-> > > > +
-> > > > +	  To compile this driver as a module, choose M here: the
-> > > > +	  module will be called imx290.
-> > > > +
-> > > >  config VIDEO_IMX319
-> > > >  	tristate "Sony IMX319 sensor support"
-> > > >  	depends on I2C && VIDEO_V4L2 && VIDEO_V4L2_SUBDEV_API
-> > > > diff --git a/drivers/media/i2c/Makefile b/drivers/media/i2c/Makefile
-> > > > index fd4ea86dedd5..04411ddb4922 100644
-> > > > --- a/drivers/media/i2c/Makefile
-> > > > +++ b/drivers/media/i2c/Makefile
-> > > > @@ -111,6 +111,7 @@ obj-$(CONFIG_VIDEO_TC358743)	+= tc358743.o
-> > > >  obj-$(CONFIG_VIDEO_IMX214)	+= imx214.o
-> > > >  obj-$(CONFIG_VIDEO_IMX258)	+= imx258.o
-> > > >  obj-$(CONFIG_VIDEO_IMX274)	+= imx274.o
-> > > > +obj-$(CONFIG_VIDEO_IMX290)	+= imx290.o
-> > > >  obj-$(CONFIG_VIDEO_IMX319)	+= imx319.o
-> > > >  obj-$(CONFIG_VIDEO_IMX355)	+= imx355.o
-> > > >  obj-$(CONFIG_VIDEO_ST_MIPID02) += st-mipid02.o
-> > > > diff --git a/drivers/media/i2c/imx290.c b/drivers/media/i2c/imx290.c
-> > > > new file mode 100644
-> > > > index 000000000000..db5bb0d69eb8
-> > > > --- /dev/null
-> > > > +++ b/drivers/media/i2c/imx290.c
-> > > > @@ -0,0 +1,881 @@
-> > > > +// SPDX-License-Identifier: GPL-2.0
-> > > > +/*
-> > > > + * Sony IMX290 CMOS Image Sensor Driver
-> > > > + *
-> > > > + * Copyright (C) 2019 FRAMOS GmbH.
-> > > > + *
-> > > > + * Copyright (C) 2019 Linaro Ltd.
-> > > > + * Author: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> > > > + */
-> > > > +
-> > > > +#include <linux/clk.h>
-> > > > +#include <linux/delay.h>
-> > > > +#include <linux/gpio/consumer.h>
-> > > > +#include <linux/i2c.h>
-> > > > +#include <linux/module.h>
-> > > > +#include <linux/pm_runtime.h>
-> > > > +#include <linux/regmap.h>
-> > > > +#include <linux/regulator/consumer.h>
-> > > > +#include <media/media-entity.h>
-> > > > +#include <media/v4l2-ctrls.h>
-> > > > +#include <media/v4l2-device.h>
-> > > > +#include <media/v4l2-fwnode.h>
-> > > > +#include <media/v4l2-subdev.h>
-> > > > +
-> > > > +#define IMX290_STANDBY 0x3000
-> > > > +#define IMX290_REGHOLD 0x3001
-> > > > +#define IMX290_XMSTA 0x3002
-> > > > +#define IMX290_GAIN 0x3014
-> > > > +
-> > > > +#define IMX290_DEFAULT_LINK_FREQ 445500000
-> > > > +
-> > > > +static const char * const imx290_supply_name[] = {
-> > > > +	"vdda",
-> > > > +	"vddd",
-> > > > +	"vdddo",
-> > > > +};
-> > > > +
-> > > > +#define IMX290_NUM_SUPPLIES ARRAY_SIZE(imx290_supply_name)
-> > > > +
-> > > > +struct imx290_regval {
-> > > > +	u16 reg;
-> > > > +	u8 val;
-> > > > +};
-> > > > +
-> > > > +struct imx290_mode {
-> > > > +	u32 width;
-> > > > +	u32 height;
-> > > > +	u32 pixel_rate;
-> > > > +	u32 link_freq_index;
-> > > > +
-> > > > +	const struct imx290_regval *data;
-> > > > +	u32 data_size;
-> > > > +};
-> > > > +
-> > > > +struct imx290 {
-> > > > +	struct device *dev;
-> > > > +	struct clk *xclk;
-> > > > +	struct regmap *regmap;
-> > > > +
-> > > > +	struct v4l2_subdev sd;
-> > > > +	struct v4l2_fwnode_endpoint ep;
-> > > > +	struct media_pad pad;
-> > > > +	struct v4l2_mbus_framefmt current_format;
-> > > > +	const struct imx290_mode *current_mode;
-> > > > +
-> > > > +	struct regulator_bulk_data supplies[IMX290_NUM_SUPPLIES];
-> > > > +	struct gpio_desc *rst_gpio;
-> > > > +
-> > > > +	struct v4l2_ctrl_handler ctrls;
-> > > > +	struct v4l2_ctrl *link_freq;
-> > > > +	struct v4l2_ctrl *pixel_rate;
-> > > > +
-> > > > +	struct mutex lock;
-> > > > +};
-> > > > +
-> > > > +struct imx290_pixfmt {
-> > > > +	u32 code;
-> > > > +};
-> > > > +
-> > > > +static const struct imx290_pixfmt imx290_formats[] = {
-> > > > +	{ MEDIA_BUS_FMT_SRGGB10_1X10 },
-> > > 
-> > > You have a single format here. You don't need the entire array, do you?
-> > > 
-> > > Unless you have plans to add more, that is.
-> > > 
-> > 
-> > Yes, the sensor supports RAW12 format as well and it will be added once
-> > this driver is merged.
+> Before the patch:
 > 
-> Ok. 
+> # cat /sys/kernel/debug/memblock/memory
+>    0: 0x10000000..0x8fffffff
+> # cat /sys/kernel/debug/memblock/reserved
+>    0: 0x10004000..0x10007fff
+>   34: 0x2fffff88..0x3fffffff
 > 
-> > 
-> > > > +};
-> > > > +
-> > > > +static struct regmap_config imx290_regmap_config = {
 > 
-> Should this be const, too?
-> 
+> After the patch:
+> # cat /sys/kernel/debug/memblock/memory
+>    0: 0x10000000..0x8fffffff
+> # cat /sys/kernel/debug/memblock/reserved
+>    0: 0x10004000..0x10007fff
+>   36: 0x80000000..0x8fffffff
 
-yep
+I'm still not convinced that the memblock refactoring didn't uncovered an
+issue in etnaviv driver.
 
-> > > > +	.reg_bits = 16,
-> > > > +	.val_bits = 8,
-> > > > +	.cache_type = REGCACHE_RBTREE,
-> > > > +};
-> 
-> ...
-> 
-> > > > +static int imx290_write_buffered_reg(struct imx290 *imx290, u16 address_low,
-> > > > +				     u8 nr_regs, u32 value)
-> > > > +{
-> > > > +	unsigned int i;
-> > > > +	int ret;
-> > > > +
-> > > > +	ret = imx290_write_reg(imx290, IMX290_REGHOLD, 0x01);
-> > > > +	if (ret) {
-> > > > +		dev_err(imx290->dev, "Error setting hold register\n");
-> > > > +		return ret;
-> > > > +	}
-> > > > +
-> > > > +	for (i = 0; i < nr_regs; i++) {
-> > > > +		ret = imx290_write_reg(imx290, address_low + i,
-> > > > +				       (u8)(value >> (i * 8)));
-> > > > +		if (ret) {
-> > > > +			dev_err(imx290->dev, "Error writing buffered registers\n");
-> > > > +			return ret;
-> > > > +		}
-> > > > +	}
-> > > > +
-> > > > +	ret = imx290_write_reg(imx290, IMX290_REGHOLD, 0x00);
-> > > > +	if (ret) {
-> > > > +		dev_err(imx290->dev, "Error setting hold register\n");
-> > > > +		return ret;
-> > > > +	}
-> > > > +
-> > > > +	return ret;
-> > > > +}
-> > > > +
-> > > > +static int imx290_set_gain(struct imx290 *imx290, u32 value)
-> > > > +{
-> > > > +	int ret;
-> > > > +
-> > > > +	u32 adjusted_value = (value * 10) / 3;
-> > > 
-> > > What's the purpose of this? Why not to use the value directly?
-> > > 
-> > 
-> > The gain register accepts the value 10/3 of the actual gain required. Hence,
-> > we need to manually do the calculation before updating the value. I can
-> > add a comment here to clarify.
-> 
-> It's better to use the register value directly. Otherwise the granularity
-> won't be available to the user space.
-> 
+Why moving the CMA area from 0x80000000 to 0x30000000 makes it fail?
 
-The sensor datasheet clearly defines that the 10/3'rd of the expected gain
-should be set to this register. So, IMO we should be setting the value as
-mentioned in the datasheet. I agree that we are missing the userspace
-granularity here but sticking to the device limitation shouldn't be a problem.
-As I said, I'll add a comment here to clarify.
+BTW, the code that complained about "command buffer outside valid memory
+window" has been removed by the commit 17e4660ae3d7 ("drm/etnaviv:
+implement per-process address spaces on MMUv2"). 
 
-> > 
-> > > > +
-> > > > +	ret = imx290_write_buffered_reg(imx290, IMX290_GAIN, 1, adjusted_value);
-> > > > +	if (ret)
-> > > > +		dev_err(imx290->dev, "Unable to write gain\n");
-> > > > +
-> > > > +	return ret;
-> > > > +}
-> > > > +
-> > > > +static int imx290_set_power_on(struct imx290 *imx290)
-> > > > +{
-> > > > +	int ret;
-> > > > +
-> > > > +	ret = clk_prepare_enable(imx290->xclk);
-> > > 
-> > > Please move the code from this function to the runtime PM runtime suspend
-> > > callback. The same for imx290_set_power_off().
-> > > 
-> > 
-> > May I know why? I think since this is being used only once, you're suggesting
-> > to move to the callback function itself but please see the comment below. I
-> > will reuse this function to power on the device during probe.
-> 
-> Yes, you can call the same function from probe, even if it's used as a
-> runtime PM callback.
-> 
-> There's no need to have a function that acts as a wrapper for calling it
-> with a different type of an argument.
-> 
+Could be that recent changes to MMU management of etnaviv resolve the
+issue?
 
-You mean directly calling imx290_runtime_resume() from probe is fine?
-
-Thanks,
-Mani
-
-> -- 
-> Kind regards,
+> > From 06529f861772b7dea2912fc2245debe4690139b8 Mon Sep 17 00:00:00 2001
+> > From: Mike Rapoport <rppt@linux.ibm.com>
+> > Date: Wed, 2 Oct 2019 10:14:17 +0300
+> > Subject: [PATCH] mm: memblock: do not enforce current limit for memblock_phys*
+> >  family
+> >
+> > Until commit 92d12f9544b7 ("memblock: refactor internal allocation
+> > functions") the maximal address for memblock allocations was forced to
+> > memblock.current_limit only for the allocation functions returning virtual
+> > address. The changes introduced by that commit moved the limit enforcement
+> > into the allocation core and as a result the allocation functions returning
+> > physical address also started to limit allocations to
+> > memblock.current_limit.
+> >
+> > This caused breakage of etnaviv GPU driver:
+> >
+> > [    3.682347] etnaviv etnaviv: bound 130000.gpu (ops gpu_ops)
+> > [    3.688669] etnaviv etnaviv: bound 134000.gpu (ops gpu_ops)
+> > [    3.695099] etnaviv etnaviv: bound 2204000.gpu (ops gpu_ops)
+> > [    3.700800] etnaviv-gpu 130000.gpu: model: GC2000, revision: 5108
+> > [    3.723013] etnaviv-gpu 130000.gpu: command buffer outside valid
+> > memory window
+> > [    3.731308] etnaviv-gpu 134000.gpu: model: GC320, revision: 5007
+> > [    3.752437] etnaviv-gpu 134000.gpu: command buffer outside valid
+> > memory window
+> > [    3.760583] etnaviv-gpu 2204000.gpu: model: GC355, revision: 1215
+> > [    3.766766] etnaviv-gpu 2204000.gpu: Ignoring GPU with VG and FE2.0
+> >
+> > Restore the behaviour of memblock_phys* family so that these functions will
+> > not enforce memblock.current_limit.
+> >
 > 
-> Sakari Ailus
+> This fixed the issue.  Thank you
+> 
+> Tested-by: Adam Ford <aford173@gmail.com> #imx6q-logicpd
+> 
+> > Fixes: 92d12f9544b7 ("memblock: refactor internal allocation functions")
+> > Reported-by: Adam Ford <aford173@gmail.com>
+> > Signed-off-by: Mike Rapoport <rppt@linux.ibm.com>
+> > ---
+> >  mm/memblock.c | 6 +++---
+> >  1 file changed, 3 insertions(+), 3 deletions(-)
+> >
+> > diff --git a/mm/memblock.c b/mm/memblock.c
+> > index 7d4f61a..c4b16ca 100644
+> > --- a/mm/memblock.c
+> > +++ b/mm/memblock.c
+> > @@ -1356,9 +1356,6 @@ static phys_addr_t __init memblock_alloc_range_nid(phys_addr_t size,
+> >                 align = SMP_CACHE_BYTES;
+> >         }
+> >
+> > -       if (end > memblock.current_limit)
+> > -               end = memblock.current_limit;
+> > -
+> >  again:
+> >         found = memblock_find_in_range_node(size, align, start, end, nid,
+> >                                             flags);
+> > @@ -1469,6 +1466,9 @@ static void * __init memblock_alloc_internal(
+> >         if (WARN_ON_ONCE(slab_is_available()))
+> >                 return kzalloc_node(size, GFP_NOWAIT, nid);
+> >
+> > +       if (max_addr > memblock.current_limit)
+> > +               max_addr = memblock.current_limit;
+> > +
+> >         alloc = memblock_alloc_range_nid(size, align, min_addr, max_addr, nid);
+> >
+> >         /* retry allocation without lower limit */
+> > --
+> > 2.7.4
+> >
+> >
+> > > > adam
+> > > >
+> > > > On Sat, Sep 28, 2019 at 2:33 AM Mike Rapoport <rppt@linux.ibm.com> wrote:
+> > > > >
+> > > > > On Thu, Sep 26, 2019 at 02:35:53PM -0500, Adam Ford wrote:
+> > > > > > On Thu, Sep 26, 2019 at 11:04 AM Mike Rapoport <rppt@linux.ibm.com> wrote:
+> > > > > > >
+> > > > > > > Hi,
+> > > > > > >
+> > > > > > > On Thu, Sep 26, 2019 at 08:09:52AM -0500, Adam Ford wrote:
+> > > > > > > > On Wed, Sep 25, 2019 at 10:17 AM Fabio Estevam <festevam@gmail.com> wrote:
+> > > > > > > > >
+> > > > > > > > > On Wed, Sep 25, 2019 at 9:17 AM Adam Ford <aford173@gmail.com> wrote:
+> > > > > > > > >
+> > > > > > > > > > I tried cma=256M and noticed the cma dump at the beginning didn't
+> > > > > > > > > > change.  Do we need to setup a reserved-memory node like
+> > > > > > > > > > imx6ul-ccimx6ulsom.dtsi did?
+> > > > > > > > >
+> > > > > > > > > I don't think so.
+> > > > > > > > >
+> > > > > > > > > Were you able to identify what was the exact commit that caused such regression?
+> > > > > > > >
+> > > > > > > > I was able to narrow it down the 92d12f9544b7 ("memblock: refactor
+> > > > > > > > internal allocation functions") that caused the regression with
+> > > > > > > > Etnaviv.
+> > > > > > >
+> > > > > > >
+> > > > > > > Can you please test with this change:
+> > > > > > >
+> > > > > >
+> > > > > > That appears to have fixed my issue.  I am not sure what the impact
+> > > > > > is, but is this a safe option?
+> > > > >
+> > > > > It's not really a fix, I just wanted to see how exactly 92d12f9544b7 ("memblock:
+> > > > > refactor internal allocation functions") broke your setup.
+> > > > >
+> > > > > Can you share the dts you are using and the full kernel log?
+> > > > >
+> > > > > > adam
+> > > > > >
+> > > > > > > diff --git a/mm/memblock.c b/mm/memblock.c
+> > > > > > > index 7d4f61a..1f5a0eb 100644
+> > > > > > > --- a/mm/memblock.c
+> > > > > > > +++ b/mm/memblock.c
+> > > > > > > @@ -1356,9 +1356,6 @@ static phys_addr_t __init memblock_alloc_range_nid(phys_addr_t size,
+> > > > > > >                 align = SMP_CACHE_BYTES;
+> > > > > > >         }
+> > > > > > >
+> > > > > > > -       if (end > memblock.current_limit)
+> > > > > > > -               end = memblock.current_limit;
+> > > > > > > -
+> > > > > > >  again:
+> > > > > > >         found = memblock_find_in_range_node(size, align, start, end, nid,
+> > > > > > >                                             flags);
+> > > > > > >
+> > > > > > > > I also noticed that if I create a reserved memory node as was done one
+> > > > > > > > imx6ul-ccimx6ulsom.dtsi the 3D seems to work again, but without it, I
+> > > > > > > > was getting errors regardless of the 'cma=256M' or not.
+> > > > > > > > I don't have a problem using the reserved memory, but I guess I am not
+> > > > > > > > sure what the amount should be.  I know for the video decoding 1080p,
+> > > > > > > > I have historically used cma=128M, but with the 3D also needing some
+> > > > > > > > memory allocation, is that enough or should I use 256M?
+> > > > > > > >
+> > > > > > > > adam
+> > > > > > >
+> > > > > > > --
+> > > > > > > Sincerely yours,
+> > > > > > > Mike.
+> > > > > > >
+> > > > >
+> > > > > --
+> > > > > Sincerely yours,
+> > > > > Mike.
+> > > > >
+> >
+> > --
+> > Sincerely yours,
+> > Mike.
+> >
+
+-- 
+Sincerely yours,
+Mike.
+
