@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D20F6C10F14
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:16:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B734C10F14
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:17:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A0C4321A4C
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:16:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 50A02215EA
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:17:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570119415;
-	bh=XdCheeG0w24WQDvOmQTlTAsMqd8i15E+HQEqz4HkuCw=;
+	s=default; t=1570119421;
+	bh=skgGzswSz24HtRMDnCp6Kk1bFMF4TPrE0bKwgDLKF0A=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=NpCgdIXaMd7J/zHd7XnqR/Z/yCTN1OFMwZCo1jctiPcT0fozuFVp7jIBgaGwde35f
-	 Zc7CR0DzbBjv11i4EaJny/2ZrcsNTplStRr/cgyOlHRluzvZ7rTTCakSmHILX2cjH4
-	 4n3pbHa0JIhR3Kiv946WHk1gTRYOP6wFE5hYBiFk=
+	b=rHE40ZB9MvTQppebWZoSrl4qsUDI6RIsqpBauNUWWNuttbd9b1dNlib4QCvP9B1/Y
+	 9rU/avZkjxf1brZkHlHA5tdYUvzFsPuNf5cUocI4Tg57DPpqX+IqOO0XAUa6X4lcQB
+	 /LBhB/h+3wDfTq9mdUzu3RqghOH3PE5j5g4mlmfc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389114AbfJCQQy (ORCPT
+        id S2389140AbfJCQQ7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 12:16:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42138 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 12:16:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42290 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389086AbfJCQQt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:16:49 -0400
+        id S2389119AbfJCQQ4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:16:56 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 23DD720700;
-        Thu,  3 Oct 2019 16:16:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E0B7F20865;
+        Thu,  3 Oct 2019 16:16:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570119408;
-        bh=XdCheeG0w24WQDvOmQTlTAsMqd8i15E+HQEqz4HkuCw=;
+        s=default; t=1570119415;
+        bh=skgGzswSz24HtRMDnCp6Kk1bFMF4TPrE0bKwgDLKF0A=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Q6X5YLaLa/W6TaXnUjCOxmGprFGDFR+K/5cHi+ejmmcsWG/VZBeOAQXVPNI+5o1dm
-         CJzKytyIURNoZCFAthZaYSzT29DcZzFWdNAl6HAl6KAjA7w/cR37xf3ltCZ5AfTfbF
-         +E2KR/QYYpFow+jnuP+W2wHUTlL6saQ6d9QLOyvc=
+        b=p90NDy6UhYbv9SzPdInUjWZvOJd4ZXvBgW805jfF9IQ17DDRsIG0VvaIgJjx6n6Je
+         FLTJCEpq1c8+goB3MQJe7neuDE4W94ZWcopjBehwBMeS1Sjn3POxoYM747ML3VvxGf
+         M+aMKUWDAjxCvXWmwX7bc/uF3fD7SUrFqTjv521k=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Yufen Yu <yuyufen@huawei.com>,
+        stable@vger.kernel.org,
+        Guoqing Jiang <guoqing.jiang@cloud.ionos.com>,
         Song Liu <songliubraving@fb.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 054/211] md/raid1: end bio when the device faulty
-Date:   Thu,  3 Oct 2019 17:52:00 +0200
-Message-Id: <20191003154500.482539522@linuxfoundation.org>
+Subject: [PATCH 4.19 056/211] md: dont set In_sync if array is frozen
+Date:   Thu,  3 Oct 2019 17:52:02 +0200
+Message-Id: <20191003154501.093901208@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191003154447.010950442@linuxfoundation.org>
 References: <20191003154447.010950442@linuxfoundation.org>
@@ -60,73 +61,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yufen Yu <yuyufen@huawei.com>
+From: Guoqing Jiang <jgq516@gmail.com>
 
-[ Upstream commit eeba6809d8d58908b5ed1b5ceb5fcb09a98a7cad ]
+[ Upstream commit 062f5b2ae12a153644c765e7ba3b0f825427be1d ]
 
-When write bio return error, it would be added to conf->retry_list
-and wait for raid1d thread to retry write and acknowledge badblocks.
+When a disk is added to array, the following path is called in mdadm.
 
-In narrow_write_error(), the error bio will be split in the unit of
-badblock shift (such as one sector) and raid1d thread issues them
-one by one. Until all of the splited bio has finished, raid1d thread
-can go on processing other things, which is time consuming.
+Manage_subdevs -> sysfs_freeze_array
+               -> Manage_add
+               -> sysfs_set_str(&info, NULL, "sync_action","idle")
 
-But, there is a scene for error handling that is not necessary.
-When the device has been set faulty, flush_bio_list() may end
-bios in pending_bio_list with error status. Since these bios
-has not been issued to the device actually, error handlding to
-retry write and acknowledge badblocks make no sense.
+Then from kernel side, Manage_add invokes the path (add_new_disk ->
+validate_super = super_1_validate) to set In_sync flag.
 
-Even without that scene, when the device is faulty, badblocks info
-can not be written out to the device. Thus, we also no need to
-handle the error IO.
+Since In_sync means "device is in_sync with rest of array", and the new
+added disk need to resync thread to help the synchronization of data.
+And md_reap_sync_thread would call spare_active to set In_sync for the
+new added disk finally. So don't set In_sync if array is in frozen.
 
-Signed-off-by: Yufen Yu <yuyufen@huawei.com>
+Signed-off-by: Guoqing Jiang <guoqing.jiang@cloud.ionos.com>
 Signed-off-by: Song Liu <songliubraving@fb.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/md/raid1.c | 26 ++++++++++++++------------
- 1 file changed, 14 insertions(+), 12 deletions(-)
+ drivers/md/md.c | 11 +++++++++--
+ 1 file changed, 9 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/md/raid1.c b/drivers/md/raid1.c
-index fa47249fa3e42..54010675df9a5 100644
---- a/drivers/md/raid1.c
-+++ b/drivers/md/raid1.c
-@@ -434,19 +434,21 @@ static void raid1_end_write_request(struct bio *bio)
- 		    /* We never try FailFast to WriteMostly devices */
- 		    !test_bit(WriteMostly, &rdev->flags)) {
- 			md_error(r1_bio->mddev, rdev);
--			if (!test_bit(Faulty, &rdev->flags))
--				/* This is the only remaining device,
--				 * We need to retry the write without
--				 * FailFast
--				 */
--				set_bit(R1BIO_WriteError, &r1_bio->state);
--			else {
--				/* Finished with this branch */
--				r1_bio->bios[mirror] = NULL;
--				to_put = bio;
--			}
--		} else
-+		}
-+
-+		/*
-+		 * When the device is faulty, it is not necessary to
-+		 * handle write error.
-+		 * For failfast, this is the only remaining device,
-+		 * We need to retry the write without FailFast.
-+		 */
-+		if (!test_bit(Faulty, &rdev->flags))
- 			set_bit(R1BIO_WriteError, &r1_bio->state);
-+		else {
-+			/* Finished with this branch */
-+			r1_bio->bios[mirror] = NULL;
-+			to_put = bio;
-+		}
- 	} else {
- 		/*
- 		 * Set R1BIO_Uptodate in our master bio, so that we
+diff --git a/drivers/md/md.c b/drivers/md/md.c
+index 73758b3679a11..277025784d6c0 100644
+--- a/drivers/md/md.c
++++ b/drivers/md/md.c
+@@ -1770,8 +1770,15 @@ static int super_1_validate(struct mddev *mddev, struct md_rdev *rdev)
+ 				if (!(le32_to_cpu(sb->feature_map) &
+ 				      MD_FEATURE_RECOVERY_BITMAP))
+ 					rdev->saved_raid_disk = -1;
+-			} else
+-				set_bit(In_sync, &rdev->flags);
++			} else {
++				/*
++				 * If the array is FROZEN, then the device can't
++				 * be in_sync with rest of array.
++				 */
++				if (!test_bit(MD_RECOVERY_FROZEN,
++					      &mddev->recovery))
++					set_bit(In_sync, &rdev->flags);
++			}
+ 			rdev->raid_disk = role;
+ 			break;
+ 		}
 -- 
 2.20.1
 
