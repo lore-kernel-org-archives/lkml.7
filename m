@@ -2,58 +2,58 @@ Return-Path: <SRS0=6dNS=X4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90DEDC10F14
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:00:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3554DC10F14
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:00:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4BC05207FF
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:00:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0C6B3207FF
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:00:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570118433;
-	bh=F5QrHJ8dW3ius4QmW17jT6/U5gly7/R3QyccOZun8hY=;
+	s=default; t=1570118435;
+	bh=kXRTHqdvzRxg+hLmSIfW68KUmIdN8xeuSlI/WR+DK7A=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=haWUlEe6CeMqOL5wbQ/5lOBnEC4QO7/K6o8HxOeoJQSkZq4QdQYMf/5tqT7ZQoq5S
-	 yO5Fvj+mq+PGSpr5lafw5ib9iz1p2Toa8LcN5r/vM6FIGLg8rfU7TKMBFYEYzR2TIe
-	 EljkfrkedG5nd6fqzc3axCbUXYxFYsl+FbHiLzrs=
+	b=TiWS88IDc6W3RcZLw0v6OYcOveqXmIXK5Dsvvy7TC2idIeCEZSNGhnUDCjGzENg2L
+	 kN/PaUPzW8iURjL4hXv4BbIIpCsp885BoqEdvMqd2r/qpid9Ew5W4QTQYcOMMN7vU5
+	 c2TqPXtAkXF7yzmWoceSTU28XrYRm6aDH84G2EXk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730185AbfJCQAc (ORCPT
+        id S1730285AbfJCQAe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 12:00:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44158 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 12:00:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44238 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731580AbfJCQA1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:00:27 -0400
+        id S1728869AbfJCQAa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:00:30 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 686E120700;
-        Thu,  3 Oct 2019 16:00:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 31B0F207FF;
+        Thu,  3 Oct 2019 16:00:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570118426;
-        bh=F5QrHJ8dW3ius4QmW17jT6/U5gly7/R3QyccOZun8hY=;
+        s=default; t=1570118429;
+        bh=kXRTHqdvzRxg+hLmSIfW68KUmIdN8xeuSlI/WR+DK7A=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=u820+P7YAWfjMvZ6/im9M3GcUs/ZmERNkgliYHqxduh5h58nhpOhaJ7xujdkOFraz
-         Kwc8b1IhNh4uMU4/pUAiVQ8OvyGdJ84RuSTl9q+Nj5NZ1QGBJN8J4YrZh5vpMUeFWL
-         LW8F4BJlon3SRhM4yC7jmM2AyTq7Ckzz6BlifnFA=
+        b=cJfJsScZgnJ+RGDqlcZVF7O+4KYwajH+DJIzoA4ibOb57PZRoamAk5aO8pl+fSUjJ
+         byofAzn5M8WOzrR2Ber8ohFNtmZMzEp9yd3F5cApmitLXbzcIOjET33slNglbydVhL
+         WXy++pDB0W54FUaenEFW58XpPgYdro9iJXn2cUr0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Denis Lunev <den@virtuozzo.com>,
-        Roman Kagan <rkagan@virtuozzo.com>,
-        Denis Plotnikov <dplotnikov@virtuozzo.com>,
-        Jan Dakinevich <jan.dakinevich@virtuozzo.com>,
-        Paolo Bonzini <pbonzini@redhat.com>
-Subject: [PATCH 4.4 82/99] KVM: x86: set ctxt->have_exception in x86_decode_insn()
-Date:   Thu,  3 Oct 2019 17:53:45 +0200
-Message-Id: <20191003154336.086758733@linuxfoundation.org>
+        stable@vger.kernel.org, Marcel Holtmann <marcel@holtmann.org>,
+        Johan Hedberg <johan.hedberg@intel.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.9 001/129] Revert "Bluetooth: validate BLE connection interval updates"
+Date:   Thu,  3 Oct 2019 17:52:04 +0200
+Message-Id: <20191003154318.892827121@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20191003154252.297991283@linuxfoundation.org>
-References: <20191003154252.297991283@linuxfoundation.org>
+In-Reply-To: <20191003154318.081116689@linuxfoundation.org>
+References: <20191003154318.081116689@linuxfoundation.org>
 User-Agent: quilt/0.66
+X-stable: review
+X-Patchwork-Hint: ignore
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -62,53 +62,62 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jan Dakinevich <jan.dakinevich@virtuozzo.com>
+From: Marcel Holtmann <marcel@holtmann.org>
 
-commit c8848cee74ff05638e913582a476bde879c968ad upstream.
+[ Upstream commit 68d19d7d995759b96169da5aac313363f92a9075 ]
 
-x86_emulate_instruction() takes into account ctxt->have_exception flag
-during instruction decoding, but in practice this flag is never set in
-x86_decode_insn().
+This reverts commit c49a8682fc5d298d44e8d911f4fa14690ea9485e.
 
-Fixes: 6ea6e84309ca ("KVM: x86: inject exceptions produced by x86_decode_insn")
-Cc: stable@vger.kernel.org
-Cc: Denis Lunev <den@virtuozzo.com>
-Cc: Roman Kagan <rkagan@virtuozzo.com>
-Cc: Denis Plotnikov <dplotnikov@virtuozzo.com>
-Signed-off-by: Jan Dakinevich <jan.dakinevich@virtuozzo.com>
-Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+There are devices which require low connection intervals for usable operation
+including keyboards and mice. Forcing a static connection interval for
+these types of devices has an impact in latency and causes a regression.
 
+Signed-off-by: Marcel Holtmann <marcel@holtmann.org>
+Signed-off-by: Johan Hedberg <johan.hedberg@intel.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/kvm/emulate.c |    2 ++
- arch/x86/kvm/x86.c     |    6 ++++++
- 2 files changed, 8 insertions(+)
+ net/bluetooth/hci_event.c  | 5 -----
+ net/bluetooth/l2cap_core.c | 9 +--------
+ 2 files changed, 1 insertion(+), 13 deletions(-)
 
---- a/arch/x86/kvm/emulate.c
-+++ b/arch/x86/kvm/emulate.c
-@@ -5245,6 +5245,8 @@ done_prefixes:
- 					ctxt->memopp->addr.mem.ea + ctxt->_eip);
+diff --git a/net/bluetooth/hci_event.c b/net/bluetooth/hci_event.c
+index 163a239bda91a..6f78489fdb132 100644
+--- a/net/bluetooth/hci_event.c
++++ b/net/bluetooth/hci_event.c
+@@ -5089,11 +5089,6 @@ static void hci_le_remote_conn_param_req_evt(struct hci_dev *hdev,
+ 		return send_conn_param_neg_reply(hdev, handle,
+ 						 HCI_ERROR_UNKNOWN_CONN_ID);
  
- done:
-+	if (rc == X86EMUL_PROPAGATE_FAULT)
-+		ctxt->have_exception = true;
- 	return (rc != X86EMUL_CONTINUE) ? EMULATION_FAILED : EMULATION_OK;
- }
+-	if (min < hcon->le_conn_min_interval ||
+-	    max > hcon->le_conn_max_interval)
+-		return send_conn_param_neg_reply(hdev, handle,
+-						 HCI_ERROR_INVALID_LL_PARAMS);
+-
+ 	if (hci_check_conn_params(min, max, latency, timeout))
+ 		return send_conn_param_neg_reply(hdev, handle,
+ 						 HCI_ERROR_INVALID_LL_PARAMS);
+diff --git a/net/bluetooth/l2cap_core.c b/net/bluetooth/l2cap_core.c
+index 4912e80dacefa..48d23abfe7992 100644
+--- a/net/bluetooth/l2cap_core.c
++++ b/net/bluetooth/l2cap_core.c
+@@ -5277,14 +5277,7 @@ static inline int l2cap_conn_param_update_req(struct l2cap_conn *conn,
  
---- a/arch/x86/kvm/x86.c
-+++ b/arch/x86/kvm/x86.c
-@@ -5487,6 +5487,12 @@ int x86_emulate_instruction(struct kvm_v
- 						emulation_type))
- 				return EMULATE_DONE;
- 			if (ctxt->have_exception) {
-+				/*
-+				 * #UD should result in just EMULATION_FAILED, and trap-like
-+				 * exception should not be encountered during decode.
-+				 */
-+				WARN_ON_ONCE(ctxt->exception.vector == UD_VECTOR ||
-+					     exception_type(ctxt->exception.vector) == EXCPT_TRAP);
- 				inject_emulated_exception(vcpu);
- 				return EMULATE_DONE;
- 			}
+ 	memset(&rsp, 0, sizeof(rsp));
+ 
+-	if (min < hcon->le_conn_min_interval ||
+-	    max > hcon->le_conn_max_interval) {
+-		BT_DBG("requested connection interval exceeds current bounds.");
+-		err = -EINVAL;
+-	} else {
+-		err = hci_check_conn_params(min, max, latency, to_multiplier);
+-	}
+-
++	err = hci_check_conn_params(min, max, latency, to_multiplier);
+ 	if (err)
+ 		rsp.result = cpu_to_le16(L2CAP_CONN_PARAM_REJECTED);
+ 	else
+-- 
+2.20.1
+
 
 
