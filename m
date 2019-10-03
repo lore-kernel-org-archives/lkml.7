@@ -2,117 +2,112 @@ Return-Path: <SRS0=6dNS=X4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 21C3DC4CED1
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 22:15:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 498E3C10F14
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 22:21:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E2536215EA
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 22:15:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570140919;
-	bh=Iwjv0cYSZTuQsc9KwzGWDMEOZCnt/5QZ+H4+pxuSkcw=;
-	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
-	b=17j8muV6p8Gzub0RuKszlJu/vlgb3HrQcfU4uDjytRwfkP/ONmSNDAWg5vcoMHWxa
-	 EAk0fT7euDxxyvkPSVhD3NuTL2dBEppyIZr4yQE2LLXhW4mBDPFrYrgk0P5JC2RkoK
-	 cnMj53i4f19rp75e7u+aKNAfMCTv8wIYytj5nMTM=
+	by mail.kernel.org (Postfix) with ESMTP id 1C11A215EA
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 22:21:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730302AbfJCWPS (ORCPT
+        id S1730533AbfJCWVm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 18:15:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53204 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730297AbfJCWPS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 18:15:18 -0400
-Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net [24.9.64.241])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B673720867;
-        Thu,  3 Oct 2019 22:15:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570140917;
-        bh=Iwjv0cYSZTuQsc9KwzGWDMEOZCnt/5QZ+H4+pxuSkcw=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=1XGiqxhQpiS8qJU1660yhorYGIMPs+gVEr2itAc63pnWSnmBTDVqJa9oP2/2vXnjb
-         c9fWZbFmmI11v+l95/lUuQsXvjbSMwkH150Y3ibzlTYKaJLwlafkwOanpwQNN8CCAd
-         izahV9qz0naHh4ZH3aSE7haoJp6xMTxEN5K9x2pQ=
-Subject: Re: [PATCH v2] cpupower : Handle set and info subcommands correctly
-To:     Abhishek Goel <huntbag@linux.vnet.ibm.com>,
-        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     trenn@suse.com, ego@linux.vnet.ibm.com, shuah <shuah@kernel.org>
-References: <20190913080712.26383-1-huntbag@linux.vnet.ibm.com>
- <2614b112-5e19-96dc-179b-8d4e3b8c8858@kernel.org>
-From:   shuah <shuah@kernel.org>
-Message-ID: <9f493ef7-8222-3e12-5068-41ea76e660a2@kernel.org>
-Date:   Thu, 3 Oct 2019 16:15:15 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Thu, 3 Oct 2019 18:21:42 -0400
+Received: from mailoutvs37.siol.net ([185.57.226.228]:33009 "EHLO
+        mail.siol.net" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1728692AbfJCWVm (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 18:21:42 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by mail.siol.net (Zimbra) with ESMTP id 95C28524629;
+        Fri,  4 Oct 2019 00:21:38 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at psrvmta12.zcs-production.pri
+Received: from mail.siol.net ([127.0.0.1])
+        by localhost (psrvmta12.zcs-production.pri [127.0.0.1]) (amavisd-new, port 10032)
+        with ESMTP id UmRQVluGO7pv; Fri,  4 Oct 2019 00:21:38 +0200 (CEST)
+Received: from mail.siol.net (localhost [127.0.0.1])
+        by mail.siol.net (Zimbra) with ESMTPS id 4992852462A;
+        Fri,  4 Oct 2019 00:21:38 +0200 (CEST)
+Received: from localhost.localdomain (cpe-86-58-59-25.static.triera.net [86.58.59.25])
+        (Authenticated sender: 031275009)
+        by mail.siol.net (Zimbra) with ESMTPSA id D4D13524629;
+        Fri,  4 Oct 2019 00:21:37 +0200 (CEST)
+From:   Jernej Skrabec <jernej.skrabec@siol.net>
+To:     mripard@kernel.org, wens@csie.org
+Cc:     robh+dt@kernel.org, mark.rutland@arm.com,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] arm64: dts: allwinner: a64: orangepi-win: Enable audio codec
+Date:   Fri,  4 Oct 2019 00:21:30 +0200
+Message-Id: <20191003222130.2015617-1-jernej.skrabec@siol.net>
+X-Mailer: git-send-email 2.23.0
 MIME-Version: 1.0
-In-Reply-To: <2614b112-5e19-96dc-179b-8d4e3b8c8858@kernel.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Abhishek,
+This patch enables internal audio codec on OrangePi Win board by
+enabling all relevant nodes and adding appropriate routing. Board has
+on-board microphone (MIC1) and 3.5 mm jack with stereo audio and
+microphone (MIC2).
 
-On 10/3/19 8:38 AM, shuah wrote:
-> On 9/13/19 2:07 AM, Abhishek Goel wrote:
->> Cpupower tool has set and info options which are being used only by
->> x86 machines. This patch removes support for these two subcommands
->> from generic cpupower utility. Thus, these two subcommands will now be
->> available only for intel.
->> This removes the ambiguous error message while using set option in case
->> of using non-intel systems.
->>
->> Without this patch on a non-intel box:
->>
->> root@ubuntu:~# cpupower info
->> System does not support Intel's performance bias setting
->>
->> root@ubuntu:~# cpupower set -b 10
->> Error setting perf-bias value on CPU
->>
->> With this patch on a non-intel box:
->>
->> root@ubuntu:~# cpupower info
->> Supported commands are:
->>          frequency-info
->>          frequency-set
->>          idle-info
->>          idle-set
->>          monitor
->>          help
->>
->> Same result for set subcommand.
->>
->> This patch does not affect results on a intel box.
->>
->> Signed-off-by: Abhishek Goel <huntbag@linux.vnet.ibm.com>
->> Acked-by: Thomas Renninger <trenn@suse.de>
->> ---
->>
->> changes from v1:
->>     Instead of bailing out early in set and info commands, in V2, we
->>     are cutting out support for these two commands for non-intel
->>     systems.
-> 
-> thanks. I will get this in for 5.4-rc3 veru likely. Definitely in 5.4
-> 
+Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
+---
+ .../dts/allwinner/sun50i-a64-orangepi-win.dts | 29 +++++++++++++++++++
+ 1 file changed, 29 insertions(+)
 
-Okay I almost applied this and decided it needs improvements.
+diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-orangepi-win.dts b/=
+arch/arm64/boot/dts/allwinner/sun50i-a64-orangepi-win.dts
+index 04446e4716c4..f54a415f2e3b 100644
+--- a/arch/arm64/boot/dts/allwinner/sun50i-a64-orangepi-win.dts
++++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-orangepi-win.dts
+@@ -114,6 +114,19 @@
+ 	};
+ };
+=20
++&codec {
++	status =3D "okay";
++};
++
++&codec_analog {
++	cpvdd-supply =3D <&reg_eldo1>;
++	status =3D "okay";
++};
++
++&dai {
++	status =3D "okay";
++};
++
+ &de {
+ 	status =3D "okay";
+ };
+@@ -333,6 +346,22 @@
+ 	vcc-hdmi-supply =3D <&reg_dldo1>;
+ };
+=20
++&sound {
++	status =3D "okay";
++	simple-audio-card,widgets =3D "Headphone", "Headphone Jack",
++				    "Microphone", "Microphone Jack",
++				    "Microphone", "Onboard Microphone";
++	simple-audio-card,routing =3D
++			"Left DAC", "AIF1 Slot 0 Left",
++			"Right DAC", "AIF1 Slot 0 Right",
++			"AIF1 Slot 0 Left ADC", "Left ADC",
++			"AIF1 Slot 0 Right ADC", "Right ADC",
++			"Headphone Jack", "HP",
++			"MIC2", "Microphone Jack",
++			"Onboard Microphone", "MBIAS",
++			"MIC1", "Onboard Microphone";
++};
++
+ &spi0 {
+ 	status =3D "okay";
+=20
+--=20
+2.23.0
 
-I don't like using #if defined(__x86_64__) || defined(__i386__)
-
-tools/power/cpupower/utils/cpupower.c main() already does this
-dynamically using uname(). Please use the same logic do this,
-instead of adding compile time code.
-
-thanks,
--- Shuah
