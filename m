@@ -2,118 +2,120 @@ Return-Path: <SRS0=6dNS=X4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 55652C32792
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 14:06:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 39831C32792
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 14:08:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 278DA207FF
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 14:06:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570111563;
-	bh=GH4taLsUBDAr8HKIqVU8lz5qUiBhWaxiGGrIcZImd2E=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=iV14FPO8zv0BCDtC6bT6X4owwzVESPqUiez+gXRa8zO49URyOe2TjcjvhNverE+HA
-	 Chw26gAs8Au3DClQZzLUAg8/BZsWCbgs8THq4LY4iNI3fa5D5dIKtGvJo59yFF9e7f
-	 TeCtZcvgunFWBK7c86Qjmizuka1BEjb32QSSAW5M=
+	by mail.kernel.org (Postfix) with ESMTP id 1A14E207FF
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 14:08:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730313AbfJCOGC (ORCPT
+        id S1730316AbfJCOIg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 10:06:02 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:39996 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730114AbfJCOGC (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 10:06:02 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Subject:Cc:To:
-        From:Date:Sender:Reply-To:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=g5ZI7dzXc6DzdoiPhmhftNfql4ZQHg2viebNXmQcCkQ=; b=e2riPOA0ky61D/JeXl4NU791k
-        Mb5LkuuosQPgMBB6vmxhq3Tq2v8pRqruZDMU8402qmhQFDEy6klXdTbNfMqw2kGpQFUQNJmuNxM8k
-        tPHUD9eP81bo64My3g28MdiBj5Rf8hxpBFMZq3VfhqPMQd5/1PYjI8uPiFh6qMeh868q8ZzKGPu3Q
-        cZoQ8KwqRCEVQGfkdD27/3FL/y8qiJRsuQIKyYOntBLFQFMcQ4R7WUMCKuBep0jF1QTFUlAeZ6C8i
-        oQIYhhwl3u0SJ9LJNvq/ZJ7WCDjQ43OJ/wnUE/3cvZLrXmE3/mnTU6F2QCoPD3BQwoi3G5YABx+rT
-        mdvVYrLGQ==;
-Received: from 177.133.68.49.dynamic.adsl.gvt.net.br ([177.133.68.49] helo=coco.lan)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.2 #3 (Red Hat Linux))
-        id 1iG1jv-000161-V2; Thu, 03 Oct 2019 14:05:56 +0000
-Date:   Thu, 3 Oct 2019 11:05:51 -0300
-From:   Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-To:     Gonsolo <gonsolo@gmail.com>
-Cc:     JP <jp@jpvw.nl>, crope@iki.fi, Sean Young <sean@mess.org>,
-        linux-media@vger.kernel.org,
-        Linux Kernel <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] si2157: Add support for Logilink VG0022A.
-Message-ID: <20191003110551.19f06922@coco.lan>
-In-Reply-To: <CANL0fFQR4KDU5PKeedK6wF45nSTu6dUyz_MBwmP1QsJxYQAWNg@mail.gmail.com>
-References: <20191002150650.GA4227@gofer.mess.org>
-        <CANL0fFRoL6NxOCbNC=XjQ6LDkeeqAayaLUbm9xARWX9ttqfPFg@mail.gmail.com>
-        <29ab2e43-4374-a3ea-6ae1-a4267867eaa4@jpvw.nl>
-        <20191002154922.7f1cfc76@coco.lan>
-        <CANL0fFRJZBfEDWK_c2w1TomvB5-i4g09LopyJUbO5NtOwKdDTg@mail.gmail.com>
-        <CANL0fFTwJ4yRO+5q6WkL0+DtwdrRti6r_WY1intisYJhs5En8w@mail.gmail.com>
-        <20191003081742.0933264b@coco.lan>
-        <CANL0fFTtHn4ocL4BD4cVKhVzjLhnQ0a45yq5x4MxWAVu-tD8sw@mail.gmail.com>
-        <20191003094904.3aa5fdc7@coco.lan>
-        <20191003095237.2efa0e7f@coco.lan>
-        <20191003130224.GA2596@Limone>
-        <CANL0fFQR4KDU5PKeedK6wF45nSTu6dUyz_MBwmP1QsJxYQAWNg@mail.gmail.com>
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+        Thu, 3 Oct 2019 10:08:36 -0400
+Received: from mga03.intel.com ([134.134.136.65]:64806 "EHLO mga03.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729369AbfJCOIf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 10:08:35 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 03 Oct 2019 07:08:33 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.67,252,1566889200"; 
+   d="scan'208";a="191275044"
+Received: from stinkbox.fi.intel.com (HELO stinkbox) ([10.237.72.174])
+  by fmsmga008.fm.intel.com with SMTP; 03 Oct 2019 07:08:29 -0700
+Received: by stinkbox (sSMTP sendmail emulation); Thu, 03 Oct 2019 17:08:28 +0300
+From:   Ville Syrjala <ville.syrjala@linux.intel.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     stable@vger.kernel.org,
+        "Paul E . McKenney" <paulmck@linux.vnet.ibm.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        linux-pm@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        =?UTF-8?q?Ville=20Syrj=C3=A4l=C3=A4?= 
+        <ville.syrjala@linux.intel.com>
+Subject: [PATCH] cpufreq: Fix RCU reboot regression on x86 PIC machines
+Date:   Thu,  3 Oct 2019 17:08:28 +0300
+Message-Id: <20191003140828.14801-1-ville.syrjala@linux.intel.com>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Thu, 3 Oct 2019 15:53:30 +0200
-Gonsolo <gonsolo@gmail.com> escreveu:
+From: Ville Syrjälä <ville.syrjala@linux.intel.com>
 
-> Hi!
-> 
-> I tried downloading a new firmware via
-> 
->        case SI_BOGUS:
-> -               dev_info(&client->dev, "Bogus chip version, trying
-> with no firmware\n");
-> -               fw_name = NULL;
-> +               dev_info(&client->dev, "Bogus chip version, trying
-> with new firmware\n");
-> +               fw_name = SI2157_A30_FIRMWARE;
->                 break;
-> 
-> which I downloaded from
-> 
-> +               //
-> https://github.com/CoreELEC/dvb-firmware/blob/master/firmware/dvb-tuner-si2157-a30-01.fw
-> 
-> resulting in
-> 
-> [  209.312086] si2168 1-0067: downloading firmware from file
-> 'dvb-demod-si2168-b40-01.fw'
-> [  211.535097] si2168 1-0067: firmware version: B 4.0.25
-> [  211.554938] si2157 2-0063: Bogus chip version, trying with new firmware
-> [  211.554944] si2157 2-0063: found a 'Silicon Labs Si21255-\xff\xff\xff'
-> [  211.557978] si2157 2-0063: downloading firmware from file
-> 'dvb-tuner-si2157-a30-01.fw'
-> [  215.739092] si2157 2-0063: rebooting tuner...
-> [  215.755271] si2157 2-0063: querying firmware version...
-> [  215.760756] si2157 2-0063: firmware version: \xff.\xff.255
-> 
-> . So even with a new firmware the queried numbers are bogus.
+Since 4.20-rc1 my PIC machines no longer reboot/shutdown.
+I bisected this down to commit 45975c7d21a1 ("rcu: Define RCU-sched
+API in terms of RCU for Tree RCU PREEMPT builds").
 
-Try to reduce the bus speed to 10kbps
-> 
-> g
+I traced the hang into
+-> cpufreq_suspend()
+ -> cpufreq_stop_governor()
+  -> cpufreq_dbs_governor_stop()
+   -> gov_clear_update_util()
+    -> synchronize_sched()
+     -> synchronize_rcu()
 
+Only PREEMPT=y is affected for obvious reasons. The problem
+is limited to PIC machines since they mask off interrupts
+in i8259A_shutdown() (syscore_ops.shutdown() registered
+from device_initcall()).
 
+I reported this long ago but no better fix has surfaced,
+hence sending out my initial workaround which I've been
+carrying around ever since. I just move cpufreq_core_init()
+to late_initcall() so the syscore_ops get registered in the
+oppsite order and thus the .shutdown() hooks get executed
+in the opposite order as well. Not 100% convinced this is
+safe (especially moving the cpufreq_global_kobject creation
+to late_initcall()) but I've not had any problems with it
+at least.
 
-Thanks,
-Mauro
+Here's the resulting change in initcall_debug:
++ PM: Calling cpufreq_suspend+0x0/0x100
+  PM: Calling mce_syscore_shutdown+0x0/0x10
+  PM: Calling i8259A_shutdown+0x0/0x10
+- PM: Calling cpufreq_suspend+0x0/0x100
++ reboot: Restarting system
++ reboot: machine restart
+
+Cc: stable@vger.kernel.org
+Cc: Paul E. McKenney <paulmck@linux.vnet.ibm.com>
+Cc: Andi Kleen <ak@linux.intel.com>
+Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Cc: Viresh Kumar <viresh.kumar@linaro.org>
+Cc: linux-pm@vger.kernel.org
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Borislav Petkov <bp@alien8.de>
+Cc: "H. Peter Anvin" <hpa@zytor.com>
+Fixes: 45975c7d21a1 ("rcu: Define RCU-sched API in terms of RCU for Tree RCU PREEMPT builds")
+Signed-off-by: Ville Syrjälä <ville.syrjala@linux.intel.com>
+---
+ drivers/cpufreq/cpufreq.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/cpufreq/cpufreq.c b/drivers/cpufreq/cpufreq.c
+index c52d6fa32aac..6a8fb9b08e33 100644
+--- a/drivers/cpufreq/cpufreq.c
++++ b/drivers/cpufreq/cpufreq.c
+@@ -2761,4 +2761,4 @@ static int __init cpufreq_core_init(void)
+ 	return 0;
+ }
+ module_param(off, int, 0444);
+-core_initcall(cpufreq_core_init);
++late_initcall(cpufreq_core_init);
+-- 
+2.21.0
+
