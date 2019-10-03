@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F8D3C10F14
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:27:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D4D8EC4CED1
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:27:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6547720867
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:27:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 97C01222BE
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:27:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570120065;
-	bh=48xQrCMOZWQY0GMUtiT7ORhyY7JKh36Uou8DfkPsZ14=;
+	s=default; t=1570120068;
+	bh=Lc59sncasa5gS38TB/SVhDDqzccv+JjvHgvKuSv4u+I=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=dL88HjANHPRqBaAFXU3EPtRIJadGnFsyFl2PQ2uxWbMWllXHWGF6IjxTjNUgUCBJ3
-	 ykEFCVIfyYP74oGKMkGxQuL0zN6gB1mhipZeRsMzJl6qGt3sK0tZVGsXmin5WxvJ49
-	 1mgHmhEx9GY+V3wjvDrCcBDChfxRQ24p6oF0CaL0=
+	b=TO6HECGSZjTKpLFdtkh6kWqglWuU0cInoEhAUMJDwlfRLwT4OVvgq1/Iy1+8OqKCZ
+	 mzZTRfcAHP7bIa+25a1X0HXbXBy8IBBeBEiBl/mglsYTYTW2RNRGam5Gm5aWh1XrLA
+	 rCfxgGWglY0QPI46597dXa4cCESKNaUBfD/NSZdw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730176AbfJCQ1o (ORCPT
+        id S2390691AbfJCQ1s (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 12:27:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59748 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 12:27:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59810 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387971AbfJCQ1l (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:27:41 -0400
+        id S2391309AbfJCQ1n (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:27:43 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1378721783;
-        Thu,  3 Oct 2019 16:27:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D013020867;
+        Thu,  3 Oct 2019 16:27:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570120060;
-        bh=48xQrCMOZWQY0GMUtiT7ORhyY7JKh36Uou8DfkPsZ14=;
+        s=default; t=1570120063;
+        bh=Lc59sncasa5gS38TB/SVhDDqzccv+JjvHgvKuSv4u+I=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=NbCNnMgpoWdONlOZDrrypP2YnBsZQj3QwrdDa3VTaAHHYqHY4jLMOhE64J9w16nrZ
-         ZvP3gVFCevdJwPXNRFiuhyzS/4VlvCDLL6JgK4QzyJ1F3NzC7wosgrBp3VRZUqP0TU
-         PE+CIHpo185Rty7RjyioCcPSTxn5kWu1g6bcPTT0=
+        b=04NpvnNB1i8pbn4hgWtQAtV7GwfJlrDqudOPg+3z3SuZQCoTUkEUassKbtYZzyDrj
+         pnz++lVO9T/U5cdHS7Q5bO7ra2+j6xKzMKkN0Y8TCCntzowStYUT6/vGHFz1tdrVci
+         otdE6i/h0Zm8RJ32KzRRuUV5+lpQXacublmlNSSM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
-        Sean Young <sean@mess.org>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        stable@vger.kernel.org,
+        Hariprasad Kelam <hariprasad.kelam@gmail.com>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 044/313] media: dib0700: fix link error for dibx000_i2c_set_speed
-Date:   Thu,  3 Oct 2019 17:50:22 +0200
-Message-Id: <20191003154537.516567442@linuxfoundation.org>
+Subject: [PATCH 5.2 035/313] cpufreq: ap806: Add NULL check after kcalloc
+Date:   Thu,  3 Oct 2019 17:50:13 +0200
+Message-Id: <20191003154536.721814144@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191003154533.590915454@linuxfoundation.org>
 References: <20191003154533.590915454@linuxfoundation.org>
@@ -61,67 +61,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Arnd Bergmann <arnd@arndb.de>
+From: Hariprasad Kelam <hariprasad.kelam@gmail.com>
 
-[ Upstream commit 765bb8610d305ee488b35d07e2a04ae52fb2df9c ]
+[ Upstream commit 3355c91b79394593ebbb197c8e930a91826f4ff3 ]
 
-When CONFIG_DVB_DIB9000 is disabled, we can still compile code that
-now fails to link against dibx000_i2c_set_speed:
+Add NULL check  after kcalloc.
 
-drivers/media/usb/dvb-usb/dib0700_devices.o: In function `dib01x0_pmu_update.constprop.7':
-dib0700_devices.c:(.text.unlikely+0x1c9c): undefined reference to `dibx000_i2c_set_speed'
+Fix below issue reported by coccicheck
+./drivers/cpufreq/armada-8k-cpufreq.c:138:1-12: alloc with no test,
+possible model on line 151
 
-The call sites are both through dib01x0_pmu_update(), which gets passed
-an 'i2c' pointer from dib9000_get_i2c_master(), which has returned
-NULL. Checking this pointer seems to be a good idea anyway, and it avoids
-the link failure in most cases.
-
-Sean Young found another case that is not fixed by that, where certain
-gcc versions leave an unused function in place that causes the link error,
-but adding an explict IS_ENABLED() check also solves this.
-
-Fixes: b7f54910ce01 ("V4L/DVB (4647): Added module for DiB0700 based devices")
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-Signed-off-by: Sean Young <sean@mess.org>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Signed-off-by: Hariprasad Kelam <hariprasad.kelam@gmail.com>
+Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/usb/dvb-usb/dib0700_devices.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
+ drivers/cpufreq/armada-8k-cpufreq.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/media/usb/dvb-usb/dib0700_devices.c b/drivers/media/usb/dvb-usb/dib0700_devices.c
-index 66d685065e065..ab7a100ec84fe 100644
---- a/drivers/media/usb/dvb-usb/dib0700_devices.c
-+++ b/drivers/media/usb/dvb-usb/dib0700_devices.c
-@@ -2439,9 +2439,13 @@ static int dib9090_tuner_attach(struct dvb_usb_adapter *adap)
- 		8, 0x0486,
- 	};
+diff --git a/drivers/cpufreq/armada-8k-cpufreq.c b/drivers/cpufreq/armada-8k-cpufreq.c
+index 988ebc326bdbb..39e34f5066d3d 100644
+--- a/drivers/cpufreq/armada-8k-cpufreq.c
++++ b/drivers/cpufreq/armada-8k-cpufreq.c
+@@ -136,6 +136,8 @@ static int __init armada_8k_cpufreq_init(void)
  
-+	if (!IS_ENABLED(CONFIG_DVB_DIB9000))
-+		return -ENODEV;
- 	if (dvb_attach(dib0090_fw_register, adap->fe_adap[0].fe, i2c, &dib9090_dib0090_config) == NULL)
- 		return -ENODEV;
- 	i2c = dib9000_get_i2c_master(adap->fe_adap[0].fe, DIBX000_I2C_INTERFACE_GPIO_1_2, 0);
-+	if (!i2c)
-+		return -ENODEV;
- 	if (dib01x0_pmu_update(i2c, data_dib190, 10) != 0)
- 		return -ENODEV;
- 	dib0700_set_i2c_speed(adap->dev, 1500);
-@@ -2517,10 +2521,14 @@ static int nim9090md_tuner_attach(struct dvb_usb_adapter *adap)
- 		0, 0x00ef,
- 		8, 0x0406,
- 	};
-+	if (!IS_ENABLED(CONFIG_DVB_DIB9000))
-+		return -ENODEV;
- 	i2c = dib9000_get_tuner_interface(adap->fe_adap[0].fe);
- 	if (dvb_attach(dib0090_fw_register, adap->fe_adap[0].fe, i2c, &nim9090md_dib0090_config[0]) == NULL)
- 		return -ENODEV;
- 	i2c = dib9000_get_i2c_master(adap->fe_adap[0].fe, DIBX000_I2C_INTERFACE_GPIO_1_2, 0);
-+	if (!i2c)
-+		return -ENODEV;
- 	if (dib01x0_pmu_update(i2c, data_dib190, 10) < 0)
- 		return -ENODEV;
+ 	nb_cpus = num_possible_cpus();
+ 	freq_tables = kcalloc(nb_cpus, sizeof(*freq_tables), GFP_KERNEL);
++	if (!freq_tables)
++		return -ENOMEM;
+ 	cpumask_copy(&cpus, cpu_possible_mask);
  
+ 	/*
 -- 
 2.20.1
 
