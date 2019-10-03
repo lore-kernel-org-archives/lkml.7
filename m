@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 585F7C10F14
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:06:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43E63C10F14
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:06:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0EF3D20865
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:06:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0C3EF21A4C
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:06:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570118775;
-	bh=pCoRd6bnS+sX9P63yO/66v06j6A7fbqVov1eu9fZ5eg=;
+	s=default; t=1570118778;
+	bh=5QYmQZV2pA/DNpw4OFYIGRSt7i0ih+m90WhDxBYwo5o=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=B0jR0xPGZwG4z+lY9kUlCc8CJa9nXJ/jwlALSMG8ATeK1DOIvfDQrBN7X4NvHXkJ4
-	 2KpY6Z0PhJdIgzTyBt8F5TkFnhmifYiQyQRnXU9Jx1Ueaq+mmDDTYlG71hLfeq0n6t
-	 Eaz1+Yk4eDqrjK4EpZsjk7kM4d3BKx4mdkRMIFhE=
+	b=Nydd7mEMW7e+ljXryIxn42ZvAWUfAl8raCvEXQ1ac97kNvspg2p/Roux40NEWCfkG
+	 inENi+xktehnB+DmBpDPm/w2vveBzYN6Zm3ZES0UAxea7c/XqRfcpFqVy3VCMAPDDy
+	 DzTwA4THFlXfozGWg0xbYbTYewafqkG7v/eUn1TE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732719AbfJCQGO (ORCPT
+        id S1732724AbfJCQGR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 12:06:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53216 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 12:06:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53384 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732700AbfJCQGK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:06:10 -0400
+        id S1728763AbfJCQGQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:06:16 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C2EBB20865;
-        Thu,  3 Oct 2019 16:06:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 431D621783;
+        Thu,  3 Oct 2019 16:06:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570118769;
-        bh=pCoRd6bnS+sX9P63yO/66v06j6A7fbqVov1eu9fZ5eg=;
+        s=default; t=1570118774;
+        bh=5QYmQZV2pA/DNpw4OFYIGRSt7i0ih+m90WhDxBYwo5o=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qfauXTKsOc+pRVM+0YJdwtkclNa7viGZoKNeMWS2ls1YwFhPPZqnX5++bzTTzWicu
-         MlunTECzTjBWVNLDDQ74VghYjSoEFM+hm3B0d8kidHvRvCsKoX8igJugpzGwSxQVjB
-         SYlE+bXZEN591bo2RR50ZCzhqznpU84qk+LKniKQ=
+        b=jcyMf93JzmLbgh5oECPnTOiLGR063IqZS8XcDr0OC4uPzRVsQW1lg0K0LRRVAOs1Q
+         OCXkZc8rSlQjFPLsXRK7K7Zx6ujtAt/QrFijm2JxlvkdaCoJ+l+2dvxV9Fe18aq0cb
+         jZ48+jUWaBiJ128D8bRnmcL4zmPvqeM+Dc+4sZS0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Xiao Ni <xni@redhat.com>,
-        Song Liu <songliubraving@fb.com>
-Subject: [PATCH 4.9 118/129] md/raid6: Set R5_ReadError when there is read failure on parity disk
-Date:   Thu,  3 Oct 2019 17:54:01 +0200
-Message-Id: <20191003154414.369085980@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>,
+        syzbot <syzbot+8ab2d0f39fb79fe6ca40@syzkaller.appspotmail.com>
+Subject: [PATCH 4.9 120/129] /dev/mem: Bail out upon SIGKILL.
+Date:   Thu,  3 Oct 2019 17:54:03 +0200
+Message-Id: <20191003154415.367645290@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191003154318.081116689@linuxfoundation.org>
 References: <20191003154318.081116689@linuxfoundation.org>
@@ -59,46 +60,112 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Xiao Ni <xni@redhat.com>
+From: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
 
-commit 143f6e733b73051cd22dcb80951c6c929da413ce upstream.
+commit 8619e5bdeee8b2c685d686281f2d2a6017c4bc15 upstream.
 
-7471fb77ce4d ("md/raid6: Fix anomily when recovering a single device in
-RAID6.") avoids rereading P when it can be computed from other members.
-However, this misses the chance to re-write the right data to P. This
-patch sets R5_ReadError if the re-read fails.
+syzbot found that a thread can stall for minutes inside read_mem() or
+write_mem() after that thread was killed by SIGKILL [1]. Reading from
+iomem areas of /dev/mem can be slow, depending on the hardware.
+While reading 2GB at one read() is legal, delaying termination of killed
+thread for minutes is bad. Thus, allow reading/writing /dev/mem and
+/dev/kmem to be preemptible and killable.
 
-Also, when re-read is skipped, we also missed the chance to reset
-rdev->read_errors to 0. It can fail the disk when there are many read
-errors on P member disk (other disks don't have read error)
+  [ 1335.912419][T20577] read_mem: sz=4096 count=2134565632
+  [ 1335.943194][T20577] read_mem: sz=4096 count=2134561536
+  [ 1335.978280][T20577] read_mem: sz=4096 count=2134557440
+  [ 1336.011147][T20577] read_mem: sz=4096 count=2134553344
+  [ 1336.041897][T20577] read_mem: sz=4096 count=2134549248
 
-V2: upper layer read request don't read parity/Q data. So there is no
-need to consider such situation.
+Theoretically, reading/writing /dev/mem and /dev/kmem can become
+"interruptible". But this patch chose "killable". Future patch will make
+them "interruptible" so that we can revert to "killable" if some program
+regressed.
 
-This is Reported-by: kbuild test robot <lkp@intel.com>
+[1] https://syzkaller.appspot.com/bug?id=a0e3436829698d5824231251fad9d8e998f94f5e
 
-Fixes: 7471fb77ce4d ("md/raid6: Fix anomily when recovering a single device in RAID6.")
-Cc: <stable@vger.kernel.org> #4.4+
-Signed-off-by: Xiao Ni <xni@redhat.com>
-Signed-off-by: Song Liu <songliubraving@fb.com>
+Signed-off-by: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
+Cc: stable <stable@vger.kernel.org>
+Reported-by: syzbot <syzbot+8ab2d0f39fb79fe6ca40@syzkaller.appspotmail.com>
+Link: https://lore.kernel.org/r/1566825205-10703-1-git-send-email-penguin-kernel@I-love.SAKURA.ne.jp
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/md/raid5.c |    4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/char/mem.c |   21 +++++++++++++++++++++
+ 1 file changed, 21 insertions(+)
 
---- a/drivers/md/raid5.c
-+++ b/drivers/md/raid5.c
-@@ -2416,7 +2416,9 @@ static void raid5_end_read_request(struc
- 		    && !test_bit(R5_ReadNoMerge, &sh->dev[i].flags))
- 			retry = 1;
- 		if (retry)
--			if (test_bit(R5_ReadNoMerge, &sh->dev[i].flags)) {
-+			if (sh->qd_idx >= 0 && sh->pd_idx == i)
-+				set_bit(R5_ReadError, &sh->dev[i].flags);
-+			else if (test_bit(R5_ReadNoMerge, &sh->dev[i].flags)) {
- 				set_bit(R5_ReadError, &sh->dev[i].flags);
- 				clear_bit(R5_ReadNoMerge, &sh->dev[i].flags);
- 			} else
+--- a/drivers/char/mem.c
++++ b/drivers/char/mem.c
+@@ -96,6 +96,13 @@ void __weak unxlate_dev_mem_ptr(phys_add
+ }
+ #endif
+ 
++static inline bool should_stop_iteration(void)
++{
++	if (need_resched())
++		cond_resched();
++	return fatal_signal_pending(current);
++}
++
+ /*
+  * This funcion reads the *physical* memory. The f_pos points directly to the
+  * memory location.
+@@ -162,6 +169,8 @@ static ssize_t read_mem(struct file *fil
+ 		p += sz;
+ 		count -= sz;
+ 		read += sz;
++		if (should_stop_iteration())
++			break;
+ 	}
+ 
+ 	*ppos += read;
+@@ -233,6 +242,8 @@ static ssize_t write_mem(struct file *fi
+ 		p += sz;
+ 		count -= sz;
+ 		written += sz;
++		if (should_stop_iteration())
++			break;
+ 	}
+ 
+ 	*ppos += written;
+@@ -446,6 +457,10 @@ static ssize_t read_kmem(struct file *fi
+ 			read += sz;
+ 			low_count -= sz;
+ 			count -= sz;
++			if (should_stop_iteration()) {
++				count = 0;
++				break;
++			}
+ 		}
+ 	}
+ 
+@@ -470,6 +485,8 @@ static ssize_t read_kmem(struct file *fi
+ 			buf += sz;
+ 			read += sz;
+ 			p += sz;
++			if (should_stop_iteration())
++				break;
+ 		}
+ 		free_page((unsigned long)kbuf);
+ 	}
+@@ -522,6 +539,8 @@ static ssize_t do_write_kmem(unsigned lo
+ 		p += sz;
+ 		count -= sz;
+ 		written += sz;
++		if (should_stop_iteration())
++			break;
+ 	}
+ 
+ 	*ppos += written;
+@@ -573,6 +592,8 @@ static ssize_t write_kmem(struct file *f
+ 			buf += sz;
+ 			virtr += sz;
+ 			p += sz;
++			if (should_stop_iteration())
++				break;
+ 		}
+ 		free_page((unsigned long)kbuf);
+ 	}
 
 
