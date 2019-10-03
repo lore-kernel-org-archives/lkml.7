@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00F8BC4CED1
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 00:27:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C0A67C4360C
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 00:27:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CC659222C3
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 00:27:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 81493222C2
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 00:27:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570062439;
-	bh=baLTMdx07iCqRCWMuubQkKARX70LMzRzCtll0Y/P/5M=;
+	s=default; t=1570062443;
+	bh=p+9lrgqJ+SbV5LAKbQmR9qhA+3HGIUyw41ATVWidbeg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=QkhLc9XXNkGxx4Pg2z81MQBUeNBMWl2o28mgfyIn1tnu+7s026ohFiyAGKlvqTVEX
-	 lf4LBWuz9qhhlVpSoMYjT00jphGuuMcGFHk9er2HGSxXv9qKu2WVr9AMCHQWzM+mfZ
-	 p6WEOAmhHiza2s36mgrYQvxBPw7KpyJI6r/1WsTI=
+	b=wUCpQDTZ/53jvIeHgPfCBAoidk3XP3naqzn6sgtGIwBP45aetUerVv/7353siZCl6
+	 Pd2ZYKgE5jeFxfOyFoeM1htvgQHaJL/1XNV6LzuV2AO7FcLKyUzpR52gU2lr7fJ9iJ
+	 BgkI6UGIk2jAFnQ53qyi+5T7bGqOfryS/GEpntGw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729773AbfJCA1H (ORCPT
+        id S1729734AbfJCA1D (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Oct 2019 20:27:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56118 "EHLO mail.kernel.org"
+        Wed, 2 Oct 2019 20:27:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56262 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729651AbfJCA06 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Oct 2019 20:26:58 -0400
+        id S1729617AbfJCA04 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 2 Oct 2019 20:26:56 -0400
 Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1A70B2245B;
-        Thu,  3 Oct 2019 00:26:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5A2DE222CB;
+        Thu,  3 Oct 2019 00:26:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570062417;
-        bh=baLTMdx07iCqRCWMuubQkKARX70LMzRzCtll0Y/P/5M=;
+        s=default; t=1570062415;
+        bh=p+9lrgqJ+SbV5LAKbQmR9qhA+3HGIUyw41ATVWidbeg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=UEh8njNzMoJkMJy7mckQqaagh1d/ebBYfp02Cmc1X7IlTiSuEXUVHyqOx4ni66g90
-         UTqumMFrnLoRpSHBIPNRnuWyudBrzbuprvqvfMPByIv1ww2L7ggy6tv1rE+PWbmu90
-         woTLJZmZSzy85DL9e3G7UhYJbcxdtXCmxaV1z4Ds=
+        b=SuZZU0iQO1tIocmq7UxBvm8BhEHpCjUTGhcKU6x+SakkWpBkYqnZ19S4d3FH7cpI6
+         y4+wZlWQweMM/5DYJGgf0khekuDbdoF622wv/k8iBwdek9slS4FBamrTzjmEexcuGE
+         63joUWA0mWNhe4YubiBKTLx0LgTeVr+1bcPLbonU=
 From:   paulmck@kernel.org
 To:     linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
         mingo@kernel.org
@@ -46,9 +46,9 @@ Cc:     stern@rowland.harvard.edu, parri.andrea@gmail.com, will@kernel.org,
         peterz@infradead.org, boqun.feng@gmail.com, npiggin@gmail.com,
         dhowells@redhat.com, j.alglave@ucl.ac.uk, luc.maranget@inria.fr,
         akiyks@gmail.com, "Paul E. McKenney" <paulmck@linux.ibm.com>
-Subject: [PATCH tip/core/rcu 17/32] tools/memory-model: Make runlitmus.sh generate .litmus.out for --hw
-Date:   Wed,  2 Oct 2019 17:26:35 -0700
-Message-Id: <20191003002650.11249-17-paulmck@kernel.org>
+Subject: [PATCH tip/core/rcu 11/32] tools/memory-model: Make judgelitmus.sh handle hardware verifications
+Date:   Wed,  2 Oct 2019 17:26:29 -0700
+Message-Id: <20191003002650.11249-11-paulmck@kernel.org>
 X-Mailer: git-send-email 2.9.5
 In-Reply-To: <20191003001039.GA8027@paulmck-ThinkPad-P72>
 References: <20191003001039.GA8027@paulmck-ThinkPad-P72>
@@ -59,93 +59,192 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: "Paul E. McKenney" <paulmck@linux.ibm.com>
 
-In the absence of "Result:" comments, the runlitmus.sh script relies on
-litmus.out files from prior LKMM runs.  This can be a bit user-hostile,
-so this commit makes runlitmus.sh generate any needed .litmus.out files
-that don't already exist.
+This commit makes the judgelitmus.sh script check the --hw argument
+(AKA the LKMM_HW_MAP_FILE environment variable) and to adjust its
+judgment for a run where a C-language litmus test has been translated to
+assembly and the assembly version verified.  In this case, the assembly
+verification output is checked against the C-language script's "Result:"
+comment.  However, because hardware can be stronger than LKMM requires,
+the judgelitmus.sh script forgives verification mismatches featuring
+a "Sometimes" in the C-language script and an "Always" or "Never"
+assembly-language verification.
+
+Note that deadlock is not forgiven, however, this should not normally be
+an issue given that C-language tests containing locking, RCU, or SRCU
+cannot be translated to assembly.  However, this issue can crop up in
+litmus tests that mimic deadlock by using the "filter" clause to ignore
+all executions.  It can also crop up when certain herd arguments are
+used to autofilter everything that does not match the "exists" clause
+in cases where the "exists" clause cannot be satisfied.
 
 Signed-off-by: Paul E. McKenney <paulmck@linux.ibm.com>
 ---
- tools/memory-model/scripts/runlitmus.sh | 54 ++++++++++++++++++---------------
- 1 file changed, 30 insertions(+), 24 deletions(-)
+ tools/memory-model/scripts/README         |  8 ++--
+ tools/memory-model/scripts/judgelitmus.sh | 75 +++++++++++++++++++------------
+ 2 files changed, 51 insertions(+), 32 deletions(-)
 
-diff --git a/tools/memory-model/scripts/runlitmus.sh b/tools/memory-model/scripts/runlitmus.sh
-index 91af859..2865a96 100755
---- a/tools/memory-model/scripts/runlitmus.sh
-+++ b/tools/memory-model/scripts/runlitmus.sh
-@@ -28,42 +28,48 @@ if test -f "$litmus" -a -r "$litmus"
+diff --git a/tools/memory-model/scripts/README b/tools/memory-model/scripts/README
+index 095c7eb..0e29a52 100644
+--- a/tools/memory-model/scripts/README
++++ b/tools/memory-model/scripts/README
+@@ -43,10 +43,10 @@ initlitmushist.sh
+ 
+ judgelitmus.sh
+ 
+-	Given a .litmus file and its .litmus.out herd7 output, check the
+-	.litmus.out file against the .litmus file's "Result:" comment to
+-	judge whether the test ran correctly.  Not normally run manually,
+-	provided instead for use by other scripts.
++	Given a .litmus file and its herd7 output, check the output file
++	against the .litmus file's "Result:" comment to judge whether
++	the test ran correctly.  Not normally run manually, provided
++	instead for use by other scripts.
+ 
+ newlitmushist.sh
+ 
+diff --git a/tools/memory-model/scripts/judgelitmus.sh b/tools/memory-model/scripts/judgelitmus.sh
+index d82133e..6f3c600 100755
+--- a/tools/memory-model/scripts/judgelitmus.sh
++++ b/tools/memory-model/scripts/judgelitmus.sh
+@@ -1,9 +1,14 @@
+ #!/bin/sh
+ # SPDX-License-Identifier: GPL-2.0+
+ #
+-# Given a .litmus test and the corresponding .litmus.out file, check
+-# the .litmus.out file against the "Result:" comment to judge whether
+-# the test ran correctly.
++# Given a .litmus test and the corresponding litmus output file, check
++# the .litmus.out file against the "Result:" comment to judge whether the
++# test ran correctly.  If the --hw argument is omitted, check against the
++# LKMM output, which is assumed to be in file.litmus.out.  If this argument
++# is provided, this is assumed to be a hardware test, and the output is
++# assumed to be in file.HW.litmus.out, where "HW" is the --hw argument.
++# In addition, non-Sometimes verification results will be noted, but
++# forgiven.
+ #
+ # Usage:
+ #	judgelitmus.sh file.litmus
+@@ -24,11 +29,18 @@ else
+ 	echo ' --- ' error: \"$litmus\" is not a readable file
+ 	exit 255
+ fi
+-if test -f "$LKMM_DESTDIR/$litmus".out -a -r "$LKMM_DESTDIR/$litmus".out
++if test -z "$LKMM_HW_MAP_FILE"
++then
++	litmusout=$litmus.out
++else
++	litmusout="`echo $litmus |
++		sed -e 's/\.litmus$/.'${LKMM_HW_MAP_FILE}'.litmus/'`.out"
++fi
++if test -f "$LKMM_DESTDIR/$litmusout" -a -r "$LKMM_DESTDIR/$litmusout"
  then
  	:
  else
--	echo ' --- ' error: \"$litmus\" is not a readable file
-+	echo ' !!! ' error: \"$litmus\" is not a readable file
+-	echo ' --- ' error: \"$LKMM_DESTDIR/$litmus\".out is not a readable file
++	echo ' --- ' error: \"$LKMM_DESTDIR/$litmusout is not a readable file
  	exit 255
  fi
- 
--if test -z "$LKMM_HW_MAP_FILE"
-+if test -z "$LKMM_HW_MAP_FILE" -o ! -e $LKMM_DESTDIR/$litmus.out
- then
- 	# LKMM run
- 	herdoptions=${LKMM_HERD_OPTIONS--conf linux-kernel.cfg}
- 	echo Herd options: $herdoptions > $LKMM_DESTDIR/$litmus.out
- 	/usr/bin/time $LKMM_TIMEOUT_CMD herd7 $herdoptions $litmus >> $LKMM_DESTDIR/$litmus.out 2>&1
--else
--	# Hardware run
-+	ret=$?
-+	if test -z "$LKMM_HW_MAP_FILE"
-+	then
-+		exit $ret
-+	fi
-+	echo " --- " Automatically generated LKMM output for '"'--hw $LKMM_HW_MAP_FILE'"' run
-+fi
- 
--	T=/tmp/checklitmushw.sh.$$
--	trap 'rm -rf $T' 0 2
--	mkdir $T
-+# Hardware run
- 
--	# Generate filenames
--	catfile="`echo $LKMM_HW_MAP_FILE | tr '[A-Z]' '[a-z]'`.cat"
--	mapfile="Linux2${LKMM_HW_MAP_FILE}.map"
--	themefile="$T/${LKMM_HW_MAP_FILE}.theme"
--	herdoptions="-model $LKMM_HW_CAT_FILE"
--	hwlitmus=`echo $litmus | sed -e 's/\.litmus$/.'${LKMM_HW_MAP_FILE}'.litmus/'`
--	hwlitmusfile=`echo $hwlitmus | sed -e 's,^.*/,,'`
-+T=/tmp/checklitmushw.sh.$$
-+trap 'rm -rf $T' 0 2
-+mkdir $T
- 
--	# Don't run on litmus tests with complex synchronization
--	if ! scripts/simpletest.sh $litmus
--	then
--		echo ' --- ' error: \"$litmus\" contains locking, RCU, or SRCU
--		exit 254
--	fi
-+# Generate filenames
-+catfile="`echo $LKMM_HW_MAP_FILE | tr '[A-Z]' '[a-z]'`.cat"
-+mapfile="Linux2${LKMM_HW_MAP_FILE}.map"
-+themefile="$T/${LKMM_HW_MAP_FILE}.theme"
-+herdoptions="-model $LKMM_HW_CAT_FILE"
-+hwlitmus=`echo $litmus | sed -e 's/\.litmus$/.'${LKMM_HW_MAP_FILE}'.litmus/'`
-+hwlitmusfile=`echo $hwlitmus | sed -e 's,^.*/,,'`
- 
--	# Generate the assembly code and run herd on it.
--	gen_theme7 -n 10 -map $mapfile -call Linux.call > $themefile
--	jingle7 -theme $themefile $litmus > $T/$hwlitmusfile 2> $T/$hwlitmusfile.jingle7.out
--	/usr/bin/time $LKMM_TIMEOUT_CMD herd7 -model $catfile $T/$hwlitmusfile > $LKMM_DESTDIR/$hwlitmus.out 2>&1
-+# Don't run on litmus tests with complex synchronization
-+if ! scripts/simpletest.sh $litmus
-+then
-+	echo ' --- ' error: \"$litmus\" contains locking, RCU, or SRCU
-+	exit 254
+ if grep -q '^ \* Result: ' $litmus
+@@ -38,69 +50,76 @@ else
+ 	outcome=specified
  fi
  
-+# Generate the assembly code and run herd7 on it.
-+gen_theme7 -n 10 -map $mapfile -call Linux.call > $themefile
-+jingle7 -theme $themefile $litmus > $T/$hwlitmusfile 2> $T/$hwlitmusfile.jingle7.out
-+/usr/bin/time $LKMM_TIMEOUT_CMD herd7 -model $catfile $T/$hwlitmusfile > $LKMM_DESTDIR/$hwlitmus.out 2>&1
-+
- exit $?
+-grep '^Observation' $LKMM_DESTDIR/$litmus.out
+-if grep -q '^Observation' $LKMM_DESTDIR/$litmus.out
++grep '^Observation' $LKMM_DESTDIR/$litmusout
++if grep -q '^Observation' $LKMM_DESTDIR/$litmusout
+ then
+ 	:
+-elif grep ': Unknown macro ' $LKMM_DESTDIR/$litmus.out
++elif grep ': Unknown macro ' $LKMM_DESTDIR/$litmusout
+ then
+-	badname=`grep ': Unknown macro ' $LKMM_DESTDIR/$litmus.out |
++	badname=`grep ': Unknown macro ' $LKMM_DESTDIR/$litmusout |
+ 		sed -e 's/^.*: Unknown macro //' |
+ 		sed -e 's/ (User error).*$//'`
+ 	badmsg=' !!! Current LKMM version does not know "'$badname'"'" $litmus"
+ 	echo $badmsg
+-	if ! grep -q '!!!' $LKMM_DESTDIR/$litmus.out
++	if ! grep -q '!!!' $LKMM_DESTDIR/$litmusout
+ 	then
+-		echo ' !!! '$badmsg >> $LKMM_DESTDIR/$litmus.out 2>&1
++		echo ' !!! '$badmsg >> $LKMM_DESTDIR/$litmusout 2>&1
+ 	fi
+ 	exit 254
+-elif grep '^Command exited with non-zero status 124' $LKMM_DESTDIR/$litmus.out
++elif grep '^Command exited with non-zero status 124' $LKMM_DESTDIR/$litmusout
+ then
+ 	echo ' !!! Timeout' $litmus
+-	if ! grep -q '!!!' $LKMM_DESTDIR/$litmus.out
++	if ! grep -q '!!!' $LKMM_DESTDIR/$litmusout
+ 	then
+-		echo ' !!! Timeout' >> $LKMM_DESTDIR/$litmus.out 2>&1
++		echo ' !!! Timeout' >> $LKMM_DESTDIR/$litmusout 2>&1
+ 	fi
+ 	exit 124
+ else
+ 	echo ' !!! Verification error' $litmus
+-	if ! grep -q '!!!' $LKMM_DESTDIR/$litmus.out
++	if ! grep -q '!!!' $LKMM_DESTDIR/$litmusout
+ 	then
+-		echo ' !!! Verification error' >> $LKMM_DESTDIR/$litmus.out 2>&1
++		echo ' !!! Verification error' >> $LKMM_DESTDIR/$litmusout 2>&1
+ 	fi
+ 	exit 255
+ fi
+ if test "$outcome" = DEADLOCK
+ then
+-	if grep '^Observation' $LKMM_DESTDIR/$litmus.out | grep -q 'Never 0 0$'
++	if grep '^Observation' $LKMM_DESTDIR/$litmusout | grep -q 'Never 0 0$'
+ 	then
+ 		ret=0
+ 	else
+ 		echo " !!! Unexpected non-$outcome verification" $litmus
+-		if ! grep -q '!!!' $LKMM_DESTDIR/$litmus.out
++		if ! grep -q '!!!' $LKMM_DESTDIR/$litmusout
+ 		then
+-			echo " !!! Unexpected non-$outcome verification" >> $LKMM_DESTDIR/$litmus.out 2>&1
++			echo " !!! Unexpected non-$outcome verification" >> $LKMM_DESTDIR/$litmusout 2>&1
+ 		fi
+ 		ret=1
+ 	fi
+-elif grep '^Observation' $LKMM_DESTDIR/$litmus.out | grep -q 'Never 0 0$'
++elif grep '^Observation' $LKMM_DESTDIR/$litmusout | grep -q 'Never 0 0$'
+ then
+ 	echo " !!! Unexpected non-$outcome deadlock" $litmus
+-	if ! grep -q '!!!' $LKMM_DESTDIR/$litmus.out
++	if ! grep -q '!!!' $LKMM_DESTDIR/$litmusout
+ 	then
+-		echo " !!! Unexpected non-$outcome deadlock" $litmus >> $LKMM_DESTDIR/$litmus.out 2>&1
++		echo " !!! Unexpected non-$outcome deadlock" $litmus >> $LKMM_DESTDIR/$litmusout 2>&1
+ 	fi
+ 	ret=1
+-elif grep '^Observation' $LKMM_DESTDIR/$litmus.out | grep -q $outcome || test "$outcome" = Maybe
++elif grep '^Observation' $LKMM_DESTDIR/$litmusout | grep -q $outcome || test "$outcome" = Maybe
+ then
+ 	ret=0
+ else
+-	echo " !!! Unexpected non-$outcome verification" $litmus
+-	if ! grep -q '!!!' $LKMM_DESTDIR/$litmus.out
++	if test -n "$LKMM_HW_MAP_FILE" -a "$outcome" = Sometimes
+ 	then
+-		echo " !!! Unexpected non-$outcome verification" >> $LKMM_DESTDIR/$litmus.out 2>&1
++		flag="--- Forgiven"
++		ret=0
++	else
++		flag="!!! Unexpected"
++		ret=1
++	fi
++	echo " $flag non-$outcome verification" $litmus
++	if ! grep -qe "$flag" $LKMM_DESTDIR/$litmusout
++	then
++		echo " $flag non-$outcome verification" >> $LKMM_DESTDIR/$litmusout 2>&1
+ 	fi
+-	ret=1
+ fi
+-tail -2 $LKMM_DESTDIR/$litmus.out | head -1
++tail -2 $LKMM_DESTDIR/$litmusout | head -1
+ exit $ret
 -- 
 2.9.5
 
