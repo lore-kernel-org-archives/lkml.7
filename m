@@ -2,99 +2,136 @@ Return-Path: <SRS0=6dNS=X4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1640FC10F14
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 11:19:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69819C4CED1
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 11:21:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D913821A4C
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 11:19:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 40B5620673
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 11:21:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="ApEpOv4I"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="e5yyq1MX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729948AbfJCLTS (ORCPT
+        id S1729934AbfJCLVs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 07:19:18 -0400
-Received: from mail-qk1-f194.google.com ([209.85.222.194]:38999 "EHLO
-        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729241AbfJCLTR (ORCPT
+        Thu, 3 Oct 2019 07:21:48 -0400
+Received: from aserp2120.oracle.com ([141.146.126.78]:58872 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729304AbfJCLVs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 07:19:17 -0400
-Received: by mail-qk1-f194.google.com with SMTP id 4so1918792qki.6
-        for <linux-kernel@vger.kernel.org>; Thu, 03 Oct 2019 04:19:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lca.pw; s=google;
-        h=content-transfer-encoding:from:mime-version:subject:date:message-id
-         :references:cc:in-reply-to:to;
-        bh=j+LY7SBrpaPWN8ZunyPxCza+/gP8sBOqig05DwJQYFY=;
-        b=ApEpOv4IeWriJlUn5gRN+xzsCLmXeQKY2qkAlssw/67TrWl8dFK4APF2cv08pUeA6K
-         9CnxQldWMkRybFAcjZwqMtlRUh9GD3p4u3izVKX+2yIFQ0h84BvB5Pq2zRJzrjPgVOLs
-         RO55OzYh2I+zLOKDt+z9zOtlbMgYzJeH38h6Yr0lm7R/ISMb8Y85zLXfYhWZKgfC0DMV
-         uPQbfGX+yojWi9Dc0b6OzVUM+X5qDzxZcjnjzHO7c4D0RYpvVaDLn5HOJkpdGoJhVS51
-         fXTj8enyEH1b6iZJL3lvF7+m7PGoqV5BYeVl9KA+Xbtt5mnI67+xaj12xy+rYbQJVZiO
-         pUXg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:content-transfer-encoding:from:mime-version
-         :subject:date:message-id:references:cc:in-reply-to:to;
-        bh=j+LY7SBrpaPWN8ZunyPxCza+/gP8sBOqig05DwJQYFY=;
-        b=AByj/DJFiLkbLlUTLt0Razn7Y1DrIyJHywx6AwbYl8PeOYzmTCaNs4cDiOLcEeSQ3a
-         ogNCtipWB5TIshHXz58TW8Yxnl/t7QCB1Yc/LwgFZ6JXqypmGkhXINB5I2FNritGzUXb
-         86G4ew+o2h+KA3LsQZfcMZySlZmWiBDa3jkoCOzUeuj9C9MkhomBqd4GBI8tT7dswv5W
-         7S80NFKKh0bI52IsrIgkZIIIdA+b3zrCfmjP0gjf+Ee3wkEUwQR93DRPeE6kZGSYI4Pe
-         1B8UVOo9zRvnjW7WeCIILBx79/45Pn/0I2XXYPIyB+AoKnrmxqSZJUpMUbkgVDjQ0LzF
-         Khag==
-X-Gm-Message-State: APjAAAVPNtaTfd75HRi8endBNEf+tIPuQih71zyDo5+EWYCarzMjWKTp
-        j1W4PwQXj6ZBnN7wCjdDibGL2w==
-X-Google-Smtp-Source: APXvYqxW4gB/kYtHI5Of00L1W60hX0JJhtdRgri4WP/QFf4o/BePI+7/OvNdO3N3HdmZ3pS3PHx9BQ==
-X-Received: by 2002:ae9:f215:: with SMTP id m21mr3781093qkg.47.1570101556499;
-        Thu, 03 Oct 2019 04:19:16 -0700 (PDT)
-Received: from [192.168.1.183] (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
-        by smtp.gmail.com with ESMTPSA id z38sm1355269qtj.83.2019.10.03.04.19.15
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 03 Oct 2019 04:19:15 -0700 (PDT)
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: quoted-printable
-From:   Qian Cai <cai@lca.pw>
-Mime-Version: 1.0 (1.0)
-Subject: Re: [PATCH] mm/page_alloc: Add a reason for reserved pages in has_unmovable_pages()
-Date:   Thu, 3 Oct 2019 07:19:15 -0400
-Message-Id: <285C0297-BF27-4095-87B6-AFC88C1F3C0F@lca.pw>
-References: <37b43978-5652-576c-8990-451e751b7c67@arm.com>
-Cc:     linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>,
-        Michal Hocko <mhocko@suse.com>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Oscar Salvador <osalvador@suse.de>,
-        Mel Gorman <mgorman@techsingularity.net>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Pavel Tatashin <pavel.tatashin@microsoft.com>,
-        linux-kernel@vger.kernel.org
-In-Reply-To: <37b43978-5652-576c-8990-451e751b7c67@arm.com>
-To:     Anshuman Khandual <Anshuman.Khandual@arm.com>
-X-Mailer: iPhone Mail (17A844)
+        Thu, 3 Oct 2019 07:21:48 -0400
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x93BKtFP077082;
+        Thu, 3 Oct 2019 11:21:19 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2019-08-05;
+ bh=r4fTn8v6IGQxS08sc1goJtM+I/0/djaSKLGXMb40fsQ=;
+ b=e5yyq1MXb9D1cVJWuSpSzQlncmeIGGVzbUJi1XYPsgWf3uJ5TmIe9IwU8e9ny9xUFe5l
+ 5wbE6dydFNwoYWxokzezK4H7V3w/tU9sp0W6alvQU5VvqcAkrSKIdtI/UXym9i+xuqOB
+ 9cvzaWMqOx3sBK3AZdouei990kc7BSUEnboi3tLw6ycwyWyCrn5SJR1Pvpz8PgNPVHbb
+ Gvgbvsl2zkWDbQFqbtFPAMbUuGijQyw9SHbDRrDs4uVF3+I1lbpdv2SL01GMijCC6xx/
+ 3Q2WKLjRNZiQaTIv5L1iG9MoZVVkjYXUhkZJraIihTkWYe82AHLha5L2AEyLaeDh/Mvv /g== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by aserp2120.oracle.com with ESMTP id 2v9yfqk6nf-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 03 Oct 2019 11:21:19 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x93BKLY5174632;
+        Thu, 3 Oct 2019 11:21:18 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by userp3030.oracle.com with ESMTP id 2vcg63e8b2-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 03 Oct 2019 11:21:18 +0000
+Received: from abhmp0010.oracle.com (abhmp0010.oracle.com [141.146.116.16])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x93BLECk026220;
+        Thu, 3 Oct 2019 11:21:14 GMT
+Received: from [10.191.0.240] (/10.191.0.240)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Thu, 03 Oct 2019 04:21:14 -0700
+Subject: Re: [PATCH v3 3/4] xen: Mark "xen_nopvspin" parameter obsolete and
+ map it to "nopvspin"
+To:     Sean Christopherson <sean.j.christopherson@intel.com>
+Cc:     linux-kernel@vger.kernel.org, vkuznets@redhat.com,
+        linux-hyperv@vger.kernel.org, kvm@vger.kernel.org,
+        Jonathan Corbet <corbet@lwn.net>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Juergen Gross <jgross@suse.com>,
+        Stefano Stabellini <sstabellini@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>
+References: <1569847479-13201-1-git-send-email-zhenzhong.duan@oracle.com>
+ <1569847479-13201-4-git-send-email-zhenzhong.duan@oracle.com>
+ <20191002171805.GD9615@linux.intel.com>
+From:   Zhenzhong Duan <zhenzhong.duan@oracle.com>
+Organization: Oracle Corporation
+Message-ID: <cbfb13ec-bd0c-d9df-e61e-8a08f2c9f526@oracle.com>
+Date:   Thu, 3 Oct 2019 19:21:11 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
+MIME-Version: 1.0
+In-Reply-To: <20191002171805.GD9615@linux.intel.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9398 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1908290000 definitions=main-1910030106
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9398 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1908290000
+ definitions=main-1910030106
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
+On 2019/10/3 1:18, Sean Christopherson wrote:
+> On Mon, Sep 30, 2019 at 08:44:38PM +0800, Zhenzhong Duan wrote:
+>> Fix stale description of "xen_nopvspin" as we use qspinlock now.
+>>
+>> Signed-off-by: Zhenzhong Duan<zhenzhong.duan@oracle.com>
+>> Reviewed-by: Juergen Gross<jgross@suse.com>
+>> Cc: Jonathan Corbet<corbet@lwn.net>
+>> Cc: Boris Ostrovsky<boris.ostrovsky@oracle.com>
+>> Cc: Juergen Gross<jgross@suse.com>
+>> Cc: Stefano Stabellini<sstabellini@kernel.org>
+>> Cc: Thomas Gleixner<tglx@linutronix.de>
+>> Cc: Ingo Molnar<mingo@redhat.com>
+>> Cc: Borislav Petkov<bp@alien8.de>
+>> Cc: "H. Peter Anvin"<hpa@zytor.com>
+>> ---
+...snip
+>> @@ -93,7 +92,7 @@ void xen_init_lock_cpu(int cpu)
+>>   
+>>   void xen_uninit_lock_cpu(int cpu)
+>>   {
+>> -	if (!xen_pvspin)
+>> +	if (!pvspin)
+>>   		return;
+>>   
+>>   	unbind_from_irqhandler(per_cpu(lock_kicker_irq, cpu), NULL);
+>> @@ -117,9 +116,9 @@ void __init xen_init_spinlocks(void)
+>>   
+>>   	/*  Don't need to use pvqspinlock code if there is only 1 vCPU. */
+>>   	if (num_possible_cpus() == 1)
+>> -		xen_pvspin = false;
+>> +		pvspin = false;
+> As suggested in the other patch, if you incorporate pvspin (or nopvspin)
+> into xen_pvspin then the param can be __initdata and the diff for this
+> patch will be smaller, e.g. you wouldn't need the xen_domain() shenanigans
+> in xen_parse_nopvspin().
 
-> On Oct 3, 2019, at 5:32 AM, Anshuman Khandual <Anshuman.Khandual@arm.com> w=
-rote:
->=20
-> Even though page flags does contain reserved bit information, the problem
-> is that we are explicitly printing the reason for this page dump. In this
-> case it is caused by the fact that it is a reserved page.
->=20
-> page dumped because: <reason>
->=20
-> The proposed change makes it explicit that the dump is caused because a
-> non movable page with reserved bit set. It also helps in differentiating=20=
+Ok, will fix. Thanks
 
-> between reserved bit condition and the last one "if (found > count)".
+Zhenzhong
 
-Then, someone later would like to add a reason for every different page flag=
-s just because they *think* they are special.=
