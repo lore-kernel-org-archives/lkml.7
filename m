@@ -4,52 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D0F1C4CED1
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:11:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 022F9C10F14
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:11:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DF1A32054F
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:11:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C99BF20865
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:11:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570119103;
-	bh=4TiQxJJfR3qDJTi4w87i1jLrhWKWJHCVRA0qnfV3P2g=;
+	s=default; t=1570119110;
+	bh=d4ncFyiCsd77a457JAwmaPtaDLK0wuqOVsHZty0nllA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=A58XyLpOqbmD4xALCNIBLQuUyNQD7kAKlpui7gqbm/LTxWS6/Ty36uk0VZnJaqoyw
-	 E4yt3JgOjh00Vsv6h4cEPrVTpznSTZDKWkGhVUbUH8G04TiBPr5uZQaVQ9zSN8ufjb
-	 xR5X1S2WTmZCH51ekfWUxI+6FWx4pODzNSTCRG5s=
+	b=uh1mm6/SilXpFYGK7Vao5BNeP45NGVEER3wCfQa9s7d/Tw6lRbclhVpU8TGtKVO4I
+	 4nPcfDYRuxO3jbBwzUo+fPO11Z5WIT0ZpAX2cUqwju/AU4d5s6TaJwAASwi3girDTT
+	 VOldv1EuH/WO4UHYD15NzVdtOqx4Aj10B331WgFs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732593AbfJCQLm (ORCPT
+        id S2387910AbfJCQLu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 12:11:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33440 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 12:11:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33614 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387870AbfJCQLg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:11:36 -0400
+        id S1732058AbfJCQLo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:11:44 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B4A1320700;
-        Thu,  3 Oct 2019 16:11:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DE91E2054F;
+        Thu,  3 Oct 2019 16:11:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570119096;
-        bh=4TiQxJJfR3qDJTi4w87i1jLrhWKWJHCVRA0qnfV3P2g=;
+        s=default; t=1570119104;
+        bh=d4ncFyiCsd77a457JAwmaPtaDLK0wuqOVsHZty0nllA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=iB1HGSx2W1oAJlBEy8sIovhi2AyvZjk+RK0ubtzo/t6EpYFiypcx+V7jqfVBJYDIK
-         p9/aUdPFjrUtvBLCMo/32JocVCUsobM1tYJXVZYIc5JJCHd6E2q4erm1QEUyiUM/w9
-         jRBJ/kbM4Bh2bINLm9Q3WnTLX4/eyWQFvfqbn9i8=
+        b=ydGAcXZICFKvbA4VGGSHX5So3BAWRc1dFQkf1v0ZzqUdNG0Y91ID5REGxBvjf4MXk
+         N08kb2q8kxFTQJaik45pvWtnZJk7P8HNylcbnNLBwnnswiqjQU/L7ENPtfiIIuWXMW
+         1uUVDq68eD+wkJAqmXoaUfbvICTv6KWwf6Z2dOoU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Matthias Brugger <matthias.bgg@gmail.com>,
-        Houlong Wei <houlong.wei@mediatek.com>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 086/185] media: mtk-mdp: fix reference count on old device tree
-Date:   Thu,  3 Oct 2019 17:52:44 +0200
-Message-Id: <20191003154457.551440417@linuxfoundation.org>
+        stable@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
+        Vinod Koul <vkoul@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 089/185] dmaengine: iop-adma: use correct printk format strings
+Date:   Thu,  3 Oct 2019 17:52:47 +0200
+Message-Id: <20191003154458.411745147@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191003154437.541662648@linuxfoundation.org>
 References: <20191003154437.541662648@linuxfoundation.org>
@@ -62,40 +59,106 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Matthias Brugger <matthias.bgg@gmail.com>
+From: Arnd Bergmann <arnd@arndb.de>
 
-[ Upstream commit 864919ea0380e62adb2503b89825fe358acb8216 ]
+[ Upstream commit 00c9755524fbaa28117be774d7c92fddb5ca02f3 ]
 
-of_get_next_child() increments the reference count of the returning
-device_node. Decrement it in the check if we are using the old or the
-new DTB.
+When compile-testing on other architectures, we get lots of warnings
+about incorrect format strings, like:
 
-Fixes: ba1f1f70c2c0 ("[media] media: mtk-mdp: Fix mdp device tree")
-Signed-off-by: Matthias Brugger <matthias.bgg@gmail.com>
-Acked-by: Houlong Wei <houlong.wei@mediatek.com>
-[hverkuil-cisco@xs4all.nl: use node instead of parent as temp variable]
-Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+   drivers/dma/iop-adma.c: In function 'iop_adma_alloc_slots':
+   drivers/dma/iop-adma.c:307:6: warning: format '%x' expects argument of type 'unsigned int', but argument 6 has type 'dma_addr_t {aka long long unsigned int}' [-Wformat=]
+
+   drivers/dma/iop-adma.c: In function 'iop_adma_prep_dma_memcpy':
+>> drivers/dma/iop-adma.c:518:40: warning: format '%u' expects argument of type 'unsigned int', but argument 5 has type 'size_t {aka long unsigned int}' [-Wformat=]
+
+Use %zu for printing size_t as required, and cast the dma_addr_t
+arguments to 'u64' for printing with %llx. Ideally this should use
+the %pad format string, but that requires an lvalue argument that
+doesn't work here.
+
+Link: https://lore.kernel.org/r/20190809163334.489360-3-arnd@arndb.de
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Acked-by: Vinod Koul <vkoul@kernel.org>
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/platform/mtk-mdp/mtk_mdp_core.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/dma/iop-adma.c | 18 +++++++++---------
+ 1 file changed, 9 insertions(+), 9 deletions(-)
 
-diff --git a/drivers/media/platform/mtk-mdp/mtk_mdp_core.c b/drivers/media/platform/mtk-mdp/mtk_mdp_core.c
-index bbb24fb95b951..3deb0549b1a13 100644
---- a/drivers/media/platform/mtk-mdp/mtk_mdp_core.c
-+++ b/drivers/media/platform/mtk-mdp/mtk_mdp_core.c
-@@ -118,7 +118,9 @@ static int mtk_mdp_probe(struct platform_device *pdev)
- 	mutex_init(&mdp->vpulock);
+diff --git a/drivers/dma/iop-adma.c b/drivers/dma/iop-adma.c
+index a410657f7bcd6..012584cf3c17b 100644
+--- a/drivers/dma/iop-adma.c
++++ b/drivers/dma/iop-adma.c
+@@ -125,9 +125,9 @@ static void __iop_adma_slot_cleanup(struct iop_adma_chan *iop_chan)
+ 	list_for_each_entry_safe(iter, _iter, &iop_chan->chain,
+ 					chain_node) {
+ 		pr_debug("\tcookie: %d slot: %d busy: %d "
+-			"this_desc: %#x next_desc: %#x ack: %d\n",
++			"this_desc: %#x next_desc: %#llx ack: %d\n",
+ 			iter->async_tx.cookie, iter->idx, busy,
+-			iter->async_tx.phys, iop_desc_get_next_desc(iter),
++			iter->async_tx.phys, (u64)iop_desc_get_next_desc(iter),
+ 			async_tx_test_ack(&iter->async_tx));
+ 		prefetch(_iter);
+ 		prefetch(&_iter->async_tx);
+@@ -315,9 +315,9 @@ iop_adma_alloc_slots(struct iop_adma_chan *iop_chan, int num_slots,
+ 				int i;
+ 				dev_dbg(iop_chan->device->common.dev,
+ 					"allocated slot: %d "
+-					"(desc %p phys: %#x) slots_per_op %d\n",
++					"(desc %p phys: %#llx) slots_per_op %d\n",
+ 					iter->idx, iter->hw_desc,
+-					iter->async_tx.phys, slots_per_op);
++					(u64)iter->async_tx.phys, slots_per_op);
  
- 	/* Old dts had the components as child nodes */
--	if (of_get_next_child(dev->of_node, NULL)) {
-+	node = of_get_next_child(dev->of_node, NULL);
-+	if (node) {
-+		of_node_put(node);
- 		parent = dev->of_node;
- 		dev_warn(dev, "device tree is out of date\n");
- 	} else {
+ 				/* pre-ack all but the last descriptor */
+ 				if (num_slots != slots_per_op)
+@@ -525,7 +525,7 @@ iop_adma_prep_dma_memcpy(struct dma_chan *chan, dma_addr_t dma_dest,
+ 		return NULL;
+ 	BUG_ON(len > IOP_ADMA_MAX_BYTE_COUNT);
+ 
+-	dev_dbg(iop_chan->device->common.dev, "%s len: %u\n",
++	dev_dbg(iop_chan->device->common.dev, "%s len: %zu\n",
+ 		__func__, len);
+ 
+ 	spin_lock_bh(&iop_chan->lock);
+@@ -558,7 +558,7 @@ iop_adma_prep_dma_xor(struct dma_chan *chan, dma_addr_t dma_dest,
+ 	BUG_ON(len > IOP_ADMA_XOR_MAX_BYTE_COUNT);
+ 
+ 	dev_dbg(iop_chan->device->common.dev,
+-		"%s src_cnt: %d len: %u flags: %lx\n",
++		"%s src_cnt: %d len: %zu flags: %lx\n",
+ 		__func__, src_cnt, len, flags);
+ 
+ 	spin_lock_bh(&iop_chan->lock);
+@@ -591,7 +591,7 @@ iop_adma_prep_dma_xor_val(struct dma_chan *chan, dma_addr_t *dma_src,
+ 	if (unlikely(!len))
+ 		return NULL;
+ 
+-	dev_dbg(iop_chan->device->common.dev, "%s src_cnt: %d len: %u\n",
++	dev_dbg(iop_chan->device->common.dev, "%s src_cnt: %d len: %zu\n",
+ 		__func__, src_cnt, len);
+ 
+ 	spin_lock_bh(&iop_chan->lock);
+@@ -629,7 +629,7 @@ iop_adma_prep_dma_pq(struct dma_chan *chan, dma_addr_t *dst, dma_addr_t *src,
+ 	BUG_ON(len > IOP_ADMA_XOR_MAX_BYTE_COUNT);
+ 
+ 	dev_dbg(iop_chan->device->common.dev,
+-		"%s src_cnt: %d len: %u flags: %lx\n",
++		"%s src_cnt: %d len: %zu flags: %lx\n",
+ 		__func__, src_cnt, len, flags);
+ 
+ 	if (dmaf_p_disabled_continue(flags))
+@@ -692,7 +692,7 @@ iop_adma_prep_dma_pq_val(struct dma_chan *chan, dma_addr_t *pq, dma_addr_t *src,
+ 		return NULL;
+ 	BUG_ON(len > IOP_ADMA_XOR_MAX_BYTE_COUNT);
+ 
+-	dev_dbg(iop_chan->device->common.dev, "%s src_cnt: %d len: %u\n",
++	dev_dbg(iop_chan->device->common.dev, "%s src_cnt: %d len: %zu\n",
+ 		__func__, src_cnt, len);
+ 
+ 	spin_lock_bh(&iop_chan->lock);
 -- 
 2.20.1
 
