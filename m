@@ -2,92 +2,135 @@ Return-Path: <SRS0=6dNS=X4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E7CBC4CED1
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:12:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AAABEC32792
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:12:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D445D21783
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:12:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="b8geVaxU"
+	by mail.kernel.org (Postfix) with ESMTP id 7073F20700
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:12:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1570119159;
+	bh=VOJAS5kmfIvHyD8Ct4Ladu8Yj/Cr74Ixde/fcxvrqQo=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=RH+DpQTmYPxF2b2zJs48dcXCCVJNSzawty40uHeiJH/JD/Jqst0JRVwTqGCjna3YK
+	 1rss/kO0cYVoFmQiAiehZW9aAxj7RKrs2D4uD5wFiFvdAh24coVvvWaWtLQ4tgvBSj
+	 OPEVS1aBvZS15z8AVsUHlB5uE3OLij4+P70EM6oA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732430AbfJCQMc (ORCPT
+        id S2388082AbfJCQMj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 12:12:32 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:39443 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388045AbfJCQM2 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:12:28 -0400
-Received: by mail-pg1-f195.google.com with SMTP id e1so2059112pgj.6
-        for <linux-kernel@vger.kernel.org>; Thu, 03 Oct 2019 09:12:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=message-id:mime-version:content-transfer-encoding:in-reply-to
-         :references:from:to:cc:subject:user-agent:date;
-        bh=XiVsYRW0n3APOo8SN5jHN6423sGK1hzLkdW22R6gUlQ=;
-        b=b8geVaxUUmJEPSmYVZ/urv+GIDjPVA+tUw7s237kt7/4+W9qC3LDCPfcGAQhQ7qMnw
-         4T4SP4lmYuQYPQV6SzMaM7KOid5w+rycvgqMZD86rgttuyzqDiKJchqoCKkH6tOvuN0f
-         TWekoQ3fbZ0zfYkqUHWkpN71y1uBl7+ZV27Vg=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:mime-version
-         :content-transfer-encoding:in-reply-to:references:from:to:cc:subject
-         :user-agent:date;
-        bh=XiVsYRW0n3APOo8SN5jHN6423sGK1hzLkdW22R6gUlQ=;
-        b=mY0TiEj+5F8IpTnMx/UveGmFOr1d79rv+gAbhdoCKkJbigb9f3DdjIGpRTShyzn6kK
-         8fv3N6dUaEeZ+KsKNio2C/4S1qrIugY7H8CW9YDavZLRlddMGCtRta4q4JXQ7FG+FxBA
-         wQ9M0giwWJgGf2+mG8T3/oK/U53xlNJg4FiOvJf7rmxLWgpgpMmhICUv1PuyebPKlkf5
-         6+LDMmp9F+Pp5M5acfbk7Je9xa7bIlvSU1hhfgUBbWbcuVmcmCkDH4GRsyL7fSvHIJhW
-         7Vfy/7vKNG8vsRETySWBa6u+aw4cAZ0/OyMKfdiMQKagZPm2U8Au1lQPEah+uxtYxQgL
-         AMHA==
-X-Gm-Message-State: APjAAAU1Mpe97wVDwa+RXR0iMvKUOjgxqHBDqfLfMoTtV3eut/Ww5Gl5
-        fJBi4U57CHJB8kag6M7Y8CLyYQ==
-X-Google-Smtp-Source: APXvYqz1b4RepNxT7vkrCPPzJdtlfmm8TflfIc9vumG8d7od9p989etC+nr8zMpohgtuvg7k7k8vtw==
-X-Received: by 2002:a62:5847:: with SMTP id m68mr11824475pfb.23.1570119147433;
-        Thu, 03 Oct 2019 09:12:27 -0700 (PDT)
-Received: from chromium.org ([2620:15c:202:1:fa53:7765:582b:82b9])
-        by smtp.gmail.com with ESMTPSA id o9sm3228540pfp.67.2019.10.03.09.12.26
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 03 Oct 2019 09:12:26 -0700 (PDT)
-Message-ID: <5d961dea.1c69fb81.d0777.9f4b@mx.google.com>
-Content-Type: text/plain; charset="utf-8"
-MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20191001180547.734-1-geert+renesas@glider.be>
-References: <20191001180547.734-1-geert+renesas@glider.be>
-From:   Stephen Boyd <swboyd@chromium.org>
-To:     Geert Uytterhoeven <geert+renesas@glider.be>,
-        Linus Walleij <linus.walleij@linaro.org>
+        Thu, 3 Oct 2019 12:12:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34862 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728767AbfJCQMg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:12:36 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id D5FE220700;
+        Thu,  3 Oct 2019 16:12:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1570119155;
+        bh=VOJAS5kmfIvHyD8Ct4Ladu8Yj/Cr74Ixde/fcxvrqQo=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=VlkWtYEYafzQA8rk4NjBtgrMJQqtvTj+yB5neT4Na3NBuxay0j8RlZQWi0qsHLPaZ
+         CHaPgFO0QrsUUGEYgMiQO8MX8y7VFru9BAxi1MR/7Rwsg27qk1QcvIr7/44ppYobFO
+         A0epNQWj0UvcuJ7KJ4TW92iIth9j1SpvPty3NnL8=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-renesas-soc@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: Re: [PATCH] pinctrl: sh-pfc: Do not use platform_get_irq() to count interrupts
-User-Agent: alot/0.8.1
-Date:   Thu, 03 Oct 2019 09:12:26 -0700
+        stable@vger.kernel.org, Tom Briden <tom@decompile.me.uk>,
+        Takashi Iwai <tiwai@suse.de>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 146/185] ALSA: hda/realtek - Fixup mute led on HP Spectre x360
+Date:   Thu,  3 Oct 2019 17:53:44 +0200
+Message-Id: <20191003154511.856254267@linuxfoundation.org>
+X-Mailer: git-send-email 2.23.0
+In-Reply-To: <20191003154437.541662648@linuxfoundation.org>
+References: <20191003154437.541662648@linuxfoundation.org>
+User-Agent: quilt/0.66
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Geert Uytterhoeven (2019-10-01 11:05:47)
-> As platform_get_irq() now prints an error when the interrupt does not
-> exist, counting interrupts by looping until failure causes the printing
-> of scary messages like:
->=20
->     sh-pfc e6060000.pin-controller: IRQ index 0 not found
->=20
-> Fix this by using the platform_irq_count() helper instead.
->=20
-> Fixes: 7723f4c5ecdb8d83 ("driver core: platform: Add an error message to =
-platform_get_irq*()")
-> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> ---
+From: Tom Briden <tom@decompile.me.uk>
 
-Reviewed-by: Stephen Boyd <swboyd@chromium.org>
+[ Upstream commit 7f783bd5e215a014a3c98df64bef24c2dc736def ]
+
+This patch adds the mute LED control for HP Spectre x360 Kabylake
+model.  The mute LED is controlled via VREF bits on NID 0x1b, so we
+need a new fixup function.
+
+Note that this doesn't fix the other issues like the missing speaker
+output on the machine.  They will be addressed by later patches.
+
+Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=189331
+Signed-off-by: Tom Briden <tom@decompile.me.uk>
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ sound/pci/hda/patch_realtek.c | 19 +++++++++++++++++++
+ 1 file changed, 19 insertions(+)
+
+diff --git a/sound/pci/hda/patch_realtek.c b/sound/pci/hda/patch_realtek.c
+index 4f35ac2606708..ab7bc7ebb7215 100644
+--- a/sound/pci/hda/patch_realtek.c
++++ b/sound/pci/hda/patch_realtek.c
+@@ -3611,6 +3611,19 @@ static void alc269_fixup_hp_mute_led_mic2(struct hda_codec *codec,
+ 	}
+ }
+ 
++static void alc269_fixup_hp_mute_led_mic3(struct hda_codec *codec,
++				const struct hda_fixup *fix, int action)
++{
++	struct alc_spec *spec = codec->spec;
++	if (action == HDA_FIXUP_ACT_PRE_PROBE) {
++		spec->mute_led_polarity = 0;
++		spec->mute_led_nid = 0x1b;
++		spec->gen.vmaster_mute.hook = alc269_fixup_mic_mute_hook;
++		spec->gen.vmaster_mute_enum = 1;
++		codec->power_filter = led_power_filter;
++	}
++}
++
+ /* update LED status via GPIO */
+ static void alc_update_gpio_led(struct hda_codec *codec, unsigned int mask,
+ 				bool enabled)
+@@ -5385,6 +5398,7 @@ enum {
+ 	ALC269_FIXUP_HP_MUTE_LED,
+ 	ALC269_FIXUP_HP_MUTE_LED_MIC1,
+ 	ALC269_FIXUP_HP_MUTE_LED_MIC2,
++	ALC269_FIXUP_HP_MUTE_LED_MIC3,
+ 	ALC269_FIXUP_HP_GPIO_LED,
+ 	ALC269_FIXUP_HP_GPIO_MIC1_LED,
+ 	ALC269_FIXUP_HP_LINE1_MIC1_LED,
+@@ -5648,6 +5662,10 @@ static const struct hda_fixup alc269_fixups[] = {
+ 		.type = HDA_FIXUP_FUNC,
+ 		.v.func = alc269_fixup_hp_mute_led_mic2,
+ 	},
++	[ALC269_FIXUP_HP_MUTE_LED_MIC3] = {
++		.type = HDA_FIXUP_FUNC,
++		.v.func = alc269_fixup_hp_mute_led_mic3,
++	},
+ 	[ALC269_FIXUP_HP_GPIO_LED] = {
+ 		.type = HDA_FIXUP_FUNC,
+ 		.v.func = alc269_fixup_hp_gpio_led,
+@@ -6502,6 +6520,7 @@ static const struct snd_pci_quirk alc269_fixup_tbl[] = {
+ 	SND_PCI_QUIRK(0x103c, 0x2337, "HP", ALC269_FIXUP_HP_MUTE_LED_MIC1),
+ 	SND_PCI_QUIRK(0x103c, 0x221c, "HP EliteBook 755 G2", ALC280_FIXUP_HP_HEADSET_MIC),
+ 	SND_PCI_QUIRK(0x103c, 0x8256, "HP", ALC221_FIXUP_HP_FRONT_MIC),
++	SND_PCI_QUIRK(0x103c, 0x827e, "HP x360", ALC269_FIXUP_HP_MUTE_LED_MIC3),
+ 	SND_PCI_QUIRK(0x103c, 0x82bf, "HP", ALC221_FIXUP_HP_MIC_NO_PRESENCE),
+ 	SND_PCI_QUIRK(0x103c, 0x82c0, "HP", ALC221_FIXUP_HP_MIC_NO_PRESENCE),
+ 	SND_PCI_QUIRK(0x1043, 0x103e, "ASUS X540SA", ALC256_FIXUP_ASUS_MIC),
+-- 
+2.20.1
+
+
 
