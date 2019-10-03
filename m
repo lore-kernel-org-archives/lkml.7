@@ -2,122 +2,122 @@ Return-Path: <SRS0=6dNS=X4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F579C32792
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 12:49:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A447EC10F14
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 12:50:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D6EAA215EA
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 12:49:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570106952;
-	bh=3I16dtKMV/ywKVSjTPwklsWAsz9K/b2UODMZF56SWZg=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=UW1V3w/5RjRGkwO/2YOM9EVepB6jxZadHVRoM6iaVGtTFxSf/qosy7B+wYgPMvCxU
-	 dtAadb8Lp/OVp4yQUAWbK48gPeHHWrKI/p96nx4mSaAVMvdv3pM4uQAQ906BLeDVj1
-	 d2kmaS4pVpARb9PAi2nkQURO5ctq6uZ+R1D/l+74=
+	by mail.kernel.org (Postfix) with ESMTP id 7FF9D20700
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 12:50:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729506AbfJCMtM (ORCPT
+        id S1730009AbfJCMuQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 08:49:12 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:36670 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727331AbfJCMtL (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 08:49:11 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Subject:Cc:To:
-        From:Date:Sender:Reply-To:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=+3A0RVi/eynu6cHrvlnzbDBBXa/7l6DXVZbYu9LkAQI=; b=ShUzobsjuDPIifsb0K9SQmZn+
-        xIPryyo6TVO6d1PgEwfo+n3ogNYeXAgoDzeZ8GfSlXO3aPywkEawRyvTYsSltg99TmrfQJA2UAu6F
-        vxhThdlNmA4rZ8miSRAHF2nIORFM8zR4e2/zDi9+qLYfhfKkBMGmIyhGO8EOEWV4+WUuUQSYAK83H
-        zjIOWM8DCFDL6VA6168FgeyFCbcOfowWCdJTVxImlPiT5Qldw6MTmA06NPS+zkR1RyhuXt4LkRjZs
-        KCJKIVZ03hyt/DQ8KQ478mGhEQ5DEnKs7amDKXT44eaXW6mY9qu0ulY343nrU9whomtFEar/3kW8I
-        klGGE4xMA==;
-Received: from 177.133.68.49.dynamic.adsl.gvt.net.br ([177.133.68.49] helo=coco.lan)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.2 #3 (Red Hat Linux))
-        id 1iG0Xd-0003Rg-8Z; Thu, 03 Oct 2019 12:49:09 +0000
-Date:   Thu, 3 Oct 2019 09:49:04 -0300
-From:   Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-To:     Gonsolo <gonsolo@gmail.com>
-Cc:     JP <jp@jpvw.nl>, crope@iki.fi, Sean Young <sean@mess.org>,
-        linux-media@vger.kernel.org,
-        Linux Kernel <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] si2157: Add support for Logilink VG0022A.
-Message-ID: <20191003094904.3aa5fdc7@coco.lan>
-In-Reply-To: <CANL0fFTtHn4ocL4BD4cVKhVzjLhnQ0a45yq5x4MxWAVu-tD8sw@mail.gmail.com>
-References: <20191001205203.4b1a5fb6@coco.lan>
-        <20191002141359.30166-1-gonsolo@gmail.com>
-        <20191002141359.30166-2-gonsolo@gmail.com>
-        <20191002142744.GA3475@gofer.mess.org>
-        <CANL0fFS9TGKJH2rfkXzak78BaLazTNO7GoZhSb4vLBsDrmz3FQ@mail.gmail.com>
-        <20191002150650.GA4227@gofer.mess.org>
-        <CANL0fFRoL6NxOCbNC=XjQ6LDkeeqAayaLUbm9xARWX9ttqfPFg@mail.gmail.com>
-        <29ab2e43-4374-a3ea-6ae1-a4267867eaa4@jpvw.nl>
-        <20191002154922.7f1cfc76@coco.lan>
-        <CANL0fFRJZBfEDWK_c2w1TomvB5-i4g09LopyJUbO5NtOwKdDTg@mail.gmail.com>
-        <CANL0fFTwJ4yRO+5q6WkL0+DtwdrRti6r_WY1intisYJhs5En8w@mail.gmail.com>
-        <20191003081742.0933264b@coco.lan>
-        <CANL0fFTtHn4ocL4BD4cVKhVzjLhnQ0a45yq5x4MxWAVu-tD8sw@mail.gmail.com>
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+        Thu, 3 Oct 2019 08:50:16 -0400
+Received: from mga12.intel.com ([192.55.52.136]:49408 "EHLO mga12.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726393AbfJCMuQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 08:50:16 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 03 Oct 2019 05:50:15 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.67,252,1566889200"; 
+   d="scan'208";a="196334370"
+Received: from jsakkine-mobl1.tm.intel.com (HELO localhost) ([10.237.50.161])
+  by orsmga006.jf.intel.com with ESMTP; 03 Oct 2019 05:50:13 -0700
+From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+To:     linux-integrity@vger.kernel.org
+Cc:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        stable@vger.kernel.org, David Howells <dhowells@redhat.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        "David S. Miller" <davem@davemloft.net>,
+        keyrings@vger.kernel.org (open list:ASYMMETRIC KEYS),
+        linux-crypto@vger.kernel.org (open list:CRYPTO API),
+        linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH v2] KEYS: asym_tpm: Switch to get_random_bytes()
+Date:   Thu,  3 Oct 2019 15:50:09 +0300
+Message-Id: <20191003125009.30195-1-jarkko.sakkinen@linux.intel.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Thu, 3 Oct 2019 13:41:23 +0200
-Gonsolo <gonsolo@gmail.com> escreveu:
+Only the kernel random pool should be used for generating random numbers.
+TPM contributes to that pool among the other sources of entropy. In here it
+is not, agreed, absolutely critical because TPM is what is trusted anyway
+but in order to remove tpm_get_random() we need to first remove all the
+call sites.
 
-> Hi!
-> 
-> > It means that there's a firmware stored at the device's eeprom
-> > (version 4.0.2). When the driver starts, it downloads a newer firmware
-> > from the file dvb-demod-si2168-b40-01.fw.  
-> 
-> Thanks for the explanation.
-> 
-> > Btw, could you please try the enclosed hack and post the results?  
-> 
-> Will do in a second.
-> 
-> FWIW, this hack worked:
-> 
-> diff --git a/drivers/media/tuners/si2157.c b/drivers/media/tuners/si2157.c
-> index e87040d6eca7..28a3a4f1640e 100644
-> --- a/drivers/media/tuners/si2157.c
-> +++ b/drivers/media/tuners/si2157.c
-> @@ -136,6 +136,7 @@ static int si2157_init(struct dvb_frontend *fe)
->         #define SI2147_A30 ('A' << 24 | 47 << 16 | '3' << 8 | '0' << 0)
->         #define SI2146_A10 ('A' << 24 | 46 << 16 | '1' << 8 | '0' << 0)
->         #define SI2141_A10 ('A' << 24 | 41 << 16 | '1' << 8 | '0' << 0)
-> +       #define GONZO     (255 << 24 | 255 << 16 | 255 << 8 | 255 << 0)
-> 
->         switch (chip_id) {
->         case SI2158_A20:
-> @@ -148,6 +149,10 @@ static int si2157_init(struct dvb_frontend *fe)
->         case SI2177_A30:
->                 fw_name = SI2157_A30_FIRMWARE;
->                 break;
-> +       case GONZO:
-> +               dev_info(&client->dev, "trying null\n");
-> +               fw_name = NULL;
-> +               break;
->         case SI2157_A30:
->         case SI2147_A30:
->         case SI2146_A10:
+Cc: stable@vger.kernel.org
+Fixes: 0c36264aa1d5 ("KEYS: asym_tpm: Add loadkey2 and flushspecific [ver #2]")
+Signed-off-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+---
+v2:
+* Changed two remaining call sites to use get_random_bytes()
+* Removed "stating the obvious" comments.
+ crypto/asymmetric_keys/asym_tpm.c | 22 ++++------------------
+ 1 file changed, 4 insertions(+), 18 deletions(-)
 
-What does it print with this hack?
+diff --git a/crypto/asymmetric_keys/asym_tpm.c b/crypto/asymmetric_keys/asym_tpm.c
+index 76d2ce3a1b5b..4eaf57483b9a 100644
+--- a/crypto/asymmetric_keys/asym_tpm.c
++++ b/crypto/asymmetric_keys/asym_tpm.c
+@@ -6,6 +6,7 @@
+ #include <linux/kernel.h>
+ #include <linux/seq_file.h>
+ #include <linux/scatterlist.h>
++#include <linux/random.h>
+ #include <linux/tpm.h>
+ #include <linux/tpm_command.h>
+ #include <crypto/akcipher.h>
+@@ -53,12 +54,7 @@ static int tpm_loadkey2(struct tpm_buf *tb,
+ 		return ret;
+ 	}
+ 
+-	/* generate odd nonce */
+-	ret = tpm_get_random(NULL, nonceodd, TPM_NONCE_SIZE);
+-	if (ret < 0) {
+-		pr_info("tpm_get_random failed (%d)\n", ret);
+-		return ret;
+-	}
++	get_random_bytes(nonceodd, TPM_NONCE_SIZE);
+ 
+ 	/* calculate authorization HMAC value */
+ 	ret = TSS_authhmac(authdata, keyauth, SHA1_DIGEST_SIZE, enonce,
+@@ -139,12 +135,7 @@ static int tpm_unbind(struct tpm_buf *tb,
+ 		return ret;
+ 	}
+ 
+-	/* generate odd nonce */
+-	ret = tpm_get_random(NULL, nonceodd, TPM_NONCE_SIZE);
+-	if (ret < 0) {
+-		pr_info("tpm_get_random failed (%d)\n", ret);
+-		return ret;
+-	}
++	get_random_bytes(nonceodd, TPM_NONCE_SIZE);
+ 
+ 	/* calculate authorization HMAC value */
+ 	ret = TSS_authhmac(authdata, keyauth, SHA1_DIGEST_SIZE, enonce,
+@@ -225,12 +216,7 @@ static int tpm_sign(struct tpm_buf *tb,
+ 		return ret;
+ 	}
+ 
+-	/* generate odd nonce */
+-	ret = tpm_get_random(NULL, nonceodd, TPM_NONCE_SIZE);
+-	if (ret < 0) {
+-		pr_info("tpm_get_random failed (%d)\n", ret);
+-		return ret;
+-	}
++	get_random_bytes(nonceodd, TPM_NONCE_SIZE);
+ 
+ 	/* calculate authorization HMAC value */
+ 	ret = TSS_authhmac(authdata, keyauth, SHA1_DIGEST_SIZE, enonce,
+-- 
+2.20.1
 
-Also, could you get the SI version after the reset code at
-skip_fw_download, just after retrieving si2157 firmware version?
-
-Thanks,
-Mauro
