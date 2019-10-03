@@ -2,119 +2,70 @@ Return-Path: <SRS0=6dNS=X4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
 	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 724DFC10F14
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 18:30:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E443C10F14
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 18:30:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4C1F22086A
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 18:30:04 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XLaFwylB"
+	by mail.kernel.org (Postfix) with ESMTP id 43B2D2133F
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 18:30:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1570127416;
+	bh=UBjhMnDknMo9MBM+b7Q1nXNP29xUGsrYmOuL34RiEus=;
+	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
+	b=ZCZswqmeXREU4heXU/dh5BfQZ5JGoW4ukEUVXxPDSnGwTUGazUh4+3zLnrYZ3PEfg
+	 I3M5oMFdEilID5r3DPgCs6detR+z2ygMApY6TyRWN2UZH0uOvA7CdIKGrXIr/yVN8u
+	 8MsAbLn5PZvExIiUpxigTkd/cWckEcZvIqsKLL7I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388701AbfJCSaD (ORCPT
+        id S2389156AbfJCSaP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 14:30:03 -0400
-Received: from mail-qk1-f195.google.com ([209.85.222.195]:40420 "EHLO
-        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729199AbfJCSaD (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 14:30:03 -0400
-Received: by mail-qk1-f195.google.com with SMTP id y144so3351788qkb.7;
-        Thu, 03 Oct 2019 11:30:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=xVOsopYF/M0SJfUpw8uzTPzjhSyoEQWnL9exPjNMiDw=;
-        b=XLaFwylBl/MAH8vjX4IguuG9kZGDMB4N9fOgEQVAXLrT9Xl7fgwOUB+B+2EpzsmsNT
-         H1bIyY1OITdXl4uaQu03SpChBfJJx5T3yuG19pFhuy3xPpcUqC95xmYRzCkHTsWl3dK6
-         h68au5Ur+XNlpF9Knu+RH+2tzlt2LlOzOfpc76FZ6f7Q5UTDFre69380BcfqiOYTsW3h
-         PDsPPL+BK4cmutWjd+O/Gd09cAFap6SgcJKOKVuO9F1tpP2VApBEMBJs36c66OBXZdKO
-         tDrvfM7jh0//NjI4vuy/l8dnX8bxtz0NZV5IS9O22fN6NKrrJwbZjdqGFENbNJgLc3ix
-         jmDg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=xVOsopYF/M0SJfUpw8uzTPzjhSyoEQWnL9exPjNMiDw=;
-        b=LrtGotheP4m5PS3g8wL+W/0dMWY/g4yBeP9Lu462hNJif6D9vQsZs0EnYNTDFp24S7
-         wFb/7bIdknFlmaLUt6W8/bAgrZ6O/Dx6yZAkd1UcJADdn+A1DllzZjQG9TUS3XLUHwnS
-         dXBXST7xJQeit0xVniDObjbx/Wk/UPgSDSBFsUDdh2/sf446YH59+1rDDwX0Zhx3dwss
-         ALcj7+0YqP98dDcestCdrAvDF0Jn2RD+u71c4IFNBvn2KF+0I0xezKwUuPpj3SW7OwwX
-         g+0Vnc3S7XRFgWWVy9YJoG+1yDOqliz8yAllisJk4RV3JQU5lDE81y+LKtSCu3Yo0L9N
-         OrHw==
-X-Gm-Message-State: APjAAAVuvTf7uB4lGHWLsCUfU2rkrSwz+/KoU6JiQhU3VoD4bnz4TgoS
-        ZGgyJ28ajgEKPDF6tI4ikx4KEq/wh+YEIHIsSb8=
-X-Google-Smtp-Source: APXvYqz/O5Lsj4kVJ/3FOK0A7IwZlqd/CiocFrOc0esp2AIU0w10PtMdgyuGNugHD4Fmy4ajdULewG+Nto5Cx55HRu8=
-X-Received: by 2002:a37:a586:: with SMTP id o128mr5829769qke.147.1570127401853;
- Thu, 03 Oct 2019 11:30:01 -0700 (PDT)
-MIME-Version: 1.0
-References: <1569567500-20113-1-git-send-email-yanhaishuang@cmss.chinamobile.com>
-In-Reply-To: <1569567500-20113-1-git-send-email-yanhaishuang@cmss.chinamobile.com>
-From:   William Tu <u9012063@gmail.com>
-Date:   Thu, 3 Oct 2019 11:29:24 -0700
-Message-ID: <CALDO+SYz1NkyeJvfGr17nMHmG-grWakDhJB6cFvXKn2Zy4c5hg@mail.gmail.com>
-Subject: Re: [PATCH] erspan: remove the incorrect mtu limit for erspan
-To:     Haishuang Yan <yanhaishuang@cmss.chinamobile.com>
-Cc:     "David S. Miller" <davem@davemloft.net>,
-        Linux Kernel Network Developers <netdev@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Thu, 3 Oct 2019 14:30:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44018 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2388727AbfJCSaO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 14:30:14 -0400
+Subject: Re: [GIT PULL] kgdb changes v5.4-rc2
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1570127414;
+        bh=UBjhMnDknMo9MBM+b7Q1nXNP29xUGsrYmOuL34RiEus=;
+        h=From:In-Reply-To:References:Date:To:Cc:From;
+        b=XJRaODP7UK2oVyVg5fcd8lali/Uv/uxeYkQGBmtI6MO8ywUGg1YjCEZUBGl+ZxNz/
+         x80UHBM9C5oeB1YYZ6jcJPCVJJRqvKKX90BfgVhfGYCD/PF8En1kZv5Kr/LTte7/A5
+         Z1Z9CqT244wkBJxH5fQhQOT7ktFmR9S+CuU26yAk=
+From:   pr-tracker-bot@kernel.org
+In-Reply-To: <20191003155606.o5y5vmnszyzotbvw@holly.lan>
+References: <20191003155606.o5y5vmnszyzotbvw@holly.lan>
+X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
+X-PR-Tracked-Message-Id: <20191003155606.o5y5vmnszyzotbvw@holly.lan>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/danielt/linux.git/
+ tags/kgdb-5.4-rc2
+X-PR-Tracked-Commit-Id: 086bf301f541eb4acfb5dadae7b1b207ad1b95a3
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: c1053cd122b23519322c8256ca24487e3b9695ce
+Message-Id: <157012741398.22675.8973403667311156197.pr-tracker-bot@kernel.org>
+Date:   Thu, 03 Oct 2019 18:30:13 +0000
+To:     Daniel Thompson <daniel.thompson@linaro.org>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Jason Wessel <jason.wessel@windriver.com>,
+        linux-kernel@vger.kernel.org,
+        Douglas Anderson <dianders@chromium.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Sep 26, 2019 at 11:59 PM Haishuang Yan
-<yanhaishuang@cmss.chinamobile.com> wrote:
->
-> erspan driver calls ether_setup(), after commit 61e84623ace3
-> ("net: centralize net_device min/max MTU checking"), the range
-> of mtu is [min_mtu, max_mtu], which is [68, 1500] by default.
->
-> It causes the dev mtu of the erspan device to not be greater
-> than 1500, this limit value is not correct for ipgre tap device.
->
-> Tested:
-> Before patch:
-> # ip link set erspan0 mtu 1600
-> Error: mtu greater than device maximum.
-> After patch:
-> # ip link set erspan0 mtu 1600
-> # ip -d link show erspan0
-> 21: erspan0@NONE: <BROADCAST,MULTICAST> mtu 1600 qdisc noop state DOWN
-> mode DEFAULT group default qlen 1000
->     link/ether 00:00:00:00:00:00 brd ff:ff:ff:ff:ff:ff promiscuity 0 minmtu 68 maxmtu 0
->
-> Fixes: 61e84623ace3 ("net: centralize net_device min/max MTU checking")
-> Signed-off-by: Haishuang Yan <yanhaishuang@cmss.chinamobile.com>
-> ---
+The pull request you sent on Thu, 3 Oct 2019 16:56:06 +0100:
 
-Thanks for the patch!
-Acked-by: William Tu <u9012063@gmail.com>
+> git://git.kernel.org/pub/scm/linux/kernel/git/danielt/linux.git/ tags/kgdb-5.4-rc2
 
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/c1053cd122b23519322c8256ca24487e3b9695ce
 
->  net/ipv4/ip_gre.c | 1 +
->  1 file changed, 1 insertion(+)
->
-> diff --git a/net/ipv4/ip_gre.c b/net/ipv4/ip_gre.c
-> index a53a543..52690bb 100644
-> --- a/net/ipv4/ip_gre.c
-> +++ b/net/ipv4/ip_gre.c
-> @@ -1446,6 +1446,7 @@ static void erspan_setup(struct net_device *dev)
->         struct ip_tunnel *t = netdev_priv(dev);
->
->         ether_setup(dev);
-> +       dev->max_mtu = 0;
->         dev->netdev_ops = &erspan_netdev_ops;
->         dev->priv_flags &= ~IFF_TX_SKB_SHARING;
->         dev->priv_flags |= IFF_LIVE_ADDR_CHANGE;
-> --
-> 1.8.3.1
->
->
->
+Thank you!
+
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.wiki.kernel.org/userdoc/prtracker
