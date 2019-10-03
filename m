@@ -2,58 +2,64 @@ Return-Path: <SRS0=6dNS=X4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9399C10F14
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:41:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC313C10F14
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:42:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BDEF120830
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:41:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A463820830
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:42:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570124516;
-	bh=nbgbhwOlk/LuTh2Jiw/PsDh+mAGYreruz68vM9Rfhvw=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ULV5tO4j5NkYhLwj8Z8CvKmodE5MV1Jqv3Oeca0tFCZqVI6swZ9b+V4HA7PDqdugu
-	 x3M39z3/vcStjQCCHzsT17qTtr/1kRVlRHe6HX/tNSyec2zPQW8ft/deyZR01w8kMC
-	 1P+Fga1hibUQrub2jgAWCiSm8oNDom7gawCchn9s=
+	s=default; t=1570124520;
+	bh=Ui6AaSraK1/UCtiGfk+FXIRayIxoS9FPoB/0XAkaSi8=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=vQaaJrkPE1594QNZ1/Ls9KI+CyJZTlcR3iyKlmAPejx0iXyP2Nj7t3Bi7FcRmdgIt
+	 uqrU5XpKsxu7/yZNpJ7RrpfgjHI7+xY1NwfzpDEuFbitPBoobh+7SahWvFEQwlSO7v
+	 nNc/0U6wNsan/PKGjtbBRROdbQj8watPDFUyLIzQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390255AbfJCRlz (ORCPT
+        id S1731037AbfJCP5r (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 13:41:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40394 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 11:57:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40294 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731045AbfJCP5t (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 11:57:49 -0400
+        id S1729537AbfJCP5o (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 11:57:44 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 38D5C20830;
-        Thu,  3 Oct 2019 15:57:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 90A3820700;
+        Thu,  3 Oct 2019 15:57:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570118268;
-        bh=nbgbhwOlk/LuTh2Jiw/PsDh+mAGYreruz68vM9Rfhvw=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=oimJiwqcl2PQKGc6JemESW8OSa/7jgQjaecd/zl1HBIIv2D/21fn5tNRDYOAgj8RQ
-         FWNazzlvlOPrpPDrkiCYHsDouhYJqFYGWwoRaQy3Jq8LJU8rS4vJj/Ab2uR/djzLCg
-         hKbL+EiFKj9G/N4DHk3DjH2cBmsF5Np/LpiKs3Eg=
+        s=default; t=1570118263;
+        bh=Ui6AaSraK1/UCtiGfk+FXIRayIxoS9FPoB/0XAkaSi8=;
+        h=From:To:Cc:Subject:Date:From;
+        b=YCLCuy/nAtmwmQMULo18EnUBvxIaCySSMYcJu06KgetciiB4Komq5UuHLxmGP32SE
+         ud5b7V/bVgRukNO18jgtUZJWYAitL9EtgDj4f3r84kR1GVbuLnIPGqThRYXDSQxe0P
+         GGIpm+8DrfcT30lf3zG30wpG5cX794YXDuLppIYY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Xiaofei Tan <tanxiaofei@huawei.com>,
-        James Morse <james.morse@arm.com>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 51/99] efi: cper: print AER info of PCIe fatal error
-Date:   Thu,  3 Oct 2019 17:53:14 +0200
-Message-Id: <20191003154320.334572430@linuxfoundation.org>
+        torvalds@linux-foundation.org, akpm@linux-foundation.org,
+        linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
+        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
+        stable@vger.kernel.org
+Subject: [PATCH 4.4 00/99] 4.4.195-stable review
+Date:   Thu,  3 Oct 2019 17:52:23 +0200
+Message-Id: <20191003154252.297991283@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20191003154252.297991283@linuxfoundation.org>
-References: <20191003154252.297991283@linuxfoundation.org>
-User-Agent: quilt/0.66
 MIME-Version: 1.0
+User-Agent: quilt/0.66
+X-stable: review
+X-Patchwork-Hint: ignore
+X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.4.195-rc1.gz
+X-KernelTest-Tree: git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
+X-KernelTest-Branch: linux-4.4.y
+X-KernelTest-Patches: git://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git
+X-KernelTest-Version: 4.4.195-rc1
+X-KernelTest-Deadline: 2019-10-05T15:43+00:00
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -61,89 +67,448 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Xiaofei Tan <tanxiaofei@huawei.com>
+This is the start of the stable review cycle for the 4.4.195 release.
+There are 99 patches in this series, all will be posted as a response
+to this one.  If anyone has any issues with these being applied, please
+let me know.
 
-[ Upstream commit b194a77fcc4001dc40aecdd15d249648e8a436d1 ]
+Responses should be made by Sat 05 Oct 2019 03:37:47 PM UTC.
+Anything received after that time might be too late.
 
-AER info of PCIe fatal error is not printed in the current driver.
-Because APEI driver will panic directly for fatal error, and can't
-run to the place of printing AER info.
+The whole patch series can be found in one patch at:
+	https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.4.195-rc1.gz
+or in the git tree and branch at:
+	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-4.4.y
+and the diffstat can be found below.
 
-An example log is as following:
-{763}[Hardware Error]: Hardware error from APEI Generic Hardware Error Source: 11
-{763}[Hardware Error]: event severity: fatal
-{763}[Hardware Error]:  Error 0, type: fatal
-{763}[Hardware Error]:   section_type: PCIe error
-{763}[Hardware Error]:   port_type: 0, PCIe end point
-{763}[Hardware Error]:   version: 4.0
-{763}[Hardware Error]:   command: 0x0000, status: 0x0010
-{763}[Hardware Error]:   device_id: 0000:82:00.0
-{763}[Hardware Error]:   slot: 0
-{763}[Hardware Error]:   secondary_bus: 0x00
-{763}[Hardware Error]:   vendor_id: 0x8086, device_id: 0x10fb
-{763}[Hardware Error]:   class_code: 000002
-Kernel panic - not syncing: Fatal hardware error!
+thanks,
 
-This issue was imported by the patch, '37448adfc7ce ("aerdrv: Move
-cper_print_aer() call out of interrupt context")'. To fix this issue,
-this patch adds print of AER info in cper_print_pcie() for fatal error.
+greg k-h
 
-Here is the example log after this patch applied:
-{24}[Hardware Error]: Hardware error from APEI Generic Hardware Error Source: 10
-{24}[Hardware Error]: event severity: fatal
-{24}[Hardware Error]:  Error 0, type: fatal
-{24}[Hardware Error]:   section_type: PCIe error
-{24}[Hardware Error]:   port_type: 0, PCIe end point
-{24}[Hardware Error]:   version: 4.0
-{24}[Hardware Error]:   command: 0x0546, status: 0x4010
-{24}[Hardware Error]:   device_id: 0000:01:00.0
-{24}[Hardware Error]:   slot: 0
-{24}[Hardware Error]:   secondary_bus: 0x00
-{24}[Hardware Error]:   vendor_id: 0x15b3, device_id: 0x1019
-{24}[Hardware Error]:   class_code: 000002
-{24}[Hardware Error]:   aer_uncor_status: 0x00040000, aer_uncor_mask: 0x00000000
-{24}[Hardware Error]:   aer_uncor_severity: 0x00062010
-{24}[Hardware Error]:   TLP Header: 000000c0 01010000 00000001 00000000
-Kernel panic - not syncing: Fatal hardware error!
+-------------
+Pseudo-Shortlog of commits:
 
-Fixes: 37448adfc7ce ("aerdrv: Move cper_print_aer() call out of interrupt context")
-Signed-off-by: Xiaofei Tan <tanxiaofei@huawei.com>
-Reviewed-by: James Morse <james.morse@arm.com>
-[ardb: put parens around terms of && operator]
-Signed-off-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/firmware/efi/cper.c | 15 +++++++++++++++
- 1 file changed, 15 insertions(+)
+Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+    Linux 4.4.195-rc1
 
-diff --git a/drivers/firmware/efi/cper.c b/drivers/firmware/efi/cper.c
-index d425374254384..f40f7df4b7344 100644
---- a/drivers/firmware/efi/cper.c
-+++ b/drivers/firmware/efi/cper.c
-@@ -384,6 +384,21 @@ static void cper_print_pcie(const char *pfx, const struct cper_sec_pcie *pcie,
- 		printk(
- 	"%s""bridge: secondary_status: 0x%04x, control: 0x%04x\n",
- 	pfx, pcie->bridge.secondary_status, pcie->bridge.control);
-+
-+	/* Fatal errors call __ghes_panic() before AER handler prints this */
-+	if ((pcie->validation_bits & CPER_PCIE_VALID_AER_INFO) &&
-+	    (gdata->error_severity & CPER_SEV_FATAL)) {
-+		struct aer_capability_regs *aer;
-+
-+		aer = (struct aer_capability_regs *)pcie->aer_info;
-+		printk("%saer_uncor_status: 0x%08x, aer_uncor_mask: 0x%08x\n",
-+		       pfx, aer->uncor_status, aer->uncor_mask);
-+		printk("%saer_uncor_severity: 0x%08x\n",
-+		       pfx, aer->uncor_severity);
-+		printk("%sTLP Header: %08x %08x %08x %08x\n", pfx,
-+		       aer->header_log.dw0, aer->header_log.dw1,
-+		       aer->header_log.dw2, aer->header_log.dw3);
-+	}
- }
- 
- static void cper_estatus_print_section(
--- 
-2.20.1
+Filipe Manana <fdmanana@suse.com>
+    Btrfs: fix race setting up and completing qgroup rescan workers
 
+Nikolay Borisov <nborisov@suse.com>
+    btrfs: Relinquish CPUs in btrfs_compare_trees
+
+Filipe Manana <fdmanana@suse.com>
+    Btrfs: fix use-after-free when using the tree modification log
+
+Mark Salyzyn <salyzyn@android.com>
+    ovl: filter of trusted xattr results in audit
+
+Pavel Shilovsky <pshilov@microsoft.com>
+    CIFS: Fix oplock handling for SMB 2.1+ protocols
+
+Chris Brandt <chris.brandt@renesas.com>
+    i2c: riic: Clear NACK in tend isr
+
+Laurent Vivier <lvivier@redhat.com>
+    hwrng: core - don't wait on add_early_randomness()
+
+Chao Yu <yuchao0@huawei.com>
+    quota: fix wrong condition in is_quota_modification()
+
+Theodore Ts'o <tytso@mit.edu>
+    ext4: fix punch hole for inline_data file systems
+
+Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
+    /dev/mem: Bail out upon SIGKILL.
+
+Denis Kenzior <denkenz@gmail.com>
+    cfg80211: Purge frame registrations on iftype change
+
+Xiao Ni <xni@redhat.com>
+    md/raid6: Set R5_ReadError when there is read failure on parity disk
+
+Thadeu Lima de Souza Cascardo <cascardo@canonical.com>
+    alarmtimer: Use EOPNOTSUPP instead of ENOTSUPP
+
+Luis Araneda <luaraneda@gmail.com>
+    ARM: zynq: Use memcpy_toio instead of memcpy on smp bring-up
+
+Amadeusz Sławiński <amadeuszx.slawinski@intel.com>
+    ASoC: Intel: Fix use of potentially uninitialized variable
+
+Hans de Goede <hdegoede@redhat.com>
+    media: sn9c20x: Add MSI MS-1039 laptop to flip_dmi_table
+
+Sean Christopherson <sean.j.christopherson@intel.com>
+    KVM: x86: Manually calculate reserved bits when loading PDPTRS
+
+Jan Dakinevich <jan.dakinevich@virtuozzo.com>
+    KVM: x86: set ctxt->have_exception in x86_decode_insn()
+
+Jan Dakinevich <jan.dakinevich@virtuozzo.com>
+    KVM: x86: always stop emulation on page fault
+
+Helge Deller <deller@gmx.de>
+    parisc: Disable HP HSC-PCI Cards to prevent kernel crash
+
+Vasily Averin <vvs@virtuozzo.com>
+    fuse: fix missing unlock_page in fuse_writepage()
+
+Vincent Whitchurch <vincent.whitchurch@axis.com>
+    printk: Do not lose last line in kmsg buffer dump
+
+Takashi Sakamoto <o-takashi@sakamocchi.jp>
+    ALSA: firewire-tascam: check intermediate state of clock status and retry
+
+Takashi Sakamoto <o-takashi@sakamocchi.jp>
+    ALSA: firewire-tascam: handle error code when getting current source of clock
+
+Sakari Ailus <sakari.ailus@linux.intel.com>
+    media: omap3isp: Set device on omap3isp subdevs
+
+Qu Wenruo <wqu@suse.com>
+    btrfs: extent-tree: Make sure we only allocate extents from block groups with the same type
+
+Takashi Iwai <tiwai@suse.de>
+    ALSA: hda/realtek - Blacklist PC beep for Lenovo ThinkCentre M73/93
+
+Tomas Bortoli <tomasbortoli@gmail.com>
+    media: ttusb-dec: Fix info-leak in ttusb_dec_send_command()
+
+Kevin Easton <kevin@guarana.org>
+    libertas: Add missing sentinel at end of if_usb.c fw_table
+
+Al Cooper <alcooperx@gmail.com>
+    mmc: sdhci: Fix incorrect switch to HS mode
+
+Peter Ujfalusi <peter.ujfalusi@ti.com>
+    ASoC: dmaengine: Make the pcm->name equal to pcm->id if the name is not set
+
+Masami Hiramatsu <mhiramat@kernel.org>
+    kprobes: Prohibit probing on BUG() and WARN() address
+
+Peter Ujfalusi <peter.ujfalusi@ti.com>
+    dmaengine: ti: edma: Do not reset reserved paRAM slots
+
+Yufen Yu <yuyufen@huawei.com>
+    md/raid1: fail run raid1 array when active disk less than one
+
+Wang Shenran <shenran268@gmail.com>
+    hwmon: (acpi_power_meter) Change log level for 'unsafe software power cap'
+
+Wenwen Wang <wenwen@cs.uga.edu>
+    ACPI: custom_method: fix memory leaks
+
+Tzvetomir Stoyanov <tstoyanov@vmware.com>
+    libtraceevent: Change users plugin directory
+
+Al Stone <ahs3@redhat.com>
+    ACPI / CPPC: do not require the _PSD method
+
+Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+    media: ov9650: add a sanity check
+
+Maciej S. Szmigiero <mail@maciej.szmigiero.name>
+    media: saa7134: fix terminology around saa7134_i2c_eeprom_md7134_gate()
+
+Wenwen Wang <wenwen@cs.uga.edu>
+    media: cpia2_usb: fix memory leaks
+
+Wenwen Wang <wenwen@cs.uga.edu>
+    media: saa7146: add cleanup in hexium_attach()
+
+Hans Verkuil <hverkuil-cisco@xs4all.nl>
+    media: hdpvr: add terminating 0 at end of string
+
+Hans Verkuil <hverkuil-cisco@xs4all.nl>
+    media: radio/si470x: kill urb on error
+
+Arnd Bergmann <arnd@arndb.de>
+    net: lpc-enet: fix printk format strings
+
+Sakari Ailus <sakari.ailus@linux.intel.com>
+    media: omap3isp: Don't set streaming state on random subdevs
+
+Arnd Bergmann <arnd@arndb.de>
+    dmaengine: iop-adma: use correct printk format strings
+
+Hans Verkuil <hverkuil-cisco@xs4all.nl>
+    media: gspca: zero usb_buf on error
+
+Xiaofei Tan <tanxiaofei@huawei.com>
+    efi: cper: print AER info of PCIe fatal error
+
+Guoqing Jiang <jgq516@gmail.com>
+    md: don't set In_sync if array is frozen
+
+Guoqing Jiang <jgq516@gmail.com>
+    md: don't call spare_active in md_reap_sync_thread if all member devices can't work
+
+chenzefeng <chenzefeng2@huawei.com>
+    ia64:unwind: fix double free for mod->arch.init_unw_table
+
+Ard van Breemen <ard@kwaak.net>
+    ALSA: usb-audio: Skip bSynchAddress endpoint check if it is invalid
+
+Vinod Koul <vkoul@kernel.org>
+    base: soc: Export soc_device_register/unregister APIs
+
+Oliver Neukum <oneukum@suse.com>
+    media: iguanair: add sanity checks
+
+Jia-Ju Bai <baijiaju1990@gmail.com>
+    ALSA: i2c: ak4xxx-adda: Fix a possible null pointer dereference in build_adc_controls()
+
+Takashi Iwai <tiwai@suse.de>
+    ALSA: hda - Show the fatal CORB/RIRB error more clearly
+
+Thomas Gleixner <tglx@linutronix.de>
+    x86/apic: Soft disable APIC before initializing it
+
+Grzegorz Halat <ghalat@redhat.com>
+    x86/reboot: Always use NMI fallback when shutdown via reboot vector IPI fails
+
+Juri Lelli <juri.lelli@redhat.com>
+    sched/core: Fix CPU controller for !RT_GROUP_SCHED
+
+Vincent Guittot <vincent.guittot@linaro.org>
+    sched/fair: Fix imbalance due to CPU affinity
+
+Luke Nowakowski-Krijger <lnowakow@eng.ucsd.edu>
+    media: hdpvr: Add device num check and handling
+
+Arnd Bergmann <arnd@arndb.de>
+    media: dib0700: fix link error for dibx000_i2c_set_speed
+
+Nick Stoughton <nstoughton@logitech.com>
+    leds: leds-lp5562 allow firmware files up to the maximum length
+
+Stefan Wahren <wahrenst@gmx.net>
+    dmaengine: bcm2835: Print error in case setting DMA mask fails
+
+Oleksandr Suvorov <oleksandr.suvorov@toradex.com>
+    ASoC: sgtl5000: Fix charge pump source assignment
+
+Chris Wilson <chris@chris-wilson.co.uk>
+    ALSA: hda: Flush interrupts on disabling
+
+Ori Nimron <orinimron123@gmail.com>
+    nfc: enforce CAP_NET_RAW for raw sockets
+
+Ori Nimron <orinimron123@gmail.com>
+    ieee802154: enforce CAP_NET_RAW for raw sockets
+
+Ori Nimron <orinimron123@gmail.com>
+    ax25: enforce CAP_NET_RAW for raw sockets
+
+Ori Nimron <orinimron123@gmail.com>
+    appletalk: enforce CAP_NET_RAW for raw sockets
+
+Ori Nimron <orinimron123@gmail.com>
+    mISDN: enforce CAP_NET_RAW for raw sockets
+
+Oliver Neukum <oneukum@suse.com>
+    usbnet: sanity checking of packet sizes and device mtu
+
+Bjørn Mork <bjorn@mork.no>
+    usbnet: ignore endpoints with invalid wMaxPacketSize
+
+Stephen Hemminger <stephen@networkplumber.org>
+    skge: fix checksum byte order
+
+Eric Dumazet <edumazet@google.com>
+    sch_netem: fix a divide by zero in tabledist()
+
+Li RongQing <lirongqing@baidu.com>
+    openvswitch: change type of UPCALL_PID attribute to NLA_UNSPEC
+
+Peter Mamonov <pmamonov@gmail.com>
+    net/phy: fix DP83865 10 Mbps HDX loopback disable function
+
+Bjørn Mork <bjorn@mork.no>
+    cdc_ncm: fix divide-by-zero caused by invalid wMaxPacketSize
+
+Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
+    arcnet: provide a buffer big enough to actually receive packets
+
+Jian-Hong Pan <jian-hong@endlessm.com>
+    Bluetooth: btrtl: Additional Realtek 8822CE Bluetooth devices
+
+Chris Wilson <chris@chris-wilson.co.uk>
+    drm: Flush output polling on shutdown
+
+Chao Yu <yuchao0@huawei.com>
+    f2fs: fix to do sanity check on segment bitmap of LFS curseg
+
+Chao Yu <yuchao0@huawei.com>
+    Revert "f2fs: avoid out-of-range memory access"
+
+Surbhi Palande <f2fsnewbie@gmail.com>
+    f2fs: check all the data segments against all node ones
+
+Marc Zyngier <maz@kernel.org>
+    irqchip/gic-v3-its: Fix LPI release for Multi-MSI devices
+
+Waiman Long <longman@redhat.com>
+    locking/lockdep: Add debug_locks check in __lock_downgrade()
+
+Yu Wang <yyuwang@codeaurora.org>
+    mac80211: handle deauthentication/disassociation from TDLS peer
+
+Arkadiusz Miskiewicz <a.miskiewicz@gmail.com>
+    mac80211: Print text for disassociation reason
+
+Shih-Yuan Lee (FourDollars) <fourdollars@debian.org>
+    ALSA: hda - Add laptop imic fixup for ASUS M9V laptop
+
+Takashi Iwai <tiwai@suse.de>
+    ASoC: fsl: Fix of-node refcount unbalance in fsl_ssi_probe_from_dt()
+
+Mao Wenan <maowenan@huawei.com>
+    net: rds: Fix NULL ptr use in rds_tcp_kill_sock
+
+Gustavo A. R. Silva <gustavo@embeddedor.com>
+    crypto: talitos - fix missing break in switch statement
+
+Tokunori Ikegami <ikegami.t@gmail.com>
+    mtd: cfi_cmdset_0002: Use chip_good() to retry in do_write_oneword()
+
+Alan Stern <stern@rowland.harvard.edu>
+    HID: hidraw: Fix invalid read in hidraw_ioctl
+
+Alan Stern <stern@rowland.harvard.edu>
+    HID: logitech: Fix general protection fault caused by Logitech driver
+
+Benjamin Tissoires <benjamin.tissoires@redhat.com>
+    HID: lg: make transfer buffers DMA capable
+
+Alan Stern <stern@rowland.harvard.edu>
+    HID: prodikeys: Fix general protection fault during probe
+
+Marcel Holtmann <marcel@holtmann.org>
+    Revert "Bluetooth: validate BLE connection interval updates"
+
+
+-------------
+
+Diffstat:
+
+ Makefile                                      |  4 +--
+ arch/arm/mach-zynq/platsmp.c                  |  2 +-
+ arch/ia64/kernel/module.c                     |  8 +++--
+ arch/x86/kernel/apic/apic.c                   |  8 +++++
+ arch/x86/kernel/smp.c                         | 46 ++++++++++++++++-----------
+ arch/x86/kvm/emulate.c                        |  2 ++
+ arch/x86/kvm/x86.c                            | 21 +++++++++---
+ drivers/acpi/cppc_acpi.c                      |  6 ++--
+ drivers/acpi/custom_method.c                  |  5 ++-
+ drivers/base/soc.c                            |  2 ++
+ drivers/bluetooth/btusb.c                     |  3 ++
+ drivers/char/hw_random/core.c                 |  2 +-
+ drivers/char/mem.c                            | 21 ++++++++++++
+ drivers/crypto/talitos.c                      |  1 +
+ drivers/dma/bcm2835-dma.c                     |  4 ++-
+ drivers/dma/edma.c                            |  9 ++++--
+ drivers/dma/iop-adma.c                        | 18 +++++------
+ drivers/firmware/efi/cper.c                   | 15 +++++++++
+ drivers/gpu/drm/drm_probe_helper.c            |  9 +++++-
+ drivers/hid/hid-lg.c                          | 22 +++++++++----
+ drivers/hid/hid-lg4ff.c                       |  1 -
+ drivers/hid/hid-prodikeys.c                   | 12 +++++--
+ drivers/hid/hidraw.c                          |  2 +-
+ drivers/hwmon/acpi_power_meter.c              |  4 +--
+ drivers/i2c/busses/i2c-riic.c                 |  1 +
+ drivers/irqchip/irq-gic-v3-its.c              |  9 +++---
+ drivers/isdn/mISDN/socket.c                   |  2 ++
+ drivers/leds/leds-lp5562.c                    |  6 +++-
+ drivers/md/md.c                               | 14 ++++++--
+ drivers/md/raid1.c                            | 13 +++++++-
+ drivers/md/raid5.c                            |  4 ++-
+ drivers/media/i2c/ov9650.c                    |  5 +++
+ drivers/media/pci/saa7134/saa7134-i2c.c       | 12 ++++---
+ drivers/media/pci/saa7146/hexium_gemini.c     |  3 ++
+ drivers/media/platform/omap3isp/isp.c         |  8 +++++
+ drivers/media/platform/omap3isp/ispccdc.c     |  1 +
+ drivers/media/platform/omap3isp/ispccp2.c     |  1 +
+ drivers/media/platform/omap3isp/ispcsi2.c     |  1 +
+ drivers/media/platform/omap3isp/isppreview.c  |  1 +
+ drivers/media/platform/omap3isp/ispresizer.c  |  1 +
+ drivers/media/platform/omap3isp/ispstat.c     |  2 ++
+ drivers/media/radio/si470x/radio-si470x-usb.c |  5 ++-
+ drivers/media/rc/iguanair.c                   | 15 ++++-----
+ drivers/media/usb/cpia2/cpia2_usb.c           |  4 +++
+ drivers/media/usb/dvb-usb/dib0700_devices.c   |  8 +++++
+ drivers/media/usb/gspca/konica.c              |  5 +++
+ drivers/media/usb/gspca/nw80x.c               |  5 +++
+ drivers/media/usb/gspca/ov519.c               | 10 ++++++
+ drivers/media/usb/gspca/ov534.c               |  5 +++
+ drivers/media/usb/gspca/ov534_9.c             |  1 +
+ drivers/media/usb/gspca/se401.c               |  5 +++
+ drivers/media/usb/gspca/sn9c20x.c             | 12 +++++++
+ drivers/media/usb/gspca/sonixb.c              |  5 +++
+ drivers/media/usb/gspca/sonixj.c              |  5 +++
+ drivers/media/usb/gspca/spca1528.c            |  5 +++
+ drivers/media/usb/gspca/sq930x.c              |  5 +++
+ drivers/media/usb/gspca/sunplus.c             |  5 +++
+ drivers/media/usb/gspca/vc032x.c              |  5 +++
+ drivers/media/usb/gspca/w996Xcf.c             |  5 +++
+ drivers/media/usb/hdpvr/hdpvr-core.c          | 13 +++++++-
+ drivers/media/usb/ttusb-dec/ttusb_dec.c       |  2 +-
+ drivers/mmc/host/sdhci.c                      |  4 ++-
+ drivers/mtd/chips/cfi_cmdset_0002.c           | 18 +++++++----
+ drivers/net/arcnet/arcnet.c                   | 31 ++++++++++--------
+ drivers/net/ethernet/marvell/skge.c           |  2 +-
+ drivers/net/ethernet/nxp/lpc_eth.c            | 13 ++++----
+ drivers/net/phy/national.c                    |  9 ++++--
+ drivers/net/usb/cdc_ncm.c                     |  6 +++-
+ drivers/net/usb/usbnet.c                      |  8 +++++
+ drivers/net/wireless/libertas/if_usb.c        |  3 +-
+ drivers/parisc/dino.c                         | 24 ++++++++++++++
+ fs/btrfs/ctree.c                              |  5 ++-
+ fs/btrfs/extent-tree.c                        |  8 +++++
+ fs/btrfs/qgroup.c                             | 33 +++++++++++--------
+ fs/cifs/smb2ops.c                             |  5 +++
+ fs/ext4/inode.c                               |  9 ++++++
+ fs/f2fs/segment.c                             | 44 ++++++++++++++++++++++---
+ fs/f2fs/super.c                               |  4 +--
+ fs/fuse/file.c                                |  1 +
+ fs/overlayfs/inode.c                          |  3 +-
+ include/linux/bug.h                           |  5 +++
+ include/linux/quotaops.h                      |  2 +-
+ kernel/kprobes.c                              |  3 +-
+ kernel/locking/lockdep.c                      |  3 ++
+ kernel/printk/printk.c                        |  2 +-
+ kernel/sched/core.c                           |  4 ---
+ kernel/sched/fair.c                           |  5 +--
+ kernel/time/alarmtimer.c                      |  4 +--
+ net/appletalk/ddp.c                           |  5 +++
+ net/ax25/af_ax25.c                            |  2 ++
+ net/bluetooth/hci_event.c                     |  5 ---
+ net/bluetooth/l2cap_core.c                    |  9 +-----
+ net/ieee802154/socket.c                       |  3 ++
+ net/mac80211/ieee80211_i.h                    |  3 ++
+ net/mac80211/mlme.c                           | 17 ++++++++--
+ net/mac80211/tdls.c                           | 23 ++++++++++++++
+ net/nfc/llcp_sock.c                           |  7 ++--
+ net/openvswitch/datapath.c                    |  2 +-
+ net/rds/tcp.c                                 |  8 +++--
+ net/sched/sch_netem.c                         |  2 +-
+ net/wireless/util.c                           |  1 +
+ sound/firewire/tascam/tascam-pcm.c            |  3 ++
+ sound/firewire/tascam/tascam-stream.c         | 42 ++++++++++++++++--------
+ sound/hda/hdac_controller.c                   |  2 ++
+ sound/i2c/other/ak4xxx-adda.c                 |  7 ++--
+ sound/pci/hda/hda_controller.c                |  5 ++-
+ sound/pci/hda/hda_intel.c                     |  2 +-
+ sound/pci/hda/patch_analog.c                  |  1 +
+ sound/pci/hda/patch_realtek.c                 |  3 ++
+ sound/soc/codecs/sgtl5000.c                   | 15 ++++++---
+ sound/soc/fsl/fsl_ssi.c                       |  5 ++-
+ sound/soc/intel/common/sst-ipc.c              |  2 ++
+ sound/soc/soc-generic-dmaengine-pcm.c         |  6 ++++
+ sound/usb/pcm.c                               |  1 +
+ tools/lib/traceevent/Makefile                 |  6 ++--
+ tools/lib/traceevent/event-plugin.c           |  2 +-
+ 116 files changed, 679 insertions(+), 204 deletions(-)
 
 
