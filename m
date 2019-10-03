@@ -2,58 +2,56 @@ Return-Path: <SRS0=6dNS=X4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F00A6C32792
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:06:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6F1BC10F14
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:06:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C5662207FF
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:06:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9F38321A4C
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:06:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570118789;
-	bh=zpGrFTfpiC78Jb3Ehv5tG9KkadmSU0Pp2RJ1I3OoPRc=;
+	s=default; t=1570118794;
+	bh=z5ldPJTP+L3NCpdYEwBJfONcAFoO4Nxd2HBNJFZkk6A=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=18r9uUoglPoJNwgrvQMQfoErusqR+s925//xDzpatPzxMIMS2x5dXdlGrUQFaat6r
-	 WK/7DeitfK00iWSkDVPot1zkuAla1REr2U+hbOg4ygn69RAvJJ6kAPz4bjvEhw8Bhc
-	 svZcKghyEeqfRRK31vhnMyGe0BNjy7XnVxgXGi5k=
+	b=K61pIv8WaDs9dYc5zpvohpyEJXnOTdXy577Abk0CHschBPWNPSt5j+k+5OAvsAnSf
+	 XJ9mORfkmy7NuJiILtLVNONiLnsh9c82CuylLllhOogY9wQlduilkOO/pvHdyc6hYQ
+	 BbyLSw3PPP0qm1RQ9vrOEGwwBJr2KqLb1/X2qf4E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732760AbfJCQG3 (ORCPT
+        id S1732779AbfJCQGd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 12:06:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53692 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 12:06:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53860 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732755AbfJCQG0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:06:26 -0400
+        id S1730492AbfJCQGb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:06:31 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2A98F207FF;
-        Thu,  3 Oct 2019 16:06:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8375E207FF;
+        Thu,  3 Oct 2019 16:06:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570118785;
-        bh=zpGrFTfpiC78Jb3Ehv5tG9KkadmSU0Pp2RJ1I3OoPRc=;
+        s=default; t=1570118791;
+        bh=z5ldPJTP+L3NCpdYEwBJfONcAFoO4Nxd2HBNJFZkk6A=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=lf6sQkGluXGqgjWnxCXaYGoLQUvtUOl6gWtrlIj1S/A/NsDdIkSvqO8+6AJ5qOoAu
-         FEO8zk49RpUkQeezUjwhqi/+cF/eHj/kkX7bpjoZOAMcZL0fgIcZETQd+7wwYdL/72
-         PtONdQn7Thsd52GAMdwHbHmP/QviSy8jX5pb168E=
+        b=qJBaIzNfy7XQ0nIRK2GerUJR36pDgFGRyfEqnW/pZtggHnw5lQcVubotTewt5sg22
+         RichRMVKzOJZoR/BMLywcEc4Z21K5Ww9tU9Wg4rkOLdydeLahhUg4MRuzEknQpky7N
+         CKWPROF7PLZhK3771bEQMhIho53DXZCuIOtMPlO8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Marcel Holtmann <marcel@holtmann.org>,
-        Johan Hedberg <johan.hedberg@intel.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 001/185] Revert "Bluetooth: validate BLE connection interval updates"
-Date:   Thu,  3 Oct 2019 17:51:19 +0200
-Message-Id: <20191003154437.720163972@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Emmanuel Grumbach <emmanuel.grumbach@intel.com>,
+        Luca Coelho <luciano.coelho@intel.com>
+Subject: [PATCH 4.14 011/185] iwlwifi: mvm: send BCAST management frames to the right station
+Date:   Thu,  3 Oct 2019 17:51:29 +0200
+Message-Id: <20191003154439.769397054@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191003154437.541662648@linuxfoundation.org>
 References: <20191003154437.541662648@linuxfoundation.org>
 User-Agent: quilt/0.66
-X-stable: review
-X-Patchwork-Hint: ignore
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -62,62 +60,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Marcel Holtmann <marcel@holtmann.org>
+From: Emmanuel Grumbach <emmanuel.grumbach@intel.com>
 
-[ Upstream commit 68d19d7d995759b96169da5aac313363f92a9075 ]
+commit 65c3b582ecab7a403efdf08babbf87fdbe27369c upstream.
 
-This reverts commit c49a8682fc5d298d44e8d911f4fa14690ea9485e.
+Probe responses were sent to the multicast station while
+they should be routed to the broadcast station.
+This has no negative effect since the frame was still
+routed to the right queue, but it looked very fishy
+to send a frame to a (queue, station) tuple where
+'queue' is not mapped to 'station'.
 
-There are devices which require low connection intervals for usable operation
-including keyboards and mice. Forcing a static connection interval for
-these types of devices has an impact in latency and causes a regression.
+Fixes: 7c305de2b954 ("iwlwifi: mvm: Direct multicast frames to the correct station")
+Signed-off-by: Emmanuel Grumbach <emmanuel.grumbach@intel.com>
+Signed-off-by: Luca Coelho <luciano.coelho@intel.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-Signed-off-by: Marcel Holtmann <marcel@holtmann.org>
-Signed-off-by: Johan Hedberg <johan.hedberg@intel.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/bluetooth/hci_event.c  | 5 -----
- net/bluetooth/l2cap_core.c | 9 +--------
- 2 files changed, 1 insertion(+), 13 deletions(-)
+ drivers/net/wireless/intel/iwlwifi/mvm/tx.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/net/bluetooth/hci_event.c b/net/bluetooth/hci_event.c
-index 3d2f64a6d6239..363dc85bbc5c9 100644
---- a/net/bluetooth/hci_event.c
-+++ b/net/bluetooth/hci_event.c
-@@ -5089,11 +5089,6 @@ static void hci_le_remote_conn_param_req_evt(struct hci_dev *hdev,
- 		return send_conn_param_neg_reply(hdev, handle,
- 						 HCI_ERROR_UNKNOWN_CONN_ID);
- 
--	if (min < hcon->le_conn_min_interval ||
--	    max > hcon->le_conn_max_interval)
--		return send_conn_param_neg_reply(hdev, handle,
--						 HCI_ERROR_INVALID_LL_PARAMS);
--
- 	if (hci_check_conn_params(min, max, latency, timeout))
- 		return send_conn_param_neg_reply(hdev, handle,
- 						 HCI_ERROR_INVALID_LL_PARAMS);
-diff --git a/net/bluetooth/l2cap_core.c b/net/bluetooth/l2cap_core.c
-index 4dc1db85a9c2f..0c2219f483d70 100644
---- a/net/bluetooth/l2cap_core.c
-+++ b/net/bluetooth/l2cap_core.c
-@@ -5287,14 +5287,7 @@ static inline int l2cap_conn_param_update_req(struct l2cap_conn *conn,
- 
- 	memset(&rsp, 0, sizeof(rsp));
- 
--	if (min < hcon->le_conn_min_interval ||
--	    max > hcon->le_conn_max_interval) {
--		BT_DBG("requested connection interval exceeds current bounds.");
--		err = -EINVAL;
--	} else {
--		err = hci_check_conn_params(min, max, latency, to_multiplier);
--	}
--
-+	err = hci_check_conn_params(min, max, latency, to_multiplier);
- 	if (err)
- 		rsp.result = cpu_to_le16(L2CAP_CONN_PARAM_REJECTED);
- 	else
--- 
-2.20.1
-
+--- a/drivers/net/wireless/intel/iwlwifi/mvm/tx.c
++++ b/drivers/net/wireless/intel/iwlwifi/mvm/tx.c
+@@ -651,7 +651,7 @@ int iwl_mvm_tx_skb_non_sta(struct iwl_mv
+ 		if (info.control.vif->type == NL80211_IFTYPE_P2P_DEVICE ||
+ 		    info.control.vif->type == NL80211_IFTYPE_AP ||
+ 		    info.control.vif->type == NL80211_IFTYPE_ADHOC) {
+-			if (info.control.vif->type == NL80211_IFTYPE_P2P_DEVICE)
++			if (!ieee80211_is_data(hdr->frame_control))
+ 				sta_id = mvmvif->bcast_sta.sta_id;
+ 			else
+ 				sta_id = mvmvif->mcast_sta.sta_id;
 
 
