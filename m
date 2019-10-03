@@ -2,128 +2,110 @@ Return-Path: <SRS0=6dNS=X4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C1A47C10F14
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:41:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF08DC10F14
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:41:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 919E120865
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:41:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570120904;
-	bh=9YTmjz6JzHxwcmKGl0VJUGsFdEfzvM/9GRS2tB2FdWA=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Qiip3XJMNvDD/s54V+ZgL11FCUm6comBEmGxVMhUHYZexOiN5yp/BtnEOZW12/7o+
-	 47rp52OdgtN1Br0+5DASHr1PL7438GU6cxVhM3Kf8Ihx06KNOGd1Z+jfPGS0qYWngc
-	 oRHsDn6EwpcybrdbKQfQ0ZlPZQK1FM0pIgrVpCug=
+	by mail.kernel.org (Postfix) with ESMTP id A050A206BB
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:41:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405073AbfJCQlm (ORCPT
+        id S2405079AbfJCQlq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 12:41:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52144 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 12:41:46 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:34588 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2405058AbfJCQli (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:41:38 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S2405064AbfJCQlj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:41:39 -0400
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A6B7020830;
-        Thu,  3 Oct 2019 16:41:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570120897;
-        bh=9YTmjz6JzHxwcmKGl0VJUGsFdEfzvM/9GRS2tB2FdWA=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=sM6BiEC19QNGTv53Wk1agsW1bjlHvTlEKpR+aLdBoUKZJFTiIJjZ5vyK6bt5RwwDo
-         t/mmevqLQWVFcYotpysZsddW3K5rsnGmdv4Zd807Nq7PIDexVqhfS3efOh0R2EFphM
-         jfh6hEccVAtFXP2Ab5IQM6w0FlgapLnJ+vPrYTLQ=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Kevin Hilman <khilman@baylibre.com>,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.3 079/344] soc: amlogic: meson-clk-measure: protect measure with a mutex
-Date:   Thu,  3 Oct 2019 17:50:44 +0200
-Message-Id: <20191003154547.939282431@linuxfoundation.org>
-X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20191003154540.062170222@linuxfoundation.org>
-References: <20191003154540.062170222@linuxfoundation.org>
-User-Agent: quilt/0.66
+        by mx1.redhat.com (Postfix) with ESMTPS id 590FE18C4290;
+        Thu,  3 Oct 2019 16:41:39 +0000 (UTC)
+Received: from mail (ovpn-120-134.rdu2.redhat.com [10.10.120.134])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 0481C5C226;
+        Thu,  3 Oct 2019 16:41:33 +0000 (UTC)
+Date:   Thu, 3 Oct 2019 12:41:33 -0400
+From:   Andrea Arcangeli <aarcange@redhat.com>
+To:     Ben Luo <luoben@linux.alibaba.com>
+Cc:     alex.williamson@redhat.com, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] vfio/type1: remove hugepage checks in
+ is_invalid_reserved_pfn()
+Message-ID: <20191003164133.GG13922@redhat.com>
+References: <1d6b7e1c40783f2db4c6cb15bf679a94222ec6a3.1570073993.git.luoben@linux.alibaba.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1d6b7e1c40783f2db4c6cb15bf679a94222ec6a3.1570073993.git.luoben@linux.alibaba.com>
+User-Agent: Mutt/1.12.2 (2019-09-21)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.62]); Thu, 03 Oct 2019 16:41:39 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Neil Armstrong <narmstrong@baylibre.com>
+On Thu, Oct 03, 2019 at 11:49:42AM +0800, Ben Luo wrote:
+> Currently, no hugepage split code can transfer the reserved bit
+> from head to tail during the split, so checking the head can't make
+> a difference in a racing condition with hugepage spliting.
+> 
+> The buddy wouldn't allow a driver to allocate an hugepage if any
+> subpage is reserved in the e820 map at boot, if any driver sets the
+> reserved bit of head page before mapping the hugepage in userland,
+> it needs to set the reserved bit in all subpages to be safe.
+> 
+> Signed-off-by: Ben Luo <luoben@linux.alibaba.com>
 
-[ Upstream commit 3a760d986568b67d1f8411dab64608075817b90d ]
-
-In order to protect clock measuring when multiple process asks for
-a measure, protect the main measure function with mutexes.
-
-Reviewed-by: Kevin Hilman <khilman@baylibre.com>
-Reviewed-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
-Signed-off-by: Kevin Hilman <khilman@baylibre.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/soc/amlogic/meson-clk-measure.c | 12 +++++++++++-
- 1 file changed, 11 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/soc/amlogic/meson-clk-measure.c b/drivers/soc/amlogic/meson-clk-measure.c
-index 19d4cbc93a17a..c470e24f1dfa6 100644
---- a/drivers/soc/amlogic/meson-clk-measure.c
-+++ b/drivers/soc/amlogic/meson-clk-measure.c
-@@ -11,6 +11,8 @@
- #include <linux/debugfs.h>
- #include <linux/regmap.h>
- 
-+static DEFINE_MUTEX(measure_lock);
-+
- #define MSR_CLK_DUTY		0x0
- #define MSR_CLK_REG0		0x4
- #define MSR_CLK_REG1		0x8
-@@ -360,6 +362,10 @@ static int meson_measure_id(struct meson_msr_id *clk_msr_id,
- 	unsigned int val;
- 	int ret;
- 
-+	ret = mutex_lock_interruptible(&measure_lock);
-+	if (ret)
-+		return ret;
-+
- 	regmap_write(priv->regmap, MSR_CLK_REG0, 0);
- 
- 	/* Set measurement duration */
-@@ -377,8 +383,10 @@ static int meson_measure_id(struct meson_msr_id *clk_msr_id,
- 
- 	ret = regmap_read_poll_timeout(priv->regmap, MSR_CLK_REG0,
- 				       val, !(val & MSR_BUSY), 10, 10000);
--	if (ret)
-+	if (ret) {
-+		mutex_unlock(&measure_lock);
- 		return ret;
-+	}
- 
- 	/* Disable */
- 	regmap_update_bits(priv->regmap, MSR_CLK_REG0, MSR_ENABLE, 0);
-@@ -386,6 +394,8 @@ static int meson_measure_id(struct meson_msr_id *clk_msr_id,
- 	/* Get the value in multiple of gate time counts */
- 	regmap_read(priv->regmap, MSR_CLK_REG2, &val);
- 
-+	mutex_unlock(&measure_lock);
-+
- 	if (val >= MSR_VAL_MASK)
- 		return -EINVAL;
- 
--- 
-2.20.1
+Reviewed-by: Andrea Arcangeli <aarcange@redhat.com>
 
 
-
+> ---
+>  drivers/vfio/vfio_iommu_type1.c | 26 ++++----------------------
+>  1 file changed, 4 insertions(+), 22 deletions(-)
+> 
+> diff --git a/drivers/vfio/vfio_iommu_type1.c b/drivers/vfio/vfio_iommu_type1.c
+> index 054391f..e2019ba 100644
+> --- a/drivers/vfio/vfio_iommu_type1.c
+> +++ b/drivers/vfio/vfio_iommu_type1.c
+> @@ -287,31 +287,13 @@ static int vfio_lock_acct(struct vfio_dma *dma, long npage, bool async)
+>   * Some mappings aren't backed by a struct page, for example an mmap'd
+>   * MMIO range for our own or another device.  These use a different
+>   * pfn conversion and shouldn't be tracked as locked pages.
+> + * For compound pages, any driver that sets the reserved bit in head
+> + * page needs to set the reserved bit in all subpages to be safe.
+>   */
+>  static bool is_invalid_reserved_pfn(unsigned long pfn)
+>  {
+> -	if (pfn_valid(pfn)) {
+> -		bool reserved;
+> -		struct page *tail = pfn_to_page(pfn);
+> -		struct page *head = compound_head(tail);
+> -		reserved = !!(PageReserved(head));
+> -		if (head != tail) {
+> -			/*
+> -			 * "head" is not a dangling pointer
+> -			 * (compound_head takes care of that)
+> -			 * but the hugepage may have been split
+> -			 * from under us (and we may not hold a
+> -			 * reference count on the head page so it can
+> -			 * be reused before we run PageReferenced), so
+> -			 * we've to check PageTail before returning
+> -			 * what we just read.
+> -			 */
+> -			smp_rmb();
+> -			if (PageTail(tail))
+> -				return reserved;
+> -		}
+> -		return PageReserved(tail);
+> -	}
+> +	if (pfn_valid(pfn))
+> +		return PageReserved(pfn_to_page(pfn));
+>  
+>  	return true;
+>  }
+> -- 
+> 1.8.3.1
+> 
