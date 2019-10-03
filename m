@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CB24C4CED1
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:50:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1957FC10F14
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:50:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 008FE222C8
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:50:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D8B02222C8
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:50:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570121404;
-	bh=3SajF3zcEVnX9E9Yjs/rmPBDCiRdR6u3eY/O4vzsDr8=;
+	s=default; t=1570121408;
+	bh=+hscBSSiceQUDY9+VOYTuW47bvxKdbmKQzrUpDh6YtQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=PMwieLwUSy2yUHDTWwLwhHjRmnWOTj6vPXM/KomJGjJyHmwi327yW5K6uTCYHa4d+
-	 GbaMLFs8ekjGIaER8bFGNeIVDqcu9Bd2RK8fFmHP1OaeR4Rg8IldLNI0+SfeMBWsM5
-	 KIl7D2sK82wW7mHgj+xAgIPGRnYm0Ey8ZCbHklxA=
+	b=NVPg5WuoVEKy6pTnZUJcsgOorgl7d/SGs3V+i/gY+DbOmDNH4+O7iGtRgDEyPukmT
+	 Vij00EVzBH4+fB4a56bwFDBA31QHe3f5LZfBHA/0QC+V3QJ6vIpd3zs3lk1wNd9tkV
+	 rwKOjGik4rQwpwDcP9mKCOktFryG/CB40qn4eKtQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393094AbfJCQuD (ORCPT
+        id S2405888AbfJCQuG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 12:50:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36874 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 12:50:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36930 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2405872AbfJCQuA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:50:00 -0400
+        id S2392729AbfJCQuD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:50:03 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1A1EB20865;
-        Thu,  3 Oct 2019 16:49:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B31F420865;
+        Thu,  3 Oct 2019 16:50:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570121399;
-        bh=3SajF3zcEVnX9E9Yjs/rmPBDCiRdR6u3eY/O4vzsDr8=;
+        s=default; t=1570121402;
+        bh=+hscBSSiceQUDY9+VOYTuW47bvxKdbmKQzrUpDh6YtQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xyL4vE+lZsdFGgGaWFy04ZK4TBGwnQ81ypzmE7vMcEoNQOHsMTONlfyohOvAj/m8P
-         TZmlrfSt7QZ5xyPa6qh595T1pkHAjD+t5GoDgdqx/SmLd5NOhV9YsW3f6MCHAGpWtA
-         wFpG566xx684VVaIwb1WpbKD4gHN+qfL4XUQwDPg=
+        b=xddS2zoU4m0rl0BXbFNaVckdu89g3Qwu1gjsv6j+2kf5VXSK4/6x89cbThO6L4n1W
+         WWBwg0EyGl0WGtp8sItokRtrjwOxGvjv2gKIIfLPUXnE7TMl2Rw/povTzs6e968IB9
+         x+SCEZWaDJNe4ZvcAZ+k1MDl+K+SekbhF8Vrewdk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jungyeon Yoon <jungyeon.yoon@gmail.com>,
-        Qu Wenruo <wqu@suse.com>, David Sterba <dsterba@suse.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.3 229/344] btrfs: extent-tree: Make sure we only allocate extents from block groups with the same type
-Date:   Thu,  3 Oct 2019 17:53:14 +0200
-Message-Id: <20191003154602.968506530@linuxfoundation.org>
+        stable@vger.kernel.org, Tomas Espeleta <tomas.espeleta@gmail.com>,
+        Takashi Iwai <tiwai@suse.de>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.3 220/344] ALSA: hda - Add a quirk model for fixing Huawei Matebook X right speaker
+Date:   Thu,  3 Oct 2019 17:53:05 +0200
+Message-Id: <20191003154602.066062150@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191003154540.062170222@linuxfoundation.org>
 References: <20191003154540.062170222@linuxfoundation.org>
@@ -60,112 +59,168 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Qu Wenruo <wqu@suse.com>
+From: Tomas Espeleta <tomas.espeleta@gmail.com>
 
-[ Upstream commit 2a28468e525f3924efed7f29f2bc5a2926e7e19a ]
+[ Upstream commit a2ef03fe617a8365fb7794531b11ba587509a9b9 ]
 
-[BUG]
-With fuzzed image and MIXED_GROUPS super flag, we can hit the following
-BUG_ON():
+[ This is rather a revival of the patch Tomas sent in months ago, but
+  applying only with the quirk model option -- tiwai ]
 
-  kernel BUG at fs/btrfs/delayed-ref.c:491!
-  invalid opcode: 0000 [#1] PREEMPT SMP NOPTI
-  CPU: 0 PID: 1849 Comm: sync Tainted: G           O      5.2.0-custom #27
-  RIP: 0010:update_existing_head_ref.cold+0x44/0x46 [btrfs]
-  Call Trace:
-   add_delayed_ref_head+0x20c/0x2d0 [btrfs]
-   btrfs_add_delayed_tree_ref+0x1fc/0x490 [btrfs]
-   btrfs_free_tree_block+0x123/0x380 [btrfs]
-   __btrfs_cow_block+0x435/0x500 [btrfs]
-   btrfs_cow_block+0x110/0x240 [btrfs]
-   btrfs_search_slot+0x230/0xa00 [btrfs]
-   ? __lock_acquire+0x105e/0x1e20
-   btrfs_insert_empty_items+0x67/0xc0 [btrfs]
-   alloc_reserved_file_extent+0x9e/0x340 [btrfs]
-   __btrfs_run_delayed_refs+0x78e/0x1240 [btrfs]
-   ? kvm_clock_read+0x18/0x30
-   ? __sched_clock_gtod_offset+0x21/0x50
-   btrfs_run_delayed_refs.part.0+0x4e/0x180 [btrfs]
-   btrfs_run_delayed_refs+0x23/0x30 [btrfs]
-   btrfs_commit_transaction+0x53/0x9f0 [btrfs]
-   btrfs_sync_fs+0x7c/0x1c0 [btrfs]
-   ? __ia32_sys_fdatasync+0x20/0x20
-   sync_fs_one_sb+0x23/0x30
-   iterate_supers+0x95/0x100
-   ksys_sync+0x62/0xb0
-   __ia32_sys_sync+0xe/0x20
-   do_syscall_64+0x65/0x240
-   entry_SYSCALL_64_after_hwframe+0x49/0xbe
+Hard coded coefficients to make Huawuei Matebook X right speaker
+work. The Matebook X has a ALC298, please refer to bug 197801 on
+how these numbers were reverse engineered from the Windows driver
 
-[CAUSE]
-This situation is caused by several factors:
-- Fuzzed image
-  The extent tree of this fs missed one backref for extent tree root.
-  So we can allocated space from that slot.
+The reversed engineered sequence represents a repeating pattern
+of verbs, and the only values that are changing periodically are
+written on indexes 0x23 and 0x25:
 
-- MIXED_BG feature
-  Super block has MIXED_BG flag.
+0x500, 0x23
+0x400, VALUE1
+0x500, 0x25
+0x400, VALUE2
 
-- No mixed block groups exists
-  All block groups are just regular ones.
+* skipped reading sequences (0x500 - 0xc00 sequences are ignored)
+* static values from reverse engineering are used
 
-This makes data space_info->block_groups[] contains metadata block
-groups.  And when we reserve space for data, we can use space in
-metadata block group.
+NOTE: since a significant risk is still considered, this is provided
+as an experimental fix that isn't applied as default for now.  For
+enabling the fix, you'll have to choose huawei-mbx-stereo via model
+option of snd-hda-intel module.
 
-Then we hit the following file operations:
+If we get feedback from users that this works stably, we may apply it
+per default.
 
-- fallocate
-  We need to allocate data extents.
-  find_free_extent() choose to use the metadata block to allocate space
-  from, and choose the space of extent tree root, since its backref is
-  missing.
+[ Some coding style fixes and replacement with AC_VERB_* by tiwai ]
 
-  This generate one delayed ref head with is_data = 1.
-
-- extent tree update
-  We need to update extent tree at run_delayed_ref time.
-
-  This generate one delayed ref head with is_data = 0, for the same
-  bytenr of old extent tree root.
-
-Then we trigger the BUG_ON().
-
-[FIX]
-The quick fix here is to check block_group->flags before using it.
-
-The problem can only happen for MIXED_GROUPS fs. Regular filesystems
-won't have space_info with DATA|METADATA flag, and no way to hit the
-bug.
-
-Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=203255
-Reported-by: Jungyeon Yoon <jungyeon.yoon@gmail.com>
-Signed-off-by: Qu Wenruo <wqu@suse.com>
-Signed-off-by: David Sterba <dsterba@suse.com>
+BugLink: https://bugzilla.kernel.org/show_bug.cgi?id=197801
+Signed-off-by: Tomas Espeleta <tomas.espeleta@gmail.com>
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/btrfs/extent-tree.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
+ Documentation/sound/hd-audio/models.rst |  3 +
+ sound/pci/hda/patch_realtek.c           | 74 +++++++++++++++++++++++++
+ 2 files changed, 77 insertions(+)
 
-diff --git a/fs/btrfs/extent-tree.c b/fs/btrfs/extent-tree.c
-index 8b7eb22d508a5..ef2f80825c826 100644
---- a/fs/btrfs/extent-tree.c
-+++ b/fs/btrfs/extent-tree.c
-@@ -5751,6 +5751,14 @@ static noinline int find_free_extent(struct btrfs_fs_info *fs_info,
- 			 */
- 			if ((flags & extra) && !(block_group->flags & extra))
- 				goto loop;
-+
-+			/*
-+			 * This block group has different flags than we want.
-+			 * It's possible that we have MIXED_GROUP flag but no
-+			 * block group is mixed.  Just skip such block group.
-+			 */
-+			btrfs_release_block_group(block_group, delalloc);
-+			continue;
- 		}
+diff --git a/Documentation/sound/hd-audio/models.rst b/Documentation/sound/hd-audio/models.rst
+index 7d7c191102a73..11298f0ce44db 100644
+--- a/Documentation/sound/hd-audio/models.rst
++++ b/Documentation/sound/hd-audio/models.rst
+@@ -260,6 +260,9 @@ alc295-hp-x360
+     HP Spectre X360 fixups
+ alc-sense-combo
+     Headset button support for Chrome platform
++huawei-mbx-stereo
++    Enable initialization verbs for Huawei MBX stereo speakers;
++    might be risky, try this at your own risk
  
- have_block_group:
+ ALC66x/67x/892
+ ==============
+diff --git a/sound/pci/hda/patch_realtek.c b/sound/pci/hda/patch_realtek.c
+index c1ddfd2fac522..1bec62720374d 100644
+--- a/sound/pci/hda/patch_realtek.c
++++ b/sound/pci/hda/patch_realtek.c
+@@ -3755,6 +3755,72 @@ static void alc269_x101_hp_automute_hook(struct hda_codec *codec,
+ 			    vref);
+ }
+ 
++/*
++ * Magic sequence to make Huawei Matebook X right speaker working (bko#197801)
++ */
++struct hda_alc298_mbxinit {
++	unsigned char value_0x23;
++	unsigned char value_0x25;
++};
++
++static void alc298_huawei_mbx_stereo_seq(struct hda_codec *codec,
++					 const struct hda_alc298_mbxinit *initval,
++					 bool first)
++{
++	snd_hda_codec_write(codec, 0x06, 0, AC_VERB_SET_DIGI_CONVERT_3, 0x0);
++	alc_write_coef_idx(codec, 0x26, 0xb000);
++
++	if (first)
++		snd_hda_codec_write(codec, 0x21, 0, AC_VERB_GET_PIN_SENSE, 0x0);
++
++	snd_hda_codec_write(codec, 0x6, 0, AC_VERB_SET_DIGI_CONVERT_3, 0x80);
++	alc_write_coef_idx(codec, 0x26, 0xf000);
++	alc_write_coef_idx(codec, 0x23, initval->value_0x23);
++
++	if (initval->value_0x23 != 0x1e)
++		alc_write_coef_idx(codec, 0x25, initval->value_0x25);
++
++	snd_hda_codec_write(codec, 0x20, 0, AC_VERB_SET_COEF_INDEX, 0x26);
++	snd_hda_codec_write(codec, 0x20, 0, AC_VERB_SET_PROC_COEF, 0xb010);
++}
++
++static void alc298_fixup_huawei_mbx_stereo(struct hda_codec *codec,
++					   const struct hda_fixup *fix,
++					   int action)
++{
++	/* Initialization magic */
++	static const struct hda_alc298_mbxinit dac_init[] = {
++		{0x0c, 0x00}, {0x0d, 0x00}, {0x0e, 0x00}, {0x0f, 0x00},
++		{0x10, 0x00}, {0x1a, 0x40}, {0x1b, 0x82}, {0x1c, 0x00},
++		{0x1d, 0x00}, {0x1e, 0x00}, {0x1f, 0x00},
++		{0x20, 0xc2}, {0x21, 0xc8}, {0x22, 0x26}, {0x23, 0x24},
++		{0x27, 0xff}, {0x28, 0xff}, {0x29, 0xff}, {0x2a, 0x8f},
++		{0x2b, 0x02}, {0x2c, 0x48}, {0x2d, 0x34}, {0x2e, 0x00},
++		{0x2f, 0x00},
++		{0x30, 0x00}, {0x31, 0x00}, {0x32, 0x00}, {0x33, 0x00},
++		{0x34, 0x00}, {0x35, 0x01}, {0x36, 0x93}, {0x37, 0x0c},
++		{0x38, 0x00}, {0x39, 0x00}, {0x3a, 0xf8}, {0x38, 0x80},
++		{}
++	};
++	const struct hda_alc298_mbxinit *seq;
++
++	if (action != HDA_FIXUP_ACT_INIT)
++		return;
++
++	/* Start */
++	snd_hda_codec_write(codec, 0x06, 0, AC_VERB_SET_DIGI_CONVERT_3, 0x00);
++	snd_hda_codec_write(codec, 0x06, 0, AC_VERB_SET_DIGI_CONVERT_3, 0x80);
++	alc_write_coef_idx(codec, 0x26, 0xf000);
++	alc_write_coef_idx(codec, 0x22, 0x31);
++	alc_write_coef_idx(codec, 0x23, 0x0b);
++	alc_write_coef_idx(codec, 0x25, 0x00);
++	snd_hda_codec_write(codec, 0x20, 0, AC_VERB_SET_COEF_INDEX, 0x26);
++	snd_hda_codec_write(codec, 0x20, 0, AC_VERB_SET_PROC_COEF, 0xb010);
++
++	for (seq = dac_init; seq->value_0x23; seq++)
++		alc298_huawei_mbx_stereo_seq(codec, seq, seq == dac_init);
++}
++
+ static void alc269_fixup_x101_headset_mic(struct hda_codec *codec,
+ 				     const struct hda_fixup *fix, int action)
+ {
+@@ -5780,6 +5846,7 @@ enum {
+ 	ALC255_FIXUP_DUMMY_LINEOUT_VERB,
+ 	ALC255_FIXUP_DELL_HEADSET_MIC,
+ 	ALC256_FIXUP_HUAWEI_MACH_WX9_PINS,
++	ALC298_FIXUP_HUAWEI_MBX_STEREO,
+ 	ALC295_FIXUP_HP_X360,
+ 	ALC221_FIXUP_HP_HEADSET_MIC,
+ 	ALC285_FIXUP_LENOVO_HEADPHONE_NOISE,
+@@ -6089,6 +6156,12 @@ static const struct hda_fixup alc269_fixups[] = {
+ 		.chained = true,
+ 		.chain_id = ALC255_FIXUP_MIC_MUTE_LED
+ 	},
++	[ALC298_FIXUP_HUAWEI_MBX_STEREO] = {
++		.type = HDA_FIXUP_FUNC,
++		.v.func = alc298_fixup_huawei_mbx_stereo,
++		.chained = true,
++		.chain_id = ALC255_FIXUP_MIC_MUTE_LED
++	},
+ 	[ALC269_FIXUP_ASUS_X101_FUNC] = {
+ 		.type = HDA_FIXUP_FUNC,
+ 		.v.func = alc269_fixup_x101_headset_mic,
+@@ -7280,6 +7353,7 @@ static const struct hda_model_fixup alc269_fixup_models[] = {
+ 	{.id = ALC225_FIXUP_HEADSET_JACK, .name = "alc-headset-jack"},
+ 	{.id = ALC295_FIXUP_CHROME_BOOK, .name = "alc-chrome-book"},
+ 	{.id = ALC299_FIXUP_PREDATOR_SPK, .name = "predator-spk"},
++	{.id = ALC298_FIXUP_HUAWEI_MBX_STEREO, .name = "huawei-mbx-stereo"},
+ 	{}
+ };
+ #define ALC225_STANDARD_PINS \
 -- 
 2.20.1
 
