@@ -2,84 +2,134 @@ Return-Path: <SRS0=6dNS=X4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D5108C32792
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 07:38:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ADACFC10F14
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 07:40:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9CA50222C2
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 07:38:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7C89120815
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 07:40:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UQzhlNI9"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="CjfB28DM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728346AbfJCHil (ORCPT
+        id S1728303AbfJCHkx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 03:38:41 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:43449 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727849AbfJCHil (ORCPT
+        Thu, 3 Oct 2019 03:40:53 -0400
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:38693 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725497AbfJCHkx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 03:38:41 -0400
-Received: by mail-wr1-f65.google.com with SMTP id j18so971978wrq.10
-        for <linux-kernel@vger.kernel.org>; Thu, 03 Oct 2019 00:38:40 -0700 (PDT)
+        Thu, 3 Oct 2019 03:40:53 -0400
+Received: by mail-lj1-f195.google.com with SMTP id b20so1529049ljj.5
+        for <linux-kernel@vger.kernel.org>; Thu, 03 Oct 2019 00:40:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:reply-to:from:date:message-id:subject:to:cc;
-        bh=ZM83gOZXBzuKBPm+cpBADT50KzkbNlmHyWH4vyQovk4=;
-        b=UQzhlNI95Rym1id7Fj11KXbhswjhng4OESyiZubeTTkhvIjnlZqXXnNzAZMr+gbKmH
-         zMpLuG5HOGiOvyH2b+ipaCoFhLvLushCE8jzLdB4Wgfphd+mDtIBzyIq5E9PwxYmnMd0
-         +F5cdOzxlalBki7or97eQ4zro9J5gpspm6DW20F1eEJs7IcrRqgxq3+46RHLvD7IwQZJ
-         8XG1oVUyncQZL2VJJctkTmWYOsQ7Rw7RWML0c4+AHjcMFP9qLv/ssh86pbGkr7TFGkEx
-         Lc40b/11bARHVsPkIE7/pCWQ5+KVNxN80An5JZ9XTYcIHN7fnfZG+FuXKPyOA9VIXHgC
-         xO3Q==
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=E7iqFe1lhn8LdVCxH7rgleIidp2/4wVxSz9as/XPLSU=;
+        b=CjfB28DMRCqGQ++ofQBR0em6Kgtij9ayqHRRVD7m/As54ZH4FBQpZ14boAO5HnGqkR
+         sAjU8jX8jETg5g6za2V3pd/MT1a09N58Wo/2WDdURo/zHLYH5ckEFHPWp5O2Gqxt+9pa
+         UY4g5m+O0Z65ChGAr6wOP4T7JXFL4DXjRpI2UJ8AwKv+F6Iffpikg52L1+iwwJKL7gQX
+         PUt5HQoUO7929q0IwmWtbhEG3dbbmTCT2i3UbmbiqUNtbz7aYWBs5MOJu+c3tcjwWGBX
+         gLhaQt3y2tjryDIy4u4SmCyrIDvzYpmwBcPy51x7ncF6VzYSYhzp7mHQOGyuK6Wkru3Q
+         It5g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
-         :subject:to:cc;
-        bh=ZM83gOZXBzuKBPm+cpBADT50KzkbNlmHyWH4vyQovk4=;
-        b=hdw72/Ujct8G9TNvfddR3PfCNlD3gZ2BP0ILG6KX+/suk4HeKsdqI3QYx533fuW+uS
-         3JHAXXxiabSSMC1B4QVb3hSdRlwbVZI5MIoFqcC8Z0uVgWo9+/VMK8yTZcXa36TSnfS4
-         W+asylvRTCuh4gFk/ljTDloh2++rlP/pSR91iW6LdX3Arj7UUgXgpZCoBm/u2Zc3cuq7
-         F6CA0xkDIjndadNL4y4hAQ1clx59E+L4GcrxgLt0J/qnA50DdRwP275tp3tTGXek2P13
-         2KMtlIjn3lQDn9PcpH1jh4csS6wQHA8OxMGaiHMy2KoncmdYQqXa6B0svXpm7FsqAS9C
-         uJLA==
-X-Gm-Message-State: APjAAAXNWkmA1t8TW+gTlb6c0jA98ykvjB6rOOqf6J6ZkEgBg1aNCAY1
-        75z9xtZH6ay2qSLVfSh8I3pIRgPnZFS05yHT6uLFfysepIs=
-X-Google-Smtp-Source: APXvYqxuAzyywXV+QPlEJW7NYosSLHEFZ91NpQBpcBDY2xrxvYCk5/I57822uMeik6rUXKo4hgxHd5r6Yth91kApIVo=
-X-Received: by 2002:adf:f092:: with SMTP id n18mr6065076wro.262.1570088319505;
- Thu, 03 Oct 2019 00:38:39 -0700 (PDT)
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=E7iqFe1lhn8LdVCxH7rgleIidp2/4wVxSz9as/XPLSU=;
+        b=qwlyHIxXL9puZ+lkg0yDoXvlXaXJCR0L6/Kr5FkF691KEIPE3mh53AFy0zI3PKxSQ7
+         Q2G0oEompHMnIacC1bQdo0rOMAFM5Wj+AYn+i9g+Ribvsohc3CYF6k+XvYLGAjODL4ou
+         216fu0TxX804SQVbcFbIAzo/Xh/rpwn2qWkCIf/ZeaqQ42VczSDA5Q9LprZ2Qgx8oO3+
+         jnmg/H25UaAtYp++1jGoXeQQNtJWIPaXIKK3C1m2oTau0RYvL/agw/uqNb7RjI+DwYJT
+         8LOt19XrzgnP7baWqaE4IzVRqRWZBL716X2p5auDdFW1fK+6fY0J1eFgSOi/tEUFn1wx
+         gELQ==
+X-Gm-Message-State: APjAAAXxAa+3k46FDnb5Q02l733kqBL71HYjssGZQ0B0uRrK8Brux+Yk
+        A/FHltnyuTeR1IJJRyJSA+oNzV0oinUhf6AW+BEOtg==
+X-Google-Smtp-Source: APXvYqwZknb69/TYERw7YCBTe+s8V/JXOBxcZNJEdeGG35NyM+62662ZhUSQhFi5nm0jtPXJNq/2DOQgLPo1HLs58rY=
+X-Received: by 2002:a2e:530d:: with SMTP id h13mr5131568ljb.109.1570088451104;
+ Thu, 03 Oct 2019 00:40:51 -0700 (PDT)
 MIME-Version: 1.0
-Reply-To: sedat.dilek@gmail.com
-From:   Sedat Dilek <sedat.dilek@gmail.com>
-Date:   Thu, 3 Oct 2019 09:38:27 +0200
-Message-ID: <CA+icZUW9wrOAtEEXUNjHetq238D86c9c_Cf0iKQGiD+CH5bJrg@mail.gmail.com>
-Subject: [Linux-5.3.y] Versions in stable.git and stable-rc.git
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>
+References: <20190926193030.5843-1-anders.roxell@linaro.org>
+ <20190926193030.5843-5-anders.roxell@linaro.org> <bf5db3a5-96da-752c-49ea-d0de899882d5@huawei.com>
+In-Reply-To: <bf5db3a5-96da-752c-49ea-d0de899882d5@huawei.com>
+From:   Anders Roxell <anders.roxell@linaro.org>
+Date:   Thu, 3 Oct 2019 09:40:40 +0200
+Message-ID: <CADYN=9LB9RHgRkQj=HcKDz1x9jqmT464Kseh2wZU5VvcLit+bQ@mail.gmail.com>
+Subject: Re: [PATCH 3/3] arm64: configs: unset CPU_BIG_ENDIAN
+To:     John Garry <john.garry@huawei.com>
+Cc:     Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Greg,
+On Tue, 1 Oct 2019 at 16:04, John Garry <john.garry@huawei.com> wrote:
+>
+> On 26/09/2019 20:30, Anders Roxell wrote:
+> > When building allmodconfig KCONFIG_ALLCONFIG=$(pwd)/arch/arm64/configs/defconfig
+> > CONFIG_CPU_BIG_ENDIAN gets enabled. Which tends not to be what most
+> > people wants.
+>
+> Today allmodconfig does not enable CONFIG_ACPI due to BE config, which
+> is quite unfortunate, I'd say.
 
-I see two commits with "Linux 5.3.2" - in [1] it is tagged but there
-is a second one in [2] - both in stable.git.
+right.
 
-In stable-rc.git I see a commit "Linux 5.3.4-rc1" and there was no
-v5.3.3 released before.
+>
+> >
+> > Rework so that we disable CONFIG_CPU_BIG_ENDIAN in the defcinfig file so
+>
+> defconfig
 
-Can you look at this?
+thanks.
 
-Thanks.
+>
+> > it doesn't get enabled when building allmodconfig kernels. When doing a
+> > 'make savedefconfig' CONFIG_CPU_BIG_ENDIAN will be dropped.
+>
+> So without having to pass KCONFIG_ALLCONFIG or do anything else, what
+> about a config for CONFIG_CPU_LITTLE_ENDIAN instead? I'm not sure if
+> that was omitted for a specific reason.
 
-Regards,
-- Sedat -
+Oh, I tried to elaborate on the idea in the cover letter, that using
+the defconfig
+as base and then configure the rest as modules is to get a bootable kernel
+that have as many features turned on as possible. That will make it possible
+to run as wide a range of testsuites as possible on a single kernel.
 
-[1] https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/commit/?h=linux-5.3.y&id=b09339127155bf38eb28bf8ef4781a53b4c1f13f
-[2] https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/commit/?h=linux-5.3.y&id=9c30694424ee15cc30a23f92a913d5322b9e5bd2
-[3] https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git/commit/?h=linux-5.3.y&id=11340e406e61338f7585324b65b1126503547bea
+Does that make it clearer ?
+
+Cheers,
+Anders
+
+
+>
+> Thanks,
+> John
+>
+> >
+> > Signed-off-by: Anders Roxell <anders.roxell@linaro.org>
+> > ---
+> >  arch/arm64/configs/defconfig | 1 +
+> >  1 file changed, 1 insertion(+)
+> >
+> > diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
+> > index 878f379d8d84..c9aa6b9ee996 100644
+> > --- a/arch/arm64/configs/defconfig
+> > +++ b/arch/arm64/configs/defconfig
+> > @@ -855,3 +855,4 @@ CONFIG_DEBUG_KERNEL=y
+> >  # CONFIG_SCHED_DEBUG is not set
+> >  CONFIG_MEMTEST=y
+> >  # CONFIG_CMDLINE_FORCE is not set
+> > +# CONFIG_CPU_BIG_ENDIAN is not set
+> >
+>
+>
