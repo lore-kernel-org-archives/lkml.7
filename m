@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B3CE7C10F14
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 00:27:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16913C4360C
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 00:27:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8987B222C0
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 00:27:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D9B73222C0
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 00:27:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570062479;
-	bh=3Bwl5pMwocf2/uH9BRYHthWC5hMiOfpMI8VbhGrwn2I=;
+	s=default; t=1570062477;
+	bh=iRcDEBfxkv8l6bTP78ExNhW+MMZBsa+eN+470HQBJsw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=EwXqnM9rUdV0Gn3MRxdLdYaO4fuBYMUTETlOQh+YZYoQNilN25Ubu/JGs8WEtiCPg
-	 BDzX/Y8lUYpCwnpgI7tnjVFrYg0OH2uPTLzIvOOZXLQXJSxYonAoDKJmdjYg+DszAf
-	 bNbZp7CBIMomuHmeuBLPJMfvscTeVwyFSbs2T0lE=
+	b=XwkN/MXLnFAx0nnOSR6RAHwBA3UAMLw0iNhayJgUuUAJnc+nAyMvyUTYLD8+OLVJg
+	 ocHFV7PhD7bEGhw4haghhsBM5HsGnP8BQ3/P4yjuaLG3DoS+4IF45BTxx/+PSwYmun
+	 qnIluFXn4tn2JVSB3LwLuvQdPMVIO4Il88gr7lOs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729672AbfJCA06 (ORCPT
+        id S1729560AbfJCA14 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Oct 2019 20:26:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56028 "EHLO mail.kernel.org"
+        Wed, 2 Oct 2019 20:27:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56100 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727664AbfJCA0x (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Oct 2019 20:26:53 -0400
+        id S1729677AbfJCA07 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 2 Oct 2019 20:26:59 -0400
 Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A6180222C4;
-        Thu,  3 Oct 2019 00:26:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D00FA22466;
+        Thu,  3 Oct 2019 00:26:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570062412;
-        bh=3Bwl5pMwocf2/uH9BRYHthWC5hMiOfpMI8VbhGrwn2I=;
+        s=default; t=1570062419;
+        bh=iRcDEBfxkv8l6bTP78ExNhW+MMZBsa+eN+470HQBJsw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ygb6MeVP21c5OFXp+lAhXEcMto81Ik0DTHHaCd6tXpGbnt44BL1tHp3QbEcXj3W5E
-         gL0rK2PK2HK7VaqRaZnPkkI3XMyysWiJShoJlagGef5UehaRtqCDlAeUbWVTI4xq52
-         zoKgM0M+tPE801lQ3jiH0IG1jz6ewvOoX7i8cjHE=
+        b=aWEDJNKCh5pXzzR3ICpOOO2zGkVVw7thLxif/IRqx65ZZpeK6RNaBnlHfOkPwUV3r
+         H1vmW+RTh67kk8lq3nAZM0eI5bsXrKViBqpq8tSkthiZMVA0hQ+poBBU63LAlDOYr5
+         ZOrc0B3lJEk76ux4k09pyGan1/xconWxKFsR2sBY=
 From:   paulmck@kernel.org
 To:     linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
         mingo@kernel.org
 Cc:     stern@rowland.harvard.edu, parri.andrea@gmail.com, will@kernel.org,
         peterz@infradead.org, boqun.feng@gmail.com, npiggin@gmail.com,
         dhowells@redhat.com, j.alglave@ucl.ac.uk, luc.maranget@inria.fr,
-        akiyks@gmail.com, "Paul E . McKenney" <paulmck@kernel.org>
-Subject: [PATCH tip/core/rcu 02/32] tools/memory-model/Documentation: Fix typos in explanation.txt
-Date:   Wed,  2 Oct 2019 17:26:20 -0700
-Message-Id: <20191003002650.11249-2-paulmck@kernel.org>
+        akiyks@gmail.com, "Paul E. McKenney" <paulmck@linux.ibm.com>
+Subject: [PATCH tip/core/rcu 23/32] tools/memory-model: Implement --hw support for checkghlitmus.sh
+Date:   Wed,  2 Oct 2019 17:26:41 -0700
+Message-Id: <20191003002650.11249-23-paulmck@kernel.org>
 X-Mailer: git-send-email 2.9.5
 In-Reply-To: <20191003001039.GA8027@paulmck-ThinkPad-P72>
 References: <20191003001039.GA8027@paulmck-ThinkPad-P72>
@@ -57,67 +57,151 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alan Stern <stern@rowland.harvard.edu>
+From: "Paul E. McKenney" <paulmck@linux.ibm.com>
 
-This patch fixes a few minor typos and improves word usage in a few
-places in the Linux Kernel Memory Model's explanation.txt file.
+This commits enables the "--hw" argument for the checkghlitmus.sh script,
+causing it to convert any applicable C-language litmus tests to the
+specified flavor of assembly language, to verify these assembly-language
+litmus tests, and checking compatibility of the outcomes.
 
-Signed-off-by: Alan Stern <stern@rowland.harvard.edu>
-Reviewed-by: Joel Fernandes (Google) <joel@joelfernandes.org>
-Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
+Note that the conversion does not yet handle locking, RCU, SRCU, plain
+C-language memory accesses, or casts.
+
+Signed-off-by: Paul E. McKenney <paulmck@linux.ibm.com>
 ---
- tools/memory-model/Documentation/explanation.txt | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
+ tools/memory-model/scripts/checkghlitmus.sh |  9 +++++----
+ tools/memory-model/scripts/hwfnseg.sh       | 20 ++++++++++++++++++++
+ tools/memory-model/scripts/runlitmushist.sh | 27 +++++++++++++++++----------
+ 3 files changed, 42 insertions(+), 14 deletions(-)
+ create mode 100755 tools/memory-model/scripts/hwfnseg.sh
 
-diff --git a/tools/memory-model/Documentation/explanation.txt b/tools/memory-model/Documentation/explanation.txt
-index 488f11f..1b52645 100644
---- a/tools/memory-model/Documentation/explanation.txt
-+++ b/tools/memory-model/Documentation/explanation.txt
-@@ -206,7 +206,7 @@ goes like this:
- 	P0 stores 1 to buf before storing 1 to flag, since it executes
- 	its instructions in order.
+diff --git a/tools/memory-model/scripts/checkghlitmus.sh b/tools/memory-model/scripts/checkghlitmus.sh
+index 6589fbb..2ea220d 100755
+--- a/tools/memory-model/scripts/checkghlitmus.sh
++++ b/tools/memory-model/scripts/checkghlitmus.sh
+@@ -10,6 +10,7 @@
+ # parseargs.sh scripts for arguments.
  
--	Since an instruction (in this case, P1's store to flag) cannot
-+	Since an instruction (in this case, P0's store to flag) cannot
- 	execute before itself, the specified outcome is impossible.
+ . scripts/parseargs.sh
++. scripts/hwfnseg.sh
  
- However, real computer hardware almost never follows the Sequential
-@@ -419,7 +419,7 @@ example:
+ T=/tmp/checkghlitmus.sh.$$
+ trap 'rm -rf $T' 0
+@@ -32,9 +33,9 @@ then
+ 	( cd "$LKMM_DESTDIR"; sed -e 's/^/mkdir -p /' | sh )
+ fi
  
- The object code might call f(5) either before or after g(6); the
- memory model cannot assume there is a fixed program order relation
--between them.  (In fact, if the functions are inlined then the
-+between them.  (In fact, if the function calls are inlined then the
- compiler might even interleave their object code.)
+-# Create a list of the C-language litmus tests previously run.
+-( cd $LKMM_DESTDIR; find litmus -name '*.litmus.out' -print ) |
+-	sed -e 's/\.out$//' |
++# Create a list of the specified litmus tests previously run.
++( cd $LKMM_DESTDIR; find litmus -name "*.litmus${hwfnseg}.out" -print ) |
++	sed -e "s/${hwfnseg}"'\.out$//' |
+ 	xargs -r egrep -l '^ \* Result: (Never|Sometimes|Always|DEADLOCK)' |
+ 	xargs -r grep -L "^P${LKMM_PROCS}"> $T/list-C-already
  
+@@ -44,7 +45,7 @@ find litmus -name '*.litmus' -exec grep -l -m 1 "^C " {} \; > $T/list-C
+ xargs < $T/list-C -r egrep -l '^ \* Result: (Never|Sometimes|Always|DEADLOCK)' > $T/list-C-result
+ xargs < $T/list-C-result -r grep -L "^P${LKMM_PROCS}" > $T/list-C-result-short
  
-@@ -499,7 +499,7 @@ different CPUs (external reads-from, or rfe).
+-# Form list of tests without corresponding .litmus.out files
++# Form list of tests without corresponding .out files
+ sort $T/list-C-already $T/list-C-result-short | uniq -u > $T/list-C-needed
  
- For our purposes, a memory location's initial value is treated as
- though it had been written there by an imaginary initial store that
--executes on a separate CPU before the program runs.
-+executes on a separate CPU before the main program runs.
+ # Run any needed tests.
+diff --git a/tools/memory-model/scripts/hwfnseg.sh b/tools/memory-model/scripts/hwfnseg.sh
+new file mode 100755
+index 0000000..580c328
+--- /dev/null
++++ b/tools/memory-model/scripts/hwfnseg.sh
+@@ -0,0 +1,20 @@
++#!/bin/sh
++# SPDX-License-Identifier: GPL-2.0+
++#
++# Generate the hardware extension to the litmus-test filename, or the
++# empty string if this is an LKMM run.  The extension is placed in
++# the shell variable hwfnseg.
++#
++# Usage:
++#	. hwfnseg.sh
++#
++# Copyright IBM Corporation, 2019
++#
++# Author: Paul E. McKenney <paulmck@linux.ibm.com>
++
++if test -z "$LKMM_HW_MAP_FILE"
++then
++	hwfnseg=
++else
++	hwfnseg=".$LKMM_HW_MAP_FILE"
++fi
+diff --git a/tools/memory-model/scripts/runlitmushist.sh b/tools/memory-model/scripts/runlitmushist.sh
+index 852786f..c6c2bdc 100755
+--- a/tools/memory-model/scripts/runlitmushist.sh
++++ b/tools/memory-model/scripts/runlitmushist.sh
+@@ -15,6 +15,8 @@
+ #
+ # Author: Paul E. McKenney <paulmck@linux.ibm.com>
  
- Usage of the rf relation implicitly assumes that loads will always
- read from a single store.  It doesn't apply properly in the presence
-@@ -955,7 +955,7 @@ atomic update.  This is what the LKMM's "atomic" axiom says.
- THE PRESERVED PROGRAM ORDER RELATION: ppo
- -----------------------------------------
++. scripts/hwfnseg.sh
++
+ T=/tmp/runlitmushist.sh.$$
+ trap 'rm -rf $T' 0
+ mkdir $T
+@@ -30,15 +32,12 @@ fi
+ # Prefixes for per-CPU scripts
+ for ((i=0;i<$LKMM_JOBS;i++))
+ do
+-	echo dir="$LKMM_DESTDIR" > $T/$i.sh
+ 	echo T=$T >> $T/$i.sh
+-	echo herdoptions=\"$LKMM_HERD_OPTIONS\" >> $T/$i.sh
+ 	cat << '___EOF___' >> $T/$i.sh
+ 	runtest () {
+-		echo ' ... ' /usr/bin/time $LKMM_TIMEOUT_CMD herd7 $herdoptions $1 '>' $dir/$1.out '2>&1'
+-		if /usr/bin/time $LKMM_TIMEOUT_CMD herd7 $herdoptions $1 > $dir/$1.out 2>&1
++		if scripts/runlitmus.sh $1
+ 		then
+-			if ! grep -q '^Observation ' $dir/$1.out
++			if ! grep -q '^Observation ' $LKMM_DESTDIR/$1$2.out
+ 			then
+ 				echo ' !!! Herd failed, no Observation:' $1
+ 			fi
+@@ -47,10 +46,16 @@ do
+ 			if test "$exitcode" -eq 124
+ 			then
+ 				exitmsg="timed out"
++			elif test "$exitcode" -eq 253
++			then
++				exitmsg=
+ 			else
+ 				exitmsg="failed, exit code $exitcode"
+ 			fi
+-			echo ' !!! Herd' ${exitmsg}: $1
++			if test -n "$exitmsg"
++			then
++				echo ' !!! Herd' ${exitmsg}: $1
++			fi
+ 		fi
+ 	}
+ ___EOF___
+@@ -59,11 +64,13 @@ done
+ awk -v q="'" -v b='\\' '
+ {
+ 	print "echo `grep " q "^P[0-9]" b "+(" q " " $0 " | tail -1 | sed -e " q "s/^P" b "([0-9]" b "+" b ")(.*$/" b "1/" q "` " $0
+-}' | bash |
+-sort -k1n |
+-awk -v ncpu=$LKMM_JOBS -v t=$T '
++}' | sh | sort -k1n |
++awk -v dq='"' -v hwfnseg="$hwfnseg" -v ncpu="$LKMM_JOBS" -v t="$T" '
+ {
+-	print "runtest " $2 >> t "/" NR % ncpu ".sh";
++	print "if test -z " dq hwfnseg dq " || scripts/simpletest.sh " dq $2 dq
++	print "then"
++	print "\techo runtest " dq $2 dq " " hwfnseg " >> " t "/" NR % ncpu ".sh";
++	print "fi"
+ }
  
--There are many situations where a CPU is obligated to execute two
-+There are many situations where a CPU is obliged to execute two
- instructions in program order.  We amalgamate them into the ppo (for
- "preserved program order") relation, which links the po-earlier
- instruction to the po-later instruction and is thus a sub-relation of
-@@ -1572,7 +1572,7 @@ and there are events X, Y and a read-side critical section C such that:
- 
- 	2. X comes "before" Y in some sense (including rfe, co and fr);
- 
--	2. Y is po-before Z;
-+	3. Y is po-before Z;
- 
- 	4. Z is the rcu_read_unlock() event marking the end of C;
- 
+ END {
 -- 
 2.9.5
 
