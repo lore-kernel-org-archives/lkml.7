@@ -2,92 +2,114 @@ Return-Path: <SRS0=6dNS=X4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 76EA2C47404
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 01:32:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BA37C47404
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 01:33:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4225A222C2
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 01:32:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0264B222C9
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 01:33:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570066366;
-	bh=46272hxJR7y25Qsq03fV9SOQaynnC1NPAOanQP3rUCM=;
-	h=Date:From:To:Cc:Subject:Reply-To:List-ID:From;
-	b=f4Zjki0ESBED8HK9J2m99HyKSehyTb473xhTTwmEsvGqhFSLvccK68eQcHhCkJ0/K
-	 aSJtJ5BcUtLDfMfGu2nXz0REv6oq/rfp4veSQE13zm4h0dOlu3gMIT+xCEY4OSYfk4
-	 jJtH7n0xD2g42IfO67dsueaLMvNZTr2U6i/1qFWI=
+	s=default; t=1570066389;
+	bh=p+sP9pdBpS3cdIiTHoO76QDdUeVk+jdXrDWm8n37ulk=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=Rdj9lFPZSXz7XK3BtDCqbutP/MVvcOijfk1yElgZw2fO1hiKVDx2HBJu5rTryjtFl
+	 TsM4vDeA8sGW+M3qhejMP7eYIgEGo4jU7MSBtBcyxsdnM8jvZC2laLpUBTO7z+A2AS
+	 GEecU0DYWljr9PnehRDbhTY6xryEokO+cDkIL7vI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727101AbfJCBcp (ORCPT
+        id S1728039AbfJCBdI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Oct 2019 21:32:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42230 "EHLO mail.kernel.org"
+        Wed, 2 Oct 2019 21:33:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42346 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726354AbfJCBcp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Oct 2019 21:32:45 -0400
-Received: from paulmck-ThinkPad-P72 (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1725951AbfJCBdI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 2 Oct 2019 21:33:08 -0400
+Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 878A0222BE;
-        Thu,  3 Oct 2019 01:32:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 32AE2222BE;
+        Thu,  3 Oct 2019 01:33:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570066364;
-        bh=46272hxJR7y25Qsq03fV9SOQaynnC1NPAOanQP3rUCM=;
-        h=Date:From:To:Cc:Subject:Reply-To:From;
-        b=VKczAUItJuzTpPJbeI5VqrbxnmqwS9tiSfD1XJs313j04brtDdvbSKDx59toGp2ud
-         z1CYX49Fuo6OgFVuWHcg8HP7rDiu21Mefo6f3PXPKJRkI10CJsWTqVBQvME9fnhw2y
-         H4phTtc+S8QsqDQ0+rxHP91v2tiokDWRFD3Aft3I=
-Date:   Wed, 2 Oct 2019 18:32:43 -0700
-From:   "Paul E. McKenney" <paulmck@kernel.org>
+        s=default; t=1570066387;
+        bh=p+sP9pdBpS3cdIiTHoO76QDdUeVk+jdXrDWm8n37ulk=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=eMkDsf4UiL1ocrjHY96+Z3VK/Ai/mHOJGDPkLk32U379Fx7gfkFw0QUKWbZ8Mv0FZ
+         UE2JdidEq5OABU2U82njA3MtDpXoWWHjokVG4VwzZab3IdTsTg1+DZrxz/RREmTUPs
+         E40BhTvgx7jqfZi9lrkXjHQcseFrgaLjqFB/yFeU=
+From:   paulmck@kernel.org
 To:     rcu@vger.kernel.org
 Cc:     linux-kernel@vger.kernel.org, mingo@kernel.org,
         jiangshanlai@gmail.com, dipankar@in.ibm.com,
         akpm@linux-foundation.org, mathieu.desnoyers@efficios.com,
         josh@joshtriplett.org, tglx@linutronix.de, peterz@infradead.org,
         rostedt@goodmis.org, dhowells@redhat.com, edumazet@google.com,
-        fweisbec@gmail.com, oleg@redhat.com, joel@joelfernandes.org
-Subject: [PATCH tip/core/rcu 0/8] Fixes for v5.5
-Message-ID: <20191003013243.GA12705@paulmck-ThinkPad-P72>
-Reply-To: paulmck@kernel.org
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.9.4 (2018-02-28)
+        fweisbec@gmail.com, oleg@redhat.com, joel@joelfernandes.org,
+        Ethan Hansen <1ethanhansen@gmail.com>,
+        "Paul E . McKenney" <paulmck@linux.ibm.com>
+Subject: [PATCH tip/core/rcu 1/8] rcu: Remove unused function hlist_bl_del_init_rcu()
+Date:   Wed,  2 Oct 2019 18:32:58 -0700
+Message-Id: <20191003013305.12854-1-paulmck@kernel.org>
+X-Mailer: git-send-email 2.9.5
+In-Reply-To: <20191003013243.GA12705@paulmck-ThinkPad-P72>
+References: <20191003013243.GA12705@paulmck-ThinkPad-P72>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello!
+From: Ethan Hansen <1ethanhansen@gmail.com>
 
-This series provides miscellaneous fixes:
+The function hlist_bl_del_init_rcu() is declared in rculist_bl.h,
+but never used.  This commit therefore removes it.
 
-1.	Remove unused function hlist_bl_del_init_rcu(), courtesy of
-	Ethan Hansen.
+Signed-off-by: Ethan Hansen <1ethanhansen@gmail.com>
+Signed-off-by: Paul E. McKenney <paulmck@linux.ibm.com>
+---
+ include/linux/rculist_bl.h | 28 ----------------------------
+ 1 file changed, 28 deletions(-)
 
-2.	Make several rcu_segcblist functions state, courtesy of kbuild
-	test robot.
+diff --git a/include/linux/rculist_bl.h b/include/linux/rculist_bl.h
+index 66e73ec..0b952d0 100644
+--- a/include/linux/rculist_bl.h
++++ b/include/linux/rculist_bl.h
+@@ -25,34 +25,6 @@ static inline struct hlist_bl_node *hlist_bl_first_rcu(struct hlist_bl_head *h)
+ }
+ 
+ /**
+- * hlist_bl_del_init_rcu - deletes entry from hash list with re-initialization
+- * @n: the element to delete from the hash list.
+- *
+- * Note: hlist_bl_unhashed() on the node returns true after this. It is
+- * useful for RCU based read lockfree traversal if the writer side
+- * must know if the list entry is still hashed or already unhashed.
+- *
+- * In particular, it means that we can not poison the forward pointers
+- * that may still be used for walking the hash list and we can only
+- * zero the pprev pointer so list_unhashed() will return true after
+- * this.
+- *
+- * The caller must take whatever precautions are necessary (such as
+- * holding appropriate locks) to avoid racing with another
+- * list-mutation primitive, such as hlist_bl_add_head_rcu() or
+- * hlist_bl_del_rcu(), running on this same list.  However, it is
+- * perfectly legal to run concurrently with the _rcu list-traversal
+- * primitives, such as hlist_bl_for_each_entry_rcu().
+- */
+-static inline void hlist_bl_del_init_rcu(struct hlist_bl_node *n)
+-{
+-	if (!hlist_bl_unhashed(n)) {
+-		__hlist_bl_del(n);
+-		n->pprev = NULL;
+-	}
+-}
+-
+-/**
+  * hlist_bl_del_rcu - deletes entry from hash list without re-initialization
+  * @n: the element to delete from the hash list.
+  *
+-- 
+2.9.5
 
-3.	Convert for_each_wq to use built-in list check, courtesy of
-	Joel Fernandes.
-
-4.	Ensure that ->rcu_urgent_qs is set before resched IPI, courtesy
-	of Joel Fernandes.
-
-5-7.	Update tracepoint descriptions.
-
-8.	Fix uninitialized variable in nocb_gp_wait(), courtesy of
-	Dan Carpenter.
-
-							Thanx, Paul
-
-------------------------------------------------------------------------
-
- include/linux/rculist_bl.h |   28 --------------------------
- include/trace/events/rcu.h |   47 ++++++++++++++++++++++++---------------------
- kernel/rcu/rcu_segcblist.c |    6 ++---
- kernel/rcu/tree.c          |    1 
- kernel/rcu/tree_plugin.h   |    2 -
- kernel/workqueue.c         |   10 +--------
- 6 files changed, 33 insertions(+), 61 deletions(-)
