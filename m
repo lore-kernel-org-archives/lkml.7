@@ -2,129 +2,111 @@ Return-Path: <SRS0=6dNS=X4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F3FABC32792
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 13:18:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C8E30C10F14
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 13:19:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D02D220862
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 13:18:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9D542215EA
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 13:19:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1570108760;
+	bh=LZnYEhmvbSaW3Ofpm6bbGneZMRXJOF36LsLe7rVKsiE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=CB3HIUCbnoCq3aQCt3rr0eSRqyGS4IdyL2EsGrrGZA6VSJuHDU4kYa45BeAmQOYgk
+	 pJ0IyngmeX7MXvrFrIf9NC3AHSDWXPGHT1QuYOiya3zvPuCYclKjsNHYhPCcvHBl8b
+	 7UsT6KGqRZ7n+uWjGVEj0Ng6GukXGCWMi2n9T/So=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730369AbfJCNR7 (ORCPT
+        id S1730380AbfJCNTT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 09:17:59 -0400
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:35835 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726978AbfJCNR7 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 09:17:59 -0400
-Received: from gallifrey.ext.pengutronix.de ([2001:67c:670:201:5054:ff:fe8d:eefb] helo=localhost)
-        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <l.stach@pengutronix.de>)
-        id 1iG0zJ-0006F9-Ty; Thu, 03 Oct 2019 15:17:46 +0200
-Message-ID: <662abbc0298ebab59919490ccc3d5c093ae35cf7.camel@pengutronix.de>
-Subject: Re: [PATCH v2 00/21] Refine memblock API
-From:   Lucas Stach <l.stach@pengutronix.de>
-To:     Mike Rapoport <rppt@linux.ibm.com>,
-        Russell King - ARM Linux admin <linux@armlinux.org.uk>
-Cc:     Adam Ford <aford173@gmail.com>, Fabio Estevam <festevam@gmail.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Christoph Hellwig <hch@lst.de>,
-        The etnaviv authors <etnaviv@lists.freedesktop.org>,
-        arm-soc <linux-arm-kernel@lists.infradead.org>,
-        Linux Memory Management List <linux-mm@kvack.org>,
-        Andrew Morton <akpm@linux-foundation.org>
-Date:   Thu, 03 Oct 2019 15:17:36 +0200
-In-Reply-To: <20191003113010.GC23397@linux.ibm.com>
-References: <CAHCN7xJ32BYZu-DVTVLSzv222U50JDb8F0A_tLDERbb8kPdRxg@mail.gmail.com>
-         <20190926160433.GD32311@linux.ibm.com>
-         <CAHCN7xL1sFXDhKUpj04d3eDZNgLA1yGAOqwEeCxedy1Qm-JOfQ@mail.gmail.com>
-         <20190928073331.GA5269@linux.ibm.com>
-         <CAHCN7xJEvS2Si=M+BYtz+kY0M4NxmqDjiX9Nwq6_3GGBh3yg=w@mail.gmail.com>
-         <CAHCN7xKLhWw4P9-sZKXQcfSfh2r3J_+rLxuxACW0UVgimCzyVw@mail.gmail.com>
-         <20191002073605.GA30433@linux.ibm.com>
-         <CAHCN7xL1MkJh44N3W_1+08DHmX__SqnfH6dqUzYzr2Wpg0kQyQ@mail.gmail.com>
-         <20191003053451.GA23397@linux.ibm.com>
-         <20191003084914.GV25745@shell.armlinux.org.uk>
-         <20191003113010.GC23397@linux.ibm.com>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.32.4 (3.32.4-1.fc30) 
+        Thu, 3 Oct 2019 09:19:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44258 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726199AbfJCNTT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 09:19:19 -0400
+Received: from localhost (lfbn-1-10718-76.w90-89.abo.wanadoo.fr [90.89.68.76])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9305F20862;
+        Thu,  3 Oct 2019 13:19:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1570108759;
+        bh=LZnYEhmvbSaW3Ofpm6bbGneZMRXJOF36LsLe7rVKsiE=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=b4NIq8WYP5JaZDLiCwCQTigNR4O6wgBuNSMj1dwMDtbDVOQj/iC0ui6TY73gL+SiS
+         PhJWqYe90ubpY+i3nRet3oc7jB9RCXLLWy8xTzrW+N/EubHZtIg9CAxNkl3mtTMVFc
+         lKEUIxFvgExGZqaLKkuZSvOyUEbVr7jMnXC/Pf9M=
+Date:   Thu, 3 Oct 2019 15:19:16 +0200
+From:   Maxime Ripard <mripard@kernel.org>
+To:     Jagan Teki <jagan@amarulasolutions.com>
+Cc:     Icenowy Zheng <icenowy@aosc.io>, Chen-Yu Tsai <wens@csie.org>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        linux-sunxi <linux-sunxi@googlegroups.com>
+Subject: Re: [linux-sunxi] [PATCH 1/3] Revert "drm/sun4i: dsi: Change the
+ start delay calculation"
+Message-ID: <20191003131916.4bm22krapo5tz6oz@gilmour>
+References: <20191001080253.6135-1-icenowy@aosc.io>
+ <20191001080253.6135-2-icenowy@aosc.io>
+ <CAMty3ZCjrM4MajJLyLwt-31mNnfVWghwatogtwVOvCt4gY0LZA@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-SA-Exim-Connect-IP: 2001:67c:670:201:5054:ff:fe8d:eefb
-X-SA-Exim-Mail-From: l.stach@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="gpjy7vewgc4imexw"
+Content-Disposition: inline
+In-Reply-To: <CAMty3ZCjrM4MajJLyLwt-31mNnfVWghwatogtwVOvCt4gY0LZA@mail.gmail.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Am Donnerstag, den 03.10.2019, 14:30 +0300 schrieb Mike Rapoport:
-> On Thu, Oct 03, 2019 at 09:49:14AM +0100, Russell King - ARM Linux admin wrote:
-> > On Thu, Oct 03, 2019 at 08:34:52AM +0300, Mike Rapoport wrote:
-> > > (trimmed the CC)
-> > > 
-> > > On Wed, Oct 02, 2019 at 06:14:11AM -0500, Adam Ford wrote:
-> > > > On Wed, Oct 2, 2019 at 2:36 AM Mike Rapoport <rppt@linux.ibm.com> wrote:
-> > > > 
-> > > > Before the patch:
-> > > > 
-> > > > # cat /sys/kernel/debug/memblock/memory
-> > > >    0: 0x10000000..0x8fffffff
-> > > > # cat /sys/kernel/debug/memblock/reserved
-> > > >    0: 0x10004000..0x10007fff
-> > > >   34: 0x2fffff88..0x3fffffff
-> > > > 
-> > > > 
-> > > > After the patch:
-> > > > # cat /sys/kernel/debug/memblock/memory
-> > > >    0: 0x10000000..0x8fffffff
-> > > > # cat /sys/kernel/debug/memblock/reserved
-> > > >    0: 0x10004000..0x10007fff
-> > > >   36: 0x80000000..0x8fffffff
-> > > 
-> > > I'm still not convinced that the memblock refactoring didn't uncovered an
-> > > issue in etnaviv driver.
-> > > 
-> > > Why moving the CMA area from 0x80000000 to 0x30000000 makes it fail?
-> > 
-> > I think you have that the wrong way round.
-> 
-> I'm relying on Adam's reports of working and non-working versions.
-> According to that etnaviv works when CMA area is at 0x80000000 and does not
-> work when it is at 0x30000000.
-> 
-> He also sent logs a few days ago [1], they also confirm that.
-> 
-> [1] https://lore.kernel.org/linux-mm/CAHCN7xJEvS2Si=M+BYtz+kY0M4NxmqDjiX9Nwq6_3GGBh3yg=w@mail.gmail.com/
 
-To clarify: Etnaviv needs to know where the CMA area is in order to
-move a aperture window to cover the CMA area so the command buffers
-allocated in contig memory can be mapped through this aperture. Now the
-issue is that there is currently there is no good API for a driver to
-know where the CMA area is located, so we are trying to infer this from
-dma_get_required_mask. Unfortunately this can overshoot the real DRAM
-area by a bit, so combined with the fixed 2GB size of the GPU aperture
-this means we are no longer able to map the command buffers through the
-required aperture if the CMA area moves too far down in the physical
-memory.
+--gpjy7vewgc4imexw
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-It's really a bad interaction between etnaviv and CMA area placement,
-due to insufficient APIs to communicate some crucial information. There
-is nothing in the etnaviv driver or the hardware which requires the CMA
-area to be at a certain place, we just need to know where it is located
-exactly. So my try at fixing this [1] was by adding a API to get the
-required information, but the first attempt was shot down and I hadn't
-had time to follow up on this yet.
+On Thu, Oct 03, 2019 at 12:38:43PM +0530, Jagan Teki wrote:
+> On Tue, Oct 1, 2019 at 1:33 PM Icenowy Zheng <icenowy@aosc.io> wrote:
+> >
+> > This reverts commit da676c6aa6413d59ab0a80c97bbc273025e640b2.
+> >
+> > The original commit adds a start parameter to the calculation of the
+> > start delay according to some old BSP versions from Allwinner. However,
+> > there're two ways to add this delay -- add it in DSI controller or add
+> > it in the TCON. Add it in both controllers won't work.
+> >
+> > The code before this commit is picked from new versions of BSP kernel,
+> > which has a comment for the 1 that says "put start_delay to tcon". By
+> > checking the sun4i_tcon0_mode_set_cpu() in sun4i_tcon driver, it has
+> > already added this delay, so we shouldn't repeat to add the delay in DSI
+> > controller, otherwise the timing won't match.
+>
+> Thanks for this change. look like this is proper reason for adding +
+> 1. also adding bsp code links here might help for future reference.
+>
+> Otherwise,
+>
+> Reviewed-by: Jagan Teki <jagan@amarulasolutions.com>
 
-Regards,
-Lucas
+The commit log was better in this one. I ended up merging this one,
+with your R-b.
 
-[1] https://patchwork.kernel.org/patch/10966767/
+Maxime
 
+--gpjy7vewgc4imexw
+Content-Type: application/pgp-signature; name="signature.asc"
 
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXZX1VAAKCRDj7w1vZxhR
+xUuoAP4y5oTqiRELKb7+eBaUuQzrM0UnEaEFGgPGo3tNepr5MAD+JZ+yULsZi7ib
+qWa9lYn9gfhY+hQfA+wQQBdXJWRJxgk=
+=K3FM
+-----END PGP SIGNATURE-----
+
+--gpjy7vewgc4imexw--
