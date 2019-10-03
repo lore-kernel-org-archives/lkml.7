@@ -2,85 +2,79 @@ Return-Path: <SRS0=6dNS=X4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0396AC10F14
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 07:47:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FACEC10F14
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 07:48:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CEB7F21D71
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 07:47:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 663AA21D81
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 07:48:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728475AbfJCHrC (ORCPT
+        id S1728547AbfJCHsg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 03:47:02 -0400
-Received: from mga09.intel.com ([134.134.136.24]:17762 "EHLO mga09.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725907AbfJCHrC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 03:47:02 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 03 Oct 2019 00:47:01 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.67,251,1566889200"; 
-   d="scan'208";a="205558147"
-Received: from linux.intel.com ([10.54.29.200])
-  by fmsmga001.fm.intel.com with ESMTP; 03 Oct 2019 00:47:00 -0700
-Received: from [10.226.38.25] (unknown [10.226.38.25])
-        by linux.intel.com (Postfix) with ESMTP id AB2F55803A5;
-        Thu,  3 Oct 2019 00:46:57 -0700 (PDT)
-Subject: Re: [PATCH v1 2/2] mmc: sdhci-of-arasan: Add Support for Intel LGM
- SDXC
-To:     Adrian Hunter <adrian.hunter@intel.com>, ulf.hansson@linaro.org,
-        linux-mmc@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        devicetree@vger.kernel.org, michal.simek@xilinx.com,
-        robh+dt@kernel.org, mark.rutland@arm.com,
-        andriy.shevchenko@intel.com, cheol.yong.kim@intel.com,
-        qi-ming.wu@intel.com
-References: <20191003040032.37696-1-vadivel.muruganx.ramuthevar@linux.intel.com>
- <20191003040032.37696-3-vadivel.muruganx.ramuthevar@linux.intel.com>
- <329a38b4-4fba-eb6e-0d40-c241cfa28e25@intel.com>
-From:   "Ramuthevar, Vadivel MuruganX" 
-        <vadivel.muruganx.ramuthevar@linux.intel.com>
-Message-ID: <0c3d406c-dc28-a670-91df-7c7e6f818f87@linux.intel.com>
-Date:   Thu, 3 Oct 2019 15:46:56 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Thu, 3 Oct 2019 03:48:36 -0400
+Received: from mailgw01.mediatek.com ([210.61.82.183]:17091 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725907AbfJCHsf (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 03:48:35 -0400
+X-UUID: 83fe77502d2044c0a906e3906d16e602-20191003
+X-UUID: 83fe77502d2044c0a906e3906d16e602-20191003
+Received: from mtkexhb01.mediatek.inc [(172.21.101.102)] by mailgw01.mediatek.com
+        (envelope-from <argus.lin@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 1459279076; Thu, 03 Oct 2019 15:48:29 +0800
+Received: from mtkcas08.mediatek.inc (172.21.101.126) by
+ mtkmbs07n2.mediatek.inc (172.21.101.141) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Thu, 3 Oct 2019 15:48:26 +0800
+Received: from mtkswgap22.mediatek.inc (172.21.77.33) by mtkcas08.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Thu, 3 Oct 2019 15:48:27 +0800
+From:   Argus Lin <argus.lin@mediatek.com>
+To:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will.deacon@arm.com>
+CC:     Chenglin Xu <chenglin.xu@mediatek.com>, <argus.lin@mediatek.com>,
+        Sean Wang <sean.wang@mediatek.com>,
+        <wsd_upstream@mediatek.com>, <henryc.chen@mediatek.com>,
+        <flora.fu@mediatek.com>, Chen Zhong <chen.zhong@mediatek.com>,
+        Christophe Jaillet <christophe.jaillet@wanadoo.fr>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>
+Subject: [PATCH 0/3] Pwrap: Mediatek pwrap driver for MT6779
+Date:   Thu, 3 Oct 2019 15:48:18 +0800
+Message-ID: <1570088901-23211-1-git-send-email-argus.lin@mediatek.com>
+X-Mailer: git-send-email 1.8.1.1.dirty
 MIME-Version: 1.0
-In-Reply-To: <329a38b4-4fba-eb6e-0d40-c241cfa28e25@intel.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+Content-Type: text/plain
+X-MTK:  N
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Adrian,
+Here's version 1 of the patch series, include 3 patches:
+1. Add compatible for MT6779 pwrap
+2. Add pwrap driver for MT6779 SoCs. Keep PWRAP_HIPRIO_ARB_EN,
+PWRAP_WDT_UNIT, and PWRAP_WDT_SRC_EN value if it has initialized.
+When we enable interrupt flag, read current value then do logical
+OR opersion with wrp->master->int_en_all.
+3. Add MT6359 support for MT6779 SoCs.
 
-  Thank you for the comments.
+Argus Lin (3):
+  dt-bindings: pwrap: mediatek: add pwrap support for MT6779
+  soc: mediatek: pwrap: add pwrap driver for MT6779 SoCs
+  soc: mediatek: pwrap: add support for MT6359 PMIC
 
-On 3/10/2019 3:02 PM, Adrian Hunter wrote:
-> On 3/10/19 7:00 AM, Ramuthevar,Vadivel MuruganX wrote:
->> From: Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
->>
->> The current arasan sdhci PHY configuration isn't compatible
->> with the PHY on Intel's LGM(Lightning Mountain) SoC devices.
->>
->> Therefore, add a new compatible, to adapt the Intel's LGM
->> SDXC PHY with arasan-sdhc controller to configure the PHY.
->>
->> Signed-off-by: Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
-> Aren't these patches already in v5.4-rc1
+ .../devicetree/bindings/soc/mediatek/pwrap.txt     |   1 +
+ drivers/soc/mediatek/mtk-pmic-wrap.c               | 157 +++++++++++++++++++--
+ 2 files changed, 150 insertions(+), 8 deletions(-)
 
-  No, these patches are not there in v5.4-rc1.
+--
+1.8.1.1.dirty
 
-  The one which is in v5.4-rc1 supports only eMMC, does not SD/SDIO, so 
-these patches are required.
-
----
-With Best Regards
-Vadivel Murugan
