@@ -4,52 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F686C4CED1
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:49:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C817C32792
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:49:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1D61A2086A
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:49:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5F490215EA
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:49:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570121368;
-	bh=3vz0jGokF/tADKiAtasvrTU/In2SROOiBNXQon2ojrc=;
+	s=default; t=1570121369;
+	bh=hg7cnCXjeGWahhxiH2BWq0tRZool+GN4nN36HueKydU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=epMJVgaTEaSFZYNc+D67noKsakZaKgJh1kBwEO954jVhRPdByE/+huXGnzEigrpe0
-	 xTMk7YC5RC6EbzBFybPxYPIDgkt6Yi52iqW2dfCkoNaBCsJx5BFEVHHm/SiX/wIxu4
-	 mGn7UWWivvEGUsUZOgNLrMQ4dKZtSBc2Nz1SOWr0=
+	b=EAIlDk6Q4E2F4YlPOIbVuAu1w2R84nzvFCupgDq6My23xnuCWzUxONfb2E+tXEVMw
+	 y772Loy4sVb6xWkpjMb5eV/j3fxy2P3hnvHaJ9RnT9+hdWfYzP2R1OTXPYbxTqZ3Ta
+	 GrcTffwLzyALSsb2CQIse/LMdn3xLfCcZQIP50YM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405601AbfJCQt1 (ORCPT
+        id S2405672AbfJCQt2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 12:49:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35814 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 12:49:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35898 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2393067AbfJCQtW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:49:22 -0400
+        id S2393072AbfJCQt0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:49:26 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 96D82215EA;
-        Thu,  3 Oct 2019 16:49:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3D6DF222CB;
+        Thu,  3 Oct 2019 16:49:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570121362;
-        bh=3vz0jGokF/tADKiAtasvrTU/In2SROOiBNXQon2ojrc=;
+        s=default; t=1570121364;
+        bh=hg7cnCXjeGWahhxiH2BWq0tRZool+GN4nN36HueKydU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=AMb5BCRvTYsh1W9nVqjRh2s3qAHns1MPv3eFnedgF93NXNYoiLeStfExXe5kEITR3
-         MNMC8gpXfdlWgTWUFiZ3Ub+0iEJknLKnrotDNzYYCR5EgowRqzKI8SvhW89VzyzqDN
-         sOuEQc1hfOZXlPPc7uTM6GTjDg5YjG8SahtIuZ+M=
+        b=YtRZWXe27FEfzLVVl7IaVOvzAweAoQkdnE9taBgjrmGmuS6MIviPFPmUVLhzfCKcf
+         X/8avUXF33V6VV9/G4K16xhdYduh9fSRgSLs5ORV6QL9Uwk7NQYs3LbkHUIj78ULVC
+         LKQwOYkxLb652plU6g9zpAdAKe9sXqvvCaTB34i4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Tomas Bortoli <tomasbortoli@gmail.com>,
-        syzbot+0522702e9d67142379f1@syzkaller.appspotmail.com,
-        Sean Young <sean@mess.org>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.3 223/344] media: ttusb-dec: Fix info-leak in ttusb_dec_send_command()
-Date:   Thu,  3 Oct 2019 17:53:08 +0200
-Message-Id: <20191003154602.379734889@linuxfoundation.org>
+        stable@vger.kernel.org, Jan-Marek Glogowski <glogow@fbihome.de>,
+        Takashi Iwai <tiwai@suse.de>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.3 250/344] ALSA: hda/realtek - PCI quirk for Medion E4254
+Date:   Thu,  3 Oct 2019 17:53:35 +0200
+Message-Id: <20191003154605.125287747@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191003154540.062170222@linuxfoundation.org>
 References: <20191003154540.062170222@linuxfoundation.org>
@@ -62,38 +59,82 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tomas Bortoli <tomasbortoli@gmail.com>
+From: Jan-Marek Glogowski <glogow@fbihome.de>
 
-[ Upstream commit a10feaf8c464c3f9cfdd3a8a7ce17e1c0d498da1 ]
+[ Upstream commit bd9c10bc663dd2eaac8fe39dad0f18cd21527446 ]
 
-The function at issue does not always initialize each byte allocated
-for 'b' and can therefore leak uninitialized memory to a USB device in
-the call to usb_bulk_msg()
+The laptop has a combined jack to attach headsets on the right.
+The BIOS encodes them as two different colored jacks at the front,
+but otherwise it seems to be configured ok. But any adaption of
+the pins config on its own doesn't fix the jack detection to work
+in Linux. Still Windows works correct.
 
-Use kzalloc() instead of kmalloc()
+This is somehow fixed by chaining ALC256_FIXUP_ASUS_HEADSET_MODE,
+which seems to register the microphone jack as a headset part and
+also results in fixing jack sensing, visible in dmesg as:
 
-Signed-off-by: Tomas Bortoli <tomasbortoli@gmail.com>
-Reported-by: syzbot+0522702e9d67142379f1@syzkaller.appspotmail.com
-Signed-off-by: Sean Young <sean@mess.org>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+-snd_hda_codec_realtek hdaudioC0D0:      Mic=0x19
++snd_hda_codec_realtek hdaudioC0D0:      Headset Mic=0x19
+
+[ Actually the essential change is the location of the jack; the
+  driver created "Front Mic Jack" without the matching volume / mute
+  control element due to its jack location, which confused PA.
+  -- tiwai ]
+
+Signed-off-by: Jan-Marek Glogowski <glogow@fbihome.de>
+Cc: <stable@vger.kernel.org>
+Link: https://lore.kernel.org/r/8f4f9b20-0aeb-f8f1-c02f-fd53c09679f1@fbihome.de
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/usb/ttusb-dec/ttusb_dec.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ sound/pci/hda/patch_realtek.c | 13 +++++++++++++
+ 1 file changed, 13 insertions(+)
 
-diff --git a/drivers/media/usb/ttusb-dec/ttusb_dec.c b/drivers/media/usb/ttusb-dec/ttusb_dec.c
-index 1d0afa340f47c..3198f9624b7c0 100644
---- a/drivers/media/usb/ttusb-dec/ttusb_dec.c
-+++ b/drivers/media/usb/ttusb-dec/ttusb_dec.c
-@@ -319,7 +319,7 @@ static int ttusb_dec_send_command(struct ttusb_dec *dec, const u8 command,
+diff --git a/sound/pci/hda/patch_realtek.c b/sound/pci/hda/patch_realtek.c
+index d223a79ac934f..36aee8ad20547 100644
+--- a/sound/pci/hda/patch_realtek.c
++++ b/sound/pci/hda/patch_realtek.c
+@@ -5870,6 +5870,7 @@ enum {
+ 	ALC256_FIXUP_ASUS_MIC_NO_PRESENCE,
+ 	ALC299_FIXUP_PREDATOR_SPK,
+ 	ALC294_FIXUP_ASUS_INTSPK_HEADSET_MIC,
++	ALC256_FIXUP_MEDION_HEADSET_NO_PRESENCE,
+ };
  
- 	dprintk("%s\n", __func__);
+ static const struct hda_fixup alc269_fixups[] = {
+@@ -6926,6 +6927,16 @@ static const struct hda_fixup alc269_fixups[] = {
+ 		.chained = true,
+ 		.chain_id = ALC269_FIXUP_HEADSET_MODE_NO_HP_MIC
+ 	},
++	[ALC256_FIXUP_MEDION_HEADSET_NO_PRESENCE] = {
++		.type = HDA_FIXUP_PINS,
++		.v.pins = (const struct hda_pintbl[]) {
++			{ 0x19, 0x04a11040 },
++			{ 0x21, 0x04211020 },
++			{ }
++		},
++		.chained = true,
++		.chain_id = ALC256_FIXUP_ASUS_HEADSET_MODE
++	},
+ };
  
--	b = kmalloc(COMMAND_PACKET_SIZE + 4, GFP_KERNEL);
-+	b = kzalloc(COMMAND_PACKET_SIZE + 4, GFP_KERNEL);
- 	if (!b)
- 		return -ENOMEM;
+ static const struct snd_pci_quirk alc269_fixup_tbl[] = {
+@@ -7189,6 +7200,7 @@ static const struct snd_pci_quirk alc269_fixup_tbl[] = {
+ 	SND_PCI_QUIRK(0x17aa, 0x9e54, "LENOVO NB", ALC269_FIXUP_LENOVO_EAPD),
+ 	SND_PCI_QUIRK(0x19e5, 0x3204, "Huawei MACH-WX9", ALC256_FIXUP_HUAWEI_MACH_WX9_PINS),
+ 	SND_PCI_QUIRK(0x1b7d, 0xa831, "Ordissimo EVE2 ", ALC269VB_FIXUP_ORDISSIMO_EVE2), /* Also known as Malata PC-B1303 */
++	SND_PCI_QUIRK(0x10ec, 0x118c, "Medion EE4254 MD62100", ALC256_FIXUP_MEDION_HEADSET_NO_PRESENCE),
  
+ #if 0
+ 	/* Below is a quirk table taken from the old code.
+@@ -7357,6 +7369,7 @@ static const struct hda_model_fixup alc269_fixup_models[] = {
+ 	{.id = ALC295_FIXUP_CHROME_BOOK, .name = "alc-chrome-book"},
+ 	{.id = ALC299_FIXUP_PREDATOR_SPK, .name = "predator-spk"},
+ 	{.id = ALC298_FIXUP_HUAWEI_MBX_STEREO, .name = "huawei-mbx-stereo"},
++	{.id = ALC256_FIXUP_MEDION_HEADSET_NO_PRESENCE, .name = "alc256-medion-headset"},
+ 	{}
+ };
+ #define ALC225_STANDARD_PINS \
 -- 
 2.20.1
 
