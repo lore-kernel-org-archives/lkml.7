@@ -7,47 +7,55 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C8D50C10F14
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:39:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B0FCC32792
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:39:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9DFFC2086A
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:39:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 14A392086A
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:39:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570124386;
-	bh=i96ov6Rmi4+Atr3GicTb5fGFgF2PeBsIq374ck8lhDc=;
+	s=default; t=1570124395;
+	bh=CknWvKtX5BmSgd+yGV+0i6mZncWjE5nHtScPrEPnwYs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=hxb+aJR5hbzZWWMmwVk2u25WmrS9U2xKurLdNp83bzWEPAPjV8f6OuGO+zb6pYm1j
-	 Sw1/kqLXrwtw/s0s55YXig7LByoKnOiKw0lgZ3qnsGdhxxLmEYpuhIpTVmWZ33NGbF
-	 Qc2QUVfFBMAnnZLKhsJdEHMyJ+U546pqFTm6tJhk=
+	b=EjCpuGEcpcpuolrpr2zhwxD7S9siBw+C1BduNOOaEJ84m7Gv96QqMYeEJ61oXCUiC
+	 6IOLOrnC++8N2bG0L011znqKadIO3H+UVChNoZ2Qh7UBjjIeUV6Z9qLCyinYNxokx/
+	 gDzvzpEV3jM3/bMd/ibzMA1OlY31/cWJuWZgnULE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731673AbfJCQBA (ORCPT
+        id S1731641AbfJCQAv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 12:01:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44922 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 12:00:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44692 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728786AbfJCQAz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:00:55 -0400
+        id S1730115AbfJCQAr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:00:47 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5A3AF21848;
-        Thu,  3 Oct 2019 16:00:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E00E721D81;
+        Thu,  3 Oct 2019 16:00:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570118454;
-        bh=i96ov6Rmi4+Atr3GicTb5fGFgF2PeBsIq374ck8lhDc=;
+        s=default; t=1570118446;
+        bh=CknWvKtX5BmSgd+yGV+0i6mZncWjE5nHtScPrEPnwYs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=o/qUl32GgomMzMqMfxy44Oy+UUwRpuyZaAFJdD5aicsuYZVWF7OmQZeZO8QZ/PFUI
-         vhYcnxGWacMoreoyfElXAGKQXhbeR+AgCHZOjfxftOxVljHRA/085EuxufQO0vNPF3
-         2Q9Jy1Wvaz4tcnSBqfvZ0LY8YCWBADelizJaNvWw=
+        b=vesGmSXDxf1VoIZHbnm/cZD6SqA6G/4jKgd0JAOOFfRCBM403/lGE6jYvgqs8Y34k
+         mcREor9TkOdyOoSD9b9r57/N9QG8MST6qacVs1eg4RQNIw3H0fYtDVt0FmTK3Tc1Ly
+         lUzoOfTmytSk8yrhS9PHa0KTzRe6vo5vJluobv30=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Chao Yu <yuchao0@huawei.com>,
-        Jaegeuk Kim <jaegeuk@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 018/129] Revert "f2fs: avoid out-of-range memory access"
-Date:   Thu,  3 Oct 2019 17:52:21 +0200
-Message-Id: <20191003154327.439442229@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
+        syzbot+53383ae265fb161ef488@syzkaller.appspotmail.com,
+        Waiman Long <longman@redhat.com>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        "Paul E. McKenney" <paulmck@linux.vnet.ibm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Will Deacon <will.deacon@arm.com>,
+        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.9 015/129] locking/lockdep: Add debug_locks check in __lock_downgrade()
+Date:   Thu,  3 Oct 2019 17:52:18 +0200
+Message-Id: <20191003154325.692683799@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191003154318.081116689@linuxfoundation.org>
 References: <20191003154318.081116689@linuxfoundation.org>
@@ -60,59 +68,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chao Yu <yuchao0@huawei.com>
+From: Waiman Long <longman@redhat.com>
 
-[ Upstream commit a37d0862d17411edb67677a580a6f505ec2225f6 ]
+[ Upstream commit 513e1073d52e55b8024b4f238a48de7587c64ccf ]
 
-As Pavel Machek reported:
+Tetsuo Handa had reported he saw an incorrect "downgrading a read lock"
+warning right after a previous lockdep warning. It is likely that the
+previous warning turned off lock debugging causing the lockdep to have
+inconsistency states leading to the lock downgrade warning.
 
-"We normally use -EUCLEAN to signal filesystem corruption. Plus, it is
-good idea to report it to the syslog and mark filesystem as "needing
-fsck" if filesystem can do that."
+Fix that by add a check for debug_locks at the beginning of
+__lock_downgrade().
 
-Still we need improve the original patch with:
-- use unlikely keyword
-- add message print
-- return EUCLEAN
-
-However, after rethink this patch, I don't think we should add such
-condition check here as below reasons:
-- We have already checked the field in f2fs_sanity_check_ckpt(),
-- If there is fs corrupt or security vulnerability, there is nothing
-to guarantee the field is integrated after the check, unless we do
-the check before each of its use, however no filesystem does that.
-- We only have similar check for bitmap, which was added due to there
-is bitmap corruption happened on f2fs' runtime in product.
-- There are so many key fields in SB/CP/NAT did have such check
-after f2fs_sanity_check_{sb,cp,..}.
-
-So I propose to revert this unneeded check.
-
-This reverts commit 56f3ce675103e3fb9e631cfb4131fc768bc23e9a.
-
-Signed-off-by: Chao Yu <yuchao0@huawei.com>
-Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
+Reported-by: Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
+Reported-by: syzbot+53383ae265fb161ef488@syzkaller.appspotmail.com
+Signed-off-by: Waiman Long <longman@redhat.com>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Paul E. McKenney <paulmck@linux.vnet.ibm.com>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Will Deacon <will.deacon@arm.com>
+Link: https://lkml.kernel.org/r/1547093005-26085-1-git-send-email-longman@redhat.com
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/f2fs/segment.c | 5 -----
- 1 file changed, 5 deletions(-)
+ kernel/locking/lockdep.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/fs/f2fs/segment.c b/fs/f2fs/segment.c
-index c983f7d28f033..2fb99a081de8f 100644
---- a/fs/f2fs/segment.c
-+++ b/fs/f2fs/segment.c
-@@ -1709,11 +1709,6 @@ static int read_compacted_summaries(struct f2fs_sb_info *sbi)
- 		seg_i = CURSEG_I(sbi, i);
- 		segno = le32_to_cpu(ckpt->cur_data_segno[i]);
- 		blk_off = le16_to_cpu(ckpt->cur_data_blkoff[i]);
--		if (blk_off > ENTRIES_IN_SUM) {
--			f2fs_bug_on(sbi, 1);
--			f2fs_put_page(page, 1);
--			return -EFAULT;
--		}
- 		seg_i->next_segno = segno;
- 		reset_curseg(sbi, i, 0);
- 		seg_i->alloc_type = ckpt->alloc_type[i];
+diff --git a/kernel/locking/lockdep.c b/kernel/locking/lockdep.c
+index 4b27aaffdf352..d7f425698a4a1 100644
+--- a/kernel/locking/lockdep.c
++++ b/kernel/locking/lockdep.c
+@@ -3446,6 +3446,9 @@ __lock_set_class(struct lockdep_map *lock, const char *name,
+ 	unsigned int depth;
+ 	int i;
+ 
++	if (unlikely(!debug_locks))
++		return 0;
++
+ 	depth = curr->lockdep_depth;
+ 	/*
+ 	 * This function is about (re)setting the class of a held lock,
 -- 
 2.20.1
 
