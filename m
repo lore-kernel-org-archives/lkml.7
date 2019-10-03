@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D1B2C32792
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:23:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A8A4AC4CED1
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:23:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4E14321A4C
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:23:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6DF3D222BE
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:23:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570119824;
-	bh=qvdiACbPD+9kE/AR44QPMyH4ycwkChBkxIkwGFZfNfE=;
+	s=default; t=1570119827;
+	bh=yEB9cdRN152hNcF2m8k+3yw49W/hfQIpYS6OO5hf9nE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=EGhm5fQhAIYgLQgyCh+YWo8YlDUn5e/Ap+N2Fmt64v4wWIXbApt32J/ZLkFaQ5WRJ
-	 LLe4PuS2Ybng42gjuxomcpJnh08J67vJX8207VNok7RXnkcya78qMDnRjYWkPy4Af4
-	 TbRPiWWKUFljKinaZYJb6vQdzS+a3pfrEYyijGE0=
+	b=tQ8xXIOomnfKjYgjSL+HYr7Xa7Xd87NtGg6jTwGBi8qsr8fObgTZ4Y44o31QyL64k
+	 InOpX48r/jbS/a7HSfUFara1Cw4XaiKOrYq/ww1NtLc1MPkaai8jtIbl/ZINHCHULk
+	 lFnp5j8Mp4qRuuRUXytvFzq3CQFxg5MrqY9J5rlE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390617AbfJCQXn (ORCPT
+        id S2390626AbfJCQXq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 12:23:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52776 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 12:23:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52952 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389355AbfJCQXi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:23:38 -0400
+        id S2389355AbfJCQXo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:23:44 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C9CBA222BE;
-        Thu,  3 Oct 2019 16:23:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 27A8E222BE;
+        Thu,  3 Oct 2019 16:23:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570119818;
-        bh=qvdiACbPD+9kE/AR44QPMyH4ycwkChBkxIkwGFZfNfE=;
+        s=default; t=1570119823;
+        bh=yEB9cdRN152hNcF2m8k+3yw49W/hfQIpYS6OO5hf9nE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=VVAK34sI8S26qudXij7RD930DG62bPLW6YNQzL/d6KU9fiOszR4SzAjXz+nxI0YTC
-         VGa66HJh/AOMO1UpJMlyoD35A2Wgc2g/vSZG2OIehgw+9AyVus8TgOWHgCrIjHRZ75
-         IqitFMzPRuFtTGQ756S90al6etFmfbCu7eYaq/rc=
+        b=oEySnqvyPf8LmuruxZ6e1/S8w2ukDwCVqdLwOsknVK+TCrETaoZkVGKrq1HQHXE56
+         HmHDGSoTg1pHVUi7UpVk+3NasyEnBGFGfXbkDzsyyt2xVCKrRUCCvEkiZOlxj01LMj
+         h1FWcYjAmvu9zwFSvbZ47AY0y1T0VOCG1+wyFEDU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Chien Nguyen <chien.nguyen.eb@rvc.renesas.com>,
-        Chris Brandt <chris.brandt@renesas.com>,
-        Wolfram Sang <wsa@the-dreams.de>
-Subject: [PATCH 4.19 205/211] i2c: riic: Clear NACK in tend isr
-Date:   Thu,  3 Oct 2019 17:54:31 +0200
-Message-Id: <20191003154530.219914681@linuxfoundation.org>
+        stable@vger.kernel.org, Pavel Shilovsky <pshilov@microsoft.com>,
+        Steve French <stfrench@microsoft.com>,
+        Ronnie Sahlberg <lsahlber@redhat.com>
+Subject: [PATCH 4.19 207/211] CIFS: Fix oplock handling for SMB 2.1+ protocols
+Date:   Thu,  3 Oct 2019 17:54:33 +0200
+Message-Id: <20191003154530.440466449@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191003154447.010950442@linuxfoundation.org>
 References: <20191003154447.010950442@linuxfoundation.org>
@@ -61,37 +60,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chris Brandt <chris.brandt@renesas.com>
+From: Pavel Shilovsky <pshilov@microsoft.com>
 
-commit a71e2ac1f32097fbb2beab098687a7a95c84543e upstream.
+commit a016e2794fc3a245a91946038dd8f34d65e53cc3 upstream.
 
-The NACKF flag should be cleared in INTRIICNAKI interrupt processing as
-description in HW manual.
+There may be situations when a server negotiates SMB 2.1
+protocol version or higher but responds to a CREATE request
+with an oplock rather than a lease.
 
-This issue shows up quickly when PREEMPT_RT is applied and a device is
-probed that is not plugged in (like a touchscreen controller). The result
-is endless interrupts that halt system boot.
+Currently the client doesn't handle such a case correctly:
+when another CREATE comes in the server sends an oplock
+break to the initial CREATE and the client doesn't send
+an ack back due to a wrong caching level being set (READ
+instead of RWH). Missing an oplock break ack makes the
+server wait until the break times out which dramatically
+increases the latency of the second CREATE.
 
-Fixes: 310c18a41450 ("i2c: riic: add driver")
-Cc: stable@vger.kernel.org
-Reported-by: Chien Nguyen <chien.nguyen.eb@rvc.renesas.com>
-Signed-off-by: Chris Brandt <chris.brandt@renesas.com>
-Signed-off-by: Wolfram Sang <wsa@the-dreams.de>
+Fix this by properly detecting oplocks when using SMB 2.1
+protocol version and higher.
+
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Pavel Shilovsky <pshilov@microsoft.com>
+Signed-off-by: Steve French <stfrench@microsoft.com>
+Reviewed-by: Ronnie Sahlberg <lsahlber@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/i2c/busses/i2c-riic.c |    1 +
- 1 file changed, 1 insertion(+)
+ fs/cifs/smb2ops.c |    5 +++++
+ 1 file changed, 5 insertions(+)
 
---- a/drivers/i2c/busses/i2c-riic.c
-+++ b/drivers/i2c/busses/i2c-riic.c
-@@ -203,6 +203,7 @@ static irqreturn_t riic_tend_isr(int irq
- 	if (readb(riic->base + RIIC_ICSR2) & ICSR2_NACKF) {
- 		/* We got a NACKIE */
- 		readb(riic->base + RIIC_ICDRR);	/* dummy read */
-+		riic_clear_set_bit(riic, ICSR2_NACKF, 0, RIIC_ICSR2);
- 		riic->err = -ENXIO;
- 	} else if (riic->bytes_left) {
- 		return IRQ_NONE;
+--- a/fs/cifs/smb2ops.c
++++ b/fs/cifs/smb2ops.c
+@@ -2398,6 +2398,11 @@ smb21_set_oplock_level(struct cifsInodeI
+ 	if (oplock == SMB2_OPLOCK_LEVEL_NOCHANGE)
+ 		return;
+ 
++	/* Check if the server granted an oplock rather than a lease */
++	if (oplock & SMB2_OPLOCK_LEVEL_EXCLUSIVE)
++		return smb2_set_oplock_level(cinode, oplock, epoch,
++					     purge_cache);
++
+ 	if (oplock & SMB2_LEASE_READ_CACHING_HE) {
+ 		new_oplock |= CIFS_CACHE_READ_FLG;
+ 		strcat(message, "R");
 
 
