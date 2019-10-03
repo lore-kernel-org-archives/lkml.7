@@ -7,48 +7,51 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7C0DC32792
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:20:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C47DC10F14
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:20:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7EEB921A4C
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:20:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2E1F2215EA
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:20:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570119613;
-	bh=s7x370y95jXHCMWBXfaRjHHLe9MY1QprAjrHw4KTmss=;
+	s=default; t=1570119620;
+	bh=SAeCV379qkmyVZyuHuEgE/SSHwe7+vx+dkjf8h+w48Q=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=OHBrs+Wd6gZ2pAPzAr/quoQ5jmB7zelBL24qu+NCHnlnRP00ySfhIDzK1x2oxggqA
-	 mKQkzxLLK+QdYqtQwwsLiZKMMEkzLldIxmur4GxwzTMCC1fO08dSj/FA6PSAxk/iSR
-	 3gUI1IRMj2WJJJfxwCIsqTPOjb7KKmMaMZiokLOk=
+	b=eLYLHkBSiHuMu+VQDuidjfgHPtBZPejgr/zSWHsYOMA9bhfhsucVR6F95HRMjvDTu
+	 rzIlmz7Nwo/SgXsp0B4hsFupuOVDdu5kFgpQnrINg/N14H4IGnk/1/JSCExFulx4+5
+	 QRxijE67zlb2zMhqn3hFq9NmpUvu1OjAhF2M/OJA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389848AbfJCQUN (ORCPT
+        id S2388651AbfJCQUT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 12:20:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47520 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 12:20:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47794 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389835AbfJCQUH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:20:07 -0400
+        id S2389858AbfJCQUQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:20:16 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3746A222CB;
-        Thu,  3 Oct 2019 16:20:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7E23F20865;
+        Thu,  3 Oct 2019 16:20:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570119606;
-        bh=s7x370y95jXHCMWBXfaRjHHLe9MY1QprAjrHw4KTmss=;
+        s=default; t=1570119615;
+        bh=SAeCV379qkmyVZyuHuEgE/SSHwe7+vx+dkjf8h+w48Q=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=l6DpmpDo2P2J1H08zhYTF9pb5nB9ZSRh76T6FRMKQo1bthEXSXQKxefXXl7akS25G
-         yenkYfeaU4Bpon02CHqY1AYcZOxGvYZ5Gfp1cTMsHBwKVUHNchBb855rD53exEKTl6
-         Wesn1Rm8La0tulYe2uI9W5Wr0FzJsGY4CAA09Eto=
+        b=IjAeh5IJdVpacYWTgtg1pQA3xMqUrho7wzE0NrcxfAiR0eaEMyXpA+MGt0z9k1I+R
+         kfx1nqupNEcPO/Yz+U/uI0/OsAZC2mG/zkLo42vWyZDX4J8xGe0y61A7ngf+dlRSbH
+         QczGCgxL6vjYSUGdU94Fa2tZNdZ5P8HRXD4tByCU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Harald Freudenberger <freude@linux.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
+        stable@vger.kernel.org, Tom Wu <tomwu@mellanox.com>,
+        Israel Rukshin <israelr@mellanox.com>,
+        Max Gurtovoy <maxg@mellanox.com>,
+        Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Sagi Grimberg <sagi@grimberg.me>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 128/211] s390/crypto: xts-aes-s390 fix extra run-time crypto self tests finding
-Date:   Thu,  3 Oct 2019 17:53:14 +0200
-Message-Id: <20191003154515.944746287@linuxfoundation.org>
+Subject: [PATCH 4.19 113/211] nvmet: fix data units read and written counters in SMART log
+Date:   Thu,  3 Oct 2019 17:52:59 +0200
+Message-Id: <20191003154513.351749074@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191003154447.010950442@linuxfoundation.org>
 References: <20191003154447.010950442@linuxfoundation.org>
@@ -61,53 +64,63 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Harald Freudenberger <freude@linux.ibm.com>
+From: Tom Wu <tomwu@mellanox.com>
 
-[ Upstream commit 9e323d45ba94262620a073a3f9945ca927c07c71 ]
+[ Upstream commit 3bec2e3754becebd4c452999adb49bc62c575ea4 ]
 
-With 'extra run-time crypto self tests' enabled, the selftest
-for s390-xts fails with
+In nvme spec 1.3 there is a definition for data write/read counters
+from SMART log, (See section 5.14.1.2):
+	This value is reported in thousands (i.e., a value of 1
+	corresponds to 1000 units of 512 bytes read) and is rounded up.
 
-  alg: skcipher: xts-aes-s390 encryption unexpectedly succeeded on
-  test vector "random: len=0 klen=64"; expected_error=-22,
-  cfg="random: inplace use_digest nosimd src_divs=[2.61%@+4006,
-  84.44%@+21, 1.55%@+13, 4.50%@+344, 4.26%@+21, 2.64%@+27]"
+However, in nvme target where value is reported with actual units,
+but not thousands of units as the spec requires.
 
-This special case with nbytes=0 is not handled correctly and this
-fix now makes sure that -EINVAL is returned when there is en/decrypt
-called with 0 bytes to en/decrypt.
-
-Signed-off-by: Harald Freudenberger <freude@linux.ibm.com>
-Signed-off-by: Vasily Gorbik <gor@linux.ibm.com>
+Signed-off-by: Tom Wu <tomwu@mellanox.com>
+Reviewed-by: Israel Rukshin <israelr@mellanox.com>
+Reviewed-by: Max Gurtovoy <maxg@mellanox.com>
+Reviewed-by: Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>
+Reviewed-by: Christoph Hellwig <hch@lst.de>
+Signed-off-by: Sagi Grimberg <sagi@grimberg.me>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/s390/crypto/aes_s390.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+ drivers/nvme/target/admin-cmd.c | 14 ++++++++------
+ 1 file changed, 8 insertions(+), 6 deletions(-)
 
-diff --git a/arch/s390/crypto/aes_s390.c b/arch/s390/crypto/aes_s390.c
-index 8ff7cb3da1cba..2bc189187ed40 100644
---- a/arch/s390/crypto/aes_s390.c
-+++ b/arch/s390/crypto/aes_s390.c
-@@ -585,6 +585,9 @@ static int xts_aes_encrypt(struct blkcipher_desc *desc,
- 	struct s390_xts_ctx *xts_ctx = crypto_blkcipher_ctx(desc->tfm);
- 	struct blkcipher_walk walk;
+diff --git a/drivers/nvme/target/admin-cmd.c b/drivers/nvme/target/admin-cmd.c
+index 2008fa62a373b..a8eb8784e151f 100644
+--- a/drivers/nvme/target/admin-cmd.c
++++ b/drivers/nvme/target/admin-cmd.c
+@@ -68,9 +68,11 @@ static u16 nvmet_get_smart_log_nsid(struct nvmet_req *req,
+ 		goto out;
  
-+	if (!nbytes)
-+		return -EINVAL;
-+
- 	if (unlikely(!xts_ctx->fc))
- 		return xts_fallback_encrypt(desc, dst, src, nbytes);
+ 	host_reads = part_stat_read(ns->bdev->bd_part, ios[READ]);
+-	data_units_read = part_stat_read(ns->bdev->bd_part, sectors[READ]);
++	data_units_read = DIV_ROUND_UP(part_stat_read(ns->bdev->bd_part,
++		sectors[READ]), 1000);
+ 	host_writes = part_stat_read(ns->bdev->bd_part, ios[WRITE]);
+-	data_units_written = part_stat_read(ns->bdev->bd_part, sectors[WRITE]);
++	data_units_written = DIV_ROUND_UP(part_stat_read(ns->bdev->bd_part,
++		sectors[WRITE]), 1000);
  
-@@ -599,6 +602,9 @@ static int xts_aes_decrypt(struct blkcipher_desc *desc,
- 	struct s390_xts_ctx *xts_ctx = crypto_blkcipher_ctx(desc->tfm);
- 	struct blkcipher_walk walk;
+ 	put_unaligned_le64(host_reads, &slog->host_reads[0]);
+ 	put_unaligned_le64(data_units_read, &slog->data_units_read[0]);
+@@ -98,11 +100,11 @@ static u16 nvmet_get_smart_log_all(struct nvmet_req *req,
+ 		if (!ns->bdev)
+ 			continue;
+ 		host_reads += part_stat_read(ns->bdev->bd_part, ios[READ]);
+-		data_units_read +=
+-			part_stat_read(ns->bdev->bd_part, sectors[READ]);
++		data_units_read += DIV_ROUND_UP(
++			part_stat_read(ns->bdev->bd_part, sectors[READ]), 1000);
+ 		host_writes += part_stat_read(ns->bdev->bd_part, ios[WRITE]);
+-		data_units_written +=
+-			part_stat_read(ns->bdev->bd_part, sectors[WRITE]);
++		data_units_written += DIV_ROUND_UP(
++			part_stat_read(ns->bdev->bd_part, sectors[WRITE]), 1000);
  
-+	if (!nbytes)
-+		return -EINVAL;
-+
- 	if (unlikely(!xts_ctx->fc))
- 		return xts_fallback_decrypt(desc, dst, src, nbytes);
- 
+ 	}
+ 	rcu_read_unlock();
 -- 
 2.20.1
 
