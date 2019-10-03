@@ -2,52 +2,51 @@ Return-Path: <SRS0=6dNS=X4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E509C32792
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:21:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B621BC10F14
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:21:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 347D72054F
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:21:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8DC8820865
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:21:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570119705;
-	bh=kfvdiciDmqZ1VtqoBpuDh3Z6dlpATwLZE7GsvgO6uLo=;
+	s=default; t=1570119710;
+	bh=N9uKcJosbxuA8yjplpPHJhd3laP5PA0VuKho5o6Ctss=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=N5e9r/9fwY66PUqdxKzZYMVvvFTMQEoG9oMGLgI5D0dBf/YymTeNoWAjwPHiBGZnm
-	 arq3e37TQJaTSFKxwKGU2wMh1v83GFfBcDdCjdZfZLlObMQoaWt+DX5Z9kF+fQjG5y
-	 22m3Xk+aSMIl6wT5l4AGIoqId7s92RMocEIgB3zg=
+	b=MufzdupKF62vz0S7ImQH7lbTCaZ+tPhe0Qcn87IQhVrVuU0L4mvVj9zHMg4rs+TLx
+	 b2VwEFh/MIbfg5qtin+sus2f/mzy4JbUmsjmSTLIZiggfKDrziWXmGJoJ2OPu45bOv
+	 33yC7EM05a1qd+nMkfUaGtuWpTmJfKKWMQIKuNH0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390186AbfJCQVn (ORCPT
+        id S2390205AbfJCQVt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 12:21:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49980 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 12:21:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50184 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390178AbfJCQVk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:21:40 -0400
+        id S2390191AbfJCQVr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:21:47 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D4FAE21783;
-        Thu,  3 Oct 2019 16:21:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CFED02054F;
+        Thu,  3 Oct 2019 16:21:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570119698;
-        bh=kfvdiciDmqZ1VtqoBpuDh3Z6dlpATwLZE7GsvgO6uLo=;
+        s=default; t=1570119706;
+        bh=N9uKcJosbxuA8yjplpPHJhd3laP5PA0VuKho5o6Ctss=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=fHy1CKFpfxYeXOuYiPAN9W8N8ZVW32IgqV4OHMigoY6NJlLb69cv+4ek2NaHypWvm
-         dFLfF2Dm3G5ANkbGNyS/ZOwCilCns8HYFEZ+sp4bId/10gWOD4dNTWpYCfBfIM+zBB
-         xyKHWeugmhCK6lcKwb/8t+l01JHDYRlAdTh1qoig=
+        b=i5eUvbvUpG00f3Pli1/RD9HXSh8y0t/mMxa71txXq5a9/SxifIwocfLolDZwa7QFf
+         sUgpncZI+c6mZNWSd9/xtV2zuaofgWUq6CPnc2nUcYu/MXR7zWd2YIAzci0/iMwA9b
+         3MsxOzZG13JN1/4+v/1OQcz9hp0jTwHEQtgzj/uE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Shengjiu Wang <shengjiu.wang@nxp.com>,
-        Mark Brown <broonie@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 111/211] ASoC: fsl_ssi: Fix clock control issue in master mode
-Date:   Thu,  3 Oct 2019 17:52:57 +0200
-Message-Id: <20191003154512.786799494@linuxfoundation.org>
+        stable@vger.kernel.org, Helge Deller <deller@gmx.de>,
+        Phil Scarr <phil.scarr@pm.me>
+Subject: [PATCH 4.19 164/211] parisc: Disable HP HSC-PCI Cards to prevent kernel crash
+Date:   Thu,  3 Oct 2019 17:53:50 +0200
+Message-Id: <20191003154525.403545595@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191003154447.010950442@linuxfoundation.org>
 References: <20191003154447.010950442@linuxfoundation.org>
@@ -60,75 +59,73 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Shengjiu Wang <shengjiu.wang@nxp.com>
+From: Helge Deller <deller@gmx.de>
 
-[ Upstream commit 696d05225cebffd172008d212657be90e823eac0 ]
+commit 5fa1659105fac63e0f3c199b476025c2e04111ce upstream.
 
-The test case is
-arecord -Dhw:0 -d 10 -f S16_LE -r 48000 -c 2 temp.wav &
-aplay -Dhw:0 -d 30 -f S16_LE -r 48000 -c 2 test.wav
+The HP Dino PCI controller chip can be used in two variants: as on-board
+controller (e.g. in B160L), or on an Add-On card ("Card-Mode") to bridge
+PCI components to systems without a PCI bus, e.g. to a HSC/GSC bus.  One
+such Add-On card is the HP HSC-PCI Card which has one or more DEC Tulip
+PCI NIC chips connected to the on-card Dino PCI controller.
 
-There will be error after end of arecord:
-aplay: pcm_write:2051: write error: Input/output error
+Dino in Card-Mode has a big disadvantage: All PCI memory accesses need
+to go through the DINO_MEM_DATA register, so Linux drivers will not be
+able to use the ioremap() function. Without ioremap() many drivers will
+not work, one example is the tulip driver which then simply crashes the
+kernel if it tries to access the ports on the HP HSC card.
 
-Capture and Playback work in parallel in master mode, one
-substream stops, the other substream is impacted, the
-reason is that clock is disabled wrongly.
+This patch disables the HP HSC card if it finds one, and as such
+fixes the kernel crash on a HP D350/2 machine.
 
-The clock's reference count is not increased when second
-substream starts, the hw_param() function returns in the
-beginning because first substream is enabled, then in end
-of first substream, the hw_free() disables the clock.
+Signed-off-by: Helge Deller <deller@gmx.de>
+Noticed-by: Phil Scarr <phil.scarr@pm.me>
+Cc: stable@vger.kernel.org
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-This patch is to move the clock enablement to the place
-before checking of the device enablement in hw_param().
-
-Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
-Link: https://lore.kernel.org/r/1567012817-12625-1-git-send-email-shengjiu.wang@nxp.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/fsl/fsl_ssi.c | 18 +++++++++---------
- 1 file changed, 9 insertions(+), 9 deletions(-)
+ drivers/parisc/dino.c |   24 ++++++++++++++++++++++++
+ 1 file changed, 24 insertions(+)
 
-diff --git a/sound/soc/fsl/fsl_ssi.c b/sound/soc/fsl/fsl_ssi.c
-index 09b2967befd96..d83be26d64467 100644
---- a/sound/soc/fsl/fsl_ssi.c
-+++ b/sound/soc/fsl/fsl_ssi.c
-@@ -799,15 +799,6 @@ static int fsl_ssi_hw_params(struct snd_pcm_substream *substream,
- 	u32 wl = SSI_SxCCR_WL(sample_size);
- 	int ret;
+--- a/drivers/parisc/dino.c
++++ b/drivers/parisc/dino.c
+@@ -160,6 +160,15 @@ struct dino_device
+ 	(struct dino_device *)__pdata; })
  
--	/*
--	 * SSI is properly configured if it is enabled and running in
--	 * the synchronous mode; Note that AC97 mode is an exception
--	 * that should set separate configurations for STCCR and SRCCR
--	 * despite running in the synchronous mode.
--	 */
--	if (ssi->streams && ssi->synchronous)
--		return 0;
--
- 	if (fsl_ssi_is_i2s_master(ssi)) {
- 		ret = fsl_ssi_set_bclk(substream, dai, hw_params);
- 		if (ret)
-@@ -823,6 +814,15 @@ static int fsl_ssi_hw_params(struct snd_pcm_substream *substream,
- 		}
- 	}
  
-+	/*
-+	 * SSI is properly configured if it is enabled and running in
-+	 * the synchronous mode; Note that AC97 mode is an exception
-+	 * that should set separate configurations for STCCR and SRCCR
-+	 * despite running in the synchronous mode.
-+	 */
-+	if (ssi->streams && ssi->synchronous)
-+		return 0;
++/* Check if PCI device is behind a Card-mode Dino. */
++static int pci_dev_is_behind_card_dino(struct pci_dev *dev)
++{
++	struct dino_device *dino_dev;
 +
- 	if (!fsl_ssi_is_ac97(ssi)) {
- 		/*
- 		 * Keep the ssi->i2s_net intact while having a local variable
--- 
-2.20.1
-
++	dino_dev = DINO_DEV(parisc_walk_tree(dev->bus->bridge));
++	return is_card_dino(&dino_dev->hba.dev->id);
++}
++
+ /*
+  * Dino Configuration Space Accessor Functions
+  */
+@@ -442,6 +451,21 @@ static void quirk_cirrus_cardbus(struct
+ }
+ DECLARE_PCI_FIXUP_ENABLE(PCI_VENDOR_ID_CIRRUS, PCI_DEVICE_ID_CIRRUS_6832, quirk_cirrus_cardbus );
+ 
++#ifdef CONFIG_TULIP
++static void pci_fixup_tulip(struct pci_dev *dev)
++{
++	if (!pci_dev_is_behind_card_dino(dev))
++		return;
++	if (!(pci_resource_flags(dev, 1) & IORESOURCE_MEM))
++		return;
++	pr_warn("%s: HP HSC-PCI Cards with card-mode Dino not yet supported.\n",
++		pci_name(dev));
++	/* Disable this card by zeroing the PCI resources */
++	memset(&dev->resource[0], 0, sizeof(dev->resource[0]));
++	memset(&dev->resource[1], 0, sizeof(dev->resource[1]));
++}
++DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_DEC, PCI_ANY_ID, pci_fixup_tulip);
++#endif /* CONFIG_TULIP */
+ 
+ static void __init
+ dino_bios_init(void)
 
 
