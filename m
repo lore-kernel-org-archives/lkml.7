@@ -4,49 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51AB0C32792
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:50:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F0E12C32792
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:50:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 224B0215EA
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:50:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C64CB2133F
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:50:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570121410;
-	bh=Pked2uDDLVovjt6dOYD0c9fDApYqn3LgQwFvjn28zlc=;
+	s=default; t=1570121417;
+	bh=6Ey5Ks5d2d75Wxpk9etln48qhPSw/IV2zsWaUxU+wzI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=nlP3xsD8GvdI+B3OeipYFp9ASe4SdXLMT67XckS7aNcs8oslKg0L/+uj77LbE7IO4
-	 qRoHki+soC5eBucpYmmIECJvyct8e9LxQcTWelpbyegu+GYZ3j3cZyE6pRbK1z36qS
-	 y+me1ToZvk9FRyxs0QKPVS3f7yu96G2vA3NemR/0=
+	b=r6gyoRG7PRnGEXKtRnPxdlwF7O4UFwu8y/o2U/+HAaeQqLk71V7S12bBlsQ5xWBSN
+	 7VQqRMER4Rt0w3Cj7F+kn1eQQIW8yCj+r8pJ2pJ8tG2Zb2lB8G5CziB88gCvv/AQQT
+	 TuXWIuoCQ1LoDWZJBVJ+wUKtxQopSZw9Riv6QyjA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404520AbfJCQuJ (ORCPT
+        id S2405018AbfJCQuQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 12:50:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37028 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 12:50:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37180 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404439AbfJCQuG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:50:06 -0400
+        id S2388449AbfJCQuK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:50:10 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 71A122086A;
-        Thu,  3 Oct 2019 16:50:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D21FE2070B;
+        Thu,  3 Oct 2019 16:50:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570121405;
-        bh=Pked2uDDLVovjt6dOYD0c9fDApYqn3LgQwFvjn28zlc=;
+        s=default; t=1570121410;
+        bh=6Ey5Ks5d2d75Wxpk9etln48qhPSw/IV2zsWaUxU+wzI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=bQgxSNTwszYZqgQ7oRl8IJAPIcthMpKTHf9B5eUruW48gO3uhFp8UYCCZW8HXuLvY
-         JDAcIL/ks14DHSDSqqjIzI5Y4xce8ikZH/krZmRw3Vq6+KUHPIe8e5e2avkxn1Jxok
-         dB0LMntQBJA+aCYXLHIiZO/rHDyYLOHYvtUp5Sog=
+        b=mW2t2AOA+bPoRqkX5sDR5GRyMaxoWxoxhIWKIhIgsJrx+p3ebCyK3NLgkO3LggOhi
+         LuLna/Or9Ed0s9LpHs7tRjLoG6suVtQH5OTb2H5Lk+SGfVBWlafmLw+h+Z79G66/1l
+         Efb3gRmhkz6g1SGtvsTpjgGiHfSt9TEXZcgSkEMg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Tejun Heo <tj@kernel.org>,
-        Miklos Szeredi <mszeredi@redhat.com>
-Subject: [PATCH 5.3 259/344] fuse: fix beyond-end-of-page access in fuse_parse_cache()
-Date:   Thu,  3 Oct 2019 17:53:44 +0200
-Message-Id: <20191003154606.040928851@linuxfoundation.org>
+        stable@vger.kernel.org, Rui Salvaterra <rsalvaterra@gmail.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Subject: [PATCH 5.3 269/344] media: sn9c20x: Add MSI MS-1039 laptop to flip_dmi_table
+Date:   Thu,  3 Oct 2019 17:53:54 +0200
+Message-Id: <20191003154606.828539871@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191003154540.062170222@linuxfoundation.org>
 References: <20191003154540.062170222@linuxfoundation.org>
@@ -59,72 +61,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tejun Heo <tj@kernel.org>
+From: Hans de Goede <hdegoede@redhat.com>
 
-commit e5854b1cdf6cb48a20e01e3bdad0476a4c60a077 upstream.
+commit 7e0bb5828311f811309bed5749528ca04992af2f upstream.
 
-With DEBUG_PAGEALLOC on, the following triggers.
+Like a bunch of other MSI laptops the MS-1039 uses a 0c45:627b
+SN9C201 + OV7660 webcam which is mounted upside down.
 
-  BUG: unable to handle page fault for address: ffff88859367c000
-  #PF: supervisor read access in kernel mode
-  #PF: error_code(0x0000) - not-present page
-  PGD 3001067 P4D 3001067 PUD 406d3a8067 PMD 406d30c067 PTE 800ffffa6c983060
-  Oops: 0000 [#1] SMP DEBUG_PAGEALLOC
-  CPU: 38 PID: 3110657 Comm: python2.7
-  RIP: 0010:fuse_readdir+0x88f/0xe7a [fuse]
-  Code: 49 8b 4d 08 49 39 4e 60 0f 84 44 04 00 00 48 8b 43 08 43 8d 1c 3c 4d 01 7e 68 49 89 dc 48 03 5c 24 38 49 89 46 60 8b 44 24 30 <8b> 4b 10 44 29 e0 48 89 ca 48 83 c1 1f 48 83 e1 f8 83 f8 17 49 89
-  RSP: 0018:ffffc90035edbde0 EFLAGS: 00010286
-  RAX: 0000000000001000 RBX: ffff88859367bff0 RCX: 0000000000000000
-  RDX: 0000000000000000 RSI: ffff88859367bfed RDI: 0000000000920907
-  RBP: ffffc90035edbe90 R08: 000000000000014b R09: 0000000000000004
-  R10: ffff88859367b000 R11: 0000000000000000 R12: 0000000000000ff0
-  R13: ffffc90035edbee0 R14: ffff889fb8546180 R15: 0000000000000020
-  FS:  00007f80b5f4a740(0000) GS:ffff889fffa00000(0000) knlGS:0000000000000000
-  CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-  CR2: ffff88859367c000 CR3: 0000001c170c2001 CR4: 00000000003606e0
-  DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-  DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-  Call Trace:
-   iterate_dir+0x122/0x180
-   __x64_sys_getdents+0xa6/0x140
-   do_syscall_64+0x42/0x100
-   entry_SYSCALL_64_after_hwframe+0x44/0xa9
+Add it to the sn9c20x flip_dmi_table to deal with this.
 
-It's in fuse_parse_cache().  %rbx (ffff88859367bff0) is fuse_dirent
-pointer - addr + offset.  FUSE_DIRENT_SIZE() is trying to dereference
-namelen off of it but that derefs into the next page which is disabled
-by pagealloc debug causing a PF.
-
-This is caused by dirent->namelen being accessed before ensuring that
-there's enough bytes in the page for the dirent.  Fix it by pushing
-down reclen calculation.
-
-Signed-off-by: Tejun Heo <tj@kernel.org>
-Fixes: 5d7bc7e8680c ("fuse: allow using readdir cache")
-Cc: stable@vger.kernel.org # v4.20+
-Signed-off-by: Miklos Szeredi <mszeredi@redhat.com>
+Cc: stable@vger.kernel.org
+Reported-by: Rui Salvaterra <rsalvaterra@gmail.com>
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/fuse/readdir.c |    4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/media/usb/gspca/sn9c20x.c |    7 +++++++
+ 1 file changed, 7 insertions(+)
 
---- a/fs/fuse/readdir.c
-+++ b/fs/fuse/readdir.c
-@@ -372,11 +372,13 @@ static enum fuse_parse_result fuse_parse
- 	for (;;) {
- 		struct fuse_dirent *dirent = addr + offset;
- 		unsigned int nbytes = size - offset;
--		size_t reclen = FUSE_DIRENT_SIZE(dirent);
-+		size_t reclen;
- 
- 		if (nbytes < FUSE_NAME_OFFSET || !dirent->namelen)
- 			break;
- 
-+		reclen = FUSE_DIRENT_SIZE(dirent); /* derefs ->namelen */
-+
- 		if (WARN_ON(dirent->namelen > FUSE_NAME_MAX))
- 			return FOUND_ERR;
- 		if (WARN_ON(reclen > nbytes))
+--- a/drivers/media/usb/gspca/sn9c20x.c
++++ b/drivers/media/usb/gspca/sn9c20x.c
+@@ -124,6 +124,13 @@ static const struct dmi_system_id flip_d
+ 		}
+ 	},
+ 	{
++		.ident = "MSI MS-1039",
++		.matches = {
++			DMI_MATCH(DMI_SYS_VENDOR, "MICRO-STAR INT'L CO.,LTD."),
++			DMI_MATCH(DMI_PRODUCT_NAME, "MS-1039"),
++		}
++	},
++	{
+ 		.ident = "MSI MS-1632",
+ 		.matches = {
+ 			DMI_MATCH(DMI_BOARD_VENDOR, "MSI"),
 
 
