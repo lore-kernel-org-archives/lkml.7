@@ -2,163 +2,132 @@ Return-Path: <SRS0=6dNS=X4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02DBCC10F14
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:52:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13770C32792
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:52:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CD6242070B
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:52:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DB85220862
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:52:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570121546;
-	bh=OUugZjslnsj6bkH8Kgibo54v4RZVPhAyJAsWjicMKWc=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
-	 From;
-	b=w+jTupuYHfkeLmzJ+eLx+H2BC7kD+JrzGcEk9AnWLagx7QDFqtE+GCcbGEaXqlqSK
-	 eOd0hc4+Nm6mnGA1C9gGk1U4wvB1xlrJRLrEiEnaLHXTKFlvQo6hrS03rvWz35mf9Q
-	 v7/rBCPfO7K6Cr9N+OUd15nKG+O7MeYrNWhMJft4=
+	s=default; t=1570121550;
+	bh=zR8prZ67XS3tWyl81iTYJBxZzU5N6ZPe07g20rODNrk=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=VVkMFUmcaY8RafTs4RPXJ21+N3Nm0+aT2d4wxxYKXJCOQYLsXZYrbs8K1W3DzQhMD
+	 nmU2nB3CVf7c275zbyici2d3XM2UocRdsjKJKP5Td71YVJOeeniuoaPlpv5fEb3UHB
+	 GU/9ydcppNyWF9Xz0PIh8vvlrKOZJG7PrfRqJXTk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406182AbfJCQwZ (ORCPT
+        id S2405748AbfJCQwa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 12:52:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39992 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 12:52:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40104 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2406168AbfJCQwX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:52:23 -0400
-Received: from paulmck-ThinkPad-P72 (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
+        id S2406178AbfJCQwZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:52:25 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 126022086A;
-        Thu,  3 Oct 2019 16:52:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6D2732133F;
+        Thu,  3 Oct 2019 16:52:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570121542;
-        bh=OUugZjslnsj6bkH8Kgibo54v4RZVPhAyJAsWjicMKWc=;
-        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-        b=gXknnOx7unn5OX2+O0PII4w/o0Y6zfk6Sw2Pzd0mn64eTX/j6hX4Zf/O4Ws08jyOm
-         KJ1JEmDOw4MY3Gwacm5ajON64GSO2MR5RRwK7Rx5BiznSUOQSrKlBjrlMVIVXsJ0/p
-         Bi1KN9Ig1sCDE4iutxF7M9qBA7HiWRge3F5FLJTM=
-Date:   Thu, 3 Oct 2019 09:52:20 -0700
-From:   "Paul E. McKenney" <paulmck@kernel.org>
-To:     Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Cc:     rcu <rcu@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Lai Jiangshan <jiangshanlai@gmail.com>,
-        dipankar <dipankar@in.ibm.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Josh Triplett <josh@joshtriplett.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Peter Zijlstra <peterz@infradead.org>,
-        rostedt <rostedt@goodmis.org>,
-        David Howells <dhowells@redhat.com>,
-        Eric Dumazet <edumazet@google.com>,
-        fweisbec <fweisbec@gmail.com>, Oleg Nesterov <oleg@redhat.com>,
-        "Joel Fernandes, Google" <joel@joelfernandes.org>,
-        Bart Van Assche <bart.vanassche@wdc.com>,
-        Christoph Hellwig <hch@lst.de>, Hannes Reinecke <hare@suse.de>,
-        Johannes Thumshirn <jthumshirn@suse.de>,
-        Shane M Seymour <shane.seymour@hpe.com>,
-        Martin <martin.petersen@oracle.com>
-Subject: Re: [PATCH tip/core/rcu 1/9] rcu: Upgrade rcu_swap_protected() to
- rcu_replace()
-Message-ID: <20191003165220.GZ2689@paulmck-ThinkPad-P72>
-Reply-To: paulmck@kernel.org
-References: <20191003014153.GA13156@paulmck-ThinkPad-P72>
- <20191003014310.13262-1-paulmck@kernel.org>
- <644598334.955.1570120530976.JavaMail.zimbra@efficios.com>
+        s=default; t=1570121544;
+        bh=zR8prZ67XS3tWyl81iTYJBxZzU5N6ZPe07g20rODNrk=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=wb68v6VFW8KJTmUUYsbNe+nVSbj38JRzPiUTatY7SK+v/YY8vSPGOBMU04+uG3bVg
+         iS/QnmADr9pU15B24ByIUjxSCNk7e1wcCPX7Do7Je279tWwb8TFOAn5A4zdjIjHBuy
+         SPdyY10SkI7/09qKdw0/yITVrM4FrEiOlNy/NIF4=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Stefan Assmann <sassmann@kpanic.de>,
+        Andrew Bowers <andrewx.bowers@intel.com>,
+        Jeff Kirsher <jeffrey.t.kirsher@intel.com>
+Subject: [PATCH 5.3 301/344] i40e: check __I40E_VF_DISABLE bit in i40e_sync_filters_subtask
+Date:   Thu,  3 Oct 2019 17:54:26 +0200
+Message-Id: <20191003154609.147514725@linuxfoundation.org>
+X-Mailer: git-send-email 2.23.0
+In-Reply-To: <20191003154540.062170222@linuxfoundation.org>
+References: <20191003154540.062170222@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <644598334.955.1570120530976.JavaMail.zimbra@efficios.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Oct 03, 2019 at 12:35:30PM -0400, Mathieu Desnoyers wrote:
-> ----- On Oct 2, 2019, at 9:43 PM, paulmck paulmck@kernel.org wrote:
-> 
-> > From: "Paul E. McKenney" <paulmck@kernel.org>
-> > 
-> > Although the rcu_swap_protected() macro follows the example of swap(),
-> > the interactions with RCU make its update of its argument somewhat
-> > counter-intuitive.  This commit therefore introduces an rcu_replace()
-> > that returns the old value of the RCU pointer instead of doing the
-> > argument update.  Once all the uses of rcu_swap_protected() are updated
-> > to instead use rcu_replace(), rcu_swap_protected() will be removed.
-> 
-> We expose the rcu_xchg_pointer() API in liburcu (Userspace RCU) project.
-> Any reason for not going that way and keep the kernel and user-space RCU
-> APIs alike ?
-> 
-> It's of course fine if they diverge, but we might want to at least consider
-> if using the same API name would be OK.
+From: Stefan Assmann <sassmann@kpanic.de>
 
-Different semantics.  An rcu_xchg_pointer() allows concurrent updates,
-and rcu_replace() does not.
+commit a7542b87607560d0b89e7ff81d870bd6ff8835cb upstream.
 
-But yes, if someone needs the concurrent updates, rcu_xchg_pointer()
-would certainly be my choice for the name.
+While testing VF spawn/destroy the following panic occurred.
 
-							Thanx, Paul
+BUG: unable to handle kernel NULL pointer dereference at 0000000000000029
+[...]
+Workqueue: i40e i40e_service_task [i40e]
+RIP: 0010:i40e_sync_vsi_filters+0x6fd/0xc60 [i40e]
+[...]
+Call Trace:
+ ? __switch_to_asm+0x35/0x70
+ ? __switch_to_asm+0x41/0x70
+ ? __switch_to_asm+0x35/0x70
+ ? _cond_resched+0x15/0x30
+ i40e_sync_filters_subtask+0x56/0x70 [i40e]
+ i40e_service_task+0x382/0x11b0 [i40e]
+ ? __switch_to_asm+0x41/0x70
+ ? __switch_to_asm+0x41/0x70
+ process_one_work+0x1a7/0x3b0
+ worker_thread+0x30/0x390
+ ? create_worker+0x1a0/0x1a0
+ kthread+0x112/0x130
+ ? kthread_bind+0x30/0x30
+ ret_from_fork+0x35/0x40
 
-> Thanks,
-> 
-> Mathieu
-> 
-> 
-> > 
-> > Link:
-> > https://lore.kernel.org/lkml/CAHk-=wiAsJLw1egFEE=Z7-GGtM6wcvtyytXZA1+BHqta4gg6Hw@mail.gmail.com/
-> > Reported-by: Linus Torvalds <torvalds@linux-foundation.org>
-> > Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
-> > Cc: Bart Van Assche <bart.vanassche@wdc.com>
-> > Cc: Christoph Hellwig <hch@lst.de>
-> > Cc: Hannes Reinecke <hare@suse.de>
-> > Cc: Johannes Thumshirn <jthumshirn@suse.de>
-> > Cc: Shane M Seymour <shane.seymour@hpe.com>
-> > Cc: Martin K. Petersen <martin.petersen@oracle.com>
-> > ---
-> > include/linux/rcupdate.h | 18 ++++++++++++++++++
-> > 1 file changed, 18 insertions(+)
-> > 
-> > diff --git a/include/linux/rcupdate.h b/include/linux/rcupdate.h
-> > index 75a2ede..3b73287 100644
-> > --- a/include/linux/rcupdate.h
-> > +++ b/include/linux/rcupdate.h
-> > @@ -383,6 +383,24 @@ do {									      \
-> > } while (0)
-> > 
-> > /**
-> > + * rcu_replace() - replace an RCU pointer, returning its old value
-> > + * @rcu_ptr: RCU pointer, whose old value is returned
-> > + * @ptr: regular pointer
-> > + * @c: the lockdep conditions under which the dereference will take place
-> > + *
-> > + * Perform a replacement, where @rcu_ptr is an RCU-annotated
-> > + * pointer and @c is the lockdep argument that is passed to the
-> > + * rcu_dereference_protected() call used to read that pointer.  The old
-> > + * value of @rcu_ptr is returned, and @rcu_ptr is set to @ptr.
-> > + */
-> > +#define rcu_replace(rcu_ptr, ptr, c)					\
-> > +({									\
-> > +	typeof(ptr) __tmp = rcu_dereference_protected((rcu_ptr), (c));	\
-> > +	rcu_assign_pointer((rcu_ptr), (ptr));				\
-> > +	__tmp;								\
-> > +})
-> > +
-> > +/**
-> >  * rcu_swap_protected() - swap an RCU and a regular pointer
-> >  * @rcu_ptr: RCU pointer
-> >  * @ptr: regular pointer
-> > --
-> > 2.9.5
-> 
-> -- 
-> Mathieu Desnoyers
-> EfficiOS Inc.
-> http://www.efficios.com
+Investigation revealed a race where pf->vf[vsi->vf_id].trusted may get
+accessed by the watchdog via i40e_sync_filters_subtask() although
+i40e_free_vfs() already free'd pf->vf.
+To avoid this the call to i40e_sync_vsi_filters() in
+i40e_sync_filters_subtask() needs to be guarded by __I40E_VF_DISABLE,
+which is also used by i40e_free_vfs().
+
+Note: put the __I40E_VF_DISABLE check after the
+__I40E_MACVLAN_SYNC_PENDING check as the latter is more likely to
+trigger.
+
+CC: stable@vger.kernel.org
+Signed-off-by: Stefan Assmann <sassmann@kpanic.de>
+Tested-by: Andrew Bowers <andrewx.bowers@intel.com>
+Signed-off-by: Jeff Kirsher <jeffrey.t.kirsher@intel.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
+---
+ drivers/net/ethernet/intel/i40e/i40e_main.c |    5 +++++
+ 1 file changed, 5 insertions(+)
+
+--- a/drivers/net/ethernet/intel/i40e/i40e_main.c
++++ b/drivers/net/ethernet/intel/i40e/i40e_main.c
+@@ -2583,6 +2583,10 @@ static void i40e_sync_filters_subtask(st
+ 		return;
+ 	if (!test_and_clear_bit(__I40E_MACVLAN_SYNC_PENDING, pf->state))
+ 		return;
++	if (test_and_set_bit(__I40E_VF_DISABLE, pf->state)) {
++		set_bit(__I40E_MACVLAN_SYNC_PENDING, pf->state);
++		return;
++	}
+ 
+ 	for (v = 0; v < pf->num_alloc_vsi; v++) {
+ 		if (pf->vsi[v] &&
+@@ -2597,6 +2601,7 @@ static void i40e_sync_filters_subtask(st
+ 			}
+ 		}
+ 	}
++	clear_bit(__I40E_VF_DISABLE, pf->state);
+ }
+ 
+ /**
+
+
