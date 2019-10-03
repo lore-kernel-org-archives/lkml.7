@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E6E8C32792
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:13:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D688FC10F14
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:13:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ED5DD20700
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:13:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ACD9120700
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:13:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570119185;
-	bh=ZYCCv+T4GyOSEM7sSveA086+4vtEk0XaVhStkGR/kfM=;
+	s=default; t=1570119187;
+	bh=cJIv5/qNCRfpgoyHBGiQr4dN6PXNAlmJtOYktcQtAUY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=lHjjzjVfbs5EsRaQQa8HvIYx2eRQcaOoP2sgjkKz24dTYUbJZmVvrqGkoksaR/Myl
-	 80Ww73JKuw8q8dVibB439pYcUpWAuxTl87On1l0k17CiEWoDrIG9TRBQoxCTvLLHt+
-	 2Ya8RWFVMOkuI0jh8QVfYn3JWqbzwEEpzDu79yg0=
+	b=yXmBYOvxnGhC+gv4zDHcMLRyQQ2LSPQNM9Ngn6YmC2tEFYnGdWbfn6UeuJ80xBTI3
+	 Lqnw0LWklZt2SAKMGo4fJZp9tVMYgwABqv6VAZR7qxHF6vL3/yyKDDTma5r5Csr6O2
+	 d0DwFpMDYrR6ArqcjbdR46f+N9cuxvYiqm2W4XHE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388187AbfJCQM7 (ORCPT
+        id S1733140AbfJCQNH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 12:12:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35492 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 12:13:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35566 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388157AbfJCQM6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:12:58 -0400
+        id S2388195AbfJCQNA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:13:00 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E43A92054F;
-        Thu,  3 Oct 2019 16:12:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9781720700;
+        Thu,  3 Oct 2019 16:12:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570119177;
-        bh=ZYCCv+T4GyOSEM7sSveA086+4vtEk0XaVhStkGR/kfM=;
+        s=default; t=1570119179;
+        bh=cJIv5/qNCRfpgoyHBGiQr4dN6PXNAlmJtOYktcQtAUY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=BKsMrv/OLCs7hMejQOtNwng2HPhgZYgfJevIROnFIQxdV8DRmnaYZFHSaVcCmZ9TG
-         DAIOfz6FdqhDrswzzfSpL1hnKjEi6vLZsS06096ECXOYcLeGkax2qA8hCKSG1YrxT2
-         VIe7w/nduMgLGFWrmLCVoNCk3m326pLrhM+d+E5M=
+        b=lAO/3TiOWvlDNPXdhetIIyqNslEY71gdEYg6kYmW1A5WUyLoqLlkfrzaNMRLp+/oC
+         4+60bGmZGO6IrKXzTHOODdQGuCsmpf/dhNXZm1PXa39EaCoyjN7mUufp9aUJBNnNwV
+         3rECLUEFBw5zE6zHkMYc8Aopanoxc/JdgekgQgKY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Rui Salvaterra <rsalvaterra@gmail.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-Subject: [PATCH 4.14 153/185] media: sn9c20x: Add MSI MS-1039 laptop to flip_dmi_table
-Date:   Thu,  3 Oct 2019 17:53:51 +0200
-Message-Id: <20191003154513.863247432@linuxfoundation.org>
+        stable@vger.kernel.org, Kees Cook <keescook@chromium.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Richard Kojedzinszky <richard@kojedz.in>
+Subject: [PATCH 4.14 154/185] binfmt_elf: Do not move brk for INTERP-less ET_EXEC
+Date:   Thu,  3 Oct 2019 17:53:52 +0200
+Message-Id: <20191003154514.087761098@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191003154437.541662648@linuxfoundation.org>
 References: <20191003154437.541662648@linuxfoundation.org>
@@ -61,41 +60,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hans de Goede <hdegoede@redhat.com>
+From: Kees Cook <keescook@chromium.org>
 
-commit 7e0bb5828311f811309bed5749528ca04992af2f upstream.
+commit 7be3cb019db1cbd5fd5ffe6d64a23fefa4b6f229 upstream.
 
-Like a bunch of other MSI laptops the MS-1039 uses a 0c45:627b
-SN9C201 + OV7660 webcam which is mounted upside down.
+When brk was moved for binaries without an interpreter, it should have
+been limited to ET_DYN only. In other words, the special case was an
+ET_DYN that lacks an INTERP, not just an executable that lacks INTERP.
+The bug manifested for giant static executables, where the brk would end
+up in the middle of the text area on 32-bit architectures.
 
-Add it to the sn9c20x flip_dmi_table to deal with this.
-
+Reported-and-tested-by: Richard Kojedzinszky <richard@kojedz.in>
+Fixes: bbdc6076d2e5 ("binfmt_elf: move brk out of mmap when doing direct loader exec")
 Cc: stable@vger.kernel.org
-Reported-by: Rui Salvaterra <rsalvaterra@gmail.com>
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
-Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Signed-off-by: Kees Cook <keescook@chromium.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/media/usb/gspca/sn9c20x.c |    7 +++++++
- 1 file changed, 7 insertions(+)
+ fs/binfmt_elf.c |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
---- a/drivers/media/usb/gspca/sn9c20x.c
-+++ b/drivers/media/usb/gspca/sn9c20x.c
-@@ -133,6 +133,13 @@ static const struct dmi_system_id flip_d
- 		}
- 	},
- 	{
-+		.ident = "MSI MS-1039",
-+		.matches = {
-+			DMI_MATCH(DMI_SYS_VENDOR, "MICRO-STAR INT'L CO.,LTD."),
-+			DMI_MATCH(DMI_PRODUCT_NAME, "MS-1039"),
-+		}
-+	},
-+	{
- 		.ident = "MSI MS-1632",
- 		.matches = {
- 			DMI_MATCH(DMI_BOARD_VENDOR, "MSI"),
+--- a/fs/binfmt_elf.c
++++ b/fs/binfmt_elf.c
+@@ -1123,7 +1123,8 @@ static int load_elf_binary(struct linux_
+ 		 * (since it grows up, and may collide early with the stack
+ 		 * growing down), and into the unused ELF_ET_DYN_BASE region.
+ 		 */
+-		if (IS_ENABLED(CONFIG_ARCH_HAS_ELF_RANDOMIZE) && !interpreter)
++		if (IS_ENABLED(CONFIG_ARCH_HAS_ELF_RANDOMIZE) &&
++		    loc->elf_ex.e_type == ET_DYN && !interpreter)
+ 			current->mm->brk = current->mm->start_brk =
+ 				ELF_ET_DYN_BASE;
+ 
 
 
