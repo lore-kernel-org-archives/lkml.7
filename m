@@ -4,52 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84508C10F14
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:56:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42F41C10F14
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:56:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4ED1C2070B
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:56:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 096D520673
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:56:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570121775;
-	bh=CHkZLjem3nkE1m3RRY4Ods+xDIlfZDJEQ8AWlDXFenE=;
+	s=default; t=1570121781;
+	bh=OSDbZ+qnZK1aTfBoQCDkx4FU7CwedCYXzK82/thGqPc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ZuASN6xLJ96U0DnelZUaaxi6VevRWVl64obBC5cwGrXs1VyZvbdFme3yNNR6v4ofS
-	 fZAsxWa4Yd3mOXFrvPUVSJw02GbZenvtRkP8YytcwVylabyWzYQYkER4OUbTxYht1J
-	 Hrldl+ZbVaa1i3H7fUQg9Whz3b5EC39W7jMIne9c=
+	b=lzhoSOMNwHPFA9sHb4ytCxYuBwtG+kWLrNH7AsCu1217q+WU0DZ43eLG6tO9G7Skx
+	 pljykh9NaXlp/h3ldoerVYnz6W/a3ZbQfHcKA/iPK7HVtagjj992yoVyjCC2ThUehF
+	 tfUmu03c4iLPphHAJVupmrYyUqK3AMZGK1tYANQg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393273AbfJCQ4O (ORCPT
+        id S2392916AbfJCQvS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 12:56:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38852 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 12:51:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38510 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2393150AbfJCQv0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:51:26 -0400
+        id S2405182AbfJCQvH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:51:07 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 37129222C2;
-        Thu,  3 Oct 2019 16:51:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AC8EA2054F;
+        Thu,  3 Oct 2019 16:51:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570121485;
-        bh=CHkZLjem3nkE1m3RRY4Ods+xDIlfZDJEQ8AWlDXFenE=;
+        s=default; t=1570121467;
+        bh=OSDbZ+qnZK1aTfBoQCDkx4FU7CwedCYXzK82/thGqPc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0O3+SPqmlkdgM1q76S4VPNBNwFb+lgJ5MTIpqys+k2jOJzsATkcltaoOrhNIkO2Kq
-         o+8WKN6K4G57jfefjGqQC40MdQQH+qlu4DVFGDKTBvTslV6CwXJw/auuy8ofMcgwjp
-         FFJvP7AXfyiD4lf3X6XqZVw5WWRy0AaqWreOOZCI=
+        b=SVxXFvyWKEaOU7dapxkbpx4qcEGHKl5bEFRD0yTtl9wf5Ux58GN7G28PirqEo34be
+         16dncNx5AxqQGdwf+bFAlAIAOYggKbDBl28A1NuVpEe5E5tXOE9MZX05GCtD1QqTFP
+         SaXEQgVCT5F4EER91qPPItAp2Zmdd0RsS8lOYeWQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dave Rodgman <dave.rodgman@arm.com>,
-        "Markus F.X.J. Oberhumer" <markus@oberhumer.com>,
-        Minchan Kim <minchan@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 5.3 295/344] lib/lzo/lzo1x_compress.c: fix alignment bug in lzo-rle
-Date:   Thu,  3 Oct 2019 17:54:20 +0200
-Message-Id: <20191003154608.731764678@linuxfoundation.org>
+        stable@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Peter Jones <pjones@redhat.com>
+Subject: [PATCH 5.3 288/344] efifb: BGRT: Improve efifb_bgrt_sanity_check
+Date:   Thu,  3 Oct 2019 17:54:13 +0200
+Message-Id: <20191003154608.221655861@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191003154540.062170222@linuxfoundation.org>
 References: <20191003154540.062170222@linuxfoundation.org>
@@ -62,54 +60,71 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dave Rodgman <dave.rodgman@arm.com>
+From: Hans de Goede <hdegoede@redhat.com>
 
-commit 09b35b4192f6682dff96a093ab1930998cdb73b4 upstream.
+commit 51677dfcc17f88ed754143df670ff064eae67f84 upstream.
 
-Fix an unaligned access which breaks on platforms where this is not
-permitted (e.g., Sparc).
+For various reasons, at least with x86 EFI firmwares, the xoffset and
+yoffset in the BGRT info are not always reliable.
 
-Link: http://lkml.kernel.org/r/20190912145502.35229-1-dave.rodgman@arm.com
-Signed-off-by: Dave Rodgman <dave.rodgman@arm.com>
-Cc: Dave Rodgman <dave.rodgman@arm.com>
-Cc: Markus F.X.J. Oberhumer <markus@oberhumer.com>
-Cc: Minchan Kim <minchan@kernel.org>
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Extensive testing has shown that when the info is correct, the
+BGRT image is always exactly centered horizontally (the yoffset variable
+is more variable and not always predictable).
+
+This commit simplifies / improves the bgrt_sanity_check to simply
+check that the BGRT image is exactly centered horizontally and skips
+(re)drawing it when it is not.
+
+This fixes the BGRT image sometimes being drawn in the wrong place.
+
+Cc: stable@vger.kernel.org
+Fixes: 88fe4ceb2447 ("efifb: BGRT: Do not copy the boot graphics for non native resolutions")
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+Cc: Peter Jones <pjones@redhat.com>,
+Signed-off-by: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Link: https://patchwork.freedesktop.org/patch/msgid/20190721131918.10115-1-hdegoede@redhat.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- lib/lzo/lzo1x_compress.c |   14 ++++++++------
- 1 file changed, 8 insertions(+), 6 deletions(-)
+ drivers/video/fbdev/efifb.c |   27 ++++++---------------------
+ 1 file changed, 6 insertions(+), 21 deletions(-)
 
---- a/lib/lzo/lzo1x_compress.c
-+++ b/lib/lzo/lzo1x_compress.c
-@@ -83,17 +83,19 @@ next:
- 					ALIGN((uintptr_t)ir, 4)) &&
- 					(ir < limit) && (*ir == 0))
- 				ir++;
--			for (; (ir + 4) <= limit; ir += 4) {
--				dv = *((u32 *)ir);
--				if (dv) {
-+			if (IS_ALIGNED((uintptr_t)ir, 4)) {
-+				for (; (ir + 4) <= limit; ir += 4) {
-+					dv = *((u32 *)ir);
-+					if (dv) {
- #  if defined(__LITTLE_ENDIAN)
--					ir += __builtin_ctz(dv) >> 3;
-+						ir += __builtin_ctz(dv) >> 3;
- #  elif defined(__BIG_ENDIAN)
--					ir += __builtin_clz(dv) >> 3;
-+						ir += __builtin_clz(dv) >> 3;
- #  else
- #    error "missing endian definition"
- #  endif
--					break;
-+						break;
-+					}
- 				}
- 			}
- #endif
+--- a/drivers/video/fbdev/efifb.c
++++ b/drivers/video/fbdev/efifb.c
+@@ -122,28 +122,13 @@ static void efifb_copy_bmp(u8 *src, u32
+  */
+ static bool efifb_bgrt_sanity_check(struct screen_info *si, u32 bmp_width)
+ {
+-	static const int default_resolutions[][2] = {
+-		{  800,  600 },
+-		{ 1024,  768 },
+-		{ 1280, 1024 },
+-	};
+-	u32 i, right_margin;
++	/*
++	 * All x86 firmwares horizontally center the image (the yoffset
++	 * calculations differ between boards, but xoffset is predictable).
++	 */
++	u32 expected_xoffset = (si->lfb_width - bmp_width) / 2;
+ 
+-	for (i = 0; i < ARRAY_SIZE(default_resolutions); i++) {
+-		if (default_resolutions[i][0] == si->lfb_width &&
+-		    default_resolutions[i][1] == si->lfb_height)
+-			break;
+-	}
+-	/* If not a default resolution used for textmode, this should be fine */
+-	if (i >= ARRAY_SIZE(default_resolutions))
+-		return true;
+-
+-	/* If the right margin is 5 times smaller then the left one, reject */
+-	right_margin = si->lfb_width - (bgrt_tab.image_offset_x + bmp_width);
+-	if (right_margin < (bgrt_tab.image_offset_x / 5))
+-		return false;
+-
+-	return true;
++	return bgrt_tab.image_offset_x == expected_xoffset;
+ }
+ #else
+ static bool efifb_bgrt_sanity_check(struct screen_info *si, u32 bmp_width)
 
 
