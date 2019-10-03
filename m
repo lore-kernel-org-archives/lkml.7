@@ -2,146 +2,126 @@ Return-Path: <SRS0=6dNS=X4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=ham
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 54595C10F14
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 13:14:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 947C0C32792
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 13:14:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2200C2133F
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 13:14:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Ux5nAYlQ"
+	by mail.kernel.org (Postfix) with ESMTP id 74D26215EA
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 13:14:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728766AbfJCNOM (ORCPT
+        id S1730337AbfJCNO6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 09:14:12 -0400
-Received: from mail-qt1-f196.google.com ([209.85.160.196]:36873 "EHLO
-        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726811AbfJCNOL (ORCPT
+        Thu, 3 Oct 2019 09:14:58 -0400
+Received: from mail-out.m-online.net ([212.18.0.10]:40089 "EHLO
+        mail-out.m-online.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726508AbfJCNO6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 09:14:11 -0400
-Received: by mail-qt1-f196.google.com with SMTP id l3so3496781qtr.4
-        for <linux-kernel@vger.kernel.org>; Thu, 03 Oct 2019 06:14:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=hjQvtW5KCBAhxkXZKBpTw3Thc1AXYBDLoKRUiQoeyvg=;
-        b=Ux5nAYlQ9Yn7WG4UF2qw8RylFHuO0L2HAo44axKf7TjfqtzcRmqlAvj5ARzygQgGOG
-         MzogY0KlYe/FjCgm9/0ZusfW72VRZ4uZy4dtdc56HnzEtkXKD4NyaVsb4AUA5yYFbqrf
-         SYAxgM1GhM4icx9dGx5eFCM97/i89UM/WRpfhjtZlI9YWy7XuuXMFSQQsL2eDd/pCum4
-         f+uEOCLuG4B7mxdRAa3g5TMmEHye4gWNbYmYWmaDrd5ZRAPEOqYnwjrTvZesj1SkO1XD
-         FCVR7HRuRimHgkHGjbY0uAgv124H6+Plyl8559oe5aeIN69KCrYZvRes+PjDqG/aKjbx
-         uFjA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=hjQvtW5KCBAhxkXZKBpTw3Thc1AXYBDLoKRUiQoeyvg=;
-        b=R7+AMMTc0TqsOTbS96K96HgEZU70QSC4rVryWQnjw+WaUVqiuXBUoqwYlGKM5L0fTW
-         R1ooMgFwWY2ru9e6KmfPO0wSSrzOTkehUVI98JeC7fTTSotM3MtcRs9Q3858TPlIFF7N
-         4p+E8Maye52J86rsrLIU0YrhTaqkHZlTS39ZFnlxjyhjjUyWr3GkhIWhm0wBucNBk1V+
-         f/d3YmJEO6r37jcpX11tvMd4lgk0XgXxPo1J2eqvcv1hqaizwWvrq/qVmGU1WzddmR6u
-         8DClZhLrBJhVut+AAgds67bFs0yPNgauewSBw9uJ81WkdmDNkJY6Tma/JR5ffHtZSAzN
-         /GVw==
-X-Gm-Message-State: APjAAAXQvE7b+TjmJmBAFxRn/14F89qZeKXgszlSH01Rs7FPgaiPg9R0
-        RehWbX2sP5YkolT1XZiGckDu9EZLWb1nWS45r2KShA==
-X-Google-Smtp-Source: APXvYqx46VL8BiLxZS8kOhAGH18FRPo0bE4MIrAYpRnckeMIKR3KpU5qVoBEDW2koRAWlytrsJAgLVwUhuUXyXD37vY=
-X-Received: by 2002:ac8:7642:: with SMTP id i2mr9488940qtr.57.1570108450446;
- Thu, 03 Oct 2019 06:14:10 -0700 (PDT)
+        Thu, 3 Oct 2019 09:14:58 -0400
+Received: from frontend01.mail.m-online.net (unknown [192.168.8.182])
+        by mail-out.m-online.net (Postfix) with ESMTP id 46kYQ73LN2z1rpSZ;
+        Thu,  3 Oct 2019 15:14:55 +0200 (CEST)
+Received: from localhost (dynscan1.mnet-online.de [192.168.6.70])
+        by mail.m-online.net (Postfix) with ESMTP id 46kYQ72G6Nz1qqkM;
+        Thu,  3 Oct 2019 15:14:55 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at mnet-online.de
+Received: from mail.mnet-online.de ([192.168.8.182])
+        by localhost (dynscan1.mail.m-online.net [192.168.6.70]) (amavisd-new, port 10024)
+        with ESMTP id qyrIp-v7WbMQ; Thu,  3 Oct 2019 15:14:54 +0200 (CEST)
+X-Auth-Info: xiZETJUVqfKpf2L5V7ri6d768Sag1oWyEMv8K/uuf50=
+Received: from jawa (85-222-111-42.dynamic.chello.pl [85.222.111.42])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.mnet-online.de (Postfix) with ESMTPSA;
+        Thu,  3 Oct 2019 15:14:54 +0200 (CEST)
+Date:   Thu, 3 Oct 2019 15:14:34 +0200
+From:   Lukasz Majewski <lukma@denx.de>
+To:     Alexandre Belloni <alexandre.belloni@bootlin.com>
+Cc:     Alessandro Zummo <a.zummo@towertech.it>, linux-rtc@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] rtc: Add support for century bits to m41t62 (rv4162)
+ RTC devices
+Message-ID: <20191003151434.49762715@jawa>
+In-Reply-To: <20191003123538.GS4106@piout.net>
+References: <20190911154803.15969-1-lukma@denx.de>
+        <20191003114831.GR4106@piout.net>
+        <20191003142150.3d73a9d7@jawa>
+        <20191003123538.GS4106@piout.net>
+Organization: denx.de
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-References: <CANpmjNPJ_bHjfLZCAPV23AXFfiPiyXXqqu72n6TgWzb2Gnu1eA@mail.gmail.com>
- <20191001211948.GA42035@google.com> <CANpmjNNp=zVzM2iGcQwVYxzNHYjBo==_2nito4Dw=kHopy=0Sg@mail.gmail.com>
-In-Reply-To: <CANpmjNNp=zVzM2iGcQwVYxzNHYjBo==_2nito4Dw=kHopy=0Sg@mail.gmail.com>
-From:   Dmitry Vyukov <dvyukov@google.com>
-Date:   Thu, 3 Oct 2019 15:13:57 +0200
-Message-ID: <CACT4Y+bNun9zAcUEAm9TC6C_e9W9dd3+Eq9GwPWun1zzQOtHAg@mail.gmail.com>
-Subject: Re: Kernel Concurrency Sanitizer (KCSAN)
-To:     Marco Elver <elver@google.com>
-Cc:     Joel Fernandes <joel@joelfernandes.org>,
-        kasan-dev <kasan-dev@googlegroups.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Andrey Konovalov <andreyknvl@google.com>,
-        Alexander Potapenko <glider@google.com>,
-        "Paul E. McKenney" <paulmck@linux.ibm.com>,
-        Paul Turner <pjt@google.com>, Daniel Axtens <dja@axtens.net>,
-        Anatol Pomazau <anatol@google.com>,
-        Will Deacon <willdeacon@google.com>,
-        Andrea Parri <parri.andrea@gmail.com>,
-        Alan Stern <stern@rowland.harvard.edu>,
-        LKMM Maintainers -- Akira Yokosawa <akiyks@gmail.com>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Boqun Feng <boqun.feng@gmail.com>,
-        Daniel Lustig <dlustig@nvidia.com>,
-        Jade Alglave <j.alglave@ucl.ac.uk>,
-        Luc Maranget <luc.maranget@inria.fr>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha512;
+ boundary="Sig_/j/.C7KS_WRAAcH/i3tvI2vT"; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Oct 2, 2019 at 9:52 PM Marco Elver <elver@google.com> wrote:
->
-> Hi Joel,
->
-> On Tue, 1 Oct 2019 at 23:19, Joel Fernandes <joel@joelfernandes.org> wrote:
-> >
-> > On Fri, Sep 20, 2019 at 04:18:57PM +0200, Marco Elver wrote:
-> > > Hi all,
-> > >
-> > > We would like to share a new data-race detector for the Linux kernel:
-> > > Kernel Concurrency Sanitizer (KCSAN) --
-> > > https://github.com/google/ktsan/wiki/KCSAN  (Details:
-> > > https://github.com/google/ktsan/blob/kcsan/Documentation/dev-tools/kcsan.rst)
-> > >
-> > > To those of you who we mentioned at LPC that we're working on a
-> > > watchpoint-based KTSAN inspired by DataCollider [1], this is it (we
-> > > renamed it to KCSAN to avoid confusion with KTSAN).
-> > > [1] http://usenix.org/legacy/events/osdi10/tech/full_papers/Erickson.pdf
-> > >
-> > > In the coming weeks we're planning to:
-> > > * Set up a syzkaller instance.
-> > > * Share the dashboard so that you can see the races that are found.
-> > > * Attempt to send fixes for some races upstream (if you find that the
-> > > kcsan-with-fixes branch contains an important fix, please feel free to
-> > > point it out and we'll prioritize that).
-> > >
-> > > There are a few open questions:
-> > > * The big one: most of the reported races are due to unmarked
-> > > accesses; prioritization or pruning of races to focus initial efforts
-> > > to fix races might be required. Comments on how best to proceed are
-> > > welcome. We're aware that these are issues that have recently received
-> > > attention in the context of the LKMM
-> > > (https://lwn.net/Articles/793253/).
-> > > * How/when to upstream KCSAN?
-> >
-> > Looks exciting. I think based on our discussion at LPC, you mentioned
-> > one way of pruning is if the compiler generated different code with _ONCE
-> > annotations than what would have otherwise been generated. Is that still on
-> > the table, for the purposing of pruning the reports?
->
-> This might be interesting at first, but it's not entirely clear how
-> feasible it is. It's also dangerous, because the real issue would be
-> ignored. It may be that one compiler version on a particular
-> architecture generates the same code, but any change in compiler or
-> architecture and this would no longer be true. Let me know if you have
-> any more ideas.
->
-> Best,
-> -- Marco
->
-> > Also appreciate a CC on future patches as well.
-> >
-> > thanks,
-> >
-> >  - Joel
-> >
-> >
-> > >
-> > > Feel free to test and send feedback.
+--Sig_/j/.C7KS_WRAAcH/i3tvI2vT
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-FYI https://twitter.com/grsecurity/status/1179736828880048128 :)
+Hi Alexandre,
+
+> On 03/10/2019 14:21:50+0200, Lukasz Majewski wrote:
+> > >=20
+> > > See the datasheet:
+> > >=20
+> > > "During any year which is a multiple of 4, the RV-4162 RTC will
+> > > automatically insert leap day, February 29.  Therefore, the
+> > > application software must correct for this during the exception
+> > > years (2100, 2200, etc.) as noted above." =20
+> >=20
+> > I'm wondering what the phrase "application software" means here?
+> >=20
+> > If it is the userland SW, then we shall at least be able to set
+> > 2099 in this device and then count on software correction.
+> >=20
+> > If the "application software" is the kernel driver - the date
+> > correction shall be done there (maybe some lookup table?).
+> >=20
+> > Personally, I do prefer the first option - this means that with this
+> > patch we can set the time to e.g. 2234 year and then rely on
+> > userland software (or libc) to do the correction.
+> >  =20
+>=20
+> It is not possible to ensure this correction is properly done in
+> software, there is no point in letting the user set those bits.
+>=20
+>=20
+
+I see your point.
+
+However, could you share your idea on testing setting RTC time to year
+2100 on this particular IC (by using hctosys and friends)?
+
+
+Best regards,
+
+Lukasz Majewski
+
+--
+
+DENX Software Engineering GmbH,      Managing Director: Wolfgang Denk
+HRB 165235 Munich, Office: Kirchenstr.5, D-82194 Groebenzell, Germany
+Phone: (+49)-8142-66989-59 Fax: (+49)-8142-66989-80 Email: lukma@denx.de
+
+--Sig_/j/.C7KS_WRAAcH/i3tvI2vT
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCgAdFiEEgAyFJ+N6uu6+XupJAR8vZIA0zr0FAl2V9DoACgkQAR8vZIA0
+zr3BIQgAlkA+YDvGJVBeIvlyQeEpjCBRSOKg1njJc/zbo+dyLX04exb85bLdZaZa
+/qdn/Haxk7CAh6I+vL8X57hcmdJSLBtev42HWSnIYlL8jabaU0SMm0s8kPFln3Bw
+LpDaAaS8q5VM7dCmhtu8jzYOFyDvAZrmT5s1fLHu/FegEgMQAvHVR+ePLhebGRwl
+IqAdmnmTV8kwVXz7RdhrxF61/0SgVqNqf4+IUszFInpHErdCIZZYRc7kw9GNtdYK
+AQKB8Qw3/9gWIc9vsd1ZxLjQ1RJxDEMBvAVUM9Jc40m6ML4lRpmDGRDnIAlha2Uc
+FkEVn2RQ6l+w58s4bhb6h8NBXVkLTg==
+=9hH2
+-----END PGP SIGNATURE-----
+
+--Sig_/j/.C7KS_WRAAcH/i3tvI2vT--
