@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FE5DC4CED1
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:45:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55317C32792
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:45:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E80D5215EA
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:45:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 224FB20865
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:45:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570121128;
-	bh=m1xU3MN9oZtjKPTUZFaPksrFuGLR44/SZKFcE/8zU+8=;
+	s=default; t=1570121132;
+	bh=DdnHqTTMKKfCpDwlPlBDOYddiSHmslJNpMh4FwJwhwI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=GFAmXI/1vuyTwZ57JHvxvJi/i2QS2NsUyL9TcRH9Uv0LlvWvlmAb0UPhHfuSQgylA
-	 aWMjdruf/s9akH/3X8gg+1os2BEIS3/hDSVHkRe1hDOfTOGwnt671XdeNnAEHOE0/M
-	 2bFnBv3S2QoXIwUugVUDD1DKDmmtReqdbYdtfQYk=
+	b=vj7y31W6G8hF/2/I+FoOfVHzTUo1Fbd64aatiX5bRe5uBh+jIAdOSYk89DO9UUFFa
+	 JmTSO/yggmIa5wmlOGQS0j9i+z1d+BinfVPZnLt/UReXRnqveizka/W44CoIapvLMj
+	 3M/W4lE9gPGfdjLt8ByHw75afP8ex1z3nc1pkufs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392791AbfJCQpX (ORCPT
+        id S2392809AbfJCQpa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 12:45:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57816 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 12:45:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57958 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392776AbfJCQpU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:45:20 -0400
+        id S2388899AbfJCQp2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:45:28 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 13CAE2070B;
-        Thu,  3 Oct 2019 16:45:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1462720867;
+        Thu,  3 Oct 2019 16:45:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570121119;
-        bh=m1xU3MN9oZtjKPTUZFaPksrFuGLR44/SZKFcE/8zU+8=;
+        s=default; t=1570121127;
+        bh=DdnHqTTMKKfCpDwlPlBDOYddiSHmslJNpMh4FwJwhwI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=UA6Z+ljscwMSYMz2zcM+Td53bmUEGq/qN1viLpnFA9YDacD7VOpIBDmcGWtGAK+5v
-         lu4zd70zH+w4/TiAKMsNgzpRNmpnAotpcoYn7M7oQ05D8VlZR9xwL3QxcjLPV6djiP
-         DDPlsXyauPJVQbuAwLfd8ZSAbNqfMmiuAaN7H5Z8=
+        b=VuJ7BHSGQ4KJHMU6J/dfJ1LJcQqaAxqq7SlQB8PareKEn9YwrrH7n450J65o+p9aO
+         Mz4MWdF+xSTvrcoXBlnN8lcc6igp0NcKtc6Fcg6aAAcA+g8fkzzQ8JZ9V36aub43tx
+         ox317CsDDSrIjMZ+4ZnoyqEwWj0Ooj9MCwFd360w=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Andi Kleen <ak@linux.intel.com>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Jiri Olsa <jolsa@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.3 161/344] perf report: Fix --ns time sort key output
-Date:   Thu,  3 Oct 2019 17:52:06 +0200
-Message-Id: <20191003154556.092459836@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Sylwester Nawrocki <s.nawrocki@samsung.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.3 164/344] media: ov9650: add a sanity check
+Date:   Thu,  3 Oct 2019 17:52:09 +0200
+Message-Id: <20191003154556.423138582@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191003154540.062170222@linuxfoundation.org>
 References: <20191003154540.062170222@linuxfoundation.org>
@@ -60,62 +61,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andi Kleen <ak@linux.intel.com>
+From: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 
-[ Upstream commit 3dab6ac080dcd7f71cb9ceb84ad7dafecd6f7c07 ]
+[ Upstream commit 093347abc7a4e0490e3c962ecbde2dc272a8f708 ]
 
-If the user specified --ns, the column to print the sort time stamp
-wasn't wide enough to actually print the full nanoseconds.
+As pointed by cppcheck:
 
-Widen the time key column width when --ns is specified.
+	[drivers/media/i2c/ov9650.c:706]: (error) Shifting by a negative value is undefined behaviour
+	[drivers/media/i2c/ov9650.c:707]: (error) Shifting by a negative value is undefined behaviour
+	[drivers/media/i2c/ov9650.c:721]: (error) Shifting by a negative value is undefined behaviour
 
-Before:
+Prevent mangling with gains with invalid values.
 
-  % perf record -a sleep 1
-  % perf report --sort time,overhead,symbol --stdio --ns
-  ...
-       2.39%  187851.10000  [k] smp_call_function_single   -      -
-       1.53%  187851.10000  [k] intel_idle                 -      -
-       0.59%  187851.10000  [.] __wcscmp_ifunc             -      -
-       0.33%  187851.10000  [.] 0000000000000000           -      -
-       0.28%  187851.10000  [k] cpuidle_enter_state        -      -
+As pointed by Sylvester, this should never happen in practice,
+as min value of V4L2_CID_GAIN control is 16 (gain is always >= 16
+and m is always >= 0), but it is too hard for a static analyzer
+to get this, as the logic with validates control min/max is
+elsewhere inside V4L2 core.
 
-After:
-
-  % perf report --sort time,overhead,symbol --stdio --ns
-  ...
-       2.39%  187851.100000000  [k] smp_call_function_single   -      -
-       1.53%  187851.100000000  [k] intel_idle                 -      -
-       0.59%  187851.100000000  [.] __wcscmp_ifunc             -      -
-       0.33%  187851.100000000  [.] 0000000000000000           -      -
-       0.28%  187851.100000000  [k] cpuidle_enter_state        -      -
-
-Signed-off-by: Andi Kleen <ak@linux.intel.com>
-Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-Cc: Jiri Olsa <jolsa@kernel.org>
-Link: http://lkml.kernel.org/r/20190823210338.12360-2-andi@firstfloor.org
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Reviewed-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/perf/util/hist.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ drivers/media/i2c/ov9650.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/tools/perf/util/hist.c b/tools/perf/util/hist.c
-index f24fd1954f6c9..6bd270a1e93e0 100644
---- a/tools/perf/util/hist.c
-+++ b/tools/perf/util/hist.c
-@@ -193,7 +193,10 @@ void hists__calc_col_len(struct hists *hists, struct hist_entry *h)
- 	hists__new_col_len(hists, HISTC_MEM_LVL, 21 + 3);
- 	hists__new_col_len(hists, HISTC_LOCAL_WEIGHT, 12);
- 	hists__new_col_len(hists, HISTC_GLOBAL_WEIGHT, 12);
--	hists__new_col_len(hists, HISTC_TIME, 12);
-+	if (symbol_conf.nanosecs)
-+		hists__new_col_len(hists, HISTC_TIME, 16);
-+	else
-+		hists__new_col_len(hists, HISTC_TIME, 12);
+diff --git a/drivers/media/i2c/ov9650.c b/drivers/media/i2c/ov9650.c
+index 30ab2225fbd0c..b350f5c1a9890 100644
+--- a/drivers/media/i2c/ov9650.c
++++ b/drivers/media/i2c/ov9650.c
+@@ -703,6 +703,11 @@ static int ov965x_set_gain(struct ov965x *ov965x, int auto_gain)
+ 		for (m = 6; m >= 0; m--)
+ 			if (gain >= (1 << m) * 16)
+ 				break;
++
++		/* Sanity check: don't adjust the gain with a negative value */
++		if (m < 0)
++			return -EINVAL;
++
+ 		rgain = (gain - ((1 << m) * 16)) / (1 << m);
+ 		rgain |= (((1 << m) - 1) << 4);
  
- 	if (h->srcline) {
- 		len = MAX(strlen(h->srcline), strlen(sort_srcline.se_header));
 -- 
 2.20.1
 
