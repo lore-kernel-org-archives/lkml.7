@@ -2,139 +2,84 @@ Return-Path: <SRS0=6dNS=X4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5123DECE58B
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 18:19:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C225C10F14
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 18:19:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2180820830
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 18:19:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="ZxEj+hUR"
+	by mail.kernel.org (Postfix) with ESMTP id 6F54120830
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 18:19:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1570126782;
+	bh=zbj1ZLtsX6CCQqumum9b70SmuYxgm1ogsv5Y+/BHswM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=MZqcZ5jTUwL/1i+HZhg5cA6Rt8ks82kFDtCf4a7XstCg7a8tAS4BGwaIaSedGimh1
+	 XER01f/lzTZZTWi5Lnt1aqDuNF7QMGUfSO5qs+nNUtvmYKdx7rtFLfz3fsGSPImRL8
+	 Qgb2ngXRe+ZbMzaJ4ZVSi/BuQYC5HkgN1nf0fkGM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388321AbfJCSS7 (ORCPT
+        id S2388459AbfJCSTl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 14:18:59 -0400
-Received: from mail-eopbgr1300110.outbound.protection.outlook.com ([40.107.130.110]:58944
-        "EHLO APC01-HK2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1731113AbfJCSS6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 14:18:58 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=i5LYwP1wkUCJhK41joc5buLVaVApHP9A5w4ftxCD7PeO5u/fs3xEicXf3eRYFXA0yfvoQc4QLgW03mr+6czLOuJJzs1Xw3EQVjdtSXBvNCmW6heKOJklO0hghY7x4HPjQRSOm/kMujUpzxmjVtD//+fB7h6c+XUPVOYqVnvenpa0FibI+bcZ2AwIDEMBy6V60bGjv7JWOSJuga832k769u3xc+GkWj338Zvq03EeG7iKUr0CgVReVu7qKW1WvC4aDP5gFvMgCcptdVS5MY7uaCpR5t89FowLWgEqvlvgaeHqMHysbq/Fe1lygkpYSyPCqrYu76gCpNnPADl8OCRd4g==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=lZVzpDglIsz6Us7WGaF6KHFvSgYy7koC23diZDQqa6M=;
- b=a74INfAH++hBF98o/BCcIyO7Imu/Z1qF0id9Rrb3fyYDNvKnHN8213pXykHgN4P7iKFTw2raFvyohwJ+DMUdvtiC1fzvRQw8zkWMwbGKLOZ+YI/gDY84/PGGohF5DbT8Uii+Xv2sJaZOoQwtmyeqUpVAxMDoqXeWuo5i+RTEbMJTW6+ZOmQcDRFQNS61m0OnBv2PwCmGR1Qy4r/iOvb8GkhwWqq3+9Ym30sweWr2VqEjkFoMDBBuTHy6rlUWZ75Kn/lpG/EMwYcQ2rtYepWC3qNtiB0ckgKkZcyoRFJAeRzfE1Kw6ISJUBcpXZoqb+VXnmxS98bMpjUEzxvt+6MLhA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microsoft.com; dmarc=pass action=none
- header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=lZVzpDglIsz6Us7WGaF6KHFvSgYy7koC23diZDQqa6M=;
- b=ZxEj+hURUKvMuxoJG4jp+6AUjBIkgjglwPH5CUJVvuAEyMT+OlWSAl8affuNb/Y3vH5iJuV+tzoYiN8FrZ4S6IUz02XA5QyqOBeYFrSqEP6rtxpi4DnOF1IEWCpEKNd4psgYu0OgvywdDQTRSsM6K8C4xrhUxKMr+p0h+tQ8AK8=
-Received: from PU1P153MB0169.APCP153.PROD.OUTLOOK.COM (10.170.189.13) by
- PU1P153MB0108.APCP153.PROD.OUTLOOK.COM (10.170.188.13) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2347.10; Thu, 3 Oct 2019 18:18:37 +0000
-Received: from PU1P153MB0169.APCP153.PROD.OUTLOOK.COM
- ([fe80::fc44:a784:73e6:c1c2]) by PU1P153MB0169.APCP153.PROD.OUTLOOK.COM
- ([fe80::fc44:a784:73e6:c1c2%7]) with mapi id 15.20.2327.021; Thu, 3 Oct 2019
- 18:18:37 +0000
-From:   Dexuan Cui <decui@microsoft.com>
-To:     "dmitry.torokhov@gmail.com" <dmitry.torokhov@gmail.com>
-CC:     KY Srinivasan <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        "sashal@kernel.org" <sashal@kernel.org>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Michael Kelley <mikelley@microsoft.com>
-Subject: RE: [PATCH] Input: hyperv-keyboard: Add the support of hibernation
-Thread-Topic: [PATCH] Input: hyperv-keyboard: Add the support of hibernation
-Thread-Index: AQHVbwXQRPtGDntMcU+sv4R8q5dPMac1q4VggAqesgCABFerkIAAR5AAgAAEvxCAA52PEIAAuuYAgAAIzDA=
-Date:   Thu, 3 Oct 2019 18:18:37 +0000
-Message-ID: <PU1P153MB016904AA7BAC9255552A89E1BF9F0@PU1P153MB0169.APCP153.PROD.OUTLOOK.COM>
-References: <1568244975-66795-1-git-send-email-decui@microsoft.com>
- <20190919161752.GS237523@dtor-ws>
- <PU1P153MB016914A7C827CA35D7FEB66ABF8B0@PU1P153MB0169.APCP153.PROD.OUTLOOK.COM>
- <20190928003156.GU237523@dtor-ws>
- <PU1P153MB0169C315F7F9EBEBED4C7A7DBF820@PU1P153MB0169.APCP153.PROD.OUTLOOK.COM>
- <20190930230652.GW237523@dtor-ws>
- <PU1P153MB01696258D9983DF59D68E748BF9F0@PU1P153MB0169.APCP153.PROD.OUTLOOK.COM>
- <PU1P153MB0169CC57749BF297F2581B02BF9F0@PU1P153MB0169.APCP153.PROD.OUTLOOK.COM>
- <20191003174530.GB22365@dtor-ws>
-In-Reply-To: <20191003174530.GB22365@dtor-ws>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=True;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Owner=decui@microsoft.com;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2019-10-03T18:18:35.5985548Z;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=General;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Application=Microsoft Azure
- Information Protection;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=33ad7441-da83-448d-b128-7a96e2c029e8;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Extended_MSFT_Method=Automatic
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=decui@microsoft.com; 
-x-originating-ip: [2001:4898:80e8:2:e8be:9c25:96c9:9a3c]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: a1826418-1d76-4f6e-29bd-08d7482e1c67
-x-ms-office365-filtering-ht: Tenant
-x-ms-traffictypediagnostic: PU1P153MB0108:|PU1P153MB0108:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <PU1P153MB010888048611AE415CA99A1ABF9F0@PU1P153MB0108.APCP153.PROD.OUTLOOK.COM>
-x-ms-oob-tlc-oobclassifiers: OLM:3173;
-x-forefront-prvs: 01792087B6
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(39860400002)(396003)(366004)(376002)(136003)(346002)(189003)(199004)(5640700003)(229853002)(74316002)(5660300002)(2351001)(305945005)(107886003)(8936002)(14454004)(99286004)(81156014)(8676002)(6246003)(7696005)(6916009)(6436002)(1361003)(6506007)(10290500003)(486006)(476003)(316002)(2501003)(22452003)(76176011)(446003)(186003)(11346002)(55016002)(7736002)(9686003)(54906003)(71200400001)(478600001)(71190400001)(46003)(14444005)(256004)(64756008)(66556008)(33656002)(66476007)(66946007)(76116006)(102836004)(8990500004)(52536014)(66446008)(86362001)(25786009)(10090500001)(2906002)(4326008)(81166006)(6116002);DIR:OUT;SFP:1102;SCL:1;SRVR:PU1P153MB0108;H:PU1P153MB0169.APCP153.PROD.OUTLOOK.COM;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: microsoft.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: op95pzlrpbwfKDGzhroTWub/CrivSmxUvRYbHBOD7GJm3q2ccB1gy/jlILtr2Irear0o2kUU6mGTUG1QWvhOF3aKF6+6sL3K12QYK3DvCEel1e6qKi2RK9075z5u7YMfTnFGtfYYPfWjJlolf0nSHqjiJ7yQyaNNLvmWvf6eJA2ZJq8aGqBdAXwEF85eE1MBWXwc//LIeC9GR+xdm279+eNkX3p3usClUKL8Uje9ciozZ4hX8+X3aH7PDuPEy6C+N2B4DOhqghaMLZL3WhXU6r0gk0+ulpEJmcxLbDThrDbSR9397Apr1eyoMYcSqzbMRIkXb0h143wCxTycQ+60LNpju1f8E1Ezwvn+ur7T2eZIzX7wrxQ1B9iSbbt5pdrECqFRx+VuOp51mE1nmhKdQ+K3ejyJAP0jUqqfDvdwR30=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Thu, 3 Oct 2019 14:19:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40358 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2387866AbfJCSTk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 14:19:40 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id AA7A32133F;
+        Thu,  3 Oct 2019 18:19:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1570126780;
+        bh=zbj1ZLtsX6CCQqumum9b70SmuYxgm1ogsv5Y+/BHswM=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=okCmgu3Orocz3Ua/9OzDyEvJJK/K8IhGAbKg2fVJmnVQevUujH0Txhx9wQXidF1Bi
+         07A3SEGzV8gBCg7zQFMAUqq1PiBGMygO8T01vyqvxkUjZda6t4SF9KLOZg/kh7Vl1u
+         bvS9pQKmrIshroie4WhlM0J1fTC+ZhT1jJYIoah4=
+Date:   Thu, 3 Oct 2019 20:19:37 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Mark Brown <broonie@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        Libin Yang <libin.yang@intel.com>,
+        Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
+        Takashi Iwai <tiwai@suse.de>, Sasha Levin <sashal@kernel.org>
+Subject: Re: [PATCH 5.3 039/344] ASoC: SOF: Intel: hda: Make hdac_device
+ device-managed
+Message-ID: <20191003181937.GC3457141@kroah.com>
+References: <20191003154540.062170222@linuxfoundation.org>
+ <20191003154543.920067214@linuxfoundation.org>
+ <20191003172617.GA6090@sirena.co.uk>
 MIME-Version: 1.0
-X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: a1826418-1d76-4f6e-29bd-08d7482e1c67
-X-MS-Exchange-CrossTenant-originalarrivaltime: 03 Oct 2019 18:18:37.4235
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: XZbyaLYTWd+346zLLABlxVPtqglh5Zk/SmjOmyPsPxql4YWZZeuctJcCOPpOPQWHGMIEfOsePdj9JnvqgP/LuQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PU1P153MB0108
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191003172617.GA6090@sirena.co.uk>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-PiBGcm9tOiBkbWl0cnkudG9yb2tob3ZAZ21haWwuY29tIDxkbWl0cnkudG9yb2tob3ZAZ21haWwu
-Y29tPg0KPiBTZW50OiBUaHVyc2RheSwgT2N0b2JlciAzLCAyMDE5IDEwOjQ2IEFNDQo+ID4NCj4g
-PiBJIHRoaW5rIEkgdW5kZXJzdG9vZCBub3c6IGl0IGxvb2tzIHRoZSB2bWJ1cyBkcml2ZXIgc2hv
-dWxkIGltcGxlbWVudA0KPiA+IGEgcHJlcGFyZSgpIG9yIGZyZWV6ZSgpLCB3aGljaCBjYWxscyB0
-aGUgaHlwZXJ2X2tleWJvYXJkIGRyaXZlcidzDQo+ID4gcHJlcGFyZSgpIG9yIGZyZWV6ZSgpLCB3
-aGljaCBjYW4gc2V0IHRoZSBmbGFnIG9yIGRpc2FibGUgdGhlIGtleWJvYXJkDQo+ID4gZXZlbnQg
-aGFuZGxpbmcuIFRoaXMgd2F5IHdlIGRvbid0IG5lZWQgdGhlIG5vdGlmaWVyLg0KPiANCj4gUmln
-aHQuIEkgdGhpbmsgaW4gcHJhY3RpY2UgdGhlIGN1cnJlbnQgc3VzcGVuZCBpbXBsZW1lbnRhdGlv
-biBjYW4gd29yaw0KPiBhcyBmcmVlemUoKSBmb3IgdGhlIEhWIGtleWJvYXJkLCBiZWNhdXNlIGlu
-IHN1c3BlbmQgeW91IHNodXQgb2ZmIHZtYnVzDQo+IGNoYW5uZWwsIHNvIHRoZXJlIHNob3VsZCBu
-b3QgYmUgd2FrZXVwIHNpZ25hbHMgYW55bW9yZS4gV2hhdCB5b3UgZG8gbm90DQo+IHdhbnQgaXMg
-dG8gaGF2ZSB0aGUgY3VycmVudCByZXN1bWUgdG8gYmUgdXNlZCBpbiBwbGFjZSBvZiB0aGF3KCks
-IGFzDQo+IHRoZXJlIHlvdSByZS1lbmFibGUgdGhlIHZtYnVzIGNoYW5uZWwgYW5kIHJlc3VtZSBz
-ZW5kaW5nIHdha2V1cCByZXF1ZXN0cw0KPiBhcyB5b3UgYXJlIHdyaXRpbmcgb3V0IHRoZSBoaWJl
-cm5hdGlvbiBpbWFnZSB0byBzdG9yYWdlLg0KPiANCj4gSSB0aGluayBpZiB2bWJ1cyBhbGxvd2Vk
-IEhWIGtleWJvYXJkIGRyaXZlciB0byBzdXBwbHkgZW1wdHkgdGhhdygpIGFuZA0KPiBwb3dlcm9m
-ZigpIGltcGxlbWVudGF0aW9ucywgd2hpbGUgdXNpbmcgc3VzcGVuZCgpIGFzIGZyZWV6ZSgpIGFu
-ZA0KPiByZXN1bWUoKSBhcyByZXN0b3JlKCksIGl0IHdvdWxkIHNvbHZlIHRoZSBpc3N1ZSBmb3Ig
-eW91Lg0KPiANCj4gRG1pdHJ5DQoNCkV4YWN0bHkuIEknbGwgaGF2ZSB0byBmaXggdm1idXMgZmly
-c3QsIHRoZW4gcG9zdCBhIHYyIGZvciB0aGlzIHBhdGNoLg0KDQpUaGFua3MsDQotLSBEZXh1YW4N
-Cg==
+On Thu, Oct 03, 2019 at 06:26:17PM +0100, Mark Brown wrote:
+> On Thu, Oct 03, 2019 at 05:50:04PM +0200, Greg Kroah-Hartman wrote:
+> 
+> > 
+> > Signed-off-by: Libin Yang <libin.yang@intel.com>
+> > Signed-off-by: Ranjani Sridharan <ranjani.sridharan@linux.intel.com>
+> > Reviewed-by: Takashi Iwai <tiwai@suse.de>
+> > Link: https://lore.kernel.org/r/20190626070450.7229-1-ranjani.sridharan@linux.intel.com
+> > Signed-off-by: Mark Brown <broonie@kernel.org>
+> > Signed-off-by: Sasha Levin <sashal@kernel.org>
+> > ---
+> 
+> Looks like you're missing your own signoff on this (and quite a few of
+> the others)?
+
+Sasha signs off on these, I didn't, as he is the one that queues them
+up.
+
+thanks,
+
+greg k-h
