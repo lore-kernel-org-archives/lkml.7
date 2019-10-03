@@ -4,57 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 722DAC32792
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:02:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 130AAC10F14
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:02:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 40B15222BE
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:02:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CCBBA20700
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:02:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570118547;
-	bh=4b7EPLv8vbcfCZ5GhE7MQToFTlBb4KzIfHFHQN/th1o=;
+	s=default; t=1570118549;
+	bh=khJUX06VjxDazzhaxeyGfY+sLuklaDw3Cw25F/QPmIs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=M2Aik8ldGN4CPsLfSbax9N+t++4pPcONZpupd5xhlPC7KPiVCZMHBvZB0d3TQjRZr
-	 wp8tRvl9By6Il/fSW3kHACJpyIbLWzE8IUzti60NOUuelnOUWtbBZcEP70954Zr4Dk
-	 PRXi5KECFKlqB555ym7iPZ9GD3G3W0P00uiOZ3EI=
+	b=QQnOcNkSS1qPSFqglgxTUoDMLDBE3qUpHQdcPMojEGAxcoUxnPQ9jGSucKpFWeT+y
+	 H03JydFURgxMMcXq9AsfnP5GzVd+Y74zxVxnmraNG0QTcRHkCtCmXfKrpUkT6nHF8b
+	 887S/QNzOaRf4Id1h1KiIX3WdWUpRyEOUvnufmCc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731892AbfJCQC0 (ORCPT
+        id S1732003AbfJCQC3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 12:02:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47176 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 12:02:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47248 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731989AbfJCQCU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:02:20 -0400
+        id S1729977AbfJCQCX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:02:23 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 695B7222C8;
-        Thu,  3 Oct 2019 16:02:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1FA6920700;
+        Thu,  3 Oct 2019 16:02:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570118539;
-        bh=4b7EPLv8vbcfCZ5GhE7MQToFTlBb4KzIfHFHQN/th1o=;
+        s=default; t=1570118542;
+        bh=khJUX06VjxDazzhaxeyGfY+sLuklaDw3Cw25F/QPmIs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=m+/9W4kOGR3bsPsgspN2GarVMM41mxbIaVlgqEDH6EBS9TnUdJ+JQfQKhrpYl4eed
-         kNOhIL9K820v3MlEmcq6lg2tyJiGJC4FCZIshMf8vFcB7OKskKcu6L1E/sefc7YAnH
-         LUMc324e+YHhK81/FE9lZovcVvpjgfIdBzag77yU=
+        b=W+tlnntKWf2v8fiSyjc3hFgOjH7Grk3F7EZkrueDhLXSEvNwE0AEk5VKS02QjZis8
+         D9pQdkxO3mVRCuHDPEIIDOIBWeKX6ZMmmNpAlf7WCZxka0IzBsOTdlCkIVNlRjQoaw
+         KKctA+/dO2Zs4kwKuTyrMRnKBUM41S8xBhRcaKw4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Juri Lelli <juri.lelli@redhat.com>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        =?UTF-8?q?Michal=20Koutn=C3=BD?= <mkoutny@suse.com>,
-        Daniel Bristot de Oliveira <bristot@redhat.com>,
-        Tejun Heo <tj@kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>, lizefan@huawei.com,
-        longman@redhat.com, luca.abeni@santannapisa.it,
-        rostedt@goodmis.org, Ingo Molnar <mingo@kernel.org>,
+        stable@vger.kernel.org, Grzegorz Halat <ghalat@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Don Zickus <dzickus@redhat.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 048/129] sched/core: Fix CPU controller for !RT_GROUP_SCHED
-Date:   Thu,  3 Oct 2019 17:52:51 +0200
-Message-Id: <20191003154339.072176581@linuxfoundation.org>
+Subject: [PATCH 4.9 049/129] x86/reboot: Always use NMI fallback when shutdown via reboot vector IPI fails
+Date:   Thu,  3 Oct 2019 17:52:52 +0200
+Message-Id: <20191003154339.355556990@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191003154318.081116689@linuxfoundation.org>
 References: <20191003154318.081116689@linuxfoundation.org>
@@ -67,79 +61,126 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Juri Lelli <juri.lelli@redhat.com>
+From: Grzegorz Halat <ghalat@redhat.com>
 
-[ Upstream commit a07db5c0865799ebed1f88be0df50c581fb65029 ]
+[ Upstream commit 747d5a1bf293dcb33af755a6d285d41b8c1ea010 ]
 
-On !CONFIG_RT_GROUP_SCHED configurations it is currently not possible to
-move RT tasks between cgroups to which CPU controller has been attached;
-but it is oddly possible to first move tasks around and then make them
-RT (setschedule to FIFO/RR).
+A reboot request sends an IPI via the reboot vector and waits for all other
+CPUs to stop. If one or more CPUs are in critical regions with interrupts
+disabled then the IPI is not handled on those CPUs and the shutdown hangs
+if native_stop_other_cpus() is called with the wait argument set.
 
-E.g.:
+Such a situation can happen when one CPU was stopped within a lock held
+section and another CPU is trying to acquire that lock with interrupts
+disabled. There are other scenarios which can cause such a lockup as well.
 
-  # mkdir /sys/fs/cgroup/cpu,cpuacct/group1
-  # chrt -fp 10 $$
-  # echo $$ > /sys/fs/cgroup/cpu,cpuacct/group1/tasks
-  bash: echo: write error: Invalid argument
-  # chrt -op 0 $$
-  # echo $$ > /sys/fs/cgroup/cpu,cpuacct/group1/tasks
-  # chrt -fp 10 $$
-  # cat /sys/fs/cgroup/cpu,cpuacct/group1/tasks
-  2345
-  2598
-  # chrt -p 2345
-  pid 2345's current scheduling policy: SCHED_FIFO
-  pid 2345's current scheduling priority: 10
+In theory the shutdown should be attempted by an NMI IPI after the timeout
+period elapsed. Though the wait loop after sending the reboot vector IPI
+prevents this. It checks the wait request argument and the timeout. If wait
+is set, which is true for sys_reboot() then it won't fall through to the
+NMI shutdown method after the timeout period has finished.
 
-Also, as Michal noted, it is currently not possible to enable CPU
-controller on unified hierarchy with !CONFIG_RT_GROUP_SCHED (if there
-are any kernel RT threads in root cgroup, they can't be migrated to the
-newly created CPU controller's root in cgroup_update_dfl_csses()).
+This was an oversight when the NMI shutdown mechanism was added to handle
+the 'reboot IPI is not working' situation. The mechanism was added to deal
+with stuck panic shutdowns, which do not have the wait request set, so the
+'wait request' case was probably not considered.
 
-Existing code comes with a comment saying the "we don't support RT-tasks
-being in separate groups". Such comment is however stale and belongs to
-pre-RT_GROUP_SCHED times. Also, it doesn't make much sense for
-!RT_GROUP_ SCHED configurations, since checks related to RT bandwidth
-are not performed at all in these cases.
+Remove the wait check from the post reboot vector IPI wait loop and enforce
+that the wait loop in the NMI fallback path is invoked even if NMI IPIs are
+disabled or the registration of the NMI handler fails. That second wait
+loop will then hang if not all CPUs shutdown and the wait argument is set.
 
-Make moving RT tasks between CPU controller groups viable by removing
-special case check for RT (and DEADLINE) tasks.
+[ tglx: Avoid the hard to parse line break in the NMI fallback path,
+  	add comments and massage the changelog ]
 
-Signed-off-by: Juri Lelli <juri.lelli@redhat.com>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Reviewed-by: Michal Koutný <mkoutny@suse.com>
-Reviewed-by: Daniel Bristot de Oliveira <bristot@redhat.com>
-Acked-by: Tejun Heo <tj@kernel.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: lizefan@huawei.com
-Cc: longman@redhat.com
-Cc: luca.abeni@santannapisa.it
-Cc: rostedt@goodmis.org
-Link: https://lkml.kernel.org/r/20190719063455.27328-1-juri.lelli@redhat.com
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Fixes: 7d007d21e539 ("x86/reboot: Use NMI to assist in shutting down if IRQ fails")
+Signed-off-by: Grzegorz Halat <ghalat@redhat.com>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Cc: Don Zickus <dzickus@redhat.com>
+Link: https://lkml.kernel.org/r/20190628122813.15500-1-ghalat@redhat.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/sched/core.c | 4 ----
- 1 file changed, 4 deletions(-)
+ arch/x86/kernel/smp.c | 46 +++++++++++++++++++++++++------------------
+ 1 file changed, 27 insertions(+), 19 deletions(-)
 
-diff --git a/kernel/sched/core.c b/kernel/sched/core.c
-index 3861dd6da91e7..63be0bcfa286d 100644
---- a/kernel/sched/core.c
-+++ b/kernel/sched/core.c
-@@ -8474,10 +8474,6 @@ static int cpu_cgroup_can_attach(struct cgroup_taskset *tset)
- #ifdef CONFIG_RT_GROUP_SCHED
- 		if (!sched_rt_can_attach(css_tg(css), task))
- 			return -EINVAL;
--#else
--		/* We don't support RT-tasks being in separate groups */
--		if (task->sched_class != &fair_sched_class)
--			return -EINVAL;
- #endif
+diff --git a/arch/x86/kernel/smp.c b/arch/x86/kernel/smp.c
+index 2863ad3066921..33ba47c44816b 100644
+--- a/arch/x86/kernel/smp.c
++++ b/arch/x86/kernel/smp.c
+@@ -181,6 +181,12 @@ asmlinkage __visible void smp_reboot_interrupt(void)
+ 	irq_exit();
+ }
+ 
++static int register_stop_handler(void)
++{
++	return register_nmi_handler(NMI_LOCAL, smp_stop_nmi_callback,
++				    NMI_FLAG_FIRST, "smp_stop");
++}
++
+ static void native_stop_other_cpus(int wait)
+ {
+ 	unsigned long flags;
+@@ -214,39 +220,41 @@ static void native_stop_other_cpus(int wait)
+ 		apic->send_IPI_allbutself(REBOOT_VECTOR);
+ 
  		/*
- 		 * Serialize against wake_up_new_task() such that if its
+-		 * Don't wait longer than a second if the caller
+-		 * didn't ask us to wait.
++		 * Don't wait longer than a second for IPI completion. The
++		 * wait request is not checked here because that would
++		 * prevent an NMI shutdown attempt in case that not all
++		 * CPUs reach shutdown state.
+ 		 */
+ 		timeout = USEC_PER_SEC;
+-		while (num_online_cpus() > 1 && (wait || timeout--))
++		while (num_online_cpus() > 1 && timeout--)
+ 			udelay(1);
+ 	}
+-	
+-	/* if the REBOOT_VECTOR didn't work, try with the NMI */
+-	if ((num_online_cpus() > 1) && (!smp_no_nmi_ipi))  {
+-		if (register_nmi_handler(NMI_LOCAL, smp_stop_nmi_callback,
+-					 NMI_FLAG_FIRST, "smp_stop"))
+-			/* Note: we ignore failures here */
+-			/* Hope the REBOOT_IRQ is good enough */
+-			goto finish;
+-
+-		/* sync above data before sending IRQ */
+-		wmb();
+ 
+-		pr_emerg("Shutting down cpus with NMI\n");
++	/* if the REBOOT_VECTOR didn't work, try with the NMI */
++	if (num_online_cpus() > 1) {
++		/*
++		 * If NMI IPI is enabled, try to register the stop handler
++		 * and send the IPI. In any case try to wait for the other
++		 * CPUs to stop.
++		 */
++		if (!smp_no_nmi_ipi && !register_stop_handler()) {
++			/* Sync above data before sending IRQ */
++			wmb();
+ 
+-		apic->send_IPI_allbutself(NMI_VECTOR);
++			pr_emerg("Shutting down cpus with NMI\n");
+ 
++			apic->send_IPI_allbutself(NMI_VECTOR);
++		}
+ 		/*
+-		 * Don't wait longer than a 10 ms if the caller
+-		 * didn't ask us to wait.
++		 * Don't wait longer than 10 ms if the caller didn't
++		 * reqeust it. If wait is true, the machine hangs here if
++		 * one or more CPUs do not reach shutdown state.
+ 		 */
+ 		timeout = USEC_PER_MSEC * 10;
+ 		while (num_online_cpus() > 1 && (wait || timeout--))
+ 			udelay(1);
+ 	}
+ 
+-finish:
+ 	local_irq_save(flags);
+ 	disable_local_APIC();
+ 	mcheck_cpu_clear(this_cpu_ptr(&cpu_info));
 -- 
 2.20.1
 
