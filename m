@@ -4,53 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E6D8C10F14
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:18:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48FE8C10F14
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:18:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 505FD20865
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:18:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1865420830
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:18:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570123117;
-	bh=TEG5FMLOPxC2m3iJa7OAlqaOJOc/fweVtH3XyEcLuQE=;
+	s=default; t=1570123129;
+	bh=+hiAlNfbSBPF8qKfDkfN4sNImtyxNSb/HIggk7vL2UE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ngpcHGds8RdS0Vh3MdWHxVgngNm3tYW2neXq30hHhFTDe+JC1doLEpad/m7rd5hsP
-	 ADFiWaz8qubov3Fby+kqoBxcbdCPYgBIunJarDMaPWx06cs5puklmQSPYZ/pEA3dd7
-	 FF2ydAZv253NJFe/nlEr1EIfrWWmWr+bywGvp2PA=
+	b=n9z3IohJ1NvhAeyZ5jy+6/KLf6bYRghapxxykdTqc9HaDRWrJvg4POwHlYP5sQKdT
+	 R4MARz2CM2Re9ziUSvVbROCC8RSU64K+uFs1slPCrViBExvO7XSqNT1nX+wGW1VHSu
+	 rm35OG/xLcNnAuNkvRFuUr7GaN6W20CPrXzYgwUo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390015AbfJCQUw (ORCPT
+        id S2389917AbfJCQUf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 12:20:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48714 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 12:20:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48298 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389992AbfJCQUs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:20:48 -0400
+        id S1731517AbfJCQUd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:20:33 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 162422054F;
-        Thu,  3 Oct 2019 16:20:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 90DB720865;
+        Thu,  3 Oct 2019 16:20:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570119647;
-        bh=TEG5FMLOPxC2m3iJa7OAlqaOJOc/fweVtH3XyEcLuQE=;
+        s=default; t=1570119633;
+        bh=+hiAlNfbSBPF8qKfDkfN4sNImtyxNSb/HIggk7vL2UE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=HxH6VGXmPlVQexKQE1GVNdLrGH45Mq3Cjg6MySjyUg4G4SFV2elStCN5VjK5BA1SS
-         8tqlgEaz+jzIw8KWjkQS1eo2oWX0EzXSmUWZzN1rKIYGwpTJ+/jBaLckG/N0wtENhj
-         8yShK90ACDbmfppIYtfcjoJcTNo1ZE7gmc2KqWA0=
+        b=SBH6riL5/qd/BA9nrJf1OjUpZAune74uhhx5DzC0qoPVx/us5Eaj/aXg/q+ch1xkV
+         iGexVsgvcCQRaJs6AkLekpgQM+fFUto3lAqzf+KjljNJJK+ddGvugo48lZ2q5FSQlB
+         JB57GzYXeESN6iFQUrOB82LpGJ1wR6cWNkvYbnio=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Anton Eidelman <anton@lightbitslabs.com>,
-        James Smart <james.smart@broadcom.com>,
-        Hannes Reinecke <hare@suse.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Sagi Grimberg <sagi@grimberg.me>,
+        stable@vger.kernel.org, Matthias Kaehlcke <mka@chromium.org>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Douglas Anderson <dianders@chromium.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 114/211] nvme-multipath: fix ana log nsid lookup when nsid is not found
-Date:   Thu,  3 Oct 2019 17:53:00 +0200
-Message-Id: <20191003154513.499252504@linuxfoundation.org>
+Subject: [PATCH 4.19 136/211] mmc: dw_mmc: Re-store SDIO IRQs mask at system resume
+Date:   Thu,  3 Oct 2019 17:53:22 +0200
+Message-Id: <20191003154518.185905298@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191003154447.010950442@linuxfoundation.org>
 References: <20191003154447.010950442@linuxfoundation.org>
@@ -63,79 +61,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Anton Eidelman <anton@lightbitslabs.com>
+From: Ulf Hansson <ulf.hansson@linaro.org>
 
-[ Upstream commit e01f91dff91c7b16a6e3faf2565017d497a73f83 ]
+[ Upstream commit 7c526608d5afb62cbc967225e2ccaacfdd142e9d ]
 
-ANA log parsing invokes nvme_update_ana_state() per ANA group desc.
-This updates the state of namespaces with nsids in desc->nsids[].
+In cases when SDIO IRQs have been enabled, runtime suspend is prevented by
+the driver. However, this still means dw_mci_runtime_suspend|resume() gets
+called during system suspend/resume, via pm_runtime_force_suspend|resume().
+This means during system suspend/resume, the register context of the dw_mmc
+device most likely loses its register context, even in cases when SDIO IRQs
+have been enabled.
 
-Both ctrl->namespaces list and desc->nsids[] array are sorted by nsid.
-Hence nvme_update_ana_state() performs a single walk over ctrl->namespaces:
-- if current namespace matches the current desc->nsids[n],
-  this namespace is updated, and n is incremented.
-- the process stops when it encounters the end of either
-  ctrl->namespaces end or desc->nsids[]
+To re-enable the SDIO IRQs during system resume, the dw_mmc driver
+currently relies on the mmc core to re-enable the SDIO IRQs when it resumes
+the SDIO card, but this isn't the recommended solution. Instead, it's
+better to deal with this locally in the dw_mmc driver, so let's do that.
 
-In case desc->nsids[n] does not match any of ctrl->namespaces,
-the remaining nsids following desc->nsids[n] will not be updated.
-Such situation was considered abnormal and generated WARN_ON_ONCE.
-
-However ANA log MAY contain nsids not (yet) found in ctrl->namespaces.
-For example, lets consider the following scenario:
-- nvme0 exposes namespaces with nsids = [2, 3] to the host
-- a new namespace nsid = 1 is added dynamically
-- also, a ANA topology change is triggered
-- NS_CHANGED aen is generated and triggers scan_work
-- before scan_work discovers nsid=1 and creates a namespace, a NOTICE_ANA
-  aen was issues and ana_work receives ANA log with nsids=[1, 2, 3]
-
-Result: ana_work fails to update ANA state on existing namespaces [2, 3]
-
-Solution:
-Change the way nvme_update_ana_state() namespace list walk
-checks the current namespace against desc->nsids[n] as follows:
-a) ns->head->ns_id < desc->nsids[n]: keep walking ctrl->namespaces.
-b) ns->head->ns_id == desc->nsids[n]: match, update the namespace
-c) ns->head->ns_id >= desc->nsids[n]: skip to desc->nsids[n+1]
-
-This enables correct operation in the scenario described above.
-This also allows ANA log to contain nsids currently invisible
-to the host, i.e. inactive nsids.
-
-Signed-off-by: Anton Eidelman <anton@lightbitslabs.com>
-Reviewed-by:   James Smart <james.smart@broadcom.com>
-Reviewed-by: Hannes Reinecke <hare@suse.com>
-Reviewed-by: Christoph Hellwig <hch@lst.de>
-Signed-off-by: Sagi Grimberg <sagi@grimberg.me>
+Tested-by: Matthias Kaehlcke <mka@chromium.org>
+Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
+Reviewed-by: Douglas Anderson <dianders@chromium.org>
+Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/nvme/host/multipath.c | 8 +++++---
- 1 file changed, 5 insertions(+), 3 deletions(-)
+ drivers/mmc/host/dw_mmc.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/drivers/nvme/host/multipath.c b/drivers/nvme/host/multipath.c
-index f57feb8fdea45..892ef52122329 100644
---- a/drivers/nvme/host/multipath.c
-+++ b/drivers/nvme/host/multipath.c
-@@ -404,14 +404,16 @@ static int nvme_update_ana_state(struct nvme_ctrl *ctrl,
+diff --git a/drivers/mmc/host/dw_mmc.c b/drivers/mmc/host/dw_mmc.c
+index 942da07c9eb87..22c454c7aaca6 100644
+--- a/drivers/mmc/host/dw_mmc.c
++++ b/drivers/mmc/host/dw_mmc.c
+@@ -3486,6 +3486,10 @@ int dw_mci_runtime_resume(struct device *dev)
+ 	/* Force setup bus to guarantee available clock output */
+ 	dw_mci_setup_bus(host->slot, true);
  
- 	down_write(&ctrl->namespaces_rwsem);
- 	list_for_each_entry(ns, &ctrl->namespaces, list) {
--		if (ns->head->ns_id != le32_to_cpu(desc->nsids[n]))
-+		unsigned nsid = le32_to_cpu(desc->nsids[n]);
++	/* Re-enable SDIO interrupts. */
++	if (sdio_irq_claimed(host->slot->mmc))
++		__dw_mci_enable_sdio_irq(host->slot, 1);
 +
-+		if (ns->head->ns_id < nsid)
- 			continue;
--		nvme_update_ns_ana_state(desc, ns);
-+		if (ns->head->ns_id == nsid)
-+			nvme_update_ns_ana_state(desc, ns);
- 		if (++n == nr_nsids)
- 			break;
- 	}
- 	up_write(&ctrl->namespaces_rwsem);
--	WARN_ON_ONCE(n < nr_nsids);
- 	return 0;
- }
+ 	/* Now that slots are all setup, we can enable card detect */
+ 	dw_mci_enable_cd(host);
  
 -- 
 2.20.1
