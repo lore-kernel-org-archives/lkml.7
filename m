@@ -2,125 +2,97 @@ Return-Path: <SRS0=6dNS=X4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1,USER_IN_DEF_DKIM_WL autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 64C1CC10F14
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 19:52:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD195C32792
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 19:53:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 37FE3215EA
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 19:52:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Cs5bN0Ms"
+	by mail.kernel.org (Postfix) with ESMTP id 7D6762133F
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 19:53:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1570132380;
+	bh=UcnOy/rJUGALOoVZI1BUFqQgEVaBFlIv9avHKWpI+mA=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=sWrlIYtfZ4re1vzjPiV67UIikF1wK0lzUVp63SCqEgISK9lBqtcT4No6eHfdLRl8c
+	 xxNb25rc7oOhGRrblmhc91M2so1jgne26OuXZfW9CgkNJ5oZvYYRnAJVRtrrjK9Fun
+	 /CIBPT6LEhkht8KitbgT1dBXvxfO7/waCKmowRIQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733273AbfJCTwg (ORCPT
+        id S2387654AbfJCTw7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 15:52:36 -0400
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:46352 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726677AbfJCTwg (ORCPT
+        Thu, 3 Oct 2019 15:52:59 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:44540 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726677AbfJCTw7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 15:52:36 -0400
-Received: by mail-pl1-f195.google.com with SMTP id q24so1977212plr.13
-        for <linux-kernel@vger.kernel.org>; Thu, 03 Oct 2019 12:52:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:from:to:cc:subject:in-reply-to:message-id:references
-         :user-agent:mime-version;
-        bh=At1JkwuXqZ3LFuZLMcGPn7BnqP6xgEOzm+oOPuoeZCw=;
-        b=Cs5bN0Ms2J4H8eerWkKl+7VV4n6Drh5DalQ/YypF26lf038jPpPifIAM2oMFqh7kzu
-         pfz26TAJbjuvoDyXxCizOyusCi+eM6NsntiQXXMvO1N6uLYyJg8HIWwMBz3elISvmfLV
-         xwLook/rzaw2fF6V+6J1qDgniYYGc0ipVVzD+85wubnQDLtU5pyEE7Hvn7DO8gGIqjwn
-         YSrqMS8kM5tNChmzwQCU3pekXwPB7CTlOKN/6kmVIJWGF7wZAXR4SqFEzQ7Xe7TPuMru
-         Xiw/yv/+41TkWXP0k5Zo4ZlrnxqFroqTLoKxCXlJzy2OV1SqH/+PeEavAg6ClvWu+4Z9
-         HgaQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:in-reply-to:message-id
-         :references:user-agent:mime-version;
-        bh=At1JkwuXqZ3LFuZLMcGPn7BnqP6xgEOzm+oOPuoeZCw=;
-        b=Kth4+Ogoyqn4xrp2umE38XErXlGGn/f/5tHlOf+NJYzJhT646j+Fjt/i5lpAj4yd1G
-         F6I7zOXIPyrUz5Evd54q5h+QkhJOxU8IOE+QjxQzZfBn0t+f0O6CUuPTDJ/QOxQnrUKn
-         RtCrseUshJQyOQFxiA1TJe5W6aW9mKCc4dBTxKk9O7mmscpjg9n2ONaStGUyPCRY/tS/
-         UllLlHY09L0vNu2+JdGDi9NW5byJImfmMaBsdlwkXeaw5z2NMcBCSJ4J31Sdsl2eY+Fz
-         8DPgiFoIWyJOzOd+s8GIMv5VnxKsdJmeWDm2klUHUosGh9YAAWMC64dK/eRWeMySO3BI
-         q+tg==
-X-Gm-Message-State: APjAAAWZgeK1p1qKIjtQcWbsWjTepBF6aHhKxyfAuv9+S0bH/bQTob5E
-        0MHXTJl5Q68nWvi/gtmRFL6YOw==
-X-Google-Smtp-Source: APXvYqxWHU1cLDLEYvXF5ogNeQqdEl5RjrAy7PbpU/nMugHciefJV2xdXBvSWbbkOjkUnM8I8/cz+g==
-X-Received: by 2002:a17:902:bd4a:: with SMTP id b10mr11269472plx.305.1570132355113;
-        Thu, 03 Oct 2019 12:52:35 -0700 (PDT)
-Received: from [2620:15c:17:3:3a5:23a7:5e32:4598] ([2620:15c:17:3:3a5:23a7:5e32:4598])
-        by smtp.gmail.com with ESMTPSA id d20sm6380430pfq.88.2019.10.03.12.52.33
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 03 Oct 2019 12:52:34 -0700 (PDT)
-Date:   Thu, 3 Oct 2019 12:52:33 -0700 (PDT)
-From:   David Rientjes <rientjes@google.com>
-X-X-Sender: rientjes@chino.kir.corp.google.com
-To:     Vlastimil Babka <vbabka@suse.cz>
-cc:     Mike Kravetz <mike.kravetz@oracle.com>,
-        Michal Hocko <mhocko@kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Mel Gorman <mgorman@suse.de>,
-        "Kirill A. Shutemov" <kirill@shutemov.name>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux-MM <linux-mm@kvack.org>
-Subject: Re: [rfc] mm, hugetlb: allow hugepage allocations to excessively
- reclaim
-In-Reply-To: <d7752ddf-ccdc-9ff4-ab9f-529c2cd7f041@suse.cz>
-Message-ID: <alpine.DEB.2.21.1910031243050.88296@chino.kir.corp.google.com>
-References: <alpine.DEB.2.21.1910021556270.187014@chino.kir.corp.google.com> <d7752ddf-ccdc-9ff4-ab9f-529c2cd7f041@suse.cz>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        Thu, 3 Oct 2019 15:52:59 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Subject:Cc:To:
+        From:Date:Sender:Reply-To:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=1yFNFXuAcr496RCSAiHWQcK6F/VRk+66pua7RRYRJMM=; b=XztyqVSJvQb1FIWeXD0gf0BRW
+        CBmTggGyeketQtpqlyVx6EgxS3c3KBE9WTmWrvPC4auRg+VM2tZXqY5KahRI/r2LRKWMrPlv4voHK
+        113OvYWO1Z/5CdzEiGqORrsdIzsIzE5Ue7bu8ksGIMmP50jrZm08OpRQQ4IzElU5l36GxCG9PAZ56
+        PT6WrrNjRRkqf/UZwoa8Jr+DtnvFVaMpOE4+/ZexTHEBq/3Gcu5odOmT4jNKywSDqRn8g9ZRhzwgM
+        StAdsHab1gIrxocn8qy5q7X0YQcyrpqkqBO1Lf8XQmAnhU5dZTwEvG2zSeJjM06bptX9U7vBBe/O3
+        hnGrBNuYw==;
+Received: from 177.133.68.49.dynamic.adsl.gvt.net.br ([177.133.68.49] helo=coco.lan)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.2 #3 (Red Hat Linux))
+        id 1iG79k-0007gZ-DP; Thu, 03 Oct 2019 19:52:56 +0000
+Date:   Thu, 3 Oct 2019 16:52:52 -0300
+From:   Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+To:     Gonsolo <gonsolo@gmail.com>
+Cc:     JP <jp@jpvw.nl>, crope@iki.fi, Sean Young <sean@mess.org>,
+        linux-media@vger.kernel.org,
+        Linux Kernel <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] si2157: Add support for Logilink VG0022A.
+Message-ID: <20191003165252.4145accf@coco.lan>
+In-Reply-To: <CANL0fFQCax1XHMaVj6Hvwe3JMzreH2w-dP-efr5VyGAc7Vd9aA@mail.gmail.com>
+References: <29ab2e43-4374-a3ea-6ae1-a4267867eaa4@jpvw.nl>
+        <20191002154922.7f1cfc76@coco.lan>
+        <CANL0fFRJZBfEDWK_c2w1TomvB5-i4g09LopyJUbO5NtOwKdDTg@mail.gmail.com>
+        <20191003080539.2b13c03b@coco.lan>
+        <CANL0fFSmvEEJhnA=qjTuEPr4N8q8eWLeYC5du+OoTMxe1Gnh5Q@mail.gmail.com>
+        <20191003120238.75811da6@coco.lan>
+        <20191003160336.GA5125@Limone>
+        <20191003130909.01d29b77@coco.lan>
+        <20191003162326.GA2727@Limone>
+        <20191003144225.0137bf6c@coco.lan>
+        <20191003183200.GA2631@Limone>
+        <e468b867-1b45-8220-a5d2-ac40fdb4e0e6@jpvw.nl>
+        <CANL0fFQms9oyec_1UevbJ7aLp+KNJ3h6UhGEbqrnCNO286rbGg@mail.gmail.com>
+        <CANL0fFQCax1XHMaVj6Hvwe3JMzreH2w-dP-efr5VyGAc7Vd9aA@mail.gmail.com>
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 3 Oct 2019, Vlastimil Babka wrote:
+Em Thu, 3 Oct 2019 21:40:28 +0200
+Gonsolo <gonsolo@gmail.com> escreveu:
 
-> I think the key differences between Mike's tests and Michal's is this part
-> from Mike's mail linked above:
+> From si2168.c:808:
+>                /* Sometimes firmware returns bogus value */
+>                 if (utmp1 == 0xffff)
+>                         utmp1 = 0;
+
+Huh? are you using the upstream Kernel? the above code is at line 215!
+
+Please always use the upstream code when sending patches.
+
 > 
-> "I 'tested' by simply creating some background activity and then seeing
-> how many hugetlb pages could be allocated. Of course, many tries over
-> time in a loop."
+> Maybe we can include my "bogus" hack to get at least Logilink running.
+> Maybe with an info message to tell users what is going on.
 > 
-> - "some background activity" might be different than Michal's pre-filling
->   of the memory with (clean) page cache
-> - "many tries over time in a loop" could mean that kswapd has time to 
->   reclaim and eventually the new condition for pageblock order will pass
->   every few retries, because there's enough memory for compaction and it
->   won't return COMPACT_SKIPPED
-> 
+> g
 
-I'll rely on Mike, the hugetlb maintainer, to assess the trade-off between 
-the potential for encountering very expensive reclaim as Andrea did and 
-the possibility of being able to allocate additional hugetlb pages at 
-runtime if we did that expensive reclaim.
 
-For parity with previous kernels it seems reasonable to ask that this 
-remains unchanged since allocating large amounts of hugetlb pages has 
-different latency expectations than during page fault.  This patch is 
-available if he'd prefer to go that route.
 
-On the other hand, userspace could achieve similar results if it were to 
-use vm.drop_caches and explicitly triggered compaction through either 
-procfs or sysfs before writing to vm.nr_hugepages, and that would be much 
-faster because it would be done in one go.  Users who allocate through the 
-kernel command line would obviously be unaffected.
-
-Commit b39d0ee2632d ("mm, page_alloc: avoid expensive reclaim when 
-compaction may not succeed") was written with the latter in mind.  Mike 
-subsequently requested that hugetlb not be impacted at least provisionally 
-until it could be further assessed.
-
-I'd suggest that latter: let the user initiate expensive reclaim and/or 
-compaction when tuning vm.nr_hugepages and leave no surprises for users 
-using hugetlb overcommit, but I wouldn't argue against either approach, he 
-knows the users and expectations of hugetlb far better than I do.
+Thanks,
+Mauro
