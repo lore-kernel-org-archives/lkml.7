@@ -2,52 +2,52 @@ Return-Path: <SRS0=6dNS=X4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 95DC1C32792
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:39:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C8D50C10F14
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:39:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 70A3420865
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:39:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9DFFC2086A
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:39:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570124365;
-	bh=1OUUghvMNit7ATWMhWdyUNvrax21oyc5yD7XumTD/D4=;
+	s=default; t=1570124386;
+	bh=i96ov6Rmi4+Atr3GicTb5fGFgF2PeBsIq374ck8lhDc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=t2/YkgjJQEsRWcQ0DNYTTIRszw2pJz0jj9OUat8hWyQLHhNqPcjFltUqTZJ+ycK41
-	 ZDw1zmXZifJ3+caGweU7Q890PQ8yKVrQfUlwCmMcBdahRdKuzmV5oiHNVGXi2hUYx+
-	 OgmNBO8p6E4dRwlkU3t93kBET3URqvnjb4/xVOxQ=
+	b=hxb+aJR5hbzZWWMmwVk2u25WmrS9U2xKurLdNp83bzWEPAPjV8f6OuGO+zb6pYm1j
+	 Sw1/kqLXrwtw/s0s55YXig7LByoKnOiKw0lgZ3qnsGdhxxLmEYpuhIpTVmWZ33NGbF
+	 Qc2QUVfFBMAnnZLKhsJdEHMyJ+U546pqFTm6tJhk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388380AbfJCRjY (ORCPT
+        id S1731673AbfJCQBA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 13:39:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45930 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 12:01:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44922 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731832AbfJCQBe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:01:34 -0400
+        id S1728786AbfJCQAz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:00:55 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CAC7620700;
-        Thu,  3 Oct 2019 16:01:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5A3AF21848;
+        Thu,  3 Oct 2019 16:00:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570118493;
-        bh=1OUUghvMNit7ATWMhWdyUNvrax21oyc5yD7XumTD/D4=;
+        s=default; t=1570118454;
+        bh=i96ov6Rmi4+Atr3GicTb5fGFgF2PeBsIq374ck8lhDc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=QqFvSkeeNfzp+CIgX4RM3WOVsUG00jNI3CHY1iQ51btcmPJvuRyhKN3O5YskJG8KJ
-         tQKcC/tNy+t2jdAHcvsZkXwb3YaeWmudfwAmm0o7l2ix32wjQTu43MXqlOZraa7JY6
-         KRe8VeIXhkZTVLqm4qRgxLc4iG90DN1CYyuricDU=
+        b=o/qUl32GgomMzMqMfxy44Oy+UUwRpuyZaAFJdD5aicsuYZVWF7OmQZeZO8QZ/PFUI
+         vhYcnxGWacMoreoyfElXAGKQXhbeR+AgCHZOjfxftOxVljHRA/085EuxufQO0vNPF3
+         2Q9Jy1Wvaz4tcnSBqfvZ0LY8YCWBADelizJaNvWw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Alan Stern <stern@rowland.harvard.edu>,
-        Jiri Kosina <jkosina@suse.cz>,
-        syzbot+1088533649dafa1c9004@syzkaller.appspotmail.com
-Subject: [PATCH 4.9 003/129] HID: prodikeys: Fix general protection fault during probe
-Date:   Thu,  3 Oct 2019 17:52:06 +0200
-Message-Id: <20191003154320.144037710@linuxfoundation.org>
+        stable@vger.kernel.org, Chao Yu <yuchao0@huawei.com>,
+        Jaegeuk Kim <jaegeuk@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.9 018/129] Revert "f2fs: avoid out-of-range memory access"
+Date:   Thu,  3 Oct 2019 17:52:21 +0200
+Message-Id: <20191003154327.439442229@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191003154318.081116689@linuxfoundation.org>
 References: <20191003154318.081116689@linuxfoundation.org>
@@ -60,76 +60,61 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alan Stern <stern@rowland.harvard.edu>
+From: Chao Yu <yuchao0@huawei.com>
 
-commit 98375b86c79137416e9fd354177b85e768c16e56 upstream.
+[ Upstream commit a37d0862d17411edb67677a580a6f505ec2225f6 ]
 
-The syzbot fuzzer provoked a general protection fault in the
-hid-prodikeys driver:
+As Pavel Machek reported:
 
-kasan: CONFIG_KASAN_INLINE enabled
-kasan: GPF could be caused by NULL-ptr deref or user memory access
-general protection fault: 0000 [#1] SMP KASAN
-CPU: 0 PID: 12 Comm: kworker/0:1 Not tainted 5.3.0-rc5+ #28
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS
-Google 01/01/2011
-Workqueue: usb_hub_wq hub_event
-RIP: 0010:pcmidi_submit_output_report drivers/hid/hid-prodikeys.c:300  [inline]
-RIP: 0010:pcmidi_set_operational drivers/hid/hid-prodikeys.c:558 [inline]
-RIP: 0010:pcmidi_snd_initialise drivers/hid/hid-prodikeys.c:686 [inline]
-RIP: 0010:pk_probe+0xb51/0xfd0 drivers/hid/hid-prodikeys.c:836
-Code: 0f 85 50 04 00 00 48 8b 04 24 4c 89 7d 10 48 8b 58 08 e8 b2 53 e4 fc
-48 8b 54 24 20 48 b8 00 00 00 00 00 fc ff df 48 c1 ea 03 <80> 3c 02 00 0f
-85 13 04 00 00 48 ba 00 00 00 00 00 fc ff df 49 8b
+"We normally use -EUCLEAN to signal filesystem corruption. Plus, it is
+good idea to report it to the syslog and mark filesystem as "needing
+fsck" if filesystem can do that."
 
-The problem is caused by the fact that pcmidi_get_output_report() will
-return an error if the HID device doesn't provide the right sort of
-output report, but pcmidi_set_operational() doesn't bother to check
-the return code and assumes the function call always succeeds.
+Still we need improve the original patch with:
+- use unlikely keyword
+- add message print
+- return EUCLEAN
 
-This patch adds the missing check and aborts the probe operation if
-necessary.
+However, after rethink this patch, I don't think we should add such
+condition check here as below reasons:
+- We have already checked the field in f2fs_sanity_check_ckpt(),
+- If there is fs corrupt or security vulnerability, there is nothing
+to guarantee the field is integrated after the check, unless we do
+the check before each of its use, however no filesystem does that.
+- We only have similar check for bitmap, which was added due to there
+is bitmap corruption happened on f2fs' runtime in product.
+- There are so many key fields in SB/CP/NAT did have such check
+after f2fs_sanity_check_{sb,cp,..}.
 
-Reported-and-tested-by: syzbot+1088533649dafa1c9004@syzkaller.appspotmail.com
-Signed-off-by: Alan Stern <stern@rowland.harvard.edu>
-CC: <stable@vger.kernel.org>
-Signed-off-by: Jiri Kosina <jkosina@suse.cz>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+So I propose to revert this unneeded check.
 
+This reverts commit 56f3ce675103e3fb9e631cfb4131fc768bc23e9a.
+
+Signed-off-by: Chao Yu <yuchao0@huawei.com>
+Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/hid/hid-prodikeys.c |   12 ++++++++++--
- 1 file changed, 10 insertions(+), 2 deletions(-)
+ fs/f2fs/segment.c | 5 -----
+ 1 file changed, 5 deletions(-)
 
---- a/drivers/hid/hid-prodikeys.c
-+++ b/drivers/hid/hid-prodikeys.c
-@@ -556,10 +556,14 @@ static void pcmidi_setup_extra_keys(
- 
- static int pcmidi_set_operational(struct pcmidi_snd *pm)
- {
-+	int rc;
-+
- 	if (pm->ifnum != 1)
- 		return 0; /* only set up ONCE for interace 1 */
- 
--	pcmidi_get_output_report(pm);
-+	rc = pcmidi_get_output_report(pm);
-+	if (rc < 0)
-+		return rc;
- 	pcmidi_submit_output_report(pm, 0xc1);
- 	return 0;
- }
-@@ -688,7 +692,11 @@ static int pcmidi_snd_initialise(struct
- 	spin_lock_init(&pm->rawmidi_in_lock);
- 
- 	init_sustain_timers(pm);
--	pcmidi_set_operational(pm);
-+	err = pcmidi_set_operational(pm);
-+	if (err < 0) {
-+		pk_error("failed to find output report\n");
-+		goto fail_register;
-+	}
- 
- 	/* register it */
- 	err = snd_card_register(card);
+diff --git a/fs/f2fs/segment.c b/fs/f2fs/segment.c
+index c983f7d28f033..2fb99a081de8f 100644
+--- a/fs/f2fs/segment.c
++++ b/fs/f2fs/segment.c
+@@ -1709,11 +1709,6 @@ static int read_compacted_summaries(struct f2fs_sb_info *sbi)
+ 		seg_i = CURSEG_I(sbi, i);
+ 		segno = le32_to_cpu(ckpt->cur_data_segno[i]);
+ 		blk_off = le16_to_cpu(ckpt->cur_data_blkoff[i]);
+-		if (blk_off > ENTRIES_IN_SUM) {
+-			f2fs_bug_on(sbi, 1);
+-			f2fs_put_page(page, 1);
+-			return -EFAULT;
+-		}
+ 		seg_i->next_segno = segno;
+ 		reset_curseg(sbi, i, 0);
+ 		seg_i->alloc_type = ckpt->alloc_type[i];
+-- 
+2.20.1
+
 
 
