@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 81562C32792
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:34:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7742FC32792
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:34:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 49A4720830
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:34:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4EDBB20830
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:34:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570120482;
-	bh=ZSr+ymMHWbVbOK74oW3ZFZxpB4i/n3GUFDbjMk3BF4M=;
+	s=default; t=1570120485;
+	bh=Pked2uDDLVovjt6dOYD0c9fDApYqn3LgQwFvjn28zlc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=fobs5zWyI0h0MwEKeHLvMNzHITUrZqMLcpu/zaxF1xqCferJ8OOrDJYeDD/MBPNmn
-	 Dn0PfErMwmlVBwjpT8BGDawP2n04oGlljuyNoZWst+bUcEzvMeFGFJBM2GfjwSGeVs
-	 IBY7vrQECUIa3J2TCgp/AxOgBd65/v70xnpCSJYE=
+	b=YQbTF2fVdWjbtxMA/8DI7+0iCYP3WjRxrs657wRTTgnDNz7dbjMGydlkHWZ/qa4mU
+	 9rYsftMhkerGRY5qhY3RjHAhTjA4Myz5/eB6B8lxo58aY1ZwHlu8lvbVwFw6ClgjLS
+	 +B+Q2BMD2Ws7IbNHQp1AJNf+pzRafgIfXFnZxPxk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392122AbfJCQel (ORCPT
+        id S2392156AbfJCQeo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 12:34:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43318 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 12:34:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43372 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391775AbfJCQej (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:34:39 -0400
+        id S2392148AbfJCQem (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:34:42 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3D9A620830;
-        Thu,  3 Oct 2019 16:34:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id ACFA72070B;
+        Thu,  3 Oct 2019 16:34:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570120478;
-        bh=ZSr+ymMHWbVbOK74oW3ZFZxpB4i/n3GUFDbjMk3BF4M=;
+        s=default; t=1570120481;
+        bh=Pked2uDDLVovjt6dOYD0c9fDApYqn3LgQwFvjn28zlc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=MhR2wjqG8wNQ0LFe0cplbQn6d5ND7PUmlNee7rNZ+iGxEi8QCF0WaUbK1IW9bC6iw
-         OWLnL64Bl0h0mSkTO5w7+qi7f6QW3+U09zpDud+IPQY+umf4XVrUxRvUcYBzQI7k3s
-         pX6x22kQTD8leeM8BfodAvdxGj0FhrvI24rNc6dk=
+        b=zASLddE4BHedEw3djlFq+M+Un/xJkpEnDZCByD37x5Pkx3CHNjOw+VlcUiC6aTn00
+         CDXj3L+BywaZzqAFkiyEsB1RKp3MMrWm1GWUyTl22VVWszF7HmtKDfQR83vfVuxMFH
+         EMcUYC3PxRyL3nu9/clYL149h/yNCAn90XWIkqNg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Vasily Averin <vvs@virtuozzo.com>,
+        stable@vger.kernel.org, Tejun Heo <tj@kernel.org>,
         Miklos Szeredi <mszeredi@redhat.com>
-Subject: [PATCH 5.2 236/313] fuse: fix missing unlock_page in fuse_writepage()
-Date:   Thu,  3 Oct 2019 17:53:34 +0200
-Message-Id: <20191003154556.245317543@linuxfoundation.org>
+Subject: [PATCH 5.2 237/313] fuse: fix beyond-end-of-page access in fuse_parse_cache()
+Date:   Thu,  3 Oct 2019 17:53:35 +0200
+Message-Id: <20191003154556.374840052@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191003154533.590915454@linuxfoundation.org>
 References: <20191003154533.590915454@linuxfoundation.org>
@@ -59,32 +59,72 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vasily Averin <vvs@virtuozzo.com>
+From: Tejun Heo <tj@kernel.org>
 
-commit d5880c7a8620290a6c90ced7a0e8bd0ad9419601 upstream.
+commit e5854b1cdf6cb48a20e01e3bdad0476a4c60a077 upstream.
 
-unlock_page() was missing in case of an already in-flight write against the
-same page.
+With DEBUG_PAGEALLOC on, the following triggers.
 
-Signed-off-by: Vasily Averin <vvs@virtuozzo.com>
-Fixes: ff17be086477 ("fuse: writepage: skip already in flight")
-Cc: <stable@vger.kernel.org> # v3.13
+  BUG: unable to handle page fault for address: ffff88859367c000
+  #PF: supervisor read access in kernel mode
+  #PF: error_code(0x0000) - not-present page
+  PGD 3001067 P4D 3001067 PUD 406d3a8067 PMD 406d30c067 PTE 800ffffa6c983060
+  Oops: 0000 [#1] SMP DEBUG_PAGEALLOC
+  CPU: 38 PID: 3110657 Comm: python2.7
+  RIP: 0010:fuse_readdir+0x88f/0xe7a [fuse]
+  Code: 49 8b 4d 08 49 39 4e 60 0f 84 44 04 00 00 48 8b 43 08 43 8d 1c 3c 4d 01 7e 68 49 89 dc 48 03 5c 24 38 49 89 46 60 8b 44 24 30 <8b> 4b 10 44 29 e0 48 89 ca 48 83 c1 1f 48 83 e1 f8 83 f8 17 49 89
+  RSP: 0018:ffffc90035edbde0 EFLAGS: 00010286
+  RAX: 0000000000001000 RBX: ffff88859367bff0 RCX: 0000000000000000
+  RDX: 0000000000000000 RSI: ffff88859367bfed RDI: 0000000000920907
+  RBP: ffffc90035edbe90 R08: 000000000000014b R09: 0000000000000004
+  R10: ffff88859367b000 R11: 0000000000000000 R12: 0000000000000ff0
+  R13: ffffc90035edbee0 R14: ffff889fb8546180 R15: 0000000000000020
+  FS:  00007f80b5f4a740(0000) GS:ffff889fffa00000(0000) knlGS:0000000000000000
+  CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+  CR2: ffff88859367c000 CR3: 0000001c170c2001 CR4: 00000000003606e0
+  DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+  DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+  Call Trace:
+   iterate_dir+0x122/0x180
+   __x64_sys_getdents+0xa6/0x140
+   do_syscall_64+0x42/0x100
+   entry_SYSCALL_64_after_hwframe+0x44/0xa9
+
+It's in fuse_parse_cache().  %rbx (ffff88859367bff0) is fuse_dirent
+pointer - addr + offset.  FUSE_DIRENT_SIZE() is trying to dereference
+namelen off of it but that derefs into the next page which is disabled
+by pagealloc debug causing a PF.
+
+This is caused by dirent->namelen being accessed before ensuring that
+there's enough bytes in the page for the dirent.  Fix it by pushing
+down reclen calculation.
+
+Signed-off-by: Tejun Heo <tj@kernel.org>
+Fixes: 5d7bc7e8680c ("fuse: allow using readdir cache")
+Cc: stable@vger.kernel.org # v4.20+
 Signed-off-by: Miklos Szeredi <mszeredi@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/fuse/file.c |    1 +
- 1 file changed, 1 insertion(+)
+ fs/fuse/readdir.c |    4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
---- a/fs/fuse/file.c
-+++ b/fs/fuse/file.c
-@@ -1767,6 +1767,7 @@ static int fuse_writepage(struct page *p
- 		WARN_ON(wbc->sync_mode == WB_SYNC_ALL);
+--- a/fs/fuse/readdir.c
++++ b/fs/fuse/readdir.c
+@@ -372,11 +372,13 @@ static enum fuse_parse_result fuse_parse
+ 	for (;;) {
+ 		struct fuse_dirent *dirent = addr + offset;
+ 		unsigned int nbytes = size - offset;
+-		size_t reclen = FUSE_DIRENT_SIZE(dirent);
++		size_t reclen;
  
- 		redirty_page_for_writepage(wbc, page);
-+		unlock_page(page);
- 		return 0;
- 	}
+ 		if (nbytes < FUSE_NAME_OFFSET || !dirent->namelen)
+ 			break;
  
++		reclen = FUSE_DIRENT_SIZE(dirent); /* derefs ->namelen */
++
+ 		if (WARN_ON(dirent->namelen > FUSE_NAME_MAX))
+ 			return FOUND_ERR;
+ 		if (WARN_ON(reclen > nbytes))
 
 
