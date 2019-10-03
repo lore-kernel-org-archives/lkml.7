@@ -2,170 +2,121 @@ Return-Path: <SRS0=6dNS=X4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF2F6C32792
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 08:15:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB179C10F14
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 08:16:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CF87821A4C
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 08:15:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7817F222C2
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 08:16:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=victronenergy.com header.i=@victronenergy.com header.b="x4jSe6lb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728180AbfJCIPD (ORCPT
+        id S1727756AbfJCIQu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 04:15:03 -0400
-Received: from mx2.suse.de ([195.135.220.15]:53938 "EHLO mx1.suse.de"
+        Thu, 3 Oct 2019 04:16:50 -0400
+Received: from mail-eopbgr80097.outbound.protection.outlook.com ([40.107.8.97]:14823
+        "EHLO EUR04-VI1-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725613AbfJCIPC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 04:15:02 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 8982CAE24;
-        Thu,  3 Oct 2019 08:14:59 +0000 (UTC)
-Subject: Re: [rfc] mm, hugetlb: allow hugepage allocations to excessively
- reclaim
-To:     David Rientjes <rientjes@google.com>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        Michal Hocko <mhocko@kernel.org>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Mel Gorman <mgorman@suse.de>,
-        "Kirill A. Shutemov" <kirill@shutemov.name>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux-MM <linux-mm@kvack.org>
-References: <alpine.DEB.2.21.1910021556270.187014@chino.kir.corp.google.com>
-From:   Vlastimil Babka <vbabka@suse.cz>
-Autocrypt: addr=vbabka@suse.cz; prefer-encrypt=mutual; keydata=
- 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
-Message-ID: <d7752ddf-ccdc-9ff4-ab9f-529c2cd7f041@suse.cz>
-Date:   Thu, 3 Oct 2019 10:14:58 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.0
-MIME-Version: 1.0
-In-Reply-To: <alpine.DEB.2.21.1910021556270.187014@chino.kir.corp.google.com>
-Content-Type: text/plain; charset=utf-8
+        id S1725613AbfJCIQu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 04:16:50 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=BZqYaigtA9y73xoUn/rZDzSXA7TL7lgAWx6TVANyKfOiytafdIAjJVc5hdvxOPlf+cwmrFPADKpjtCzsweAJ1riHrIb/qqmrBdWKJFPUrVBWsJui8zeUJXuDRhGVwG+bHKXsv1XBYHF8PlMPeC2ADYyrmGC2M21rUM2scCAPrcQVmWnCnVO1ED7AQEOF5x2M6sXvAuzp+q5vC7jwNKtTp7jysHwtBvr/fjOary3Vmp3q9c/pnnh4KKi5CkilvH1Vc13aI3brRiaTIumNgdxZAf8zFr33Z8FbZIUUa1NrvTEXFjUqewbUf2557Ix0BSFKIo4Uos4zSh6pJFo0KoGjcg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=iH+cbg4+TqV2TOXBSNXhCukVnIsqCRqtOdhafimfPfA=;
+ b=flxxnnid5cqETR/cHKCssgoc0NBrPGgX37OC9fOFMcJNs0thKyOpQLPmDfS0VUUFSNhQVR/5B49TuHm2CCg6t1DlV2QfBBOTDlCYlQGIiQr9k+rh2U+d9Urq9rpEnazgAiAEsDRRKLHAooMKgSyPKtzZofiiUUdZzjzRpUP5iyOBNr+Ix89pbA+TaLpUPM2Qfi7c4MZd3Yyks57TmDSP2aVZRP8kkG2RTsR0uYWMO9HNyMgeuv+kWnBNZBlR+aa8iInficswyhYupkFAQgmu/1ateKjozwyBBf6I6MRNWg/lK3tmlbOKRRao8z+ppUjhnoErjbvWhJ4fe7UhCaxQTA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=victronenergy.com; dmarc=pass action=none
+ header.from=victronenergy.com; dkim=pass header.d=victronenergy.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=victronenergy.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=iH+cbg4+TqV2TOXBSNXhCukVnIsqCRqtOdhafimfPfA=;
+ b=x4jSe6lb3+HY2SEFFxTFmgTJfba+zzLblFGDSjf1W16kxFbKixCqJ1nJPuu5UAdQIzY9JJQKbH/vbLOts4ae9FZL5c4vgqkTo197Yz3N43aMBUOKZN6jF3GZqb6IEPRwIBpq7n5eQDBZryLLctXva/NCZT5P3OvvBDMH1+ptpkU=
+Received: from VI1PR0701MB2623.eurprd07.prod.outlook.com (10.173.82.19) by
+ VI1PR0701MB2749.eurprd07.prod.outlook.com (10.173.80.149) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2327.21; Thu, 3 Oct 2019 08:16:46 +0000
+Received: from VI1PR0701MB2623.eurprd07.prod.outlook.com
+ ([fe80::dc92:2e0d:561a:fbb1]) by VI1PR0701MB2623.eurprd07.prod.outlook.com
+ ([fe80::dc92:2e0d:561a:fbb1%8]) with mapi id 15.20.2305.023; Thu, 3 Oct 2019
+ 08:16:46 +0000
+From:   Jeroen Hofstee <jhofstee@victronenergy.com>
+To:     Grygorii Strashko <grygorii.strashko@ti.com>,
+        "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>
+CC:     Koen Kooi <koen@dominion.thruhere.net>,
+        =?utf-8?B?QmVub8OudCBDb3Vzc29u?= <bcousson@baylibre.com>,
+        Tony Lindgren <tony@atomide.com>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] ARM: dts: am335x-sancloud-bbe: Fix PHY mode for ethernet
+Thread-Topic: [PATCH] ARM: dts: am335x-sancloud-bbe: Fix PHY mode for ethernet
+Thread-Index: AQHVeQdofKkOWkby2kaW5oWVx4ahWqdHbuCAgAEk2gA=
+Date:   Thu, 3 Oct 2019 08:16:46 +0000
+Message-ID: <436f1712-7dec-db40-d08f-1a3032af3596@victronenergy.com>
+References: <20191002095416.19603-1-jhofstee@victronenergy.com>
+ <d027ef07-807d-6a7b-2939-b67be4542469@ti.com>
+In-Reply-To: <d027ef07-807d-6a7b-2939-b67be4542469@ti.com>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+user-agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
+x-originating-ip: [213.126.8.10]
+x-clientproxiedby: AM0PR07CA0001.eurprd07.prod.outlook.com
+ (2603:10a6:208:ac::14) To VI1PR0701MB2623.eurprd07.prod.outlook.com
+ (2603:10a6:801:b::19)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=jhofstee@victronenergy.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: a159a511-797e-411f-806e-08d747da082e
+x-ms-traffictypediagnostic: VI1PR0701MB2749:
+x-microsoft-antispam-prvs: <VI1PR0701MB2749DFC242E75BC6ED459DEDC09F0@VI1PR0701MB2749.eurprd07.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:820;
+x-forefront-prvs: 01792087B6
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(396003)(376002)(346002)(39850400004)(366004)(136003)(199004)(189003)(81166006)(86362001)(6486002)(31696002)(81156014)(99286004)(71200400001)(7736002)(71190400001)(8676002)(6116002)(3846002)(31686004)(14454004)(4744005)(478600001)(2906002)(229853002)(6512007)(2501003)(6246003)(66946007)(5660300002)(66476007)(66556008)(64756008)(66446008)(14444005)(4326008)(66066001)(36756003)(256004)(65806001)(305945005)(8936002)(110136005)(65956001)(6436002)(25786009)(102836004)(54906003)(11346002)(58126008)(446003)(316002)(2616005)(53546011)(476003)(6506007)(386003)(186003)(52116002)(486006)(76176011)(26005);DIR:OUT;SFP:1102;SCL:1;SRVR:VI1PR0701MB2749;H:VI1PR0701MB2623.eurprd07.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: victronenergy.com does not
+ designate permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: /zL5IXKhQ911gDMySrESPIpcJtYog3zFE49keerOfBznCtuswrf7YwmvwPIgF1UsspAqxaz74HbY/gM/Dl06Nzw4LYYvQtAGOUPN/fmy1wKQWhAb+6A5IDuY2pIe2hp/KUemU7qWn6UjW8jaCQGIWQcUK8+7qPJCY7JBSldAEMhxZVx0zJjRrXHSMEtQIEsuIaoPkU97qiW4fFm7Yr/ruVLOuTH/3cDFzmGq0AoSgXY+DKt6ks37okuBhJAiX8nJrRYqiDOT5dP2ey2vxq1DZguGVgbU/HN5LWO6rXKBjYS2WF8SJbwaFUj+h3Bm1yvvhI3bj4WJSSUE4k3ChsosDEkciOGvnwxbSODYO+sc4dObTP1RKpLnz7DwbQEab2CKSbtg7RT3++9Ogww19SthWerCTKL/IfPLAhhVkddQSvo=
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <4E369A5D265D0944841A4077B9CB9A5C@eurprd07.prod.outlook.com>
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-OriginatorOrg: victronenergy.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: a159a511-797e-411f-806e-08d747da082e
+X-MS-Exchange-CrossTenant-originalarrivaltime: 03 Oct 2019 08:16:46.4701
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 60b95f08-3558-4e94-b0f8-d690c498e225
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: wjP1RxZNM+nDR4pToRzdV85TULpxgbDmtyxpe07rZp9sCsbrD+cb7Rd79p07dDwTuz4mHGyltiDLTUyfNq55Ep6mjvQpOhD7xT2GXtI73oc=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR0701MB2749
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 10/3/19 1:03 AM, David Rientjes wrote:
-> Hugetlb allocations use __GFP_RETRY_MAYFAIL to aggressively attempt to get 
-> hugepages that the user needs.  Commit b39d0ee2632d ("mm, page_alloc: 
-> avoid expensive reclaim when compaction may not succeed") intends to 
-> improve allocator behind for thp allocations to prevent excessive amounts 
-> of reclaim especially when constrained to a single node.
-> 
-> Since hugetlb allocations have explicitly preferred to loop and do reclaim 
-> and compaction, exempt them from this new behavior at least for the time 
-> being.  It is not shown that hugetlb allocation success rate has been 
-> impacted by commit b39d0ee2632d but hugetlb allocations are admittedly 
-> beyond the scope of what the patch is intended to address (thp 
-> allocations).
-> 
-> Cc: Mike Kravetz <mike.kravetz@oracle.com>
-> Signed-off-by: David Rientjes <rientjes@google.com>
-> ---
->  Mike, you eluded that you may want to opt hugetlbfs out of this for the
->  time being in https://marc.info/?l=linux-kernel&m=156771690024533 --
-
-I think the key differences between Mike's tests and Michal's is this part
-from Mike's mail linked above:
-
-"I 'tested' by simply creating some background activity and then seeing
-how many hugetlb pages could be allocated. Of course, many tries over
-time in a loop."
-
-- "some background activity" might be different than Michal's pre-filling
-  of the memory with (clean) page cache
-- "many tries over time in a loop" could mean that kswapd has time to 
-  reclaim and eventually the new condition for pageblock order will pass
-  every few retries, because there's enough memory for compaction and it
-  won't return COMPACT_SKIPPED
-
->  not sure if you want to allow this excessive amount of reclaim for 
->  hugetlb allocations or not given the swap storms Andrea has shown is
-
-More precisely this is about hugetlb reservations by admin, not allocations
-by the program. It's when admin uses the appropriate sysctl to say how many
-hugetlb pages to reserve. In that case they expect that memory will be
-reclaimed as needed. I don't think we should complicate the admin action
-by requiring e.g. a sync+drop_caches before that, or retrying in the loop.
-It's a one time action, not a continuous swap storm by a stream of THP
-allocations.
-
->  possible (and nr_hugepages_mempolicy does exist), but hugetlbfs was not
->  part of the problem we are trying to address here so no objection to
->  opting it out.  
-> 
->  You might want to consider how expensive hugetlb allocations can become
->  and disruptive to the system if it does not yield additional hugepages,
-
-Yes, there have been recent issues with the action not terminating properly
-in the case there's nothing more to reclaim (i.e. admin asking for an unrealistic
-number of hugetlb pages), but that has been addressed (IIRC already merged
-from mmotm to 5.4-rc1). It was actually an improvement to the reclaim/compaction
-feedback that everybody asks for, although the result is obviously still
-not perfect.
+SGVsbG8gR3J5Z29ycmksDQoNCk9uIDEwLzIvMTkgNDo0OCBQTSwgR3J5Z29yaWkgU3RyYXNoa28g
+d3JvdGU6DQo+DQo+DQo+IE9uIDAyLzEwLzIwMTkgMTI6NTQsIEplcm9lbiBIb2ZzdGVlIHdyb3Rl
+Og0KPj4gY2QyOGQxZDZlNTJlOiAoIm5ldDogcGh5OiBhdDgwM3g6IERpc2FibGUgcGh5IGRlbGF5
+IGZvciBSR01JSSBtb2RlIikgDQo+PiBicm9rZQ0KPj4gdGhlIGV0aGVybmV0IG5ldHdvcmtpbmcg
+b24gdGhlIGJlYWdsZWJvbmUgZW5oYW5jZWQuDQo+DQo+IEFib3ZlIGNvbW1pdCBpcyBpbmNvcnJl
+Y3QgKGJ5IGl0c2VsZikgYW5kIHRoZXJlIGFyZSBmZXcgbW9yZSBjb21taXRzIA0KPiBvbiB0b3Ag
+b2YNCj4gaXQsIHNvIHBscy4gdXBkYXRlIHJlZmVyZW5jZSB0byBjb21taXQocykNCj4NCj4gYmIw
+Y2U0YzE1MTdkIG5ldDogcGh5OiBhdDgwM3g6IHN0b3Agc3dpdGNoaW5nIHBoeSBkZWxheSBjb25m
+aWcgbmVlZGxlc3NseQ0KPiA2ZDRjZDA0MWYwYWYgbmV0OiBwaHk6IGF0ODAzeDogZGlzYWJsZSBk
+ZWxheSBvbmx5IGZvciBSR01JSSBtb2RlDQo+DQo+DQpJIGRvbid0IHNlZSB3aHkgdGhhdCBpcyBy
+ZWxldmFudC4gVGhlIG1lbnRpb24gcGF0Y2ggaW50cm9kdWNlcyBhDQpiYWNrd2FyZHMgaW5jb21w
+YXRpYmlsaXR5IGZvciB0aGUgZGV2aWNlIHRyZWUuIFRoZSBwYXRjaGVzIHlvdQ0KbWVudGlvbiBk
+b24ndCBmaXggdGhhdCBhbmQgaGVuY2UgYXJlIHVucmVsYXRlZCB0byB0aGlzIHBhdGNoLg0KDQpG
+dXJ0aGVybW9yZSA0LjE5IGlzIGZpbmUsIHNvIHRoZXJlIGlzIG5vIG5lZWQgdG8gaW5jbHVkZSBp
+dCBpbiBzdGFibGUNCmFuZCBoYXZlIGEgbm90ZSB0byBtYWtlIHN1cmUgYWxzbyBvdGhlciBwYXRj
+aGVzIGFyZSByZXF1aXJlZCBldGMuDQoNClJlZ2FyZHMsDQoNCkplcm9lbg0KDQo=
