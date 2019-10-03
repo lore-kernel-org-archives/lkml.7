@@ -2,52 +2,52 @@ Return-Path: <SRS0=6dNS=X4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CB8FC32792
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:00:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9786C10F14
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:00:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 07C27222C2
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:00:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8D59F21848
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:00:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570118439;
-	bh=WFPSs1XY6ltViKwCO9RVIRh0ygbXm+W+QOBH+Hvw6PI=;
+	s=default; t=1570118445;
+	bh=4P6MSDnzsesx6pv5JsKnOe6/ahOueIEhgfYHMzGTTjU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=E51/cXAlN5wx8lJFZpRymkw8N/oBsnoFz6GORi+QBaAvFJYjmQdGq3LqbQqp+bddx
-	 au7F3uTcBLc4/sAo5/WSg7cInfO2LsoC3j4NmJz95FBnloC0zAteCQEjhKMiHXLaDV
-	 TnzieYBQ2rS3Y721zc6FkSVu/qZPfuANPa9KQULw=
+	b=zf5m0jWonkd5GsKnrhAApMkJdYKoMpciNWUubClXR0iU84odByKSAK6sq1KJ8XFiH
+	 jBHYyTWpc/0BhhwUtY9iN5k3We/+l1bOSRhl89xRIYPOpoZfbsv9mKgKu4BQ6lzT2A
+	 5pmQ/r6G4OScgpyWuI3Oke/E47nZ3xxWhGJ6nQao=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731598AbfJCQAg (ORCPT
+        id S1730176AbfJCQAo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 12:00:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44338 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 12:00:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44562 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731585AbfJCQAd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:00:33 -0400
+        id S1729838AbfJCQAm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:00:42 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1593020700;
-        Thu,  3 Oct 2019 16:00:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D070920700;
+        Thu,  3 Oct 2019 16:00:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570118432;
-        bh=WFPSs1XY6ltViKwCO9RVIRh0ygbXm+W+QOBH+Hvw6PI=;
+        s=default; t=1570118441;
+        bh=4P6MSDnzsesx6pv5JsKnOe6/ahOueIEhgfYHMzGTTjU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ynk2SwzrxZeFgTkHRf+htBU9tq6vQJ/StmFO+kkaSLr/gLgyJzpN6PFVEo/UnYy0d
-         8mQAq0/85fvkjrafo+A0b7Av9AF40MbuYuBvxnRaOD3aoJm/FBN7kZVQ0iZ+MSnogM
-         zLzUvKiZaIjoj9R68ta3bAIvdXpimw/B6vcpXWVQ=
+        b=16REERKDipfuUqBSq1iW2ycAzK9kBCLtQTqqXr4C09t9X1mS0eXHITrekFUaWeBL/
+         AsO/x/AwlhA57OZruxTQgKat47+DDXKe294iJ1m6tuRbe9fDtAtI8A0PrJA9Ey7EvT
+         BjSVkUJpJOTF44LgfYTBPl1wTQ33fIFg9Yh7Mr3g=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        "Shih-Yuan Lee (FourDollars)" <fourdollars@debian.org>,
-        Takashi Iwai <tiwai@suse.de>
-Subject: [PATCH 4.9 010/129] ALSA: hda - Add laptop imic fixup for ASUS M9V laptop
-Date:   Thu,  3 Oct 2019 17:52:13 +0200
-Message-Id: <20191003154323.369301414@linuxfoundation.org>
+        stable@vger.kernel.org, Yu Wang <yyuwang@codeaurora.org>,
+        Johannes Berg <johannes.berg@intel.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.9 013/129] mac80211: handle deauthentication/disassociation from TDLS peer
+Date:   Thu,  3 Oct 2019 17:52:16 +0200
+Message-Id: <20191003154324.605928554@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191003154318.081116689@linuxfoundation.org>
 References: <20191003154318.081116689@linuxfoundation.org>
@@ -60,32 +60,125 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Shih-Yuan Lee (FourDollars) <fourdollars@debian.org>
+From: Yu Wang <yyuwang@codeaurora.org>
 
-commit 7b485d175631be676424aedb8cd2f66d0c93da78 upstream.
+[ Upstream commit 79c92ca42b5a3e0ea172ea2ce8df8e125af237da ]
 
-The same fixup to enable laptop imic is needed for ASUS M9V with AD1986A
-codec like another HP machine.
+When receiving a deauthentication/disassociation frame from a TDLS
+peer, a station should not disconnect the current AP, but only
+disable the current TDLS link if it's enabled.
 
-Signed-off-by: Shih-Yuan Lee (FourDollars) <fourdollars@debian.org>
-Cc: <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/20190920134052.GA8035@localhost
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Without this change, a TDLS issue can be reproduced by following the
+steps as below:
 
+1. STA-1 and STA-2 are connected to AP, bidirection traffic is running
+   between STA-1 and STA-2.
+2. Set up TDLS link between STA-1 and STA-2, stay for a while, then
+   teardown TDLS link.
+3. Repeat step #2 and monitor the connection between STA and AP.
+
+During the test, one STA may send a deauthentication/disassociation
+frame to another, after TDLS teardown, with reason code 6/7, which
+means: Class 2/3 frame received from nonassociated STA.
+
+On receive this frame, the receiver STA will disconnect the current
+AP and then reconnect. It's not a expected behavior, purpose of this
+frame should be disabling the TDLS link, not the link with AP.
+
+Cc: stable@vger.kernel.org
+Signed-off-by: Yu Wang <yyuwang@codeaurora.org>
+Signed-off-by: Johannes Berg <johannes.berg@intel.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/pci/hda/patch_analog.c |    1 +
- 1 file changed, 1 insertion(+)
+ net/mac80211/ieee80211_i.h |  3 +++
+ net/mac80211/mlme.c        | 12 +++++++++++-
+ net/mac80211/tdls.c        | 23 +++++++++++++++++++++++
+ 3 files changed, 37 insertions(+), 1 deletion(-)
 
---- a/sound/pci/hda/patch_analog.c
-+++ b/sound/pci/hda/patch_analog.c
-@@ -370,6 +370,7 @@ static const struct hda_fixup ad1986a_fi
+diff --git a/net/mac80211/ieee80211_i.h b/net/mac80211/ieee80211_i.h
+index 6708de10a3e5e..0b0de3030e0dc 100644
+--- a/net/mac80211/ieee80211_i.h
++++ b/net/mac80211/ieee80211_i.h
+@@ -2123,6 +2123,9 @@ void ieee80211_tdls_cancel_channel_switch(struct wiphy *wiphy,
+ 					  const u8 *addr);
+ void ieee80211_teardown_tdls_peers(struct ieee80211_sub_if_data *sdata);
+ void ieee80211_tdls_chsw_work(struct work_struct *wk);
++void ieee80211_tdls_handle_disconnect(struct ieee80211_sub_if_data *sdata,
++				      const u8 *peer, u16 reason);
++const char *ieee80211_get_reason_code_string(u16 reason_code);
  
- static const struct snd_pci_quirk ad1986a_fixup_tbl[] = {
- 	SND_PCI_QUIRK(0x103c, 0x30af, "HP B2800", AD1986A_FIXUP_LAPTOP_IMIC),
-+	SND_PCI_QUIRK(0x1043, 0x1153, "ASUS M9V", AD1986A_FIXUP_LAPTOP_IMIC),
- 	SND_PCI_QUIRK(0x1043, 0x1443, "ASUS Z99He", AD1986A_FIXUP_EAPD),
- 	SND_PCI_QUIRK(0x1043, 0x1447, "ASUS A8JN", AD1986A_FIXUP_EAPD),
- 	SND_PCI_QUIRK_MASK(0x1043, 0xff00, 0x8100, "ASUS P5", AD1986A_FIXUP_3STACK),
+ extern const struct ethtool_ops ieee80211_ethtool_ops;
+ 
+diff --git a/net/mac80211/mlme.c b/net/mac80211/mlme.c
+index 090e2aa8630e8..c75594a12c38e 100644
+--- a/net/mac80211/mlme.c
++++ b/net/mac80211/mlme.c
+@@ -2755,7 +2755,7 @@ static void ieee80211_rx_mgmt_auth(struct ieee80211_sub_if_data *sdata,
+ #define case_WLAN(type) \
+ 	case WLAN_REASON_##type: return #type
+ 
+-static const char *ieee80211_get_reason_code_string(u16 reason_code)
++const char *ieee80211_get_reason_code_string(u16 reason_code)
+ {
+ 	switch (reason_code) {
+ 	case_WLAN(UNSPECIFIED);
+@@ -2820,6 +2820,11 @@ static void ieee80211_rx_mgmt_deauth(struct ieee80211_sub_if_data *sdata,
+ 	if (len < 24 + 2)
+ 		return;
+ 
++	if (!ether_addr_equal(mgmt->bssid, mgmt->sa)) {
++		ieee80211_tdls_handle_disconnect(sdata, mgmt->sa, reason_code);
++		return;
++	}
++
+ 	if (ifmgd->associated &&
+ 	    ether_addr_equal(mgmt->bssid, ifmgd->associated->bssid)) {
+ 		const u8 *bssid = ifmgd->associated->bssid;
+@@ -2869,6 +2874,11 @@ static void ieee80211_rx_mgmt_disassoc(struct ieee80211_sub_if_data *sdata,
+ 
+ 	reason_code = le16_to_cpu(mgmt->u.disassoc.reason_code);
+ 
++	if (!ether_addr_equal(mgmt->bssid, mgmt->sa)) {
++		ieee80211_tdls_handle_disconnect(sdata, mgmt->sa, reason_code);
++		return;
++	}
++
+ 	sdata_info(sdata, "disassociated from %pM (Reason: %u=%s)\n",
+ 		   mgmt->sa, reason_code,
+ 		   ieee80211_get_reason_code_string(reason_code));
+diff --git a/net/mac80211/tdls.c b/net/mac80211/tdls.c
+index c64ae68ae4f84..863f92c087014 100644
+--- a/net/mac80211/tdls.c
++++ b/net/mac80211/tdls.c
+@@ -2001,3 +2001,26 @@ void ieee80211_tdls_chsw_work(struct work_struct *wk)
+ 	}
+ 	rtnl_unlock();
+ }
++
++void ieee80211_tdls_handle_disconnect(struct ieee80211_sub_if_data *sdata,
++				      const u8 *peer, u16 reason)
++{
++	struct ieee80211_sta *sta;
++
++	rcu_read_lock();
++	sta = ieee80211_find_sta(&sdata->vif, peer);
++	if (!sta || !sta->tdls) {
++		rcu_read_unlock();
++		return;
++	}
++	rcu_read_unlock();
++
++	tdls_dbg(sdata, "disconnected from TDLS peer %pM (Reason: %u=%s)\n",
++		 peer, reason,
++		 ieee80211_get_reason_code_string(reason));
++
++	ieee80211_tdls_oper_request(&sdata->vif, peer,
++				    NL80211_TDLS_TEARDOWN,
++				    WLAN_REASON_TDLS_TEARDOWN_UNREACHABLE,
++				    GFP_ATOMIC);
++}
+-- 
+2.20.1
+
 
 
