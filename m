@@ -2,123 +2,94 @@ Return-Path: <SRS0=6dNS=X4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26D1AC10F14
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:54:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CE1C0C32792
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:55:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 039352054F
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:54:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 97D0C2054F
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:55:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1570121701;
+	bh=BpjS6IUJhmox+vBPnpbgrvbr5+HsoBdVE8y3Pth3xdE=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=Iv5V1TeVpk+WpTvz11uI6oiq+6Q83tVCa34FYdRHH7RRsLkVPyqG+9P6f66XcB952
+	 J6+WG4rVGJiz4vDv8ZdOOu5RWBzj4DYlMf9XWnqg98lNCNN7Tk8fewXSLmPw8Z70S5
+	 nFToUxrVR6X97QrpZ4nj7O0EqGCiSCYtpb6oEn04=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406489AbfJCQyy (ORCPT
+        id S2405530AbfJCQzA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 12:54:54 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:26284 "EHLO
-        mx0b-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2406371AbfJCQyv (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:54:51 -0400
-Received: from pps.filterd (m0127361.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x93GmpAV109559;
-        Thu, 3 Oct 2019 12:54:40 -0400
-Received: from ppma04dal.us.ibm.com (7a.29.35a9.ip4.static.sl-reverse.com [169.53.41.122])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2vdm171dpe-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 03 Oct 2019 12:54:39 -0400
-Received: from pps.filterd (ppma04dal.us.ibm.com [127.0.0.1])
-        by ppma04dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id x93GrPOS020802;
-        Thu, 3 Oct 2019 16:54:37 GMT
-Received: from b03cxnp08025.gho.boulder.ibm.com (b03cxnp08025.gho.boulder.ibm.com [9.17.130.17])
-        by ppma04dal.us.ibm.com with ESMTP id 2v9y58h8wg-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 03 Oct 2019 16:54:37 +0000
-Received: from b03ledav002.gho.boulder.ibm.com (b03ledav002.gho.boulder.ibm.com [9.17.130.233])
-        by b03cxnp08025.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x93GsZTq56754432
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 3 Oct 2019 16:54:35 GMT
-Received: from b03ledav002.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id BF680136051;
-        Thu,  3 Oct 2019 16:54:35 +0000 (GMT)
-Received: from b03ledav002.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 2EAB9136055;
-        Thu,  3 Oct 2019 16:54:35 +0000 (GMT)
-Received: from oc5348122405.ibm.com.austin.ibm.com (unknown [9.53.179.215])
-        by b03ledav002.gho.boulder.ibm.com (Postfix) with ESMTP;
-        Thu,  3 Oct 2019 16:54:34 +0000 (GMT)
-From:   David Dai <zdai@linux.vnet.ibm.com>
-To:     jeffrey.t.kirsher@intel.com, davem@davemloft.net
-Cc:     intel-wired-lan@lists.osuosl.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, zdai@us.ibm.com,
-        zdai@linux.vnet.ibm.com
-Subject: [v1] e1000e: EEH on e1000e adapter detects io perm failure can trigger crash
-Date:   Thu,  3 Oct 2019 11:54:32 -0500
-Message-Id: <1570121672-12172-1-git-send-email-zdai@linux.vnet.ibm.com>
-X-Mailer: git-send-email 1.7.1
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-10-03_07:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=2 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1011 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=989 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1908290000 definitions=main-1910030146
+        Thu, 3 Oct 2019 12:55:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40874 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2406295AbfJCQxA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:53:00 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9C28A20867;
+        Thu,  3 Oct 2019 16:52:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1570121580;
+        bh=BpjS6IUJhmox+vBPnpbgrvbr5+HsoBdVE8y3Pth3xdE=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=E/g8+2HStfyKzZtdVeA5QteFihNeJL+Xe106TA/lgCkxcuz481wFD4dtrshlMD7YG
+         Zei6Ab7VrIWAs4kkuGJNlq/dqUzKQXd/gg0JsHE8s4Y+feqv+NjYbNxxlFCqQ8/B25
+         HaiBjtQO1vmk16uAefAZgymHIi9G7BSN/ZSblbO8=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Rakesh Pandit <rakesh@tuxera.com>,
+        Theodore Tso <tytso@mit.edu>, stable@kernel.org
+Subject: [PATCH 5.3 330/344] ext4: fix warning inside ext4_convert_unwritten_extents_endio
+Date:   Thu,  3 Oct 2019 17:54:55 +0200
+Message-Id: <20191003154611.335437065@linuxfoundation.org>
+X-Mailer: git-send-email 2.23.0
+In-Reply-To: <20191003154540.062170222@linuxfoundation.org>
+References: <20191003154540.062170222@linuxfoundation.org>
+User-Agent: quilt/0.66
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-We see the behavior when EEH e1000e adapter detects io permanent failure,
-it will crash kernel with this stack:
-EEH: Beginning: 'error_detected(permanent failure)'
-EEH: PE#900000 (PCI 0115:90:00.1): Invoking e1000e->error_detected(permanent failure)
-EEH: PE#900000 (PCI 0115:90:00.1): e1000e driver reports: 'disconnect'
-EEH: PE#900000 (PCI 0115:90:00.0): Invoking e1000e->error_detected(permanent failure)
-EEH: PE#900000 (PCI 0115:90:00.0): e1000e driver reports: 'disconnect'
-EEH: Finished:'error_detected(permanent failure)'
-Oops: Exception in kernel mode, sig: 5 [#1]
-NIP [c0000000007b1be0] free_msi_irqs+0xa0/0x280
- LR [c0000000007b1bd0] free_msi_irqs+0x90/0x280
-Call Trace:
-[c0000004f491ba10] [c0000000007b1bd0] free_msi_irqs+0x90/0x280 (unreliable)
-[c0000004f491ba70] [c0000000007b260c] pci_disable_msi+0x13c/0x180
-[c0000004f491bab0] [d0000000046381ac] e1000_remove+0x234/0x2a0 [e1000e]
-[c0000004f491baf0] [c000000000783cec] pci_device_remove+0x6c/0x120
-[c0000004f491bb30] [c00000000088da6c] device_release_driver_internal+0x2bc/0x3f0
-[c0000004f491bb80] [c00000000076f5a8] pci_stop_and_remove_bus_device+0xb8/0x110
-[c0000004f491bbc0] [c00000000006e890] pci_hp_remove_devices+0x90/0x130
-[c0000004f491bc50] [c00000000004ad34] eeh_handle_normal_event+0x1d4/0x660
-[c0000004f491bd10] [c00000000004bf10] eeh_event_handler+0x1c0/0x1e0
-[c0000004f491bdc0] [c00000000017c4ac] kthread+0x1ac/0x1c0
-[c0000004f491be30] [c00000000000b75c] ret_from_kernel_thread+0x5c/0x80
+From: Rakesh Pandit <rakesh@tuxera.com>
 
-Basically the e1000e irqs haven't been freed at the time eeh is trying to 
-remove the the e1000e device.
-Need to make sure when e1000e_close is called to bring down the NIC,
-if adapter error_state is pci_channel_io_perm_failure, it should also 
-bring down the link and free irqs.
+commit e3d550c2c4f2f3dba469bc3c4b83d9332b4e99e1 upstream.
 
-Reported-by: Morumuri Srivalli  <smorumu1@in.ibm.com>
-Signed-off-by: David Dai <zdai@linux.vnet.ibm.com>
+Really enable warning when CONFIG_EXT4_DEBUG is set and fix missing
+first argument.  This was introduced in commit ff95ec22cd7f ("ext4:
+add warning to ext4_convert_unwritten_extents_endio") and splitting
+extents inside endio would trigger it.
+
+Fixes: ff95ec22cd7f ("ext4: add warning to ext4_convert_unwritten_extents_endio")
+Signed-off-by: Rakesh Pandit <rakesh@tuxera.com>
+Signed-off-by: Theodore Ts'o <tytso@mit.edu>
+Cc: stable@kernel.org
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- drivers/net/ethernet/intel/e1000e/netdev.c |    3 ++-
- 1 files changed, 2 insertions(+), 1 deletions(-)
+ fs/ext4/extents.c |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/net/ethernet/intel/e1000e/netdev.c b/drivers/net/ethernet/intel/e1000e/netdev.c
-index d7d56e4..cf618e1 100644
---- a/drivers/net/ethernet/intel/e1000e/netdev.c
-+++ b/drivers/net/ethernet/intel/e1000e/netdev.c
-@@ -4715,7 +4715,8 @@ int e1000e_close(struct net_device *netdev)
- 
- 	pm_runtime_get_sync(&pdev->dev);
- 
--	if (!test_bit(__E1000_DOWN, &adapter->state)) {
-+	if (!test_bit(__E1000_DOWN, &adapter->state) ||
-+	    (adapter->pdev->error_state == pci_channel_io_perm_failure)) {
- 		e1000e_down(adapter, true);
- 		e1000_free_irq(adapter);
- 
--- 
-1.7.1
+--- a/fs/ext4/extents.c
++++ b/fs/ext4/extents.c
+@@ -3813,8 +3813,8 @@ static int ext4_convert_unwritten_extent
+ 	 * illegal.
+ 	 */
+ 	if (ee_block != map->m_lblk || ee_len > map->m_len) {
+-#ifdef EXT4_DEBUG
+-		ext4_warning("Inode (%ld) finished: extent logical block %llu,"
++#ifdef CONFIG_EXT4_DEBUG
++		ext4_warning(inode->i_sb, "Inode (%ld) finished: extent logical block %llu,"
+ 			     " len %u; IO logical block %llu, len %u",
+ 			     inode->i_ino, (unsigned long long)ee_block, ee_len,
+ 			     (unsigned long long)map->m_lblk, map->m_len);
+
 
