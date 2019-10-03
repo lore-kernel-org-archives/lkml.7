@@ -7,46 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D84CFC32792
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:33:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD152C10F14
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:33:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A0AB020830
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:33:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 797E82133F
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:33:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570120383;
-	bh=+hscBSSiceQUDY9+VOYTuW47bvxKdbmKQzrUpDh6YtQ=;
+	s=default; t=1570120394;
+	bh=jL5wQ6eTQyWxcf7RX45gfmdeByKDlb/Cp7nHYsl2g88=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Dvg77ExNjR/uOULrD+7PNXdDj05Deyad8/6FXZXfTp0WDG3Mjlv52l53Q/r9oer1V
-	 rT5LG3458ZPPhLiQzYTh380xAihEkXNi9z9xDmwFIVh6HsxvGzmy1XrbnAcOzvZLne
-	 gIME8uj6yQfn1ik4a5+/C74ecr5x3v6O9QByKbDU=
+	b=E4GjgdTkTASmRyqJXugnDr4flbn49+eG9KRYfwzkfrxqPgBE/P+3xccKqaOCKVYRz
+	 Uha8Vy6XXfq9dU3jSZhIHoE7No9g+C4KVSCo2qAbiHJkquKTQI/VbBOHmacvW/OdE9
+	 1nrm3MX2kYg5zC7JlNHH5rZf1vnjbjIYvCHP0p/w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391959AbfJCQdC (ORCPT
+        id S2391972AbfJCQdO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 12:33:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40762 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 12:33:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41004 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2403999AbfJCQc6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:32:58 -0400
+        id S2404086AbfJCQdJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:33:09 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A8A632133F;
-        Thu,  3 Oct 2019 16:32:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6C8822070B;
+        Thu,  3 Oct 2019 16:33:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570120376;
-        bh=+hscBSSiceQUDY9+VOYTuW47bvxKdbmKQzrUpDh6YtQ=;
+        s=default; t=1570120386;
+        bh=jL5wQ6eTQyWxcf7RX45gfmdeByKDlb/Cp7nHYsl2g88=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ciKRCxEkCVpselaCWq08EGGM4JkLDhlzpXbh+XV/fbOd8d3pW8SfaJQI9jPVWMlV7
-         4AuR7cIG8nYnVFOvlTWnQca4pvsytGYvg7J+tEGslTrWFkPXHF9hZn2Gb1ngDhpJpy
-         zaOYJdf66oadWH130g58lxebg2sc7wvglDyzbw+Q=
+        b=02joRVwypnDpTn1Ip3pvrFAH0GWxeQmu0BrRgilwgNxeCTdMKMWHi9HF5w+ckt2G/
+         csq6UUqzOGnXIerPyPkTLK3Z7WUGbMjebAwXlJQLzjlS+1h+PpbLetRlnnbgd+7hAG
+         HFoaNSR+Mfq37WRtdsTHOHCHhrgbAtVyR39qExfo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Tomas Espeleta <tomas.espeleta@gmail.com>,
-        Takashi Iwai <tiwai@suse.de>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 198/313] ALSA: hda - Add a quirk model for fixing Huawei Matebook X right speaker
-Date:   Thu,  3 Oct 2019 17:52:56 +0200
-Message-Id: <20191003154552.482978712@linuxfoundation.org>
+        stable@vger.kernel.org, Stephen Douthit <stephend@silicom-usa.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.2 165/313] libata/ahci: Drop PCS quirk for Denverton and beyond
+Date:   Thu,  3 Oct 2019 17:52:23 +0200
+Message-Id: <20191003154549.217839375@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191003154533.590915454@linuxfoundation.org>
 References: <20191003154533.590915454@linuxfoundation.org>
@@ -59,168 +61,244 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tomas Espeleta <tomas.espeleta@gmail.com>
+From: Dan Williams <dan.j.williams@intel.com>
 
-[ Upstream commit a2ef03fe617a8365fb7794531b11ba587509a9b9 ]
+[ Upstream commit c312ef176399e04fc5f7f2809d9a589751fbf6d9 ]
 
-[ This is rather a revival of the patch Tomas sent in months ago, but
-  applying only with the quirk model option -- tiwai ]
+The Linux ahci driver has historically implemented a configuration fixup
+for platforms / platform-firmware that fails to enable the ports prior
+to OS hand-off at boot. The fixup was originally implemented way back
+before ahci moved from drivers/scsi/ to drivers/ata/, and was updated in
+2007 via commit 49f290903935 "ahci: update PCS programming". The quirk
+sets a port-enable bitmap in the PCS register at offset 0x92.
 
-Hard coded coefficients to make Huawuei Matebook X right speaker
-work. The Matebook X has a ALC298, please refer to bug 197801 on
-how these numbers were reverse engineered from the Windows driver
+This quirk could be applied generically up until the arrival of the
+Denverton (DNV) platform. The DNV AHCI controller architecture supports
+more than 6 ports and along with that the PCS register location and
+format were updated to allow for more possible ports in the bitmap. DNV
+AHCI expands the register to 32-bits and moves it to offset 0x94.
 
-The reversed engineered sequence represents a repeating pattern
-of verbs, and the only values that are changing periodically are
-written on indexes 0x23 and 0x25:
+As it stands there are no known problem reports with existing Linux
+trying to set bits at offset 0x92 which indicates that the quirk is not
+applicable. Likely it is not applicable on a wider range of platforms,
+but it is difficult to discern which platforms if any still depend on
+the quirk.
 
-0x500, 0x23
-0x400, VALUE1
-0x500, 0x25
-0x400, VALUE2
+Rather than try to fix the PCS quirk to consider the DNV register layout
+instead require explicit opt-in. The assumption is that the OS driver
+need not touch this register, and platforms can be added with a new
+boad_ahci_pcs7 board-id when / if problematic platforms are found in the
+future. The logic in ahci_intel_pcs_quirk() looks for all Intel AHCI
+instances with "legacy" board-ids and otherwise skips the quirk if the
+board was matched by class-code.
 
-* skipped reading sequences (0x500 - 0xc00 sequences are ignored)
-* static values from reverse engineering are used
-
-NOTE: since a significant risk is still considered, this is provided
-as an experimental fix that isn't applied as default for now.  For
-enabling the fix, you'll have to choose huawei-mbx-stereo via model
-option of snd-hda-intel module.
-
-If we get feedback from users that this works stably, we may apply it
-per default.
-
-[ Some coding style fixes and replacement with AC_VERB_* by tiwai ]
-
-BugLink: https://bugzilla.kernel.org/show_bug.cgi?id=197801
-Signed-off-by: Tomas Espeleta <tomas.espeleta@gmail.com>
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Reported-by: Stephen Douthit <stephend@silicom-usa.com>
+Cc: Christoph Hellwig <hch@infradead.org>
+Reviewed-by: Stephen Douthit <stephend@silicom-usa.com>
+Signed-off-by: Dan Williams <dan.j.williams@intel.com>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- Documentation/sound/hd-audio/models.rst |  3 +
- sound/pci/hda/patch_realtek.c           | 74 +++++++++++++++++++++++++
- 2 files changed, 77 insertions(+)
+ drivers/ata/ahci.c | 116 +++++++++++++++++++++++++++------------------
+ drivers/ata/ahci.h |   2 +
+ 2 files changed, 71 insertions(+), 47 deletions(-)
 
-diff --git a/Documentation/sound/hd-audio/models.rst b/Documentation/sound/hd-audio/models.rst
-index 7d7c191102a73..11298f0ce44db 100644
---- a/Documentation/sound/hd-audio/models.rst
-+++ b/Documentation/sound/hd-audio/models.rst
-@@ -260,6 +260,9 @@ alc295-hp-x360
-     HP Spectre X360 fixups
- alc-sense-combo
-     Headset button support for Chrome platform
-+huawei-mbx-stereo
-+    Enable initialization verbs for Huawei MBX stereo speakers;
-+    might be risky, try this at your own risk
+diff --git a/drivers/ata/ahci.c b/drivers/ata/ahci.c
+index f7652baa63370..3e63294304c72 100644
+--- a/drivers/ata/ahci.c
++++ b/drivers/ata/ahci.c
+@@ -65,6 +65,12 @@ enum board_ids {
+ 	board_ahci_sb700,	/* for SB700 and SB800 */
+ 	board_ahci_vt8251,
  
- ALC66x/67x/892
- ==============
-diff --git a/sound/pci/hda/patch_realtek.c b/sound/pci/hda/patch_realtek.c
-index c1ddfd2fac522..1bec62720374d 100644
---- a/sound/pci/hda/patch_realtek.c
-+++ b/sound/pci/hda/patch_realtek.c
-@@ -3755,6 +3755,72 @@ static void alc269_x101_hp_automute_hook(struct hda_codec *codec,
- 			    vref);
++	/*
++	 * board IDs for Intel chipsets that support more than 6 ports
++	 * *and* end up needing the PCS quirk.
++	 */
++	board_ahci_pcs7,
++
+ 	/* aliases */
+ 	board_ahci_mcp_linux	= board_ahci_mcp65,
+ 	board_ahci_mcp67	= board_ahci_mcp65,
+@@ -220,6 +226,12 @@ static const struct ata_port_info ahci_port_info[] = {
+ 		.udma_mask	= ATA_UDMA6,
+ 		.port_ops	= &ahci_vt8251_ops,
+ 	},
++	[board_ahci_pcs7] = {
++		.flags		= AHCI_FLAG_COMMON,
++		.pio_mask	= ATA_PIO4,
++		.udma_mask	= ATA_UDMA6,
++		.port_ops	= &ahci_ops,
++	},
+ };
+ 
+ static const struct pci_device_id ahci_pci_tbl[] = {
+@@ -264,26 +276,26 @@ static const struct pci_device_id ahci_pci_tbl[] = {
+ 	{ PCI_VDEVICE(INTEL, 0x3b2b), board_ahci }, /* PCH RAID */
+ 	{ PCI_VDEVICE(INTEL, 0x3b2c), board_ahci_mobile }, /* PCH M RAID */
+ 	{ PCI_VDEVICE(INTEL, 0x3b2f), board_ahci }, /* PCH AHCI */
+-	{ PCI_VDEVICE(INTEL, 0x19b0), board_ahci }, /* DNV AHCI */
+-	{ PCI_VDEVICE(INTEL, 0x19b1), board_ahci }, /* DNV AHCI */
+-	{ PCI_VDEVICE(INTEL, 0x19b2), board_ahci }, /* DNV AHCI */
+-	{ PCI_VDEVICE(INTEL, 0x19b3), board_ahci }, /* DNV AHCI */
+-	{ PCI_VDEVICE(INTEL, 0x19b4), board_ahci }, /* DNV AHCI */
+-	{ PCI_VDEVICE(INTEL, 0x19b5), board_ahci }, /* DNV AHCI */
+-	{ PCI_VDEVICE(INTEL, 0x19b6), board_ahci }, /* DNV AHCI */
+-	{ PCI_VDEVICE(INTEL, 0x19b7), board_ahci }, /* DNV AHCI */
+-	{ PCI_VDEVICE(INTEL, 0x19bE), board_ahci }, /* DNV AHCI */
+-	{ PCI_VDEVICE(INTEL, 0x19bF), board_ahci }, /* DNV AHCI */
+-	{ PCI_VDEVICE(INTEL, 0x19c0), board_ahci }, /* DNV AHCI */
+-	{ PCI_VDEVICE(INTEL, 0x19c1), board_ahci }, /* DNV AHCI */
+-	{ PCI_VDEVICE(INTEL, 0x19c2), board_ahci }, /* DNV AHCI */
+-	{ PCI_VDEVICE(INTEL, 0x19c3), board_ahci }, /* DNV AHCI */
+-	{ PCI_VDEVICE(INTEL, 0x19c4), board_ahci }, /* DNV AHCI */
+-	{ PCI_VDEVICE(INTEL, 0x19c5), board_ahci }, /* DNV AHCI */
+-	{ PCI_VDEVICE(INTEL, 0x19c6), board_ahci }, /* DNV AHCI */
+-	{ PCI_VDEVICE(INTEL, 0x19c7), board_ahci }, /* DNV AHCI */
+-	{ PCI_VDEVICE(INTEL, 0x19cE), board_ahci }, /* DNV AHCI */
+-	{ PCI_VDEVICE(INTEL, 0x19cF), board_ahci }, /* DNV AHCI */
++	{ PCI_VDEVICE(INTEL, 0x19b0), board_ahci_pcs7 }, /* DNV AHCI */
++	{ PCI_VDEVICE(INTEL, 0x19b1), board_ahci_pcs7 }, /* DNV AHCI */
++	{ PCI_VDEVICE(INTEL, 0x19b2), board_ahci_pcs7 }, /* DNV AHCI */
++	{ PCI_VDEVICE(INTEL, 0x19b3), board_ahci_pcs7 }, /* DNV AHCI */
++	{ PCI_VDEVICE(INTEL, 0x19b4), board_ahci_pcs7 }, /* DNV AHCI */
++	{ PCI_VDEVICE(INTEL, 0x19b5), board_ahci_pcs7 }, /* DNV AHCI */
++	{ PCI_VDEVICE(INTEL, 0x19b6), board_ahci_pcs7 }, /* DNV AHCI */
++	{ PCI_VDEVICE(INTEL, 0x19b7), board_ahci_pcs7 }, /* DNV AHCI */
++	{ PCI_VDEVICE(INTEL, 0x19bE), board_ahci_pcs7 }, /* DNV AHCI */
++	{ PCI_VDEVICE(INTEL, 0x19bF), board_ahci_pcs7 }, /* DNV AHCI */
++	{ PCI_VDEVICE(INTEL, 0x19c0), board_ahci_pcs7 }, /* DNV AHCI */
++	{ PCI_VDEVICE(INTEL, 0x19c1), board_ahci_pcs7 }, /* DNV AHCI */
++	{ PCI_VDEVICE(INTEL, 0x19c2), board_ahci_pcs7 }, /* DNV AHCI */
++	{ PCI_VDEVICE(INTEL, 0x19c3), board_ahci_pcs7 }, /* DNV AHCI */
++	{ PCI_VDEVICE(INTEL, 0x19c4), board_ahci_pcs7 }, /* DNV AHCI */
++	{ PCI_VDEVICE(INTEL, 0x19c5), board_ahci_pcs7 }, /* DNV AHCI */
++	{ PCI_VDEVICE(INTEL, 0x19c6), board_ahci_pcs7 }, /* DNV AHCI */
++	{ PCI_VDEVICE(INTEL, 0x19c7), board_ahci_pcs7 }, /* DNV AHCI */
++	{ PCI_VDEVICE(INTEL, 0x19cE), board_ahci_pcs7 }, /* DNV AHCI */
++	{ PCI_VDEVICE(INTEL, 0x19cF), board_ahci_pcs7 }, /* DNV AHCI */
+ 	{ PCI_VDEVICE(INTEL, 0x1c02), board_ahci }, /* CPT AHCI */
+ 	{ PCI_VDEVICE(INTEL, 0x1c03), board_ahci_mobile }, /* CPT M AHCI */
+ 	{ PCI_VDEVICE(INTEL, 0x1c04), board_ahci }, /* CPT RAID */
+@@ -623,30 +635,6 @@ static void ahci_pci_save_initial_config(struct pci_dev *pdev,
+ 	ahci_save_initial_config(&pdev->dev, hpriv);
  }
  
-+/*
-+ * Magic sequence to make Huawei Matebook X right speaker working (bko#197801)
-+ */
-+struct hda_alc298_mbxinit {
-+	unsigned char value_0x23;
-+	unsigned char value_0x25;
-+};
-+
-+static void alc298_huawei_mbx_stereo_seq(struct hda_codec *codec,
-+					 const struct hda_alc298_mbxinit *initval,
-+					 bool first)
+-static int ahci_pci_reset_controller(struct ata_host *host)
+-{
+-	struct pci_dev *pdev = to_pci_dev(host->dev);
+-	int rc;
+-
+-	rc = ahci_reset_controller(host);
+-	if (rc)
+-		return rc;
+-
+-	if (pdev->vendor == PCI_VENDOR_ID_INTEL) {
+-		struct ahci_host_priv *hpriv = host->private_data;
+-		u16 tmp16;
+-
+-		/* configure PCS */
+-		pci_read_config_word(pdev, 0x92, &tmp16);
+-		if ((tmp16 & hpriv->port_map) != hpriv->port_map) {
+-			tmp16 |= hpriv->port_map;
+-			pci_write_config_word(pdev, 0x92, tmp16);
+-		}
+-	}
+-
+-	return 0;
+-}
+-
+ static void ahci_pci_init_controller(struct ata_host *host)
+ {
+ 	struct ahci_host_priv *hpriv = host->private_data;
+@@ -849,7 +837,7 @@ static int ahci_pci_device_runtime_resume(struct device *dev)
+ 	struct ata_host *host = pci_get_drvdata(pdev);
+ 	int rc;
+ 
+-	rc = ahci_pci_reset_controller(host);
++	rc = ahci_reset_controller(host);
+ 	if (rc)
+ 		return rc;
+ 	ahci_pci_init_controller(host);
+@@ -884,7 +872,7 @@ static int ahci_pci_device_resume(struct device *dev)
+ 		ahci_mcp89_apple_enable(pdev);
+ 
+ 	if (pdev->dev.power.power_state.event == PM_EVENT_SUSPEND) {
+-		rc = ahci_pci_reset_controller(host);
++		rc = ahci_reset_controller(host);
+ 		if (rc)
+ 			return rc;
+ 
+@@ -1619,6 +1607,34 @@ static void ahci_update_initial_lpm_policy(struct ata_port *ap,
+ 		ap->target_lpm_policy = policy;
+ }
+ 
++static void ahci_intel_pcs_quirk(struct pci_dev *pdev, struct ahci_host_priv *hpriv)
 +{
-+	snd_hda_codec_write(codec, 0x06, 0, AC_VERB_SET_DIGI_CONVERT_3, 0x0);
-+	alc_write_coef_idx(codec, 0x26, 0xb000);
++	const struct pci_device_id *id = pci_match_id(ahci_pci_tbl, pdev);
++	u16 tmp16;
 +
-+	if (first)
-+		snd_hda_codec_write(codec, 0x21, 0, AC_VERB_GET_PIN_SENSE, 0x0);
-+
-+	snd_hda_codec_write(codec, 0x6, 0, AC_VERB_SET_DIGI_CONVERT_3, 0x80);
-+	alc_write_coef_idx(codec, 0x26, 0xf000);
-+	alc_write_coef_idx(codec, 0x23, initval->value_0x23);
-+
-+	if (initval->value_0x23 != 0x1e)
-+		alc_write_coef_idx(codec, 0x25, initval->value_0x25);
-+
-+	snd_hda_codec_write(codec, 0x20, 0, AC_VERB_SET_COEF_INDEX, 0x26);
-+	snd_hda_codec_write(codec, 0x20, 0, AC_VERB_SET_PROC_COEF, 0xb010);
-+}
-+
-+static void alc298_fixup_huawei_mbx_stereo(struct hda_codec *codec,
-+					   const struct hda_fixup *fix,
-+					   int action)
-+{
-+	/* Initialization magic */
-+	static const struct hda_alc298_mbxinit dac_init[] = {
-+		{0x0c, 0x00}, {0x0d, 0x00}, {0x0e, 0x00}, {0x0f, 0x00},
-+		{0x10, 0x00}, {0x1a, 0x40}, {0x1b, 0x82}, {0x1c, 0x00},
-+		{0x1d, 0x00}, {0x1e, 0x00}, {0x1f, 0x00},
-+		{0x20, 0xc2}, {0x21, 0xc8}, {0x22, 0x26}, {0x23, 0x24},
-+		{0x27, 0xff}, {0x28, 0xff}, {0x29, 0xff}, {0x2a, 0x8f},
-+		{0x2b, 0x02}, {0x2c, 0x48}, {0x2d, 0x34}, {0x2e, 0x00},
-+		{0x2f, 0x00},
-+		{0x30, 0x00}, {0x31, 0x00}, {0x32, 0x00}, {0x33, 0x00},
-+		{0x34, 0x00}, {0x35, 0x01}, {0x36, 0x93}, {0x37, 0x0c},
-+		{0x38, 0x00}, {0x39, 0x00}, {0x3a, 0xf8}, {0x38, 0x80},
-+		{}
-+	};
-+	const struct hda_alc298_mbxinit *seq;
-+
-+	if (action != HDA_FIXUP_ACT_INIT)
++	/*
++	 * Only apply the 6-port PCS quirk for known legacy platforms.
++	 */
++	if (!id || id->vendor != PCI_VENDOR_ID_INTEL)
++		return;
++	if (((enum board_ids) id->driver_data) < board_ahci_pcs7)
 +		return;
 +
-+	/* Start */
-+	snd_hda_codec_write(codec, 0x06, 0, AC_VERB_SET_DIGI_CONVERT_3, 0x00);
-+	snd_hda_codec_write(codec, 0x06, 0, AC_VERB_SET_DIGI_CONVERT_3, 0x80);
-+	alc_write_coef_idx(codec, 0x26, 0xf000);
-+	alc_write_coef_idx(codec, 0x22, 0x31);
-+	alc_write_coef_idx(codec, 0x23, 0x0b);
-+	alc_write_coef_idx(codec, 0x25, 0x00);
-+	snd_hda_codec_write(codec, 0x20, 0, AC_VERB_SET_COEF_INDEX, 0x26);
-+	snd_hda_codec_write(codec, 0x20, 0, AC_VERB_SET_PROC_COEF, 0xb010);
-+
-+	for (seq = dac_init; seq->value_0x23; seq++)
-+		alc298_huawei_mbx_stereo_seq(codec, seq, seq == dac_init);
++	/*
++	 * port_map is determined from PORTS_IMPL PCI register which is
++	 * implemented as write or write-once register.  If the register
++	 * isn't programmed, ahci automatically generates it from number
++	 * of ports, which is good enough for PCS programming. It is
++	 * otherwise expected that platform firmware enables the ports
++	 * before the OS boots.
++	 */
++	pci_read_config_word(pdev, PCS_6, &tmp16);
++	if ((tmp16 & hpriv->port_map) != hpriv->port_map) {
++		tmp16 |= hpriv->port_map;
++		pci_write_config_word(pdev, PCS_6, tmp16);
++	}
 +}
 +
- static void alc269_fixup_x101_headset_mic(struct hda_codec *codec,
- 				     const struct hda_fixup *fix, int action)
+ static int ahci_init_one(struct pci_dev *pdev, const struct pci_device_id *ent)
  {
-@@ -5780,6 +5846,7 @@ enum {
- 	ALC255_FIXUP_DUMMY_LINEOUT_VERB,
- 	ALC255_FIXUP_DELL_HEADSET_MIC,
- 	ALC256_FIXUP_HUAWEI_MACH_WX9_PINS,
-+	ALC298_FIXUP_HUAWEI_MBX_STEREO,
- 	ALC295_FIXUP_HP_X360,
- 	ALC221_FIXUP_HP_HEADSET_MIC,
- 	ALC285_FIXUP_LENOVO_HEADPHONE_NOISE,
-@@ -6089,6 +6156,12 @@ static const struct hda_fixup alc269_fixups[] = {
- 		.chained = true,
- 		.chain_id = ALC255_FIXUP_MIC_MUTE_LED
- 	},
-+	[ALC298_FIXUP_HUAWEI_MBX_STEREO] = {
-+		.type = HDA_FIXUP_FUNC,
-+		.v.func = alc298_fixup_huawei_mbx_stereo,
-+		.chained = true,
-+		.chain_id = ALC255_FIXUP_MIC_MUTE_LED
-+	},
- 	[ALC269_FIXUP_ASUS_X101_FUNC] = {
- 		.type = HDA_FIXUP_FUNC,
- 		.v.func = alc269_fixup_x101_headset_mic,
-@@ -7280,6 +7353,7 @@ static const struct hda_model_fixup alc269_fixup_models[] = {
- 	{.id = ALC225_FIXUP_HEADSET_JACK, .name = "alc-headset-jack"},
- 	{.id = ALC295_FIXUP_CHROME_BOOK, .name = "alc-chrome-book"},
- 	{.id = ALC299_FIXUP_PREDATOR_SPK, .name = "predator-spk"},
-+	{.id = ALC298_FIXUP_HUAWEI_MBX_STEREO, .name = "huawei-mbx-stereo"},
- 	{}
- };
- #define ALC225_STANDARD_PINS \
+ 	unsigned int board_id = ent->driver_data;
+@@ -1731,6 +1747,12 @@ static int ahci_init_one(struct pci_dev *pdev, const struct pci_device_id *ent)
+ 	/* save initial config */
+ 	ahci_pci_save_initial_config(pdev, hpriv);
+ 
++	/*
++	 * If platform firmware failed to enable ports, try to enable
++	 * them here.
++	 */
++	ahci_intel_pcs_quirk(pdev, hpriv);
++
+ 	/* prepare host */
+ 	if (hpriv->cap & HOST_CAP_NCQ) {
+ 		pi.flags |= ATA_FLAG_NCQ;
+@@ -1840,7 +1862,7 @@ static int ahci_init_one(struct pci_dev *pdev, const struct pci_device_id *ent)
+ 	if (rc)
+ 		return rc;
+ 
+-	rc = ahci_pci_reset_controller(host);
++	rc = ahci_reset_controller(host);
+ 	if (rc)
+ 		return rc;
+ 
+diff --git a/drivers/ata/ahci.h b/drivers/ata/ahci.h
+index 0570629d719d8..3dbf398c92eaf 100644
+--- a/drivers/ata/ahci.h
++++ b/drivers/ata/ahci.h
+@@ -247,6 +247,8 @@ enum {
+ 					  ATA_FLAG_ACPI_SATA | ATA_FLAG_AN,
+ 
+ 	ICH_MAP				= 0x90, /* ICH MAP register */
++	PCS_6				= 0x92, /* 6 port PCS */
++	PCS_7				= 0x94, /* 7+ port PCS (Denverton) */
+ 
+ 	/* em constants */
+ 	EM_MAX_SLOTS			= 8,
 -- 
 2.20.1
 
