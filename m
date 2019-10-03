@@ -2,178 +2,117 @@ Return-Path: <SRS0=6dNS=X4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FAKE_REPLY_C,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AB8DEC32792
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 22:10:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BC3BAC10F14
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 22:10:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7553620867
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 22:10:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570140611;
-	bh=F6E2RvV20IDKK+8vbX46hyZ6gzaFZiM6GfmUhN5E1EM=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
-	b=QLKXdLKLQK+EN1s4GdF26zH010cLsv5ILvMXlx98cQbNoj+ygwmgHUI5IpSYu+gH8
-	 OOfatgxmvu8pI28RU0wAYNPgXgGstXDduZKElk6xLfLPUfmNVq2oQn+bTW6OK2KuZh
-	 wG89c+blB2NC5DGPjXqzNZXdrw/1/7xcXbo8ZVfg=
+	by mail.kernel.org (Postfix) with ESMTP id 8BA77215EA
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 22:10:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730146AbfJCWKK (ORCPT
+        id S1730221AbfJCWKt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 18:10:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48900 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 18:10:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49424 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729490AbfJCWKK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 18:10:10 -0400
-Received: from localhost (unknown [69.71.4.100])
+        id S1728795AbfJCWKt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 18:10:49 -0400
+Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AE8BF20867;
-        Thu,  3 Oct 2019 22:10:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570140609;
-        bh=F6E2RvV20IDKK+8vbX46hyZ6gzaFZiM6GfmUhN5E1EM=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=zu8WGpXZN1sGAbtPCJ1ddNvZhX+JVpBzcXYxUiAsYO4gdcdA2rE8hV1AEdNYGcBS6
-         BadYC0xhyZXUUnxHU20w+IT3uX5RLAdVL7JA5yo1jKaV4LLK+ed5l6bR0zt0BmxC0+
-         xC+crqB4jS7C2Dcq7obhj2TPkMCSEjG11sjcZyv4=
-Date:   Thu, 3 Oct 2019 17:10:07 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     CREGUT Pierre IMT/OLN <pierre.cregut@orange.com>
-Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Donald Dutile <ddutile@redhat.com>,
-        Alexander Duyck <alexander.h.duyck@intel.com>,
-        Jakub Kicinski <jakub.kicinski@netronome.com>
-Subject: Re: [PATCH] PCI/IOV: update num_VFs earlier
-Message-ID: <20191003221007.GA209602@google.com>
+        by mail.kernel.org (Postfix) with ESMTPSA id 7655C20867;
+        Thu,  3 Oct 2019 22:10:47 +0000 (UTC)
+Date:   Thu, 3 Oct 2019 18:10:45 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Daniel Bristot de Oliveira <bristot@redhat.com>,
+        linux-kernel@vger.kernel.org, x86@kernel.org,
+        Nadav Amit <nadav.amit@gmail.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Song Liu <songliubraving@fb.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>
+Subject: Re: [PATCH 3/3] x86/ftrace: Use text_poke()
+Message-ID: <20191003181045.7fb1a5b3@gandalf.local.home>
+In-Reply-To: <20191002182106.GC4643@worktop.programming.kicks-ass.net>
+References: <20190827180622.159326993@infradead.org>
+        <20190827181147.166658077@infradead.org>
+        <aaffb32f-6ca9-f9e3-9b1a-627125c563ed@redhat.com>
+        <20191002182106.GC4643@worktop.programming.kicks-ass.net>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <49b0ad6d-7b6f-adbd-c4a3-5f9328a7ad9d@orange.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[+cc Don, Alex, Jakub]
+On Wed, 2 Oct 2019 20:21:06 +0200
+Peter Zijlstra <peterz@infradead.org> wrote:
 
-On Thu, Oct 03, 2019 at 11:04:45AM +0200, CREGUT Pierre IMT/OLN wrote:
-> Le 02/10/2019 à 01:45, Bjorn Helgaas a écrit :
-> > On Fri, Apr 26, 2019 at 10:11:54AM +0200, CREGUT Pierre IMT/OLN wrote:
-> > > I also initially thought that kobject_uevent generated the netlink event
-> > > but this is not the case. This is generated by the specific driver in use.
-> > > For the Intel i40e driver, this is the call to i40e_do_reset_safe in
-> > > i40e_pci_sriov_configure that sends the event.
-> > > It is followed by i40e_pci_sriov_enable that calls i40e_alloc_vfs that
-> > > finally calls the generic pci_enable_sriov function.
-> > I don't know anything about netlink.  The script from the bugzilla
-> > (https://bugzilla.kernel.org/show_bug.cgi?id=202991) looks like it
-> > runs
+> On Wed, Oct 02, 2019 at 06:35:26PM +0200, Daniel Bristot de Oliveira wrote:
+> 
+> > ftrace was already batching the updates, for instance, causing 3 IPIs to enable
+> > all functions. The text_poke() batching also works. But because of the limited
+> > buffer [ see the reply to the patch 2/3 ], it is flushing the buffer during the
+> > operation, causing more IPIs than the previous code. Using the 5.4-rc1 in a VM,
+> > when enabling the function tracer, I see 250+ intermediate text_poke_finish()
+> > because of a full buffer...
 > > 
-> >    ip monitor dev enp9s0f2
+> > Would this be the case of trying to use a dynamically allocated buffer?
 > > 
-> > What are the actual netlink events you see?  Are they related to a
-> > device being removed?
+> > Thoughts?  
 > 
-> We have netlink events both when num_vfs goes from 0 to N and from N to 0.
-> Indeed you have to go to 0 before going to M with M != N.
+> Is it a problem? I tried growing the buffer (IIRC I made it 10 times
+> bigger) and didn't see any performance improvements because of it.
 
-Right.
+I'm just worried if people are going to complain about the IPI burst.
+Although, I just tried it out before applying this patch, and there's
+still a bit of a burst. Not sure why. I did:
 
-> On an Intel card, when one goes from 0 to N, the netlink event is
-> sent "early". The value of num_vfs is still 0 and you get the
-> impression that the number of VFS has not changed. As the meaning of
-> those events is overloaded, you have to wait an arbitrary amount of
-> time until it settles (there will be no other event).  There is no
-> such problem when it goes from N to 0 because of implementation
-> details but it may be different for another brand.
+# cat /proc/interrupts > /tmp/before; echo function > /debug/tracing/current_tracer; cat /proc/interrupts > /tmp/after
+# cat /proc/interrupts > /tmp/before1; echo nop > /debug/tracing/current_tracer; cat /proc/interrupts > /tmp/after1
 
-I hadn't looked far enough.  I think the "remove" netlink events are
-probably from the i40e_do_reset_safe() path, which eventually calls
-free_netdev() and put_device().
+Before this patch:
 
-The pci_enable_sriov() path calls the driver's ->probe method, and I
-suspect the "add" netlink events are emitted there.
+# diff /tmp/before /tmp/after
+< CAL:       2342       2347       2116       2175       2446       2030       2416       2222   Function call interrupts
+---
+> CAL:       2462       2467       2236       2295       2446       2150       2536       2342   Function call interrupts
 
-> > When we change num_VFs, I think we have to disable any existing VFs
-> > before enabling the new num_VFs, so if you trigger on a netlink
-> > "remove" event, I wouldn't be surprised that reading sriov_numvfs
-> > would give a zero until the new VFs are enabled.
-> Yes but we are speaking of the event sent when num_vfs is changed from 0 to
-> N
-> > [...]
-> > I thought this was a good idea, but
-> > 
-> >    - It does break the device_lock() encapsulation a little bit:
-> >      sriov_numvfs_store() uses device_lock(), which happens to be
-> >      implemented as "mutex_lock(&dev->mutex)", but we really shouldn't
-> >      rely on that implementation, and
+(Just showing the function call interrupts)
 
-> The use of device_lock was the cheapest solution. It is true that
-> lock and trylock are exposed by device.h but not is_locked. To
-> respect the abstraction, we would have to lock the device (at least
-> use trylock but it means locking when we can access the value, in
-> that case we may just make reading num_vfs blocking ?).
-> 
-> The other solution is to record the state of freshness of num_vfs
-> but it means a new Boolean in the pci_sriov data-structure.
+There appears to be 120 IPIs sent to all CPUS for enabling function tracer.
 
-> 
-> >    - The netlink events are being generated via the NIC driver, and I'm
-> >      a little hesitant about changing the PCI core to deal with timing
-> >      issues "over there".
-> 
-> NIC drivers send netlink events when their state change, but it is
-> the core that changes the value of num_vfs. So I would think it is
-> the core responsibility to make sure the exposed value makes sense
-> and it would be better to ignore the details of the driver
-> implementation.
+# diff /tmp/before1 /tmp/after1
+< CAL:       2462       2467       2236       2295       2446       2150       2536       2342   Function call interrupts
+---
+> CAL:       2577       2582       2351       2410       2446       2265       2651       2457   Function call interrupts
 
-Yes, I think you're right.  And I like your previous suggestion of
-just locking the device in the reader.  I'm not enough of a sysfs
-expert to know if there's a good reason to avoid a lock there.  Does
-the following look reasonable to you?
+And 151 IPIs for disabling it.
+
+After applying this patch:
+
+# diff /tmp/before /tmp/after
+< CAL:      66070      46620      59955      59236      68707      63397      61644      62742   Function call interrupts
+---
+> CAL:      66727      47277      59955      59893      69364      64054      62301      63399   Function call interrupts
+
+# diff /tmp/before1 /tmp/after1
+< CAL:      66727      47277      59955      59893      69364      64054      62301      63399   Function call interrupts
+---
+> CAL:      67358      47938      59985      60554      70025      64715      62962      64060   Function call interrupts
 
 
-commit 0940fc95da45
-Author: Pierre Crégut <pierre.cregut@orange.com>
-Date:   Wed Sep 11 09:27:36 2019 +0200
+We get 657 IPIs for enabling function tracer, and 661 for disabling it.
+Funny how it's more on the disable than the enable with the patch but
+the other way without it.
 
-    PCI/IOV: Serialize sysfs sriov_numvfs reads vs writes
-    
-    When sriov_numvfs is being updated, drivers may notify about new devices
-    before they are reflected in sriov->num_VFs, so concurrent sysfs reads
-    previously returned stale values.
-    
-    Serialize the sysfs read vs the write so the read returns the correct
-    num_VFs value.
-    
-    Link: https://bugzilla.kernel.org/show_bug.cgi?id=202991
-    Link: https://lore.kernel.org/r/20190911072736.32091-1-pierre.cregut@orange.com
-    Signed-off-by: Pierre Crégut <pierre.cregut@orange.com>
-    Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+But still, we are going from 120 to 660 IPIs for every CPU. Not saying
+it's a problem, but something that we should note. Someone (those that
+don't like kernel interference) may complain.
 
-diff --git a/drivers/pci/iov.c b/drivers/pci/iov.c
-index b3f972e8cfed..e77562aabbae 100644
---- a/drivers/pci/iov.c
-+++ b/drivers/pci/iov.c
-@@ -254,8 +254,14 @@ static ssize_t sriov_numvfs_show(struct device *dev,
- 				 char *buf)
- {
- 	struct pci_dev *pdev = to_pci_dev(dev);
-+	u16 num_vfs;
-+
-+	/* Serialize vs sriov_numvfs_store() so readers see valid num_VFs */
-+	device_lock(&pdev->dev);
-+	num_vfs = pdev->sriov->num_VFs;
-+	device_lock(&pdev->dev);
- 
--	return sprintf(buf, "%u\n", pdev->sriov->num_VFs);
-+	return sprintf(buf, "%u\n", num_vfs);
- }
- 
- /*
+-- Steve
