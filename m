@@ -2,216 +2,564 @@ Return-Path: <SRS0=6dNS=X4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1055C32792
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 19:14:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C0EDAC4CED1
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 19:15:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A17FA207FF
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 19:14:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8EC6C2133F
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 19:15:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="beEbyjRH"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="s1MjDEpq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730696AbfJCTOP (ORCPT
+        id S1730827AbfJCTPK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 15:14:15 -0400
-Received: from mail.efficios.com ([167.114.142.138]:60432 "EHLO
-        mail.efficios.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726677AbfJCTOO (ORCPT
+        Thu, 3 Oct 2019 15:15:10 -0400
+Received: from mail-wr1-f52.google.com ([209.85.221.52]:34863 "EHLO
+        mail-wr1-f52.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730382AbfJCTPK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 15:14:14 -0400
-Received: from localhost (ip6-localhost [IPv6:::1])
-        by mail.efficios.com (Postfix) with ESMTP id A458233B6C7;
-        Thu,  3 Oct 2019 15:14:12 -0400 (EDT)
-Received: from mail.efficios.com ([IPv6:::1])
-        by localhost (mail02.efficios.com [IPv6:::1]) (amavisd-new, port 10032)
-        with ESMTP id 2VPmRjdUR16r; Thu,  3 Oct 2019 15:14:12 -0400 (EDT)
-Received: from localhost (ip6-localhost [IPv6:::1])
-        by mail.efficios.com (Postfix) with ESMTP id EFB6B33B6C0;
-        Thu,  3 Oct 2019 15:14:11 -0400 (EDT)
-DKIM-Filter: OpenDKIM Filter v2.10.3 mail.efficios.com EFB6B33B6C0
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=efficios.com;
-        s=default; t=1570130052;
-        bh=7io7uSdeeE/pgtuBYIIMb2OgPbrbl38vwPbZaO6HFvw=;
-        h=Date:From:To:Message-ID:MIME-Version;
-        b=beEbyjRH8RDU1ayL22FADOwMgSZr7sHigxFMjXI2qgq8/UCvEKQUz0BAu0ma4VSvH
-         ElPhCIJKfqloIbzwqUaoYvSl+CEHYWIryWQIgbiSFMZpkJ5+OS0shtOszfU4hrmLBY
-         jYqCOd7595Fh6TTom8wsBPKfTS3G9e2H2NNipLmsUaxy25yvbX0GC0tN02TLH+bxZJ
-         ShGjKH2aMkcnnvYeFhHRCrhYpqir8/Kl9yvc40l/H9QyVN1Rl9fWVdWN6u1DcuNw7A
-         091bRHxp6Ou1eohY9EJy7NTbFvVu2hFX17GjUDpbGzGcO/Z1Q1oiLEbz3v6ak39k3I
-         XSWRvWk/KNzvg==
-X-Virus-Scanned: amavisd-new at efficios.com
-Received: from mail.efficios.com ([IPv6:::1])
-        by localhost (mail02.efficios.com [IPv6:::1]) (amavisd-new, port 10026)
-        with ESMTP id pJzSuz6dVofd; Thu,  3 Oct 2019 15:14:11 -0400 (EDT)
-Received: from mail02.efficios.com (mail02.efficios.com [167.114.142.138])
-        by mail.efficios.com (Postfix) with ESMTP id D0F9B33B6B3;
-        Thu,  3 Oct 2019 15:14:11 -0400 (EDT)
-Date:   Thu, 3 Oct 2019 15:14:11 -0400 (EDT)
-From:   Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-To:     paulmck <paulmck@kernel.org>
-Cc:     rcu <rcu@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Lai Jiangshan <jiangshanlai@gmail.com>,
-        dipankar <dipankar@in.ibm.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Josh Triplett <josh@joshtriplett.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Peter Zijlstra <peterz@infradead.org>,
-        rostedt <rostedt@goodmis.org>,
-        David Howells <dhowells@redhat.com>,
-        Eric Dumazet <edumazet@google.com>,
-        fweisbec <fweisbec@gmail.com>, Oleg Nesterov <oleg@redhat.com>,
-        "Joel Fernandes, Google" <joel@joelfernandes.org>,
-        Bart Van Assche <bart.vanassche@wdc.com>,
-        Christoph Hellwig <hch@lst.de>, Hannes Reinecke <hare@suse.de>,
-        Johannes Thumshirn <jthumshirn@suse.de>,
-        Shane M Seymour <shane.seymour@hpe.com>,
-        Martin <martin.petersen@oracle.com>
-Message-ID: <996944932.1292.1570130051686.JavaMail.zimbra@efficios.com>
-In-Reply-To: <20191003190919.GA2689@paulmck-ThinkPad-P72>
-References: <20191003014153.GA13156@paulmck-ThinkPad-P72> <20191003014310.13262-1-paulmck@kernel.org> <644598334.955.1570120530976.JavaMail.zimbra@efficios.com> <20191003165220.GZ2689@paulmck-ThinkPad-P72> <618064891.1049.1570123274780.JavaMail.zimbra@efficios.com> <20191003190919.GA2689@paulmck-ThinkPad-P72>
-Subject: Re: [PATCH tip/core/rcu 1/9] rcu: Upgrade rcu_swap_protected() to
- rcu_replace()
+        Thu, 3 Oct 2019 15:15:10 -0400
+Received: by mail-wr1-f52.google.com with SMTP id v8so3997254wrt.2;
+        Thu, 03 Oct 2019 12:15:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:from:date:message-id:subject:to;
+        bh=fYwGBeUiBfZ3DuFZnlZx5sUy268cNpvEp2Ss+NL8Ixg=;
+        b=s1MjDEpqhFr5mZW9Y3HPLZBlnxUt+0K2SBLy6uBDKSC79L/oAOqObxv8jekCDGGCSu
+         +9QAwzkPVO5uaXj1ld8Ga/ex/cjMr50XPgY3/akfgsUGhkhwHSzcJXkQyw7rA2WYMCET
+         R7fW6Wf1jfc5042uUKgQOSD1AHYBlaEVgvBTVYZplZJas4ya9E9Pvq1Nv8QcU/ZI2MTI
+         BmoRLqIQwofDaba2YZW+O4gQbUrwO1JOnRqxz5PyUX9a4fCldYpIbC9RXQxHkNmAuhwE
+         IlOTASPhg0ozQ5ykgFRjtehOI9Xjqe2LmbLLiwRJXyxKLUYWakLbsP+VUHNioDde+M6l
+         URFQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to;
+        bh=fYwGBeUiBfZ3DuFZnlZx5sUy268cNpvEp2Ss+NL8Ixg=;
+        b=Dz66n8tAtf/R3beLY5hwxro0mAzNS19sFjeC5FNfOaQ6J0pwEiucjqXEozeR3CpKMZ
+         k3v35lbJakFCIE1PFLfxpv9IUHluC6U2SGZnwOKbZpW4qSnifC93WMTuLw+S/AgG0b25
+         29gUv+CfjV2DniRTN/iZFN2OedvxfrxAr3cb7cSa5cjWfOEi0qbAvU/MXc2WpbFBUXlC
+         GumNkE47O42qaW3wv/Is93/zxu2A6ZdfMzirPV6XTyK9AvLeg+1kH33XXi/dgFdtIdn5
+         JVKSkytS5v3pIetMWDFp6564c3FWfMYoRi6YVj7KJl/dQX/lCFlCKbIVjjdH7WrWJyTL
+         +YlQ==
+X-Gm-Message-State: APjAAAXI30nRXCQwOCIYpvxpR138Ir5ckfz+k5Mm6FqSU8cKn4JGGX4D
+        us0i65ZwsTQRGf55D1c6rSWAda7OhEw+AcFdbY+1okEUAxM=
+X-Google-Smtp-Source: APXvYqwH7ls/ZSODMxLJ79Zrz+9+ISg4AsNwNmjiu5nJmpBxu2FmNSKPDKoVkY82D1DKUT5KX17p1Rqdpv/otH0Vcw4=
+X-Received: by 2002:adf:cd86:: with SMTP id q6mr8309615wrj.153.1570130105102;
+ Thu, 03 Oct 2019 12:15:05 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [167.114.142.138]
-X-Mailer: Zimbra 8.8.15_GA_3847 (ZimbraWebClient - FF69 (Linux)/8.8.15_GA_3847)
-Thread-Topic: Upgrade rcu_swap_protected() to rcu_replace()
-Thread-Index: ag42kyaxnP9eCqmhEy53O9DecrsO8A==
+From:   =?UTF-8?Q?Carlos_Eduardo_Cl=C3=ADmaco_Barbosa?= 
+        <climacobarbosacee@gmail.com>
+Date:   Thu, 3 Oct 2019 16:14:53 -0300
+Message-ID: <CACViCuWTp0SHj+eSQu7i27whfDQez1wJqPMnoBzYAijOBxzJwQ@mail.gmail.com>
+Subject: [PATCH 2/2] media: vimc: include pointer to info in struct vimc_pix_map
+To:     Helen Koike <helen.koike@collabora.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
------ On Oct 3, 2019, at 3:09 PM, paulmck paulmck@kernel.org wrote:
+Change struct vimc_pix_map and add vimc_pix_map_fmt to clean up and
+increase readability
+---
+ drivers/media/platform/vimc/vimc-capture.c | 24 ++++-----
+ drivers/media/platform/vimc/vimc-common.c  | 61 ++++++++++++++++------
+ drivers/media/platform/vimc/vimc-common.h  | 25 ++++++---
+ drivers/media/platform/vimc/vimc-debayer.c |  8 ++-
+ drivers/media/platform/vimc/vimc-scaler.c  | 26 ++++-----
+ drivers/media/platform/vimc/vimc-sensor.c  | 29 +++++-----
+ 6 files changed, 100 insertions(+), 73 deletions(-)
 
-> On Thu, Oct 03, 2019 at 01:21:14PM -0400, Mathieu Desnoyers wrote:
->> ----- On Oct 3, 2019, at 12:52 PM, paulmck paulmck@kernel.org wrote:
->> 
->> > On Thu, Oct 03, 2019 at 12:35:30PM -0400, Mathieu Desnoyers wrote:
->> >> ----- On Oct 2, 2019, at 9:43 PM, paulmck paulmck@kernel.org wrote:
->> >> 
->> >> > From: "Paul E. McKenney" <paulmck@kernel.org>
->> >> > 
->> >> > Although the rcu_swap_protected() macro follows the example of swap(),
->> >> > the interactions with RCU make its update of its argument somewhat
->> >> > counter-intuitive.  This commit therefore introduces an rcu_replace()
->> >> > that returns the old value of the RCU pointer instead of doing the
->> >> > argument update.  Once all the uses of rcu_swap_protected() are updated
->> >> > to instead use rcu_replace(), rcu_swap_protected() will be removed.
->> >> 
->> >> We expose the rcu_xchg_pointer() API in liburcu (Userspace RCU) project.
->> >> Any reason for not going that way and keep the kernel and user-space RCU
->> >> APIs alike ?
->> >> 
->> >> It's of course fine if they diverge, but we might want to at least consider
->> >> if using the same API name would be OK.
->> > 
->> > Different semantics.  An rcu_xchg_pointer() allows concurrent updates,
->> > and rcu_replace() does not.
->> > 
->> > But yes, if someone needs the concurrent updates, rcu_xchg_pointer()
->> > would certainly be my choice for the name.
->> 
->> Then considering that its assignment counterpart is "rcu_assign_pointer()"
->> (and not "rcu_assign()"), would "rcu_replace_pointer()" be less ambiguous
->> about its intended use ?
-> 
-> The sequence was rcu_swap_protected() -> rcu_swap() -> rcu_replace().
-> Because that rcu_replace(), unlike rcu_swap_protected(), returns a
-> value, the shorter name is valuable.
-> 
-> Maybe we should have used rcu_assign() instead of rcu_assign_pointer(),
-> but there is no point in that sort of change at this late date!
+diff --git a/drivers/media/platform/vimc/vimc-capture.c
+b/drivers/media/platform/vimc/vimc-capture.c
+index 49bc8c133980..42719605f9d1 100644
+--- a/drivers/media/platform/vimc/vimc-capture.c
++++ b/drivers/media/platform/vimc/vimc-capture.c
+@@ -91,8 +91,7 @@ static int vimc_cap_try_fmt_vid_cap(struct file
+*file, void *priv,
+                     struct v4l2_format *f)
+ {
+     struct v4l2_pix_format *format = &f->fmt.pix;
+-    const struct vimc_pix_map *vpix;
+-    const struct v4l2_format_info *vinfo;
++    struct vimc_pix_map vpix;
 
-I agree that having both the "rcu_" prefix and the "_pointer" suffix is
-somewhat redundant. Indeed it's not a worthwhile change for a pre-existing
-API, but it is welcome for a new API.
+     format->width = clamp_t(u32, format->width, VIMC_FRAME_MIN_WIDTH,
+                 VIMC_FRAME_MAX_WIDTH) & ~1;
+@@ -101,13 +100,12 @@ static int vimc_cap_try_fmt_vid_cap(struct file
+*file, void *priv,
 
-Thanks!
+     /* Don't accept a pixelformat that is not on the table */
+     vpix = vimc_pix_map_by_pixelformat(format->pixelformat);
+-    if (!vpix) {
++    if (!vpix.info) {
+         format->pixelformat = fmt_default.pixelformat;
+         vpix = vimc_pix_map_by_pixelformat(format->pixelformat);
+     }
+-    vinfo = v4l2_format_info(format->pixelformat);
+     /* TODO: Add support for custom bytesperline values */
+-    format->bytesperline = format->width * vinfo->bpp[0];
++    format->bytesperline = format->width * vpix.info->bpp[0];
+     format->sizeimage = format->bytesperline * format->height;
 
-Mathieu
+     if (format->field == V4L2_FIELD_ANY)
+@@ -154,12 +152,12 @@ static int vimc_cap_s_fmt_vid_cap(struct file
+*file, void *priv,
+ static int vimc_cap_enum_fmt_vid_cap(struct file *file, void *priv,
+                      struct v4l2_fmtdesc *f)
+ {
+-    const struct vimc_pix_map *vpix = vimc_pix_map_by_index(f->index);
++    const struct vimc_pix_map vpix = vimc_pix_map_by_index(f->index);
 
-> 
->							Thanx, Paul
-> 
->> Thanks,
->> 
->> Mathieu
->> 
->> 
->> > 
->> >							Thanx, Paul
->> > 
->> >> Thanks,
->> >> 
->> >> Mathieu
->> >> 
->> >> 
->> >> > 
->> >> > Link:
->> >> > https://lore.kernel.org/lkml/CAHk-=wiAsJLw1egFEE=Z7-GGtM6wcvtyytXZA1+BHqta4gg6Hw@mail.gmail.com/
->> >> > Reported-by: Linus Torvalds <torvalds@linux-foundation.org>
->> >> > Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
->> >> > Cc: Bart Van Assche <bart.vanassche@wdc.com>
->> >> > Cc: Christoph Hellwig <hch@lst.de>
->> >> > Cc: Hannes Reinecke <hare@suse.de>
->> >> > Cc: Johannes Thumshirn <jthumshirn@suse.de>
->> >> > Cc: Shane M Seymour <shane.seymour@hpe.com>
->> >> > Cc: Martin K. Petersen <martin.petersen@oracle.com>
->> >> > ---
->> >> > include/linux/rcupdate.h | 18 ++++++++++++++++++
->> >> > 1 file changed, 18 insertions(+)
->> >> > 
->> >> > diff --git a/include/linux/rcupdate.h b/include/linux/rcupdate.h
->> >> > index 75a2ede..3b73287 100644
->> >> > --- a/include/linux/rcupdate.h
->> >> > +++ b/include/linux/rcupdate.h
->> >> > @@ -383,6 +383,24 @@ do {									      \
->> >> > } while (0)
->> >> > 
->> >> > /**
->> >> > + * rcu_replace() - replace an RCU pointer, returning its old value
->> >> > + * @rcu_ptr: RCU pointer, whose old value is returned
->> >> > + * @ptr: regular pointer
->> >> > + * @c: the lockdep conditions under which the dereference will take place
->> >> > + *
->> >> > + * Perform a replacement, where @rcu_ptr is an RCU-annotated
->> >> > + * pointer and @c is the lockdep argument that is passed to the
->> >> > + * rcu_dereference_protected() call used to read that pointer.  The old
->> >> > + * value of @rcu_ptr is returned, and @rcu_ptr is set to @ptr.
->> >> > + */
->> >> > +#define rcu_replace(rcu_ptr, ptr, c)					\
->> >> > +({									\
->> >> > +	typeof(ptr) __tmp = rcu_dereference_protected((rcu_ptr), (c));	\
->> >> > +	rcu_assign_pointer((rcu_ptr), (ptr));				\
->> >> > +	__tmp;								\
->> >> > +})
->> >> > +
->> >> > +/**
->> >> >  * rcu_swap_protected() - swap an RCU and a regular pointer
->> >> >  * @rcu_ptr: RCU pointer
->> >> >  * @ptr: regular pointer
->> >> > --
->> >> > 2.9.5
->> >> 
->> >> --
->> >> Mathieu Desnoyers
->> >> EfficiOS Inc.
->> > > http://www.efficios.com
->> 
->> --
->> Mathieu Desnoyers
->> EfficiOS Inc.
-> > http://www.efficios.com
+-    if (!vpix)
++    if (!vpix.info)
+         return -EINVAL;
 
+-    f->pixelformat = vpix->pixelformat;
++    f->pixelformat = vpix.info->format;
+
+     return 0;
+ }
+@@ -167,14 +165,14 @@ static int vimc_cap_enum_fmt_vid_cap(struct file
+*file, void *priv,
+ static int vimc_cap_enum_framesizes(struct file *file, void *fh,
+                     struct v4l2_frmsizeenum *fsize)
+ {
+-    const struct vimc_pix_map *vpix;
++    struct vimc_pix_map vpix;
+
+     if (fsize->index)
+         return -EINVAL;
+
+     /* Only accept code in the pix map table */
+     vpix = vimc_pix_map_by_code(fsize->pixel_format);
+-    if (!vpix)
++    if (!vpix.info)
+         return -EINVAL;
+
+     fsize->type = V4L2_FRMSIZE_TYPE_CONTINUOUS;
+@@ -398,8 +396,7 @@ static int vimc_cap_comp_bind(struct device *comp,
+struct device *master,
+ {
+     struct v4l2_device *v4l2_dev = master_data;
+     struct vimc_platform_data *pdata = comp->platform_data;
+-    const struct vimc_pix_map *vpix;
+-    const struct v4l2_format_info *vinfo;
++    struct vimc_pix_map vpix;
+     struct vimc_cap_device *vcap;
+     struct video_device *vdev;
+     struct vb2_queue *q;
+@@ -455,8 +452,7 @@ static int vimc_cap_comp_bind(struct device *comp,
+struct device *master,
+     /* Set default frame format */
+     vcap->format = fmt_default;
+     vpix = vimc_pix_map_by_pixelformat(vcap->format.pixelformat);
+-    vinfo = v4l2_format_info(vpix->pixelformat);
+-    vcap->format.bytesperline = vcap->format.width * vinfo->bpp[0];
++    vcap->format.bytesperline = vcap->format.width * vpix.info->bpp[0];
+     vcap->format.sizeimage = vcap->format.bytesperline *
+                  vcap->format.height;
+
+diff --git a/drivers/media/platform/vimc/vimc-common.c
+b/drivers/media/platform/vimc/vimc-common.c
+index 2d1205f0a600..e807734bb373 100644
+--- a/drivers/media/platform/vimc/vimc-common.c
++++ b/drivers/media/platform/vimc/vimc-common.c
+@@ -14,7 +14,7 @@
+  * NOTE: non-bayer formats need to come first (necessary for enum_mbus_code
+  * in the scaler)
+  */
+-static const struct vimc_pix_map vimc_pix_map_list[] = {
++static struct vimc_pix_map_fmt vimc_pix_map_fmt_list[] = {
+     /* TODO: add all missing formats */
+
+     /* RGB formats */
+@@ -118,36 +118,63 @@ static const struct vimc_pix_map vimc_pix_map_list[] = {
+     },
+ };
+
+-const struct vimc_pix_map *vimc_pix_map_by_index(unsigned int i)
++struct vimc_pix_map vimc_pix_map_fmt_info(const struct vimc_pix_map_fmt *vfmt)
+ {
+-    if (i >= ARRAY_SIZE(vimc_pix_map_list))
+-        return NULL;
+
+-    return &vimc_pix_map_list[i];
++    struct vimc_pix_map vpix = {
++        .code = vfmt->code,
++        .info = v4l2_format_info(vfmt->pixelformat),
++    };
++    return vpix;
++}
++
++const struct vimc_pix_map vimc_pix_map_by_index(unsigned int i)
++{
++    struct vimc_pix_map vpix;
++    struct vimc_pix_map_fmt *vfmt;
++
++    if (i >= ARRAY_SIZE(vimc_pix_map_fmt_list))
++        return (struct vimc_pix_map) {};
++
++    vfmt = &vimc_pix_map_fmt_list[i];
++    vpix = vimc_pix_map_fmt_info(vfmt);
++
++    return vpix;
+ }
+ EXPORT_SYMBOL_GPL(vimc_pix_map_by_index);
+
+-const struct vimc_pix_map *vimc_pix_map_by_code(u32 code)
++const struct vimc_pix_map vimc_pix_map_by_code(u32 code)
+ {
++    struct vimc_pix_map vpix;
++    struct vimc_pix_map_fmt *vfmt;
+     unsigned int i;
+
+-    for (i = 0; i < ARRAY_SIZE(vimc_pix_map_list); i++) {
+-        if (vimc_pix_map_list[i].code == code)
+-            return &vimc_pix_map_list[i];
++    for (i = 0; i < ARRAY_SIZE(vimc_pix_map_fmt_list); i++) {
++        if (vimc_pix_map_fmt_list[i].code == code) {
++            vfmt = &vimc_pix_map_fmt_list[i];
++            vpix = vimc_pix_map_fmt_info(vfmt);
++            return vpix;
++        }
+     }
+-    return NULL;
++    return (struct vimc_pix_map) {};
+ }
+ EXPORT_SYMBOL_GPL(vimc_pix_map_by_code);
+
+-const struct vimc_pix_map *vimc_pix_map_by_pixelformat(u32 pixelformat)
++const struct vimc_pix_map vimc_pix_map_by_pixelformat(u32 pixelformat)
+ {
++    struct vimc_pix_map vpix;
++    struct vimc_pix_map_fmt *vfmt;
+     unsigned int i;
+
+-    for (i = 0; i < ARRAY_SIZE(vimc_pix_map_list); i++) {
+-        if (vimc_pix_map_list[i].pixelformat == pixelformat)
+-            return &vimc_pix_map_list[i];
++    for (i = 0; i < ARRAY_SIZE(vimc_pix_map_fmt_list); i++) {
++        if (vimc_pix_map_fmt_list[i].pixelformat == pixelformat) {
++            vfmt = &vimc_pix_map_fmt_list[i];
++            vpix = vimc_pix_map_fmt_info(vfmt);
++
++            return vpix;
++        }
+     }
+-    return NULL;
++    return (struct vimc_pix_map) {};
+ }
+ EXPORT_SYMBOL_GPL(vimc_pix_map_by_pixelformat);
+
+@@ -221,7 +248,7 @@ static int vimc_get_mbus_format(struct media_pad *pad,
+                              struct video_device,
+                              entity);
+         struct vimc_ent_device *ved = video_get_drvdata(vdev);
+-        const struct vimc_pix_map *vpix;
++        struct vimc_pix_map vpix;
+         struct v4l2_pix_format vdev_fmt;
+
+         if (!ved->vdev_get_format)
+@@ -229,7 +256,7 @@ static int vimc_get_mbus_format(struct media_pad *pad,
+
+         ved->vdev_get_format(ved, &vdev_fmt);
+         vpix = vimc_pix_map_by_pixelformat(vdev_fmt.pixelformat);
+-        v4l2_fill_mbus_format(&fmt->format, &vdev_fmt, vpix->code);
++        v4l2_fill_mbus_format(&fmt->format, &vdev_fmt, vpix.code);
+     } else {
+         return -EINVAL;
+     }
+diff --git a/drivers/media/platform/vimc/vimc-common.h
+b/drivers/media/platform/vimc/vimc-common.h
+index 0a54dcd37410..3eb66c3026b8 100644
+--- a/drivers/media/platform/vimc/vimc-common.h
++++ b/drivers/media/platform/vimc/vimc-common.h
+@@ -68,20 +68,33 @@ struct vimc_platform_data {
+ };
+
+ /**
+- * struct vimc_pix_map - maps media bus code with v4l2 pixel format
++ * struct vimc_pix_map_fmt - maps media bus code with v4l2 pixel format
+  *
+  * @code:        media bus format code defined by MEDIA_BUS_FMT_* macros
+- * @bbp:        number of bytes each pixel occupies
+  * @pixelformat:    pixel format devined by V4L2_PIX_FMT_* macros
+  *
+  * Struct which matches the MEDIA_BUS_FMT_* codes with the corresponding
+  * V4L2_PIX_FMT_* fourcc pixelformat and its bytes per pixel (bpp)
+  */
+-struct vimc_pix_map {
++struct vimc_pix_map_fmt {
+     unsigned int code;
+     u32 pixelformat;
+ };
+
++/**
++ * struct vimc_pix_map - maps media bus code with v4l2 pixel info
++ *
++ * @code:        media bus format code defined by MEDIA_BUS_FMT_* macros
++ * @info:        pixel info defined by v4l2_format_info function
++ *
++ * Struct which matches the MEDIA_BUS_FMT_* codes with the corresponding
++ * V4L2_PIX_FMT_* fourcc pixelformat and its information
++ */
++struct vimc_pix_map {
++    unsigned int code;
++    struct v4l2_format_info *info;
++};
++
+ /**
+  * struct vimc_ent_device - core struct that represents a node in the topology
+  *
+@@ -148,21 +161,21 @@ int vimc_pipeline_s_stream(struct media_entity
+*ent, int enable);
+  *
+  * @i:            index of the vimc_pix_map struct in vimc_pix_map_list
+  */
+-const struct vimc_pix_map *vimc_pix_map_by_index(unsigned int i);
++const struct vimc_pix_map vimc_pix_map_by_index(unsigned int i);
+
+ /**
+  * vimc_pix_map_by_code - get vimc_pix_map struct by media bus code
+  *
+  * @code:        media bus format code defined by MEDIA_BUS_FMT_* macros
+  */
+-const struct vimc_pix_map *vimc_pix_map_by_code(u32 code);
++const struct vimc_pix_map vimc_pix_map_by_code(u32 code);
+
+ /**
+  * vimc_pix_map_by_pixelformat - get vimc_pix_map struct by v4l2 pixel format
+  *
+  * @pixelformat:    pixel format devined by V4L2_PIX_FMT_* macros
+  */
+-const struct vimc_pix_map *vimc_pix_map_by_pixelformat(u32 pixelformat);
++const struct vimc_pix_map vimc_pix_map_by_pixelformat(u32 pixelformat);
+
+ /**
+  * vimc_ent_sd_register - initialize and register a subdev node
+diff --git a/drivers/media/platform/vimc/vimc-debayer.c
+b/drivers/media/platform/vimc/vimc-debayer.c
+index 50801f76a448..8823d856b89f 100644
+--- a/drivers/media/platform/vimc/vimc-debayer.c
++++ b/drivers/media/platform/vimc/vimc-debayer.c
+@@ -313,8 +313,7 @@ static int vimc_deb_s_stream(struct v4l2_subdev
+*sd, int enable)
+     struct vimc_deb_device *vdeb = v4l2_get_subdevdata(sd);
+
+     if (enable) {
+-        const struct vimc_pix_map *vpix;
+-        const struct v4l2_format_info *vinfo;
++        struct vimc_pix_map vpix;
+         unsigned int frame_size;
+
+         if (vdeb->src_frame)
+@@ -322,13 +321,12 @@ static int vimc_deb_s_stream(struct v4l2_subdev
+*sd, int enable)
+
+         /* Calculate the frame size of the source pad */
+         vpix = vimc_pix_map_by_code(vdeb->src_code);
+-        vinfo = v4l2_format_info(vpix->pixelformat);
+         frame_size = vdeb->sink_fmt.width * vdeb->sink_fmt.height *
+-                vinfo->bpp[0];
++                vpix.info->bpp[0];
+
+         /* Save the bytes per pixel of the sink */
+         vpix = vimc_pix_map_by_code(vdeb->sink_fmt.code);
+-        vdeb->sink_bpp = vinfo->bpp[0];
++        vdeb->sink_bpp = vpix.info->bpp[0];
+
+         /* Get the corresponding pixel map from the table */
+         vdeb->sink_pix_map =
+diff --git a/drivers/media/platform/vimc/vimc-scaler.c
+b/drivers/media/platform/vimc/vimc-scaler.c
+index 599653169b1e..11b054c05374 100644
+--- a/drivers/media/platform/vimc/vimc-scaler.c
++++ b/drivers/media/platform/vimc/vimc-scaler.c
+@@ -66,11 +66,9 @@ static int vimc_sca_init_cfg(struct v4l2_subdev *sd,
+     return 0;
+ }
+
+-static int vimc_is_bayer(const struct vimc_pix_map *vpix)
++static int vimc_is_bayer(const struct vimc_pix_map vpix)
+ {
+-    const struct v4l2_format_info *vinfo =
+-                v4l2_format_info(vpix->pixelformat);
+-    const u8 *bpp = vinfo->bpp;
++    const u8 *bpp = vpix.info->bpp;
+
+     return bpp[0] != 1 || bpp[1] || bpp[2] || bpp[3];
+ }
+@@ -79,12 +77,12 @@ static int vimc_sca_enum_mbus_code(struct v4l2_subdev *sd,
+                    struct v4l2_subdev_pad_config *cfg,
+                    struct v4l2_subdev_mbus_code_enum *code)
+ {
+-    const struct vimc_pix_map *vpix = vimc_pix_map_by_index(code->index);
++    const struct vimc_pix_map vpix = vimc_pix_map_by_index(code->index);
+     /* We don't support bayer format */
+-    if (!vpix || vimc_is_bayer(vpix))
++    if (!vpix.info || vimc_is_bayer(vpix))
+         return -EINVAL;
+
+-    code->code = vpix->code;
++    code->code = vpix.code;
+
+     return 0;
+ }
+@@ -93,14 +91,14 @@ static int vimc_sca_enum_frame_size(struct v4l2_subdev *sd,
+                     struct v4l2_subdev_pad_config *cfg,
+                     struct v4l2_subdev_frame_size_enum *fse)
+ {
+-    const struct vimc_pix_map *vpix;
++    struct vimc_pix_map vpix;
+
+     if (fse->index)
+         return -EINVAL;
+
+     /* Only accept code in the pix map table in non bayer format */
+     vpix = vimc_pix_map_by_code(fse->code);
+-    if (!vpix || vimc_is_bayer(vpix))
++    if (!vpix.info || vimc_is_bayer(vpix))
+         return -EINVAL;
+
+     fse->min_width = VIMC_FRAME_MIN_WIDTH;
+@@ -139,11 +137,11 @@ static int vimc_sca_get_fmt(struct v4l2_subdev *sd,
+
+ static void vimc_sca_adjust_sink_fmt(struct v4l2_mbus_framefmt *fmt)
+ {
+-    const struct vimc_pix_map *vpix;
++    struct vimc_pix_map vpix;
+
+     /* Only accept code in the pix map table in non bayer format */
+     vpix = vimc_pix_map_by_code(fmt->code);
+-    if (!vpix || vimc_is_bayer(vpix))
++    if (!vpix.info || vimc_is_bayer(vpix))
+         fmt->code = sink_fmt_default.code;
+
+     fmt->width = clamp_t(u32, fmt->width, VIMC_FRAME_MIN_WIDTH,
+@@ -217,8 +215,7 @@ static int vimc_sca_s_stream(struct v4l2_subdev
+*sd, int enable)
+     struct vimc_sca_device *vsca = v4l2_get_subdevdata(sd);
+
+     if (enable) {
+-        const struct vimc_pix_map *vpix;
+-        const struct v4l2_format_info *vinfo;
++        struct vimc_pix_map vpix;
+         unsigned int frame_size;
+
+         if (vsca->src_frame)
+@@ -226,8 +223,7 @@ static int vimc_sca_s_stream(struct v4l2_subdev
+*sd, int enable)
+
+         /* Save the bytes per pixel of the sink */
+         vpix = vimc_pix_map_by_code(vsca->sink_fmt.code);
+-        vinfo = v4l2_format_info(vpix->pixelformat);
+-        vsca->bpp = vinfo->bpp[0];
++        vsca->bpp = vpix.info->bpp[0];
+
+         /* Calculate the width in bytes of the src frame */
+         vsca->src_line_size = vsca->sink_fmt.width *
+diff --git a/drivers/media/platform/vimc/vimc-sensor.c
+b/drivers/media/platform/vimc/vimc-sensor.c
+index 81acd12b0896..45650beaa0c2 100644
+--- a/drivers/media/platform/vimc/vimc-sensor.c
++++ b/drivers/media/platform/vimc/vimc-sensor.c
+@@ -59,12 +59,12 @@ static int vimc_sen_enum_mbus_code(struct v4l2_subdev *sd,
+                    struct v4l2_subdev_pad_config *cfg,
+                    struct v4l2_subdev_mbus_code_enum *code)
+ {
+-    const struct vimc_pix_map *vpix = vimc_pix_map_by_index(code->index);
++    struct vimc_pix_map vpix = vimc_pix_map_by_index(code->index);
+
+-    if (!vpix)
++    if (!vpix.info)
+         return -EINVAL;
+
+-    code->code = vpix->code;
++    code->code = vpix.code;
+
+     return 0;
+ }
+@@ -73,14 +73,14 @@ static int vimc_sen_enum_frame_size(struct v4l2_subdev *sd,
+                     struct v4l2_subdev_pad_config *cfg,
+                     struct v4l2_subdev_frame_size_enum *fse)
+ {
+-    const struct vimc_pix_map *vpix;
++    struct vimc_pix_map vpix;
+
+     if (fse->index)
+         return -EINVAL;
+
+     /* Only accept code in the pix map table */
+     vpix = vimc_pix_map_by_code(fse->code);
+-    if (!vpix)
++    if (!vpix.info)
+         return -EINVAL;
+
+     fse->min_width = VIMC_FRAME_MIN_WIDTH;
+@@ -107,16 +107,15 @@ static int vimc_sen_get_fmt(struct v4l2_subdev *sd,
+
+ static void vimc_sen_tpg_s_format(struct vimc_sen_device *vsen)
+ {
+-    const struct vimc_pix_map *vpix =
++    const struct vimc_pix_map vpix =
+                 vimc_pix_map_by_code(vsen->mbus_format.code);
+-    const struct v4l2_format_info *vinfo =
+-                v4l2_format_info(vpix->pixelformat);
+
+     tpg_reset_source(&vsen->tpg, vsen->mbus_format.width,
+              vsen->mbus_format.height, vsen->mbus_format.field);
+-    tpg_s_bytesperline(&vsen->tpg, 0, vsen->mbus_format.width * vinfo->bpp[0]);
++    tpg_s_bytesperline(&vsen->tpg, 0,
++            vsen->mbus_format.width * vpix.info->bpp[0]);
+     tpg_s_buf_height(&vsen->tpg, vsen->mbus_format.height);
+-    tpg_s_fourcc(&vsen->tpg, vpix->pixelformat);
++    tpg_s_fourcc(&vsen->tpg, vpix.info->format);
+     /* TODO: add support for V4L2_FIELD_ALTERNATE */
+     tpg_s_field(&vsen->tpg, vsen->mbus_format.field, false);
+     tpg_s_colorspace(&vsen->tpg, vsen->mbus_format.colorspace);
+@@ -127,11 +126,11 @@ static void vimc_sen_tpg_s_format(struct
+vimc_sen_device *vsen)
+
+ static void vimc_sen_adjust_fmt(struct v4l2_mbus_framefmt *fmt)
+ {
+-    const struct vimc_pix_map *vpix;
++    struct vimc_pix_map vpix;
+
+     /* Only accept code in the pix map table */
+     vpix = vimc_pix_map_by_code(fmt->code);
+-    if (!vpix)
++    if (!vpix.info)
+         fmt->code = fmt_default.code;
+
+     fmt->width = clamp_t(u32, fmt->width, VIMC_FRAME_MIN_WIDTH,
+@@ -207,8 +206,7 @@ static int vimc_sen_s_stream(struct v4l2_subdev
+*sd, int enable)
+                 container_of(sd, struct vimc_sen_device, sd);
+
+     if (enable) {
+-        const struct vimc_pix_map *vpix;
+-        const struct v4l2_format_info *vinfo;
++        struct vimc_pix_map vpix;
+         unsigned int frame_size;
+
+         if (vsen->kthread_sen)
+@@ -217,8 +215,7 @@ static int vimc_sen_s_stream(struct v4l2_subdev
+*sd, int enable)
+
+         /* Calculate the frame size */
+         vpix = vimc_pix_map_by_code(vsen->mbus_format.code);
+-        vinfo = v4l2_format_info(vpix->pixelformat);
+-        frame_size = vsen->mbus_format.width * vinfo->bpp[0] *
++        frame_size = vsen->mbus_format.width * vpix.info->bpp[0] *
+                  vsen->mbus_format.height;
+
+         /*
 -- 
-Mathieu Desnoyers
-EfficiOS Inc.
-http://www.efficios.com
+2.23.0
