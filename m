@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2796C10F14
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D890DECE58D
 	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:18:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7096120865
+	by mail.kernel.org (Postfix) with ESMTP id A6AA120865
 	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:18:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=default; t=1570123091;
-	bh=Qrmdlh54a97G3v74uvBNhghLzDukho25jehHop0KfnI=;
+	bh=yket5TpcSZGOX03eYAQZxGgqyOJjlPy5rHxOb8Ugevo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=KnwtqElCOrzidIUVqbXgkQ5z+NJWCLRldrJ//H9mf/kuy5qEkD3CFGanG5c23ohkC
-	 +kayem26WOydOFFyEemyWrO7n3fIfV7RiPIstVatG8zlzypXEaLJNlmFcCnGQMJnzs
-	 PwnQTSig+Mw8KZTiUhMrpGpWpEqOx5NnFEPnY0ag=
+	b=Kdpr0ZIZ1Z959U7nbDlbMI5289KhXv8OzskpZzHctFB2UHTfoIgg4lCQuiIP75UTr
+	 T9oQs3SMHKy62friHiVFXo1/NjxwX1LHY3lJVSYIvOwP6nIhPEoct+ZsrSS+/k58C0
+	 EKMGSemUOphNrQ5+r5zh6lmtCqYRqSNUEhYwDoTM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390114AbfJCQVR (ORCPT
+        id S2390106AbfJCQVO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 12:21:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49402 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 12:21:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49344 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388845AbfJCQVL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:21:11 -0400
+        id S2390076AbfJCQVJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:21:09 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BB5932054F;
-        Thu,  3 Oct 2019 16:21:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0E5DD20659;
+        Thu,  3 Oct 2019 16:21:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570119671;
-        bh=Qrmdlh54a97G3v74uvBNhghLzDukho25jehHop0KfnI=;
+        s=default; t=1570119668;
+        bh=yket5TpcSZGOX03eYAQZxGgqyOJjlPy5rHxOb8Ugevo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=uztMQIAczotyWoBUw+AvWJUbXiBPj0cseGQaAGvdlkvytXoTNB/TEQzGmL7cnZxje
-         gBPJOd01TCW5Mz/8lUgteCx1hwI0vyt8R2F+oDNLKEgKhvrur4VNW7eg9WCudmGo1s
-         v/1FwBdaG97SbhQILqJ7GDR7jbjWaJTViQyRZKJg=
+        b=GC2kCqK6tmbbY9mJzrk79bwzoOOYZitH91ji1n4pF4o95QSooyUb7M1vQP6WiRQ0N
+         CLsX2/wSMgpntUpOv/b4g66SVnsw10ChJ2U6Ac0LhcDlRLRLzfGPZrkv+4iI/vpwEl
+         xgXqZZyum630cA56eEdfz10xY9n+UjxscqpMlE1U=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Takashi Sakamoto <o-takashi@sakamocchi.jp>,
-        Takashi Iwai <tiwai@suse.de>
-Subject: [PATCH 4.19 149/211] ALSA: firewire-tascam: handle error code when getting current source of clock
-Date:   Thu,  3 Oct 2019 17:53:35 +0200
-Message-Id: <20191003154521.989888006@linuxfoundation.org>
+        stable@vger.kernel.org, Luca Coelho <luciano.coelho@intel.com>,
+        Kalle Valo <kvalo@codeaurora.org>
+Subject: [PATCH 4.19 148/211] iwlwifi: fw: dont send GEO_TX_POWER_LIMIT command to FW version 36
+Date:   Thu,  3 Oct 2019 17:53:34 +0200
+Message-Id: <20191003154521.591995103@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191003154447.010950442@linuxfoundation.org>
 References: <20191003154447.010950442@linuxfoundation.org>
@@ -59,35 +59,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Takashi Sakamoto <o-takashi@sakamocchi.jp>
+From: Luca Coelho <luciano.coelho@intel.com>
 
-commit 2617120f4de6d0423384e0e86b14c78b9de84d5a upstream.
+commit fddbfeece9c7882cc47754c7da460fe427e3e85b upstream.
 
-The return value of snd_tscm_stream_get_clock() is ignored. This commit
-checks the value and handle error.
+The intention was to have the GEO_TX_POWER_LIMIT command in FW version
+36 as well, but not all 8000 family got this feature enabled.  The
+8000 family is the only one using version 36, so skip this version
+entirely.  If we try to send this command to the firmwares that do not
+support it, we get a BAD_COMMAND response from the firmware.
 
-Fixes: e453df44f0d6 ("ALSA: firewire-tascam: add PCM functionality")
-Cc: <stable@vger.kernel.org> # v4.4+
-Signed-off-by: Takashi Sakamoto <o-takashi@sakamocchi.jp>
-Link: https://lore.kernel.org/r/20190910135152.29800-2-o-takashi@sakamocchi.jp
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+This fixes https://bugzilla.kernel.org/show_bug.cgi?id=204151.
+
+Cc: stable@vger.kernel.org # 4.19+
+Signed-off-by: Luca Coelho <luciano.coelho@intel.com>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- sound/firewire/tascam/tascam-pcm.c |    3 +++
- 1 file changed, 3 insertions(+)
+ drivers/net/wireless/intel/iwlwifi/mvm/fw.c |    8 +++++---
+ 1 file changed, 5 insertions(+), 3 deletions(-)
 
---- a/sound/firewire/tascam/tascam-pcm.c
-+++ b/sound/firewire/tascam/tascam-pcm.c
-@@ -57,6 +57,9 @@ static int pcm_open(struct snd_pcm_subst
- 		goto err_locked;
- 
- 	err = snd_tscm_stream_get_clock(tscm, &clock);
-+	if (err < 0)
-+		goto err_locked;
-+
- 	if (clock != SND_TSCM_CLOCK_INTERNAL ||
- 	    amdtp_stream_pcm_running(&tscm->rx_stream) ||
- 	    amdtp_stream_pcm_running(&tscm->tx_stream)) {
+--- a/drivers/net/wireless/intel/iwlwifi/mvm/fw.c
++++ b/drivers/net/wireless/intel/iwlwifi/mvm/fw.c
+@@ -843,11 +843,13 @@ static bool iwl_mvm_sar_geo_support(stru
+ 	 * firmware versions.  Unfortunately, we don't have a TLV API
+ 	 * flag to rely on, so rely on the major version which is in
+ 	 * the first byte of ucode_ver.  This was implemented
+-	 * initially on version 38 and then backported to 36, 29 and
+-	 * 17.
++	 * initially on version 38 and then backported to29 and 17.
++	 * The intention was to have it in 36 as well, but not all
++	 * 8000 family got this feature enabled.  The 8000 family is
++	 * the only one using version 36, so skip this version
++	 * entirely.
+ 	 */
+ 	return IWL_UCODE_SERIAL(mvm->fw->ucode_ver) >= 38 ||
+-	       IWL_UCODE_SERIAL(mvm->fw->ucode_ver) == 36 ||
+ 	       IWL_UCODE_SERIAL(mvm->fw->ucode_ver) == 29 ||
+ 	       IWL_UCODE_SERIAL(mvm->fw->ucode_ver) == 17;
+ }
 
 
