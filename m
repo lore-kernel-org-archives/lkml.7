@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF258C32792
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:59:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54CA7C10F14
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:59:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 88E1220673
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:59:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1FBB620673
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:59:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570121944;
-	bh=HiwsV5TpdnN+VgtHgx7ikNQaIghLwyuaB9/PgqbRLeY=;
+	s=default; t=1570121954;
+	bh=9SO459Tx95hQLcr6M3fZdhK5p3dMn/Dz2ldcdyi20Qc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=HYAbdn0DPRQHnf44mXezIyxQ453D80W3bISiw6CQSG35kzKRml1BkSa7DAdKfy6b6
-	 u9S6P8lRyhS8qdrYz+MwToyImVEypzckoQVmTt+JZHvqiUDKVDUhEpbbWnwjvPQ3qY
-	 raViqnjQ7ugV+icXPtWh3ZUT9EuLouG6UJVtKYGA=
+	b=vAMdn8+/DUhhGNkF1lyqAIVlbNkvpz0Bk7L4ueEF9F4G00mynpnXQ9XVY9rH8xhwa
+	 yb/UowvL1VyUrvFEMLCIYvjH/QSOAMUx5f7eB1lyrb8K73wVZC21QA/kSlyoDCuocw
+	 jKTjvpPx03mh6P59nd1Mf8v7NJycwfs/IeMhVuLM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406155AbfJCQ7D (ORCPT
+        id S2391630AbfJCQrk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 12:59:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33204 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 12:47:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:32940 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2405539AbfJCQrp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:47:45 -0400
+        id S2405202AbfJCQre (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:47:34 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4FB9D20865;
-        Thu,  3 Oct 2019 16:47:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 856E12086A;
+        Thu,  3 Oct 2019 16:47:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570121264;
-        bh=HiwsV5TpdnN+VgtHgx7ikNQaIghLwyuaB9/PgqbRLeY=;
+        s=default; t=1570121254;
+        bh=9SO459Tx95hQLcr6M3fZdhK5p3dMn/Dz2ldcdyi20Qc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xcdGSCHPPiPbVjNlKOczMHiCX9ZhQCuP3EnSq0khEV7AY1nZbjwJOSqvnsDkJHUBX
-         dG09DkhRncupc9jIqrg5cTVEKoVP9mJJp2UUmOhjZBdZOtzWgm4RPln9RnYk89wQ+6
-         MNl73XkcfBvirVYP6f5X7ojqON74FiNB20ESq/q4=
+        b=md9cV8CkeabwpBgC7nspO4ST69xmdZgBAydKC9Ns1hrZVuiFnca8A2oxhfdyKEECL
+         W9KHZafr2n6DGUv/wJudWRvDA5SkYWWIupJCRMZN2QZkHfofo+9BHF56FWBxekWshP
+         mNK7WHWOEDMkgWAsCEEDGNCQjDiaujLuu9MaEv+s=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Matthias Kaehlcke <mka@chromium.org>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Douglas Anderson <dianders@chromium.org>,
+        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
+        Jinyu Qi <jinyuqi@huawei.com>, Joerg Roedel <jroedel@suse.de>,
+        Robin Murphy <robin.murphy@arm.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.3 214/344] mmc: core: Add helper function to indicate if SDIO IRQs is enabled
-Date:   Thu,  3 Oct 2019 17:52:59 +0200
-Message-Id: <20191003154601.403868995@linuxfoundation.org>
+Subject: [PATCH 5.3 184/344] iommu/iova: Avoid false sharing on fq_timer_on
+Date:   Thu,  3 Oct 2019 17:52:29 +0200
+Message-Id: <20191003154558.358824001@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191003154540.062170222@linuxfoundation.org>
 References: <20191003154540.062170222@linuxfoundation.org>
@@ -61,48 +61,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ulf Hansson <ulf.hansson@linaro.org>
+From: Eric Dumazet <edumazet@google.com>
 
-[ Upstream commit bd880b00697befb73eff7220ee20bdae4fdd487b ]
+[ Upstream commit 0d87308cca2c124f9bce02383f1d9632c9be89c4 ]
 
-To avoid each host driver supporting SDIO IRQs, from keeping track
-internally about if SDIO IRQs has been claimed, let's introduce a common
-helper function, sdio_irq_claimed().
+In commit 14bd9a607f90 ("iommu/iova: Separate atomic variables
+to improve performance") Jinyu Qi identified that the atomic_cmpxchg()
+in queue_iova() was causing a performance loss and moved critical fields
+so that the false sharing would not impact them.
 
-The function returns true if SDIO IRQs are claimed, via using the
-information about the number of claimed irqs. This is safe, even without
-any locks, as long as the helper function is called only from
-runtime/system suspend callbacks of the host driver.
+However, avoiding the false sharing in the first place seems easy.
+We should attempt the atomic_cmpxchg() no more than 100 times
+per second. Adding an atomic_read() will keep the cache
+line mostly shared.
 
-Tested-by: Matthias Kaehlcke <mka@chromium.org>
-Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
-Reviewed-by: Douglas Anderson <dianders@chromium.org>
-Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
+This false sharing came with commit 9a005a800ae8
+("iommu/iova: Add flush timer").
+
+Signed-off-by: Eric Dumazet <edumazet@google.com>
+Fixes: 9a005a800ae8 ('iommu/iova: Add flush timer')
+Cc: Jinyu Qi <jinyuqi@huawei.com>
+Cc: Joerg Roedel <jroedel@suse.de>
+Acked-by: Robin Murphy <robin.murphy@arm.com>
+Signed-off-by: Joerg Roedel <jroedel@suse.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/linux/mmc/host.h | 9 +++++++++
- 1 file changed, 9 insertions(+)
+ drivers/iommu/iova.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/include/linux/mmc/host.h b/include/linux/mmc/host.h
-index 4a351cb7f20fc..cf87c673cbb81 100644
---- a/include/linux/mmc/host.h
-+++ b/include/linux/mmc/host.h
-@@ -493,6 +493,15 @@ void mmc_command_done(struct mmc_host *host, struct mmc_request *mrq);
+diff --git a/drivers/iommu/iova.c b/drivers/iommu/iova.c
+index 3e1a8a6755723..41c605b0058f9 100644
+--- a/drivers/iommu/iova.c
++++ b/drivers/iommu/iova.c
+@@ -577,7 +577,9 @@ void queue_iova(struct iova_domain *iovad,
  
- void mmc_cqe_request_done(struct mmc_host *host, struct mmc_request *mrq);
+ 	spin_unlock_irqrestore(&fq->lock, flags);
  
-+/*
-+ * May be called from host driver's system/runtime suspend/resume callbacks,
-+ * to know if SDIO IRQs has been claimed.
-+ */
-+static inline bool sdio_irq_claimed(struct mmc_host *host)
-+{
-+	return host->sdio_irqs > 0;
-+}
-+
- static inline void mmc_signal_sdio_irq(struct mmc_host *host)
- {
- 	host->ops->enable_sdio_irq(host, 0);
+-	if (atomic_cmpxchg(&iovad->fq_timer_on, 0, 1) == 0)
++	/* Avoid false sharing as much as possible. */
++	if (!atomic_read(&iovad->fq_timer_on) &&
++	    !atomic_cmpxchg(&iovad->fq_timer_on, 0, 1))
+ 		mod_timer(&iovad->fq_timer,
+ 			  jiffies + msecs_to_jiffies(IOVA_FQ_TIMEOUT));
+ }
 -- 
 2.20.1
 
