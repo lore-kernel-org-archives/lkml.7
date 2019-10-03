@@ -2,143 +2,195 @@ Return-Path: <SRS0=6dNS=X4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_SBL,URIBL_SBL_A,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CDA02C10F14
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:28:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B7CBC32792
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:28:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A2C4120865
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:28:01 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="YJoEtvR8"
+	by mail.kernel.org (Postfix) with ESMTP id E650120865
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:28:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1570123685;
+	bh=jCpjBMoXOqDB2adKnl5Oq4QiFrn57XrTTlkr3kExZes=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=ZiCw1ZIb/1RuL5NCTVLQ0Mw3P/R8aJEnNU1D1JTK7BySYSJGE9ez4WcdM8sFyZ5vR
+	 vFFIeakHsAe8kJkuDGUVn2JgLp6V5z95lV1oq4jqMxuGK/kYtLCwAB4wQ165DtdQiD
+	 pOIY/MwbN6zFfPjtCn35buc9a1x5Dc2EDf1eNAio=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729722AbfJCR2A (ORCPT
+        id S2388561AbfJCQOR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 13:28:00 -0400
-Received: from condef-03.nifty.com ([202.248.20.68]:31723 "EHLO
-        condef-03.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729199AbfJCR1z (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 13:27:55 -0400
-Received: from conssluserg-02.nifty.com ([10.126.8.81])by condef-03.nifty.com with ESMTP id x93HOMtO024256;
-        Fri, 4 Oct 2019 02:24:22 +0900
-Received: from mail-ua1-f42.google.com (mail-ua1-f42.google.com [209.85.222.42]) (authenticated)
-        by conssluserg-02.nifty.com with ESMTP id x93HODVW006126;
-        Fri, 4 Oct 2019 02:24:13 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-02.nifty.com x93HODVW006126
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1570123454;
-        bh=LJ8ChLvuFkxOnRaAfzcwPHpVO6iA3brJ5hpU1BX1eNM=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=YJoEtvR8gerE47Ilqm+9qHWrT5ejo7mmyCPWUxRwjrQvhDoKpmFyNhYPZB4P/3lQn
-         m488NTZCmfDrSSxvZNiBb4vzFF6bfUzr8wWSvzqs6bipD4/fBJJN6aRgVAL+k7ASSn
-         +GsIyXeenTGPRExtiYn25nAM5HOkCRpBUW/qksdN3Mj2p0pGQ5G2gU+aOnUp/Cj4Ux
-         xxFHclgj2gvSgXwDfv4le3HKJm6T7xR6cGQt4SD4Jz7wUIugAB3BPkYNcNyxJ3jTg9
-         lmGKs4KldhJ3f1ziivjjmo+VDN5TZEfwPFd2BYBKf/OfFUss37s7QKJA6ZjbndzKXI
-         fZIWQl7F8eHkA==
-X-Nifty-SrcIP: [209.85.222.42]
-Received: by mail-ua1-f42.google.com with SMTP id u31so1184450uah.0;
-        Thu, 03 Oct 2019 10:24:13 -0700 (PDT)
-X-Gm-Message-State: APjAAAX39GdNDrAv1m1XPuAjZBhuYpCZNBh0URvJFTXpMAWwUGBeQboo
-        KNtb5DGQHQ8q4Gkv0Cpk9AYJ1vD1aM29Qr5UmXU=
-X-Google-Smtp-Source: APXvYqxcbafJe04SN1qeT5pWEmiFMIsMMij9Z6/1CaqUF5SYJfUPY3akBZRbK+HKr3EEke1jiD5zOefK+INWk5Gr9hA=
-X-Received: by 2002:a9f:21f6:: with SMTP id 109mr3156310uac.109.1570123452512;
- Thu, 03 Oct 2019 10:24:12 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190930112636.vx2qxo4hdysvxibl@willie-the-truck>
- <CAK7LNASQZ82KSOrQW7+Wq1vFDCg2__maBEAPMLqUDqZMLuj1rA@mail.gmail.com>
- <20190930121803.n34i63scet2ec7ll@willie-the-truck> <CAKwvOdnqn=0LndrX+mUrtSAQqoT1JWRMOJCA5t3e=S=T7zkcCQ@mail.gmail.com>
- <20191001092823.z4zhlbwvtwnlotwc@willie-the-truck> <CAKwvOdk0h2A6=fb7Yepf+oKbZfq_tqwpGq8EBmHVu1j4mo-a-A@mail.gmail.com>
- <20191001170142.x66orounxuln7zs3@willie-the-truck> <CAKwvOdnFJqipp+G5xLDRBcOrQRcvMQmn+n8fufWyzyt2QL_QkA@mail.gmail.com>
- <20191001175512.GK25745@shell.armlinux.org.uk> <CAKwvOdmw_xmTGZLeK8-+Q4nUpjs-UypJjHWks-3jHA670Dxa1A@mail.gmail.com>
- <20191001181438.GL25745@shell.armlinux.org.uk> <CAKwvOdmBnBVU7F-a6DqPU6QM-BRc8LNn6YRmhTsuGLauCWKUOg@mail.gmail.com>
- <CAMuHMdWPhE1nNkmL1nj3vpQhB7fP3uDs2i_ZVi0Gf9qij4W2CA@mail.gmail.com>
- <CAHk-=wgFODvdFBHzgVf3JjoBz0z6LZhOm8xvMntsvOr66ASmZQ@mail.gmail.com>
- <CAK7LNARM2jVSdgCDJWDbvVxYLiUR_CFgTPg0nxzbCszSKcx+pg@mail.gmail.com> <CAHk-=wiMm3rN15WmiAqMHjC-pakL_b8qgWsPPri0+YLFORT-ZA@mail.gmail.com>
-In-Reply-To: <CAHk-=wiMm3rN15WmiAqMHjC-pakL_b8qgWsPPri0+YLFORT-ZA@mail.gmail.com>
-From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-Date:   Fri, 4 Oct 2019 02:23:36 +0900
-X-Gmail-Original-Message-ID: <CAK7LNATSoOD0g=Aarui6Y26E_YB035NsaPpHxqtBNyw0K0UXVw@mail.gmail.com>
-Message-ID: <CAK7LNATSoOD0g=Aarui6Y26E_YB035NsaPpHxqtBNyw0K0UXVw@mail.gmail.com>
-Subject: Re: [PATCH] compiler: enable CONFIG_OPTIMIZE_INLINING forcibly
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Geert Uytterhoeven <geert@linux-m68k.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Russell King - ARM Linux admin <linux@armlinux.org.uk>,
-        Will Deacon <will@kernel.org>,
-        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        Thu, 3 Oct 2019 12:14:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37364 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2388541AbfJCQON (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:14:13 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id B351520865;
+        Thu,  3 Oct 2019 16:14:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1570119252;
+        bh=jCpjBMoXOqDB2adKnl5Oq4QiFrn57XrTTlkr3kExZes=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=iUgeEbP4zVg0R0FWs8Nh2FoUdZveyoXmEt54HgxVCiAEqQYOSmnrso+c2s1qsIzAR
+         5SOgpEhK6Nv2HyHMeU6pmkYXqeWK4NBgbowYlrCqPpgatrenMsYO3osGFDpdu0hlZ7
+         vs9kUL7eT5nYSeeQsq14c2jGyEzwUj/VlshglPaM=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Yafang Shao <laoar.shao@gmail.com>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        David Rientjes <rientjes@google.com>,
+        Yafang Shao <shaoyafang@didiglobal.com>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        Michal Hocko <mhocko@suse.com>,
         Andrew Morton <akpm@linux-foundation.org>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Stefan Wahren <wahrenst@gmx.net>,
-        Kees Cook <keescook@google.com>, Arnd Bergmann <arnd@arndb.de>,
-        clang-built-linux <clang-built-linux@googlegroups.com>
-Content-Type: text/plain; charset="UTF-8"
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 183/185] mm/compaction.c: clear total_{migrate,free}_scanned before scanning a new zone
+Date:   Thu,  3 Oct 2019 17:54:21 +0200
+Message-Id: <20191003154522.282309670@linuxfoundation.org>
+X-Mailer: git-send-email 2.23.0
+In-Reply-To: <20191003154437.541662648@linuxfoundation.org>
+References: <20191003154437.541662648@linuxfoundation.org>
+User-Agent: quilt/0.66
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Oct 4, 2019 at 2:02 AM Linus Torvalds
-<torvalds@linux-foundation.org> wrote:
->
-> On Wed, Oct 2, 2019 at 7:11 PM Masahiro Yamada
-> <yamada.masahiro@socionext.com> wrote:
-> >
-> > Macrofying the 'inline' is a horrid mistake that makes incorrect code work.
-> > It would eternally prevent people from writing portable, correct code.
-> > Please do not encourage to hide problems.
->
-> Honestly, if the alternative to hiding problems is "use a macro", then
-> I'd rather hide the problems and just make "inline" means "inline".
->
-> If "inline" means "it's just a hint, use macros", then inline is useless.
+From: Yafang Shao <laoar.shao@gmail.com>
 
-For clarification,
-I am not saying "use macros" at all.
+[ Upstream commit a94b525241c0fff3598809131d7cfcfe1d572d8c ]
 
+total_{migrate,free}_scanned will be added to COMPACTMIGRATE_SCANNED and
+COMPACTFREE_SCANNED in compact_zone().  We should clear them before
+scanning a new zone.  In the proc triggered compaction, we forgot clearing
+them.
 
-I just want to annotate __always_inline for the case
-"2. code that if not inlined is somehow not correct."
+[laoar.shao@gmail.com: introduce a helper compact_zone_counters_init()]
+  Link: http://lkml.kernel.org/r/1563869295-25748-1-git-send-email-laoar.shao@gmail.com
+[akpm@linux-foundation.org: expand compact_zone_counters_init() into its single callsite, per mhocko]
+[vbabka@suse.cz: squash compact_zone() list_head init as well]
+  Link: http://lkml.kernel.org/r/1fb6f7da-f776-9e42-22f8-bbb79b030b98@suse.cz
+[akpm@linux-foundation.org: kcompactd_do_work(): avoid unnecessary initialization of cc.zone]
+Link: http://lkml.kernel.org/r/1563789275-9639-1-git-send-email-laoar.shao@gmail.com
+Fixes: 7f354a548d1c ("mm, compaction: add vmstats for kcompactd work")
+Signed-off-by: Yafang Shao <laoar.shao@gmail.com>
+Signed-off-by: Vlastimil Babka <vbabka@suse.cz>
+Reviewed-by: Vlastimil Babka <vbabka@suse.cz>
+Cc: David Rientjes <rientjes@google.com>
+Cc: Yafang Shao <shaoyafang@didiglobal.com>
+Cc: Mel Gorman <mgorman@techsingularity.net>
+Cc: Michal Hocko <mhocko@suse.com>
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ mm/compaction.c | 35 +++++++++++++----------------------
+ 1 file changed, 13 insertions(+), 22 deletions(-)
 
-
-
-> If "inline" means "using this means that there are known compiler
-> bugs, but we don't know where they trigger", then inline is _worse_
-> than useless.
->
-> I do not see the big advantage of letting the compiler say "yeah, I'm
-> not going to do that, Dave".
->
-> And I see a *huge* disadvantage when people are ignoring compiler
-> bugs, and are saying "use a macro". Seriously.
-
-
-Again, not saying "use a macro".
-
-
-
->
-> Right now we see the obvious compiler bugs that cause build breakages.
-> How many non-obvious compiler bugs do we have? And how sure are you
-> that our code is "correct" after fixing a couple of obvious cases?
->
-> As to "portable", nobody cares. We're a kernel. We aren't portable,
-> and never were.
->
-> If this is purely about the fact that x86 is different from other
-> architectures, then let's remove the "compiler can do stupid things"
-> option on x86 too. It was never clear that it was a huge advantage.
->
->                Linus
-
-
-
+diff --git a/mm/compaction.c b/mm/compaction.c
+index 85395dc6eb137..eb8e7f5d3a08e 100644
+--- a/mm/compaction.c
++++ b/mm/compaction.c
+@@ -1517,6 +1517,17 @@ static enum compact_result compact_zone(struct zone *zone, struct compact_contro
+ 	unsigned long end_pfn = zone_end_pfn(zone);
+ 	const bool sync = cc->mode != MIGRATE_ASYNC;
+ 
++	/*
++	 * These counters track activities during zone compaction.  Initialize
++	 * them before compacting a new zone.
++	 */
++	cc->total_migrate_scanned = 0;
++	cc->total_free_scanned = 0;
++	cc->nr_migratepages = 0;
++	cc->nr_freepages = 0;
++	INIT_LIST_HEAD(&cc->freepages);
++	INIT_LIST_HEAD(&cc->migratepages);
++
+ 	cc->migratetype = gfpflags_to_migratetype(cc->gfp_mask);
+ 	ret = compaction_suitable(zone, cc->order, cc->alloc_flags,
+ 							cc->classzone_idx);
+@@ -1680,10 +1691,6 @@ static enum compact_result compact_zone_order(struct zone *zone, int order,
+ {
+ 	enum compact_result ret;
+ 	struct compact_control cc = {
+-		.nr_freepages = 0,
+-		.nr_migratepages = 0,
+-		.total_migrate_scanned = 0,
+-		.total_free_scanned = 0,
+ 		.order = order,
+ 		.gfp_mask = gfp_mask,
+ 		.zone = zone,
+@@ -1696,8 +1703,6 @@ static enum compact_result compact_zone_order(struct zone *zone, int order,
+ 		.ignore_skip_hint = (prio == MIN_COMPACT_PRIORITY),
+ 		.ignore_block_suitable = (prio == MIN_COMPACT_PRIORITY)
+ 	};
+-	INIT_LIST_HEAD(&cc.freepages);
+-	INIT_LIST_HEAD(&cc.migratepages);
+ 
+ 	ret = compact_zone(zone, &cc);
+ 
+@@ -1796,8 +1801,6 @@ static void compact_node(int nid)
+ 	struct zone *zone;
+ 	struct compact_control cc = {
+ 		.order = -1,
+-		.total_migrate_scanned = 0,
+-		.total_free_scanned = 0,
+ 		.mode = MIGRATE_SYNC,
+ 		.ignore_skip_hint = true,
+ 		.whole_zone = true,
+@@ -1811,11 +1814,7 @@ static void compact_node(int nid)
+ 		if (!populated_zone(zone))
+ 			continue;
+ 
+-		cc.nr_freepages = 0;
+-		cc.nr_migratepages = 0;
+ 		cc.zone = zone;
+-		INIT_LIST_HEAD(&cc.freepages);
+-		INIT_LIST_HEAD(&cc.migratepages);
+ 
+ 		compact_zone(zone, &cc);
+ 
+@@ -1924,8 +1923,6 @@ static void kcompactd_do_work(pg_data_t *pgdat)
+ 	struct zone *zone;
+ 	struct compact_control cc = {
+ 		.order = pgdat->kcompactd_max_order,
+-		.total_migrate_scanned = 0,
+-		.total_free_scanned = 0,
+ 		.classzone_idx = pgdat->kcompactd_classzone_idx,
+ 		.mode = MIGRATE_SYNC_LIGHT,
+ 		.ignore_skip_hint = true,
+@@ -1950,16 +1947,10 @@ static void kcompactd_do_work(pg_data_t *pgdat)
+ 							COMPACT_CONTINUE)
+ 			continue;
+ 
+-		cc.nr_freepages = 0;
+-		cc.nr_migratepages = 0;
+-		cc.total_migrate_scanned = 0;
+-		cc.total_free_scanned = 0;
+-		cc.zone = zone;
+-		INIT_LIST_HEAD(&cc.freepages);
+-		INIT_LIST_HEAD(&cc.migratepages);
+-
+ 		if (kthread_should_stop())
+ 			return;
++
++		cc.zone = zone;
+ 		status = compact_zone(zone, &cc);
+ 
+ 		if (status == COMPACT_SUCCESS) {
 -- 
-Best Regards
-Masahiro Yamada
+2.20.1
+
+
+
