@@ -2,53 +2,52 @@ Return-Path: <SRS0=6dNS=X4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13659C32792
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:14:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E10F2C10F14
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:14:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D996621783
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:14:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B56E120865
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:14:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570119254;
-	bh=3WwguDc4N+jwyxYyr5VZivaM+c7eenyCQ0XBChLpn1w=;
+	s=default; t=1570119259;
+	bh=yj49ZFTGd94w6BIGaonON0vn7CB2KRR7SGrVAmFkRp0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=sRC+XbClpJ+gak+YM545ZHxH/yYNPQi+pcTMKL6UCZjrtNMOFOWMscmqpIlt3iCib
-	 lQDDR8m41UYkAfhMclB645I6DLmUmyfmpWXxbgnsGE9d0cM7pSLhDhUKB6UV5p+hL7
-	 DxxDt5rVOhOtqi+EIDY6UDqm0A37weQtUS0oTNmQ=
+	b=hLWMrjGxoBZtdiUNhO31uH4EgCEk19KiWaDcLA++lnSsAJy76VzzLayKMMqxBFRgE
+	 s5Cz7CQbLjvlPZrp26MdixC/iTlYtIN3xrfnaPJmSdL+1hSrYP9kwOpa5FJ7IqJV02
+	 2Y+he3NKOCsdxtNdsSgkiLeRf/CXxcBWFgUKUJHM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388548AbfJCQOO (ORCPT
+        id S2387691AbfJCQOS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 12:14:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37304 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 12:14:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37452 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729087AbfJCQOL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:14:11 -0400
+        id S1729087AbfJCQOP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:14:15 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 386B02054F;
-        Thu,  3 Oct 2019 16:14:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 832032054F;
+        Thu,  3 Oct 2019 16:14:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570119249;
-        bh=3WwguDc4N+jwyxYyr5VZivaM+c7eenyCQ0XBChLpn1w=;
+        s=default; t=1570119255;
+        bh=yj49ZFTGd94w6BIGaonON0vn7CB2KRR7SGrVAmFkRp0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gQClggXd2zhLRfgImsun7oIM0XWouO4gK7zdteDk/7a77DFEyxliokq+Q50LhoB5P
-         aPhfV2OK8g2kGhMMq3JSQJyQiNUskDFYUAB549h+Kv/OuBNCvmHiy6j4PjJImGGZeD
-         g2I0gg8St4LKsWAftCcV4OvcL08T3taxsXAU9Yro=
+        b=iRbGsAJKKPzTuE6TLy7BthvDIVFl7RUwsq5c5t4kp7/+vJR/fWRb6Uqu/LHXhIwpO
+         rj69LRBukA8fHuRFvSCWmG04p/Czc1m0AceNbybIEcIwXBIM/XMW6fMmKJxbZOcglv
+         vrP06HpiaMzZ6H5nnmaWoBhQqocXOd37zBl5Rjls=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Guoqing Jiang <guoqing.jiang@cloud.ionos.com>,
-        NeilBrown <neilb@suse.de>, Song Liu <songliubraving@fb.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 182/185] md/raid0: avoid RAID0 data corruption due to layout confusion.
-Date:   Thu,  3 Oct 2019 17:54:20 +0200
-Message-Id: <20191003154522.204761992@linuxfoundation.org>
+        stable@vger.kernel.org, Mark Salyzyn <salyzyn@android.com>,
+        linux-security-module@vger.kernel.org, kernel-team@android.com,
+        Miklos Szeredi <mszeredi@redhat.com>
+Subject: [PATCH 4.14 166/185] ovl: filter of trusted xattr results in audit
+Date:   Thu,  3 Oct 2019 17:54:04 +0200
+Message-Id: <20191003154516.782998221@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191003154437.541662648@linuxfoundation.org>
 References: <20191003154437.541662648@linuxfoundation.org>
@@ -61,140 +60,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: NeilBrown <neilb@suse.de>
+From: Mark Salyzyn <salyzyn@android.com>
 
-[ Upstream commit c84a1372df929033cb1a0441fb57bd3932f39ac9 ]
+commit 5c2e9f346b815841f9bed6029ebcb06415caf640 upstream.
 
-If the drives in a RAID0 are not all the same size, the array is
-divided into zones.
-The first zone covers all drives, to the size of the smallest.
-The second zone covers all drives larger than the smallest, up to
-the size of the second smallest - etc.
+When filtering xattr list for reading, presence of trusted xattr
+results in a security audit log.  However, if there is other content
+no errno will be set, and if there isn't, the errno will be -ENODATA
+and not -EPERM as is usually associated with a lack of capability.
+The check does not block the request to list the xattrs present.
 
-A change in Linux 3.14 unintentionally changed the layout for the
-second and subsequent zones.  All the correct data is still stored, but
-each chunk may be assigned to a different device than in pre-3.14 kernels.
-This can lead to data corruption.
+Switch to ns_capable_noaudit to reflect a more appropriate check.
 
-It is not possible to determine what layout to use - it depends which
-kernel the data was written by.
-So we add a module parameter to allow the old (0) or new (1) layout to be
-specified, and refused to assemble an affected array if that parameter is
-not set.
+Signed-off-by: Mark Salyzyn <salyzyn@android.com>
+Cc: linux-security-module@vger.kernel.org
+Cc: kernel-team@android.com
+Cc: stable@vger.kernel.org # v3.18+
+Fixes: a082c6f680da ("ovl: filter trusted xattr for non-admin")
+Signed-off-by: Miklos Szeredi <mszeredi@redhat.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-Fixes: 20d0189b1012 ("block: Introduce new bio_split()")
-cc: stable@vger.kernel.org (3.14+)
-Acked-by: Guoqing Jiang <guoqing.jiang@cloud.ionos.com>
-Signed-off-by: NeilBrown <neilb@suse.de>
-Signed-off-by: Song Liu <songliubraving@fb.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/md/raid0.c | 33 ++++++++++++++++++++++++++++++++-
- drivers/md/raid0.h | 14 ++++++++++++++
- 2 files changed, 46 insertions(+), 1 deletion(-)
+ fs/overlayfs/inode.c |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/md/raid0.c b/drivers/md/raid0.c
-index 5ecba9eef441f..28fb717217706 100644
---- a/drivers/md/raid0.c
-+++ b/drivers/md/raid0.c
-@@ -26,6 +26,9 @@
- #include "raid0.h"
- #include "raid5.h"
+--- a/fs/overlayfs/inode.c
++++ b/fs/overlayfs/inode.c
+@@ -265,7 +265,8 @@ static bool ovl_can_list(const char *s)
+ 		return true;
  
-+static int default_layout = 0;
-+module_param(default_layout, int, 0644);
-+
- #define UNSUPPORTED_MDDEV_FLAGS		\
- 	((1L << MD_HAS_JOURNAL) |	\
- 	 (1L << MD_JOURNAL_CLEAN) |	\
-@@ -146,6 +149,19 @@ static int create_strip_zones(struct mddev *mddev, struct r0conf **private_conf)
- 	}
- 	pr_debug("md/raid0:%s: FINAL %d zones\n",
- 		 mdname(mddev), conf->nr_strip_zones);
-+
-+	if (conf->nr_strip_zones == 1) {
-+		conf->layout = RAID0_ORIG_LAYOUT;
-+	} else if (default_layout == RAID0_ORIG_LAYOUT ||
-+		   default_layout == RAID0_ALT_MULTIZONE_LAYOUT) {
-+		conf->layout = default_layout;
-+	} else {
-+		pr_err("md/raid0:%s: cannot assemble multi-zone RAID0 with default_layout setting\n",
-+		       mdname(mddev));
-+		pr_err("md/raid0: please set raid.default_layout to 1 or 2\n");
-+		err = -ENOTSUPP;
-+		goto abort;
-+	}
- 	/*
- 	 * now since we have the hard sector sizes, we can make sure
- 	 * chunk size is a multiple of that sector size
-@@ -552,10 +568,12 @@ static void raid0_handle_discard(struct mddev *mddev, struct bio *bio)
+ 	/* Never list trusted.overlay, list other trusted for superuser only */
+-	return !ovl_is_private_xattr(s) && capable(CAP_SYS_ADMIN);
++	return !ovl_is_private_xattr(s) &&
++	       ns_capable_noaudit(&init_user_ns, CAP_SYS_ADMIN);
+ }
  
- static bool raid0_make_request(struct mddev *mddev, struct bio *bio)
- {
-+	struct r0conf *conf = mddev->private;
- 	struct strip_zone *zone;
- 	struct md_rdev *tmp_dev;
- 	sector_t bio_sector;
- 	sector_t sector;
-+	sector_t orig_sector;
- 	unsigned chunk_sects;
- 	unsigned sectors;
- 
-@@ -588,8 +606,21 @@ static bool raid0_make_request(struct mddev *mddev, struct bio *bio)
- 		bio = split;
- 	}
- 
-+	orig_sector = sector;
- 	zone = find_zone(mddev->private, &sector);
--	tmp_dev = map_sector(mddev, zone, sector, &sector);
-+	switch (conf->layout) {
-+	case RAID0_ORIG_LAYOUT:
-+		tmp_dev = map_sector(mddev, zone, orig_sector, &sector);
-+		break;
-+	case RAID0_ALT_MULTIZONE_LAYOUT:
-+		tmp_dev = map_sector(mddev, zone, sector, &sector);
-+		break;
-+	default:
-+		WARN("md/raid0:%s: Invalid layout\n", mdname(mddev));
-+		bio_io_error(bio);
-+		return true;
-+	}
-+
- 	bio_set_dev(bio, tmp_dev->bdev);
- 	bio->bi_iter.bi_sector = sector + zone->dev_start +
- 		tmp_dev->data_offset;
-diff --git a/drivers/md/raid0.h b/drivers/md/raid0.h
-index 540e65d92642d..3816e5477db1e 100644
---- a/drivers/md/raid0.h
-+++ b/drivers/md/raid0.h
-@@ -8,11 +8,25 @@ struct strip_zone {
- 	int	 nb_dev;	/* # of devices attached to the zone */
- };
- 
-+/* Linux 3.14 (20d0189b101) made an unintended change to
-+ * the RAID0 layout for multi-zone arrays (where devices aren't all
-+ * the same size.
-+ * RAID0_ORIG_LAYOUT restores the original layout
-+ * RAID0_ALT_MULTIZONE_LAYOUT uses the altered layout
-+ * The layouts are identical when there is only one zone (all
-+ * devices the same size).
-+ */
-+
-+enum r0layout {
-+	RAID0_ORIG_LAYOUT = 1,
-+	RAID0_ALT_MULTIZONE_LAYOUT = 2,
-+};
- struct r0conf {
- 	struct strip_zone	*strip_zone;
- 	struct md_rdev		**devlist; /* lists of rdevs, pointed to
- 					    * by strip_zone->dev */
- 	int			nr_strip_zones;
-+	enum r0layout		layout;
- };
- 
- #endif
--- 
-2.20.1
-
+ ssize_t ovl_listxattr(struct dentry *dentry, char *list, size_t size)
 
 
