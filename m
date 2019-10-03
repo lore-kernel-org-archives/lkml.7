@@ -2,120 +2,157 @@ Return-Path: <SRS0=6dNS=X4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.3 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF998C32792
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 20:42:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B605C10F14
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 20:42:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BCB88207FF
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 20:42:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EA8F6207FF
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 20:42:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389441AbfJCUm1 (ORCPT
+        id S2389487AbfJCUme (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 16:42:27 -0400
-Received: from foss.arm.com ([217.140.110.172]:56256 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726669AbfJCUm0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 16:42:26 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id CF79F337;
-        Thu,  3 Oct 2019 13:42:25 -0700 (PDT)
-Received: from [192.168.1.124] (unknown [172.31.20.19])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E00273F739;
-        Thu,  3 Oct 2019 13:42:23 -0700 (PDT)
-Subject: Re: [PATCH v2] iommu/arm-smmu: Break insecure users by disabling
- bypass by default
-To:     Tim Harvey <tharvey@gateworks.com>,
-        Douglas Anderson <dianders@chromium.org>,
-        Tirumalesh Chalamarla <tchalamarla@caviumnetworks.com>
-Cc:     Joerg Roedel <joro@8bytes.org>, Will Deacon <will.deacon@arm.com>,
-        linux-arm-msm@vger.kernel.org, evgreen@chromium.org,
-        tfiga@chromium.org, Rob Clark <robdclark@gmail.com>,
-        iommu@lists.linux-foundation.org,
-        linux-arm-kernel@lists.infradead.org,
-        Vivek Gautam <vivek.gautam@codeaurora.org>,
-        open list <linux-kernel@vger.kernel.org>
-References: <20190301192017.39770-1-dianders@chromium.org>
- <CAJ+vNU0Ma5nG9_ThLO4cdO+=ivf7rmXiHZonF0HY0xx6X3R6Hw@mail.gmail.com>
-From:   Robin Murphy <robin.murphy@arm.com>
-Message-ID: <5dce2964-8761-e7d0-8963-f0f5cb2feb02@arm.com>
-Date:   Thu, 3 Oct 2019 21:42:20 +0100
-User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:68.0) Gecko/20100101
- Thunderbird/68.1.1
+        Thu, 3 Oct 2019 16:42:34 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:36556 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726669AbfJCUmd (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 16:42:33 -0400
+Received: from pps.filterd (m0098394.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x93Kawvo021258;
+        Thu, 3 Oct 2019 16:40:25 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2vdqd29pd0-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 03 Oct 2019 16:40:25 -0400
+Received: from m0098394.ppops.net (m0098394.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.27/8.16.0.27) with SMTP id x93KaxC5021544;
+        Thu, 3 Oct 2019 16:40:24 -0400
+Received: from ppma02wdc.us.ibm.com (aa.5b.37a9.ip4.static.sl-reverse.com [169.55.91.170])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2vdqd29pcb-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 03 Oct 2019 16:40:24 -0400
+Received: from pps.filterd (ppma02wdc.us.ibm.com [127.0.0.1])
+        by ppma02wdc.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id x93KYnnu029841;
+        Thu, 3 Oct 2019 20:40:23 GMT
+Received: from b03cxnp08026.gho.boulder.ibm.com (b03cxnp08026.gho.boulder.ibm.com [9.17.130.18])
+        by ppma02wdc.us.ibm.com with ESMTP id 2v9y58q4mu-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 03 Oct 2019 20:40:23 +0000
+Received: from b03ledav005.gho.boulder.ibm.com (b03ledav005.gho.boulder.ibm.com [9.17.130.236])
+        by b03cxnp08026.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x93KeLcl61341986
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 3 Oct 2019 20:40:21 GMT
+Received: from b03ledav005.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 377AFBE054;
+        Thu,  3 Oct 2019 20:40:21 +0000 (GMT)
+Received: from b03ledav005.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 91CACBE04F;
+        Thu,  3 Oct 2019 20:40:12 +0000 (GMT)
+Received: from leobras.br.ibm.com (unknown [9.18.235.190])
+        by b03ledav005.gho.boulder.ibm.com (Postfix) with ESMTP;
+        Thu,  3 Oct 2019 20:40:12 +0000 (GMT)
+Message-ID: <3598584cc4b829e9c290b6dab89fb148528e4f72.camel@linux.ibm.com>
+Subject: Re: [PATCH v5 10/11] mm/Kconfig: Adds config option to track
+ lockless pagetable walks
+From:   Leonardo Bras <leonardo@linux.ibm.com>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Song Liu <songliubraving@fb.com>, Michal Hocko <mhocko@suse.com>,
+        "Dmitry V. Levin" <ldv@altlinux.org>,
+        Keith Busch <keith.busch@intel.com>, linux-mm@kvack.org,
+        Paul Mackerras <paulus@samba.org>,
+        Christoph Lameter <cl@linux.com>,
+        Ira Weiny <ira.weiny@intel.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Elena Reshetova <elena.reshetova@intel.com>,
+        linux-arch@vger.kernel.org, Santosh Sivaraj <santosh@fossix.org>,
+        Davidlohr Bueso <dave@stgolabs.net>,
+        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Mahesh Salgaonkar <mahesh@linux.vnet.ibm.com>,
+        Andrey Ryabinin <aryabinin@virtuozzo.com>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Ingo Molnar <mingo@kernel.org>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        Ralph Campbell <rcampbell@nvidia.com>,
+        Arnd Bergmann <arnd@arndb.de>, Jann Horn <jannh@google.com>,
+        John Hubbard <jhubbard@nvidia.com>,
+        Jesper Dangaard Brouer <brouer@redhat.com>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        =?ISO-8859-1?Q?J=E9r=F4me?= Glisse <jglisse@redhat.com>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        kvm-ppc@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
+        Reza Arbab <arbab@linux.ibm.com>,
+        Allison Randal <allison@lohutok.net>,
+        Christian Brauner <christian.brauner@ubuntu.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org,
+        Logan Gunthorpe <logang@deltatee.com>,
+        Souptick Joarder <jrdr.linux@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        linuxppc-dev@lists.ozlabs.org, Roman Gushchin <guro@fb.com>,
+        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+        Al Viro <viro@zeniv.linux.org.uk>
+Date:   Thu, 03 Oct 2019 17:40:11 -0300
+In-Reply-To: <20191003074432.GO4536@hirez.programming.kicks-ass.net>
+References: <20191003013325.2614-1-leonardo@linux.ibm.com>
+         <20191003013325.2614-11-leonardo@linux.ibm.com>
+         <20191003074432.GO4536@hirez.programming.kicks-ass.net>
+Content-Type: multipart/signed; micalg="pgp-sha256";
+        protocol="application/pgp-signature"; boundary="=-cFtUj1Ho01ANPCDPn5bA"
+User-Agent: Evolution 3.30.5 (3.30.5-1.fc29) 
 MIME-Version: 1.0
-In-Reply-To: <CAJ+vNU0Ma5nG9_ThLO4cdO+=ivf7rmXiHZonF0HY0xx6X3R6Hw@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-10-03_07:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1908290000 definitions=main-1910030167
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Tim,
 
-On 2019-10-03 7:27 pm, Tim Harvey wrote:
-> On Fri, Mar 1, 2019 at 11:21 AM Douglas Anderson <dianders@chromium.org> wrote:
->>
->> If you're bisecting why your peripherals stopped working, it's
->> probably this CL.  Specifically if you see this in your dmesg:
->>    Unexpected global fault, this could be serious
->> ...then it's almost certainly this CL.
->>
->> Running your IOMMU-enabled peripherals with the IOMMU in bypass mode
->> is insecure and effectively disables the protection they provide.
->> There are few reasons to allow unmatched stream bypass, and even fewer
->> good ones.
->>
->> This patch starts the transition over to make it much harder to run
->> your system insecurely.  Expected steps:
->>
->> 1. By default disable bypass (so anyone insecure will notice) but make
->>     it easy for someone to re-enable bypass with just a KConfig change.
->>     That's this patch.
->>
->> 2. After people have had a little time to come to grips with the fact
->>     that they need to set their IOMMUs properly and have had time to
->>     dig into how to do this, the KConfig will be eliminated and bypass
->>     will simply be disabled.  Folks who are truly upset and still
->>     haven't fixed their system can either figure out how to add
->>     'arm-smmu.disable_bypass=n' to their command line or revert the
->>     patch in their own private kernel.  Of course these folks will be
->>     less secure.
->>
->> Suggested-by: Robin Murphy <robin.murphy@arm.com>
->> Signed-off-by: Douglas Anderson <dianders@chromium.org>
->> ---
-> 
-> Hi Doug / Robin,
-> 
-> I ran into this breaking things on OcteonTx boards based on CN80XX
-> CPU. The IOMMU configuration is a bit beyond me and I'm hoping you can
-> offer some advice. The IOMMU here is cavium,smmu-v2 as defined in
-> https://github.com/Gateworks/dts-newport/blob/master/cn81xx-linux.dtsi
-> 
-> Booting with 'arm-smmu.disable_bypass=n' does indeed work around the
-> breakage as the commit suggests.
-> 
-> Any suggestions for a proper fix?
+--=-cFtUj1Ho01ANPCDPn5bA
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Ah, you're using the old "mmu-masters" binding (and in a way which isn't 
-well-defined - it's never been specified what the stream ID argument(s) 
-would mean for a PCI host bridge, and Linux just ignores them). The 
-ideal thing would be to update the DT to generic "iommu-map" properties 
-- it's been a long time since I last played with a ThunderX, but I 
-believe the SMMU stream IDs should just be the same as the ITS device 
-IDs (which is how the "mmu-masters" mapping would have played out anyway).
+On Thu, 2019-10-03 at 09:44 +0200, Peter Zijlstra wrote:
+> This shouldn't be a user visible option at all. Either the arch needs
+> it and selects it or not.
 
-The arm-smmu driver support for the old binding has always relied on 
-implicit bypass - there are technical reasons why we can't realistically 
-support the full functionality offered to the generic bindings, but it 
-would be possible to add some degree of workaround to prevent it 
-interacting quite so poorly with disable_bypass, if necessary. Do you 
-have deployed systems with DTs that can't be updated, but still might 
-need to run new kernels?
+You are right. I will do that on v6.
+Thanks for the feedback!
 
-Robin.
+--=-cFtUj1Ho01ANPCDPn5bA
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+Content-Transfer-Encoding: 7bit
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEMdeUgIzgjf6YmUyOlQYWtz9SttQFAl2WXKsACgkQlQYWtz9S
+ttT0Rw/+O9ro3F+kPIMVu+zxDUbz2AsZH3nFxKIz+44t5QRLd0SVCWEZoL8sXxBl
+szuekeDyKqOVi4Uxq0kFBYP79d+/4XthFa9AwDozRXNre5Q0DiNv0j0z9DT0Ng02
+nSLeaiuIt8SlD/TRrFOrlt0yFmE0485uR2jQYklJ056mh+629wFa8XJ3NOuOlU3C
+wst6saBjYMZXlDg2acZTrI6VY1tpXAzkD1q1yQoEFUoMaLuBNhvLff0kxjxKTm2A
+WnfAyv+BNeD/BlUzi8ifmvz/V6tWyhJ3LGwOOPloAKVy+SyJkxhzQoNn0uToodx6
+GqeglOW+cnrPkmn3vZpinpSVOoQDzyy1MrurMbpXtV1iiVBxGXflyK7GAa9bpI4l
+E45jXUJHTnFB3LOon16oBweT/fM3jVa4RVzPzO7JFfdLQUhnNdWROxdglOVvQxH7
+2ZSy6maWC/mwRerDZk23R+usHwJ3kRItE/XT6mfzWcgf16Ph0A0xuZTLYvKJgOX4
+8mFMwRkitAKKI/AYeKZ5w1AsVzO6XcG95Fxv78yIHxau479a0LB8FQVbCUySWjlR
+6hZvWhqKJpy28cRX9ojp9MEzhABgb3bp8/3N7IKSxC2Gxsf7tVFs6ioEGFyBk/mK
+unZ51OqsQ9LvoN4l67gzt238uunxFlb/uQIH4AWX/eO/9iYv5lY=
+=uZ4G
+-----END PGP SIGNATURE-----
+
+--=-cFtUj1Ho01ANPCDPn5bA--
+
