@@ -2,58 +2,57 @@ Return-Path: <SRS0=6dNS=X4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_SBL,URIBL_SBL_A,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 91140C10F14
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:35:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 73F30C10F14
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:36:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5F7B620830
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:35:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 446372133F
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:36:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570120557;
-	bh=Q2csLGPfbPef3CuRi72M6y/BVZlrVtVLVt5CDkrmq8Q=;
+	s=default; t=1570120561;
+	bh=3x8lhPuPZvG+6bqgi6iV13EmQ31ZxAZxBhE99d0ERrQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=CtmiI+jjGY4fdGvyV/eN1QPNU81VabBUx1SMbIGo83oIzH3faQVx5gKlm53Sawc+f
-	 XoM0mF/nj10Ki8apzxMVwY4LI6hHiVOnDjWv6/wf06iw2CG2BfTwBcmcxQ1GOh7g0Q
-	 fMKV/dNPJvgjKEO8IsvjwYzVpEupyPi4RcjVdEjw=
+	b=MoxBGijnxJA59N6iPHSxpBQyQwuxSrZ74jYH4zb6Re0uoIuedr5RfSYSCRlw+h6ee
+	 IUI4eEA9+f5bL+3dGubZHlNmVZOIGQIAQ4LtyvaqaYoTbzIy0ymY2suUVg4M7GmXYx
+	 7fTYdCwENHSij4RMVo8mN1fkPBjcIxZQ3EzYAVAM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391611AbfJCQf4 (ORCPT
+        id S2391869AbfJCQgA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 12:35:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44914 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 12:36:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45010 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389429AbfJCQfx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:35:53 -0400
+        id S2389429AbfJCQf5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:35:57 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C8FD72070B;
-        Thu,  3 Oct 2019 16:35:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5B9602086A;
+        Thu,  3 Oct 2019 16:35:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570120551;
-        bh=Q2csLGPfbPef3CuRi72M6y/BVZlrVtVLVt5CDkrmq8Q=;
+        s=default; t=1570120556;
+        bh=3x8lhPuPZvG+6bqgi6iV13EmQ31ZxAZxBhE99d0ERrQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=eqFm0teokzezRZnr2XECQVrE+PXWQD7kjpmvOHxxx5nlnJDcON6pQizFeNKR95zDQ
-         BNU908FL137RkErMiI9YH50KcrVl3IR3DUHmnNwIpz/lEBlL52fM0Jihth981wLdph
-         7ovCq8qlSxZqR5cAqWZeXye03i0BQ0zKNV9xcj1U=
+        b=QG1NE2ORP47aJ0t+C8ehMYKagg2oV1HzSofqvRpKSWXLcUqIScE9TsUl/zXZz76gy
+         2IhlC3gg6c2c/pRPdFul6tZE4ZgLGf+vLS3q658Zumo/ApyG2QtDAxxR6mPBN2MifT
+         7YcFYwRSx7fZagIXnyt4ksQ2TuEPMECSD2Z2cJTU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Vitaly Wool <vitalywool@gmail.com>,
-        Markus Linnala <markus.linnala@gmail.com>,
-        Chris Murphy <bugzilla@colorremedies.com>,
-        Agustin DallAlba <agustin@dallalba.com.ar>,
-        "Maciej S. Szmigiero" <mail@maciej.szmigiero.name>,
-        Shakeel Butt <shakeelb@google.com>,
-        Henry Burns <henrywolfeburns@gmail.com>,
+        stable@vger.kernel.org, Yafang Shao <laoar.shao@gmail.com>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        David Rientjes <rientjes@google.com>,
+        Yafang Shao <shaoyafang@didiglobal.com>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        Michal Hocko <mhocko@suse.com>,
         Andrew Morton <akpm@linux-foundation.org>,
         Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 5.2 264/313] z3fold: fix retry mechanism in page reclaim
-Date:   Thu,  3 Oct 2019 17:54:02 +0200
-Message-Id: <20191003154559.044870572@linuxfoundation.org>
+Subject: [PATCH 5.2 266/313] mm/compaction.c: clear total_{migrate,free}_scanned before scanning a new zone
+Date:   Thu,  3 Oct 2019 17:54:04 +0200
+Message-Id: <20191003154559.262163524@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191003154533.590915454@linuxfoundation.org>
 References: <20191003154533.590915454@linuxfoundation.org>
@@ -66,176 +65,127 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vitaly Wool <vitalywool@gmail.com>
+From: Yafang Shao <laoar.shao@gmail.com>
 
-commit 3f9d2b5766aea06042630ac60b7316fd0cebf06f upstream.
+commit a94b525241c0fff3598809131d7cfcfe1d572d8c upstream.
 
-z3fold_page_reclaim()'s retry mechanism is broken: on a second iteration
-it will have zhdr from the first one so that zhdr is no longer in line
-with struct page.  That leads to crashes when the system is stressed.
+total_{migrate,free}_scanned will be added to COMPACTMIGRATE_SCANNED and
+COMPACTFREE_SCANNED in compact_zone().  We should clear them before
+scanning a new zone.  In the proc triggered compaction, we forgot clearing
+them.
 
-Fix that by moving zhdr assignment up.
-
-While at it, protect against using already freed handles by using own
-local slots structure in z3fold_page_reclaim().
-
-Link: http://lkml.kernel.org/r/20190908162919.830388dc7404d1e2c80f4095@gmail.com
-Signed-off-by: Vitaly Wool <vitalywool@gmail.com>
-Reported-by: Markus Linnala <markus.linnala@gmail.com>
-Reported-by: Chris Murphy <bugzilla@colorremedies.com>
-Reported-by: Agustin Dall'Alba <agustin@dallalba.com.ar>
-Cc: "Maciej S. Szmigiero" <mail@maciej.szmigiero.name>
-Cc: Shakeel Butt <shakeelb@google.com>
-Cc: Henry Burns <henrywolfeburns@gmail.com>
+[laoar.shao@gmail.com: introduce a helper compact_zone_counters_init()]
+  Link: http://lkml.kernel.org/r/1563869295-25748-1-git-send-email-laoar.shao@gmail.com
+[akpm@linux-foundation.org: expand compact_zone_counters_init() into its single callsite, per mhocko]
+[vbabka@suse.cz: squash compact_zone() list_head init as well]
+  Link: http://lkml.kernel.org/r/1fb6f7da-f776-9e42-22f8-bbb79b030b98@suse.cz
+[akpm@linux-foundation.org: kcompactd_do_work(): avoid unnecessary initialization of cc.zone]
+Link: http://lkml.kernel.org/r/1563789275-9639-1-git-send-email-laoar.shao@gmail.com
+Fixes: 7f354a548d1c ("mm, compaction: add vmstats for kcompactd work")
+Signed-off-by: Yafang Shao <laoar.shao@gmail.com>
+Signed-off-by: Vlastimil Babka <vbabka@suse.cz>
+Reviewed-by: Vlastimil Babka <vbabka@suse.cz>
+Cc: David Rientjes <rientjes@google.com>
+Cc: Yafang Shao <shaoyafang@didiglobal.com>
+Cc: Mel Gorman <mgorman@techsingularity.net>
+Cc: Michal Hocko <mhocko@suse.com>
 Cc: <stable@vger.kernel.org>
 Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
 Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- mm/z3fold.c |   49 ++++++++++++++++++++++++++++++++++---------------
- 1 file changed, 34 insertions(+), 15 deletions(-)
+ mm/compaction.c |   35 +++++++++++++----------------------
+ 1 file changed, 13 insertions(+), 22 deletions(-)
 
---- a/mm/z3fold.c
-+++ b/mm/z3fold.c
-@@ -368,9 +368,10 @@ static inline int __idx(struct z3fold_he
-  * Encodes the handle of a particular buddy within a z3fold page
-  * Pool lock should be held as this function accesses first_num
-  */
--static unsigned long encode_handle(struct z3fold_header *zhdr, enum buddy bud)
-+static unsigned long __encode_handle(struct z3fold_header *zhdr,
-+				struct z3fold_buddy_slots *slots,
-+				enum buddy bud)
- {
--	struct z3fold_buddy_slots *slots;
- 	unsigned long h = (unsigned long)zhdr;
- 	int idx = 0;
+--- a/mm/compaction.c
++++ b/mm/compaction.c
+@@ -2078,6 +2078,17 @@ compact_zone(struct compact_control *cc,
+ 	const bool sync = cc->mode != MIGRATE_ASYNC;
+ 	bool update_cached;
  
-@@ -387,11 +388,15 @@ static unsigned long encode_handle(struc
- 	if (bud == LAST)
- 		h |= (zhdr->last_chunks << BUDDY_SHIFT);
- 
--	slots = zhdr->slots;
- 	slots->slot[idx] = h;
- 	return (unsigned long)&slots->slot[idx];
- }
- 
-+static unsigned long encode_handle(struct z3fold_header *zhdr, enum buddy bud)
-+{
-+	return __encode_handle(zhdr, zhdr->slots, bud);
-+}
++	/*
++	 * These counters track activities during zone compaction.  Initialize
++	 * them before compacting a new zone.
++	 */
++	cc->total_migrate_scanned = 0;
++	cc->total_free_scanned = 0;
++	cc->nr_migratepages = 0;
++	cc->nr_freepages = 0;
++	INIT_LIST_HEAD(&cc->freepages);
++	INIT_LIST_HEAD(&cc->migratepages);
 +
- /* Returns the z3fold page where a given handle is stored */
- static inline struct z3fold_header *handle_to_z3fold_header(unsigned long h)
+ 	cc->migratetype = gfpflags_to_migratetype(cc->gfp_mask);
+ 	ret = compaction_suitable(cc->zone, cc->order, cc->alloc_flags,
+ 							cc->classzone_idx);
+@@ -2281,10 +2292,6 @@ static enum compact_result compact_zone_
  {
-@@ -626,6 +631,7 @@ static void do_compact_page(struct z3fol
- 	}
+ 	enum compact_result ret;
+ 	struct compact_control cc = {
+-		.nr_freepages = 0,
+-		.nr_migratepages = 0,
+-		.total_migrate_scanned = 0,
+-		.total_free_scanned = 0,
+ 		.order = order,
+ 		.search_order = order,
+ 		.gfp_mask = gfp_mask,
+@@ -2305,8 +2312,6 @@ static enum compact_result compact_zone_
  
- 	if (unlikely(PageIsolated(page) ||
-+		     test_bit(PAGE_CLAIMED, &page->private) ||
- 		     test_bit(PAGE_STALE, &page->private))) {
- 		z3fold_page_unlock(zhdr);
- 		return;
-@@ -1102,6 +1108,7 @@ static int z3fold_reclaim_page(struct z3
- 	struct z3fold_header *zhdr = NULL;
- 	struct page *page = NULL;
- 	struct list_head *pos;
-+	struct z3fold_buddy_slots slots;
- 	unsigned long first_handle = 0, middle_handle = 0, last_handle = 0;
+ 	if (capture)
+ 		current->capture_control = &capc;
+-	INIT_LIST_HEAD(&cc.freepages);
+-	INIT_LIST_HEAD(&cc.migratepages);
  
- 	spin_lock(&pool->lock);
-@@ -1120,16 +1127,22 @@ static int z3fold_reclaim_page(struct z3
- 			/* this bit could have been set by free, in which case
- 			 * we pass over to the next page in the pool.
- 			 */
--			if (test_and_set_bit(PAGE_CLAIMED, &page->private))
-+			if (test_and_set_bit(PAGE_CLAIMED, &page->private)) {
-+				page = NULL;
- 				continue;
-+			}
+ 	ret = compact_zone(&cc, &capc);
  
--			if (unlikely(PageIsolated(page)))
-+			if (unlikely(PageIsolated(page))) {
-+				clear_bit(PAGE_CLAIMED, &page->private);
-+				page = NULL;
- 				continue;
-+			}
-+			zhdr = page_address(page);
- 			if (test_bit(PAGE_HEADLESS, &page->private))
- 				break;
+@@ -2408,8 +2413,6 @@ static void compact_node(int nid)
+ 	struct zone *zone;
+ 	struct compact_control cc = {
+ 		.order = -1,
+-		.total_migrate_scanned = 0,
+-		.total_free_scanned = 0,
+ 		.mode = MIGRATE_SYNC,
+ 		.ignore_skip_hint = true,
+ 		.whole_zone = true,
+@@ -2423,11 +2426,7 @@ static void compact_node(int nid)
+ 		if (!populated_zone(zone))
+ 			continue;
  
--			zhdr = page_address(page);
- 			if (!z3fold_page_trylock(zhdr)) {
-+				clear_bit(PAGE_CLAIMED, &page->private);
- 				zhdr = NULL;
- 				continue; /* can't evict at this point */
- 			}
-@@ -1147,26 +1160,30 @@ static int z3fold_reclaim_page(struct z3
+-		cc.nr_freepages = 0;
+-		cc.nr_migratepages = 0;
+ 		cc.zone = zone;
+-		INIT_LIST_HEAD(&cc.freepages);
+-		INIT_LIST_HEAD(&cc.migratepages);
  
- 		if (!test_bit(PAGE_HEADLESS, &page->private)) {
- 			/*
--			 * We need encode the handles before unlocking, since
--			 * we can race with free that will set
--			 * (first|last)_chunks to 0
-+			 * We need encode the handles before unlocking, and
-+			 * use our local slots structure because z3fold_free
-+			 * can zero out zhdr->slots and we can't do much
-+			 * about that
- 			 */
- 			first_handle = 0;
- 			last_handle = 0;
- 			middle_handle = 0;
- 			if (zhdr->first_chunks)
--				first_handle = encode_handle(zhdr, FIRST);
-+				first_handle = __encode_handle(zhdr, &slots,
-+								FIRST);
- 			if (zhdr->middle_chunks)
--				middle_handle = encode_handle(zhdr, MIDDLE);
-+				middle_handle = __encode_handle(zhdr, &slots,
-+								MIDDLE);
- 			if (zhdr->last_chunks)
--				last_handle = encode_handle(zhdr, LAST);
-+				last_handle = __encode_handle(zhdr, &slots,
-+								LAST);
- 			/*
- 			 * it's safe to unlock here because we hold a
- 			 * reference to this page
- 			 */
- 			z3fold_page_unlock(zhdr);
- 		} else {
--			first_handle = encode_handle(zhdr, HEADLESS);
-+			first_handle = __encode_handle(zhdr, &slots, HEADLESS);
- 			last_handle = middle_handle = 0;
- 		}
+ 		compact_zone(&cc, NULL);
  
-@@ -1196,9 +1213,9 @@ next:
- 			spin_lock(&pool->lock);
- 			list_add(&page->lru, &pool->lru);
- 			spin_unlock(&pool->lock);
-+			clear_bit(PAGE_CLAIMED, &page->private);
- 		} else {
- 			z3fold_page_lock(zhdr);
--			clear_bit(PAGE_CLAIMED, &page->private);
- 			if (kref_put(&zhdr->refcount,
- 					release_z3fold_page_locked)) {
- 				atomic64_dec(&pool->pages_nr);
-@@ -1213,6 +1230,7 @@ next:
- 			list_add(&page->lru, &pool->lru);
- 			spin_unlock(&pool->lock);
- 			z3fold_page_unlock(zhdr);
-+			clear_bit(PAGE_CLAIMED, &page->private);
- 		}
+@@ -2529,8 +2528,6 @@ static void kcompactd_do_work(pg_data_t
+ 	struct compact_control cc = {
+ 		.order = pgdat->kcompactd_max_order,
+ 		.search_order = pgdat->kcompactd_max_order,
+-		.total_migrate_scanned = 0,
+-		.total_free_scanned = 0,
+ 		.classzone_idx = pgdat->kcompactd_classzone_idx,
+ 		.mode = MIGRATE_SYNC_LIGHT,
+ 		.ignore_skip_hint = false,
+@@ -2554,16 +2551,10 @@ static void kcompactd_do_work(pg_data_t
+ 							COMPACT_CONTINUE)
+ 			continue;
  
- 		/* We started off locked to we need to lock the pool back */
-@@ -1317,7 +1335,8 @@ static bool z3fold_page_isolate(struct p
- 	VM_BUG_ON_PAGE(!PageMovable(page), page);
- 	VM_BUG_ON_PAGE(PageIsolated(page), page);
+-		cc.nr_freepages = 0;
+-		cc.nr_migratepages = 0;
+-		cc.total_migrate_scanned = 0;
+-		cc.total_free_scanned = 0;
+-		cc.zone = zone;
+-		INIT_LIST_HEAD(&cc.freepages);
+-		INIT_LIST_HEAD(&cc.migratepages);
+-
+ 		if (kthread_should_stop())
+ 			return;
++
++		cc.zone = zone;
+ 		status = compact_zone(&cc, NULL);
  
--	if (test_bit(PAGE_HEADLESS, &page->private))
-+	if (test_bit(PAGE_HEADLESS, &page->private) ||
-+	    test_bit(PAGE_CLAIMED, &page->private))
- 		return false;
- 
- 	zhdr = page_address(page);
+ 		if (status == COMPACT_SUCCESS) {
 
 
