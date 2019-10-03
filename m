@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9C4DC10F14
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:03:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AB0A2C32792
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:04:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 958F821A4C
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:03:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6EFC6207FF
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:04:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570118639;
-	bh=Hqe7t7JdnTuFCKufE3feuDa7ql1gu7k9tS6OpgdrodE=;
+	s=default; t=1570118643;
+	bh=QJorBsuu7/I+O7IoyuxkA/c3Do8nJw9lZYvwg/ZsupQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=e0W1iXg9uyIPclO+ZU0ubZDRNxioAWEgRE1UYzS4djHTNItOvjvMiQI3LG5tJKeD4
-	 zidW+3DLtsnZIFv/4ECqyi7Pmu9//qM1+zo21ICSJOnmGUjdA5xhD6FfIV0Mx6Ss2J
-	 O1jjcO2ZER/onn7rjFQsGH+q6r+J3LqD1elpGsyE=
+	b=c7BpdJqZ73Abx+NK8kF6goo1j+Uj6HIG8TpBrJyumXmxuSaBAEzd00dqsYnSlcyv7
+	 ysrmLioBaDl07H7OCqejgJpCZd3l9h85/ib83/OBc0asQs/JR9hep0W/zizkIhdhiK
+	 GGDHuPa1jYuD30mhgu86vdEwITC2osRQu81Bh+nE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732308AbfJCQD6 (ORCPT
+        id S1732325AbfJCQEC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 12:03:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49522 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 12:04:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49430 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729970AbfJCQDy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:03:54 -0400
+        id S1732291AbfJCQDv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:03:51 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2690F222C2;
-        Thu,  3 Oct 2019 16:03:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9D7A321848;
+        Thu,  3 Oct 2019 16:03:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570118633;
-        bh=Hqe7t7JdnTuFCKufE3feuDa7ql1gu7k9tS6OpgdrodE=;
+        s=default; t=1570118631;
+        bh=QJorBsuu7/I+O7IoyuxkA/c3Do8nJw9lZYvwg/ZsupQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=n5mNmHpRkM0zWSEZdxkRBhduaMRwZeGScgJEZSd2y3ZX2Z9urNkfoAq47WvLwyyoK
-         vDqwt7dQUArhz+vCycPMEmrENoMLUZRQo2+VQbkHEGocMIeqPZkkG5UtpfmhafE3ol
-         vB08rQmgbOaOywHvwk/K32spcPqi+ipl57kCHOM8=
+        b=ypRoFdYtiMy2+78+p75kGejX1tXZBJiuaDasgufg3NfZy59KB2fXwcyUPdR4Q+2iG
+         SPnksz03nKz7fulZfBC48KgoG7j/oxWB0jJWx9sdtJ92/7xUrxT5VQl4k+8zUmycb8
+         e2aOdmOH/pw3oxw91TfrrfTOIM1xqaXf2YZZ0ftY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Wang Shenran <shenran268@gmail.com>,
-        Guenter Roeck <linux@roeck-us.net>,
+        stable@vger.kernel.org, Wenwen Wang <wenwen@cs.uga.edu>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 083/129] hwmon: (acpi_power_meter) Change log level for unsafe software power cap
-Date:   Thu,  3 Oct 2019 17:53:26 +0200
-Message-Id: <20191003154356.695235663@linuxfoundation.org>
+Subject: [PATCH 4.9 082/129] ACPI / PCI: fix acpi_pci_irq_enable() memory leak
+Date:   Thu,  3 Oct 2019 17:53:25 +0200
+Message-Id: <20191003154356.184531301@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191003154318.081116689@linuxfoundation.org>
 References: <20191003154318.081116689@linuxfoundation.org>
@@ -60,48 +60,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wang Shenran <shenran268@gmail.com>
+From: Wenwen Wang <wenwen@cs.uga.edu>
 
-[ Upstream commit 6e4d91aa071810deac2cd052161aefb376ecf04e ]
+[ Upstream commit 29b49958cf73b439b17fa29e9a25210809a6c01c ]
 
-At boot time, the acpi_power_meter driver logs the following error level
-message: "Ignoring unsafe software power cap". Having read about it from
-a few sources, it seems that the error message can be quite misleading.
+In acpi_pci_irq_enable(), 'entry' is allocated by kzalloc() in
+acpi_pci_irq_check_entry() (invoked from acpi_pci_irq_lookup()). However,
+it is not deallocated if acpi_pci_irq_valid() returns false, leading to a
+memory leak. To fix this issue, free 'entry' before returning 0.
 
-While the message can imply that Linux is ignoring the fact that the
-system is operating in potentially dangerous conditions, the truth is
-the driver found an ACPI_PMC object that supports software power
-capping. The driver simply decides not to use it, perhaps because it
-doesn't support the object.
-
-The best solution is probably changing the log level from error to warning.
-All sources I have found, regarding the error, have downplayed its
-significance. There is not much of a reason for it to be on error level,
-while causing potential confusions or misinterpretations.
-
-Signed-off-by: Wang Shenran <shenran268@gmail.com>
-Link: https://lore.kernel.org/r/20190724080110.6952-1-shenran268@gmail.com
-Signed-off-by: Guenter Roeck <linux@roeck-us.net>
+Fixes: e237a5518425 ("x86/ACPI/PCI: Recognize that Interrupt Line 255 means "not connected"")
+Signed-off-by: Wenwen Wang <wenwen@cs.uga.edu>
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/hwmon/acpi_power_meter.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/acpi/pci_irq.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/hwmon/acpi_power_meter.c b/drivers/hwmon/acpi_power_meter.c
-index 579bdf93be433..e27f7e12c05bb 100644
---- a/drivers/hwmon/acpi_power_meter.c
-+++ b/drivers/hwmon/acpi_power_meter.c
-@@ -693,8 +693,8 @@ static int setup_attrs(struct acpi_power_meter_resource *resource)
+diff --git a/drivers/acpi/pci_irq.c b/drivers/acpi/pci_irq.c
+index c576a6fe4ebb3..94ded9513c73b 100644
+--- a/drivers/acpi/pci_irq.c
++++ b/drivers/acpi/pci_irq.c
+@@ -462,8 +462,10 @@ int acpi_pci_irq_enable(struct pci_dev *dev)
+ 		 * No IRQ known to the ACPI subsystem - maybe the BIOS /
+ 		 * driver reported one, then use it. Exit in any case.
+ 		 */
+-		if (!acpi_pci_irq_valid(dev, pin))
++		if (!acpi_pci_irq_valid(dev, pin)) {
++			kfree(entry);
+ 			return 0;
++		}
  
- 	if (resource->caps.flags & POWER_METER_CAN_CAP) {
- 		if (!can_cap_in_hardware()) {
--			dev_err(&resource->acpi_dev->dev,
--				"Ignoring unsafe software power cap!\n");
-+			dev_warn(&resource->acpi_dev->dev,
-+				 "Ignoring unsafe software power cap!\n");
- 			goto skip_unsafe_cap;
- 		}
- 
+ 		if (acpi_isa_register_gsi(dev))
+ 			dev_warn(&dev->dev, "PCI INT %c: no GSI\n",
 -- 
 2.20.1
 
