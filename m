@@ -2,204 +2,122 @@ Return-Path: <SRS0=6dNS=X4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 447CDC10F14
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 12:47:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F579C32792
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 12:49:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1CA9B20700
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 12:47:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="Fjcj6iDt"
+	by mail.kernel.org (Postfix) with ESMTP id D6EAA215EA
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 12:49:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1570106952;
+	bh=3I16dtKMV/ywKVSjTPwklsWAsz9K/b2UODMZF56SWZg=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=UW1V3w/5RjRGkwO/2YOM9EVepB6jxZadHVRoM6iaVGtTFxSf/qosy7B+wYgPMvCxU
+	 dtAadb8Lp/OVp4yQUAWbK48gPeHHWrKI/p96nx4mSaAVMvdv3pM4uQAQ906BLeDVj1
+	 d2kmaS4pVpARb9PAi2nkQURO5ctq6uZ+R1D/l+74=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730093AbfJCMr0 (ORCPT
+        id S1729506AbfJCMtM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 08:47:26 -0400
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:60864 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727254AbfJCMr0 (ORCPT
+        Thu, 3 Oct 2019 08:49:12 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:36670 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727331AbfJCMtL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 08:47:26 -0400
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id x93ClE2a102613;
-        Thu, 3 Oct 2019 07:47:14 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1570106834;
-        bh=JMexwncxTG0RXIsiZpMRKEljXTzagWDuN8gPgZxM0XE=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=Fjcj6iDtcRQawB3mvUUYvOiTXnNrYyGqT3c3C0ia4wJgyOoqWRLysVEqCWmxlVtuG
-         kifRa1kmP1LOh6VFH2LQplnTc11uh9+7tNP9pk0pPXYK3xSDyMSAD85zEvnyGsztFj
-         vIFMYDOJrT8DEZK6AzOBDissL37IMza2jHpniEq8=
-Received: from DFLE104.ent.ti.com (dfle104.ent.ti.com [10.64.6.25])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id x93ClEVg119215;
-        Thu, 3 Oct 2019 07:47:14 -0500
-Received: from DFLE102.ent.ti.com (10.64.6.23) by DFLE104.ent.ti.com
- (10.64.6.25) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Thu, 3 Oct
- 2019 07:47:14 -0500
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE102.ent.ti.com
- (10.64.6.23) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Thu, 3 Oct 2019 07:47:14 -0500
-Received: from [10.250.99.146] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id x93ClBe1067033;
-        Thu, 3 Oct 2019 07:47:12 -0500
-Subject: Re: [PATCH v8 2/5] leds: Add of_led_get() and led_put()
-To:     Sebastian Reichel <sebastian.reichel@collabora.com>
-CC:     <jacek.anaszewski@gmail.com>, <pavel@ucw.cz>, <robh+dt@kernel.org>,
-        <mark.rutland@arm.com>, <lee.jones@linaro.org>,
-        <daniel.thompson@linaro.org>, <linux-kernel@vger.kernel.org>,
-        <dri-devel@lists.freedesktop.org>, <tomi.valkeinen@ti.com>,
-        <dmurphy@ti.com>, <linux-leds@vger.kernel.org>
-References: <20191003082812.28491-1-jjhiblot@ti.com>
- <20191003082812.28491-3-jjhiblot@ti.com>
- <20191003104228.c5nho6eimwzqwxpt@earth.universe>
-From:   Jean-Jacques Hiblot <jjhiblot@ti.com>
-Message-ID: <acd11fe1-1d51-eda5-f807-c16319514c3a@ti.com>
-Date:   Thu, 3 Oct 2019 14:47:11 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Thu, 3 Oct 2019 08:49:11 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Subject:Cc:To:
+        From:Date:Sender:Reply-To:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=+3A0RVi/eynu6cHrvlnzbDBBXa/7l6DXVZbYu9LkAQI=; b=ShUzobsjuDPIifsb0K9SQmZn+
+        xIPryyo6TVO6d1PgEwfo+n3ogNYeXAgoDzeZ8GfSlXO3aPywkEawRyvTYsSltg99TmrfQJA2UAu6F
+        vxhThdlNmA4rZ8miSRAHF2nIORFM8zR4e2/zDi9+qLYfhfKkBMGmIyhGO8EOEWV4+WUuUQSYAK83H
+        zjIOWM8DCFDL6VA6168FgeyFCbcOfowWCdJTVxImlPiT5Qldw6MTmA06NPS+zkR1RyhuXt4LkRjZs
+        KCJKIVZ03hyt/DQ8KQ478mGhEQ5DEnKs7amDKXT44eaXW6mY9qu0ulY343nrU9whomtFEar/3kW8I
+        klGGE4xMA==;
+Received: from 177.133.68.49.dynamic.adsl.gvt.net.br ([177.133.68.49] helo=coco.lan)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.2 #3 (Red Hat Linux))
+        id 1iG0Xd-0003Rg-8Z; Thu, 03 Oct 2019 12:49:09 +0000
+Date:   Thu, 3 Oct 2019 09:49:04 -0300
+From:   Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+To:     Gonsolo <gonsolo@gmail.com>
+Cc:     JP <jp@jpvw.nl>, crope@iki.fi, Sean Young <sean@mess.org>,
+        linux-media@vger.kernel.org,
+        Linux Kernel <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] si2157: Add support for Logilink VG0022A.
+Message-ID: <20191003094904.3aa5fdc7@coco.lan>
+In-Reply-To: <CANL0fFTtHn4ocL4BD4cVKhVzjLhnQ0a45yq5x4MxWAVu-tD8sw@mail.gmail.com>
+References: <20191001205203.4b1a5fb6@coco.lan>
+        <20191002141359.30166-1-gonsolo@gmail.com>
+        <20191002141359.30166-2-gonsolo@gmail.com>
+        <20191002142744.GA3475@gofer.mess.org>
+        <CANL0fFS9TGKJH2rfkXzak78BaLazTNO7GoZhSb4vLBsDrmz3FQ@mail.gmail.com>
+        <20191002150650.GA4227@gofer.mess.org>
+        <CANL0fFRoL6NxOCbNC=XjQ6LDkeeqAayaLUbm9xARWX9ttqfPFg@mail.gmail.com>
+        <29ab2e43-4374-a3ea-6ae1-a4267867eaa4@jpvw.nl>
+        <20191002154922.7f1cfc76@coco.lan>
+        <CANL0fFRJZBfEDWK_c2w1TomvB5-i4g09LopyJUbO5NtOwKdDTg@mail.gmail.com>
+        <CANL0fFTwJ4yRO+5q6WkL0+DtwdrRti6r_WY1intisYJhs5En8w@mail.gmail.com>
+        <20191003081742.0933264b@coco.lan>
+        <CANL0fFTtHn4ocL4BD4cVKhVzjLhnQ0a45yq5x4MxWAVu-tD8sw@mail.gmail.com>
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-In-Reply-To: <20191003104228.c5nho6eimwzqwxpt@earth.universe>
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Sebastian,
+Em Thu, 3 Oct 2019 13:41:23 +0200
+Gonsolo <gonsolo@gmail.com> escreveu:
 
-On 03/10/2019 12:42, Sebastian Reichel wrote:
-> Hi,
->
-> On Thu, Oct 03, 2019 at 10:28:09AM +0200, Jean-Jacques Hiblot wrote:
->> From: Tomi Valkeinen <tomi.valkeinen@ti.com>
->>
->> This patch adds basic support for a kernel driver to get a LED device.
->> This will be used by the led-backlight driver.
->>
->> Only OF version is implemented for now, and the behavior is similar to
->> PWM's of_pwm_get() and pwm_put().
->>
->> Signed-off-by: Tomi Valkeinen <tomi.valkeinen@ti.com>
->> Signed-off-by: Jean-Jacques Hiblot <jjhiblot@ti.com>
->> Acked-by: Pavel Machek <pavel@ucw.cz>
->> ---
->>   drivers/leds/led-class.c | 44 ++++++++++++++++++++++++++++++++++++++++
->>   include/linux/leds.h     |  4 ++++
->>   2 files changed, 48 insertions(+)
->>
->> diff --git a/drivers/leds/led-class.c b/drivers/leds/led-class.c
->> index c2167b66b61f..455545f5d663 100644
->> --- a/drivers/leds/led-class.c
->> +++ b/drivers/leds/led-class.c
->> @@ -19,6 +19,7 @@
->>   #include <linux/spinlock.h>
->>   #include <linux/timer.h>
->>   #include <uapi/linux/uleds.h>
->> +#include <linux/of.h>
->>   #include "leds.h"
->>   
->>   static struct class *leds_class;
->> @@ -214,6 +215,49 @@ static int led_resume(struct device *dev)
->>   
->>   static SIMPLE_DEV_PM_OPS(leds_class_dev_pm_ops, led_suspend, led_resume);
->>   
->> +/**
->> + * of_led_get() - request a LED device via the LED framework
->> + * @np: device node to get the LED device from
->> + * @index: the index of the LED
->> + *
->> + * Returns the LED device parsed from the phandle specified in the "leds"
->> + * property of a device tree node or a negative error-code on failure.
->> + */
->> +struct led_classdev *of_led_get(struct device_node *np, int index)
->> +{
->> +	struct device *led_dev;
->> +	struct led_classdev *led_cdev;
->> +	struct device_node *led_node;
->> +
->> +	led_node = of_parse_phandle(np, "leds", index);
->> +	if (!led_node)
->> +		return ERR_PTR(-ENOENT);
->> +
->> +	led_dev = class_find_device_by_of_node(leds_class, led_node);
-> If you convert led_node into a fwnode, you can use
-> class_find_device_by_fwnode() instead. That way the
-> first patch can just be dropped.
+> Hi!
+> 
+> > It means that there's a firmware stored at the device's eeprom
+> > (version 4.0.2). When the driver starts, it downloads a newer firmware
+> > from the file dvb-demod-si2168-b40-01.fw.  
+> 
+> Thanks for the explanation.
+> 
+> > Btw, could you please try the enclosed hack and post the results?  
+> 
+> Will do in a second.
+> 
+> FWIW, this hack worked:
+> 
+> diff --git a/drivers/media/tuners/si2157.c b/drivers/media/tuners/si2157.c
+> index e87040d6eca7..28a3a4f1640e 100644
+> --- a/drivers/media/tuners/si2157.c
+> +++ b/drivers/media/tuners/si2157.c
+> @@ -136,6 +136,7 @@ static int si2157_init(struct dvb_frontend *fe)
+>         #define SI2147_A30 ('A' << 24 | 47 << 16 | '3' << 8 | '0' << 0)
+>         #define SI2146_A10 ('A' << 24 | 46 << 16 | '1' << 8 | '0' << 0)
+>         #define SI2141_A10 ('A' << 24 | 41 << 16 | '1' << 8 | '0' << 0)
+> +       #define GONZO     (255 << 24 | 255 << 16 | 255 << 8 | 255 << 0)
+> 
+>         switch (chip_id) {
+>         case SI2158_A20:
+> @@ -148,6 +149,10 @@ static int si2157_init(struct dvb_frontend *fe)
+>         case SI2177_A30:
+>                 fw_name = SI2157_A30_FIRMWARE;
+>                 break;
+> +       case GONZO:
+> +               dev_info(&client->dev, "trying null\n");
+> +               fw_name = NULL;
+> +               break;
+>         case SI2157_A30:
+>         case SI2147_A30:
+>         case SI2146_A10:
 
-Thanks for the reviews.
+What does it print with this hack?
 
-The first patch could be dropped  indeed, but it would break something 
-else I'm working on: getting regulator support in the LED core.
+Also, could you get the SI version after the reset code at
+skip_fw_download, just after retrieving si2157 firmware version?
 
-This has been discussed during the v7 iteration of this series.
-
-JJ
-
-
->
-> -- Sebastian
->
->> +	of_node_put(led_node);
->> +
->> +	if (!led_dev)
->> +		return ERR_PTR(-EPROBE_DEFER);
->> +
->> +	led_cdev = dev_get_drvdata(led_dev);
->> +
->> +	if (!try_module_get(led_cdev->dev->parent->driver->owner))
->> +		return ERR_PTR(-ENODEV);
->> +
->> +	return led_cdev;
->> +}
->> +EXPORT_SYMBOL_GPL(of_led_get);
->> +
->> +/**
->> + * led_put() - release a LED device
->> + * @led_cdev: LED device
->> + */
->> +void led_put(struct led_classdev *led_cdev)
->> +{
->> +	module_put(led_cdev->dev->parent->driver->owner);
->> +}
->> +EXPORT_SYMBOL_GPL(led_put);
->> +
->>   static int led_classdev_next_name(const char *init_name, char *name,
->>   				  size_t len)
->>   {
->> diff --git a/include/linux/leds.h b/include/linux/leds.h
->> index b8df71193329..6f7371bc7757 100644
->> --- a/include/linux/leds.h
->> +++ b/include/linux/leds.h
->> @@ -20,6 +20,7 @@
->>   
->>   struct device;
->>   struct led_pattern;
->> +struct device_node;
->>   /*
->>    * LED Core
->>    */
->> @@ -196,6 +197,9 @@ extern void devm_led_classdev_unregister(struct device *parent,
->>   extern void led_classdev_suspend(struct led_classdev *led_cdev);
->>   extern void led_classdev_resume(struct led_classdev *led_cdev);
->>   
->> +extern struct led_classdev *of_led_get(struct device_node *np, int index);
->> +extern void led_put(struct led_classdev *led_cdev);
->> +
->>   /**
->>    * led_blink_set - set blinking with software fallback
->>    * @led_cdev: the LED to start blinking
->> -- 
->> 2.17.1
->>
->> _______________________________________________
->> dri-devel mailing list
->> dri-devel@lists.freedesktop.org
->> https://lists.freedesktop.org/mailman/listinfo/dri-devel
+Thanks,
+Mauro
