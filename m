@@ -2,216 +2,172 @@ Return-Path: <SRS0=6dNS=X4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1DBAC10F14
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 06:52:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B114CC32792
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 06:53:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AC17D22459
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 06:52:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 91C3B20842
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 06:53:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727771AbfJCGwb convert rfc822-to-8bit (ORCPT
+        id S1727831AbfJCGx1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 02:52:31 -0400
-Received: from hermes.aosc.io ([199.195.250.187]:47109 "EHLO hermes.aosc.io"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726210AbfJCGwa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 02:52:30 -0400
-Received: from localhost (localhost [127.0.0.1]) (Authenticated sender: icenowy@aosc.io)
-        by hermes.aosc.io (Postfix) with ESMTPSA id AA72B82E72;
-        Thu,  3 Oct 2019 06:52:27 +0000 (UTC)
-Date:   Thu, 03 Oct 2019 14:52:23 +0800
-In-Reply-To: <20191003064527.15128-3-jagan@amarulasolutions.com>
-References: <20191003064527.15128-1-jagan@amarulasolutions.com> <20191003064527.15128-3-jagan@amarulasolutions.com>
+        Thu, 3 Oct 2019 02:53:27 -0400
+Received: from relay3-d.mail.gandi.net ([217.70.183.195]:44437 "EHLO
+        relay3-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726048AbfJCGx0 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 02:53:26 -0400
+X-Originating-IP: 2.224.242.101
+Received: from uno.localdomain (2-224-242-101.ip172.fastwebnet.it [2.224.242.101])
+        (Authenticated sender: jacopo@jmondi.org)
+        by relay3-d.mail.gandi.net (Postfix) with ESMTPSA id ABA586000C;
+        Thu,  3 Oct 2019 06:53:22 +0000 (UTC)
+Date:   Thu, 3 Oct 2019 08:55:06 +0200
+From:   Jacopo Mondi <jacopo@jmondi.org>
+To:     Benoit Parrot <bparrot@ti.com>
+Cc:     Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Hans Verkuil <hverkuil@xs4all.nl>, linux-media@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        hugues.fruchet@st.com
+Subject: Re: [Patch 1/3] media: ov5640: add PIXEL_RATE control
+Message-ID: <20191003065506.ijivptniwvzyo5oz@uno.localdomain>
+References: <20190925152301.21645-1-bparrot@ti.com>
+ <20190925152301.21645-2-bparrot@ti.com>
+ <20191001075704.GA5449@paasikivi.fi.intel.com>
+ <20191001162341.f2o7ruar2nifl5ws@ti.com>
+ <20191002075951.afp2xligspqat4ew@uno.localdomain>
+ <20191002121438.g3re6v54q4hit2wv@ti.com>
+ <20191002143226.psrcocsjs2wtiydd@uno.localdomain>
+ <20191002150615.tyxy3n6cbxttbpum@ti.com>
 MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: 8BIT
-Subject: Re: [PATCH v11 2/7] drm/sun4i: dsi: Update start value in video start delay
-To:     Jagan Teki <jagan@amarulasolutions.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Chen-Yu Tsai <wens@csie.org>, David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>
-CC:     michael@amarulasolutions.com,
-        linux-sunxi <linux-sunxi@googlegroups.com>,
-        dri-devel@lists.freedesktop.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org
-From:   Icenowy Zheng <icenowy@aosc.io>
-Message-ID: <75B6346D-714D-4235-B4B8-CAE4384919DB@aosc.io>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="t4za3ljubo5keeag"
+Content-Disposition: inline
+In-Reply-To: <20191002150615.tyxy3n6cbxttbpum@ti.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
+--t4za3ljubo5keeag
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 
-于 2019年10月3日 GMT+08:00 下午2:45:22, Jagan Teki <jagan@amarulasolutions.com> 写到:
->start value in video start delay was changed in
->commit da676c6aa641 ("drm/sun4i: dsi: Change the start delay
->calculation")
->to match the legacy BSP driver [1].
->
->So, using this existing start delay computation gives the wrong
->start delay value for the "bananapi,s070wv20-ct16" panel. Due to
->this the panel trigger below flip_done timed out as during kernel
->bootup:
->
->WARNING: CPU: 0 PID: 31 at drivers/gpu/drm/drm_atomic_helper.c:1429
->drm_atomic_helper_wait_for_vblanks.part.1+0x298/0x2a0
-> [CRTC:46:crtc-0] vblank wait timed out
-> Modules linked in:
->CPU: 0 PID: 31 Comm: kworker/0:1 Tainted: G        W        
->5.1.0-next-20190514-00025-gf928bc7cc146 #15
-> Hardware name: Allwinner sun8i Family
-> Workqueue: events deferred_probe_work_func
->[<c010ed54>] (unwind_backtrace) from [<c010b76c>]
->(show_stack+0x10/0x14)
-> [<c010b76c>] (show_stack) from [<c0688c90>] (dump_stack+0x84/0x98)
-> [<c0688c90>] (dump_stack) from [<c011d9e4>] (__warn+0xfc/0x114)
-> [<c011d9e4>] (__warn) from [<c011da40>] (warn_slowpath_fmt+0x44/0x68)
->[<c011da40>] (warn_slowpath_fmt) from [<c040cd50>]
->(drm_atomic_helper_wait_for_vblanks.part.1+0x298/0x2a0)
->[<c040cd50>] (drm_atomic_helper_wait_for_vblanks.part.1) from
->[<c040e694>] (drm_atomic_helper_commit_tail_rpm+0x5c/0x6c)
->[<c040e694>] (drm_atomic_helper_commit_tail_rpm) from [<c040e4dc>]
->(commit_tail+0x40/0x6c)
->[<c040e4dc>] (commit_tail) from [<c040e5cc>]
->(drm_atomic_helper_commit+0xbc/0x128)
->[<c040e5cc>] (drm_atomic_helper_commit) from [<c0411b64>]
->(restore_fbdev_mode_atomic+0x1cc/0x1dc)
->[<c0411b64>] (restore_fbdev_mode_atomic) from [<c0411cb0>]
->(drm_fb_helper_pan_display+0xac/0x1d0)
->[<c0411cb0>] (drm_fb_helper_pan_display) from [<c03a4e84>]
->(fb_pan_display+0xcc/0x134)
->[<c03a4e84>] (fb_pan_display) from [<c03b1214>]
->(bit_update_start+0x14/0x30)
->[<c03b1214>] (bit_update_start) from [<c03afe94>]
->(fbcon_switch+0x3d8/0x4e0)
->[<c03afe94>] (fbcon_switch) from [<c03ec930>]
->(redraw_screen+0x174/0x238)
->[<c03ec930>] (redraw_screen) from [<c03aceb4>]
->(fbcon_prepare_logo+0x3c4/0x400)
->[<c03aceb4>] (fbcon_prepare_logo) from [<c03ad2b8>]
->(fbcon_init+0x3c8/0x5ac)
-> [<c03ad2b8>] (fbcon_init) from [<c03eb8a0>] (visual_init+0xbc/0x104)
->[<c03eb8a0>] (visual_init) from [<c03ed1b8>]
->(do_bind_con_driver+0x1b0/0x390)
->[<c03ed1b8>] (do_bind_con_driver) from [<c03ed780>]
->(do_take_over_console+0x13c/0x1c4)
->[<c03ed780>] (do_take_over_console) from [<c03ad800>]
->(do_fbcon_takeover+0x74/0xcc)
->[<c03ad800>] (do_fbcon_takeover) from [<c013c9c8>]
->(notifier_call_chain+0x44/0x84)
->[<c013c9c8>] (notifier_call_chain) from [<c013cd20>]
->(__blocking_notifier_call_chain+0x48/0x60)
->[<c013cd20>] (__blocking_notifier_call_chain) from [<c013cd50>]
->(blocking_notifier_call_chain+0x18/0x20)
->[<c013cd50>] (blocking_notifier_call_chain) from [<c03a6e44>]
->(register_framebuffer+0x1e0/0x2f8)
->[<c03a6e44>] (register_framebuffer) from [<c04153c0>]
->(__drm_fb_helper_initial_config_and_unlock+0x2fc/0x50c)
->[<c04153c0>] (__drm_fb_helper_initial_config_and_unlock) from
->[<c04158c8>] (drm_fbdev_client_hotplug+0xe8/0x1b8)
->[<c04158c8>] (drm_fbdev_client_hotplug) from [<c0415a20>]
->(drm_fbdev_generic_setup+0x88/0x118)
->[<c0415a20>] (drm_fbdev_generic_setup) from [<c043f060>]
->(sun4i_drv_bind+0x128/0x160)
->[<c043f060>] (sun4i_drv_bind) from [<c044b5b0>]
->(try_to_bring_up_master+0x164/0x1a0)
->[<c044b5b0>] (try_to_bring_up_master) from [<c044b680>]
->(__component_add+0x94/0x140)
->[<c044b680>] (__component_add) from [<c0445e1c>]
->(sun6i_dsi_probe+0x144/0x234)
->[<c0445e1c>] (sun6i_dsi_probe) from [<c0452f0c>]
->(platform_drv_probe+0x48/0x9c)
->[<c0452f0c>] (platform_drv_probe) from [<c04512e4>]
->(really_probe+0x1dc/0x2c8)
->[<c04512e4>] (really_probe) from [<c0451530>]
->(driver_probe_device+0x60/0x160)
->[<c0451530>] (driver_probe_device) from [<c044f7bc>]
->(bus_for_each_drv+0x74/0xb8)
->[<c044f7bc>] (bus_for_each_drv) from [<c0451094>]
->(__device_attach+0xd0/0x13c)
->[<c0451094>] (__device_attach) from [<c045048c>]
->(bus_probe_device+0x84/0x8c)
->[<c045048c>] (bus_probe_device) from [<c0450918>]
->(deferred_probe_work_func+0x64/0x90)
->[<c0450918>] (deferred_probe_work_func) from [<c0135970>]
->(process_one_work+0x204/0x420)
->[<c0135970>] (process_one_work) from [<c013690c>]
->(worker_thread+0x274/0x5a0)
-> [<c013690c>] (worker_thread) from [<c013b3d8>] (kthread+0x11c/0x14c)
-> [<c013b3d8>] (kthread) from [<c01010e8>] (ret_from_fork+0x14/0x2c)
-> Exception stack(0xde539fb0 to 0xde539ff8)
->9fa0:                                     00000000 00000000 00000000
->00000000
->9fc0: 00000000 00000000 00000000 00000000 00000000 00000000 00000000
->00000000
-> 9fe0: 00000000 00000000 00000000 00000000 00000013 00000000
-> ---[ end trace 755e10f62b83f396 ]---
-> Console: switching to colour frame buffer device 100x30
->[drm:drm_atomic_helper_wait_for_dependencies] *ERROR* [CRTC:46:crtc-0]
->flip_done timed out
->[drm:drm_atomic_helper_wait_for_dependencies] *ERROR*
->[CONNECTOR:48:DSI-1] flip_done timed out
->[drm:drm_atomic_helper_wait_for_dependencies] *ERROR*
->[PLANE:30:plane-0] flip_done timed out
->
->To fix this, adjust the start delay computation according to the
->new BSP code [2].
->
->Unfortunately we don't have any evidence or documentation for this
->reassignment to 1 in new bsp, but it is working with below mainline
->supported panels in A33, A64.
->- bananapi,s070wv20-ct16
->- feiyang,fy07024di26a30d
->- techstar,ts8550b
->
->So, use the start as per new bsp code since it is working in all
->the supported panels.
->
->[1]
->https://github.com/BPI-SINOVOIP/BPI-M2M-bsp/blob/master/linux-sunxi/drivers/video/sunxi/legacy/disp/de_bsp/de/ebios/de_dsi.c#L682
->[2]
->https://github.com/BPI-SINOVOIP/BPI-M2M-bsp/blob/master/linux-sunxi/drivers/video/sunxi/disp/de/lowlevel_sun8iw5/de_dsi.c#L807
->
->Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
->---
-> drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c | 12 +++++++++++-
-> 1 file changed, 11 insertions(+), 1 deletion(-)
->
->diff --git a/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c
->b/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c
->index f83522717488..c9c99c52bf1e 100644
->--- a/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c
->+++ b/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c
->@@ -365,7 +365,17 @@ static void sun6i_dsi_inst_init(struct sun6i_dsi
->*dsi,
-> static u16 sun6i_dsi_get_video_start_delay(struct sun6i_dsi *dsi,
-> 					   struct drm_display_mode *mode)
-> {
->-	u16 start = clamp(mode->vtotal - mode->vdisplay - 10, 8, 100);
->+	/**
->+	 * Allwinner legacy (drivers/video/sunxi/legacy),
->+	 * new (drivers/video/sunxi/disp/de/lowlevel_sun8iw5) bsp drivers
->+	 * are evaluating start as:
->+	 *
->+	 *	vtotal - vdisplay - 10
->+	 *
->+	 * but the new drivers are reassigning start to 1, which seems to be
->+	 * working in DSI panels available in mainline.
+Hi Benoit,
 
-Please see my patchset for the reason that set 1 here.
+On Wed, Oct 02, 2019 at 10:06:15AM -0500, Benoit Parrot wrote:
+> Jacopo Mondi <jacopo@jmondi.org> wrote on Wed [2019-Oct-02 16:32:26 +0200]:
+> > Hi Benoit,
+> >
+> > On Wed, Oct 02, 2019 at 07:14:38AM -0500, Benoit Parrot wrote:
+> > > Hi Jacopo,
+> > >
+> > > Maybe, I miss spoke when I mentioned a helper I did not intent a framework
+> > > level generic function. Just a function to help in this case :)
+> >
+> > Yes indeed, the discussion thread I linked here was mostly interesting
+> > because Hugues tried to do the same for LINK_FREQ iirc, and there
+> > where some usefult pointers.
+> >
+> > >
+> > > That being said, I re-read the thread you mentioned. And as Hughes pointed
+> > > out dynamically generating a "working" link frequency value which can be
+> > > used by a CSI2 receiver to properly configure its PHY is not trivial.
+> > >
+> > > When I created this patch, I also had another to add V4L2_CID_LINK_FREQ
+> > > support. I am testing this against the TI CAL CSI2 receiver, which already
+> > > uses the V4L2_CID_PIXEL_RATE value for that purpose, so I also had a patch
+> > > to add support for V4L2_CID_LINK_FREQ to that driver as well.
+> > >
+> > > Unfortunately, similar to Hughes' findings I was not able to make it "work"
+> > > with all supported resolution/framerate.
+> >
+> > As reported by Hugues findings, the PLL calculation procedure might be
+> > faulty, and the actuall frequencies on the bus are different from the
+> > calculated ones.
+> >
+> > I wish I had more time to re-look at that, as they worked for my and
+> > Sam's use case, but deserve some rework.
+> >
+> > >
+> > > Unlike my V4L2_CID_PIXEL_RATE solution which now works in all mode with the
+> > > same receiver.
+> > >
+> >
+> > It seems to me you're reporting a fixed rate. It might make your
+> > receiver happy, but does not report what is acutally put on the bus.
+> > Am I missing something ?
+>
+> No it is not fixed, the only fixed value was the initial value (which
+> representative of the initial/default resolution and framerate), I
+> fixed this in v2. The reported PIXEL_RATE is re-calculated every time there
+> is a s_fmt and/or framerate change and the V4L2_CID_PIXEL_RATE control
+> value is updated accordingly.
 
->+	 */
->+	u8 start = 1;
->	u16 delay = mode->vtotal - (mode->vsync_end - mode->vdisplay) + start;
-> 
-> 	if (delay > mode->vtotal)
+Oh I missed v2! I only seen this one.
+I'll reply there.
 
--- 
-使用 K-9 Mail 发送自我的Android设备。
+Thanks
+  j
+
+>
+> >
+> > > So long story short I dropped the V4L2_CID_LINK_FREQ patch and focused on
+> > > V4L2_CID_PIXEL_RATE instead.
+> > >
+> >
+> > As Sakari pointed out, going from one to the other is trivial and
+> > could be done on top.
+>
+> As you said it could be done on top. :)
+>
+> Benoit
+>
+> >
+> > Thanks
+> >    j
+> >
+> > > Regard,
+> > > Benoit
+> > >
+> > > Jacopo Mondi <jacopo@jmondi.org> wrote on Wed [2019-Oct-02 09:59:51 +0200]:
+> > > > Hi Benoit,
+> > > >   +Hugues
+> > > >
+> > > > If you're considering an helper, this thread might be useful to you:
+> > > > https://patchwork.kernel.org/patch/11019673/
+> > > >
+> > > > Thanks
+> > > >    j
+> > > >
+> > >
+> > >
+>
+>
+
+--t4za3ljubo5keeag
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEtcQ9SICaIIqPWDjAcjQGjxahVjwFAl2Vm0kACgkQcjQGjxah
+VjxCvA/8CIxJ1u3/4d340kMy543hq9yHlp9oKDwuamw0VLyqOdOGYKiJTrD8HN1M
+oE5TrFlcc4j5crvLg6MHre35j2e+EHsJKsFQ+lrJp9OhXaOGSzELWc4/ixzFnLox
+1hmew+DyLq/lCEThSxrRN9cWQq6mtZ4oItfB1pzGDLcaSUJ9j4sr1w+Y3gvkC3/M
+zbp+IWqT75CtP7HlNgTu8ncnOJ76g+FXmQiJq1oIazq5NXTwM7vbm2V0vl+ZCnzQ
+w+dz+dgmqfrO0KPthbp7HDb9Nh5SnAr0wr+E4v/ur69aHFtw5duRRHZlVmChh4vk
+yg6gtrykzwx2UvT+xZWuQKoJZ2Q1m+DC3hahnKYv4Sp/wQsYuXOn5NN/MsgOBrLI
+HG6SmTx0yjnygv0qXKWRbq1hwyojiED2MozPBHxGsFOUo88Gu5uZl1W7Z0K9/z18
+y77Xcfj7E7W92dazdsyklxR5f2Q9/xHKV2vkVGb33WKs0j2dpNhzvSKboUV9lZX0
+EiSv9njvXCN9ZkEN23SRHewP8l04+lAMSdPeA6WcZbFxkO64z2XzyuHAH2JIE1Lu
++ZqJPKRaoUQQEDtnHuZpkS7nDRUElS6EKnIp95HsYT55WB72nuINyUfTrQhTih94
+BKKfRRIQ6qZ49dqlcXrh03FcDc1P/wKgU5cN1a9898NwrJZ7QWA=
+=3rJs
+-----END PGP SIGNATURE-----
+
+--t4za3ljubo5keeag--
