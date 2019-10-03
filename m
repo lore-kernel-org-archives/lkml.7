@@ -2,44 +2,57 @@ Return-Path: <SRS0=6dNS=X4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 86CCDC10F14
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:47:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 75ECEC10F14
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:47:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5F16820867
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:47:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4B21A2070B
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:47:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1570121269;
+	bh=OOYbtDl++mAga3Ve0irijuGjJiSWW+eTKM4eu1A5L8A=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=oMRyjOfbaDvL/uxXPd7B66UxPOPaMsx4fA7ts1l+b+s+X7c7/us6pr1mhaKNbnVdo
+	 TIHATWbhXP7kkrDjlj+2TLPDAg8JMln0v9gUoFYdrUdfMvjr/ea0YT2ZhrjKSO4wvV
+	 84vf2Y3BBgwgB3t5swNYVyJlpK+vO+domFf2hUpI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405538AbfJCQro (ORCPT
+        id S2405559AbfJCQrs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 12:47:44 -0400
-Received: from ms.lwn.net ([45.79.88.28]:33140 "EHLO ms.lwn.net"
+        Thu, 3 Oct 2019 12:47:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33122 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2405322AbfJCQrj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:47:39 -0400
-Received: from lwn.net (localhost [127.0.0.1])
+        id S2405525AbfJCQrm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:47:42 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ms.lwn.net (Postfix) with ESMTPSA id 8A6C22D4;
-        Thu,  3 Oct 2019 16:47:38 +0000 (UTC)
-Date:   Thu, 3 Oct 2019 10:47:37 -0600
-From:   Jonathan Corbet <corbet@lwn.net>
-To:     Jonathan =?UTF-8?B?TmV1c2Now6RmZXI=?= <j.neuschaefer@gmx.net>
-Cc:     linux-doc@vger.kernel.org,
-        Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Shannon Nelson <snelson@pensando.io>,
-        Pensando Drivers <drivers@pensando.io>,
-        intel-wired-lan@lists.osuosl.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] Documentation: networking: device drivers: Remove stray
- asterisks
-Message-ID: <20191003104737.3774a00f@lwn.net>
-In-Reply-To: <20191002150956.16234-1-j.neuschaefer@gmx.net>
-References: <20191002150956.16234-1-j.neuschaefer@gmx.net>
-Organization: LWN.net
+        by mail.kernel.org (Postfix) with ESMTPSA id 7341820865;
+        Thu,  3 Oct 2019 16:47:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1570121262;
+        bh=OOYbtDl++mAga3Ve0irijuGjJiSWW+eTKM4eu1A5L8A=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=dmaOrg9IpUSx48tyB/Krv2f3i1ZgOOwLltlPK6sXb5WiAFv2w0mSkMdFjAwr7LAlc
+         A4t16dYz0ceorZwFlZf3OiAPCxQfx/4VvSXShmuYXsIJ8sYOleBUUM5XUmD6YPff4Z
+         q8od3fvejAPk0CIVEGEfj1kWErWHbMjqziSCqkdA=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Adrian Hunter <adrian.hunter@intel.com>,
+        Al Cooper <alcooperx@gmail.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.3 213/344] mmc: sdhci: Fix incorrect switch to HS mode
+Date:   Thu,  3 Oct 2019 17:52:58 +0200
+Message-Id: <20191003154601.306159884@linuxfoundation.org>
+X-Mailer: git-send-email 2.23.0
+In-Reply-To: <20191003154540.062170222@linuxfoundation.org>
+References: <20191003154540.062170222@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -48,32 +61,56 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed,  2 Oct 2019 17:09:55 +0200
-Jonathan Neuschäfer <j.neuschaefer@gmx.net> wrote:
+From: Al Cooper <alcooperx@gmail.com>
 
-> These asterisks were once references to a line that said:
->   "* Other names and brands may be claimed as the property of others."
-> But now, they serve no purpose; they can only irritate the reader.
-> 
-> Fixes: de3edab4276c ("e1000: update README for e1000")
-> Fixes: a3fb65680f65 ("e100.txt: Cleanup license info in kernel doc")
-> Fixes: da8c01c4502a ("e1000e.txt: Add e1000e documentation")
-> Fixes: f12a84a9f650 ("Documentation: fm10k: Add kernel documentation")
-> Fixes: b55c52b1938c ("igb.txt: Add igb documentation")
-> Fixes: c4e9b56e2442 ("igbvf.txt: Add igbvf Documentation")
-> Fixes: d7064f4c192c ("Documentation/networking/: Update Intel wired LAN driver documentation")
-> Fixes: c4b8c01112a1 ("ixgbevf.txt: Update ixgbevf documentation")
-> Fixes: 1e06edcc2f22 ("Documentation: i40e: Prepare documentation for RST conversion")
-> Fixes: 105bf2fe6b32 ("i40evf: add driver to kernel build system")
-> Fixes: 1fae869bcf3d ("Documentation: ice: Prepare documentation for RST conversion")
-> Fixes: df69ba43217d ("ionic: Add basic framework for IONIC Network device driver")
-> Signed-off-by: Jonathan Neuschäfer <j.neuschaefer@gmx.net>
+[ Upstream commit c894e33ddc1910e14d6f2a2016f60ab613fd8b37 ]
 
-So just FYI: as I applied this, I removed most of the "Fixes" tags.  The
-cited commits were adding documentation as plain-text files, so the extra
-asterisk was *not* an error to be fixed at that point.  The RST-conversion
-patches, instead, should have caught that...
+When switching from any MMC speed mode that requires 1.8v
+(HS200, HS400 and HS400ES) to High Speed (HS) mode, the system
+ends up configured for SDR12 with a 50MHz clock which is an illegal
+mode.
 
-Thanks,
+This happens because the SDHCI_CTRL_VDD_180 bit in the
+SDHCI_HOST_CONTROL2 register is left set and when this bit is
+set, the speed mode is controlled by the SDHCI_CTRL_UHS field
+in the SDHCI_HOST_CONTROL2 register. The SDHCI_CTRL_UHS field
+will end up being set to 0 (SDR12) by sdhci_set_uhs_signaling()
+because there is no UHS mode being set.
 
-jon
+The fix is to change sdhci_set_uhs_signaling() to set the
+SDHCI_CTRL_UHS field to SDR25 (which is the same as HS) for
+any switch to HS mode.
+
+This was found on a new eMMC controller that does strict checking
+of the speed mode and the corresponding clock rate. It caused the
+switch to HS400 mode to fail because part of the sequence to switch
+to HS400 requires a switch from HS200 to HS before going to HS400.
+
+Suggested-by: Adrian Hunter <adrian.hunter@intel.com>
+Signed-off-by: Al Cooper <alcooperx@gmail.com>
+Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/mmc/host/sdhci.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/mmc/host/sdhci.c b/drivers/mmc/host/sdhci.c
+index a5dc5aae973e6..c66e66fbaeb40 100644
+--- a/drivers/mmc/host/sdhci.c
++++ b/drivers/mmc/host/sdhci.c
+@@ -1849,7 +1849,9 @@ void sdhci_set_uhs_signaling(struct sdhci_host *host, unsigned timing)
+ 		ctrl_2 |= SDHCI_CTRL_UHS_SDR104;
+ 	else if (timing == MMC_TIMING_UHS_SDR12)
+ 		ctrl_2 |= SDHCI_CTRL_UHS_SDR12;
+-	else if (timing == MMC_TIMING_UHS_SDR25)
++	else if (timing == MMC_TIMING_SD_HS ||
++		 timing == MMC_TIMING_MMC_HS ||
++		 timing == MMC_TIMING_UHS_SDR25)
+ 		ctrl_2 |= SDHCI_CTRL_UHS_SDR25;
+ 	else if (timing == MMC_TIMING_UHS_SDR50)
+ 		ctrl_2 |= SDHCI_CTRL_UHS_SDR50;
+-- 
+2.20.1
+
+
+
