@@ -7,50 +7,53 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1C7DC32792
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:31:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09C12C4CED1
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:31:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A880320830
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:31:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D482920862
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:31:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570123865;
-	bh=uR4aGca4FN9wadKYbMaF/W0aRTC4nJx9UHIMFrXBdn0=;
+	s=default; t=1570123866;
+	bh=B05maExQbhzmRz3QtW0v5BieCGz5HdQQOqgZortZCcA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=QdofHRy/bXz7CZRMaChqpcH/wNE/u/zHkd1bGKTNAk9u/Xh54nMrQWTLoZd+UhlKt
-	 nkJLfsAX64fKB/qX7967NUDfiXDN0H03/Cb7RmTLsXDFbl5/+leU5OLpmTlcknbxAg
-	 6stH3hl9/CwzS0B1zn6Y3lbhBD0cyhaz7A29PlS4=
+	b=dwdzGkjzhyyAdUzdwJmhvVczsHzyD/ep8UDyCDrCZvOGkfTsio9bUPcgXEpr/V9Lq
+	 j7dKg205/PVV30tbFJfCQZv/xquAfH059iNN4qAko1EndPmqHt6QJS/Te2IdxprGBD
+	 UdmlcQCcl/vX0QTYdcdAD9fy8/bS70doe4T+ZNgo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387679AbfJCQKi (ORCPT
+        id S2387661AbfJCQKf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 12:10:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59998 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 12:10:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59916 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730267AbfJCQKc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:10:32 -0400
+        id S2387652AbfJCQK3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:10:29 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F2589215EA;
-        Thu,  3 Oct 2019 16:10:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 546B2207FF;
+        Thu,  3 Oct 2019 16:10:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570119031;
-        bh=uR4aGca4FN9wadKYbMaF/W0aRTC4nJx9UHIMFrXBdn0=;
+        s=default; t=1570119028;
+        bh=B05maExQbhzmRz3QtW0v5BieCGz5HdQQOqgZortZCcA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=nYYvtGzzkn9hTknMnUmNiSt8JsNr6l32NzDccBdeJh4Y1lgTdGjKPO+0UR9rCPXmZ
-         G36Qvqv4CuKbjgRGtK87kV3nhL5Ih9qAY7rzyqwimMGLnjNISiC6CKVnvfmeSw0dCR
-         f8+dT+7FOLfIbU7QxiJuSs6Pmbamohy45SUYeVpU=
+        b=eMFwPoqF+O+1eHR88DdwCJ6wmD7d2e1VxaZmcnsS5tuRr8DKPzfOtONcMWoiA+xOw
+         MhheLhBhmy+7QE04mPvTAt7FOVA9fg9dHnj/PtOiPPdQHWMeoc5E31eh/hZLHMFRU3
+         VwnkEA2ppiLu3r4i9lOfjNEUrntpJfGwUMSw/pKs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Phil Auld <pauld@redhat.com>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 083/185] sched/fair: Use rq_lock/unlock in online_fair_sched_group
-Date:   Thu,  3 Oct 2019 17:52:41 +0200
-Message-Id: <20191003154456.332104405@linuxfoundation.org>
+        stable@vger.kernel.org, Gerald Baeza <gerald.baeza@st.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        Andi Kleen <ak@linux.intel.com>, Jiri Olsa <jolsa@redhat.com>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 100/185] libperf: Fix alignment trap with xyarray contents in perf stat
+Date:   Thu,  3 Oct 2019 17:52:58 +0200
+Message-Id: <20191003154501.345118791@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191003154437.541662648@linuxfoundation.org>
 References: <20191003154437.541662648@linuxfoundation.org>
@@ -63,72 +66,56 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Phil Auld <pauld@redhat.com>
+From: Gerald BAEZA <gerald.baeza@st.com>
 
-[ Upstream commit a46d14eca7b75fffe35603aa8b81df654353d80f ]
+[ Upstream commit d9c5c083416500e95da098c01be092b937def7fa ]
 
-Enabling WARN_DOUBLE_CLOCK in /sys/kernel/debug/sched_features causes
-warning to fire in update_rq_clock. This seems to be caused by onlining
-a new fair sched group not using the rq lock wrappers.
+Following the patch 'perf stat: Fix --no-scale', an alignment trap
+happens in process_counter_values() on ARMv7 platforms due to the
+attempt to copy non 64 bits aligned double words (pointed by 'count')
+via a NEON vectored instruction ('vld1' with 64 bits alignment
+constraint).
 
-  [] rq->clock_update_flags & RQCF_UPDATED
-  [] WARNING: CPU: 5 PID: 54385 at kernel/sched/core.c:210 update_rq_clock+0xec/0x150
+This patch sets a 64 bits alignment constraint on 'contents[]' field in
+'struct xyarray' since the 'count' pointer used above points to such a
+structure.
 
-  [] Call Trace:
-  []  online_fair_sched_group+0x53/0x100
-  []  cpu_cgroup_css_online+0x16/0x20
-  []  online_css+0x1c/0x60
-  []  cgroup_apply_control_enable+0x231/0x3b0
-  []  cgroup_mkdir+0x41b/0x530
-  []  kernfs_iop_mkdir+0x61/0xa0
-  []  vfs_mkdir+0x108/0x1a0
-  []  do_mkdirat+0x77/0xe0
-  []  do_syscall_64+0x55/0x1d0
-  []  entry_SYSCALL_64_after_hwframe+0x44/0xa9
-
-Using the wrappers in online_fair_sched_group instead of the raw locking
-removes this warning.
-
-[ tglx: Use rq_*lock_irq() ]
-
-Signed-off-by: Phil Auld <pauld@redhat.com>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: Vincent Guittot <vincent.guittot@linaro.org>
-Cc: Ingo Molnar <mingo@kernel.org>
-Link: https://lkml.kernel.org/r/20190801133749.11033-1-pauld@redhat.com
+Signed-off-by: Gerald Baeza <gerald.baeza@st.com>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Alexandre Torgue <alexandre.torgue@st.com>
+Cc: Andi Kleen <ak@linux.intel.com>
+Cc: Jiri Olsa <jolsa@redhat.com>
+Cc: Mathieu Poirier <mathieu.poirier@linaro.org>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Link: http://lkml.kernel.org/r/1566464769-16374-1-git-send-email-gerald.baeza@st.com
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/sched/fair.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ tools/perf/util/xyarray.h | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-index 808db3566ddbc..55a33009f9a54 100644
---- a/kernel/sched/fair.c
-+++ b/kernel/sched/fair.c
-@@ -9423,18 +9423,18 @@ int alloc_fair_sched_group(struct task_group *tg, struct task_group *parent)
- void online_fair_sched_group(struct task_group *tg)
- {
- 	struct sched_entity *se;
-+	struct rq_flags rf;
- 	struct rq *rq;
- 	int i;
+diff --git a/tools/perf/util/xyarray.h b/tools/perf/util/xyarray.h
+index 7ffe562e7ae7f..2627b038b6f2a 100644
+--- a/tools/perf/util/xyarray.h
++++ b/tools/perf/util/xyarray.h
+@@ -2,6 +2,7 @@
+ #ifndef _PERF_XYARRAY_H_
+ #define _PERF_XYARRAY_H_ 1
  
- 	for_each_possible_cpu(i) {
- 		rq = cpu_rq(i);
- 		se = tg->se[i];
--
--		raw_spin_lock_irq(&rq->lock);
-+		rq_lock_irq(rq, &rf);
- 		update_rq_clock(rq);
- 		attach_entity_cfs_rq(se);
- 		sync_throttle(tg, i);
--		raw_spin_unlock_irq(&rq->lock);
-+		rq_unlock_irq(rq, &rf);
- 	}
- }
++#include <linux/compiler.h>
+ #include <sys/types.h>
  
+ struct xyarray {
+@@ -10,7 +11,7 @@ struct xyarray {
+ 	size_t entries;
+ 	size_t max_x;
+ 	size_t max_y;
+-	char contents[];
++	char contents[] __aligned(8);
+ };
+ 
+ struct xyarray *xyarray__new(int xlen, int ylen, size_t entry_size);
 -- 
 2.20.1
 
