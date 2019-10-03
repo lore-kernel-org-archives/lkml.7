@@ -2,146 +2,83 @@ Return-Path: <SRS0=6dNS=X4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0375DC32792
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 11:26:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22FE1C10F14
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 11:26:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DAD0A20830
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 11:26:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E553F20830
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 11:26:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1570101983;
+	bh=AhZQoGf4zTRrL+qcSHQEtSnkoivcIWq/JAiSadZKrWM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=lNB8NKFalGXgRB/1AuyWj/N2c8X60xwhmaR4aMiqEs2PX8dPYn6jthGM/Bs9qSAM1
+	 XNFvuqWk/FFRZNWBM5MloK2oAWYGCP0yxauv4EhUBZmHLc+Vq7psb019oYKRcZsNYI
+	 G7IwapiHdmoirmOfXFrZXMgToM8KNiMVZowBCQec=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730093AbfJCL0Q (ORCPT
+        id S1730109AbfJCL0W (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 07:26:16 -0400
-Received: from relay3-d.mail.gandi.net ([217.70.183.195]:38653 "EHLO
-        relay3-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725827AbfJCL0Q (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 07:26:16 -0400
-X-Originating-IP: 162.222.80.169
-Received: from aptenodytes (unknown [162.222.80.169])
-        (Authenticated sender: paul.kocialkowski@bootlin.com)
-        by relay3-d.mail.gandi.net (Postfix) with ESMTPSA id 855C860008;
-        Thu,  3 Oct 2019 11:26:11 +0000 (UTC)
-Date:   Thu, 3 Oct 2019 07:26:10 -0400
-From:   Paul Kocialkowski <paul.kocialkowski@bootlin.com>
-To:     Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Cc:     linux-gpio <linux-gpio@vger.kernel.org>,
-        linux-devicetree <devicetree@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
+        Thu, 3 Oct 2019 07:26:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57822 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725827AbfJCL0W (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 07:26:22 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id E162F206BB;
+        Thu,  3 Oct 2019 11:26:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1570101981;
+        bh=AhZQoGf4zTRrL+qcSHQEtSnkoivcIWq/JAiSadZKrWM=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=F+4psT/Bq+vGjfcihWhKTzx0SjGv+QFdtvvVGXRCweHjdQf2sn8P7fuBz17qDXxt4
+         d0O6H/mjoOSZ289JAtWH/PSxRLmNGJKmiUMhKbYu1ze1pq04IrhTrLDTg/e9oFmtBX
+         Z/eGrAvlBBGcw8jh3qSMOcpHSIpZoTEKvnwdV4lE=
+Date:   Thu, 3 Oct 2019 13:26:18 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     John Stultz <john.stultz@linaro.org>
+Cc:     lkml <linux-kernel@vger.kernel.org>, Yu Chen <chenyu56@huawei.com>,
         Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Subject: Re: [PATCH v3 3/5] gpio: syscon: Add support for a custom get
- operation
-Message-ID: <20191003112610.GA28856@aptenodytes>
-References: <20190927100407.1863293-1-paul.kocialkowski@bootlin.com>
- <20190927100407.1863293-4-paul.kocialkowski@bootlin.com>
- <CAMpxmJUHPuGPPPFSctyhtfj0oAk6oJ+=mvgN4=7jmLxAfHs45Q@mail.gmail.com>
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Chunfeng Yun <chunfeng.yun@mediatek.com>,
+        Felipe Balbi <balbi@kernel.org>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Jun Li <lijun.kernel@gmail.com>,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        linux-usb@vger.kernel.org, devicetree@vger.kernel.org
+Subject: Re: [RFC][PATCH 2/3] usb: roles: Add usb role switch notifier.
+Message-ID: <20191003112618.GA2420393@kroah.com>
+References: <20191002231617.3670-1-john.stultz@linaro.org>
+ <20191002231617.3670-3-john.stultz@linaro.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="KsGdsel6WgEHnImy"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAMpxmJUHPuGPPPFSctyhtfj0oAk6oJ+=mvgN4=7jmLxAfHs45Q@mail.gmail.com>
+In-Reply-To: <20191002231617.3670-3-john.stultz@linaro.org>
 User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, Oct 02, 2019 at 11:16:16PM +0000, John Stultz wrote:
+> From: Yu Chen <chenyu56@huawei.com>
+> 
+> This patch adds notifier for drivers want to be informed of the usb role
+> switch.
 
---KsGdsel6WgEHnImy
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Ick, I hate notifiers, they always come back to cause problems.
 
-Hi,
+What's just wrong with a "real" call to who ever needs to know this?
+And who does need to know this anyway?  Like Hans said, if we don't have
+a user for it, we should not add it.
 
-On Thu 03 Oct 19, 10:24, Bartosz Golaszewski wrote:
-> pt., 27 wrz 2019 o 12:04 Paul Kocialkowski
-> <paul.kocialkowski@bootlin.com> napisa=C5=82(a):
-> >
-> > Some drivers might need a custom get operation to match custom
-> > behavior implemented in the set operation.
-> >
-> > Add plumbing for supporting that.
-> >
-> > Signed-off-by: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
-> > ---
-> >  drivers/gpio/gpio-syscon.c | 7 ++++---
-> >  1 file changed, 4 insertions(+), 3 deletions(-)
-> >
-> > diff --git a/drivers/gpio/gpio-syscon.c b/drivers/gpio/gpio-syscon.c
-> > index 31f332074d7d..05c537ed73f1 100644
-> > --- a/drivers/gpio/gpio-syscon.c
-> > +++ b/drivers/gpio/gpio-syscon.c
-> > @@ -43,8 +43,9 @@ struct syscon_gpio_data {
-> >         unsigned int    bit_count;
-> >         unsigned int    dat_bit_offset;
-> >         unsigned int    dir_bit_offset;
-> > -       void            (*set)(struct gpio_chip *chip,
-> > -                              unsigned offset, int value);
-> > +       int             (*get)(struct gpio_chip *chip, unsigned offset);
-> > +       void            (*set)(struct gpio_chip *chip, unsigned offset,
-> > +                              int value);
->=20
-> Why did you change this line? Doesn't seem necessary and pollutes the his=
-tory.
+thanks,
 
-This is for consistency since both the "chip" and "offset" arguments can fit
-in a single line. Since I want the "get" addition to fit in a single line,
-bringing back "offset" on the previous line of "set" makes things consisten=
-t.
-There's probably no particular reason for the split in the first place.
-
-Do you think it needs a separate cosmetic commit only for that?
-I'd rather add a note in the commit message and keep the change as-is.
-
-Cheers,
-
-Paul
-
-> Bart
->=20
-> >  };
-> >
-> >  struct syscon_gpio_priv {
-> > @@ -252,7 +253,7 @@ static int syscon_gpio_probe(struct platform_device=
- *pdev)
-> >         priv->chip.label =3D dev_name(dev);
-> >         priv->chip.base =3D -1;
-> >         priv->chip.ngpio =3D priv->data->bit_count;
-> > -       priv->chip.get =3D syscon_gpio_get;
-> > +       priv->chip.get =3D priv->data->get ? : syscon_gpio_get;
-> >         if (priv->data->flags & GPIO_SYSCON_FEAT_IN)
-> >                 priv->chip.direction_input =3D syscon_gpio_dir_in;
-> >         if (priv->data->flags & GPIO_SYSCON_FEAT_OUT) {
-> > --
-> > 2.23.0
-> >
-
---=20
-Paul Kocialkowski, Bootlin
-Embedded Linux and kernel engineering
-https://bootlin.com
-
---KsGdsel6WgEHnImy
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEEJZpWjZeIetVBefti3cLmz3+fv9EFAl2V2tIACgkQ3cLmz3+f
-v9GFGwf+IxprRkzBRr6IH3r+Ju8Sd+z8fEo/prPvemGLA9fboSrQhRno5RP3V6dX
-h6NYZY+XEegXl+DrVqbJkNz0fpudKjY2XdJLhNR/9tKHQddj0UD2/ZgfavO30sZi
-DL7f2PCUYC1kVr8j8bgJz4Vr/4EnEHs4Vkjfm9jKV8giap/DUYOX3QL1OwhBFEJW
-53Cr+bJOuNC/+3G6oMeJ8GPzcikdYu+dRHV6Ka1mjxEeB3REj2g5jSEjZ+dwfczT
-WLp3usydgx1AC+ag8EObLYXTb3ysu7Ugz0k+3HACQ1OTXijo5YMDzTtCYwlVrn4A
-J+G/dstigrIs86FBd4MmZaOtafb+Xw==
-=vWKK
------END PGP SIGNATURE-----
-
---KsGdsel6WgEHnImy--
+greg k-h
