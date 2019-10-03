@@ -2,136 +2,88 @@ Return-Path: <SRS0=6dNS=X4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2B36C10F14
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:04:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A73A0C10F14
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:04:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8F35920673
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:04:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6FC092070B
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:04:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1570122254;
+	bh=0xn1V+dQaLQrN6Mj+KrT7gR0pmwR/tohH0dFedkmAxU=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=u7GGuh50jqA1Uiv/XVz1ywqVZkzuP/vT2kTCnkymYM8lgVIpXV123tN1rfDcySawm
+	 kvVyhy6Gbanc2Byabofs2S6vgHVdeEOZiaWNnRzzkuSIau/uHcj9DNsm7rWMOlxhZr
+	 ZwCStNERYSd1i5uyZywWhVaI5BdhQmONLL6Op+5g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393313AbfJCREG (ORCPT
+        id S2393321AbfJCREN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 13:04:06 -0400
-Received: from stargate.chelsio.com ([12.32.117.8]:48549 "EHLO
-        stargate.chelsio.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732998AbfJCREE (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 13:04:04 -0400
-Received: from localhost (mehrangarh.blr.asicdesigners.com [10.193.185.169])
-        by stargate.chelsio.com (8.13.8/8.13.8) with ESMTP id x93H3sMP028509;
-        Thu, 3 Oct 2019 10:03:55 -0700
-Date:   Thu, 3 Oct 2019 22:33:53 +0530
-From:   Potnuri Bharat Teja <bharat@chelsio.com>
-To:     Greg KH <gregkh@linuxfoundation.org>
-Cc:     Doug Ledford <dledford@redhat.com>, Jason Gunthorpe <jgg@ziepe.ca>,
-        "linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Nicolas Waisman <nico@semmle.com>
-Subject: Re: [PATCH] cxgb4: do not dma memory off of the stack
-Message-ID: <20191003170339.GA16190@chelsio.com>
-References: <20191001153917.GA3498459@kroah.com>
+        Thu, 3 Oct 2019 13:04:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51642 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2405008AbfJCQlQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:41:16 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8CBF0206BB;
+        Thu,  3 Oct 2019 16:41:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1570120876;
+        bh=0xn1V+dQaLQrN6Mj+KrT7gR0pmwR/tohH0dFedkmAxU=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=i4JNlVIxy5GyFmvR9o9PKGZb9mtYzuRzlOeaKrU9oa0OI00WsrH+6M+lfD62a7nf0
+         YZbsQRR2AjSeNzkyZLTcuQqjfqfhvEZy7CHQm2P+BOluBDZ3sQXzuLId/xUQCJTY4W
+         8YoqNClnwidGLmc+vQyyzGOHdYBFYiENn5HtYhb0=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Ori Nimron <orinimron123@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 5.3 035/344] ax25: enforce CAP_NET_RAW for raw sockets
+Date:   Thu,  3 Oct 2019 17:50:00 +0200
+Message-Id: <20191003154543.547209436@linuxfoundation.org>
+X-Mailer: git-send-email 2.23.0
+In-Reply-To: <20191003154540.062170222@linuxfoundation.org>
+References: <20191003154540.062170222@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191001153917.GA3498459@kroah.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tuesday, October 10/01/19, 2019 at 21:09:17 +0530, Greg KH wrote:
-> Nicolas pointed out that the cxgb4 driver is doing dma off of the stack,
-> which is generally considered a very bad thing.  On some architectures
-> it could be a security problem, but odds are none of them actually run
-> this driver, so it's just a "normal" bug.
-> 
-> Resolve this by allocating the memory for a message off of the heap
-> instead of the stack.  kmalloc() always will give us a proper memory
-> location that DMA will work correctly from.
-> 
-> Reported-by: Nicolas Waisman <nico@semmle.com>
-> Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> 
-> ---
-> 
-> Note, test-built only, I don't have this hardware to actually run this
-> code at all.
-Thanks for the patch.
-Tests with HW ran fine.
-Tested-by: Potnuri Bharat Teja <bharat@chelsio.com>
+From: Ori Nimron <orinimron123@gmail.com>
 
-> 
-> diff --git a/drivers/infiniband/hw/cxgb4/mem.c b/drivers/infiniband/hw/cxgb4/mem.c
-> index aa772ee0706f..b2bd3de81dcd 100644
-> --- a/drivers/infiniband/hw/cxgb4/mem.c
-> +++ b/drivers/infiniband/hw/cxgb4/mem.c
-> @@ -275,13 +275,17 @@ static int write_tpt_entry(struct c4iw_rdev *rdev, u32 reset_tpt_entry,
->  			   struct sk_buff *skb, struct c4iw_wr_wait *wr_waitp)
->  {
->  	int err;
-> -	struct fw_ri_tpte tpt;
-> +	struct fw_ri_tpte *tpt;
->  	u32 stag_idx;
->  	static atomic_t key;
->  
->  	if (c4iw_fatal_error(rdev))
->  		return -EIO;
->  
-> +	tpt = kmalloc(sizeof(*tpt), GFP_KERNEL);
-> +	if (!tpt)
-> +		return -ENOMEM;
-> +
->  	stag_state = stag_state > 0;
->  	stag_idx = (*stag) >> 8;
->  
-> @@ -305,28 +309,28 @@ static int write_tpt_entry(struct c4iw_rdev *rdev, u32 reset_tpt_entry,
->  
->  	/* write TPT entry */
->  	if (reset_tpt_entry)
-> -		memset(&tpt, 0, sizeof(tpt));
-> +		memset(tpt, 0, sizeof(*tpt));
->  	else {
-> -		tpt.valid_to_pdid = cpu_to_be32(FW_RI_TPTE_VALID_F |
-> +		tpt->valid_to_pdid = cpu_to_be32(FW_RI_TPTE_VALID_F |
->  			FW_RI_TPTE_STAGKEY_V((*stag & FW_RI_TPTE_STAGKEY_M)) |
->  			FW_RI_TPTE_STAGSTATE_V(stag_state) |
->  			FW_RI_TPTE_STAGTYPE_V(type) | FW_RI_TPTE_PDID_V(pdid));
-> -		tpt.locread_to_qpid = cpu_to_be32(FW_RI_TPTE_PERM_V(perm) |
-> +		tpt->locread_to_qpid = cpu_to_be32(FW_RI_TPTE_PERM_V(perm) |
->  			(bind_enabled ? FW_RI_TPTE_MWBINDEN_F : 0) |
->  			FW_RI_TPTE_ADDRTYPE_V((zbva ? FW_RI_ZERO_BASED_TO :
->  						      FW_RI_VA_BASED_TO))|
->  			FW_RI_TPTE_PS_V(page_size));
-> -		tpt.nosnoop_pbladdr = !pbl_size ? 0 : cpu_to_be32(
-> +		tpt->nosnoop_pbladdr = !pbl_size ? 0 : cpu_to_be32(
->  			FW_RI_TPTE_PBLADDR_V(PBL_OFF(rdev, pbl_addr)>>3));
-> -		tpt.len_lo = cpu_to_be32((u32)(len & 0xffffffffUL));
-> -		tpt.va_hi = cpu_to_be32((u32)(to >> 32));
-> -		tpt.va_lo_fbo = cpu_to_be32((u32)(to & 0xffffffffUL));
-> -		tpt.dca_mwbcnt_pstag = cpu_to_be32(0);
-> -		tpt.len_hi = cpu_to_be32((u32)(len >> 32));
-> +		tpt->len_lo = cpu_to_be32((u32)(len & 0xffffffffUL));
-> +		tpt->va_hi = cpu_to_be32((u32)(to >> 32));
-> +		tpt->va_lo_fbo = cpu_to_be32((u32)(to & 0xffffffffUL));
-> +		tpt->dca_mwbcnt_pstag = cpu_to_be32(0);
-> +		tpt->len_hi = cpu_to_be32((u32)(len >> 32));
->  	}
->  	err = write_adapter_mem(rdev, stag_idx +
->  				(rdev->lldi.vr->stag.start >> 5),
-> -				sizeof(tpt), &tpt, skb, wr_waitp);
-> +				sizeof(*tpt), tpt, skb, wr_waitp);
->  
->  	if (reset_tpt_entry) {
->  		c4iw_put_resource(&rdev->resource.tpt_table, stag_idx);
-> @@ -334,6 +338,7 @@ static int write_tpt_entry(struct c4iw_rdev *rdev, u32 reset_tpt_entry,
->  		rdev->stats.stag.cur -= 32;
->  		mutex_unlock(&rdev->stats.lock);
->  	}
-> +	kfree(tpt);
->  	return err;
->  }
->  
+[ Upstream commit 0614e2b73768b502fc32a75349823356d98aae2c ]
+
+When creating a raw AF_AX25 socket, CAP_NET_RAW needs to be checked
+first.
+
+Signed-off-by: Ori Nimron <orinimron123@gmail.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+---
+ net/ax25/af_ax25.c |    2 ++
+ 1 file changed, 2 insertions(+)
+
+--- a/net/ax25/af_ax25.c
++++ b/net/ax25/af_ax25.c
+@@ -855,6 +855,8 @@ static int ax25_create(struct net *net,
+ 		break;
+ 
+ 	case SOCK_RAW:
++		if (!capable(CAP_NET_RAW))
++			return -EPERM;
+ 		break;
+ 	default:
+ 		return -ESOCKTNOSUPPORT;
+
+
