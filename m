@@ -2,96 +2,103 @@ Return-Path: <SRS0=6dNS=X4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CFC21C10F14
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 11:51:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C5CFC32792
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 11:51:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AD0CE215EA
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 11:51:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 014F9218DE
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 11:51:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1570103519;
+	bh=gh2BwGChFgakU2b0Nn81nUTVrkAdKDXGZpJ4cMB1VM8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Vi8Nn6zglRUHVhA390we8Vlt02qzdJec9wZ2Et5NvL2HHBd/IDE7GZzT69wuAWk1L
+	 XLLHtFhspdvrqcnP4D4clY7zJ/lC13l/nYO3lkLYVfq4gD4ORN5iJRE7bqEpvA/2UN
+	 iyefwDYw99+GDbtqsSIoPjKpo2xkaH3kOHt61mgQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730276AbfJCLvj (ORCPT
+        id S1730306AbfJCLv6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 07:51:39 -0400
-Received: from tartarus.angband.pl ([54.37.238.230]:40722 "EHLO
-        tartarus.angband.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726523AbfJCLvj (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 07:51:39 -0400
-Received: from kilobyte by tartarus.angband.pl with local (Exim 4.92)
-        (envelope-from <kilobyte@angband.pl>)
-        id 1iFzds-0004Po-Ja; Thu, 03 Oct 2019 13:51:32 +0200
-Date:   Thu, 3 Oct 2019 13:51:32 +0200
-From:   Adam Borowski <kilobyte@angband.pl>
-To:     David Laight <David.Laight@ACULAB.COM>
-Cc:     'Kurt Roeckx' <kurt@roeckx.be>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Theodore Ts'o <tytso@mit.edu>
-Subject: Re: Stop breaking the CSRNG
-Message-ID: <20191003115132.GA14301@angband.pl>
-References: <20191002165533.GA18282@roeckx.be>
- <b193685d90c0474aa0727555f936528b@AcuMS.aculab.com>
+        Thu, 3 Oct 2019 07:51:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35796 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726523AbfJCLv5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 07:51:57 -0400
+Received: from localhost (lfbn-1-10718-76.w90-89.abo.wanadoo.fr [90.89.68.76])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id C283F215EA;
+        Thu,  3 Oct 2019 11:51:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1570103517;
+        bh=gh2BwGChFgakU2b0Nn81nUTVrkAdKDXGZpJ4cMB1VM8=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=vdRXrRY18lwTNPL/y9J3Ef9MtoUxJKfG7fmE8fGIKEmTJwfJgZg9XqdaEirRiSA7m
+         jJGvAiJG+M24eY4h79ygx5XcyBA6YdhlxUebj78LxuLisK8hmiFGAvZbLraxmzkfiy
+         mwPt9B8wLzyBWOxnSpuFkGW23MvVWm0YcPCQs+wQ=
+Date:   Thu, 3 Oct 2019 13:51:54 +0200
+From:   Maxime Ripard <mripard@kernel.org>
+To:     Amit Kucheria <amit.kucheria@linaro.org>
+Cc:     linux-kernel@vger.kernel.org,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Chen-Yu Tsai <wens@csie.org>, linux-media@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH] media: dt-bindings: media: Fixup Allwinner A10 CSI
+ binding
+Message-ID: <20191003115154.6f2jgj3dnqsved2y@gilmour>
+References: <b47ec7088aa4b07458519ab151de92df552a9302.1570101510.git.amit.kucheria@linaro.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="nmzxrjrlzz4yd5h2"
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <b193685d90c0474aa0727555f936528b@AcuMS.aculab.com>
-X-Junkbait: aaron@angband.pl, zzyx@angband.pl
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-SA-Exim-Connect-IP: <locally generated>
-X-SA-Exim-Mail-From: kilobyte@angband.pl
-X-SA-Exim-Scanned: No (on tartarus.angband.pl); SAEximRunCond expanded to false
+In-Reply-To: <b47ec7088aa4b07458519ab151de92df552a9302.1570101510.git.amit.kucheria@linaro.org>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Oct 03, 2019 at 10:13:39AM +0000, David Laight wrote:
-> From: Kurt Roeckx
-> > Sent: 02 October 2019 17:56
-> > As OpenSSL, we want cryptograhic secure random numbers. Before
-> > getrandom(), Linux never provided a good API for that, both
-> > /dev/random and /dev/urandom have problems. getrandom() fixed
-> > that, so we switched to it were available.
-> 
-> The fundamental problem is that you can't always get ' cryptograhic secure
-> random numbers'. No API changes are ever going to change that.
-> 
-> The system can either return an error or sleep (possibly indefinitely)
-> until some 'reasonably random' numbers are available.
-> 
-> A RISC-V system running on an FGPA (I've only used Altera NIOS cpu)
-> may have absolutely no sources of randomness at boot time.
 
-I'd say this is a hardware security vulnerability; no different from eg.
-having no or faulty MMU, speculation that allows exfiltrating data, etc.
-We did not understand the seriousness of lacking hardware sources of
-randomness, but that's a common thing to many other security
-vulnerabilities.
+--nmzxrjrlzz4yd5h2
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Machines that lack any sources of entropy have their uses, but they're akin
-to processors with no MMU.  You should never run a world-accessible ssh
-daemon on either of them.
+Hi,
 
-> Saying the architecture must include a random number instruction
-> doesn't help!
+On Thu, Oct 03, 2019 at 04:52:24PM +0530, Amit Kucheria wrote:
+> This new binding fails dt_binding_check due to a typo. Fix it up.
+>
+> linux.git/Documentation/devicetree/bindings/media/allwinner,sun4i-a10-csi.yaml: $id: path/filename 'arm/allwinner,sun4i-a10-csi.yaml' doesn't match actual filename
+> linux.git/Documentation/devicetree/bindings/Makefile:12: recipe for target 'Documentation/devicetree/bindings/media/allwinner,sun4i-a10-csi.example.dts' failed
+> make[2]: *** [Documentation/devicetree/bindings/media/allwinner,sun4i-a10-csi.example.dts] Error 1
+> make[2]: *** Waiting for unfinished jobs....
+> linux.git/Makefile:1284: recipe for target 'dt_binding_check' failed
+> make[1]: *** [dt_binding_check] Error 2
+>
+> Fixes: c5e8f4ccd7750 ("media: dt-bindings: media: Add Allwinner A10 CSI binding")
+> Signed-off-by: Amit Kucheria <amit.kucheria@linaro.org>
 
-It won't fix existing systems, and is irrelevant to deeply embedded, but
-communicating this requirement to SoC designers sounds like a good idea to
-me.  IoTrash appliance makers won't care but their security is already so
-atrocious that lack of entropy is nowhere near the easiest way to get in,
-while anyone else will at least notice the warning.
+Thanks for your patch.
 
-Any real-silicon hardware can include an entropy source, and if it doesn't,
-shaming the maker is the way to go.  Calling the problem a security
-vulnerability (which I say it is) sends a stronger message.
+It has already been submitted though:
+https://lore.kernel.org/linux-arm-kernel/1568808060-17516-1-git-send-email-pragnesh.patel@sifive.com/
 
+I'm not sure why it hasn't been applied yet though :/
 
-Meow!
--- 
-⢀⣴⠾⠻⢶⣦⠀ A MAP07 (Dead Simple) raspberry tincture recipe: 0.5l 95% alcohol,
-⣾⠁⢠⠒⠀⣿⡁ 1kg raspberries, 0.4kg sugar; put into a big jar for 1 month.
-⢿⡄⠘⠷⠚⠋⠀ Filter out and throw away the fruits (can dump them into a cake,
-⠈⠳⣄⠀⠀⠀⠀ etc), let the drink age at least 3-6 months.
+Maxime
+>
+
+--nmzxrjrlzz4yd5h2
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXZXg2gAKCRDj7w1vZxhR
+xS0OAP0SU5JvkUNzuu7h9+tNkONFA7iQwgl1sR9AZpJjgOiFJAEAoJeO4CR/ZOBa
+0Vu6m/HmNJojnOFoY2ILvkflVt+Zlwg=
+=RF+5
+-----END PGP SIGNATURE-----
+
+--nmzxrjrlzz4yd5h2--
