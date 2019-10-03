@@ -7,51 +7,52 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3C8AC32792
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:45:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C281BC10F14
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:45:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9C45120865
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:45:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 96A8021783
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:45:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570121120;
-	bh=V0RnYzcQU1XuCrNHFEnrM5GjrBtSWIbwGLuJ+vIGQHc=;
+	s=default; t=1570121125;
+	bh=LNmQa8JfNTTyUIRhReMvSm1L2bW74E9pXOUWqgGxBu4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=OWiFvzWJozzXYTj3P9appGAdiFQQRYy8yvBYwuw2rVjdSB1kA4zUuC4fkTBvLWrQ4
-	 zYn6i3IXNy8oBu0q7oOEE+NjriCIGzCa+vJLCWNjho7bnCk1zgFkGyMOO/sMw5dUQg
-	 LK+FTlbacKn01Jm+pMpZGxPW6lb3YLuisK2s6XLc=
+	b=wyTO0Tck6+d3DrKIgPB8lW8KIbCG3rzXQeGv3focTlfcW86/BghorkILHiKB0Knmp
+	 EhUTI79ho8IYvCyerHKMd/D5uiLPJhyYLote9jGU3aRjWEEj2FZEZRxH8TDRsYe3WA
+	 OIgtY4u2/+Q7aIOdb83tBKFbkCVF2fJWNWeMQ31o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392775AbfJCQpT (ORCPT
+        id S2392799AbfJCQpY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 12:45:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57696 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 12:45:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57868 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392753AbfJCQpP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:45:15 -0400
+        id S2392779AbfJCQpW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:45:22 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B7DB92070B;
-        Thu,  3 Oct 2019 16:45:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BC8762070B;
+        Thu,  3 Oct 2019 16:45:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570121114;
-        bh=V0RnYzcQU1XuCrNHFEnrM5GjrBtSWIbwGLuJ+vIGQHc=;
+        s=default; t=1570121122;
+        bh=LNmQa8JfNTTyUIRhReMvSm1L2bW74E9pXOUWqgGxBu4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=kEnnR29LtvCxCCj4RryFeSSLojV999E3DNJzm7Xvs+0oI/32Isf0juM8fGXVNzP+6
-         eZxfzLLPbIkHD1X68sVkgXBwjn0SAaccU6u6voNVKC1d+Y9OT4Pd+IP0JJJHGWOqab
-         zX8sDrGkYzBnz9TNRqn46pe+oZIzr0v5CRbkM0Rs=
+        b=IG7XmWtYGbAYBLh6/HsqsZBfyEmhnzhE0XoiESNyhyh89gZXJpe1AGHXKkmcyCR1Q
+         ilYpAR8/+lwbKOGbYjH83+gf9RSUC+60yyGp45ZdttoqdjHZtyprqBnHlRvH5feVgx
+         C1+Rahqm9eV/z1L5SIoC70KIICmUzOvXNm48eEdo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Benjamin Peterson <benjamin@python.org>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        stable@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
+        Andi Kleen <ak@linux.intel.com>, Jiri Olsa <jolsa@redhat.com>,
         Namhyung Kim <namhyung@kernel.org>,
         Peter Zijlstra <peterz@infradead.org>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.3 160/344] perf trace beauty ioctl: Fix off-by-one error in cmd->string table
-Date:   Thu,  3 Oct 2019 17:52:05 +0200
-Message-Id: <20191003154555.990626790@linuxfoundation.org>
+Subject: [PATCH 5.3 162/344] perf script: Fix memory leaks in list_scripts()
+Date:   Thu,  3 Oct 2019 17:52:07 +0200
+Message-Id: <20191003154556.200523688@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191003154540.062170222@linuxfoundation.org>
 References: <20191003154540.062170222@linuxfoundation.org>
@@ -64,82 +65,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Benjamin Peterson <benjamin@python.org>
+From: Gustavo A. R. Silva <gustavo@embeddedor.com>
 
-[ Upstream commit b92675f4a9c02dd78052645597dac9e270679ddf ]
+[ Upstream commit 3b4acbb92dbda4829e021e5c6d5410658849fa1c ]
 
-While tracing a program that calls isatty(3), I noticed that strace
-reported TCGETS for the request argument of the underlying ioctl(2)
-syscall while perf trace reported TCSETS. strace is corrrect. The bug in
-perf was due to the tty ioctl beauty table starting at 0x5400 rather
-than 0x5401.
+In case memory resources for *buf* and *paths* were allocated, jump to
+*out* and release them before return.
 
-Committer testing:
-
-  Using augmented_raw_syscalls.o and settings to make 'perf trace'
-  use strace formatting, i.e. with this in ~/.perfconfig
-
-  # cat ~/.perfconfig
-  [trace]
-	add_events = /home/acme/git/linux/tools/perf/examples/bpf/augmented_raw_syscalls.c
-	show_zeros = yes
-	show_duration = no
-	no_inherit = yes
-	show_timestamp = no
-	show_arg_names = no
-	args_alignment = 40
-	show_prefix = yes
-
-  # strace -e ioctl stty > /dev/null
-  ioctl(0, TCGETS, {B38400 opost isig icanon echo ...}) = 0
-  ioctl(1, TIOCGWINSZ, 0x7fff8a9b0860)    = -1 ENOTTY (Inappropriate ioctl for device)
-  ioctl(1, TCGETS, 0x7fff8a9b0540)        = -1 ENOTTY (Inappropriate ioctl for device)
-  +++ exited with 0 +++
-  #
-
-Before:
-
-  # perf trace -e ioctl stty > /dev/null
-  ioctl(0, TCSETS, 0x7fff2cf79f20)        = 0
-  ioctl(1, TIOCSWINSZ, 0x7fff2cf79f40)    = -1 ENOTTY (Inappropriate ioctl for device)
-  ioctl(1, TCSETS, 0x7fff2cf79c20)        = -1 ENOTTY (Inappropriate ioctl for device)
-  #
-
-After:
-
-  # perf trace -e ioctl stty > /dev/null
-  ioctl(0, TCGETS, 0x7ffed0763920)        = 0
-  ioctl(1, TIOCGWINSZ, 0x7ffed0763940)    = -1 ENOTTY (Inappropriate ioctl for device)
-  ioctl(1, TCGETS, 0x7ffed0763620)        = -1 ENOTTY (Inappropriate ioctl for device)
-  #
-
-Signed-off-by: Benjamin Peterson <benjamin@python.org>
-Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
 Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Andi Kleen <ak@linux.intel.com>
+Cc: Gustavo A. R. Silva <gustavo@embeddedor.com>
 Cc: Jiri Olsa <jolsa@redhat.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
 Cc: Peter Zijlstra <peterz@infradead.org>
-Fixes: 1cc47f2d46206d67285aea0ca7e8450af571da13 ("perf trace beauty ioctl: Improve 'cmd' beautifier")
-Link: http://lkml.kernel.org/r/20190823033625.18814-1-benjamin@python.org
+Addresses-Coverity-ID: 1444328 ("Resource leak")
+Fixes: 6f3da20e151f ("perf report: Support builtin perf script in scripts menu")
+Link: http://lkml.kernel.org/r/20190408162748.GA21008@embeddedor
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/perf/trace/beauty/ioctl.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ tools/perf/ui/browsers/scripts.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/tools/perf/trace/beauty/ioctl.c b/tools/perf/trace/beauty/ioctl.c
-index 52242fa4072b0..e19eb6ea361d7 100644
---- a/tools/perf/trace/beauty/ioctl.c
-+++ b/tools/perf/trace/beauty/ioctl.c
-@@ -21,7 +21,7 @@
- static size_t ioctl__scnprintf_tty_cmd(int nr, int dir, char *bf, size_t size)
- {
- 	static const char *ioctl_tty_cmd[] = {
--	"TCGETS", "TCSETS", "TCSETSW", "TCSETSF", "TCGETA", "TCSETA", "TCSETAW",
-+	[_IOC_NR(TCGETS)] = "TCGETS", "TCSETS", "TCSETSW", "TCSETSF", "TCGETA", "TCSETA", "TCSETAW",
- 	"TCSETAF", "TCSBRK", "TCXONC", "TCFLSH", "TIOCEXCL", "TIOCNXCL", "TIOCSCTTY",
- 	"TIOCGPGRP", "TIOCSPGRP", "TIOCOUTQ", "TIOCSTI", "TIOCGWINSZ", "TIOCSWINSZ",
- 	"TIOCMGET", "TIOCMBIS", "TIOCMBIC", "TIOCMSET", "TIOCGSOFTCAR", "TIOCSSOFTCAR",
+diff --git a/tools/perf/ui/browsers/scripts.c b/tools/perf/ui/browsers/scripts.c
+index 4d565cc14076c..0355d4aaf2eed 100644
+--- a/tools/perf/ui/browsers/scripts.c
++++ b/tools/perf/ui/browsers/scripts.c
+@@ -131,8 +131,10 @@ static int list_scripts(char *script_name, bool *custom,
+ 		int key = ui_browser__input_window("perf script command",
+ 				"Enter perf script command line (without perf script prefix)",
+ 				script_args, "", 0);
+-		if (key != K_ENTER)
+-			return -1;
++		if (key != K_ENTER) {
++			ret = -1;
++			goto out;
++		}
+ 		sprintf(script_name, "%s script %s", perf, script_args);
+ 	} else if (choice < num + max_std) {
+ 		strcpy(script_name, paths[choice]);
 -- 
 2.20.1
 
