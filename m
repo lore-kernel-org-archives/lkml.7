@@ -2,132 +2,70 @@ Return-Path: <SRS0=6dNS=X4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 01124C10F14
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 12:06:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DBAFAC10F14
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 12:11:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CB17A20700
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 12:06:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="RTG4/tZ7"
+	by mail.kernel.org (Postfix) with ESMTP id AA6DA20700
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 12:11:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729119AbfJCMG4 (ORCPT
+        id S1729181AbfJCMLW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 08:06:56 -0400
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:54680 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728234AbfJCMG4 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 08:06:56 -0400
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id x93C6pXX012402;
-        Thu, 3 Oct 2019 07:06:51 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1570104411;
-        bh=fIgeJdEZxeUHDYtIIEIg9Wo4Rny89F3Ow23zWdC1F0A=;
-        h=Date:From:To:CC:Subject:References:In-Reply-To;
-        b=RTG4/tZ7CqcXeaBvlrenopT0+I30vfNXrumomGwdsUPczLjuRRVeuAp4ni5QRbd4T
-         rcbeYrvyOPcSK7gUS77lryPhzY/aAAVVkOkQVznGqWJvHED/Gn2m1LkvB4aQssX+PB
-         n6MR8WKARX1f2+JIZK0tR4zrXYh4Hlnw6iV646F8=
-Received: from DLEE108.ent.ti.com (dlee108.ent.ti.com [157.170.170.38])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x93C6pNu107500
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 3 Oct 2019 07:06:51 -0500
-Received: from DLEE115.ent.ti.com (157.170.170.26) by DLEE108.ent.ti.com
- (157.170.170.38) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Thu, 3 Oct
- 2019 07:06:39 -0500
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE115.ent.ti.com
- (157.170.170.26) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Thu, 3 Oct 2019 07:06:50 -0500
-Received: from ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with SMTP id x93C6oR5005970;
-        Thu, 3 Oct 2019 07:06:50 -0500
-Date:   Thu, 3 Oct 2019 07:09:02 -0500
-From:   Benoit Parrot <bparrot@ti.com>
-To:     Jacopo Mondi <jacopo@jmondi.org>
-CC:     Hans Verkuil <hverkuil@xs4all.nl>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        <linux-media@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: Re: [Patch v2 3/3] media: ov5640: Make 2592x1944 mode only available
- at 15 fps
-Message-ID: <20191003120902.wd3w2qmiry5bpa4h@ti.com>
-References: <20191002135134.12273-1-bparrot@ti.com>
- <20191002135134.12273-4-bparrot@ti.com>
- <20191003073155.4sl3jkmobnm53tm2@uno.localdomain>
+        Thu, 3 Oct 2019 08:11:22 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:59222 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725892AbfJCMLV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 08:11:21 -0400
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 7D4473091753;
+        Thu,  3 Oct 2019 12:11:21 +0000 (UTC)
+Received: from prarit.bos.redhat.com (prarit-guest.khw1.lab.eng.bos.redhat.com [10.16.200.63])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id DE5235C226;
+        Thu,  3 Oct 2019 12:11:20 +0000 (UTC)
+From:   Prarit Bhargava <prarit@redhat.com>
+To:     platform-driver-x86@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, srinivas.pandruvada@linux.intel.com,
+        Prarit Bhargava <prarit@redhat.com>
+Subject: [PATCH v2 0/7] Add CascadeLake-N Support
+Date:   Thu,  3 Oct 2019 08:11:05 -0400
+Message-Id: <20191003121112.25870-1-prarit@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20191003073155.4sl3jkmobnm53tm2@uno.localdomain>
-User-Agent: NeoMutt/20171215
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.41]); Thu, 03 Oct 2019 12:11:21 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Jacopo Mondi <jacopo@jmondi.org> wrote on Thu [2019-Oct-03 09:31:55 +0200]:
-> Hi Benoit,
-> 
-> On Wed, Oct 02, 2019 at 08:51:34AM -0500, Benoit Parrot wrote:
-> > The sensor data sheet clearly state that 2592x1944 only works at 15 fps
-> > make sure we don't try to miss configure the pll out of acceptable
-> > range.
-> 
-> The datasheet clearly indicates that 15 fps is the maximum achievable
-> rate with that resolution, so I guess preventing it from being set
-> to anything faster than that it's acceptable.
-> >
-> > Signed-off-by: Benoit Parrot <bparrot@ti.com>
-> > ---
-> >  drivers/media/i2c/ov5640.c | 5 +++++
-> >  1 file changed, 5 insertions(+)
-> >
-> > diff --git a/drivers/media/i2c/ov5640.c b/drivers/media/i2c/ov5640.c
-> > index 103a4e8f88e1..d5b0be2c7a0a 100644
-> > --- a/drivers/media/i2c/ov5640.c
-> > +++ b/drivers/media/i2c/ov5640.c
-> > @@ -1613,6 +1613,11 @@ ov5640_find_mode(struct ov5640_dev *sensor, enum ov5640_frame_rate fr,
-> >  	    !(mode->hact == 640 && mode->vact == 480))
-> >  		return NULL;
-> >
-> > +	/* 2592x1944 only works at 15fps */
-> > +	if (fr != OV5640_15_FPS &&
-> 
-> As long as 15 fps is the lower framerate declared in
-> ov5640_framerates[] this is ok, but I would make this condition a
-> check for "fr  > OV5640_15_FPS" so that it's safe for future
-> extensions.
-> 
-> (And I would check for the resolution first then FPS, so you check
-> the most unlikely condition first, but that's really a minor
-> optimization).
+Add support for SST-BF on CascadeLake-N support.  The CascadeLake-N
+processor only support SST-BF and not other SST functionality.
 
-Ah, very good I'll change that.
+v2: Updated with comments from Srinivas (use common clx_n_* function names,
+common is_clx_n_platform() function call to identify CascadeLake-N)
 
-Benoit
+Signed-off-by: Prarit Bhargava <prarit@redhat.com>
 
-> 
-> With the above small details addressed
-> Reviewed-by: Jacopo Mondi <jacopo@jmondi.org>
-> 
-> Thanks
->    j
-> 
-> > +	    (mode->hact == 2592 && mode->vact == 1944))
-> > +		return NULL;
-> > +
-> >  	return mode;
-> >  }
-> >
-> > --
-> > 2.17.1
-> >
+Prarit Bhargava (7):
+  intel-speed-select: Add int argument to command functions
+  intel-speed-select: Make process_command generic
+  intel-speed-select: Add check for CascadeLake-N models
+  intel-speed-select: Add configuration for CascadeLake-N
+  intel-speed-select: Implement CascadeLake-N help and command functions
+    structures
+  intel-speed-select: Implement 'perf-profile info' on CascadeLake-N
+  intel-speed-select: Implement base-freq commands on CascadeLake-N
 
+ .../x86/intel-speed-select/isst-config.c      | 493 ++++++++++++------
+ .../x86/intel-speed-select/isst-display.c     |  14 +-
+ tools/power/x86/intel-speed-select/isst.h     |   3 +
+ 3 files changed, 339 insertions(+), 171 deletions(-)
+
+-- 
+2.18.1
 
