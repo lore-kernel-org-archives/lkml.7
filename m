@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C81A9C32792
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:34:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB540C10F14
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:34:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9DDEE2086A
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:34:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AE0ED20830
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:34:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570120458;
-	bh=hg7cnCXjeGWahhxiH2BWq0tRZool+GN4nN36HueKydU=;
+	s=default; t=1570120463;
+	bh=Q/NK56j/ghdmHEJTxu2BwpA78enXAjTw55znvF1Vb/A=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=x8HADHzr1Z5sEX/5J0/+VormYdUEshY22de6EjrGK7JHlf/3OG05CCjLYDT0+LHZ3
-	 rKT1Z8HUxYwEz3uKqAHveTDnNZujs1fYUhtvxtt+t/ZUJiOgl6GqYcosZaM2CbVyBx
-	 cZ7j0Xa6VhRCd/3DOfSidxsYL9bl/ho0I6zPOB18=
+	b=Sy3E3l7QiMfCZVGFK2Ipbr7ORnXkES+D73SB4abgJ/I176xBV4TWOwJo4CpxeqlyC
+	 Iz1TW3FaPH+bTk1zJbTzOtq9NpFgghYNTYa4bDTvC/Z7YFKFsmCiw3H0D2ZuiaD385
+	 7IIbcTvawVOxkKqjdSuYhp6pE6S+yYScbe9LAWuA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392119AbfJCQeS (ORCPT
+        id S2404165AbfJCQeW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 12:34:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42722 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 12:34:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42872 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404152AbfJCQeP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:34:15 -0400
+        id S2392122AbfJCQeU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:34:20 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D859F215EA;
-        Thu,  3 Oct 2019 16:34:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 198A92086A;
+        Thu,  3 Oct 2019 16:34:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570120454;
-        bh=hg7cnCXjeGWahhxiH2BWq0tRZool+GN4nN36HueKydU=;
+        s=default; t=1570120459;
+        bh=Q/NK56j/ghdmHEJTxu2BwpA78enXAjTw55znvF1Vb/A=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=H8NK+EuFQF+BoD6qhy2DkkjrSwjOm2CtB20KUbMdijL10gVQVemFxrbB/0jeMbVo3
-         lkD6x6zafOzaPPpJUmpO2Je08lKvFFa8mZkKuownVWkFUA7AKFz/M4h02qUsrJDsvq
-         QquXyWy8V9m8wa0d9WHqS7Mp+uHCwsm17ceOxQvs=
+        b=fgPaC9C8UFwMcRjQOZl2pmt7IdDlyAGk75p7p8oMNSpSldF5CwOd++t9LivlBBe/a
+         MlR/aF/juTLwugyJFpIztu/NlF11FyStVWQYxE5/n2bRFZmMVWOMwcXon8HEhZI0MI
+         LgDaimMAAowNb/piswkWtf2S/7bzXvUThwf5/B0k=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jan-Marek Glogowski <glogow@fbihome.de>,
-        Takashi Iwai <tiwai@suse.de>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 228/313] ALSA: hda/realtek - PCI quirk for Medion E4254
-Date:   Thu,  3 Oct 2019 17:53:26 +0200
-Message-Id: <20191003154555.468959729@linuxfoundation.org>
+        stable@vger.kernel.org, Takashi Iwai <tiwai@suse.de>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.2 203/313] ALSA: hda/realtek - Blacklist PC beep for Lenovo ThinkCentre M73/93
+Date:   Thu,  3 Oct 2019 17:53:01 +0200
+Message-Id: <20191003154552.986364854@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191003154533.590915454@linuxfoundation.org>
 References: <20191003154533.590915454@linuxfoundation.org>
@@ -59,82 +59,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jan-Marek Glogowski <glogow@fbihome.de>
+From: Takashi Iwai <tiwai@suse.de>
 
-[ Upstream commit bd9c10bc663dd2eaac8fe39dad0f18cd21527446 ]
+[ Upstream commit 051c78af14fcd74a22b5af45548ad9d588247cc7 ]
 
-The laptop has a combined jack to attach headsets on the right.
-The BIOS encodes them as two different colored jacks at the front,
-but otherwise it seems to be configured ok. But any adaption of
-the pins config on its own doesn't fix the jack detection to work
-in Linux. Still Windows works correct.
+Lenovo ThinkCentre M73 and M93 don't seem to have a proper beep
+although the driver tries to probe and set up blindly.
+Blacklist these machines for suppressing the beep creation.
 
-This is somehow fixed by chaining ALC256_FIXUP_ASUS_HEADSET_MODE,
-which seems to register the microphone jack as a headset part and
-also results in fixing jack sensing, visible in dmesg as:
-
--snd_hda_codec_realtek hdaudioC0D0:      Mic=0x19
-+snd_hda_codec_realtek hdaudioC0D0:      Headset Mic=0x19
-
-[ Actually the essential change is the location of the jack; the
-  driver created "Front Mic Jack" without the matching volume / mute
-  control element due to its jack location, which confused PA.
-  -- tiwai ]
-
-Signed-off-by: Jan-Marek Glogowski <glogow@fbihome.de>
-Cc: <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/8f4f9b20-0aeb-f8f1-c02f-fd53c09679f1@fbihome.de
+BugLink: https://bugzilla.kernel.org/show_bug.cgi?id=204635
 Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/pci/hda/patch_realtek.c | 13 +++++++++++++
- 1 file changed, 13 insertions(+)
+ sound/pci/hda/patch_realtek.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
 diff --git a/sound/pci/hda/patch_realtek.c b/sound/pci/hda/patch_realtek.c
-index d223a79ac934f..36aee8ad20547 100644
+index 1bec62720374d..d223a79ac934f 100644
 --- a/sound/pci/hda/patch_realtek.c
 +++ b/sound/pci/hda/patch_realtek.c
-@@ -5870,6 +5870,7 @@ enum {
- 	ALC256_FIXUP_ASUS_MIC_NO_PRESENCE,
- 	ALC299_FIXUP_PREDATOR_SPK,
- 	ALC294_FIXUP_ASUS_INTSPK_HEADSET_MIC,
-+	ALC256_FIXUP_MEDION_HEADSET_NO_PRESENCE,
- };
- 
- static const struct hda_fixup alc269_fixups[] = {
-@@ -6926,6 +6927,16 @@ static const struct hda_fixup alc269_fixups[] = {
- 		.chained = true,
- 		.chain_id = ALC269_FIXUP_HEADSET_MODE_NO_HP_MIC
- 	},
-+	[ALC256_FIXUP_MEDION_HEADSET_NO_PRESENCE] = {
-+		.type = HDA_FIXUP_PINS,
-+		.v.pins = (const struct hda_pintbl[]) {
-+			{ 0x19, 0x04a11040 },
-+			{ 0x21, 0x04211020 },
-+			{ }
-+		},
-+		.chained = true,
-+		.chain_id = ALC256_FIXUP_ASUS_HEADSET_MODE
-+	},
- };
- 
- static const struct snd_pci_quirk alc269_fixup_tbl[] = {
-@@ -7189,6 +7200,7 @@ static const struct snd_pci_quirk alc269_fixup_tbl[] = {
- 	SND_PCI_QUIRK(0x17aa, 0x9e54, "LENOVO NB", ALC269_FIXUP_LENOVO_EAPD),
- 	SND_PCI_QUIRK(0x19e5, 0x3204, "Huawei MACH-WX9", ALC256_FIXUP_HUAWEI_MACH_WX9_PINS),
- 	SND_PCI_QUIRK(0x1b7d, 0xa831, "Ordissimo EVE2 ", ALC269VB_FIXUP_ORDISSIMO_EVE2), /* Also known as Malata PC-B1303 */
-+	SND_PCI_QUIRK(0x10ec, 0x118c, "Medion EE4254 MD62100", ALC256_FIXUP_MEDION_HEADSET_NO_PRESENCE),
- 
- #if 0
- 	/* Below is a quirk table taken from the old code.
-@@ -7357,6 +7369,7 @@ static const struct hda_model_fixup alc269_fixup_models[] = {
- 	{.id = ALC295_FIXUP_CHROME_BOOK, .name = "alc-chrome-book"},
- 	{.id = ALC299_FIXUP_PREDATOR_SPK, .name = "predator-spk"},
- 	{.id = ALC298_FIXUP_HUAWEI_MBX_STEREO, .name = "huawei-mbx-stereo"},
-+	{.id = ALC256_FIXUP_MEDION_HEADSET_NO_PRESENCE, .name = "alc256-medion-headset"},
+@@ -1058,6 +1058,9 @@ static const struct snd_pci_quirk beep_white_list[] = {
+ 	SND_PCI_QUIRK(0x1043, 0x834a, "EeePC", 1),
+ 	SND_PCI_QUIRK(0x1458, 0xa002, "GA-MA790X", 1),
+ 	SND_PCI_QUIRK(0x8086, 0xd613, "Intel", 1),
++	/* blacklist -- no beep available */
++	SND_PCI_QUIRK(0x17aa, 0x309e, "Lenovo ThinkCentre M73", 0),
++	SND_PCI_QUIRK(0x17aa, 0x30a3, "Lenovo ThinkCentre M93", 0),
  	{}
  };
- #define ALC225_STANDARD_PINS \
+ 
 -- 
 2.20.1
 
