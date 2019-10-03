@@ -2,96 +2,156 @@ Return-Path: <SRS0=6dNS=X4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F2B3C10F14
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 07:59:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A862C10F14
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 08:00:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0EBDF21D81
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 07:59:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="xzpHUKIW"
+	by mail.kernel.org (Postfix) with ESMTP id 3A16121D81
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 08:00:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728763AbfJCH7f (ORCPT
+        id S1728795AbfJCIAM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 03:59:35 -0400
-Received: from conuserg-11.nifty.com ([210.131.2.78]:59224 "EHLO
-        conuserg-11.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727452AbfJCH7Q (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 03:59:16 -0400
-Received: from localhost.localdomain (p14092-ipngnfx01kyoto.kyoto.ocn.ne.jp [153.142.97.92]) (authenticated)
-        by conuserg-11.nifty.com with ESMTP id x937wTkW007720;
-        Thu, 3 Oct 2019 16:58:32 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-11.nifty.com x937wTkW007720
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1570089513;
-        bh=+2++qHqEb0DqRRYFRDlh3635ELQ/E4mk9ABraUBN90M=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xzpHUKIW1Rdb+BGeVOTE9aitZme/b4Cfxbnx0ukpryA73Q4laaIZVJGwNI8EgBL11
-         m+uKhaOQFaL8e1PwVsafamEH4O56h27AmtxkNtTG6KI0ugDRwCQ7rSRUgK2aQaka0l
-         M/Ph7mbYklGJwrBRwxK4BavnKcTVFXoPN3q6/Dbc3raiAeBUwo68O0yC92D6Mr/lq2
-         psMYe10UTW5BIQLpX3JB4Zr2JUg5sFAVaP1le7jQz8Cbn9I517yaTTo44qZOfrqqNA
-         JLYFfDsJ/ak3lsxsO5PD+KT3jvexpQIMH8cdcXjE8jyCtEoT5j5IbFnHbJeSXbaDi6
-         j9JPu7ZbVh3ZA==
-X-Nifty-SrcIP: [153.142.97.92]
-From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-To:     Jessica Yu <jeyu@kernel.org>
-Cc:     Matthias Maennich <maennich@google.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Shaun Ruffell <sruffell@sruffell.net>,
-        linux-kbuild@vger.kernel.org,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Michal Marek <michal.lkml@markovi.net>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v2 4/6] kbuild: fix build error of 'make nsdeps' in clean tree
-Date:   Thu,  3 Oct 2019 16:58:24 +0900
-Message-Id: <20191003075826.7478-5-yamada.masahiro@socionext.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20191003075826.7478-1-yamada.masahiro@socionext.com>
-References: <20191003075826.7478-1-yamada.masahiro@socionext.com>
+        Thu, 3 Oct 2019 04:00:12 -0400
+Received: from mx2.suse.de ([195.135.220.15]:47228 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727385AbfJCIAM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 04:00:12 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 5D91EB0DA;
+        Thu,  3 Oct 2019 08:00:09 +0000 (UTC)
+Subject: Re: [patch for-5.3 0/4] revert immediate fallback to remote hugepages
+To:     David Rientjes <rientjes@google.com>,
+        Michal Hocko <mhocko@kernel.org>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Mel Gorman <mgorman@suse.de>,
+        "Kirill A. Shutemov" <kirill@shutemov.name>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux-MM <linux-mm@kvack.org>
+References: <20190909193020.GD2063@dhcp22.suse.cz>
+ <20190925070817.GH23050@dhcp22.suse.cz>
+ <alpine.DEB.2.21.1909261149380.39830@chino.kir.corp.google.com>
+ <20190927074803.GB26848@dhcp22.suse.cz>
+ <CAHk-=wgba5zOJtGBFCBP3Oc1m4ma+AR+80s=hy=BbvNr3GqEmA@mail.gmail.com>
+ <20190930112817.GC15942@dhcp22.suse.cz>
+ <20191001054343.GA15624@dhcp22.suse.cz>
+ <fac13297-424f-33b0-e01d-d72b949a73fe@suse.cz>
+ <alpine.DEB.2.21.1910011318050.38265@chino.kir.corp.google.com>
+ <a5abc877-26de-ed3c-eb33-71474301c852@suse.cz>
+ <20191002103422.GJ15624@dhcp22.suse.cz>
+ <alpine.DEB.2.21.1910021525180.63052@chino.kir.corp.google.com>
+From:   Vlastimil Babka <vbabka@suse.cz>
+Autocrypt: addr=vbabka@suse.cz; prefer-encrypt=mutual; keydata=
+ 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
+Message-ID: <788d3e5b-40e6-916a-9e3f-7f03fa9d618d@suse.cz>
+Date:   Thu, 3 Oct 2019 10:00:08 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.0
+MIME-Version: 1.0
+In-Reply-To: <alpine.DEB.2.21.1910021525180.63052@chino.kir.corp.google.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Running 'make nsdeps' in a clean source tree fails as follows:
+On 10/3/19 12:32 AM, David Rientjes wrote:
+> On Wed, 2 Oct 2019, Michal Hocko wrote:
+> 
+>>>> If 
+>>>> hugetlb wants to stress this to the fullest extent possible, it already 
+>>>> appropriately uses __GFP_RETRY_MAYFAIL.
+>>>
+>>> Which doesn't work anymore right now, and should again after this patch.
+>>
+>> I didn't get to fully digest the patch Vlastimil is proposing. (Ab)using
+>> __GFP_NORETRY is quite subtle but it is already in place with some
+>> explanation and a reference to THPs. So while I am not really happy it
+>> is at least something you can reason about.
+>>
+> 
+> It's a no-op:
+> 
+>         /* Do not loop if specifically requested */
+>         if (gfp_mask & __GFP_NORETRY)
+>                 goto nopage;
+> 
+>         /*
+>          * Do not retry costly high order allocations unless they are
+>          * __GFP_RETRY_MAYFAIL
+>          */
+>         if (costly_order && !(gfp_mask & __GFP_RETRY_MAYFAIL))
+>                 goto nopage;
+> 
+> So I'm not sure we should spend too much time discussing a hunk of a patch 
+> that doesn't do anything.
 
-$ make -s clean; make -s defconfig; make nsdeps
-   [ snip ]
-awk: fatal: cannot open file `init/modules.order' for reading (No such file or directory)
-make: *** [Makefile;1307: modules.order] Error 2
-make: *** Deleting file 'modules.order'
-make: *** Waiting for unfinished jobs....
-
-The cause of the error is 'make nsdeps' does not build modules at all.
-Set KBUILD_MODULES to fix it.
-
-Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
-Reviewed-by: Matthias Maennich <maennich@google.com>
----
-
-Changes in v2: None
-
- Makefile | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/Makefile b/Makefile
-index 6f54f2f95743..d97f38ad5d9f 100644
---- a/Makefile
-+++ b/Makefile
-@@ -616,7 +616,7 @@ endif
- # in addition to whatever we do anyway.
- # Just "make" or "make all" shall build modules as well
- 
--ifneq ($(filter all _all modules,$(MAKECMDGOALS)),)
-+ifneq ($(filter all _all modules nsdeps,$(MAKECMDGOALS)),)
-   KBUILD_MODULES := 1
- endif
- 
--- 
-2.17.1
-
+I believe Michal was talking about my (ab)use of __GFP_NORETRY, where it
+controls the earlier 'goto nopage' condition. Yes, with your patches alone,
+the addition of __GFP_NORETRY in the second attempt is a no-op, although
+then I don't see the point of confusing people reading the code with it.
