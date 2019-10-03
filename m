@@ -7,49 +7,50 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D09E1C4CED1
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:31:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D1C7DC32792
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:31:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A352720862
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:31:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A880320830
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:31:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570123860;
-	bh=hl3O/OFJLRd7pyM5aEktlYIQgT6hixGXy1W4f3nfxMQ=;
+	s=default; t=1570123865;
+	bh=uR4aGca4FN9wadKYbMaF/W0aRTC4nJx9UHIMFrXBdn0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vNszpgF+0CIumiAWbZB0D/b57klPF+LwiskkMCaeGy8oLFy+5fgK5GKswzKKRdMEi
-	 Ujg+NPNR67GyRKbpQcMMVc9ldxtFUhOZN5z1yvDw1L0S+yraeyQVx/kYGlC0mrEkS7
-	 dAUZxb2CTbQ3WJ3L7zLra1sKOViAWAGAsaKoL9cs=
+	b=QdofHRy/bXz7CZRMaChqpcH/wNE/u/zHkd1bGKTNAk9u/Xh54nMrQWTLoZd+UhlKt
+	 nkJLfsAX64fKB/qX7967NUDfiXDN0H03/Cb7RmTLsXDFbl5/+leU5OLpmTlcknbxAg
+	 6stH3hl9/CwzS0B1zn6Y3lbhBD0cyhaz7A29PlS4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387719AbfJCQKq (ORCPT
+        id S2387679AbfJCQKi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 12:10:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60240 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 12:10:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59998 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387702AbfJCQKn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:10:43 -0400
+        id S1730267AbfJCQKc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:10:32 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D16A220865;
-        Thu,  3 Oct 2019 16:10:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F2589215EA;
+        Thu,  3 Oct 2019 16:10:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570119042;
-        bh=hl3O/OFJLRd7pyM5aEktlYIQgT6hixGXy1W4f3nfxMQ=;
+        s=default; t=1570119031;
+        bh=uR4aGca4FN9wadKYbMaF/W0aRTC4nJx9UHIMFrXBdn0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wvzdcvXenZpyb/gOQhNTPTqGmsclGN0Z8+r1zrIK3O42RJmvVv7I4FUy/JmWeO/0F
-         TyTfOB6bzB1n6xIF9aMPRPnpGcgfdkTCOJgAnnbPnHbEIfgOXTFUFgC5vf+naxYmD0
-         tCyz+AI3yyPJJ8jMSaOf7RmjswNP1q3i5crV5B7I=
+        b=nYYvtGzzkn9hTknMnUmNiSt8JsNr6l32NzDccBdeJh4Y1lgTdGjKPO+0UR9rCPXmZ
+         G36Qvqv4CuKbjgRGtK87kV3nhL5Ih9qAY7rzyqwimMGLnjNISiC6CKVnvfmeSw0dCR
+         f8+dT+7FOLfIbU7QxiJuSs6Pmbamohy45SUYeVpU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Kamil Konieczny <k.konieczny@partner.samsung.com>,
-        Chanwoo Choi <cw00.choi@samsung.com>,
-        MyungJoo Ham <myungjoo.ham@samsung.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 104/185] PM / devfreq: exynos-bus: Correct clock enable sequence
-Date:   Thu,  3 Oct 2019 17:53:02 +0200
-Message-Id: <20191003154502.348273629@linuxfoundation.org>
+        stable@vger.kernel.org, Phil Auld <pauld@redhat.com>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 083/185] sched/fair: Use rq_lock/unlock in online_fair_sched_group
+Date:   Thu,  3 Oct 2019 17:52:41 +0200
+Message-Id: <20191003154456.332104405@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191003154437.541662648@linuxfoundation.org>
 References: <20191003154437.541662648@linuxfoundation.org>
@@ -62,99 +63,72 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kamil Konieczny <k.konieczny@partner.samsung.com>
+From: Phil Auld <pauld@redhat.com>
 
-[ Upstream commit 2c2b20e0da89c76759ee28c6824413ab2fa3bfc6 ]
+[ Upstream commit a46d14eca7b75fffe35603aa8b81df654353d80f ]
 
-Regulators should be enabled before clocks to avoid h/w hang. This
-require change in exynos_bus_probe() to move exynos_bus_parse_of()
-after exynos_bus_parent_parse_of() and change in error handling.
-Similar change is needed in exynos_bus_exit() where clock should be
-disabled before regulators.
+Enabling WARN_DOUBLE_CLOCK in /sys/kernel/debug/sched_features causes
+warning to fire in update_rq_clock. This seems to be caused by onlining
+a new fair sched group not using the rq lock wrappers.
 
-Signed-off-by: Kamil Konieczny <k.konieczny@partner.samsung.com>
-Acked-by: Chanwoo Choi <cw00.choi@samsung.com>
-Signed-off-by: MyungJoo Ham <myungjoo.ham@samsung.com>
+  [] rq->clock_update_flags & RQCF_UPDATED
+  [] WARNING: CPU: 5 PID: 54385 at kernel/sched/core.c:210 update_rq_clock+0xec/0x150
+
+  [] Call Trace:
+  []  online_fair_sched_group+0x53/0x100
+  []  cpu_cgroup_css_online+0x16/0x20
+  []  online_css+0x1c/0x60
+  []  cgroup_apply_control_enable+0x231/0x3b0
+  []  cgroup_mkdir+0x41b/0x530
+  []  kernfs_iop_mkdir+0x61/0xa0
+  []  vfs_mkdir+0x108/0x1a0
+  []  do_mkdirat+0x77/0xe0
+  []  do_syscall_64+0x55/0x1d0
+  []  entry_SYSCALL_64_after_hwframe+0x44/0xa9
+
+Using the wrappers in online_fair_sched_group instead of the raw locking
+removes this warning.
+
+[ tglx: Use rq_*lock_irq() ]
+
+Signed-off-by: Phil Auld <pauld@redhat.com>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Vincent Guittot <vincent.guittot@linaro.org>
+Cc: Ingo Molnar <mingo@kernel.org>
+Link: https://lkml.kernel.org/r/20190801133749.11033-1-pauld@redhat.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/devfreq/exynos-bus.c | 31 +++++++++++++++++--------------
- 1 file changed, 17 insertions(+), 14 deletions(-)
+ kernel/sched/fair.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/devfreq/exynos-bus.c b/drivers/devfreq/exynos-bus.c
-index 49f68929e024f..25ff31eb1044c 100644
---- a/drivers/devfreq/exynos-bus.c
-+++ b/drivers/devfreq/exynos-bus.c
-@@ -194,11 +194,10 @@ static void exynos_bus_exit(struct device *dev)
- 	if (ret < 0)
- 		dev_warn(dev, "failed to disable the devfreq-event devices\n");
+diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+index 808db3566ddbc..55a33009f9a54 100644
+--- a/kernel/sched/fair.c
++++ b/kernel/sched/fair.c
+@@ -9423,18 +9423,18 @@ int alloc_fair_sched_group(struct task_group *tg, struct task_group *parent)
+ void online_fair_sched_group(struct task_group *tg)
+ {
+ 	struct sched_entity *se;
++	struct rq_flags rf;
+ 	struct rq *rq;
+ 	int i;
  
--	if (bus->regulator)
--		regulator_disable(bus->regulator);
+ 	for_each_possible_cpu(i) {
+ 		rq = cpu_rq(i);
+ 		se = tg->se[i];
 -
- 	dev_pm_opp_of_remove_table(dev);
- 	clk_disable_unprepare(bus->clk);
-+	if (bus->regulator)
-+		regulator_disable(bus->regulator);
- }
- 
- /*
-@@ -386,6 +385,7 @@ static int exynos_bus_probe(struct platform_device *pdev)
- 	struct exynos_bus *bus;
- 	int ret, max_state;
- 	unsigned long min_freq, max_freq;
-+	bool passive = false;
- 
- 	if (!np) {
- 		dev_err(dev, "failed to find devicetree node\n");
-@@ -399,27 +399,27 @@ static int exynos_bus_probe(struct platform_device *pdev)
- 	bus->dev = &pdev->dev;
- 	platform_set_drvdata(pdev, bus);
- 
--	/* Parse the device-tree to get the resource information */
--	ret = exynos_bus_parse_of(np, bus);
--	if (ret < 0)
--		return ret;
--
- 	profile = devm_kzalloc(dev, sizeof(*profile), GFP_KERNEL);
--	if (!profile) {
--		ret = -ENOMEM;
--		goto err;
--	}
-+	if (!profile)
-+		return -ENOMEM;
- 
- 	node = of_parse_phandle(dev->of_node, "devfreq", 0);
- 	if (node) {
- 		of_node_put(node);
--		goto passive;
-+		passive = true;
- 	} else {
- 		ret = exynos_bus_parent_parse_of(np, bus);
-+		if (ret < 0)
-+			return ret;
+-		raw_spin_lock_irq(&rq->lock);
++		rq_lock_irq(rq, &rf);
+ 		update_rq_clock(rq);
+ 		attach_entity_cfs_rq(se);
+ 		sync_throttle(tg, i);
+-		raw_spin_unlock_irq(&rq->lock);
++		rq_unlock_irq(rq, &rf);
  	}
- 
-+	/* Parse the device-tree to get the resource information */
-+	ret = exynos_bus_parse_of(np, bus);
- 	if (ret < 0)
--		goto err;
-+		goto err_reg;
-+
-+	if (passive)
-+		goto passive;
- 
- 	/* Initialize the struct profile and governor data for parent device */
- 	profile->polling_ms = 50;
-@@ -509,6 +509,9 @@ static int exynos_bus_probe(struct platform_device *pdev)
- err:
- 	dev_pm_opp_of_remove_table(dev);
- 	clk_disable_unprepare(bus->clk);
-+err_reg:
-+	if (!passive)
-+		regulator_disable(bus->regulator);
- 
- 	return ret;
  }
+ 
 -- 
 2.20.1
 
