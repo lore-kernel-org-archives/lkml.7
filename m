@@ -4,51 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 48FE8C10F14
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:18:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97896C10F14
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:18:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1865420830
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:18:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6A26E20830
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:18:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570123129;
-	bh=+hiAlNfbSBPF8qKfDkfN4sNImtyxNSb/HIggk7vL2UE=;
+	s=default; t=1570123139;
+	bh=oxUGfmRL9iGpIDJ2pCNJq5o2xCvzlbFrr0Q4xmMQX0s=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=n9z3IohJ1NvhAeyZ5jy+6/KLf6bYRghapxxykdTqc9HaDRWrJvg4POwHlYP5sQKdT
-	 R4MARz2CM2Re9ziUSvVbROCC8RSU64K+uFs1slPCrViBExvO7XSqNT1nX+wGW1VHSu
-	 rm35OG/xLcNnAuNkvRFuUr7GaN6W20CPrXzYgwUo=
+	b=azyZWVsI9BimRnqTWLBXCIDlB4D8ebCQba8yE5PlY9eUdZJRe6jVrgutLB15rL6p0
+	 m1xh40h2NPuQqYPnHJEnBVYwpi5vy10GSoqApPVFNot4xv/WGQP224+s+sMRxbeIuZ
+	 Or3eyKPISawDRlEDo6KjfZ7MVVYWPQvz7SyrByDQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389917AbfJCQUf (ORCPT
+        id S2389866AbfJCQUR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 12:20:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48298 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 12:20:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47630 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731517AbfJCQUd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:20:33 -0400
+        id S2389829AbfJCQUL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:20:11 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 90DB720865;
-        Thu,  3 Oct 2019 16:20:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E6D18222BE;
+        Thu,  3 Oct 2019 16:20:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570119633;
-        bh=+hiAlNfbSBPF8qKfDkfN4sNImtyxNSb/HIggk7vL2UE=;
+        s=default; t=1570119610;
+        bh=oxUGfmRL9iGpIDJ2pCNJq5o2xCvzlbFrr0Q4xmMQX0s=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=SBH6riL5/qd/BA9nrJf1OjUpZAune74uhhx5DzC0qoPVx/us5Eaj/aXg/q+ch1xkV
-         iGexVsgvcCQRaJs6AkLekpgQM+fFUto3lAqzf+KjljNJJK+ddGvugo48lZ2q5FSQlB
-         JB57GzYXeESN6iFQUrOB82LpGJ1wR6cWNkvYbnio=
+        b=p7OHDglXCpFLD6d5zxe7DI4ThnGbMvkZHRvncSeWH7/LP+nymnUTH6+KRsmD8hy7A
+         SpTZ5JJksG/a9LJAwdUjK42rYOEfLNb9/ea9fIrSiwviReCb9C0vZNTYpcUTjqAOYt
+         OBkxzCNaeAjWvvZBFZbihq7deX4HWiIFSi3RRQ8w=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Matthias Kaehlcke <mka@chromium.org>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Douglas Anderson <dianders@chromium.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 136/211] mmc: dw_mmc: Re-store SDIO IRQs mask at system resume
-Date:   Thu,  3 Oct 2019 17:53:22 +0200
-Message-Id: <20191003154518.185905298@linuxfoundation.org>
+        stable@vger.kernel.org, Tony Luck <tony.luck@intel.com>,
+        Gayatri Kammela <gayatri.kammela@intel.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Rahul Tanwar <rahul.tanwar@linux.intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 129/211] x86/cpu: Add Tiger Lake to Intel family
+Date:   Thu,  3 Oct 2019 17:53:15 +0200
+Message-Id: <20191003154516.210922650@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191003154447.010950442@linuxfoundation.org>
 References: <20191003154447.010950442@linuxfoundation.org>
@@ -61,46 +64,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ulf Hansson <ulf.hansson@linaro.org>
+From: Gayatri Kammela <gayatri.kammela@intel.com>
 
-[ Upstream commit 7c526608d5afb62cbc967225e2ccaacfdd142e9d ]
+[ Upstream commit 6e1c32c5dbb4b90eea8f964c2869d0bde050dbe0 ]
 
-In cases when SDIO IRQs have been enabled, runtime suspend is prevented by
-the driver. However, this still means dw_mci_runtime_suspend|resume() gets
-called during system suspend/resume, via pm_runtime_force_suspend|resume().
-This means during system suspend/resume, the register context of the dw_mmc
-device most likely loses its register context, even in cases when SDIO IRQs
-have been enabled.
+Add the model numbers/CPUIDs of Tiger Lake mobile and desktop to the
+Intel family.
 
-To re-enable the SDIO IRQs during system resume, the dw_mmc driver
-currently relies on the mmc core to re-enable the SDIO IRQs when it resumes
-the SDIO card, but this isn't the recommended solution. Instead, it's
-better to deal with this locally in the dw_mmc driver, so let's do that.
-
-Tested-by: Matthias Kaehlcke <mka@chromium.org>
-Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
-Reviewed-by: Douglas Anderson <dianders@chromium.org>
-Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
+Suggested-by: Tony Luck <tony.luck@intel.com>
+Signed-off-by: Gayatri Kammela <gayatri.kammela@intel.com>
+Signed-off-by: Tony Luck <tony.luck@intel.com>
+Reviewed-by: Tony Luck <tony.luck@intel.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Rahul Tanwar <rahul.tanwar@linux.intel.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Link: https://lkml.kernel.org/r/20190905193020.14707-2-tony.luck@intel.com
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/mmc/host/dw_mmc.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ arch/x86/include/asm/intel-family.h | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/drivers/mmc/host/dw_mmc.c b/drivers/mmc/host/dw_mmc.c
-index 942da07c9eb87..22c454c7aaca6 100644
---- a/drivers/mmc/host/dw_mmc.c
-+++ b/drivers/mmc/host/dw_mmc.c
-@@ -3486,6 +3486,10 @@ int dw_mci_runtime_resume(struct device *dev)
- 	/* Force setup bus to guarantee available clock output */
- 	dw_mci_setup_bus(host->slot, true);
+diff --git a/arch/x86/include/asm/intel-family.h b/arch/x86/include/asm/intel-family.h
+index aebedbaf52607..5d0b72f281402 100644
+--- a/arch/x86/include/asm/intel-family.h
++++ b/arch/x86/include/asm/intel-family.h
+@@ -58,6 +58,9 @@
+ #define INTEL_FAM6_ICELAKE_MOBILE	0x7E
+ #define INTEL_FAM6_ICELAKE_NNPI		0x9D
  
-+	/* Re-enable SDIO interrupts. */
-+	if (sdio_irq_claimed(host->slot->mmc))
-+		__dw_mci_enable_sdio_irq(host->slot, 1);
++#define INTEL_FAM6_TIGERLAKE_L		0x8C
++#define INTEL_FAM6_TIGERLAKE		0x8D
 +
- 	/* Now that slots are all setup, we can enable card detect */
- 	dw_mci_enable_cd(host);
+ /* "Small Core" Processors (Atom) */
  
+ #define INTEL_FAM6_ATOM_BONNELL		0x1C /* Diamondville, Pineview */
 -- 
 2.20.1
 
