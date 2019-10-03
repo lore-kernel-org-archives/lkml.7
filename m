@@ -4,49 +4,59 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DF31C10F14
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:43:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34A09C10F14
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:43:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2169E20865
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:43:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0C2E220867
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:43:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570120995;
-	bh=R84mSIxpEX1AcPIuhZJU0uwLWQyn3K4b+Mpvg9kxH0k=;
+	s=default; t=1570120998;
+	bh=6wQX0xJ/q3Ed4fG+/mE1pswdwSLXVm2+9rffNMTgyZM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=S2Wt7v8mIaSS8NXk6Fq/lzayT50N4f5FOoYM2s5HUO/IIs2AB6gaSsDSnqs8yAfV3
-	 N0VytMIr/DRJfYqhQIGqEA7Q3ocAIbFYFBqQUuEbZLapAvGK7kNmbKC9YKss8qX2qI
-	 jXDKW5UagoFtUi5B1DaZjSqv30ThAaJyJc5nCOok=
+	b=yrJ4DiEhyzZY+ny2amDPxWcUrAXSCeJxVyBnR8kBiPDpFr9TxP8HAfgn6ZfxYw3ke
+	 Izii8LzpK/e775oNX9gFw9Vr/3RCnnWOQNtFqcBH+l7H9/rXYXdTD7kfdvLxdvAkvO
+	 NM7mPk719Trr9tpl8GqX+bPwD62n0RcCMAooS6jA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405139AbfJCQnN (ORCPT
+        id S2405168AbfJCQnR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 12:43:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54490 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 12:43:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54582 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2405120AbfJCQnL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:43:11 -0400
+        id S2405140AbfJCQnN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:43:13 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C3EB920865;
-        Thu,  3 Oct 2019 16:43:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4D7692070B;
+        Thu,  3 Oct 2019 16:43:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570120990;
-        bh=R84mSIxpEX1AcPIuhZJU0uwLWQyn3K4b+Mpvg9kxH0k=;
+        s=default; t=1570120992;
+        bh=6wQX0xJ/q3Ed4fG+/mE1pswdwSLXVm2+9rffNMTgyZM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=w21k/gQHvA1HwrHNFFaHb55uh9WCsPGo8ikcYBrCtc2F1lRqcEku4MkPMkgui5MHO
-         N5QXXH/QhkgvOAH/t5FuuO9FshM+J4qMYsMFBNaeWhZBZS/JPecCaRMXtWd4Cu/bwM
-         bbU3rk0lFGdRoiQlizrR2eMp/UDYlX5aES7k6LuQ=
+        b=n7KejlMLMT3DxqKyeAjZr/z5HpDbRQZtJDMsUvLOnU9aIJjQcGWThdTUcxGHydLhf
+         8EXl2q5aVT0uh0wFX2nE2tZQSpC6Tof1NMVs8Qsjc81FE+DMd9/H2Jt78w9ic3Nkb0
+         3OAYDlxZ1Wy5e2Zk27z/uOnz48eyCzsaTEr7rW6k=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
+        stable@vger.kernel.org, Tan Xiaojun <tanxiaojun@huawei.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Alexey Budankov <alexey.budankov@linux.intel.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Song Liu <songliubraving@fb.com>,
+        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
+        "Tzvetomir Stoyanov (VMware)" <tz.stoyanov@gmail.com>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.3 114/344] ARM: xscale: fix multi-cpu compilation
-Date:   Thu,  3 Oct 2019 17:51:19 +0200
-Message-Id: <20191003154551.446518473@linuxfoundation.org>
+Subject: [PATCH 5.3 115/344] perf record: Support aarch64 random socket_id assignment
+Date:   Thu,  3 Oct 2019 17:51:20 +0200
+Message-Id: <20191003154551.554233113@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191003154540.062170222@linuxfoundation.org>
 References: <20191003154540.062170222@linuxfoundation.org>
@@ -59,56 +69,78 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Arnd Bergmann <arnd@arndb.de>
+From: Tan Xiaojun <tanxiaojun@huawei.com>
 
-[ Upstream commit c7b68049943079550d4e6af0f10aa3aabd64131a ]
+[ Upstream commit 0a4d8fb229dd78f9e0752817339e19e903b37a60 ]
 
-Building a combined ARMv4+XScale kernel produces these
-and other build failures:
+Same as in the commit 01766229533f ("perf record: Support s390 random
+socket_id assignment"), aarch64 also have this problem.
 
-/tmp/copypage-xscale-3aa821.s: Assembler messages:
-/tmp/copypage-xscale-3aa821.s:167: Error: selected processor does not support `pld [r7,#0]' in ARM mode
-/tmp/copypage-xscale-3aa821.s:168: Error: selected processor does not support `pld [r7,#32]' in ARM mode
-/tmp/copypage-xscale-3aa821.s:169: Error: selected processor does not support `pld [r1,#0]' in ARM mode
-/tmp/copypage-xscale-3aa821.s:170: Error: selected processor does not support `pld [r1,#32]' in ARM mode
-/tmp/copypage-xscale-3aa821.s:171: Error: selected processor does not support `pld [r7,#64]' in ARM mode
-/tmp/copypage-xscale-3aa821.s:176: Error: selected processor does not support `ldrd r4,r5,[r7],#8' in ARM mode
-/tmp/copypage-xscale-3aa821.s:180: Error: selected processor does not support `strd r4,r5,[r1],#8' in ARM mode
+Without this fix:
 
-Add an explict .arch armv5 in the inline assembly to allow the ARMv5
-specific instructions regardless of the compiler -march= target.
+  [root@localhost perf]# ./perf report --header -I -v
+  ...
+  socket_id number is too big.You may need to upgrade the perf tool.
 
-Link: https://lore.kernel.org/r/20190809163334.489360-5-arnd@arndb.de
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+  # ========
+  # captured on    : Thu Aug  1 22:58:38 2019
+  # header version : 1
+  ...
+  # Core ID and Socket ID information is not available
+  ...
+
+With this fix:
+  [root@localhost perf]# ./perf report --header -I -v
+  ...
+  cpumask list: 0-31
+  cpumask list: 32-63
+  cpumask list: 64-95
+  cpumask list: 96-127
+
+  # ========
+  # captured on    : Thu Aug  1 22:58:38 2019
+  # header version : 1
+  ...
+  # CPU 0: Core ID 0, Socket ID 36
+  # CPU 1: Core ID 1, Socket ID 36
+  ...
+  # CPU 126: Core ID 126, Socket ID 8442
+  # CPU 127: Core ID 127, Socket ID 8442
+  ...
+
+Signed-off-by: Tan Xiaojun <tanxiaojun@huawei.com>
+Acked-by: Jiri Olsa <jolsa@kernel.org>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Alexey Budankov <alexey.budankov@linux.intel.com>
+Cc: Kan Liang <kan.liang@linux.intel.com>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Song Liu <songliubraving@fb.com>
+Cc: Steven Rostedt (VMware) <rostedt@goodmis.org>
+Cc: Tzvetomir Stoyanov (VMware) <tz.stoyanov@gmail.com>
+Link: http://lkml.kernel.org/r/1564717737-21602-1-git-send-email-tanxiaojun@huawei.com
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/mm/copypage-xscale.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ tools/perf/util/header.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/arch/arm/mm/copypage-xscale.c b/arch/arm/mm/copypage-xscale.c
-index 61d834157bc05..382e1c2855e85 100644
---- a/arch/arm/mm/copypage-xscale.c
-+++ b/arch/arm/mm/copypage-xscale.c
-@@ -42,6 +42,7 @@ static void mc_copy_user_page(void *from, void *to)
- 	 * when prefetching destination as well.  (NP)
+diff --git a/tools/perf/util/header.c b/tools/perf/util/header.c
+index 1903d7ec97976..bf7cf12495539 100644
+--- a/tools/perf/util/header.c
++++ b/tools/perf/util/header.c
+@@ -2251,8 +2251,10 @@ static int process_cpu_topology(struct feat_fd *ff, void *data __maybe_unused)
+ 	/* On s390 the socket_id number is not related to the numbers of cpus.
+ 	 * The socket_id number might be higher than the numbers of cpus.
+ 	 * This depends on the configuration.
++	 * AArch64 is the same.
  	 */
- 	asm volatile ("\
-+.arch xscale					\n\
- 	pld	[%0, #0]			\n\
- 	pld	[%0, #32]			\n\
- 	pld	[%1, #0]			\n\
-@@ -106,8 +107,9 @@ void
- xscale_mc_clear_user_highpage(struct page *page, unsigned long vaddr)
- {
- 	void *ptr, *kaddr = kmap_atomic(page);
--	asm volatile(
--	"mov	r1, %2				\n\
-+	asm volatile("\
-+.arch xscale					\n\
-+	mov	r1, %2				\n\
- 	mov	r2, #0				\n\
- 	mov	r3, #0				\n\
- 1:	mov	ip, %0				\n\
+-	if (ph->env.arch && !strncmp(ph->env.arch, "s390", 4))
++	if (ph->env.arch && (!strncmp(ph->env.arch, "s390", 4)
++			  || !strncmp(ph->env.arch, "aarch64", 7)))
+ 		do_core_id_test = false;
+ 
+ 	for (i = 0; i < (u32)cpu_nr; i++) {
 -- 
 2.20.1
 
