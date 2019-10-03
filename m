@@ -4,51 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99A69C4CED1
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:01:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 430F7C32792
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:01:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 63E77222C2
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:01:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0337A21A4C
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:01:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570118517;
-	bh=MIecuNNRxGS+on9SL/GewOgrOrgNIMHtj3KVEuhl5CI=;
+	s=default; t=1570118519;
+	bh=zhlYxEHaGCVikA60k3MAIF+EJmj7oCxcoIJOOn1L+Js=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=CU0awdTYwIq2oVWbmDQnc62EsvU/aZ8UeiQ1y2s2t8r6TH0nMzmtYFrpAxFI+cyDE
-	 /5rCyyzRs4AtuBTo0IZDwEU8mT2/eHy7Va20BN3vfuUWvazvHQ4y5lfyCQz2dGoZx4
-	 MF4sSeGp3WXcHjt56BjybExbeeBe0+DayzmUQayE=
+	b=MuxGAq4oLK0tzfuxUWQqeKXYhNZJFnB3npU9uNcXiISIEE6SWgaJXd6jwNfWjNEhA
+	 /qV6bwwxLezJFUL66Qd7xFtArJyTY5idc0CXe4ka9Ggo5uEzflGn63hJWkAM5+ieDn
+	 hX6+cX166zob3Xek0vQic02nmhKw++kFmO9YBKU4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731936AbfJCQB4 (ORCPT
+        id S1731951AbfJCQB6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 12:01:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46416 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 12:01:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46492 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731048AbfJCQBx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:01:53 -0400
+        id S1731928AbfJCQBz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:01:55 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9E52320700;
-        Thu,  3 Oct 2019 16:01:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 52CA021A4C;
+        Thu,  3 Oct 2019 16:01:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570118512;
-        bh=MIecuNNRxGS+on9SL/GewOgrOrgNIMHtj3KVEuhl5CI=;
+        s=default; t=1570118514;
+        bh=zhlYxEHaGCVikA60k3MAIF+EJmj7oCxcoIJOOn1L+Js=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=OBJ5/o4MgSnTjTwq0zHwd/JvAdGZskCAklobknWSwHVmCOHP+SAoE+ct2RlZHQQd0
-         8Zav4DLKbB5CGNsU62IBsdGtF+5ZYp83DtNO6ArDwZfC6nUcZaggeOAH/eOpXG3liy
-         69OsfHgppsQwG1D6pdMZm2EqqWN1zzgzchFTlq2A=
+        b=QbuquQDIBT/liCIbJV+9qHwMV7n1OX5gtOMsj4IwZo/vtGOZQNI/5Nn0VaV7aVBsU
+         RiQBM8zk31RwYX9xYV88Xx8yEFhfLoJPoqVFecPadiY6q9VamlJ+5HGmYN5rULhXCx
+         pfC1MNkmA70FM5SUfUcz34XCIbtgoHqMKL1stYDQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, kbuild test robot <lkp@intel.com>,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        Christophe Leroy <christophe.leroy@c-s.fr>,
-        Herbert Xu <herbert@gondor.apana.org.au>
-Subject: [PATCH 4.9 007/129] crypto: talitos - fix missing break in switch statement
-Date:   Thu,  3 Oct 2019 17:52:10 +0200
-Message-Id: <20191003154322.503362886@linuxfoundation.org>
+        stable@vger.kernel.org, Marco Felsch <m.felsch@pengutronix.de>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Subject: [PATCH 4.9 008/129] media: tvp5150: fix switch exit in set control handler
+Date:   Thu,  3 Oct 2019 17:52:11 +0200
+Message-Id: <20191003154322.788073384@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191003154318.081116689@linuxfoundation.org>
 References: <20191003154318.081116689@linuxfoundation.org>
@@ -61,34 +59,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Gustavo A. R. Silva <gustavo@embeddedor.com>
+From: Marco Felsch <m.felsch@pengutronix.de>
 
-commit 5fc194ea6d34dfad9833d3043ce41d6c52aff39a upstream.
+commit 2d29bcc8c237874795175b2930fa9a45a115175a upstream.
 
-Add missing break statement in order to prevent the code from falling
-through to case CRYPTO_ALG_TYPE_AHASH.
+The function only consists of a single switch case block without a
+default case. Unsupported control requests are indicated by the -EINVAL
+return code trough the last return statement at the end of the function. So
+exiting just the switch case block returns the -EINVAL error code but the
+hue control is supported and a zero should be returned instead.
 
-Fixes: aeb4c132f33d ("crypto: talitos - Convert to new AEAD interface")
-Cc: stable@vger.kernel.org
-Reported-by: kbuild test robot <lkp@intel.com>
-Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
-Reviewed-by: Christophe Leroy <christophe.leroy@c-s.fr>
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+Replace the break by a 'return 0' to fix this behaviour.
+
+Fixes: d183e4efcae8 ("[media] v4l: tvp5150: Add missing break in set
+control handler")
+
+Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/crypto/talitos.c |    1 +
- 1 file changed, 1 insertion(+)
+ drivers/media/i2c/tvp5150.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/crypto/talitos.c
-+++ b/drivers/crypto/talitos.c
-@@ -3043,6 +3043,7 @@ static int talitos_remove(struct platfor
- 			break;
- 		case CRYPTO_ALG_TYPE_AEAD:
- 			crypto_unregister_aead(&t_alg->algt.alg.aead);
-+			break;
- 		case CRYPTO_ALG_TYPE_AHASH:
- 			crypto_unregister_ahash(&t_alg->algt.alg.hash);
- 			break;
+--- a/drivers/media/i2c/tvp5150.c
++++ b/drivers/media/i2c/tvp5150.c
+@@ -824,7 +824,7 @@ static int tvp5150_s_ctrl(struct v4l2_ct
+ 		return 0;
+ 	case V4L2_CID_HUE:
+ 		tvp5150_write(sd, TVP5150_HUE_CTL, ctrl->val);
+-		break;
++		return 0;
+ 	case V4L2_CID_TEST_PATTERN:
+ 		decoder->enable = ctrl->val ? false : true;
+ 		tvp5150_selmux(sd);
 
 
