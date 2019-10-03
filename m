@@ -2,141 +2,118 @@ Return-Path: <SRS0=6dNS=X4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99EF7C10F14
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:07:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CBD91C32792
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:07:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6EECD20830
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:07:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A26E420830
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:07:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570122464;
-	bh=5c5TRDo84sJDQ13UTbdqdWaHh1lRiJyZiHqi4clyXMM=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=SUqjcVYeVf+gjrJhof8/Hmh2OhLsTqED7K2b8MtHbJoFA+yvsey+HJICT1LNQrna1
-	 AZ3lpj1nYJDR64IYIuSArsJDJI468pkR2m3r1x2nq8zKmVjJZ1n/50ZvKPSDpexX+O
-	 TBHh3eyKof3YLWKKkS5Hw4JiYjxvNRY61Lvg8dFs=
+	s=default; t=1570122467;
+	bh=judodVvtfyPO1QPUMh5cBC0ImVnKv7kctqKG1EVeODU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=bIbd5WVG1lAGvKSUw07ZHQyh3l49u4jQEE2YMq26nRHaTAIbLOeLesYsvFbf+DeK7
+	 7kw2NCwSisn6AMNjw1vHYg2CxrhmOOfEraXM1/CYf3JGRVRKn11dX5I+/ql1GHnthP
+	 opsXDERTzJiKCK5IdZMW9SCSvYQkwOTB0Xku+tgM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404393AbfJCQgP (ORCPT
+        id S2404382AbfJCRHq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 12:36:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45338 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 13:07:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45456 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404371AbfJCQgK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:36:10 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        id S2404386AbfJCQgP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:36:15 -0400
+Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B57042086A;
-        Thu,  3 Oct 2019 16:36:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3C33F2070B;
+        Thu,  3 Oct 2019 16:36:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570120570;
-        bh=5c5TRDo84sJDQ13UTbdqdWaHh1lRiJyZiHqi4clyXMM=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=enYHxHnE5kNtFbGEHcPAloEAsLISa0TNt9jl0BVsRoceEZsQXDP8ee0uEL/OOsmou
-         yo7eeUyTr18/B2hrpFVVfwpKZ80o72bW0/5/sTPT/6i5PftHMsuSwnypC9OllurHEa
-         2bCnfhaM+gtoFrVONtgWykx4E1+gI2tBGh6kVEXw=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Roberto Sassu <roberto.sassu@huawei.com>,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        Jerry Snitselaar <jsnitsel@redhat.com>
-Subject: [PATCH 5.2 271/313] KEYS: trusted: correctly initialize digests and fix locking issue
-Date:   Thu,  3 Oct 2019 17:54:09 +0200
-Message-Id: <20191003154559.738687404@linuxfoundation.org>
-X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20191003154533.590915454@linuxfoundation.org>
-References: <20191003154533.590915454@linuxfoundation.org>
-User-Agent: quilt/0.66
+        s=default; t=1570120574;
+        bh=judodVvtfyPO1QPUMh5cBC0ImVnKv7kctqKG1EVeODU=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=w8bZ+hMV38XC1vWA/KGyoQUuiE4RMwZVD9yuxNZqO981Z3pQMRsrpGiZPZo57qbw1
+         2NiUg7aTcpDliYgmtTHGHRnbLrGUeclrjXfMhOUoXSYlXrxMkyKovSCk2lBulZwJOw
+         bNJJjmxrrIkGjj1w8uy8Xd6xBBr/QuxGzun0vLdI=
+Date:   Thu, 3 Oct 2019 17:36:08 +0100
+From:   Will Deacon <will@kernel.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Geert Uytterhoeven <geert@linux-m68k.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Russell King - ARM Linux admin <linux@armlinux.org.uk>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Stefan Wahren <wahrenst@gmx.net>,
+        Kees Cook <keescook@google.com>, Arnd Bergmann <arnd@arndb.de>,
+        clang-built-linux <clang-built-linux@googlegroups.com>
+Subject: Re: [PATCH] compiler: enable CONFIG_OPTIMIZE_INLINING forcibly
+Message-ID: <20191003163606.iqzcxvghaw7hdqb5@willie-the-truck>
+References: <20191001092823.z4zhlbwvtwnlotwc@willie-the-truck>
+ <CAKwvOdk0h2A6=fb7Yepf+oKbZfq_tqwpGq8EBmHVu1j4mo-a-A@mail.gmail.com>
+ <20191001170142.x66orounxuln7zs3@willie-the-truck>
+ <CAKwvOdnFJqipp+G5xLDRBcOrQRcvMQmn+n8fufWyzyt2QL_QkA@mail.gmail.com>
+ <20191001175512.GK25745@shell.armlinux.org.uk>
+ <CAKwvOdmw_xmTGZLeK8-+Q4nUpjs-UypJjHWks-3jHA670Dxa1A@mail.gmail.com>
+ <20191001181438.GL25745@shell.armlinux.org.uk>
+ <CAKwvOdmBnBVU7F-a6DqPU6QM-BRc8LNn6YRmhTsuGLauCWKUOg@mail.gmail.com>
+ <CAMuHMdWPhE1nNkmL1nj3vpQhB7fP3uDs2i_ZVi0Gf9qij4W2CA@mail.gmail.com>
+ <CAHk-=wgFODvdFBHzgVf3JjoBz0z6LZhOm8xvMntsvOr66ASmZQ@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAHk-=wgFODvdFBHzgVf3JjoBz0z6LZhOm8xvMntsvOr66ASmZQ@mail.gmail.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Roberto Sassu <roberto.sassu@huawei.com>
+On Wed, Oct 02, 2019 at 01:39:40PM -0700, Linus Torvalds wrote:
+> On Wed, Oct 2, 2019 at 5:56 AM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
+> >
+> > >
+> > > Then use the C preprocessor to force the inlining.  I'm sorry it's not
+> > > as pretty as static inline functions.
+> >
+> > Which makes us lose the baby^H^H^H^Htype checking performed
+> > on function parameters, requiring to add more ugly checks.
+> 
+> I'm 100% agreed on this.
+> 
+> If the inline change is being pushed by people who say "you should
+> have used macros instead if you wanted inlining", then I will just
+> revert that stupid commit that is causing problems.
+> 
+> No, the preprocessor is not the answer.
+> 
+> That said, code that relies on inlining for _correctness_ should use
+> "__always_inline" and possibly even have a comment about why.
+> 
+> But I am considering just undoing commit 9012d011660e ("compiler:
+> allow all arches to enable CONFIG_OPTIMIZE_INLINING") entirely. The
+> advantages are questionable, and when the advantages are balanced
+> against actual regressions and the arguments are "use macros", that
+> just shows how badly thought out this was.
 
-commit 9f75c82246313d4c2a6bc77e947b45655b3b5ad5 upstream.
+It's clear that opinions are divided on this issue, but you can add
+an enthusiastic:
 
-Commit 0b6cf6b97b7e ("tpm: pass an array of tpm_extend_digest structures to
-tpm_pcr_extend()") modifies tpm_pcr_extend() to accept a digest for each
-PCR bank. After modification, tpm_pcr_extend() expects that digests are
-passed in the same order as the algorithms set in chip->allocated_banks.
+Acked-by: Will Deacon <will@kernel.org>
 
-This patch fixes two issues introduced in the last iterations of the patch
-set: missing initialization of the TPM algorithm ID in the tpm_digest
-structures passed to tpm_pcr_extend() by the trusted key module, and
-unreleased locks in the TPM driver due to returning from tpm_pcr_extend()
-without calling tpm_put_ops().
+if you go ahead with the revert. I'm all for allowing the compiler to
+make its own inlining decisions, but not when the potential for
+miscompilation isn't fully understood and the proposed alternatives turn
+the source into an unreadable mess. Perhaps we can do something different
+for 5.5 (arch opt-in? clang only? invert the logic? work to move functions
+over to __always_inline /before/ flipping the CONFIG option? ...?)
 
-Cc: stable@vger.kernel.org
-Fixes: 0b6cf6b97b7e ("tpm: pass an array of tpm_extend_digest structures to tpm_pcr_extend()")
-Signed-off-by: Roberto Sassu <roberto.sassu@huawei.com>
-Suggested-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Reviewed-by: Jerry Snitselaar <jsnitsel@redhat.com>
-Reviewed-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Signed-off-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
----
- drivers/char/tpm/tpm-interface.c |   14 +++++++++-----
- security/keys/trusted.c          |    5 +++++
- 2 files changed, 14 insertions(+), 5 deletions(-)
-
---- a/drivers/char/tpm/tpm-interface.c
-+++ b/drivers/char/tpm/tpm-interface.c
-@@ -320,18 +320,22 @@ int tpm_pcr_extend(struct tpm_chip *chip
- 	if (!chip)
- 		return -ENODEV;
- 
--	for (i = 0; i < chip->nr_allocated_banks; i++)
--		if (digests[i].alg_id != chip->allocated_banks[i].alg_id)
--			return -EINVAL;
-+	for (i = 0; i < chip->nr_allocated_banks; i++) {
-+		if (digests[i].alg_id != chip->allocated_banks[i].alg_id) {
-+			rc = EINVAL;
-+			goto out;
-+		}
-+	}
- 
- 	if (chip->flags & TPM_CHIP_FLAG_TPM2) {
- 		rc = tpm2_pcr_extend(chip, pcr_idx, digests);
--		tpm_put_ops(chip);
--		return rc;
-+		goto out;
- 	}
- 
- 	rc = tpm1_pcr_extend(chip, pcr_idx, digests[0].digest,
- 			     "attempting extend a PCR value");
-+
-+out:
- 	tpm_put_ops(chip);
- 	return rc;
- }
---- a/security/keys/trusted.c
-+++ b/security/keys/trusted.c
-@@ -1228,11 +1228,16 @@ hashalg_fail:
- 
- static int __init init_digests(void)
- {
-+	int i;
-+
- 	digests = kcalloc(chip->nr_allocated_banks, sizeof(*digests),
- 			  GFP_KERNEL);
- 	if (!digests)
- 		return -ENOMEM;
- 
-+	for (i = 0; i < chip->nr_allocated_banks; i++)
-+		digests[i].alg_id = chip->allocated_banks[i].alg_id;
-+
- 	return 0;
- }
- 
-
-
+Will
