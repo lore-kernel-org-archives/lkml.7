@@ -2,57 +2,44 @@ Return-Path: <SRS0=6dNS=X4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4251FC32792
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:47:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86CCDC10F14
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:47:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1608B20865
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:47:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570121263;
-	bh=tNKTrgo6pekEMV7o4Yg/oW12mfaytm7NtZ+DZIXJrIo=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=IyNo7ksvAqcXbAshlfJ3i7wSHWGvm/P5+jBtZWlMNfh8mYaH/YQ9JdXzYGOK0Mbu4
-	 rdcluTRTWZXXcI5U3uxzHODhrA5aF3RRgexiz0B76TIHKjISgnuPnqTrpMqwEreBwE
-	 yrUY1x4Jkjb6fkDZIzpk5bAHxlprYxdtdFoc0Vd4=
+	by mail.kernel.org (Postfix) with ESMTP id 5F16820867
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:47:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405527AbfJCQrm (ORCPT
+        id S2405538AbfJCQro (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 12:47:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33014 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 12:47:44 -0400
+Received: from ms.lwn.net ([45.79.88.28]:33140 "EHLO ms.lwn.net"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2405290AbfJCQrh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:47:37 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        id S2405322AbfJCQrj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:47:39 -0400
+Received: from lwn.net (localhost [127.0.0.1])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 42CB621848;
-        Thu,  3 Oct 2019 16:47:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570121256;
-        bh=tNKTrgo6pekEMV7o4Yg/oW12mfaytm7NtZ+DZIXJrIo=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=KFl0yU4vP0N2nc1iQMt54+J5quF0FkgrW8vpTpgluFUZPJ1VUOWo6daaucoeQ9s+4
-         7GSRV6+9D+0K2/J1B879VrnuiKTyQ9YxS+xGoAqmwv+BE9Ptbg6+b60Qil5ZqPfhAh
-         1OgcQkVEj10cBt+iBdyFfRqBHa0uBVoInFfm44nk=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Matthias Kaehlcke <mka@chromium.org>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Douglas Anderson <dianders@chromium.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.3 211/344] mmc: core: Clarify sdio_irq_pending flag for MMC_CAP2_SDIO_IRQ_NOTHREAD
-Date:   Thu,  3 Oct 2019 17:52:56 +0200
-Message-Id: <20191003154601.098886365@linuxfoundation.org>
-X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20191003154540.062170222@linuxfoundation.org>
-References: <20191003154540.062170222@linuxfoundation.org>
-User-Agent: quilt/0.66
+        by ms.lwn.net (Postfix) with ESMTPSA id 8A6C22D4;
+        Thu,  3 Oct 2019 16:47:38 +0000 (UTC)
+Date:   Thu, 3 Oct 2019 10:47:37 -0600
+From:   Jonathan Corbet <corbet@lwn.net>
+To:     Jonathan =?UTF-8?B?TmV1c2Now6RmZXI=?= <j.neuschaefer@gmx.net>
+Cc:     linux-doc@vger.kernel.org,
+        Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Shannon Nelson <snelson@pensando.io>,
+        Pensando Drivers <drivers@pensando.io>,
+        intel-wired-lan@lists.osuosl.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] Documentation: networking: device drivers: Remove stray
+ asterisks
+Message-ID: <20191003104737.3774a00f@lwn.net>
+In-Reply-To: <20191002150956.16234-1-j.neuschaefer@gmx.net>
+References: <20191002150956.16234-1-j.neuschaefer@gmx.net>
+Organization: LWN.net
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -61,102 +48,32 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ulf Hansson <ulf.hansson@linaro.org>
+On Wed,  2 Oct 2019 17:09:55 +0200
+Jonathan Neuschäfer <j.neuschaefer@gmx.net> wrote:
 
-[ Upstream commit 36d57efb4af534dd6b442ea0b9a04aa6dfa37abe ]
+> These asterisks were once references to a line that said:
+>   "* Other names and brands may be claimed as the property of others."
+> But now, they serve no purpose; they can only irritate the reader.
+> 
+> Fixes: de3edab4276c ("e1000: update README for e1000")
+> Fixes: a3fb65680f65 ("e100.txt: Cleanup license info in kernel doc")
+> Fixes: da8c01c4502a ("e1000e.txt: Add e1000e documentation")
+> Fixes: f12a84a9f650 ("Documentation: fm10k: Add kernel documentation")
+> Fixes: b55c52b1938c ("igb.txt: Add igb documentation")
+> Fixes: c4e9b56e2442 ("igbvf.txt: Add igbvf Documentation")
+> Fixes: d7064f4c192c ("Documentation/networking/: Update Intel wired LAN driver documentation")
+> Fixes: c4b8c01112a1 ("ixgbevf.txt: Update ixgbevf documentation")
+> Fixes: 1e06edcc2f22 ("Documentation: i40e: Prepare documentation for RST conversion")
+> Fixes: 105bf2fe6b32 ("i40evf: add driver to kernel build system")
+> Fixes: 1fae869bcf3d ("Documentation: ice: Prepare documentation for RST conversion")
+> Fixes: df69ba43217d ("ionic: Add basic framework for IONIC Network device driver")
+> Signed-off-by: Jonathan Neuschäfer <j.neuschaefer@gmx.net>
 
-The sdio_irq_pending flag is used to let host drivers indicate that it has
-signaled an IRQ. If that is the case and we only have a single SDIO func
-that have claimed an SDIO IRQ, our assumption is that we can avoid reading
-the SDIO_CCCR_INTx register and just call the SDIO func irq handler
-immediately. This makes sense, but the flag is set/cleared in a somewhat
-messy order, let's fix that up according to below.
+So just FYI: as I applied this, I removed most of the "Fixes" tags.  The
+cited commits were adding documentation as plain-text files, so the extra
+asterisk was *not* an error to be fixed at that point.  The RST-conversion
+patches, instead, should have caught that...
 
-First, the flag is currently set in sdio_run_irqs(), which is executed as a
-work that was scheduled from sdio_signal_irq(). To make it more implicit
-that the host have signaled an IRQ, let's instead immediately set the flag
-in sdio_signal_irq(). This also makes the behavior consistent with host
-drivers that uses the legacy, mmc_signal_sdio_irq() API. This have no
-functional impact, because we don't expect host drivers to call
-sdio_signal_irq() until after the work (sdio_run_irqs()) have been executed
-anyways.
+Thanks,
 
-Second, currently we never clears the flag when using the sdio_run_irqs()
-work, but only when using the sdio_irq_thread(). Let make the behavior
-consistent, by moving the flag to be cleared inside the common
-process_sdio_pending_irqs() function. Additionally, tweak the behavior of
-the flag slightly, by avoiding to clear it unless we processed the SDIO
-IRQ. The purpose with this at this point, is to keep the information about
-whether there have been an SDIO IRQ signaled by the host, so at system
-resume we can decide to process it without reading the SDIO_CCCR_INTx
-register.
-
-Tested-by: Matthias Kaehlcke <mka@chromium.org>
-Reviewed-by: Matthias Kaehlcke <mka@chromium.org>
-Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
-Reviewed-by: Douglas Anderson <dianders@chromium.org>
-Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/mmc/core/sdio_irq.c | 9 ++++++---
- 1 file changed, 6 insertions(+), 3 deletions(-)
-
-diff --git a/drivers/mmc/core/sdio_irq.c b/drivers/mmc/core/sdio_irq.c
-index 0bcc5e83bd1a0..40109a6159228 100644
---- a/drivers/mmc/core/sdio_irq.c
-+++ b/drivers/mmc/core/sdio_irq.c
-@@ -31,6 +31,7 @@ static int process_sdio_pending_irqs(struct mmc_host *host)
- {
- 	struct mmc_card *card = host->card;
- 	int i, ret, count;
-+	bool sdio_irq_pending = host->sdio_irq_pending;
- 	unsigned char pending;
- 	struct sdio_func *func;
- 
-@@ -38,13 +39,16 @@ static int process_sdio_pending_irqs(struct mmc_host *host)
- 	if (mmc_card_suspended(card))
- 		return 0;
- 
-+	/* Clear the flag to indicate that we have processed the IRQ. */
-+	host->sdio_irq_pending = false;
-+
- 	/*
- 	 * Optimization, if there is only 1 function interrupt registered
- 	 * and we know an IRQ was signaled then call irq handler directly.
- 	 * Otherwise do the full probe.
- 	 */
- 	func = card->sdio_single_irq;
--	if (func && host->sdio_irq_pending) {
-+	if (func && sdio_irq_pending) {
- 		func->irq_handler(func);
- 		return 1;
- 	}
-@@ -96,7 +100,6 @@ static void sdio_run_irqs(struct mmc_host *host)
- {
- 	mmc_claim_host(host);
- 	if (host->sdio_irqs) {
--		host->sdio_irq_pending = true;
- 		process_sdio_pending_irqs(host);
- 		if (host->ops->ack_sdio_irq)
- 			host->ops->ack_sdio_irq(host);
-@@ -114,6 +117,7 @@ void sdio_irq_work(struct work_struct *work)
- 
- void sdio_signal_irq(struct mmc_host *host)
- {
-+	host->sdio_irq_pending = true;
- 	queue_delayed_work(system_wq, &host->sdio_irq_work, 0);
- }
- EXPORT_SYMBOL_GPL(sdio_signal_irq);
-@@ -159,7 +163,6 @@ static int sdio_irq_thread(void *_host)
- 		if (ret)
- 			break;
- 		ret = process_sdio_pending_irqs(host);
--		host->sdio_irq_pending = false;
- 		mmc_release_host(host);
- 
- 		/*
--- 
-2.20.1
-
-
-
+jon
