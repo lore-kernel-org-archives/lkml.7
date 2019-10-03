@@ -2,96 +2,105 @@ Return-Path: <SRS0=6dNS=X4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D186FC32792
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:16:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A048C10F14
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:16:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 930A7215EA
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:16:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4919121783
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:16:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1570119383;
+	bh=E+8DDLBbjMszKWIYzvh2j4yfRBKcj4KQ5wwXpznjhCo=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=iClC7AdZyvmYLvkmGezHSyHd5j3LtsuK931gQgCoYmF57FAnyl6kz95us1zqbPXIj
+	 7pw+TtWjNFrnFTKZCTrazuMYeTXphj+OdEgqQ75sGQsv08dn7suBG70Izul9FU3m3m
+	 SeRUyrSVsJCJqT5NRUqFzFQAsgpNIGH5YR9qQ4Y4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389010AbfJCQQb (ORCPT
+        id S2388972AbfJCQQW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 12:16:31 -0400
-Received: from foss.arm.com ([217.140.110.172]:48430 "EHLO foss.arm.com"
+        Thu, 3 Oct 2019 12:16:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41130 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388982AbfJCQQZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:16:25 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9C54E1000;
-        Thu,  3 Oct 2019 09:16:24 -0700 (PDT)
-Received: from arrakis.emea.arm.com (unknown [10.1.196.49])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 7EFC23F739;
-        Thu,  3 Oct 2019 09:16:23 -0700 (PDT)
-Date:   Thu, 3 Oct 2019 17:16:21 +0100
-From:   Catalin Marinas <catalin.marinas@arm.com>
-To:     Vincenzo Frascino <vincenzo.frascino@arm.com>
-Cc:     ard.biesheuvel@linaro.org, ndesaulniers@google.com,
-        linux-kernel@vger.kernel.org, luto@kernel.org, tglx@linutronix.de,
-        will@kernel.org, linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v4 1/6] arm64: vdso32: Fix syncconfig errors.
-Message-ID: <20191003161621.GJ21629@arrakis.emea.arm.com>
-References: <20191002144156.2174-1-vincenzo.frascino@arm.com>
- <20191002144156.2174-2-vincenzo.frascino@arm.com>
- <20191003160041.GI21629@arrakis.emea.arm.com>
+        id S1732434AbfJCQQQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:16:16 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id D5F802133F;
+        Thu,  3 Oct 2019 16:16:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1570119376;
+        bh=E+8DDLBbjMszKWIYzvh2j4yfRBKcj4KQ5wwXpznjhCo=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=uQdfMJr0wCK7i5qVaJu8q6Dj5MRrC3Rs5GftIgfdYWkL6bs7I140J9gzrU85kYMme
+         IGIufBi3aldGZAYalOh2pJAYAgOA/X/Tof8sykgWQGBlpwR9d2pt64lVxpbNJqxKil
+         w74OXrj3YwoS1iubOusfkuhtfpdswKscEN6XKklI=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 043/211] x86/apic: Soft disable APIC before initializing it
+Date:   Thu,  3 Oct 2019 17:51:49 +0200
+Message-Id: <20191003154457.710618197@linuxfoundation.org>
+X-Mailer: git-send-email 2.23.0
+In-Reply-To: <20191003154447.010950442@linuxfoundation.org>
+References: <20191003154447.010950442@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191003160041.GI21629@arrakis.emea.arm.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Oct 03, 2019 at 05:00:41PM +0100, Catalin Marinas wrote:
-> On Wed, Oct 02, 2019 at 03:41:51PM +0100, Vincenzo Frascino wrote:
-> > diff --git a/arch/arm64/Makefile b/arch/arm64/Makefile
-> > index 84a3d502c5a5..dfa6a5cb99e4 100644
-> > --- a/arch/arm64/Makefile
-> > +++ b/arch/arm64/Makefile
-> > @@ -53,20 +53,12 @@ $(warning Detected assembler with broken .inst; disassembly will be unreliable)
-> >    endif
-> >  endif
-> >  
-> > +COMPATCC ?= $(CROSS_COMPILE_COMPAT)gcc
-> > +export COMPATCC
-> > +
-> >  ifeq ($(CONFIG_GENERIC_COMPAT_VDSO), y)
-> > -  CROSS_COMPILE_COMPAT ?= $(CONFIG_CROSS_COMPILE_COMPAT_VDSO:"%"=%)
-> > -
-> > -  ifeq ($(CONFIG_CC_IS_CLANG), y)
-> > -    $(warning CROSS_COMPILE_COMPAT is clang, the compat vDSO will not be built)
-> > -  else ifeq ($(strip $(CROSS_COMPILE_COMPAT)),)
-> > -    $(warning CROSS_COMPILE_COMPAT not defined or empty, the compat vDSO will not be built)
-> > -  else ifeq ($(shell which $(CROSS_COMPILE_COMPAT)gcc 2> /dev/null),)
-> > -    $(error $(CROSS_COMPILE_COMPAT)gcc not found, check CROSS_COMPILE_COMPAT)
-> > -  else
-> > -    export CROSS_COMPILE_COMPAT
-> > -    export CONFIG_COMPAT_VDSO := y
-> > -    compat_vdso := -DCONFIG_COMPAT_VDSO=1
-> > -  endif
-> > +  export CONFIG_COMPAT_VDSO := y
-> > +  compat_vdso := -DCONFIG_COMPAT_VDSO=1
-> >  endif
-> 
-> With this change, if I don't have any CROSS_COMPILE_COMPAT in my
-> environment, the kernel fails to build because COMPATCC becomes gcc
-> which cannot build the vdso32. What I really want is not to warn me, nor
-> fail to build the kernel when I don't care about the compat vDSO (e.g. I
-> have a 64-bit only machine).
-> 
-> What saved us before was the COMPATCC_IS_ARM_GCC check and a selection
-> of the GENERIC_COMPAT_VDSO dependent on this check. This was now dropped
-> from the previous version of the patch. We could add something like
-> COMPATCC_CAN_LINK.
+From: Thomas Gleixner <tglx@linutronix.de>
 
-Ah, the COMPATCC_CAN_LINK idea doesn't help because an x86 gcc can still
-link. Maybe only enable CONFIG_COMPAT_VDSO above if CROSS_COMPILE_COMPAT
-was set. You could move the COMPATCC setting and export under the
-same 'if' block in the Makefile.
+[ Upstream commit 2640da4cccf5cc613bf26f0998b9e340f4b5f69c ]
 
+If the APIC was already enabled on entry of setup_local_APIC() then
+disabling it soft via the SPIV register makes a lot of sense.
+
+That masks all LVT entries and brings it into a well defined state.
+
+Otherwise previously enabled LVTs which are not touched in the setup
+function stay unmasked and might surprise the just booting kernel.
+
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Link: https://lkml.kernel.org/r/20190722105219.068290579@linutronix.de
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ arch/x86/kernel/apic/apic.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
+
+diff --git a/arch/x86/kernel/apic/apic.c b/arch/x86/kernel/apic/apic.c
+index 9bfbe1fa0339c..dfdd1caf0d55d 100644
+--- a/arch/x86/kernel/apic/apic.c
++++ b/arch/x86/kernel/apic/apic.c
+@@ -1538,6 +1538,14 @@ static void setup_local_APIC(void)
+ 		return;
+ 	}
+ 
++	/*
++	 * If this comes from kexec/kcrash the APIC might be enabled in
++	 * SPIV. Soft disable it before doing further initialization.
++	 */
++	value = apic_read(APIC_SPIV);
++	value &= ~APIC_SPIV_APIC_ENABLED;
++	apic_write(APIC_SPIV, value);
++
+ #ifdef CONFIG_X86_32
+ 	/* Pound the ESR really hard over the head with a big hammer - mbligh */
+ 	if (lapic_is_integrated() && apic->disable_esr) {
 -- 
-Catalin
+2.20.1
+
+
+
