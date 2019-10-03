@@ -2,162 +2,250 @@ Return-Path: <SRS0=6dNS=X4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 34D8EC10F14
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 12:14:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E0FAC32792
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 12:16:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 078C020700
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 12:14:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E447320862
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 12:16:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="fd53pALg"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="gujkHolU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729452AbfJCMOn (ORCPT
+        id S1729462AbfJCMQC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 08:14:43 -0400
-Received: from mail-qt1-f196.google.com ([209.85.160.196]:39872 "EHLO
-        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728898AbfJCMOm (ORCPT
+        Thu, 3 Oct 2019 08:16:02 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:60754 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728773AbfJCMQB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 08:14:42 -0400
-Received: by mail-qt1-f196.google.com with SMTP id n7so3207918qtb.6
-        for <linux-kernel@vger.kernel.org>; Thu, 03 Oct 2019 05:14:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lca.pw; s=google;
-        h=content-transfer-encoding:from:mime-version:subject:date:message-id
-         :references:cc:in-reply-to:to;
-        bh=EaMAN3l7OjmmHPY5foDFT/JHZpitrV1Zhkp1njn6pF8=;
-        b=fd53pALg/i7/fDWKjZ1CAZQAMXsLhANtFFZLWvQ1bHL5i0w9K+qF5KVpcjtYSCL7o5
-         v9zjjdLFOIJCRwJ5AulwCHFEAmV8cdOLYPt2rMTbxDRHGCwuGUsWmLyIgLxyfKKuGftW
-         DItRVfj7mlkw58Ytagr2Kt5ZAq0k0E1yBVBqrqZytBrl7vYUfbH9zxtQfcZhpoBP6TJx
-         jYv1LyUoPFlwcX6YPDS26fU6sFUq8NtEb9YEFejRtb4HlM7Mddj+mISuPLUzy0756u1s
-         t5aA5k/6tgGLC2VTRqbykgkCnAHNdHSA9wS5djcq4X9jVdxw7HIQZfawhH9VAN93/CZr
-         rk0g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:content-transfer-encoding:from:mime-version
-         :subject:date:message-id:references:cc:in-reply-to:to;
-        bh=EaMAN3l7OjmmHPY5foDFT/JHZpitrV1Zhkp1njn6pF8=;
-        b=UD34ltf33SXhPrRKxhivm8wvi5nGVY2sHswHAA8dSDhXob9uoqwzcqSXxHMhYpoctk
-         ig2ygqhEnMsTK+BHzYkX677V2onLZsL1EUQo1YSSTE5Hzfbs8g/hRqowyeug5AxUZO9q
-         pSIQscdtqWAq2O5uSNFLKa+jH5qtCfq9u7N4wK4Qy4Uwk/CQKAgvR4fD7G/kcns1Kogb
-         NYKUg/nDy+xMAH6QEhGaYY+ccOjk7Cbe0PAyplLbocqpJgJiunoOHkKw/0yOrTAmrDIg
-         60+y+HfVmewqslgnJYdH7Y6hxjih9CF/KNB6grpSbWLyGzsFjq1CW8UyA5sB+lBiiiw9
-         bKoQ==
-X-Gm-Message-State: APjAAAUShnUSp67IYTBx/69edKKA/v3kFrk9KnsGGwGeIg1QafUmKc6i
-        iRhCswn3k5QA8oACaDqwiAUokg==
-X-Google-Smtp-Source: APXvYqx23Ode9lvxzQiDr2/Wr19WXFRC4gkIgYc8CKyZymnST/Ny6bT9TLpU/ncCLwouL8vAueyphg==
-X-Received: by 2002:ac8:3b52:: with SMTP id r18mr9865084qtf.62.1570104881711;
-        Thu, 03 Oct 2019 05:14:41 -0700 (PDT)
-Received: from [192.168.1.183] (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
-        by smtp.gmail.com with ESMTPSA id t65sm1201300qkh.23.2019.10.03.05.14.40
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 03 Oct 2019 05:14:40 -0700 (PDT)
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: quoted-printable
-From:   Qian Cai <cai@lca.pw>
-Mime-Version: 1.0 (1.0)
-Subject: Re: [PATCH] mm/page_alloc: Add a reason for reserved pages in has_unmovable_pages()
-Date:   Thu, 3 Oct 2019 08:14:40 -0400
-Message-Id: <6A58E80B-7A5F-4CAD-ACF1-89BCCBE4D3B1@lca.pw>
-References: <49fa7dea-00ac-155f-e7b7-eeca206556b5@arm.com>
-Cc:     linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>,
-        Michal Hocko <mhocko@suse.com>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Oscar Salvador <osalvador@suse.de>,
+        Thu, 3 Oct 2019 08:16:01 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=KMUClkTO6UWSCzmxIhjPetiD9IE/Gkdvn1kLBeQuxRE=; b=gujkHolU2Wm9Os7tK7ZVubjef
+        gsTC8lV8nD83Z8tvk/iaWR1pT/zljFBk/Fwbe+D41CUwc8WZ2H0s2zn9N9H4o9HpWAG2Uxp+wI480
+        p5qQO12bw2Ogb/az7kxN/rw03iCFGdkRaYJ8kLbibMnWbBY35DaQEjCYS3DOjlvT2Tpy3hFsMZmFh
+        +arwDhukoxSN32C30xaIsJ9StzFiF4fj7G0790HD1ms70cTX8CqSpD3uxRdOX8n9wu0h3/NmRcHQ3
+        6KisWoddR/aAvBjUv50WiBDcEl0/BEVi0If5pzOk/UrH1QeKGAjHuw1svhMxmG/06Ahtq12swgBJI
+        +AMSG1omw==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.2 #3 (Red Hat Linux))
+        id 1iG01E-00013R-Sw; Thu, 03 Oct 2019 12:15:41 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 59F51301B59;
+        Thu,  3 Oct 2019 14:14:48 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 82763201DF20D; Thu,  3 Oct 2019 14:15:37 +0200 (CEST)
+Date:   Thu, 3 Oct 2019 14:15:37 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Cc:     Giovanni Gherdovich <ggherdovich@suse.cz>,
+        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@suse.de>,
+        Len Brown <lenb@kernel.org>, x86@kernel.org,
+        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
         Mel Gorman <mgorman@techsingularity.net>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Pavel Tatashin <pavel.tatashin@microsoft.com>,
-        linux-kernel@vger.kernel.org
-In-Reply-To: <49fa7dea-00ac-155f-e7b7-eeca206556b5@arm.com>
-To:     Anshuman Khandual <Anshuman.Khandual@arm.com>
-X-Mailer: iPhone Mail (17A844)
+        Matt Fleming <matt@codeblueprint.co.uk>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Paul Turner <pjt@google.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Quentin Perret <qperret@qperret.net>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Doug Smythies <dsmythies@telus.net>
+Subject: Re: [PATCH v2 1/2] x86,sched: Add support for frequency invariance
+Message-ID: <20191003121537.GR4536@hirez.programming.kicks-ass.net>
+References: <20191002122926.385-1-ggherdovich@suse.cz>
+ <20191002122926.385-2-ggherdovich@suse.cz>
+ <1906426.HDqaVa71mF@kreacher>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1906426.HDqaVa71mF@kreacher>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, Oct 03, 2019 at 12:27:52PM +0200, Rafael J. Wysocki wrote:
+> On Wednesday, October 2, 2019 2:29:25 PM CEST Giovanni Gherdovich wrote:
+> > +static bool turbo_disabled(void)
+> > +{
+> > +	u64 misc_en;
+> > +	int err;
+> > +
+> > +	err = rdmsrl_safe(MSR_IA32_MISC_ENABLE, &misc_en);
+> > +	if (err)
+> > +		return false;
+> > +
+> > +	return (misc_en & MSR_IA32_MISC_ENABLE_TURBO_DISABLE);
+> > +}
+> 
+> This setting may be updated by the platform firmware (BIOS) in some cases
+> (see kernel.org BZ 200759, for example), so in general checking it once
+> at the init time is not enough.
 
+Is there anything sane we can do if the BIOS frobs stuff like that under
+our feet? Other than yell bloody murder, that is?
 
-> On Oct 3, 2019, at 8:01 AM, Anshuman Khandual <Anshuman.Khandual@arm.com> w=
-rote:
->=20
-> Will something like this be better ?
+> > +
+> > +#include <asm/cpu_device_id.h>
+> > +#include <asm/intel-family.h>
+> > +
+> > +#define ICPU(model) \
+> > +	{ X86_VENDOR_INTEL, 6, model, X86_FEATURE_APERFMPERF, 0}
+> > +
+> > +static const struct x86_cpu_id has_knl_turbo_ratio_limits[] = {
+> > +	ICPU(INTEL_FAM6_XEON_PHI_KNL),
+> > +	ICPU(INTEL_FAM6_XEON_PHI_KNM),
+> > +	{}
+> > +};
+> > +
+> > +static const struct x86_cpu_id has_turbo_ratio_group_limits[] = {
+> > +	ICPU(INTEL_FAM6_ATOM_GOLDMONT),
+> > +	ICPU(INTEL_FAM6_ATOM_GOLDMONT_D),
+> > +	ICPU(INTEL_FAM6_ATOM_GOLDMONT_PLUS),
+> > +	ICPU(INTEL_FAM6_SKYLAKE_X),
+> > +	{}
+> > +};
+> > +
+> > +static void core_set_cpu_max_freq(void)
+> > +{
+> > +	u64 ratio, turbo_ratio;
+> > +	int err;
+> > +
+> > +	if (smp_processor_id() != 0)
+> > +		return;
+> > +
+> > +	if (turbo_disabled() ||
+> > +		x86_match_cpu(has_knl_turbo_ratio_limits) ||
+> > +		x86_match_cpu(has_turbo_ratio_group_limits))
+> > +		return;
+> > +
+> 
+> I would move the checks above directly to intel_set_cpu_max_freq().
 
-Not really. dump_page() will dump PageCompound information anyway, so it is t=
-rivial to figure out if went in that path.
+The reason it is here, is that..
 
-> hugepage_migration_supported() has got
-> uncertainty depending on platform and huge page size.
->=20
-> diff --git a/mm/page_alloc.c b/mm/page_alloc.c
-> index 15c2050c629b..8dbc86696515 100644
-> --- a/mm/page_alloc.c
-> +++ b/mm/page_alloc.c
-> @@ -8175,7 +8175,7 @@ bool has_unmovable_pages(struct zone *zone, struct p=
-age *page, int count,
->        unsigned long found;
->        unsigned long iter =3D 0;
->        unsigned long pfn =3D page_to_pfn(page);
-> -       const char *reason =3D "unmovable page";
-> +       const char *reason;
->=20
->        /*
->         * TODO we could make this much more efficient by not checking ever=
-y
-> @@ -8194,7 +8194,7 @@ bool has_unmovable_pages(struct zone *zone, struct p=
-age *page, int count,
->                if (is_migrate_cma(migratetype))
->                        return false;
->=20
-> -               reason =3D "CMA page";
-> +               reason =3D "Unmovable CMA page";
->                goto unmovable;
->        }
->=20
-> @@ -8206,8 +8206,10 @@ bool has_unmovable_pages(struct zone *zone, struct p=
-age *page, int count,
->=20
->                page =3D pfn_to_page(check);
->=20
-> -               if (PageReserved(page))
-> +               if (PageReserved(page)) {
-> +                       reason =3D "Unmovable reserved page";
->                        goto unmovable;
-> +               }
->=20
->                /*
->                 * If the zone is movable and we have ruled out all reserve=
-d
-> @@ -8226,8 +8228,10 @@ bool has_unmovable_pages(struct zone *zone, struct p=
-age *page, int count,
->                        struct page *head =3D compound_head(page);
->                        unsigned int skip_pages;
->=20
-> -                       if (!hugepage_migration_supported(page_hstate(head=
-)))
-> +                       if (!hugepage_migration_supported(page_hstate(head=
-))) {
-> +                               reason =3D "Unmovable HugeTLB page";
->                                goto unmovable;
-> +                       }
->=20
->                        skip_pages =3D compound_nr(head) - (page - head);
->                        iter +=3D skip_pages - 1;
-> @@ -8271,8 +8275,10 @@ bool has_unmovable_pages(struct zone *zone, struct p=
-age *page, int count,
->                 * is set to both of a memory hole page and a _used_ kernel=
+> > +	err = rdmsrl_safe(MSR_PLATFORM_INFO, &ratio);
+> > +	if (err)
+> > +		return;
+> > +
+> > +	err = rdmsrl_safe(MSR_TURBO_RATIO_LIMIT, &turbo_ratio);
+> > +	if (err)
+> > +		return;
+> > +
+> > +	ratio = (ratio >> 8) & 0xFF;                /* max P state ratio */
+> > +	turbo_ratio = (turbo_ratio >> 24) & 0xFF;   /* 4C turbo ratio */
+> > +
+> > +	arch_max_freq = div_u64(turbo_ratio * SCHED_CAPACITY_SCALE, ratio);
+> > +
+> > +	static_branch_enable(&arch_scale_freq_key);
+> > +}
+> > +
+> > +static void intel_set_cpu_max_freq(void)
+> > +{
+> > +	/*
+> > +	 * TODO: add support for:
+> > +	 *
+> > +	 * - Xeon Phi (KNM, KNL)
+> > +	 * - Xeon Gold/Platinum, Atom Goldmont/Goldmont Plus
+> > +	 * - Atom Silvermont
+> > +	 *
+> > +	 * which all now get by default arch_max_freq = SCHED_CAPACITY_SCALE
+> > +	 */
+> > +	core_set_cpu_max_freq();
 
->                 * page at boot.
->                 */
-> -               if (found > count)
-> +               if (found > count) {
-> +                       reason =3D "Unmovable non-LRU page";
->                        goto unmovable;
-> +               }
->        }
->        return false;
-> unmovable:
+This used to read something like:
+
+	if (core_set_cpu_max_freq())
+		return;
+
+	if (atom_set_cpu_max_freq())
+		return;
+
+	...
+
+and then those checks make sense, because we're failing the 'core' way,
+but another way might work.
+
+But in this version the atom version has gone missing -- I've suggested
+it be put back as an additional patch.
+
+Also, the SKX way still needs to be written..
+
+> > +}
+> > +
+> > +static void init_scale_freq(void *arg)
+> > +{
+> > +	u64 aperf, mperf;
+> > +
+> > +	rdmsrl(MSR_IA32_APERF, aperf);
+> > +	rdmsrl(MSR_IA32_MPERF, mperf);
+> > +
+> > +	this_cpu_write(arch_prev_aperf, aperf);
+> > +	this_cpu_write(arch_prev_mperf, mperf);
+> > +}
+> > +
+> > +static void set_cpu_max_freq(void)
+> > +{
+> > +	if (!boot_cpu_has(X86_FEATURE_APERFMPERF))
+> > +		return;
+> > +
+> > +	switch (boot_cpu_data.x86_vendor) {
+> > +	case X86_VENDOR_INTEL:
+> > +		intel_set_cpu_max_freq();
+> > +		break;
+> > +	default:
+> > +		break;
+> > +	}
+> 
+> Why is the switch () needed?
+> 
+> It seems that
+> 
+> 	if (boot_cpu_data.x86_vendor == X86_VENDOR_INTEL)
+> 		intel_set_cpu_max_freq();
+> 
+> would do the trick.
+
+I was hoping to grow X86_VENDOR_AMD bits..
+
+> > +
+> > +	init_scale_freq(NULL);
+> > +}
+> > +
+> > +DEFINE_PER_CPU(unsigned long, arch_cpu_freq);
+> > +
+> > +static bool tick_disable;
+> > +
+> > +void arch_scale_freq_tick(void)
+> > +{
+> > +	u64 freq;
+> > +	u64 aperf, mperf;
+> > +	u64 acnt, mcnt;
+> > +
+> > +	if (!arch_scale_freq_invariant() || tick_disable)
+> > +		return;
+> > +
+> 
+> This may be a silly question, but can using tick_disable be avoided?
+> 
+> I guess it is there, because disabling the static branch from
+> x86_arch_scale_freq_tick_disable() would be unsafe, but I'm not
+> sure why that would be the case?
+
+There's not enough state -- we can of course fix that.
+
+That is, if you disable it, we don't know if we should enable it again
+later or if it was disabled because we failed to initialize it earlier.
