@@ -7,47 +7,49 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 93D0CC32792
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:05:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4400DC10F14
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:05:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5D61920673
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:05:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 10B3E2070B
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:05:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570122320;
-	bh=egfPkjQleP3+sm+wRrMFBlYgRWbRB8K/Z1RhaImosww=;
+	s=default; t=1570122325;
+	bh=04og8EJJ0XrlsWKUC1y0IBIQv+GS066+o2phC4sBs70=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=apozd1g6YmGbWJHIWrgyJQMK2Pbzpjj59OhhhowVLjNjFqJ+5X/6IPTb4aNpFtBGs
-	 aptRTXZmkDg7AUaBZie0SCysr9yEwp5/hw8GeFN8906l3UClnvn9Z+Zc9gQL9xcV8o
-	 yqusAkiOcQaAmcJ0eFb2569xJMveX3Xw0v2plysY=
+	b=vd9Srf65fUgW74lx5l49h87ikii+gx0pN/FWYKWj7194KCdcDGkLZ3M7vSDqsPDvd
+	 jb1Mwuw/7jI1gYh+wurBmSYAH8xmIQH2Sd9ffS8rPbH75PB6wZmABSLX9rhFWBesxS
+	 GioP1dPONodGblaJ3XnGlUcu5ne8geYJWE/02LtE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404885AbfJCQjo (ORCPT
+        id S2393368AbfJCRFY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 12:39:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49684 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 13:05:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49616 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391591AbfJCQjl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:39:41 -0400
+        id S2404841AbfJCQjj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:39:39 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3DD6221848;
-        Thu,  3 Oct 2019 16:39:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8CD0C2070B;
+        Thu,  3 Oct 2019 16:39:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570120780;
-        bh=egfPkjQleP3+sm+wRrMFBlYgRWbRB8K/Z1RhaImosww=;
+        s=default; t=1570120778;
+        bh=04og8EJJ0XrlsWKUC1y0IBIQv+GS066+o2phC4sBs70=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=GnzlP9hOM+pRcGk/jJbbmFbtLPPy3Xo0udmHL0bqoDSdwfpD0m7TNJ+n+y3DZBFc4
-         gZ/a353Zxm7DRsB7PhB+Dszp1r/cSdLcbsYZSnUIpJ7dVtVaJVGspDRWFWkmXYn76M
-         fiFLg31R0abJs2RWueYKqdjNy/CQty/ggLNWBxu4=
+        b=YZuZwFOkuZg00RZCsdbhCsQTGQrmf1cWRnhv/nByR7S6zfh/1cXmzVzWLFMBWhrGS
+         OTIsa0hKvBy13cPhjrEZM0pBT+AS07XaWeA6Hxc9JX6dBcWKkLMRYo5nJmPhF7oHSe
+         m2K1cW7UwpVTvSdw0rEmdVIbFkSnSTsIasdrviGw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ori Nimron <orinimron123@gmail.com>,
-        Stefan Schmidt <stefan@datenfreihafen.org>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.3 036/344] ieee802154: enforce CAP_NET_RAW for raw sockets
-Date:   Thu,  3 Oct 2019 17:50:01 +0200
-Message-Id: <20191003154543.641781781@linuxfoundation.org>
+        stable@vger.kernel.org, David Ahern <dsahern@gmail.com>,
+        Jamal Hadi Salim <jhs@mojatatu.com>,
+        Cong Wang <xiyou.wangcong@gmail.com>,
+        Jiri Pirko <jiri@mellanox.com>,
+        Jakub Kicinski <jakub.kicinski@netronome.com>
+Subject: [PATCH 5.3 027/344] net_sched: add policy validation for action attributes
+Date:   Thu,  3 Oct 2019 17:49:52 +0200
+Message-Id: <20191003154542.774892228@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191003154540.062170222@linuxfoundation.org>
 References: <20191003154540.062170222@linuxfoundation.org>
@@ -60,33 +62,102 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ori Nimron <orinimron123@gmail.com>
+From: Cong Wang <xiyou.wangcong@gmail.com>
 
-[ Upstream commit e69dbd4619e7674c1679cba49afd9dd9ac347eef ]
+[ Upstream commit 199ce850ce112315cfc68d42b694bcaa27b097b7 ]
 
-When creating a raw AF_IEEE802154 socket, CAP_NET_RAW needs to be
-checked first.
+Similar to commit 8b4c3cdd9dd8
+("net: sched: Add policy validation for tc attributes"), we need
+to add proper policy validation for TC action attributes too.
 
-Signed-off-by: Ori Nimron <orinimron123@gmail.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Acked-by: Stefan Schmidt <stefan@datenfreihafen.org>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Cc: David Ahern <dsahern@gmail.com>
+Cc: Jamal Hadi Salim <jhs@mojatatu.com>
+Signed-off-by: Cong Wang <xiyou.wangcong@gmail.com>
+Acked-by: Jiri Pirko <jiri@mellanox.com>
+Signed-off-by: Jakub Kicinski <jakub.kicinski@netronome.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/ieee802154/socket.c |    3 +++
- 1 file changed, 3 insertions(+)
+ net/sched/act_api.c |   34 ++++++++++++++++++----------------
+ 1 file changed, 18 insertions(+), 16 deletions(-)
 
---- a/net/ieee802154/socket.c
-+++ b/net/ieee802154/socket.c
-@@ -1008,6 +1008,9 @@ static int ieee802154_create(struct net
+--- a/net/sched/act_api.c
++++ b/net/sched/act_api.c
+@@ -831,6 +831,15 @@ static struct tc_cookie *nla_memdup_cook
+ 	return c;
+ }
  
- 	switch (sock->type) {
- 	case SOCK_RAW:
-+		rc = -EPERM;
-+		if (!capable(CAP_NET_RAW))
-+			goto out;
- 		proto = &ieee802154_raw_prot;
- 		ops = &ieee802154_raw_ops;
- 		break;
++static const struct nla_policy tcf_action_policy[TCA_ACT_MAX + 1] = {
++	[TCA_ACT_KIND]		= { .type = NLA_NUL_STRING,
++				    .len = IFNAMSIZ - 1 },
++	[TCA_ACT_INDEX]		= { .type = NLA_U32 },
++	[TCA_ACT_COOKIE]	= { .type = NLA_BINARY,
++				    .len = TC_COOKIE_MAX_SIZE },
++	[TCA_ACT_OPTIONS]	= { .type = NLA_NESTED },
++};
++
+ struct tc_action *tcf_action_init_1(struct net *net, struct tcf_proto *tp,
+ 				    struct nlattr *nla, struct nlattr *est,
+ 				    char *name, int ovr, int bind,
+@@ -846,8 +855,8 @@ struct tc_action *tcf_action_init_1(stru
+ 	int err;
+ 
+ 	if (name == NULL) {
+-		err = nla_parse_nested_deprecated(tb, TCA_ACT_MAX, nla, NULL,
+-						  extack);
++		err = nla_parse_nested_deprecated(tb, TCA_ACT_MAX, nla,
++						  tcf_action_policy, extack);
+ 		if (err < 0)
+ 			goto err_out;
+ 		err = -EINVAL;
+@@ -856,18 +865,9 @@ struct tc_action *tcf_action_init_1(stru
+ 			NL_SET_ERR_MSG(extack, "TC action kind must be specified");
+ 			goto err_out;
+ 		}
+-		if (nla_strlcpy(act_name, kind, IFNAMSIZ) >= IFNAMSIZ) {
+-			NL_SET_ERR_MSG(extack, "TC action name too long");
+-			goto err_out;
+-		}
+-		if (tb[TCA_ACT_COOKIE]) {
+-			int cklen = nla_len(tb[TCA_ACT_COOKIE]);
+-
+-			if (cklen > TC_COOKIE_MAX_SIZE) {
+-				NL_SET_ERR_MSG(extack, "TC cookie size above the maximum");
+-				goto err_out;
+-			}
++		nla_strlcpy(act_name, kind, IFNAMSIZ);
+ 
++		if (tb[TCA_ACT_COOKIE]) {
+ 			cookie = nla_memdup_cookie(tb);
+ 			if (!cookie) {
+ 				NL_SET_ERR_MSG(extack, "No memory to generate TC cookie");
+@@ -1098,7 +1098,8 @@ static struct tc_action *tcf_action_get_
+ 	int index;
+ 	int err;
+ 
+-	err = nla_parse_nested_deprecated(tb, TCA_ACT_MAX, nla, NULL, extack);
++	err = nla_parse_nested_deprecated(tb, TCA_ACT_MAX, nla,
++					  tcf_action_policy, extack);
+ 	if (err < 0)
+ 		goto err_out;
+ 
+@@ -1152,7 +1153,8 @@ static int tca_action_flush(struct net *
+ 
+ 	b = skb_tail_pointer(skb);
+ 
+-	err = nla_parse_nested_deprecated(tb, TCA_ACT_MAX, nla, NULL, extack);
++	err = nla_parse_nested_deprecated(tb, TCA_ACT_MAX, nla,
++					  tcf_action_policy, extack);
+ 	if (err < 0)
+ 		goto err_out;
+ 
+@@ -1440,7 +1442,7 @@ static struct nlattr *find_dump_kind(str
+ 
+ 	if (tb[1] == NULL)
+ 		return NULL;
+-	if (nla_parse_nested_deprecated(tb2, TCA_ACT_MAX, tb[1], NULL, NULL) < 0)
++	if (nla_parse_nested_deprecated(tb2, TCA_ACT_MAX, tb[1], tcf_action_policy, NULL) < 0)
+ 		return NULL;
+ 	kind = tb2[TCA_ACT_KIND];
+ 
 
 
