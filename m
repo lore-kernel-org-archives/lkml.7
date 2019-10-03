@@ -2,97 +2,127 @@ Return-Path: <SRS0=6dNS=X4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B1C6C32792
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 13:02:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 742C5C32792
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 13:02:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F1EFA2133F
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 13:02:32 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="seYrPpfa"
+	by mail.kernel.org (Postfix) with ESMTP id 4F75321783
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 13:02:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729654AbfJCNCc (ORCPT
+        id S1730143AbfJCNCn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 09:02:32 -0400
-Received: from mail-ed1-f67.google.com ([209.85.208.67]:45981 "EHLO
-        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726677AbfJCNCb (ORCPT
+        Thu, 3 Oct 2019 09:02:43 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:61052 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726677AbfJCNCn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 09:02:31 -0400
-Received: by mail-ed1-f67.google.com with SMTP id h33so2334294edh.12;
-        Thu, 03 Oct 2019 06:02:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=8r5WxxOeOXTyhjGVoA0FbOjfJLtO+yGrerZ8PuIaYmA=;
-        b=seYrPpfa1oOXQgrqfHF2tePaGXgom357i9t/5fcs7p3yIcJoYEH7i0PeS5YC8iknfw
-         0/vh94UAO2wTa4TQ+z9T1U2M5iBFmzv4Z2eYeug/ui68fVsT2in8OVzMYI9f7tU5Gi4B
-         7EVSSbLo8Rf6PGknwi1s9/zhQs/04mKwrUzGVn/uyCl9ZcmKOHElQPMNRo0dpVvpw0ab
-         32lVpELTlxpqOYCLlmmyemJURZCy0xJz0uYsosJvUatKNmPD6CaCNdoxCb9FS0vQVa00
-         f7UffWZU2h4aWFtjEV1x6R4Vo+OW5bWWuSvzfpxRdPvNpUCqKalR4m2+b0c0XSc+VRGm
-         B8FQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=8r5WxxOeOXTyhjGVoA0FbOjfJLtO+yGrerZ8PuIaYmA=;
-        b=b2NYlSApuVnFM0E0LMg5bgavd63kxqabrA3WiSecXUeNsyKSetZwpmdDkckTQ33Pn+
-         4beTcFuaemoL6u1ZmmEs/sz9bhv0b1vRhFVX5guY00z+x4tO+D3TUGos4rcBWuCA4zz5
-         L3sLriqIEl9lLNOZYoh1iAljZD6tTIJJlfBzLG2ngjKT9RaP343ZI0yPGgUBWJL0b175
-         KdlaSnRpx8U4x+bgxK51KcptRh1jZKJv2xu+3Tkv1YT9V9T2m1/toorVH/wcp72PJxGW
-         djsPyb0vwO2IwoLPATJeKfKQXaQ/i6mMcVULThLqcC8+JMzoVdscJdQD3uYu4eV8aIR6
-         CiOg==
-X-Gm-Message-State: APjAAAXciF2T/jzkYO2Rv0IZaWv6L9gbAjT+uZ52EX+6wuaeZW/TxRf3
-        tzcKbXuO3BUWrXiXM8a1KJw=
-X-Google-Smtp-Source: APXvYqx2IAKglMxnqKNvUPxz71FVzHMHHQooHceUpTXrz9+Op0nqMRrYn3aAwnTnekCDdHr8WMLUzQ==
-X-Received: by 2002:a17:906:1f57:: with SMTP id d23mr7735574ejk.103.1570107749938;
-        Thu, 03 Oct 2019 06:02:29 -0700 (PDT)
-Received: from Limone ([46.114.33.103])
-        by smtp.gmail.com with ESMTPSA id q33sm460603eda.60.2019.10.03.06.02.26
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 03 Oct 2019 06:02:28 -0700 (PDT)
-Date:   Thu, 3 Oct 2019 15:02:24 +0200
-From:   Gon Solo <gonsolo@gmail.com>
-To:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-Cc:     JP <jp@jpvw.nl>, crope@iki.fi, Sean Young <sean@mess.org>,
-        linux-media@vger.kernel.org,
-        Linux Kernel <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] si2157: Add support for Logilink VG0022A.
-Message-ID: <20191003130224.GA2596@Limone>
-References: <20191002150650.GA4227@gofer.mess.org>
- <CANL0fFRoL6NxOCbNC=XjQ6LDkeeqAayaLUbm9xARWX9ttqfPFg@mail.gmail.com>
- <29ab2e43-4374-a3ea-6ae1-a4267867eaa4@jpvw.nl>
- <20191002154922.7f1cfc76@coco.lan>
- <CANL0fFRJZBfEDWK_c2w1TomvB5-i4g09LopyJUbO5NtOwKdDTg@mail.gmail.com>
- <CANL0fFTwJ4yRO+5q6WkL0+DtwdrRti6r_WY1intisYJhs5En8w@mail.gmail.com>
- <20191003081742.0933264b@coco.lan>
- <CANL0fFTtHn4ocL4BD4cVKhVzjLhnQ0a45yq5x4MxWAVu-tD8sw@mail.gmail.com>
- <20191003094904.3aa5fdc7@coco.lan>
- <20191003095237.2efa0e7f@coco.lan>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191003095237.2efa0e7f@coco.lan>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Thu, 3 Oct 2019 09:02:43 -0400
+Received: from pps.filterd (m0098404.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x93D2cCs126688
+        for <linux-kernel@vger.kernel.org>; Thu, 3 Oct 2019 09:02:42 -0400
+Received: from e06smtp05.uk.ibm.com (e06smtp05.uk.ibm.com [195.75.94.101])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2vdfdfvjt6-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Thu, 03 Oct 2019 09:02:41 -0400
+Received: from localhost
+        by e06smtp05.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <zohar@linux.ibm.com>;
+        Thu, 3 Oct 2019 14:02:37 +0100
+Received: from b06avi18626390.portsmouth.uk.ibm.com (9.149.26.192)
+        by e06smtp05.uk.ibm.com (192.168.101.135) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Thu, 3 Oct 2019 14:02:35 +0100
+Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
+        by b06avi18626390.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x93D25iZ39125454
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 3 Oct 2019 13:02:05 GMT
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 15ED3A4055;
+        Thu,  3 Oct 2019 13:02:34 +0000 (GMT)
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id F1159A4057;
+        Thu,  3 Oct 2019 13:02:32 +0000 (GMT)
+Received: from localhost.localdomain (unknown [9.85.158.158])
+        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Thu,  3 Oct 2019 13:02:32 +0000 (GMT)
+Subject: Re: [PATCH] KEYS: asym_tpm: Switch to get_random_bytes()
+From:   Mimi Zohar <zohar@linux.ibm.com>
+To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+Cc:     linux-integrity@vger.kernel.org, stable@vger.kernel.org,
+        David Howells <dhowells@redhat.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        "David S. Miller" <davem@davemloft.net>,
+        "open list:ASYMMETRIC KEYS" <keyrings@vger.kernel.org>,
+        "open list:CRYPTO API" <linux-crypto@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+Date:   Thu, 03 Oct 2019 09:02:32 -0400
+In-Reply-To: <20191003114119.GF8933@linux.intel.com>
+References: <20190926171601.30404-1-jarkko.sakkinen@linux.intel.com>
+         <1570024819.4999.119.camel@linux.ibm.com>
+         <20191003114119.GF8933@linux.intel.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+x-cbid: 19100313-0020-0000-0000-00000374ADF7
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19100313-0021-0000-0000-000021CAB7E1
+Message-Id: <1570107752.4421.183.camel@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-10-03_05:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=803 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1908290000 definitions=main-1910030122
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
- 
-> Maybe something like this would make it work?
+On Thu, 2019-10-03 at 14:41 +0300, Jarkko Sakkinen wrote:
+> On Wed, Oct 02, 2019 at 10:00:19AM -0400, Mimi Zohar wrote:
+> > On Thu, 2019-09-26 at 20:16 +0300, Jarkko Sakkinen wrote:
+> > > Only the kernel random pool should be used for generating random numbers.
+> > > TPM contributes to that pool among the other sources of entropy. In here it
+> > > is not, agreed, absolutely critical because TPM is what is trusted anyway
+> > > but in order to remove tpm_get_random() we need to first remove all the
+> > > call sites.
+> > 
+> > At what point during boot is the kernel random pool available?  Does
+> > this imply that you're planning on changing trusted keys as well?
+> 
+> Well trusted keys *must* be changed to use it. It is not a choice
+> because using a proprietary random number generator instead of defacto
+> one in the kernel can be categorized as a *regression*.
 
-Nope. :(
+I really don't see how using the TPM random number for TPM trusted
+keys would be considered a regression.  That by definition is a
+trusted key.  If anything, changing what is currently being done would
+be the regression. 
 
-[   47.371022] si2168 1-0067: downloading firmware from file 'dvb-demod-si2168-b40-01.fw'
-[   48.632824] si2168 1-0067: firmware version: B 4.0.25
-[   48.671268] si2157 2-0063: unknown chip version Si21255-\xff\xff\xff
+> Also, TEE trusted keys cannot use the TPM option.
 
+That isn't a valid justification for changing the original definition
+of trusted keys.  Just as the kernel supports different methods of
+implementing the same function on different architectures, trusted
+keys will need to support different methods of generating a random
+number.   
 
-g
+> 
+> If it was not initialized early enough we would need fix that too.
+
+Shouldn't this be determined and fixed, before making any changes?
+
+> 
+> I don't think there should be a problem anyway since encrypted keys is
+> already using get_random_bytes().
+
+Encrypted keys has no bearing on trusted keys.
+
+Mimi
 
