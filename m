@@ -2,400 +2,106 @@ Return-Path: <SRS0=6dNS=X4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 25586C32792
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 10:27:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F53FC32792
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 10:28:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 08649218DE
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 10:27:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0388421A4C
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 10:28:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="b2BT52Hp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729241AbfJCK16 (ORCPT
+        id S1729311AbfJCK2O (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 06:27:58 -0400
-Received: from cloudserver094114.home.pl ([79.96.170.134]:56605 "EHLO
-        cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727657AbfJCK16 (ORCPT
+        Thu, 3 Oct 2019 06:28:14 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:44145 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727657AbfJCK2N (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 06:27:58 -0400
-Received: from 79.184.253.225.ipv4.supernova.orange.pl (79.184.253.225) (HELO kreacher.localnet)
- by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.292)
- id 5f3d4d156279d6fa; Thu, 3 Oct 2019 12:27:53 +0200
-From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
-To:     Giovanni Gherdovich <ggherdovich@suse.cz>
-Cc:     Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Borislav Petkov <bp@suse.de>, Len Brown <lenb@kernel.org>,
-        x86@kernel.org, linux-pm@vger.kernel.org,
+        Thu, 3 Oct 2019 06:28:13 -0400
+Received: by mail-wr1-f68.google.com with SMTP id z9so2310144wrl.11
+        for <linux-kernel@vger.kernel.org>; Thu, 03 Oct 2019 03:28:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=8A0SaEYYe0J2Jik12kIYDJK29NXY+H6u1d3B57ETVtU=;
+        b=b2BT52Hp4jqhRvrAAbkSJwgl3k/crr/1cyvLfQmF8o178ZBQZD0srr8mKn6LyCuQwo
+         F6I7lNHhkeYyp3Z/e7UXU0qSmsD2FoOe0zZ8QrRe8MNEqRnZgARvAq6pzTFj8nIOMHS7
+         pW3ylXfbZsTieEyJzX6780I6YGT+38ccKJypTtKlnT7UsZR5SJQu9oVvhDQYA7dSlU4D
+         3ww5GhcNMkEosTczmqkNNwWw6/DqKLG+afojn1q0gETScKVbBABjNODWLryU6yjTVcKE
+         Frdr3QT+TrMdmDW0V1bki1i/VqP2++yXCiTqtxFkL6TQBQAmSXbrwtloO4oxlOGRRLF/
+         jW+A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=8A0SaEYYe0J2Jik12kIYDJK29NXY+H6u1d3B57ETVtU=;
+        b=o66XxFP6LrDy3aViBYue6bT2YLPgjpk4zgNooN+HQIMXumv3cVRf7YwepT/ZQa20mw
+         LuovWLyRLTfymWh/UTxeVe3+aTnkr3jmQ/9e4MtKsX1j6TCn7B3VlXzGDKv8HGHXJzZW
+         8c+macybOt9IWmxgtChWSTAi5y9smbN9+A88iKpiLemwJ1viZ9YEoNQbr4JOBEshUXv9
+         dBlXLyKvCKmw+Orb1yCjvb2ZIG94iKPX6B8cV33fbaV4U9rv/kjIqsYpx2e+0s0zwX5k
+         YKWoSbPxNJu4S9iptMFwpZVRULLQTlkLjzs6Q3z6WeV5zN3RZRrh4SEe9qCFcAFlpX4W
+         zNnQ==
+X-Gm-Message-State: APjAAAWCuoeSQSswAVfaXyxrXwvZfC6bY2RbZrkUXQUN8v/uaPgWY7Wo
+        qA06mTUVqRZkCSPV5o95ipEDo2/2o1w=
+X-Google-Smtp-Source: APXvYqxbnqYYFrgiX8wxlXj6DtHm6R9O9KqBlknamHm+7r9SOjdm3CHXdDjccGSLPMvVjP428rGflA==
+X-Received: by 2002:a5d:67c3:: with SMTP id n3mr6031099wrw.294.1570098491906;
+        Thu, 03 Oct 2019 03:28:11 -0700 (PDT)
+Received: from holly.lan (cpc141214-aztw34-2-0-cust773.18-1.cable.virginm.net. [86.9.19.6])
+        by smtp.gmail.com with ESMTPSA id x16sm1962479wrl.32.2019.10.03.03.28.11
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 03 Oct 2019 03:28:11 -0700 (PDT)
+Date:   Thu, 3 Oct 2019 11:28:09 +0100
+From:   Daniel Thompson <daniel.thompson@linaro.org>
+To:     Bartosz Golaszewski <brgl@bgdev.pl>
+Cc:     Yoshinori Sato <ysato@users.sourceforge.jp>,
+        Rich Felker <dalias@libc.org>, linux-sh@vger.kernel.org,
         linux-kernel@vger.kernel.org,
-        Mel Gorman <mgorman@techsingularity.net>,
-        Matt Fleming <matt@codeblueprint.co.uk>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Paul Turner <pjt@google.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Quentin Perret <qperret@qperret.net>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Doug Smythies <dsmythies@telus.net>
-Subject: Re: [PATCH v2 1/2] x86,sched: Add support for frequency invariance
-Date:   Thu, 03 Oct 2019 12:27:52 +0200
-Message-ID: <1906426.HDqaVa71mF@kreacher>
-In-Reply-To: <20191002122926.385-2-ggherdovich@suse.cz>
-References: <20191002122926.385-1-ggherdovich@suse.cz> <20191002122926.385-2-ggherdovich@suse.cz>
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Subject: Re: [PATCH] sh: kgdb: fix an implicit fallthrough warning
+Message-ID: <20191003102809.ymtwu33ouzipyecz@holly.lan>
+References: <20191002154756.18924-1-brgl@bgdev.pl>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191002154756.18924-1-brgl@bgdev.pl>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wednesday, October 2, 2019 2:29:25 PM CEST Giovanni Gherdovich wrote:
-> Implement arch_scale_freq_capacity() for 'modern' x86. This function
-> is used by the scheduler to correctly account usage in the face of
-> DVFS.
+On Wed, Oct 02, 2019 at 05:47:56PM +0200, Bartosz Golaszewski wrote:
+> From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 > 
-
-[cut]
-
+> The switch case in arch/sh/kernel/kgdb.c can fallthrough. Add an
+> appropriate comment.
 > 
-> Suggested-by: Peter Zijlstra <peterz@infradead.org>
-> Signed-off-by: Giovanni Gherdovich <ggherdovich@suse.cz>
-> Acked-by: Doug Smythies <dsmythies@telus.net>
+> Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+
+Reviewed-by: Daniel Thompson <daniel.thompson@linaro.org>
+
 > ---
->  arch/x86/include/asm/topology.h |  33 +++++++
->  arch/x86/kernel/smpboot.c       | 195 +++++++++++++++++++++++++++++++++++++++-
->  kernel/sched/core.c             |   1 +
->  kernel/sched/sched.h            |   7 ++
->  4 files changed, 235 insertions(+), 1 deletion(-)
+>  arch/sh/kernel/kgdb.c | 1 +
+>  1 file changed, 1 insertion(+)
 > 
-> diff --git a/arch/x86/include/asm/topology.h b/arch/x86/include/asm/topology.h
-> index 4b14d2318251..260410306879 100644
-> --- a/arch/x86/include/asm/topology.h
-> +++ b/arch/x86/include/asm/topology.h
-> @@ -193,4 +193,37 @@ static inline void sched_clear_itmt_support(void)
->  }
->  #endif /* CONFIG_SCHED_MC_PRIO */
->  
-> +#ifdef CONFIG_SMP
-> +#include <asm/cpufeature.h>
-> +
-> +DECLARE_STATIC_KEY_FALSE(arch_scale_freq_key);
-> +
-> +#define arch_scale_freq_invariant() static_branch_likely(&arch_scale_freq_key)
-> +
-> +DECLARE_PER_CPU(unsigned long, arch_cpu_freq);
-> +
-> +static inline long arch_scale_freq_capacity(int cpu)
-> +{
-> +	if (arch_scale_freq_invariant())
-> +		return per_cpu(arch_cpu_freq, cpu);
-> +
-> +	return 1024 /* SCHED_CAPACITY_SCALE */;
-> +}
-> +#define arch_scale_freq_capacity arch_scale_freq_capacity
-> +
-> +extern void arch_scale_freq_tick(void);
-> +#define arch_scale_freq_tick arch_scale_freq_tick
-> +
-> +extern void x86_arch_scale_freq_tick_enable(void);
-> +extern void x86_arch_scale_freq_tick_disable(void);
-> +#else
-> +static inline void x86_arch_scale_freq_tick_enable(void)
-> +{
-> +}
-> +
-> +static inline void x86_arch_scale_freq_tick_disable(void)
-> +{
-> +}
-> +#endif
-> +
->  #endif /* _ASM_X86_TOPOLOGY_H */
-> diff --git a/arch/x86/kernel/smpboot.c b/arch/x86/kernel/smpboot.c
-> index 69881b2d446c..7aa72a51e1e9 100644
-> --- a/arch/x86/kernel/smpboot.c
-> +++ b/arch/x86/kernel/smpboot.c
-> @@ -147,6 +147,8 @@ static inline void smpboot_restore_warm_reset_vector(void)
->  	*((volatile u32 *)phys_to_virt(TRAMPOLINE_PHYS_LOW)) = 0;
->  }
->  
-> +static void set_cpu_max_freq(void);
-> +
->  /*
->   * Report back to the Boot Processor during boot time or to the caller processor
->   * during CPU online.
-> @@ -183,6 +185,8 @@ static void smp_callin(void)
->  	 */
->  	set_cpu_sibling_map(raw_smp_processor_id());
->  
-> +	set_cpu_max_freq();
-> +
->  	/*
->  	 * Get our bogomips.
->  	 * Update loops_per_jiffy in cpu_data. Previous call to
-> @@ -1337,7 +1341,7 @@ void __init native_smp_prepare_cpus(unsigned int max_cpus)
->  	set_sched_topology(x86_topology);
->  
->  	set_cpu_sibling_map(0);
-> -
-> +	set_cpu_max_freq();
->  	smp_sanity_check();
->  
->  	switch (apic_intr_mode) {
-> @@ -1764,3 +1768,192 @@ void native_play_dead(void)
->  }
->  
->  #endif
-> +
-> +/*
-> + * APERF/MPERF frequency ratio computation.
-> + *
-> + * The scheduler wants to do frequency invariant accounting and needs a <1
-> + * ratio to account for the 'current' frequency, corresponding to
-> + * freq_curr / freq_max.
-> + *
-> + * Since the frequency freq_curr on x86 is controlled by micro-controller and
-> + * our P-state setting is little more than a request/hint, we need to observe
-> + * the effective frequency 'BusyMHz', i.e. the average frequency over a time
-> + * interval after discarding idle time. This is given by:
-> + *
-> + *   BusyMHz = delta_APERF / delta_MPERF * freq_base
-> + *
-> + * where freq_base is the max non-turbo P-state.
-> + *
-> + * The freq_max term has to be set to a somewhat arbitrary value, because we
-> + * can't know which turbo states will be available at a given point in time:
-> + * it all depends on the thermal headroom of the entire package. We set it to
-> + * the turbo level with 4 cores active.
-> + *
-> + * Benchmarks show that's a good compromise between the 1C turbo ratio
-> + * (freq_curr/freq_max would rarely reach 1) and something close to freq_base,
-> + * which would ignore the entire turbo range (a conspicuous part, making
-> + * freq_curr/freq_max always maxed out).
-> + *
-> + * Setting freq_max to anything less than the 1C turbo ratio makes the ratio
-> + * freq_curr / freq_max to eventually grow >1, in which case we clip it to 1.
-> + */
-> +
-> +DEFINE_STATIC_KEY_FALSE(arch_scale_freq_key);
-> +
-> +static DEFINE_PER_CPU(u64, arch_prev_aperf);
-> +static DEFINE_PER_CPU(u64, arch_prev_mperf);
-> +static u64 arch_max_freq = SCHED_CAPACITY_SCALE;
-> +
-> +static bool turbo_disabled(void)
-> +{
-> +	u64 misc_en;
-> +	int err;
-> +
-> +	err = rdmsrl_safe(MSR_IA32_MISC_ENABLE, &misc_en);
-> +	if (err)
-> +		return false;
-> +
-> +	return (misc_en & MSR_IA32_MISC_ENABLE_TURBO_DISABLE);
-> +}
-
-This setting may be updated by the platform firmware (BIOS) in some cases
-(see kernel.org BZ 200759, for example), so in general checking it once
-at the init time is not enough.
-
-> +
-> +#include <asm/cpu_device_id.h>
-> +#include <asm/intel-family.h>
-> +
-> +#define ICPU(model) \
-> +	{ X86_VENDOR_INTEL, 6, model, X86_FEATURE_APERFMPERF, 0}
-> +
-> +static const struct x86_cpu_id has_knl_turbo_ratio_limits[] = {
-> +	ICPU(INTEL_FAM6_XEON_PHI_KNL),
-> +	ICPU(INTEL_FAM6_XEON_PHI_KNM),
-> +	{}
-> +};
-> +
-> +static const struct x86_cpu_id has_turbo_ratio_group_limits[] = {
-> +	ICPU(INTEL_FAM6_ATOM_GOLDMONT),
-> +	ICPU(INTEL_FAM6_ATOM_GOLDMONT_D),
-> +	ICPU(INTEL_FAM6_ATOM_GOLDMONT_PLUS),
-> +	ICPU(INTEL_FAM6_SKYLAKE_X),
-> +	{}
-> +};
-> +
-> +static void core_set_cpu_max_freq(void)
-> +{
-> +	u64 ratio, turbo_ratio;
-> +	int err;
-> +
-> +	if (smp_processor_id() != 0)
-> +		return;
-> +
-> +	if (turbo_disabled() ||
-> +		x86_match_cpu(has_knl_turbo_ratio_limits) ||
-> +		x86_match_cpu(has_turbo_ratio_group_limits))
-> +		return;
-> +
-
-I would move the checks above directly to intel_set_cpu_max_freq().
-
-> +	err = rdmsrl_safe(MSR_PLATFORM_INFO, &ratio);
-> +	if (err)
-> +		return;
-> +
-> +	err = rdmsrl_safe(MSR_TURBO_RATIO_LIMIT, &turbo_ratio);
-> +	if (err)
-> +		return;
-> +
-> +	ratio = (ratio >> 8) & 0xFF;                /* max P state ratio */
-> +	turbo_ratio = (turbo_ratio >> 24) & 0xFF;   /* 4C turbo ratio */
-> +
-> +	arch_max_freq = div_u64(turbo_ratio * SCHED_CAPACITY_SCALE, ratio);
-> +
-> +	static_branch_enable(&arch_scale_freq_key);
-> +}
-> +
-> +static void intel_set_cpu_max_freq(void)
-> +{
-> +	/*
-> +	 * TODO: add support for:
-> +	 *
-> +	 * - Xeon Phi (KNM, KNL)
-> +	 * - Xeon Gold/Platinum, Atom Goldmont/Goldmont Plus
-> +	 * - Atom Silvermont
-> +	 *
-> +	 * which all now get by default arch_max_freq = SCHED_CAPACITY_SCALE
-> +	 */
-> +	core_set_cpu_max_freq();
-> +}
-> +
-> +static void init_scale_freq(void *arg)
-> +{
-> +	u64 aperf, mperf;
-> +
-> +	rdmsrl(MSR_IA32_APERF, aperf);
-> +	rdmsrl(MSR_IA32_MPERF, mperf);
-> +
-> +	this_cpu_write(arch_prev_aperf, aperf);
-> +	this_cpu_write(arch_prev_mperf, mperf);
-> +}
-> +
-> +static void set_cpu_max_freq(void)
-> +{
-> +	if (!boot_cpu_has(X86_FEATURE_APERFMPERF))
-> +		return;
-> +
-> +	switch (boot_cpu_data.x86_vendor) {
-> +	case X86_VENDOR_INTEL:
-> +		intel_set_cpu_max_freq();
-> +		break;
-> +	default:
-> +		break;
-> +	}
-
-Why is the switch () needed?
-
-It seems that
-
-	if (boot_cpu_data.x86_vendor == X86_VENDOR_INTEL)
-		intel_set_cpu_max_freq();
-
-would do the trick.
-
-> +
-> +	init_scale_freq(NULL);
-> +}
-> +
-> +DEFINE_PER_CPU(unsigned long, arch_cpu_freq);
-> +
-> +static bool tick_disable;
-> +
-> +void arch_scale_freq_tick(void)
-> +{
-> +	u64 freq;
-> +	u64 aperf, mperf;
-> +	u64 acnt, mcnt;
-> +
-> +	if (!arch_scale_freq_invariant() || tick_disable)
-> +		return;
-> +
-
-This may be a silly question, but can using tick_disable be avoided?
-
-I guess it is there, because disabling the static branch from
-x86_arch_scale_freq_tick_disable() would be unsafe, but I'm not
-sure why that would be the case?
-
-> +	rdmsrl(MSR_IA32_APERF, aperf);
-> +	rdmsrl(MSR_IA32_MPERF, mperf);
-> +
-> +	acnt = aperf - this_cpu_read(arch_prev_aperf);
-> +	mcnt = mperf - this_cpu_read(arch_prev_mperf);
-> +	if (!mcnt)
-> +		return;
-> +
-> +	this_cpu_write(arch_prev_aperf, aperf);
-> +	this_cpu_write(arch_prev_mperf, mperf);
-> +
-> +	acnt <<= 2*SCHED_CAPACITY_SHIFT;
-> +	mcnt *= arch_max_freq;
-> +
-> +	freq = div64_u64(acnt, mcnt);
-> +
-> +	if (freq > SCHED_CAPACITY_SCALE)
-> +		freq = SCHED_CAPACITY_SCALE;
-> +
-> +	this_cpu_write(arch_cpu_freq, freq);
-> +}
-> +
-> +void x86_arch_scale_freq_tick_enable(void)
-> +{
-> +	tick_disable = false;
-> +}
-> +
-> +static void reset_scale_freq(void *arg)
-> +{
-> +	this_cpu_write(arch_cpu_freq, SCHED_CAPACITY_SCALE);
-> +}
-> +
-> +void x86_arch_scale_freq_tick_disable(void)
-> +{
-> +	on_each_cpu(reset_scale_freq, NULL, 1);
-> +	tick_disable = true;
-> +}
-> diff --git a/kernel/sched/core.c b/kernel/sched/core.c
-> index 7880f4f64d0e..2bdce4a140ae 100644
-> --- a/kernel/sched/core.c
-> +++ b/kernel/sched/core.c
-> @@ -3593,6 +3593,7 @@ void scheduler_tick(void)
->  	struct task_struct *curr = rq->curr;
->  	struct rq_flags rf;
->  
-> +	arch_scale_freq_tick();
->  	sched_clock_tick();
->  
->  	rq_lock(rq, &rf);
-> diff --git a/kernel/sched/sched.h b/kernel/sched/sched.h
-> index 0db2c1b3361e..0fe4f2dcd175 100644
-> --- a/kernel/sched/sched.h
-> +++ b/kernel/sched/sched.h
-> @@ -1953,6 +1953,13 @@ static inline int hrtick_enabled(struct rq *rq)
->  
->  #endif /* CONFIG_SCHED_HRTICK */
->  
-> +#ifndef arch_scale_freq_tick
-> +static __always_inline
-> +void arch_scale_freq_tick(void)
-> +{
-> +}
-> +#endif
-> +
->  #ifndef arch_scale_freq_capacity
->  static __always_inline
->  unsigned long arch_scale_freq_capacity(int cpu)
+> diff --git a/arch/sh/kernel/kgdb.c b/arch/sh/kernel/kgdb.c
+> index 6d61f8cf4c13..0d5f3c9d52f3 100644
+> --- a/arch/sh/kernel/kgdb.c
+> +++ b/arch/sh/kernel/kgdb.c
+> @@ -266,6 +266,7 @@ int kgdb_arch_handle_exception(int e_vector, int signo, int err_code,
+>  		ptr = &remcomInBuffer[1];
+>  		if (kgdb_hex2long(&ptr, &addr))
+>  			linux_regs->pc = addr;
+> +		/* fallthrough */
+>  	case 'D':
+>  	case 'k':
+>  		atomic_set(&kgdb_cpu_doing_single_step, -1);
+> -- 
+> 2.23.0
 > 
-
-
-
-
