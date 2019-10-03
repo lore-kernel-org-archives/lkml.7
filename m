@@ -2,176 +2,85 @@ Return-Path: <SRS0=6dNS=X4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 67394C10F14
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 07:43:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0396AC10F14
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 07:47:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3CE5020815
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 07:43:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CEB7F21D71
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 07:47:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728455AbfJCHnL (ORCPT
+        id S1728475AbfJCHrC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 03:43:11 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:37582 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725497AbfJCHnL (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 03:43:11 -0400
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: pq)
-        with ESMTPSA id 03BAA28F5FD
-Date:   Thu, 3 Oct 2019 10:42:58 +0300
-From:   Pekka Paalanen <pekka.paalanen@collabora.com>
-To:     Rodrigo Siqueira <rodrigosiqueiramelo@gmail.com>
-Cc:     Keith Packard <keithp@keithp.com>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Ville =?UTF-8?B?U3lyasOkbMOk?= <ville.syrjala@linux.intel.com>,
-        Chris Wilson <chris@chris-wilson.co.uk>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
-        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
-        kernel-janitors@vger.kernel.org, intel-gfx@lists.freedesktop.org
-Subject: Re: [PATCH V6] drm/drm_vblank: Change EINVAL by the correct errno
-Message-ID: <20191003104258.119d72e9.pekka.paalanen@collabora.com>
-In-Reply-To: <20191002140516.adeyj3htylimmlmg@smtp.gmail.com>
-References: <20191002140516.adeyj3htylimmlmg@smtp.gmail.com>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Thu, 3 Oct 2019 03:47:02 -0400
+Received: from mga09.intel.com ([134.134.136.24]:17762 "EHLO mga09.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725907AbfJCHrC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 03:47:02 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 03 Oct 2019 00:47:01 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.67,251,1566889200"; 
+   d="scan'208";a="205558147"
+Received: from linux.intel.com ([10.54.29.200])
+  by fmsmga001.fm.intel.com with ESMTP; 03 Oct 2019 00:47:00 -0700
+Received: from [10.226.38.25] (unknown [10.226.38.25])
+        by linux.intel.com (Postfix) with ESMTP id AB2F55803A5;
+        Thu,  3 Oct 2019 00:46:57 -0700 (PDT)
+Subject: Re: [PATCH v1 2/2] mmc: sdhci-of-arasan: Add Support for Intel LGM
+ SDXC
+To:     Adrian Hunter <adrian.hunter@intel.com>, ulf.hansson@linaro.org,
+        linux-mmc@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        devicetree@vger.kernel.org, michal.simek@xilinx.com,
+        robh+dt@kernel.org, mark.rutland@arm.com,
+        andriy.shevchenko@intel.com, cheol.yong.kim@intel.com,
+        qi-ming.wu@intel.com
+References: <20191003040032.37696-1-vadivel.muruganx.ramuthevar@linux.intel.com>
+ <20191003040032.37696-3-vadivel.muruganx.ramuthevar@linux.intel.com>
+ <329a38b4-4fba-eb6e-0d40-c241cfa28e25@intel.com>
+From:   "Ramuthevar, Vadivel MuruganX" 
+        <vadivel.muruganx.ramuthevar@linux.intel.com>
+Message-ID: <0c3d406c-dc28-a670-91df-7c7e6f818f87@linux.intel.com>
+Date:   Thu, 3 Oct 2019 15:46:56 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
- boundary="Sig_/o+JZAc3u12D=Y2_U=czydx8"; protocol="application/pgp-signature"
+In-Reply-To: <329a38b4-4fba-eb6e-0d40-c241cfa28e25@intel.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/o+JZAc3u12D=Y2_U=czydx8
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Hi Adrian,
 
-On Wed, 2 Oct 2019 11:05:16 -0300
-Rodrigo Siqueira <rodrigosiqueiramelo@gmail.com> wrote:
+  Thank you for the comments.
 
-> For historical reasons, the function drm_wait_vblank_ioctl always return
-> -EINVAL if something gets wrong. This scenario limits the flexibility
-> for the userspace to make detailed verification of any problem and take
-> some action. In particular, the validation of =E2=80=9Cif (!dev->irq_enab=
-led)=E2=80=9D
-> in the drm_wait_vblank_ioctl is responsible for checking if the driver
-> support vblank or not. If the driver does not support VBlank, the
-> function drm_wait_vblank_ioctl returns EINVAL, which does not represent
-> the real issue; this patch changes this behavior by return EOPNOTSUPP.
-> Additionally, drm_crtc_get_sequence_ioctl and
-> drm_crtc_queue_sequence_ioctl, also returns EINVAL if vblank is not
-> supported; this patch also changes the return value to EOPNOTSUPP in
-> these functions. Lastly, these functions are invoked by libdrm, which is
-> used by many compositors; because of this, it is important to check if
-> this change breaks any compositor. In this sense, the following projects
-> were examined:
->=20
-> * Drm-hwcomposer
-> * Kwin
-> * Sway
-> * Wlroots
-> * Wayland
-> * Weston
-> * Mutter
-> * Xorg (67 different drivers)
->=20
-> For each repository the verification happened in three steps:
->=20
-> * Update the main branch
-> * Look for any occurrence of "drmCrtcQueueSequence",
->   "drmCrtcGetSequence", and "drmWaitVBlank" with the command git grep -n
->   "STRING".
-> * Look in the git history of the project with the command
-> git log -S<STRING>
->=20
-> None of the above projects validate the use of EINVAL when using
-> drmWaitVBlank(), which make safe, at least for these projects, to change
-> the return values. On the other hand, mesa and xserver project uses
-> drmCrtcQueueSequence() and drmCrtcGetSequence(); this change is harmless
-> for both projects.
->=20
-> Change since V5 (Pekka Paalanen):
->  - Check if the change also affects Mutter
->=20
-> Change since V4 (Daniel):
->  - Also return EOPNOTSUPP in drm_crtc_[get|queue]_sequence_ioctl
->=20
-> Change since V3:
->  - Return EINVAL for _DRM_VBLANK_SIGNAL (Daniel)
->=20
-> Change since V2:
->  Daniel Vetter and Chris Wilson
->  - Replace ENOTTY by EOPNOTSUPP
->  - Return EINVAL if the parameters are wrong
->=20
-> Cc: Keith Packard <keithp@keithp.com>
-> Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>
-> Cc: Ville Syrj=C3=A4l=C3=A4 <ville.syrjala@linux.intel.com>
-> Cc: Chris Wilson <chris@chris-wilson.co.uk>
-> Cc: Daniel Vetter <daniel@ffwll.ch>
-> Cc: Pekka Paalanen <pekka.paalanen@collabora.com>
-> Signed-off-by: Rodrigo Siqueira <rodrigosiqueiramelo@gmail.com>
-> ---
->  drivers/gpu/drm/drm_vblank.c | 6 +++---
->  1 file changed, 3 insertions(+), 3 deletions(-)
->=20
-> diff --git a/drivers/gpu/drm/drm_vblank.c b/drivers/gpu/drm/drm_vblank.c
-> index 9c6899758bc9..71cf2633ac58 100644
-> --- a/drivers/gpu/drm/drm_vblank.c
-> +++ b/drivers/gpu/drm/drm_vblank.c
-> @@ -1610,7 +1610,7 @@ int drm_wait_vblank_ioctl(struct drm_device *dev, v=
-oid *data,
->  	unsigned int flags, pipe, high_pipe;
-> =20
->  	if (!dev->irq_enabled)
-> -		return -EINVAL;
-> +		return -EOPNOTSUPP;
-> =20
->  	if (vblwait->request.type & _DRM_VBLANK_SIGNAL)
->  		return -EINVAL;
+On 3/10/2019 3:02 PM, Adrian Hunter wrote:
+> On 3/10/19 7:00 AM, Ramuthevar,Vadivel MuruganX wrote:
+>> From: Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
+>>
+>> The current arasan sdhci PHY configuration isn't compatible
+>> with the PHY on Intel's LGM(Lightning Mountain) SoC devices.
+>>
+>> Therefore, add a new compatible, to adapt the Intel's LGM
+>> SDXC PHY with arasan-sdhc controller to configure the PHY.
+>>
+>> Signed-off-by: Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
+> Aren't these patches already in v5.4-rc1
 
-Hi,
+  No, these patches are not there in v5.4-rc1.
 
-this part looks safe for Weston indeed, so this part:
+  The one which is in v5.4-rc1 supports only eMMC, does not SD/SDIO, so 
+these patches are required.
 
-Acked-by: Pekka Paalanen <pekka.paalanen@collabora.com>
-
-There is no need to check the "Wayland" project, it will never do
-anything with DRM.
-
-(What looks extremely suspicious though is the libdrm implementation of
-drmWaitVblank() in case the ioctl returns EINTR, but that's unrelated.)
-
-
-Thanks,
-pq
-
---Sig_/o+JZAc3u12D=Y2_U=czydx8
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCAAdFiEEJQjwWQChkWOYOIONI1/ltBGqqqcFAl2VpoIACgkQI1/ltBGq
-qqdxlRAAjTrqbU3NrK1kJ8lgwsXFGgwwlLVU2uu56fq5vVb6wyZb0coZEe01/OP8
-KCunoHBG0e6I7HKgmay2y73JKvy9HA93YZ4tm0ErI4KqTIc+EqnKVCMfnVr3HSCh
-cbEqjVdAVmfYRHmEu4UczgQdeGg1Vqfvfq5UVCI0v2vrPzVpAnqfJ6btVYX8f4tM
-FkXUAAyVgPyHojcwUopU+XiuKruDekrfv/n5edC2uP9gi/bM5n2Gu3Nq+s7+kzGZ
-PW01We28veJ9b1jjWhrvbW1J8M2ot35HXRtgNwDBcpoWtb8qcZk/n3M2+J2CdjCx
-W8Q7ZLfq/j6ee0XlE4ZJRzy19FNzyl2lLzhp3GxR5vbZ7ml3A4yUY5vjQxpcADgu
-dUjXLSdw2VPyJmzsc8A5hGjjH8Pv17Va3zkjOtKJiW6Bmq1D0z8m7hdcFy6zxZKh
-/SrcBq/U6y8Cvo33tRElcsDVQ3zQWECAJFmaZ4AG3xtVXvO17fmly4saU7jwOx1f
-/2K5NiENNhJ8vpHBh3jz6KDRHiiVmDC5DtLStk4O7JqDvErlMRUMHdY0V6XMoRqu
-CWRvYDB3+E5FykEPYIoTpOf/LLX41I0EpFXuzh6tWmOHgtl8CgIUrQS5HX0u/Oo8
-JjOBP+oWKotSmqD7eS95ug7N3EVuk4/9bWun+kFe8pKzLDg+Ws4=
-=AcvH
------END PGP SIGNATURE-----
-
---Sig_/o+JZAc3u12D=Y2_U=czydx8--
+---
+With Best Regards
+Vadivel Murugan
