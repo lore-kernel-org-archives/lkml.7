@@ -7,47 +7,49 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13770C32792
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:52:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E8C9C10F14
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:52:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DB85220862
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:52:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 74AAF2070B
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:52:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570121550;
-	bh=zR8prZ67XS3tWyl81iTYJBxZzU5N6ZPe07g20rODNrk=;
+	s=default; t=1570121554;
+	bh=AVrR9+tsKYdOfYBrPs/yN9cRUzxjuwMAG5sQEM8OOFY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=VVkMFUmcaY8RafTs4RPXJ21+N3Nm0+aT2d4wxxYKXJCOQYLsXZYrbs8K1W3DzQhMD
-	 nmU2nB3CVf7c275zbyici2d3XM2UocRdsjKJKP5Td71YVJOeeniuoaPlpv5fEb3UHB
-	 GU/9ydcppNyWF9Xz0PIh8vvlrKOZJG7PrfRqJXTk=
+	b=OcwWIxhzAR1MfjhARLNac1jaILaskjoKSsnvuJJ5M3OhkAwBdKkyDakqp0dzuepoF
+	 OEofGUrFuI90iBJxr6s8ilziQYrVl1Wbl5Gek/dtSj8R1r8hz9tlpNwZgqt1e7bkVA
+	 MLPCcrYQ7NV2ZPAyKqxETLuF/H+AKcDFhqdU6SEM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405748AbfJCQwa (ORCPT
+        id S2406205AbfJCQwd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 12:52:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40104 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 12:52:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40176 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2406178AbfJCQwZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:52:25 -0400
+        id S2406184AbfJCQw2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:52:28 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6D2732133F;
-        Thu,  3 Oct 2019 16:52:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1EB6020867;
+        Thu,  3 Oct 2019 16:52:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570121544;
-        bh=zR8prZ67XS3tWyl81iTYJBxZzU5N6ZPe07g20rODNrk=;
+        s=default; t=1570121547;
+        bh=AVrR9+tsKYdOfYBrPs/yN9cRUzxjuwMAG5sQEM8OOFY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wb68v6VFW8KJTmUUYsbNe+nVSbj38JRzPiUTatY7SK+v/YY8vSPGOBMU04+uG3bVg
-         iS/QnmADr9pU15B24ByIUjxSCNk7e1wcCPX7Do7Je279tWwb8TFOAn5A4zdjIjHBuy
-         SPdyY10SkI7/09qKdw0/yITVrM4FrEiOlNy/NIF4=
+        b=sDQHhVDHmysfAYUumR9sV/P4w1sVg/e3WvqU3eqPpXSRFa+VzGIOwrVbaXMvmJVOY
+         WW/m9eTHS2mA8Ogh0DDL9VWTPpTIXUg+6dkcreBejKz6SdM3sbM/8pMcYXwA6HLfnL
+         NbzbfB6w/8yk53HOJhnqnO1znYaOgDtuM8daixQE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Stefan Assmann <sassmann@kpanic.de>,
-        Andrew Bowers <andrewx.bowers@intel.com>,
-        Jeff Kirsher <jeffrey.t.kirsher@intel.com>
-Subject: [PATCH 5.3 301/344] i40e: check __I40E_VF_DISABLE bit in i40e_sync_filters_subtask
-Date:   Thu,  3 Oct 2019 17:54:26 +0200
-Message-Id: <20191003154609.147514725@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Curtis Malainey <cujomalainey@chromium.org>,
+        Jarkko Nikula <jarkko.nikula@linux.intel.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
+Subject: [PATCH 5.3 319/344] ACPI / LPSS: Save/restore LPSS private registers also on Lynxpoint
+Date:   Thu,  3 Oct 2019 17:54:44 +0200
+Message-Id: <20191003154610.524307055@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191003154540.062170222@linuxfoundation.org>
 References: <20191003154540.062170222@linuxfoundation.org>
@@ -60,74 +62,64 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Stefan Assmann <sassmann@kpanic.de>
+From: Jarkko Nikula <jarkko.nikula@linux.intel.com>
 
-commit a7542b87607560d0b89e7ff81d870bd6ff8835cb upstream.
+commit 57b3006492a4c11b2d4a772b5b2905d544a32037 upstream.
 
-While testing VF spawn/destroy the following panic occurred.
+My assumption in commit b53548f9d9e4 ("spi: pxa2xx: Remove LPSS private
+register restoring during resume") that Intel Lynxpoint and compatible
+based chipsets may not need LPSS private registers saving and restoring
+over suspend/resume cycle turned out to be false on Intel Broadwell.
 
-BUG: unable to handle kernel NULL pointer dereference at 0000000000000029
-[...]
-Workqueue: i40e i40e_service_task [i40e]
-RIP: 0010:i40e_sync_vsi_filters+0x6fd/0xc60 [i40e]
-[...]
-Call Trace:
- ? __switch_to_asm+0x35/0x70
- ? __switch_to_asm+0x41/0x70
- ? __switch_to_asm+0x35/0x70
- ? _cond_resched+0x15/0x30
- i40e_sync_filters_subtask+0x56/0x70 [i40e]
- i40e_service_task+0x382/0x11b0 [i40e]
- ? __switch_to_asm+0x41/0x70
- ? __switch_to_asm+0x41/0x70
- process_one_work+0x1a7/0x3b0
- worker_thread+0x30/0x390
- ? create_worker+0x1a0/0x1a0
- kthread+0x112/0x130
- ? kthread_bind+0x30/0x30
- ret_from_fork+0x35/0x40
+Curtis Malainey sent a patch bringing above change back and reported the
+LPSS SPI Chip Select control was lost over suspend/resume cycle on
+Broadwell machine.
 
-Investigation revealed a race where pf->vf[vsi->vf_id].trusted may get
-accessed by the watchdog via i40e_sync_filters_subtask() although
-i40e_free_vfs() already free'd pf->vf.
-To avoid this the call to i40e_sync_vsi_filters() in
-i40e_sync_filters_subtask() needs to be guarded by __I40E_VF_DISABLE,
-which is also used by i40e_free_vfs().
+Instead of reverting above commit lets add LPSS private register
+saving/restoring also for all LPSS SPI, I2C and UART controllers on
+Lynxpoint and compatible chipset to make sure context is not lost in
+case nothing else preserves it like firmware or if LPSS is always on.
 
-Note: put the __I40E_VF_DISABLE check after the
-__I40E_MACVLAN_SYNC_PENDING check as the latter is more likely to
-trigger.
-
-CC: stable@vger.kernel.org
-Signed-off-by: Stefan Assmann <sassmann@kpanic.de>
-Tested-by: Andrew Bowers <andrewx.bowers@intel.com>
-Signed-off-by: Jeff Kirsher <jeffrey.t.kirsher@intel.com>
+Fixes: b53548f9d9e4 ("spi: pxa2xx: Remove LPSS private register restoring during resume")
+Reported-by: Curtis Malainey <cujomalainey@chromium.org>
+Tested-by: Curtis Malainey <cujomalainey@chromium.org>
+Cc: 5.0+ <stable@vger.kernel.org> # 5.0+
+Signed-off-by: Jarkko Nikula <jarkko.nikula@linux.intel.com>
+Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/net/ethernet/intel/i40e/i40e_main.c |    5 +++++
- 1 file changed, 5 insertions(+)
+ drivers/acpi/acpi_lpss.c |    8 +++++---
+ 1 file changed, 5 insertions(+), 3 deletions(-)
 
---- a/drivers/net/ethernet/intel/i40e/i40e_main.c
-+++ b/drivers/net/ethernet/intel/i40e/i40e_main.c
-@@ -2583,6 +2583,10 @@ static void i40e_sync_filters_subtask(st
- 		return;
- 	if (!test_and_clear_bit(__I40E_MACVLAN_SYNC_PENDING, pf->state))
- 		return;
-+	if (test_and_set_bit(__I40E_VF_DISABLE, pf->state)) {
-+		set_bit(__I40E_MACVLAN_SYNC_PENDING, pf->state);
-+		return;
-+	}
- 
- 	for (v = 0; v < pf->num_alloc_vsi; v++) {
- 		if (pf->vsi[v] &&
-@@ -2597,6 +2601,7 @@ static void i40e_sync_filters_subtask(st
- 			}
- 		}
- 	}
-+	clear_bit(__I40E_VF_DISABLE, pf->state);
+--- a/drivers/acpi/acpi_lpss.c
++++ b/drivers/acpi/acpi_lpss.c
+@@ -219,12 +219,13 @@ static void bsw_pwm_setup(struct lpss_pr
  }
  
- /**
+ static const struct lpss_device_desc lpt_dev_desc = {
+-	.flags = LPSS_CLK | LPSS_CLK_GATE | LPSS_CLK_DIVIDER | LPSS_LTR,
++	.flags = LPSS_CLK | LPSS_CLK_GATE | LPSS_CLK_DIVIDER | LPSS_LTR
++			| LPSS_SAVE_CTX,
+ 	.prv_offset = 0x800,
+ };
+ 
+ static const struct lpss_device_desc lpt_i2c_dev_desc = {
+-	.flags = LPSS_CLK | LPSS_CLK_GATE | LPSS_LTR,
++	.flags = LPSS_CLK | LPSS_CLK_GATE | LPSS_LTR | LPSS_SAVE_CTX,
+ 	.prv_offset = 0x800,
+ };
+ 
+@@ -236,7 +237,8 @@ static struct property_entry uart_proper
+ };
+ 
+ static const struct lpss_device_desc lpt_uart_dev_desc = {
+-	.flags = LPSS_CLK | LPSS_CLK_GATE | LPSS_CLK_DIVIDER | LPSS_LTR,
++	.flags = LPSS_CLK | LPSS_CLK_GATE | LPSS_CLK_DIVIDER | LPSS_LTR
++			| LPSS_SAVE_CTX,
+ 	.clk_con_id = "baudclk",
+ 	.prv_offset = 0x800,
+ 	.setup = lpss_uart_setup,
 
 
