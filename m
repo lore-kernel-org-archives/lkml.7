@@ -2,27 +2,27 @@ Return-Path: <SRS0=6dNS=X4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 74408C10F14
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 09:53:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D9EAC10F14
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 09:53:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 545AE21A4C
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 09:53:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 06254217D7
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 09:53:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729528AbfJCJwy (ORCPT
+        id S1729689AbfJCJxT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 05:52:54 -0400
-Received: from mx2.suse.de ([195.135.220.15]:37284 "EHLO mx1.suse.de"
+        Thu, 3 Oct 2019 05:53:19 -0400
+Received: from mx2.suse.de ([195.135.220.15]:37474 "EHLO mx1.suse.de"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728992AbfJCJww (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 05:52:52 -0400
+        id S1729472AbfJCJwy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 05:52:54 -0400
 X-Virus-Scanned: by amavisd-new at test-mx.suse.de
 Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 67E80B14A;
-        Thu,  3 Oct 2019 09:52:49 +0000 (UTC)
+        by mx1.suse.de (Postfix) with ESMTP id DAE5CB163;
+        Thu,  3 Oct 2019 09:52:51 +0000 (UTC)
 From:   Thomas Bogendoerfer <tbogendoerfer@suse.de>
 To:     Jonathan Corbet <corbet@lwn.net>,
         Ralf Baechle <ralf@linux-mips.org>,
@@ -38,97 +38,62 @@ To:     Jonathan Corbet <corbet@lwn.net>,
         linux-kernel@vger.kernel.org, linux-mips@vger.kernel.org,
         netdev@vger.kernel.org, linux-rtc@vger.kernel.org,
         linux-serial@vger.kernel.org
-Subject: [PATCH v7 0/5] Use MFD framework for SGI IOC3 drivers
-Date:   Thu,  3 Oct 2019 11:52:28 +0200
-Message-Id: <20191003095235.5158-1-tbogendoerfer@suse.de>
+Subject: [PATCH v7 5/5] MIPS: SGI-IP27: Enable ethernet phy on second Origin 200 module
+Date:   Thu,  3 Oct 2019 11:52:33 +0200
+Message-Id: <20191003095235.5158-6-tbogendoerfer@suse.de>
 X-Mailer: git-send-email 2.16.4
+In-Reply-To: <20191003095235.5158-1-tbogendoerfer@suse.de>
+References: <20191003095235.5158-1-tbogendoerfer@suse.de>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGI IOC3 ASIC includes support for ethernet, PS2 keyboard/mouse,
-NIC (number in a can), GPIO and a byte  bus. By attaching a
-SuperIO chip to it, it also supports serial lines and a parallel
-port. The chip is used on a variety of SGI systems with different
-configurations. This patchset moves code out of the network driver,
-which doesn't belong there, into its new place a MFD driver and
-specific platform drivers for the different subfunctions.
+PROM only enables ethernet PHY on first Origin 200 module, so we must
+do it ourselves for the second module.
 
-Changes in v7:
- - added patch to enable ethernet phy for Origin 200 systems
- - depend on 64bit for ioc3 mfd driver
+Signed-off-by: Thomas Bogendoerfer <tbogendoerfer@suse.de>
+---
+ arch/mips/pci/pci-ip27.c | 22 ++++++++++++++++++++++
+ 1 file changed, 22 insertions(+)
 
-Changes in v6:
- - dropped patches accepted for v5.4-rc1
- - moved serio patch to ip30 patch series
- - adapted nvmem patch
-
-Changes in v5:
- - requested by Jakub I've splited ioc3 ethernet driver changes into
-   more steps to make the transition more visible; on the way there 
-   I've "checkpatched" the driver and reduced code reorderings
- - dropped all uint16_t and uint32_t
- - added nvmem API extension to the documenation file
- - changed to use request_irq/free_irq in serio driver
- - removed wrong kfree() in serio error path
-
-Changes in v4:
- - added w1 drivers to the series after merge in 5.3 failed because
-   of no response from maintainer and other parts of this series
-   won't work without that drivers
- - moved ip30 systemboard support to the ip30 series, which will
-   deal with rtc oddity Lee found
- - converted to use devm_platform_ioremap_resource
- - use PLATFORM_DEVID_AUTO for serial, ethernet and serio in mfd driver
- - fixed reverse christmas order in ioc3-eth.c
- - formating issue found by Lee
- - re-worked irq request/free in serio driver to avoid crashes during
-   probe/remove
-
-Changes in v3:
- - use 1-wire subsystem for handling proms
- - pci-xtalk driver uses prom information to create PCI subsystem
-   ids for use in MFD driver
- - changed MFD driver to only use static declared mfd_cells
- - added IP30 system board setup to MFD driver
- - mac address is now read from ioc3-eth driver with nvmem framework
-
-Changes in v2:
- - fixed issue in ioc3kbd.c reported by Dmitry Torokhov
- - merged IP27 RTC removal and 8250 serial driver addition into
-   main MFD patch to keep patches bisectable
-
-Thomas Bogendoerfer (5):
-  nvmem: core: add nvmem_device_find
-  MIPS: PCI: use information from 1-wire PROM for IOC3 detection
-  mfd: ioc3: Add driver for SGI IOC3 chip
-  MIPS: SGI-IP27: fix readb/writeb addressing
-  MIPS: SGI-IP27: Enable ethernet phy on second Origin 200 module
-
- Documentation/driver-api/nvmem.rst            |   2 +
- arch/mips/include/asm/mach-ip27/mangle-port.h |   4 +-
- arch/mips/include/asm/pci/bridge.h            |   1 +
- arch/mips/include/asm/sn/ioc3.h               |  47 ++-
- arch/mips/pci/pci-ip27.c                      |  22 +
- arch/mips/pci/pci-xtalk-bridge.c              | 135 +++++-
- arch/mips/sgi-ip27/ip27-timer.c               |  20 -
- arch/mips/sgi-ip27/ip27-xtalk.c               |  38 +-
- drivers/mfd/Kconfig                           |  13 +
- drivers/mfd/Makefile                          |   1 +
- drivers/mfd/ioc3.c                            | 585 ++++++++++++++++++++++++++
- drivers/net/ethernet/sgi/Kconfig              |   4 +-
- drivers/net/ethernet/sgi/ioc3-eth.c           | 561 +++++-------------------
- drivers/nvmem/core.c                          |  61 ++-
- drivers/rtc/rtc-m48t35.c                      |  11 +
- drivers/tty/serial/8250/8250_ioc3.c           |  98 +++++
- drivers/tty/serial/8250/Kconfig               |  11 +
- drivers/tty/serial/8250/Makefile              |   1 +
- include/linux/nvmem-consumer.h                |   9 +
- 19 files changed, 1076 insertions(+), 548 deletions(-)
- create mode 100644 drivers/mfd/ioc3.c
- create mode 100644 drivers/tty/serial/8250/8250_ioc3.c
-
+diff --git a/arch/mips/pci/pci-ip27.c b/arch/mips/pci/pci-ip27.c
+index 441eb9383b20..7cc784cb299b 100644
+--- a/arch/mips/pci/pci-ip27.c
++++ b/arch/mips/pci/pci-ip27.c
+@@ -7,6 +7,11 @@
+  * Copyright (C) 1999, 2000, 04 Ralf Baechle (ralf@linux-mips.org)
+  * Copyright (C) 1999, 2000 Silicon Graphics, Inc.
+  */
++#include <asm/sn/addrs.h>
++#include <asm/sn/types.h>
++#include <asm/sn/klconfig.h>
++#include <asm/sn/hub.h>
++#include <asm/sn/ioc3.h>
+ #include <asm/pci/bridge.h>
+ 
+ dma_addr_t __phys_to_dma(struct device *dev, phys_addr_t paddr)
+@@ -31,3 +36,20 @@ int pcibus_to_node(struct pci_bus *bus)
+ }
+ EXPORT_SYMBOL(pcibus_to_node);
+ #endif /* CONFIG_NUMA */
++
++static void ip29_fixup_phy(struct pci_dev *dev)
++{
++	int nasid = pcibus_to_node(dev->bus);
++	u32 sid;
++
++	if (nasid != 1)
++		return; /* only needed on second module */
++
++	/* enable ethernet PHY on IP29 systemboard */
++	pci_read_config_dword(dev, PCI_SUBSYSTEM_VENDOR_ID, &sid);
++	if (sid == ((PCI_VENDOR_ID_SGI << 16) | IOC3_SUBSYS_IP29_SYSBOARD))
++		REMOTE_HUB_S(nasid, MD_LED0, 0x09);
++}
++
++DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_SGI, PCI_DEVICE_ID_SGI_IOC3,
++			ip29_fixup_phy);
 -- 
 2.16.4
 
