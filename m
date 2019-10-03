@@ -2,73 +2,53 @@ Return-Path: <SRS0=6dNS=X4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 372B2C10F14
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 09:31:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC2F0C10F14
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 09:32:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0831D218DE
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 09:31:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="Ws2T/1yg"
+	by mail.kernel.org (Postfix) with ESMTP id 8AE77218DE
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 09:32:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728998AbfJCJb6 (ORCPT
+        id S1729103AbfJCJcH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 05:31:58 -0400
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:42348 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728743AbfJCJb6 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 05:31:58 -0400
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id x939Vrnj054353;
-        Thu, 3 Oct 2019 04:31:53 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1570095113;
-        bh=P9zTt6JVcLBVKsSp0EGZr4X1HHOjTST4nbJcuG2gmb0=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=Ws2T/1ygmfuTnYSc0i15+fJsvQsMVPI1/XArSZ/lUPr90FyyLlP9GMblLFbXCfoL7
-         nWup/dphJ872DsMqfjVZ2qGwTXdBUItyAS9ZJN1x+rf1ykG2NArC+pXUhHp7IUdPd4
-         nQIW+2PJFqlf3Y3ShmGDC7NdoPHpvmGr4YK5kZLw=
-Received: from DLEE109.ent.ti.com (dlee109.ent.ti.com [157.170.170.41])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x939VrZ1082190
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 3 Oct 2019 04:31:53 -0500
-Received: from DLEE105.ent.ti.com (157.170.170.35) by DLEE109.ent.ti.com
- (157.170.170.41) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Thu, 3 Oct
- 2019 04:31:42 -0500
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE105.ent.ti.com
- (157.170.170.35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Thu, 3 Oct 2019 04:31:42 -0500
-Received: from [10.250.98.116] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id x939VpeZ102890;
-        Thu, 3 Oct 2019 04:31:51 -0500
-Subject: Re: [PATCH] ARM: dts: am335x-sancloud-bbe: Fix PHY mode for ethernet
-To:     Jeroen Hofstee <jhofstee@victronenergy.com>,
-        "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>
-CC:     Koen Kooi <koen@dominion.thruhere.net>,
-        =?UTF-8?Q?Beno=c3=aet_Cousson?= <bcousson@baylibre.com>,
-        Tony Lindgren <tony@atomide.com>,
-        open list <linux-kernel@vger.kernel.org>
-References: <20191002095416.19603-1-jhofstee@victronenergy.com>
- <d027ef07-807d-6a7b-2939-b67be4542469@ti.com>
- <436f1712-7dec-db40-d08f-1a3032af3596@victronenergy.com>
-From:   Grygorii Strashko <grygorii.strashko@ti.com>
-Message-ID: <d85cd860-22a3-6142-7f2d-736a428d7a31@ti.com>
-Date:   Thu, 3 Oct 2019 12:31:49 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Thu, 3 Oct 2019 05:32:07 -0400
+Received: from foss.arm.com ([217.140.110.172]:39438 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728743AbfJCJcH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 05:32:07 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id ABCC21000;
+        Thu,  3 Oct 2019 02:32:06 -0700 (PDT)
+Received: from [10.162.40.180] (p8cg001049571a15.blr.arm.com [10.162.40.180])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id B7F433F739;
+        Thu,  3 Oct 2019 02:32:03 -0700 (PDT)
+Subject: Re: [PATCH] mm/page_alloc: Add a reason for reserved pages in
+ has_unmovable_pages()
+To:     Qian Cai <cai@lca.pw>
+Cc:     linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>,
+        Michal Hocko <mhocko@suse.com>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Oscar Salvador <osalvador@suse.de>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Pavel Tatashin <pavel.tatashin@microsoft.com>,
+        linux-kernel@vger.kernel.org
+References: <1570090257-25001-1-git-send-email-anshuman.khandual@arm.com>
+ <7FA7CBE1-E0A9-40E2-B3CA-0896F6D491E5@lca.pw>
+From:   Anshuman Khandual <anshuman.khandual@arm.com>
+Message-ID: <37b43978-5652-576c-8990-451e751b7c67@arm.com>
+Date:   Thu, 3 Oct 2019 15:02:24 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
 MIME-Version: 1.0
-In-Reply-To: <436f1712-7dec-db40-d08f-1a3032af3596@victronenergy.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
+In-Reply-To: <7FA7CBE1-E0A9-40E2-B3CA-0896F6D491E5@lca.pw>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -76,53 +56,62 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 
 
-On 03/10/2019 11:16, Jeroen Hofstee wrote:
-> Hello Grygorri,
+On 10/03/2019 02:35 PM, Qian Cai wrote:
 > 
-> On 10/2/19 4:48 PM, Grygorii Strashko wrote:
+> 
+>> On Oct 3, 2019, at 4:10 AM, Anshuman Khandual <Anshuman.Khandual@arm.com> wrote:
 >>
->>
->> On 02/10/2019 12:54, Jeroen Hofstee wrote:
->>> cd28d1d6e52e: ("net: phy: at803x: Disable phy delay for RGMII mode")
->>> broke
->>> the ethernet networking on the beaglebone enhanced.
->>
->> Above commit is incorrect (by itself) and there are few more commits
->> on top of
->> it, so pls. update reference to commit(s)
->>
->> bb0ce4c1517d net: phy: at803x: stop switching phy delay config needlessly
->> 6d4cd041f0af net: phy: at803x: disable delay only for RGMII mode
->>
->>
-> I don't see why that is relevant. The mention patch introduces a
-> backwards incompatibility for the device tree. 
+>> Having unmovable pages on a given pageblock should be reported correctly
+>> when required with REPORT_FAILURE flag. But there can be a scenario where a
+>> reserved page in the page block will get reported as a generic "unmovable"
+>> reason code. Instead this should be changed to a more appropriate reason
+>> code like "Reserved page".
+> 
+> Isn’t this redundant as it dumps the flags in dump_page() anyway?
 
-Pls read https://patchwork.kernel.org/patch/10773389/
-The patch you've mentioned here is buggy by itself and not related to your
-fix, but final at803x behavior actually defined by above two commits.
+Even though page flags does contain reserved bit information, the problem
+is that we are explicitly printing the reason for this page dump. In this
+case it is caused by the fact that it is a reserved page.
 
-I've posted this commit because I was confused when i've checked commit you referenced.
+page dumped because: <reason>
 
-The patches you
-> mention don't fix that and hence are unrelated to this patch.
-
-No. but they define new at803x behavior which is:
-After commits (see above) at803x driver disable RX RGMII delay
-if phy-mode = "rgmii-txid"
-or will disable TX RGMII delay
-if phy-mode = "rgmii-rxid"
-
-Before above commits, the at803x driver was keeping RX or TX RGMII delay setting
-untouched as per bootloader or bootstraping configuration for "rgmii-txid"/"rgmii-rxid".
+The proposed change makes it explicit that the dump is caused because a
+non movable page with reserved bit set. It also helps in differentiating 
+between reserved bit condition and the last one "if (found > count)".
 
 > 
-> Furthermore 4.19 is fine, so there is no need to include it in stable
-> and have a note to make sure also other patches are required etc.
-
-Hence all above patches went in 5.1 it would be correct to mention only
-6d4cd041f0af net: phy: at803x: disable delay only for RGMII mode
-
--- 
-Best regards,
-grygorii
+>>
+>> Cc: Andrew Morton <akpm@linux-foundation.org>
+>> Cc: Michal Hocko <mhocko@suse.com>
+>> Cc: Vlastimil Babka <vbabka@suse.cz>
+>> Cc: Oscar Salvador <osalvador@suse.de>
+>> Cc: Mel Gorman <mgorman@techsingularity.net>
+>> Cc: Mike Rapoport <rppt@linux.ibm.com>
+>> Cc: Dan Williams <dan.j.williams@intel.com>
+>> Cc: Pavel Tatashin <pavel.tatashin@microsoft.com>
+>> Cc: linux-kernel@vger.kernel.org
+>> Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
+>> ---
+>> mm/page_alloc.c | 4 +++-
+>> 1 file changed, 3 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/mm/page_alloc.c b/mm/page_alloc.c
+>> index 15c2050c629b..fbf93ea119d2 100644
+>> --- a/mm/page_alloc.c
+>> +++ b/mm/page_alloc.c
+>> @@ -8206,8 +8206,10 @@ bool has_unmovable_pages(struct zone *zone, struct page *page, int count,
+>>
+>>        page = pfn_to_page(check);
+>>
+>> -        if (PageReserved(page))
+>> +        if (PageReserved(page)) {
+>> +            reason = "Reserved page";
+>>            goto unmovable;
+>> +        }
+>>
+>>        /*
+>>         * If the zone is movable and we have ruled out all reserved
+>> -- 
+>> 2.20.1
+>>
+> 
