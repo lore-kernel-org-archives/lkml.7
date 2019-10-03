@@ -4,49 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 72976C32792
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 15:59:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 800BFC10F14
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 15:59:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4081E21848
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 15:59:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4956621783
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 15:59:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570118346;
-	bh=agcK21fovO8R8OBGihJ+5fxidtN3+4UA9+YgcXgx4gA=;
+	s=default; t=1570118349;
+	bh=T/E/BwtN/dI1JDper1M7B7IKOkO6LvSfCJ6TLxvs+Ko=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=uuaEnkjNmkEyR/xOEYSgzvRlmkbTGWYTJXotokhKv0Iy7cz7zxLsDP3/Nqudy889v
-	 Hw1GcTSaA0IomvKybmKTheGZb6mPLBUdA8zVSQz8QhXLNjeU3D1vogoGTuqpaf1yc4
-	 txafiqDtGRjktv/wRKtT7z43jo7ChQrx2dtxURk8=
+	b=tm/5nCTzHNmRyb1fII1lCGSfNHQmsFrT2P9QtLQws7jyrIrer4fjN5ldCDv/BYzYz
+	 IJnhqdzI03VkxpJVbgaKN6f27F4fFhQ2IV1wH+etOmYu28Q8YJdekokv99iU3qHLek
+	 blAbwhgtADgK+CjCu4GHoUCn8u6d9OMsD07Q//7k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731307AbfJCP7B (ORCPT
+        id S1730374AbfJCP7I (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 11:59:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41852 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 11:59:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41940 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730265AbfJCP65 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 11:58:57 -0400
+        id S1729160AbfJCP7E (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 11:59:04 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 862C8207FF;
-        Thu,  3 Oct 2019 15:58:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 900BA207FF;
+        Thu,  3 Oct 2019 15:59:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570118337;
-        bh=agcK21fovO8R8OBGihJ+5fxidtN3+4UA9+YgcXgx4gA=;
+        s=default; t=1570118343;
+        bh=T/E/BwtN/dI1JDper1M7B7IKOkO6LvSfCJ6TLxvs+Ko=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ZzweHHDh2HwRMhdRmELnwfLsMyqeX1UrQbB6SKRDEjltC5l6bLZAPaPt8i05sEV+e
-         wrQw/8Eji3bH1NOZuKJ09UXCX/nMbFv3ruEosDxmD5M0M6lM9znBSh2nsQ6XQp0kIk
-         IPovREUgA5V4j1mODwoB1doM7wxix72QNGsXmgD4=
+        b=zQpQAOLFwKdRJG8uIB1iIhb+H/Nx4DYFLhAYlPTImb8zpvRK4rfAtLjpra7EgF86g
+         zC8UJtFwpUIO4tm/yIe2g1mSGqyvquWSQ9krPC5K/LZ5jum0NjUFLghogsUPen+i8T
+         gdlsE0ldYlWq/5xZFIz+G06+rBpABskMTFfMIxwg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Takashi Iwai <tiwai@suse.de>,
+        stable@vger.kernel.org,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 73/99] ALSA: hda/realtek - Blacklist PC beep for Lenovo ThinkCentre M73/93
-Date:   Thu,  3 Oct 2019 17:53:36 +0200
-Message-Id: <20191003154332.560975756@linuxfoundation.org>
+Subject: [PATCH 4.4 75/99] media: omap3isp: Set device on omap3isp subdevs
+Date:   Thu,  3 Oct 2019 17:53:38 +0200
+Message-Id: <20191003154333.664045608@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191003154252.297991283@linuxfoundation.org>
 References: <20191003154252.297991283@linuxfoundation.org>
@@ -59,34 +62,98 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Takashi Iwai <tiwai@suse.de>
+From: Sakari Ailus <sakari.ailus@linux.intel.com>
 
-[ Upstream commit 051c78af14fcd74a22b5af45548ad9d588247cc7 ]
+[ Upstream commit e9eb103f027725053a4b02f93d7f2858b56747ce ]
 
-Lenovo ThinkCentre M73 and M93 don't seem to have a proper beep
-although the driver tries to probe and set up blindly.
-Blacklist these machines for suppressing the beep creation.
+The omap3isp driver registered subdevs without the dev field being set. Do
+that now.
 
-BugLink: https://bugzilla.kernel.org/show_bug.cgi?id=204635
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/pci/hda/patch_realtek.c | 3 +++
- 1 file changed, 3 insertions(+)
+ drivers/media/platform/omap3isp/ispccdc.c    | 1 +
+ drivers/media/platform/omap3isp/ispccp2.c    | 1 +
+ drivers/media/platform/omap3isp/ispcsi2.c    | 1 +
+ drivers/media/platform/omap3isp/isppreview.c | 1 +
+ drivers/media/platform/omap3isp/ispresizer.c | 1 +
+ drivers/media/platform/omap3isp/ispstat.c    | 2 ++
+ 6 files changed, 7 insertions(+)
 
-diff --git a/sound/pci/hda/patch_realtek.c b/sound/pci/hda/patch_realtek.c
-index d5ca16048ce0d..55bae9e6de27d 100644
---- a/sound/pci/hda/patch_realtek.c
-+++ b/sound/pci/hda/patch_realtek.c
-@@ -977,6 +977,9 @@ static const struct snd_pci_quirk beep_white_list[] = {
- 	SND_PCI_QUIRK(0x1043, 0x834a, "EeePC", 1),
- 	SND_PCI_QUIRK(0x1458, 0xa002, "GA-MA790X", 1),
- 	SND_PCI_QUIRK(0x8086, 0xd613, "Intel", 1),
-+	/* blacklist -- no beep available */
-+	SND_PCI_QUIRK(0x17aa, 0x309e, "Lenovo ThinkCentre M73", 0),
-+	SND_PCI_QUIRK(0x17aa, 0x30a3, "Lenovo ThinkCentre M93", 0),
- 	{}
- };
+diff --git a/drivers/media/platform/omap3isp/ispccdc.c b/drivers/media/platform/omap3isp/ispccdc.c
+index a6a61cce43dda..e349f5d990b73 100644
+--- a/drivers/media/platform/omap3isp/ispccdc.c
++++ b/drivers/media/platform/omap3isp/ispccdc.c
+@@ -2603,6 +2603,7 @@ int omap3isp_ccdc_register_entities(struct isp_ccdc_device *ccdc,
+ 	int ret;
+ 
+ 	/* Register the subdev and video node. */
++	ccdc->subdev.dev = vdev->mdev->dev;
+ 	ret = v4l2_device_register_subdev(vdev, &ccdc->subdev);
+ 	if (ret < 0)
+ 		goto error;
+diff --git a/drivers/media/platform/omap3isp/ispccp2.c b/drivers/media/platform/omap3isp/ispccp2.c
+index 38e6a974c5b1e..e6b19b785c2f4 100644
+--- a/drivers/media/platform/omap3isp/ispccp2.c
++++ b/drivers/media/platform/omap3isp/ispccp2.c
+@@ -1025,6 +1025,7 @@ int omap3isp_ccp2_register_entities(struct isp_ccp2_device *ccp2,
+ 	int ret;
+ 
+ 	/* Register the subdev and video nodes. */
++	ccp2->subdev.dev = vdev->mdev->dev;
+ 	ret = v4l2_device_register_subdev(vdev, &ccp2->subdev);
+ 	if (ret < 0)
+ 		goto error;
+diff --git a/drivers/media/platform/omap3isp/ispcsi2.c b/drivers/media/platform/omap3isp/ispcsi2.c
+index a78338d012b4d..029b434b76094 100644
+--- a/drivers/media/platform/omap3isp/ispcsi2.c
++++ b/drivers/media/platform/omap3isp/ispcsi2.c
+@@ -1201,6 +1201,7 @@ int omap3isp_csi2_register_entities(struct isp_csi2_device *csi2,
+ 	int ret;
+ 
+ 	/* Register the subdev and video nodes. */
++	csi2->subdev.dev = vdev->mdev->dev;
+ 	ret = v4l2_device_register_subdev(vdev, &csi2->subdev);
+ 	if (ret < 0)
+ 		goto error;
+diff --git a/drivers/media/platform/omap3isp/isppreview.c b/drivers/media/platform/omap3isp/isppreview.c
+index 13803270d1045..c9e8845de1b1d 100644
+--- a/drivers/media/platform/omap3isp/isppreview.c
++++ b/drivers/media/platform/omap3isp/isppreview.c
+@@ -2223,6 +2223,7 @@ int omap3isp_preview_register_entities(struct isp_prev_device *prev,
+ 	int ret;
+ 
+ 	/* Register the subdev and video nodes. */
++	prev->subdev.dev = vdev->mdev->dev;
+ 	ret = v4l2_device_register_subdev(vdev, &prev->subdev);
+ 	if (ret < 0)
+ 		goto error;
+diff --git a/drivers/media/platform/omap3isp/ispresizer.c b/drivers/media/platform/omap3isp/ispresizer.c
+index 7cfb43dc0ffd7..d4e53cbe91936 100644
+--- a/drivers/media/platform/omap3isp/ispresizer.c
++++ b/drivers/media/platform/omap3isp/ispresizer.c
+@@ -1679,6 +1679,7 @@ int omap3isp_resizer_register_entities(struct isp_res_device *res,
+ 	int ret;
+ 
+ 	/* Register the subdev and video nodes. */
++	res->subdev.dev = vdev->mdev->dev;
+ 	ret = v4l2_device_register_subdev(vdev, &res->subdev);
+ 	if (ret < 0)
+ 		goto error;
+diff --git a/drivers/media/platform/omap3isp/ispstat.c b/drivers/media/platform/omap3isp/ispstat.c
+index 94d4c295d3d00..c54c5c494b751 100644
+--- a/drivers/media/platform/omap3isp/ispstat.c
++++ b/drivers/media/platform/omap3isp/ispstat.c
+@@ -1010,6 +1010,8 @@ void omap3isp_stat_unregister_entities(struct ispstat *stat)
+ int omap3isp_stat_register_entities(struct ispstat *stat,
+ 				    struct v4l2_device *vdev)
+ {
++	stat->subdev.dev = vdev->mdev->dev;
++
+ 	return v4l2_device_register_subdev(vdev, &stat->subdev);
+ }
  
 -- 
 2.20.1
