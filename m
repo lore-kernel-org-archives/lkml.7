@@ -2,115 +2,110 @@ Return-Path: <SRS0=6dNS=X4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 217F3C32792
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:00:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 25AB0C32792
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:00:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DE2DC20673
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:00:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D964120673
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 17:00:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570122020;
-	bh=2et6kh5u9FLYVe88GeLbMKtsoeoF/CZr/Ah6IeVbid4=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=RpCTELNqgXiK+8gTH37kcgxK1nnp8IXnVTbuEklYyjbiJG8FYrvMwyY25ffpVdgub
-	 YprdoAgmDAU8YQtv5oNkCZKaPPpPPS7TNMdv8CPTrzPLUMks6TjRmOBHzfTvBvIOfg
-	 ni9oqGBH2IGbxJnhDyqXOlIQZx1F3/zojQWFdt0o=
+	s=default; t=1570122025;
+	bh=E1mnXerODbEXRn9aKW4A7q6u0klKrptr8tBzOAQqpeM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=fkRyFC/bKviG9NaJX9z2Ndre0XqqvCo9sTxw28WHcLdXy181OKBXQjqxPs0zKNehU
+	 Pt4XWN8ez0csUzuBogB0tQaD9n0NYm2W8f3KwertK2LKqHQnEXza7mgxooTVrqF3Hj
+	 G/JP/4ByWhLxBnLhXVGCEfs9u8JOob2Db5SVpLwM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393158AbfJCRAT (ORCPT
+        id S2393254AbfJCRAZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 13:00:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58922 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732998AbfJCQqA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:46:00 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3AC352133F;
-        Thu,  3 Oct 2019 16:45:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570121159;
-        bh=2et6kh5u9FLYVe88GeLbMKtsoeoF/CZr/Ah6IeVbid4=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=DxNV7lDOMbExO53fnCGQcOZutwyxgZHW9Ir3HolFdgaza+UHBIX/4r5A+83r7uKIz
-         m5mHm/blsVMncJEN8qELq1b0POGz349xvhhOg9k+nzzp4oQ86Onake5fryC7pMiabE
-         ZAD5O3S6YHA53SQnR/Q0uNSv/rEkDoUupHMUUQfU=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Ingo Molnar <mingo@kernel.org>,
-        Song Liu <songliubraving@fb.com>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.3 175/344] x86/mm/pti: Do not invoke PTI functions when PTI is disabled
-Date:   Thu,  3 Oct 2019 17:52:20 +0200
-Message-Id: <20191003154557.501455396@linuxfoundation.org>
-X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20191003154540.062170222@linuxfoundation.org>
-References: <20191003154540.062170222@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Thu, 3 Oct 2019 13:00:25 -0400
+Received: from mail-qk1-f193.google.com ([209.85.222.193]:35267 "EHLO
+        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2392862AbfJCQp4 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:45:56 -0400
+Received: by mail-qk1-f193.google.com with SMTP id w2so3044902qkf.2;
+        Thu, 03 Oct 2019 09:45:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=cY7dwSAZ/LRC+V3+VuDl/u0CtvPhkHUKtwYdGP4h8tM=;
+        b=hLGF2x3mry/9VP8Cgyatm0IMsLfiswwpsqSwtwh3Z2Hay6ZNSrYP6Hl5hSyR5M48qX
+         0IPsGhDFHmzedwYhjqPSKXxSwEpjaF1SjvuJ0FK0DlG2SceDEdslkMbvqyN5w454YJEj
+         OuwD5C0GKsFxYOH/fjS9taQ1Fao+rvVL7X1AVWbbtq3PQMNMju9lJvlRQgAV3ZyrxHfz
+         Zj6wGdAz4K8h7+DjIXPxytnFabB1ZqrIkvVfNl+Es1B4BNAEYSyFz5+rL/yTVGZXslMS
+         T9YRxz1/wbsN4CzseBltb1yCaLMVpoVxf5u9viLfyDTGM5uggapI2PAJl/M2cNZb9nJB
+         +HVQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition
+         :content-transfer-encoding:in-reply-to:user-agent;
+        bh=cY7dwSAZ/LRC+V3+VuDl/u0CtvPhkHUKtwYdGP4h8tM=;
+        b=RMHT5/h6CUgdSc/0yRyZM0s0mVbobXvyVqfA+oKKvrAeSR4Lc0r6jyTSXT7e/P0E0X
+         GlgTldK6jN0y2Nm4cbGWWnoj2QyGAKbzSpgRk+F4qd8EwDXGRbOKXoFQ5JlKOATFhxw6
+         eTlfLkKVQrOi7qtzWnJML+OR33E056u/cGwHHVZttZRvMXLTCj+XIcwA6STFxZb40Aws
+         GkMdjKMGoVsp2XXJzVXaut/uITHYfcF6ek0S0F4Bcg/WhG/9+GYKGxDcbJosxAjHKvak
+         a3T4bmzlJKp8yXajbWn5eXrTVq+a8C/cmsn4la3dKs8goeqveg7LM6SU9o/k8XKooygR
+         X2Yw==
+X-Gm-Message-State: APjAAAVPjRvcNqvwQTuBqa+J1fViD7Nf7o1OM9epKhg6SJBx5u12wJxa
+        ZQTxKnrEg93PUXGG19MHNTM=
+X-Google-Smtp-Source: APXvYqwyDNBYMAZlSJRkUJmx4zksig6ZCgUKH4qEh9uQ/wdnO/i0VrSvc1T2/bEhZTtSydu35p/6UQ==
+X-Received: by 2002:ae9:e810:: with SMTP id a16mr5237472qkg.364.1570121154872;
+        Thu, 03 Oct 2019 09:45:54 -0700 (PDT)
+Received: from localhost ([2620:10d:c091:500::3:9f72])
+        by smtp.gmail.com with ESMTPSA id c131sm1941291qke.24.2019.10.03.09.45.54
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 03 Oct 2019 09:45:54 -0700 (PDT)
+Date:   Thu, 3 Oct 2019 09:45:52 -0700
+From:   Tejun Heo <tj@kernel.org>
+To:     Michal =?iso-8859-1?Q?Koutn=FD?= <mkoutny@suse.com>
+Cc:     hannes@cmpxchg.org, clm@fb.com, dennisz@fb.com,
+        Josef Bacik <jbacik@fb.com>, kernel-team@fb.com,
+        newella@fb.com, lizefan@huawei.com, axboe@kernel.dk,
+        Paolo Valente <paolo.valente@linaro.org>,
+        Rik van Riel <riel@surriel.com>, josef@toxicpanda.com,
+        cgroups@vger.kernel.org, linux-block@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 08/10] blkcg: implement blk-iocost
+Message-ID: <20191003164552.GA3247445@devbig004.ftw2.facebook.com>
+References: <20190828220600.2527417-1-tj@kernel.org>
+ <20190828220600.2527417-9-tj@kernel.org>
+ <20190910125513.GA6399@blackbody.suse.cz>
+ <20190910160855.GS2263813@devbig004.ftw2.facebook.com>
+ <20191003145106.GC6678@blackbody.suse.cz>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <20191003145106.GC6678@blackbody.suse.cz>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Thomas Gleixner <tglx@linutronix.de>
+Hello,
 
-[ Upstream commit 990784b57731192b7d90c8d4049e6318d81e887d ]
+On Thu, Oct 03, 2019 at 04:51:06PM +0200, Michal Koutný wrote:
+> > Initially, I put them under block device sysfs but it was too clumsy
+> > with different config file formats and all.
+> Do you have any more details on that? In the end, it all boils down to a
+> daemon/setup utility writing into the control files and it can use
+> whatever config files it decides, can't it?
 
-When PTI is disabled at boot time either because the CPU is not affected or
-PTI has been disabled on the command line, the boot code still calls into
-pti_finalize() which then unconditionally invokes:
+Yeah, I mean, we can make any interface work.  So, there are two
+global knobs io.cost.model and io.cost.qos.  Of the tw, io.cost.model
+is okay to move under block device but the qos file gets weird because
+the content of the file is more resource control policies than device
+properties.
 
-     pti_clone_entry_text()
-     pti_clone_kernel_text()
+Thanks.
 
-pti_clone_kernel_text() was called unconditionally before the 32bit support
-was added and 32bit added the call to pti_clone_entry_text().
-
-The call has no side effects as cloning the page tables into the available
-second one, which was allocated for PTI does not create damage. But it does
-not make sense either and in case that this functionality would be extended
-later this might actually lead to hard to diagnose issues.
-
-Neither function should be called when PTI is runtime disabled. Make the
-invocation conditional.
-
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Reviewed-by: Dave Hansen <dave.hansen@linux.intel.com>
-Acked-by: Ingo Molnar <mingo@kernel.org>
-Acked-by: Song Liu <songliubraving@fb.com>
-Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Link: https://lkml.kernel.org/r/20190828143124.063353972@linutronix.de
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- arch/x86/mm/pti.c | 2 ++
- 1 file changed, 2 insertions(+)
-
-diff --git a/arch/x86/mm/pti.c b/arch/x86/mm/pti.c
-index b196524759ec5..ba22b50f4eca2 100644
---- a/arch/x86/mm/pti.c
-+++ b/arch/x86/mm/pti.c
-@@ -666,6 +666,8 @@ void __init pti_init(void)
-  */
- void pti_finalize(void)
- {
-+	if (!boot_cpu_has(X86_FEATURE_PTI))
-+		return;
- 	/*
- 	 * We need to clone everything (again) that maps parts of the
- 	 * kernel image.
 -- 
-2.20.1
-
-
-
+tejun
