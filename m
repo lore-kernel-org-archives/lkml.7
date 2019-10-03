@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E1C0C4CED1
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:53:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E3F8C10F14
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:53:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 44BA720862
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:53:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 02A1B20862
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 16:53:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570121625;
-	bh=i4IspC7AeqYlgm2PcakB4Ki6b9MyRM+zKi5VW6w/aa8=;
+	s=default; t=1570121630;
+	bh=q7eCzLPTDaIpBcf+WZvxds6txD0ESug7P0vRW/8KDuA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=VYxfFAEoaNGL6XUFtetNiaJ9MtCrzkoPGg0inQsqxk3TjYOH8UYHPe6PY2P+Wy+G0
-	 OWqgCFpfECubnjDDh5oHo/A7pDNQ5xuOBbKchLj0xvJE8jJZw4DRHY9QEbkVCkruvT
-	 A6GV5M3rmoAPYZWCKuXBt23eahRLiO2HfKh6TV9s=
+	b=QivVb+5ODJGaOyT+2tp5jh4hJdLOqhKL1WlsdFagQ7TXczzE4f5aqv+BZkqWNGBhY
+	 6w+0zCd7y/E3cCvFxzUiPXGk4P+i2R6FO+FATHuTfTLF6gUBH9UenLK+uGIuLmkHOW
+	 MgUnz3bjCRbhmB3hhjLQ3WwMunHKRjxrcLft2hus=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393212AbfJCQxo (ORCPT
+        id S2393233AbfJCQxt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 12:53:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41812 "EHLO mail.kernel.org"
+        Thu, 3 Oct 2019 12:53:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41882 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392392AbfJCQxk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 12:53:40 -0400
+        id S2393033AbfJCQxn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 12:53:43 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B4F0F2070B;
-        Thu,  3 Oct 2019 16:53:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7000220862;
+        Thu,  3 Oct 2019 16:53:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570121620;
-        bh=i4IspC7AeqYlgm2PcakB4Ki6b9MyRM+zKi5VW6w/aa8=;
+        s=default; t=1570121622;
+        bh=q7eCzLPTDaIpBcf+WZvxds6txD0ESug7P0vRW/8KDuA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Tb5NbJoc+1GCkRMJgK4mvPDoCOXl7WWJod4Nefbdly8Cso4Hpz+ht6zI0nM+ZsD1S
-         aIAfj+JBAAVkVFiGEN4oVXj2I8axLrCBIEkiixJrs58lG06IzHKSRjKOXHXxqEjRz7
-         28tmhFBMS9HDtr3Gi6OIF72zvYJs/84ybK+Wh8S4=
+        b=IQ0SHYiJA2E9YWKwSC7iWksueXfqjEeqMR4syTAGF1wr79VM5a/Y+8C66NItNw6jO
+         e3Rxba7DadWxrU4HxMSZWzWCwU1mjM06T/rnY7mRKT7j0463V2Sl5DtSu1Z9GFVwkk
+         lhjhIAkLUtmBkUQMt73m3c+mQBco3FVH09o0umsM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jian-Hong Pan <jian-hong@endlessm.com>,
-        Kalle Valo <kvalo@codeaurora.org>
-Subject: [PATCH 5.3 299/344] rtw88: pci: Use DMA sync instead of remapping in RX ISR
-Date:   Thu,  3 Oct 2019 17:54:24 +0200
-Message-Id: <20191003154609.010463031@linuxfoundation.org>
+        stable@vger.kernel.org, Harry Wentland <harry.wentland@amd.com>,
+        Alex Deucher <alexander.deucher@amd.com>
+Subject: [PATCH 5.3 340/344] drm/amdgpu/display: fix 64 bit divide
+Date:   Thu,  3 Oct 2019 17:55:05 +0200
+Message-Id: <20191003154612.019908990@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191003154540.062170222@linuxfoundation.org>
 References: <20191003154540.062170222@linuxfoundation.org>
@@ -59,68 +59,32 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jian-Hong Pan <jian-hong@endlessm.com>
+From: Alex Deucher <alexander.deucher@amd.com>
 
-commit 29b68a920f6abb7b5ba21ab4b779f62d536bac9b upstream.
+commit dd9212a885ca4a95443905c7c3781122a4d664e8 upstream.
 
-Since each skb in RX ring is reused instead of new allocation, we can
-treat the DMA in a more efficient way by DMA synchronization.
+Use proper helper for 32 bit.
 
-Signed-off-by: Jian-Hong Pan <jian-hong@endlessm.com>
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+Reviewed-by: Harry Wentland <harry.wentland@amd.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/net/wireless/realtek/rtw88/pci.c |   24 +++++++++++++++++++++---
- 1 file changed, 21 insertions(+), 3 deletions(-)
+ drivers/gpu/drm/amd/display/dc/clk_mgr/dce110/dce110_clk_mgr.c |    4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
---- a/drivers/net/wireless/realtek/rtw88/pci.c
-+++ b/drivers/net/wireless/realtek/rtw88/pci.c
-@@ -206,6 +206,23 @@ static int rtw_pci_reset_rx_desc(struct
- 	return 0;
- }
- 
-+static void rtw_pci_sync_rx_desc_device(struct rtw_dev *rtwdev, dma_addr_t dma,
-+					struct rtw_pci_rx_ring *rx_ring,
-+					u32 idx, u32 desc_sz)
-+{
-+	struct device *dev = rtwdev->dev;
-+	struct rtw_pci_rx_buffer_desc *buf_desc;
-+	int buf_sz = RTK_PCI_RX_BUF_SIZE;
-+
-+	dma_sync_single_for_device(dev, dma, buf_sz, DMA_FROM_DEVICE);
-+
-+	buf_desc = (struct rtw_pci_rx_buffer_desc *)(rx_ring->r.head +
-+						     idx * desc_sz);
-+	memset(buf_desc, 0, sizeof(*buf_desc));
-+	buf_desc->buf_size = cpu_to_le16(RTK_PCI_RX_BUF_SIZE);
-+	buf_desc->dma = cpu_to_le32(dma);
-+}
-+
- static int rtw_pci_init_rx_ring(struct rtw_dev *rtwdev,
- 				struct rtw_pci_rx_ring *rx_ring,
- 				u8 desc_size, u32 len)
-@@ -784,8 +801,8 @@ static void rtw_pci_rx_isr(struct rtw_de
- 		rtw_pci_dma_check(rtwdev, ring, cur_rp);
- 		skb = ring->buf[cur_rp];
- 		dma = *((dma_addr_t *)skb->cb);
--		pci_unmap_single(rtwpci->pdev, dma, RTK_PCI_RX_BUF_SIZE,
--				 PCI_DMA_FROMDEVICE);
-+		dma_sync_single_for_cpu(rtwdev->dev, dma, RTK_PCI_RX_BUF_SIZE,
-+					DMA_FROM_DEVICE);
- 		rx_desc = skb->data;
- 		chip->ops->query_rx_desc(rtwdev, rx_desc, &pkt_stat, &rx_status);
- 
-@@ -820,7 +837,8 @@ static void rtw_pci_rx_isr(struct rtw_de
- 
- next_rp:
- 		/* new skb delivered to mac80211, re-enable original skb DMA */
--		rtw_pci_reset_rx_desc(rtwdev, skb, ring, cur_rp, buf_desc_sz);
-+		rtw_pci_sync_rx_desc_device(rtwdev, dma, ring, cur_rp,
-+					    buf_desc_sz);
- 
- 		/* host read next element in ring */
- 		if (++cur_rp >= ring->r.len)
+--- a/drivers/gpu/drm/amd/display/dc/clk_mgr/dce110/dce110_clk_mgr.c
++++ b/drivers/gpu/drm/amd/display/dc/clk_mgr/dce110/dce110_clk_mgr.c
+@@ -197,7 +197,9 @@ void dce11_pplib_apply_display_requireme
+ 	 */
+ 	if (ASICREV_IS_VEGA20_P(dc->ctx->asic_id.hw_internal_rev) && (context->stream_count >= 2)) {
+ 		pp_display_cfg->min_memory_clock_khz = max(pp_display_cfg->min_memory_clock_khz,
+-			(uint32_t) (dc->bw_vbios->high_yclk.value / memory_type_multiplier / 10000));
++							   (uint32_t) div64_s64(
++								   div64_s64(dc->bw_vbios->high_yclk.value,
++									     memory_type_multiplier), 10000));
+ 	} else {
+ 		pp_display_cfg->min_memory_clock_khz = context->bw_ctx.bw.dce.yclk_khz
+ 			/ memory_type_multiplier;
 
 
