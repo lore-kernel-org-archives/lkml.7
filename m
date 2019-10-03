@@ -2,122 +2,117 @@ Return-Path: <SRS0=6dNS=X4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC854C4CED1
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 22:10:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 21C3DC4CED1
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 22:15:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9BE3D21848
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 22:10:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E2536215EA
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 22:15:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1570140919;
+	bh=Iwjv0cYSZTuQsc9KwzGWDMEOZCnt/5QZ+H4+pxuSkcw=;
+	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
+	b=17j8muV6p8Gzub0RuKszlJu/vlgb3HrQcfU4uDjytRwfkP/ONmSNDAWg5vcoMHWxa
+	 EAk0fT7euDxxyvkPSVhD3NuTL2dBEppyIZr4yQE2LLXhW4mBDPFrYrgk0P5JC2RkoK
+	 cnMj53i4f19rp75e7u+aKNAfMCTv8wIYytj5nMTM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731136AbfJCWKz (ORCPT
+        id S1730302AbfJCWPS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 18:10:55 -0400
-Received: from mga04.intel.com ([192.55.52.120]:55666 "EHLO mga04.intel.com"
+        Thu, 3 Oct 2019 18:15:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53204 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730232AbfJCWKy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 18:10:54 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 03 Oct 2019 15:10:53 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.67,253,1566889200"; 
-   d="scan'208";a="191397905"
-Received: from okiselev-mobl1.ccr.corp.intel.com (HELO localhost) ([10.251.93.117])
-  by fmsmga008.fm.intel.com with ESMTP; 03 Oct 2019 15:10:48 -0700
-Date:   Fri, 4 Oct 2019 01:10:42 +0300
-From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-To:     Mimi Zohar <zohar@linux.ibm.com>
-Cc:     David Safford <david.safford@ge.com>,
-        linux-integrity@vger.kernel.org, stable@vger.kernel.org,
-        David Howells <dhowells@redhat.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        "David S. Miller" <davem@davemloft.net>,
-        "open list:ASYMMETRIC KEYS" <keyrings@vger.kernel.org>,
-        "open list:CRYPTO API" <linux-crypto@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] KEYS: asym_tpm: Switch to get_random_bytes()
-Message-ID: <20191003221042.GA3363@linux.intel.com>
-References: <20190926171601.30404-1-jarkko.sakkinen@linux.intel.com>
- <1570024819.4999.119.camel@linux.ibm.com>
- <20191003114119.GF8933@linux.intel.com>
- <1570107752.4421.183.camel@linux.ibm.com>
- <20191003175854.GB19679@linux.intel.com>
- <1570128827.5046.19.camel@linux.ibm.com>
- <20191003215125.GA30511@linux.intel.com>
- <20191003215743.GB30511@linux.intel.com>
+        id S1730297AbfJCWPS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Oct 2019 18:15:18 -0400
+Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net [24.9.64.241])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id B673720867;
+        Thu,  3 Oct 2019 22:15:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1570140917;
+        bh=Iwjv0cYSZTuQsc9KwzGWDMEOZCnt/5QZ+H4+pxuSkcw=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=1XGiqxhQpiS8qJU1660yhorYGIMPs+gVEr2itAc63pnWSnmBTDVqJa9oP2/2vXnjb
+         c9fWZbFmmI11v+l95/lUuQsXvjbSMwkH150Y3ibzlTYKaJLwlafkwOanpwQNN8CCAd
+         izahV9qz0naHh4ZH3aSE7haoJp6xMTxEN5K9x2pQ=
+Subject: Re: [PATCH v2] cpupower : Handle set and info subcommands correctly
+To:     Abhishek Goel <huntbag@linux.vnet.ibm.com>,
+        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     trenn@suse.com, ego@linux.vnet.ibm.com, shuah <shuah@kernel.org>
+References: <20190913080712.26383-1-huntbag@linux.vnet.ibm.com>
+ <2614b112-5e19-96dc-179b-8d4e3b8c8858@kernel.org>
+From:   shuah <shuah@kernel.org>
+Message-ID: <9f493ef7-8222-3e12-5068-41ea76e660a2@kernel.org>
+Date:   Thu, 3 Oct 2019 16:15:15 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
+In-Reply-To: <2614b112-5e19-96dc-179b-8d4e3b8c8858@kernel.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20191003215743.GB30511@linux.intel.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Oct 04, 2019 at 12:57:43AM +0300, Jarkko Sakkinen wrote:
-> On Fri, Oct 04, 2019 at 12:51:25AM +0300, Jarkko Sakkinen wrote:
-> > On Thu, Oct 03, 2019 at 02:53:47PM -0400, Mimi Zohar wrote:
-> > > [Cc'ing David Safford]
-> > > 
-> > > On Thu, 2019-10-03 at 20:58 +0300, Jarkko Sakkinen wrote:
-> > > > On Thu, Oct 03, 2019 at 09:02:32AM -0400, Mimi Zohar wrote:
-> > > > > On Thu, 2019-10-03 at 14:41 +0300, Jarkko Sakkinen wrote:
-> > > > > > On Wed, Oct 02, 2019 at 10:00:19AM -0400, Mimi Zohar wrote:
-> > > > > > > On Thu, 2019-09-26 at 20:16 +0300, Jarkko Sakkinen wrote:
-> > > > > > > > Only the kernel random pool should be used for generating random numbers.
-> > > > > > > > TPM contributes to that pool among the other sources of entropy. In here it
-> > > > > > > > is not, agreed, absolutely critical because TPM is what is trusted anyway
-> > > > > > > > but in order to remove tpm_get_random() we need to first remove all the
-> > > > > > > > call sites.
-> > > > > > > 
-> > > > > > > At what point during boot is the kernel random pool available? �Does
-> > > > > > > this imply that you're planning on changing trusted keys as well?
-> > > > > > 
-> > > > > > Well trusted keys *must* be changed to use it. It is not a choice
-> > > > > > because using a proprietary random number generator instead of defacto
-> > > > > > one in the kernel can be categorized as a *regression*.
-> > > > > 
-> > > > > I really don't see how using the TPM random number for TPM trusted
-> > > > > keys would be considered a regression. �That by definition is a
-> > > > > trusted key. �If anything, changing what is currently being done would
-> > > > > be the regression.�
-> > > > 
-> > > > It is really not a TPM trusted key. It trusted key that gets sealed with
-> > > > the TPM. The key itself is used in clear by kernel. The random number
-> > > > generator exists in the kernel to for a reason.
-> > > > 
-> > > > It is without doubt a regression.
-> > > 
-> > > You're misusing the term "regression" here. �A regression is something
-> > > that previously worked and has stopped working. �In this case, trusted
-> > > keys has always been based on the TPM random number generator. �Before
-> > > changing this, there needs to be some guarantees that the kernel
-> > > random number generator has a pool of random numbers early, on all
-> > > systems including embedded devices, not just servers.
-> > 
-> > I'm not using the term regression incorrectly here. Wrong function
-> > was used to generate random numbers for the payload here. It is an
-> > obvious bug.
-> 
-> At the time when trusted keys was introduced I'd say that it was a wrong
-> design decision and badly implemented code. But you are right in that as
-> far that code is considered it would unfair to speak of a regression.
-> 
-> asym-tpm.c on the other hand this is fresh new code. There has been
-> *countless* of discussions over the years that random numbers should
-> come from multiple sources of entropy. There is no other categorization
-> than a bug for the tpm_get_random() there.
+Hi Abhishek,
 
-Saying that regression is something that "stopped working" is very blunt
-and naive definition of regression, and is not true. Any misbehaviour
-can be categorized as a regression.
+On 10/3/19 8:38 AM, shuah wrote:
+> On 9/13/19 2:07 AM, Abhishek Goel wrote:
+>> Cpupower tool has set and info options which are being used only by
+>> x86 machines. This patch removes support for these two subcommands
+>> from generic cpupower utility. Thus, these two subcommands will now be
+>> available only for intel.
+>> This removes the ambiguous error message while using set option in case
+>> of using non-intel systems.
+>>
+>> Without this patch on a non-intel box:
+>>
+>> root@ubuntu:~# cpupower info
+>> System does not support Intel's performance bias setting
+>>
+>> root@ubuntu:~# cpupower set -b 10
+>> Error setting perf-bias value on CPU
+>>
+>> With this patch on a non-intel box:
+>>
+>> root@ubuntu:~# cpupower info
+>> Supported commands are:
+>>          frequency-info
+>>          frequency-set
+>>          idle-info
+>>          idle-set
+>>          monitor
+>>          help
+>>
+>> Same result for set subcommand.
+>>
+>> This patch does not affect results on a intel box.
+>>
+>> Signed-off-by: Abhishek Goel <huntbag@linux.vnet.ibm.com>
+>> Acked-by: Thomas Renninger <trenn@suse.de>
+>> ---
+>>
+>> changes from v1:
+>>     Instead of bailing out early in set and info commands, in V2, we
+>>     are cutting out support for these two commands for non-intel
+>>     systems.
+> 
+> thanks. I will get this in for 5.4-rc3 veru likely. Definitely in 5.4
+> 
 
-/Jarkko
+Okay I almost applied this and decided it needs improvements.
+
+I don't like using #if defined(__x86_64__) || defined(__i386__)
+
+tools/power/cpupower/utils/cpupower.c main() already does this
+dynamically using uname(). Please use the same logic do this,
+instead of adding compile time code.
+
+thanks,
+-- Shuah
