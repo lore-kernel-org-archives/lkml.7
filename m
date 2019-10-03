@@ -2,639 +2,199 @@ Return-Path: <SRS0=6dNS=X4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7949C10F14
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 18:07:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D4FBCC10F14
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 18:08:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7C2DE20679
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 18:07:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A2DAD20862
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Oct 2019 18:08:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="V4d6Nxh1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733193AbfJCSHC (ORCPT
+        id S1733180AbfJCSIx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Oct 2019 14:07:02 -0400
-Received: from 68-189-91-139.static.snlo.ca.charter.com ([68.189.91.139]:56792
-        "EHLO rjones.pdc.gateworks.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726119AbfJCSHC (ORCPT
+        Thu, 3 Oct 2019 14:08:53 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:40602 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729906AbfJCSIw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Oct 2019 14:07:02 -0400
-X-Greylist: delayed 548 seconds by postgrey-1.27 at vger.kernel.org; Thu, 03 Oct 2019 14:07:01 EDT
-Received: by rjones.pdc.gateworks.com (Postfix, from userid 1002)
-        id 1ABF21A4415E; Thu,  3 Oct 2019 10:57:51 -0700 (PDT)
-From:   Robert Jones <rjones@gateworks.com>
-To:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>
-Cc:     Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        Tim Harvey <tharvey@gateworks.com>,
-        Robert Jones <rjones@gateworks.com>
-Subject: [PATCH] ARM: dts: imx: Add GW5910
-Date:   Thu,  3 Oct 2019 10:57:24 -0700
-Message-Id: <20191003175724.25849-1-rjones@gateworks.com>
-X-Mailer: git-send-email 2.9.2
+        Thu, 3 Oct 2019 14:08:52 -0400
+Received: by mail-pf1-f195.google.com with SMTP id x127so2246602pfb.7
+        for <linux-kernel@vger.kernel.org>; Thu, 03 Oct 2019 11:08:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:openpgp:autocrypt:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=GuIjFVnstRywBL8Gyi4CDSaXWWKUxOeS5oqihjYg5Tc=;
+        b=V4d6Nxh1Ug2hw9/YMPEgUlF0wfzsKGUoO9wGWvJbmlcb3jK9jGKbw/fgUzlXs83bdS
+         xznqR9N8xoEDhYuD6Vo3ACaKFcNAIpR+zm4VE1WhRN+CtoLd7T7kkKrhg5XjmYwSOP8M
+         2pRJdR+CbXqDB3wuA0yPTt3Lr45kG4AWwav1alQkD1XS4HXFXG6vbuoapt/0/fPS5Qyo
+         9yMyxsbPL3EgA2TF4r06vxVJdQQGUj+ZWn0OAxWH3T/rmGBS6HdwWqUocN1TAjGY/CPh
+         IrWbmfjy2FOIOhx4sX/+G2fjoe1sWVkokBv2+gyCP7RwBmbq3d0IH44QYAou2temxAH0
+         6KUA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=GuIjFVnstRywBL8Gyi4CDSaXWWKUxOeS5oqihjYg5Tc=;
+        b=Or2F/bgVoIEJ/1YLsUkbH7Hv2FFQGQCCXVJ7qMas2rkCg3daXkZHy5I4xm2vHLZKAV
+         Z+bThHw1AQeJc1EuCqFCsfRT55TdsOMIxcTRELQJfZY38zvRONrFoP8dTe5IU0mphR4X
+         /xag+UtZ+Xma92Z5Qw0WXVnPZEl14A9fLFj9Qj/jmjKyKcLbwlThj1Cd0KOZvLAw4wSZ
+         sU3BeuQQb+UXiyabk3+zSRZUOZI3q02XyWRPLwtRfyDwJ62UMWHaoq/uAEjVDZg1Unbp
+         IrS59+PJD/YML22gV6asowAy/AuJPgFSJh3UOsxttH7AIIat3JYCTWqit46lAZT9Zm1+
+         6aUg==
+X-Gm-Message-State: APjAAAXdw54FGKu7lF6WjY9myJ9T/o2t38MKJHRIRnZHK+EQkVltnwKW
+        V1ZFql4lltszidnVj/jkWu8=
+X-Google-Smtp-Source: APXvYqxsZtWFc3C27TObF1Bf8YDcgjKQBSLOP1raeFKi2QXrViEBBv4akG/N65q/0B3ifb8vY6WomA==
+X-Received: by 2002:a63:747:: with SMTP id 68mr10449181pgh.377.1570126131161;
+        Thu, 03 Oct 2019 11:08:51 -0700 (PDT)
+Received: from [10.67.50.53] ([192.19.223.252])
+        by smtp.googlemail.com with ESMTPSA id z13sm3711782pfq.121.2019.10.03.11.08.47
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 03 Oct 2019 11:08:48 -0700 (PDT)
+Subject: Re: [PATCH] ARM: dt: check MPIDR on MP devices built without SMP
+To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        linux-kernel@vger.kernel.org
+Cc:     "kernelci.org bot" <bot@kernelci.org>,
+        linux-arm-kernel@lists.infradead.org, wahrenst@gmx.net,
+        Russell King <linux@armlinux.org.uk>
+References: <20191002114508.1089-1-nsaenzjulienne@suse.de>
+From:   Florian Fainelli <f.fainelli@gmail.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=f.fainelli@gmail.com; prefer-encrypt=mutual; keydata=
+ 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
+ M5kY0ACeNhCZJvZ5g4C2Lc9fcTHu8jxmEkI=
+Message-ID: <17976e82-04da-d22d-5779-f50db63f98a2@gmail.com>
+Date:   Thu, 3 Oct 2019 11:08:35 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
+MIME-Version: 1.0
+In-Reply-To: <20191002114508.1089-1-nsaenzjulienne@suse.de>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tim Harvey <tharvey@gateworks.com>
+On 10/2/19 4:45 AM, Nicolas Saenz Julienne wrote:
+> Currently, in arm_dt_init_cpu_maps(), the hwid of the boot CPU is read
+> from MPIDR on SMP devices and set to 0 for non SMP. This value is then
+> matched with the DT cpu nodes' reg property in order to find the boot
+> CPU in DT.
 
-The Gateworks GW5910 is an IMX6 SoC based single board computer with:
- - IMX6Q or IMX6DL
- - 32bit DDR3 DRAM
- - FEC GbE RJ45 front-panel
- - 1x miniPCIe socket with PCI Gen2, USB2
- - 1x miniPCIe socket with PCI Gen2, USB2, nanoSIM
- - 5V to 60V DC input barrel jack
- - 3axis accelerometer (lis2de12)
- - GPS (ublox ZOE-M8Q)
- - bi-color front-panel LED
- - 256MB NAND boot device
- - microSD socket (with UHS-I support)
- - user pushbutton
- - Gateworks System Controller (hwmon, pushbutton controller, EEPROM)
- - Dual-Band Wireless MCU (CC1352, UART/I2S interrconnect to IMX6)
- - WiFi/Bluetooth/BLE module (Sterling-LSW, SDIO/UART interconnect to IMX6)
- - RS232 transceiver (1x UART with flow-control or 2x UART (build option)
- - off-board SPI connector (1x chip-select)
+The code you change is about the "mpidr" variable, yet in your commit
+message you refer to "hwid", that is a tad confusing for the reader.
 
-Signed-off-by: Tim Harvey <tharvey@gateworks.com>
-Signed-off-by: Robert Jones <rjones@gateworks.com>
+> 
+> On MP devices build without SMP the cpu DT node contains the expected
+> MPIDR yet the hwid is set to 0. With this the function fails to match
+> the cpus and uses the default CPU logical map. Making it impossible to
+> get the CPU's DT node further down the line. This causes issues with
+> cpufreq-dt, as it triggers warnings when not finding a suitable DT node
+> on CPU0.
+> 
+> Change the way we choose whether to get MPIDR or not. Instead of
+> depending on SMP check the number of CPUs defined in DT. Anything > 1
+> means MPIDR will be available.
 
----
- arch/arm/boot/dts/Makefile            |   2 +
- arch/arm/boot/dts/imx6dl-gw5910.dts   |  14 +
- arch/arm/boot/dts/imx6q-gw5910.dts    |  14 +
- arch/arm/boot/dts/imx6qdl-gw5910.dtsi | 491 ++++++++++++++++++++++++++++++++++
- 4 files changed, 521 insertions(+)
- create mode 100644 arch/arm/boot/dts/imx6dl-gw5910.dts
- create mode 100644 arch/arm/boot/dts/imx6q-gw5910.dts
- create mode 100644 arch/arm/boot/dts/imx6qdl-gw5910.dtsi
+Except if someone accidentally wrote their Device Tree such as to have >
+1 CPU nodes, yet the CPU is not MP capable and reading the MPIDR
+register does return the expected value, but that is wrong anyway.
 
-diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index dbc27c9..d7736f5 100644
---- a/arch/arm/boot/dts/Makefile
-+++ b/arch/arm/boot/dts/Makefile
-@@ -417,6 +417,7 @@ dtb-$(CONFIG_SOC_IMX6Q) += \
- 	imx6dl-gw560x.dtb \
- 	imx6dl-gw5903.dtb \
- 	imx6dl-gw5904.dtb \
-+	imx6dl-gw5910.dtb \
- 	imx6dl-hummingboard.dtb \
- 	imx6dl-hummingboard-emmc-som-v15.dtb \
- 	imx6dl-hummingboard-som-v15.dtb \
-@@ -488,6 +489,7 @@ dtb-$(CONFIG_SOC_IMX6Q) += \
- 	imx6q-gw560x.dtb \
- 	imx6q-gw5903.dtb \
- 	imx6q-gw5904.dtb \
-+	imx6q-gw5910.dtb \
- 	imx6q-h100.dtb \
- 	imx6q-hummingboard.dtb \
- 	imx6q-hummingboard-emmc-som-v15.dtb \
-diff --git a/arch/arm/boot/dts/imx6dl-gw5910.dts b/arch/arm/boot/dts/imx6dl-gw5910.dts
-new file mode 100644
-index 0000000..0d5e7e5
---- /dev/null
-+++ b/arch/arm/boot/dts/imx6dl-gw5910.dts
-@@ -0,0 +1,14 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Copyright 2019 Gateworks Corporation
-+ */
-+
-+/dts-v1/;
-+
-+#include "imx6dl.dtsi"
-+#include "imx6qdl-gw5910.dtsi"
-+
-+/ {
-+	model = "Gateworks Ventana i.MX6 DualLite/Solo GW5910";
-+	compatible = "gw,imx6dl-gw5910", "gw,ventana", "fsl,imx6dl";
-+};
-diff --git a/arch/arm/boot/dts/imx6q-gw5910.dts b/arch/arm/boot/dts/imx6q-gw5910.dts
-new file mode 100644
-index 0000000..6aafa2f
---- /dev/null
-+++ b/arch/arm/boot/dts/imx6q-gw5910.dts
-@@ -0,0 +1,14 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Copyright 2019 Gateworks Corporation
-+ */
-+
-+/dts-v1/;
-+
-+#include "imx6q.dtsi"
-+#include "imx6qdl-gw5910.dtsi"
-+
-+/ {
-+	model = "Gateworks Ventana i.MX6 Dual/Quad GW5910";
-+	compatible = "gw,imx6q-gw5910", "gw,ventana", "fsl,imx6q";
-+};
-diff --git a/arch/arm/boot/dts/imx6qdl-gw5910.dtsi b/arch/arm/boot/dts/imx6qdl-gw5910.dtsi
-new file mode 100644
-index 0000000..0a5c3b7
---- /dev/null
-+++ b/arch/arm/boot/dts/imx6qdl-gw5910.dtsi
-@@ -0,0 +1,491 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Copyright 2019 Gateworks Corporation
-+ */
-+
-+#include <dt-bindings/gpio/gpio.h>
-+
-+/ {
-+	/* these are used by bootloader for disabling nodes */
-+	aliases {
-+		led0 = &led0;
-+		led1 = &led1;
-+		led2 = &led2;
-+	};
-+
-+	chosen {
-+		stdout-path = &uart2;
-+	};
-+
-+	memory@10000000 {
-+		device_type = "memory";
-+		reg = <0x10000000 0x20000000>;
-+	};
-+
-+	leds {
-+		compatible = "gpio-leds";
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&pinctrl_gpio_leds>;
-+
-+		led0: user1 {
-+			label = "user1";
-+			gpios = <&gpio4 6 GPIO_ACTIVE_HIGH>; /* MX6_PANLEDG */
-+			default-state = "on";
-+			linux,default-trigger = "heartbeat";
-+		};
-+
-+		led1: user2 {
-+			label = "user2";
-+			gpios = <&gpio4 7 GPIO_ACTIVE_HIGH>; /* MX6_PANLEDR */
-+			default-state = "off";
-+		};
-+
-+		led2: user3 {
-+			label = "user3";
-+			gpios = <&gpio4 15 GPIO_ACTIVE_LOW>; /* MX6_LOCLED# */
-+			default-state = "off";
-+		};
-+	};
-+
-+	pps {
-+		compatible = "pps-gpio";
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&pinctrl_pps>;
-+		gpios = <&gpio4 16 GPIO_ACTIVE_HIGH>;
-+		status = "okay";
-+	};
-+
-+	reg_3p3v: regulator-3p3v {
-+		compatible = "regulator-fixed";
-+		regulator-name = "3P3V";
-+		regulator-min-microvolt = <3300000>;
-+		regulator-max-microvolt = <3300000>;
-+		regulator-always-on;
-+	};
-+
-+	reg_5p0v: regulator-5p0v {
-+		compatible = "regulator-fixed";
-+		regulator-name = "5P0V";
-+		regulator-min-microvolt = <5000000>;
-+		regulator-max-microvolt = <5000000>;
-+		regulator-always-on;
-+	};
-+
-+	reg_wl: regulator-wl {
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&pinctrl_reg_wl>;
-+		compatible = "regulator-fixed";
-+		regulator-name = "wl";
-+		gpio = <&gpio1 5 GPIO_ACTIVE_HIGH>;
-+		startup-delay-us = <100>;
-+		enable-active-high;
-+		regulator-min-microvolt = <3300000>;
-+		regulator-max-microvolt = <3300000>;
-+		regulator-always-on;
-+	};
-+
-+	reg_bt: regulator-bt {
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&pinctrl_reg_bt>;
-+		compatible = "regulator-fixed";
-+		regulator-name = "bt";
-+		gpio = <&gpio1 2 GPIO_ACTIVE_HIGH>;
-+		startup-delay-us = <100>;
-+		enable-active-high;
-+		regulator-min-microvolt = <3300000>;
-+		regulator-max-microvolt = <3300000>;
-+		regulator-always-on;
-+	};
-+};
-+
-+
-+&ecspi3 {
-+	cs-gpios = <&gpio4 24 GPIO_ACTIVE_HIGH>;
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_ecspi3>;
-+	status = "okay";
-+};
-+
-+&fec {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_enet>;
-+	phy-mode = "rgmii-id";
-+	status = "okay";
-+};
-+
-+&gpmi {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_gpmi_nand>;
-+	status = "okay";
-+};
-+
-+&i2c1 {
-+	clock-frequency = <100000>;
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_i2c1>;
-+	status = "okay";
-+
-+	pca9555: gpio@23 {
-+		compatible = "nxp,pca9555";
-+		reg = <0x23>;
-+		gpio-controller;
-+		#gpio-cells = <2>;
-+	};
-+
-+	eeprom1: eeprom@50 {
-+		compatible = "atmel,24c02";
-+		reg = <0x50>;
-+		pagesize = <16>;
-+	};
-+
-+	eeprom2: eeprom@51 {
-+		compatible = "atmel,24c02";
-+		reg = <0x51>;
-+		pagesize = <16>;
-+	};
-+
-+	eeprom3: eeprom@52 {
-+		compatible = "atmel,24c02";
-+		reg = <0x52>;
-+		pagesize = <16>;
-+	};
-+
-+	eeprom4: eeprom@53 {
-+		compatible = "atmel,24c02";
-+		reg = <0x53>;
-+		pagesize = <16>;
-+	};
-+
-+	dts1672: rtc@68 {
-+		compatible = "dallas,ds1672";
-+		reg = <0x68>;
-+	};
-+};
-+
-+&i2c2 {
-+	clock-frequency = <100000>;
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_i2c2>;
-+	status = "okay";
-+};
-+
-+&i2c3 {
-+	clock-frequency = <100000>;
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_i2c3>;
-+	status = "okay";
-+
-+	lis2de12@19 {
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&pinctrl_accel>;
-+		compatible = "st,lis2de12";
-+		reg = <0x19>;
-+		st,drdy-int-pin = <1>;
-+		interrupt-parent = <&gpio7>;
-+		interrupts = <13 0>;
-+		interrupt-names = "INT1";
-+	};
-+};
-+
-+&pcie {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_pcie>;
-+	reset-gpio = <&gpio3 20 GPIO_ACTIVE_LOW>;
-+	status = "okay";
-+};
-+
-+&pwm2 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_pwm2>; /* MX6_DIO1 */
-+	status = "disabled";
-+};
-+
-+&pwm3 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_pwm3>; /* MX6_DIO2 */
-+	status = "disabled";
-+};
-+
-+/* off-board RS232 */
-+&uart1 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_uart1>;
-+	status = "okay";
-+};
-+
-+/* serial console */
-+&uart2 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_uart2>;
-+	status = "okay";
-+};
-+
-+/* Sterling-LWB Bluetooth */
-+&uart4 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_uart4>;
-+	uart-has-rtscts;
-+	status = "okay";
-+};
-+
-+/* GPS */
-+&uart5 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_uart5>;
-+	status = "okay";
-+};
-+
-+&usbotg {
-+	vbus-supply = <&reg_5p0v>;
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_usbotg>;
-+	disable-over-current;
-+	status = "okay";
-+};
-+
-+&usbh1 {
-+	status = "okay";
-+};
-+
-+/* Sterling-LWB SDIO WiFi */
-+&usdhc2 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_usdhc2>;
-+	vmmc-supply = <&reg_3p3v>;
-+	non-removable;
-+	bus-width = <4>;
-+	status = "okay";
-+};
-+
-+&usdhc3 {
-+	pinctrl-names = "default", "state_100mhz", "state_200mhz";
-+	pinctrl-0 = <&pinctrl_usdhc3>;
-+	pinctrl-1 = <&pinctrl_usdhc3_100mhz>;
-+	pinctrl-2 = <&pinctrl_usdhc3_200mhz>;
-+	cd-gpios = <&gpio7 0 GPIO_ACTIVE_LOW>;
-+	vmmc-supply = <&reg_3p3v>;
-+	status = "okay";
-+};
-+
-+&wdog1 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_wdog>;
-+	fsl,ext-reset-output;
-+};
-+
-+&iomuxc {
-+	pinctrl_accel: accelmuxgrp {
-+		fsl,pins = <
-+			MX6QDL_PAD_GPIO_18__GPIO7_IO13		0x1b0b1
-+		>;
-+	};
-+
-+	pinctrl_ecspi3: escpi3grp {
-+		fsl,pins = <
-+			MX6QDL_PAD_DISP0_DAT0__ECSPI3_SCLK	0x100b1
-+			MX6QDL_PAD_DISP0_DAT1__ECSPI3_MOSI	0x100b1
-+			MX6QDL_PAD_DISP0_DAT2__ECSPI3_MISO	0x100b1
-+			MX6QDL_PAD_DISP0_DAT3__GPIO4_IO24	0x100b1
-+		>;
-+	};
-+
-+	pinctrl_enet: enetgrp {
-+		fsl,pins = <
-+			MX6QDL_PAD_RGMII_RXC__RGMII_RXC		0x1b030
-+			MX6QDL_PAD_RGMII_RD0__RGMII_RD0		0x1b030
-+			MX6QDL_PAD_RGMII_RD1__RGMII_RD1		0x1b030
-+			MX6QDL_PAD_RGMII_RD2__RGMII_RD2		0x1b030
-+			MX6QDL_PAD_RGMII_RD3__RGMII_RD3		0x1b030
-+			MX6QDL_PAD_RGMII_RX_CTL__RGMII_RX_CTL	0x1b030
-+			MX6QDL_PAD_RGMII_TXC__RGMII_TXC		0x1b030
-+			MX6QDL_PAD_RGMII_TD0__RGMII_TD0		0x1b030
-+			MX6QDL_PAD_RGMII_TD1__RGMII_TD1		0x1b030
-+			MX6QDL_PAD_RGMII_TD2__RGMII_TD2		0x1b030
-+			MX6QDL_PAD_RGMII_TD3__RGMII_TD3		0x1b030
-+			MX6QDL_PAD_RGMII_TX_CTL__RGMII_TX_CTL	0x1b030
-+			MX6QDL_PAD_ENET_REF_CLK__ENET_TX_CLK	0x1b0b0
-+			MX6QDL_PAD_ENET_MDIO__ENET_MDIO		0x1b0b0
-+			MX6QDL_PAD_ENET_MDC__ENET_MDC		0x1b0b0
-+			MX6QDL_PAD_GPIO_16__ENET_REF_CLK	0x4001b0a8
-+			MX6QDL_PAD_ENET_TXD0__GPIO1_IO30	0x1b0b0
-+		>;
-+	};
-+
-+	pinctrl_gpio_leds: gpioledsgrp {
-+		fsl,pins = <
-+			MX6QDL_PAD_KEY_COL0__GPIO4_IO06  0x1b0b0
-+			MX6QDL_PAD_KEY_ROW0__GPIO4_IO07  0x1b0b0
-+			MX6QDL_PAD_KEY_ROW4__GPIO4_IO15  0x1b0b0
-+		>;
-+	};
-+
-+	pinctrl_gpmi_nand: gpminandgrp {
-+		fsl,pins = <
-+			MX6QDL_PAD_NANDF_CLE__NAND_CLE		0xb0b1
-+			MX6QDL_PAD_NANDF_ALE__NAND_ALE		0xb0b1
-+			MX6QDL_PAD_NANDF_WP_B__NAND_WP_B	0xb0b1
-+			MX6QDL_PAD_NANDF_RB0__NAND_READY_B	0xb000
-+			MX6QDL_PAD_NANDF_CS0__NAND_CE0_B	0xb0b1
-+			MX6QDL_PAD_SD4_CMD__NAND_RE_B		0xb0b1
-+			MX6QDL_PAD_SD4_CLK__NAND_WE_B		0xb0b1
-+			MX6QDL_PAD_NANDF_D0__NAND_DATA00	0xb0b1
-+			MX6QDL_PAD_NANDF_D1__NAND_DATA01	0xb0b1
-+			MX6QDL_PAD_NANDF_D2__NAND_DATA02	0xb0b1
-+			MX6QDL_PAD_NANDF_D3__NAND_DATA03	0xb0b1
-+			MX6QDL_PAD_NANDF_D4__NAND_DATA04	0xb0b1
-+			MX6QDL_PAD_NANDF_D5__NAND_DATA05	0xb0b1
-+			MX6QDL_PAD_NANDF_D6__NAND_DATA06	0xb0b1
-+			MX6QDL_PAD_NANDF_D7__NAND_DATA07	0xb0b1
-+		>;
-+	};
-+
-+	pinctrl_i2c1: i2c1grp {
-+		fsl,pins = <
-+			MX6QDL_PAD_EIM_D21__I2C1_SCL		0x4001b8b1
-+			MX6QDL_PAD_EIM_D28__I2C1_SDA		0x4001b8b1
-+			MX6QDL_PAD_GPIO_4__GPIO1_IO04		0x0001b0b0
-+		>;
-+	};
-+
-+	pinctrl_i2c2: i2c2grp {
-+		fsl,pins = <
-+			MX6QDL_PAD_KEY_COL3__I2C2_SCL		0x4001b8b1
-+			MX6QDL_PAD_KEY_ROW3__I2C2_SDA		0x4001b8b1
-+		>;
-+	};
-+
-+	pinctrl_i2c3: i2c3grp {
-+		fsl,pins = <
-+			MX6QDL_PAD_GPIO_3__I2C3_SCL		0x4001b8b1
-+			MX6QDL_PAD_GPIO_6__I2C3_SDA		0x4001b8b1
-+		>;
-+	};
-+
-+	pinctrl_pcie: pciegrp {
-+		fsl,pins = <
-+			MX6QDL_PAD_EIM_D20__GPIO3_IO20		0x1b0b0
-+		>;
-+	};
-+
-+	pinctrl_pps: ppsgrp {
-+		fsl,pins = <
-+			MX6QDL_PAD_DI0_DISP_CLK__GPIO4_IO16	0x1b0b1
-+		>;
-+	};
-+
-+	pinctrl_pwm2: pwm2grp {
-+		fsl,pins = <
-+			MX6QDL_PAD_SD1_DAT2__PWM2_OUT		0x1b0b1
-+		>;
-+	};
-+
-+	pinctrl_pwm3: pwm3grp {
-+		fsl,pins = <
-+			MX6QDL_PAD_SD1_DAT1__PWM3_OUT		0x1b0b1
-+		>;
-+	};
-+
-+	pinctrl_reg_bt: regbtgrp {
-+		fsl,pins = <
-+			MX6QDL_PAD_GPIO_2__GPIO1_IO02		0x1b0b1
-+		>;
-+	};
-+
-+	pinctrl_reg_wl: regwlgrp {
-+		fsl,pins = <
-+			MX6QDL_PAD_GPIO_5__GPIO1_IO05		0x1b0b1
-+		>;
-+	};
-+
-+	pinctrl_uart1: uart1grp {
-+		fsl,pins = <
-+			MX6QDL_PAD_CSI0_DAT10__UART1_TX_DATA	0x1b0b1
-+			MX6QDL_PAD_CSI0_DAT11__UART1_RX_DATA	0x1b0b1
-+		>;
-+	};
-+
-+	pinctrl_uart2: uart2grp {
-+		fsl,pins = <
-+			MX6QDL_PAD_SD4_DAT7__UART2_TX_DATA	0x1b0b1
-+			MX6QDL_PAD_SD4_DAT4__UART2_RX_DATA	0x1b0b1
-+		>;
-+	};
-+
-+	pinctrl_uart4: uart4grp {
-+		fsl,pins = <
-+			MX6QDL_PAD_CSI0_DAT12__UART4_TX_DATA	0x1b0b1
-+			MX6QDL_PAD_CSI0_DAT13__UART4_RX_DATA	0x1b0b1
-+			MX6QDL_PAD_CSI0_DAT16__UART4_RTS_B	0x1b0b1
-+			MX6QDL_PAD_CSI0_DAT17__UART4_CTS_B	0x1b0b1
-+		>;
-+	};
-+
-+	pinctrl_uart5: uart5grp {
-+		fsl,pins = <
-+			MX6QDL_PAD_KEY_COL1__UART5_TX_DATA	0x1b0b1
-+			MX6QDL_PAD_KEY_ROW1__UART5_RX_DATA	0x1b0b1
-+		>;
-+	};
-+
-+	pinctrl_usbotg: usbotggrp {
-+		fsl,pins = <
-+			MX6QDL_PAD_GPIO_1__USB_OTG_ID		0x13059
-+		>;
-+	};
-+
-+	pinctrl_usdhc2: usdhc2grp {
-+		fsl,pins = <
-+			MX6QDL_PAD_SD2_CMD__SD2_CMD		0x17059
-+			MX6QDL_PAD_SD2_CLK__SD2_CLK		0x10059
-+			MX6QDL_PAD_SD2_DAT0__SD2_DATA0		0x17059
-+			MX6QDL_PAD_SD2_DAT1__SD2_DATA1		0x17059
-+			MX6QDL_PAD_SD2_DAT2__SD2_DATA2		0x17059
-+			MX6QDL_PAD_SD2_DAT3__SD2_DATA3		0x17059
-+		>;
-+	};
-+
-+	pinctrl_usdhc3: usdhc3grp {
-+		fsl,pins = <
-+			MX6QDL_PAD_SD3_CMD__SD3_CMD		0x17059
-+			MX6QDL_PAD_SD3_CLK__SD3_CLK		0x10059
-+			MX6QDL_PAD_SD3_DAT0__SD3_DATA0		0x17059
-+			MX6QDL_PAD_SD3_DAT1__SD3_DATA1		0x17059
-+			MX6QDL_PAD_SD3_DAT2__SD3_DATA2		0x17059
-+			MX6QDL_PAD_SD3_DAT3__SD3_DATA3		0x17059
-+			MX6QDL_PAD_SD3_DAT5__GPIO7_IO00		0x17059 /* CD */
-+			MX6QDL_PAD_NANDF_CS1__SD3_VSELECT	0x17059
-+		>;
-+	};
-+
-+	pinctrl_usdhc3_100mhz: usdhc3grp100mhz {
-+		fsl,pins = <
-+			MX6QDL_PAD_SD3_CMD__SD3_CMD		0x170b9
-+			MX6QDL_PAD_SD3_CLK__SD3_CLK		0x170b9
-+			MX6QDL_PAD_SD3_DAT0__SD3_DATA0		0x170b9
-+			MX6QDL_PAD_SD3_DAT1__SD3_DATA1		0x170b9
-+			MX6QDL_PAD_SD3_DAT2__SD3_DATA2		0x170b9
-+			MX6QDL_PAD_SD3_DAT3__SD3_DATA3		0x170b9
-+			MX6QDL_PAD_SD3_DAT5__GPIO7_IO00		0x170b9 /* CD */
-+			MX6QDL_PAD_NANDF_CS1__SD3_VSELECT	0x170b9
-+		>;
-+	};
-+
-+	pinctrl_usdhc3_200mhz: usdhc3grp200mhz {
-+		fsl,pins = <
-+			MX6QDL_PAD_SD3_CMD__SD3_CMD		0x170f9
-+			MX6QDL_PAD_SD3_CLK__SD3_CLK		0x100f9
-+			MX6QDL_PAD_SD3_DAT0__SD3_DATA0		0x170f9
-+			MX6QDL_PAD_SD3_DAT1__SD3_DATA1		0x170f9
-+			MX6QDL_PAD_SD3_DAT2__SD3_DATA2		0x170f9
-+			MX6QDL_PAD_SD3_DAT3__SD3_DATA3		0x170f9
-+			MX6QDL_PAD_SD3_DAT5__GPIO7_IO00		0x170f9 /* CD */
-+			MX6QDL_PAD_NANDF_CS1__SD3_VSELECT	0x170f9
-+		>;
-+	};
-+
-+	pinctrl_wdog: wdoggrp {
-+		fsl,pins = <
-+			MX6QDL_PAD_DISP0_DAT8__WDOG1_B		0x1b0b0
-+		>;
-+	};
-+};
+> 
+> This was seen on a Raspberry Pi 2 build with bcm2835_defconfig.
+> 
+> Reported-by: "kernelci.org bot" <bot@kernelci.org>
+> Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+> ---
+>  arch/arm/kernel/devtree.c | 5 ++++-
+>  1 file changed, 4 insertions(+), 1 deletion(-)
+> 
+> diff --git a/arch/arm/kernel/devtree.c b/arch/arm/kernel/devtree.c
+> index 39c978698406..a924fda9abc8 100644
+> --- a/arch/arm/kernel/devtree.c
+> +++ b/arch/arm/kernel/devtree.c
+> @@ -74,7 +74,7 @@ void __init arm_dt_init_cpu_maps(void)
+>  	struct device_node *cpu, *cpus;
+>  	int found_method = 0;
+>  	u32 i, j, cpuidx = 1;
+> -	u32 mpidr = is_smp() ? read_cpuid_mpidr() & MPIDR_HWID_BITMASK : 0;
+> +	u32 mpidr = 0;
+>  
+>  	u32 tmp_map[NR_CPUS] = { [0 ... NR_CPUS-1] = MPIDR_INVALID };
+>  	bool bootcpu_valid = false;
+> @@ -83,6 +83,9 @@ void __init arm_dt_init_cpu_maps(void)
+>  	if (!cpus)
+>  		return;
+>  
+> +	if (is_smp() || of_get_child_count(cpus) > 1)
+> +		mpidr = read_cpuid_mpidr() & MPIDR_HWID_BITMASK;
+> +
+>  	for_each_of_cpu_node(cpu) {
+>  		const __be32 *cell;
+>  		int prop_bytes;
+> 
+
+
 -- 
-2.9.2
-
+Florian
